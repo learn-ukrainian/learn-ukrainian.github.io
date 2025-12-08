@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -481,13 +521,14 @@ footer {
     <h1>Module 03: The Gender Code</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Quiz</button>
-      <button class="nav-tab" data-section="activity-1">2. Sort</button>
+      <button class="nav-tab" data-section="activity-0">1. Sort</button>
+      <button class="nav-tab" data-section="activity-1">2. Quiz</button>
       <button class="nav-tab" data-section="activity-2">3. Match</button>
-      <button class="nav-tab" data-section="activity-3">4. Match</button>
-      <button class="nav-tab" data-section="activity-4">5. T/F</button>
-      <button class="nav-tab" data-section="activity-5">6. Fill</button>
+      <button class="nav-tab" data-section="activity-3">4. Fill</button>
+      <button class="nav-tab" data-section="activity-4">5. Order</button>
+      <button class="nav-tab" data-section="activity-5">6. T/F</button>
       <button class="nav-tab" data-section="activity-6">7. Spell</button>
+      <button class="nav-tab" data-section="activity-7">8. Quiz</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -497,386 +538,158 @@ footer {
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.1</span>
         <h2 style="font-size:2rem;margin:0.5rem 0">The Gender Code</h2>
-        <p style="color:var(--text-muted)">Masculine, Feminine, and Neuter: How Ukrainian Organizes Nouns</p>
+        <p style="color:var(--text-muted)">It&#039;s Not Biology, It&#039;s Sound and System</p>
       </div>
       
     <div class="card section-intro">
       <h3>📖 Introduction</h3>
       <div class="md-content"><h2 id="warmup">warm-up</h2>
-<h3 id="everythinghasagender">Everything Has a Gender!</h3>
-<p>In Ukrainian, every noun has a gender: masculine, feminine, or neuter. This isn't about biology - it's about grammar. A table (стіл) is masculine, a book (книга) is feminine, and a window (вікно) is neuter.</p>
-<p>Why does this matter? Because adjectives, pronouns, and even verbs change their endings to match the noun's gender. Learning gender now will make everything else easier!</p>
+<p><strong>The Three Genres of Reality: Masculine, Feminine, and Neuter.</strong></p>
+<p>In English, a table is "it", a lamp is "it", a book is "it". Gender is primarily biological: men are "he", women are "she", everything else is "it". This is simple, but also quite limited in how it describes the world.</p>
+<p>In Ukrainian, reality is vibrant and nuanced, divided into three fundamental categories of grammatical gender: <strong>Він</strong> (He, Masculine), <strong>Вона</strong> (She, Feminine), and <strong>Воно</strong> (It, Neuter). But here's the crucial point: this is <strong>not</strong> about biology, or even about the intrinsic qualities of the object itself. A sturdy oak tree can be feminine (<strong>дуб</strong> is masculine, but <strong>липа</strong> (linden) is feminine). A powerful river is feminine (<strong>річка</strong>), and a fragile flower can be masculine (<strong>квітка</strong> is actually feminine but similar examples exist).</p>
+<p>Grammatical gender in Ukrainian is primarily about <strong>sound and form</strong>. It's a fundamental system that organizes words based on their endings. Think of it like a subtle background music, assigning a certain "feel" to each word. Masculine nouns often have a strong, abrupt ending (a consonant). Feminine nouns have an open, flowing sound (-а, -я). Neuter nouns have a soft, rounded echo (-о, -е).</p>
+<p>In this module, you will not only learn to instantly determine the gender of most Ukrainian nouns, but you will also understand the <strong>four fundamental "families" (declensions)</strong> that govern how these words behave. This understanding is critical, as grammatical gender dictates how adjectives, pronouns, and even verb endings will agree with the noun – it's the invisible glue that holds Ukrainian sentences together. By mastering this code, you'll gain an intuitive feel for the language's structure.</p>
 <blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>English used to have grammatical gender too! Words like "sun" were feminine and "moon" was masculine in Old English. Ukrainian kept this feature - and it makes the language more expressive!</p>
+  <p>💡 <strong>Did You Know? Grammatical Gender Across Languages</strong><br />
+  Ukrainian is far from alone in having grammatical gender. Languages like German (der, die, das), French (le, la), Spanish (el, la), and Russian also have it. Even Old English had grammatical gender! This system isn't random; it often has historical roots, and once you learn the patterns, it becomes a powerful tool for understanding the language's internal logic. It's a core feature that makes Ukrainian rich and expressive.</p>
 </blockquote>
-<h3 id="thegoodnews">The Good News</h3>
-<p>Unlike German (where you must memorize each word's gender), Ukrainian gender is <strong>predictable from the ending</strong> in most cases:</p>
-<table>
-<thead>
-<tr>
-<th>Ending</th>
-<th>Gender</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Consonant</td>
-<td>Masculine</td>
-<td>сті<strong>л</strong> (stіl) - table</td>
-</tr>
-<tr>
-<td><strong>-а/-я</strong></td>
-<td>Feminine</td>
-<td>книг<strong>а</strong> (knyha) - book</td>
-</tr>
-<tr>
-<td><strong>-о/-е</strong></td>
-<td>Neuter</td>
-<td>вікн<strong>о</strong> (vikno) - window</td>
-</tr>
-</tbody>
-</table>
 <h2 id="presentation">presentation</h2>
-<h3 id="masculinenounsconsonantendings">Masculine Nouns: Consonant Endings</h3>
-<p>Masculine nouns typically end in a consonant (no vowel at the end):</p>
+<h3 id="thegoldenruleofendingsyourinstantgenderdetector">The Golden Rule of Endings: Your Instant Gender Detector</h3>
+<p>The easiest way to determine a noun's gender is by looking at its <strong>last letter or sound</strong> in its dictionary (nominative singular) form. This rule works for approximately 99% of all Ukrainian nouns.</p>
 <table>
 <thead>
 <tr>
-<th>Ukrainian</th>
-<th>Transliteration</th>
-<th>English</th>
+<th>Gender Category</th>
+<th>Typical Ending</th>
+<th>Phonetic "Feel"</th>
+<th>Examples (Pronunciation)</th>
+<th>English Meaning</th>
+<th>Audio</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>стіл</td>
-<td>stil</td>
-<td>table</td>
+<td><strong>Masculine (Він)</strong></td>
+<td><strong>Consonant</strong></td>
+<td>Hard, Abrupt Stop</td>
+<td><strong>Стіл</strong> (/stʲil/), <strong>Банк</strong> (/bɑnk/), <strong>Хліб</strong> (/xlʲib/)</td>
+<td>Table, Bank, Bread</td>
+<td><button class="audio-btn" onclick="openForvo('masc ex')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
-<td>дім</td>
-<td>dim</td>
-<td>house</td>
+<td><strong>Feminine (Вона)</strong></td>
+<td><strong>-А</strong> or <strong>-Я</strong></td>
+<td>Open, Flowing Vowel</td>
+<td><strong>Кава</strong> (/ˈkɑvɑ/), <strong>Земля</strong> (/zɛmˈlʲɑ/), <strong>Річка</strong> (/ˈrʲitʃkɑ/)</td>
+<td>Coffee, Earth, River</td>
+<td><button class="audio-btn" onclick="openForvo('fem ex')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
-<td>хліб</td>
-<td>khlib</td>
-<td>bread</td>
-</tr>
-<tr>
-<td>чай</td>
-<td>chai</td>
-<td>tea</td>
-</tr>
-<tr>
-<td>сік</td>
-<td>sik</td>
-<td>juice</td>
-</tr>
-<tr>
-<td>огірок</td>
-<td>ohirok</td>
-<td>cucumber</td>
-</tr>
-<tr>
-<td>помідор</td>
-<td>pomidor</td>
-<td>tomato</td>
+<td><strong>Neuter (Воно)</strong></td>
+<td><strong>-О</strong> or <strong>-Е</strong></td>
+<td>Soft, Rounded Vowel</td>
+<td><strong>Вікно</strong> (/vʲiˈknɔ/), <strong>Море</strong> (/ˈmɔrɛ/), <strong>Місто</strong> (/ˈmʲistɔ/)</td>
+<td>Window, Sea, City</td>
+<td><button class="audio-btn" onclick="openForvo('neu ex')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 </tbody>
 </table>
-<blockquote>
-  <p>⚡ <strong>Pro Tip</strong></p>
-  <p>If a noun ends in a consonant sound, it's almost always masculine. The letter Й counts as a consonant here: чай (chai - tea) is masculine!</p>
-</blockquote>
-<h3 id="femininenounsendings">Feminine Nouns: -а/-я Endings</h3>
-<p>Feminine nouns typically end in <strong>-а</strong> or <strong>-я</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Transliteration</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>книга</td>
-<td>knyha</td>
-<td>book</td>
-</tr>
-<tr>
-<td>кімната</td>
-<td>kimnata</td>
-<td>room</td>
-</tr>
-<tr>
-<td>вода</td>
-<td>voda</td>
-<td>water</td>
-</tr>
-<tr>
-<td>риба</td>
-<td>ryba</td>
-<td>fish</td>
-</tr>
-<tr>
-<td>картопля</td>
-<td>kartoplya</td>
-<td>potato</td>
-</tr>
-<tr>
-<td>цибуля</td>
-<td>tsybulya</td>
-<td>onion</td>
-</tr>
-<tr>
-<td>річка</td>
-<td>richka</td>
-<td>river</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎯 <strong>Fun Fact</strong></p>
-  <p>The word "Україна" (Ukraine) is feminine! That's why Ukrainians say "моя Україна" (my Ukraine) - with the feminine possessive. The country is often personified as a mother figure in Ukrainian culture.</p>
-</blockquote>
-<h3 id="neuternounsendings">Neuter Nouns: -о/-е Endings</h3>
-<p>Neuter nouns typically end in <strong>-о</strong> or <strong>-е</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Transliteration</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>вікно</td>
-<td>vikno</td>
-<td>window</td>
-</tr>
-<tr>
-<td>місто</td>
-<td>misto</td>
-<td>city</td>
-</tr>
-<tr>
-<td>село</td>
-<td>selo</td>
-<td>village</td>
-</tr>
-<tr>
-<td>море</td>
-<td>more</td>
-<td>sea</td>
-</tr>
-<tr>
-<td>молоко</td>
-<td>moloko</td>
-<td>milk</td>
-</tr>
-<tr>
-<td>м'ясо</td>
-<td>myaso</td>
-<td>meat</td>
-</tr>
-<tr>
-<td>яблуко</td>
-<td>yabluko</td>
-<td>apple</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🔍 <strong>Myth Buster</strong></p>
-  <p><strong>Myth:</strong> "Neuter gender is rare in Ukrainian"<br />
-  <strong>Fact:</strong> Neuter is very common! Many everyday words are neuter: місто (city), село (village), море (sea), молоко (milk). Don't ignore this gender!</p>
-</blockquote>
-<h3 id="thegenderdecisiontree">The Gender Decision Tree</h3>
-<pre><code>Look at the ending:
-│
-├── Consonant (including Й)? → MASCULINE (стіл, дім, чай)
-├── -а or -я? → FEMININE (книга, вода, земля)
-└── -о or -е? → NEUTER (вікно, море, яблуко)
-</code></pre>
-<h3 id="irregulargenderswordsthatbreaktherules">Irregular Genders: Words That Break the Rules</h3>
-<p>Some words don't follow the pattern. Memorize these exceptions:</p>
-<table>
-<thead>
-<tr>
-<th>Word</th>
-<th>Expected</th>
-<th>Actual</th>
-<th>Why</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>тато (tato)</td>
-<td>neuter?</td>
-<td><strong>masculine</strong></td>
-<td>Refers to a male</td>
-</tr>
-<tr>
-<td>батько (batko)</td>
-<td>neuter?</td>
-<td><strong>masculine</strong></td>
-<td>Refers to a male</td>
-</tr>
-<tr>
-<td>дідусь (didus')</td>
-<td>feminine?</td>
-<td><strong>masculine</strong></td>
-<td>Refers to a male</td>
-</tr>
-<tr>
-<td>двері (dveri)</td>
-<td>feminine?</td>
-<td><strong>plural</strong></td>
-<td>Always plural in Ukrainian</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>📜 <strong>History Bite</strong></p>
-  <p>Words for family members often break gender rules because the gender follows the person, not the ending. "Тато" (dad) ends in -о but is masculine because it refers to a male person.</p>
-</blockquote>
-<h3 id="thefourdeclensionfamilies">The Four Declension Families</h3>
-<p>Ukrainian nouns belong to four "families" based on how they change (decline) in different cases. For now, just know they exist:</p>
-<table>
-<thead>
-<tr>
-<th>Family</th>
-<th>Pattern</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>1st</strong></td>
-<td>-а/-я feminines</td>
-<td>книг<strong>а</strong>, земл<strong>я</strong></td>
-</tr>
-<tr>
-<td><strong>2nd</strong></td>
-<td>Consonant M + -о/-е N</td>
-<td>стіл, вікн<strong>о</strong></td>
-</tr>
-<tr>
-<td><strong>3rd</strong></td>
-<td>Soft feminines</td>
-<td>ніч, радіст<strong>ь</strong></td>
-</tr>
-<tr>
-<td><strong>4th</strong></td>
-<td>-а masculines</td>
-<td>тат<strong>о</strong>, суддя</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>The declension family determines what endings a noun takes in different cases (which you'll learn in later modules). But for now, gender is enough - most endings follow predictable patterns!</p>
-</blockquote>
-<h3 id="genderinaction">Gender in Action</h3>
-<p>Here's why gender matters - notice how "this" changes:</p>
-<table>
-<thead>
-<tr>
-<th>Gender</th>
-<th>"This"</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Masculine</td>
-<td>це<strong>й</strong></td>
-<td>Цей стіл (This table)</td>
-</tr>
-<tr>
-<td>Feminine</td>
-<td>ц<strong>я</strong></td>
-<td>Ця книга (This book)</td>
-</tr>
-<tr>
-<td>Neuter</td>
-<td>ц<strong>е</strong></td>
-<td>Це вікно (This window)</td>
-</tr>
-</tbody>
-</table>
-<p>We'll explore this more in Module 05!</p>
-<h2 id="practice">practice</h2>
-<h3 id="exercise1genderidentification">Exercise 1: Gender Identification</h3>
-<p>What gender is each word?</p>
-<ol>
-<li><p>стіл</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer">Masculine (ends in consonant)</div></div>
-<ol start="2">
-<li><p>книга</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer">Feminine (ends in -а)</div></div>
-<ol start="3">
-<li><p>вікно</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer">Neuter (ends in -о)</div></div>
-<ol start="4">
-<li><p>вода</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer">Feminine (ends in -а)</div></div>
-<ol start="5">
-<li><p>хліб</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer">Masculine (ends in consonant)</div></div>
-<ol start="6">
-<li><p>море</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-5', this)">Показати відповідь</button><div class="answer-block" id="ans-5"><div class="callout callout-answer" data-callout="answer">Neuter (ends in -е)</div></div>
-<h3 id="exercise2predictthegender">Exercise 2: Predict the Gender</h3>
-<p>Before checking, predict based on the ending:</p>
-<ol>
-<li><p>яблуко (apple)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-6', this)">Показати відповідь</button><div class="answer-block" id="ans-6"><div class="callout callout-answer" data-callout="answer">Neuter (-о ending)</div></div>
-<ol start="2">
-<li><p>картопля (potato)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-7', this)">Показати відповідь</button><div class="answer-block" id="ans-7"><div class="callout callout-answer" data-callout="answer">Feminine (-я ending)</div></div>
-<ol start="3">
-<li><p>чай (tea)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-8', this)">Показати відповідь</button><div class="answer-block" id="ans-8"><div class="callout callout-answer" data-callout="answer">Masculine (consonant Й)</div></div>
-<ol start="4">
-<li><p>молоко (milk)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-9', this)">Показати відповідь</button><div class="answer-block" id="ans-9"><div class="callout callout-answer" data-callout="answer">Neuter (-о ending)</div></div>
-<ol start="5">
-<li><p>риба (fish)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-10', this)">Показати відповідь</button><div class="answer-block" id="ans-10"><div class="callout callout-answer" data-callout="answer">Feminine (-а ending)</div></div>
-<ol start="6">
-<li><p>сік (juice)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-11', this)">Показати відповідь</button><div class="answer-block" id="ans-11"><div class="callout callout-answer" data-callout="answer">Masculine (consonant)</div></div>
-<h2 id="production">production</h2>
-<h3 id="sortingpractice">Sorting Practice</h3>
-<p>Look around your room. In Ukrainian, can you identify:</p>
+<p><strong>Crucial Exceptions to Memorize:</strong></p>
 <ul>
-<li>3 masculine objects (ending in consonant)</li>
-<li>3 feminine objects (ending in -а/-я)</li>
-<li>3 neuter objects (ending in -о/-е)</li>
+<li><strong>Biologically Male Nouns Ending in -О/-А:</strong> These override the ending rule.<ul>
+<li><strong>Тато</strong> <button class="audio-btn" onclick="openForvo('Тато')" title="Listen on Forvo">🔊</button> (Dad), <strong>Дядько</strong> <button class="audio-btn" onclick="openForvo('Дядько')" title="Listen on Forvo">🔊</button> (Uncle), <strong>Колега</strong> <button class="audio-btn" onclick="openForvo('Колега')" title="Listen on Forvo">🔊</button> (Colleague - if male). These are Masculine.</li></ul></li>
+<li><strong>Nouns Ending in -Ь (Soft Sign):</strong> The soft sign can belong to both Masculine and Feminine nouns. You generally have to memorize these.<ul>
+<li><strong>Ніч</strong> <button class="audio-btn" onclick="openForvo('Ніч')" title="Listen on Forvo">🔊</button> (Night) - Feminine.</li>
+<li><strong>Біль</strong> <button class="audio-btn" onclick="openForvo('Біль')" title="Listen on Forvo">🔊</button> (Pain) - Masculine.</li>
+<li><em>Rule of Thumb:</em> If it ends in <code>-ість</code>, it's almost always Feminine (<strong>радість</strong> - joy).</li></ul></li>
 </ul>
 <blockquote>
-  <p>🌍 <strong>Real World</strong></p>
-  <p>Next time you're in a Ukrainian restaurant, notice the menu items! Борщ (borshch) is masculine, риба (ryba - fish) is feminine, and м'ясо (myaso - meat) is neuter. You're already reading gender!</p>
+  <p>⚡ <strong>Pro Tip: Hear the Gender</strong><br />
+  Try to develop an intuitive "feel" for the sounds. A final consonant creates a sense of closure, a Masculine force. An <code>-а</code> or <code>-я</code> ending feels open, inviting, a Feminine grace. An <code>-о</code> or <code>-е</code> ending feels neutral, perhaps echoing a calm observation. This is how native speakers often intuitively process gender.</p>
 </blockquote>
-<hr />
+<h3 id="thefourdeclensionfamiliesblueprintforchange">The Four Declension Families: Blueprint for Change</h3>
+<p>Understanding grammatical gender is the first step. The second, more advanced step, is to recognize that nouns belong to different "Declension Families." These families are crucial because they dictate how noun endings will change when they interact with other words in a sentence (a process called declension, which we will explore in later modules). For now, simply identify which family a noun belongs to based on its gender and ending.</p>
+<p><strong>Family 1: The "A" Team (Feminines & Some Masculines in -а/-я)</strong></p>
+<ul>
+<li><strong>Characteristics:</strong> Nouns ending in <strong>-А</strong> or <strong>-Я</strong>.</li>
+<li><strong>Members:</strong> The vast majority of Feminine nouns (e.g., <strong>Мама, Карта, Вода, Книга, Річка</strong>). It also includes a small but important group of Masculine nouns that end in <strong>-А</strong> or <strong>-Я</strong> (e.g., <strong>Тато, Микола, Дядько, Суддя</strong> - Judge).</li>
+<li><em>Vibe:</em> This is the largest and most dynamic family, often associated with living beings and common objects.</li>
+</ul>
+<p><strong>Family 2: The Solid Core (Masculines & Neuters)</strong></p>
+<ul>
+<li><strong>Characteristics:</strong> Masculine nouns ending in a <strong>Consonant</strong> (e.g., <strong>Дім, Стіл, Студент, Хліб, Чай</strong>) and Neuter nouns ending in <strong>-О</strong> or <strong>-Е</strong> (e.g., <strong>Вікно, Сонце, Море, Місто, Молоко</strong>).</li>
+<li><em>Vibe:</em> This family represents the stable, tangible world—objects, places, and many abstract concepts. It's robust and foundational.</li>
+</ul>
+<p><strong>Family 3: The Soft Feminines</strong></p>
+<ul>
+<li><strong>Characteristics:</strong> Feminine nouns ending in a <strong>Soft Sign (-Ь)</strong> (e.g., <strong>Ніч, Сіль, Осінь, Радість</strong> - joy, <strong>Любов</strong> - love).</li>
+<li><em>Vibe:</em> This is a smaller but highly expressive family, often denoting abstract qualities, emotions, or concepts that feel ethereal. These endings feel "gentle" or "soft."</li>
+</ul>
+<p><strong>Family 4: The Little Ones (Neuters in -А/-Я)</strong></p>
+<ul>
+<li><strong>Characteristics:</strong> A very small family of Neuter nouns that end in <strong>-А</strong> or <strong>-Я</strong>. These often refer to young creatures or unique concepts.</li>
+<li><strong>Members:</strong> <strong>Ім'я</strong> (Name), <strong>Цуценя</strong> (Puppy), <strong>Дівча</strong> (Little girl), <strong>Теля</strong> (Calf).</li>
+<li><em>Vibe:</em> This family is distinct and often relates to a sense of smallness, youth, or peculiarity.</li>
+</ul>
+<p>Understanding these families now will make learning case endings much easier in future modules, as each family has its own set of rules for how words change.</p>
+<blockquote>
+  <p>🎭 <strong>Culture Corner: Gender and the World Around You</strong><br />
+  In Ukrainian culture, grammatical gender is so ingrained that it subtly influences perception. Objects can feel "male" or "female" in a way that goes beyond literal gender. A sturdy <strong>стіл</strong> (table, M) is reliably masculine. A flowing <strong>річка</strong> (river, F) has a feminine grace. This linguistic reality deepens the connection between language and the environment, making the world you inhabit through Ukrainian a more personified, character-filled place.</p>
+</blockquote>
+<h2 id="practice">practice</h2>
+<p>Let's do a "Home Tour" through a typical Ukrainian apartment. Identify the gender of each item.</p>
+<p><strong>In the Living Room (Вітальня):</strong></p>
+<ul>
+<li><strong>Диван</strong> <button class="audio-btn" onclick="openForvo('Диван')" title="Listen on Forvo">🔊</button> (Sofa) - Consonant, Masculine.</li>
+<li><strong>Крісло</strong> <button class="audio-btn" onclick="openForvo('Крісло')" title="Listen on Forvo">🔊</button> (Armchair) - -о, Neuter.</li>
+<li><strong>Телевізор</strong> <button class="audio-btn" onclick="openForvo('Телевізор')" title="Listen on Forvo">🔊</button> (TV) - Consonant, Masculine.</li>
+<li><strong>Картина</strong> <button class="audio-btn" onclick="openForvo('Картина')" title="Listen on Forvo">🔊</button> (Painting) - -а, Feminine.</li>
+<li><strong>Підлога</strong> <button class="audio-btn" onclick="openForvo('Підлога')" title="Listen on Forvo">🔊</button> (Floor) - -а, Feminine.</li>
+</ul>
+<p><strong>In the Kitchen (Кухня):</strong></p>
+<ul>
+<li><strong>Холодильник</strong> <button class="audio-btn" onclick="openForvo('Холодильник')" title="Listen on Forvo">🔊</button> (Fridge) - Consonant, Masculine.</li>
+<li><strong>Чашка</strong> <button class="audio-btn" onclick="openForvo('Чашка')" title="Listen on Forvo">🔊</button> (Cup) - -а, Feminine.</li>
+<li><strong>Склянка</strong> <button class="audio-btn" onclick="openForvo('Склянка')" title="Listen on Forvo">🔊</button> (Glass) - -а, Feminine.</li>
+<li><strong>Ніж</strong> <button class="audio-btn" onclick="openForvo('Ніж')" title="Listen on Forvo">🔊</button> (Knife) - Consonant, Masculine.</li>
+<li><strong>Тарілка</strong> <button class="audio-btn" onclick="openForvo('Тарілка')" title="Listen on Forvo">🔊</button> (Plate) - -а, Feminine.</li>
+</ul>
+<p><strong>In the Bedroom (Спальня):</strong></p>
+<ul>
+<li><strong>Ліжко</strong> <button class="audio-btn" onclick="openForvo('Ліжко')" title="Listen on Forvo">🔊</button> (Bed) - -о, Neuter.</li>
+<li><strong>Шафа</strong> <button class="audio-btn" onclick="openForvo('Шафа')" title="Listen on Forvo">🔊</button> (Wardrobe) - -а, Feminine.</li>
+<li><strong>Стіна</strong> <button class="audio-btn" onclick="openForvo('Стіна')" title="Listen on Forvo">🔊</button> (Wall) - -а, Feminine.</li>
+<li><strong>Вікно</strong> <button class="audio-btn" onclick="openForvo('Вікно')" title="Listen on Forvo">🔊</button> (Window) - -о, Neuter.</li>
+<li><strong>Стеля</strong> <button class="audio-btn" onclick="openForvo('Стеля')" title="Listen on Forvo">🔊</button> (Ceiling) - -я, Feminine.</li>
+</ul>
+<p>Now, let's stock a grocery basket.</p>
+<ul>
+<li><strong>Хліб</strong> <button class="audio-btn" onclick="openForvo('Хліб')" title="Listen on Forvo">🔊</button> (Bread - M)</li>
+<li><strong>Молоко</strong> <button class="audio-btn" onclick="openForvo('Молоко')" title="Listen on Forvo">🔊</button> (Milk - N)</li>
+<li><strong>Риба</strong> <button class="audio-btn" onclick="openForvo('Риба')" title="Listen on Forvo">🔊</button> (Fish - F)</li>
+<li><strong>Чай</strong> <button class="audio-btn" onclick="openForvo('Чай')" title="Listen on Forvo">🔊</button> (Tea - M)</li>
+<li><strong>Вода</strong> <button class="audio-btn" onclick="openForvo('Вода')" title="Listen on Forvo">🔊</button> (Water - F)</li>
+<li><strong>Овочі</strong> <button class="audio-btn" onclick="openForvo('Овочі')" title="Listen on Forvo">🔊</button> (Vegetables - Plural, treated as M for some agreements)</li>
+</ul>
+<h2 id="production">production</h2>
+<p>Imagine you are introducing your friends to a Ukrainian family. They are curious about what's what.</p>
+<p><strong>Dialogue Practice:</strong><br />
+<strong>A:</strong> Що це? (What is this?)<br />
+<strong>B:</strong> Це <strong>стіл</strong>.<br />
+<strong>A:</strong> А це? (And this?)<br />
+<strong>B:</strong> Це <strong>лампа</strong>.<br />
+<strong>A:</strong> Зрозуміло. А <strong>кава</strong>? (Understood. And coffee?)<br />
+<strong>B:</strong> <strong>Кава</strong> ось тут. (Coffee is right here.)</p>
+<p><strong>Your Turn:</strong><br />
+Look around your current room. Point to five items and say their Ukrainian name, then state its gender.</p>
+<ol>
+<li><strong>КОМП'ЮТЕР.</strong> (Consonant ending -&gt; Він).</li>
+<li><strong>ДВЕРІ.</strong> (Plural, no single gender).</li>
+<li><strong>КНИГА.</strong> ( -а ending -&gt; Вона).</li>
+<li><strong>ЧАШКА.</strong> ( -а ending -&gt; Вона).</li>
+<li><strong>ТЕЛЕФОН.</strong> (Consonant ending -&gt; Він).</li>
+</ol>
+<p>You are beginning to perceive the world through Ukrainian eyes, hearing the subtle gender assigned to every object.</p>
 <hr />
 <hr /></div>
     </div>
@@ -884,25 +697,14 @@ footer {
       
     <div class="card section-summary">
       <h3>📋 Summary</h3>
-      <div class="md-content"><blockquote>
-  <p><strong>What You Learned Today</strong></p>
-  <ul>
-  <li><strong>Masculine nouns</strong> end in a consonant: стіл, дім, хліб, чай</li>
-  <li><strong>Feminine nouns</strong> end in -а/-я: книга, вода, кімната, картопля</li>
-  <li><strong>Neuter nouns</strong> end in -о/-е: вікно, місто, море, молоко</li>
-  <li><strong>Exception:</strong> "тато" (dad) is masculine despite -о ending</li>
-  <li>Gender affects adjectives and pronouns (more in Module 05!)</li>
-  <li>You learned 25 new vocabulary words for household and food items!</li>
-  </ul>
-  <p><strong>Coming Next</strong></p>
-  <p>In Module 04, you'll learn "This Is / I Am":</p>
-  <ul>
-  <li>The zero copula (no "to be" in present tense!)</li>
-  <li>Using "Це" (This is)</li>
-  <li>Personal pronouns (я, ти, він, вона, ми, ви, вони)</li>
-  <li>Introducing yourself in Ukrainian!</li>
-  </ul>
-</blockquote></div>
+      <div class="md-content"><p>In this module, you learned to see the "Gender" of reality, which is primarily determined by a word's ending. This concept of gender is a fundamental organizational principle in Ukrainian.</p>
+<ol>
+<li><strong>Masculine:</strong> Ends in a Consonant (Стіл, Дім, Чай).</li>
+<li><strong>Feminine:</strong> Ends in <strong>-А</strong> or <strong>-Я</strong> (Мама, Книга, Річка).</li>
+<li><strong>Neuter:</strong> Ends in <strong>-О</strong> or <strong>-Е</strong> (Вікно, Місто, Море).</li>
+<li><strong>Exceptions:</strong> Biological gender for some nouns (Тато) and certain soft-sign Feminines (Ніч).</li>
+</ol>
+<p>You also identified the <strong>4 Declension Families</strong> (or groups of nouns) based on these endings. Understanding these families is a powerful predictive tool for how words will change later in sentences. For now, remember: <strong>Sound = Gender, and Gender = Family!</strong></p></div>
     </div>
   
       <div class="btn-group">
@@ -911,22 +713,22 @@ footer {
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Gender Identification</h3>
-      <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container"></div>
-      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+    <section id="activity-0" class="section"><div class="card"><h3>The Three Genders</h3>
+      <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/36</span></div>
+      <div class="sort-pool" id="activity-0-pool"><div class="sort-items" id="activity-0-items"></div></div>
+      <div class="sort-groups" id="activity-0-groups"></div>
+      <div class="completion-message" id="activity-0-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Gender Classification</h3>
-      <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/21</span></div>
-      <div class="sort-pool" id="activity-1-pool"><div class="sort-items" id="activity-1-items"></div></div>
-      <div class="sort-groups" id="activity-1-groups"></div>
-      <div class="completion-message" id="activity-1-complete"><h3>All Sorted!</h3></div>
+    <section id="activity-1" class="section"><div class="card"><h3>Predict the Gender</h3>
+      <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
+      <div id="activity-1-container"></div>
+      <div class="completion-message" id="activity-1-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Words and Genders</h3>
+    <section id="activity-2" class="section"><div class="card"><h3>Word to Declension Family</h3>
       <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
       <div class="match-container" id="activity-2-container"><svg class="match-lines" id="activity-2-lines"></svg>
         <div class="match-column" id="activity-2-left"></div>
@@ -936,50 +738,54 @@ footer {
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Vocabulary</h3>
+    <section id="activity-3" class="section"><div class="card"><h3>Pronoun Replacement</h3>
       <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-3-container"><svg class="match-lines" id="activity-3-lines"></svg>
-        <div class="match-column" id="activity-3-left"></div>
-        <div class="match-column" id="activity-3-right"></div>
-      </div>
-      <div class="completion-message" id="activity-3-complete"><h3>Perfect!</h3></div>
+      <div id="activity-3-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Gender Rules</h3>
+    <section id="activity-4" class="section"><div class="card"><h3>Gender Sentences</h3>
       <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
-      <div id="activity-4-container"></div>
-      <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
+      <div id="activity-4-container" class="order-container"></div>
+      <div class="completion-message" id="activity-4-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Gender Endings</h3>
+    <section id="activity-5" class="section"><div class="card"><h3>Gender Rules</h3>
       <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
-      <div id="activity-5-container" class="fill-container"></div>
+      <div id="activity-5-container"></div>
       <div class="completion-message" id="activity-5-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Vocabulary Spelling</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>Household &amp; Food</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
       <div id="activity-6-container" class="order-container"></div>
       <div class="completion-message" id="activity-6-complete"><h3>Perfect Order!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-7" class="section"><div class="card"><h3>Exceptions to the Rule</h3>
+      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/12</span></div>
+      <div id="activity-7-container"></div>
+      <div class="completion-message" id="activity-7-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
-        <h3>Словник (25)</h3>
+        <h3>Словник (36)</h3>
         <div class="vocab-table-container">
           <table class="vocab-table">
             <thead><tr>
     <th>Слово</th>
-    
+    <th>Вимова</th>
     <th>IPA</th>
     <th>Переклад</th>
     <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">стіл (stil)</td><td class="vocab-ipa">/stil/</td><td class="vocab-en">table</td><td class="vocab-note">furniture</td></tr><tr><td class="vocab-uk">книга (knyha)</td><td class="vocab-ipa">/ˈknɪɦa/</td><td class="vocab-en">book</td><td class="vocab-note">reading</td></tr><tr><td class="vocab-uk">вікно (vikno)</td><td class="vocab-ipa">/ʋikˈnɔ/</td><td class="vocab-en">window</td><td class="vocab-note">part of room</td></tr><tr><td class="vocab-uk">двері (dveri)</td><td class="vocab-ipa">/ˈdʋɛri/</td><td class="vocab-en">door</td><td class="vocab-note">always plural</td></tr><tr><td class="vocab-uk">кімната (kimnata)</td><td class="vocab-ipa">/kimˈnata/</td><td class="vocab-en">room</td><td class="vocab-note">general room</td></tr><tr><td class="vocab-uk">дім (dim)</td><td class="vocab-ipa">/dim/</td><td class="vocab-en">house</td><td class="vocab-note">also: home</td></tr><tr><td class="vocab-uk">місто (misto)</td><td class="vocab-ipa">/ˈmistɔ/</td><td class="vocab-en">city</td><td class="vocab-note">urban area</td></tr><tr><td class="vocab-uk">село (selo)</td><td class="vocab-ipa">/sɛˈlɔ/</td><td class="vocab-en">village</td><td class="vocab-note">rural area</td></tr><tr><td class="vocab-uk">річка (richka)</td><td class="vocab-ipa">/ˈritʃka/</td><td class="vocab-en">river</td><td class="vocab-note">body of water</td></tr><tr><td class="vocab-uk">море (more)</td><td class="vocab-ipa">/ˈmɔrɛ/</td><td class="vocab-en">sea</td><td class="vocab-note">body of water</td></tr><tr><td class="vocab-uk">хліб (khlib)</td><td class="vocab-ipa">/xlib/</td><td class="vocab-en">bread</td><td class="vocab-note">staple food</td></tr><tr><td class="vocab-uk">вода (voda)</td><td class="vocab-ipa">/ʋɔˈda/</td><td class="vocab-en">water</td><td class="vocab-note">drink</td></tr><tr><td class="vocab-uk">молоко (moloko)</td><td class="vocab-ipa">/mɔlɔˈkɔ/</td><td class="vocab-en">milk</td><td class="vocab-note">drink</td></tr><tr><td class="vocab-uk">чай (chai)</td><td class="vocab-ipa">/tʃaj/</td><td class="vocab-en">tea</td><td class="vocab-note">drink</td></tr><tr><td class="vocab-uk">сік (sik)</td><td class="vocab-ipa">/sik/</td><td class="vocab-en">juice</td><td class="vocab-note">drink</td></tr><tr><td class="vocab-uk">м&#039;ясо (myaso)</td><td class="vocab-ipa">/ˈmjasɔ/</td><td class="vocab-en">meat</td><td class="vocab-note">food</td></tr><tr><td class="vocab-uk">риба (ryba)</td><td class="vocab-ipa">/ˈrɪba/</td><td class="vocab-en">fish</td><td class="vocab-note">food</td></tr><tr><td class="vocab-uk">овочі (ovochi)</td><td class="vocab-ipa">/ˈɔʋɔtʃi/</td><td class="vocab-en">vegetables</td><td class="vocab-note">food category</td></tr><tr><td class="vocab-uk">фрукти (frukty)</td><td class="vocab-ipa">/ˈfruktɪ/</td><td class="vocab-en">fruits</td><td class="vocab-note">food category</td></tr><tr><td class="vocab-uk">яблуко (yabluko)</td><td class="vocab-ipa">/ˈjablukɔ/</td><td class="vocab-en">apple</td><td class="vocab-note">fruit</td></tr><tr><td class="vocab-uk">апельсин (apel&#039;syn)</td><td class="vocab-ipa">/apɛlʲˈsɪn/</td><td class="vocab-en">orange</td><td class="vocab-note">fruit</td></tr><tr><td class="vocab-uk">картопля (kartoplya)</td><td class="vocab-ipa">/karˈtɔplʲa/</td><td class="vocab-en">potato</td><td class="vocab-note">vegetable</td></tr><tr><td class="vocab-uk">помідор (pomidor)</td><td class="vocab-ipa">/pɔmiˈdɔr/</td><td class="vocab-en">tomato</td><td class="vocab-note">vegetable</td></tr><tr><td class="vocab-uk">огірок (ohirok)</td><td class="vocab-ipa">/ɔɦiˈrɔk/</td><td class="vocab-en">cucumber</td><td class="vocab-note">vegetable</td></tr><tr><td class="vocab-uk">цибуля (tsybulya)</td><td class="vocab-ipa">/tsɪˈbulʲa/</td><td class="vocab-en">onion</td><td class="vocab-note">vegetable</td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">стіл</td><td class="vocab-translit">/stʲil/</td><td class="vocab-ipa">table</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('стіл')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">книга</td><td class="vocab-translit">/ˈknɪɦɑ/</td><td class="vocab-ipa">book</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('книга')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вікно</td><td class="vocab-translit">/vʲiˈknɔ/</td><td class="vocab-ipa">window</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вікно')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">двері</td><td class="vocab-translit">/ˈdvɛrʲi/</td><td class="vocab-ipa">door</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('двері')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">кімната</td><td class="vocab-translit">/kʲimˈnɑtɑ/</td><td class="vocab-ipa">room</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('кімната')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">дім</td><td class="vocab-translit">/dʲim/</td><td class="vocab-ipa">home/house</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('дім')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">місто</td><td class="vocab-translit">/ˈmʲistɔ/</td><td class="vocab-ipa">city</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('місто')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">село</td><td class="vocab-translit">/sɛˈlɔ/</td><td class="vocab-ipa">village</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('село')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">річка</td><td class="vocab-translit">/ˈrʲitʃkɑ/</td><td class="vocab-ipa">river</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('річка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">море</td><td class="vocab-translit">/ˈmɔrɛ/</td><td class="vocab-ipa">sea</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('море')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">хліб</td><td class="vocab-translit">/xlʲib/</td><td class="vocab-ipa">bread</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('хліб')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вода</td><td class="vocab-translit">/vɔˈdɑ/</td><td class="vocab-ipa">water</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вода')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">молоко</td><td class="vocab-translit">/mɔlɔˈkɔ/</td><td class="vocab-ipa">milk</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('молоко')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">чай</td><td class="vocab-translit">/tʃɑj/</td><td class="vocab-ipa">tea</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('чай')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">сік</td><td class="vocab-translit">/sʲik/</td><td class="vocab-ipa">juice</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('сік')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">м&#039;ясо</td><td class="vocab-translit">/ˈmʲjɑsɔ/</td><td class="vocab-ipa">meat</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('м&#039;ясо')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">риба</td><td class="vocab-translit">/ˈrɪbɑ/</td><td class="vocab-ipa">fish</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('риба')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">овочі</td><td class="vocab-translit">/ˈɔvɔtʃi/</td><td class="vocab-ipa">vegetables</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('овочі')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">фрукти</td><td class="vocab-translit">/ˈfruktɪ/</td><td class="vocab-ipa">fruits</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('фрукти')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">яблуко</td><td class="vocab-translit">/ˈjɑblukɔ/</td><td class="vocab-ipa">apple</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('яблуко')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">апельсин</td><td class="vocab-translit">/ɑpɛlʲˈsɪn/</td><td class="vocab-ipa">orange</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('апельсин')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">картопля</td><td class="vocab-translit">/kɑrˈtɔplʲɑ/</td><td class="vocab-ipa">potato</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('картопля')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">помідор</td><td class="vocab-translit">/pɔmʲiˈdɔr/</td><td class="vocab-ipa">tomato</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('помідор')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">огірок</td><td class="vocab-translit">/ɔɦʲiˈrɔk/</td><td class="vocab-ipa">cucumber</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('огірок')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">цибуля</td><td class="vocab-translit">/tseˈbulʲɑ/</td><td class="vocab-ipa">onion</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('цибуля')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">стілець</td><td class="vocab-translit">/sʲtʲiˈlɛtsʲ/</td><td class="vocab-ipa">chair</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('стілець')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">крісло</td><td class="vocab-translit">/ˈkrʲislɔ/</td><td class="vocab-ipa">armchair</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('крісло')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">шафа</td><td class="vocab-translit">/ˈʃɑfɑ/</td><td class="vocab-ipa">wardrobe</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('шафа')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">диван</td><td class="vocab-translit">/dɪˈvɑn/</td><td class="vocab-ipa">sofa</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('диван')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">ліжко</td><td class="vocab-translit">/ˈlʲiʒkɔ/</td><td class="vocab-ipa">bed</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('ліжко')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">підлога</td><td class="vocab-translit">/pʲidˈlɔɦɑ/</td><td class="vocab-ipa">floor</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('підлога')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">стеля</td><td class="vocab-translit">/ˈstɛlʲɑ/</td><td class="vocab-ipa">ceiling</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('стеля')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">стіна</td><td class="vocab-translit">/sʲtʲiˈnɑ/</td><td class="vocab-ipa">wall</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('стіна')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">магазин</td><td class="vocab-translit">/mɑɦɑˈzɪn/</td><td class="vocab-ipa">shop</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('магазин')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">школа</td><td class="vocab-translit">/ˈʃkɔlɑ/</td><td class="vocab-ipa">school</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('школа')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">університет</td><td class="vocab-translit">/unʲivɛrsɪˈtɛt/</td><td class="vocab-ipa">university</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('університет')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -991,8 +797,8 @@ footer {
   </main><footer>Module 03 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"quiz","title":"Gender Identification","data":{"type":"quiz","questions":[{"question":"What gender is \"стіл\" (table)?","options":["Masculine","Feminine","Neuter","Plural"],"correctIndex":0,"explanation":"Стіл ends in a consonant, making it masculine."},{"question":"What gender is \"книга\" (book)?","options":["Masculine","Feminine","Neuter","Plural"],"correctIndex":1,"explanation":"Книга ends in -а, making it feminine."},{"question":"What gender is \"вікно\" (window)?","options":["Masculine","Feminine","Neuter","Plural"],"correctIndex":2,"explanation":"Вікно ends in -о, making it neuter."},{"question":"What gender is \"вода\" (water)?","options":["Masculine","Feminine","Neuter","Plural"],"correctIndex":1,"explanation":"Вода ends in -а, making it feminine."},{"question":"What gender is \"море\" (sea)?","options":["Masculine","Feminine","Neuter","Plural"],"correctIndex":2,"explanation":"Море ends in -е, making it neuter."},{"question":"What gender is \"хліб\" (bread)?","options":["Masculine","Feminine","Neuter","Plural"],"correctIndex":0,"explanation":"Хліб ends in a consonant, making it masculine."},{"question":"What gender is \"молоко\" (milk)?","options":["Masculine","Feminine","Neuter","Plural"],"correctIndex":2,"explanation":"Молоко ends in -о, making it neuter."},{"question":"What gender is \"риба\" (fish)?","options":["Masculine","Feminine","Neuter","Plural"],"correctIndex":1,"explanation":"Риба ends in -а, making it feminine."},{"question":"What gender is \"чай\" (tea)?","options":["Masculine","Feminine","Neuter","Plural"],"correctIndex":0,"explanation":"Чай ends in Й (consonant), making it masculine."},{"question":"What gender is \"тато\" (dad)?","options":["Masculine","Feminine","Neuter","Plural"],"correctIndex":0,"explanation":"Exception! Тато refers to a male, so it's masculine despite -о ending."},{"question":"What gender is \"місто\" (city)?","options":["Masculine","Feminine","Neuter","Plural"],"correctIndex":2,"explanation":"Місто ends in -о, making it neuter."},{"question":"What gender is \"кімната\" (room)?","options":["Masculine","Feminine","Neuter","Plural"],"correctIndex":1,"explanation":"Кімната ends in -а, making it feminine."}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-1","type":"group-sort","title":"Gender Classification","data":{"type":"group-sort","groups":[{"id":"masculine","name":"Masculine","items":["стіл","дім","хліб","чай","сік","огірок","помідор"],"nameUk":"consonant ending"},{"id":"feminine","name":"Feminine","items":["книга","кімната","вода","риба","картопля","цибуля","річка"],"nameUk":"-а/-я ending"},{"id":"neuter","name":"Neuter","items":["вікно","місто","село","море","молоко","м'ясо","яблуко"],"nameUk":"-о/-е ending"}],"shuffleItems":true}},{"id":"activity-2","type":"match-up","title":"Words and Genders","data":{"type":"match-up","pairs":[{"left":"стіл","right":"masculine"},{"left":"книга","right":"feminine"},{"left":"вікно","right":"neuter"},{"left":"дім","right":"masculine"},{"left":"вода","right":"feminine"},{"left":"місто","right":"neuter"},{"left":"хліб","right":"masculine"},{"left":"риба","right":"feminine"},{"left":"молоко","right":"neuter"},{"left":"чай","right":"masculine"},{"left":"кімната","right":"feminine"},{"left":"море","right":"neuter"}],"shuffleRight":true}},{"id":"activity-3","type":"match-up","title":"Vocabulary","data":{"type":"match-up","pairs":[{"left":"стіл","right":"table"},{"left":"книга","right":"book"},{"left":"вікно","right":"window"},{"left":"дім","right":"house"},{"left":"місто","right":"city"},{"left":"село","right":"village"},{"left":"річка","right":"river"},{"left":"море","right":"sea"},{"left":"хліб","right":"bread"},{"left":"вода","right":"water"},{"left":"молоко","right":"milk"},{"left":"чай","right":"tea"}],"shuffleRight":true}},{"id":"activity-4","type":"true-false","title":"Gender Rules","data":{"type":"true-false","statements":[{"statement":"Nouns ending in a consonant are usually masculine.","isTrue":true,"explanation":"Correct! Consonant endings = masculine."},{"statement":"All nouns ending in -о are neuter.","isTrue":false,"explanation":"Incorrect! Words like \"тато\" (dad) are masculine exceptions."},{"statement":"Nouns ending in -а are usually feminine.","isTrue":true,"explanation":"Correct! The -а ending typically indicates feminine."},{"statement":"The word \"вода\" (water) is feminine.","isTrue":true,"explanation":"Correct! It ends in -а."},{"statement":"The word \"чай\" (tea) is feminine because it ends in a vowel.","isTrue":false,"explanation":"Incorrect! Й is considered a consonant, so \"чай\" is masculine."},{"statement":"\"Місто\" (city) and \"село\" (village) are both neuter.","isTrue":true,"explanation":"Correct! Both end in -о."},{"statement":"Gender doesn't affect other words in a sentence.","isTrue":false,"explanation":"Incorrect! Adjectives and pronouns must match the noun's gender."},{"statement":"The ending -е indicates neuter gender.","isTrue":true,"explanation":"Correct! Words like \"море\" are neuter."},{"statement":"\"Тато\" (dad) is masculine despite ending in -о.","isTrue":true,"explanation":"Correct! It's an exception because it refers to a male."},{"statement":"Ukrainian has only two genders like French.","isTrue":false,"explanation":"Incorrect! Ukrainian has three: masculine, feminine, and neuter."},{"statement":"The word \"яблуко\" (apple) is neuter.","isTrue":true,"explanation":"Correct! It ends in -о."},{"statement":"All food words are the same gender.","isTrue":false,"explanation":"Incorrect! Хліб (m), риба (f), м'ясо (n) - food words have different genders!"}]}},{"id":"activity-5","type":"fill-blank","title":"Gender Endings","data":{"type":"fill-blank","items":[{"prompt":"This word is masculine (consonant): ___","answer":"стіл","options":["стіл","книга","вікно","вода"]},{"prompt":"This word is feminine (-а ending): ___","answer":"книга","options":["книга","стіл","море","дім"]},{"prompt":"This word is neuter (-о ending): ___","answer":"молоко","options":["молоко","хліб","риба","чай"]},{"prompt":"This liquid is feminine: ___","answer":"вода","options":["вода","сік","чай","молоко"]},{"prompt":"This drink is masculine: ___","answer":"чай","options":["чай","вода","молоко","риба"]},{"prompt":"This food is neuter: ___","answer":"м'ясо","options":["м'ясо","хліб","риба","картопля"]},{"prompt":"This place is neuter: ___","answer":"місто","options":["місто","дім","кімната","річка"]},{"prompt":"This place is masculine: ___","answer":"дім","options":["дім","кімната","місто","село"]},{"prompt":"This fruit is neuter: ___","answer":"яблуко","options":["яблуко","огірок","помідор","цибуля"]},{"prompt":"This vegetable is feminine: ___","answer":"картопля","options":["картопля","огірок","помідор","хліб"]},{"prompt":"This body of water is feminine: ___","answer":"річка","options":["річка","море","озеро","океан"]},{"prompt":"This body of water is neuter: ___","answer":"море","options":["море","річка","вода","дощ"]}]}},{"id":"activity-6","type":"anagram","title":"Vocabulary Spelling","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["і","т","с","л"],"answer":"стіл","translation":"table"},{"letters":["а","г","и","к","н"],"answer":"книга","translation":"book"},{"letters":["о","н","к","і","в"],"answer":"вікно","translation":"window"},{"letters":["і","д","м"],"answer":"дім","translation":"house"},{"letters":["о","т","с","і","м"],"answer":"місто","translation":"city"},{"letters":["о","л","е","с"],"answer":"село","translation":"village"},{"letters":["б","і","х","л"],"answer":"хліб","translation":"bread"},{"letters":["а","д","о","в"],"answer":"вода","translation":"water"},{"letters":["о","к","о","л","о","м"],"answer":"молоко","translation":"milk"},{"letters":["а","б","и","р"],"answer":"риба","translation":"fish"},{"letters":["а","р","і","ч","к"],"answer":"річка","translation":"river"},{"letters":["е","о","м","р"],"answer":"море","translation":"sea"}]}}];
-    const vocabData = [{"uk":"стіл (stil)","translit":"","en":"table","note":"furniture"},{"uk":"книга (knyha)","translit":"","en":"book","note":"reading"},{"uk":"вікно (vikno)","translit":"","en":"window","note":"part of room"},{"uk":"двері (dveri)","translit":"","en":"door","note":"always plural"},{"uk":"кімната (kimnata)","translit":"","en":"room","note":"general room"},{"uk":"дім (dim)","translit":"","en":"house","note":"also: home"},{"uk":"місто (misto)","translit":"","en":"city","note":"urban area"},{"uk":"село (selo)","translit":"","en":"village","note":"rural area"},{"uk":"річка (richka)","translit":"","en":"river","note":"body of water"},{"uk":"море (more)","translit":"","en":"sea","note":"body of water"},{"uk":"хліб (khlib)","translit":"","en":"bread","note":"staple food"},{"uk":"вода (voda)","translit":"","en":"water","note":"drink"},{"uk":"молоко (moloko)","translit":"","en":"milk","note":"drink"},{"uk":"чай (chai)","translit":"","en":"tea","note":"drink"},{"uk":"сік (sik)","translit":"","en":"juice","note":"drink"},{"uk":"м'ясо (myaso)","translit":"","en":"meat","note":"food"},{"uk":"риба (ryba)","translit":"","en":"fish","note":"food"},{"uk":"овочі (ovochi)","translit":"","en":"vegetables","note":"food category"},{"uk":"фрукти (frukty)","translit":"","en":"fruits","note":"food category"},{"uk":"яблуко (yabluko)","translit":"","en":"apple","note":"fruit"},{"uk":"апельсин (apel'syn)","translit":"","en":"orange","note":"fruit"},{"uk":"картопля (kartoplya)","translit":"","en":"potato","note":"vegetable"},{"uk":"помідор (pomidor)","translit":"","en":"tomato","note":"vegetable"},{"uk":"огірок (ohirok)","translit":"","en":"cucumber","note":"vegetable"},{"uk":"цибуля (tsybulya)","translit":"","en":"onion","note":"vegetable"}];
+    const activitiesData = [{"id":"activity-0","type":"group-sort","title":"The Three Genders","data":{"type":"group-sort","groups":[{"id":"masculine","name":"Masculine","items":["Стіл","Банк","Борщ","Парк","Студент","Дім","Хліб","Чай","Апельсин","Помідор","Огірок","Телефон"],"nameUk":"Він"},{"id":"feminine","name":"Feminine","items":["Кава","Музика","Вода","Лампа","Піца","Книга","Кімната","Річка","Риба","Картопля","Цибуля","Школа"],"nameUk":"Вона"},{"id":"neuter","name":"Neuter","items":["Метро","Фото","Вікно","Яблуко","Місто","Село","Море","Молоко","М'ясо","Університет","Крісло","Ліжко"],"nameUk":"Воно"}],"shuffleItems":true}},{"id":"activity-1","type":"quiz","title":"Predict the Gender","data":{"type":"quiz","questions":[{"question":"СУП (Soup)","options":["Masculine (ends in consonant P)","Feminine","Neuter"],"correctIndex":0,"explanation":""},{"question":"ГІТАРА (Guitar)","options":["Masculine","Feminine (ends in A)","Neuter"],"correctIndex":1,"explanation":""},{"question":"РАДІО (Radio)","options":["Masculine","Feminine","Neuter (ends in O)"],"correctIndex":2,"explanation":""},{"question":"ТЕЛЕФОН (Phone)","options":["Masculine (ends in N)","Feminine","Neuter"],"correctIndex":0,"explanation":""},{"question":"ОЗЕРО (Lake)","options":["Masculine","Feminine","Neuter (ends in O)"],"correctIndex":2,"explanation":""},{"question":"УКРАЇНА (Ukraine)","options":["Masculine","Feminine (ends in A)","Neuter"],"correctIndex":1,"explanation":""},{"question":"ПАСПОРТ (Passport)","options":["Masculine (ends in T)","Feminine","Neuter"],"correctIndex":0,"explanation":""},{"question":"ПІЦА (Pizza)","options":["Masculine","Feminine (ends in A)","Neuter"],"correctIndex":1,"explanation":""},{"question":"МОЛОКО (Milk)","options":["Masculine","Feminine","Neuter (ends in O)"],"correctIndex":2,"explanation":""},{"question":"ЧАЙ (Tea)","options":["Masculine (ends in Y)","Feminine","Neuter"],"correctIndex":0,"explanation":""},{"question":"РІЧКА (River)","options":["Masculine","Feminine (ends in A)","Neuter"],"correctIndex":1,"explanation":""},{"question":"ОГІРОК (Cucumber)","options":["Masculine (ends in K)","Feminine","Neuter"],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-2","type":"match-up","title":"Word to Declension Family","data":{"type":"match-up","pairs":[{"left":"Мама","right":"Family 1 (\"A\" Team)"},{"left":"Тато","right":"Family 1 (\"A\" Team)"},{"left":"Книга","right":"Family 1 (\"A\" Team)"},{"left":"Річка","right":"Family 1 (\"A\" Team)"},{"left":"Стіл","right":"Family 2 (Solid Core)"},{"left":"Дім","right":"Family 2 (Solid Core)"},{"left":"Сонце","right":"Family 2 (Solid Core)"},{"left":"Море","right":"Family 2 (Solid Core)"},{"left":"Ніч","right":"Family 3 (Soft Feminine)"},{"left":"Сіль","right":"Family 3 (Soft Feminine)"},{"left":"Ім'я","right":"Family 4 (The Little Ones)"},{"left":"Цуценя","right":"Family 4 (The Little Ones)"}],"shuffleRight":true}},{"id":"activity-3","type":"fill-blank","title":"Pronoun Replacement","data":{"type":"fill-blank","items":[{"prompt":"Де мама? ___ вдома.\n   - [!answer] Вона\n   - [!options] Вона | Він | Воно","answer":""},{"prompt":"Де тато? ___ на роботі.\n   - [!answer] Він\n   - [!options] Він | Вона | Воно","answer":""},{"prompt":"Це місто. ___ гарне.\n   - [!answer] Воно\n   - [!options] Воно | Він | Вона","answer":""},{"prompt":"Де паспорт? ___ тут.\n   - [!answer] Він\n   - [!options] Він | Вона | Воно","answer":""},{"prompt":"Книга на столі. ___ цікава.\n   - [!answer] Вона\n   - [!options] Вона | Він | Воно","answer":""},{"prompt":"Молоко свіже. ___ біле.\n   - [!answer] Воно\n   - [!options] Воно | Він | Вона","answer":""},{"prompt":"Хліб смачний. ___ гарячий.\n   - [!answer] Він\n   - [!options] Він | Вона | Воно","answer":""},{"prompt":"Риба тут. ___ велика.\n   - [!answer] Вона\n   - [!options] Вона | Він | Воно","answer":""},{"prompt":"Вікно відчинене. ___ чисте.\n   - [!answer] Воно\n   - [!options] Воно | Він | Вона","answer":""},{"prompt":"Чай холодний. ___ чорний.\n    - [!answer] Він\n    - [!options] Він | Вона | Воно","answer":""},{"prompt":"Школа нова. ___ велика.\n    - [!answer] Вона\n    - [!options] Вона | Він | Воно","answer":""},{"prompt":"Університет старий. ___ відомий.\n    - [!answer] Він\n    - [!options] Він | Вона | Воно","answer":""}]}},{"id":"activity-4","type":"unjumble","title":"Gender Sentences","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["стіл","Це"],"answer":"Це стіл."},{"words":["там","Кава"],"answer":"Кава там."},{"words":["гарне","Місто","це"],"answer":"Це гарне місто."},{"words":["тут","Яблуко"],"answer":"Яблуко тут."},{"words":["великий","Дім"],"answer":"Дім великий."},{"words":["свіже","Молоко"],"answer":"Молоко свіже."},{"words":["на","Стілець","кухні"],"answer":"Стілець на кухні."},{"words":["велика","Річка"],"answer":"Річка велика."},{"words":["смачна","Піца"],"answer":"Піца смачна."},{"words":["чисте","Вікно"],"answer":"Вікно чисте."},{"words":["старий","Університет"],"answer":"Університет старий."},{"words":["нова","Школа"],"answer":"Школа нова."}]}},{"id":"activity-5","type":"true-false","title":"Gender Rules","data":{"type":"true-false","statements":[{"statement":"Nouns ending in a consonant are usually Masculine.","isTrue":true,"explanation":"Correct! Like \"стіл\" or \"дім\"."},{"statement":"Nouns ending in -O are usually Feminine.","isTrue":false,"explanation":"Incorrect. Nouns ending in -O are almost always Neuter (unless it's a man like \"Тато\")."},{"statement":"Nouns ending in -A are usually Feminine.","isTrue":true,"explanation":"Correct! Like \"мама\" or \"вода\"."},{"statement":"\"Ніч\" (Night) is a Masculine noun.","isTrue":false,"explanation":"Incorrect. \"Ніч\" is a Feminine noun (ends in -ь)."},{"statement":"\"Тато\" (Dad) is a Masculine noun, despite its -о ending.","isTrue":true,"explanation":"Correct! Biological gender overrides the ending rule here."},{"statement":"\"Вікно\" (Window) is a Feminine noun.","isTrue":false,"explanation":"Incorrect. \"Вікно\" is Neuter (ends in -о)."},{"statement":"Most nouns ending in -Я are Feminine.","isTrue":true,"explanation":"Correct! Like \"земля\" or \"річка\"."},{"statement":"Plural nouns always take Feminine pronouns.","isTrue":false,"explanation":"Incorrect. Plural nouns take \"Вони\" (They) and do not have a grammatical gender."},{"statement":"\"М'ясо\" (Meat) is a Neuter noun.","isTrue":true,"explanation":"Correct! Ends in -о."},{"statement":"\"Чай\" (Tea) is a Feminine noun.","isTrue":false,"explanation":"Incorrect. \"Чай\" is Masculine (ends in -й, a consonant)."},{"statement":"\"Кімната\" (Room) is a Feminine noun.","isTrue":true,"explanation":"Correct! Ends in -а."},{"statement":"\"Стілець\" (Chair) is a Neuter noun.","isTrue":false,"explanation":"Incorrect. \"Стілець\" is Masculine (ends in -ць, a consonant)."}]}},{"id":"activity-6","type":"anagram","title":"Household & Food","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["н","і","в","к","о"],"answer":"вікно","translation":"window - neuter"},{"letters":["п","м","а","л","а"],"answer":"лампа","translation":"lamp - feminine"},{"letters":["л","і","т","с"],"answer":"стіл","translation":"table - masculine"},{"letters":["л","х","і","б"],"answer":"хліб","translation":"bread - masculine"},{"letters":["а","д","о","в"],"answer":"вода","translation":"water - feminine"},{"letters":["к","о","л","о","м","о"],"answer":"молоко","translation":"milk - neuter"},{"letters":["й","а","ч"],"answer":"чай","translation":"tea - masculine"},{"letters":["р","и","б","а"],"answer":"риба","translation":"fish - feminine"},{"letters":["ц","і","п","а"],"answer":"піца","translation":"pizza - feminine"},{"letters":["е","р","о","м"],"answer":"море","translation":"sea - neuter"},{"letters":["в","о","о","ч","і"],"answer":"овочі","translation":"vegetables - plural"},{"letters":["с","у","ф","т","р","и"],"answer":"фрукти","translation":"fruits - plural"}]}},{"id":"activity-7","type":"quiz","title":"Exceptions to the Rule","data":{"type":"quiz","questions":[{"question":"What gender is ТАТО (Dad)?","options":["Masculine (Biological gender wins)","Feminine","Neuter"],"correctIndex":0,"explanation":""},{"question":"What gender is ДЯДЬКО (Uncle)?","options":["Masculine (Biological gender)","Neuter","Feminine"],"correctIndex":0,"explanation":""},{"question":"What gender is НІЧ (Night)?","options":["Feminine (Must be memorized)","Masculine","Neuter"],"correctIndex":0,"explanation":""},{"question":"What gender is СІЛЬ (Salt)?","options":["Feminine (Must be memorized)","Masculine","Neuter"],"correctIndex":0,"explanation":""},{"question":"What gender is ІМ'Я (Name)?","options":["Neuter (Family 4, ends in -я)","Masculine","Feminine"],"correctIndex":0,"explanation":""},{"question":"What gender is ЦУЦЕНЯ (Puppy)?","options":["Neuter (Family 4, ends in -я)","Masculine","Feminine"],"correctIndex":0,"explanation":""},{"question":"What gender is КОЛЕГА (Colleague), when referring to a man?","options":["Masculine (Biological gender wins)","Feminine","Neuter"],"correctIndex":0,"explanation":""},{"question":"What gender is МАМА (Mom)?","options":["Feminine (Ends in -а, biological gender aligns)","Masculine","Neuter"],"correctIndex":0,"explanation":""},{"question":"What gender is ПАРК (Park)?","options":["Masculine (Ends in consonant)","Feminine","Neuter"],"correctIndex":0,"explanation":""},{"question":"What gender is КАВА (Coffee)?","options":["Feminine (Ends in -а)","Masculine","Neuter"],"correctIndex":0,"explanation":""},{"question":"What gender is МЕТРО (Metro)?","options":["Neuter (Ends in -о)","Masculine","Feminine"],"correctIndex":0,"explanation":""},{"question":"What gender is ДВЕРІ (Door)?","options":["Plural (no single gender)","Masculine","Feminine"],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}}];
+    const vocabData = [{"uk":"стіл","translit":"/stʲil/","en":"noun","note":"[🔊](audio_stil)"},{"uk":"книга","translit":"/ˈknɪɦɑ/","en":"noun","note":"[🔊](audio_knyha)"},{"uk":"вікно","translit":"/vʲiˈknɔ/","en":"noun","note":"[🔊](audio_vikno)"},{"uk":"двері","translit":"/ˈdvɛrʲi/","en":"noun","note":"[🔊](audio_dveri)"},{"uk":"кімната","translit":"/kʲimˈnɑtɑ/","en":"noun","note":"[🔊](audio_kimnata)"},{"uk":"дім","translit":"/dʲim/","en":"noun","note":"[🔊](audio_dim)"},{"uk":"місто","translit":"/ˈmʲistɔ/","en":"noun","note":"[🔊](audio_misto)"},{"uk":"село","translit":"/sɛˈlɔ/","en":"noun","note":"[🔊](audio_selo)"},{"uk":"річка","translit":"/ˈrʲitʃkɑ/","en":"noun","note":"[🔊](audio_richka)"},{"uk":"море","translit":"/ˈmɔrɛ/","en":"noun","note":"[🔊](audio_more)"},{"uk":"хліб","translit":"/xlʲib/","en":"noun","note":"[🔊](audio_xlib)"},{"uk":"вода","translit":"/vɔˈdɑ/","en":"noun","note":"[🔊](audio_voda)"},{"uk":"молоко","translit":"/mɔlɔˈkɔ/","en":"noun","note":"[🔊](audio_moloko)"},{"uk":"чай","translit":"/tʃɑj/","en":"noun","note":"[🔊](audio_chai)"},{"uk":"сік","translit":"/sʲik/","en":"noun","note":"[🔊](audio_sik)"},{"uk":"м'ясо","translit":"/ˈmʲjɑsɔ/","en":"noun","note":"[🔊](audio_myaso)"},{"uk":"риба","translit":"/ˈrɪbɑ/","en":"noun","note":"[🔊](audio_ryba)"},{"uk":"овочі","translit":"/ˈɔvɔtʃi/","en":"noun","note":"[🔊](audio_ovochi)"},{"uk":"фрукти","translit":"/ˈfruktɪ/","en":"noun","note":"[🔊](audio_frukty)"},{"uk":"яблуко","translit":"/ˈjɑblukɔ/","en":"noun","note":"[🔊](audio_yabluko)"},{"uk":"апельсин","translit":"/ɑpɛlʲˈsɪn/","en":"noun","note":"[🔊](audio_apelsyn)"},{"uk":"картопля","translit":"/kɑrˈtɔplʲɑ/","en":"noun","note":"[🔊](audio_kartoplya)"},{"uk":"помідор","translit":"/pɔmʲiˈdɔr/","en":"noun","note":"[🔊](audio_pomidor)"},{"uk":"огірок","translit":"/ɔɦʲiˈrɔk/","en":"noun","note":"[🔊](audio_ohirok)"},{"uk":"цибуля","translit":"/tseˈbulʲɑ/","en":"noun","note":"[🔊](audio_tsybulya)"},{"uk":"стілець","translit":"/sʲtʲiˈlɛtsʲ/","en":"noun","note":"[🔊](audio_stilets)"},{"uk":"крісло","translit":"/ˈkrʲislɔ/","en":"noun","note":"[🔊](audio_krislo)"},{"uk":"шафа","translit":"/ˈʃɑfɑ/","en":"noun","note":"[🔊](audio_shafa)"},{"uk":"диван","translit":"/dɪˈvɑn/","en":"noun","note":"[🔊](audio_dyvan)"},{"uk":"ліжко","translit":"/ˈlʲiʒkɔ/","en":"noun","note":"[🔊](audio_lizhko)"},{"uk":"підлога","translit":"/pʲidˈlɔɦɑ/","en":"noun","note":"[🔊](audio_pidloha)"},{"uk":"стеля","translit":"/ˈstɛlʲɑ/","en":"noun","note":"[🔊](audio_stelya)"},{"uk":"стіна","translit":"/sʲtʲiˈnɑ/","en":"noun","note":"[🔊](audio_stina)"},{"uk":"магазин","translit":"/mɑɦɑˈzɪn/","en":"noun","note":"[🔊](audio_mahazyn)"},{"uk":"школа","translit":"/ˈʃkɔlɑ/","en":"noun","note":"[🔊](audio_shkola)"},{"uk":"університет","translit":"/unʲivɛrsɪˈtɛt/","en":"noun","note":"[🔊](audio_universytet)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1052,6 +858,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2316,6 +2148,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

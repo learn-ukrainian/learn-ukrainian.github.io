@@ -11,522 +11,97 @@
     "targetLevel": "A1",
     "phase": "A1.3",
     "moduleNumber": 24,
-    "moduleType": "grammar",
+    "moduleType": "vocabulary",
     "immersionLevel": 0.3,
-    "title": "Can, Must, Want — Modals",
-    "subtitle": "Можу, повинен, хочу — Expressing Ability, Obligation, and Desire",
-    "description": "Express ability with можу/вмію",
+    "title": "Days and Months",
+    "subtitle": "The Calendar",
+    "description": "Learner can name 7 days of the week",
     "objectives": [
-      "Express ability with можу/вмію",
-      "Express obligation with повинен/треба",
-      "Express desire with хочу",
-      "Use impersonal constructions (можна, не можна)"
+      "Learner can name 7 days of the week",
+      "Learner can say \"On Monday\" (V/U + Accusative)",
+      "Learner can name 12 months",
+      "Learner can name 4 seasons"
     ],
-    "grammarFocus": [
-      "Modal verbs: можу, вмію, хочу",
-      "Obligation: повинен/повинна, треба, потрібно",
-      "Impersonal: можна, не можна"
-    ],
+    "grammarFocus": [],
     "tags": [
-      "modals",
-      "verbs",
-      "grammar",
-      "ability",
-      "obligation"
+      "vocabulary",
+      "calendar",
+      "days",
+      "months",
+      "seasons"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
+    "totalDuration": 60,
+    "transliterationMode": "full",
     "sections": [
       {
-        "id": "section-intro",
+        "id": "section-intro-0",
         "name": "Вступ",
         "nameEn": "Introduction",
         "type": "intro",
-        "content": "## warm-up\n\n### What Can You Do?\n\n\"I can swim.\" \"I must work.\" \"I want to rest.\" — Every day we express ability, obligation, and desire. Ukrainian has rich ways to say all of this!\n\n> 💡 **Did You Know?**\n>\n> Ukrainian distinguishes between \"можу\" (physical ability/permission) and \"вмію\" (learned skill). In English, both are \"can,\" but in Ukrainian: \"Я можу плавати\" (I can swim — conditions allow it) vs. \"Я вмію плавати\" (I know how to swim — I have the skill)!\n\n## presentation\n\n### Expressing Ability: Можу (Can)\n\n**Можу** expresses physical ability or permission to do something.\n\n| Person | Form | Example |\n|--------|------|---------|\n| я | можу | Я можу прийти завтра. |\n| ти | можеш | Ти можеш допомогти? |\n| він/вона/воно | може | Він може говорити українською. |\n| ми | можемо | Ми можемо зустрітися о третій. |\n| ви | можете | Ви можете почекати? |\n| вони | можуть | Вони можуть приїхати. |\n\n**Structure:** можу + infinitive\n\n- Я можу читати українською. (I can read in Ukrainian.)\n- Він може допомогти. (He can help.)\n- Ми можемо працювати разом. (We can work together.)\n\n> 🎬 **Pop Culture Moment: Spider-Man**\n>\n> \"З великою силою приходить велика відповідальність\" — but first, you need to learn: \"Я можу лазити по стінах!\" (I can climb walls!)\n\n### Expressing Skill: Вмію (Know How To)\n\n**Вмію** expresses a learned skill or ability.\n\n| Person | Form | Example |\n|--------|------|---------|\n| я | вмію | Я вмію плавати. |\n| ти | вмієш | Ти вмієш готувати? |\n| він/вона/воно | вміє | Вона вміє грати на гітарі. |\n| ми | вміємо | Ми вміємо танцювати. |\n| ви | вмієте | Ви вмієте водити машину? |\n| вони | вміють | Вони вміють говорити трьома мовами. |\n\n**Structure:** вмію + infinitive\n\n- Я вмію готувати борщ. (I know how to cook borsch.)\n- Вона вміє грати на піаніно. (She knows how to play piano.)\n- Він не вміє плавати. (He doesn't know how to swim.)\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Можу\" and \"вмію\" are interchangeable.\n> **Fact:** They're different! \"Я не можу плавати\" = I can't swim right now (pool closed, injured). \"Я не вмію плавати\" = I never learned to swim.\n\n### Expressing Obligation: Повинен (Must/Should)\n\n**Повинен** changes by gender:\n\n| Gender | Form | Example |\n|--------|------|---------|\n| Masculine | повинен | Я повинен працювати. |\n| Feminine | повинна | Вона повинна вчитися. |\n| Neuter | повинне | Це повинне бути тут. |\n| Plural | повинні | Ми повинні йти. |\n\n**Structure:** subject + повинен/повинна/повинні + infinitive\n\n- Він повинен прийти о дев'ятій. (He must come at 9.)\n- Я повинна закінчити роботу. (I must finish the work. — female)\n- Ми повинні говорити українською. (We must speak Ukrainian.)\n\n> ⚡ **Pro Tip**\n>\n> \"Повинен\" matches the SUBJECT's gender, not anything else! A woman says \"Я повинна,\" a man says \"Я повинен.\"\n\n### Impersonal Obligation: Треба/Потрібно\n\n**Треба** and **потрібно** are impersonal — they don't change!\n\n**Structure:** Мені/Тобі/Йому... + треба/потрібно + infinitive\n\n| Pronoun | With треба | Meaning |\n|---------|------------|---------|\n| Мені | Мені треба працювати. | I need to work. |\n| Тобі | Тобі треба відпочити. | You need to rest. |\n| Йому | Йому треба вчитися. | He needs to study. |\n| Їй | Їй треба їхати. | She needs to go. |\n| Нам | Нам треба зустрітися. | We need to meet. |\n| Вам | Вам треба почекати. | You need to wait. |\n| Їм | Їм треба допомогти. | They need help. |\n\n> 💡 **Did You Know?**\n>\n> \"Треба\" comes from an old word meaning \"sacrifice\" or \"necessity.\" When you say \"мені треба,\" you're expressing genuine need — not just a wish!\n\n### Expressing Desire: Хочу (Want)\n\n| Person | Form | Example |\n|--------|------|---------|\n| я | хочу | Я хочу каву. |\n| ти | хочеш | Ти хочеш їсти? |\n| він/вона/воно | хоче | Він хоче відпочити. |\n| ми | хочемо | Ми хочемо вивчати українську. |\n| ви | хочете | Ви хочете замовити? |\n| вони | хочуть | Вони хочуть приїхати. |\n\n**Structure:** хочу + infinitive (or + noun in accusative)\n\n- Я хочу спати. (I want to sleep.)\n- Вона хоче читати. (She wants to read.)\n- Ми хочемо каву. (We want coffee.)\n\n> 🎮 **Gamer's Corner**\n>\n> In Cyberpunk 2077's Ukrainian localization: \"Я хочу жити вічно!\" (I want to live forever!) — Johnny Silverhand's eternal quest.\n\n### Permission: Можна / Не можна\n\n**Можна** (allowed/permitted) and **Не можна** (not allowed/forbidden) are impersonal.\n\n| Expression | Meaning | Example |\n|------------|---------|---------|\n| Можна | May I? / One can | Можна увійти? |\n| Не можна | One cannot / forbidden | Тут не можна курити. |\n\n**Using можна:**\n- Можна запитати? (May I ask?)\n- Можна меню? (May I have a menu?)\n- Тут можна фотографувати. (Photography is allowed here.)\n\n**Using не можна:**\n- Тут не можна курити. (Smoking is not allowed here.)\n- Не можна запізнюватися. (Being late is not allowed.)\n- Тут не можна паркуватися. (Parking is not allowed here.)\n\n> 🌍 **Real World**\n>\n> You'll see \"Не можна!\" signs everywhere in Ukraine — no smoking, no photography, no entry. Now you know what they mean!\n\n### Summary Table: Modals\n\n| English | Ukrainian | Type | Example |\n|---------|-----------|------|---------|\n| can (ability) | можу | personal | Я можу допомогти. |\n| can (skill) | вмію | personal | Я вмію плавати. |\n| must (personal) | повинен/повинна | personal | Я повинен йти. |\n| need to | треба/потрібно | impersonal | Мені треба працювати. |\n| want | хочу | personal | Я хочу каву. |\n| may/allowed | можна | impersonal | Можна увійти? |\n| forbidden | не можна | impersonal | Тут не можна курити. |\n\n> 🎯 **Fun Fact**\n>\n> Ukrainian modals clearly distinguish personal responsibility (повинен — YOU must) from impersonal necessity (треба — it's necessary). This reflects a cultural emphasis on personal agency!\n\n## practice\n\n### Exercise 1: Choose the Right Modal\n\n1. Я ___ плавати (I know how to swim) → вмію\n2. Він ___ прийти завтра (He can come tomorrow) → може\n3. Мені ___ працювати (I need to work) → треба\n4. Вона ___ відпочити (She wants to rest) → хоче\n5. Тут не ___ курити (Smoking forbidden) → можна\n\n### Exercise 2: Personal vs Impersonal\n\nTranslate:\n1. I must go. (male) → Я повинен йти.\n2. I must go. (female) → Я повинна йти.\n3. I need to go. → Мені треба йти.\n4. May I? → Можна?\n\n### Exercise 3: Complete the Dialogue\n\nA: Ти ___ допомогти?\nB: Так, я ___. Що тобі ___?\nA: Мені ___ знайти книгу.\n\n## production\n\n### Task: Your Abilities\n\nWrite 5 sentences about:\n- What you can do (можу)\n- What you know how to do (вмію)\n- What you must do today (повинен/треба)\n- What you want to do (хочу)\n\nExample: Я вмію готувати, але сьогодні я не хочу. Мені треба працювати.\n\n---\n\n\n---\n\n\n---"
-      },
-      {
-        "id": "section-summary",
-        "name": "Підсумок",
-        "nameEn": "Summary",
-        "type": "summary",
-        "content": "> **Congratulations!**\n>\n> You can now express ability, obligation, and desire in Ukrainian:\n> - **Ability**: Я можу допомогти. / Я вмію плавати.\n> - **Obligation**: Я повинен йти. / Мені треба працювати.\n> - **Desire**: Я хочу відпочити.\n> - **Permission**: Можна увійти? / Тут не можна курити.\n\n> **Key Distinctions:**\n> - можу vs вмію: ability/permission vs learned skill\n> - повинен vs треба: personal obligation vs impersonal necessity\n> - можна vs не можна: allowed vs forbidden\n\n> **Coming Next: Module 25 — My Daily Routine**\n>\n> In the next module, you'll learn reflexive verbs to describe your daily routine:\n> - Я прокидаюся о сьомій. (I wake up at 7.)\n> - Я вмиваюся і одягаюся. (I wash and get dressed.)\n> - Я лягаю спати о одинадцятій. (I go to bed at 11.)"
+        "content": "## warm-up\n**The Lost Weekend**\n\n\"Let's meet on Sunday.\"\n\"Ok, see you in January.\"\nWithout a calendar, we are lost in the void.\nIn Module 23, we conquered Time (09:00).\nIn Module 24, we conquer Dates.\n\nUkrainian days are ancient. They tell a story about \"Work\" and \"Rest\".\nUkrainian months are poetic. They tell a story about \"Nature\".\n\"Grass-Month\", \"Snow-Month\", \"Worm-Month\".\nLet's dive in.\n\n## presentation\n\n### Section 1: The Days of the Week\n\nUkrainian days start on **Monday**. (Sorry, USA).\nThe names all revolve around Sunday (Nedilya - No work).\n\n1.  **Понеділок** (Po-nedilok). After-Sunday. (Monday).\n2.  **Вівторок** (Vivtorok). Second. (Tuesday).\n3.  **Середа** (Sereda). Middle. (Wednesday).\n4.  **Четвер** (Chetver). Fourth. (Thursday).\n5.  **П'ятниця** (Pyatnytsya). Fifth. (Friday).\n6.  **Субота** (Subota). Sabbath. (Saturday).\n7.  **Неділя** (Nedilya). No-Work (Ne-dilo). (Sunday).\n\n> 🌍 **Culture Corner: The Weekend**\n> Everyone loves **П'ятниця** (Friday).\n> But **Неділя** is sacred. Shops are open, but traditional families gather.\n> Note: **Субота** and **Неділя** together are **Вихідні** (The Way-Out days / Weekends).\n\n### Section 2: On Monday... (The Action)\n\nTo say \"ON\" a day, we use **В** or **У** + Accusative.\nWhy Accusative? Because days are time-objects we step into.\n\n- **У понеділок** (On Monday).\n- **У вівторок** (On Tuesday).\n- **У середу** (On Wednesday - Feminine -a becomes -u).\n- **У четвер** (On Thursday).\n- **У п'ятницю** (On Friday - Feminine -ya becomes -yu).\n- **У суботу** (On Saturday - Feminine -a becomes -u).\n- **У неділю** (On Sunday - Feminine -ya becomes -yu).\n\n> 💡 **Pattern Alert**\n> Masculine days (Mon, Tue, Thu) do not change ending.\n> Feminine days (Wed, Fri, Sat, Sun) change -a/-ya to **-u/-yu**.\n> Just like \"I love pizza\" -> \"Pizzu\". \"I love Friday\" -> \"Pyatnytsyu\".\n\n### Section 3: The 12 Months of Nature\n\nUkrainian months retain pagan Slavic roots. No \"July\" (Julius Caesar) or \"August\" (Augustus).\nThey describe what nature is doing.\n\n**Winter (Зима):**\n1.  **Грудень** (Hrooden' - Frozen clods of earth) - December.\n2.  **Січень** (Sichen' - Cutting/Slashing wind) - January.\n3.  **Лютий** (Lyutiy - Fierce/Rage) - February.\n\n**Spring (Весна):**\n4.  **Березень** (Berezen' - Birch tree sap) - March.\n5.  **Квітень** (Kviten' - Flowers blooming) - April.\n6.  **Травень** (Traven' - Grass growing) - May.\n\n**Summer (Літо):**\n7.  **Червень** (Cherven' - Red berries/Worms) - June.\n8.  **Липень** (Lypen' - Linden trees catch fire/bloom) - July.\n9.  **Серпень** (Serpen' - Sickle/Harvest) - August.\n\n**Autumn (Осінь):**\n10. **Вересень** (Veresen' - Heather blooms) - September.\n11. **Жовтень** (Zhovten' - Yellow leaves) - October.\n12. **Листопад** (Lystopad - Leaf fall) - November.\n\n> 🍃 **Deep Dive: Why so poetic?**\n> English uses Latin names imposed by Rome.\n> Ukrainian kept the connection to the land.\n> If you know the name, you know the weather.\n> **Лютий** (February) is truly **Fierce**.\n> **Листопад** (November) is literally **Leaf-Fall**.\n\n### Section 4: In January... (Locative)\n\nTo say \"IN\" a month, we use **У/В** + Locative (-i).\nAll months are Masculine.\nMost end in a soft sign (-нь).\nSo **-нь** becomes **-ні**.\n\n- **Січень** ➡️ **У січні**. (In Jan).\n- **Травень** ➡️ **У травні**. (In May).\n- **Серпень** ➡️ **У серпні**. (In Aug).\n- **Листопад** ➡️ **У листопаді** (Hard d -> di).\n- **Лютий** (Adjective type) ➡️ **У лютому** (Weird exception? No, it acts like an adjective. Let's memorize it as **У лютому**).\n\n### Section 5: The Seasons\n\n- **Зима** (Winter) ➡️ **Взимку** (In winter - adverb).\n- **Весна** (Spring) ➡️ **Навесні** (In spring - adverb).\n- **Літо** (Summer) ➡️ **Влітку** (In summer - adverb).\n- **Осінь** (Autumn) ➡️ **Восени** (In autumn - adverb).\n\n> ❄️ **Culture Corner: The Holiday Season**\n> Winter is the main holiday season.\n> **New Year** (Jan 1) is bigger than Christmas for some.\n> **Christmas** (Jan 7 or Dec 25 - transition period).\n> **Easter** (Velykden') is the biggest Spring holiday.\n\n\n### Section 6: The Date Format (DD.MM.YYYY)\n\nIn Ukraine, the day comes first.\n**01.05.2023** is May 1st, not January 5th.\n- **День** (Day).\n- **Місяць** (Month).\n- **Рік** (Year).\n\n\"Яке сьогодні число?\" (What number is today?)\n- \"Сьогодні перше травня.\" (Today is first [of] May).\n- Note: We use Genitive for the month when saying the date. **Травня** (Of May).\n\n> 📅 **Deep Dive: The Old New Year**\n> Ukraine has a unique holiday: **Old New Year** (Staryi Novyi Rik) on January 14th.\n> It follows the old Julian calendar.\n> People don't work, but they celebrate.\n> It is a second chance to wish \"Shchaslyvoho Novoho Roku\" (Happy New Year).\n\n\n> 🛠️ **Deep Dive: The Working Saturday**\n> In Ukraine, if a holiday falls on a Tuesday (e.g., Independence Day), the government might create a \"Bridge\".\n> Monday becomes a holiday too! (4-day weekend).\n> But... you have to pay it back.\n> The previous or next Saturday becomes a **Working Day** (Robocha Subota).\n> People hate it, but they love the 4-day weekend more.\n> So if someone says \"I work on Saturday\", ask \"Is it a working Saturday?\" (Tse robocha subota?).\n\n## practice\n\n**Drill 1: Day Logic**\n- First day? -> Понеділок.\n- Last day? -> Неділя.\n- Mid-week? -> Середа.\n- Party time? -> П'ятниця.\n\n**Drill 2: Construct \"On Day\"**\n- Середа -> У середу.\n- Субота -> У суботу.\n- Четвер -> У четвер.\n- Неділя -> У неділю.\n\n**Drill 3: Month Match**\n- Flowers? -> Квітень.\n- Yellow? -> Жовтень.\n- Leaves falling? -> Листопад.\n- Fierce cold? -> Лютий.\n\n## production\n\n**Scenario: Planning a Trip**\n*   **You:** Коли ти їдеш у Львів? (When go you to Lviv?)\n*   **Friend:** Я їду **у суботу**. (On Saturday).\n*   **You:** А коли назад?\n*   **Friend:** **У понеділок**.\n*   **You:** Чудово. Я їду **у серпні**.\n*   **Friend:** О, влітку там гарно. (Oh, in summer there beautiful).\n\n**Scenario: The Birthday**\n*   **A:** Коли твій день народження? (When is your birthday?)\n*   **B:** **У жовтні**. А твій?\n*   **A:** **У травні**.\n*   **B:** Ти любиш весну?\n*   **A:** Так, дуже люблю.\n\n---"
       }
     ],
-    "rawMarkdown": "---\ntitle: \"Can, Must, Want — Modals\"\nsubtitle: \"Можу, повинен, хочу — Expressing Ability, Obligation, and Desire\"\nphase: A1.3\nduration: 45\ntransliteration: none\ntags: [modals, verbs, grammar, ability, obligation]\nobjectives:\n  - Express ability with можу/вмію\n  - Express obligation with повинен/треба\n  - Express desire with хочу\n  - Use impersonal constructions (можна, не можна)\ngrammar:\n  - Modal verbs: можу, вмію, хочу\n  - Obligation: повинен/повинна, треба, потрібно\n  - Impersonal: можна, не можна\n---\n\n# Lesson Content\n\n## warm-up\n\n### What Can You Do?\n\n\"I can swim.\" \"I must work.\" \"I want to rest.\" — Every day we express ability, obligation, and desire. Ukrainian has rich ways to say all of this!\n\n> 💡 **Did You Know?**\n>\n> Ukrainian distinguishes between \"можу\" (physical ability/permission) and \"вмію\" (learned skill). In English, both are \"can,\" but in Ukrainian: \"Я можу плавати\" (I can swim — conditions allow it) vs. \"Я вмію плавати\" (I know how to swim — I have the skill)!\n\n## presentation\n\n### Expressing Ability: Можу (Can)\n\n**Можу** expresses physical ability or permission to do something.\n\n| Person | Form | Example |\n|--------|------|---------|\n| я | можу | Я можу прийти завтра. |\n| ти | можеш | Ти можеш допомогти? |\n| він/вона/воно | може | Він може говорити українською. |\n| ми | можемо | Ми можемо зустрітися о третій. |\n| ви | можете | Ви можете почекати? |\n| вони | можуть | Вони можуть приїхати. |\n\n**Structure:** можу + infinitive\n\n- Я можу читати українською. (I can read in Ukrainian.)\n- Він може допомогти. (He can help.)\n- Ми можемо працювати разом. (We can work together.)\n\n> 🎬 **Pop Culture Moment: Spider-Man**\n>\n> \"З великою силою приходить велика відповідальність\" — but first, you need to learn: \"Я можу лазити по стінах!\" (I can climb walls!)\n\n### Expressing Skill: Вмію (Know How To)\n\n**Вмію** expresses a learned skill or ability.\n\n| Person | Form | Example |\n|--------|------|---------|\n| я | вмію | Я вмію плавати. |\n| ти | вмієш | Ти вмієш готувати? |\n| він/вона/воно | вміє | Вона вміє грати на гітарі. |\n| ми | вміємо | Ми вміємо танцювати. |\n| ви | вмієте | Ви вмієте водити машину? |\n| вони | вміють | Вони вміють говорити трьома мовами. |\n\n**Structure:** вмію + infinitive\n\n- Я вмію готувати борщ. (I know how to cook borsch.)\n- Вона вміє грати на піаніно. (She knows how to play piano.)\n- Він не вміє плавати. (He doesn't know how to swim.)\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Можу\" and \"вмію\" are interchangeable.\n> **Fact:** They're different! \"Я не можу плавати\" = I can't swim right now (pool closed, injured). \"Я не вмію плавати\" = I never learned to swim.\n\n### Expressing Obligation: Повинен (Must/Should)\n\n**Повинен** changes by gender:\n\n| Gender | Form | Example |\n|--------|------|---------|\n| Masculine | повинен | Я повинен працювати. |\n| Feminine | повинна | Вона повинна вчитися. |\n| Neuter | повинне | Це повинне бути тут. |\n| Plural | повинні | Ми повинні йти. |\n\n**Structure:** subject + повинен/повинна/повинні + infinitive\n\n- Він повинен прийти о дев'ятій. (He must come at 9.)\n- Я повинна закінчити роботу. (I must finish the work. — female)\n- Ми повинні говорити українською. (We must speak Ukrainian.)\n\n> ⚡ **Pro Tip**\n>\n> \"Повинен\" matches the SUBJECT's gender, not anything else! A woman says \"Я повинна,\" a man says \"Я повинен.\"\n\n### Impersonal Obligation: Треба/Потрібно\n\n**Треба** and **потрібно** are impersonal — they don't change!\n\n**Structure:** Мені/Тобі/Йому... + треба/потрібно + infinitive\n\n| Pronoun | With треба | Meaning |\n|---------|------------|---------|\n| Мені | Мені треба працювати. | I need to work. |\n| Тобі | Тобі треба відпочити. | You need to rest. |\n| Йому | Йому треба вчитися. | He needs to study. |\n| Їй | Їй треба їхати. | She needs to go. |\n| Нам | Нам треба зустрітися. | We need to meet. |\n| Вам | Вам треба почекати. | You need to wait. |\n| Їм | Їм треба допомогти. | They need help. |\n\n> 💡 **Did You Know?**\n>\n> \"Треба\" comes from an old word meaning \"sacrifice\" or \"necessity.\" When you say \"мені треба,\" you're expressing genuine need — not just a wish!\n\n### Expressing Desire: Хочу (Want)\n\n| Person | Form | Example |\n|--------|------|---------|\n| я | хочу | Я хочу каву. |\n| ти | хочеш | Ти хочеш їсти? |\n| він/вона/воно | хоче | Він хоче відпочити. |\n| ми | хочемо | Ми хочемо вивчати українську. |\n| ви | хочете | Ви хочете замовити? |\n| вони | хочуть | Вони хочуть приїхати. |\n\n**Structure:** хочу + infinitive (or + noun in accusative)\n\n- Я хочу спати. (I want to sleep.)\n- Вона хоче читати. (She wants to read.)\n- Ми хочемо каву. (We want coffee.)\n\n> 🎮 **Gamer's Corner**\n>\n> In Cyberpunk 2077's Ukrainian localization: \"Я хочу жити вічно!\" (I want to live forever!) — Johnny Silverhand's eternal quest.\n\n### Permission: Можна / Не можна\n\n**Можна** (allowed/permitted) and **Не можна** (not allowed/forbidden) are impersonal.\n\n| Expression | Meaning | Example |\n|------------|---------|---------|\n| Можна | May I? / One can | Можна увійти? |\n| Не можна | One cannot / forbidden | Тут не можна курити. |\n\n**Using можна:**\n- Можна запитати? (May I ask?)\n- Можна меню? (May I have a menu?)\n- Тут можна фотографувати. (Photography is allowed here.)\n\n**Using не можна:**\n- Тут не можна курити. (Smoking is not allowed here.)\n- Не можна запізнюватися. (Being late is not allowed.)\n- Тут не можна паркуватися. (Parking is not allowed here.)\n\n> 🌍 **Real World**\n>\n> You'll see \"Не можна!\" signs everywhere in Ukraine — no smoking, no photography, no entry. Now you know what they mean!\n\n### Summary Table: Modals\n\n| English | Ukrainian | Type | Example |\n|---------|-----------|------|---------|\n| can (ability) | можу | personal | Я можу допомогти. |\n| can (skill) | вмію | personal | Я вмію плавати. |\n| must (personal) | повинен/повинна | personal | Я повинен йти. |\n| need to | треба/потрібно | impersonal | Мені треба працювати. |\n| want | хочу | personal | Я хочу каву. |\n| may/allowed | можна | impersonal | Можна увійти? |\n| forbidden | не можна | impersonal | Тут не можна курити. |\n\n> 🎯 **Fun Fact**\n>\n> Ukrainian modals clearly distinguish personal responsibility (повинен — YOU must) from impersonal necessity (треба — it's necessary). This reflects a cultural emphasis on personal agency!\n\n## practice\n\n### Exercise 1: Choose the Right Modal\n\n1. Я ___ плавати (I know how to swim) → вмію\n2. Він ___ прийти завтра (He can come tomorrow) → може\n3. Мені ___ працювати (I need to work) → треба\n4. Вона ___ відпочити (She wants to rest) → хоче\n5. Тут не ___ курити (Smoking forbidden) → можна\n\n### Exercise 2: Personal vs Impersonal\n\nTranslate:\n1. I must go. (male) → Я повинен йти.\n2. I must go. (female) → Я повинна йти.\n3. I need to go. → Мені треба йти.\n4. May I? → Можна?\n\n### Exercise 3: Complete the Dialogue\n\nA: Ти ___ допомогти?\nB: Так, я ___. Що тобі ___?\nA: Мені ___ знайти книгу.\n\n## production\n\n### Task: Your Abilities\n\nWrite 5 sentences about:\n- What you can do (можу)\n- What you know how to do (вмію)\n- What you must do today (повинен/треба)\n- What you want to do (хочу)\n\nExample: Я вмію готувати, але сьогодні я не хочу. Мені треба працювати.\n\n---\n\n# Activities\n\n## fill-in: Modal Verbs\n\n> Choose the correct modal verb.\n\n1. Я ___ говорити українською.\n   > [!answer] можу\n   > [!options] можу | вмію | треба | можна\n\n2. Вона ___ грати на піаніно.\n   > [!answer] вміє\n   > [!options] вміє | може | хоче | треба\n\n3. Мені ___ працювати сьогодні.\n   > [!answer] треба\n   > [!options] треба | можу | хочу | повинен\n\n4. Він ___ прийти завтра.\n   > [!answer] може\n   > [!options] може | вміє | треба | можна\n\n5. Тут не ___ курити.\n   > [!answer] можна\n   > [!options] можна | треба | хочу | вмію\n\n6. Ми ___ вивчати українську.\n   > [!answer] хочемо\n   > [!options] хочемо | можемо | вміємо | треба\n\n7. Ти ___ плавати?\n   > [!answer] вмієш\n   > [!options] вмієш | можеш | хочеш | треба\n\n8. ___ увійти?\n   > [!answer] Можна\n   > [!options] Можна | Треба | Хочу | Вмію\n\n9. Вона ___ закінчити роботу.\n   > [!answer] повинна\n   > [!options] повинна | повинен | повинні | треба\n\n10. Вони ___ приїхати завтра.\n    > [!answer] можуть\n    > [!options] можуть | вміють | хочуть | треба\n\n11. Вам ___ почекати трохи.\n    > [!answer] потрібно\n    > [!options] потрібно | можна | хочете | вмієте\n\n12. Я не ___ водити машину.\n    > [!answer] вмію\n    > [!options] вмію | можу | хочу | треба\n\n## fill-in: Повинен Agreement\n\n> Choose the correct form of повинен.\n\n1. Він ___ працювати.\n   > [!answer] повинен\n   > [!options] повинен | повинна | повинні | повинне\n\n2. Вона ___ вчитися.\n   > [!answer] повинна\n   > [!options] повинна | повинен | повинні | повинне\n\n3. Ми ___ йти.\n   > [!answer] повинні\n   > [!options] повинні | повинен | повинна | повинне\n\n4. Я (male) ___ прийти о дев'ятій.\n   > [!answer] повинен\n   > [!options] повинен | повинна | повинні | повинне\n\n5. Я (female) ___ закінчити роботу.\n   > [!answer] повинна\n   > [!options] повинна | повинен | повинні | повинне\n\n6. Ви ___ говорити українською.\n   > [!answer] повинні\n   > [!options] повинні | повинен | повинна | повинне\n\n7. Вони ___ допомогти.\n   > [!answer] повинні\n   > [!options] повинні | повинен | повинна | повинне\n\n8. Діти ___ спати.\n   > [!answer] повинні\n   > [!options] повинні | повинен | повинна | повинне\n\n9. Студентка ___ вивчати.\n   > [!answer] повинна\n   > [!options] повинна | повинен | повинні | повинне\n\n10. Студент ___ читати.\n    > [!answer] повинен\n    > [!options] повинен | повинна | повинні | повинне\n\n11. Батьки ___ працювати.\n    > [!answer] повинні\n    > [!options] повинні | повинен | повинна | повинне\n\n12. Дитина ___ вчитися.\n    > [!answer] повинна\n    > [!options] повинна | повинен | повинні | повинне\n\n## unjumble: Modal Sentences\n\n> Put the words in the correct order.\n\n1. можу Я українською говорити\n   > [!answer] Я можу говорити українською.\n   > (I can speak Ukrainian.) [4 words]\n\n2. плавати вмію Я\n   > [!answer] Я вмію плавати.\n   > (I know how to swim.) [3 words]\n\n3. працювати треба Мені\n   > [!answer] Мені треба працювати.\n   > (I need to work.) [3 words]\n\n4. повинен Він прийти завтра\n   > [!answer] Він повинен прийти завтра.\n   > (He must come tomorrow.) [4 words]\n\n5. хоче відпочити Вона\n   > [!answer] Вона хоче відпочити.\n   > (She wants to rest.) [3 words]\n\n6. можна курити Тут не\n   > [!answer] Тут не можна курити.\n   > (Smoking is not allowed here.) [4 words]\n\n7. допомогти Ти можеш\n   > [!answer] Ти можеш допомогти?\n   > (Can you help?) [3 words]\n\n8. вмієш Ти готувати\n   > [!answer] Ти вмієш готувати?\n   > (Do you know how to cook?) [3 words]\n\n9. повинна йти Я\n   > [!answer] Я повинна йти.\n   > (I must go. — female) [3 words]\n\n10. увійти Можна\n    > [!answer] Можна увійти?\n    > (May I come in?) [2 words]\n\n11. вивчати хочемо українську Ми\n    > [!answer] Ми хочемо вивчати українську.\n    > (We want to learn Ukrainian.) [4 words]\n\n12. машину не водити вмію Я\n    > [!answer] Я не вмію водити машину.\n    > (I don't know how to drive.) [5 words]\n\n## match-up: Modals and Meanings\n\n> Match each modal construction with its meaning.\n\n| Left | Right |\n|------|-------|\n| Я можу допомогти | I can help |\n| Я вмію плавати | I know how to swim |\n| Мені треба працювати | I need to work |\n| Я повинен йти | I must go (male) |\n| Я хочу відпочити | I want to rest |\n| Можна увійти? | May I come in? |\n| Не можна курити | Smoking forbidden |\n| Вона вміє готувати | She knows how to cook |\n| Йому потрібно вчитися | He needs to study |\n| Вона повинна прийти | She must come |\n| Ми хочемо їсти | We want to eat |\n| Тобі треба відпочити | You need to rest |\n\n## quiz: Modal Knowledge\n\n> Test your understanding of Ukrainian modals.\n\n1. What's the difference between \"можу\" and \"вмію\"?\n   - [ ] They are the same\n   - [x] \"Можу\" = ability/permission, \"вмію\" = learned skill\n   - [ ] \"Вмію\" is more formal\n   - [ ] \"Можу\" is only for questions\n   > \"Можу\" = can (circumstances allow), \"вмію\" = know how to (skill).\n\n2. How does a woman say \"I must go\"?\n   - [ ] Я повинен йти.\n   - [x] Я повинна йти.\n   - [ ] Мені треба йти.\n   - [ ] Я повинні йти.\n   > \"Повинна\" agrees with feminine subject.\n\n3. Which is impersonal?\n   - [ ] хочу\n   - [ ] можу\n   - [x] треба\n   - [ ] повинен\n   > \"Треба\" doesn't change — it's impersonal.\n\n4. How do you ask \"May I?\"\n   - [ ] Я можу?\n   - [x] Можна?\n   - [ ] Треба?\n   - [ ] Хочу?\n   > \"Можна?\" = May I? / Is it allowed?\n\n5. \"Я не вмію плавати\" means:\n   - [ ] I can't swim right now\n   - [x] I never learned to swim\n   - [ ] I don't want to swim\n   - [ ] Swimming is forbidden\n   > \"Не вмію\" = lack of skill.\n\n6. Which form means \"forbidden\"?\n   - [ ] Треба\n   - [ ] Можна\n   - [x] Не можна\n   - [ ] Потрібно\n   > \"Не можна\" = not allowed/forbidden.\n\n7. \"Йому потрібно вчитися\" means:\n   - [x] He needs to study\n   - [ ] He wants to study\n   - [ ] He can study\n   - [ ] He knows how to study\n   > \"Потрібно\" + dative = need to.\n\n8. Plural of \"повинен\" is:\n   - [ ] повинна\n   - [ ] повинне\n   - [x] повинні\n   - [ ] повинен\n   > \"Повинні\" for plural subjects: Ми повинні.\n\n9. \"Ти вмієш готувати?\" asks about:\n   - [ ] Permission\n   - [x] Skill\n   - [ ] Desire\n   - [ ] Obligation\n   > \"Вмієш\" asks about learned skill.\n\n10. \"Можна меню?\" is asking for:\n    - [x] Permission to have the menu\n    - [ ] The menu's location\n    - [ ] The menu's price\n    - [ ] The menu's content\n    > \"Можна + noun?\" = May I have...?\n\n11. Which sentence is correct for a male student?\n    - [x] Студент повинен вчитися.\n    - [ ] Студент повинна вчитися.\n    - [ ] Студент повинні вчитися.\n    - [ ] Студент повинне вчитися.\n    > Masculine singular = повинен.\n\n12. \"Нам треба зустрітися\" means:\n    - [ ] We can meet\n    - [x] We need to meet\n    - [ ] We want to meet\n    - [ ] We must meet (personal)\n    > \"Нам треба\" = we need to.\n\n## true-false: Modal Facts\n\n> Decide if each statement is true (Правда) or false (Міф).\n\n- [x] \"Вмію\" is used for learned skills.\n  > Correct! \"Я вмію плавати\" = I know how to swim.\n\n- [ ] \"Можу\" and \"вмію\" are exactly the same.\n  > Incorrect! \"Можу\" = ability/permission, \"вмію\" = skill.\n\n- [x] \"Повинен\" changes based on gender.\n  > Correct! Повинен (m), повинна (f), повинне (n), повинні (pl).\n\n- [ ] \"Треба\" changes based on subject.\n  > Incorrect! \"Треба\" is impersonal and doesn't change.\n\n- [x] \"Можна?\" means \"May I?\"\n  > Correct! It asks for permission.\n\n- [ ] Women say \"Я повинен.\"\n  > Incorrect! Women say \"Я повинна.\"\n\n- [x] \"Не можна\" means \"forbidden\" or \"not allowed.\"\n  > Correct! \"Тут не можна курити\" = No smoking here.\n\n- [x] \"Потрібно\" and \"треба\" are similar.\n  > Correct! Both express necessity impersonally.\n\n- [ ] \"Хочу\" is impersonal.\n  > Incorrect! \"Хочу\" is personal: я хочу, ти хочеш, він хоче...\n\n- [x] \"Мені треба\" uses dative case.\n  > Correct! \"Мені\" is dative of \"я.\"\n\n- [ ] \"Можна\" always needs a subject.\n  > Incorrect! \"Можна\" is impersonal — no subject needed.\n\n- [x] \"Я можу прийти\" means \"I can come.\"\n  > Correct! \"Можу\" + infinitive = can do something.\n\n## group-sort: Modal Types\n\n> Sort these into the correct category.\n\n### Ability/Permission (можу)\n- Я можу допомогти.\n- Він може прийти.\n- Ми можемо зустрітися.\n\n### Skill (вмію)\n- Я вмію плавати.\n- Вона вміє готувати.\n- Ти вмієш водити?\n\n### Obligation (повинен/треба)\n- Я повинен йти.\n- Мені треба працювати.\n- Вона повинна вчитися.\n\n### Desire (хочу)\n- Я хочу каву.\n- Він хоче відпочити.\n- Ми хочемо вивчати.\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| могти | ˈmɔɦtɪ | can, to be able | verb | — | Irregular: можу, можеш... |\n| вміти | ˈwmitɪ | know how to | verb | — | Learned skill |\n| повинен | pɔˈwɪnɛn | must, should (m) | adj | m | Agrees with subject |\n| повинна | pɔˈwɪnnɐ | must, should (f) | adj | f | |\n| повинні | pɔˈwɪnni | must, should (pl) | adj | pl | |\n| мусити | muˈsɪtɪ | must, have to | verb | — | Stronger than повинен |\n| треба | ˈtrɛbɐ | need to, necessary | pred | — | Impersonal |\n| потрібно | pɔˈtribnɔ | need to, necessary | pred | — | Same as треба |\n| необхідно | nɛɔbˈxidnɔ | necessary | pred | — | More formal |\n| можна | ˈmɔʒnɐ | may, allowed | pred | — | Impersonal |\n| не можна | nɛ ˈmɔʒnɐ | forbidden, not allowed | pred | — | |\n| дозволено | dɔzˈwɔlɛnɔ | permitted | pred | — | Formal |\n| заборонено | zɐbɔrɔˈnɛnɔ | forbidden | pred | — | Formal |\n| слід | slid | should | pred | — | Impersonal |\n| варто | ˈwɑrtɔ | worth, should | pred | — | Impersonal |\n| здатний | ˈzdɑtnɪj | capable | adj | m | |\n| готовий | ɦɔˈtɔwɪj | ready | adj | m | |\n| згодний | ˈzɦɔdnɪj | agreeable, willing | adj | m | |\n| впевнений | wpɛwˈnɛnɪj | confident, sure | adj | m | |\n| певний | ˈpɛwnɪj | certain | adj | m | |\n| намагатися | nɐmɐˈɦɑtɪsʲɐ | to try | verb | — | Reflexive |\n| старатися | stɐˈrɑtɪsʲɐ | to try, endeavor | verb | — | Reflexive |\n| пробувати | prɔbuˈwɑtɪ | to try, attempt | verb | — | |\n| вдаватися | wdɐˈwɑtɪsʲɐ | to manage, succeed | verb | — | + infinitive |\n| встигати | wstɪˈɦɑtɪ | to manage (time) | verb | — | Have time for |\n\n---\n\n# Summary\n\n> **Congratulations!**\n>\n> You can now express ability, obligation, and desire in Ukrainian:\n> - **Ability**: Я можу допомогти. / Я вмію плавати.\n> - **Obligation**: Я повинен йти. / Мені треба працювати.\n> - **Desire**: Я хочу відпочити.\n> - **Permission**: Можна увійти? / Тут не можна курити.\n\n> **Key Distinctions:**\n> - можу vs вмію: ability/permission vs learned skill\n> - повинен vs треба: personal obligation vs impersonal necessity\n> - можна vs не можна: allowed vs forbidden\n\n> **Coming Next: Module 25 — My Daily Routine**\n>\n> In the next module, you'll learn reflexive verbs to describe your daily routine:\n> - Я прокидаюся о сьомій. (I wake up at 7.)\n> - Я вмиваюся і одягаюся. (I wash and get dressed.)\n> - Я лягаю спати о одинадцятій. (I go to bed at 11.)\n",
-    "createdAt": "2025-12-06T10:49:20.100Z",
-    "modifiedAt": "2025-12-06T10:49:20.100Z",
+    "rawMarkdown": "---\ntitle: Days and Months\nsubtitle: The Calendar\nphase: A1.3\nduration: 60\ntransliteration: full\ntags: [vocabulary, calendar, days, months, seasons]\nobjectives:\n  - Learner can name 7 days of the week\n  - Learner can say \"On Monday\" (V/U + Accusative)\n  - Learner can name 12 months\n  - Learner can name 4 seasons\n---\n\n# Lesson Content\n\n## warm-up\n**The Lost Weekend**\n\n\"Let's meet on Sunday.\"\n\"Ok, see you in January.\"\nWithout a calendar, we are lost in the void.\nIn Module 23, we conquered Time (09:00).\nIn Module 24, we conquer Dates.\n\nUkrainian days are ancient. They tell a story about \"Work\" and \"Rest\".\nUkrainian months are poetic. They tell a story about \"Nature\".\n\"Grass-Month\", \"Snow-Month\", \"Worm-Month\".\nLet's dive in.\n\n## presentation\n\n### Section 1: The Days of the Week\n\nUkrainian days start on **Monday**. (Sorry, USA).\nThe names all revolve around Sunday (Nedilya - No work).\n\n1.  **Понеділок** (Po-nedilok). After-Sunday. (Monday).\n2.  **Вівторок** (Vivtorok). Second. (Tuesday).\n3.  **Середа** (Sereda). Middle. (Wednesday).\n4.  **Четвер** (Chetver). Fourth. (Thursday).\n5.  **П'ятниця** (Pyatnytsya). Fifth. (Friday).\n6.  **Субота** (Subota). Sabbath. (Saturday).\n7.  **Неділя** (Nedilya). No-Work (Ne-dilo). (Sunday).\n\n> 🌍 **Culture Corner: The Weekend**\n> Everyone loves **П'ятниця** (Friday).\n> But **Неділя** is sacred. Shops are open, but traditional families gather.\n> Note: **Субота** and **Неділя** together are **Вихідні** (The Way-Out days / Weekends).\n\n### Section 2: On Monday... (The Action)\n\nTo say \"ON\" a day, we use **В** or **У** + Accusative.\nWhy Accusative? Because days are time-objects we step into.\n\n- **У понеділок** (On Monday).\n- **У вівторок** (On Tuesday).\n- **У середу** (On Wednesday - Feminine -a becomes -u).\n- **У четвер** (On Thursday).\n- **У п'ятницю** (On Friday - Feminine -ya becomes -yu).\n- **У суботу** (On Saturday - Feminine -a becomes -u).\n- **У неділю** (On Sunday - Feminine -ya becomes -yu).\n\n> 💡 **Pattern Alert**\n> Masculine days (Mon, Tue, Thu) do not change ending.\n> Feminine days (Wed, Fri, Sat, Sun) change -a/-ya to **-u/-yu**.\n> Just like \"I love pizza\" -> \"Pizzu\". \"I love Friday\" -> \"Pyatnytsyu\".\n\n### Section 3: The 12 Months of Nature\n\nUkrainian months retain pagan Slavic roots. No \"July\" (Julius Caesar) or \"August\" (Augustus).\nThey describe what nature is doing.\n\n**Winter (Зима):**\n1.  **Грудень** (Hrooden' - Frozen clods of earth) - December.\n2.  **Січень** (Sichen' - Cutting/Slashing wind) - January.\n3.  **Лютий** (Lyutiy - Fierce/Rage) - February.\n\n**Spring (Весна):**\n4.  **Березень** (Berezen' - Birch tree sap) - March.\n5.  **Квітень** (Kviten' - Flowers blooming) - April.\n6.  **Травень** (Traven' - Grass growing) - May.\n\n**Summer (Літо):**\n7.  **Червень** (Cherven' - Red berries/Worms) - June.\n8.  **Липень** (Lypen' - Linden trees catch fire/bloom) - July.\n9.  **Серпень** (Serpen' - Sickle/Harvest) - August.\n\n**Autumn (Осінь):**\n10. **Вересень** (Veresen' - Heather blooms) - September.\n11. **Жовтень** (Zhovten' - Yellow leaves) - October.\n12. **Листопад** (Lystopad - Leaf fall) - November.\n\n> 🍃 **Deep Dive: Why so poetic?**\n> English uses Latin names imposed by Rome.\n> Ukrainian kept the connection to the land.\n> If you know the name, you know the weather.\n> **Лютий** (February) is truly **Fierce**.\n> **Листопад** (November) is literally **Leaf-Fall**.\n\n### Section 4: In January... (Locative)\n\nTo say \"IN\" a month, we use **У/В** + Locative (-i).\nAll months are Masculine.\nMost end in a soft sign (-нь).\nSo **-нь** becomes **-ні**.\n\n- **Січень** ➡️ **У січні**. (In Jan).\n- **Травень** ➡️ **У травні**. (In May).\n- **Серпень** ➡️ **У серпні**. (In Aug).\n- **Листопад** ➡️ **У листопаді** (Hard d -> di).\n- **Лютий** (Adjective type) ➡️ **У лютому** (Weird exception? No, it acts like an adjective. Let's memorize it as **У лютому**).\n\n### Section 5: The Seasons\n\n- **Зима** (Winter) ➡️ **Взимку** (In winter - adverb).\n- **Весна** (Spring) ➡️ **Навесні** (In spring - adverb).\n- **Літо** (Summer) ➡️ **Влітку** (In summer - adverb).\n- **Осінь** (Autumn) ➡️ **Восени** (In autumn - adverb).\n\n> ❄️ **Culture Corner: The Holiday Season**\n> Winter is the main holiday season.\n> **New Year** (Jan 1) is bigger than Christmas for some.\n> **Christmas** (Jan 7 or Dec 25 - transition period).\n> **Easter** (Velykden') is the biggest Spring holiday.\n\n\n### Section 6: The Date Format (DD.MM.YYYY)\n\nIn Ukraine, the day comes first.\n**01.05.2023** is May 1st, not January 5th.\n- **День** (Day).\n- **Місяць** (Month).\n- **Рік** (Year).\n\n\"Яке сьогодні число?\" (What number is today?)\n- \"Сьогодні перше травня.\" (Today is first [of] May).\n- Note: We use Genitive for the month when saying the date. **Травня** (Of May).\n\n> 📅 **Deep Dive: The Old New Year**\n> Ukraine has a unique holiday: **Old New Year** (Staryi Novyi Rik) on January 14th.\n> It follows the old Julian calendar.\n> People don't work, but they celebrate.\n> It is a second chance to wish \"Shchaslyvoho Novoho Roku\" (Happy New Year).\n\n\n> 🛠️ **Deep Dive: The Working Saturday**\n> In Ukraine, if a holiday falls on a Tuesday (e.g., Independence Day), the government might create a \"Bridge\".\n> Monday becomes a holiday too! (4-day weekend).\n> But... you have to pay it back.\n> The previous or next Saturday becomes a **Working Day** (Robocha Subota).\n> People hate it, but they love the 4-day weekend more.\n> So if someone says \"I work on Saturday\", ask \"Is it a working Saturday?\" (Tse robocha subota?).\n\n## practice\n\n**Drill 1: Day Logic**\n- First day? -> Понеділок.\n- Last day? -> Неділя.\n- Mid-week? -> Середа.\n- Party time? -> П'ятниця.\n\n**Drill 2: Construct \"On Day\"**\n- Середа -> У середу.\n- Субота -> У суботу.\n- Четвер -> У четвер.\n- Неділя -> У неділю.\n\n**Drill 3: Month Match**\n- Flowers? -> Квітень.\n- Yellow? -> Жовтень.\n- Leaves falling? -> Листопад.\n- Fierce cold? -> Лютий.\n\n## production\n\n**Scenario: Planning a Trip**\n*   **You:** Коли ти їдеш у Львів? (When go you to Lviv?)\n*   **Friend:** Я їду **у суботу**. (On Saturday).\n*   **You:** А коли назад?\n*   **Friend:** **У понеділок**.\n*   **You:** Чудово. Я їду **у серпні**.\n*   **Friend:** О, влітку там гарно. (Oh, in summer there beautiful).\n\n**Scenario: The Birthday**\n*   **A:** Коли твій день народження? (When is your birthday?)\n*   **B:** **У жовтні**. А твій?\n*   **A:** **У травні**.\n*   **B:** Ти любиш весну?\n*   **A:** Так, дуже люблю.\n\n---\n\n# Activities\n\n## match-up: Day Translation\n\n> Match.\n\n| Eng | Ukr |\n|-----|-----|\n| Monday | Понеділок |\n| Tuesday | Вівторок |\n| Wednesday | Середа |\n| Thursday | Четвер |\n| Friday | П'ятниця |\n| Saturday | Субота |\n| Sunday | Неділя |\n| Weekend | Вихідні |\n| Today | Сьогодні |\n| Tomorrow | Завтра |\n| Yesterday | Вчора |\n| Day | День |\n\n## group-sort: Season Sorter\n\n> Put the months in the season.\n\n### Winter (Зима)\n- Грудень\n- Січень\n- Лютий\n- Cold\n- Snow\n\n### Spring (Весна)\n- Березень\n- Квітень\n- Травень\n- Flowers\n- Green\n\n### Summer (Літо)\n- Червень\n- Липень\n- Серпень\n- Hot\n- Sun\n\n### Autumn (Осінь)\n- Вересень\n- Жовтень\n- Листопад\n- Rain\n- Yellow leaves\n\n## fill-in: On The Day\n\n> Complete \"On [Day]\".\n\n1. Я працюю у ___ (Monday).\n   > [!answer] понеділок\n\n2. Ми гуляємо у ___ (Sunday).\n   > [!answer] неділю\n\n3. Концерт у ___ (Friday).\n   > [!answer] п'ятницю\n\n4. Вона тут у ___ (Wednesday).\n   > [!answer] середу\n\n5. Спортзал у ___ (Tuesday).\n   > [!answer] вівторок\n\n6. Зустріч у ___ (Thursday).\n   > [!answer] четвер\n\n7. Я вдома у ___ (Saturday).\n   > [!answer] суботу\n\n8. Ми вільні (free) у ___ (Weekend).\n   > [!answer] вихідні\n\n9. Кафе зачинено у ___ (Monday).\n   > [!answer] понеділок\n\n10. Футбол у ___ (Wednesday).\n    > [!answer] середу\n\n11. Вечірка у ___ (Friday).\n    > [!answer] п'ятницю\n\n12. Церква (Church) у ___ (Sunday).\n    > [!answer] неділю\n\n## quiz: Month Meanings\n\n> What does the month mean?\n\n1. Квітень comes from...\n   - [x] Квіти (Flowers)\n   - [ ] Кіт (Cat)\n\n2. Листопад means...\n   - [x] Leaf Fall\n   - [ ] List Pad (Paper pad)\n\n3. Лютий means...\n   - [x] Fierce/Rage\n   - [ ] Lovely\n\n4. Серпень comes from...\n   - [x] Серп (Sickle)\n   - [ ] Серце (Heart)\n\n5. Жовтень is...\n   - [x] Yellow (Жовтий)\n   - [ ] Life (Життя)\n\n6. Травень is...\n   - [x] Grass (Трава)\n   - [ ] Tram (Трамвай)\n\n7. Січень comes from...\n   - [x] Сікти (To slash/cut)\n   - [ ] Сік (Juice)\n\n8. Березень is...\n   - [x] Birch Tree (Береза)\n   - [ ] Bear (Ведмідь)\n\n9. Липень is...\n   - [x] Linden Tree (Липа)\n   - [ ] Lip (Губа)\n\n10. Грудень is from...\n    - [x] Грудки (Frozen earth clods)\n    - [ ] Груди (Chest)\n\n11. Вересень is...\n    - [x] Heather (Верес)\n    - [ ] Very Soon\n\n12. Червень sounds like...\n    - [x] Червоний (Red)\n    - [ ] Черевик (Shoe)\n\n## anagram: Day Scramble\n\n> Unscramble.\n\n1. д а е с р е\n   > [!answer] середа\n   > (Wed)\n\n2. б о т а с у\n   > [!answer] субота\n   > (Sat)\n\n3. д і л я н е\n   > [!answer] неділя\n   > (Sun)\n\n4. ц я т н и п ' я\n   > [!answer] п'ятниця\n   > (Fri)\n\n5. в т о р о к в і\n   > [!answer] вівторок\n   > (Tue)\n\n6. в е р ч е т\n   > [!answer] четвер\n   > (Thu)\n\n7. д і л о к п о н е\n   > [!answer] понеділок\n   > (Mon)\n\n8. с і ч е н ь\n   > [!answer] січень\n   > (Jan)\n\n9. т р а в е н ь\n   > [!answer] травень\n   > (May)\n\n10. з и м а\n    > [!answer] зима\n    > (Winter)\n\n11. л і т о\n    > [!answer] літо\n    > (Summer)\n\n12. о с і н ь\n    > [!answer] осінь\n    > (Autumn)\n\n## fill-in: When? (General)\n\n> Use \"У [Month-Locative]\" or \"U [Day-Accusative]\".\n\n1. (Jan) ___ холодно.\n   > [!answer] У січні\n\n2. (May) ___ гарно.\n   > [!answer] У травні\n\n3. (Saturday) ___ я сплю.\n   > [!answer] У суботу\n\n4. (Aug) ___ я на морі.\n   > [!answer] У серпні\n\n5. (Monday) ___ я на роботі.\n   > [!answer] У понеділок\n\n6. (Oct) ___ жовте листя.\n   > [!answer] У жовтні\n\n7. (Sunday) ___ ми вдома.\n   > [!answer] У неділю\n\n8. (Dec) ___ свята (holidays).\n   > [!answer] У грудні\n\n9. (Nov) ___ дощ.\n   > [!answer] У листопаді\n\n10. (April) ___ сонце.\n    > [!answer] У квітні\n\n11. (Feb) ___ сніг.\n    > [!answer] У лютому\n\n12. (July) ___ спекотно (hot).\n    > [!answer] У липні\n\n## unjumble: Planning\n\n> Build sentences.\n\n1. їду / Я / Київ / у / січні / в / .\n   > [!answer] Я їду в Київ у січні.\n\n2. четвер / у / Зустріч / .\n   > [!answer] Зустріч у четвер.\n\n3. вдома / неділю / Ми / у / .\n   > [!answer] Ми вдома у неділю.\n\n4. холодно / Взимку / .\n   > [!answer] Взимку холодно.\n\n5. гарно / Навесні / .\n   > [!answer] Навесні гарно.\n\n6. на / влітку / морі / Я / .\n   > [!answer] Я на морі влітку.\n\n7. школу / у / Вересень / це / час / в / .\n   > [!answer] Вересень це час в школу.\n\n8. працюю / Я / вівторок / у / .\n   > [!answer] Я працюю у вівторок.\n\n9. в / ми / п'ятницю / У / барі / .\n   > [!answer] У п'ятницю ми в барі.\n\n10. день / Коли / народження / ?\n    > [!answer] Коли день народження?\n\n11. вечірка / Де / ?\n    > [!answer] Де вечірка?\n\n12. зараз / Який / місяць / ?\n    > [!answer] Який зараз місяць?\n    > (Which month is now?)\n\n## true-false: Calendar Logic\n\n> Is this true?\n\n1. Monday is \"Понеділок\".\n   - [x] True\n   - [ ] False\n\n2. Saturday is a work day.\n   - [ ] True\n   - [x] False (Usually)\n\n3. \"Січень\" is Summer.\n   - [ ] True\n   - [x] False (Jan)\n\n4. \"Листопад\" means \"Snow Fall\".\n   - [ ] True\n   - [x] False (Leaf Fall)\n\n5. \"У неділю\" means \"In a week\".\n   - [ ] True\n   - [x] False (On Sunday. \"A week\" is Tyzhden')\n\n6. August is \"Серпень\".\n   - [x] True\n   - [ ] False\n\n7. \"Взимку\" means \"In Winter\".\n   - [x] True\n   - [ ] False\n\n8. There are 13 months.\n   - [ ] True\n   - [x] False\n\n9. Ukrainian months act like adjectives for weather/nature.\n   - [x] True\n   - [ ] False\n\n10. \"Середа\" implies Middle.\n    - [x] True\n    - [ ] False\n\n11. You say \"У П'ятниця\".\n    - [ ] True\n    - [x] False (У П'ятницю)\n\n12. You say \"У Жовтні\".\n    - [x] True\n    - [ ] False\n\n# Summary\n\n**You now own the Calendar.**\nYears, months, seasons, and days.\n- **Days:** Ancient Slavic (Work/No-work).\n- **Months:** Nature's description.\n- **Seasons:** Simple adverbs (Vzymku).\n- **On Day:** Accusative (U Ponedilok, U Serendu).\n- **In Month:** Locative (U Sichni).\n\n**Checklist:**\n- [ ] I can list Mon-Sun.\n- [ ] I can list Winter-Spring-Summer-Autumn.\n- [ ] I understand that \"On Friday\" changes the ending (-u).\n- [ ] I appreciate the poetry of \"Lyutiy\" (Fierce Feb) and \"Lystopad\" (Leaf Fall).\n\n**Next Stop:**\nWe have Time and Dates.\nNow we need to Move.\n**Module 25: The Verdict of Usage (Start of Verbs part 3)**.\nOr actually... **Directions/City**? No we did that.\n**Module 25: Transportation & Travel**. Getting from A to B.\n\n# Vocabulary\n\n| Word | IPA | English | Note | Audio |\n|------|-----|---------|------|-------|\n| понеділок | /pɔnɛˈd⁽ʲ⁾ilɔk/ | Monday | | [🔊](audio_ponedilok) |\n| вівторок | /vivˈtɔrɔk/ | Tuesday | | [🔊](audio_vivtorok) |\n| середа | /sɛrɛˈdɑ/ | Wednesday | | [🔊](audio_sereda) |\n| четвер | /tʃɛtˈvɛr/ | Thursday | | [🔊](audio_chetver) |\n| п'ятниця | /ˈpjɑtnɪt͡sʲɑ/ | Friday | | [🔊](audio_pyatnytsya) |\n| субота | /suˈbɔtɑ/ | Saturday | | [🔊](audio_subota) |\n| неділя | /nɛˈd⁽ʲ⁾ilʲɑ/ | Sunday | | [🔊](audio_nedilya) |\n| зима | /zɪˈmɑ/ | Winter | | [🔊](audio_zyma) |\n| весна | /vɛsˈnɑ/ | Spring | | [🔊](audio_vesna) |\n| літо | /ˈl⁽ʲ⁾itɔ/ | Summer | | [🔊](audio_lito) |\n| осінь | /ˈɔs⁽ʲ⁾inʲ/ | Autumn | | [🔊](audio_osin) |\n| січень | /ˈsitʃɛnʲ/ | January | | [🔊](audio_sichen) |\n| лютий | /ˈlʲutɪj/ | February | | [🔊](audio_lyutyj) |\n| березень | /ˈbɛrɛzɛnʲ/ | March | | [🔊](audio_berezen) |\n| квітень | /ˈkvitɛnʲ/ | April | | [🔊](audio_kviten) |\n| травень | /ˈtrɑvɛnʲ/ | May | | [🔊](audio_traven) |\n| червень | /ˈtʃɛrvɛnʲ/ | June | | [🔊](audio_cherven) |\n| липень | /ˈlɪpɛnʲ/ | July | | [🔊](audio_lypen) |\n| серпень | /ˈsɛrpɛnʲ/ | August | | [🔊](audio_serpen) |\n| вересень | /ˈvɛrɛsɛnʲ/ | September | | [🔊](audio_veresen) |\n| жовтень | /ˈʒɔvtɛnʲ/ | October | | [🔊](audio_zhovten) |\n| листопад | /lɪstɔˈpɑd/ | November | | [🔊](audio_lystopad) |\n| грудень | /ˈhrudɛnʲ/ | December | | [🔊](audio_hruden) |\n| взимку | /ˈvzɪmku/ | in winter | adv | [🔊](audio_vzymku) |\n| навесні | /nɑvɛsˈn⁽ʲ⁾i/ | in spring | adv | [🔊](audio_navesni) |\n| влітку | /ˈvl⁽ʲ⁾itku/ | in summer | adv | [🔊](audio_vlitku) |\n| восени | /vɔsɛˈnɪ/ | in autumn | adv | [🔊](audio_voseny) |\n| тиждень | /ˈtɪʒdɛnʲ/ | week | | [🔊](audio_tyzhden) |\n| місяць | /ˈm⁽ʲ⁾isʲɑt͡sʲ/ | month/moon | | [🔊](audio_misyats) |\n| рік | /rik/ | year | | [🔊](audio_rik) |\n",
+    "createdAt": "2025-12-08T21:22:09.890Z",
+    "modifiedAt": "2025-12-08T21:22:09.890Z",
     "version": 2
   },
   "activities": [
     {
-      "id": "act-a1-0-fillblank",
-      "type": "fill-blank",
-      "title": "Modal Verbs",
-      "description": "Choose the correct modal verb.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Я ___ говорити українською.",
-            "answer": "можу",
-            "options": [
-              "можу",
-              "вмію",
-              "треба",
-              "можна"
-            ]
-          },
-          {
-            "prompt": "Вона ___ грати на піаніно.",
-            "answer": "вміє",
-            "options": [
-              "вміє",
-              "може",
-              "хоче",
-              "треба"
-            ]
-          },
-          {
-            "prompt": "Мені ___ працювати сьогодні.",
-            "answer": "треба",
-            "options": [
-              "треба",
-              "можу",
-              "хочу",
-              "повинен"
-            ]
-          },
-          {
-            "prompt": "Він ___ прийти завтра.",
-            "answer": "може",
-            "options": [
-              "може",
-              "вміє",
-              "треба",
-              "можна"
-            ]
-          },
-          {
-            "prompt": "Тут не ___ курити.",
-            "answer": "можна",
-            "options": [
-              "можна",
-              "треба",
-              "хочу",
-              "вмію"
-            ]
-          },
-          {
-            "prompt": "Ми ___ вивчати українську.",
-            "answer": "хочемо",
-            "options": [
-              "хочемо",
-              "можемо",
-              "вміємо",
-              "треба"
-            ]
-          },
-          {
-            "prompt": "Ти ___ плавати?",
-            "answer": "вмієш",
-            "options": [
-              "вмієш",
-              "можеш",
-              "хочеш",
-              "треба"
-            ]
-          },
-          {
-            "prompt": "___ увійти?",
-            "answer": "Можна",
-            "options": [
-              "Можна",
-              "Треба",
-              "Хочу",
-              "Вмію"
-            ]
-          },
-          {
-            "prompt": "Вона ___ закінчити роботу.",
-            "answer": "повинна",
-            "options": [
-              "повинна",
-              "повинен",
-              "повинні",
-              "треба"
-            ]
-          },
-          {
-            "prompt": "Вони ___ приїхати завтра.",
-            "answer": "можуть",
-            "options": [
-              "можуть",
-              "вміють",
-              "хочуть",
-              "треба"
-            ]
-          },
-          {
-            "prompt": "Вам ___ почекати трохи.",
-            "answer": "потрібно",
-            "options": [
-              "потрібно",
-              "можна",
-              "хочете",
-              "вмієте"
-            ]
-          },
-          {
-            "prompt": "Я не ___ водити машину.",
-            "answer": "вмію",
-            "options": [
-              "вмію",
-              "можу",
-              "хочу",
-              "треба"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.100Z",
-      "modifiedAt": "2025-12-06T10:49:20.100Z"
-    },
-    {
-      "id": "act-a1-0-fillblank",
-      "type": "fill-blank",
-      "title": "Повинен Agreement",
-      "description": "Choose the correct form of повинен.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Він ___ працювати.",
-            "answer": "повинен",
-            "options": [
-              "повинен",
-              "повинна",
-              "повинні",
-              "повинне"
-            ]
-          },
-          {
-            "prompt": "Вона ___ вчитися.",
-            "answer": "повинна",
-            "options": [
-              "повинна",
-              "повинен",
-              "повинні",
-              "повинне"
-            ]
-          },
-          {
-            "prompt": "Ми ___ йти.",
-            "answer": "повинні",
-            "options": [
-              "повинні",
-              "повинен",
-              "повинна",
-              "повинне"
-            ]
-          },
-          {
-            "prompt": "Я (male) ___ прийти о дев'ятій.",
-            "answer": "повинен",
-            "options": [
-              "повинен",
-              "повинна",
-              "повинні",
-              "повинне"
-            ]
-          },
-          {
-            "prompt": "Я (female) ___ закінчити роботу.",
-            "answer": "повинна",
-            "options": [
-              "повинна",
-              "повинен",
-              "повинні",
-              "повинне"
-            ]
-          },
-          {
-            "prompt": "Ви ___ говорити українською.",
-            "answer": "повинні",
-            "options": [
-              "повинні",
-              "повинен",
-              "повинна",
-              "повинне"
-            ]
-          },
-          {
-            "prompt": "Вони ___ допомогти.",
-            "answer": "повинні",
-            "options": [
-              "повинні",
-              "повинен",
-              "повинна",
-              "повинне"
-            ]
-          },
-          {
-            "prompt": "Діти ___ спати.",
-            "answer": "повинні",
-            "options": [
-              "повинні",
-              "повинен",
-              "повинна",
-              "повинне"
-            ]
-          },
-          {
-            "prompt": "Студентка ___ вивчати.",
-            "answer": "повинна",
-            "options": [
-              "повинна",
-              "повинен",
-              "повинні",
-              "повинне"
-            ]
-          },
-          {
-            "prompt": "Студент ___ читати.",
-            "answer": "повинен",
-            "options": [
-              "повинен",
-              "повинна",
-              "повинні",
-              "повинне"
-            ]
-          },
-          {
-            "prompt": "Батьки ___ працювати.",
-            "answer": "повинні",
-            "options": [
-              "повинні",
-              "повинен",
-              "повинна",
-              "повинне"
-            ]
-          },
-          {
-            "prompt": "Дитина ___ вчитися.",
-            "answer": "повинна",
-            "options": [
-              "повинна",
-              "повинен",
-              "повинні",
-              "повинне"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.100Z",
-      "modifiedAt": "2025-12-06T10:49:20.100Z"
-    },
-    {
-      "id": "act-a1-0-unjumble",
-      "type": "unjumble",
-      "title": "Modal Sentences",
-      "description": "Put the words in the correct order.",
-      "content": {
-        "type": "unjumble",
-        "isUnjumble": true,
-        "items": [
-          {
-            "words": [
-              "можу",
-              "Я",
-              "українською",
-              "говорити"
-            ],
-            "answer": "Я можу говорити українською.",
-            "translation": "I can speak Ukrainian."
-          },
-          {
-            "words": [
-              "плавати",
-              "вмію",
-              "Я"
-            ],
-            "answer": "Я вмію плавати.",
-            "translation": "I know how to swim."
-          },
-          {
-            "words": [
-              "працювати",
-              "треба",
-              "Мені"
-            ],
-            "answer": "Мені треба працювати.",
-            "translation": "I need to work."
-          },
-          {
-            "words": [
-              "повинен",
-              "Він",
-              "прийти",
-              "завтра"
-            ],
-            "answer": "Він повинен прийти завтра.",
-            "translation": "He must come tomorrow."
-          },
-          {
-            "words": [
-              "хоче",
-              "відпочити",
-              "Вона"
-            ],
-            "answer": "Вона хоче відпочити.",
-            "translation": "She wants to rest."
-          },
-          {
-            "words": [
-              "можна",
-              "курити",
-              "Тут",
-              "не"
-            ],
-            "answer": "Тут не можна курити.",
-            "translation": "Smoking is not allowed here."
-          },
-          {
-            "words": [
-              "допомогти",
-              "Ти",
-              "можеш"
-            ],
-            "answer": "Ти можеш допомогти?",
-            "translation": "Can you help?"
-          },
-          {
-            "words": [
-              "вмієш",
-              "Ти",
-              "готувати"
-            ],
-            "answer": "Ти вмієш готувати?",
-            "translation": "Do you know how to cook?"
-          },
-          {
-            "words": [
-              "повинна",
-              "йти",
-              "Я"
-            ],
-            "answer": "Я повинна йти.",
-            "translation": "I must go. — female"
-          },
-          {
-            "words": [
-              "увійти",
-              "Можна"
-            ],
-            "answer": "Можна увійти?",
-            "translation": "May I come in?"
-          },
-          {
-            "words": [
-              "вивчати",
-              "хочемо",
-              "українську",
-              "Ми"
-            ],
-            "answer": "Ми хочемо вивчати українську.",
-            "translation": "We want to learn Ukrainian."
-          },
-          {
-            "words": [
-              "машину",
-              "не",
-              "водити",
-              "вмію",
-              "Я"
-            ],
-            "answer": "Я не вмію водити машину.",
-            "translation": "I don't know how to drive."
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.100Z",
-      "modifiedAt": "2025-12-06T10:49:20.100Z"
-    },
-    {
       "id": "act-a1-0-matchup",
       "type": "match-up",
-      "title": "Modals and Meanings",
-      "description": "Match each modal construction with its meaning.",
+      "title": "Day Translation",
+      "description": "Match.",
       "content": {
         "type": "match-up",
         "pairs": [
           {
-            "left": "Я можу допомогти",
-            "right": "I can help"
+            "left": "Monday",
+            "right": "Понеділок"
           },
           {
-            "left": "Я вмію плавати",
-            "right": "I know how to swim"
+            "left": "Tuesday",
+            "right": "Вівторок"
           },
           {
-            "left": "Мені треба працювати",
-            "right": "I need to work"
+            "left": "Wednesday",
+            "right": "Середа"
           },
           {
-            "left": "Я повинен йти",
-            "right": "I must go (male)"
+            "left": "Thursday",
+            "right": "Четвер"
           },
           {
-            "left": "Я хочу відпочити",
-            "right": "I want to rest"
+            "left": "Friday",
+            "right": "П'ятниця"
           },
           {
-            "left": "Можна увійти?",
-            "right": "May I come in?"
+            "left": "Saturday",
+            "right": "Субота"
           },
           {
-            "left": "Не можна курити",
-            "right": "Smoking forbidden"
+            "left": "Sunday",
+            "right": "Неділя"
           },
           {
-            "left": "Вона вміє готувати",
-            "right": "She knows how to cook"
+            "left": "Weekend",
+            "right": "Вихідні"
           },
           {
-            "left": "Йому потрібно вчитися",
-            "right": "He needs to study"
+            "left": "Today",
+            "right": "Сьогодні"
           },
           {
-            "left": "Вона повинна прийти",
-            "right": "She must come"
+            "left": "Tomorrow",
+            "right": "Завтра"
           },
           {
-            "left": "Ми хочемо їсти",
-            "right": "We want to eat"
+            "left": "Yesterday",
+            "right": "Вчора"
           },
           {
-            "left": "Тобі треба відпочити",
-            "right": "You need to rest"
+            "left": "Day",
+            "right": "День"
           }
         ],
         "shuffleRight": true
@@ -538,148 +113,297 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.100Z",
-      "modifiedAt": "2025-12-06T10:49:20.100Z"
+      "createdAt": "2025-12-08T21:22:09.890Z",
+      "modifiedAt": "2025-12-08T21:22:09.890Z"
+    },
+    {
+      "id": "act-a1-0-groupsort",
+      "type": "group-sort",
+      "title": "Season Sorter",
+      "description": "Put the months in the season.",
+      "content": {
+        "type": "group-sort",
+        "groups": [
+          {
+            "id": "winter",
+            "name": "Winter",
+            "items": [
+              "Грудень",
+              "Січень",
+              "Лютий",
+              "Cold",
+              "Snow"
+            ],
+            "nameUk": "Зима"
+          },
+          {
+            "id": "spring",
+            "name": "Spring",
+            "items": [
+              "Березень",
+              "Квітень",
+              "Травень",
+              "Flowers",
+              "Green"
+            ],
+            "nameUk": "Весна"
+          },
+          {
+            "id": "summer",
+            "name": "Summer",
+            "items": [
+              "Червень",
+              "Липень",
+              "Серпень",
+              "Hot",
+              "Sun"
+            ],
+            "nameUk": "Літо"
+          },
+          {
+            "id": "autumn",
+            "name": "Autumn",
+            "items": [
+              "Вересень",
+              "Жовтень",
+              "Листопад",
+              "Rain",
+              "Yellow leaves"
+            ],
+            "nameUk": "Осінь"
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.890Z",
+      "modifiedAt": "2025-12-08T21:22:09.890Z"
+    },
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "On The Day",
+      "description": "Complete \"On [Day]\".",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Я працюю у ___ (Monday).",
+            "answer": "понеділок",
+            "hints": [
+              "Monday"
+            ]
+          },
+          {
+            "prompt": "Ми гуляємо у ___ (Sunday).",
+            "answer": "неділю",
+            "hints": [
+              "Sunday"
+            ]
+          },
+          {
+            "prompt": "Концерт у ___ (Friday).",
+            "answer": "п'ятницю",
+            "hints": [
+              "Friday"
+            ]
+          },
+          {
+            "prompt": "Вона тут у ___ (Wednesday).",
+            "answer": "середу",
+            "hints": [
+              "Wednesday"
+            ]
+          },
+          {
+            "prompt": "Спортзал у ___ (Tuesday).",
+            "answer": "вівторок",
+            "hints": [
+              "Tuesday"
+            ]
+          },
+          {
+            "prompt": "Зустріч у ___ (Thursday).",
+            "answer": "четвер",
+            "hints": [
+              "Thursday"
+            ]
+          },
+          {
+            "prompt": "Я вдома у ___ (Saturday).",
+            "answer": "суботу",
+            "hints": [
+              "Saturday"
+            ]
+          },
+          {
+            "prompt": "Ми вільні (free) у ___ (Weekend).",
+            "answer": "вихідні",
+            "hints": [
+              "Weekend"
+            ]
+          },
+          {
+            "prompt": "Кафе зачинено у ___ (Monday).",
+            "answer": "понеділок",
+            "hints": [
+              "Monday"
+            ]
+          },
+          {
+            "prompt": "Футбол у ___ (Wednesday).",
+            "answer": "середу",
+            "hints": [
+              "Wednesday"
+            ]
+          },
+          {
+            "prompt": "Вечірка у ___ (Friday).",
+            "answer": "п'ятницю",
+            "hints": [
+              "Friday"
+            ]
+          },
+          {
+            "prompt": "Церква (Church) у ___ (Sunday).",
+            "answer": "неділю",
+            "hints": [
+              "Sunday"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.890Z",
+      "modifiedAt": "2025-12-08T21:22:09.890Z"
     },
     {
       "id": "act-a1-0-quiz",
       "type": "quiz",
-      "title": "Modal Knowledge",
-      "description": "Test your understanding of Ukrainian modals.",
+      "title": "Month Meanings",
+      "description": "What does the month mean?",
       "content": {
         "type": "quiz",
         "questions": [
           {
-            "question": "What's the difference between \"можу\" and \"вмію\"?",
+            "question": "Квітень comes from...",
             "options": [
-              "They are the same",
-              "\"Можу\" = ability/permission, \"вмію\" = learned skill",
-              "\"Вмію\" is more formal",
-              "\"Можу\" is only for questions"
-            ],
-            "correctIndex": 1,
-            "explanation": "\"Можу\" = can (circumstances allow), \"вмію\" = know how to (skill)."
-          },
-          {
-            "question": "How does a woman say \"I must go\"?",
-            "options": [
-              "Я повинен йти.",
-              "Я повинна йти.",
-              "Мені треба йти.",
-              "Я повинні йти."
-            ],
-            "correctIndex": 1,
-            "explanation": "\"Повинна\" agrees with feminine subject."
-          },
-          {
-            "question": "Which is impersonal?",
-            "options": [
-              "хочу",
-              "можу",
-              "треба",
-              "повинен"
-            ],
-            "correctIndex": 2,
-            "explanation": "\"Треба\" doesn't change — it's impersonal."
-          },
-          {
-            "question": "How do you ask \"May I?\"",
-            "options": [
-              "Я можу?",
-              "Можна?",
-              "Треба?",
-              "Хочу?"
-            ],
-            "correctIndex": 1,
-            "explanation": "\"Можна?\" = May I? / Is it allowed?"
-          },
-          {
-            "question": "\"Я не вмію плавати\" means:",
-            "options": [
-              "I can't swim right now",
-              "I never learned to swim",
-              "I don't want to swim",
-              "Swimming is forbidden"
-            ],
-            "correctIndex": 1,
-            "explanation": "\"Не вмію\" = lack of skill."
-          },
-          {
-            "question": "Which form means \"forbidden\"?",
-            "options": [
-              "Треба",
-              "Можна",
-              "Не можна",
-              "Потрібно"
-            ],
-            "correctIndex": 2,
-            "explanation": "\"Не можна\" = not allowed/forbidden."
-          },
-          {
-            "question": "\"Йому потрібно вчитися\" means:",
-            "options": [
-              "He needs to study",
-              "He wants to study",
-              "He can study",
-              "He knows how to study"
+              "Квіти (Flowers)",
+              "Кіт (Cat)"
             ],
             "correctIndex": 0,
-            "explanation": "\"Потрібно\" + dative = need to."
+            "explanation": ""
           },
           {
-            "question": "Plural of \"повинен\" is:",
+            "question": "Листопад means...",
             "options": [
-              "повинна",
-              "повинне",
-              "повинні",
-              "повинен"
-            ],
-            "correctIndex": 2,
-            "explanation": "\"Повинні\" for plural subjects: Ми повинні."
-          },
-          {
-            "question": "\"Ти вмієш готувати?\" asks about:",
-            "options": [
-              "Permission",
-              "Skill",
-              "Desire",
-              "Obligation"
-            ],
-            "correctIndex": 1,
-            "explanation": "\"Вмієш\" asks about learned skill."
-          },
-          {
-            "question": "\"Можна меню?\" is asking for:",
-            "options": [
-              "Permission to have the menu",
-              "The menu's location",
-              "The menu's price",
-              "The menu's content"
+              "Leaf Fall",
+              "List Pad (Paper pad)"
             ],
             "correctIndex": 0,
-            "explanation": "\"Можна + noun?\" = May I have...?"
+            "explanation": ""
           },
           {
-            "question": "Which sentence is correct for a male student?",
+            "question": "Лютий means...",
             "options": [
-              "Студент повинен вчитися.",
-              "Студент повинна вчитися.",
-              "Студент повинні вчитися.",
-              "Студент повинне вчитися."
+              "Fierce/Rage",
+              "Lovely"
             ],
             "correctIndex": 0,
-            "explanation": "Masculine singular = повинен."
+            "explanation": ""
           },
           {
-            "question": "\"Нам треба зустрітися\" means:",
+            "question": "Серпень comes from...",
             "options": [
-              "We can meet",
-              "We need to meet",
-              "We want to meet",
-              "We must meet (personal)"
+              "Серп (Sickle)",
+              "Серце (Heart)"
             ],
-            "correctIndex": 1,
-            "explanation": "\"Нам треба\" = we need to."
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Жовтень is...",
+            "options": [
+              "Yellow (Жовтий)",
+              "Life (Життя)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Травень is...",
+            "options": [
+              "Grass (Трава)",
+              "Tram (Трамвай)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Січень comes from...",
+            "options": [
+              "Сікти (To slash/cut)",
+              "Сік (Juice)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Березень is...",
+            "options": [
+              "Birch Tree (Береза)",
+              "Bear (Ведмідь)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Липень is...",
+            "options": [
+              "Linden Tree (Липа)",
+              "Lip (Губа)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Грудень is from...",
+            "options": [
+              "Грудки (Frozen earth clods)",
+              "Груди (Chest)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Вересень is...",
+            "options": [
+              "Heather (Верес)",
+              "Very Soon"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Червень sounds like...",
+            "options": [
+              "Червоний (Red)",
+              "Черевик (Shoe)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
           }
         ],
         "shuffleQuestions": true,
@@ -693,76 +417,164 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.100Z",
-      "modifiedAt": "2025-12-06T10:49:20.100Z"
+      "createdAt": "2025-12-08T21:22:09.890Z",
+      "modifiedAt": "2025-12-08T21:22:09.890Z"
     },
     {
-      "id": "act-a1-0-truefalse",
-      "type": "true-false",
-      "title": "Modal Facts",
-      "description": "Decide if each statement is true (Правда) or false (Міф).",
+      "id": "act-a1-0-anagram",
+      "type": "anagram",
+      "title": "Day Scramble",
+      "description": "Unscramble.",
       "content": {
-        "type": "true-false",
-        "statements": [
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
           {
-            "statement": "\"Вмію\" is used for learned skills.",
-            "isTrue": true,
-            "explanation": "Correct! \"Я вмію плавати\" = I know how to swim."
+            "letters": [
+              "д",
+              "а",
+              "е",
+              "с",
+              "р",
+              "е"
+            ],
+            "answer": "середа",
+            "translation": "Wed"
           },
           {
-            "statement": "\"Можу\" and \"вмію\" are exactly the same.",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Можу\" = ability/permission, \"вмію\" = skill."
+            "letters": [
+              "б",
+              "о",
+              "т",
+              "а",
+              "с",
+              "у"
+            ],
+            "answer": "субота",
+            "translation": "Sat"
           },
           {
-            "statement": "\"Повинен\" changes based on gender.",
-            "isTrue": true,
-            "explanation": "Correct! Повинен (m), повинна (f), повинне (n), повинні (pl)."
+            "letters": [
+              "д",
+              "і",
+              "л",
+              "я",
+              "н",
+              "е"
+            ],
+            "answer": "неділя",
+            "translation": "Sun"
           },
           {
-            "statement": "\"Треба\" changes based on subject.",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Треба\" is impersonal and doesn't change."
+            "letters": [
+              "ц",
+              "я",
+              "т",
+              "н",
+              "и",
+              "п",
+              "'",
+              "я"
+            ],
+            "answer": "п'ятниця",
+            "translation": "Fri"
           },
           {
-            "statement": "\"Можна?\" means \"May I?\"",
-            "isTrue": true,
-            "explanation": "Correct! It asks for permission."
+            "letters": [
+              "в",
+              "т",
+              "о",
+              "р",
+              "о",
+              "к",
+              "в",
+              "і"
+            ],
+            "answer": "вівторок",
+            "translation": "Tue"
           },
           {
-            "statement": "Women say \"Я повинен.\"",
-            "isTrue": false,
-            "explanation": "Incorrect! Women say \"Я повинна.\""
+            "letters": [
+              "в",
+              "е",
+              "р",
+              "ч",
+              "е",
+              "т"
+            ],
+            "answer": "четвер",
+            "translation": "Thu"
           },
           {
-            "statement": "\"Не можна\" means \"forbidden\" or \"not allowed.\"",
-            "isTrue": true,
-            "explanation": "Correct! \"Тут не можна курити\" = No smoking here."
+            "letters": [
+              "д",
+              "і",
+              "л",
+              "о",
+              "к",
+              "п",
+              "о",
+              "н",
+              "е"
+            ],
+            "answer": "понеділок",
+            "translation": "Mon"
           },
           {
-            "statement": "\"Потрібно\" and \"треба\" are similar.",
-            "isTrue": true,
-            "explanation": "Correct! Both express necessity impersonally."
+            "letters": [
+              "с",
+              "і",
+              "ч",
+              "е",
+              "н",
+              "ь"
+            ],
+            "answer": "січень",
+            "translation": "Jan"
           },
           {
-            "statement": "\"Хочу\" is impersonal.",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Хочу\" is personal: я хочу, ти хочеш, він хоче..."
+            "letters": [
+              "т",
+              "р",
+              "а",
+              "в",
+              "е",
+              "н",
+              "ь"
+            ],
+            "answer": "травень",
+            "translation": "May"
           },
           {
-            "statement": "\"Мені треба\" uses dative case.",
-            "isTrue": true,
-            "explanation": "Correct! \"Мені\" is dative of \"я.\""
+            "letters": [
+              "з",
+              "и",
+              "м",
+              "а"
+            ],
+            "answer": "зима",
+            "translation": "Winter"
           },
           {
-            "statement": "\"Можна\" always needs a subject.",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Можна\" is impersonal — no subject needed."
+            "letters": [
+              "л",
+              "і",
+              "т",
+              "о"
+            ],
+            "answer": "літо",
+            "translation": "Summer"
           },
           {
-            "statement": "\"Я можу прийти\" means \"I can come.\"",
-            "isTrue": true,
-            "explanation": "Correct! \"Можу\" + infinitive = can do something."
+            "letters": [
+              "о",
+              "с",
+              "і",
+              "н",
+              "ь"
+            ],
+            "answer": "осінь",
+            "translation": "Autumn"
           }
         ]
       },
@@ -773,59 +585,66 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.100Z",
-      "modifiedAt": "2025-12-06T10:49:20.100Z"
+      "createdAt": "2025-12-08T21:22:09.890Z",
+      "modifiedAt": "2025-12-08T21:22:09.890Z"
     },
     {
-      "id": "act-a1-0-groupsort",
-      "type": "group-sort",
-      "title": "Modal Types",
-      "description": "Sort these into the correct category.",
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "When? (General)",
+      "description": "Use \"У [Month-Locative]\" or \"U [Day-Accusative]\".",
       "content": {
-        "type": "group-sort",
-        "groups": [
+        "type": "fill-blank",
+        "items": [
           {
-            "id": "abilitypermission",
-            "name": "Ability/Permission",
-            "items": [
-              "Я можу допомогти.",
-              "Він може прийти.",
-              "Ми можемо зустрітися."
-            ],
-            "nameUk": "можу"
+            "prompt": "(Jan) ___ холодно.",
+            "answer": "У січні"
           },
           {
-            "id": "skill",
-            "name": "Skill",
-            "items": [
-              "Я вмію плавати.",
-              "Вона вміє готувати.",
-              "Ти вмієш водити?"
-            ],
-            "nameUk": "вмію"
+            "prompt": "(May) ___ гарно.",
+            "answer": "У травні"
           },
           {
-            "id": "obligation",
-            "name": "Obligation",
-            "items": [
-              "Я повинен йти.",
-              "Мені треба працювати.",
-              "Вона повинна вчитися."
-            ],
-            "nameUk": "повинен/треба"
+            "prompt": "(Saturday) ___ я сплю.",
+            "answer": "У суботу"
           },
           {
-            "id": "desire",
-            "name": "Desire",
-            "items": [
-              "Я хочу каву.",
-              "Він хоче відпочити.",
-              "Ми хочемо вивчати."
-            ],
-            "nameUk": "хочу"
+            "prompt": "(Aug) ___ я на морі.",
+            "answer": "У серпні"
+          },
+          {
+            "prompt": "(Monday) ___ я на роботі.",
+            "answer": "У понеділок"
+          },
+          {
+            "prompt": "(Oct) ___ жовте листя.",
+            "answer": "У жовтні"
+          },
+          {
+            "prompt": "(Sunday) ___ ми вдома.",
+            "answer": "У неділю"
+          },
+          {
+            "prompt": "(Dec) ___ свята (holidays).",
+            "answer": "У грудні"
+          },
+          {
+            "prompt": "(Nov) ___ дощ.",
+            "answer": "У листопаді"
+          },
+          {
+            "prompt": "(April) ___ сонце.",
+            "answer": "У квітні"
+          },
+          {
+            "prompt": "(Feb) ___ сніг.",
+            "answer": "У лютому"
+          },
+          {
+            "prompt": "(July) ___ спекотно (hot).",
+            "answer": "У липні"
           }
-        ],
-        "shuffleItems": true
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -834,264 +653,494 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.100Z",
-      "modifiedAt": "2025-12-06T10:49:20.100Z"
+      "createdAt": "2025-12-08T21:22:09.890Z",
+      "modifiedAt": "2025-12-08T21:22:09.890Z"
+    },
+    {
+      "id": "act-a1-0-unjumble",
+      "type": "unjumble",
+      "title": "Planning",
+      "description": "Build sentences.",
+      "content": {
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
+          {
+            "words": [
+              "їду",
+              "Я",
+              "Київ",
+              "у",
+              "січні",
+              "в",
+              "."
+            ],
+            "answer": "Я їду в Київ у січні."
+          },
+          {
+            "words": [
+              "четвер",
+              "у",
+              "Зустріч",
+              "."
+            ],
+            "answer": "Зустріч у четвер."
+          },
+          {
+            "words": [
+              "вдома",
+              "неділю",
+              "Ми",
+              "у",
+              "."
+            ],
+            "answer": "Ми вдома у неділю."
+          },
+          {
+            "words": [
+              "холодно",
+              "Взимку",
+              "."
+            ],
+            "answer": "Взимку холодно."
+          },
+          {
+            "words": [
+              "гарно",
+              "Навесні",
+              "."
+            ],
+            "answer": "Навесні гарно."
+          },
+          {
+            "words": [
+              "на",
+              "влітку",
+              "морі",
+              "Я",
+              "."
+            ],
+            "answer": "Я на морі влітку."
+          },
+          {
+            "words": [
+              "школу",
+              "у",
+              "Вересень",
+              "це",
+              "час",
+              "в",
+              "."
+            ],
+            "answer": "Вересень це час в школу."
+          },
+          {
+            "words": [
+              "працюю",
+              "Я",
+              "вівторок",
+              "у",
+              "."
+            ],
+            "answer": "Я працюю у вівторок."
+          },
+          {
+            "words": [
+              "в",
+              "ми",
+              "п'ятницю",
+              "У",
+              "барі",
+              "."
+            ],
+            "answer": "У п'ятницю ми в барі."
+          },
+          {
+            "words": [
+              "день",
+              "Коли",
+              "народження",
+              "?"
+            ],
+            "answer": "Коли день народження?"
+          },
+          {
+            "words": [
+              "вечірка",
+              "Де",
+              "?"
+            ],
+            "answer": "Де вечірка?"
+          },
+          {
+            "words": [
+              "зараз",
+              "Який",
+              "місяць",
+              "?"
+            ],
+            "answer": "Який зараз місяць?",
+            "translation": "Which month is now?"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.890Z",
+      "modifiedAt": "2025-12-08T21:22:09.890Z"
+    },
+    {
+      "id": "act-a1-0-truefalse",
+      "type": "true-false",
+      "title": "Calendar Logic",
+      "description": "Is this true?",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "I can list Mon-Sun.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "I can list Winter-Spring-Summer-Autumn.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "I understand that \"On Friday\" changes the ending (-u).",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "I appreciate the poetry of \"Lyutiy\" (Fierce Feb) and \"Lystopad\" (Leaf Fall).",
+            "isTrue": false,
+            "explanation": ""
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.890Z",
+      "modifiedAt": "2025-12-08T21:22:09.890Z"
     }
   ],
   "vocabulary": {
     "moduleId": "mod-uk-A1-24",
     "level": "A1",
     "phase": "A1.3",
-    "wordCount": 25,
-    "newWordCount": 25,
+    "wordCount": 30,
+    "newWordCount": 30,
     "reviewWordCount": 0,
-    "transliterationMode": "none",
+    "transliterationMode": "full",
     "words": [
       {
-        "id": "v-mohty-0-0",
-        "uk": "могти",
-        "en": "can, to be able",
-        "pos": "verb",
-        "ipa": "ˈmɔɦtɪ",
-        "note": "Irregular: можу, можеш...",
+        "id": "v-ponedilok-0-0",
+        "uk": "понеділок",
+        "en": "Monday",
+        "pos": "noun",
+        "ipa": "/pɔnɛˈd⁽ʲ⁾ilɔk/",
+        "note": "[🔊](audio_ponedilok)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-vmity-0-1",
-        "uk": "вміти",
-        "en": "know how to",
-        "pos": "verb",
-        "ipa": "ˈwmitɪ",
-        "note": "Learned skill",
+        "id": "v-vivtorok-0-1",
+        "uk": "вівторок",
+        "en": "Tuesday",
+        "pos": "noun",
+        "ipa": "/vivˈtɔrɔk/",
+        "note": "[🔊](audio_vivtorok)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-povynen-0-2",
-        "uk": "повинен",
-        "en": "must, should (m)",
-        "pos": "adj",
-        "ipa": "pɔˈwɪnɛn",
-        "gender": "m",
-        "note": "Agrees with subject",
+        "id": "v-sereda-0-2",
+        "uk": "середа",
+        "en": "Wednesday",
+        "pos": "noun",
+        "ipa": "/sɛrɛˈdɑ/",
+        "note": "[🔊](audio_sereda)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-povynna-0-3",
-        "uk": "повинна",
-        "en": "must, should (f)",
-        "pos": "adj",
-        "ipa": "pɔˈwɪnnɐ",
-        "gender": "f",
+        "id": "v-chetver-0-3",
+        "uk": "четвер",
+        "en": "Thursday",
+        "pos": "noun",
+        "ipa": "/tʃɛtˈvɛr/",
+        "note": "[🔊](audio_chetver)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-povynni-0-4",
-        "uk": "повинні",
-        "en": "must, should (pl)",
-        "pos": "adj",
-        "ipa": "pɔˈwɪnni",
+        "id": "v-p'yatnytsya-0-4",
+        "uk": "п'ятниця",
+        "en": "Friday",
+        "pos": "noun",
+        "ipa": "/ˈpjɑtnɪt͡sʲɑ/",
+        "note": "[🔊](audio_pyatnytsya)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-musyty-0-5",
-        "uk": "мусити",
-        "en": "must, have to",
-        "pos": "verb",
-        "ipa": "muˈsɪtɪ",
-        "note": "Stronger than повинен",
+        "id": "v-subota-0-5",
+        "uk": "субота",
+        "en": "Saturday",
+        "pos": "noun",
+        "ipa": "/suˈbɔtɑ/",
+        "note": "[🔊](audio_subota)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-treba-0-6",
-        "uk": "треба",
-        "en": "need to, necessary",
-        "pos": "pred",
-        "ipa": "ˈtrɛbɐ",
-        "note": "Impersonal",
+        "id": "v-nedilya-0-6",
+        "uk": "неділя",
+        "en": "Sunday",
+        "pos": "noun",
+        "ipa": "/nɛˈd⁽ʲ⁾ilʲɑ/",
+        "note": "[🔊](audio_nedilya)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-potribno-0-7",
-        "uk": "потрібно",
-        "en": "need to, necessary",
-        "pos": "pred",
-        "ipa": "pɔˈtribnɔ",
-        "note": "Same as треба",
+        "id": "v-zyma-0-7",
+        "uk": "зима",
+        "en": "Winter",
+        "pos": "noun",
+        "ipa": "/zɪˈmɑ/",
+        "note": "[🔊](audio_zyma)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-neobkhidno-0-8",
-        "uk": "необхідно",
-        "en": "necessary",
-        "pos": "pred",
-        "ipa": "nɛɔbˈxidnɔ",
-        "note": "More formal",
+        "id": "v-vesna-0-8",
+        "uk": "весна",
+        "en": "Spring",
+        "pos": "noun",
+        "ipa": "/vɛsˈnɑ/",
+        "note": "[🔊](audio_vesna)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-mozhna-0-9",
-        "uk": "можна",
-        "en": "may, allowed",
-        "pos": "pred",
-        "ipa": "ˈmɔʒnɐ",
-        "note": "Impersonal",
+        "id": "v-lito-0-9",
+        "uk": "літо",
+        "en": "Summer",
+        "pos": "noun",
+        "ipa": "/ˈl⁽ʲ⁾itɔ/",
+        "note": "[🔊](audio_lito)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-ne-mozhna-0-10",
-        "uk": "не можна",
-        "en": "forbidden, not allowed",
-        "pos": "pred",
-        "ipa": "nɛ ˈmɔʒnɐ",
+        "id": "v-osinь-0-10",
+        "uk": "осінь",
+        "en": "Autumn",
+        "pos": "noun",
+        "ipa": "/ˈɔs⁽ʲ⁾inʲ/",
+        "note": "[🔊](audio_osin)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-dozvoleno-0-11",
-        "uk": "дозволено",
-        "en": "permitted",
-        "pos": "pred",
-        "ipa": "dɔzˈwɔlɛnɔ",
-        "note": "Formal",
+        "id": "v-sichenь-0-11",
+        "uk": "січень",
+        "en": "January",
+        "pos": "noun",
+        "ipa": "/ˈsitʃɛnʲ/",
+        "note": "[🔊](audio_sichen)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-zaboroneno-0-12",
-        "uk": "заборонено",
-        "en": "forbidden",
-        "pos": "pred",
-        "ipa": "zɐbɔrɔˈnɛnɔ",
-        "note": "Formal",
+        "id": "v-lyutyy-0-12",
+        "uk": "лютий",
+        "en": "February",
+        "pos": "noun",
+        "ipa": "/ˈlʲutɪj/",
+        "note": "[🔊](audio_lyutyj)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-slid-0-13",
-        "uk": "слід",
-        "en": "should",
-        "pos": "pred",
-        "ipa": "slid",
-        "note": "Impersonal",
+        "id": "v-berezenь-0-13",
+        "uk": "березень",
+        "en": "March",
+        "pos": "noun",
+        "ipa": "/ˈbɛrɛzɛnʲ/",
+        "note": "[🔊](audio_berezen)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-varto-0-14",
-        "uk": "варто",
-        "en": "worth, should",
-        "pos": "pred",
-        "ipa": "ˈwɑrtɔ",
-        "note": "Impersonal",
+        "id": "v-kvitenь-0-14",
+        "uk": "квітень",
+        "en": "April",
+        "pos": "noun",
+        "ipa": "/ˈkvitɛnʲ/",
+        "note": "[🔊](audio_kviten)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-zdatnyy-0-15",
-        "uk": "здатний",
-        "en": "capable",
-        "pos": "adj",
-        "ipa": "ˈzdɑtnɪj",
-        "gender": "m",
+        "id": "v-travenь-0-15",
+        "uk": "травень",
+        "en": "May",
+        "pos": "noun",
+        "ipa": "/ˈtrɑvɛnʲ/",
+        "note": "[🔊](audio_traven)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-hotovyy-0-16",
-        "uk": "готовий",
-        "en": "ready",
-        "pos": "adj",
-        "ipa": "ɦɔˈtɔwɪj",
-        "gender": "m",
+        "id": "v-chervenь-0-16",
+        "uk": "червень",
+        "en": "June",
+        "pos": "noun",
+        "ipa": "/ˈtʃɛrvɛnʲ/",
+        "note": "[🔊](audio_cherven)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-zhodnyy-0-17",
-        "uk": "згодний",
-        "en": "agreeable, willing",
-        "pos": "adj",
-        "ipa": "ˈzɦɔdnɪj",
-        "gender": "m",
+        "id": "v-lypenь-0-17",
+        "uk": "липень",
+        "en": "July",
+        "pos": "noun",
+        "ipa": "/ˈlɪpɛnʲ/",
+        "note": "[🔊](audio_lypen)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-vpevnenyy-0-18",
-        "uk": "впевнений",
-        "en": "confident, sure",
-        "pos": "adj",
-        "ipa": "wpɛwˈnɛnɪj",
-        "gender": "m",
+        "id": "v-serpenь-0-18",
+        "uk": "серпень",
+        "en": "August",
+        "pos": "noun",
+        "ipa": "/ˈsɛrpɛnʲ/",
+        "note": "[🔊](audio_serpen)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-pevnyy-0-19",
-        "uk": "певний",
-        "en": "certain",
-        "pos": "adj",
-        "ipa": "ˈpɛwnɪj",
-        "gender": "m",
+        "id": "v-veresenь-0-19",
+        "uk": "вересень",
+        "en": "September",
+        "pos": "noun",
+        "ipa": "/ˈvɛrɛsɛnʲ/",
+        "note": "[🔊](audio_veresen)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-namahatysya-0-20",
-        "uk": "намагатися",
-        "en": "to try",
-        "pos": "verb",
-        "ipa": "nɐmɐˈɦɑtɪsʲɐ",
-        "note": "Reflexive",
+        "id": "v-zhovtenь-0-20",
+        "uk": "жовтень",
+        "en": "October",
+        "pos": "noun",
+        "ipa": "/ˈʒɔvtɛnʲ/",
+        "note": "[🔊](audio_zhovten)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-staratysya-0-21",
-        "uk": "старатися",
-        "en": "to try, endeavor",
-        "pos": "verb",
-        "ipa": "stɐˈrɑtɪsʲɐ",
-        "note": "Reflexive",
+        "id": "v-lystopad-0-21",
+        "uk": "листопад",
+        "en": "November",
+        "pos": "noun",
+        "ipa": "/lɪstɔˈpɑd/",
+        "note": "[🔊](audio_lystopad)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-probuvaty-0-22",
-        "uk": "пробувати",
-        "en": "to try, attempt",
-        "pos": "verb",
-        "ipa": "prɔbuˈwɑtɪ",
+        "id": "v-hrudenь-0-22",
+        "uk": "грудень",
+        "en": "December",
+        "pos": "noun",
+        "ipa": "/ˈhrudɛnʲ/",
+        "note": "[🔊](audio_hruden)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-vdavatysya-0-23",
-        "uk": "вдаватися",
-        "en": "to manage, succeed",
-        "pos": "verb",
-        "ipa": "wdɐˈwɑtɪsʲɐ",
-        "note": "+ infinitive",
+        "id": "v-vzymku-0-23",
+        "uk": "взимку",
+        "en": "in winter",
+        "pos": "adv",
+        "ipa": "/ˈvzɪmku/",
+        "note": "[🔊](audio_vzymku)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-vstyhaty-0-24",
-        "uk": "встигати",
-        "en": "to manage (time)",
-        "pos": "verb",
-        "ipa": "wstɪˈɦɑtɪ",
-        "note": "Have time for",
+        "id": "v-navesni-0-24",
+        "uk": "навесні",
+        "en": "in spring",
+        "pos": "adv",
+        "ipa": "/nɑvɛsˈn⁽ʲ⁾i/",
+        "note": "[🔊](audio_navesni)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vlitku-0-25",
+        "uk": "влітку",
+        "en": "in summer",
+        "pos": "adv",
+        "ipa": "/ˈvl⁽ʲ⁾itku/",
+        "note": "[🔊](audio_vlitku)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-voseny-0-26",
+        "uk": "восени",
+        "en": "in autumn",
+        "pos": "adv",
+        "ipa": "/vɔsɛˈnɪ/",
+        "note": "[🔊](audio_voseny)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-tyzhdenь-0-27",
+        "uk": "тиждень",
+        "en": "week",
+        "pos": "noun",
+        "ipa": "/ˈtɪʒdɛnʲ/",
+        "note": "[🔊](audio_tyzhden)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-misyatsь-0-28",
+        "uk": "місяць",
+        "en": "month/moon",
+        "pos": "noun",
+        "ipa": "/ˈm⁽ʲ⁾isʲɑt͡sʲ/",
+        "note": "[🔊](audio_misyats)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-rik-0-29",
+        "uk": "рік",
+        "en": "year",
+        "pos": "noun",
+        "ipa": "/rik/",
+        "note": "[🔊](audio_rik)",
         "isNew": true,
         "firstModule": 0
       }

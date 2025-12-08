@@ -305,12 +305,31 @@ function renderVocabSection(vocabulary: VocabWord[], reviewVocabulary: VocabWord
   const hasIpa = vocabulary.some(v => v.ipa);
   const hasNote = vocabulary.some(v => v.note);
 
+  // Helper to render text with audio buttons
+  // If textToSpeak is provided, the button will trigger TTS for that text.
+  // Otherwise, it falls back to the audio ID (which we are deprecated, but keeping for safety) OR ignores it.
+  const renderCell = (text: string, textToSpeak?: string) => {
+    // Strategy: Split by audio pattern
+    const parts = text.split(/(\[🔊\]\(audio_[^)]+\))/g);
+    return parts.map(part => {
+      const match = part.match(/^\[🔊\]\((audio_[^)]+)\)$/);
+      if (match) {
+        // Forvo Strategy: Open popup to Forvo word page
+        const text = textToSpeak || 'search'; // Fallback
+        return `<button class="audio-btn" onclick="openForvo('${escapeHtml(text)}')" title="Listen on Forvo">🔊</button>`;
+      } else {
+        return escapeHtml(part);
+      }
+    }).join('');
+  };
+
   const tableRows = vocabulary.map(v => {
-    let row = `<tr><td class="vocab-uk">${escapeHtml(v.uk)}</td>`;
+    let row = `<tr><td class="vocab-uk">${renderCell(v.uk, v.uk)}</td>`;
     if (hasTranslit) row += `<td class="vocab-translit">${escapeHtml(v.translit || '')}</td>`;
     if (hasIpa) row += `<td class="vocab-ipa">${escapeHtml(v.ipa || '')}</td>`;
-    row += `<td class="vocab-en">${escapeHtml(v.en)}</td>`;
-    if (hasNote) row += `<td class="vocab-note">${escapeHtml(v.note || '')}</td>`;
+    row += `<td class="vocab-en">${renderCell(v.en)}</td>`;
+    // Pass v.uk as the speech target for the note column too, as the audio button is likely there
+    if (hasNote) row += `<td class="vocab-note">${renderCell(v.note || '', v.uk)}</td>`;
     row += '</tr>';
     return row;
   }).join('');

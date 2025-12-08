@@ -655,7 +655,7 @@ function auditModule(filePath: string, vocabDb?: VocabDatabase): ModuleAudit {
 
     // Check for story/narrative opening
     const hasNarrative = content.match(/(?:journal|diary|journal entry|story|щоденник|історія)/i) ||
-                         content.match(/^(?:День \d+|Day \d+|Today|Сьогодні)/m);
+      content.match(/^(?:День \d+|Day \d+|Today|Сьогодні)/m);
     if (!hasNarrative) {
       issues.push({
         type: 'info',
@@ -1065,9 +1065,9 @@ function auditModule(filePath: string, vocabDb?: VocabDatabase): ModuleAudit {
 
   // Check for grammar tables (expected in grammar modules)
   const isGrammarModule = frontmatter.match(/tags:.*grammar/i) || title.toLowerCase().includes('grammar') ||
-                          title.match(/case|відмін|verb|дієсл|aspect|вид/i);
+    title.match(/case|відмін|verb|дієсл|aspect|вид/i);
   const hasGrammarTable = content.match(/\|[^|]+\|[^|]+\|[^|]+\|/) &&
-                          (content.match(/\|\s*(?:Form|Форма|Case|Відмінок|Singular|Однина|Person|Особа)/i));
+    (content.match(/\|\s*(?:Form|Форма|Case|Відмінок|Singular|Однина|Person|Особа)/i));
 
   if (isGrammarModule && !hasGrammarTable) {
     issues.push({
@@ -1278,8 +1278,9 @@ function generateFixPrompt(audit: ModuleAudit): string {
 function main() {
   const args = process.argv.slice(2);
 
-  // Check for --fix flag
+  // Check for --fix and --gemini flags
   const fixMode = args.includes('--fix');
+  const useGemini = args.includes('--gemini');
   const filteredArgs = args.filter(a => !a.startsWith('--'));
 
   const lang = filteredArgs[0] || 'l2-uk-en';
@@ -1343,15 +1344,22 @@ function main() {
     const levelPath = path.join(curriculumDir, levelDir);
     if (!fs.existsSync(levelPath)) continue;
 
-    const levelFiles = fs.readdirSync(levelPath)
-      .filter(f => f.match(/^\d{2}-.*\.md$/))
+    // Use gemini subfolder if requested
+    const scanPath = useGemini ? path.join(levelPath, 'gemini') : levelPath;
+    if (useGemini && !fs.existsSync(scanPath)) {
+      console.warn(`Warn: No gemini folder found for ${levelDir}`);
+      continue;
+    }
+
+    const levelFiles = fs.readdirSync(scanPath)
+      .filter(f => f.match(/^\d{2}-.*\.md$/) && !f.endsWith('.audit.md'))
       .map(f => {
         const localNum = parseInt(f.match(/^(\d{2})/)?.[1] || '0');
         // Read frontmatter to get global module number
-        const content = fs.readFileSync(path.join(levelPath, f), 'utf8');
+        const content = fs.readFileSync(path.join(scanPath, f), 'utf8');
         const globalNum = parseInt(content.match(/module:\s*(\d+)/)?.[1] || '0');
         return {
-          path: path.join(levelPath, f),
+          path: path.join(scanPath, f),
           num: globalNum || localNum,
           level: levelDir.toUpperCase().replace('-PLUS', '+').replace('-', '+'),
         };
@@ -1390,6 +1398,46 @@ function main() {
     if (audit.issues.length > 0) {
       problemModules.push(audit);
     }
+
+    // Generate Audit Report File
+    const reportContent = generateFixPrompt(audit);
+
+    // Determine output path: .../{level}/gemini/{module}.audit.md
+    const fileDir = path.dirname(file.path);
+    // If we are already in gemini folder (from --gemini flag scanning), step up, else use current
+    // Actually, user wants it IN gemini folder.
+    // If input is a1/gemini/01.md -> a1/gemini/01.audit.md (same folder)
+    // If input is a1/01.md -> a1/gemini/01.audit.md (subfolder)
+
+    let targetDir = fileDir;
+    if (!fileDir.endsWith('gemini')) {
+      targetDir = path.join(fileDir, 'gemini');
+    }
+
+    if (!fs.existsSync(targetDir)) {
+      try {
+        fs.mkdirSync(targetDir, { recursive: true });
+      } catch (e) {
+        console.error(`Failed to create directory ${targetDir}`, e);
+        continue;
+      }
+    }
+
+    const baseName = path.basename(file.path, '.md');
+    const auditPath = path.join(targetDir, `${baseName}.audit.md`);
+
+    const fileHeader = `---
+module: ${audit.module}
+type: audit
+date: ${new Date().toISOString()}
+---
+
+# Audit Report: ${audit.title}
+
+`;
+
+    fs.writeFileSync(auditPath, fileHeader + reportContent);
+    // console.log(`  📄 Write audit: ${auditPath}`);
   }
 
   // Print results grouped by category

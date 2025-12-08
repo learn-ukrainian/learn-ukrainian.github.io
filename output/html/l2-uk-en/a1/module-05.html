@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -481,13 +521,14 @@ footer {
     <h1>Module 05: My World: Objects</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Quiz</button>
-      <button class="nav-tab" data-section="activity-1">2. Sort</button>
-      <button class="nav-tab" data-section="activity-2">3. Match</button>
-      <button class="nav-tab" data-section="activity-3">4. Match</button>
-      <button class="nav-tab" data-section="activity-4">5. T/F</button>
-      <button class="nav-tab" data-section="activity-5">6. Fill</button>
-      <button class="nav-tab" data-section="activity-6">7. Spell</button>
+      <button class="nav-tab" data-section="activity-0">1. Spell</button>
+      <button class="nav-tab" data-section="activity-1">2. Match</button>
+      <button class="nav-tab" data-section="activity-2">3. Fill</button>
+      <button class="nav-tab" data-section="activity-3">4. Sort</button>
+      <button class="nav-tab" data-section="activity-4">5. Order</button>
+      <button class="nav-tab" data-section="activity-5">6. Quiz</button>
+      <button class="nav-tab" data-section="activity-6">7. T/F</button>
+      <button class="nav-tab" data-section="activity-7">8. Match</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -497,582 +538,187 @@ footer {
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.1</span>
         <h2 style="font-size:2rem;margin:0.5rem 0">My World: Objects</h2>
-        <p style="color:var(--text-muted)">Demonstratives and Everyday Vocabulary</p>
+        <p style="color:var(--text-muted)">The Chameleon of &quot;This&quot; and &quot;That&quot;</p>
       </div>
       
     <div class="card section-intro">
       <h3>📖 Introduction</h3>
       <div class="md-content"><h2 id="warmup">warm-up</h2>
-<h3 id="pointandsay">Point and Say!</h3>
-<p>In Module 04, you learned that "Це" means "this is" for identification. But what if you want to say "<strong>this</strong> table" or "<strong>that</strong> book"? Then you need demonstratives that match the noun's gender!</p>
-<table>
-<thead>
-<tr>
-<th>English</th>
-<th>Ukrainian</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>this (masc)</td>
-<td>цей</td>
-<td><strong>цей</strong> стіл (this table)</td>
-</tr>
-<tr>
-<td>this (fem)</td>
-<td>ця</td>
-<td><strong>ця</strong> книга (this book)</td>
-</tr>
-<tr>
-<td>this (neut)</td>
-<td>це</td>
-<td><strong>це</strong> вікно (this window)</td>
-</tr>
-<tr>
-<td>these (plural)</td>
-<td>ці</td>
-<td><strong>ці</strong> книги (these books)</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>Demonstratives are one of the most common words in any language! In Ukrainian, you'll hear "цей/ця/це" constantly. Mastering them now will make you sound much more natural.</p>
-</blockquote>
-<h3 id="twousesof">Two Uses of "Це"</h3>
-<p>Don't confuse them:</p>
-<table>
-<thead>
-<tr>
-<th>Use</th>
-<th>Example</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Identification</strong></td>
-<td>Це книга.</td>
-<td>This <strong>is</strong> a book.</td>
-</tr>
-<tr>
-<td><strong>Demonstrative</strong></td>
-<td>Це вікно велике.</td>
-<td>This window <strong>is</strong> big.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="presentation">presentation</h2>
-<h3 id="thedemonstrativefamily">The Demonstrative Family</h3>
-<p>Here's the complete picture of "this/that" in Ukrainian:</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>Masculine</th>
-<th>Feminine</th>
-<th>Neuter</th>
-<th>Plural</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>This</strong></td>
-<td>цей</td>
-<td>ця</td>
-<td>це</td>
-<td>ці</td>
-</tr>
-<tr>
-<td><strong>That</strong></td>
-<td>той</td>
-<td>та</td>
-<td>те</td>
-<td>ті</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>⚡ <strong>Pro Tip</strong></p>
-  <p>The demonstratives follow the same gender patterns you learned in Module 03! Consonant → masculine (цей, той), -а → feminine (ця, та), -е → neuter (це, те).</p>
-</blockquote>
-<h3 id="usingthis">Using "This" (цей/ця/це/ці)</h3>
-<p>Match the demonstrative to the noun's gender:</p>
-<table>
-<thead>
-<tr>
-<th>Gender</th>
-<th>Demonstrative</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Masculine</td>
-<td><strong>цей</strong></td>
-<td>цей стіл (this table)</td>
-</tr>
-<tr>
-<td>Feminine</td>
-<td><strong>ця</strong></td>
-<td>ця чашка (this cup)</td>
-</tr>
-<tr>
-<td>Neuter</td>
-<td><strong>це</strong></td>
-<td>це ліжко (this bed)</td>
-</tr>
-<tr>
-<td>Plural</td>
-<td><strong>ці</strong></td>
-<td>ці ключі (these keys)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="usingthat">Using "That" (той/та/те/ті)</h3>
-<p>For things farther away:</p>
-<table>
-<thead>
-<tr>
-<th>Gender</th>
-<th>Demonstrative</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Masculine</td>
-<td><strong>той</strong></td>
-<td>той дім (that house)</td>
-</tr>
-<tr>
-<td>Feminine</td>
-<td><strong>та</strong></td>
-<td>та лампа (that lamp)</td>
-</tr>
-<tr>
-<td>Neuter</td>
-<td><strong>те</strong></td>
-<td>те вікно (that window)</td>
-</tr>
-<tr>
-<td>Plural</td>
-<td><strong>ті</strong></td>
-<td>ті книги (those books)</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎯 <strong>Fun Fact</strong></p>
-  <p>The word "той" (that) is related to English "the"! Both come from the same Proto-Indo-European root. Languages are connected across thousands of years!</p>
-</blockquote>
-<h3 id="everydayobjectskitchen">Everyday Objects: Kitchen</h3>
-<p>Let's learn kitchen vocabulary:</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Transliteration</th>
-<th>English</th>
-<th>Gender</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>чашка</td>
-<td>chashka</td>
-<td>cup</td>
-<td>f</td>
-</tr>
-<tr>
-<td>ложка</td>
-<td>lozhka</td>
-<td>spoon</td>
-<td>f</td>
-</tr>
-<tr>
-<td>виделка</td>
-<td>vydelka</td>
-<td>fork</td>
-<td>f</td>
-</tr>
-<tr>
-<td>ніж</td>
-<td>nizh</td>
-<td>knife</td>
-<td>m</td>
-</tr>
-<tr>
-<td>тарілка</td>
-<td>tarilka</td>
-<td>plate</td>
-<td>f</td>
-</tr>
-<tr>
-<td>склянка</td>
-<td>sklyanka</td>
-<td>glass</td>
-<td>f</td>
-</tr>
-<tr>
-<td>пляшка</td>
-<td>plyashka</td>
-<td>bottle</td>
-<td>f</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🌍 <strong>Real World</strong></p>
-  <p>In a Ukrainian restaurant, you might ask: "Можна виделку?" (Can I have a fork?) or "Дайте склянку води" (Give me a glass of water). These are essential survival words!</p>
-</blockquote>
-<h3 id="everydayobjectspersonalitems">Everyday Objects: Personal Items</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Transliteration</th>
-<th>English</th>
-<th>Gender</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>сумка</td>
-<td>sumka</td>
-<td>bag</td>
-<td>f</td>
-</tr>
-<tr>
-<td>рюкзак</td>
-<td>ryukzak</td>
-<td>backpack</td>
-<td>m</td>
-</tr>
-<tr>
-<td>гаманець</td>
-<td>hamanets'</td>
-<td>wallet</td>
-<td>m</td>
-</tr>
-<tr>
-<td>телефон</td>
-<td>telefon</td>
-<td>phone</td>
-<td>m</td>
-</tr>
-<tr>
-<td>комп'ютер</td>
-<td>komp'yuter</td>
-<td>computer</td>
-<td>m</td>
-</tr>
-<tr>
-<td>ключ</td>
-<td>klyuch</td>
-<td>key</td>
-<td>m</td>
-</tr>
-</tbody>
-</table>
-<h3 id="everydayobjectsroomfurniture">Everyday Objects: Room &amp; Furniture</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Transliteration</th>
-<th>English</th>
-<th>Gender</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>стіна</td>
-<td>stina</td>
-<td>wall</td>
-<td>f</td>
-</tr>
-<tr>
-<td>підлога</td>
-<td>pidloha</td>
-<td>floor</td>
-<td>f</td>
-</tr>
-<tr>
-<td>стеля</td>
-<td>stelya</td>
-<td>ceiling</td>
-<td>f</td>
-</tr>
-<tr>
-<td>лампа</td>
-<td>lampa</td>
-<td>lamp</td>
-<td>f</td>
-</tr>
-<tr>
-<td>годинник</td>
-<td>hodynyk</td>
-<td>clock/watch</td>
-<td>m</td>
-</tr>
-<tr>
-<td>дзеркало</td>
-<td>dzerkalo</td>
-<td>mirror</td>
-<td>n</td>
-</tr>
-<tr>
-<td>картина</td>
-<td>kartyna</td>
-<td>picture/painting</td>
-<td>f</td>
-</tr>
-<tr>
-<td>стілець</td>
-<td>stilets'</td>
-<td>chair</td>
-<td>m</td>
-</tr>
-<tr>
-<td>крісло</td>
-<td>krislo</td>
-<td>armchair</td>
-<td>n</td>
-</tr>
-<tr>
-<td>диван</td>
-<td>dyvan</td>
-<td>sofa</td>
-<td>m</td>
-</tr>
-<tr>
-<td>ліжко</td>
-<td>lizhko</td>
-<td>bed</td>
-<td>n</td>
-</tr>
-<tr>
-<td>шафа</td>
-<td>shafa</td>
-<td>wardrobe/closet</td>
-<td>f</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>📜 <strong>History Bite</strong></p>
-  <p>The word "комп'ютер" (computer) came to Ukrainian in the 1990s - one of many English loanwords from the tech revolution. But Ukrainian also has native tech vocabulary: "обчислювач" (calculator) is purely Slavic!</p>
-</blockquote>
-<h3 id="everydayobjectskitchenappliances">Everyday Objects: Kitchen Appliances</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Transliteration</th>
-<th>English</th>
-<th>Gender</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>холодильник</td>
-<td>kholodyl'nyk</td>
-<td>refrigerator</td>
-<td>m</td>
-</tr>
-<tr>
-<td>плита</td>
-<td>plyta</td>
-<td>stove</td>
-<td>f</td>
-</tr>
-<tr>
-<td>мікрохвильовка</td>
-<td>mikrokhvyl'ovka</td>
-<td>microwave</td>
-<td>f</td>
-</tr>
-<tr>
-<td>праска</td>
-<td>praska</td>
-<td>iron</td>
-<td>f</td>
-</tr>
-<tr>
-<td>пилосос</td>
-<td>pylocos</td>
-<td>vacuum cleaner</td>
-<td>m</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎬 <strong>Pop Culture Moment: S.T.A.L.K.E.R.</strong></p>
-  <p>In the S.T.A.L.K.E.R. games, you see lots of Ukrainian object names: "рюкзак" (backpack) for inventory, "ключ" (key) for locked doors, "пляшка" (bottle) for vodka. Gaming teaches vocabulary!</p>
-</blockquote>
-<h3 id="puttingittogether">Putting It Together</h3>
-<p>Now you can describe anything you see:</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Transliteration</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Це мій телефон.</td>
-<td>Tse miy telefon.</td>
-<td>This is my phone.</td>
-</tr>
-<tr>
-<td>Цей стілець старий.</td>
-<td>Tsey stilets' staryy.</td>
-<td>This chair is old.</td>
-</tr>
-<tr>
-<td>Ця сумка нова.</td>
-<td>Tsya sumka nova.</td>
-<td>This bag is new.</td>
-</tr>
-<tr>
-<td>Де моя чашка?</td>
-<td>De moya chashka?</td>
-<td>Where is my cup?</td>
-</tr>
-</tbody>
-</table>
-<h3 id="colorspreview">Colors Preview</h3>
-<p>Here are some colors you'll learn fully in Module 27 - but start recognizing them now:</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Transliteration</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>великий</td>
-<td>velykyy</td>
-<td>big</td>
-</tr>
-<tr>
-<td>малий</td>
-<td>malyy</td>
-<td>small</td>
-</tr>
-<tr>
-<td>новий</td>
-<td>novyy</td>
-<td>new</td>
-</tr>
-<tr>
-<td>старий</td>
-<td>staryy</td>
-<td>old</td>
-</tr>
-</tbody>
-</table>
-<h2 id="practice">practice</h2>
-<h3 id="exercise1matchdemonstrativetogender">Exercise 1: Match Demonstrative to Gender</h3>
-<p>Choose the correct demonstrative:</p>
-<ol>
-<li><p>___ стіл (this table)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer">цей (masculine)</div></div>
-<ol start="2">
-<li><p>___ книга (this book)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer">ця (feminine)</div></div>
-<ol start="3">
-<li><p>___ вікно (this window)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer">це (neuter)</div></div>
-<ol start="4">
-<li><p>___ ключі (these keys)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer">ці (plural)</div></div>
-<ol start="5">
-<li><p>___ сумка (that bag)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer">та (feminine)</div></div>
-<ol start="6">
-<li><p>___ диван (that sofa)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-5', this)">Показати відповідь</button><div class="answer-block" id="ans-5"><div class="callout callout-answer" data-callout="answer">той (masculine)</div></div>
-<h3 id="exercise2describeobjects">Exercise 2: Describe Objects</h3>
-<p>Describe these objects using demonstratives:</p>
-<ol>
-<li><p>(this) телефон</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-6', this)">Показати відповідь</button><div class="answer-block" id="ans-6"><div class="callout callout-answer" data-callout="answer">цей телефон</div></div>
-<ol start="2">
-<li><p>(this) чашка</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-7', this)">Показати відповідь</button><div class="answer-block" id="ans-7"><div class="callout callout-answer" data-callout="answer">ця чашка</div></div>
-<ol start="3">
-<li><p>(that) дзеркало</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-8', this)">Показати відповідь</button><div class="answer-block" id="ans-8"><div class="callout callout-answer" data-callout="answer">те дзеркало</div></div>
-<ol start="4">
-<li><p>(these) ключі</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-9', this)">Показати відповідь</button><div class="answer-block" id="ans-9"><div class="callout callout-answer" data-callout="answer">ці ключі</div></div>
-<ol start="5">
-<li><p>(that) лампа</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-10', this)">Показати відповідь</button><div class="answer-block" id="ans-10"><div class="callout callout-answer" data-callout="answer">та лампа</div></div>
-<ol start="6">
-<li><p>(this) ліжко</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-11', this)">Показати відповідь</button><div class="answer-block" id="ans-11"><div class="callout callout-answer" data-callout="answer">це ліжко</div></div>
-<h2 id="production">production</h2>
-<h3 id="yourroomtour">Your Room Tour</h3>
-<p>Look around your room. Can you describe 5 objects using Ukrainian demonstratives?</p>
-<p>Example:</p>
+<p><strong>The Chameleon Word: How "This" Adapts to the Ukrainian World.</strong></p>
+<p>In English, "this" is a remarkably stable word. Whether you are pointing at a table, a lamp, or a window, it remains "this." It's a simple, unchanging descriptor. But in Ukrainian, "this" is a linguistic chameleon. It changes its form to perfectly match the <strong>grammatical gender</strong> and <strong>number</strong> of the noun it describes.</p>
+<p>Imagine a world where your "pointing" word doesn't just indicate proximity but also whispers the gender of the object.</p>
 <ul>
-<li>Це мій комп'ютер. Цей комп'ютер новий. (This is my computer. This computer is new.)</li>
-<li>Ця чашка моя. (This cup is mine.)</li>
-<li>Де мій телефон? Ось він! (Where is my phone? Here it is!)</li>
+<li>If you point at a Masculine object (<strong>стіл</strong> - table), you say <strong>ЦЕЙ</strong> стіл.</li>
+<li>If you point at a Feminine object (<strong>лампа</strong> - lamp), you say <strong>ЦЯ</strong> лампа.</li>
+<li>If you point at a Neuter object (<strong>вікно</strong> - window), you say <strong>ЦЕ</strong> вікно.</li>
+<li>If you point at multiple objects (<strong>двері</strong> - doors), you say <strong>ЦІ</strong> двері.</li>
 </ul>
+<p>This is your first real step into <strong>grammatical agreement</strong> in its purest form. In Ukrainian, words don't just stand alone; they hold hands. Adjectives (like "this" or "that") must always match the gender and number of the noun they describe. This module will equip you to precisely label and identify the world around you, understanding not just "what" something is, but its linguistic "essence."</p>
 <blockquote>
-  <p>🎭 <strong>Culture Corner</strong></p>
-  <p>Ukrainians often have a "гостьова кімната" (guest room) in their homes. Hospitality is huge in Ukrainian culture - expect to be offered tea and food the moment you visit someone's home!</p>
+  <p>💡 <strong>Did You Know? The Power of Agreement</strong><br />
+  Grammatical agreement is a cornerstone of Ukrainian syntax. It helps maintain clarity in sentences, especially when word order is flexible. When you master agreement, you'll find that adjectives act like loyal companions, always adopting the characteristics of the noun they follow. This system, while initially challenging, adds a layer of precision and elegance to the language.</p>
 </blockquote>
-<hr />
-<hr />
+<h2 id="presentation">presentation</h2>
+<h3 id="thethisfamilyproximaldemonstratives">The "This" Family (Proximal Demonstratives)</h3>
+<p>These demonstrative adjectives are used for objects that are physically close to you, or conceptually "here." They are the direct descendants of "this" in English.</p>
+<table>
+<thead>
+<tr>
+<th>Grammatical Gender</th>
+<th>Form (Ukrainian)</th>
+<th>Pronunciation</th>
+<th>Example Noun</th>
+<th>Full Phrase</th>
+<th>English Translation</th>
+<th>Audio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Masculine</strong></td>
+<td><strong>ЦЕЙ</strong></td>
+<td>/tsej/</td>
+<td>стіл</td>
+<td><strong>Цей</strong> стіл</td>
+<td>This table</td>
+<td><button class="audio-btn" onclick="openForvo('tsey')" title="Listen on Forvo (Search)">🔊</button></td>
+</tr>
+<tr>
+<td><strong>Feminine</strong></td>
+<td><strong>ЦЯ</strong></td>
+<td>/tsʲɑ/</td>
+<td>лампа</td>
+<td><strong>Ця</strong> лампа</td>
+<td>This lamp</td>
+<td><button class="audio-btn" onclick="openForvo('tsya')" title="Listen on Forvo (Search)">🔊</button></td>
+</tr>
+<tr>
+<td><strong>Neuter</strong></td>
+<td><strong>ЦЕ</strong></td>
+<td>/tʃɛ/</td>
+<td>вікно</td>
+<td><strong>Це</strong> вікно</td>
+<td>This window</td>
+<td><button class="audio-btn" onclick="openForvo('tse adj')" title="Listen on Forvo (Search)">🔊</button></td>
+</tr>
+<tr>
+<td><strong>Plural</strong></td>
+<td><strong>ЦІ</strong></td>
+<td>/tʃi/</td>
+<td>двері</td>
+<td><strong>Ці</strong> двері</td>
+<td>These doors</td>
+<td><button class="audio-btn" onclick="openForvo('tsi')" title="Listen on Forvo (Search)">🔊</button></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Rule of Agreement:</strong><br />
+The ending of <strong>цей/ця/це/ці</strong> changes to match the ending of the noun's gender.</p>
+<ul>
+<li><strong>Цей</strong> (Masculine) matches Masculine nouns (consonant ending).</li>
+<li><strong>Ця</strong> (Feminine) matches Feminine nouns (-а/-я ending).</li>
+<li><strong>Це</strong> (Neuter) matches Neuter nouns (-о/-е ending).</li>
+<li><strong>Ці</strong> (Plural) matches Plural nouns (various plural endings).</li>
+</ul>
+<h3 id="thethatfamilydistaldemonstratives">The "That" Family (Distal Demonstratives)</h3>
+<p>These demonstrative adjectives are used for objects that are further away from you, or conceptually "there." They are the direct descendants of "that" or "those" in English.</p>
+<table>
+<thead>
+<tr>
+<th>Grammatical Gender</th>
+<th>Form (Ukrainian)</th>
+<th>Example Noun</th>
+<th>Full Phrase</th>
+<th>English Translation</th>
+<th>Audio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Masculine</strong></td>
+<td><strong>ТОЙ</strong></td>
+<td>дім</td>
+<td><strong>Той</strong> дім</td>
+<td>That house</td>
+<td><button class="audio-btn" onclick="openForvo('toy')" title="Listen on Forvo (Search)">🔊</button></td>
+</tr>
+<tr>
+<td><strong>Feminine</strong></td>
+<td><strong>ТА</strong></td>
+<td>жінка</td>
+<td><strong>Та</strong> жінка</td>
+<td>That woman</td>
+<td><button class="audio-btn" onclick="openForvo('ta')" title="Listen on Forvo (Search)">🔊</button></td>
+</tr>
+<tr>
+<td><strong>Neuter</strong></td>
+<td><strong>ТЕ</strong></td>
+<td>море</td>
+<td><strong>Те</strong> море</td>
+<td>That sea</td>
+<td><button class="audio-btn" onclick="openForvo('te')" title="Listen on Forvo (Search)">🔊</button></td>
+</tr>
+<tr>
+<td><strong>Plural</strong></td>
+<td><strong>ТІ</strong></td>
+<td>люди</td>
+<td><strong>Ті</strong> люди</td>
+<td>Those people</td>
+<td><button class="audio-btn" onclick="openForvo('ti')" title="Listen on Forvo (Search)">🔊</button></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: Visual Mnemonic</strong></p>
+  <ul>
+  <li>Think of <strong>Ц</strong> (Ts) as a pointer with a short, sharp sound, keeping things <strong>Ц</strong>lose (Close).</li>
+  <li>Think of <strong>Т</strong> (T) as a sound that pushes things away, pointing <strong>Т</strong>here (There).<br />
+  This simple phonetic trick can help you remember which family to use for proximity.</li>
+  </ul>
+</blockquote>
+<h3 id="deepdivetherhythmofagreement">Deep Dive: The Rhythm of Agreement</h3>
+<p>Grammatical agreement is more than just a rule; it creates a rhyming rhythm in the language. Listen to the vowels!</p>
+<ul>
+<li><strong>Feminine Rhythm:</strong> Ц<strong>я</strong> мам<strong>а</strong>, Т<strong>а</strong> ламп<strong>а</strong>. (Ah… Ah…)</li>
+<li><strong>Neuter Rhythm:</strong> Ц<strong>е</strong> мор<strong>е</strong>, Т<strong>е</strong> сонц<strong>е</strong>. (Eh… Eh…)</li>
+<li><strong>Plural Rhythm:</strong> Ц<strong>і</strong> люд<strong>и</strong>, Т<strong>і</strong> двер<strong>і</strong>. (Ee… Ee…)</li>
+<li><strong>Masculine Rhythm:</strong> Цей дім, Той стіл. (Consonant endings, sharp and solid).</li>
+</ul>
+<p>Learning to "hear" this rhyme will help you spot mistakes faster than thinking about gender rules. If it <em>sounds</em> flowy and rhymes, it's likely correct!</p>
+<blockquote>
+  <p>🎭 <strong>Culture Corner: Gift Giving</strong><br />
+  When you give a gift in Ukraine, you might say "<strong>Це</strong> тобі" (This is for you). But if you hand over a specific object, you use the demonstrative!</p>
+  <ul>
+  <li>handing over flowers: "<strong>Ці</strong> квіти для тебе."</li>
+  <li>handing over a book: "<strong>Ця</strong> книга для тебе."<br />
+  Precision shows care!</li>
+  </ul>
+</blockquote>
+<h3 id="distinguishingaspronounvsadjective">Distinguishing Це as Pronoun vs. Adjective</h3>
+<p>Be careful! The word <strong>Це</strong> has two distinct functions:</p>
+<ol>
+<li><strong>Invariant Pronoun "This is":</strong> As we learned in Module 04, <strong>Це</strong> means "This is / It is / These are." It <strong>never changes</strong> its form and introduces a noun.<ul>
+<li><strong>Це стіл.</strong> (This is a table.)</li>
+<li><strong>Це лампа.</strong> (This is a lamp.)</li>
+<li><strong>Це вікно.</strong> (This is a window.)</li></ul></li>
+<li><strong>Neuter Adjective "This":</strong> <strong>Це</strong> also means "this" specifically for <strong>Neuter nouns</strong>.<ul>
+<li><strong>Це вікно</strong> велике. (This window is big.)</li></ul></li>
+</ol>
+<p>The context usually makes it clear. If <strong>Це</strong> is immediately followed by a noun that <em>doesn't</em> match its neuter form, it's functioning as "This is." If it's followed by a neuter noun, it could be either, but often "this is" is implied.</p>
+<h2 id="">##</h2>
 <hr /></div>
     </div>
   
       
     <div class="card section-summary">
       <h3>📋 Summary</h3>
-      <div class="md-content"><blockquote>
-  <p><strong>What You Learned Today</strong></p>
-  <ul>
-  <li><strong>Demonstratives change with gender:</strong></li>
-  <li>Masculine: цей/той</li>
-  <li>Feminine: ця/та</li>
-  <li>Neuter: це/те</li>
-  <li>Plural: ці/ті</li>
-  <li><strong>Two uses of "це":</strong> Identification (Це книга) vs. Demonstrative (Це вікно велике)</li>
-  <li><strong>40 everyday objects:</strong> kitchen items, personal items, furniture, appliances</li>
-  <li><strong>Pattern recognition:</strong> consonant → m, -а/-я → f, -о/-е → n</li>
-  <li>You can now describe anything around you!</li>
-  </ul>
-  <p><strong>Coming Next</strong></p>
-  <p>In Module 06, you'll learn "The Living Verb I":</p>
-  <ul>
-  <li>Present tense Class I verbs (-ати/-яти)</li>
-  <li>Conjugation: читати → читаю, читаєш, читає…</li>
-  <li>25 action verbs for daily life!</li>
-  </ul>
-</blockquote></div>
+      <div class="md-content"><p>You have now labeled your world. You have mastered the art of pointing with grammatical precision!</p>
+<ol>
+<li><strong>Proximal (Near):</strong> Use <strong>Цей, Ця, Це, Ці</strong> (This / These).</li>
+<li><strong>Distal (Far):</strong> Use <strong>Той, Та, Те, Ті</strong> (That / Those).</li>
+<li><strong>The Golden Rule of Agreement:</strong> The demonstrative adjective (Цей/Той) must perfectly match the <strong>grammatical gender</strong> (Masculine, Feminine, Neuter) and <strong>number</strong> (Singular, Plural) of the noun it describes.</li>
+</ol>
+<p>You can now walk into any room and confidently point at objects, knowing your words will agree perfectly. In the next module, we will finally learn how to make these objects <em>do</em> something. We will unlock the power of verbs!</p></div>
     </div>
   
       <div class="btn-group">
@@ -1081,75 +727,82 @@ footer {
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Demonstrative Mastery</h3>
+    <section id="activity-0" class="section"><div class="card"><h3>Scrambled Objects</h3>
       <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container"></div>
-      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+      <div id="activity-0-container" class="order-container"></div>
+      <div class="completion-message" id="activity-0-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Objects by Gender</h3>
-      <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/31</span></div>
-      <div class="sort-pool" id="activity-1-pool"><div class="sort-items" id="activity-1-items"></div></div>
-      <div class="sort-groups" id="activity-1-groups"></div>
-      <div class="completion-message" id="activity-1-complete"><h3>All Sorted!</h3></div>
+    <section id="activity-1" class="section"><div class="card"><h3>Demonstrative to Noun</h3>
+      <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
+      <div class="match-container" id="activity-1-container"><svg class="match-lines" id="activity-1-lines"></svg>
+        <div class="match-column" id="activity-1-left"></div>
+        <div class="match-column" id="activity-1-right"></div>
+      </div>
+      <div class="completion-message" id="activity-1-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Ukrainian to English</h3>
+    <section id="activity-2" class="section"><div class="card"><h3>This or That?</h3>
       <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-2-container"><svg class="match-lines" id="activity-2-lines"></svg>
-        <div class="match-column" id="activity-2-left"></div>
-        <div class="match-column" id="activity-2-right"></div>
-      </div>
-      <div class="completion-message" id="activity-2-complete"><h3>Perfect!</h3></div>
+      <div id="activity-2-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-2-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Demonstratives and Nouns</h3>
-      <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-3-container"><svg class="match-lines" id="activity-3-lines"></svg>
-        <div class="match-column" id="activity-3-left"></div>
-        <div class="match-column" id="activity-3-right"></div>
-      </div>
-      <div class="completion-message" id="activity-3-complete"><h3>Perfect!</h3></div>
+    <section id="activity-3" class="section"><div class="card"><h3>Proximal vs Distal</h3>
+      <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/16</span></div>
+      <div class="sort-pool" id="activity-3-pool"><div class="sort-items" id="activity-3-items"></div></div>
+      <div class="sort-groups" id="activity-3-groups"></div>
+      <div class="completion-message" id="activity-3-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Object Gender Rules</h3>
+    <section id="activity-4" class="section"><div class="card"><h3>Pointing Sentences</h3>
       <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
-      <div id="activity-4-container"></div>
-      <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
+      <div id="activity-4-container" class="order-container"></div>
+      <div class="completion-message" id="activity-4-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Complete with Demonstrative</h3>
+    <section id="activity-5" class="section"><div class="card"><h3>Usage Context</h3>
       <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
-      <div id="activity-5-container" class="fill-container"></div>
+      <div id="activity-5-container"></div>
       <div class="completion-message" id="activity-5-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Object Vocabulary</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>Grammar Rules</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
-      <div id="activity-6-container" class="order-container"></div>
-      <div class="completion-message" id="activity-6-complete"><h3>Perfect Order!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+      <div id="activity-6-container"></div>
+      <div class="completion-message" id="activity-6-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-7" class="section"><div class="card"><h3>Proximity Check</h3>
+      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/12</span></div>
+      <div class="match-container" id="activity-7-container"><svg class="match-lines" id="activity-7-lines"></svg>
+        <div class="match-column" id="activity-7-left"></div>
+        <div class="match-column" id="activity-7-right"></div>
+      </div>
+      <div class="completion-message" id="activity-7-complete"><h3>Perfect!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
-        <h3>Словник (39)</h3>
+        <h3>Словник (0)</h3>
         <div class="vocab-table-container">
           <table class="vocab-table">
             <thead><tr>
     <th>Слово</th>
     
-    <th>IPA</th>
+    
     <th>Переклад</th>
-    <th>Примітка</th>
+    
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">цей (tsey)</td><td class="vocab-ipa">/tsɛj/</td><td class="vocab-en">this</td><td class="vocab-note">masculine demonstrative</td></tr><tr><td class="vocab-uk">ця (tsya)</td><td class="vocab-ipa">/tsʲa/</td><td class="vocab-en">this</td><td class="vocab-note">feminine demonstrative</td></tr><tr><td class="vocab-uk">це (tse)</td><td class="vocab-ipa">/tsɛ/</td><td class="vocab-en">this</td><td class="vocab-note">neuter demonstrative</td></tr><tr><td class="vocab-uk">ці (tsi)</td><td class="vocab-ipa">/tsi/</td><td class="vocab-en">these</td><td class="vocab-note">plural demonstrative</td></tr><tr><td class="vocab-uk">той (toy)</td><td class="vocab-ipa">/tɔj/</td><td class="vocab-en">that</td><td class="vocab-note">masculine (far)</td></tr><tr><td class="vocab-uk">та (ta)</td><td class="vocab-ipa">/ta/</td><td class="vocab-en">that</td><td class="vocab-note">feminine (far)</td></tr><tr><td class="vocab-uk">те (te)</td><td class="vocab-ipa">/tɛ/</td><td class="vocab-en">that</td><td class="vocab-note">neuter (far)</td></tr><tr><td class="vocab-uk">ті (ti)</td><td class="vocab-ipa">/ti/</td><td class="vocab-en">those</td><td class="vocab-note">plural (far)</td></tr><tr><td class="vocab-uk">чашка (chashka)</td><td class="vocab-ipa">/ˈtʃaʃka/</td><td class="vocab-en">cup</td><td class="vocab-note">for drinks</td></tr><tr><td class="vocab-uk">ложка (lozhka)</td><td class="vocab-ipa">/ˈlɔʒka/</td><td class="vocab-en">spoon</td><td class="vocab-note">utensil</td></tr><tr><td class="vocab-uk">виделка (vydelka)</td><td class="vocab-ipa">/ʋɪˈdɛlka/</td><td class="vocab-en">fork</td><td class="vocab-note">utensil</td></tr><tr><td class="vocab-uk">ніж (nizh)</td><td class="vocab-ipa">/niʒ/</td><td class="vocab-en">knife</td><td class="vocab-note">utensil</td></tr><tr><td class="vocab-uk">тарілка (tarilka)</td><td class="vocab-ipa">/taˈrilka/</td><td class="vocab-en">plate</td><td class="vocab-note">dishware</td></tr><tr><td class="vocab-uk">склянка (sklyanka)</td><td class="vocab-ipa">/ˈsklʲanka/</td><td class="vocab-en">glass</td><td class="vocab-note">for water</td></tr><tr><td class="vocab-uk">пляшка (plyashka)</td><td class="vocab-ipa">/ˈplʲaʃka/</td><td class="vocab-en">bottle</td><td class="vocab-note">container</td></tr><tr><td class="vocab-uk">сумка (sumka)</td><td class="vocab-ipa">/ˈsumka/</td><td class="vocab-en">bag</td><td class="vocab-note">general bag</td></tr><tr><td class="vocab-uk">рюкзак (ryukzak)</td><td class="vocab-ipa">/rʲukˈzak/</td><td class="vocab-en">backpack</td><td class="vocab-note">for carrying</td></tr><tr><td class="vocab-uk">гаманець (hamanets&#039;)</td><td class="vocab-ipa">/ɦamaˈnɛtsʲ/</td><td class="vocab-en">wallet</td><td class="vocab-note">for money</td></tr><tr><td class="vocab-uk">телефон (telefon)</td><td class="vocab-ipa">/tɛlɛˈfɔn/</td><td class="vocab-en">phone</td><td class="vocab-note">mobile/cell</td></tr><tr><td class="vocab-uk">комп&#039;ютер (komp&#039;yuter)</td><td class="vocab-ipa">/kɔmpjuˈtɛr/</td><td class="vocab-en">computer</td><td class="vocab-note">tech device</td></tr><tr><td class="vocab-uk">ключ (klyuch)</td><td class="vocab-ipa">/klʲutʃ/</td><td class="vocab-en">key</td><td class="vocab-note">for locks</td></tr><tr><td class="vocab-uk">стіна (stina)</td><td class="vocab-ipa">/stiˈna/</td><td class="vocab-en">wall</td><td class="vocab-note">room part</td></tr><tr><td class="vocab-uk">підлога (pidloha)</td><td class="vocab-ipa">/pidˈlɔɦa/</td><td class="vocab-en">floor</td><td class="vocab-note">room part</td></tr><tr><td class="vocab-uk">стеля (stelya)</td><td class="vocab-ipa">/ˈstɛlʲa/</td><td class="vocab-en">ceiling</td><td class="vocab-note">room part</td></tr><tr><td class="vocab-uk">лампа (lampa)</td><td class="vocab-ipa">/ˈlampa/</td><td class="vocab-en">lamp</td><td class="vocab-note">light fixture</td></tr><tr><td class="vocab-uk">годинник (hodynyk)</td><td class="vocab-ipa">/ɦɔˈdɪnɪk/</td><td class="vocab-en">clock, watch</td><td class="vocab-note">time device</td></tr><tr><td class="vocab-uk">дзеркало (dzerkalo)</td><td class="vocab-ipa">/ˈdzɛrkalɔ/</td><td class="vocab-en">mirror</td><td class="vocab-note">reflective surface</td></tr><tr><td class="vocab-uk">картина (kartyna)</td><td class="vocab-ipa">/karˈtɪna/</td><td class="vocab-en">picture, painting</td><td class="vocab-note">art</td></tr><tr><td class="vocab-uk">стілець (stilets&#039;)</td><td class="vocab-ipa">/stiˈlɛtsʲ/</td><td class="vocab-en">chair</td><td class="vocab-note">furniture</td></tr><tr><td class="vocab-uk">крісло (krislo)</td><td class="vocab-ipa">/ˈkrislɔ/</td><td class="vocab-en">armchair</td><td class="vocab-note">furniture</td></tr><tr><td class="vocab-uk">диван (dyvan)</td><td class="vocab-ipa">/dɪˈʋan/</td><td class="vocab-en">sofa</td><td class="vocab-note">furniture</td></tr><tr><td class="vocab-uk">ліжко (lizhko)</td><td class="vocab-ipa">/ˈliʒkɔ/</td><td class="vocab-en">bed</td><td class="vocab-note">furniture</td></tr><tr><td class="vocab-uk">шафа (shafa)</td><td class="vocab-ipa">/ˈʃafa/</td><td class="vocab-en">wardrobe, closet</td><td class="vocab-note">furniture</td></tr><tr><td class="vocab-uk">холодильник (kholodyl&#039;nyk)</td><td class="vocab-ipa">/xɔlɔˈdɪlʲnɪk/</td><td class="vocab-en">refrigerator</td><td class="vocab-note">appliance</td></tr><tr><td class="vocab-uk">плита (plyta)</td><td class="vocab-ipa">/plɪˈta/</td><td class="vocab-en">stove</td><td class="vocab-note">appliance</td></tr><tr><td class="vocab-uk">мікрохвильовка (mikrokhvyl&#039;ovka)</td><td class="vocab-ipa">/mikrɔxʋɪˈlʲɔʋka/</td><td class="vocab-en">microwave</td><td class="vocab-note">appliance</td></tr><tr><td class="vocab-uk">праска (praska)</td><td class="vocab-ipa">/ˈpraska/</td><td class="vocab-en">iron</td><td class="vocab-note">appliance</td></tr><tr><td class="vocab-uk">пилосос (pylocos)</td><td class="vocab-ipa">/pɪlɔˈsɔs/</td><td class="vocab-en">vacuum cleaner</td><td class="vocab-note">appliance</td></tr><tr><td class="vocab-uk">гроші (hroshi)</td><td class="vocab-ipa">/ˈɦrɔʃi/</td><td class="vocab-en">money</td><td class="vocab-note">always plural</td></tr></tbody>
+            <tbody></tbody>
           </table>
         </div>
       </div>
@@ -1161,8 +814,8 @@ footer {
   </main><footer>Module 05 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"quiz","title":"Demonstrative Mastery","data":{"type":"quiz","questions":[{"question":"What is \"this\" for masculine nouns?","options":["цей","ця","це","ці"],"correctIndex":0,"explanation":"Masculine singular = цей (ends in consonant sound)"},{"question":"What is \"this\" for feminine nouns?","options":["цей","ця","це","ці"],"correctIndex":1,"explanation":"Feminine singular = ця (ends in -я)"},{"question":"How do you say \"this window\"?","options":["цей вікно","ця вікно","це вікно","ці вікна"],"correctIndex":2,"explanation":"Вікно is neuter, so use \"це\""},{"question":"How do you say \"these keys\"?","options":["цей ключі","ця ключі","це ключі","ці ключі"],"correctIndex":3,"explanation":"Plural = ці"},{"question":"What is \"that\" for feminine nouns?","options":["той","та","те","ті"],"correctIndex":1,"explanation":"Feminine \"that\" = та"},{"question":"How do you say \"that sofa\"?","options":["той диван","та диван","те диван","ті дивани"],"correctIndex":0,"explanation":"Диван is masculine, so use \"той\""},{"question":"What gender is \"чашка\" (cup)?","options":["Masculine","Feminine","Neuter","Plural"],"correctIndex":1,"explanation":"Чашка ends in -а, so feminine."},{"question":"What gender is \"телефон\" (phone)?","options":["Masculine","Feminine","Neuter","Plural"],"correctIndex":0,"explanation":"Телефон ends in consonant, so masculine."},{"question":"What gender is \"ліжко\" (bed)?","options":["Masculine","Feminine","Neuter","Plural"],"correctIndex":2,"explanation":"Ліжко ends in -о, so neuter."},{"question":"How do you say \"this is my bag\"?","options":["Це моя сумка.","Ця моя сумка.","Цей моя сумка.","Ці моя сумка."],"correctIndex":0,"explanation":"For identification, use \"Це\" regardless of gender."},{"question":"What is \"those books\"?","options":["той книги","та книги","те книги","ті книги"],"correctIndex":3,"explanation":"Plural \"that/those\" = ті"},{"question":"Which is correct for \"this cup\"?","options":["цей чашка","ця чашка","це чашка","ці чашка"],"correctIndex":1,"explanation":"Чашка is feminine, so use \"ця\""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-1","type":"group-sort","title":"Objects by Gender","data":{"type":"group-sort","groups":[{"id":"masculine","name":"Masculine","items":["ніж","рюкзак","гаманець","телефон","комп'ютер","ключ","годинник","стілець","диван","холодильник","пилосос"],"nameUk":"consonant ending"},{"id":"feminine","name":"Feminine","items":["чашка","ложка","виделка","тарілка","склянка","пляшка","сумка","стіна","підлога","стеля","лампа","картина","шафа","плита","мікрохвильовка","праска"],"nameUk":"-а/-я ending"},{"id":"neuter","name":"Neuter","items":["дзеркало","крісло","ліжко","вікно"],"nameUk":"-о/-е ending"}],"shuffleItems":true}},{"id":"activity-2","type":"match-up","title":"Ukrainian to English","data":{"type":"match-up","pairs":[{"left":"чашка","right":"cup"},{"left":"ложка","right":"spoon"},{"left":"виделка","right":"fork"},{"left":"ніж","right":"knife"},{"left":"тарілка","right":"plate"},{"left":"склянка","right":"glass"},{"left":"телефон","right":"phone"},{"left":"ключ","right":"key"},{"left":"диван","right":"sofa"},{"left":"ліжко","right":"bed"},{"left":"шафа","right":"wardrobe"},{"left":"дзеркало","right":"mirror"}],"shuffleRight":true}},{"id":"activity-3","type":"match-up","title":"Demonstratives and Nouns","data":{"type":"match-up","pairs":[{"left":"цей","right":"стіл"},{"left":"ця","right":"книга"},{"left":"це","right":"вікно"},{"left":"ці","right":"ключі"},{"left":"той","right":"дім"},{"left":"та","right":"лампа"},{"left":"те","right":"місто"},{"left":"ті","right":"друзі"},{"left":"цей","right":"телефон"},{"left":"ця","right":"чашка"},{"left":"це","right":"ліжко"},{"left":"той","right":"диван"}],"shuffleRight":true}},{"id":"activity-4","type":"true-false","title":"Object Gender Rules","data":{"type":"true-false","statements":[{"statement":"\"Цей\" is used with masculine nouns.","isTrue":true,"explanation":"Correct! Цей стіл, цей телефон."},{"statement":"\"Ця\" is used with neuter nouns.","isTrue":false,"explanation":"Incorrect! Ця is feminine. Neuter uses \"це.\""},{"statement":"\"Ці\" is used with plural nouns of any gender.","isTrue":true,"explanation":"Correct! Ці книги, ці столи, ці вікна."},{"statement":"\"Чашка\" is masculine because it holds things.","isTrue":false,"explanation":"Incorrect! Gender is about word endings, not meaning. Чашка ends in -а = feminine."},{"statement":"\"Телефон\" is masculine because it ends in a consonant.","isTrue":true,"explanation":"Correct! Consonant ending = masculine."},{"statement":"\"Дзеркало\" (mirror) is neuter.","isTrue":true,"explanation":"Correct! Ends in -о = neuter."},{"statement":"\"Той\" is used for \"that\" with all genders.","isTrue":false,"explanation":"Incorrect! Той (m), та (f), те (n), ті (pl)."},{"statement":"Kitchen utensils like ложка, виделка are mostly feminine.","isTrue":true,"explanation":"Correct! They end in -а."},{"statement":"\"Ключ\" is feminine because keys are small.","isTrue":false,"explanation":"Incorrect! Ключ ends in consonant = masculine."},{"statement":"\"Ліжко\" (bed) is neuter because it ends in -о.","isTrue":true,"explanation":"Correct!"},{"statement":"For identification (\"This is X\"), use \"Це\" regardless of gender.","isTrue":true,"explanation":"Correct! \"Це книга\" (f), \"Це стіл\" (m), \"Це вікно\" (n) - always \"Це.\""},{"statement":"\"Те\" means \"this\" for neuter nouns.","isTrue":false,"explanation":"Incorrect! \"Те\" means \"that\" (far). \"Це\" means \"this\" (near)."}]}},{"id":"activity-5","type":"fill-blank","title":"Complete with Demonstrative","data":{"type":"fill-blank","items":[{"prompt":"___ стіл великий. (This table is big.)","answer":"Цей","options":["Цей","Ця","Це","Ці"]},{"prompt":"___ книга нова. (This book is new.)","answer":"Ця","options":["Ця","Цей","Це","Ці"]},{"prompt":"___ вікно чисте. (This window is clean.)","answer":"Це","options":["Це","Цей","Ця","Ці"]},{"prompt":"___ ключі мої. (These keys are mine.)","answer":"Ці","options":["Ці","Цей","Ця","Це"]},{"prompt":"___ диван зручний. (That sofa is comfortable.)","answer":"Той","options":["Той","Та","Те","Ті"]},{"prompt":"___ чашка гаряча. (This cup is hot.)","answer":"Ця","options":["Ця","Цей","Це","Ці"]},{"prompt":"___ дзеркало старе. (That mirror is old.)","answer":"Те","options":["Те","Той","Та","Ті"]},{"prompt":"___ телефон мій. (This phone is mine.)","answer":"Цей","options":["Цей","Ця","Це","Ці"]},{"prompt":"___ сумка моя. (That bag is mine.)","answer":"Та","options":["Та","Той","Те","Ті"]},{"prompt":"___ ліжко зручне. (This bed is comfortable.)","answer":"Це","options":["Це","Цей","Ця","Ці"]},{"prompt":"___ лампа яскрава. (This lamp is bright.)","answer":"Ця","options":["Ця","Цей","Це","Ці"]},{"prompt":"___ комп'ютер новий. (That computer is new.)","answer":"Той","options":["Той","Та","Те","Ті"]}]}},{"id":"activity-6","type":"anagram","title":"Object Vocabulary","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["а","к","ш","а","ч"],"answer":"чашка","translation":"cup"},{"letters":["а","к","ж","о","л"],"answer":"ложка","translation":"spoon"},{"letters":["ж","і","н"],"answer":"ніж","translation":"knife"},{"letters":["н","о","ф","е","л","е","т"],"answer":"телефон","translation":"phone"},{"letters":["ч","ю","к","л"],"answer":"ключ","translation":"key"},{"letters":["а","к","м","у","с"],"answer":"сумка","translation":"bag"},{"letters":["н","а","в","и","д"],"answer":"диван","translation":"sofa"},{"letters":["о","к","ж","і","л"],"answer":"ліжко","translation":"bed"},{"letters":["а","ф","а","ш"],"answer":"шафа","translation":"wardrobe"},{"letters":["а","п","м","а","л"],"answer":"лампа","translation":"lamp"},{"letters":["ц","л","е","і","т","с","ь"],"answer":"стілець","translation":"chair"},{"letters":["о","л","а","к","р","з","е","д"],"answer":"дзеркало","translation":"mirror"}]}}];
-    const vocabData = [{"uk":"цей (tsey)","translit":"","en":"this","note":"masculine demonstrative"},{"uk":"ця (tsya)","translit":"","en":"this","note":"feminine demonstrative"},{"uk":"це (tse)","translit":"","en":"this","note":"neuter demonstrative"},{"uk":"ці (tsi)","translit":"","en":"these","note":"plural demonstrative"},{"uk":"той (toy)","translit":"","en":"that","note":"masculine (far)"},{"uk":"та (ta)","translit":"","en":"that","note":"feminine (far)"},{"uk":"те (te)","translit":"","en":"that","note":"neuter (far)"},{"uk":"ті (ti)","translit":"","en":"those","note":"plural (far)"},{"uk":"чашка (chashka)","translit":"","en":"cup","note":"for drinks"},{"uk":"ложка (lozhka)","translit":"","en":"spoon","note":"utensil"},{"uk":"виделка (vydelka)","translit":"","en":"fork","note":"utensil"},{"uk":"ніж (nizh)","translit":"","en":"knife","note":"utensil"},{"uk":"тарілка (tarilka)","translit":"","en":"plate","note":"dishware"},{"uk":"склянка (sklyanka)","translit":"","en":"glass","note":"for water"},{"uk":"пляшка (plyashka)","translit":"","en":"bottle","note":"container"},{"uk":"сумка (sumka)","translit":"","en":"bag","note":"general bag"},{"uk":"рюкзак (ryukzak)","translit":"","en":"backpack","note":"for carrying"},{"uk":"гаманець (hamanets')","translit":"","en":"wallet","note":"for money"},{"uk":"телефон (telefon)","translit":"","en":"phone","note":"mobile/cell"},{"uk":"комп'ютер (komp'yuter)","translit":"","en":"computer","note":"tech device"},{"uk":"ключ (klyuch)","translit":"","en":"key","note":"for locks"},{"uk":"стіна (stina)","translit":"","en":"wall","note":"room part"},{"uk":"підлога (pidloha)","translit":"","en":"floor","note":"room part"},{"uk":"стеля (stelya)","translit":"","en":"ceiling","note":"room part"},{"uk":"лампа (lampa)","translit":"","en":"lamp","note":"light fixture"},{"uk":"годинник (hodynyk)","translit":"","en":"clock, watch","note":"time device"},{"uk":"дзеркало (dzerkalo)","translit":"","en":"mirror","note":"reflective surface"},{"uk":"картина (kartyna)","translit":"","en":"picture, painting","note":"art"},{"uk":"стілець (stilets')","translit":"","en":"chair","note":"furniture"},{"uk":"крісло (krislo)","translit":"","en":"armchair","note":"furniture"},{"uk":"диван (dyvan)","translit":"","en":"sofa","note":"furniture"},{"uk":"ліжко (lizhko)","translit":"","en":"bed","note":"furniture"},{"uk":"шафа (shafa)","translit":"","en":"wardrobe, closet","note":"furniture"},{"uk":"холодильник (kholodyl'nyk)","translit":"","en":"refrigerator","note":"appliance"},{"uk":"плита (plyta)","translit":"","en":"stove","note":"appliance"},{"uk":"мікрохвильовка (mikrokhvyl'ovka)","translit":"","en":"microwave","note":"appliance"},{"uk":"праска (praska)","translit":"","en":"iron","note":"appliance"},{"uk":"пилосос (pylocos)","translit":"","en":"vacuum cleaner","note":"appliance"},{"uk":"гроші (hroshi)","translit":"","en":"money","note":"always plural"}];
+    const activitiesData = [{"id":"activity-0","type":"anagram","title":"Scrambled Objects","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["л","і","т","с"],"answer":"стіл","translation":"Table"},{"letters":["н","і","в","к","о"],"answer":"вікно","translation":"Window"},{"letters":["а","м","п","л","а"],"answer":"лампа","translation":"Light source"},{"letters":["а","ф","а","ш"],"answer":"шафа","translation":"Clothes go here"},{"letters":["в","а","н","и","д"],"answer":"диван","translation":"Sofa"},{"letters":["ж","к","о","л","і"],"answer":"ліжко","translation":"Bed"},{"letters":["л","е","ф","о","н","е","т"],"answer":"телефон","translation":"Communication"},{"letters":["ю","ч","к","л"],"answer":"ключ","translation":"Opens doors"},{"letters":["н","а","к","л","я","с"],"answer":"склянка","translation":"Glass"},{"letters":["о","л","и","к","д","и","н","л","ь","х"],"answer":"холодильник","translation":"Fridge"},{"letters":["к","а","ч","а","ш"],"answer":"чашка","translation":"Cup"},{"letters":["р","і","л","а","к","а","т"],"answer":"тарілка","translation":"Plate"}]}},{"id":"activity-1","type":"match-up","title":"Demonstrative to Noun","data":{"type":"match-up","pairs":[{"left":"Цей","right":"Стіл (M)"},{"left":"Ця","right":"Лампа (F)"},{"left":"Це","right":"Вікно (N)"},{"left":"Ці","right":"Двері (Pl)"},{"left":"Цей","right":"Телефон (M)"},{"left":"Ця","right":"Сумка (F)"},{"left":"Це","right":"Ліжко (N)"},{"left":"Ці","right":"Ключі (Pl)"},{"left":"Цей","right":"Рюкзак (M)"},{"left":"Ця","right":"Тарілка (F)"},{"left":"Це","right":"Крісло (N)"},{"left":"Ці","right":"Фрукти (Pl)"}],"shuffleRight":true}},{"id":"activity-2","type":"fill-blank","title":"This or That?","data":{"type":"fill-blank","items":[{"prompt":"___ (This) дівчина студентка. (near)\n   - [!answer] Ця\n   - [!options] Ця | Цей | Це | Ці","answer":"","hints":["This"]},{"prompt":"___ (That) хлопець мій друг. (far)\n   - [!answer] Той\n   - [!options] Той | Та | Те | Ті","answer":"","hints":["That"]},{"prompt":"___ (This) місто старе. (near)\n   - [!answer] Це\n   - [!options] Це | Цей | Ця | Ці","answer":"","hints":["This"]},{"prompt":"___ (These) люди тут. (near)\n   - [!answer] Ці\n   - [!options] Ці | Цей | Ця | Це","answer":"","hints":["These"]},{"prompt":"___ (That) вікно велике. (far)\n   - [!answer] Те\n   - [!options] Те | Той | Та | Ті","answer":"","hints":["That"]},{"prompt":"___ (This) комп'ютер новий. (near)\n   - [!answer] Цей\n   - [!options] Цей | Ця | Це | Ці","answer":"","hints":["This"]},{"prompt":"___ (That) шафа стара. (far)\n   - [!answer] Та\n   - [!options] Та | Той | Те | Ті","answer":"","hints":["That"]},{"prompt":"___ (These) книги цікаві. (near)\n   - [!answer] Ці\n   - [!options] Ці | Цей | Ця | Це","answer":"","hints":["These"]},{"prompt":"___ (This) ніж гострий. (near)\n   - [!answer] Цей\n   - [!options] Цей | Ця | Це | Ці","answer":"","hints":["This"]},{"prompt":"___ (That) машина червона. (far)\n    - [!answer] Та\n    - [!options] Та | Той | Те | Ті","answer":"","hints":["That"]},{"prompt":"___ (This) крісло зручне. (near)\n    - [!answer] Це\n    - [!options] Це | Цей | Ця | Ці","answer":"","hints":["This"]},{"prompt":"___ (Those) фрукти смачні. (far)\n    - [!answer] Ті\n    - [!options] Ті | Той | Та | Те","answer":"","hints":["Those"]}]}},{"id":"activity-3","type":"group-sort","title":"Proximal vs Distal","data":{"type":"group-sort","groups":[{"id":"near","name":"Near","items":["Цей стіл","Ця книга","Це вікно","Ці люди","Цей телефон","Ця лампа","Це крісло","Ці двері"],"nameUk":"Близько"},{"id":"far","name":"Far","items":["Той дім","Та гора","Те море","Ті птахи","Той парк","Та річка","Те сонце","Ті зірки (stars)"],"nameUk":"Далеко"}],"shuffleItems":true}},{"id":"activity-4","type":"unjumble","title":"Pointing Sentences","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["сумка","гарна","Ця"],"answer":"Ця сумка гарна.","translation":"This bag is nice."},{"words":["телефон","мій","Цей"],"answer":"Цей телефон мій.","translation":"This phone is mine."},{"words":["велике","вікно","Те"],"answer":"Те вікно велике.","translation":"That window is big."},{"words":["люди","Ці","тут"],"answer":"Ці люди тут.","translation":"These people are here."},{"words":["нова","Та","машина"],"answer":"Та машина нова.","translation":"That car is new."},{"words":["старий","Цей","стіл"],"answer":"Цей стіл старий.","translation":"This table is old."},{"words":["цікава","Ця","книга"],"answer":"Ця книга цікава.","translation":"This book is interesting."},{"words":["синій","Той","диван"],"answer":"Той диван синій.","translation":"That sofa is blue."},{"words":["смачні","Ті","яблука"],"answer":"Ті яблука смачні.","translation":"Those apples are tasty."},{"words":["чиста","Ця","чашка"],"answer":"Ця чашка чиста.","translation":"This cup is clean."},{"words":["мій","Той","рюкзак"],"answer":"Той рюкзак мій.","translation":"That backpack is mine."},{"words":["зручне","Це","крісло"],"answer":"Це крісло зручне.","translation":"This armchair is comfortable."}]}},{"id":"activity-5","type":"quiz","title":"Usage Context","data":{"type":"quiz","questions":[{"question":"You are holding a key in your hand. You say: \"___ ключ.\"","options":["Цей","Той","Це"],"correctIndex":0,"explanation":""},{"question":"Your friend points to a remote mountain in a photo. You say: \"___ гора.\"","options":["Та","Ця","Те"],"correctIndex":0,"explanation":""},{"question":"You are showing someone a picture of a group of famous Ukrainian dancers right next to you. You say: \"___ танцюристи.\"","options":["Ці","Ті","Це"],"correctIndex":0,"explanation":""},{"question":"You see a beautiful old church far away on a hill. You say: \"___ церква.\"","options":["Та","Ця","Те"],"correctIndex":0,"explanation":""},{"question":"You are reading a fascinating book. You say: \"___ книга цікава.\"","options":["Ця","Та","Цей"],"correctIndex":0,"explanation":""},{"question":"You have just cooked some delicious борщ. You say: \"___ борщ смачний!\"","options":["Цей","Той","Це"],"correctIndex":0,"explanation":""},{"question":"You are looking at a painting on the wall across the room. You say: \"___ картина стара.\"","options":["Та","Ця","Те"],"correctIndex":0,"explanation":""},{"question":"You are sitting on a comfortable sofa. You say: \"___ диван дуже зручний.\"","options":["Цей","Той","Це"],"correctIndex":0,"explanation":""},{"question":"You are trying on new jeans in a shop. You say: \"___ джинси нові.\"","options":["Ці","Ті","Це"],"correctIndex":0,"explanation":""},{"question":"You are talking about the phone in your hand. You say: \"___ телефон мій.\"","options":["Цей","Той","Це"],"correctIndex":0,"explanation":""},{"question":"Your child is playing with a toy car. You say: \"___ машинка його.\"","options":["Ця","Та","Це"],"correctIndex":0,"explanation":""},{"question":"You are admiring a beautiful river in front of you. You say: \"___ річка широка.\"","options":["Ця","Та","Це"],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-6","type":"true-false","title":"Grammar Rules","data":{"type":"true-false","statements":[{"statement":"\"Цей\" is used for Masculine nouns.","isTrue":true,"explanation":"Correct. The ending matches."},{"statement":"\"Це\" is only used for Neuter nouns.","isTrue":false,"explanation":"Incorrect. \"Це\" is used for Neuter nouns (\"Це вікно\") BUT ALSO as the invariant subject \"This is\" for ANY gender (\"Це мама\"). Context matters!"},{"statement":"\"Ті\" is the plural for \"Those\".","isTrue":true,"explanation":"Correct."},{"statement":"\"Та\" is used for Masculine nouns that are far away.","isTrue":false,"explanation":"Incorrect. \"Та\" is for Feminine nouns far away. \"Той\" is for Masculine nouns far away."},{"statement":"Demonstrative adjectives must agree with the noun's gender and number.","isTrue":true,"explanation":"Correct. This is the core rule of agreement."},{"statement":"The word \"Це\" always changes its form.","isTrue":false,"explanation":"Incorrect. As the subject \"This is\", \"Це\" is invariant. It only changes form when acting as a neuter demonstrative adjective."},{"statement":"If a noun ends in -a, it will use \"Ця\" or \"Та\".","isTrue":true,"explanation":"Correct (for singular feminine nouns)."},{"statement":"The demonstrative for a plural noun is always \"Це\".","isTrue":false,"explanation":"Incorrect. For plural nouns, it's \"Ці\" (near) or \"Ті\" (far)."},{"statement":"\"Цей\" and \"Той\" are used for Masculine nouns.","isTrue":true,"explanation":"Correct. They indicate near and far for masculine nouns."},{"statement":"\"Стіл\" uses the demonstrative \"Ця\".","isTrue":false,"explanation":"Incorrect. \"Стіл\" is Masculine, so it uses \"Цей\"."},{"statement":"\"Кімната\" uses the demonstrative \"Ця\".","isTrue":true,"explanation":"Correct. \"Кімната\" is Feminine, so it uses \"Ця\"."},{"statement":"\"Вікно\" uses the demonstrative \"Цей\".","isTrue":false,"explanation":"Incorrect. \"Вікно\" is Neuter, so it uses \"Це\"."}]}},{"id":"activity-7","type":"match-up","title":"Proximity Check","data":{"type":"match-up","pairs":[{"left":"Цей","right":"This (Masculine, Near)"},{"left":"Ця","right":"This (Feminine, Near)"},{"left":"Це","right":"This (Neuter, Near)"},{"left":"Ці","right":"These (Plural, Near)"},{"left":"Той","right":"That (Masculine, Far)"},{"left":"Та","right":"That (Feminine, Far)"},{"left":"Те","right":"That (Neuter, Far)"},{"left":"Ті","right":"Those (Plural, Far)"},{"left":"Діалог","right":"Dialogue"},{"left":"Віза","right":"Visa"},{"left":"Карта","right":"Map"},{"left":"Опера","right":"Opera"}],"shuffleRight":true}}];
+    const vocabData = [];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1222,6 +875,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2486,6 +2165,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -481,14 +521,15 @@ footer {
     <h1>Module 09: Food &amp; Drinks</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Quiz</button>
-      <button class="nav-tab" data-section="activity-1">2. Match</button>
-      <button class="nav-tab" data-section="activity-2">3. Sort</button>
-      <button class="nav-tab" data-section="activity-3">4. T/F</button>
-      <button class="nav-tab" data-section="activity-4">5. Fill</button>
-      <button class="nav-tab" data-section="activity-5">6. Match</button>
-      <button class="nav-tab" data-section="activity-6">7. Spell</button>
-      <button class="nav-tab" data-section="activity-7">8. Fill</button>
+      <button class="nav-tab" data-section="activity-0">1. Match</button>
+      <button class="nav-tab" data-section="activity-1">2. Quiz</button>
+      <button class="nav-tab" data-section="activity-2">3. Fill</button>
+      <button class="nav-tab" data-section="activity-3">4. Sort</button>
+      <button class="nav-tab" data-section="activity-4">5. Order</button>
+      <button class="nav-tab" data-section="activity-5">6. Spell</button>
+      <button class="nav-tab" data-section="activity-6">7. Match</button>
+      <button class="nav-tab" data-section="activity-7">8. T/F</button>
+      <button class="nav-tab" data-section="activity-8">9. Select</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -498,671 +539,122 @@ footer {
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.1</span>
         <h2 style="font-size:2rem;margin:0.5rem 0">Food &amp; Drinks</h2>
-        <p style="color:var(--text-muted)">Ukrainian Cuisine Vocabulary</p>
+        <p style="color:var(--text-muted)">The Taste of Ukraine</p>
       </div>
       
-    <div class="card section-content">
-      <h3>Warm Up</h3>
-      <div class="md-content"><p>Їжа (Yizha) — food — is at the heart of Ukrainian culture. Whether it's борщ (borshch) at grandma's table or вареники (varenyky) at a festive gathering, food brings people together. Let's learn to talk about what Ukrainians eat and drink!</p>
-<hr /></div>
-    </div>
-  
-    <div class="card section-content">
-      <h3>Lesson</h3>
-      <div class="md-content"><h2 id="ukrainianmeals">Ukrainian Meals</h2>
-<p>Ukrainians traditionally eat three main meals:</p>
-<table>
-<thead>
-<tr>
-<th>Meal</th>
-<th>Ukrainian</th>
-<th>Pronunciation</th>
-<th>Typical Time</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Breakfast</td>
-<td>сніданок</td>
-<td>(snidanok)</td>
-<td>7:00-9:00</td>
-</tr>
-<tr>
-<td>Lunch</td>
-<td>обід</td>
-<td>(obid)</td>
-<td>12:00-14:00</td>
-</tr>
-<tr>
-<td>Dinner</td>
-<td>вечеря</td>
-<td>(vecherya)</td>
-<td>18:00-20:00</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Key phrases:</strong></p>
+    <div class="card section-intro">
+      <h3>📖 Introduction</h3>
+      <div class="md-content"><h2 id="warmup">warm-up</h2>
+<p><strong>The Sacred Table</strong></p>
+<p>In Ukraine, food is not just fuel. It is a language of love, hospitality, and survival. If you visit a Ukrainian home, you will be fed. It is not a request; it is a rule of the universe.</p>
+<p>The table (стіл) is the heart of the house. And on that table, you will almost always find two things: <strong>Хліб</strong> (Bread) and some form of <strong>Суп</strong> (Soup), likely the legendary <strong>Борщ</strong>.</p>
+<p>To know Ukrainians is to eat with them. Today, we fill your plate. You already know the verbs <strong>Їсти</strong> (To eat) and <strong>Пити</strong> (To drink) and <strong>Любити</strong> (To love). Now, we give you the objects for those verbs. You will learn not just the names of foods, but the rhythm of the Ukrainian day.</p>
+<blockquote>
+  <p>💡 <strong>Did You Know? The Bread Code</strong><br />
+  In Ukrainian culture, bread (<strong>Хліб</strong>) is sacred. It is a symbol of life itself. Traditionally, guests are welcomed with "Bread and Salt" (<strong>Хліб-сіль</strong>) on an embroidered towel (<strong>Рушник</strong>). It is considered a sin to throw bread away. If a piece falls, an older generation Ukrainian might pick it up and kiss it as an apology. Bread is never placed upside down on the table—that is bad luck!</p>
+  <p>⚡ <strong>Pro Tip: The Hospitality Pressure</strong><br />
+  If you are a guest, be prepared: you <em>will</em> be fed. "I'm not hungry" is not a valid defense.</p>
+  <ul>
+  <li><strong>Host:</strong> "Їжте, їжте!" (Eat, eat!)</li>
+  <li><strong>You:</strong> "Я не хочу…" (I don't want…)</li>
+  <li><strong>Host:</strong> "Тільки трошки!" (Just a little!)<br />
+  Result: You eat three plates. This is love.</li>
+  </ul>
+</blockquote>
+<h2 id="presentation">presentation</h2>
+<h3 id="thethreemeals">The Three Meals (Три прийоми їжі)</h3>
+<p>Ukrainians typically have three main meals.</p>
+<ol>
+<li><strong>Сніданок</strong> (Breakfast) - Usually hearty. Eggs, porridge, or sandwiches.</li>
+<li><strong>Обід</strong> (Lunch) - The main meal. Almost always includes <strong>soup</strong> (first course) and a main dish (second course).</li>
+<li><strong>Вечеря</strong> (Dinner) - A family gathering in the evening, usually around 7:00 PM or 8:00 PM. It is a time to talk, share news, and relax.</li>
+</ol>
 <ul>
-<li>Я снідаю. (Ya snidayu.) — I'm having breakfast.</li>
-<li>Ми обідаємо. (My obidayemo.) — We're having lunch.</li>
-<li>Вона вечеряє. (Vona vecheryaye.) — She's having dinner.</li>
+<li><strong>Я снідаю.</strong> (I have breakfast.)</li>
+<li><strong>Ми обідаємо.</strong> (We have lunch.)</li>
+<li><strong>Вони вечеряють.</strong> (They have dinner.)</li>
 </ul>
+<p>Notice that these are verbs! In English you "have" breakfast. In Ukrainian, you "breakfast" (action).</p>
+<ul>
+<li><strong>Ти снідаєш?</strong> (Are you breakfast-ing?)</li>
+<li><strong>Ні, я тільки п'ю каву.</strong> (No, I am only drinking coffee.)</li>
+</ul>
+<p><strong>Dialogue: The Morning Ritual</strong></p>
+<ul>
+<li><strong>Олена:</strong> Ти снідаєш?</li>
+<li><strong>Іван:</strong> Так. Я їм яйце і хліб. А ти?</li>
+<li><strong>Олена:</strong> Я не снідаю. Я тільки п'ю каву.</li>
+<li><strong>Іван:</strong> Це погано! Сніданок — це важливо.</li>
+</ul>
+<h3 id="theessentialsbreadandproduce">The Essentials: Bread and Produce</h3>
+<p>Ukrainian soil (<strong>Чорнозем</strong> - Black Earth) is incredibly fertile. It is famous worldwide. If you go to a market (called a <strong>Базар</strong> or <strong>Ринок</strong>) in Kyiv or Lviv, you will smell the difference. Vegetables here taste like <em>vegetables</em>, not plastic. They are full of sun and earth.</p>
+<p><strong>Vegetables (Овочі):</strong></p>
+<ul>
+<li><strong>Картопля</strong> (Potato) - The "Second Bread." It is boiled, fried, baked, mashed, and put in soup. A meal without potato is rare.</li>
+<li><strong>Помідор</strong> (Tomato) - Real tomatoes, red and juicy.</li>
+<li><strong>Огірок</strong> (Cucumber) - Fresh in summer, pickled (soleny) in winter.</li>
+<li><strong>Цибуля</strong> (Onion) - Essential for every frying pan base (<em>zazharka</em>). Without onion, there is no flavor.</li>
+</ul>
+<p><strong>Fruit (Фрукти):</strong></p>
+<ul>
+<li><strong>Яблуко</strong> (Apple) - Ukraine is an apple country. There are orchards everywhere.</li>
+<li><strong>Банан</strong> (Banana) - Imported but very common and cheap.</li>
+</ul>
+<p><strong>Staples:</strong></p>
+<ul>
+<li><strong>Хліб</strong> (Bread) - Usually dark rye (<strong>Житній</strong>) or white wheat (<strong>Пшеничний</strong>).</li>
+<li><strong>Сир</strong> (Cheese/Cottage Cheese) - Note: In Ukraine, <strong>Сир</strong> creates confusion for learners. It can mean yellow cheese (Hard cheese) OR white cottage cheese ("Tvoroh"). To be specific, cottage cheese is called <strong>Домашній сир</strong> (Home cheese), and it is used for pancakes, dumplings, and breakfast.</li>
+<li><strong>Яйце</strong> (Egg) - The symbol of life (think <em>Pysanka</em>).</li>
+</ul>
+<h3 id="theiconsborschtandvarenyky">The Icons: Borscht and Varenyky</h3>
+<p>You cannot speak Ukrainian without these two words.</p>
+<ol>
+<li><strong>Борщ</strong> (Borscht): It is NOT just beet soup. It is a masterpiece of 20+ ingredients (beets, cabbage, potatoes, onions, carrots, meat, beans…). It represents the harmony of the universe. Every family has a unique recipe, and every mother believes hers is the best.</li>
+<li><strong>Вареники</strong> (Varenyky): Dumplings. They can be savory (potato, cabbage, meat) or sweet (cherry, cheese). They are NEVER called "Pierogi" in Ukraine (that's Polish!). Eating varenyky is a communal act.</li>
+</ol>
 <blockquote>
-  <p>💡 <strong>Did You Know?</strong><br />
-  In Ukraine, <strong>обід</strong> (lunch) is traditionally the largest meal of the day, often featuring soup followed by a main course. This contrasts with many Western countries where dinner is the main meal.</p>
+  <p>🎭 <strong>Culture Corner: The Sour Cream Cult</strong><br />
+  Ukrainians put <strong>Смета́на</strong> (Sour Cream) on everything. Borscht? Smetana. Varenyky? Smetana. Pancakes (Mlyntsi)? Smetana. Even sometimes in salad! It is the white gold of Ukrainian cuisine. It is rich, thick, and nothing like the watery stuff you find elsewhere.</p>
 </blockquote>
-<hr />
-<h2 id="essentialfoodvocabulary">Essential Food Vocabulary</h2>
-<h3 id="yizhafood">Їжа (Yizha) — Food</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Pronunciation</th>
-<th>English</th>
-<th>Category</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>їжа</td>
-<td>(yizha)</td>
-<td>food</td>
-<td>general</td>
-</tr>
-<tr>
-<td>страва</td>
-<td>(strava)</td>
-<td>dish, course</td>
-<td>general</td>
-</tr>
-<tr>
-<td>хліб</td>
-<td>(khlib)</td>
-<td>bread</td>
-<td>staple</td>
-</tr>
-<tr>
-<td>м'ясо</td>
-<td>(m'yaso)</td>
-<td>meat</td>
-<td>protein</td>
-</tr>
-<tr>
-<td>курка</td>
-<td>(kurka)</td>
-<td>chicken</td>
-<td>protein</td>
-</tr>
-<tr>
-<td>риба</td>
-<td>(ryba)</td>
-<td>fish</td>
-<td>protein</td>
-</tr>
-<tr>
-<td>яйце</td>
-<td>(yaytse)</td>
-<td>egg</td>
-<td>protein</td>
-</tr>
-<tr>
-<td>сир</td>
-<td>(syr)</td>
-<td>cheese</td>
-<td>dairy</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🌍 <strong>Real World</strong><br />
-  <strong>Хліб</strong> (bread) is sacred in Ukrainian culture. Never throw bread away, and always break it by hand rather than cutting it at the table during important occasions. The phrase "хліб-сіль" (bread and salt) represents traditional Ukrainian hospitality.</p>
-</blockquote>
-<h3 id="ovochivegetables">Овочі (Ovochi) — Vegetables</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Pronunciation</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>овочі</td>
-<td>(ovochi)</td>
-<td>vegetables</td>
-</tr>
-<tr>
-<td>картопля</td>
-<td>(kartoplya)</td>
-<td>potato</td>
-</tr>
-<tr>
-<td>помідор</td>
-<td>(pomidor)</td>
-<td>tomato</td>
-</tr>
-<tr>
-<td>огірок</td>
-<td>(ohirok)</td>
-<td>cucumber</td>
-</tr>
-<tr>
-<td>цибуля</td>
-<td>(tsybulya)</td>
-<td>onion</td>
-</tr>
-</tbody>
-</table>
-<h3 id="fruktyfruits">Фрукти (Frukty) — Fruits</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Pronunciation</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>фрукти</td>
-<td>(frukty)</td>
-<td>fruits</td>
-</tr>
-<tr>
-<td>яблуко</td>
-<td>(yabluko)</td>
-<td>apple</td>
-</tr>
-<tr>
-<td>банан</td>
-<td>(banan)</td>
-<td>banana</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="traditionalukrainiandishes">Traditional Ukrainian Dishes</h2>
-<h3 id="borshch">Борщ (Borshch)</h3>
-<p>The iconic Ukrainian soup! Made with beets, cabbage, potatoes, carrots, and often served with сметана (sour cream) and пампушки (garlic bread).</p>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Ukrainian</th>
-<th>Pronunciation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Beet soup</td>
-<td>борщ</td>
-<td>(borshch)</td>
-</tr>
-<tr>
-<td>Sour cream</td>
-<td>сметана</td>
-<td>(smetana)</td>
-</tr>
-<tr>
-<td>Dumplings</td>
-<td>вареники</td>
-<td>(varenyky)</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎬 <strong>Pop Culture Moment</strong><br />
-  Борщ was inscribed on UNESCO's list of Intangible Cultural Heritage in 2022 as Ukrainian! While other countries have similar soups, Ukrainian борщ is the original, with recipes passed down through generations. Each region—and every grandmother—has their own secret recipe.</p>
-</blockquote>
-<h3 id="varenyky">Вареники (Varenyky)</h3>
-<p>Ukrainian dumplings filled with various ingredients:</p>
-<table>
-<thead>
-<tr>
-<th>Filling</th>
-<th>Ukrainian</th>
-<th>Pronunciation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Potato</td>
-<td>з картоплею</td>
-<td>(z kartopleyu)</td>
-</tr>
-<tr>
-<td>Cheese</td>
-<td>з сиром</td>
-<td>(z syrom)</td>
-</tr>
-<tr>
-<td>Cherry</td>
-<td>з вишнею</td>
-<td>(z vyshneyu)</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎯 <strong>Fun Fact</strong><br />
-  There's a giant statue of a вареник in the Canadian town of Glendon, Alberta—home to many Ukrainian immigrants! It's 25 feet tall and holds a giant fork.</p>
-</blockquote>
-<hr />
-<h2 id="drinksnapoyi">Drinks — Напої (Napoyi)</h2>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Pronunciation</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>чай</td>
-<td>(chay)</td>
-<td>tea</td>
-</tr>
-<tr>
-<td>кава</td>
-<td>(kava)</td>
-<td>coffee</td>
-</tr>
-<tr>
-<td>вода</td>
-<td>(voda)</td>
-<td>water</td>
-</tr>
-<tr>
-<td>сік</td>
-<td>(sik)</td>
-<td>juice</td>
-</tr>
-<tr>
-<td>молоко</td>
-<td>(moloko)</td>
-<td>milk</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong><br />
-  Ukrainians are serious coffee lovers! <strong>Львівська кава</strong> (Lviv coffee) has a centuries-old tradition. The city of Львів (Lviv) has some of the best coffee houses in Eastern Europe, dating back to Austro-Hungarian times.</p>
-</blockquote>
-<hr />
-<h2 id="usingand">Using їсти and пити</h2>
-<p>Remember from Module 08:</p>
-<p><strong>Їсти (to eat):</strong> я їм, ти їси, він/вона їсть, ми їмо, ви їсте, вони їдять</p>
-<p><strong>Пити (to drink):</strong> я п'ю, ти п'єш, він/вона п'є, ми п'ємо, ви п'єте, вони п'ють</p>
-<h3 id="examplesentences">Example Sentences</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Pronunciation</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Я їм борщ.</td>
-<td>(Ya yim borshch.)</td>
-<td>I eat borscht.</td>
-</tr>
-<tr>
-<td>Вона їсть хліб.</td>
-<td>(Vona yist' khlib.)</td>
-<td>She eats bread.</td>
-</tr>
-<tr>
-<td>Ми їмо вареники.</td>
-<td>(My yimo varenyky.)</td>
-<td>We eat varenyky.</td>
-</tr>
-<tr>
-<td>Ти п'єш каву?</td>
-<td>(Ty p'yesh kavu?)</td>
-<td>Do you drink coffee?</td>
-</tr>
-<tr>
-<td>Він п'є чай.</td>
-<td>(Vin p'ye chay.)</td>
-<td>He drinks tea.</td>
-</tr>
-<tr>
-<td>Вони п'ють воду.</td>
-<td>(Vony p'yut' vodu.)</td>
-<td>They drink water.</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="tastywordssmachnyy">Tasty Words: Смачний (Smachnyy)</h2>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Pronunciation</th>
-<th>English</th>
-<th>Usage</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>смачний</td>
-<td>(smachnyy)</td>
-<td>delicious, tasty</td>
-<td>adjective (m)</td>
-</tr>
-<tr>
-<td>смачна</td>
-<td>(smachna)</td>
-<td>delicious</td>
-<td>adjective (f)</td>
-</tr>
-<tr>
-<td>смачне</td>
-<td>(smachne)</td>
-<td>delicious</td>
-<td>adjective (n)</td>
-</tr>
-<tr>
-<td>смачно</td>
-<td>(smachno)</td>
-<td>it's delicious</td>
-<td>adverb</td>
-</tr>
-<tr>
-<td>Смачного!</td>
-<td>(Smachnoho!)</td>
-<td>Enjoy your meal!</td>
-<td>expression</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🌍 <strong>Real World</strong><br />
-  <strong>"Смачного!"</strong> is what Ukrainians say before a meal—similar to "Bon appétit!" Always say this when someone starts eating. The response is "Дякую!" (Thank you!)</p>
-</blockquote>
-<h3 id="describingfood">Describing Food</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Pronunciation</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Борщ смачний!</td>
-<td>(Borshch smachnyy!)</td>
-<td>Borscht is delicious!</td>
-</tr>
-<tr>
-<td>Кава смачна!</td>
-<td>(Kava smachna!)</td>
-<td>Coffee is delicious!</td>
-</tr>
-<tr>
-<td>Яблуко смачне!</td>
-<td>(Yabluko smachne!)</td>
-<td>The apple is delicious!</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="mealconversations">Meal Conversations</h2>
-<h3 id="athome">At Home</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Pronunciation</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Ти голодний?</td>
-<td>(Ty holodnyy?)</td>
-<td>Are you hungry? (to male)</td>
-</tr>
-<tr>
-<td>Ти голодна?</td>
-<td>(Ty holodna?)</td>
-<td>Are you hungry? (to female)</td>
-</tr>
-<tr>
-<td>Так, я хочу їсти.</td>
-<td>(Tak, ya khochu yisty.)</td>
-<td>Yes, I want to eat.</td>
-</tr>
-<tr>
-<td>Що ти хочеш їсти?</td>
-<td>(Shcho ty khochesh yisty?)</td>
-<td>What do you want to eat?</td>
-</tr>
-<tr>
-<td>Я хочу борщ.</td>
-<td>(Ya khochu borshch.)</td>
-<td>I want borscht.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="basicpreferences">Basic Preferences</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Pronunciation</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Я люблю каву.</td>
-<td>(Ya lyublyu kavu.)</td>
-<td>I love coffee.</td>
-</tr>
-<tr>
-<td>Я не люблю рибу.</td>
-<td>(Ya ne lyublyu rybu.)</td>
-<td>I don't like fish.</td>
-</tr>
-<tr>
-<td>Вона любить чай.</td>
-<td>(Vona lyubyt' chay.)</td>
-<td>She loves tea.</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎮 <strong>Gamer's Corner</strong><br />
-  In the video game S.T.A.L.K.E.R., set in the Chornobyl Exclusion Zone, characters eat Ukrainian foods like ковбаса (sausage) and хліб (bread) to restore health. Even in post-apocalyptic settings, Ukrainian cuisine survives!</p>
-</blockquote>
-<hr />
-<h2 id="foodcategoriesgrouppractice">Food Categories: Group Practice</h2>
-<h3 id="protein">Protein (Білок)</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Gender</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>м'ясо</td>
-<td>n</td>
-<td>meat</td>
-</tr>
-<tr>
-<td>курка</td>
-<td>f</td>
-<td>chicken</td>
-</tr>
-<tr>
-<td>риба</td>
-<td>f</td>
-<td>fish</td>
-</tr>
-<tr>
-<td>яйце</td>
-<td>n</td>
-<td>egg</td>
-</tr>
-<tr>
-<td>сир</td>
-<td>m</td>
-<td>cheese</td>
-</tr>
-</tbody>
-</table>
-<h3 id="carbohydrates">Carbohydrates (Вуглеводи)</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Gender</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>хліб</td>
-<td>m</td>
-<td>bread</td>
-</tr>
-<tr>
-<td>картопля</td>
-<td>f</td>
-<td>potato</td>
-</tr>
-<tr>
-<td>вареники</td>
-<td>pl</td>
-<td>dumplings</td>
-</tr>
-</tbody>
-</table>
+<p><strong>Dialogue: Lunch Time</strong></p>
+<ul>
+<li><strong>Офіціант:</strong> Що ви хочете на обід?</li>
+<li><strong>Гість:</strong> Я хочу борщ і сметану.</li>
+<li><strong>Офіціант:</strong> А що ще?</li>
+<li><strong>Гість:</strong> Вареники з картоплею.</li>
+<li><strong>Офіціант:</strong> Що ви п'єте?</li>
+<li><strong>Гість:</strong> Сік, будь ласка.</li>
+</ul>
 <h3 id="drinks">Drinks (Напої)</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Gender</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>чай</td>
-<td>m</td>
-<td>tea</td>
-</tr>
-<tr>
-<td>кава</td>
-<td>f</td>
-<td>coffee</td>
-</tr>
-<tr>
-<td>вода</td>
-<td>f</td>
-<td>water</td>
-</tr>
-<tr>
-<td>сік</td>
-<td>m</td>
-<td>juice</td>
-</tr>
-<tr>
-<td>молоко</td>
-<td>n</td>
-<td>milk</td>
-</tr>
-</tbody>
-</table>
-<hr /></div>
-    </div>
-  
-    <div class="card section-practice">
-      <h3>Practice</h3>
-      <div class="md-content"><h2 id="exercise1whatdoyoueatdrink">Exercise 1: What Do You Eat/Drink?</h2>
-<p>Complete with the correct form of їсти or пити:</p>
-<ol>
-<li>Я <strong><em><em></em></strong><strong><em></em></em></strong>_ борщ.</li>
-<li>Ти <strong><em><em></em></strong><strong><em></em></em></strong>_ каву?</li>
-<li>Вона <strong><em><em></em></strong><strong><em></em></em></strong>_ яблуко.</li>
-<li>Ми <strong><em><em></em></strong><strong><em></em></em></strong>_ чай.</li>
-<li>Вони <strong><em><em></em></strong><strong><em></em></em></strong>_ вареники.</li>
-</ol>
-<h2 id="exercise2matchthemeal">Exercise 2: Match the Meal</h2>
-<p>Connect the meal with typical foods:</p>
-<table>
-<thead>
-<tr>
-<th>Meal</th>
-<th>Typical Food</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>сніданок</td>
-<td>???</td>
-</tr>
-<tr>
-<td>обід</td>
-<td>???</td>
-</tr>
-<tr>
-<td>вечеря</td>
-<td>???</td>
-</tr>
-</tbody>
-</table>
-<p>Options: борщ і хліб, яйця і чай, вареники і сік</p>
-<h2 id="exercise3describethetaste">Exercise 3: Describe the Taste</h2>
-<p>Use the correct form of смачний:</p>
-<ol>
-<li>Борщ <strong><em><em></em></strong><strong><em></em></em></strong>_! (m)</li>
-<li>Кава <strong><em><em></em></strong><strong><em></em></em></strong>_! (f)</li>
-<li>Молоко <strong><em><em></em></strong><strong><em></em></em></strong>_! (n)</li>
-</ol>
-<hr /></div>
-    </div>
-  
-    <div class="card section-content">
-      <h3>Production</h3>
-      <div class="md-content"><h2 id="taskyourfooddiary">Task: Your Food Diary</h2>
-<p>Write what you eat and drink in a typical day:</p>
-<p><strong>Сніданок:</strong></p>
 <ul>
-<li>Я їм <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Я п'ю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
+<li><strong>Вода</strong> (Water) - The source of life.</li>
+<li><strong>Чай</strong> (Tea) - Drunk hot, often with lemon and sugar.</li>
+<li><strong>Кава</strong> (Coffee) - Lviv is the coffee capital of Ukraine. Coffee culture is huge.</li>
+<li><strong>Сік</strong> (Juice)</li>
+<li><strong>Молоко</strong> (Milk)</li>
 </ul>
-<p><strong>Обід:</strong></p>
+<h2 id="practice">practice</h2>
+<p><strong>Drill 1: "Wait, this isn't right!"</strong><br />
+Correct these statements.</p>
 <ul>
-<li>Я їм <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Я п'ю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
+<li><strong>Я п'ю борщ.</strong> (I drink borscht.) -&gt; <strong>Ні! Я їм борщ.</strong> (No! I eat borscht.)</li>
+<li><strong>Ми їмо чай.</strong> (We eat tea.) -&gt; <strong>Ні! Ми п'ємо чай.</strong> (No! We drink tea.)</li>
 </ul>
-<p><strong>Вечеря:</strong></p>
+<p><strong>Drill 2: "Bon Appetit!"</strong><br />
+When you see someone eating, you say: <strong>Смачного!</strong> (Tasty/Bon Appetit!).</p>
 <ul>
-<li>Я їм <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Я п'ю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
+<li><strong>Ви:</strong> Я їм вареники.</li>
+<li><strong>Друг:</strong> Смачного!</li>
+<li><strong>Ви:</strong> Дякую!</li>
 </ul>
-<h2 id="taskfoodpreferences">Task: Food Preferences</h2>
-<p>Write 5 sentences about what you love or don't love to eat/drink:</p>
+<h2 id="production">production</h2>
+<p>Plan your perfect day of eating in Ukraine.</p>
 <ol>
-<li>Я люблю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Я не люблю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li><strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li><strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li><strong><em><em></em></strong><strong><em></em></em></strong>_</li>
+<li><strong>Сніданок:</strong> Я їм <strong>яйце</strong> і <strong>хліб</strong>. Я п'ю <strong>каву</strong>.</li>
+<li><strong>Обід:</strong> Я їм <strong>борщ</strong> і <strong>салат</strong> (salad). Я п'ю <strong>сік</strong>.</li>
+<li><strong>Вечеря:</strong> Я їм <strong>рибу</strong> і <strong>картоплю</strong>. Я п'ю <strong>чай</strong>.</li>
 </ol>
-<hr />
+<p><em>(Note: Don't worry about the case endings -у/-ю right now. Just get the words out! We master the Accusative Case for food in Module 11.)</em></p>
 <hr />
 <hr /></div>
     </div>
@@ -1170,23 +662,15 @@ footer {
       
     <div class="card section-summary">
       <h3>📋 Summary</h3>
-      <div class="md-content"><p>In this module, you learned:</p>
-<ol>
-<li><strong>Meal vocabulary</strong> — сніданок (breakfast), обід (lunch), вечеря (dinner)</li>
-<li><strong>Food categories</strong> — їжа, м'ясо, овочі, фрукти, напої</li>
-<li><strong>Traditional dishes</strong> — борщ, вареники</li>
-<li><strong>Using їсти/пити</strong> — Я їм борщ. Вона п'є каву.</li>
-<li><strong>Taste adjectives</strong> — смачний/смачна/смачне, Смачного!</li>
-<li><strong>Cultural notes</strong> — Bread is sacred, lunch is the main meal, coffee culture in Lviv</li>
-</ol>
-<p><strong>Key phrases:</strong></p>
+      <div class="md-content"><p>You have officially broken bread (<strong>Хліб</strong>) with us! You know the sacred trinity of Ukrainian cuisine: <strong>Борщ</strong>, <strong>Вареники</strong>, and <strong>Сметана</strong>.<br />
+You can now navigate the three meals of the day:</p>
 <ul>
-<li>Смачного! (Enjoy your meal!)</li>
-<li>Я хочу їсти. (I want to eat.)</li>
-<li>Борщ смачний! (Borscht is delicious!)</li>
-<li>Ти голодний/голодна? (Are you hungry?)</li>
+<li><strong>Сніданок</strong> (Start with energy)</li>
+<li><strong>Обід</strong> (Refuel with soup)</li>
+<li><strong>Вечеря</strong> (Gather with family)</li>
 </ul>
-<p>Next module: Checkpoint! We'll review everything from Modules 1-9 and test your knowledge.</p></div>
+<p>Crucially, you know how to wish everyone <strong>Смачного!</strong><br />
+In the next and final module of Phase A1.1, we will Review everything you have learned in the "First Contact" phase. Get ready for the checkpoint!</p></div>
     </div>
   
       <div class="btn-group">
@@ -1195,82 +679,89 @@ footer {
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Food Category Recognition</h3>
-      <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container"></div>
-      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+    <section id="activity-0" class="section"><div class="card"><h3>Food Categories</h3>
+      <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/14</span></div>
+      <div class="match-container" id="activity-0-container"><svg class="match-lines" id="activity-0-lines"></svg>
+        <div class="match-column" id="activity-0-left"></div>
+        <div class="match-column" id="activity-0-right"></div>
+      </div>
+      <div class="completion-message" id="activity-0-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Food Vocabulary Translation</h3>
-      <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-1-container"><svg class="match-lines" id="activity-1-lines"></svg>
-        <div class="match-column" id="activity-1-left"></div>
-        <div class="match-column" id="activity-1-right"></div>
-      </div>
-      <div class="completion-message" id="activity-1-complete"><h3>Perfect!</h3></div>
+    <section id="activity-1" class="section"><div class="card"><h3>The Ukrainian Menu</h3>
+      <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/4</span></div>
+      <div id="activity-1-container"></div>
+      <div class="completion-message" id="activity-1-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Food vs Drinks</h3>
-      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/13</span></div>
-      <div class="sort-pool" id="activity-2-pool"><div class="sort-items" id="activity-2-items"></div></div>
-      <div class="sort-groups" id="activity-2-groups"></div>
-      <div class="completion-message" id="activity-2-complete"><h3>All Sorted!</h3></div>
+    <section id="activity-2" class="section"><div class="card"><h3>I Eat / I Drink</h3>
+      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
+      <div id="activity-2-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-2-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Ukrainian Food Culture</h3>
+    <section id="activity-3" class="section"><div class="card"><h3>Fridge Sorting</h3>
       <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div id="activity-3-container"></div>
-      <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
+      <div class="sort-pool" id="activity-3-pool"><div class="sort-items" id="activity-3-items"></div></div>
+      <div class="sort-groups" id="activity-3-groups"></div>
+      <div class="completion-message" id="activity-3-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Complete with їсти or пити</h3>
+    <section id="activity-4" class="section"><div class="card"><h3>Meal Time</h3>
       <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
-      <div id="activity-4-container" class="fill-container"></div>
-      <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
+      <div id="activity-4-container" class="order-container"></div>
+      <div class="completion-message" id="activity-4-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Meals and Times</h3>
+    <section id="activity-5" class="section"><div class="card"><h3>Scrambled Food</h3>
       <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-5-container"><svg class="match-lines" id="activity-5-lines"></svg>
-        <div class="match-column" id="activity-5-left"></div>
-        <div class="match-column" id="activity-5-right"></div>
-      </div>
-      <div class="completion-message" id="activity-5-complete"><h3>Perfect!</h3></div>
+      <div id="activity-5-container" class="order-container"></div>
+      <div class="completion-message" id="activity-5-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Food Word Scramble</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>Flavor Check</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
-      <div id="activity-6-container" class="order-container"></div>
-      <div class="completion-message" id="activity-6-complete"><h3>Perfect Order!</h3></div>
+      <div class="match-container" id="activity-6-container"><svg class="match-lines" id="activity-6-lines"></svg>
+        <div class="match-column" id="activity-6-left"></div>
+        <div class="match-column" id="activity-6-right"></div>
+      </div>
+      <div class="completion-message" id="activity-6-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
     </div></section>
 
-    <section id="activity-7" class="section"><div class="card"><h3>Describe with смачний</h3>
+    <section id="activity-7" class="section"><div class="card"><h3>Food Facts</h3>
       <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/12</span></div>
-      <div id="activity-7-container" class="fill-container"></div>
+      <div id="activity-7-container"></div>
       <div class="completion-message" id="activity-7-complete"><h3>Complete!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-8')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-8" class="section"><div class="card"><h3>Odd One Out</h3>
+      <div class="score-display"><span class="score"><span id="activity-8-score">0</span>/3</span></div>
+      <div id="activity-8-container" class="select-container"></div>
+      <div class="completion-message" id="activity-8-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-8')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
-        <h3>Словник (31)</h3>
+        <h3>Словник (32)</h3>
         <div class="vocab-table-container">
           <table class="vocab-table">
             <thead><tr>
     <th>Слово</th>
-    
+    <th>Вимова</th>
     <th>IPA</th>
     <th>Переклад</th>
     <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">їжа (yizha)</td><td class="vocab-ipa">/ˈjiʒɑ/</td><td class="vocab-en">food</td><td class="vocab-note">General term</td></tr><tr><td class="vocab-uk">сніданок (snidanok)</td><td class="vocab-ipa">/ˈsnʲidɑnɔk/</td><td class="vocab-en">breakfast</td><td class="vocab-note">Morning meal</td></tr><tr><td class="vocab-uk">обід (obid)</td><td class="vocab-ipa">/ɔˈbʲid/</td><td class="vocab-en">lunch</td><td class="vocab-note">Largest meal traditionally</td></tr><tr><td class="vocab-uk">вечеря (vecherya)</td><td class="vocab-ipa">/vɛˈtʃɛrʲɑ/</td><td class="vocab-en">dinner</td><td class="vocab-note">Evening meal</td></tr><tr><td class="vocab-uk">борщ (borshch)</td><td class="vocab-ipa">/bɔrʃtʃ/</td><td class="vocab-en">borscht</td><td class="vocab-note">Ukrainian beet soup</td></tr><tr><td class="vocab-uk">суп (sup)</td><td class="vocab-ipa">/sup/</td><td class="vocab-en">soup</td><td class="vocab-note">General soup</td></tr><tr><td class="vocab-uk">вареники (varenyky)</td><td class="vocab-ipa">/vɑˈrɛnɪkɪ/</td><td class="vocab-en">dumplings</td><td class="vocab-note">Traditional Ukrainian dumplings</td></tr><tr><td class="vocab-uk">хліб (khlib)</td><td class="vocab-ipa">/xlʲib/</td><td class="vocab-en">bread</td><td class="vocab-note">Sacred in Ukrainian culture</td></tr><tr><td class="vocab-uk">м&#039;ясо (m&#039;yaso)</td><td class="vocab-ipa">/ˈmjɑsɔ/</td><td class="vocab-en">meat</td><td class="vocab-note">General term</td></tr><tr><td class="vocab-uk">курка (kurka)</td><td class="vocab-ipa">/ˈkurkɑ/</td><td class="vocab-en">chicken</td><td class="vocab-note">Poultry</td></tr><tr><td class="vocab-uk">риба (ryba)</td><td class="vocab-ipa">/ˈrɪbɑ/</td><td class="vocab-en">fish</td><td class="vocab-note">Seafood</td></tr><tr><td class="vocab-uk">овочі (ovochi)</td><td class="vocab-ipa">/ɔˈvɔtʃi/</td><td class="vocab-en">vegetables</td><td class="vocab-note">General term</td></tr><tr><td class="vocab-uk">фрукти (frukty)</td><td class="vocab-ipa">/ˈfruktɪ/</td><td class="vocab-en">fruits</td><td class="vocab-note">General term</td></tr><tr><td class="vocab-uk">яблуко (yabluko)</td><td class="vocab-ipa">/ˈjɑblukɔ/</td><td class="vocab-en">apple</td><td class="vocab-note">Common fruit</td></tr><tr><td class="vocab-uk">банан (banan)</td><td class="vocab-ipa">/bɑˈnɑn/</td><td class="vocab-en">banana</td><td class="vocab-note">Tropical fruit</td></tr><tr><td class="vocab-uk">картопля (kartoplya)</td><td class="vocab-ipa">/kɑrˈtɔplʲɑ/</td><td class="vocab-en">potato</td><td class="vocab-note">Staple vegetable</td></tr><tr><td class="vocab-uk">помідор (pomidor)</td><td class="vocab-ipa">/pɔmʲiˈdɔr/</td><td class="vocab-en">tomato</td><td class="vocab-note">Common vegetable</td></tr><tr><td class="vocab-uk">огірок (ohirok)</td><td class="vocab-ipa">/ɔɦʲiˈrɔk/</td><td class="vocab-en">cucumber</td><td class="vocab-note">Common vegetable</td></tr><tr><td class="vocab-uk">цибуля (tsybulya)</td><td class="vocab-ipa">/tsɪˈbulʲɑ/</td><td class="vocab-en">onion</td><td class="vocab-note">Essential in cooking</td></tr><tr><td class="vocab-uk">сир (syr)</td><td class="vocab-ipa">/sɪr/</td><td class="vocab-en">cheese</td><td class="vocab-note">Dairy product</td></tr><tr><td class="vocab-uk">яйце (yaytse)</td><td class="vocab-ipa">/ˈjɑjtsɛ/</td><td class="vocab-en">egg</td><td class="vocab-note">Protein source</td></tr><tr><td class="vocab-uk">чай (chay)</td><td class="vocab-ipa">/tʃɑj/</td><td class="vocab-en">tea</td><td class="vocab-note">Hot beverage</td></tr><tr><td class="vocab-uk">кава (kava)</td><td class="vocab-ipa">/ˈkɑvɑ/</td><td class="vocab-en">coffee</td><td class="vocab-note">Hot beverage</td></tr><tr><td class="vocab-uk">вода (voda)</td><td class="vocab-ipa">/vɔˈdɑ/</td><td class="vocab-en">water</td><td class="vocab-note">Essential drink</td></tr><tr><td class="vocab-uk">сік (sik)</td><td class="vocab-ipa">/sʲik/</td><td class="vocab-en">juice</td><td class="vocab-note">Fruit drink</td></tr><tr><td class="vocab-uk">молоко (moloko)</td><td class="vocab-ipa">/mɔlɔˈkɔ/</td><td class="vocab-en">milk</td><td class="vocab-note">Dairy drink</td></tr><tr><td class="vocab-uk">смачний (smachnyy)</td><td class="vocab-ipa">/ˈsmɑtʃnɪj/</td><td class="vocab-en">delicious, tasty</td><td class="vocab-note">Changes: смачна (f), смачне (n)</td></tr><tr><td class="vocab-uk">смачно (smachno)</td><td class="vocab-ipa">/ˈsmɑtʃnɔ/</td><td class="vocab-en">it&#039;s delicious</td><td class="vocab-note">Used as exclamation</td></tr><tr><td class="vocab-uk">Смачного! (Smachnoho!)</td><td class="vocab-ipa">/smɑtʃˈnɔɦɔ/</td><td class="vocab-en">Enjoy your meal!</td><td class="vocab-note">Said before eating</td></tr><tr><td class="vocab-uk">їсти (yisty)</td><td class="vocab-ipa">/ˈjistɪ/</td><td class="vocab-en">to eat</td><td class="vocab-note">Irregular conjugation</td></tr><tr><td class="vocab-uk">пити (pyty)</td><td class="vocab-ipa">/ˈpɪtɪ/</td><td class="vocab-en">to drink</td><td class="vocab-note">Irregular conjugation</td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">їжа</td><td class="vocab-translit">/ˈjiʒɑ/</td><td class="vocab-ipa">food</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('їжа')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">сніданок</td><td class="vocab-translit">/sɲiˈdɑnɔk/</td><td class="vocab-ipa">breakfast</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('сніданок')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">обід</td><td class="vocab-translit">/oˈbid/</td><td class="vocab-ipa">lunch</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('обід')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вечеря</td><td class="vocab-translit">/vɛˈtʃɛrʲɑ/</td><td class="vocab-ipa">dinner</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вечеря')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">борщ</td><td class="vocab-translit">/bɔrʃtʃ/</td><td class="vocab-ipa">borscht</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('борщ')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">суп</td><td class="vocab-translit">/sup/</td><td class="vocab-ipa">soup</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('суп')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вареники</td><td class="vocab-translit">/vɑˈrɛnɪkɪ/</td><td class="vocab-ipa">dumplings</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вареники')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">хліб</td><td class="vocab-translit">/xlʲib/</td><td class="vocab-ipa">bread</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('хліб')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">м&#039;ясо</td><td class="vocab-translit">/ˈmjɑsɔ/</td><td class="vocab-ipa">meat</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('м&#039;ясо')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">курка</td><td class="vocab-translit">/ˈkurkɑ/</td><td class="vocab-ipa">chicken</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('курка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">риба</td><td class="vocab-translit">/ˈrɪbɑ/</td><td class="vocab-ipa">fish</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('риба')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">овочі</td><td class="vocab-translit">/ˈɔvɔtʃi/</td><td class="vocab-ipa">vegetables</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('овочі')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">фрукти</td><td class="vocab-translit">/ˈfruktɪ/</td><td class="vocab-ipa">fruits</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('фрукти')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">яблуко</td><td class="vocab-translit">/ˈjɑblukɔ/</td><td class="vocab-ipa">apple</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('яблуко')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">банан</td><td class="vocab-translit">/bɑˈnɑn/</td><td class="vocab-ipa">banana</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('банан')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">картопля</td><td class="vocab-translit">/kɑrˈtɔplʲɑ/</td><td class="vocab-ipa">potato</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('картопля')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">помідор</td><td class="vocab-translit">/pɔmiˈdɔr/</td><td class="vocab-ipa">tomato</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('помідор')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">огірок</td><td class="vocab-translit">/oɦiˈrɔk/</td><td class="vocab-ipa">cucumber</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('огірок')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">цибуля</td><td class="vocab-translit">/tsɪˈbulʲɑ/</td><td class="vocab-ipa">onion</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('цибуля')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">сир</td><td class="vocab-translit">/sɪr/</td><td class="vocab-ipa">cheese</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('сир')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">яйце</td><td class="vocab-translit">/jɑjˈtsɛ/</td><td class="vocab-ipa">egg</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('яйце')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">чай</td><td class="vocab-translit">/tʃɑj/</td><td class="vocab-ipa">tea</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('чай')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">кава</td><td class="vocab-translit">/ˈkɑvɑ/</td><td class="vocab-ipa">coffee</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('кава')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вода</td><td class="vocab-translit">/vɔˈdɑ/</td><td class="vocab-ipa">water</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вода')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">сік</td><td class="vocab-translit">/sʲik/</td><td class="vocab-ipa">juice</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('сік')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">молоко</td><td class="vocab-translit">/mɔlɔˈkɔ/</td><td class="vocab-ipa">milk</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('молоко')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">сметана</td><td class="vocab-translit">/smɛˈtɑnɑ/</td><td class="vocab-ipa">sour cream</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('сметана')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">смачний</td><td class="vocab-translit">/smɑtʃˈnɪj/</td><td class="vocab-ipa">tasty</td><td class="vocab-en">adj</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('смачний')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">смачно</td><td class="vocab-translit">/ˈsmɑtʃnɔ/</td><td class="vocab-ipa">tasty (adv)</td><td class="vocab-en">adv</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('смачно')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">смачного</td><td class="vocab-translit">/smɑtʃˈnɔhɔ/</td><td class="vocab-ipa">bon appetit</td><td class="vocab-en">phrase</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('смачного')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">їсти</td><td class="vocab-translit">/ˈjistɪ/</td><td class="vocab-ipa">to eat</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('їсти')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">пити</td><td class="vocab-translit">/ˈpɪtɪ/</td><td class="vocab-ipa">to drink</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('пити')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1282,8 +773,8 @@ footer {
   </main><footer>Module 09 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"quiz","title":"Food Category Recognition","data":{"type":"quiz","questions":[{"question":"What category is борщ (borscht)?","options":["суп (soup)","напій (drink)","фрукт (fruit)","м'ясо (meat)"],"correctIndex":0,"explanation":"Борщ is Ukraine's iconic beet soup!"},{"question":"What category is картопля (potato)?","options":["овоч (vegetable)","м'ясо (meat)","напій (drink)","фрукт (fruit)"],"correctIndex":0,"explanation":"Картопля is a staple vegetable in Ukrainian cuisine."},{"question":"What category is яблуко (apple)?","options":["фрукт (fruit)","овоч (vegetable)","м'ясо (meat)","напій (drink)"],"correctIndex":0,"explanation":"Яблуко is a common fruit."},{"question":"What category is курка (chicken)?","options":["м'ясо (meat)","овоч (vegetable)","напій (drink)","фрукт (fruit)"],"correctIndex":0,"explanation":"Курка is a type of meat/protein."},{"question":"What category is кава (coffee)?","options":["напій (drink)","їжа (food)","овоч (vegetable)","фрукт (fruit)"],"correctIndex":0,"explanation":"Кава is a hot beverage, especially popular in Lviv!"},{"question":"What category is хліб (bread)?","options":["їжа (food)","напій (drink)","фрукт (fruit)","овоч (vegetable)"],"correctIndex":0,"explanation":"Хліб is a staple food, sacred in Ukrainian culture."},{"question":"What category is чай (tea)?","options":["напій (drink)","їжа (food)","овоч (vegetable)","м'ясо (meat)"],"correctIndex":0,"explanation":"Чай is a popular hot drink."},{"question":"What category is риба (fish)?","options":["м'ясо (meat/protein)","овоч (vegetable)","напій (drink)","фрукт (fruit)"],"correctIndex":0,"explanation":"Риба is a protein source."},{"question":"What category is помідор (tomato)?","options":["овоч (vegetable)","фрукт (fruit)","м'ясо (meat)","напій (drink)"],"correctIndex":0,"explanation":"Помідор is commonly used as a vegetable in cooking."},{"question":"What category is молоко (milk)?","options":["напій (drink)","їжа (food)","овоч (vegetable)","фрукт (fruit)"],"correctIndex":0,"explanation":"Молоко is a dairy drink."},{"question":"What category is вареники (dumplings)?","options":["їжа (food)","напій (drink)","овоч (vegetable)","фрукт (fruit)"],"correctIndex":0,"explanation":"Вареники are traditional Ukrainian dumplings!"},{"question":"What category is сік (juice)?","options":["напій (drink)","їжа (food)","овоч (vegetable)","м'ясо (meat)"],"correctIndex":0,"explanation":"Сік is a fruit drink."}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-1","type":"match-up","title":"Food Vocabulary Translation","data":{"type":"match-up","pairs":[{"left":"борщ","right":"beet soup"},{"left":"вареники","right":"dumplings"},{"left":"хліб","right":"bread"},{"left":"м'ясо","right":"meat"},{"left":"курка","right":"chicken"},{"left":"риба","right":"fish"},{"left":"картопля","right":"potato"},{"left":"яблуко","right":"apple"},{"left":"чай","right":"tea"},{"left":"кава","right":"coffee"},{"left":"вода","right":"water"},{"left":"молоко","right":"milk"}],"shuffleRight":true}},{"id":"activity-2","type":"group-sort","title":"Food vs Drinks","data":{"type":"group-sort","groups":[{"id":"","name":"Їжа","items":["борщ","хліб","м'ясо","вареники","яйце","риба","картопля","сир"],"nameUk":"Food"},{"id":"","name":"Напої","items":["чай","кава","вода","сік","молоко"],"nameUk":"Drinks"}],"shuffleItems":true}},{"id":"activity-3","type":"true-false","title":"Ukrainian Food Culture","data":{"type":"true-false","statements":[{"statement":"Обід (lunch) is traditionally the largest meal in Ukraine.","isTrue":true,"explanation":"Correct! Lunch often features soup followed by a main course, making it the biggest meal of the day."},{"statement":"Борщ is originally Russian.","isTrue":false,"explanation":"False! Борщ is Ukrainian! UNESCO recognized it as Ukrainian Intangible Cultural Heritage in 2022."},{"statement":"Смачного! means \"Enjoy your meal!\"","isTrue":true,"explanation":"Correct! Say this before others start eating, similar to \"Bon appétit!\""},{"statement":"Вареники can only be filled with potatoes.","isTrue":false,"explanation":"False! Вареники can have many fillings: cheese, cherries, meat, cabbage, and more!"},{"statement":"Хліб (bread) is considered sacred in Ukrainian culture.","isTrue":true,"explanation":"Correct! Bread represents hospitality and should never be wasted or disrespected."},{"statement":"Coffee culture is weak in Ukraine.","isTrue":false,"explanation":"False! Lviv has a centuries-old coffee tradition dating back to Austro-Hungarian times."},{"statement":"The phrase \"хліб-сіль\" (bread and salt) represents Ukrainian hospitality.","isTrue":true,"explanation":"Correct! This traditional greeting symbolizes welcoming guests."},{"statement":"Сметана (sour cream) is often served with борщ.","isTrue":true,"explanation":"Correct! It's a classic topping for this iconic Ukrainian soup."},{"statement":"Ukrainians typically eat dinner as their largest meal.","isTrue":false,"explanation":"False! Обід (lunch) is traditionally the largest meal, not dinner."},{"statement":"Lviv is famous for its coffee houses.","isTrue":true,"explanation":"Correct! The city has some of the best coffee houses in Eastern Europe."},{"statement":"Вареники are originally from Poland.","isTrue":false,"explanation":"False! Вареники are a traditional Ukrainian dish."},{"statement":"\"Я хочу їсти\" means \"I want to eat.\"","isTrue":true,"explanation":"Correct! This is how you express hunger in Ukrainian."}]}},{"id":"activity-4","type":"fill-blank","title":"Complete with їсти or пити","data":{"type":"fill-blank","items":[{"prompt":"Я ___ борщ.","answer":"їм","options":["їм","п'ю","їси","п'єш"]},{"prompt":"Ти ___ каву?","answer":"п'єш","options":["п'єш","їси","п'ю","їм"]},{"prompt":"Вона ___ яблуко.","answer":"їсть","options":["їсть","п'є","їм","п'ю"]},{"prompt":"Ми ___ чай.","answer":"п'ємо","options":["п'ємо","їмо","п'єш","їси"]},{"prompt":"Вони ___ вареники.","answer":"їдять","options":["їдять","п'ють","їмо","п'ємо"]},{"prompt":"Він ___ воду.","answer":"п'є","options":["п'є","їсть","п'ю","їм"]},{"prompt":"Ви ___ хліб?","answer":"їсте","options":["їсте","п'єте","їм","п'ю"]},{"prompt":"Я ___ молоко.","answer":"п'ю","options":["п'ю","їм","п'єш","їси"]},{"prompt":"Вона ___ сік.","answer":"п'є","options":["п'є","їсть","п'ємо","їмо"]},{"prompt":"Ми ___ м'ясо.","answer":"їмо","options":["їмо","п'ємо","їсть","п'є"]},{"prompt":"Ти ___ рибу?","answer":"їси","options":["їси","п'єш","їм","п'ю"]},{"prompt":"Вони ___ каву.","answer":"п'ють","options":["п'ють","їдять","п'ємо","їмо"]}]}},{"id":"activity-5","type":"match-up","title":"Meals and Times","data":{"type":"match-up","pairs":[{"left":"сніданок","right":"breakfast"},{"left":"обід","right":"lunch"},{"left":"вечеря","right":"dinner"},{"left":"снідаю","right":"I'm having breakfast"},{"left":"обідаю","right":"I'm having lunch"},{"left":"вечеряю","right":"I'm having dinner"},{"left":"Я хочу їсти","right":"I want to eat"},{"left":"Ти голодний?","right":"Are you hungry? (to male)"},{"left":"Ти голодна?","right":"Are you hungry? (to female)"},{"left":"Смачного!","right":"Enjoy your meal!"},{"left":"Це смачно!","right":"This is delicious!"},{"left":"Дякую за обід!","right":"Thank you for lunch!"}],"shuffleRight":true}},{"id":"activity-6","type":"anagram","title":"Food Word Scramble","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["щ","р","о","б"],"answer":"борщ","translation":"borscht"},{"letters":["б","і","л","х"],"answer":"хліб","translation":"bread"},{"letters":["а","в","а","к"],"answer":"кава","translation":"coffee"},{"letters":["й","а","ч"],"answer":"чай","translation":"tea"},{"letters":["д","а","о","в"],"answer":"вода","translation":"water"},{"letters":["о","л","о","к","о","м"],"answer":"молоко","translation":"milk"},{"letters":["к","с","і"],"answer":"сік","translation":"juice"},{"letters":["а","р","и","б"],"answer":"риба","translation":"fish"},{"letters":["а","р","к","у","к"],"answer":"курка","translation":"chicken"},{"letters":["ц","е","я","й"],"answer":"яйце","translation":"egg"},{"letters":["р","и","с"],"answer":"сир","translation":"cheese"},{"letters":["о","с","я","м","'"],"answer":"м'ясо","translation":"meat"}]}},{"id":"activity-7","type":"fill-blank","title":"Describe with смачний","data":{"type":"fill-blank","items":[{"prompt":"Борщ ___!","answer":"смачний","options":["смачний","смачна","смачне","смачно"]},{"prompt":"Кава ___!","answer":"смачна","options":["смачна","смачний","смачне","смачно"]},{"prompt":"Яблуко ___!","answer":"смачне","options":["смачне","смачний","смачна","смачно"]},{"prompt":"Вареники ___!","answer":"смачні","options":["смачні","смачний","смачна","смачне"]},{"prompt":"Тут дуже ___!","answer":"смачно","options":["смачно","смачний","смачна","смачне"]},{"prompt":"Чай ___!","answer":"смачний","options":["смачний","смачна","смачне","смачно"]},{"prompt":"Вода ___!","answer":"смачна","options":["смачна","смачний","смачне","смачно"]},{"prompt":"М'ясо ___!","answer":"смачне","options":["смачне","смачний","смачна","смачно"]},{"prompt":"___! Дякую за обід!","answer":"Смачного","options":["Смачного","Смачний","Смачна","Смачно"]},{"prompt":"Молоко ___!","answer":"смачне","options":["смачне","смачний","смачна","смачно"]},{"prompt":"Хліб ___!","answer":"смачний","options":["смачний","смачна","смачне","смачно"]},{"prompt":"Картопля ___!","answer":"смачна","options":["смачна","смачний","смачне","смачно"]}]}}];
-    const vocabData = [{"uk":"їжа (yizha)","translit":"","en":"food","note":"General term"},{"uk":"сніданок (snidanok)","translit":"","en":"breakfast","note":"Morning meal"},{"uk":"обід (obid)","translit":"","en":"lunch","note":"Largest meal traditionally"},{"uk":"вечеря (vecherya)","translit":"","en":"dinner","note":"Evening meal"},{"uk":"борщ (borshch)","translit":"","en":"borscht","note":"Ukrainian beet soup"},{"uk":"суп (sup)","translit":"","en":"soup","note":"General soup"},{"uk":"вареники (varenyky)","translit":"","en":"dumplings","note":"Traditional Ukrainian dumplings"},{"uk":"хліб (khlib)","translit":"","en":"bread","note":"Sacred in Ukrainian culture"},{"uk":"м'ясо (m'yaso)","translit":"","en":"meat","note":"General term"},{"uk":"курка (kurka)","translit":"","en":"chicken","note":"Poultry"},{"uk":"риба (ryba)","translit":"","en":"fish","note":"Seafood"},{"uk":"овочі (ovochi)","translit":"","en":"vegetables","note":"General term"},{"uk":"фрукти (frukty)","translit":"","en":"fruits","note":"General term"},{"uk":"яблуко (yabluko)","translit":"","en":"apple","note":"Common fruit"},{"uk":"банан (banan)","translit":"","en":"banana","note":"Tropical fruit"},{"uk":"картопля (kartoplya)","translit":"","en":"potato","note":"Staple vegetable"},{"uk":"помідор (pomidor)","translit":"","en":"tomato","note":"Common vegetable"},{"uk":"огірок (ohirok)","translit":"","en":"cucumber","note":"Common vegetable"},{"uk":"цибуля (tsybulya)","translit":"","en":"onion","note":"Essential in cooking"},{"uk":"сир (syr)","translit":"","en":"cheese","note":"Dairy product"},{"uk":"яйце (yaytse)","translit":"","en":"egg","note":"Protein source"},{"uk":"чай (chay)","translit":"","en":"tea","note":"Hot beverage"},{"uk":"кава (kava)","translit":"","en":"coffee","note":"Hot beverage"},{"uk":"вода (voda)","translit":"","en":"water","note":"Essential drink"},{"uk":"сік (sik)","translit":"","en":"juice","note":"Fruit drink"},{"uk":"молоко (moloko)","translit":"","en":"milk","note":"Dairy drink"},{"uk":"смачний (smachnyy)","translit":"","en":"delicious, tasty","note":"Changes: смачна (f), смачне (n)"},{"uk":"смачно (smachno)","translit":"","en":"it's delicious","note":"Used as exclamation"},{"uk":"Смачного! (Smachnoho!)","translit":"","en":"Enjoy your meal!","note":"Said before eating"},{"uk":"їсти (yisty)","translit":"","en":"to eat","note":"Irregular conjugation"},{"uk":"пити (pyty)","translit":"","en":"to drink","note":"Irregular conjugation"}];
+    const activitiesData = [{"id":"activity-0","type":"match-up","title":"Food Categories","data":{"type":"match-up","pairs":[{"left":"Яблуко","right":"Фрукти (Fruit)"},{"left":"Картопля","right":"Овочі (Vegetables)"},{"left":"Курка","right":"М'ясо (Meat)"},{"left":"Чай","right":"Напій (Drink)"},{"left":"Борщ","right":"Суп (Soup)"},{"left":"Хліб","right":"Їжа (Food)"},{"left":"Банан","right":"Фрукти (Fruit)"},{"left":"Цибуля","right":"Овочі (Vegetables)"},{"left":"Помідор","right":"Овочі (Vegetables)"},{"left":"Кава","right":"Напій (Drink)"},{"left":"Риба","right":"М'ясо (Meat)"},{"left":"Вареники","right":"Їжа (Food)"},{"left":"Сік","right":"Напій (Drink)"},{"left":"Огірок","right":"Овочі (Vegetables)"}],"shuffleRight":true}},{"id":"activity-1","type":"quiz","title":"The Ukrainian Menu","data":{"type":"quiz","questions":[{"question":"Which meal is traditionally the largest, often with soup?","options":["Обід (Lunch)","Сніданок (Breakfast)","Вечеря (Dinner)"],"correctIndex":0,"explanation":""},{"question":"What do you put on Varenyky?","options":["Сметана (Sour cream)","Кетчуп (Ketchup)","Гірчиця (Mustard)"],"correctIndex":0,"explanation":""},{"question":"\"Varenyky\" are dumplings. What is \"Pierogi\"?","options":["The Polish word for dumplings","A type of soup","A vegetable"],"correctIndex":0,"explanation":""},{"question":"What do you say to wish someone a good meal?","options":["Смачного!","Дякую!","Привіт!"],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-2","type":"fill-blank","title":"I Eat / I Drink","data":{"type":"fill-blank","items":[{"prompt":"Я ___ каву.\n   - [x] п'ю\n   - [ ] їм","answer":""},{"prompt":"Я ___ яблуко.\n   - [x] їм\n   - [ ] п'ю","answer":""},{"prompt":"Я ___ суп.\n   - [x] їм\n   - [ ] п'ю\n*(Trick! You \"eat\" soup in Ukrainian/English, you don't drink it from a cup usually!)*","answer":""},{"prompt":"Я ___ воду.\n   - [x] п'ю\n   - [ ] їм","answer":""},{"prompt":"Я ___ вареники.\n   - [x] їм\n   - [ ] п'ю","answer":""},{"prompt":"Я ___ молоко.\n   - [x] п'ю\n   - [ ] їм","answer":""},{"prompt":"Я ___ банан.\n   - [x] їм\n   - [ ] п'ю","answer":""},{"prompt":"Я ___ сік.\n   - [x] п'ю\n   - [ ] їм","answer":""},{"prompt":"Я ___ помідор.\n   - [x] їм\n   - [ ] п'ю","answer":""},{"prompt":"Я ___ чай.\n   - [x] п'ю\n   - [ ] їм","answer":""},{"prompt":"Я ___ курку.\n   - [x] їм\n   - [ ] п'ю","answer":""},{"prompt":"Я ___ сир.\n   - [x] їм\n   - [ ] п'ю","answer":""}]}},{"id":"activity-3","type":"group-sort","title":"Fridge Sorting","data":{"type":"group-sort","groups":[{"id":"fridge","name":"Fridge","items":["Молоко","Сир","М'ясо","Риба","Сметана","Яйце (Usually)"],"nameUk":"Cold"},{"id":"cupboard","name":"Cupboard","items":["Хліб","Чай","Кава","Картопля","Цибуля","Яблуко (Often)"],"nameUk":"Dry/Room Temp"}],"shuffleItems":true}},{"id":"activity-4","type":"unjumble","title":"Meal Time","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["їм","Я","борщ"],"answer":"Я їм борщ."},{"words":["смачна","Кава"],"answer":"Кава смачна.","translation":"Coffee is tasty."},{"words":["п'ємо","чай","Ми"],"answer":"Ми п'ємо чай."},{"words":["Смачного","!"],"answer":"Смачного!"},{"words":["тут","Суп"],"answer":"Суп тут."},{"words":["їмо","Ми","обід"],"answer":"Ми їмо обід."},{"words":["п'є","Він","молоко"],"answer":"Він п'є молоко."},{"words":["смачний","Борщ"],"answer":"Борщ смачний."},{"words":["люблю","Я","вечерю"],"answer":"Я люблю вечерю."},{"words":["вода","Це"],"answer":"Це вода."},{"words":["п'єш","Ти","каву","?"],"answer":"Ти п'єш каву?"},{"words":["їсти","Я","хочу"],"answer":"Я хочу їсти."}]}},{"id":"activity-5","type":"anagram","title":"Scrambled Food","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["б","і","л","х"],"answer":"хліб","translation":"Bread"},{"letters":["щ","р","о","б"],"answer":"борщ","translation":"Borscht"},{"letters":["в","к","а","а"],"answer":"кава","translation":"Coffee"},{"letters":["к","і","с"],"answer":"сік","translation":"Juice"},{"letters":["р","и","с"],"answer":"сир","translation":"Cheese"},{"letters":["а","б","и","р"],"answer":"риба","translation":"Fish"},{"letters":["п","у","с"],"answer":"суп","translation":"Soup"},{"letters":["л","к","о","м","о","о"],"answer":"молоко","translation":"Milk"},{"letters":["р","у","к","а","к"],"answer":"курка","translation":"Chicken"},{"letters":["о","с","я","м"],"answer":"м'ясо","translation":"Meat"},{"letters":["д","а","в","о"],"answer":"вода","translation":"Water"},{"letters":["й","а","ч"],"answer":"чай","translation":"Tea"}]}},{"id":"activity-6","type":"match-up","title":"Flavor Check","data":{"type":"match-up","pairs":[{"left":"Смачний","right":"Борщ"},{"left":"Смачна","right":"Кава"},{"left":"Смачне","right":"Яблуко"},{"left":"Смачні","right":"Вареники"},{"left":"Смачний","right":"Суп"},{"left":"Смачна","right":"Вечеря"},{"left":"Смачне","right":"М'ясо"},{"left":"Смачні","right":"Фрукти"},{"left":"Смачний","right":"Обід"},{"left":"Смачна","right":"Риба"},{"left":"Смачне","right":"Яйце"},{"left":"Смачні","right":"Овочі"}],"shuffleRight":true}},{"id":"activity-7","type":"true-false","title":"Food Facts","data":{"type":"true-false","statements":[{"statement":"\"Борщ\" is a soup made with beets.","isTrue":true,"explanation":"Correct."},{"statement":"\"Вареники\" is the Ukrainian word for \"Pizza\".","isTrue":false,"explanation":"Incorrect. They are dumplings."},{"statement":"\"Обід\" means \"Lunch\".","isTrue":true,"explanation":"Correct."},{"statement":"\"Картопля\" is a fruit.","isTrue":false,"explanation":"Incorrect. It is a vegetable (Овочі)."},{"statement":"\"Вечеря\" is in the evening.","isTrue":true,"explanation":"Correct."},{"statement":"Ukrainians drink tea (\"Чай\").","isTrue":true,"explanation":"Correct."},{"statement":"\"Хліб\" is bad luck.","isTrue":false,"explanation":"Incorrect! It is sacred."},{"statement":"\"Сік\" is juice.","isTrue":true,"explanation":"Correct."},{"statement":"You eat soup for breakfast usually.","isTrue":false,"explanation":"Incorrect. Usually for lunch (Обід)."},{"statement":"\"Сметана\" goes on everything.","isTrue":true,"explanation":"Correct (mostly!)."},{"statement":"\"Риба\" is a drink.","isTrue":false,"explanation":"Incorrect. It is fish."},{"statement":"\"Молоко\" is white.","isTrue":true,"explanation":"Correct."}]}},{"id":"activity-8","type":"select","title":"Odd One Out","data":{"type":"select","items":[{"question":"**Drinks:**","options":[{"text":"Чай","correct":false},{"text":"Кава","correct":false},{"text":"Хліб","correct":true}]},{"question":"**Meat:**","options":[{"text":"Курка","correct":false},{"text":"Риба (Technically not meat meat, but animal protein)","correct":false},{"text":"Яблуко","correct":true}]},{"question":"**Vegetables:**","options":[{"text":"Картопля","correct":false},{"text":"Цибуля","correct":false},{"text":"Молоко","correct":true}]}]}}];
+    const vocabData = [{"uk":"їжа","translit":"/ˈjiʒɑ/","en":"noun","note":"[🔊](audio_yizha)"},{"uk":"сніданок","translit":"/sɲiˈdɑnɔk/","en":"noun","note":"[🔊](audio_snidanok)"},{"uk":"обід","translit":"/oˈbid/","en":"noun","note":"[🔊](audio_obid)"},{"uk":"вечеря","translit":"/vɛˈtʃɛrʲɑ/","en":"noun","note":"[🔊](audio_vecherya)"},{"uk":"борщ","translit":"/bɔrʃtʃ/","en":"noun","note":"[🔊](audio_borshch)"},{"uk":"суп","translit":"/sup/","en":"noun","note":"[🔊](audio_sup)"},{"uk":"вареники","translit":"/vɑˈrɛnɪkɪ/","en":"noun","note":"[🔊](audio_varenyky)"},{"uk":"хліб","translit":"/xlʲib/","en":"noun","note":"[🔊](audio_khlib)"},{"uk":"м'ясо","translit":"/ˈmjɑsɔ/","en":"noun","note":"[🔊](audio_myaso)"},{"uk":"курка","translit":"/ˈkurkɑ/","en":"noun","note":"[🔊](audio_kurka)"},{"uk":"риба","translit":"/ˈrɪbɑ/","en":"noun","note":"[🔊](audio_ryba)"},{"uk":"овочі","translit":"/ˈɔvɔtʃi/","en":"noun","note":"[🔊](audio_ovochi)"},{"uk":"фрукти","translit":"/ˈfruktɪ/","en":"noun","note":"[🔊](audio_frukty)"},{"uk":"яблуко","translit":"/ˈjɑblukɔ/","en":"noun","note":"[🔊](audio_yabluko)"},{"uk":"банан","translit":"/bɑˈnɑn/","en":"noun","note":"[🔊](audio_banan)"},{"uk":"картопля","translit":"/kɑrˈtɔplʲɑ/","en":"noun","note":"[🔊](audio_kartoplya)"},{"uk":"помідор","translit":"/pɔmiˈdɔr/","en":"noun","note":"[🔊](audio_pomidor)"},{"uk":"огірок","translit":"/oɦiˈrɔk/","en":"noun","note":"[🔊](audio_ohirok)"},{"uk":"цибуля","translit":"/tsɪˈbulʲɑ/","en":"noun","note":"[🔊](audio_tsybulya)"},{"uk":"сир","translit":"/sɪr/","en":"noun","note":"[🔊](audio_syr)"},{"uk":"яйце","translit":"/jɑjˈtsɛ/","en":"noun","note":"[🔊](audio_yaytse)"},{"uk":"чай","translit":"/tʃɑj/","en":"noun","note":"[🔊](audio_chay)"},{"uk":"кава","translit":"/ˈkɑvɑ/","en":"noun","note":"[🔊](audio_kava)"},{"uk":"вода","translit":"/vɔˈdɑ/","en":"noun","note":"[🔊](audio_voda)"},{"uk":"сік","translit":"/sʲik/","en":"noun","note":"[🔊](audio_sik)"},{"uk":"молоко","translit":"/mɔlɔˈkɔ/","en":"noun","note":"[🔊](audio_moloko)"},{"uk":"сметана","translit":"/smɛˈtɑnɑ/","en":"noun","note":"[🔊](audio_smetana)"},{"uk":"смачний","translit":"/smɑtʃˈnɪj/","en":"adj","note":"[🔊](audio_smachnyy)"},{"uk":"смачно","translit":"/ˈsmɑtʃnɔ/","en":"adv","note":"[🔊](audio_smachno)"},{"uk":"смачного","translit":"/smɑtʃˈnɔhɔ/","en":"phrase","note":"[🔊](audio_smachnoho)"},{"uk":"їсти","translit":"/ˈjistɪ/","en":"verb","note":"[🔊](audio_yisty)"},{"uk":"пити","translit":"/ˈpɪtɪ/","en":"verb","note":"[🔊](audio_pyty)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1343,6 +834,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2607,6 +2124,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

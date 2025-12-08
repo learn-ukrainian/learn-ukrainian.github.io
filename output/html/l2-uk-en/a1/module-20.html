@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Module 20: Checkpoint: Navigation | Ukrainian A1</title>
+  <title>Module 20: Checkpoint - Navigation | Ukrainian A1</title>
   <style>
 :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -478,15 +518,18 @@ footer {
     </div>
   </div>
   <nav class="nav">
-    <h1>Module 20: Checkpoint: Navigation</h1>
+    <h1>Module 20: Checkpoint - Navigation</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Fill</button>
-      <button class="nav-tab" data-section="activity-1">2. Order</button>
-      <button class="nav-tab" data-section="activity-2">3. Match</button>
-      <button class="nav-tab" data-section="activity-3">4. Quiz</button>
-      <button class="nav-tab" data-section="activity-4">5. T/F</button>
-      <button class="nav-tab" data-section="activity-5">6. Sort</button>
+      <button class="nav-tab" data-section="activity-0">1. Quiz</button>
+      <button class="nav-tab" data-section="activity-1">2. Match</button>
+      <button class="nav-tab" data-section="activity-2">3. Fill</button>
+      <button class="nav-tab" data-section="activity-3">4. Fill</button>
+      <button class="nav-tab" data-section="activity-4">5. Match</button>
+      <button class="nav-tab" data-section="activity-5">6. Order</button>
+      <button class="nav-tab" data-section="activity-6">7. Sort</button>
+      <button class="nav-tab" data-section="activity-7">8. Fill</button>
+      <button class="nav-tab" data-section="activity-8">9. Spell</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -495,452 +538,319 @@ footer {
     <section id="lesson" class="section active">
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.2</span>
-        <h2 style="font-size:2rem;margin:0.5rem 0">Checkpoint: Navigation</h2>
-        <p style="color:var(--text-muted)">Review of A1.2 — Cases, Possession, and Real-World Skills</p>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Checkpoint - Navigation</h2>
+        <p style="color:var(--text-muted)">Review of Modules 11-19</p>
       </div>
       
     <div class="card section-intro">
       <h3>📖 Introduction</h3>
       <div class="md-content"><h2 id="warmup">warm-up</h2>
-<h3 id="congratulationsyouvereacheda12checkpoint">Congratulations — You've Reached A1.2 Checkpoint!</h3>
-<p>You've come so far! In modules 11-19, you learned three grammatical cases and how to navigate real-world situations. Let's review everything before moving on.</p>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>You now know 5 of 7 Ukrainian cases! Nominative (M01), Accusative (M11-12), Locative (M13), Genitive (M16), and Vocative (M02). Only Dative and Instrumental remain — and those are for A2!</p>
-</blockquote>
+<p><strong>The Navigation Test</strong></p>
+<p>You have survived Modules 11 through 19.<br />
+You know how to say "I see a friend" (Accusative).<br />
+You know how to say "I am in the park" (Locative).<br />
+You know how to say "I don't have money" (Genitive).<br />
+You can order borscht and find the toilet.<br />
+Now, we put it all together.<br />
+This module is a <strong>Checkpoint</strong>. No new grammar. Just proof that you are ready for Phase A1.3 (Time &amp; Self).</p>
 <h2 id="presentation">presentation</h2>
-<h3 id="casesummarytable">Case Summary Table</h3>
-<table>
-<thead>
-<tr>
-<th>Case</th>
-<th>Question</th>
-<th>Usage</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Nominative</td>
-<td>Хто? Що?</td>
-<td>Subject</td>
-<td>Це <strong>книга</strong>.</td>
-</tr>
-<tr>
-<td>Accusative</td>
-<td>Кого? Що?</td>
-<td>Direct object</td>
-<td>Я читаю <strong>книгу</strong>.</td>
-</tr>
-<tr>
-<td>Locative</td>
-<td>Де? На чому?</td>
-<td>Location</td>
-<td>Книга <strong>на столі</strong>.</td>
-</tr>
-<tr>
-<td>Genitive</td>
-<td>Кого? Чого?</td>
-<td>Absence, quantities</td>
-<td>Немає <strong>книги</strong>.</td>
-</tr>
-<tr>
-<td>Vocative</td>
-<td>—</td>
-<td>Addressing</td>
-<td><strong>Олено</strong>!</td>
-</tr>
-</tbody>
-</table>
-<h3 id="accusativeendingsreview">Accusative Endings Review</h3>
-<table>
-<thead>
-<tr>
-<th>Gender</th>
-<th>Nominative</th>
-<th>Accusative</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>M inanimate</td>
-<td>стіл</td>
-<td>стіл</td>
-<td>Я бачу стіл.</td>
-</tr>
-<tr>
-<td>M animate</td>
-<td>друг</td>
-<td>друга</td>
-<td>Я бачу друга.</td>
-</tr>
-<tr>
-<td>F (-а)</td>
-<td>книга</td>
-<td>книгу</td>
-<td>Я читаю книгу.</td>
-</tr>
-<tr>
-<td>F (-я)</td>
-<td>земля</td>
-<td>землю</td>
-<td>Я люблю землю.</td>
-</tr>
-<tr>
-<td>N</td>
-<td>вікно</td>
-<td>вікно</td>
-<td>Я бачу вікно.</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>⚡ <strong>Pro Tip</strong></p>
-  <p>Remember: Masculine animate accusative = genitive (друг → друга). This helps you learn genitive forms too!</p>
-</blockquote>
-<h3 id="locativeendingsreview">Locative Endings Review</h3>
-<table>
-<thead>
-<tr>
-<th>Gender</th>
-<th>Nominative</th>
-<th>Locative</th>
-<th>Preposition</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>M</td>
-<td>банк</td>
-<td>у банку</td>
-<td>в/у</td>
-</tr>
-<tr>
-<td>M</td>
-<td>стіл</td>
-<td>на столі</td>
-<td>на</td>
-</tr>
-<tr>
-<td>F</td>
-<td>книга</td>
-<td>у книзі</td>
-<td>в/у</td>
-</tr>
-<tr>
-<td>F</td>
-<td>вулиця</td>
-<td>на вулиці</td>
-<td>на</td>
-</tr>
-<tr>
-<td>N</td>
-<td>місто</td>
-<td>у місті</td>
-<td>в/у</td>
-</tr>
-<tr>
-<td>N</td>
-<td>море</td>
-<td>на морі</td>
-<td>на</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🔍 <strong>Myth Buster</strong></p>
-  <p><strong>Myth:</strong> "в" and "у" are different prepositions.<br />
-  <strong>Fact:</strong> They're the same! Use "у" after consonants for easier pronunciation, "в" after vowels: "Я у банку" but "Вона в банку."</p>
-</blockquote>
-<h3 id="genitiveendingsreview">Genitive Endings Review</h3>
-<table>
-<thead>
-<tr>
-<th>Gender</th>
-<th>Nominative</th>
-<th>Genitive</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>M</td>
-<td>час</td>
-<td>часу</td>
-<td>немає часу</td>
-</tr>
-<tr>
-<td>M</td>
-<td>друг</td>
-<td>друга</td>
-<td>немає друга</td>
-</tr>
-<tr>
-<td>F (-а)</td>
-<td>вода</td>
-<td>води</td>
-<td>немає води</td>
-</tr>
-<tr>
-<td>F (-я)</td>
-<td>ідея</td>
-<td>ідеї</td>
-<td>немає ідеї</td>
-</tr>
-<tr>
-<td>N</td>
-<td>вікно</td>
-<td>вікна</td>
-<td>немає вікна</td>
-</tr>
-</tbody>
-</table>
-<h3 id="possessivepronounsreview">Possessive Pronouns Review</h3>
-<table>
-<thead>
-<tr>
-<th>Pronoun</th>
-<th>M</th>
-<th>F</th>
-<th>N</th>
-<th>Pl</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>my</td>
-<td>мій</td>
-<td>моя</td>
-<td>моє</td>
-<td>мої</td>
-</tr>
-<tr>
-<td>your (sg)</td>
-<td>твій</td>
-<td>твоя</td>
-<td>твоє</td>
-<td>твої</td>
-</tr>
-<tr>
-<td>his</td>
-<td>його</td>
-<td>його</td>
-<td>його</td>
-<td>його</td>
-</tr>
-<tr>
-<td>her</td>
-<td>її</td>
-<td>її</td>
-<td>її</td>
-<td>її</td>
-</tr>
-<tr>
-<td>our</td>
-<td>наш</td>
-<td>наша</td>
-<td>наше</td>
-<td>наші</td>
-</tr>
-<tr>
-<td>your (pl)</td>
-<td>ваш</td>
-<td>ваша</td>
-<td>ваше</td>
-<td>ваші</td>
-</tr>
-<tr>
-<td>their</td>
-<td>їхній</td>
-<td>їхня</td>
-<td>їхнє</td>
-<td>їхні</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎬 <strong>Pop Culture Moment: Harry Potter</strong></p>
-  <p>"Це моя паличка" (This is my wand). Harry would need different possessives: "Це твоя паличка, Роне" (This is your wand, Ron) — and notice the vocative "Роне"!</p>
-</blockquote>
-<h3 id="numberswithcasesreview">Numbers with Cases Review</h3>
-<table>
-<thead>
-<tr>
-<th>Number</th>
-<th>Noun Form</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>Nom. singular</td>
-<td>одна гривня</td>
-</tr>
-<tr>
-<td>2, 3, 4</td>
-<td>Nom. plural</td>
-<td>дві гривні</td>
-</tr>
-<tr>
-<td>5-20</td>
-<td>Gen. plural</td>
-<td>п'ять гривень</td>
-</tr>
-<tr>
-<td>21</td>
-<td>Nom. singular</td>
-<td>двадцять одна гривня</td>
-</tr>
-<tr>
-<td>25</td>
-<td>Gen. plural</td>
-<td>двадцять п'ять гривень</td>
-</tr>
-</tbody>
-</table>
-<h3 id="integratedskillschecklist">Integrated Skills Checklist</h3>
-<p>By the end of A1.2, you should be able to:</p>
+<h3 id="checkpoint1accusativecasedirectobjects">Checkpoint 1: Accusative Case (Direct Objects)</h3>
 <ul>
-<li>[ ] Talk about what you have and don't have (У мене є…/немає…)</li>
-<li>[ ] Describe where things are (на столі, у кімнаті)</li>
-<li>[ ] Navigate a city (Де метро? Прямо, потім наліво.)</li>
-<li>[ ] Order food and drinks at a café</li>
-<li>[ ] Handle money and prices</li>
-<li>[ ] Use possessives correctly</li>
+<li><strong>What?</strong> Use it for the object of the verb (Baču, khochu, lyublyu).</li>
+<li><strong>Rule:</strong><ul>
+<li>Inanimate Masculine/Neuter = No Change. (Бачу стіл).</li>
+<li>Feminine: -А -&gt; -У, -Я -&gt; -Ю. (Бачу книгу).</li>
+<li>Animate Masculine: +А. (Бачу студента).</li></ul></li>
 </ul>
+<h3 id="checkpoint2locativecaselocation">Checkpoint 2: Locative Case (Location)</h3>
+<ul>
+<li><strong>What?</strong> Use it for "Where?" (De?).</li>
+<li><strong>Rule:</strong><ul>
+<li>Masculine: -І / -ОВІ. (У парку, на столі).</li>
+<li>Feminine: -І. (У кімнаті).</li>
+<li>Neuter: -І. (У місті).</li></ul></li>
+</ul>
+<h3 id="checkpoint3genitivecaseabsencequantity">Checkpoint 3: Genitive Case (Absence &amp; Quantity)</h3>
+<ul>
+<li><strong>What?</strong> Use it for "No/Not have" (Nemaye), "Without" (Bez), and Quantities (5+).</li>
+<li><strong>Rule:</strong><ul>
+<li>Masculine: -А / -У. (Немає столу, немає часу).</li>
+<li>Feminine: -И / -І. (Немає води, немає ідеї).</li>
+<li>Neuter: -А. (Немає вікна).</li></ul></li>
+</ul>
+<h3 id="section5thecaseofthemissingobject">Section 5: The Case of the Missing Object</h3>
+<p>Why do we change the word endings?<br />
+Imagine a world without cases.<br />
+"Student read book."<br />
+Who reads what? Did the book read the student?<br />
+"Студент читає книгу." (Ah, student -&gt; Subject, book -&gt; Object).<br />
+"Студента читає книга." (The book reads the student. Scary!)<br />
+Cases give <strong>Direction</strong> and <strong>Role</strong>.</p>
+<ul>
+<li>Nominal: The Star.</li>
+<li>Accusative: The Victim (Direct Object).</li>
+<li>Locative: The Stage (Location).</li>
+<li>Genitive: The Ghost (Absence/Owner).</li>
+</ul>
+<blockquote>
+  <p>🎓 <strong>Deep Dive: The Soft Sign Effect</strong><br />
+  Remember Module 02? The Soft Sign (Ь).<br />
+  It affects cases too.</p>
+  <ul>
+  <li>День (Day) -&gt; У дні (Locative - soft I).</li>
+  <li>Сіль (Salt) -&gt; Без солі (Genitive).</li>
+  <li>Батько (Father) -&gt; На батькові (Locative).</li>
+  </ul>
+  <p>🚌 <strong>Culture Corner: Social Distance (Ty vs Vy)</strong><br />
+  In the city (Module 15-20), use <strong>Ви</strong>.</p>
+  <ul>
+  <li>Taxi driver? Ви.</li>
+  <li>Waiter? Ви.</li>
+  <li>Police? Ви.</li>
+  <li>Stranger asking directions? Ви.<br />
+  Use <strong>Ти</strong> only for friends (Module 12) "Drug/Podruha".<br />
+  "Вибачте, ви не знаєте…?" (Excuse me, do you not know…?)</li>
+  </ul>
+</blockquote>
+<h3 id="section6thelogicofhaving">Section 6: The Logic of "Having"</h3>
+<p>In English, you "have" things.<br />
+In Ukrainian, things "are at you".</p>
+<ul>
+<li><strong>У мене є машина.</strong> (At me is car).</li>
+<li><strong>У тебе є час.</strong> (At you is time).</li>
+<li><strong>У нас є ідея.</strong> (At us is idea).</li>
+</ul>
+<p>When you DON'T have them, they disappear (Genitive).</p>
+<ul>
+<li><strong>У мене немає машини.</strong></li>
+<li><strong>У тебе немає часу.</strong></li>
+<li><strong>У нас немає ідеї.</strong></li>
+</ul>
+<blockquote>
+  <p>🇺🇦 <strong>Deep Dive: Why "Na" Ukraine?</strong><br />
+  You might hear "Na Ukraini" in old texts or songs.<br />
+  But the official norm is <strong>В Україні</strong> (In Ukraine).<br />
+  "Na" implies a territory/region (Na Donbasi, Na Zakarpatti).<br />
+  "V" implies an independent state.<br />
+  Using "Na Ukraini" is considered a political faux pas today. Stick to <strong>"V"</strong>.</p>
+  <p>🚌 <strong>Culture Corner: The Marshrutka Review</strong><br />
+  Remember Module 15? The yellow bus.<br />
+  It breaks all grammar rules.<br />
+  You yell: "На зупинці!" (On the stop! - Locative).<br />
+  You pass money: "За двох!" (For two! - Acc/Gen).<br />
+  You ask: "Ви виходите?" (Are you exiting?).<br />
+  It is the ultimate test of your A1 skills.</p>
+</blockquote>
+<h3 id="section7phasea12summary">Section 7: Phase A1.2 Summary</h3>
+<p>You started Phase A1.2 knowing only "This is a table".<br />
+Now you can:</p>
+<ol>
+<li><strong>See</strong> the table (Baču stil).</li>
+<li><strong>Put</strong> something on the table (Na stoli).</li>
+<li><strong>Take</strong> something from the table (Z stolu - Gen).</li>
+<li><strong>Buy</strong> the table (Kupuyu stil).</li>
+<li><strong>Say</strong> there is no table (Nemaye stolu).</li>
+</ol>
+<p>This "Case System" is the engine of the language.<br />
+In Phase A1.3, we add <strong>Time</strong> (Past/Future).<br />
+The static picture becomes a movie.</p>
+<blockquote>
+  <p>⚡ <strong>Deep Dive: The Power of "Mozhna"</strong><br />
+  If you forget all grammar, remember <strong>Можна</strong> (Is it possible/May I?).<br />
+  It is the Swiss Army Knife of Ukrainian.</p>
+  <ul>
+  <li><strong>Можна меню?</strong> (Can I have the menu?)</li>
+  <li><strong>Можна рахунок?</strong> (Can I have the bill?)</li>
+  <li><strong>Можна увійти?</strong> (May I come in?)</li>
+  <li><strong>Можна води?</strong> (Can I have water?)</li>
+  <li><strong>Тут можна курити?</strong> (Is it allowed to smoke here?)<br />
+  Answer: <strong>Можна</strong> (Allowed) or <strong>Не можна</strong> (Forbidden).</li>
+  </ul>
+  <p>🗣️ <strong>Language Link: The Polite Imperative</strong><br />
+  In dictionaries, you see "Скажи" (Say).<br />
+  In life, you say <strong>Скажіть</strong> (Say - Plural/Polite).</p>
+  <ul>
+  <li><strong>Скажіть, будь ласка…</strong> (Tell me please…)</li>
+  <li><strong>Дайте…</strong> (Give…)</li>
+  <li><strong>Покажіть…</strong> (Show…)</li>
+  <li><strong>Повторіть…</strong> (Repeat…)<br />
+  Using the "Ti" form (Скажи, Дай) with a stranger is rude. Stick to <strong>-ТЕ/-ІТЬ</strong>.</li>
+  </ul>
+  <p>🔄 <strong>Deep Dive: The Map App</strong><br />
+  Google Maps works well in Ukraine.<br />
+  But local apps like <strong>EasyWay</strong> (for public transport) are often better.<br />
+  They show real-time GPS of the yellow marshrutka.<br />
+  Download it before you go.</p>
+</blockquote>
 <h2 id="practice">practice</h2>
-<h3 id="mixedexercisechoosetherightcase">Mixed Exercise: Choose the Right Case</h3>
-<ol>
-<li><p>Я бачу ___ (книга).</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer">книгу (Accusative)</div></div>
-<ol start="2">
-<li><p>Книга на ___ (стіл).</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer">столі (Locative)</div></div>
-<ol start="3">
-<li><p>У мене немає ___ (час).</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer">часу (Genitive)</div></div>
-<ol start="4">
-<li><p>Це ___ (мій) телефон.</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer">мій (Nominative)</div></div>
-<ol start="5">
-<li><p>П'ять ___ (гривня).</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer">гривень (Genitive plural)</div></div>
+<p><strong>Drill 1: The Case Mixer</strong><br />
+Select the correct case.</p>
+<ul>
+<li>(I see a car) -&gt; Я бачу <strong>машину</strong> (Acc).</li>
+<li>(I am in the car) -&gt; Я в <strong>машині</strong> (Loc).</li>
+<li>(I don't have a car) -&gt; У мене немає <strong>машини</strong> (Gen).</li>
+<li>(This is a car) -&gt; Це <strong>машина</strong> (Nom).</li>
+</ul>
+<p><strong>Drill 2: The City Navigator</strong></p>
+<ul>
+<li>(Where is the bank?) -&gt; Де <strong>банк</strong>?</li>
+<li>(Go straight) -&gt; Йдіть <strong>прямо</strong>.</li>
+<li>(Turn left) -&gt; Поверніть <strong>ліворуч</strong>.</li>
+<li>(It is on the right) -&gt; Це <strong>праворуч</strong>.</li>
+<li>(Is it far?) -&gt; Це <strong>далеко</strong>?</li>
+</ul>
+<p><strong>Drill 3: The Restaurant Survivor</strong></p>
+<ul>
+<li>(I want soup) -&gt; Я хочу <strong>суп</strong> (Acc).</li>
+<li>(Soup with sour cream) -&gt; Суп зі <strong>сметаною</strong> (Instr - bonus).</li>
+<li>(Without sugar) -&gt; Без <strong>цукру</strong> (Gen).</li>
+<li>(The bill please) -&gt; <strong>Рахунок</strong>, будь ласка.</li>
+</ul>
+<p><strong>Drill 4: Case Logic</strong></p>
+<ul>
+<li>(I don't see X) -&gt; <strong>Не бачу…</strong> (Gen/Acc).</li>
+<li>(I don't have X) -&gt; <strong>Немає…</strong> (Gen).</li>
+<li>(I live in X) -&gt; <strong>Живу в…</strong> (Loc).</li>
+<li>(I go to X) -&gt; <strong>Йду в…</strong> (Acc).</li>
+</ul>
+<p><strong>Drill 5: Preposition Master</strong></p>
+<ul>
+<li>(In) the park -&gt; <strong>У</strong> парку.</li>
+<li>(On) the table -&gt; <strong>На</strong> столі.</li>
+<li>(Without) milk -&gt; <strong>Без</strong> молока.</li>
+<li>(From) Kyiv -&gt; <strong>З</strong> Києва.</li>
+<li>(For) you -&gt; <strong>Для</strong> тебе.</li>
+</ul>
+<p><strong>Drill 6: Mozhna Master</strong></p>
+<ul>
+<li>(Can I enter?) -&gt; <strong>Можна увійти?</strong></li>
+<li>(Can I pay?) -&gt; <strong>Можна оплатити?</strong></li>
+<li>(Smoking forbidden) -&gt; <strong>Курити не можна.</strong></li>
+<li>(Can I have the menu?) -&gt; <strong>Можна меню?</strong></li>
+</ul>
 <h2 id="production">production</h2>
-<h3 id="selfassessment">Self-Assessment</h3>
-<p>Rate yourself on these skills (1-5):</p>
-<ol>
-<li>I can order food at a café: ___</li>
-<li>I can ask for and understand prices: ___</li>
-<li>I can say what I have and don't have: ___</li>
-<li>I can describe where things are: ___</li>
-<li>I can give and understand directions: ___</li>
-</ol>
-<p>What do you need to practice more?</p>
-<hr />
-<hr />
+<blockquote>
+  <p>🏆 <strong>Challenge: The Kyiv Day Trip</strong><br />
+  You arrive in Kyiv.</p>
+  <ol>
+  <li>You take a taxi to the hotel (Locative destination).</li>
+  <li>You meet a friend (Accusative animate).</li>
+  <li>You go to a restaurant (Locative/Accusative).</li>
+  <li>You realize you have no money (Genitive).</li>
+  <li>Your friend pays (Hero).</li>
+  </ol>
+</blockquote>
+<p><strong>Scenario: The Lost Tourist</strong></p>
+<ul>
+<li><strong>You:</strong> Вибачте, ви знаєте, де метро "Хрещатик"?</li>
+<li><strong>Local:</strong> Так. Це недалеко. Йдіть прямо, потім наліво.</li>
+<li><strong>You:</strong> Прямо і наліво. Дякую. А аптека там є?</li>
+<li><strong>Local:</strong> Аптеки немає (Gen). Аптека праворуч, біля банку.</li>
+<li><strong>You:</strong> Зрозумів. Дякую.</li>
+<li><strong>Local:</strong> Нема за що. Гарного дня!</li>
+</ul>
+<p><strong>Scenario: The Picky Eater</strong></p>
+<ul>
+<li><strong>Waiter:</strong> Ви готові?</li>
+<li><strong>You:</strong> Так. Я не їм м'ясо (Acc). У вас є вегетаріанське меню?</li>
+<li><strong>Waiter:</strong> Так. Ось салат з сиром.</li>
+<li><strong>You:</strong> Я не люблю сир (Acc).</li>
+<li><strong>Waiter:</strong> Тоді вареники з капустою?</li>
+<li><strong>You:</strong> О, чудово. Я візьму вареники. І сік без льоду (Gen).</li>
+</ul>
 <hr /></div>
     </div>
   
       
-    <div class="card section-summary">
-      <h3>📋 Summary</h3>
-      <div class="md-content"><blockquote>
-  <p><strong>A1.2 Complete!</strong></p>
-  <p>You've mastered:</p>
-  <ul>
-  <li><strong>Accusative case</strong> for direct objects and animate beings</li>
-  <li><strong>Locative case</strong> for location with в/у and на</li>
-  <li><strong>Genitive case</strong> for absence (немає) and quantities</li>
-  <li><strong>Possessive pronouns</strong> (мій, твій, його, її, наш, ваш, їхній)</li>
-  <li><strong>Numbers 0-100</strong> with correct noun forms</li>
-  <li><strong>Real-world skills</strong>: ordering food, asking prices, navigating</li>
-  </ul>
-  <p><strong>Coming Next: A1.3 — Time & Self</strong></p>
-  <p>In Modules 21-30, you'll learn:</p>
-  <ul>
-  <li>Past tense (what happened yesterday)</li>
-  <li>Future tense (what will happen tomorrow)</li>
-  <li>Time expressions and calendar</li>
-  <li>Modal verbs (can, must, want)</li>
-  <li>Daily routine with reflexive verbs</li>
-  <li>Adjectives, colors, clothing</li>
-  <li>Weather and family</li>
-  </ul>
-</blockquote></div>
-    </div>
-  
       <div class="btn-group">
         <button class="btn btn-primary" onclick="showSection('activity-0')">Activities →</button>
       </div>
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Case Practice</h3>
-      <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container" class="fill-container"></div>
+    <section id="activity-0" class="section"><div class="card"><h3>The Great Case Test</h3>
+      <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/16</span></div>
+      <div id="activity-0-container"></div>
       <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>A1.2 Sentences</h3>
+    <section id="activity-1" class="section"><div class="card"><h3>Concept Match</h3>
       <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
-      <div id="activity-1-container" class="order-container"></div>
-      <div class="completion-message" id="activity-1-complete"><h3>Perfect Order!</h3></div>
+      <div class="match-container" id="activity-1-container"><svg class="match-lines" id="activity-1-lines"></svg>
+        <div class="match-column" id="activity-1-left"></div>
+        <div class="match-column" id="activity-1-right"></div>
+      </div>
+      <div class="completion-message" id="activity-1-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Case Functions</h3>
+    <section id="activity-2" class="section"><div class="card"><h3>The Missing Case</h3>
       <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-2-container"><svg class="match-lines" id="activity-2-lines"></svg>
-        <div class="match-column" id="activity-2-left"></div>
-        <div class="match-column" id="activity-2-right"></div>
-      </div>
-      <div class="completion-message" id="activity-2-complete"><h3>Perfect!</h3></div>
+      <div id="activity-2-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-2-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>A1.2 Comprehensive</h3>
+    <section id="activity-3" class="section"><div class="card"><h3>Preposition Master</h3>
       <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div id="activity-3-container"></div>
+      <div id="activity-3-container" class="fill-container"></div>
       <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>A1.2 Review</h3>
+    <section id="activity-4" class="section"><div class="card"><h3>Mozhna Scenario</h3>
       <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
-      <div id="activity-4-container"></div>
-      <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
+      <div class="match-container" id="activity-4-container"><svg class="match-lines" id="activity-4-lines"></svg>
+        <div class="match-column" id="activity-4-left"></div>
+        <div class="match-column" id="activity-4-right"></div>
+      </div>
+      <div class="completion-message" id="activity-4-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Cases</h3>
-      <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/16</span></div>
-      <div class="sort-pool" id="activity-5-pool"><div class="sort-items" id="activity-5-items"></div></div>
-      <div class="sort-groups" id="activity-5-groups"></div>
-      <div class="completion-message" id="activity-5-complete"><h3>All Sorted!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+    <section id="activity-5" class="section"><div class="card"><h3>Sentence Reconstruction</h3>
+      <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
+      <div id="activity-5-container" class="order-container"></div>
+      <div class="completion-message" id="activity-5-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-6" class="section"><div class="card"><h3>Case Sorting</h3>
+      <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
+      <div class="sort-pool" id="activity-6-pool"><div class="sort-items" id="activity-6-items"></div></div>
+      <div class="sort-groups" id="activity-6-groups"></div>
+      <div class="completion-message" id="activity-6-complete"><h3>All Sorted!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-7" class="section"><div class="card"><h3>City Logic</h3>
+      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/12</span></div>
+      <div id="activity-7-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-7-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-8')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-8" class="section"><div class="card"><h3>Vocabulary Review</h3>
+      <div class="score-display"><span class="score"><span id="activity-8-score">0</span>/12</span></div>
+      <div id="activity-8-container" class="order-container"></div>
+      <div class="completion-message" id="activity-8-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-8')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
-        <h3>Словник (1)</h3>
+        <h3>Словник (20)</h3>
         <div class="vocab-table-container">
           <table class="vocab-table">
             <thead><tr>
     <th>Слово</th>
     
-    
+    <th>IPA</th>
     <th>Переклад</th>
-    
+    <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">Review vocabulary from modules 11-19</td><td class="vocab-en"></td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">бачити</td><td class="vocab-ipa">/ˈbɑtʃɪtɪ/</td><td class="vocab-en">to see</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('бачити')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">хотіти</td><td class="vocab-ipa">/xɔˈtitɪ/</td><td class="vocab-en">to want</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('хотіти')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">любити</td><td class="vocab-ipa">/lʲuˈbɪtɪ/</td><td class="vocab-en">to love/like</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('любити')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">немає</td><td class="vocab-ipa">/nɛˈmɑjɛ/</td><td class="vocab-en">there is no</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('немає')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">у / в</td><td class="vocab-ipa">/u/ /v/</td><td class="vocab-en">in / at</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('у / в')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">на</td><td class="vocab-ipa">/nɑ/</td><td class="vocab-en">on / at</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('на')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">праворуч</td><td class="vocab-ipa">/prɑˈvɔrutʃ/</td><td class="vocab-en">to the right</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('праворуч')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">ліворуч</td><td class="vocab-ipa">/lʲiˈvɔrutʃ/</td><td class="vocab-en">to the left</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('ліворуч')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">прямо</td><td class="vocab-ipa">/ˈprjɑmɔ/</td><td class="vocab-en">straight</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('прямо')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вулиця</td><td class="vocab-ipa">/ˈvulɪt͡sʲɑ/</td><td class="vocab-en">street</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вулиця')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">місто</td><td class="vocab-ipa">/ˈmistɔ/</td><td class="vocab-en">city</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('місто')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">друг</td><td class="vocab-ipa">/druɦ/</td><td class="vocab-en">friend</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('друг')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">скільки</td><td class="vocab-ipa">/ˈskilʲkɪ/</td><td class="vocab-en">how much</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('скільки')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">коштує</td><td class="vocab-ipa">/kɔʃˈtujɛ/</td><td class="vocab-en">cost (verb)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('коштує')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">рахунок</td><td class="vocab-ipa">/rɑˈxunɔk/</td><td class="vocab-en">bill/account</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('рахунок')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">смачно</td><td class="vocab-ipa">/ˈsmɑtʃnɔ/</td><td class="vocab-en">tasty</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('смачно')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вода</td><td class="vocab-ipa">/vɔˈdɑ/</td><td class="vocab-en">water</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вода')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">кава</td><td class="vocab-ipa">/ˈkɑvɑ/</td><td class="vocab-en">coffee</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('кава')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">далеко</td><td class="vocab-ipa">/dɑˈlɛkɔ/</td><td class="vocab-en">far</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('далеко')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">близько</td><td class="vocab-ipa">/ˈblɪzʲkɔ/</td><td class="vocab-en">near</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('близько')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -952,8 +862,8 @@ footer {
   </main><footer>Module 20 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"fill-blank","title":"Case Practice","data":{"type":"fill-blank","items":[{"prompt":"Я читаю ___ (книга).","answer":"книгу","hints":["книга"],"options":["книгу","книга","книги","книзі"]},{"prompt":"Книга на ___ (стіл).","answer":"столі","hints":["стіл"],"options":["столі","стіл","столу","столом"]},{"prompt":"Немає ___ (вода).","answer":"води","hints":["вода"],"options":["води","вода","воду","водою"]},{"prompt":"Я бачу ___ (друг).","answer":"друга","hints":["друг"],"options":["друга","друг","другу","другові"]},{"prompt":"Вона в ___ (магазин).","answer":"магазині","hints":["магазин"],"options":["магазині","магазин","магазину","магазином"]},{"prompt":"Це ___ (мій) машина.","answer":"моя","hints":["мій"],"options":["моя","мій","моє","мої"]},{"prompt":"У мене немає ___ (гроші).","answer":"грошей","hints":["гроші"],"options":["грошей","гроші","грошима","грошам"]},{"prompt":"Двадцять ___ (гривня).","answer":"гривень","hints":["гривня"],"options":["гривень","гривня","гривні","гривню"]},{"prompt":"Книга у ___ (сумка).","answer":"сумці","hints":["сумка"],"options":["сумці","сумка","сумку","сумкою"]},{"prompt":"Можна ___ (меню)?","answer":"меню","hints":["меню"],"options":["меню","меню","меню","меню"]},{"prompt":"Ми живемо в ___ (місто).","answer":"місті","hints":["місто"],"options":["місті","місто","міста","містом"]},{"prompt":"Три ___ (книга).","answer":"книги","hints":["книга"],"options":["книги","книга","книгу","книг"]}]}},{"id":"activity-1","type":"unjumble","title":"A1.2 Sentences","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["книгу","читаю","Я"],"answer":"Я читаю книгу.","translation":"I'm reading a book."},{"words":["столі","на","Книга"],"answer":"Книга на столі.","translation":"The book is on the table."},{"words":["часу","немає","мене","У"],"answer":"У мене немає часу.","translation":"I don't have time."},{"words":["є","брат","У","мене"],"answer":"У мене є брат.","translation":"I have a brother."},{"words":["телефон","Це","мій"],"answer":"Це мій телефон.","translation":"This is my phone."},{"words":["друга","бачу","Я"],"answer":"Я бачу друга.","translation":"I see a friend."},{"words":["гривень","П'ятдесят","коштує","Це"],"answer":"Це коштує п'ятдесят гривень.","translation":"This costs 50 hryvnias."},{"words":["Києві","живу","Я","в"],"answer":"Я живу в Києві.","translation":"I live in Kyiv."},{"words":["візьму","Я","борщ"],"answer":"Я візьму борщ.","translation":"I'll take borsch."},{"words":["молоком","Кава","без","з","цукру"],"answer":"Кава з молоком, без цукру.","translation":"Coffee with milk, without sugar."},{"words":["метро","наліво","Прямо","потім"],"answer":"Прямо, потім наліво — метро.","translation":"Straight, then left — metro."},{"words":["ласка","будь","Рахунок"],"answer":"Рахунок, будь ласка.","translation":"Check, please."}]}},{"id":"activity-2","type":"match-up","title":"Case Functions","data":{"type":"match-up","pairs":[{"left":"Direct object (what I see)","right":"Accusative"},{"left":"Location (where it is)","right":"Locative"},{"left":"Absence (what's missing)","right":"Genitive"},{"left":"Subject (what this is)","right":"Nominative"},{"left":"Addressing someone","right":"Vocative"},{"left":"After numbers 5+","right":"Genitive plural"},{"left":"After у/в + location","right":"Locative"},{"left":"After без (without)","right":"Genitive"},{"left":"After для (for)","right":"Genitive"},{"left":"I have (possession)","right":"Accusative"},{"left":"I don't have","right":"Genitive"},{"left":"Object of emotion (love)","right":"Accusative"}],"shuffleRight":true}},{"id":"activity-3","type":"quiz","title":"A1.2 Comprehensive","data":{"type":"quiz","questions":[{"question":"Which case is used for direct objects?","options":["Nominative","Accusative","Genitive","Locative"],"correctIndex":1,"explanation":"Direct objects use accusative: Я читаю книгу."},{"question":"Which preposition is followed by locative for location?","options":["без","до","у/в","для"],"correctIndex":2,"explanation":"\"У/в\" + locative = in/at a location."},{"question":"How do you say \"I don't have time\"?","options":["Я не маю час","У мене немає часу","Мені немає часу","Я немаю часу"],"correctIndex":1,"explanation":"\"У мене немає\" + genitive."},{"question":"What is \"книга\" in locative?","options":["книгу","книги","книзі","книгою"],"correctIndex":2,"explanation":"Feminine -а → -і in locative (with consonant change)."},{"question":"After number 5, nouns use:","options":["Nominative singular","Nominative plural","Genitive plural","Accusative"],"correctIndex":2,"explanation":"Numbers 5-20 require genitive plural: п'ять гривень."},{"question":"\"Моя\" is used with:","options":["Masculine nouns","Feminine nouns","Neuter nouns","Plural nouns"],"correctIndex":1,"explanation":"\"Моя\" = my (feminine): моя книга."},{"question":"Which is correct for \"at the café\"?","options":["на кафе","у кафе","до кафе","з кафе"],"correctIndex":1,"explanation":"\"У кафе\" (кафе is indeclinable)."},{"question":"\"Без цукру\" uses which case?","options":["Accusative","Locative","Genitive","Nominative"],"correctIndex":2,"explanation":"\"Без\" requires genitive."},{"question":"Masculine animate accusative equals:","options":["Nominative","Locative","Genitive","Instrumental"],"correctIndex":2,"explanation":"Animate masculine: accusative = genitive (друг → друга)."},{"question":"\"Скільки коштує?\" asks about:","options":["Price","Location","Time","Direction"],"correctIndex":0,"explanation":"\"Скільки коштує?\" = How much does it cost?"},{"question":"Which is the correct locative of \"місто\"?","options":["містo","міста","місті","містом"],"correctIndex":2,"explanation":"Neuter -о → -і in locative."},{"question":"\"Двадцять одна гривня\" — why \"гривня\"?","options":["21 ends in 1, so nominative singular","21 uses genitive","All numbers use nominative","This is an exception"],"correctIndex":0,"explanation":"Numbers ending in 1 use nominative singular."}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-4","type":"true-false","title":"A1.2 Review","data":{"type":"true-false","statements":[{"statement":"Accusative case is used for direct objects.","isTrue":true,"explanation":"Correct! \"Я бачу книгу\" — \"книгу\" is accusative."},{"statement":"Locative case is used after \"без.\"","isTrue":false,"explanation":"Incorrect! \"Без\" requires genitive, not locative."},{"statement":"\"У мене є\" uses accusative for what you have.","isTrue":true,"explanation":"Correct! \"У мене є книга\" — \"книга\" is nominative/accusative."},{"statement":"Numbers 2-4 require genitive case.","isTrue":false,"explanation":"Incorrect! 2-4 use nominative plural; 5+ use genitive plural."},{"statement":"Possessive pronouns agree with the noun's gender.","isTrue":true,"explanation":"Correct! \"Мій стіл\" (m), \"моя книга\" (f), \"моє вікно\" (n)."},{"statement":"\"В\" and \"у\" are different prepositions with different meanings.","isTrue":false,"explanation":"Incorrect! They're the same; \"у\" is used after consonants."},{"statement":"Masculine animate accusative = genitive.","isTrue":true,"explanation":"Correct! \"Друг → друга\" in accusative."},{"statement":"\"Кафе\" changes form in different cases.","isTrue":false,"explanation":"Incorrect! \"Кафе\" is indeclinable (doesn't change)."},{"statement":"\"Немає\" is always followed by genitive.","isTrue":true,"explanation":"Correct! \"Немає води, часу, грошей.\""},{"statement":"\"Три гривень\" is correct.","isTrue":false,"explanation":"Incorrect! 2-4 use nominative plural: \"три гривні.\""},{"statement":"You must ask for the check in Ukrainian restaurants.","isTrue":true,"explanation":"Correct! \"Рахунок, будь ласка.\""},{"statement":"\"Прямо, потім наліво\" gives directions.","isTrue":true,"explanation":"Correct! \"Straight, then left.\""}]}},{"id":"activity-5","type":"group-sort","title":"Cases","data":{"type":"group-sort","groups":[{"id":"nominative","name":"Nominative","items":["книга","стіл","мій телефон","це вода"]},{"id":"accusative","name":"Accusative","items":["книгу","друга","воду","мою книгу"]},{"id":"locative","name":"Locative","items":["на столі","у книзі","в місті","на вулиці"]},{"id":"genitive","name":"Genitive","items":["води","часу","без цукру","п'ять гривень"]}],"shuffleItems":true}}];
-    const vocabData = [{"uk":"Review vocabulary from modules 11-19","translit":"","en":"","note":""}];
+    const activitiesData = [{"id":"activity-0","type":"quiz","title":"The Great Case Test","data":{"type":"quiz","questions":[{"question":"Я бачу ___ (sister).","options":["сестру","сестра","сестрі"],"correctIndex":0,"explanation":""},{"question":"Я живу в ___ (London).","options":["Лондоні","Лондон","Лондона"],"correctIndex":0,"explanation":""},{"question":"У мене немає ___ (time).","options":["часу","час","часом"],"correctIndex":0,"explanation":""},{"question":"Ми любимо ___ (Ukraine).","options":["Україну","Україна","Україні"],"correctIndex":0,"explanation":""},{"question":"Книга на ___ (table).","options":["столі","стіл","столу"],"correctIndex":0,"explanation":""},{"question":"Я не хочу ___ (pizza).","options":["піци","піцу (Negation triggers Genitive usually, but informal Accusative is seen. Wait, rule is Genitive after Negation for existence, but transitive verbs often keep Accusative or switch to Genitive. Simple rule for A1: Negation of *existence* (nemaye) is Genitive. Negation of *action* (ne khochu) can be Genitive or Accusative. Let's stick to strict grammar: Ne khochu picy (Genitive) is safer/standard).","піца"],"correctIndex":0,"explanation":""},{"question":"Я чекаю на ___ (doctor).","options":["лікаря","лікар","лікарю"],"correctIndex":0,"explanation":""},{"question":"Це мій ___ (friend).","options":["друг","друга","другу"],"correctIndex":0,"explanation":""},{"question":"Я йду в ___ (bank).","options":["банк","банку","банком"],"correctIndex":0,"explanation":""},{"question":"Я п'ю каву з ___ (milk).","options":["молоком","молока","молоко"],"correctIndex":0,"explanation":""},{"question":"Ти знаєш ___ (Ivan)?","options":["Івана","Іван","Івану"],"correctIndex":0,"explanation":""},{"question":"Ми у ___ (park).","options":["парку","парк","парка","парком"],"correctIndex":0,"explanation":""},{"question":"Він з ___ (Kyiv).","options":["Києва","Київ","Києві"],"correctIndex":0,"explanation":""},{"question":"Я не маю ___ (idea).","options":["ідеї","ідея","ідею"],"correctIndex":0,"explanation":""},{"question":"У кімнаті немає ___ (window).","options":["вікна","вікно","вікні"],"correctIndex":0,"explanation":""},{"question":"Я читаю ___ (book).","options":["книгу (Acc)","книга","книги"],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-1","type":"match-up","title":"Concept Match","data":{"type":"match-up","pairs":[{"left":"Nominative","right":"Це студент."},{"left":"Accusative (Inanimate)","right":"Я бачу стіл."},{"left":"Accusative (Animate)","right":"Я бачу студента."},{"left":"Locative","right":"Я в Києві."},{"left":"Genitive (Absence)","right":"Немає часу."},{"left":"Genitive (Origin)","right":"Я з України."},{"left":"Instrumental (With)","right":"Чай з лимоном."},{"left":"Possessive","right":"Мій паспорт."},{"left":"Demonstrative","right":"Цей будинок."},{"left":"Negation","right":"Я не знаю."},{"left":"Question","right":"Де ти?"},{"left":"Imperative","right":"Скажіть, будь ласка."}],"shuffleRight":true}},{"id":"activity-2","type":"fill-blank","title":"The Missing Case","data":{"type":"fill-blank","items":[{"prompt":"Я бачу мам___ (Mama - Acc).","answer":"маму","hints":["Mama - Acc"]},{"prompt":"Я в кімнат___ (Kimnata - Loc).","answer":"кімнаті","hints":["Kimnata - Loc"]},{"prompt":"Немає вод___ (Voda - Gen).","answer":"води","hints":["Voda - Gen"]},{"prompt":"Я люблю кав___ (Kava - Acc).","answer":"каву","hints":["Kava - Acc"]},{"prompt":"Книга на стол___ (Stil - Loc).","answer":"столі","hints":["Stil - Loc"]},{"prompt":"Я чекаю друг___ (Drug - Acc Animate).","answer":"друга","hints":["Drug - Acc Animate"]},{"prompt":"Без цукр___ (Tsukor - Gen).","answer":"цукру","hints":["Tsukor - Gen"]},{"prompt":"Чай з мед___ (Med - Instr).","answer":"медом","hints":["Med - Instr"]},{"prompt":"Я у міст___ (Misto - Loc).","answer":"місті","hints":["Misto - Loc"]},{"prompt":"Я знаю брат___ (Brat - Acc Animate).","answer":"брата","hints":["Brat - Acc Animate"]},{"prompt":"Немає проблем___ (Problema - Gen).","answer":"проблеми","hints":["Problema - Gen"]},{"prompt":"Я хочу піц___ (Pitsa - Acc).","answer":"піцу","hints":["Pitsa - Acc"]}]}},{"id":"activity-3","type":"fill-blank","title":"Preposition Master","data":{"type":"fill-blank","items":[{"prompt":"Я живу ___ (in) Києві.","answer":"в","hints":["in"]},{"prompt":"Книга ___ (on) столі.","answer":"на","hints":["on"]},{"prompt":"Чай ___ (without) цукру.","answer":"без","hints":["without"]},{"prompt":"Я ___ (from) України.","answer":"з","hints":["from"]},{"prompt":"Це ___ (for) тебе.","answer":"для","hints":["for"]},{"prompt":"Піца ___ (with) сиром.","answer":"з","hints":["with"]},{"prompt":"Я ___ (in) парку.","answer":"у","hints":["in"]},{"prompt":"Студент ___ (at) університеті.","answer":"в","hints":["at"]},{"prompt":"Ми ___ (on) концерті.","answer":"на","hints":["on"]},{"prompt":"Суп ___ (without) м'яса.","answer":"без","hints":["without"]},{"prompt":"Салат ___ (with) олією.","answer":"з","hints":["with"]},{"prompt":"Квиток ___ (for) мене.","answer":"для","hints":["for"]}]}},{"id":"activity-4","type":"match-up","title":"Mozhna Scenario","data":{"type":"match-up","pairs":[{"left":"You want tea.","right":"Можна чай?"},{"left":"You want to give money.","right":"Можна оплатити?"},{"left":"You want to use the toilet.","right":"Можна в туалет?"},{"left":"It is forbidden to smoke.","right":"Тут не можна курити."},{"left":"It is forbidden to park.","right":"Тут не можна паркуватися."},{"left":"You want to enter.","right":"Можна увійти?"},{"left":"You want to take a photo.","right":"Можна фото?"},{"left":"You want the bill.","right":"Можна рахунок?"},{"left":"You want a discount (znizhka).","right":"Можна знижку?"},{"left":"You want water.","right":"Можна води?"},{"left":"Is it allowed here?","right":"Тут можна?"},{"left":"Entrance forbidden.","right":"Не можна."}],"shuffleRight":true}},{"id":"activity-5","type":"unjumble","title":"Sentence Reconstruction","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["не","Я","м'ясо","їм","."],"answer":"Я не їм м'ясо."},{"words":["парку","Ми","в","гуляємо","."],"answer":"Ми гуляємо в парку."},{"words":["немає","У","часу","мене","."],"answer":"У мене немає часу."},{"words":["меню","Можна",",","ласка","будь","?"],"answer":"Можна меню, будь ласка?"},{"words":["живе","Де","друг","твій","?"],"answer":"Де живе твій друг?"},{"words":["дуже","Це","далеко","."],"answer":"Це дуже далеко."},{"words":["на","каву","Ми","чекаємо","."],"answer":"Ми чекаємо на каву."},{"words":["бачу","автобус","Я","не","."],"answer":"Я не бачу автобус."},{"words":["коштує","Скільки","квиток","?"],"answer":"Скільки коштує квиток?"},{"words":["з","Борщ","смачний","салом","."],"answer":"Борщ смачний з салом."},{"words":["тут","Туалет","є","?"],"answer":"Туалет тут є?"},{"words":["центрі","Я","в","живу","."],"answer":"Я живу в центрі."}]}},{"id":"activity-6","type":"group-sort","title":"Case Sorting","data":{"type":"group-sort","groups":[{"id":"accusative","name":"Accusative","items":["Я бачу **сонце**","Я люблю **музику**","Я чекаю **автобус**","Я знаю **Івана**"]},{"id":"locative","name":"Locative","items":["Ми в **Україні**","Книга на **столі**","Живу у **Львові**","В **центрі**"]},{"id":"genitive","name":"Genitive","items":["Немає **грошей**","Без **газу**","Я з **Америки**","Пляшка **води**"]}],"shuffleItems":true}},{"id":"activity-7","type":"fill-blank","title":"City Logic","data":{"type":"fill-blank","items":[{"prompt":"Автобус на ___ (stop).","answer":"зупинці","hints":["stop"]},{"prompt":"Гроші в ___ (bank).","answer":"банку","hints":["bank"]},{"prompt":"Студент в ___ (university).","answer":"університеті","hints":["university"]},{"prompt":"Лікар у ___ (hospital).","answer":"лікарні","hints":["hospital"]},{"prompt":"Актор у ___ (theater).","answer":"театрі","hints":["theater"]},{"prompt":"Фільм у ___ (cinema).","answer":"кінотеатрі","hints":["cinema"]},{"prompt":"Картина в ___ (museum).","answer":"музеї","hints":["museum"]},{"prompt":"Кава в ___ (cafe).","answer":"кафе","hints":["cafe"]},{"prompt":"Ми в ___ (kyiv).","answer":"Києві","hints":["kyiv"]},{"prompt":"Ти в ___ (london).","answer":"Лондоні","hints":["london"]},{"prompt":"Вона в ___ (taxi).","answer":"таксі","hints":["taxi"]},{"prompt":"Я в ___ (metro).","answer":"метро","hints":["metro"]}]}},{"id":"activity-8","type":"anagram","title":"Vocabulary Review","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["в","у","л","и","ц","я"],"answer":"вулиця","translation":"Street"},{"letters":["м","а","г","а","з","и","н"],"answer":"магазин","translation":"Shop"},{"letters":["р","а","х","у","н","о","к"],"answer":"рахунок","translation":"Bill"},{"letters":["о","ф","і","ц","і","а","н","т"],"answer":"офіціант","translation":"Waiter"},{"letters":["л","і","к","а","р"],"answer":"лікар","translation":"Doctor"},{"letters":["к","в","и","т","о","к"],"answer":"квиток","translation":"Ticket"},{"letters":["г","о","т","і","в","к","а"],"answer":"готівка","translation":"Cash"},{"letters":["п","л","о","щ","а"],"answer":"площа","translation":"Square"},{"letters":["з","у","п","и","н","к","а"],"answer":"зупинка","translation":"Stop"},{"letters":["н","е","м","а","є"],"answer":"немає","translation":"There is no"},{"letters":["д","р","у","г"],"answer":"друг","translation":"Friend"},{"letters":["м","і","с","т","о"],"answer":"місто","translation":"City"}]}}];
+    const vocabData = [{"uk":"бачити","translit":"","en":"to see","note":"[🔊](audio_bachyty)"},{"uk":"хотіти","translit":"","en":"to want","note":"[🔊](audio_khotity)"},{"uk":"любити","translit":"","en":"to love/like","note":"[🔊](audio_lyubyty)"},{"uk":"немає","translit":"","en":"there is no","note":"[🔊](audio_nemaye)"},{"uk":"у / в","translit":"","en":"in / at","note":"[🔊](audio_u_v)"},{"uk":"на","translit":"","en":"on / at","note":"[🔊](audio_na)"},{"uk":"праворуч","translit":"","en":"to the right","note":"[🔊](audio_pravoruch)"},{"uk":"ліворуч","translit":"","en":"to the left","note":"[🔊](audio_livoruch)"},{"uk":"прямо","translit":"","en":"straight","note":"[🔊](audio_pryamo)"},{"uk":"вулиця","translit":"","en":"street","note":"[🔊](audio_vulytsya)"},{"uk":"місто","translit":"","en":"city","note":"[🔊](audio_misto)"},{"uk":"друг","translit":"","en":"friend","note":"[🔊](audio_druh)"},{"uk":"скільки","translit":"","en":"how much","note":"[🔊](audio_skilky)"},{"uk":"коштує","translit":"","en":"cost (verb)","note":"[🔊](audio_koshtuye)"},{"uk":"рахунок","translit":"","en":"bill/account","note":"[🔊](audio_rakhunok)"},{"uk":"смачно","translit":"","en":"tasty","note":"[🔊](audio_smachno)"},{"uk":"вода","translit":"","en":"water","note":"[🔊](audio_voda)"},{"uk":"кава","translit":"","en":"coffee","note":"[🔊](audio_kava)"},{"uk":"далеко","translit":"","en":"far","note":"[🔊](audio_daleko)"},{"uk":"близько","translit":"","en":"near","note":"[🔊](audio_blyzko)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1013,6 +923,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2277,6 +2213,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

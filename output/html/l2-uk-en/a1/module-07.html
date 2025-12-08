@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -481,14 +521,14 @@ footer {
     <h1>Module 07: Questions &amp; Negation</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Quiz</button>
-      <button class="nav-tab" data-section="activity-1">2. Match</button>
-      <button class="nav-tab" data-section="activity-2">3. Sort</button>
-      <button class="nav-tab" data-section="activity-3">4. T/F</button>
-      <button class="nav-tab" data-section="activity-4">5. Fill</button>
-      <button class="nav-tab" data-section="activity-5">6. Match</button>
-      <button class="nav-tab" data-section="activity-6">7. Spell</button>
-      <button class="nav-tab" data-section="activity-7">8. Fill</button>
+      <button class="nav-tab" data-section="activity-0">1. Match</button>
+      <button class="nav-tab" data-section="activity-1">2. Fill</button>
+      <button class="nav-tab" data-section="activity-2">3. Order</button>
+      <button class="nav-tab" data-section="activity-3">4. Spell</button>
+      <button class="nav-tab" data-section="activity-4">5. Quiz</button>
+      <button class="nav-tab" data-section="activity-5">6. T/F</button>
+      <button class="nav-tab" data-section="activity-6">7. Sort</button>
+      <button class="nav-tab" data-section="activity-7">8. Match</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -498,496 +538,203 @@ footer {
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.1</span>
         <h2 style="font-size:2rem;margin:0.5rem 0">Questions &amp; Negation</h2>
-        <p style="color:var(--text-muted)">Asking Questions and Saying No</p>
+        <p style="color:var(--text-muted)">Unlocking the Conversation</p>
       </div>
       
-    <div class="card section-content">
-      <h3>Warm Up</h3>
-      <div class="md-content"><p>Think about conversations. What makes them flow? Questions! In English, we change word order or add "do/does" to make questions. Ukrainian has a much simpler system.</p>
-<hr /></div>
-    </div>
-  
-    <div class="card section-content">
-      <h3>Lesson</h3>
-      <div class="md-content"><h2 id="themagicparticlechy">The Magic Particle: Чи (Chy)</h2>
-<p>In Ukrainian, you can turn ANY statement into a yes/no question by adding <strong>чи</strong> (chy) at the beginning:</p>
-<table>
-<thead>
-<tr>
-<th>Statement</th>
-<th>Question</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Ти читаєш. (Ty chytayesh)</td>
-<td>Чи ти читаєш? (Chy ty chytayesh?)</td>
-</tr>
-<tr>
-<td>Вона працює. (Vona pratsyuye)</td>
-<td>Чи вона працює? (Chy vona pratsyuye?)</td>
-</tr>
-<tr>
-<td>Він знає. (Vin znaye)</td>
-<td>Чи він знає? (Chy vin znaye?)</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Literal translation:</strong> "Whether you read?" → "Do you read?"</p>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong><br />
-  Unlike English, Ukrainian doesn't require any auxiliary verbs ("do/does") for questions. The word order stays exactly the same—just add <strong>чи</strong> and raise your intonation at the end!</p>
-</blockquote>
-<h3 id="optional">Optional Чи</h3>
-<p>In casual speech, Ukrainians often skip <strong>чи</strong> entirely and just use rising intonation:</p>
+    <div class="card section-intro">
+      <h3>📖 Introduction</h3>
+      <div class="md-content"><h2 id="warmup">warm-up</h2>
+<p><strong>The Power of Curiosity</strong></p>
+<p>You can now name objects ("Це стіл") and describe actions ("Я читаю"). But you are still trapped in your own bubble. You can state facts, but you cannot ask for information. You cannot connect.</p>
+<p>To truly interact, you need two keys:</p>
+<ol>
+<li><strong>The Question:</strong> To invite someone else into the conversation.</li>
+<li><strong>The Negation:</strong> To define boundaries and correct misunderstandings.</li>
+</ol>
+<p>Today, we hand you these keys. We will turn you from a narrator into an interviewer. You will learn to ask "Who?" "Where?" and "Why?"—the three favorite words of every Ukrainian grandmother!</p>
+<h3 id="thepolitestrangervsthefriend">The Polite Stranger vs. The Friend</h3>
+<p>Imagine two scenes.<br />
+<strong>Scene 1:</strong> You meet a stranger. You want to ask if they know English.</p>
 <ul>
-<li>Ти читаєш? (Ty chytayesh?) — "You read?" (casual)</li>
-<li>Вона працює? (Vona pratsyuye?) — "She works?" (casual)</li>
+<li><strong>You:</strong> "Чи ви знаєте англійську?" (Do you know English?) -&gt; <em>Polite, clear, structured.</em></li>
 </ul>
-<p>But <strong>чи</strong> makes the question crystal clear, especially in writing.</p>
-<hr />
-<h2 id="questionwordsthecompleteset">Question Words: The Complete Set</h2>
-<p>These are your tools for gathering information:</p>
+<p><strong>Scene 2:</strong> You are with a friend. You are shocked they don't know a meme.</p>
+<ul>
+<li><strong>You:</strong> "Ти не знаєш?!" (You don't know?!) -&gt; <em>Emotional, direct, intonation-driven.</em></li>
+</ul>
+<blockquote>
+  <p>💡 <strong>Did You Know? The "Thinking" Sound</strong><br />
+  When English speakers think, they say "Ummm…"<br />
+  When Ukrainian speakers think, they often say "Еммм…" (Emmm…) or stretch the last vowel of the previous word.<br />
+  "Я думаюююю…" (I am thinking…)</p>
+</blockquote>
+<h3 id="themelodyofaquestion">The Melody of a Question</h3>
+<p>Ukrainian is very musical. The difference between a statement and a question is often just the melody.</p>
+<ul>
+<li><strong>Statement:</strong> The voice goes down at the end, like a heavy stone dropping. $\searrow$</li>
+<li><strong>Question:</strong> The voice jumps UP on the most important word, then hangs in the air. $\nearrow$</li>
+</ul>
+<blockquote>
+  <p>🔗 <strong>Language Link: The Missing "Do"</strong><br />
+  In English, you need "helpers" like "Do" or "Does" or "Is".</p>
+  <ul>
+  <li>"Do you read?"</li>
+  <li>"Is he here?"<br />
+  Ukrainian has NO helpers. The specific verb and the context do all the heavy lifting.</li>
+  <li>"Ти читаєш?" (You read?)</li>
+  <li>"Він тут?" (He here?)<br />
+  It makes learning easier—fewer words to juggle!</li>
+  </ul>
+</blockquote>
+<h2 id="presentation">presentation</h2>
+<h3 id="key1theyesnoquestion">Key 1: The Yes/No Question (Так чи Ні?)</h3>
+<p>As we hinted in the last module, the easiest way to ask a question is <strong>Intonation</strong>.</p>
+<ul>
+<li><strong>Ти знаєш.</strong> (You know.) $\searrow$ (Falling tone)</li>
+<li><strong>Ти знаєш?</strong> (Do you know?) $\nearrow$ (Rising tone like a surprise)</li>
+</ul>
+<p>But sometimes, for polite emphasis or clarity, we use the particle <strong>Чи</strong> (Chy) at the start. <strong>Чи</strong> is like a flag that says "Hey! A question is coming!" It functions a bit like "Do" or "Is" in English questions.</p>
+<p><strong>Pattern:</strong> <strong>Чи</strong> + [Sentence]?</p>
+<ul>
+<li><strong>Чи</strong> ти знаєш? (Do you know?)</li>
+<li><strong>Чи</strong> це правда? (Is this true?)</li>
+<li><strong>Чи</strong> він тут? (Is he here?)</li>
+</ul>
+<p><strong>When to use Чи:</strong></p>
+<ul>
+<li>In formal writing (almost always).</li>
+<li>When you want to be very clear.</li>
+<li>When offering an alternative: "Кава <strong>чи</strong> чай?" (Coffee <strong>or</strong> tea?) -&gt; Yes, "Чи" also means "Or"!</li>
+</ul>
+<h3 id="key2thequestionwordsthewwords">Key 2: The Question Words (The "W" Words)</h3>
+<p>To get specific information, you need these power words. Note that most of them start with <strong>K</strong> or <strong>Щ</strong> or <strong>Д</strong>.</p>
 <table>
 <thead>
 <tr>
-<th>Ukrainian</th>
-<th>Pronunciation</th>
+<th>Word</th>
+<th>IPA</th>
 <th>English</th>
 <th>Example</th>
+<th>Translation</th>
+<th>Audio</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Що?</td>
-<td>(Shcho?)</td>
-<td>What?</td>
-<td>Що це? (Shcho tse?)</td>
-</tr>
-<tr>
-<td>Хто?</td>
-<td>(Khto?)</td>
+<td><strong>Хто?</strong></td>
+<td>/xtɔ/</td>
 <td>Who?</td>
-<td>Хто це? (Khto tse?)</td>
-</tr>
-<tr>
-<td>Де?</td>
-<td>(De?)</td>
-<td>Where?</td>
-<td>Де ти? (De ty?)</td>
-</tr>
-<tr>
-<td>Куди?</td>
-<td>(Kudy?)</td>
-<td>Where to?</td>
-<td>Куди ти йдеш? (Kudy ty ydesh?)</td>
-</tr>
-<tr>
-<td>Звідки?</td>
-<td>(Zvidky?)</td>
-<td>Where from?</td>
-<td>Звідки ти? (Zvidky ty?)</td>
-</tr>
-<tr>
-<td>Коли?</td>
-<td>(Koly?)</td>
-<td>When?</td>
-<td>Коли ти працюєш? (Koly ty pratsyuyesh?)</td>
-</tr>
-<tr>
-<td>Чому?</td>
-<td>(Chomu?)</td>
-<td>Why?</td>
-<td>Чому ні? (Chomu ni?)</td>
-</tr>
-<tr>
-<td>Як?</td>
-<td>(Yak?)</td>
-<td>How?</td>
-<td>Як справи? (Yak spravy?)</td>
-</tr>
-<tr>
-<td>Скільки?</td>
-<td>(Skilky?)</td>
-<td>How much/many?</td>
-<td>Скільки це коштує? (Skilky tse koshtuye?)</td>
-</tr>
-<tr>
-<td>Який?</td>
-<td>(Yakyy?)</td>
-<td>Which?/What kind?</td>
-<td>Який це колір? (Yakyy tse kolir?)</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎬 <strong>Pop Culture Moment</strong><br />
-  The question "Звідки ти?" (Where are you from?) is one of the most common conversation starters in Ukraine. It reflects the importance of regional identity—people from Lviv, Kyiv, and Odesa each have their own distinct character!</p>
-</blockquote>
-<h3 id="genderagreementwith">Gender Agreement with Який</h3>
-<p><strong>Який</strong> changes form to match the noun it describes:</p>
-<table>
-<thead>
-<tr>
-<th>Gender</th>
-<th>Form</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Masculine</td>
-<td>який (yakyy)</td>
-<td>Який це фільм? (What film is this?)</td>
-</tr>
-<tr>
-<td>Feminine</td>
-<td>яка (yaka)</td>
-<td>Яка це книга? (What book is this?)</td>
-</tr>
-<tr>
-<td>Neuter</td>
-<td>яке (yake)</td>
-<td>Яке це слово? (What word is this?)</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="negationsimplyne">Negation: Simply Не (Ne)</h2>
-<p>To make any sentence negative, just add <strong>не</strong> (ne) before the verb:</p>
-<table>
-<thead>
-<tr>
-<th>Positive</th>
-<th>Negative</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Я читаю. (Ya chytayu)</td>
-<td>Я <strong>не</strong> читаю. (Ya <strong>ne</strong> chytayu)</td>
-</tr>
-<tr>
-<td>Вона працює. (Vona pratsyuye)</td>
-<td>Вона <strong>не</strong> працює. (Vona <strong>ne</strong> pratsyuye)</td>
-</tr>
-<tr>
-<td>Ми знаємо. (My znayemo)</td>
-<td>Ми <strong>не</strong> знаємо. (My <strong>ne</strong> znayemo)</td>
-</tr>
-</tbody>
-</table>
-<p>That's it! No "don't/doesn't" needed.</p>
-<blockquote>
-  <p>🌍 <strong>Real World</strong><br />
-  In Ukrainian shops, you might hear "Не маємо" (Ne mayemo) — "We don't have." It's short, direct, and very common when something is out of stock.</p>
-</blockquote>
-<hr />
-<h2 id="answeringquestions">Answering Questions</h2>
-<h3 id="yesnoanswers">Yes/No Answers</h3>
-<table>
-<thead>
-<tr>
-<th>Answer</th>
-<th>Ukrainian</th>
-<th>Pronunciation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Yes</td>
-<td>Так</td>
-<td>(Tak)</td>
-</tr>
-<tr>
-<td>No</td>
-<td>Ні</td>
-<td>(Ni)</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Full answers:</strong></p>
-<ul>
-<li>Чи ти працюєш? — Так, я працюю. (Yes, I work.)</li>
-<li>Чи ти працюєш? — Ні, я не працюю. (No, I don't work.)</li>
-</ul>
-<h3 id="commonanswerphrases">Common Answer Phrases</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Pronunciation</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Так, звичайно!</td>
-<td>(Tak, zvychayno!)</td>
-<td>Yes, of course!</td>
-</tr>
-<tr>
-<td>Ні, дякую.</td>
-<td>(Ni, dyakuyu.)</td>
-<td>No, thank you.</td>
-</tr>
-<tr>
-<td>Можливо.</td>
-<td>(Mozhlyvo.)</td>
-<td>Maybe/Perhaps.</td>
-</tr>
-<tr>
-<td>Не знаю.</td>
-<td>(Ne znayu.)</td>
-<td>I don't know.</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="frequencyadverbs">Frequency Adverbs</h2>
-<p>These words tell us HOW OFTEN something happens:</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Pronunciation</th>
-<th>English</th>
-<th>Position</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>завжди</td>
-<td>(zavzhdy)</td>
-<td>always</td>
-<td>before verb</td>
-</tr>
-<tr>
-<td>часто</td>
-<td>(chasto)</td>
-<td>often</td>
-<td>before verb</td>
-</tr>
-<tr>
-<td>іноді</td>
-<td>(inodi)</td>
-<td>sometimes</td>
-<td>before verb</td>
-</tr>
-<tr>
-<td>рідко</td>
-<td>(ridko)</td>
-<td>rarely</td>
-<td>before verb</td>
-</tr>
-<tr>
-<td>ніколи</td>
-<td>(nikoly)</td>
-<td>never</td>
-<td>before verb + не</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Examples:</strong></p>
-<ul>
-<li>Я <strong>завжди</strong> читаю. (Ya zavzhdy chytayu.) — I always read.</li>
-<li>Вона <strong>часто</strong> працює. (Vona chasto pratsyuye.) — She often works.</li>
-<li>Ми <strong>іноді</strong> гуляємо. (My inodi hulyayemo.) — We sometimes walk.</li>
-<li>Він <strong>рідко</strong> говорить. (Vin ridko hovoryt.) — He rarely speaks.</li>
-</ul>
-<h3 id="specialcasenever">Special Case: Ніколи (Never)</h3>
-<p><strong>Ніколи</strong> requires double negation—use it with <strong>не</strong>:</p>
-<ul>
-<li>Я <strong>ніколи не</strong> читаю. (Ya nikoly ne chytayu.) — I never read.</li>
-<li>Вона <strong>ніколи не</strong> працює. (Vona nikoly ne pratsyuye.) — She never works.</li>
-</ul>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong><br />
-  Double negation is standard in Ukrainian (and most Slavic languages)! "Я ніколи не…" literally translates to "I never don't…" but means "I never…" The negatives reinforce each other rather than canceling out.</p>
-</blockquote>
-<hr />
-<h2 id="combiningquestionsandnegation">Combining Questions and Negation</h2>
-<p>You can negate questions too:</p>
-<table>
-<thead>
-<tr>
-<th>Question Type</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Yes/No negative</td>
-<td>Чи ти не читаєш? (Don't you read?)</td>
-</tr>
-<tr>
-<td>Why not</td>
-<td>Чому ні? (Why not?)</td>
-</tr>
-<tr>
-<td>Why don't you</td>
-<td>Чому ти не працюєш? (Why don't you work?)</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎯 <strong>Fun Fact</strong><br />
-  "Чому ні?" (Why not?) is a very common Ukrainian phrase used to express agreement or willingness to try something. Someone suggests coffee? "Чому ні?" — sounds good!</p>
-</blockquote>
-<hr />
-<h2 id="commonquestionpatterns">Common Question Patterns</h2>
-<h3 id="basicconversationalquestions">Basic Conversational Questions</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Pronunciation</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Як справи?</td>
-<td>(Yak spravy?)</td>
-<td>How are you?</td>
-</tr>
-<tr>
-<td>Як тебе звати?</td>
-<td>(Yak tebe zvaty?)</td>
-<td>What's your name?</td>
-</tr>
-<tr>
-<td>Звідки ти?</td>
-<td>(Zvidky ty?)</td>
-<td>Where are you from?</td>
-</tr>
-<tr>
-<td>Де ти живеш?</td>
-<td>(De ty zhyvesh?)</td>
-<td>Where do you live?</td>
-</tr>
-<tr>
-<td>Що ти робиш?</td>
-<td>(Shcho ty robysh?)</td>
-<td>What are you doing?</td>
-</tr>
-<tr>
-<td>Коли ти працюєш?</td>
-<td>(Koly ty pratsyuyesh?)</td>
-<td>When do you work?</td>
-</tr>
-</tbody>
-</table>
-<h3 id="askingaboutthings">Asking About Things</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Pronunciation</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Що це?</td>
-<td>(Shcho tse?)</td>
-<td>What is this?</td>
-</tr>
-<tr>
-<td>Хто це?</td>
-<td>(Khto tse?)</td>
+<td><strong>Хто</strong> це?</td>
 <td>Who is this?</td>
+<td><button class="audio-btn" onclick="openForvo('khto')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
-<td>Де це?</td>
-<td>(De tse?)</td>
-<td>Where is this?</td>
+<td><strong>Що?</strong></td>
+<td>/ʃtʃɔ/</td>
+<td>What?</td>
+<td><strong>Що</strong> ти робиш?</td>
+<td>What are you doing?</td>
+<td><button class="audio-btn" onclick="openForvo('shcho')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
-<td>Скільки це коштує?</td>
-<td>(Skilky tse koshtuye?)</td>
-<td>How much does this cost?</td>
+<td><strong>Де?</strong></td>
+<td>/dɛ/</td>
+<td>Where?</td>
+<td><strong>Де</strong> ти?</td>
+<td>Where are you?</td>
+<td><button class="audio-btn" onclick="openForvo('de')" title="Listen on Forvo (Search)">🔊</button></td>
+</tr>
+<tr>
+<td><strong>Куди?</strong></td>
+<td>/kuˈdɪ/</td>
+<td>Where to?</td>
+<td><strong>Куди</strong> ти йдеш?</td>
+<td>Where are you going?</td>
+<td><button class="audio-btn" onclick="openForvo('kudy')" title="Listen on Forvo (Search)">🔊</button></td>
+</tr>
+<tr>
+<td><strong>Коли?</strong></td>
+<td>/kɔˈlɪ/</td>
+<td>When?</td>
+<td><strong>Коли</strong> обід?</td>
+<td>When is lunch?</td>
+<td><button class="audio-btn" onclick="openForvo('koly')" title="Listen on Forvo (Search)">🔊</button></td>
+</tr>
+<tr>
+<td><strong>Чому?</strong></td>
+<td>/tʃɔˈmu/</td>
+<td>Why?</td>
+<td><strong>Чому</strong> ти тут?</td>
+<td>Why are you here?</td>
+<td><button class="audio-btn" onclick="openForvo('chomu')" title="Listen on Forvo (Search)">🔊</button></td>
+</tr>
+<tr>
+<td><strong>Як?</strong></td>
+<td>/jɑk/</td>
+<td>How?</td>
+<td><strong>Як</strong> справи?</td>
+<td>How are things?</td>
+<td><button class="audio-btn" onclick="openForvo('yak')" title="Listen on Forvo (Search)">🔊</button></td>
+</tr>
+<tr>
+<td><strong>Скільки?</strong></td>
+<td>/ˈsʲkʲilʲkɪ/</td>
+<td>How much?</td>
+<td><strong>Скільки</strong> коштує?</td>
+<td>How much does it cost?</td>
+<td><button class="audio-btn" onclick="openForvo('skilky')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 </tbody>
 </table>
-<hr /></div>
-    </div>
-  
-    <div class="card section-practice">
-      <h3>Practice</h3>
-      <div class="md-content"><h2 id="exercise1transformstatementstoquestions">Exercise 1: Transform Statements to Questions</h2>
-<p>Turn these statements into questions using <strong>чи</strong>:</p>
-<ol>
-<li>Він читає книгу. → <strong><em><em></em></strong><strong><em></em></em></strong>_?</li>
-<li>Вона працює в офісі. → <strong><em><em></em></strong><strong><em></em></em></strong>_?</li>
-<li>Ми знаємо українську. → <strong><em><em></em></strong><strong><em></em></em></strong>_?</li>
-<li>Ти слухаєш музику. → <strong><em><em></em></strong><strong><em></em></em></strong>_?</li>
-</ol>
-<h2 id="exercise2choosetherightquestionword">Exercise 2: Choose the Right Question Word</h2>
-<p>Fill in with що, хто, де, коли, чому, or як:</p>
-<ol>
-<li>___ ти живеш? — У Києві. (Where do you live?)</li>
-<li>___ це? — Це мій друг. (Who is this?)</li>
-<li>___ ти робиш? — Читаю. (What are you doing?)</li>
-<li>___ ти працюєш? — Зранку. (When do you work?)</li>
-<li>___ справи? — Добре! (How are things?)</li>
-<li>___ ти не читаєш? — Я втомився. (Why don't you read?)</li>
-</ol>
-<h2 id="exercise3makethesesentencesnegative">Exercise 3: Make These Sentences Negative</h2>
-<p>Add <strong>не</strong> to negate:</p>
-<ol>
-<li>Я працюю. → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Вона читає. → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Ми знаємо. → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Він говорить. → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-</ol>
-<hr /></div>
-    </div>
-  
-    <div class="card section-content">
-      <h3>Production</h3>
-      <div class="md-content"><h2 id="taskquestiongame">Task: Question Game</h2>
-<p>Work with these question-answer pairs. Read the question, then create your own answer:</p>
-<ol>
-<li><strong>Де ти живеш?</strong> — <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li><strong>Що ти любиш робити?</strong> — <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li><strong>Чи ти говориш українською?</strong> — <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li><strong>Коли ти працюєш?</strong> — <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-</ol>
-<h2 id="taskinterviewpractice">Task: Interview Practice</h2>
-<p>Using the question words you learned, write 5 questions you would ask a new Ukrainian friend:</p>
-<ol>
-<li><strong><em><em></em></strong><strong><em></em></em></strong>_?</li>
-<li><strong><em><em></em></strong><strong><em></em></em></strong>_?</li>
-<li><strong><em><em></em></strong><strong><em></em></em></strong>_?</li>
-<li><strong><em><em></em></strong><strong><em></em></em></strong>_?</li>
-<li><strong><em><em></em></strong><strong><em></em></em></strong>_?</li>
-</ol>
-<hr />
-<hr />
+<blockquote>
+  <p>⚡ <strong>Pro Tip: Де vs. Куди</strong><br />
+  English uses "Where" for both location and direction. Ukrainian is precise!</p>
+  <ul>
+  <li><strong>Де</strong> = Location (Static). "Де ти?" (At what place are you?)</li>
+  <li><strong>Куди</strong> = Direction (Motion). "Куди ми йдемо?" (To what place are we going?)<br />
+  Memorize: "<strong>Де</strong> is here, <strong>Куди</strong> is to go."</li>
+  </ul>
+</blockquote>
+<h3 id="key3thepowerofnonegation">Key 3: The Power of "No" (Negation)</h3>
+<p>Negation in Ukrainian is beautifully simple. You just put <strong>Не</strong> (Ne) immediately BEFORE the word you want to negate.</p>
+<p><strong>Pattern:</strong> Subject + <strong>не</strong> + Verb.</p>
+<ul>
+<li>Я <strong>не</strong> знаю. (I do not know.)</li>
+<li>Він <strong>не</strong> читає. (He is not reading.)</li>
+<li>Це <strong>не</strong> цікаво. (This is not interesting.)</li>
+</ul>
+<p><strong>The Double Negative Rule:</strong><br />
+In English, logic suggests two negatives make a positive ("I don't know nothing" = I know something).<br />
+In Ukrainian, logic takes a backseat to <strong>emphatic concord</strong>. If the meaning is negative, every part of the sentence must agree to be negative!</p>
+<p><strong>You must match the negative pronoun with the negative particle <code>не</code>.</strong></p>
+<ul>
+<li><strong>Ніколи</strong> (Never) $\rightarrow$ Я <strong>ніколи не</strong> читаю. (I [never] [not] read.)</li>
+<li><strong>Ніхто</strong> (Nobody) $\rightarrow$ <strong>Ніхто не</strong> знає. ([Nobody] [not] knows.)</li>
+<li><strong>Ніде</strong> (Nowhere) $\rightarrow$ Він <strong>ніде не</strong> працює. (He works [nowhere] [not].)</li>
+<li><strong>Нічого</strong> (Nothing) $\rightarrow$ Я <strong>нічого не</strong> бачу. (I see [nothing] [not].)</li>
+</ul>
+<blockquote>
+  <p>🎬 <strong>Pop Culture Moment: The "No" of Steel</strong><br />
+  In many action movies dubbed in Ukrainian, the dramatic "NOOOOO!" is translated simply as "<strong>НІ!</strong>" But when a hero refuses a command, like "I will not do it!", they say "<strong>Я не буду!</strong>" (I will not!). The particle <strong>не</strong> is the shield that stops the action.</p>
+  <p>🎭 <strong>Culture Corner: The Direct "No"</strong><br />
+  Ukrainians can be quite direct. If you ask "Do you want coffee?" and the answer is "Ні" (No), it's not rude. It's just efficient.<br />
+  However, "Ні, дякую" (No, thank you) is always better!</p>
+</blockquote>
+<h2 id="">##</h2>
 <hr /></div>
     </div>
   
       
     <div class="card section-summary">
       <h3>📋 Summary</h3>
-      <div class="md-content"><p>In this module, you learned:</p>
+      <div class="md-content"><p>You have unlocked the conversation!</p>
 <ol>
-<li><strong>Yes/No questions</strong> — Add <strong>чи</strong> before the sentence (optional in casual speech)</li>
-<li><strong>Question words</strong> — що, хто, де, куди, звідки, коли, чому, як, скільки, який</li>
-<li><strong>Negation</strong> — Add <strong>не</strong> before the verb</li>
-<li><strong>Double negation</strong> — Ніколи requires не (ніколи не)</li>
-<li><strong>Frequency adverbs</strong> — завжди, часто, іноді, рідко, ніколи</li>
-<li><strong>Gender agreement</strong> — Який/яка/яке matches the noun</li>
+<li><strong>Ask Yes/No:</strong> Use Intonation $\nearrow$ or add <strong>Чи</strong>.</li>
+<li><strong>Ask Details:</strong> Use the <strong>K/Щ/Д</strong> words (Хто, Що, Де, Коли…).</li>
+<li><strong>Set Boundaries:</strong> Use <strong>Не</strong> before the verb.</li>
+<li><strong>Double Down:</strong> Use <strong>Ніколи не</strong> (Never not) for strong negation.</li>
 </ol>
-<p><strong>Key patterns:</strong></p>
-<ul>
-<li>Чи ти читаєш? (Do you read?)</li>
-<li>Що ти робиш? (What are you doing?)</li>
-<li>Я не знаю. (I don't know.)</li>
-<li>Я ніколи не запізнююся. (I never am late.)</li>
-</ul>
-<p>Next module: More verbs! You'll learn Class II verbs (-ити/-іти) like говорити (to speak) and бачити (to see).</p></div>
+<p>Now you can interrogate your friends: "Що ти робиш?" and judge their answers: "Це не цікаво." In the next module, we will expand your verb power to the second family: <strong>Class II Verbs</strong>.</p></div>
     </div>
   
       <div class="btn-group">
@@ -996,82 +743,82 @@ footer {
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Question Word Recognition</h3>
+    <section id="activity-0" class="section"><div class="card"><h3>Question Words</h3>
       <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container"></div>
-      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+      <div class="match-container" id="activity-0-container"><svg class="match-lines" id="activity-0-lines"></svg>
+        <div class="match-column" id="activity-0-left"></div>
+        <div class="match-column" id="activity-0-right"></div>
+      </div>
+      <div class="completion-message" id="activity-0-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Question Words and Meanings</h3>
+    <section id="activity-1" class="section"><div class="card"><h3>Complete the Question</h3>
       <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-1-container"><svg class="match-lines" id="activity-1-lines"></svg>
-        <div class="match-column" id="activity-1-left"></div>
-        <div class="match-column" id="activity-1-right"></div>
-      </div>
-      <div class="completion-message" id="activity-1-complete"><h3>Perfect!</h3></div>
+      <div id="activity-1-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-1-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Frequency and Question Words</h3>
+    <section id="activity-2" class="section"><div class="card"><h3>Build the Question</h3>
       <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
-      <div class="sort-pool" id="activity-2-pool"><div class="sort-items" id="activity-2-items"></div></div>
-      <div class="sort-groups" id="activity-2-groups"></div>
-      <div class="completion-message" id="activity-2-complete"><h3>All Sorted!</h3></div>
+      <div id="activity-2-container" class="order-container"></div>
+      <div class="completion-message" id="activity-2-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Question and Negation Rules</h3>
+    <section id="activity-3" class="section"><div class="card"><h3>Scrambled Questions</h3>
       <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div id="activity-3-container"></div>
-      <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
+      <div id="activity-3-container" class="order-container"></div>
+      <div class="completion-message" id="activity-3-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Complete with Question Words</h3>
-      <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
-      <div id="activity-4-container" class="fill-container"></div>
+    <section id="activity-4" class="section"><div class="card"><h3>Logic Check</h3>
+      <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/4</span></div>
+      <div id="activity-4-container"></div>
       <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Positive and Negative Pairs</h3>
+    <section id="activity-5" class="section"><div class="card"><h3>Grammar Rules</h3>
       <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-5-container"><svg class="match-lines" id="activity-5-lines"></svg>
-        <div class="match-column" id="activity-5-left"></div>
-        <div class="match-column" id="activity-5-right"></div>
-      </div>
-      <div class="completion-message" id="activity-5-complete"><h3>Perfect!</h3></div>
+      <div id="activity-5-container"></div>
+      <div class="completion-message" id="activity-5-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Question Word Scramble</h3>
-      <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
-      <div id="activity-6-container" class="order-container"></div>
-      <div class="completion-message" id="activity-6-complete"><h3>Perfect Order!</h3></div>
+    <section id="activity-6" class="section"><div class="card"><h3>Question vs Statement</h3>
+      <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/23</span></div>
+      <div class="sort-pool" id="activity-6-pool"><div class="sort-items" id="activity-6-items"></div></div>
+      <div class="sort-groups" id="activity-6-groups"></div>
+      <div class="completion-message" id="activity-6-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
     </div></section>
 
-    <section id="activity-7" class="section"><div class="card"><h3>Add Negation</h3>
-      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/12</span></div>
-      <div id="activity-7-container" class="fill-container"></div>
-      <div class="completion-message" id="activity-7-complete"><h3>Complete!</h3></div>
+    <section id="activity-7" class="section"><div class="card"><h3>Frequency Adverbs</h3>
+      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/6</span></div>
+      <div class="match-container" id="activity-7-container"><svg class="match-lines" id="activity-7-lines"></svg>
+        <div class="match-column" id="activity-7-left"></div>
+        <div class="match-column" id="activity-7-right"></div>
+      </div>
+      <div class="completion-message" id="activity-7-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
-        <h3>Словник (20)</h3>
+        <h3>Словник (0)</h3>
         <div class="vocab-table-container">
           <table class="vocab-table">
             <thead><tr>
     <th>Слово</th>
     
-    <th>IPA</th>
+    
     <th>Переклад</th>
-    <th>Примітка</th>
+    
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">що (shcho)</td><td class="vocab-ipa">/ʃtʃɔ/</td><td class="vocab-en">what</td><td class="vocab-note">Question word</td></tr><tr><td class="vocab-uk">хто (khto)</td><td class="vocab-ipa">/xtɔ/</td><td class="vocab-en">who</td><td class="vocab-note">Question word</td></tr><tr><td class="vocab-uk">де (de)</td><td class="vocab-ipa">/dɛ/</td><td class="vocab-en">where</td><td class="vocab-note">Location question</td></tr><tr><td class="vocab-uk">куди (kudy)</td><td class="vocab-ipa">/kuˈdɪ/</td><td class="vocab-en">where to</td><td class="vocab-note">Direction question</td></tr><tr><td class="vocab-uk">звідки (zvidky)</td><td class="vocab-ipa">/ˈzʋʲidkɪ/</td><td class="vocab-en">where from</td><td class="vocab-note">Origin question</td></tr><tr><td class="vocab-uk">коли (koly)</td><td class="vocab-ipa">/kɔˈlɪ/</td><td class="vocab-en">when</td><td class="vocab-note">Time question</td></tr><tr><td class="vocab-uk">чому (chomu)</td><td class="vocab-ipa">/tʃɔˈmu/</td><td class="vocab-en">why</td><td class="vocab-note">Reason question</td></tr><tr><td class="vocab-uk">як (yak)</td><td class="vocab-ipa">/jɑk/</td><td class="vocab-en">how</td><td class="vocab-note">Manner question</td></tr><tr><td class="vocab-uk">скільки (skilky)</td><td class="vocab-ipa">/ˈskʲilʲkɪ/</td><td class="vocab-en">how much/many</td><td class="vocab-note">Quantity question</td></tr><tr><td class="vocab-uk">який (yakyy)</td><td class="vocab-ipa">/jaˈkɪj/</td><td class="vocab-en">which, what kind</td><td class="vocab-note">Changes: яка (f), яке (n)</td></tr><tr><td class="vocab-uk">чи (chy)</td><td class="vocab-ipa">/tʃɪ/</td><td class="vocab-en">whether (question particle)</td><td class="vocab-note">Makes yes/no questions</td></tr><tr><td class="vocab-uk">так (tak)</td><td class="vocab-ipa">/tɑk/</td><td class="vocab-en">yes</td><td class="vocab-note">Affirmative answer</td></tr><tr><td class="vocab-uk">ні (ni)</td><td class="vocab-ipa">/nʲi/</td><td class="vocab-en">no</td><td class="vocab-note">Negative answer</td></tr><tr><td class="vocab-uk">не (ne)</td><td class="vocab-ipa">/nɛ/</td><td class="vocab-en">not</td><td class="vocab-note">Negation particle</td></tr><tr><td class="vocab-uk">ніколи (nikoly)</td><td class="vocab-ipa">/nʲiˈkɔlɪ/</td><td class="vocab-en">never</td><td class="vocab-note">Uses double negation</td></tr><tr><td class="vocab-uk">завжди (zavzhdy)</td><td class="vocab-ipa">/ˈzɑʋʒdɪ/</td><td class="vocab-en">always</td><td class="vocab-note">Frequency adverb</td></tr><tr><td class="vocab-uk">часто (chasto)</td><td class="vocab-ipa">/ˈtʃɑstɔ/</td><td class="vocab-en">often</td><td class="vocab-note">Frequency adverb</td></tr><tr><td class="vocab-uk">іноді (inodi)</td><td class="vocab-ipa">/iˈnɔdʲi/</td><td class="vocab-en">sometimes</td><td class="vocab-note">Frequency adverb</td></tr><tr><td class="vocab-uk">рідко (ridko)</td><td class="vocab-ipa">/ˈrʲidkɔ/</td><td class="vocab-en">rarely</td><td class="vocab-note">Frequency adverb</td></tr><tr><td class="vocab-uk">звичайно (zvychayno)</td><td class="vocab-ipa">/zvɪˈtʃɑjnɔ/</td><td class="vocab-en">usually, of course</td><td class="vocab-note">Frequency/agreement</td></tr></tbody>
+            <tbody></tbody>
           </table>
         </div>
       </div>
@@ -1083,8 +830,8 @@ footer {
   </main><footer>Module 07 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"quiz","title":"Question Word Recognition","data":{"type":"quiz","questions":[{"question":"You want to know a person's name. Which question do you ask?","options":["Хто це?","Де це?","Що це?","Коли?"],"correctIndex":0,"explanation":"\"Хто\" asks about people!"},{"question":"You want to know a location. Which question word do you use?","options":["Хто?","Де?","Що?","Чому?"],"correctIndex":1,"explanation":"\"Де\" asks about places!"},{"question":"You want to know the time. Which question word do you use?","options":["Де?","Чому?","Коли?","Як?"],"correctIndex":2,"explanation":"\"Коли\" asks about time!"},{"question":"You want to know a reason. Which question word do you use?","options":["Як?","Що?","Коли?","Чому?"],"correctIndex":3,"explanation":"\"Чому\" asks \"why\"!"},{"question":"How do you make a statement into a yes/no question?","options":["Add \"чи\" at the beginning","Change the word order","Add \"не\" at the end","Remove the verb"],"correctIndex":0,"explanation":"Чи turns any statement into a question!"},{"question":"What does \"не\" do in a sentence?","options":["Makes it a question","Makes it negative","Makes it past tense","Makes it formal"],"correctIndex":1,"explanation":"Не negates the verb!"},{"question":"What is special about \"ніколи\"?","options":["It means \"always\"","It's only used in questions","It requires double negation with \"не\"","It changes the word order"],"correctIndex":2,"explanation":"Ніколи не = never!"},{"question":"What does \"Як справи?\" mean?","options":["Where are you?","Who are you?","How are you?","When are you?"],"correctIndex":2,"explanation":"Як = how!"},{"question":"Which form of \"який\" matches feminine nouns?","options":["який","яка","яке","які"],"correctIndex":1,"explanation":"Яка for feminine nouns!"},{"question":"What is \"Так\" in English?","options":["Yes","No","Maybe","Why"],"correctIndex":0,"explanation":"Так = yes, Ні = no!"},{"question":"How do you say \"I don't know\" in Ukrainian?","options":["Я знаю","Я не знаю","Я ні знаю","Я чи знаю"],"correctIndex":1,"explanation":"Add \"не\" before the verb!"},{"question":"What does \"Звідки ти?\" ask?","options":["Where are you?","Where are you going?","Where are you from?","When are you?"],"correctIndex":2,"explanation":"Звідки asks about origin!"}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-1","type":"match-up","title":"Question Words and Meanings","data":{"type":"match-up","pairs":[{"left":"що","right":"what"},{"left":"хто","right":"who"},{"left":"де","right":"where"},{"left":"коли","right":"when"},{"left":"чому","right":"why"},{"left":"як","right":"how"},{"left":"скільки","right":"how much/many"},{"left":"куди","right":"where to"},{"left":"звідки","right":"where from"},{"left":"який","right":"which/what kind"},{"left":"чи","right":"whether (yes/no)"},{"left":"ні","right":"no"}],"shuffleRight":true}},{"id":"activity-2","type":"group-sort","title":"Frequency and Question Words","data":{"type":"group-sort","groups":[{"id":"frequency-adverbs","name":"Frequency Adverbs","items":["завжди","часто","звичайно","рідко","іноді","ніколи"]},{"id":"question-words","name":"Question Words","items":["що","хто","де","коли","чому","як"]}],"shuffleItems":true}},{"id":"activity-3","type":"true-false","title":"Question and Negation Rules","data":{"type":"true-false","statements":[{"statement":"Чи is required to form all questions in Ukrainian.","isTrue":false,"explanation":"False! Чи is optional. Rising intonation alone can form a question."},{"statement":"To negate a sentence, add \"не\" before the verb.","isTrue":true,"explanation":"Correct! Я читаю → Я не читаю."},{"statement":"\"Ніколи\" requires double negation with \"не\".","isTrue":true,"explanation":"Correct! Я ніколи не читаю."},{"statement":"The question word \"який\" never changes form.","isTrue":false,"explanation":"False! Який changes to яка (f) and яке (n)."},{"statement":"\"Так\" means \"yes\" and \"ні\" means \"no\".","isTrue":true,"explanation":"Correct! The basics of Ukrainian answers."},{"statement":"Word order must change to form a question.","isTrue":false,"explanation":"False! Word order stays the same. Just add чи or use rising intonation."},{"statement":"\"Де\" asks about location.","isTrue":true,"explanation":"Correct! Де ти? = Where are you?"},{"statement":"\"Куди\" and \"де\" mean the same thing.","isTrue":false,"explanation":"False! Де = where (location), Куди = where to (direction)."},{"statement":"You can often skip \"чи\" in casual speech.","isTrue":true,"explanation":"Correct! Just use rising intonation."},{"statement":"\"Завжди\" means \"never\".","isTrue":false,"explanation":"False! Завжди = always, Ніколи = never."},{"statement":"\"Чому ні?\" means \"Why not?\"","isTrue":true,"explanation":"Correct! A common phrase to express agreement."},{"statement":"Question words go at the beginning of the sentence.","isTrue":true,"explanation":"Correct! Що ти робиш? Де ти живеш?"}]}},{"id":"activity-4","type":"fill-blank","title":"Complete with Question Words","data":{"type":"fill-blank","items":[{"prompt":"___ ти робиш? — Читаю.","answer":"Що","options":["Що","Хто","Де","Коли"]},{"prompt":"___ це? — Це мій друг Олег.","answer":"Хто","options":["Хто","Що","Де","Як"]},{"prompt":"___ ти живеш? — У Львові.","answer":"Де","options":["Де","Куди","Звідки","Коли"]},{"prompt":"___ ти працюєш? — Зранку.","answer":"Коли","options":["Коли","Де","Чому","Як"]},{"prompt":"___ справи? — Добре, дякую!","answer":"Як","options":["Як","Що","Хто","Де"]},{"prompt":"___ ти не читаєш? — Я втомився.","answer":"Чому","options":["Чому","Як","Де","Коли"]},{"prompt":"___ це коштує? — 50 гривень.","answer":"Скільки","options":["Скільки","Що","Де","Як"]},{"prompt":"___ ти? — З України.","answer":"Звідки","options":["Звідки","Куди","Де","Хто"]},{"prompt":"___ ти йдеш? — До магазину.","answer":"Куди","options":["Куди","Де","Звідки","Коли"]},{"prompt":"___ це книга? — Це українська книга.","answer":"Яка","options":["Яка","Який","Яке","Де"]},{"prompt":"Вона ___ працює.","answer":"не","options":["не","ні","так","чи"]},{"prompt":"___ ти знаєш? — Так, я знаю.","answer":"Чи","options":["Чи","Що","Де","Як"]}]}},{"id":"activity-5","type":"match-up","title":"Positive and Negative Pairs","data":{"type":"match-up","pairs":[{"left":"Я читаю.","right":"Я не читаю."},{"left":"Він працює.","right":"Він не працює."},{"left":"Ми знаємо.","right":"Ми не знаємо."},{"left":"Вона говорить.","right":"Вона не говорить."},{"left":"Ти слухаєш.","right":"Ти не слухаєш."},{"left":"Вони розуміють.","right":"Вони не розуміють."},{"left":"Я завжди читаю.","right":"Я ніколи не читаю."},{"left":"Вона часто працює.","right":"Вона рідко працює."},{"left":"Ми завжди знаємо.","right":"Ми іноді не знаємо."},{"left":"Він завжди говорить.","right":"Він ніколи не говорить."},{"left":"Ти часто слухаєш.","right":"Ти не слухаєш."},{"left":"Вони завжди розуміють.","right":"Вони не розуміють."}],"shuffleRight":true}},{"id":"activity-6","type":"anagram","title":"Question Word Scramble","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["к","о","л","и"],"answer":"коли","translation":"when"},{"letters":["щ","о"],"answer":"що","translation":"what"},{"letters":["д","е"],"answer":"де","translation":"where"},{"letters":["х","т","о"],"answer":"хто","translation":"who"},{"letters":["ч","о","м","у"],"answer":"чому","translation":"why"},{"letters":["я","к"],"answer":"як","translation":"how"},{"letters":["к","у","д","и"],"answer":"куди","translation":"where to"},{"letters":["с","к","і","л","ь","к","и"],"answer":"скільки","translation":"how much"},{"letters":["з","в","і","д","к","и"],"answer":"звідки","translation":"where from"},{"letters":["я","к","и","й"],"answer":"який","translation":"which"},{"letters":["н","і","к","о","л","и"],"answer":"ніколи","translation":"never"},{"letters":["з","а","в","ж","д","и"],"answer":"завжди","translation":"always"}]}},{"id":"activity-7","type":"fill-blank","title":"Add Negation","data":{"type":"fill-blank","items":[{"prompt":"Я ___ розумію українську.","answer":"не","options":["не","ні","так","чи"]},{"prompt":"Вона ___ читає. (She never reads)","answer":"ніколи не","options":["ніколи не","завжди","часто","іноді"]},{"prompt":"Ми ___ знаємо цю людину.","answer":"не","options":["не","ні","так","чи"]},{"prompt":"Він ___ говорить англійською.","answer":"не","options":["не","ні","так","чи"]},{"prompt":"Вони ___ працюють у неділю.","answer":"не","options":["не","ні","так","чи"]},{"prompt":"___, дякую. Я не хочу.","answer":"Ні","options":["Ні","Так","Чому","Де"]},{"prompt":"Я ___ запізнююся. (I never am late)","answer":"ніколи не","options":["ніколи не","завжди","часто","рідко"]},{"prompt":"___, я читаю цю книгу.","answer":"Так","options":["Так","Ні","Не","Чи"]},{"prompt":"Вона ___ працює тут.","answer":"рідко","options":["рідко","ніколи не","завжди","не"]},{"prompt":"Ми ___ гуляємо в парку.","answer":"часто","options":["часто","ніколи","не","рідко не"]},{"prompt":"Ти ___ снідаєш? (Do you eat breakfast?)","answer":"чи","options":["чи","не","ні","як"]},{"prompt":"Я ___ п'ю каву вранці.","answer":"іноді","options":["іноді","ніколи не","чи","де"]}]}}];
-    const vocabData = [{"uk":"що (shcho)","translit":"","en":"what","note":"Question word"},{"uk":"хто (khto)","translit":"","en":"who","note":"Question word"},{"uk":"де (de)","translit":"","en":"where","note":"Location question"},{"uk":"куди (kudy)","translit":"","en":"where to","note":"Direction question"},{"uk":"звідки (zvidky)","translit":"","en":"where from","note":"Origin question"},{"uk":"коли (koly)","translit":"","en":"when","note":"Time question"},{"uk":"чому (chomu)","translit":"","en":"why","note":"Reason question"},{"uk":"як (yak)","translit":"","en":"how","note":"Manner question"},{"uk":"скільки (skilky)","translit":"","en":"how much/many","note":"Quantity question"},{"uk":"який (yakyy)","translit":"","en":"which, what kind","note":"Changes: яка (f), яке (n)"},{"uk":"чи (chy)","translit":"","en":"whether (question particle)","note":"Makes yes/no questions"},{"uk":"так (tak)","translit":"","en":"yes","note":"Affirmative answer"},{"uk":"ні (ni)","translit":"","en":"no","note":"Negative answer"},{"uk":"не (ne)","translit":"","en":"not","note":"Negation particle"},{"uk":"ніколи (nikoly)","translit":"","en":"never","note":"Uses double negation"},{"uk":"завжди (zavzhdy)","translit":"","en":"always","note":"Frequency adverb"},{"uk":"часто (chasto)","translit":"","en":"often","note":"Frequency adverb"},{"uk":"іноді (inodi)","translit":"","en":"sometimes","note":"Frequency adverb"},{"uk":"рідко (ridko)","translit":"","en":"rarely","note":"Frequency adverb"},{"uk":"звичайно (zvychayno)","translit":"","en":"usually, of course","note":"Frequency/agreement"}];
+    const activitiesData = [{"id":"activity-0","type":"match-up","title":"Question Words","data":{"type":"match-up","pairs":[{"left":"Хто?","right":"Person (Ivan, Olena)"},{"left":"Де?","right":"Place (Kyiv, Home)"},{"left":"Коли?","right":"Time (Tomorrow, Morning)"},{"left":"Чому?","right":"Reason (Because...)"},{"left":"Скільки?","right":"Number (10, 100)"},{"left":"Як?","right":"Manner (Fast, Slow)"},{"left":"Що?","right":"Thing/Action (Book, Reading)"},{"left":"Куди?","right":"Direction (To the park)"},{"left":"Звідки?","right":"Origin (From Ukraine)"},{"left":"Чи?","right":"Yes/No (Is it?)"},{"left":"Який?","right":"Description (Good, Bad)"},{"left":"Чий?","right":"Possession (Mine, Yours)"}],"shuffleRight":true}},{"id":"activity-1","type":"fill-blank","title":"Complete the Question","data":{"type":"fill-blank","items":[{"prompt":"___ це? — Це мій брат. (Person)","answer":"Хто","options":["Хто","Що","Де","Куди"]},{"prompt":"___ ти живеш? — У Лондоні. (Location)","answer":"Де","options":["Де","Куди","Хто","Чому"]},{"prompt":"___ це коштує? — 100 гривень. (Quantity)","answer":"Скільки","options":["Скільки","Як","Коли","Що"]},{"prompt":"___ твої справи? — Добре! (Manner/State)","answer":"Як","options":["Як","Що","Хто","Де"]},{"prompt":"___ ти йдеш? — У парк. (Direction)","answer":"Куди","options":["Куди","Де","Коли","Чому"]},{"prompt":"___ ти робиш? — Я читаю. (Action)","answer":"Що","options":["Що","Де","Коли","Хто"]},{"prompt":"___ це книга? — Це моя книга. (Possession - implicit)","answer":"Чия","options":["Чия","Хто","Де","Як"]},{"prompt":"___ ти не спиш? — Я працюю. (Reason)","answer":"Чому","options":["Чому","Що","Де","Куди"]},{"prompt":"___ ми йдемо? — Додому. (Direction)","answer":"Куди","options":["Куди","Де","Коли","Як"]},{"prompt":"___ ти? — Я тут. (Location)","answer":"Де","options":["Де","Куди","Хто","Що"]},{"prompt":"___ це? — Це стіл. (Object)","answer":"Що","options":["Що","Хто","Де","Як"]},{"prompt":"___ ти? — Я Іван. (Person/Identity)","answer":"Хто","options":["Хто","Що","Де","Як"]}]}},{"id":"activity-2","type":"unjumble","title":"Build the Question","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["робиш","ти","Що","?"],"answer":"Що ти робиш?","translation":"What are you doing?"},{"words":["не","Чому","читаєш","ти","?"],"answer":"Чому ти не читаєш?","translation":"Why are you not reading?"},{"words":["знаємо","ми","Хто","?"],"answer":"Хто ми знаємо?","translation":"Who do we know?"},{"words":["живе","Де","він","?"],"answer":"Де він живе?","translation":"Where does he live?"},{"words":["коштує","Скільки","це","?"],"answer":"Скільки це коштує?","translation":"How much does this cost?"},{"words":["не","Я","знаю"],"answer":"Я не знаю."},{"words":["розумію","не","Я"],"answer":"Я не розумію."},{"words":["тут","Ми","не"],"answer":"Ми не тут."},{"words":["читаєш","Ти","?"],"answer":"Ти читаєш?"},{"words":["йде","Він","куди","?"],"answer":"Куди він йде?"},{"words":["це","Що","?"],"answer":"Що це?"},{"words":["хто","Це","?"],"answer":"Хто це?"}]}},{"id":"activity-3","type":"anagram","title":"Scrambled Questions","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["о","т","х"],"answer":"хто","translation":"Who?"},{"letters":["о","щ"],"answer":"що","translation":"What?"},{"letters":["е","д"],"answer":"де","translation":"Where?"},{"letters":["л","и","о","к"],"answer":"коли","translation":"When?"},{"letters":["о","ч","м","у"],"answer":"чому","translation":"Why?"},{"letters":["и","к","л","і","с","ь","к"],"answer":"скільки","translation":"How much?"},{"letters":["д","и","к","у"],"answer":"куди","translation":"Where to?"},{"letters":["к","я"],"answer":"як","translation":"How?"},{"letters":["в","і","д","з","и","к"],"answer":"звідки","translation":"Where from? - *challenging!*"},{"letters":["ч","и"],"answer":"чи","translation":"Or / Question particle"},{"letters":["й","и","ч"],"answer":"чий","translation":"Whose? m"},{"letters":["а","к","я"],"answer":"яка","translation":"Which? f"}]}},{"id":"activity-4","type":"quiz","title":"Logic Check","data":{"type":"quiz","questions":[{"question":"Де ти?","options":["Я вдома.","Я обідаю.","Це стіл."],"correctIndex":0,"explanation":""},{"question":"Куди ти йдеш?","options":["У банк.","У банку.","Я читаю."],"correctIndex":0,"explanation":""},{"question":"Скільки коштує кава?","options":["40 гривень.","Дуже смачна.","Я люблю каву."],"correctIndex":0,"explanation":""},{"question":"Чому ти не їси?","options":["Я не хочу.","Я їм.","Це суп."],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-5","type":"true-false","title":"Grammar Rules","data":{"type":"true-false","statements":[{"statement":"\"Де\" means \"Where\" (Location).","isTrue":true,"explanation":"Correct."},{"statement":"\"Куди\" means \"When\".","isTrue":false,"explanation":"Incorrect. \"Куди\" means \"Where to\" (Direction). \"Коли\" is \"When\"."},{"statement":"To negate a verb, put \"не\" before it.","isTrue":true,"explanation":"Correct. \"Не знаю\"."},{"statement":"Double negatives (like \"Ніколи не\") are forbidden in Ukrainian.","isTrue":false,"explanation":"Incorrect. They are REQUIRED! \"Я ніколи не читаю\"."},{"statement":"\"Чи\" is used to mark a Yes/No question.","isTrue":true,"explanation":"Correct."},{"statement":"\"I know nothing\" translates to \"Я знаю нічого\".","isTrue":false,"explanation":"Incorrect. Double negative required: \"Я нічого не знаю\"."},{"statement":"\"Чому\" means \"Why\".","isTrue":true,"explanation":"Correct."},{"statement":"\"Хто\" is for things.","isTrue":false,"explanation":"Incorrect. \"Хто\" is for people. \"Що\" is for things."},{"statement":"\"Я не розумію\" is correct.","isTrue":true,"explanation":"Correct."},{"statement":"\"Як\" means \"Who\".","isTrue":false,"explanation":"Incorrect. \"Як\" means \"How\"."},{"statement":"\"Коли\" refers to time.","isTrue":true,"explanation":"Correct."},{"statement":"You can drop \"не\" in negative sentences.","isTrue":false,"explanation":"Incorrect. Never!"}]}},{"id":"activity-6","type":"group-sort","title":"Question vs Statement","data":{"type":"group-sort","groups":[{"id":"question","name":"Question","items":["Ти знаєш?","Чи це правда?","Що ти робиш?","Де він?","Ми йдемо?","Ти тут?","Це кіт?","Хто там?","Що це?","Куди ми йдемо?"],"nameUk":"?"},{"id":"statement","name":"Statement","items":["Ти знаєш.","Це правда.","Ти робиш це.","Він тут.","Ми йдемо.","Це кіт.","Ми вдома.","Я знаю."],"nameUk":"."},{"id":"statement","name":"Statement","items":["Ти знаєш.","Це правда.","Ти робиш це.","Він тут.","Ми йдемо."],"nameUk":"."}],"shuffleItems":true}},{"id":"activity-7","type":"match-up","title":"Frequency Adverbs","data":{"type":"match-up","pairs":[{"left":"Завжди","right":"Always"},{"left":"Часто","right":"Often"},{"left":"Іноді","right":"Sometimes"},{"left":"Рідко","right":"Rarely"},{"left":"Ніколи","right":"Never"},{"left":"Звичайно","right":"Of course"}],"shuffleRight":true}}];
+    const vocabData = [];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1144,6 +891,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2408,6 +2181,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

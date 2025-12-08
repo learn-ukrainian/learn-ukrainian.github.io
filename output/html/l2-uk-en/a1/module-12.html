@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -481,14 +521,15 @@ footer {
     <h1>Module 12: The Accusative II - People</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Quiz</button>
-      <button class="nav-tab" data-section="activity-1">2. Match</button>
-      <button class="nav-tab" data-section="activity-2">3. Sort</button>
-      <button class="nav-tab" data-section="activity-3">4. T/F</button>
-      <button class="nav-tab" data-section="activity-4">5. Fill</button>
-      <button class="nav-tab" data-section="activity-5">6. Match</button>
-      <button class="nav-tab" data-section="activity-6">7. Spell</button>
-      <button class="nav-tab" data-section="activity-7">8. Fill</button>
+      <button class="nav-tab" data-section="activity-0">1. Sort</button>
+      <button class="nav-tab" data-section="activity-1">2. Fill</button>
+      <button class="nav-tab" data-section="activity-2">3. Match</button>
+      <button class="nav-tab" data-section="activity-3">4. translate</button>
+      <button class="nav-tab" data-section="activity-4">5. Quiz</button>
+      <button class="nav-tab" data-section="activity-5">6. Fill</button>
+      <button class="nav-tab" data-section="activity-6">7. Fill</button>
+      <button class="nav-tab" data-section="activity-7">8. Order</button>
+      <button class="nav-tab" data-section="activity-8">9. Spell</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -498,586 +539,294 @@ footer {
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.2</span>
         <h2 style="font-size:2rem;margin:0.5rem 0">The Accusative II - People</h2>
-        <p style="color:var(--text-muted)">Direct Objects: Animate Nouns</p>
+        <p style="color:var(--text-muted)">The Soul Detector</p>
       </div>
       
-    <div class="card section-content">
-      <h3>Warm Up</h3>
-      <div class="md-content"><p>In Module 11, you learned that masculine inanimate nouns don't change: "Я бачу стіл." But what happens when you see a person? In Ukrainian, <strong>animate</strong> (living) nouns follow a special rule!</p>
-<hr /></div>
-    </div>
-  
-    <div class="card section-content">
-      <h3>Lesson</h3>
-      <div class="md-content"><h2 id="theanimaterule">The Animate Rule</h2>
-<p>For <strong>animate nouns</strong> (people, animals), masculine nouns <strong>do</strong> change in the accusative—they take the <strong>genitive</strong> ending!</p>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Nominative</th>
-<th>Accusative</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Inanimate (m)</td>
-<td>стіл</td>
-<td>стіл (no change)</td>
-</tr>
-<tr>
-<td><strong>Animate (m)</strong></td>
-<td>студент</td>
-<td>студент<strong>а</strong> (= genitive!)</td>
-</tr>
-</tbody>
-</table>
-<p>This is one of the most important rules in Ukrainian grammar:</p>
+    <div class="card section-intro">
+      <h3>📖 Introduction</h3>
+      <div class="md-content"><h2 id="warmup">warm-up</h2>
+<p><strong>The Soul Detector</strong></p>
+<p>In the last module, you learned that <strong>tables</strong> and <strong>telephones</strong> are invisible to the laser beam.<br />
+"Я бачу телефон" (I see the phone). No change.<br />
+Why? Because they have no soul. They are just things.</p>
+<p>But what if you point the laser at a person?<br />
+A person has a soul. A person reacts.<br />
+In Ukrainian grammar, <strong>Masculine People</strong> are highly reactive.<br />
+If you do something to a man (see him, love him, ask him), you must mark him. You cannot treat him like a table.</p>
+<ul>
+<li><strong>Non-Living:</strong> Я бачу паспорт. (No change).</li>
+<li><strong>Living:</strong> Я бачу <strong>студента</strong>. (Change!).</li>
+</ul>
+<p>This is the <strong>Animate Accusative</strong>.</p>
+<h2 id="presentation">presentation</h2>
+<h3 id="section1themasculinemark">Section 1: The Masculine Mark (+А)</h3>
+<p>If a Masculine noun refers to a person (or an animal), you add the ending <strong>-А</strong>.<br />
+This makes it look like the Genitive case (which we will learn later), but for now, just think: <strong>Add -A for Life.</strong></p>
+<p><strong>The Pattern:</strong></p>
+<ul>
+<li>Cononants add <strong>-а</strong>.</li>
+<li>Soft signs (-ь) change to <strong>-я</strong>.</li>
+<li>-Й changes to <strong>-я</strong>.</li>
+</ul>
+<p><strong>Examples:</strong></p>
+<ul>
+<li><strong>Студент</strong> ➡️ Я бачу <strong>студента</strong>.</li>
+<li><strong>Брат</strong> ➡️ Я маю <strong>брата</strong>.</li>
+<li><strong>Син</strong> (Son) ➡️ Вона любить <strong>сина</strong>.</li>
+<li><strong>Лікар</strong> ➡️ Ми шукаємо <strong>лікаря</strong> (Soft R).</li>
+<li><strong>Андрій</strong> ➡️ Я знаю <strong>Андрія</strong>.</li>
+</ul>
 <blockquote>
-  <p><strong>Masculine animate accusative = genitive</strong></p>
-  <p>💡 <strong>Did You Know?</strong><br />
-  Why does this rule exist? Historically, it developed to distinguish "I see a man" from "a man sees" when word order was very free. The -а ending clearly marks the object!</p>
+  <p>💡 <strong>Deep Dive: The Logic</strong><br />
+  Why mark the object?<br />
+  In "Boris hears Ivan", both are masculine.<br />
+  If grammar didn't change endings, "Boris hear Ivan" could mean "Ivan hears Boris" if word order was loose.<br />
+  By saying "Boris hears Ivan<strong>a</strong>", we know 100% that Ivan is the target, no matter where he stands in the sentence.</p>
 </blockquote>
-<hr />
-<h2 id="accusativeendingsanimatenouns">Accusative Endings: Animate Nouns</h2>
-<table>
-<thead>
-<tr>
-<th>Gender</th>
-<th>Nominative</th>
-<th>Accusative</th>
-<th>Change</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Masculine consonant</td>
-<td>студент</td>
-<td>студент<strong>а</strong></td>
-<td>+ -а</td>
-</tr>
-<tr>
-<td>Masculine -а</td>
-<td>тато</td>
-<td>тат<strong>у</strong></td>
-<td>-а → -у</td>
-</tr>
-<tr>
-<td>Feminine -а</td>
-<td>студентка</td>
-<td>студентк<strong>у</strong></td>
-<td>-а → -у (same as inanimate)</td>
-</tr>
-<tr>
-<td>Feminine -я</td>
-<td>Марія</td>
-<td>Марі<strong>ю</strong></td>
-<td>-я → -ю</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Key point:</strong> Feminine animate nouns follow the same pattern as feminine inanimate—only masculine animate is special!</p>
-<hr />
-<h2 id="commonpeoplevocabulary">Common People Vocabulary</h2>
-<h3 id="friendsrelations">Friends &amp; Relations</h3>
-<table>
-<thead>
-<tr>
-<th>Nominative</th>
-<th>Accusative</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>друг</td>
-<td>друга</td>
-<td>friend (m)</td>
-</tr>
-<tr>
-<td>подруга</td>
-<td>подругу</td>
-<td>friend (f)</td>
-</tr>
-<tr>
-<td>колега</td>
-<td>колегу</td>
-<td>colleague</td>
-</tr>
-<tr>
-<td>сусід</td>
-<td>сусіда</td>
-<td>neighbor (m)</td>
-</tr>
-<tr>
-<td>сусідка</td>
-<td>сусідку</td>
-<td>neighbor (f)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="professions">Professions</h3>
-<table>
-<thead>
-<tr>
-<th>Nominative</th>
-<th>Accusative</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>лікар</td>
-<td>лікаря</td>
-<td>doctor (m)</td>
-</tr>
-<tr>
-<td>лікарка</td>
-<td>лікарку</td>
-<td>doctor (f)</td>
-</tr>
-<tr>
-<td>вчитель</td>
-<td>вчителя</td>
-<td>teacher (m)</td>
-</tr>
-<tr>
-<td>вчителька</td>
-<td>вчительку</td>
-<td>teacher (f)</td>
-</tr>
-<tr>
-<td>студент</td>
-<td>студента</td>
-<td>student (m)</td>
-</tr>
-<tr>
-<td>студентка</td>
-<td>студентку</td>
-<td>student (f)</td>
-</tr>
-</tbody>
-</table>
+<h3 id="section2thedaddyrulemasculinea">Section 2: The "Daddy" Rule (Masculine -a)</h3>
+<p>Some masculine words end in <strong>-а</strong> (like <strong>Тато</strong> - Dad, or names like <strong>Микола</strong>).<br />
+Grammatically, they dress like women. They wear the "-a" ending.<br />
+So, they accept the Feminine rule!</p>
+<ul>
+<li>Rule: <strong>-А</strong> ➡️ <strong>-У</strong>.</li>
+</ul>
+<p><strong>Examples:</strong></p>
+<ul>
+<li><p><strong>Тато</strong> (Dad) ➡️ Я люблю <strong>тата</strong>? NO! ➡️ Я люблю <strong>тата</strong> (Wait, Genitive?)<br />
+<em>Correction:</em> Masculine -a nouns in Accusative follow the Feminine Pattern (-a -&gt; -u).</p></li>
+<li><p>Nominative: <strong>Тато</strong>.</p></li>
+<li><p>Accusative: <strong>Тата</strong>? No, let's check standard grammar.</p></li>
+<li><p><em>Standard Ukrainian:</em> Тато (Nom) -&gt; Тата (Acc/Gen).</p></li>
+<li><p><em>Wait.</em> Feminine -a (Mama) -&gt; Mamu.</p></li>
+<li><p><em>Masculine -a</em> (Mikola) -&gt; Mikolu. (Accusative).</p></li>
+<li><p><em>Dad (Tato)</em>… actually, ends in -o.</p></li>
+<li><p><em>Grandpa (Did)</em> -&gt; Dida.</p></li>
+<li><p><em>Colleague (Koleha - m)</em> -&gt; Kolehu.</p>
+<p>Let's stick to the clear ones:</p></li>
+<li><p><strong>Колега</strong> (Colleague - m) ➡️ Я бачу <strong>колегу</strong>.</p></li>
+<li><p><strong>Микола</strong> (Name) ➡️ Я бачу <strong>Миколу</strong>.</p></li>
+<li><p><strong>Тато</strong>… historically -o nouns are 2nd declension, but <em>Tato</em> is often treated as mixed.</p></li>
+<li><p>Actually, <strong>Тато</strong> in Accusative is <strong>Тата</strong>. (Like inanimate neuter? No, animate masculine).</p></li>
+<li><p>2nd Declension (Hard): Bat'ko -&gt; Bat'ka. Syn -&gt; Syna. Tato -&gt; Tata.</p></li>
+<li><p>Ah, <strong>Тато</strong> ends in -o, not -a. It belongs to 2nd declension (mostly).</p></li>
+<li><p>Let's focus on <strong>-a</strong> nouns: <strong>Колега</strong>, <strong>Микола</strong>.</p></li>
+<li><p>And normal masculines: <strong>Друг</strong> -&gt; <strong>Друга</strong>.</p></li>
+</ul>
+<h3 id="section3femininepeoplesameoldstory">Section 3: Feminine People (Same Old Story)</h3>
+<p>Women are consistent.<br />
+The rule you learned for "Pizza" applies to "Mama".</p>
+<ul>
+<li><strong>-А</strong> ➡️ <strong>-У</strong>.</li>
+<li><strong>-Я</strong> ➡️ <strong>-Ю</strong>.</li>
+</ul>
+<p><strong>Examples:</strong></p>
+<ul>
+<li><strong>Мама</strong> ➡️ Я люблю <strong>маму</strong>.</li>
+<li><strong>Сестра</strong> ➡️ Я маю <strong>сестру</strong>.</li>
+<li><strong>Подруга</strong> (Girlfriend/Friend-f) ➡️ Я чекаю <strong>подругу</strong>.</li>
+<li><strong>Марія</strong> ➡️ Я знаю <strong>Марію</strong>.</li>
+</ul>
+<h3 id="section4whovswhat">Section 4: Who vs. What?</h3>
+<p>Now you have two question words.</p>
+<ul>
+<li><p><strong>Що?</strong> (What?) -&gt; For Things (Inanimate).</p></li>
+<li><p><strong>Кого?</strong> (Whom?) -&gt; For People (Animate).</p></li>
+<li><p><strong>Q:</strong> Що ти бачиш?</p>
+<ul>
+<li><strong>A:</strong> Автобус. (No change).</li></ul></li>
+<li><p><strong>Q:</strong> Кого ти бачиш?</p>
+<ul>
+<li><strong>A:</strong> Студент<strong>а</strong>. (Change!).</li></ul></li>
+</ul>
 <blockquote>
-  <p>🌍 <strong>Real World</strong><br />
-  Ukrainian has distinct male and female forms for most professions. This isn't just grammar—it's cultural. Using the correct form shows respect and acknowledgment of the person's identity.</p>
+  <p>⚡ <strong>Language Link: Him and Her</strong><br />
+  English does this too!<br />
+  You don't say "I see he". You say "I see <strong>him</strong>".<br />
+  You don't say "I see she". You say "I see <strong>her</strong>".<br />
+  English only kept this "Animate Accusative" for pronouns. Ukrainian kept it for all masculine people.</p>
+  <ul>
+  <li>He -&gt; Him (Він -&gt; Його).</li>
+  <li>Brother -&gt; Brother + a (Брат -&gt; Брата).</li>
+  </ul>
 </blockquote>
-<h3 id="serviceworkers">Service Workers</h3>
-<table>
-<thead>
-<tr>
-<th>Nominative</th>
-<th>Accusative</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>офіціант</td>
-<td>офіціанта</td>
-<td>waiter</td>
-</tr>
-<tr>
-<td>офіціантка</td>
-<td>офіціантку</td>
-<td>waitress</td>
-</tr>
-<tr>
-<td>продавець</td>
-<td>продавця</td>
-<td>salesperson (m)</td>
-</tr>
-<tr>
-<td>продавчиня</td>
-<td>продавчиню</td>
-<td>salesperson (f)</td>
-</tr>
-<tr>
-<td>водій</td>
-<td>водія</td>
-<td>driver</td>
-</tr>
-<tr>
-<td>пасажир</td>
-<td>пасажира</td>
-<td>passenger</td>
-</tr>
-</tbody>
-</table>
-<h3 id="other">Other</h3>
-<table>
-<thead>
-<tr>
-<th>Nominative</th>
-<th>Accusative</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>гість</td>
-<td>гостя</td>
-<td>guest</td>
-</tr>
-<tr>
-<td>директор</td>
-<td>директора</td>
-<td>director</td>
-</tr>
-<tr>
-<td>менеджер</td>
-<td>менеджера</td>
-<td>manager</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="usinganimateaccusative">Using Animate Accusative</h2>
-<h3 id="patterniseeperson">Pattern: "I see [person]"</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Я бачу друга.</td>
-<td>I see a friend.</td>
-</tr>
-<tr>
-<td>Вона бачить студента.</td>
-<td>She sees the student.</td>
-</tr>
-<tr>
-<td>Ми бачимо лікаря.</td>
-<td>We see the doctor.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="patterniknowperson">Pattern: "I know [person]"</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Я знаю вчителя.</td>
-<td>I know the teacher.</td>
-</tr>
-<tr>
-<td>Вона знає офіціанта.</td>
-<td>She knows the waiter.</td>
-</tr>
-<tr>
-<td>Ти знаєш директора?</td>
-<td>Do you know the director?</td>
-</tr>
-</tbody>
-</table>
+<h3 id="section5theloveverbkohatyvsliubyty">Section 5: The "Love" Verb (Kohaty vs Liubyty)</h3>
+<p>In the vocabulary list, you will see <strong>Кохати</strong> (To love).<br />
+Wait, didn't we learn <strong>Любити</strong>?</p>
+<ul>
+<li><strong>Любити:</strong> General love. I love pizza, I love mom, I love football.</li>
+<li><strong>Кохати:</strong> Romantic love. Only for a partner. Passion.</li>
+<li>"Я люблю борщ" (Correct).</li>
+<li>"Я кохаю борщ" (Very weird! Unless you want to marry the soup).</li>
+<li>"Я кохаю тебе" (I love you - romantic).</li>
+</ul>
+<h3 id="section6theprofessionalsearch">Section 6: The Professional Search</h3>
+<p>When you look for a professional, you use the Accusative.<br />
+Remember that even if you don't know <em>which</em> doctor you want, grammar treats the concept of "Doctor" as a living, breathing goal.</p>
+<ul>
+<li>"Я шукаю <strong>лікарЯ</strong>" (I am looking for a doctor).</li>
+<li>"Я шукаю <strong>водіЯ</strong>" (I am looking for a driver).</li>
+<li>"Ми шукаємо <strong>директорА</strong>" (We are looking for the director).</li>
+</ul>
+<p>You are not looking for a "Doctor Object" (like a coat). You are looking for a "Doctor Person".<br />
+This distinction is crucial. It shows respect to the profession.</p>
 <blockquote>
-  <p>🎬 <strong>Pop Culture Moment</strong><br />
-  In the Ukrainian dub of The Matrix, when Neo meets Morpheus, he says "Я бачу Морфеуса" — with the accusative ending -а, because Morpheus is a person (animate)!</p>
+  <p>🕵️ <strong>Deep Dive: The Waiter Paradox</strong><br />
+  If you scream "Waiter!" (Офіціант!), you use the <strong>Vocative Case</strong> (which we lightly touched on).<br />
+  But if you ask "Where is the waiter?", you use Nominative.<br />
+  And if you say "I see the waiter", you use Accusative: "Я бачу <strong>офіціантА</strong>".<br />
+  Always treat service staff as Animate! "Я бачу офіціант" would imply he is a robot.</p>
+  <p>🌍 <strong>Culture Corner: The Guest</strong><br />
+  In Ukraine, a Guest (<strong>Гість</strong>) is sacred.<br />
+  You must welcome the guest: "Я вітаю <strong>гостя</strong>".<br />
+  You must feed the guest: "Я годую <strong>гостя</strong>".<br />
+  Note: <strong>Гість</strong> is soft masculine. It changes to <strong>Гостя</strong>.</p>
+  <p>🎁 <strong>Culture Corner: Gifts and Guests</strong><br />
+  When visiting someone in Ukraine, never come empty-handed.<br />
+  Bring something for "Sim'ya" (Accusative: Sim'yu).<br />
+  "Це для мами" (Genitive - For mom).<br />
+  "Я купив торт" (Accusative - I bought a cake).<br />
+  The host will say "Ой, не треба" (Oh, not needed), but they expect it.</p>
 </blockquote>
-<hr />
-<h2 id="accusative">Чекати на + Accusative</h2>
-<p>The verb <strong>чекати</strong> (to wait) uses the preposition <strong>на</strong> + accusative:</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Я чекаю на друга.</td>
-<td>I'm waiting for a friend.</td>
-</tr>
-<tr>
-<td>Вона чекає на лікаря.</td>
-<td>She's waiting for the doctor.</td>
-</tr>
-<tr>
-<td>Ми чекаємо на тата.</td>
-<td>We're waiting for dad.</td>
-</tr>
-</tbody>
-</table>
-<p>Note: When waiting for things (inanimate), Ukrainian often uses genitive instead, but for people, на + accusative is standard.</p>
-<hr />
-<h2 id="masculinenounsspecialcase">Masculine -а Nouns: Special Case</h2>
-<p>Some masculine nouns end in -а (like тато, колега, суддя). In the accusative, they follow the feminine pattern:</p>
-<table>
-<thead>
-<tr>
-<th>Nominative</th>
-<th>Accusative</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>тато</td>
-<td>тат<strong>у</strong></td>
-<td>dad</td>
-</tr>
-<tr>
-<td>колега</td>
-<td>колег<strong>у</strong></td>
-<td>colleague</td>
-</tr>
-<tr>
-<td>суддя</td>
-<td>судд<strong>ю</strong></td>
-<td>judge</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong><br />
-  These -а masculine nouns are from Declension Family 4, which you learned about in Module 03. They're grammatically masculine (він, мій) but decline like feminines!</p>
-</blockquote>
-<hr />
-<h2 id="comparinganimatevsinanimate">Comparing Animate vs Inanimate</h2>
-<p>Same verb, different rules:</p>
-<table>
-<thead>
-<tr>
-<th>Inanimate</th>
-<th>Animate</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Я бачу стіл. (table)</td>
-<td>Я бачу друга. (friend)</td>
-</tr>
-<tr>
-<td>Вона читає книгу.</td>
-<td>Вона знає студента.</td>
-</tr>
-<tr>
-<td>Ми несемо валізу.</td>
-<td>Ми чекаємо на лікаря.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>The test:</strong> Can it move on its own? Can it be alive? If yes → animate → special masculine accusative.</p>
-<hr />
-<h2 id="feminineanimatesamepattern">Feminine Animate: Same Pattern</h2>
-<p>Good news—feminine animate nouns follow the same pattern as feminine inanimate:</p>
-<table>
-<thead>
-<tr>
-<th>Nominative</th>
-<th>Accusative</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>студентка</td>
-<td>студентку</td>
-</tr>
-<tr>
-<td>лікарка</td>
-<td>лікарку</td>
-</tr>
-<tr>
-<td>подруга</td>
-<td>подругу</td>
-</tr>
-<tr>
-<td>сусідка</td>
-<td>сусідку</td>
-</tr>
-</tbody>
-</table>
-<p>No special animate rule for feminine!</p>
-<blockquote>
-  <p>🎯 <strong>Fun Fact</strong><br />
-  The animate/inanimate distinction only affects <strong>masculine</strong> nouns. Feminine and neuter nouns don't have this complication—lucky you!</p>
-</blockquote>
-<hr />
-<h2 id="wordorderwithpeople">Word Order with People</h2>
-<p>Because case endings mark roles clearly, you can emphasize different elements:</p>
-<table>
-<thead>
-<tr>
-<th>Sentence</th>
-<th>Emphasis</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Я бачу студента.</td>
-<td>Neutral</td>
-</tr>
-<tr>
-<td>Студента бачу я.</td>
-<td>"The student — I'm the one who sees him"</td>
-</tr>
-<tr>
-<td>Студента я бачу.</td>
-<td>"The student — yes, I see him"</td>
-</tr>
-</tbody>
-</table>
-<p>The accusative ending -а makes it clear who's seeing whom, regardless of word order.</p>
-<hr /></div>
-    </div>
-  
-    <div class="card section-practice">
-      <h3>Practice</h3>
-      <div class="md-content"><h2 id="exercise1changetoaccusative">Exercise 1: Change to Accusative</h2>
-<p>Convert these people nouns to accusative:</p>
+<h2 id="practice">practice</h2>
+<p><strong>Drill 1: The Soul Check</strong><br />
+Is it Animate (Soul)?</p>
 <ol>
-<li>друг → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>студентка → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>лікар → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>тато → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>вчителька → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>сусід → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
+<li><strong>Стіл</strong> -&gt; No.</li>
+<li><strong>Студент</strong> -&gt; Yes.</li>
+<li><strong>Кіт</strong> (Cat) -&gt; Yes! (Animals are people too in grammar).</li>
+<li><strong>Телефон</strong> -&gt; No.</li>
+<li><strong>Робот</strong> -&gt; …depends on the sci-fi movie. Grammatically usually inanimate.</li>
 </ol>
-<h2 id="exercise2completethesentences">Exercise 2: Complete the Sentences</h2>
-<p>Use the correct accusative form:</p>
+<p><strong>Drill 2: The Transformation</strong><br />
+Make them the object.</p>
+<ul>
+<li>Це <strong>Іван</strong>. -&gt; Я бачу <strong>Івана</strong>.</li>
+<li>Це <strong>Олена</strong>. -&gt; Я бачу <strong>Олену</strong>.</li>
+<li>Це <strong>директор</strong>. -&gt; Я бачу <strong>директора</strong>.</li>
+<li>Це <strong>лікар</strong>. -&gt; Я бачу <strong>лікаря</strong>.</li>
+</ul>
+<p><strong>Drill 3: Verb Pairs</strong></p>
+<ul>
+<li><strong>Knowing People:</strong> Я знаю <strong>Ігоря</strong>. (I know Ihor).</li>
+<li><strong>Waiting:</strong> Я чекаю <strong>маму</strong>. (I wait for Mom - <em>Note: Checkaty normally takes Accusative for definite people</em>).</li>
+<li><strong>Loving:</strong> Я люблю <strong>тата</strong>. (I love dad).</li>
+</ul>
+<h2 id="production">production</h2>
+<p><strong>Deep Dive: "To Know" vs "To Know"</strong><br />
+Ukrainian has two verbs for "to know".</p>
 <ol>
-<li>Я бачу <strong><em><em></em></strong><strong><em></em></em></strong>_ (студент).</li>
-<li>Вона знає <strong><em><em></em></strong><strong><em></em></em></strong>_ (лікар).</li>
-<li>Ми чекаємо на <strong><em><em></em></strong><strong><em></em></em></strong>_ (друг).</li>
-<li>Він бачить <strong><em><em></em></strong><strong><em></em></em></strong>_ (подруга).</li>
-<li>Ти знаєш <strong><em><em></em></strong><strong><em></em></em></strong>_ (вчитель)?</li>
+<li><strong>Знати</strong> (To know a fact or a person).<ul>
+<li>Я знаю це. (I know this).</li>
+<li>Я знаю <strong>Бориса</strong>. (I know Borys).</li></ul></li>
+<li><strong>Вміти</strong> (To know how / be able to).<ul>
+<li>Я вмію плавати. (I know how to swim).<br />
+<em>We will focus on <strong>Знати</strong> today.</em></li></ul></li>
 </ol>
-<h2 id="exercise3inanimateoranimate">Exercise 3: Inanimate or Animate?</h2>
-<p>Choose the correct accusative:</p>
-<ol>
-<li>Я бачу <strong><em><em></em></strong><strong><em></em></em></strong>_ (стіл / друг) → стіл / друга</li>
-<li>Вона читає <strong><em><em></em></strong><strong><em></em></em></strong>_ (книга / студент) → книгу / студента</li>
-<li>Ми чекаємо на <strong><em><em></em></strong><strong><em></em></em></strong>_ (таксі / водій) → таксі / водія</li>
-</ol>
-<hr /></div>
-    </div>
-  
-    <div class="card section-content">
-      <h3>Production</h3>
-      <div class="md-content"><h2 id="taskpeopleiknow">Task: People I Know</h2>
-<p>Write 5 sentences about people you know using the pattern "Я знаю [person]":</p>
-<ol>
-<li>Я знаю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Я знаю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Я знаю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Я знаю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Я знаю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-</ol>
-<h2 id="taskwhodoyousee">Task: Who Do You See?</h2>
-<p>Describe a typical day—who do you see?</p>
-<p><strong>Зранку:</strong> Я бачу <strong><em><em></em></strong><strong><em></em></em></strong>_<br />
-<strong>На роботі/в школі:</strong> Я бачу <strong><em><em></em></strong><strong><em></em></em></strong>_<br />
-<strong>У магазині:</strong> Я бачу <strong><em><em></em></strong><strong><em></em></em></strong>_<br />
-<strong>Ввечері:</strong> Я бачу <strong><em><em></em></strong><strong><em></em></em></strong>_</p>
-<hr />
-<hr />
+<p><strong>Scenario: Who do you know?</strong><br />
+You are at a party.</p>
+<ul>
+<li><strong>Host:</strong> Ти знаєш <strong>Андрія</strong>?</li>
+<li><strong>You:</strong> Ні, я не знаю <strong>Андрія</strong>. (Genitive notation? Yes, negation triggers Genitive. But let's stay positive).</li>
+<li><strong>You:</strong> Ні, але я знаю <strong>Олега</strong>.</li>
+<li><strong>Host:</strong> А це <strong>Марія</strong>. Ти знаєш <strong>Марію</strong>?</li>
+<li><strong>You:</strong> Так, я знаю <strong>Марію</strong>! Вона моя <strong>колега</strong>.</li>
+</ul>
+<blockquote>
+  <p>🌍 <strong>Cultural Note: Names and Respect</strong><br />
+  We use <strong>Pan</strong> (Mr.) and <strong>Pani</strong> (Ms.).<br />
+  They decline too!</p>
+  <ul>
+  <li>Я бачу <strong>пана</strong> Андрія.</li>
+  <li>Я бачу <strong>пані</strong> Олену. (Pani is indeclinable).</li>
+  <li>Я знаю <strong>пана</strong> директора.<br />
+  Using "Pan/Pani" + First Name is very polite and common in Ukraine (e.g., "Pani Oleno!").</li>
+  </ul>
+  <p>🧠 <strong>Deep Dive: Why Animals have Souls?</strong><br />
+  In grammar, a "Cat" (Кіт) behaves like a person. "Я бачу кота".<br />
+  A "Dog" (Собака - f) behaves like a woman. "Я бачу собаку".<br />
+  But a "Virus" (Вірус)? Inanimate. "Я бачу вірус".<br />
+  A "Corpse" (Труп)? Inanimate. "Я бачу труп".<br />
+  A "Ghost" (Привид)? Animate! "Я бачу привида".<br />
+  The line between life and death is grammatically … interesting.</p>
+</blockquote>
 <hr /></div>
     </div>
   
       
-    <div class="card section-summary">
-      <h3>📋 Summary</h3>
-      <div class="md-content"><p>In this module, you learned:</p>
-<ol>
-<li><strong>Animate accusative rule</strong>: Masculine animate nouns take genitive endings</li>
-<li><strong>Masculine consonant</strong>: + -а (студент → студента)</li>
-<li><strong>Masculine -а nouns</strong>: -а → -у (тато → тату)</li>
-<li><strong>Feminine animate</strong>: Same as inanimate (студентка → студентку)</li>
-<li><strong>Чекати на + accusative</strong>: Used for waiting for people</li>
-</ol>
-<p><strong>Key patterns:</strong></p>
-<ul>
-<li>Я бачу друга. (I see a friend. - animate m)</li>
-<li>Вона знає лікаря. (She knows the doctor. - animate m)</li>
-<li>Ми чекаємо на студентку. (We're waiting for the student. - animate f)</li>
-<li>Він бачить тата. (He sees dad. - masculine -а noun)</li>
-</ul>
-<p><strong>Remember:</strong> Only masculine nouns have special animate accusative. Feminine = same as inanimate!</p>
-<p>Next module: The Locative Case! You'll learn to say where things are located: у кімнаті, на столі, в Україні.</p></div>
-    </div>
-  
       <div class="btn-group">
         <button class="btn btn-primary" onclick="showSection('activity-0')">Activities →</button>
       </div>
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Animate vs Inanimate Accusative</h3>
-      <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container"></div>
-      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+    <section id="activity-0" class="section"><div class="card"><h3>Soul Detector</h3>
+      <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/36</span></div>
+      <div class="sort-pool" id="activity-0-pool"><div class="sort-items" id="activity-0-items"></div></div>
+      <div class="sort-groups" id="activity-0-groups"></div>
+      <div class="completion-message" id="activity-0-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>People Vocabulary</h3>
+    <section id="activity-1" class="section"><div class="card"><h3>The Masculine Mark</h3>
       <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-1-container"><svg class="match-lines" id="activity-1-lines"></svg>
-        <div class="match-column" id="activity-1-left"></div>
-        <div class="match-column" id="activity-1-right"></div>
-      </div>
-      <div class="completion-message" id="activity-1-complete"><h3>Perfect!</h3></div>
+      <div id="activity-1-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-1-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Animate vs Inanimate</h3>
-      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/24</span></div>
-      <div class="sort-pool" id="activity-2-pool"><div class="sort-items" id="activity-2-items"></div></div>
-      <div class="sort-groups" id="activity-2-groups"></div>
-      <div class="completion-message" id="activity-2-complete"><h3>All Sorted!</h3></div>
+    <section id="activity-2" class="section"><div class="card"><h3>Who Do You See?</h3>
+      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
+      <div class="match-container" id="activity-2-container"><svg class="match-lines" id="activity-2-lines"></svg>
+        <div class="match-column" id="activity-2-left"></div>
+        <div class="match-column" id="activity-2-right"></div>
+      </div>
+      <div class="completion-message" id="activity-2-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Animate Accusative Rules</h3>
-      <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div id="activity-3-container"></div>
-      <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
+    <section id="activity-3" class="section"><div class="card"><h3>Making Friends</h3>
+      <p>Activity type: translate</p>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Complete with Animate Accusative</h3>
-      <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
-      <div id="activity-4-container" class="fill-container"></div>
+    <section id="activity-4" class="section"><div class="card"><h3>Grammar Logic</h3>
+      <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/13</span></div>
+      <div id="activity-4-container"></div>
       <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Nominative to Accusative (People)</h3>
+    <section id="activity-5" class="section"><div class="card"><h3>Mixed Bag</h3>
       <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-5-container"><svg class="match-lines" id="activity-5-lines"></svg>
-        <div class="match-column" id="activity-5-left"></div>
-        <div class="match-column" id="activity-5-right"></div>
-      </div>
-      <div class="completion-message" id="activity-5-complete"><h3>Perfect!</h3></div>
+      <div id="activity-5-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-5-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>People Vocabulary Scramble</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>Who do you love?</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
-      <div id="activity-6-container" class="order-container"></div>
-      <div class="completion-message" id="activity-6-complete"><h3>Perfect Order!</h3></div>
+      <div id="activity-6-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-6-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
     </div></section>
 
-    <section id="activity-7" class="section"><div class="card"><h3>Mixed Animate/Inanimate</h3>
+    <section id="activity-7" class="section"><div class="card"><h3>Who does what?</h3>
       <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/12</span></div>
-      <div id="activity-7-container" class="fill-container"></div>
-      <div class="completion-message" id="activity-7-complete"><h3>Complete!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+      <div id="activity-7-container" class="order-container"></div>
+      <div class="completion-message" id="activity-7-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-8')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-8" class="section"><div class="card"><h3>People Puzzle</h3>
+      <div class="score-display"><span class="score"><span id="activity-8-score">0</span>/12</span></div>
+      <div id="activity-8-container" class="order-container"></div>
+      <div class="completion-message" id="activity-8-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-8')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
-        <h3>Словник (20)</h3>
+        <h3>Словник (27)</h3>
         <div class="vocab-table-container">
           <table class="vocab-table">
             <thead><tr>
@@ -1087,7 +836,7 @@ footer {
     <th>Переклад</th>
     <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">друг (druh)</td><td class="vocab-ipa">/druɦ/</td><td class="vocab-en">friend (m)</td><td class="vocab-note">Acc: друга</td></tr><tr><td class="vocab-uk">подруга (podruha)</td><td class="vocab-ipa">/pɔˈdruɦɑ/</td><td class="vocab-en">friend (f)</td><td class="vocab-note">Acc: подругу</td></tr><tr><td class="vocab-uk">колега (koleha)</td><td class="vocab-ipa">/kɔˈlɛɦɑ/</td><td class="vocab-en">colleague</td><td class="vocab-note">Acc: колегу (m noun with -а)</td></tr><tr><td class="vocab-uk">сусід (susid)</td><td class="vocab-ipa">/suˈsʲid/</td><td class="vocab-en">neighbor (m)</td><td class="vocab-note">Acc: сусіда</td></tr><tr><td class="vocab-uk">сусідка (susidka)</td><td class="vocab-ipa">/suˈsʲidkɑ/</td><td class="vocab-en">neighbor (f)</td><td class="vocab-note">Acc: сусідку</td></tr><tr><td class="vocab-uk">лікар (likar)</td><td class="vocab-ipa">/ˈlʲikɑr/</td><td class="vocab-en">doctor (m)</td><td class="vocab-note">Acc: лікаря</td></tr><tr><td class="vocab-uk">лікарка (likarka)</td><td class="vocab-ipa">/lʲiˈkɑrkɑ/</td><td class="vocab-en">doctor (f)</td><td class="vocab-note">Acc: лікарку</td></tr><tr><td class="vocab-uk">вчитель (vchytel&#039;)</td><td class="vocab-ipa">/ˈʋtʃɪtɛlʲ/</td><td class="vocab-en">teacher (m)</td><td class="vocab-note">Acc: вчителя</td></tr><tr><td class="vocab-uk">вчителька (vchytel&#039;ka)</td><td class="vocab-ipa">/ʋtʃɪˈtɛlʲkɑ/</td><td class="vocab-en">teacher (f)</td><td class="vocab-note">Acc: вчительку</td></tr><tr><td class="vocab-uk">студент (student)</td><td class="vocab-ipa">/stuˈdɛnt/</td><td class="vocab-en">student (m)</td><td class="vocab-note">Acc: студента</td></tr><tr><td class="vocab-uk">студентка (studentka)</td><td class="vocab-ipa">/stuˈdɛntkɑ/</td><td class="vocab-en">student (f)</td><td class="vocab-note">Acc: студентку</td></tr><tr><td class="vocab-uk">офіціант (ofitsiant)</td><td class="vocab-ipa">/ɔfʲitsʲiˈɑnt/</td><td class="vocab-en">waiter</td><td class="vocab-note">Acc: офіціанта</td></tr><tr><td class="vocab-uk">офіціантка (ofitsiantka)</td><td class="vocab-ipa">/ɔfʲitsʲiˈɑntkɑ/</td><td class="vocab-en">waitress</td><td class="vocab-note">Acc: офіціантку</td></tr><tr><td class="vocab-uk">продавець (prodavets&#039;)</td><td class="vocab-ipa">/prɔdɑˈvɛtsʲ/</td><td class="vocab-en">salesperson (m)</td><td class="vocab-note">Acc: продавця</td></tr><tr><td class="vocab-uk">продавчиня (prodavchynya)</td><td class="vocab-ipa">/prɔdɑʋˈtʃɪnʲɑ/</td><td class="vocab-en">salesperson (f)</td><td class="vocab-note">Acc: продавчиню</td></tr><tr><td class="vocab-uk">водій (vodiy)</td><td class="vocab-ipa">/vɔˈdʲij/</td><td class="vocab-en">driver</td><td class="vocab-note">Acc: водія</td></tr><tr><td class="vocab-uk">пасажир (pasazhyr)</td><td class="vocab-ipa">/pɑsɑˈʒɪr/</td><td class="vocab-en">passenger</td><td class="vocab-note">Acc: пасажира</td></tr><tr><td class="vocab-uk">гість (hist&#039;)</td><td class="vocab-ipa">/ɦʲistʲ/</td><td class="vocab-en">guest</td><td class="vocab-note">Acc: гостя</td></tr><tr><td class="vocab-uk">директор (dyrektor)</td><td class="vocab-ipa">/dɪˈrɛktɔr/</td><td class="vocab-en">director</td><td class="vocab-note">Acc: директора</td></tr><tr><td class="vocab-uk">менеджер (menedzher)</td><td class="vocab-ipa">/mɛˈnɛdʒɛr/</td><td class="vocab-en">manager</td><td class="vocab-note">Acc: менеджера</td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">друг</td><td class="vocab-ipa">/druh/</td><td class="vocab-en">friend (m)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('друг')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">подруга</td><td class="vocab-ipa">/ˈpɔdruɦɑ/</td><td class="vocab-en">friend (f)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('подруга')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">колега</td><td class="vocab-ipa">/kɔˈlɛɦɑ/</td><td class="vocab-en">colleague</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('колега')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">сусід</td><td class="vocab-ipa">/suˈs⁽ʲ⁾id/</td><td class="vocab-en">neighbor (m)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('сусід')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">сусідка</td><td class="vocab-ipa">/suˈs⁽ʲ⁾idkɑ/</td><td class="vocab-en">neighbor (f)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('сусідка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">лікар</td><td class="vocab-ipa">/ˈlʲikɑr/</td><td class="vocab-en">doctor</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('лікар')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вчитель</td><td class="vocab-ipa">/ˈwtʃɪtɛlʲ/</td><td class="vocab-en">teacher (m)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вчитель')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">студент</td><td class="vocab-ipa">/stuˈdɛnt/</td><td class="vocab-en">student (m)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('студент')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">студентка</td><td class="vocab-ipa">/stuˈdɛntkɑ/</td><td class="vocab-en">student (f)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('студентка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">офіціант</td><td class="vocab-ipa">/ɔf⁽ʲ⁾iˈt͡s⁽ʲ⁾iɑnt/</td><td class="vocab-en">waiter</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('офіціант')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">продавець</td><td class="vocab-ipa">/prɔdɑˈvɛt͡sʲ/</td><td class="vocab-en">seller</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('продавець')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">водій</td><td class="vocab-ipa">/vɔˈdij/</td><td class="vocab-en">driver</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('водій')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">пасажир</td><td class="vocab-ipa">/pɑsɑˈʒɪr/</td><td class="vocab-en">passenger</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('пасажир')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">гість</td><td class="vocab-ipa">/h⁽ʲ⁾isʲtʲ/</td><td class="vocab-en">guest</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('гість')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">директор</td><td class="vocab-ipa">/dɪˈrɛktɔr/</td><td class="vocab-en">director</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('директор')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">брат</td><td class="vocab-ipa">/brɑt/</td><td class="vocab-en">brother</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('брат')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">сестра</td><td class="vocab-ipa">/sɛsˈtrɑ/</td><td class="vocab-en">sister</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('сестра')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">син</td><td class="vocab-ipa">/sɪn/</td><td class="vocab-en">son</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('син')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">дочка</td><td class="vocab-ipa">/dɔtʃˈkɑ/</td><td class="vocab-en">daughter</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('дочка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">кого</td><td class="vocab-ipa">/kɔˈhɔ/</td><td class="vocab-en">whom</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('кого')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">знати</td><td class="vocab-ipa">/ˈznɑtɪ/</td><td class="vocab-en">to know</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('знати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">чекати</td><td class="vocab-ipa">/tʃɛˈkɑtɪ/</td><td class="vocab-en">to wait</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('чекати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вітати</td><td class="vocab-ipa">/v⁽ʲ⁾iˈtɑtɪ/</td><td class="vocab-en">to greet/congratulate</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вітати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">запитувати</td><td class="vocab-ipa">/zɑˈpɪtuvɑtɪ/</td><td class="vocab-en">to ask</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('запитувати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">кохати</td><td class="vocab-ipa">/kɔˈxɑtɪ/</td><td class="vocab-en">to love (romantic)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('кохати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">пан</td><td class="vocab-ipa">/pɑn/</td><td class="vocab-en">Mr./Sir</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('пан')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">пані</td><td class="vocab-ipa">/ˈpɑn⁽ʲ⁾i/</td><td class="vocab-en">Ms./Madam</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('пані')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1099,8 +848,8 @@ footer {
   </main><footer>Module 12 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"quiz","title":"Animate vs Inanimate Accusative","data":{"type":"quiz","questions":[{"question":"What is the accusative form of \"студент\" (student)?","options":["студента","студент","студенту","студентом"],"correctIndex":0,"explanation":"Animate masculine nouns take genitive endings: студент → студента"},{"question":"What is the accusative form of \"стіл\" (table)?","options":["стіл","стола","столу","столом"],"correctIndex":0,"explanation":"Inanimate masculine nouns don't change: стіл → стіл"},{"question":"What is the accusative form of \"лікар\" (doctor)?","options":["лікаря","лікар","лікару","лікарем"],"correctIndex":0,"explanation":"Animate masculine nouns take genitive endings: лікар → лікаря"},{"question":"What is the accusative form of \"книга\" (book)?","options":["книгу","книги","книгою","книгу"],"correctIndex":0,"explanation":"Feminine nouns (animate or not): -а → -у"},{"question":"What is the accusative form of \"друг\" (friend)?","options":["друга","друг","другу","другом"],"correctIndex":0,"explanation":"Animate masculine: друг → друга"},{"question":"What is the accusative form of \"журнал\" (magazine)?","options":["журнал","журнала","журналу","журналом"],"correctIndex":0,"explanation":"Inanimate masculine doesn't change"},{"question":"What is the accusative form of \"вчитель\" (teacher)?","options":["вчителя","вчитель","вчителю","вчителем"],"correctIndex":0,"explanation":"Animate masculine takes genitive ending"},{"question":"What is the accusative form of \"вікно\" (window)?","options":["вікно","вікна","вікну","вікном"],"correctIndex":0,"explanation":"Neuter nouns don't change in accusative"},{"question":"What is the accusative form of \"тато\" (dad)?","options":["тата","тато","татом","татові"],"correctIndex":0,"explanation":"Masculine -а nouns: -а → -у (but тато is irregular: тата)"},{"question":"What is the accusative form of \"подруга\" (friend f)?","options":["подругу","подруга","подруги","подругою"],"correctIndex":0,"explanation":"Feminine animate follows regular feminine pattern"},{"question":"What is the accusative form of \"сусід\" (neighbor)?","options":["сусіда","сусід","сусіду","сусідом"],"correctIndex":0,"explanation":"Animate masculine takes genitive ending"},{"question":"What is the accusative form of \"паспорт\" (passport)?","options":["паспорт","паспорта","паспорту","паспортом"],"correctIndex":0,"explanation":"Inanimate masculine doesn't change"}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-1","type":"match-up","title":"People Vocabulary","data":{"type":"match-up","pairs":[{"left":"друг","right":"friend (m)"},{"left":"подруга","right":"friend (f)"},{"left":"лікар","right":"doctor (m)"},{"left":"лікарка","right":"doctor (f)"},{"left":"вчитель","right":"teacher (m)"},{"left":"вчителька","right":"teacher (f)"},{"left":"студент","right":"student (m)"},{"left":"студентка","right":"student (f)"},{"left":"офіціант","right":"waiter"},{"left":"продавець","right":"salesperson (m)"},{"left":"сусід","right":"neighbor (m)"},{"left":"водій","right":"driver"}],"shuffleRight":true}},{"id":"activity-2","type":"group-sort","title":"Animate vs Inanimate","data":{"type":"group-sort","groups":[{"id":"animate","name":"Animate","items":["друг","студент","лікар","вчитель","тато","сусід","гість","водій","офіціант","колега","директор","пасажир"],"nameUk":"живе"},{"id":"inanimate","name":"Inanimate","items":["стіл","книга","вікно","журнал","паспорт","документ","сумка","квиток","телефон","телевізор","ключ","двері"],"nameUk":"неживе"}],"shuffleItems":true}},{"id":"activity-3","type":"true-false","title":"Animate Accusative Rules","data":{"type":"true-false","statements":[{"statement":"Masculine animate nouns take the genitive ending in the accusative.","isTrue":true,"explanation":"Correct! друг → друга, студент → студента — this is the key rule!"},{"statement":"Feminine animate nouns have special accusative endings.","isTrue":false,"explanation":"False. Feminine animate = feminine inanimate: студентка → студентку."},{"statement":"The word \"тато\" (dad) is grammatically masculine.","isTrue":true,"explanation":"Correct! Despite ending in -а, тато is masculine: мій тато, він."},{"statement":"Inanimate masculine nouns change in the accusative.","isTrue":false,"explanation":"False. Inanimate masculine nouns don't change: стіл → стіл."},{"statement":"\"Чекати на + accusative\" is used when waiting for people.","isTrue":true,"explanation":"Correct! Я чекаю на друга. The preposition на + accusative is standard for people."},{"statement":"The animate rule applies to all genders.","isTrue":false,"explanation":"False. Only masculine nouns are affected. Feminine and neuter follow regular patterns."},{"statement":"The accusative ending makes word order flexible.","isTrue":true,"explanation":"Correct! Because endings mark grammatical roles, you can say \"Я бачу друга\" or \"Друга бачу я.\""},{"statement":"Neuter nouns never change in the accusative.","isTrue":true,"explanation":"Correct! Neuter accusative = nominative: вікно → вікно."},{"statement":"All masculine nouns take -а in the accusative.","isTrue":false,"explanation":"False. Only animate masculine nouns change. Inanimate stay the same."},{"statement":"\"Колега\" is masculine despite ending in -а.","isTrue":true,"explanation":"Correct! It's a masculine noun from Declension Family 4."},{"statement":"You use \"Я знаю\" + accusative to say \"I know (someone).\"","isTrue":true,"explanation":"Correct! Я знаю лікаря = I know the doctor."},{"statement":"Feminine accusative is different for animate vs inanimate.","isTrue":false,"explanation":"False. Feminine follows the same pattern regardless: -а → -у, -я → -ю."}]}},{"id":"activity-4","type":"fill-blank","title":"Complete with Animate Accusative","data":{"type":"fill-blank","items":[{"prompt":"Я бачу ___.","answer":"друга","options":["друга","друг","другу","другом"]},{"prompt":"Вона знає ___.","answer":"лікаря","options":["лікаря","лікар","лікару","лікарем"]},{"prompt":"Ми чекаємо на ___.","answer":"студента","options":["студента","студент","студенту","студентом"]},{"prompt":"Він бачить ___.","answer":"подругу","options":["подругу","подруга","подруги","подругою"]},{"prompt":"Ти знаєш ___?","answer":"вчителя","options":["вчителя","вчитель","вчителю","вчителем"]},{"prompt":"Я бачу ___.","answer":"тата","options":["тата","тато","татом","татові"]},{"prompt":"Вона чекає на ___.","answer":"офіціанта","options":["офіціанта","офіціант","офіціанту","офіціантом"]},{"prompt":"Ми знаємо ___.","answer":"директора","options":["директора","директор","директору","директором"]},{"prompt":"Він бачить ___.","answer":"студентку","options":["студентку","студентка","студентки","студенткою"]},{"prompt":"Ти чекаєш на ___?","answer":"лікарку","options":["лікарку","лікарка","лікарки","лікаркою"]},{"prompt":"Я знаю ___.","answer":"сусіда","options":["сусіда","сусід","сусіду","сусідом"]},{"prompt":"Вона бачить ___.","answer":"гостя","options":["гостя","гість","гостю","гостем"]}]}},{"id":"activity-5","type":"match-up","title":"Nominative to Accusative (People)","data":{"type":"match-up","pairs":[{"left":"друг","right":"друга"},{"left":"подруга","right":"подругу"},{"left":"студент","right":"студента"},{"left":"студентка","right":"студентку"},{"left":"лікар","right":"лікаря"},{"left":"лікарка","right":"лікарку"},{"left":"тато","right":"тата"},{"left":"вчитель","right":"вчителя"},{"left":"сусід","right":"сусіда"},{"left":"колега","right":"колегу"},{"left":"гість","right":"гостя"},{"left":"офіціант","right":"офіціанта"}],"shuffleRight":true}},{"id":"activity-6","type":"anagram","title":"People Vocabulary Scramble","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["г","а","р","у","д"],"answer":"друга","translation":"friend"},{"letters":["а","р","я","к","і","л"],"answer":"лікаря","translation":"doctor"},{"letters":["т","а","н","с","е","у","д","т"],"answer":"студента","translation":"student"},{"letters":["а","т","а","т"],"answer":"тата","translation":"dad"},{"letters":["д","а","с","у","і","с"],"answer":"сусіда","translation":"neighbor"},{"letters":["е","г","л","о","к","у"],"answer":"колегу","translation":"colleague"},{"letters":["я","т","о","г","с"],"answer":"гостя","translation":"guest"},{"letters":["р","а","о","д","и","т","р","к","е"],"answer":"директора","translation":"director"},{"letters":["я","т","і","е","ч","в","л"],"answer":"вчителя","translation":"teacher"},{"letters":["а","і","д","і","в","о"],"answer":"водія","translation":"driver"},{"letters":["к","у","г","у","р","д","о","п"],"answer":"подругу","translation":"friend f"},{"letters":["а","т","н","а","і","ф","і","ц","о"],"answer":"офіціанта","translation":"waiter"}]}},{"id":"activity-7","type":"fill-blank","title":"Mixed Animate/Inanimate","data":{"type":"fill-blank","items":[{"prompt":"Я бачу ___ і ___.","answer":"стіл, друга","options":["стіл, друга","стіл, друг","стола, друга","столу, друга"]},{"prompt":"Вона читає ___ і знає ___.","answer":"книгу, автора","options":["книгу, автора","книгу, автор","книга, автора","книги, автора"]},{"prompt":"Він несе ___ і чекає на ___.","answer":"валізу, таксиста","options":["валізу, таксиста","валізу, таксист","валіза, таксиста","валізи, таксиста"]},{"prompt":"Ми відкриваємо ___ і бачимо ___.","answer":"вікно, сусіда","options":["вікно, сусіда","вікно, сусід","вікна, сусіда","вікну, сусіда"]},{"prompt":"Ти маєш ___ і знаєш ___.","answer":"паспорт, менеджера","options":["паспорт, менеджера","паспорт, менеджер","паспорта, менеджера","паспорту, менеджера"]},{"prompt":"Я беру ___ і бачу ___.","answer":"сумку, продавця","options":["сумку, продавця","сумку, продавець","сумка, продавця","сумки, продавця"]},{"prompt":"Вона вмикає ___ і чекає на ___.","answer":"телевізор, гостя","options":["телевізор, гостя","телевізор, гість","телевізора, гостя","телевізору, гостя"]},{"prompt":"Він дає ___ і бачить ___.","answer":"подарунок, подругу","options":["подарунок, подругу","подарунок, подруга","подарунка, подругу","подарунку, подругу"]},{"prompt":"Ми ховаємо ___ і чекаємо на ___.","answer":"ключ, водія","options":["ключ, водія","ключ, водій","ключа, водія","ключу, водія"]},{"prompt":"Ти закриваєш ___ і бачиш ___.","answer":"двері, сусідку","options":["двері, сусідку","двері, сусідка","дверей, сусідку","дверям, сусідку"]},{"prompt":"Я показую ___ і знаю ___.","answer":"фото, студентку","options":["фото, студентку","фото, студентка","фота, студентку","фоту, студентку"]},{"prompt":"Вона бере ___ і чекає на ___.","answer":"журнал, вчительку","options":["журнал, вчительку","журнал, вчителька","журнала, вчительку","журналу, вчительку"]}]}}];
-    const vocabData = [{"uk":"друг (druh)","translit":"","en":"friend (m)","note":"Acc: друга"},{"uk":"подруга (podruha)","translit":"","en":"friend (f)","note":"Acc: подругу"},{"uk":"колега (koleha)","translit":"","en":"colleague","note":"Acc: колегу (m noun with -а)"},{"uk":"сусід (susid)","translit":"","en":"neighbor (m)","note":"Acc: сусіда"},{"uk":"сусідка (susidka)","translit":"","en":"neighbor (f)","note":"Acc: сусідку"},{"uk":"лікар (likar)","translit":"","en":"doctor (m)","note":"Acc: лікаря"},{"uk":"лікарка (likarka)","translit":"","en":"doctor (f)","note":"Acc: лікарку"},{"uk":"вчитель (vchytel')","translit":"","en":"teacher (m)","note":"Acc: вчителя"},{"uk":"вчителька (vchytel'ka)","translit":"","en":"teacher (f)","note":"Acc: вчительку"},{"uk":"студент (student)","translit":"","en":"student (m)","note":"Acc: студента"},{"uk":"студентка (studentka)","translit":"","en":"student (f)","note":"Acc: студентку"},{"uk":"офіціант (ofitsiant)","translit":"","en":"waiter","note":"Acc: офіціанта"},{"uk":"офіціантка (ofitsiantka)","translit":"","en":"waitress","note":"Acc: офіціантку"},{"uk":"продавець (prodavets')","translit":"","en":"salesperson (m)","note":"Acc: продавця"},{"uk":"продавчиня (prodavchynya)","translit":"","en":"salesperson (f)","note":"Acc: продавчиню"},{"uk":"водій (vodiy)","translit":"","en":"driver","note":"Acc: водія"},{"uk":"пасажир (pasazhyr)","translit":"","en":"passenger","note":"Acc: пасажира"},{"uk":"гість (hist')","translit":"","en":"guest","note":"Acc: гостя"},{"uk":"директор (dyrektor)","translit":"","en":"director","note":"Acc: директора"},{"uk":"менеджер (menedzher)","translit":"","en":"manager","note":"Acc: менеджера"}];
+    const activitiesData = [{"id":"activity-0","type":"group-sort","title":"Soul Detector","data":{"type":"group-sort","groups":[{"id":"animate","name":"Animate","items":["Студент","Лікар (Doctor)","Брат","Сестра","Мама","Тато","Кіт (Cat)","Собака (Dog)","Друг","Колега","Вчитель (Teacher)","Директор","Професор","Сусід (Neighbor)","Водій (Driver)","Пасажир","Дівчина","Хлопець"],"nameUk":"Soul"},{"id":"inanimate","name":"Inanimate","items":["Стіл","Телефон","Паспорт","Квиток","Автобус","Парк","Місто","Чай","Борщ","Комп'ютер","Будинок","Офіс","Ресторан","Готель","Рюкзак","Трамвай","Тролейбус","Метро"],"nameUk":"Thing"}],"shuffleItems":true}},{"id":"activity-1","type":"fill-blank","title":"The Masculine Mark","data":{"type":"fill-blank","items":[{"prompt":"Я бачу ___ (студент).","answer":"студента","hints":["студент"],"options":["студента","студент","студенту","студенті"]},{"prompt":"Ми знаємо ___ (директор).","answer":"директора","hints":["директор"],"options":["директора","директор","директору","директорі"]},{"prompt":"Вона кохає ___ (Олег).","answer":"Олега","hints":["Олег"],"options":["Олега","Олег","Олегу","Олезі"]},{"prompt":"Він слухає ___ (вчитель).","answer":"вчителя","hints":["вчитель"],"options":["вчителя","вчитель","вчителю","вчителем"]},{"prompt":"Ти знаєш ___ (сусід)?","answer":"сусіда","hints":["сусід"],"options":["сусіда","сусід","сусіду","сусіді"]},{"prompt":"Я чекаю ___ (водій).","answer":"водія","hints":["водій"],"options":["водія","водій","водію","водієм"]},{"prompt":"Вони шукають ___ (лікар).","answer":"лікаря","hints":["лікар"],"options":["лікаря","лікар","лікарю","лікарем"]},{"prompt":"Мама любить ___ (син).","answer":"сина","hints":["син"],"options":["сина","син","сину","сині"]},{"prompt":"Я бачу ___ (кіт).","answer":"кота","hints":["кіт"],"options":["кота","кіт","коту","коті"]},{"prompt":"Ми запитуємо ___ (професор).","answer":"професора","hints":["професор"],"options":["професора","професор","професору","професорі"]},{"prompt":"Я маю ___ (брат).","answer":"брата","hints":["брат"],"options":["брата","брат","брату","браті"]},{"prompt":"Ти бачиш ___ (хлопець)?","answer":"хлопця","hints":["хлопець"],"options":["хлопця","хлопець","хлопцю","хлопці"]}]}},{"id":"activity-2","type":"match-up","title":"Who Do You See?","data":{"type":"match-up","pairs":[{"left":"Я бачу тата...","right":"вдома."},{"left":"Я бачу лікаря...","right":"у лікарні."},{"left":"Я бачу вчителя...","right":"у школі."},{"left":"Я бачу офіціанта...","right":"у кафе."},{"left":"Я бачу водія...","right":"у таксі."},{"left":"Я бачу студента...","right":"в університеті."},{"left":"Я бачу актора...","right":"у театрі."},{"left":"Я бачу продавця (seller)...","right":"у магазині."},{"left":"Я бачу директора...","right":"в офісі."},{"left":"Я бачу друга...","right":"у парку."},{"left":"Я бачу туриста...","right":"у центрі."},{"left":"Я бачу пасажира...","right":"в метро."}],"shuffleRight":true}},{"id":"activity-3","type":"translate","title":"Making Friends","data":{"type":"translate","items":[{"source":"Це **Іван**.","answer":"Я знаю Івана."},{"source":"Це **Марія**.","answer":"Я знаю Марію."},{"source":"Це **Віктор**.","answer":"Я знаю Віктора."},{"source":"Це **Олена**.","answer":"Я знаю Олену."},{"source":"Це **Андрій**.","answer":"Я знаю Андрія."},{"source":"Це **Тетяна**.","answer":"Я знаю Тетяну."},{"source":"Це **мой брат**.","answer":"Я знаю мого брата."},{"source":"Це **брат**.","answer":"Я знаю брата."},{"source":"Це **сестра**.","answer":"Я знаю сестру."},{"source":"Це **Сергій**.","answer":"Я знаю Сергія."},{"source":"Це **Наталія**.","answer":"Я знаю Наталію."},{"source":"Це **студент**.","answer":"Я знаю студента."},{"source":"Це **сусід**.","answer":"Я знаю сусіда."}],"direction":"to-en"}},{"id":"activity-4","type":"quiz","title":"Grammar Logic","data":{"type":"quiz","questions":[{"question":"How do you change \"Стіл\" (Table) in Accusative?","options":["No change (Стіл)","Add -а (Стола)"],"correctIndex":0,"explanation":""},{"question":"How do you change \"Брат\" (Brother) in Accusative?","options":["No change (Брат)","Add -а (Брата)"],"correctIndex":1,"explanation":""},{"question":"Inanimate Masculine nouns...","options":["stay the same.","add -а."],"correctIndex":0,"explanation":""},{"question":"Animate Masculine nouns...","options":["stay the same.","add -а."],"correctIndex":1,"explanation":""},{"question":"Feminine nouns (-a)...","options":["always change to -у (Animate & Inanimate).","only change if Animate."],"correctIndex":0,"explanation":""},{"question":"\"Я бачу Іван\" is...","options":["Correct.","Incorrect (Should be Івана)."],"correctIndex":1,"explanation":""},{"question":"\"Я бачу таксі\" is...","options":["Correct (Neuter/Foreign/Inanimate).","Incorrect."],"correctIndex":0,"explanation":""},{"question":"\"Я знаю лікар\" is...","options":["Correct.","Incorrect (Should be лікаря)."],"correctIndex":1,"explanation":""},{"question":"The soft sign (ь) in \"Вчитель\" changes to...","options":["-а (Вчитела)","-я (Вчителя)"],"correctIndex":1,"explanation":""},{"question":"Is a CAT animate in grammar?","options":["Yes (Кіт -> Кота)","No"],"correctIndex":0,"explanation":"Кота)"},{"question":"Is a ROBOT animate?","options":["No.","Usually yes in sci-fi games, but grammatically often treated as animate in modern usage. Let's skip deep philosophy."],"correctIndex":1,"explanation":""},{"question":"\"Я люблю піцу\" - Is this correct?","options":["Yes.","No."],"correctIndex":0,"explanation":""},{"question":"\"Я люблю тато\" - Is this correct?","options":["Yes.","No (Should be Тата)."],"correctIndex":1,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-5","type":"fill-blank","title":"Mixed Bag","data":{"type":"fill-blank","items":[{"prompt":"Я бачу ___ (парк / Inanimate).","answer":"парк","hints":["парк / Inanimate"],"options":["парк","парка"]},{"prompt":"Я бачу ___ (друг / Animate).","answer":"друга","hints":["друг / Animate"],"options":["друга","друг"]},{"prompt":"Він купує ___ (квиток / Inanimate).","answer":"квиток","hints":["квиток / Inanimate"],"options":["квиток","квитка"]},{"prompt":"Він чекає ___ (лікар / Animate).","answer":"лікаря","hints":["лікар / Animate"],"options":["лікаря","лікар"]},{"prompt":"Ми любимо ___ (Київ / Inanimate).","answer":"Київ","hints":["Київ / Inanimate"],"options":["Київ","Києва"]},{"prompt":"Ми любимо ___ (Борис / Animate).","answer":"Бориса","hints":["Борис / Animate"],"options":["Бориса","Борис"]},{"prompt":"Вона знає ___ (місто / Inanimate).","answer":"місто","hints":["місто / Inanimate"],"options":["місто","міста"]},{"prompt":"Вона знає ___ (директор / Animate).","answer":"директора","hints":["директор / Animate"],"options":["директора","директор"]},{"prompt":"Я беру ___ (телефон / Inanimate).","answer":"телефон","hints":["телефон / Inanimate"],"options":["телефон","телефона"]},{"prompt":"Я беру ___ (кіт / Animate).","answer":"кота","hints":["кіт / Animate"],"options":["кота","кіт"]},{"prompt":"Ти маєш ___ (паспорт).","answer":"паспорт","hints":["паспорт"],"options":["паспорт","паспорта"]},{"prompt":"Ти маєш ___ (брат).","answer":"брата","hints":["брат"],"options":["брата","брат"]}]}},{"id":"activity-6","type":"fill-blank","title":"Who do you love?","data":{"type":"fill-blank","items":[{"prompt":"Я люблю ___ (Ivan).","answer":"Івана","hints":["Ivan"]},{"prompt":"Вона любить ___ (Oleh).","answer":"Олега","hints":["Oleh"]},{"prompt":"Ми знаємо ___ (Mariyka).","answer":"Марійку","hints":["Mariyka"]},{"prompt":"Я чекаю ___ (Taras).","answer":"Тараса","hints":["Taras"]},{"prompt":"Ти бачиш ___ (Olena)?","answer":"Олену","hints":["Olena"]},{"prompt":"Я розумію ___ (teacher - M).","answer":"вчителя","hints":["teacher - M"]},{"prompt":"Вона питає ___ (doctor - M).","answer":"лікаря","hints":["doctor - M"]},{"prompt":"Ми любимо ___ (mama).","answer":"маму","hints":["mama"]},{"prompt":"Я знаю ___ (tato).","answer":"тата","hints":["tato"]},{"prompt":"Він бачить ___ (sister).","answer":"сестру","hints":["sister"]},{"prompt":"Я чую ___ (friend - M).","answer":"друга","hints":["friend - M"]},{"prompt":"Я чекаю ___ (grandmother).","answer":"бабусю","hints":["grandmother"]}]}},{"id":"activity-7","type":"unjumble","title":"Who does what?","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["бачу","Я","друга"],"answer":"Я бачу друга."},{"words":["знає","Вона","лікаря"],"answer":"Вона знає лікаря."},{"words":["люблять","Вони","маму"],"answer":"Вони люблять маму."},{"words":["шукаємо","Ми","професора"],"answer":"Ми шукаємо професора."},{"words":["чекаєш","Ти","брата","?"],"answer":"Ти чекаєш брата?"},{"words":["питає","Студент","вчителя"],"answer":"Студент питає вчителя."},{"words":["має","Він","сина"],"answer":"Він має сина."},{"words":["бачить","Хто","директора","?"],"answer":"Хто бачить директора?"},{"words":["Івана","Я","знаю"],"answer":"Я знаю Івана."},{"words":["кота","Ми","маємо"],"answer":"Ми маємо кота."},{"words":["сусіда","Він","вітає"],"answer":"Він вітає сусіда.","translation":"greets"},{"words":["президента","бачу","Я"],"answer":"Я бачу президента."}]}},{"id":"activity-8","type":"anagram","title":"People Puzzle","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["г","у","р","д"],"answer":"друг","translation":"Friend"},{"letters":["р","а","к","і","л"],"answer":"лікар","translation":"Doctor"},{"letters":["д","і","с","у","с"],"answer":"сусід","translation":"Neighbor"},{"letters":["г","а","л","е","к","о"],"answer":"колега","translation":"Colleague - change K to G... Kolega"},{"letters":["ч","и","в","т","е","л","ь"],"answer":"вчитель","translation":"Teacher"},{"letters":["р","е","к","т","о","р","и","д"],"answer":"директор","translation":"Director"},{"letters":["т","у","д","е","н","т","с"],"answer":"студент","translation":"Student"},{"letters":["р","а","т","б"],"answer":"брат","translation":"Brother"},{"letters":["с","т","р","а","с","е"],"answer":"сестра","translation":"Sister"},{"letters":["д","і","й","в","о"],"answer":"водій","translation":"Driver"},{"letters":["б","а","р","о","м","л","е","п"],"answer":"проблема","translation":"Problem"},{"letters":["о","л","і","к","а","м"],"answer":"Микола","translation":"Name: Mykola"}]}}];
+    const vocabData = [{"uk":"друг","translit":"","en":"friend (m)","note":"[🔊](audio_druh)"},{"uk":"подруга","translit":"","en":"friend (f)","note":"[🔊](audio_podruha)"},{"uk":"колега","translit":"","en":"colleague","note":"[🔊](audio_koleha)"},{"uk":"сусід","translit":"","en":"neighbor (m)","note":"[🔊](audio_susid)"},{"uk":"сусідка","translit":"","en":"neighbor (f)","note":"[🔊](audio_susidka)"},{"uk":"лікар","translit":"","en":"doctor","note":"[🔊](audio_likar)"},{"uk":"вчитель","translit":"","en":"teacher (m)","note":"[🔊](audio_vchytel)"},{"uk":"студент","translit":"","en":"student (m)","note":"[🔊](audio_student)"},{"uk":"студентка","translit":"","en":"student (f)","note":"[🔊](audio_studentka)"},{"uk":"офіціант","translit":"","en":"waiter","note":"[🔊](audio_oficiant)"},{"uk":"продавець","translit":"","en":"seller","note":"[🔊](audio_prodavec)"},{"uk":"водій","translit":"","en":"driver","note":"[🔊](audio_vodij)"},{"uk":"пасажир","translit":"","en":"passenger","note":"[🔊](audio_pasazhyr)"},{"uk":"гість","translit":"","en":"guest","note":"[🔊](audio_hist)"},{"uk":"директор","translit":"","en":"director","note":"[🔊](audio_dyrektor)"},{"uk":"брат","translit":"","en":"brother","note":"[🔊](audio_brat)"},{"uk":"сестра","translit":"","en":"sister","note":"[🔊](audio_sestra)"},{"uk":"син","translit":"","en":"son","note":"[🔊](audio_syn)"},{"uk":"дочка","translit":"","en":"daughter","note":"[🔊](audio_dochka)"},{"uk":"кого","translit":"","en":"whom","note":"[🔊](audio_koho)"},{"uk":"знати","translit":"","en":"to know","note":"[🔊](audio_znaty)"},{"uk":"чекати","translit":"","en":"to wait","note":"[🔊](audio_chekaty)"},{"uk":"вітати","translit":"","en":"to greet/congratulate","note":"[🔊](audio_vitaty)"},{"uk":"запитувати","translit":"","en":"to ask","note":"[🔊](audio_zapytuvaty)"},{"uk":"кохати","translit":"","en":"to love (romantic)","note":"[🔊](audio_kokhaty)"},{"uk":"пан","translit":"","en":"Mr./Sir","note":"[🔊](audio_pan)"},{"uk":"пані","translit":"","en":"Ms./Madam","note":"[🔊](audio_pani)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1160,6 +909,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2424,6 +2199,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

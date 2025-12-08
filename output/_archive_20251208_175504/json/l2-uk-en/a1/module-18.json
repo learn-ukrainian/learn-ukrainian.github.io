@@ -1,0 +1,1421 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A1-18",
+    "moduleId": "mod-uk-A1-18",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A1",
+    "phase": "A1.2",
+    "moduleNumber": 18,
+    "moduleType": "functional",
+    "immersionLevel": 0.3,
+    "title": "Food & Restaurant",
+    "subtitle": "Navigating Ukrainian menus and ordering meals",
+    "description": "Learn restaurant and menu vocabulary",
+    "objectives": [
+      "Learn restaurant and menu vocabulary",
+      "Order food using accusative case",
+      "Use genitive for quantities",
+      "Handle restaurant interactions"
+    ],
+    "grammarFocus": [
+      "Accusative case for ordering (Я хочу...)",
+      "Genitive case with quantities",
+      "Polite requests"
+    ],
+    "tags": [
+      "vocabulary",
+      "food",
+      "restaurant",
+      "functional"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "partial",
+    "sections": [
+      {
+        "id": "section-intro",
+        "name": "Вступ",
+        "nameEn": "Introduction",
+        "type": "intro",
+        "content": "## warm-up\n\n### Їсти чи не їсти? (To Eat or Not to Eat?)\n\nOne of life's greatest pleasures is food, and Ukrainian cuisine is legendary! From hearty borsch to delicate varenyky, you're about to unlock the delicious world of Ukrainian dining.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian borsch (борщ) was recognized by UNESCO as part of Ukraine's cultural heritage in 2022. Every region and every grandmother has their own secret recipe!\n\n## presentation\n\n### Restaurant Vocabulary\n\n| Ukrainian | English | Notes |\n|-----------|---------|-------|\n| ресторан | restaurant | formal dining |\n| кафе | café | casual dining |\n| меню | menu | indeclinable |\n| страва | dish | main item |\n| закуска | appetizer | starter |\n| салат | salad | |\n| суп | soup | |\n| головна страва | main course | |\n| десерт | dessert | |\n| напій | drink, beverage | |\n\n> 🎬 **Pop Culture Moment: The Witcher**\n>\n> Geralt of Rivia might order \"Ведьмачий відвар\" (Witcher's brew), but you'll probably prefer \"Кава з молоком, будь ласка!\" (Coffee with milk, please!)\n\n### Ordering Food — Using Accusative\n\nRemember: when you want something, the noun goes into **accusative case**!\n\n| What you want | Accusative form | Full sentence |\n|---------------|-----------------|---------------|\n| кава (f) | каву | Я хочу каву. |\n| чай (m) | чай | Я хочу чай. |\n| суп (m) | суп | Я хочу суп. |\n| вода (f) | воду | Я хочу воду. |\n| пиво (n) | пиво | Я хочу пиво. |\n\nCommon ordering phrases:\n\n| Ukrainian | English |\n|-----------|---------|\n| Я хочу... | I want... |\n| Можна...? | May I have...? / Can I have...? |\n| Я візьму... | I'll take... |\n| Для мене... | For me... |\n\n> ⚡ **Pro Tip**\n>\n> \"Можна...?\" is the most polite way to order. It literally means \"Is it possible?\" and Ukrainians use it constantly!\n\n### Quantities — Using Genitive\n\nWhen specifying amounts, use **genitive case**:\n\n| Order | Structure |\n|-------|-----------|\n| Склянку води | A glass of water (Gen) |\n| Чашку кави | A cup of coffee (Gen) |\n| Пляшку пива | A bottle of beer (Gen) |\n| Порцію салату | A portion of salad (Gen) |\n| Тарілку супу | A plate/bowl of soup (Gen) |\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Borsch is Russian.\"\n> **Fact:** Borsch (борщ) is Ukrainian! The word entered English from Ukrainian. UNESCO recognized Ukrainian borsch-making as endangered cultural heritage during Russia's invasion.\n\n### Describing Food\n\n> 💡 **Preview Vocabulary**\n>\n> These cooking terms and taste words are essential for restaurant ordering. You'll learn adjective grammar formally in Module 26, but you can use these descriptive words now as fixed phrases.\n\n| Ukrainian | English | Use in ordering |\n|-----------|---------|-----------------|\n| гарячий | hot (temperature) | гарячий суп |\n| холодний | cold | холодна вода |\n| теплий | warm | теплий чай |\n| смажений | fried | смажена риба |\n| варений | boiled | варені яйця |\n| печений | baked | печена картопля |\n| солодкий | sweet | солодкий десерт |\n| солоний | salty | солоний суп |\n| гострий | spicy | гострий соус |\n| смачний | tasty, delicious | Дуже смачно! |\n\n> 🌍 **Real World**\n>\n> When food arrives, Ukrainians say \"Смачного!\" — the equivalent of \"Bon appétit!\" (literally \"Tasty [eating]!\")\n\n### Restaurant Interaction\n\n| Stage | Ukrainian | English |\n|-------|-----------|---------|\n| Arriving | Столик на двох, будь ласка. | A table for two, please. |\n| Menu | Можна меню? | May I have a menu? |\n| Ordering | Я візьму борщ і вареники. | I'll have borsch and varenyky. |\n| Drinks | Що будете пити? | What will you drink? |\n| Paying | Рахунок, будь ласка. | Check, please. |\n| Compliment | Дуже смачно! Дякую! | Very tasty! Thank you! |\n\n> 🎯 **Fun Fact**\n>\n> In Ukrainian restaurants, you usually have to ask for the check — it won't come automatically. Say \"Рахунок, будь ласка!\" when you're ready.\n\n## practice\n\n### Exercise 1: Order These Items\n\nPut into accusative for ordering:\n\n1. кава → Я хочу ___\n   > [!answer] каву\n\n2. вода → Можна ___?\n   > [!answer] воду\n\n3. суп → Я візьму ___\n   > [!answer] суп\n\n4. піца → Для мене ___\n   > [!answer] піцу\n\n5. салат → Я хочу ___\n   > [!answer] салат\n\n### Exercise 2: Quantities with Genitive\n\nComplete with genitive:\n\n1. Склянку ___ (вода)\n   > [!answer] води\n\n2. Чашку ___ (кава)\n   > [!answer] кави\n\n3. Порцію ___ (борщ)\n   > [!answer] борщу\n\n4. Тарілку ___ (суп)\n   > [!answer] супу\n\n## production\n\n### Role Play: At a Restaurant\n\nCreate a dialogue using:\n- Greeting and asking for a table\n- Asking for menu\n- Ordering food and drinks\n- Asking for the check\n- Paying and leaving\n\n---\n\n\n---\n\n\n---"
+      },
+      {
+        "id": "section-summary",
+        "name": "Підсумок",
+        "nameEn": "Summary",
+        "type": "summary",
+        "content": "> **What You Learned Today**\n>\n> - Restaurant vocabulary: меню, страва, закуска, напій\n> - Ordering with accusative: Я хочу каву\n> - Quantities with genitive: Склянку води\n> - Key phrases: Можна...? Рахунок, будь ласка!\n> - Food descriptions: смажений, варений, гострий\n\n> **Coming Next**\n>\n> In Module 19, you'll practice **At the Café** — a complete functional module:\n> - Full café dialogue practice\n> - Common situations and responses\n> - Integrating everything you've learned"
+      }
+    ],
+    "rawMarkdown": "---\ntitle: \"Food & Restaurant\"\nsubtitle: \"Navigating Ukrainian menus and ordering meals\"\nphase: A1.2\nduration: 45\ntransliteration: partial\ntags: [vocabulary, food, restaurant, functional]\nobjectives:\n  - Learn restaurant and menu vocabulary\n  - Order food using accusative case\n  - Use genitive for quantities\n  - Handle restaurant interactions\ngrammar:\n  - Accusative case for ordering (Я хочу...)\n  - Genitive case with quantities\n  - Polite requests\n---\n\n# Lesson Content\n\n## warm-up\n\n### Їсти чи не їсти? (To Eat or Not to Eat?)\n\nOne of life's greatest pleasures is food, and Ukrainian cuisine is legendary! From hearty borsch to delicate varenyky, you're about to unlock the delicious world of Ukrainian dining.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian borsch (борщ) was recognized by UNESCO as part of Ukraine's cultural heritage in 2022. Every region and every grandmother has their own secret recipe!\n\n## presentation\n\n### Restaurant Vocabulary\n\n| Ukrainian | English | Notes |\n|-----------|---------|-------|\n| ресторан | restaurant | formal dining |\n| кафе | café | casual dining |\n| меню | menu | indeclinable |\n| страва | dish | main item |\n| закуска | appetizer | starter |\n| салат | salad | |\n| суп | soup | |\n| головна страва | main course | |\n| десерт | dessert | |\n| напій | drink, beverage | |\n\n> 🎬 **Pop Culture Moment: The Witcher**\n>\n> Geralt of Rivia might order \"Ведьмачий відвар\" (Witcher's brew), but you'll probably prefer \"Кава з молоком, будь ласка!\" (Coffee with milk, please!)\n\n### Ordering Food — Using Accusative\n\nRemember: when you want something, the noun goes into **accusative case**!\n\n| What you want | Accusative form | Full sentence |\n|---------------|-----------------|---------------|\n| кава (f) | каву | Я хочу каву. |\n| чай (m) | чай | Я хочу чай. |\n| суп (m) | суп | Я хочу суп. |\n| вода (f) | воду | Я хочу воду. |\n| пиво (n) | пиво | Я хочу пиво. |\n\nCommon ordering phrases:\n\n| Ukrainian | English |\n|-----------|---------|\n| Я хочу... | I want... |\n| Можна...? | May I have...? / Can I have...? |\n| Я візьму... | I'll take... |\n| Для мене... | For me... |\n\n> ⚡ **Pro Tip**\n>\n> \"Можна...?\" is the most polite way to order. It literally means \"Is it possible?\" and Ukrainians use it constantly!\n\n### Quantities — Using Genitive\n\nWhen specifying amounts, use **genitive case**:\n\n| Order | Structure |\n|-------|-----------|\n| Склянку води | A glass of water (Gen) |\n| Чашку кави | A cup of coffee (Gen) |\n| Пляшку пива | A bottle of beer (Gen) |\n| Порцію салату | A portion of salad (Gen) |\n| Тарілку супу | A plate/bowl of soup (Gen) |\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Borsch is Russian.\"\n> **Fact:** Borsch (борщ) is Ukrainian! The word entered English from Ukrainian. UNESCO recognized Ukrainian borsch-making as endangered cultural heritage during Russia's invasion.\n\n### Describing Food\n\n> 💡 **Preview Vocabulary**\n>\n> These cooking terms and taste words are essential for restaurant ordering. You'll learn adjective grammar formally in Module 26, but you can use these descriptive words now as fixed phrases.\n\n| Ukrainian | English | Use in ordering |\n|-----------|---------|-----------------|\n| гарячий | hot (temperature) | гарячий суп |\n| холодний | cold | холодна вода |\n| теплий | warm | теплий чай |\n| смажений | fried | смажена риба |\n| варений | boiled | варені яйця |\n| печений | baked | печена картопля |\n| солодкий | sweet | солодкий десерт |\n| солоний | salty | солоний суп |\n| гострий | spicy | гострий соус |\n| смачний | tasty, delicious | Дуже смачно! |\n\n> 🌍 **Real World**\n>\n> When food arrives, Ukrainians say \"Смачного!\" — the equivalent of \"Bon appétit!\" (literally \"Tasty [eating]!\")\n\n### Restaurant Interaction\n\n| Stage | Ukrainian | English |\n|-------|-----------|---------|\n| Arriving | Столик на двох, будь ласка. | A table for two, please. |\n| Menu | Можна меню? | May I have a menu? |\n| Ordering | Я візьму борщ і вареники. | I'll have borsch and varenyky. |\n| Drinks | Що будете пити? | What will you drink? |\n| Paying | Рахунок, будь ласка. | Check, please. |\n| Compliment | Дуже смачно! Дякую! | Very tasty! Thank you! |\n\n> 🎯 **Fun Fact**\n>\n> In Ukrainian restaurants, you usually have to ask for the check — it won't come automatically. Say \"Рахунок, будь ласка!\" when you're ready.\n\n## practice\n\n### Exercise 1: Order These Items\n\nPut into accusative for ordering:\n\n1. кава → Я хочу ___\n   > [!answer] каву\n\n2. вода → Можна ___?\n   > [!answer] воду\n\n3. суп → Я візьму ___\n   > [!answer] суп\n\n4. піца → Для мене ___\n   > [!answer] піцу\n\n5. салат → Я хочу ___\n   > [!answer] салат\n\n### Exercise 2: Quantities with Genitive\n\nComplete with genitive:\n\n1. Склянку ___ (вода)\n   > [!answer] води\n\n2. Чашку ___ (кава)\n   > [!answer] кави\n\n3. Порцію ___ (борщ)\n   > [!answer] борщу\n\n4. Тарілку ___ (суп)\n   > [!answer] супу\n\n## production\n\n### Role Play: At a Restaurant\n\nCreate a dialogue using:\n- Greeting and asking for a table\n- Asking for menu\n- Ordering food and drinks\n- Asking for the check\n- Paying and leaving\n\n---\n\n# Activities\n\n## fill-in: Restaurant Orders\n\n> Complete each order with the correct form.\n\n1. Я хочу ___ (кава).\n   > [!answer] каву\n   > [!options] каву | кава | кави | кавою\n\n2. Можна ___ (вода)?\n   > [!answer] воду\n   > [!options] воду | вода | води | водою\n\n3. Склянку ___ (сік).\n   > [!answer] соку\n   > [!options] соку | сік | соком | сокові\n\n4. Чашку ___ (чай).\n   > [!answer] чаю\n   > [!options] чаю | чай | чаєм | чаї\n\n5. Я візьму ___ (борщ).\n   > [!answer] борщ\n   > [!options] борщ | борщу | борщем | борщі\n\n6. Порцію ___ (вареники).\n   > [!answer] вареників\n   > [!options] вареників | вареники | варениками | вареникам\n\n7. Для мене ___ (салат).\n   > [!answer] салат\n   > [!options] салат | салату | салатом | салаті\n\n8. Пляшку ___ (вино).\n   > [!answer] вина\n   > [!options] вина | вино | вином | вині\n\n9. Тарілку ___ (суп).\n   > [!answer] супу\n   > [!options] супу | суп | супом | супі\n\n10. Я хочу ___ (десерт).\n    > [!answer] десерт\n    > [!options] десерт | десерту | десертом | десерті\n\n11. Можна ___ (меню)?\n    > [!answer] меню\n    > [!options] меню | меню | меню | меню\n\n12. ___ (рахунок), будь ласка.\n    > [!answer] Рахунок\n    > [!options] Рахунок | Рахунку | Рахунком | Рахунки\n\n## unjumble: Restaurant Sentences\n\n> Put the words in the correct order.\n\n1. каву Я хочу\n   > [!answer] Я хочу каву.\n   > (I want coffee.) [3 words]\n\n2. будь меню Можна ласка\n   > [!answer] Можна меню, будь ласка?\n   > (May I have a menu, please?) [4 words]\n\n3. візьму борщ Я\n   > [!answer] Я візьму борщ.\n   > (I'll take borsch.) [3 words]\n\n4. води Склянку ласка будь\n   > [!answer] Склянку води, будь ласка.\n   > (A glass of water, please.) [4 words]\n\n5. ласка Рахунок будь\n   > [!answer] Рахунок, будь ласка.\n   > (Check, please.) [3 words]\n\n6. смачно Дуже Дякую\n   > [!answer] Дуже смачно! Дякую!\n   > (Very tasty! Thank you!) [3 words]\n\n7. двох Столик будь ласка на\n   > [!answer] Столик на двох, будь ласка.\n   > (A table for two, please.) [5 words]\n\n8. пити Що будете\n   > [!answer] Що будете пити?\n   > (What will you drink?) [3 words]\n\n9. мене салат Для\n   > [!answer] Для мене салат.\n   > (For me, salad.) [3 words]\n\n10. кави чашку Можна\n    > [!answer] Можна чашку кави?\n    > (May I have a cup of coffee?) [4 words]\n\n11. смачного Вам Бажаю\n    > [!answer] Бажаю вам смачного!\n    > (Enjoy your meal!) [3 words]\n\n12. картою Платити готівкою чи\n    > [!answer] Платити картою чи готівкою?\n    > (Pay by card or cash?) [4 words]\n\n## match-up: Food Vocabulary\n\n> Match the Ukrainian word with its English translation.\n\n| Left | Right |\n|------|-------|\n| страва | dish |\n| закуска | appetizer |\n| напій | drink |\n| меню | menu |\n| рахунок | check/bill |\n| офіціант | waiter |\n| замовлення | order |\n| чайові | tip |\n| порція | portion |\n| борщ | borsch |\n| вареники | varenyky |\n| десерт | dessert |\n\n## quiz: Restaurant Knowledge\n\n> Test your restaurant vocabulary and skills.\n\n1. How do you ask for the menu?\n   - [ ] Де меню?\n   - [x] Можна меню?\n   - [ ] Я хочу меню\n   - [ ] Меню, дякую\n   > \"Можна меню?\" = May I have a menu?\n\n2. What case do you use with \"Я хочу...\"?\n   - [ ] Nominative\n   - [x] Accusative\n   - [ ] Genitive\n   - [ ] Locative\n   > Direct objects (what you want) use accusative.\n\n3. How do you say \"A glass of water\"?\n   - [ ] Склянка води\n   - [x] Склянку води\n   - [ ] Склянка вода\n   - [ ] Склянки води\n   > \"Склянку\" (acc) + \"води\" (gen) = a glass of water.\n\n4. What does \"Смачного!\" mean?\n   - [ ] Thank you\n   - [ ] Goodbye\n   - [x] Enjoy your meal\n   - [ ] Check, please\n   > \"Смачного!\" = Enjoy your meal! (Bon appétit!)\n\n5. How do you ask for the check?\n   - [x] Рахунок, будь ласка.\n   - [ ] Гроші, будь ласка.\n   - [ ] Платити, будь ласка.\n   - [ ] Меню, будь ласка.\n   > \"Рахунок, будь ласка\" = Check, please.\n\n6. What is \"закуска\"?\n   - [x] appetizer\n   - [ ] main course\n   - [ ] dessert\n   - [ ] drink\n   > \"Закуска\" = appetizer, starter.\n\n7. \"Я візьму борщ\" means:\n   - [ ] I want borsch\n   - [x] I'll take borsch\n   - [ ] Give me borsch\n   - [ ] Where is borsch?\n   > \"Візьму\" is the future form meaning \"I'll take.\"\n\n8. What does \"гарячий\" mean?\n   - [x] hot (temperature)\n   - [ ] spicy\n   - [ ] cold\n   - [ ] tasty\n   > \"Гарячий\" = hot; \"гострий\" = spicy.\n\n9. How do you say \"for me\"?\n   - [ ] Мені\n   - [x] Для мене\n   - [ ] У мене\n   - [ ] Зі мною\n   > \"Для мене\" = for me (для + genitive).\n\n10. What is \"чайові\"?\n    - [ ] tea\n    - [ ] teapot\n    - [x] tip (gratuity)\n    - [ ] tea leaves\n    > \"Чайові\" = tip (from \"чай\" - tea, like \"tea money\").\n\n11. \"Столик на двох\" means:\n    - [x] A table for two\n    - [ ] Two tables\n    - [ ] Table number two\n    - [ ] A small table\n    > \"На двох\" = for two (people).\n\n12. What does \"смажений\" mean?\n    - [x] fried\n    - [ ] boiled\n    - [ ] baked\n    - [ ] raw\n    > \"Смажений\" = fried; \"варений\" = boiled; \"печений\" = baked.\n\n## true-false: Food & Restaurant Facts\n\n> Decide if each statement is true (Правда) or false (Міф).\n\n- [x] \"Борщ\" is a traditional Ukrainian dish.\n  > Correct! Borsch is Ukrainian, recognized by UNESCO.\n\n- [ ] \"Можна\" is an impolite way to order.\n  > Incorrect! \"Можна\" is very polite — it means \"May I?\"\n\n- [x] Food you want uses accusative case.\n  > Correct! \"Я хочу каву\" — \"каву\" is accusative.\n\n- [ ] \"Рахунок\" means \"menu.\"\n  > Incorrect! \"Рахунок\" = check/bill; \"меню\" = menu.\n\n- [x] \"Смачного!\" is said before eating.\n  > Correct! It's like \"Bon appétit!\"\n\n- [ ] \"Чайові\" means \"tea.\"\n  > Incorrect! \"Чайові\" = tip; \"чай\" = tea.\n\n- [x] Quantities like \"a cup of\" use genitive case.\n  > Correct! \"Чашку кави\" — \"кави\" is genitive.\n\n- [ ] \"Гострий\" means \"hot\" in temperature.\n  > Incorrect! \"Гострий\" = spicy; \"гарячий\" = hot (temp).\n\n- [x] \"Офіціант\" is a waiter.\n  > Correct! From French \"officiant.\"\n\n- [ ] You don't need to ask for the check in Ukraine.\n  > Incorrect! You must ask: \"Рахунок, будь ласка!\"\n\n- [x] \"Вареники\" is a Ukrainian dumpling dish.\n  > Correct! Filled with potatoes, cheese, cherries, etc.\n\n- [x] \"Десерт\" means dessert.\n  > Correct! Same cognate as English.\n\n## group-sort: Food Categories\n\n> Sort these items into the correct category.\n\n### Напої (Drinks)\n- кава\n- чай\n- сік\n- вода\n\n### Страви (Dishes)\n- борщ\n- вареники\n- салат\n- суп\n\n### Десерти (Desserts)\n- торт\n- морозиво\n- тістечко\n- шоколад\n\n## anagram: Food Vocabulary\n> Unscramble the Ukrainian food and restaurant words.\n\n1. а в а к\n   > [!answer] кава\n   > (coffee)\n\n2. й а ч\n   > [!answer] чай\n   > (tea)\n\n3. щ р о б\n   > [!answer] борщ\n   > (borsch)\n\n4. п у с\n   > [!answer] суп\n   > (soup)\n\n5. а д о в\n   > [!answer] вода\n   > (water)\n\n6. б і л х\n   > [!answer] хліб\n   > (bread)\n\n7. о с я м\n   > [!answer] м'ясо\n   > (meat)\n\n8. а б и р\n   > [!answer] риба\n   > (fish)\n\n9. р и с\n   > [!answer] сир\n   > (cheese)\n\n10. к і с\n    > [!answer] сік\n    > (juice)\n\n11. а в а р т с\n    > [!answer] страва\n    > (dish)\n\n12. ю н е м\n    > [!answer] меню\n    > (menu)\n\n## match-up: Cooking Methods\n> Match the Ukrainian cooking term with its English translation.\n\n| Ukrainian | English |\n|-----------|---------|\n| смажений | fried |\n| варений | boiled |\n| печений | baked |\n| гарячий | hot |\n| холодний | cold |\n| теплий | warm |\n| солодкий | sweet |\n| солоний | salty |\n| гострий | spicy |\n| смачний | tasty |\n| свіжий | fresh |\n| запечений | baked (au gratin) |\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| страва | /ˈstrɑvɑ/ | dish | noun | f | main item |\n| закуска | /zɑˈkuskɑ/ | appetizer | noun | f | starter |\n| салат | /sɑˈlɑt/ | salad | noun | m | |\n| суп | /sup/ | soup | noun | m | |\n| борщ | /bɔrʃt͡ʃ/ | borsch | noun | m | Ukrainian beet soup |\n| головна страва | /ɦɔlɔvˈnɑ ˈstrɑvɑ/ | main course | phrase | f | |\n| десерт | /dɛˈsɛrt/ | dessert | noun | m | |\n| напій | /nɑˈpʲij/ | drink, beverage | noun | m | |\n| кава | /ˈkɑvɑ/ | coffee | noun | f | |\n| чай | /t͡ʃɑj/ | tea | noun | m | |\n| сік | /sʲik/ | juice | noun | m | |\n| вода | /vɔˈdɑ/ | water | noun | f | |\n| вино | /vɪˈnɔ/ | wine | noun | n | |\n| пиво | /ˈpɪvɔ/ | beer | noun | n | |\n| м'ясо | /ˈmjɑsɔ/ | meat | noun | n | |\n| курка | /ˈkurkɑ/ | chicken | noun | f | |\n| риба | /ˈrɪbɑ/ | fish | noun | f | |\n| овочі | /ˈɔvɔt͡ʃi/ | vegetables | noun | pl | |\n| картопля | /kɑrˈtɔplʲɑ/ | potato | noun | f | |\n| рис | /rɪs/ | rice | noun | m | |\n| хліб | /xlʲib/ | bread | noun | m | |\n| масло | /ˈmɑslɔ/ | butter, oil | noun | n | |\n| сир | /sɪr/ | cheese | noun | m | |\n| яйце | /jɑjˈt͡sɛ/ | egg | noun | n | |\n| ковбаса | /kɔvbɑˈsɑ/ | sausage | noun | f | |\n| шинка | /ˈʃɪnkɑ/ | ham | noun | f | |\n| смажений | /ˈsmɑʒɛnɪj/ | fried | adj | m | Preview: cooking term |\n| варений | /ˈvɑrɛnɪj/ | boiled | adj | m | Preview: cooking term |\n| печений | /ˈpɛt͡ʃɛnɪj/ | baked | adj | m | Preview: cooking term |\n| гарячий | /ɦɑˈrʲɑt͡ʃɪj/ | hot (temp) | adj | m | Preview: food descriptor |\n| холодний | /xɔˈlɔdnɪj/ | cold | adj | m | Preview: food descriptor |\n| теплий | /ˈtɛplɪj/ | warm | adj | m | Preview: food descriptor |\n| солодкий | /sɔˈlɔdkɪj/ | sweet | adj | m | Preview: taste word |\n| солоний | /sɔˈlɔnɪj/ | salty | adj | m | Preview: taste word |\n| гострий | /ˈɦɔstrɪj/ | spicy | adj | m | Preview: taste word |\n| смачний | /ˈsmɑt͡ʃnɪj/ | tasty | adj | m | Preview: taste word |\n| меню | /mɛˈnʲu/ | menu | noun | n | indeclinable |\n| порція | /ˈpɔrt͡sʲijɑ/ | portion | noun | f | |\n| тарілка | /tɑˈrʲilkɑ/ | plate | noun | f | |\n| склянка | /ˈsklʲɑnkɑ/ | glass | noun | f | |\n| пляшка | /ˈplʲɑʃkɑ/ | bottle | noun | f | |\n| офіціант | /ɔfʲit͡sʲiˈɑnt/ | waiter | noun | m | офіціантка (f) |\n| замовлення | /zɑmɔvˈlɛnʲːɑ/ | order | noun | n | |\n| рахунок | /rɑˈxunɔk/ | bill, check | noun | m | |\n| чайові | /t͡ʃɑjɔˈvʲi/ | tip | noun | pl | |\n| готівка | /ɦɔˈtʲivkɑ/ | cash | noun | f | |\n\n---\n\n# Summary\n\n> **What You Learned Today**\n>\n> - Restaurant vocabulary: меню, страва, закуска, напій\n> - Ordering with accusative: Я хочу каву\n> - Quantities with genitive: Склянку води\n> - Key phrases: Можна...? Рахунок, будь ласка!\n> - Food descriptions: смажений, варений, гострий\n\n> **Coming Next**\n>\n> In Module 19, you'll practice **At the Café** — a complete functional module:\n> - Full café dialogue practice\n> - Common situations and responses\n> - Integrating everything you've learned\n",
+    "createdAt": "2025-12-06T10:49:20.097Z",
+    "modifiedAt": "2025-12-06T10:49:20.097Z",
+    "version": 2
+  },
+  "activities": [
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "Restaurant Orders",
+      "description": "Complete each order with the correct form.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Я хочу ___ (кава).",
+            "answer": "каву",
+            "hints": [
+              "кава"
+            ],
+            "options": [
+              "каву",
+              "кава",
+              "кави",
+              "кавою"
+            ]
+          },
+          {
+            "prompt": "Можна ___ (вода)?",
+            "answer": "воду",
+            "hints": [
+              "вода"
+            ],
+            "options": [
+              "воду",
+              "вода",
+              "води",
+              "водою"
+            ]
+          },
+          {
+            "prompt": "Склянку ___ (сік).",
+            "answer": "соку",
+            "hints": [
+              "сік"
+            ],
+            "options": [
+              "соку",
+              "сік",
+              "соком",
+              "сокові"
+            ]
+          },
+          {
+            "prompt": "Чашку ___ (чай).",
+            "answer": "чаю",
+            "hints": [
+              "чай"
+            ],
+            "options": [
+              "чаю",
+              "чай",
+              "чаєм",
+              "чаї"
+            ]
+          },
+          {
+            "prompt": "Я візьму ___ (борщ).",
+            "answer": "борщ",
+            "hints": [
+              "борщ"
+            ],
+            "options": [
+              "борщ",
+              "борщу",
+              "борщем",
+              "борщі"
+            ]
+          },
+          {
+            "prompt": "Порцію ___ (вареники).",
+            "answer": "вареників",
+            "hints": [
+              "вареники"
+            ],
+            "options": [
+              "вареників",
+              "вареники",
+              "варениками",
+              "вареникам"
+            ]
+          },
+          {
+            "prompt": "Для мене ___ (салат).",
+            "answer": "салат",
+            "hints": [
+              "салат"
+            ],
+            "options": [
+              "салат",
+              "салату",
+              "салатом",
+              "салаті"
+            ]
+          },
+          {
+            "prompt": "Пляшку ___ (вино).",
+            "answer": "вина",
+            "hints": [
+              "вино"
+            ],
+            "options": [
+              "вина",
+              "вино",
+              "вином",
+              "вині"
+            ]
+          },
+          {
+            "prompt": "Тарілку ___ (суп).",
+            "answer": "супу",
+            "hints": [
+              "суп"
+            ],
+            "options": [
+              "супу",
+              "суп",
+              "супом",
+              "супі"
+            ]
+          },
+          {
+            "prompt": "Я хочу ___ (десерт).",
+            "answer": "десерт",
+            "hints": [
+              "десерт"
+            ],
+            "options": [
+              "десерт",
+              "десерту",
+              "десертом",
+              "десерті"
+            ]
+          },
+          {
+            "prompt": "Можна ___ (меню)?",
+            "answer": "меню",
+            "hints": [
+              "меню"
+            ],
+            "options": [
+              "меню",
+              "меню",
+              "меню",
+              "меню"
+            ]
+          },
+          {
+            "prompt": "___ (рахунок), будь ласка.",
+            "answer": "Рахунок",
+            "hints": [
+              "рахунок"
+            ],
+            "options": [
+              "Рахунок",
+              "Рахунку",
+              "Рахунком",
+              "Рахунки"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.097Z",
+      "modifiedAt": "2025-12-06T10:49:20.097Z"
+    },
+    {
+      "id": "act-a1-0-unjumble",
+      "type": "unjumble",
+      "title": "Restaurant Sentences",
+      "description": "Put the words in the correct order.",
+      "content": {
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
+          {
+            "words": [
+              "каву",
+              "Я",
+              "хочу"
+            ],
+            "answer": "Я хочу каву.",
+            "translation": "I want coffee."
+          },
+          {
+            "words": [
+              "будь",
+              "меню",
+              "Можна",
+              "ласка"
+            ],
+            "answer": "Можна меню, будь ласка?",
+            "translation": "May I have a menu, please?"
+          },
+          {
+            "words": [
+              "візьму",
+              "борщ",
+              "Я"
+            ],
+            "answer": "Я візьму борщ.",
+            "translation": "I'll take borsch."
+          },
+          {
+            "words": [
+              "води",
+              "Склянку",
+              "ласка",
+              "будь"
+            ],
+            "answer": "Склянку води, будь ласка.",
+            "translation": "A glass of water, please."
+          },
+          {
+            "words": [
+              "ласка",
+              "Рахунок",
+              "будь"
+            ],
+            "answer": "Рахунок, будь ласка.",
+            "translation": "Check, please."
+          },
+          {
+            "words": [
+              "смачно",
+              "Дуже",
+              "Дякую"
+            ],
+            "answer": "Дуже смачно! Дякую!",
+            "translation": "Very tasty! Thank you!"
+          },
+          {
+            "words": [
+              "двох",
+              "Столик",
+              "будь",
+              "ласка",
+              "на"
+            ],
+            "answer": "Столик на двох, будь ласка.",
+            "translation": "A table for two, please."
+          },
+          {
+            "words": [
+              "пити",
+              "Що",
+              "будете"
+            ],
+            "answer": "Що будете пити?",
+            "translation": "What will you drink?"
+          },
+          {
+            "words": [
+              "мене",
+              "салат",
+              "Для"
+            ],
+            "answer": "Для мене салат.",
+            "translation": "For me, salad."
+          },
+          {
+            "words": [
+              "кави",
+              "чашку",
+              "Можна"
+            ],
+            "answer": "Можна чашку кави?",
+            "translation": "May I have a cup of coffee?"
+          },
+          {
+            "words": [
+              "смачного",
+              "Вам",
+              "Бажаю"
+            ],
+            "answer": "Бажаю вам смачного!",
+            "translation": "Enjoy your meal!"
+          },
+          {
+            "words": [
+              "картою",
+              "Платити",
+              "готівкою",
+              "чи"
+            ],
+            "answer": "Платити картою чи готівкою?",
+            "translation": "Pay by card or cash?"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.097Z",
+      "modifiedAt": "2025-12-06T10:49:20.097Z"
+    },
+    {
+      "id": "act-a1-0-matchup",
+      "type": "match-up",
+      "title": "Food Vocabulary",
+      "description": "Match the Ukrainian word with its English translation.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "страва",
+            "right": "dish"
+          },
+          {
+            "left": "закуска",
+            "right": "appetizer"
+          },
+          {
+            "left": "напій",
+            "right": "drink"
+          },
+          {
+            "left": "меню",
+            "right": "menu"
+          },
+          {
+            "left": "рахунок",
+            "right": "check/bill"
+          },
+          {
+            "left": "офіціант",
+            "right": "waiter"
+          },
+          {
+            "left": "замовлення",
+            "right": "order"
+          },
+          {
+            "left": "чайові",
+            "right": "tip"
+          },
+          {
+            "left": "порція",
+            "right": "portion"
+          },
+          {
+            "left": "борщ",
+            "right": "borsch"
+          },
+          {
+            "left": "вареники",
+            "right": "varenyky"
+          },
+          {
+            "left": "десерт",
+            "right": "dessert"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.097Z",
+      "modifiedAt": "2025-12-06T10:49:20.097Z"
+    },
+    {
+      "id": "act-a1-0-quiz",
+      "type": "quiz",
+      "title": "Restaurant Knowledge",
+      "description": "Test your restaurant vocabulary and skills.",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "How do you ask for the menu?",
+            "options": [
+              "Де меню?",
+              "Можна меню?",
+              "Я хочу меню",
+              "Меню, дякую"
+            ],
+            "correctIndex": 1,
+            "explanation": "\"Можна меню?\" = May I have a menu?"
+          },
+          {
+            "question": "What case do you use with \"Я хочу...\"?",
+            "options": [
+              "Nominative",
+              "Accusative",
+              "Genitive",
+              "Locative"
+            ],
+            "correctIndex": 1,
+            "explanation": "Direct objects (what you want) use accusative."
+          },
+          {
+            "question": "How do you say \"A glass of water\"?",
+            "options": [
+              "Склянка води",
+              "Склянку води",
+              "Склянка вода",
+              "Склянки води"
+            ],
+            "correctIndex": 1,
+            "explanation": "\"Склянку\" (acc) + \"води\" (gen) = a glass of water."
+          },
+          {
+            "question": "What does \"Смачного!\" mean?",
+            "options": [
+              "Thank you",
+              "Goodbye",
+              "Enjoy your meal",
+              "Check, please"
+            ],
+            "correctIndex": 2,
+            "explanation": "\"Смачного!\" = Enjoy your meal! (Bon appétit!)"
+          },
+          {
+            "question": "How do you ask for the check?",
+            "options": [
+              "Рахунок, будь ласка.",
+              "Гроші, будь ласка.",
+              "Платити, будь ласка.",
+              "Меню, будь ласка."
+            ],
+            "correctIndex": 0,
+            "explanation": "\"Рахунок, будь ласка\" = Check, please."
+          },
+          {
+            "question": "What is \"закуска\"?",
+            "options": [
+              "appetizer",
+              "main course",
+              "dessert",
+              "drink"
+            ],
+            "correctIndex": 0,
+            "explanation": "\"Закуска\" = appetizer, starter."
+          },
+          {
+            "question": "\"Я візьму борщ\" means:",
+            "options": [
+              "I want borsch",
+              "I'll take borsch",
+              "Give me borsch",
+              "Where is borsch?"
+            ],
+            "correctIndex": 1,
+            "explanation": "\"Візьму\" is the future form meaning \"I'll take.\""
+          },
+          {
+            "question": "What does \"гарячий\" mean?",
+            "options": [
+              "hot (temperature)",
+              "spicy",
+              "cold",
+              "tasty"
+            ],
+            "correctIndex": 0,
+            "explanation": "\"Гарячий\" = hot; \"гострий\" = spicy."
+          },
+          {
+            "question": "How do you say \"for me\"?",
+            "options": [
+              "Мені",
+              "Для мене",
+              "У мене",
+              "Зі мною"
+            ],
+            "correctIndex": 1,
+            "explanation": "\"Для мене\" = for me (для + genitive)."
+          },
+          {
+            "question": "What is \"чайові\"?",
+            "options": [
+              "tea",
+              "teapot",
+              "tip (gratuity)",
+              "tea leaves"
+            ],
+            "correctIndex": 2,
+            "explanation": "\"Чайові\" = tip (from \"чай\" - tea, like \"tea money\")."
+          },
+          {
+            "question": "\"Столик на двох\" means:",
+            "options": [
+              "A table for two",
+              "Two tables",
+              "Table number two",
+              "A small table"
+            ],
+            "correctIndex": 0,
+            "explanation": "\"На двох\" = for two (people)."
+          },
+          {
+            "question": "What does \"смажений\" mean?",
+            "options": [
+              "fried",
+              "boiled",
+              "baked",
+              "raw"
+            ],
+            "correctIndex": 0,
+            "explanation": "\"Смажений\" = fried; \"варений\" = boiled; \"печений\" = baked."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.097Z",
+      "modifiedAt": "2025-12-06T10:49:20.097Z"
+    },
+    {
+      "id": "act-a1-0-truefalse",
+      "type": "true-false",
+      "title": "Food & Restaurant Facts",
+      "description": "Decide if each statement is true (Правда) or false (Міф).",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "\"Борщ\" is a traditional Ukrainian dish.",
+            "isTrue": true,
+            "explanation": "Correct! Borsch is Ukrainian, recognized by UNESCO."
+          },
+          {
+            "statement": "\"Можна\" is an impolite way to order.",
+            "isTrue": false,
+            "explanation": "Incorrect! \"Можна\" is very polite — it means \"May I?\""
+          },
+          {
+            "statement": "Food you want uses accusative case.",
+            "isTrue": true,
+            "explanation": "Correct! \"Я хочу каву\" — \"каву\" is accusative."
+          },
+          {
+            "statement": "\"Рахунок\" means \"menu.\"",
+            "isTrue": false,
+            "explanation": "Incorrect! \"Рахунок\" = check/bill; \"меню\" = menu."
+          },
+          {
+            "statement": "\"Смачного!\" is said before eating.",
+            "isTrue": true,
+            "explanation": "Correct! It's like \"Bon appétit!\""
+          },
+          {
+            "statement": "\"Чайові\" means \"tea.\"",
+            "isTrue": false,
+            "explanation": "Incorrect! \"Чайові\" = tip; \"чай\" = tea."
+          },
+          {
+            "statement": "Quantities like \"a cup of\" use genitive case.",
+            "isTrue": true,
+            "explanation": "Correct! \"Чашку кави\" — \"кави\" is genitive."
+          },
+          {
+            "statement": "\"Гострий\" means \"hot\" in temperature.",
+            "isTrue": false,
+            "explanation": "Incorrect! \"Гострий\" = spicy; \"гарячий\" = hot (temp)."
+          },
+          {
+            "statement": "\"Офіціант\" is a waiter.",
+            "isTrue": true,
+            "explanation": "Correct! From French \"officiant.\""
+          },
+          {
+            "statement": "You don't need to ask for the check in Ukraine.",
+            "isTrue": false,
+            "explanation": "Incorrect! You must ask: \"Рахунок, будь ласка!\""
+          },
+          {
+            "statement": "\"Вареники\" is a Ukrainian dumpling dish.",
+            "isTrue": true,
+            "explanation": "Correct! Filled with potatoes, cheese, cherries, etc."
+          },
+          {
+            "statement": "\"Десерт\" means dessert.",
+            "isTrue": true,
+            "explanation": "Correct! Same cognate as English."
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.097Z",
+      "modifiedAt": "2025-12-06T10:49:20.097Z"
+    },
+    {
+      "id": "act-a1-0-groupsort",
+      "type": "group-sort",
+      "title": "Food Categories",
+      "description": "Sort these items into the correct category.",
+      "content": {
+        "type": "group-sort",
+        "groups": [
+          {
+            "id": "",
+            "name": "Напої",
+            "items": [
+              "кава",
+              "чай",
+              "сік",
+              "вода"
+            ],
+            "nameUk": "Drinks"
+          },
+          {
+            "id": "",
+            "name": "Страви",
+            "items": [
+              "борщ",
+              "вареники",
+              "салат",
+              "суп"
+            ],
+            "nameUk": "Dishes"
+          },
+          {
+            "id": "",
+            "name": "Десерти",
+            "items": [
+              "торт",
+              "морозиво",
+              "тістечко",
+              "шоколад"
+            ],
+            "nameUk": "Desserts"
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.097Z",
+      "modifiedAt": "2025-12-06T10:49:20.097Z"
+    },
+    {
+      "id": "act-a1-0-anagram",
+      "type": "anagram",
+      "title": "Food Vocabulary",
+      "description": "Unscramble the Ukrainian food and restaurant words.",
+      "content": {
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
+          {
+            "letters": [
+              "а",
+              "в",
+              "а",
+              "к"
+            ],
+            "answer": "кава",
+            "translation": "coffee"
+          },
+          {
+            "letters": [
+              "й",
+              "а",
+              "ч"
+            ],
+            "answer": "чай",
+            "translation": "tea"
+          },
+          {
+            "letters": [
+              "щ",
+              "р",
+              "о",
+              "б"
+            ],
+            "answer": "борщ",
+            "translation": "borsch"
+          },
+          {
+            "letters": [
+              "п",
+              "у",
+              "с"
+            ],
+            "answer": "суп",
+            "translation": "soup"
+          },
+          {
+            "letters": [
+              "а",
+              "д",
+              "о",
+              "в"
+            ],
+            "answer": "вода",
+            "translation": "water"
+          },
+          {
+            "letters": [
+              "б",
+              "і",
+              "л",
+              "х"
+            ],
+            "answer": "хліб",
+            "translation": "bread"
+          },
+          {
+            "letters": [
+              "о",
+              "с",
+              "я",
+              "м"
+            ],
+            "answer": "м'ясо",
+            "translation": "meat"
+          },
+          {
+            "letters": [
+              "а",
+              "б",
+              "и",
+              "р"
+            ],
+            "answer": "риба",
+            "translation": "fish"
+          },
+          {
+            "letters": [
+              "р",
+              "и",
+              "с"
+            ],
+            "answer": "сир",
+            "translation": "cheese"
+          },
+          {
+            "letters": [
+              "к",
+              "і",
+              "с"
+            ],
+            "answer": "сік",
+            "translation": "juice"
+          },
+          {
+            "letters": [
+              "а",
+              "в",
+              "а",
+              "р",
+              "т",
+              "с"
+            ],
+            "answer": "страва",
+            "translation": "dish"
+          },
+          {
+            "letters": [
+              "ю",
+              "н",
+              "е",
+              "м"
+            ],
+            "answer": "меню",
+            "translation": "menu"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.097Z",
+      "modifiedAt": "2025-12-06T10:49:20.097Z"
+    },
+    {
+      "id": "act-a1-0-matchup",
+      "type": "match-up",
+      "title": "Cooking Methods",
+      "description": "Match the Ukrainian cooking term with its English translation.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "смажений",
+            "right": "fried"
+          },
+          {
+            "left": "варений",
+            "right": "boiled"
+          },
+          {
+            "left": "печений",
+            "right": "baked"
+          },
+          {
+            "left": "гарячий",
+            "right": "hot"
+          },
+          {
+            "left": "холодний",
+            "right": "cold"
+          },
+          {
+            "left": "теплий",
+            "right": "warm"
+          },
+          {
+            "left": "солодкий",
+            "right": "sweet"
+          },
+          {
+            "left": "солоний",
+            "right": "salty"
+          },
+          {
+            "left": "гострий",
+            "right": "spicy"
+          },
+          {
+            "left": "смачний",
+            "right": "tasty"
+          },
+          {
+            "left": "свіжий",
+            "right": "fresh"
+          },
+          {
+            "left": "запечений",
+            "right": "baked (au gratin)"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.097Z",
+      "modifiedAt": "2025-12-06T10:49:20.097Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A1-18",
+    "level": "A1",
+    "phase": "A1.2",
+    "wordCount": 46,
+    "newWordCount": 46,
+    "reviewWordCount": 0,
+    "transliterationMode": "partial",
+    "words": [
+      {
+        "id": "v-strava-0-0",
+        "uk": "страва",
+        "en": "dish",
+        "pos": "noun",
+        "ipa": "/ˈstrɑvɑ/",
+        "gender": "f",
+        "note": "main item",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-zakuska-0-1",
+        "uk": "закуска",
+        "en": "appetizer",
+        "pos": "noun",
+        "ipa": "/zɑˈkuskɑ/",
+        "gender": "f",
+        "note": "starter",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-salat-0-2",
+        "uk": "салат",
+        "en": "salad",
+        "pos": "noun",
+        "ipa": "/sɑˈlɑt/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-sup-0-3",
+        "uk": "суп",
+        "en": "soup",
+        "pos": "noun",
+        "ipa": "/sup/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-borshch-0-4",
+        "uk": "борщ",
+        "en": "borsch",
+        "pos": "noun",
+        "ipa": "/bɔrʃt͡ʃ/",
+        "gender": "m",
+        "note": "Ukrainian beet soup",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-holovna-strava-0-5",
+        "uk": "головна страва",
+        "en": "main course",
+        "pos": "phrase",
+        "ipa": "/ɦɔlɔvˈnɑ ˈstrɑvɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-desert-0-6",
+        "uk": "десерт",
+        "en": "dessert",
+        "pos": "noun",
+        "ipa": "/dɛˈsɛrt/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-napiy-0-7",
+        "uk": "напій",
+        "en": "drink, beverage",
+        "pos": "noun",
+        "ipa": "/nɑˈpʲij/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-kava-0-8",
+        "uk": "кава",
+        "en": "coffee",
+        "pos": "noun",
+        "ipa": "/ˈkɑvɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-chay-0-9",
+        "uk": "чай",
+        "en": "tea",
+        "pos": "noun",
+        "ipa": "/t͡ʃɑj/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-sik-0-10",
+        "uk": "сік",
+        "en": "juice",
+        "pos": "noun",
+        "ipa": "/sʲik/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-voda-0-11",
+        "uk": "вода",
+        "en": "water",
+        "pos": "noun",
+        "ipa": "/vɔˈdɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vyno-0-12",
+        "uk": "вино",
+        "en": "wine",
+        "pos": "noun",
+        "ipa": "/vɪˈnɔ/",
+        "gender": "n",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pyvo-0-13",
+        "uk": "пиво",
+        "en": "beer",
+        "pos": "noun",
+        "ipa": "/ˈpɪvɔ/",
+        "gender": "n",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-m'yaso-0-14",
+        "uk": "м'ясо",
+        "en": "meat",
+        "pos": "noun",
+        "ipa": "/ˈmjɑsɔ/",
+        "gender": "n",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-kurka-0-15",
+        "uk": "курка",
+        "en": "chicken",
+        "pos": "noun",
+        "ipa": "/ˈkurkɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-ryba-0-16",
+        "uk": "риба",
+        "en": "fish",
+        "pos": "noun",
+        "ipa": "/ˈrɪbɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-ovochi-0-17",
+        "uk": "овочі",
+        "en": "vegetables",
+        "pos": "noun",
+        "ipa": "/ˈɔvɔt͡ʃi/",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-kartoplya-0-18",
+        "uk": "картопля",
+        "en": "potato",
+        "pos": "noun",
+        "ipa": "/kɑrˈtɔplʲɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-rys-0-19",
+        "uk": "рис",
+        "en": "rice",
+        "pos": "noun",
+        "ipa": "/rɪs/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-khlib-0-20",
+        "uk": "хліб",
+        "en": "bread",
+        "pos": "noun",
+        "ipa": "/xlʲib/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-maslo-0-21",
+        "uk": "масло",
+        "en": "butter, oil",
+        "pos": "noun",
+        "ipa": "/ˈmɑslɔ/",
+        "gender": "n",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-syr-0-22",
+        "uk": "сир",
+        "en": "cheese",
+        "pos": "noun",
+        "ipa": "/sɪr/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-yaytse-0-23",
+        "uk": "яйце",
+        "en": "egg",
+        "pos": "noun",
+        "ipa": "/jɑjˈt͡sɛ/",
+        "gender": "n",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-kovbasa-0-24",
+        "uk": "ковбаса",
+        "en": "sausage",
+        "pos": "noun",
+        "ipa": "/kɔvbɑˈsɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-shynka-0-25",
+        "uk": "шинка",
+        "en": "ham",
+        "pos": "noun",
+        "ipa": "/ˈʃɪnkɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-smazhenyy-0-26",
+        "uk": "смажений",
+        "en": "fried",
+        "pos": "adj",
+        "ipa": "/ˈsmɑʒɛnɪj/",
+        "gender": "m",
+        "note": "Preview: cooking term",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-varenyy-0-27",
+        "uk": "варений",
+        "en": "boiled",
+        "pos": "adj",
+        "ipa": "/ˈvɑrɛnɪj/",
+        "gender": "m",
+        "note": "Preview: cooking term",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pechenyy-0-28",
+        "uk": "печений",
+        "en": "baked",
+        "pos": "adj",
+        "ipa": "/ˈpɛt͡ʃɛnɪj/",
+        "gender": "m",
+        "note": "Preview: cooking term",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-haryachyy-0-29",
+        "uk": "гарячий",
+        "en": "hot (temp)",
+        "pos": "adj",
+        "ipa": "/ɦɑˈrʲɑt͡ʃɪj/",
+        "gender": "m",
+        "note": "Preview: food descriptor",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-kholodnyy-0-30",
+        "uk": "холодний",
+        "en": "cold",
+        "pos": "adj",
+        "ipa": "/xɔˈlɔdnɪj/",
+        "gender": "m",
+        "note": "Preview: food descriptor",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-teplyy-0-31",
+        "uk": "теплий",
+        "en": "warm",
+        "pos": "adj",
+        "ipa": "/ˈtɛplɪj/",
+        "gender": "m",
+        "note": "Preview: food descriptor",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-solodkyy-0-32",
+        "uk": "солодкий",
+        "en": "sweet",
+        "pos": "adj",
+        "ipa": "/sɔˈlɔdkɪj/",
+        "gender": "m",
+        "note": "Preview: taste word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-solonyy-0-33",
+        "uk": "солоний",
+        "en": "salty",
+        "pos": "adj",
+        "ipa": "/sɔˈlɔnɪj/",
+        "gender": "m",
+        "note": "Preview: taste word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-hostryy-0-34",
+        "uk": "гострий",
+        "en": "spicy",
+        "pos": "adj",
+        "ipa": "/ˈɦɔstrɪj/",
+        "gender": "m",
+        "note": "Preview: taste word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-smachnyy-0-35",
+        "uk": "смачний",
+        "en": "tasty",
+        "pos": "adj",
+        "ipa": "/ˈsmɑt͡ʃnɪj/",
+        "gender": "m",
+        "note": "Preview: taste word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-menyu-0-36",
+        "uk": "меню",
+        "en": "menu",
+        "pos": "noun",
+        "ipa": "/mɛˈnʲu/",
+        "gender": "n",
+        "note": "indeclinable",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-portsiya-0-37",
+        "uk": "порція",
+        "en": "portion",
+        "pos": "noun",
+        "ipa": "/ˈpɔrt͡sʲijɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-tarilka-0-38",
+        "uk": "тарілка",
+        "en": "plate",
+        "pos": "noun",
+        "ipa": "/tɑˈrʲilkɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-sklyanka-0-39",
+        "uk": "склянка",
+        "en": "glass",
+        "pos": "noun",
+        "ipa": "/ˈsklʲɑnkɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-plyashka-0-40",
+        "uk": "пляшка",
+        "en": "bottle",
+        "pos": "noun",
+        "ipa": "/ˈplʲɑʃkɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-ofitsiant-0-41",
+        "uk": "офіціант",
+        "en": "waiter",
+        "pos": "noun",
+        "ipa": "/ɔfʲit͡sʲiˈɑnt/",
+        "gender": "m",
+        "note": "офіціантка (f)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-zamovlennya-0-42",
+        "uk": "замовлення",
+        "en": "order",
+        "pos": "noun",
+        "ipa": "/zɑmɔvˈlɛnʲːɑ/",
+        "gender": "n",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-rakhunok-0-43",
+        "uk": "рахунок",
+        "en": "bill, check",
+        "pos": "noun",
+        "ipa": "/rɑˈxunɔk/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-chayovi-0-44",
+        "uk": "чайові",
+        "en": "tip",
+        "pos": "noun",
+        "ipa": "/t͡ʃɑjɔˈvʲi/",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-hotivka-0-45",
+        "uk": "готівка",
+        "en": "cash",
+        "pos": "noun",
+        "ipa": "/ɦɔˈtʲivkɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 0
+      }
+    ]
+  }
+}

@@ -1,0 +1,2628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 09: Food &amp; Drinks | Ukrainian A1</title>
+  <style>
+:root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+.top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+.top-nav a { color: white; text-decoration: none; }
+.top-nav a:hover { text-decoration: underline; }
+.module-nav { display: flex; gap: 1rem; align-items: center; }
+.module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+.module-nav-link:hover { color: white; }
+.module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+.nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+.nav h1 { font-size: 1.25rem; }
+.nav-tabs { display: flex; gap: 0.5rem; }
+.nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+.nav-tab.active { background: white; color: var(--primary); }
+main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+.section { display: none; } .section.active { display: block; }
+.lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+.level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+.card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+.card h3 { color: var(--primary); margin-bottom: 1rem; }
+.section-intro { border-left: 4px solid var(--primary); }
+.section-intro h3 { color: var(--primary); }
+.section-topic { border-left: 4px solid var(--border); }
+.section-summary { background: linear-gradient(135deg, #f0f9ff, #e8f4fd); border-left: 4px solid var(--success); }
+.section-summary h3 { color: var(--success); }
+.canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+.md-content { line-height: 1.7; }
+.md-content p { margin: 0.75rem 0; }
+.md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+.md-content li { margin: 0.25rem 0; }
+.md-content strong { color: var(--primary); }
+.md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.md-content blockquote p { margin: 0.25rem 0; }
+.md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+.md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+.md-content th { background: #f5f5f5; font-weight: 600; }
+.md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+.md-content details { background: #f8f9fa; border: 1px solid var(--border); border-radius: 8px; padding: 0; margin: 1rem 0; }
+.md-content details summary { background: linear-gradient(135deg, #e8f4fd, #f0e8fd); padding: 0.75rem 1rem; cursor: pointer; font-weight: 600; color: var(--primary); border-radius: 8px; list-style: none; display: flex; align-items: center; gap: 0.5rem; }
+.md-content details summary::-webkit-details-marker { display: none; }
+.md-content details summary::before { content: '▶'; font-size: 0.75rem; transition: transform 0.2s; }
+.md-content details[open] summary::before { transform: rotate(90deg); }
+.md-content details[open] summary { border-radius: 8px 8px 0 0; }
+.md-content details > *:not(summary) { padding: 0 1rem; }
+.md-content details > *:last-child { padding-bottom: 1rem; }
+.md-content p > details { margin: 0; }
+.md-content p:has(> details) { margin: 1rem 0; }
+.inline-answer { background: linear-gradient(135deg, #d4edda, #e8f4fd); padding: 0.125rem 0.5rem; border-radius: 4px; transition: opacity 0.2s; }
+.inline-answer.hidden { opacity: 0; user-select: none; }
+.answer-toggle-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border: 1px solid var(--primary); color: var(--primary); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.875rem; font-weight: 600; margin: 1rem 0; }
+.answer-toggle-btn:hover { background: var(--primary); color: white; }
+.answer-toggle-btn svg { width: 1rem; height: 1rem; }
+.letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+.letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+.letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+.letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+.letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+.letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+.btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-outline { background: transparent; border: 2px solid var(--border); }
+.btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+.score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+.score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+.completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+.completion-message.show { display: block; }
+footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+@media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+
+
+/**
+ * Layout styles - Navigation, page structure
+ */
+
+/* Top Navigation */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: #f8f8f8;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+
+.top-nav a {
+  color: var(--text-muted);
+}
+
+.top-nav a:hover {
+  color: var(--primary);
+}
+
+.module-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.module-nav-link {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.module-nav-link:hover {
+  background: #e8f4fd;
+}
+
+/* Main Navigation */
+.nav {
+  background: linear-gradient(135deg, #1a5fb4, #613583);
+  color: white;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav h1 {
+  font-size: 1.5rem;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-tab {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+}
+
+.nav-tab:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.nav-tab.active {
+  background: white;
+  color: var(--primary);
+}
+
+/* Main Content */
+main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Sections */
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+/* Lesson Header */
+.lesson-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #e8f4fd, #f0e8fd);
+  border-radius: 12px;
+}
+
+.lesson-header h2 {
+  font-size: 2rem;
+  margin: 0.5rem 0;
+}
+
+/* Section Cards */
+.section-intro {
+  border-left: 4px solid var(--primary);
+}
+
+.section-intro h3 {
+  color: var(--primary);
+}
+
+.section-topic {
+  border-left: 4px solid var(--border);
+}
+
+.section-summary {
+  background: linear-gradient(135deg, #f0f9ff, #e8f4fd);
+  border-left: 4px solid var(--success);
+}
+
+.section-summary h3 {
+  color: var(--success);
+}
+
+/* Canvas Notes */
+.canvas-note {
+  background: #fffbeb;
+  border-left: 4px solid var(--warning);
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.canvas-note h4 {
+  color: var(--warning);
+  margin-bottom: 0.5rem;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav h1 {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .nav-tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  main {
+    padding: 1rem;
+  }
+
+  .top-nav {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+
+/* Match Activity */
+.match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+.match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+.match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+.match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+.match-item.matched { border-color: var(--success); background: #e8f8f0; }
+.match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* Quiz Activity */
+.quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+.quiz-question.answered { pointer-events: none; }
+.quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+.quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+.quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+.quiz-option.correct { border-color: var(--success); background: #d4edda; }
+.quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+.quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+.quiz-explanation.show { display: block; }
+
+/* True/False Activity */
+.tf-statement { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+.tf-statement.answered { pointer-events: none; }
+.tf-text { font-size: 1.15rem; margin-bottom: 1rem; }
+.tf-buttons { display: flex; gap: 1rem; }
+.tf-btn { flex: 1; background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1rem; cursor: pointer; font-size: 1rem; font-weight: 500; }
+.tf-btn:hover { background: #e8f4fd; border-color: var(--primary); }
+.tf-btn.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.tf-btn.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+.tf-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+.tf-explanation.show { display: block; }
+
+/* Sort Activity */
+.sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+.sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+.sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+.sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+.sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+.sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+.sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+.sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+.sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+.sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+
+/* Vocabulary Grid (legacy) */
+.vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+.vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+.vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+.vocab-card .translit { color: var(--text-muted); font-style: italic; }
+.vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+.vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+
+/* Vocabulary Table (book-style) */
+.vocab-table-container { overflow-x: auto; }
+.vocab-table { width: 100%; border-collapse: collapse; font-size: 1rem; }
+.vocab-table thead { background: var(--card-bg); border-bottom: 2px solid var(--border); }
+.vocab-table th { padding: 0.75rem 1rem; text-align: left; font-weight: 600; color: var(--text-muted); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.vocab-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
+.vocab-table tbody tr:hover { background: #f8f9fa; }
+.vocab-table .vocab-uk { font-size: 1.25rem; font-weight: 600; color: var(--primary); }
+.vocab-table .vocab-translit { color: var(--text-muted); font-style: italic; }
+.vocab-table .vocab-ipa { font-family: monospace; color: var(--text-muted); font-size: 0.9rem; }
+.vocab-table .vocab-en { font-weight: 500; }
+.vocab-table .vocab-note { font-size: 0.85rem; color: #613583; }
+
+/* Answer Callout Blocks */
+.callout { padding: 0.5rem 1rem; margin: 0.25rem 0; border-radius: 4px; }
+.callout-answer { background: #e8f8f0; border-left: 3px solid var(--success); }
+.callout-explanation { background: #e8f4fd; border-left: 3px solid var(--primary); color: var(--text-muted); font-style: italic; }
+.callout-alt { background: #f5f5f5; border-left: 3px solid var(--border); color: var(--text-muted); }
+
+/* Answer Block Toggle */
+.answer-block { display: none; }
+.answer-block.show { display: block; }
+.show-answer-btn { background: #f0f0f0; border: 1px solid var(--border); border-radius: 6px; padding: 0.25rem 0.75rem; font-size: 0.8rem; cursor: pointer; color: var(--text-muted); margin: 0.25rem 0; }
+.show-answer-btn:hover { background: #e5e5e5; }
+.show-answer-btn.revealed { background: #e8f8f0; border-color: var(--success); color: var(--success); }
+
+/* Fill-in Activity - Dropdown in Sentence */
+.fill-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.fill-question { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; }
+
+.fill-number { font-weight: 600; color: var(--text-muted); margin-right: 0.5rem; }
+.fill-sentence { font-size: 1.15rem; line-height: 1.8; }
+
+.fill-dropdown { font-size: 1rem; padding: 0.4rem 0.6rem; border: 2px solid var(--primary); border-radius: 6px; background: #fff; color: var(--primary); font-weight: 500; cursor: pointer; min-width: 120px; }
+.fill-dropdown:focus { outline: none; box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2); }
+.fill-dropdown.correct { border-color: var(--success); background: #e8f8f0; color: var(--success); }
+.fill-dropdown.wrong { border-color: var(--danger); background: #fde8e8; color: var(--danger); }
+
+.fill-feedback { margin-top: 0.5rem; font-weight: 500; }
+.fill-feedback .correct-text { color: var(--success); }
+.fill-feedback .wrong-text { color: var(--danger); }
+.btn-sm { padding: 0.5rem 1rem; font-size: 0.875rem; }
+
+/* Order/Unjumble Activity */
+.order-container { display: flex; flex-direction: column; gap: 1rem; }
+.order-items { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+.order-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; display: flex; align-items: center; gap: 1rem; cursor: grab; user-select: none; }
+.order-item:active { cursor: grabbing; }
+.order-item.dragging { opacity: 0.5; }
+.order-item.correct { border-color: var(--success); background: #e8f8f0; }
+.order-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.order-handle { color: var(--text-muted); font-size: 1.25rem; }
+.order-text { font-size: 1.1rem; }
+
+/* Unjumble Activity - Drag and Drop */
+.unjumble-question { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.75rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.unjumble-question.answered .unjumble-word { cursor: default; }
+.unjumble-question.correct { border-color: var(--success); background: #f8fff8; }
+.unjumble-question.wrong { border-color: var(--danger); background: #fff8f8; }
+
+.unjumble-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+
+.unjumble-word-row { display: flex; flex-wrap: wrap; gap: 0.5rem; flex: 1; min-height: 42px; padding: 0.25rem; border-radius: 8px; background: #f8f9fa; }
+.unjumble-word-row.correct { background: #e8f8f0; }
+.unjumble-word-row.wrong { background: #fde8e8; }
+
+.unjumble-word { background: var(--primary); color: white; border-radius: 6px; padding: 0.5rem 0.75rem; font-size: 1rem; cursor: grab; user-select: none; transition: transform 0.1s, box-shadow 0.1s; }
+.unjumble-word:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.unjumble-word:active { cursor: grabbing; }
+.unjumble-word.dragging { opacity: 0.5; transform: scale(1.05); }
+
+.unjumble-word.touch-clone { position: fixed; z-index: 1000; pointer-events: none; box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
+
+.unjumble-actions { display: flex; gap: 0.5rem; }
+.unjumble-feedback { width: 100%; padding: 0.5rem 0 0 2.5rem; display: none; }
+.unjumble-feedback.show { display: block; }
+.unjumble-feedback .correct-text { color: var(--success); font-weight: 600; }
+.unjumble-feedback .wrong-text { color: var(--danger); }
+.unjumble-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
+
+/* Order Sentence Activity - Sentence reordering with unjumble-style UI */
+.order-sequence { display: flex; flex-direction: column; align-items: stretch; }
+.order-sentence-row { display: flex; flex-direction: column; flex-wrap: nowrap; gap: 0.5rem; min-height: auto; padding: 0.5rem; flex: none; width: 100%; }
+.order-sentence-item { background: var(--primary); color: white; border-radius: 8px; padding: 0.75rem 1rem; font-size: 1rem; cursor: grab; user-select: none; display: flex; align-items: center; gap: 0.75rem; transition: transform 0.1s, box-shadow 0.1s; }
+.order-sentence-item:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.order-sentence-item:active { cursor: grabbing; }
+.order-sentence-item.dragging { opacity: 0.5; transform: scale(1.02); }
+.order-sentence-item.correct { background: var(--success); }
+.order-sentence-item.wrong { background: var(--danger); }
+.order-sentence-item.touch-clone { position: fixed; z-index: 1000; pointer-events: none; box-shadow: 0 8px 16px rgba(0,0,0,0.2); max-width: 90vw; }
+.order-num { background: rgba(255,255,255,0.3); padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 600; min-width: 1.5rem; text-align: center; }
+.order-sentence-text { flex: 1; }
+.order-feedback { width: 100%; padding: 0.5rem 0; display: none; }
+.order-feedback.show { display: block; }
+.order-feedback .correct-text { color: var(--success); font-weight: 600; }
+.order-feedback .wrong-text { color: var(--danger); }
+
+/* Order Card Activity - New class names for classic order */
+.order-items-wrapper { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+.order-sentence-card { background: var(--primary); color: white; border-radius: 8px; padding: 0.75rem 1rem; font-size: 1rem; cursor: grab; user-select: none; display: flex; align-items: center; gap: 0.75rem; transition: transform 0.1s, box-shadow 0.1s; }
+.order-sentence-card:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.order-sentence-card:active { cursor: grabbing; }
+.order-sentence-card.dragging { opacity: 0.5; transform: scale(1.02); }
+.order-sentence-card.correct { background: var(--success); }
+.order-sentence-card.wrong { background: var(--danger); }
+.order-card-num { background: rgba(255,255,255,0.3); padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 600; min-width: 1.5rem; text-align: center; }
+.order-card-text { flex: 1; }
+.order-buttons { margin-top: 0.5rem; }
+
+/* Select Activity - Multi-choice checkboxes */
+.select-container { display: flex; flex-direction: column; gap: 1rem; }
+.select-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; display: flex; gap: 0.75rem; }
+.select-question.answered .select-checkbox { pointer-events: none; }
+.select-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.select-content { flex: 1; }
+.select-prompt { font-size: 1.1rem; font-weight: 500; margin-bottom: 0.75rem; }
+.select-options { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.75rem; }
+.select-option { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.75rem; border-radius: 6px; cursor: pointer; transition: background 0.15s; }
+.select-option:hover { background: #f5f5f5; }
+.select-option.correct { background: #d4edda; }
+.select-option.correct-unchecked { background: #f8f9fa; }
+.select-option.wrong { background: #f8d7da; }
+.select-option.missed { background: #fff3cd; border: 1px dashed var(--warning); }
+.select-checkbox { width: 1.25rem; height: 1.25rem; cursor: pointer; }
+.select-text { font-size: 1rem; }
+.select-check { margin-top: 0.5rem; }
+.select-feedback { margin-top: 0.75rem; display: none; }
+.select-feedback.show { display: block; }
+.select-feedback .correct-text { color: var(--success); font-weight: 600; }
+.select-feedback .wrong-text { color: var(--danger); }
+
+/* Anagram Activity - Letter reordering to form words */
+.anagram-question { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.75rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.anagram-question.answered .anagram-letter { cursor: default; }
+.anagram-question.correct { border-color: var(--success); background: #f8fff8; }
+.anagram-question.wrong { border-color: var(--danger); background: #fff8f8; }
+
+.anagram-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+
+.anagram-letter-row { display: flex; flex-wrap: wrap; gap: 0.35rem; flex: 1; min-height: 52px; padding: 0.25rem; border-radius: 8px; background: #f8f9fa; }
+.anagram-letter-row.correct { background: #e8f8f0; }
+.anagram-letter-row.wrong { background: #fde8e8; }
+
+.anagram-letter { background: var(--primary); color: white; border-radius: 8px; padding: 0.6rem 0.9rem; font-size: 1.5rem; font-weight: 600; cursor: grab; user-select: none; transition: transform 0.1s, box-shadow 0.1s; min-width: 2.5rem; text-align: center; }
+.anagram-letter:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.anagram-letter:active { cursor: grabbing; }
+.anagram-letter.dragging { opacity: 0.5; transform: scale(1.05); }
+
+.anagram-letter.touch-clone { position: fixed; z-index: 1000; pointer-events: none; box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
+
+.anagram-actions { display: flex; gap: 0.5rem; }
+.anagram-feedback { width: 100%; padding: 0.5rem 0 0 2.5rem; display: none; }
+.anagram-feedback.show { display: block; }
+.anagram-feedback .correct-text { color: var(--success); font-weight: 600; }
+.anagram-feedback .wrong-text { color: var(--danger); }
+.anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
+
+  </style>
+</head>
+<body>
+  
+  <div class="top-nav">
+    <a href="../index.html">← l2-uk-en Curriculum</a>
+    <div class="module-nav">
+      <a href="module-08.html" class="module-nav-link">← Module 08</a>
+      <a href="index.html" class="module-nav-link">A1 Index</a>
+      <a href="module-10.html" class="module-nav-link">Module 10 →</a>
+    </div>
+  </div>
+  <nav class="nav">
+    <h1>Module 09: Food &amp; Drinks</h1>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-section="lesson">Lesson</button>
+      <button class="nav-tab" data-section="activity-0">1. Quiz</button>
+      <button class="nav-tab" data-section="activity-1">2. Match</button>
+      <button class="nav-tab" data-section="activity-2">3. Sort</button>
+      <button class="nav-tab" data-section="activity-3">4. T/F</button>
+      <button class="nav-tab" data-section="activity-4">5. Fill</button>
+      <button class="nav-tab" data-section="activity-5">6. Match</button>
+      <button class="nav-tab" data-section="activity-6">7. Spell</button>
+      <button class="nav-tab" data-section="activity-7">8. Fill</button>
+      <button class="nav-tab" data-section="vocab">Vocab</button>
+    </div>
+  </nav>
+  <main>
+    
+    <section id="lesson" class="section active">
+      <div class="lesson-header">
+        <span class="level-badge">A1 · A1.1</span>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Food &amp; Drinks</h2>
+        <p style="color:var(--text-muted)">Ukrainian Cuisine Vocabulary</p>
+      </div>
+      
+    <div class="card section-content">
+      <h3>Warm Up</h3>
+      <div class="md-content"><p>Їжа (Yizha) — food — is at the heart of Ukrainian culture. Whether it's борщ (borshch) at grandma's table or вареники (varenyky) at a festive gathering, food brings people together. Let's learn to talk about what Ukrainians eat and drink!</p>
+<hr /></div>
+    </div>
+  
+    <div class="card section-content">
+      <h3>Lesson</h3>
+      <div class="md-content"><h2 id="ukrainianmeals">Ukrainian Meals</h2>
+<p>Ukrainians traditionally eat three main meals:</p>
+<table>
+<thead>
+<tr>
+<th>Meal</th>
+<th>Ukrainian</th>
+<th>Pronunciation</th>
+<th>Typical Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Breakfast</td>
+<td>сніданок</td>
+<td>(snidanok)</td>
+<td>7:00-9:00</td>
+</tr>
+<tr>
+<td>Lunch</td>
+<td>обід</td>
+<td>(obid)</td>
+<td>12:00-14:00</td>
+</tr>
+<tr>
+<td>Dinner</td>
+<td>вечеря</td>
+<td>(vecherya)</td>
+<td>18:00-20:00</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key phrases:</strong></p>
+<ul>
+<li>Я снідаю. (Ya snidayu.) — I'm having breakfast.</li>
+<li>Ми обідаємо. (My obidayemo.) — We're having lunch.</li>
+<li>Вона вечеряє. (Vona vecheryaye.) — She's having dinner.</li>
+</ul>
+<blockquote>
+  <p>💡 <strong>Did You Know?</strong><br />
+  In Ukraine, <strong>обід</strong> (lunch) is traditionally the largest meal of the day, often featuring soup followed by a main course. This contrasts with many Western countries where dinner is the main meal.</p>
+</blockquote>
+<hr />
+<h2 id="essentialfoodvocabulary">Essential Food Vocabulary</h2>
+<h3 id="yizhafood">Їжа (Yizha) — Food</h3>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Pronunciation</th>
+<th>English</th>
+<th>Category</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>їжа</td>
+<td>(yizha)</td>
+<td>food</td>
+<td>general</td>
+</tr>
+<tr>
+<td>страва</td>
+<td>(strava)</td>
+<td>dish, course</td>
+<td>general</td>
+</tr>
+<tr>
+<td>хліб</td>
+<td>(khlib)</td>
+<td>bread</td>
+<td>staple</td>
+</tr>
+<tr>
+<td>м'ясо</td>
+<td>(m'yaso)</td>
+<td>meat</td>
+<td>protein</td>
+</tr>
+<tr>
+<td>курка</td>
+<td>(kurka)</td>
+<td>chicken</td>
+<td>protein</td>
+</tr>
+<tr>
+<td>риба</td>
+<td>(ryba)</td>
+<td>fish</td>
+<td>protein</td>
+</tr>
+<tr>
+<td>яйце</td>
+<td>(yaytse)</td>
+<td>egg</td>
+<td>protein</td>
+</tr>
+<tr>
+<td>сир</td>
+<td>(syr)</td>
+<td>cheese</td>
+<td>dairy</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>🌍 <strong>Real World</strong><br />
+  <strong>Хліб</strong> (bread) is sacred in Ukrainian culture. Never throw bread away, and always break it by hand rather than cutting it at the table during important occasions. The phrase "хліб-сіль" (bread and salt) represents traditional Ukrainian hospitality.</p>
+</blockquote>
+<h3 id="ovochivegetables">Овочі (Ovochi) — Vegetables</h3>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Pronunciation</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>овочі</td>
+<td>(ovochi)</td>
+<td>vegetables</td>
+</tr>
+<tr>
+<td>картопля</td>
+<td>(kartoplya)</td>
+<td>potato</td>
+</tr>
+<tr>
+<td>помідор</td>
+<td>(pomidor)</td>
+<td>tomato</td>
+</tr>
+<tr>
+<td>огірок</td>
+<td>(ohirok)</td>
+<td>cucumber</td>
+</tr>
+<tr>
+<td>цибуля</td>
+<td>(tsybulya)</td>
+<td>onion</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fruktyfruits">Фрукти (Frukty) — Fruits</h3>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Pronunciation</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>фрукти</td>
+<td>(frukty)</td>
+<td>fruits</td>
+</tr>
+<tr>
+<td>яблуко</td>
+<td>(yabluko)</td>
+<td>apple</td>
+</tr>
+<tr>
+<td>банан</td>
+<td>(banan)</td>
+<td>banana</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="traditionalukrainiandishes">Traditional Ukrainian Dishes</h2>
+<h3 id="borshch">Борщ (Borshch)</h3>
+<p>The iconic Ukrainian soup! Made with beets, cabbage, potatoes, carrots, and often served with сметана (sour cream) and пампушки (garlic bread).</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Ukrainian</th>
+<th>Pronunciation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Beet soup</td>
+<td>борщ</td>
+<td>(borshch)</td>
+</tr>
+<tr>
+<td>Sour cream</td>
+<td>сметана</td>
+<td>(smetana)</td>
+</tr>
+<tr>
+<td>Dumplings</td>
+<td>вареники</td>
+<td>(varenyky)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>🎬 <strong>Pop Culture Moment</strong><br />
+  Борщ was inscribed on UNESCO's list of Intangible Cultural Heritage in 2022 as Ukrainian! While other countries have similar soups, Ukrainian борщ is the original, with recipes passed down through generations. Each region—and every grandmother—has their own secret recipe.</p>
+</blockquote>
+<h3 id="varenyky">Вареники (Varenyky)</h3>
+<p>Ukrainian dumplings filled with various ingredients:</p>
+<table>
+<thead>
+<tr>
+<th>Filling</th>
+<th>Ukrainian</th>
+<th>Pronunciation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Potato</td>
+<td>з картоплею</td>
+<td>(z kartopleyu)</td>
+</tr>
+<tr>
+<td>Cheese</td>
+<td>з сиром</td>
+<td>(z syrom)</td>
+</tr>
+<tr>
+<td>Cherry</td>
+<td>з вишнею</td>
+<td>(z vyshneyu)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>🎯 <strong>Fun Fact</strong><br />
+  There's a giant statue of a вареник in the Canadian town of Glendon, Alberta—home to many Ukrainian immigrants! It's 25 feet tall and holds a giant fork.</p>
+</blockquote>
+<hr />
+<h2 id="drinksnapoyi">Drinks — Напої (Napoyi)</h2>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Pronunciation</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>чай</td>
+<td>(chay)</td>
+<td>tea</td>
+</tr>
+<tr>
+<td>кава</td>
+<td>(kava)</td>
+<td>coffee</td>
+</tr>
+<tr>
+<td>вода</td>
+<td>(voda)</td>
+<td>water</td>
+</tr>
+<tr>
+<td>сік</td>
+<td>(sik)</td>
+<td>juice</td>
+</tr>
+<tr>
+<td>молоко</td>
+<td>(moloko)</td>
+<td>milk</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>💡 <strong>Did You Know?</strong><br />
+  Ukrainians are serious coffee lovers! <strong>Львівська кава</strong> (Lviv coffee) has a centuries-old tradition. The city of Львів (Lviv) has some of the best coffee houses in Eastern Europe, dating back to Austro-Hungarian times.</p>
+</blockquote>
+<hr />
+<h2 id="usingand">Using їсти and пити</h2>
+<p>Remember from Module 08:</p>
+<p><strong>Їсти (to eat):</strong> я їм, ти їси, він/вона їсть, ми їмо, ви їсте, вони їдять</p>
+<p><strong>Пити (to drink):</strong> я п'ю, ти п'єш, він/вона п'є, ми п'ємо, ви п'єте, вони п'ють</p>
+<h3 id="examplesentences">Example Sentences</h3>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Pronunciation</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Я їм борщ.</td>
+<td>(Ya yim borshch.)</td>
+<td>I eat borscht.</td>
+</tr>
+<tr>
+<td>Вона їсть хліб.</td>
+<td>(Vona yist' khlib.)</td>
+<td>She eats bread.</td>
+</tr>
+<tr>
+<td>Ми їмо вареники.</td>
+<td>(My yimo varenyky.)</td>
+<td>We eat varenyky.</td>
+</tr>
+<tr>
+<td>Ти п'єш каву?</td>
+<td>(Ty p'yesh kavu?)</td>
+<td>Do you drink coffee?</td>
+</tr>
+<tr>
+<td>Він п'є чай.</td>
+<td>(Vin p'ye chay.)</td>
+<td>He drinks tea.</td>
+</tr>
+<tr>
+<td>Вони п'ють воду.</td>
+<td>(Vony p'yut' vodu.)</td>
+<td>They drink water.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="tastywordssmachnyy">Tasty Words: Смачний (Smachnyy)</h2>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Pronunciation</th>
+<th>English</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>смачний</td>
+<td>(smachnyy)</td>
+<td>delicious, tasty</td>
+<td>adjective (m)</td>
+</tr>
+<tr>
+<td>смачна</td>
+<td>(smachna)</td>
+<td>delicious</td>
+<td>adjective (f)</td>
+</tr>
+<tr>
+<td>смачне</td>
+<td>(smachne)</td>
+<td>delicious</td>
+<td>adjective (n)</td>
+</tr>
+<tr>
+<td>смачно</td>
+<td>(smachno)</td>
+<td>it's delicious</td>
+<td>adverb</td>
+</tr>
+<tr>
+<td>Смачного!</td>
+<td>(Smachnoho!)</td>
+<td>Enjoy your meal!</td>
+<td>expression</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>🌍 <strong>Real World</strong><br />
+  <strong>"Смачного!"</strong> is what Ukrainians say before a meal—similar to "Bon appétit!" Always say this when someone starts eating. The response is "Дякую!" (Thank you!)</p>
+</blockquote>
+<h3 id="describingfood">Describing Food</h3>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Pronunciation</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Борщ смачний!</td>
+<td>(Borshch smachnyy!)</td>
+<td>Borscht is delicious!</td>
+</tr>
+<tr>
+<td>Кава смачна!</td>
+<td>(Kava smachna!)</td>
+<td>Coffee is delicious!</td>
+</tr>
+<tr>
+<td>Яблуко смачне!</td>
+<td>(Yabluko smachne!)</td>
+<td>The apple is delicious!</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="mealconversations">Meal Conversations</h2>
+<h3 id="athome">At Home</h3>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Pronunciation</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ти голодний?</td>
+<td>(Ty holodnyy?)</td>
+<td>Are you hungry? (to male)</td>
+</tr>
+<tr>
+<td>Ти голодна?</td>
+<td>(Ty holodna?)</td>
+<td>Are you hungry? (to female)</td>
+</tr>
+<tr>
+<td>Так, я хочу їсти.</td>
+<td>(Tak, ya khochu yisty.)</td>
+<td>Yes, I want to eat.</td>
+</tr>
+<tr>
+<td>Що ти хочеш їсти?</td>
+<td>(Shcho ty khochesh yisty?)</td>
+<td>What do you want to eat?</td>
+</tr>
+<tr>
+<td>Я хочу борщ.</td>
+<td>(Ya khochu borshch.)</td>
+<td>I want borscht.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="basicpreferences">Basic Preferences</h3>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Pronunciation</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Я люблю каву.</td>
+<td>(Ya lyublyu kavu.)</td>
+<td>I love coffee.</td>
+</tr>
+<tr>
+<td>Я не люблю рибу.</td>
+<td>(Ya ne lyublyu rybu.)</td>
+<td>I don't like fish.</td>
+</tr>
+<tr>
+<td>Вона любить чай.</td>
+<td>(Vona lyubyt' chay.)</td>
+<td>She loves tea.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>🎮 <strong>Gamer's Corner</strong><br />
+  In the video game S.T.A.L.K.E.R., set in the Chornobyl Exclusion Zone, characters eat Ukrainian foods like ковбаса (sausage) and хліб (bread) to restore health. Even in post-apocalyptic settings, Ukrainian cuisine survives!</p>
+</blockquote>
+<hr />
+<h2 id="foodcategoriesgrouppractice">Food Categories: Group Practice</h2>
+<h3 id="protein">Protein (Білок)</h3>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Gender</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>м'ясо</td>
+<td>n</td>
+<td>meat</td>
+</tr>
+<tr>
+<td>курка</td>
+<td>f</td>
+<td>chicken</td>
+</tr>
+<tr>
+<td>риба</td>
+<td>f</td>
+<td>fish</td>
+</tr>
+<tr>
+<td>яйце</td>
+<td>n</td>
+<td>egg</td>
+</tr>
+<tr>
+<td>сир</td>
+<td>m</td>
+<td>cheese</td>
+</tr>
+</tbody>
+</table>
+<h3 id="carbohydrates">Carbohydrates (Вуглеводи)</h3>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Gender</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>хліб</td>
+<td>m</td>
+<td>bread</td>
+</tr>
+<tr>
+<td>картопля</td>
+<td>f</td>
+<td>potato</td>
+</tr>
+<tr>
+<td>вареники</td>
+<td>pl</td>
+<td>dumplings</td>
+</tr>
+</tbody>
+</table>
+<h3 id="drinks">Drinks (Напої)</h3>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Gender</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>чай</td>
+<td>m</td>
+<td>tea</td>
+</tr>
+<tr>
+<td>кава</td>
+<td>f</td>
+<td>coffee</td>
+</tr>
+<tr>
+<td>вода</td>
+<td>f</td>
+<td>water</td>
+</tr>
+<tr>
+<td>сік</td>
+<td>m</td>
+<td>juice</td>
+</tr>
+<tr>
+<td>молоко</td>
+<td>n</td>
+<td>milk</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+    </div>
+  
+    <div class="card section-practice">
+      <h3>Practice</h3>
+      <div class="md-content"><h2 id="exercise1whatdoyoueatdrink">Exercise 1: What Do You Eat/Drink?</h2>
+<p>Complete with the correct form of їсти or пити:</p>
+<ol>
+<li>Я <strong><em><em></em></strong><strong><em></em></em></strong>_ борщ.</li>
+<li>Ти <strong><em><em></em></strong><strong><em></em></em></strong>_ каву?</li>
+<li>Вона <strong><em><em></em></strong><strong><em></em></em></strong>_ яблуко.</li>
+<li>Ми <strong><em><em></em></strong><strong><em></em></em></strong>_ чай.</li>
+<li>Вони <strong><em><em></em></strong><strong><em></em></em></strong>_ вареники.</li>
+</ol>
+<h2 id="exercise2matchthemeal">Exercise 2: Match the Meal</h2>
+<p>Connect the meal with typical foods:</p>
+<table>
+<thead>
+<tr>
+<th>Meal</th>
+<th>Typical Food</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>сніданок</td>
+<td>???</td>
+</tr>
+<tr>
+<td>обід</td>
+<td>???</td>
+</tr>
+<tr>
+<td>вечеря</td>
+<td>???</td>
+</tr>
+</tbody>
+</table>
+<p>Options: борщ і хліб, яйця і чай, вареники і сік</p>
+<h2 id="exercise3describethetaste">Exercise 3: Describe the Taste</h2>
+<p>Use the correct form of смачний:</p>
+<ol>
+<li>Борщ <strong><em><em></em></strong><strong><em></em></em></strong>_! (m)</li>
+<li>Кава <strong><em><em></em></strong><strong><em></em></em></strong>_! (f)</li>
+<li>Молоко <strong><em><em></em></strong><strong><em></em></em></strong>_! (n)</li>
+</ol>
+<hr /></div>
+    </div>
+  
+    <div class="card section-content">
+      <h3>Production</h3>
+      <div class="md-content"><h2 id="taskyourfooddiary">Task: Your Food Diary</h2>
+<p>Write what you eat and drink in a typical day:</p>
+<p><strong>Сніданок:</strong></p>
+<ul>
+<li>Я їм <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
+<li>Я п'ю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
+</ul>
+<p><strong>Обід:</strong></p>
+<ul>
+<li>Я їм <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
+<li>Я п'ю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
+</ul>
+<p><strong>Вечеря:</strong></p>
+<ul>
+<li>Я їм <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
+<li>Я п'ю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
+</ul>
+<h2 id="taskfoodpreferences">Task: Food Preferences</h2>
+<p>Write 5 sentences about what you love or don't love to eat/drink:</p>
+<ol>
+<li>Я люблю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
+<li>Я не люблю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
+<li><strong><em><em></em></strong><strong><em></em></em></strong>_</li>
+<li><strong><em><em></em></strong><strong><em></em></em></strong>_</li>
+<li><strong><em><em></em></strong><strong><em></em></em></strong>_</li>
+</ol>
+<hr />
+<hr />
+<hr /></div>
+    </div>
+  
+      
+    <div class="card section-summary">
+      <h3>📋 Summary</h3>
+      <div class="md-content"><p>In this module, you learned:</p>
+<ol>
+<li><strong>Meal vocabulary</strong> — сніданок (breakfast), обід (lunch), вечеря (dinner)</li>
+<li><strong>Food categories</strong> — їжа, м'ясо, овочі, фрукти, напої</li>
+<li><strong>Traditional dishes</strong> — борщ, вареники</li>
+<li><strong>Using їсти/пити</strong> — Я їм борщ. Вона п'є каву.</li>
+<li><strong>Taste adjectives</strong> — смачний/смачна/смачне, Смачного!</li>
+<li><strong>Cultural notes</strong> — Bread is sacred, lunch is the main meal, coffee culture in Lviv</li>
+</ol>
+<p><strong>Key phrases:</strong></p>
+<ul>
+<li>Смачного! (Enjoy your meal!)</li>
+<li>Я хочу їсти. (I want to eat.)</li>
+<li>Борщ смачний! (Borscht is delicious!)</li>
+<li>Ти голодний/голодна? (Are you hungry?)</li>
+</ul>
+<p>Next module: Checkpoint! We'll review everything from Modules 1-9 and test your knowledge.</p></div>
+    </div>
+  
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="showSection('activity-0')">Activities →</button>
+      </div>
+    </section>
+  
+    
+    <section id="activity-0" class="section"><div class="card"><h3>Food Category Recognition</h3>
+      <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
+      <div id="activity-0-container"></div>
+      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-1" class="section"><div class="card"><h3>Food Vocabulary Translation</h3>
+      <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
+      <div class="match-container" id="activity-1-container"><svg class="match-lines" id="activity-1-lines"></svg>
+        <div class="match-column" id="activity-1-left"></div>
+        <div class="match-column" id="activity-1-right"></div>
+      </div>
+      <div class="completion-message" id="activity-1-complete"><h3>Perfect!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-2" class="section"><div class="card"><h3>Food vs Drinks</h3>
+      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/13</span></div>
+      <div class="sort-pool" id="activity-2-pool"><div class="sort-items" id="activity-2-items"></div></div>
+      <div class="sort-groups" id="activity-2-groups"></div>
+      <div class="completion-message" id="activity-2-complete"><h3>All Sorted!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-3" class="section"><div class="card"><h3>Ukrainian Food Culture</h3>
+      <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
+      <div id="activity-3-container"></div>
+      <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-4" class="section"><div class="card"><h3>Complete with їсти or пити</h3>
+      <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
+      <div id="activity-4-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-5" class="section"><div class="card"><h3>Meals and Times</h3>
+      <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
+      <div class="match-container" id="activity-5-container"><svg class="match-lines" id="activity-5-lines"></svg>
+        <div class="match-column" id="activity-5-left"></div>
+        <div class="match-column" id="activity-5-right"></div>
+      </div>
+      <div class="completion-message" id="activity-5-complete"><h3>Perfect!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-6" class="section"><div class="card"><h3>Food Word Scramble</h3>
+      <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
+      <div id="activity-6-container" class="order-container"></div>
+      <div class="completion-message" id="activity-6-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-7" class="section"><div class="card"><h3>Describe with смачний</h3>
+      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/12</span></div>
+      <div id="activity-7-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-7-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+    </div></section>
+    
+    <section id="vocab" class="section">
+      <div class="card">
+        <h3>Словник (31)</h3>
+        <div class="vocab-table-container">
+          <table class="vocab-table">
+            <thead><tr>
+    <th>Слово</th>
+    
+    <th>IPA</th>
+    <th>Переклад</th>
+    <th>Примітка</th>
+  </tr></thead>
+            <tbody><tr><td class="vocab-uk">їжа (yizha)</td><td class="vocab-ipa">/ˈjiʒɑ/</td><td class="vocab-en">food</td><td class="vocab-note">General term</td></tr><tr><td class="vocab-uk">сніданок (snidanok)</td><td class="vocab-ipa">/ˈsnʲidɑnɔk/</td><td class="vocab-en">breakfast</td><td class="vocab-note">Morning meal</td></tr><tr><td class="vocab-uk">обід (obid)</td><td class="vocab-ipa">/ɔˈbʲid/</td><td class="vocab-en">lunch</td><td class="vocab-note">Largest meal traditionally</td></tr><tr><td class="vocab-uk">вечеря (vecherya)</td><td class="vocab-ipa">/vɛˈtʃɛrʲɑ/</td><td class="vocab-en">dinner</td><td class="vocab-note">Evening meal</td></tr><tr><td class="vocab-uk">борщ (borshch)</td><td class="vocab-ipa">/bɔrʃtʃ/</td><td class="vocab-en">borscht</td><td class="vocab-note">Ukrainian beet soup</td></tr><tr><td class="vocab-uk">суп (sup)</td><td class="vocab-ipa">/sup/</td><td class="vocab-en">soup</td><td class="vocab-note">General soup</td></tr><tr><td class="vocab-uk">вареники (varenyky)</td><td class="vocab-ipa">/vɑˈrɛnɪkɪ/</td><td class="vocab-en">dumplings</td><td class="vocab-note">Traditional Ukrainian dumplings</td></tr><tr><td class="vocab-uk">хліб (khlib)</td><td class="vocab-ipa">/xlʲib/</td><td class="vocab-en">bread</td><td class="vocab-note">Sacred in Ukrainian culture</td></tr><tr><td class="vocab-uk">м&#039;ясо (m&#039;yaso)</td><td class="vocab-ipa">/ˈmjɑsɔ/</td><td class="vocab-en">meat</td><td class="vocab-note">General term</td></tr><tr><td class="vocab-uk">курка (kurka)</td><td class="vocab-ipa">/ˈkurkɑ/</td><td class="vocab-en">chicken</td><td class="vocab-note">Poultry</td></tr><tr><td class="vocab-uk">риба (ryba)</td><td class="vocab-ipa">/ˈrɪbɑ/</td><td class="vocab-en">fish</td><td class="vocab-note">Seafood</td></tr><tr><td class="vocab-uk">овочі (ovochi)</td><td class="vocab-ipa">/ɔˈvɔtʃi/</td><td class="vocab-en">vegetables</td><td class="vocab-note">General term</td></tr><tr><td class="vocab-uk">фрукти (frukty)</td><td class="vocab-ipa">/ˈfruktɪ/</td><td class="vocab-en">fruits</td><td class="vocab-note">General term</td></tr><tr><td class="vocab-uk">яблуко (yabluko)</td><td class="vocab-ipa">/ˈjɑblukɔ/</td><td class="vocab-en">apple</td><td class="vocab-note">Common fruit</td></tr><tr><td class="vocab-uk">банан (banan)</td><td class="vocab-ipa">/bɑˈnɑn/</td><td class="vocab-en">banana</td><td class="vocab-note">Tropical fruit</td></tr><tr><td class="vocab-uk">картопля (kartoplya)</td><td class="vocab-ipa">/kɑrˈtɔplʲɑ/</td><td class="vocab-en">potato</td><td class="vocab-note">Staple vegetable</td></tr><tr><td class="vocab-uk">помідор (pomidor)</td><td class="vocab-ipa">/pɔmʲiˈdɔr/</td><td class="vocab-en">tomato</td><td class="vocab-note">Common vegetable</td></tr><tr><td class="vocab-uk">огірок (ohirok)</td><td class="vocab-ipa">/ɔɦʲiˈrɔk/</td><td class="vocab-en">cucumber</td><td class="vocab-note">Common vegetable</td></tr><tr><td class="vocab-uk">цибуля (tsybulya)</td><td class="vocab-ipa">/tsɪˈbulʲɑ/</td><td class="vocab-en">onion</td><td class="vocab-note">Essential in cooking</td></tr><tr><td class="vocab-uk">сир (syr)</td><td class="vocab-ipa">/sɪr/</td><td class="vocab-en">cheese</td><td class="vocab-note">Dairy product</td></tr><tr><td class="vocab-uk">яйце (yaytse)</td><td class="vocab-ipa">/ˈjɑjtsɛ/</td><td class="vocab-en">egg</td><td class="vocab-note">Protein source</td></tr><tr><td class="vocab-uk">чай (chay)</td><td class="vocab-ipa">/tʃɑj/</td><td class="vocab-en">tea</td><td class="vocab-note">Hot beverage</td></tr><tr><td class="vocab-uk">кава (kava)</td><td class="vocab-ipa">/ˈkɑvɑ/</td><td class="vocab-en">coffee</td><td class="vocab-note">Hot beverage</td></tr><tr><td class="vocab-uk">вода (voda)</td><td class="vocab-ipa">/vɔˈdɑ/</td><td class="vocab-en">water</td><td class="vocab-note">Essential drink</td></tr><tr><td class="vocab-uk">сік (sik)</td><td class="vocab-ipa">/sʲik/</td><td class="vocab-en">juice</td><td class="vocab-note">Fruit drink</td></tr><tr><td class="vocab-uk">молоко (moloko)</td><td class="vocab-ipa">/mɔlɔˈkɔ/</td><td class="vocab-en">milk</td><td class="vocab-note">Dairy drink</td></tr><tr><td class="vocab-uk">смачний (smachnyy)</td><td class="vocab-ipa">/ˈsmɑtʃnɪj/</td><td class="vocab-en">delicious, tasty</td><td class="vocab-note">Changes: смачна (f), смачне (n)</td></tr><tr><td class="vocab-uk">смачно (smachno)</td><td class="vocab-ipa">/ˈsmɑtʃnɔ/</td><td class="vocab-en">it&#039;s delicious</td><td class="vocab-note">Used as exclamation</td></tr><tr><td class="vocab-uk">Смачного! (Smachnoho!)</td><td class="vocab-ipa">/smɑtʃˈnɔɦɔ/</td><td class="vocab-en">Enjoy your meal!</td><td class="vocab-note">Said before eating</td></tr><tr><td class="vocab-uk">їсти (yisty)</td><td class="vocab-ipa">/ˈjistɪ/</td><td class="vocab-en">to eat</td><td class="vocab-note">Irregular conjugation</td></tr><tr><td class="vocab-uk">пити (pyty)</td><td class="vocab-ipa">/ˈpɪtɪ/</td><td class="vocab-en">to drink</td><td class="vocab-note">Irregular conjugation</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="showSection('lesson')">← Back to Lesson</button>
+      </div>
+    </section>
+  </main><footer>Module 09 · curricula-opus</footer>
+  <script>
+
+    const activitiesData = [{"id":"activity-0","type":"quiz","title":"Food Category Recognition","data":{"type":"quiz","questions":[{"question":"What category is борщ (borscht)?","options":["суп (soup)","напій (drink)","фрукт (fruit)","м'ясо (meat)"],"correctIndex":0,"explanation":"Борщ is Ukraine's iconic beet soup!"},{"question":"What category is картопля (potato)?","options":["овоч (vegetable)","м'ясо (meat)","напій (drink)","фрукт (fruit)"],"correctIndex":0,"explanation":"Картопля is a staple vegetable in Ukrainian cuisine."},{"question":"What category is яблуко (apple)?","options":["фрукт (fruit)","овоч (vegetable)","м'ясо (meat)","напій (drink)"],"correctIndex":0,"explanation":"Яблуко is a common fruit."},{"question":"What category is курка (chicken)?","options":["м'ясо (meat)","овоч (vegetable)","напій (drink)","фрукт (fruit)"],"correctIndex":0,"explanation":"Курка is a type of meat/protein."},{"question":"What category is кава (coffee)?","options":["напій (drink)","їжа (food)","овоч (vegetable)","фрукт (fruit)"],"correctIndex":0,"explanation":"Кава is a hot beverage, especially popular in Lviv!"},{"question":"What category is хліб (bread)?","options":["їжа (food)","напій (drink)","фрукт (fruit)","овоч (vegetable)"],"correctIndex":0,"explanation":"Хліб is a staple food, sacred in Ukrainian culture."},{"question":"What category is чай (tea)?","options":["напій (drink)","їжа (food)","овоч (vegetable)","м'ясо (meat)"],"correctIndex":0,"explanation":"Чай is a popular hot drink."},{"question":"What category is риба (fish)?","options":["м'ясо (meat/protein)","овоч (vegetable)","напій (drink)","фрукт (fruit)"],"correctIndex":0,"explanation":"Риба is a protein source."},{"question":"What category is помідор (tomato)?","options":["овоч (vegetable)","фрукт (fruit)","м'ясо (meat)","напій (drink)"],"correctIndex":0,"explanation":"Помідор is commonly used as a vegetable in cooking."},{"question":"What category is молоко (milk)?","options":["напій (drink)","їжа (food)","овоч (vegetable)","фрукт (fruit)"],"correctIndex":0,"explanation":"Молоко is a dairy drink."},{"question":"What category is вареники (dumplings)?","options":["їжа (food)","напій (drink)","овоч (vegetable)","фрукт (fruit)"],"correctIndex":0,"explanation":"Вареники are traditional Ukrainian dumplings!"},{"question":"What category is сік (juice)?","options":["напій (drink)","їжа (food)","овоч (vegetable)","м'ясо (meat)"],"correctIndex":0,"explanation":"Сік is a fruit drink."}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-1","type":"match-up","title":"Food Vocabulary Translation","data":{"type":"match-up","pairs":[{"left":"борщ","right":"beet soup"},{"left":"вареники","right":"dumplings"},{"left":"хліб","right":"bread"},{"left":"м'ясо","right":"meat"},{"left":"курка","right":"chicken"},{"left":"риба","right":"fish"},{"left":"картопля","right":"potato"},{"left":"яблуко","right":"apple"},{"left":"чай","right":"tea"},{"left":"кава","right":"coffee"},{"left":"вода","right":"water"},{"left":"молоко","right":"milk"}],"shuffleRight":true}},{"id":"activity-2","type":"group-sort","title":"Food vs Drinks","data":{"type":"group-sort","groups":[{"id":"","name":"Їжа","items":["борщ","хліб","м'ясо","вареники","яйце","риба","картопля","сир"],"nameUk":"Food"},{"id":"","name":"Напої","items":["чай","кава","вода","сік","молоко"],"nameUk":"Drinks"}],"shuffleItems":true}},{"id":"activity-3","type":"true-false","title":"Ukrainian Food Culture","data":{"type":"true-false","statements":[{"statement":"Обід (lunch) is traditionally the largest meal in Ukraine.","isTrue":true,"explanation":"Correct! Lunch often features soup followed by a main course, making it the biggest meal of the day."},{"statement":"Борщ is originally Russian.","isTrue":false,"explanation":"False! Борщ is Ukrainian! UNESCO recognized it as Ukrainian Intangible Cultural Heritage in 2022."},{"statement":"Смачного! means \"Enjoy your meal!\"","isTrue":true,"explanation":"Correct! Say this before others start eating, similar to \"Bon appétit!\""},{"statement":"Вареники can only be filled with potatoes.","isTrue":false,"explanation":"False! Вареники can have many fillings: cheese, cherries, meat, cabbage, and more!"},{"statement":"Хліб (bread) is considered sacred in Ukrainian culture.","isTrue":true,"explanation":"Correct! Bread represents hospitality and should never be wasted or disrespected."},{"statement":"Coffee culture is weak in Ukraine.","isTrue":false,"explanation":"False! Lviv has a centuries-old coffee tradition dating back to Austro-Hungarian times."},{"statement":"The phrase \"хліб-сіль\" (bread and salt) represents Ukrainian hospitality.","isTrue":true,"explanation":"Correct! This traditional greeting symbolizes welcoming guests."},{"statement":"Сметана (sour cream) is often served with борщ.","isTrue":true,"explanation":"Correct! It's a classic topping for this iconic Ukrainian soup."},{"statement":"Ukrainians typically eat dinner as their largest meal.","isTrue":false,"explanation":"False! Обід (lunch) is traditionally the largest meal, not dinner."},{"statement":"Lviv is famous for its coffee houses.","isTrue":true,"explanation":"Correct! The city has some of the best coffee houses in Eastern Europe."},{"statement":"Вареники are originally from Poland.","isTrue":false,"explanation":"False! Вареники are a traditional Ukrainian dish."},{"statement":"\"Я хочу їсти\" means \"I want to eat.\"","isTrue":true,"explanation":"Correct! This is how you express hunger in Ukrainian."}]}},{"id":"activity-4","type":"fill-blank","title":"Complete with їсти or пити","data":{"type":"fill-blank","items":[{"prompt":"Я ___ борщ.","answer":"їм","options":["їм","п'ю","їси","п'єш"]},{"prompt":"Ти ___ каву?","answer":"п'єш","options":["п'єш","їси","п'ю","їм"]},{"prompt":"Вона ___ яблуко.","answer":"їсть","options":["їсть","п'є","їм","п'ю"]},{"prompt":"Ми ___ чай.","answer":"п'ємо","options":["п'ємо","їмо","п'єш","їси"]},{"prompt":"Вони ___ вареники.","answer":"їдять","options":["їдять","п'ють","їмо","п'ємо"]},{"prompt":"Він ___ воду.","answer":"п'є","options":["п'є","їсть","п'ю","їм"]},{"prompt":"Ви ___ хліб?","answer":"їсте","options":["їсте","п'єте","їм","п'ю"]},{"prompt":"Я ___ молоко.","answer":"п'ю","options":["п'ю","їм","п'єш","їси"]},{"prompt":"Вона ___ сік.","answer":"п'є","options":["п'є","їсть","п'ємо","їмо"]},{"prompt":"Ми ___ м'ясо.","answer":"їмо","options":["їмо","п'ємо","їсть","п'є"]},{"prompt":"Ти ___ рибу?","answer":"їси","options":["їси","п'єш","їм","п'ю"]},{"prompt":"Вони ___ каву.","answer":"п'ють","options":["п'ють","їдять","п'ємо","їмо"]}]}},{"id":"activity-5","type":"match-up","title":"Meals and Times","data":{"type":"match-up","pairs":[{"left":"сніданок","right":"breakfast"},{"left":"обід","right":"lunch"},{"left":"вечеря","right":"dinner"},{"left":"снідаю","right":"I'm having breakfast"},{"left":"обідаю","right":"I'm having lunch"},{"left":"вечеряю","right":"I'm having dinner"},{"left":"Я хочу їсти","right":"I want to eat"},{"left":"Ти голодний?","right":"Are you hungry? (to male)"},{"left":"Ти голодна?","right":"Are you hungry? (to female)"},{"left":"Смачного!","right":"Enjoy your meal!"},{"left":"Це смачно!","right":"This is delicious!"},{"left":"Дякую за обід!","right":"Thank you for lunch!"}],"shuffleRight":true}},{"id":"activity-6","type":"anagram","title":"Food Word Scramble","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["щ","р","о","б"],"answer":"борщ","translation":"borscht"},{"letters":["б","і","л","х"],"answer":"хліб","translation":"bread"},{"letters":["а","в","а","к"],"answer":"кава","translation":"coffee"},{"letters":["й","а","ч"],"answer":"чай","translation":"tea"},{"letters":["д","а","о","в"],"answer":"вода","translation":"water"},{"letters":["о","л","о","к","о","м"],"answer":"молоко","translation":"milk"},{"letters":["к","с","і"],"answer":"сік","translation":"juice"},{"letters":["а","р","и","б"],"answer":"риба","translation":"fish"},{"letters":["а","р","к","у","к"],"answer":"курка","translation":"chicken"},{"letters":["ц","е","я","й"],"answer":"яйце","translation":"egg"},{"letters":["р","и","с"],"answer":"сир","translation":"cheese"},{"letters":["о","с","я","м","'"],"answer":"м'ясо","translation":"meat"}]}},{"id":"activity-7","type":"fill-blank","title":"Describe with смачний","data":{"type":"fill-blank","items":[{"prompt":"Борщ ___!","answer":"смачний","options":["смачний","смачна","смачне","смачно"]},{"prompt":"Кава ___!","answer":"смачна","options":["смачна","смачний","смачне","смачно"]},{"prompt":"Яблуко ___!","answer":"смачне","options":["смачне","смачний","смачна","смачно"]},{"prompt":"Вареники ___!","answer":"смачні","options":["смачні","смачний","смачна","смачне"]},{"prompt":"Тут дуже ___!","answer":"смачно","options":["смачно","смачний","смачна","смачне"]},{"prompt":"Чай ___!","answer":"смачний","options":["смачний","смачна","смачне","смачно"]},{"prompt":"Вода ___!","answer":"смачна","options":["смачна","смачний","смачне","смачно"]},{"prompt":"М'ясо ___!","answer":"смачне","options":["смачне","смачний","смачна","смачно"]},{"prompt":"___! Дякую за обід!","answer":"Смачного","options":["Смачного","Смачний","Смачна","Смачно"]},{"prompt":"Молоко ___!","answer":"смачне","options":["смачне","смачний","смачна","смачно"]},{"prompt":"Хліб ___!","answer":"смачний","options":["смачний","смачна","смачне","смачно"]},{"prompt":"Картопля ___!","answer":"смачна","options":["смачна","смачний","смачне","смачно"]}]}}];
+    const vocabData = [{"uk":"їжа (yizha)","translit":"","en":"food","note":"General term"},{"uk":"сніданок (snidanok)","translit":"","en":"breakfast","note":"Morning meal"},{"uk":"обід (obid)","translit":"","en":"lunch","note":"Largest meal traditionally"},{"uk":"вечеря (vecherya)","translit":"","en":"dinner","note":"Evening meal"},{"uk":"борщ (borshch)","translit":"","en":"borscht","note":"Ukrainian beet soup"},{"uk":"суп (sup)","translit":"","en":"soup","note":"General soup"},{"uk":"вареники (varenyky)","translit":"","en":"dumplings","note":"Traditional Ukrainian dumplings"},{"uk":"хліб (khlib)","translit":"","en":"bread","note":"Sacred in Ukrainian culture"},{"uk":"м'ясо (m'yaso)","translit":"","en":"meat","note":"General term"},{"uk":"курка (kurka)","translit":"","en":"chicken","note":"Poultry"},{"uk":"риба (ryba)","translit":"","en":"fish","note":"Seafood"},{"uk":"овочі (ovochi)","translit":"","en":"vegetables","note":"General term"},{"uk":"фрукти (frukty)","translit":"","en":"fruits","note":"General term"},{"uk":"яблуко (yabluko)","translit":"","en":"apple","note":"Common fruit"},{"uk":"банан (banan)","translit":"","en":"banana","note":"Tropical fruit"},{"uk":"картопля (kartoplya)","translit":"","en":"potato","note":"Staple vegetable"},{"uk":"помідор (pomidor)","translit":"","en":"tomato","note":"Common vegetable"},{"uk":"огірок (ohirok)","translit":"","en":"cucumber","note":"Common vegetable"},{"uk":"цибуля (tsybulya)","translit":"","en":"onion","note":"Essential in cooking"},{"uk":"сир (syr)","translit":"","en":"cheese","note":"Dairy product"},{"uk":"яйце (yaytse)","translit":"","en":"egg","note":"Protein source"},{"uk":"чай (chay)","translit":"","en":"tea","note":"Hot beverage"},{"uk":"кава (kava)","translit":"","en":"coffee","note":"Hot beverage"},{"uk":"вода (voda)","translit":"","en":"water","note":"Essential drink"},{"uk":"сік (sik)","translit":"","en":"juice","note":"Fruit drink"},{"uk":"молоко (moloko)","translit":"","en":"milk","note":"Dairy drink"},{"uk":"смачний (smachnyy)","translit":"","en":"delicious, tasty","note":"Changes: смачна (f), смачне (n)"},{"uk":"смачно (smachno)","translit":"","en":"it's delicious","note":"Used as exclamation"},{"uk":"Смачного! (Smachnoho!)","translit":"","en":"Enjoy your meal!","note":"Said before eating"},{"uk":"їсти (yisty)","translit":"","en":"to eat","note":"Irregular conjugation"},{"uk":"пити (pyty)","translit":"","en":"to drink","note":"Irregular conjugation"}];
+  
+// Answer callout toggle (for new > [!answer] syntax)
+function toggleAnswer(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const isUkrainian = document.querySelector('.level-badge')?.textContent.match(/B[12]|C[12]/);
+  const showText = isUkrainian ? 'Показати відповідь' : 'Show Answer';
+  const hideText = isUkrainian ? 'Сховати відповідь' : 'Hide Answer';
+  const show = !el.classList.contains('show');
+  if (show) {
+    el.classList.add('show');
+    btn.textContent = hideText;
+    btn.classList.add('revealed');
+  } else {
+    el.classList.remove('show');
+    btn.textContent = showText;
+    btn.classList.remove('revealed');
+  }
+}
+
+// Section navigation
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
+  document.querySelector('[data-section="' + id + '"]')?.classList.add('active');
+}
+document.querySelectorAll('.nav-tab').forEach(t => t.addEventListener('click', () => showSection(t.dataset.section)));
+
+// Activity reset dispatcher
+function resetActivity(sectionId) {
+  const activity = activitiesData.find(a => a.id === sectionId);
+  if (!activity) return;
+
+  switch (activity.type) {
+    case 'match-up':
+      resetMatch(sectionId);
+      break;
+    case 'quiz':
+      resetQuiz(sectionId);
+      break;
+    case 'true-false':
+      resetTf(sectionId);
+      break;
+    case 'group-sort':
+      resetSort(sectionId);
+      break;
+    case 'fill-blank':
+    case 'gap-fill':
+      resetFill(sectionId);
+      break;
+    case 'unjumble':
+    case 'anagram':
+      resetOrder(sectionId);
+      break;
+    case 'select':
+      resetSelect(sectionId);
+      break;
+  }
+}
+
+// Initialize all activities from activitiesData array
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof activitiesData === 'undefined') return;
+
+  activitiesData.forEach(activity => {
+    switch (activity.type) {
+      case 'match-up':
+        initMatch(activity.id, activity.data);
+        break;
+      case 'quiz':
+        initQuiz(activity.id, activity.data);
+        break;
+      case 'true-false':
+        initTf(activity.id, activity.data);
+        break;
+      case 'group-sort':
+        initSort(activity.id, activity.data);
+        break;
+      case 'fill-blank':
+      case 'gap-fill':
+        initFill(activity.id, activity.data);
+        break;
+      case 'unjumble':
+      case 'anagram':
+        initOrder(activity.id, activity.data);
+        break;
+      case 'select':
+        initSelect(activity.id, activity.data);
+        break;
+    }
+  });
+
+  // Initialize vocabulary
+  if (typeof initVocab === 'function') initVocab();
+});
+
+
+// Quiz Activity - supports multiple instances
+const quizState = {};
+
+function initQuiz(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.questions || !data.questions.length) return;
+
+  quizState[sectionId] = { score: 0, answered: 0, total: data.questions.length, data: data };
+
+  c.innerHTML = '';
+  data.questions.forEach((q, i) => {
+    const sh = [...q.options].sort(() => Math.random() - 0.5);
+    const cor = sh.indexOf(q.options[q.correctIndex]);
+    const div = document.createElement('div');
+    div.className = 'quiz-question';
+    div.dataset.section = sectionId;
+    div.innerHTML = '<h4>Q' + (i + 1) + ': ' + q.question + '</h4><div class="quiz-options">' + sh.map((o, j) => '<div class="quiz-option" data-c="' + (j === cor) + '" data-q="' + i + '" data-section="' + sectionId + '">' + o + '</div>').join('') + '</div><div class="quiz-explanation" id="' + sectionId + '-exp-' + i + '">' + (q.explanation || '') + '</div>';
+    c.appendChild(div);
+  });
+  c.querySelectorAll('.quiz-option').forEach(o => o.addEventListener('click', handleQuiz));
+}
+
+function handleQuiz(e) {
+  const opt = e.target, q = opt.closest('.quiz-question');
+  const sectionId = opt.dataset.section;
+  if (q.classList.contains('answered')) return;
+  q.classList.add('answered');
+
+  const state = quizState[sectionId];
+  if (opt.dataset.c === 'true') {
+    opt.classList.add('correct');
+    state.score++;
+  } else {
+    opt.classList.add('wrong');
+    q.querySelector('[data-c="true"]').classList.add('correct');
+  }
+  document.getElementById(sectionId + '-exp-' + opt.dataset.q)?.classList.add('show');
+  document.getElementById(sectionId + '-score').textContent = state.score;
+  state.answered++;
+  if (state.answered === state.total) document.getElementById(sectionId + '-complete').classList.add('show');
+}
+
+function resetQuiz(sectionId) {
+  const state = quizState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initQuiz(sectionId, state.data);
+}
+
+
+// True/False Activity - supports multiple instances
+const tfState = {};
+
+function initTf(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.statements || !data.statements.length) return;
+
+  tfState[sectionId] = { score: 0, answered: 0, total: data.statements.length, data: data };
+
+  c.innerHTML = '';
+  data.statements.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'tf-statement';
+    div.dataset.section = sectionId;
+    div.innerHTML = '<p class="tf-text">' + s.statement + '</p>' +
+      '<div class="tf-buttons">' +
+      '<button class="tf-btn" data-value="true" data-idx="' + i + '" data-section="' + sectionId + '">True</button>' +
+      '<button class="tf-btn" data-value="false" data-idx="' + i + '" data-section="' + sectionId + '">False</button>' +
+      '</div>' +
+      '<div class="tf-explanation" id="' + sectionId + '-exp-' + i + '">' + (s.explanation || '') + '</div>';
+    div.dataset.correct = s.isTrue;
+    c.appendChild(div);
+  });
+  c.querySelectorAll('.tf-btn').forEach(b => b.addEventListener('click', handleTf));
+}
+
+function handleTf(e) {
+  const btn = e.target;
+  const sectionId = btn.dataset.section;
+  const idx = parseInt(btn.dataset.idx);
+  const statement = btn.closest('.tf-statement');
+  const state = tfState[sectionId];
+  if (statement.classList.contains('answered')) return;
+
+  statement.classList.add('answered');
+  const correct = state.data.statements[idx].isTrue;
+  const clicked = btn.dataset.value === 'true';
+
+  if (clicked === correct) {
+    btn.classList.add('correct');
+    state.score++;
+  } else {
+    btn.classList.add('wrong');
+    // Highlight the correct answer
+    statement.querySelector('[data-value="' + correct + '"]').classList.add('correct');
+  }
+
+  const exp = document.getElementById(sectionId + '-exp-' + idx);
+  if (exp && exp.textContent) exp.classList.add('show');
+
+  document.getElementById(sectionId + '-score').textContent = state.score;
+  state.answered++;
+  if (state.answered === state.total) document.getElementById(sectionId + '-complete').classList.add('show');
+}
+
+function resetTf(sectionId) {
+  const state = tfState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initTf(sectionId, state.data);
+}
+
+
+// Match Activity - supports multiple instances
+const matchState = {};
+
+function initMatch(sectionId, data) {
+  const container = document.getElementById(sectionId + '-container');
+  const leftCol = document.getElementById(sectionId + '-left');
+  const rightCol = document.getElementById(sectionId + '-right');
+  if (!container || !leftCol || !rightCol || !data.pairs || !data.pairs.length) return;
+
+  const pairs = data.pairs;
+  matchState[sectionId] = { selected: null, score: 0, matched: [], total: pairs.length, data: data };
+
+  // Create left column items
+  const shuffledLeft = pairs.map((p, i) => ({ text: p.left, idx: i })).sort(() => Math.random() - 0.5);
+  leftCol.innerHTML = shuffledLeft.map(p => '<div class="match-item" data-pair="' + p.idx + '" data-section="' + sectionId + '" data-side="left">' + p.text + '</div>').join('');
+
+  // Create right column items
+  const shuffledRight = pairs.map((p, i) => ({ text: p.right, idx: i })).sort(() => Math.random() - 0.5);
+  rightCol.innerHTML = shuffledRight.map(p => '<div class="match-item" data-pair="' + p.idx + '" data-section="' + sectionId + '" data-side="right">' + p.text + '</div>').join('');
+
+  // Attach click handlers
+  leftCol.querySelectorAll('.match-item').forEach(item => {
+    item.addEventListener('click', () => handleMatchLeft(item));
+  });
+  rightCol.querySelectorAll('.match-item').forEach(item => {
+    item.addEventListener('click', () => handleMatchRight(item));
+  });
+}
+
+function handleMatchLeft(item) {
+  const sectionId = item.dataset.section;
+  const state = matchState[sectionId];
+  if (item.classList.contains('matched')) return;
+
+  const leftCol = document.getElementById(sectionId + '-left');
+  leftCol.querySelectorAll('.match-item').forEach(i => i.classList.remove('selected'));
+  item.classList.add('selected');
+  state.selected = { el: item, pair: item.dataset.pair };
+}
+
+function handleMatchRight(item) {
+  const sectionId = item.dataset.section;
+  const state = matchState[sectionId];
+  if (item.classList.contains('matched') || !state.selected) return;
+
+  if (state.selected.pair === item.dataset.pair) {
+    state.selected.el.classList.remove('selected');
+    state.selected.el.classList.add('matched');
+    item.classList.add('matched');
+    state.matched.push({ left: state.selected.el, right: item });
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+    drawMatchLines(sectionId);
+    if (state.score === state.total) document.getElementById(sectionId + '-complete').classList.add('show');
+  } else {
+    item.classList.add('wrong');
+    setTimeout(() => item.classList.remove('wrong'), 300);
+  }
+  state.selected = null;
+}
+
+function drawMatchLines(sectionId) {
+  const svg = document.getElementById(sectionId + '-lines');
+  const container = document.getElementById(sectionId + '-container');
+  const state = matchState[sectionId];
+  if (!svg || !container || !state) return;
+
+  const r = container.getBoundingClientRect();
+  svg.innerHTML = '';
+  svg.setAttribute('viewBox', '0 0 ' + r.width + ' ' + r.height);
+  state.matched.forEach(p => {
+    const lr = p.left.getBoundingClientRect(), rr = p.right.getBoundingClientRect();
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', lr.right - r.left);
+    line.setAttribute('y1', lr.top + lr.height / 2 - r.top);
+    line.setAttribute('x2', rr.left - r.left);
+    line.setAttribute('y2', rr.top + rr.height / 2 - r.top);
+    line.setAttribute('stroke', '#26a269');
+    line.setAttribute('stroke-width', '2');
+    svg.appendChild(line);
+  });
+}
+
+function resetMatch(sectionId) {
+  const state = matchState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  document.getElementById(sectionId + '-lines').innerHTML = '';
+  initMatch(sectionId, state.data);
+}
+
+// Redraw lines on resize for all match activities
+window.addEventListener('resize', () => {
+  Object.keys(matchState).forEach(sectionId => drawMatchLines(sectionId));
+});
+
+
+// Sort Activity - supports multiple instances
+const sortState = {};
+
+function initSort(sectionId, data) {
+  const pool = document.getElementById(sectionId + '-items');
+  const groupsContainer = document.getElementById(sectionId + '-groups');
+  if (!pool || !groupsContainer || !data.groups || !data.groups.length) return;
+
+  const groups = data.groups;
+  const totalItems = groups.reduce((sum, g) => sum + g.items.length, 0);
+  sortState[sectionId] = { score: 0, total: totalItems, dragItem: null, data: data };
+
+  // Create group containers
+  groupsContainer.innerHTML = groups.map((g, i) =>
+    '<div class="sort-group" data-group="' + i + '" data-section="' + sectionId + '"><h4>' + g.name + '</h4><div class="sort-items"></div></div>'
+  ).join('');
+
+  // Flatten and shuffle all items
+  const allItems = groups.flatMap((g, gi) => g.items.map(item => ({ text: item, group: gi })));
+  allItems.sort(() => Math.random() - 0.5);
+
+  // Create draggable items
+  pool.innerHTML = '';
+  allItems.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'sort-item';
+    el.textContent = item.text;
+    el.draggable = true;
+    el.dataset.group = item.group;
+    el.dataset.section = sectionId;
+    el.addEventListener('dragstart', () => {
+      sortState[sectionId].dragItem = el;
+      el.classList.add('dragging');
+    });
+    el.addEventListener('dragend', () => {
+      el.classList.remove('dragging');
+      sortState[sectionId].dragItem = null;
+    });
+    pool.appendChild(el);
+  });
+
+  // Setup drop zones
+  groupsContainer.querySelectorAll('.sort-group').forEach(g => {
+    g.addEventListener('dragover', e => {
+      e.preventDefault();
+      g.classList.add('drag-over');
+    });
+    g.addEventListener('dragleave', () => g.classList.remove('drag-over'));
+    g.addEventListener('drop', e => handleSortDrop(e, g));
+  });
+}
+
+function handleSortDrop(e, groupEl) {
+  e.preventDefault();
+  groupEl.classList.remove('drag-over');
+  const sectionId = groupEl.dataset.section;
+  const state = sortState[sectionId];
+  const dragItem = state.dragItem;
+  if (!dragItem) return;
+
+  if (groupEl.dataset.group === dragItem.dataset.group) {
+    dragItem.classList.add('correct');
+    groupEl.querySelector('.sort-items').appendChild(dragItem);
+    dragItem.draggable = false;
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+    if (state.score === state.total) document.getElementById(sectionId + '-complete').classList.add('show');
+  } else {
+    dragItem.classList.add('wrong');
+    setTimeout(() => dragItem.classList.remove('wrong'), 300);
+  }
+}
+
+function resetSort(sectionId) {
+  const state = sortState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initSort(sectionId, state.data);
+}
+
+
+// Fill-in Activity - supports multiple instances
+const fillState = {};
+
+function initFill(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  fillState[sectionId] = { score: 0, answered: 0, total: data.items.length, data: data };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'fill-question';
+    div.dataset.section = sectionId;
+
+    // Generate options: correct answer + 3 distractors
+    let options = [];
+    if (item.options && item.options.length >= 4) {
+      options = item.options;
+    } else {
+      // Fallback: generate distractors from other items' answers
+      options = [item.answer];
+      const otherAnswers = data.items
+        .filter((_, idx) => idx !== i)
+        .map(it => it.answer)
+        .filter(a => a && a !== item.answer);
+
+      const shuffled = otherAnswers.sort(() => Math.random() - 0.5);
+      options.push(...shuffled.slice(0, 3));
+
+      while (options.length < 4) {
+        options.push('—');
+      }
+    }
+
+    // Shuffle options
+    const shuffledOptions = [...options].sort(() => Math.random() - 0.5);
+
+    // Replace ___ in the sentence with a dropdown
+    const sentence = (item.prompt || item.sentence || '').replace(/___/g,
+      `<select class="fill-dropdown" data-idx="${i}" data-answer="${item.answer}" data-section="${sectionId}">
+        <option value="" disabled selected>—</option>
+        ${shuffledOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+      </select>`
+    );
+
+    div.innerHTML = `
+      <div class="fill-sentence">
+        <span class="fill-number">${i + 1}.</span>
+        ${sentence}
+      </div>
+      <div class="fill-feedback" id="${sectionId}-fb-${i}"></div>
+    `;
+    c.appendChild(div);
+  });
+
+  // Event delegation for dropdown changes
+  c.addEventListener('change', (e) => {
+    if (e.target.classList.contains('fill-dropdown')) {
+      handleFillChoice(e.target);
+    }
+  });
+}
+
+function handleFillChoice(dropdown) {
+  const q = dropdown.closest('.fill-question');
+  const sectionId = dropdown.dataset.section;
+  const state = fillState[sectionId];
+  if (q.classList.contains('answered')) return;
+
+  const idx = dropdown.dataset.idx;
+  const userAnswer = dropdown.value;
+  const correctAnswer = dropdown.dataset.answer;
+  const fb = document.getElementById(sectionId + '-fb-' + idx);
+
+  q.classList.add('answered');
+  dropdown.disabled = true;
+
+  if (userAnswer === correctAnswer) {
+    dropdown.classList.add('correct');
+    fb.innerHTML = '<span class="correct-text">✓ Correct!</span>';
+    state.score++;
+  } else {
+    dropdown.classList.add('wrong');
+    fb.innerHTML = `<span class="wrong-text">✗ Answer: ${correctAnswer}</span>`;
+  }
+
+  document.getElementById(sectionId + '-score').textContent = state.score;
+  state.answered++;
+  if (state.answered === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetFill(sectionId) {
+  const state = fillState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initFill(sectionId, state.data);
+}
+
+
+// Order/Unjumble/Anagram Activity - supports multiple instances
+const orderState = {};
+
+function initOrder(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  orderState[sectionId] = { score: 0, total: data.items.length, data: data };
+  c.innerHTML = '';
+
+  if (data.isAnagram) {
+    initAnagram(sectionId, c, data);
+  } else if (data.isUnjumble) {
+    initUnjumble(sectionId, c, data);
+  } else {
+    initClassicOrder(sectionId, c, data);
+  }
+}
+
+// UNJUMBLE: Drag-and-drop words to form sentences
+function initUnjumble(sectionId, container, data) {
+  data.items.forEach((item, idx) => {
+    const question = document.createElement('div');
+    question.className = 'unjumble-question';
+    question.dataset.idx = idx;
+    question.dataset.section = sectionId;
+
+    // Shuffle words
+    const shuffledWords = [...item.words].sort(() => Math.random() - 0.5);
+
+    question.innerHTML = `
+      <div class="unjumble-number">${idx + 1}.</div>
+      <div class="unjumble-word-row" data-idx="${idx}" data-section="${sectionId}">
+        ${shuffledWords.map((word, i) => `
+          <span class="unjumble-word" draggable="true" data-word="${word}">${word}</span>
+        `).join('')}
+      </div>
+      <div class="unjumble-actions">
+        <button class="btn btn-sm btn-outline unjumble-check" data-idx="${idx}" data-section="${sectionId}">Check</button>
+        <button class="btn btn-sm btn-outline unjumble-reset" data-idx="${idx}" data-section="${sectionId}">Reset</button>
+      </div>
+      <div class="unjumble-feedback" data-idx="${idx}" data-section="${sectionId}"></div>
+    `;
+
+    container.appendChild(question);
+
+    // Initialize drag-and-drop for this row
+    initUnjumbleDragDrop(question.querySelector('.unjumble-word-row'));
+  });
+
+  // Event delegation for buttons
+  container.addEventListener('click', handleUnjumbleClick);
+}
+
+function initUnjumbleDragDrop(row) {
+  let dragItem = null;
+
+  row.querySelectorAll('.unjumble-word').forEach(word => {
+    word.addEventListener('dragstart', (e) => {
+      dragItem = word;
+      word.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    word.addEventListener('dragend', () => {
+      word.classList.remove('dragging');
+      dragItem = null;
+    });
+
+    word.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (!dragItem || dragItem === word) return;
+
+      const rect = word.getBoundingClientRect();
+      const midX = rect.left + rect.width / 2;
+
+      if (e.clientX < midX) {
+        row.insertBefore(dragItem, word);
+      } else {
+        row.insertBefore(dragItem, word.nextSibling);
+      }
+    });
+  });
+
+  // Touch support for mobile
+  let touchItem = null;
+  let touchClone = null;
+
+  row.querySelectorAll('.unjumble-word').forEach(word => {
+    word.addEventListener('touchstart', (e) => {
+      touchItem = word;
+      word.classList.add('dragging');
+
+      // Create a clone for visual feedback
+      touchClone = word.cloneNode(true);
+      touchClone.classList.add('touch-clone');
+      document.body.appendChild(touchClone);
+      updateTouchClone(e.touches[0]);
+    });
+
+    word.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (!touchItem) return;
+      updateTouchClone(e.touches[0]);
+
+      // Find which word we're over
+      const touch = e.touches[0];
+      const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+      const targetWord = elements.find(el => el.classList.contains('unjumble-word') && el !== touchItem);
+
+      if (targetWord && targetWord.parentNode === row) {
+        const rect = targetWord.getBoundingClientRect();
+        const midX = rect.left + rect.width / 2;
+        if (touch.clientX < midX) {
+          row.insertBefore(touchItem, targetWord);
+        } else {
+          row.insertBefore(touchItem, targetWord.nextSibling);
+        }
+      }
+    });
+
+    word.addEventListener('touchend', () => {
+      if (touchItem) touchItem.classList.remove('dragging');
+      if (touchClone) touchClone.remove();
+      touchItem = null;
+      touchClone = null;
+    });
+  });
+
+  function updateTouchClone(touch) {
+    if (touchClone) {
+      touchClone.style.left = (touch.clientX - 40) + 'px';
+      touchClone.style.top = (touch.clientY - 20) + 'px';
+    }
+  }
+}
+
+function handleUnjumbleClick(e) {
+  const target = e.target;
+
+  if (target.classList.contains('unjumble-check')) {
+    checkUnjumbleAnswer(target.dataset.section, parseInt(target.dataset.idx));
+  }
+
+  if (target.classList.contains('unjumble-reset')) {
+    resetUnjumbleQuestion(target.dataset.section, parseInt(target.dataset.idx));
+  }
+}
+
+function checkUnjumbleAnswer(sectionId, idx) {
+  const state = orderState[sectionId];
+  const item = state.data.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  // Build user's answer from current word order
+  const words = row.querySelectorAll('.unjumble-word');
+  const userAnswer = Array.from(words).map(w => w.dataset.word).join(' ');
+
+  // Normalize for comparison (handle punctuation)
+  const normalize = (s) => s.replace(/[?!.,]/g, '').toLowerCase().trim();
+  const isCorrect = normalize(userAnswer) === normalize(item.answer);
+
+  if (isCorrect) {
+    question.classList.add('answered', 'correct');
+    row.classList.add('correct');
+    words.forEach(w => w.setAttribute('draggable', 'false'));
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    feedback.innerHTML = `
+      <span class="correct-text">✓ Correct!</span>
+      <span class="translation">${item.translation || ''}</span>
+    `;
+    feedback.classList.add('show');
+
+    if (state.score === state.total) {
+      document.getElementById(sectionId + '-complete').classList.add('show');
+    }
+  } else {
+    question.classList.add('wrong');
+    row.classList.add('wrong');
+
+    feedback.innerHTML = `
+      <span class="wrong-text">✗ Try again. Hint: ${item.answer}</span>
+    `;
+    feedback.classList.add('show');
+
+    setTimeout(() => {
+      question.classList.remove('wrong');
+      row.classList.remove('wrong');
+      feedback.classList.remove('show');
+    }, 2000);
+  }
+}
+
+function resetUnjumbleQuestion(sectionId, idx) {
+  const state = orderState[sectionId];
+  const item = state.data.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (question.classList.contains('correct')) return;
+
+  // Re-shuffle and rebuild
+  const shuffledWords = [...item.words].sort(() => Math.random() - 0.5);
+  row.innerHTML = shuffledWords.map(word => `
+    <span class="unjumble-word" draggable="true" data-word="${word}">${word}</span>
+  `).join('');
+
+  initUnjumbleDragDrop(row);
+
+  question.classList.remove('wrong');
+  row.classList.remove('wrong');
+  feedback.innerHTML = '';
+  feedback.classList.remove('show');
+}
+
+// ANAGRAM: Drag-and-drop letters to form a single word
+function initAnagram(sectionId, container, data) {
+  data.items.forEach((item, idx) => {
+    const question = document.createElement('div');
+    question.className = 'anagram-question';
+    question.dataset.idx = idx;
+    question.dataset.section = sectionId;
+
+    // Shuffle letters
+    const shuffledLetters = [...item.letters].sort(() => Math.random() - 0.5);
+
+    question.innerHTML = `
+      <div class="anagram-number">${idx + 1}.</div>
+      <div class="anagram-letter-row" data-idx="${idx}" data-section="${sectionId}">
+        ${shuffledLetters.map((letter, i) => `
+          <span class="anagram-letter" draggable="true" data-letter="${letter}">${letter}</span>
+        `).join('')}
+      </div>
+      <div class="anagram-actions">
+        <button class="btn btn-sm btn-outline anagram-check" data-idx="${idx}" data-section="${sectionId}">Check</button>
+        <button class="btn btn-sm btn-outline anagram-reset" data-idx="${idx}" data-section="${sectionId}">Reset</button>
+      </div>
+      <div class="anagram-feedback" data-idx="${idx}" data-section="${sectionId}"></div>
+    `;
+
+    container.appendChild(question);
+
+    // Initialize drag-and-drop for this row
+    initAnagramDragDrop(question.querySelector('.anagram-letter-row'));
+  });
+
+  // Event delegation for buttons
+  container.addEventListener('click', handleAnagramClick);
+}
+
+function initAnagramDragDrop(row) {
+  let dragItem = null;
+
+  row.querySelectorAll('.anagram-letter').forEach(letter => {
+    letter.addEventListener('dragstart', (e) => {
+      dragItem = letter;
+      letter.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    letter.addEventListener('dragend', () => {
+      letter.classList.remove('dragging');
+      dragItem = null;
+    });
+
+    letter.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (!dragItem || dragItem === letter) return;
+
+      const rect = letter.getBoundingClientRect();
+      const midX = rect.left + rect.width / 2;
+
+      if (e.clientX < midX) {
+        row.insertBefore(dragItem, letter);
+      } else {
+        row.insertBefore(dragItem, letter.nextSibling);
+      }
+    });
+  });
+
+  // Touch support for mobile
+  let touchItem = null;
+  let touchClone = null;
+
+  row.querySelectorAll('.anagram-letter').forEach(letter => {
+    letter.addEventListener('touchstart', (e) => {
+      touchItem = letter;
+      letter.classList.add('dragging');
+
+      // Create a clone for visual feedback
+      touchClone = letter.cloneNode(true);
+      touchClone.classList.add('touch-clone');
+      document.body.appendChild(touchClone);
+      updateAnagramTouchClone(e.touches[0], touchClone);
+    });
+
+    letter.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (!touchItem) return;
+      updateAnagramTouchClone(e.touches[0], touchClone);
+
+      // Find which letter we're over
+      const touch = e.touches[0];
+      const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+      const targetLetter = elements.find(el => el.classList.contains('anagram-letter') && el !== touchItem);
+
+      if (targetLetter && targetLetter.parentNode === row) {
+        const rect = targetLetter.getBoundingClientRect();
+        const midX = rect.left + rect.width / 2;
+        if (touch.clientX < midX) {
+          row.insertBefore(touchItem, targetLetter);
+        } else {
+          row.insertBefore(touchItem, targetLetter.nextSibling);
+        }
+      }
+    });
+
+    letter.addEventListener('touchend', () => {
+      if (touchItem) touchItem.classList.remove('dragging');
+      if (touchClone) touchClone.remove();
+      touchItem = null;
+      touchClone = null;
+    });
+  });
+
+  function updateAnagramTouchClone(touch, clone) {
+    if (clone) {
+      clone.style.left = (touch.clientX - 20) + 'px';
+      clone.style.top = (touch.clientY - 20) + 'px';
+    }
+  }
+}
+
+function handleAnagramClick(e) {
+  const target = e.target;
+
+  if (target.classList.contains('anagram-check')) {
+    checkAnagramAnswer(target.dataset.section, parseInt(target.dataset.idx));
+  }
+
+  if (target.classList.contains('anagram-reset')) {
+    resetAnagramQuestion(target.dataset.section, parseInt(target.dataset.idx));
+  }
+}
+
+function checkAnagramAnswer(sectionId, idx) {
+  const state = orderState[sectionId];
+  const item = state.data.items[idx];
+  const row = document.querySelector(`.anagram-letter-row[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.anagram-feedback[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const question = document.querySelector(`.anagram-question[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  // Build user's answer from current letter order
+  const letters = row.querySelectorAll('.anagram-letter');
+  const userAnswer = Array.from(letters).map(l => l.dataset.letter).join('');
+
+  // Compare with correct answer
+  const isCorrect = userAnswer.toLowerCase() === item.answer.toLowerCase();
+
+  if (isCorrect) {
+    question.classList.add('answered', 'correct');
+    row.classList.add('correct');
+    letters.forEach(l => l.setAttribute('draggable', 'false'));
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    feedback.innerHTML = `
+      <span class="correct-text">✓ Correct!</span>
+      <span class="translation">${item.translation || ''}</span>
+    `;
+    feedback.classList.add('show');
+
+    if (state.score === state.total) {
+      document.getElementById(sectionId + '-complete').classList.add('show');
+    }
+  } else {
+    question.classList.add('wrong');
+    row.classList.add('wrong');
+
+    feedback.innerHTML = `
+      <span class="wrong-text">✗ Try again. Hint: ${item.answer}</span>
+    `;
+    feedback.classList.add('show');
+
+    setTimeout(() => {
+      question.classList.remove('wrong');
+      row.classList.remove('wrong');
+      feedback.classList.remove('show');
+    }, 2000);
+  }
+}
+
+function resetAnagramQuestion(sectionId, idx) {
+  const state = orderState[sectionId];
+  const item = state.data.items[idx];
+  const row = document.querySelector(`.anagram-letter-row[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const question = document.querySelector(`.anagram-question[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.anagram-feedback[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (question.classList.contains('correct')) return;
+
+  // Re-shuffle and rebuild
+  const shuffledLetters = [...item.letters].sort(() => Math.random() - 0.5);
+  row.innerHTML = shuffledLetters.map(letter => `
+    <span class="anagram-letter" draggable="true" data-letter="${letter}">${letter}</span>
+  `).join('');
+
+  initAnagramDragDrop(row);
+
+  question.classList.remove('wrong');
+  row.classList.remove('wrong');
+  feedback.innerHTML = '';
+  feedback.classList.remove('show');
+}
+
+// CLASSIC ORDER: Drag items into correct sequence
+function initClassicOrder(sectionId, container, data) {
+  const state = orderState[sectionId];
+
+  // Create array with original indices, then shuffle
+  const items = [...data.items].map((item, idx) => ({ text: item, origIdx: idx }));
+  // Fisher-Yates shuffle
+  for (let i = items.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [items[i], items[j]] = [items[j], items[i]];
+  }
+
+  // Create container div for all items
+  const wrapper = document.createElement('div');
+  wrapper.className = 'order-items-wrapper';
+  wrapper.dataset.section = sectionId;
+
+  // Create each sentence as a draggable item
+  items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'order-sentence-card';
+    div.draggable = true;
+    div.dataset.orig = item.origIdx;
+    div.dataset.section = sectionId;
+    div.innerHTML = '<span class="order-card-num">' + (i + 1) + '</span><span class="order-card-text">' + item.text + '</span>';
+    wrapper.appendChild(div);
+  });
+
+  container.appendChild(wrapper);
+
+  // Add buttons
+  const btnDiv = document.createElement('div');
+  btnDiv.className = 'order-buttons';
+  btnDiv.innerHTML = '<button class="btn btn-outline order-check-btn" data-section="' + sectionId + '">Check Order</button>';
+  container.appendChild(btnDiv);
+
+  // Add feedback area
+  const feedback = document.createElement('div');
+  feedback.className = 'order-feedback';
+  feedback.dataset.section = sectionId;
+  container.appendChild(feedback);
+
+  // Initialize drag-and-drop
+  initOrderCardDragDrop(wrapper);
+
+  // Button click handler
+  btnDiv.querySelector('.order-check-btn').onclick = function() { checkOrder(sectionId); };
+}
+
+function initOrderCardDragDrop(wrapper) {
+  let dragItem = null;
+
+  wrapper.querySelectorAll('.order-sentence-card').forEach(function(card) {
+    card.addEventListener('dragstart', function(e) {
+      dragItem = card;
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    card.addEventListener('dragend', function() {
+      card.classList.remove('dragging');
+      dragItem = null;
+      updateCardNumbers(wrapper);
+    });
+
+    card.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      if (!dragItem || dragItem === card) return;
+      const rect = card.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      if (e.clientY < midY) {
+        wrapper.insertBefore(dragItem, card);
+      } else {
+        wrapper.insertBefore(dragItem, card.nextSibling);
+      }
+    });
+  });
+
+  // Touch support
+  let touchItem = null;
+  let touchClone = null;
+
+  wrapper.querySelectorAll('.order-sentence-card').forEach(function(card) {
+    card.addEventListener('touchstart', function(e) {
+      touchItem = card;
+      card.classList.add('dragging');
+      touchClone = card.cloneNode(true);
+      touchClone.style.position = 'fixed';
+      touchClone.style.zIndex = '1000';
+      touchClone.style.pointerEvents = 'none';
+      touchClone.style.opacity = '0.8';
+      touchClone.style.maxWidth = '90vw';
+      document.body.appendChild(touchClone);
+      moveTouchClone(e.touches[0]);
+    });
+
+    card.addEventListener('touchmove', function(e) {
+      e.preventDefault();
+      if (!touchItem) return;
+      moveTouchClone(e.touches[0]);
+      const touch = e.touches[0];
+      const els = document.elementsFromPoint(touch.clientX, touch.clientY);
+      const target = els.find(function(el) { return el.classList.contains('order-sentence-card') && el !== touchItem; });
+      if (target && target.parentNode === wrapper) {
+        const rect = target.getBoundingClientRect();
+        const midY = rect.top + rect.height / 2;
+        if (touch.clientY < midY) {
+          wrapper.insertBefore(touchItem, target);
+        } else {
+          wrapper.insertBefore(touchItem, target.nextSibling);
+        }
+      }
+    });
+
+    card.addEventListener('touchend', function() {
+      if (touchItem) touchItem.classList.remove('dragging');
+      if (touchClone) touchClone.remove();
+      touchItem = null;
+      touchClone = null;
+      updateCardNumbers(wrapper);
+    });
+  });
+
+  function moveTouchClone(touch) {
+    if (touchClone) {
+      touchClone.style.left = (touch.clientX - 100) + 'px';
+      touchClone.style.top = (touch.clientY - 25) + 'px';
+    }
+  }
+}
+
+function updateCardNumbers(wrapper) {
+  wrapper.querySelectorAll('.order-sentence-card').forEach(function(card, i) {
+    card.querySelector('.order-card-num').textContent = i + 1;
+  });
+}
+
+function initOrderSentenceDragDrop(row) {
+  let dragItem = null;
+
+  row.querySelectorAll('.order-sentence-item').forEach(item => {
+    item.addEventListener('dragstart', (e) => {
+      dragItem = item;
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      dragItem = null;
+      // Update numbers after drag
+      updateOrderNumbers(row);
+    });
+
+    item.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (!dragItem || dragItem === item) return;
+
+      const rect = item.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+
+      if (e.clientY < midY) {
+        row.insertBefore(dragItem, item);
+      } else {
+        row.insertBefore(dragItem, item.nextSibling);
+      }
+    });
+  });
+
+  // Touch support
+  let touchItem = null;
+  let touchClone = null;
+
+  row.querySelectorAll('.order-sentence-item').forEach(item => {
+    item.addEventListener('touchstart', (e) => {
+      touchItem = item;
+      item.classList.add('dragging');
+      touchClone = item.cloneNode(true);
+      touchClone.classList.add('touch-clone');
+      document.body.appendChild(touchClone);
+      updateTouchClonePos(e.touches[0], touchClone);
+    });
+
+    item.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (!touchItem) return;
+      updateTouchClonePos(e.touches[0], touchClone);
+
+      const touch = e.touches[0];
+      const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+      const target = elements.find(el => el.classList.contains('order-sentence-item') && el !== touchItem);
+
+      if (target && target.parentNode === row) {
+        const rect = target.getBoundingClientRect();
+        const midY = rect.top + rect.height / 2;
+        if (touch.clientY < midY) {
+          row.insertBefore(touchItem, target);
+        } else {
+          row.insertBefore(touchItem, target.nextSibling);
+        }
+      }
+    });
+
+    item.addEventListener('touchend', () => {
+      if (touchItem) touchItem.classList.remove('dragging');
+      if (touchClone) touchClone.remove();
+      touchItem = null;
+      touchClone = null;
+      updateOrderNumbers(row);
+    });
+  });
+
+  function updateTouchClonePos(touch, clone) {
+    if (clone) {
+      clone.style.left = (touch.clientX - 100) + 'px';
+      clone.style.top = (touch.clientY - 20) + 'px';
+    }
+  }
+}
+
+function updateOrderNumbers(row) {
+  row.querySelectorAll('.order-sentence-item').forEach((item, i) => {
+    item.querySelector('.order-num').textContent = i + 1;
+  });
+}
+
+function initDragDrop(container) {
+  const items = container.querySelectorAll('.order-item');
+  let dragItem = null;
+
+  items.forEach(item => {
+    item.addEventListener('dragstart', (e) => {
+      dragItem = item;
+      item.classList.add('dragging');
+    });
+
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      dragItem = null;
+    });
+
+    item.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (!dragItem || dragItem === item) return;
+      const rect = item.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      if (e.clientY < midY) {
+        container.insertBefore(dragItem, item);
+      } else {
+        container.insertBefore(dragItem, item.nextSibling);
+      }
+    });
+  });
+}
+
+function checkOrder(sectionId) {
+  const state = orderState[sectionId];
+  const data = state.data;
+  // Support multiple class names for order items
+  let items = document.querySelectorAll('.order-sentence-card[data-section="' + sectionId + '"]');
+  if (!items.length) {
+    items = document.querySelectorAll('.order-sentence-item[data-section="' + sectionId + '"]');
+  }
+  if (!items.length) {
+    items = document.querySelectorAll('.order-item[data-section="' + sectionId + '"]');
+  }
+  const currentOrder = Array.from(items).map(function(item) { return parseInt(item.dataset.orig); });
+  const feedback = document.querySelector('.order-feedback[data-section="' + sectionId + '"]');
+
+  let correct = true;
+  currentOrder.forEach((val, idx) => {
+    const expectedIdx = data.correctOrder && data.correctOrder.length ? data.correctOrder[idx] : idx;
+    if (val !== expectedIdx) correct = false;
+  });
+
+  items.forEach((item, idx) => {
+    const expectedIdx = data.correctOrder && data.correctOrder.length ? data.correctOrder[idx] : idx;
+    if (parseInt(item.dataset.orig) === expectedIdx) {
+      item.classList.add('correct');
+      item.classList.remove('wrong');
+    } else {
+      item.classList.add('wrong');
+      item.classList.remove('correct');
+    }
+  });
+
+  if (correct) {
+    state.score = state.total;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+    document.getElementById(sectionId + '-complete').classList.add('show');
+    if (feedback) {
+      feedback.innerHTML = '<span class="correct-text">✓ Perfect order!</span>';
+      feedback.classList.add('show');
+    }
+  } else {
+    if (feedback) {
+      feedback.innerHTML = '<span class="wrong-text">✗ Not quite right. Try again!</span>';
+      feedback.classList.add('show');
+    }
+    setTimeout(function() {
+      items.forEach(function(item) { item.classList.remove('wrong'); });
+      if (feedback) feedback.classList.remove('show');
+    }, 2000);
+  }
+}
+
+function resetOrder(sectionId) {
+  const state = orderState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initOrder(sectionId, state.data);
+}
+
+
+// Select Activity - supports multiple instances
+const selectState = {};
+
+function initSelect(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  selectState[sectionId] = { score: 0, answered: 0, total: data.items.length, data: data };
+  c.innerHTML = '';
+
+  data.items.forEach((item, idx) => {
+    const div = document.createElement('div');
+    div.className = 'select-question';
+    div.dataset.section = sectionId;
+    div.dataset.idx = idx;
+
+    const optionsHtml = item.options.map((opt, oi) =>
+      `<label class="select-option" data-correct="${opt.correct}" data-section="${sectionId}" data-idx="${idx}">
+        <input type="checkbox" class="select-checkbox" data-oi="${oi}">
+        <span class="select-text">${opt.text}</span>
+      </label>`
+    ).join('');
+
+    div.innerHTML = `
+      <div class="select-number">${idx + 1}.</div>
+      <div class="select-content">
+        <p class="select-prompt">${item.question}</p>
+        <div class="select-options">${optionsHtml}</div>
+        <button class="btn btn-sm btn-outline select-check" data-section="${sectionId}" data-idx="${idx}">Check</button>
+        <div class="select-feedback" id="${sectionId}-fb-${idx}"></div>
+      </div>
+    `;
+    c.appendChild(div);
+  });
+
+  // Event delegation for check buttons
+  c.addEventListener('click', (e) => {
+    if (e.target.classList.contains('select-check')) {
+      checkSelectAnswer(e.target.dataset.section, parseInt(e.target.dataset.idx));
+    }
+  });
+}
+
+function checkSelectAnswer(sectionId, idx) {
+  const state = selectState[sectionId];
+  const item = state.data.items[idx];
+  const question = document.querySelector(`.select-question[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(sectionId + '-fb-' + idx);
+
+  if (question.classList.contains('answered')) return;
+
+  const options = question.querySelectorAll('.select-option');
+  let allCorrect = true;
+
+  options.forEach(opt => {
+    const checkbox = opt.querySelector('.select-checkbox');
+    const isChecked = checkbox.checked;
+    const shouldBeChecked = opt.dataset.correct === 'true';
+
+    if (isChecked === shouldBeChecked) {
+      opt.classList.add(shouldBeChecked ? 'correct' : 'correct-unchecked');
+    } else {
+      opt.classList.add(shouldBeChecked ? 'missed' : 'wrong');
+      allCorrect = false;
+    }
+    checkbox.disabled = true;
+  });
+
+  question.classList.add('answered');
+
+  if (allCorrect) {
+    fb.innerHTML = '<span class="correct-text">✓ Perfect!</span>';
+    state.score++;
+  } else {
+    fb.innerHTML = '<span class="wrong-text">✗ Some answers were incorrect.</span>';
+  }
+  fb.classList.add('show');
+
+  document.getElementById(sectionId + '-score').textContent = state.score;
+  state.answered++;
+
+  if (state.answered === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetSelect(sectionId) {
+  const state = selectState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initSelect(sectionId, state.data);
+}
+
+
+// Vocabulary
+function initVocab() {
+  const grid = document.getElementById('vocab-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  vocabData.forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'vocab-card';
+    card.innerHTML = '<div class="uk">' + v.uk + '</div><div class="translit">' + v.translit + '</div><div class="en">' + v.en + '</div>' + (v.note ? '<div class="note">' + v.note + '</div>' : '');
+    grid.appendChild(card);
+  });
+}
+
+  </script>
+</body>
+</html>

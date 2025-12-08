@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Module 21: Yesterday: Past Tense | Ukrainian A1</title>
+  <title>Module 21: Yesterday - Past Tense | Ukrainian A1</title>
   <style>
 :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -478,17 +518,17 @@ footer {
     </div>
   </div>
   <nav class="nav">
-    <h1>Module 21: Yesterday: Past Tense</h1>
+    <h1>Module 21: Yesterday - Past Tense</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Fill</button>
-      <button class="nav-tab" data-section="activity-1">2. Order</button>
-      <button class="nav-tab" data-section="activity-2">3. Match</button>
-      <button class="nav-tab" data-section="activity-3">4. Quiz</button>
+      <button class="nav-tab" data-section="activity-0">1. Quiz</button>
+      <button class="nav-tab" data-section="activity-1">2. Match</button>
+      <button class="nav-tab" data-section="activity-2">3. Fill</button>
+      <button class="nav-tab" data-section="activity-3">4. Fill</button>
       <button class="nav-tab" data-section="activity-4">5. T/F</button>
       <button class="nav-tab" data-section="activity-5">6. Sort</button>
-      <button class="nav-tab" data-section="activity-6">7. Spell</button>
-      <button class="nav-tab" data-section="activity-7">8. Match</button>
+      <button class="nav-tab" data-section="activity-6">7. Order</button>
+      <button class="nav-tab" data-section="activity-7">8. Spell</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -497,442 +537,334 @@ footer {
     <section id="lesson" class="section active">
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.3</span>
-        <h2 style="font-size:2rem;margin:0.5rem 0">Yesterday: Past Tense</h2>
-        <p style="color:var(--text-muted)">Talking about what already happened</p>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Yesterday - Past Tense</h2>
+        <p style="color:var(--text-muted)">The Time Machine</p>
       </div>
       
     <div class="card section-intro">
       <h3>📖 Introduction</h3>
       <div class="md-content"><h2 id="warmup">warm-up</h2>
-<h3 id="welcometoa13timeself">Welcome to A1.3: Time &amp; Self!</h3>
-<p>You've learned to talk about what IS. Now it's time to talk about what WAS! The past tense opens up a whole new world — sharing stories, explaining what happened, and connecting with people through shared experiences.</p>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>Ukrainian past tense is actually simpler than English! There's only ONE past form (no "was reading" vs "read" vs "had read"). The catch? It changes based on the <strong>gender</strong> of the subject!</p>
-</blockquote>
+<p><strong>The Time Traveler</strong></p>
+<p>Until now, you lived in the "Now".<br />
+"I read." "I eat." "I sleep."<br />
+But life has a history.<br />
+To tell stories, you need the <strong>Past Tense</strong>.<br />
+In English, you add "-ed" (Walk -&gt; Walked) or break the rules (Go -&gt; Went).<br />
+In Ukrainian, it is easier.<br />
+You just check the gender of the <strong>doer</strong>.</p>
+<ul>
+<li><strong>He</strong> -&gt; -В.</li>
+<li><strong>She</strong> -&gt; -ЛА.</li>
+<li><strong>It</strong> -&gt; -ЛО.</li>
+<li><strong>They</strong> -&gt; -ЛИ.</li>
+</ul>
 <h2 id="presentation">presentation</h2>
-<h3 id="pasttenseformation">Past Tense Formation</h3>
-<p>The past tense uses the <strong>L-participle</strong> — take the infinitive stem and add endings:</p>
+<h3 id="section1themagicllparticiple">Section 1: The Magic L (L-Participle)</h3>
+<p>To make the past, take the Infinitive (Читати) and cut off <strong>-ТИ</strong>.<br />
+Stem: <strong>Чита-</strong>.<br />
+Add the ending.</p>
 <table>
 <thead>
 <tr>
-<th>Subject</th>
+<th>Gender</th>
+<th>Pronoun</th>
 <th>Ending</th>
-<th>Example (читати)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>він (he)</td>
-<td>-в</td>
-<td>читав</td>
-</tr>
-<tr>
-<td>вона (she)</td>
-<td>-ла</td>
-<td>читала</td>
-</tr>
-<tr>
-<td>воно (it)</td>
-<td>-ло</td>
-<td>читало</td>
-</tr>
-<tr>
-<td>вони (they)</td>
-<td>-ли</td>
-<td>читали</td>
-</tr>
-<tr>
-<td>я (I) - male</td>
-<td>-в</td>
-<td>я читав</td>
-</tr>
-<tr>
-<td>я (I) - female</td>
-<td>-ла</td>
-<td>я читала</td>
-</tr>
-<tr>
-<td>ти (you) - male</td>
-<td>-в</td>
-<td>ти читав</td>
-</tr>
-<tr>
-<td>ти (you) - female</td>
-<td>-ла</td>
-<td>ти читала</td>
-</tr>
-<tr>
-<td>ми (we)</td>
-<td>-ли</td>
-<td>ми читали</td>
-</tr>
-<tr>
-<td>ви (you pl/formal)</td>
-<td>-ли</td>
-<td>ви читали</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>⚡ <strong>Pro Tip</strong></p>
-  <p>The past tense ending tells you the GENDER of who did the action! If someone says "Я читала," you know it's a woman speaking. "Я читав" = a man.</p>
-</blockquote>
-<h3 id="formingthestem">Forming the Stem</h3>
-<ol>
-<li>Take the infinitive: <strong>читати</strong></li>
-<li>Remove <strong>-ти</strong>: <strong>чита-</strong></li>
-<li>Add ending: <strong>читав, читала, читало, читали</strong></li>
-</ol>
-<p>More examples:</p>
-<table>
-<thead>
-<tr>
-<th>Infinitive</th>
-<th>He</th>
-<th>She</th>
-<th>They</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>працювати</td>
-<td>працював</td>
-<td>працювала</td>
-<td>працювали</td>
-</tr>
-<tr>
-<td>говорити</td>
-<td>говорив</td>
-<td>говорила</td>
-<td>говорили</td>
-</tr>
-<tr>
-<td>робити</td>
-<td>робив</td>
-<td>робила</td>
-<td>робили</td>
-</tr>
-<tr>
-<td>бачити</td>
-<td>бачив</td>
-<td>бачила</td>
-<td>бачили</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🔍 <strong>Myth Buster</strong></p>
-  <p><strong>Myth:</strong> "Ukrainian verbs are impossibly complex!"<br />
-  <strong>Fact:</strong> Past tense is actually EASIER than present! Same form for all persons — only gender changes. Compare: він читав, вона читала vs він читає, вони читають.</p>
-</blockquote>
-<h3 id="specialpastforms">Special Past Forms</h3>
-<p>Some verbs have consonant changes or irregular stems:</p>
-<table>
-<thead>
-<tr>
-<th>Infinitive</th>
-<th>Past Stem</th>
 <th>Example</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>іти (to go)</td>
-<td>йшов/йшла</td>
-<td>Він йшов додому.</td>
+<td>Masculine</td>
+<td>Я, Ти, Він</td>
+<td><strong>-В</strong></td>
+<td>Я чита<strong>в</strong>.</td>
 </tr>
 <tr>
-<td>їсти (to eat)</td>
-<td>їв/їла</td>
-<td>Вона їла борщ.</td>
+<td>Feminine</td>
+<td>Я, Ти, Вона</td>
+<td><strong>-ЛА</strong></td>
+<td>Я чита<strong>ла</strong>.</td>
 </tr>
 <tr>
-<td>піти (to go/leave)</td>
-<td>пішов/пішла</td>
-<td>Він пішов.</td>
+<td>Neuter</td>
+<td>Воно</td>
+<td><strong>-ЛО</strong></td>
+<td>Воно чита<strong>ло</strong>.</td>
 </tr>
 <tr>
-<td>прийти (to come)</td>
-<td>прийшов/прийшла</td>
-<td>Вона прийшла.</td>
-</tr>
-<tr>
-<td>взяти (to take)</td>
-<td>взяв/взяла</td>
-<td>Він взяв книгу.</td>
-</tr>
-<tr>
-<td>сказати (to say)</td>
-<td>сказав/сказала</td>
-<td>Вона сказала.</td>
+<td>Plural</td>
+<td>Ми, Ви, Вони</td>
+<td><strong>-ЛИ</strong></td>
+<td>Ми чита<strong>ли</strong>.</td>
 </tr>
 </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li><strong>Писати</strong> (To write): Він писав, Вона писала, Ми писали.</li>
+<li><strong>Говорити</strong> (To speak): Він говорив, Вона говорила, Вони говорили.</li>
+<li><strong>Робити</strong> (To do): Я робив (Man), Я робила (Woman).</li>
+</ul>
+<h3 id="section2timemarkerswhen">Section 2: Time Markers (When?)</h3>
+<ul>
+<li><strong>Сьогодні</strong> (Today) -&gt; Present/Future.</li>
+<li><strong>Вчора</strong> (Yesterday) -&gt; Past.</li>
+<li><strong>Позавчора</strong> (Day before yesterday).</li>
+<li><strong>Давно</strong> (Long ago).</li>
+<li><strong>Недавно</strong> (Recently).</li>
+<li><strong>Раніше</strong> (Earlier / Before).</li>
+<li><strong>Колись</strong> (Once / Some time ago).</li>
+</ul>
+<h3 id="section3thelasttime">Section 3: The "Last" Time</h3>
+<p>Use Genitive for "Last X".</p>
+<ul>
+<li><strong>Минулого тижня</strong> (Last week).</li>
+<li><strong>Минулого місяця</strong> (Last month).</li>
+<li><strong>Минулого року</strong> (Last year).</li>
+</ul>
 <blockquote>
-  <p>🎬 <strong>Pop Culture Moment: S.T.A.L.K.E.R.</strong></p>
-  <p>"Він пішов у Зону і не повернувся" (He went to the Zone and didn't return). In gaming, past tense tells the tragic stories!</p>
+  <p>⚠️ <strong>Warning: The "Buty" (To Be) Exception</strong><br />
+  The verb <strong>Бути</strong> (To be) has a past tense!<br />
+  In Present: "Я студент" (Zero copula).<br />
+  In Past: "Я <strong>був</strong> студентом" (I was a student - Instr).<br />
+  Wait, A1 rule: Keep it simple.</p>
+  <ul>
+  <li><strong>Я був удома.</strong> (I was at home).</li>
+  <li><strong>Вона була в парку.</strong> (She was in the park).</li>
+  <li><strong>Ми були в Києві.</strong> (We were in Kyiv).</li>
+  </ul>
 </blockquote>
-<h3 id="pasttimeexpressions">Past Time Expressions</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>вчора</td>
-<td>yesterday</td>
-</tr>
-<tr>
-<td>позавчора</td>
-<td>the day before yesterday</td>
-</tr>
-<tr>
-<td>минулого тижня</td>
-<td>last week</td>
-</tr>
-<tr>
-<td>минулого місяця</td>
-<td>last month</td>
-</tr>
-<tr>
-<td>минулого року</td>
-<td>last year</td>
-</tr>
-<tr>
-<td>давно</td>
-<td>long ago</td>
-</tr>
-<tr>
-<td>недавно</td>
-<td>recently</td>
-</tr>
-<tr>
-<td>раніше</td>
-<td>earlier, before</td>
-</tr>
-<tr>
-<td>колись</td>
-<td>once, sometime</td>
-</tr>
-</tbody>
-</table>
+<h3 id="section4didyoudoit">Section 4: Did you do it?</h3>
+<ul>
+<li><strong>Ти читав це?</strong> (Did you read this? - to a male).</li>
+<li><strong>Ти читала це?</strong> (Did you read this? - to a female).</li>
+<li><strong>Ви знали?</strong> (Did you know? - Plural/Formal).</li>
+</ul>
 <blockquote>
-  <p>🌍 <strong>Real World</strong></p>
-  <p>"Що ти робив учора?" (What did you do yesterday?) is one of the most common conversation starters. Now you can answer!</p>
+  <p>🧔 <strong>Deep Dive: The Easy Past</strong><br />
+  Ukrainian Past Tense is remarkably regular.<br />
+  Even "Irregular" verbs usually follow the pattern.</p>
+  <ul>
+  <li><strong>Їсти</strong> (To eat) -&gt; Їв, Їла, Їли.</li>
+  <li><strong>Пити</strong> (To drink) -&gt; Пив, Пила, Пили.</li>
+  <li><strong>Жити</strong> (To live) -&gt; Жив, Жила, Жили.<br />
+  Only <strong>Іти</strong> (To go) is weird: <strong>Ішов</strong>, <strong>Ішла</strong>, <strong>Ішли</strong>. (The "d" sound disappears/changes).</li>
+  </ul>
+  <p>🕰️ <strong>Deep Dive: The "Perfect" Trap</strong><br />
+  You might ask: "How do I say 'I <em>have</em> read' vs 'I read'?"<br />
+  In Module 21, we only use the <strong>Imperfective Past</strong> (Nedokonanij Vyd).<br />
+  It answers: "What were you doing?" (Process).</p>
+  <ul>
+  <li><strong>Я читав.</strong> (I was reading / I read).</li>
+  <li><strong>Я писав.</strong> (I was writing / I wrote).<br />
+  Later, we will learn <strong>Perfective</strong> (I finished reading).<br />
+  For now, relax. Everything is a process.</li>
+  </ul>
 </blockquote>
-<h3 id="negationinpasttense">Negation in Past Tense</h3>
-<p>Just add <strong>не</strong> before the verb:</p>
-<table>
-<thead>
-<tr>
-<th>Positive</th>
-<th>Negative</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Я читав.</td>
-<td>Я <strong>не</strong> читав.</td>
-</tr>
-<tr>
-<td>Вона працювала.</td>
-<td>Вона <strong>не</strong> працювала.</td>
-</tr>
-<tr>
-<td>Вони говорили.</td>
-<td>Вони <strong>не</strong> говорили.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="theverbtobeinpast">The Verb "бути" (to be) in Past</h3>
-<p>Unlike present (where "to be" is usually omitted), past tense uses <strong>був/була/було/були</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Subject</th>
-<th>Form</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>він</td>
-<td>був</td>
-<td>Він був тут. (He was here.)</td>
-</tr>
-<tr>
-<td>вона</td>
-<td>була</td>
-<td>Вона була вчителькою. (She was a teacher.)</td>
-</tr>
-<tr>
-<td>воно</td>
-<td>було</td>
-<td>Це було цікаво. (It was interesting.)</td>
-</tr>
-<tr>
-<td>вони</td>
-<td>були</td>
-<td>Вони були в Києві. (They were in Kyiv.)</td>
-</tr>
-</tbody>
-</table>
+<h3 id="section5thequestionofwherewereyou">Section 5: The Question of "Where were you?"</h3>
+<p>This is the most common conversational opener.</p>
+<ul>
+<li><strong>Де ти був?</strong> (Where were you?)</li>
+<li><strong>Я був у…</strong> + Locative.</li>
+<li><strong>Я був у магазині.</strong> (I was in the shop).</li>
+<li><strong>Я був на роботі.</strong> (I was at work).</li>
+<li><strong>Я був в Україні.</strong> (I was in Ukraine).</li>
+</ul>
 <blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>"Було" (it was) is incredibly common in expressions: "Було смачно!" (It was tasty!), "Було цікаво!" (It was interesting!), "Як було?" (How was it?)</p>
+  <p>🇺🇦 <strong>Culture Corner: The Soviet Ghost</strong><br />
+  Past tense often triggers cultural memories.<br />
+  "Коли я був малий…" (When I was small…).<br />
+  Older people might say: "Раніше було краще" (Earlier it was better) or "Раніше було дешево" (Earlier it was cheap).<br />
+  Younger people say: "Раніше був хаос" (Earlier was chaos).<br />
+  The word <strong>Раніше</strong> (Earlier/Before) splits the generations.</p>
+</blockquote>
+<h3 id="section6biographicalfacts">Section 6: Biographical Facts</h3>
+<p>Use Past Tense for life facts.</p>
+<ul>
+<li><strong>Я народився в…</strong> (I was born in… - Masculine).</li>
+<li><strong>Я народилася в…</strong> (I was born in… - Feminine).</li>
+<li><strong>Я вчився в…</strong> (I studied in… - Masculine).</li>
+<li><strong>Я вчилася в…</strong> (I studied in… - Feminine).</li>
+<li><strong>Я жив там…</strong> (I lived there…).</li>
+</ul>
+<h3 id="section7thedidyoudoitquestion">Section 7: The "Did you do it?" Question</h3>
+<p>In Ukraine, "Did you do [verb]?" is a common check-in.</p>
+<ul>
+<li><strong>Ти зробив це?</strong> (Did you do this? - Perfective preview, but commonly used).</li>
+<li>A1 Imperfective: <strong>Ти робив це?</strong> (Were you doing this?).</li>
+<li><strong>Ти снідав?</strong> (Did you have breakfast? / Were you breakfasting?).</li>
+<li><strong>Ти обідав?</strong> (Did you have lunch?).</li>
+<li><strong>Ти вечеряв?</strong> (Did you have dinner?).</li>
+</ul>
+<blockquote>
+  <p>🤯 <strong>Deep Dive: The Irregular "To Go"</strong><br />
+  Most verbs are easy (-v, -la).<br />
+  <strong>Іти</strong> (To go) is the rebel.<br />
+  It changes the stem completely.</p>
+  <ul>
+  <li><strong>Я йшов.</strong> (I was walking - M).</li>
+  <li><strong>Вона йшла.</strong> (She was walking - F).</li>
+  <li><strong>Вони йшли.</strong> (They were walking - Pl).<br />
+  Why? History. Just memorize it. It sounds like "Show" (Ishov).</li>
+  </ul>
+  <p>❓ <strong>Culture Corner: The "Ty" Question</strong><br />
+  Asking "Did <strong>you</strong>…?" requires picking gender.</p>
+  <ul>
+  <li>Asking a man: "Ти знав?"</li>
+  <li>Asking a woman: "Ти знала?"<br />
+  If you are unsure (online pseudonym), use plural <strong>Ви</strong>: "Ви знали?"<br />
+  It is safe and polite.</li>
+  </ul>
 </blockquote>
 <h2 id="practice">practice</h2>
-<h3 id="exercise1transformtopasttense">Exercise 1: Transform to Past Tense</h3>
-<p>Change to past tense (masculine form):</p>
-<ol>
-<li><p>читати → він ___</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer">читав</div></div>
-<ol start="2">
-<li><p>працювати → він ___</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer">працював</div></div>
-<ol start="3">
-<li><p>говорити → він ___</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer">говорив</div></div>
-<ol start="4">
-<li><p>їсти → він ___</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer">їв</div></div>
-<ol start="5">
-<li><p>іти → він ___</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer">йшов</div></div>
-<h3 id="exercise2choosetherightgender">Exercise 2: Choose the Right Gender</h3>
-<ol>
-<li><p>Марія ___ (читати) книгу.</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-5', this)">Показати відповідь</button><div class="answer-block" id="ans-5"><div class="callout callout-answer" data-callout="answer">читала</div></div>
-<ol start="2">
-<li><p>Іван ___ (працювати) вчора.</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-6', this)">Показати відповідь</button><div class="answer-block" id="ans-6"><div class="callout callout-answer" data-callout="answer">працював</div></div>
-<ol start="3">
-<li><p>Діти ___ (грати) в парку.</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-7', this)">Показати відповідь</button><div class="answer-block" id="ans-7"><div class="callout callout-answer" data-callout="answer">грали</div></div>
-<ol start="4">
-<li><p>Воно ___ (бути) цікаво.</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-8', this)">Показати відповідь</button><div class="answer-block" id="ans-8"><div class="callout callout-answer" data-callout="answer">було</div></div>
-<h2 id="production">production</h2>
-<h3 id="tellyourstory">Tell Your Story</h3>
-<p>What did you do yesterday? Use these prompts:</p>
+<p><strong>Drill 1: The Gender Check</strong><br />
+Conjugate <strong>Слухати</strong> (To listen).</p>
 <ul>
-<li>Вчора я… (читав/читала, працював/працювала, їв/їла…)</li>
-<li>Минулого тижня я… (був/була в…, бачив/бачила…)</li>
-<li>Раніше я часто… (говорив/говорила, ходив/ходила…)</li>
+<li>(He) Він ___ -&gt; <strong>слухав</strong>.</li>
+<li>(She) Вона ___ -&gt; <strong>слухала</strong>.</li>
+<li>(They) Вони ___ -&gt; <strong>слухали</strong>.</li>
+<li>(It) Воно ___ -&gt; <strong>слухало</strong>.</li>
 </ul>
-<p>Share 3-4 sentences about your past!</p>
-<hr />
-<hr />
+<p><strong>Drill 2: Yesterday</strong><br />
+Change Present to Past.</p>
+<ul>
+<li>(Я читаю) -&gt; Вчора я ___ -&gt; <strong>читав / читала</strong>.</li>
+<li>(Ми говоримо) -&gt; Вчора ми ___ -&gt; <strong>говорили</strong>.</li>
+<li>(Ти знаєш) -&gt; Вчора ти ___ -&gt; <strong>знав / знала</strong>.</li>
+<li>(Вони працюють) -&gt; Вчора вони ___ -&gt; <strong>працювали</strong>.</li>
+</ul>
+<p><strong>Drill 3: The "To Be" Time</strong></p>
+<ul>
+<li>(I am home) -&gt; Я був <strong>удома</strong>.</li>
+<li>(She is in Lviv) -&gt; Вона була <strong>у Львові</strong>.</li>
+<li>(We are happy) -&gt; Ми були <strong>щасливі</strong>.</li>
+<li>(Where were you?) -&gt; Де ви <strong>були</strong>?</li>
+</ul>
+<p><strong>Drill 4: Autobiography</strong></p>
+<ul>
+<li>(I was born in Kyiv - M) -&gt; Я <strong>народився</strong> в Києві.</li>
+<li>(I lived in London - F) -&gt; Я <strong>жила</strong> в Лондоні.</li>
+<li>(I studied verbs - Pl) -&gt; Ми <strong>вчили</strong> дієслова.</li>
+<li>(I worked here - M) -&gt; Я тут <strong>працював</strong>.</li>
+</ul>
+<p><strong>Drill 5: Did you eat?</strong></p>
+<ul>
+<li>(Did you have breakfast? - M) -&gt; Ти <strong>снідав</strong>?</li>
+<li>(Did you have lunch? - F) -&gt; Ти <strong>обідала</strong>?</li>
+<li>(Did you have dinner? - Pl) -&gt; Ви <strong>вечеряли</strong>?</li>
+<li>(Did you drink coffee? - M) -&gt; Ти <strong>пив</strong> каву?</li>
+</ul>
+<h2 id="production">production</h2>
+<blockquote>
+  <p>📺 <strong>Culture Corner: "Ya bachyla tse!"</strong><br />
+  When watching TV or news, you often say "Я бачив це" (I saw this).<br />
+  It implies shared knowledge.<br />
+  "Ти бачив цей фільм?" (Did you see this movie?)<br />
+  "Ні, не бачив." (No, [I] didn't see).<br />
+  Short answers usually repeat the verb: "Бачив".</p>
+</blockquote>
+<p><strong>Scenario: The Detective</strong></p>
+<ul>
+<li><strong>Detective:</strong> Де ви були вчора ввечері?</li>
+<li><strong>Suspect (Male):</strong> Я був вдома. Я спав.</li>
+<li><strong>Detective:</strong> А ваша дружина?</li>
+<li><strong>Suspect:</strong> Вона була на роботі. Вона працювала.</li>
+<li><strong>Detective:</strong> Хто це бачив?</li>
+<li><strong>Suspect:</strong> Ніхто. Ми спали.</li>
+</ul>
+<p><strong>Scenario: Remembering the Trip</strong></p>
+<ul>
+<li><strong>Friend 1:</strong> Ти був у Лондоні?</li>
+<li><strong>Friend 2:</strong> Так, я був там минулого року.</li>
+<li><strong>Friend 1:</strong> Що ти там робив?</li>
+<li><strong>Friend 2:</strong> Я гуляв, пив каву і дивився на Темзу.</li>
+<li><strong>Friend 1:</strong> А погода?</li>
+<li><strong>Friend 2:</strong> Дощ. Завжди дощ.</li>
+</ul>
+<p><strong>Scenario: The Biography</strong></p>
+<ul>
+<li><strong>Interviewer:</strong> Де ви народилися?</li>
+<li><strong>You:</strong> Я народився в Америці.</li>
+<li><strong>Interviewer:</strong> А де ви вчилися?</li>
+<li><strong>You:</strong> Я вчився в університеті в Нью-Йорку.</li>
+<li><strong>Interviewer:</strong> Де ви працювали раніше?</li>
+<li><strong>You:</strong> Я працював у банку, але я не любив цю роботу.</li>
+<li><strong>Interviewer:</strong> А зараз?</li>
+<li><strong>You:</strong> Зараз я люблю жити в Києві.</li>
+</ul>
 <hr /></div>
     </div>
   
       
-    <div class="card section-summary">
-      <h3>📋 Summary</h3>
-      <div class="md-content"><blockquote>
-  <p><strong>What You Learned Today</strong></p>
-  <ul>
-  <li>Past tense formation: infinitive stem + ending</li>
-  <li>Gender agreement: -в (m), -ла (f), -ло (n), -ли (pl)</li>
-  <li>"Бути" in past: був, була, було, були</li>
-  <li>Time expressions: вчора, минулого тижня, давно</li>
-  <li>Negation: не + past verb</li>
-  </ul>
-  <p><strong>Coming Next</strong></p>
-  <p>In Module 22, you'll learn <strong>Future Tense</strong>:</p>
-  <ul>
-  <li>Compound future: буду + infinitive</li>
-  <li>Future time expressions: завтра, наступного тижня</li>
-  <li>Making plans and predictions</li>
-  </ul>
-</blockquote></div>
-    </div>
-  
       <div class="btn-group">
         <button class="btn btn-primary" onclick="showSection('activity-0')">Activities →</button>
       </div>
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Past Tense Forms</h3>
+    <section id="activity-0" class="section"><div class="card"><h3>Past Tense Logic</h3>
       <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container" class="fill-container"></div>
+      <div id="activity-0-container"></div>
       <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Past Tense Sentences</h3>
+    <section id="activity-1" class="section"><div class="card"><h3>Who did it?</h3>
       <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
-      <div id="activity-1-container" class="order-container"></div>
-      <div class="completion-message" id="activity-1-complete"><h3>Perfect Order!</h3></div>
+      <div class="match-container" id="activity-1-container"><svg class="match-lines" id="activity-1-lines"></svg>
+        <div class="match-column" id="activity-1-left"></div>
+        <div class="match-column" id="activity-1-right"></div>
+      </div>
+      <div class="completion-message" id="activity-1-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Infinitive to Past</h3>
+    <section id="activity-2" class="section"><div class="card"><h3>Time Traveler</h3>
       <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-2-container"><svg class="match-lines" id="activity-2-lines"></svg>
-        <div class="match-column" id="activity-2-left"></div>
-        <div class="match-column" id="activity-2-right"></div>
-      </div>
-      <div class="completion-message" id="activity-2-complete"><h3>Perfect!</h3></div>
+      <div id="activity-2-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-2-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Past Tense Knowledge</h3>
+    <section id="activity-3" class="section"><div class="card"><h3>Biography Builder</h3>
       <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div id="activity-3-container"></div>
+      <div id="activity-3-container" class="fill-container"></div>
       <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Past Tense Facts</h3>
+    <section id="activity-4" class="section"><div class="card"><h3>Historical Fact</h3>
       <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
       <div id="activity-4-container"></div>
       <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Gender Endings</h3>
-      <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/16</span></div>
+    <section id="activity-5" class="section"><div class="card"><h3>Time Sorter</h3>
+      <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/14</span></div>
       <div class="sort-pool" id="activity-5-pool"><div class="sort-items" id="activity-5-items"></div></div>
       <div class="sort-groups" id="activity-5-groups"></div>
       <div class="completion-message" id="activity-5-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Past Tense Vocabulary</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>History Maker</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
       <div id="activity-6-container" class="order-container"></div>
       <div class="completion-message" id="activity-6-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
     </div></section>
 
-    <section id="activity-7" class="section"><div class="card"><h3>Past Tense Forms by Gender</h3>
+    <section id="activity-7" class="section"><div class="card"><h3>Verbs in Past</h3>
       <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-7-container"><svg class="match-lines" id="activity-7-lines"></svg>
-        <div class="match-column" id="activity-7-left"></div>
-        <div class="match-column" id="activity-7-right"></div>
-      </div>
-      <div class="completion-message" id="activity-7-complete"><h3>Perfect!</h3></div>
+      <div id="activity-7-container" class="order-container"></div>
+      <div class="completion-message" id="activity-7-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
-        <h3>Словник (25)</h3>
+        <h3>Словник (20)</h3>
         <div class="vocab-table-container">
           <table class="vocab-table">
             <thead><tr>
@@ -942,7 +874,7 @@ footer {
     <th>Переклад</th>
     <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">вчора</td><td class="vocab-ipa">/vˈt͡ʃɔrɑ/</td><td class="vocab-en">yesterday</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">позавчора</td><td class="vocab-ipa">/pɔzɑvˈt͡ʃɔrɑ/</td><td class="vocab-en">day before yesterday</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">минулого тижня</td><td class="vocab-ipa">/mɪˈnulɔɦɔ ˈtɪʒnʲɑ/</td><td class="vocab-en">last week</td><td class="vocab-note">genitive time</td></tr><tr><td class="vocab-uk">минулого місяця</td><td class="vocab-ipa">/mɪˈnulɔɦɔ ˈmʲisʲɑt͡sʲɑ/</td><td class="vocab-en">last month</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">минулого року</td><td class="vocab-ipa">/mɪˈnulɔɦɔ ˈrɔku/</td><td class="vocab-en">last year</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">давно</td><td class="vocab-ipa">/dɑvˈnɔ/</td><td class="vocab-en">long ago</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">недавно</td><td class="vocab-ipa">/nɛˈdɑvnɔ/</td><td class="vocab-en">recently</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">раніше</td><td class="vocab-ipa">/ˈrɑnʲiʃɛ/</td><td class="vocab-en">earlier, before</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">колись</td><td class="vocab-ipa">/ˈkɔlɪsʲ/</td><td class="vocab-en">once, sometime</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">був</td><td class="vocab-ipa">/buv/</td><td class="vocab-en">was (m)</td><td class="vocab-note">past of бути</td></tr><tr><td class="vocab-uk">була</td><td class="vocab-ipa">/buˈlɑ/</td><td class="vocab-en">was (f)</td><td class="vocab-note">past of бути</td></tr><tr><td class="vocab-uk">було</td><td class="vocab-ipa">/ˈbulɔ/</td><td class="vocab-en">was (n)</td><td class="vocab-note">past of бути</td></tr><tr><td class="vocab-uk">були</td><td class="vocab-ipa">/buˈlɪ/</td><td class="vocab-en">were (pl)</td><td class="vocab-note">past of бути</td></tr><tr><td class="vocab-uk">зробив</td><td class="vocab-ipa">/zrɔˈbɪv/</td><td class="vocab-en">did, made (m)</td><td class="vocab-note">past of зробити</td></tr><tr><td class="vocab-uk">сказав</td><td class="vocab-ipa">/skɑˈzɑv/</td><td class="vocab-en">said (m)</td><td class="vocab-note">past of сказати</td></tr><tr><td class="vocab-uk">пішов</td><td class="vocab-ipa">/pʲiˈʃɔv/</td><td class="vocab-en">went, left (m)</td><td class="vocab-note">past of піти</td></tr><tr><td class="vocab-uk">прийшов</td><td class="vocab-ipa">/prɪjˈʃɔv/</td><td class="vocab-en">came (m)</td><td class="vocab-note">past of прийти</td></tr><tr><td class="vocab-uk">поїхав</td><td class="vocab-ipa">/pɔˈjixɑv/</td><td class="vocab-en">went (vehicle) (m)</td><td class="vocab-note">past of поїхати</td></tr><tr><td class="vocab-uk">приїхав</td><td class="vocab-ipa">/prɪˈjixɑv/</td><td class="vocab-en">arrived (vehicle) (m)</td><td class="vocab-note">past of приїхати</td></tr><tr><td class="vocab-uk">почав</td><td class="vocab-ipa">/pɔˈt͡ʃɑv/</td><td class="vocab-en">began (m)</td><td class="vocab-note">past of почати</td></tr><tr><td class="vocab-uk">закінчив</td><td class="vocab-ipa">/zɑˈkʲint͡ʃɪv/</td><td class="vocab-en">finished (m)</td><td class="vocab-note">past of закінчити</td></tr><tr><td class="vocab-uk">побачив</td><td class="vocab-ipa">/pɔˈbɑt͡ʃɪv/</td><td class="vocab-en">saw (m)</td><td class="vocab-note">past of побачити</td></tr><tr><td class="vocab-uk">почув</td><td class="vocab-ipa">/pɔˈt͡ʃuv/</td><td class="vocab-en">heard (m)</td><td class="vocab-note">past of почути</td></tr><tr><td class="vocab-uk">зустрів</td><td class="vocab-ipa">/zuˈstrʲiv/</td><td class="vocab-en">met (m)</td><td class="vocab-note">past of зустріти</td></tr><tr><td class="vocab-uk">забув</td><td class="vocab-ipa">/zɑˈbuv/</td><td class="vocab-en">forgot (m)</td><td class="vocab-note">past of забути</td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">вчора</td><td class="vocab-ipa">/ˈwtʃɔrɑ/</td><td class="vocab-en">yesterday</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вчора')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">позавчора</td><td class="vocab-ipa">/pɔzɑˈwtʃɔrɑ/</td><td class="vocab-en">day before yesterday</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('позавчора')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">давно</td><td class="vocab-ipa">/dɑwˈnɔ/</td><td class="vocab-en">long ago</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('давно')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">недавно</td><td class="vocab-ipa">/nɛˈdɑwnɔ/</td><td class="vocab-en">recently</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('недавно')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">колись</td><td class="vocab-ipa">/kɔˈlɪsʲ/</td><td class="vocab-en">once/sometime</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('колись')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">раніше</td><td class="vocab-ipa">/rɑˈniʃɛ/</td><td class="vocab-en">earlier/before</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('раніше')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">був</td><td class="vocab-ipa">/buw/</td><td class="vocab-en">was (m)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('був')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">була</td><td class="vocab-ipa">/buˈlɑ/</td><td class="vocab-en">was (f)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('була')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">було</td><td class="vocab-ipa">/buˈlɔ/</td><td class="vocab-en">was (n)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('було')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">були</td><td class="vocab-ipa">/buˈlɪ/</td><td class="vocab-en">were (pl)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('були')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">минулого</td><td class="vocab-ipa">/mɪˈnulɔɦɔ/</td><td class="vocab-en">last (of last)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('минулого')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">тижня</td><td class="vocab-ipa">/ˈtɪʒnʲɑ/</td><td class="vocab-en">week (gen)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('тижня')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">місяця</td><td class="vocab-ipa">/ˈmisʲɑt͡sʲɑ/</td><td class="vocab-en">month (gen)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('місяця')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">року</td><td class="vocab-ipa">/ˈrɔku/</td><td class="vocab-en">year (gen)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('року')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">робив</td><td class="vocab-ipa">/rɔˈbɪw/</td><td class="vocab-en">did (m)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('робив')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">бачив</td><td class="vocab-ipa">/ˈbɑtʃɪw/</td><td class="vocab-en">saw (m)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('бачив')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">знав</td><td class="vocab-ipa">/znɑw/</td><td class="vocab-en">knew (m)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('знав')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">сказав</td><td class="vocab-ipa">/skɑˈzɑw/</td><td class="vocab-en">said (m)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('сказав')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">пішов</td><td class="vocab-ipa">/piˈʃɔw/</td><td class="vocab-en">went (m)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('пішов')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">забув</td><td class="vocab-ipa">/zɑˈbuw/</td><td class="vocab-en">forgot (m)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('забув')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -954,8 +886,8 @@ footer {
   </main><footer>Module 21 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"fill-blank","title":"Past Tense Forms","data":{"type":"fill-blank","items":[{"prompt":"Він ___ (читати) книгу.","answer":"читав","hints":["читати"],"options":["читав","читала","читало","читали"]},{"prompt":"Вона ___ (працювати) вчора.","answer":"працювала","hints":["працювати"],"options":["працювала","працював","працювало","працювали"]},{"prompt":"Ми ___ (говорити) українською.","answer":"говорили","hints":["говорити"],"options":["говорили","говорив","говорила","говорило"]},{"prompt":"Я (male) ___ (їсти) борщ.","answer":"їв","hints":["їсти"],"options":["їв","їла","їло","їли"]},{"prompt":"Вони ___ (бути) в Києві.","answer":"були","hints":["бути"],"options":["були","був","була","було"]},{"prompt":"Це ___ (бути) цікаво.","answer":"було","hints":["бути"],"options":["було","був","була","були"]},{"prompt":"Марія ___ (піти) додому.","answer":"пішла","hints":["піти"],"options":["пішла","пішов","пішло","пішли"]},{"prompt":"Він ___ (сказати) правду.","answer":"сказав","hints":["сказати"],"options":["сказав","сказала","сказало","сказали"]},{"prompt":"Ти (female) ___ (бачити) це?","answer":"бачила","hints":["бачити"],"options":["бачила","бачив","бачило","бачили"]},{"prompt":"Діти ___ (грати) в парку.","answer":"грали","hints":["грати"],"options":["грали","грав","грала","грало"]},{"prompt":"Він ___ (прийти) о шостій.","answer":"прийшов","hints":["прийти"],"options":["прийшов","прийшла","прийшло","прийшли"]},{"prompt":"Вона ___ (взяти) мою книгу.","answer":"взяла","hints":["взяти"],"options":["взяла","взяв","взяло","взяли"]}]}},{"id":"activity-1","type":"unjumble","title":"Past Tense Sentences","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["читав","книгу","Він","вчора"],"answer":"Він вчора читав книгу.","translation":"He read a book yesterday."},{"words":["працювала","Вона","тижня","минулого"],"answer":"Вона працювала минулого тижня.","translation":"She worked last week."},{"words":["говорили","українською","Ми"],"answer":"Ми говорили українською.","translation":"We spoke Ukrainian."},{"words":["були","Києві","Вони","в"],"answer":"Вони були в Києві.","translation":"They were in Kyiv."},{"words":["Було","смачно","дуже"],"answer":"Було дуже смачно.","translation":"It was very tasty."},{"words":["їв","борщ","я","Вчора"],"answer":"Вчора я їв борщ.","translation":"Yesterday I ate borsch."},{"words":["додому","пішла","Вона"],"answer":"Вона пішла додому.","translation":"She went home."},{"words":["не","працював","вчора","Він"],"answer":"Він не працював вчора.","translation":"He didn't work yesterday."},{"words":["сказала","Що","вона"],"answer":"Що вона сказала?","translation":"What did she say?"},{"words":["прийшов","пізно","Він"],"answer":"Він прийшов пізно.","translation":"He came late."},{"words":["робив","ти","Що","вчора"],"answer":"Що ти робив вчора?","translation":"What did you do yesterday?"},{"words":["Як","було"],"answer":"Як було?","translation":"How was it?"}]}},{"id":"activity-2","type":"match-up","title":"Infinitive to Past","data":{"type":"match-up","pairs":[{"left":"читати","right":"читав"},{"left":"працювати","right":"працював"},{"left":"говорити","right":"говорив"},{"left":"робити","right":"робив"},{"left":"їсти","right":"їв"},{"left":"іти","right":"йшов"},{"left":"піти","right":"пішов"},{"left":"прийти","right":"прийшов"},{"left":"взяти","right":"взяв"},{"left":"сказати","right":"сказав"},{"left":"бачити","right":"бачив"},{"left":"бути","right":"був"}],"shuffleRight":true}},{"id":"activity-3","type":"quiz","title":"Past Tense Knowledge","data":{"type":"quiz","questions":[{"question":"What determines the past tense ending?","options":["The verb class","The gender of the subject","The time of day","The direct object"],"correctIndex":1,"explanation":"Past tense endings agree with subject gender: -в (m), -ла (f), -ло (n), -ли (pl)."},{"question":"How do you say \"she read\" in Ukrainian?","options":["вона читав","вона читала","вона читало","вона читали"],"correctIndex":1,"explanation":"Feminine subjects use -ла ending."},{"question":"What is the past tense of \"іти\" (to go)?","options":["ів/іла","йшов/йшла","ішов/ішла","ходив/ходила"],"correctIndex":1,"explanation":"\"Іти\" has irregular past: йшов, йшла, йшло, йшли."},{"question":"\"Вчора\" means:","options":["yesterday","tomorrow","today","last week"],"correctIndex":0,"explanation":"\"Вчора\" = yesterday; \"завтра\" = tomorrow."},{"question":"How do you negate past tense?","options":["Add \"ні\" after the verb","Add \"не\" before the verb","Change the ending","Use a different verb"],"correctIndex":1,"explanation":"Negation: Він **не** читав."},{"question":"If a woman says \"Я читала,\" what do we know?","options":["The speaker is female","The speaker is male","Multiple people are speaking","It's a question"],"correctIndex":0,"explanation":"-ла ending indicates feminine gender of the subject."},{"question":"\"Було цікаво\" means:","options":["It is interesting","It was interesting","It will be interesting","Interesting!"],"correctIndex":1,"explanation":"\"Було\" is past tense of \"бути\" (to be)."},{"question":"What is the past tense of \"їсти\" (to eat)?","options":["їв/їла","їстив/їстила","їдав/їдала","їжив/їжила"],"correctIndex":0,"explanation":"\"Їсти\" → їв (m), їла (f), їло (n), їли (pl)."},{"question":"\"Минулого тижня\" means:","options":["this week","next week","last week","every week"],"correctIndex":2,"explanation":"\"Минулого\" = past/last; \"тижня\" = week (genitive)."},{"question":"Which is correct for \"they were\"?","options":["вони був","вони була","вони було","вони були"],"correctIndex":3,"explanation":"Plural subjects use -ли ending."},{"question":"\"Він прийшов\" means:","options":["He came/arrived","He left","He is coming","He will come"],"correctIndex":0,"explanation":"\"Прийшов\" is past tense of \"прийти\" (to come)."},{"question":"In \"Ми говорили,\" why is it \"-ли\"?","options":["Because it's negative","Because of the verb class","Because \"ми\" is plural","Because it's formal"],"correctIndex":2,"explanation":"All plural subjects (ми, ви, вони) use -ли."}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-4","type":"true-false","title":"Past Tense Facts","data":{"type":"true-false","statements":[{"statement":"Past tense endings change based on gender.","isTrue":true,"explanation":"Correct! -в (m), -ла (f), -ло (n), -ли (pl)."},{"statement":"Ukrainian has multiple past tenses like English.","isTrue":false,"explanation":"Incorrect! Ukrainian has only one past tense form."},{"statement":"\"Він читав\" and \"вона читала\" are both past tense.","isTrue":true,"explanation":"Correct! Same tense, different gender endings."},{"statement":"\"Бути\" (to be) is omitted in past tense.","isTrue":false,"explanation":"Incorrect! Unlike present, past uses був/була/було/були."},{"statement":"\"Не\" comes before the verb for negation.","isTrue":true,"explanation":"Correct! Він не читав, вона не працювала."},{"statement":"\"Позавчора\" means \"tomorrow.\"","isTrue":false,"explanation":"Incorrect! \"Позавчора\" = the day before yesterday."},{"statement":"\"Їв\" is the masculine past of \"їсти.\"","isTrue":true,"explanation":"Correct! Їсти → їв (m), їла (f)."},{"statement":"Past tense of \"я\" always uses -в ending.","isTrue":false,"explanation":"Incorrect! It depends on the speaker's gender: я читав (m), я читала (f)."},{"statement":"\"Йшов\" is the past of \"іти.\"","isTrue":true,"explanation":"Correct! Irregular: іти → йшов/йшла/йшло/йшли."},{"statement":"\"Як було?\" means \"How is it?\"","isTrue":false,"explanation":"Incorrect! \"Як було?\" = How was it? (past)."},{"statement":"\"Колись\" means \"once\" or \"sometime.\"","isTrue":true,"explanation":"Correct! Time expression for the past."},{"statement":"\"-ли\" ending is used for all plural subjects.","isTrue":true,"explanation":"Correct! Ми, ви, вони all use -ли."}]}},{"id":"activity-5","type":"group-sort","title":"Gender Endings","data":{"type":"group-sort","groups":[{"id":"masculine","name":"Masculine","items":["читав","працював","був","пішов"],"nameUk":"-в"},{"id":"feminine","name":"Feminine","items":["читала","працювала","була","пішла"],"nameUk":"-ла"},{"id":"neuter","name":"Neuter","items":["читало","працювало","було","пішло"],"nameUk":"-ло"},{"id":"plural","name":"Plural","items":["читали","працювали","були","пішли"],"nameUk":"-ли"}],"shuffleItems":true}},{"id":"activity-6","type":"anagram","title":"Past Tense Vocabulary","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["в","а","ч","и","т"],"answer":"читав","translation":"read - masculine"},{"letters":["а","л","а","ю","в","ц","а","р","п"],"answer":"працювала","translation":"worked - feminine"},{"letters":["в","у","б"],"answer":"був","translation":"was - masculine"},{"letters":["а","л","у","б"],"answer":"була","translation":"was - feminine"},{"letters":["в","о","ш","і","п"],"answer":"пішов","translation":"went - masculine"},{"letters":["в","і","р","о","в","о","г"],"answer":"говорив","translation":"spoke - masculine"},{"letters":["а","р","о","ч","в"],"answer":"вчора","translation":"yesterday"},{"letters":["о","н","в","а","д"],"answer":"давно","translation":"long ago"},{"letters":["о","н","в","а","д","е","н"],"answer":"недавно","translation":"recently"},{"letters":["в","а","з","а","к","с"],"answer":"сказав","translation":"said - masculine"},{"letters":["в","а","л","і","х","о","п","і","р","п"],"answer":"приїхала","translation":"arrived - feminine"},{"letters":["в","о","ш","й","і","р","п"],"answer":"прийшов","translation":"came - masculine"}]}},{"id":"activity-7","type":"match-up","title":"Past Tense Forms by Gender","data":{"type":"match-up","pairs":[{"left":"читав","right":"читала"},{"left":"працював","right":"працювала"},{"left":"говорив","right":"говорила"},{"left":"був","right":"була"},{"left":"пішов","right":"пішла"},{"left":"прийшов","right":"прийшла"},{"left":"сказав","right":"сказала"},{"left":"їв","right":"їла"},{"left":"йшов","right":"йшла"},{"left":"взяв","right":"взяла"},{"left":"бачив","right":"бачила"},{"left":"робив","right":"робила"}],"shuffleRight":true}}];
-    const vocabData = [{"uk":"вчора","translit":"","en":"yesterday","note":""},{"uk":"позавчора","translit":"","en":"day before yesterday","note":""},{"uk":"минулого тижня","translit":"","en":"last week","note":"genitive time"},{"uk":"минулого місяця","translit":"","en":"last month","note":""},{"uk":"минулого року","translit":"","en":"last year","note":""},{"uk":"давно","translit":"","en":"long ago","note":""},{"uk":"недавно","translit":"","en":"recently","note":""},{"uk":"раніше","translit":"","en":"earlier, before","note":""},{"uk":"колись","translit":"","en":"once, sometime","note":""},{"uk":"був","translit":"","en":"was (m)","note":"past of бути"},{"uk":"була","translit":"","en":"was (f)","note":"past of бути"},{"uk":"було","translit":"","en":"was (n)","note":"past of бути"},{"uk":"були","translit":"","en":"were (pl)","note":"past of бути"},{"uk":"зробив","translit":"","en":"did, made (m)","note":"past of зробити"},{"uk":"сказав","translit":"","en":"said (m)","note":"past of сказати"},{"uk":"пішов","translit":"","en":"went, left (m)","note":"past of піти"},{"uk":"прийшов","translit":"","en":"came (m)","note":"past of прийти"},{"uk":"поїхав","translit":"","en":"went (vehicle) (m)","note":"past of поїхати"},{"uk":"приїхав","translit":"","en":"arrived (vehicle) (m)","note":"past of приїхати"},{"uk":"почав","translit":"","en":"began (m)","note":"past of почати"},{"uk":"закінчив","translit":"","en":"finished (m)","note":"past of закінчити"},{"uk":"побачив","translit":"","en":"saw (m)","note":"past of побачити"},{"uk":"почув","translit":"","en":"heard (m)","note":"past of почути"},{"uk":"зустрів","translit":"","en":"met (m)","note":"past of зустріти"},{"uk":"забув","translit":"","en":"forgot (m)","note":"past of забути"}];
+    const activitiesData = [{"id":"activity-0","type":"quiz","title":"Past Tense Logic","data":{"type":"quiz","questions":[{"question":"Іван ___ (read) книгу.","options":["читав","читала","читали"],"correctIndex":0,"explanation":""},{"question":"Олена ___ (speak) по-українськи.","options":["говорила","говорив","говорили"],"correctIndex":0,"explanation":""},{"question":"Ми ___ (work) в офісі.","options":["працювали","працював","працювала"],"correctIndex":0,"explanation":""},{"question":"Я (Male) ___ (eat) борщ.","options":["їв","їла","їли"],"correctIndex":0,"explanation":""},{"question":"Я (Female) ___ (drink) чай.","options":["пила","пив","пили"],"correctIndex":0,"explanation":""},{"question":"Де ви ___ (were)?","options":["були","був","була"],"correctIndex":0,"explanation":""},{"question":"Студенти ___ (listened).","options":["слухали","слухав","слухала"],"correctIndex":0,"explanation":""},{"question":"Вчора ___ (was) холодно.","options":["було","був","була"],"correctIndex":0,"explanation":""},{"question":"Максим ___ (forgot) телефон.","options":["забув","забула","забули"],"correctIndex":0,"explanation":""},{"question":"Марія ___ (bought) хліб.","options":["купила","купив","купили"],"correctIndex":0,"explanation":""},{"question":"Вони ___ (lived) тут.","options":["жили","жив","жила"],"correctIndex":0,"explanation":""},{"question":"Сонце (It) ___ (shone/was).","options":["було","був","була"],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-1","type":"match-up","title":"Who did it?","data":{"type":"match-up","pairs":[{"left":"Він (He)","right":"-В"},{"left":"Вона (She)","right":"-ЛА"},{"left":"Воно (It)","right":"-ЛО"},{"left":"Вони (They)","right":"-ЛИ"},{"left":"Я (Male)","right":"-В"},{"left":"Я (Female)","right":"-ЛА"},{"left":"Ми (We)","right":"-ЛИ"},{"left":"Ви (You Pl)","right":"-ЛИ"},{"left":"Ти (Male)","right":"-В"},{"left":"Ти (Female)","right":"-ЛА"},{"left":"Хто (Who - M)","right":"-В"},{"left":"Що (What - N)","right":"-ЛО"}],"shuffleRight":true}},{"id":"activity-2","type":"fill-blank","title":"Time Traveler","data":{"type":"fill-blank","items":[{"prompt":"Я знаю -> Я ___ (knew - M).","answer":"знав","hints":["knew - M"]},{"prompt":"Вона бачить -> Вона ___ (saw).","answer":"бачила","hints":["saw"]},{"prompt":"Ми хочемо -> Ми ___ (wanted).","answer":"хотіли","hints":["wanted"]},{"prompt":"Він робить -> Він ___ (did).","answer":"робив","hints":["did"]},{"prompt":"Вони сплять -> Вони ___ (slept).","answer":"спали","hints":["slept"]},{"prompt":"Ти думаєш -> Ти ___ (thought - F).","answer":"думала","hints":["thought - F"]},{"prompt":"Я люблю -> Я ___ (loved - M).","answer":"любив","hints":["loved - M"]},{"prompt":"Вона пише -> Вона ___ (wrote).","answer":"писала","hints":["wrote"]},{"prompt":"Ми йдемо -> Ми ___ (went/walked - Irreg).","answer":"йшли","hints":["went/walked - Irreg"]},{"prompt":"Він їсть -> Він ___ (ate).","answer":"їв","hints":["ate"]},{"prompt":"Воно лежить -> Воно ___ (lay).","answer":"лежало","hints":["lay"]},{"prompt":"Ви питаєте - Ви ___ (asked).","answer":"питали","hints":["asked"]}]}},{"id":"activity-3","type":"fill-blank","title":"Biography Builder","data":{"type":"fill-blank","items":[{"prompt":"Марія ___ (born) в Одесі.","answer":"народилася","hints":["born"]},{"prompt":"Іван ___ (lived) у Львові.","answer":"жив","hints":["lived"]},{"prompt":"Ми ___ (studied) в школі.","answer":"вчилися","hints":["studied"]},{"prompt":"Я (Female) ___ (knew) це.","answer":"знала","hints":["knew"]},{"prompt":"Тарас ___ (wrote) книгу.","answer":"писав","hints":["wrote"]},{"prompt":"Олена ___ (did) це.","answer":"робила","hints":["did"]},{"prompt":"Вони ___ (were) тут.","answer":"були","hints":["were"]},{"prompt":"Батько ___ (worked) там.","answer":"працював","hints":["worked"]},{"prompt":"Мама ___ (loved) квіти.","answer":"любила","hints":["loved"]},{"prompt":"Сонце ___ (shone/was).","answer":"було","hints":["shone/was"]},{"prompt":"Я (Male) ___ (thought) так.","answer":"думав","hints":["thought"]},{"prompt":"Студенти ___ (read).","answer":"читали","hints":["read"]}]}},{"id":"activity-4","type":"true-false","title":"Historical Fact","data":{"type":"true-false","statements":[{"statement":"Іван (Вона) читала.","isTrue":false,"explanation":""},{"statement":"Марія (Вона) жила.","isTrue":true,"explanation":""},{"statement":"Ми (Вони) були.","isTrue":false,"explanation":""},{"statement":"Я (Man) говорила.","isTrue":false,"explanation":""},{"statement":"Сонце (Воно) світило.","isTrue":true,"explanation":""},{"statement":"Вчора (Present) я їм.","isTrue":false,"explanation":""},{"statement":"Сьогодні (Past) я був.","isTrue":false,"explanation":""},{"statement":"Раніше (Past) було краще.","isTrue":false,"explanation":""},{"statement":"Вона (He) писав.","isTrue":false,"explanation":""},{"statement":"Вони (They) знали.","isTrue":true,"explanation":""},{"statement":"Ти (Female) хотів.","isTrue":false,"explanation":""},{"statement":"Ви (Plural) працювали.","isTrue":true,"explanation":""}]}},{"id":"activity-5","type":"group-sort","title":"Time Sorter","data":{"type":"group-sort","groups":[{"id":"past","name":"Past","items":["Вчора","Позавчора","Минулого тижня","Минулого року","Давно","Раніше","Колись"],"nameUk":"Yesterday"},{"id":"presentfuture","name":"Present/Future","items":["Сьогодні","Зараз","Завтра","Наступного тижня","Завжди","Часто","Швидко"],"nameUk":"Not Past"}],"shuffleItems":true}},{"id":"activity-6","type":"unjumble","title":"History Maker","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["вчора","робив","ти","Що","?"],"answer":"Що ти робив вчора?"},{"words":["бачила","Я","фільм","цей","."],"answer":"Я бачила цей фільм."},{"words":["в","Ми","парку","були","."],"answer":"Ми були в парку."},{"words":["не","Він","знав","."],"answer":"Він не знав."},{"words":["купили","Вони","машину","."],"answer":"Вони купили машину."},{"words":["працювала","Вона","тут","."],"answer":"Вона тут працювала."},{"words":["минулого","Я","тижня","був","там","."],"answer":"Я був там минулого тижня."},{"words":["їли","Ви","піцу","?"],"answer":"Ви їли піцу?"},{"words":["дуже","Було","смачно","."],"answer":"Було дуже смачно."},{"words":["книгу","читав","Студент","."],"answer":"Студент читав книгу."},{"words":["спали","довго","Ми","."],"answer":"Ми довго спали."},{"words":["бачив","Я","тебе","."],"answer":"Я бачив тебе."}]}},{"id":"activity-7","type":"anagram","title":"Verbs in Past","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["б","у","в"],"answer":"був","translation":"Was - M"},{"letters":["б","у","л","а"],"answer":"була","translation":"Was - F"},{"letters":["ж","и","л","и"],"answer":"жили","translation":"Lived - Pl"},{"letters":["з","н","а","в"],"answer":"знав","translation":"Knew - M"},{"letters":["ї","л","а"],"answer":"їла","translation":"Ate - F"},{"letters":["с","п","а","в"],"answer":"спав","translation":"Slept - M"},{"letters":["п","и","л","и"],"answer":"пили","translation":"Drank - Pl"},{"letters":["б","у","л","о"],"answer":"було","translation":"Was - N"},{"letters":["х","о","т","і","в"],"answer":"хотів","translation":"Wanted - M"},{"letters":["м","а","л","а"],"answer":"мала","translation":"Had - F"},{"letters":["д","у","м","а","в"],"answer":"думав","translation":"Thought - M"},{"letters":["ч","и","т","а","л","и"],"answer":"читали","translation":"Read - Pl"}]}}];
+    const vocabData = [{"uk":"вчора","translit":"","en":"yesterday","note":"[🔊](audio_vchora)"},{"uk":"позавчора","translit":"","en":"day before yesterday","note":"[🔊](audio_pozavchora)"},{"uk":"давно","translit":"","en":"long ago","note":"[🔊](audio_davno)"},{"uk":"недавно","translit":"","en":"recently","note":"[🔊](audio_nedavno)"},{"uk":"колись","translit":"","en":"once/sometime","note":"[🔊](audio_kolys)"},{"uk":"раніше","translit":"","en":"earlier/before","note":"[🔊](audio_ranishe)"},{"uk":"був","translit":"","en":"was (m)","note":"[🔊](audio_buv)"},{"uk":"була","translit":"","en":"was (f)","note":"[🔊](audio_bula)"},{"uk":"було","translit":"","en":"was (n)","note":"[🔊](audio_bulo)"},{"uk":"були","translit":"","en":"were (pl)","note":"[🔊](audio_buly)"},{"uk":"минулого","translit":"","en":"last (of last)","note":"[🔊](audio_mynuloho)"},{"uk":"тижня","translit":"","en":"week (gen)","note":"[🔊](audio_tyzhnya)"},{"uk":"місяця","translit":"","en":"month (gen)","note":"[🔊](audio_misyatsya)"},{"uk":"року","translit":"","en":"year (gen)","note":"[🔊](audio_roku)"},{"uk":"робив","translit":"","en":"did (m)","note":"[🔊](audio_robyv)"},{"uk":"бачив","translit":"","en":"saw (m)","note":"[🔊](audio_bachyv)"},{"uk":"знав","translit":"","en":"knew (m)","note":"[🔊](audio_znav)"},{"uk":"сказав","translit":"","en":"said (m)","note":"[🔊](audio_skazav)"},{"uk":"пішов","translit":"","en":"went (m)","note":"[🔊](audio_pishov)"},{"uk":"забув","translit":"","en":"forgot (m)","note":"[🔊](audio_zabuv)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1015,6 +947,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2279,6 +2237,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

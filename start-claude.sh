@@ -74,7 +74,8 @@ echo "   Module counts:"
 for level in a1 a2 b1 b2 c1 c2; do
     if [ -d "curriculum/l2-uk-en/$level" ]; then
         COUNT=$(ls -1 curriculum/l2-uk-en/$level/*.md 2>/dev/null | wc -l | xargs)
-        echo "       ${level^^}: $COUNT modules"
+        LEVEL_UPPER=$(echo "$level" | tr 'a-z' 'A-Z')
+        echo "       $LEVEL_UPPER: $COUNT modules"
     fi
 done
 

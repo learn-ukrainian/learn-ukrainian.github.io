@@ -53,7 +53,7 @@ export interface ParsedModule {
 
 export interface Section {
   id: string;
-  type: 'intro' | 'content' | 'practice' | 'summary' | 'vocabulary' | 'activities';
+  type: 'intro' | 'content' | 'practice' | 'summary' | 'vocabulary' | 'activities' | 'diagnostic' | 'analysis' | 'consolidation' | 'application';
   title: string;
   titleUk?: string;
   content: string;

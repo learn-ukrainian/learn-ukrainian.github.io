@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Module 27: Colors &amp; Clothing | Ukrainian A1</title>
+  <title>Module 27: Description (Adjectives III) | Ukrainian A1</title>
   <style>
 :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -478,17 +518,17 @@ footer {
     </div>
   </div>
   <nav class="nav">
-    <h1>Module 27: Colors &amp; Clothing</h1>
+    <h1>Module 27: Description (Adjectives III)</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Fill</button>
+      <button class="nav-tab" data-section="activity-0">1. Match</button>
       <button class="nav-tab" data-section="activity-1">2. Fill</button>
-      <button class="nav-tab" data-section="activity-2">3. Order</button>
-      <button class="nav-tab" data-section="activity-3">4. Match</button>
-      <button class="nav-tab" data-section="activity-4">5. Match</button>
-      <button class="nav-tab" data-section="activity-5">6. Quiz</button>
-      <button class="nav-tab" data-section="activity-6">7. T/F</button>
-      <button class="nav-tab" data-section="activity-7">8. Sort</button>
+      <button class="nav-tab" data-section="activity-2">3. Sort</button>
+      <button class="nav-tab" data-section="activity-3">4. Quiz</button>
+      <button class="nav-tab" data-section="activity-4">5. Spell</button>
+      <button class="nav-tab" data-section="activity-5">6. Order</button>
+      <button class="nav-tab" data-section="activity-6">7. Fill</button>
+      <button class="nav-tab" data-section="activity-7">8. T/F</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -497,597 +537,344 @@ footer {
     <section id="lesson" class="section active">
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.3</span>
-        <h2 style="font-size:2rem;margin:0.5rem 0">Colors &amp; Clothing</h2>
-        <p style="color:var(--text-muted)">Кольори та одяг — Describing What You Wear</p>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Description (Adjectives III)</h2>
+        <p style="color:var(--text-muted)">The World in HD</p>
       </div>
       
     <div class="card section-intro">
       <h3>📖 Introduction</h3>
       <div class="md-content"><h2 id="warmup">warm-up</h2>
-<h3 id="aworldofcolors">A World of Colors</h3>
-<p>Red, blue, green, yellow — colors are everywhere! In this module, you'll learn to describe the colorful world around you and talk about what people wear.</p>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>Ukrainian has TWO words for blue: "синій" (dark blue, like the sea) and "блакитний" (light blue, like the sky). This distinction is important in Ukrainian culture!</p>
-</blockquote>
+<p><strong>The Critic</strong></p>
+<p>This coffee is cold (<code>Холодна</code>).<br />
+This soup is expensive (<code>Дорогий</code>).<br />
+This car is fast (<code>Швидка</code>).<br />
+This book is boring (<code>Нудна</code>).</p>
+<p>We are critics. We judge the world constantly.<br />
+In this module, we expand your vocabulary of judgment.<br />
+We learn the opposites (Antonyms).<br />
+Because the world is not just "Good". Sometimes it is "Bad".</p>
 <h2 id="presentation">presentation</h2>
-<h3 id="basiccolors">Basic Colors</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>IPA</th>
-<th>English</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>білий</td>
-<td>ˈbilɪj</td>
-<td>white</td>
-<td>hard</td>
-</tr>
-<tr>
-<td>чорний</td>
-<td>ˈt͡ʃɔrnɪj</td>
-<td>black</td>
-<td>hard</td>
-</tr>
-<tr>
-<td>сірий</td>
-<td>ˈsirɪj</td>
-<td>gray</td>
-<td>hard</td>
-</tr>
-<tr>
-<td>червоний</td>
-<td>t͡ʃɛrˈwɔnɪj</td>
-<td>red</td>
-<td>hard</td>
-</tr>
-<tr>
-<td>помаранчевий</td>
-<td>pɔmɐrɐnˈt͡ʃɛwɪj</td>
-<td>orange</td>
-<td>hard</td>
-</tr>
-<tr>
-<td>жовтий</td>
-<td>ˈʒɔwtɪj</td>
-<td>yellow</td>
-<td>hard</td>
-</tr>
-<tr>
-<td>зелений</td>
-<td>zɛˈlɛnɪj</td>
-<td>green</td>
-<td>hard</td>
-</tr>
-<tr>
-<td>синій</td>
-<td>ˈsɪnʲij</td>
-<td>dark blue</td>
-<td>soft</td>
-</tr>
-<tr>
-<td>блакитний</td>
-<td>blɐˈkɪtnɪj</td>
-<td>light blue</td>
-<td>hard</td>
-</tr>
-<tr>
-<td>фіолетовий</td>
-<td>fiɔˈlɛtɔwɪj</td>
-<td>purple</td>
-<td>hard</td>
-</tr>
-<tr>
-<td>рожевий</td>
-<td>rɔˈʒɛwɪj</td>
-<td>pink</td>
-<td>hard</td>
-</tr>
-<tr>
-<td>коричневий</td>
-<td>kɔˈrɪt͡ʃnɛwɪj</td>
-<td>brown</td>
-<td>hard</td>
-</tr>
-</tbody>
-</table>
+<h3 id="section1thebigfourpairs">Section 1: The Big Four Pairs</h3>
+<p>Memorize these. They are 80% of daily description.</p>
+<ol>
+<li><strong>Великий</strong> (Big) ↔️ <strong>Маленький</strong> (Small).</li>
+<li><strong>Новий</strong> (New) ↔️ <strong>Старий</strong> (Old).</li>
+<li><strong>Хороший</strong> (Good) ↔️ <strong>Поганий</strong> (Bad).</li>
+<li><strong>Дорогий</strong> (Expensive/Dear) ↔️ <strong>Дешевий</strong> (Cheap).</li>
+</ol>
+<p><strong>Agreement Examples:</strong></p>
+<ul>
+<li>Великий дім (Big house - m).</li>
+<li>Велика проблема (Big problem - f).</li>
+<li>Велике вікно (Big window - n).</li>
+<li>Великі люди (Big people - pl).</li>
+</ul>
 <blockquote>
-  <p>🎬 <strong>Pop Culture Moment: The Matrix</strong></p>
-  <p>"Синя таблетка чи червона таблетка?" (Blue pill or red pill?) — This famous choice uses both colors! Notice "синя" (f) and "червона" (f) match "таблетка" (feminine).</p>
+  <p>💡 <strong>Pattern Alert</strong><br />
+  Note the stems.<br />
+  <strong>Velyk</strong>-yy.<br />
+  <strong>Mal</strong>-en'-kyy. (Suffix -en'k is diminutive/cute).</p>
 </blockquote>
-<h3 id="coloragreement">Color Agreement</h3>
-<p>Colors are adjectives, so they agree with nouns:</p>
-<table>
-<thead>
-<tr>
-<th>Color</th>
-<th>M</th>
-<th>F</th>
-<th>N</th>
-<th>Pl</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>білий</td>
-<td>білий</td>
-<td>біла</td>
-<td>біле</td>
-<td>білі</td>
-</tr>
-<tr>
-<td>чорний</td>
-<td>чорний</td>
-<td>чорна</td>
-<td>чорне</td>
-<td>чорні</td>
-</tr>
-<tr>
-<td>червоний</td>
-<td>червоний</td>
-<td>червона</td>
-<td>червоне</td>
-<td>червоні</td>
-</tr>
-<tr>
-<td>зелений</td>
-<td>зелений</td>
-<td>зелена</td>
-<td>зелене</td>
-<td>зелені</td>
-</tr>
-<tr>
-<td>синій</td>
-<td>синій</td>
-<td>синя</td>
-<td>синє</td>
-<td>сині</td>
-</tr>
-</tbody>
-</table>
+<h3 id="section2temperaturespeed">Section 2: Temperature &amp; Speed</h3>
+<ol>
+<li><p><strong>Гарячий</strong> (Hot - for things) ↔️ <strong>Холодний</strong> (Cold).<br />
+<em>Note: For weather/feeling, we use adverbs (Here is hot - Tut Zharko). Adjectives describe the object.</em></p>
+<ul>
+<li>Гарячий чай (Hot tea).</li>
+<li>Холодний душ (Cold shower).</li></ul></li>
+<li><p><strong>Швидкий</strong> (Fast) ↔️ <strong>Повільний</strong> (Slow).</p>
+<ul>
+<li>Швидкий поїзд (Fast train).</li>
+<li>Повільний інтернет (Slow internet).</li></ul></li>
+</ol>
+<h3 id="section3difficultyinterest">Section 3: Difficulty &amp; Interest</h3>
+<ol>
+<li><p><strong>Важкий</strong> (Heavy / Difficult) ↔️ <strong>Легкий</strong> (Light / Easy).</p>
+<ul>
+<li>Ця сумка важка. (This bag is heavy).</li>
+<li>Цей тест легкий. (This test is easy).<br />
+<em>Yes, "Heavy" and "Difficult" are the same word.</em></li></ul></li>
+<li><p><strong>Цікавий</strong> (Interesting) ↔️ <strong>Нудний</strong> (Boring).</p>
+<ul>
+<li>Цікава книга.</li>
+<li>Нудний фільм.</li></ul></li>
+</ol>
+<h3 id="section4veryvstooduzhevszanadto">Section 4: Very vs Too (Duzhe vs Zanadto)</h3>
+<p>Modifiers change the intensity.</p>
+<ul>
+<li><p><strong>Дуже</strong> (Very).</p>
+<ul>
+<li>Це дуже дорого. (This is very expensive).</li>
+<li>Він дуже розумний. (He is very smart).</li></ul></li>
+<li><p><strong>Занадто</strong> (Too / Excessively).</p>
+<ul>
+<li>Це занадто дорого. (This is too expensive - I won't buy it).</li>
+<li>Це занадто складно. (This is too complicated).</li></ul></li>
+</ul>
+<blockquote>
+  <p>🛒 <strong>Culture Corner: The Market (Rynok)</strong><br />
+  In a bazaar, you need these words.<br />
+  "Скільки коштує? Ого! Це дуже дорого!" (How much? Wow! Very expensive!).<br />
+  Describing goods is a sport.<br />
+  Seller: "Це дуже свіже!" (This is very fresh!).<br />
+  Buyer: "Ні, це старе." (No, this is old).</p>
+</blockquote>
+<h3 id="section5beautifulvsugly">Section 5: Beautiful vs Ugly</h3>
+<ul>
+<li><p><strong>Гарний</strong> (Beautiful / Good / Nice).</p>
+<ul>
+<li>Used for people, weather, objects.</li>
+<li>Гарна дівчина (Beautiful girl).</li>
+<li>Гарний день (Nice day).</li></ul></li>
+<li><p><strong>Негарний</strong> (Not beautiful / Ugly).</p>
+<ul>
+<li>Ukrainian is polite. We rarely say "Ugly" (Potvornyy).</li>
+<li>We say "Neharnyy" (Un-beautiful).</li></ul></li>
+</ul>
+<h3 id="section6describingpeoplephysical">Section 6: Describing People (Physical)</h3>
+<p>Be careful. Adjectives can be rude.</p>
+<ol>
+<li><strong>Високий</strong> (Tall) ↔️ <strong>Низький</strong> (Short/Low).<br />
+<em>Note: "Short" for people is Nyzkyy. "Short" for time/distance is Korotkyy.</em></li>
+<li><strong>Худий</strong> (Thin) ↔️ <strong>Товстий</strong> (Fat).<br />
+<em>Polite:</em> <strong>Повний</strong> (Full/Plump).</li>
+<li><strong>Молодий</strong> (Young) ↔️ <strong>Старий</strong> (Old).<br />
+<em>Polite:</em> <strong>Літній</strong> (Elderly / Of years).</li>
+</ol>
+<blockquote>
+  <p>👵 <strong>Culture Corner: The Babusya's Judgment</strong><br />
+  Ukrainian grandmothers (Babusy) are the ultimate judges.<br />
+  "Ти занадто худий!" (You are too thin!).<br />
+  "Ти блідий!" (You are pale!).<br />
+  Solution: "Їж!" (Eat!).<br />
+  If a Babusya says you are "Garnyy", you have succeeded in life.</p>
+</blockquote>
+<h3 id="section7describingweather">Section 7: Describing Weather</h3>
+<p>We use neuter short forms or adverbs (ending in -o).</p>
+<ul>
+<li><strong>Сонячно</strong> (Sunny).</li>
+<li><strong>Хмарно</strong> (Cloudy).</li>
+<li><strong>Вітряно</strong> (Windy).</li>
+<li><strong>Холодно</strong> (Cold).</li>
+<li><strong>Спекотно</strong> (Hot/Sweltering).</li>
+</ul>
+<p>"Сьогодні гарна погода." (Today is nice weather).<br />
+"Завтра буде погана погода." (Tomorrow will be bad weather).</p>
+<blockquote>
+  <p>🔬 <strong>Deep Dive: The Diminutive (-енький)</strong><br />
+  You will hear "Mal<strong>en'k</strong>yy" instead of "Malyy".<br />
+  This suffix <strong>-еньк</strong> makes things cuter or softer.</p>
+  <ul>
+  <li>Гарний ➡️ Гарненький (Pretty/Cute).</li>
+  <li>Теплий (Warm) ➡️ Тепленький.</li>
+  <li>Свіжий (Fresh) ➡️ Свіженький.<br />
+  Describing food or children? Use -еньк.</li>
+  </ul>
+</blockquote>
+<h3 id="section8richvspoor">Section 8: Rich vs Poor</h3>
+<ol>
+<li><strong>Багатий</strong> (Rich).<ul>
+<li>Багата людина (Rich person).</li>
+<li>Багата історія (Rich history).</li></ul></li>
+<li><strong>Бідний</strong> (Poor).<ul>
+<li>Бідний студент (Poor student).</li>
+<li>"Бідненький!" (Poor little thing! - Expression of pity).</li></ul></li>
+</ol>
+<h3 id="section9thesuperlativenay">Section 9: The Superlative (Nay-)</h3>
+<p>How do you say "The Best", "The Biggest"?<br />
+Just add <strong>Най-</strong> prefix.</p>
+<ul>
+<li>Великий ➡️ <strong>Най</strong>великий (Allocit? No just Nay-). <strong>Найбільший</strong> (The biggest - irregular).</li>
+<li>Гарний ➡️ <strong>Най</strong>гарніший. (The most beautiful).</li>
+<li>Цікавий ➡️ <strong>Най</strong>цікавіший. (The most interesting).</li>
+<li>Розумний ➡️ <strong>Най</strong>розумніший. (The smartest).</li>
+</ul>
+<blockquote>
+  <p>🏠 <strong>Culture Corner: The "Euro-Renovation" (Yevroremont)</strong><br />
+  In the 90s, everyone wanted "European" quality.<br />
+  So they did <strong>Yevroremont</strong>.<br />
+  It usually means: Beige walls, plastic ceilings, bright lights.<br />
+  Real estate ads say: "Kvartyra z yevroremontom".<br />
+  It means "Newly renovated (but maybe with bad taste)".<br />
+  <strong>"Звичайний стан"</strong> (Normal state) usually means "Soviet condition".</p>
+</blockquote>
+<h3 id="section10thecolorpalette">Section 10: The Color Palette</h3>
+<p>Colors behave exactly like adjectives.<br />
+They must agree with the noun.</p>
+<ul>
+<li><strong>Червоний</strong> (Red).</li>
+<li><strong>Білий</strong> (White).</li>
+<li><strong>Чорний</strong> (Black).</li>
+<li><strong>Зелений</strong> (Green).</li>
+<li><strong>Синій</strong> (Dark Blue).</li>
+<li><strong>Блакитний</strong> (Light Blue / Sky Blue).</li>
+<li><strong>Жовтий</strong> (Yellow).</li>
+<li><strong>Сірий</strong> (Grey).</li>
+</ul>
 <p><strong>Examples:</strong></p>
 <ul>
-<li>червоний автобус (red bus - m)</li>
-<li>червона машина (red car - f)</li>
-<li>червоне яблуко (red apple - n)</li>
-<li>червоні квіти (red flowers - pl)</li>
+<li>Червона машина (Red car).</li>
+<li>Білий сніг (White snow).</li>
+<li>Чорний кіт (Black cat).</li>
+<li>Зелене яблуко (Green apple).</li>
+<li>Жовте сонце (Yellow sun).</li>
 </ul>
 <blockquote>
-  <p>⚡ <strong>Pro Tip</strong></p>
-  <p>Remember: "синій" is soft stem! So its feminine is "синя" (not "синя"), neuter is "синє" (not "синє").</p>
+  <p>🎨 <strong>Deep Dive: Blue vs Blue</strong><br />
+  English has "Blue".<br />
+  Ukrainian has two distinct colors (like Russian).<br />
+  <strong>Синій</strong> (Dark/Navy). The color of the deep sea or night sky.<br />
+  <strong>Блакитний</strong> (Light/Azure). The color of the day sky or the flag.<br />
+  The Ukrainian flag is <strong>Synio-Zhovtyy</strong> (Blue-Yellow) in the constitution, but often described as <strong>Blakytnyy</strong> sky over <strong>Zhovte</strong> wheat.</p>
 </blockquote>
-<h3 id="lightanddark">Light and Dark</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>світлий</td>
-<td>light</td>
-<td>світло-зелений (light green)</td>
-</tr>
-<tr>
-<td>темний</td>
-<td>dark</td>
-<td>темно-синій (dark blue)</td>
-</tr>
-<tr>
-<td>яскравий</td>
-<td>bright</td>
-<td>яскраво-червоний (bright red)</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Compound colors:</strong></p>
-<ul>
-<li>світло-синій (light blue)</li>
-<li>темно-зелений (dark green)</li>
-<li>яскраво-жовтий (bright yellow)</li>
-</ul>
-<blockquote>
-  <p>🌍 <strong>Real World</strong></p>
-  <p>Ukrainian national colors are синій і жовтий (blue and yellow). The flag represents the blue sky over golden wheat fields!</p>
-</blockquote>
-<h3 id="clothingitemsupperbody">Clothing Items: Upper Body</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>IPA</th>
-<th>English</th>
-<th>Gender</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>сорочка</td>
-<td>sɔˈrɔt͡ʃkɐ</td>
-<td>shirt</td>
-<td>f</td>
-</tr>
-<tr>
-<td>футболка</td>
-<td>futˈbɔlkɐ</td>
-<td>T-shirt</td>
-<td>f</td>
-</tr>
-<tr>
-<td>светр</td>
-<td>swɛtr</td>
-<td>sweater</td>
-<td>m</td>
-</tr>
-<tr>
-<td>куртка</td>
-<td>ˈkurtkɐ</td>
-<td>jacket</td>
-<td>f</td>
-</tr>
-<tr>
-<td>пальто</td>
-<td>pɐlʲˈtɔ</td>
-<td>coat</td>
-<td>n</td>
-</tr>
-<tr>
-<td>піджак</td>
-<td>pidˈʒɑk</td>
-<td>blazer</td>
-<td>m</td>
-</tr>
-<tr>
-<td>блузка</td>
-<td>ˈbluzkɐ</td>
-<td>blouse</td>
-<td>f</td>
-</tr>
-</tbody>
-</table>
-<h3 id="clothingitemslowerbody">Clothing Items: Lower Body</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>IPA</th>
-<th>English</th>
-<th>Gender</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>штани</td>
-<td>ʃtɐˈnɪ</td>
-<td>pants</td>
-<td>pl</td>
-</tr>
-<tr>
-<td>джинси</td>
-<td>ˈdʒɪnsɪ</td>
-<td>jeans</td>
-<td>pl</td>
-</tr>
-<tr>
-<td>шорти</td>
-<td>ˈʃɔrtɪ</td>
-<td>shorts</td>
-<td>pl</td>
-</tr>
-<tr>
-<td>спідниця</td>
-<td>spidˈnɪt͡sʲɐ</td>
-<td>skirt</td>
-<td>f</td>
-</tr>
-<tr>
-<td>сукня</td>
-<td>ˈsuknʲɐ</td>
-<td>dress</td>
-<td>f</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🔍 <strong>Myth Buster</strong></p>
-  <p><strong>Myth:</strong> "Штани" can be singular.<br />
-  <strong>Fact:</strong> Like "pants" in English, "штани" is always plural! "Мої штани" (my pants), never "моя штан."</p>
-</blockquote>
-<h3 id="footwearandaccessories">Footwear and Accessories</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>IPA</th>
-<th>English</th>
-<th>Gender</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>взуття</td>
-<td>ˈwzutʲːɐ</td>
-<td>footwear</td>
-<td>n</td>
-</tr>
-<tr>
-<td>черевики</td>
-<td>t͡ʃɛrɛˈwɪkɪ</td>
-<td>boots</td>
-<td>pl</td>
-</tr>
-<tr>
-<td>кросівки</td>
-<td>krɔˈsiwkɪ</td>
-<td>sneakers</td>
-<td>pl</td>
-</tr>
-<tr>
-<td>туфлі</td>
-<td>ˈtuflʲi</td>
-<td>dress shoes</td>
-<td>pl</td>
-</tr>
-<tr>
-<td>капелюх</td>
-<td>kɐpɛˈlʲux</td>
-<td>hat</td>
-<td>m</td>
-</tr>
-<tr>
-<td>шапка</td>
-<td>ˈʃɑpkɐ</td>
-<td>winter hat</td>
-<td>f</td>
-</tr>
-<tr>
-<td>шарф</td>
-<td>ʃɑrf</td>
-<td>scarf</td>
-<td>m</td>
-</tr>
-<tr>
-<td>рукавички</td>
-<td>rukɐˈwɪt͡ʃkɪ</td>
-<td>gloves</td>
-<td>pl</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎮 <strong>Gamer's Corner</strong></p>
-  <p>In RPGs like The Witcher: "Нова чорна куртка +5 до захисту!" (New black jacket +5 defense!) Understanding clothing terms helps with inventory management!</p>
-</blockquote>
-<h3 id="theverbtowear">The Verb "носити" (to wear)</h3>
-<table>
-<thead>
-<tr>
-<th>Person</th>
-<th>Form</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>я</td>
-<td>ношу</td>
-</tr>
-<tr>
-<td>ти</td>
-<td>носиш</td>
-</tr>
-<tr>
-<td>він/вона</td>
-<td>носить</td>
-</tr>
-<tr>
-<td>ми</td>
-<td>носимо</td>
-</tr>
-<tr>
-<td>ви</td>
-<td>носите</td>
-</tr>
-<tr>
-<td>вони</td>
-<td>носять</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Examples:</strong></p>
-<ul>
-<li>Я ношу сині джинси. (I wear blue jeans.)</li>
-<li>Вона носить червону сукню. (She wears a red dress.)</li>
-<li>Він носить білу сорочку. (He wears a white shirt.)</li>
-</ul>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>"Носити" means both "to wear" (habitually) and "to carry." For "wearing right now," you can say "Я в синіх джинсах" (I'm in blue jeans) or "На мені сині джинси" (On me are blue jeans).</p>
-</blockquote>
-<h3 id="describingwhatsomeonewears">Describing What Someone Wears</h3>
-<p><strong>Question:</strong> Що ти носиш? / Що на тобі?</p>
-<p><strong>Answers:</strong></p>
-<ul>
-<li>Я ношу чорні штани і білу сорочку.</li>
-<li>На мені джинси і футболка.</li>
-<li>Він у сірому светрі.</li>
-<li>Вона в зеленій сукні.</li>
-</ul>
-<blockquote>
-  <p>🎯 <strong>Fun Fact</strong></p>
-  <p>Traditional Ukrainian clothing (вишиванка — embroidered shirt) typically features червоний (red) and чорний (black) on білий (white) fabric. These colors carry deep cultural meaning!</p>
-</blockquote>
-<h3 id="coloridioms">Color Idioms</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Literal</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>білий як сніг</td>
-<td>white as snow</td>
-<td>very white</td>
-</tr>
-<tr>
-<td>чорний як ніч</td>
-<td>black as night</td>
-<td>very black</td>
-</tr>
-<tr>
-<td>червоний як рак</td>
-<td>red as a crab</td>
-<td>very red/blushing</td>
-</tr>
-<tr>
-<td>зелений як трава</td>
-<td>green as grass</td>
-<td>very green</td>
-</tr>
-</tbody>
-</table>
 <h2 id="practice">practice</h2>
-<h3 id="exercise1coloragreement">Exercise 1: Color Agreement</h3>
-<p>Make the color agree with the noun:</p>
-<ol>
-<li>___ (червоний) машина → червона машина</li>
-<li>___ (синій) небо → синє небо</li>
-<li>___ (зелений) трава → зелена трава</li>
-<li>___ (білий) сорочка → біла сорочка</li>
-</ol>
-<h3 id="exercise2whataretheywearing">Exercise 2: What Are They Wearing?</h3>
-<p>Describe what these people wear:</p>
-<ol>
-<li>Бізнесмен: чорний костюм, біла сорочка</li>
-<li>Спортсмен: сірі шорти, біла футболка</li>
-<li>Студентка: сині джинси, зелена куртка</li>
-</ol>
-<h3 id="exercise3youroutfit">Exercise 3: Your Outfit</h3>
-<p>Describe what you're wearing today using colors and clothing words.</p>
+<p><strong>Drill 1: Antonym Match</strong></p>
+<ul>
+<li>Big -&gt; Маленький.</li>
+<li>New -&gt; Старий.</li>
+<li>Good -&gt; Поганий.</li>
+<li>Fast -&gt; Повільний.</li>
+</ul>
+<p><strong>Drill 2: Agree the Adjective</strong></p>
+<ul>
+<li>(Big) House -&gt; Великий дім.</li>
+<li>(Big) Car -&gt; Велика машина.</li>
+<li>(Big) Misto (City) -&gt; Велике місто.</li>
+<li>(Big) Problems -&gt; Великі проблеми.</li>
+</ul>
+<p><strong>Drill 3: The Critic</strong></p>
+<ul>
+<li>(The soup is cold) -&gt; Суп холодний.</li>
+<li>(The internet is slow) -&gt; Інтернет повільний.</li>
+<li>(The book is interesting) -&gt; Книга цікава.</li>
+</ul>
 <h2 id="production">production</h2>
-<h3 id="taskfashiondescription">Task: Fashion Description</h3>
-<p>Write a paragraph describing:</p>
-<ol>
-<li>What you typically wear</li>
-<li>Your favorite colors for clothing</li>
-<li>What someone you know usually wears</li>
-</ol>
-<p>Use at least 5 different colors and 5 clothing items.</p>
-<hr />
-<hr />
+<p><strong>Scenario: Shopping for a Phone</strong></p>
+<ul>
+<li><strong>You:</strong> Я хочу новий телефон.</li>
+<li><strong>Seller:</strong> У нас є цей "Айфон". Він дуже швидкий.</li>
+<li><strong>You:</strong> Він гарний. Але він великий?</li>
+<li><strong>Seller:</strong> Так, він великий і легкий.</li>
+<li><strong>You:</strong> Скільки коштує?</li>
+<li><strong>Seller:</strong> 40,000 гривень.</li>
+<li><strong>You:</strong> Ого! Це занадто дорого.</li>
+<li><strong>Seller:</strong> Він дуже якісний (quality).</li>
+<li><strong>You:</strong> Я хочу дешевий телефон.</li>
+<li><strong>Seller:</strong> Тоді (then) ось цей "Нокіа". Він старий, але надійний (reliable).</li>
+</ul>
+<p><strong>Scenario: The Hotel Review</strong></p>
+<ul>
+<li><strong>A:</strong> Як твій готель?</li>
+<li><strong>B:</strong> Жахливо (Terrible).</li>
+<li><strong>A:</strong> Чому?</li>
+<li><strong>B:</strong> Кімната маленька. Ліжко старе. Душ холодний.</li>
+<li><strong>A:</strong> А сніданок?</li>
+<li><strong>B:</strong> Сніданок дорогий і несмачний (not tasty).</li>
+<li><strong>A:</strong> Співчуваю (I sympathize).</li>
+<li><strong>B:</strong> А ще (also) там дуже шумно (noisy).</li>
+<li><strong>A:</strong> Ти хочеш змінити готель?</li>
+<li><strong>B:</strong> Я не можу. Я бідний турист.</li>
+</ul>
+<p><strong>Scenario: The Dating App</strong></p>
+<ul>
+<li><strong>Anna:</strong> Дивись. Цей хлопець гарний?</li>
+<li><strong>Olya:</strong> Ну… він симпатичний (cute). Але він здається (seems) низьким.</li>
+<li><strong>Anna:</strong> Я теж низька. Це добре.</li>
+<li><strong>Olya:</strong> А цей? Він високий і багатий.</li>
+<li><strong>Anna:</strong> Він виглядає (looks) нудним.</li>
+<li><strong>Olya:</strong> Чому?</li>
+<li><strong>Anna:</strong> У нього надто серйозне (serious) лице.</li>
+<li><strong>Olya:</strong> Ти занадто критична.</li>
+<li><strong>Anna:</strong> Я хочу ідеального.</li>
+</ul>
+<blockquote>
+  <p>🎨 <strong>Deep Dive: Colors (Review)</strong><br />
+  Remember colors act like adjectives.</p>
+  <ul>
+  <li>Червоний (Red).</li>
+  <li>Білий (White).</li>
+  <li>Чорний (Black).</li>
+  <li>Зелений (Green).</li>
+  <li>Синій (Dark Blue).</li>
+  <li>Жовтий (Yellow).<br />
+  "Червона машина" (Red car).<br />
+  "Чорний кіт" (Black cat).<br />
+  "Зелений чай" (Green tea - not 'young'!).</li>
+  </ul>
+</blockquote>
 <hr /></div>
     </div>
   
       
-    <div class="card section-summary">
-      <h3>📋 Summary</h3>
-      <div class="md-content"><blockquote>
-  <p><strong>Congratulations!</strong></p>
-  <p>You can now describe colors and clothing in Ukrainian:</p>
-  <ul>
-  <li><strong>Basic colors</strong>: білий, чорний, червоний, синій, зелений, жовтий</li>
-  <li><strong>Two blues</strong>: синій (dark) vs блакитний (light)</li>
-  <li><strong>Clothing</strong>: сорочка, штани, сукня, куртка, черевики</li>
-  <li><strong>Agreement</strong>: Color adjectives match noun gender and number</li>
-  </ul>
-  <p><strong>Key Patterns:</strong></p>
-  <ul>
-  <li>Я ношу + accusative: Я ношу білу сорочку.</li>
-  <li>На мені + nominative: На мені сині джинси.</li>
-  <li>Color + noun: червона машина, синє небо, білі квіти</li>
-  </ul>
-  <p><strong>Coming Next: Module 28 — What's the Weather Like?</strong></p>
-  <p>In the next module, you'll learn weather expressions:</p>
-  <ul>
-  <li>Яка сьогодні погода? (What's the weather like today?)</li>
-  <li>Сьогодні тепло/холодно. (It's warm/cold today.)</li>
-  <li>Йде дощ/сніг. (It's raining/snowing.)</li>
-  </ul>
-</blockquote></div>
-    </div>
-  
       <div class="btn-group">
         <button class="btn btn-primary" onclick="showSection('activity-0')">Activities →</button>
       </div>
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Color Agreement</h3>
+    <section id="activity-0" class="section"><div class="card"><h3>Antonym Attack</h3>
       <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container" class="fill-container"></div>
-      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+      <div class="match-container" id="activity-0-container"><svg class="match-lines" id="activity-0-lines"></svg>
+        <div class="match-column" id="activity-0-left"></div>
+        <div class="match-column" id="activity-0-right"></div>
+      </div>
+      <div class="completion-message" id="activity-0-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Clothing Items</h3>
+    <section id="activity-1" class="section"><div class="card"><h3>Description Builder</h3>
       <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
       <div id="activity-1-container" class="fill-container"></div>
       <div class="completion-message" id="activity-1-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Color and Clothing Sentences</h3>
-      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
-      <div id="activity-2-container" class="order-container"></div>
-      <div class="completion-message" id="activity-2-complete"><h3>Perfect Order!</h3></div>
+    <section id="activity-2" class="section"><div class="card"><h3>Positive vs Negative</h3>
+      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/16</span></div>
+      <div class="sort-pool" id="activity-2-pool"><div class="sort-items" id="activity-2-items"></div></div>
+      <div class="sort-groups" id="activity-2-groups"></div>
+      <div class="completion-message" id="activity-2-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Colors</h3>
+    <section id="activity-3" class="section"><div class="card"><h3>Logic Check</h3>
       <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-3-container"><svg class="match-lines" id="activity-3-lines"></svg>
-        <div class="match-column" id="activity-3-left"></div>
-        <div class="match-column" id="activity-3-right"></div>
-      </div>
-      <div class="completion-message" id="activity-3-complete"><h3>Perfect!</h3></div>
+      <div id="activity-3-container"></div>
+      <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Clothing</h3>
+    <section id="activity-4" class="section"><div class="card"><h3>Adjective Scramble</h3>
       <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-4-container"><svg class="match-lines" id="activity-4-lines"></svg>
-        <div class="match-column" id="activity-4-left"></div>
-        <div class="match-column" id="activity-4-right"></div>
-      </div>
-      <div class="completion-message" id="activity-4-complete"><h3>Perfect!</h3></div>
+      <div id="activity-4-container" class="order-container"></div>
+      <div class="completion-message" id="activity-4-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Colors and Clothing Knowledge</h3>
+    <section id="activity-5" class="section"><div class="card"><h3>Build Descriptions</h3>
       <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
-      <div id="activity-5-container"></div>
-      <div class="completion-message" id="activity-5-complete"><h3>Complete!</h3></div>
+      <div id="activity-5-container" class="order-container"></div>
+      <div class="completion-message" id="activity-5-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Color and Clothing Facts</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>Make it Negative (Antonyms)</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
-      <div id="activity-6-container"></div>
+      <div id="activity-6-container" class="fill-container"></div>
       <div class="completion-message" id="activity-6-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
     </div></section>
 
-    <section id="activity-7" class="section"><div class="card"><h3>Clothing Categories</h3>
-      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/18</span></div>
-      <div class="sort-pool" id="activity-7-pool"><div class="sort-items" id="activity-7-items"></div></div>
-      <div class="sort-groups" id="activity-7-groups"></div>
-      <div class="completion-message" id="activity-7-complete"><h3>All Sorted!</h3></div>
+    <section id="activity-7" class="section"><div class="card"><h3>Adjective Facts</h3>
+      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/4</span></div>
+      <div id="activity-7-container"></div>
+      <div class="completion-message" id="activity-7-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
-        <h3>Словник (30)</h3>
+        <h3>Словник (25)</h3>
         <div class="vocab-table-container">
           <table class="vocab-table">
             <thead><tr>
@@ -1097,7 +884,7 @@ footer {
     <th>Переклад</th>
     <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">білий</td><td class="vocab-ipa">ˈbilɪj</td><td class="vocab-en">white</td><td class="vocab-note">біла, біле, білі</td></tr><tr><td class="vocab-uk">чорний</td><td class="vocab-ipa">ˈt͡ʃɔrnɪj</td><td class="vocab-en">black</td><td class="vocab-note">чорна, чорне, чорні</td></tr><tr><td class="vocab-uk">сірий</td><td class="vocab-ipa">ˈsirɪj</td><td class="vocab-en">gray</td><td class="vocab-note">сіра, сіре, сірі</td></tr><tr><td class="vocab-uk">червоний</td><td class="vocab-ipa">t͡ʃɛrˈwɔnɪj</td><td class="vocab-en">red</td><td class="vocab-note">червона, червоне, червоні</td></tr><tr><td class="vocab-uk">помаранчевий</td><td class="vocab-ipa">pɔmɐrɐnˈt͡ʃɛwɪj</td><td class="vocab-en">orange</td><td class="vocab-note">помаранчева, -е, -і</td></tr><tr><td class="vocab-uk">жовтий</td><td class="vocab-ipa">ˈʒɔwtɪj</td><td class="vocab-en">yellow</td><td class="vocab-note">жовта, жовте, жовті</td></tr><tr><td class="vocab-uk">зелений</td><td class="vocab-ipa">zɛˈlɛnɪj</td><td class="vocab-en">green</td><td class="vocab-note">зелена, зелене, зелені</td></tr><tr><td class="vocab-uk">синій</td><td class="vocab-ipa">ˈsɪnʲij</td><td class="vocab-en">dark blue</td><td class="vocab-note">синя, синє, сині (soft)</td></tr><tr><td class="vocab-uk">блакитний</td><td class="vocab-ipa">blɐˈkɪtnɪj</td><td class="vocab-en">light blue</td><td class="vocab-note">блакитна, -е, -і</td></tr><tr><td class="vocab-uk">фіолетовий</td><td class="vocab-ipa">fiɔˈlɛtɔwɪj</td><td class="vocab-en">purple</td><td class="vocab-note">фіолетова, -е, -і</td></tr><tr><td class="vocab-uk">рожевий</td><td class="vocab-ipa">rɔˈʒɛwɪj</td><td class="vocab-en">pink</td><td class="vocab-note">рожева, рожеве, рожеві</td></tr><tr><td class="vocab-uk">коричневий</td><td class="vocab-ipa">kɔˈrɪt͡ʃnɛwɪj</td><td class="vocab-en">brown</td><td class="vocab-note">коричнева, -е, -і</td></tr><tr><td class="vocab-uk">світлий</td><td class="vocab-ipa">ˈswitlɪj</td><td class="vocab-en">light</td><td class="vocab-note">світла, світле, світлі</td></tr><tr><td class="vocab-uk">темний</td><td class="vocab-ipa">ˈtɛmnɪj</td><td class="vocab-en">dark</td><td class="vocab-note">темна, темне, темні</td></tr><tr><td class="vocab-uk">яскравий</td><td class="vocab-ipa">jɐsˈkrɑwɪj</td><td class="vocab-en">bright</td><td class="vocab-note">яскрава, -е, -і</td></tr><tr><td class="vocab-uk">сорочка</td><td class="vocab-ipa">sɔˈrɔt͡ʃkɐ</td><td class="vocab-en">shirt</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">футболка</td><td class="vocab-ipa">futˈbɔlkɐ</td><td class="vocab-en">T-shirt</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">светр</td><td class="vocab-ipa">swɛtr</td><td class="vocab-en">sweater</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">куртка</td><td class="vocab-ipa">ˈkurtkɐ</td><td class="vocab-en">jacket</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">пальто</td><td class="vocab-ipa">pɐlʲˈtɔ</td><td class="vocab-en">coat</td><td class="vocab-note">Indeclinable</td></tr><tr><td class="vocab-uk">штани</td><td class="vocab-ipa">ʃtɐˈnɪ</td><td class="vocab-en">pants</td><td class="vocab-note">Always plural</td></tr><tr><td class="vocab-uk">джинси</td><td class="vocab-ipa">ˈdʒɪnsɪ</td><td class="vocab-en">jeans</td><td class="vocab-note">Always plural</td></tr><tr><td class="vocab-uk">шорти</td><td class="vocab-ipa">ˈʃɔrtɪ</td><td class="vocab-en">shorts</td><td class="vocab-note">Always plural</td></tr><tr><td class="vocab-uk">спідниця</td><td class="vocab-ipa">spidˈnɪt͡sʲɐ</td><td class="vocab-en">skirt</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">сукня</td><td class="vocab-ipa">ˈsuknʲɐ</td><td class="vocab-en">dress</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">взуття</td><td class="vocab-ipa">ˈwzutʲːɐ</td><td class="vocab-en">footwear</td><td class="vocab-note">Collective</td></tr><tr><td class="vocab-uk">черевики</td><td class="vocab-ipa">t͡ʃɛrɛˈwɪkɪ</td><td class="vocab-en">boots</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">кросівки</td><td class="vocab-ipa">krɔˈsiwkɪ</td><td class="vocab-en">sneakers</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">капелюх</td><td class="vocab-ipa">kɐpɛˈlʲux</td><td class="vocab-en">hat</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">шарф</td><td class="vocab-ipa">ʃɑrf</td><td class="vocab-en">scarf</td><td class="vocab-note"></td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">великий</td><td class="vocab-ipa">/vɛˈlɪkɪj/</td><td class="vocab-en">big</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('великий')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">маленький</td><td class="vocab-ipa">/mɑˈlɛnʲkɪj/</td><td class="vocab-en">small</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('маленький')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">новий</td><td class="vocab-ipa">/nɔˈvɪj/</td><td class="vocab-en">new</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('новий')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">старий</td><td class="vocab-ipa">/stɑˈrɪj/</td><td class="vocab-en">old</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('старий')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">хороший</td><td class="vocab-ipa">/xɔˈrɔʃɪj/</td><td class="vocab-en">good</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('хороший')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">поганий</td><td class="vocab-ipa">/pɔˈɦɑnɪj/</td><td class="vocab-en">bad</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('поганий')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">дорогий</td><td class="vocab-ipa">/dɔrɔˈɦɪj/</td><td class="vocab-en">expensive</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('дорогий')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">дешевий</td><td class="vocab-ipa">/dɛˈʃɛvɪj/</td><td class="vocab-en">cheap</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('дешевий')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">гарячий</td><td class="vocab-ipa">/ɦɑˈrʲɑtʃɪj/</td><td class="vocab-en">hot</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('гарячий')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">холодний</td><td class="vocab-ipa">/xɔˈlɔdnɪj/</td><td class="vocab-en">cold</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('холодний')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">швидкий</td><td class="vocab-ipa">/ʃvɪdˈkɪj/</td><td class="vocab-en">fast</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('швидкий')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">повільний</td><td class="vocab-ipa">/pɔˈvilʲnɪj/</td><td class="vocab-en">slow</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('повільний')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">важкий</td><td class="vocab-ipa">/vɑʒˈkɪj/</td><td class="vocab-en">heavy/hard</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('важкий')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">легкий</td><td class="vocab-ipa">/lɛxˈkɪj/</td><td class="vocab-en">light/easy</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('легкий')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">цікавий</td><td class="vocab-ipa">/t͡s⁽ʲ⁾iˈkɑvɪj/</td><td class="vocab-en">interesting</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('цікавий')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">нудний</td><td class="vocab-ipa">/nudˈnɪj/</td><td class="vocab-en">boring</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('нудний')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">гарний</td><td class="vocab-ipa">/ˈɦɑrnɪj/</td><td class="vocab-en">beautiful/good</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('гарний')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">негарний</td><td class="vocab-ipa">/nɛˈɦɑrnɪj/</td><td class="vocab-en">ugly</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('негарний')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">дуже</td><td class="vocab-ipa">/ˈduʒɛ/</td><td class="vocab-en">very</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('дуже')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">занадто</td><td class="vocab-ipa">/zɑˈnɑdtɔ/</td><td class="vocab-en">too/excessively</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('занадто')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">розумний</td><td class="vocab-ipa">/rɔˈzumnɪj/</td><td class="vocab-en">smart</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('розумний')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">дурний</td><td class="vocab-ipa">/durˈnɪj/</td><td class="vocab-en">stupid</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('дурний')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">смачний</td><td class="vocab-ipa">/smɑtʃˈnɪj/</td><td class="vocab-en">tasty</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('смачний')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">довгий</td><td class="vocab-ipa">/ˈdɔvɦɪj/</td><td class="vocab-en">long</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('довгий')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">короткий</td><td class="vocab-ipa">/kɔˈrɔtkɪj/</td><td class="vocab-en">short</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('короткий')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1109,8 +896,8 @@ footer {
   </main><footer>Module 27 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"fill-blank","title":"Color Agreement","data":{"type":"fill-blank","items":[{"prompt":"___ машина (red)","answer":"червона","options":["червона","червоний","червоне","червоні"]},{"prompt":"___ небо (blue)","answer":"синє","options":["синє","синій","синя","сині"]},{"prompt":"___ сорочка (white)","answer":"біла","options":["біла","білий","біле","білі"]},{"prompt":"___ штани (black)","answer":"чорні","options":["чорні","чорний","чорна","чорне"]},{"prompt":"___ трава (green)","answer":"зелена","options":["зелена","зелений","зелене","зелені"]},{"prompt":"___ сонце (yellow)","answer":"жовте","options":["жовте","жовтий","жовта","жовті"]},{"prompt":"___ куртка (gray)","answer":"сіра","options":["сіра","сірий","сіре","сірі"]},{"prompt":"___ квіти (red)","answer":"червоні","options":["червоні","червоний","червона","червоне"]},{"prompt":"___ сукня (pink)","answer":"рожева","options":["рожева","рожевий","рожеве","рожеві"]},{"prompt":"___ пальто (brown)","answer":"коричневе","options":["коричневе","коричневий","коричнева","коричневі"]},{"prompt":"___ взуття (black)","answer":"чорне","options":["чорне","чорний","чорна","чорні"]},{"prompt":"___ очі (blue — light)","answer":"блакитні","options":["блакитні","блакитний","блакитна","блакитне"]}]}},{"id":"activity-1","type":"fill-blank","title":"Clothing Items","data":{"type":"fill-blank","items":[{"prompt":"На голові — ___.","answer":"капелюх","options":["капелюх","штани","куртка","взуття"]},{"prompt":"На ногах — ___.","answer":"черевики","options":["черевики","шарф","сорочка","капелюх"]},{"prompt":"Влітку ношу ___.","answer":"шорти","options":["шорти","пальто","рукавички","шапку"]},{"prompt":"Взимку ношу теплу ___.","answer":"куртку","options":["куртку","футболку","сукню","шорти"]},{"prompt":"Бізнесмен носить ___.","answer":"піджак","options":["піджак","шорти","футболку","кросівки"]},{"prompt":"На руках — ___.","answer":"рукавички","options":["рукавички","черевики","капелюх","штани"]},{"prompt":"Жінка носить ___.","answer":"сукню","options":["сукню","піджак","шорти","капелюх"]},{"prompt":"Спортсмен носить ___.","answer":"кросівки","options":["кросівки","туфлі","черевики","рукавички"]},{"prompt":"Узимку на голові — тепла ___.","answer":"шапка","options":["шапка","капелюх","шарф","куртка"]},{"prompt":"Вона носить білу ___.","answer":"блузку","options":["блузку","штани","джинси","шорти"]},{"prompt":"Він носить сині ___.","answer":"джинси","options":["джинси","сорочку","куртку","капелюх"]},{"prompt":"На шиї — теплий ___.","answer":"шарф","options":["шарф","капелюх","рукавички","черевики"]}]}},{"id":"activity-2","type":"unjumble","title":"Color and Clothing Sentences","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["червону","ношу","Я","сукню"],"answer":"Я ношу червону сукню.","translation":"I wear a red dress."},{"words":["сорочка","біла","У","нього"],"answer":"У нього біла сорочка.","translation":"He has a white shirt."},{"words":["сині","джинси","носить","Вона"],"answer":"Вона носить сині джинси.","translation":"She wears blue jeans."},{"words":["чорні","На","мені","штани"],"answer":"На мені чорні штани.","translation":"I'm wearing black pants."},{"words":["Це","зелена","куртка","моя"],"answer":"Це моя зелена куртка.","translation":"This is my green jacket."},{"words":["жовта","Сонце","і","тепле"],"answer":"Сонце жовте і тепле.","translation":"The sun is yellow and warm."},{"words":["синє","Небо","сьогодні"],"answer":"Небо сьогодні синє.","translation":"The sky is blue today."},{"words":["носиш","Що","ти"],"answer":"Що ти носиш?","translation":"What are you wearing?"},{"words":["сірий","Він","у","светрі"],"answer":"Він у сірому светрі.","translation":"He's in a gray sweater."},{"words":["рожева","У","неї","блузка"],"answer":"У неї рожева блузка.","translation":"She has a pink blouse."},{"words":["білі","Я","кросівки","ношу"],"answer":"Я ношу білі кросівки.","translation":"I wear white sneakers."},{"words":["коричневий","Це","капелюх","мій"],"answer":"Це мій коричневий капелюх.","translation":"This is my brown hat."}]}},{"id":"activity-3","type":"match-up","title":"Colors","data":{"type":"match-up","pairs":[{"left":"білий","right":"white"},{"left":"чорний","right":"black"},{"left":"сірий","right":"gray"},{"left":"червоний","right":"red"},{"left":"жовтий","right":"yellow"},{"left":"зелений","right":"green"},{"left":"синій","right":"dark blue"},{"left":"блакитний","right":"light blue"},{"left":"рожевий","right":"pink"},{"left":"коричневий","right":"brown"},{"left":"фіолетовий","right":"purple"},{"left":"помаранчевий","right":"orange"}],"shuffleRight":true}},{"id":"activity-4","type":"match-up","title":"Clothing","data":{"type":"match-up","pairs":[{"left":"сорочка","right":"shirt"},{"left":"штани","right":"pants"},{"left":"сукня","right":"dress"},{"left":"куртка","right":"jacket"},{"left":"черевики","right":"boots"},{"left":"капелюх","right":"hat"},{"left":"шарф","right":"scarf"},{"left":"джинси","right":"jeans"},{"left":"светр","right":"sweater"},{"left":"кросівки","right":"sneakers"},{"left":"спідниця","right":"skirt"},{"left":"рукавички","right":"gloves"}],"shuffleRight":true}},{"id":"activity-5","type":"quiz","title":"Colors and Clothing Knowledge","data":{"type":"quiz","questions":[{"question":"What's the difference between \"синій\" and \"блакитний\"?","options":["They are the same","Синій is dark blue, блакитний is light blue","Синій is purple, блакитний is blue","Блакитний is for clothes only"],"correctIndex":1,"explanation":"Ukrainian distinguishes dark blue (синій) from light blue (блакитний)."},{"question":"\"Червона машина\" — why \"червона\"?","options":["Because \"машина\" is neuter","Because \"машина\" is feminine","Because it's plural","Random choice"],"correctIndex":1,"explanation":"\"Машина\" is feminine, so the adjective takes -а."},{"question":"Which is always plural?","options":["сукня","куртка","штани","сорочка"],"correctIndex":2,"explanation":"Like \"pants\" in English, \"штани\" is always plural."},{"question":"\"Синє небо\" — what form is \"синє\"?","options":["Masculine","Feminine","Neuter","Plural"],"correctIndex":2,"explanation":"\"Небо\" is neuter, so синій → синє."},{"question":"What colors are in the Ukrainian flag?","options":["синій і жовтий","червоний і білий","зелений і білий","чорний і жовтий"],"correctIndex":0,"explanation":"Blue and yellow: blue sky over golden wheat fields."},{"question":"\"Я ношу\" means:","options":["I wear","I have","I want","I like"],"correctIndex":0,"explanation":"\"Носити\" = to wear."},{"question":"Which is footwear?","options":["шарф","капелюх","кросівки","рукавички"],"correctIndex":2,"explanation":"Кросівки = sneakers (footwear)."},{"question":"\"Темно-зелений\" means:","options":["Light green","Dark green","Bright green","Green grass"],"correctIndex":1,"explanation":"\"Темний\" = dark."},{"question":"What's worn on the head?","options":["капелюх","черевики","рукавички","штани"],"correctIndex":0,"explanation":"Капелюх (hat) is worn on the head."},{"question":"\"Біла сорочка\" — why \"біла\"?","options":["Because сорочка is feminine","Because сорочка is neuter","Because it's plural","Because білий is irregular"],"correctIndex":0,"explanation":"\"Сорочка\" is feminine: білий → біла."},{"question":"What's a \"вишиванка\"?","options":["Traditional embroidered shirt","Winter jacket","Type of footwear","Color name"],"correctIndex":0,"explanation":"Ukrainian traditional embroidered shirt."},{"question":"\"На мені чорні штани\" means:","options":["I'm wearing black pants","I like black pants","I have black pants","I want black pants"],"correctIndex":0,"explanation":"\"На мені\" = on me (what I'm wearing)."}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-6","type":"true-false","title":"Color and Clothing Facts","data":{"type":"true-false","statements":[{"statement":"Ukrainian has two words for blue: синій and блакитний.","isTrue":true,"explanation":"Correct! Dark blue and light blue."},{"statement":"\"Штани\" can be singular.","isTrue":false,"explanation":"Incorrect! \"Штани\" is always plural, like \"pants.\""},{"statement":"Color adjectives must agree with nouns.","isTrue":true,"explanation":"Correct! Червоний (m), червона (f), червоне (n), червоні (pl)."},{"statement":"\"Синій\" is a hard stem adjective.","isTrue":false,"explanation":"Incorrect! \"Синій\" is soft stem (-ій/-я/-є/-і)."},{"statement":"\"Носити\" means \"to wear.\"","isTrue":true,"explanation":"Correct! Я ношу = I wear."},{"statement":"\"Пальто\" is neuter.","isTrue":true,"explanation":"Correct! Нове пальто (neuter)."},{"statement":"\"Взуття\" is plural.","isTrue":false,"explanation":"Incorrect! \"Взуття\" is neuter singular (collective noun)."},{"statement":"The Ukrainian flag is синьо-жовтий.","isTrue":true,"explanation":"Correct! Blue and yellow."},{"statement":"\"Біла\" is masculine.","isTrue":false,"explanation":"Incorrect! \"Біла\" is feminine. Masculine is \"білий.\""},{"statement":"\"Темно-синій\" means dark blue.","isTrue":true,"explanation":"Correct! Темний = dark."},{"statement":"\"Вишиванка\" is a traditional Ukrainian embroidered shirt.","isTrue":true,"explanation":"Correct! It's an important cultural symbol."},{"statement":"\"Кросівки\" is singular.","isTrue":false,"explanation":"Incorrect! It's plural (like \"sneakers\")."}]}},{"id":"activity-7","type":"group-sort","title":"Clothing Categories","data":{"type":"group-sort","groups":[{"id":"upper-body","name":"Upper Body","items":["сорочка","футболка","светр","куртка","блузка"]},{"id":"lower-body","name":"Lower Body","items":["штани","джинси","шорти","спідниця","сукня"]},{"id":"footwear","name":"Footwear","items":["черевики","кросівки","туфлі","взуття"]},{"id":"accessories","name":"Accessories","items":["капелюх","шапка","шарф","рукавички"]}],"shuffleItems":true}}];
-    const vocabData = [{"uk":"білий","translit":"","en":"white","note":"біла, біле, білі"},{"uk":"чорний","translit":"","en":"black","note":"чорна, чорне, чорні"},{"uk":"сірий","translit":"","en":"gray","note":"сіра, сіре, сірі"},{"uk":"червоний","translit":"","en":"red","note":"червона, червоне, червоні"},{"uk":"помаранчевий","translit":"","en":"orange","note":"помаранчева, -е, -і"},{"uk":"жовтий","translit":"","en":"yellow","note":"жовта, жовте, жовті"},{"uk":"зелений","translit":"","en":"green","note":"зелена, зелене, зелені"},{"uk":"синій","translit":"","en":"dark blue","note":"синя, синє, сині (soft)"},{"uk":"блакитний","translit":"","en":"light blue","note":"блакитна, -е, -і"},{"uk":"фіолетовий","translit":"","en":"purple","note":"фіолетова, -е, -і"},{"uk":"рожевий","translit":"","en":"pink","note":"рожева, рожеве, рожеві"},{"uk":"коричневий","translit":"","en":"brown","note":"коричнева, -е, -і"},{"uk":"світлий","translit":"","en":"light","note":"світла, світле, світлі"},{"uk":"темний","translit":"","en":"dark","note":"темна, темне, темні"},{"uk":"яскравий","translit":"","en":"bright","note":"яскрава, -е, -і"},{"uk":"сорочка","translit":"","en":"shirt","note":""},{"uk":"футболка","translit":"","en":"T-shirt","note":""},{"uk":"светр","translit":"","en":"sweater","note":""},{"uk":"куртка","translit":"","en":"jacket","note":""},{"uk":"пальто","translit":"","en":"coat","note":"Indeclinable"},{"uk":"штани","translit":"","en":"pants","note":"Always plural"},{"uk":"джинси","translit":"","en":"jeans","note":"Always plural"},{"uk":"шорти","translit":"","en":"shorts","note":"Always plural"},{"uk":"спідниця","translit":"","en":"skirt","note":""},{"uk":"сукня","translit":"","en":"dress","note":""},{"uk":"взуття","translit":"","en":"footwear","note":"Collective"},{"uk":"черевики","translit":"","en":"boots","note":""},{"uk":"кросівки","translit":"","en":"sneakers","note":""},{"uk":"капелюх","translit":"","en":"hat","note":""},{"uk":"шарф","translit":"","en":"scarf","note":""}];
+    const activitiesData = [{"id":"activity-0","type":"match-up","title":"Antonym Attack","data":{"type":"match-up","pairs":[{"left":"Великий (Big)","right":"Маленький (Small)"},{"left":"Новий (New)","right":"Старий (Old)"},{"left":"Хороший (Good)","right":"Поганий (Bad)"},{"left":"Дорогий (Expensive)","right":"Дешевий (Cheap)"},{"left":"Швидкий (Fast)","right":"Повільний (Slow)"},{"left":"Важкий (Hard/Heavy)","right":"Легкий (Easy/Light)"},{"left":"Цікавий (Interesting)","right":"Нудний (Boring)"},{"left":"Гарний (Beautiful)","right":"Негарний (Ugly)"},{"left":"Гарячий (Hot)","right":"Холодний (Cold)"},{"left":"Довгий (Long)","right":"Короткий (Short)"},{"left":"Розумний (Smart)","right":"Дурний (Stupid)"},{"left":"Смачний (Tasty)","right":"Несмачний (Tasteless)"}],"shuffleRight":true}},{"id":"activity-1","type":"fill-blank","title":"Description Builder","data":{"type":"fill-blank","items":[{"prompt":"(Big) ___ дім.","answer":"Великий"},{"prompt":"(Small) ___ квартира.","answer":"Маленька"},{"prompt":"(New) ___ авто.","answer":"Нове"},{"prompt":"(Old) ___ місто.","answer":"Старе"},{"prompt":"(Good) ___ друг.","answer":"Хороший"},{"prompt":"(Bad) ___ погода (f).","answer":"Погана"},{"prompt":"(Expensive) ___ телефон.","answer":"Дорогий"},{"prompt":"(Cheap) ___ вода.","answer":"Дешева"},{"prompt":"(Hot) ___ кава.","answer":"Гаряча"},{"prompt":"(Cold) ___ пиво (n).","answer":"Холодне"},{"prompt":"(Interesting) ___ фільм.","answer":"Цікавий"},{"prompt":"(Boring) ___ урок.","answer":"Нудний"}]}},{"id":"activity-2","type":"group-sort","title":"Positive vs Negative","data":{"type":"group-sort","groups":[{"id":"positive","name":"Positive","items":["Хороший","Гарний","Цікавий","Смачний","Розумний","Легкий (Easy)","Швидкий (Fast)","Новий"],"nameUk":"Good"},{"id":"negative","name":"Negative","items":["Поганий","Негарний","Нудний","Несмачний","Дурний","Важкий (Hard)","Повільний (Slow)","Старий (Usually)"],"nameUk":"Bad"}],"shuffleItems":true}},{"id":"activity-3","type":"quiz","title":"Logic Check","data":{"type":"quiz","questions":[{"question":"A Ferrari is...","options":["Швидка.","Повільна."],"correctIndex":0,"explanation":""},{"question":"Einstein was...","options":["Розумний.","Дурний."],"correctIndex":0,"explanation":""},{"question":"A stone (камінь) is...","options":["Важкий.","Легкий."],"correctIndex":0,"explanation":""},{"question":"The sun is...","options":["Гаряче.","Холодне."],"correctIndex":0,"explanation":""},{"question":"A comedy movie is usually...","options":["Смішний (Funny) / Цікавий.","Нудний."],"correctIndex":0,"explanation":""},{"question":"Water in the fridge is...","options":["Холодна.","Гаряча."],"correctIndex":0,"explanation":""},{"question":"A new iPhone is...","options":["Дорогий.","Дешевий."],"correctIndex":0,"explanation":""},{"question":"A tiny mouse is...","options":["Маленька.","Велика."],"correctIndex":0,"explanation":""},{"question":"Kyiv is a...","options":["Велике місто (Big city).","Маленьке село (Small village)."],"correctIndex":0,"explanation":""},{"question":"A broken phone is...","options":["Поганий.","Хороший."],"correctIndex":0,"explanation":""},{"question":"Sugar is...","options":["Солодкий (Sweet).","Гіркий (Bitter)."],"correctIndex":0,"explanation":""},{"question":"The weekend is...","options":["Короткий (Short).","Довгий (Long - rarely)."],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-4","type":"anagram","title":"Adjective Scramble","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["г","и","й","р","о","д"],"answer":"дорогий","translation":"Expensive"},{"letters":["в","и","й","е","ш","е","д"],"answer":"дешевий","translation":"Cheap"},{"letters":["к","и","й","л","и","в","е"],"answer":"великий","translation":"Big"},{"letters":["к","и","й","н","ь","л","е","а","м"],"answer":"маленький","translation":"Small"},{"letters":["р","и","й","т","а","с"],"answer":"старий","translation":"Old"},{"letters":["о","в","и","й","н"],"answer":"новий","translation":"New"},{"letters":["р","о","ш","и","й","х","о"],"answer":"хороший","translation":"Good"},{"letters":["г","а","н","и","й","п","о"],"answer":"поганий","translation":"Bad"},{"letters":["а","в","и","й","к","і","ц"],"answer":"цікавий","translation":"Interesting"},{"letters":["н","и","й","д","у","н"],"answer":"нудний","translation":"Boring"},{"letters":["р","н","и","й","г","а"],"answer":"гарний","translation":"Beautiful"},{"letters":["к","и","й","ж","а","в"],"answer":"важкий","translation":"Heavy/Hard"}]}},{"id":"activity-5","type":"unjumble","title":"Build Descriptions","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["дуже","Це","цікаво","."],"answer":"Це дуже цікаво."},{"words":["занадто","Суп","гарячий","."],"answer":"Суп занадто гарячий."},{"words":["велика","Квартира","і","гарна","."],"answer":"Квартира велика і гарна."},{"words":["машина","Це","стара","."],"answer":"Це стара машина."},{"words":["новий","Телефон","дорогий","."],"answer":"Телефон новий дорогий."},{"words":["не","Я","багатий","."],"answer":"Я не багатий.","translation":"rich"},{"words":["важка","Робота","."],"answer":"Робота важка."},{"words":["тест","Цей","легкий","."],"answer":"Цей тест легкий."},{"words":["тут","Їжа","смачна","."],"answer":"Їжа тут смачна."},{"words":["повільний","Ти","дуже","!"],"answer":"Ти дуже повільний!"},{"words":["місто","Київ","гарне","."],"answer":"Київ гарне місто."},{"words":["фільм","Це","був","нудний","."],"answer":"Це був нудний фільм."}]}},{"id":"activity-6","type":"fill-blank","title":"Make it Negative (Antonyms)","data":{"type":"fill-blank","items":[{"prompt":"Це великий дім. -> Це ___ дім.","answer":"маленький"},{"prompt":"Це новий телефон. -> Це ___ телефон.","answer":"старий"},{"prompt":"Це хороший день. -> Це ___ день.","answer":"поганий"},{"prompt":"Це цікава книга. -> Це ___ книга.","answer":"нудна"},{"prompt":"Це гаряча вода. -> Це ___ вода.","answer":"холодна"},{"prompt":"Це дешеве кафе. -> Це ___ кафе.","answer":"дорогі"},{"prompt":"Це легкий тест. -> Це ___ тест.","answer":"важкий"},{"prompt":"Це гарне фото. -> Це ___ фото.","answer":"негарне"},{"prompt":"Це швидкий поїзд. -> Це ___ поїзд.","answer":"повільний"},{"prompt":"Це розумний кіт. -> Це ___ кіт.","answer":"дурний (stupid)"},{"prompt":"Це довгий урок. -> Це ___ урок.","answer":"короткий"},{"prompt":"Це смачний суп. -> Це ___ суп.","answer":"несмачний"}]}},{"id":"activity-7","type":"true-false","title":"Adjective Facts","data":{"type":"true-false","statements":[{"statement":"I can describe my house (Великий/Маленький).","isTrue":false,"explanation":""},{"statement":"I can complain about prices (Дорого!).","isTrue":false,"explanation":""},{"statement":"I can say if food is Good or Bad.","isTrue":false,"explanation":""},{"statement":"I know \"Цікавий\" (Interesting) vs \"Нудний\" (Boring).","isTrue":false,"explanation":""}]}}];
+    const vocabData = [{"uk":"великий","translit":"","en":"big","note":"[🔊](audio_velykyj)"},{"uk":"маленький","translit":"","en":"small","note":"[🔊](audio_malenkyj)"},{"uk":"новий","translit":"","en":"new","note":"[🔊](audio_novyj)"},{"uk":"старий","translit":"","en":"old","note":"[🔊](audio_staryj)"},{"uk":"хороший","translit":"","en":"good","note":"[🔊](audio_khoroshyj)"},{"uk":"поганий","translit":"","en":"bad","note":"[🔊](audio_pohanyj)"},{"uk":"дорогий","translit":"","en":"expensive","note":"[🔊](audio_dorohyj)"},{"uk":"дешевий","translit":"","en":"cheap","note":"[🔊](audio_deshevyj)"},{"uk":"гарячий","translit":"","en":"hot","note":"[🔊](audio_haryachyj)"},{"uk":"холодний","translit":"","en":"cold","note":"[🔊](audio_kholodnyj)"},{"uk":"швидкий","translit":"","en":"fast","note":"[🔊](audio_shvydkyj)"},{"uk":"повільний","translit":"","en":"slow","note":"[🔊](audio_povilnyj)"},{"uk":"важкий","translit":"","en":"heavy/hard","note":"[🔊](audio_vazhkyj)"},{"uk":"легкий","translit":"","en":"light/easy","note":"[🔊](audio_lehkyj)"},{"uk":"цікавий","translit":"","en":"interesting","note":"[🔊](audio_tsikavyj)"},{"uk":"нудний","translit":"","en":"boring","note":"[🔊](audio_nudnyj)"},{"uk":"гарний","translit":"","en":"beautiful/good","note":"[🔊](audio_harnyj)"},{"uk":"негарний","translit":"","en":"ugly","note":"[🔊](audio_neharnyj)"},{"uk":"дуже","translit":"","en":"very","note":"[🔊](audio_duzhe)"},{"uk":"занадто","translit":"","en":"too/excessively","note":"[🔊](audio_zanadto)"},{"uk":"розумний","translit":"","en":"smart","note":"[🔊](audio_rozumnyj)"},{"uk":"дурний","translit":"","en":"stupid","note":"[🔊](audio_durnyj)"},{"uk":"смачний","translit":"","en":"tasty","note":"[🔊](audio_smachnyj)"},{"uk":"довгий","translit":"","en":"long","note":"[🔊](audio_dovhyj)"},{"uk":"короткий","translit":"","en":"short","note":"[🔊](audio_korotkyj)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1170,6 +957,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2434,6 +2247,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

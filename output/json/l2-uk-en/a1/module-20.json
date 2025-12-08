@@ -13,570 +13,209 @@
     "moduleNumber": 20,
     "moduleType": "checkpoint",
     "immersionLevel": 0.3,
-    "title": "Checkpoint: Navigation",
-    "subtitle": "Review of A1.2 — Cases, Possession, and Real-World Skills",
-    "description": "Review accusative case (objects and people)",
+    "title": "Checkpoint - Navigation",
+    "subtitle": "Review of Modules 11-19",
+    "description": "Learner demonstrates mastery of Accusative (objects)",
     "objectives": [
-      "Review accusative case (objects and people)",
-      "Review locative case (location)",
-      "Review genitive case (absence and quantities)",
-      "Consolidate possessive pronouns",
-      "Practice integrated dialogue skills"
+      "Learner demonstrates mastery of Accusative (objects)",
+      "Learner demonstrates mastery of Locative (places)",
+      "Learner demonstrates mastery of Genitive (absence/quantity)",
+      "Learner can navigate a city and restaurant scenario"
     ],
-    "grammarFocus": [
-      "All A1.2 cases: Accusative, Locative, Genitive",
-      "Possessive pronouns",
-      "Numbers with cases"
-    ],
+    "grammarFocus": [],
     "tags": [
       "review",
       "checkpoint",
-      "assessment"
+      "a1.2",
+      "cases",
+      "city",
+      "food"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "partial",
+    "totalDuration": 60,
+    "transliterationMode": "full",
     "sections": [
       {
-        "id": "section-intro",
+        "id": "section-intro-0",
         "name": "Вступ",
         "nameEn": "Introduction",
         "type": "intro",
-        "content": "## warm-up\n\n### Congratulations — You've Reached A1.2 Checkpoint!\n\nYou've come so far! In modules 11-19, you learned three grammatical cases and how to navigate real-world situations. Let's review everything before moving on.\n\n> 💡 **Did You Know?**\n>\n> You now know 5 of 7 Ukrainian cases! Nominative (M01), Accusative (M11-12), Locative (M13), Genitive (M16), and Vocative (M02). Only Dative and Instrumental remain — and those are for A2!\n\n## presentation\n\n### Case Summary Table\n\n| Case | Question | Usage | Example |\n|------|----------|-------|---------|\n| Nominative | Хто? Що? | Subject | Це **книга**. |\n| Accusative | Кого? Що? | Direct object | Я читаю **книгу**. |\n| Locative | Де? На чому? | Location | Книга **на столі**. |\n| Genitive | Кого? Чого? | Absence, quantities | Немає **книги**. |\n| Vocative | — | Addressing | **Олено**! |\n\n### Accusative Endings Review\n\n| Gender | Nominative | Accusative | Example |\n|--------|------------|------------|---------|\n| M inanimate | стіл | стіл | Я бачу стіл. |\n| M animate | друг | друга | Я бачу друга. |\n| F (-а) | книга | книгу | Я читаю книгу. |\n| F (-я) | земля | землю | Я люблю землю. |\n| N | вікно | вікно | Я бачу вікно. |\n\n> ⚡ **Pro Tip**\n>\n> Remember: Masculine animate accusative = genitive (друг → друга). This helps you learn genitive forms too!\n\n### Locative Endings Review\n\n| Gender | Nominative | Locative | Preposition |\n|--------|------------|----------|-------------|\n| M | банк | у банку | в/у |\n| M | стіл | на столі | на |\n| F | книга | у книзі | в/у |\n| F | вулиця | на вулиці | на |\n| N | місто | у місті | в/у |\n| N | море | на морі | на |\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"в\" and \"у\" are different prepositions.\n> **Fact:** They're the same! Use \"у\" after consonants for easier pronunciation, \"в\" after vowels: \"Я у банку\" but \"Вона в банку.\"\n\n### Genitive Endings Review\n\n| Gender | Nominative | Genitive | Example |\n|--------|------------|----------|---------|\n| M | час | часу | немає часу |\n| M | друг | друга | немає друга |\n| F (-а) | вода | води | немає води |\n| F (-я) | ідея | ідеї | немає ідеї |\n| N | вікно | вікна | немає вікна |\n\n### Possessive Pronouns Review\n\n| Pronoun | M | F | N | Pl |\n|---------|---|---|---|-----|\n| my | мій | моя | моє | мої |\n| your (sg) | твій | твоя | твоє | твої |\n| his | його | його | його | його |\n| her | її | її | її | її |\n| our | наш | наша | наше | наші |\n| your (pl) | ваш | ваша | ваше | ваші |\n| their | їхній | їхня | їхнє | їхні |\n\n> 🎬 **Pop Culture Moment: Harry Potter**\n>\n> \"Це моя паличка\" (This is my wand). Harry would need different possessives: \"Це твоя паличка, Роне\" (This is your wand, Ron) — and notice the vocative \"Роне\"!\n\n### Numbers with Cases Review\n\n| Number | Noun Form | Example |\n|--------|-----------|---------|\n| 1 | Nom. singular | одна гривня |\n| 2, 3, 4 | Nom. plural | дві гривні |\n| 5-20 | Gen. plural | п'ять гривень |\n| 21 | Nom. singular | двадцять одна гривня |\n| 25 | Gen. plural | двадцять п'ять гривень |\n\n### Integrated Skills Checklist\n\nBy the end of A1.2, you should be able to:\n\n- [ ] Talk about what you have and don't have (У мене є.../немає...)\n- [ ] Describe where things are (на столі, у кімнаті)\n- [ ] Navigate a city (Де метро? Прямо, потім наліво.)\n- [ ] Order food and drinks at a café\n- [ ] Handle money and prices\n- [ ] Use possessives correctly\n\n## practice\n\n### Mixed Exercise: Choose the Right Case\n\n1. Я бачу ___ (книга).\n   > [!answer] книгу (Accusative)\n\n2. Книга на ___ (стіл).\n   > [!answer] столі (Locative)\n\n3. У мене немає ___ (час).\n   > [!answer] часу (Genitive)\n\n4. Це ___ (мій) телефон.\n   > [!answer] мій (Nominative)\n\n5. П'ять ___ (гривня).\n   > [!answer] гривень (Genitive plural)\n\n## production\n\n### Self-Assessment\n\nRate yourself on these skills (1-5):\n\n1. I can order food at a café: ___\n2. I can ask for and understand prices: ___\n3. I can say what I have and don't have: ___\n4. I can describe where things are: ___\n5. I can give and understand directions: ___\n\nWhat do you need to practice more?\n\n---\n\n\n---\n\n\n---"
-      },
-      {
-        "id": "section-summary",
-        "name": "Підсумок",
-        "nameEn": "Summary",
-        "type": "summary",
-        "content": "> **A1.2 Complete!**\n>\n> You've mastered:\n> - **Accusative case** for direct objects and animate beings\n> - **Locative case** for location with в/у and на\n> - **Genitive case** for absence (немає) and quantities\n> - **Possessive pronouns** (мій, твій, його, її, наш, ваш, їхній)\n> - **Numbers 0-100** with correct noun forms\n> - **Real-world skills**: ordering food, asking prices, navigating\n\n> **Coming Next: A1.3 — Time & Self**\n>\n> In Modules 21-30, you'll learn:\n> - Past tense (what happened yesterday)\n> - Future tense (what will happen tomorrow)\n> - Time expressions and calendar\n> - Modal verbs (can, must, want)\n> - Daily routine with reflexive verbs\n> - Adjectives, colors, clothing\n> - Weather and family"
+        "content": "## warm-up\n**The Navigation Test**\n\nYou have survived Modules 11 through 19.\nYou know how to say \"I see a friend\" (Accusative).\nYou know how to say \"I am in the park\" (Locative).\nYou know how to say \"I don't have money\" (Genitive).\nYou can order borscht and find the toilet.\nNow, we put it all together.\nThis module is a **Checkpoint**. No new grammar. Just proof that you are ready for Phase A1.3 (Time & Self).\n\n## presentation\n\n### Checkpoint 1: Accusative Case (Direct Objects)\n- **What?** Use it for the object of the verb (Baču, khochu, lyublyu).\n- **Rule:**\n    - Inanimate Masculine/Neuter = No Change. (Бачу стіл).\n    - Feminine: -А -> -У, -Я -> -Ю. (Бачу книгу).\n    - Animate Masculine: +А. (Бачу студента).\n\n### Checkpoint 2: Locative Case (Location)\n- **What?** Use it for \"Where?\" (De?).\n- **Rule:**\n    - Masculine: -І / -ОВІ. (У парку, на столі).\n    - Feminine: -І. (У кімнаті).\n    - Neuter: -І. (У місті).\n\n### Checkpoint 3: Genitive Case (Absence & Quantity)\n- **What?** Use it for \"No/Not have\" (Nemaye), \"Without\" (Bez), and Quantities (5+).\n- **Rule:**\n    - Masculine: -А / -У. (Немає столу, немає часу).\n    - Feminine: -И / -І. (Немає води, немає ідеї).\n    - Neuter: -А. (Немає вікна).\n\n\n### Section 5: The Case of the Missing Object\n\nWhy do we change the word endings?\nImagine a world without cases.\n\"Student read book.\"\nWho reads what? Did the book read the student?\n\"Студент читає книгу.\" (Ah, student -> Subject, book -> Object).\n\"Студента читає книга.\" (The book reads the student. Scary!)\nCases give **Direction** and **Role**.\n- Nominal: The Star.\n- Accusative: The Victim (Direct Object).\n- Locative: The Stage (Location).\n- Genitive: The Ghost (Absence/Owner).\n\n> 🎓 **Deep Dive: The Soft Sign Effect**\n> Remember Module 02? The Soft Sign (Ь).\n> It affects cases too.\n> - День (Day) -> У дні (Locative - soft I).\n> - Сіль (Salt) -> Без солі (Genitive).\n> - Батько (Father) -> На батькові (Locative).\n\n> 🚌 **Culture Corner: Social Distance (Ty vs Vy)**\n> In the city (Module 15-20), use **Ви**.\n> - Taxi driver? Ви.\n> - Waiter? Ви.\n> - Police? Ви.\n> - Stranger asking directions? Ви.\n> Use **Ти** only for friends (Module 12) \"Drug/Podruha\".\n> \"Вибачте, ви не знаєте...?\" (Excuse me, do you not know...?)\n\n\n### Section 6: The Logic of \"Having\"\n\nIn English, you \"have\" things.\nIn Ukrainian, things \"are at you\".\n- **У мене є машина.** (At me is car).\n- **У тебе є час.** (At you is time).\n- **У нас є ідея.** (At us is idea).\n\nWhen you DON'T have them, they disappear (Genitive).\n- **У мене немає машини.**\n- **У тебе немає часу.**\n- **У нас немає ідеї.**\n\n> 🇺🇦 **Deep Dive: Why \"Na\" Ukraine?**\n> You might hear \"Na Ukraini\" in old texts or songs.\n> But the official norm is **В Україні** (In Ukraine).\n> \"Na\" implies a territory/region (Na Donbasi, Na Zakarpatti).\n> \"V\" implies an independent state.\n> Using \"Na Ukraini\" is considered a political faux pas today. Stick to **\"V\"**.\n\n> 🚌 **Culture Corner: The Marshrutka Review**\n> Remember Module 15? The yellow bus.\n> It breaks all grammar rules.\n> You yell: \"На зупинці!\" (On the stop! - Locative).\n> You pass money: \"За двох!\" (For two! - Acc/Gen).\n> You ask: \"Ви виходите?\" (Are you exiting?).\n> It is the ultimate test of your A1 skills.\n\n### Section 7: Phase A1.2 Summary\n\nYou started Phase A1.2 knowing only \"This is a table\".\nNow you can:\n1.  **See** the table (Baču stil).\n2.  **Put** something on the table (Na stoli).\n3.  **Take** something from the table (Z stolu - Gen).\n4.  **Buy** the table (Kupuyu stil).\n5.  **Say** there is no table (Nemaye stolu).\n\nThis \"Case System\" is the engine of the language.\nIn Phase A1.3, we add **Time** (Past/Future).\nThe static picture becomes a movie.\n\n\n> ⚡ **Deep Dive: The Power of \"Mozhna\"**\n> If you forget all grammar, remember **Можна** (Is it possible/May I?).\n> It is the Swiss Army Knife of Ukrainian.\n> - **Можна меню?** (Can I have the menu?)\n> - **Можна рахунок?** (Can I have the bill?)\n> - **Можна увійти?** (May I come in?)\n> - **Можна води?** (Can I have water?)\n> - **Тут можна курити?** (Is it allowed to smoke here?)\n> Answer: **Можна** (Allowed) or **Не можна** (Forbidden).\n\n> 🗣️ **Language Link: The Polite Imperative**\n> In dictionaries, you see \"Скажи\" (Say).\n> In life, you say **Скажіть** (Say - Plural/Polite).\n> - **Скажіть, будь ласка...** (Tell me please...)\n> - **Дайте...** (Give...)\n> - **Покажіть...** (Show...)\n> - **Повторіть...** (Repeat...)\n> Using the \"Ti\" form (Скажи, Дай) with a stranger is rude. Stick to **-ТЕ/-ІТЬ**.\n\n\n> 🔄 **Deep Dive: The Map App**\n> Google Maps works well in Ukraine.\n> But local apps like **EasyWay** (for public transport) are often better.\n> They show real-time GPS of the yellow marshrutka.\n> Download it before you go.\n\n## practice\n\n**Drill 1: The Case Mixer**\nSelect the correct case.\n- (I see a car) -> Я бачу **машину** (Acc).\n- (I am in the car) -> Я в **машині** (Loc).\n- (I don't have a car) -> У мене немає **машини** (Gen).\n- (This is a car) -> Це **машина** (Nom).\n\n**Drill 2: The City Navigator**\n- (Where is the bank?) -> Де **банк**?\n- (Go straight) -> Йдіть **прямо**.\n- (Turn left) -> Поверніть **ліворуч**.\n- (It is on the right) -> Це **праворуч**.\n- (Is it far?) -> Це **далеко**?\n\n**Drill 3: The Restaurant Survivor**\n- (I want soup) -> Я хочу **суп** (Acc).\n- (Soup with sour cream) -> Суп зі **сметаною** (Instr - bonus).\n- (Without sugar) -> Без **цукру** (Gen).\n- (The bill please) -> **Рахунок**, будь ласка.\n\n**Drill 4: Case Logic**\n- (I don't see X) -> **Не бачу...** (Gen/Acc).\n- (I don't have X) -> **Немає...** (Gen).\n- (I live in X) -> **Живу в...** (Loc).\n- (I go to X) -> **Йду в...** (Acc).\n\n**Drill 5: Preposition Master**\n- (In) the park -> **У** парку.\n- (On) the table -> **На** столі.\n- (Without) milk -> **Без** молока.\n- (From) Kyiv -> **З** Києва.\n- (For) you -> **Для** тебе.\n\n**Drill 6: Mozhna Master**\n- (Can I enter?) -> **Можна увійти?**\n- (Can I pay?) -> **Можна оплатити?**\n- (Smoking forbidden) -> **Курити не можна.**\n- (Can I have the menu?) -> **Можна меню?**\n\n## production\n\n> 🏆 **Challenge: The Kyiv Day Trip**\n> You arrive in Kyiv.\n> 1. You take a taxi to the hotel (Locative destination).\n> 2. You meet a friend (Accusative animate).\n> 3. You go to a restaurant (Locative/Accusative).\n> 4. You realize you have no money (Genitive).\n> 5. Your friend pays (Hero).\n\n**Scenario: The Lost Tourist**\n*   **You:** Вибачте, ви знаєте, де метро \"Хрещатик\"?\n*   **Local:** Так. Це недалеко. Йдіть прямо, потім наліво.\n*   **You:** Прямо і наліво. Дякую. А аптека там є?\n*   **Local:** Аптеки немає (Gen). Аптека праворуч, біля банку.\n*   **You:** Зрозумів. Дякую.\n*   **Local:** Нема за що. Гарного дня!\n\n**Scenario: The Picky Eater**\n*   **Waiter:** Ви готові?\n*   **You:** Так. Я не їм м'ясо (Acc). У вас є вегетаріанське меню?\n*   **Waiter:** Так. Ось салат з сиром.\n*   **You:** Я не люблю сир (Acc).\n*   **Waiter:** Тоді вареники з капустою?\n*   **You:** О, чудово. Я візьму вареники. І сік без льоду (Gen).\n\n---"
       }
     ],
-    "rawMarkdown": "---\ntitle: \"Checkpoint: Navigation\"\nsubtitle: \"Review of A1.2 — Cases, Possession, and Real-World Skills\"\nphase: A1.2\nduration: 45\ntransliteration: partial\ntags: [review, checkpoint, assessment]\nobjectives:\n  - Review accusative case (objects and people)\n  - Review locative case (location)\n  - Review genitive case (absence and quantities)\n  - Consolidate possessive pronouns\n  - Practice integrated dialogue skills\ngrammar:\n  - All A1.2 cases: Accusative, Locative, Genitive\n  - Possessive pronouns\n  - Numbers with cases\n---\n\n# Lesson Content\n\n## warm-up\n\n### Congratulations — You've Reached A1.2 Checkpoint!\n\nYou've come so far! In modules 11-19, you learned three grammatical cases and how to navigate real-world situations. Let's review everything before moving on.\n\n> 💡 **Did You Know?**\n>\n> You now know 5 of 7 Ukrainian cases! Nominative (M01), Accusative (M11-12), Locative (M13), Genitive (M16), and Vocative (M02). Only Dative and Instrumental remain — and those are for A2!\n\n## presentation\n\n### Case Summary Table\n\n| Case | Question | Usage | Example |\n|------|----------|-------|---------|\n| Nominative | Хто? Що? | Subject | Це **книга**. |\n| Accusative | Кого? Що? | Direct object | Я читаю **книгу**. |\n| Locative | Де? На чому? | Location | Книга **на столі**. |\n| Genitive | Кого? Чого? | Absence, quantities | Немає **книги**. |\n| Vocative | — | Addressing | **Олено**! |\n\n### Accusative Endings Review\n\n| Gender | Nominative | Accusative | Example |\n|--------|------------|------------|---------|\n| M inanimate | стіл | стіл | Я бачу стіл. |\n| M animate | друг | друга | Я бачу друга. |\n| F (-а) | книга | книгу | Я читаю книгу. |\n| F (-я) | земля | землю | Я люблю землю. |\n| N | вікно | вікно | Я бачу вікно. |\n\n> ⚡ **Pro Tip**\n>\n> Remember: Masculine animate accusative = genitive (друг → друга). This helps you learn genitive forms too!\n\n### Locative Endings Review\n\n| Gender | Nominative | Locative | Preposition |\n|--------|------------|----------|-------------|\n| M | банк | у банку | в/у |\n| M | стіл | на столі | на |\n| F | книга | у книзі | в/у |\n| F | вулиця | на вулиці | на |\n| N | місто | у місті | в/у |\n| N | море | на морі | на |\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"в\" and \"у\" are different prepositions.\n> **Fact:** They're the same! Use \"у\" after consonants for easier pronunciation, \"в\" after vowels: \"Я у банку\" but \"Вона в банку.\"\n\n### Genitive Endings Review\n\n| Gender | Nominative | Genitive | Example |\n|--------|------------|----------|---------|\n| M | час | часу | немає часу |\n| M | друг | друга | немає друга |\n| F (-а) | вода | води | немає води |\n| F (-я) | ідея | ідеї | немає ідеї |\n| N | вікно | вікна | немає вікна |\n\n### Possessive Pronouns Review\n\n| Pronoun | M | F | N | Pl |\n|---------|---|---|---|-----|\n| my | мій | моя | моє | мої |\n| your (sg) | твій | твоя | твоє | твої |\n| his | його | його | його | його |\n| her | її | її | її | її |\n| our | наш | наша | наше | наші |\n| your (pl) | ваш | ваша | ваше | ваші |\n| their | їхній | їхня | їхнє | їхні |\n\n> 🎬 **Pop Culture Moment: Harry Potter**\n>\n> \"Це моя паличка\" (This is my wand). Harry would need different possessives: \"Це твоя паличка, Роне\" (This is your wand, Ron) — and notice the vocative \"Роне\"!\n\n### Numbers with Cases Review\n\n| Number | Noun Form | Example |\n|--------|-----------|---------|\n| 1 | Nom. singular | одна гривня |\n| 2, 3, 4 | Nom. plural | дві гривні |\n| 5-20 | Gen. plural | п'ять гривень |\n| 21 | Nom. singular | двадцять одна гривня |\n| 25 | Gen. plural | двадцять п'ять гривень |\n\n### Integrated Skills Checklist\n\nBy the end of A1.2, you should be able to:\n\n- [ ] Talk about what you have and don't have (У мене є.../немає...)\n- [ ] Describe where things are (на столі, у кімнаті)\n- [ ] Navigate a city (Де метро? Прямо, потім наліво.)\n- [ ] Order food and drinks at a café\n- [ ] Handle money and prices\n- [ ] Use possessives correctly\n\n## practice\n\n### Mixed Exercise: Choose the Right Case\n\n1. Я бачу ___ (книга).\n   > [!answer] книгу (Accusative)\n\n2. Книга на ___ (стіл).\n   > [!answer] столі (Locative)\n\n3. У мене немає ___ (час).\n   > [!answer] часу (Genitive)\n\n4. Це ___ (мій) телефон.\n   > [!answer] мій (Nominative)\n\n5. П'ять ___ (гривня).\n   > [!answer] гривень (Genitive plural)\n\n## production\n\n### Self-Assessment\n\nRate yourself on these skills (1-5):\n\n1. I can order food at a café: ___\n2. I can ask for and understand prices: ___\n3. I can say what I have and don't have: ___\n4. I can describe where things are: ___\n5. I can give and understand directions: ___\n\nWhat do you need to practice more?\n\n---\n\n# Activities\n\n## fill-in: Case Practice\n\n> Complete with the correct case form.\n\n1. Я читаю ___ (книга).\n   > [!answer] книгу\n   > [!options] книгу | книга | книги | книзі\n\n2. Книга на ___ (стіл).\n   > [!answer] столі\n   > [!options] столі | стіл | столу | столом\n\n3. Немає ___ (вода).\n   > [!answer] води\n   > [!options] води | вода | воду | водою\n\n4. Я бачу ___ (друг).\n   > [!answer] друга\n   > [!options] друга | друг | другу | другові\n\n5. Вона в ___ (магазин).\n   > [!answer] магазині\n   > [!options] магазині | магазин | магазину | магазином\n\n6. Це ___ (мій) машина.\n   > [!answer] моя\n   > [!options] моя | мій | моє | мої\n\n7. У мене немає ___ (гроші).\n   > [!answer] грошей\n   > [!options] грошей | гроші | грошима | грошам\n\n8. Двадцять ___ (гривня).\n   > [!answer] гривень\n   > [!options] гривень | гривня | гривні | гривню\n\n9. Книга у ___ (сумка).\n   > [!answer] сумці\n   > [!options] сумці | сумка | сумку | сумкою\n\n10. Можна ___ (меню)?\n    > [!answer] меню\n    > [!options] меню | меню | меню | меню\n\n11. Ми живемо в ___ (місто).\n    > [!answer] місті\n    > [!options] місті | місто | міста | містом\n\n12. Три ___ (книга).\n    > [!answer] книги\n    > [!options] книги | книга | книгу | книг\n\n## unjumble: A1.2 Sentences\n\n> Put the words in the correct order.\n\n1. книгу читаю Я\n   > [!answer] Я читаю книгу.\n   > (I'm reading a book.) [3 words]\n\n2. столі на Книга\n   > [!answer] Книга на столі.\n   > (The book is on the table.) [3 words]\n\n3. часу немає мене У\n   > [!answer] У мене немає часу.\n   > (I don't have time.) [4 words]\n\n4. є брат У мене\n   > [!answer] У мене є брат.\n   > (I have a brother.) [4 words]\n\n5. телефон Це мій\n   > [!answer] Це мій телефон.\n   > (This is my phone.) [3 words]\n\n6. друга бачу Я\n   > [!answer] Я бачу друга.\n   > (I see a friend.) [3 words]\n\n7. гривень П'ятдесят коштує Це\n   > [!answer] Це коштує п'ятдесят гривень.\n   > (This costs 50 hryvnias.) [4 words]\n\n8. Києві живу Я в\n   > [!answer] Я живу в Києві.\n   > (I live in Kyiv.) [4 words]\n\n9. візьму Я борщ\n   > [!answer] Я візьму борщ.\n   > (I'll take borsch.) [3 words]\n\n10. молоком Кава без з цукру\n    > [!answer] Кава з молоком, без цукру.\n    > (Coffee with milk, without sugar.) [5 words]\n\n11. метро наліво Прямо потім\n    > [!answer] Прямо, потім наліво — метро.\n    > (Straight, then left — metro.) [4 words]\n\n12. ласка будь Рахунок\n    > [!answer] Рахунок, будь ласка.\n    > (Check, please.) [3 words]\n\n## match-up: Case Functions\n\n> Match each sentence type with the correct case.\n\n| Left | Right |\n|------|-------|\n| Direct object (what I see) | Accusative |\n| Location (where it is) | Locative |\n| Absence (what's missing) | Genitive |\n| Subject (what this is) | Nominative |\n| Addressing someone | Vocative |\n| After numbers 5+ | Genitive plural |\n| After у/в + location | Locative |\n| After без (without) | Genitive |\n| After для (for) | Genitive |\n| I have (possession) | Accusative |\n| I don't have | Genitive |\n| Object of emotion (love) | Accusative |\n\n## quiz: A1.2 Comprehensive\n\n> Test everything you learned in A1.2.\n\n1. Which case is used for direct objects?\n   - [ ] Nominative\n   - [x] Accusative\n   - [ ] Genitive\n   - [ ] Locative\n   > Direct objects use accusative: Я читаю книгу.\n\n2. Which preposition is followed by locative for location?\n   - [ ] без\n   - [ ] до\n   - [x] у/в\n   - [ ] для\n   > \"У/в\" + locative = in/at a location.\n\n3. How do you say \"I don't have time\"?\n   - [ ] Я не маю час\n   - [x] У мене немає часу\n   - [ ] Мені немає часу\n   - [ ] Я немаю часу\n   > \"У мене немає\" + genitive.\n\n4. What is \"книга\" in locative?\n   - [ ] книгу\n   - [ ] книги\n   - [x] книзі\n   - [ ] книгою\n   > Feminine -а → -і in locative (with consonant change).\n\n5. After number 5, nouns use:\n   - [ ] Nominative singular\n   - [ ] Nominative plural\n   - [x] Genitive plural\n   - [ ] Accusative\n   > Numbers 5-20 require genitive plural: п'ять гривень.\n\n6. \"Моя\" is used with:\n   - [ ] Masculine nouns\n   - [x] Feminine nouns\n   - [ ] Neuter nouns\n   - [ ] Plural nouns\n   > \"Моя\" = my (feminine): моя книга.\n\n7. Which is correct for \"at the café\"?\n   - [ ] на кафе\n   - [x] у кафе\n   - [ ] до кафе\n   - [ ] з кафе\n   > \"У кафе\" (кафе is indeclinable).\n\n8. \"Без цукру\" uses which case?\n   - [ ] Accusative\n   - [ ] Locative\n   - [x] Genitive\n   - [ ] Nominative\n   > \"Без\" requires genitive.\n\n9. Masculine animate accusative equals:\n   - [ ] Nominative\n   - [ ] Locative\n   - [x] Genitive\n   - [ ] Instrumental\n   > Animate masculine: accusative = genitive (друг → друга).\n\n10. \"Скільки коштує?\" asks about:\n    - [x] Price\n    - [ ] Location\n    - [ ] Time\n    - [ ] Direction\n    > \"Скільки коштує?\" = How much does it cost?\n\n11. Which is the correct locative of \"місто\"?\n    - [ ] містo\n    - [ ] міста\n    - [x] місті\n    - [ ] містом\n    > Neuter -о → -і in locative.\n\n12. \"Двадцять одна гривня\" — why \"гривня\"?\n    - [x] 21 ends in 1, so nominative singular\n    - [ ] 21 uses genitive\n    - [ ] All numbers use nominative\n    - [ ] This is an exception\n    > Numbers ending in 1 use nominative singular.\n\n## true-false: A1.2 Review\n\n> Decide if each statement is true (Правда) or false (Міф).\n\n- [x] Accusative case is used for direct objects.\n  > Correct! \"Я бачу книгу\" — \"книгу\" is accusative.\n\n- [ ] Locative case is used after \"без.\"\n  > Incorrect! \"Без\" requires genitive, not locative.\n\n- [x] \"У мене є\" uses accusative for what you have.\n  > Correct! \"У мене є книга\" — \"книга\" is nominative/accusative.\n\n- [ ] Numbers 2-4 require genitive case.\n  > Incorrect! 2-4 use nominative plural; 5+ use genitive plural.\n\n- [x] Possessive pronouns agree with the noun's gender.\n  > Correct! \"Мій стіл\" (m), \"моя книга\" (f), \"моє вікно\" (n).\n\n- [ ] \"В\" and \"у\" are different prepositions with different meanings.\n  > Incorrect! They're the same; \"у\" is used after consonants.\n\n- [x] Masculine animate accusative = genitive.\n  > Correct! \"Друг → друга\" in accusative.\n\n- [ ] \"Кафе\" changes form in different cases.\n  > Incorrect! \"Кафе\" is indeclinable (doesn't change).\n\n- [x] \"Немає\" is always followed by genitive.\n  > Correct! \"Немає води, часу, грошей.\"\n\n- [ ] \"Три гривень\" is correct.\n  > Incorrect! 2-4 use nominative plural: \"три гривні.\"\n\n- [x] You must ask for the check in Ukrainian restaurants.\n  > Correct! \"Рахунок, будь ласка.\"\n\n- [x] \"Прямо, потім наліво\" gives directions.\n  > Correct! \"Straight, then left.\"\n\n## group-sort: Cases\n\n> Sort these forms into the correct case category.\n\n### Nominative\n- книга\n- стіл\n- мій телефон\n- це вода\n\n### Accusative\n- книгу\n- друга\n- воду\n- мою книгу\n\n### Locative\n- на столі\n- у книзі\n- в місті\n- на вулиці\n\n### Genitive\n- води\n- часу\n- без цукру\n- п'ять гривень\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| Review vocabulary from modules 11-19 | | | | | |\n\n---\n\n# Summary\n\n> **A1.2 Complete!**\n>\n> You've mastered:\n> - **Accusative case** for direct objects and animate beings\n> - **Locative case** for location with в/у and на\n> - **Genitive case** for absence (немає) and quantities\n> - **Possessive pronouns** (мій, твій, його, її, наш, ваш, їхній)\n> - **Numbers 0-100** with correct noun forms\n> - **Real-world skills**: ordering food, asking prices, navigating\n\n> **Coming Next: A1.3 — Time & Self**\n>\n> In Modules 21-30, you'll learn:\n> - Past tense (what happened yesterday)\n> - Future tense (what will happen tomorrow)\n> - Time expressions and calendar\n> - Modal verbs (can, must, want)\n> - Daily routine with reflexive verbs\n> - Adjectives, colors, clothing\n> - Weather and family\n",
-    "createdAt": "2025-12-06T10:49:20.098Z",
-    "modifiedAt": "2025-12-06T10:49:20.098Z",
+    "rawMarkdown": "---\ntitle: Checkpoint - Navigation\nsubtitle: Review of Modules 11-19\nphase: A1.2\nduration: 60\ntransliteration: full\ntags: [review, checkpoint, a1.2, cases, city, food]\nobjectives:\n  - Learner demonstrates mastery of Accusative (objects)\n  - Learner demonstrates mastery of Locative (places)\n  - Learner demonstrates mastery of Genitive (absence/quantity)\n  - Learner can navigate a city and restaurant scenario\n---\n\n# Lesson Content\n\n## warm-up\n**The Navigation Test**\n\nYou have survived Modules 11 through 19.\nYou know how to say \"I see a friend\" (Accusative).\nYou know how to say \"I am in the park\" (Locative).\nYou know how to say \"I don't have money\" (Genitive).\nYou can order borscht and find the toilet.\nNow, we put it all together.\nThis module is a **Checkpoint**. No new grammar. Just proof that you are ready for Phase A1.3 (Time & Self).\n\n## presentation\n\n### Checkpoint 1: Accusative Case (Direct Objects)\n- **What?** Use it for the object of the verb (Baču, khochu, lyublyu).\n- **Rule:**\n    - Inanimate Masculine/Neuter = No Change. (Бачу стіл).\n    - Feminine: -А -> -У, -Я -> -Ю. (Бачу книгу).\n    - Animate Masculine: +А. (Бачу студента).\n\n### Checkpoint 2: Locative Case (Location)\n- **What?** Use it for \"Where?\" (De?).\n- **Rule:**\n    - Masculine: -І / -ОВІ. (У парку, на столі).\n    - Feminine: -І. (У кімнаті).\n    - Neuter: -І. (У місті).\n\n### Checkpoint 3: Genitive Case (Absence & Quantity)\n- **What?** Use it for \"No/Not have\" (Nemaye), \"Without\" (Bez), and Quantities (5+).\n- **Rule:**\n    - Masculine: -А / -У. (Немає столу, немає часу).\n    - Feminine: -И / -І. (Немає води, немає ідеї).\n    - Neuter: -А. (Немає вікна).\n\n\n### Section 5: The Case of the Missing Object\n\nWhy do we change the word endings?\nImagine a world without cases.\n\"Student read book.\"\nWho reads what? Did the book read the student?\n\"Студент читає книгу.\" (Ah, student -> Subject, book -> Object).\n\"Студента читає книга.\" (The book reads the student. Scary!)\nCases give **Direction** and **Role**.\n- Nominal: The Star.\n- Accusative: The Victim (Direct Object).\n- Locative: The Stage (Location).\n- Genitive: The Ghost (Absence/Owner).\n\n> 🎓 **Deep Dive: The Soft Sign Effect**\n> Remember Module 02? The Soft Sign (Ь).\n> It affects cases too.\n> - День (Day) -> У дні (Locative - soft I).\n> - Сіль (Salt) -> Без солі (Genitive).\n> - Батько (Father) -> На батькові (Locative).\n\n> 🚌 **Culture Corner: Social Distance (Ty vs Vy)**\n> In the city (Module 15-20), use **Ви**.\n> - Taxi driver? Ви.\n> - Waiter? Ви.\n> - Police? Ви.\n> - Stranger asking directions? Ви.\n> Use **Ти** only for friends (Module 12) \"Drug/Podruha\".\n> \"Вибачте, ви не знаєте...?\" (Excuse me, do you not know...?)\n\n\n### Section 6: The Logic of \"Having\"\n\nIn English, you \"have\" things.\nIn Ukrainian, things \"are at you\".\n- **У мене є машина.** (At me is car).\n- **У тебе є час.** (At you is time).\n- **У нас є ідея.** (At us is idea).\n\nWhen you DON'T have them, they disappear (Genitive).\n- **У мене немає машини.**\n- **У тебе немає часу.**\n- **У нас немає ідеї.**\n\n> 🇺🇦 **Deep Dive: Why \"Na\" Ukraine?**\n> You might hear \"Na Ukraini\" in old texts or songs.\n> But the official norm is **В Україні** (In Ukraine).\n> \"Na\" implies a territory/region (Na Donbasi, Na Zakarpatti).\n> \"V\" implies an independent state.\n> Using \"Na Ukraini\" is considered a political faux pas today. Stick to **\"V\"**.\n\n> 🚌 **Culture Corner: The Marshrutka Review**\n> Remember Module 15? The yellow bus.\n> It breaks all grammar rules.\n> You yell: \"На зупинці!\" (On the stop! - Locative).\n> You pass money: \"За двох!\" (For two! - Acc/Gen).\n> You ask: \"Ви виходите?\" (Are you exiting?).\n> It is the ultimate test of your A1 skills.\n\n### Section 7: Phase A1.2 Summary\n\nYou started Phase A1.2 knowing only \"This is a table\".\nNow you can:\n1.  **See** the table (Baču stil).\n2.  **Put** something on the table (Na stoli).\n3.  **Take** something from the table (Z stolu - Gen).\n4.  **Buy** the table (Kupuyu stil).\n5.  **Say** there is no table (Nemaye stolu).\n\nThis \"Case System\" is the engine of the language.\nIn Phase A1.3, we add **Time** (Past/Future).\nThe static picture becomes a movie.\n\n\n> ⚡ **Deep Dive: The Power of \"Mozhna\"**\n> If you forget all grammar, remember **Можна** (Is it possible/May I?).\n> It is the Swiss Army Knife of Ukrainian.\n> - **Можна меню?** (Can I have the menu?)\n> - **Можна рахунок?** (Can I have the bill?)\n> - **Можна увійти?** (May I come in?)\n> - **Можна води?** (Can I have water?)\n> - **Тут можна курити?** (Is it allowed to smoke here?)\n> Answer: **Можна** (Allowed) or **Не можна** (Forbidden).\n\n> 🗣️ **Language Link: The Polite Imperative**\n> In dictionaries, you see \"Скажи\" (Say).\n> In life, you say **Скажіть** (Say - Plural/Polite).\n> - **Скажіть, будь ласка...** (Tell me please...)\n> - **Дайте...** (Give...)\n> - **Покажіть...** (Show...)\n> - **Повторіть...** (Repeat...)\n> Using the \"Ti\" form (Скажи, Дай) with a stranger is rude. Stick to **-ТЕ/-ІТЬ**.\n\n\n> 🔄 **Deep Dive: The Map App**\n> Google Maps works well in Ukraine.\n> But local apps like **EasyWay** (for public transport) are often better.\n> They show real-time GPS of the yellow marshrutka.\n> Download it before you go.\n\n## practice\n\n**Drill 1: The Case Mixer**\nSelect the correct case.\n- (I see a car) -> Я бачу **машину** (Acc).\n- (I am in the car) -> Я в **машині** (Loc).\n- (I don't have a car) -> У мене немає **машини** (Gen).\n- (This is a car) -> Це **машина** (Nom).\n\n**Drill 2: The City Navigator**\n- (Where is the bank?) -> Де **банк**?\n- (Go straight) -> Йдіть **прямо**.\n- (Turn left) -> Поверніть **ліворуч**.\n- (It is on the right) -> Це **праворуч**.\n- (Is it far?) -> Це **далеко**?\n\n**Drill 3: The Restaurant Survivor**\n- (I want soup) -> Я хочу **суп** (Acc).\n- (Soup with sour cream) -> Суп зі **сметаною** (Instr - bonus).\n- (Without sugar) -> Без **цукру** (Gen).\n- (The bill please) -> **Рахунок**, будь ласка.\n\n**Drill 4: Case Logic**\n- (I don't see X) -> **Не бачу...** (Gen/Acc).\n- (I don't have X) -> **Немає...** (Gen).\n- (I live in X) -> **Живу в...** (Loc).\n- (I go to X) -> **Йду в...** (Acc).\n\n**Drill 5: Preposition Master**\n- (In) the park -> **У** парку.\n- (On) the table -> **На** столі.\n- (Without) milk -> **Без** молока.\n- (From) Kyiv -> **З** Києва.\n- (For) you -> **Для** тебе.\n\n**Drill 6: Mozhna Master**\n- (Can I enter?) -> **Можна увійти?**\n- (Can I pay?) -> **Можна оплатити?**\n- (Smoking forbidden) -> **Курити не можна.**\n- (Can I have the menu?) -> **Можна меню?**\n\n## production\n\n> 🏆 **Challenge: The Kyiv Day Trip**\n> You arrive in Kyiv.\n> 1. You take a taxi to the hotel (Locative destination).\n> 2. You meet a friend (Accusative animate).\n> 3. You go to a restaurant (Locative/Accusative).\n> 4. You realize you have no money (Genitive).\n> 5. Your friend pays (Hero).\n\n**Scenario: The Lost Tourist**\n*   **You:** Вибачте, ви знаєте, де метро \"Хрещатик\"?\n*   **Local:** Так. Це недалеко. Йдіть прямо, потім наліво.\n*   **You:** Прямо і наліво. Дякую. А аптека там є?\n*   **Local:** Аптеки немає (Gen). Аптека праворуч, біля банку.\n*   **You:** Зрозумів. Дякую.\n*   **Local:** Нема за що. Гарного дня!\n\n**Scenario: The Picky Eater**\n*   **Waiter:** Ви готові?\n*   **You:** Так. Я не їм м'ясо (Acc). У вас є вегетаріанське меню?\n*   **Waiter:** Так. Ось салат з сиром.\n*   **You:** Я не люблю сир (Acc).\n*   **Waiter:** Тоді вареники з капустою?\n*   **You:** О, чудово. Я візьму вареники. І сік без льоду (Gen).\n\n---\n\n# Activities\n\n## quiz: The Great Case Test\n\n> Choose the correct ending.\n\n1. Я бачу ___ (sister).\n   - [x] сестру\n   - [ ] сестра\n   - [ ] сестрі\n\n2. Я живу в ___ (London).\n   - [x] Лондоні\n   - [ ] Лондон\n   - [ ] Лондона\n\n3. У мене немає ___ (time).\n   - [x] часу\n   - [ ] час\n   - [ ] часом\n\n4. Ми любимо ___ (Ukraine).\n   - [x] Україну\n   - [ ] Україна\n   - [ ] Україні\n\n5. Книга на ___ (table).\n   - [x] столі\n   - [ ] стіл\n   - [ ] столу\n\n6. Я не хочу ___ (pizza).\n   - [x] піци\n   - [ ] піцу (Negation triggers Genitive usually, but informal Accusative is seen. Wait, rule is Genitive after Negation for existence, but transitive verbs often keep Accusative or switch to Genitive. Simple rule for A1: Negation of *existence* (nemaye) is Genitive. Negation of *action* (ne khochu) can be Genitive or Accusative. Let's stick to strict grammar: Ne khochu picy (Genitive) is safer/standard).\n   - [ ] піца\n\n7. Я чекаю на ___ (doctor).\n   - [x] лікаря\n   - [ ] лікар\n   - [ ] лікарю\n\n8. Це мій ___ (friend).\n   - [x] друг\n   - [ ] друга\n   - [ ] другу\n\n9. Я йду в ___ (bank).\n   - [x] банк\n   - [ ] банку\n   - [ ] банком\n\n10. Я п'ю каву з ___ (milk).\n    - [x] молоком\n    - [ ] молока\n    - [ ] молоко\n\n11. Ти знаєш ___ (Ivan)?\n    - [x] Івана\n    - [ ] Іван\n    - [ ] Івану\n\n12. Ми у ___ (park).\n    - [x] парку\n    - [ ] парк\n    - [ ] парка\n    - [ ] парком\n\n13. Він з ___ (Kyiv).\n    - [x] Києва\n    - [ ] Київ\n    - [ ] Києві\n\n14. Я не маю ___ (idea).\n    - [x] ідеї\n    - [ ] ідея\n    - [ ] ідею\n\n15. У кімнаті немає ___ (window).\n    - [x] вікна\n    - [ ] вікно\n    - [ ] вікні\n\n16. Я читаю ___ (book).\n    - [x] книгу (Acc)\n    - [ ] книга\n    - [ ] книги\n\n## match-up: Concept Match\n\n> Match the grammar term to the example.\n\n| Term | Example |\n|------|---------|\n| Nominative | Це студент. |\n| Accusative (Inanimate) | Я бачу стіл. |\n| Accusative (Animate) | Я бачу студента. |\n| Locative | Я в Києві. |\n| Genitive (Absence) | Немає часу. |\n| Genitive (Origin) | Я з України. |\n| Instrumental (With) | Чай з лимоном. |\n| Possessive | Мій паспорт. |\n| Demonstrative | Цей будинок. |\n| Negation | Я не знаю. |\n| Question | Де ти? |\n| Imperative | Скажіть, будь ласка. |\n\n## fill-in: The Missing Case\n\n> Fill in the ending.\n\n1. Я бачу мам___ (Mama - Acc).\n   > [!answer] маму\n\n2. Я в кімнат___ (Kimnata - Loc).\n   > [!answer] кімнаті\n\n3. Немає вод___ (Voda - Gen).\n   > [!answer] води\n\n4. Я люблю кав___ (Kava - Acc).\n   > [!answer] каву\n\n5. Книга на стол___ (Stil - Loc).\n   > [!answer] столі\n\n6. Я чекаю друг___ (Drug - Acc Animate).\n   > [!answer] друга\n\n7. Без цукр___ (Tsukor - Gen).\n   > [!answer] цукру\n\n8. Чай з мед___ (Med - Instr).\n   > [!answer] медом\n\n9. Я у міст___ (Misto - Loc).\n   > [!answer] місті\n\n10. Я знаю брат___ (Brat - Acc Animate).\n    > [!answer] брата\n\n11. Немає проблем___ (Problema - Gen).\n    > [!answer] проблеми\n\n12. Я хочу піц___ (Pitsa - Acc).\n    > [!answer] піцу\n\n\n## fill-in: Preposition Master\n\n> Choose the correct preposition (В, На, Без, З, Для).\n\n1. Я живу ___ (in) Києві.\n   > [!answer] в\n\n2. Книга ___ (on) столі.\n   > [!answer] на\n\n3. Чай ___ (without) цукру.\n   > [!answer] без\n\n4. Я ___ (from) України.\n   > [!answer] з\n\n5. Це ___ (for) тебе.\n   > [!answer] для\n\n6. Піца ___ (with) сиром.\n   > [!answer] з\n\n7. Я ___ (in) парку.\n   > [!answer] у\n\n8. Студент ___ (at) університеті.\n   > [!answer] в\n\n9. Ми ___ (on) концерті.\n   > [!answer] на\n\n10. Суп ___ (without) м'яса.\n    > [!answer] без\n\n11. Салат ___ (with) олією.\n    > [!answer] з\n\n12. Квиток ___ (for) мене.\n    > [!answer] для\n\n\n## match-up: Mozhna Scenario\n\n> Can you? Or Can't you?\n\n| Situation | Phrase |\n|-----------|--------|\n| You want tea. | Можна чай? |\n| You want to give money. | Можна оплатити? |\n| You want to use the toilet. | Можна в туалет? |\n| It is forbidden to smoke. | Тут не можна курити. |\n| It is forbidden to park. | Тут не можна паркуватися. |\n| You want to enter. | Можна увійти? |\n| You want to take a photo. | Можна фото? |\n| You want the bill. | Можна рахунок? |\n| You want a discount (znizhka). | Можна знижку? |\n| You want water. | Можна води? |\n| Is it allowed here? | Тут можна? |\n| Entrance forbidden. | Не можна. |\n\n## unjumble: Sentence Reconstruction\n\n> Rebuild the sentences.\n\n1. не / Я / м'ясо / їм / .\n   > [!answer] Я не їм м'ясо.\n\n2. парку / Ми / в / гуляємо / .\n   > [!answer] Ми гуляємо в парку.\n\n3. немає / У / часу / мене / .\n   > [!answer] У мене немає часу.\n\n4. меню / Можна / , / ласка / будь / ?\n   > [!answer] Можна меню, будь ласка?\n\n5. живе / Де / друг / твій / ?\n   > [!answer] Де живе твій друг?\n\n6. дуже / Це / далеко / .\n   > [!answer] Це дуже далеко.\n\n7. на / каву / Ми / чекаємо / .\n   > [!answer] Ми чекаємо на каву.\n\n8. бачу / автобус / Я / не / .\n   > [!answer] Я не бачу автобус.\n\n9. коштує / Скільки / квиток / ?\n   > [!answer] Скільки коштує квиток?\n\n10. з / Борщ / смачний / салом / .\n    > [!answer] Борщ смачний з салом.\n\n11. тут / Туалет / є / ?\n    > [!answer] Туалет тут є?\n\n12. центрі / Я / в / живу / .\n    > [!answer] Я живу в центрі.\n\n## group-sort: Case Sorting\n\n> Which case is used in the phrase?\n\n### Accusative\n- Я бачу **сонце**\n- Я люблю **музику**\n- Я чекаю **автобус**\n- Я знаю **Івана**\n\n### Locative\n- Ми в **Україні**\n- Книга на **столі**\n- Живу у **Львові**\n- В **центрі**\n\n### Genitive\n- Немає **грошей**\n- Без **газу**\n- Я з **Америки**\n- Пляшка **води**\n\n## fill-in: City Logic\n\n> Logical completions.\n\n1. Автобус на ___ (stop).\n   > [!answer] зупинці\n\n2. Гроші в ___ (bank).\n   > [!answer] банку\n\n3. Студент в ___ (university).\n   > [!answer] університеті\n\n4. Лікар у ___ (hospital).\n   > [!answer] лікарні\n\n5. Актор у ___ (theater).\n   > [!answer] театрі\n\n6. Фільм у ___ (cinema).\n   > [!answer] кінотеатрі\n\n7. Картина в ___ (museum).\n   > [!answer] музеї\n\n8. Кава в ___ (cafe).\n   > [!answer] кафе\n\n9. Ми в ___ (kyiv).\n   > [!answer] Києві\n\n10. Ти в ___ (london).\n    > [!answer] Лондоні\n\n11. Вона в ___ (taxi).\n    > [!answer] таксі\n\n12. Я в ___ (metro).\n    > [!answer] метро\n\n## anagram: Vocabulary Review\n\n> Unscramble key words from Modules 11-19.\n\n1. в у л и ц я\n   > [!answer] вулиця\n   > (Street)\n\n2. м а г а з и н\n   > [!answer] магазин\n   > (Shop)\n\n3. р а х у н о к\n   > [!answer] рахунок\n   > (Bill)\n\n4. о ф і ц і а н т\n   > [!answer] офіціант\n   > (Waiter)\n\n5. л і к а р\n   > [!answer] лікар\n   > (Doctor)\n\n6. к в и т о к\n   > [!answer] квиток\n   > (Ticket)\n\n7. г о т і в к а\n   > [!answer] готівка\n   > (Cash)\n\n8. п л о щ а\n   > [!answer] площа\n   > (Square)\n\n9. з у п и н к а\n   > [!answer] зупинка\n   > (Stop)\n\n10. н е м а є\n    > [!answer] немає\n    > (There is no)\n\n11. д р у г\n    > [!answer] друг\n    > (Friend)\n\n12. м і с т о\n    > [!answer] місто\n    > (City)\n\n# Summary\n\n**You have navigated Phase A1.2.**\nYou are no longer just pointing and naming objects (\"This is a table\").\nYou are interacting with them.\n- You go **to** places (Acc/Loc).\n- You utilize **objects** (Acc).\n- You notice when things are **missing** (Gen).\n- You pay with **money** (Nom/Instr).\n\n**Checklist:**\n- [ ] I know when to use Accusative vs Locative.\n- [ ] I can handle Gender changes in cases.\n- [ ] I can count to 100.\n- [ ] I can survive in a city.\n\n**Next Stop:**\nPhase A1.3: **Time & Self**.\nStop living in the eternal \"Now\".\nModule 21 will teach you **The Past**.\nModule 22 will teach you **The Future**.\nWe will time travel to yesterday and tomorrow.\nLet's go!\n\n# Vocabulary\n\n| Word | IPA | English | Note | Audio |\n|------|-----|---------|------|-------|\n| бачити | /ˈbɑtʃɪtɪ/ | to see | A1.2 Key | [🔊](audio_bachyty) |\n| хотіти | /xɔˈtitɪ/ | to want | A1.2 Key | [🔊](audio_khotity) |\n| любити | /lʲuˈbɪtɪ/ | to love/like | A1.2 Key | [🔊](audio_lyubyty) |\n| немає | /nɛˈmɑjɛ/ | there is no | A1.2 Key | [🔊](audio_nemaye) |\n| у / в | /u/ /v/ | in / at | Prep | [🔊](audio_u_v) |\n| на | /nɑ/ | on / at | Prep | [🔊](audio_na) |\n| праворуч | /prɑˈvɔrutʃ/ | to the right | Direction | [🔊](audio_pravoruch) |\n| ліворуч | /lʲiˈvɔrutʃ/ | to the left | Direction | [🔊](audio_livoruch) |\n| прямо | /ˈprjɑmɔ/ | straight | Direction | [🔊](audio_pryamo) |\n| вулиця | /ˈvulɪt͡sʲɑ/ | street | City | [🔊](audio_vulytsya) |\n| місто | /ˈmistɔ/ | city | City | [🔊](audio_misto) |\n| друг | /druɦ/ | friend | People | [🔊](audio_druh) |\n| скільки | /ˈskilʲkɪ/ | how much | Question | [🔊](audio_skilky) |\n| коштує | /kɔʃˈtujɛ/ | cost (verb) | Shop | [🔊](audio_koshtuye) |\n| рахунок | /rɑˈxunɔk/ | bill/account | Shop | [🔊](audio_rakhunok) |\n| смачно | /ˈsmɑtʃnɔ/ | tasty | Food | [🔊](audio_smachno) |\n| вода | /vɔˈdɑ/ | water | drink | [🔊](audio_voda) |\n| кава | /ˈkɑvɑ/ | coffee | drink | [🔊](audio_kava) |\n| далеко | /dɑˈlɛkɔ/ | far | Location | [🔊](audio_daleko) |\n| близько | /ˈblɪzʲkɔ/ | near | Location | [🔊](audio_blyzko) |\n",
+    "createdAt": "2025-12-08T21:22:09.887Z",
+    "modifiedAt": "2025-12-08T21:22:09.887Z",
     "version": 2
   },
   "activities": [
     {
-      "id": "act-a1-0-fillblank",
-      "type": "fill-blank",
-      "title": "Case Practice",
-      "description": "Complete with the correct case form.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Я читаю ___ (книга).",
-            "answer": "книгу",
-            "hints": [
-              "книга"
-            ],
-            "options": [
-              "книгу",
-              "книга",
-              "книги",
-              "книзі"
-            ]
-          },
-          {
-            "prompt": "Книга на ___ (стіл).",
-            "answer": "столі",
-            "hints": [
-              "стіл"
-            ],
-            "options": [
-              "столі",
-              "стіл",
-              "столу",
-              "столом"
-            ]
-          },
-          {
-            "prompt": "Немає ___ (вода).",
-            "answer": "води",
-            "hints": [
-              "вода"
-            ],
-            "options": [
-              "води",
-              "вода",
-              "воду",
-              "водою"
-            ]
-          },
-          {
-            "prompt": "Я бачу ___ (друг).",
-            "answer": "друга",
-            "hints": [
-              "друг"
-            ],
-            "options": [
-              "друга",
-              "друг",
-              "другу",
-              "другові"
-            ]
-          },
-          {
-            "prompt": "Вона в ___ (магазин).",
-            "answer": "магазині",
-            "hints": [
-              "магазин"
-            ],
-            "options": [
-              "магазині",
-              "магазин",
-              "магазину",
-              "магазином"
-            ]
-          },
-          {
-            "prompt": "Це ___ (мій) машина.",
-            "answer": "моя",
-            "hints": [
-              "мій"
-            ],
-            "options": [
-              "моя",
-              "мій",
-              "моє",
-              "мої"
-            ]
-          },
-          {
-            "prompt": "У мене немає ___ (гроші).",
-            "answer": "грошей",
-            "hints": [
-              "гроші"
-            ],
-            "options": [
-              "грошей",
-              "гроші",
-              "грошима",
-              "грошам"
-            ]
-          },
-          {
-            "prompt": "Двадцять ___ (гривня).",
-            "answer": "гривень",
-            "hints": [
-              "гривня"
-            ],
-            "options": [
-              "гривень",
-              "гривня",
-              "гривні",
-              "гривню"
-            ]
-          },
-          {
-            "prompt": "Книга у ___ (сумка).",
-            "answer": "сумці",
-            "hints": [
-              "сумка"
-            ],
-            "options": [
-              "сумці",
-              "сумка",
-              "сумку",
-              "сумкою"
-            ]
-          },
-          {
-            "prompt": "Можна ___ (меню)?",
-            "answer": "меню",
-            "hints": [
-              "меню"
-            ],
-            "options": [
-              "меню",
-              "меню",
-              "меню",
-              "меню"
-            ]
-          },
-          {
-            "prompt": "Ми живемо в ___ (місто).",
-            "answer": "місті",
-            "hints": [
-              "місто"
-            ],
-            "options": [
-              "місті",
-              "місто",
-              "міста",
-              "містом"
-            ]
-          },
-          {
-            "prompt": "Три ___ (книга).",
-            "answer": "книги",
-            "hints": [
-              "книга"
-            ],
-            "options": [
-              "книги",
-              "книга",
-              "книгу",
-              "книг"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.098Z",
-      "modifiedAt": "2025-12-06T10:49:20.098Z"
-    },
-    {
-      "id": "act-a1-0-unjumble",
-      "type": "unjumble",
-      "title": "A1.2 Sentences",
-      "description": "Put the words in the correct order.",
-      "content": {
-        "type": "unjumble",
-        "isUnjumble": true,
-        "items": [
-          {
-            "words": [
-              "книгу",
-              "читаю",
-              "Я"
-            ],
-            "answer": "Я читаю книгу.",
-            "translation": "I'm reading a book."
-          },
-          {
-            "words": [
-              "столі",
-              "на",
-              "Книга"
-            ],
-            "answer": "Книга на столі.",
-            "translation": "The book is on the table."
-          },
-          {
-            "words": [
-              "часу",
-              "немає",
-              "мене",
-              "У"
-            ],
-            "answer": "У мене немає часу.",
-            "translation": "I don't have time."
-          },
-          {
-            "words": [
-              "є",
-              "брат",
-              "У",
-              "мене"
-            ],
-            "answer": "У мене є брат.",
-            "translation": "I have a brother."
-          },
-          {
-            "words": [
-              "телефон",
-              "Це",
-              "мій"
-            ],
-            "answer": "Це мій телефон.",
-            "translation": "This is my phone."
-          },
-          {
-            "words": [
-              "друга",
-              "бачу",
-              "Я"
-            ],
-            "answer": "Я бачу друга.",
-            "translation": "I see a friend."
-          },
-          {
-            "words": [
-              "гривень",
-              "П'ятдесят",
-              "коштує",
-              "Це"
-            ],
-            "answer": "Це коштує п'ятдесят гривень.",
-            "translation": "This costs 50 hryvnias."
-          },
-          {
-            "words": [
-              "Києві",
-              "живу",
-              "Я",
-              "в"
-            ],
-            "answer": "Я живу в Києві.",
-            "translation": "I live in Kyiv."
-          },
-          {
-            "words": [
-              "візьму",
-              "Я",
-              "борщ"
-            ],
-            "answer": "Я візьму борщ.",
-            "translation": "I'll take borsch."
-          },
-          {
-            "words": [
-              "молоком",
-              "Кава",
-              "без",
-              "з",
-              "цукру"
-            ],
-            "answer": "Кава з молоком, без цукру.",
-            "translation": "Coffee with milk, without sugar."
-          },
-          {
-            "words": [
-              "метро",
-              "наліво",
-              "Прямо",
-              "потім"
-            ],
-            "answer": "Прямо, потім наліво — метро.",
-            "translation": "Straight, then left — metro."
-          },
-          {
-            "words": [
-              "ласка",
-              "будь",
-              "Рахунок"
-            ],
-            "answer": "Рахунок, будь ласка.",
-            "translation": "Check, please."
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.098Z",
-      "modifiedAt": "2025-12-06T10:49:20.098Z"
-    },
-    {
-      "id": "act-a1-0-matchup",
-      "type": "match-up",
-      "title": "Case Functions",
-      "description": "Match each sentence type with the correct case.",
-      "content": {
-        "type": "match-up",
-        "pairs": [
-          {
-            "left": "Direct object (what I see)",
-            "right": "Accusative"
-          },
-          {
-            "left": "Location (where it is)",
-            "right": "Locative"
-          },
-          {
-            "left": "Absence (what's missing)",
-            "right": "Genitive"
-          },
-          {
-            "left": "Subject (what this is)",
-            "right": "Nominative"
-          },
-          {
-            "left": "Addressing someone",
-            "right": "Vocative"
-          },
-          {
-            "left": "After numbers 5+",
-            "right": "Genitive plural"
-          },
-          {
-            "left": "After у/в + location",
-            "right": "Locative"
-          },
-          {
-            "left": "After без (without)",
-            "right": "Genitive"
-          },
-          {
-            "left": "After для (for)",
-            "right": "Genitive"
-          },
-          {
-            "left": "I have (possession)",
-            "right": "Accusative"
-          },
-          {
-            "left": "I don't have",
-            "right": "Genitive"
-          },
-          {
-            "left": "Object of emotion (love)",
-            "right": "Accusative"
-          }
-        ],
-        "shuffleRight": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.098Z",
-      "modifiedAt": "2025-12-06T10:49:20.098Z"
-    },
-    {
       "id": "act-a1-0-quiz",
       "type": "quiz",
-      "title": "A1.2 Comprehensive",
-      "description": "Test everything you learned in A1.2.",
+      "title": "The Great Case Test",
+      "description": "Choose the correct ending.",
       "content": {
         "type": "quiz",
         "questions": [
           {
-            "question": "Which case is used for direct objects?",
+            "question": "Я бачу ___ (sister).",
             "options": [
-              "Nominative",
-              "Accusative",
-              "Genitive",
-              "Locative"
-            ],
-            "correctIndex": 1,
-            "explanation": "Direct objects use accusative: Я читаю книгу."
-          },
-          {
-            "question": "Which preposition is followed by locative for location?",
-            "options": [
-              "без",
-              "до",
-              "у/в",
-              "для"
-            ],
-            "correctIndex": 2,
-            "explanation": "\"У/в\" + locative = in/at a location."
-          },
-          {
-            "question": "How do you say \"I don't have time\"?",
-            "options": [
-              "Я не маю час",
-              "У мене немає часу",
-              "Мені немає часу",
-              "Я немаю часу"
-            ],
-            "correctIndex": 1,
-            "explanation": "\"У мене немає\" + genitive."
-          },
-          {
-            "question": "What is \"книга\" in locative?",
-            "options": [
-              "книгу",
-              "книги",
-              "книзі",
-              "книгою"
-            ],
-            "correctIndex": 2,
-            "explanation": "Feminine -а → -і in locative (with consonant change)."
-          },
-          {
-            "question": "After number 5, nouns use:",
-            "options": [
-              "Nominative singular",
-              "Nominative plural",
-              "Genitive plural",
-              "Accusative"
-            ],
-            "correctIndex": 2,
-            "explanation": "Numbers 5-20 require genitive plural: п'ять гривень."
-          },
-          {
-            "question": "\"Моя\" is used with:",
-            "options": [
-              "Masculine nouns",
-              "Feminine nouns",
-              "Neuter nouns",
-              "Plural nouns"
-            ],
-            "correctIndex": 1,
-            "explanation": "\"Моя\" = my (feminine): моя книга."
-          },
-          {
-            "question": "Which is correct for \"at the café\"?",
-            "options": [
-              "на кафе",
-              "у кафе",
-              "до кафе",
-              "з кафе"
-            ],
-            "correctIndex": 1,
-            "explanation": "\"У кафе\" (кафе is indeclinable)."
-          },
-          {
-            "question": "\"Без цукру\" uses which case?",
-            "options": [
-              "Accusative",
-              "Locative",
-              "Genitive",
-              "Nominative"
-            ],
-            "correctIndex": 2,
-            "explanation": "\"Без\" requires genitive."
-          },
-          {
-            "question": "Masculine animate accusative equals:",
-            "options": [
-              "Nominative",
-              "Locative",
-              "Genitive",
-              "Instrumental"
-            ],
-            "correctIndex": 2,
-            "explanation": "Animate masculine: accusative = genitive (друг → друга)."
-          },
-          {
-            "question": "\"Скільки коштує?\" asks about:",
-            "options": [
-              "Price",
-              "Location",
-              "Time",
-              "Direction"
+              "сестру",
+              "сестра",
+              "сестрі"
             ],
             "correctIndex": 0,
-            "explanation": "\"Скільки коштує?\" = How much does it cost?"
+            "explanation": ""
           },
           {
-            "question": "Which is the correct locative of \"місто\"?",
+            "question": "Я живу в ___ (London).",
             "options": [
-              "містo",
-              "міста",
-              "місті",
-              "містом"
-            ],
-            "correctIndex": 2,
-            "explanation": "Neuter -о → -і in locative."
-          },
-          {
-            "question": "\"Двадцять одна гривня\" — why \"гривня\"?",
-            "options": [
-              "21 ends in 1, so nominative singular",
-              "21 uses genitive",
-              "All numbers use nominative",
-              "This is an exception"
+              "Лондоні",
+              "Лондон",
+              "Лондона"
             ],
             "correctIndex": 0,
-            "explanation": "Numbers ending in 1 use nominative singular."
+            "explanation": ""
+          },
+          {
+            "question": "У мене немає ___ (time).",
+            "options": [
+              "часу",
+              "час",
+              "часом"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Ми любимо ___ (Ukraine).",
+            "options": [
+              "Україну",
+              "Україна",
+              "Україні"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Книга на ___ (table).",
+            "options": [
+              "столі",
+              "стіл",
+              "столу"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Я не хочу ___ (pizza).",
+            "options": [
+              "піци",
+              "піцу (Negation triggers Genitive usually, but informal Accusative is seen. Wait, rule is Genitive after Negation for existence, but transitive verbs often keep Accusative or switch to Genitive. Simple rule for A1: Negation of *existence* (nemaye) is Genitive. Negation of *action* (ne khochu) can be Genitive or Accusative. Let's stick to strict grammar: Ne khochu picy (Genitive) is safer/standard).",
+              "піца"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Я чекаю на ___ (doctor).",
+            "options": [
+              "лікаря",
+              "лікар",
+              "лікарю"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Це мій ___ (friend).",
+            "options": [
+              "друг",
+              "друга",
+              "другу"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Я йду в ___ (bank).",
+            "options": [
+              "банк",
+              "банку",
+              "банком"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Я п'ю каву з ___ (milk).",
+            "options": [
+              "молоком",
+              "молока",
+              "молоко"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Ти знаєш ___ (Ivan)?",
+            "options": [
+              "Івана",
+              "Іван",
+              "Івану"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Ми у ___ (park).",
+            "options": [
+              "парку",
+              "парк",
+              "парка",
+              "парком"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Він з ___ (Kyiv).",
+            "options": [
+              "Києва",
+              "Київ",
+              "Києві"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Я не маю ___ (idea).",
+            "options": [
+              "ідеї",
+              "ідея",
+              "ідею"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "У кімнаті немає ___ (window).",
+            "options": [
+              "вікна",
+              "вікно",
+              "вікні"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Я читаю ___ (book).",
+            "options": [
+              "книгу (Acc)",
+              "книга",
+              "книги"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
           }
         ],
         "shuffleQuestions": true,
@@ -590,76 +229,169 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.098Z",
-      "modifiedAt": "2025-12-06T10:49:20.098Z"
+      "createdAt": "2025-12-08T21:22:09.887Z",
+      "modifiedAt": "2025-12-08T21:22:09.887Z"
     },
     {
-      "id": "act-a1-0-truefalse",
-      "type": "true-false",
-      "title": "A1.2 Review",
-      "description": "Decide if each statement is true (Правда) or false (Міф).",
+      "id": "act-a1-0-matchup",
+      "type": "match-up",
+      "title": "Concept Match",
+      "description": "Match the grammar term to the example.",
       "content": {
-        "type": "true-false",
-        "statements": [
+        "type": "match-up",
+        "pairs": [
           {
-            "statement": "Accusative case is used for direct objects.",
-            "isTrue": true,
-            "explanation": "Correct! \"Я бачу книгу\" — \"книгу\" is accusative."
+            "left": "Nominative",
+            "right": "Це студент."
           },
           {
-            "statement": "Locative case is used after \"без.\"",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Без\" requires genitive, not locative."
+            "left": "Accusative (Inanimate)",
+            "right": "Я бачу стіл."
           },
           {
-            "statement": "\"У мене є\" uses accusative for what you have.",
-            "isTrue": true,
-            "explanation": "Correct! \"У мене є книга\" — \"книга\" is nominative/accusative."
+            "left": "Accusative (Animate)",
+            "right": "Я бачу студента."
           },
           {
-            "statement": "Numbers 2-4 require genitive case.",
-            "isTrue": false,
-            "explanation": "Incorrect! 2-4 use nominative plural; 5+ use genitive plural."
+            "left": "Locative",
+            "right": "Я в Києві."
           },
           {
-            "statement": "Possessive pronouns agree with the noun's gender.",
-            "isTrue": true,
-            "explanation": "Correct! \"Мій стіл\" (m), \"моя книга\" (f), \"моє вікно\" (n)."
+            "left": "Genitive (Absence)",
+            "right": "Немає часу."
           },
           {
-            "statement": "\"В\" and \"у\" are different prepositions with different meanings.",
-            "isTrue": false,
-            "explanation": "Incorrect! They're the same; \"у\" is used after consonants."
+            "left": "Genitive (Origin)",
+            "right": "Я з України."
           },
           {
-            "statement": "Masculine animate accusative = genitive.",
-            "isTrue": true,
-            "explanation": "Correct! \"Друг → друга\" in accusative."
+            "left": "Instrumental (With)",
+            "right": "Чай з лимоном."
           },
           {
-            "statement": "\"Кафе\" changes form in different cases.",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Кафе\" is indeclinable (doesn't change)."
+            "left": "Possessive",
+            "right": "Мій паспорт."
           },
           {
-            "statement": "\"Немає\" is always followed by genitive.",
-            "isTrue": true,
-            "explanation": "Correct! \"Немає води, часу, грошей.\""
+            "left": "Demonstrative",
+            "right": "Цей будинок."
           },
           {
-            "statement": "\"Три гривень\" is correct.",
-            "isTrue": false,
-            "explanation": "Incorrect! 2-4 use nominative plural: \"три гривні.\""
+            "left": "Negation",
+            "right": "Я не знаю."
           },
           {
-            "statement": "You must ask for the check in Ukrainian restaurants.",
-            "isTrue": true,
-            "explanation": "Correct! \"Рахунок, будь ласка.\""
+            "left": "Question",
+            "right": "Де ти?"
           },
           {
-            "statement": "\"Прямо, потім наліво\" gives directions.",
-            "isTrue": true,
-            "explanation": "Correct! \"Straight, then left.\""
+            "left": "Imperative",
+            "right": "Скажіть, будь ласка."
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.887Z",
+      "modifiedAt": "2025-12-08T21:22:09.887Z"
+    },
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "The Missing Case",
+      "description": "Fill in the ending.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Я бачу мам___ (Mama - Acc).",
+            "answer": "маму",
+            "hints": [
+              "Mama - Acc"
+            ]
+          },
+          {
+            "prompt": "Я в кімнат___ (Kimnata - Loc).",
+            "answer": "кімнаті",
+            "hints": [
+              "Kimnata - Loc"
+            ]
+          },
+          {
+            "prompt": "Немає вод___ (Voda - Gen).",
+            "answer": "води",
+            "hints": [
+              "Voda - Gen"
+            ]
+          },
+          {
+            "prompt": "Я люблю кав___ (Kava - Acc).",
+            "answer": "каву",
+            "hints": [
+              "Kava - Acc"
+            ]
+          },
+          {
+            "prompt": "Книга на стол___ (Stil - Loc).",
+            "answer": "столі",
+            "hints": [
+              "Stil - Loc"
+            ]
+          },
+          {
+            "prompt": "Я чекаю друг___ (Drug - Acc Animate).",
+            "answer": "друга",
+            "hints": [
+              "Drug - Acc Animate"
+            ]
+          },
+          {
+            "prompt": "Без цукр___ (Tsukor - Gen).",
+            "answer": "цукру",
+            "hints": [
+              "Tsukor - Gen"
+            ]
+          },
+          {
+            "prompt": "Чай з мед___ (Med - Instr).",
+            "answer": "медом",
+            "hints": [
+              "Med - Instr"
+            ]
+          },
+          {
+            "prompt": "Я у міст___ (Misto - Loc).",
+            "answer": "місті",
+            "hints": [
+              "Misto - Loc"
+            ]
+          },
+          {
+            "prompt": "Я знаю брат___ (Brat - Acc Animate).",
+            "answer": "брата",
+            "hints": [
+              "Brat - Acc Animate"
+            ]
+          },
+          {
+            "prompt": "Немає проблем___ (Problema - Gen).",
+            "answer": "проблеми",
+            "hints": [
+              "Problema - Gen"
+            ]
+          },
+          {
+            "prompt": "Я хочу піц___ (Pitsa - Acc).",
+            "answer": "піцу",
+            "hints": [
+              "Pitsa - Acc"
+            ]
           }
         ]
       },
@@ -670,55 +402,357 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.098Z",
-      "modifiedAt": "2025-12-06T10:49:20.098Z"
+      "createdAt": "2025-12-08T21:22:09.887Z",
+      "modifiedAt": "2025-12-08T21:22:09.887Z"
+    },
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "Preposition Master",
+      "description": "Choose the correct preposition (В, На, Без, З, Для).",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Я живу ___ (in) Києві.",
+            "answer": "в",
+            "hints": [
+              "in"
+            ]
+          },
+          {
+            "prompt": "Книга ___ (on) столі.",
+            "answer": "на",
+            "hints": [
+              "on"
+            ]
+          },
+          {
+            "prompt": "Чай ___ (without) цукру.",
+            "answer": "без",
+            "hints": [
+              "without"
+            ]
+          },
+          {
+            "prompt": "Я ___ (from) України.",
+            "answer": "з",
+            "hints": [
+              "from"
+            ]
+          },
+          {
+            "prompt": "Це ___ (for) тебе.",
+            "answer": "для",
+            "hints": [
+              "for"
+            ]
+          },
+          {
+            "prompt": "Піца ___ (with) сиром.",
+            "answer": "з",
+            "hints": [
+              "with"
+            ]
+          },
+          {
+            "prompt": "Я ___ (in) парку.",
+            "answer": "у",
+            "hints": [
+              "in"
+            ]
+          },
+          {
+            "prompt": "Студент ___ (at) університеті.",
+            "answer": "в",
+            "hints": [
+              "at"
+            ]
+          },
+          {
+            "prompt": "Ми ___ (on) концерті.",
+            "answer": "на",
+            "hints": [
+              "on"
+            ]
+          },
+          {
+            "prompt": "Суп ___ (without) м'яса.",
+            "answer": "без",
+            "hints": [
+              "without"
+            ]
+          },
+          {
+            "prompt": "Салат ___ (with) олією.",
+            "answer": "з",
+            "hints": [
+              "with"
+            ]
+          },
+          {
+            "prompt": "Квиток ___ (for) мене.",
+            "answer": "для",
+            "hints": [
+              "for"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.887Z",
+      "modifiedAt": "2025-12-08T21:22:09.887Z"
+    },
+    {
+      "id": "act-a1-0-matchup",
+      "type": "match-up",
+      "title": "Mozhna Scenario",
+      "description": "Can you? Or Can't you?",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "You want tea.",
+            "right": "Можна чай?"
+          },
+          {
+            "left": "You want to give money.",
+            "right": "Можна оплатити?"
+          },
+          {
+            "left": "You want to use the toilet.",
+            "right": "Можна в туалет?"
+          },
+          {
+            "left": "It is forbidden to smoke.",
+            "right": "Тут не можна курити."
+          },
+          {
+            "left": "It is forbidden to park.",
+            "right": "Тут не можна паркуватися."
+          },
+          {
+            "left": "You want to enter.",
+            "right": "Можна увійти?"
+          },
+          {
+            "left": "You want to take a photo.",
+            "right": "Можна фото?"
+          },
+          {
+            "left": "You want the bill.",
+            "right": "Можна рахунок?"
+          },
+          {
+            "left": "You want a discount (znizhka).",
+            "right": "Можна знижку?"
+          },
+          {
+            "left": "You want water.",
+            "right": "Можна води?"
+          },
+          {
+            "left": "Is it allowed here?",
+            "right": "Тут можна?"
+          },
+          {
+            "left": "Entrance forbidden.",
+            "right": "Не можна."
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.887Z",
+      "modifiedAt": "2025-12-08T21:22:09.887Z"
+    },
+    {
+      "id": "act-a1-0-unjumble",
+      "type": "unjumble",
+      "title": "Sentence Reconstruction",
+      "description": "Rebuild the sentences.",
+      "content": {
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
+          {
+            "words": [
+              "не",
+              "Я",
+              "м'ясо",
+              "їм",
+              "."
+            ],
+            "answer": "Я не їм м'ясо."
+          },
+          {
+            "words": [
+              "парку",
+              "Ми",
+              "в",
+              "гуляємо",
+              "."
+            ],
+            "answer": "Ми гуляємо в парку."
+          },
+          {
+            "words": [
+              "немає",
+              "У",
+              "часу",
+              "мене",
+              "."
+            ],
+            "answer": "У мене немає часу."
+          },
+          {
+            "words": [
+              "меню",
+              "Можна",
+              ",",
+              "ласка",
+              "будь",
+              "?"
+            ],
+            "answer": "Можна меню, будь ласка?"
+          },
+          {
+            "words": [
+              "живе",
+              "Де",
+              "друг",
+              "твій",
+              "?"
+            ],
+            "answer": "Де живе твій друг?"
+          },
+          {
+            "words": [
+              "дуже",
+              "Це",
+              "далеко",
+              "."
+            ],
+            "answer": "Це дуже далеко."
+          },
+          {
+            "words": [
+              "на",
+              "каву",
+              "Ми",
+              "чекаємо",
+              "."
+            ],
+            "answer": "Ми чекаємо на каву."
+          },
+          {
+            "words": [
+              "бачу",
+              "автобус",
+              "Я",
+              "не",
+              "."
+            ],
+            "answer": "Я не бачу автобус."
+          },
+          {
+            "words": [
+              "коштує",
+              "Скільки",
+              "квиток",
+              "?"
+            ],
+            "answer": "Скільки коштує квиток?"
+          },
+          {
+            "words": [
+              "з",
+              "Борщ",
+              "смачний",
+              "салом",
+              "."
+            ],
+            "answer": "Борщ смачний з салом."
+          },
+          {
+            "words": [
+              "тут",
+              "Туалет",
+              "є",
+              "?"
+            ],
+            "answer": "Туалет тут є?"
+          },
+          {
+            "words": [
+              "центрі",
+              "Я",
+              "в",
+              "живу",
+              "."
+            ],
+            "answer": "Я живу в центрі."
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.887Z",
+      "modifiedAt": "2025-12-08T21:22:09.887Z"
     },
     {
       "id": "act-a1-0-groupsort",
       "type": "group-sort",
-      "title": "Cases",
-      "description": "Sort these forms into the correct case category.",
+      "title": "Case Sorting",
+      "description": "Which case is used in the phrase?",
       "content": {
         "type": "group-sort",
         "groups": [
           {
-            "id": "nominative",
-            "name": "Nominative",
-            "items": [
-              "книга",
-              "стіл",
-              "мій телефон",
-              "це вода"
-            ]
-          },
-          {
             "id": "accusative",
             "name": "Accusative",
             "items": [
-              "книгу",
-              "друга",
-              "воду",
-              "мою книгу"
+              "Я бачу **сонце**",
+              "Я люблю **музику**",
+              "Я чекаю **автобус**",
+              "Я знаю **Івана**"
             ]
           },
           {
             "id": "locative",
             "name": "Locative",
             "items": [
-              "на столі",
-              "у книзі",
-              "в місті",
-              "на вулиці"
+              "Ми в **Україні**",
+              "Книга на **столі**",
+              "Живу у **Львові**",
+              "В **центрі**"
             ]
           },
           {
             "id": "genitive",
             "name": "Genitive",
             "items": [
-              "води",
-              "часу",
-              "без цукру",
-              "п'ять гривень"
+              "Немає **грошей**",
+              "Без **газу**",
+              "Я з **Америки**",
+              "Пляшка **води**"
             ]
           }
         ],
@@ -731,24 +765,485 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.098Z",
-      "modifiedAt": "2025-12-06T10:49:20.098Z"
+      "createdAt": "2025-12-08T21:22:09.887Z",
+      "modifiedAt": "2025-12-08T21:22:09.887Z"
+    },
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "City Logic",
+      "description": "Logical completions.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Автобус на ___ (stop).",
+            "answer": "зупинці",
+            "hints": [
+              "stop"
+            ]
+          },
+          {
+            "prompt": "Гроші в ___ (bank).",
+            "answer": "банку",
+            "hints": [
+              "bank"
+            ]
+          },
+          {
+            "prompt": "Студент в ___ (university).",
+            "answer": "університеті",
+            "hints": [
+              "university"
+            ]
+          },
+          {
+            "prompt": "Лікар у ___ (hospital).",
+            "answer": "лікарні",
+            "hints": [
+              "hospital"
+            ]
+          },
+          {
+            "prompt": "Актор у ___ (theater).",
+            "answer": "театрі",
+            "hints": [
+              "theater"
+            ]
+          },
+          {
+            "prompt": "Фільм у ___ (cinema).",
+            "answer": "кінотеатрі",
+            "hints": [
+              "cinema"
+            ]
+          },
+          {
+            "prompt": "Картина в ___ (museum).",
+            "answer": "музеї",
+            "hints": [
+              "museum"
+            ]
+          },
+          {
+            "prompt": "Кава в ___ (cafe).",
+            "answer": "кафе",
+            "hints": [
+              "cafe"
+            ]
+          },
+          {
+            "prompt": "Ми в ___ (kyiv).",
+            "answer": "Києві",
+            "hints": [
+              "kyiv"
+            ]
+          },
+          {
+            "prompt": "Ти в ___ (london).",
+            "answer": "Лондоні",
+            "hints": [
+              "london"
+            ]
+          },
+          {
+            "prompt": "Вона в ___ (taxi).",
+            "answer": "таксі",
+            "hints": [
+              "taxi"
+            ]
+          },
+          {
+            "prompt": "Я в ___ (metro).",
+            "answer": "метро",
+            "hints": [
+              "metro"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.887Z",
+      "modifiedAt": "2025-12-08T21:22:09.887Z"
+    },
+    {
+      "id": "act-a1-0-anagram",
+      "type": "anagram",
+      "title": "Vocabulary Review",
+      "description": "Unscramble key words from Modules 11-19.",
+      "content": {
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
+          {
+            "letters": [
+              "в",
+              "у",
+              "л",
+              "и",
+              "ц",
+              "я"
+            ],
+            "answer": "вулиця",
+            "translation": "Street"
+          },
+          {
+            "letters": [
+              "м",
+              "а",
+              "г",
+              "а",
+              "з",
+              "и",
+              "н"
+            ],
+            "answer": "магазин",
+            "translation": "Shop"
+          },
+          {
+            "letters": [
+              "р",
+              "а",
+              "х",
+              "у",
+              "н",
+              "о",
+              "к"
+            ],
+            "answer": "рахунок",
+            "translation": "Bill"
+          },
+          {
+            "letters": [
+              "о",
+              "ф",
+              "і",
+              "ц",
+              "і",
+              "а",
+              "н",
+              "т"
+            ],
+            "answer": "офіціант",
+            "translation": "Waiter"
+          },
+          {
+            "letters": [
+              "л",
+              "і",
+              "к",
+              "а",
+              "р"
+            ],
+            "answer": "лікар",
+            "translation": "Doctor"
+          },
+          {
+            "letters": [
+              "к",
+              "в",
+              "и",
+              "т",
+              "о",
+              "к"
+            ],
+            "answer": "квиток",
+            "translation": "Ticket"
+          },
+          {
+            "letters": [
+              "г",
+              "о",
+              "т",
+              "і",
+              "в",
+              "к",
+              "а"
+            ],
+            "answer": "готівка",
+            "translation": "Cash"
+          },
+          {
+            "letters": [
+              "п",
+              "л",
+              "о",
+              "щ",
+              "а"
+            ],
+            "answer": "площа",
+            "translation": "Square"
+          },
+          {
+            "letters": [
+              "з",
+              "у",
+              "п",
+              "и",
+              "н",
+              "к",
+              "а"
+            ],
+            "answer": "зупинка",
+            "translation": "Stop"
+          },
+          {
+            "letters": [
+              "н",
+              "е",
+              "м",
+              "а",
+              "є"
+            ],
+            "answer": "немає",
+            "translation": "There is no"
+          },
+          {
+            "letters": [
+              "д",
+              "р",
+              "у",
+              "г"
+            ],
+            "answer": "друг",
+            "translation": "Friend"
+          },
+          {
+            "letters": [
+              "м",
+              "і",
+              "с",
+              "т",
+              "о"
+            ],
+            "answer": "місто",
+            "translation": "City"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.887Z",
+      "modifiedAt": "2025-12-08T21:22:09.887Z"
     }
   ],
   "vocabulary": {
     "moduleId": "mod-uk-A1-20",
     "level": "A1",
     "phase": "A1.2",
-    "wordCount": 1,
-    "newWordCount": 1,
+    "wordCount": 20,
+    "newWordCount": 20,
     "reviewWordCount": 0,
-    "transliterationMode": "partial",
+    "transliterationMode": "full",
     "words": [
       {
-        "id": "v-review-vocabulary-from-modules-11-19-0-0",
-        "uk": "Review vocabulary from modules 11-19",
-        "en": "",
-        "pos": "noun",
+        "id": "v-bachyty-0-0",
+        "uk": "бачити",
+        "en": "to see",
+        "pos": "A1.2 Key",
+        "ipa": "/ˈbɑtʃɪtɪ/",
+        "note": "[🔊](audio_bachyty)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-khotity-0-1",
+        "uk": "хотіти",
+        "en": "to want",
+        "pos": "A1.2 Key",
+        "ipa": "/xɔˈtitɪ/",
+        "note": "[🔊](audio_khotity)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-lyubyty-0-2",
+        "uk": "любити",
+        "en": "to love/like",
+        "pos": "A1.2 Key",
+        "ipa": "/lʲuˈbɪtɪ/",
+        "note": "[🔊](audio_lyubyty)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-nemaye-0-3",
+        "uk": "немає",
+        "en": "there is no",
+        "pos": "A1.2 Key",
+        "ipa": "/nɛˈmɑjɛ/",
+        "note": "[🔊](audio_nemaye)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-u-/-v-0-4",
+        "uk": "у / в",
+        "en": "in / at",
+        "pos": "Prep",
+        "ipa": "/u/ /v/",
+        "note": "[🔊](audio_u_v)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-na-0-5",
+        "uk": "на",
+        "en": "on / at",
+        "pos": "Prep",
+        "ipa": "/nɑ/",
+        "note": "[🔊](audio_na)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pravoruch-0-6",
+        "uk": "праворуч",
+        "en": "to the right",
+        "pos": "Direction",
+        "ipa": "/prɑˈvɔrutʃ/",
+        "note": "[🔊](audio_pravoruch)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-livoruch-0-7",
+        "uk": "ліворуч",
+        "en": "to the left",
+        "pos": "Direction",
+        "ipa": "/lʲiˈvɔrutʃ/",
+        "note": "[🔊](audio_livoruch)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pryamo-0-8",
+        "uk": "прямо",
+        "en": "straight",
+        "pos": "Direction",
+        "ipa": "/ˈprjɑmɔ/",
+        "note": "[🔊](audio_pryamo)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vulytsya-0-9",
+        "uk": "вулиця",
+        "en": "street",
+        "pos": "City",
+        "ipa": "/ˈvulɪt͡sʲɑ/",
+        "note": "[🔊](audio_vulytsya)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-misto-0-10",
+        "uk": "місто",
+        "en": "city",
+        "pos": "City",
+        "ipa": "/ˈmistɔ/",
+        "note": "[🔊](audio_misto)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-druh-0-11",
+        "uk": "друг",
+        "en": "friend",
+        "pos": "People",
+        "ipa": "/druɦ/",
+        "note": "[🔊](audio_druh)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-skilьky-0-12",
+        "uk": "скільки",
+        "en": "how much",
+        "pos": "Question",
+        "ipa": "/ˈskilʲkɪ/",
+        "note": "[🔊](audio_skilky)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-koshtuye-0-13",
+        "uk": "коштує",
+        "en": "cost (verb)",
+        "pos": "Shop",
+        "ipa": "/kɔʃˈtujɛ/",
+        "note": "[🔊](audio_koshtuye)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-rakhunok-0-14",
+        "uk": "рахунок",
+        "en": "bill/account",
+        "pos": "Shop",
+        "ipa": "/rɑˈxunɔk/",
+        "note": "[🔊](audio_rakhunok)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-smachno-0-15",
+        "uk": "смачно",
+        "en": "tasty",
+        "pos": "Food",
+        "ipa": "/ˈsmɑtʃnɔ/",
+        "note": "[🔊](audio_smachno)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-voda-0-16",
+        "uk": "вода",
+        "en": "water",
+        "pos": "drink",
+        "ipa": "/vɔˈdɑ/",
+        "note": "[🔊](audio_voda)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-kava-0-17",
+        "uk": "кава",
+        "en": "coffee",
+        "pos": "drink",
+        "ipa": "/ˈkɑvɑ/",
+        "note": "[🔊](audio_kava)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-daleko-0-18",
+        "uk": "далеко",
+        "en": "far",
+        "pos": "Location",
+        "ipa": "/dɑˈlɛkɔ/",
+        "note": "[🔊](audio_daleko)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-blyzьko-0-19",
+        "uk": "близько",
+        "en": "near",
+        "pos": "Location",
+        "ipa": "/ˈblɪzʲkɔ/",
+        "note": "[🔊](audio_blyzko)",
         "isNew": true,
         "firstModule": 0
       }

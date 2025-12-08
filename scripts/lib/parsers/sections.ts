@@ -19,12 +19,12 @@ import { Section, VibePhase, VibePhaseItem } from '../types';
 // Section Types
 // =============================================================================
 
-type SectionType = 
-  | 'intro' 
-  | 'content' 
-  | 'practice' 
-  | 'summary' 
-  | 'vocabulary' 
+type SectionType =
+  | 'intro'
+  | 'content'
+  | 'practice'
+  | 'summary'
+  | 'vocabulary'
   | 'activities'
   | 'diagnostic'
   | 'analysis'
@@ -52,7 +52,57 @@ const sectionMappings: SectionMapping[] = [
   { pattern: /^# (?:Activities|Вправи)/i, type: 'activities', titleEn: 'Activities', titleUk: 'Вправи' },
 ];
 
-// ... (keep parseSections as is) ...
+/**
+ * Parse standard sections from module body
+ */
+export function parseSections(body: string): Section[] {
+  const sections: Section[] = [];
+
+  // Find all known section headers and their positions
+  const foundHeaders: { index: number; mapping: SectionMapping; matchLength: number }[] = [];
+
+  for (const mapping of sectionMappings) {
+    // We need to match globally and multiline to find all occurrences
+    // mapping.pattern is likely /^.../i, so we need to ensure 'gm' flags
+    const flags = (mapping.pattern.flags || '') + 'gm';
+    // Remove duplicate flags if any
+    const uniqueFlags = Array.from(new Set(flags.split(''))).join('');
+
+    const regex = new RegExp(mapping.pattern.source, uniqueFlags);
+    let match;
+    while ((match = regex.exec(body)) !== null) {
+      foundHeaders.push({
+        index: match.index,
+        mapping: mapping,
+        matchLength: match[0].length
+      });
+    }
+  }
+
+  // Sort by position to process in order
+  foundHeaders.sort((a, b) => a.index - b.index);
+
+  // Extract content between headers
+  for (let i = 0; i < foundHeaders.length; i++) {
+    const current = foundHeaders[i];
+    const next = foundHeaders[i + 1];
+
+    const startPos = current.index + current.matchLength;
+    const endPos = next ? next.index : body.length;
+
+    const content = body.slice(startPos, endPos).trim();
+
+    sections.push({
+      id: `section-${current.mapping.type}-${i}`,
+      type: current.mapping.type,
+      title: current.mapping.titleEn,
+      titleUk: current.mapping.titleUk,
+      content: content
+    });
+  }
+
+  return sections;
+}
 
 // =============================================================================
 // PPP/TTT Phase Parser
@@ -170,4 +220,5 @@ function parsePhaseItems(content: string): VibePhaseItem[] {
 // Exports
 // =============================================================================
 
+// export { parseSections }; // Removed duplicate
 export { parseSections as parse };

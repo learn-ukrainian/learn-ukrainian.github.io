@@ -43,6 +43,38 @@ const calloutExtension: showdown.ShowdownExtension = {
 };
 
 /**
+ * Extension to convert [🔊](audio_id) to Forvo buttons
+ * Tries to find preceding **Word** to use as search term.
+ * If not found, uses the ID suffix (e.g. "boryspil") which Forvo search might handle.
+ */
+const audioLinkExtension: showdown.ShowdownExtension = {
+  type: 'lang',
+  filter: (text: string) => {
+    // 1. Match: **Word** [🔊](audio_id)
+    text = text.replace(
+      /\*\*([^*]+)\*\*\s*\[🔊\]\(audio_[^)]+\)/g,
+      (match, word) => {
+        // Keep the bold word, add the button
+        return `<strong>${word}</strong> <button class="audio-btn" onclick="openForvo('${word}')" title="Listen on Forvo">🔊</button>`;
+      }
+    );
+
+    // 2. Match remaining orphan [🔊](audio_id) (fallback)
+    text = text.replace(
+      /\[🔊\]\(audio_([a-zA-Z0-9_]+)\)/g,
+      (match, idSuffix) => {
+        const fallback = idSuffix.replace(/_/g, ' ');
+        return `<button class="audio-btn" onclick="openForvo('${fallback}')" title="Listen on Forvo (Search)">🔊</button>`;
+      }
+    );
+
+    return text;
+  }
+};
+
+
+
+/**
  * Extension to handle answer blocks with toggle functionality
  * Groups consecutive callouts into hideable sections
  */
@@ -149,6 +181,7 @@ export function createMarkdownConverter(options: MarkdownConverterOptions = {}):
 
   const extensions: showdown.ShowdownExtension[] = [
     calloutExtension,
+    audioLinkExtension,
   ];
 
   if (opts.convertLegacyAnswers) {

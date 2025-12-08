@@ -1,0 +1,970 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A1-04",
+    "moduleId": "mod-uk-A1-04",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A1",
+    "phase": "A1.1",
+    "moduleNumber": 4,
+    "moduleType": "grammar",
+    "immersionLevel": 0.3,
+    "title": "This Is / I Am",
+    "subtitle": "Zero Copula, Це, and Personal Pronouns",
+    "description": "Understand the zero copula (no \"to be\" in present tense)",
+    "objectives": [
+      "Understand the zero copula (no \"to be\" in present tense)",
+      "Use \"Це\" (This is) for identification",
+      "Learn personal pronouns (я, ти, він, вона, ми, ви, вони)",
+      "Form basic identity sentences"
+    ],
+    "grammarFocus": [
+      "Zero copula",
+      "Demonstrative Це",
+      "Personal pronouns (nominative)"
+    ],
+    "tags": [
+      "grammar",
+      "pronouns",
+      "copula",
+      "identity"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "full",
+    "sections": [
+      {
+        "id": "section-intro",
+        "name": "Вступ",
+        "nameEn": "Introduction",
+        "type": "intro",
+        "content": "## warm-up\n\n### The Invisible Verb\n\nHere's one of the coolest things about Ukrainian: in the present tense, you don't need \"to be\"!\n\n| English | Ukrainian |\n|---------|-----------|\n| I **am** a student | Я студент (Ya student) |\n| She **is** Ukrainian | Вона українка (Vona ukrainka) |\n| This **is** a book | Це книга (Tse knyha) |\n\nSee? No \"am,\" \"is,\" or \"are\"! The verb just disappears. This is called the **zero copula**.\n\n> 💡 **Did You Know?**\n>\n> Many languages have the zero copula, including Russian, Arabic, and Hungarian. English used to have it too in some dialects! \"You ready?\" instead of \"Are you ready?\" is a trace of this.\n\n### Why No \"To Be\"?\n\nUkrainian doesn't need \"to be\" in the present tense because:\n- The pronoun tells you WHO\n- The noun/adjective tells you WHAT\n- Context does the rest!\n\n## presentation\n\n### Це - The Magic Word for \"This Is\"\n\n**Це** (tse) means \"this is\" or \"it is.\" Use it to identify or point out things:\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| Це книга. | Tse knyha. | This is a book. |\n| Це стіл. | Tse stil. | This is a table. |\n| Це мама. | Tse mama. | This is (my) mom. |\n| Це Україна. | Tse Ukraina. | This is Ukraine. |\n\n> ⚡ **Pro Tip**\n>\n> \"Це\" doesn't change! Unlike \"цей/ця/це\" (this specific one), the identifying \"Це\" stays the same regardless of gender. \"Це книга\" (feminine), \"Це стіл\" (masculine), \"Це вікно\" (neuter) - always just \"Це\"!\n\n### То - The Partner of Це\n\n**То** (to) means \"that is\" for things farther away:\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| То дім. | To dim. | That is a house. |\n| То мій друг. | To miy druh. | That is my friend. |\n\n### Personal Pronouns: Who's Who\n\nUkrainian has seven personal pronouns:\n\n| Ukrainian | Transliteration | English | Usage |\n|-----------|-----------------|---------|-------|\n| **я** | ya | I | yourself |\n| **ти** | ty | you (informal) | friends, family, children |\n| **він** | vin | he | males |\n| **вона** | vona | she | females |\n| **воно** | vono | it | things (rare) |\n| **ми** | my | we | group including you |\n| **ви** | vy | you (formal/plural) | strangers, respect, groups |\n| **вони** | vony | they | any group |\n\n> 🎭 **Culture Corner**\n>\n> The ти/ви distinction is important! Use \"ви\" with strangers, older people, bosses, and in formal situations. Use \"ти\" with friends, family, and children. Using \"ти\" with a stranger can be rude, but using \"ви\" with close friends can feel distant!\n\n### Making Identity Sentences\n\nJust put the pronoun and the identity together - no verb needed!\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| Я студент. | Ya student. | I am a student. (male) |\n| Я студентка. | Ya studentka. | I am a student. (female) |\n| Ти українець. | Ty ukrainets'. | You are Ukrainian. (male) |\n| Ти українка. | Ty ukrainka. | You are Ukrainian. (female) |\n| Він лікар. | Vin likar. | He is a doctor. |\n| Вона вчителька. | Vona vchytel'ka. | She is a teacher. |\n| Ми студенти. | My studenty. | We are students. |\n| Вони туристи. | Vony turysty. | They are tourists. |\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"You can't express 'to be' in Ukrainian\"\n> **Fact:** Ukrainian has the verb \"бути\" (to be), but it's only used in past and future tenses. \"Я був студентом\" (I was a student), \"Вона буде вчителькою\" (She will be a teacher). Present tense just doesn't need it!\n\n### Ось - \"Here is\"\n\n**Ось** (os') means \"here is\" or \"here are\":\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| Ось мій паспорт. | Os' miy pasport. | Here is my passport. |\n| Ось вона! | Os' vona! | Here she is! |\n\n### Nationalities: Male vs Female Forms\n\nUkrainian nationalities have different forms for men and women:\n\n| Male | Female | English |\n|------|--------|---------|\n| українець (ukrainets') | українка (ukrainka) | Ukrainian |\n| англієць (anhliets') | англійка (anhliyka) | English person |\n| американець (amerykanets') | американка (amerykanka) | American |\n\n> 📜 **History Bite**\n>\n> The word \"українець\" comes from \"Україна\" (Ukraine). Historically, it meant \"person from the borderland,\" but modern Ukrainians reject this etymology, preferring the interpretation \"person from their own country\" (у + країна = in + country).\n\n### Introducing Yourself\n\nHere's how to introduce yourself:\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| Я Марія. | Ya Mariya. | I am Maria. |\n| Мене звати Марія. | Mene zvaty Mariya. | My name is Maria. |\n| Я українка. | Ya ukrainka. | I am Ukrainian. (female) |\n| Я студентка. | Ya studentka. | I am a student. (female) |\n| Я з Києва. | Ya z Kyiva. | I am from Kyiv. |\n\n> 🎬 **Pop Culture Moment: The Witcher**\n>\n> In the Ukrainian dub of The Witcher, Geralt would say \"Я відьмак\" (Ya vid'mak - I am a witcher). Notice - no \"am\"! Just \"I witcher.\" That's the zero copula in action!\n\n## practice\n\n### Exercise 1: Identify with Це\n\nComplete with the correct word:\n\n1. ___ книга. (This is a book.)\n   > [!answer] Це\n\n2. ___ студент. (He is a student.)\n   > [!answer] Він\n\n3. ___ українка. (She is Ukrainian.)\n   > [!answer] Вона\n\n4. ___ туристи. (They are tourists.)\n   > [!answer] Вони\n\n5. ___ мій дім. (This is my house.)\n   > [!answer] Це\n\n6. ___ вчителька. (I am a teacher - female)\n   > [!answer] Я\n\n### Exercise 2: Translate\n\nTranslate to Ukrainian (no verb needed!):\n\n1. I am a student. (male)\n   > [!answer] Я студент.\n\n2. She is a doctor.\n   > [!answer] Вона лікар. (or лікарка)\n\n3. This is a window.\n   > [!answer] Це вікно.\n\n4. We are Ukrainian.\n   > [!answer] Ми українці.\n\n5. You are a tourist. (formal, male)\n   > [!answer] Ви турист.\n\n6. They are students.\n   > [!answer] Вони студенти.\n\n## production\n\n### Introduce Yourself\n\nPractice these sentences about yourself:\n\n1. **Я ___** (Your name)\n2. **Я з ___** (Your country/city)\n3. **Я ___** (Your profession/status)\n\nExample:\n- Я Джон. (Ya Dzhon.)\n- Я з Лондона. (Ya z Londona.)\n- Я студент. (Ya student.)\n\n> 🌍 **Real World**\n>\n> When you meet Ukrainians, they'll often ask \"Звідки ви?\" (Where are you from?) Your answer: \"Я з...\" + city/country. No verb needed!\n\n---\n\n\n---\n\n\n---"
+      },
+      {
+        "id": "section-summary",
+        "name": "Підсумок",
+        "nameEn": "Summary",
+        "type": "summary",
+        "content": "> **What You Learned Today**\n>\n> - **Zero copula:** Ukrainian doesn't need \"to be\" in present tense\n> - **Це** (this is) for identification: Це книга. Це студент.\n> - **Personal pronouns:** я, ти, він, вона, воно, ми, ви, вони\n> - **Formal vs informal:** Use \"ви\" with strangers and for respect\n> - **Nationalities have gender:** українець (m) / українка (f)\n> - **Ось** = \"here is,\" **То** = \"that is\"\n> - Basic introductions: Я Марія. Я з Києва. Я студентка.\n\n> **Coming Next**\n>\n> In Module 05, you'll expand \"My World: Objects\":\n> - Demonstratives that change: цей (m), ця (f), це (n), ці (pl)\n> - 40 everyday objects vocabulary\n> - Talking about things around you!"
+      }
+    ],
+    "rawMarkdown": "---\ntitle: \"This Is / I Am\"\nsubtitle: \"Zero Copula, Це, and Personal Pronouns\"\nphase: A1.1\nduration: 45\ntransliteration: full\ntags: [grammar, pronouns, copula, identity]\nobjectives:\n  - Understand the zero copula (no \"to be\" in present tense)\n  - Use \"Це\" (This is) for identification\n  - Learn personal pronouns (я, ти, він, вона, ми, ви, вони)\n  - Form basic identity sentences\ngrammar:\n  - Zero copula\n  - Demonstrative Це\n  - Personal pronouns (nominative)\n---\n\n# Lesson Content\n\n## warm-up\n\n### The Invisible Verb\n\nHere's one of the coolest things about Ukrainian: in the present tense, you don't need \"to be\"!\n\n| English | Ukrainian |\n|---------|-----------|\n| I **am** a student | Я студент (Ya student) |\n| She **is** Ukrainian | Вона українка (Vona ukrainka) |\n| This **is** a book | Це книга (Tse knyha) |\n\nSee? No \"am,\" \"is,\" or \"are\"! The verb just disappears. This is called the **zero copula**.\n\n> 💡 **Did You Know?**\n>\n> Many languages have the zero copula, including Russian, Arabic, and Hungarian. English used to have it too in some dialects! \"You ready?\" instead of \"Are you ready?\" is a trace of this.\n\n### Why No \"To Be\"?\n\nUkrainian doesn't need \"to be\" in the present tense because:\n- The pronoun tells you WHO\n- The noun/adjective tells you WHAT\n- Context does the rest!\n\n## presentation\n\n### Це - The Magic Word for \"This Is\"\n\n**Це** (tse) means \"this is\" or \"it is.\" Use it to identify or point out things:\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| Це книга. | Tse knyha. | This is a book. |\n| Це стіл. | Tse stil. | This is a table. |\n| Це мама. | Tse mama. | This is (my) mom. |\n| Це Україна. | Tse Ukraina. | This is Ukraine. |\n\n> ⚡ **Pro Tip**\n>\n> \"Це\" doesn't change! Unlike \"цей/ця/це\" (this specific one), the identifying \"Це\" stays the same regardless of gender. \"Це книга\" (feminine), \"Це стіл\" (masculine), \"Це вікно\" (neuter) - always just \"Це\"!\n\n### То - The Partner of Це\n\n**То** (to) means \"that is\" for things farther away:\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| То дім. | To dim. | That is a house. |\n| То мій друг. | To miy druh. | That is my friend. |\n\n### Personal Pronouns: Who's Who\n\nUkrainian has seven personal pronouns:\n\n| Ukrainian | Transliteration | English | Usage |\n|-----------|-----------------|---------|-------|\n| **я** | ya | I | yourself |\n| **ти** | ty | you (informal) | friends, family, children |\n| **він** | vin | he | males |\n| **вона** | vona | she | females |\n| **воно** | vono | it | things (rare) |\n| **ми** | my | we | group including you |\n| **ви** | vy | you (formal/plural) | strangers, respect, groups |\n| **вони** | vony | they | any group |\n\n> 🎭 **Culture Corner**\n>\n> The ти/ви distinction is important! Use \"ви\" with strangers, older people, bosses, and in formal situations. Use \"ти\" with friends, family, and children. Using \"ти\" with a stranger can be rude, but using \"ви\" with close friends can feel distant!\n\n### Making Identity Sentences\n\nJust put the pronoun and the identity together - no verb needed!\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| Я студент. | Ya student. | I am a student. (male) |\n| Я студентка. | Ya studentka. | I am a student. (female) |\n| Ти українець. | Ty ukrainets'. | You are Ukrainian. (male) |\n| Ти українка. | Ty ukrainka. | You are Ukrainian. (female) |\n| Він лікар. | Vin likar. | He is a doctor. |\n| Вона вчителька. | Vona vchytel'ka. | She is a teacher. |\n| Ми студенти. | My studenty. | We are students. |\n| Вони туристи. | Vony turysty. | They are tourists. |\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"You can't express 'to be' in Ukrainian\"\n> **Fact:** Ukrainian has the verb \"бути\" (to be), but it's only used in past and future tenses. \"Я був студентом\" (I was a student), \"Вона буде вчителькою\" (She will be a teacher). Present tense just doesn't need it!\n\n### Ось - \"Here is\"\n\n**Ось** (os') means \"here is\" or \"here are\":\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| Ось мій паспорт. | Os' miy pasport. | Here is my passport. |\n| Ось вона! | Os' vona! | Here she is! |\n\n### Nationalities: Male vs Female Forms\n\nUkrainian nationalities have different forms for men and women:\n\n| Male | Female | English |\n|------|--------|---------|\n| українець (ukrainets') | українка (ukrainka) | Ukrainian |\n| англієць (anhliets') | англійка (anhliyka) | English person |\n| американець (amerykanets') | американка (amerykanka) | American |\n\n> 📜 **History Bite**\n>\n> The word \"українець\" comes from \"Україна\" (Ukraine). Historically, it meant \"person from the borderland,\" but modern Ukrainians reject this etymology, preferring the interpretation \"person from their own country\" (у + країна = in + country).\n\n### Introducing Yourself\n\nHere's how to introduce yourself:\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| Я Марія. | Ya Mariya. | I am Maria. |\n| Мене звати Марія. | Mene zvaty Mariya. | My name is Maria. |\n| Я українка. | Ya ukrainka. | I am Ukrainian. (female) |\n| Я студентка. | Ya studentka. | I am a student. (female) |\n| Я з Києва. | Ya z Kyiva. | I am from Kyiv. |\n\n> 🎬 **Pop Culture Moment: The Witcher**\n>\n> In the Ukrainian dub of The Witcher, Geralt would say \"Я відьмак\" (Ya vid'mak - I am a witcher). Notice - no \"am\"! Just \"I witcher.\" That's the zero copula in action!\n\n## practice\n\n### Exercise 1: Identify with Це\n\nComplete with the correct word:\n\n1. ___ книга. (This is a book.)\n   > [!answer] Це\n\n2. ___ студент. (He is a student.)\n   > [!answer] Він\n\n3. ___ українка. (She is Ukrainian.)\n   > [!answer] Вона\n\n4. ___ туристи. (They are tourists.)\n   > [!answer] Вони\n\n5. ___ мій дім. (This is my house.)\n   > [!answer] Це\n\n6. ___ вчителька. (I am a teacher - female)\n   > [!answer] Я\n\n### Exercise 2: Translate\n\nTranslate to Ukrainian (no verb needed!):\n\n1. I am a student. (male)\n   > [!answer] Я студент.\n\n2. She is a doctor.\n   > [!answer] Вона лікар. (or лікарка)\n\n3. This is a window.\n   > [!answer] Це вікно.\n\n4. We are Ukrainian.\n   > [!answer] Ми українці.\n\n5. You are a tourist. (formal, male)\n   > [!answer] Ви турист.\n\n6. They are students.\n   > [!answer] Вони студенти.\n\n## production\n\n### Introduce Yourself\n\nPractice these sentences about yourself:\n\n1. **Я ___** (Your name)\n2. **Я з ___** (Your country/city)\n3. **Я ___** (Your profession/status)\n\nExample:\n- Я Джон. (Ya Dzhon.)\n- Я з Лондона. (Ya z Londona.)\n- Я студент. (Ya student.)\n\n> 🌍 **Real World**\n>\n> When you meet Ukrainians, they'll often ask \"Звідки ви?\" (Where are you from?) Your answer: \"Я з...\" + city/country. No verb needed!\n\n---\n\n# Activities\n\n## quiz: Zero Copula Mastery\n\n> Test your understanding of Ukrainian sentences without \"to be\"!\n\n1. How do you say \"I am a student\" (male) in Ukrainian?\n   - [ ] Я є студент.\n   - [x] Я студент.\n   - [ ] Я бути студент.\n   - [ ] Я студента.\n   > In present tense, Ukrainian doesn't use \"to be\"!\n\n2. What does \"Це книга\" mean?\n   - [x] This is a book.\n   - [ ] The book is here.\n   - [ ] I have a book.\n   - [ ] Where is the book?\n   > \"Це\" means \"this is\" for identification.\n\n3. How do you say \"She is Ukrainian\" (female)?\n   - [ ] Вона є українка.\n   - [x] Вона українка.\n   - [ ] Вона українець.\n   - [ ] Воно українка.\n   > No verb needed, and use feminine form \"українка\"!\n\n4. What is \"Це\"?\n   - [ ] He\n   - [ ] She\n   - [x] This is / It is\n   - [ ] That\n   > \"Це\" is used for identification.\n\n5. Which pronoun means \"we\"?\n   - [ ] ви\n   - [ ] вони\n   - [x] ми\n   - [ ] я\n   > \"Ми\" means \"we.\"\n\n6. When do you use \"ви\" instead of \"ти\"?\n   - [ ] Only for groups\n   - [ ] Only for women\n   - [x] For formal situations or plural \"you\"\n   - [ ] Never - they're the same\n   > \"Ви\" is formal/polite or plural.\n\n7. What does \"Він лікар\" mean?\n   - [x] He is a doctor.\n   - [ ] He has a doctor.\n   - [ ] Is he a doctor?\n   - [ ] This is a doctor.\n   > Він (he) + лікар (doctor) = He is a doctor.\n\n8. How would a woman say \"I am Ukrainian\"?\n   - [ ] Я українець.\n   - [x] Я українка.\n   - [ ] Я український.\n   - [ ] Я Україна.\n   > Women use \"українка,\" men use \"українець.\"\n\n9. What does \"Ось мій паспорт\" mean?\n   - [x] Here is my passport.\n   - [ ] This is a passport.\n   - [ ] Where is my passport?\n   - [ ] I have a passport.\n   > \"Ось\" means \"here is.\"\n\n10. Which sentence is correct for \"They are students\"?\n    - [ ] Вони є студенти.\n    - [ ] Вони студент.\n    - [x] Вони студенти.\n    - [ ] Вони студентка.\n    > No verb + plural form \"студенти.\"\n\n11. What is \"То\"?\n    - [ ] This (near)\n    - [x] That (far)\n    - [ ] Here\n    - [ ] He\n    > \"То\" means \"that is\" for things farther away.\n\n12. What pronoun means \"it\" in Ukrainian?\n    - [ ] вона\n    - [ ] він\n    - [x] воно\n    - [ ] це\n    > \"Воно\" is \"it,\" but it's rarely used.\n\n## match-up: Pronouns and Demonstratives\n\n> Match each Ukrainian word to its English meaning.\n\n| Ukrainian | English |\n|-----------|---------|\n| я | I |\n| ти | you (informal) |\n| він | he |\n| вона | she |\n| воно | it |\n| ми | we |\n| ви | you (formal/plural) |\n| вони | they |\n| це | this is |\n| то | that is |\n| ось | here is |\n| людина | person |\n\n## match-up: Male and Female Forms\n\n> Match male and female forms of people words.\n\n| Male Form | Female Form |\n|-----------|-------------|\n| українець | українка |\n| англієць | англійка |\n| студент | студентка |\n| турист | туристка |\n| чоловік | жінка |\n| хлопець | дівчина |\n| він | вона |\n| лікар | лікарка |\n| вчитель | вчителька |\n| американець | американка |\n| друг | подруга |\n| я (чоловік) | я (жінка) |\n\n## group-sort: Gender Pairs\n\n> Sort these people words by gender.\n\n### Male Forms\n- українець\n- англієць\n- студент\n- турист\n- чоловік\n- хлопець\n\n### Female Forms\n- українка\n- англійка\n- студентка\n- туристка\n- жінка\n- дівчина\n\n## true-false: Zero Copula Rules\n\n> Decide if each statement is true (Правда) or false (Міф).\n\n- [x] Ukrainian doesn't use \"to be\" in present tense.\n  > Correct! This is called the zero copula.\n\n- [ ] \"Я є студент\" is correct Ukrainian.\n  > Incorrect! Just \"Я студент\" - no verb needed.\n\n- [x] \"Це\" means \"this is\" for identification.\n  > Correct! Use \"Це\" to point out or identify things.\n\n- [ ] \"Він\" and \"вона\" can be used interchangeably.\n  > Incorrect! \"Він\" is he, \"вона\" is she.\n\n- [x] \"Ви\" is both formal \"you\" and plural \"you.\"\n  > Correct! Like French \"vous.\"\n\n- [x] Nationalities have different forms for men and women.\n  > Correct! Українець (m) / Українка (f).\n\n- [ ] \"Воно\" is commonly used for objects.\n  > Incorrect! \"Воно\" is rare; usually \"це\" is used instead.\n\n- [x] \"Ось\" means \"here is.\"\n  > Correct! \"Ось мій паспорт\" = Here is my passport.\n\n- [ ] You should use \"ти\" with your boss.\n  > Incorrect! Use \"ви\" in formal situations.\n\n- [x] \"Мене звати\" means \"my name is.\"\n  > Correct! Literally \"me call\" = \"I am called.\"\n\n- [x] \"То\" means \"that is\" for things farther away.\n  > Correct! \"Це\" = this, \"То\" = that.\n\n- [ ] In past tense, Ukrainian still has zero copula.\n  > Incorrect! Past tense uses \"був/була/було\" (was).\n\n## fill-in: Complete the Sentence\n\n> Fill in the blank with the correct word.\n\n1. ___ студент. (I am a student - male)\n   > [!answer] Я\n   > [!options] Я | Він | Вона | Ми\n\n2. ___ книга. (This is a book.)\n   > [!answer] Це\n   > [!options] Це | Я | То | Ось\n\n3. Вона ___. (She is Ukrainian.)\n   > [!answer] українка\n   > [!options] українка | українець | український | Україна\n\n4. ___ туристи. (We are tourists.)\n   > [!answer] Ми\n   > [!options] Ми | Вони | Ви | Я\n\n5. ___ лікар. (He is a doctor.)\n   > [!answer] Він\n   > [!options] Він | Вона | Воно | Я\n\n6. Я ___. (I am a teacher - female)\n   > [!answer] вчителька\n   > [!options] вчителька | вчитель | студент | лікар\n\n7. ___ мій дім. (This is my house.)\n   > [!answer] Це\n   > [!options] Це | Він | Я | То\n\n8. ___ студенти. (They are students.)\n   > [!answer] Вони\n   > [!options] Вони | Ми | Ви | Він\n\n9. ___ англієць. (You are English - formal, male)\n   > [!answer] Ви\n   > [!options] Ви | Ти | Він | Я\n\n10. Ти ___. (You are a tourist - informal, female)\n    > [!answer] туристка\n    > [!options] туристка | турист | туристи | туристки\n\n11. ___ мій паспорт. (Here is my passport.)\n    > [!answer] Ось\n    > [!options] Ось | Це | То | Він\n\n12. ___ вікно. (That is a window.)\n    > [!answer] То\n    > [!options] То | Це | Ось | Він\n\n## anagram: Pronoun Practice\n\n> Arrange the letters to form the correct word.\n\n1. я\n   > [!answer] я\n   > (I)\n\n2. и т\n   > [!answer] ти\n   > (you - informal)\n\n3. і н в\n   > [!answer] він\n   > (he)\n\n4. а о н в\n   > [!answer] вона\n   > (she)\n\n5. о о н в\n   > [!answer] воно\n   > (it)\n\n6. и м\n   > [!answer] ми\n   > (we)\n\n7. и в\n   > [!answer] ви\n   > (you - formal)\n\n8. и н о в\n   > [!answer] вони\n   > (they)\n\n9. е ц\n   > [!answer] це\n   > (this is)\n\n10. ь о с\n    > [!answer] ось\n    > (here is)\n\n11. о т\n    > [!answer] то\n    > (that is)\n\n12. а н и д л ю\n    > [!answer] людина\n    > (person)\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| я (ya) | /ja/ | I | pron | - | 1st person singular |\n| ти (ty) | /tɪ/ | you (informal) | pron | - | 2nd person singular |\n| він (vin) | /ʋin/ | he | pron | m | 3rd person masculine |\n| вона (vona) | /ʋɔˈna/ | she | pron | f | 3rd person feminine |\n| воно (vono) | /ʋɔˈnɔ/ | it | pron | n | 3rd person neuter (rare) |\n| ми (my) | /mɪ/ | we | pron | - | 1st person plural |\n| ви (vy) | /ʋɪ/ | you (formal/plural) | pron | - | 2nd person formal/plural |\n| вони (vony) | /ʋɔˈnɪ/ | they | pron | - | 3rd person plural |\n| це (tse) | /tsɛ/ | this is, it is | pron | - | demonstrative |\n| то (to) | /tɔ/ | that is | pron | - | demonstrative (far) |\n| ось (os') | /osʲ/ | here is | particle | - | presenting |\n| людина (lyudyna) | /ljuˈdɪna/ | person | noun | f | human being |\n| чоловік (cholovik) | /tʃɔlɔˈʋik/ | man | noun | m | adult male |\n| жінка (zhinka) | /ˈʒinka/ | woman | noun | f | adult female |\n| хлопець (khlopets') | /ˈxlɔpɛtsʲ/ | boy, guy | noun | m | young male |\n| дівчина (divchyna) | /diʋˈtʃɪna/ | girl | noun | f | young female |\n| українець (ukrainets') | /ukraˈjinɛtsʲ/ | Ukrainian | noun | m | nationality (male) |\n| українка (ukrainka) | /ukraˈjinka/ | Ukrainian | noun | f | nationality (female) |\n| англієць (anhliets') | /anˈɦlijɛtsʲ/ | English person | noun | m | nationality (male) |\n| англійка (anhliyka) | /anˈɦlijka/ | English person | noun | f | nationality (female) |\n\n---\n\n# Summary\n\n> **What You Learned Today**\n>\n> - **Zero copula:** Ukrainian doesn't need \"to be\" in present tense\n> - **Це** (this is) for identification: Це книга. Це студент.\n> - **Personal pronouns:** я, ти, він, вона, воно, ми, ви, вони\n> - **Formal vs informal:** Use \"ви\" with strangers and for respect\n> - **Nationalities have gender:** українець (m) / українка (f)\n> - **Ось** = \"here is,\" **То** = \"that is\"\n> - Basic introductions: Я Марія. Я з Києва. Я студентка.\n\n> **Coming Next**\n>\n> In Module 05, you'll expand \"My World: Objects\":\n> - Demonstratives that change: цей (m), ця (f), це (n), ці (pl)\n> - 40 everyday objects vocabulary\n> - Talking about things around you!\n",
+    "createdAt": "2025-12-06T10:49:20.084Z",
+    "modifiedAt": "2025-12-06T10:49:20.084Z",
+    "version": 2
+  },
+  "activities": [
+    {
+      "id": "act-a1-0-quiz",
+      "type": "quiz",
+      "title": "Zero Copula Mastery",
+      "description": "Test your understanding of Ukrainian sentences without \"to be\"!",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "How do you say \"I am a student\" (male) in Ukrainian?",
+            "options": [
+              "Я є студент.",
+              "Я студент.",
+              "Я бути студент.",
+              "Я студента."
+            ],
+            "correctIndex": 1,
+            "explanation": "In present tense, Ukrainian doesn't use \"to be\"!"
+          },
+          {
+            "question": "What does \"Це книга\" mean?",
+            "options": [
+              "This is a book.",
+              "The book is here.",
+              "I have a book.",
+              "Where is the book?"
+            ],
+            "correctIndex": 0,
+            "explanation": "\"Це\" means \"this is\" for identification."
+          },
+          {
+            "question": "How do you say \"She is Ukrainian\" (female)?",
+            "options": [
+              "Вона є українка.",
+              "Вона українка.",
+              "Вона українець.",
+              "Воно українка."
+            ],
+            "correctIndex": 1,
+            "explanation": "No verb needed, and use feminine form \"українка\"!"
+          },
+          {
+            "question": "What is \"Це\"?",
+            "options": [
+              "He",
+              "She",
+              "This is / It is",
+              "That"
+            ],
+            "correctIndex": 2,
+            "explanation": "\"Це\" is used for identification."
+          },
+          {
+            "question": "Which pronoun means \"we\"?",
+            "options": [
+              "ви",
+              "вони",
+              "ми",
+              "я"
+            ],
+            "correctIndex": 2,
+            "explanation": "\"Ми\" means \"we.\""
+          },
+          {
+            "question": "When do you use \"ви\" instead of \"ти\"?",
+            "options": [
+              "Only for groups",
+              "Only for women",
+              "For formal situations or plural \"you\"",
+              "Never - they're the same"
+            ],
+            "correctIndex": 2,
+            "explanation": "\"Ви\" is formal/polite or plural."
+          },
+          {
+            "question": "What does \"Він лікар\" mean?",
+            "options": [
+              "He is a doctor.",
+              "He has a doctor.",
+              "Is he a doctor?",
+              "This is a doctor."
+            ],
+            "correctIndex": 0,
+            "explanation": "Він (he) + лікар (doctor) = He is a doctor."
+          },
+          {
+            "question": "How would a woman say \"I am Ukrainian\"?",
+            "options": [
+              "Я українець.",
+              "Я українка.",
+              "Я український.",
+              "Я Україна."
+            ],
+            "correctIndex": 1,
+            "explanation": "Women use \"українка,\" men use \"українець.\""
+          },
+          {
+            "question": "What does \"Ось мій паспорт\" mean?",
+            "options": [
+              "Here is my passport.",
+              "This is a passport.",
+              "Where is my passport?",
+              "I have a passport."
+            ],
+            "correctIndex": 0,
+            "explanation": "\"Ось\" means \"here is.\""
+          },
+          {
+            "question": "Which sentence is correct for \"They are students\"?",
+            "options": [
+              "Вони є студенти.",
+              "Вони студент.",
+              "Вони студенти.",
+              "Вони студентка."
+            ],
+            "correctIndex": 2,
+            "explanation": "No verb + plural form \"студенти.\""
+          },
+          {
+            "question": "What is \"То\"?",
+            "options": [
+              "This (near)",
+              "That (far)",
+              "Here",
+              "He"
+            ],
+            "correctIndex": 1,
+            "explanation": "\"То\" means \"that is\" for things farther away."
+          },
+          {
+            "question": "What pronoun means \"it\" in Ukrainian?",
+            "options": [
+              "вона",
+              "він",
+              "воно",
+              "це"
+            ],
+            "correctIndex": 2,
+            "explanation": "\"Воно\" is \"it,\" but it's rarely used."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.084Z",
+      "modifiedAt": "2025-12-06T10:49:20.084Z"
+    },
+    {
+      "id": "act-a1-0-matchup",
+      "type": "match-up",
+      "title": "Pronouns and Demonstratives",
+      "description": "Match each Ukrainian word to its English meaning.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "я",
+            "right": "I"
+          },
+          {
+            "left": "ти",
+            "right": "you (informal)"
+          },
+          {
+            "left": "він",
+            "right": "he"
+          },
+          {
+            "left": "вона",
+            "right": "she"
+          },
+          {
+            "left": "воно",
+            "right": "it"
+          },
+          {
+            "left": "ми",
+            "right": "we"
+          },
+          {
+            "left": "ви",
+            "right": "you (formal/plural)"
+          },
+          {
+            "left": "вони",
+            "right": "they"
+          },
+          {
+            "left": "це",
+            "right": "this is"
+          },
+          {
+            "left": "то",
+            "right": "that is"
+          },
+          {
+            "left": "ось",
+            "right": "here is"
+          },
+          {
+            "left": "людина",
+            "right": "person"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.084Z",
+      "modifiedAt": "2025-12-06T10:49:20.084Z"
+    },
+    {
+      "id": "act-a1-0-matchup",
+      "type": "match-up",
+      "title": "Male and Female Forms",
+      "description": "Match male and female forms of people words.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "українець",
+            "right": "українка"
+          },
+          {
+            "left": "англієць",
+            "right": "англійка"
+          },
+          {
+            "left": "студент",
+            "right": "студентка"
+          },
+          {
+            "left": "турист",
+            "right": "туристка"
+          },
+          {
+            "left": "чоловік",
+            "right": "жінка"
+          },
+          {
+            "left": "хлопець",
+            "right": "дівчина"
+          },
+          {
+            "left": "він",
+            "right": "вона"
+          },
+          {
+            "left": "лікар",
+            "right": "лікарка"
+          },
+          {
+            "left": "вчитель",
+            "right": "вчителька"
+          },
+          {
+            "left": "американець",
+            "right": "американка"
+          },
+          {
+            "left": "друг",
+            "right": "подруга"
+          },
+          {
+            "left": "я (чоловік)",
+            "right": "я (жінка)"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.084Z",
+      "modifiedAt": "2025-12-06T10:49:20.084Z"
+    },
+    {
+      "id": "act-a1-0-groupsort",
+      "type": "group-sort",
+      "title": "Gender Pairs",
+      "description": "Sort these people words by gender.",
+      "content": {
+        "type": "group-sort",
+        "groups": [
+          {
+            "id": "male-forms",
+            "name": "Male Forms",
+            "items": [
+              "українець",
+              "англієць",
+              "студент",
+              "турист",
+              "чоловік",
+              "хлопець"
+            ]
+          },
+          {
+            "id": "female-forms",
+            "name": "Female Forms",
+            "items": [
+              "українка",
+              "англійка",
+              "студентка",
+              "туристка",
+              "жінка",
+              "дівчина"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.084Z",
+      "modifiedAt": "2025-12-06T10:49:20.084Z"
+    },
+    {
+      "id": "act-a1-0-truefalse",
+      "type": "true-false",
+      "title": "Zero Copula Rules",
+      "description": "Decide if each statement is true (Правда) or false (Міф).",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "Ukrainian doesn't use \"to be\" in present tense.",
+            "isTrue": true,
+            "explanation": "Correct! This is called the zero copula."
+          },
+          {
+            "statement": "\"Я є студент\" is correct Ukrainian.",
+            "isTrue": false,
+            "explanation": "Incorrect! Just \"Я студент\" - no verb needed."
+          },
+          {
+            "statement": "\"Це\" means \"this is\" for identification.",
+            "isTrue": true,
+            "explanation": "Correct! Use \"Це\" to point out or identify things."
+          },
+          {
+            "statement": "\"Він\" and \"вона\" can be used interchangeably.",
+            "isTrue": false,
+            "explanation": "Incorrect! \"Він\" is he, \"вона\" is she."
+          },
+          {
+            "statement": "\"Ви\" is both formal \"you\" and plural \"you.\"",
+            "isTrue": true,
+            "explanation": "Correct! Like French \"vous.\""
+          },
+          {
+            "statement": "Nationalities have different forms for men and women.",
+            "isTrue": true,
+            "explanation": "Correct! Українець (m) / Українка (f)."
+          },
+          {
+            "statement": "\"Воно\" is commonly used for objects.",
+            "isTrue": false,
+            "explanation": "Incorrect! \"Воно\" is rare; usually \"це\" is used instead."
+          },
+          {
+            "statement": "\"Ось\" means \"here is.\"",
+            "isTrue": true,
+            "explanation": "Correct! \"Ось мій паспорт\" = Here is my passport."
+          },
+          {
+            "statement": "You should use \"ти\" with your boss.",
+            "isTrue": false,
+            "explanation": "Incorrect! Use \"ви\" in formal situations."
+          },
+          {
+            "statement": "\"Мене звати\" means \"my name is.\"",
+            "isTrue": true,
+            "explanation": "Correct! Literally \"me call\" = \"I am called.\""
+          },
+          {
+            "statement": "\"То\" means \"that is\" for things farther away.",
+            "isTrue": true,
+            "explanation": "Correct! \"Це\" = this, \"То\" = that."
+          },
+          {
+            "statement": "In past tense, Ukrainian still has zero copula.",
+            "isTrue": false,
+            "explanation": "Incorrect! Past tense uses \"був/була/було\" (was)."
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.084Z",
+      "modifiedAt": "2025-12-06T10:49:20.084Z"
+    },
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "Complete the Sentence",
+      "description": "Fill in the blank with the correct word.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "___ студент. (I am a student - male)",
+            "answer": "Я",
+            "options": [
+              "Я",
+              "Він",
+              "Вона",
+              "Ми"
+            ]
+          },
+          {
+            "prompt": "___ книга. (This is a book.)",
+            "answer": "Це",
+            "options": [
+              "Це",
+              "Я",
+              "То",
+              "Ось"
+            ]
+          },
+          {
+            "prompt": "Вона ___. (She is Ukrainian.)",
+            "answer": "українка",
+            "options": [
+              "українка",
+              "українець",
+              "український",
+              "Україна"
+            ]
+          },
+          {
+            "prompt": "___ туристи. (We are tourists.)",
+            "answer": "Ми",
+            "options": [
+              "Ми",
+              "Вони",
+              "Ви",
+              "Я"
+            ]
+          },
+          {
+            "prompt": "___ лікар. (He is a doctor.)",
+            "answer": "Він",
+            "options": [
+              "Він",
+              "Вона",
+              "Воно",
+              "Я"
+            ]
+          },
+          {
+            "prompt": "Я ___. (I am a teacher - female)",
+            "answer": "вчителька",
+            "options": [
+              "вчителька",
+              "вчитель",
+              "студент",
+              "лікар"
+            ]
+          },
+          {
+            "prompt": "___ мій дім. (This is my house.)",
+            "answer": "Це",
+            "options": [
+              "Це",
+              "Він",
+              "Я",
+              "То"
+            ]
+          },
+          {
+            "prompt": "___ студенти. (They are students.)",
+            "answer": "Вони",
+            "options": [
+              "Вони",
+              "Ми",
+              "Ви",
+              "Він"
+            ]
+          },
+          {
+            "prompt": "___ англієць. (You are English - formal, male)",
+            "answer": "Ви",
+            "options": [
+              "Ви",
+              "Ти",
+              "Він",
+              "Я"
+            ]
+          },
+          {
+            "prompt": "Ти ___. (You are a tourist - informal, female)",
+            "answer": "туристка",
+            "options": [
+              "туристка",
+              "турист",
+              "туристи",
+              "туристки"
+            ]
+          },
+          {
+            "prompt": "___ мій паспорт. (Here is my passport.)",
+            "answer": "Ось",
+            "options": [
+              "Ось",
+              "Це",
+              "То",
+              "Він"
+            ]
+          },
+          {
+            "prompt": "___ вікно. (That is a window.)",
+            "answer": "То",
+            "options": [
+              "То",
+              "Це",
+              "Ось",
+              "Він"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.084Z",
+      "modifiedAt": "2025-12-06T10:49:20.084Z"
+    },
+    {
+      "id": "act-a1-0-anagram",
+      "type": "anagram",
+      "title": "Pronoun Practice",
+      "description": "Arrange the letters to form the correct word.",
+      "content": {
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
+          {
+            "letters": [
+              "я"
+            ],
+            "answer": "я",
+            "translation": "I"
+          },
+          {
+            "letters": [
+              "и",
+              "т"
+            ],
+            "answer": "ти",
+            "translation": "you - informal"
+          },
+          {
+            "letters": [
+              "і",
+              "н",
+              "в"
+            ],
+            "answer": "він",
+            "translation": "he"
+          },
+          {
+            "letters": [
+              "а",
+              "о",
+              "н",
+              "в"
+            ],
+            "answer": "вона",
+            "translation": "she"
+          },
+          {
+            "letters": [
+              "о",
+              "о",
+              "н",
+              "в"
+            ],
+            "answer": "воно",
+            "translation": "it"
+          },
+          {
+            "letters": [
+              "и",
+              "м"
+            ],
+            "answer": "ми",
+            "translation": "we"
+          },
+          {
+            "letters": [
+              "и",
+              "в"
+            ],
+            "answer": "ви",
+            "translation": "you - formal"
+          },
+          {
+            "letters": [
+              "и",
+              "н",
+              "о",
+              "в"
+            ],
+            "answer": "вони",
+            "translation": "they"
+          },
+          {
+            "letters": [
+              "е",
+              "ц"
+            ],
+            "answer": "це",
+            "translation": "this is"
+          },
+          {
+            "letters": [
+              "ь",
+              "о",
+              "с"
+            ],
+            "answer": "ось",
+            "translation": "here is"
+          },
+          {
+            "letters": [
+              "о",
+              "т"
+            ],
+            "answer": "то",
+            "translation": "that is"
+          },
+          {
+            "letters": [
+              "а",
+              "н",
+              "и",
+              "д",
+              "л",
+              "ю"
+            ],
+            "answer": "людина",
+            "translation": "person"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.084Z",
+      "modifiedAt": "2025-12-06T10:49:20.084Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A1-4",
+    "level": "A1",
+    "phase": "A1.1",
+    "wordCount": 20,
+    "newWordCount": 20,
+    "reviewWordCount": 0,
+    "transliterationMode": "full",
+    "words": [
+      {
+        "id": "v-ya-(ya)-0-0",
+        "uk": "я (ya)",
+        "en": "I",
+        "pos": "pron",
+        "ipa": "/ja/",
+        "note": "1st person singular",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-ty-(ty)-0-1",
+        "uk": "ти (ty)",
+        "en": "you (informal)",
+        "pos": "pron",
+        "ipa": "/tɪ/",
+        "note": "2nd person singular",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vin-(vin)-0-2",
+        "uk": "він (vin)",
+        "en": "he",
+        "pos": "pron",
+        "ipa": "/ʋin/",
+        "gender": "m",
+        "note": "3rd person masculine",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vona-(vona)-0-3",
+        "uk": "вона (vona)",
+        "en": "she",
+        "pos": "pron",
+        "ipa": "/ʋɔˈna/",
+        "gender": "f",
+        "note": "3rd person feminine",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vono-(vono)-0-4",
+        "uk": "воно (vono)",
+        "en": "it",
+        "pos": "pron",
+        "ipa": "/ʋɔˈnɔ/",
+        "gender": "n",
+        "note": "3rd person neuter (rare)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-my-(my)-0-5",
+        "uk": "ми (my)",
+        "en": "we",
+        "pos": "pron",
+        "ipa": "/mɪ/",
+        "note": "1st person plural",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vy-(vy)-0-6",
+        "uk": "ви (vy)",
+        "en": "you (formal/plural)",
+        "pos": "pron",
+        "ipa": "/ʋɪ/",
+        "note": "2nd person formal/plural",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vony-(vony)-0-7",
+        "uk": "вони (vony)",
+        "en": "they",
+        "pos": "pron",
+        "ipa": "/ʋɔˈnɪ/",
+        "note": "3rd person plural",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-tse-(tse)-0-8",
+        "uk": "це (tse)",
+        "en": "this is, it is",
+        "pos": "pron",
+        "ipa": "/tsɛ/",
+        "note": "demonstrative",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-to-(to)-0-9",
+        "uk": "то (to)",
+        "en": "that is",
+        "pos": "pron",
+        "ipa": "/tɔ/",
+        "note": "demonstrative (far)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-osь-(os')-0-10",
+        "uk": "ось (os')",
+        "en": "here is",
+        "pos": "particle",
+        "ipa": "/osʲ/",
+        "note": "presenting",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-lyudyna-(lyudyna)-0-11",
+        "uk": "людина (lyudyna)",
+        "en": "person",
+        "pos": "noun",
+        "ipa": "/ljuˈdɪna/",
+        "gender": "f",
+        "note": "human being",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-cholovik-(cholovik)-0-12",
+        "uk": "чоловік (cholovik)",
+        "en": "man",
+        "pos": "noun",
+        "ipa": "/tʃɔlɔˈʋik/",
+        "gender": "m",
+        "note": "adult male",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-zhinka-(zhinka)-0-13",
+        "uk": "жінка (zhinka)",
+        "en": "woman",
+        "pos": "noun",
+        "ipa": "/ˈʒinka/",
+        "gender": "f",
+        "note": "adult female",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-khlopetsь-(khlopets')-0-14",
+        "uk": "хлопець (khlopets')",
+        "en": "boy, guy",
+        "pos": "noun",
+        "ipa": "/ˈxlɔpɛtsʲ/",
+        "gender": "m",
+        "note": "young male",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-divchyna-(divchyna)-0-15",
+        "uk": "дівчина (divchyna)",
+        "en": "girl",
+        "pos": "noun",
+        "ipa": "/diʋˈtʃɪna/",
+        "gender": "f",
+        "note": "young female",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-ukrayinetsь-(ukrainets')-0-16",
+        "uk": "українець (ukrainets')",
+        "en": "Ukrainian",
+        "pos": "noun",
+        "ipa": "/ukraˈjinɛtsʲ/",
+        "gender": "m",
+        "note": "nationality (male)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-ukrayinka-(ukrainka)-0-17",
+        "uk": "українка (ukrainka)",
+        "en": "Ukrainian",
+        "pos": "noun",
+        "ipa": "/ukraˈjinka/",
+        "gender": "f",
+        "note": "nationality (female)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-anhliyetsь-(anhliets')-0-18",
+        "uk": "англієць (anhliets')",
+        "en": "English person",
+        "pos": "noun",
+        "ipa": "/anˈɦlijɛtsʲ/",
+        "gender": "m",
+        "note": "nationality (male)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-anhliyka-(anhliyka)-0-19",
+        "uk": "англійка (anhliyka)",
+        "en": "English person",
+        "pos": "noun",
+        "ipa": "/anˈɦlijka/",
+        "gender": "f",
+        "note": "nationality (female)",
+        "isNew": true,
+        "firstModule": 0
+      }
+    ]
+  }
+}

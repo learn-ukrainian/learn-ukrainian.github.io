@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -481,13 +521,14 @@ footer {
     <h1>Module 04: This Is / I Am</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Quiz</button>
-      <button class="nav-tab" data-section="activity-1">2. Match</button>
-      <button class="nav-tab" data-section="activity-2">3. Match</button>
-      <button class="nav-tab" data-section="activity-3">4. Sort</button>
-      <button class="nav-tab" data-section="activity-4">5. T/F</button>
-      <button class="nav-tab" data-section="activity-5">6. Fill</button>
-      <button class="nav-tab" data-section="activity-6">7. Spell</button>
+      <button class="nav-tab" data-section="activity-0">1. Match</button>
+      <button class="nav-tab" data-section="activity-1">2. Spell</button>
+      <button class="nav-tab" data-section="activity-2">3. Fill</button>
+      <button class="nav-tab" data-section="activity-3">4. Quiz</button>
+      <button class="nav-tab" data-section="activity-4">5. Sort</button>
+      <button class="nav-tab" data-section="activity-5">6. Order</button>
+      <button class="nav-tab" data-section="activity-6">7. T/F</button>
+      <button class="nav-tab" data-section="activity-7">8. Fill</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -497,402 +538,182 @@ footer {
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.1</span>
         <h2 style="font-size:2rem;margin:0.5rem 0">This Is / I Am</h2>
-        <p style="color:var(--text-muted)">Zero Copula, Це, and Personal Pronouns</p>
+        <p style="color:var(--text-muted)">The Mystery of the Missing Verb in the Present</p>
       </div>
       
     <div class="card section-intro">
       <h3>📖 Introduction</h3>
       <div class="md-content"><h2 id="warmup">warm-up</h2>
-<h3 id="theinvisibleverb">The Invisible Verb</h3>
-<p>Here's one of the coolest things about Ukrainian: in the present tense, you don't need "to be"!</p>
-<table>
-<thead>
-<tr>
-<th>English</th>
-<th>Ukrainian</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>I <strong>am</strong> a student</td>
-<td>Я студент (Ya student)</td>
-</tr>
-<tr>
-<td>She <strong>is</strong> Ukrainian</td>
-<td>Вона українка (Vona ukrainka)</td>
-</tr>
-<tr>
-<td>This <strong>is</strong> a book</td>
-<td>Це книга (Tse knyha)</td>
-</tr>
-</tbody>
-</table>
-<p>See? No "am," "is," or "are"! The verb just disappears. This is called the <strong>zero copula</strong>.</p>
+<p><strong>The Efficient Silence: How to Exist Without "Am" or "Is".</strong></p>
+<p>In English, to state existence or identity, you constantly rely on forms of the verb "to be": "I <strong>am</strong> a student," "She <strong>is</strong> Ukrainian," "They <strong>are</strong> here." This little verb acts as a crucial link, a "copula," binding the subject to its description.</p>
+<p>Now, imagine speaking English without "am," "is," or "are" in the present tense. It might sound jarring, even primitive: "I student," "She Ukrainian," "They here." Yet, this is precisely how Ukrainian functions in the present tense, and it's anything but primitive—it's elegantly efficient. This phenomenon is called the <strong>"Zero Copula."</strong> The verb "to be" (<strong>бути</strong>) exists in Ukrainian, but in the present tense, it often prefers to remain silent, its meaning implicitly understood.</p>
+<p>This module will teach you to construct fundamental Ukrainian sentences of identity and location with a directness that might surprise you. You will master the essential Personal Pronouns (Я, Ти, Він, Вона, etc.), learn the universal pointer <strong>Це</strong> ("This is"), and start making clear, concise statements about yourself and the world around you. Get ready to embrace the power of what's <em>not</em> said.</p>
 <blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>Many languages have the zero copula, including Russian, Arabic, and Hungarian. English used to have it too in some dialects! "You ready?" instead of "Are you ready?" is a trace of this.</p>
+  <p>💡 <strong>Did You Know? The Slavic Affinity for Silence</strong><br />
+  The Zero Copula is a common feature across many Slavic languages, including Russian, Polish, Czech, and Bulgarian. It's a testament to an ancient linguistic heritage where the present tense verb "to be" was often deemed redundant. For English speakers, it's a significant mental shift, but once embraced, it makes sentence construction surprisingly straightforward.</p>
 </blockquote>
-<h3 id="whynotobe">Why No "To Be"?</h3>
-<p>Ukrainian doesn't need "to be" in the present tense because:</p>
-<ul>
-<li>The pronoun tells you WHO</li>
-<li>The noun/adjective tells you WHAT</li>
-<li>Context does the rest!</li>
-</ul>
 <h2 id="presentation">presentation</h2>
-<h3 id="themagicwordforthisis">Це - The Magic Word for "This Is"</h3>
-<p><strong>Це</strong> (tse) means "this is" or "it is." Use it to identify or point out things:</p>
+<h3 id="theessentialcastpersonalpronouns">The Essential Cast: Personal Pronouns</h3>
+<p>These are the most basic building blocks of any conversation – the subjects who perform actions or are described.</p>
 <table>
 <thead>
 <tr>
+<th>English Singular</th>
 <th>Ukrainian</th>
-<th>Transliteration</th>
-<th>English</th>
+<th>Pronunciation</th>
+<th>English Plural</th>
+<th>Ukrainian</th>
+<th>Pronunciation</th>
+<th>Audio</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Це книга.</td>
-<td>Tse knyha.</td>
-<td>This is a book.</td>
+<td><strong>I</strong></td>
+<td><strong>Я</strong></td>
+<td>/jɑ/</td>
+<td><strong>We</strong></td>
+<td><strong>Ми</strong></td>
+<td>/mɪ/</td>
+<td><button class="audio-btn" onclick="openForvo('pronouns')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
-<td>Це стіл.</td>
-<td>Tse stil.</td>
-<td>This is a table.</td>
+<td><strong>You</strong> (informal)</td>
+<td><strong>Ти</strong></td>
+<td>/tɪ/</td>
+<td><strong>You</strong> (formal/pl)</td>
+<td><strong>Ви</strong></td>
+<td>/vɪ/</td>
+<td></td>
 </tr>
 <tr>
-<td>Це мама.</td>
-<td>Tse mama.</td>
-<td>This is (my) mom.</td>
+<td><strong>He</strong></td>
+<td><strong>Він</strong></td>
+<td>/vʲin/</td>
+<td><strong>They</strong></td>
+<td><strong>Вони</strong></td>
+<td>/vɔˈnɪ/</td>
+<td></td>
 </tr>
 <tr>
-<td>Це Україна.</td>
-<td>Tse Ukraina.</td>
-<td>This is Ukraine.</td>
+<td><strong>She</strong></td>
+<td><strong>Вона</strong></td>
+<td>/vɔˈnɑ/</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>It</strong></td>
+<td><strong>Воно</strong></td>
+<td>/vɔˈnɔ/</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table>
 <blockquote>
-  <p>⚡ <strong>Pro Tip</strong></p>
-  <p>"Це" doesn't change! Unlike "цей/ця/це" (this specific one), the identifying "Це" stays the same regardless of gender. "Це книга" (feminine), "Це стіл" (masculine), "Це вікно" (neuter) - always just "Це"!</p>
+  <p>⚡ <strong>Pro Tip: Ти vs Ви - Navigating Social Distance</strong><br />
+  The choice between <strong>Ти</strong> (informal "you") and <strong>Ви</strong> (formal/plural "you") is a crucial aspect of Ukrainian social etiquette, much more pronounced than in English.</p>
+  <ul>
+  <li><strong>Ти (Informal):</strong> Use with close friends, family members, children, pets, or God. It implies intimacy and equality.</li>
+  <li><strong>Ви (Formal/Plural):</strong> Use with strangers, older people, superiors (like a boss or a teacher), or when addressing more than one person. It conveys respect and maintains a social distance.<br />
+  When in doubt, always default to <strong>Ви</strong> to avoid appearing rude. Over time, you'll learn the cues for when to transition to <strong>Ти</strong>.</li>
+  </ul>
 </blockquote>
-<h3 id="thepartnerof">То - The Partner of Це</h3>
-<p><strong>То</strong> (to) means "that is" for things farther away:</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Transliteration</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>То дім.</td>
-<td>To dim.</td>
-<td>That is a house.</td>
-</tr>
-<tr>
-<td>То мій друг.</td>
-<td>To miy druh.</td>
-<td>That is my friend.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="personalpronounswhoswho">Personal Pronouns: Who's Who</h3>
-<p>Ukrainian has seven personal pronouns:</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Transliteration</th>
-<th>English</th>
-<th>Usage</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>я</strong></td>
-<td>ya</td>
-<td>I</td>
-<td>yourself</td>
-</tr>
-<tr>
-<td><strong>ти</strong></td>
-<td>ty</td>
-<td>you (informal)</td>
-<td>friends, family, children</td>
-</tr>
-<tr>
-<td><strong>він</strong></td>
-<td>vin</td>
-<td>he</td>
-<td>males</td>
-</tr>
-<tr>
-<td><strong>вона</strong></td>
-<td>vona</td>
-<td>she</td>
-<td>females</td>
-</tr>
-<tr>
-<td><strong>воно</strong></td>
-<td>vono</td>
-<td>it</td>
-<td>things (rare)</td>
-</tr>
-<tr>
-<td><strong>ми</strong></td>
-<td>my</td>
-<td>we</td>
-<td>group including you</td>
-</tr>
-<tr>
-<td><strong>ви</strong></td>
-<td>vy</td>
-<td>you (formal/plural)</td>
-<td>strangers, respect, groups</td>
-</tr>
-<tr>
-<td><strong>вони</strong></td>
-<td>vony</td>
-<td>they</td>
-<td>any group</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎭 <strong>Culture Corner</strong></p>
-  <p>The ти/ви distinction is important! Use "ви" with strangers, older people, bosses, and in formal situations. Use "ти" with friends, family, and children. Using "ти" with a stranger can be rude, but using "ви" with close friends can feel distant!</p>
-</blockquote>
-<h3 id="makingidentitysentences">Making Identity Sentences</h3>
-<p>Just put the pronoun and the identity together - no verb needed!</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Transliteration</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Я студент.</td>
-<td>Ya student.</td>
-<td>I am a student. (male)</td>
-</tr>
-<tr>
-<td>Я студентка.</td>
-<td>Ya studentka.</td>
-<td>I am a student. (female)</td>
-</tr>
-<tr>
-<td>Ти українець.</td>
-<td>Ty ukrainets'.</td>
-<td>You are Ukrainian. (male)</td>
-</tr>
-<tr>
-<td>Ти українка.</td>
-<td>Ty ukrainka.</td>
-<td>You are Ukrainian. (female)</td>
-</tr>
-<tr>
-<td>Він лікар.</td>
-<td>Vin likar.</td>
-<td>He is a doctor.</td>
-</tr>
-<tr>
-<td>Вона вчителька.</td>
-<td>Vona vchytel'ka.</td>
-<td>She is a teacher.</td>
-</tr>
-<tr>
-<td>Ми студенти.</td>
-<td>My studenty.</td>
-<td>We are students.</td>
-</tr>
-<tr>
-<td>Вони туристи.</td>
-<td>Vony turysty.</td>
-<td>They are tourists.</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🔍 <strong>Myth Buster</strong></p>
-  <p><strong>Myth:</strong> "You can't express 'to be' in Ukrainian"<br />
-  <strong>Fact:</strong> Ukrainian has the verb "бути" (to be), but it's only used in past and future tenses. "Я був студентом" (I was a student), "Вона буде вчителькою" (She will be a teacher). Present tense just doesn't need it!</p>
-</blockquote>
-<h3 id="hereis">Ось - "Here is"</h3>
-<p><strong>Ось</strong> (os') means "here is" or "here are":</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Transliteration</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Ось мій паспорт.</td>
-<td>Os' miy pasport.</td>
-<td>Here is my passport.</td>
-</tr>
-<tr>
-<td>Ось вона!</td>
-<td>Os' vona!</td>
-<td>Here she is!</td>
-</tr>
-</tbody>
-</table>
-<h3 id="nationalitiesmalevsfemaleforms">Nationalities: Male vs Female Forms</h3>
-<p>Ukrainian nationalities have different forms for men and women:</p>
-<table>
-<thead>
-<tr>
-<th>Male</th>
-<th>Female</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>українець (ukrainets')</td>
-<td>українка (ukrainka)</td>
-<td>Ukrainian</td>
-</tr>
-<tr>
-<td>англієць (anhliets')</td>
-<td>англійка (anhliyka)</td>
-<td>English person</td>
-</tr>
-<tr>
-<td>американець (amerykanets')</td>
-<td>американка (amerykanka)</td>
-<td>American</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>📜 <strong>History Bite</strong></p>
-  <p>The word "українець" comes from "Україна" (Ukraine). Historically, it meant "person from the borderland," but modern Ukrainians reject this etymology, preferring the interpretation "person from their own country" (у + країна = in + country).</p>
-</blockquote>
-<h3 id="introducingyourself">Introducing Yourself</h3>
-<p>Here's how to introduce yourself:</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Transliteration</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Я Марія.</td>
-<td>Ya Mariya.</td>
-<td>I am Maria.</td>
-</tr>
-<tr>
-<td>Мене звати Марія.</td>
-<td>Mene zvaty Mariya.</td>
-<td>My name is Maria.</td>
-</tr>
-<tr>
-<td>Я українка.</td>
-<td>Ya ukrainka.</td>
-<td>I am Ukrainian. (female)</td>
-</tr>
-<tr>
-<td>Я студентка.</td>
-<td>Ya studentka.</td>
-<td>I am a student. (female)</td>
-</tr>
-<tr>
-<td>Я з Києва.</td>
-<td>Ya z Kyiva.</td>
-<td>I am from Kyiv.</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎬 <strong>Pop Culture Moment: The Witcher</strong></p>
-  <p>In the Ukrainian dub of The Witcher, Geralt would say "Я відьмак" (Ya vid'mak - I am a witcher). Notice - no "am"! Just "I witcher." That's the zero copula in action!</p>
-</blockquote>
-<h2 id="practice">practice</h2>
-<h3 id="exercise1identifywith">Exercise 1: Identify with Це</h3>
-<p>Complete with the correct word:</p>
-<ol>
-<li><p>___ книга. (This is a book.)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer">Це</div></div>
-<ol start="2">
-<li><p>___ студент. (He is a student.)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer">Він</div></div>
-<ol start="3">
-<li><p>___ українка. (She is Ukrainian.)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer">Вона</div></div>
-<ol start="4">
-<li><p>___ туристи. (They are tourists.)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer">Вони</div></div>
-<ol start="5">
-<li><p>___ мій дім. (This is my house.)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer">Це</div></div>
-<ol start="6">
-<li><p>___ вчителька. (I am a teacher - female)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-5', this)">Показати відповідь</button><div class="answer-block" id="ans-5"><div class="callout callout-answer" data-callout="answer">Я</div></div>
-<h3 id="exercise2translate">Exercise 2: Translate</h3>
-<p>Translate to Ukrainian (no verb needed!):</p>
-<ol>
-<li><p>I am a student. (male)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-6', this)">Показати відповідь</button><div class="answer-block" id="ans-6"><div class="callout callout-answer" data-callout="answer">Я студент.</div></div>
-<ol start="2">
-<li><p>She is a doctor.</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-7', this)">Показати відповідь</button><div class="answer-block" id="ans-7"><div class="callout callout-answer" data-callout="answer">Вона лікар. (or лікарка)</div></div>
-<ol start="3">
-<li><p>This is a window.</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-8', this)">Показати відповідь</button><div class="answer-block" id="ans-8"><div class="callout callout-answer" data-callout="answer">Це вікно.</div></div>
-<ol start="4">
-<li><p>We are Ukrainian.</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-9', this)">Показати відповідь</button><div class="answer-block" id="ans-9"><div class="callout callout-answer" data-callout="answer">Ми українці.</div></div>
-<ol start="5">
-<li><p>You are a tourist. (formal, male)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-10', this)">Показати відповідь</button><div class="answer-block" id="ans-10"><div class="callout callout-answer" data-callout="answer">Ви турист.</div></div>
-<ol start="6">
-<li><p>They are students.</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-11', this)">Показати відповідь</button><div class="answer-block" id="ans-11"><div class="callout callout-answer" data-callout="answer">Вони студенти.</div></div>
-<h2 id="production">production</h2>
-<h3 id="introduceyourself">Introduce Yourself</h3>
-<p>Practice these sentences about yourself:</p>
-<ol>
-<li><strong>Я ___</strong> (Your name)</li>
-<li><strong>Я з ___</strong> (Your country/city)</li>
-<li><strong>Я ___</strong> (Your profession/status)</li>
-</ol>
-<p>Example:</p>
+<h3 id="theuniversalpointertse">The Universal Pointer: Це (Tse)</h3>
+<p>This little word is incredibly versatile and unchanging. <strong>Це</strong> acts as a universal identifier. It literally means "this" or "it", and in a "zero copula" context, it functions as "This is", "That is", "It is", or "These are". It never changes its form to agree with gender or number.</p>
 <ul>
-<li>Я Джон. (Ya Dzhon.)</li>
-<li>Я з Лондона. (Ya z Londona.)</li>
-<li>Я студент. (Ya student.)</li>
+<li><strong>Це стіл.</strong> (This is a table.)</li>
+<li><strong>Це мама.</strong> (This is mom.)</li>
+<li><strong>Це вода.</strong> (This is water.)</li>
+<li><strong>Це студенти.</strong> (These are students.)</li>
 </ul>
+<h3 id="thezerocopulaequationsimplicityiskey">The Zero Copula Equation: Simplicity is Key</h3>
+<p>In present tense Ukrainian, to state who or what someone/something is, you simply place the subject followed by the noun or adjective. The verb "to be" is understood, but not spoken.</p>
+<p><strong>Subject + [Implicit "is/am/are"] + Noun/Adjective</strong></p>
+<ul>
+<li><strong>Я студент.</strong> (I [am] a student.)</li>
+<li><strong>Вона українка.</strong> (She [is] Ukrainian.)</li>
+<li><strong>Ми тут.</strong> (We [are] here.)</li>
+<li><strong>Він добрий.</strong> (He [is] kind.)</li>
+</ul>
+<p><strong>Forming Negative Sentences:</strong><br />
+To make a sentence negative, you simply place <strong>не</strong> (not) before the noun or adjective.</p>
+<ul>
+<li><strong>Я не студент.</strong> (I am not a student.)</li>
+<li><strong>Він не тут.</strong> (He is not here.)</li>
+<li><strong>Це не вода.</strong> (This is not water.)</li>
+</ul>
+<h3 id="culturalinsightthedirectnessofidentity">Cultural Insight: The Directness of Identity</h3>
+<p>The absence of "am/is/are" in the present tense often makes Ukrainian statements of identity feel very direct and assertive. "Я українець" isn't just "I am Ukrainian"; it carries a stronger, almost declarative weight, a deep sense of belonging. This linguistic directness reflects a cultural value for clear, unambiguous statements of self and truth.</p>
 <blockquote>
-  <p>🌍 <strong>Real World</strong></p>
-  <p>When you meet Ukrainians, they'll often ask "Звідки ви?" (Where are you from?) Your answer: "Я з…" + city/country. No verb needed!</p>
+  <p>🎭 <strong>Culture Corner: The Power of the Middle Name</strong><br />
+  In Ukraine, identity is not just clear; it is lineage. You will often hear people addressed by their first name <em>and</em> a "Patronymic" (Father's name). If your father is Ivan, you are <strong>Іванович</strong> (Son of Ivan) or <strong>Іванівна</strong> (Daughter of Ivan).</p>
+  <ul>
+  <li><strong>President:</strong> Володимир Олександрович (Volodymyr, son of Oleksandr).</li>
+  <li><strong>Teacher:</strong> Марія Петрівна (Maria, daughter of Petro).<br />
+  Using the patronymic is the ultimate sign of respect in formal settings. It acknowledges not just the person, but their roots.</li>
+  </ul>
 </blockquote>
-<hr />
+<h3 id="deepdivenationalitiesandorigins">Deep Dive: Nationalities and Origins</h3>
+<p>Talking about where you are from is a key part of identity. In Ukrainian, nationalities are nouns, and they change gender!</p>
+<ul>
+<li><strong>-ець</strong> (Male ending): Він українець, Він американець, Він іспанець.</li>
+<li><strong>-ка</strong> (Female ending): Вона українка, Вона американка, Вона іспанка.</li>
+</ul>
+<p><strong>Compare:</strong></p>
+<ul>
+<li><strong>English:</strong> He is American / She is American. (Adjective - same)</li>
+<li><strong>Ukrainian:</strong> Він америка<strong>нець</strong> / Вона американ<strong>ка</strong>. (Noun - different!)</li>
+</ul>
+<p><strong>Common Nationalities:</strong></p>
+<ol>
+<li><strong>Україна</strong> (Country) -&gt; <strong>Українець / Українка</strong></li>
+<li><strong>Америка</strong> (Country) -&gt; <strong>Американець / Американка</strong></li>
+<li><strong>Канада</strong> (Country) -&gt; <strong>Канадець / Канадка</strong></li>
+<li><strong>Англія</strong> (Country) -&gt; <strong>Англієць / Англійка</strong></li>
+<li><strong>Німеччина</strong> (Germany) -&gt; <strong>Німець / Німкеня</strong> (<em>Irregular!</em>)</li>
+</ol>
+<h2 id="practice">practice</h2>
+<p>Let's imagine you are at an international student gathering in Lviv. You are introducing yourself and meeting new people.</p>
+<p><strong>Vocabulary for Identity & Profession:</strong></p>
+<ul>
+<li><strong>Чоловік</strong> (Man)</li>
+<li><strong>Жінка</strong> (Woman)</li>
+<li><strong>Хлопець</strong> (Boy)</li>
+<li><strong>Дівчина</strong> (Girl)</li>
+<li><strong>Студент / Студентка</strong> (Student M / F)</li>
+<li><strong>Професор / Професорка</strong> (Professor M / F)</li>
+<li><strong>Лікар / Лікарка</strong> (Doctor M / F)</li>
+<li><strong>Українець / Українка</strong> (Ukrainian M / F)</li>
+<li><strong>Англієць / Англійка</strong> (Englishman / Englishwoman)</li>
+<li><strong>Американець / Американка</strong> (American M / F)</li>
+<li><strong>Канадець / Канадка</strong> (Canadian M / F)</li>
+<li><strong>Друг / Подруга</strong> (Friend M / F)</li>
+</ul>
+<p><strong>Scenario 1: Self-Introduction</strong><br />
+<strong>Ви:</strong> Привіт! Я Данило. Я студент. (Hi! I am Danylo. I am a student.)<br />
+<strong>Андрій:</strong> Привіт, Даниле! Я Андрій. Я українець. (Hi, Danylo! I am Andriy. I am Ukrainian.)</p>
+<p><strong>Scenario 2: Identifying Others</strong><br />
+<strong>Олена:</strong> Хто це? (Who is this?)<br />
+<strong>Юлія:</strong> Це Анна. Вона студентка. Вона англійка. (This is Anna. She is a student. She is English.)</p>
+<p><strong>Scenario 3: Negation in Practice</strong><br />
+<strong>Марко:</strong> Це професорка Ірина? (Is this Professor Iryna?)<br />
+<strong>Наталя:</strong> Ні, це не професорка Ірина. Це лікарка Оксана. Вона не професорка. (No, this is not Professor Iryna. This is Doctor Oksana. She is not a professor.)</p>
+<h2 id="production">production</h2>
+<p>You've landed in a new city and are settling into your dormitory. Your roommate, Марта (Marta), is asking about your friends who will visit.</p>
+<p><strong>Марта:</strong> Привіт! Хто це? (Hi! Who is this? - points to a photo)<br />
+<strong>Ви:</strong> Це мій друг, Джон. Він американець. (This is my friend, John. He is American.)<br />
+<strong>Марта:</strong> Він студент?<br />
+<strong>Ви:</strong> Ні, він не студент. Він лікар. (No, he is not a student. He is a doctor.)<br />
+<strong>Марта:</strong> А це хто? (And who is this? - points to another photo)<br />
+<strong>Ви:</strong> Це моя подруга, Софія. Вона канадка. Вона професорка. (This is my friend, Sofia. She is Canadian. She is a professor.)<br />
+<strong>Марта:</strong> Дуже добре! (Very good!)</p>
+<p>See how naturally you can build conversations, introduce people, and convey key information about identity and profession, all without the English "to be" verb?</p>
 <hr />
 <hr /></div>
     </div>
@@ -900,25 +721,14 @@ footer {
       
     <div class="card section-summary">
       <h3>📋 Summary</h3>
-      <div class="md-content"><blockquote>
-  <p><strong>What You Learned Today</strong></p>
-  <ul>
-  <li><strong>Zero copula:</strong> Ukrainian doesn't need "to be" in present tense</li>
-  <li><strong>Це</strong> (this is) for identification: Це книга. Це студент.</li>
-  <li><strong>Personal pronouns:</strong> я, ти, він, вона, воно, ми, ви, вони</li>
-  <li><strong>Formal vs informal:</strong> Use "ви" with strangers and for respect</li>
-  <li><strong>Nationalities have gender:</strong> українець (m) / українка (f)</li>
-  <li><strong>Ось</strong> = "here is," <strong>То</strong> = "that is"</li>
-  <li>Basic introductions: Я Марія. Я з Києва. Я студентка.</li>
-  </ul>
-  <p><strong>Coming Next</strong></p>
-  <p>In Module 05, you'll expand "My World: Objects":</p>
-  <ul>
-  <li>Demonstratives that change: цей (m), ця (f), це (n), ці (pl)</li>
-  <li>40 everyday objects vocabulary</li>
-  <li>Talking about things around you!</li>
-  </ul>
-</blockquote></div>
+      <div class="md-content"><p>In this module, you learned the secret of the "Zero Copula". You don't need "am/is/are" to exist in Ukrainian.</p>
+<ol>
+<li><strong>Pronouns:</strong> Я, Ти, Він, Вона, Воно, Ми, Ви, Вони.</li>
+<li><strong>Universal Pointer:</strong> Це (This is / That is / It is).</li>
+<li><strong>Basic Sentence Structure:</strong> Subject + Noun/Adjective (Я студент).</li>
+<li><strong>Negation:</strong> Add "не" before the noun/adjective (Він не лікар).</li>
+</ol>
+<p>You can now introduce yourself, state your nationality and profession, and identify others. You also practiced using <strong>Ти</strong> and <strong>Ви</strong> appropriately. Next, we will learn how to talk about the objects <em>around</em> you using "This" and "That" as adjectives, making sure they agree with the objects' genders.</p></div>
     </div>
   
       <div class="btn-group">
@@ -927,75 +737,79 @@ footer {
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Zero Copula Mastery</h3>
+    <section id="activity-0" class="section"><div class="card"><h3>Pronouns</h3>
       <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container"></div>
-      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+      <div class="match-container" id="activity-0-container"><svg class="match-lines" id="activity-0-lines"></svg>
+        <div class="match-column" id="activity-0-left"></div>
+        <div class="match-column" id="activity-0-right"></div>
+      </div>
+      <div class="completion-message" id="activity-0-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Pronouns and Demonstratives</h3>
+    <section id="activity-1" class="section"><div class="card"><h3>Scrambled Identities</h3>
       <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-1-container"><svg class="match-lines" id="activity-1-lines"></svg>
-        <div class="match-column" id="activity-1-left"></div>
-        <div class="match-column" id="activity-1-right"></div>
-      </div>
-      <div class="completion-message" id="activity-1-complete"><h3>Perfect!</h3></div>
+      <div id="activity-1-container" class="order-container"></div>
+      <div class="completion-message" id="activity-1-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Male and Female Forms</h3>
+    <section id="activity-2" class="section"><div class="card"><h3>Complete the Sentence with Pronouns/Words</h3>
       <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-2-container"><svg class="match-lines" id="activity-2-lines"></svg>
-        <div class="match-column" id="activity-2-left"></div>
-        <div class="match-column" id="activity-2-right"></div>
-      </div>
-      <div class="completion-message" id="activity-2-complete"><h3>Perfect!</h3></div>
+      <div id="activity-2-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-2-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Gender Pairs</h3>
+    <section id="activity-3" class="section"><div class="card"><h3>Translation</h3>
       <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div class="sort-pool" id="activity-3-pool"><div class="sort-items" id="activity-3-items"></div></div>
-      <div class="sort-groups" id="activity-3-groups"></div>
-      <div class="completion-message" id="activity-3-complete"><h3>All Sorted!</h3></div>
+      <div id="activity-3-container"></div>
+      <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Zero Copula Rules</h3>
-      <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
-      <div id="activity-4-container"></div>
-      <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
+    <section id="activity-4" class="section"><div class="card"><h3>Gendered People</h3>
+      <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/18</span></div>
+      <div class="sort-pool" id="activity-4-pool"><div class="sort-items" id="activity-4-items"></div></div>
+      <div class="sort-groups" id="activity-4-groups"></div>
+      <div class="completion-message" id="activity-4-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Complete the Sentence</h3>
+    <section id="activity-5" class="section"><div class="card"><h3>Build Sentences</h3>
       <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
-      <div id="activity-5-container" class="fill-container"></div>
-      <div class="completion-message" id="activity-5-complete"><h3>Complete!</h3></div>
+      <div id="activity-5-container" class="order-container"></div>
+      <div class="completion-message" id="activity-5-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Pronoun Practice</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>Grammar Facts</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
-      <div id="activity-6-container" class="order-container"></div>
-      <div class="completion-message" id="activity-6-complete"><h3>Perfect Order!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+      <div id="activity-6-container"></div>
+      <div class="completion-message" id="activity-6-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-7" class="section"><div class="card"><h3>Dialogue Completion</h3>
+      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/12</span></div>
+      <div id="activity-7-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-7-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
-        <h3>Словник (20)</h3>
+        <h3>Словник (32)</h3>
         <div class="vocab-table-container">
           <table class="vocab-table">
             <thead><tr>
     <th>Слово</th>
-    
+    <th>Вимова</th>
     <th>IPA</th>
     <th>Переклад</th>
     <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">я (ya)</td><td class="vocab-ipa">/ja/</td><td class="vocab-en">I</td><td class="vocab-note">1st person singular</td></tr><tr><td class="vocab-uk">ти (ty)</td><td class="vocab-ipa">/tɪ/</td><td class="vocab-en">you (informal)</td><td class="vocab-note">2nd person singular</td></tr><tr><td class="vocab-uk">він (vin)</td><td class="vocab-ipa">/ʋin/</td><td class="vocab-en">he</td><td class="vocab-note">3rd person masculine</td></tr><tr><td class="vocab-uk">вона (vona)</td><td class="vocab-ipa">/ʋɔˈna/</td><td class="vocab-en">she</td><td class="vocab-note">3rd person feminine</td></tr><tr><td class="vocab-uk">воно (vono)</td><td class="vocab-ipa">/ʋɔˈnɔ/</td><td class="vocab-en">it</td><td class="vocab-note">3rd person neuter (rare)</td></tr><tr><td class="vocab-uk">ми (my)</td><td class="vocab-ipa">/mɪ/</td><td class="vocab-en">we</td><td class="vocab-note">1st person plural</td></tr><tr><td class="vocab-uk">ви (vy)</td><td class="vocab-ipa">/ʋɪ/</td><td class="vocab-en">you (formal/plural)</td><td class="vocab-note">2nd person formal/plural</td></tr><tr><td class="vocab-uk">вони (vony)</td><td class="vocab-ipa">/ʋɔˈnɪ/</td><td class="vocab-en">they</td><td class="vocab-note">3rd person plural</td></tr><tr><td class="vocab-uk">це (tse)</td><td class="vocab-ipa">/tsɛ/</td><td class="vocab-en">this is, it is</td><td class="vocab-note">demonstrative</td></tr><tr><td class="vocab-uk">то (to)</td><td class="vocab-ipa">/tɔ/</td><td class="vocab-en">that is</td><td class="vocab-note">demonstrative (far)</td></tr><tr><td class="vocab-uk">ось (os&#039;)</td><td class="vocab-ipa">/osʲ/</td><td class="vocab-en">here is</td><td class="vocab-note">presenting</td></tr><tr><td class="vocab-uk">людина (lyudyna)</td><td class="vocab-ipa">/ljuˈdɪna/</td><td class="vocab-en">person</td><td class="vocab-note">human being</td></tr><tr><td class="vocab-uk">чоловік (cholovik)</td><td class="vocab-ipa">/tʃɔlɔˈʋik/</td><td class="vocab-en">man</td><td class="vocab-note">adult male</td></tr><tr><td class="vocab-uk">жінка (zhinka)</td><td class="vocab-ipa">/ˈʒinka/</td><td class="vocab-en">woman</td><td class="vocab-note">adult female</td></tr><tr><td class="vocab-uk">хлопець (khlopets&#039;)</td><td class="vocab-ipa">/ˈxlɔpɛtsʲ/</td><td class="vocab-en">boy, guy</td><td class="vocab-note">young male</td></tr><tr><td class="vocab-uk">дівчина (divchyna)</td><td class="vocab-ipa">/diʋˈtʃɪna/</td><td class="vocab-en">girl</td><td class="vocab-note">young female</td></tr><tr><td class="vocab-uk">українець (ukrainets&#039;)</td><td class="vocab-ipa">/ukraˈjinɛtsʲ/</td><td class="vocab-en">Ukrainian</td><td class="vocab-note">nationality (male)</td></tr><tr><td class="vocab-uk">українка (ukrainka)</td><td class="vocab-ipa">/ukraˈjinka/</td><td class="vocab-en">Ukrainian</td><td class="vocab-note">nationality (female)</td></tr><tr><td class="vocab-uk">англієць (anhliets&#039;)</td><td class="vocab-ipa">/anˈɦlijɛtsʲ/</td><td class="vocab-en">English person</td><td class="vocab-note">nationality (male)</td></tr><tr><td class="vocab-uk">англійка (anhliyka)</td><td class="vocab-ipa">/anˈɦlijka/</td><td class="vocab-en">English person</td><td class="vocab-note">nationality (female)</td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">я</td><td class="vocab-translit">/jɑ/</td><td class="vocab-ipa">I</td><td class="vocab-en">pron</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('я')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">ти</td><td class="vocab-translit">/tɪ/</td><td class="vocab-ipa">you (sg)</td><td class="vocab-en">pron</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('ти')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">він</td><td class="vocab-translit">/vʲin/</td><td class="vocab-ipa">he</td><td class="vocab-en">pron</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('він')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вона</td><td class="vocab-translit">/vɔˈnɑ/</td><td class="vocab-ipa">she</td><td class="vocab-en">pron</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вона')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">воно</td><td class="vocab-translit">/vɔˈnɔ/</td><td class="vocab-ipa">it</td><td class="vocab-en">pron</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('воно')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">ми</td><td class="vocab-translit">/mɪ/</td><td class="vocab-ipa">we</td><td class="vocab-en">pron</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('ми')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">ви</td><td class="vocab-translit">/vɪ/</td><td class="vocab-ipa">you (pl)</td><td class="vocab-en">pron</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('ви')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вони</td><td class="vocab-translit">/vɔˈnɪ/</td><td class="vocab-ipa">they</td><td class="vocab-en">pron</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вони')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">це</td><td class="vocab-translit">/tʃɛ/</td><td class="vocab-ipa">this is</td><td class="vocab-en">pron</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('це')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">то</td><td class="vocab-translit">/tɔ/</td><td class="vocab-ipa">that is</td><td class="vocab-en">pron</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('то')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">ось</td><td class="vocab-translit">/ɔsʲ/</td><td class="vocab-ipa">here is</td><td class="vocab-en">part</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('ось')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">людина</td><td class="vocab-translit">/lʲuˈdɪnɑ/</td><td class="vocab-ipa">person</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('людина')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">чоловік</td><td class="vocab-translit">/tʃɔlɔˈvʲik/</td><td class="vocab-ipa">man</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('чоловік')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">жінка</td><td class="vocab-translit">/ˈʒin.kɑ/</td><td class="vocab-ipa">woman</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('жінка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">хлопець</td><td class="vocab-translit">/ˈxlɔpɛtsʲ/</td><td class="vocab-ipa">boy</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('хлопець')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">дівчина</td><td class="vocab-translit">/ˈdʲivtʃɪnɑ/</td><td class="vocab-ipa">girl</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('дівчина')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">українець</td><td class="vocab-translit">/ukrɑˈjinɛtsʲ/</td><td class="vocab-ipa">Ukrainian</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('українець')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">українка</td><td class="vocab-translit">/ukrɑˈjinkɑ/</td><td class="vocab-ipa">Ukrainian</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('українка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">англієць</td><td class="vocab-translit">/ɑnˈɦlʲijɛtsʲ/</td><td class="vocab-ipa">Englishman</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('англієць')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">англійка</td><td class="vocab-translit">/ɑnˈɦlʲijkɑ/</td><td class="vocab-ipa">Englishwoman</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('англійка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">американець</td><td class="vocab-translit">/ɑmɛrɪˈkɑnɛtsʲ/</td><td class="vocab-ipa">American</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('американець')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">американка</td><td class="vocab-translit">/ɑmɛrɪˈkɑnkɑ/</td><td class="vocab-ipa">American</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('американка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">канадець</td><td class="vocab-translit">/kɑnɑˈdɛtsʲ/</td><td class="vocab-ipa">Canadian</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('канадець')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">канадка</td><td class="vocab-translit">/kɑnɑˈkɑnkɑ/</td><td class="vocab-ipa">Canadian</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('канадка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">студент</td><td class="vocab-translit">/stuˈdɛnt/</td><td class="vocab-ipa">student</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('студент')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">студентка</td><td class="vocab-translit">/stuˈdɛntkɑ/</td><td class="vocab-ipa">student</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('студентка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">професор</td><td class="vocab-translit">/prɔfɛˈsɔr/</td><td class="vocab-ipa">professor</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('професор')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">професорка</td><td class="vocab-translit">/prɔfɛˈsɔrkɑ/</td><td class="vocab-ipa">professor</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('професорка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">лікар</td><td class="vocab-translit">/ˈlʲikɑr/</td><td class="vocab-ipa">doctor</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('лікар')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">лікарка</td><td class="vocab-translit">/ˈlʲikɑrkɑ/</td><td class="vocab-ipa">doctor</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('лікарка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">друг</td><td class="vocab-translit">/druɦ/</td><td class="vocab-ipa">friend</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('друг')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">подруга</td><td class="vocab-translit">/ˈpɔdruɦɑ/</td><td class="vocab-ipa">friend</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('подруга')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1007,8 +821,8 @@ footer {
   </main><footer>Module 04 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"quiz","title":"Zero Copula Mastery","data":{"type":"quiz","questions":[{"question":"How do you say \"I am a student\" (male) in Ukrainian?","options":["Я є студент.","Я студент.","Я бути студент.","Я студента."],"correctIndex":1,"explanation":"In present tense, Ukrainian doesn't use \"to be\"!"},{"question":"What does \"Це книга\" mean?","options":["This is a book.","The book is here.","I have a book.","Where is the book?"],"correctIndex":0,"explanation":"\"Це\" means \"this is\" for identification."},{"question":"How do you say \"She is Ukrainian\" (female)?","options":["Вона є українка.","Вона українка.","Вона українець.","Воно українка."],"correctIndex":1,"explanation":"No verb needed, and use feminine form \"українка\"!"},{"question":"What is \"Це\"?","options":["He","She","This is / It is","That"],"correctIndex":2,"explanation":"\"Це\" is used for identification."},{"question":"Which pronoun means \"we\"?","options":["ви","вони","ми","я"],"correctIndex":2,"explanation":"\"Ми\" means \"we.\""},{"question":"When do you use \"ви\" instead of \"ти\"?","options":["Only for groups","Only for women","For formal situations or plural \"you\"","Never - they're the same"],"correctIndex":2,"explanation":"\"Ви\" is formal/polite or plural."},{"question":"What does \"Він лікар\" mean?","options":["He is a doctor.","He has a doctor.","Is he a doctor?","This is a doctor."],"correctIndex":0,"explanation":"Він (he) + лікар (doctor) = He is a doctor."},{"question":"How would a woman say \"I am Ukrainian\"?","options":["Я українець.","Я українка.","Я український.","Я Україна."],"correctIndex":1,"explanation":"Women use \"українка,\" men use \"українець.\""},{"question":"What does \"Ось мій паспорт\" mean?","options":["Here is my passport.","This is a passport.","Where is my passport?","I have a passport."],"correctIndex":0,"explanation":"\"Ось\" means \"here is.\""},{"question":"Which sentence is correct for \"They are students\"?","options":["Вони є студенти.","Вони студент.","Вони студенти.","Вони студентка."],"correctIndex":2,"explanation":"No verb + plural form \"студенти.\""},{"question":"What is \"То\"?","options":["This (near)","That (far)","Here","He"],"correctIndex":1,"explanation":"\"То\" means \"that is\" for things farther away."},{"question":"What pronoun means \"it\" in Ukrainian?","options":["вона","він","воно","це"],"correctIndex":2,"explanation":"\"Воно\" is \"it,\" but it's rarely used."}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-1","type":"match-up","title":"Pronouns and Demonstratives","data":{"type":"match-up","pairs":[{"left":"я","right":"I"},{"left":"ти","right":"you (informal)"},{"left":"він","right":"he"},{"left":"вона","right":"she"},{"left":"воно","right":"it"},{"left":"ми","right":"we"},{"left":"ви","right":"you (formal/plural)"},{"left":"вони","right":"they"},{"left":"це","right":"this is"},{"left":"то","right":"that is"},{"left":"ось","right":"here is"},{"left":"людина","right":"person"}],"shuffleRight":true}},{"id":"activity-2","type":"match-up","title":"Male and Female Forms","data":{"type":"match-up","pairs":[{"left":"українець","right":"українка"},{"left":"англієць","right":"англійка"},{"left":"студент","right":"студентка"},{"left":"турист","right":"туристка"},{"left":"чоловік","right":"жінка"},{"left":"хлопець","right":"дівчина"},{"left":"він","right":"вона"},{"left":"лікар","right":"лікарка"},{"left":"вчитель","right":"вчителька"},{"left":"американець","right":"американка"},{"left":"друг","right":"подруга"},{"left":"я (чоловік)","right":"я (жінка)"}],"shuffleRight":true}},{"id":"activity-3","type":"group-sort","title":"Gender Pairs","data":{"type":"group-sort","groups":[{"id":"male-forms","name":"Male Forms","items":["українець","англієць","студент","турист","чоловік","хлопець"]},{"id":"female-forms","name":"Female Forms","items":["українка","англійка","студентка","туристка","жінка","дівчина"]}],"shuffleItems":true}},{"id":"activity-4","type":"true-false","title":"Zero Copula Rules","data":{"type":"true-false","statements":[{"statement":"Ukrainian doesn't use \"to be\" in present tense.","isTrue":true,"explanation":"Correct! This is called the zero copula."},{"statement":"\"Я є студент\" is correct Ukrainian.","isTrue":false,"explanation":"Incorrect! Just \"Я студент\" - no verb needed."},{"statement":"\"Це\" means \"this is\" for identification.","isTrue":true,"explanation":"Correct! Use \"Це\" to point out or identify things."},{"statement":"\"Він\" and \"вона\" can be used interchangeably.","isTrue":false,"explanation":"Incorrect! \"Він\" is he, \"вона\" is she."},{"statement":"\"Ви\" is both formal \"you\" and plural \"you.\"","isTrue":true,"explanation":"Correct! Like French \"vous.\""},{"statement":"Nationalities have different forms for men and women.","isTrue":true,"explanation":"Correct! Українець (m) / Українка (f)."},{"statement":"\"Воно\" is commonly used for objects.","isTrue":false,"explanation":"Incorrect! \"Воно\" is rare; usually \"це\" is used instead."},{"statement":"\"Ось\" means \"here is.\"","isTrue":true,"explanation":"Correct! \"Ось мій паспорт\" = Here is my passport."},{"statement":"You should use \"ти\" with your boss.","isTrue":false,"explanation":"Incorrect! Use \"ви\" in formal situations."},{"statement":"\"Мене звати\" means \"my name is.\"","isTrue":true,"explanation":"Correct! Literally \"me call\" = \"I am called.\""},{"statement":"\"То\" means \"that is\" for things farther away.","isTrue":true,"explanation":"Correct! \"Це\" = this, \"То\" = that."},{"statement":"In past tense, Ukrainian still has zero copula.","isTrue":false,"explanation":"Incorrect! Past tense uses \"був/була/було\" (was)."}]}},{"id":"activity-5","type":"fill-blank","title":"Complete the Sentence","data":{"type":"fill-blank","items":[{"prompt":"___ студент. (I am a student - male)","answer":"Я","options":["Я","Він","Вона","Ми"]},{"prompt":"___ книга. (This is a book.)","answer":"Це","options":["Це","Я","То","Ось"]},{"prompt":"Вона ___. (She is Ukrainian.)","answer":"українка","options":["українка","українець","український","Україна"]},{"prompt":"___ туристи. (We are tourists.)","answer":"Ми","options":["Ми","Вони","Ви","Я"]},{"prompt":"___ лікар. (He is a doctor.)","answer":"Він","options":["Він","Вона","Воно","Я"]},{"prompt":"Я ___. (I am a teacher - female)","answer":"вчителька","options":["вчителька","вчитель","студент","лікар"]},{"prompt":"___ мій дім. (This is my house.)","answer":"Це","options":["Це","Він","Я","То"]},{"prompt":"___ студенти. (They are students.)","answer":"Вони","options":["Вони","Ми","Ви","Він"]},{"prompt":"___ англієць. (You are English - formal, male)","answer":"Ви","options":["Ви","Ти","Він","Я"]},{"prompt":"Ти ___. (You are a tourist - informal, female)","answer":"туристка","options":["туристка","турист","туристи","туристки"]},{"prompt":"___ мій паспорт. (Here is my passport.)","answer":"Ось","options":["Ось","Це","То","Він"]},{"prompt":"___ вікно. (That is a window.)","answer":"То","options":["То","Це","Ось","Він"]}]}},{"id":"activity-6","type":"anagram","title":"Pronoun Practice","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["я"],"answer":"я","translation":"I"},{"letters":["и","т"],"answer":"ти","translation":"you - informal"},{"letters":["і","н","в"],"answer":"він","translation":"he"},{"letters":["а","о","н","в"],"answer":"вона","translation":"she"},{"letters":["о","о","н","в"],"answer":"воно","translation":"it"},{"letters":["и","м"],"answer":"ми","translation":"we"},{"letters":["и","в"],"answer":"ви","translation":"you - formal"},{"letters":["и","н","о","в"],"answer":"вони","translation":"they"},{"letters":["е","ц"],"answer":"це","translation":"this is"},{"letters":["ь","о","с"],"answer":"ось","translation":"here is"},{"letters":["о","т"],"answer":"то","translation":"that is"},{"letters":["а","н","и","д","л","ю"],"answer":"людина","translation":"person"}]}}];
-    const vocabData = [{"uk":"я (ya)","translit":"","en":"I","note":"1st person singular"},{"uk":"ти (ty)","translit":"","en":"you (informal)","note":"2nd person singular"},{"uk":"він (vin)","translit":"","en":"he","note":"3rd person masculine"},{"uk":"вона (vona)","translit":"","en":"she","note":"3rd person feminine"},{"uk":"воно (vono)","translit":"","en":"it","note":"3rd person neuter (rare)"},{"uk":"ми (my)","translit":"","en":"we","note":"1st person plural"},{"uk":"ви (vy)","translit":"","en":"you (formal/plural)","note":"2nd person formal/plural"},{"uk":"вони (vony)","translit":"","en":"they","note":"3rd person plural"},{"uk":"це (tse)","translit":"","en":"this is, it is","note":"demonstrative"},{"uk":"то (to)","translit":"","en":"that is","note":"demonstrative (far)"},{"uk":"ось (os')","translit":"","en":"here is","note":"presenting"},{"uk":"людина (lyudyna)","translit":"","en":"person","note":"human being"},{"uk":"чоловік (cholovik)","translit":"","en":"man","note":"adult male"},{"uk":"жінка (zhinka)","translit":"","en":"woman","note":"adult female"},{"uk":"хлопець (khlopets')","translit":"","en":"boy, guy","note":"young male"},{"uk":"дівчина (divchyna)","translit":"","en":"girl","note":"young female"},{"uk":"українець (ukrainets')","translit":"","en":"Ukrainian","note":"nationality (male)"},{"uk":"українка (ukrainka)","translit":"","en":"Ukrainian","note":"nationality (female)"},{"uk":"англієць (anhliets')","translit":"","en":"English person","note":"nationality (male)"},{"uk":"англійка (anhliyka)","translit":"","en":"English person","note":"nationality (female)"}];
+    const activitiesData = [{"id":"activity-0","type":"match-up","title":"Pronouns","data":{"type":"match-up","pairs":[{"left":"I","right":"Я"},{"left":"You (informal)","right":"Ти"},{"left":"He","right":"Він"},{"left":"She","right":"Вона"},{"left":"It","right":"Воно"},{"left":"We","right":"Ми"},{"left":"You (formal)","right":"Ви"},{"left":"They","right":"Вони"},{"left":"Man","right":"Чоловік"},{"left":"Woman","right":"Жінка"},{"left":"Boy","right":"Хлопець"},{"left":"Girl","right":"Дівчина"}],"shuffleRight":true}},{"id":"activity-1","type":"anagram","title":"Scrambled Identities","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["т","у","с","д","н","е","т"],"answer":"студент","translation":"Learner"},{"letters":["р","і","л","а","к"],"answer":"лікар","translation":"Heals people"},{"letters":["у","к","р","а","а","к","ї","н"],"answer":"українка","translation":"Nationality F"},{"letters":["а","к","н","д","а","к","а"],"answer":"канадка","translation":"Nationality F"},{"letters":["ф","с","о","р","е","п","р","о"],"answer":"професор","translation":"Teacher at uni"},{"letters":["г","р","у","д"],"answer":"друг","translation":"Buddy"},{"letters":["п","о","л","е","ц","ь","х"],"answer":"хлопець","translation":"Boy"},{"letters":["н","а","і","ж","к"],"answer":"жінка","translation":"Woman"},{"letters":["ц","ь","е","і","л","г","н","а"],"answer":"англієць","translation":"Nationality M"},{"letters":["н","а","л","ю","д","и"],"answer":"людина","translation":"Person"},{"letters":["м","е","р","а","к","и","ц","е","н","а"],"answer":"американець","translation":"Nationality M"},{"letters":["о","л","о","ч","к","і","в"],"answer":"чоловік","translation":"Man"}]}},{"id":"activity-2","type":"fill-blank","title":"Complete the Sentence with Pronouns/Words","data":{"type":"fill-blank","items":[{"prompt":"___ студент. (I am a student.)\n   - [!answer] Я","answer":"","options":["Я","Ти","Воно"]},{"prompt":"___ українка. (She is Ukrainian.)\n   - [!answer] Вона","answer":"","options":["Вона","Він","Ми"]},{"prompt":"___ американці. (They are Americans.)\n   - [!answer] Вони","answer":"","options":["Вони","Він","Я"]},{"prompt":"___ ви? (Who are you?)\n   - [!answer] Хто","answer":"","options":["Хто","Що","Де"]},{"prompt":"___ лікар. (He is a doctor.)","answer":"Він","options":["Він","Вона","Ми"]},{"prompt":"___ тут. (We are here.)","answer":"Ми","options":["Ми","Ви","Вони"]},{"prompt":"___ професорка. (She is a professor.)","answer":"Вона","options":["Вона","Він","Я"]},{"prompt":"___ друг. (He is a friend.)","answer":"Він","options":["Він","Вона","Воно"]},{"prompt":"___ канадець. (He is Canadian.)","answer":"Він","options":["Він","Вона","Воно"]},{"prompt":"___ студентка. (She is a student.)","answer":"Вона","options":["Вона","Він","Ми"]},{"prompt":"___ хлопці. (They are boys.)","answer":"Вони","options":["Вони","Він","Я"]},{"prompt":"___ англійка. (She is English.)","answer":"Вона","options":["Вона","Він","Ми"]}]}},{"id":"activity-3","type":"quiz","title":"Translation","data":{"type":"quiz","questions":[{"question":"\"He is a doctor.\"","options":["Він лікар.","Вона лікар.","Ми лікар."],"correctIndex":0,"explanation":""},{"question":"\"This is a park.\"","options":["Це парк.","Він парк.","Я парк."],"correctIndex":0,"explanation":""},{"question":"\"We are here.\"","options":["Ми тут."],"correctIndex":0,"explanation":""},{"question":"\"She is Ukrainian.\"","options":["Вона українка.","Він українець.","Я українка."],"correctIndex":0,"explanation":""},{"question":"\"I am a student.\"","options":["Я студент.","Він студент.","Вона студент."],"correctIndex":0,"explanation":""},{"question":"\"Who is this?\"","options":["Хто це?","Що це?","Де це?"],"correctIndex":0,"explanation":""},{"question":"\"They are friends.\"","options":["Вони друзі.","Ми друзі.","Ви друзі."],"correctIndex":0,"explanation":""},{"question":"\"He is not American.\"","options":["Він не американець.","Він американець.","Він американець не."],"correctIndex":0,"explanation":""},{"question":"\"Is this Anna?\"","options":["Це Анна?","Хто Анна?","Що Анна?"],"correctIndex":0,"explanation":""},{"question":"\"You (informal) are here.\"","options":["Ти тут.","Ви тут.","Я тут."],"correctIndex":0,"explanation":""},{"question":"\"She is a professor.\"","options":["Вона професорка.","Він професор.","Вона професор."],"correctIndex":0,"explanation":""},{"question":"\"They are Canadian.\"","options":["Вони канадці.","Вони канадійці.","Вони Канада."],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-4","type":"group-sort","title":"Gendered People","data":{"type":"group-sort","groups":[{"id":"masculine","name":"Masculine","items":["Чоловік","Хлопець","Студент","Українець","Американець","Канадець","Професор","Лікар","Друг"]},{"id":"feminine","name":"Feminine","items":["Жінка","Дівчина","Студентка","Українка","Американка","Канадка","Професорка","Лікарка","Подруга"]}],"shuffleItems":true}},{"id":"activity-5","type":"unjumble","title":"Build Sentences","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["студент","Я"],"answer":"Я студент."},{"words":["не","Він","турист"],"answer":"Він не турист."},{"words":["це","Хто","?"],"answer":"Хто це?"},{"words":["тут","Ми"],"answer":"Ми тут."},{"words":["українка","Вона"],"answer":"Вона українка."},{"words":["Він","лікар","не","."],"answer":"Він не лікар."},{"words":["Професор","вона","?"],"answer":"Вона професор?"},{"words":["друг","Мій","Андрій"],"answer":"Мій друг Андрій."},{"words":["студентка","Моя","Анна","подруга"],"answer":"Моя подруга Анна студентка."},{"words":["тут","Канадець","він"],"answer":"Він канадець тут."},{"words":["Це","хто","?"],"answer":"Хто це?"},{"words":["не","Ти","тут","."],"answer":"Ти не тут."}]}},{"id":"activity-6","type":"true-false","title":"Grammar Facts","data":{"type":"true-false","statements":[{"statement":"In the present tense, Ukrainian sentences usually don't have a visible verb \"to be\".","isTrue":true,"explanation":"Correct! It's the Zero Copula."},{"statement":"\"Ти\" is used for your boss or strangers.","isTrue":false,"explanation":"Incorrect. \"Ти\" is informal. Use \"Ви\" for bosses."},{"statement":"\"Це\" can mean \"This is\", \"That is\", or \"It is\".","isTrue":true,"explanation":"Correct! It is a universal pointer."},{"statement":"\"Ми\" means \"You (plural)\".","isTrue":false,"explanation":"Incorrect. \"Ми\" means \"We\"."},{"statement":"\"Вони\" means \"They\".","isTrue":true,"explanation":"Correct!"},{"statement":"\"Він\" is used for \"She\".","isTrue":false,"explanation":"Incorrect. \"Він\" is for \"He\"."},{"statement":"\"Я не студент\" means \"I am not a student\".","isTrue":true,"explanation":"Correct! \"Не\" negates the noun."},{"statement":"\"Хто це?\" asks \"What is this?\".","isTrue":false,"explanation":"Incorrect. \"Хто це?\" asks \"Who is this?\"."},{"statement":"\"Ви\" is used for groups of people.","isTrue":true,"explanation":"Correct!"},{"statement":"\"Людина\" is a masculine noun.","isTrue":false,"explanation":"Incorrect. \"Людина\" (person) is a feminine noun."},{"statement":"\"Друг\" is a masculine noun.","isTrue":true,"explanation":"Correct!"},{"statement":"\"Професорка\" is a masculine noun.","isTrue":false,"explanation":"Incorrect. \"Професорка\" is a feminine noun."}]}},{"id":"activity-7","type":"fill-blank","title":"Dialogue Completion","data":{"type":"fill-blank","items":[{"prompt":"(name)\n    - [!answer] Джон\n    - [!options] Джон | Марія | Олександр","answer":""},{"prompt":"(profession - student)\n    - [!answer] студент\n    - [!options] студент | лікар | професор","answer":""},{"prompt":"(name)\n    - [!answer] Джоне\n    - [!options] Джоне | Джоном | Джономі","answer":""},{"prompt":"(name)\n    - [!answer] Анна\n    - [!options] Анна | Андрій | Олена","answer":""},{"prompt":"(nationality - Ukrainian)\n    - [!answer] українка\n    - [!options] українка | американець | канадець","answer":""},{"prompt":"(name)\n    - [!answer] Марто\n    - [!options] Марто | Марта | Марті","answer":""},{"prompt":"(profession - doctor)\n    - [!answer] лікар\n    - [!options] лікар | професор | студент","answer":""},{"prompt":"(nationality - American)\n    - [!answer] американець\n    - [!options] американець | українець | канадець","answer":""},{"prompt":"(profession - professor)\n    - [!answer] професорка\n    - [!options] професорка | студентка | лікарка","answer":""},{"prompt":"(nationality - Canadian)\n    - [!answer] канадець\n    - [!options] канадець | українець | американець","answer":""},{"prompt":"(name)\n    - [!answer] Софія\n    - [!options] Софія | Олена | Анна","answer":""},{"prompt":"(profession - friend)\n    - [!answer] друг\n    - [!options] друг | лікар | студент","answer":""}]}}];
+    const vocabData = [{"uk":"я","translit":"/jɑ/","en":"pron","note":"[🔊](audio_ya)"},{"uk":"ти","translit":"/tɪ/","en":"pron","note":"[🔊](audio_ty)"},{"uk":"він","translit":"/vʲin/","en":"pron","note":"[🔊](audio_vin)"},{"uk":"вона","translit":"/vɔˈnɑ/","en":"pron","note":"[🔊](audio_vona)"},{"uk":"воно","translit":"/vɔˈnɔ/","en":"pron","note":"[🔊](audio_vono)"},{"uk":"ми","translit":"/mɪ/","en":"pron","note":"[🔊](audio_my)"},{"uk":"ви","translit":"/vɪ/","en":"pron","note":"[🔊](audio_vy)"},{"uk":"вони","translit":"/vɔˈnɪ/","en":"pron","note":"[🔊](audio_vony)"},{"uk":"це","translit":"/tʃɛ/","en":"pron","note":"[🔊](audio_tse)"},{"uk":"то","translit":"/tɔ/","en":"pron","note":"[🔊](audio_to)"},{"uk":"ось","translit":"/ɔsʲ/","en":"part","note":"[🔊](audio_os)"},{"uk":"людина","translit":"/lʲuˈdɪnɑ/","en":"noun","note":"[🔊](audio_lyudyna)"},{"uk":"чоловік","translit":"/tʃɔlɔˈvʲik/","en":"noun","note":"[🔊](audio_cholovik)"},{"uk":"жінка","translit":"/ˈʒin.kɑ/","en":"noun","note":"[🔊](audio_zhinka)"},{"uk":"хлопець","translit":"/ˈxlɔpɛtsʲ/","en":"noun","note":"[🔊](audio_khlopets)"},{"uk":"дівчина","translit":"/ˈdʲivtʃɪnɑ/","en":"noun","note":"[🔊](audio_divchyna)"},{"uk":"українець","translit":"/ukrɑˈjinɛtsʲ/","en":"noun","note":"[🔊](audio_ukrainets)"},{"uk":"українка","translit":"/ukrɑˈjinkɑ/","en":"noun","note":"[🔊](audio_ukrainka)"},{"uk":"англієць","translit":"/ɑnˈɦlʲijɛtsʲ/","en":"noun","note":"[🔊](audio_anhliyets)"},{"uk":"англійка","translit":"/ɑnˈɦlʲijkɑ/","en":"noun","note":"[🔊](audio_anhliyka)"},{"uk":"американець","translit":"/ɑmɛrɪˈkɑnɛtsʲ/","en":"noun","note":"[🔊](audio_amerykanets)"},{"uk":"американка","translit":"/ɑmɛrɪˈkɑnkɑ/","en":"noun","note":"[🔊](audio_amerykanka)"},{"uk":"канадець","translit":"/kɑnɑˈdɛtsʲ/","en":"noun","note":"[🔊](audio_kanadets)"},{"uk":"канадка","translit":"/kɑnɑˈkɑnkɑ/","en":"noun","note":"[🔊](audio_kanadka)"},{"uk":"студент","translit":"/stuˈdɛnt/","en":"noun","note":"[🔊](audio_student)"},{"uk":"студентка","translit":"/stuˈdɛntkɑ/","en":"noun","note":"[🔊](audio_studentka)"},{"uk":"професор","translit":"/prɔfɛˈsɔr/","en":"noun","note":"[🔊](audio_profesor)"},{"uk":"професорка","translit":"/prɔfɛˈsɔrkɑ/","en":"noun","note":"[🔊](audio_profesorka)"},{"uk":"лікар","translit":"/ˈlʲikɑr/","en":"noun","note":"[🔊](audio_likar)"},{"uk":"лікарка","translit":"/ˈlʲikɑrkɑ/","en":"noun","note":"[🔊](audio_likarka)"},{"uk":"друг","translit":"/druɦ/","en":"noun","note":"[🔊](audio_druh)"},{"uk":"подруга","translit":"/ˈpɔdruɦɑ/","en":"noun","note":"[🔊](audio_podruha)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1068,6 +882,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2332,6 +2172,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

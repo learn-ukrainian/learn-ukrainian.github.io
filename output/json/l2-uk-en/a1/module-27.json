@@ -11,526 +11,96 @@
     "targetLevel": "A1",
     "phase": "A1.3",
     "moduleNumber": 27,
-    "moduleType": "vocabulary",
+    "moduleType": "grammar",
     "immersionLevel": 0.3,
-    "title": "Colors & Clothing",
-    "subtitle": "Кольори та одяг — Describing What You Wear",
-    "description": "Name colors in Ukrainian",
+    "title": "Description (Adjectives III)",
+    "subtitle": "The World in HD",
+    "description": "Learner can use key antonyms (Big/Small, New/Old)",
     "objectives": [
-      "Name colors in Ukrainian",
-      "Name common clothing items",
-      "Describe what someone is wearing",
-      "Use color adjectives with correct agreement"
+      "Learner can use key antonyms (Big/Small, New/Old)",
+      "Learner can describe objects (It is heavy, It is cheap)",
+      "Learner can use \"Very\" (Duzhe) and \"Too\" (Zanadto)",
+      "Learner can agree adjectives with Nouns (M/F/N/Pl)"
     ],
-    "grammarFocus": [
-      "Color adjectives with agreement",
-      "носити (to wear) conjugation",
-      "Accusative with clothing"
-    ],
+    "grammarFocus": [],
     "tags": [
-      "colors",
-      "clothing",
+      "grammar",
       "adjectives",
-      "vocabulary"
+      "antonyms",
+      "description"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
+    "totalDuration": 60,
+    "transliterationMode": "full",
     "sections": [
       {
-        "id": "section-intro",
+        "id": "section-intro-0",
         "name": "Вступ",
         "nameEn": "Introduction",
         "type": "intro",
-        "content": "## warm-up\n\n### A World of Colors\n\nRed, blue, green, yellow — colors are everywhere! In this module, you'll learn to describe the colorful world around you and talk about what people wear.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian has TWO words for blue: \"синій\" (dark blue, like the sea) and \"блакитний\" (light blue, like the sky). This distinction is important in Ukrainian culture!\n\n## presentation\n\n### Basic Colors\n\n| Ukrainian | IPA | English | Type |\n|-----------|-----|---------|------|\n| білий | ˈbilɪj | white | hard |\n| чорний | ˈt͡ʃɔrnɪj | black | hard |\n| сірий | ˈsirɪj | gray | hard |\n| червоний | t͡ʃɛrˈwɔnɪj | red | hard |\n| помаранчевий | pɔmɐrɐnˈt͡ʃɛwɪj | orange | hard |\n| жовтий | ˈʒɔwtɪj | yellow | hard |\n| зелений | zɛˈlɛnɪj | green | hard |\n| синій | ˈsɪnʲij | dark blue | soft |\n| блакитний | blɐˈkɪtnɪj | light blue | hard |\n| фіолетовий | fiɔˈlɛtɔwɪj | purple | hard |\n| рожевий | rɔˈʒɛwɪj | pink | hard |\n| коричневий | kɔˈrɪt͡ʃnɛwɪj | brown | hard |\n\n> 🎬 **Pop Culture Moment: The Matrix**\n>\n> \"Синя таблетка чи червона таблетка?\" (Blue pill or red pill?) — This famous choice uses both colors! Notice \"синя\" (f) and \"червона\" (f) match \"таблетка\" (feminine).\n\n### Color Agreement\n\nColors are adjectives, so they agree with nouns:\n\n| Color | M | F | N | Pl |\n|-------|---|---|---|-----|\n| білий | білий | біла | біле | білі |\n| чорний | чорний | чорна | чорне | чорні |\n| червоний | червоний | червона | червоне | червоні |\n| зелений | зелений | зелена | зелене | зелені |\n| синій | синій | синя | синє | сині |\n\n**Examples:**\n- червоний автобус (red bus - m)\n- червона машина (red car - f)\n- червоне яблуко (red apple - n)\n- червоні квіти (red flowers - pl)\n\n> ⚡ **Pro Tip**\n>\n> Remember: \"синій\" is soft stem! So its feminine is \"синя\" (not \"синя\"), neuter is \"синє\" (not \"синє\").\n\n### Light and Dark\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| світлий | light | світло-зелений (light green) |\n| темний | dark | темно-синій (dark blue) |\n| яскравий | bright | яскраво-червоний (bright red) |\n\n**Compound colors:**\n- світло-синій (light blue)\n- темно-зелений (dark green)\n- яскраво-жовтий (bright yellow)\n\n> 🌍 **Real World**\n>\n> Ukrainian national colors are синій і жовтий (blue and yellow). The flag represents the blue sky over golden wheat fields!\n\n### Clothing Items: Upper Body\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| сорочка | sɔˈrɔt͡ʃkɐ | shirt | f |\n| футболка | futˈbɔlkɐ | T-shirt | f |\n| светр | swɛtr | sweater | m |\n| куртка | ˈkurtkɐ | jacket | f |\n| пальто | pɐlʲˈtɔ | coat | n |\n| піджак | pidˈʒɑk | blazer | m |\n| блузка | ˈbluzkɐ | blouse | f |\n\n### Clothing Items: Lower Body\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| штани | ʃtɐˈnɪ | pants | pl |\n| джинси | ˈdʒɪnsɪ | jeans | pl |\n| шорти | ˈʃɔrtɪ | shorts | pl |\n| спідниця | spidˈnɪt͡sʲɐ | skirt | f |\n| сукня | ˈsuknʲɐ | dress | f |\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Штани\" can be singular.\n> **Fact:** Like \"pants\" in English, \"штани\" is always plural! \"Мої штани\" (my pants), never \"моя штан.\"\n\n### Footwear and Accessories\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| взуття | ˈwzutʲːɐ | footwear | n |\n| черевики | t͡ʃɛrɛˈwɪkɪ | boots | pl |\n| кросівки | krɔˈsiwkɪ | sneakers | pl |\n| туфлі | ˈtuflʲi | dress shoes | pl |\n| капелюх | kɐpɛˈlʲux | hat | m |\n| шапка | ˈʃɑpkɐ | winter hat | f |\n| шарф | ʃɑrf | scarf | m |\n| рукавички | rukɐˈwɪt͡ʃkɪ | gloves | pl |\n\n> 🎮 **Gamer's Corner**\n>\n> In RPGs like The Witcher: \"Нова чорна куртка +5 до захисту!\" (New black jacket +5 defense!) Understanding clothing terms helps with inventory management!\n\n### The Verb \"носити\" (to wear)\n\n| Person | Form |\n|--------|------|\n| я | ношу |\n| ти | носиш |\n| він/вона | носить |\n| ми | носимо |\n| ви | носите |\n| вони | носять |\n\n**Examples:**\n- Я ношу сині джинси. (I wear blue jeans.)\n- Вона носить червону сукню. (She wears a red dress.)\n- Він носить білу сорочку. (He wears a white shirt.)\n\n> 💡 **Did You Know?**\n>\n> \"Носити\" means both \"to wear\" (habitually) and \"to carry.\" For \"wearing right now,\" you can say \"Я в синіх джинсах\" (I'm in blue jeans) or \"На мені сині джинси\" (On me are blue jeans).\n\n### Describing What Someone Wears\n\n**Question:** Що ти носиш? / Що на тобі?\n\n**Answers:**\n- Я ношу чорні штани і білу сорочку.\n- На мені джинси і футболка.\n- Він у сірому светрі.\n- Вона в зеленій сукні.\n\n> 🎯 **Fun Fact**\n>\n> Traditional Ukrainian clothing (вишиванка — embroidered shirt) typically features червоний (red) and чорний (black) on білий (white) fabric. These colors carry deep cultural meaning!\n\n### Color Idioms\n\n| Ukrainian | Literal | Meaning |\n|-----------|---------|---------|\n| білий як сніг | white as snow | very white |\n| чорний як ніч | black as night | very black |\n| червоний як рак | red as a crab | very red/blushing |\n| зелений як трава | green as grass | very green |\n\n## practice\n\n### Exercise 1: Color Agreement\n\nMake the color agree with the noun:\n\n1. ___ (червоний) машина → червона машина\n2. ___ (синій) небо → синє небо\n3. ___ (зелений) трава → зелена трава\n4. ___ (білий) сорочка → біла сорочка\n\n### Exercise 2: What Are They Wearing?\n\nDescribe what these people wear:\n\n1. Бізнесмен: чорний костюм, біла сорочка\n2. Спортсмен: сірі шорти, біла футболка\n3. Студентка: сині джинси, зелена куртка\n\n### Exercise 3: Your Outfit\n\nDescribe what you're wearing today using colors and clothing words.\n\n## production\n\n### Task: Fashion Description\n\nWrite a paragraph describing:\n1. What you typically wear\n2. Your favorite colors for clothing\n3. What someone you know usually wears\n\nUse at least 5 different colors and 5 clothing items.\n\n---\n\n\n---\n\n\n---"
-      },
-      {
-        "id": "section-summary",
-        "name": "Підсумок",
-        "nameEn": "Summary",
-        "type": "summary",
-        "content": "> **Congratulations!**\n>\n> You can now describe colors and clothing in Ukrainian:\n> - **Basic colors**: білий, чорний, червоний, синій, зелений, жовтий\n> - **Two blues**: синій (dark) vs блакитний (light)\n> - **Clothing**: сорочка, штани, сукня, куртка, черевики\n> - **Agreement**: Color adjectives match noun gender and number\n\n> **Key Patterns:**\n> - Я ношу + accusative: Я ношу білу сорочку.\n> - На мені + nominative: На мені сині джинси.\n> - Color + noun: червона машина, синє небо, білі квіти\n\n> **Coming Next: Module 28 — What's the Weather Like?**\n>\n> In the next module, you'll learn weather expressions:\n> - Яка сьогодні погода? (What's the weather like today?)\n> - Сьогодні тепло/холодно. (It's warm/cold today.)\n> - Йде дощ/сніг. (It's raining/snowing.)"
+        "content": "## warm-up\n**The Critic**\n\nThis coffee is cold (`Холодна`).\nThis soup is expensive (`Дорогий`).\nThis car is fast (`Швидка`).\nThis book is boring (`Нудна`).\n\nWe are critics. We judge the world constantly.\nIn this module, we expand your vocabulary of judgment.\nWe learn the opposites (Antonyms).\nBecause the world is not just \"Good\". Sometimes it is \"Bad\".\n\n## presentation\n\n### Section 1: The Big Four Pairs\n\nMemorize these. They are 80% of daily description.\n\n1.  **Великий** (Big) ↔️ **Маленький** (Small).\n2.  **Новий** (New) ↔️ **Старий** (Old).\n3.  **Хороший** (Good) ↔️ **Поганий** (Bad).\n4.  **Дорогий** (Expensive/Dear) ↔️ **Дешевий** (Cheap).\n\n**Agreement Examples:**\n- Великий дім (Big house - m).\n- Велика проблема (Big problem - f).\n- Велике вікно (Big window - n).\n- Великі люди (Big people - pl).\n\n> 💡 **Pattern Alert**\n> Note the stems.\n> **Velyk**-yy.\n> **Mal**-en'-kyy. (Suffix -en'k is diminutive/cute).\n\n### Section 2: Temperature & Speed\n\n1.  **Гарячий** (Hot - for things) ↔️ **Холодний** (Cold).\n    *Note: For weather/feeling, we use adverbs (Here is hot - Tut Zharko). Adjectives describe the object.*\n    - Гарячий чай (Hot tea).\n    - Холодний душ (Cold shower).\n\n2.  **Швидкий** (Fast) ↔️ **Повільний** (Slow).\n    - Швидкий поїзд (Fast train).\n    - Повільний інтернет (Slow internet).\n\n### Section 3: Difficulty & Interest\n\n1.  **Важкий** (Heavy / Difficult) ↔️ **Легкий** (Light / Easy).\n    - Ця сумка важка. (This bag is heavy).\n    - Цей тест легкий. (This test is easy).\n    *Yes, \"Heavy\" and \"Difficult\" are the same word.*\n\n2.  **Цікавий** (Interesting) ↔️ **Нудний** (Boring).\n    - Цікава книга.\n    - Нудний фільм.\n\n### Section 4: Very vs Too (Duzhe vs Zanadto)\n\nModifiers change the intensity.\n\n- **Дуже** (Very).\n    - Це дуже дорого. (This is very expensive).\n    - Він дуже розумний. (He is very smart).\n\n- **Занадто** (Too / Excessively).\n    - Це занадто дорого. (This is too expensive - I won't buy it).\n    - Це занадто складно. (This is too complicated).\n\n> 🛒 **Culture Corner: The Market (Rynok)**\n> In a bazaar, you need these words.\n> \"Скільки коштує? Ого! Це дуже дорого!\" (How much? Wow! Very expensive!).\n> Describing goods is a sport.\n> Seller: \"Це дуже свіже!\" (This is very fresh!).\n> Buyer: \"Ні, це старе.\" (No, this is old).\n\n### Section 5: Beautiful vs Ugly\n\n- **Гарний** (Beautiful / Good / Nice).\n    - Used for people, weather, objects.\n    - Гарна дівчина (Beautiful girl).\n    - Гарний день (Nice day).\n\n- **Негарний** (Not beautiful / Ugly).\n    - Ukrainian is polite. We rarely say \"Ugly\" (Potvornyy).\n    - We say \"Neharnyy\" (Un-beautiful).\n\n\n### Section 6: Describing People (Physical)\n\nBe careful. Adjectives can be rude.\n\n1.  **Високий** (Tall) ↔️ **Низький** (Short/Low).\n    *Note: \"Short\" for people is Nyzkyy. \"Short\" for time/distance is Korotkyy.*\n2.  **Худий** (Thin) ↔️ **Товстий** (Fat).\n    *Polite:* **Повний** (Full/Plump).\n3.  **Молодий** (Young) ↔️ **Старий** (Old).\n    *Polite:* **Літній** (Elderly / Of years).\n\n> 👵 **Culture Corner: The Babusya's Judgment**\n> Ukrainian grandmothers (Babusy) are the ultimate judges.\n> \"Ти занадто худий!\" (You are too thin!).\n> \"Ти блідий!\" (You are pale!).\n> Solution: \"Їж!\" (Eat!).\n> If a Babusya says you are \"Garnyy\", you have succeeded in life.\n\n### Section 7: Describing Weather\n\nWe use neuter short forms or adverbs (ending in -o).\n- **Сонячно** (Sunny).\n- **Хмарно** (Cloudy).\n- **Вітряно** (Windy).\n- **Холодно** (Cold).\n- **Спекотно** (Hot/Sweltering).\n\n\"Сьогодні гарна погода.\" (Today is nice weather).\n\"Завтра буде погана погода.\" (Tomorrow will be bad weather).\n\n> 🔬 **Deep Dive: The Diminutive (-енький)**\n> You will hear \"Mal**en'k**yy\" instead of \"Malyy\".\n> This suffix **-еньк** makes things cuter or softer.\n> - Гарний ➡️ Гарненький (Pretty/Cute).\n> - Теплий (Warm) ➡️ Тепленький.\n> - Свіжий (Fresh) ➡️ Свіженький.\n> Describing food or children? Use -еньк.\n\n### Section 8: Rich vs Poor\n\n1.  **Багатий** (Rich).\n    - Багата людина (Rich person).\n    - Багата історія (Rich history).\n2.  **Бідний** (Poor).\n    - Бідний студент (Poor student).\n    - \"Бідненький!\" (Poor little thing! - Expression of pity).\n\n\n### Section 9: The Superlative (Nay-)\n\nHow do you say \"The Best\", \"The Biggest\"?\nJust add **Най-** prefix.\n- Великий ➡️ **Най**великий (Allocit? No just Nay-). **Найбільший** (The biggest - irregular).\n- Гарний ➡️ **Най**гарніший. (The most beautiful).\n- Цікавий ➡️ **Най**цікавіший. (The most interesting).\n- Розумний ➡️ **Най**розумніший. (The smartest).\n\n> 🏠 **Culture Corner: The \"Euro-Renovation\" (Yevroremont)**\n> In the 90s, everyone wanted \"European\" quality.\n> So they did **Yevroremont**.\n> It usually means: Beige walls, plastic ceilings, bright lights.\n> Real estate ads say: \"Kvartyra z yevroremontom\".\n> It means \"Newly renovated (but maybe with bad taste)\".\n> **\"Звичайний стан\"** (Normal state) usually means \"Soviet condition\".\n\n\n### Section 10: The Color Palette\n\nColors behave exactly like adjectives.\nThey must agree with the noun.\n- **Червоний** (Red).\n- **Білий** (White).\n- **Чорний** (Black).\n- **Зелений** (Green).\n- **Синій** (Dark Blue).\n- **Блакитний** (Light Blue / Sky Blue).\n- **Жовтий** (Yellow).\n- **Сірий** (Grey).\n\n**Examples:**\n- Червона машина (Red car).\n- Білий сніг (White snow).\n- Чорний кіт (Black cat).\n- Зелене яблуко (Green apple).\n- Жовте сонце (Yellow sun).\n\n> 🎨 **Deep Dive: Blue vs Blue**\n> English has \"Blue\".\n> Ukrainian has two distinct colors (like Russian).\n> **Синій** (Dark/Navy). The color of the deep sea or night sky.\n> **Блакитний** (Light/Azure). The color of the day sky or the flag.\n> The Ukrainian flag is **Synio-Zhovtyy** (Blue-Yellow) in the constitution, but often described as **Blakytnyy** sky over **Zhovte** wheat.\n\n## practice\n\n**Drill 1: Antonym Match**\n- Big -> Маленький.\n- New -> Старий.\n- Good -> Поганий.\n- Fast -> Повільний.\n\n**Drill 2: Agree the Adjective**\n- (Big) House -> Великий дім.\n- (Big) Car -> Велика машина.\n- (Big) Misto (City) -> Велике місто.\n- (Big) Problems -> Великі проблеми.\n\n**Drill 3: The Critic**\n- (The soup is cold) -> Суп холодний.\n- (The internet is slow) -> Інтернет повільний.\n- (The book is interesting) -> Книга цікава.\n\n## production\n\n**Scenario: Shopping for a Phone**\n*   **You:** Я хочу новий телефон.\n*   **Seller:** У нас є цей \"Айфон\". Він дуже швидкий.\n*   **You:** Він гарний. Але він великий?\n*   **Seller:** Так, він великий і легкий.\n*   **You:** Скільки коштує?\n*   **Seller:** 40,000 гривень.\n*   **You:** Ого! Це занадто дорого.\n*   **Seller:** Він дуже якісний (quality).\n*   **You:** Я хочу дешевий телефон.\n*   **Seller:** Тоді (then) ось цей \"Нокіа\". Він старий, але надійний (reliable).\n\n\n**Scenario: The Hotel Review**\n*   **A:** Як твій готель?\n*   **B:** Жахливо (Terrible).\n*   **A:** Чому?\n*   **B:** Кімната маленька. Ліжко старе. Душ холодний.\n*   **A:** А сніданок?\n*   **B:** Сніданок дорогий і несмачний (not tasty).\n*   **A:** Співчуваю (I sympathize).\n*   **B:** А ще (also) там дуже шумно (noisy).\n*   **A:** Ти хочеш змінити готель?\n*   **B:** Я не можу. Я бідний турист.\n\n**Scenario: The Dating App**\n*   **Anna:** Дивись. Цей хлопець гарний?\n*   **Olya:** Ну... він симпатичний (cute). Але він здається (seems) низьким.\n*   **Anna:** Я теж низька. Це добре.\n*   **Olya:** А цей? Він високий і багатий.\n*   **Anna:** Він виглядає (looks) нудним.\n*   **Olya:** Чому?\n*   **Anna:** У нього надто серйозне (serious) лице.\n*   **Olya:** Ти занадто критична.\n*   **Anna:** Я хочу ідеального.\n\n> 🎨 **Deep Dive: Colors (Review)**\n> Remember colors act like adjectives.\n> - Червоний (Red).\n> - Білий (White).\n> - Чорний (Black).\n> - Зелений (Green).\n> - Синій (Dark Blue).\n> - Жовтий (Yellow).\n> \"Червона машина\" (Red car).\n> \"Чорний кіт\" (Black cat).\n> \"Зелений чай\" (Green tea - not 'young'!).\n\n---"
       }
     ],
-    "rawMarkdown": "---\ntitle: \"Colors & Clothing\"\nsubtitle: \"Кольори та одяг — Describing What You Wear\"\nphase: A1.3\nduration: 45\ntransliteration: none\ntags: [colors, clothing, adjectives, vocabulary]\nobjectives:\n  - Name colors in Ukrainian\n  - Name common clothing items\n  - Describe what someone is wearing\n  - Use color adjectives with correct agreement\ngrammar:\n  - Color adjectives with agreement\n  - носити (to wear) conjugation\n  - Accusative with clothing\n---\n\n# Lesson Content\n\n## warm-up\n\n### A World of Colors\n\nRed, blue, green, yellow — colors are everywhere! In this module, you'll learn to describe the colorful world around you and talk about what people wear.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian has TWO words for blue: \"синій\" (dark blue, like the sea) and \"блакитний\" (light blue, like the sky). This distinction is important in Ukrainian culture!\n\n## presentation\n\n### Basic Colors\n\n| Ukrainian | IPA | English | Type |\n|-----------|-----|---------|------|\n| білий | ˈbilɪj | white | hard |\n| чорний | ˈt͡ʃɔrnɪj | black | hard |\n| сірий | ˈsirɪj | gray | hard |\n| червоний | t͡ʃɛrˈwɔnɪj | red | hard |\n| помаранчевий | pɔmɐrɐnˈt͡ʃɛwɪj | orange | hard |\n| жовтий | ˈʒɔwtɪj | yellow | hard |\n| зелений | zɛˈlɛnɪj | green | hard |\n| синій | ˈsɪnʲij | dark blue | soft |\n| блакитний | blɐˈkɪtnɪj | light blue | hard |\n| фіолетовий | fiɔˈlɛtɔwɪj | purple | hard |\n| рожевий | rɔˈʒɛwɪj | pink | hard |\n| коричневий | kɔˈrɪt͡ʃnɛwɪj | brown | hard |\n\n> 🎬 **Pop Culture Moment: The Matrix**\n>\n> \"Синя таблетка чи червона таблетка?\" (Blue pill or red pill?) — This famous choice uses both colors! Notice \"синя\" (f) and \"червона\" (f) match \"таблетка\" (feminine).\n\n### Color Agreement\n\nColors are adjectives, so they agree with nouns:\n\n| Color | M | F | N | Pl |\n|-------|---|---|---|-----|\n| білий | білий | біла | біле | білі |\n| чорний | чорний | чорна | чорне | чорні |\n| червоний | червоний | червона | червоне | червоні |\n| зелений | зелений | зелена | зелене | зелені |\n| синій | синій | синя | синє | сині |\n\n**Examples:**\n- червоний автобус (red bus - m)\n- червона машина (red car - f)\n- червоне яблуко (red apple - n)\n- червоні квіти (red flowers - pl)\n\n> ⚡ **Pro Tip**\n>\n> Remember: \"синій\" is soft stem! So its feminine is \"синя\" (not \"синя\"), neuter is \"синє\" (not \"синє\").\n\n### Light and Dark\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| світлий | light | світло-зелений (light green) |\n| темний | dark | темно-синій (dark blue) |\n| яскравий | bright | яскраво-червоний (bright red) |\n\n**Compound colors:**\n- світло-синій (light blue)\n- темно-зелений (dark green)\n- яскраво-жовтий (bright yellow)\n\n> 🌍 **Real World**\n>\n> Ukrainian national colors are синій і жовтий (blue and yellow). The flag represents the blue sky over golden wheat fields!\n\n### Clothing Items: Upper Body\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| сорочка | sɔˈrɔt͡ʃkɐ | shirt | f |\n| футболка | futˈbɔlkɐ | T-shirt | f |\n| светр | swɛtr | sweater | m |\n| куртка | ˈkurtkɐ | jacket | f |\n| пальто | pɐlʲˈtɔ | coat | n |\n| піджак | pidˈʒɑk | blazer | m |\n| блузка | ˈbluzkɐ | blouse | f |\n\n### Clothing Items: Lower Body\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| штани | ʃtɐˈnɪ | pants | pl |\n| джинси | ˈdʒɪnsɪ | jeans | pl |\n| шорти | ˈʃɔrtɪ | shorts | pl |\n| спідниця | spidˈnɪt͡sʲɐ | skirt | f |\n| сукня | ˈsuknʲɐ | dress | f |\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Штани\" can be singular.\n> **Fact:** Like \"pants\" in English, \"штани\" is always plural! \"Мої штани\" (my pants), never \"моя штан.\"\n\n### Footwear and Accessories\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| взуття | ˈwzutʲːɐ | footwear | n |\n| черевики | t͡ʃɛrɛˈwɪkɪ | boots | pl |\n| кросівки | krɔˈsiwkɪ | sneakers | pl |\n| туфлі | ˈtuflʲi | dress shoes | pl |\n| капелюх | kɐpɛˈlʲux | hat | m |\n| шапка | ˈʃɑpkɐ | winter hat | f |\n| шарф | ʃɑrf | scarf | m |\n| рукавички | rukɐˈwɪt͡ʃkɪ | gloves | pl |\n\n> 🎮 **Gamer's Corner**\n>\n> In RPGs like The Witcher: \"Нова чорна куртка +5 до захисту!\" (New black jacket +5 defense!) Understanding clothing terms helps with inventory management!\n\n### The Verb \"носити\" (to wear)\n\n| Person | Form |\n|--------|------|\n| я | ношу |\n| ти | носиш |\n| він/вона | носить |\n| ми | носимо |\n| ви | носите |\n| вони | носять |\n\n**Examples:**\n- Я ношу сині джинси. (I wear blue jeans.)\n- Вона носить червону сукню. (She wears a red dress.)\n- Він носить білу сорочку. (He wears a white shirt.)\n\n> 💡 **Did You Know?**\n>\n> \"Носити\" means both \"to wear\" (habitually) and \"to carry.\" For \"wearing right now,\" you can say \"Я в синіх джинсах\" (I'm in blue jeans) or \"На мені сині джинси\" (On me are blue jeans).\n\n### Describing What Someone Wears\n\n**Question:** Що ти носиш? / Що на тобі?\n\n**Answers:**\n- Я ношу чорні штани і білу сорочку.\n- На мені джинси і футболка.\n- Він у сірому светрі.\n- Вона в зеленій сукні.\n\n> 🎯 **Fun Fact**\n>\n> Traditional Ukrainian clothing (вишиванка — embroidered shirt) typically features червоний (red) and чорний (black) on білий (white) fabric. These colors carry deep cultural meaning!\n\n### Color Idioms\n\n| Ukrainian | Literal | Meaning |\n|-----------|---------|---------|\n| білий як сніг | white as snow | very white |\n| чорний як ніч | black as night | very black |\n| червоний як рак | red as a crab | very red/blushing |\n| зелений як трава | green as grass | very green |\n\n## practice\n\n### Exercise 1: Color Agreement\n\nMake the color agree with the noun:\n\n1. ___ (червоний) машина → червона машина\n2. ___ (синій) небо → синє небо\n3. ___ (зелений) трава → зелена трава\n4. ___ (білий) сорочка → біла сорочка\n\n### Exercise 2: What Are They Wearing?\n\nDescribe what these people wear:\n\n1. Бізнесмен: чорний костюм, біла сорочка\n2. Спортсмен: сірі шорти, біла футболка\n3. Студентка: сині джинси, зелена куртка\n\n### Exercise 3: Your Outfit\n\nDescribe what you're wearing today using colors and clothing words.\n\n## production\n\n### Task: Fashion Description\n\nWrite a paragraph describing:\n1. What you typically wear\n2. Your favorite colors for clothing\n3. What someone you know usually wears\n\nUse at least 5 different colors and 5 clothing items.\n\n---\n\n# Activities\n\n## fill-in: Color Agreement\n\n> Choose the correct color form.\n\n1. ___ машина (red)\n   > [!answer] червона\n   > [!options] червона | червоний | червоне | червоні\n\n2. ___ небо (blue)\n   > [!answer] синє\n   > [!options] синє | синій | синя | сині\n\n3. ___ сорочка (white)\n   > [!answer] біла\n   > [!options] біла | білий | біле | білі\n\n4. ___ штани (black)\n   > [!answer] чорні\n   > [!options] чорні | чорний | чорна | чорне\n\n5. ___ трава (green)\n   > [!answer] зелена\n   > [!options] зелена | зелений | зелене | зелені\n\n6. ___ сонце (yellow)\n   > [!answer] жовте\n   > [!options] жовте | жовтий | жовта | жовті\n\n7. ___ куртка (gray)\n   > [!answer] сіра\n   > [!options] сіра | сірий | сіре | сірі\n\n8. ___ квіти (red)\n   > [!answer] червоні\n   > [!options] червоні | червоний | червона | червоне\n\n9. ___ сукня (pink)\n   > [!answer] рожева\n   > [!options] рожева | рожевий | рожеве | рожеві\n\n10. ___ пальто (brown)\n    > [!answer] коричневе\n    > [!options] коричневе | коричневий | коричнева | коричневі\n\n11. ___ взуття (black)\n    > [!answer] чорне\n    > [!options] чорне | чорний | чорна | чорні\n\n12. ___ очі (blue — light)\n    > [!answer] блакитні\n    > [!options] блакитні | блакитний | блакитна | блакитне\n\n## fill-in: Clothing Items\n\n> Choose the correct clothing item.\n\n1. На голові — ___.\n   > [!answer] капелюх\n   > [!options] капелюх | штани | куртка | взуття\n\n2. На ногах — ___.\n   > [!answer] черевики\n   > [!options] черевики | шарф | сорочка | капелюх\n\n3. Влітку ношу ___.\n   > [!answer] шорти\n   > [!options] шорти | пальто | рукавички | шапку\n\n4. Взимку ношу теплу ___.\n   > [!answer] куртку\n   > [!options] куртку | футболку | сукню | шорти\n\n5. Бізнесмен носить ___.\n   > [!answer] піджак\n   > [!options] піджак | шорти | футболку | кросівки\n\n6. На руках — ___.\n   > [!answer] рукавички\n   > [!options] рукавички | черевики | капелюх | штани\n\n7. Жінка носить ___.\n   > [!answer] сукню\n   > [!options] сукню | піджак | шорти | капелюх\n\n8. Спортсмен носить ___.\n   > [!answer] кросівки\n   > [!options] кросівки | туфлі | черевики | рукавички\n\n9. Узимку на голові — тепла ___.\n   > [!answer] шапка\n   > [!options] шапка | капелюх | шарф | куртка\n\n10. Вона носить білу ___.\n    > [!answer] блузку\n    > [!options] блузку | штани | джинси | шорти\n\n11. Він носить сині ___.\n    > [!answer] джинси\n    > [!options] джинси | сорочку | куртку | капелюх\n\n12. На шиї — теплий ___.\n    > [!answer] шарф\n    > [!options] шарф | капелюх | рукавички | черевики\n\n## unjumble: Color and Clothing Sentences\n\n> Put the words in the correct order.\n\n1. червону ношу Я сукню\n   > [!answer] Я ношу червону сукню.\n   > (I wear a red dress.) [4 words]\n\n2. сорочка біла У нього\n   > [!answer] У нього біла сорочка.\n   > (He has a white shirt.) [4 words]\n\n3. сині джинси носить Вона\n   > [!answer] Вона носить сині джинси.\n   > (She wears blue jeans.) [4 words]\n\n4. чорні На мені штани\n   > [!answer] На мені чорні штани.\n   > (I'm wearing black pants.) [4 words]\n\n5. Це зелена куртка моя\n   > [!answer] Це моя зелена куртка.\n   > (This is my green jacket.) [4 words]\n\n6. жовта Сонце і тепле\n   > [!answer] Сонце жовте і тепле.\n   > (The sun is yellow and warm.) [4 words]\n\n7. синє Небо сьогодні\n   > [!answer] Небо сьогодні синє.\n   > (The sky is blue today.) [3 words]\n\n8. носиш Що ти\n   > [!answer] Що ти носиш?\n   > (What are you wearing?) [3 words]\n\n9. сірий Він у светрі\n   > [!answer] Він у сірому светрі.\n   > (He's in a gray sweater.) [4 words]\n\n10. рожева У неї блузка\n    > [!answer] У неї рожева блузка.\n    > (She has a pink blouse.) [4 words]\n\n11. білі Я кросівки ношу\n    > [!answer] Я ношу білі кросівки.\n    > (I wear white sneakers.) [4 words]\n\n12. коричневий Це капелюх мій\n    > [!answer] Це мій коричневий капелюх.\n    > (This is my brown hat.) [4 words]\n\n## match-up: Colors\n\n> Match each Ukrainian color with its English meaning.\n\n| Left | Right |\n|------|-------|\n| білий | white |\n| чорний | black |\n| сірий | gray |\n| червоний | red |\n| жовтий | yellow |\n| зелений | green |\n| синій | dark blue |\n| блакитний | light blue |\n| рожевий | pink |\n| коричневий | brown |\n| фіолетовий | purple |\n| помаранчевий | orange |\n\n## match-up: Clothing\n\n> Match each clothing item with its English meaning.\n\n| Left | Right |\n|------|-------|\n| сорочка | shirt |\n| штани | pants |\n| сукня | dress |\n| куртка | jacket |\n| черевики | boots |\n| капелюх | hat |\n| шарф | scarf |\n| джинси | jeans |\n| светр | sweater |\n| кросівки | sneakers |\n| спідниця | skirt |\n| рукавички | gloves |\n\n## quiz: Colors and Clothing Knowledge\n\n> Test your understanding of colors and clothing.\n\n1. What's the difference between \"синій\" and \"блакитний\"?\n   - [ ] They are the same\n   - [x] Синій is dark blue, блакитний is light blue\n   - [ ] Синій is purple, блакитний is blue\n   - [ ] Блакитний is for clothes only\n   > Ukrainian distinguishes dark blue (синій) from light blue (блакитний).\n\n2. \"Червона машина\" — why \"червона\"?\n   - [ ] Because \"машина\" is neuter\n   - [x] Because \"машина\" is feminine\n   - [ ] Because it's plural\n   - [ ] Random choice\n   > \"Машина\" is feminine, so the adjective takes -а.\n\n3. Which is always plural?\n   - [ ] сукня\n   - [ ] куртка\n   - [x] штани\n   - [ ] сорочка\n   > Like \"pants\" in English, \"штани\" is always plural.\n\n4. \"Синє небо\" — what form is \"синє\"?\n   - [ ] Masculine\n   - [ ] Feminine\n   - [x] Neuter\n   - [ ] Plural\n   > \"Небо\" is neuter, so синій → синє.\n\n5. What colors are in the Ukrainian flag?\n   - [x] синій і жовтий\n   - [ ] червоний і білий\n   - [ ] зелений і білий\n   - [ ] чорний і жовтий\n   > Blue and yellow: blue sky over golden wheat fields.\n\n6. \"Я ношу\" means:\n   - [x] I wear\n   - [ ] I have\n   - [ ] I want\n   - [ ] I like\n   > \"Носити\" = to wear.\n\n7. Which is footwear?\n   - [ ] шарф\n   - [ ] капелюх\n   - [x] кросівки\n   - [ ] рукавички\n   > Кросівки = sneakers (footwear).\n\n8. \"Темно-зелений\" means:\n   - [ ] Light green\n   - [x] Dark green\n   - [ ] Bright green\n   - [ ] Green grass\n   > \"Темний\" = dark.\n\n9. What's worn on the head?\n   - [x] капелюх\n   - [ ] черевики\n   - [ ] рукавички\n   - [ ] штани\n   > Капелюх (hat) is worn on the head.\n\n10. \"Біла сорочка\" — why \"біла\"?\n    - [x] Because сорочка is feminine\n    - [ ] Because сорочка is neuter\n    - [ ] Because it's plural\n    - [ ] Because білий is irregular\n    > \"Сорочка\" is feminine: білий → біла.\n\n11. What's a \"вишиванка\"?\n    - [x] Traditional embroidered shirt\n    - [ ] Winter jacket\n    - [ ] Type of footwear\n    - [ ] Color name\n    > Ukrainian traditional embroidered shirt.\n\n12. \"На мені чорні штани\" means:\n    - [x] I'm wearing black pants\n    - [ ] I like black pants\n    - [ ] I have black pants\n    - [ ] I want black pants\n    > \"На мені\" = on me (what I'm wearing).\n\n## true-false: Color and Clothing Facts\n\n> Decide if each statement is true (Правда) or false (Міф).\n\n- [x] Ukrainian has two words for blue: синій and блакитний.\n  > Correct! Dark blue and light blue.\n\n- [ ] \"Штани\" can be singular.\n  > Incorrect! \"Штани\" is always plural, like \"pants.\"\n\n- [x] Color adjectives must agree with nouns.\n  > Correct! Червоний (m), червона (f), червоне (n), червоні (pl).\n\n- [ ] \"Синій\" is a hard stem adjective.\n  > Incorrect! \"Синій\" is soft stem (-ій/-я/-є/-і).\n\n- [x] \"Носити\" means \"to wear.\"\n  > Correct! Я ношу = I wear.\n\n- [x] \"Пальто\" is neuter.\n  > Correct! Нове пальто (neuter).\n\n- [ ] \"Взуття\" is plural.\n  > Incorrect! \"Взуття\" is neuter singular (collective noun).\n\n- [x] The Ukrainian flag is синьо-жовтий.\n  > Correct! Blue and yellow.\n\n- [ ] \"Біла\" is masculine.\n  > Incorrect! \"Біла\" is feminine. Masculine is \"білий.\"\n\n- [x] \"Темно-синій\" means dark blue.\n  > Correct! Темний = dark.\n\n- [x] \"Вишиванка\" is a traditional Ukrainian embroidered shirt.\n  > Correct! It's an important cultural symbol.\n\n- [ ] \"Кросівки\" is singular.\n  > Incorrect! It's plural (like \"sneakers\").\n\n## group-sort: Clothing Categories\n\n> Sort these items into the correct category.\n\n### Upper Body\n- сорочка\n- футболка\n- светр\n- куртка\n- блузка\n\n### Lower Body\n- штани\n- джинси\n- шорти\n- спідниця\n- сукня\n\n### Footwear\n- черевики\n- кросівки\n- туфлі\n- взуття\n\n### Accessories\n- капелюх\n- шапка\n- шарф\n- рукавички\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| білий | ˈbilɪj | white | adj | m | біла, біле, білі |\n| чорний | ˈt͡ʃɔrnɪj | black | adj | m | чорна, чорне, чорні |\n| сірий | ˈsirɪj | gray | adj | m | сіра, сіре, сірі |\n| червоний | t͡ʃɛrˈwɔnɪj | red | adj | m | червона, червоне, червоні |\n| помаранчевий | pɔmɐrɐnˈt͡ʃɛwɪj | orange | adj | m | помаранчева, -е, -і |\n| жовтий | ˈʒɔwtɪj | yellow | adj | m | жовта, жовте, жовті |\n| зелений | zɛˈlɛnɪj | green | adj | m | зелена, зелене, зелені |\n| синій | ˈsɪnʲij | dark blue | adj | m | синя, синє, сині (soft) |\n| блакитний | blɐˈkɪtnɪj | light blue | adj | m | блакитна, -е, -і |\n| фіолетовий | fiɔˈlɛtɔwɪj | purple | adj | m | фіолетова, -е, -і |\n| рожевий | rɔˈʒɛwɪj | pink | adj | m | рожева, рожеве, рожеві |\n| коричневий | kɔˈrɪt͡ʃnɛwɪj | brown | adj | m | коричнева, -е, -і |\n| світлий | ˈswitlɪj | light | adj | m | світла, світле, світлі |\n| темний | ˈtɛmnɪj | dark | adj | m | темна, темне, темні |\n| яскравий | jɐsˈkrɑwɪj | bright | adj | m | яскрава, -е, -і |\n| сорочка | sɔˈrɔt͡ʃkɐ | shirt | noun | f | |\n| футболка | futˈbɔlkɐ | T-shirt | noun | f | |\n| светр | swɛtr | sweater | noun | m | |\n| куртка | ˈkurtkɐ | jacket | noun | f | |\n| пальто | pɐlʲˈtɔ | coat | noun | n | Indeclinable |\n| штани | ʃtɐˈnɪ | pants | noun | pl | Always plural |\n| джинси | ˈdʒɪnsɪ | jeans | noun | pl | Always plural |\n| шорти | ˈʃɔrtɪ | shorts | noun | pl | Always plural |\n| спідниця | spidˈnɪt͡sʲɐ | skirt | noun | f | |\n| сукня | ˈsuknʲɐ | dress | noun | f | |\n| взуття | ˈwzutʲːɐ | footwear | noun | n | Collective |\n| черевики | t͡ʃɛrɛˈwɪkɪ | boots | noun | pl | |\n| кросівки | krɔˈsiwkɪ | sneakers | noun | pl | |\n| капелюх | kɐpɛˈlʲux | hat | noun | m | |\n| шарф | ʃɑrf | scarf | noun | m | |\n\n---\n\n# Summary\n\n> **Congratulations!**\n>\n> You can now describe colors and clothing in Ukrainian:\n> - **Basic colors**: білий, чорний, червоний, синій, зелений, жовтий\n> - **Two blues**: синій (dark) vs блакитний (light)\n> - **Clothing**: сорочка, штани, сукня, куртка, черевики\n> - **Agreement**: Color adjectives match noun gender and number\n\n> **Key Patterns:**\n> - Я ношу + accusative: Я ношу білу сорочку.\n> - На мені + nominative: На мені сині джинси.\n> - Color + noun: червона машина, синє небо, білі квіти\n\n> **Coming Next: Module 28 — What's the Weather Like?**\n>\n> In the next module, you'll learn weather expressions:\n> - Яка сьогодні погода? (What's the weather like today?)\n> - Сьогодні тепло/холодно. (It's warm/cold today.)\n> - Йде дощ/сніг. (It's raining/snowing.)\n",
-    "createdAt": "2025-12-06T10:49:20.102Z",
-    "modifiedAt": "2025-12-06T10:49:20.102Z",
+    "rawMarkdown": "---\ntitle: Description (Adjectives III)\nsubtitle: The World in HD\nphase: A1.3\nduration: 60\ntransliteration: full\ntags: [grammar, adjectives, antonyms, description]\nobjectives:\n  - Learner can use key antonyms (Big/Small, New/Old)\n  - Learner can describe objects (It is heavy, It is cheap)\n  - Learner can use \"Very\" (Duzhe) and \"Too\" (Zanadto)\n  - Learner can agree adjectives with Nouns (M/F/N/Pl)\n---\n\n# Lesson Content\n\n## warm-up\n**The Critic**\n\nThis coffee is cold (`Холодна`).\nThis soup is expensive (`Дорогий`).\nThis car is fast (`Швидка`).\nThis book is boring (`Нудна`).\n\nWe are critics. We judge the world constantly.\nIn this module, we expand your vocabulary of judgment.\nWe learn the opposites (Antonyms).\nBecause the world is not just \"Good\". Sometimes it is \"Bad\".\n\n## presentation\n\n### Section 1: The Big Four Pairs\n\nMemorize these. They are 80% of daily description.\n\n1.  **Великий** (Big) ↔️ **Маленький** (Small).\n2.  **Новий** (New) ↔️ **Старий** (Old).\n3.  **Хороший** (Good) ↔️ **Поганий** (Bad).\n4.  **Дорогий** (Expensive/Dear) ↔️ **Дешевий** (Cheap).\n\n**Agreement Examples:**\n- Великий дім (Big house - m).\n- Велика проблема (Big problem - f).\n- Велике вікно (Big window - n).\n- Великі люди (Big people - pl).\n\n> 💡 **Pattern Alert**\n> Note the stems.\n> **Velyk**-yy.\n> **Mal**-en'-kyy. (Suffix -en'k is diminutive/cute).\n\n### Section 2: Temperature & Speed\n\n1.  **Гарячий** (Hot - for things) ↔️ **Холодний** (Cold).\n    *Note: For weather/feeling, we use adverbs (Here is hot - Tut Zharko). Adjectives describe the object.*\n    - Гарячий чай (Hot tea).\n    - Холодний душ (Cold shower).\n\n2.  **Швидкий** (Fast) ↔️ **Повільний** (Slow).\n    - Швидкий поїзд (Fast train).\n    - Повільний інтернет (Slow internet).\n\n### Section 3: Difficulty & Interest\n\n1.  **Важкий** (Heavy / Difficult) ↔️ **Легкий** (Light / Easy).\n    - Ця сумка важка. (This bag is heavy).\n    - Цей тест легкий. (This test is easy).\n    *Yes, \"Heavy\" and \"Difficult\" are the same word.*\n\n2.  **Цікавий** (Interesting) ↔️ **Нудний** (Boring).\n    - Цікава книга.\n    - Нудний фільм.\n\n### Section 4: Very vs Too (Duzhe vs Zanadto)\n\nModifiers change the intensity.\n\n- **Дуже** (Very).\n    - Це дуже дорого. (This is very expensive).\n    - Він дуже розумний. (He is very smart).\n\n- **Занадто** (Too / Excessively).\n    - Це занадто дорого. (This is too expensive - I won't buy it).\n    - Це занадто складно. (This is too complicated).\n\n> 🛒 **Culture Corner: The Market (Rynok)**\n> In a bazaar, you need these words.\n> \"Скільки коштує? Ого! Це дуже дорого!\" (How much? Wow! Very expensive!).\n> Describing goods is a sport.\n> Seller: \"Це дуже свіже!\" (This is very fresh!).\n> Buyer: \"Ні, це старе.\" (No, this is old).\n\n### Section 5: Beautiful vs Ugly\n\n- **Гарний** (Beautiful / Good / Nice).\n    - Used for people, weather, objects.\n    - Гарна дівчина (Beautiful girl).\n    - Гарний день (Nice day).\n\n- **Негарний** (Not beautiful / Ugly).\n    - Ukrainian is polite. We rarely say \"Ugly\" (Potvornyy).\n    - We say \"Neharnyy\" (Un-beautiful).\n\n\n### Section 6: Describing People (Physical)\n\nBe careful. Adjectives can be rude.\n\n1.  **Високий** (Tall) ↔️ **Низький** (Short/Low).\n    *Note: \"Short\" for people is Nyzkyy. \"Short\" for time/distance is Korotkyy.*\n2.  **Худий** (Thin) ↔️ **Товстий** (Fat).\n    *Polite:* **Повний** (Full/Plump).\n3.  **Молодий** (Young) ↔️ **Старий** (Old).\n    *Polite:* **Літній** (Elderly / Of years).\n\n> 👵 **Culture Corner: The Babusya's Judgment**\n> Ukrainian grandmothers (Babusy) are the ultimate judges.\n> \"Ти занадто худий!\" (You are too thin!).\n> \"Ти блідий!\" (You are pale!).\n> Solution: \"Їж!\" (Eat!).\n> If a Babusya says you are \"Garnyy\", you have succeeded in life.\n\n### Section 7: Describing Weather\n\nWe use neuter short forms or adverbs (ending in -o).\n- **Сонячно** (Sunny).\n- **Хмарно** (Cloudy).\n- **Вітряно** (Windy).\n- **Холодно** (Cold).\n- **Спекотно** (Hot/Sweltering).\n\n\"Сьогодні гарна погода.\" (Today is nice weather).\n\"Завтра буде погана погода.\" (Tomorrow will be bad weather).\n\n> 🔬 **Deep Dive: The Diminutive (-енький)**\n> You will hear \"Mal**en'k**yy\" instead of \"Malyy\".\n> This suffix **-еньк** makes things cuter or softer.\n> - Гарний ➡️ Гарненький (Pretty/Cute).\n> - Теплий (Warm) ➡️ Тепленький.\n> - Свіжий (Fresh) ➡️ Свіженький.\n> Describing food or children? Use -еньк.\n\n### Section 8: Rich vs Poor\n\n1.  **Багатий** (Rich).\n    - Багата людина (Rich person).\n    - Багата історія (Rich history).\n2.  **Бідний** (Poor).\n    - Бідний студент (Poor student).\n    - \"Бідненький!\" (Poor little thing! - Expression of pity).\n\n\n### Section 9: The Superlative (Nay-)\n\nHow do you say \"The Best\", \"The Biggest\"?\nJust add **Най-** prefix.\n- Великий ➡️ **Най**великий (Allocit? No just Nay-). **Найбільший** (The biggest - irregular).\n- Гарний ➡️ **Най**гарніший. (The most beautiful).\n- Цікавий ➡️ **Най**цікавіший. (The most interesting).\n- Розумний ➡️ **Най**розумніший. (The smartest).\n\n> 🏠 **Culture Corner: The \"Euro-Renovation\" (Yevroremont)**\n> In the 90s, everyone wanted \"European\" quality.\n> So they did **Yevroremont**.\n> It usually means: Beige walls, plastic ceilings, bright lights.\n> Real estate ads say: \"Kvartyra z yevroremontom\".\n> It means \"Newly renovated (but maybe with bad taste)\".\n> **\"Звичайний стан\"** (Normal state) usually means \"Soviet condition\".\n\n\n### Section 10: The Color Palette\n\nColors behave exactly like adjectives.\nThey must agree with the noun.\n- **Червоний** (Red).\n- **Білий** (White).\n- **Чорний** (Black).\n- **Зелений** (Green).\n- **Синій** (Dark Blue).\n- **Блакитний** (Light Blue / Sky Blue).\n- **Жовтий** (Yellow).\n- **Сірий** (Grey).\n\n**Examples:**\n- Червона машина (Red car).\n- Білий сніг (White snow).\n- Чорний кіт (Black cat).\n- Зелене яблуко (Green apple).\n- Жовте сонце (Yellow sun).\n\n> 🎨 **Deep Dive: Blue vs Blue**\n> English has \"Blue\".\n> Ukrainian has two distinct colors (like Russian).\n> **Синій** (Dark/Navy). The color of the deep sea or night sky.\n> **Блакитний** (Light/Azure). The color of the day sky or the flag.\n> The Ukrainian flag is **Synio-Zhovtyy** (Blue-Yellow) in the constitution, but often described as **Blakytnyy** sky over **Zhovte** wheat.\n\n## practice\n\n**Drill 1: Antonym Match**\n- Big -> Маленький.\n- New -> Старий.\n- Good -> Поганий.\n- Fast -> Повільний.\n\n**Drill 2: Agree the Adjective**\n- (Big) House -> Великий дім.\n- (Big) Car -> Велика машина.\n- (Big) Misto (City) -> Велике місто.\n- (Big) Problems -> Великі проблеми.\n\n**Drill 3: The Critic**\n- (The soup is cold) -> Суп холодний.\n- (The internet is slow) -> Інтернет повільний.\n- (The book is interesting) -> Книга цікава.\n\n## production\n\n**Scenario: Shopping for a Phone**\n*   **You:** Я хочу новий телефон.\n*   **Seller:** У нас є цей \"Айфон\". Він дуже швидкий.\n*   **You:** Він гарний. Але він великий?\n*   **Seller:** Так, він великий і легкий.\n*   **You:** Скільки коштує?\n*   **Seller:** 40,000 гривень.\n*   **You:** Ого! Це занадто дорого.\n*   **Seller:** Він дуже якісний (quality).\n*   **You:** Я хочу дешевий телефон.\n*   **Seller:** Тоді (then) ось цей \"Нокіа\". Він старий, але надійний (reliable).\n\n\n**Scenario: The Hotel Review**\n*   **A:** Як твій готель?\n*   **B:** Жахливо (Terrible).\n*   **A:** Чому?\n*   **B:** Кімната маленька. Ліжко старе. Душ холодний.\n*   **A:** А сніданок?\n*   **B:** Сніданок дорогий і несмачний (not tasty).\n*   **A:** Співчуваю (I sympathize).\n*   **B:** А ще (also) там дуже шумно (noisy).\n*   **A:** Ти хочеш змінити готель?\n*   **B:** Я не можу. Я бідний турист.\n\n**Scenario: The Dating App**\n*   **Anna:** Дивись. Цей хлопець гарний?\n*   **Olya:** Ну... він симпатичний (cute). Але він здається (seems) низьким.\n*   **Anna:** Я теж низька. Це добре.\n*   **Olya:** А цей? Він високий і багатий.\n*   **Anna:** Він виглядає (looks) нудним.\n*   **Olya:** Чому?\n*   **Anna:** У нього надто серйозне (serious) лице.\n*   **Olya:** Ти занадто критична.\n*   **Anna:** Я хочу ідеального.\n\n> 🎨 **Deep Dive: Colors (Review)**\n> Remember colors act like adjectives.\n> - Червоний (Red).\n> - Білий (White).\n> - Чорний (Black).\n> - Зелений (Green).\n> - Синій (Dark Blue).\n> - Жовтий (Yellow).\n> \"Червона машина\" (Red car).\n> \"Чорний кіт\" (Black cat).\n> \"Зелений чай\" (Green tea - not 'young'!).\n\n---\n\n# Activities\n\n## match-up: Antonym Attack\n\n> Match the opposites.\n\n| Word 1 | Word 2 |\n|--------|--------|\n| Великий (Big) | Маленький (Small) |\n| Новий (New) | Старий (Old) |\n| Хороший (Good) | Поганий (Bad) |\n| Дорогий (Expensive) | Дешевий (Cheap) |\n| Швидкий (Fast) | Повільний (Slow) |\n| Важкий (Hard/Heavy) | Легкий (Easy/Light) |\n| Цікавий (Interesting) | Нудний (Boring) |\n| Гарний (Beautiful) | Негарний (Ugly) |\n| Гарячий (Hot) | Холодний (Cold) |\n| Довгий (Long) | Короткий (Short) |\n| Розумний (Smart) | Дурний (Stupid) |\n| Смачний (Tasty) | Несмачний (Tasteless) |\n\n## fill-in: Description Builder\n\n> Describe the noun. (Agree gender).\n\n1. (Big) ___ дім.\n   > [!answer] Великий\n\n2. (Small) ___ квартира.\n   > [!answer] Маленька\n\n3. (New) ___ авто.\n   > [!answer] Нове\n\n4. (Old) ___ місто.\n   > [!answer] Старе\n\n5. (Good) ___ друг.\n   > [!answer] Хороший\n\n6. (Bad) ___ погода (f).\n   > [!answer] Погана\n\n7. (Expensive) ___ телефон.\n   > [!answer] Дорогий\n\n8. (Cheap) ___ вода.\n   > [!answer] Дешева\n\n9. (Hot) ___ кава.\n   > [!answer] Гаряча\n\n10. (Cold) ___ пиво (n).\n    > [!answer] Холодне\n\n11. (Interesting) ___ фільм.\n    > [!answer] Цікавий\n\n12. (Boring) ___ урок.\n    > [!answer] Нудний\n\n## group-sort: Positive vs Negative\n\n> Is this a compliment or complaint?\n\n### Positive (Good)\n- Хороший\n- Гарний\n- Цікавий\n- Смачний\n- Розумний\n- Легкий (Easy)\n- Швидкий (Fast)\n- Новий\n\n### Negative (Bad)\n- Поганий\n- Негарний\n- Нудний\n- Несмачний\n- Дурний\n- Важкий (Hard)\n- Повільний (Slow)\n- Старий (Usually)\n\n## quiz: Logic Check\n\n> Choose the logical adjective.\n\n1. A Ferrari is...\n   - [x] Швидка.\n   - [ ] Повільна.\n\n2. Einstein was...\n   - [x] Розумний.\n   - [ ] Дурний.\n\n3. A stone (камінь) is...\n   - [x] Важкий.\n   - [ ] Легкий.\n\n4. The sun is...\n   - [x] Гаряче.\n   - [ ] Холодне.\n\n5. A comedy movie is usually...\n   - [x] Смішний (Funny) / Цікавий.\n   - [ ] Нудний.\n\n6. Water in the fridge is...\n   - [x] Холодна.\n   - [ ] Гаряча.\n\n7. A new iPhone is...\n   - [x] Дорогий.\n   - [ ] Дешевий.\n\n8. A tiny mouse is...\n   - [x] Маленька.\n   - [ ] Велика.\n\n9. Kyiv is a...\n   - [x] Велике місто (Big city).\n   - [ ] Маленьке село (Small village).\n\n10. A broken phone is...\n    - [x] Поганий.\n    - [ ] Хороший.\n\n11. Sugar is...\n    - [x] Солодкий (Sweet).\n    - [ ] Гіркий (Bitter).\n\n12. The weekend is...\n    - [x] Короткий (Short).\n    - [ ] Довгий (Long - rarely).\n\n## anagram: Adjective Scramble\n\n> Unscramble.\n\n1. г и й р о д\n   > [!answer] дорогий\n   > (Expensive)\n\n2. в и й е ш е д\n   > [!answer] дешевий\n   > (Cheap)\n\n3. к и й л и в е\n   > [!answer] великий\n   > (Big)\n\n4. к и й н ь л е а м\n   > [!answer] маленький\n   > (Small)\n\n5. р и й т а с\n   > [!answer] старий\n   > (Old)\n\n6. о в и й н\n   > [!answer] новий\n   > (New)\n\n7. р о ш и й х о\n   > [!answer] хороший\n   > (Good)\n\n8. г а н и й п о\n   > [!answer] поганий\n   > (Bad)\n\n9. а в и й к і ц\n   > [!answer] цікавий\n   > (Interesting)\n\n10. н и й д у н\n    > [!answer] нудний\n    > (Boring)\n\n11. р н и й г а\n    > [!answer] гарний\n    > (Beautiful)\n\n12. к и й ж а в\n    > [!answer] важкий\n    > (Heavy/Hard)\n\n## unjumble: Build Descriptions\n\n> Build sentences.\n\n1. дуже / Це / цікаво / .\n   > [!answer] Це дуже цікаво.\n\n2. занадто / Суп / гарячий / .\n   > [!answer] Суп занадто гарячий.\n\n3. велика / Квартира / і / гарна / .\n   > [!answer] Квартира велика і гарна.\n\n4. машина / Це / стара / .\n   > [!answer] Це стара машина.\n\n5. новий / Телефон / дорогий / .\n   > [!answer] Телефон новий дорогий.\n\n6. не / Я / багатий / .\n   > [!answer] Я не багатий.\n   > (rich)\n\n7. важка / Робота / .\n   > [!answer] Робота важка.\n\n8. тест / Цей / легкий / .\n   > [!answer] Цей тест легкий.\n\n9. тут / Їжа / смачна / .\n   > [!answer] Їжа тут смачна.\n\n10. повільний / Ти / дуже / !\n    > [!answer] Ти дуже повільний!\n\n11. місто / Київ / гарне / .\n    > [!answer] Київ гарне місто.\n\n12. фільм / Це / був / нудний / .\n    > [!answer] Це був нудний фільм.\n\n## fill-in: Make it Negative (Antonyms)\n\n> Change the sentence to opposite.\n> \"Це добре\" -> \"Це погано\".\n\n1. Це великий дім. -> Це ___ дім.\n   > [!answer] маленький\n\n2. Це новий телефон. -> Це ___ телефон.\n   > [!answer] старий\n\n3. Це хороший день. -> Це ___ день.\n   > [!answer] поганий\n\n4. Це цікава книга. -> Це ___ книга.\n   > [!answer] нудна\n\n5. Це гаряча вода. -> Це ___ вода.\n   > [!answer] холодна\n\n6. Це дешеве кафе. -> Це ___ кафе.\n   > [!answer] дорогі\n\n7. Це легкий тест. -> Це ___ тест.\n   > [!answer] важкий\n\n8. Це гарне фото. -> Це ___ фото.\n   > [!answer] негарне\n\n9. Це швидкий поїзд. -> Це ___ поїзд.\n   > [!answer] повільний\n\n10. Це розумний кіт. -> Це ___ кіт.\n    > [!answer] дурний (stupid)\n\n11. Це довгий урок. -> Це ___ урок.\n    > [!answer] короткий\n\n12. Це смачний суп. -> Це ___ суп.\n    > [!answer] несмачний\n\n## true-false: Adjective Facts\n\n> True or False?\n\n1. \"Великий\" means Small.\n   - [ ] True\n   - [x] False (Big)\n\n2. \"Старий\" means Old.\n   - [x] True\n   - [ ] False\n\n3. \"Гарна\" is for feminine nouns.\n   - [x] True\n   - [ ] False\n\n4. \"Важкий\" means Heavy AND Difficult.\n   - [x] True\n   - [ ] False\n\n5. \"Цікавий\" means Expensive.\n   - [ ] True\n   - [x] False (Interesting)\n\n6. \"Дуже\" means Very.\n   - [x] True\n   - [ ] False\n\n7. \"Занадто\" means Too much.\n   - [x] True\n   - [ ] False\n\n8. \"Гаряче\" describes weather usually.\n   - [ ] True\n   - [x] False (Objects. Weather is Zharko).\n\n9. \"Дешевий\" means Cheap.\n   - [x] True\n   - [ ] False\n\n10. \"Розумний\" means Boring.\n    - [ ] True\n    - [x] False (Smart)\n\n11. Adjectives must agree with noun gender.\n    - [x] True\n    - [ ] False\n\n12. \"Негарний\" implies Ugly.\n    - [x] True\n    - [ ] False\n\n# Summary\n\n**You are a critic.**\nYou can judge size, price, quality, and speed.\n- **The Pairs:** Big/Small, Old/New, Good/Bad.\n- **The Modifiers:** Very (Duzhe), Too (Zanadto).\n- **The Agreement:** -yy, -a, -e, -i.\n\n**Checklist:**\n- [ ] I can describe my house (Великий/Маленький).\n- [ ] I can complain about prices (Дорого!).\n- [ ] I can say if food is Good or Bad.\n- [ ] I know \"Цікавий\" (Interesting) vs \"Нудний\" (Boring).\n\n**Next Stop:**\nWe judged the objects.\nNow let's judge the Action.\n**Module 28: Adverbs**. Quickly, Slowly, Well, Badly.\n\"He runs fast.\" (Not He runs fast car).\n\n# Vocabulary\n\n| Word | IPA | English | Note | Audio |\n|------|-----|---------|------|-------|\n| великий | /vɛˈlɪkɪj/ | big | | [🔊](audio_velykyj) |\n| маленький | /mɑˈlɛnʲkɪj/ | small | | [🔊](audio_malenkyj) |\n| новий | /nɔˈvɪj/ | new | | [🔊](audio_novyj) |\n| старий | /stɑˈrɪj/ | old | | [🔊](audio_staryj) |\n| хороший | /xɔˈrɔʃɪj/ | good | | [🔊](audio_khoroshyj) |\n| поганий | /pɔˈɦɑnɪj/ | bad | | [🔊](audio_pohanyj) |\n| дорогий | /dɔrɔˈɦɪj/ | expensive | | [🔊](audio_dorohyj) |\n| дешевий | /dɛˈʃɛvɪj/ | cheap | | [🔊](audio_deshevyj) |\n| гарячий | /ɦɑˈrʲɑtʃɪj/ | hot | | [🔊](audio_haryachyj) |\n| холодний | /xɔˈlɔdnɪj/ | cold | | [🔊](audio_kholodnyj) |\n| швидкий | /ʃvɪdˈkɪj/ | fast | | [🔊](audio_shvydkyj) |\n| повільний | /pɔˈvilʲnɪj/ | slow | | [🔊](audio_povilnyj) |\n| важкий | /vɑʒˈkɪj/ | heavy/hard | | [🔊](audio_vazhkyj) |\n| легкий | /lɛxˈkɪj/ | light/easy | | [🔊](audio_lehkyj) |\n| цікавий | /t͡s⁽ʲ⁾iˈkɑvɪj/ | interesting | | [🔊](audio_tsikavyj) |\n| нудний | /nudˈnɪj/ | boring | | [🔊](audio_nudnyj) |\n| гарний | /ˈɦɑrnɪj/ | beautiful/good | | [🔊](audio_harnyj) |\n| негарний | /nɛˈɦɑrnɪj/ | ugly | | [🔊](audio_neharnyj) |\n| дуже | /ˈduʒɛ/ | very | | [🔊](audio_duzhe) |\n| занадто | /zɑˈnɑdtɔ/ | too/excessively | | [🔊](audio_zanadto) |\n| розумний | /rɔˈzumnɪj/ | smart | | [🔊](audio_rozumnyj) |\n| дурний | /durˈnɪj/ | stupid | | [🔊](audio_durnyj) |\n| смачний | /smɑtʃˈnɪj/ | tasty | | [🔊](audio_smachnyj) |\n| довгий | /ˈdɔvɦɪj/ | long | | [🔊](audio_dovhyj) |\n| короткий | /kɔˈrɔtkɪj/ | short | | [🔊](audio_korotkyj) |\n",
+    "createdAt": "2025-12-08T21:22:09.892Z",
+    "modifiedAt": "2025-12-08T21:22:09.892Z",
     "version": 2
   },
   "activities": [
     {
-      "id": "act-a1-0-fillblank",
-      "type": "fill-blank",
-      "title": "Color Agreement",
-      "description": "Choose the correct color form.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "___ машина (red)",
-            "answer": "червона",
-            "options": [
-              "червона",
-              "червоний",
-              "червоне",
-              "червоні"
-            ]
-          },
-          {
-            "prompt": "___ небо (blue)",
-            "answer": "синє",
-            "options": [
-              "синє",
-              "синій",
-              "синя",
-              "сині"
-            ]
-          },
-          {
-            "prompt": "___ сорочка (white)",
-            "answer": "біла",
-            "options": [
-              "біла",
-              "білий",
-              "біле",
-              "білі"
-            ]
-          },
-          {
-            "prompt": "___ штани (black)",
-            "answer": "чорні",
-            "options": [
-              "чорні",
-              "чорний",
-              "чорна",
-              "чорне"
-            ]
-          },
-          {
-            "prompt": "___ трава (green)",
-            "answer": "зелена",
-            "options": [
-              "зелена",
-              "зелений",
-              "зелене",
-              "зелені"
-            ]
-          },
-          {
-            "prompt": "___ сонце (yellow)",
-            "answer": "жовте",
-            "options": [
-              "жовте",
-              "жовтий",
-              "жовта",
-              "жовті"
-            ]
-          },
-          {
-            "prompt": "___ куртка (gray)",
-            "answer": "сіра",
-            "options": [
-              "сіра",
-              "сірий",
-              "сіре",
-              "сірі"
-            ]
-          },
-          {
-            "prompt": "___ квіти (red)",
-            "answer": "червоні",
-            "options": [
-              "червоні",
-              "червоний",
-              "червона",
-              "червоне"
-            ]
-          },
-          {
-            "prompt": "___ сукня (pink)",
-            "answer": "рожева",
-            "options": [
-              "рожева",
-              "рожевий",
-              "рожеве",
-              "рожеві"
-            ]
-          },
-          {
-            "prompt": "___ пальто (brown)",
-            "answer": "коричневе",
-            "options": [
-              "коричневе",
-              "коричневий",
-              "коричнева",
-              "коричневі"
-            ]
-          },
-          {
-            "prompt": "___ взуття (black)",
-            "answer": "чорне",
-            "options": [
-              "чорне",
-              "чорний",
-              "чорна",
-              "чорні"
-            ]
-          },
-          {
-            "prompt": "___ очі (blue — light)",
-            "answer": "блакитні",
-            "options": [
-              "блакитні",
-              "блакитний",
-              "блакитна",
-              "блакитне"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.102Z",
-      "modifiedAt": "2025-12-06T10:49:20.102Z"
-    },
-    {
-      "id": "act-a1-0-fillblank",
-      "type": "fill-blank",
-      "title": "Clothing Items",
-      "description": "Choose the correct clothing item.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "На голові — ___.",
-            "answer": "капелюх",
-            "options": [
-              "капелюх",
-              "штани",
-              "куртка",
-              "взуття"
-            ]
-          },
-          {
-            "prompt": "На ногах — ___.",
-            "answer": "черевики",
-            "options": [
-              "черевики",
-              "шарф",
-              "сорочка",
-              "капелюх"
-            ]
-          },
-          {
-            "prompt": "Влітку ношу ___.",
-            "answer": "шорти",
-            "options": [
-              "шорти",
-              "пальто",
-              "рукавички",
-              "шапку"
-            ]
-          },
-          {
-            "prompt": "Взимку ношу теплу ___.",
-            "answer": "куртку",
-            "options": [
-              "куртку",
-              "футболку",
-              "сукню",
-              "шорти"
-            ]
-          },
-          {
-            "prompt": "Бізнесмен носить ___.",
-            "answer": "піджак",
-            "options": [
-              "піджак",
-              "шорти",
-              "футболку",
-              "кросівки"
-            ]
-          },
-          {
-            "prompt": "На руках — ___.",
-            "answer": "рукавички",
-            "options": [
-              "рукавички",
-              "черевики",
-              "капелюх",
-              "штани"
-            ]
-          },
-          {
-            "prompt": "Жінка носить ___.",
-            "answer": "сукню",
-            "options": [
-              "сукню",
-              "піджак",
-              "шорти",
-              "капелюх"
-            ]
-          },
-          {
-            "prompt": "Спортсмен носить ___.",
-            "answer": "кросівки",
-            "options": [
-              "кросівки",
-              "туфлі",
-              "черевики",
-              "рукавички"
-            ]
-          },
-          {
-            "prompt": "Узимку на голові — тепла ___.",
-            "answer": "шапка",
-            "options": [
-              "шапка",
-              "капелюх",
-              "шарф",
-              "куртка"
-            ]
-          },
-          {
-            "prompt": "Вона носить білу ___.",
-            "answer": "блузку",
-            "options": [
-              "блузку",
-              "штани",
-              "джинси",
-              "шорти"
-            ]
-          },
-          {
-            "prompt": "Він носить сині ___.",
-            "answer": "джинси",
-            "options": [
-              "джинси",
-              "сорочку",
-              "куртку",
-              "капелюх"
-            ]
-          },
-          {
-            "prompt": "На шиї — теплий ___.",
-            "answer": "шарф",
-            "options": [
-              "шарф",
-              "капелюх",
-              "рукавички",
-              "черевики"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.102Z",
-      "modifiedAt": "2025-12-06T10:49:20.102Z"
-    },
-    {
-      "id": "act-a1-0-unjumble",
-      "type": "unjumble",
-      "title": "Color and Clothing Sentences",
-      "description": "Put the words in the correct order.",
-      "content": {
-        "type": "unjumble",
-        "isUnjumble": true,
-        "items": [
-          {
-            "words": [
-              "червону",
-              "ношу",
-              "Я",
-              "сукню"
-            ],
-            "answer": "Я ношу червону сукню.",
-            "translation": "I wear a red dress."
-          },
-          {
-            "words": [
-              "сорочка",
-              "біла",
-              "У",
-              "нього"
-            ],
-            "answer": "У нього біла сорочка.",
-            "translation": "He has a white shirt."
-          },
-          {
-            "words": [
-              "сині",
-              "джинси",
-              "носить",
-              "Вона"
-            ],
-            "answer": "Вона носить сині джинси.",
-            "translation": "She wears blue jeans."
-          },
-          {
-            "words": [
-              "чорні",
-              "На",
-              "мені",
-              "штани"
-            ],
-            "answer": "На мені чорні штани.",
-            "translation": "I'm wearing black pants."
-          },
-          {
-            "words": [
-              "Це",
-              "зелена",
-              "куртка",
-              "моя"
-            ],
-            "answer": "Це моя зелена куртка.",
-            "translation": "This is my green jacket."
-          },
-          {
-            "words": [
-              "жовта",
-              "Сонце",
-              "і",
-              "тепле"
-            ],
-            "answer": "Сонце жовте і тепле.",
-            "translation": "The sun is yellow and warm."
-          },
-          {
-            "words": [
-              "синє",
-              "Небо",
-              "сьогодні"
-            ],
-            "answer": "Небо сьогодні синє.",
-            "translation": "The sky is blue today."
-          },
-          {
-            "words": [
-              "носиш",
-              "Що",
-              "ти"
-            ],
-            "answer": "Що ти носиш?",
-            "translation": "What are you wearing?"
-          },
-          {
-            "words": [
-              "сірий",
-              "Він",
-              "у",
-              "светрі"
-            ],
-            "answer": "Він у сірому светрі.",
-            "translation": "He's in a gray sweater."
-          },
-          {
-            "words": [
-              "рожева",
-              "У",
-              "неї",
-              "блузка"
-            ],
-            "answer": "У неї рожева блузка.",
-            "translation": "She has a pink blouse."
-          },
-          {
-            "words": [
-              "білі",
-              "Я",
-              "кросівки",
-              "ношу"
-            ],
-            "answer": "Я ношу білі кросівки.",
-            "translation": "I wear white sneakers."
-          },
-          {
-            "words": [
-              "коричневий",
-              "Це",
-              "капелюх",
-              "мій"
-            ],
-            "answer": "Це мій коричневий капелюх.",
-            "translation": "This is my brown hat."
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.102Z",
-      "modifiedAt": "2025-12-06T10:49:20.102Z"
-    },
-    {
       "id": "act-a1-0-matchup",
       "type": "match-up",
-      "title": "Colors",
-      "description": "Match each Ukrainian color with its English meaning.",
+      "title": "Antonym Attack",
+      "description": "Match the opposites.",
       "content": {
         "type": "match-up",
         "pairs": [
           {
-            "left": "білий",
-            "right": "white"
+            "left": "Великий (Big)",
+            "right": "Маленький (Small)"
           },
           {
-            "left": "чорний",
-            "right": "black"
+            "left": "Новий (New)",
+            "right": "Старий (Old)"
           },
           {
-            "left": "сірий",
-            "right": "gray"
+            "left": "Хороший (Good)",
+            "right": "Поганий (Bad)"
           },
           {
-            "left": "червоний",
-            "right": "red"
+            "left": "Дорогий (Expensive)",
+            "right": "Дешевий (Cheap)"
           },
           {
-            "left": "жовтий",
-            "right": "yellow"
+            "left": "Швидкий (Fast)",
+            "right": "Повільний (Slow)"
           },
           {
-            "left": "зелений",
-            "right": "green"
+            "left": "Важкий (Hard/Heavy)",
+            "right": "Легкий (Easy/Light)"
           },
           {
-            "left": "синій",
-            "right": "dark blue"
+            "left": "Цікавий (Interesting)",
+            "right": "Нудний (Boring)"
           },
           {
-            "left": "блакитний",
-            "right": "light blue"
+            "left": "Гарний (Beautiful)",
+            "right": "Негарний (Ugly)"
           },
           {
-            "left": "рожевий",
-            "right": "pink"
+            "left": "Гарячий (Hot)",
+            "right": "Холодний (Cold)"
           },
           {
-            "left": "коричневий",
-            "right": "brown"
+            "left": "Довгий (Long)",
+            "right": "Короткий (Short)"
           },
           {
-            "left": "фіолетовий",
-            "right": "purple"
+            "left": "Розумний (Smart)",
+            "right": "Дурний (Stupid)"
           },
           {
-            "left": "помаранчевий",
-            "right": "orange"
+            "left": "Смачний (Tasty)",
+            "right": "Несмачний (Tasteless)"
           }
         ],
         "shuffleRight": true
@@ -542,67 +112,66 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.102Z",
-      "modifiedAt": "2025-12-06T10:49:20.102Z"
+      "createdAt": "2025-12-08T21:22:09.892Z",
+      "modifiedAt": "2025-12-08T21:22:09.892Z"
     },
     {
-      "id": "act-a1-0-matchup",
-      "type": "match-up",
-      "title": "Clothing",
-      "description": "Match each clothing item with its English meaning.",
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "Description Builder",
+      "description": "Describe the noun. (Agree gender).",
       "content": {
-        "type": "match-up",
-        "pairs": [
+        "type": "fill-blank",
+        "items": [
           {
-            "left": "сорочка",
-            "right": "shirt"
+            "prompt": "(Big) ___ дім.",
+            "answer": "Великий"
           },
           {
-            "left": "штани",
-            "right": "pants"
+            "prompt": "(Small) ___ квартира.",
+            "answer": "Маленька"
           },
           {
-            "left": "сукня",
-            "right": "dress"
+            "prompt": "(New) ___ авто.",
+            "answer": "Нове"
           },
           {
-            "left": "куртка",
-            "right": "jacket"
+            "prompt": "(Old) ___ місто.",
+            "answer": "Старе"
           },
           {
-            "left": "черевики",
-            "right": "boots"
+            "prompt": "(Good) ___ друг.",
+            "answer": "Хороший"
           },
           {
-            "left": "капелюх",
-            "right": "hat"
+            "prompt": "(Bad) ___ погода (f).",
+            "answer": "Погана"
           },
           {
-            "left": "шарф",
-            "right": "scarf"
+            "prompt": "(Expensive) ___ телефон.",
+            "answer": "Дорогий"
           },
           {
-            "left": "джинси",
-            "right": "jeans"
+            "prompt": "(Cheap) ___ вода.",
+            "answer": "Дешева"
           },
           {
-            "left": "светр",
-            "right": "sweater"
+            "prompt": "(Hot) ___ кава.",
+            "answer": "Гаряча"
           },
           {
-            "left": "кросівки",
-            "right": "sneakers"
+            "prompt": "(Cold) ___ пиво (n).",
+            "answer": "Холодне"
           },
           {
-            "left": "спідниця",
-            "right": "skirt"
+            "prompt": "(Interesting) ___ фільм.",
+            "answer": "Цікавий"
           },
           {
-            "left": "рукавички",
-            "right": "gloves"
+            "prompt": "(Boring) ___ урок.",
+            "answer": "Нудний"
           }
-        ],
-        "shuffleRight": true
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -611,148 +180,175 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.102Z",
-      "modifiedAt": "2025-12-06T10:49:20.102Z"
+      "createdAt": "2025-12-08T21:22:09.892Z",
+      "modifiedAt": "2025-12-08T21:22:09.892Z"
+    },
+    {
+      "id": "act-a1-0-groupsort",
+      "type": "group-sort",
+      "title": "Positive vs Negative",
+      "description": "Is this a compliment or complaint?",
+      "content": {
+        "type": "group-sort",
+        "groups": [
+          {
+            "id": "positive",
+            "name": "Positive",
+            "items": [
+              "Хороший",
+              "Гарний",
+              "Цікавий",
+              "Смачний",
+              "Розумний",
+              "Легкий (Easy)",
+              "Швидкий (Fast)",
+              "Новий"
+            ],
+            "nameUk": "Good"
+          },
+          {
+            "id": "negative",
+            "name": "Negative",
+            "items": [
+              "Поганий",
+              "Негарний",
+              "Нудний",
+              "Несмачний",
+              "Дурний",
+              "Важкий (Hard)",
+              "Повільний (Slow)",
+              "Старий (Usually)"
+            ],
+            "nameUk": "Bad"
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.892Z",
+      "modifiedAt": "2025-12-08T21:22:09.892Z"
     },
     {
       "id": "act-a1-0-quiz",
       "type": "quiz",
-      "title": "Colors and Clothing Knowledge",
-      "description": "Test your understanding of colors and clothing.",
+      "title": "Logic Check",
+      "description": "Choose the logical adjective.",
       "content": {
         "type": "quiz",
         "questions": [
           {
-            "question": "What's the difference between \"синій\" and \"блакитний\"?",
+            "question": "A Ferrari is...",
             "options": [
-              "They are the same",
-              "Синій is dark blue, блакитний is light blue",
-              "Синій is purple, блакитний is blue",
-              "Блакитний is for clothes only"
-            ],
-            "correctIndex": 1,
-            "explanation": "Ukrainian distinguishes dark blue (синій) from light blue (блакитний)."
-          },
-          {
-            "question": "\"Червона машина\" — why \"червона\"?",
-            "options": [
-              "Because \"машина\" is neuter",
-              "Because \"машина\" is feminine",
-              "Because it's plural",
-              "Random choice"
-            ],
-            "correctIndex": 1,
-            "explanation": "\"Машина\" is feminine, so the adjective takes -а."
-          },
-          {
-            "question": "Which is always plural?",
-            "options": [
-              "сукня",
-              "куртка",
-              "штани",
-              "сорочка"
-            ],
-            "correctIndex": 2,
-            "explanation": "Like \"pants\" in English, \"штани\" is always plural."
-          },
-          {
-            "question": "\"Синє небо\" — what form is \"синє\"?",
-            "options": [
-              "Masculine",
-              "Feminine",
-              "Neuter",
-              "Plural"
-            ],
-            "correctIndex": 2,
-            "explanation": "\"Небо\" is neuter, so синій → синє."
-          },
-          {
-            "question": "What colors are in the Ukrainian flag?",
-            "options": [
-              "синій і жовтий",
-              "червоний і білий",
-              "зелений і білий",
-              "чорний і жовтий"
+              "Швидка.",
+              "Повільна."
             ],
             "correctIndex": 0,
-            "explanation": "Blue and yellow: blue sky over golden wheat fields."
+            "explanation": ""
           },
           {
-            "question": "\"Я ношу\" means:",
+            "question": "Einstein was...",
             "options": [
-              "I wear",
-              "I have",
-              "I want",
-              "I like"
+              "Розумний.",
+              "Дурний."
             ],
             "correctIndex": 0,
-            "explanation": "\"Носити\" = to wear."
+            "explanation": ""
           },
           {
-            "question": "Which is footwear?",
+            "question": "A stone (камінь) is...",
             "options": [
-              "шарф",
-              "капелюх",
-              "кросівки",
-              "рукавички"
-            ],
-            "correctIndex": 2,
-            "explanation": "Кросівки = sneakers (footwear)."
-          },
-          {
-            "question": "\"Темно-зелений\" means:",
-            "options": [
-              "Light green",
-              "Dark green",
-              "Bright green",
-              "Green grass"
-            ],
-            "correctIndex": 1,
-            "explanation": "\"Темний\" = dark."
-          },
-          {
-            "question": "What's worn on the head?",
-            "options": [
-              "капелюх",
-              "черевики",
-              "рукавички",
-              "штани"
+              "Важкий.",
+              "Легкий."
             ],
             "correctIndex": 0,
-            "explanation": "Капелюх (hat) is worn on the head."
+            "explanation": ""
           },
           {
-            "question": "\"Біла сорочка\" — why \"біла\"?",
+            "question": "The sun is...",
             "options": [
-              "Because сорочка is feminine",
-              "Because сорочка is neuter",
-              "Because it's plural",
-              "Because білий is irregular"
+              "Гаряче.",
+              "Холодне."
             ],
             "correctIndex": 0,
-            "explanation": "\"Сорочка\" is feminine: білий → біла."
+            "explanation": ""
           },
           {
-            "question": "What's a \"вишиванка\"?",
+            "question": "A comedy movie is usually...",
             "options": [
-              "Traditional embroidered shirt",
-              "Winter jacket",
-              "Type of footwear",
-              "Color name"
+              "Смішний (Funny) / Цікавий.",
+              "Нудний."
             ],
             "correctIndex": 0,
-            "explanation": "Ukrainian traditional embroidered shirt."
+            "explanation": ""
           },
           {
-            "question": "\"На мені чорні штани\" means:",
+            "question": "Water in the fridge is...",
             "options": [
-              "I'm wearing black pants",
-              "I like black pants",
-              "I have black pants",
-              "I want black pants"
+              "Холодна.",
+              "Гаряча."
             ],
             "correctIndex": 0,
-            "explanation": "\"На мені\" = on me (what I'm wearing)."
+            "explanation": ""
+          },
+          {
+            "question": "A new iPhone is...",
+            "options": [
+              "Дорогий.",
+              "Дешевий."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "A tiny mouse is...",
+            "options": [
+              "Маленька.",
+              "Велика."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Kyiv is a...",
+            "options": [
+              "Велике місто (Big city).",
+              "Маленьке село (Small village)."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "A broken phone is...",
+            "options": [
+              "Поганий.",
+              "Хороший."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Sugar is...",
+            "options": [
+              "Солодкий (Sweet).",
+              "Гіркий (Bitter)."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "The weekend is...",
+            "options": [
+              "Короткий (Short).",
+              "Довгий (Long - rarely)."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
           }
         ],
         "shuffleQuestions": true,
@@ -766,76 +362,168 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.102Z",
-      "modifiedAt": "2025-12-06T10:49:20.102Z"
+      "createdAt": "2025-12-08T21:22:09.892Z",
+      "modifiedAt": "2025-12-08T21:22:09.892Z"
     },
     {
-      "id": "act-a1-0-truefalse",
-      "type": "true-false",
-      "title": "Color and Clothing Facts",
-      "description": "Decide if each statement is true (Правда) or false (Міф).",
+      "id": "act-a1-0-anagram",
+      "type": "anagram",
+      "title": "Adjective Scramble",
+      "description": "Unscramble.",
       "content": {
-        "type": "true-false",
-        "statements": [
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
           {
-            "statement": "Ukrainian has two words for blue: синій and блакитний.",
-            "isTrue": true,
-            "explanation": "Correct! Dark blue and light blue."
+            "letters": [
+              "г",
+              "и",
+              "й",
+              "р",
+              "о",
+              "д"
+            ],
+            "answer": "дорогий",
+            "translation": "Expensive"
           },
           {
-            "statement": "\"Штани\" can be singular.",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Штани\" is always plural, like \"pants.\""
+            "letters": [
+              "в",
+              "и",
+              "й",
+              "е",
+              "ш",
+              "е",
+              "д"
+            ],
+            "answer": "дешевий",
+            "translation": "Cheap"
           },
           {
-            "statement": "Color adjectives must agree with nouns.",
-            "isTrue": true,
-            "explanation": "Correct! Червоний (m), червона (f), червоне (n), червоні (pl)."
+            "letters": [
+              "к",
+              "и",
+              "й",
+              "л",
+              "и",
+              "в",
+              "е"
+            ],
+            "answer": "великий",
+            "translation": "Big"
           },
           {
-            "statement": "\"Синій\" is a hard stem adjective.",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Синій\" is soft stem (-ій/-я/-є/-і)."
+            "letters": [
+              "к",
+              "и",
+              "й",
+              "н",
+              "ь",
+              "л",
+              "е",
+              "а",
+              "м"
+            ],
+            "answer": "маленький",
+            "translation": "Small"
           },
           {
-            "statement": "\"Носити\" means \"to wear.\"",
-            "isTrue": true,
-            "explanation": "Correct! Я ношу = I wear."
+            "letters": [
+              "р",
+              "и",
+              "й",
+              "т",
+              "а",
+              "с"
+            ],
+            "answer": "старий",
+            "translation": "Old"
           },
           {
-            "statement": "\"Пальто\" is neuter.",
-            "isTrue": true,
-            "explanation": "Correct! Нове пальто (neuter)."
+            "letters": [
+              "о",
+              "в",
+              "и",
+              "й",
+              "н"
+            ],
+            "answer": "новий",
+            "translation": "New"
           },
           {
-            "statement": "\"Взуття\" is plural.",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Взуття\" is neuter singular (collective noun)."
+            "letters": [
+              "р",
+              "о",
+              "ш",
+              "и",
+              "й",
+              "х",
+              "о"
+            ],
+            "answer": "хороший",
+            "translation": "Good"
           },
           {
-            "statement": "The Ukrainian flag is синьо-жовтий.",
-            "isTrue": true,
-            "explanation": "Correct! Blue and yellow."
+            "letters": [
+              "г",
+              "а",
+              "н",
+              "и",
+              "й",
+              "п",
+              "о"
+            ],
+            "answer": "поганий",
+            "translation": "Bad"
           },
           {
-            "statement": "\"Біла\" is masculine.",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Біла\" is feminine. Masculine is \"білий.\""
+            "letters": [
+              "а",
+              "в",
+              "и",
+              "й",
+              "к",
+              "і",
+              "ц"
+            ],
+            "answer": "цікавий",
+            "translation": "Interesting"
           },
           {
-            "statement": "\"Темно-синій\" means dark blue.",
-            "isTrue": true,
-            "explanation": "Correct! Темний = dark."
+            "letters": [
+              "н",
+              "и",
+              "й",
+              "д",
+              "у",
+              "н"
+            ],
+            "answer": "нудний",
+            "translation": "Boring"
           },
           {
-            "statement": "\"Вишиванка\" is a traditional Ukrainian embroidered shirt.",
-            "isTrue": true,
-            "explanation": "Correct! It's an important cultural symbol."
+            "letters": [
+              "р",
+              "н",
+              "и",
+              "й",
+              "г",
+              "а"
+            ],
+            "answer": "гарний",
+            "translation": "Beautiful"
           },
           {
-            "statement": "\"Кросівки\" is singular.",
-            "isTrue": false,
-            "explanation": "Incorrect! It's plural (like \"sneakers\")."
+            "letters": [
+              "к",
+              "и",
+              "й",
+              "ж",
+              "а",
+              "в"
+            ],
+            "answer": "важкий",
+            "translation": "Heavy/Hard"
           }
         ]
       },
@@ -846,61 +534,129 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.102Z",
-      "modifiedAt": "2025-12-06T10:49:20.102Z"
+      "createdAt": "2025-12-08T21:22:09.892Z",
+      "modifiedAt": "2025-12-08T21:22:09.892Z"
     },
     {
-      "id": "act-a1-0-groupsort",
-      "type": "group-sort",
-      "title": "Clothing Categories",
-      "description": "Sort these items into the correct category.",
+      "id": "act-a1-0-unjumble",
+      "type": "unjumble",
+      "title": "Build Descriptions",
+      "description": "Build sentences.",
       "content": {
-        "type": "group-sort",
-        "groups": [
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
           {
-            "id": "upper-body",
-            "name": "Upper Body",
-            "items": [
-              "сорочка",
-              "футболка",
-              "светр",
-              "куртка",
-              "блузка"
-            ]
+            "words": [
+              "дуже",
+              "Це",
+              "цікаво",
+              "."
+            ],
+            "answer": "Це дуже цікаво."
           },
           {
-            "id": "lower-body",
-            "name": "Lower Body",
-            "items": [
-              "штани",
-              "джинси",
-              "шорти",
-              "спідниця",
-              "сукня"
-            ]
+            "words": [
+              "занадто",
+              "Суп",
+              "гарячий",
+              "."
+            ],
+            "answer": "Суп занадто гарячий."
           },
           {
-            "id": "footwear",
-            "name": "Footwear",
-            "items": [
-              "черевики",
-              "кросівки",
-              "туфлі",
-              "взуття"
-            ]
+            "words": [
+              "велика",
+              "Квартира",
+              "і",
+              "гарна",
+              "."
+            ],
+            "answer": "Квартира велика і гарна."
           },
           {
-            "id": "accessories",
-            "name": "Accessories",
-            "items": [
-              "капелюх",
-              "шапка",
-              "шарф",
-              "рукавички"
-            ]
+            "words": [
+              "машина",
+              "Це",
+              "стара",
+              "."
+            ],
+            "answer": "Це стара машина."
+          },
+          {
+            "words": [
+              "новий",
+              "Телефон",
+              "дорогий",
+              "."
+            ],
+            "answer": "Телефон новий дорогий."
+          },
+          {
+            "words": [
+              "не",
+              "Я",
+              "багатий",
+              "."
+            ],
+            "answer": "Я не багатий.",
+            "translation": "rich"
+          },
+          {
+            "words": [
+              "важка",
+              "Робота",
+              "."
+            ],
+            "answer": "Робота важка."
+          },
+          {
+            "words": [
+              "тест",
+              "Цей",
+              "легкий",
+              "."
+            ],
+            "answer": "Цей тест легкий."
+          },
+          {
+            "words": [
+              "тут",
+              "Їжа",
+              "смачна",
+              "."
+            ],
+            "answer": "Їжа тут смачна."
+          },
+          {
+            "words": [
+              "повільний",
+              "Ти",
+              "дуже",
+              "!"
+            ],
+            "answer": "Ти дуже повільний!"
+          },
+          {
+            "words": [
+              "місто",
+              "Київ",
+              "гарне",
+              "."
+            ],
+            "answer": "Київ гарне місто."
+          },
+          {
+            "words": [
+              "фільм",
+              "Це",
+              "був",
+              "нудний",
+              "."
+            ],
+            "answer": "Це був нудний фільм."
           }
-        ],
-        "shuffleItems": true
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -909,331 +665,374 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.102Z",
-      "modifiedAt": "2025-12-06T10:49:20.102Z"
+      "createdAt": "2025-12-08T21:22:09.892Z",
+      "modifiedAt": "2025-12-08T21:22:09.892Z"
+    },
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "Make it Negative (Antonyms)",
+      "description": "Change the sentence to opposite. \"Це добре\" -> \"Це погано\".",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Це великий дім. -> Це ___ дім.",
+            "answer": "маленький"
+          },
+          {
+            "prompt": "Це новий телефон. -> Це ___ телефон.",
+            "answer": "старий"
+          },
+          {
+            "prompt": "Це хороший день. -> Це ___ день.",
+            "answer": "поганий"
+          },
+          {
+            "prompt": "Це цікава книга. -> Це ___ книга.",
+            "answer": "нудна"
+          },
+          {
+            "prompt": "Це гаряча вода. -> Це ___ вода.",
+            "answer": "холодна"
+          },
+          {
+            "prompt": "Це дешеве кафе. -> Це ___ кафе.",
+            "answer": "дорогі"
+          },
+          {
+            "prompt": "Це легкий тест. -> Це ___ тест.",
+            "answer": "важкий"
+          },
+          {
+            "prompt": "Це гарне фото. -> Це ___ фото.",
+            "answer": "негарне"
+          },
+          {
+            "prompt": "Це швидкий поїзд. -> Це ___ поїзд.",
+            "answer": "повільний"
+          },
+          {
+            "prompt": "Це розумний кіт. -> Це ___ кіт.",
+            "answer": "дурний (stupid)"
+          },
+          {
+            "prompt": "Це довгий урок. -> Це ___ урок.",
+            "answer": "короткий"
+          },
+          {
+            "prompt": "Це смачний суп. -> Це ___ суп.",
+            "answer": "несмачний"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.892Z",
+      "modifiedAt": "2025-12-08T21:22:09.892Z"
+    },
+    {
+      "id": "act-a1-0-truefalse",
+      "type": "true-false",
+      "title": "Adjective Facts",
+      "description": "True or False?",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "I can describe my house (Великий/Маленький).",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "I can complain about prices (Дорого!).",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "I can say if food is Good or Bad.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "I know \"Цікавий\" (Interesting) vs \"Нудний\" (Boring).",
+            "isTrue": false,
+            "explanation": ""
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.892Z",
+      "modifiedAt": "2025-12-08T21:22:09.892Z"
     }
   ],
   "vocabulary": {
     "moduleId": "mod-uk-A1-27",
     "level": "A1",
     "phase": "A1.3",
-    "wordCount": 30,
-    "newWordCount": 30,
+    "wordCount": 25,
+    "newWordCount": 25,
     "reviewWordCount": 0,
-    "transliterationMode": "none",
+    "transliterationMode": "full",
     "words": [
       {
-        "id": "v-bilyy-0-0",
-        "uk": "білий",
-        "en": "white",
-        "pos": "adj",
-        "ipa": "ˈbilɪj",
-        "gender": "m",
-        "note": "біла, біле, білі",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-chornyy-0-1",
-        "uk": "чорний",
-        "en": "black",
-        "pos": "adj",
-        "ipa": "ˈt͡ʃɔrnɪj",
-        "gender": "m",
-        "note": "чорна, чорне, чорні",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-siryy-0-2",
-        "uk": "сірий",
-        "en": "gray",
-        "pos": "adj",
-        "ipa": "ˈsirɪj",
-        "gender": "m",
-        "note": "сіра, сіре, сірі",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-chervonyy-0-3",
-        "uk": "червоний",
-        "en": "red",
-        "pos": "adj",
-        "ipa": "t͡ʃɛrˈwɔnɪj",
-        "gender": "m",
-        "note": "червона, червоне, червоні",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-pomaranchevyy-0-4",
-        "uk": "помаранчевий",
-        "en": "orange",
-        "pos": "adj",
-        "ipa": "pɔmɐrɐnˈt͡ʃɛwɪj",
-        "gender": "m",
-        "note": "помаранчева, -е, -і",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-zhovtyy-0-5",
-        "uk": "жовтий",
-        "en": "yellow",
-        "pos": "adj",
-        "ipa": "ˈʒɔwtɪj",
-        "gender": "m",
-        "note": "жовта, жовте, жовті",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-zelenyy-0-6",
-        "uk": "зелений",
-        "en": "green",
-        "pos": "adj",
-        "ipa": "zɛˈlɛnɪj",
-        "gender": "m",
-        "note": "зелена, зелене, зелені",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-syniy-0-7",
-        "uk": "синій",
-        "en": "dark blue",
-        "pos": "adj",
-        "ipa": "ˈsɪnʲij",
-        "gender": "m",
-        "note": "синя, синє, сині (soft)",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-blakytnyy-0-8",
-        "uk": "блакитний",
-        "en": "light blue",
-        "pos": "adj",
-        "ipa": "blɐˈkɪtnɪj",
-        "gender": "m",
-        "note": "блакитна, -е, -і",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-fioletovyy-0-9",
-        "uk": "фіолетовий",
-        "en": "purple",
-        "pos": "adj",
-        "ipa": "fiɔˈlɛtɔwɪj",
-        "gender": "m",
-        "note": "фіолетова, -е, -і",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-rozhevyy-0-10",
-        "uk": "рожевий",
-        "en": "pink",
-        "pos": "adj",
-        "ipa": "rɔˈʒɛwɪj",
-        "gender": "m",
-        "note": "рожева, рожеве, рожеві",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-korychnevyy-0-11",
-        "uk": "коричневий",
-        "en": "brown",
-        "pos": "adj",
-        "ipa": "kɔˈrɪt͡ʃnɛwɪj",
-        "gender": "m",
-        "note": "коричнева, -е, -і",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-svitlyy-0-12",
-        "uk": "світлий",
-        "en": "light",
-        "pos": "adj",
-        "ipa": "ˈswitlɪj",
-        "gender": "m",
-        "note": "світла, світле, світлі",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-temnyy-0-13",
-        "uk": "темний",
-        "en": "dark",
-        "pos": "adj",
-        "ipa": "ˈtɛmnɪj",
-        "gender": "m",
-        "note": "темна, темне, темні",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-yaskravyy-0-14",
-        "uk": "яскравий",
-        "en": "bright",
-        "pos": "adj",
-        "ipa": "jɐsˈkrɑwɪj",
-        "gender": "m",
-        "note": "яскрава, -е, -і",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-sorochka-0-15",
-        "uk": "сорочка",
-        "en": "shirt",
+        "id": "v-velykyy-0-0",
+        "uk": "великий",
+        "en": "big",
         "pos": "noun",
-        "ipa": "sɔˈrɔt͡ʃkɐ",
-        "gender": "f",
+        "ipa": "/vɛˈlɪkɪj/",
+        "note": "[🔊](audio_velykyj)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-futbolka-0-16",
-        "uk": "футболка",
-        "en": "T-shirt",
+        "id": "v-malenьkyy-0-1",
+        "uk": "маленький",
+        "en": "small",
         "pos": "noun",
-        "ipa": "futˈbɔlkɐ",
-        "gender": "f",
+        "ipa": "/mɑˈlɛnʲkɪj/",
+        "note": "[🔊](audio_malenkyj)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-svetr-0-17",
-        "uk": "светр",
-        "en": "sweater",
+        "id": "v-novyy-0-2",
+        "uk": "новий",
+        "en": "new",
         "pos": "noun",
-        "ipa": "swɛtr",
-        "gender": "m",
+        "ipa": "/nɔˈvɪj/",
+        "note": "[🔊](audio_novyj)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-kurtka-0-18",
-        "uk": "куртка",
-        "en": "jacket",
+        "id": "v-staryy-0-3",
+        "uk": "старий",
+        "en": "old",
         "pos": "noun",
-        "ipa": "ˈkurtkɐ",
-        "gender": "f",
+        "ipa": "/stɑˈrɪj/",
+        "note": "[🔊](audio_staryj)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-palьto-0-19",
-        "uk": "пальто",
-        "en": "coat",
+        "id": "v-khoroshyy-0-4",
+        "uk": "хороший",
+        "en": "good",
         "pos": "noun",
-        "ipa": "pɐlʲˈtɔ",
-        "gender": "n",
-        "note": "Indeclinable",
+        "ipa": "/xɔˈrɔʃɪj/",
+        "note": "[🔊](audio_khoroshyj)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-shtany-0-20",
-        "uk": "штани",
-        "en": "pants",
+        "id": "v-pohanyy-0-5",
+        "uk": "поганий",
+        "en": "bad",
         "pos": "noun",
-        "ipa": "ʃtɐˈnɪ",
-        "note": "Always plural",
+        "ipa": "/pɔˈɦɑnɪj/",
+        "note": "[🔊](audio_pohanyj)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-dzhynsy-0-21",
-        "uk": "джинси",
-        "en": "jeans",
+        "id": "v-dorohyy-0-6",
+        "uk": "дорогий",
+        "en": "expensive",
         "pos": "noun",
-        "ipa": "ˈdʒɪnsɪ",
-        "note": "Always plural",
+        "ipa": "/dɔrɔˈɦɪj/",
+        "note": "[🔊](audio_dorohyj)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-shorty-0-22",
-        "uk": "шорти",
-        "en": "shorts",
+        "id": "v-deshevyy-0-7",
+        "uk": "дешевий",
+        "en": "cheap",
         "pos": "noun",
-        "ipa": "ˈʃɔrtɪ",
-        "note": "Always plural",
+        "ipa": "/dɛˈʃɛvɪj/",
+        "note": "[🔊](audio_deshevyj)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-spidnytsya-0-23",
-        "uk": "спідниця",
-        "en": "skirt",
+        "id": "v-haryachyy-0-8",
+        "uk": "гарячий",
+        "en": "hot",
         "pos": "noun",
-        "ipa": "spidˈnɪt͡sʲɐ",
-        "gender": "f",
+        "ipa": "/ɦɑˈrʲɑtʃɪj/",
+        "note": "[🔊](audio_haryachyj)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-suknya-0-24",
-        "uk": "сукня",
-        "en": "dress",
+        "id": "v-kholodnyy-0-9",
+        "uk": "холодний",
+        "en": "cold",
         "pos": "noun",
-        "ipa": "ˈsuknʲɐ",
-        "gender": "f",
+        "ipa": "/xɔˈlɔdnɪj/",
+        "note": "[🔊](audio_kholodnyj)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-vzuttya-0-25",
-        "uk": "взуття",
-        "en": "footwear",
+        "id": "v-shvydkyy-0-10",
+        "uk": "швидкий",
+        "en": "fast",
         "pos": "noun",
-        "ipa": "ˈwzutʲːɐ",
-        "gender": "n",
-        "note": "Collective",
+        "ipa": "/ʃvɪdˈkɪj/",
+        "note": "[🔊](audio_shvydkyj)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-cherevyky-0-26",
-        "uk": "черевики",
-        "en": "boots",
+        "id": "v-povilьnyy-0-11",
+        "uk": "повільний",
+        "en": "slow",
         "pos": "noun",
-        "ipa": "t͡ʃɛrɛˈwɪkɪ",
+        "ipa": "/pɔˈvilʲnɪj/",
+        "note": "[🔊](audio_povilnyj)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-krosivky-0-27",
-        "uk": "кросівки",
-        "en": "sneakers",
+        "id": "v-vazhkyy-0-12",
+        "uk": "важкий",
+        "en": "heavy/hard",
         "pos": "noun",
-        "ipa": "krɔˈsiwkɪ",
+        "ipa": "/vɑʒˈkɪj/",
+        "note": "[🔊](audio_vazhkyj)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-kapelyukh-0-28",
-        "uk": "капелюх",
-        "en": "hat",
+        "id": "v-lehkyy-0-13",
+        "uk": "легкий",
+        "en": "light/easy",
         "pos": "noun",
-        "ipa": "kɐpɛˈlʲux",
-        "gender": "m",
+        "ipa": "/lɛxˈkɪj/",
+        "note": "[🔊](audio_lehkyj)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-sharf-0-29",
-        "uk": "шарф",
-        "en": "scarf",
+        "id": "v-tsikavyy-0-14",
+        "uk": "цікавий",
+        "en": "interesting",
         "pos": "noun",
-        "ipa": "ʃɑrf",
-        "gender": "m",
+        "ipa": "/t͡s⁽ʲ⁾iˈkɑvɪj/",
+        "note": "[🔊](audio_tsikavyj)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-nudnyy-0-15",
+        "uk": "нудний",
+        "en": "boring",
+        "pos": "noun",
+        "ipa": "/nudˈnɪj/",
+        "note": "[🔊](audio_nudnyj)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-harnyy-0-16",
+        "uk": "гарний",
+        "en": "beautiful/good",
+        "pos": "noun",
+        "ipa": "/ˈɦɑrnɪj/",
+        "note": "[🔊](audio_harnyj)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-neharnyy-0-17",
+        "uk": "негарний",
+        "en": "ugly",
+        "pos": "noun",
+        "ipa": "/nɛˈɦɑrnɪj/",
+        "note": "[🔊](audio_neharnyj)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-duzhe-0-18",
+        "uk": "дуже",
+        "en": "very",
+        "pos": "noun",
+        "ipa": "/ˈduʒɛ/",
+        "note": "[🔊](audio_duzhe)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-zanadto-0-19",
+        "uk": "занадто",
+        "en": "too/excessively",
+        "pos": "noun",
+        "ipa": "/zɑˈnɑdtɔ/",
+        "note": "[🔊](audio_zanadto)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-rozumnyy-0-20",
+        "uk": "розумний",
+        "en": "smart",
+        "pos": "noun",
+        "ipa": "/rɔˈzumnɪj/",
+        "note": "[🔊](audio_rozumnyj)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-durnyy-0-21",
+        "uk": "дурний",
+        "en": "stupid",
+        "pos": "noun",
+        "ipa": "/durˈnɪj/",
+        "note": "[🔊](audio_durnyj)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-smachnyy-0-22",
+        "uk": "смачний",
+        "en": "tasty",
+        "pos": "noun",
+        "ipa": "/smɑtʃˈnɪj/",
+        "note": "[🔊](audio_smachnyj)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-dovhyy-0-23",
+        "uk": "довгий",
+        "en": "long",
+        "pos": "noun",
+        "ipa": "/ˈdɔvɦɪj/",
+        "note": "[🔊](audio_dovhyj)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-korotkyy-0-24",
+        "uk": "короткий",
+        "en": "short",
+        "pos": "noun",
+        "ipa": "/kɔˈrɔtkɪj/",
+        "note": "[🔊](audio_korotkyj)",
         "isNew": true,
         "firstModule": 0
       }

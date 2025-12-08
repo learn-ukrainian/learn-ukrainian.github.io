@@ -13,388 +13,95 @@
     "moduleNumber": 17,
     "moduleType": "vocabulary",
     "immersionLevel": 0.3,
-    "title": "Numbers & Money",
-    "subtitle": "Counting from 0-100 and handling Ukrainian currency",
-    "description": "Count from 0 to 100 in Ukrainian",
+    "title": "Numbers and Money",
+    "subtitle": "The Rule of Five",
+    "description": "Learner can count from 0 to 100",
     "objectives": [
-      "Count from 0 to 100 in Ukrainian",
-      "Use numbers with genitive case (5+)",
-      "Handle Ukrainian currency (гривня)",
-      "Ask and understand prices"
+      "Learner can count from 0 to 100",
+      "Learner can say prices (Hryvnias, Dollars)",
+      "Learner applies the \"2-3-4\" vs \"5+\" rule",
+      "Learner can ask \"How much does it cost?\""
     ],
-    "grammarFocus": [
-      "Cardinal numbers 0-100",
-      "Number agreement with nouns",
-      "Genitive plural after 5+"
-    ],
+    "grammarFocus": [],
     "tags": [
       "vocabulary",
       "numbers",
+      "shopping",
       "money",
-      "genitive"
+      "genitive_plural"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "partial",
+    "totalDuration": 60,
+    "transliterationMode": "full",
     "sections": [
       {
-        "id": "section-intro",
+        "id": "section-intro-0",
         "name": "Вступ",
         "nameEn": "Introduction",
         "type": "intro",
-        "content": "## warm-up\n\n### Numbers Are Everywhere!\n\nFrom ordering coffee to catching the right bus, numbers are essential. Today you'll master Ukrainian numbers and learn to handle money like a local!\n\n> 💡 **Did You Know?**\n>\n> The Ukrainian currency is called **гривня** (hryvnia), named after an ancient unit of currency and weight used in Kyivan Rus' over 1000 years ago. The symbol ₴ represents the letter \"г\" (H in Latin).\n\n## presentation\n\n### Numbers 0-10\n\nLet's start with the basics:\n\n| Number | Ukrainian | Pronunciation |\n|--------|-----------|---------------|\n| 0 | нуль | /nulʲ/ |\n| 1 | один (m), одна (f), одне (n) | /ɔˈdɪn/ |\n| 2 | два (m/n), дві (f) | /dvɑ/, /dvʲi/ |\n| 3 | три | /trɪ/ |\n| 4 | чотири | /t͡ʃɔˈtɪrɪ/ |\n| 5 | п'ять | /pjɑtʲ/ |\n| 6 | шість | /ʃistʲ/ |\n| 7 | сім | /sʲim/ |\n| 8 | вісім | /ˈvʲisʲim/ |\n| 9 | дев'ять | /ˈdɛvjɑtʲ/ |\n| 10 | десять | /ˈdɛsʲɑtʲ/ |\n\n> ⚡ **Pro Tip**\n>\n> Notice that 1 and 2 have gender forms! **Один** стіл (one table - m), **одна** книга (one book - f), **два** столи but **дві** книги.\n\n### Numbers 11-20\n\nThe teens follow a pattern: number + \"надцять\" (like \"-teen\" in English):\n\n| Number | Ukrainian | Pattern |\n|--------|-----------|---------|\n| 11 | одинадцять | один + -надцять |\n| 12 | дванадцять | два + -надцять |\n| 13 | тринадцять | три + -надцять |\n| 14 | чотирнадцять | чотир- + -надцять |\n| 15 | п'ятнадцять | п'ят- + -надцять |\n| 16 | шістнадцять | шіст- + -надцять |\n| 17 | сімнадцять | сім- + -надцять |\n| 18 | вісімнадцять | вісім- + -надцять |\n| 19 | дев'ятнадцять | дев'ят- + -надцять |\n| 20 | двадцять | два + -дцять |\n\n> 🎬 **Pop Culture Moment: S.T.A.L.K.E.R.**\n>\n> In the iconic Ukrainian video game S.T.A.L.K.E.R., you're constantly counting ammunition and currency. \"П'ятнадцять набоїв\" (15 bullets) could save your life in the Zone!\n\n### Tens (20-100)\n\n| Number | Ukrainian |\n|--------|-----------|\n| 20 | двадцять |\n| 30 | тридцять |\n| 40 | сорок |\n| 50 | п'ятдесят |\n| 60 | шістдесят |\n| 70 | сімдесят |\n| 80 | вісімдесят |\n| 90 | дев'яносто |\n| 100 | сто |\n\nCompound numbers: **двадцять один** (21), **тридцять п'ять** (35), **дев'яносто дев'ять** (99)\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** Ukrainian numbers are irregular and impossible to learn.\n> **Fact:** They're actually quite systematic! Once you know 1-10 and the patterns for teens (-надцять) and tens (-десят), you can count to 100!\n\n### Numbers and Cases: The Magic Rule\n\nHere's where genitive comes in! Numbers affect which case the noun uses:\n\n| Number | Case | Example |\n|--------|------|---------|\n| 1 | Nominative singular | одна гривня |\n| 2, 3, 4 | Nominative plural | дві гривні |\n| 5-20 | **Genitive plural** | п'ять гривень |\n| 21 | Nominative singular | двадцять одна гривня |\n| 22, 23, 24 | Nominative plural | двадцять дві гривні |\n| 25-30 | **Genitive plural** | тридцять гривень |\n\n> 💡 **Did You Know?**\n>\n> This pattern (1 = singular, 2-4 = plural, 5+ = genitive plural) exists in all Slavic languages. It's thought to relate to ancient counting systems!\n\n### Ukrainian Currency\n\n| Ukrainian | English | When to use |\n|-----------|---------|-------------|\n| гривня | hryvnia | 1, 21, 31... |\n| гривні | hryvnias | 2-4, 22-24... |\n| гривень | hryvnias (gen) | 5-20, 25-30... |\n| копійка | kopeck | 1, 21... |\n| копійки | kopecks | 2-4, 22-24... |\n| копійок | kopecks (gen) | 5-20, 25-30... |\n\nExamples:\n- 1 гривня (одна гривня)\n- 3 гривні (три гривні)\n- 7 гривень (сім гривень)\n- 21 гривня (двадцять одна гривня)\n- 25 гривень (двадцять п'ять гривень)\n\n> 🌍 **Real World**\n>\n> At a Ukrainian café, you might hear: \"Кава коштує сорок п'ять гривень\" (Coffee costs 45 hryvnias). Now you can understand prices!\n\n### Asking About Prices\n\n| Ukrainian | English |\n|-----------|---------|\n| Скільки коштує? | How much does it cost? |\n| Скільки це коштує? | How much does this cost? |\n| Яка ціна? | What's the price? |\n| Дорого! | Expensive! |\n| Дешево! | Cheap! |\n| Є знижка? | Is there a discount? |\n\n> ⚡ **Pro Tip**\n>\n> \"Скільки коштує?\" is the most useful phrase. Point at anything and ask!\n\n## practice\n\n### Exercise 1: Write the Numbers\n\nWrite these numbers in Ukrainian:\n\n1. 15\n   > [!answer] п'ятнадцять\n\n2. 42\n   > [!answer] сорок два\n\n3. 78\n   > [!answer] сімдесят вісім\n\n4. 100\n   > [!answer] сто\n\n5. 33\n   > [!answer] тридцять три\n\n### Exercise 2: Currency Practice\n\nComplete with the correct form of гривня:\n\n1. 1 ___\n   > [!answer] гривня\n\n2. 5 ___\n   > [!answer] гривень\n\n3. 23 ___\n   > [!answer] гривні\n\n4. 11 ___\n   > [!answer] гривень\n\n5. 100 ___\n   > [!answer] гривень\n\n## production\n\n### Role Play: At the Market\n\nPractice asking prices:\n- Скільки коштує [item]?\n- [Number] гривень/гривні/гривня.\n- Дорого! / Добре, я візьму.\n\nTry with: хліб (bread), кава (coffee), яблука (apples), молоко (milk).\n\n---\n\n\n---\n\n\n---"
-      },
-      {
-        "id": "section-summary",
-        "name": "Підсумок",
-        "nameEn": "Summary",
-        "type": "summary",
-        "content": "> **What You Learned Today**\n>\n> - Numbers 0-100: нуль, один... сто\n> - Number + noun agreement:\n>   - 1: nominative singular (одна гривня)\n>   - 2-4: nominative plural (дві гривні)\n>   - 5+: genitive plural (п'ять гривень)\n> - Currency: гривня, гривні, гривень\n> - Asking prices: Скільки коштує?\n\n> **Coming Next**\n>\n> In Module 18, you'll learn **Food & Restaurant** vocabulary:\n> - Menu items: страва, закуска, десерт\n> - Ordering food: Я хочу... Можна...?\n> - Combining accusative, genitive, and numbers"
+        "content": "## warm-up\n**The Price of Bread**\n\nYou are at the market (Bazar).\nYou see fresh bread. It smells like heaven.\n\"Скільки коштує?\" (How much does it cost?).\nThe seller speaks fast: \"Двадцять п'ять гривень\".\nYou hand her a 50 note.\nShe asks: \"У вас немає п'ять гривень?\"\nNumbers are everywhere. Addresses, prices, times, buses.\nIn Ukraine, numbers control the grammar.\n- 1 Student? No problem.\n- 2 Students? Different ending.\n- 5 Students? Completely different ending.\nWelcome to **The Rule of Five**.\n\n## presentation\n\n### Section 1: 0 to 10 (The Basics)\n\nMemorize these. They are your building blocks.\n\n- 0 - **Нуль** (Nul).\n- 1 - **Один** (Odyn) / **Одна** (Odna - F) / **Одне** (Odne - N).\n- 2 - **Два** (Dva) / **Дві** (Dvi - F).\n- 3 - **Три** (Try).\n- 4 - **Чотири** (Chotyry).\n- 5 - **П'ять** (Pyat').\n- 6 - **Шість** (Shist').\n- 7 - **Сім** (Sim).\n- 8 - **Вісім** (Visim).\n- 9 - **Дев'ять** (Devyat').\n- 10 - **Десять** (Desyat').\n\n### Section 2: The Magic Rules (Currency)\n\nMoney is the best way to learn counting rules.\nMeet the **Гривня** (Hryvnia - F).\n\n**Rule 1: The Loner (1)**\nIf the number ends in **1** (but not 11), use Nominative Singular.\n- 1 Гривн**я**.\n- 21 Гривн**я**.\n- 51 Гривн**я**.\n\n**Rule 2: The Small Group (2, 3, 4)**\nIf the number ends in **2, 3, or 4** (but not 12, 13, 14), use Nominative Plural.\nFor Hryvnia (Fem -a), this looks like **-і**.\n- 2 Гривн**і**.\n- 3 Гривн**і**.\n- 4 Гривн**і**.\n- 22 Гривн**і**.\n\n**Rule 3: The Mass (5 to 20 + 0)**\nIf the number ends in **5, 6, 7, 8, 9, 0** OR is a teen (**11-19**), use **Genitive Plural**.\nFor Hryvnia, words drop the ending or change drastically.\n- 5 Грив**ень**.\n- 10 Грив**ень**.\n- 20 Грив**ень**.\n- 11, 12, 13... Грив**ень** (Teenagers follow the mob).\n\n> 💸 **Currency Cheat Sheet**\n> - **Hryvnia (F):** 1 Гривня | 2-4 Гривні | 5+ Гривень.\n> - **Dollar (M):** 1 Долар | 2-4 Долари | 5+ Доларів.\n> - **Euro (N):** 1 Євро | 2-4 Євро | 5+ Євро (Invariant! Easy mode).\n\n### Section 3: The Teens (11-19)\n\nTake the numbers 1-9 and add **-надцять** (-nadtsyat').\nThink of it as \"On ten\" (Nad dtsyat').\n- 11 - Одинадцять (Odyn-nadtsyat').\n- 12 - Дванадцять.\n- 13 - Тринадцять.\n- 14 - Чотирнадцять.\n- 15 - П'ятнадцять.\n- ...\n- 19 - Дев'ятнадцять.\n- 20 - **Двадцять** (Two-tens).\n\n### Section 4: The Tens (20-100)\n\n- 20 - Двадцять.\n- 30 - Тридцять.\n- 40 - **Сорок** (Weird one. Like \"Magpie\").\n- 50 - П'ятдесят (Five-tens).\n- 60 - Шістдесят.\n- 70 - Сімдесят.\n- 80 - Вісімдесят.\n- 90 - Дев'яносто (Ninety - also weird).\n- 100 - **Сто**.\n\nTo make big numbers, just say them in order.\n- 25 = Двадцять п'ять.\n- 42 = Сорок два.\n\n### Section 5: How much?\n\nTo ask for a price:\n- **\"Скільки коштує?\"** (How much costs?).\n- Or just **\"Скільки?\"** (How much?).\n\n**Answers:**\n- 50 гривень.\n- 100 доларів (Sto dolariv).\n- 200 євро (Dvi-sti yevro).\n\n> 🕵️ **Deep Dive: The 1-2 Gender Trap**\n> Numbers 1 and 2 define gender.\n> - **1:** Один (M), Одна (F), Одне (N).\n> - **2:** Два (M/N), Дві (F).\n> - 3, 4, 5... don't care about gender.\n> So:\n> - **Один** долар (M).\n> - **Одна** гривня (F).\n> - **Два** долари (M).\n> - **Дві** гривні (F).\n\n\n### Section 6: How old are you?\n\nThe \"Rule of Five\" also controls time.\nTo say your age, you say: \"**To me is X years**\" (Мені X років).\nThe word \"Year\" changes just like \"Hryvnia\".\n\n1.  **1 Рік** (Rik) - Irregular base!\n2.  **2, 3, 4 Роки** (Roky) - Nom Plural.\n3.  **5...100 Років** (Rokiv) - Gen Plural.\n\n**Examples:**\n- Мені 21 рік. (I am 21).\n- Мені 22 роки. (I am 22).\n- Мені 25 років. (I am 25).\n- Мені 30 років. (I am 30).\n- Професору 50 років. (The professor is 50).\n\n> 🕰️ **Deep Dive: The Year Paradox**\n> Why does \"Рік\" become \"Років\"?\n> It's an irregular plural.\n> Just like in English: 1 Person -> 2 People.\n> Don't fight it. Just memorize:\n> - 1 Рік.\n> - 2 Роки.\n> - 5 Років.\n\n> 💰 **Cultural Insight: The \"Reshta\" (Change)**\n> \"Решта\" is the change you get back.\n> In small shops, they often stick \"Reshta\" to the receipt with a staple.\n> Sometimes they offer you gum instead of 10 kopecks coin.\n> \"Решти немає\" (No change) is a common phrase.\n> Try to carry small bills (dribni hroshi).\n\n> ⚡ **Language Link: The Logic of 5**\n> Why 5? Why does the grammar break at 5?\n> It is an ancient Proto-Indo-European trait.\n> 1, 2, 3, 4 were \"Adjectives\" (they describe the noun).\n> 5 and above were \"Nouns\" (A group of five OF something).\n> \"A five of wolves\". \"A ten of men\".\n> That is why we use Genitive (OF) for 5+.\n> Mind blown?\n\n## practice\n\n**Drill 1: Hryvnia Logic**\nChoose the correct form: Гривня, Гривні, or Гривень.\n- 1 -> **Гривня**.\n- 2 -> **Гривні**.\n- 5 -> **Гривень**.\n- 10 -> **Гривень**.\n- 21 -> **Гривня**.\n- 22 -> **Гривні**.\n- 25 -> **Гривень**.\n- 12 -> **Гривень** (Teen rule!).\n- 34 -> **Гривні**.\n- 40 -> **Гривень**.\n\n**Drill 2: Dollar Math**\nChoose: Долар, Долари, Доларів.\n- 1 -> **Долар**.\n- 3 -> **Долари**.\n- 6 -> **Доларів**.\n- 100 -> **Доларів** (Ends in 0).\n- 52 -> **Долари**.\n- 61 -> **Долар**.\n\n**Drill 3: The Price Tag**\nRead the price.\n- 45 uah -> **Сорок п'ять гривень**.\n- 10 uah -> **Десять гривень**.\n- 3 uah -> **Три гривні**.\n- 100 uah -> **Сто гривень**.\n- 120 uah -> **Сто двадцять гривень**.\n\n## production\n\n> 🛍️ **Culture Corner: The Market (Bazar)**\n> In a supermarkets, prices are fixed (\"Фіксована ціна\").\n> At the **Bazar**, prices are... fluid.\n> If you speak Ukrainian, the price might go down.\n> If you speak English, the price might go up (\"Tourist Tax\").\n> Always ask \"Скільки?\". Even if it's written. It starts the conversation.\n\n**Scenario: Buying Coffee**\n*   **You:** Добрий день. Скільки коштує еспресо?\n*   **Barista:** Тридцять гривень.\n*   **You:** А капучино?\n*   **Barista:** Сорок п'ять.\n*   **You:** Дайте, будь ласка, капучино.\n*   **Barista:** З вас 45 гривень. Карта чи готівка (cash)?\n*   **You:** Карта. Тримайте. (Here/Hold).\n\n**Scenario: Taxi Haggling (Rare but Classic)**\n*   **Driver:** Куди їдемо?\n*   **You:** Центр. Скільки?\n*   **Driver:** Двісті (200) гривень.\n*   **You:** Ого! Це дорого (expensive). Сто п'ятдесят?\n*   **Driver:** Ех... Добре. Сідайте.\n*   *(Note: Most people use Uber/Uklon/Bolt now. Fixed prices!)*\n\n> ⚡ **Language Link: The \"Kopiika\"**\n> The small coin is **Копійка**.\n> - 1 Копійк**а**.\n> - 2 Копійк**и**.\n> - 5 Копій**ок**.\n> It is almost worthless now due to inflation, but the word remains.\n> \"Це копійки\" = \"It's peanuts/cheap\".\n\n---"
       }
     ],
-    "rawMarkdown": "---\ntitle: \"Numbers & Money\"\nsubtitle: \"Counting from 0-100 and handling Ukrainian currency\"\nphase: A1.2\nduration: 45\ntransliteration: partial\ntags: [vocabulary, numbers, money, genitive]\nobjectives:\n  - Count from 0 to 100 in Ukrainian\n  - Use numbers with genitive case (5+)\n  - Handle Ukrainian currency (гривня)\n  - Ask and understand prices\ngrammar:\n  - Cardinal numbers 0-100\n  - Number agreement with nouns\n  - Genitive plural after 5+\n---\n\n# Lesson Content\n\n## warm-up\n\n### Numbers Are Everywhere!\n\nFrom ordering coffee to catching the right bus, numbers are essential. Today you'll master Ukrainian numbers and learn to handle money like a local!\n\n> 💡 **Did You Know?**\n>\n> The Ukrainian currency is called **гривня** (hryvnia), named after an ancient unit of currency and weight used in Kyivan Rus' over 1000 years ago. The symbol ₴ represents the letter \"г\" (H in Latin).\n\n## presentation\n\n### Numbers 0-10\n\nLet's start with the basics:\n\n| Number | Ukrainian | Pronunciation |\n|--------|-----------|---------------|\n| 0 | нуль | /nulʲ/ |\n| 1 | один (m), одна (f), одне (n) | /ɔˈdɪn/ |\n| 2 | два (m/n), дві (f) | /dvɑ/, /dvʲi/ |\n| 3 | три | /trɪ/ |\n| 4 | чотири | /t͡ʃɔˈtɪrɪ/ |\n| 5 | п'ять | /pjɑtʲ/ |\n| 6 | шість | /ʃistʲ/ |\n| 7 | сім | /sʲim/ |\n| 8 | вісім | /ˈvʲisʲim/ |\n| 9 | дев'ять | /ˈdɛvjɑtʲ/ |\n| 10 | десять | /ˈdɛsʲɑtʲ/ |\n\n> ⚡ **Pro Tip**\n>\n> Notice that 1 and 2 have gender forms! **Один** стіл (one table - m), **одна** книга (one book - f), **два** столи but **дві** книги.\n\n### Numbers 11-20\n\nThe teens follow a pattern: number + \"надцять\" (like \"-teen\" in English):\n\n| Number | Ukrainian | Pattern |\n|--------|-----------|---------|\n| 11 | одинадцять | один + -надцять |\n| 12 | дванадцять | два + -надцять |\n| 13 | тринадцять | три + -надцять |\n| 14 | чотирнадцять | чотир- + -надцять |\n| 15 | п'ятнадцять | п'ят- + -надцять |\n| 16 | шістнадцять | шіст- + -надцять |\n| 17 | сімнадцять | сім- + -надцять |\n| 18 | вісімнадцять | вісім- + -надцять |\n| 19 | дев'ятнадцять | дев'ят- + -надцять |\n| 20 | двадцять | два + -дцять |\n\n> 🎬 **Pop Culture Moment: S.T.A.L.K.E.R.**\n>\n> In the iconic Ukrainian video game S.T.A.L.K.E.R., you're constantly counting ammunition and currency. \"П'ятнадцять набоїв\" (15 bullets) could save your life in the Zone!\n\n### Tens (20-100)\n\n| Number | Ukrainian |\n|--------|-----------|\n| 20 | двадцять |\n| 30 | тридцять |\n| 40 | сорок |\n| 50 | п'ятдесят |\n| 60 | шістдесят |\n| 70 | сімдесят |\n| 80 | вісімдесят |\n| 90 | дев'яносто |\n| 100 | сто |\n\nCompound numbers: **двадцять один** (21), **тридцять п'ять** (35), **дев'яносто дев'ять** (99)\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** Ukrainian numbers are irregular and impossible to learn.\n> **Fact:** They're actually quite systematic! Once you know 1-10 and the patterns for teens (-надцять) and tens (-десят), you can count to 100!\n\n### Numbers and Cases: The Magic Rule\n\nHere's where genitive comes in! Numbers affect which case the noun uses:\n\n| Number | Case | Example |\n|--------|------|---------|\n| 1 | Nominative singular | одна гривня |\n| 2, 3, 4 | Nominative plural | дві гривні |\n| 5-20 | **Genitive plural** | п'ять гривень |\n| 21 | Nominative singular | двадцять одна гривня |\n| 22, 23, 24 | Nominative plural | двадцять дві гривні |\n| 25-30 | **Genitive plural** | тридцять гривень |\n\n> 💡 **Did You Know?**\n>\n> This pattern (1 = singular, 2-4 = plural, 5+ = genitive plural) exists in all Slavic languages. It's thought to relate to ancient counting systems!\n\n### Ukrainian Currency\n\n| Ukrainian | English | When to use |\n|-----------|---------|-------------|\n| гривня | hryvnia | 1, 21, 31... |\n| гривні | hryvnias | 2-4, 22-24... |\n| гривень | hryvnias (gen) | 5-20, 25-30... |\n| копійка | kopeck | 1, 21... |\n| копійки | kopecks | 2-4, 22-24... |\n| копійок | kopecks (gen) | 5-20, 25-30... |\n\nExamples:\n- 1 гривня (одна гривня)\n- 3 гривні (три гривні)\n- 7 гривень (сім гривень)\n- 21 гривня (двадцять одна гривня)\n- 25 гривень (двадцять п'ять гривень)\n\n> 🌍 **Real World**\n>\n> At a Ukrainian café, you might hear: \"Кава коштує сорок п'ять гривень\" (Coffee costs 45 hryvnias). Now you can understand prices!\n\n### Asking About Prices\n\n| Ukrainian | English |\n|-----------|---------|\n| Скільки коштує? | How much does it cost? |\n| Скільки це коштує? | How much does this cost? |\n| Яка ціна? | What's the price? |\n| Дорого! | Expensive! |\n| Дешево! | Cheap! |\n| Є знижка? | Is there a discount? |\n\n> ⚡ **Pro Tip**\n>\n> \"Скільки коштує?\" is the most useful phrase. Point at anything and ask!\n\n## practice\n\n### Exercise 1: Write the Numbers\n\nWrite these numbers in Ukrainian:\n\n1. 15\n   > [!answer] п'ятнадцять\n\n2. 42\n   > [!answer] сорок два\n\n3. 78\n   > [!answer] сімдесят вісім\n\n4. 100\n   > [!answer] сто\n\n5. 33\n   > [!answer] тридцять три\n\n### Exercise 2: Currency Practice\n\nComplete with the correct form of гривня:\n\n1. 1 ___\n   > [!answer] гривня\n\n2. 5 ___\n   > [!answer] гривень\n\n3. 23 ___\n   > [!answer] гривні\n\n4. 11 ___\n   > [!answer] гривень\n\n5. 100 ___\n   > [!answer] гривень\n\n## production\n\n### Role Play: At the Market\n\nPractice asking prices:\n- Скільки коштує [item]?\n- [Number] гривень/гривні/гривня.\n- Дорого! / Добре, я візьму.\n\nTry with: хліб (bread), кава (coffee), яблука (apples), молоко (milk).\n\n---\n\n# Activities\n\n## fill-in: Number Forms\n\n> Complete with the correct number or currency form.\n\n1. ___ гривня (1)\n   > [!answer] одна\n   > [!options] одна | один | одне | одного\n\n2. ___ гривні (2)\n   > [!answer] дві\n   > [!options] дві | два | двох | двоє\n\n3. П'ять ___ (гривня)\n   > [!answer] гривень\n   > [!options] гривень | гривня | гривні | гривню\n\n4. ___ гривень (10)\n   > [!answer] десять\n   > [!options] десять | десяти | десятьох | десятеро\n\n5. Двадцять одна ___ (гривня)\n   > [!answer] гривня\n   > [!options] гривня | гривні | гривень | гривню\n\n6. Сорок ___ гривень (5)\n   > [!answer] п'ять\n   > [!options] п'ять | п'яти | п'ятьох | п'ятеро\n\n7. ___ копійок (7)\n   > [!answer] сім\n   > [!options] сім | сьома | сьомий | семи\n\n8. Тридцять три ___ (гривня)\n   > [!answer] гривні\n   > [!options] гривні | гривня | гривень | гривню\n\n9. Це коштує ___ гривень. (100)\n   > [!answer] сто\n   > [!options] сто | стох | стома | сотня\n\n10. ___ книги (4)\n    > [!answer] чотири\n    > [!options] чотири | чотирьох | чотирьом | четверо\n\n11. П'ятдесят ___ гривень (6)\n    > [!answer] шість\n    > [!options] шість | шести | шостий | шестеро\n\n12. Дев'яносто ___ гривень (9)\n    > [!answer] дев'ять\n    > [!options] дев'ять | дев'яти | дев'ятий | дев'ятеро\n\n## unjumble: Price Sentences\n\n> Put the words in the correct order.\n\n1. коштує Скільки це\n   > [!answer] Скільки це коштує?\n   > (How much does this cost?) [3 words]\n\n2. гривень п'ятдесят Кава коштує\n   > [!answer] Кава коштує п'ятдесят гривень.\n   > (Coffee costs 50 hryvnias.) [4 words]\n\n3. Дорого Це\n   > [!answer] Це дорого.\n   > (This is expensive.) [2 words]\n\n4. знижка Є\n   > [!answer] Є знижка?\n   > (Is there a discount?) [2 words]\n\n5. двадцять гривень Хліб коштує\n   > [!answer] Хліб коштує двадцять гривень.\n   > (Bread costs 20 hryvnias.) [4 words]\n\n6. гривні три Це коштує\n   > [!answer] Це коштує три гривні.\n   > (This costs 3 hryvnias.) [4 words]\n\n7. сто гривень Скільки п'ятдесят Ціна\n   > [!answer] Ціна сто п'ятдесят гривень.\n   > (The price is 150 hryvnias.) [4 words]\n\n8. готівкою Платити картою чи\n   > [!answer] Платити картою чи готівкою?\n   > (Pay by card or cash?) [4 words]\n\n9. гривень Решта двадцять п'ять\n   > [!answer] Решта двадцять п'ять гривень.\n   > (Change is 25 hryvnias.) [4 words]\n\n10. одна Двадцять гривня\n    > [!answer] Двадцять одна гривня.\n    > (Twenty-one hryvnias.) [3 words]\n\n11. коштує яблуко Скільки\n    > [!answer] Скільки коштує яблуко?\n    > (How much does an apple cost?) [3 words]\n\n12. дешево Тут Це\n    > [!answer] Тут це дешево.\n    > (Here this is cheap.) [3 words]\n\n## match-up: Numbers to Words\n\n> Match the digit with the Ukrainian word.\n\n| Left | Right |\n|------|-------|\n| 5 | п'ять |\n| 11 | одинадцять |\n| 20 | двадцять |\n| 33 | тридцять три |\n| 40 | сорок |\n| 55 | п'ятдесят п'ять |\n| 67 | шістдесят сім |\n| 78 | сімдесят вісім |\n| 84 | вісімдесят чотири |\n| 90 | дев'яносто |\n| 99 | дев'яносто дев'ять |\n| 100 | сто |\n\n## quiz: Numbers & Money\n\n> Test your understanding of Ukrainian numbers and currency.\n\n1. How do you say \"15\" in Ukrainian?\n   - [ ] п'ятьдесят\n   - [x] п'ятнадцять\n   - [ ] п'ять\n   - [ ] п'ятсот\n   > 15 = п'ятнадцять (п'ят- + -надцять)\n\n2. What case follows numbers 5-20?\n   - [ ] Nominative\n   - [ ] Accusative\n   - [x] Genitive plural\n   - [ ] Locative\n   > Numbers 5-20 require genitive plural: п'ять гривень.\n\n3. How do you say \"21 hryvnias\"?\n   - [ ] двадцять один гривень\n   - [x] двадцять одна гривня\n   - [ ] двадцять один гривні\n   - [ ] двадцять одна гривні\n   > 21 ends in 1, so it uses nominative singular: гривня.\n\n4. What is \"Скільки коштує?\"\n   - [ ] What is this?\n   - [ ] Where is it?\n   - [x] How much does it cost?\n   - [ ] Do you have it?\n   > \"Скільки коштує?\" = How much does it cost?\n\n5. Which is correct for \"3 hryvnias\"?\n   - [ ] три гривня\n   - [x] три гривні\n   - [ ] три гривень\n   - [ ] три гривню\n   > Numbers 2-4 use nominative plural: гривні.\n\n6. How do you say \"40\" in Ukrainian?\n   - [ ] чотиридесять\n   - [x] сорок\n   - [ ] чотирдесят\n   - [ ] четверо\n   > 40 is irregular: сорок.\n\n7. What does \"дорого\" mean?\n   - [x] expensive\n   - [ ] cheap\n   - [ ] free\n   - [ ] discount\n   > \"Дорого\" = expensive; \"дешево\" = cheap.\n\n8. How do you say \"100 hryvnias\"?\n   - [ ] сто гривня\n   - [ ] сто гривні\n   - [x] сто гривень\n   - [ ] сто гривню\n   > 100 ends in 0, so uses genitive plural: гривень.\n\n9. Which number has gender forms?\n   - [x] один/одна/одне\n   - [ ] три\n   - [ ] п'ять\n   - [ ] десять\n   > 1 (один/одна/одне) and 2 (два/дві) have gender forms.\n\n10. How do you say \"90\" in Ukrainian?\n    - [ ] дев'ятьдесят\n    - [x] дев'яносто\n    - [ ] дев'ять десять\n    - [ ] дев'яносот\n    > 90 is irregular: дев'яносто.\n\n11. What is \"готівка\"?\n    - [x] cash\n    - [ ] card\n    - [ ] price\n    - [ ] discount\n    > \"Готівка\" = cash; \"картка\" = card.\n\n12. \"Є знижка?\" means:\n    - [ ] What's the price?\n    - [x] Is there a discount?\n    - [ ] Is it expensive?\n    - [ ] Where is the cash?\n    > \"Є знижка?\" = Is there a discount?\n\n## true-false: Number Facts\n\n> Decide if each statement is true (Правда) or false (Міф).\n\n- [x] Numbers 5-20 require genitive plural.\n  > Correct! П'ять книг, десять гривень, etc.\n\n- [ ] \"Сорок\" means \"14\" in Ukrainian.\n  > Incorrect! \"Сорок\" = 40. \"Чотирнадцять\" = 14.\n\n- [x] The Ukrainian currency is called \"гривня.\"\n  > Correct! Named after an ancient Kyivan Rus' currency unit.\n\n- [ ] \"Два\" and \"дві\" mean the same number.\n  > Correct (but marked as true)! Both mean 2, but два is m/n, дві is f.\n\n- [x] \"Скільки коштує?\" asks about price.\n  > Correct! = How much does it cost?\n\n- [ ] After \"один,\" nouns use genitive case.\n  > Incorrect! After 1, nouns use nominative singular.\n\n- [x] \"Дев'яносто\" means \"90.\"\n  > Correct! It's an irregular form.\n\n- [ ] \"Дорого\" means \"cheap.\"\n  > Incorrect! \"Дорого\" = expensive; \"дешево\" = cheap.\n\n- [x] \"Три гривні\" is correct (not \"три гривень\").\n  > Correct! 2-4 use nominative plural: гривні.\n\n- [ ] Numbers 11-19 don't use \"-надцять.\"\n  > Incorrect! All teens use -надцять: одинадцять, дванадцять, etc.\n\n- [x] \"Решта\" means \"change\" (money returned).\n  > Correct! \"Решта п'ять гривень\" = Change is 5 hryvnias.\n\n- [x] 21 uses the same noun form as 1.\n  > Correct! Both use nominative singular: двадцять одна гривня.\n\n## group-sort: Currency Forms\n\n> Sort these into the correct category based on noun form required.\n\n### гривня (1, 21, 31...)\n- одна\n- двадцять одна\n- тридцять одна\n- сорок одна\n\n### гривні (2-4, 22-24...)\n- дві\n- три\n- двадцять дві\n- тридцять чотири\n\n### гривень (5-20, 25-30...)\n- п'ять\n- десять\n- двадцять п'ять\n- сто\n\n## anagram: Number Words\n> Unscramble the Ukrainian number words.\n\n1. ь т я п\n   > [!answer] п'ять\n   > (five)\n\n2. ь т с і ш\n   > [!answer] шість\n   > (six)\n\n3. м і с\n   > [!answer] сім\n   > (seven)\n\n4. м і с і в\n   > [!answer] вісім\n   > (eight)\n\n5. ь т я в е д\n   > [!answer] дев'ять\n   > (nine)\n\n6. ь т я с е д\n   > [!answer] десять\n   > (ten)\n\n7. к о р о с\n   > [!answer] сорок\n   > (forty)\n\n8. о т с\n   > [!answer] сто\n   > (hundred)\n\n9. я н в и р г\n   > [!answer] гривня\n   > (hryvnia)\n\n10. а к й і п о к\n    > [!answer] копійка\n    > (kopeck)\n\n11. о г о р о д\n    > [!answer] дорого\n    > (expensive)\n\n12. о в е ш е д\n    > [!answer] дешево\n    > (cheap)\n\n## match-up: Price Expressions\n> Match the price with the correct Ukrainian phrase.\n\n| Price | Ukrainian |\n|-------|-----------|\n| 1₴ | одна гривня |\n| 2₴ | дві гривні |\n| 3₴ | три гривні |\n| 5₴ | п'ять гривень |\n| 10₴ | десять гривень |\n| 15₴ | п'ятнадцять гривень |\n| 21₴ | двадцять одна гривня |\n| 25₴ | двадцять п'ять гривень |\n| 33₴ | тридцять три гривні |\n| 50₴ | п'ятдесят гривень |\n| 99₴ | дев'яносто дев'ять гривень |\n| 100₴ | сто гривень |\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| нуль | /nulʲ/ | zero | noun | m | |\n| один | /ɔˈdɪn/ | one (m) | num | - | одна (f), одне (n) |\n| два | /dvɑ/ | two (m/n) | num | - | дві (f) |\n| три | /trɪ/ | three | num | - | |\n| чотири | /t͡ʃɔˈtɪrɪ/ | four | num | - | |\n| п'ять | /pjɑtʲ/ | five | num | - | requires genitive |\n| шість | /ʃistʲ/ | six | num | - | |\n| сім | /sʲim/ | seven | num | - | |\n| вісім | /ˈvʲisʲim/ | eight | num | - | |\n| дев'ять | /ˈdɛvjɑtʲ/ | nine | num | - | |\n| десять | /ˈdɛsʲɑtʲ/ | ten | num | - | |\n| двадцять | /ˈdvɑd͡tsʲɑtʲ/ | twenty | num | - | |\n| тридцять | /ˈtrɪd͡tsʲɑtʲ/ | thirty | num | - | |\n| сорок | /ˈsɔrɔk/ | forty | num | - | irregular |\n| п'ятдесят | /pjɑdɛˈsʲɑt/ | fifty | num | - | |\n| шістдесят | /ʃizdɛˈsʲɑt/ | sixty | num | - | |\n| сімдесят | /sʲimdɛˈsʲɑt/ | seventy | num | - | |\n| вісімдесят | /vʲisʲimdɛˈsʲɑt/ | eighty | num | - | |\n| дев'яносто | /dɛvjɑˈnɔstɔ/ | ninety | num | - | irregular |\n| сто | /stɔ/ | hundred | num | - | |\n| гривня | /ˈɦrɪvnʲɑ/ | hryvnia | noun | f | Ukrainian currency |\n| копійка | /kɔˈpʲijkɑ/ | kopeck | noun | f | 1/100 of гривня |\n| долар | /ˈdɔlɑr/ | dollar | noun | m | |\n| євро | /ˈjɛvrɔ/ | euro | noun | n | indeclinable |\n| ціна | /t͡sʲiˈnɑ/ | price | noun | f | |\n| скільки | /ˈskʲilʲkɪ/ | how much/many | adv | - | + genitive |\n| коштувати | /kɔʃtuˈvɑtɪ/ | to cost | verb | - | коштує (3rd sg) |\n| дорого | /ˈdɔrɔɦɔ/ | expensive | adv | - | |\n| дешево | /ˈdɛʃɛvɔ/ | cheap | adv | - | |\n| знижка | /ˈznɪʒkɑ/ | discount | noun | f | |\n| решта | /ˈrɛʃtɑ/ | change, remainder | noun | f | |\n| платити | /plɑˈtɪtɪ/ | to pay | verb | - | |\n| рахунок | /rɑˈxunɔk/ | bill, check | noun | m | |\n| готівка | /ɦɔˈtʲivkɑ/ | cash | noun | f | |\n| картка | /ˈkɑrtkɑ/ | card | noun | f | банківська картка |\n\n---\n\n# Summary\n\n> **What You Learned Today**\n>\n> - Numbers 0-100: нуль, один... сто\n> - Number + noun agreement:\n>   - 1: nominative singular (одна гривня)\n>   - 2-4: nominative plural (дві гривні)\n>   - 5+: genitive plural (п'ять гривень)\n> - Currency: гривня, гривні, гривень\n> - Asking prices: Скільки коштує?\n\n> **Coming Next**\n>\n> In Module 18, you'll learn **Food & Restaurant** vocabulary:\n> - Menu items: страва, закуска, десерт\n> - Ordering food: Я хочу... Можна...?\n> - Combining accusative, genitive, and numbers\n",
-    "createdAt": "2025-12-06T10:49:20.096Z",
-    "modifiedAt": "2025-12-06T10:49:20.096Z",
+    "rawMarkdown": "---\ntitle: Numbers and Money\nsubtitle: The Rule of Five\nphase: A1.2\nduration: 60\ntransliteration: full\ntags: [vocabulary, numbers, shopping, money, genitive_plural]\nobjectives:\n  - Learner can count from 0 to 100\n  - Learner can say prices (Hryvnias, Dollars)\n  - Learner applies the \"2-3-4\" vs \"5+\" rule\n  - Learner can ask \"How much does it cost?\"\n---\n\n# Lesson Content\n\n## warm-up\n**The Price of Bread**\n\nYou are at the market (Bazar).\nYou see fresh bread. It smells like heaven.\n\"Скільки коштує?\" (How much does it cost?).\nThe seller speaks fast: \"Двадцять п'ять гривень\".\nYou hand her a 50 note.\nShe asks: \"У вас немає п'ять гривень?\"\nNumbers are everywhere. Addresses, prices, times, buses.\nIn Ukraine, numbers control the grammar.\n- 1 Student? No problem.\n- 2 Students? Different ending.\n- 5 Students? Completely different ending.\nWelcome to **The Rule of Five**.\n\n## presentation\n\n### Section 1: 0 to 10 (The Basics)\n\nMemorize these. They are your building blocks.\n\n- 0 - **Нуль** (Nul).\n- 1 - **Один** (Odyn) / **Одна** (Odna - F) / **Одне** (Odne - N).\n- 2 - **Два** (Dva) / **Дві** (Dvi - F).\n- 3 - **Три** (Try).\n- 4 - **Чотири** (Chotyry).\n- 5 - **П'ять** (Pyat').\n- 6 - **Шість** (Shist').\n- 7 - **Сім** (Sim).\n- 8 - **Вісім** (Visim).\n- 9 - **Дев'ять** (Devyat').\n- 10 - **Десять** (Desyat').\n\n### Section 2: The Magic Rules (Currency)\n\nMoney is the best way to learn counting rules.\nMeet the **Гривня** (Hryvnia - F).\n\n**Rule 1: The Loner (1)**\nIf the number ends in **1** (but not 11), use Nominative Singular.\n- 1 Гривн**я**.\n- 21 Гривн**я**.\n- 51 Гривн**я**.\n\n**Rule 2: The Small Group (2, 3, 4)**\nIf the number ends in **2, 3, or 4** (but not 12, 13, 14), use Nominative Plural.\nFor Hryvnia (Fem -a), this looks like **-і**.\n- 2 Гривн**і**.\n- 3 Гривн**і**.\n- 4 Гривн**і**.\n- 22 Гривн**і**.\n\n**Rule 3: The Mass (5 to 20 + 0)**\nIf the number ends in **5, 6, 7, 8, 9, 0** OR is a teen (**11-19**), use **Genitive Plural**.\nFor Hryvnia, words drop the ending or change drastically.\n- 5 Грив**ень**.\n- 10 Грив**ень**.\n- 20 Грив**ень**.\n- 11, 12, 13... Грив**ень** (Teenagers follow the mob).\n\n> 💸 **Currency Cheat Sheet**\n> - **Hryvnia (F):** 1 Гривня | 2-4 Гривні | 5+ Гривень.\n> - **Dollar (M):** 1 Долар | 2-4 Долари | 5+ Доларів.\n> - **Euro (N):** 1 Євро | 2-4 Євро | 5+ Євро (Invariant! Easy mode).\n\n### Section 3: The Teens (11-19)\n\nTake the numbers 1-9 and add **-надцять** (-nadtsyat').\nThink of it as \"On ten\" (Nad dtsyat').\n- 11 - Одинадцять (Odyn-nadtsyat').\n- 12 - Дванадцять.\n- 13 - Тринадцять.\n- 14 - Чотирнадцять.\n- 15 - П'ятнадцять.\n- ...\n- 19 - Дев'ятнадцять.\n- 20 - **Двадцять** (Two-tens).\n\n### Section 4: The Tens (20-100)\n\n- 20 - Двадцять.\n- 30 - Тридцять.\n- 40 - **Сорок** (Weird one. Like \"Magpie\").\n- 50 - П'ятдесят (Five-tens).\n- 60 - Шістдесят.\n- 70 - Сімдесят.\n- 80 - Вісімдесят.\n- 90 - Дев'яносто (Ninety - also weird).\n- 100 - **Сто**.\n\nTo make big numbers, just say them in order.\n- 25 = Двадцять п'ять.\n- 42 = Сорок два.\n\n### Section 5: How much?\n\nTo ask for a price:\n- **\"Скільки коштує?\"** (How much costs?).\n- Or just **\"Скільки?\"** (How much?).\n\n**Answers:**\n- 50 гривень.\n- 100 доларів (Sto dolariv).\n- 200 євро (Dvi-sti yevro).\n\n> 🕵️ **Deep Dive: The 1-2 Gender Trap**\n> Numbers 1 and 2 define gender.\n> - **1:** Один (M), Одна (F), Одне (N).\n> - **2:** Два (M/N), Дві (F).\n> - 3, 4, 5... don't care about gender.\n> So:\n> - **Один** долар (M).\n> - **Одна** гривня (F).\n> - **Два** долари (M).\n> - **Дві** гривні (F).\n\n\n### Section 6: How old are you?\n\nThe \"Rule of Five\" also controls time.\nTo say your age, you say: \"**To me is X years**\" (Мені X років).\nThe word \"Year\" changes just like \"Hryvnia\".\n\n1.  **1 Рік** (Rik) - Irregular base!\n2.  **2, 3, 4 Роки** (Roky) - Nom Plural.\n3.  **5...100 Років** (Rokiv) - Gen Plural.\n\n**Examples:**\n- Мені 21 рік. (I am 21).\n- Мені 22 роки. (I am 22).\n- Мені 25 років. (I am 25).\n- Мені 30 років. (I am 30).\n- Професору 50 років. (The professor is 50).\n\n> 🕰️ **Deep Dive: The Year Paradox**\n> Why does \"Рік\" become \"Років\"?\n> It's an irregular plural.\n> Just like in English: 1 Person -> 2 People.\n> Don't fight it. Just memorize:\n> - 1 Рік.\n> - 2 Роки.\n> - 5 Років.\n\n> 💰 **Cultural Insight: The \"Reshta\" (Change)**\n> \"Решта\" is the change you get back.\n> In small shops, they often stick \"Reshta\" to the receipt with a staple.\n> Sometimes they offer you gum instead of 10 kopecks coin.\n> \"Решти немає\" (No change) is a common phrase.\n> Try to carry small bills (dribni hroshi).\n\n> ⚡ **Language Link: The Logic of 5**\n> Why 5? Why does the grammar break at 5?\n> It is an ancient Proto-Indo-European trait.\n> 1, 2, 3, 4 were \"Adjectives\" (they describe the noun).\n> 5 and above were \"Nouns\" (A group of five OF something).\n> \"A five of wolves\". \"A ten of men\".\n> That is why we use Genitive (OF) for 5+.\n> Mind blown?\n\n## practice\n\n**Drill 1: Hryvnia Logic**\nChoose the correct form: Гривня, Гривні, or Гривень.\n- 1 -> **Гривня**.\n- 2 -> **Гривні**.\n- 5 -> **Гривень**.\n- 10 -> **Гривень**.\n- 21 -> **Гривня**.\n- 22 -> **Гривні**.\n- 25 -> **Гривень**.\n- 12 -> **Гривень** (Teen rule!).\n- 34 -> **Гривні**.\n- 40 -> **Гривень**.\n\n**Drill 2: Dollar Math**\nChoose: Долар, Долари, Доларів.\n- 1 -> **Долар**.\n- 3 -> **Долари**.\n- 6 -> **Доларів**.\n- 100 -> **Доларів** (Ends in 0).\n- 52 -> **Долари**.\n- 61 -> **Долар**.\n\n**Drill 3: The Price Tag**\nRead the price.\n- 45 uah -> **Сорок п'ять гривень**.\n- 10 uah -> **Десять гривень**.\n- 3 uah -> **Три гривні**.\n- 100 uah -> **Сто гривень**.\n- 120 uah -> **Сто двадцять гривень**.\n\n## production\n\n> 🛍️ **Culture Corner: The Market (Bazar)**\n> In a supermarkets, prices are fixed (\"Фіксована ціна\").\n> At the **Bazar**, prices are... fluid.\n> If you speak Ukrainian, the price might go down.\n> If you speak English, the price might go up (\"Tourist Tax\").\n> Always ask \"Скільки?\". Even if it's written. It starts the conversation.\n\n**Scenario: Buying Coffee**\n*   **You:** Добрий день. Скільки коштує еспресо?\n*   **Barista:** Тридцять гривень.\n*   **You:** А капучино?\n*   **Barista:** Сорок п'ять.\n*   **You:** Дайте, будь ласка, капучино.\n*   **Barista:** З вас 45 гривень. Карта чи готівка (cash)?\n*   **You:** Карта. Тримайте. (Here/Hold).\n\n**Scenario: Taxi Haggling (Rare but Classic)**\n*   **Driver:** Куди їдемо?\n*   **You:** Центр. Скільки?\n*   **Driver:** Двісті (200) гривень.\n*   **You:** Ого! Це дорого (expensive). Сто п'ятдесят?\n*   **Driver:** Ех... Добре. Сідайте.\n*   *(Note: Most people use Uber/Uklon/Bolt now. Fixed prices!)*\n\n> ⚡ **Language Link: The \"Kopiika\"**\n> The small coin is **Копійка**.\n> - 1 Копійк**а**.\n> - 2 Копійк**и**.\n> - 5 Копій**ок**.\n> It is almost worthless now due to inflation, but the word remains.\n> \"Це копійки\" = \"It's peanuts/cheap\".\n\n---\n\n# Activities\n\n## match-up: Number Match\n\n> Match the word to the digit.\n\n| Word | Digit |\n|------|-------|\n| Один | 1 |\n| Два | 2 |\n| Три | 3 |\n| Чотири | 4 |\n| П'ять | 5 |\n| Десять | 10 |\n| Дванадцять | 12 |\n| Двадцять | 20 |\n| Сорок | 40 |\n| П'ятдесят | 50 |\n| Дев'яносто | 90 |\n| Сто | 100 |\n\n## fill-in: The Price is Right\n\n> Complete with the correct currency form (Гривня, Гривні, Гривень).\n\n1. Це коштує 5 ___ .\n   > [!answer] гривень\n   > [!options] гривень | гривні | гривня\n\n2. Це коштує 2 ___ .\n   > [!answer] гривні\n   > [!options] гривні | гривень | гривня\n\n3. Це коштує 1 ___ .\n   > [!answer] гривня\n   > [!options] гривня | гривні | гривень\n\n4. Це коштує 10 ___ .\n   > [!answer] гривень\n   > [!options] гривень | гривні | гривня\n\n5. Це коштує 21 ___ .\n   > [!answer] гривня\n   > [!options] гривня | гривні | гривень\n\n6. Це коштує 33 ___ .\n   > [!answer] гривні\n   > [!options] гривні | гривень | гривня\n\n7. Це коштує 100 ___ .\n   > [!answer] гривень\n   > [!options] гривень | гривні | гривня\n\n8. Це коштує 12 ___ .\n   > [!answer] гривень\n   > [!options] гривень | гривні | гривня\n\n9. Це коштує 4 ___ .\n   > [!answer] гривні\n   > [!options] гривні | гривень | гривня\n\n10. Це коштує 50 ___ .\n    > [!answer] гривень\n    > [!options] гривень | гривні | гривня\n\n11. Це коштує 99 ___ .\n    > [!answer] гривень\n    > [!options] гривень | гривні | гривня\n\n12. Це коштує 3 ___ .\n    > [!answer] гривні\n    > [!options] гривні | гривень | гривня\n\n## quiz: Math Whiz\n\n> Solve (in Ukrainian).\n\n1. Один + Один = ?\n   - [x] Два\n   - [ ] Три\n\n2. Два + Два = ?\n   - [x] Чотири\n   - [ ] П'ять\n\n3. Десять - Два = ?\n   - [x] Вісім\n   - [ ] Сім\n\n4. П'ять + П'ять = ?\n   - [x] Десять\n   - [ ] Двадцять\n\n5. 20 + 20?\n   - [x] Сорок\n   - [ ] Тридцять\n\n6. 100 / 2?\n   - [x] П'ятдесят\n   - [ ] Шістдесят\n\n7. Is \"Сорок\" 40?\n   - [x] Yes.\n   - [ ] No, it's 14.\n\n8. Is \"П'ятдесят\" 15?\n   - [ ] Yes.\n   - [x] No, it's 50. (15 is П'ятнадцять).\n\n## fill-in: Dollar or Dollars?\n\n> Choose the correct form for Dollar (Masc).\n\n1. 1 ___\n   > [!answer] долар\n\n2. 2 ___\n   > [!answer] долари\n\n3. 5 ___\n   > [!answer] доларів\n\n4. 10 ___\n   > [!answer] доларів\n\n5. 24 ___\n   > [!answer] долари\n\n6. 31 ___\n   > [!answer] долар\n\n7. 13 ___\n   > [!answer] доларів (Teen rule!)\n\n8. 100 ___\n   > [!answer] доларів\n\n9. 3 ___\n   > [!answer] долари\n\n10. 4 ___\n    > [!answer] долари\n\n11. 6 ___\n    > [!answer] доларів\n\n12. 0 ___\n    > [!answer] доларів (Zero is plural genitive always).\n\n## group-sort: The Rule of 5 Sorter\n\n> Does this number take Genitive Plural (5+ / Mass)? Or Nom Pl/Sing?\n\n### Mass Group (5+, Teens, 0)\n- П'ять (5)\n- Десять (10)\n- Одинадцять (11)\n- Дванадцять (12)\n- Двадцять (20)\n- Сто (100)\n- Нуль (0)\n- Двадцять п'ять (25)\n\n### Small Group (1, 2, 3, 4)\n- Один (1)\n- Два (2)\n- Три (3)\n- Чотири (4)\n- Двадцять один (21)\n- Двадцять два (22)\n- Сорок три (43)\n\n## unjumble: Price Checker\n\n> Build the sentence.\n\n1. коштує / Скільки / ?\n   > [!answer] Скільки коштує?\n\n2. п'ять / Це / гривень / .\n   > [!answer] Це п'ять гривень.\n\n3. три / Долар / коштує / гривні / ?\n   > [!answer] Долар коштує три гривні?\n   > (Does dollar cost 3 UAH? No, but gramatically ok).\n\n4. коштує / Кава / сорок / .\n   > [!answer] Кава коштує сорок.\n\n5. сім / Це / доларів / .\n   > [!answer] Це сім доларів.\n\n6. у / Немає / мене / грошей / .\n   > [!answer] У мене немає грошей.\n\n7. сто / Це / євро / .\n   > [!answer] Це сто євро.\n\n8. коштує / Скільки / вода / ?\n   > [!answer] Скільки коштує вода?\n\n9. вас / У / є / гривня / одна / ?\n   > [!answer] У вас є одна гривня?\n\n10. два / Дайте / квитки / .\n    > [!answer] Дайте два квитки.\n\n11. три / Це / копійки / .\n    > [!answer] Це три копійки.\n\n12. п'ятдесят / З / вас / .\n    > [!answer] З вас п'ятдесят.\n\n## fill-in: Number Words\n\n> Write the Ukrainian word for the number (in Nominative).\n\n1. 1 (Masc)\n   > [!answer] один\n\n2. 2 (Masc)\n   > [!answer] два\n\n3. 3\n   > [!answer] три\n\n4. 5\n   > [!answer] п'ять\n\n5. 10\n   > [!answer] десять\n\n6. 20\n   > [!answer] двадцять\n\n7. 100\n   > [!answer] сто\n\n8. 0\n   > [!answer] нуль\n\n9. 40\n   > [!answer] сорок\n\n10. 50\n    > [!answer] п'ятдесят\n\n11. 11\n    > [!answer] одинадцять\n\n12. 12\n    > [!answer] дванадцять\n\n\n## fill-in: How Old?\n\n> Complete with Рік / Роки / Років.\n\n1. Мені 20 ___\n   > [!answer] років\n\n2. Мені 22 ___\n   > [!answer] роки\n\n3. Брату 10 ___\n   > [!answer] років\n\n4. Сестрі 3 ___\n   > [!answer] роки\n\n5. Україні 30+ ___\n   > [!answer] років\n\n6. Мені 21 ___\n   > [!answer] рік\n\n7. Йому 40 ___\n   > [!answer] років\n\n8. Їй 5 ___\n   > [!answer] років\n\n9. Нам 2 ___\n   > [!answer] роки\n\n10. Їм 100 ___\n    > [!answer] років\n\n11. Мені 1 ___\n    > [!answer] рік\n\n12. Мені 4 ___\n    > [!answer] роки\n\n## anagram: Number Scramble\n\n> Unscramble.\n\n1. н и д о\n   > [!answer] один\n   > (1)\n\n2. в а д\n   > [!answer] два\n   > (2)\n\n3. р и т\n   > [!answer] три\n   > (3)\n\n4. о т с\n   > [!answer] сто\n   > (100)\n\n5. к о р о с\n   > [!answer] сорок\n   > (40)\n\n6. я г в р и н\n   > [!answer] гривня\n   > (Hryvnia)\n\n7. л ь у н\n   > [!answer] нуль\n   > (0)\n\n8. р о л а д\n   > [!answer] долар\n   > (Dollar)\n\n9. р о в є\n   > [!answer] євро\n   > (Euro)\n\n10. о в о ш е д\n    > [!answer] дешево\n    > (Cheap - deshevo)\n\n11. о р о г о д\n    > [!answer] дорого\n    > (Expensive - doroho)\n\n12. і ш ь т с\n    > [!answer] шість\n    > (6)\n\n# Summary\n\n**You are rich!**\nYou can count your money and your years.\n- **1:** Nominative Singular. (Гривня, Рік).\n- **2-4:** Nominative Plural. (Гривні, Роки).\n- **5-20+:** Genitive Plural. (Гривень, Років).\n- **Teens:** Always Genitive Plural (-nadtsyat').\n- **Asking:** Скільки коштує?\n- **Logic:** 1-4 describe (Adjectives). 5+ measure (Nouns/Containers).\n\n**Checklist:**\n- [ ] I can count 1-100.\n- [ ] I can handle the \"Rule of 5\" trap.\n- [ ] I know that Hryvni (2-4) and Hryven (5+) are different.\n- [ ] I can say my age (\"Мені 30 років\").\n- [ ] I can ask for change (\"Решта\").\n\n**Next Stop:**\nWe have money. We have numbers. We have hunger.\nLet's go eat properly.\nNext module: **Food and Restaurant (Extended)**.\nOrdering full meals, understanding menus, and cooking vocab.\nBon appétit!\n\n# Vocabulary\n\n| Word | IPA | English | Note | Audio |\n|------|-----|---------|------|-------|\n| нуль | /nulʲ/ | zero | | [🔊](audio_nul) |\n| один | /ɔˈdɪn/ | one | | [🔊](audio_odyn) |\n| два | /dvɑ/ | two | | [🔊](audio_dva) |\n| три | /trɪ/ | three | | [🔊](audio_try) |\n| чотири | /tʃɔˈtɪrɪ/ | four | | [🔊](audio_chotyry) |\n| п'ять | /pjɑtʲ/ | five | | [🔊](audio_pyat) |\n| шість | /ʃisʲtʲ/ | six | | [🔊](audio_shist) |\n| сім | /sim/ | seven | | [🔊](audio_sim) |\n| вісім | /ˈvisim/ | eight | | [🔊](audio_visim) |\n| дев'ять | /ˈdɛvjɑtʲ/ | nine | | [🔊](audio_devyat) |\n| десять | /ˈdɛsʲɑtʲ/ | ten | | [🔊](audio_desyat) |\n| двадцять | /ˈdvɑd͡zʲt͡sʲɑtʲ/ | twenty | | [🔊](audio_dvadtsyat) |\n| сорок | /ˈsɔrɔk/ | forty | | [🔊](audio_sorok) |\n| п'ятдесят | /pjɑtdɛˈsʲɑt/ | fifty | | [🔊](audio_pyatdesyat) |\n| дев'яносто | /dɛvjɑˈnɔstɔ/ | ninety | | [🔊](audio_devyanosto) |\n| сто | /stɔ/ | hundred | | [🔊](audio_sto) |\n| скільки | /ˈskilʲkɪ/ | how much | | [🔊](audio_skilky) |\n| коштує | /kɔʃˈtuje/ | costs (v) | | [🔊](audio_koshtuye) |\n| гривня | /ˈɦrɪvnʲɑ/ | hryvnia | Currency | [🔊](audio_hryvnya) |\n| долар | /ˈdɔlɑr/ | dollar | | [🔊](audio_dolar) |\n| євро | /ˈjɛvrɔ/ | euro | indecl | [🔊](audio_yevro) |\n| дорого | /ˈdɔrɔɦɔ/ | expensive | | [🔊](audio_doroho) |\n| дешево | /ˈdɛʃɛvɔ/ | cheap | | [🔊](audio_deshevo) |\n| готівка | /ɦɔˈtivkɑ/ | cash | | [🔊](audio_hotivka) |\n| карта | /ˈkɑrtɑ/ | card | | [🔊](audio_tarta) |\n| решта | /ˈrɛʃtɑ/ | change (money) | | [🔊](audio_reshta) |\n| ціна | /t͡s⁽ʲ⁾iˈnɑ/ | price | | [🔊](audio_tsina) |\n",
+    "createdAt": "2025-12-08T21:22:09.886Z",
+    "modifiedAt": "2025-12-08T21:22:09.886Z",
     "version": 2
   },
   "activities": [
     {
-      "id": "act-a1-0-fillblank",
-      "type": "fill-blank",
-      "title": "Number Forms",
-      "description": "Complete with the correct number or currency form.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "___ гривня (1)",
-            "answer": "одна",
-            "options": [
-              "одна",
-              "один",
-              "одне",
-              "одного"
-            ]
-          },
-          {
-            "prompt": "___ гривні (2)",
-            "answer": "дві",
-            "options": [
-              "дві",
-              "два",
-              "двох",
-              "двоє"
-            ]
-          },
-          {
-            "prompt": "П'ять ___ (гривня)",
-            "answer": "гривень",
-            "hints": [
-              "гривня"
-            ],
-            "options": [
-              "гривень",
-              "гривня",
-              "гривні",
-              "гривню"
-            ]
-          },
-          {
-            "prompt": "___ гривень (10)",
-            "answer": "десять",
-            "options": [
-              "десять",
-              "десяти",
-              "десятьох",
-              "десятеро"
-            ]
-          },
-          {
-            "prompt": "Двадцять одна ___ (гривня)",
-            "answer": "гривня",
-            "hints": [
-              "гривня"
-            ],
-            "options": [
-              "гривня",
-              "гривні",
-              "гривень",
-              "гривню"
-            ]
-          },
-          {
-            "prompt": "Сорок ___ гривень (5)",
-            "answer": "п'ять",
-            "options": [
-              "п'ять",
-              "п'яти",
-              "п'ятьох",
-              "п'ятеро"
-            ]
-          },
-          {
-            "prompt": "___ копійок (7)",
-            "answer": "сім",
-            "options": [
-              "сім",
-              "сьома",
-              "сьомий",
-              "семи"
-            ]
-          },
-          {
-            "prompt": "Тридцять три ___ (гривня)",
-            "answer": "гривні",
-            "hints": [
-              "гривня"
-            ],
-            "options": [
-              "гривні",
-              "гривня",
-              "гривень",
-              "гривню"
-            ]
-          },
-          {
-            "prompt": "Це коштує ___ гривень. (100)",
-            "answer": "сто",
-            "options": [
-              "сто",
-              "стох",
-              "стома",
-              "сотня"
-            ]
-          },
-          {
-            "prompt": "___ книги (4)",
-            "answer": "чотири",
-            "options": [
-              "чотири",
-              "чотирьох",
-              "чотирьом",
-              "четверо"
-            ]
-          },
-          {
-            "prompt": "П'ятдесят ___ гривень (6)",
-            "answer": "шість",
-            "options": [
-              "шість",
-              "шести",
-              "шостий",
-              "шестеро"
-            ]
-          },
-          {
-            "prompt": "Дев'яносто ___ гривень (9)",
-            "answer": "дев'ять",
-            "options": [
-              "дев'ять",
-              "дев'яти",
-              "дев'ятий",
-              "дев'ятеро"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.096Z",
-      "modifiedAt": "2025-12-06T10:49:20.096Z"
-    },
-    {
-      "id": "act-a1-0-unjumble",
-      "type": "unjumble",
-      "title": "Price Sentences",
-      "description": "Put the words in the correct order.",
-      "content": {
-        "type": "unjumble",
-        "isUnjumble": true,
-        "items": [
-          {
-            "words": [
-              "коштує",
-              "Скільки",
-              "це"
-            ],
-            "answer": "Скільки це коштує?",
-            "translation": "How much does this cost?"
-          },
-          {
-            "words": [
-              "гривень",
-              "п'ятдесят",
-              "Кава",
-              "коштує"
-            ],
-            "answer": "Кава коштує п'ятдесят гривень.",
-            "translation": "Coffee costs 50 hryvnias."
-          },
-          {
-            "words": [
-              "Дорого",
-              "Це"
-            ],
-            "answer": "Це дорого.",
-            "translation": "This is expensive."
-          },
-          {
-            "words": [
-              "знижка",
-              "Є"
-            ],
-            "answer": "Є знижка?",
-            "translation": "Is there a discount?"
-          },
-          {
-            "words": [
-              "двадцять",
-              "гривень",
-              "Хліб",
-              "коштує"
-            ],
-            "answer": "Хліб коштує двадцять гривень.",
-            "translation": "Bread costs 20 hryvnias."
-          },
-          {
-            "words": [
-              "гривні",
-              "три",
-              "Це",
-              "коштує"
-            ],
-            "answer": "Це коштує три гривні.",
-            "translation": "This costs 3 hryvnias."
-          },
-          {
-            "words": [
-              "сто",
-              "гривень",
-              "Скільки",
-              "п'ятдесят",
-              "Ціна"
-            ],
-            "answer": "Ціна сто п'ятдесят гривень.",
-            "translation": "The price is 150 hryvnias."
-          },
-          {
-            "words": [
-              "готівкою",
-              "Платити",
-              "картою",
-              "чи"
-            ],
-            "answer": "Платити картою чи готівкою?",
-            "translation": "Pay by card or cash?"
-          },
-          {
-            "words": [
-              "гривень",
-              "Решта",
-              "двадцять",
-              "п'ять"
-            ],
-            "answer": "Решта двадцять п'ять гривень.",
-            "translation": "Change is 25 hryvnias."
-          },
-          {
-            "words": [
-              "одна",
-              "Двадцять",
-              "гривня"
-            ],
-            "answer": "Двадцять одна гривня.",
-            "translation": "Twenty-one hryvnias."
-          },
-          {
-            "words": [
-              "коштує",
-              "яблуко",
-              "Скільки"
-            ],
-            "answer": "Скільки коштує яблуко?",
-            "translation": "How much does an apple cost?"
-          },
-          {
-            "words": [
-              "дешево",
-              "Тут",
-              "Це"
-            ],
-            "answer": "Тут це дешево.",
-            "translation": "Here this is cheap."
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.096Z",
-      "modifiedAt": "2025-12-06T10:49:20.096Z"
-    },
-    {
       "id": "act-a1-0-matchup",
       "type": "match-up",
-      "title": "Numbers to Words",
-      "description": "Match the digit with the Ukrainian word.",
+      "title": "Number Match",
+      "description": "Match the word to the digit.",
       "content": {
         "type": "match-up",
         "pairs": [
           {
-            "left": "5",
-            "right": "п'ять"
+            "left": "Один",
+            "right": "1"
           },
           {
-            "left": "11",
-            "right": "одинадцять"
+            "left": "Два",
+            "right": "2"
           },
           {
-            "left": "20",
-            "right": "двадцять"
+            "left": "Три",
+            "right": "3"
           },
           {
-            "left": "33",
-            "right": "тридцять три"
+            "left": "Чотири",
+            "right": "4"
           },
           {
-            "left": "40",
-            "right": "сорок"
+            "left": "П'ять",
+            "right": "5"
           },
           {
-            "left": "55",
-            "right": "п'ятдесят п'ять"
+            "left": "Десять",
+            "right": "10"
           },
           {
-            "left": "67",
-            "right": "шістдесят сім"
+            "left": "Дванадцять",
+            "right": "12"
           },
           {
-            "left": "78",
-            "right": "сімдесят вісім"
+            "left": "Двадцять",
+            "right": "20"
           },
           {
-            "left": "84",
-            "right": "вісімдесят чотири"
+            "left": "Сорок",
+            "right": "40"
           },
           {
-            "left": "90",
-            "right": "дев'яносто"
+            "left": "П'ятдесят",
+            "right": "50"
           },
           {
-            "left": "99",
-            "right": "дев'яносто дев'ять"
+            "left": "Дев'яносто",
+            "right": "90"
           },
           {
-            "left": "100",
-            "right": "сто"
+            "left": "Сто",
+            "right": "100"
           }
         ],
         "shuffleRight": true
@@ -406,148 +113,216 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.096Z",
-      "modifiedAt": "2025-12-06T10:49:20.096Z"
+      "createdAt": "2025-12-08T21:22:09.886Z",
+      "modifiedAt": "2025-12-08T21:22:09.886Z"
+    },
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "The Price is Right",
+      "description": "Complete with the correct currency form (Гривня, Гривні, Гривень).",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Це коштує 5 ___ .",
+            "answer": "гривень",
+            "options": [
+              "гривень",
+              "гривні",
+              "гривня"
+            ]
+          },
+          {
+            "prompt": "Це коштує 2 ___ .",
+            "answer": "гривні",
+            "options": [
+              "гривні",
+              "гривень",
+              "гривня"
+            ]
+          },
+          {
+            "prompt": "Це коштує 1 ___ .",
+            "answer": "гривня",
+            "options": [
+              "гривня",
+              "гривні",
+              "гривень"
+            ]
+          },
+          {
+            "prompt": "Це коштує 10 ___ .",
+            "answer": "гривень",
+            "options": [
+              "гривень",
+              "гривні",
+              "гривня"
+            ]
+          },
+          {
+            "prompt": "Це коштує 21 ___ .",
+            "answer": "гривня",
+            "options": [
+              "гривня",
+              "гривні",
+              "гривень"
+            ]
+          },
+          {
+            "prompt": "Це коштує 33 ___ .",
+            "answer": "гривні",
+            "options": [
+              "гривні",
+              "гривень",
+              "гривня"
+            ]
+          },
+          {
+            "prompt": "Це коштує 100 ___ .",
+            "answer": "гривень",
+            "options": [
+              "гривень",
+              "гривні",
+              "гривня"
+            ]
+          },
+          {
+            "prompt": "Це коштує 12 ___ .",
+            "answer": "гривень",
+            "options": [
+              "гривень",
+              "гривні",
+              "гривня"
+            ]
+          },
+          {
+            "prompt": "Це коштує 4 ___ .",
+            "answer": "гривні",
+            "options": [
+              "гривні",
+              "гривень",
+              "гривня"
+            ]
+          },
+          {
+            "prompt": "Це коштує 50 ___ .",
+            "answer": "гривень",
+            "options": [
+              "гривень",
+              "гривні",
+              "гривня"
+            ]
+          },
+          {
+            "prompt": "Це коштує 99 ___ .",
+            "answer": "гривень",
+            "options": [
+              "гривень",
+              "гривні",
+              "гривня"
+            ]
+          },
+          {
+            "prompt": "Це коштує 3 ___ .",
+            "answer": "гривні",
+            "options": [
+              "гривні",
+              "гривень",
+              "гривня"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.886Z",
+      "modifiedAt": "2025-12-08T21:22:09.886Z"
     },
     {
       "id": "act-a1-0-quiz",
       "type": "quiz",
-      "title": "Numbers & Money",
-      "description": "Test your understanding of Ukrainian numbers and currency.",
+      "title": "Math Whiz",
+      "description": "Solve (in Ukrainian).",
       "content": {
         "type": "quiz",
         "questions": [
           {
-            "question": "How do you say \"15\" in Ukrainian?",
+            "question": "Один + Один = ?",
             "options": [
-              "п'ятьдесят",
-              "п'ятнадцять",
-              "п'ять",
-              "п'ятсот"
-            ],
-            "correctIndex": 1,
-            "explanation": "15 = п'ятнадцять (п'ят- + -надцять)"
-          },
-          {
-            "question": "What case follows numbers 5-20?",
-            "options": [
-              "Nominative",
-              "Accusative",
-              "Genitive plural",
-              "Locative"
-            ],
-            "correctIndex": 2,
-            "explanation": "Numbers 5-20 require genitive plural: п'ять гривень."
-          },
-          {
-            "question": "How do you say \"21 hryvnias\"?",
-            "options": [
-              "двадцять один гривень",
-              "двадцять одна гривня",
-              "двадцять один гривні",
-              "двадцять одна гривні"
-            ],
-            "correctIndex": 1,
-            "explanation": "21 ends in 1, so it uses nominative singular: гривня."
-          },
-          {
-            "question": "What is \"Скільки коштує?\"",
-            "options": [
-              "What is this?",
-              "Where is it?",
-              "How much does it cost?",
-              "Do you have it?"
-            ],
-            "correctIndex": 2,
-            "explanation": "\"Скільки коштує?\" = How much does it cost?"
-          },
-          {
-            "question": "Which is correct for \"3 hryvnias\"?",
-            "options": [
-              "три гривня",
-              "три гривні",
-              "три гривень",
-              "три гривню"
-            ],
-            "correctIndex": 1,
-            "explanation": "Numbers 2-4 use nominative plural: гривні."
-          },
-          {
-            "question": "How do you say \"40\" in Ukrainian?",
-            "options": [
-              "чотиридесять",
-              "сорок",
-              "чотирдесят",
-              "четверо"
-            ],
-            "correctIndex": 1,
-            "explanation": "40 is irregular: сорок."
-          },
-          {
-            "question": "What does \"дорого\" mean?",
-            "options": [
-              "expensive",
-              "cheap",
-              "free",
-              "discount"
+              "Два",
+              "Три"
             ],
             "correctIndex": 0,
-            "explanation": "\"Дорого\" = expensive; \"дешево\" = cheap."
+            "explanation": ""
           },
           {
-            "question": "How do you say \"100 hryvnias\"?",
+            "question": "Два + Два = ?",
             "options": [
-              "сто гривня",
-              "сто гривні",
-              "сто гривень",
-              "сто гривню"
-            ],
-            "correctIndex": 2,
-            "explanation": "100 ends in 0, so uses genitive plural: гривень."
-          },
-          {
-            "question": "Which number has gender forms?",
-            "options": [
-              "один/одна/одне",
-              "три",
-              "п'ять",
-              "десять"
+              "Чотири",
+              "П'ять"
             ],
             "correctIndex": 0,
-            "explanation": "1 (один/одна/одне) and 2 (два/дві) have gender forms."
+            "explanation": ""
           },
           {
-            "question": "How do you say \"90\" in Ukrainian?",
+            "question": "Десять - Два = ?",
             "options": [
-              "дев'ятьдесят",
-              "дев'яносто",
-              "дев'ять десять",
-              "дев'яносот"
-            ],
-            "correctIndex": 1,
-            "explanation": "90 is irregular: дев'яносто."
-          },
-          {
-            "question": "What is \"готівка\"?",
-            "options": [
-              "cash",
-              "card",
-              "price",
-              "discount"
+              "Вісім",
+              "Сім"
             ],
             "correctIndex": 0,
-            "explanation": "\"Готівка\" = cash; \"картка\" = card."
+            "explanation": ""
           },
           {
-            "question": "\"Є знижка?\" means:",
+            "question": "П'ять + П'ять = ?",
             "options": [
-              "What's the price?",
-              "Is there a discount?",
-              "Is it expensive?",
-              "Where is the cash?"
+              "Десять",
+              "Двадцять"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "20 + 20?",
+            "options": [
+              "Сорок",
+              "Тридцять"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "100 / 2?",
+            "options": [
+              "П'ятдесят",
+              "Шістдесят"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Is \"Сорок\" 40?",
+            "options": [
+              "Yes.",
+              "No, it's 14."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Is \"П'ятдесят\" 15?",
+            "options": [
+              "Yes.",
+              "No, it's 50. (15 is П'ятнадцять)."
             ],
             "correctIndex": 1,
-            "explanation": "\"Є знижка?\" = Is there a discount?"
+            "explanation": ""
           }
         ],
         "shuffleQuestions": true,
@@ -561,76 +336,64 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.096Z",
-      "modifiedAt": "2025-12-06T10:49:20.096Z"
+      "createdAt": "2025-12-08T21:22:09.886Z",
+      "modifiedAt": "2025-12-08T21:22:09.886Z"
     },
     {
-      "id": "act-a1-0-truefalse",
-      "type": "true-false",
-      "title": "Number Facts",
-      "description": "Decide if each statement is true (Правда) or false (Міф).",
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "Dollar or Dollars?",
+      "description": "Choose the correct form for Dollar (Masc).",
       "content": {
-        "type": "true-false",
-        "statements": [
+        "type": "fill-blank",
+        "items": [
           {
-            "statement": "Numbers 5-20 require genitive plural.",
-            "isTrue": true,
-            "explanation": "Correct! П'ять книг, десять гривень, etc."
+            "prompt": "1 ___",
+            "answer": "долар"
           },
           {
-            "statement": "\"Сорок\" means \"14\" in Ukrainian.",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Сорок\" = 40. \"Чотирнадцять\" = 14."
+            "prompt": "2 ___",
+            "answer": "долари"
           },
           {
-            "statement": "The Ukrainian currency is called \"гривня.\"",
-            "isTrue": true,
-            "explanation": "Correct! Named after an ancient Kyivan Rus' currency unit."
+            "prompt": "5 ___",
+            "answer": "доларів"
           },
           {
-            "statement": "\"Два\" and \"дві\" mean the same number.",
-            "isTrue": false,
-            "explanation": "Correct (but marked as true)! Both mean 2, but два is m/n, дві is f."
+            "prompt": "10 ___",
+            "answer": "доларів"
           },
           {
-            "statement": "\"Скільки коштує?\" asks about price.",
-            "isTrue": true,
-            "explanation": "Correct! = How much does it cost?"
+            "prompt": "24 ___",
+            "answer": "долари"
           },
           {
-            "statement": "After \"один,\" nouns use genitive case.",
-            "isTrue": false,
-            "explanation": "Incorrect! After 1, nouns use nominative singular."
+            "prompt": "31 ___",
+            "answer": "долар"
           },
           {
-            "statement": "\"Дев'яносто\" means \"90.\"",
-            "isTrue": true,
-            "explanation": "Correct! It's an irregular form."
+            "prompt": "13 ___",
+            "answer": "доларів (Teen rule!)"
           },
           {
-            "statement": "\"Дорого\" means \"cheap.\"",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Дорого\" = expensive; \"дешево\" = cheap."
+            "prompt": "100 ___",
+            "answer": "доларів"
           },
           {
-            "statement": "\"Три гривні\" is correct (not \"три гривень\").",
-            "isTrue": true,
-            "explanation": "Correct! 2-4 use nominative plural: гривні."
+            "prompt": "3 ___",
+            "answer": "долари"
           },
           {
-            "statement": "Numbers 11-19 don't use \"-надцять.\"",
-            "isTrue": false,
-            "explanation": "Incorrect! All teens use -надцять: одинадцять, дванадцять, etc."
+            "prompt": "4 ___",
+            "answer": "долари"
           },
           {
-            "statement": "\"Решта\" means \"change\" (money returned).",
-            "isTrue": true,
-            "explanation": "Correct! \"Решта п'ять гривень\" = Change is 5 hryvnias."
+            "prompt": "6 ___",
+            "answer": "доларів"
           },
           {
-            "statement": "21 uses the same noun form as 1.",
-            "isTrue": true,
-            "explanation": "Correct! Both use nominative singular: двадцять одна гривня."
+            "prompt": "0 ___",
+            "answer": "доларів (Zero is plural genitive always)."
           }
         ]
       },
@@ -641,49 +404,45 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.096Z",
-      "modifiedAt": "2025-12-06T10:49:20.096Z"
+      "createdAt": "2025-12-08T21:22:09.886Z",
+      "modifiedAt": "2025-12-08T21:22:09.886Z"
     },
     {
       "id": "act-a1-0-groupsort",
       "type": "group-sort",
-      "title": "Currency Forms",
-      "description": "Sort these into the correct category based on noun form required.",
+      "title": "The Rule of 5 Sorter",
+      "description": "Does this number take Genitive Plural (5+ / Mass)? Or Nom Pl/Sing?",
       "content": {
         "type": "group-sort",
         "groups": [
           {
-            "id": "",
-            "name": "гривня",
+            "id": "mass-group",
+            "name": "Mass Group",
             "items": [
-              "одна",
-              "двадцять одна",
-              "тридцять одна",
-              "сорок одна"
+              "П'ять (5)",
+              "Десять (10)",
+              "Одинадцять (11)",
+              "Дванадцять (12)",
+              "Двадцять (20)",
+              "Сто (100)",
+              "Нуль (0)",
+              "Двадцять п'ять (25)"
             ],
-            "nameUk": "1, 21, 31..."
+            "nameUk": "5+, Teens, 0"
           },
           {
-            "id": "",
-            "name": "гривні",
+            "id": "small-group",
+            "name": "Small Group",
             "items": [
-              "дві",
-              "три",
-              "двадцять дві",
-              "тридцять чотири"
+              "Один (1)",
+              "Два (2)",
+              "Три (3)",
+              "Чотири (4)",
+              "Двадцять один (21)",
+              "Двадцять два (22)",
+              "Сорок три (43)"
             ],
-            "nameUk": "2-4, 22-24..."
-          },
-          {
-            "id": "",
-            "name": "гривень",
-            "items": [
-              "п'ять",
-              "десять",
-              "двадцять п'ять",
-              "сто"
-            ],
-            "nameUk": "5-20, 25-30..."
+            "nameUk": "1, 2, 3, 4"
           }
         ],
         "shuffleItems": true
@@ -695,151 +454,129 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.096Z",
-      "modifiedAt": "2025-12-06T10:49:20.096Z"
+      "createdAt": "2025-12-08T21:22:09.886Z",
+      "modifiedAt": "2025-12-08T21:22:09.886Z"
     },
     {
-      "id": "act-a1-0-anagram",
-      "type": "anagram",
-      "title": "Number Words",
-      "description": "Unscramble the Ukrainian number words.",
+      "id": "act-a1-0-unjumble",
+      "type": "unjumble",
+      "title": "Price Checker",
+      "description": "Build the sentence.",
       "content": {
-        "type": "anagram",
-        "isAnagram": true,
+        "type": "unjumble",
+        "isUnjumble": true,
         "items": [
           {
-            "letters": [
-              "ь",
-              "т",
-              "я",
-              "п"
+            "words": [
+              "коштує",
+              "Скільки",
+              "?"
             ],
-            "answer": "п'ять",
-            "translation": "five"
+            "answer": "Скільки коштує?"
           },
           {
-            "letters": [
-              "ь",
-              "т",
-              "с",
-              "і",
-              "ш"
+            "words": [
+              "п'ять",
+              "Це",
+              "гривень",
+              "."
             ],
-            "answer": "шість",
-            "translation": "six"
+            "answer": "Це п'ять гривень."
           },
           {
-            "letters": [
-              "м",
-              "і",
-              "с"
+            "words": [
+              "три",
+              "Долар",
+              "коштує",
+              "гривні",
+              "?"
             ],
-            "answer": "сім",
-            "translation": "seven"
+            "answer": "Долар коштує три гривні?",
+            "translation": "Does dollar cost 3 UAH? No, but gramatically ok"
           },
           {
-            "letters": [
-              "м",
-              "і",
-              "с",
-              "і",
-              "в"
+            "words": [
+              "коштує",
+              "Кава",
+              "сорок",
+              "."
             ],
-            "answer": "вісім",
-            "translation": "eight"
+            "answer": "Кава коштує сорок."
           },
           {
-            "letters": [
-              "ь",
-              "т",
-              "я",
-              "в",
-              "е",
-              "д"
+            "words": [
+              "сім",
+              "Це",
+              "доларів",
+              "."
             ],
-            "answer": "дев'ять",
-            "translation": "nine"
+            "answer": "Це сім доларів."
           },
           {
-            "letters": [
-              "ь",
-              "т",
-              "я",
-              "с",
-              "е",
-              "д"
+            "words": [
+              "у",
+              "Немає",
+              "мене",
+              "грошей",
+              "."
             ],
-            "answer": "десять",
-            "translation": "ten"
+            "answer": "У мене немає грошей."
           },
           {
-            "letters": [
-              "к",
-              "о",
-              "р",
-              "о",
-              "с"
+            "words": [
+              "сто",
+              "Це",
+              "євро",
+              "."
             ],
-            "answer": "сорок",
-            "translation": "forty"
+            "answer": "Це сто євро."
           },
           {
-            "letters": [
-              "о",
-              "т",
-              "с"
+            "words": [
+              "коштує",
+              "Скільки",
+              "вода",
+              "?"
             ],
-            "answer": "сто",
-            "translation": "hundred"
+            "answer": "Скільки коштує вода?"
           },
           {
-            "letters": [
-              "я",
-              "н",
-              "в",
-              "и",
-              "р",
-              "г"
+            "words": [
+              "вас",
+              "У",
+              "є",
+              "гривня",
+              "одна",
+              "?"
             ],
-            "answer": "гривня",
-            "translation": "hryvnia"
+            "answer": "У вас є одна гривня?"
           },
           {
-            "letters": [
-              "а",
-              "к",
-              "й",
-              "і",
-              "п",
-              "о",
-              "к"
+            "words": [
+              "два",
+              "Дайте",
+              "квитки",
+              "."
             ],
-            "answer": "копійка",
-            "translation": "kopeck"
+            "answer": "Дайте два квитки."
           },
           {
-            "letters": [
-              "о",
-              "г",
-              "о",
-              "р",
-              "о",
-              "д"
+            "words": [
+              "три",
+              "Це",
+              "копійки",
+              "."
             ],
-            "answer": "дорого",
-            "translation": "expensive"
+            "answer": "Це три копійки."
           },
           {
-            "letters": [
-              "о",
-              "в",
-              "е",
-              "ш",
-              "е",
-              "д"
+            "words": [
+              "п'ятдесят",
+              "З",
+              "вас",
+              "."
             ],
-            "answer": "дешево",
-            "translation": "cheap"
+            "answer": "З вас п'ятдесят."
           }
         ]
       },
@@ -850,67 +587,66 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.096Z",
-      "modifiedAt": "2025-12-06T10:49:20.096Z"
+      "createdAt": "2025-12-08T21:22:09.886Z",
+      "modifiedAt": "2025-12-08T21:22:09.886Z"
     },
     {
-      "id": "act-a1-0-matchup",
-      "type": "match-up",
-      "title": "Price Expressions",
-      "description": "Match the price with the correct Ukrainian phrase.",
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "Number Words",
+      "description": "Write the Ukrainian word for the number (in Nominative).",
       "content": {
-        "type": "match-up",
-        "pairs": [
+        "type": "fill-blank",
+        "items": [
           {
-            "left": "1₴",
-            "right": "одна гривня"
+            "prompt": "1 (Masc)",
+            "answer": "один"
           },
           {
-            "left": "2₴",
-            "right": "дві гривні"
+            "prompt": "2 (Masc)",
+            "answer": "два"
           },
           {
-            "left": "3₴",
-            "right": "три гривні"
+            "prompt": "3",
+            "answer": "три"
           },
           {
-            "left": "5₴",
-            "right": "п'ять гривень"
+            "prompt": "5",
+            "answer": "п'ять"
           },
           {
-            "left": "10₴",
-            "right": "десять гривень"
+            "prompt": "10",
+            "answer": "десять"
           },
           {
-            "left": "15₴",
-            "right": "п'ятнадцять гривень"
+            "prompt": "20",
+            "answer": "двадцять"
           },
           {
-            "left": "21₴",
-            "right": "двадцять одна гривня"
+            "prompt": "100",
+            "answer": "сто"
           },
           {
-            "left": "25₴",
-            "right": "двадцять п'ять гривень"
+            "prompt": "0",
+            "answer": "нуль"
           },
           {
-            "left": "33₴",
-            "right": "тридцять три гривні"
+            "prompt": "40",
+            "answer": "сорок"
           },
           {
-            "left": "50₴",
-            "right": "п'ятдесят гривень"
+            "prompt": "50",
+            "answer": "п'ятдесят"
           },
           {
-            "left": "99₴",
-            "right": "дев'яносто дев'ять гривень"
+            "prompt": "11",
+            "answer": "одинадцять"
           },
           {
-            "left": "100₴",
-            "right": "сто гривень"
+            "prompt": "12",
+            "answer": "дванадцять"
           }
-        ],
-        "shuffleRight": true
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -919,18 +655,233 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.096Z",
-      "modifiedAt": "2025-12-06T10:49:20.096Z"
+      "createdAt": "2025-12-08T21:22:09.886Z",
+      "modifiedAt": "2025-12-08T21:22:09.886Z"
+    },
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "How Old?",
+      "description": "Complete with Рік / Роки / Років.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Мені 20 ___",
+            "answer": "років"
+          },
+          {
+            "prompt": "Мені 22 ___",
+            "answer": "роки"
+          },
+          {
+            "prompt": "Брату 10 ___",
+            "answer": "років"
+          },
+          {
+            "prompt": "Сестрі 3 ___",
+            "answer": "роки"
+          },
+          {
+            "prompt": "Україні 30+ ___",
+            "answer": "років"
+          },
+          {
+            "prompt": "Мені 21 ___",
+            "answer": "рік"
+          },
+          {
+            "prompt": "Йому 40 ___",
+            "answer": "років"
+          },
+          {
+            "prompt": "Їй 5 ___",
+            "answer": "років"
+          },
+          {
+            "prompt": "Нам 2 ___",
+            "answer": "роки"
+          },
+          {
+            "prompt": "Їм 100 ___",
+            "answer": "років"
+          },
+          {
+            "prompt": "Мені 1 ___",
+            "answer": "рік"
+          },
+          {
+            "prompt": "Мені 4 ___",
+            "answer": "роки"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.886Z",
+      "modifiedAt": "2025-12-08T21:22:09.886Z"
+    },
+    {
+      "id": "act-a1-0-anagram",
+      "type": "anagram",
+      "title": "Number Scramble",
+      "description": "Unscramble.",
+      "content": {
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
+          {
+            "letters": [
+              "н",
+              "и",
+              "д",
+              "о"
+            ],
+            "answer": "один",
+            "translation": "1"
+          },
+          {
+            "letters": [
+              "в",
+              "а",
+              "д"
+            ],
+            "answer": "два",
+            "translation": "2"
+          },
+          {
+            "letters": [
+              "р",
+              "и",
+              "т"
+            ],
+            "answer": "три",
+            "translation": "3"
+          },
+          {
+            "letters": [
+              "о",
+              "т",
+              "с"
+            ],
+            "answer": "сто",
+            "translation": "100"
+          },
+          {
+            "letters": [
+              "к",
+              "о",
+              "р",
+              "о",
+              "с"
+            ],
+            "answer": "сорок",
+            "translation": "40"
+          },
+          {
+            "letters": [
+              "я",
+              "г",
+              "в",
+              "р",
+              "и",
+              "н"
+            ],
+            "answer": "гривня",
+            "translation": "Hryvnia"
+          },
+          {
+            "letters": [
+              "л",
+              "ь",
+              "у",
+              "н"
+            ],
+            "answer": "нуль",
+            "translation": "0"
+          },
+          {
+            "letters": [
+              "р",
+              "о",
+              "л",
+              "а",
+              "д"
+            ],
+            "answer": "долар",
+            "translation": "Dollar"
+          },
+          {
+            "letters": [
+              "р",
+              "о",
+              "в",
+              "є"
+            ],
+            "answer": "євро",
+            "translation": "Euro"
+          },
+          {
+            "letters": [
+              "о",
+              "в",
+              "о",
+              "ш",
+              "е",
+              "д"
+            ],
+            "answer": "дешево",
+            "translation": "Cheap - deshevo"
+          },
+          {
+            "letters": [
+              "о",
+              "р",
+              "о",
+              "г",
+              "о",
+              "д"
+            ],
+            "answer": "дорого",
+            "translation": "Expensive - doroho"
+          },
+          {
+            "letters": [
+              "і",
+              "ш",
+              "ь",
+              "т",
+              "с"
+            ],
+            "answer": "шість",
+            "translation": "6"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.886Z",
+      "modifiedAt": "2025-12-08T21:22:09.886Z"
     }
   ],
   "vocabulary": {
     "moduleId": "mod-uk-A1-17",
     "level": "A1",
     "phase": "A1.2",
-    "wordCount": 35,
-    "newWordCount": 35,
+    "wordCount": 27,
+    "newWordCount": 27,
     "reviewWordCount": 0,
-    "transliterationMode": "partial",
+    "transliterationMode": "full",
     "words": [
       {
         "id": "v-nulь-0-0",
@@ -938,27 +889,27 @@
         "en": "zero",
         "pos": "noun",
         "ipa": "/nulʲ/",
-        "gender": "m",
+        "note": "[🔊](audio_nul)",
         "isNew": true,
         "firstModule": 0
       },
       {
         "id": "v-odyn-0-1",
         "uk": "один",
-        "en": "one (m)",
-        "pos": "num",
+        "en": "one",
+        "pos": "noun",
         "ipa": "/ɔˈdɪn/",
-        "note": "одна (f), одне (n)",
+        "note": "[🔊](audio_odyn)",
         "isNew": true,
         "firstModule": 0
       },
       {
         "id": "v-dva-0-2",
         "uk": "два",
-        "en": "two (m/n)",
-        "pos": "num",
+        "en": "two",
+        "pos": "noun",
         "ipa": "/dvɑ/",
-        "note": "дві (f)",
+        "note": "[🔊](audio_dva)",
         "isNew": true,
         "firstModule": 0
       },
@@ -966,8 +917,9 @@
         "id": "v-try-0-3",
         "uk": "три",
         "en": "three",
-        "pos": "num",
+        "pos": "noun",
         "ipa": "/trɪ/",
+        "note": "[🔊](audio_try)",
         "isNew": true,
         "firstModule": 0
       },
@@ -975,8 +927,9 @@
         "id": "v-chotyry-0-4",
         "uk": "чотири",
         "en": "four",
-        "pos": "num",
-        "ipa": "/t͡ʃɔˈtɪrɪ/",
+        "pos": "noun",
+        "ipa": "/tʃɔˈtɪrɪ/",
+        "note": "[🔊](audio_chotyry)",
         "isNew": true,
         "firstModule": 0
       },
@@ -984,9 +937,9 @@
         "id": "v-p'yatь-0-5",
         "uk": "п'ять",
         "en": "five",
-        "pos": "num",
+        "pos": "noun",
         "ipa": "/pjɑtʲ/",
-        "note": "requires genitive",
+        "note": "[🔊](audio_pyat)",
         "isNew": true,
         "firstModule": 0
       },
@@ -994,8 +947,9 @@
         "id": "v-shistь-0-6",
         "uk": "шість",
         "en": "six",
-        "pos": "num",
-        "ipa": "/ʃistʲ/",
+        "pos": "noun",
+        "ipa": "/ʃisʲtʲ/",
+        "note": "[🔊](audio_shist)",
         "isNew": true,
         "firstModule": 0
       },
@@ -1003,8 +957,9 @@
         "id": "v-sim-0-7",
         "uk": "сім",
         "en": "seven",
-        "pos": "num",
-        "ipa": "/sʲim/",
+        "pos": "noun",
+        "ipa": "/sim/",
+        "note": "[🔊](audio_sim)",
         "isNew": true,
         "firstModule": 0
       },
@@ -1012,8 +967,9 @@
         "id": "v-visim-0-8",
         "uk": "вісім",
         "en": "eight",
-        "pos": "num",
-        "ipa": "/ˈvʲisʲim/",
+        "pos": "noun",
+        "ipa": "/ˈvisim/",
+        "note": "[🔊](audio_visim)",
         "isNew": true,
         "firstModule": 0
       },
@@ -1021,8 +977,9 @@
         "id": "v-dev'yatь-0-9",
         "uk": "дев'ять",
         "en": "nine",
-        "pos": "num",
+        "pos": "noun",
         "ipa": "/ˈdɛvjɑtʲ/",
+        "note": "[🔊](audio_devyat)",
         "isNew": true,
         "firstModule": 0
       },
@@ -1030,8 +987,9 @@
         "id": "v-desyatь-0-10",
         "uk": "десять",
         "en": "ten",
-        "pos": "num",
+        "pos": "noun",
         "ipa": "/ˈdɛsʲɑtʲ/",
+        "note": "[🔊](audio_desyat)",
         "isNew": true,
         "firstModule": 0
       },
@@ -1039,233 +997,159 @@
         "id": "v-dvadtsyatь-0-11",
         "uk": "двадцять",
         "en": "twenty",
-        "pos": "num",
-        "ipa": "/ˈdvɑd͡tsʲɑtʲ/",
+        "pos": "noun",
+        "ipa": "/ˈdvɑd͡zʲt͡sʲɑtʲ/",
+        "note": "[🔊](audio_dvadtsyat)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-trydtsyatь-0-12",
-        "uk": "тридцять",
-        "en": "thirty",
-        "pos": "num",
-        "ipa": "/ˈtrɪd͡tsʲɑtʲ/",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-sorok-0-13",
+        "id": "v-sorok-0-12",
         "uk": "сорок",
         "en": "forty",
-        "pos": "num",
+        "pos": "noun",
         "ipa": "/ˈsɔrɔk/",
-        "note": "irregular",
+        "note": "[🔊](audio_sorok)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-p'yatdesyat-0-14",
+        "id": "v-p'yatdesyat-0-13",
         "uk": "п'ятдесят",
         "en": "fifty",
-        "pos": "num",
-        "ipa": "/pjɑdɛˈsʲɑt/",
+        "pos": "noun",
+        "ipa": "/pjɑtdɛˈsʲɑt/",
+        "note": "[🔊](audio_pyatdesyat)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-shistdesyat-0-15",
-        "uk": "шістдесят",
-        "en": "sixty",
-        "pos": "num",
-        "ipa": "/ʃizdɛˈsʲɑt/",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-simdesyat-0-16",
-        "uk": "сімдесят",
-        "en": "seventy",
-        "pos": "num",
-        "ipa": "/sʲimdɛˈsʲɑt/",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-visimdesyat-0-17",
-        "uk": "вісімдесят",
-        "en": "eighty",
-        "pos": "num",
-        "ipa": "/vʲisʲimdɛˈsʲɑt/",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-dev'yanosto-0-18",
+        "id": "v-dev'yanosto-0-14",
         "uk": "дев'яносто",
         "en": "ninety",
-        "pos": "num",
+        "pos": "noun",
         "ipa": "/dɛvjɑˈnɔstɔ/",
-        "note": "irregular",
+        "note": "[🔊](audio_devyanosto)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-sto-0-19",
+        "id": "v-sto-0-15",
         "uk": "сто",
         "en": "hundred",
-        "pos": "num",
+        "pos": "noun",
         "ipa": "/stɔ/",
+        "note": "[🔊](audio_sto)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-hryvnya-0-20",
+        "id": "v-skilьky-0-16",
+        "uk": "скільки",
+        "en": "how much",
+        "pos": "noun",
+        "ipa": "/ˈskilʲkɪ/",
+        "note": "[🔊](audio_skilky)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-koshtuye-0-17",
+        "uk": "коштує",
+        "en": "costs (v)",
+        "pos": "noun",
+        "ipa": "/kɔʃˈtuje/",
+        "note": "[🔊](audio_koshtuye)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-hryvnya-0-18",
         "uk": "гривня",
         "en": "hryvnia",
-        "pos": "noun",
+        "pos": "Currency",
         "ipa": "/ˈɦrɪvnʲɑ/",
-        "gender": "f",
-        "note": "Ukrainian currency",
+        "note": "[🔊](audio_hryvnya)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-kopiyka-0-21",
-        "uk": "копійка",
-        "en": "kopeck",
-        "pos": "noun",
-        "ipa": "/kɔˈpʲijkɑ/",
-        "gender": "f",
-        "note": "1/100 of гривня",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-dolar-0-22",
+        "id": "v-dolar-0-19",
         "uk": "долар",
         "en": "dollar",
         "pos": "noun",
         "ipa": "/ˈdɔlɑr/",
-        "gender": "m",
+        "note": "[🔊](audio_dolar)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-yevro-0-23",
+        "id": "v-yevro-0-20",
         "uk": "євро",
         "en": "euro",
-        "pos": "noun",
+        "pos": "indecl",
         "ipa": "/ˈjɛvrɔ/",
-        "gender": "n",
-        "note": "indeclinable",
+        "note": "[🔊](audio_yevro)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-tsina-0-24",
-        "uk": "ціна",
-        "en": "price",
-        "pos": "noun",
-        "ipa": "/t͡sʲiˈnɑ/",
-        "gender": "f",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-skilьky-0-25",
-        "uk": "скільки",
-        "en": "how much/many",
-        "pos": "adv",
-        "ipa": "/ˈskʲilʲkɪ/",
-        "note": "+ genitive",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-koshtuvaty-0-26",
-        "uk": "коштувати",
-        "en": "to cost",
-        "pos": "verb",
-        "ipa": "/kɔʃtuˈvɑtɪ/",
-        "note": "коштує (3rd sg)",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-doroho-0-27",
+        "id": "v-doroho-0-21",
         "uk": "дорого",
         "en": "expensive",
-        "pos": "adv",
+        "pos": "noun",
         "ipa": "/ˈdɔrɔɦɔ/",
+        "note": "[🔊](audio_doroho)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-deshevo-0-28",
+        "id": "v-deshevo-0-22",
         "uk": "дешево",
         "en": "cheap",
-        "pos": "adv",
+        "pos": "noun",
         "ipa": "/ˈdɛʃɛvɔ/",
+        "note": "[🔊](audio_deshevo)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-znyzhka-0-29",
-        "uk": "знижка",
-        "en": "discount",
-        "pos": "noun",
-        "ipa": "/ˈznɪʒkɑ/",
-        "gender": "f",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-reshta-0-30",
-        "uk": "решта",
-        "en": "change, remainder",
-        "pos": "noun",
-        "ipa": "/ˈrɛʃtɑ/",
-        "gender": "f",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-platyty-0-31",
-        "uk": "платити",
-        "en": "to pay",
-        "pos": "verb",
-        "ipa": "/plɑˈtɪtɪ/",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-rakhunok-0-32",
-        "uk": "рахунок",
-        "en": "bill, check",
-        "pos": "noun",
-        "ipa": "/rɑˈxunɔk/",
-        "gender": "m",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-hotivka-0-33",
+        "id": "v-hotivka-0-23",
         "uk": "готівка",
         "en": "cash",
         "pos": "noun",
-        "ipa": "/ɦɔˈtʲivkɑ/",
-        "gender": "f",
+        "ipa": "/ɦɔˈtivkɑ/",
+        "note": "[🔊](audio_hotivka)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-kartka-0-34",
-        "uk": "картка",
+        "id": "v-karta-0-24",
+        "uk": "карта",
         "en": "card",
         "pos": "noun",
-        "ipa": "/ˈkɑrtkɑ/",
-        "gender": "f",
-        "note": "банківська картка",
+        "ipa": "/ˈkɑrtɑ/",
+        "note": "[🔊](audio_tarta)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-reshta-0-25",
+        "uk": "решта",
+        "en": "change (money)",
+        "pos": "noun",
+        "ipa": "/ˈrɛʃtɑ/",
+        "note": "[🔊](audio_reshta)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-tsina-0-26",
+        "uk": "ціна",
+        "en": "price",
+        "pos": "noun",
+        "ipa": "/t͡s⁽ʲ⁾iˈnɑ/",
+        "note": "[🔊](audio_tsina)",
         "isNew": true,
         "firstModule": 0
       }

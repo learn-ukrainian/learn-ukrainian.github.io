@@ -11,181 +11,99 @@
     "targetLevel": "A1",
     "phase": "A1.3",
     "moduleNumber": 28,
-    "moduleType": "vocabulary",
+    "moduleType": "grammar",
     "immersionLevel": 0.3,
-    "title": "What's the Weather Like?",
-    "subtitle": "Яка сьогодні погода? — Weather and Impersonal Constructions",
-    "description": "Ask and answer about weather",
+    "title": "Description (Adverbs)",
+    "subtitle": "How you do it",
+    "description": "Learner can form Adverbs from Adjectives (-o)",
     "objectives": [
-      "Ask and answer about weather",
-      "Use impersonal weather expressions",
-      "Name seasons and weather conditions",
-      "Describe weather in different situations"
+      "Learner can form Adverbs from Adjectives (-o)",
+      "Learner can use Frequency Adverbs (Always, Never)",
+      "Learner knows \"Dobro\" vs \"Khorosh\"",
+      "Learner can describe actions (He runs fast)"
     ],
-    "grammarFocus": [
-      "Impersonal constructions (no subject)",
-      "Weather expressions with йти (rain/snow)",
-      "Adverbs for weather (тепло, холодно)"
-    ],
+    "grammarFocus": [],
     "tags": [
-      "weather",
-      "impersonal",
-      "seasons",
-      "vocabulary"
+      "grammar",
+      "adverbs",
+      "manner",
+      "frequency"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
+    "totalDuration": 60,
+    "transliterationMode": "full",
     "sections": [
       {
-        "id": "section-intro",
+        "id": "section-intro-0",
         "name": "Вступ",
         "nameEn": "Introduction",
         "type": "intro",
-        "content": "## warm-up\n\n### Talking About the Weather\n\n\"Nice weather today, isn't it?\" — Weather is the universal conversation starter! In Ukrainian, weather expressions are often impersonal — they don't need a subject.\n\n> 💡 **Did You Know?**\n>\n> In Ukrainian, you don't say \"It is cold\" with a subject. You simply say \"Холодно\" — the absence of a subject makes it universal, applying to everyone and everything!\n\n## presentation\n\n### Asking About Weather\n\n| Question | Meaning |\n|----------|---------|\n| Яка сьогодні погода? | What's the weather like today? |\n| Яка буде погода завтра? | What will the weather be tomorrow? |\n| Яка була погода вчора? | What was the weather yesterday? |\n| Скільки градусів? | How many degrees? |\n\n### Temperature Expressions\n\nUkrainian uses impersonal constructions for weather — no subject needed!\n\n| Ukrainian | English | Note |\n|-----------|---------|------|\n| тепло | warm | It's warm |\n| холодно | cold | It's cold |\n| спекотно | hot | It's hot (summer) |\n| прохолодно | cool | It's cool |\n| жарко | hot | Same as спекотно |\n| морозно | frosty | Below freezing |\n\n**Examples:**\n- Сьогодні тепло. (It's warm today.)\n- Вчора було холодно. (Yesterday it was cold.)\n- Завтра буде спекотно. (Tomorrow it will be hot.)\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** You need to say \"воно тепло\" (it is warm).\n> **Fact:** No subject is needed! Just say \"Тепло\" — this is a true impersonal construction.\n\n### Weather Conditions\n\n| Ukrainian | IPA | English |\n|-----------|-----|---------|\n| сонячно | ˈsɔnʲɐt͡ʃnɔ | sunny |\n| хмарно | ˈxmɑrnɔ | cloudy |\n| вітряно | ˈwitrʲɐnɔ | windy |\n| туманно | tumɐnˈnɔ | foggy |\n| вогко | ˈwɔɦkɔ | humid |\n\n**Examples:**\n- Сьогодні сонячно. (It's sunny today.)\n- Надворі хмарно. (It's cloudy outside.)\n- Там вітряно. (It's windy there.)\n\n> 🎬 **Pop Culture Moment: Game of Thrones**\n>\n> \"Зима наближається\" (Winter is coming) — but what's winter weather like? \"Взимку холодно і морозно. Йде сніг.\" (In winter it's cold and frosty. Snow falls.)\n\n### Rain and Snow: Using \"йти\"\n\nThe verb **йти** (to go) is used for precipitation:\n\n| Ukrainian | Literal | Meaning |\n|-----------|---------|---------|\n| Йде дощ. | Rain goes. | It's raining. |\n| Йде сніг. | Snow goes. | It's snowing. |\n| Йшов дощ. | Rain went. | It was raining. |\n| Буде йти дощ. | Rain will go. | It will rain. |\n\n**More precipitation:**\n- Йде град. (It's hailing.)\n- Йде злива. (There's a downpour.)\n\n> ⚡ **Pro Tip**\n>\n> To say \"it's going to rain,\" use \"Збирається на дощ\" (It's gathering for rain) — literally, the weather is preparing!\n\n### Weather Nouns\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| погода | pɔˈɦɔdɐ | weather | f |\n| сонце | ˈsɔnt͡sɛ | sun | n |\n| хмара | ˈxmɑrɐ | cloud | f |\n| вітер | ˈwitɛr | wind | m |\n| дощ | dɔʃt͡ʃ | rain | m |\n| сніг | sniɦ | snow | m |\n| туман | tuˈmɑn | fog | m |\n| грім | ɦrim | thunder | m |\n| блискавка | ˈblɪskɑwkɐ | lightning | f |\n\n> 🌍 **Real World**\n>\n> Ukrainian weather varies dramatically! Kyiv winters can reach -20°C with heavy snow, while summers hit +35°C. Knowing weather words helps you plan your visit!\n\n### Seasons\n\n| Ukrainian | IPA | English | Weather |\n|-----------|-----|---------|---------|\n| весна | wɛsˈnɑ | spring | тепло, йде дощ |\n| літо | ˈlitɔ | summer | спекотно, сонячно |\n| осінь | ˈɔsʲinʲ | autumn | прохолодно, хмарно |\n| зима | zɪˈmɑ | winter | холодно, йде сніг |\n\n**Using seasons:**\n- Навесні тепло. (In spring it's warm.)\n- Влітку спекотно. (In summer it's hot.)\n- Восени прохолодно. (In autumn it's cool.)\n- Взимку холодно. (In winter it's cold.)\n\n> 🎯 **Fun Fact**\n>\n> Ukrainian has special adverbs for \"in the season\": навесні (in spring), влітку (in summer), восени (in autumn), взимку (in winter). They're formed differently from other time expressions!\n\n### Weather Verbs\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| світить | shines | Сонце світить. (The sun shines.) |\n| дме | blows | Вітер дме. (The wind blows.) |\n| падає | falls | Сніг падає. (Snow falls.) |\n| гримить | thunders | Гримить грім. (Thunder rumbles.) |\n| блискає | flashes | Блискає блискавка. (Lightning flashes.) |\n\n### Weather Forecast Phrases\n\n| Ukrainian | English |\n|-----------|---------|\n| Прогноз погоди | Weather forecast |\n| Очікується дощ. | Rain is expected. |\n| Можливий сніг. | Snow is possible. |\n| Температура повітря | Air temperature |\n| Плюс десять градусів | Plus 10 degrees |\n| Мінус п'ять градусів | Minus 5 degrees |\n\n> 🎮 **Gamer's Corner**\n>\n> In S.T.A.L.K.E.R., weather affects gameplay: \"Збирається на грозу\" (A storm is gathering), \"Йде радіоактивний дощ\" (Radioactive rain is falling). Weather survival is key!\n\n### Describing Weather in Detail\n\n**Good weather:**\n- Погода гарна. (The weather is nice.)\n- Чудовий день! (Wonderful day!)\n- Сонце світить, тепло. (The sun is shining, it's warm.)\n\n**Bad weather:**\n- Погода погана. (The weather is bad.)\n- Жахлива погода! (Terrible weather!)\n- Холодно і йде дощ. (It's cold and raining.)\n\n> 💡 **Did You Know?**\n>\n> Ukrainians often greet each other with weather comments: \"Який гарний день!\" (What a nice day!) or \"Яка погана погода!\" (What bad weather!) — it's a social ritual!\n\n## practice\n\n### Exercise 1: Describe Today's Weather\n\nAnswer in Ukrainian:\n1. Яка сьогодні погода?\n2. Тепло чи холодно?\n3. Сонячно чи хмарно?\n4. Йде дощ?\n\n### Exercise 2: Seasons and Weather\n\nMatch each season with its typical weather:\n1. Весна → тепло, йде дощ\n2. Літо → спекотно, сонячно\n3. Осінь → прохолодно, хмарно\n4. Зима → холодно, йде сніг\n\n### Exercise 3: Past and Future Weather\n\nTransform:\n1. Сьогодні холодно. → Вчора було холодно.\n2. Йде дощ. → Вчора йшов дощ.\n3. Сьогодні тепло. → Завтра буде тепло.\n\n## production\n\n### Task: Weather Report\n\nWrite a short weather report including:\n- Today's weather\n- Yesterday's weather\n- Tomorrow's forecast\n- Your favorite season and why\n\nUse at least 8 weather expressions.\n\n---\n\n\n---\n\n\n---"
-      },
-      {
-        "id": "section-summary",
-        "name": "Підсумок",
-        "nameEn": "Summary",
-        "type": "summary",
-        "content": "> **Congratulations!**\n>\n> You can now talk about weather in Ukrainian:\n> - **Asking**: Яка сьогодні погода?\n> - **Temperature**: тепло, холодно, спекотно, прохолодно\n> - **Conditions**: сонячно, хмарно, вітряно\n> - **Precipitation**: Йде дощ / Йде сніг\n> - **Seasons**: весна, літо, осінь, зима (навесні, влітку, восени, взимку)\n\n> **Key Grammar: Impersonal Constructions**\n> Weather expressions need no subject! \"Холодно\" = \"It's cold\" without saying \"it.\"\n\n> **Coming Next: Module 29 — My Family**\n>\n> In the next module, you'll learn family vocabulary:\n> - батько, мати, брат, сестра (father, mother, brother, sister)\n> - У мене є брат. (I have a brother.)\n> - Мою маму звати... (My mother's name is...)"
+        "content": "## warm-up\n**The Critics Part II**\n\nYou know how to say \"The soup is good\" (**Хороший суп**).\nBut how do you say \"He cooks well\"?\n\"Він готує хороший\"? No. That means \"He cooks a good one\".\nYou need \"Він готує **добре**\".\n\nImagine a world without adverbs. You can say \"I run\". You can say \"She sings\". It is factual, but it is boring. It is a black-and-white sketch.\nBut do you run **fast**? Do you run **happily**? Do you run **backwards**? Adverbs are the colors of action. They tell us the *style* of your life. Today, we learn how to paint with words.\n\nAdjectives describe **Things** (Nouns).\nAdverbs describe **Actions** (Verbs).\nIn Ukrainian, this switch is usually just one letter: **-о**.\n\n## presentation\n\n### Section 1: The Magic \"O\"\n\nTo make an adverb, take the adjective stem and add **-о**.\n\n- **Швидк**ий (Fast - adj) ➡️ **Швидко** (Fast/Quickly - adv).\n- **Повільн**ий (Slow - adj) ➡️ **Повільно** (Slowly - adv).\n- **Гарн**ий (Nice/Beautiful - adj) ➡️ **Гарно** (Nicely/Beautifully - adv).\n- **Дешев**ий (Cheap - adj) ➡️ **Дешево** (Cheaply - adv).\n- **Дорог**ий (Expensive - adj) ➡️ **Дорого** (Expensively - adv).\n\n**Usage:**\n- Це **швидка** машина. (This is a fast car).\n- Він їде **швидко**. (He drives fast).\n\n### Section 2: Good and Bad (The Irregulars)\n\n1.  **Хороший** (Good) ➡️ **Добре** (Well).\n    *Note: \"Khorosho\" exists but \"Dobro\" is standard Ukrainian for \"Well\".*\n    - Як справи? (How are things?)\n    - **Добре**. (Well / Good).\n\n2.  **Поганий** (Bad) ➡️ **Погано** (Badly).\n    - Я сплю **погано**. (I sleep badly).\n\n> 🎨 **Culture Corner: Everything is \"Normalno\"**\n> If you ask a Ukrainian \"How are you?\", the most common answer is **Нормально**.\n> It doesn't mean \"Average\". It means \"Functional / Okay / No crisis\".\n> To say \"Great\", use **Чудово**.\n> To say \"Terrible\", use **Жахливо**.\n\n### Section 3: Frequency (How often?)\n\nThese are pure adverbs (not from adjectives).\n\n1.  **Завжди** (Always).\n2.  **Часто** (Often).\n3.  **Іноді** (Sometimes).\n4.  **Рідко** (Rarely).\n5.  **Ніколи** (Never).\n    *Rule:* Start sentence with \"Ya nikoly ne...\" (I never not...). Double negative!\n    - Я **ніколи не** їм м'ясо. (I never eat meat).\n\n### Section 4: It is... (Impersonal Expressions)\n\nWe use Adverbs to describe the \"State of the World\".\n- **Холодно** (It is cold).\n- **Цікаво** (It is interesting).\n- **Важко** (It is hard).\n- **Легко** (It is easy).\n- **Нудно** (It is boring).\n\n\"Мені холодно\" (To me is cold = I am cold).\n\"Це цікаво\" (This is interesting).\n\n> 🧠 **Deep Dive: Adverb vs Short Adjective**\n> Linguists argue if \"Kholodno\" is an adverb or a \"Productive Category of State\".\n> For A1 learners: It looks like an adverb. It acts like an adverb. Call it an adverb.\n> \"Coffee is hot\" -> Use Adjective (Kava hariacha).\n> \"It is hot (outside)\" -> Use Adverb (Haryacho/Zharko).\n\n\n> 💡 **Pro Tip: The Power of \"Tak\"**\n> \"Tak\" means \"Yes\".\n> \"Tak\" also means \"So\".\n> - **Так** глибоко (So deep).\n> - **Так** смачно (So tasty).\n> - **Так** собі (So-so).\n> It is the most versatile word.\n\n\n### Section 5: Better and Worse (Comparatives)\n\nAdverbs can compare actions.\n- **Швидко** (Fast) ➡️ **Швидше** (Faster).\n- **Повільно** (Slowly) ➡️ **Повільніше** (More slowly).\n- **Гарно** (Well) ➡️ **Краще** (Better - Irregular!).\n- **Погано** (Badly) ➡️ **Гірше** (Worse - Irregular!).\n\n\"Він бігає швидше, ніж я.\" (He runs faster than I).\n\"Це краще.\" (This is better).\n\n> 🦉 **Wisdom: Better Late Than Never**\n> Ukrainians love this proverb:\n> **Краще пізно, ніж ніколи.**\n> (Better late, than never).\n> It uses two irregular comparatives and a frequency adverb. Memorize it like a magic spell. Use it when you are late for a meeting (but only if you are also smiling).\n\n> 🌡️ **Deep Dive: The Temperature Scale**\n> Describing weather states:\n> - **Спекотно** (Sweltering/Hot +30C).\n> - **Жарко** (Hot +25C).\n> - **Тепло** (Warm +20C).\n> - **Прохолодно** (Cool/Fresh +15C).\n> - **Холодно** (Cold +5C).\n> - **Морозно** (Freezing -5C).\n> Ukrainians complain about all of them. \"To me is cold\" is the national anthem of winter.\n\n### Section 6: Soft Adverbs (Trokhy)\n\n- **Трохи** (A little bit).\n- **Зовсім** (At all / Completely).\n- **Досить** (Enough / Quite).\n- **Занадто** (Too).\n\n\"Я трохи говорю українською\" (I speak a little Ukrainian).\n\"Це зовсім не цікаво\" (This is at all not interesting).\n\n\n### Section 7: Where? (Adverbs of Place)\n\nAdverbs also answer \"Where?\" (De?).\n- **Тут** (Here).\n- **Там** (There).\n- **Вдома** (At home).\n- **Надворі** (Outside / Outdoors).\n- **Скрізь** (Everywhere).\n- **Ніде** (Nowhere). *\"Я ніде не бачу ключі\"*.\n\n\"Я тут.\" (I am here).\n\"Він там.\" (He is there).\n\"Вдома добре.\" (At home [it is] good).\n\n> 🏠 **Culture Corner: Vdoma vs Domu**\n> **Вдома** (Adverb) = At home (Location). \"Я вдома.\"\n> **Додому** (Adverb of direction) = To home / Homeward. \"Я йду додому.\"\n> Don't mix them!\n> \"Я йду вдома\" implies you are walking *inside* your house.\n\n### Section 8: When? (Adverbs of Time)\n\nWe learned days, but these are adverbs relative to *now*.\n- **Сьогодні** (Today).\n- **Вчора** (Yesterday).\n- **Завтра** (Tomorrow).\n- **Зараз** (Now - specific moment).\n- **Тепер** (Now - general period).\n- **Потім** (Later / Then).\n- **Рано** (Early).\n- **Пізно** (Late).\n\n\"Ми йдемо зараз.\" (We are going right now).\n\"Тепер я розумію.\" (Now [unlike before] I understand).\n\n\n### Section 9: Manners (How to be polite)\n\nPoliteness is about *how* you say things (Adverbs).\n- **Ввічливо** (Politely).\n- **Грубо** (Rudely).\n- **Чесно** (Honestly).\n- **Серйозно** (Seriously).\n- **Жартома** (Jokingly).\n\n\"Скажіть це ввічливо.\" (Say this politely).\n\"Я говорю чесно.\" (I speak honestly).\n\n> 💡 **Language Link: Please (Bud' laska)**\n> \"Bud' laska\" literally means \"Be kindness\" (Imperative + Noun).\n> It is an adverbial phrase of manner.\n> Do it how? Do it \"with kindness\".\n\n## practice\n\n**Drill 1: Adj to Adv**\n- Гарний -> **Гарно**\n- Поганий -> **Погано**\n- Ввічливий -> **Ввічливо**\n- Цікавий -> **Цікаво**\n- Дивний -> **Дивно**\n\n**Drill 2: Frequency**\n- (Always) -> **Завжди**\n- (Never) -> **Ніколи**\n- (Often) -> **Часто**\n- (Usually) -> **Зазвичай**\n\n**Drill 3: Adverb vs Adjective**\n- Kava is good. -> **Гарна** (Adj).\n- Do it good. -> **Гарно** (Adv).\n- I am fast. -> **Швидкий** (Adj).\n- I run fast. -> **Швидко** (Adv).\n\n## production\n\n**Scenario: The Taxi Driver**\n*   **Driver:** Куди їдемо?\n*   **You:** В центр. Тільки не **швидко**.\n*   **Driver:** Чому? Я їжджу (drive) **нормально**.\n*   **You:** Я боюся (afraid). Їдьте, будь ласка, **повільно**.\n*   **Driver:** Добре, добре. Будемо їхати **дуже повільно**. Як черепаха (turtle).\n*   **You:** Це **чудово**.\n\n**Scenario: The Job Interview**\n*   **Boss:** Як ви працюєте?\n*   **You:** Я працюю **швидко** і **якісно** (quality-wise).\n*   **Boss:** Ви спізнюєтесь (late)?\n*   **You:** Я **ніколи не** запізнююся.\n*   **Boss:** Це **чудово**. Ви прийняті.\n\n**Scenario: The Compliment**\n*   **Ivan:** Ти **гарно** виглядаєш (look).\n*   **Maria:** Дякую. Це **нова** сукня (dress).\n*   **Ivan:** Тобі **дуже** пасує (fits/suits).\n*   **Maria:** А ти **дивно** (strangely) поводишся (behave). Що ти хочеш?\n*   **Ivan:** Я хочу їсти. Ти **смачно** готуєш.\n*   **Maria:** А! Ти хочеш борщ?\n*   **Ivan:** Так. Я дуже голодний.\n*   **Maria:** Ти хитрий (cunning). Але добре.\n\n**Scenario: The Taxi Driver (Again)**\n*   **You:** Ви їдете занадто швидко!\n*   **Driver:** Це не швидко. Це нормально.\n*   **You:** Мені страшно (scary). Їдьте повільніше, будь ласка.\n*   **Driver:** Якщо повільніше, буде дорожче (more expensive).\n*   **You:** Чому?\n*   **Driver:** Час — це гроші.\n*   **You:** Я дам вам час. Я вийду тут.\n*   **Driver:** Ні, ні. Я їду повільно. Бачите?\n*   **You:** Дякую.\n\n> 🥪 **Culture Corner: Tasty! (Smachno)**\n> When you eat, someone might say \"**Смачного!**\" (Bon appetit - Genitive wish).\n> You answer: \"Дякую!\"\n> If food is good, say \"**Дуже смачно**\" (Very tasty-ly).\n> Even if it is bad, say it. Grandmothers have radar for lies, but flattery jams the radar.\n> \"Як суп?\" - \"Цікаво.\" (Interesting) is a polite code for \"Bad\".\n\n---"
       }
     ],
-    "rawMarkdown": "---\ntitle: \"What's the Weather Like?\"\nsubtitle: \"Яка сьогодні погода? — Weather and Impersonal Constructions\"\nphase: A1.3\nduration: 45\ntransliteration: none\ntags: [weather, impersonal, seasons, vocabulary]\nobjectives:\n  - Ask and answer about weather\n  - Use impersonal weather expressions\n  - Name seasons and weather conditions\n  - Describe weather in different situations\ngrammar:\n  - Impersonal constructions (no subject)\n  - Weather expressions with йти (rain/snow)\n  - Adverbs for weather (тепло, холодно)\n---\n\n# Lesson Content\n\n## warm-up\n\n### Talking About the Weather\n\n\"Nice weather today, isn't it?\" — Weather is the universal conversation starter! In Ukrainian, weather expressions are often impersonal — they don't need a subject.\n\n> 💡 **Did You Know?**\n>\n> In Ukrainian, you don't say \"It is cold\" with a subject. You simply say \"Холодно\" — the absence of a subject makes it universal, applying to everyone and everything!\n\n## presentation\n\n### Asking About Weather\n\n| Question | Meaning |\n|----------|---------|\n| Яка сьогодні погода? | What's the weather like today? |\n| Яка буде погода завтра? | What will the weather be tomorrow? |\n| Яка була погода вчора? | What was the weather yesterday? |\n| Скільки градусів? | How many degrees? |\n\n### Temperature Expressions\n\nUkrainian uses impersonal constructions for weather — no subject needed!\n\n| Ukrainian | English | Note |\n|-----------|---------|------|\n| тепло | warm | It's warm |\n| холодно | cold | It's cold |\n| спекотно | hot | It's hot (summer) |\n| прохолодно | cool | It's cool |\n| жарко | hot | Same as спекотно |\n| морозно | frosty | Below freezing |\n\n**Examples:**\n- Сьогодні тепло. (It's warm today.)\n- Вчора було холодно. (Yesterday it was cold.)\n- Завтра буде спекотно. (Tomorrow it will be hot.)\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** You need to say \"воно тепло\" (it is warm).\n> **Fact:** No subject is needed! Just say \"Тепло\" — this is a true impersonal construction.\n\n### Weather Conditions\n\n| Ukrainian | IPA | English |\n|-----------|-----|---------|\n| сонячно | ˈsɔnʲɐt͡ʃnɔ | sunny |\n| хмарно | ˈxmɑrnɔ | cloudy |\n| вітряно | ˈwitrʲɐnɔ | windy |\n| туманно | tumɐnˈnɔ | foggy |\n| вогко | ˈwɔɦkɔ | humid |\n\n**Examples:**\n- Сьогодні сонячно. (It's sunny today.)\n- Надворі хмарно. (It's cloudy outside.)\n- Там вітряно. (It's windy there.)\n\n> 🎬 **Pop Culture Moment: Game of Thrones**\n>\n> \"Зима наближається\" (Winter is coming) — but what's winter weather like? \"Взимку холодно і морозно. Йде сніг.\" (In winter it's cold and frosty. Snow falls.)\n\n### Rain and Snow: Using \"йти\"\n\nThe verb **йти** (to go) is used for precipitation:\n\n| Ukrainian | Literal | Meaning |\n|-----------|---------|---------|\n| Йде дощ. | Rain goes. | It's raining. |\n| Йде сніг. | Snow goes. | It's snowing. |\n| Йшов дощ. | Rain went. | It was raining. |\n| Буде йти дощ. | Rain will go. | It will rain. |\n\n**More precipitation:**\n- Йде град. (It's hailing.)\n- Йде злива. (There's a downpour.)\n\n> ⚡ **Pro Tip**\n>\n> To say \"it's going to rain,\" use \"Збирається на дощ\" (It's gathering for rain) — literally, the weather is preparing!\n\n### Weather Nouns\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| погода | pɔˈɦɔdɐ | weather | f |\n| сонце | ˈsɔnt͡sɛ | sun | n |\n| хмара | ˈxmɑrɐ | cloud | f |\n| вітер | ˈwitɛr | wind | m |\n| дощ | dɔʃt͡ʃ | rain | m |\n| сніг | sniɦ | snow | m |\n| туман | tuˈmɑn | fog | m |\n| грім | ɦrim | thunder | m |\n| блискавка | ˈblɪskɑwkɐ | lightning | f |\n\n> 🌍 **Real World**\n>\n> Ukrainian weather varies dramatically! Kyiv winters can reach -20°C with heavy snow, while summers hit +35°C. Knowing weather words helps you plan your visit!\n\n### Seasons\n\n| Ukrainian | IPA | English | Weather |\n|-----------|-----|---------|---------|\n| весна | wɛsˈnɑ | spring | тепло, йде дощ |\n| літо | ˈlitɔ | summer | спекотно, сонячно |\n| осінь | ˈɔsʲinʲ | autumn | прохолодно, хмарно |\n| зима | zɪˈmɑ | winter | холодно, йде сніг |\n\n**Using seasons:**\n- Навесні тепло. (In spring it's warm.)\n- Влітку спекотно. (In summer it's hot.)\n- Восени прохолодно. (In autumn it's cool.)\n- Взимку холодно. (In winter it's cold.)\n\n> 🎯 **Fun Fact**\n>\n> Ukrainian has special adverbs for \"in the season\": навесні (in spring), влітку (in summer), восени (in autumn), взимку (in winter). They're formed differently from other time expressions!\n\n### Weather Verbs\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| світить | shines | Сонце світить. (The sun shines.) |\n| дме | blows | Вітер дме. (The wind blows.) |\n| падає | falls | Сніг падає. (Snow falls.) |\n| гримить | thunders | Гримить грім. (Thunder rumbles.) |\n| блискає | flashes | Блискає блискавка. (Lightning flashes.) |\n\n### Weather Forecast Phrases\n\n| Ukrainian | English |\n|-----------|---------|\n| Прогноз погоди | Weather forecast |\n| Очікується дощ. | Rain is expected. |\n| Можливий сніг. | Snow is possible. |\n| Температура повітря | Air temperature |\n| Плюс десять градусів | Plus 10 degrees |\n| Мінус п'ять градусів | Minus 5 degrees |\n\n> 🎮 **Gamer's Corner**\n>\n> In S.T.A.L.K.E.R., weather affects gameplay: \"Збирається на грозу\" (A storm is gathering), \"Йде радіоактивний дощ\" (Radioactive rain is falling). Weather survival is key!\n\n### Describing Weather in Detail\n\n**Good weather:**\n- Погода гарна. (The weather is nice.)\n- Чудовий день! (Wonderful day!)\n- Сонце світить, тепло. (The sun is shining, it's warm.)\n\n**Bad weather:**\n- Погода погана. (The weather is bad.)\n- Жахлива погода! (Terrible weather!)\n- Холодно і йде дощ. (It's cold and raining.)\n\n> 💡 **Did You Know?**\n>\n> Ukrainians often greet each other with weather comments: \"Який гарний день!\" (What a nice day!) or \"Яка погана погода!\" (What bad weather!) — it's a social ritual!\n\n## practice\n\n### Exercise 1: Describe Today's Weather\n\nAnswer in Ukrainian:\n1. Яка сьогодні погода?\n2. Тепло чи холодно?\n3. Сонячно чи хмарно?\n4. Йде дощ?\n\n### Exercise 2: Seasons and Weather\n\nMatch each season with its typical weather:\n1. Весна → тепло, йде дощ\n2. Літо → спекотно, сонячно\n3. Осінь → прохолодно, хмарно\n4. Зима → холодно, йде сніг\n\n### Exercise 3: Past and Future Weather\n\nTransform:\n1. Сьогодні холодно. → Вчора було холодно.\n2. Йде дощ. → Вчора йшов дощ.\n3. Сьогодні тепло. → Завтра буде тепло.\n\n## production\n\n### Task: Weather Report\n\nWrite a short weather report including:\n- Today's weather\n- Yesterday's weather\n- Tomorrow's forecast\n- Your favorite season and why\n\nUse at least 8 weather expressions.\n\n---\n\n# Activities\n\n## fill-in: Weather Expressions\n\n> Choose the correct weather expression.\n\n1. Сьогодні дуже ___, +35 градусів!\n   > [!answer] спекотно\n   > [!options] спекотно | холодно | морозно | прохолодно\n\n2. Надворі ___, небо без хмар.\n   > [!answer] сонячно\n   > [!options] сонячно | хмарно | туманно | вітряно\n\n3. ___ сильний вітер.\n   > [!answer] Дме\n   > [!options] Дме | Йде | Світить | Падає\n\n4. На вулиці ___ дощ.\n   > [!answer] йде\n   > [!options] йде | дме | світить | падає\n\n5. Взимку ___.\n   > [!answer] холодно\n   > [!options] холодно | спекотно | тепло | жарко\n\n6. Сонце ___ яскраво.\n   > [!answer] світить\n   > [!options] світить | йде | дме | падає\n\n7. ___ сніг, все біле.\n   > [!answer] Падає\n   > [!options] Падає | Дме | Світить | Йде\n\n8. Яка ___ погода сьогодні!\n   > [!answer] гарна\n   > [!options] гарна | гарний | гарне | гарні\n\n9. Вчора ___ дощ.\n   > [!answer] йшов\n   > [!options] йшов | йде | буде йти | йдуть\n\n10. Завтра ___ тепло.\n    > [!answer] буде\n    > [!options] буде | було | є | бути\n\n11. Надворі дуже ___, нічого не видно.\n    > [!answer] туманно\n    > [!options] туманно | сонячно | тепло | холодно\n\n12. Влітку ___.\n    > [!answer] спекотно\n    > [!options] спекотно | морозно | холодно | прохолодно\n\n## fill-in: Seasons\n\n> Choose the correct season or seasonal expression.\n\n1. ___ йде сніг і холодно.\n   > [!answer] Взимку\n   > [!options] Взимку | Влітку | Навесні | Восени\n\n2. ___ сонячно і спекотно.\n   > [!answer] Влітку\n   > [!options] Влітку | Взимку | Восени | Навесні\n\n3. ___ падає листя.\n   > [!answer] Восени\n   > [!options] Восени | Взимку | Влітку | Навесні\n\n4. ___ квітнуть квіти.\n   > [!answer] Навесні\n   > [!options] Навесні | Взимку | Влітку | Восени\n\n5. Моя улюблена пора року — ___.\n   > [!answer] літо\n   > [!options] літо | зимою | влітку | весна\n\n6. Перша пора року — ___.\n   > [!answer] весна\n   > [!options] весна | літо | осінь | зима\n\n7. Після літа настає ___.\n   > [!answer] осінь\n   > [!options] осінь | весна | зима | літо\n\n8. ___ морозно, мінус двадцять.\n   > [!answer] Взимку\n   > [!options] Взимку | Влітку | Навесні | Восени\n\n9. ___ часто йде дощ.\n   > [!answer] Восени\n   > [!options] Восени | Взимку | Влітку | Навесні\n\n10. У грудні вже ___.\n    > [!answer] зима\n    > [!options] зима | літо | весна | осінь\n\n11. ___ діти купаються в морі.\n    > [!answer] Влітку\n    > [!options] Влітку | Взимку | Восени | Навесні\n\n12. ___ буває гарна погода.\n    > [!answer] Навесні\n    > [!options] Навесні | Взимку | Влітку | Восени\n\n## unjumble: Weather Sentences\n\n> Put the words in the correct order.\n\n1. сьогодні погода Яка\n   > [!answer] Яка сьогодні погода?\n   > (What's the weather like today?) [3 words]\n\n2. холодно Сьогодні дуже\n   > [!answer] Сьогодні дуже холодно.\n   > (It's very cold today.) [3 words]\n\n3. дощ Йде сильний\n   > [!answer] Йде сильний дощ.\n   > (Heavy rain is falling.) [3 words]\n\n4. сонце яскраво Світить\n   > [!answer] Світить яскраво сонце.\n   > (The sun shines brightly.) [3 words]\n\n5. спекотно Влітку і сонячно\n   > [!answer] Влітку спекотно і сонячно.\n   > (In summer it's hot and sunny.) [4 words]\n\n6. сніг Взимку йде\n   > [!answer] Взимку йде сніг.\n   > (In winter it snows.) [3 words]\n\n7. Вчора холодно було\n   > [!answer] Вчора було холодно.\n   > (Yesterday it was cold.) [3 words]\n\n8. тепло Завтра буде\n   > [!answer] Завтра буде тепло.\n   > (Tomorrow it will be warm.) [3 words]\n\n9. вітер Дме сильний\n   > [!answer] Дме сильний вітер.\n   > (A strong wind is blowing.) [3 words]\n\n10. хмарно Надворі сьогодні\n    > [!answer] Сьогодні надворі хмарно.\n    > (It's cloudy outside today.) [3 words]\n\n11. градусів Плюс десять\n    > [!answer] Плюс десять градусів.\n    > (Plus ten degrees.) [3 words]\n\n12. улюблена Моя пора року весна\n    > [!answer] Моя улюблена пора року — весна.\n    > (My favorite season is spring.) [5 words]\n\n## match-up: Weather Vocabulary\n\n> Match each Ukrainian word with its English meaning.\n\n| Left | Right |\n|------|-------|\n| погода | weather |\n| сонце | sun |\n| хмара | cloud |\n| вітер | wind |\n| дощ | rain |\n| сніг | snow |\n| тепло | warm |\n| холодно | cold |\n| спекотно | hot |\n| сонячно | sunny |\n| хмарно | cloudy |\n| вітряно | windy |\n\n## match-up: Seasons and Weather\n\n> Match each season with its typical weather.\n\n| Left | Right |\n|------|-------|\n| весна | тепло, йде дощ |\n| літо | спекотно, сонячно |\n| осінь | прохолодно, хмарно |\n| зима | холодно, йде сніг |\n| навесні | в весняний час |\n| влітку | в літній час |\n| восени | в осінній час |\n| взимку | в зимовий час |\n| грім | thunder |\n| блискавка | lightning |\n| туман | fog |\n| прогноз | forecast |\n\n## quiz: Weather Knowledge\n\n> Test your understanding of Ukrainian weather expressions.\n\n1. How do you say \"It's raining\" in Ukrainian?\n   - [ ] Дощ йде\n   - [x] Йде дощ\n   - [ ] Дощ падає\n   - [ ] Є дощ\n   > \"Йде дощ\" — rain \"goes.\"\n\n2. Why don't weather expressions need a subject?\n   - [ ] Ukrainian has no subjects\n   - [x] They are impersonal constructions\n   - [ ] The subject is hidden\n   - [ ] It's optional\n   > Impersonal constructions apply universally.\n\n3. \"Взимку\" means:\n   - [ ] In spring\n   - [ ] In summer\n   - [ ] In autumn\n   - [x] In winter\n   > Взимку = in winter.\n\n4. What verb means \"shines\" (for the sun)?\n   - [ ] йде\n   - [x] світить\n   - [ ] дме\n   - [ ] падає\n   > Сонце світить = The sun shines.\n\n5. \"Дме вітер\" means:\n   - [x] The wind blows\n   - [ ] The wind goes\n   - [ ] Wind is falling\n   - [ ] Wind shines\n   > \"Дме\" = blows.\n\n6. How do you ask \"What's the weather like?\"\n   - [x] Яка сьогодні погода?\n   - [ ] Що погода?\n   - [ ] Де погода?\n   - [ ] Коли погода?\n   > \"Яка\" (what kind of) is used for weather.\n\n7. \"Прохолодно\" means:\n   - [ ] warm\n   - [ ] hot\n   - [x] cool\n   - [ ] freezing\n   > Прохолодно = cool (not quite cold).\n\n8. What season comes after весна?\n   - [x] літо\n   - [ ] осінь\n   - [ ] зима\n   - [ ] весна\n   > Spring → Summer.\n\n9. \"Блискавка\" means:\n   - [ ] rain\n   - [ ] thunder\n   - [x] lightning\n   - [ ] cloud\n   > Блискавка = lightning.\n\n10. \"-5°C\" in Ukrainian is:\n    - [x] Мінус п'ять градусів\n    - [ ] Плюс п'ять градусів\n    - [ ] Негативний п'ять\n    - [ ] Холодно п'ять\n    > \"Мінус\" for negative temperatures.\n\n11. \"Восени\" means:\n    - [ ] In spring\n    - [ ] In summer\n    - [x] In autumn\n    - [ ] In winter\n    > Восени = in autumn.\n\n12. How do you say \"Yesterday it was cold\"?\n    - [ ] Вчора холодно\n    - [x] Вчора було холодно\n    - [ ] Вчора є холодно\n    - [ ] Вчора буде холодно\n    > Past tense: було холодно.\n\n## true-false: Weather Facts\n\n> Decide if each statement is true (Правда) or false (Міф).\n\n- [x] \"Холодно\" is a complete sentence in Ukrainian.\n  > Correct! Impersonal constructions need no subject.\n\n- [ ] \"Йде сніг\" literally means \"Snow is falling.\"\n  > Incorrect! It literally means \"Snow goes.\"\n\n- [x] \"Влітку\" means \"in summer.\"\n  > Correct! Special adverb for \"in summer.\"\n\n- [ ] You need to say \"воно тепло\" for \"it's warm.\"\n  > Incorrect! Just \"тепло\" is enough — no subject needed.\n\n- [x] \"Сонце світить\" means \"The sun shines.\"\n  > Correct! Світить = shines.\n\n- [x] Ukrainian distinguishes спекотно (hot) from тепло (warm).\n  > Correct! Different degrees of warmth.\n\n- [ ] \"Весна\" and \"навесні\" mean the same thing.\n  > Incorrect! \"Весна\" = spring (noun), \"навесні\" = in spring (adverb).\n\n- [x] \"Грім\" means thunder.\n  > Correct! Гримить грім = thunder rumbles.\n\n- [ ] \"Дме вітер\" means the wind is falling.\n  > Incorrect! It means the wind blows. \"Дути\" = to blow.\n\n- [x] \"Прогноз погоди\" means weather forecast.\n  > Correct! Прогноз = forecast.\n\n- [x] Temperature below zero uses \"мінус.\"\n  > Correct! Мінус п'ять градусів = -5°C.\n\n- [ ] All seasons use the same adverb pattern.\n  > Incorrect! Each has a unique form: навесні, влітку, восени, взимку.\n\n## group-sort: Weather Categories\n\n> Sort these words into the correct category.\n\n### Temperature\n- тепло\n- холодно\n- спекотно\n- прохолодно\n- морозно\n\n### Precipitation\n- дощ\n- сніг\n- град\n- злива\n\n### Sky Conditions\n- сонячно\n- хмарно\n- туманно\n\n### Seasons\n- весна\n- літо\n- осінь\n- зима\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| погода | pɔˈɦɔdɐ | weather | noun | f | |\n| клімат | ˈklimɐt | climate | noun | m | |\n| температура | tɛmpɛrɐˈturɐ | temperature | noun | f | |\n| градус | ˈɦrɑdus | degree | noun | m | |\n| тепло | ˈtɛplɔ | warm | pred | — | Impersonal |\n| холодно | ˈxɔlɔdnɔ | cold | pred | — | Impersonal |\n| спекотно | spɛˈkɔtnɔ | hot | pred | — | Impersonal |\n| прохолодно | prɔˈxɔlɔdnɔ | cool | pred | — | Impersonal |\n| сонячно | ˈsɔnʲɐt͡ʃnɔ | sunny | pred | — | Impersonal |\n| хмарно | ˈxmɑrnɔ | cloudy | pred | — | Impersonal |\n| вітряно | ˈwitrʲɐnɔ | windy | pred | — | Impersonal |\n| сонце | ˈsɔnt͡sɛ | sun | noun | n | |\n| хмара | ˈxmɑrɐ | cloud | noun | f | |\n| вітер | ˈwitɛr | wind | noun | m | |\n| дощ | dɔʃt͡ʃ | rain | noun | m | |\n| сніг | sniɦ | snow | noun | m | |\n| туман | tuˈmɑn | fog | noun | m | |\n| грім | ɦrim | thunder | noun | m | |\n| блискавка | ˈblɪskɑwkɐ | lightning | noun | f | |\n| йде дощ | jdɛ dɔʃt͡ʃ | it's raining | phrase | — | Literally: rain goes |\n| йде сніг | jdɛ sniɦ | it's snowing | phrase | — | Literally: snow goes |\n| світить сонце | ˈswitɪtʲ ˈsɔnt͡sɛ | the sun shines | phrase | — | |\n| дме вітер | dmɛ ˈwitɛr | the wind blows | phrase | — | |\n| прогноз | prɔɦˈnɔz | forecast | noun | m | |\n| сезон | sɛˈzɔn | season | noun | m | |\n\n---\n\n# Summary\n\n> **Congratulations!**\n>\n> You can now talk about weather in Ukrainian:\n> - **Asking**: Яка сьогодні погода?\n> - **Temperature**: тепло, холодно, спекотно, прохолодно\n> - **Conditions**: сонячно, хмарно, вітряно\n> - **Precipitation**: Йде дощ / Йде сніг\n> - **Seasons**: весна, літо, осінь, зима (навесні, влітку, восени, взимку)\n\n> **Key Grammar: Impersonal Constructions**\n> Weather expressions need no subject! \"Холодно\" = \"It's cold\" without saying \"it.\"\n\n> **Coming Next: Module 29 — My Family**\n>\n> In the next module, you'll learn family vocabulary:\n> - батько, мати, брат, сестра (father, mother, brother, sister)\n> - У мене є брат. (I have a brother.)\n> - Мою маму звати... (My mother's name is...)\n",
-    "createdAt": "2025-12-06T10:49:20.103Z",
-    "modifiedAt": "2025-12-06T10:49:20.103Z",
+    "rawMarkdown": "---\ntitle: Description (Adverbs)\nsubtitle: How you do it\nphase: A1.3\nduration: 60\ntransliteration: full\ntags: [grammar, adverbs, manner, frequency]\nobjectives:\n  - Learner can form Adverbs from Adjectives (-o)\n  - Learner can use Frequency Adverbs (Always, Never)\n  - Learner knows \"Dobro\" vs \"Khorosh\"\n  - Learner can describe actions (He runs fast)\n---\n\n# Lesson Content\n\n## warm-up\n**The Critics Part II**\n\nYou know how to say \"The soup is good\" (**Хороший суп**).\nBut how do you say \"He cooks well\"?\n\"Він готує хороший\"? No. That means \"He cooks a good one\".\nYou need \"Він готує **добре**\".\n\nImagine a world without adverbs. You can say \"I run\". You can say \"She sings\". It is factual, but it is boring. It is a black-and-white sketch.\nBut do you run **fast**? Do you run **happily**? Do you run **backwards**? Adverbs are the colors of action. They tell us the *style* of your life. Today, we learn how to paint with words.\n\nAdjectives describe **Things** (Nouns).\nAdverbs describe **Actions** (Verbs).\nIn Ukrainian, this switch is usually just one letter: **-о**.\n\n## presentation\n\n### Section 1: The Magic \"O\"\n\nTo make an adverb, take the adjective stem and add **-о**.\n\n- **Швидк**ий (Fast - adj) ➡️ **Швидко** (Fast/Quickly - adv).\n- **Повільн**ий (Slow - adj) ➡️ **Повільно** (Slowly - adv).\n- **Гарн**ий (Nice/Beautiful - adj) ➡️ **Гарно** (Nicely/Beautifully - adv).\n- **Дешев**ий (Cheap - adj) ➡️ **Дешево** (Cheaply - adv).\n- **Дорог**ий (Expensive - adj) ➡️ **Дорого** (Expensively - adv).\n\n**Usage:**\n- Це **швидка** машина. (This is a fast car).\n- Він їде **швидко**. (He drives fast).\n\n### Section 2: Good and Bad (The Irregulars)\n\n1.  **Хороший** (Good) ➡️ **Добре** (Well).\n    *Note: \"Khorosho\" exists but \"Dobro\" is standard Ukrainian for \"Well\".*\n    - Як справи? (How are things?)\n    - **Добре**. (Well / Good).\n\n2.  **Поганий** (Bad) ➡️ **Погано** (Badly).\n    - Я сплю **погано**. (I sleep badly).\n\n> 🎨 **Culture Corner: Everything is \"Normalno\"**\n> If you ask a Ukrainian \"How are you?\", the most common answer is **Нормально**.\n> It doesn't mean \"Average\". It means \"Functional / Okay / No crisis\".\n> To say \"Great\", use **Чудово**.\n> To say \"Terrible\", use **Жахливо**.\n\n### Section 3: Frequency (How often?)\n\nThese are pure adverbs (not from adjectives).\n\n1.  **Завжди** (Always).\n2.  **Часто** (Often).\n3.  **Іноді** (Sometimes).\n4.  **Рідко** (Rarely).\n5.  **Ніколи** (Never).\n    *Rule:* Start sentence with \"Ya nikoly ne...\" (I never not...). Double negative!\n    - Я **ніколи не** їм м'ясо. (I never eat meat).\n\n### Section 4: It is... (Impersonal Expressions)\n\nWe use Adverbs to describe the \"State of the World\".\n- **Холодно** (It is cold).\n- **Цікаво** (It is interesting).\n- **Важко** (It is hard).\n- **Легко** (It is easy).\n- **Нудно** (It is boring).\n\n\"Мені холодно\" (To me is cold = I am cold).\n\"Це цікаво\" (This is interesting).\n\n> 🧠 **Deep Dive: Adverb vs Short Adjective**\n> Linguists argue if \"Kholodno\" is an adverb or a \"Productive Category of State\".\n> For A1 learners: It looks like an adverb. It acts like an adverb. Call it an adverb.\n> \"Coffee is hot\" -> Use Adjective (Kava hariacha).\n> \"It is hot (outside)\" -> Use Adverb (Haryacho/Zharko).\n\n\n> 💡 **Pro Tip: The Power of \"Tak\"**\n> \"Tak\" means \"Yes\".\n> \"Tak\" also means \"So\".\n> - **Так** глибоко (So deep).\n> - **Так** смачно (So tasty).\n> - **Так** собі (So-so).\n> It is the most versatile word.\n\n\n### Section 5: Better and Worse (Comparatives)\n\nAdverbs can compare actions.\n- **Швидко** (Fast) ➡️ **Швидше** (Faster).\n- **Повільно** (Slowly) ➡️ **Повільніше** (More slowly).\n- **Гарно** (Well) ➡️ **Краще** (Better - Irregular!).\n- **Погано** (Badly) ➡️ **Гірше** (Worse - Irregular!).\n\n\"Він бігає швидше, ніж я.\" (He runs faster than I).\n\"Це краще.\" (This is better).\n\n> 🦉 **Wisdom: Better Late Than Never**\n> Ukrainians love this proverb:\n> **Краще пізно, ніж ніколи.**\n> (Better late, than never).\n> It uses two irregular comparatives and a frequency adverb. Memorize it like a magic spell. Use it when you are late for a meeting (but only if you are also smiling).\n\n> 🌡️ **Deep Dive: The Temperature Scale**\n> Describing weather states:\n> - **Спекотно** (Sweltering/Hot +30C).\n> - **Жарко** (Hot +25C).\n> - **Тепло** (Warm +20C).\n> - **Прохолодно** (Cool/Fresh +15C).\n> - **Холодно** (Cold +5C).\n> - **Морозно** (Freezing -5C).\n> Ukrainians complain about all of them. \"To me is cold\" is the national anthem of winter.\n\n### Section 6: Soft Adverbs (Trokhy)\n\n- **Трохи** (A little bit).\n- **Зовсім** (At all / Completely).\n- **Досить** (Enough / Quite).\n- **Занадто** (Too).\n\n\"Я трохи говорю українською\" (I speak a little Ukrainian).\n\"Це зовсім не цікаво\" (This is at all not interesting).\n\n\n### Section 7: Where? (Adverbs of Place)\n\nAdverbs also answer \"Where?\" (De?).\n- **Тут** (Here).\n- **Там** (There).\n- **Вдома** (At home).\n- **Надворі** (Outside / Outdoors).\n- **Скрізь** (Everywhere).\n- **Ніде** (Nowhere). *\"Я ніде не бачу ключі\"*.\n\n\"Я тут.\" (I am here).\n\"Він там.\" (He is there).\n\"Вдома добре.\" (At home [it is] good).\n\n> 🏠 **Culture Corner: Vdoma vs Domu**\n> **Вдома** (Adverb) = At home (Location). \"Я вдома.\"\n> **Додому** (Adverb of direction) = To home / Homeward. \"Я йду додому.\"\n> Don't mix them!\n> \"Я йду вдома\" implies you are walking *inside* your house.\n\n### Section 8: When? (Adverbs of Time)\n\nWe learned days, but these are adverbs relative to *now*.\n- **Сьогодні** (Today).\n- **Вчора** (Yesterday).\n- **Завтра** (Tomorrow).\n- **Зараз** (Now - specific moment).\n- **Тепер** (Now - general period).\n- **Потім** (Later / Then).\n- **Рано** (Early).\n- **Пізно** (Late).\n\n\"Ми йдемо зараз.\" (We are going right now).\n\"Тепер я розумію.\" (Now [unlike before] I understand).\n\n\n### Section 9: Manners (How to be polite)\n\nPoliteness is about *how* you say things (Adverbs).\n- **Ввічливо** (Politely).\n- **Грубо** (Rudely).\n- **Чесно** (Honestly).\n- **Серйозно** (Seriously).\n- **Жартома** (Jokingly).\n\n\"Скажіть це ввічливо.\" (Say this politely).\n\"Я говорю чесно.\" (I speak honestly).\n\n> 💡 **Language Link: Please (Bud' laska)**\n> \"Bud' laska\" literally means \"Be kindness\" (Imperative + Noun).\n> It is an adverbial phrase of manner.\n> Do it how? Do it \"with kindness\".\n\n## practice\n\n**Drill 1: Adj to Adv**\n- Гарний -> **Гарно**\n- Поганий -> **Погано**\n- Ввічливий -> **Ввічливо**\n- Цікавий -> **Цікаво**\n- Дивний -> **Дивно**\n\n**Drill 2: Frequency**\n- (Always) -> **Завжди**\n- (Never) -> **Ніколи**\n- (Often) -> **Часто**\n- (Usually) -> **Зазвичай**\n\n**Drill 3: Adverb vs Adjective**\n- Kava is good. -> **Гарна** (Adj).\n- Do it good. -> **Гарно** (Adv).\n- I am fast. -> **Швидкий** (Adj).\n- I run fast. -> **Швидко** (Adv).\n\n## production\n\n**Scenario: The Taxi Driver**\n*   **Driver:** Куди їдемо?\n*   **You:** В центр. Тільки не **швидко**.\n*   **Driver:** Чому? Я їжджу (drive) **нормально**.\n*   **You:** Я боюся (afraid). Їдьте, будь ласка, **повільно**.\n*   **Driver:** Добре, добре. Будемо їхати **дуже повільно**. Як черепаха (turtle).\n*   **You:** Це **чудово**.\n\n**Scenario: The Job Interview**\n*   **Boss:** Як ви працюєте?\n*   **You:** Я працюю **швидко** і **якісно** (quality-wise).\n*   **Boss:** Ви спізнюєтесь (late)?\n*   **You:** Я **ніколи не** запізнююся.\n*   **Boss:** Це **чудово**. Ви прийняті.\n\n**Scenario: The Compliment**\n*   **Ivan:** Ти **гарно** виглядаєш (look).\n*   **Maria:** Дякую. Це **нова** сукня (dress).\n*   **Ivan:** Тобі **дуже** пасує (fits/suits).\n*   **Maria:** А ти **дивно** (strangely) поводишся (behave). Що ти хочеш?\n*   **Ivan:** Я хочу їсти. Ти **смачно** готуєш.\n*   **Maria:** А! Ти хочеш борщ?\n*   **Ivan:** Так. Я дуже голодний.\n*   **Maria:** Ти хитрий (cunning). Але добре.\n\n**Scenario: The Taxi Driver (Again)**\n*   **You:** Ви їдете занадто швидко!\n*   **Driver:** Це не швидко. Це нормально.\n*   **You:** Мені страшно (scary). Їдьте повільніше, будь ласка.\n*   **Driver:** Якщо повільніше, буде дорожче (more expensive).\n*   **You:** Чому?\n*   **Driver:** Час — це гроші.\n*   **You:** Я дам вам час. Я вийду тут.\n*   **Driver:** Ні, ні. Я їду повільно. Бачите?\n*   **You:** Дякую.\n\n> 🥪 **Culture Corner: Tasty! (Smachno)**\n> When you eat, someone might say \"**Смачного!**\" (Bon appetit - Genitive wish).\n> You answer: \"Дякую!\"\n> If food is good, say \"**Дуже смачно**\" (Very tasty-ly).\n> Even if it is bad, say it. Grandmothers have radar for lies, but flattery jams the radar.\n> \"Як суп?\" - \"Цікаво.\" (Interesting) is a polite code for \"Bad\".\n\n---\n\n# Activities\n\n## match-up: Adverb Creation\n\n> Make adverbs from adjectives.\n\n| Adjective | Adverb |\n|-----------|--------|\n| Гарний (Good/Nice) | Гарно |\n| Поганий (Bad) | Погано |\n| Швидкий (Fast) | Швидко |\n| Повільний (Slow) | Повільно |\n| Цікавий (Interesting) | Цікаво |\n| Смачний (Tasty) | Смачно |\n| Сумний (Sad) | Сумно |\n| Веселий (Fun) | Весело |\n| Дорогий (Expensive) | Дорого |\n| Дешевий (Cheap) | Дешево |\n| Дивний (Strange) | Дивно |\n| Ввічливий (Polite) | Ввічливо |\n\n## fill-in: Adjective or Adverb?\n\n> Choose the correct form (Adj or Adv).\n\n1. Ця книга ___ (interesting).\n   > [!answer] цікава\n   > [!options] цікава | цікаво\n\n2. Мені ___ (interesting) тут.\n   > [!answer] цікаво\n   > [!options] цікава | цікаво\n\n3. Ти ___ (good) співаєш.\n   > [!answer] гарно\n   > [!options] гарна | гарно\n\n4. Це ___ (good) пісня.\n   > [!answer] гарна\n   > [!options] гарна | гарно\n\n5. Він їде ___ (fast).\n   > [!answer] швидко\n   > [!options] швидкий | швидко\n\n6. Цей поїзд ___ (fast).\n   > [!answer] швидкий\n   > [!options] швидкий | швидко\n\n7. Тут ___ (expensive).\n   > [!answer] дорого\n   > [!options] дорогий | дорого\n\n8. Це ___ (expensive) ресторан.\n   > [!answer] дорогий\n   > [!options] дорогий | дорого\n\n9. Мені ___ (sad).\n   > [!answer] сумно\n   > [!options] сумний | сумно\n\n10. Фільм ___ (sad).\n    > [!answer] сумний\n    > [!options] сумний | сумно\n\n11. Це ___ (strange).\n    > [!answer] дивно\n    > [!options] дивна | дивно\n\n12. Вона ___ (strange).\n    > [!answer] дивна\n    > [!options] дивна | дивно\n\n## unjumble: Morning Routine\n> Reorder the words to make sentences.\n\n1. прокидаюся Я рано .\n   > [!answer] Я прокидаюся рано.\n   > (I wake up early.)\n\n2. швидко каву п'ю Я .\n   > [!answer] Я п'ю каву швидко.\n   > (I drink coffee fast.)\n\n3. повільно снідаю Я .\n   > [!answer] Я снідаю повільно.\n   > (I eat breakfast slowly.)\n\n4. роботу Я швидко йду на .\n   > [!answer] Я йду на роботу швидко.\n   > (I go to work quickly.)\n\n5. погано українською говорю Я .\n   > [!answer] Я говорю українською погано.\n   > (I speak Ukrainian badly.)\n\n6. добре англійською говорю Я .\n   > [!answer] Я говорю англійською добре.\n   > (I speak English well.)\n\n7. голосно Він співає .\n   > [!answer] Він співає голосно.\n   > (He sings loudly.)\n\n8. пише Вона гарно .\n   > [!answer] Вона пише гарно.\n   > (She writes beautifully.)\n## unjumble: Complex Sentences (Clauses)\n> Reorder the clauses to make complex sentences.\n\n1. ми Коли їмо вечір .\n   > [!answer] Коли вечір, ми їмо.\n   > (When it is evening, we eat.)\n\n2. я Якщо читаю маю час .\n   > [!answer] Якщо я маю час, я читаю.\n   > (If I have time, I read.)\n\n3. тому що Я втомився працював я .\n   > [!answer] Я втомився, тому що я працював.\n\n4. але гарно Він співає тихо .\n   > [!answer] Він співає гарно, але тихо.\n\n5. швидко поїзд їде Цей дуже .\n   > [!answer] Цей поїзд їде дуже швидко.\n\n6. не Я знаю хто це .\n   > [!answer] Я не знаю, хто це.\n\n7. де Ти знаєш він ?\n   > [!answer] Ти знаєш, де він?\n\n8. що Ми думаємо це добре .\n   > [!answer] Ми думаємо, що це добре.\n\n9. як Ви знаєте це робити ?\n   > [!answer] Ви знаєте, як це робити?\n\n10. коли Я люблю тепло .\n    > [!answer] Я люблю, коли тепло.\n\n11. тому що Я тут ти тут .\n    > [!answer] Я тут, тому що ти тут.\n\n12. але Це дешево погано .\n    > [!answer] Це дешево, але погано.\n\n## group-sort: Frequency Sorter\n\n> Sort by frequency (High to Low/Zero).\n\n### High Frequency\n- Завжди (Always)\n- Часто (Often)\n- Зазвичай (Usually)\n- Постійно (Constantly)\n- Щодня (Every day)\n\n### Mid/Low Frequency\n- Іноді (Sometimes)\n- Час від часу (Time from time)\n- Рідко (Rarely)\n- Нечасто (Not often)\n\n### Zero Frequency\n- Ніколи (Never)\n- Ніколи в житті (Never in life)\n- Жодного разу (Not a single time)\n\n## quiz: Adverb Concept\n\n> Logic Check.\n\n1. Which answers \"What kind?\" (Yaky)?\n   - [x] Adjective (Harnyi)\n   - [ ] Adverb (Harno)\n\n2. Which answers \"How?\" (Yak)?\n   - [ ] Adjective\n   - [x] Adverb\n\n3. \"Meni sumno\" (To me is sad). Case?\n   - [x] Dative (Meni)\n   - [ ] Nominative (Ya)\n\n4. \"Ya sumnyi\" (I am sad). Case?\n   - [ ] Dative\n   - [x] Nominative\n\n5. Where is \"Always\" usually placed?\n   - [x] Before the verb (\"Ya zavzhdy snidayu\").\n   - [ ] After the verb.\n\n6. \"Tak sobi\" means...\n   - [x] So-so.\n   - [ ] Very good.\n\n7. \"Duzhe\" means...\n   - [x] Very.\n   - [ ] Little.\n\n8. \"Trokhy\" means...\n   - [x] A little.\n   - [ ] Very.\n\n9. Can you say \"Menі harno\"?\n   - [x] Yes (I feel good).\n   - [ ] No.\n\n10. \"Schvydko\" opposite is...\n    - [x] Povilno.\n    - [ ] Harno.\n\n11. \"Dobre\" opposite is...\n    - [x] Pohano.\n    - [ ] Duzhe.\n\n12. \"Tyt\" (Here) opposite is...\n    - [x] Tam (There).\n    - [ ] Misto.\n\n## anagram: Adverb Scramble\n\n> Scramble words.\n\n1. в ж з д и а\n   > [!answer] завжди\n   > (Always)\n\n2. ч т с а о\n   > [!answer] часто\n   > (Often)\n\n3. ш в д и к о\n   > [!answer] швидко\n   > (Fast)\n\n4. п в і л ь н о\n   > [!answer] повільно\n   > (Slowly)\n\n5. г р н о а\n   > [!answer] гарно\n   > (Well/Nicely)\n\n6. п о н о г а\n   > [!answer] погано\n   > (Badly)\n\n7. д ж у е\n   > [!answer] дуже\n   > (Very)\n\n8. т р х о и\n   > [!answer] трохи\n   > (A little)\n\n9. ц к в о і а\n   > [!answer] цікаво\n   > (Interesting-ly)\n\n10. с м н о у\n    > [!answer] сумно\n    > (Sad-ly)\n\n11. н к л о и і\n    > [!answer] ніколи\n    > (Never)\n\n12. т о с а ч\n    > [!answer] часто\n    > (Often)\n\n## unjumble: Sentence Building (Adverbs)\n\n> Build sentences.\n\n1. читаю / швидко / Я / .\n   > [!answer] Я швидко читаю.\n\n2. готує / Вона / смачно / .\n   > [!answer] Вона смачно готує.\n\n3. додому / Ми / йдемо / повільно / .\n   > [!answer] Ми повільно йдемо додому.\n\n4. цікаво / Це / дуже / .\n   > [!answer] Це дуже цікаво.\n\n5. тут / Дорого / .\n   > [!answer] Тут дорого.\n\n6. не / Я / сплю / ніколи / .\n   > [!answer] Я ніколи не сплю.\n\n7. часто / Ти / тут / ?\n   > [!answer] Ти часто тут?\n\n8. добре / Все / буде / .\n   > [!answer] Все буде добре.\n   > (Everything will be well - famous phrase).\n\n9. погано / Я / чую / .\n   > [!answer] Я погано чую.\n   > (hear)\n\n10. виглядаєш / Ти / чудово / !\n    > [!answer] Ти чудово виглядаєш!\n\n11. важко / Мені / .\n    > [!answer] Мені важко.\n\n12. їдеш / Ти / швидко / занадто / .\n    > [!answer] Ти їдеш занадто швидко.\n\n## fill-in: My Life (Adverbs)\n\n> Answer about yourself (Truth or Lie).\n\n1. Я готую ___ (how?).\n   > [!answer] смачно / погано\n\n2. Я бігаю ___ (how?).\n   > [!answer] швидко / повільно\n\n3. Я сплю ___ (how?).\n   > [!answer] багато / мало\n\n4. Українська мова — це ___ (how/adj?).\n   > [!answer] цікаво / складно\n\n5. Я живу ___ (where?).\n   > [!answer] тут / там\n\n6. Я встаю ___ (when?).\n   > [!answer] рано / пізно\n\n7. Я читаю ___ (how?).\n   > [!answer] багато / швидко\n\n8. Мені ___ (state).\n   > [!answer] весело / сумно / нудно\n\n9. Це ___ (price).\n   > [!answer] дорого / дешево\n\n10. Я ___ (frequency) п'ю каву.\n    > [!answer] завжди / часто / ніколи\n\n11. Я ___ (frequency) запізнююсь.\n    > [!answer] ніколи / іноді\n\n12. Мені ___ (hot/cold).\n    > [!answer] холодно / жарко\n\n## true-false: Adverb Facts\n\n> Check your knowledge.\n\n1. Adverbs usually end in -O.\n   - [x] True (Harno, Dobre).\n   - [ ] False\n\n2. Adverbs change gender.\n   - [ ] True\n   - [x] False (Never!).\n\n3. \"Harnyi\" is an Adverb.\n   - [ ] True\n   - [x] False (Adjective - ends in YI).\n\n4. \"Harno\" is an Adverb.\n   - [x] True\n   - [ ] False\n\n5. \"Meni harno\" means \"I am beautiful\".\n   - [ ] True\n   - [x] False (It means \"I feel good/nice\").\n\n6. \"Zavzhdy\" comes after the verb.\n   - [ ] True\n   - [x] False (Usually before).\n\n7. \"Tak\" can mean \"So\".\n   - [x] True\n   - [ ] False\n\n8. \"Duzhe\" means \"A little\".\n   - [ ] True\n   - [x] False (Very).\n\n9. \"Pohano\" means \"Good\".\n   - [ ] True\n   - [x] False (Badly).\n\n10. \"Sok\" (Juice) is an Adverb.\n    - [ ] True\n    - [x] False (Noun).\n\n11. \"Vdoma\" is an Adverb of Place.\n    - [x] True\n    - [ ] False\n\n12. \"Dodomu\" is an Adverb of Direction.\n    - [x] True\n    - [ ] False\n\n# Summary\n\n**You act with style.**\nYou don't just \"do\". You do it **well** (добре), **fast** (швидко), and **often** (часто).\n- **-o Rules:** Adj -> Adv (Shvydkyy -> Shvydko).\n- **States:** Meni kholodno (I am cold).\n- **Frequency:** Zavzhdy, Nikoly ne.\n\n**Checklist:**\n- [ ] I can say \"I live well\" (Я живу добре).\n- [ ] I can say \"It is cold\" (Холодно).\n- [ ] I can say \"I never smoke\" (Я ніколи не курю).\n- [ ] I know \"Normalno\" is the answer to everything.\n\n**Next Stop:**\nWe have actions, descriptions, manner.\nNow let's locate things precisely.\n**Module 29: Prepositions III (Direction vs Location)**.\nInto the box, out of the box, near the box.\n\n# Vocabulary\n\n| Word | IPA | English | Note | Audio |\n|------|-----|---------|------|-------|\n| швидко | /ˈʃvɪdkɔ/ | fast/quickly | | [🔊](audio_shvydko) |\n| повільно | /pɔˈvilʲnɔ/ | slowly | | [🔊](audio_povilno) |\n| добре | /ˈdɔbrɛ/ | well/good | | [🔊](audio_dobre) |\n| погано | /pɔˈɦɑnɔ/ | badly | | [🔊](audio_pohano) |\n| гарно | /ˈɦɑrnɔ/ | nicely/beautifully | | [🔊](audio_harno) |\n| дорого | /ˈdɔrɔɦɔ/ | expensively | | [🔊](audio_doroho) |\n| дешево | /ˈdɛʃɛvɔ/ | cheaply | | [🔊](audio_deshevo) |\n| смачно | /ˈsmɑtʃnɔ/ | tasty (adv) | | [🔊](audio_smachno) |\n| цікаво | /t͡s⁽ʲ⁾iˈkɑvɔ/ | interestingly | | [🔊](audio_tsikavo) |\n| нудно | /ˈnudnɔ/ | boringly | | [🔊](audio_nudno) |\n| важко | /ˈvɑʒkɔ/ | hard/difficultly | | [🔊](audio_vazhko) |\n| легко | /ˈlɛxkɔ/ | easily | | [🔊](audio_lehko) |\n| холодно | /ˈxɔlɔdnɔ/ | cold (state) | | [🔊](audio_kholodno) |\n| гаряче | /ɦɑˈrʲɑtʃɛ/ | hot (state) | irregular ending | [🔊](audio_haryache) |\n| спекотно | /spɛˈkɔtnɔ/ | sweltering | weather | [🔊](audio_spekotno) |\n| завжди | /zɑvˈʒdɪ/ | always | | [🔊](audio_zavzhdy) |\n| часто | /ˈtʃɑstɔ/ | often | | [🔊](audio_chasto) |\n| іноді | /ˈinɔd⁽ʲ⁾i/ | sometimes | | [🔊](audio_inodi) |\n| рідко | /ˈridkɔ/ | rarely | | [🔊](audio_ridko) |\n| ніколи | /n⁽ʲ⁾iˈkɔlɪ/ | never | | [🔊](audio_nikoly) |\n| зазвичай | /zɑˈzvɪtʃɑj/ | usually | | [🔊](audio_zazvychaj) |\n| чудово | /tʃuˈdɔvɔ/ | wonderfully | | [🔊](audio_chudovo) |\n| жахливо | /ʒɑxˈlɪvɔ/ | terribly | | [🔊](audio_zhakhlyvo) |\n| нормально | /nɔrˈmɑlʲnɔ/ | okay/normally | | [🔊](audio_normalno) |\n| вільно | /ˈvilʲnɔ/ | freely/fluently | | [🔊](audio_vilno) |\n",
+    "createdAt": "2025-12-08T21:22:09.893Z",
+    "modifiedAt": "2025-12-08T21:22:09.893Z",
     "version": 2
   },
   "activities": [
     {
-      "id": "act-a1-0-fillblank",
-      "type": "fill-blank",
-      "title": "Weather Expressions",
-      "description": "Choose the correct weather expression.",
+      "id": "act-a1-0-matchup",
+      "type": "match-up",
+      "title": "Adverb Creation",
+      "description": "Make adverbs from adjectives.",
       "content": {
-        "type": "fill-blank",
-        "items": [
+        "type": "match-up",
+        "pairs": [
           {
-            "prompt": "Сьогодні дуже ___, +35 градусів!",
-            "answer": "спекотно",
-            "options": [
-              "спекотно",
-              "холодно",
-              "морозно",
-              "прохолодно"
-            ]
+            "left": "Гарний (Good/Nice)",
+            "right": "Гарно"
           },
           {
-            "prompt": "Надворі ___, небо без хмар.",
-            "answer": "сонячно",
-            "options": [
-              "сонячно",
-              "хмарно",
-              "туманно",
-              "вітряно"
-            ]
+            "left": "Поганий (Bad)",
+            "right": "Погано"
           },
           {
-            "prompt": "___ сильний вітер.",
-            "answer": "Дме",
-            "options": [
-              "Дме",
-              "Йде",
-              "Світить",
-              "Падає"
-            ]
+            "left": "Швидкий (Fast)",
+            "right": "Швидко"
           },
           {
-            "prompt": "На вулиці ___ дощ.",
-            "answer": "йде",
-            "options": [
-              "йде",
-              "дме",
-              "світить",
-              "падає"
-            ]
+            "left": "Повільний (Slow)",
+            "right": "Повільно"
           },
           {
-            "prompt": "Взимку ___.",
-            "answer": "холодно",
-            "options": [
-              "холодно",
-              "спекотно",
-              "тепло",
-              "жарко"
-            ]
+            "left": "Цікавий (Interesting)",
+            "right": "Цікаво"
           },
           {
-            "prompt": "Сонце ___ яскраво.",
-            "answer": "світить",
-            "options": [
-              "світить",
-              "йде",
-              "дме",
-              "падає"
-            ]
+            "left": "Смачний (Tasty)",
+            "right": "Смачно"
           },
           {
-            "prompt": "___ сніг, все біле.",
-            "answer": "Падає",
-            "options": [
-              "Падає",
-              "Дме",
-              "Світить",
-              "Йде"
-            ]
+            "left": "Сумний (Sad)",
+            "right": "Сумно"
           },
           {
-            "prompt": "Яка ___ погода сьогодні!",
-            "answer": "гарна",
-            "options": [
-              "гарна",
-              "гарний",
-              "гарне",
-              "гарні"
-            ]
+            "left": "Веселий (Fun)",
+            "right": "Весело"
           },
           {
-            "prompt": "Вчора ___ дощ.",
-            "answer": "йшов",
-            "options": [
-              "йшов",
-              "йде",
-              "буде йти",
-              "йдуть"
-            ]
+            "left": "Дорогий (Expensive)",
+            "right": "Дорого"
           },
           {
-            "prompt": "Завтра ___ тепло.",
-            "answer": "буде",
-            "options": [
-              "буде",
-              "було",
-              "є",
-              "бути"
-            ]
+            "left": "Дешевий (Cheap)",
+            "right": "Дешево"
           },
           {
-            "prompt": "Надворі дуже ___, нічого не видно.",
-            "answer": "туманно",
-            "options": [
-              "туманно",
-              "сонячно",
-              "тепло",
-              "холодно"
-            ]
+            "left": "Дивний (Strange)",
+            "right": "Дивно"
           },
           {
-            "prompt": "Влітку ___.",
-            "answer": "спекотно",
-            "options": [
-              "спекотно",
-              "морозно",
-              "холодно",
-              "прохолодно"
-            ]
+            "left": "Ввічливий (Polite)",
+            "right": "Ввічливо"
           }
-        ]
+        ],
+        "shuffleRight": true
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -194,135 +112,147 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.103Z",
-      "modifiedAt": "2025-12-06T10:49:20.103Z"
+      "createdAt": "2025-12-08T21:22:09.893Z",
+      "modifiedAt": "2025-12-08T21:22:09.893Z"
     },
     {
       "id": "act-a1-0-fillblank",
       "type": "fill-blank",
-      "title": "Seasons",
-      "description": "Choose the correct season or seasonal expression.",
+      "title": "Adjective or Adverb?",
+      "description": "Choose the correct form (Adj or Adv).",
       "content": {
         "type": "fill-blank",
         "items": [
           {
-            "prompt": "___ йде сніг і холодно.",
-            "answer": "Взимку",
+            "prompt": "Ця книга ___ (interesting).",
+            "answer": "цікава",
+            "hints": [
+              "interesting"
+            ],
             "options": [
-              "Взимку",
-              "Влітку",
-              "Навесні",
-              "Восени"
+              "цікава",
+              "цікаво"
             ]
           },
           {
-            "prompt": "___ сонячно і спекотно.",
-            "answer": "Влітку",
+            "prompt": "Мені ___ (interesting) тут.",
+            "answer": "цікаво",
+            "hints": [
+              "interesting"
+            ],
             "options": [
-              "Влітку",
-              "Взимку",
-              "Восени",
-              "Навесні"
+              "цікава",
+              "цікаво"
             ]
           },
           {
-            "prompt": "___ падає листя.",
-            "answer": "Восени",
+            "prompt": "Ти ___ (good) співаєш.",
+            "answer": "гарно",
+            "hints": [
+              "good"
+            ],
             "options": [
-              "Восени",
-              "Взимку",
-              "Влітку",
-              "Навесні"
+              "гарна",
+              "гарно"
             ]
           },
           {
-            "prompt": "___ квітнуть квіти.",
-            "answer": "Навесні",
+            "prompt": "Це ___ (good) пісня.",
+            "answer": "гарна",
+            "hints": [
+              "good"
+            ],
             "options": [
-              "Навесні",
-              "Взимку",
-              "Влітку",
-              "Восени"
+              "гарна",
+              "гарно"
             ]
           },
           {
-            "prompt": "Моя улюблена пора року — ___.",
-            "answer": "літо",
+            "prompt": "Він їде ___ (fast).",
+            "answer": "швидко",
+            "hints": [
+              "fast"
+            ],
             "options": [
-              "літо",
-              "зимою",
-              "влітку",
-              "весна"
+              "швидкий",
+              "швидко"
             ]
           },
           {
-            "prompt": "Перша пора року — ___.",
-            "answer": "весна",
+            "prompt": "Цей поїзд ___ (fast).",
+            "answer": "швидкий",
+            "hints": [
+              "fast"
+            ],
             "options": [
-              "весна",
-              "літо",
-              "осінь",
-              "зима"
+              "швидкий",
+              "швидко"
             ]
           },
           {
-            "prompt": "Після літа настає ___.",
-            "answer": "осінь",
+            "prompt": "Тут ___ (expensive).",
+            "answer": "дорого",
+            "hints": [
+              "expensive"
+            ],
             "options": [
-              "осінь",
-              "весна",
-              "зима",
-              "літо"
+              "дорогий",
+              "дорого"
             ]
           },
           {
-            "prompt": "___ морозно, мінус двадцять.",
-            "answer": "Взимку",
+            "prompt": "Це ___ (expensive) ресторан.",
+            "answer": "дорогий",
+            "hints": [
+              "expensive"
+            ],
             "options": [
-              "Взимку",
-              "Влітку",
-              "Навесні",
-              "Восени"
+              "дорогий",
+              "дорого"
             ]
           },
           {
-            "prompt": "___ часто йде дощ.",
-            "answer": "Восени",
+            "prompt": "Мені ___ (sad).",
+            "answer": "сумно",
+            "hints": [
+              "sad"
+            ],
             "options": [
-              "Восени",
-              "Взимку",
-              "Влітку",
-              "Навесні"
+              "сумний",
+              "сумно"
             ]
           },
           {
-            "prompt": "У грудні вже ___.",
-            "answer": "зима",
+            "prompt": "Фільм ___ (sad).",
+            "answer": "сумний",
+            "hints": [
+              "sad"
+            ],
             "options": [
-              "зима",
-              "літо",
-              "весна",
-              "осінь"
+              "сумний",
+              "сумно"
             ]
           },
           {
-            "prompt": "___ діти купаються в морі.",
-            "answer": "Влітку",
+            "prompt": "Це ___ (strange).",
+            "answer": "дивно",
+            "hints": [
+              "strange"
+            ],
             "options": [
-              "Влітку",
-              "Взимку",
-              "Восени",
-              "Навесні"
+              "дивна",
+              "дивно"
             ]
           },
           {
-            "prompt": "___ буває гарна погода.",
-            "answer": "Навесні",
+            "prompt": "Вона ___ (strange).",
+            "answer": "дивна",
+            "hints": [
+              "strange"
+            ],
             "options": [
-              "Навесні",
-              "Взимку",
-              "Влітку",
-              "Восени"
+              "дивна",
+              "дивно"
             ]
           }
         ]
@@ -334,128 +264,102 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.103Z",
-      "modifiedAt": "2025-12-06T10:49:20.103Z"
+      "createdAt": "2025-12-08T21:22:09.893Z",
+      "modifiedAt": "2025-12-08T21:22:09.893Z"
     },
     {
       "id": "act-a1-0-unjumble",
       "type": "unjumble",
-      "title": "Weather Sentences",
-      "description": "Put the words in the correct order.",
+      "title": "Morning Routine",
+      "description": "Reorder the words to make sentences.",
       "content": {
         "type": "unjumble",
         "isUnjumble": true,
         "items": [
           {
             "words": [
-              "сьогодні",
-              "погода",
-              "Яка"
+              "прокидаюся",
+              "Я",
+              "рано",
+              "."
             ],
-            "answer": "Яка сьогодні погода?",
-            "translation": "What's the weather like today?"
+            "answer": "Я прокидаюся рано.",
+            "translation": "I wake up early."
           },
           {
             "words": [
-              "холодно",
-              "Сьогодні",
-              "дуже"
+              "швидко",
+              "каву",
+              "п'ю",
+              "Я",
+              "."
             ],
-            "answer": "Сьогодні дуже холодно.",
-            "translation": "It's very cold today."
+            "answer": "Я п'ю каву швидко.",
+            "translation": "I drink coffee fast."
           },
           {
             "words": [
-              "дощ",
-              "Йде",
-              "сильний"
+              "повільно",
+              "снідаю",
+              "Я",
+              "."
             ],
-            "answer": "Йде сильний дощ.",
-            "translation": "Heavy rain is falling."
+            "answer": "Я снідаю повільно.",
+            "translation": "I eat breakfast slowly."
           },
           {
             "words": [
-              "сонце",
-              "яскраво",
-              "Світить"
+              "роботу",
+              "Я",
+              "швидко",
+              "йду",
+              "на",
+              "."
             ],
-            "answer": "Світить яскраво сонце.",
-            "translation": "The sun shines brightly."
+            "answer": "Я йду на роботу швидко.",
+            "translation": "I go to work quickly."
           },
           {
             "words": [
-              "спекотно",
-              "Влітку",
-              "і",
-              "сонячно"
+              "погано",
+              "українською",
+              "говорю",
+              "Я",
+              "."
             ],
-            "answer": "Влітку спекотно і сонячно.",
-            "translation": "In summer it's hot and sunny."
+            "answer": "Я говорю українською погано.",
+            "translation": "I speak Ukrainian badly."
           },
           {
             "words": [
-              "сніг",
-              "Взимку",
-              "йде"
+              "добре",
+              "англійською",
+              "говорю",
+              "Я",
+              "."
             ],
-            "answer": "Взимку йде сніг.",
-            "translation": "In winter it snows."
+            "answer": "Я говорю англійською добре.",
+            "translation": "I speak English well."
           },
           {
             "words": [
-              "Вчора",
-              "холодно",
-              "було"
+              "голосно",
+              "Він",
+              "співає",
+              "."
             ],
-            "answer": "Вчора було холодно.",
-            "translation": "Yesterday it was cold."
+            "answer": "Він співає голосно.",
+            "translation": "He sings loudly."
           },
           {
             "words": [
-              "тепло",
-              "Завтра",
-              "буде"
+              "пише",
+              "Вона",
+              "гарно",
+              "."
             ],
-            "answer": "Завтра буде тепло.",
-            "translation": "Tomorrow it will be warm."
-          },
-          {
-            "words": [
-              "вітер",
-              "Дме",
-              "сильний"
-            ],
-            "answer": "Дме сильний вітер.",
-            "translation": "A strong wind is blowing."
-          },
-          {
-            "words": [
-              "хмарно",
-              "Надворі",
-              "сьогодні"
-            ],
-            "answer": "Сьогодні надворі хмарно.",
-            "translation": "It's cloudy outside today."
-          },
-          {
-            "words": [
-              "градусів",
-              "Плюс",
-              "десять"
-            ],
-            "answer": "Плюс десять градусів.",
-            "translation": "Plus ten degrees."
-          },
-          {
-            "words": [
-              "улюблена",
-              "Моя",
-              "пора",
-              "року",
-              "весна"
-            ],
-            "answer": "Моя улюблена пора року — весна.",
-            "translation": "My favorite season is spring."
+            "answer": "Вона пише гарно.",
+            "translation": "She writes beautifully."
           }
         ]
       },
@@ -466,67 +370,151 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.103Z",
-      "modifiedAt": "2025-12-06T10:49:20.103Z"
+      "createdAt": "2025-12-08T21:22:09.893Z",
+      "modifiedAt": "2025-12-08T21:22:09.893Z"
     },
     {
-      "id": "act-a1-0-matchup",
-      "type": "match-up",
-      "title": "Weather Vocabulary",
-      "description": "Match each Ukrainian word with its English meaning.",
+      "id": "act-a1-0-unjumble",
+      "type": "unjumble",
+      "title": "Complex Sentences (Clauses)",
+      "description": "Reorder the clauses to make complex sentences.",
       "content": {
-        "type": "match-up",
-        "pairs": [
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
           {
-            "left": "погода",
-            "right": "weather"
+            "words": [
+              "ми",
+              "Коли",
+              "їмо",
+              "вечір",
+              "."
+            ],
+            "answer": "Коли вечір, ми їмо.",
+            "translation": "When it is evening, we eat."
           },
           {
-            "left": "сонце",
-            "right": "sun"
+            "words": [
+              "я",
+              "Якщо",
+              "читаю",
+              "маю",
+              "час",
+              "."
+            ],
+            "answer": "Якщо я маю час, я читаю.",
+            "translation": "If I have time, I read."
           },
           {
-            "left": "хмара",
-            "right": "cloud"
+            "words": [
+              "тому",
+              "що",
+              "Я",
+              "втомився",
+              "працював",
+              "я",
+              "."
+            ],
+            "answer": "Я втомився, тому що я працював."
           },
           {
-            "left": "вітер",
-            "right": "wind"
+            "words": [
+              "але",
+              "гарно",
+              "Він",
+              "співає",
+              "тихо",
+              "."
+            ],
+            "answer": "Він співає гарно, але тихо."
           },
           {
-            "left": "дощ",
-            "right": "rain"
+            "words": [
+              "швидко",
+              "поїзд",
+              "їде",
+              "Цей",
+              "дуже",
+              "."
+            ],
+            "answer": "Цей поїзд їде дуже швидко."
           },
           {
-            "left": "сніг",
-            "right": "snow"
+            "words": [
+              "не",
+              "Я",
+              "знаю",
+              "хто",
+              "це",
+              "."
+            ],
+            "answer": "Я не знаю, хто це."
           },
           {
-            "left": "тепло",
-            "right": "warm"
+            "words": [
+              "де",
+              "Ти",
+              "знаєш",
+              "він",
+              "?"
+            ],
+            "answer": "Ти знаєш, де він?"
           },
           {
-            "left": "холодно",
-            "right": "cold"
+            "words": [
+              "що",
+              "Ми",
+              "думаємо",
+              "це",
+              "добре",
+              "."
+            ],
+            "answer": "Ми думаємо, що це добре."
           },
           {
-            "left": "спекотно",
-            "right": "hot"
+            "words": [
+              "як",
+              "Ви",
+              "знаєте",
+              "це",
+              "робити",
+              "?"
+            ],
+            "answer": "Ви знаєте, як це робити?"
           },
           {
-            "left": "сонячно",
-            "right": "sunny"
+            "words": [
+              "коли",
+              "Я",
+              "люблю",
+              "тепло",
+              "."
+            ],
+            "answer": "Я люблю, коли тепло."
           },
           {
-            "left": "хмарно",
-            "right": "cloudy"
+            "words": [
+              "тому",
+              "що",
+              "Я",
+              "тут",
+              "ти",
+              "тут",
+              "."
+            ],
+            "answer": "Я тут, тому що ти тут."
           },
           {
-            "left": "вітряно",
-            "right": "windy"
+            "words": [
+              "але",
+              "Це",
+              "дешево",
+              "погано",
+              "."
+            ],
+            "answer": "Це дешево, але погано."
           }
-        ],
-        "shuffleRight": true
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -535,67 +523,49 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.103Z",
-      "modifiedAt": "2025-12-06T10:49:20.103Z"
+      "createdAt": "2025-12-08T21:22:09.893Z",
+      "modifiedAt": "2025-12-08T21:22:09.893Z"
     },
     {
-      "id": "act-a1-0-matchup",
-      "type": "match-up",
-      "title": "Seasons and Weather",
-      "description": "Match each season with its typical weather.",
+      "id": "act-a1-0-groupsort",
+      "type": "group-sort",
+      "title": "Frequency Sorter",
+      "description": "Sort by frequency (High to Low/Zero).",
       "content": {
-        "type": "match-up",
-        "pairs": [
+        "type": "group-sort",
+        "groups": [
           {
-            "left": "весна",
-            "right": "тепло, йде дощ"
+            "id": "high-frequency",
+            "name": "High Frequency",
+            "items": [
+              "Завжди (Always)",
+              "Часто (Often)",
+              "Зазвичай (Usually)",
+              "Постійно (Constantly)",
+              "Щодня (Every day)"
+            ]
           },
           {
-            "left": "літо",
-            "right": "спекотно, сонячно"
+            "id": "midlow-frequency",
+            "name": "Mid/Low Frequency",
+            "items": [
+              "Іноді (Sometimes)",
+              "Час від часу (Time from time)",
+              "Рідко (Rarely)",
+              "Нечасто (Not often)"
+            ]
           },
           {
-            "left": "осінь",
-            "right": "прохолодно, хмарно"
-          },
-          {
-            "left": "зима",
-            "right": "холодно, йде сніг"
-          },
-          {
-            "left": "навесні",
-            "right": "в весняний час"
-          },
-          {
-            "left": "влітку",
-            "right": "в літній час"
-          },
-          {
-            "left": "восени",
-            "right": "в осінній час"
-          },
-          {
-            "left": "взимку",
-            "right": "в зимовий час"
-          },
-          {
-            "left": "грім",
-            "right": "thunder"
-          },
-          {
-            "left": "блискавка",
-            "right": "lightning"
-          },
-          {
-            "left": "туман",
-            "right": "fog"
-          },
-          {
-            "left": "прогноз",
-            "right": "forecast"
+            "id": "zero-frequency",
+            "name": "Zero Frequency",
+            "items": [
+              "Ніколи (Never)",
+              "Ніколи в житті (Never in life)",
+              "Жодного разу (Not a single time)"
+            ]
           }
         ],
-        "shuffleRight": true
+        "shuffleItems": true
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -604,148 +574,124 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.103Z",
-      "modifiedAt": "2025-12-06T10:49:20.103Z"
+      "createdAt": "2025-12-08T21:22:09.893Z",
+      "modifiedAt": "2025-12-08T21:22:09.893Z"
     },
     {
       "id": "act-a1-0-quiz",
       "type": "quiz",
-      "title": "Weather Knowledge",
-      "description": "Test your understanding of Ukrainian weather expressions.",
+      "title": "Adverb Concept",
+      "description": "Logic Check.",
       "content": {
         "type": "quiz",
         "questions": [
           {
-            "question": "How do you say \"It's raining\" in Ukrainian?",
+            "question": "Which answers \"What kind?\" (Yaky)?",
             "options": [
-              "Дощ йде",
-              "Йде дощ",
-              "Дощ падає",
-              "Є дощ"
-            ],
-            "correctIndex": 1,
-            "explanation": "\"Йде дощ\" — rain \"goes.\""
-          },
-          {
-            "question": "Why don't weather expressions need a subject?",
-            "options": [
-              "Ukrainian has no subjects",
-              "They are impersonal constructions",
-              "The subject is hidden",
-              "It's optional"
-            ],
-            "correctIndex": 1,
-            "explanation": "Impersonal constructions apply universally."
-          },
-          {
-            "question": "\"Взимку\" means:",
-            "options": [
-              "In spring",
-              "In summer",
-              "In autumn",
-              "In winter"
-            ],
-            "correctIndex": 3,
-            "explanation": "Взимку = in winter."
-          },
-          {
-            "question": "What verb means \"shines\" (for the sun)?",
-            "options": [
-              "йде",
-              "світить",
-              "дме",
-              "падає"
-            ],
-            "correctIndex": 1,
-            "explanation": "Сонце світить = The sun shines."
-          },
-          {
-            "question": "\"Дме вітер\" means:",
-            "options": [
-              "The wind blows",
-              "The wind goes",
-              "Wind is falling",
-              "Wind shines"
+              "Adjective (Harnyi)",
+              "Adverb (Harno)"
             ],
             "correctIndex": 0,
-            "explanation": "\"Дме\" = blows."
+            "explanation": ""
           },
           {
-            "question": "How do you ask \"What's the weather like?\"",
+            "question": "Which answers \"How?\" (Yak)?",
             "options": [
-              "Яка сьогодні погода?",
-              "Що погода?",
-              "Де погода?",
-              "Коли погода?"
-            ],
-            "correctIndex": 0,
-            "explanation": "\"Яка\" (what kind of) is used for weather."
-          },
-          {
-            "question": "\"Прохолодно\" means:",
-            "options": [
-              "warm",
-              "hot",
-              "cool",
-              "freezing"
-            ],
-            "correctIndex": 2,
-            "explanation": "Прохолодно = cool (not quite cold)."
-          },
-          {
-            "question": "What season comes after весна?",
-            "options": [
-              "літо",
-              "осінь",
-              "зима",
-              "весна"
-            ],
-            "correctIndex": 0,
-            "explanation": "Spring → Summer."
-          },
-          {
-            "question": "\"Блискавка\" means:",
-            "options": [
-              "rain",
-              "thunder",
-              "lightning",
-              "cloud"
-            ],
-            "correctIndex": 2,
-            "explanation": "Блискавка = lightning."
-          },
-          {
-            "question": "\"-5°C\" in Ukrainian is:",
-            "options": [
-              "Мінус п'ять градусів",
-              "Плюс п'ять градусів",
-              "Негативний п'ять",
-              "Холодно п'ять"
-            ],
-            "correctIndex": 0,
-            "explanation": "\"Мінус\" for negative temperatures."
-          },
-          {
-            "question": "\"Восени\" means:",
-            "options": [
-              "In spring",
-              "In summer",
-              "In autumn",
-              "In winter"
-            ],
-            "correctIndex": 2,
-            "explanation": "Восени = in autumn."
-          },
-          {
-            "question": "How do you say \"Yesterday it was cold\"?",
-            "options": [
-              "Вчора холодно",
-              "Вчора було холодно",
-              "Вчора є холодно",
-              "Вчора буде холодно"
+              "Adjective",
+              "Adverb"
             ],
             "correctIndex": 1,
-            "explanation": "Past tense: було холодно."
+            "explanation": ""
+          },
+          {
+            "question": "\"Meni sumno\" (To me is sad). Case?",
+            "options": [
+              "Dative (Meni)",
+              "Nominative (Ya)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Ya sumnyi\" (I am sad). Case?",
+            "options": [
+              "Dative",
+              "Nominative"
+            ],
+            "correctIndex": 1,
+            "explanation": ""
+          },
+          {
+            "question": "Where is \"Always\" usually placed?",
+            "options": [
+              "Before the verb (\"Ya zavzhdy snidayu\").",
+              "After the verb."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Tak sobi\" means...",
+            "options": [
+              "So-so.",
+              "Very good."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Duzhe\" means...",
+            "options": [
+              "Very.",
+              "Little."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Trokhy\" means...",
+            "options": [
+              "A little.",
+              "Very."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Can you say \"Menі harno\"?",
+            "options": [
+              "Yes (I feel good).",
+              "No."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Schvydko\" opposite is...",
+            "options": [
+              "Povilno.",
+              "Harno."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Dobre\" opposite is...",
+            "options": [
+              "Pohano.",
+              "Duzhe."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Tyt\" (Here) opposite is...",
+            "options": [
+              "Tam (There).",
+              "Misto."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
           }
         ],
         "shuffleQuestions": true,
@@ -759,76 +705,155 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.103Z",
-      "modifiedAt": "2025-12-06T10:49:20.103Z"
+      "createdAt": "2025-12-08T21:22:09.893Z",
+      "modifiedAt": "2025-12-08T21:22:09.893Z"
     },
     {
-      "id": "act-a1-0-truefalse",
-      "type": "true-false",
-      "title": "Weather Facts",
-      "description": "Decide if each statement is true (Правда) or false (Міф).",
+      "id": "act-a1-0-anagram",
+      "type": "anagram",
+      "title": "Adverb Scramble",
+      "description": "Scramble words.",
       "content": {
-        "type": "true-false",
-        "statements": [
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
           {
-            "statement": "\"Холодно\" is a complete sentence in Ukrainian.",
-            "isTrue": true,
-            "explanation": "Correct! Impersonal constructions need no subject."
+            "letters": [
+              "в",
+              "ж",
+              "з",
+              "д",
+              "и",
+              "а"
+            ],
+            "answer": "завжди",
+            "translation": "Always"
           },
           {
-            "statement": "\"Йде сніг\" literally means \"Snow is falling.\"",
-            "isTrue": false,
-            "explanation": "Incorrect! It literally means \"Snow goes.\""
+            "letters": [
+              "ч",
+              "т",
+              "с",
+              "а",
+              "о"
+            ],
+            "answer": "часто",
+            "translation": "Often"
           },
           {
-            "statement": "\"Влітку\" means \"in summer.\"",
-            "isTrue": true,
-            "explanation": "Correct! Special adverb for \"in summer.\""
+            "letters": [
+              "ш",
+              "в",
+              "д",
+              "и",
+              "к",
+              "о"
+            ],
+            "answer": "швидко",
+            "translation": "Fast"
           },
           {
-            "statement": "You need to say \"воно тепло\" for \"it's warm.\"",
-            "isTrue": false,
-            "explanation": "Incorrect! Just \"тепло\" is enough — no subject needed."
+            "letters": [
+              "п",
+              "в",
+              "і",
+              "л",
+              "ь",
+              "н",
+              "о"
+            ],
+            "answer": "повільно",
+            "translation": "Slowly"
           },
           {
-            "statement": "\"Сонце світить\" means \"The sun shines.\"",
-            "isTrue": true,
-            "explanation": "Correct! Світить = shines."
+            "letters": [
+              "г",
+              "р",
+              "н",
+              "о",
+              "а"
+            ],
+            "answer": "гарно",
+            "translation": "Well/Nicely"
           },
           {
-            "statement": "Ukrainian distinguishes спекотно (hot) from тепло (warm).",
-            "isTrue": true,
-            "explanation": "Correct! Different degrees of warmth."
+            "letters": [
+              "п",
+              "о",
+              "н",
+              "о",
+              "г",
+              "а"
+            ],
+            "answer": "погано",
+            "translation": "Badly"
           },
           {
-            "statement": "\"Весна\" and \"навесні\" mean the same thing.",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Весна\" = spring (noun), \"навесні\" = in spring (adverb)."
+            "letters": [
+              "д",
+              "ж",
+              "у",
+              "е"
+            ],
+            "answer": "дуже",
+            "translation": "Very"
           },
           {
-            "statement": "\"Грім\" means thunder.",
-            "isTrue": true,
-            "explanation": "Correct! Гримить грім = thunder rumbles."
+            "letters": [
+              "т",
+              "р",
+              "х",
+              "о",
+              "и"
+            ],
+            "answer": "трохи",
+            "translation": "A little"
           },
           {
-            "statement": "\"Дме вітер\" means the wind is falling.",
-            "isTrue": false,
-            "explanation": "Incorrect! It means the wind blows. \"Дути\" = to blow."
+            "letters": [
+              "ц",
+              "к",
+              "в",
+              "о",
+              "і",
+              "а"
+            ],
+            "answer": "цікаво",
+            "translation": "Interesting-ly"
           },
           {
-            "statement": "\"Прогноз погоди\" means weather forecast.",
-            "isTrue": true,
-            "explanation": "Correct! Прогноз = forecast."
+            "letters": [
+              "с",
+              "м",
+              "н",
+              "о",
+              "у"
+            ],
+            "answer": "сумно",
+            "translation": "Sad-ly"
           },
           {
-            "statement": "Temperature below zero uses \"мінус.\"",
-            "isTrue": true,
-            "explanation": "Correct! Мінус п'ять градусів = -5°C."
+            "letters": [
+              "н",
+              "к",
+              "л",
+              "о",
+              "и",
+              "і"
+            ],
+            "answer": "ніколи",
+            "translation": "Never"
           },
           {
-            "statement": "All seasons use the same adverb pattern.",
-            "isTrue": false,
-            "explanation": "Incorrect! Each has a unique form: навесні, влітку, восени, взимку."
+            "letters": [
+              "т",
+              "о",
+              "с",
+              "а",
+              "ч"
+            ],
+            "answer": "часто",
+            "translation": "Often"
           }
         ]
       },
@@ -839,59 +864,130 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.103Z",
-      "modifiedAt": "2025-12-06T10:49:20.103Z"
+      "createdAt": "2025-12-08T21:22:09.893Z",
+      "modifiedAt": "2025-12-08T21:22:09.893Z"
     },
     {
-      "id": "act-a1-0-groupsort",
-      "type": "group-sort",
-      "title": "Weather Categories",
-      "description": "Sort these words into the correct category.",
+      "id": "act-a1-0-unjumble",
+      "type": "unjumble",
+      "title": "Sentence Building (Adverbs)",
+      "description": "Build sentences.",
       "content": {
-        "type": "group-sort",
-        "groups": [
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
           {
-            "id": "temperature",
-            "name": "Temperature",
-            "items": [
-              "тепло",
-              "холодно",
-              "спекотно",
-              "прохолодно",
-              "морозно"
-            ]
+            "words": [
+              "читаю",
+              "швидко",
+              "Я",
+              "."
+            ],
+            "answer": "Я швидко читаю."
           },
           {
-            "id": "precipitation",
-            "name": "Precipitation",
-            "items": [
-              "дощ",
-              "сніг",
-              "град",
-              "злива"
-            ]
+            "words": [
+              "готує",
+              "Вона",
+              "смачно",
+              "."
+            ],
+            "answer": "Вона смачно готує."
           },
           {
-            "id": "sky-conditions",
-            "name": "Sky Conditions",
-            "items": [
-              "сонячно",
-              "хмарно",
-              "туманно"
-            ]
+            "words": [
+              "додому",
+              "Ми",
+              "йдемо",
+              "повільно",
+              "."
+            ],
+            "answer": "Ми повільно йдемо додому."
           },
           {
-            "id": "seasons",
-            "name": "Seasons",
-            "items": [
-              "весна",
-              "літо",
-              "осінь",
-              "зима"
-            ]
+            "words": [
+              "цікаво",
+              "Це",
+              "дуже",
+              "."
+            ],
+            "answer": "Це дуже цікаво."
+          },
+          {
+            "words": [
+              "тут",
+              "Дорого",
+              "."
+            ],
+            "answer": "Тут дорого."
+          },
+          {
+            "words": [
+              "не",
+              "Я",
+              "сплю",
+              "ніколи",
+              "."
+            ],
+            "answer": "Я ніколи не сплю."
+          },
+          {
+            "words": [
+              "часто",
+              "Ти",
+              "тут",
+              "?"
+            ],
+            "answer": "Ти часто тут?"
+          },
+          {
+            "words": [
+              "добре",
+              "Все",
+              "буде",
+              "."
+            ],
+            "answer": "Все буде добре.",
+            "translation": "Everything will be well - famous phrase"
+          },
+          {
+            "words": [
+              "погано",
+              "Я",
+              "чую",
+              "."
+            ],
+            "answer": "Я погано чую.",
+            "translation": "hear"
+          },
+          {
+            "words": [
+              "виглядаєш",
+              "Ти",
+              "чудово",
+              "!"
+            ],
+            "answer": "Ти чудово виглядаєш!"
+          },
+          {
+            "words": [
+              "важко",
+              "Мені",
+              "."
+            ],
+            "answer": "Мені важко."
+          },
+          {
+            "words": [
+              "їдеш",
+              "Ти",
+              "швидко",
+              "занадто",
+              "."
+            ],
+            "answer": "Ти їдеш занадто швидко."
           }
-        ],
-        "shuffleItems": true
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -900,8 +996,152 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.103Z",
-      "modifiedAt": "2025-12-06T10:49:20.103Z"
+      "createdAt": "2025-12-08T21:22:09.893Z",
+      "modifiedAt": "2025-12-08T21:22:09.893Z"
+    },
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "My Life (Adverbs)",
+      "description": "Answer about yourself (Truth or Lie).",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Я готую ___ (how?).",
+            "answer": "смачно / погано",
+            "hints": [
+              "how?"
+            ]
+          },
+          {
+            "prompt": "Я бігаю ___ (how?).",
+            "answer": "швидко / повільно",
+            "hints": [
+              "how?"
+            ]
+          },
+          {
+            "prompt": "Я сплю ___ (how?).",
+            "answer": "багато / мало",
+            "hints": [
+              "how?"
+            ]
+          },
+          {
+            "prompt": "Українська мова — це ___ (how/adj?).",
+            "answer": "цікаво / складно",
+            "hints": [
+              "how/adj?"
+            ]
+          },
+          {
+            "prompt": "Я живу ___ (where?).",
+            "answer": "тут / там",
+            "hints": [
+              "where?"
+            ]
+          },
+          {
+            "prompt": "Я встаю ___ (when?).",
+            "answer": "рано / пізно",
+            "hints": [
+              "when?"
+            ]
+          },
+          {
+            "prompt": "Я читаю ___ (how?).",
+            "answer": "багато / швидко",
+            "hints": [
+              "how?"
+            ]
+          },
+          {
+            "prompt": "Мені ___ (state).",
+            "answer": "весело / сумно / нудно",
+            "hints": [
+              "state"
+            ]
+          },
+          {
+            "prompt": "Це ___ (price).",
+            "answer": "дорого / дешево",
+            "hints": [
+              "price"
+            ]
+          },
+          {
+            "prompt": "Я ___ (frequency) п'ю каву.",
+            "answer": "завжди / часто / ніколи",
+            "hints": [
+              "frequency"
+            ]
+          },
+          {
+            "prompt": "Я ___ (frequency) запізнююсь.",
+            "answer": "ніколи / іноді",
+            "hints": [
+              "frequency"
+            ]
+          },
+          {
+            "prompt": "Мені ___ (hot/cold).",
+            "answer": "холодно / жарко",
+            "hints": [
+              "hot/cold"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.893Z",
+      "modifiedAt": "2025-12-08T21:22:09.893Z"
+    },
+    {
+      "id": "act-a1-0-truefalse",
+      "type": "true-false",
+      "title": "Adverb Facts",
+      "description": "Check your knowledge.",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "I can say \"I live well\" (Я живу добре).",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "I can say \"It is cold\" (Холодно).",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "I can say \"I never smoke\" (Я ніколи не курю).",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "I know \"Normalno\" is the answer to everything.",
+            "isTrue": false,
+            "explanation": ""
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.893Z",
+      "modifiedAt": "2025-12-08T21:22:09.893Z"
     }
   ],
   "vocabulary": {
@@ -911,253 +1151,255 @@
     "wordCount": 25,
     "newWordCount": 25,
     "reviewWordCount": 0,
-    "transliterationMode": "none",
+    "transliterationMode": "full",
     "words": [
       {
-        "id": "v-pohoda-0-0",
-        "uk": "погода",
-        "en": "weather",
+        "id": "v-shvydko-0-0",
+        "uk": "швидко",
+        "en": "fast/quickly",
         "pos": "noun",
-        "ipa": "pɔˈɦɔdɐ",
-        "gender": "f",
+        "ipa": "/ˈʃvɪdkɔ/",
+        "note": "[🔊](audio_shvydko)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-klimat-0-1",
-        "uk": "клімат",
-        "en": "climate",
+        "id": "v-povilьno-0-1",
+        "uk": "повільно",
+        "en": "slowly",
         "pos": "noun",
-        "ipa": "ˈklimɐt",
-        "gender": "m",
+        "ipa": "/pɔˈvilʲnɔ/",
+        "note": "[🔊](audio_povilno)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-temperatura-0-2",
-        "uk": "температура",
-        "en": "temperature",
+        "id": "v-dobre-0-2",
+        "uk": "добре",
+        "en": "well/good",
         "pos": "noun",
-        "ipa": "tɛmpɛrɐˈturɐ",
-        "gender": "f",
+        "ipa": "/ˈdɔbrɛ/",
+        "note": "[🔊](audio_dobre)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-hradus-0-3",
-        "uk": "градус",
-        "en": "degree",
+        "id": "v-pohano-0-3",
+        "uk": "погано",
+        "en": "badly",
         "pos": "noun",
-        "ipa": "ˈɦrɑdus",
-        "gender": "m",
+        "ipa": "/pɔˈɦɑnɔ/",
+        "note": "[🔊](audio_pohano)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-teplo-0-4",
-        "uk": "тепло",
-        "en": "warm",
-        "pos": "pred",
-        "ipa": "ˈtɛplɔ",
-        "note": "Impersonal",
+        "id": "v-harno-0-4",
+        "uk": "гарно",
+        "en": "nicely/beautifully",
+        "pos": "noun",
+        "ipa": "/ˈɦɑrnɔ/",
+        "note": "[🔊](audio_harno)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-kholodno-0-5",
+        "id": "v-doroho-0-5",
+        "uk": "дорого",
+        "en": "expensively",
+        "pos": "noun",
+        "ipa": "/ˈdɔrɔɦɔ/",
+        "note": "[🔊](audio_doroho)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-deshevo-0-6",
+        "uk": "дешево",
+        "en": "cheaply",
+        "pos": "noun",
+        "ipa": "/ˈdɛʃɛvɔ/",
+        "note": "[🔊](audio_deshevo)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-smachno-0-7",
+        "uk": "смачно",
+        "en": "tasty (adv)",
+        "pos": "noun",
+        "ipa": "/ˈsmɑtʃnɔ/",
+        "note": "[🔊](audio_smachno)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-tsikavo-0-8",
+        "uk": "цікаво",
+        "en": "interestingly",
+        "pos": "noun",
+        "ipa": "/t͡s⁽ʲ⁾iˈkɑvɔ/",
+        "note": "[🔊](audio_tsikavo)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-nudno-0-9",
+        "uk": "нудно",
+        "en": "boringly",
+        "pos": "noun",
+        "ipa": "/ˈnudnɔ/",
+        "note": "[🔊](audio_nudno)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vazhko-0-10",
+        "uk": "важко",
+        "en": "hard/difficultly",
+        "pos": "noun",
+        "ipa": "/ˈvɑʒkɔ/",
+        "note": "[🔊](audio_vazhko)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-lehko-0-11",
+        "uk": "легко",
+        "en": "easily",
+        "pos": "noun",
+        "ipa": "/ˈlɛxkɔ/",
+        "note": "[🔊](audio_lehko)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-kholodno-0-12",
         "uk": "холодно",
-        "en": "cold",
-        "pos": "pred",
-        "ipa": "ˈxɔlɔdnɔ",
-        "note": "Impersonal",
+        "en": "cold (state)",
+        "pos": "noun",
+        "ipa": "/ˈxɔlɔdnɔ/",
+        "note": "[🔊](audio_kholodno)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-spekotno-0-6",
+        "id": "v-haryache-0-13",
+        "uk": "гаряче",
+        "en": "hot (state)",
+        "pos": "irregular ending",
+        "ipa": "/ɦɑˈrʲɑtʃɛ/",
+        "note": "[🔊](audio_haryache)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-spekotno-0-14",
         "uk": "спекотно",
-        "en": "hot",
-        "pos": "pred",
-        "ipa": "spɛˈkɔtnɔ",
-        "note": "Impersonal",
+        "en": "sweltering",
+        "pos": "weather",
+        "ipa": "/spɛˈkɔtnɔ/",
+        "note": "[🔊](audio_spekotno)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-prokholodno-0-7",
-        "uk": "прохолодно",
-        "en": "cool",
-        "pos": "pred",
-        "ipa": "prɔˈxɔlɔdnɔ",
-        "note": "Impersonal",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-sonyachno-0-8",
-        "uk": "сонячно",
-        "en": "sunny",
-        "pos": "pred",
-        "ipa": "ˈsɔnʲɐt͡ʃnɔ",
-        "note": "Impersonal",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-khmarno-0-9",
-        "uk": "хмарно",
-        "en": "cloudy",
-        "pos": "pred",
-        "ipa": "ˈxmɑrnɔ",
-        "note": "Impersonal",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-vitryano-0-10",
-        "uk": "вітряно",
-        "en": "windy",
-        "pos": "pred",
-        "ipa": "ˈwitrʲɐnɔ",
-        "note": "Impersonal",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-sontse-0-11",
-        "uk": "сонце",
-        "en": "sun",
+        "id": "v-zavzhdy-0-15",
+        "uk": "завжди",
+        "en": "always",
         "pos": "noun",
-        "ipa": "ˈsɔnt͡sɛ",
-        "gender": "n",
+        "ipa": "/zɑvˈʒdɪ/",
+        "note": "[🔊](audio_zavzhdy)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-khmara-0-12",
-        "uk": "хмара",
-        "en": "cloud",
+        "id": "v-chasto-0-16",
+        "uk": "часто",
+        "en": "often",
         "pos": "noun",
-        "ipa": "ˈxmɑrɐ",
-        "gender": "f",
+        "ipa": "/ˈtʃɑstɔ/",
+        "note": "[🔊](audio_chasto)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-viter-0-13",
-        "uk": "вітер",
-        "en": "wind",
+        "id": "v-inodi-0-17",
+        "uk": "іноді",
+        "en": "sometimes",
         "pos": "noun",
-        "ipa": "ˈwitɛr",
-        "gender": "m",
+        "ipa": "/ˈinɔd⁽ʲ⁾i/",
+        "note": "[🔊](audio_inodi)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-doshch-0-14",
-        "uk": "дощ",
-        "en": "rain",
+        "id": "v-ridko-0-18",
+        "uk": "рідко",
+        "en": "rarely",
         "pos": "noun",
-        "ipa": "dɔʃt͡ʃ",
-        "gender": "m",
+        "ipa": "/ˈridkɔ/",
+        "note": "[🔊](audio_ridko)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-snih-0-15",
-        "uk": "сніг",
-        "en": "snow",
+        "id": "v-nikoly-0-19",
+        "uk": "ніколи",
+        "en": "never",
         "pos": "noun",
-        "ipa": "sniɦ",
-        "gender": "m",
+        "ipa": "/n⁽ʲ⁾iˈkɔlɪ/",
+        "note": "[🔊](audio_nikoly)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-tuman-0-16",
-        "uk": "туман",
-        "en": "fog",
+        "id": "v-zazvychay-0-20",
+        "uk": "зазвичай",
+        "en": "usually",
         "pos": "noun",
-        "ipa": "tuˈmɑn",
-        "gender": "m",
+        "ipa": "/zɑˈzvɪtʃɑj/",
+        "note": "[🔊](audio_zazvychaj)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-hrim-0-17",
-        "uk": "грім",
-        "en": "thunder",
+        "id": "v-chudovo-0-21",
+        "uk": "чудово",
+        "en": "wonderfully",
         "pos": "noun",
-        "ipa": "ɦrim",
-        "gender": "m",
+        "ipa": "/tʃuˈdɔvɔ/",
+        "note": "[🔊](audio_chudovo)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-blyskavka-0-18",
-        "uk": "блискавка",
-        "en": "lightning",
+        "id": "v-zhakhlyvo-0-22",
+        "uk": "жахливо",
+        "en": "terribly",
         "pos": "noun",
-        "ipa": "ˈblɪskɑwkɐ",
-        "gender": "f",
+        "ipa": "/ʒɑxˈlɪvɔ/",
+        "note": "[🔊](audio_zhakhlyvo)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-yde-doshch-0-19",
-        "uk": "йде дощ",
-        "en": "it's raining",
-        "pos": "phrase",
-        "ipa": "jdɛ dɔʃt͡ʃ",
-        "note": "Literally: rain goes",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-yde-snih-0-20",
-        "uk": "йде сніг",
-        "en": "it's snowing",
-        "pos": "phrase",
-        "ipa": "jdɛ sniɦ",
-        "note": "Literally: snow goes",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-svitytь-sontse-0-21",
-        "uk": "світить сонце",
-        "en": "the sun shines",
-        "pos": "phrase",
-        "ipa": "ˈswitɪtʲ ˈsɔnt͡sɛ",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-dme-viter-0-22",
-        "uk": "дме вітер",
-        "en": "the wind blows",
-        "pos": "phrase",
-        "ipa": "dmɛ ˈwitɛr",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-prohnoz-0-23",
-        "uk": "прогноз",
-        "en": "forecast",
+        "id": "v-normalьno-0-23",
+        "uk": "нормально",
+        "en": "okay/normally",
         "pos": "noun",
-        "ipa": "prɔɦˈnɔz",
-        "gender": "m",
+        "ipa": "/nɔrˈmɑlʲnɔ/",
+        "note": "[🔊](audio_normalno)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-sezon-0-24",
-        "uk": "сезон",
-        "en": "season",
+        "id": "v-vilьno-0-24",
+        "uk": "вільно",
+        "en": "freely/fluently",
         "pos": "noun",
-        "ipa": "sɛˈzɔn",
-        "gender": "m",
+        "ipa": "/ˈvilʲnɔ/",
+        "note": "[🔊](audio_vilno)",
         "isNew": true,
         "firstModule": 0
       }

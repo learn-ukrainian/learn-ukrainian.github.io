@@ -13,517 +13,95 @@
     "moduleNumber": 26,
     "moduleType": "grammar",
     "immersionLevel": 0.3,
-    "title": "Describing Things — Adjectives",
-    "subtitle": "Прикметники — Making Your Ukrainian Colorful",
-    "description": "Use adjectives that agree with nouns in gender and number",
+    "title": "Modal Verbs",
+    "subtitle": "Except No Substitutes",
+    "description": "Learner can use \"I want\" (Khotity)",
     "objectives": [
-      "Use adjectives that agree with nouns in gender and number",
-      "Describe people, places, and things",
-      "Recognize hard and soft adjective patterns",
-      "Build noun-adjective phrases"
+      "Learner can use \"I want\" (Khotity)",
+      "Learner can use \"I can\" (Mohty)",
+      "Learner can use \"I must\" (Musyty / Treba)",
+      "Learner can construct \"Modal + Infinitive\" sentences"
     ],
-    "grammarFocus": [
-      "Adjective agreement (gender, number)",
-      "Hard stem adjectives (-ий/-а/-е/-і)",
-      "Soft stem adjectives (-ій/-я/-є/-і)"
-    ],
+    "grammarFocus": [],
     "tags": [
-      "adjectives",
-      "agreement",
-      "description",
-      "grammar"
+      "grammar",
+      "modals",
+      "wanting",
+      "necessity",
+      "possibility"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
+    "totalDuration": 60,
+    "transliterationMode": "full",
     "sections": [
       {
-        "id": "section-intro",
+        "id": "section-intro-0",
         "name": "Вступ",
         "nameEn": "Introduction",
         "type": "intro",
-        "content": "## warm-up\n\n### Colors, Sizes, and Qualities\n\n\"A big house.\" \"A beautiful city.\" \"An old book.\" — Adjectives bring language to life! In Ukrainian, adjectives change their endings to match the nouns they describe.\n\n> 💡 **Did You Know?**\n>\n> Unlike English where \"big\" stays \"big\" regardless of the noun, Ukrainian adjectives change: великий будинок (big house-m), велика книга (big book-f), велике місто (big city-n). The adjective agrees with the noun in gender and number!\n\n## presentation\n\n### Adjective Agreement: The Basics\n\nEvery Ukrainian adjective must agree with its noun in:\n- **Gender**: masculine, feminine, or neuter\n- **Number**: singular or plural\n\n| Gender | Ending | Example |\n|--------|--------|---------|\n| Masculine | -ий/-ій | новий телефон |\n| Feminine | -а/-я | нова книга |\n| Neuter | -е/-є | нове місто |\n| Plural | -і | нові друзі |\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** You need to memorize separate adjectives for each gender.\n> **Fact:** Just learn the masculine form and change the ending! новий → нова → нове → нові. The stem stays the same!\n\n### Hard Stem Adjectives (-ий)\n\nMost adjectives have hard stems. The masculine form ends in **-ий**:\n\n| Gender | Ending | Example with \"новий\" |\n|--------|--------|---------------------|\n| M | -ий | новий друг (new friend) |\n| F | -а | нова подруга (new girlfriend) |\n| N | -е | нове слово (new word) |\n| Pl | -і | нові слова (new words) |\n\n**Common hard stem adjectives:**\n\n| Masculine | English | F | N | Pl |\n|-----------|---------|---|---|-----|\n| великий | big | велика | велике | великі |\n| малий | small | мала | мале | малі |\n| старий | old | стара | старе | старі |\n| молодий | young | молода | молоде | молоді |\n| гарний | beautiful | гарна | гарне | гарні |\n| добрий | good/kind | добра | добре | добрі |\n| поганий | bad | погана | погане | погані |\n\n> 🎬 **Pop Culture Moment: Harry Potter**\n>\n> \"Це великий замок!\" (This is a big castle!) — describing Hogwarts. \"Велика зала\" (The Great Hall) — feminine! The adjective changes to match.\n\n### Soft Stem Adjectives (-ій)\n\nSome adjectives have soft stems. The masculine form ends in **-ій**:\n\n| Gender | Ending | Example with \"синій\" |\n|--------|--------|---------------------|\n| M | -ій | синій колір (blue color) |\n| F | -я | синя сукня (blue dress) |\n| N | -є | синє небо (blue sky) |\n| Pl | -і | сині очі (blue eyes) |\n\n**Common soft stem adjectives:**\n\n| Masculine | English | F | N | Pl |\n|-----------|---------|---|---|-----|\n| синій | blue | синя | синє | сині |\n| останній | last | остання | останнє | останні |\n| домашній | home/domestic | домашня | домашнє | домашні |\n| ранній | early | рання | раннє | ранні |\n| пізній | late | пізня | пізнє | пізні |\n\n> ⚡ **Pro Tip**\n>\n> Most color adjectives are hard stem (червоний, зелений, жовтий), but синій (blue) is soft stem. Notice the soft sign in the ending: син**і**й, син**я**, син**є**!\n\n### More Common Adjectives\n\n**Size and Dimension:**\n\n| Ukrainian | English | F | N | Pl |\n|-----------|---------|---|---|-----|\n| високий | tall/high | висока | високе | високі |\n| низький | short/low | низька | низьке | низькі |\n| довгий | long | довга | довге | довгі |\n| короткий | short | коротка | коротке | короткі |\n| широкий | wide | широка | широке | широкі |\n| вузький | narrow | вузька | вузьке | вузькі |\n\n> 🌍 **Real World**\n>\n> In Ukrainian cities: \"широка вулиця\" (wide street), \"висока будівля\" (tall building), \"довга черга\" (long queue). These phrases help you navigate!\n\n**Quality and Character:**\n\n| Ukrainian | English | F | N | Pl |\n|-----------|---------|---|---|-----|\n| розумний | smart | розумна | розумне | розумні |\n| дурний | stupid | дурна | дурне | дурні |\n| сильний | strong | сильна | сильне | сильні |\n| слабкий | weak | слабка | слабке | слабкі |\n| швидкий | fast | швидка | швидке | швидкі |\n| повільний | slow | повільна | повільне | повільні |\n\n> 🎮 **Gamer's Corner**\n>\n> In The Witcher games: \"сильний монстр\" (strong monster), \"швидка атака\" (fast attack), \"розумний вибір\" (smart choice). Game descriptions are full of adjectives!\n\n**Value and Interest:**\n\n| Ukrainian | English | F | N | Pl |\n|-----------|---------|---|---|-----|\n| дорогий | expensive | дорога | дороге | дорогі |\n| дешевий | cheap | дешева | дешеве | дешеві |\n| цікавий | interesting | цікава | цікаве | цікаві |\n| нудний | boring | нудна | нудне | нудні |\n| важливий | important | важлива | важливе | важливі |\n| простий | simple | проста | просте | прості |\n| складний | complex | складна | складне | складні |\n\n### Word Order\n\nIn Ukrainian, adjectives typically come **before** the noun (like in English):\n\n- великий будинок (a big house)\n- гарна погода (nice weather)\n- цікава книга (an interesting book)\n\nBut in poetic or emphatic speech, they can follow:\n- людина добра (a kind person — sounds poetic)\n\n> 💡 **Did You Know?**\n>\n> You can stack multiple adjectives: \"великий старий будинок\" (a big old house), \"гарна молода жінка\" (a beautiful young woman). Each adjective must agree with the noun!\n\n### Using Adjectives with \"Це\" (This is)\n\nWhen describing with \"це,\" the adjective often stays in nominative:\n\n- Це великий будинок. (This is a big house.)\n- Це нова книга. (This is a new book.)\n- Це гарне місто. (This is a beautiful city.)\n\n### Adjectives as Predicates\n\nAdjectives can also come after the verb \"бути\" (to be):\n\n- Будинок великий. (The house is big.)\n- Книга цікава. (The book is interesting.)\n- Місто красиве. (The city is beautiful.)\n\n> 🎯 **Fun Fact**\n>\n> Ukrainian has special \"short forms\" of adjectives that only exist as predicates: \"рад\" (glad), \"готов\" (ready), \"певен\" (sure). But for A1, focus on the regular forms!\n\n## practice\n\n### Exercise 1: Match the Ending\n\nChoose the correct adjective form:\n\n1. ___ телефон (новий/нова/нове)\n2. ___ книга (великий/велика/велике)\n3. ___ місто (гарний/гарна/гарне)\n4. ___ друзі (добрий/добра/добрі)\n\n### Exercise 2: Describe These\n\nUse adjectives to describe:\n\n1. Ваш дім (your house) → великий/малий/старий/новий\n2. Ваше місто (your city) → гарне/цікаве/велике\n3. Ваш друг (your friend) → добрий/розумний/молодий\n\n### Exercise 3: Transform\n\nChange the adjective to match:\n\n1. новий (телефон → книга) → нова книга\n2. великий (будинок → місто) → велике місто\n3. гарний (хлопець → дівчина) → гарна дівчина\n\n## production\n\n### Task: Describe Your World\n\nWrite 8 sentences describing:\n- Your home (size, age, quality)\n- Your city (size, beauty, interest)\n- A friend or family member (character, appearance)\n- An object you like (quality, value)\n\nUse different adjectives for each!\n\n---\n\n\n---\n\n\n---"
-      },
-      {
-        "id": "section-summary",
-        "name": "Підсумок",
-        "nameEn": "Summary",
-        "type": "summary",
-        "content": "> **Congratulations!**\n>\n> You can now describe people, places, and things in Ukrainian:\n> - **Agreement**: Adjectives match nouns in gender and number\n> - **Hard stem**: -ий/-а/-е/-і (великий, велика, велике, великі)\n> - **Soft stem**: -ій/-я/-є/-і (синій, синя, синє, сині)\n> - **Word order**: Adjective + Noun (гарна погода)\n\n> **Key Adjective Categories:**\n> - Size: великий, малий, високий, низький\n> - Quality: гарний, поганий, добрий\n> - Character: розумний, сильний, швидкий\n> - Value: дорогий, дешевий, цікавий, важливий\n\n> **Coming Next: Module 27 — Colors & Clothing**\n>\n> In the next module, you'll learn:\n> - Colors: червоний, синій, зелений, жовтий...\n> - Clothing: сорочка, штани, сукня, взуття...\n> - Describing outfits: Вона носить червону сукню."
+        "content": "## warm-up\n**The Forbidden Fruit**\n\nI eat pizza. (Statement).\nI **want** to eat pizza. (Desire).\nI **can** eat pizza. (Ability).\nI **must** eat pizza. (Necessity / Addiction).\n\nVerbs are actions.\nModals are attitudes.\nIn this module, we will learn how to add \"Attitude\" to your sentences.\nYou change the world not by doing, but by **wanting** to do.\n\n## presentation\n\n### Section 1: To Want (Khotity)\n\nThis is the engine of life.\nIt is an irregular verb (of course).\n\n- Я **хочу** (Khochu - I want).\n- Ти **хочеш** (Khochesh).\n- Він **хоче** (Khoche).\n- Ми **хочемо** (Khochemo).\n- Ви **хочете** (Khochete).\n- Вони **хочуть** (Khochut').\n\n**Usage:**\n- Я хочу піцу (I want pizza - Accusative).\n- Я хочу спати (I want to sleep - Infinitive).\n\n> 🌍 **Culture Corner: The Polite Want**\n> \"Я хочу\" can sound demanding to a stranger.\n> To be polite, use: \"Я хотів би...\" (I would like...).\n> But for A1, \"Я хочу\" is fine. Just smile.\n\n### Section 2: To Can (Mohty)\n\nThis is the engine of possibility.\nAnother irregular nice guy.\n\n- Я **можу** (Mozhu).\n- Ти **можеш**.\n- Він **може**.\n- Ми **можемо**.\n- Ви **можете**.\n- Вони **можуть**.\n\n**Usage:**\n- Я можу це зробити (I can do this).\n- Я не можу спати (I cannot sleep).\n- Ви можете допомогти? (Can you help?).\n\n### Section 3: Must vs Need (Musyty vs Treba)\n\nUkrainian has a personal \"Must\" and an impersonal \"Need\".\n\n**1. Musyty (Personal Must/Obligation):**\n- Я **мушу**.\n- Ти **мусиш**.\n- Він **мусить**.\n- Ми **мусимо**.\n- Ви **мусите**.\n- Вони **мусять**.\n*This is strong. \"I am obliged\".*\n\n**2. Treba (Impersonal Need):**\n- **Треба** + Infinitive.\n- Мені треба йти. (To me [is] need to go).\n- Йому треба спати. (To him [is] need to sleep).\n*This is the most common way to say \"I need to\".*\n\n> 💡 **Logic Check**\n> - **Я мушу йти** = It is my duty/obligation to go.\n> - **Мені треба йти** = It is necessary for me to go (External circumstance or need).\n> In daily life, **Treba** is friendlier.\n\n### Section 4: The Modal Sandwich\n\nStructure:\n**[Subject] + [Modal Verb] + [Infinitive]**\n\n- Я [Subject] + **хочу** [Modal] + **їсти** [Infinitive].\n- Ти + **можеш** + **говорити**.\n- Ми + **мусимо** + **працювати**.\n\n**Negation:**\nPut **не** before the Modal.\n- Я **не** можу спати.\n- Я **не** хочу йти.\n\n### Section 5: May I? (Mozhna)\n\nTo ask for permission, we rarely use \"Can I...?\" (Mozhu ya?).\nWe use the impersonal **Можна?** (Is it allowed / possible?).\n\n- **Можна?** (May I [enter/do it]?).\n- **Можна** увійти? (May [I] enter?).\n- **Можна** меню? (May [I have] the menu? - lit: Is menu possible?).\n\n**Answers:**\n- **Можна.** (Yes, allowed).\n- **Не можна.** (No, forbidden).\n\n> 🚫 **Deep Dive: Ne Mozhna vs Ne Mozhu**\n> - **Я не можу** = I cannot (No ability/time). \"I can't lift this car.\"\n> - **Не можна** = It is forbidden. \"No smoking.\"\n> If you say \"Я не можу курити\", it sounds like you don't know how to smoke or your lungs are broken.\n> If you say \"Не можна курити\", it means \"Smoking is not allowed here\".\n\n\n### Section 6: Volya (Will + Liberty)\n\nThe noun **Воля** means \"Will\" (Power of will) AND \"Liberty\" (Freedom).\nTo want (**Хотіти**) is to express your Volya.\n- **Вільна людина** = Free person / Person with Will.\n- **Сила волі** = Willpower (Strength of Will).\nUkrainian grammar respects personal agency.\n\n> 🥪 **Culture Corner: The Guest's Obligation**\n> If you are a guest, you lose your \"Want\", and you gain a \"Must\".\n> Host: \"Їжте!\" (Eat!).\n> Guest: \"Я не можу, я повний.\" (I can't, I am full).\n> Host: \"Треба!\" (Need!).\n> Guest: \"Ну добре...\" (Oh well...).\n> The first \"No\" is never accepted. The second \"No\" is polite. The third \"No\" is real (maybe).\n\n### Section 7: Future Wants\n\nHow to say \"I **will** want\"?\nIt is complex (Future Tense of imperfective).\n- Я **буду хотіти**.\n- Я **буду могти** (Rare).\nUsually, we just use the present for near future desires or perfective verbs (Modals 2.0).\nFor A1, stick to Present Tense.\n\"Я хочу піцу\" = I want pizza (Now) or I want pizza (Tomorrow). Context is king.\n\n\n### Section 8: Treba vs Potribno\n\nYou will hear:\n- **Мені треба** (I need).\n- **Мені потрібно** (I need).\nWhat is the difference?\nVery little.\n- **Треба** is more about action/necessity. \"Course correction\". (German *Treiben* - to drive).\n- **Потрібно** is more about requirement/need. (Noun *Potreba* - need).\nFor A1, just use **Треба**. It is short, punchy, and everyone uses it.\n\n> ❓ **Deep Dive: The Existential Treba**\n> \"Так треба.\" (It is needed so / It must be so).\n> This is a common phrase to accept destiny or bureaucracy.\n> \"Why do we have to wait?\"\n> \"Так треба.\"\n> It is the ultimate conversation stopper.\n\n## practice\n\n**Drill 1: Conjugation Check**\n- I want -> Я хочу.\n- You can -> Ти можеш.\n- he must -> Він мусить.\n- We want -> Ми хочемо.\n- They can -> Вони можуть.\n\n**Drill 2: Treba or Musyty?**\n- (I need to sleep) -> Мені треба спати.\n- (I am strictly obliged to work) -> Я мушу працювати.\n- (We need tickets) -> Нам треба квитки.\n\n**Drill 3: Permission**\n- (May I come in?) -> Можна?\n- (No, forbidden) -> Не можна.\n- (Yes, allowed) -> Можна.\n\n## production\n\n\n**Scenario: The Lazy Sunday**\n*   **Mom:** Треба прибирати (clean).\n*   **Son:** Я не хочу прибирати.\n*   **Mom:** Ти мусиш. Це твій дім.\n*   **Son:** Я не можу. Я хворий (sick).\n*   **Mom:** Ти не хворий. Ти лінивий (lazy).\n*   **Son:** Можна я буду прибирати завтра?\n*   **Mom:** Ні. Зараз.\n*   **Son:** А можна я подивлюся (watch) фільм, а потім (then) прибирати?\n*   **Mom:** Ти хочеш торгуватися (bargain)?\n*   **Son:** Я хочу компроміс.\n*   **Mom:** Компроміс — це коли ти прибираєш зараз.\n\n**Scenario: The Club Face Control**\n*   **Guard:** Добрий вечір. Куди ви йдете?\n*   **You:** Я хочу в клуб.\n*   **Guard:** Не можна.\n*   **You:** Чому не можна?\n*   **Guard:** Ви у \"шортах\". (Shorts).\n*   **You:** І що?\n*   **Guard:** Тут дрес-код. Треба штани (pants).\n*   **You:** Я можу купити штани?\n*   **Guard:** Ви можете піти в магазин.\n*   **You:** Добре. Я хочу танцювати. Я мушу знайти штани.\n\n**Scenario: The Restaurant Order**\n*   **Waiter:** Добрий день. Що ви хочете?\n*   **You:** Я хочу борщ.\n*   **Waiter:** Борщу немає. (Genitive of absence!).\n*   **You:** Ох. А що ви можете запропонувати (offer)?\n*   **Waiter:** Я можу запропонувати вареники.\n*   **You:** Добре. Я хочу вареники.\n*   **You:** Можна рахунок? (Can I have the bill?).\n\n> 🧠 **Deep Dive: Wanting Things (Accusative vs Genitive)**\n> usually \"I want + Accusative\".\n> - Я хочу **воду**.\n> But sometimes \"I want + Genitive\" (Some of).\n> - Я хочу **води**. (Some water).\n> For A1, stick to Accusative. It is specific. \"I want THE water\".\n\n---"
       }
     ],
-    "rawMarkdown": "---\ntitle: \"Describing Things — Adjectives\"\nsubtitle: \"Прикметники — Making Your Ukrainian Colorful\"\nphase: A1.3\nduration: 45\ntransliteration: none\ntags: [adjectives, agreement, description, grammar]\nobjectives:\n  - Use adjectives that agree with nouns in gender and number\n  - Describe people, places, and things\n  - Recognize hard and soft adjective patterns\n  - Build noun-adjective phrases\ngrammar:\n  - Adjective agreement (gender, number)\n  - Hard stem adjectives (-ий/-а/-е/-і)\n  - Soft stem adjectives (-ій/-я/-є/-і)\n---\n\n# Lesson Content\n\n## warm-up\n\n### Colors, Sizes, and Qualities\n\n\"A big house.\" \"A beautiful city.\" \"An old book.\" — Adjectives bring language to life! In Ukrainian, adjectives change their endings to match the nouns they describe.\n\n> 💡 **Did You Know?**\n>\n> Unlike English where \"big\" stays \"big\" regardless of the noun, Ukrainian adjectives change: великий будинок (big house-m), велика книга (big book-f), велике місто (big city-n). The adjective agrees with the noun in gender and number!\n\n## presentation\n\n### Adjective Agreement: The Basics\n\nEvery Ukrainian adjective must agree with its noun in:\n- **Gender**: masculine, feminine, or neuter\n- **Number**: singular or plural\n\n| Gender | Ending | Example |\n|--------|--------|---------|\n| Masculine | -ий/-ій | новий телефон |\n| Feminine | -а/-я | нова книга |\n| Neuter | -е/-є | нове місто |\n| Plural | -і | нові друзі |\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** You need to memorize separate adjectives for each gender.\n> **Fact:** Just learn the masculine form and change the ending! новий → нова → нове → нові. The stem stays the same!\n\n### Hard Stem Adjectives (-ий)\n\nMost adjectives have hard stems. The masculine form ends in **-ий**:\n\n| Gender | Ending | Example with \"новий\" |\n|--------|--------|---------------------|\n| M | -ий | новий друг (new friend) |\n| F | -а | нова подруга (new girlfriend) |\n| N | -е | нове слово (new word) |\n| Pl | -і | нові слова (new words) |\n\n**Common hard stem adjectives:**\n\n| Masculine | English | F | N | Pl |\n|-----------|---------|---|---|-----|\n| великий | big | велика | велике | великі |\n| малий | small | мала | мале | малі |\n| старий | old | стара | старе | старі |\n| молодий | young | молода | молоде | молоді |\n| гарний | beautiful | гарна | гарне | гарні |\n| добрий | good/kind | добра | добре | добрі |\n| поганий | bad | погана | погане | погані |\n\n> 🎬 **Pop Culture Moment: Harry Potter**\n>\n> \"Це великий замок!\" (This is a big castle!) — describing Hogwarts. \"Велика зала\" (The Great Hall) — feminine! The adjective changes to match.\n\n### Soft Stem Adjectives (-ій)\n\nSome adjectives have soft stems. The masculine form ends in **-ій**:\n\n| Gender | Ending | Example with \"синій\" |\n|--------|--------|---------------------|\n| M | -ій | синій колір (blue color) |\n| F | -я | синя сукня (blue dress) |\n| N | -є | синє небо (blue sky) |\n| Pl | -і | сині очі (blue eyes) |\n\n**Common soft stem adjectives:**\n\n| Masculine | English | F | N | Pl |\n|-----------|---------|---|---|-----|\n| синій | blue | синя | синє | сині |\n| останній | last | остання | останнє | останні |\n| домашній | home/domestic | домашня | домашнє | домашні |\n| ранній | early | рання | раннє | ранні |\n| пізній | late | пізня | пізнє | пізні |\n\n> ⚡ **Pro Tip**\n>\n> Most color adjectives are hard stem (червоний, зелений, жовтий), but синій (blue) is soft stem. Notice the soft sign in the ending: син**і**й, син**я**, син**є**!\n\n### More Common Adjectives\n\n**Size and Dimension:**\n\n| Ukrainian | English | F | N | Pl |\n|-----------|---------|---|---|-----|\n| високий | tall/high | висока | високе | високі |\n| низький | short/low | низька | низьке | низькі |\n| довгий | long | довга | довге | довгі |\n| короткий | short | коротка | коротке | короткі |\n| широкий | wide | широка | широке | широкі |\n| вузький | narrow | вузька | вузьке | вузькі |\n\n> 🌍 **Real World**\n>\n> In Ukrainian cities: \"широка вулиця\" (wide street), \"висока будівля\" (tall building), \"довга черга\" (long queue). These phrases help you navigate!\n\n**Quality and Character:**\n\n| Ukrainian | English | F | N | Pl |\n|-----------|---------|---|---|-----|\n| розумний | smart | розумна | розумне | розумні |\n| дурний | stupid | дурна | дурне | дурні |\n| сильний | strong | сильна | сильне | сильні |\n| слабкий | weak | слабка | слабке | слабкі |\n| швидкий | fast | швидка | швидке | швидкі |\n| повільний | slow | повільна | повільне | повільні |\n\n> 🎮 **Gamer's Corner**\n>\n> In The Witcher games: \"сильний монстр\" (strong monster), \"швидка атака\" (fast attack), \"розумний вибір\" (smart choice). Game descriptions are full of adjectives!\n\n**Value and Interest:**\n\n| Ukrainian | English | F | N | Pl |\n|-----------|---------|---|---|-----|\n| дорогий | expensive | дорога | дороге | дорогі |\n| дешевий | cheap | дешева | дешеве | дешеві |\n| цікавий | interesting | цікава | цікаве | цікаві |\n| нудний | boring | нудна | нудне | нудні |\n| важливий | important | важлива | важливе | важливі |\n| простий | simple | проста | просте | прості |\n| складний | complex | складна | складне | складні |\n\n### Word Order\n\nIn Ukrainian, adjectives typically come **before** the noun (like in English):\n\n- великий будинок (a big house)\n- гарна погода (nice weather)\n- цікава книга (an interesting book)\n\nBut in poetic or emphatic speech, they can follow:\n- людина добра (a kind person — sounds poetic)\n\n> 💡 **Did You Know?**\n>\n> You can stack multiple adjectives: \"великий старий будинок\" (a big old house), \"гарна молода жінка\" (a beautiful young woman). Each adjective must agree with the noun!\n\n### Using Adjectives with \"Це\" (This is)\n\nWhen describing with \"це,\" the adjective often stays in nominative:\n\n- Це великий будинок. (This is a big house.)\n- Це нова книга. (This is a new book.)\n- Це гарне місто. (This is a beautiful city.)\n\n### Adjectives as Predicates\n\nAdjectives can also come after the verb \"бути\" (to be):\n\n- Будинок великий. (The house is big.)\n- Книга цікава. (The book is interesting.)\n- Місто красиве. (The city is beautiful.)\n\n> 🎯 **Fun Fact**\n>\n> Ukrainian has special \"short forms\" of adjectives that only exist as predicates: \"рад\" (glad), \"готов\" (ready), \"певен\" (sure). But for A1, focus on the regular forms!\n\n## practice\n\n### Exercise 1: Match the Ending\n\nChoose the correct adjective form:\n\n1. ___ телефон (новий/нова/нове)\n2. ___ книга (великий/велика/велике)\n3. ___ місто (гарний/гарна/гарне)\n4. ___ друзі (добрий/добра/добрі)\n\n### Exercise 2: Describe These\n\nUse adjectives to describe:\n\n1. Ваш дім (your house) → великий/малий/старий/новий\n2. Ваше місто (your city) → гарне/цікаве/велике\n3. Ваш друг (your friend) → добрий/розумний/молодий\n\n### Exercise 3: Transform\n\nChange the adjective to match:\n\n1. новий (телефон → книга) → нова книга\n2. великий (будинок → місто) → велике місто\n3. гарний (хлопець → дівчина) → гарна дівчина\n\n## production\n\n### Task: Describe Your World\n\nWrite 8 sentences describing:\n- Your home (size, age, quality)\n- Your city (size, beauty, interest)\n- A friend or family member (character, appearance)\n- An object you like (quality, value)\n\nUse different adjectives for each!\n\n---\n\n# Activities\n\n## fill-in: Adjective Agreement\n\n> Choose the correct adjective form.\n\n1. Це ___ будинок.\n   > [!answer] великий\n   > [!options] великий | велика | велике | великі\n\n2. Це ___ книга.\n   > [!answer] цікава\n   > [!options] цікава | цікавий | цікаве | цікаві\n\n3. Це ___ місто.\n   > [!answer] гарне\n   > [!options] гарне | гарний | гарна | гарні\n\n4. Це ___ друзі.\n   > [!answer] добрі\n   > [!options] добрі | добрий | добра | добре\n\n5. Вона ___ жінка.\n   > [!answer] розумна\n   > [!options] розумна | розумний | розумне | розумні\n\n6. Це ___ слово.\n   > [!answer] нове\n   > [!options] нове | новий | нова | нові\n\n7. Він ___ чоловік.\n   > [!answer] молодий\n   > [!options] молодий | молода | молоде | молоді\n\n8. Це ___ вулиця.\n   > [!answer] широка\n   > [!options] широка | широкий | широке | широкі\n\n9. Книга дуже ___.\n   > [!answer] цікава\n   > [!options] цікава | цікавий | цікаве | цікаві\n\n10. Погода сьогодні ___.\n    > [!answer] гарна\n    > [!options] гарна | гарний | гарне | гарні\n\n11. Це ___ небо.\n    > [!answer] синє\n    > [!options] синє | синій | синя | сині\n\n12. Мої батьки ___.\n    > [!answer] добрі\n    > [!options] добрі | добрий | добра | добре\n\n## fill-in: Opposites\n\n> Choose the opposite adjective.\n\n1. Не великий, а ___.\n   > [!answer] малий\n   > [!options] малий | старий | новий | добрий\n\n2. Не новий, а ___.\n   > [!answer] старий\n   > [!options] старий | молодий | великий | малий\n\n3. Не швидкий, а ___.\n   > [!answer] повільний\n   > [!options] повільний | сильний | високий | довгий\n\n4. Не дорогий, а ___.\n   > [!answer] дешевий\n   > [!options] дешевий | новий | старий | великий\n\n5. Не високий, а ___.\n   > [!answer] низький\n   > [!options] низький | довгий | короткий | широкий\n\n6. Не довгий, а ___.\n   > [!answer] короткий\n   > [!options] короткий | високий | низький | вузький\n\n7. Не цікавий, а ___.\n   > [!answer] нудний\n   > [!options] нудний | простий | складний | важливий\n\n8. Не добрий, а ___.\n   > [!answer] поганий\n   > [!options] поганий | злий | дурний | слабкий\n\n9. Не сильний, а ___.\n   > [!answer] слабкий\n   > [!options] слабкий | повільний | малий | короткий\n\n10. Не простий, а ___.\n    > [!answer] складний\n    > [!options] складний | важливий | цікавий | нудний\n\n11. Не молодий, а ___.\n    > [!answer] старий\n    > [!options] старий | новий | великий | малий\n\n12. Не широкий, а ___.\n    > [!answer] вузький\n    > [!options] вузький | довгий | короткий | низький\n\n## unjumble: Adjective Sentences\n\n> Put the words in the correct order.\n\n1. великий будинок Це\n   > [!answer] Це великий будинок.\n   > (This is a big house.) [3 words]\n\n2. книга цікава Ця\n   > [!answer] Ця книга цікава.\n   > (This book is interesting.) [3 words]\n\n3. гарне місто Київ\n   > [!answer] Київ — гарне місто.\n   > (Kyiv is a beautiful city.) [4 words]\n\n4. Моя подруга розумна\n   > [!answer] Моя подруга розумна.\n   > (My friend is smart. — female) [3 words]\n\n5. старий У мене телефон\n   > [!answer] У мене старий телефон.\n   > (I have an old phone.) [4 words]\n\n6. висока Ця будівля дуже\n   > [!answer] Ця будівля дуже висока.\n   > (This building is very tall.) [4 words]\n\n7. добра людина Він\n   > [!answer] Він добра людина.\n   > (He is a good person.) [3 words]\n\n8. сині очі У неї\n   > [!answer] У неї сині очі.\n   > (She has blue eyes.) [4 words]\n\n9. нова машина Це\n   > [!answer] Це нова машина.\n   > (This is a new car.) [3 words]\n\n10. довга вулиця Ця\n    > [!answer] Ця вулиця довга.\n    > (This street is long.) [3 words]\n\n11. швидкий поїзд Це\n    > [!answer] Це швидкий поїзд.\n    > (This is a fast train.) [3 words]\n\n12. молоді студенти Вони\n    > [!answer] Вони молоді студенти.\n    > (They are young students.) [3 words]\n\n## match-up: Adjective Meanings\n\n> Match each adjective with its meaning.\n\n| Left | Right |\n|------|-------|\n| великий | big |\n| малий | small |\n| новий | new |\n| старий | old |\n| гарний | beautiful |\n| поганий | bad |\n| добрий | good, kind |\n| швидкий | fast |\n| повільний | slow |\n| цікавий | interesting |\n| нудний | boring |\n| важливий | important |\n\n## match-up: Adjective Forms\n\n> Match each masculine adjective with its feminine form.\n\n| Left | Right |\n|------|-------|\n| великий | велика |\n| новий | нова |\n| старий | стара |\n| гарний | гарна |\n| синій | синя |\n| добрий | добра |\n| дорогий | дорога |\n| молодий | молода |\n| розумний | розумна |\n| цікавий | цікава |\n| високий | висока |\n| швидкий | швидка |\n\n## quiz: Adjective Knowledge\n\n> Test your understanding of Ukrainian adjectives.\n\n1. What determines the adjective ending?\n   - [ ] The verb\n   - [x] The noun's gender and number\n   - [ ] The subject\n   - [ ] The sentence position\n   > Adjectives agree with nouns in gender and number.\n\n2. \"Нова книга\" — what gender is \"книга\"?\n   - [ ] Masculine\n   - [x] Feminine\n   - [ ] Neuter\n   - [ ] Plural\n   > \"Нова\" is feminine, matching \"книга.\"\n\n3. What's the neuter form of \"великий\"?\n   - [ ] велика\n   - [x] велике\n   - [ ] великі\n   - [ ] великого\n   > Neuter adjectives end in -е: велике.\n\n4. \"Синій\" is a ___ stem adjective.\n   - [ ] Hard\n   - [x] Soft\n   - [ ] Mixed\n   - [ ] Irregular\n   > Soft stem: -ій/-я/-є/-і.\n\n5. What's the plural of \"новий\"?\n   - [ ] нова\n   - [ ] нове\n   - [x] нові\n   - [ ] новий\n   > All plural adjectives end in -і.\n\n6. \"Це гарне місто\" — why \"гарне\"?\n   - [ ] Because \"це\" is neuter\n   - [x] Because \"місто\" is neuter\n   - [ ] Because it's plural\n   - [ ] It's always \"гарне\"\n   > The adjective matches \"місто\" (neuter).\n\n7. Where do adjectives usually go?\n   - [x] Before the noun\n   - [ ] After the noun\n   - [ ] After the verb\n   - [ ] At the end of the sentence\n   > Like English: великий будинок (big house).\n\n8. \"Вона розумна жінка\" — why \"розумна\"?\n   - [x] Because \"жінка\" is feminine\n   - [ ] Because \"вона\" is feminine\n   - [ ] Because it's plural\n   - [ ] Random choice\n   > Adjective agrees with \"жінка.\"\n\n9. What's the opposite of \"великий\"?\n   - [x] малий\n   - [ ] новий\n   - [ ] старий\n   - [ ] добрий\n   > Великий (big) ↔ малий (small).\n\n10. \"Добрі друзі\" — why \"добрі\"?\n    - [ ] Because \"друзі\" is masculine\n    - [ ] Because \"друзі\" is feminine\n    - [x] Because \"друзі\" is plural\n    - [ ] It's always \"добрі\"\n    > Plural adjectives always end in -і.\n\n11. Which is a soft stem adjective?\n    - [ ] великий\n    - [ ] новий\n    - [x] синій\n    - [ ] старий\n    > \"Синій\" ends in -ій (soft).\n\n12. \"Цікавий фільм\" → feminine would be:\n    - [x] цікава книга\n    - [ ] цікавий книга\n    - [ ] цікаве книга\n    - [ ] цікаві книга\n    > Feminine: -ий → -а.\n\n## true-false: Adjective Facts\n\n> Decide if each statement is true (Правда) or false (Міф).\n\n- [x] Adjectives must agree with nouns in gender.\n  > Correct! Великий (m), велика (f), велике (n).\n\n- [ ] All adjectives end in -ий in masculine.\n  > Incorrect! Soft stem adjectives end in -ій (синій).\n\n- [x] Plural adjectives always end in -і.\n  > Correct! Нові, великі, гарні — all end in -і.\n\n- [ ] \"Синій\" is a hard stem adjective.\n  > Incorrect! \"Синій\" is soft stem (-ій/-я/-є/-і).\n\n- [x] Adjectives usually come before nouns.\n  > Correct! Like English: гарний день (nice day).\n\n- [ ] The adjective ending depends on the verb.\n  > Incorrect! It depends on the noun's gender and number.\n\n- [x] \"Добрий\" and \"добра\" are the same adjective.\n  > Correct! Just different genders of the same word.\n\n- [x] Neuter adjectives end in -е or -є.\n  > Correct! Велике (hard), синє (soft).\n\n- [ ] \"Великий\" and \"малий\" mean the same thing.\n  > Incorrect! Великий = big, малий = small (opposites).\n\n- [x] You can use multiple adjectives with one noun.\n  > Correct! \"Великий старий будинок\" (big old house).\n\n- [ ] \"Нове\" is masculine.\n  > Incorrect! \"Нове\" is neuter. Masculine is \"новий.\"\n\n- [x] \"Висока будівля\" means \"tall building.\"\n  > Correct! \"Висока\" (f) matches \"будівля\" (f).\n\n## group-sort: Adjective Types\n\n> Sort these adjectives into the correct category.\n\n### Hard Stem (-ий)\n- великий\n- малий\n- новий\n- старий\n- гарний\n- добрий\n\n### Soft Stem (-ій)\n- синій\n- останній\n- домашній\n- ранній\n- пізній\n\n### Size Adjectives\n- великий\n- малий\n- високий\n- низький\n- довгий\n- короткий\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| великий | wɛˈlɪkɪj | big, large | adj | m | велика (f), велике (n) |\n| малий | mɐˈlɪj | small, little | adj | m | мала, мале |\n| високий | wɪˈsɔkɪj | tall, high | adj | m | висока, високе |\n| низький | ˈnɪzʲkɪj | short, low | adj | m | низька, низьке |\n| довгий | ˈdɔwɦɪj | long | adj | m | довга, довге |\n| короткий | kɔˈrɔtkɪj | short | adj | m | коротка, коротке |\n| широкий | ʃɪˈrɔkɪj | wide | adj | m | широка, широке |\n| вузький | ˈwuzʲkɪj | narrow | adj | m | вузька, вузьке |\n| новий | ˈnɔwɪj | new | adj | m | нова, нове |\n| старий | stɐˈrɪj | old | adj | m | стара, старе |\n| молодий | mɔˈlɔdɪj | young | adj | m | молода, молоде |\n| гарний | ˈɦɑrnɪj | beautiful, nice | adj | m | гарна, гарне |\n| красивий | krɐˈsɪwɪj | beautiful | adj | m | красива, красиве |\n| поганий | pɔˈɦɑnɪj | bad | adj | m | погана, погане |\n| добрий | ˈdɔbrɪj | good, kind | adj | m | добра, добре |\n| злий | zlɪj | evil, angry | adj | m | зла, зле |\n| розумний | rɔˈzumnɪj | smart, clever | adj | m | розумна, розумне |\n| дурний | ˈdurnɪj | stupid | adj | m | дурна, дурне |\n| сильний | ˈsɪlʲnɪj | strong | adj | m | сильна, сильне |\n| слабкий | ˈslɑbkɪj | weak | adj | m | слабка, слабке |\n| швидкий | ˈʃwɪdkɪj | fast, quick | adj | m | швидка, швидке |\n| повільний | pɔˈwilʲnɪj | slow | adj | m | повільна, повільне |\n| легкий | ˈlɛɦkɪj | easy, light | adj | m | легка, легке |\n| важкий | wɐʒˈkɪj | heavy, difficult | adj | m | важка, важке |\n| дорогий | dɔrɔˈɦɪj | expensive, dear | adj | m | дорога, дороге |\n| дешевий | dɛˈʃɛwɪj | cheap | adj | m | дешева, дешеве |\n| цікавий | t͡siˈkɑwɪj | interesting | adj | m | цікава, цікаве |\n| нудний | ˈnudnɪj | boring | adj | m | нудна, нудне |\n| простий | prɔsˈtɪj | simple | adj | m | проста, просте |\n| складний | sklɐdˈnɪj | complex | adj | m | складна, складне |\n| важливий | wɐʒˈlɪwɪj | important | adj | m | важлива, важливе |\n| головний | ɦɔˈlɔwnɪj | main | adj | m | головна, головне |\n| різний | ˈriznɪj | different | adj | m | різна, різне |\n| однаковий | ɔdnɐˈkɔwɪj | same, identical | adj | m | однакова, однакове |\n| особливий | ɔsɔˈblɪwɪj | special | adj | m | особлива, особливе |\n\n---\n\n# Summary\n\n> **Congratulations!**\n>\n> You can now describe people, places, and things in Ukrainian:\n> - **Agreement**: Adjectives match nouns in gender and number\n> - **Hard stem**: -ий/-а/-е/-і (великий, велика, велике, великі)\n> - **Soft stem**: -ій/-я/-є/-і (синій, синя, синє, сині)\n> - **Word order**: Adjective + Noun (гарна погода)\n\n> **Key Adjective Categories:**\n> - Size: великий, малий, високий, низький\n> - Quality: гарний, поганий, добрий\n> - Character: розумний, сильний, швидкий\n> - Value: дорогий, дешевий, цікавий, важливий\n\n> **Coming Next: Module 27 — Colors & Clothing**\n>\n> In the next module, you'll learn:\n> - Colors: червоний, синій, зелений, жовтий...\n> - Clothing: сорочка, штани, сукня, взуття...\n> - Describing outfits: Вона носить червону сукню.\n",
-    "createdAt": "2025-12-06T10:49:20.102Z",
-    "modifiedAt": "2025-12-06T10:49:20.102Z",
+    "rawMarkdown": "---\ntitle: Modal Verbs\nsubtitle: Except No Substitutes\nphase: A1.3\nduration: 60\ntransliteration: full\ntags: [grammar, modals, wanting, necessity, possibility]\nobjectives:\n  - Learner can use \"I want\" (Khotity)\n  - Learner can use \"I can\" (Mohty)\n  - Learner can use \"I must\" (Musyty / Treba)\n  - Learner can construct \"Modal + Infinitive\" sentences\n---\n\n# Lesson Content\n\n## warm-up\n**The Forbidden Fruit**\n\nI eat pizza. (Statement).\nI **want** to eat pizza. (Desire).\nI **can** eat pizza. (Ability).\nI **must** eat pizza. (Necessity / Addiction).\n\nVerbs are actions.\nModals are attitudes.\nIn this module, we will learn how to add \"Attitude\" to your sentences.\nYou change the world not by doing, but by **wanting** to do.\n\n## presentation\n\n### Section 1: To Want (Khotity)\n\nThis is the engine of life.\nIt is an irregular verb (of course).\n\n- Я **хочу** (Khochu - I want).\n- Ти **хочеш** (Khochesh).\n- Він **хоче** (Khoche).\n- Ми **хочемо** (Khochemo).\n- Ви **хочете** (Khochete).\n- Вони **хочуть** (Khochut').\n\n**Usage:**\n- Я хочу піцу (I want pizza - Accusative).\n- Я хочу спати (I want to sleep - Infinitive).\n\n> 🌍 **Culture Corner: The Polite Want**\n> \"Я хочу\" can sound demanding to a stranger.\n> To be polite, use: \"Я хотів би...\" (I would like...).\n> But for A1, \"Я хочу\" is fine. Just smile.\n\n### Section 2: To Can (Mohty)\n\nThis is the engine of possibility.\nAnother irregular nice guy.\n\n- Я **можу** (Mozhu).\n- Ти **можеш**.\n- Він **може**.\n- Ми **можемо**.\n- Ви **можете**.\n- Вони **можуть**.\n\n**Usage:**\n- Я можу це зробити (I can do this).\n- Я не можу спати (I cannot sleep).\n- Ви можете допомогти? (Can you help?).\n\n### Section 3: Must vs Need (Musyty vs Treba)\n\nUkrainian has a personal \"Must\" and an impersonal \"Need\".\n\n**1. Musyty (Personal Must/Obligation):**\n- Я **мушу**.\n- Ти **мусиш**.\n- Він **мусить**.\n- Ми **мусимо**.\n- Ви **мусите**.\n- Вони **мусять**.\n*This is strong. \"I am obliged\".*\n\n**2. Treba (Impersonal Need):**\n- **Треба** + Infinitive.\n- Мені треба йти. (To me [is] need to go).\n- Йому треба спати. (To him [is] need to sleep).\n*This is the most common way to say \"I need to\".*\n\n> 💡 **Logic Check**\n> - **Я мушу йти** = It is my duty/obligation to go.\n> - **Мені треба йти** = It is necessary for me to go (External circumstance or need).\n> In daily life, **Treba** is friendlier.\n\n### Section 4: The Modal Sandwich\n\nStructure:\n**[Subject] + [Modal Verb] + [Infinitive]**\n\n- Я [Subject] + **хочу** [Modal] + **їсти** [Infinitive].\n- Ти + **можеш** + **говорити**.\n- Ми + **мусимо** + **працювати**.\n\n**Negation:**\nPut **не** before the Modal.\n- Я **не** можу спати.\n- Я **не** хочу йти.\n\n### Section 5: May I? (Mozhna)\n\nTo ask for permission, we rarely use \"Can I...?\" (Mozhu ya?).\nWe use the impersonal **Можна?** (Is it allowed / possible?).\n\n- **Можна?** (May I [enter/do it]?).\n- **Можна** увійти? (May [I] enter?).\n- **Можна** меню? (May [I have] the menu? - lit: Is menu possible?).\n\n**Answers:**\n- **Можна.** (Yes, allowed).\n- **Не можна.** (No, forbidden).\n\n> 🚫 **Deep Dive: Ne Mozhna vs Ne Mozhu**\n> - **Я не можу** = I cannot (No ability/time). \"I can't lift this car.\"\n> - **Не можна** = It is forbidden. \"No smoking.\"\n> If you say \"Я не можу курити\", it sounds like you don't know how to smoke or your lungs are broken.\n> If you say \"Не можна курити\", it means \"Smoking is not allowed here\".\n\n\n### Section 6: Volya (Will + Liberty)\n\nThe noun **Воля** means \"Will\" (Power of will) AND \"Liberty\" (Freedom).\nTo want (**Хотіти**) is to express your Volya.\n- **Вільна людина** = Free person / Person with Will.\n- **Сила волі** = Willpower (Strength of Will).\nUkrainian grammar respects personal agency.\n\n> 🥪 **Culture Corner: The Guest's Obligation**\n> If you are a guest, you lose your \"Want\", and you gain a \"Must\".\n> Host: \"Їжте!\" (Eat!).\n> Guest: \"Я не можу, я повний.\" (I can't, I am full).\n> Host: \"Треба!\" (Need!).\n> Guest: \"Ну добре...\" (Oh well...).\n> The first \"No\" is never accepted. The second \"No\" is polite. The third \"No\" is real (maybe).\n\n### Section 7: Future Wants\n\nHow to say \"I **will** want\"?\nIt is complex (Future Tense of imperfective).\n- Я **буду хотіти**.\n- Я **буду могти** (Rare).\nUsually, we just use the present for near future desires or perfective verbs (Modals 2.0).\nFor A1, stick to Present Tense.\n\"Я хочу піцу\" = I want pizza (Now) or I want pizza (Tomorrow). Context is king.\n\n\n### Section 8: Treba vs Potribno\n\nYou will hear:\n- **Мені треба** (I need).\n- **Мені потрібно** (I need).\nWhat is the difference?\nVery little.\n- **Треба** is more about action/necessity. \"Course correction\". (German *Treiben* - to drive).\n- **Потрібно** is more about requirement/need. (Noun *Potreba* - need).\nFor A1, just use **Треба**. It is short, punchy, and everyone uses it.\n\n> ❓ **Deep Dive: The Existential Treba**\n> \"Так треба.\" (It is needed so / It must be so).\n> This is a common phrase to accept destiny or bureaucracy.\n> \"Why do we have to wait?\"\n> \"Так треба.\"\n> It is the ultimate conversation stopper.\n\n## practice\n\n**Drill 1: Conjugation Check**\n- I want -> Я хочу.\n- You can -> Ти можеш.\n- he must -> Він мусить.\n- We want -> Ми хочемо.\n- They can -> Вони можуть.\n\n**Drill 2: Treba or Musyty?**\n- (I need to sleep) -> Мені треба спати.\n- (I am strictly obliged to work) -> Я мушу працювати.\n- (We need tickets) -> Нам треба квитки.\n\n**Drill 3: Permission**\n- (May I come in?) -> Можна?\n- (No, forbidden) -> Не можна.\n- (Yes, allowed) -> Можна.\n\n## production\n\n\n**Scenario: The Lazy Sunday**\n*   **Mom:** Треба прибирати (clean).\n*   **Son:** Я не хочу прибирати.\n*   **Mom:** Ти мусиш. Це твій дім.\n*   **Son:** Я не можу. Я хворий (sick).\n*   **Mom:** Ти не хворий. Ти лінивий (lazy).\n*   **Son:** Можна я буду прибирати завтра?\n*   **Mom:** Ні. Зараз.\n*   **Son:** А можна я подивлюся (watch) фільм, а потім (then) прибирати?\n*   **Mom:** Ти хочеш торгуватися (bargain)?\n*   **Son:** Я хочу компроміс.\n*   **Mom:** Компроміс — це коли ти прибираєш зараз.\n\n**Scenario: The Club Face Control**\n*   **Guard:** Добрий вечір. Куди ви йдете?\n*   **You:** Я хочу в клуб.\n*   **Guard:** Не можна.\n*   **You:** Чому не можна?\n*   **Guard:** Ви у \"шортах\". (Shorts).\n*   **You:** І що?\n*   **Guard:** Тут дрес-код. Треба штани (pants).\n*   **You:** Я можу купити штани?\n*   **Guard:** Ви можете піти в магазин.\n*   **You:** Добре. Я хочу танцювати. Я мушу знайти штани.\n\n**Scenario: The Restaurant Order**\n*   **Waiter:** Добрий день. Що ви хочете?\n*   **You:** Я хочу борщ.\n*   **Waiter:** Борщу немає. (Genitive of absence!).\n*   **You:** Ох. А що ви можете запропонувати (offer)?\n*   **Waiter:** Я можу запропонувати вареники.\n*   **You:** Добре. Я хочу вареники.\n*   **You:** Можна рахунок? (Can I have the bill?).\n\n> 🧠 **Deep Dive: Wanting Things (Accusative vs Genitive)**\n> usually \"I want + Accusative\".\n> - Я хочу **воду**.\n> But sometimes \"I want + Genitive\" (Some of).\n> - Я хочу **води**. (Some water).\n> For A1, stick to Accusative. It is specific. \"I want THE water\".\n\n---\n\n# Activities\n\n## match-up: Modal Meanings\n\n> Match.\n\n| Ukr | Eng |\n|-----|-----|\n| Хочу | I want |\n| Можу | I can |\n| Мушу | I must |\n| Треба | Need to |\n| Можна | Allowed/May |\n| Не можна | Forbidden |\n| Хочеш | You want |\n| Можеш | You can |\n| Мусиш | You must |\n| Хочемо | We want |\n| Можемо | We can |\n| Хочуть | They want |\n\n## fill-in: Modal Conjugation\n\n> Complete the verb.\n\n1. Я ___ (want) піцу.\n   > [!answer] хочу\n\n2. Ти ___ (can) читати.\n   > [!answer] можеш\n\n3. Він ___ (must) йти.\n   > [!answer] мусить\n\n4. Ми ___ (want) спати.\n   > [!answer] хочемо\n\n5. Ви ___ (can) допомогти?\n   > [!answer] можете\n\n6. Вони ___ (want) їсти.\n   > [!answer] хочуть\n\n7. Я не ___ (can) говорити.\n   > [!answer] можу\n\n8. Вона ___ (must) працювати.\n   > [!answer] мусить\n\n9. Ми не ___ (can) чекати.\n   > [!answer] можемо\n\n10. Ти ___ (want) каву?\n    > [!answer] хочеш\n\n11. Вони ___ (can) плавати.\n    > [!answer] можуть\n\n12. Мені ___ (need) квиток.\n    > [!answer] треба\n\n## group-sort: Permission vs Ability\n\n> Is this about Permission (Rules) or Ability (Skills/Self)?\n\n### Permission (Rules)\n- Можна? (May I?)\n- Не можна (Forbidden)\n- Тут можна курити?\n- Можна увійти?\n- Фотографувати не можна\n- Тут можна сидіти?\n\n### Ability (Self)\n- Я можу плавати\n- Я можу читати\n- Ти можеш це зробити?\n- Я не можу спати\n- Ми можемо бігати\n- Вона може співати\n\n## quiz: Logic Check\n\n> Choose the logical modal.\n\n1. I am very tired.\n   - [x] Я хочу спати.\n   - [ ] Я можу спати.\n\n2. I am at a red light.\n   - [x] Я мушу стояти.\n   - [ ] Я хочу стояти.\n\n3. I see a tasty cake.\n   - [x] Я хочу торт.\n   - [ ] Я мушу торт.\n\n4. I broke my leg.\n   - [x] Я не можу йти.\n   - [ ] Не можна йти.\n\n5. This is a museum.\n   - [x] Тут не можна бігати.\n   - [ ] Тут я не можу бігати.\n\n6. I need to go to the toilet.\n   - [x] Мені треба в туалет.\n   - [ ] Я можу в туалет.\n\n7. Can you help me?\n   - [x] Ви можете допомогти?\n   - [ ] Ви хочете допомогти? (Did not ask about desire).\n\n8. May I sit here?\n   - [x] Можна тут сісти?\n   - [ ] Я можу тут сісти? (Physical ability?)\n\n9. I have a meeting at 9:00.\n   - [x] Я мушу бути там.\n   - [ ] Я можу бути там.\n\n10. I hate broccoli.\n    - [x] Я не хочу це.\n    - [ ] Я не можу це.\n\n11. Superman...\n    - [x] може літати.\n    - [ ] хоче літати (maybe, but fame is ability).\n\n12. Fish...\n    - [x] не можуть говорити.\n    - [ ] не хочуть говорити (who knows?).\n\n## anagram: Modal Scramble\n\n> Unscramble.\n\n1. ч у х о\n   > [!answer] хочу\n   > (I want)\n\n2. ж у м о\n   > [!answer] можу\n   > (I can)\n\n3. б а т р е\n   > [!answer] треба\n   > (Need)\n\n4. ш у м у\n   > [!answer] мушу\n   > (I must)\n\n5. н а ж о м\n   > [!answer] можна\n   > (Allowed)\n\n6. ш е ч о х\n   > [!answer] хочеш\n   > (You want)\n\n7. ш е ж о м\n   > [!answer] можеш\n   > (You can)\n\n8. м о м о ж е\n   > [!answer] можемо\n   > (We can)\n\n9. т ь у ч о х\n   > [!answer] хочуть\n   > (They want)\n\n10. т ь у ж о м\n    > [!answer] можуть\n    > (They can)\n\n11. с и ш м у\n    > [!answer] мусиш\n    > (You must)\n\n12. т е ч о х\n    > [!answer] хочете\n    > (He wants - typo in scramble source? Khoche + ? No. He wants is Khoche. You pl want is Khochete. Scramble: Khochete).\n\n## unjumble: Sentence Building\n\n> Build sentences.\n\n1. хочу / пити / Я / .\n   > [!answer] Я хочу пити.\n\n2. не / спати / Я / можу / .\n   > [!answer] Я не можу спати.\n\n3. треба / Мені / йти / .\n   > [!answer] Мені треба йти.\n\n4. ти / Що / хочеш / ?\n   > [!answer] Що ти хочеш?\n\n5. допомогти / Ви / можете / ?\n   > [!answer] Ви можете допомогти?\n\n6. тут / Не / курити / можна / .\n   > [!answer] Тут не можна курити.\n\n7. ми / Коли / їсти / можемо / ?\n   > [!answer] Коли ми можемо їсти?\n\n8. жити / Я / тут / хочу / .\n   > [!answer] Я хочу тут жити.\n\n9. мусите / Ви / це / знати / .\n   > [!answer] Ви мусите це знати.\n\n10. каву / Можна / ?\n    > [!answer] Можна каву?\n\n11. не / Вони / чути / можуть / нас / .\n    > [!answer] Вони не можуть нас чути.\n    > (They cannot hear us).\n\n12. дуже / Я / хочу / спати / .\n    > [!answer] Я дуже хочу спати.\n\n## fill-in: Translation Challenge\n\n> Translate the idea.\n\n1. I can swim.\n   > [!answer] Я можу плавати.\n\n2. I want pizza.\n   > [!answer] Я хочу піцу.\n\n3. I must work.\n   > [!answer] Я мушу працювати.\n\n4. Need to sleep. (Impersonal)\n   > [!answer] Треба спати.\n\n5. May I?\n   > [!answer] Можна?\n\n6. Forbidden.\n   > [!answer] Не можна.\n\n7. We want coffee.\n   > [!answer] Ми хочемо каву.\n\n8. They can dance.\n   > [!answer] Вони можуть танцювати.\n\n9. She wants to go home.\n   > [!answer] Вона хоче йти додому.\n\n10. You (formal) must listen.\n    > [!answer] Ви мусите слухати.\n\n11. I cannot speak.\n    > [!answer] Я не можу говорити.\n\n12. We need a taxi.\n    > [!answer] Нам треба таксі.\n\n## true-false: Modal Facts\n\n> True or False?\n\n1. \"Я хочу\" means \"I can\".\n   - [ ] True\n   - [x] False (I want)\n\n2. \"Можна\" is used for permission.\n   - [x] True\n   - [ ] False\n\n3. \"Треба\" changes ending for \"I/You/He\".\n   - [ ] True\n   - [x] False (It is invariable/impersonal)\n\n4. \"Мусити\" implies strong obligation.\n   - [x] True\n   - [ ] False\n\n5. You say \"Я не можна\".\n   - [ ] True\n   - [x] False (Я не можу OR Не можна without \"I\")\n\n6. \"Я хотів би\" is more polite than \"Я хочу\".\n   - [x] True\n   - [ ] False\n\n7. \"Можеш\" is formal.\n   - [ ] True\n   - [x] False (You informal)\n\n8. \"Хочуть\" is They want.\n   - [x] True\n   - [ ] False\n\n9. Modals are usually followed by Infinitive.\n   - [x] True\n   - [ ] False\n\n10. \"Мені треба\" uses Dative (to me).\n    - [x] True\n    - [ ] False\n\n11. \"Я можу це\" means \"I want this\".\n    - [ ] True\n    - [x] False (I can [do] this)\n\n12. Borsch wants you.\n    - [x] True (Metaphorically)\n    - [ ] False\n\n# Summary\n\n**You have Attitude.**\nYou are no longer a robot engaging in factual actions.\n- You **Want** (Хочу).\n- You **Can** (Можу).\n- You **Must** (Мушу).\n- You **Request** (Можна?).\n\n**Checklist:**\n- [ ] I can conjugate **Хотіти** (To want).\n- [ ] I can conjugate **Могти** (To be able).\n- [ ] I know the difference between **Я не можу** (Ability) and **Не можна** (Permission).\n- [ ] I can politely accept my fate: \"Треба працювати\".\n\n**Next Stop:**\nWe have moved, we have wanted.\nNow we need to describe the world in color.\n**Module 27: Adjectives III - Description**.\nOld, New, Beautiful, Ugly.\nLet's paint.\n\n# Vocabulary\n\n| Word | IPA | English | Note | Audio |\n|------|-----|---------|------|-------|\n| хотіти | /xɔˈt⁽ʲ⁾itɪ/ | to want | | [🔊](audio_khotity) |\n| могти | /mɔhˈtɪ/ | can/be able | | [🔊](audio_mohty) |\n| мусити | /ˈmusɪtɪ/ | must/oblige | | [🔊](audio_musyty) |\n| треба | /ˈtrɛbɑ/ | need/necessary | | [🔊](audio_treba) |\n| можна | /ˈmɔʒnɑ/ | allowed/may | | [🔊](audio_mozhna) |\n| хочу | /ˈxɔtʃu/ | I want | | [🔊](audio_khochu) |\n| хочеш | /ˈxɔtʃɛʃ/ | you want | | [🔊](audio_khochesh) |\n| хоче | /ˈxɔtʃɛ/ | he wants | | [🔊](audio_khoche) |\n| хочемо | /ˈxɔtʃɛmɔ/ | we want | | [🔊](audio_khochemo) |\n| хочуть | /ˈxɔtʃutʲ/ | they want | | [🔊](audio_khochut) |\n| можу | /ˈmɔʒu/ | I can | | [🔊](audio_mozhu) |\n| можеш | /ˈmɔʒɛʃ/ | you can | | [🔊](audio_mozhesh) |\n| може | /ˈmɔʒɛ/ | he can | | [🔊](audio_mozhe) |\n| можемо | /ˈmɔʒɛmɔ/ | we can | | [🔊](audio_mozhemo) |\n| можуть | /ˈmɔʒutʲ/ | they can | | [🔊](audio_mozhut) |\n| мушу | /ˈmuʃu/ | I must | | [🔊](audio_mushu) |\n| бажати | /bɑˈʒɑtɪ/ | to wish | | [🔊](audio_bazhaty) |\n| робити | /rɔˈbɪtɪ/ | to do | | [🔊](audio_robyty) |\n| допомогти | /dɔpɔmɔhˈtɪ/ | to help | | [🔊](audio_dopomohty) |\n| пропонувати | /prɔpɔnuˈvɑtɪ/ | to offer | | [🔊](audio_proponuvaty) |\n| меню | /mɛˈnʲu/ | menu | | [🔊](audio_menyu) |\n| рахунок | /rɑˈxunɔk/ | bill | | [🔊](audio_rakhunok) |\n| лінивий | /l⁽ʲ⁾iˈnɪvɪj/ | lazy | | [🔊](audio_linyvyj) |\n| хворий | /ˈxvɔrɪj/ | sick | | [🔊](audio_khvoryj) |\n| зайнятий | /ˈzɑjnʲɑtɪj/ | busy | | [🔊](audio_zajnyatyj) |\n",
+    "createdAt": "2025-12-08T21:22:09.891Z",
+    "modifiedAt": "2025-12-08T21:22:09.891Z",
     "version": 2
   },
   "activities": [
     {
-      "id": "act-a1-0-fillblank",
-      "type": "fill-blank",
-      "title": "Adjective Agreement",
-      "description": "Choose the correct adjective form.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Це ___ будинок.",
-            "answer": "великий",
-            "options": [
-              "великий",
-              "велика",
-              "велике",
-              "великі"
-            ]
-          },
-          {
-            "prompt": "Це ___ книга.",
-            "answer": "цікава",
-            "options": [
-              "цікава",
-              "цікавий",
-              "цікаве",
-              "цікаві"
-            ]
-          },
-          {
-            "prompt": "Це ___ місто.",
-            "answer": "гарне",
-            "options": [
-              "гарне",
-              "гарний",
-              "гарна",
-              "гарні"
-            ]
-          },
-          {
-            "prompt": "Це ___ друзі.",
-            "answer": "добрі",
-            "options": [
-              "добрі",
-              "добрий",
-              "добра",
-              "добре"
-            ]
-          },
-          {
-            "prompt": "Вона ___ жінка.",
-            "answer": "розумна",
-            "options": [
-              "розумна",
-              "розумний",
-              "розумне",
-              "розумні"
-            ]
-          },
-          {
-            "prompt": "Це ___ слово.",
-            "answer": "нове",
-            "options": [
-              "нове",
-              "новий",
-              "нова",
-              "нові"
-            ]
-          },
-          {
-            "prompt": "Він ___ чоловік.",
-            "answer": "молодий",
-            "options": [
-              "молодий",
-              "молода",
-              "молоде",
-              "молоді"
-            ]
-          },
-          {
-            "prompt": "Це ___ вулиця.",
-            "answer": "широка",
-            "options": [
-              "широка",
-              "широкий",
-              "широке",
-              "широкі"
-            ]
-          },
-          {
-            "prompt": "Книга дуже ___.",
-            "answer": "цікава",
-            "options": [
-              "цікава",
-              "цікавий",
-              "цікаве",
-              "цікаві"
-            ]
-          },
-          {
-            "prompt": "Погода сьогодні ___.",
-            "answer": "гарна",
-            "options": [
-              "гарна",
-              "гарний",
-              "гарне",
-              "гарні"
-            ]
-          },
-          {
-            "prompt": "Це ___ небо.",
-            "answer": "синє",
-            "options": [
-              "синє",
-              "синій",
-              "синя",
-              "сині"
-            ]
-          },
-          {
-            "prompt": "Мої батьки ___.",
-            "answer": "добрі",
-            "options": [
-              "добрі",
-              "добрий",
-              "добра",
-              "добре"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.102Z",
-      "modifiedAt": "2025-12-06T10:49:20.102Z"
-    },
-    {
-      "id": "act-a1-0-fillblank",
-      "type": "fill-blank",
-      "title": "Opposites",
-      "description": "Choose the opposite adjective.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Не великий, а ___.",
-            "answer": "малий",
-            "options": [
-              "малий",
-              "старий",
-              "новий",
-              "добрий"
-            ]
-          },
-          {
-            "prompt": "Не новий, а ___.",
-            "answer": "старий",
-            "options": [
-              "старий",
-              "молодий",
-              "великий",
-              "малий"
-            ]
-          },
-          {
-            "prompt": "Не швидкий, а ___.",
-            "answer": "повільний",
-            "options": [
-              "повільний",
-              "сильний",
-              "високий",
-              "довгий"
-            ]
-          },
-          {
-            "prompt": "Не дорогий, а ___.",
-            "answer": "дешевий",
-            "options": [
-              "дешевий",
-              "новий",
-              "старий",
-              "великий"
-            ]
-          },
-          {
-            "prompt": "Не високий, а ___.",
-            "answer": "низький",
-            "options": [
-              "низький",
-              "довгий",
-              "короткий",
-              "широкий"
-            ]
-          },
-          {
-            "prompt": "Не довгий, а ___.",
-            "answer": "короткий",
-            "options": [
-              "короткий",
-              "високий",
-              "низький",
-              "вузький"
-            ]
-          },
-          {
-            "prompt": "Не цікавий, а ___.",
-            "answer": "нудний",
-            "options": [
-              "нудний",
-              "простий",
-              "складний",
-              "важливий"
-            ]
-          },
-          {
-            "prompt": "Не добрий, а ___.",
-            "answer": "поганий",
-            "options": [
-              "поганий",
-              "злий",
-              "дурний",
-              "слабкий"
-            ]
-          },
-          {
-            "prompt": "Не сильний, а ___.",
-            "answer": "слабкий",
-            "options": [
-              "слабкий",
-              "повільний",
-              "малий",
-              "короткий"
-            ]
-          },
-          {
-            "prompt": "Не простий, а ___.",
-            "answer": "складний",
-            "options": [
-              "складний",
-              "важливий",
-              "цікавий",
-              "нудний"
-            ]
-          },
-          {
-            "prompt": "Не молодий, а ___.",
-            "answer": "старий",
-            "options": [
-              "старий",
-              "новий",
-              "великий",
-              "малий"
-            ]
-          },
-          {
-            "prompt": "Не широкий, а ___.",
-            "answer": "вузький",
-            "options": [
-              "вузький",
-              "довгий",
-              "короткий",
-              "низький"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.102Z",
-      "modifiedAt": "2025-12-06T10:49:20.102Z"
-    },
-    {
-      "id": "act-a1-0-unjumble",
-      "type": "unjumble",
-      "title": "Adjective Sentences",
-      "description": "Put the words in the correct order.",
-      "content": {
-        "type": "unjumble",
-        "isUnjumble": true,
-        "items": [
-          {
-            "words": [
-              "великий",
-              "будинок",
-              "Це"
-            ],
-            "answer": "Це великий будинок.",
-            "translation": "This is a big house."
-          },
-          {
-            "words": [
-              "книга",
-              "цікава",
-              "Ця"
-            ],
-            "answer": "Ця книга цікава.",
-            "translation": "This book is interesting."
-          },
-          {
-            "words": [
-              "гарне",
-              "місто",
-              "Київ"
-            ],
-            "answer": "Київ — гарне місто.",
-            "translation": "Kyiv is a beautiful city."
-          },
-          {
-            "words": [
-              "Моя",
-              "подруга",
-              "розумна"
-            ],
-            "answer": "Моя подруга розумна.",
-            "translation": "My friend is smart. — female"
-          },
-          {
-            "words": [
-              "старий",
-              "У",
-              "мене",
-              "телефон"
-            ],
-            "answer": "У мене старий телефон.",
-            "translation": "I have an old phone."
-          },
-          {
-            "words": [
-              "висока",
-              "Ця",
-              "будівля",
-              "дуже"
-            ],
-            "answer": "Ця будівля дуже висока.",
-            "translation": "This building is very tall."
-          },
-          {
-            "words": [
-              "добра",
-              "людина",
-              "Він"
-            ],
-            "answer": "Він добра людина.",
-            "translation": "He is a good person."
-          },
-          {
-            "words": [
-              "сині",
-              "очі",
-              "У",
-              "неї"
-            ],
-            "answer": "У неї сині очі.",
-            "translation": "She has blue eyes."
-          },
-          {
-            "words": [
-              "нова",
-              "машина",
-              "Це"
-            ],
-            "answer": "Це нова машина.",
-            "translation": "This is a new car."
-          },
-          {
-            "words": [
-              "довга",
-              "вулиця",
-              "Ця"
-            ],
-            "answer": "Ця вулиця довга.",
-            "translation": "This street is long."
-          },
-          {
-            "words": [
-              "швидкий",
-              "поїзд",
-              "Це"
-            ],
-            "answer": "Це швидкий поїзд.",
-            "translation": "This is a fast train."
-          },
-          {
-            "words": [
-              "молоді",
-              "студенти",
-              "Вони"
-            ],
-            "answer": "Вони молоді студенти.",
-            "translation": "They are young students."
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.102Z",
-      "modifiedAt": "2025-12-06T10:49:20.102Z"
-    },
-    {
       "id": "act-a1-0-matchup",
       "type": "match-up",
-      "title": "Adjective Meanings",
-      "description": "Match each adjective with its meaning.",
+      "title": "Modal Meanings",
+      "description": "Match.",
       "content": {
         "type": "match-up",
         "pairs": [
           {
-            "left": "великий",
-            "right": "big"
+            "left": "Хочу",
+            "right": "I want"
           },
           {
-            "left": "малий",
-            "right": "small"
+            "left": "Можу",
+            "right": "I can"
           },
           {
-            "left": "новий",
-            "right": "new"
+            "left": "Мушу",
+            "right": "I must"
           },
           {
-            "left": "старий",
-            "right": "old"
+            "left": "Треба",
+            "right": "Need to"
           },
           {
-            "left": "гарний",
-            "right": "beautiful"
+            "left": "Можна",
+            "right": "Allowed/May"
           },
           {
-            "left": "поганий",
-            "right": "bad"
+            "left": "Не можна",
+            "right": "Forbidden"
           },
           {
-            "left": "добрий",
-            "right": "good, kind"
+            "left": "Хочеш",
+            "right": "You want"
           },
           {
-            "left": "швидкий",
-            "right": "fast"
+            "left": "Можеш",
+            "right": "You can"
           },
           {
-            "left": "повільний",
-            "right": "slow"
+            "left": "Мусиш",
+            "right": "You must"
           },
           {
-            "left": "цікавий",
-            "right": "interesting"
+            "left": "Хочемо",
+            "right": "We want"
           },
           {
-            "left": "нудний",
-            "right": "boring"
+            "left": "Можемо",
+            "right": "We can"
           },
           {
-            "left": "важливий",
-            "right": "important"
+            "left": "Хочуть",
+            "right": "They want"
           }
         ],
         "shuffleRight": true
@@ -535,67 +113,102 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.102Z",
-      "modifiedAt": "2025-12-06T10:49:20.102Z"
+      "createdAt": "2025-12-08T21:22:09.891Z",
+      "modifiedAt": "2025-12-08T21:22:09.891Z"
     },
     {
-      "id": "act-a1-0-matchup",
-      "type": "match-up",
-      "title": "Adjective Forms",
-      "description": "Match each masculine adjective with its feminine form.",
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "Modal Conjugation",
+      "description": "Complete the verb.",
       "content": {
-        "type": "match-up",
-        "pairs": [
+        "type": "fill-blank",
+        "items": [
           {
-            "left": "великий",
-            "right": "велика"
+            "prompt": "Я ___ (want) піцу.",
+            "answer": "хочу",
+            "hints": [
+              "want"
+            ]
           },
           {
-            "left": "новий",
-            "right": "нова"
+            "prompt": "Ти ___ (can) читати.",
+            "answer": "можеш",
+            "hints": [
+              "can"
+            ]
           },
           {
-            "left": "старий",
-            "right": "стара"
+            "prompt": "Він ___ (must) йти.",
+            "answer": "мусить",
+            "hints": [
+              "must"
+            ]
           },
           {
-            "left": "гарний",
-            "right": "гарна"
+            "prompt": "Ми ___ (want) спати.",
+            "answer": "хочемо",
+            "hints": [
+              "want"
+            ]
           },
           {
-            "left": "синій",
-            "right": "синя"
+            "prompt": "Ви ___ (can) допомогти?",
+            "answer": "можете",
+            "hints": [
+              "can"
+            ]
           },
           {
-            "left": "добрий",
-            "right": "добра"
+            "prompt": "Вони ___ (want) їсти.",
+            "answer": "хочуть",
+            "hints": [
+              "want"
+            ]
           },
           {
-            "left": "дорогий",
-            "right": "дорога"
+            "prompt": "Я не ___ (can) говорити.",
+            "answer": "можу",
+            "hints": [
+              "can"
+            ]
           },
           {
-            "left": "молодий",
-            "right": "молода"
+            "prompt": "Вона ___ (must) працювати.",
+            "answer": "мусить",
+            "hints": [
+              "must"
+            ]
           },
           {
-            "left": "розумний",
-            "right": "розумна"
+            "prompt": "Ми не ___ (can) чекати.",
+            "answer": "можемо",
+            "hints": [
+              "can"
+            ]
           },
           {
-            "left": "цікавий",
-            "right": "цікава"
+            "prompt": "Ти ___ (want) каву?",
+            "answer": "хочеш",
+            "hints": [
+              "want"
+            ]
           },
           {
-            "left": "високий",
-            "right": "висока"
+            "prompt": "Вони ___ (can) плавати.",
+            "answer": "можуть",
+            "hints": [
+              "can"
+            ]
           },
           {
-            "left": "швидкий",
-            "right": "швидка"
+            "prompt": "Мені ___ (need) квиток.",
+            "answer": "треба",
+            "hints": [
+              "need"
+            ]
           }
-        ],
-        "shuffleRight": true
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -604,148 +217,171 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.102Z",
-      "modifiedAt": "2025-12-06T10:49:20.102Z"
+      "createdAt": "2025-12-08T21:22:09.891Z",
+      "modifiedAt": "2025-12-08T21:22:09.891Z"
+    },
+    {
+      "id": "act-a1-0-groupsort",
+      "type": "group-sort",
+      "title": "Permission vs Ability",
+      "description": "Is this about Permission (Rules) or Ability (Skills/Self)?",
+      "content": {
+        "type": "group-sort",
+        "groups": [
+          {
+            "id": "permission",
+            "name": "Permission",
+            "items": [
+              "Можна? (May I?)",
+              "Не можна (Forbidden)",
+              "Тут можна курити?",
+              "Можна увійти?",
+              "Фотографувати не можна",
+              "Тут можна сидіти?"
+            ],
+            "nameUk": "Rules"
+          },
+          {
+            "id": "ability",
+            "name": "Ability",
+            "items": [
+              "Я можу плавати",
+              "Я можу читати",
+              "Ти можеш це зробити?",
+              "Я не можу спати",
+              "Ми можемо бігати",
+              "Вона може співати"
+            ],
+            "nameUk": "Self"
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.891Z",
+      "modifiedAt": "2025-12-08T21:22:09.891Z"
     },
     {
       "id": "act-a1-0-quiz",
       "type": "quiz",
-      "title": "Adjective Knowledge",
-      "description": "Test your understanding of Ukrainian adjectives.",
+      "title": "Logic Check",
+      "description": "Choose the logical modal.",
       "content": {
         "type": "quiz",
         "questions": [
           {
-            "question": "What determines the adjective ending?",
+            "question": "I am very tired.",
             "options": [
-              "The verb",
-              "The noun's gender and number",
-              "The subject",
-              "The sentence position"
-            ],
-            "correctIndex": 1,
-            "explanation": "Adjectives agree with nouns in gender and number."
-          },
-          {
-            "question": "\"Нова книга\" — what gender is \"книга\"?",
-            "options": [
-              "Masculine",
-              "Feminine",
-              "Neuter",
-              "Plural"
-            ],
-            "correctIndex": 1,
-            "explanation": "\"Нова\" is feminine, matching \"книга.\""
-          },
-          {
-            "question": "What's the neuter form of \"великий\"?",
-            "options": [
-              "велика",
-              "велике",
-              "великі",
-              "великого"
-            ],
-            "correctIndex": 1,
-            "explanation": "Neuter adjectives end in -е: велике."
-          },
-          {
-            "question": "\"Синій\" is a ___ stem adjective.",
-            "options": [
-              "Hard",
-              "Soft",
-              "Mixed",
-              "Irregular"
-            ],
-            "correctIndex": 1,
-            "explanation": "Soft stem: -ій/-я/-є/-і."
-          },
-          {
-            "question": "What's the plural of \"новий\"?",
-            "options": [
-              "нова",
-              "нове",
-              "нові",
-              "новий"
-            ],
-            "correctIndex": 2,
-            "explanation": "All plural adjectives end in -і."
-          },
-          {
-            "question": "\"Це гарне місто\" — why \"гарне\"?",
-            "options": [
-              "Because \"це\" is neuter",
-              "Because \"місто\" is neuter",
-              "Because it's plural",
-              "It's always \"гарне\""
-            ],
-            "correctIndex": 1,
-            "explanation": "The adjective matches \"місто\" (neuter)."
-          },
-          {
-            "question": "Where do adjectives usually go?",
-            "options": [
-              "Before the noun",
-              "After the noun",
-              "After the verb",
-              "At the end of the sentence"
+              "Я хочу спати.",
+              "Я можу спати."
             ],
             "correctIndex": 0,
-            "explanation": "Like English: великий будинок (big house)."
+            "explanation": ""
           },
           {
-            "question": "\"Вона розумна жінка\" — why \"розумна\"?",
+            "question": "I am at a red light.",
             "options": [
-              "Because \"жінка\" is feminine",
-              "Because \"вона\" is feminine",
-              "Because it's plural",
-              "Random choice"
+              "Я мушу стояти.",
+              "Я хочу стояти."
             ],
             "correctIndex": 0,
-            "explanation": "Adjective agrees with \"жінка.\""
+            "explanation": ""
           },
           {
-            "question": "What's the opposite of \"великий\"?",
+            "question": "I see a tasty cake.",
             "options": [
-              "малий",
-              "новий",
-              "старий",
-              "добрий"
+              "Я хочу торт.",
+              "Я мушу торт."
             ],
             "correctIndex": 0,
-            "explanation": "Великий (big) ↔ малий (small)."
+            "explanation": ""
           },
           {
-            "question": "\"Добрі друзі\" — why \"добрі\"?",
+            "question": "I broke my leg.",
             "options": [
-              "Because \"друзі\" is masculine",
-              "Because \"друзі\" is feminine",
-              "Because \"друзі\" is plural",
-              "It's always \"добрі\""
-            ],
-            "correctIndex": 2,
-            "explanation": "Plural adjectives always end in -і."
-          },
-          {
-            "question": "Which is a soft stem adjective?",
-            "options": [
-              "великий",
-              "новий",
-              "синій",
-              "старий"
-            ],
-            "correctIndex": 2,
-            "explanation": "\"Синій\" ends in -ій (soft)."
-          },
-          {
-            "question": "\"Цікавий фільм\" → feminine would be:",
-            "options": [
-              "цікава книга",
-              "цікавий книга",
-              "цікаве книга",
-              "цікаві книга"
+              "Я не можу йти.",
+              "Не можна йти."
             ],
             "correctIndex": 0,
-            "explanation": "Feminine: -ий → -а."
+            "explanation": ""
+          },
+          {
+            "question": "This is a museum.",
+            "options": [
+              "Тут не можна бігати.",
+              "Тут я не можу бігати."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "I need to go to the toilet.",
+            "options": [
+              "Мені треба в туалет.",
+              "Я можу в туалет."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Can you help me?",
+            "options": [
+              "Ви можете допомогти?",
+              "Ви хочете допомогти? (Did not ask about desire)."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "May I sit here?",
+            "options": [
+              "Можна тут сісти?",
+              "Я можу тут сісти? (Physical ability?)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "I have a meeting at 9:00.",
+            "options": [
+              "Я мушу бути там.",
+              "Я можу бути там."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "I hate broccoli.",
+            "options": [
+              "Я не хочу це.",
+              "Я не можу це."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Superman...",
+            "options": [
+              "може літати.",
+              "хоче літати (maybe, but fame is ability)."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Fish...",
+            "options": [
+              "не можуть говорити.",
+              "не хочуть говорити (who knows?)."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
           }
         ],
         "shuffleQuestions": true,
@@ -759,76 +395,149 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.102Z",
-      "modifiedAt": "2025-12-06T10:49:20.102Z"
+      "createdAt": "2025-12-08T21:22:09.891Z",
+      "modifiedAt": "2025-12-08T21:22:09.891Z"
     },
     {
-      "id": "act-a1-0-truefalse",
-      "type": "true-false",
-      "title": "Adjective Facts",
-      "description": "Decide if each statement is true (Правда) or false (Міф).",
+      "id": "act-a1-0-anagram",
+      "type": "anagram",
+      "title": "Modal Scramble",
+      "description": "Unscramble.",
       "content": {
-        "type": "true-false",
-        "statements": [
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
           {
-            "statement": "Adjectives must agree with nouns in gender.",
-            "isTrue": true,
-            "explanation": "Correct! Великий (m), велика (f), велике (n)."
+            "letters": [
+              "ч",
+              "у",
+              "х",
+              "о"
+            ],
+            "answer": "хочу",
+            "translation": "I want"
           },
           {
-            "statement": "All adjectives end in -ий in masculine.",
-            "isTrue": false,
-            "explanation": "Incorrect! Soft stem adjectives end in -ій (синій)."
+            "letters": [
+              "ж",
+              "у",
+              "м",
+              "о"
+            ],
+            "answer": "можу",
+            "translation": "I can"
           },
           {
-            "statement": "Plural adjectives always end in -і.",
-            "isTrue": true,
-            "explanation": "Correct! Нові, великі, гарні — all end in -і."
+            "letters": [
+              "б",
+              "а",
+              "т",
+              "р",
+              "е"
+            ],
+            "answer": "треба",
+            "translation": "Need"
           },
           {
-            "statement": "\"Синій\" is a hard stem adjective.",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Синій\" is soft stem (-ій/-я/-є/-і)."
+            "letters": [
+              "ш",
+              "у",
+              "м",
+              "у"
+            ],
+            "answer": "мушу",
+            "translation": "I must"
           },
           {
-            "statement": "Adjectives usually come before nouns.",
-            "isTrue": true,
-            "explanation": "Correct! Like English: гарний день (nice day)."
+            "letters": [
+              "н",
+              "а",
+              "ж",
+              "о",
+              "м"
+            ],
+            "answer": "можна",
+            "translation": "Allowed"
           },
           {
-            "statement": "The adjective ending depends on the verb.",
-            "isTrue": false,
-            "explanation": "Incorrect! It depends on the noun's gender and number."
+            "letters": [
+              "ш",
+              "е",
+              "ч",
+              "о",
+              "х"
+            ],
+            "answer": "хочеш",
+            "translation": "You want"
           },
           {
-            "statement": "\"Добрий\" and \"добра\" are the same adjective.",
-            "isTrue": true,
-            "explanation": "Correct! Just different genders of the same word."
+            "letters": [
+              "ш",
+              "е",
+              "ж",
+              "о",
+              "м"
+            ],
+            "answer": "можеш",
+            "translation": "You can"
           },
           {
-            "statement": "Neuter adjectives end in -е or -є.",
-            "isTrue": true,
-            "explanation": "Correct! Велике (hard), синє (soft)."
+            "letters": [
+              "м",
+              "о",
+              "м",
+              "о",
+              "ж",
+              "е"
+            ],
+            "answer": "можемо",
+            "translation": "We can"
           },
           {
-            "statement": "\"Великий\" and \"малий\" mean the same thing.",
-            "isTrue": false,
-            "explanation": "Incorrect! Великий = big, малий = small (opposites)."
+            "letters": [
+              "т",
+              "ь",
+              "у",
+              "ч",
+              "о",
+              "х"
+            ],
+            "answer": "хочуть",
+            "translation": "They want"
           },
           {
-            "statement": "You can use multiple adjectives with one noun.",
-            "isTrue": true,
-            "explanation": "Correct! \"Великий старий будинок\" (big old house)."
+            "letters": [
+              "т",
+              "ь",
+              "у",
+              "ж",
+              "о",
+              "м"
+            ],
+            "answer": "можуть",
+            "translation": "They can"
           },
           {
-            "statement": "\"Нове\" is masculine.",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Нове\" is neuter. Masculine is \"новий.\""
+            "letters": [
+              "с",
+              "и",
+              "ш",
+              "м",
+              "у"
+            ],
+            "answer": "мусиш",
+            "translation": "You must"
           },
           {
-            "statement": "\"Висока будівля\" means \"tall building.\"",
-            "isTrue": true,
-            "explanation": "Correct! \"Висока\" (f) matches \"будівля\" (f)."
+            "letters": [
+              "т",
+              "е",
+              "ч",
+              "о",
+              "х"
+            ],
+            "answer": "хочете",
+            "translation": "He wants - typo in scramble source? Khoche + ? No. He wants is Khoche. You pl want is Khochete. Scramble: Khochete"
           }
         ]
       },
@@ -839,56 +548,135 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.102Z",
-      "modifiedAt": "2025-12-06T10:49:20.102Z"
+      "createdAt": "2025-12-08T21:22:09.891Z",
+      "modifiedAt": "2025-12-08T21:22:09.891Z"
     },
     {
-      "id": "act-a1-0-groupsort",
-      "type": "group-sort",
-      "title": "Adjective Types",
-      "description": "Sort these adjectives into the correct category.",
+      "id": "act-a1-0-unjumble",
+      "type": "unjumble",
+      "title": "Sentence Building",
+      "description": "Build sentences.",
       "content": {
-        "type": "group-sort",
-        "groups": [
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
           {
-            "id": "hard-stem",
-            "name": "Hard Stem",
-            "items": [
-              "великий",
-              "малий",
-              "новий",
-              "старий",
-              "гарний",
-              "добрий"
+            "words": [
+              "хочу",
+              "пити",
+              "Я",
+              "."
             ],
-            "nameUk": "-ий"
+            "answer": "Я хочу пити."
           },
           {
-            "id": "soft-stem",
-            "name": "Soft Stem",
-            "items": [
-              "синій",
-              "останній",
-              "домашній",
-              "ранній",
-              "пізній"
+            "words": [
+              "не",
+              "спати",
+              "Я",
+              "можу",
+              "."
             ],
-            "nameUk": "-ій"
+            "answer": "Я не можу спати."
           },
           {
-            "id": "size-adjectives",
-            "name": "Size Adjectives",
-            "items": [
-              "великий",
-              "малий",
-              "високий",
-              "низький",
-              "довгий",
-              "короткий"
-            ]
+            "words": [
+              "треба",
+              "Мені",
+              "йти",
+              "."
+            ],
+            "answer": "Мені треба йти."
+          },
+          {
+            "words": [
+              "ти",
+              "Що",
+              "хочеш",
+              "?"
+            ],
+            "answer": "Що ти хочеш?"
+          },
+          {
+            "words": [
+              "допомогти",
+              "Ви",
+              "можете",
+              "?"
+            ],
+            "answer": "Ви можете допомогти?"
+          },
+          {
+            "words": [
+              "тут",
+              "Не",
+              "курити",
+              "можна",
+              "."
+            ],
+            "answer": "Тут не можна курити."
+          },
+          {
+            "words": [
+              "ми",
+              "Коли",
+              "їсти",
+              "можемо",
+              "?"
+            ],
+            "answer": "Коли ми можемо їсти?"
+          },
+          {
+            "words": [
+              "жити",
+              "Я",
+              "тут",
+              "хочу",
+              "."
+            ],
+            "answer": "Я хочу тут жити."
+          },
+          {
+            "words": [
+              "мусите",
+              "Ви",
+              "це",
+              "знати",
+              "."
+            ],
+            "answer": "Ви мусите це знати."
+          },
+          {
+            "words": [
+              "каву",
+              "Можна",
+              "?"
+            ],
+            "answer": "Можна каву?"
+          },
+          {
+            "words": [
+              "не",
+              "Вони",
+              "чути",
+              "можуть",
+              "нас",
+              "."
+            ],
+            "answer": "Вони не можуть нас чути.",
+            "translation": "They cannot hear us"
+          },
+          {
+            "words": [
+              "дуже",
+              "Я",
+              "хочу",
+              "спати",
+              "."
+            ],
+            "answer": "Я дуже хочу спати."
           }
-        ],
-        "shuffleItems": true
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -897,401 +685,374 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.102Z",
-      "modifiedAt": "2025-12-06T10:49:20.102Z"
+      "createdAt": "2025-12-08T21:22:09.891Z",
+      "modifiedAt": "2025-12-08T21:22:09.891Z"
+    },
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "Translation Challenge",
+      "description": "Translate the idea.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "I can swim.",
+            "answer": "Я можу плавати."
+          },
+          {
+            "prompt": "I want pizza.",
+            "answer": "Я хочу піцу."
+          },
+          {
+            "prompt": "I must work.",
+            "answer": "Я мушу працювати."
+          },
+          {
+            "prompt": "Need to sleep. (Impersonal)",
+            "answer": "Треба спати."
+          },
+          {
+            "prompt": "May I?",
+            "answer": "Можна?"
+          },
+          {
+            "prompt": "Forbidden.",
+            "answer": "Не можна."
+          },
+          {
+            "prompt": "We want coffee.",
+            "answer": "Ми хочемо каву."
+          },
+          {
+            "prompt": "They can dance.",
+            "answer": "Вони можуть танцювати."
+          },
+          {
+            "prompt": "She wants to go home.",
+            "answer": "Вона хоче йти додому."
+          },
+          {
+            "prompt": "You (formal) must listen.",
+            "answer": "Ви мусите слухати."
+          },
+          {
+            "prompt": "I cannot speak.",
+            "answer": "Я не можу говорити."
+          },
+          {
+            "prompt": "We need a taxi.",
+            "answer": "Нам треба таксі."
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.891Z",
+      "modifiedAt": "2025-12-08T21:22:09.891Z"
+    },
+    {
+      "id": "act-a1-0-truefalse",
+      "type": "true-false",
+      "title": "Modal Facts",
+      "description": "True or False?",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "I can conjugate **Хотіти** (To want).",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "I can conjugate **Могти** (To be able).",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "I know the difference between **Я не можу** (Ability) and **Не можна** (Permission).",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "I can politely accept my fate: \"Треба працювати\".",
+            "isTrue": false,
+            "explanation": ""
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.891Z",
+      "modifiedAt": "2025-12-08T21:22:09.891Z"
     }
   ],
   "vocabulary": {
     "moduleId": "mod-uk-A1-26",
     "level": "A1",
     "phase": "A1.3",
-    "wordCount": 35,
-    "newWordCount": 35,
+    "wordCount": 25,
+    "newWordCount": 25,
     "reviewWordCount": 0,
-    "transliterationMode": "none",
+    "transliterationMode": "full",
     "words": [
       {
-        "id": "v-velykyy-0-0",
-        "uk": "великий",
-        "en": "big, large",
-        "pos": "adj",
-        "ipa": "wɛˈlɪkɪj",
-        "gender": "m",
-        "note": "велика (f), велике (n)",
+        "id": "v-khotity-0-0",
+        "uk": "хотіти",
+        "en": "to want",
+        "pos": "noun",
+        "ipa": "/xɔˈt⁽ʲ⁾itɪ/",
+        "note": "[🔊](audio_khotity)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-malyy-0-1",
-        "uk": "малий",
-        "en": "small, little",
-        "pos": "adj",
-        "ipa": "mɐˈlɪj",
-        "gender": "m",
-        "note": "мала, мале",
+        "id": "v-mohty-0-1",
+        "uk": "могти",
+        "en": "can/be able",
+        "pos": "noun",
+        "ipa": "/mɔhˈtɪ/",
+        "note": "[🔊](audio_mohty)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-vysokyy-0-2",
-        "uk": "високий",
-        "en": "tall, high",
-        "pos": "adj",
-        "ipa": "wɪˈsɔkɪj",
-        "gender": "m",
-        "note": "висока, високе",
+        "id": "v-musyty-0-2",
+        "uk": "мусити",
+        "en": "must/oblige",
+        "pos": "noun",
+        "ipa": "/ˈmusɪtɪ/",
+        "note": "[🔊](audio_musyty)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-nyzьkyy-0-3",
-        "uk": "низький",
-        "en": "short, low",
-        "pos": "adj",
-        "ipa": "ˈnɪzʲkɪj",
-        "gender": "m",
-        "note": "низька, низьке",
+        "id": "v-treba-0-3",
+        "uk": "треба",
+        "en": "need/necessary",
+        "pos": "noun",
+        "ipa": "/ˈtrɛbɑ/",
+        "note": "[🔊](audio_treba)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-dovhyy-0-4",
-        "uk": "довгий",
-        "en": "long",
-        "pos": "adj",
-        "ipa": "ˈdɔwɦɪj",
-        "gender": "m",
-        "note": "довга, довге",
+        "id": "v-mozhna-0-4",
+        "uk": "можна",
+        "en": "allowed/may",
+        "pos": "noun",
+        "ipa": "/ˈmɔʒnɑ/",
+        "note": "[🔊](audio_mozhna)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-korotkyy-0-5",
-        "uk": "короткий",
-        "en": "short",
-        "pos": "adj",
-        "ipa": "kɔˈrɔtkɪj",
-        "gender": "m",
-        "note": "коротка, коротке",
+        "id": "v-khochu-0-5",
+        "uk": "хочу",
+        "en": "I want",
+        "pos": "noun",
+        "ipa": "/ˈxɔtʃu/",
+        "note": "[🔊](audio_khochu)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-shyrokyy-0-6",
-        "uk": "широкий",
-        "en": "wide",
-        "pos": "adj",
-        "ipa": "ʃɪˈrɔkɪj",
-        "gender": "m",
-        "note": "широка, широке",
+        "id": "v-khochesh-0-6",
+        "uk": "хочеш",
+        "en": "you want",
+        "pos": "noun",
+        "ipa": "/ˈxɔtʃɛʃ/",
+        "note": "[🔊](audio_khochesh)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-vuzьkyy-0-7",
-        "uk": "вузький",
-        "en": "narrow",
-        "pos": "adj",
-        "ipa": "ˈwuzʲkɪj",
-        "gender": "m",
-        "note": "вузька, вузьке",
+        "id": "v-khoche-0-7",
+        "uk": "хоче",
+        "en": "he wants",
+        "pos": "noun",
+        "ipa": "/ˈxɔtʃɛ/",
+        "note": "[🔊](audio_khoche)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-novyy-0-8",
-        "uk": "новий",
-        "en": "new",
-        "pos": "adj",
-        "ipa": "ˈnɔwɪj",
-        "gender": "m",
-        "note": "нова, нове",
+        "id": "v-khochemo-0-8",
+        "uk": "хочемо",
+        "en": "we want",
+        "pos": "noun",
+        "ipa": "/ˈxɔtʃɛmɔ/",
+        "note": "[🔊](audio_khochemo)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-staryy-0-9",
-        "uk": "старий",
-        "en": "old",
-        "pos": "adj",
-        "ipa": "stɐˈrɪj",
-        "gender": "m",
-        "note": "стара, старе",
+        "id": "v-khochutь-0-9",
+        "uk": "хочуть",
+        "en": "they want",
+        "pos": "noun",
+        "ipa": "/ˈxɔtʃutʲ/",
+        "note": "[🔊](audio_khochut)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-molodyy-0-10",
-        "uk": "молодий",
-        "en": "young",
-        "pos": "adj",
-        "ipa": "mɔˈlɔdɪj",
-        "gender": "m",
-        "note": "молода, молоде",
+        "id": "v-mozhu-0-10",
+        "uk": "можу",
+        "en": "I can",
+        "pos": "noun",
+        "ipa": "/ˈmɔʒu/",
+        "note": "[🔊](audio_mozhu)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-harnyy-0-11",
-        "uk": "гарний",
-        "en": "beautiful, nice",
-        "pos": "adj",
-        "ipa": "ˈɦɑrnɪj",
-        "gender": "m",
-        "note": "гарна, гарне",
+        "id": "v-mozhesh-0-11",
+        "uk": "можеш",
+        "en": "you can",
+        "pos": "noun",
+        "ipa": "/ˈmɔʒɛʃ/",
+        "note": "[🔊](audio_mozhesh)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-krasyvyy-0-12",
-        "uk": "красивий",
-        "en": "beautiful",
-        "pos": "adj",
-        "ipa": "krɐˈsɪwɪj",
-        "gender": "m",
-        "note": "красива, красиве",
+        "id": "v-mozhe-0-12",
+        "uk": "може",
+        "en": "he can",
+        "pos": "noun",
+        "ipa": "/ˈmɔʒɛ/",
+        "note": "[🔊](audio_mozhe)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-pohanyy-0-13",
-        "uk": "поганий",
-        "en": "bad",
-        "pos": "adj",
-        "ipa": "pɔˈɦɑnɪj",
-        "gender": "m",
-        "note": "погана, погане",
+        "id": "v-mozhemo-0-13",
+        "uk": "можемо",
+        "en": "we can",
+        "pos": "noun",
+        "ipa": "/ˈmɔʒɛmɔ/",
+        "note": "[🔊](audio_mozhemo)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-dobryy-0-14",
-        "uk": "добрий",
-        "en": "good, kind",
-        "pos": "adj",
-        "ipa": "ˈdɔbrɪj",
-        "gender": "m",
-        "note": "добра, добре",
+        "id": "v-mozhutь-0-14",
+        "uk": "можуть",
+        "en": "they can",
+        "pos": "noun",
+        "ipa": "/ˈmɔʒutʲ/",
+        "note": "[🔊](audio_mozhut)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-zlyy-0-15",
-        "uk": "злий",
-        "en": "evil, angry",
-        "pos": "adj",
-        "ipa": "zlɪj",
-        "gender": "m",
-        "note": "зла, зле",
+        "id": "v-mushu-0-15",
+        "uk": "мушу",
+        "en": "I must",
+        "pos": "noun",
+        "ipa": "/ˈmuʃu/",
+        "note": "[🔊](audio_mushu)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-rozumnyy-0-16",
-        "uk": "розумний",
-        "en": "smart, clever",
-        "pos": "adj",
-        "ipa": "rɔˈzumnɪj",
-        "gender": "m",
-        "note": "розумна, розумне",
+        "id": "v-bazhaty-0-16",
+        "uk": "бажати",
+        "en": "to wish",
+        "pos": "noun",
+        "ipa": "/bɑˈʒɑtɪ/",
+        "note": "[🔊](audio_bazhaty)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-durnyy-0-17",
-        "uk": "дурний",
-        "en": "stupid",
-        "pos": "adj",
-        "ipa": "ˈdurnɪj",
-        "gender": "m",
-        "note": "дурна, дурне",
+        "id": "v-robyty-0-17",
+        "uk": "робити",
+        "en": "to do",
+        "pos": "noun",
+        "ipa": "/rɔˈbɪtɪ/",
+        "note": "[🔊](audio_robyty)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-sylьnyy-0-18",
-        "uk": "сильний",
-        "en": "strong",
-        "pos": "adj",
-        "ipa": "ˈsɪlʲnɪj",
-        "gender": "m",
-        "note": "сильна, сильне",
+        "id": "v-dopomohty-0-18",
+        "uk": "допомогти",
+        "en": "to help",
+        "pos": "noun",
+        "ipa": "/dɔpɔmɔhˈtɪ/",
+        "note": "[🔊](audio_dopomohty)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-slabkyy-0-19",
-        "uk": "слабкий",
-        "en": "weak",
-        "pos": "adj",
-        "ipa": "ˈslɑbkɪj",
-        "gender": "m",
-        "note": "слабка, слабке",
+        "id": "v-proponuvaty-0-19",
+        "uk": "пропонувати",
+        "en": "to offer",
+        "pos": "noun",
+        "ipa": "/prɔpɔnuˈvɑtɪ/",
+        "note": "[🔊](audio_proponuvaty)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-shvydkyy-0-20",
-        "uk": "швидкий",
-        "en": "fast, quick",
-        "pos": "adj",
-        "ipa": "ˈʃwɪdkɪj",
-        "gender": "m",
-        "note": "швидка, швидке",
+        "id": "v-menyu-0-20",
+        "uk": "меню",
+        "en": "menu",
+        "pos": "noun",
+        "ipa": "/mɛˈnʲu/",
+        "note": "[🔊](audio_menyu)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-povilьnyy-0-21",
-        "uk": "повільний",
-        "en": "slow",
-        "pos": "adj",
-        "ipa": "pɔˈwilʲnɪj",
-        "gender": "m",
-        "note": "повільна, повільне",
+        "id": "v-rakhunok-0-21",
+        "uk": "рахунок",
+        "en": "bill",
+        "pos": "noun",
+        "ipa": "/rɑˈxunɔk/",
+        "note": "[🔊](audio_rakhunok)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-lehkyy-0-22",
-        "uk": "легкий",
-        "en": "easy, light",
-        "pos": "adj",
-        "ipa": "ˈlɛɦkɪj",
-        "gender": "m",
-        "note": "легка, легке",
+        "id": "v-linyvyy-0-22",
+        "uk": "лінивий",
+        "en": "lazy",
+        "pos": "noun",
+        "ipa": "/l⁽ʲ⁾iˈnɪvɪj/",
+        "note": "[🔊](audio_linyvyj)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-vazhkyy-0-23",
-        "uk": "важкий",
-        "en": "heavy, difficult",
-        "pos": "adj",
-        "ipa": "wɐʒˈkɪj",
-        "gender": "m",
-        "note": "важка, важке",
+        "id": "v-khvoryy-0-23",
+        "uk": "хворий",
+        "en": "sick",
+        "pos": "noun",
+        "ipa": "/ˈxvɔrɪj/",
+        "note": "[🔊](audio_khvoryj)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-dorohyy-0-24",
-        "uk": "дорогий",
-        "en": "expensive, dear",
-        "pos": "adj",
-        "ipa": "dɔrɔˈɦɪj",
-        "gender": "m",
-        "note": "дорога, дороге",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-deshevyy-0-25",
-        "uk": "дешевий",
-        "en": "cheap",
-        "pos": "adj",
-        "ipa": "dɛˈʃɛwɪj",
-        "gender": "m",
-        "note": "дешева, дешеве",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-tsikavyy-0-26",
-        "uk": "цікавий",
-        "en": "interesting",
-        "pos": "adj",
-        "ipa": "t͡siˈkɑwɪj",
-        "gender": "m",
-        "note": "цікава, цікаве",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-nudnyy-0-27",
-        "uk": "нудний",
-        "en": "boring",
-        "pos": "adj",
-        "ipa": "ˈnudnɪj",
-        "gender": "m",
-        "note": "нудна, нудне",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-prostyy-0-28",
-        "uk": "простий",
-        "en": "simple",
-        "pos": "adj",
-        "ipa": "prɔsˈtɪj",
-        "gender": "m",
-        "note": "проста, просте",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-skladnyy-0-29",
-        "uk": "складний",
-        "en": "complex",
-        "pos": "adj",
-        "ipa": "sklɐdˈnɪj",
-        "gender": "m",
-        "note": "складна, складне",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-vazhlyvyy-0-30",
-        "uk": "важливий",
-        "en": "important",
-        "pos": "adj",
-        "ipa": "wɐʒˈlɪwɪj",
-        "gender": "m",
-        "note": "важлива, важливе",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-holovnyy-0-31",
-        "uk": "головний",
-        "en": "main",
-        "pos": "adj",
-        "ipa": "ɦɔˈlɔwnɪj",
-        "gender": "m",
-        "note": "головна, головне",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-riznyy-0-32",
-        "uk": "різний",
-        "en": "different",
-        "pos": "adj",
-        "ipa": "ˈriznɪj",
-        "gender": "m",
-        "note": "різна, різне",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-odnakovyy-0-33",
-        "uk": "однаковий",
-        "en": "same, identical",
-        "pos": "adj",
-        "ipa": "ɔdnɐˈkɔwɪj",
-        "gender": "m",
-        "note": "однакова, однакове",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-osoblyvyy-0-34",
-        "uk": "особливий",
-        "en": "special",
-        "pos": "adj",
-        "ipa": "ɔsɔˈblɪwɪj",
-        "gender": "m",
-        "note": "особлива, особливе",
+        "id": "v-zaynyatyy-0-24",
+        "uk": "зайнятий",
+        "en": "busy",
+        "pos": "noun",
+        "ipa": "/ˈzɑjnʲɑtɪj/",
+        "note": "[🔊](audio_zajnyatyj)",
         "isNew": true,
         "firstModule": 0
       }

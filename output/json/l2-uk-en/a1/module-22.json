@@ -13,539 +13,165 @@
     "moduleNumber": 22,
     "moduleType": "grammar",
     "immersionLevel": 0.3,
-    "title": "Tomorrow: Future Tense",
-    "subtitle": "Talking about what will happen",
-    "description": "Form compound future with буду + infinitive",
+    "title": "Tomorrow - Future Tense",
+    "subtitle": "The Prediction Machine",
+    "description": "Learner can form the future tense of imperfective verbs (Budu + Inf)",
     "objectives": [
-      "Form compound future with буду + infinitive",
-      "Use future time expressions",
-      "Make plans and predictions",
-      "Express intentions"
+      "Learner can form the future tense of imperfective verbs (Budu + Inf)",
+      "Learner can use time markers (tomorrow, next week)",
+      "Learner can predict and plan actions"
     ],
-    "grammarFocus": [
-      "Compound future (буду + infinitive)",
-      "Future time expressions",
-      "Intention verbs"
-    ],
+    "grammarFocus": [],
     "tags": [
       "grammar",
+      "future-tense",
       "verbs",
-      "future-tense"
+      "time"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
+    "totalDuration": 60,
+    "transliterationMode": "full",
     "sections": [
       {
-        "id": "section-intro",
+        "id": "section-intro-0",
         "name": "Вступ",
         "nameEn": "Introduction",
         "type": "intro",
-        "content": "## warm-up\n\n### What Will Tomorrow Bring?\n\nYesterday you learned to talk about the past. Today, we look forward! The future tense lets you make plans, express hopes, and discuss what's coming next.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian has THREE ways to express future! Today we learn the most common one: **compound future** (буду + infinitive). It works for almost any situation and is the safest choice for beginners.\n\n## presentation\n\n### Compound Future: буду + infinitive\n\nThe easiest way to form future tense:\n\n| Subject | \"буду\" form | + Infinitive | Example |\n|---------|-------------|--------------|---------|\n| я | буду | читати | Я буду читати. |\n| ти | будеш | працювати | Ти будеш працювати. |\n| він/вона | буде | говорити | Він буде говорити. |\n| ми | будемо | вивчати | Ми будемо вивчати. |\n| ви | будете | робити | Ви будете робити. |\n| вони | будуть | жити | Вони будуть жити. |\n\n> ⚡ **Pro Tip**\n>\n> This is exactly like English \"will be doing\" — the structure is almost identical! \"I will be reading\" = \"Я буду читати.\"\n\n### Conjugation of \"бути\" (Future)\n\n| Person | Form | Pronunciation |\n|--------|------|---------------|\n| я | буду | /ˈbudu/ |\n| ти | будеш | /ˈbudɛʃ/ |\n| він/вона/воно | буде | /ˈbudɛ/ |\n| ми | будемо | /ˈbudɛmɔ/ |\n| ви | будете | /ˈbudɛtɛ/ |\n| вони | будуть | /ˈbudutʲ/ |\n\n### Examples in Context\n\n| Ukrainian | English |\n|-----------|---------|\n| Я буду працювати завтра. | I will work tomorrow. |\n| Вона буде вивчати українську. | She will study Ukrainian. |\n| Ми будемо їсти о шостій. | We will eat at six. |\n| Вони будуть жити в Києві. | They will live in Kyiv. |\n| Ти будеш дивитися фільм? | Will you watch a movie? |\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Future tense is complicated in Ukrainian.\"\n> **Fact:** Compound future is actually one of the SIMPLEST forms! Just learn 6 forms of \"буду\" and add any infinitive.\n\n### Future Time Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| завтра | tomorrow |\n| післязавтра | day after tomorrow |\n| наступного тижня | next week |\n| наступного місяця | next month |\n| наступного року | next year |\n| скоро | soon |\n| пізніше | later |\n| потім | then, afterward |\n| згодом | later on, eventually |\n\n> 🎬 **Pop Culture Moment: Back to the Future**\n>\n> In Ukrainian, \"Back to the Future\" is \"Назад у майбутнє.\" Marty would say: \"Я буду подорожувати в часі!\" (I will travel through time!)\n\n### Expressing Intentions\n\nBeyond \"буду,\" you can express future plans with:\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| збираюся | I'm going to | Я збираюся читати. |\n| планую | I plan to | Я планую працювати. |\n| хочу | I want to | Я хочу вивчати. |\n| маю намір | I intend to | Я маю намір поїхати. |\n| сподіваюся | I hope to | Сподіваюся побачити. |\n| обіцяю | I promise to | Обіцяю допомогти. |\n\n> 🌍 **Real World**\n>\n> \"Що ти будеш робити завтра?\" (What will you do tomorrow?) — A perfect conversation starter for making plans with Ukrainian friends!\n\n### Questions and Negation\n\n**Questions:** Simply use question intonation or add \"чи\":\n\n| Statement | Question |\n|-----------|----------|\n| Ти будеш працювати. | Ти будеш працювати? |\n| Вона буде їсти. | Чи вона буде їсти? |\n\n**Negation:** Add \"не\" before \"буду\":\n\n| Positive | Negative |\n|----------|----------|\n| Я буду читати. | Я **не** буду читати. |\n| Вона буде працювати. | Вона **не** буде працювати. |\n\n### Common Future Phrases\n\n| Ukrainian | English |\n|-----------|---------|\n| Що ти будеш робити? | What will you do? |\n| Коли ти будеш вдома? | When will you be home? |\n| Все буде добре! | Everything will be fine! |\n| Як буде по-українськи...? | How will it be in Ukrainian...? |\n| Я буду чекати. | I will wait. |\n\n> 💡 **Did You Know?**\n>\n> \"Все буде добре!\" (Everything will be fine!) became a popular phrase of hope and resilience in Ukraine. You'll see it everywhere!\n\n## practice\n\n### Exercise 1: Form the Future\n\nCreate sentences with буду + infinitive:\n\n1. я / читати / книгу\n   > [!answer] Я буду читати книгу.\n\n2. вона / працювати / завтра\n   > [!answer] Вона буде працювати завтра.\n\n3. ми / вивчати / українську\n   > [!answer] Ми будемо вивчати українську.\n\n4. вони / жити / в Києві\n   > [!answer] Вони будуть жити в Києві.\n\n### Exercise 2: Choose the Right Form\n\n1. Я ___ працювати.\n   > [!answer] буду\n\n2. Ти ___ читати?\n   > [!answer] будеш\n\n3. Вони ___ говорити українською.\n   > [!answer] будуть\n\n4. Ми ___ їсти о сьомій.\n   > [!answer] будемо\n\n## production\n\n### Make Your Plans\n\nWhat will you do this week? Share your plans:\n\n- Завтра я буду...\n- Наступного тижня я буду...\n- Скоро я буду...\n- Я планую... / Я збираюся...\n\nTell us 3-4 of your future plans!\n\n---\n\n\n---\n\n\n---"
-      },
-      {
-        "id": "section-summary",
-        "name": "Підсумок",
-        "nameEn": "Summary",
-        "type": "summary",
-        "content": "> **What You Learned Today**\n>\n> - Compound future: буду/будеш/буде/будемо/будете/будуть + infinitive\n> - Future time expressions: завтра, скоро, наступного тижня\n> - Intention verbs: збираюся, планую, хочу\n> - Questions and negation in future tense\n> - Popular phrase: Все буде добре!\n\n> **Coming Next**\n>\n> In Module 23, you'll learn **What Time Is It?**:\n> - Telling time in Ukrainian\n> - Days of the week\n> - Months of the year\n> - Scheduling and appointments"
+        "content": "## warm-up\n**The Fortune Teller**\n\nYou conquered the Past (Drill 21).\nNow we look forward.\nIn English: \"I will read.\"\nIn Ukrainian: \"Я буду читати.\"\nIt is literally \"I will-be to-read.\"\nThis is the easiest tense in the language.\nNo gender changes. No weird endings.\nJust **Budu** + **Infinitive**.\n\n## presentation\n\n### Section 1: The Magic Helper (Buty - To Be)\n\nTo make the future (Imperfective), you conjugate **Бути** (To be) and add the dictionary form of the verb.\n\n| Pronoun | Form | + Infinitive | Example |\n|---------|------|--------------|---------|\n| Я | **Буду** | читати | Я буду читати. |\n| Ти | **Будеш** | читати | Ти будеш читати. |\n| Він/Вона | **Буде** | читати | Він буде читати. |\n| Ми | **Будемо** | читати | Ми будемо читати. |\n| Ви | **Будете** | читати | Ви будете читати. |\n| Вони | **Будуть** | читати | Вони будуть читати. |\n\n> ⚠️ **Only for Process!**\n> \"Я буду читати\" means \"I will be reading\" (Process).\n> It does not mean \"I will finish reading\" (Result).\n> A1 Level = Focus on Process.\n\n### Section 2: Time Markers (When?)\n\n- **Завтра** (Tomorrow).\n- **Післязавтра** (Day after tomorrow).\n- **Скоро** (Soon).\n- **Потім** (Later/Then).\n\n### Section 3: The \"Next\" Time\n\nUse Genitive for \"Next X\" (Nastupnoho).\n- **Наступного тижня** (Next week).\n- **Наступного місяця** (Next month).\n- **Наступного року** (Next year).\n- Exception: **У понеділок** (On Monday - Acc).\n\n### Section 4: The Question \"Will you?\"\n\n- **Ти будеш їсти?** (Will you be eating?)\n- **Ти будеш пити каву?** (Will you drink coffee?)\n- **Ми будемо дивитися фільм.** (We will watch a movie).\n- Answer: **Буду** (I will) or **Не буду** (I won't).\n\n> 🎓 **Deep Dive: The Alternative Future**\n> You might hear \"Читат**иму**\".\n> This is the *Synthetic Future*.\n> - **Читати** + **му** = **Читатиму**. (I will read).\n> - **Читати** + **меш** = **Читатимеш**. (You will read).\n> It is elegant and shorter.\n> But \"Budu + Inf\" is universal. Stick to \"Budu\" for A1.\n\n### Section 5: The \"Will Be\" State\n\nSometimes you just want to say \"It will be good\".\n- **Буде добре.** (It will be good).\n- **Буде весело.** (It will be fun).\n- **Буде цікаво.** (It will be interesting).\n- **Я буду вдома.** (I will be at home).\n\n\n### Section 6: The Weather Forecast (Prognoz Pohody)\nFuture tense is weather tense.\n- **Завтра буде сонце.** (Tomorrow will be sun).\n- **Завтра буде дощ.** (Tomorrow will be rain/rainy).\n- **Буде тепло.** (It will be warm).\n- **Буде холодно.** (It will be cold).\n- **Буде вітер.** (It will be wind).\n\n> 🌦️ **Deep Dive: The Degrees**\n> Ukrainians use Celsius.\n> - **Плюс 20** (Plus 20) = Warm.\n> - **Мінус 5** (Minus 5) = Cold.\n> - **Нуль** (Zero) = Freezing point.\n> \"Завтра буде плюс тридцять!\" (Tropical heat).\n\n### Section 7: The Promise (Obitsianka)\nUsing Future tense implies commitment.\n- **Я буду там.** (I will be there).\n- **Я це зроблю.** (Perfective - I will get it done).\n- A1 Imperfective: **Я буду робити це завтра.** (I will be working on it tomorrow).\n- Polite refusal: **Я не зможу.** (I won't be able - Modal preview). Or simply: **Я не буду.** (I won't).\n\n> 🇺🇦 **Culture Corner: The \"Maybe\" Future**\n> Ukrainians are spontaneous.\n> Plans made weeks in advance often change.\n> \"Давай (Let's) завтра на каву?\" is a common proposal.\n> Reply: \"Подивимось\" (We will see).\n> \"Подивимось\" is the polite way to say \"Probably not, but maybe.\"\n\n\n### Section 8: The Weekend (Vykhidni)\nThe most important plans are for the weekend.\n- **Вихідні** (Weekend - Plural).\n- **У вихідні** (On the weekend).\n- **Що ти будеш робити у вихідні?**\n- **Я буду відпочивати (rest).**\n- **Я буду спати.**\n- **Я буду прибирати (clean).**\n\n> 🇺🇦 **Culture Corner: The Planning Horizon**\n> In the West, calendars are booked months ahead.\n> In Ukraine, spontaneity rules.\n> If you say \"Let's meet in 3 weeks,\" a Ukrainian might laugh.\n> \"Я не знаю, що буде завтра!\" (I don't know what will be tomorrow).\n> Focus on \"Zavtra\" (Tomorrow) and \"Na vykhidni\" (For the weekend).\n> Long-term planning is considered almost bad luck (don't jinx it).\n\n\n> 🗣️ **Deep Dive: The \"Nu, Bu!\"**\n> When ending a phone call perfectly, Ukrainians say:\n> \"Ну, бувай!\" (Well, be!).\n> Shortened to: \"Ну, бу!\" (Well, be!).\n> It is the equivalent of \"Later!\" or \"Ciao!\".\n> Use it only with friends. \"Давай, бу!\"\n\n> 🛠️ **Language Link: The Instrumental Trap**\n> You learned: \"Я буду вдома\" (Locative).\n> But if you say WHAT you will be (profession/role), you need **Instrumental Case**.\n> - **Я буду президентом.** (I will be [a] president - Instr).\n> - **Він буде лікарем.** (He will be [a] doctor - Instr).\n> - **Вона буде мамою.** (She will be [a] mom - Instr).\n> Don't worry about the endings yet. Just know that \"Subject\" changes to \"Instrument\" in the future.\n\n### Section 9: The Polite Refusal\nUkrainians don't like to say \"No\".\nInstead, they say what they will be doing instead.\n- **Ти будеш пити?** (Will you drink?)\n- **Ні, я буду за кермом.** (No, I will be behind the wheel).\n- **Ти будеш їсти?**\n- **Ні, я буду на дієті.** (No, I will be on a diet).\n\n\n> 🔮 **Deep Dive: The Fortune Teller**\n> Ukrainians love predictions.\n> \"A cuckoo bird (Zozulia) counts your years.\"\n> If you hear \"Ku-ku\", you count \"Roz, dva, try...\".\n> That is how many years you have left.\n> Superstition? Maybe. Fun? Yes.\n\n## practice\n\n**Drill 1: The Conjugator**\nConjugate **Слухати** (To listen) in Future.\n- (I) Я ___ -> **буду слухати**.\n- (You) Ти ___ -> **будеш слухати**.\n- (He) Він ___ -> **буде слухати**.\n- (We) Ми ___ -> **будемо слухати**.\n\n**Drill 2: Tomorrow**\nChange Present to Future.\n- (Я читаю) -> Завтра я ___ -> **буду читати**.\n- (Він знає) -> Завтра він ___ -> **буде знати**.\n- (Ми робимо) -> Завтра ми ___ -> **будемо робити**.\n- (Вони йдуть) -> Завтра вони ___ -> **будуть йти**.\n\n**Drill 3: The Plan**\n- (I will be in Kyiv next year) -> Я **буду** в Києві наступного року.\n- (We will work tomorrow) -> Ми **будемо** працювати завтра.\n- (She will sleep soon) -> Вона **буде** спати скоро.\n\n**Drill 4: Weather Forecast**\n- (Tomorrow - rain) -> Завтра буде **дощ**.\n- (Soon - sun) -> Скоро буде **сонце**.\n- (Later - cold) -> Потім буде **холодно**.\n- (Monday - warm) -> У понеділок буде **тепло**.\n\n**Drill 5: The Weekend**\n- (I will rest) -> Я буду **відпочивати**.\n- (We will clean) -> Ми будемо **прибирати**.\n- (She will cook) -> Вона буде **готувати**.\n- (They will sleep) -> Вони будуть **спати**.\n\n**Drill 6: The Refusal**\n- (Will you work?) -> Ні, я буду **відпочивати**.\n- (Will you eat?) -> Ні, я буду **пити**.\n- (Will you sleep?) -> Ні, я буду **працювати**.\n- (Will you clean?) -> Ні, я буду **дивитися фільм**.\n\n## production\n\n> 🔮 **Culture Corner: \"Shcho bude, te bude\"**\n> Ukrainians are sometimes fatalistic.\n> \"Що буде, те буде.\" (What will be, that will be).\n> It means accepting the unpredictable future.\n> Use it when you don't know the outcome but are proceeding anyway.\n\n> 🎱 **Game: The Magic 8-Ball**\n> Ask a question. \"Я буду багатий?\" (Will I be rich?)\n> Answers:\n> - **Так, звичайно.** (Yes, of course).\n> - **Мабуть.** (Probably/Maybe).\n> - **Точно ні.** (Definitely no).\n> - **Подивимось.** (We will see).\n\n**Scenario: The Weekend Plan**\n*   **Friend:** Що ти будеш робити у суботу?\n*   **You:** Я буду спати до обіду.\n*   **Friend:** А потім?\n*   **You:** Потім я буду снідати і пити каву.\n*   **Friend:** А ввечері?\n*   **You:** Ввечері ми будемо гуляти в парку. А ти?\n*   **Friend:** Я буду працювати.\n*   **You:** Жахливо!\n\n**Scenario: The Prediction**\n*   **Fortune Teller:** У майбутньому (In the future) ти будеш жити в Америці.\n*   **Client:** Я? В Америці? Ні, я буду жити в Україні.\n*   **Fortune Teller:** Ти будеш багатим (rich - Instr).\n*   **Client:** Супер. Я буду мати машину?\n*   **Fortune Teller:** Так, ти будеш мати три машини.\n*   **Client:** А дружина?\n*   **Fortune Teller:** Дружини не буде. (There will be no wife - Gen).\n*   **Client:** Ой.\n\n**Scenario: The 5-Year Plan**\n*   **HR:** Де ви будете через 5 років? (In 5 years?)\n*   **You:** Я буду босом.\n*   **HR:** Амбітно. А що ви будете робити?\n*   **You:** Я буду пити каву і читати газети.\n*   **HR:** А працювати?\n*   **You:** Ні. Ви будете працювати. Я буду відпочивати.\n*   **HR:** Ми вам зателефонуємо. (We will call you).\n\n---"
       }
     ],
-    "rawMarkdown": "---\ntitle: \"Tomorrow: Future Tense\"\nsubtitle: \"Talking about what will happen\"\nphase: A1.3\nduration: 45\ntransliteration: none\ntags: [grammar, verbs, future-tense]\nobjectives:\n  - Form compound future with буду + infinitive\n  - Use future time expressions\n  - Make plans and predictions\n  - Express intentions\ngrammar:\n  - Compound future (буду + infinitive)\n  - Future time expressions\n  - Intention verbs\n---\n\n# Lesson Content\n\n## warm-up\n\n### What Will Tomorrow Bring?\n\nYesterday you learned to talk about the past. Today, we look forward! The future tense lets you make plans, express hopes, and discuss what's coming next.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian has THREE ways to express future! Today we learn the most common one: **compound future** (буду + infinitive). It works for almost any situation and is the safest choice for beginners.\n\n## presentation\n\n### Compound Future: буду + infinitive\n\nThe easiest way to form future tense:\n\n| Subject | \"буду\" form | + Infinitive | Example |\n|---------|-------------|--------------|---------|\n| я | буду | читати | Я буду читати. |\n| ти | будеш | працювати | Ти будеш працювати. |\n| він/вона | буде | говорити | Він буде говорити. |\n| ми | будемо | вивчати | Ми будемо вивчати. |\n| ви | будете | робити | Ви будете робити. |\n| вони | будуть | жити | Вони будуть жити. |\n\n> ⚡ **Pro Tip**\n>\n> This is exactly like English \"will be doing\" — the structure is almost identical! \"I will be reading\" = \"Я буду читати.\"\n\n### Conjugation of \"бути\" (Future)\n\n| Person | Form | Pronunciation |\n|--------|------|---------------|\n| я | буду | /ˈbudu/ |\n| ти | будеш | /ˈbudɛʃ/ |\n| він/вона/воно | буде | /ˈbudɛ/ |\n| ми | будемо | /ˈbudɛmɔ/ |\n| ви | будете | /ˈbudɛtɛ/ |\n| вони | будуть | /ˈbudutʲ/ |\n\n### Examples in Context\n\n| Ukrainian | English |\n|-----------|---------|\n| Я буду працювати завтра. | I will work tomorrow. |\n| Вона буде вивчати українську. | She will study Ukrainian. |\n| Ми будемо їсти о шостій. | We will eat at six. |\n| Вони будуть жити в Києві. | They will live in Kyiv. |\n| Ти будеш дивитися фільм? | Will you watch a movie? |\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Future tense is complicated in Ukrainian.\"\n> **Fact:** Compound future is actually one of the SIMPLEST forms! Just learn 6 forms of \"буду\" and add any infinitive.\n\n### Future Time Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| завтра | tomorrow |\n| післязавтра | day after tomorrow |\n| наступного тижня | next week |\n| наступного місяця | next month |\n| наступного року | next year |\n| скоро | soon |\n| пізніше | later |\n| потім | then, afterward |\n| згодом | later on, eventually |\n\n> 🎬 **Pop Culture Moment: Back to the Future**\n>\n> In Ukrainian, \"Back to the Future\" is \"Назад у майбутнє.\" Marty would say: \"Я буду подорожувати в часі!\" (I will travel through time!)\n\n### Expressing Intentions\n\nBeyond \"буду,\" you can express future plans with:\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| збираюся | I'm going to | Я збираюся читати. |\n| планую | I plan to | Я планую працювати. |\n| хочу | I want to | Я хочу вивчати. |\n| маю намір | I intend to | Я маю намір поїхати. |\n| сподіваюся | I hope to | Сподіваюся побачити. |\n| обіцяю | I promise to | Обіцяю допомогти. |\n\n> 🌍 **Real World**\n>\n> \"Що ти будеш робити завтра?\" (What will you do tomorrow?) — A perfect conversation starter for making plans with Ukrainian friends!\n\n### Questions and Negation\n\n**Questions:** Simply use question intonation or add \"чи\":\n\n| Statement | Question |\n|-----------|----------|\n| Ти будеш працювати. | Ти будеш працювати? |\n| Вона буде їсти. | Чи вона буде їсти? |\n\n**Negation:** Add \"не\" before \"буду\":\n\n| Positive | Negative |\n|----------|----------|\n| Я буду читати. | Я **не** буду читати. |\n| Вона буде працювати. | Вона **не** буде працювати. |\n\n### Common Future Phrases\n\n| Ukrainian | English |\n|-----------|---------|\n| Що ти будеш робити? | What will you do? |\n| Коли ти будеш вдома? | When will you be home? |\n| Все буде добре! | Everything will be fine! |\n| Як буде по-українськи...? | How will it be in Ukrainian...? |\n| Я буду чекати. | I will wait. |\n\n> 💡 **Did You Know?**\n>\n> \"Все буде добре!\" (Everything will be fine!) became a popular phrase of hope and resilience in Ukraine. You'll see it everywhere!\n\n## practice\n\n### Exercise 1: Form the Future\n\nCreate sentences with буду + infinitive:\n\n1. я / читати / книгу\n   > [!answer] Я буду читати книгу.\n\n2. вона / працювати / завтра\n   > [!answer] Вона буде працювати завтра.\n\n3. ми / вивчати / українську\n   > [!answer] Ми будемо вивчати українську.\n\n4. вони / жити / в Києві\n   > [!answer] Вони будуть жити в Києві.\n\n### Exercise 2: Choose the Right Form\n\n1. Я ___ працювати.\n   > [!answer] буду\n\n2. Ти ___ читати?\n   > [!answer] будеш\n\n3. Вони ___ говорити українською.\n   > [!answer] будуть\n\n4. Ми ___ їсти о сьомій.\n   > [!answer] будемо\n\n## production\n\n### Make Your Plans\n\nWhat will you do this week? Share your plans:\n\n- Завтра я буду...\n- Наступного тижня я буду...\n- Скоро я буду...\n- Я планую... / Я збираюся...\n\nTell us 3-4 of your future plans!\n\n---\n\n# Activities\n\n## fill-in: Future Tense Forms\n\n> Complete with the correct form of \"буду.\"\n\n1. Я ___ читати книгу.\n   > [!answer] буду\n   > [!options] буду | будеш | буде | будуть\n\n2. Ти ___ працювати завтра?\n   > [!answer] будеш\n   > [!options] будеш | буду | буде | будете\n\n3. Вона ___ вивчати українську.\n   > [!answer] буде\n   > [!options] буде | буду | будуть | будемо\n\n4. Ми ___ жити в Києві.\n   > [!answer] будемо\n   > [!options] будемо | буду | будуть | будете\n\n5. Вони ___ говорити українською.\n   > [!answer] будуть\n   > [!options] будуть | буде | будемо | будете\n\n6. Ви ___ їсти о шостій?\n   > [!answer] будете\n   > [!options] будете | будуть | будемо | буде\n\n7. Він ___ дивитися фільм.\n   > [!answer] буде\n   > [!options] буде | буду | будуть | будемо\n\n8. Я не ___ працювати.\n   > [!answer] буду\n   > [!options] буду | будеш | буде | будуть\n\n9. Хто ___ готувати вечерю?\n   > [!answer] буде\n   > [!options] буде | буду | будуть | будемо\n\n10. Ти ___ чекати?\n    > [!answer] будеш\n    > [!options] будеш | буду | буде | будуть\n\n11. Ми ___ робити це разом.\n    > [!answer] будемо\n    > [!options] будемо | буду | будуть | будете\n\n12. Вони ___ приходити щодня.\n    > [!answer] будуть\n    > [!options] будуть | буде | будемо | будете\n\n## unjumble: Future Sentences\n\n> Put the words in the correct order.\n\n1. читати буду книгу Я\n   > [!answer] Я буду читати книгу.\n   > (I will read a book.) [4 words]\n\n2. завтра працювати Вона буде\n   > [!answer] Вона буде працювати завтра.\n   > (She will work tomorrow.) [4 words]\n\n3. українську вивчати будемо Ми\n   > [!answer] Ми будемо вивчати українську.\n   > (We will study Ukrainian.) [4 words]\n\n4. робити будеш Що ти завтра\n   > [!answer] Що ти будеш робити завтра?\n   > (What will you do tomorrow?) [5 words]\n\n5. буде Все добре\n   > [!answer] Все буде добре!\n   > (Everything will be fine!) [3 words]\n\n6. чекати Я буду\n   > [!answer] Я буду чекати.\n   > (I will wait.) [3 words]\n\n7. Києві жити в будуть Вони\n   > [!answer] Вони будуть жити в Києві.\n   > (They will live in Kyiv.) [5 words]\n\n8. буду не працювати Я\n   > [!answer] Я не буду працювати.\n   > (I won't work.) [4 words]\n\n9. пізніше Я зателефоную буду\n   > [!answer] Я буду телефонувати пізніше.\n   > (I will call later.) [4 words]\n\n10. о Ми будемо шостій їсти\n    > [!answer] Ми будемо їсти о шостій.\n    > (We will eat at six.) [5 words]\n\n11. скоро Він приїде буде\n    > [!answer] Він буде приїжджати скоро.\n    > (He will be arriving soon.) [4 words]\n\n12. Коли вдома ти будеш\n    > [!answer] Коли ти будеш вдома?\n    > (When will you be home?) [4 words]\n\n## match-up: Present to Future\n\n> Match the present tense with its future equivalent.\n\n| Left | Right |\n|------|-------|\n| Я читаю. | Я буду читати. |\n| Ти працюєш. | Ти будеш працювати. |\n| Вона говорить. | Вона буде говорити. |\n| Ми їмо. | Ми будемо їсти. |\n| Ви робите. | Ви будете робити. |\n| Вони живуть. | Вони будуть жити. |\n| Він дивиться. | Він буде дивитися. |\n| Вона вчить. | Вона буде вчити. |\n| Ми чекаємо. | Ми будемо чекати. |\n| Вони їдуть. | Вони будуть їхати. |\n| Ти пишеш. | Ти будеш писати. |\n| Я сплю. | Я буду спати. |\n\n## quiz: Future Tense Knowledge\n\n> Test your understanding of Ukrainian future tense.\n\n1. How do you form compound future?\n   - [ ] Verb + -му ending\n   - [x] буду + infinitive\n   - [ ] Past tense + will\n   - [ ] Adding \"завтра\" to present\n   > Compound future = буду/будеш/буде/etc. + infinitive.\n\n2. What is \"буду\" for \"ми\"?\n   - [ ] буду\n   - [ ] будеш\n   - [x] будемо\n   - [ ] будуть\n   > Ми будемо (we will).\n\n3. \"Завтра\" means:\n   - [ ] yesterday\n   - [x] tomorrow\n   - [ ] today\n   - [ ] later\n   > \"Завтра\" = tomorrow; \"вчора\" = yesterday.\n\n4. How do you say \"I will work\"?\n   - [ ] Я працюю\n   - [ ] Я працював\n   - [x] Я буду працювати\n   - [ ] Я працювати буду\n   > Standard order: subject + буду + infinitive.\n\n5. How do you negate future tense?\n   - [ ] Add \"ні\" at the end\n   - [x] Add \"не\" before \"буду\"\n   - [ ] Change the infinitive\n   - [ ] Use a different verb\n   > Negation: Я **не** буду працювати.\n\n6. \"Все буде добре!\" means:\n   - [x] Everything will be fine!\n   - [ ] Everything was fine!\n   - [ ] Everything is fine!\n   - [ ] Nothing will be fine!\n   > A popular Ukrainian phrase of hope.\n\n7. \"Наступного тижня\" means:\n   - [ ] last week\n   - [ ] this week\n   - [x] next week\n   - [ ] every week\n   > \"Наступного\" = next; \"минулого\" = last.\n\n8. Which form is for \"вони\" (they)?\n   - [ ] буде\n   - [ ] будемо\n   - [ ] будете\n   - [x] будуть\n   > Вони будуть (they will).\n\n9. \"Я збираюся\" means:\n   - [ ] I was going to\n   - [x] I'm going to\n   - [ ] I used to\n   - [ ] I have to\n   > \"Збираюся\" expresses intention/plans.\n\n10. How do you ask \"Will you work?\"\n    - [x] Ти будеш працювати?\n    - [ ] Ти працюватимеш?\n    - [ ] Будеш ти працювати?\n    - [ ] Працюватимеш ти?\n    > Question intonation with standard word order.\n\n11. \"Пізніше\" means:\n    - [x] later\n    - [ ] earlier\n    - [ ] now\n    - [ ] never\n    > \"Пізніше\" = later; \"раніше\" = earlier.\n\n12. In \"Що ти будеш робити?\", what is \"робити\"?\n    - [ ] A conjugated verb\n    - [x] An infinitive\n    - [ ] A past participle\n    - [ ] An adjective\n    > After \"буду,\" always use infinitive.\n\n## true-false: Future Tense Facts\n\n> Decide if each statement is true (Правда) or false (Міф).\n\n- [x] Compound future uses буду + infinitive.\n  > Correct! The most common future form.\n\n- [ ] \"Буду\" changes based on gender.\n  > Incorrect! \"Буду\" changes based on person, not gender.\n\n- [x] \"Завтра\" is a future time word.\n  > Correct! \"Завтра\" = tomorrow.\n\n- [ ] You put \"не\" after \"буду\" for negation.\n  > Incorrect! \"Не\" goes before: Я не буду.\n\n- [x] \"Все буде добре!\" is a popular Ukrainian phrase.\n  > Correct! A phrase of hope and resilience.\n\n- [ ] \"Післязавтра\" means yesterday.\n  > Incorrect! \"Післязавтра\" = day after tomorrow.\n\n- [x] \"Ми будемо\" means \"we will.\"\n  > Correct! Ми + будемо + infinitive.\n\n- [ ] Future tense has gender endings like past tense.\n  > Incorrect! Future tense (compound) has no gender agreement.\n\n- [x] \"Я планую\" expresses future intentions.\n  > Correct! \"I plan to\" + infinitive.\n\n- [ ] \"Скоро\" means \"slowly.\"\n  > Incorrect! \"Скоро\" = soon; \"повільно\" = slowly.\n\n- [x] Questions use the same word order with rising intonation.\n  > Correct! Ти будеш працювати? (rising tone at end).\n\n- [x] \"Будете\" is the form for \"ви.\"\n  > Correct! Ви будете (you will - formal/plural).\n\n## group-sort: Time Expressions\n\n> Sort these into past or future.\n\n### Past\n- вчора\n- позавчора\n- минулого тижня\n- раніше\n\n### Future\n- завтра\n- післязавтра\n- наступного тижня\n- скоро\n\n### Both/Neutral\n- потім\n- пізніше\n- згодом\n- колись\n\n## anagram: Future Tense Vocabulary\n> Unscramble the Ukrainian future tense words and time expressions.\n\n1. у д у б\n   > [!answer] буду\n   > (will - 1st person)\n\n2. ш е д у б\n   > [!answer] будеш\n   > (will - 2nd person)\n\n3. е д у б\n   > [!answer] буде\n   > (will - 3rd person)\n\n4. о м е д у б\n   > [!answer] будемо\n   > (will - 1st plural)\n\n5. ь т у д у б\n   > [!answer] будуть\n   > (will - 3rd plural)\n\n6. а р т в а з\n   > [!answer] завтра\n   > (tomorrow)\n\n7. о р о к с\n   > [!answer] скоро\n   > (soon)\n\n8. є ш і н з і п\n   > [!answer] пізніше\n   > (later)\n\n9. м і т о п\n   > [!answer] потім\n   > (then)\n\n10. ю у н а л п\n    > [!answer] планую\n    > (I plan)\n\n11. ю у ч о х\n    > [!answer] хочу\n    > (I want)\n\n12. я с ю а р и б з\n    > [!answer] збираюся\n    > (I'm going to)\n\n## match-up: Present to Future Intentions\n> Match the present situation with the future intention.\n\n| Now | Future |\n|-----|--------|\n| Я вивчаю українську. | Я буду говорити вільно. |\n| Я працюю. | Я буду відпочивати. |\n| Я голодний. | Я буду їсти. |\n| Я втомлений. | Я буду спати. |\n| Я в Україні. | Я буду подорожувати. |\n| Я читаю книгу. | Я буду писати рецензію. |\n| Я дивлюся фільм. | Я буду обговорювати. |\n| Я снідаю. | Я буду працювати. |\n| Я вчуся. | Я буду складати іспит. |\n| Я готую. | Я буду вечеряти. |\n| Я прибираю. | Я буду відпочивати. |\n| Я чекаю. | Я буду зустрічатися. |\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| завтра | /ˈzɑvtrɑ/ | tomorrow | adv | - | |\n| післязавтра | /pʲislʲɑˈzɑvtrɑ/ | day after tomorrow | adv | - | |\n| наступного тижня | /nɑˈstupnɔɦɔ ˈtɪʒnʲɑ/ | next week | phrase | - | |\n| наступного місяця | /nɑˈstupnɔɦɔ ˈmʲisʲɑt͡sʲɑ/ | next month | phrase | - | |\n| наступного року | /nɑˈstupnɔɦɔ ˈrɔku/ | next year | phrase | - | |\n| скоро | /ˈskɔrɔ/ | soon | adv | - | |\n| пізніше | /ˈpʲiznʲiʃɛ/ | later | adv | - | |\n| потім | /pɔˈtʲim/ | then, afterward | adv | - | |\n| згодом | /ˈzɦɔdɔm/ | later on, eventually | adv | - | |\n| буду | /ˈbudu/ | will (1st sg) | verb | - | future of бути |\n| будеш | /ˈbudɛʃ/ | will (2nd sg) | verb | - | |\n| буде | /ˈbudɛ/ | will (3rd sg) | verb | - | |\n| будемо | /ˈbudɛmɔ/ | will (1st pl) | verb | - | |\n| будете | /ˈbudɛtɛ/ | will (2nd pl) | verb | - | |\n| будуть | /ˈbudutʲ/ | will (3rd pl) | verb | - | |\n| збираюся | /zbɪˈrɑjusʲɑ/ | I'm going to | verb | - | intention |\n| планую | /plɑˈnuju/ | I plan | verb | - | |\n| хочу | /ˈxɔt͡ʃu/ | I want | verb | - | |\n| маю намір | /ˈmɑju ˈnɑmʲir/ | I intend | phrase | - | |\n| сподіваюся | /spɔdʲiˈvɑjusʲɑ/ | I hope | verb | - | |\n| обіцяю | /ɔˈbʲit͡sʲɑju/ | I promise | verb | - | |\n| спробую | /ˈsprɔbuju/ | I'll try | verb | - | |\n| постараюся | /pɔstɑˈrɑjusʲɑ/ | I'll do my best | verb | - | |\n| мрію | /ˈmrʲiju/ | I dream | verb | - | |\n| думаю | /ˈdumɑju/ | I think | verb | - | |\n| вирішив | /vɪˈrʲiʃɪv/ | I decided | verb | - | past tense |\n| вже | /vʒɛ/ | already | adv | - | |\n| ще | /ʃt͡ʃɛ/ | still, yet | adv | - | |\n| ніколи | /nʲiˈkɔlɪ/ | never | adv | - | |\n| обов'язково | /ɔbɔvjɑzˈkɔvɔ/ | definitely, certainly | adv | - | |\n\n---\n\n# Summary\n\n> **What You Learned Today**\n>\n> - Compound future: буду/будеш/буде/будемо/будете/будуть + infinitive\n> - Future time expressions: завтра, скоро, наступного тижня\n> - Intention verbs: збираюся, планую, хочу\n> - Questions and negation in future tense\n> - Popular phrase: Все буде добре!\n\n> **Coming Next**\n>\n> In Module 23, you'll learn **What Time Is It?**:\n> - Telling time in Ukrainian\n> - Days of the week\n> - Months of the year\n> - Scheduling and appointments\n",
-    "createdAt": "2025-12-06T10:49:20.099Z",
-    "modifiedAt": "2025-12-06T10:49:20.099Z",
+    "rawMarkdown": "---\ntitle: Tomorrow - Future Tense\nsubtitle: The Prediction Machine\nphase: A1.3\nduration: 60\ntransliteration: full\ntags: [grammar, future-tense, verbs, time]\nobjectives:\n  - Learner can form the future tense of imperfective verbs (Budu + Inf)\n  - Learner can use time markers (tomorrow, next week)\n  - Learner can predict and plan actions\n---\n\n# Lesson Content\n\n## warm-up\n**The Fortune Teller**\n\nYou conquered the Past (Drill 21).\nNow we look forward.\nIn English: \"I will read.\"\nIn Ukrainian: \"Я буду читати.\"\nIt is literally \"I will-be to-read.\"\nThis is the easiest tense in the language.\nNo gender changes. No weird endings.\nJust **Budu** + **Infinitive**.\n\n## presentation\n\n### Section 1: The Magic Helper (Buty - To Be)\n\nTo make the future (Imperfective), you conjugate **Бути** (To be) and add the dictionary form of the verb.\n\n| Pronoun | Form | + Infinitive | Example |\n|---------|------|--------------|---------|\n| Я | **Буду** | читати | Я буду читати. |\n| Ти | **Будеш** | читати | Ти будеш читати. |\n| Він/Вона | **Буде** | читати | Він буде читати. |\n| Ми | **Будемо** | читати | Ми будемо читати. |\n| Ви | **Будете** | читати | Ви будете читати. |\n| Вони | **Будуть** | читати | Вони будуть читати. |\n\n> ⚠️ **Only for Process!**\n> \"Я буду читати\" means \"I will be reading\" (Process).\n> It does not mean \"I will finish reading\" (Result).\n> A1 Level = Focus on Process.\n\n### Section 2: Time Markers (When?)\n\n- **Завтра** (Tomorrow).\n- **Післязавтра** (Day after tomorrow).\n- **Скоро** (Soon).\n- **Потім** (Later/Then).\n\n### Section 3: The \"Next\" Time\n\nUse Genitive for \"Next X\" (Nastupnoho).\n- **Наступного тижня** (Next week).\n- **Наступного місяця** (Next month).\n- **Наступного року** (Next year).\n- Exception: **У понеділок** (On Monday - Acc).\n\n### Section 4: The Question \"Will you?\"\n\n- **Ти будеш їсти?** (Will you be eating?)\n- **Ти будеш пити каву?** (Will you drink coffee?)\n- **Ми будемо дивитися фільм.** (We will watch a movie).\n- Answer: **Буду** (I will) or **Не буду** (I won't).\n\n> 🎓 **Deep Dive: The Alternative Future**\n> You might hear \"Читат**иму**\".\n> This is the *Synthetic Future*.\n> - **Читати** + **му** = **Читатиму**. (I will read).\n> - **Читати** + **меш** = **Читатимеш**. (You will read).\n> It is elegant and shorter.\n> But \"Budu + Inf\" is universal. Stick to \"Budu\" for A1.\n\n### Section 5: The \"Will Be\" State\n\nSometimes you just want to say \"It will be good\".\n- **Буде добре.** (It will be good).\n- **Буде весело.** (It will be fun).\n- **Буде цікаво.** (It will be interesting).\n- **Я буду вдома.** (I will be at home).\n\n\n### Section 6: The Weather Forecast (Prognoz Pohody)\nFuture tense is weather tense.\n- **Завтра буде сонце.** (Tomorrow will be sun).\n- **Завтра буде дощ.** (Tomorrow will be rain/rainy).\n- **Буде тепло.** (It will be warm).\n- **Буде холодно.** (It will be cold).\n- **Буде вітер.** (It will be wind).\n\n> 🌦️ **Deep Dive: The Degrees**\n> Ukrainians use Celsius.\n> - **Плюс 20** (Plus 20) = Warm.\n> - **Мінус 5** (Minus 5) = Cold.\n> - **Нуль** (Zero) = Freezing point.\n> \"Завтра буде плюс тридцять!\" (Tropical heat).\n\n### Section 7: The Promise (Obitsianka)\nUsing Future tense implies commitment.\n- **Я буду там.** (I will be there).\n- **Я це зроблю.** (Perfective - I will get it done).\n- A1 Imperfective: **Я буду робити це завтра.** (I will be working on it tomorrow).\n- Polite refusal: **Я не зможу.** (I won't be able - Modal preview). Or simply: **Я не буду.** (I won't).\n\n> 🇺🇦 **Culture Corner: The \"Maybe\" Future**\n> Ukrainians are spontaneous.\n> Plans made weeks in advance often change.\n> \"Давай (Let's) завтра на каву?\" is a common proposal.\n> Reply: \"Подивимось\" (We will see).\n> \"Подивимось\" is the polite way to say \"Probably not, but maybe.\"\n\n\n### Section 8: The Weekend (Vykhidni)\nThe most important plans are for the weekend.\n- **Вихідні** (Weekend - Plural).\n- **У вихідні** (On the weekend).\n- **Що ти будеш робити у вихідні?**\n- **Я буду відпочивати (rest).**\n- **Я буду спати.**\n- **Я буду прибирати (clean).**\n\n> 🇺🇦 **Culture Corner: The Planning Horizon**\n> In the West, calendars are booked months ahead.\n> In Ukraine, spontaneity rules.\n> If you say \"Let's meet in 3 weeks,\" a Ukrainian might laugh.\n> \"Я не знаю, що буде завтра!\" (I don't know what will be tomorrow).\n> Focus on \"Zavtra\" (Tomorrow) and \"Na vykhidni\" (For the weekend).\n> Long-term planning is considered almost bad luck (don't jinx it).\n\n\n> 🗣️ **Deep Dive: The \"Nu, Bu!\"**\n> When ending a phone call perfectly, Ukrainians say:\n> \"Ну, бувай!\" (Well, be!).\n> Shortened to: \"Ну, бу!\" (Well, be!).\n> It is the equivalent of \"Later!\" or \"Ciao!\".\n> Use it only with friends. \"Давай, бу!\"\n\n> 🛠️ **Language Link: The Instrumental Trap**\n> You learned: \"Я буду вдома\" (Locative).\n> But if you say WHAT you will be (profession/role), you need **Instrumental Case**.\n> - **Я буду президентом.** (I will be [a] president - Instr).\n> - **Він буде лікарем.** (He will be [a] doctor - Instr).\n> - **Вона буде мамою.** (She will be [a] mom - Instr).\n> Don't worry about the endings yet. Just know that \"Subject\" changes to \"Instrument\" in the future.\n\n### Section 9: The Polite Refusal\nUkrainians don't like to say \"No\".\nInstead, they say what they will be doing instead.\n- **Ти будеш пити?** (Will you drink?)\n- **Ні, я буду за кермом.** (No, I will be behind the wheel).\n- **Ти будеш їсти?**\n- **Ні, я буду на дієті.** (No, I will be on a diet).\n\n\n> 🔮 **Deep Dive: The Fortune Teller**\n> Ukrainians love predictions.\n> \"A cuckoo bird (Zozulia) counts your years.\"\n> If you hear \"Ku-ku\", you count \"Roz, dva, try...\".\n> That is how many years you have left.\n> Superstition? Maybe. Fun? Yes.\n\n## practice\n\n**Drill 1: The Conjugator**\nConjugate **Слухати** (To listen) in Future.\n- (I) Я ___ -> **буду слухати**.\n- (You) Ти ___ -> **будеш слухати**.\n- (He) Він ___ -> **буде слухати**.\n- (We) Ми ___ -> **будемо слухати**.\n\n**Drill 2: Tomorrow**\nChange Present to Future.\n- (Я читаю) -> Завтра я ___ -> **буду читати**.\n- (Він знає) -> Завтра він ___ -> **буде знати**.\n- (Ми робимо) -> Завтра ми ___ -> **будемо робити**.\n- (Вони йдуть) -> Завтра вони ___ -> **будуть йти**.\n\n**Drill 3: The Plan**\n- (I will be in Kyiv next year) -> Я **буду** в Києві наступного року.\n- (We will work tomorrow) -> Ми **будемо** працювати завтра.\n- (She will sleep soon) -> Вона **буде** спати скоро.\n\n**Drill 4: Weather Forecast**\n- (Tomorrow - rain) -> Завтра буде **дощ**.\n- (Soon - sun) -> Скоро буде **сонце**.\n- (Later - cold) -> Потім буде **холодно**.\n- (Monday - warm) -> У понеділок буде **тепло**.\n\n**Drill 5: The Weekend**\n- (I will rest) -> Я буду **відпочивати**.\n- (We will clean) -> Ми будемо **прибирати**.\n- (She will cook) -> Вона буде **готувати**.\n- (They will sleep) -> Вони будуть **спати**.\n\n**Drill 6: The Refusal**\n- (Will you work?) -> Ні, я буду **відпочивати**.\n- (Will you eat?) -> Ні, я буду **пити**.\n- (Will you sleep?) -> Ні, я буду **працювати**.\n- (Will you clean?) -> Ні, я буду **дивитися фільм**.\n\n## production\n\n> 🔮 **Culture Corner: \"Shcho bude, te bude\"**\n> Ukrainians are sometimes fatalistic.\n> \"Що буде, те буде.\" (What will be, that will be).\n> It means accepting the unpredictable future.\n> Use it when you don't know the outcome but are proceeding anyway.\n\n> 🎱 **Game: The Magic 8-Ball**\n> Ask a question. \"Я буду багатий?\" (Will I be rich?)\n> Answers:\n> - **Так, звичайно.** (Yes, of course).\n> - **Мабуть.** (Probably/Maybe).\n> - **Точно ні.** (Definitely no).\n> - **Подивимось.** (We will see).\n\n**Scenario: The Weekend Plan**\n*   **Friend:** Що ти будеш робити у суботу?\n*   **You:** Я буду спати до обіду.\n*   **Friend:** А потім?\n*   **You:** Потім я буду снідати і пити каву.\n*   **Friend:** А ввечері?\n*   **You:** Ввечері ми будемо гуляти в парку. А ти?\n*   **Friend:** Я буду працювати.\n*   **You:** Жахливо!\n\n**Scenario: The Prediction**\n*   **Fortune Teller:** У майбутньому (In the future) ти будеш жити в Америці.\n*   **Client:** Я? В Америці? Ні, я буду жити в Україні.\n*   **Fortune Teller:** Ти будеш багатим (rich - Instr).\n*   **Client:** Супер. Я буду мати машину?\n*   **Fortune Teller:** Так, ти будеш мати три машини.\n*   **Client:** А дружина?\n*   **Fortune Teller:** Дружини не буде. (There will be no wife - Gen).\n*   **Client:** Ой.\n\n**Scenario: The 5-Year Plan**\n*   **HR:** Де ви будете через 5 років? (In 5 years?)\n*   **You:** Я буду босом.\n*   **HR:** Амбітно. А що ви будете робити?\n*   **You:** Я буду пити каву і читати газети.\n*   **HR:** А працювати?\n*   **You:** Ні. Ви будете працювати. Я буду відпочивати.\n*   **HR:** Ми вам зателефонуємо. (We will call you).\n\n---\n\n# Activities\n\n## quiz: Future Logic\n\n> Choose the correct form.\n\n1. Я ___ (will read).\n   - [x] буду читати\n   - [ ] буду читав\n   - [ ] буде читати\n\n2. Ти ___ (will know).\n   - [x] будеш знати\n   - [ ] будете знати\n   - [ ] буде знати\n\n3. Вона ___ (will work).\n   - [x] буде працювати\n   - [ ] буду працювати\n   - [ ] будуть працювати\n\n4. Ми ___ (will rest/vydpochivaty).\n   - [x] будемо відпочивати\n   - [ ] будете відпочивати\n   - [ ] будуть відпочивати\n\n5. Ви ___ (will speak).\n   - [x] будете говорити\n   - [ ] будеш говорити\n   - [ ] будемо говорити\n\n6. Вони ___ (will live).\n   - [x] будуть жити\n   - [ ] будемо жити\n   - [ ] буде жити\n\n7. Завтра ___ (will be) холодно.\n   - [x] буде\n   - [ ] будуть\n   - [ ] буду\n\n8. Я не ___ (will not) їсти.\n   - [x] буду\n   - [ ] будеш\n   - [ ] буде\n\n9. Що ти ___ (will) робити?\n   - [x] будеш\n   - [ ] будуть\n   - [ ] буде\n\n10. Ми ___ (will be) вдома.\n    - [x] будемо\n    - [ ] будете\n    - [ ] будуть\n\n11. Ти ___ (will be) там?\n    - [x] будеш\n    - [ ] будете\n    - [ ] буду\n\n12. Це ___ (will be) цікаво.\n    - [x] буде\n    - [ ] будуть\n    - [ ] буду\n\n## match-up: Who will do it?\n\n> Match the helper verb.\n\n| Pronoun | Helper |\n|---------|--------|\n| Я | Буду |\n| Ти | Будеш |\n| Він | Буде |\n| Вона | Буде |\n| Ми | Будемо |\n| Ви | Будете |\n| Вони | Будуть |\n| Воно | Буде |\n| Хто | Буде |\n| Що | Буде |\n| Студенти (They) | Будуть |\n| Лікар (He/She) | Буде |\n\n## fill-in: The Future Builder\n\n> Complete with \"буду/будеш/буде...\".\n\n1. Я ___ спати. (I will sleep).\n   > [!answer] буду\n\n2. Ти ___ їсти. (You will eat).\n   > [!answer] будеш\n\n3. Він ___ писати. (He will write).\n   > [!answer] буде\n\n4. Ми ___ гуляти. (We will walk).\n   > [!answer] будемо\n\n5. Ви ___ читати. (You will read).\n   > [!answer] будете\n\n6. Вони ___ знати. (They will know).\n   > [!answer] будуть\n\n7. Мама ___ готувати. (Mom will cook).\n   > [!answer] буде\n\n8. Тато ___ працювати. (Dad will work).\n   > [!answer] буде\n\n9. Завтра ___ дощ. (Tomorrow will be rain).\n   > [!answer] буде\n\n10. Я не ___ пити. (I will not drink).\n    > [!answer] буду\n\n11. Ми не ___ говорити. (We will not speak).\n    > [!answer] будемо\n\n12. Де ти ___ жити? (Where will you live?).\n    > [!answer] будеш\n\n## group-sort: Time Sorter II\n\n> Past or Future?\n\n### Future\n- Завтра\n- Післязавтра\n- Наступного тижня\n- Наступного місяця\n- Скоро\n- Потім\n- У майбутньому (In future)\n\n### Past\n- Вчора\n- Позавчора\n- Минулого тижня\n- Минулого року\n- Давно\n- Раніше\n- Колись\n\n\n\n## fill-in: The Optimist\n\n> Everything will be good!\n\n1. Завтра ___ (will be) сонце.\n   > [!answer] буде\n\n2. Ми ___ (will be) багаті.\n   > [!answer] будемо\n\n3. Ти ___ (will be) здоровий.\n   > [!answer] будеш\n\n4. Вона ___ (will be) щаслива.\n   > [!answer] буде\n\n5. Все ___ (will be) добре.\n   > [!answer] буде\n\n6. Я ___ (will have) гроші.\n   > [!answer] буду мати\n\n7. Ми ___ (will travel) в Європу.\n   > [!answer] будемо подорожувати\n\n8. Вони ___ (will love) нас.\n   > [!answer] будуть любити\n\n9. День ___ (will be) теплий.\n   > [!answer] буде\n\n10. Робота ___ (will be) цікава.\n    > [!answer] буде\n\n11. Ми ___ (will rest).\n    > [!answer] будемо відпочивати\n\n12. Життя (Life) ___ (will be) супер.\n    > [!answer] буде\n\n\n## fill-in: The Pessimist\n\n> Everything will be bad...\n\n1. Завтра ___ (will be) дощ.\n   > [!answer] буде\n\n2. Ми ___ (will be) бідні (poor).\n   > [!answer] будемо\n\n3. Ти ___ (will be) хворий (sick).\n   > [!answer] будеш\n\n4. Все ___ (will be) погано.\n   > [!answer] буде\n\n5. Я ___ (will have) проблеми.\n   > [!answer] буду мати\n\n6. Вони не ___ (will love) нас.\n   > [!answer] будуть любити\n\n7. Робота ___ (will be) нудна (boring).\n   > [!answer] буде\n\n8. Ми ___ (will work) завжди.\n   > [!answer] будемо працювати\n\n9. Ніхто не ___ (will know).\n   > [!answer] буде знати\n\n10. Це ___ (will be) жахливо.\n    > [!answer] буде\n\n11. Я не ___ (will sleep).\n    > [!answer] буду спати\n\n12. Ти ___ (will cry/plakaty).\n    > [!answer] будеш плакати\n\n## True-False: Realistic Predictions\n\n> Is this likely?\n\n1. Завтра буде 50 годин. (50 hours).\n   > [!answer] False\n\n2. Взимку (In winter) буде сніг (snow).\n   > [!answer] True\n\n3. Я буду спати вночі (at night).\n   > [!answer] True\n\n4. Ми будемо їсти каміння (stones).\n   > [!answer] False\n\n5. Завтра буде день.\n   > [!answer] True\n\n6. Влітку (In summer) буде холодно.\n   > [!answer] False (Usually warm)\n\n7. Люди будуть жити на Марсі скоро.\n   > [!answer] False (Debatable, but for A1 -> False)\n\n8. Вода буде мокра (wet).\n   > [!answer] True\n\n9. Ти будеш президентом.\n   > [!answer] False (Statistic probability)\n\n10. Ми будемо говорити українською.\n    > [!answer] True (Optimism!)\n\n11. Студенти будуть вчити.\n    > [!answer] True\n\n12. Сонце буде зелене.\n    > [!answer] False\n\n## unjumble: Prediction Maker\n\n> Make a prediction.\n\n1. буду / Я / там / .\n   > [!answer] Я буду там.\n\n2. робити / Що / будеш / ти / ?\n   > [!answer] Що ти будеш робити?\n\n3. будемо / Ми / піцу / їсти / .\n   > [!answer] Ми будемо їсти піцу.\n\n4. буде / Це / весело / .\n   > [!answer] Це буде весело.\n\n5. Завтра / тепло / буде / .\n   > [!answer] Завтра буде тепло.\n\n6. жити / Вони / будуть / тут / .\n   > [!answer] Вони будуть тут жити.\n\n7. не / Я / знати / буду / .\n   > [!answer] Я не буду знати.\n\n8. працювати / Ви / будете / ?\n   > [!answer] Ви будете працювати?\n\n9. буде / Вона / вдома / .\n   > [!answer] Вона буде вдома.\n\n10. щасливі / Ми / будемо / .\n    > [!answer] Ми будемо щасливі.\n\n11. спати / Він / буде / .\n    > [!answer] Він буде спати.\n\n12. буде / дощ / Скоро / .\n    > [!answer] Скоро буде дощ.\n\n## anagram: Future Forms\n\n> Unscramble.\n\n1. б у д у\n   > [!answer] буду\n   > (I will)\n\n2. б у д е ш\n   > [!answer] будеш\n   > (You will)\n\n3. б у д е\n   > [!answer] буде\n   > (He will)\n\n4. б у д е м о\n   > [!answer] будемо\n   > (We will)\n\n5. б у д е т е\n   > [!answer] будете\n   > (You pl will)\n\n6. б у д у т ь\n   > [!answer] будуть\n   > (They will)\n\n7. з а в т р а\n   > [!answer] завтра\n   > (Tomorrow)\n\n8. с к о р о\n   > [!answer] скоро\n   > (Soon)\n\n9. п о т і м\n   > [!answer] потім\n   > (Then)\n\n10. м а й б у т н є\n    > [!answer] майбутнє\n    > (Future)\n\n11. р і к\n    > [!answer] рік\n    > (Year)\n\n12. т и ж д е н ь\n    > [!answer] тиждень\n    > (Week)\n\n# Summary\n\n**You are a Prophet.**\nYou can now speak about what **will** happen.\n- **Form:** Budu + Infinitive.\n- **Simplicity:** No gender, just person.\n- **Usage:** Plans, predictions, promises.\n\n**Checklist:**\n- [ ] I can conjugate \"Бути\" (Budu, Budesh...).\n- [ ] I can make a future sentence (\"Я буду їсти\").\n- [ ] I know \"Tomorrow\" (Завтра) and \"Next\" (Наступного).\n- [ ] I can accept fate (\"Що буде, те буде\").\n\n**Next Stop:**\nModule 23: **What time is it?**.\nWe will learn to read the clock and the calendar.\nPrecision time is key.\nSee you tomorrow!\n\n# Vocabulary\n\n| Word | IPA | English | Note | Audio |\n|------|-----|---------|------|-------|\n| завтра | /ˈzɑwtrɑ/ | tomorrow | Time | [🔊](audio_zavtra) |\n| післязавтра | /pisʲlʲɑˈzɑwtrɑ/ | day after tomorrow | Time | [🔊](audio_pisljazavtra) |\n| скоро | /ˈskɔrɔ/ | soon | Time | [🔊](audio_skoro) |\n| потім | /ˈpɔtim/ | later/then | Time | [🔊](audio_potim) |\n| наступного | /nɑˈstupnɔɦɔ/ | next (of next) | Genitive | [🔊](audio_nastupnoho) |\n| майбутнє | /mɑjˈbutnʲɛ/ | future (noun) | Time | [🔊](audio_maybutnye) |\n| буду | /ˈbudu/ | I will | Future | [🔊](audio_budu) |\n| будеш | /ˈbudɛʃ/ | you will | Future | [🔊](audio_budesh) |\n| буде | /ˈbudɛ/ | he/she will | Future | [🔊](audio_bude) |\n| будемо | /ˈbudɛmɔ/ | we will | Future | [🔊](audio_budemo) |\n| будете | /ˈbudɛtɛ/ | you (pl) will | Future | [🔊](audio_budete) |\n| будуть | /ˈbudutʲ/ | they will | Future | [🔊](audio_budut) |\n| ввечері | /ˈwwɛtʃɛri/ | in the evening | Time | [🔊](audio_vvecheri) |\n| до обіду | /dɔ ɔˈbidu/ | until lunch | Time | [🔊](audio_do_obidu) |\n| субота | /suˈbɔtɑ/ | Saturday | Day | [🔊](audio_subota) |\n| понеділок | /pɔnɛˈdilɔk/ | Monday | Day | [🔊](audio_ponedilok) |\n| багатий | /bɑˈɦɑtɪj/ | rich | Adj | [🔊](audio_bahatyj) |\n| щасливий | /ʃtʃɑsˈlɪwɪj/ | happy | Adj | [🔊](audio_shchaslyvyj) |\n| весело | /ˈvɛsɛlɔ/ | fun/merrily | Adv | [🔊](audio_veselo) |\n| цікаво | /tsiˈkɑvɔ/ | interesting | Adv | [🔊](audio_tsikavo) |\n",
+    "createdAt": "2025-12-08T21:22:09.889Z",
+    "modifiedAt": "2025-12-08T21:22:09.889Z",
     "version": 2
   },
   "activities": [
     {
-      "id": "act-a1-0-fillblank",
-      "type": "fill-blank",
-      "title": "Future Tense Forms",
-      "description": "Complete with the correct form of \"буду.\"",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Я ___ читати книгу.",
-            "answer": "буду",
-            "options": [
-              "буду",
-              "будеш",
-              "буде",
-              "будуть"
-            ]
-          },
-          {
-            "prompt": "Ти ___ працювати завтра?",
-            "answer": "будеш",
-            "options": [
-              "будеш",
-              "буду",
-              "буде",
-              "будете"
-            ]
-          },
-          {
-            "prompt": "Вона ___ вивчати українську.",
-            "answer": "буде",
-            "options": [
-              "буде",
-              "буду",
-              "будуть",
-              "будемо"
-            ]
-          },
-          {
-            "prompt": "Ми ___ жити в Києві.",
-            "answer": "будемо",
-            "options": [
-              "будемо",
-              "буду",
-              "будуть",
-              "будете"
-            ]
-          },
-          {
-            "prompt": "Вони ___ говорити українською.",
-            "answer": "будуть",
-            "options": [
-              "будуть",
-              "буде",
-              "будемо",
-              "будете"
-            ]
-          },
-          {
-            "prompt": "Ви ___ їсти о шостій?",
-            "answer": "будете",
-            "options": [
-              "будете",
-              "будуть",
-              "будемо",
-              "буде"
-            ]
-          },
-          {
-            "prompt": "Він ___ дивитися фільм.",
-            "answer": "буде",
-            "options": [
-              "буде",
-              "буду",
-              "будуть",
-              "будемо"
-            ]
-          },
-          {
-            "prompt": "Я не ___ працювати.",
-            "answer": "буду",
-            "options": [
-              "буду",
-              "будеш",
-              "буде",
-              "будуть"
-            ]
-          },
-          {
-            "prompt": "Хто ___ готувати вечерю?",
-            "answer": "буде",
-            "options": [
-              "буде",
-              "буду",
-              "будуть",
-              "будемо"
-            ]
-          },
-          {
-            "prompt": "Ти ___ чекати?",
-            "answer": "будеш",
-            "options": [
-              "будеш",
-              "буду",
-              "буде",
-              "будуть"
-            ]
-          },
-          {
-            "prompt": "Ми ___ робити це разом.",
-            "answer": "будемо",
-            "options": [
-              "будемо",
-              "буду",
-              "будуть",
-              "будете"
-            ]
-          },
-          {
-            "prompt": "Вони ___ приходити щодня.",
-            "answer": "будуть",
-            "options": [
-              "будуть",
-              "буде",
-              "будемо",
-              "будете"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.099Z",
-      "modifiedAt": "2025-12-06T10:49:20.099Z"
-    },
-    {
-      "id": "act-a1-0-unjumble",
-      "type": "unjumble",
-      "title": "Future Sentences",
-      "description": "Put the words in the correct order.",
-      "content": {
-        "type": "unjumble",
-        "isUnjumble": true,
-        "items": [
-          {
-            "words": [
-              "читати",
-              "буду",
-              "книгу",
-              "Я"
-            ],
-            "answer": "Я буду читати книгу.",
-            "translation": "I will read a book."
-          },
-          {
-            "words": [
-              "завтра",
-              "працювати",
-              "Вона",
-              "буде"
-            ],
-            "answer": "Вона буде працювати завтра.",
-            "translation": "She will work tomorrow."
-          },
-          {
-            "words": [
-              "українську",
-              "вивчати",
-              "будемо",
-              "Ми"
-            ],
-            "answer": "Ми будемо вивчати українську.",
-            "translation": "We will study Ukrainian."
-          },
-          {
-            "words": [
-              "робити",
-              "будеш",
-              "Що",
-              "ти",
-              "завтра"
-            ],
-            "answer": "Що ти будеш робити завтра?",
-            "translation": "What will you do tomorrow?"
-          },
-          {
-            "words": [
-              "буде",
-              "Все",
-              "добре"
-            ],
-            "answer": "Все буде добре!",
-            "translation": "Everything will be fine!"
-          },
-          {
-            "words": [
-              "чекати",
-              "Я",
-              "буду"
-            ],
-            "answer": "Я буду чекати.",
-            "translation": "I will wait."
-          },
-          {
-            "words": [
-              "Києві",
-              "жити",
-              "в",
-              "будуть",
-              "Вони"
-            ],
-            "answer": "Вони будуть жити в Києві.",
-            "translation": "They will live in Kyiv."
-          },
-          {
-            "words": [
-              "буду",
-              "не",
-              "працювати",
-              "Я"
-            ],
-            "answer": "Я не буду працювати.",
-            "translation": "I won't work."
-          },
-          {
-            "words": [
-              "пізніше",
-              "Я",
-              "зателефоную",
-              "буду"
-            ],
-            "answer": "Я буду телефонувати пізніше.",
-            "translation": "I will call later."
-          },
-          {
-            "words": [
-              "о",
-              "Ми",
-              "будемо",
-              "шостій",
-              "їсти"
-            ],
-            "answer": "Ми будемо їсти о шостій.",
-            "translation": "We will eat at six."
-          },
-          {
-            "words": [
-              "скоро",
-              "Він",
-              "приїде",
-              "буде"
-            ],
-            "answer": "Він буде приїжджати скоро.",
-            "translation": "He will be arriving soon."
-          },
-          {
-            "words": [
-              "Коли",
-              "вдома",
-              "ти",
-              "будеш"
-            ],
-            "answer": "Коли ти будеш вдома?",
-            "translation": "When will you be home?"
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.099Z",
-      "modifiedAt": "2025-12-06T10:49:20.099Z"
-    },
-    {
-      "id": "act-a1-0-matchup",
-      "type": "match-up",
-      "title": "Present to Future",
-      "description": "Match the present tense with its future equivalent.",
-      "content": {
-        "type": "match-up",
-        "pairs": [
-          {
-            "left": "Я читаю.",
-            "right": "Я буду читати."
-          },
-          {
-            "left": "Ти працюєш.",
-            "right": "Ти будеш працювати."
-          },
-          {
-            "left": "Вона говорить.",
-            "right": "Вона буде говорити."
-          },
-          {
-            "left": "Ми їмо.",
-            "right": "Ми будемо їсти."
-          },
-          {
-            "left": "Ви робите.",
-            "right": "Ви будете робити."
-          },
-          {
-            "left": "Вони живуть.",
-            "right": "Вони будуть жити."
-          },
-          {
-            "left": "Він дивиться.",
-            "right": "Він буде дивитися."
-          },
-          {
-            "left": "Вона вчить.",
-            "right": "Вона буде вчити."
-          },
-          {
-            "left": "Ми чекаємо.",
-            "right": "Ми будемо чекати."
-          },
-          {
-            "left": "Вони їдуть.",
-            "right": "Вони будуть їхати."
-          },
-          {
-            "left": "Ти пишеш.",
-            "right": "Ти будеш писати."
-          },
-          {
-            "left": "Я сплю.",
-            "right": "Я буду спати."
-          }
-        ],
-        "shuffleRight": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.099Z",
-      "modifiedAt": "2025-12-06T10:49:20.099Z"
-    },
-    {
       "id": "act-a1-0-quiz",
       "type": "quiz",
-      "title": "Future Tense Knowledge",
-      "description": "Test your understanding of Ukrainian future tense.",
+      "title": "Future Logic",
+      "description": "Choose the correct form.",
       "content": {
         "type": "quiz",
         "questions": [
           {
-            "question": "How do you form compound future?",
+            "question": "Я ___ (will read).",
             "options": [
-              "Verb + -му ending",
-              "буду + infinitive",
-              "Past tense + will",
-              "Adding \"завтра\" to present"
+              "буду читати",
+              "буду читав",
+              "буде читати"
             ],
-            "correctIndex": 1,
-            "explanation": "Compound future = буду/будеш/буде/etc. + infinitive."
+            "correctIndex": 0,
+            "explanation": ""
           },
           {
-            "question": "What is \"буду\" for \"ми\"?",
+            "question": "Ти ___ (will know).",
+            "options": [
+              "будеш знати",
+              "будете знати",
+              "буде знати"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Вона ___ (will work).",
+            "options": [
+              "буде працювати",
+              "буду працювати",
+              "будуть працювати"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Ми ___ (will rest/vydpochivaty).",
+            "options": [
+              "будемо відпочивати",
+              "будете відпочивати",
+              "будуть відпочивати"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Ви ___ (will speak).",
+            "options": [
+              "будете говорити",
+              "будеш говорити",
+              "будемо говорити"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Вони ___ (will live).",
+            "options": [
+              "будуть жити",
+              "будемо жити",
+              "буде жити"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Завтра ___ (will be) холодно.",
+            "options": [
+              "буде",
+              "будуть",
+              "буду"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Я не ___ (will not) їсти.",
             "options": [
               "буду",
               "будеш",
-              "будемо",
-              "будуть"
-            ],
-            "correctIndex": 2,
-            "explanation": "Ми будемо (we will)."
-          },
-          {
-            "question": "\"Завтра\" means:",
-            "options": [
-              "yesterday",
-              "tomorrow",
-              "today",
-              "later"
-            ],
-            "correctIndex": 1,
-            "explanation": "\"Завтра\" = tomorrow; \"вчора\" = yesterday."
-          },
-          {
-            "question": "How do you say \"I will work\"?",
-            "options": [
-              "Я працюю",
-              "Я працював",
-              "Я буду працювати",
-              "Я працювати буду"
-            ],
-            "correctIndex": 2,
-            "explanation": "Standard order: subject + буду + infinitive."
-          },
-          {
-            "question": "How do you negate future tense?",
-            "options": [
-              "Add \"ні\" at the end",
-              "Add \"не\" before \"буду\"",
-              "Change the infinitive",
-              "Use a different verb"
-            ],
-            "correctIndex": 1,
-            "explanation": "Negation: Я **не** буду працювати."
-          },
-          {
-            "question": "\"Все буде добре!\" means:",
-            "options": [
-              "Everything will be fine!",
-              "Everything was fine!",
-              "Everything is fine!",
-              "Nothing will be fine!"
+              "буде"
             ],
             "correctIndex": 0,
-            "explanation": "A popular Ukrainian phrase of hope."
+            "explanation": ""
           },
           {
-            "question": "\"Наступного тижня\" means:",
+            "question": "Що ти ___ (will) робити?",
             "options": [
-              "last week",
-              "this week",
-              "next week",
-              "every week"
+              "будеш",
+              "будуть",
+              "буде"
             ],
-            "correctIndex": 2,
-            "explanation": "\"Наступного\" = next; \"минулого\" = last."
+            "correctIndex": 0,
+            "explanation": ""
           },
           {
-            "question": "Which form is for \"вони\" (they)?",
+            "question": "Ми ___ (will be) вдома.",
             "options": [
-              "буде",
               "будемо",
               "будете",
               "будуть"
             ],
-            "correctIndex": 3,
-            "explanation": "Вони будуть (they will)."
+            "correctIndex": 0,
+            "explanation": ""
           },
           {
-            "question": "\"Я збираюся\" means:",
+            "question": "Ти ___ (will be) там?",
             "options": [
-              "I was going to",
-              "I'm going to",
-              "I used to",
-              "I have to"
-            ],
-            "correctIndex": 1,
-            "explanation": "\"Збираюся\" expresses intention/plans."
-          },
-          {
-            "question": "How do you ask \"Will you work?\"",
-            "options": [
-              "Ти будеш працювати?",
-              "Ти працюватимеш?",
-              "Будеш ти працювати?",
-              "Працюватимеш ти?"
+              "будеш",
+              "будете",
+              "буду"
             ],
             "correctIndex": 0,
-            "explanation": "Question intonation with standard word order."
+            "explanation": ""
           },
           {
-            "question": "\"Пізніше\" means:",
+            "question": "Це ___ (will be) цікаво.",
             "options": [
-              "later",
-              "earlier",
-              "now",
-              "never"
+              "буде",
+              "будуть",
+              "буду"
             ],
             "correctIndex": 0,
-            "explanation": "\"Пізніше\" = later; \"раніше\" = earlier."
-          },
-          {
-            "question": "In \"Що ти будеш робити?\", what is \"робити\"?",
-            "options": [
-              "A conjugated verb",
-              "An infinitive",
-              "A past participle",
-              "An adjective"
-            ],
-            "correctIndex": 1,
-            "explanation": "After \"буду,\" always use infinitive."
+            "explanation": ""
           }
         ],
         "shuffleQuestions": true,
@@ -559,76 +185,133 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.099Z",
-      "modifiedAt": "2025-12-06T10:49:20.099Z"
+      "createdAt": "2025-12-08T21:22:09.889Z",
+      "modifiedAt": "2025-12-08T21:22:09.889Z"
     },
     {
-      "id": "act-a1-0-truefalse",
-      "type": "true-false",
-      "title": "Future Tense Facts",
-      "description": "Decide if each statement is true (Правда) or false (Міф).",
+      "id": "act-a1-0-matchup",
+      "type": "match-up",
+      "title": "Who will do it?",
+      "description": "Match the helper verb.",
       "content": {
-        "type": "true-false",
-        "statements": [
+        "type": "match-up",
+        "pairs": [
           {
-            "statement": "Compound future uses буду + infinitive.",
-            "isTrue": true,
-            "explanation": "Correct! The most common future form."
+            "left": "Я",
+            "right": "Буду"
           },
           {
-            "statement": "\"Буду\" changes based on gender.",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Буду\" changes based on person, not gender."
+            "left": "Ти",
+            "right": "Будеш"
           },
           {
-            "statement": "\"Завтра\" is a future time word.",
-            "isTrue": true,
-            "explanation": "Correct! \"Завтра\" = tomorrow."
+            "left": "Він",
+            "right": "Буде"
           },
           {
-            "statement": "You put \"не\" after \"буду\" for negation.",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Не\" goes before: Я не буду."
+            "left": "Вона",
+            "right": "Буде"
           },
           {
-            "statement": "\"Все буде добре!\" is a popular Ukrainian phrase.",
-            "isTrue": true,
-            "explanation": "Correct! A phrase of hope and resilience."
+            "left": "Ми",
+            "right": "Будемо"
           },
           {
-            "statement": "\"Післязавтра\" means yesterday.",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Післязавтра\" = day after tomorrow."
+            "left": "Ви",
+            "right": "Будете"
           },
           {
-            "statement": "\"Ми будемо\" means \"we will.\"",
-            "isTrue": true,
-            "explanation": "Correct! Ми + будемо + infinitive."
+            "left": "Вони",
+            "right": "Будуть"
           },
           {
-            "statement": "Future tense has gender endings like past tense.",
-            "isTrue": false,
-            "explanation": "Incorrect! Future tense (compound) has no gender agreement."
+            "left": "Воно",
+            "right": "Буде"
           },
           {
-            "statement": "\"Я планую\" expresses future intentions.",
-            "isTrue": true,
-            "explanation": "Correct! \"I plan to\" + infinitive."
+            "left": "Хто",
+            "right": "Буде"
           },
           {
-            "statement": "\"Скоро\" means \"slowly.\"",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Скоро\" = soon; \"повільно\" = slowly."
+            "left": "Що",
+            "right": "Буде"
           },
           {
-            "statement": "Questions use the same word order with rising intonation.",
-            "isTrue": true,
-            "explanation": "Correct! Ти будеш працювати? (rising tone at end)."
+            "left": "Студенти (They)",
+            "right": "Будуть"
           },
           {
-            "statement": "\"Будете\" is the form for \"ви.\"",
-            "isTrue": true,
-            "explanation": "Correct! Ви будете (you will - formal/plural)."
+            "left": "Лікар (He/She)",
+            "right": "Буде"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.889Z",
+      "modifiedAt": "2025-12-08T21:22:09.889Z"
+    },
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "The Future Builder",
+      "description": "Complete with \"буду/будеш/буде...\".",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Я ___ спати. (I will sleep).",
+            "answer": "буду"
+          },
+          {
+            "prompt": "Ти ___ їсти. (You will eat).",
+            "answer": "будеш"
+          },
+          {
+            "prompt": "Він ___ писати. (He will write).",
+            "answer": "буде"
+          },
+          {
+            "prompt": "Ми ___ гуляти. (We will walk).",
+            "answer": "будемо"
+          },
+          {
+            "prompt": "Ви ___ читати. (You will read).",
+            "answer": "будете"
+          },
+          {
+            "prompt": "Вони ___ знати. (They will know).",
+            "answer": "будуть"
+          },
+          {
+            "prompt": "Мама ___ готувати. (Mom will cook).",
+            "answer": "буде"
+          },
+          {
+            "prompt": "Тато ___ працювати. (Dad will work).",
+            "answer": "буде"
+          },
+          {
+            "prompt": "Завтра ___ дощ. (Tomorrow will be rain).",
+            "answer": "буде"
+          },
+          {
+            "prompt": "Я не ___ пити. (I will not drink).",
+            "answer": "буду"
+          },
+          {
+            "prompt": "Ми не ___ говорити. (We will not speak).",
+            "answer": "будемо"
+          },
+          {
+            "prompt": "Де ти ___ жити? (Where will you live?).",
+            "answer": "будеш"
           }
         ]
       },
@@ -639,45 +322,41 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.099Z",
-      "modifiedAt": "2025-12-06T10:49:20.099Z"
+      "createdAt": "2025-12-08T21:22:09.889Z",
+      "modifiedAt": "2025-12-08T21:22:09.889Z"
     },
     {
       "id": "act-a1-0-groupsort",
       "type": "group-sort",
-      "title": "Time Expressions",
-      "description": "Sort these into past or future.",
+      "title": "Time Sorter II",
+      "description": "Past or Future?",
       "content": {
         "type": "group-sort",
         "groups": [
           {
-            "id": "past",
-            "name": "Past",
-            "items": [
-              "вчора",
-              "позавчора",
-              "минулого тижня",
-              "раніше"
-            ]
-          },
-          {
             "id": "future",
             "name": "Future",
             "items": [
-              "завтра",
-              "післязавтра",
-              "наступного тижня",
-              "скоро"
+              "Завтра",
+              "Післязавтра",
+              "Наступного тижня",
+              "Наступного місяця",
+              "Скоро",
+              "Потім",
+              "У майбутньому (In future)"
             ]
           },
           {
-            "id": "bothneutral",
-            "name": "Both/Neutral",
+            "id": "past",
+            "name": "Past",
             "items": [
-              "потім",
-              "пізніше",
-              "згодом",
-              "колись"
+              "Вчора",
+              "Позавчора",
+              "Минулого тижня",
+              "Минулого року",
+              "Давно",
+              "Раніше",
+              "Колись"
             ]
           }
         ],
@@ -690,156 +369,100 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.099Z",
-      "modifiedAt": "2025-12-06T10:49:20.099Z"
+      "createdAt": "2025-12-08T21:22:09.889Z",
+      "modifiedAt": "2025-12-08T21:22:09.889Z"
     },
     {
-      "id": "act-a1-0-anagram",
-      "type": "anagram",
-      "title": "Future Tense Vocabulary",
-      "description": "Unscramble the Ukrainian future tense words and time expressions.",
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "The Optimist",
+      "description": "Everything will be good!",
       "content": {
-        "type": "anagram",
-        "isAnagram": true,
+        "type": "fill-blank",
         "items": [
           {
-            "letters": [
-              "у",
-              "д",
-              "у",
-              "б"
-            ],
-            "answer": "буду",
-            "translation": "will - 1st person"
-          },
-          {
-            "letters": [
-              "ш",
-              "е",
-              "д",
-              "у",
-              "б"
-            ],
-            "answer": "будеш",
-            "translation": "will - 2nd person"
-          },
-          {
-            "letters": [
-              "е",
-              "д",
-              "у",
-              "б"
-            ],
+            "prompt": "Завтра ___ (will be) сонце.",
             "answer": "буде",
-            "translation": "will - 3rd person"
+            "hints": [
+              "will be"
+            ]
           },
           {
-            "letters": [
-              "о",
-              "м",
-              "е",
-              "д",
-              "у",
-              "б"
-            ],
+            "prompt": "Ми ___ (will be) багаті.",
             "answer": "будемо",
-            "translation": "will - 1st plural"
+            "hints": [
+              "will be"
+            ]
           },
           {
-            "letters": [
-              "ь",
-              "т",
-              "у",
-              "д",
-              "у",
-              "б"
-            ],
-            "answer": "будуть",
-            "translation": "will - 3rd plural"
+            "prompt": "Ти ___ (will be) здоровий.",
+            "answer": "будеш",
+            "hints": [
+              "will be"
+            ]
           },
           {
-            "letters": [
-              "а",
-              "р",
-              "т",
-              "в",
-              "а",
-              "з"
-            ],
-            "answer": "завтра",
-            "translation": "tomorrow"
+            "prompt": "Вона ___ (will be) щаслива.",
+            "answer": "буде",
+            "hints": [
+              "will be"
+            ]
           },
           {
-            "letters": [
-              "о",
-              "р",
-              "о",
-              "к",
-              "с"
-            ],
-            "answer": "скоро",
-            "translation": "soon"
+            "prompt": "Все ___ (will be) добре.",
+            "answer": "буде",
+            "hints": [
+              "will be"
+            ]
           },
           {
-            "letters": [
-              "є",
-              "ш",
-              "і",
-              "н",
-              "з",
-              "і",
-              "п"
-            ],
-            "answer": "пізніше",
-            "translation": "later"
+            "prompt": "Я ___ (will have) гроші.",
+            "answer": "буду мати",
+            "hints": [
+              "will have"
+            ]
           },
           {
-            "letters": [
-              "м",
-              "і",
-              "т",
-              "о",
-              "п"
-            ],
-            "answer": "потім",
-            "translation": "then"
+            "prompt": "Ми ___ (will travel) в Європу.",
+            "answer": "будемо подорожувати",
+            "hints": [
+              "will travel"
+            ]
           },
           {
-            "letters": [
-              "ю",
-              "у",
-              "н",
-              "а",
-              "л",
-              "п"
-            ],
-            "answer": "планую",
-            "translation": "I plan"
+            "prompt": "Вони ___ (will love) нас.",
+            "answer": "будуть любити",
+            "hints": [
+              "will love"
+            ]
           },
           {
-            "letters": [
-              "ю",
-              "у",
-              "ч",
-              "о",
-              "х"
-            ],
-            "answer": "хочу",
-            "translation": "I want"
+            "prompt": "День ___ (will be) теплий.",
+            "answer": "буде",
+            "hints": [
+              "will be"
+            ]
           },
           {
-            "letters": [
-              "я",
-              "с",
-              "ю",
-              "а",
-              "р",
-              "и",
-              "б",
-              "з"
-            ],
-            "answer": "збираюся",
-            "translation": "I'm going to"
+            "prompt": "Робота ___ (will be) цікава.",
+            "answer": "буде",
+            "hints": [
+              "will be"
+            ]
+          },
+          {
+            "prompt": "Ми ___ (will rest).",
+            "answer": "будемо відпочивати",
+            "hints": [
+              "will rest"
+            ]
+          },
+          {
+            "prompt": "Життя (Life) ___ (will be) супер.",
+            "answer": "буде",
+            "hints": [
+              "will be"
+            ]
           }
         ]
       },
@@ -850,67 +473,102 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.099Z",
-      "modifiedAt": "2025-12-06T10:49:20.099Z"
+      "createdAt": "2025-12-08T21:22:09.889Z",
+      "modifiedAt": "2025-12-08T21:22:09.889Z"
     },
     {
-      "id": "act-a1-0-matchup",
-      "type": "match-up",
-      "title": "Present to Future Intentions",
-      "description": "Match the present situation with the future intention.",
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "The Pessimist",
+      "description": "Everything will be bad...",
       "content": {
-        "type": "match-up",
-        "pairs": [
+        "type": "fill-blank",
+        "items": [
           {
-            "left": "Я вивчаю українську.",
-            "right": "Я буду говорити вільно."
+            "prompt": "Завтра ___ (will be) дощ.",
+            "answer": "буде",
+            "hints": [
+              "will be"
+            ]
           },
           {
-            "left": "Я працюю.",
-            "right": "Я буду відпочивати."
+            "prompt": "Ми ___ (will be) бідні (poor).",
+            "answer": "будемо",
+            "hints": [
+              "will be"
+            ]
           },
           {
-            "left": "Я голодний.",
-            "right": "Я буду їсти."
+            "prompt": "Ти ___ (will be) хворий (sick).",
+            "answer": "будеш",
+            "hints": [
+              "will be"
+            ]
           },
           {
-            "left": "Я втомлений.",
-            "right": "Я буду спати."
+            "prompt": "Все ___ (will be) погано.",
+            "answer": "буде",
+            "hints": [
+              "will be"
+            ]
           },
           {
-            "left": "Я в Україні.",
-            "right": "Я буду подорожувати."
+            "prompt": "Я ___ (will have) проблеми.",
+            "answer": "буду мати",
+            "hints": [
+              "will have"
+            ]
           },
           {
-            "left": "Я читаю книгу.",
-            "right": "Я буду писати рецензію."
+            "prompt": "Вони не ___ (will love) нас.",
+            "answer": "будуть любити",
+            "hints": [
+              "will love"
+            ]
           },
           {
-            "left": "Я дивлюся фільм.",
-            "right": "Я буду обговорювати."
+            "prompt": "Робота ___ (will be) нудна (boring).",
+            "answer": "буде",
+            "hints": [
+              "will be"
+            ]
           },
           {
-            "left": "Я снідаю.",
-            "right": "Я буду працювати."
+            "prompt": "Ми ___ (will work) завжди.",
+            "answer": "будемо працювати",
+            "hints": [
+              "will work"
+            ]
           },
           {
-            "left": "Я вчуся.",
-            "right": "Я буду складати іспит."
+            "prompt": "Ніхто не ___ (will know).",
+            "answer": "буде знати",
+            "hints": [
+              "will know"
+            ]
           },
           {
-            "left": "Я готую.",
-            "right": "Я буду вечеряти."
+            "prompt": "Це ___ (will be) жахливо.",
+            "answer": "буде",
+            "hints": [
+              "will be"
+            ]
           },
           {
-            "left": "Я прибираю.",
-            "right": "Я буду відпочивати."
+            "prompt": "Я не ___ (will sleep).",
+            "answer": "буду спати",
+            "hints": [
+              "will sleep"
+            ]
           },
           {
-            "left": "Я чекаю.",
-            "right": "Я буду зустрічатися."
+            "prompt": "Ти ___ (will cry/plakaty).",
+            "answer": "будеш плакати",
+            "hints": [
+              "will cry/plakaty"
+            ]
           }
-        ],
-        "shuffleRight": true
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -919,25 +577,397 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.099Z",
-      "modifiedAt": "2025-12-06T10:49:20.099Z"
+      "createdAt": "2025-12-08T21:22:09.889Z",
+      "modifiedAt": "2025-12-08T21:22:09.889Z"
+    },
+    {
+      "id": "act-a1-0-truefalse",
+      "type": "true-false",
+      "title": "Realistic Predictions",
+      "description": "Is this likely?",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "Завтра буде 50 годин. (50 hours).",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "Взимку (In winter) буде сніг (snow).",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "Я буду спати вночі (at night).",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "Ми будемо їсти каміння (stones).",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "Завтра буде день.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "Влітку (In summer) буде холодно.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "Люди будуть жити на Марсі скоро.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "Вода буде мокра (wet).",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "Ти будеш президентом.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "Ми будемо говорити українською.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "Студенти будуть вчити.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "Сонце буде зелене.",
+            "isTrue": false,
+            "explanation": ""
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.889Z",
+      "modifiedAt": "2025-12-08T21:22:09.889Z"
+    },
+    {
+      "id": "act-a1-0-unjumble",
+      "type": "unjumble",
+      "title": "Prediction Maker",
+      "description": "Make a prediction.",
+      "content": {
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
+          {
+            "words": [
+              "буду",
+              "Я",
+              "там",
+              "."
+            ],
+            "answer": "Я буду там."
+          },
+          {
+            "words": [
+              "робити",
+              "Що",
+              "будеш",
+              "ти",
+              "?"
+            ],
+            "answer": "Що ти будеш робити?"
+          },
+          {
+            "words": [
+              "будемо",
+              "Ми",
+              "піцу",
+              "їсти",
+              "."
+            ],
+            "answer": "Ми будемо їсти піцу."
+          },
+          {
+            "words": [
+              "буде",
+              "Це",
+              "весело",
+              "."
+            ],
+            "answer": "Це буде весело."
+          },
+          {
+            "words": [
+              "Завтра",
+              "тепло",
+              "буде",
+              "."
+            ],
+            "answer": "Завтра буде тепло."
+          },
+          {
+            "words": [
+              "жити",
+              "Вони",
+              "будуть",
+              "тут",
+              "."
+            ],
+            "answer": "Вони будуть тут жити."
+          },
+          {
+            "words": [
+              "не",
+              "Я",
+              "знати",
+              "буду",
+              "."
+            ],
+            "answer": "Я не буду знати."
+          },
+          {
+            "words": [
+              "працювати",
+              "Ви",
+              "будете",
+              "?"
+            ],
+            "answer": "Ви будете працювати?"
+          },
+          {
+            "words": [
+              "буде",
+              "Вона",
+              "вдома",
+              "."
+            ],
+            "answer": "Вона буде вдома."
+          },
+          {
+            "words": [
+              "щасливі",
+              "Ми",
+              "будемо",
+              "."
+            ],
+            "answer": "Ми будемо щасливі."
+          },
+          {
+            "words": [
+              "спати",
+              "Він",
+              "буде",
+              "."
+            ],
+            "answer": "Він буде спати."
+          },
+          {
+            "words": [
+              "буде",
+              "дощ",
+              "Скоро",
+              "."
+            ],
+            "answer": "Скоро буде дощ."
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.889Z",
+      "modifiedAt": "2025-12-08T21:22:09.889Z"
+    },
+    {
+      "id": "act-a1-0-anagram",
+      "type": "anagram",
+      "title": "Future Forms",
+      "description": "Unscramble.",
+      "content": {
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
+          {
+            "letters": [
+              "б",
+              "у",
+              "д",
+              "у"
+            ],
+            "answer": "буду",
+            "translation": "I will"
+          },
+          {
+            "letters": [
+              "б",
+              "у",
+              "д",
+              "е",
+              "ш"
+            ],
+            "answer": "будеш",
+            "translation": "You will"
+          },
+          {
+            "letters": [
+              "б",
+              "у",
+              "д",
+              "е"
+            ],
+            "answer": "буде",
+            "translation": "He will"
+          },
+          {
+            "letters": [
+              "б",
+              "у",
+              "д",
+              "е",
+              "м",
+              "о"
+            ],
+            "answer": "будемо",
+            "translation": "We will"
+          },
+          {
+            "letters": [
+              "б",
+              "у",
+              "д",
+              "е",
+              "т",
+              "е"
+            ],
+            "answer": "будете",
+            "translation": "You pl will"
+          },
+          {
+            "letters": [
+              "б",
+              "у",
+              "д",
+              "у",
+              "т",
+              "ь"
+            ],
+            "answer": "будуть",
+            "translation": "They will"
+          },
+          {
+            "letters": [
+              "з",
+              "а",
+              "в",
+              "т",
+              "р",
+              "а"
+            ],
+            "answer": "завтра",
+            "translation": "Tomorrow"
+          },
+          {
+            "letters": [
+              "с",
+              "к",
+              "о",
+              "р",
+              "о"
+            ],
+            "answer": "скоро",
+            "translation": "Soon"
+          },
+          {
+            "letters": [
+              "п",
+              "о",
+              "т",
+              "і",
+              "м"
+            ],
+            "answer": "потім",
+            "translation": "Then"
+          },
+          {
+            "letters": [
+              "м",
+              "а",
+              "й",
+              "б",
+              "у",
+              "т",
+              "н",
+              "є"
+            ],
+            "answer": "майбутнє",
+            "translation": "Future"
+          },
+          {
+            "letters": [
+              "р",
+              "і",
+              "к"
+            ],
+            "answer": "рік",
+            "translation": "Year"
+          },
+          {
+            "letters": [
+              "т",
+              "и",
+              "ж",
+              "д",
+              "е",
+              "н",
+              "ь"
+            ],
+            "answer": "тиждень",
+            "translation": "Week"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.889Z",
+      "modifiedAt": "2025-12-08T21:22:09.889Z"
     }
   ],
   "vocabulary": {
     "moduleId": "mod-uk-A1-22",
     "level": "A1",
     "phase": "A1.3",
-    "wordCount": 30,
-    "newWordCount": 30,
+    "wordCount": 20,
+    "newWordCount": 20,
     "reviewWordCount": 0,
-    "transliterationMode": "none",
+    "transliterationMode": "full",
     "words": [
       {
         "id": "v-zavtra-0-0",
         "uk": "завтра",
         "en": "tomorrow",
-        "pos": "adv",
-        "ipa": "/ˈzɑvtrɑ/",
+        "pos": "Time",
+        "ipa": "/ˈzɑwtrɑ/",
+        "note": "[🔊](audio_zavtra)",
         "isNew": true,
         "firstModule": 0
       },
@@ -945,263 +975,189 @@
         "id": "v-pislyazavtra-0-1",
         "uk": "післязавтра",
         "en": "day after tomorrow",
-        "pos": "adv",
-        "ipa": "/pʲislʲɑˈzɑvtrɑ/",
+        "pos": "Time",
+        "ipa": "/pisʲlʲɑˈzɑwtrɑ/",
+        "note": "[🔊](audio_pisljazavtra)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-nastupnoho-tyzhnya-0-2",
-        "uk": "наступного тижня",
-        "en": "next week",
-        "pos": "phrase",
-        "ipa": "/nɑˈstupnɔɦɔ ˈtɪʒnʲɑ/",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-nastupnoho-misyatsya-0-3",
-        "uk": "наступного місяця",
-        "en": "next month",
-        "pos": "phrase",
-        "ipa": "/nɑˈstupnɔɦɔ ˈmʲisʲɑt͡sʲɑ/",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-nastupnoho-roku-0-4",
-        "uk": "наступного року",
-        "en": "next year",
-        "pos": "phrase",
-        "ipa": "/nɑˈstupnɔɦɔ ˈrɔku/",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-skoro-0-5",
+        "id": "v-skoro-0-2",
         "uk": "скоро",
         "en": "soon",
-        "pos": "adv",
+        "pos": "Time",
         "ipa": "/ˈskɔrɔ/",
+        "note": "[🔊](audio_skoro)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-piznishe-0-6",
-        "uk": "пізніше",
-        "en": "later",
-        "pos": "adv",
-        "ipa": "/ˈpʲiznʲiʃɛ/",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-potim-0-7",
+        "id": "v-potim-0-3",
         "uk": "потім",
-        "en": "then, afterward",
-        "pos": "adv",
-        "ipa": "/pɔˈtʲim/",
+        "en": "later/then",
+        "pos": "Time",
+        "ipa": "/ˈpɔtim/",
+        "note": "[🔊](audio_potim)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-zhodom-0-8",
-        "uk": "згодом",
-        "en": "later on, eventually",
-        "pos": "adv",
-        "ipa": "/ˈzɦɔdɔm/",
+        "id": "v-nastupnoho-0-4",
+        "uk": "наступного",
+        "en": "next (of next)",
+        "pos": "Genitive",
+        "ipa": "/nɑˈstupnɔɦɔ/",
+        "note": "[🔊](audio_nastupnoho)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-budu-0-9",
+        "id": "v-maybutnye-0-5",
+        "uk": "майбутнє",
+        "en": "future (noun)",
+        "pos": "Time",
+        "ipa": "/mɑjˈbutnʲɛ/",
+        "note": "[🔊](audio_maybutnye)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-budu-0-6",
         "uk": "буду",
-        "en": "will (1st sg)",
-        "pos": "verb",
+        "en": "I will",
+        "pos": "Future",
         "ipa": "/ˈbudu/",
-        "note": "future of бути",
+        "note": "[🔊](audio_budu)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-budesh-0-10",
+        "id": "v-budesh-0-7",
         "uk": "будеш",
-        "en": "will (2nd sg)",
-        "pos": "verb",
+        "en": "you will",
+        "pos": "Future",
         "ipa": "/ˈbudɛʃ/",
+        "note": "[🔊](audio_budesh)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-bude-0-11",
+        "id": "v-bude-0-8",
         "uk": "буде",
-        "en": "will (3rd sg)",
-        "pos": "verb",
+        "en": "he/she will",
+        "pos": "Future",
         "ipa": "/ˈbudɛ/",
+        "note": "[🔊](audio_bude)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-budemo-0-12",
+        "id": "v-budemo-0-9",
         "uk": "будемо",
-        "en": "will (1st pl)",
-        "pos": "verb",
+        "en": "we will",
+        "pos": "Future",
         "ipa": "/ˈbudɛmɔ/",
+        "note": "[🔊](audio_budemo)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-budete-0-13",
+        "id": "v-budete-0-10",
         "uk": "будете",
-        "en": "will (2nd pl)",
-        "pos": "verb",
+        "en": "you (pl) will",
+        "pos": "Future",
         "ipa": "/ˈbudɛtɛ/",
+        "note": "[🔊](audio_budete)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-budutь-0-14",
+        "id": "v-budutь-0-11",
         "uk": "будуть",
-        "en": "will (3rd pl)",
-        "pos": "verb",
+        "en": "they will",
+        "pos": "Future",
         "ipa": "/ˈbudutʲ/",
+        "note": "[🔊](audio_budut)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-zbyrayusya-0-15",
-        "uk": "збираюся",
-        "en": "I'm going to",
-        "pos": "verb",
-        "ipa": "/zbɪˈrɑjusʲɑ/",
-        "note": "intention",
+        "id": "v-vvecheri-0-12",
+        "uk": "ввечері",
+        "en": "in the evening",
+        "pos": "Time",
+        "ipa": "/ˈwwɛtʃɛri/",
+        "note": "[🔊](audio_vvecheri)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-planuyu-0-16",
-        "uk": "планую",
-        "en": "I plan",
-        "pos": "verb",
-        "ipa": "/plɑˈnuju/",
+        "id": "v-do-obidu-0-13",
+        "uk": "до обіду",
+        "en": "until lunch",
+        "pos": "Time",
+        "ipa": "/dɔ ɔˈbidu/",
+        "note": "[🔊](audio_do_obidu)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-khochu-0-17",
-        "uk": "хочу",
-        "en": "I want",
-        "pos": "verb",
-        "ipa": "/ˈxɔt͡ʃu/",
+        "id": "v-subota-0-14",
+        "uk": "субота",
+        "en": "Saturday",
+        "pos": "Day",
+        "ipa": "/suˈbɔtɑ/",
+        "note": "[🔊](audio_subota)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-mayu-namir-0-18",
-        "uk": "маю намір",
-        "en": "I intend",
-        "pos": "phrase",
-        "ipa": "/ˈmɑju ˈnɑmʲir/",
+        "id": "v-ponedilok-0-15",
+        "uk": "понеділок",
+        "en": "Monday",
+        "pos": "Day",
+        "ipa": "/pɔnɛˈdilɔk/",
+        "note": "[🔊](audio_ponedilok)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-spodivayusya-0-19",
-        "uk": "сподіваюся",
-        "en": "I hope",
-        "pos": "verb",
-        "ipa": "/spɔdʲiˈvɑjusʲɑ/",
+        "id": "v-bahatyy-0-16",
+        "uk": "багатий",
+        "en": "rich",
+        "pos": "Adj",
+        "ipa": "/bɑˈɦɑtɪj/",
+        "note": "[🔊](audio_bahatyj)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-obitsyayu-0-20",
-        "uk": "обіцяю",
-        "en": "I promise",
-        "pos": "verb",
-        "ipa": "/ɔˈbʲit͡sʲɑju/",
+        "id": "v-shchaslyvyy-0-17",
+        "uk": "щасливий",
+        "en": "happy",
+        "pos": "Adj",
+        "ipa": "/ʃtʃɑsˈlɪwɪj/",
+        "note": "[🔊](audio_shchaslyvyj)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-sprobuyu-0-21",
-        "uk": "спробую",
-        "en": "I'll try",
-        "pos": "verb",
-        "ipa": "/ˈsprɔbuju/",
+        "id": "v-veselo-0-18",
+        "uk": "весело",
+        "en": "fun/merrily",
+        "pos": "Adv",
+        "ipa": "/ˈvɛsɛlɔ/",
+        "note": "[🔊](audio_veselo)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-postarayusya-0-22",
-        "uk": "постараюся",
-        "en": "I'll do my best",
-        "pos": "verb",
-        "ipa": "/pɔstɑˈrɑjusʲɑ/",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-mriyu-0-23",
-        "uk": "мрію",
-        "en": "I dream",
-        "pos": "verb",
-        "ipa": "/ˈmrʲiju/",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-dumayu-0-24",
-        "uk": "думаю",
-        "en": "I think",
-        "pos": "verb",
-        "ipa": "/ˈdumɑju/",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-vyrishyv-0-25",
-        "uk": "вирішив",
-        "en": "I decided",
-        "pos": "verb",
-        "ipa": "/vɪˈrʲiʃɪv/",
-        "note": "past tense",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-vzhe-0-26",
-        "uk": "вже",
-        "en": "already",
-        "pos": "adv",
-        "ipa": "/vʒɛ/",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-shche-0-27",
-        "uk": "ще",
-        "en": "still, yet",
-        "pos": "adv",
-        "ipa": "/ʃt͡ʃɛ/",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-nikoly-0-28",
-        "uk": "ніколи",
-        "en": "never",
-        "pos": "adv",
-        "ipa": "/nʲiˈkɔlɪ/",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-obov'yazkovo-0-29",
-        "uk": "обов'язково",
-        "en": "definitely, certainly",
-        "pos": "adv",
-        "ipa": "/ɔbɔvjɑzˈkɔvɔ/",
+        "id": "v-tsikavo-0-19",
+        "uk": "цікаво",
+        "en": "interesting",
+        "pos": "Adv",
+        "ipa": "/tsiˈkɑvɔ/",
+        "note": "[🔊](audio_tsikavo)",
         "isNew": true,
         "firstModule": 0
       }

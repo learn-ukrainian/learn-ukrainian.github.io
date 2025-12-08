@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -481,13 +521,15 @@ footer {
     <h1>Module 06: The Living Verb I</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Quiz</button>
-      <button class="nav-tab" data-section="activity-1">2. Match</button>
+      <button class="nav-tab" data-section="activity-0">1. Fill</button>
+      <button class="nav-tab" data-section="activity-1">2. Spell</button>
       <button class="nav-tab" data-section="activity-2">3. Match</button>
-      <button class="nav-tab" data-section="activity-3">4. Sort</button>
-      <button class="nav-tab" data-section="activity-4">5. T/F</button>
-      <button class="nav-tab" data-section="activity-5">6. Fill</button>
-      <button class="nav-tab" data-section="activity-6">7. Spell</button>
+      <button class="nav-tab" data-section="activity-3">4. Order</button>
+      <button class="nav-tab" data-section="activity-4">5. Quiz</button>
+      <button class="nav-tab" data-section="activity-5">6. Match</button>
+      <button class="nav-tab" data-section="activity-6">7. T/F</button>
+      <button class="nav-tab" data-section="activity-7">8. Select</button>
+      <button class="nav-tab" data-section="activity-8">9. Sort</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -497,574 +539,213 @@ footer {
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.1</span>
         <h2 style="font-size:2rem;margin:0.5rem 0">The Living Verb I</h2>
-        <p style="color:var(--text-muted)">Present Tense Class I Verbs (-ати/-яти)</p>
+        <p style="color:var(--text-muted)">Action and Energy</p>
       </div>
       
     <div class="card section-intro">
       <h3>📖 Introduction</h3>
       <div class="md-content"><h2 id="warmup">warm-up</h2>
-<h3 id="verbsbringlanguagetolife">Verbs Bring Language to Life!</h3>
-<p>You've learned nouns (things) and pronouns (people). Now it's time for <strong>verbs</strong> - action words that make your Ukrainian come alive!</p>
-<p>In English, verbs barely change: "I read, you read, they read." But Ukrainian verbs change endings for each person:</p>
+<p><strong>The Engine of the Sentence: Bringing Words to Life</strong></p>
+<p>So far, you have learned to label your world. You can point and say "This is a table" or "That is a lamp." You have the nouns (the "things") and the adjectives (the "colors"). But your world is still a still-life painting. Nothing moves. Nothing happens.</p>
+<p>Today, that changes. Today, we turn on the engine.</p>
+<p>We are introducing <strong>Verbs</strong> (Дієслова). Verbs are the heartbeat of the Ukrainian sentence. They tell us who is doing what. They allow you to say "I read," "We work," "You know."</p>
+<p>In English, verbs are quite lazy. "I read, You read, We read, They read." The word "read" barely changes. But in Ukrainian, verbs are alive. They change their ending to match the person doing the action. This is called <strong>conjugation</strong>.</p>
+<p>Think of the verb as a chameleon that changes color depending on who it is sitting next to.</p>
+<ul>
+<li>If <strong>I</strong> do it, the verb wears one ending.</li>
+<li>If <strong>You</strong> do it, the verb wears another.</li>
+</ul>
+<p>This might sound complex, but it follows a beautiful, rhythm pattern. Once you hear the rhythm, you will feel it.</p>
+<blockquote>
+  <p>💡 <strong>Did You Know? The "You" Distinction</strong><br />
+  Just like in French or German, Ukrainian has two ways to say "You":</p>
+  <ol>
+  <li><strong>Ти</strong> (Informal singular): Used for friends, family, children, and God.</li>
+  <li><strong>Ви</strong> (Formal/Plural): Used for strangers, elders, authority figures, OR when addressing a group of people.<br />
+  In our conjugation tables, we will always show both.</li>
+  </ol>
+</blockquote>
+<h2 id="presentation">presentation</h2>
+<h3 id="classiverbsthefamily">Class I Verbs: The "-АТИ" Family</h3>
+<p>Ukrainian verbs are grouped into two main "families" (conjugations) based on how they sound. Today we meet the biggest and friendliest family: <strong>Class I</strong>.</p>
+<p>These verbs generally end in <strong>-АТИ</strong> or <strong>-ЯТИ</strong> in their dictionary form (the Infinitive).<br />
+Example: <strong>Читати</strong> (To read).</p>
+<p>To use this verb, we first chop off the <strong>-ти</strong> to find the "stem" (the root), and then we add our new "person" endings.</p>
+<p><strong>Stem:</strong> Чита-</p>
 <table>
 <thead>
 <tr>
 <th>Person</th>
+<th>Pronoun</th>
+<th>Ending</th>
+<th>Verb Form</th>
 <th>English</th>
-<th>Ukrainian</th>
+<th>Audio</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>I</td>
-<td>read</td>
-<td>читаю</td>
-</tr>
-<tr>
-<td>you</td>
-<td>read</td>
-<td>читаєш</td>
-</tr>
-<tr>
-<td>he/she</td>
-<td>reads</td>
-<td>читає</td>
-</tr>
-<tr>
-<td>we</td>
-<td>read</td>
-<td>читаємо</td>
-</tr>
-<tr>
-<td>you (pl)</td>
-<td>read</td>
-<td>читаєте</td>
-</tr>
-<tr>
-<td>they</td>
-<td>read</td>
-<td>читають</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>Ukrainian verb conjugation tells you WHO is doing the action - you often don't need the pronoun! "Читаю" already means "I read" because only "я" (I) uses the -ю ending.</p>
-</blockquote>
-<h3 id="twoverbclasses">Two Verb Classes</h3>
-<p>Ukrainian verbs fall into two main classes based on their infinitive ending:</p>
-<table>
-<thead>
-<tr>
-<th>Class</th>
-<th>Infinitive</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Class I</strong></td>
-<td>-ати, -яти</td>
-<td>читати (to read)</td>
-</tr>
-<tr>
-<td><strong>Class II</strong></td>
-<td>-ити, -іти</td>
-<td>говорити (to speak)</td>
-</tr>
-</tbody>
-</table>
-<p>Today we focus on <strong>Class I</strong> - the most common type!</p>
-<h2 id="presentation">presentation</h2>
-<h3 id="theinfinitivestartingpoint">The Infinitive: Starting Point</h3>
-<p>The <strong>infinitive</strong> is the dictionary form - "to read," "to write," etc. In Ukrainian, Class I infinitives end in <strong>-ати</strong> or <strong>-яти</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Transliteration</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>читати</td>
-<td>chytaty</td>
-<td>to read</td>
-</tr>
-<tr>
-<td>писати</td>
-<td>pysaty</td>
-<td>to write</td>
-</tr>
-<tr>
-<td>знати</td>
-<td>znaty</td>
-<td>to know</td>
-</tr>
-<tr>
-<td>працювати</td>
-<td>pratsyuvaty</td>
-<td>to work</td>
-</tr>
-</tbody>
-</table>
-<h3 id="classiconjugationpattern">Class I Conjugation Pattern</h3>
-<p>To conjugate, remove <strong>-ти</strong> from the infinitive and add personal endings:</p>
-<p><strong>читати → чита-</strong> (stem)</p>
-<table>
-<thead>
-<tr>
-<th>Person</th>
-<th>Ending</th>
-<th>Full Form</th>
-<th>Translation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>я</td>
-<td>-ю</td>
-<td>читаю</td>
+<td><strong>Я</strong></td>
+<td><strong>-ю</strong></td>
+<td>чита<strong>ю</strong></td>
 <td>I read</td>
+<td><button class="audio-btn" onclick="openForvo('chytayu')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
-<td>ти</td>
-<td>-єш</td>
-<td>читаєш</td>
-<td>you read</td>
+<td>You (sg)</td>
+<td><strong>Ти</strong></td>
+<td><strong>-єш</strong></td>
+<td>чита<strong>єш</strong></td>
+<td>You read</td>
+<td><button class="audio-btn" onclick="openForvo('chytayesh')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
-<td>він/вона</td>
-<td>-є</td>
-<td>читає</td>
-<td>he/she reads</td>
+<td>He/She/It</td>
+<td><strong>Він/Вона</strong></td>
+<td><strong>-є</strong></td>
+<td>чита<strong>є</strong></td>
+<td>He/she reads</td>
+<td><button class="audio-btn" onclick="openForvo('chytaye')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
-<td>ми</td>
-<td>-ємо</td>
-<td>читаємо</td>
-<td>we read</td>
+<td>We</td>
+<td><strong>Ми</strong></td>
+<td><strong>-ємо</strong></td>
+<td>чита<strong>ємо</strong></td>
+<td>We read</td>
+<td><button class="audio-btn" onclick="openForvo('chytayemo')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
-<td>ви</td>
-<td>-єте</td>
-<td>читаєте</td>
-<td>you read</td>
+<td>You (pl)</td>
+<td><strong>Ви</strong></td>
+<td><strong>-єте</strong></td>
+<td>чита<strong>єте</strong></td>
+<td>You read</td>
+<td><button class="audio-btn" onclick="openForvo('chytayete')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
-<td>вони</td>
-<td>-ють</td>
-<td>читають</td>
-<td>they read</td>
+<td>They</td>
+<td><strong>Вони</strong></td>
+<td><strong>-ють</strong></td>
+<td>чита<strong>ють</strong></td>
+<td>They read</td>
+<td><button class="audio-btn" onclick="openForvo('chytayut')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 </tbody>
 </table>
-<blockquote>
-  <p>⚡ <strong>Pro Tip</strong></p>
-  <p>Notice the pattern: я ends in <strong>-ю</strong>, ти/він/вона/ми/ви have <strong>-є-</strong> in the middle, and вони ends in <strong>-ють</strong>. Once you see the pattern, conjugation becomes easy!</p>
-</blockquote>
-<h3 id="moreclassiexamples">More Class I Examples</h3>
-<p>Let's conjugate "знати" (to know):</p>
-<table>
-<thead>
-<tr>
-<th>Person</th>
-<th>Ukrainian</th>
-<th>Transliteration</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>я</td>
-<td>знаю</td>
-<td>znayu</td>
-</tr>
-<tr>
-<td>ти</td>
-<td>знаєш</td>
-<td>znayesh</td>
-</tr>
-<tr>
-<td>він/вона</td>
-<td>знає</td>
-<td>znaye</td>
-</tr>
-<tr>
-<td>ми</td>
-<td>знаємо</td>
-<td>znayemo</td>
-</tr>
-<tr>
-<td>ви</td>
-<td>знаєте</td>
-<td>znayete</td>
-</tr>
-<tr>
-<td>вони</td>
-<td>знають</td>
-<td>znayut'</td>
-</tr>
-</tbody>
-</table>
-<p>And "працювати" (to work):</p>
-<table>
-<thead>
-<tr>
-<th>Person</th>
-<th>Ukrainian</th>
-<th>Transliteration</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>я</td>
-<td>працюю</td>
-<td>pratsyuyu</td>
-</tr>
-<tr>
-<td>ти</td>
-<td>працюєш</td>
-<td>pratsyuyesh</td>
-</tr>
-<tr>
-<td>він/вона</td>
-<td>працює</td>
-<td>pratsyuye</td>
-</tr>
-<tr>
-<td>ми</td>
-<td>працюємо</td>
-<td>pratsyuyemo</td>
-</tr>
-<tr>
-<td>ви</td>
-<td>працюєте</td>
-<td>pratsyuyete</td>
-</tr>
-<tr>
-<td>вони</td>
-<td>працюють</td>
-<td>pratsyuyut'</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🔍 <strong>Myth Buster</strong></p>
-  <p><strong>Myth:</strong> "Ukrainian verb conjugation is harder than English"<br />
-  <strong>Fact:</strong> It's actually more logical! English has irregular verbs (go→went, be→am/is/are), but Ukrainian Class I verbs ALL follow the same pattern. Learn one, know them all!</p>
-</blockquote>
-<h3 id="stemchangeswatchout">Stem Changes: Watch Out!</h3>
-<p>Some verbs have small stem changes. The most common: <strong>-ува-</strong> → <strong>-у-</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Infinitive</th>
-<th>я</th>
-<th>ти</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>малювати</td>
-<td>малюю</td>
-<td>малюєш</td>
-</tr>
-<tr>
-<td>танцювати</td>
-<td>танцюю</td>
-<td>танцюєш</td>
-</tr>
-<tr>
-<td>працювати</td>
-<td>працюю</td>
-<td>працюєш</td>
-</tr>
-</tbody>
-</table>
-<h3 id="essentialclassiverbs">Essential Class I Verbs</h3>
-<p>Here are 25 verbs you need to know:</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Transliteration</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>читати</td>
-<td>chytaty</td>
-<td>to read</td>
-</tr>
-<tr>
-<td>писати</td>
-<td>pysaty</td>
-<td>to write</td>
-</tr>
-<tr>
-<td>знати</td>
-<td>znaty</td>
-<td>to know</td>
-</tr>
-<tr>
-<td>розуміти</td>
-<td>rozumity</td>
-<td>to understand</td>
-</tr>
-<tr>
-<td>слухати</td>
-<td>slukhaty</td>
-<td>to listen</td>
-</tr>
-<tr>
-<td>чекати</td>
-<td>chekaty</td>
-<td>to wait</td>
-</tr>
-<tr>
-<td>питати</td>
-<td>pytaty</td>
-<td>to ask</td>
-</tr>
-<tr>
-<td>відповідати</td>
-<td>vidpovidaty</td>
-<td>to answer</td>
-</tr>
-<tr>
-<td>працювати</td>
-<td>pratsyuvaty</td>
-<td>to work</td>
-</tr>
-<tr>
-<td>відпочивати</td>
-<td>vidpochyvaty</td>
-<td>to rest</td>
-</tr>
-<tr>
-<td>снідати</td>
-<td>snidaty</td>
-<td>to have breakfast</td>
-</tr>
-<tr>
-<td>обідати</td>
-<td>obidaty</td>
-<td>to have lunch</td>
-</tr>
-<tr>
-<td>вечеряти</td>
-<td>vecheryaty</td>
-<td>to have dinner</td>
-</tr>
-<tr>
-<td>гуляти</td>
-<td>hulyaty</td>
-<td>to walk/stroll</td>
-</tr>
-<tr>
-<td>грати</td>
-<td>hraty</td>
-<td>to play</td>
-</tr>
-<tr>
-<td>співати</td>
-<td>spivaty</td>
-<td>to sing</td>
-</tr>
-<tr>
-<td>танцювати</td>
-<td>tantsyuvaty</td>
-<td>to dance</td>
-</tr>
-<tr>
-<td>малювати</td>
-<td>malyuvaty</td>
-<td>to draw</td>
-</tr>
-<tr>
-<td>думати</td>
-<td>dumaty</td>
-<td>to think</td>
-</tr>
-<tr>
-<td>мріяти</td>
-<td>mriyaty</td>
-<td>to dream</td>
-</tr>
-<tr>
-<td>починати</td>
-<td>pochynaty</td>
-<td>to begin</td>
-</tr>
-<tr>
-<td>закінчувати</td>
-<td>zakinchuvaty</td>
-<td>to finish</td>
-</tr>
-<tr>
-<td>шукати</td>
-<td>shukaty</td>
-<td>to search</td>
-</tr>
-<tr>
-<td>знаходити</td>
-<td>znakhodyty</td>
-<td>to find</td>
-</tr>
-<tr>
-<td>називати</td>
-<td>nazyvaty</td>
-<td>to call/name</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>📜 <strong>History Bite</strong></p>
-  <p>The verb "читати" (to read) is related to words for counting and honoring in other Slavic languages. Originally, reading was counting letters and marks - a sacred skill possessed only by monks and scribes!</p>
-</blockquote>
-<h3 id="buildingsentences">Building Sentences</h3>
-<p>Now combine verbs with what you already know:</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Transliteration</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Я читаю книгу.</td>
-<td>Ya chytayu knyhu.</td>
-<td>I read a book.</td>
-</tr>
-<tr>
-<td>Ти пишеш лист.</td>
-<td>Ty pyshesh lyst.</td>
-<td>You write a letter.</td>
-</tr>
-<tr>
-<td>Вона знає.</td>
-<td>Vona znaye.</td>
-<td>She knows.</td>
-</tr>
-<tr>
-<td>Ми працюємо.</td>
-<td>My pratsyuyemo.</td>
-<td>We work.</td>
-</tr>
-<tr>
-<td>Вони слухають музику.</td>
-<td>Vony slukhayut' muzyku.</td>
-<td>They listen to music.</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎬 <strong>Pop Culture Moment: Metro 2033</strong></p>
-  <p>In the Ukrainian version of Metro 2033, characters say things like "Я чекаю" (I'm waiting) or "Ми шукаємо" (We're searching). These verbs appear constantly in video game dialogue!</p>
-</blockquote>
-<h3 id="nopronounneeded">No Pronoun Needed!</h3>
-<p>Because verb endings show the person, you can often drop the pronoun:</p>
-<table>
-<thead>
-<tr>
-<th>With Pronoun</th>
-<th>Without</th>
-<th>Both Mean</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Я читаю.</td>
-<td>Читаю.</td>
-<td>I read.</td>
-</tr>
-<tr>
-<td>Ти знаєш?</td>
-<td>Знаєш?</td>
-<td>Do you know?</td>
-</tr>
-<tr>
-<td>Ми працюємо.</td>
-<td>Працюємо.</td>
-<td>We work.</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎭 <strong>Culture Corner</strong></p>
-  <p>Dropping the pronoun is common in casual speech. "Читаю цікаву книгу!" (Reading an interesting book!) sounds natural. But keep the pronoun for emphasis: "Я читаю, а він спить!" (I'm reading, but he's sleeping!)</p>
-</blockquote>
-<h2 id="practice">practice</h2>
-<h3 id="exercise1conjugate">Exercise 1: Conjugate</h3>
-<p>Conjugate these verbs for the given pronoun:</p>
-<ol>
-<li><p>читати (я)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer">читаю</div></div>
-<ol start="2">
-<li><p>писати (ти)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer">пишеш</div></div>
-<ol start="3">
-<li><p>знати (він)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer">знає</div></div>
-<ol start="4">
-<li><p>працювати (ми)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer">працюємо</div></div>
-<ol start="5">
-<li><p>слухати (вони)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer">слухають</div></div>
-<ol start="6">
-<li><p>думати (вона)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-5', this)">Показати відповідь</button><div class="answer-block" id="ans-5"><div class="callout callout-answer" data-callout="answer">думає</div></div>
-<h3 id="exercise2completethesentence">Exercise 2: Complete the Sentence</h3>
-<p>Fill in the correct verb form:</p>
-<ol>
-<li><p>Я ___ книгу. (читати)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-6', this)">Показати відповідь</button><div class="answer-block" id="ans-6"><div class="callout callout-answer" data-callout="answer">читаю</div></div>
-<ol start="2">
-<li><p>Вона ___ музику. (слухати)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-7', this)">Показати відповідь</button><div class="answer-block" id="ans-7"><div class="callout callout-answer" data-callout="answer">слухає</div></div>
-<ol start="3">
-<li><p>Ми ___ українською. (розуміти)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-8', this)">Показати відповідь</button><div class="answer-block" id="ans-8"><div class="callout callout-answer" data-callout="answer">розуміємо</div></div>
-<ol start="4">
-<li><p>Ти ___ на роботу? (чекати)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-9', this)">Показати відповідь</button><div class="answer-block" id="ans-9"><div class="callout callout-answer" data-callout="answer">чекаєш</div></div>
-<ol start="5">
-<li><p>Вони ___ разом. (працювати)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-10', this)">Показати відповідь</button><div class="answer-block" id="ans-10"><div class="callout callout-answer" data-callout="answer">працюють</div></div>
-<ol start="6">
-<li><p>Він ___ у парку. (гуляти)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-11', this)">Показати відповідь</button><div class="answer-block" id="ans-11"><div class="callout callout-answer" data-callout="answer">гуляє</div></div>
-<h2 id="production">production</h2>
-<h3 id="describeyourdailyactions">Describe Your Daily Actions</h3>
-<p>Make 5 sentences about what you do using these verbs:</p>
-<p>Example:</p>
+<p><strong>The Rhythm of Class I:</strong><br />
+Listen to the vowels: -Ю, -ЄШ, -Є, -ЄМО, -ЄТЕ, -ЮТЬ.<br />
+It is bright and open. It flows.</p>
+<hr />
+<h3 id="thehiddensubjectthepowerofendings">The "Hidden" Subject: The Power of Endings</h3>
+<p>You might notice something interesting. Since every pronoun has a unique ending, the ending <em>itself</em> tells you who is speaking.</p>
 <ul>
-<li>Я читаю щодня. (I read every day.)</li>
-<li>Ми обідаємо о першій. (We have lunch at one.)</li>
-<li>Вони працюють у Києві. (They work in Kyiv.)</li>
+<li><strong>Читаю</strong> can <em>only</em> mean "I read."</li>
+<li><strong>Читаємо</strong> can <em>only</em> mean "We read."</li>
+</ul>
+<p>In poetic or casual Ukrainian, you can sometimes drop the pronoun entirely because the verb does all the work!</p>
+<blockquote>
+  <p><strong>Я знаю</strong> (I know) $\rightarrow$ <strong>Знаю</strong> (I know).</p>
+</blockquote>
+<p>This is why we call them "Living Verbs." They carry the identity of the speaker inside them.</p>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: No "Is" in "Reads"</strong><br />
+  English speakers often want to translate "He is reading" as "Він є читає." <strong>Don't do it!</strong><br />
+  "To be" (є) is almost never used as a helper verb in the present tense.</p>
+  <ul>
+  <li><strong>Wrong:</strong> Він є читає.</li>
+  <li><strong>Right:</strong> Він читає.<br />
+  The Ukrainian present tense covers both "Basic" (he reads) and "Continuous" (he is reading) aspects.</li>
+  </ul>
+</blockquote>
+<h3 id="verbsinactionadayinthelife">Verbs in Action: A Day in the Life</h3>
+<p>Let's see how these verbs paint a picture of daily life.</p>
+<p><strong>Scenario 1: At the University</strong></p>
+<ul>
+<li><strong>Я читаю.</strong> (I am reading / I read.)</li>
+<li><strong>Ми слухаємо.</strong> (We are listening.)</li>
+<li><strong>Ви питаєте.</strong> (You are asking.)</li>
+<li><strong>Він відповідає.</strong> (He is answering.)</li>
+</ul>
+<p>Notice that there is no "am" or "is" or "are" here. "Я читаю" means both "I read" AND "I am reading." The context tells you which one it is.</p>
+<p><strong>Scenario 2: Relaxing at Home</strong><br />
+The evening is quiet.</p>
+<ul>
+<li><strong>Олена відпочиває.</strong> (Olena is resting.)</li>
+<li><strong>Ми граємо.</strong> (We are playing.)</li>
+<li><strong>Вони співають.</strong> (They are singing.)</li>
+<li><strong>Ти снідаєш?</strong> (Are you having breakfast? - <em>Wait, at night? Maybe a late snack!</em>)</li>
+</ul>
+<p><strong>Scenario 3: The Common Mistake</strong><br />
+Imagine a student acts confused.</p>
+<ul>
+<li>Teacher: <strong>Ти розумієш?</strong> (Do you understand?)</li>
+<li>Student: <strong>Я не розумію.</strong> (I don't understand.)</li>
+<li>Teacher: <strong>Хто знає?</strong> (Who knows?)</li>
+<li>Other Student: <strong>Я знаю!</strong> (I know!)</li>
 </ul>
 <blockquote>
-  <p>🌍 <strong>Real World</strong></p>
-  <p>These verbs are essential for basic conversation! "Що ви робите?" (What do you do?) → "Я працюю…" / "Я вчу українську…" You're building real communication skills!</p>
+  <p>🎭 <strong>Culture Corner: The Art of "Questioning"</strong><br />
+  In Ukrainian, you don't need a helper word like "Do" or "Does" to ask a question. You simply change your intonation!</p>
+  <ul>
+  <li>Statement: <strong>Ти знаєш.</strong> (You know.) ↘</li>
+  <li>Question: <strong>Ти знаєш?</strong> (Do you know?) ↗<br />
+  Later we will add the little word <strong>"чи"</strong> to make formal Yes/No questions, but nearly 90% of the time in daily life, intonation is King.</li>
+  </ul>
+  <p><strong>Try it:</strong><br />
+  Say "Ти читаєш" like a robot. (Statement)<br />
+  Now say "Ти читаєш" like you are surprised. (Question)<br />
+  That's it! You're speaking Ukrainian.</p>
 </blockquote>
-<hr />
+<h3 id="commonclassiverbs">Common Class I Verbs</h3>
+<p>Here are the verbs you will use to build your first action sentences.</p>
+<p><strong>Communication:</strong></p>
+<ul>
+<li><strong>Говорити</strong> is Class II (coming later). For now, we use:</li>
+<li><strong>Питати</strong> (To ask)</li>
+<li><strong>Відповідати</strong> (To answer)</li>
+<li><strong>Співати</strong> (To sing) (Ukrainians love to sing!)</li>
+</ul>
+<p><strong>Mental Actions:</strong></p>
+<ul>
+<li><strong>Знати</strong> (To know) - <em>Very useful! "Я не знаю" (I don't know).</em></li>
+<li><strong>Думати</strong> (To think)</li>
+<li><strong>Розуміти</strong> (To understand)</li>
+<li><strong>Мріяти</strong> (To dream/daydream)</li>
+</ul>
+<p><strong>Daily Routine:</strong></p>
+<ul>
+<li><strong>Снідати</strong> (To have breakfast)</li>
+<li><strong>Обідати</strong> (To have lunch)</li>
+<li><strong>Вечеряти</strong> (To have dinner)</li>
+<li><strong>Гуляти</strong> (To walk/stroll) - <em>A huge part of Ukrainian social culture. "To go for a walk" is how friends hang out.</em></li>
+</ul>
+<h2 id="practice">practice</h2>
+<p>Let's tune the engine.</p>
+<p><strong>Pattern Drill: The "You" and "I" Exchange</strong><br />
+Typical conversation involves asking "Do you…?" and answering "I…".</p>
+<ul>
+<li><p><strong>Question:</strong> Ти чита<strong>єш</strong>? (Do you read?)</p></li>
+<li><p><strong>Answer:</strong> Так, я чита<strong>ю</strong>. (Yes, I read.)</p></li>
+<li><p><strong>Question:</strong> Ти зна<strong>єш</strong>? (Do you know?)</p></li>
+<li><p><strong>Answer:</strong> Ні, я не зна<strong>ю</strong>. (No, I don't know.)<br />
+<em>(Note: "Не" goes BEFORE the verb for negation)</em></p></li>
+<li><p><strong>Question:</strong> Ви працю<strong>єте</strong>? (Do you (pl/formal) work?)</p></li>
+<li><p><strong>Answer:</strong> Так, ми працю<strong>ємо</strong>. (Yes, we work.)</p></li>
+</ul>
+<h2 id="production">production</h2>
+<p>Look at the people around you (or imagine them). Describe what they are doing using our new verbs.</p>
+<ol>
+<li><strong>(Self):</strong> Я <strong>думаю</strong>. (I am thinking.)</li>
+<li><strong>(Friend):</strong> Ти <strong>слухаєш</strong>. (You are listening.)</li>
+<li><strong>(Group):</strong> Ми <strong>починаємо</strong>. (We are starting.)</li>
+<li><strong>(Others):</strong> Вони <strong>чекають</strong>. (They are waiting.)</li>
+</ol>
+<p>Now, combine it with a noun you know:</p>
+<ul>
+<li><strong>Я читаю книгу.</strong> (I am reading a book.) [Wait! "Книга" changes to "Книгу" because it's an object? Yes! That's the Accusative case, coming in Module 11. For now, just listen to the sound.]</li>
+</ul>
 <hr />
 <hr /></div>
     </div>
@@ -1072,24 +753,19 @@ footer {
       
     <div class="card section-summary">
       <h3>📋 Summary</h3>
-      <div class="md-content"><blockquote>
-  <p><strong>What You Learned Today</strong></p>
-  <ul>
-  <li><strong>Class I verbs</strong> end in -ати or -яти in the infinitive</li>
-  <li><strong>Conjugation pattern:</strong> remove -ти, add personal endings</li>
-  <li><strong>Personal endings:</strong> я -ю, ти -єш, він/вона -є, ми -ємо, ви -єте, вони -ють</li>
-  <li><strong>Stem change:</strong> -ува- verbs shorten to -у- (працювати → працюю)</li>
-  <li><strong>Pronoun dropping:</strong> verb endings show the person, so pronouns are optional</li>
-  <li>You learned 25 essential action verbs!</li>
-  </ul>
-  <p><strong>Coming Next</strong></p>
-  <p>In Module 07, you'll learn "Questions &amp; Negation":</p>
-  <ul>
-  <li>Question words: що, хто, де, коли, чому, як</li>
-  <li>Yes/no questions with Чи</li>
-  <li>Negation with не</li>
-  </ul>
-</blockquote></div>
+      <div class="md-content"><p>You have ignited the engine! Language is no longer just labels on a shelf; it is action, movement, and life.</p>
+<ol>
+<li><strong>Class I Verbs</strong> are your diverse workforce. They end in <strong>-АТИ</strong> or <strong>-ЯТИ</strong>.</li>
+<li><strong>The Pattern:</strong> You drop the <strong>-ти</strong> and match the ending to the pronoun:<ul>
+<li><strong>Я -ю</strong></li>
+<li><strong>Ти -єш</strong></li>
+<li><strong>Він -є</strong></li>
+<li><strong>Ми -ємо</strong></li>
+<li><strong>Ви -єте</strong></li>
+<li><strong>Вони -ють</strong></li></ul></li>
+<li><strong>No "Is/Are":</strong> The verb contains the "to be" meaning within it. "Я читаю" = "I am reading."</li>
+</ol>
+<p>Next, we will give you the tools to seek information. You can state facts ("I read"), but soon you will learn to ask deep questions ("What do you read?").</p></div>
     </div>
   
       <div class="btn-group">
@@ -1098,24 +774,21 @@ footer {
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Verb Conjugation</h3>
+    <section id="activity-0" class="section"><div class="card"><h3>Conjugation Station</h3>
       <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container"></div>
+      <div id="activity-0-container" class="fill-container"></div>
       <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Pronouns and Verb Forms</h3>
+    <section id="activity-1" class="section"><div class="card"><h3>Scrambled Verbs</h3>
       <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-1-container"><svg class="match-lines" id="activity-1-lines"></svg>
-        <div class="match-column" id="activity-1-left"></div>
-        <div class="match-column" id="activity-1-right"></div>
-      </div>
-      <div class="completion-message" id="activity-1-complete"><h3>Perfect!</h3></div>
+      <div id="activity-1-container" class="order-container"></div>
+      <div class="completion-message" id="activity-1-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Verbs and Meanings</h3>
+    <section id="activity-2" class="section"><div class="card"><h3>Subject to Verb</h3>
       <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
       <div class="match-container" id="activity-2-container"><svg class="match-lines" id="activity-2-lines"></svg>
         <div class="match-column" id="activity-2-left"></div>
@@ -1125,33 +798,50 @@ footer {
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Verb Forms by Person</h3>
-      <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/20</span></div>
-      <div class="sort-pool" id="activity-3-pool"><div class="sort-items" id="activity-3-items"></div></div>
-      <div class="sort-groups" id="activity-3-groups"></div>
-      <div class="completion-message" id="activity-3-complete"><h3>All Sorted!</h3></div>
+    <section id="activity-3" class="section"><div class="card"><h3>Building Sentences</h3>
+      <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
+      <div id="activity-3-container" class="order-container"></div>
+      <div class="completion-message" id="activity-3-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Conjugation Rules</h3>
-      <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
+    <section id="activity-4" class="section"><div class="card"><h3>Verb Meanings</h3>
+      <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/5</span></div>
       <div id="activity-4-container"></div>
       <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Conjugation Practice</h3>
+    <section id="activity-5" class="section"><div class="card"><h3>Opposites (Antonyms)</h3>
       <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
-      <div id="activity-5-container" class="fill-container"></div>
-      <div class="completion-message" id="activity-5-complete"><h3>Complete!</h3></div>
+      <div class="match-container" id="activity-5-container"><svg class="match-lines" id="activity-5-lines"></svg>
+        <div class="match-column" id="activity-5-left"></div>
+        <div class="match-column" id="activity-5-right"></div>
+      </div>
+      <div class="completion-message" id="activity-5-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Verb Vocabulary</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>Grammar Rules</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
-      <div id="activity-6-container" class="order-container"></div>
-      <div class="completion-message" id="activity-6-complete"><h3>Perfect Order!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+      <div id="activity-6-container"></div>
+      <div class="completion-message" id="activity-6-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-7" class="section"><div class="card"><h3>Quick Choice</h3>
+      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/5</span></div>
+      <div id="activity-7-container" class="select-container"></div>
+      <div class="completion-message" id="activity-7-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-8')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-8" class="section"><div class="card"><h3>Singular vs Plural</h3>
+      <div class="score-display"><span class="score"><span id="activity-8-score">0</span>/12</span></div>
+      <div class="sort-pool" id="activity-8-pool"><div class="sort-items" id="activity-8-items"></div></div>
+      <div class="sort-groups" id="activity-8-groups"></div>
+      <div class="completion-message" id="activity-8-complete"><h3>All Sorted!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-8')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
@@ -1161,12 +851,12 @@ footer {
           <table class="vocab-table">
             <thead><tr>
     <th>Слово</th>
-    
+    <th>Вимова</th>
     <th>IPA</th>
     <th>Переклад</th>
     <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">читати (chytaty)</td><td class="vocab-ipa">/tʃɪˈtatɪ/</td><td class="vocab-en">to read</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">писати (pysaty)</td><td class="vocab-ipa">/pɪˈsatɪ/</td><td class="vocab-en">to write</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">знати (znaty)</td><td class="vocab-ipa">/ˈznatɪ/</td><td class="vocab-en">to know</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">розуміти (rozumity)</td><td class="vocab-ipa">/rɔzuˈmitɪ/</td><td class="vocab-en">to understand</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">слухати (slukhaty)</td><td class="vocab-ipa">/ˈsluxatɪ/</td><td class="vocab-en">to listen</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">чекати (chekaty)</td><td class="vocab-ipa">/tʃɛˈkatɪ/</td><td class="vocab-en">to wait</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">питати (pytaty)</td><td class="vocab-ipa">/pɪˈtatɪ/</td><td class="vocab-en">to ask</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">відповідати (vidpovidaty)</td><td class="vocab-ipa">/ʋidpɔʋiˈdatɪ/</td><td class="vocab-en">to answer</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">працювати (pratsyuvaty)</td><td class="vocab-ipa">/pratsʲuˈʋatɪ/</td><td class="vocab-en">to work</td><td class="vocab-note">Class I -ува-</td></tr><tr><td class="vocab-uk">відпочивати (vidpochyvaty)</td><td class="vocab-ipa">/ʋidpɔtʃɪˈʋatɪ/</td><td class="vocab-en">to rest</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">снідати (snidaty)</td><td class="vocab-ipa">/sniˈdatɪ/</td><td class="vocab-en">to have breakfast</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">обідати (obidaty)</td><td class="vocab-ipa">/ɔˈbidatɪ/</td><td class="vocab-en">to have lunch</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">вечеряти (vecheryaty)</td><td class="vocab-ipa">/ʋɛtʃɛˈrʲatɪ/</td><td class="vocab-en">to have dinner</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">гуляти (hulyaty)</td><td class="vocab-ipa">/ɦuˈlʲatɪ/</td><td class="vocab-en">to walk, stroll</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">грати (hraty)</td><td class="vocab-ipa">/ˈɦratɪ/</td><td class="vocab-en">to play</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">співати (spivaty)</td><td class="vocab-ipa">/spiˈʋatɪ/</td><td class="vocab-en">to sing</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">танцювати (tantsyuvaty)</td><td class="vocab-ipa">/tantsʲuˈʋatɪ/</td><td class="vocab-en">to dance</td><td class="vocab-note">Class I -ува-</td></tr><tr><td class="vocab-uk">малювати (malyuvaty)</td><td class="vocab-ipa">/malʲuˈʋatɪ/</td><td class="vocab-en">to draw</td><td class="vocab-note">Class I -ува-</td></tr><tr><td class="vocab-uk">думати (dumaty)</td><td class="vocab-ipa">/ˈdumatɪ/</td><td class="vocab-en">to think</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">мріяти (mriyaty)</td><td class="vocab-ipa">/mriˈjatɪ/</td><td class="vocab-en">to dream</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">починати (pochynaty)</td><td class="vocab-ipa">/pɔtʃɪˈnatɪ/</td><td class="vocab-en">to begin</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">закінчувати (zakinchuvaty)</td><td class="vocab-ipa">/zakintʃuˈʋatɪ/</td><td class="vocab-en">to finish</td><td class="vocab-note">Class I -ува-</td></tr><tr><td class="vocab-uk">шукати (shukaty)</td><td class="vocab-ipa">/ʃuˈkatɪ/</td><td class="vocab-en">to search</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">знаходити (znakhodyty)</td><td class="vocab-ipa">/znaxɔˈdɪtɪ/</td><td class="vocab-en">to find</td><td class="vocab-note">Class II (preview)</td></tr><tr><td class="vocab-uk">називати (nazyvaty)</td><td class="vocab-ipa">/nazɪˈʋatɪ/</td><td class="vocab-en">to call, name</td><td class="vocab-note">Class I</td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">читати</td><td class="vocab-translit">/tʃɪˈtɑtɪ/</td><td class="vocab-ipa">to read</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('читати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">писати</td><td class="vocab-translit">/pɪˈsɑtɪ/</td><td class="vocab-ipa">to write</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('писати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">знати</td><td class="vocab-translit">/ˈznɑtɪ/</td><td class="vocab-ipa">to know</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('знати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">розуміти</td><td class="vocab-translit">/rɔzuˈmʲitɪ/</td><td class="vocab-ipa">to understand</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('розуміти')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">слухати</td><td class="vocab-translit">/ˈsluxɑtɪ/</td><td class="vocab-ipa">to listen</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('слухати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">чекати</td><td class="vocab-translit">/tʃɛˈkɑtɪ/</td><td class="vocab-ipa">to wait</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('чекати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">питати</td><td class="vocab-translit">/pɪˈtɑtɪ/</td><td class="vocab-ipa">to ask</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('питати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">відповідати</td><td class="vocab-translit">/vʲidpɔvʲiˈdɑtɪ/</td><td class="vocab-ipa">to answer</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('відповідати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">працювати</td><td class="vocab-translit">/prɑtsʲuˈvɑtɪ/</td><td class="vocab-ipa">to work</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('працювати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">відпочивати</td><td class="vocab-translit">/vʲidpɔtʃɪˈvɑtɪ/</td><td class="vocab-ipa">to rest</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('відпочивати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">снідати</td><td class="vocab-translit">/ˈsɲidɑtɪ/</td><td class="vocab-ipa">to have breakfast</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('снідати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">обідати</td><td class="vocab-translit">/oˈbidɑtɪ/</td><td class="vocab-ipa">to have lunch</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('обідати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вечеряти</td><td class="vocab-translit">/vɛˈtʃɛrʲɑtɪ/</td><td class="vocab-ipa">to have dinner</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вечеряти')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">гуляти</td><td class="vocab-translit">/ɦuˈlʲɑtɪ/</td><td class="vocab-ipa">to walk/stroll</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('гуляти')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">грати</td><td class="vocab-translit">/ˈɦrɑtɪ/</td><td class="vocab-ipa">to play</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('грати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">співати</td><td class="vocab-translit">/sʲpʲiˈvɑtɪ/</td><td class="vocab-ipa">to sing</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('співати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">танцювати</td><td class="vocab-translit">/tɑntsʲuˈvɑtɪ/</td><td class="vocab-ipa">to dance</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('танцювати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">малювати</td><td class="vocab-translit">/mɑlʲuˈvɑtɪ/</td><td class="vocab-ipa">to draw/paint</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('малювати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">думати</td><td class="vocab-translit">/ˈdumɑtɪ/</td><td class="vocab-ipa">to think</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('думати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">мріяти</td><td class="vocab-translit">/ˈmrʲijɑtɪ/</td><td class="vocab-ipa">to dream</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('мріяти')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">починати</td><td class="vocab-translit">/pɔtʃɪˈnɑtɪ/</td><td class="vocab-ipa">to start</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('починати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">закінчувати</td><td class="vocab-translit">/zɑˈkʲintʃuvɑtɪ/</td><td class="vocab-ipa">to finish</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('закінчувати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">шукати</td><td class="vocab-translit">/ʃuˈkɑtɪ/</td><td class="vocab-ipa">to look for</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('шукати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">знаходити</td><td class="vocab-translit">/znɑˈxɔdɪtɪ/</td><td class="vocab-ipa">to find</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('знаходити')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">називати</td><td class="vocab-translit">/nɑzɪˈvɑtɪ/</td><td class="vocab-ipa">to name/call</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('називати')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1178,8 +868,8 @@ footer {
   </main><footer>Module 06 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"quiz","title":"Verb Conjugation","data":{"type":"quiz","questions":[{"question":"What is the я form of \"читати\"?","options":["читаю","читаєш","читає","читаємо"],"correctIndex":0,"explanation":"The я ending is -ю!"},{"question":"What is the ти form of \"знати\"?","options":["знаю","знаєш","знає","знають"],"correctIndex":1,"explanation":"The ти ending is -єш!"},{"question":"What is the він/вона form of \"працювати\"?","options":["працюю","працюєш","працює","працюють"],"correctIndex":2,"explanation":"The він/вона ending is -є!"},{"question":"What is the ми form of \"слухати\"?","options":["слухаю","слухає","слухаємо","слухають"],"correctIndex":2,"explanation":"The ми ending is -ємо!"},{"question":"What is the вони form of \"писати\"?","options":["пишу","пишеш","пишемо","пишуть"],"correctIndex":3,"explanation":"The вони ending is -ють (or -уть for some verbs)!"},{"question":"Which verb class ends in -ати/-яти?","options":["Class I","Class II","Class III","Irregular"],"correctIndex":0,"explanation":"Class I verbs end in -ати or -яти!"},{"question":"What does \"розуміти\" mean?","options":["to read","to understand","to write","to work"],"correctIndex":1,"explanation":"Розуміти = to understand!"},{"question":"How do you say \"She works\"?","options":["Вона працюю.","Вона працюєш.","Вона працює.","Вона працюємо."],"correctIndex":2,"explanation":"Він/вона takes the -є ending!"},{"question":"What happens to -ува- verbs like \"малювати\"?","options":["-ува- becomes -у- (малюю)","They don't change","-ува- becomes -а-","They're irregular"],"correctIndex":0,"explanation":"The -ува- shortens to -у- in conjugation!"},{"question":"Why can you drop the pronoun in \"Читаю книгу\"?","options":["The verb ending shows it's \"я\"","Pronouns are never used","It's grammatically incorrect","Only in formal speech"],"correctIndex":0,"explanation":"The -ю ending already indicates first person!"},{"question":"What is \"they play\" in Ukrainian?","options":["грає","граємо","граєте","грають"],"correctIndex":3,"explanation":"Вони takes -ють!"},{"question":"What is the infinitive marker in Ukrainian?","options":["-ю","-є","-ти","-ють"],"correctIndex":2,"explanation":"All infinitives end in -ти!"}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-1","type":"match-up","title":"Pronouns and Verb Forms","data":{"type":"match-up","pairs":[{"left":"я","right":"читаю"},{"left":"ти","right":"читаєш"},{"left":"він","right":"знає"},{"left":"вона","right":"працює"},{"left":"ми","right":"слухаємо"},{"left":"ви","right":"думаєте"},{"left":"вони","right":"пишуть"},{"left":"я","right":"знаю"},{"left":"ти","right":"працюєш"},{"left":"вона","right":"читає"},{"left":"ми","right":"думаємо"},{"left":"вони","right":"слухають"}],"shuffleRight":true}},{"id":"activity-2","type":"match-up","title":"Verbs and Meanings","data":{"type":"match-up","pairs":[{"left":"читати","right":"to read"},{"left":"писати","right":"to write"},{"left":"знати","right":"to know"},{"left":"працювати","right":"to work"},{"left":"слухати","right":"to listen"},{"left":"думати","right":"to think"},{"left":"гуляти","right":"to walk"},{"left":"чекати","right":"to wait"},{"left":"питати","right":"to ask"},{"left":"відповідати","right":"to answer"},{"left":"снідати","right":"to have breakfast"},{"left":"вечеряти","right":"to have dinner"}],"shuffleRight":true}},{"id":"activity-3","type":"group-sort","title":"Verb Forms by Person","data":{"type":"group-sort","groups":[{"id":"","name":"я","items":["читаю","знаю","працюю","слухаю","думаю"],"nameUk":"I"},{"id":"","name":"ти","items":["читаєш","знаєш","працюєш","слухаєш","думаєш"],"nameUk":"you"},{"id":"","name":"він/вона","items":["читає","знає","працює","слухає","думає"],"nameUk":"he/she"},{"id":"","name":"вони","items":["читають","знають","працюють","слухають","думають"],"nameUk":"they"}],"shuffleItems":true}},{"id":"activity-4","type":"true-false","title":"Conjugation Rules","data":{"type":"true-false","statements":[{"statement":"Class I verbs end in -ати or -яти.","isTrue":true,"explanation":"Correct! That's the Class I infinitive pattern."},{"statement":"All Ukrainian verbs are conjugated the same way.","isTrue":false,"explanation":"Incorrect! Class I and Class II have different patterns."},{"statement":"The я ending is -ю.","isTrue":true,"explanation":"Correct! Я читаю, я знаю, я працюю."},{"statement":"Verb endings show who is doing the action.","isTrue":true,"explanation":"Correct! That's why pronouns are often optional."},{"statement":"\"Вони читає\" is correct.","isTrue":false,"explanation":"Incorrect! Вони takes -ють: вони читають."},{"statement":"\"Працюю\" already means \"I work\" without a pronoun.","isTrue":true,"explanation":"Correct! The -ю ending indicates first person."},{"statement":"The infinitive ending is -ю.","isTrue":false,"explanation":"Incorrect! Infinitives end in -ти: читати, писати."},{"statement":"-ува- verbs like \"малювати\" shorten to -у-.","isTrue":true,"explanation":"Correct! Малювати → малюю."},{"statement":"Ukrainian verb conjugation is completely random.","isTrue":false,"explanation":"Incorrect! Class I verbs all follow the same pattern."},{"statement":"\"Слухати\" means \"to listen.\"","isTrue":true,"explanation":"Correct! Я слухаю музику = I listen to music."},{"statement":"The ви form ends in -єте.","isTrue":true,"explanation":"Correct! Ви читаєте, ви знаєте."},{"statement":"\"Думати\" means \"to read.\"","isTrue":false,"explanation":"Incorrect! Думати = to think. Читати = to read."}]}},{"id":"activity-5","type":"fill-blank","title":"Conjugation Practice","data":{"type":"fill-blank","items":[{"prompt":"Я ___ книгу. (читати)","answer":"читаю","options":["читаю","читаєш","читає","читають"]},{"prompt":"Ти ___ англійською? (знати)","answer":"знаєш","options":["знаєш","знаю","знає","знаємо"]},{"prompt":"Він ___ у Києві. (працювати)","answer":"працює","options":["працює","працюю","працюєш","працюють"]},{"prompt":"Ми ___ музику. (слухати)","answer":"слухаємо","options":["слухаємо","слухаю","слухає","слухають"]},{"prompt":"Вони ___ лист. (писати)","answer":"пишуть","options":["пишуть","пишу","пишеш","пише"]},{"prompt":"Вона ___ на роботу. (чекати)","answer":"чекає","options":["чекає","чекаю","чекаєш","чекаємо"]},{"prompt":"Ви ___ українською? (розуміти)","answer":"розумієте","options":["розумієте","розумію","розуміє","розуміють"]},{"prompt":"Я ___ у парку. (гуляти)","answer":"гуляю","options":["гуляю","гуляєш","гуляє","гуляють"]},{"prompt":"Ти ___ картину. (малювати)","answer":"малюєш","options":["малюєш","малюю","малює","малюємо"]},{"prompt":"Ми ___ разом. (танцювати)","answer":"танцюємо","options":["танцюємо","танцюю","танцює","танцюють"]},{"prompt":"Він ___ питання. (питати)","answer":"питає","options":["питає","питаю","питаєш","питають"]},{"prompt":"Вони ___ відповідь. (знати)","answer":"знають","options":["знають","знаю","знаєш","знаємо"]}]}},{"id":"activity-6","type":"anagram","title":"Verb Vocabulary","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["ч","и","т","а","т","и"],"answer":"читати","translation":"to read"},{"letters":["п","и","с","а","т","и"],"answer":"писати","translation":"to write"},{"letters":["з","н","а","т","и"],"answer":"знати","translation":"to know"},{"letters":["с","л","у","х","а","т","и"],"answer":"слухати","translation":"to listen"},{"letters":["д","у","м","а","т","и"],"answer":"думати","translation":"to think"},{"letters":["г","у","л","я","т","и"],"answer":"гуляти","translation":"to walk"},{"letters":["ч","е","к","а","т","и"],"answer":"чекати","translation":"to wait"},{"letters":["г","р","а","т","и"],"answer":"грати","translation":"to play"},{"letters":["с","п","і","в","а","т","и"],"answer":"співати","translation":"to sing"},{"letters":["м","р","і","я","т","и"],"answer":"мріяти","translation":"to dream"},{"letters":["п","и","т","а","т","и"],"answer":"питати","translation":"to ask"},{"letters":["с","н","і","д","а","т","и"],"answer":"снідати","translation":"to have breakfast"}]}}];
-    const vocabData = [{"uk":"читати (chytaty)","translit":"","en":"to read","note":"Class I"},{"uk":"писати (pysaty)","translit":"","en":"to write","note":"Class I"},{"uk":"знати (znaty)","translit":"","en":"to know","note":"Class I"},{"uk":"розуміти (rozumity)","translit":"","en":"to understand","note":"Class I"},{"uk":"слухати (slukhaty)","translit":"","en":"to listen","note":"Class I"},{"uk":"чекати (chekaty)","translit":"","en":"to wait","note":"Class I"},{"uk":"питати (pytaty)","translit":"","en":"to ask","note":"Class I"},{"uk":"відповідати (vidpovidaty)","translit":"","en":"to answer","note":"Class I"},{"uk":"працювати (pratsyuvaty)","translit":"","en":"to work","note":"Class I -ува-"},{"uk":"відпочивати (vidpochyvaty)","translit":"","en":"to rest","note":"Class I"},{"uk":"снідати (snidaty)","translit":"","en":"to have breakfast","note":"Class I"},{"uk":"обідати (obidaty)","translit":"","en":"to have lunch","note":"Class I"},{"uk":"вечеряти (vecheryaty)","translit":"","en":"to have dinner","note":"Class I"},{"uk":"гуляти (hulyaty)","translit":"","en":"to walk, stroll","note":"Class I"},{"uk":"грати (hraty)","translit":"","en":"to play","note":"Class I"},{"uk":"співати (spivaty)","translit":"","en":"to sing","note":"Class I"},{"uk":"танцювати (tantsyuvaty)","translit":"","en":"to dance","note":"Class I -ува-"},{"uk":"малювати (malyuvaty)","translit":"","en":"to draw","note":"Class I -ува-"},{"uk":"думати (dumaty)","translit":"","en":"to think","note":"Class I"},{"uk":"мріяти (mriyaty)","translit":"","en":"to dream","note":"Class I"},{"uk":"починати (pochynaty)","translit":"","en":"to begin","note":"Class I"},{"uk":"закінчувати (zakinchuvaty)","translit":"","en":"to finish","note":"Class I -ува-"},{"uk":"шукати (shukaty)","translit":"","en":"to search","note":"Class I"},{"uk":"знаходити (znakhodyty)","translit":"","en":"to find","note":"Class II (preview)"},{"uk":"називати (nazyvaty)","translit":"","en":"to call, name","note":"Class I"}];
+    const activitiesData = [{"id":"activity-0","type":"fill-blank","title":"Conjugation Station","data":{"type":"fill-blank","items":[{"prompt":"Я (читати) ___ книгу.","answer":"читаю","options":["читаю","читаєш","читає","читаємо"]},{"prompt":"Ти (знати) ___ це слово?","answer":"знаєш","options":["знаєш","знаю","знають","знаєте"]},{"prompt":"Ми (снідати) ___ разом.","answer":"снідаємо","options":["снідаємо","снідають","снідає","снідаєш"]},{"prompt":"Ви (працювати) ___ сьогодні?","answer":"працюєте","options":["працюєте","працюємо","працюють","працює"]},{"prompt":"Вони (слухати) ___ музику.","answer":"слухають","options":["слухають","слухаємо","слухає","слухаєш"]},{"prompt":"Вона (відпочивати) ___ вдома.","answer":"відпочиває","options":["відпочиває","відпочиваю","відпочивають","відпочиваємо"]},{"prompt":"Я (думати) ___ про це.","answer":"думаю","options":["думаю","думаєш","думає","думають"]},{"prompt":"Ти (питати) ___ професора?","answer":"питаєш","options":["питаєш","питаю","питає","питають"]},{"prompt":"Ми (гуляти) ___ в парку.","answer":"гуляємо","options":["гуляємо","гуляють","гуляє","гуляєш"]},{"prompt":"Вони (співати) ___ пісню.","answer":"співають","options":["співають","співаємо","співає","співаєш"]},{"prompt":"Ви (розуміти) ___ мене?","answer":"розумієте","options":["розумієте","розумієш","розуміють","розуміємо"]},{"prompt":"Вона (чекати) ___ на таксі.","answer":"чекає","options":["чекає","чекають","чекаєш","чекаю"]}]}},{"id":"activity-1","type":"anagram","title":"Scrambled Verbs","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["т","а","т","и","ч","и"],"answer":"читати","translation":"to read"},{"letters":["а","т","и","з","н"],"answer":"знати","translation":"to know"},{"letters":["м","а","т","и","д","у"],"answer":"думати","translation":"to think"},{"letters":["х","а","т","и","с","л","у"],"answer":"слухати","translation":"to listen"},{"letters":["р","і","м","я","т","и"],"answer":"мріяти","translation":"to dream"},{"letters":["т","а","т","и","п","и"],"answer":"питати","translation":"to ask"},{"letters":["ц","ю","в","а","т","и","п","р","а"],"answer":"працювати","translation":"to work"},{"letters":["т","и","т","і","х","о"],"answer":"хотіти","translation":"to want"},{"letters":["в","а","т","и","п","с","і"],"answer":"співати","translation":"to sing"},{"letters":["б","и","т","и","р","о"],"answer":"робити","translation":"to do/make"},{"letters":["д","а","т","и","с","н","і"],"answer":"снідати","translation":"to breakfast"},{"letters":["с","а","т","и","п","и"],"answer":"писати","translation":"to write"}]}},{"id":"activity-2","type":"match-up","title":"Subject to Verb","data":{"type":"match-up","pairs":[{"left":"Я (I)","right":"Читаю книгу (read a book)"},{"left":"Ти (You)","right":"Слухаєш музику (listen to music)"},{"left":"Вона (She)","right":"Співає гарно (sings well)"},{"left":"Ми (We)","right":"Працюємо тут (work here)"},{"left":"Ви (You all)","right":"Питаєте чому (ask why)"},{"left":"Вони (They)","right":"Знають це (know this)"},{"left":"Студент","right":"Думає (thinks)"},{"left":"Мама","right":"Відпочиває (rests)"},{"left":"Ми","right":"Снідаємо (have breakfast)"},{"left":"Вони","right":"Гуляють (walk)"},{"left":"Я","right":"Не знаю (don't know)"},{"left":"Ти","right":"Розумієш (understand)"}],"shuffleRight":true}},{"id":"activity-3","type":"unjumble","title":"Building Sentences","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["книгу","Я","читаю"],"answer":"Я читаю книгу.","translation":"I read a book."},{"words":["знаєш","Ти","це"],"answer":"Ти знаєш це.","translation":"You know this."},{"words":["думаємо","Ми","про","це"],"answer":"Ми думаємо про це.","translation":"We are thinking about this."},{"words":["тут","Вони","працюють"],"answer":"Вони працюють тут.","translation":"They work here."},{"words":["музику","слухає","Вона"],"answer":"Вона слухає музику.","translation":"She is listening to music."},{"words":["не","Я","знаю"],"answer":"Я не знаю.","translation":"I don't know."},{"words":["питаєте","Ви","чому","?"],"answer":"Ви питаєте чому?","translation":"You ask why?"},{"words":["гуляємо","Ми","парку","в"],"answer":"Ми гуляємо в парку.","translation":"We walk in the park."},{"words":["гарно","Вона","співає"],"answer":"Вона співає гарно.","translation":"She sings well."},{"words":["зараз","Він","снідає"],"answer":"Він снідає зараз.","translation":"He is having breakfast now."},{"words":["чекають","Вони","автобус"],"answer":"Вони чекають автобус.","translation":"They are waiting for the bus."},{"words":["все","розумієш","Ти","?"],"answer":"Ти все розумієш?","translation":"Do you understand everything?"}]}},{"id":"activity-4","type":"quiz","title":"Verb Meanings","data":{"type":"quiz","questions":[{"question":"Що означає \"мріяти\"?","options":["To dream","To sleep","To work"],"correctIndex":0,"explanation":""},{"question":"Що означає \"працювати\"?","options":["To work","To walk","To ask"],"correctIndex":0,"explanation":""},{"question":"Що означає \"питати\"?","options":["To ask","To answer","To read"],"correctIndex":0,"explanation":""},{"question":"Що означає \"шукати\"?","options":["To search/look for","To find","To know"],"correctIndex":0,"explanation":""},{"question":"Що означає \"снідати\"?","options":["To have breakfast","To have dinner","To sleep"],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-5","type":"match-up","title":"Opposites (Antonyms)","data":{"type":"match-up","pairs":[{"left":"Питати (To ask)","right":"Відповідати (To answer)"},{"left":"Починати (To start)","right":"Закінчувати (To finish)"},{"left":"Працювати (To work)","right":"Відпочивати (To rest)"},{"left":"Шукати (To look for)","right":"Знаходити (To find)"},{"left":"Пам'ятати (To remember)","right":"Забувати (To forget)"},{"left":"Любити (To love)","right":"Ненавидіти (To hate)"},{"left":"Говорити (To speak)","right":"Слухати (To listen)"},{"left":"Кричати (To shout)","right":"Шепотіти (To whisper)"},{"left":"Сміятися (To laugh)","right":"Плакати (To cry)"},{"left":"Жити (To live)","right":"Вмирати (To die)"},{"left":"Купувати (To buy)","right":"Продавати (To sell)"},{"left":"Вміти (To be able)","right":"Не вміти (Not to be able)"}],"shuffleRight":true}},{"id":"activity-6","type":"true-false","title":"Grammar Rules","data":{"type":"true-false","statements":[{"statement":"The pronoun \"Я\" (I) usually takes the ending \"-ю\".","isTrue":true,"explanation":"Correct! For example: читаю, знаю."},{"statement":"\"Він є читає\" is the correct way to say \"He is reading\".","isTrue":false,"explanation":"Incorrect! Never use \"є\" (is) as a helper. Just say \"Він читає\"."},{"statement":"\"Ми\" (We) always ends in \"-ємо\" for Class I verbs.","isTrue":true,"explanation":"Correct! Читаємо, знаємо, співаємо."},{"statement":"To make a question, you must always add the word \"Do\".","isTrue":false,"explanation":"Incorrect! Ukrainian uses intonation, not \"Do/Does\"."},{"statement":"\"Вони знають\" means \"They know\".","isTrue":true,"explanation":"Correct. \"-ють\" is the specific ending for \"They\"."},{"statement":"The stem of \"Чита-ти\" is \"Читат-\".","isTrue":false,"explanation":"Incorrect! You remove the entire \"-ти\". The stem is \"Чита-\"."},{"statement":"\"Ти\" is used for addressing one person informally.","isTrue":true,"explanation":"Correct. Use \"Ви\" for formal or plural."},{"statement":"\"Ви\" always takes the ending \"-ю\".","isTrue":false,"explanation":"Incorrect. \"Ви\" usually ends in \"-ете\" (Class I) or \"-ите\" (Class II)."},{"statement":"\"Снідати\" means to eat in the morning.","isTrue":true,"explanation":"Correct. Breakfast."},{"statement":"\"Мріяти\" means to work hard.","isTrue":false,"explanation":"Incorrect. \"Мріяти\" means to dream."},{"statement":"Negation \"не\" comes BEFORE the verb.","isTrue":true,"explanation":"Correct. \"Я не знаю.\""},{"statement":"Class I verbs usually end in \"-ИТИ\".","isTrue":false,"explanation":"Incorrect. Class I usually ends in \"-АТИ\" or \"-ЯТИ\". Class II ends in \"-ИТИ\"."}]}},{"id":"activity-7","type":"select","title":"Quick Choice","data":{"type":"select","items":[{"question":"Мама ___ книжку.","options":[{"text":"читає","correct":true},{"text":"читають","correct":false},{"text":"читаємо","correct":false}]},{"question":"Ми тут ___.","options":[{"text":"працюємо","correct":true},{"text":"працює","correct":false},{"text":"працюю","correct":false}]},{"question":"Ти ___ музику?","options":[{"text":"слухаєш","correct":true},{"text":"слухаєте","correct":false},{"text":"слухає","correct":false}]},{"question":"Я не ___.","options":[{"text":"знаю","correct":true},{"text":"знає","correct":false},{"text":"знають","correct":false}]},{"question":"Вони ___ пісню.","options":[{"text":"співають","correct":true},{"text":"співаємо","correct":false},{"text":"співає","correct":false}]}]}},{"id":"activity-8","type":"group-sort","title":"Singular vs Plural","data":{"type":"group-sort","groups":[{"id":"singular","name":"Singular","items":["Я знаю","Ти читаєш","Вона працює","Він слухає","Я думаю","Ти питаєш"],"nameUk":"One"},{"id":"plural","name":"Plural","items":["Ми знаємо","Ви читаєте","Вони працюють","Ми слухаємо","Ви думаєте","Вони питають"],"nameUk":"Many"}],"shuffleItems":true}}];
+    const vocabData = [{"uk":"читати","translit":"/tʃɪˈtɑtɪ/","en":"verb","note":"[🔊](audio_chytaty)"},{"uk":"писати","translit":"/pɪˈsɑtɪ/","en":"verb","note":"[🔊](audio_pysaty)"},{"uk":"знати","translit":"/ˈznɑtɪ/","en":"verb","note":"[🔊](audio_znaty)"},{"uk":"розуміти","translit":"/rɔzuˈmʲitɪ/","en":"verb","note":"[🔊](audio_rozumity)"},{"uk":"слухати","translit":"/ˈsluxɑtɪ/","en":"verb","note":"[🔊](audio_slukhaty)"},{"uk":"чекати","translit":"/tʃɛˈkɑtɪ/","en":"verb","note":"[🔊](audio_chekaty)"},{"uk":"питати","translit":"/pɪˈtɑtɪ/","en":"verb","note":"[🔊](audio_pytaty)"},{"uk":"відповідати","translit":"/vʲidpɔvʲiˈdɑtɪ/","en":"verb","note":"[🔊](audio_vidpovidaty)"},{"uk":"працювати","translit":"/prɑtsʲuˈvɑtɪ/","en":"verb","note":"[🔊](audio_pratsyuvaty)"},{"uk":"відпочивати","translit":"/vʲidpɔtʃɪˈvɑtɪ/","en":"verb","note":"[🔊](audio_vidpochyvaty)"},{"uk":"снідати","translit":"/ˈsɲidɑtɪ/","en":"verb","note":"[🔊](audio_snidaty)"},{"uk":"обідати","translit":"/oˈbidɑtɪ/","en":"verb","note":"[🔊](audio_obidaty)"},{"uk":"вечеряти","translit":"/vɛˈtʃɛrʲɑtɪ/","en":"verb","note":"[🔊](audio_vecheryaty)"},{"uk":"гуляти","translit":"/ɦuˈlʲɑtɪ/","en":"verb","note":"[🔊](audio_hulyaty)"},{"uk":"грати","translit":"/ˈɦrɑtɪ/","en":"verb","note":"[🔊](audio_hraty)"},{"uk":"співати","translit":"/sʲpʲiˈvɑtɪ/","en":"verb","note":"[🔊](audio_spivaty)"},{"uk":"танцювати","translit":"/tɑntsʲuˈvɑtɪ/","en":"verb","note":"[🔊](audio_tantsyuvaty)"},{"uk":"малювати","translit":"/mɑlʲuˈvɑtɪ/","en":"verb","note":"[🔊](audio_malyuvaty)"},{"uk":"думати","translit":"/ˈdumɑtɪ/","en":"verb","note":"[🔊](audio_dumaty)"},{"uk":"мріяти","translit":"/ˈmrʲijɑtɪ/","en":"verb","note":"[🔊](audio_mriyaty)"},{"uk":"починати","translit":"/pɔtʃɪˈnɑtɪ/","en":"verb","note":"[🔊](audio_pochynaty)"},{"uk":"закінчувати","translit":"/zɑˈkʲintʃuvɑtɪ/","en":"verb","note":"[🔊](audio_zakinchuvaty)"},{"uk":"шукати","translit":"/ʃuˈkɑtɪ/","en":"verb","note":"[🔊](audio_shukaty)"},{"uk":"знаходити","translit":"/znɑˈxɔdɪtɪ/","en":"verb","note":"[🔊](audio_znakhodyty)"},{"uk":"називати","translit":"/nɑzɪˈvɑtɪ/","en":"verb","note":"[🔊](audio_nazyvaty)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1239,6 +929,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2503,6 +2219,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

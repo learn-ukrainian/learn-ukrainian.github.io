@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Module 28: What&#039;s the Weather Like? | Ukrainian A1</title>
+  <title>Module 28: Description (Adverbs) | Ukrainian A1</title>
   <style>
 :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -478,17 +518,19 @@ footer {
     </div>
   </div>
   <nav class="nav">
-    <h1>Module 28: What&#039;s the Weather Like?</h1>
+    <h1>Module 28: Description (Adverbs)</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Fill</button>
+      <button class="nav-tab" data-section="activity-0">1. Match</button>
       <button class="nav-tab" data-section="activity-1">2. Fill</button>
       <button class="nav-tab" data-section="activity-2">3. Order</button>
-      <button class="nav-tab" data-section="activity-3">4. Match</button>
-      <button class="nav-tab" data-section="activity-4">5. Match</button>
+      <button class="nav-tab" data-section="activity-3">4. Order</button>
+      <button class="nav-tab" data-section="activity-4">5. Sort</button>
       <button class="nav-tab" data-section="activity-5">6. Quiz</button>
-      <button class="nav-tab" data-section="activity-6">7. T/F</button>
-      <button class="nav-tab" data-section="activity-7">8. Sort</button>
+      <button class="nav-tab" data-section="activity-6">7. Spell</button>
+      <button class="nav-tab" data-section="activity-7">8. Order</button>
+      <button class="nav-tab" data-section="activity-8">9. Fill</button>
+      <button class="nav-tab" data-section="activity-9">10. T/F</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -497,533 +539,336 @@ footer {
     <section id="lesson" class="section active">
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.3</span>
-        <h2 style="font-size:2rem;margin:0.5rem 0">What&#039;s the Weather Like?</h2>
-        <p style="color:var(--text-muted)">Яка сьогодні погода? — Weather and Impersonal Constructions</p>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Description (Adverbs)</h2>
+        <p style="color:var(--text-muted)">How you do it</p>
       </div>
       
     <div class="card section-intro">
       <h3>📖 Introduction</h3>
       <div class="md-content"><h2 id="warmup">warm-up</h2>
-<h3 id="talkingabouttheweather">Talking About the Weather</h3>
-<p>"Nice weather today, isn't it?" — Weather is the universal conversation starter! In Ukrainian, weather expressions are often impersonal — they don't need a subject.</p>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>In Ukrainian, you don't say "It is cold" with a subject. You simply say "Холодно" — the absence of a subject makes it universal, applying to everyone and everything!</p>
-</blockquote>
+<p><strong>The Critics Part II</strong></p>
+<p>You know how to say "The soup is good" (<strong>Хороший суп</strong>).<br />
+But how do you say "He cooks well"?<br />
+"Він готує хороший"? No. That means "He cooks a good one".<br />
+You need "Він готує <strong>добре</strong>".</p>
+<p>Imagine a world without adverbs. You can say "I run". You can say "She sings". It is factual, but it is boring. It is a black-and-white sketch.<br />
+But do you run <strong>fast</strong>? Do you run <strong>happily</strong>? Do you run <strong>backwards</strong>? Adverbs are the colors of action. They tell us the <em>style</em> of your life. Today, we learn how to paint with words.</p>
+<p>Adjectives describe <strong>Things</strong> (Nouns).<br />
+Adverbs describe <strong>Actions</strong> (Verbs).<br />
+In Ukrainian, this switch is usually just one letter: <strong>-о</strong>.</p>
 <h2 id="presentation">presentation</h2>
-<h3 id="askingaboutweather">Asking About Weather</h3>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Яка сьогодні погода?</td>
-<td>What's the weather like today?</td>
-</tr>
-<tr>
-<td>Яка буде погода завтра?</td>
-<td>What will the weather be tomorrow?</td>
-</tr>
-<tr>
-<td>Яка була погода вчора?</td>
-<td>What was the weather yesterday?</td>
-</tr>
-<tr>
-<td>Скільки градусів?</td>
-<td>How many degrees?</td>
-</tr>
-</tbody>
-</table>
-<h3 id="temperatureexpressions">Temperature Expressions</h3>
-<p>Ukrainian uses impersonal constructions for weather — no subject needed!</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-<th>Note</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>тепло</td>
-<td>warm</td>
-<td>It's warm</td>
-</tr>
-<tr>
-<td>холодно</td>
-<td>cold</td>
-<td>It's cold</td>
-</tr>
-<tr>
-<td>спекотно</td>
-<td>hot</td>
-<td>It's hot (summer)</td>
-</tr>
-<tr>
-<td>прохолодно</td>
-<td>cool</td>
-<td>It's cool</td>
-</tr>
-<tr>
-<td>жарко</td>
-<td>hot</td>
-<td>Same as спекотно</td>
-</tr>
-<tr>
-<td>морозно</td>
-<td>frosty</td>
-<td>Below freezing</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Examples:</strong></p>
+<h3 id="section1themagico">Section 1: The Magic "O"</h3>
+<p>To make an adverb, take the adjective stem and add <strong>-о</strong>.</p>
 <ul>
-<li>Сьогодні тепло. (It's warm today.)</li>
-<li>Вчора було холодно. (Yesterday it was cold.)</li>
-<li>Завтра буде спекотно. (Tomorrow it will be hot.)</li>
+<li><strong>Швидк</strong>ий (Fast - adj) ➡️ <strong>Швидко</strong> (Fast/Quickly - adv).</li>
+<li><strong>Повільн</strong>ий (Slow - adj) ➡️ <strong>Повільно</strong> (Slowly - adv).</li>
+<li><strong>Гарн</strong>ий (Nice/Beautiful - adj) ➡️ <strong>Гарно</strong> (Nicely/Beautifully - adv).</li>
+<li><strong>Дешев</strong>ий (Cheap - adj) ➡️ <strong>Дешево</strong> (Cheaply - adv).</li>
+<li><strong>Дорог</strong>ий (Expensive - adj) ➡️ <strong>Дорого</strong> (Expensively - adv).</li>
 </ul>
-<blockquote>
-  <p>🔍 <strong>Myth Buster</strong></p>
-  <p><strong>Myth:</strong> You need to say "воно тепло" (it is warm).<br />
-  <strong>Fact:</strong> No subject is needed! Just say "Тепло" — this is a true impersonal construction.</p>
-</blockquote>
-<h3 id="weatherconditions">Weather Conditions</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>IPA</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>сонячно</td>
-<td>ˈsɔnʲɐt͡ʃnɔ</td>
-<td>sunny</td>
-</tr>
-<tr>
-<td>хмарно</td>
-<td>ˈxmɑrnɔ</td>
-<td>cloudy</td>
-</tr>
-<tr>
-<td>вітряно</td>
-<td>ˈwitrʲɐnɔ</td>
-<td>windy</td>
-</tr>
-<tr>
-<td>туманно</td>
-<td>tumɐnˈnɔ</td>
-<td>foggy</td>
-</tr>
-<tr>
-<td>вогко</td>
-<td>ˈwɔɦkɔ</td>
-<td>humid</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Examples:</strong></p>
+<p><strong>Usage:</strong></p>
 <ul>
-<li>Сьогодні сонячно. (It's sunny today.)</li>
-<li>Надворі хмарно. (It's cloudy outside.)</li>
-<li>Там вітряно. (It's windy there.)</li>
+<li>Це <strong>швидка</strong> машина. (This is a fast car).</li>
+<li>Він їде <strong>швидко</strong>. (He drives fast).</li>
 </ul>
-<blockquote>
-  <p>🎬 <strong>Pop Culture Moment: Game of Thrones</strong></p>
-  <p>"Зима наближається" (Winter is coming) — but what's winter weather like? "Взимку холодно і морозно. Йде сніг." (In winter it's cold and frosty. Snow falls.)</p>
-</blockquote>
-<h3 id="rainandsnowusing">Rain and Snow: Using "йти"</h3>
-<p>The verb <strong>йти</strong> (to go) is used for precipitation:</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Literal</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Йде дощ.</td>
-<td>Rain goes.</td>
-<td>It's raining.</td>
-</tr>
-<tr>
-<td>Йде сніг.</td>
-<td>Snow goes.</td>
-<td>It's snowing.</td>
-</tr>
-<tr>
-<td>Йшов дощ.</td>
-<td>Rain went.</td>
-<td>It was raining.</td>
-</tr>
-<tr>
-<td>Буде йти дощ.</td>
-<td>Rain will go.</td>
-<td>It will rain.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>More precipitation:</strong></p>
+<h3 id="section2goodandbadtheirregulars">Section 2: Good and Bad (The Irregulars)</h3>
+<ol>
+<li><p><strong>Хороший</strong> (Good) ➡️ <strong>Добре</strong> (Well).<br />
+<em>Note: "Khorosho" exists but "Dobro" is standard Ukrainian for "Well".</em></p>
 <ul>
-<li>Йде град. (It's hailing.)</li>
-<li>Йде злива. (There's a downpour.)</li>
-</ul>
-<blockquote>
-  <p>⚡ <strong>Pro Tip</strong></p>
-  <p>To say "it's going to rain," use "Збирається на дощ" (It's gathering for rain) — literally, the weather is preparing!</p>
-</blockquote>
-<h3 id="weathernouns">Weather Nouns</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>IPA</th>
-<th>English</th>
-<th>Gender</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>погода</td>
-<td>pɔˈɦɔdɐ</td>
-<td>weather</td>
-<td>f</td>
-</tr>
-<tr>
-<td>сонце</td>
-<td>ˈsɔnt͡sɛ</td>
-<td>sun</td>
-<td>n</td>
-</tr>
-<tr>
-<td>хмара</td>
-<td>ˈxmɑrɐ</td>
-<td>cloud</td>
-<td>f</td>
-</tr>
-<tr>
-<td>вітер</td>
-<td>ˈwitɛr</td>
-<td>wind</td>
-<td>m</td>
-</tr>
-<tr>
-<td>дощ</td>
-<td>dɔʃt͡ʃ</td>
-<td>rain</td>
-<td>m</td>
-</tr>
-<tr>
-<td>сніг</td>
-<td>sniɦ</td>
-<td>snow</td>
-<td>m</td>
-</tr>
-<tr>
-<td>туман</td>
-<td>tuˈmɑn</td>
-<td>fog</td>
-<td>m</td>
-</tr>
-<tr>
-<td>грім</td>
-<td>ɦrim</td>
-<td>thunder</td>
-<td>m</td>
-</tr>
-<tr>
-<td>блискавка</td>
-<td>ˈblɪskɑwkɐ</td>
-<td>lightning</td>
-<td>f</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🌍 <strong>Real World</strong></p>
-  <p>Ukrainian weather varies dramatically! Kyiv winters can reach -20°C with heavy snow, while summers hit +35°C. Knowing weather words helps you plan your visit!</p>
-</blockquote>
-<h3 id="seasons">Seasons</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>IPA</th>
-<th>English</th>
-<th>Weather</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>весна</td>
-<td>wɛsˈnɑ</td>
-<td>spring</td>
-<td>тепло, йде дощ</td>
-</tr>
-<tr>
-<td>літо</td>
-<td>ˈlitɔ</td>
-<td>summer</td>
-<td>спекотно, сонячно</td>
-</tr>
-<tr>
-<td>осінь</td>
-<td>ˈɔsʲinʲ</td>
-<td>autumn</td>
-<td>прохолодно, хмарно</td>
-</tr>
-<tr>
-<td>зима</td>
-<td>zɪˈmɑ</td>
-<td>winter</td>
-<td>холодно, йде сніг</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Using seasons:</strong></p>
+<li>Як справи? (How are things?)</li>
+<li><strong>Добре</strong>. (Well / Good).</li></ul></li>
+<li><p><strong>Поганий</strong> (Bad) ➡️ <strong>Погано</strong> (Badly).</p>
 <ul>
-<li>Навесні тепло. (In spring it's warm.)</li>
-<li>Влітку спекотно. (In summer it's hot.)</li>
-<li>Восени прохолодно. (In autumn it's cool.)</li>
-<li>Взимку холодно. (In winter it's cold.)</li>
-</ul>
+<li>Я сплю <strong>погано</strong>. (I sleep badly).</li></ul></li>
+</ol>
 <blockquote>
-  <p>🎯 <strong>Fun Fact</strong></p>
-  <p>Ukrainian has special adverbs for "in the season": навесні (in spring), влітку (in summer), восени (in autumn), взимку (in winter). They're formed differently from other time expressions!</p>
+  <p>🎨 <strong>Culture Corner: Everything is "Normalno"</strong><br />
+  If you ask a Ukrainian "How are you?", the most common answer is <strong>Нормально</strong>.<br />
+  It doesn't mean "Average". It means "Functional / Okay / No crisis".<br />
+  To say "Great", use <strong>Чудово</strong>.<br />
+  To say "Terrible", use <strong>Жахливо</strong>.</p>
 </blockquote>
-<h3 id="weatherverbs">Weather Verbs</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>світить</td>
-<td>shines</td>
-<td>Сонце світить. (The sun shines.)</td>
-</tr>
-<tr>
-<td>дме</td>
-<td>blows</td>
-<td>Вітер дме. (The wind blows.)</td>
-</tr>
-<tr>
-<td>падає</td>
-<td>falls</td>
-<td>Сніг падає. (Snow falls.)</td>
-</tr>
-<tr>
-<td>гримить</td>
-<td>thunders</td>
-<td>Гримить грім. (Thunder rumbles.)</td>
-</tr>
-<tr>
-<td>блискає</td>
-<td>flashes</td>
-<td>Блискає блискавка. (Lightning flashes.)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="weatherforecastphrases">Weather Forecast Phrases</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Прогноз погоди</td>
-<td>Weather forecast</td>
-</tr>
-<tr>
-<td>Очікується дощ.</td>
-<td>Rain is expected.</td>
-</tr>
-<tr>
-<td>Можливий сніг.</td>
-<td>Snow is possible.</td>
-</tr>
-<tr>
-<td>Температура повітря</td>
-<td>Air temperature</td>
-</tr>
-<tr>
-<td>Плюс десять градусів</td>
-<td>Plus 10 degrees</td>
-</tr>
-<tr>
-<td>Мінус п'ять градусів</td>
-<td>Minus 5 degrees</td>
-</tr>
-</tbody>
-</table>
+<h3 id="section3frequencyhowoften">Section 3: Frequency (How often?)</h3>
+<p>These are pure adverbs (not from adjectives).</p>
+<ol>
+<li><strong>Завжди</strong> (Always).</li>
+<li><strong>Часто</strong> (Often).</li>
+<li><strong>Іноді</strong> (Sometimes).</li>
+<li><strong>Рідко</strong> (Rarely).</li>
+<li><strong>Ніколи</strong> (Never).
+<em>Rule:</em> Start sentence with "Ya nikoly ne…" (I never not…). Double negative!<ul>
+<li>Я <strong>ніколи не</strong> їм м'ясо. (I never eat meat).</li></ul></li>
+</ol>
+<h3 id="section4itisimpersonalexpressions">Section 4: It is… (Impersonal Expressions)</h3>
+<p>We use Adverbs to describe the "State of the World".</p>
+<ul>
+<li><strong>Холодно</strong> (It is cold).</li>
+<li><strong>Цікаво</strong> (It is interesting).</li>
+<li><strong>Важко</strong> (It is hard).</li>
+<li><strong>Легко</strong> (It is easy).</li>
+<li><strong>Нудно</strong> (It is boring).</li>
+</ul>
+<p>"Мені холодно" (To me is cold = I am cold).<br />
+"Це цікаво" (This is interesting).</p>
 <blockquote>
-  <p>🎮 <strong>Gamer's Corner</strong></p>
-  <p>In S.T.A.L.K.E.R., weather affects gameplay: "Збирається на грозу" (A storm is gathering), "Йде радіоактивний дощ" (Radioactive rain is falling). Weather survival is key!</p>
+  <p>🧠 <strong>Deep Dive: Adverb vs Short Adjective</strong><br />
+  Linguists argue if "Kholodno" is an adverb or a "Productive Category of State".<br />
+  For A1 learners: It looks like an adverb. It acts like an adverb. Call it an adverb.<br />
+  "Coffee is hot" -&gt; Use Adjective (Kava hariacha).<br />
+  "It is hot (outside)" -&gt; Use Adverb (Haryacho/Zharko).</p>
+  <p>💡 <strong>Pro Tip: The Power of "Tak"</strong><br />
+  "Tak" means "Yes".<br />
+  "Tak" also means "So".</p>
+  <ul>
+  <li><strong>Так</strong> глибоко (So deep).</li>
+  <li><strong>Так</strong> смачно (So tasty).</li>
+  <li><strong>Так</strong> собі (So-so).<br />
+  It is the most versatile word.</li>
+  </ul>
 </blockquote>
-<h3 id="describingweatherindetail">Describing Weather in Detail</h3>
-<p><strong>Good weather:</strong></p>
+<h3 id="section5betterandworsecomparatives">Section 5: Better and Worse (Comparatives)</h3>
+<p>Adverbs can compare actions.</p>
 <ul>
-<li>Погода гарна. (The weather is nice.)</li>
-<li>Чудовий день! (Wonderful day!)</li>
-<li>Сонце світить, тепло. (The sun is shining, it's warm.)</li>
+<li><strong>Швидко</strong> (Fast) ➡️ <strong>Швидше</strong> (Faster).</li>
+<li><strong>Повільно</strong> (Slowly) ➡️ <strong>Повільніше</strong> (More slowly).</li>
+<li><strong>Гарно</strong> (Well) ➡️ <strong>Краще</strong> (Better - Irregular!).</li>
+<li><strong>Погано</strong> (Badly) ➡️ <strong>Гірше</strong> (Worse - Irregular!).</li>
 </ul>
-<p><strong>Bad weather:</strong></p>
-<ul>
-<li>Погода погана. (The weather is bad.)</li>
-<li>Жахлива погода! (Terrible weather!)</li>
-<li>Холодно і йде дощ. (It's cold and raining.)</li>
-</ul>
+<p>"Він бігає швидше, ніж я." (He runs faster than I).<br />
+"Це краще." (This is better).</p>
 <blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>Ukrainians often greet each other with weather comments: "Який гарний день!" (What a nice day!) or "Яка погана погода!" (What bad weather!) — it's a social ritual!</p>
+  <p>🦉 <strong>Wisdom: Better Late Than Never</strong><br />
+  Ukrainians love this proverb:<br />
+  <strong>Краще пізно, ніж ніколи.</strong><br />
+  (Better late, than never).<br />
+  It uses two irregular comparatives and a frequency adverb. Memorize it like a magic spell. Use it when you are late for a meeting (but only if you are also smiling).</p>
+  <p>🌡️ <strong>Deep Dive: The Temperature Scale</strong><br />
+  Describing weather states:</p>
+  <ul>
+  <li><strong>Спекотно</strong> (Sweltering/Hot +30C).</li>
+  <li><strong>Жарко</strong> (Hot +25C).</li>
+  <li><strong>Тепло</strong> (Warm +20C).</li>
+  <li><strong>Прохолодно</strong> (Cool/Fresh +15C).</li>
+  <li><strong>Холодно</strong> (Cold +5C).</li>
+  <li><strong>Морозно</strong> (Freezing -5C).<br />
+  Ukrainians complain about all of them. "To me is cold" is the national anthem of winter.</li>
+  </ul>
+</blockquote>
+<h3 id="section6softadverbstrokhy">Section 6: Soft Adverbs (Trokhy)</h3>
+<ul>
+<li><strong>Трохи</strong> (A little bit).</li>
+<li><strong>Зовсім</strong> (At all / Completely).</li>
+<li><strong>Досить</strong> (Enough / Quite).</li>
+<li><strong>Занадто</strong> (Too).</li>
+</ul>
+<p>"Я трохи говорю українською" (I speak a little Ukrainian).<br />
+"Це зовсім не цікаво" (This is at all not interesting).</p>
+<h3 id="section7whereadverbsofplace">Section 7: Where? (Adverbs of Place)</h3>
+<p>Adverbs also answer "Where?" (De?).</p>
+<ul>
+<li><strong>Тут</strong> (Here).</li>
+<li><strong>Там</strong> (There).</li>
+<li><strong>Вдома</strong> (At home).</li>
+<li><strong>Надворі</strong> (Outside / Outdoors).</li>
+<li><strong>Скрізь</strong> (Everywhere).</li>
+<li><strong>Ніде</strong> (Nowhere). <em>"Я ніде не бачу ключі"</em>.</li>
+</ul>
+<p>"Я тут." (I am here).<br />
+"Він там." (He is there).<br />
+"Вдома добре." (At home [it is] good).</p>
+<blockquote>
+  <p>🏠 <strong>Culture Corner: Vdoma vs Domu</strong><br />
+  <strong>Вдома</strong> (Adverb) = At home (Location). "Я вдома."<br />
+  <strong>Додому</strong> (Adverb of direction) = To home / Homeward. "Я йду додому."<br />
+  Don't mix them!<br />
+  "Я йду вдома" implies you are walking <em>inside</em> your house.</p>
+</blockquote>
+<h3 id="section8whenadverbsoftime">Section 8: When? (Adverbs of Time)</h3>
+<p>We learned days, but these are adverbs relative to <em>now</em>.</p>
+<ul>
+<li><strong>Сьогодні</strong> (Today).</li>
+<li><strong>Вчора</strong> (Yesterday).</li>
+<li><strong>Завтра</strong> (Tomorrow).</li>
+<li><strong>Зараз</strong> (Now - specific moment).</li>
+<li><strong>Тепер</strong> (Now - general period).</li>
+<li><strong>Потім</strong> (Later / Then).</li>
+<li><strong>Рано</strong> (Early).</li>
+<li><strong>Пізно</strong> (Late).</li>
+</ul>
+<p>"Ми йдемо зараз." (We are going right now).<br />
+"Тепер я розумію." (Now [unlike before] I understand).</p>
+<h3 id="section9mannershowtobepolite">Section 9: Manners (How to be polite)</h3>
+<p>Politeness is about <em>how</em> you say things (Adverbs).</p>
+<ul>
+<li><strong>Ввічливо</strong> (Politely).</li>
+<li><strong>Грубо</strong> (Rudely).</li>
+<li><strong>Чесно</strong> (Honestly).</li>
+<li><strong>Серйозно</strong> (Seriously).</li>
+<li><strong>Жартома</strong> (Jokingly).</li>
+</ul>
+<p>"Скажіть це ввічливо." (Say this politely).<br />
+"Я говорю чесно." (I speak honestly).</p>
+<blockquote>
+  <p>💡 <strong>Language Link: Please (Bud' laska)</strong><br />
+  "Bud' laska" literally means "Be kindness" (Imperative + Noun).<br />
+  It is an adverbial phrase of manner.<br />
+  Do it how? Do it "with kindness".</p>
 </blockquote>
 <h2 id="practice">practice</h2>
-<h3 id="exercise1describetodaysweather">Exercise 1: Describe Today's Weather</h3>
-<p>Answer in Ukrainian:</p>
-<ol>
-<li>Яка сьогодні погода?</li>
-<li>Тепло чи холодно?</li>
-<li>Сонячно чи хмарно?</li>
-<li>Йде дощ?</li>
-</ol>
-<h3 id="exercise2seasonsandweather">Exercise 2: Seasons and Weather</h3>
-<p>Match each season with its typical weather:</p>
-<ol>
-<li>Весна → тепло, йде дощ</li>
-<li>Літо → спекотно, сонячно</li>
-<li>Осінь → прохолодно, хмарно</li>
-<li>Зима → холодно, йде сніг</li>
-</ol>
-<h3 id="exercise3pastandfutureweather">Exercise 3: Past and Future Weather</h3>
-<p>Transform:</p>
-<ol>
-<li>Сьогодні холодно. → Вчора було холодно.</li>
-<li>Йде дощ. → Вчора йшов дощ.</li>
-<li>Сьогодні тепло. → Завтра буде тепло.</li>
-</ol>
-<h2 id="production">production</h2>
-<h3 id="taskweatherreport">Task: Weather Report</h3>
-<p>Write a short weather report including:</p>
+<p><strong>Drill 1: Adj to Adv</strong></p>
 <ul>
-<li>Today's weather</li>
-<li>Yesterday's weather</li>
-<li>Tomorrow's forecast</li>
-<li>Your favorite season and why</li>
+<li>Гарний -&gt; <strong>Гарно</strong></li>
+<li>Поганий -&gt; <strong>Погано</strong></li>
+<li>Ввічливий -&gt; <strong>Ввічливо</strong></li>
+<li>Цікавий -&gt; <strong>Цікаво</strong></li>
+<li>Дивний -&gt; <strong>Дивно</strong></li>
 </ul>
-<p>Use at least 8 weather expressions.</p>
-<hr />
-<hr />
+<p><strong>Drill 2: Frequency</strong></p>
+<ul>
+<li>(Always) -&gt; <strong>Завжди</strong></li>
+<li>(Never) -&gt; <strong>Ніколи</strong></li>
+<li>(Often) -&gt; <strong>Часто</strong></li>
+<li>(Usually) -&gt; <strong>Зазвичай</strong></li>
+</ul>
+<p><strong>Drill 3: Adverb vs Adjective</strong></p>
+<ul>
+<li>Kava is good. -&gt; <strong>Гарна</strong> (Adj).</li>
+<li>Do it good. -&gt; <strong>Гарно</strong> (Adv).</li>
+<li>I am fast. -&gt; <strong>Швидкий</strong> (Adj).</li>
+<li>I run fast. -&gt; <strong>Швидко</strong> (Adv).</li>
+</ul>
+<h2 id="production">production</h2>
+<p><strong>Scenario: The Taxi Driver</strong></p>
+<ul>
+<li><strong>Driver:</strong> Куди їдемо?</li>
+<li><strong>You:</strong> В центр. Тільки не <strong>швидко</strong>.</li>
+<li><strong>Driver:</strong> Чому? Я їжджу (drive) <strong>нормально</strong>.</li>
+<li><strong>You:</strong> Я боюся (afraid). Їдьте, будь ласка, <strong>повільно</strong>.</li>
+<li><strong>Driver:</strong> Добре, добре. Будемо їхати <strong>дуже повільно</strong>. Як черепаха (turtle).</li>
+<li><strong>You:</strong> Це <strong>чудово</strong>.</li>
+</ul>
+<p><strong>Scenario: The Job Interview</strong></p>
+<ul>
+<li><strong>Boss:</strong> Як ви працюєте?</li>
+<li><strong>You:</strong> Я працюю <strong>швидко</strong> і <strong>якісно</strong> (quality-wise).</li>
+<li><strong>Boss:</strong> Ви спізнюєтесь (late)?</li>
+<li><strong>You:</strong> Я <strong>ніколи не</strong> запізнююся.</li>
+<li><strong>Boss:</strong> Це <strong>чудово</strong>. Ви прийняті.</li>
+</ul>
+<p><strong>Scenario: The Compliment</strong></p>
+<ul>
+<li><strong>Ivan:</strong> Ти <strong>гарно</strong> виглядаєш (look).</li>
+<li><strong>Maria:</strong> Дякую. Це <strong>нова</strong> сукня (dress).</li>
+<li><strong>Ivan:</strong> Тобі <strong>дуже</strong> пасує (fits/suits).</li>
+<li><strong>Maria:</strong> А ти <strong>дивно</strong> (strangely) поводишся (behave). Що ти хочеш?</li>
+<li><strong>Ivan:</strong> Я хочу їсти. Ти <strong>смачно</strong> готуєш.</li>
+<li><strong>Maria:</strong> А! Ти хочеш борщ?</li>
+<li><strong>Ivan:</strong> Так. Я дуже голодний.</li>
+<li><strong>Maria:</strong> Ти хитрий (cunning). Але добре.</li>
+</ul>
+<p><strong>Scenario: The Taxi Driver (Again)</strong></p>
+<ul>
+<li><strong>You:</strong> Ви їдете занадто швидко!</li>
+<li><strong>Driver:</strong> Це не швидко. Це нормально.</li>
+<li><strong>You:</strong> Мені страшно (scary). Їдьте повільніше, будь ласка.</li>
+<li><strong>Driver:</strong> Якщо повільніше, буде дорожче (more expensive).</li>
+<li><strong>You:</strong> Чому?</li>
+<li><strong>Driver:</strong> Час — це гроші.</li>
+<li><strong>You:</strong> Я дам вам час. Я вийду тут.</li>
+<li><strong>Driver:</strong> Ні, ні. Я їду повільно. Бачите?</li>
+<li><strong>You:</strong> Дякую.</li>
+</ul>
+<blockquote>
+  <p>🥪 <strong>Culture Corner: Tasty! (Smachno)</strong><br />
+  When you eat, someone might say "<strong>Смачного!</strong>" (Bon appetit - Genitive wish).<br />
+  You answer: "Дякую!"<br />
+  If food is good, say "<strong>Дуже смачно</strong>" (Very tasty-ly).<br />
+  Even if it is bad, say it. Grandmothers have radar for lies, but flattery jams the radar.<br />
+  "Як суп?" - "Цікаво." (Interesting) is a polite code for "Bad".</p>
+</blockquote>
 <hr /></div>
     </div>
   
       
-    <div class="card section-summary">
-      <h3>📋 Summary</h3>
-      <div class="md-content"><blockquote>
-  <p><strong>Congratulations!</strong></p>
-  <p>You can now talk about weather in Ukrainian:</p>
-  <ul>
-  <li><strong>Asking</strong>: Яка сьогодні погода?</li>
-  <li><strong>Temperature</strong>: тепло, холодно, спекотно, прохолодно</li>
-  <li><strong>Conditions</strong>: сонячно, хмарно, вітряно</li>
-  <li><strong>Precipitation</strong>: Йде дощ / Йде сніг</li>
-  <li><strong>Seasons</strong>: весна, літо, осінь, зима (навесні, влітку, восени, взимку)</li>
-  </ul>
-  <p><strong>Key Grammar: Impersonal Constructions</strong><br />
-  Weather expressions need no subject! "Холодно" = "It's cold" without saying "it."</p>
-  <p><strong>Coming Next: Module 29 — My Family</strong></p>
-  <p>In the next module, you'll learn family vocabulary:</p>
-  <ul>
-  <li>батько, мати, брат, сестра (father, mother, brother, sister)</li>
-  <li>У мене є брат. (I have a brother.)</li>
-  <li>Мою маму звати… (My mother's name is…)</li>
-  </ul>
-</blockquote></div>
-    </div>
-  
       <div class="btn-group">
         <button class="btn btn-primary" onclick="showSection('activity-0')">Activities →</button>
       </div>
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Weather Expressions</h3>
+    <section id="activity-0" class="section"><div class="card"><h3>Adverb Creation</h3>
       <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container" class="fill-container"></div>
-      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+      <div class="match-container" id="activity-0-container"><svg class="match-lines" id="activity-0-lines"></svg>
+        <div class="match-column" id="activity-0-left"></div>
+        <div class="match-column" id="activity-0-right"></div>
+      </div>
+      <div class="completion-message" id="activity-0-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Seasons</h3>
+    <section id="activity-1" class="section"><div class="card"><h3>Adjective or Adverb?</h3>
       <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
       <div id="activity-1-container" class="fill-container"></div>
       <div class="completion-message" id="activity-1-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Weather Sentences</h3>
-      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
+    <section id="activity-2" class="section"><div class="card"><h3>Morning Routine</h3>
+      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/8</span></div>
       <div id="activity-2-container" class="order-container"></div>
       <div class="completion-message" id="activity-2-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Weather Vocabulary</h3>
+    <section id="activity-3" class="section"><div class="card"><h3>Complex Sentences (Clauses)</h3>
       <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-3-container"><svg class="match-lines" id="activity-3-lines"></svg>
-        <div class="match-column" id="activity-3-left"></div>
-        <div class="match-column" id="activity-3-right"></div>
-      </div>
-      <div class="completion-message" id="activity-3-complete"><h3>Perfect!</h3></div>
+      <div id="activity-3-container" class="order-container"></div>
+      <div class="completion-message" id="activity-3-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Seasons and Weather</h3>
+    <section id="activity-4" class="section"><div class="card"><h3>Frequency Sorter</h3>
       <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-4-container"><svg class="match-lines" id="activity-4-lines"></svg>
-        <div class="match-column" id="activity-4-left"></div>
-        <div class="match-column" id="activity-4-right"></div>
-      </div>
-      <div class="completion-message" id="activity-4-complete"><h3>Perfect!</h3></div>
+      <div class="sort-pool" id="activity-4-pool"><div class="sort-items" id="activity-4-items"></div></div>
+      <div class="sort-groups" id="activity-4-groups"></div>
+      <div class="completion-message" id="activity-4-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Weather Knowledge</h3>
+    <section id="activity-5" class="section"><div class="card"><h3>Adverb Concept</h3>
       <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
       <div id="activity-5-container"></div>
       <div class="completion-message" id="activity-5-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Weather Facts</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>Adverb Scramble</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
-      <div id="activity-6-container"></div>
-      <div class="completion-message" id="activity-6-complete"><h3>Complete!</h3></div>
+      <div id="activity-6-container" class="order-container"></div>
+      <div class="completion-message" id="activity-6-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
     </div></section>
 
-    <section id="activity-7" class="section"><div class="card"><h3>Weather Categories</h3>
-      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/16</span></div>
-      <div class="sort-pool" id="activity-7-pool"><div class="sort-items" id="activity-7-items"></div></div>
-      <div class="sort-groups" id="activity-7-groups"></div>
-      <div class="completion-message" id="activity-7-complete"><h3>All Sorted!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+    <section id="activity-7" class="section"><div class="card"><h3>Sentence Building (Adverbs)</h3>
+      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/12</span></div>
+      <div id="activity-7-container" class="order-container"></div>
+      <div class="completion-message" id="activity-7-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-8')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-8" class="section"><div class="card"><h3>My Life (Adverbs)</h3>
+      <div class="score-display"><span class="score"><span id="activity-8-score">0</span>/12</span></div>
+      <div id="activity-8-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-8-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-8')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-9')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-9" class="section"><div class="card"><h3>Adverb Facts</h3>
+      <div class="score-display"><span class="score"><span id="activity-9-score">0</span>/4</span></div>
+      <div id="activity-9-container"></div>
+      <div class="completion-message" id="activity-9-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-9')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
@@ -1038,7 +883,7 @@ footer {
     <th>Переклад</th>
     <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">погода</td><td class="vocab-ipa">pɔˈɦɔdɐ</td><td class="vocab-en">weather</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">клімат</td><td class="vocab-ipa">ˈklimɐt</td><td class="vocab-en">climate</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">температура</td><td class="vocab-ipa">tɛmpɛrɐˈturɐ</td><td class="vocab-en">temperature</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">градус</td><td class="vocab-ipa">ˈɦrɑdus</td><td class="vocab-en">degree</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">тепло</td><td class="vocab-ipa">ˈtɛplɔ</td><td class="vocab-en">warm</td><td class="vocab-note">Impersonal</td></tr><tr><td class="vocab-uk">холодно</td><td class="vocab-ipa">ˈxɔlɔdnɔ</td><td class="vocab-en">cold</td><td class="vocab-note">Impersonal</td></tr><tr><td class="vocab-uk">спекотно</td><td class="vocab-ipa">spɛˈkɔtnɔ</td><td class="vocab-en">hot</td><td class="vocab-note">Impersonal</td></tr><tr><td class="vocab-uk">прохолодно</td><td class="vocab-ipa">prɔˈxɔlɔdnɔ</td><td class="vocab-en">cool</td><td class="vocab-note">Impersonal</td></tr><tr><td class="vocab-uk">сонячно</td><td class="vocab-ipa">ˈsɔnʲɐt͡ʃnɔ</td><td class="vocab-en">sunny</td><td class="vocab-note">Impersonal</td></tr><tr><td class="vocab-uk">хмарно</td><td class="vocab-ipa">ˈxmɑrnɔ</td><td class="vocab-en">cloudy</td><td class="vocab-note">Impersonal</td></tr><tr><td class="vocab-uk">вітряно</td><td class="vocab-ipa">ˈwitrʲɐnɔ</td><td class="vocab-en">windy</td><td class="vocab-note">Impersonal</td></tr><tr><td class="vocab-uk">сонце</td><td class="vocab-ipa">ˈsɔnt͡sɛ</td><td class="vocab-en">sun</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">хмара</td><td class="vocab-ipa">ˈxmɑrɐ</td><td class="vocab-en">cloud</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">вітер</td><td class="vocab-ipa">ˈwitɛr</td><td class="vocab-en">wind</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">дощ</td><td class="vocab-ipa">dɔʃt͡ʃ</td><td class="vocab-en">rain</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">сніг</td><td class="vocab-ipa">sniɦ</td><td class="vocab-en">snow</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">туман</td><td class="vocab-ipa">tuˈmɑn</td><td class="vocab-en">fog</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">грім</td><td class="vocab-ipa">ɦrim</td><td class="vocab-en">thunder</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">блискавка</td><td class="vocab-ipa">ˈblɪskɑwkɐ</td><td class="vocab-en">lightning</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">йде дощ</td><td class="vocab-ipa">jdɛ dɔʃt͡ʃ</td><td class="vocab-en">it&#039;s raining</td><td class="vocab-note">Literally: rain goes</td></tr><tr><td class="vocab-uk">йде сніг</td><td class="vocab-ipa">jdɛ sniɦ</td><td class="vocab-en">it&#039;s snowing</td><td class="vocab-note">Literally: snow goes</td></tr><tr><td class="vocab-uk">світить сонце</td><td class="vocab-ipa">ˈswitɪtʲ ˈsɔnt͡sɛ</td><td class="vocab-en">the sun shines</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">дме вітер</td><td class="vocab-ipa">dmɛ ˈwitɛr</td><td class="vocab-en">the wind blows</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">прогноз</td><td class="vocab-ipa">prɔɦˈnɔz</td><td class="vocab-en">forecast</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">сезон</td><td class="vocab-ipa">sɛˈzɔn</td><td class="vocab-en">season</td><td class="vocab-note"></td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">швидко</td><td class="vocab-ipa">/ˈʃvɪdkɔ/</td><td class="vocab-en">fast/quickly</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('швидко')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">повільно</td><td class="vocab-ipa">/pɔˈvilʲnɔ/</td><td class="vocab-en">slowly</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('повільно')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">добре</td><td class="vocab-ipa">/ˈdɔbrɛ/</td><td class="vocab-en">well/good</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('добре')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">погано</td><td class="vocab-ipa">/pɔˈɦɑnɔ/</td><td class="vocab-en">badly</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('погано')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">гарно</td><td class="vocab-ipa">/ˈɦɑrnɔ/</td><td class="vocab-en">nicely/beautifully</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('гарно')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">дорого</td><td class="vocab-ipa">/ˈdɔrɔɦɔ/</td><td class="vocab-en">expensively</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('дорого')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">дешево</td><td class="vocab-ipa">/ˈdɛʃɛvɔ/</td><td class="vocab-en">cheaply</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('дешево')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">смачно</td><td class="vocab-ipa">/ˈsmɑtʃnɔ/</td><td class="vocab-en">tasty (adv)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('смачно')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">цікаво</td><td class="vocab-ipa">/t͡s⁽ʲ⁾iˈkɑvɔ/</td><td class="vocab-en">interestingly</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('цікаво')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">нудно</td><td class="vocab-ipa">/ˈnudnɔ/</td><td class="vocab-en">boringly</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('нудно')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">важко</td><td class="vocab-ipa">/ˈvɑʒkɔ/</td><td class="vocab-en">hard/difficultly</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('важко')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">легко</td><td class="vocab-ipa">/ˈlɛxkɔ/</td><td class="vocab-en">easily</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('легко')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">холодно</td><td class="vocab-ipa">/ˈxɔlɔdnɔ/</td><td class="vocab-en">cold (state)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('холодно')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">гаряче</td><td class="vocab-ipa">/ɦɑˈrʲɑtʃɛ/</td><td class="vocab-en">hot (state)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('гаряче')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">спекотно</td><td class="vocab-ipa">/spɛˈkɔtnɔ/</td><td class="vocab-en">sweltering</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('спекотно')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">завжди</td><td class="vocab-ipa">/zɑvˈʒdɪ/</td><td class="vocab-en">always</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('завжди')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">часто</td><td class="vocab-ipa">/ˈtʃɑstɔ/</td><td class="vocab-en">often</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('часто')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">іноді</td><td class="vocab-ipa">/ˈinɔd⁽ʲ⁾i/</td><td class="vocab-en">sometimes</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('іноді')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">рідко</td><td class="vocab-ipa">/ˈridkɔ/</td><td class="vocab-en">rarely</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('рідко')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">ніколи</td><td class="vocab-ipa">/n⁽ʲ⁾iˈkɔlɪ/</td><td class="vocab-en">never</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('ніколи')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">зазвичай</td><td class="vocab-ipa">/zɑˈzvɪtʃɑj/</td><td class="vocab-en">usually</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('зазвичай')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">чудово</td><td class="vocab-ipa">/tʃuˈdɔvɔ/</td><td class="vocab-en">wonderfully</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('чудово')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">жахливо</td><td class="vocab-ipa">/ʒɑxˈlɪvɔ/</td><td class="vocab-en">terribly</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('жахливо')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">нормально</td><td class="vocab-ipa">/nɔrˈmɑlʲnɔ/</td><td class="vocab-en">okay/normally</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('нормально')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вільно</td><td class="vocab-ipa">/ˈvilʲnɔ/</td><td class="vocab-en">freely/fluently</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вільно')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1050,8 +895,8 @@ footer {
   </main><footer>Module 28 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"fill-blank","title":"Weather Expressions","data":{"type":"fill-blank","items":[{"prompt":"Сьогодні дуже ___, +35 градусів!","answer":"спекотно","options":["спекотно","холодно","морозно","прохолодно"]},{"prompt":"Надворі ___, небо без хмар.","answer":"сонячно","options":["сонячно","хмарно","туманно","вітряно"]},{"prompt":"___ сильний вітер.","answer":"Дме","options":["Дме","Йде","Світить","Падає"]},{"prompt":"На вулиці ___ дощ.","answer":"йде","options":["йде","дме","світить","падає"]},{"prompt":"Взимку ___.","answer":"холодно","options":["холодно","спекотно","тепло","жарко"]},{"prompt":"Сонце ___ яскраво.","answer":"світить","options":["світить","йде","дме","падає"]},{"prompt":"___ сніг, все біле.","answer":"Падає","options":["Падає","Дме","Світить","Йде"]},{"prompt":"Яка ___ погода сьогодні!","answer":"гарна","options":["гарна","гарний","гарне","гарні"]},{"prompt":"Вчора ___ дощ.","answer":"йшов","options":["йшов","йде","буде йти","йдуть"]},{"prompt":"Завтра ___ тепло.","answer":"буде","options":["буде","було","є","бути"]},{"prompt":"Надворі дуже ___, нічого не видно.","answer":"туманно","options":["туманно","сонячно","тепло","холодно"]},{"prompt":"Влітку ___.","answer":"спекотно","options":["спекотно","морозно","холодно","прохолодно"]}]}},{"id":"activity-1","type":"fill-blank","title":"Seasons","data":{"type":"fill-blank","items":[{"prompt":"___ йде сніг і холодно.","answer":"Взимку","options":["Взимку","Влітку","Навесні","Восени"]},{"prompt":"___ сонячно і спекотно.","answer":"Влітку","options":["Влітку","Взимку","Восени","Навесні"]},{"prompt":"___ падає листя.","answer":"Восени","options":["Восени","Взимку","Влітку","Навесні"]},{"prompt":"___ квітнуть квіти.","answer":"Навесні","options":["Навесні","Взимку","Влітку","Восени"]},{"prompt":"Моя улюблена пора року — ___.","answer":"літо","options":["літо","зимою","влітку","весна"]},{"prompt":"Перша пора року — ___.","answer":"весна","options":["весна","літо","осінь","зима"]},{"prompt":"Після літа настає ___.","answer":"осінь","options":["осінь","весна","зима","літо"]},{"prompt":"___ морозно, мінус двадцять.","answer":"Взимку","options":["Взимку","Влітку","Навесні","Восени"]},{"prompt":"___ часто йде дощ.","answer":"Восени","options":["Восени","Взимку","Влітку","Навесні"]},{"prompt":"У грудні вже ___.","answer":"зима","options":["зима","літо","весна","осінь"]},{"prompt":"___ діти купаються в морі.","answer":"Влітку","options":["Влітку","Взимку","Восени","Навесні"]},{"prompt":"___ буває гарна погода.","answer":"Навесні","options":["Навесні","Взимку","Влітку","Восени"]}]}},{"id":"activity-2","type":"unjumble","title":"Weather Sentences","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["сьогодні","погода","Яка"],"answer":"Яка сьогодні погода?","translation":"What's the weather like today?"},{"words":["холодно","Сьогодні","дуже"],"answer":"Сьогодні дуже холодно.","translation":"It's very cold today."},{"words":["дощ","Йде","сильний"],"answer":"Йде сильний дощ.","translation":"Heavy rain is falling."},{"words":["сонце","яскраво","Світить"],"answer":"Світить яскраво сонце.","translation":"The sun shines brightly."},{"words":["спекотно","Влітку","і","сонячно"],"answer":"Влітку спекотно і сонячно.","translation":"In summer it's hot and sunny."},{"words":["сніг","Взимку","йде"],"answer":"Взимку йде сніг.","translation":"In winter it snows."},{"words":["Вчора","холодно","було"],"answer":"Вчора було холодно.","translation":"Yesterday it was cold."},{"words":["тепло","Завтра","буде"],"answer":"Завтра буде тепло.","translation":"Tomorrow it will be warm."},{"words":["вітер","Дме","сильний"],"answer":"Дме сильний вітер.","translation":"A strong wind is blowing."},{"words":["хмарно","Надворі","сьогодні"],"answer":"Сьогодні надворі хмарно.","translation":"It's cloudy outside today."},{"words":["градусів","Плюс","десять"],"answer":"Плюс десять градусів.","translation":"Plus ten degrees."},{"words":["улюблена","Моя","пора","року","весна"],"answer":"Моя улюблена пора року — весна.","translation":"My favorite season is spring."}]}},{"id":"activity-3","type":"match-up","title":"Weather Vocabulary","data":{"type":"match-up","pairs":[{"left":"погода","right":"weather"},{"left":"сонце","right":"sun"},{"left":"хмара","right":"cloud"},{"left":"вітер","right":"wind"},{"left":"дощ","right":"rain"},{"left":"сніг","right":"snow"},{"left":"тепло","right":"warm"},{"left":"холодно","right":"cold"},{"left":"спекотно","right":"hot"},{"left":"сонячно","right":"sunny"},{"left":"хмарно","right":"cloudy"},{"left":"вітряно","right":"windy"}],"shuffleRight":true}},{"id":"activity-4","type":"match-up","title":"Seasons and Weather","data":{"type":"match-up","pairs":[{"left":"весна","right":"тепло, йде дощ"},{"left":"літо","right":"спекотно, сонячно"},{"left":"осінь","right":"прохолодно, хмарно"},{"left":"зима","right":"холодно, йде сніг"},{"left":"навесні","right":"в весняний час"},{"left":"влітку","right":"в літній час"},{"left":"восени","right":"в осінній час"},{"left":"взимку","right":"в зимовий час"},{"left":"грім","right":"thunder"},{"left":"блискавка","right":"lightning"},{"left":"туман","right":"fog"},{"left":"прогноз","right":"forecast"}],"shuffleRight":true}},{"id":"activity-5","type":"quiz","title":"Weather Knowledge","data":{"type":"quiz","questions":[{"question":"How do you say \"It's raining\" in Ukrainian?","options":["Дощ йде","Йде дощ","Дощ падає","Є дощ"],"correctIndex":1,"explanation":"\"Йде дощ\" — rain \"goes.\""},{"question":"Why don't weather expressions need a subject?","options":["Ukrainian has no subjects","They are impersonal constructions","The subject is hidden","It's optional"],"correctIndex":1,"explanation":"Impersonal constructions apply universally."},{"question":"\"Взимку\" means:","options":["In spring","In summer","In autumn","In winter"],"correctIndex":3,"explanation":"Взимку = in winter."},{"question":"What verb means \"shines\" (for the sun)?","options":["йде","світить","дме","падає"],"correctIndex":1,"explanation":"Сонце світить = The sun shines."},{"question":"\"Дме вітер\" means:","options":["The wind blows","The wind goes","Wind is falling","Wind shines"],"correctIndex":0,"explanation":"\"Дме\" = blows."},{"question":"How do you ask \"What's the weather like?\"","options":["Яка сьогодні погода?","Що погода?","Де погода?","Коли погода?"],"correctIndex":0,"explanation":"\"Яка\" (what kind of) is used for weather."},{"question":"\"Прохолодно\" means:","options":["warm","hot","cool","freezing"],"correctIndex":2,"explanation":"Прохолодно = cool (not quite cold)."},{"question":"What season comes after весна?","options":["літо","осінь","зима","весна"],"correctIndex":0,"explanation":"Spring → Summer."},{"question":"\"Блискавка\" means:","options":["rain","thunder","lightning","cloud"],"correctIndex":2,"explanation":"Блискавка = lightning."},{"question":"\"-5°C\" in Ukrainian is:","options":["Мінус п'ять градусів","Плюс п'ять градусів","Негативний п'ять","Холодно п'ять"],"correctIndex":0,"explanation":"\"Мінус\" for negative temperatures."},{"question":"\"Восени\" means:","options":["In spring","In summer","In autumn","In winter"],"correctIndex":2,"explanation":"Восени = in autumn."},{"question":"How do you say \"Yesterday it was cold\"?","options":["Вчора холодно","Вчора було холодно","Вчора є холодно","Вчора буде холодно"],"correctIndex":1,"explanation":"Past tense: було холодно."}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-6","type":"true-false","title":"Weather Facts","data":{"type":"true-false","statements":[{"statement":"\"Холодно\" is a complete sentence in Ukrainian.","isTrue":true,"explanation":"Correct! Impersonal constructions need no subject."},{"statement":"\"Йде сніг\" literally means \"Snow is falling.\"","isTrue":false,"explanation":"Incorrect! It literally means \"Snow goes.\""},{"statement":"\"Влітку\" means \"in summer.\"","isTrue":true,"explanation":"Correct! Special adverb for \"in summer.\""},{"statement":"You need to say \"воно тепло\" for \"it's warm.\"","isTrue":false,"explanation":"Incorrect! Just \"тепло\" is enough — no subject needed."},{"statement":"\"Сонце світить\" means \"The sun shines.\"","isTrue":true,"explanation":"Correct! Світить = shines."},{"statement":"Ukrainian distinguishes спекотно (hot) from тепло (warm).","isTrue":true,"explanation":"Correct! Different degrees of warmth."},{"statement":"\"Весна\" and \"навесні\" mean the same thing.","isTrue":false,"explanation":"Incorrect! \"Весна\" = spring (noun), \"навесні\" = in spring (adverb)."},{"statement":"\"Грім\" means thunder.","isTrue":true,"explanation":"Correct! Гримить грім = thunder rumbles."},{"statement":"\"Дме вітер\" means the wind is falling.","isTrue":false,"explanation":"Incorrect! It means the wind blows. \"Дути\" = to blow."},{"statement":"\"Прогноз погоди\" means weather forecast.","isTrue":true,"explanation":"Correct! Прогноз = forecast."},{"statement":"Temperature below zero uses \"мінус.\"","isTrue":true,"explanation":"Correct! Мінус п'ять градусів = -5°C."},{"statement":"All seasons use the same adverb pattern.","isTrue":false,"explanation":"Incorrect! Each has a unique form: навесні, влітку, восени, взимку."}]}},{"id":"activity-7","type":"group-sort","title":"Weather Categories","data":{"type":"group-sort","groups":[{"id":"temperature","name":"Temperature","items":["тепло","холодно","спекотно","прохолодно","морозно"]},{"id":"precipitation","name":"Precipitation","items":["дощ","сніг","град","злива"]},{"id":"sky-conditions","name":"Sky Conditions","items":["сонячно","хмарно","туманно"]},{"id":"seasons","name":"Seasons","items":["весна","літо","осінь","зима"]}],"shuffleItems":true}}];
-    const vocabData = [{"uk":"погода","translit":"","en":"weather","note":""},{"uk":"клімат","translit":"","en":"climate","note":""},{"uk":"температура","translit":"","en":"temperature","note":""},{"uk":"градус","translit":"","en":"degree","note":""},{"uk":"тепло","translit":"","en":"warm","note":"Impersonal"},{"uk":"холодно","translit":"","en":"cold","note":"Impersonal"},{"uk":"спекотно","translit":"","en":"hot","note":"Impersonal"},{"uk":"прохолодно","translit":"","en":"cool","note":"Impersonal"},{"uk":"сонячно","translit":"","en":"sunny","note":"Impersonal"},{"uk":"хмарно","translit":"","en":"cloudy","note":"Impersonal"},{"uk":"вітряно","translit":"","en":"windy","note":"Impersonal"},{"uk":"сонце","translit":"","en":"sun","note":""},{"uk":"хмара","translit":"","en":"cloud","note":""},{"uk":"вітер","translit":"","en":"wind","note":""},{"uk":"дощ","translit":"","en":"rain","note":""},{"uk":"сніг","translit":"","en":"snow","note":""},{"uk":"туман","translit":"","en":"fog","note":""},{"uk":"грім","translit":"","en":"thunder","note":""},{"uk":"блискавка","translit":"","en":"lightning","note":""},{"uk":"йде дощ","translit":"","en":"it's raining","note":"Literally: rain goes"},{"uk":"йде сніг","translit":"","en":"it's snowing","note":"Literally: snow goes"},{"uk":"світить сонце","translit":"","en":"the sun shines","note":""},{"uk":"дме вітер","translit":"","en":"the wind blows","note":""},{"uk":"прогноз","translit":"","en":"forecast","note":""},{"uk":"сезон","translit":"","en":"season","note":""}];
+    const activitiesData = [{"id":"activity-0","type":"match-up","title":"Adverb Creation","data":{"type":"match-up","pairs":[{"left":"Гарний (Good/Nice)","right":"Гарно"},{"left":"Поганий (Bad)","right":"Погано"},{"left":"Швидкий (Fast)","right":"Швидко"},{"left":"Повільний (Slow)","right":"Повільно"},{"left":"Цікавий (Interesting)","right":"Цікаво"},{"left":"Смачний (Tasty)","right":"Смачно"},{"left":"Сумний (Sad)","right":"Сумно"},{"left":"Веселий (Fun)","right":"Весело"},{"left":"Дорогий (Expensive)","right":"Дорого"},{"left":"Дешевий (Cheap)","right":"Дешево"},{"left":"Дивний (Strange)","right":"Дивно"},{"left":"Ввічливий (Polite)","right":"Ввічливо"}],"shuffleRight":true}},{"id":"activity-1","type":"fill-blank","title":"Adjective or Adverb?","data":{"type":"fill-blank","items":[{"prompt":"Ця книга ___ (interesting).","answer":"цікава","hints":["interesting"],"options":["цікава","цікаво"]},{"prompt":"Мені ___ (interesting) тут.","answer":"цікаво","hints":["interesting"],"options":["цікава","цікаво"]},{"prompt":"Ти ___ (good) співаєш.","answer":"гарно","hints":["good"],"options":["гарна","гарно"]},{"prompt":"Це ___ (good) пісня.","answer":"гарна","hints":["good"],"options":["гарна","гарно"]},{"prompt":"Він їде ___ (fast).","answer":"швидко","hints":["fast"],"options":["швидкий","швидко"]},{"prompt":"Цей поїзд ___ (fast).","answer":"швидкий","hints":["fast"],"options":["швидкий","швидко"]},{"prompt":"Тут ___ (expensive).","answer":"дорого","hints":["expensive"],"options":["дорогий","дорого"]},{"prompt":"Це ___ (expensive) ресторан.","answer":"дорогий","hints":["expensive"],"options":["дорогий","дорого"]},{"prompt":"Мені ___ (sad).","answer":"сумно","hints":["sad"],"options":["сумний","сумно"]},{"prompt":"Фільм ___ (sad).","answer":"сумний","hints":["sad"],"options":["сумний","сумно"]},{"prompt":"Це ___ (strange).","answer":"дивно","hints":["strange"],"options":["дивна","дивно"]},{"prompt":"Вона ___ (strange).","answer":"дивна","hints":["strange"],"options":["дивна","дивно"]}]}},{"id":"activity-2","type":"unjumble","title":"Morning Routine","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["прокидаюся","Я","рано","."],"answer":"Я прокидаюся рано.","translation":"I wake up early."},{"words":["швидко","каву","п'ю","Я","."],"answer":"Я п'ю каву швидко.","translation":"I drink coffee fast."},{"words":["повільно","снідаю","Я","."],"answer":"Я снідаю повільно.","translation":"I eat breakfast slowly."},{"words":["роботу","Я","швидко","йду","на","."],"answer":"Я йду на роботу швидко.","translation":"I go to work quickly."},{"words":["погано","українською","говорю","Я","."],"answer":"Я говорю українською погано.","translation":"I speak Ukrainian badly."},{"words":["добре","англійською","говорю","Я","."],"answer":"Я говорю англійською добре.","translation":"I speak English well."},{"words":["голосно","Він","співає","."],"answer":"Він співає голосно.","translation":"He sings loudly."},{"words":["пише","Вона","гарно","."],"answer":"Вона пише гарно.","translation":"She writes beautifully."}]}},{"id":"activity-3","type":"unjumble","title":"Complex Sentences (Clauses)","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["ми","Коли","їмо","вечір","."],"answer":"Коли вечір, ми їмо.","translation":"When it is evening, we eat."},{"words":["я","Якщо","читаю","маю","час","."],"answer":"Якщо я маю час, я читаю.","translation":"If I have time, I read."},{"words":["тому","що","Я","втомився","працював","я","."],"answer":"Я втомився, тому що я працював."},{"words":["але","гарно","Він","співає","тихо","."],"answer":"Він співає гарно, але тихо."},{"words":["швидко","поїзд","їде","Цей","дуже","."],"answer":"Цей поїзд їде дуже швидко."},{"words":["не","Я","знаю","хто","це","."],"answer":"Я не знаю, хто це."},{"words":["де","Ти","знаєш","він","?"],"answer":"Ти знаєш, де він?"},{"words":["що","Ми","думаємо","це","добре","."],"answer":"Ми думаємо, що це добре."},{"words":["як","Ви","знаєте","це","робити","?"],"answer":"Ви знаєте, як це робити?"},{"words":["коли","Я","люблю","тепло","."],"answer":"Я люблю, коли тепло."},{"words":["тому","що","Я","тут","ти","тут","."],"answer":"Я тут, тому що ти тут."},{"words":["але","Це","дешево","погано","."],"answer":"Це дешево, але погано."}]}},{"id":"activity-4","type":"group-sort","title":"Frequency Sorter","data":{"type":"group-sort","groups":[{"id":"high-frequency","name":"High Frequency","items":["Завжди (Always)","Часто (Often)","Зазвичай (Usually)","Постійно (Constantly)","Щодня (Every day)"]},{"id":"midlow-frequency","name":"Mid/Low Frequency","items":["Іноді (Sometimes)","Час від часу (Time from time)","Рідко (Rarely)","Нечасто (Not often)"]},{"id":"zero-frequency","name":"Zero Frequency","items":["Ніколи (Never)","Ніколи в житті (Never in life)","Жодного разу (Not a single time)"]}],"shuffleItems":true}},{"id":"activity-5","type":"quiz","title":"Adverb Concept","data":{"type":"quiz","questions":[{"question":"Which answers \"What kind?\" (Yaky)?","options":["Adjective (Harnyi)","Adverb (Harno)"],"correctIndex":0,"explanation":""},{"question":"Which answers \"How?\" (Yak)?","options":["Adjective","Adverb"],"correctIndex":1,"explanation":""},{"question":"\"Meni sumno\" (To me is sad). Case?","options":["Dative (Meni)","Nominative (Ya)"],"correctIndex":0,"explanation":""},{"question":"\"Ya sumnyi\" (I am sad). Case?","options":["Dative","Nominative"],"correctIndex":1,"explanation":""},{"question":"Where is \"Always\" usually placed?","options":["Before the verb (\"Ya zavzhdy snidayu\").","After the verb."],"correctIndex":0,"explanation":""},{"question":"\"Tak sobi\" means...","options":["So-so.","Very good."],"correctIndex":0,"explanation":""},{"question":"\"Duzhe\" means...","options":["Very.","Little."],"correctIndex":0,"explanation":""},{"question":"\"Trokhy\" means...","options":["A little.","Very."],"correctIndex":0,"explanation":""},{"question":"Can you say \"Menі harno\"?","options":["Yes (I feel good).","No."],"correctIndex":0,"explanation":""},{"question":"\"Schvydko\" opposite is...","options":["Povilno.","Harno."],"correctIndex":0,"explanation":""},{"question":"\"Dobre\" opposite is...","options":["Pohano.","Duzhe."],"correctIndex":0,"explanation":""},{"question":"\"Tyt\" (Here) opposite is...","options":["Tam (There).","Misto."],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-6","type":"anagram","title":"Adverb Scramble","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["в","ж","з","д","и","а"],"answer":"завжди","translation":"Always"},{"letters":["ч","т","с","а","о"],"answer":"часто","translation":"Often"},{"letters":["ш","в","д","и","к","о"],"answer":"швидко","translation":"Fast"},{"letters":["п","в","і","л","ь","н","о"],"answer":"повільно","translation":"Slowly"},{"letters":["г","р","н","о","а"],"answer":"гарно","translation":"Well/Nicely"},{"letters":["п","о","н","о","г","а"],"answer":"погано","translation":"Badly"},{"letters":["д","ж","у","е"],"answer":"дуже","translation":"Very"},{"letters":["т","р","х","о","и"],"answer":"трохи","translation":"A little"},{"letters":["ц","к","в","о","і","а"],"answer":"цікаво","translation":"Interesting-ly"},{"letters":["с","м","н","о","у"],"answer":"сумно","translation":"Sad-ly"},{"letters":["н","к","л","о","и","і"],"answer":"ніколи","translation":"Never"},{"letters":["т","о","с","а","ч"],"answer":"часто","translation":"Often"}]}},{"id":"activity-7","type":"unjumble","title":"Sentence Building (Adverbs)","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["читаю","швидко","Я","."],"answer":"Я швидко читаю."},{"words":["готує","Вона","смачно","."],"answer":"Вона смачно готує."},{"words":["додому","Ми","йдемо","повільно","."],"answer":"Ми повільно йдемо додому."},{"words":["цікаво","Це","дуже","."],"answer":"Це дуже цікаво."},{"words":["тут","Дорого","."],"answer":"Тут дорого."},{"words":["не","Я","сплю","ніколи","."],"answer":"Я ніколи не сплю."},{"words":["часто","Ти","тут","?"],"answer":"Ти часто тут?"},{"words":["добре","Все","буде","."],"answer":"Все буде добре.","translation":"Everything will be well - famous phrase"},{"words":["погано","Я","чую","."],"answer":"Я погано чую.","translation":"hear"},{"words":["виглядаєш","Ти","чудово","!"],"answer":"Ти чудово виглядаєш!"},{"words":["важко","Мені","."],"answer":"Мені важко."},{"words":["їдеш","Ти","швидко","занадто","."],"answer":"Ти їдеш занадто швидко."}]}},{"id":"activity-8","type":"fill-blank","title":"My Life (Adverbs)","data":{"type":"fill-blank","items":[{"prompt":"Я готую ___ (how?).","answer":"смачно / погано","hints":["how?"]},{"prompt":"Я бігаю ___ (how?).","answer":"швидко / повільно","hints":["how?"]},{"prompt":"Я сплю ___ (how?).","answer":"багато / мало","hints":["how?"]},{"prompt":"Українська мова — це ___ (how/adj?).","answer":"цікаво / складно","hints":["how/adj?"]},{"prompt":"Я живу ___ (where?).","answer":"тут / там","hints":["where?"]},{"prompt":"Я встаю ___ (when?).","answer":"рано / пізно","hints":["when?"]},{"prompt":"Я читаю ___ (how?).","answer":"багато / швидко","hints":["how?"]},{"prompt":"Мені ___ (state).","answer":"весело / сумно / нудно","hints":["state"]},{"prompt":"Це ___ (price).","answer":"дорого / дешево","hints":["price"]},{"prompt":"Я ___ (frequency) п'ю каву.","answer":"завжди / часто / ніколи","hints":["frequency"]},{"prompt":"Я ___ (frequency) запізнююсь.","answer":"ніколи / іноді","hints":["frequency"]},{"prompt":"Мені ___ (hot/cold).","answer":"холодно / жарко","hints":["hot/cold"]}]}},{"id":"activity-9","type":"true-false","title":"Adverb Facts","data":{"type":"true-false","statements":[{"statement":"I can say \"I live well\" (Я живу добре).","isTrue":false,"explanation":""},{"statement":"I can say \"It is cold\" (Холодно).","isTrue":false,"explanation":""},{"statement":"I can say \"I never smoke\" (Я ніколи не курю).","isTrue":false,"explanation":""},{"statement":"I know \"Normalno\" is the answer to everything.","isTrue":false,"explanation":""}]}}];
+    const vocabData = [{"uk":"швидко","translit":"","en":"fast/quickly","note":"[🔊](audio_shvydko)"},{"uk":"повільно","translit":"","en":"slowly","note":"[🔊](audio_povilno)"},{"uk":"добре","translit":"","en":"well/good","note":"[🔊](audio_dobre)"},{"uk":"погано","translit":"","en":"badly","note":"[🔊](audio_pohano)"},{"uk":"гарно","translit":"","en":"nicely/beautifully","note":"[🔊](audio_harno)"},{"uk":"дорого","translit":"","en":"expensively","note":"[🔊](audio_doroho)"},{"uk":"дешево","translit":"","en":"cheaply","note":"[🔊](audio_deshevo)"},{"uk":"смачно","translit":"","en":"tasty (adv)","note":"[🔊](audio_smachno)"},{"uk":"цікаво","translit":"","en":"interestingly","note":"[🔊](audio_tsikavo)"},{"uk":"нудно","translit":"","en":"boringly","note":"[🔊](audio_nudno)"},{"uk":"важко","translit":"","en":"hard/difficultly","note":"[🔊](audio_vazhko)"},{"uk":"легко","translit":"","en":"easily","note":"[🔊](audio_lehko)"},{"uk":"холодно","translit":"","en":"cold (state)","note":"[🔊](audio_kholodno)"},{"uk":"гаряче","translit":"","en":"hot (state)","note":"[🔊](audio_haryache)"},{"uk":"спекотно","translit":"","en":"sweltering","note":"[🔊](audio_spekotno)"},{"uk":"завжди","translit":"","en":"always","note":"[🔊](audio_zavzhdy)"},{"uk":"часто","translit":"","en":"often","note":"[🔊](audio_chasto)"},{"uk":"іноді","translit":"","en":"sometimes","note":"[🔊](audio_inodi)"},{"uk":"рідко","translit":"","en":"rarely","note":"[🔊](audio_ridko)"},{"uk":"ніколи","translit":"","en":"never","note":"[🔊](audio_nikoly)"},{"uk":"зазвичай","translit":"","en":"usually","note":"[🔊](audio_zazvychaj)"},{"uk":"чудово","translit":"","en":"wonderfully","note":"[🔊](audio_chudovo)"},{"uk":"жахливо","translit":"","en":"terribly","note":"[🔊](audio_zhakhlyvo)"},{"uk":"нормально","translit":"","en":"okay/normally","note":"[🔊](audio_normalno)"},{"uk":"вільно","translit":"","en":"freely/fluently","note":"[🔊](audio_vilno)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1111,6 +956,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2375,6 +2246,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

@@ -11,530 +11,98 @@
     "targetLevel": "A1",
     "phase": "A1.3",
     "moduleNumber": 29,
-    "moduleType": "vocabulary",
+    "moduleType": "grammar",
     "immersionLevel": 0.3,
-    "title": "My Family",
-    "subtitle": "Моя родина — Family Members and Relationships",
-    "description": "Name immediate and extended family members",
+    "title": "Prepositions III (Direction vs Location)",
+    "subtitle": "Moving and Staying",
+    "description": "Learner distinguishes \"Where?\" (De?) vs \"Where to?\" (Kudy?)",
     "objectives": [
-      "Name immediate and extended family members",
-      "Describe family relationships",
-      "Use genitive for relationships",
-      "Talk about age and marital status"
+      "Learner distinguishes \"Where?\" (De?) vs \"Where to?\" (Kudy?)",
+      "Learner uses Accusative for Motion (I go to the park)",
+      "Learner uses Locative for Location (I am in the park)",
+      "Learner uses Genitive for Origin (I am from Ukraine)"
     ],
-    "grammarFocus": [
-      "Family vocabulary with gender",
-      "Possessives with family (мій батько, моя мама)",
-      "Genitive for possession and relationships",
-      "Age expressions"
-    ],
+    "grammarFocus": [],
     "tags": [
-      "family",
-      "relationships",
-      "possessives",
-      "vocabulary"
+      "grammar",
+      "prepositions",
+      "cases",
+      "locative",
+      "accusative",
+      "genitive"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
+    "totalDuration": 60,
+    "transliterationMode": "full",
     "sections": [
       {
-        "id": "section-intro",
+        "id": "section-intro-0",
         "name": "Вступ",
         "nameEn": "Introduction",
         "type": "intro",
-        "content": "## warm-up\n\n### Who's in Your Family?\n\nFamily is at the heart of Ukrainian culture! In this module, you'll learn to talk about parents, siblings, grandparents, and more.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian has both formal and informal words for parents: батько/мати (formal) and тато/мама (informal, like dad/mom). Knowing both helps you adapt to any conversation!\n\n## presentation\n\n### Immediate Family: Parents\n\n| Ukrainian | IPA | English | Informal |\n|-----------|-----|---------|----------|\n| батько | ˈbɑtʲkɔ | father | тато |\n| мати | ˈmɑtɪ | mother | мама |\n| батьки | bɑtʲˈkɪ | parents | — |\n\n**Examples:**\n- Мій батько працює в банку. (My father works at a bank.)\n- Моя мама — лікар. (My mother is a doctor.)\n- Мої батьки живуть у Львові. (My parents live in Lviv.)\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Батьки\" can mean just one parent.\n> **Fact:** \"Батьки\" is always plural (parents). For \"a parent,\" use \"один з батьків\" (one of the parents).\n\n### Immediate Family: Siblings\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| брат | brɑt | brother | m |\n| сестра | sɛsˈtrɑ | sister | f |\n| брати | brɑˈtɪ | brothers | pl |\n| сестри | ˈsɛstrɪ | sisters | pl |\n\n**Examples:**\n- У мене є брат. (I have a brother.)\n- У мене є сестра. (I have a sister.)\n- У мене два брати і одна сестра. (I have two brothers and one sister.)\n\n### Immediate Family: Children\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| син | sɪn | son | m |\n| дочка | ˈdɔt͡ʃkɐ | daughter | f |\n| дитина | dɪˈtɪnɐ | child | f |\n| діти | ˈditɪ | children | pl |\n\n> 🎬 **Pop Culture Moment: The Godfather**\n>\n> \"Він мій хрещений батько\" (He is my godfather). Ukrainian also has хрещена мати (godmother), хрещеник (godson), and хрещениця (goddaughter)!\n\n### Extended Family: Grandparents\n\n| Ukrainian | IPA | English |\n|-----------|-----|---------|\n| дідусь | ˈdidusʲ | grandfather |\n| бабуся | bɐˈbusʲɐ | grandmother |\n| дідусь і бабуся | — | grandparents |\n\n**Also:**\n- прадід (great-grandfather)\n- прабабуся (great-grandmother)\n\n> 🌍 **Real World**\n>\n> Ukrainian grandparents often live with or near their families and play a huge role in raising children. \"Бабуся\" is often the family's best cook!\n\n### Extended Family: Grandchildren\n\n| Ukrainian | IPA | English |\n|-----------|-----|---------|\n| онук | ɔˈnuk | grandson |\n| онучка | ɔˈnut͡ʃkɐ | granddaughter |\n| онуки | ɔˈnukɪ | grandchildren |\n\n### Extended Family: Aunts and Uncles\n\n| Ukrainian | IPA | English |\n|-----------|-----|---------|\n| дядько | ˈdʲɐdʲkɔ | uncle |\n| тітка | ˈtitkɐ | aunt |\n\n### Cousins\n\n| Ukrainian | English |\n|-----------|---------|\n| двоюрідний брат | male cousin (lit. \"second-degree brother\") |\n| двоюрідна сестра | female cousin (lit. \"second-degree sister\") |\n\n> ⚡ **Pro Tip**\n>\n> Ukrainian doesn't have a single word for \"cousin\" — you specify if they're a cousin-brother or cousin-sister. It's more precise!\n\n### Marital Relationships\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| чоловік | t͡ʃɔlɔˈwik | husband | m |\n| дружина | druˈʒɪnɐ | wife | f |\n| наречений | nɐrɛˈt͡ʃɛnɪj | fiancé | m |\n| наречена | nɐrɛˈt͡ʃɛnɐ | fiancée | f |\n\n**Dating relationships:**\n- хлопець (boyfriend)\n- дівчина (girlfriend)\n\n> 🎯 **Fun Fact**\n>\n> \"Чоловік\" means both \"husband\" and \"man\"! Context tells you which. \"Мій чоловік\" = my husband, \"Цей чоловік\" = this man.\n\n### Marital Status\n\n| Ukrainian | English |\n|-----------|---------|\n| одружений | married (m) |\n| одружена | married (f) |\n| неодружений | unmarried (m) |\n| неодружена | unmarried (f) |\n| розлучений | divorced (m) |\n| розлучена | divorced (f) |\n| вдівець | widower |\n| вдова | widow |\n\n**Examples:**\n- Я одружений. (I'm married. — male)\n- Вона неодружена. (She's unmarried.)\n- Він розлучений. (He's divorced.)\n\n### Describing Family Relationships\n\n**\"У мене є...\"** (I have...)\n- У мене є брат. (I have a brother.)\n- У мене є два брати. (I have two brothers.)\n- У мене немає сестри. (I don't have a sister.)\n\n**\"Мого/Мою звати...\"** (My ... is called...)\n- Мого батька звати Іван. (My father's name is Ivan.)\n- Мою маму звати Оксана. (My mother's name is Oksana.)\n\n**Age expressions:**\n- Моїй сестрі двадцять років. (My sister is 20 years old.)\n- Моєму братові тридцять років. (My brother is 30 years old.)\n\n> 💡 **Did You Know?**\n>\n> To say someone's age in Ukrainian, you use dative case + рік/роки/років! But at A1, just learn the patterns: \"Йому/Їй X років\" (He/She is X years old).\n\n### Birth Order and Age\n\n| Ukrainian | English |\n|-----------|---------|\n| старший | older (m) |\n| старша | older (f) |\n| молодший | younger (m) |\n| молодша | younger (f) |\n| середній | middle (m) |\n| середня | middle (f) |\n| єдиний | only (m) |\n| єдина | only (f) |\n\n**Examples:**\n- Це мій старший брат. (This is my older brother.)\n- Вона моя молодша сестра. (She is my younger sister.)\n- Я єдина дитина. (I'm an only child. — female)\n\n> 🎮 **Gamer's Corner**\n>\n> In The Witcher, Geralt has a complex found family: \"Цірі — як моя дочка\" (Ciri is like my daughter), \"Весемір — як мій батько\" (Vesemir is like my father). Family isn't always blood!\n\n### The Complete Family Tree\n\n```\nпрадід + прабабуся\n        |\n    дідусь + бабуся     дідусь + бабуся\n           |                   |\n    дядько/тітка      батько + мати     дядько/тітка\n                            |\n              двоюрідні     брат/сестра    двоюрідні\n                                |\n                          син/дочка\n                                |\n                          онук/онучка\n```\n\n## practice\n\n### Exercise 1: My Family\n\nAnswer about your family:\n1. У вас є брат або сестра?\n2. Як звати ваших батьків?\n3. Ви одружений/одружена?\n4. Скільки років вашим батькам?\n\n### Exercise 2: Who Is Who?\n\nIdentify relationships:\n1. Батько мого батька — мій ___ (дідусь)\n2. Сестра моєї мами — моя ___ (тітка)\n3. Син мого брата — мій ___ (племінник)\n4. Дочка моєї сестри — моя ___ (племінниця)\n\n### Exercise 3: Family Description\n\nDescribe your family using at least 6 family terms.\n\n## production\n\n### Task: My Family Tree\n\nDraw and describe your family tree:\n- Name at least 8 family members\n- Include their relationships to you\n- Mention ages if you know them\n- Describe if they're older/younger\n\n---\n\n\n---\n\n\n---"
-      },
-      {
-        "id": "section-summary",
-        "name": "Підсумок",
-        "nameEn": "Summary",
-        "type": "summary",
-        "content": "> **Congratulations!**\n>\n> You can now talk about your family in Ukrainian:\n> - **Parents**: батько/тато, мати/мама, батьки\n> - **Siblings**: брат, сестра\n> - **Grandparents**: дідусь, бабуся\n> - **Extended family**: дядько, тітка, двоюрідний брат/сестра\n> - **Marital status**: одружений, неодружений, розлучений\n\n> **Key Patterns:**\n> - У мене є + nominative (I have...)\n> - У мене немає + genitive (I don't have...)\n> - Мого/Мою ... звати ... (My ... is called ...)\n\n> **Coming Next: Module 30 — A1 Capstone**\n>\n> In the final A1 module, you'll review everything:\n> - All three cases (Accusative, Locative, Genitive)\n> - Past and future tense\n> - All vocabulary domains\n> - Comprehensive self-assessment"
+        "content": "## warm-up\n**The Box Paradox**\n\nImagine a box.\n1.  You are inside the box. (Location).\n2.  You walk into the box. (Motion).\n3.  You walk out of the box. (Origin).\n\nIn English, \"In\" usually works for both 1 and 2. \"I am in the park\", \"I go in the park\".\nIn Ukrainian, GRAMMAR changes.\n- **Where? (De?)** -> Uses Locative Case. \"Я в парку.\"\n- **Where to? (Kudy?)** -> Uses Accusative Case. \"Я йду в парк.\"\n- **From where? (Zvidky?)** -> Uses Genitive Case. \"Я з парку.\"\n\nThis module is the Grand Unification of Prepositions.\n\n## presentation\n\n### Section 1: The Golden Questions\n\nEverything depends on the verb.\n- **Buty / Zhyty / Spaty** (To be / live / sleep) -> Ask **DE?** (Where?).\n- **Yty / Yikhaty** (To go) -> Ask **KUDY?** (Where to?).\n- **Pryikhaly** (Arrived) -> Ask **ZVIDKY?** (From where?).\n\n> 💡 **Pro Tip: The Verb Decides**\n> - Verbs of **Stasis** (Standing still) -> Locative.\n> - Verbs of **Motion** (Moving towards) -> Accusative.\n\n### Section 2: V / U (In/Into)\n\n**Location (De? + Locative):**\n- Я живу **в Києві**. (I live in Kyiv).\n- Я сплю **у готелі**. (I sleep in a hotel).\n*Ending: -i / -u*.\n\n**Motion (Kudy? + Accusative):**\n- Я їду **в Київ**. (I go to Kyiv).\n- Я йду **в готель**. (I go to the hotel).\n*Ending: No change for inanimate masculine!*\n*Note: Feminine changes: \"Я їду в Україну\".*\n\n### Section 3: Na (On/Onto)\n\n**Location (De? + Locative):**\n- Я **на роботі**. (I am at work).\n- Я **на Хрещатику**. (I am on Khreshchatyk).\n\n**Motion (Kudy? + Accusative):**\n- Я йду **на роботу**. (I go to work).\n- Я йду **на Хрещатик**. (I go to Khreshchatyk).\n\n> 🏫 **Culture Corner: Na vs V?**\n> Why \"Na Roboti\"? Why \"V Ofisi\"?\n> - **V** is for enclosed spaces / cities / countries.\n> - **Na** is for surfaces / events / open spaces.\n> - **Exception:** Ukraine used to take \"Na\" in Russian imperial times (\"On the borderlands\").\n> - **Rule:** Always say **В Україні** (In Ukraine). It is an independent state, not a territory. \"Na Ukraini\" is considered archaic and rude effectively.\n\n### Section 4: Do (To - Towards a person/place)\n\nSometimes we don't enter \"Into\". We just go \"To\".\nUses **Genitive**.\n- **До** (To / Towards).\n- Я йду **додому**. (I go home).\n- Я йду **до мами**. (I go to mom).\n- Я йду **до лікаря**. (I go to the doctor).\n*You cannot go \"V Likarya\" (Inside the doctor). That would be surgery.*\n*So for people, always use DO.*\n\n### Section 5: Z / Vid (From)\n\n**From a Place (Z + Genitive):**\n- Я **з України**. (I am from Ukraine).\n- Я йду **з роботи**. (I go from work).\n- Я їду **з Києва**. (I go from Kyiv).\n\n**From a Person (Vid + Genitive):**\n- Я йду **від лікаря**. (I go from the doctor).\n- Це подарунок **від мами**. (This is a gift from mom).\n\n### Section 6: Summary Table\n\n| Question | Logic | Case | Preposition | Example |\n|---|---|---|---|---|\n| **De?** | Location | Locative | V / Na | В парку |\n| **Kudy?** | Motion | Accusative | V / Na | В парк |\n| **Kudy? (People)** | Motion | Genitive | Do | До мами |\n| **Zvidky?** | Origin | Genitive | Z / Vid | З парку |\n\n> 🕵️ **Deep Dive: The House (Dim)**\n> - **Вдома** (At home - Locative-ish Adverb).\n> - **Додому** (To home - Direction Adverb).\n> - **З дому** (From home - Genitive).\n> Memorize these three as fixed phrases.\n\n### Section 7: Interrogative Words\n\n- **Де ти?** (Where are you?)\n- **Куди ти йдеш?** (Where are you going?)\n- **Звідки ти?** (Where are you from?)\n\n*Mistake:* \"Де ти йдеш?\" (Where are you walking? - Meaning: In what location are you performing the act of walking?).\n*Correct:* \"Куди ти йдеш?\" (What is your destination?).\n\n\n### Section 8: The Tourist Trap (Cities as Objects)\n\nRemember \"Location\" vs \"Motion\" with cities?\n1.  **Я в Києві** (Locative).\n2.  **Я їду в Київ** (Accusative).\n    *Wait, why \"Kyiv\" and not \"Kyiva\"?*\n    *Because Inanimate Masculine Nouns DO NOT change in Accusative.*\n    *This is a gift from the gods.*\n    *London -> London. New York -> New York.*\n    *BUT Feminine cities change:*\n    *Poltava -> Poltavu. Odesa -> Odesu.*\n\n> 🧭 **Deep Dive: Prepositions are Maps**\n> - **V** = Container. (In).\n> - **Na** = Surface. (On).\n> - **Do** = Approach. (To).\n> - **Z** = Exit Container. (From inside).\n> - **Vid** = Retreat. (From near).\n> - **Z-pid** = From under. (Yes, really).\n> - **Cherez** = Through/Across.\n\n### Section 9: Through (Cherez)\n\nIf you go *through* a park, use **Через** + Accusative.\n\"Я йду через парк.\" (I walk through the park).\n\"Я їду через центр.\" (I drive through the center).\n\n\n> 🔄 **Deep Dive: The Prepositional Dance**\n> Prepositions are like dance moves.\n> - **V (In)** is an embrace. You are inside.\n> - **Na (On)** is a handshake. You are on the surface or at an event.\n> - **Do (To)** is a bow. You approach a person but respect their personal space (you don't go inside them).\n> - **Z (From)** is leaving a building.\n> - **Vid (From)** is walking away from a person after the bow.\n> - **Cherez (Through)** is cutting across the dance floor.\n\n### Section 10: The \"U\" Euphony\n\nUkrainian hates consonant clusters.\n- **V** becomes **U** if the next word starts with a consonant.\n- \"Я **в** парку\" (Okay).\n- \"Я **у** Львові\" (Better than \"V Lvovi\").\n- \"Він **у** школі\" (He is in school).\n- Meaning is identical. Usage depends on flow.\n- \"U\" is melodic. \"V\" is sharp.\n\n## practice\n\n**Drill 1: Logic Check (De vs Kudy)**\n- (I am sleeping) -> Де?\n- (I am walking) -> Куди?\n- (I am driving) -> Куди?\n- (I am eating) -> Де?\n\n**Drill 2: Preposition Choice**\n- (To Kyiv) -> В Київ.\n- (In Kyiv) -> В Києві.\n- (To Mom) -> До мами.\n- (From Mom) -> Від мами.\n- (From Kyiv) -> З Києва.\n\n**Drill 3: Home**\n- (I am home) -> Я вдома.\n- (I go home) -> Я йду додому.\n- (I go from home) -> Я йду з дому.\n\n## production\n\n**Scenario: The Taxi Ride**\n*   **Driver:** Куди їдемо?\n*   **You:** Я їду **в готель** \"Дніпро\".\n*   **Driver:** Де це?\n*   **You:** Це **на Хрещатику**.\n*   **Driver:** А звідки ви їдете?\n*   **You:** Я їду **з аеропорту**.\n\n**Scenario: The Lost Tourist**\n*   **Tourist:** Перепрошую, де метро?\n*   **Local:** Метро там. Куди вам треба?\n*   **Tourist:** Мені треба **на вокзал** (train station).\n*   **Local:** Ідіть прямо, потім у метро.\n*   **Tourist:** Дякую. Я **з Лондона**, я не знаю місто.\n\n> 🚌 **Culture Corner: The Marshrutka Stop**\n> In a marshrutka, you must yell your destination to stop.\n> Usually: \"**На зупинці!**\" (At the stop!).\n> Or be specific: \"**На пошті!**\" (At the post office!).\n> Uses Locative (Stop at X).\n\n---"
       }
     ],
-    "rawMarkdown": "---\ntitle: \"My Family\"\nsubtitle: \"Моя родина — Family Members and Relationships\"\nphase: A1.3\nduration: 45\ntransliteration: none\ntags: [family, relationships, possessives, vocabulary]\nobjectives:\n  - Name immediate and extended family members\n  - Describe family relationships\n  - Use genitive for relationships\n  - Talk about age and marital status\ngrammar:\n  - Family vocabulary with gender\n  - Possessives with family (мій батько, моя мама)\n  - Genitive for possession and relationships\n  - Age expressions\n---\n\n# Lesson Content\n\n## warm-up\n\n### Who's in Your Family?\n\nFamily is at the heart of Ukrainian culture! In this module, you'll learn to talk about parents, siblings, grandparents, and more.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian has both formal and informal words for parents: батько/мати (formal) and тато/мама (informal, like dad/mom). Knowing both helps you adapt to any conversation!\n\n## presentation\n\n### Immediate Family: Parents\n\n| Ukrainian | IPA | English | Informal |\n|-----------|-----|---------|----------|\n| батько | ˈbɑtʲkɔ | father | тато |\n| мати | ˈmɑtɪ | mother | мама |\n| батьки | bɑtʲˈkɪ | parents | — |\n\n**Examples:**\n- Мій батько працює в банку. (My father works at a bank.)\n- Моя мама — лікар. (My mother is a doctor.)\n- Мої батьки живуть у Львові. (My parents live in Lviv.)\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Батьки\" can mean just one parent.\n> **Fact:** \"Батьки\" is always plural (parents). For \"a parent,\" use \"один з батьків\" (one of the parents).\n\n### Immediate Family: Siblings\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| брат | brɑt | brother | m |\n| сестра | sɛsˈtrɑ | sister | f |\n| брати | brɑˈtɪ | brothers | pl |\n| сестри | ˈsɛstrɪ | sisters | pl |\n\n**Examples:**\n- У мене є брат. (I have a brother.)\n- У мене є сестра. (I have a sister.)\n- У мене два брати і одна сестра. (I have two brothers and one sister.)\n\n### Immediate Family: Children\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| син | sɪn | son | m |\n| дочка | ˈdɔt͡ʃkɐ | daughter | f |\n| дитина | dɪˈtɪnɐ | child | f |\n| діти | ˈditɪ | children | pl |\n\n> 🎬 **Pop Culture Moment: The Godfather**\n>\n> \"Він мій хрещений батько\" (He is my godfather). Ukrainian also has хрещена мати (godmother), хрещеник (godson), and хрещениця (goddaughter)!\n\n### Extended Family: Grandparents\n\n| Ukrainian | IPA | English |\n|-----------|-----|---------|\n| дідусь | ˈdidusʲ | grandfather |\n| бабуся | bɐˈbusʲɐ | grandmother |\n| дідусь і бабуся | — | grandparents |\n\n**Also:**\n- прадід (great-grandfather)\n- прабабуся (great-grandmother)\n\n> 🌍 **Real World**\n>\n> Ukrainian grandparents often live with or near their families and play a huge role in raising children. \"Бабуся\" is often the family's best cook!\n\n### Extended Family: Grandchildren\n\n| Ukrainian | IPA | English |\n|-----------|-----|---------|\n| онук | ɔˈnuk | grandson |\n| онучка | ɔˈnut͡ʃkɐ | granddaughter |\n| онуки | ɔˈnukɪ | grandchildren |\n\n### Extended Family: Aunts and Uncles\n\n| Ukrainian | IPA | English |\n|-----------|-----|---------|\n| дядько | ˈdʲɐdʲkɔ | uncle |\n| тітка | ˈtitkɐ | aunt |\n\n### Cousins\n\n| Ukrainian | English |\n|-----------|---------|\n| двоюрідний брат | male cousin (lit. \"second-degree brother\") |\n| двоюрідна сестра | female cousin (lit. \"second-degree sister\") |\n\n> ⚡ **Pro Tip**\n>\n> Ukrainian doesn't have a single word for \"cousin\" — you specify if they're a cousin-brother or cousin-sister. It's more precise!\n\n### Marital Relationships\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| чоловік | t͡ʃɔlɔˈwik | husband | m |\n| дружина | druˈʒɪnɐ | wife | f |\n| наречений | nɐrɛˈt͡ʃɛnɪj | fiancé | m |\n| наречена | nɐrɛˈt͡ʃɛnɐ | fiancée | f |\n\n**Dating relationships:**\n- хлопець (boyfriend)\n- дівчина (girlfriend)\n\n> 🎯 **Fun Fact**\n>\n> \"Чоловік\" means both \"husband\" and \"man\"! Context tells you which. \"Мій чоловік\" = my husband, \"Цей чоловік\" = this man.\n\n### Marital Status\n\n| Ukrainian | English |\n|-----------|---------|\n| одружений | married (m) |\n| одружена | married (f) |\n| неодружений | unmarried (m) |\n| неодружена | unmarried (f) |\n| розлучений | divorced (m) |\n| розлучена | divorced (f) |\n| вдівець | widower |\n| вдова | widow |\n\n**Examples:**\n- Я одружений. (I'm married. — male)\n- Вона неодружена. (She's unmarried.)\n- Він розлучений. (He's divorced.)\n\n### Describing Family Relationships\n\n**\"У мене є...\"** (I have...)\n- У мене є брат. (I have a brother.)\n- У мене є два брати. (I have two brothers.)\n- У мене немає сестри. (I don't have a sister.)\n\n**\"Мого/Мою звати...\"** (My ... is called...)\n- Мого батька звати Іван. (My father's name is Ivan.)\n- Мою маму звати Оксана. (My mother's name is Oksana.)\n\n**Age expressions:**\n- Моїй сестрі двадцять років. (My sister is 20 years old.)\n- Моєму братові тридцять років. (My brother is 30 years old.)\n\n> 💡 **Did You Know?**\n>\n> To say someone's age in Ukrainian, you use dative case + рік/роки/років! But at A1, just learn the patterns: \"Йому/Їй X років\" (He/She is X years old).\n\n### Birth Order and Age\n\n| Ukrainian | English |\n|-----------|---------|\n| старший | older (m) |\n| старша | older (f) |\n| молодший | younger (m) |\n| молодша | younger (f) |\n| середній | middle (m) |\n| середня | middle (f) |\n| єдиний | only (m) |\n| єдина | only (f) |\n\n**Examples:**\n- Це мій старший брат. (This is my older brother.)\n- Вона моя молодша сестра. (She is my younger sister.)\n- Я єдина дитина. (I'm an only child. — female)\n\n> 🎮 **Gamer's Corner**\n>\n> In The Witcher, Geralt has a complex found family: \"Цірі — як моя дочка\" (Ciri is like my daughter), \"Весемір — як мій батько\" (Vesemir is like my father). Family isn't always blood!\n\n### The Complete Family Tree\n\n```\nпрадід + прабабуся\n        |\n    дідусь + бабуся     дідусь + бабуся\n           |                   |\n    дядько/тітка      батько + мати     дядько/тітка\n                            |\n              двоюрідні     брат/сестра    двоюрідні\n                                |\n                          син/дочка\n                                |\n                          онук/онучка\n```\n\n## practice\n\n### Exercise 1: My Family\n\nAnswer about your family:\n1. У вас є брат або сестра?\n2. Як звати ваших батьків?\n3. Ви одружений/одружена?\n4. Скільки років вашим батькам?\n\n### Exercise 2: Who Is Who?\n\nIdentify relationships:\n1. Батько мого батька — мій ___ (дідусь)\n2. Сестра моєї мами — моя ___ (тітка)\n3. Син мого брата — мій ___ (племінник)\n4. Дочка моєї сестри — моя ___ (племінниця)\n\n### Exercise 3: Family Description\n\nDescribe your family using at least 6 family terms.\n\n## production\n\n### Task: My Family Tree\n\nDraw and describe your family tree:\n- Name at least 8 family members\n- Include their relationships to you\n- Mention ages if you know them\n- Describe if they're older/younger\n\n---\n\n# Activities\n\n## fill-in: Family Members\n\n> Choose the correct family member.\n\n1. Батько моєї мами — мій ___.\n   > [!answer] дідусь\n   > [!options] дідусь | дядько | брат | син\n\n2. Мати мого батька — моя ___.\n   > [!answer] бабуся\n   > [!options] бабуся | тітка | сестра | дочка\n\n3. Брат моєї мами — мій ___.\n   > [!answer] дядько\n   > [!options] дядько | дідусь | брат | батько\n\n4. Син мого батька — мій ___.\n   > [!answer] брат\n   > [!options] брат | дядько | онук | син\n\n5. Дочка моєї сестри — моя ___.\n   > [!answer] племінниця\n   > [!options] племінниця | онучка | сестра | дочка\n\n6. Мій ___ — чоловік моєї сестри.\n   > [!answer] зять\n   > [!options] зять | брат | дядько | син\n\n7. Моя ___ — дружина мого брата.\n   > [!answer] невістка\n   > [!options] невістка | сестра | тітка | дочка\n\n8. ___ і мама — це мої батьки.\n   > [!answer] Тато\n   > [!options] Тато | Брат | Дідусь | Дядько\n\n9. Син мого сина — мій ___.\n   > [!answer] онук\n   > [!options] онук | брат | племінник | син\n\n10. Сестра мого батька — моя ___.\n    > [!answer] тітка\n    > [!options] тітка | бабуся | сестра | мати\n\n11. Дочка моїх батьків — моя ___.\n    > [!answer] сестра\n    > [!options] сестра | дочка | племінниця | тітка\n\n12. Батьки моїх батьків — мої ___.\n    > [!answer] дідусі й бабусі\n    > [!options] дідусі й бабусі | дядьки й тітки | брати й сестри | сини й дочки\n\n## fill-in: Family Sentences\n\n> Choose the correct word.\n\n1. У мене ___ брат.\n   > [!answer] є\n   > [!options] є | має | немає | був\n\n2. Мого батька ___ Іван.\n   > [!answer] звати\n   > [!options] звати | звуть | називається | ім'я\n\n3. Моя сестра ___ за лікаря.\n   > [!answer] одружена\n   > [!options] одружена | одружений | неодружена | розлучена\n\n4. У мене немає ___.\n   > [!answer] сестри\n   > [!options] сестри | сестра | сестру | сестрою\n\n5. Це мій ___ брат.\n   > [!answer] старший\n   > [!options] старший | старша | старше | старші\n\n6. Вона моя ___ сестра.\n   > [!answer] молодша\n   > [!options] молодша | молодший | молодше | молодші\n\n7. Я ___ дитина в сім'ї.\n   > [!answer] єдина\n   > [!options] єдина | єдиний | єдине | єдині\n\n8. Мої батьки ___ у Києві.\n   > [!answer] живуть\n   > [!options] живуть | живе | живу | живемо\n\n9. У мене два ___.\n   > [!answer] брати\n   > [!options] брати | брат | братів | братом\n\n10. Моїй мамі п'ятдесят ___.\n    > [!answer] років\n    > [!options] років | рік | роки | року\n\n11. Він ___ вже десять років.\n    > [!answer] одружений\n    > [!options] одружений | одружена | неодружений | розлучений\n\n12. ___ родина велика.\n    > [!answer] Моя\n    > [!options] Моя | Мій | Моє | Мої\n\n## unjumble: Family Sentences\n\n> Put the words in the correct order.\n\n1. є брат У мене\n   > [!answer] У мене є брат.\n   > (I have a brother.) [4 words]\n\n2. звати батька Мого Іван\n   > [!answer] Мого батька звати Іван.\n   > (My father's name is Ivan.) [4 words]\n\n3. старша сестра Це моя\n   > [!answer] Це моя старша сестра.\n   > (This is my older sister.) [4 words]\n\n4. живуть батьки Мої у Львові\n   > [!answer] Мої батьки живуть у Львові.\n   > (My parents live in Lviv.) [5 words]\n\n5. немає сестри У мене\n   > [!answer] У мене немає сестри.\n   > (I don't have a sister.) [4 words]\n\n6. працює Мій тато в банку\n   > [!answer] Мій тато працює в банку.\n   > (My dad works at a bank.) [5 words]\n\n7. родина Моя велика\n   > [!answer] Моя родина велика.\n   > (My family is big.) [3 words]\n\n8. одружений Він вже\n   > [!answer] Він вже одружений.\n   > (He's already married.) [3 words]\n\n9. двоюрідна Це моя сестра\n   > [!answer] Це моя двоюрідна сестра.\n   > (This is my cousin — female.) [4 words]\n\n10. п'ятдесят Моєму татові років\n    > [!answer] Моєму татові п'ятдесят років.\n    > (My dad is 50 years old.) [4 words]\n\n11. маленький Мій брат молодший ще\n    > [!answer] Мій молодший брат ще маленький.\n    > (My younger brother is still small.) [5 words]\n\n12. два У них сини\n    > [!answer] У них два сини.\n    > (They have two sons.) [4 words]\n\n## match-up: Family Members\n\n> Match each Ukrainian word with its English meaning.\n\n| Left | Right |\n|------|-------|\n| батько | father |\n| мати | mother |\n| брат | brother |\n| сестра | sister |\n| дідусь | grandfather |\n| бабуся | grandmother |\n| дядько | uncle |\n| тітка | aunt |\n| син | son |\n| дочка | daughter |\n| чоловік | husband |\n| дружина | wife |\n\n## match-up: Family Relationships\n\n> Match each relationship description with the correct term.\n\n| Left | Right |\n|------|-------|\n| батько батька | дідусь |\n| мати мами | бабуся |\n| брат мами | дядько |\n| сестра батька | тітка |\n| син брата | племінник |\n| дочка сестри | племінниця |\n| старша сестра | older sister |\n| молодший брат | younger brother |\n| єдина дитина | only child |\n| одружений | married (m) |\n| розлучена | divorced (f) |\n| наречений | fiancé |\n\n## quiz: Family Knowledge\n\n> Test your understanding of Ukrainian family vocabulary.\n\n1. \"Батьки\" means:\n   - [ ] Father\n   - [ ] Mother\n   - [x] Parents\n   - [ ] Children\n   > \"Батьки\" is plural: parents (both).\n\n2. What's the informal word for \"mother\"?\n   - [ ] мати\n   - [x] мама\n   - [ ] батько\n   - [ ] тітка\n   > \"Мама\" is informal, like \"mom.\"\n\n3. \"Двоюрідна сестра\" means:\n   - [ ] Sister\n   - [x] Female cousin\n   - [ ] Aunt\n   - [ ] Niece\n   > Literally \"second-degree sister.\"\n\n4. How do you say \"I have a brother\"?\n   - [ ] Я маю брат\n   - [x] У мене є брат\n   - [ ] Мій брат є\n   - [ ] Брат у мене\n   > \"У мене є\" + nominative.\n\n5. \"Чоловік\" can mean:\n   - [ ] Only \"husband\"\n   - [ ] Only \"man\"\n   - [x] Both \"husband\" and \"man\"\n   - [ ] \"Father\"\n   > Context determines meaning.\n\n6. How do you say \"My father's name is Ivan\"?\n   - [x] Мого батька звати Іван.\n   - [ ] Мій батько ім'я Іван.\n   - [ ] Батько мій Іван.\n   - [ ] Ім'я батька Іван.\n   > \"Звати\" + genitive for \"is called.\"\n\n7. \"Єдина дитина\" means:\n   - [ ] First child\n   - [ ] Last child\n   - [x] Only child (f)\n   - [ ] Youngest child\n   > \"Єдиний/єдина\" = only.\n\n8. What's \"older brother\"?\n   - [x] старший брат\n   - [ ] молодший брат\n   - [ ] середній брат\n   - [ ] великий брат\n   > \"Старший\" = older.\n\n9. \"Неодружена\" means:\n   - [ ] Married (f)\n   - [x] Unmarried (f)\n   - [ ] Divorced (f)\n   - [ ] Widowed\n   > \"Не-\" prefix = not.\n\n10. \"Онук\" is:\n    - [ ] nephew\n    - [x] grandson\n    - [ ] uncle\n    - [ ] son\n    > Онук = grandson, онучка = granddaughter.\n\n11. The parents of your parents are:\n    - [ ] тітки й дядьки\n    - [x] дідусі й бабусі\n    - [ ] брати й сестри\n    - [ ] племінники\n    > Grandparents.\n\n12. \"Розлучений\" means:\n    - [ ] married\n    - [ ] single\n    - [x] divorced (m)\n    - [ ] widowed\n    > \"Розлучений/розлучена\" = divorced.\n\n## true-false: Family Facts\n\n> Decide if each statement is true (Правда) or false (Міф).\n\n- [x] \"Батько\" and \"тато\" both mean \"father.\"\n  > Correct! Formal and informal versions.\n\n- [ ] \"Батьки\" can refer to just one parent.\n  > Incorrect! \"Батьки\" is always plural (parents).\n\n- [x] Ukrainian has different words for male and female cousins.\n  > Correct! Двоюрідний брат / двоюрідна сестра.\n\n- [ ] \"Чоловік\" only means \"husband.\"\n  > Incorrect! It also means \"man.\"\n\n- [x] \"Старший\" means \"older.\"\n  > Correct! Старший брат = older brother.\n\n- [x] To say \"I have a sister,\" you use genitive.\n  > Incorrect! You use nominative: \"У мене є сестра.\"\n\n- [x] \"Дідусь\" means \"grandfather.\"\n  > Correct! And \"бабуся\" = grandmother.\n\n- [ ] \"Одружений\" and \"одружена\" mean the same thing.\n  > Incorrect! Одружений (m), одружена (f) — different genders.\n\n- [x] \"Невістка\" is the wife of your brother.\n  > Correct! Also can mean daughter-in-law.\n\n- [x] \"Зять\" is the husband of your sister.\n  > Correct! Also can mean son-in-law.\n\n- [ ] In Ukrainian, weeks start with Sunday.\n  > Incorrect! Ukrainian weeks start on Monday.\n\n- [x] \"Немає сестри\" uses genitive case.\n  > Correct! \"Немає\" requires genitive.\n\n## group-sort: Family Categories\n\n> Sort these family members into the correct category.\n\n### Parents Generation\n- батько\n- мати\n- дядько\n- тітка\n\n### Grandparents Generation\n- дідусь\n- бабуся\n- прадід\n- прабабуся\n\n### Siblings & Cousins\n- брат\n- сестра\n- двоюрідний брат\n- двоюрідна сестра\n\n### Children Generation\n- син\n- дочка\n- племінник\n- племінниця\n- онук\n- онучка\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| сім'я | ˈsimjɐ | family | noun | f | Also: родина |\n| родина | rɔˈdɪnɐ | family | noun | f | |\n| батьки | bɑtʲˈkɪ | parents | noun | pl | |\n| батько | ˈbɑtʲkɔ | father | noun | m | Formal |\n| тато | ˈtɑtɔ | dad | noun | m | Informal |\n| мати | ˈmɑtɪ | mother | noun | f | Formal |\n| мама | ˈmɑmɐ | mom | noun | f | Informal |\n| брат | brɑt | brother | noun | m | |\n| сестра | sɛsˈtrɑ | sister | noun | f | |\n| дідусь | ˈdidusʲ | grandfather | noun | m | |\n| бабуся | bɐˈbusʲɐ | grandmother | noun | f | |\n| онук | ɔˈnuk | grandson | noun | m | |\n| онучка | ɔˈnut͡ʃkɐ | granddaughter | noun | f | |\n| дядько | ˈdʲɐdʲkɔ | uncle | noun | m | |\n| тітка | ˈtitkɐ | aunt | noun | f | |\n| двоюрідний брат | dwɔˈjuridnɪj brɑt | male cousin | noun | m | |\n| двоюрідна сестра | dwɔˈjuridnɐ sɛsˈtrɑ | female cousin | noun | f | |\n| син | sɪn | son | noun | m | |\n| дочка | ˈdɔt͡ʃkɐ | daughter | noun | f | |\n| чоловік | t͡ʃɔlɔˈwik | husband, man | noun | m | |\n| дружина | druˈʒɪnɐ | wife | noun | f | |\n| хлопець | ˈxlɔpɛt͡sʲ | boyfriend | noun | m | |\n| дівчина | ˈdiwt͡ʃɪnɐ | girlfriend | noun | f | |\n| наречений | nɐrɛˈt͡ʃɛnɪj | fiancé | noun | m | |\n| наречена | nɐrɛˈt͡ʃɛnɐ | fiancée | noun | f | |\n| старший | ˈstɑrʃɪj | older | adj | m | |\n| молодший | mɔˈlɔdʃɪj | younger | adj | m | |\n| середній | sɛˈrɛdnʲij | middle | adj | m | |\n| єдиний | jɛˈdɪnɪj | only | adj | m | |\n| одружений | ɔˈdruʒɛnɪj | married (m) | adj | m | |\n| неодружений | nɛɔˈdruʒɛnɪj | unmarried (m) | adj | m | |\n| розлучений | rɔzˈlut͡ʃɛnɪj | divorced (m) | adj | m | |\n| вдівець | wdɔˈwɛt͡sʲ | widower | noun | m | |\n| вдова | wdɔˈwɑ | widow | noun | f | |\n| дитина | dɪˈtɪnɐ | child | noun | f | |\n\n---\n\n# Summary\n\n> **Congratulations!**\n>\n> You can now talk about your family in Ukrainian:\n> - **Parents**: батько/тато, мати/мама, батьки\n> - **Siblings**: брат, сестра\n> - **Grandparents**: дідусь, бабуся\n> - **Extended family**: дядько, тітка, двоюрідний брат/сестра\n> - **Marital status**: одружений, неодружений, розлучений\n\n> **Key Patterns:**\n> - У мене є + nominative (I have...)\n> - У мене немає + genitive (I don't have...)\n> - Мого/Мою ... звати ... (My ... is called ...)\n\n> **Coming Next: Module 30 — A1 Capstone**\n>\n> In the final A1 module, you'll review everything:\n> - All three cases (Accusative, Locative, Genitive)\n> - Past and future tense\n> - All vocabulary domains\n> - Comprehensive self-assessment\n",
-    "createdAt": "2025-12-06T10:49:20.103Z",
-    "modifiedAt": "2025-12-06T10:49:20.103Z",
+    "rawMarkdown": "---\ntitle: Prepositions III (Direction vs Location)\nsubtitle: Moving and Staying\nphase: A1.3\nduration: 60\ntransliteration: full\ntags: [grammar, prepositions, cases, locative, accusative, genitive]\nobjectives:\n  - Learner distinguishes \"Where?\" (De?) vs \"Where to?\" (Kudy?)\n  - Learner uses Accusative for Motion (I go to the park)\n  - Learner uses Locative for Location (I am in the park)\n  - Learner uses Genitive for Origin (I am from Ukraine)\n---\n\n# Lesson Content\n\n## warm-up\n**The Box Paradox**\n\nImagine a box.\n1.  You are inside the box. (Location).\n2.  You walk into the box. (Motion).\n3.  You walk out of the box. (Origin).\n\nIn English, \"In\" usually works for both 1 and 2. \"I am in the park\", \"I go in the park\".\nIn Ukrainian, GRAMMAR changes.\n- **Where? (De?)** -> Uses Locative Case. \"Я в парку.\"\n- **Where to? (Kudy?)** -> Uses Accusative Case. \"Я йду в парк.\"\n- **From where? (Zvidky?)** -> Uses Genitive Case. \"Я з парку.\"\n\nThis module is the Grand Unification of Prepositions.\n\n## presentation\n\n### Section 1: The Golden Questions\n\nEverything depends on the verb.\n- **Buty / Zhyty / Spaty** (To be / live / sleep) -> Ask **DE?** (Where?).\n- **Yty / Yikhaty** (To go) -> Ask **KUDY?** (Where to?).\n- **Pryikhaly** (Arrived) -> Ask **ZVIDKY?** (From where?).\n\n> 💡 **Pro Tip: The Verb Decides**\n> - Verbs of **Stasis** (Standing still) -> Locative.\n> - Verbs of **Motion** (Moving towards) -> Accusative.\n\n### Section 2: V / U (In/Into)\n\n**Location (De? + Locative):**\n- Я живу **в Києві**. (I live in Kyiv).\n- Я сплю **у готелі**. (I sleep in a hotel).\n*Ending: -i / -u*.\n\n**Motion (Kudy? + Accusative):**\n- Я їду **в Київ**. (I go to Kyiv).\n- Я йду **в готель**. (I go to the hotel).\n*Ending: No change for inanimate masculine!*\n*Note: Feminine changes: \"Я їду в Україну\".*\n\n### Section 3: Na (On/Onto)\n\n**Location (De? + Locative):**\n- Я **на роботі**. (I am at work).\n- Я **на Хрещатику**. (I am on Khreshchatyk).\n\n**Motion (Kudy? + Accusative):**\n- Я йду **на роботу**. (I go to work).\n- Я йду **на Хрещатик**. (I go to Khreshchatyk).\n\n> 🏫 **Culture Corner: Na vs V?**\n> Why \"Na Roboti\"? Why \"V Ofisi\"?\n> - **V** is for enclosed spaces / cities / countries.\n> - **Na** is for surfaces / events / open spaces.\n> - **Exception:** Ukraine used to take \"Na\" in Russian imperial times (\"On the borderlands\").\n> - **Rule:** Always say **В Україні** (In Ukraine). It is an independent state, not a territory. \"Na Ukraini\" is considered archaic and rude effectively.\n\n### Section 4: Do (To - Towards a person/place)\n\nSometimes we don't enter \"Into\". We just go \"To\".\nUses **Genitive**.\n- **До** (To / Towards).\n- Я йду **додому**. (I go home).\n- Я йду **до мами**. (I go to mom).\n- Я йду **до лікаря**. (I go to the doctor).\n*You cannot go \"V Likarya\" (Inside the doctor). That would be surgery.*\n*So for people, always use DO.*\n\n### Section 5: Z / Vid (From)\n\n**From a Place (Z + Genitive):**\n- Я **з України**. (I am from Ukraine).\n- Я йду **з роботи**. (I go from work).\n- Я їду **з Києва**. (I go from Kyiv).\n\n**From a Person (Vid + Genitive):**\n- Я йду **від лікаря**. (I go from the doctor).\n- Це подарунок **від мами**. (This is a gift from mom).\n\n### Section 6: Summary Table\n\n| Question | Logic | Case | Preposition | Example |\n|---|---|---|---|---|\n| **De?** | Location | Locative | V / Na | В парку |\n| **Kudy?** | Motion | Accusative | V / Na | В парк |\n| **Kudy? (People)** | Motion | Genitive | Do | До мами |\n| **Zvidky?** | Origin | Genitive | Z / Vid | З парку |\n\n> 🕵️ **Deep Dive: The House (Dim)**\n> - **Вдома** (At home - Locative-ish Adverb).\n> - **Додому** (To home - Direction Adverb).\n> - **З дому** (From home - Genitive).\n> Memorize these three as fixed phrases.\n\n### Section 7: Interrogative Words\n\n- **Де ти?** (Where are you?)\n- **Куди ти йдеш?** (Where are you going?)\n- **Звідки ти?** (Where are you from?)\n\n*Mistake:* \"Де ти йдеш?\" (Where are you walking? - Meaning: In what location are you performing the act of walking?).\n*Correct:* \"Куди ти йдеш?\" (What is your destination?).\n\n\n### Section 8: The Tourist Trap (Cities as Objects)\n\nRemember \"Location\" vs \"Motion\" with cities?\n1.  **Я в Києві** (Locative).\n2.  **Я їду в Київ** (Accusative).\n    *Wait, why \"Kyiv\" and not \"Kyiva\"?*\n    *Because Inanimate Masculine Nouns DO NOT change in Accusative.*\n    *This is a gift from the gods.*\n    *London -> London. New York -> New York.*\n    *BUT Feminine cities change:*\n    *Poltava -> Poltavu. Odesa -> Odesu.*\n\n> 🧭 **Deep Dive: Prepositions are Maps**\n> - **V** = Container. (In).\n> - **Na** = Surface. (On).\n> - **Do** = Approach. (To).\n> - **Z** = Exit Container. (From inside).\n> - **Vid** = Retreat. (From near).\n> - **Z-pid** = From under. (Yes, really).\n> - **Cherez** = Through/Across.\n\n### Section 9: Through (Cherez)\n\nIf you go *through* a park, use **Через** + Accusative.\n\"Я йду через парк.\" (I walk through the park).\n\"Я їду через центр.\" (I drive through the center).\n\n\n> 🔄 **Deep Dive: The Prepositional Dance**\n> Prepositions are like dance moves.\n> - **V (In)** is an embrace. You are inside.\n> - **Na (On)** is a handshake. You are on the surface or at an event.\n> - **Do (To)** is a bow. You approach a person but respect their personal space (you don't go inside them).\n> - **Z (From)** is leaving a building.\n> - **Vid (From)** is walking away from a person after the bow.\n> - **Cherez (Through)** is cutting across the dance floor.\n\n### Section 10: The \"U\" Euphony\n\nUkrainian hates consonant clusters.\n- **V** becomes **U** if the next word starts with a consonant.\n- \"Я **в** парку\" (Okay).\n- \"Я **у** Львові\" (Better than \"V Lvovi\").\n- \"Він **у** школі\" (He is in school).\n- Meaning is identical. Usage depends on flow.\n- \"U\" is melodic. \"V\" is sharp.\n\n## practice\n\n**Drill 1: Logic Check (De vs Kudy)**\n- (I am sleeping) -> Де?\n- (I am walking) -> Куди?\n- (I am driving) -> Куди?\n- (I am eating) -> Де?\n\n**Drill 2: Preposition Choice**\n- (To Kyiv) -> В Київ.\n- (In Kyiv) -> В Києві.\n- (To Mom) -> До мами.\n- (From Mom) -> Від мами.\n- (From Kyiv) -> З Києва.\n\n**Drill 3: Home**\n- (I am home) -> Я вдома.\n- (I go home) -> Я йду додому.\n- (I go from home) -> Я йду з дому.\n\n## production\n\n**Scenario: The Taxi Ride**\n*   **Driver:** Куди їдемо?\n*   **You:** Я їду **в готель** \"Дніпро\".\n*   **Driver:** Де це?\n*   **You:** Це **на Хрещатику**.\n*   **Driver:** А звідки ви їдете?\n*   **You:** Я їду **з аеропорту**.\n\n**Scenario: The Lost Tourist**\n*   **Tourist:** Перепрошую, де метро?\n*   **Local:** Метро там. Куди вам треба?\n*   **Tourist:** Мені треба **на вокзал** (train station).\n*   **Local:** Ідіть прямо, потім у метро.\n*   **Tourist:** Дякую. Я **з Лондона**, я не знаю місто.\n\n> 🚌 **Culture Corner: The Marshrutka Stop**\n> In a marshrutka, you must yell your destination to stop.\n> Usually: \"**На зупинці!**\" (At the stop!).\n> Or be specific: \"**На пошті!**\" (At the post office!).\n> Uses Locative (Stop at X).\n\n---\n\n# Activities\n\n## match-up: Question Match\n\n> Match the situation to the question word.\n\n\n| Situation | Question |\n|-----------|----------|\n| Sleeping in bed | Де? |\n| Driving to Lviv | Куди? |\n| Arriving from USA | Звідки? |\n| Walking to park | Куди? |\n| Sitting on chair | Де? |\n| Going to mom | Куди? (До кого?) |\n| Moving to Ukraine | Куди? |\n| Living in Kyiv | Де? |\n| Coming from Grandma | Звідки? |\n| Standing at bus stop | Де? |\n| Running into house | Куди? |\n| Flying from London | Звідки? |\n\n## fill-in: Preposition Master\n\n> Choose: В, На, До, З, Від.\n\n1. Я йду ___ (to) магазин.\n   > [!answer] в\n\n2. Я ___ (in) магазині.\n   > [!answer] в\n\n3. Я йду ___ (to) роботи.\n   > [!answer] з\n\n4. Я йду ___ (to) мами.\n   > [!answer] до\n\n5. Я йду ___ (from) лікаря.\n   > [!answer] від\n\n6. Книга ___ (on) столі.\n   > [!answer] на\n\n7. Я кладу книгу ___ (on) стіл.\n   > [!answer] на\n\n8. Ми їдемо ___ (to) Київ.\n   > [!answer] в\n\n9. Ми живемо ___ (in) Києві.\n   > [!answer] в\n\n10. Я ___ (from) України.\n    > [!answer] з\n\n11. Я йду ___ (to/home).\n    > [!answer] додому\n\n12. Я ___ (at/home).\n    > [!answer] вдома\n\n## group-sort: Motion vs Location\n\n> Is this Motion (Kudy) or Location (De)?\n\n### Motion (Kudy?)\n- Я йду в парк\n- Ми їдемо додому\n- Вона летить в Америку\n- Я кладу ручку на стіл\n- Ідіть прямо\n- Ми йдемо в кіно\n\n### Location (De?)\n- Я в парку\n- Ми вдома\n- Вона в Америці\n- Ручка на столі\n- Тут гарно\n- Ми в кіно\n\n## quiz: Logic Whiz\n\n> Logic Check.\n\n1. \"Я йду в парк.\" Case?\n   - [x] Accusative (Motion)\n   - [ ] Locative\n\n2. \"Я в парку.\" Case?\n   - [x] Locative (Location)\n   - [ ] Accusative\n\n3. \"Я йду до Олега.\" Why 'Do'?\n   - [x] Oleg is a person.\n   - [ ] Oleg is a city.\n\n4. \"Я з Києва.\" Case?\n   - [x] Genitive (Origin)\n   - [ ] Locative\n\n5. \"Я в Україні.\" Preposition?\n   - [x] В (In independent state)\n   - [ ] На (Wrong/Archaic)\n\n6. \"Я йду вдома.\" Meaning?\n   - [x] Walking inside the house.\n   - [ ] Walking homeward (Wrong).\n\n7. \"Куди?\" means...\n   - [x] Where to? (Whither)\n   - [ ] Where? (At)\n\n8. \"Звідки?\" means...\n   - [x] From where? (Whence)\n   - [ ] Where?\n\n9. Can you say \"В Олега\" (Inside Oleg)?\n   - [ ] Yes.\n   - [x] No. (Unless surgery).\n\n10. \"Я на концерті.\" (At concert).\n    - [x] Event = NA.\n    - [ ] Event = V.\n\n11. \"Я йду на концерт.\"\n    - [x] Accusative.\n    - [ ] Locative.\n\n12. \"Я їду від бабусі.\" (From grandma).\n    - [x] Vid (From person).\n    - [ ] Z (From place).\n\n## unjumble: Scramble Sentences\n\n> Build the sentence.\n\n1. йду / Я / додому / .\n   > [!answer] Я йду додому.\n\n2. парку / Ми / в / .\n   > [!answer] Ми в парку.\n\n3. їде / Він / Київ / в / .\n   > [!answer] Він їде в Київ.\n\n4. з / Я / України / .\n   > [!answer] Я з України.\n\n5. столі / на / Книга / .\n   > [!answer] Книга на столі.\n\n6. на / Я / роботу / йду / .\n   > [!answer] Я йду на роботу.\n\n7. ти / Де / ?\n   > [!answer] Де ти?\n\n8. ти / Куди / йдеш / ?\n   > [!answer] Куди ти йдеш?\n\n9. звідки / Ти / ?\n   > [!answer] Ти звідки?\n\n10. у / Я / лікаря / .\n    > [!answer] Я у лікаря.\n    > (At doctor's - Genitive 'U').\n\n11. до / йду / Я / лікаря / .\n    > [!answer] Я йду до лікаря.\n\n12. від / йду / Я / лікаря / .\n    > [!answer] Я йду від лікаря.\n\n\n## unjumble: Story Reorder (Travel)\n\n> Put the story in order.\n\n1. I go to the airport. / I fly to Ukraine. / I am in Kyiv.\n   > [!answer] Я їду в аеропорт. Я лечу в Україну. Я в Києві.\n\n2. I wake up. / I go to work. / I am at work.\n   > [!answer] Я прокидаюся. Я йду на роботу. Я на роботі.\n\n3. I buy a ticket. / I go to the cinema. / I watch a film.\n   > [!answer] Я купую квиток. Я йду в кіно. Я дивлюся фільм.\n\n4. I am home. / I go to the shop. / I buy bread.\n   > [!answer] Я вдома. Я йду в магазин. Я купую хліб.\n\n5. I see a friend. / I go to the cafe. / We drink coffee.\n   > [!answer] Я бачу друга. Я йду в кафе. Ми п'ємо каву.\n\n6. I am hungry. / I go to the restaurant. / I eat borsch.\n   > [!answer] Я голодний. Я йду в ресторан. Я їм борщ.\n\n7. It is morning. / I go to the park. / I run.\n   > [!answer] Ранок. Я йду в парк. Я бігаю.\n\n8. I am tired. / I go home. / I sleep.\n   > [!answer] Я втомився. Я йду додому. Я сплю.\n\n9. I am cold. / I go to the house. / I drink tea.\n   > [!answer] Мені холодно. Я йду в дім. Я п'ю чай.\n\n10. It is summer. / I go to the sea. / I swim.\n    > [!answer] Літо. Я їду на море. Я плаваю.\n\n11. It is work time. / I go to the office. / I work.\n    > [!answer] Час працювати. Я йду в офіс. Я працюю.\n\n12. I need money. / I go to the bank. / I take cash.\n    > [!answer] Мені треба гроші. Я йду в банк. Я беру готівку.\n\n## fill-in: My Logic\n\n> Fill based on YOUR life (or logic).\n\n1. Я зараз ___ (location).\n   > [!answer] вдома / на роботі\n\n2. Я хочу поїхати ___ (motion).\n   > [!answer] в Україну / на море\n\n3. Я ___ (origin).\n   > [!answer] з Америки / з Англії\n\n4. Завтра я піду ___ (motion).\n   > [!answer] на роботу / в парк\n\n5. Мій телефон ___ (location).\n   > [!answer] на столі / в кишені\n\n6. Я йду ___ (to person).\n   > [!answer] до друга / до мами\n\n7. Я йду ___ (from person).\n   > [!answer] від друга\n\n8. Я йду ___ (from place).\n   > [!answer] з роботи\n\n9. Зараз я ___ (in city).\n   > [!answer] в Києві / в Лондоні\n\n10. Я люблю бути ___ (at home).\n    > [!answer] вдома\n\n11. Я йду ___ (homeward).\n    > [!answer] додому\n\n12. Де ти? Я ___ (here).\n    > [!answer] тут\n\n## true-false: Grammar Rules\n\n> True or False?\n\n1. \"De\" means \"Where to\".\n   - [ ] True\n   - [x] False (Where at)\n\n2. \"Kudy\" uses Accusative.\n   - [x] True\n   - [ ] False\n\n3. \"Do\" is used for people.\n   - [x] True\n   - [ ] False\n\n4. \"V Ukrayini\" is correct.\n   - [x] True\n   - [ ] False\n\n5. \"Na Ukrayini\" is modern standard.\n   - [ ] True\n   - [x] False (Archaic/Rude)\n\n6. \"Vid\" means From (a person).\n   - [x] True\n   - [ ] False\n\n7. \"Z\" means From (a place).\n   - [x] True\n   - [ ] False\n\n8. \"Vdoma\" implies motion.\n   - [ ] True\n   - [x] False (Location)\n\n9. \"Dodomu\" implies location.\n   - [ ] True\n   - [x] False (Motion)\n\n10. \"Na\" is used for events (concerts).\n    - [x] True\n    - [ ] False\n\n11. \"V\" is used for enclosed spaces.\n    - [x] True\n    - [ ] False\n\n12. You can go \"V Oleha\".\n    - [ ] True\n    - [x] False (Do Oleha)\n\n# Summary\n\n**You are a navigator.**\nYou know where you are, where you are going, and where you came from.\n- **De?** (Location) -> Locative (V/Na).\n- **Kudy?** (Motion) -> Accusative (V/Na) OR Genitive (Do).\n- **Zvidky?** (Origin) -> Genitive (Z/Vid).\n\n**Checklist:**\n- [ ] I can say \"I am in Kyiv\" (В Києві).\n- [ ] I can say \"I go to Kyiv\" (В Київ).\n- [ ] I know not to go \"Inside\" people (Do vs V).\n- [ ] I know \"Na Ukraini\" is bad manners.\n\n**Next Stop:**\nWe have reached the end of the line.\nYou have tools, words, grammar, and manners.\n**Module 30: Final Checkpoint (A1 Mastery)**.\nThe ultimate test.\n\n# Vocabulary\n\n| Word | IPA | English | Note | Audio |\n|------|-----|---------|------|-------|\n| де | /dɛ/ | where (loc) | | [🔊](audio_de) |\n| куди | /kuˈdɪ/ | where to | | [🔊](audio_kudy) |\n| звідки | /ˈzvidkɪ/ | where from | | [🔊](audio_zvidky) |\n| тут | /tut/ | here | | [🔊](audio_tut) |\n| там | /tɑm/ | there | | [🔊](audio_tam) |\n| вдома | /ˈvdɔmɑ/ | at home | | [🔊](audio_vdoma) |\n| додому | /dɔˈdɔmu/ | homeward | | [🔊](audio_dodomu) |\n| з | /z/ | from (place) | | [🔊](audio_z) |\n| від | /vid/ | from (person) | | [🔊](audio_vid) |\n| до | /dɔ/ | to (person) | | [🔊](audio_do) |\n| в | /v/ | in/to | | [🔊](audio_v) |\n| на | /nɑ/ | on/to | | [🔊](audio_na) |\n| місто | /ˈmistɔ/ | city | | [🔊](audio_misto) |\n| країна | /krɑˈjinɑ/ | country | | [🔊](audio_krajina) |\n| вулиця | /ˈvulɪt͡sʲɑ/ | street | | [🔊](audio_vulytsya) |\n| площа | /ˈplɔʃtʃɑ/ | square | | [🔊](audio_ploshcha) |\n| магазин | /mɑɦɑˈzɪn/ | shop | | [🔊](audio_mahazyn) |\n| робота | /rɔˈbɔtɑ/ | work | | [🔊](audio_robota) |\n| школа | /ˈʃkɔlɑ/ | school | | [🔊](audio_shkola) |\n| парк | /pɑrk/ | park | | [🔊](audio_park) |\n| ресторан | /rɛstɔˈrɑn/ | restaurant | | [🔊](audio_restoran) |\n| лікар | /ˈlikɑr/ | doctor | | [🔊](audio_likar) |\n| зупинка | /zuˈpɪnkɑ/ | stop (bus) | | [🔊](audio_zupynka) |\n| театр | /tɛˈɑtr/ | theater | | [🔊](audio_teatr) |\n| вокзал | /vɔkˈzɑl/ | station | | [🔊](audio_vokzal) |\n",
+    "createdAt": "2025-12-08T21:22:09.893Z",
+    "modifiedAt": "2025-12-08T21:22:09.893Z",
     "version": 2
   },
   "activities": [
     {
-      "id": "act-a1-0-fillblank",
-      "type": "fill-blank",
-      "title": "Family Members",
-      "description": "Choose the correct family member.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Батько моєї мами — мій ___.",
-            "answer": "дідусь",
-            "options": [
-              "дідусь",
-              "дядько",
-              "брат",
-              "син"
-            ]
-          },
-          {
-            "prompt": "Мати мого батька — моя ___.",
-            "answer": "бабуся",
-            "options": [
-              "бабуся",
-              "тітка",
-              "сестра",
-              "дочка"
-            ]
-          },
-          {
-            "prompt": "Брат моєї мами — мій ___.",
-            "answer": "дядько",
-            "options": [
-              "дядько",
-              "дідусь",
-              "брат",
-              "батько"
-            ]
-          },
-          {
-            "prompt": "Син мого батька — мій ___.",
-            "answer": "брат",
-            "options": [
-              "брат",
-              "дядько",
-              "онук",
-              "син"
-            ]
-          },
-          {
-            "prompt": "Дочка моєї сестри — моя ___.",
-            "answer": "племінниця",
-            "options": [
-              "племінниця",
-              "онучка",
-              "сестра",
-              "дочка"
-            ]
-          },
-          {
-            "prompt": "Мій ___ — чоловік моєї сестри.",
-            "answer": "зять",
-            "options": [
-              "зять",
-              "брат",
-              "дядько",
-              "син"
-            ]
-          },
-          {
-            "prompt": "Моя ___ — дружина мого брата.",
-            "answer": "невістка",
-            "options": [
-              "невістка",
-              "сестра",
-              "тітка",
-              "дочка"
-            ]
-          },
-          {
-            "prompt": "___ і мама — це мої батьки.",
-            "answer": "Тато",
-            "options": [
-              "Тато",
-              "Брат",
-              "Дідусь",
-              "Дядько"
-            ]
-          },
-          {
-            "prompt": "Син мого сина — мій ___.",
-            "answer": "онук",
-            "options": [
-              "онук",
-              "брат",
-              "племінник",
-              "син"
-            ]
-          },
-          {
-            "prompt": "Сестра мого батька — моя ___.",
-            "answer": "тітка",
-            "options": [
-              "тітка",
-              "бабуся",
-              "сестра",
-              "мати"
-            ]
-          },
-          {
-            "prompt": "Дочка моїх батьків — моя ___.",
-            "answer": "сестра",
-            "options": [
-              "сестра",
-              "дочка",
-              "племінниця",
-              "тітка"
-            ]
-          },
-          {
-            "prompt": "Батьки моїх батьків — мої ___.",
-            "answer": "дідусі й бабусі",
-            "options": [
-              "дідусі й бабусі",
-              "дядьки й тітки",
-              "брати й сестри",
-              "сини й дочки"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.103Z",
-      "modifiedAt": "2025-12-06T10:49:20.103Z"
-    },
-    {
-      "id": "act-a1-0-fillblank",
-      "type": "fill-blank",
-      "title": "Family Sentences",
-      "description": "Choose the correct word.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "У мене ___ брат.",
-            "answer": "є",
-            "options": [
-              "є",
-              "має",
-              "немає",
-              "був"
-            ]
-          },
-          {
-            "prompt": "Мого батька ___ Іван.",
-            "answer": "звати",
-            "options": [
-              "звати",
-              "звуть",
-              "називається",
-              "ім'я"
-            ]
-          },
-          {
-            "prompt": "Моя сестра ___ за лікаря.",
-            "answer": "одружена",
-            "options": [
-              "одружена",
-              "одружений",
-              "неодружена",
-              "розлучена"
-            ]
-          },
-          {
-            "prompt": "У мене немає ___.",
-            "answer": "сестри",
-            "options": [
-              "сестри",
-              "сестра",
-              "сестру",
-              "сестрою"
-            ]
-          },
-          {
-            "prompt": "Це мій ___ брат.",
-            "answer": "старший",
-            "options": [
-              "старший",
-              "старша",
-              "старше",
-              "старші"
-            ]
-          },
-          {
-            "prompt": "Вона моя ___ сестра.",
-            "answer": "молодша",
-            "options": [
-              "молодша",
-              "молодший",
-              "молодше",
-              "молодші"
-            ]
-          },
-          {
-            "prompt": "Я ___ дитина в сім'ї.",
-            "answer": "єдина",
-            "options": [
-              "єдина",
-              "єдиний",
-              "єдине",
-              "єдині"
-            ]
-          },
-          {
-            "prompt": "Мої батьки ___ у Києві.",
-            "answer": "живуть",
-            "options": [
-              "живуть",
-              "живе",
-              "живу",
-              "живемо"
-            ]
-          },
-          {
-            "prompt": "У мене два ___.",
-            "answer": "брати",
-            "options": [
-              "брати",
-              "брат",
-              "братів",
-              "братом"
-            ]
-          },
-          {
-            "prompt": "Моїй мамі п'ятдесят ___.",
-            "answer": "років",
-            "options": [
-              "років",
-              "рік",
-              "роки",
-              "року"
-            ]
-          },
-          {
-            "prompt": "Він ___ вже десять років.",
-            "answer": "одружений",
-            "options": [
-              "одружений",
-              "одружена",
-              "неодружений",
-              "розлучений"
-            ]
-          },
-          {
-            "prompt": "___ родина велика.",
-            "answer": "Моя",
-            "options": [
-              "Моя",
-              "Мій",
-              "Моє",
-              "Мої"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.103Z",
-      "modifiedAt": "2025-12-06T10:49:20.103Z"
-    },
-    {
-      "id": "act-a1-0-unjumble",
-      "type": "unjumble",
-      "title": "Family Sentences",
-      "description": "Put the words in the correct order.",
-      "content": {
-        "type": "unjumble",
-        "isUnjumble": true,
-        "items": [
-          {
-            "words": [
-              "є",
-              "брат",
-              "У",
-              "мене"
-            ],
-            "answer": "У мене є брат.",
-            "translation": "I have a brother."
-          },
-          {
-            "words": [
-              "звати",
-              "батька",
-              "Мого",
-              "Іван"
-            ],
-            "answer": "Мого батька звати Іван.",
-            "translation": "My father's name is Ivan."
-          },
-          {
-            "words": [
-              "старша",
-              "сестра",
-              "Це",
-              "моя"
-            ],
-            "answer": "Це моя старша сестра.",
-            "translation": "This is my older sister."
-          },
-          {
-            "words": [
-              "живуть",
-              "батьки",
-              "Мої",
-              "у",
-              "Львові"
-            ],
-            "answer": "Мої батьки живуть у Львові.",
-            "translation": "My parents live in Lviv."
-          },
-          {
-            "words": [
-              "немає",
-              "сестри",
-              "У",
-              "мене"
-            ],
-            "answer": "У мене немає сестри.",
-            "translation": "I don't have a sister."
-          },
-          {
-            "words": [
-              "працює",
-              "Мій",
-              "тато",
-              "в",
-              "банку"
-            ],
-            "answer": "Мій тато працює в банку.",
-            "translation": "My dad works at a bank."
-          },
-          {
-            "words": [
-              "родина",
-              "Моя",
-              "велика"
-            ],
-            "answer": "Моя родина велика.",
-            "translation": "My family is big."
-          },
-          {
-            "words": [
-              "одружений",
-              "Він",
-              "вже"
-            ],
-            "answer": "Він вже одружений.",
-            "translation": "He's already married."
-          },
-          {
-            "words": [
-              "двоюрідна",
-              "Це",
-              "моя",
-              "сестра"
-            ],
-            "answer": "Це моя двоюрідна сестра.",
-            "translation": "This is my cousin — female."
-          },
-          {
-            "words": [
-              "п'ятдесят",
-              "Моєму",
-              "татові",
-              "років"
-            ],
-            "answer": "Моєму татові п'ятдесят років.",
-            "translation": "My dad is 50 years old."
-          },
-          {
-            "words": [
-              "маленький",
-              "Мій",
-              "брат",
-              "молодший",
-              "ще"
-            ],
-            "answer": "Мій молодший брат ще маленький.",
-            "translation": "My younger brother is still small."
-          },
-          {
-            "words": [
-              "два",
-              "У",
-              "них",
-              "сини"
-            ],
-            "answer": "У них два сини.",
-            "translation": "They have two sons."
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.103Z",
-      "modifiedAt": "2025-12-06T10:49:20.103Z"
-    },
-    {
       "id": "act-a1-0-matchup",
       "type": "match-up",
-      "title": "Family Members",
-      "description": "Match each Ukrainian word with its English meaning.",
+      "title": "Question Match",
+      "description": "Match the situation to the question word.",
       "content": {
         "type": "match-up",
         "pairs": [
           {
-            "left": "батько",
-            "right": "father"
+            "left": "Sleeping in bed",
+            "right": "Де?"
           },
           {
-            "left": "мати",
-            "right": "mother"
+            "left": "Driving to Lviv",
+            "right": "Куди?"
           },
           {
-            "left": "брат",
-            "right": "brother"
+            "left": "Arriving from USA",
+            "right": "Звідки?"
           },
           {
-            "left": "сестра",
-            "right": "sister"
+            "left": "Walking to park",
+            "right": "Куди?"
           },
           {
-            "left": "дідусь",
-            "right": "grandfather"
+            "left": "Sitting on chair",
+            "right": "Де?"
           },
           {
-            "left": "бабуся",
-            "right": "grandmother"
+            "left": "Going to mom",
+            "right": "Куди? (До кого?)"
           },
           {
-            "left": "дядько",
-            "right": "uncle"
+            "left": "Moving to Ukraine",
+            "right": "Куди?"
           },
           {
-            "left": "тітка",
-            "right": "aunt"
+            "left": "Living in Kyiv",
+            "right": "Де?"
           },
           {
-            "left": "син",
-            "right": "son"
+            "left": "Coming from Grandma",
+            "right": "Звідки?"
           },
           {
-            "left": "дочка",
-            "right": "daughter"
+            "left": "Standing at bus stop",
+            "right": "Де?"
           },
           {
-            "left": "чоловік",
-            "right": "husband"
+            "left": "Running into house",
+            "right": "Куди?"
           },
           {
-            "left": "дружина",
-            "right": "wife"
+            "left": "Flying from London",
+            "right": "Звідки?"
           }
         ],
         "shuffleRight": true
@@ -546,67 +114,102 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.103Z",
-      "modifiedAt": "2025-12-06T10:49:20.103Z"
+      "createdAt": "2025-12-08T21:22:09.893Z",
+      "modifiedAt": "2025-12-08T21:22:09.893Z"
     },
     {
-      "id": "act-a1-0-matchup",
-      "type": "match-up",
-      "title": "Family Relationships",
-      "description": "Match each relationship description with the correct term.",
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "Preposition Master",
+      "description": "Choose: В, На, До, З, Від.",
       "content": {
-        "type": "match-up",
-        "pairs": [
+        "type": "fill-blank",
+        "items": [
           {
-            "left": "батько батька",
-            "right": "дідусь"
+            "prompt": "Я йду ___ (to) магазин.",
+            "answer": "в",
+            "hints": [
+              "to"
+            ]
           },
           {
-            "left": "мати мами",
-            "right": "бабуся"
+            "prompt": "Я ___ (in) магазині.",
+            "answer": "в",
+            "hints": [
+              "in"
+            ]
           },
           {
-            "left": "брат мами",
-            "right": "дядько"
+            "prompt": "Я йду ___ (to) роботи.",
+            "answer": "з",
+            "hints": [
+              "to"
+            ]
           },
           {
-            "left": "сестра батька",
-            "right": "тітка"
+            "prompt": "Я йду ___ (to) мами.",
+            "answer": "до",
+            "hints": [
+              "to"
+            ]
           },
           {
-            "left": "син брата",
-            "right": "племінник"
+            "prompt": "Я йду ___ (from) лікаря.",
+            "answer": "від",
+            "hints": [
+              "from"
+            ]
           },
           {
-            "left": "дочка сестри",
-            "right": "племінниця"
+            "prompt": "Книга ___ (on) столі.",
+            "answer": "на",
+            "hints": [
+              "on"
+            ]
           },
           {
-            "left": "старша сестра",
-            "right": "older sister"
+            "prompt": "Я кладу книгу ___ (on) стіл.",
+            "answer": "на",
+            "hints": [
+              "on"
+            ]
           },
           {
-            "left": "молодший брат",
-            "right": "younger brother"
+            "prompt": "Ми їдемо ___ (to) Київ.",
+            "answer": "в",
+            "hints": [
+              "to"
+            ]
           },
           {
-            "left": "єдина дитина",
-            "right": "only child"
+            "prompt": "Ми живемо ___ (in) Києві.",
+            "answer": "в",
+            "hints": [
+              "in"
+            ]
           },
           {
-            "left": "одружений",
-            "right": "married (m)"
+            "prompt": "Я ___ (from) України.",
+            "answer": "з",
+            "hints": [
+              "from"
+            ]
           },
           {
-            "left": "розлучена",
-            "right": "divorced (f)"
+            "prompt": "Я йду ___ (to/home).",
+            "answer": "додому",
+            "hints": [
+              "to/home"
+            ]
           },
           {
-            "left": "наречений",
-            "right": "fiancé"
+            "prompt": "Я ___ (at/home).",
+            "answer": "вдома",
+            "hints": [
+              "at/home"
+            ]
           }
-        ],
-        "shuffleRight": true
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -615,148 +218,171 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.103Z",
-      "modifiedAt": "2025-12-06T10:49:20.103Z"
+      "createdAt": "2025-12-08T21:22:09.893Z",
+      "modifiedAt": "2025-12-08T21:22:09.893Z"
+    },
+    {
+      "id": "act-a1-0-groupsort",
+      "type": "group-sort",
+      "title": "Motion vs Location",
+      "description": "Is this Motion (Kudy) or Location (De)?",
+      "content": {
+        "type": "group-sort",
+        "groups": [
+          {
+            "id": "motion",
+            "name": "Motion",
+            "items": [
+              "Я йду в парк",
+              "Ми їдемо додому",
+              "Вона летить в Америку",
+              "Я кладу ручку на стіл",
+              "Ідіть прямо",
+              "Ми йдемо в кіно"
+            ],
+            "nameUk": "Kudy?"
+          },
+          {
+            "id": "location",
+            "name": "Location",
+            "items": [
+              "Я в парку",
+              "Ми вдома",
+              "Вона в Америці",
+              "Ручка на столі",
+              "Тут гарно",
+              "Ми в кіно"
+            ],
+            "nameUk": "De?"
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.893Z",
+      "modifiedAt": "2025-12-08T21:22:09.893Z"
     },
     {
       "id": "act-a1-0-quiz",
       "type": "quiz",
-      "title": "Family Knowledge",
-      "description": "Test your understanding of Ukrainian family vocabulary.",
+      "title": "Logic Whiz",
+      "description": "Logic Check.",
       "content": {
         "type": "quiz",
         "questions": [
           {
-            "question": "\"Батьки\" means:",
+            "question": "\"Я йду в парк.\" Case?",
             "options": [
-              "Father",
-              "Mother",
-              "Parents",
-              "Children"
-            ],
-            "correctIndex": 2,
-            "explanation": "\"Батьки\" is plural: parents (both)."
-          },
-          {
-            "question": "What's the informal word for \"mother\"?",
-            "options": [
-              "мати",
-              "мама",
-              "батько",
-              "тітка"
-            ],
-            "correctIndex": 1,
-            "explanation": "\"Мама\" is informal, like \"mom.\""
-          },
-          {
-            "question": "\"Двоюрідна сестра\" means:",
-            "options": [
-              "Sister",
-              "Female cousin",
-              "Aunt",
-              "Niece"
-            ],
-            "correctIndex": 1,
-            "explanation": "Literally \"second-degree sister.\""
-          },
-          {
-            "question": "How do you say \"I have a brother\"?",
-            "options": [
-              "Я маю брат",
-              "У мене є брат",
-              "Мій брат є",
-              "Брат у мене"
-            ],
-            "correctIndex": 1,
-            "explanation": "\"У мене є\" + nominative."
-          },
-          {
-            "question": "\"Чоловік\" can mean:",
-            "options": [
-              "Only \"husband\"",
-              "Only \"man\"",
-              "Both \"husband\" and \"man\"",
-              "\"Father\""
-            ],
-            "correctIndex": 2,
-            "explanation": "Context determines meaning."
-          },
-          {
-            "question": "How do you say \"My father's name is Ivan\"?",
-            "options": [
-              "Мого батька звати Іван.",
-              "Мій батько ім'я Іван.",
-              "Батько мій Іван.",
-              "Ім'я батька Іван."
+              "Accusative (Motion)",
+              "Locative"
             ],
             "correctIndex": 0,
-            "explanation": "\"Звати\" + genitive for \"is called.\""
+            "explanation": ""
           },
           {
-            "question": "\"Єдина дитина\" means:",
+            "question": "\"Я в парку.\" Case?",
             "options": [
-              "First child",
-              "Last child",
-              "Only child (f)",
-              "Youngest child"
-            ],
-            "correctIndex": 2,
-            "explanation": "\"Єдиний/єдина\" = only."
-          },
-          {
-            "question": "What's \"older brother\"?",
-            "options": [
-              "старший брат",
-              "молодший брат",
-              "середній брат",
-              "великий брат"
+              "Locative (Location)",
+              "Accusative"
             ],
             "correctIndex": 0,
-            "explanation": "\"Старший\" = older."
+            "explanation": ""
           },
           {
-            "question": "\"Неодружена\" means:",
+            "question": "\"Я йду до Олега.\" Why 'Do'?",
             "options": [
-              "Married (f)",
-              "Unmarried (f)",
-              "Divorced (f)",
-              "Widowed"
+              "Oleg is a person.",
+              "Oleg is a city."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Я з Києва.\" Case?",
+            "options": [
+              "Genitive (Origin)",
+              "Locative"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Я в Україні.\" Preposition?",
+            "options": [
+              "В (In independent state)",
+              "На (Wrong/Archaic)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Я йду вдома.\" Meaning?",
+            "options": [
+              "Walking inside the house.",
+              "Walking homeward (Wrong)."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Куди?\" means...",
+            "options": [
+              "Where to? (Whither)",
+              "Where? (At)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Звідки?\" means...",
+            "options": [
+              "From where? (Whence)",
+              "Where?"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Can you say \"В Олега\" (Inside Oleg)?",
+            "options": [
+              "Yes.",
+              "No. (Unless surgery)."
             ],
             "correctIndex": 1,
-            "explanation": "\"Не-\" prefix = not."
+            "explanation": ""
           },
           {
-            "question": "\"Онук\" is:",
+            "question": "\"Я на концерті.\" (At concert).",
             "options": [
-              "nephew",
-              "grandson",
-              "uncle",
-              "son"
+              "Event = NA.",
+              "Event = V."
             ],
-            "correctIndex": 1,
-            "explanation": "Онук = grandson, онучка = granddaughter."
+            "correctIndex": 0,
+            "explanation": ""
           },
           {
-            "question": "The parents of your parents are:",
+            "question": "\"Я йду на концерт.\"",
             "options": [
-              "тітки й дядьки",
-              "дідусі й бабусі",
-              "брати й сестри",
-              "племінники"
+              "Accusative.",
+              "Locative."
             ],
-            "correctIndex": 1,
-            "explanation": "Grandparents."
+            "correctIndex": 0,
+            "explanation": ""
           },
           {
-            "question": "\"Розлучений\" means:",
+            "question": "\"Я їду від бабусі.\" (From grandma).",
             "options": [
-              "married",
-              "single",
-              "divorced (m)",
-              "widowed"
+              "Vid (From person).",
+              "Z (From place)."
             ],
-            "correctIndex": 2,
-            "explanation": "\"Розлучений/розлучена\" = divorced."
+            "correctIndex": 0,
+            "explanation": ""
           }
         ],
         "shuffleQuestions": true,
@@ -770,76 +396,128 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.103Z",
-      "modifiedAt": "2025-12-06T10:49:20.103Z"
+      "createdAt": "2025-12-08T21:22:09.893Z",
+      "modifiedAt": "2025-12-08T21:22:09.893Z"
     },
     {
-      "id": "act-a1-0-truefalse",
-      "type": "true-false",
-      "title": "Family Facts",
-      "description": "Decide if each statement is true (Правда) or false (Міф).",
+      "id": "act-a1-0-unjumble",
+      "type": "unjumble",
+      "title": "Scramble Sentences",
+      "description": "Build the sentence.",
       "content": {
-        "type": "true-false",
-        "statements": [
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
           {
-            "statement": "\"Батько\" and \"тато\" both mean \"father.\"",
-            "isTrue": true,
-            "explanation": "Correct! Formal and informal versions."
+            "words": [
+              "йду",
+              "Я",
+              "додому",
+              "."
+            ],
+            "answer": "Я йду додому."
           },
           {
-            "statement": "\"Батьки\" can refer to just one parent.",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Батьки\" is always plural (parents)."
+            "words": [
+              "парку",
+              "Ми",
+              "в",
+              "."
+            ],
+            "answer": "Ми в парку."
           },
           {
-            "statement": "Ukrainian has different words for male and female cousins.",
-            "isTrue": true,
-            "explanation": "Correct! Двоюрідний брат / двоюрідна сестра."
+            "words": [
+              "їде",
+              "Він",
+              "Київ",
+              "в",
+              "."
+            ],
+            "answer": "Він їде в Київ."
           },
           {
-            "statement": "\"Чоловік\" only means \"husband.\"",
-            "isTrue": false,
-            "explanation": "Incorrect! It also means \"man.\""
+            "words": [
+              "з",
+              "Я",
+              "України",
+              "."
+            ],
+            "answer": "Я з України."
           },
           {
-            "statement": "\"Старший\" means \"older.\"",
-            "isTrue": true,
-            "explanation": "Correct! Старший брат = older brother."
+            "words": [
+              "столі",
+              "на",
+              "Книга",
+              "."
+            ],
+            "answer": "Книга на столі."
           },
           {
-            "statement": "To say \"I have a sister,\" you use genitive.",
-            "isTrue": true,
-            "explanation": "Incorrect! You use nominative: \"У мене є сестра.\""
+            "words": [
+              "на",
+              "Я",
+              "роботу",
+              "йду",
+              "."
+            ],
+            "answer": "Я йду на роботу."
           },
           {
-            "statement": "\"Дідусь\" means \"grandfather.\"",
-            "isTrue": true,
-            "explanation": "Correct! And \"бабуся\" = grandmother."
+            "words": [
+              "ти",
+              "Де",
+              "?"
+            ],
+            "answer": "Де ти?"
           },
           {
-            "statement": "\"Одружений\" and \"одружена\" mean the same thing.",
-            "isTrue": false,
-            "explanation": "Incorrect! Одружений (m), одружена (f) — different genders."
+            "words": [
+              "ти",
+              "Куди",
+              "йдеш",
+              "?"
+            ],
+            "answer": "Куди ти йдеш?"
           },
           {
-            "statement": "\"Невістка\" is the wife of your brother.",
-            "isTrue": true,
-            "explanation": "Correct! Also can mean daughter-in-law."
+            "words": [
+              "звідки",
+              "Ти",
+              "?"
+            ],
+            "answer": "Ти звідки?"
           },
           {
-            "statement": "\"Зять\" is the husband of your sister.",
-            "isTrue": true,
-            "explanation": "Correct! Also can mean son-in-law."
+            "words": [
+              "у",
+              "Я",
+              "лікаря",
+              "."
+            ],
+            "answer": "Я у лікаря.",
+            "translation": "At doctor's - Genitive 'U'"
           },
           {
-            "statement": "In Ukrainian, weeks start with Sunday.",
-            "isTrue": false,
-            "explanation": "Incorrect! Ukrainian weeks start on Monday."
+            "words": [
+              "до",
+              "йду",
+              "Я",
+              "лікаря",
+              "."
+            ],
+            "answer": "Я йду до лікаря."
           },
           {
-            "statement": "\"Немає сестри\" uses genitive case.",
-            "isTrue": true,
-            "explanation": "Correct! \"Немає\" requires genitive."
+            "words": [
+              "від",
+              "йду",
+              "Я",
+              "лікаря",
+              "."
+            ],
+            "answer": "Я йду від лікаря."
           }
         ]
       },
@@ -850,61 +528,115 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.103Z",
-      "modifiedAt": "2025-12-06T10:49:20.103Z"
+      "createdAt": "2025-12-08T21:22:09.893Z",
+      "modifiedAt": "2025-12-08T21:22:09.893Z"
     },
     {
-      "id": "act-a1-0-groupsort",
-      "type": "group-sort",
-      "title": "Family Categories",
-      "description": "Sort these family members into the correct category.",
+      "id": "act-a1-0-unjumble",
+      "type": "unjumble",
+      "title": "Story Reorder (Travel)",
+      "description": "Put the story in order.",
       "content": {
-        "type": "group-sort",
-        "groups": [
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
           {
-            "id": "parents-generation",
-            "name": "Parents Generation",
-            "items": [
-              "батько",
-              "мати",
-              "дядько",
-              "тітка"
-            ]
+            "words": [
+              "I go to the airport.",
+              "I fly to Ukraine.",
+              "I am in Kyiv."
+            ],
+            "answer": "Я їду в аеропорт. Я лечу в Україну. Я в Києві."
           },
           {
-            "id": "grandparents-generation",
-            "name": "Grandparents Generation",
-            "items": [
-              "дідусь",
-              "бабуся",
-              "прадід",
-              "прабабуся"
-            ]
+            "words": [
+              "I wake up.",
+              "I go to work.",
+              "I am at work."
+            ],
+            "answer": "Я прокидаюся. Я йду на роботу. Я на роботі."
           },
           {
-            "id": "siblings--cousins",
-            "name": "Siblings & Cousins",
-            "items": [
-              "брат",
-              "сестра",
-              "двоюрідний брат",
-              "двоюрідна сестра"
-            ]
+            "words": [
+              "I buy a ticket.",
+              "I go to the cinema.",
+              "I watch a film."
+            ],
+            "answer": "Я купую квиток. Я йду в кіно. Я дивлюся фільм."
           },
           {
-            "id": "children-generation",
-            "name": "Children Generation",
-            "items": [
-              "син",
-              "дочка",
-              "племінник",
-              "племінниця",
-              "онук",
-              "онучка"
-            ]
+            "words": [
+              "I am home.",
+              "I go to the shop.",
+              "I buy bread."
+            ],
+            "answer": "Я вдома. Я йду в магазин. Я купую хліб."
+          },
+          {
+            "words": [
+              "I see a friend.",
+              "I go to the cafe.",
+              "We drink coffee."
+            ],
+            "answer": "Я бачу друга. Я йду в кафе. Ми п'ємо каву."
+          },
+          {
+            "words": [
+              "I am hungry.",
+              "I go to the restaurant.",
+              "I eat borsch."
+            ],
+            "answer": "Я голодний. Я йду в ресторан. Я їм борщ."
+          },
+          {
+            "words": [
+              "It is morning.",
+              "I go to the park.",
+              "I run."
+            ],
+            "answer": "Ранок. Я йду в парк. Я бігаю."
+          },
+          {
+            "words": [
+              "I am tired.",
+              "I go home.",
+              "I sleep."
+            ],
+            "answer": "Я втомився. Я йду додому. Я сплю."
+          },
+          {
+            "words": [
+              "I am cold.",
+              "I go to the house.",
+              "I drink tea."
+            ],
+            "answer": "Мені холодно. Я йду в дім. Я п'ю чай."
+          },
+          {
+            "words": [
+              "It is summer.",
+              "I go to the sea.",
+              "I swim."
+            ],
+            "answer": "Літо. Я їду на море. Я плаваю."
+          },
+          {
+            "words": [
+              "It is work time.",
+              "I go to the office.",
+              "I work."
+            ],
+            "answer": "Час працювати. Я йду в офіс. Я працюю."
+          },
+          {
+            "words": [
+              "I need money.",
+              "I go to the bank.",
+              "I take cash."
+            ],
+            "answer": "Мені треба гроші. Я йду в банк. Я беру готівку."
           }
-        ],
-        "shuffleItems": true
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -913,370 +645,410 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.103Z",
-      "modifiedAt": "2025-12-06T10:49:20.103Z"
+      "createdAt": "2025-12-08T21:22:09.893Z",
+      "modifiedAt": "2025-12-08T21:22:09.893Z"
+    },
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "My Logic",
+      "description": "Fill based on YOUR life (or logic).",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Я зараз ___ (location).",
+            "answer": "вдома / на роботі",
+            "hints": [
+              "location"
+            ]
+          },
+          {
+            "prompt": "Я хочу поїхати ___ (motion).",
+            "answer": "в Україну / на море",
+            "hints": [
+              "motion"
+            ]
+          },
+          {
+            "prompt": "Я ___ (origin).",
+            "answer": "з Америки / з Англії",
+            "hints": [
+              "origin"
+            ]
+          },
+          {
+            "prompt": "Завтра я піду ___ (motion).",
+            "answer": "на роботу / в парк",
+            "hints": [
+              "motion"
+            ]
+          },
+          {
+            "prompt": "Мій телефон ___ (location).",
+            "answer": "на столі / в кишені",
+            "hints": [
+              "location"
+            ]
+          },
+          {
+            "prompt": "Я йду ___ (to person).",
+            "answer": "до друга / до мами",
+            "hints": [
+              "to person"
+            ]
+          },
+          {
+            "prompt": "Я йду ___ (from person).",
+            "answer": "від друга",
+            "hints": [
+              "from person"
+            ]
+          },
+          {
+            "prompt": "Я йду ___ (from place).",
+            "answer": "з роботи",
+            "hints": [
+              "from place"
+            ]
+          },
+          {
+            "prompt": "Зараз я ___ (in city).",
+            "answer": "в Києві / в Лондоні",
+            "hints": [
+              "in city"
+            ]
+          },
+          {
+            "prompt": "Я люблю бути ___ (at home).",
+            "answer": "вдома",
+            "hints": [
+              "at home"
+            ]
+          },
+          {
+            "prompt": "Я йду ___ (homeward).",
+            "answer": "додому",
+            "hints": [
+              "homeward"
+            ]
+          },
+          {
+            "prompt": "Де ти? Я ___ (here).",
+            "answer": "тут",
+            "hints": [
+              "here"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.893Z",
+      "modifiedAt": "2025-12-08T21:22:09.893Z"
+    },
+    {
+      "id": "act-a1-0-truefalse",
+      "type": "true-false",
+      "title": "Grammar Rules",
+      "description": "True or False?",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "I can say \"I am in Kyiv\" (В Києві).",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "I can say \"I go to Kyiv\" (В Київ).",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "I know not to go \"Inside\" people (Do vs V).",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "I know \"Na Ukraini\" is bad manners.",
+            "isTrue": false,
+            "explanation": ""
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.893Z",
+      "modifiedAt": "2025-12-08T21:22:09.893Z"
     }
   ],
   "vocabulary": {
     "moduleId": "mod-uk-A1-29",
     "level": "A1",
     "phase": "A1.3",
-    "wordCount": 35,
-    "newWordCount": 35,
+    "wordCount": 25,
+    "newWordCount": 25,
     "reviewWordCount": 0,
-    "transliterationMode": "none",
+    "transliterationMode": "full",
     "words": [
       {
-        "id": "v-sim'ya-0-0",
-        "uk": "сім'я",
-        "en": "family",
+        "id": "v-de-0-0",
+        "uk": "де",
+        "en": "where (loc)",
         "pos": "noun",
-        "ipa": "ˈsimjɐ",
-        "gender": "f",
-        "note": "Also: родина",
+        "ipa": "/dɛ/",
+        "note": "[🔊](audio_de)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-rodyna-0-1",
-        "uk": "родина",
-        "en": "family",
+        "id": "v-kudy-0-1",
+        "uk": "куди",
+        "en": "where to",
         "pos": "noun",
-        "ipa": "rɔˈdɪnɐ",
-        "gender": "f",
+        "ipa": "/kuˈdɪ/",
+        "note": "[🔊](audio_kudy)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-batьky-0-2",
-        "uk": "батьки",
-        "en": "parents",
+        "id": "v-zvidky-0-2",
+        "uk": "звідки",
+        "en": "where from",
         "pos": "noun",
-        "ipa": "bɑtʲˈkɪ",
+        "ipa": "/ˈzvidkɪ/",
+        "note": "[🔊](audio_zvidky)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-batьko-0-3",
-        "uk": "батько",
-        "en": "father",
+        "id": "v-tut-0-3",
+        "uk": "тут",
+        "en": "here",
         "pos": "noun",
-        "ipa": "ˈbɑtʲkɔ",
-        "gender": "m",
-        "note": "Formal",
+        "ipa": "/tut/",
+        "note": "[🔊](audio_tut)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-tato-0-4",
-        "uk": "тато",
-        "en": "dad",
+        "id": "v-tam-0-4",
+        "uk": "там",
+        "en": "there",
         "pos": "noun",
-        "ipa": "ˈtɑtɔ",
-        "gender": "m",
-        "note": "Informal",
+        "ipa": "/tɑm/",
+        "note": "[🔊](audio_tam)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-maty-0-5",
-        "uk": "мати",
-        "en": "mother",
+        "id": "v-vdoma-0-5",
+        "uk": "вдома",
+        "en": "at home",
         "pos": "noun",
-        "ipa": "ˈmɑtɪ",
-        "gender": "f",
-        "note": "Formal",
+        "ipa": "/ˈvdɔmɑ/",
+        "note": "[🔊](audio_vdoma)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-mama-0-6",
-        "uk": "мама",
-        "en": "mom",
+        "id": "v-dodomu-0-6",
+        "uk": "додому",
+        "en": "homeward",
         "pos": "noun",
-        "ipa": "ˈmɑmɐ",
-        "gender": "f",
-        "note": "Informal",
+        "ipa": "/dɔˈdɔmu/",
+        "note": "[🔊](audio_dodomu)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-brat-0-7",
-        "uk": "брат",
-        "en": "brother",
+        "id": "v-z-0-7",
+        "uk": "з",
+        "en": "from (place)",
         "pos": "noun",
-        "ipa": "brɑt",
-        "gender": "m",
+        "ipa": "/z/",
+        "note": "[🔊](audio_z)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-sestra-0-8",
-        "uk": "сестра",
-        "en": "sister",
+        "id": "v-vid-0-8",
+        "uk": "від",
+        "en": "from (person)",
         "pos": "noun",
-        "ipa": "sɛsˈtrɑ",
-        "gender": "f",
+        "ipa": "/vid/",
+        "note": "[🔊](audio_vid)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-didusь-0-9",
-        "uk": "дідусь",
-        "en": "grandfather",
+        "id": "v-do-0-9",
+        "uk": "до",
+        "en": "to (person)",
         "pos": "noun",
-        "ipa": "ˈdidusʲ",
-        "gender": "m",
+        "ipa": "/dɔ/",
+        "note": "[🔊](audio_do)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-babusya-0-10",
-        "uk": "бабуся",
-        "en": "grandmother",
+        "id": "v-v-0-10",
+        "uk": "в",
+        "en": "in/to",
         "pos": "noun",
-        "ipa": "bɐˈbusʲɐ",
-        "gender": "f",
+        "ipa": "/v/",
+        "note": "[🔊](audio_v)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-onuk-0-11",
-        "uk": "онук",
-        "en": "grandson",
+        "id": "v-na-0-11",
+        "uk": "на",
+        "en": "on/to",
         "pos": "noun",
-        "ipa": "ɔˈnuk",
-        "gender": "m",
+        "ipa": "/nɑ/",
+        "note": "[🔊](audio_na)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-onuchka-0-12",
-        "uk": "онучка",
-        "en": "granddaughter",
+        "id": "v-misto-0-12",
+        "uk": "місто",
+        "en": "city",
         "pos": "noun",
-        "ipa": "ɔˈnut͡ʃkɐ",
-        "gender": "f",
+        "ipa": "/ˈmistɔ/",
+        "note": "[🔊](audio_misto)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-dyadьko-0-13",
-        "uk": "дядько",
-        "en": "uncle",
+        "id": "v-krayina-0-13",
+        "uk": "країна",
+        "en": "country",
         "pos": "noun",
-        "ipa": "ˈdʲɐdʲkɔ",
-        "gender": "m",
+        "ipa": "/krɑˈjinɑ/",
+        "note": "[🔊](audio_krajina)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-titka-0-14",
-        "uk": "тітка",
-        "en": "aunt",
+        "id": "v-vulytsya-0-14",
+        "uk": "вулиця",
+        "en": "street",
         "pos": "noun",
-        "ipa": "ˈtitkɐ",
-        "gender": "f",
+        "ipa": "/ˈvulɪt͡sʲɑ/",
+        "note": "[🔊](audio_vulytsya)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-dvoyuridnyy-brat-0-15",
-        "uk": "двоюрідний брат",
-        "en": "male cousin",
+        "id": "v-ploshcha-0-15",
+        "uk": "площа",
+        "en": "square",
         "pos": "noun",
-        "ipa": "dwɔˈjuridnɪj brɑt",
-        "gender": "m",
+        "ipa": "/ˈplɔʃtʃɑ/",
+        "note": "[🔊](audio_ploshcha)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-dvoyuridna-sestra-0-16",
-        "uk": "двоюрідна сестра",
-        "en": "female cousin",
+        "id": "v-mahazyn-0-16",
+        "uk": "магазин",
+        "en": "shop",
         "pos": "noun",
-        "ipa": "dwɔˈjuridnɐ sɛsˈtrɑ",
-        "gender": "f",
+        "ipa": "/mɑɦɑˈzɪn/",
+        "note": "[🔊](audio_mahazyn)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-syn-0-17",
-        "uk": "син",
-        "en": "son",
+        "id": "v-robota-0-17",
+        "uk": "робота",
+        "en": "work",
         "pos": "noun",
-        "ipa": "sɪn",
-        "gender": "m",
+        "ipa": "/rɔˈbɔtɑ/",
+        "note": "[🔊](audio_robota)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-dochka-0-18",
-        "uk": "дочка",
-        "en": "daughter",
+        "id": "v-shkola-0-18",
+        "uk": "школа",
+        "en": "school",
         "pos": "noun",
-        "ipa": "ˈdɔt͡ʃkɐ",
-        "gender": "f",
+        "ipa": "/ˈʃkɔlɑ/",
+        "note": "[🔊](audio_shkola)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-cholovik-0-19",
-        "uk": "чоловік",
-        "en": "husband, man",
+        "id": "v-park-0-19",
+        "uk": "парк",
+        "en": "park",
         "pos": "noun",
-        "ipa": "t͡ʃɔlɔˈwik",
-        "gender": "m",
+        "ipa": "/pɑrk/",
+        "note": "[🔊](audio_park)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-druzhyna-0-20",
-        "uk": "дружина",
-        "en": "wife",
+        "id": "v-restoran-0-20",
+        "uk": "ресторан",
+        "en": "restaurant",
         "pos": "noun",
-        "ipa": "druˈʒɪnɐ",
-        "gender": "f",
+        "ipa": "/rɛstɔˈrɑn/",
+        "note": "[🔊](audio_restoran)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-khlopetsь-0-21",
-        "uk": "хлопець",
-        "en": "boyfriend",
+        "id": "v-likar-0-21",
+        "uk": "лікар",
+        "en": "doctor",
         "pos": "noun",
-        "ipa": "ˈxlɔpɛt͡sʲ",
-        "gender": "m",
+        "ipa": "/ˈlikɑr/",
+        "note": "[🔊](audio_likar)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-divchyna-0-22",
-        "uk": "дівчина",
-        "en": "girlfriend",
+        "id": "v-zupynka-0-22",
+        "uk": "зупинка",
+        "en": "stop (bus)",
         "pos": "noun",
-        "ipa": "ˈdiwt͡ʃɪnɐ",
-        "gender": "f",
+        "ipa": "/zuˈpɪnkɑ/",
+        "note": "[🔊](audio_zupynka)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-narechenyy-0-23",
-        "uk": "наречений",
-        "en": "fiancé",
+        "id": "v-teatr-0-23",
+        "uk": "театр",
+        "en": "theater",
         "pos": "noun",
-        "ipa": "nɐrɛˈt͡ʃɛnɪj",
-        "gender": "m",
+        "ipa": "/tɛˈɑtr/",
+        "note": "[🔊](audio_teatr)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-narechena-0-24",
-        "uk": "наречена",
-        "en": "fiancée",
+        "id": "v-vokzal-0-24",
+        "uk": "вокзал",
+        "en": "station",
         "pos": "noun",
-        "ipa": "nɐrɛˈt͡ʃɛnɐ",
-        "gender": "f",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-starshyy-0-25",
-        "uk": "старший",
-        "en": "older",
-        "pos": "adj",
-        "ipa": "ˈstɑrʃɪj",
-        "gender": "m",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-molodshyy-0-26",
-        "uk": "молодший",
-        "en": "younger",
-        "pos": "adj",
-        "ipa": "mɔˈlɔdʃɪj",
-        "gender": "m",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-seredniy-0-27",
-        "uk": "середній",
-        "en": "middle",
-        "pos": "adj",
-        "ipa": "sɛˈrɛdnʲij",
-        "gender": "m",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-yedynyy-0-28",
-        "uk": "єдиний",
-        "en": "only",
-        "pos": "adj",
-        "ipa": "jɛˈdɪnɪj",
-        "gender": "m",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-odruzhenyy-0-29",
-        "uk": "одружений",
-        "en": "married (m)",
-        "pos": "adj",
-        "ipa": "ɔˈdruʒɛnɪj",
-        "gender": "m",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-neodruzhenyy-0-30",
-        "uk": "неодружений",
-        "en": "unmarried (m)",
-        "pos": "adj",
-        "ipa": "nɛɔˈdruʒɛnɪj",
-        "gender": "m",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-rozluchenyy-0-31",
-        "uk": "розлучений",
-        "en": "divorced (m)",
-        "pos": "adj",
-        "ipa": "rɔzˈlut͡ʃɛnɪj",
-        "gender": "m",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-vdivetsь-0-32",
-        "uk": "вдівець",
-        "en": "widower",
-        "pos": "noun",
-        "ipa": "wdɔˈwɛt͡sʲ",
-        "gender": "m",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-vdova-0-33",
-        "uk": "вдова",
-        "en": "widow",
-        "pos": "noun",
-        "ipa": "wdɔˈwɑ",
-        "gender": "f",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-dytyna-0-34",
-        "uk": "дитина",
-        "en": "child",
-        "pos": "noun",
-        "ipa": "dɪˈtɪnɐ",
-        "gender": "f",
+        "ipa": "/vɔkˈzɑl/",
+        "note": "[🔊](audio_vokzal)",
         "isNew": true,
         "firstModule": 0
       }

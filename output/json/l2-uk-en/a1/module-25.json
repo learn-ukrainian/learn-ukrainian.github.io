@@ -11,529 +11,97 @@
     "targetLevel": "A1",
     "phase": "A1.3",
     "moduleNumber": 25,
-    "moduleType": "grammar",
+    "moduleType": "vocabulary",
     "immersionLevel": 0.3,
-    "title": "My Daily Routine",
-    "subtitle": "Мій розпорядок дня — Reflexive Verbs and Daily Activities",
-    "description": "Use reflexive verbs (-ся/-сь)",
+    "title": "Transport and Travel",
+    "subtitle": "Moving Through Space",
+    "description": "Learner can name transport modes (Bus, Train, Car, Plane)",
     "objectives": [
-      "Use reflexive verbs (-ся/-сь)",
-      "Describe daily routine activities",
-      "Combine time expressions with actions",
-      "Narrate a typical day"
+      "Learner can name transport modes (Bus, Train, Car, Plane)",
+      "Learner can use Instrumental Case for \"By Transport\" (Oroginal noun -> Noun+om)",
+      "Learner can use \"To Go\" (Yihaty) vs \"To Walk\" (Yty)",
+      "Learner can buy a ticket"
     ],
-    "grammarFocus": [
-      "Reflexive verbs with -ся/-сь",
-      "Sequence adverbs (спочатку, потім, нарешті)",
-      "Time + action structure"
-    ],
+    "grammarFocus": [],
     "tags": [
-      "reflexive-verbs",
-      "daily-routine",
-      "verbs",
-      "time"
+      "vocabulary",
+      "transport",
+      "travel",
+      "instrumental",
+      "verbs"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
+    "totalDuration": 60,
+    "transliterationMode": "full",
     "sections": [
       {
-        "id": "section-intro",
+        "id": "section-intro-0",
         "name": "Вступ",
         "nameEn": "Introduction",
         "type": "intro",
-        "content": "## warm-up\n\n### A Day in Your Life\n\nWhat do you do every day? Wake up, wash, eat breakfast, go to work... These daily activities often use special verbs in Ukrainian — reflexive verbs!\n\n> 💡 **Did You Know?**\n>\n> Reflexive verbs in Ukrainian end in -ся or -сь. The -ся comes from \"себе\" (oneself). So \"я вмиваюся\" literally means \"I wash myself\"!\n\n## presentation\n\n### Reflexive Verbs: What Are They?\n\nReflexive verbs describe actions you do to yourself. They end in **-ся** (after consonants) or **-сь** (after vowels).\n\n| Regular | Reflexive | Meaning |\n|---------|-----------|---------|\n| мити | митися | to wash (oneself) |\n| одягати | одягатися | to dress (oneself) |\n| будити | будитися | to wake (oneself) |\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** All reflexive verbs are about doing something to yourself.\n> **Fact:** Some reflexive verbs don't mean \"oneself\" at all! \"Сміятися\" (to laugh) and \"боятися\" (to be afraid) are reflexive but not \"self-directed.\"\n\n### Morning Routine Verbs\n\n| Infinitive | Meaning | Я form | Example |\n|------------|---------|--------|---------|\n| прокидатися | to wake up | прокидаюся | Я прокидаюся о сьомій. |\n| вставати | to get up | встаю | Я встаю о пів на восьму. |\n| вмиватися | to wash face | вмиваюся | Я вмиваюся щоранку. |\n| чистити зуби | to brush teeth | чищу зуби | Я чищу зуби двічі на день. |\n| голитися | to shave | голюся | Він голиться щоранку. |\n| одягатися | to get dressed | одягаюся | Я одягаюся швидко. |\n| снідати | to have breakfast | снідаю | Я снідаю о восьмій. |\n\n> 🎬 **Pop Culture Moment: Groundhog Day**\n>\n> \"Щоранку я прокидаюся, вмиваюся, снідаю...\" — and for Phil Connors, it's the same day every time! Imagine describing THAT routine in Ukrainian!\n\n### Conjugating Reflexive Verbs\n\n**Прокидатися** (to wake up):\n\n| Person | Form | -ся/-сь |\n|--------|------|---------|\n| я | прокидаюся | -ся (after consonant) |\n| ти | прокидаєшся | -ся |\n| він/вона | прокидається | -ся |\n| ми | прокидаємося | -ся |\n| ви | прокидаєтеся | -ся |\n| вони | прокидаються | -ся |\n\n**Вмиватися** (to wash oneself):\n\n| Person | Form |\n|--------|------|\n| я | вмиваюся |\n| ти | вмиваєшся |\n| він/вона | вмивається |\n| ми | вмиваємося |\n| ви | вмиваєтеся |\n| вони | вмиваються |\n\n> ⚡ **Pro Tip**\n>\n> The -ся always stays at the very end, after the personal ending: прокидаю + ся = прокидаюся, прокидаєш + ся = прокидаєшся.\n\n### Daytime Activities\n\n| Infinitive | Meaning | Example |\n|------------|---------|---------|\n| виходити | to leave (home) | Я виходжу о дев'ятій. |\n| їхати | to go (by transport) | Я їду на роботу. |\n| приходити | to arrive | Я приходжу о десятій. |\n| працювати | to work | Я працюю до п'ятої. |\n| обідати | to have lunch | Я обідаю о першій. |\n| повертатися | to return | Я повертаюся о шостій. |\n\n> 🌍 **Real World**\n>\n> In Ukraine, lunch (обід) is traditionally the main meal of the day, usually between 12:00 and 14:00. Many offices have a full lunch break for this!\n\n### Evening Routine Verbs\n\n| Infinitive | Meaning | Example |\n|------------|---------|---------|\n| вечеряти | to have dinner | Я вечеряю о сьомій. |\n| відпочивати | to rest | Я відпочиваю після роботи. |\n| дивитися | to watch | Я дивлюся телевізор. |\n| читати | to read | Я читаю книгу. |\n| гуляти | to walk | Я гуляю з собакою. |\n| лягати спати | to go to bed | Я лягаю спати о одинадцятій. |\n| засинати | to fall asleep | Я засинаю швидко. |\n\n> 🎮 **Gamer's Corner**\n>\n> Ukrainian gamers' routine: \"Я повертаюся з роботи, вечеряю, а потім граю в комп'ютерні ігри до пізньої ночі!\" (I return from work, have dinner, then play video games until late!)\n\n### Sequence Words\n\nUse these to connect your routine:\n\n| Word | Meaning | Example |\n|------|---------|---------|\n| спочатку | first | Спочатку я снідаю. |\n| потім | then | Потім я йду на роботу. |\n| після того | after that | Після того я обідаю. |\n| нарешті | finally | Нарешті я відпочиваю. |\n| завжди | always | Я завжди снідаю. |\n| зазвичай | usually | Зазвичай я прокидаюся рано. |\n| щодня | every day | Щодня я працюю. |\n| ніколи | never | Я ніколи не запізнююся. |\n\n### A Sample Daily Routine\n\n> Мій типовий день\n>\n> Я прокидаюся о сьомій. Спочатку я вмиваюся і чищу зуби. Потім я одягаюся і снідаю. Я виходжу з дому о восьмій тридцять і їду на роботу. Я працюю з дев'ятої до п'ятої. О першій я обідаю. Після роботи я повертаюся додому. Увечері я вечеряю, відпочиваю і дивлюся телевізор. Я лягаю спати о одинадцятій.\n\n> 💡 **Did You Know?**\n>\n> Ukrainians often say \"їду на роботу\" (I go to work by transport) rather than \"йду на роботу\" (I walk to work). The verb choice tells you HOW they commute!\n\n### Common Time Expressions in Routine\n\n| Expression | Meaning |\n|------------|---------|\n| щоранку | every morning |\n| щовечора | every evening |\n| щодня | every day |\n| двічі на день | twice a day |\n| раз на тиждень | once a week |\n| о сьомій ранку | at 7 AM |\n| о десятій вечора | at 10 PM |\n\n> 🎯 **Fun Fact**\n>\n> Ukrainians traditionally have three main meals: сніданок (breakfast), обід (lunch — the biggest meal), and вечеря (dinner). Many also have a light полуденок (afternoon snack)!\n\n## practice\n\n### Exercise 1: Conjugate\n\nConjugate \"одягатися\" (to get dressed):\n\n1. Я ___ (одягаюся)\n2. Ти ___ (одягаєшся)\n3. Він ___ (одягається)\n4. Ми ___ (одягаємося)\n5. Ви ___ (одягаєтеся)\n6. Вони ___ (одягаються)\n\n### Exercise 2: Sequence Your Morning\n\nPut in order using спочатку, потім, після того, нарешті:\n\n- ___ я снідаю.\n- ___ я прокидаюся.\n- ___ я виходжу з дому.\n- ___ я вмиваюся і одягаюся.\n\n### Exercise 3: Match Time and Action\n\nMatch:\n1. О сьомій ранку → (прокидатися)\n2. О першій → (обідати)\n3. О шостій вечора → (повертатися)\n4. О одинадцятій → (лягати спати)\n\n## production\n\n### Task: Write Your Daily Routine\n\nDescribe your typical day in at least 8 sentences. Include:\n- What time you wake up\n- Morning activities\n- Work/study time\n- Lunch\n- Evening activities\n- Bedtime\n\nUse sequence words: спочатку, потім, після того, нарешті.\n\n---\n\n\n---\n\n\n---"
-      },
-      {
-        "id": "section-summary",
-        "name": "Підсумок",
-        "nameEn": "Summary",
-        "type": "summary",
-        "content": "> **Congratulations!**\n>\n> You can now describe your daily routine in Ukrainian:\n> - **Morning**: прокидатися, вмиватися, одягатися, снідати\n> - **Day**: їхати на роботу, працювати, обідати\n> - **Evening**: повертатися, вечеряти, відпочивати, лягати спати\n> - **Sequence**: спочатку, потім, після того, нарешті\n> - **Frequency**: щодня, завжди, зазвичай, ніколи\n\n> **Reflexive Verbs (-ся/-сь):**\n> These show actions done to oneself: я вмиваюся (I wash myself), він одягається (he dresses himself).\n\n> **Coming Next: Module 26 — Describing Things**\n>\n> In the next module, you'll learn adjectives to describe people and things:\n> - великий будинок (big house)\n> - нова книга (new book)\n> - гарна дівчина (pretty girl)"
+        "content": "## warm-up\n**The Great Journey**\n\nYou are in Kyiv. You want to go to Lviv.\nIt is far (500 km). You cannot walk (`Йти`).\nYou must ride (`Їхати`).\nBut how?\nBy bus? By train? By hyperloop (not yet)?\n\nIn this module, we learn how to move.\nAnd more importantly, we touch the **Instrumental Case**.\n\"I go **by** bus.\"\nThe bus is your instrument.\n\n## presentation\n\n### Section 1: The Vehicles\n\n- **Машина** (Car).\n- **Автобус** (Bus).\n- **Поїзд** (Train).\n- **Літак** (Plane).\n- **Таксі** (Taxi).\n- **Метро** (Metro - indeclinable).\n- **Велосипед** (Bicycle).\n- **Трамвай** (Tram).\n- **Тролейбус** (Trolleybus).\n\n> 🚌 **Culture Corner: The Night Train**\n> Trains in Ukraine are a lifestyle.\n> The **Platskart** (Open dormitory) is a social experiment. You sleep with 50 strangers. You share food. You talk.\n> The **Kupe** (Coupe) is a closed room for 4.\n> The **SV** (Lux) is for 2.\n> Tea involves a metal cup holder (**Pidstakannyk**) and lots of sugar.\n\n### Section 2: Foot vs Wheel (Yty vs Yihaty)\n\nEnglish has \"To go\".\nUkrainian asks: \"How?\"\n1.  **Йти** (To walk / Go on foot).\n    - Я йду в парк. (I am walking to the park).\n2.  **Їхати** (To go by vehicle / Ride / Drive).\n    - Я їду в Київ. (I am riding to Kyiv).\n\n**Conjugation (Їхати):**\n- Я **їду** (Yidu - looks like Ydu, but soft YI).\n- Ти **їдеш**.\n- Він **їде**.\n- Ми **їдемо**.\n- Ви **їдете**.\n- Вони **їдуть**.\n\n> 💡 **Logic Check**\n> If you say \"Я йду в Київ\" (from London), you are a pilgrim walking 2000 km.\n> If you say \"Я їду в парк\" (100 meters away), you are lazy.\n\n### Section 3: The Instrumental Case (By Means Of...)\n\nHow do you travel? **By** bus.\nIn Ukrainian, we don't use a preposition (like \"By\"). We use an **Ending**.\nThis is the **Instrumental Case** (Orudnyi vidminok).\n\n**Masculine (Hard):** Add **-ом**.\n- Автобус ➡️ Автобус**ом**.\n- Поїзд ➡️ Поїзд**ом**.\n- Літак ➡️ Літак**ом**.\n- Трамвай (Soft J) ➡️ Трамва**єм** (Yem).\n\n**Feminine (-a):** Change to **-ою**.\n- Машина ➡️ Машин**ою**.\n- Ракета (Rocket) ➡️ Ракет**ою**.\n\n**Exceptions:**\n- **Метро** (Indeclinable) ➡️ Метро. \"Я їду метро\".\n- **Таксі** (Indeclinable) ➡️ Таксі.\n\n### Section 4: Buying a Ticket\n\n- **Квиток** (Ticket).\n- **На** (On/To) + Accusative (Destination).\n- \"Один квиток на Київ, будь ласка.\" (One ticket to Kyiv, please).\n- \"Один квиток на автобус.\" (One ticket for the bus).\n\n**Questions:**\n- Скільки коштує квиток? (How much costs ticket?)\n- Коли відправлення? (When is departure?)\n- Яке місце? (Which seat/place?)\n\n> 🎟️ **Deep Dive: The Place (Mistse)**\n> Your ticket says:\n> - **Вагон** (Wagon/Carriage): 5.\n> - **Місце** (Place/Seat): 23.\n> In Platskart, oddly numbered seats are usually bottom bunks (Nyz), even numbers are top bunks (Verkh).\n> Everyone wants the bottom bunk. It forces Accusative negotiations. \"Can I sit on your bunk?\"\n\n\n### Section 5: The Funicular and Unusual Transport\n\nKyiv has a **Funikuler**.\nIs it a train? Is it a lift?\nIt connects the Upper City (Mykhailivska) to the Lower City (Poshtova).\n\"Я їду фунікулером\" (I go by funicular).\n\n> 🚋 **Culture Corner: The Forest Tram (Pushcha-Vodytsia)**\n> Tram 12 in Kyiv is legendary.\n> It goes from the loud Podil district deep into the forest (Pushcha-Vodytsia).\n> It is a time machine.\n> \"Я їду трамваєм у ліс\" (I go by tram into the forest).\n> It is the cheapest romantic date in the city.\n\n### Section 6: Border Control (Kordon)\n\nTraveling abroad?\n- **Паспорт** (Passport).\n- **Кордон** (Border).\n- **Митниця** (Customs).\n- \"Яка мета вашого візиту?\" (What is the goal of your visit?)\n- \"Туризм\" (Tourism).\n\n> 🚌 **Deep Dive: The Yellow Marshrutka**\n> The **Bohdan** bus (yellow, boxy, loud) is the workhorse of Ukrainian transport.\n> It is made in Ukraine.\n> It is everywhere.\n> It shakes. It rattles. It smells of diesel.\n> But it gets you there for 15 hryvnias.\n> \"Передайте за проїзд!\" (Pass the fare!). The eternal cry of the yellow box.\n\n### Section 7: Verbs of Motion (A Glimpse)\n\nWe are learning **Йти** (Unidirectional - One way).\nThere is also **Ходити** (Multidirectional - Walking around/Regularly).\n- Я йду в магазин. (I am going to the shop now).\n- Я ходжу в магазин щодня. (I go to the shop every day).\nSame for vehicles:\n- **Їхати** (One way).\n- **Їздити** (Regularly).\n- Я їду на роботу. (Now).\n- Я їжджу на роботу на метро. (Usually).\n*Note: A1 focuses on Unidirectional (Simpler). But be aware.*\n\n\n### Section 8: The Etiquette of Travel\n\nIn Ukraine, public transport has unwritten rules.\n1.  **Give up your seat.** If you see an elderly person, a pregnant woman, or a parent with a child, you **must** stand up. Otherwise, the whole bus will shame you.\n2.  **Backpack off.** If the metro is crowded, take your backpack off and put it on the floor.\n3.  **Prepare cash.** In a Marshrutka, search for 15 hryvnias *before* you enter. Don't block the door while fishing for coins.\n4.  **The \"Stop\" Button.** Marshrutkas rarely have buttons. You are the button. Scream.\n\n> 🗣️ **Deep Dive: The \"Passing\" Chain**\n> In a packed Marshrutka, you might be far from the driver.\n> You tap the shoulder of the person in front of you.\n> You give them 20 UAH and say \"Za odnoho\" (For one person).\n> They pass it forward.\n> Eventually, change comes back. \"Zdacha z dvadtsyaty!\" (Change from twenty!).\n> It travels back to you.\n> It requires trust. And it works.\n\n## practice\n\n**Drill 1: Walk or Ride?**\n- To the kitchen? -> Йти (Walk).\n- To America? -> Їхати/Літати (Fly - but Їхати is generic transit).\n- To work (5km)? -> Їхати.\n- To the neighbor? -> Йти.\n\n**Drill 2: Instrumental Builder**\n- Bus -> Автобусом.\n- Car -> Машиною.\n- Train -> Поїздом.\n- Plane -> Літаком.\n- Tram -> Трамваєм.\n- Taxi -> Таксі.\n\n**Drill 3: The Ticket Agent**\n- Ticket to Odesa -> Квиток на Одесу.\n- Ticket to Lviv -> Квиток на Львів.\n- Ticket to London -> Квиток на Лондон.\n\n## production\n\n**Scenario: At the Train Station**\n*   **You:** Добрий день. Мені треба квиток на Харків.\n*   **Agent:** На коли? (For when?)\n*   **You:** На завтра. На вечір.\n*   **Agent:** Є поїзд о шостій (18:00) і о десятій (22:00).\n*   **You:** О шостій, будь ласка.\n*   **Agent:** Купе чи плацкарт?\n*   **You:** Купе. Скільки коштує?\n*   **Agent:** 800 гривень.\n*   **You:** Прошу. (Here you are).\n*   **Agent:** Ваш квиток. Вагон 7, місце 12.\n\n\n**Scenario: The Taxi Driver**\n*   **Driver:** Добрий день. Куди їдемо? (Where are we going?)\n*   **You:** На Хрещатик, будь ласка.\n*   **Driver:** О, там затор. Ми поїдемо через Поділ. (We will go via Podil).\n*   **You:** Добре. Це далеко?\n*   **Driver:** Ні, близько. 20 хвилин.\n*   **You:** Я поспішаю. (I am in a hurry).\n*   **Driver:** Я теж! (Me too!). (Ukrainian taxi humor).\n\n**Scenario: Traffic Jam**\n*   **Boss:** Алло? Де ти?\n*   **You:** Я їду на роботу.\n*   **Boss:** Ти йдеш чи їдеш?\n*   **You:** Я їду машиною. Тут затор (traffic jam).\n*   **Boss:** Чому ти не їдеш на метро?\n*   **You:** Я люблю комфорт.\n*   **Boss:** А я люблю пунктуальність!\n*   **You:** Вибачте. Я буду скоро (soon).\n\n> 🛣️ **Deep Dive: BlaBlaCar**\n> In Ukraine, intercity buses exist, but **BlaBlaCar** (ridesharing) is huge.\n> It is often faster and cheaper.\n> \"Я їду блаблакаром\" (I go by BlaBlaCar).\n> Yes, we decline app names too.\n> It is a great way to practice Ukrainian because the driver WILL talk to you.\n> \"Звідки ви?\" (Where are you from?), \"Що ви робите в Україні?\".\n> Prepare your answers!\n\n---"
       }
     ],
-    "rawMarkdown": "---\ntitle: \"My Daily Routine\"\nsubtitle: \"Мій розпорядок дня — Reflexive Verbs and Daily Activities\"\nphase: A1.3\nduration: 45\ntransliteration: none\ntags: [reflexive-verbs, daily-routine, verbs, time]\nobjectives:\n  - Use reflexive verbs (-ся/-сь)\n  - Describe daily routine activities\n  - Combine time expressions with actions\n  - Narrate a typical day\ngrammar:\n  - Reflexive verbs with -ся/-сь\n  - Sequence adverbs (спочатку, потім, нарешті)\n  - Time + action structure\n---\n\n# Lesson Content\n\n## warm-up\n\n### A Day in Your Life\n\nWhat do you do every day? Wake up, wash, eat breakfast, go to work... These daily activities often use special verbs in Ukrainian — reflexive verbs!\n\n> 💡 **Did You Know?**\n>\n> Reflexive verbs in Ukrainian end in -ся or -сь. The -ся comes from \"себе\" (oneself). So \"я вмиваюся\" literally means \"I wash myself\"!\n\n## presentation\n\n### Reflexive Verbs: What Are They?\n\nReflexive verbs describe actions you do to yourself. They end in **-ся** (after consonants) or **-сь** (after vowels).\n\n| Regular | Reflexive | Meaning |\n|---------|-----------|---------|\n| мити | митися | to wash (oneself) |\n| одягати | одягатися | to dress (oneself) |\n| будити | будитися | to wake (oneself) |\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** All reflexive verbs are about doing something to yourself.\n> **Fact:** Some reflexive verbs don't mean \"oneself\" at all! \"Сміятися\" (to laugh) and \"боятися\" (to be afraid) are reflexive but not \"self-directed.\"\n\n### Morning Routine Verbs\n\n| Infinitive | Meaning | Я form | Example |\n|------------|---------|--------|---------|\n| прокидатися | to wake up | прокидаюся | Я прокидаюся о сьомій. |\n| вставати | to get up | встаю | Я встаю о пів на восьму. |\n| вмиватися | to wash face | вмиваюся | Я вмиваюся щоранку. |\n| чистити зуби | to brush teeth | чищу зуби | Я чищу зуби двічі на день. |\n| голитися | to shave | голюся | Він голиться щоранку. |\n| одягатися | to get dressed | одягаюся | Я одягаюся швидко. |\n| снідати | to have breakfast | снідаю | Я снідаю о восьмій. |\n\n> 🎬 **Pop Culture Moment: Groundhog Day**\n>\n> \"Щоранку я прокидаюся, вмиваюся, снідаю...\" — and for Phil Connors, it's the same day every time! Imagine describing THAT routine in Ukrainian!\n\n### Conjugating Reflexive Verbs\n\n**Прокидатися** (to wake up):\n\n| Person | Form | -ся/-сь |\n|--------|------|---------|\n| я | прокидаюся | -ся (after consonant) |\n| ти | прокидаєшся | -ся |\n| він/вона | прокидається | -ся |\n| ми | прокидаємося | -ся |\n| ви | прокидаєтеся | -ся |\n| вони | прокидаються | -ся |\n\n**Вмиватися** (to wash oneself):\n\n| Person | Form |\n|--------|------|\n| я | вмиваюся |\n| ти | вмиваєшся |\n| він/вона | вмивається |\n| ми | вмиваємося |\n| ви | вмиваєтеся |\n| вони | вмиваються |\n\n> ⚡ **Pro Tip**\n>\n> The -ся always stays at the very end, after the personal ending: прокидаю + ся = прокидаюся, прокидаєш + ся = прокидаєшся.\n\n### Daytime Activities\n\n| Infinitive | Meaning | Example |\n|------------|---------|---------|\n| виходити | to leave (home) | Я виходжу о дев'ятій. |\n| їхати | to go (by transport) | Я їду на роботу. |\n| приходити | to arrive | Я приходжу о десятій. |\n| працювати | to work | Я працюю до п'ятої. |\n| обідати | to have lunch | Я обідаю о першій. |\n| повертатися | to return | Я повертаюся о шостій. |\n\n> 🌍 **Real World**\n>\n> In Ukraine, lunch (обід) is traditionally the main meal of the day, usually between 12:00 and 14:00. Many offices have a full lunch break for this!\n\n### Evening Routine Verbs\n\n| Infinitive | Meaning | Example |\n|------------|---------|---------|\n| вечеряти | to have dinner | Я вечеряю о сьомій. |\n| відпочивати | to rest | Я відпочиваю після роботи. |\n| дивитися | to watch | Я дивлюся телевізор. |\n| читати | to read | Я читаю книгу. |\n| гуляти | to walk | Я гуляю з собакою. |\n| лягати спати | to go to bed | Я лягаю спати о одинадцятій. |\n| засинати | to fall asleep | Я засинаю швидко. |\n\n> 🎮 **Gamer's Corner**\n>\n> Ukrainian gamers' routine: \"Я повертаюся з роботи, вечеряю, а потім граю в комп'ютерні ігри до пізньої ночі!\" (I return from work, have dinner, then play video games until late!)\n\n### Sequence Words\n\nUse these to connect your routine:\n\n| Word | Meaning | Example |\n|------|---------|---------|\n| спочатку | first | Спочатку я снідаю. |\n| потім | then | Потім я йду на роботу. |\n| після того | after that | Після того я обідаю. |\n| нарешті | finally | Нарешті я відпочиваю. |\n| завжди | always | Я завжди снідаю. |\n| зазвичай | usually | Зазвичай я прокидаюся рано. |\n| щодня | every day | Щодня я працюю. |\n| ніколи | never | Я ніколи не запізнююся. |\n\n### A Sample Daily Routine\n\n> Мій типовий день\n>\n> Я прокидаюся о сьомій. Спочатку я вмиваюся і чищу зуби. Потім я одягаюся і снідаю. Я виходжу з дому о восьмій тридцять і їду на роботу. Я працюю з дев'ятої до п'ятої. О першій я обідаю. Після роботи я повертаюся додому. Увечері я вечеряю, відпочиваю і дивлюся телевізор. Я лягаю спати о одинадцятій.\n\n> 💡 **Did You Know?**\n>\n> Ukrainians often say \"їду на роботу\" (I go to work by transport) rather than \"йду на роботу\" (I walk to work). The verb choice tells you HOW they commute!\n\n### Common Time Expressions in Routine\n\n| Expression | Meaning |\n|------------|---------|\n| щоранку | every morning |\n| щовечора | every evening |\n| щодня | every day |\n| двічі на день | twice a day |\n| раз на тиждень | once a week |\n| о сьомій ранку | at 7 AM |\n| о десятій вечора | at 10 PM |\n\n> 🎯 **Fun Fact**\n>\n> Ukrainians traditionally have three main meals: сніданок (breakfast), обід (lunch — the biggest meal), and вечеря (dinner). Many also have a light полуденок (afternoon snack)!\n\n## practice\n\n### Exercise 1: Conjugate\n\nConjugate \"одягатися\" (to get dressed):\n\n1. Я ___ (одягаюся)\n2. Ти ___ (одягаєшся)\n3. Він ___ (одягається)\n4. Ми ___ (одягаємося)\n5. Ви ___ (одягаєтеся)\n6. Вони ___ (одягаються)\n\n### Exercise 2: Sequence Your Morning\n\nPut in order using спочатку, потім, після того, нарешті:\n\n- ___ я снідаю.\n- ___ я прокидаюся.\n- ___ я виходжу з дому.\n- ___ я вмиваюся і одягаюся.\n\n### Exercise 3: Match Time and Action\n\nMatch:\n1. О сьомій ранку → (прокидатися)\n2. О першій → (обідати)\n3. О шостій вечора → (повертатися)\n4. О одинадцятій → (лягати спати)\n\n## production\n\n### Task: Write Your Daily Routine\n\nDescribe your typical day in at least 8 sentences. Include:\n- What time you wake up\n- Morning activities\n- Work/study time\n- Lunch\n- Evening activities\n- Bedtime\n\nUse sequence words: спочатку, потім, після того, нарешті.\n\n---\n\n# Activities\n\n## fill-in: Reflexive Verbs\n\n> Choose the correct reflexive verb form.\n\n1. Я ___ о сьомій ранку.\n   > [!answer] прокидаюся\n   > [!options] прокидаюся | прокидаєшся | прокидається | прокидаємося\n\n2. Вона ___ перед дзеркалом.\n   > [!answer] одягається\n   > [!options] одягається | одягаюся | одягаєшся | одягаємося\n\n3. Ми ___ о дев'ятій вечора.\n   > [!answer] повертаємося\n   > [!options] повертаємося | повертаюся | повертається | повертаються\n\n4. Ти ___ щоранку?\n   > [!answer] вмиваєшся\n   > [!options] вмиваєшся | вмиваюся | вмивається | вмиваємося\n\n5. Вони ___ пізно.\n   > [!answer] лягають\n   > [!options] лягають | лягаю | лягає | лягаємо\n\n6. Він ___ щоранку.\n   > [!answer] голиться\n   > [!options] голиться | голюся | голишся | голимося\n\n7. Я ___ зуби двічі на день.\n   > [!answer] чищу\n   > [!options] чищу | чистиш | чистить | чистимо\n\n8. Діти ___ швидко.\n   > [!answer] засинають\n   > [!options] засинають | засинаю | засинає | засинаємо\n\n9. Ви ___ на роботу?\n   > [!answer] їдете\n   > [!options] їдете | їду | їде | їдемо\n\n10. Я ___ після обіду.\n    > [!answer] відпочиваю\n    > [!options] відпочиваю | відпочиваєш | відпочиває | відпочиваємо\n\n11. Вона ___ телевізор щовечора.\n    > [!answer] дивиться\n    > [!options] дивиться | дивлюся | дивишся | дивимося\n\n12. Ми ___ о восьмій.\n    > [!answer] снідаємо\n    > [!options] снідаємо | снідаю | снідаєш | снідають\n\n## fill-in: Sequence Words\n\n> Choose the correct sequence word.\n\n1. ___ я прокидаюся, потім вмиваюся.\n   > [!answer] Спочатку\n   > [!options] Спочатку | Потім | Нарешті | Після того\n\n2. Я снідаю, ___ йду на роботу.\n   > [!answer] потім\n   > [!options] потім | спочатку | нарешті | завжди\n\n3. ___ я лягаю спати.\n   > [!answer] Нарешті\n   > [!options] Нарешті | Спочатку | Потім | Зазвичай\n\n4. Я ___ снідаю вранці.\n   > [!answer] завжди\n   > [!options] завжди | ніколи | нарешті | спочатку\n\n5. ___ я працюю з дев'ятої до п'ятої.\n   > [!answer] Щодня\n   > [!options] Щодня | Нарешті | Спочатку | Ніколи\n\n6. Я ___ не запізнююся на роботу.\n   > [!answer] ніколи\n   > [!options] ніколи | завжди | щодня | потім\n\n7. ___ роботи я відпочиваю.\n   > [!answer] Після\n   > [!options] Після | Спочатку | Потім | Завжди\n\n8. ___ я прокидаюся о сьомій.\n   > [!answer] Зазвичай\n   > [!options] Зазвичай | Ніколи | Нарешті | Потім\n\n9. Я чищу зуби ___ на день.\n   > [!answer] двічі\n   > [!options] двічі | завжди | ніколи | потім\n\n10. ___ я вмиваюся, одягаюся, а ___ снідаю.\n    > [!answer] Спочатку... потім\n    > [!options] Спочатку... потім | Потім... нарешті | Нарешті... спочатку | Завжди... ніколи\n\n11. ___ я гуляю з собакою.\n    > [!answer] Щовечора\n    > [!options] Щовечора | Нарешті | Спочатку | Ніколи\n\n12. ___ обіду я п'ю каву.\n    > [!answer] Після\n    > [!options] Після | Спочатку | Потім | Завжди\n\n## unjumble: Daily Routine Sentences\n\n> Put the words in the correct order.\n\n1. о сьомій прокидаюся Я\n   > [!answer] Я прокидаюся о сьомій.\n   > (I wake up at 7.) [4 words]\n\n2. Спочатку вмиваюся я\n   > [!answer] Спочатку я вмиваюся.\n   > (First I wash my face.) [3 words]\n\n3. на роботу Я їду\n   > [!answer] Я їду на роботу.\n   > (I go to work.) [4 words]\n\n4. о першій обідаю Я\n   > [!answer] Я обідаю о першій.\n   > (I have lunch at 1.) [4 words]\n\n5. Після роботи повертаюся я додому\n   > [!answer] Після роботи я повертаюся додому.\n   > (After work I return home.) [5 words]\n\n6. спати лягаю Я о одинадцятій\n   > [!answer] Я лягаю спати о одинадцятій.\n   > (I go to bed at 11.) [5 words]\n\n7. зуби чищу Я щодня\n   > [!answer] Я чищу зуби щодня.\n   > (I brush my teeth every day.) [4 words]\n\n8. Він рано завжди прокидається\n   > [!answer] Він завжди прокидається рано.\n   > (He always wakes up early.) [4 words]\n\n9. снідаю о восьмій Зазвичай я\n   > [!answer] Зазвичай я снідаю о восьмій.\n   > (Usually I have breakfast at 8.) [5 words]\n\n10. Вона дивиться телевізор щовечора\n    > [!answer] Вона щовечора дивиться телевізор.\n    > (She watches TV every evening.) [4 words]\n\n11. одягається швидко Він\n    > [!answer] Він одягається швидко.\n    > (He gets dressed quickly.) [3 words]\n\n12. Ми о шостій вечеряємо\n    > [!answer] Ми вечеряємо о шостій.\n    > (We have dinner at 6.) [4 words]\n\n## match-up: Routine Activities\n\n> Match each Ukrainian phrase with its meaning.\n\n| Left | Right |\n|------|-------|\n| прокидатися | to wake up |\n| вмиватися | to wash oneself |\n| одягатися | to get dressed |\n| снідати | to have breakfast |\n| їхати на роботу | to go to work |\n| обідати | to have lunch |\n| повертатися додому | to return home |\n| вечеряти | to have dinner |\n| відпочивати | to rest |\n| лягати спати | to go to bed |\n| чистити зуби | to brush teeth |\n| голитися | to shave |\n\n## match-up: Time Expressions\n\n> Match each time expression with its meaning.\n\n| Left | Right |\n|------|-------|\n| щоранку | every morning |\n| щовечора | every evening |\n| щодня | every day |\n| двічі на день | twice a day |\n| раз на тиждень | once a week |\n| спочатку | first |\n| потім | then |\n| нарешті | finally |\n| завжди | always |\n| ніколи | never |\n| зазвичай | usually |\n| після роботи | after work |\n\n## quiz: Daily Routine Knowledge\n\n> Test your understanding of daily routine expressions.\n\n1. What does \"-ся\" at the end of a verb indicate?\n   - [ ] Future tense\n   - [x] Reflexive action\n   - [ ] Past tense\n   - [ ] Plural\n   > \"-ся\" makes verbs reflexive (action to oneself).\n\n2. \"Я прокидаюся\" means:\n   - [x] I wake up\n   - [ ] I go to sleep\n   - [ ] I get dressed\n   - [ ] I wash\n   > \"Прокидатися\" = to wake up.\n\n3. Which is the correct order?\n   - [x] спочатку, потім, нарешті\n   - [ ] нарешті, потім, спочатку\n   - [ ] потім, спочатку, нарешті\n   - [ ] нарешті, спочатку, потім\n   > First, then, finally.\n\n4. \"Вона вмивається\" — what form is this?\n   - [ ] я\n   - [ ] ти\n   - [x] він/вона\n   - [ ] ми\n   > Third person singular (she).\n\n5. \"Щодня\" means:\n   - [ ] sometimes\n   - [ ] never\n   - [x] every day\n   - [ ] usually\n   > \"Що\" + \"дня\" = every day.\n\n6. Which verb is NOT reflexive?\n   - [ ] прокидатися\n   - [ ] вмиватися\n   - [x] снідати\n   - [ ] одягатися\n   > \"Снідати\" (to have breakfast) is not reflexive.\n\n7. \"Я лягаю спати\" means:\n   - [ ] I wake up\n   - [ ] I fall asleep\n   - [x] I go to bed\n   - [ ] I rest\n   > \"Лягати спати\" = to go to bed.\n\n8. What's \"after work\" in Ukrainian?\n   - [x] після роботи\n   - [ ] перед роботою\n   - [ ] на роботі\n   - [ ] до роботи\n   > \"Після\" + genitive = after.\n\n9. \"Двічі на день\" means:\n   - [ ] once a day\n   - [x] twice a day\n   - [ ] every day\n   - [ ] once a week\n   > \"Двічі\" = twice.\n\n10. Which is correct for \"we get dressed\"?\n    - [ ] Ми одягаюся\n    - [ ] Ми одягається\n    - [x] Ми одягаємося\n    - [ ] Ми одягаються\n    > First person plural: одягаємося.\n\n11. \"Зазвичай\" means:\n    - [ ] always\n    - [ ] never\n    - [x] usually\n    - [ ] sometimes\n    > \"Зазвичай\" = usually.\n\n12. \"Він голиться щоранку\" — when does he shave?\n    - [x] every morning\n    - [ ] every evening\n    - [ ] once a week\n    - [ ] never\n    > \"Щоранку\" = every morning.\n\n## true-false: Routine Facts\n\n> Decide if each statement is true (Правда) or false (Міф).\n\n- [x] Reflexive verbs end in -ся or -сь.\n  > Correct! -ся after consonants, -сь after vowels.\n\n- [ ] \"Снідати\" is a reflexive verb.\n  > Incorrect! \"Снідати\" (to have breakfast) is not reflexive.\n\n- [x] \"Спочатку\" means \"first\" in a sequence.\n  > Correct! Спочатку, потім, нарешті = first, then, finally.\n\n- [ ] \"Прокидатися\" means \"to fall asleep.\"\n  > Incorrect! It means \"to wake up.\" \"Засинати\" = to fall asleep.\n\n- [x] In Ukraine, \"обід\" is traditionally the main meal.\n  > Correct! Lunch is often the biggest meal of the day.\n\n- [ ] \"Ніколи\" means \"always.\"\n  > Incorrect! \"Ніколи\" = never. \"Завжди\" = always.\n\n- [x] \"Я їду на роботу\" means I go to work by transport.\n  > Correct! \"Їхати\" = to go by vehicle.\n\n- [x] \"Щовечора\" means \"every evening.\"\n  > Correct! \"Що\" + \"вечора\" = every evening.\n\n- [ ] The reflexive ending changes based on tense.\n  > Incorrect! -ся/-сь stays the same; only the verb stem changes.\n\n- [x] \"Чистити зуби\" is not reflexive.\n  > Correct! It's \"to clean teeth\" — no -ся ending.\n\n- [ ] \"Повертатися\" means \"to leave.\"\n  > Incorrect! It means \"to return.\" \"Виходити\" = to leave.\n\n- [x] \"Раз на тиждень\" means \"once a week.\"\n  > Correct! \"Раз\" = once, \"тиждень\" = week.\n\n## group-sort: Activity Times\n\n> Sort these activities into when they typically happen.\n\n### Morning\n- прокидатися\n- вмиватися\n- одягатися\n- снідати\n- виходити з дому\n\n### Daytime\n- працювати\n- обідати\n- їхати на роботу\n\n### Evening\n- повертатися додому\n- вечеряти\n- відпочивати\n- дивитися телевізор\n- лягати спати\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| прокидатися | prɔkɪˈdɑtɪsʲɐ | to wake up | verb | — | Reflexive |\n| вставати | wstɐˈwɑtɪ | to get up | verb | — | |\n| вмиватися | wmɪˈwɑtɪsʲɐ | to wash oneself | verb | — | Reflexive |\n| чистити зуби | ˈt͡ʃɪstɪtɪ ˈzubɪ | to brush teeth | verb | — | |\n| голитися | ɦɔˈlɪtɪsʲɐ | to shave | verb | — | Reflexive |\n| одягатися | ɔdʲɐˈɦɑtɪsʲɐ | to get dressed | verb | — | Reflexive |\n| снідати | ˈsnidɐtɪ | to have breakfast | verb | — | |\n| виходити | wɪˈxɔdɪtɪ | to leave, exit | verb | — | |\n| їхати | ˈjixɐtɪ | to go (by vehicle) | verb | — | |\n| приходити | prɪˈxɔdɪtɪ | to arrive, come | verb | — | |\n| працювати | prɐt͡sʲuˈwɑtɪ | to work | verb | — | |\n| обідати | ɔˈbidɐtɪ | to have lunch | verb | — | |\n| повертатися | pɔwɛrˈtɑtɪsʲɐ | to return | verb | — | Reflexive |\n| вечеряти | wɛˈt͡ʃɛrʲɐtɪ | to have dinner | verb | — | |\n| відпочивати | widpɔˈt͡ʃɪwɑtɪ | to rest | verb | — | |\n| дивитися | dɪˈwɪtɪsʲɐ | to watch | verb | — | Reflexive form |\n| читати | t͡ʃɪˈtɑtɪ | to read | verb | — | |\n| гуляти | ɦuˈlʲɐtɪ | to walk, stroll | verb | — | |\n| лягати спати | lʲɐˈɦɑtɪ ˈspɑtɪ | to go to bed | verb | — | |\n| засинати | zɐsɪˈnɑtɪ | to fall asleep | verb | — | |\n| розпорядок | rɔzpɔˈrʲɐdɔk | schedule, routine | noun | m | |\n| звичка | ˈzwɪt͡ʃkɐ | habit | noun | f | |\n| щодня | ʃt͡ʃɔˈdnʲɐ | every day | adv | — | |\n| зазвичай | zɐˈzwɪt͡ʃɐj | usually | adv | — | |\n| спочатку | spɔˈt͡ʃɑtku | first, at first | adv | — | |\n| потім | pɔˈtim | then, after | adv | — | |\n| після того | ˈpislʲɐ ˈtɔɦɔ | after that | adv | — | |\n| нарешті | nɐˈrɛʃti | finally | adv | — | |\n| завжди | ˈzɑwʒdɪ | always | adv | — | |\n| ніколи | niˈkɔlɪ | never | adv | — | With negative verb |\n\n---\n\n# Summary\n\n> **Congratulations!**\n>\n> You can now describe your daily routine in Ukrainian:\n> - **Morning**: прокидатися, вмиватися, одягатися, снідати\n> - **Day**: їхати на роботу, працювати, обідати\n> - **Evening**: повертатися, вечеряти, відпочивати, лягати спати\n> - **Sequence**: спочатку, потім, після того, нарешті\n> - **Frequency**: щодня, завжди, зазвичай, ніколи\n\n> **Reflexive Verbs (-ся/-сь):**\n> These show actions done to oneself: я вмиваюся (I wash myself), він одягається (he dresses himself).\n\n> **Coming Next: Module 26 — Describing Things**\n>\n> In the next module, you'll learn adjectives to describe people and things:\n> - великий будинок (big house)\n> - нова книга (new book)\n> - гарна дівчина (pretty girl)\n",
-    "createdAt": "2025-12-06T10:49:20.101Z",
-    "modifiedAt": "2025-12-06T10:49:20.101Z",
+    "rawMarkdown": "---\ntitle: Transport and Travel\nsubtitle: Moving Through Space\nphase: A1.3\nduration: 60\ntransliteration: full\ntags: [vocabulary, transport, travel, instrumental, verbs]\nobjectives:\n  - Learner can name transport modes (Bus, Train, Car, Plane)\n  - Learner can use Instrumental Case for \"By Transport\" (Oroginal noun -> Noun+om)\n  - Learner can use \"To Go\" (Yihaty) vs \"To Walk\" (Yty)\n  - Learner can buy a ticket\n---\n\n# Lesson Content\n\n## warm-up\n**The Great Journey**\n\nYou are in Kyiv. You want to go to Lviv.\nIt is far (500 km). You cannot walk (`Йти`).\nYou must ride (`Їхати`).\nBut how?\nBy bus? By train? By hyperloop (not yet)?\n\nIn this module, we learn how to move.\nAnd more importantly, we touch the **Instrumental Case**.\n\"I go **by** bus.\"\nThe bus is your instrument.\n\n## presentation\n\n### Section 1: The Vehicles\n\n- **Машина** (Car).\n- **Автобус** (Bus).\n- **Поїзд** (Train).\n- **Літак** (Plane).\n- **Таксі** (Taxi).\n- **Метро** (Metro - indeclinable).\n- **Велосипед** (Bicycle).\n- **Трамвай** (Tram).\n- **Тролейбус** (Trolleybus).\n\n> 🚌 **Culture Corner: The Night Train**\n> Trains in Ukraine are a lifestyle.\n> The **Platskart** (Open dormitory) is a social experiment. You sleep with 50 strangers. You share food. You talk.\n> The **Kupe** (Coupe) is a closed room for 4.\n> The **SV** (Lux) is for 2.\n> Tea involves a metal cup holder (**Pidstakannyk**) and lots of sugar.\n\n### Section 2: Foot vs Wheel (Yty vs Yihaty)\n\nEnglish has \"To go\".\nUkrainian asks: \"How?\"\n1.  **Йти** (To walk / Go on foot).\n    - Я йду в парк. (I am walking to the park).\n2.  **Їхати** (To go by vehicle / Ride / Drive).\n    - Я їду в Київ. (I am riding to Kyiv).\n\n**Conjugation (Їхати):**\n- Я **їду** (Yidu - looks like Ydu, but soft YI).\n- Ти **їдеш**.\n- Він **їде**.\n- Ми **їдемо**.\n- Ви **їдете**.\n- Вони **їдуть**.\n\n> 💡 **Logic Check**\n> If you say \"Я йду в Київ\" (from London), you are a pilgrim walking 2000 km.\n> If you say \"Я їду в парк\" (100 meters away), you are lazy.\n\n### Section 3: The Instrumental Case (By Means Of...)\n\nHow do you travel? **By** bus.\nIn Ukrainian, we don't use a preposition (like \"By\"). We use an **Ending**.\nThis is the **Instrumental Case** (Orudnyi vidminok).\n\n**Masculine (Hard):** Add **-ом**.\n- Автобус ➡️ Автобус**ом**.\n- Поїзд ➡️ Поїзд**ом**.\n- Літак ➡️ Літак**ом**.\n- Трамвай (Soft J) ➡️ Трамва**єм** (Yem).\n\n**Feminine (-a):** Change to **-ою**.\n- Машина ➡️ Машин**ою**.\n- Ракета (Rocket) ➡️ Ракет**ою**.\n\n**Exceptions:**\n- **Метро** (Indeclinable) ➡️ Метро. \"Я їду метро\".\n- **Таксі** (Indeclinable) ➡️ Таксі.\n\n### Section 4: Buying a Ticket\n\n- **Квиток** (Ticket).\n- **На** (On/To) + Accusative (Destination).\n- \"Один квиток на Київ, будь ласка.\" (One ticket to Kyiv, please).\n- \"Один квиток на автобус.\" (One ticket for the bus).\n\n**Questions:**\n- Скільки коштує квиток? (How much costs ticket?)\n- Коли відправлення? (When is departure?)\n- Яке місце? (Which seat/place?)\n\n> 🎟️ **Deep Dive: The Place (Mistse)**\n> Your ticket says:\n> - **Вагон** (Wagon/Carriage): 5.\n> - **Місце** (Place/Seat): 23.\n> In Platskart, oddly numbered seats are usually bottom bunks (Nyz), even numbers are top bunks (Verkh).\n> Everyone wants the bottom bunk. It forces Accusative negotiations. \"Can I sit on your bunk?\"\n\n\n### Section 5: The Funicular and Unusual Transport\n\nKyiv has a **Funikuler**.\nIs it a train? Is it a lift?\nIt connects the Upper City (Mykhailivska) to the Lower City (Poshtova).\n\"Я їду фунікулером\" (I go by funicular).\n\n> 🚋 **Culture Corner: The Forest Tram (Pushcha-Vodytsia)**\n> Tram 12 in Kyiv is legendary.\n> It goes from the loud Podil district deep into the forest (Pushcha-Vodytsia).\n> It is a time machine.\n> \"Я їду трамваєм у ліс\" (I go by tram into the forest).\n> It is the cheapest romantic date in the city.\n\n### Section 6: Border Control (Kordon)\n\nTraveling abroad?\n- **Паспорт** (Passport).\n- **Кордон** (Border).\n- **Митниця** (Customs).\n- \"Яка мета вашого візиту?\" (What is the goal of your visit?)\n- \"Туризм\" (Tourism).\n\n> 🚌 **Deep Dive: The Yellow Marshrutka**\n> The **Bohdan** bus (yellow, boxy, loud) is the workhorse of Ukrainian transport.\n> It is made in Ukraine.\n> It is everywhere.\n> It shakes. It rattles. It smells of diesel.\n> But it gets you there for 15 hryvnias.\n> \"Передайте за проїзд!\" (Pass the fare!). The eternal cry of the yellow box.\n\n### Section 7: Verbs of Motion (A Glimpse)\n\nWe are learning **Йти** (Unidirectional - One way).\nThere is also **Ходити** (Multidirectional - Walking around/Regularly).\n- Я йду в магазин. (I am going to the shop now).\n- Я ходжу в магазин щодня. (I go to the shop every day).\nSame for vehicles:\n- **Їхати** (One way).\n- **Їздити** (Regularly).\n- Я їду на роботу. (Now).\n- Я їжджу на роботу на метро. (Usually).\n*Note: A1 focuses on Unidirectional (Simpler). But be aware.*\n\n\n### Section 8: The Etiquette of Travel\n\nIn Ukraine, public transport has unwritten rules.\n1.  **Give up your seat.** If you see an elderly person, a pregnant woman, or a parent with a child, you **must** stand up. Otherwise, the whole bus will shame you.\n2.  **Backpack off.** If the metro is crowded, take your backpack off and put it on the floor.\n3.  **Prepare cash.** In a Marshrutka, search for 15 hryvnias *before* you enter. Don't block the door while fishing for coins.\n4.  **The \"Stop\" Button.** Marshrutkas rarely have buttons. You are the button. Scream.\n\n> 🗣️ **Deep Dive: The \"Passing\" Chain**\n> In a packed Marshrutka, you might be far from the driver.\n> You tap the shoulder of the person in front of you.\n> You give them 20 UAH and say \"Za odnoho\" (For one person).\n> They pass it forward.\n> Eventually, change comes back. \"Zdacha z dvadtsyaty!\" (Change from twenty!).\n> It travels back to you.\n> It requires trust. And it works.\n\n## practice\n\n**Drill 1: Walk or Ride?**\n- To the kitchen? -> Йти (Walk).\n- To America? -> Їхати/Літати (Fly - but Їхати is generic transit).\n- To work (5km)? -> Їхати.\n- To the neighbor? -> Йти.\n\n**Drill 2: Instrumental Builder**\n- Bus -> Автобусом.\n- Car -> Машиною.\n- Train -> Поїздом.\n- Plane -> Літаком.\n- Tram -> Трамваєм.\n- Taxi -> Таксі.\n\n**Drill 3: The Ticket Agent**\n- Ticket to Odesa -> Квиток на Одесу.\n- Ticket to Lviv -> Квиток на Львів.\n- Ticket to London -> Квиток на Лондон.\n\n## production\n\n**Scenario: At the Train Station**\n*   **You:** Добрий день. Мені треба квиток на Харків.\n*   **Agent:** На коли? (For when?)\n*   **You:** На завтра. На вечір.\n*   **Agent:** Є поїзд о шостій (18:00) і о десятій (22:00).\n*   **You:** О шостій, будь ласка.\n*   **Agent:** Купе чи плацкарт?\n*   **You:** Купе. Скільки коштує?\n*   **Agent:** 800 гривень.\n*   **You:** Прошу. (Here you are).\n*   **Agent:** Ваш квиток. Вагон 7, місце 12.\n\n\n**Scenario: The Taxi Driver**\n*   **Driver:** Добрий день. Куди їдемо? (Where are we going?)\n*   **You:** На Хрещатик, будь ласка.\n*   **Driver:** О, там затор. Ми поїдемо через Поділ. (We will go via Podil).\n*   **You:** Добре. Це далеко?\n*   **Driver:** Ні, близько. 20 хвилин.\n*   **You:** Я поспішаю. (I am in a hurry).\n*   **Driver:** Я теж! (Me too!). (Ukrainian taxi humor).\n\n**Scenario: Traffic Jam**\n*   **Boss:** Алло? Де ти?\n*   **You:** Я їду на роботу.\n*   **Boss:** Ти йдеш чи їдеш?\n*   **You:** Я їду машиною. Тут затор (traffic jam).\n*   **Boss:** Чому ти не їдеш на метро?\n*   **You:** Я люблю комфорт.\n*   **Boss:** А я люблю пунктуальність!\n*   **You:** Вибачте. Я буду скоро (soon).\n\n> 🛣️ **Deep Dive: BlaBlaCar**\n> In Ukraine, intercity buses exist, but **BlaBlaCar** (ridesharing) is huge.\n> It is often faster and cheaper.\n> \"Я їду блаблакаром\" (I go by BlaBlaCar).\n> Yes, we decline app names too.\n> It is a great way to practice Ukrainian because the driver WILL talk to you.\n> \"Звідки ви?\" (Where are you from?), \"Що ви робите в Україні?\".\n> Prepare your answers!\n\n---\n\n# Activities\n\n## match-up: Transport Names\n\n> Match.\n\n\n| Eng | Ukr |\n|-----|-----|\n| Car | Машина |\n| Bus | Автобус |\n| Train | Поїзд |\n| Plane | Літак |\n| Tram | Трамвай |\n| Trolleybus | Тролейбус |\n| Subway | Метро |\n| Bicycle | Велосипед |\n| Ship | Корабель |\n| On foot | Пішки |\n| Suitcase | Валіза |\n| Ticket | Квиток |\n\n## group-sort: City vs World\n\n> Which transport is mostly for City (Local) vs World (Intercity)?\n\n### City (Local)\n- Метро\n- Трамвай\n- Тролейбус\n- Велосипед\n- Таксі\n- Маршрутка\n- Самокат (Scooter)\n- Пішки\n\n### World (Long Distance)\n- Літак\n- Поїзд\n- Автобус (Intercity)\n- Корабель\n- Ракета (Rocket)\n\n## fill-in: Instrumental Maker\n\n> \"Я їду...\" (I go by...)\n\n1. (Bus) ___\n   > [!answer] автобусом\n\n2. (Car) ___\n   > [!answer] машиною\n\n3. (Train) ___\n   > [!answer] поїздом\n\n4. (Metro) ___\n   > [!answer] метро\n\n5. (Plane) ___\n   > [!answer] літаком\n\n6. (Taxi) ___\n   > [!answer] таксі\n\n7. (Tram) ___\n   > [!answer] трамваєм\n\n8. (Trolleybus) ___\n   > [!answer] тролейбусом\n\n9. (Bicycle) ___\n   > [!answer] велосипедом\n\n10. (Foot) ___ (Adverb: Pishky)\n    > [!answer] пішки\n\n11. (Rocket) ___\n    > [!answer] ракетою\n\n12. (BlaBlaCar) ___\n    > [!answer] блаблакаром\n\n## quiz: Travel Logic\n\n> Choose the correct action.\n\n1. Kyiv to New York.\n   - [x] Я лечу літаком. (Flying).\n   - [ ] Я йду пішки.\n\n2. Bedroom to Kitchen.\n   - [ ] Я їду машиною.\n   - [x] Я йду пішки.\n\n3. Buying a ticket.\n   - [x] Мені треба квиток.\n   - [ ] Мені треба паспорт (Well, yes, but ticket first).\n\n4. \"Вагон\" means...\n   - [x] Carriage/Car.\n   - [ ] Wagon (Horse cart).\n\n5. Instrumental of \"Машина\" is...\n   - [x] Машиною.\n   - [ ] Машином.\n\n6. Instrumental of \"Автобус\" is...\n   - [x] Автобусом.\n   - [ ] Автобусою.\n\n7. Is \"Метро\" declinable?\n   - [ ] Yes (Метром).\n   - [x] No (Метро).\n\n8. \"Їхати\" implies...\n   - [x] Wheels/Vehicle.\n   - [ ] Legs.\n\n9. \"Йти\" implies...\n   - [x] Legs.\n   - [ ] Wheels.\n\n10. Platskart is...\n    - [x] Open dormitory train.\n    - [ ] Luxury suite.\n\n11. Ticket \"To Lviv\" uses...\n    - [x] Accusative (На Львів).\n    - [ ] Instrumental.\n\n12. Morning train is...\n    - [x] Ранковий поїзд.\n    - [ ] Нічний поїзд.\n\n## anagram: Transport Scramble\n\n> Unscramble.\n\n12. ш и н а м а\n   > [!answer] машина\n   > (Car)\n\n21. с у т о б а в\n   > [!answer] автобус\n   > (Bus)\n\n3. ї з д п о\n   > [!answer] поїзд\n   > (Train)\n\n4. т а к л і\n   > [!answer] літак\n   > (Plane)\n\n5. к с і т а\n   > [!answer] таксі\n   > (Taxi)\n\n6. т р о м е\n   > [!answer] метро\n   > (Metro)\n\n7. в а й м т р а\n   > [!answer] трамвай\n   > (Tram)\n\n8. л е й б у с т р о\n   > [!answer] тролейбус\n   > (Trolley)\n\n9. с и п е д в е л о\n   > [!answer] велосипед\n   > (Bike)\n\n10. т о к в и к\n    > [!answer] квиток\n    > (Ticket)\n\n11. г о н в а\n    > [!answer] вагон\n    > (Wagon)\n\n12. с ц е м і\n    > [!answer] місце\n    > (Seat/Place)\n\n## unjumble: Buying a Ticket\n\n> Build the dialogue.\n\n1. треба / квиток / Мені / .\n   > [!answer] Мені треба квиток.\n\n2. на / Квиток / Одесу / .\n   > [!answer] Квиток на Одесу.\n\n3. коштує / Скільки / ?\n   > [!answer] Скільки коштує?\n\n4. їду / Я / поїздом / .\n   > [!answer] Я їду поїздом.\n\n5. їдеш / Чим / ти / ?\n   > [!answer] Чим ти їдеш?\n   > (By what go you?)\n\n6. їду / машиною / Я / .\n   > [!answer] Я їду машиною.\n\n7. пішки / йду / Я / .\n   > [!answer] Я йду пішки.\n\n8. комфортний / Автобус / .\n   > [!answer] Автобус комфортний.\n\n9. швидке / Метро / .\n   > [!answer] Метро швидке.\n\n10. ваше / місце / Це / .\n    > [!answer] Це ваше місце.\n\n11. мій / Де / вагон / ?\n    > [!answer] Де мій вагон?\n\n12. щасливої / дороги / !\n    > [!answer] Щасливої дороги!\n    > (Happy road!)\n\n## fill-in: Verb Choice (Idy vs Yidy)\n\n> Choose Йду (Walk) or Їду (Ride).\n\n1. Я ___ в парк (nearby).\n   > [!answer] йду\n\n2. Я ___ в Америку (far).\n   > [!answer] їду\n\n3. Ми ___ на машині.\n   > [!answer] їдемо\n\n4. Вони ___ пішки.\n   > [!answer] йдуть\n\n5. Ти ___ на таксі.\n   > [!answer] їдеш\n\n6. Він ___ на автобусі.\n   > [!answer] їде\n\n7. Вона ___ додому (walking).\n   > [!answer] йде\n\n8. Ви ___ у Львів (train).\n   > [!answer] їдете\n\n9. Я ___ в магазин (corner shop).\n   > [!answer] йду\n\n10. Студент ___ в університет (metro).\n    > [!answer] їде\n\n11. Турист ___ в центр (walking).\n    > [!answer] йде\n\n12. Ми ___ на море.\n    > [!answer] їдемо\n\n## true-false: Transport Facts\n\n> True or False?\n\n1. \"Машиною\" means \"By car\".\n   - [x] True\n   - [ ] False\n\n2. \"Йти\" is for vehicles.\n   - [ ] True\n   - [x] False (Feet)\n\n3. Platskart is a private room.\n   - [ ] True\n   - [x] False (Dorm)\n\n4. Trains have tea service.\n   - [x] True\n   - [ ] False\n\n5. \"Метром\" is incorrect.\n   - [x] True (Метро is indeclinable)\n   - [ ] False\n\n6. \"На Київ\" uses Accusative.\n   - [x] True\n   - [ ] False\n\n7. \"Їхати\" conjugates like \"To Read\" (Chytayu).\n   - [ ] True\n   - [x] False (Yidu, Yidesh... -e conjugation)\n\n8. Trolleybus uses gas.\n   - [ ] True\n   - [x] False (Electric w/ wires)\n\n9. \"Квиток\" means Passport.\n   - [ ] True\n   - [x] False (Ticket)\n\n10. \"Місце\" means Place/Seat.\n    - [x] True\n    - [ ] False\n\n11. You can take a train to New York from Kyiv.\n    - [ ] True\n    - [x] False (Ocean problem)\n\n12. BlaBlaCar is popular.\n    - [x] True\n    - [ ] False\n\n# Summary\n\n**You are moving.**\nYou have the verb **Їхати** (To go by vehicle).\nYou have the **Instrumental Case** (By means of).\n- **-ом** for Masculine (Avtobusom).\n- **-oyu** for Feminine (Mashynoyu).\n- **Indeclinable** (Metro, Taksi).\n\n**Checklist:**\n- [ ] I can differentiate **Йти** (Walk) vs **Їхати** (Ride).\n- [ ] I can say \"By car\" (**Машиною**) and \"By train\" (**Поїздом**).\n- [ ] I can buy a ticket (\"Квиток на Київ\").\n- [ ] I know what a **Platskart** is (and maybe fear it).\n\n**Next Stop:**\nWe traveled. We arrived.\nNow let's talk about what we CAN do.\n**Module 26: Modal Verbs**. Can, Must, Want.\nUnlock the power of possibility.\n\n# Vocabulary\n\n| Word | IPA | English | Note | Audio |\n|------|-----|---------|------|-------|\n| машина | /mɑˈʃɪnɑ/ | car | | [🔊](audio_mashyna) |\n| автобус | /ɑwˈtɔbus/ | bus | | [🔊](audio_avtobus) |\n| поїзд | /ˈpɔjizd/ | train | | [🔊](audio_poizd) |\n| літак | /l⁽ʲ⁾iˈtɑk/ | plane | | [🔊](audio_litak) |\n| метро | /mɛˈtrɔ/ | metro | | [🔊](audio_metro) |\n| таксі | /tɑkˈsi/ | taxi | | [🔊](audio_taksi) |\n| трамвай | /trɑmˈvɑj/ | tram | | [🔊](audio_tramvaj) |\n| тролейбус | /trɔˈlɛjbus/ | trolleybus | | [🔊](audio_trolejbus) |\n| велосипед | /vɛlɔsɪˈpɛd/ | bicycle | | [🔊](audio_velosyped) |\n| пішки | /ˈpiʃkɪ/ | on foot | adv | [🔊](audio_pishky) |\n| йти | /jtɪ/ | to walk | | [🔊](audio_jty) |\n| їхати | /ˈjixɑtɪ/ | to ride/drive | | [🔊](audio_jikhaty) |\n| квиток | /kvɪˈtɔk/ | ticket | | [🔊](audio_kvytok) |\n| вагон | /vɑˈhɔn/ | wagon/carriage | | [🔊](audio_vahon) |\n| місце | /ˈm⁽ʲ⁾isʲt͡sʲɛ/ | place/seat | | [🔊](audio_mistse) |\n| вокзал | /vɔkˈzɑl/ | station | | [🔊](audio_vokzal) |\n| аеропорт | /ɑɛrɔˈpɔrt/ | airport | | [🔊](audio_aeroport) |\n| ціна | /t͡s⁽ʲ⁾iˈnɑ/ | price | | [🔊](audio_tsina) |\n| купе | /kuˈpɛ/ | coupe (4-bed) | | [🔊](audio_kupe) |\n| плацкарт | /plɑt͡sˈkɑrt/ | dorm car | | [🔊](audio_platskart) |\n| поїздка | /pɔˈjizdkɑ/ | trip | | [🔊](audio_poizdka) |\n| швидкий | /ʃvɪdˈkɪj/ | fast | | [🔊](audio_shvydkyj) |\n| зручний | /zrutʃˈnɪj/ | comfortable | | [🔊](audio_zruchnyj) |\n| дорога | /dɔˈrɔhɑ/ | road/way | | [🔊](audio_doroha) |\n| валіза | /vɑˈl⁽ʲ⁾izɑ/ | suitcase | | [🔊](audio_valiza) |\n",
+    "createdAt": "2025-12-08T21:22:09.891Z",
+    "modifiedAt": "2025-12-08T21:22:09.891Z",
     "version": 2
   },
   "activities": [
     {
-      "id": "act-a1-0-fillblank",
-      "type": "fill-blank",
-      "title": "Reflexive Verbs",
-      "description": "Choose the correct reflexive verb form.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Я ___ о сьомій ранку.",
-            "answer": "прокидаюся",
-            "options": [
-              "прокидаюся",
-              "прокидаєшся",
-              "прокидається",
-              "прокидаємося"
-            ]
-          },
-          {
-            "prompt": "Вона ___ перед дзеркалом.",
-            "answer": "одягається",
-            "options": [
-              "одягається",
-              "одягаюся",
-              "одягаєшся",
-              "одягаємося"
-            ]
-          },
-          {
-            "prompt": "Ми ___ о дев'ятій вечора.",
-            "answer": "повертаємося",
-            "options": [
-              "повертаємося",
-              "повертаюся",
-              "повертається",
-              "повертаються"
-            ]
-          },
-          {
-            "prompt": "Ти ___ щоранку?",
-            "answer": "вмиваєшся",
-            "options": [
-              "вмиваєшся",
-              "вмиваюся",
-              "вмивається",
-              "вмиваємося"
-            ]
-          },
-          {
-            "prompt": "Вони ___ пізно.",
-            "answer": "лягають",
-            "options": [
-              "лягають",
-              "лягаю",
-              "лягає",
-              "лягаємо"
-            ]
-          },
-          {
-            "prompt": "Він ___ щоранку.",
-            "answer": "голиться",
-            "options": [
-              "голиться",
-              "голюся",
-              "голишся",
-              "голимося"
-            ]
-          },
-          {
-            "prompt": "Я ___ зуби двічі на день.",
-            "answer": "чищу",
-            "options": [
-              "чищу",
-              "чистиш",
-              "чистить",
-              "чистимо"
-            ]
-          },
-          {
-            "prompt": "Діти ___ швидко.",
-            "answer": "засинають",
-            "options": [
-              "засинають",
-              "засинаю",
-              "засинає",
-              "засинаємо"
-            ]
-          },
-          {
-            "prompt": "Ви ___ на роботу?",
-            "answer": "їдете",
-            "options": [
-              "їдете",
-              "їду",
-              "їде",
-              "їдемо"
-            ]
-          },
-          {
-            "prompt": "Я ___ після обіду.",
-            "answer": "відпочиваю",
-            "options": [
-              "відпочиваю",
-              "відпочиваєш",
-              "відпочиває",
-              "відпочиваємо"
-            ]
-          },
-          {
-            "prompt": "Вона ___ телевізор щовечора.",
-            "answer": "дивиться",
-            "options": [
-              "дивиться",
-              "дивлюся",
-              "дивишся",
-              "дивимося"
-            ]
-          },
-          {
-            "prompt": "Ми ___ о восьмій.",
-            "answer": "снідаємо",
-            "options": [
-              "снідаємо",
-              "снідаю",
-              "снідаєш",
-              "снідають"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.101Z",
-      "modifiedAt": "2025-12-06T10:49:20.101Z"
-    },
-    {
-      "id": "act-a1-0-fillblank",
-      "type": "fill-blank",
-      "title": "Sequence Words",
-      "description": "Choose the correct sequence word.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "___ я прокидаюся, потім вмиваюся.",
-            "answer": "Спочатку",
-            "options": [
-              "Спочатку",
-              "Потім",
-              "Нарешті",
-              "Після того"
-            ]
-          },
-          {
-            "prompt": "Я снідаю, ___ йду на роботу.",
-            "answer": "потім",
-            "options": [
-              "потім",
-              "спочатку",
-              "нарешті",
-              "завжди"
-            ]
-          },
-          {
-            "prompt": "___ я лягаю спати.",
-            "answer": "Нарешті",
-            "options": [
-              "Нарешті",
-              "Спочатку",
-              "Потім",
-              "Зазвичай"
-            ]
-          },
-          {
-            "prompt": "Я ___ снідаю вранці.",
-            "answer": "завжди",
-            "options": [
-              "завжди",
-              "ніколи",
-              "нарешті",
-              "спочатку"
-            ]
-          },
-          {
-            "prompt": "___ я працюю з дев'ятої до п'ятої.",
-            "answer": "Щодня",
-            "options": [
-              "Щодня",
-              "Нарешті",
-              "Спочатку",
-              "Ніколи"
-            ]
-          },
-          {
-            "prompt": "Я ___ не запізнююся на роботу.",
-            "answer": "ніколи",
-            "options": [
-              "ніколи",
-              "завжди",
-              "щодня",
-              "потім"
-            ]
-          },
-          {
-            "prompt": "___ роботи я відпочиваю.",
-            "answer": "Після",
-            "options": [
-              "Після",
-              "Спочатку",
-              "Потім",
-              "Завжди"
-            ]
-          },
-          {
-            "prompt": "___ я прокидаюся о сьомій.",
-            "answer": "Зазвичай",
-            "options": [
-              "Зазвичай",
-              "Ніколи",
-              "Нарешті",
-              "Потім"
-            ]
-          },
-          {
-            "prompt": "Я чищу зуби ___ на день.",
-            "answer": "двічі",
-            "options": [
-              "двічі",
-              "завжди",
-              "ніколи",
-              "потім"
-            ]
-          },
-          {
-            "prompt": "___ я вмиваюся, одягаюся, а ___ снідаю.",
-            "answer": "Спочатку... потім",
-            "options": [
-              "Спочатку... потім",
-              "Потім... нарешті",
-              "Нарешті... спочатку",
-              "Завжди... ніколи"
-            ]
-          },
-          {
-            "prompt": "___ я гуляю з собакою.",
-            "answer": "Щовечора",
-            "options": [
-              "Щовечора",
-              "Нарешті",
-              "Спочатку",
-              "Ніколи"
-            ]
-          },
-          {
-            "prompt": "___ обіду я п'ю каву.",
-            "answer": "Після",
-            "options": [
-              "Після",
-              "Спочатку",
-              "Потім",
-              "Завжди"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.101Z",
-      "modifiedAt": "2025-12-06T10:49:20.101Z"
-    },
-    {
-      "id": "act-a1-0-unjumble",
-      "type": "unjumble",
-      "title": "Daily Routine Sentences",
-      "description": "Put the words in the correct order.",
-      "content": {
-        "type": "unjumble",
-        "isUnjumble": true,
-        "items": [
-          {
-            "words": [
-              "о",
-              "сьомій",
-              "прокидаюся",
-              "Я"
-            ],
-            "answer": "Я прокидаюся о сьомій.",
-            "translation": "I wake up at 7."
-          },
-          {
-            "words": [
-              "Спочатку",
-              "вмиваюся",
-              "я"
-            ],
-            "answer": "Спочатку я вмиваюся.",
-            "translation": "First I wash my face."
-          },
-          {
-            "words": [
-              "на",
-              "роботу",
-              "Я",
-              "їду"
-            ],
-            "answer": "Я їду на роботу.",
-            "translation": "I go to work."
-          },
-          {
-            "words": [
-              "о",
-              "першій",
-              "обідаю",
-              "Я"
-            ],
-            "answer": "Я обідаю о першій.",
-            "translation": "I have lunch at 1."
-          },
-          {
-            "words": [
-              "Після",
-              "роботи",
-              "повертаюся",
-              "я",
-              "додому"
-            ],
-            "answer": "Після роботи я повертаюся додому.",
-            "translation": "After work I return home."
-          },
-          {
-            "words": [
-              "спати",
-              "лягаю",
-              "Я",
-              "о",
-              "одинадцятій"
-            ],
-            "answer": "Я лягаю спати о одинадцятій.",
-            "translation": "I go to bed at 11."
-          },
-          {
-            "words": [
-              "зуби",
-              "чищу",
-              "Я",
-              "щодня"
-            ],
-            "answer": "Я чищу зуби щодня.",
-            "translation": "I brush my teeth every day."
-          },
-          {
-            "words": [
-              "Він",
-              "рано",
-              "завжди",
-              "прокидається"
-            ],
-            "answer": "Він завжди прокидається рано.",
-            "translation": "He always wakes up early."
-          },
-          {
-            "words": [
-              "снідаю",
-              "о",
-              "восьмій",
-              "Зазвичай",
-              "я"
-            ],
-            "answer": "Зазвичай я снідаю о восьмій.",
-            "translation": "Usually I have breakfast at 8."
-          },
-          {
-            "words": [
-              "Вона",
-              "дивиться",
-              "телевізор",
-              "щовечора"
-            ],
-            "answer": "Вона щовечора дивиться телевізор.",
-            "translation": "She watches TV every evening."
-          },
-          {
-            "words": [
-              "одягається",
-              "швидко",
-              "Він"
-            ],
-            "answer": "Він одягається швидко.",
-            "translation": "He gets dressed quickly."
-          },
-          {
-            "words": [
-              "Ми",
-              "о",
-              "шостій",
-              "вечеряємо"
-            ],
-            "answer": "Ми вечеряємо о шостій.",
-            "translation": "We have dinner at 6."
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.101Z",
-      "modifiedAt": "2025-12-06T10:49:20.101Z"
-    },
-    {
       "id": "act-a1-0-matchup",
       "type": "match-up",
-      "title": "Routine Activities",
-      "description": "Match each Ukrainian phrase with its meaning.",
+      "title": "Transport Names",
+      "description": "Match.",
       "content": {
         "type": "match-up",
         "pairs": [
           {
-            "left": "прокидатися",
-            "right": "to wake up"
+            "left": "Car",
+            "right": "Машина"
           },
           {
-            "left": "вмиватися",
-            "right": "to wash oneself"
+            "left": "Bus",
+            "right": "Автобус"
           },
           {
-            "left": "одягатися",
-            "right": "to get dressed"
+            "left": "Train",
+            "right": "Поїзд"
           },
           {
-            "left": "снідати",
-            "right": "to have breakfast"
+            "left": "Plane",
+            "right": "Літак"
           },
           {
-            "left": "їхати на роботу",
-            "right": "to go to work"
+            "left": "Tram",
+            "right": "Трамвай"
           },
           {
-            "left": "обідати",
-            "right": "to have lunch"
+            "left": "Trolleybus",
+            "right": "Тролейбус"
           },
           {
-            "left": "повертатися додому",
-            "right": "to return home"
+            "left": "Subway",
+            "right": "Метро"
           },
           {
-            "left": "вечеряти",
-            "right": "to have dinner"
+            "left": "Bicycle",
+            "right": "Велосипед"
           },
           {
-            "left": "відпочивати",
-            "right": "to rest"
+            "left": "Ship",
+            "right": "Корабель"
           },
           {
-            "left": "лягати спати",
-            "right": "to go to bed"
+            "left": "On foot",
+            "right": "Пішки"
           },
           {
-            "left": "чистити зуби",
-            "right": "to brush teeth"
+            "left": "Suitcase",
+            "right": "Валіза"
           },
           {
-            "left": "голитися",
-            "right": "to shave"
+            "left": "Ticket",
+            "right": "Квиток"
           }
         ],
         "shuffleRight": true
@@ -545,67 +113,46 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.101Z",
-      "modifiedAt": "2025-12-06T10:49:20.101Z"
+      "createdAt": "2025-12-08T21:22:09.891Z",
+      "modifiedAt": "2025-12-08T21:22:09.891Z"
     },
     {
-      "id": "act-a1-0-matchup",
-      "type": "match-up",
-      "title": "Time Expressions",
-      "description": "Match each time expression with its meaning.",
+      "id": "act-a1-0-groupsort",
+      "type": "group-sort",
+      "title": "City vs World",
+      "description": "Which transport is mostly for City (Local) vs World (Intercity)?",
       "content": {
-        "type": "match-up",
-        "pairs": [
+        "type": "group-sort",
+        "groups": [
           {
-            "left": "щоранку",
-            "right": "every morning"
+            "id": "city",
+            "name": "City",
+            "items": [
+              "Метро",
+              "Трамвай",
+              "Тролейбус",
+              "Велосипед",
+              "Таксі",
+              "Маршрутка",
+              "Самокат (Scooter)",
+              "Пішки"
+            ],
+            "nameUk": "Local"
           },
           {
-            "left": "щовечора",
-            "right": "every evening"
-          },
-          {
-            "left": "щодня",
-            "right": "every day"
-          },
-          {
-            "left": "двічі на день",
-            "right": "twice a day"
-          },
-          {
-            "left": "раз на тиждень",
-            "right": "once a week"
-          },
-          {
-            "left": "спочатку",
-            "right": "first"
-          },
-          {
-            "left": "потім",
-            "right": "then"
-          },
-          {
-            "left": "нарешті",
-            "right": "finally"
-          },
-          {
-            "left": "завжди",
-            "right": "always"
-          },
-          {
-            "left": "ніколи",
-            "right": "never"
-          },
-          {
-            "left": "зазвичай",
-            "right": "usually"
-          },
-          {
-            "left": "після роботи",
-            "right": "after work"
+            "id": "world",
+            "name": "World",
+            "items": [
+              "Літак",
+              "Поїзд",
+              "Автобус (Intercity)",
+              "Корабель",
+              "Ракета (Rocket)"
+            ],
+            "nameUk": "Long Distance"
           }
         ],
-        "shuffleRight": true
+        "shuffleItems": true
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -614,148 +161,195 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.101Z",
-      "modifiedAt": "2025-12-06T10:49:20.101Z"
+      "createdAt": "2025-12-08T21:22:09.891Z",
+      "modifiedAt": "2025-12-08T21:22:09.891Z"
+    },
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "Instrumental Maker",
+      "description": "\"Я їду...\" (I go by...)",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "(Bus) ___",
+            "answer": "автобусом"
+          },
+          {
+            "prompt": "(Car) ___",
+            "answer": "машиною"
+          },
+          {
+            "prompt": "(Train) ___",
+            "answer": "поїздом"
+          },
+          {
+            "prompt": "(Metro) ___",
+            "answer": "метро"
+          },
+          {
+            "prompt": "(Plane) ___",
+            "answer": "літаком"
+          },
+          {
+            "prompt": "(Taxi) ___",
+            "answer": "таксі"
+          },
+          {
+            "prompt": "(Tram) ___",
+            "answer": "трамваєм"
+          },
+          {
+            "prompt": "(Trolleybus) ___",
+            "answer": "тролейбусом"
+          },
+          {
+            "prompt": "(Bicycle) ___",
+            "answer": "велосипедом"
+          },
+          {
+            "prompt": "(Foot) ___ (Adverb: Pishky)",
+            "answer": "пішки",
+            "hints": [
+              "Adverb: Pishky"
+            ]
+          },
+          {
+            "prompt": "(Rocket) ___",
+            "answer": "ракетою"
+          },
+          {
+            "prompt": "(BlaBlaCar) ___",
+            "answer": "блаблакаром"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.891Z",
+      "modifiedAt": "2025-12-08T21:22:09.891Z"
     },
     {
       "id": "act-a1-0-quiz",
       "type": "quiz",
-      "title": "Daily Routine Knowledge",
-      "description": "Test your understanding of daily routine expressions.",
+      "title": "Travel Logic",
+      "description": "Choose the correct action.",
       "content": {
         "type": "quiz",
         "questions": [
           {
-            "question": "What does \"-ся\" at the end of a verb indicate?",
+            "question": "Kyiv to New York.",
             "options": [
-              "Future tense",
-              "Reflexive action",
-              "Past tense",
-              "Plural"
+              "Я лечу літаком. (Flying).",
+              "Я йду пішки."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Bedroom to Kitchen.",
+            "options": [
+              "Я їду машиною.",
+              "Я йду пішки."
             ],
             "correctIndex": 1,
-            "explanation": "\"-ся\" makes verbs reflexive (action to oneself)."
+            "explanation": ""
           },
           {
-            "question": "\"Я прокидаюся\" means:",
+            "question": "Buying a ticket.",
             "options": [
-              "I wake up",
-              "I go to sleep",
-              "I get dressed",
-              "I wash"
+              "Мені треба квиток.",
+              "Мені треба паспорт (Well, yes, but ticket first)."
             ],
             "correctIndex": 0,
-            "explanation": "\"Прокидатися\" = to wake up."
+            "explanation": ""
           },
           {
-            "question": "Which is the correct order?",
+            "question": "\"Вагон\" means...",
             "options": [
-              "спочатку, потім, нарешті",
-              "нарешті, потім, спочатку",
-              "потім, спочатку, нарешті",
-              "нарешті, спочатку, потім"
+              "Carriage/Car.",
+              "Wagon (Horse cart)."
             ],
             "correctIndex": 0,
-            "explanation": "First, then, finally."
+            "explanation": ""
           },
           {
-            "question": "\"Вона вмивається\" — what form is this?",
+            "question": "Instrumental of \"Машина\" is...",
             "options": [
-              "я",
-              "ти",
-              "він/вона",
-              "ми"
-            ],
-            "correctIndex": 2,
-            "explanation": "Third person singular (she)."
-          },
-          {
-            "question": "\"Щодня\" means:",
-            "options": [
-              "sometimes",
-              "never",
-              "every day",
-              "usually"
-            ],
-            "correctIndex": 2,
-            "explanation": "\"Що\" + \"дня\" = every day."
-          },
-          {
-            "question": "Which verb is NOT reflexive?",
-            "options": [
-              "прокидатися",
-              "вмиватися",
-              "снідати",
-              "одягатися"
-            ],
-            "correctIndex": 2,
-            "explanation": "\"Снідати\" (to have breakfast) is not reflexive."
-          },
-          {
-            "question": "\"Я лягаю спати\" means:",
-            "options": [
-              "I wake up",
-              "I fall asleep",
-              "I go to bed",
-              "I rest"
-            ],
-            "correctIndex": 2,
-            "explanation": "\"Лягати спати\" = to go to bed."
-          },
-          {
-            "question": "What's \"after work\" in Ukrainian?",
-            "options": [
-              "після роботи",
-              "перед роботою",
-              "на роботі",
-              "до роботи"
+              "Машиною.",
+              "Машином."
             ],
             "correctIndex": 0,
-            "explanation": "\"Після\" + genitive = after."
+            "explanation": ""
           },
           {
-            "question": "\"Двічі на день\" means:",
+            "question": "Instrumental of \"Автобус\" is...",
             "options": [
-              "once a day",
-              "twice a day",
-              "every day",
-              "once a week"
+              "Автобусом.",
+              "Автобусою."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Is \"Метро\" declinable?",
+            "options": [
+              "Yes (Метром).",
+              "No (Метро)."
             ],
             "correctIndex": 1,
-            "explanation": "\"Двічі\" = twice."
+            "explanation": ""
           },
           {
-            "question": "Which is correct for \"we get dressed\"?",
+            "question": "\"Їхати\" implies...",
             "options": [
-              "Ми одягаюся",
-              "Ми одягається",
-              "Ми одягаємося",
-              "Ми одягаються"
-            ],
-            "correctIndex": 2,
-            "explanation": "First person plural: одягаємося."
-          },
-          {
-            "question": "\"Зазвичай\" means:",
-            "options": [
-              "always",
-              "never",
-              "usually",
-              "sometimes"
-            ],
-            "correctIndex": 2,
-            "explanation": "\"Зазвичай\" = usually."
-          },
-          {
-            "question": "\"Він голиться щоранку\" — when does he shave?",
-            "options": [
-              "every morning",
-              "every evening",
-              "once a week",
-              "never"
+              "Wheels/Vehicle.",
+              "Legs."
             ],
             "correctIndex": 0,
-            "explanation": "\"Щоранку\" = every morning."
+            "explanation": ""
+          },
+          {
+            "question": "\"Йти\" implies...",
+            "options": [
+              "Legs.",
+              "Wheels."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Platskart is...",
+            "options": [
+              "Open dormitory train.",
+              "Luxury suite."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Ticket \"To Lviv\" uses...",
+            "options": [
+              "Accusative (На Львів).",
+              "Instrumental."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Morning train is...",
+            "options": [
+              "Ранковий поїзд.",
+              "Нічний поїзд."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
           }
         ],
         "shuffleQuestions": true,
@@ -769,76 +363,163 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.101Z",
-      "modifiedAt": "2025-12-06T10:49:20.101Z"
+      "createdAt": "2025-12-08T21:22:09.891Z",
+      "modifiedAt": "2025-12-08T21:22:09.891Z"
     },
     {
-      "id": "act-a1-0-truefalse",
-      "type": "true-false",
-      "title": "Routine Facts",
-      "description": "Decide if each statement is true (Правда) or false (Міф).",
+      "id": "act-a1-0-anagram",
+      "type": "anagram",
+      "title": "Transport Scramble",
+      "description": "Unscramble.",
       "content": {
-        "type": "true-false",
-        "statements": [
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
           {
-            "statement": "Reflexive verbs end in -ся or -сь.",
-            "isTrue": true,
-            "explanation": "Correct! -ся after consonants, -сь after vowels."
+            "letters": [
+              "ш",
+              "и",
+              "н",
+              "а",
+              "м",
+              "а"
+            ],
+            "answer": "машина",
+            "translation": "Car"
           },
           {
-            "statement": "\"Снідати\" is a reflexive verb.",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Снідати\" (to have breakfast) is not reflexive."
+            "letters": [
+              "с",
+              "у",
+              "т",
+              "о",
+              "б",
+              "а",
+              "в"
+            ],
+            "answer": "автобус",
+            "translation": "Bus"
           },
           {
-            "statement": "\"Спочатку\" means \"first\" in a sequence.",
-            "isTrue": true,
-            "explanation": "Correct! Спочатку, потім, нарешті = first, then, finally."
+            "letters": [
+              "ї",
+              "з",
+              "д",
+              "п",
+              "о"
+            ],
+            "answer": "поїзд",
+            "translation": "Train"
           },
           {
-            "statement": "\"Прокидатися\" means \"to fall asleep.\"",
-            "isTrue": false,
-            "explanation": "Incorrect! It means \"to wake up.\" \"Засинати\" = to fall asleep."
+            "letters": [
+              "т",
+              "а",
+              "к",
+              "л",
+              "і"
+            ],
+            "answer": "літак",
+            "translation": "Plane"
           },
           {
-            "statement": "In Ukraine, \"обід\" is traditionally the main meal.",
-            "isTrue": true,
-            "explanation": "Correct! Lunch is often the biggest meal of the day."
+            "letters": [
+              "к",
+              "с",
+              "і",
+              "т",
+              "а"
+            ],
+            "answer": "таксі",
+            "translation": "Taxi"
           },
           {
-            "statement": "\"Ніколи\" means \"always.\"",
-            "isTrue": false,
-            "explanation": "Incorrect! \"Ніколи\" = never. \"Завжди\" = always."
+            "letters": [
+              "т",
+              "р",
+              "о",
+              "м",
+              "е"
+            ],
+            "answer": "метро",
+            "translation": "Metro"
           },
           {
-            "statement": "\"Я їду на роботу\" means I go to work by transport.",
-            "isTrue": true,
-            "explanation": "Correct! \"Їхати\" = to go by vehicle."
+            "letters": [
+              "в",
+              "а",
+              "й",
+              "м",
+              "т",
+              "р",
+              "а"
+            ],
+            "answer": "трамвай",
+            "translation": "Tram"
           },
           {
-            "statement": "\"Щовечора\" means \"every evening.\"",
-            "isTrue": true,
-            "explanation": "Correct! \"Що\" + \"вечора\" = every evening."
+            "letters": [
+              "л",
+              "е",
+              "й",
+              "б",
+              "у",
+              "с",
+              "т",
+              "р",
+              "о"
+            ],
+            "answer": "тролейбус",
+            "translation": "Trolley"
           },
           {
-            "statement": "The reflexive ending changes based on tense.",
-            "isTrue": false,
-            "explanation": "Incorrect! -ся/-сь stays the same; only the verb stem changes."
+            "letters": [
+              "с",
+              "и",
+              "п",
+              "е",
+              "д",
+              "в",
+              "е",
+              "л",
+              "о"
+            ],
+            "answer": "велосипед",
+            "translation": "Bike"
           },
           {
-            "statement": "\"Чистити зуби\" is not reflexive.",
-            "isTrue": true,
-            "explanation": "Correct! It's \"to clean teeth\" — no -ся ending."
+            "letters": [
+              "т",
+              "о",
+              "к",
+              "в",
+              "и",
+              "к"
+            ],
+            "answer": "квиток",
+            "translation": "Ticket"
           },
           {
-            "statement": "\"Повертатися\" means \"to leave.\"",
-            "isTrue": false,
-            "explanation": "Incorrect! It means \"to return.\" \"Виходити\" = to leave."
+            "letters": [
+              "г",
+              "о",
+              "н",
+              "в",
+              "а"
+            ],
+            "answer": "вагон",
+            "translation": "Wagon"
           },
           {
-            "statement": "\"Раз на тиждень\" means \"once a week.\"",
-            "isTrue": true,
-            "explanation": "Correct! \"Раз\" = once, \"тиждень\" = week."
+            "letters": [
+              "с",
+              "ц",
+              "е",
+              "м",
+              "і"
+            ],
+            "answer": "місце",
+            "translation": "Seat/Place"
           }
         ]
       },
@@ -849,50 +530,125 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.101Z",
-      "modifiedAt": "2025-12-06T10:49:20.101Z"
+      "createdAt": "2025-12-08T21:22:09.891Z",
+      "modifiedAt": "2025-12-08T21:22:09.891Z"
     },
     {
-      "id": "act-a1-0-groupsort",
-      "type": "group-sort",
-      "title": "Activity Times",
-      "description": "Sort these activities into when they typically happen.",
+      "id": "act-a1-0-unjumble",
+      "type": "unjumble",
+      "title": "Buying a Ticket",
+      "description": "Build the dialogue.",
       "content": {
-        "type": "group-sort",
-        "groups": [
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
           {
-            "id": "morning",
-            "name": "Morning",
-            "items": [
-              "прокидатися",
-              "вмиватися",
-              "одягатися",
-              "снідати",
-              "виходити з дому"
-            ]
+            "words": [
+              "треба",
+              "квиток",
+              "Мені",
+              "."
+            ],
+            "answer": "Мені треба квиток."
           },
           {
-            "id": "daytime",
-            "name": "Daytime",
-            "items": [
-              "працювати",
-              "обідати",
-              "їхати на роботу"
-            ]
+            "words": [
+              "на",
+              "Квиток",
+              "Одесу",
+              "."
+            ],
+            "answer": "Квиток на Одесу."
           },
           {
-            "id": "evening",
-            "name": "Evening",
-            "items": [
-              "повертатися додому",
-              "вечеряти",
-              "відпочивати",
-              "дивитися телевізор",
-              "лягати спати"
-            ]
+            "words": [
+              "коштує",
+              "Скільки",
+              "?"
+            ],
+            "answer": "Скільки коштує?"
+          },
+          {
+            "words": [
+              "їду",
+              "Я",
+              "поїздом",
+              "."
+            ],
+            "answer": "Я їду поїздом."
+          },
+          {
+            "words": [
+              "їдеш",
+              "Чим",
+              "ти",
+              "?"
+            ],
+            "answer": "Чим ти їдеш?",
+            "translation": "By what go you?"
+          },
+          {
+            "words": [
+              "їду",
+              "машиною",
+              "Я",
+              "."
+            ],
+            "answer": "Я їду машиною."
+          },
+          {
+            "words": [
+              "пішки",
+              "йду",
+              "Я",
+              "."
+            ],
+            "answer": "Я йду пішки."
+          },
+          {
+            "words": [
+              "комфортний",
+              "Автобус",
+              "."
+            ],
+            "answer": "Автобус комфортний."
+          },
+          {
+            "words": [
+              "швидке",
+              "Метро",
+              "."
+            ],
+            "answer": "Метро швидке."
+          },
+          {
+            "words": [
+              "ваше",
+              "місце",
+              "Це",
+              "."
+            ],
+            "answer": "Це ваше місце."
+          },
+          {
+            "words": [
+              "мій",
+              "Де",
+              "вагон",
+              "?"
+            ],
+            "answer": "Де мій вагон?"
+          },
+          {
+            "words": [
+              "щасливої",
+              "дороги",
+              "!"
+            ],
+            "answer": "Щасливої дороги!",
+            "translation": "Happy road!"
           }
-        ],
-        "shuffleItems": true
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -901,295 +657,374 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.101Z",
-      "modifiedAt": "2025-12-06T10:49:20.101Z"
+      "createdAt": "2025-12-08T21:22:09.891Z",
+      "modifiedAt": "2025-12-08T21:22:09.891Z"
+    },
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "Verb Choice (Idy vs Yidy)",
+      "description": "Choose Йду (Walk) or Їду (Ride).",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Я ___ в парк (nearby).",
+            "answer": "йду"
+          },
+          {
+            "prompt": "Я ___ в Америку (far).",
+            "answer": "їду"
+          },
+          {
+            "prompt": "Ми ___ на машині.",
+            "answer": "їдемо"
+          },
+          {
+            "prompt": "Вони ___ пішки.",
+            "answer": "йдуть"
+          },
+          {
+            "prompt": "Ти ___ на таксі.",
+            "answer": "їдеш"
+          },
+          {
+            "prompt": "Він ___ на автобусі.",
+            "answer": "їде"
+          },
+          {
+            "prompt": "Вона ___ додому (walking).",
+            "answer": "йде"
+          },
+          {
+            "prompt": "Ви ___ у Львів (train).",
+            "answer": "їдете"
+          },
+          {
+            "prompt": "Я ___ в магазин (corner shop).",
+            "answer": "йду"
+          },
+          {
+            "prompt": "Студент ___ в університет (metro).",
+            "answer": "їде"
+          },
+          {
+            "prompt": "Турист ___ в центр (walking).",
+            "answer": "йде"
+          },
+          {
+            "prompt": "Ми ___ на море.",
+            "answer": "їдемо"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.891Z",
+      "modifiedAt": "2025-12-08T21:22:09.891Z"
+    },
+    {
+      "id": "act-a1-0-truefalse",
+      "type": "true-false",
+      "title": "Transport Facts",
+      "description": "True or False?",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "I can differentiate **Йти** (Walk) vs **Їхати** (Ride).",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "I can say \"By car\" (**Машиною**) and \"By train\" (**Поїздом**).",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "I can buy a ticket (\"Квиток на Київ\").",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "I know what a **Platskart** is (and maybe fear it).",
+            "isTrue": false,
+            "explanation": ""
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.891Z",
+      "modifiedAt": "2025-12-08T21:22:09.891Z"
     }
   ],
   "vocabulary": {
     "moduleId": "mod-uk-A1-25",
     "level": "A1",
     "phase": "A1.3",
-    "wordCount": 30,
-    "newWordCount": 30,
+    "wordCount": 25,
+    "newWordCount": 25,
     "reviewWordCount": 0,
-    "transliterationMode": "none",
+    "transliterationMode": "full",
     "words": [
       {
-        "id": "v-prokydatysya-0-0",
-        "uk": "прокидатися",
-        "en": "to wake up",
-        "pos": "verb",
-        "ipa": "prɔkɪˈdɑtɪsʲɐ",
-        "note": "Reflexive",
+        "id": "v-mashyna-0-0",
+        "uk": "машина",
+        "en": "car",
+        "pos": "noun",
+        "ipa": "/mɑˈʃɪnɑ/",
+        "note": "[🔊](audio_mashyna)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-vstavaty-0-1",
-        "uk": "вставати",
-        "en": "to get up",
-        "pos": "verb",
-        "ipa": "wstɐˈwɑtɪ",
+        "id": "v-avtobus-0-1",
+        "uk": "автобус",
+        "en": "bus",
+        "pos": "noun",
+        "ipa": "/ɑwˈtɔbus/",
+        "note": "[🔊](audio_avtobus)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-vmyvatysya-0-2",
-        "uk": "вмиватися",
-        "en": "to wash oneself",
-        "pos": "verb",
-        "ipa": "wmɪˈwɑtɪsʲɐ",
-        "note": "Reflexive",
+        "id": "v-poyizd-0-2",
+        "uk": "поїзд",
+        "en": "train",
+        "pos": "noun",
+        "ipa": "/ˈpɔjizd/",
+        "note": "[🔊](audio_poizd)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-chystyty-zuby-0-3",
-        "uk": "чистити зуби",
-        "en": "to brush teeth",
-        "pos": "verb",
-        "ipa": "ˈt͡ʃɪstɪtɪ ˈzubɪ",
+        "id": "v-litak-0-3",
+        "uk": "літак",
+        "en": "plane",
+        "pos": "noun",
+        "ipa": "/l⁽ʲ⁾iˈtɑk/",
+        "note": "[🔊](audio_litak)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-holytysya-0-4",
-        "uk": "голитися",
-        "en": "to shave",
-        "pos": "verb",
-        "ipa": "ɦɔˈlɪtɪsʲɐ",
-        "note": "Reflexive",
+        "id": "v-metro-0-4",
+        "uk": "метро",
+        "en": "metro",
+        "pos": "noun",
+        "ipa": "/mɛˈtrɔ/",
+        "note": "[🔊](audio_metro)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-odyahatysya-0-5",
-        "uk": "одягатися",
-        "en": "to get dressed",
-        "pos": "verb",
-        "ipa": "ɔdʲɐˈɦɑtɪsʲɐ",
-        "note": "Reflexive",
+        "id": "v-taksi-0-5",
+        "uk": "таксі",
+        "en": "taxi",
+        "pos": "noun",
+        "ipa": "/tɑkˈsi/",
+        "note": "[🔊](audio_taksi)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-snidaty-0-6",
-        "uk": "снідати",
-        "en": "to have breakfast",
-        "pos": "verb",
-        "ipa": "ˈsnidɐtɪ",
+        "id": "v-tramvay-0-6",
+        "uk": "трамвай",
+        "en": "tram",
+        "pos": "noun",
+        "ipa": "/trɑmˈvɑj/",
+        "note": "[🔊](audio_tramvaj)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-vykhodyty-0-7",
-        "uk": "виходити",
-        "en": "to leave, exit",
-        "pos": "verb",
-        "ipa": "wɪˈxɔdɪtɪ",
+        "id": "v-troleybus-0-7",
+        "uk": "тролейбус",
+        "en": "trolleybus",
+        "pos": "noun",
+        "ipa": "/trɔˈlɛjbus/",
+        "note": "[🔊](audio_trolejbus)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-yikhaty-0-8",
+        "id": "v-velosyped-0-8",
+        "uk": "велосипед",
+        "en": "bicycle",
+        "pos": "noun",
+        "ipa": "/vɛlɔsɪˈpɛd/",
+        "note": "[🔊](audio_velosyped)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pishky-0-9",
+        "uk": "пішки",
+        "en": "on foot",
+        "pos": "adv",
+        "ipa": "/ˈpiʃkɪ/",
+        "note": "[🔊](audio_pishky)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-yty-0-10",
+        "uk": "йти",
+        "en": "to walk",
+        "pos": "noun",
+        "ipa": "/jtɪ/",
+        "note": "[🔊](audio_jty)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-yikhaty-0-11",
         "uk": "їхати",
-        "en": "to go (by vehicle)",
-        "pos": "verb",
-        "ipa": "ˈjixɐtɪ",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-prykhodyty-0-9",
-        "uk": "приходити",
-        "en": "to arrive, come",
-        "pos": "verb",
-        "ipa": "prɪˈxɔdɪtɪ",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-pratsyuvaty-0-10",
-        "uk": "працювати",
-        "en": "to work",
-        "pos": "verb",
-        "ipa": "prɐt͡sʲuˈwɑtɪ",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-obidaty-0-11",
-        "uk": "обідати",
-        "en": "to have lunch",
-        "pos": "verb",
-        "ipa": "ɔˈbidɐtɪ",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-povertatysya-0-12",
-        "uk": "повертатися",
-        "en": "to return",
-        "pos": "verb",
-        "ipa": "pɔwɛrˈtɑtɪsʲɐ",
-        "note": "Reflexive",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-vecheryaty-0-13",
-        "uk": "вечеряти",
-        "en": "to have dinner",
-        "pos": "verb",
-        "ipa": "wɛˈt͡ʃɛrʲɐtɪ",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-vidpochyvaty-0-14",
-        "uk": "відпочивати",
-        "en": "to rest",
-        "pos": "verb",
-        "ipa": "widpɔˈt͡ʃɪwɑtɪ",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-dyvytysya-0-15",
-        "uk": "дивитися",
-        "en": "to watch",
-        "pos": "verb",
-        "ipa": "dɪˈwɪtɪsʲɐ",
-        "note": "Reflexive form",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-chytaty-0-16",
-        "uk": "читати",
-        "en": "to read",
-        "pos": "verb",
-        "ipa": "t͡ʃɪˈtɑtɪ",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-hulyaty-0-17",
-        "uk": "гуляти",
-        "en": "to walk, stroll",
-        "pos": "verb",
-        "ipa": "ɦuˈlʲɐtɪ",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-lyahaty-spaty-0-18",
-        "uk": "лягати спати",
-        "en": "to go to bed",
-        "pos": "verb",
-        "ipa": "lʲɐˈɦɑtɪ ˈspɑtɪ",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-zasynaty-0-19",
-        "uk": "засинати",
-        "en": "to fall asleep",
-        "pos": "verb",
-        "ipa": "zɐsɪˈnɑtɪ",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-rozporyadok-0-20",
-        "uk": "розпорядок",
-        "en": "schedule, routine",
+        "en": "to ride/drive",
         "pos": "noun",
-        "ipa": "rɔzpɔˈrʲɐdɔk",
-        "gender": "m",
+        "ipa": "/ˈjixɑtɪ/",
+        "note": "[🔊](audio_jikhaty)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-zvychka-0-21",
-        "uk": "звичка",
-        "en": "habit",
+        "id": "v-kvytok-0-12",
+        "uk": "квиток",
+        "en": "ticket",
         "pos": "noun",
-        "ipa": "ˈzwɪt͡ʃkɐ",
-        "gender": "f",
+        "ipa": "/kvɪˈtɔk/",
+        "note": "[🔊](audio_kvytok)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-shchodnya-0-22",
-        "uk": "щодня",
-        "en": "every day",
-        "pos": "adv",
-        "ipa": "ʃt͡ʃɔˈdnʲɐ",
+        "id": "v-vahon-0-13",
+        "uk": "вагон",
+        "en": "wagon/carriage",
+        "pos": "noun",
+        "ipa": "/vɑˈhɔn/",
+        "note": "[🔊](audio_vahon)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-zazvychay-0-23",
-        "uk": "зазвичай",
-        "en": "usually",
-        "pos": "adv",
-        "ipa": "zɐˈzwɪt͡ʃɐj",
+        "id": "v-mistse-0-14",
+        "uk": "місце",
+        "en": "place/seat",
+        "pos": "noun",
+        "ipa": "/ˈm⁽ʲ⁾isʲt͡sʲɛ/",
+        "note": "[🔊](audio_mistse)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-spochatku-0-24",
-        "uk": "спочатку",
-        "en": "first, at first",
-        "pos": "adv",
-        "ipa": "spɔˈt͡ʃɑtku",
+        "id": "v-vokzal-0-15",
+        "uk": "вокзал",
+        "en": "station",
+        "pos": "noun",
+        "ipa": "/vɔkˈzɑl/",
+        "note": "[🔊](audio_vokzal)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-potim-0-25",
-        "uk": "потім",
-        "en": "then, after",
-        "pos": "adv",
-        "ipa": "pɔˈtim",
+        "id": "v-aeroport-0-16",
+        "uk": "аеропорт",
+        "en": "airport",
+        "pos": "noun",
+        "ipa": "/ɑɛrɔˈpɔrt/",
+        "note": "[🔊](audio_aeroport)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-pislya-toho-0-26",
-        "uk": "після того",
-        "en": "after that",
-        "pos": "adv",
-        "ipa": "ˈpislʲɐ ˈtɔɦɔ",
+        "id": "v-tsina-0-17",
+        "uk": "ціна",
+        "en": "price",
+        "pos": "noun",
+        "ipa": "/t͡s⁽ʲ⁾iˈnɑ/",
+        "note": "[🔊](audio_tsina)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-nareshti-0-27",
-        "uk": "нарешті",
-        "en": "finally",
-        "pos": "adv",
-        "ipa": "nɐˈrɛʃti",
+        "id": "v-kupe-0-18",
+        "uk": "купе",
+        "en": "coupe (4-bed)",
+        "pos": "noun",
+        "ipa": "/kuˈpɛ/",
+        "note": "[🔊](audio_kupe)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-zavzhdy-0-28",
-        "uk": "завжди",
-        "en": "always",
-        "pos": "adv",
-        "ipa": "ˈzɑwʒdɪ",
+        "id": "v-platskart-0-19",
+        "uk": "плацкарт",
+        "en": "dorm car",
+        "pos": "noun",
+        "ipa": "/plɑt͡sˈkɑrt/",
+        "note": "[🔊](audio_platskart)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-nikoly-0-29",
-        "uk": "ніколи",
-        "en": "never",
-        "pos": "adv",
-        "ipa": "niˈkɔlɪ",
-        "note": "With negative verb",
+        "id": "v-poyizdka-0-20",
+        "uk": "поїздка",
+        "en": "trip",
+        "pos": "noun",
+        "ipa": "/pɔˈjizdkɑ/",
+        "note": "[🔊](audio_poizdka)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-shvydkyy-0-21",
+        "uk": "швидкий",
+        "en": "fast",
+        "pos": "noun",
+        "ipa": "/ʃvɪdˈkɪj/",
+        "note": "[🔊](audio_shvydkyj)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-zruchnyy-0-22",
+        "uk": "зручний",
+        "en": "comfortable",
+        "pos": "noun",
+        "ipa": "/zrutʃˈnɪj/",
+        "note": "[🔊](audio_zruchnyj)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-doroha-0-23",
+        "uk": "дорога",
+        "en": "road/way",
+        "pos": "noun",
+        "ipa": "/dɔˈrɔhɑ/",
+        "note": "[🔊](audio_doroha)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-valiza-0-24",
+        "uk": "валіза",
+        "en": "suitcase",
+        "pos": "noun",
+        "ipa": "/vɑˈl⁽ʲ⁾izɑ/",
+        "note": "[🔊](audio_valiza)",
         "isNew": true,
         "firstModule": 0
       }

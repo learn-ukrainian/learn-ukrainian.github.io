@@ -14,188 +14,253 @@
     "moduleType": "grammar",
     "immersionLevel": 0.3,
     "title": "The Cyrillic Code II",
-    "subtitle": "Unique Letters, Soft Sign, and the Italic Warning",
-    "description": "Learn remaining Cyrillic letters unique to Ukrainian",
+    "subtitle": "The Aliens, The Hissers, and The Soft Sign",
+    "description": "Learner can recognize and pronounce the 14 \"Unique\" Ukrainian letters",
     "objectives": [
-      "Learn remaining Cyrillic letters unique to Ukrainian",
-      "Understand iotated vowels (Є, Ї, Ю, Я)",
-      "Recognize the soft sign (Ь) and its function",
-      "Be aware of italic letter differences"
+      "Learner can recognize and pronounce the 14 \"Unique\" Ukrainian letters",
+      "Learner can pronounce the \"Hissing\" consonants (Ж, Ш, Щ, Ч, Ц)",
+      "Learner can pronounce the \"Iotated\" vowels (Є, Ї, Ю, Я)",
+      "Learner can distinguish Г (H) from Ґ (G)",
+      "Learner can recognize standard Italic forms (m, n, u, g)"
     ],
-    "grammarFocus": [
-      "Letter recognition",
-      "Sound-symbol correspondence",
-      "Soft sign function"
-    ],
+    "grammarFocus": [],
     "tags": [
       "alphabet",
-      "cyrillic",
-      "phonetics",
-      "reading"
+      "reading",
+      "phonetics"
     ],
-    "totalDuration": 45,
+    "totalDuration": 60,
     "transliterationMode": "full",
     "sections": [
       {
-        "id": "section-intro",
+        "id": "section-intro-0",
         "name": "Вступ",
         "nameEn": "Introduction",
         "type": "intro",
-        "content": "## warm-up\n\n### Congratulations - You're Halfway There!\n\nIn Module 01, you learned 19 letters. Today we complete the Ukrainian alphabet with the remaining 14 letters. By the end of this lesson, you'll be able to read ANY Ukrainian word!\n\n> 💡 **Did You Know?**\n>\n> Ukrainian has 33 letters - one more than Russian (which has 32). The extra letter is **Ґ** - a sound that was banned during Soviet times but has been restored in independent Ukraine!\n\n### What's Left to Learn?\n\nWe have four groups of letters remaining:\n\n| Group | Letters | Description |\n|-------|---------|-------------|\n| **Unique Sounds** | Г, Ґ, Ж, Ш, Щ, Ч, Ц | Sounds not in English |\n| **Iotated Vowels** | Є, Ї, Ю, Я | Vowels with a \"y\" prefix |\n| **Hard I** | И | Between /i/ and /ɪ/ |\n| **Soft Sign** | Ь | Makes previous consonant soft |\n\nLet's crack the rest of the code!\n\n## presentation\n\n### Unique Ukrainian Sounds\n\nThese letters represent sounds that don't have exact English equivalents, but you'll pick them up quickly!\n\n| Letter | Sound | How to Say It | Example |\n|--------|-------|---------------|---------|\n| **Г г** | /ɦ/ | breathy H (like sighing) | **г**арно (harno) - good/nice |\n| **Ґ ґ** | /g/ | hard G like \"**g**o\" | **ґ**анок (ganok) - porch |\n| **Ж ж** | /ʒ/ | like \"mea**s**ure\" | **ж**урнал (zhurnal) - magazine |\n| **Ш ш** | /ʃ/ | like \"**sh**oe\" | **ш**кола (shkola) - school |\n| **Щ щ** | /ʃtʃ/ | \"sh\" + \"ch\" together | **щ**о (shcho) - what |\n| **Ч ч** | /tʃ/ | like \"**ch**urch\" | **ч**ай (chai) - tea |\n| **Ц ц** | /ts/ | like \"ca**ts**\" | **ц**е (tse) - this |\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Ukrainian Г is just like Russian Г\"\n> **Fact:** Ukrainian Г is a soft, breathy /ɦ/ sound, while Russian Г is a hard /g/. The hard G sound in Ukrainian uses the special letter **Ґ** - one of Ukraine's unique letters that was suppressed during Soviet rule!\n\n### The \"Hard I\": И\n\nThis vowel sits between English \"i\" in \"bit\" and \"ee\" in \"beet\":\n\n| Letter | Sound | Example |\n|--------|-------|---------|\n| **И и** | /ɪ/ | like \"b**i**t\" (short) | в**и**бачте (vybachte) - excuse me |\n\n> ⚡ **Pro Tip**\n>\n> Think of **И** as the \"hard\" version of **І**:\n> - **І** = clear \"ee\" (machine)\n> - **И** = shorter, harder \"i\" (bit)\n\n### Iotated Vowels: The \"Y\" Family\n\nThese vowels start with a /j/ sound (like English \"y\") before the vowel:\n\n| Letter | Sound | Breakdown | Example |\n|--------|-------|-----------|---------|\n| **Є є** | /jɛ/ | \"y\" + \"e\" | **Є**вропа (Yevropa) - Europe |\n| **Ї ї** | /ji/ | \"y\" + \"ee\" | **ї**сти (yisty) - to eat |\n| **Ю ю** | /ju/ | \"y\" + \"oo\" | **ю**рист (yurist) - lawyer |\n| **Я я** | /ja/ | \"y\" + \"a\" | **я** (ya) - I |\n\n> 💡 **Did You Know?**\n>\n> The letter **Ї** exists ONLY in Ukrainian - no other Slavic language has it! It's used in words like Україна (Ukraina) and їсти (yisty - to eat). This letter is a symbol of Ukrainian linguistic uniqueness!\n\n### The Soft Sign: Ь\n\nThe soft sign doesn't make a sound itself. Instead, it makes the consonant before it \"soft\" (palatalized):\n\n| Without Ь | With Ь | Difference |\n|-----------|--------|------------|\n| кон (kon) | конь (kon') | horse (soft n) |\n| мат (mat) | мать → мати (maty) | mother (historical) |\n\n> 🎯 **Fun Fact**\n>\n> The soft sign **Ь** is like a \"silent softener.\" When you see it after a consonant, touch your tongue to the roof of your mouth as you say the consonant - that's palatalization!\n\n### ⚠️ ITALIC WARNING: Letters That Change Shape!\n\nWhen Ukrainian text is in *italics*, some letters look completely different! This catches many learners by surprise:\n\n| Print | Italic | Looks Like | Watch Out! |\n|-------|--------|------------|------------|\n| **т** | *т* | m | Don't confuse with М! |\n| **п** | *п* | n | Don't confuse with Н! |\n| **д** | *д* | g | Completely different! |\n| **и** | *и* | u | Don't confuse with У! |\n| **л** | *л* | hook/л | Rounded at bottom |\n| **г** | *г* | ∂ | Like partial delta |\n\n> 🎬 **Pop Culture Moment: The Witcher**\n>\n> \"Відьмак\" (The Witcher) in italic would be \"*Відьмак*\" - notice how the letters change shape! When you see Ukrainian game menus or film credits in italics, remember this warning!\n\n### Let's Practice: Full Alphabet Reading\n\nNow you can read ANY Ukrainian word! Try these common phrases:\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| так | tak | yes |\n| ні | ni | no |\n| добре | dobre | good/okay |\n| дякую | dyakuyu | thank you |\n| будь ласка | bud' laska | please |\n| привіт | pryvit | hello (informal) |\n| до побачення | do pobachennya | goodbye |\n| вибачте | vybachte | excuse me |\n| прошу | proshu | you're welcome/please |\n| що | shcho | what |\n| як | yak | how |\n| де | de | where |\n| хто | khto | who |\n| ласкаво просимо | laskavo prosymo | welcome |\n\n> 🌍 **Real World**\n>\n> These are the first words you'll hear and need in Ukraine! \"Дякую\" (thank you) and \"Будь ласка\" (please) will get you far in any interaction.\n\n### The Complete Ukrainian Alphabet\n\nHere's your complete reference - all 33 letters!\n\n| А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я |\n\n> 📜 **History Bite**\n>\n> Ukrainian was once called \"Little Russian\" by imperial powers who wanted to suppress it. The word \"українська\" (Ukrainian) and the distinct alphabet are symbols of national identity and survival through centuries of oppression.\n\n## practice\n\n### Exercise 1: New Letter Sounds\n\nMatch the sound to the letter:\n\n1. Which letter sounds like \"sh\" in \"shoe\"?\n   > [!answer] Ш\n\n2. Which letter sounds like \"ch\" in \"church\"?\n   > [!answer] Ч\n\n3. Which letter sounds like \"y\" + \"a\" together?\n   > [!answer] Я\n\n4. Which letter is the soft sign?\n   > [!answer] Ь\n\n5. Which letter is unique to Ukrainian?\n   > [!answer] Ї (or Ґ)\n\n6. Which letter sounds like \"zh\" (measure)?\n   > [!answer] Ж\n\n### Exercise 2: Read the Words\n\nSound out these words:\n\n1. школа\n   > [!answer] /shkola/ - school\n\n2. дякую\n   > [!answer] /dyakuyu/ - thank you\n\n3. Україна\n   > [!answer] /Ukraina/ - Ukraine\n\n4. що\n   > [!answer] /shcho/ - what\n\n5. будь ласка\n   > [!answer] /bud' laska/ - please\n\n6. привіт\n   > [!answer] /pryvit/ - hello\n\n## production\n\n### Your First Conversation Words\n\nPractice saying these essential phrases:\n\n1. **Привіт!** (Pryvit!) - Hello!\n2. **Дякую!** (Dyakuyu!) - Thank you!\n3. **Будь ласка** (Bud' laska) - Please / You're welcome\n4. **Так** (Tak) - Yes\n5. **Ні** (Ni) - No\n6. **Добре** (Dobre) - Good / Okay\n\n> 🎭 **Culture Corner**\n>\n> Ukrainians appreciate when foreigners try to speak their language! Even a simple \"Дякую\" (thank you) will bring smiles. Unlike in some countries, people won't switch to English just because your Ukrainian isn't perfect - they'll encourage you!\n\n---\n\n\n---\n\n\n---"
+        "content": "## warm-up\n**Entering the Alien Territory: The Sound of Ukrainian Identity.**\n\nIn Module 01, we built a foundation with familiar letters, the \"True Friends,\" and demystified the \"False Friends\" that look like English but sound different. Now, we embark on the final, most exciting stage of our journey into the Ukrainian alphabet: meeting the true \"Aliens.\"\n\nThese are the letters that initially look like enigmatic squiggles, symbols from another galaxy: **Ж, Щ, Є, Ю**. They don't resemble anything in the Latin alphabet, and that's precisely their beauty and power. These unique symbols carry the very essence of Ukrainian phonology, shaping its melody, rhythm, and distinct character. They are not merely letters; they are gateways to the authentic sound of Ukraine, sounds that you will soon learn to love and produce with confidence.\n\nThis module is where the alphabet truly comes alive. We will master the rich, textured \"Hissing Sounds\" that are a hallmark of Slavic languages. You will learn the \"Y-Vowels,\" which introduce a beautiful softness and fluidity to words. We will tackle the subtle but crucial distinction between the two Ukrainian 'H' sounds (one breathy, one hard). And finally, we will unlock the secret of the \"Soft Sign\" (Ь) and the \"Hard I\" (И), which subtly but profoundly shape pronunciation.\n\nBy the end of this intensive session, you will not only recognize every letter of the Ukrainian alphabet but also understand their phonetic nuances. This mastery will enable you to read *any* Ukrainian word with confidence, whether it's a street sign in Kyiv, a newspaper headline, or the lyrics of a folk song. Get ready to truly hear and produce the sounds of Ukraine!\n\n## presentation\n\n### Group 1: The Hissing, Buzzing, and Whooshing Sounds (Sibilants & Affricates)\nThese are some of the most characteristic sounds of Ukrainian, often referred to as sibilants and affricates. They add a unique texture and richness to the language, making it distinct from many Western European tongues. Don't be shy; embrace the hiss, the buzz, and the whoosh!\n\n| Letter | Sound (IPA) | English Approximation | Shape Mnemonic | Example | English Translation | Audio |\n|--------|-------------|-----------------------|----------------|---------|---------------------|-------|\n| **Ж ж** | /ʒ/ | Like **s** in plea**s**ure | A beetle (Zzhhh!) | **Ж**ук | Beetle | [🔊](audio_zh) |\n| **Ш ш** | /ʃ/ | Like **sh** in **sh**e | A pitchfork | **Ш**околад | Chocolate | [🔊](audio_sh) |\n| **Ч ч** | /tʃ/ | Like **ch** in **ch**air | An upside-down chair | **Ч**ай | Tea | [🔊](audio_ch) |\n| **Щ щ** | /ʃtʃ/ | Like **sh** + **ch** (as in fre**sh ch**eese) | Fork with a tail | **Щ**о | What | [🔊](audio_shch) |\n| **Ц ц** | /ts/ | Like **ts** in ca**ts** | U with a tail | **Ц**е | This is | [🔊](audio_ts) |\n| **ДЖ дж** | /dʒ/ | Like **j** in **j**am (digraph) | D + Zh | **Дж**аз | Jazz | [🔊](audio_dj) |\n| **ДЗ дз** | /dz/ | Like **ds** in po**ds** | D + Z | **Дз**він | Bell | [🔊](audio_dz) |\n\n> ⚡ **Pro Tip: Distinguishing Ш (Sh) vs Щ (Shch)**\n> Many learners confuse these, but in Ukrainian, they are completely distinct and affect meaning.\n> - **Ш** (Sh): This is a simple, singular \"shhh\" sound, like telling someone to be quiet.\n> - **Щ** (Shch): This is a **two-part sound** – a rapid sequence of \"sh\" followed by \"ch\". Think of the sound in \"fre**sh ch**eese\" or \"wa**sh ch**othes.\" It's longer, more complex, and definitely \"crunchier.\" Practice saying \"Sh-ch!\" together quickly.\n> Mastering this distinction is a key step towards authentic Ukrainian pronunciation.\n\n### Group 2: The \"Y\" Vowels (Iotated)\nThese four vowels are magical. They each have an invisible \"Y\" sound ([j] in IPA) built into them. This \"Y\" sound softens the preceding consonant (if there is one) or appears at the beginning of the word if no consonant precedes. They are crucial for the inherent melodic quality of Ukrainian.\n\n| Letter | Sound (IPA) | English Approximation | Rules | Example | English Translation | Audio |\n|--------|-------------|-----------------------|-------|---------|---------------------|-------|\n| **Є є** | /jɛ/ | **Ye**s | Y + E | **Є**вропа | Europe | [🔊](audio_ye) |\n| **Ї ї** | /ji/ | **Yie**ld | Y + I | Укра**ї**на | Ukraine | [🔊](audio_yi) |\n| **Ю ю** | /ju/ | **You** | Y + U | **Ю**пiтер | Jupiter | [🔊](audio_yu) |\n| **Я я** | /jɑ/ | **Ya**rd | Y + A | **Я** | I | [🔊](audio_ya) |\n\n> 💡 **Did You Know? The Power of Ї**\n> The letter **Ї** (Yi) is a unique and cherished symbol of Ukrainian language and identity. It is absent in Russian and other Slavic languages that use Cyrillic (which use variations of 'i' or 'y'). The presence of **Ї** often signifies a true Ukrainian word and its sound contributes to the language's melodic flow. In cities like Mariupol, **Ї** has even been used as a powerful symbol of cultural resistance and defiance against Russification. When you see those two dots, remember: it's *always* \"Yee,\" a clear, strong sound.\n\n### Group 3: The Tricky Pair (G vs H)\nThis distinction is vital and often challenging for English speakers, as English only has one 'H' sound and one 'G' sound. Ukrainian has two distinct sounds that often get confused.\n\n-   **Г г** (The Hook) = /ɦ/. This is a breathy, voiced \"H\" sound. Think of the soft 'h' in \"a**h**ead\" or the Scottish 'ch' in \"lo**ch**\" but voiced. Your throat vibrates slightly. It's much softer than the English 'G'.\n    *   *Example:* **Г**олос (Holos - Voice), **Г**отель (Hotel).\n-   **Ґ ґ** (The Hook with a Hat) = /g/. This is the hard, explosive \"G\" sound, exactly like the 'g' in \"**g**o\" or \"**g**ood\". It's less common in Ukrainian but crucial for proper pronunciation of some loanwords.\n    *   *Example:* **Ґ**удзик (Gudzyk - Button), **Ґ**угл (Google).\n\n> ⚡ **Pro Tip: Practice Г (H) vs Ґ (G)**\n> Try saying \"Hamburger.\" The initial 'H' sound is similar to Ukrainian **Г**. Now try \"Google.\" The initial 'G' is Ukrainian **Ґ**. Consciously producing these distinct sounds is essential for accuracy at this level.\n\n### Group 4: The Silent Modifiers & The Hard Vowel\nThese letters don't make new sounds but subtly (or not so subtly) influence the sounds around them.\n\n-   **Ь** (Soft Sign). This tiny symbol has **no sound** of its own. Its only job is to tell you that the consonant *before* it should be pronounced \"soft\" (palatalized). Think of the 'ny' in \"o**ny**on\" for a soft 'n'.\n    *   *Example:* **Н** (hard N) vs. **НЬ** (soft N). **Л** (hard L) vs. **ЛЬ** (soft L, like in 'li' in 'million').\n    *   The soft sign is a fundamental part of Ukrainian phonology and contributes to its unique melodic quality.\n\n-   **И** (Hard I). This letter often looks like a backwards 'N' or a rotated 'H'. It is pronounced /ɪ/, similar to the 'i' in \"s**i**t\" or the 'u' in \"b**u**sh\". It's a deep, central vowel sound, distinct from **І** (which is a clear \"ee\" as in \"machine\").\n    *   *Example:* **КИЇВ** (Kyiv - note the 'И' then 'Ї'), **РИБА** (Ryba - Fish).\n    *   **CRITICAL:** Do NOT confuse **И** with **І**. They are different sounds, and using one for the other will make words unintelligible.\n\n> 🔍 **The \"Italic\" Warning: Hand-Written Transformations**\n> When reading handwritten Ukrainian or certain stylized fonts (especially italics), many Cyrillic letters magically transform, often resembling Latin letters. This can be very confusing, but context and practice will help you.\n> - **т** (print) often looks like a handwritten *m*\n> - **п** (print) often looks like a handwritten *n*\n> - **д** (print) often looks like a handwritten *g*\n> - **и** (print) often looks like a handwritten *u*\n> - **г** (print) often looks like a handwritten *backward 's'* or *∂*\n> - **л** (print) often looks like a handwritten *inverted v* or *hook*\n> - **ш** (print) often looks like a handwritten *w*\n> Don't panic if you see these; simply remember the original sound and you'll be able to decode it.\n\n## practice\n\nLet's apply our full alphabet knowledge to some essential Ukrainian survival phrases and common words. Focus on articulating the unique sounds we just learned.\n\n**1. Greetings & Politeness (Revisited):**\n-   **ПРИВІТ** [🔊](audio_pryvit) (Pry-vit) — Hi / Hello (Informal). Note the soft **В** and **ТЬ**.\n-   **ДЯКУЮ** [🔊](audio_dyakuyu) (Dya-ku-yu) — Thank you. The **ДЯ** has a distinct 'y' glide.\n-   **БУДЬ ЛАСКА** [🔊](audio_budlaska) (Bud' las-ka) — Please / You're welcome. The **ДЬ** is a soft 'd'.\n-   **ДО ПОБАЧЕННЯ** [🔊](audio_dopobachennya) (Do po-ba-chen-nya) — Goodbye. Note the **Ч** and soft **ННЯ**.\n-   **ВИБАЧТЕ** [🔊](audio_vybachte) (Vy-bach-te) — Excuse me / Sorry. Hear the **Ч**.\n\n**2. Essential Question Words (The Inquisitors):**\n-   **ЩО** [🔊](audio_shcho) (Shcho) — What? This is one of the most common words – master that **Щ** sound!\n-   **ДЕ** [🔊](audio_de) (De) — Where? Simple.\n-   **ХТО** [🔊](audio_khto) (Khto) — Who? Remember the hard **Х**.\n-   **ЯК** [🔊](audio_yak) (Yak) — How?\n-   **ЧИЙ** [🔊](audio_chiy) (Chiy) — Whose?\n-   **ЧОМУ** [🔊](audio_chomu) (Chomu) — Why?\n\n**3. Common Ukrainian Words with New Letters:**\n-   **БОРЩ** [🔊](audio_borshch) (Borshch) — The famous beet soup! All the tricky sounds in one word: Б(B), О(O), Р(R), Щ(Shch)!\n-   **ЖЕЛЕ** [🔊](audio_zhele) (Zhele) — Jelly.\n-   **ЙОГУРТ** [🔊](audio_yohurt) (Yohurt) — Yogurt. (Note the **Й** for 'y' sound)\n-   **ЦУКОР** [🔊](audio_tsukor) (Tsukor) — Sugar.\n-   **ДЖАЗ** [🔊](audio_dzhaz) (Dzhaz) — Jazz. (Note the digraph **ДЖ**)\n-   **ЄВРОПА** [🔊](audio_yevropa) (Yevropa) — Europe.\n-   **УКРАЇНА** [🔊](audio_ukraina) (Ukrayina) — Ukraine. The 'И' sound followed by the 'Ї' sound is very distinct.\n\n## production\n\nYou are exploring Kyiv's historic Podil district. Everywhere you look, you see signs and hear conversations filled with the sounds you've just mastered.\n\nYou hear someone say: **\"Що це?\"** (Shcho tse? - What is this?). You understand the **Щ** and **Ц**.\nYou see a sign for **\"ЦУКЕРКИ\"** (Tsukerky - Candies). You easily read the **Ц** and **К**.\nA friend points to a map: **\"Ми тут, біля ЖИТНЬОГО РИНКУ.\"** (My tut, bilia Zhytnioho Rynku - We are here, near the Zhytniy Market). You catch the **Ж**.\nYou realize you need to ask for directions. You prepare to say: **\"ВИБАЧТЕ, ДЕ ЦЕНТР?\"** (Vy-bach-te, de tsentr? - Excuse me, where is the center?).\n\nYou've moved beyond simple recognition. You're beginning to participate in the Ukrainian soundscape.\n\n---\n\n\n---"
       },
       {
-        "id": "section-summary",
+        "id": "section-summary-1",
         "name": "Підсумок",
         "nameEn": "Summary",
         "type": "summary",
-        "content": "> **What You Learned Today**\n>\n> - **Unique Sounds:** Г (/ɦ/), Ґ (/g/), Ж (/ʒ/), Ш (/ʃ/), Щ (/ʃtʃ/), Ч (/tʃ/), Ц (/ts/)\n> - **Iotated Vowels:** Є (/je/), Ї (/ji/), Ю (/ju/), Я (/ja/) - vowels with \"y\" prefix\n> - **Hard I:** И (/ɪ/) - between \"bit\" and \"beat\"\n> - **Soft Sign:** Ь - softens the preceding consonant\n> - **Italic Warning:** т→m, п→n, д→g - letters that change in italics!\n> - **Essential phrases:** дякую, будь ласка, привіт, так, ні, добре\n> - You now know ALL 33 Ukrainian letters!\n\n> **Coming Next**\n>\n> In Module 03, you'll learn the Gender Code:\n> - How to tell if a word is masculine, feminine, or neuter\n> - The four declension families\n> - Your first 25 everyday objects!"
+        "content": "Congratulations! You have now met all 33 letters of the Ukrainian alphabet.\n1.  **True Friends:** Familiar faces (A, K, M...)\n2.  **False Friends:** Tricky spies (P=R, C=S...)\n3.  **Strangers:** New shapes (Б, Л, Д...)\n4.  **Hissers:** The texture of the language (Ж, Ш, Ч, Щ)\n5.  **Y-Vowels:** The melody (Я, Ю, Є, Ї)\n\nYou can now pronounce **БОРЩ** (Borshch) correctly. You can ask **ДЕ МЕТРО?** (Where is the metro?). In the next module, we will learn how these words change gender. Yes, words have gender. Don't worry, it's logical!"
       }
     ],
-    "rawMarkdown": "---\ntitle: \"The Cyrillic Code II\"\nsubtitle: \"Unique Letters, Soft Sign, and the Italic Warning\"\nphase: A1.1\nduration: 45\ntransliteration: full\ntags: [alphabet, cyrillic, phonetics, reading]\nobjectives:\n  - Learn remaining Cyrillic letters unique to Ukrainian\n  - Understand iotated vowels (Є, Ї, Ю, Я)\n  - Recognize the soft sign (Ь) and its function\n  - Be aware of italic letter differences\ngrammar:\n  - Letter recognition\n  - Sound-symbol correspondence\n  - Soft sign function\n---\n\n# Lesson Content\n\n## warm-up\n\n### Congratulations - You're Halfway There!\n\nIn Module 01, you learned 19 letters. Today we complete the Ukrainian alphabet with the remaining 14 letters. By the end of this lesson, you'll be able to read ANY Ukrainian word!\n\n> 💡 **Did You Know?**\n>\n> Ukrainian has 33 letters - one more than Russian (which has 32). The extra letter is **Ґ** - a sound that was banned during Soviet times but has been restored in independent Ukraine!\n\n### What's Left to Learn?\n\nWe have four groups of letters remaining:\n\n| Group | Letters | Description |\n|-------|---------|-------------|\n| **Unique Sounds** | Г, Ґ, Ж, Ш, Щ, Ч, Ц | Sounds not in English |\n| **Iotated Vowels** | Є, Ї, Ю, Я | Vowels with a \"y\" prefix |\n| **Hard I** | И | Between /i/ and /ɪ/ |\n| **Soft Sign** | Ь | Makes previous consonant soft |\n\nLet's crack the rest of the code!\n\n## presentation\n\n### Unique Ukrainian Sounds\n\nThese letters represent sounds that don't have exact English equivalents, but you'll pick them up quickly!\n\n| Letter | Sound | How to Say It | Example |\n|--------|-------|---------------|---------|\n| **Г г** | /ɦ/ | breathy H (like sighing) | **г**арно (harno) - good/nice |\n| **Ґ ґ** | /g/ | hard G like \"**g**o\" | **ґ**анок (ganok) - porch |\n| **Ж ж** | /ʒ/ | like \"mea**s**ure\" | **ж**урнал (zhurnal) - magazine |\n| **Ш ш** | /ʃ/ | like \"**sh**oe\" | **ш**кола (shkola) - school |\n| **Щ щ** | /ʃtʃ/ | \"sh\" + \"ch\" together | **щ**о (shcho) - what |\n| **Ч ч** | /tʃ/ | like \"**ch**urch\" | **ч**ай (chai) - tea |\n| **Ц ц** | /ts/ | like \"ca**ts**\" | **ц**е (tse) - this |\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Ukrainian Г is just like Russian Г\"\n> **Fact:** Ukrainian Г is a soft, breathy /ɦ/ sound, while Russian Г is a hard /g/. The hard G sound in Ukrainian uses the special letter **Ґ** - one of Ukraine's unique letters that was suppressed during Soviet rule!\n\n### The \"Hard I\": И\n\nThis vowel sits between English \"i\" in \"bit\" and \"ee\" in \"beet\":\n\n| Letter | Sound | Example |\n|--------|-------|---------|\n| **И и** | /ɪ/ | like \"b**i**t\" (short) | в**и**бачте (vybachte) - excuse me |\n\n> ⚡ **Pro Tip**\n>\n> Think of **И** as the \"hard\" version of **І**:\n> - **І** = clear \"ee\" (machine)\n> - **И** = shorter, harder \"i\" (bit)\n\n### Iotated Vowels: The \"Y\" Family\n\nThese vowels start with a /j/ sound (like English \"y\") before the vowel:\n\n| Letter | Sound | Breakdown | Example |\n|--------|-------|-----------|---------|\n| **Є є** | /jɛ/ | \"y\" + \"e\" | **Є**вропа (Yevropa) - Europe |\n| **Ї ї** | /ji/ | \"y\" + \"ee\" | **ї**сти (yisty) - to eat |\n| **Ю ю** | /ju/ | \"y\" + \"oo\" | **ю**рист (yurist) - lawyer |\n| **Я я** | /ja/ | \"y\" + \"a\" | **я** (ya) - I |\n\n> 💡 **Did You Know?**\n>\n> The letter **Ї** exists ONLY in Ukrainian - no other Slavic language has it! It's used in words like Україна (Ukraina) and їсти (yisty - to eat). This letter is a symbol of Ukrainian linguistic uniqueness!\n\n### The Soft Sign: Ь\n\nThe soft sign doesn't make a sound itself. Instead, it makes the consonant before it \"soft\" (palatalized):\n\n| Without Ь | With Ь | Difference |\n|-----------|--------|------------|\n| кон (kon) | конь (kon') | horse (soft n) |\n| мат (mat) | мать → мати (maty) | mother (historical) |\n\n> 🎯 **Fun Fact**\n>\n> The soft sign **Ь** is like a \"silent softener.\" When you see it after a consonant, touch your tongue to the roof of your mouth as you say the consonant - that's palatalization!\n\n### ⚠️ ITALIC WARNING: Letters That Change Shape!\n\nWhen Ukrainian text is in *italics*, some letters look completely different! This catches many learners by surprise:\n\n| Print | Italic | Looks Like | Watch Out! |\n|-------|--------|------------|------------|\n| **т** | *т* | m | Don't confuse with М! |\n| **п** | *п* | n | Don't confuse with Н! |\n| **д** | *д* | g | Completely different! |\n| **и** | *и* | u | Don't confuse with У! |\n| **л** | *л* | hook/л | Rounded at bottom |\n| **г** | *г* | ∂ | Like partial delta |\n\n> 🎬 **Pop Culture Moment: The Witcher**\n>\n> \"Відьмак\" (The Witcher) in italic would be \"*Відьмак*\" - notice how the letters change shape! When you see Ukrainian game menus or film credits in italics, remember this warning!\n\n### Let's Practice: Full Alphabet Reading\n\nNow you can read ANY Ukrainian word! Try these common phrases:\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| так | tak | yes |\n| ні | ni | no |\n| добре | dobre | good/okay |\n| дякую | dyakuyu | thank you |\n| будь ласка | bud' laska | please |\n| привіт | pryvit | hello (informal) |\n| до побачення | do pobachennya | goodbye |\n| вибачте | vybachte | excuse me |\n| прошу | proshu | you're welcome/please |\n| що | shcho | what |\n| як | yak | how |\n| де | de | where |\n| хто | khto | who |\n| ласкаво просимо | laskavo prosymo | welcome |\n\n> 🌍 **Real World**\n>\n> These are the first words you'll hear and need in Ukraine! \"Дякую\" (thank you) and \"Будь ласка\" (please) will get you far in any interaction.\n\n### The Complete Ukrainian Alphabet\n\nHere's your complete reference - all 33 letters!\n\n| А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я |\n\n> 📜 **History Bite**\n>\n> Ukrainian was once called \"Little Russian\" by imperial powers who wanted to suppress it. The word \"українська\" (Ukrainian) and the distinct alphabet are symbols of national identity and survival through centuries of oppression.\n\n## practice\n\n### Exercise 1: New Letter Sounds\n\nMatch the sound to the letter:\n\n1. Which letter sounds like \"sh\" in \"shoe\"?\n   > [!answer] Ш\n\n2. Which letter sounds like \"ch\" in \"church\"?\n   > [!answer] Ч\n\n3. Which letter sounds like \"y\" + \"a\" together?\n   > [!answer] Я\n\n4. Which letter is the soft sign?\n   > [!answer] Ь\n\n5. Which letter is unique to Ukrainian?\n   > [!answer] Ї (or Ґ)\n\n6. Which letter sounds like \"zh\" (measure)?\n   > [!answer] Ж\n\n### Exercise 2: Read the Words\n\nSound out these words:\n\n1. школа\n   > [!answer] /shkola/ - school\n\n2. дякую\n   > [!answer] /dyakuyu/ - thank you\n\n3. Україна\n   > [!answer] /Ukraina/ - Ukraine\n\n4. що\n   > [!answer] /shcho/ - what\n\n5. будь ласка\n   > [!answer] /bud' laska/ - please\n\n6. привіт\n   > [!answer] /pryvit/ - hello\n\n## production\n\n### Your First Conversation Words\n\nPractice saying these essential phrases:\n\n1. **Привіт!** (Pryvit!) - Hello!\n2. **Дякую!** (Dyakuyu!) - Thank you!\n3. **Будь ласка** (Bud' laska) - Please / You're welcome\n4. **Так** (Tak) - Yes\n5. **Ні** (Ni) - No\n6. **Добре** (Dobre) - Good / Okay\n\n> 🎭 **Culture Corner**\n>\n> Ukrainians appreciate when foreigners try to speak their language! Even a simple \"Дякую\" (thank you) will bring smiles. Unlike in some countries, people won't switch to English just because your Ukrainian isn't perfect - they'll encourage you!\n\n---\n\n# Activities\n\n## quiz: Complete Alphabet Knowledge\n\n> Test your knowledge of the full Ukrainian alphabet!\n\n1. What sound does **Ш** make?\n   - [ ] /s/ like \"sun\"\n   - [x] /ʃ/ like \"shoe\"\n   - [ ] /tʃ/ like \"church\"\n   - [ ] /ts/ like \"cats\"\n   > Ш makes the \"sh\" sound!\n\n2. What sound does **Ч** make?\n   - [ ] /k/ like \"kite\"\n   - [ ] /s/ like \"sun\"\n   - [x] /tʃ/ like \"church\"\n   - [ ] /ts/ like \"cats\"\n   > Ч makes the \"ch\" sound!\n\n3. What does the soft sign **Ь** do?\n   - [ ] Makes an \"h\" sound\n   - [x] Softens the previous consonant\n   - [ ] Makes a vowel sound\n   - [ ] Indicates stress\n   > Ь doesn't make a sound - it softens the consonant before it!\n\n4. Which letter is unique to Ukrainian?\n   - [ ] Ш\n   - [ ] Ч\n   - [x] Ї\n   - [ ] Ю\n   > Ї exists only in Ukrainian - no other Slavic language has it!\n\n5. What sound does **Я** make?\n   - [ ] /a/ like \"father\"\n   - [x] /ja/ like \"ya\" in \"yard\"\n   - [ ] /i/ like \"machine\"\n   - [ ] /e/ like \"bed\"\n   > Я is \"iotated\" - it has a \"y\" sound before the \"a\"!\n\n6. How does **т** look in italics?\n   - [x] Like the letter \"m\"\n   - [ ] Like the letter \"t\"\n   - [ ] Like the letter \"n\"\n   - [ ] Like the letter \"g\"\n   > In italics, т looks like a lowercase m!\n\n7. What sound does **Ж** make?\n   - [ ] /z/ like \"zoo\"\n   - [x] /ʒ/ like \"measure\"\n   - [ ] /dʒ/ like \"judge\"\n   - [ ] /g/ like \"go\"\n   > Ж makes the \"zh\" sound like in \"measure\"!\n\n8. What sound does **Ц** make?\n   - [ ] /s/ like \"sun\"\n   - [ ] /k/ like \"kite\"\n   - [x] /ts/ like \"cats\"\n   - [ ] /tʃ/ like \"church\"\n   > Ц makes the \"ts\" sound!\n\n9. What's the difference between Г and Ґ?\n   - [x] Г is breathy /h/, Ґ is hard /g/\n   - [ ] They sound the same\n   - [ ] Ґ is soft, Г is hard\n   - [ ] Г is only in Russian\n   > Г is a breathy H sound, while Ґ is the hard G sound!\n\n10. What sound does **Є** make?\n    - [ ] /e/ like \"bed\"\n    - [x] /je/ like \"ye\" in \"yes\"\n    - [ ] /i/ like \"machine\"\n    - [ ] /a/ like \"father\"\n    > Є is \"iotated\" - it sounds like \"ye\"!\n\n11. How many letters are in the Ukrainian alphabet?\n    - [ ] 26\n    - [ ] 32\n    - [x] 33\n    - [ ] 36\n    > Ukrainian has 33 letters - one more than Russian!\n\n12. What sound does **Щ** make?\n    - [ ] /ʃ/ like \"shoe\"\n    - [x] /ʃtʃ/ like \"sh\" + \"ch\"\n    - [ ] /tʃ/ like \"church\"\n    - [ ] /sk/ like \"skip\"\n    > Щ is \"sh\" followed immediately by \"ch\"!\n\n## match-up: Letters and Sounds II\n\n> Match each new letter to its sound.\n\n| Letter | Sound |\n|--------|-------|\n| Ш | /ʃ/ like \"shoe\" |\n| Ч | /tʃ/ like \"church\" |\n| Ж | /ʒ/ like \"measure\" |\n| Ц | /ts/ like \"cats\" |\n| Щ | /ʃtʃ/ like \"fresh cheese\" |\n| Г | /ɦ/ breathy H |\n| Ґ | /g/ like \"go\" |\n| Я | /ja/ like \"yard\" |\n| Ю | /ju/ like \"you\" |\n| Є | /je/ like \"yes\" |\n| Ї | /ji/ like \"yeast\" |\n| И | /ɪ/ like \"bit\" |\n\n## group-sort: Vowel Types\n\n> Sort these vowels into the correct category.\n\n### Simple Vowels\n- А\n- Е\n- И\n- І\n- О\n- У\n\n### Iotated Vowels (with \"y\" sound)\n- Є\n- Ї\n- Ю\n- Я\n\n## match-up: Essential Phrases\n\n> Match the Ukrainian phrase to its English meaning.\n\n| Ukrainian | English |\n|-----------|---------|\n| так | yes |\n| ні | no |\n| добре | good/okay |\n| дякую | thank you |\n| будь ласка | please |\n| привіт | hello |\n| до побачення | goodbye |\n| вибачте | excuse me |\n| прошу | you're welcome |\n| що | what |\n| як | how |\n| де | where |\n\n## true-false: Alphabet Facts\n\n> Decide if each statement is true (Правда) or false (Міф).\n\n- [x] The letter Ї exists only in Ukrainian.\n  > Correct! No other Slavic language has this letter.\n\n- [ ] The soft sign Ь makes a \"y\" sound.\n  > Incorrect. Ь doesn't make a sound - it softens the consonant before it.\n\n- [x] Ukrainian has 33 letters in its alphabet.\n  > Correct! One more than Russian.\n\n- [ ] Г and Ґ make the same sound.\n  > Incorrect. Г is breathy /h/, Ґ is hard /g/.\n\n- [x] In italics, the letter т looks like \"m\".\n  > Correct! This surprises many learners.\n\n- [ ] The letter Я sounds like English \"a\".\n  > Incorrect. Я sounds like \"ya\" - it's an iotated vowel.\n\n- [x] Ч sounds like \"ch\" in \"church\".\n  > Correct! Ч = /tʃ/\n\n- [x] The letter Ґ was suppressed during Soviet times.\n  > Correct! It has been restored in independent Ukraine.\n\n- [ ] И and І make the same sound.\n  > Incorrect. И is \"harder\" (like \"bit\"), І is \"clearer\" (like \"machine\").\n\n- [x] Щ combines \"sh\" and \"ch\" sounds.\n  > Correct! Щ = /ʃtʃ/\n\n- [ ] The word \"що\" is pronounced /so/.\n  > Incorrect. \"Що\" is pronounced /shcho/.\n\n- [x] \"Дякую\" means \"thank you\".\n  > Correct! One of the most useful words to know.\n\n## fill-in: Complete the Phrase\n\n> Fill in the missing letter to complete each phrase.\n\n1. дяку___у (thank you)\n   > [!answer] ю\n   > [!options] ю | у | о | а\n\n2. ___кола (school)\n   > [!answer] ш\n   > [!options] ш | с | щ | ч\n\n3. при___іт (hello)\n   > [!answer] в\n   > [!options] в | б | п | ф\n\n4. ___о (what)\n   > [!answer] щ\n   > [!options] щ | ш | ч | с\n\n5. будь ___аска (please)\n   > [!answer] л\n   > [!options] л | н | м | р\n\n6. ___к (yes)\n   > [!answer] та\n   > [!options] та | то | ти | ту\n\n7. до___ре (good)\n   > [!answer] б\n   > [!options] б | п | в | д\n\n8. н___ (no)\n   > [!answer] і\n   > [!options] і | и | е | а\n\n9. ___е (this)\n   > [!answer] ц\n   > [!options] ц | с | ч | з\n\n10. ___к (how)\n    > [!answer] я\n    > [!options] я | а | е | и\n\n11. д___ (where)\n    > [!answer] е\n    > [!options] е | є | и | і\n\n12. ___то (who)\n    > [!answer] х\n    > [!options] х | г | к | ц\n\n## anagram: Phrase Spelling\n\n> Arrange the letters to form the correct word.\n\n1. а к т\n   > [!answer] так\n   > (yes)\n\n2. і н\n   > [!answer] ні\n   > (no)\n\n3. р б о д е\n   > [!answer] добре\n   > (good)\n\n4. у ю д я к\n   > [!answer] дякую\n   > (thank you)\n\n5. і т в и п р\n   > [!answer] привіт\n   > (hello)\n\n6. о щ\n   > [!answer] що\n   > (what)\n\n7. к я\n   > [!answer] як\n   > (how)\n\n8. е д\n   > [!answer] де\n   > (where)\n\n9. о т х\n   > [!answer] хто\n   > (who)\n\n10. і й а ч\n    > [!answer] чай\n    > (tea)\n\n11. о а л к ш\n    > [!answer] школа\n    > (school)\n\n12. е ц\n    > [!answer] це\n    > (this)\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| буква (bukva) | /ˈbukʋa/ | letter | noun | f | alphabet letter |\n| слово (slovo) | /ˈslɔʋɔ/ | word | noun | n | basic vocabulary |\n| алфавіт (alfavit) | /alfaˈʋit/ | alphabet | noun | m | also: абетка |\n| мова (mova) | /ˈmɔʋa/ | language | noun | f | also: speech |\n| українська (ukrainska) | /ukraˈjinska/ | Ukrainian | adj | f | the language |\n| англійська (anhliiska) | /anˈɦlijska/ | English | adj | f | the language |\n| так (tak) | /tak/ | yes | particle | - | affirmative |\n| ні (ni) | /ni/ | no | particle | - | negative |\n| добре (dobre) | /ˈdɔbrɛ/ | good/okay | adv | - | agreement |\n| дякую (dyakuyu) | /ˈdʲakuju/ | thank you | verb | - | 1st person |\n| будь ласка (bud' laska) | /budʲ ˈlaska/ | please | phrase | - | also: you're welcome |\n| привіт (pryvit) | /prɪˈʋit/ | hello | interj | - | informal |\n| до побачення (do pobachennya) | /dɔ pɔˈbatʃɛnʲa/ | goodbye | phrase | - | formal |\n| вибачте (vybachte) | /ʋɪˈbatʃtɛ/ | excuse me | verb | - | formal/polite |\n| прошу (proshu) | /ˈprɔʃu/ | you're welcome | verb | - | also: please |\n| ласкаво просимо (laskavo prosymo) | /lasˈkaʋɔ ˈprɔsɪmɔ/ | welcome | phrase | - | greeting |\n| що (shcho) | /ʃtʃɔ/ | what | pron | - | question word |\n| як (yak) | /jak/ | how | adv | - | question word |\n| де (de) | /dɛ/ | where | adv | - | question word |\n| хто (khto) | /xtɔ/ | who | pron | - | question word |\n\n---\n\n# Summary\n\n> **What You Learned Today**\n>\n> - **Unique Sounds:** Г (/ɦ/), Ґ (/g/), Ж (/ʒ/), Ш (/ʃ/), Щ (/ʃtʃ/), Ч (/tʃ/), Ц (/ts/)\n> - **Iotated Vowels:** Є (/je/), Ї (/ji/), Ю (/ju/), Я (/ja/) - vowels with \"y\" prefix\n> - **Hard I:** И (/ɪ/) - between \"bit\" and \"beat\"\n> - **Soft Sign:** Ь - softens the preceding consonant\n> - **Italic Warning:** т→m, п→n, д→g - letters that change in italics!\n> - **Essential phrases:** дякую, будь ласка, привіт, так, ні, добре\n> - You now know ALL 33 Ukrainian letters!\n\n> **Coming Next**\n>\n> In Module 03, you'll learn the Gender Code:\n> - How to tell if a word is masculine, feminine, or neuter\n> - The four declension families\n> - Your first 25 everyday objects!\n",
-    "createdAt": "2025-12-06T10:49:20.083Z",
-    "modifiedAt": "2025-12-06T10:49:20.083Z",
+    "rawMarkdown": "---\ntitle: The Cyrillic Code II\nsubtitle: The Aliens, The Hissers, and The Soft Sign\nphase: A1.1\nduration: 60\ntransliteration: full\ntags: [alphabet, reading, phonetics]\nobjectives:\n  - Learner can recognize and pronounce the 14 \"Unique\" Ukrainian letters\n  - Learner can pronounce the \"Hissing\" consonants (Ж, Ш, Щ, Ч, Ц)\n  - Learner can pronounce the \"Iotated\" vowels (Є, Ї, Ю, Я)\n  - Learner can distinguish Г (H) from Ґ (G)\n  - Learner can recognize standard Italic forms (m, n, u, g)\n---\n\n# Lesson Content\n\n## warm-up\n**Entering the Alien Territory: The Sound of Ukrainian Identity.**\n\nIn Module 01, we built a foundation with familiar letters, the \"True Friends,\" and demystified the \"False Friends\" that look like English but sound different. Now, we embark on the final, most exciting stage of our journey into the Ukrainian alphabet: meeting the true \"Aliens.\"\n\nThese are the letters that initially look like enigmatic squiggles, symbols from another galaxy: **Ж, Щ, Є, Ю**. They don't resemble anything in the Latin alphabet, and that's precisely their beauty and power. These unique symbols carry the very essence of Ukrainian phonology, shaping its melody, rhythm, and distinct character. They are not merely letters; they are gateways to the authentic sound of Ukraine, sounds that you will soon learn to love and produce with confidence.\n\nThis module is where the alphabet truly comes alive. We will master the rich, textured \"Hissing Sounds\" that are a hallmark of Slavic languages. You will learn the \"Y-Vowels,\" which introduce a beautiful softness and fluidity to words. We will tackle the subtle but crucial distinction between the two Ukrainian 'H' sounds (one breathy, one hard). And finally, we will unlock the secret of the \"Soft Sign\" (Ь) and the \"Hard I\" (И), which subtly but profoundly shape pronunciation.\n\nBy the end of this intensive session, you will not only recognize every letter of the Ukrainian alphabet but also understand their phonetic nuances. This mastery will enable you to read *any* Ukrainian word with confidence, whether it's a street sign in Kyiv, a newspaper headline, or the lyrics of a folk song. Get ready to truly hear and produce the sounds of Ukraine!\n\n## presentation\n\n### Group 1: The Hissing, Buzzing, and Whooshing Sounds (Sibilants & Affricates)\nThese are some of the most characteristic sounds of Ukrainian, often referred to as sibilants and affricates. They add a unique texture and richness to the language, making it distinct from many Western European tongues. Don't be shy; embrace the hiss, the buzz, and the whoosh!\n\n| Letter | Sound (IPA) | English Approximation | Shape Mnemonic | Example | English Translation | Audio |\n|--------|-------------|-----------------------|----------------|---------|---------------------|-------|\n| **Ж ж** | /ʒ/ | Like **s** in plea**s**ure | A beetle (Zzhhh!) | **Ж**ук | Beetle | [🔊](audio_zh) |\n| **Ш ш** | /ʃ/ | Like **sh** in **sh**e | A pitchfork | **Ш**околад | Chocolate | [🔊](audio_sh) |\n| **Ч ч** | /tʃ/ | Like **ch** in **ch**air | An upside-down chair | **Ч**ай | Tea | [🔊](audio_ch) |\n| **Щ щ** | /ʃtʃ/ | Like **sh** + **ch** (as in fre**sh ch**eese) | Fork with a tail | **Щ**о | What | [🔊](audio_shch) |\n| **Ц ц** | /ts/ | Like **ts** in ca**ts** | U with a tail | **Ц**е | This is | [🔊](audio_ts) |\n| **ДЖ дж** | /dʒ/ | Like **j** in **j**am (digraph) | D + Zh | **Дж**аз | Jazz | [🔊](audio_dj) |\n| **ДЗ дз** | /dz/ | Like **ds** in po**ds** | D + Z | **Дз**він | Bell | [🔊](audio_dz) |\n\n> ⚡ **Pro Tip: Distinguishing Ш (Sh) vs Щ (Shch)**\n> Many learners confuse these, but in Ukrainian, they are completely distinct and affect meaning.\n> - **Ш** (Sh): This is a simple, singular \"shhh\" sound, like telling someone to be quiet.\n> - **Щ** (Shch): This is a **two-part sound** – a rapid sequence of \"sh\" followed by \"ch\". Think of the sound in \"fre**sh ch**eese\" or \"wa**sh ch**othes.\" It's longer, more complex, and definitely \"crunchier.\" Practice saying \"Sh-ch!\" together quickly.\n> Mastering this distinction is a key step towards authentic Ukrainian pronunciation.\n\n### Group 2: The \"Y\" Vowels (Iotated)\nThese four vowels are magical. They each have an invisible \"Y\" sound ([j] in IPA) built into them. This \"Y\" sound softens the preceding consonant (if there is one) or appears at the beginning of the word if no consonant precedes. They are crucial for the inherent melodic quality of Ukrainian.\n\n| Letter | Sound (IPA) | English Approximation | Rules | Example | English Translation | Audio |\n|--------|-------------|-----------------------|-------|---------|---------------------|-------|\n| **Є є** | /jɛ/ | **Ye**s | Y + E | **Є**вропа | Europe | [🔊](audio_ye) |\n| **Ї ї** | /ji/ | **Yie**ld | Y + I | Укра**ї**на | Ukraine | [🔊](audio_yi) |\n| **Ю ю** | /ju/ | **You** | Y + U | **Ю**пiтер | Jupiter | [🔊](audio_yu) |\n| **Я я** | /jɑ/ | **Ya**rd | Y + A | **Я** | I | [🔊](audio_ya) |\n\n> 💡 **Did You Know? The Power of Ї**\n> The letter **Ї** (Yi) is a unique and cherished symbol of Ukrainian language and identity. It is absent in Russian and other Slavic languages that use Cyrillic (which use variations of 'i' or 'y'). The presence of **Ї** often signifies a true Ukrainian word and its sound contributes to the language's melodic flow. In cities like Mariupol, **Ї** has even been used as a powerful symbol of cultural resistance and defiance against Russification. When you see those two dots, remember: it's *always* \"Yee,\" a clear, strong sound.\n\n### Group 3: The Tricky Pair (G vs H)\nThis distinction is vital and often challenging for English speakers, as English only has one 'H' sound and one 'G' sound. Ukrainian has two distinct sounds that often get confused.\n\n-   **Г г** (The Hook) = /ɦ/. This is a breathy, voiced \"H\" sound. Think of the soft 'h' in \"a**h**ead\" or the Scottish 'ch' in \"lo**ch**\" but voiced. Your throat vibrates slightly. It's much softer than the English 'G'.\n    *   *Example:* **Г**олос (Holos - Voice), **Г**отель (Hotel).\n-   **Ґ ґ** (The Hook with a Hat) = /g/. This is the hard, explosive \"G\" sound, exactly like the 'g' in \"**g**o\" or \"**g**ood\". It's less common in Ukrainian but crucial for proper pronunciation of some loanwords.\n    *   *Example:* **Ґ**удзик (Gudzyk - Button), **Ґ**угл (Google).\n\n> ⚡ **Pro Tip: Practice Г (H) vs Ґ (G)**\n> Try saying \"Hamburger.\" The initial 'H' sound is similar to Ukrainian **Г**. Now try \"Google.\" The initial 'G' is Ukrainian **Ґ**. Consciously producing these distinct sounds is essential for accuracy at this level.\n\n### Group 4: The Silent Modifiers & The Hard Vowel\nThese letters don't make new sounds but subtly (or not so subtly) influence the sounds around them.\n\n-   **Ь** (Soft Sign). This tiny symbol has **no sound** of its own. Its only job is to tell you that the consonant *before* it should be pronounced \"soft\" (palatalized). Think of the 'ny' in \"o**ny**on\" for a soft 'n'.\n    *   *Example:* **Н** (hard N) vs. **НЬ** (soft N). **Л** (hard L) vs. **ЛЬ** (soft L, like in 'li' in 'million').\n    *   The soft sign is a fundamental part of Ukrainian phonology and contributes to its unique melodic quality.\n\n-   **И** (Hard I). This letter often looks like a backwards 'N' or a rotated 'H'. It is pronounced /ɪ/, similar to the 'i' in \"s**i**t\" or the 'u' in \"b**u**sh\". It's a deep, central vowel sound, distinct from **І** (which is a clear \"ee\" as in \"machine\").\n    *   *Example:* **КИЇВ** (Kyiv - note the 'И' then 'Ї'), **РИБА** (Ryba - Fish).\n    *   **CRITICAL:** Do NOT confuse **И** with **І**. They are different sounds, and using one for the other will make words unintelligible.\n\n> 🔍 **The \"Italic\" Warning: Hand-Written Transformations**\n> When reading handwritten Ukrainian or certain stylized fonts (especially italics), many Cyrillic letters magically transform, often resembling Latin letters. This can be very confusing, but context and practice will help you.\n> - **т** (print) often looks like a handwritten *m*\n> - **п** (print) often looks like a handwritten *n*\n> - **д** (print) often looks like a handwritten *g*\n> - **и** (print) often looks like a handwritten *u*\n> - **г** (print) often looks like a handwritten *backward 's'* or *∂*\n> - **л** (print) often looks like a handwritten *inverted v* or *hook*\n> - **ш** (print) often looks like a handwritten *w*\n> Don't panic if you see these; simply remember the original sound and you'll be able to decode it.\n\n## practice\n\nLet's apply our full alphabet knowledge to some essential Ukrainian survival phrases and common words. Focus on articulating the unique sounds we just learned.\n\n**1. Greetings & Politeness (Revisited):**\n-   **ПРИВІТ** [🔊](audio_pryvit) (Pry-vit) — Hi / Hello (Informal). Note the soft **В** and **ТЬ**.\n-   **ДЯКУЮ** [🔊](audio_dyakuyu) (Dya-ku-yu) — Thank you. The **ДЯ** has a distinct 'y' glide.\n-   **БУДЬ ЛАСКА** [🔊](audio_budlaska) (Bud' las-ka) — Please / You're welcome. The **ДЬ** is a soft 'd'.\n-   **ДО ПОБАЧЕННЯ** [🔊](audio_dopobachennya) (Do po-ba-chen-nya) — Goodbye. Note the **Ч** and soft **ННЯ**.\n-   **ВИБАЧТЕ** [🔊](audio_vybachte) (Vy-bach-te) — Excuse me / Sorry. Hear the **Ч**.\n\n**2. Essential Question Words (The Inquisitors):**\n-   **ЩО** [🔊](audio_shcho) (Shcho) — What? This is one of the most common words – master that **Щ** sound!\n-   **ДЕ** [🔊](audio_de) (De) — Where? Simple.\n-   **ХТО** [🔊](audio_khto) (Khto) — Who? Remember the hard **Х**.\n-   **ЯК** [🔊](audio_yak) (Yak) — How?\n-   **ЧИЙ** [🔊](audio_chiy) (Chiy) — Whose?\n-   **ЧОМУ** [🔊](audio_chomu) (Chomu) — Why?\n\n**3. Common Ukrainian Words with New Letters:**\n-   **БОРЩ** [🔊](audio_borshch) (Borshch) — The famous beet soup! All the tricky sounds in one word: Б(B), О(O), Р(R), Щ(Shch)!\n-   **ЖЕЛЕ** [🔊](audio_zhele) (Zhele) — Jelly.\n-   **ЙОГУРТ** [🔊](audio_yohurt) (Yohurt) — Yogurt. (Note the **Й** for 'y' sound)\n-   **ЦУКОР** [🔊](audio_tsukor) (Tsukor) — Sugar.\n-   **ДЖАЗ** [🔊](audio_dzhaz) (Dzhaz) — Jazz. (Note the digraph **ДЖ**)\n-   **ЄВРОПА** [🔊](audio_yevropa) (Yevropa) — Europe.\n-   **УКРАЇНА** [🔊](audio_ukraina) (Ukrayina) — Ukraine. The 'И' sound followed by the 'Ї' sound is very distinct.\n\n## production\n\nYou are exploring Kyiv's historic Podil district. Everywhere you look, you see signs and hear conversations filled with the sounds you've just mastered.\n\nYou hear someone say: **\"Що це?\"** (Shcho tse? - What is this?). You understand the **Щ** and **Ц**.\nYou see a sign for **\"ЦУКЕРКИ\"** (Tsukerky - Candies). You easily read the **Ц** and **К**.\nA friend points to a map: **\"Ми тут, біля ЖИТНЬОГО РИНКУ.\"** (My tut, bilia Zhytnioho Rynku - We are here, near the Zhytniy Market). You catch the **Ж**.\nYou realize you need to ask for directions. You prepare to say: **\"ВИБАЧТЕ, ДЕ ЦЕНТР?\"** (Vy-bach-te, de tsentr? - Excuse me, where is the center?).\n\nYou've moved beyond simple recognition. You're beginning to participate in the Ukrainian soundscape.\n\n---\n\n# Activities\n\n## match-up: The Hissing Sounds\n\n> Match the letter to its sound description.\n\n| Left | Right |\n|------|-------|\n| Ж | \"S\" in Pleasure (Zh) |\n| Ш | \"Sh\" in She |\n| Ч | \"Ch\" in Chair |\n| Щ | \"Sh\" + \"Ch\" (Fresh cheese) |\n| Ц | \"Ts\" in Cats |\n| ДЖ | \"J\" in Jam |\n| ДЗ | \"Ds\" in Pods |\n| Й | \"Y\" in Boy (short i) |\n| Г | \"H\" in Home (soft, breathy) |\n| Ґ | \"G\" in Go (hard, explosive) |\n| Ь | Softens previous letter |\n| И | \"I\" in Sit (hard, guttural) |\n\n## quiz: The \"Y\" Vowels\n\n> Choose the correct pronunciation for the letter.\n\n1. What sound is Я?\n   - [x] Ya (Yard)\n   - [ ] Yu (You)\n   - [ ] Ye (Yes)\n   - [ ] Yo (Yonder)\n\n2. What sound is Ю?\n   - [x] Yu (You)\n   - [ ] Ya (Yard)\n   - [ ] Yi (Yield)\n   - [ ] Ye (Yes)\n\n3. What sound is Є?\n   - [x] Ye (Yes)\n   - [ ] E (Eh)\n   - [ ] Ya (Yard)\n   - [ ] Yo (Yonder)\n\n4. What sound is Ї?\n   - [x] Yi (Yield - two dots, two sounds)\n   - [ ] I (Machine)\n   - [ ] Y (Yard)\n   - [ ] J (Jump)\n\n5. What sound is Й?\n   - [x] Y (Short I as in Boy)\n   - [ ] J (Jump)\n   - [ ] Ch (Chew)\n   - [ ] Sh (Shoe)\n\n6. What sound is Ю in \"МЕНЮ\" (Menu)?\n   - [x] U (similar to 'u' in 'menu')\n   - [ ] A (Mena)\n   - [ ] I (Meni)\n   - [ ] O (Meno)\n\n7. What sound is Я in \"ІТАЛІЯ\" (Italy)?\n   - [x] Ya (Italia)\n   - [ ] Yu (Italiu)\n   - [ ] Yi (Italii)\n   - [ ] Ye (Italie)\n\n8. What sound is Є in \"ЄВРОПА\" (Europe)?\n   - [x] Ye (Yevropa)\n   - [ ] E (Evropa)\n   - [ ] Ya (Yavropa)\n   - [ ] Yu (Yuvropa)\n\n9. What sound is Ї in \"КИЇВ\" (Kyiv)?\n   - [x] Yi (Kyiv)\n   - [ ] I (Kyiv)\n   - [ ] Y (Kyyv)\n   - [ ] Ye (Kyev)\n\n10. Which letter makes the \"Zh\" sound (pleasure)?\n    - [x] Ж\n    - [ ] Ш\n    - [ ] Щ\n    - [ ] Ч\n\n11. Which letter makes the \"Sh\" sound (shoe)?\n    - [x] Ш\n    - [ ] Ж\n    - [ ] Щ\n    - [ ] Ч\n\n12. Which letter makes the \"Ch\" sound (chair)?\n    - [x] Ч\n    - [ ] Ц\n    - [ ] Ш\n    - [ ] Щ\n\n## match-up: Print vs Italic Form Description\n\n> Match the print letter to the description of its common handwritten/italic form.\n\n| Left | Right |\n|------|-------|\n| т (print) | often looks like English 'm' |\n| п (print) | often looks like English 'n' |\n| д (print) | often looks like English 'g' |\n| и (print) | often looks like English 'u' |\n| г (print) | often looks like a backward 's' (∂) |\n| л (print) | often looks like an inverted v or hook |\n| ш (print) | often looks like a 'w' |\n| м (print) | often looks like an 'M' |\n| а (print) | often looks like an 'a' |\n| в (print) | often looks like a 'b' |\n| з (print) | often looks like a 'z' |\n| к (print) | often looks like a 'k' |\n\n## group-sort: Letter Categories\n\n> Sort the letters into their phonetic groups.\n\n### Hissers (Sibilants & Affricates)\n- Ж\n- Ш\n- Ч\n- Щ\n- Ц\n- ДЖ\n- ДЗ\n\n### Iotated (Y-vowels)\n- Я\n- Ю\n- Є\n- Ї\n\n### Unique Consonants & Modifiers\n- Г\n- Ґ\n- Й\n- Ь (Soft Sign)\n- И (Hard I)\n\n## fill-in: Complete the Word\n\n> Fill in the missing unique Ukrainian letter.\n\n1. _ Я К У Ю (Thank you)\n   - [!answer] Д\n   - [!options] Д | Т | З | С\n\n2. П Р И В _ Т (Hi)\n   - [!answer] І\n   - [!options] І | И | Ї | Е\n\n3. Б _ Д Ь  Л А С К А (Please)\n   - [!answer] У\n   - [!options] У | Ю | О | А\n\n4. Б О Р _ (Beet soup)\n   - [!answer] Щ\n   - [!options] Щ | Ш | Ч | Ж\n\n5. _ О  П О Б А Ч Е Н Н Я (Goodbye)\n   - [!answer] Д\n   - [!options] Д | Т | П | Г\n\n6. Ш О К О Л А _ (Sweet treat - Chocolate)\n   - [!answer] Д\n   - [!options] Д | Т | П | Б\n\n7. Д Ж _ З (Music genre - Jazz)\n   - [!answer] А\n   - [!options] А | Е | І | У\n\n8. Ч Е М П І О _ (Winner - Champion)\n   - [!answer] Н\n   - [!options] Н | П | М | Л\n\n9. Л О Н Д О _ (City - London)\n   - [!answer] Н\n   - [!options] Н | П | М | Л\n\n10. Ц У К О _ (Sweetener - Sugar)\n    - [!answer] Р\n    - [!options] Р | П | Л | Н\n\n11. Д Ж И Н С _ (Clothing - Jeans)\n    - [!answer] И\n    - [!options] И | І | Ї | Е\n\n12. Й О Г У Р _ (Dairy food - Yogurt)\n    - [!answer] Т\n    - [!options] Т | Д | П | Б\n\n## unjumble: Survival Phrases\n\n> Put the letters in order to form the word.\n\n1. Т / А / К\n   > [!answer] ТАК\n   > (Yes)\n\n2. І / Н\n   > [!answer] НІ\n   > (No)\n\n3. О / Щ\n   > [!answer] ЩО\n   > (What)\n\n4. Е / Д\n   > [!answer] ДЕ\n   > (Where)\n\n5. О / Х / Т\n   > [!answer] ХТО\n   > (Who)\n\n6. К / Я\n   > [!answer] ЯК\n   > (How)\n\n7. Е / Ц\n   > [!answer] ЦЕ\n   > (This is)\n\n8. Б / Р / Е / Д / О\n   > [!answer] ДОБРЕ\n   > (Good)\n\n9. Т / М / Е / О / Р\n   > [!answer] МЕТРО\n   > (Metro)\n\n10. К / А / В / Б / У\n    > [!answer] БУКВА\n    > (Letter)\n\n11. О / В / Л / О / С\n    > [!answer] СЛОВО\n    > (Word)\n\n12. В / О / А / М\n    > [!answer] МОВА\n    > (Language)\n\n## quiz: Hard G vs Soft H\n\n> Which letter should be used for the indicated sound?\n\n1. For the soft, breathy 'H' sound (like in \"Home\").\n   - [x] Г\n   - [ ] Ґ\n\n2. For the hard, explosive 'G' sound (like in \"Go\").\n   - [x] Ґ\n   - [ ] Г\n\n3. For the initial sound in \"Hostomel'\" (city).\n   - [x] Г\n   - [ ] Ґ\n\n4. For the initial sound in \"Gudzyk\" (button).\n   - [x] Ґ\n   - [ ] Г\n\n5. For the soft 'H' in \"Holova\" (head).\n   - [x] Г\n   - [ ] Ґ\n\n6. For the hard 'G' in \"Gava\" (crow).\n   - [x] Ґ\n   - [ ] Г\n\n7. For the initial sound in \"Hulia\" (to walk).\n   - [x] Г\n   - [ ] Ґ\n\n8. For the initial sound in \"Geografiya\" (geography).\n   - [x] Г\n   - [ ] Ґ\n\n9. For the initial sound in \"Gramatyka\" (grammar).\n   - [x] Г\n   - [ ] Ґ\n\n10. For the hard 'G' in \"Garderob\" (wardrobe).\n    - [x] Ґ\n    - [ ] Г\n\n11. For the soft 'H' in \"Humor\".\n    - [x] Г\n    - [ ] Ґ\n\n12. For the soft 'H' in \"Hero\".\n    - [x] Г\n    - [ ] Ґ\n\n## anagram: Scrambled Letters\n\n> Unscramble the letters to find the word.\n\n1. у б к а в\n   > [!answer] БУКВА (wait - bukva)\n   > (Letter)\n\n2. в о л о с\n   > [!answer] слово\n   > (Word)\n\n3. д о н Л о н\n   > [!answer] Лондон\n   > (City)\n\n4. в а К и ї\n   > [!answer] Київ\n   > (City)\n\n5. к а Т\n   > [!answer] Так\n   > (Yes)\n\n6. і Н\n   > [!answer] Ні\n   > (No)\n\n7. а р к О у ц\n   > [!answer] Цукор\n   > (Sugar)\n\n8. щ о Б р\n   > [!answer] Борщ\n   > (Soup)\n\n9. з а Д ж\n   > [!answer] Джаз\n   > (Music)\n\n10. о л Ш о к д а\n    > [!answer] Шоколад\n    > (Sweet)\n\n11. п а Є в р о\n    > [!answer] Європа\n    > (Continent)\n\n12. ю к у я Д\n    > [!answer] Дякую\n    > (Thank you)\n\n## true-false: Letter Facts\n\n> Decide if the statement about the letters is true or false.\n\n- [x] The letter Щ makes a two-part \"sh-ch\" sound.\n  > Correct! Like in \"fresh cheese\".\n\n- [ ] The letter Ц makes a \"ch\" sound.\n  > Incorrect. Ц makes a \"ts\" sound.\n\n- [x] The letter Ь (Soft Sign) has no sound of its own.\n  > Correct! It only softens the preceding consonant.\n\n- [ ] The letter И sounds like \"ee\" in machine.\n  > Incorrect. И sounds like \"i\" in sit. І sounds like \"ee\".\n\n- [x] The letter Ї always has a built-in \"y\" sound.\n  > Correct! It's \"Yee\".\n\n- [ ] The letter Ю makes a \"ya\" sound.\n  > Incorrect. Ю makes a \"yu\" sound. Я makes a \"ya\" sound.\n\n- [x] The letter Є makes a \"ye\" sound.\n  > Correct!\n\n- [ ] The letter Ж makes a \"sh\" sound.\n  > Incorrect. Ж makes a \"zh\" sound (like 's' in pleasure). Ш makes a \"sh\" sound.\n\n- [x] The letters ДЖ form a single \"j\" sound.\n  > Correct! Like in \"jam\".\n\n- [ ] The letters ДЗ form a \"d-z\" sound as two separate sounds.\n  > Incorrect. They form a single \"dz\" sound, like 'ds' in 'pods'.\n\n- [x] The letter Й is a consonant.\n  > Correct! It's a short 'y' sound.\n\n- [ ] The italic form of т looks like a 'u'.\n  > Incorrect. The italic form of т looks like an 'm'. The italic form of и looks like a 'u'.\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note | Audio |\n|------|-----|---------|-----|--------|------|-------|\n| буква | /ˈbukwɑ/ | letter | noun | f | | [🔊](audio_bukva) |\n| слово | /ˈslɔwɔ/ | word | noun | n | | [🔊](audio_slovo) |\n| алфавіт | /ɑlfɑˈvit/ | alphabet | noun | m | | [🔊](audio_alfavit) |\n| мова | /ˈmɔwɑ/ | language | noun | f | | [🔊](audio_mova) |\n| українська | /ukrɑˈjinʲsʲkɑ/ | Ukrainian | adj | f | | [🔊](audio_ukrainska) |\n| англійська | /ɑnˈɦlʲijsʲkɑ/ | English | adj | f | | [🔊](audio_anhliyska) |\n| так | /tɑk/ | yes | part | - | | [🔊](audio_tak) |\n| ні | /nʲi/ | no | part | - | | [🔊](audio_ni) |\n| добре | /ˈdɔbrɛ/ | good/well | adv | - | | [🔊](audio_dobre) |\n| дякую | /ˈdʲɑkuju/ | thank you | verb | - | 1sg form | [🔊](audio_dyakuyu) |\n| будь ласка | /budʲ ˈlɑskɑ/ | please | phrase | - | | [🔊](audio_budlaska) |\n| привіт | /prɪˈvit/ | hi | interj | - | informal | [🔊](audio_pryvit) |\n| до побачення | /dɔ pɔˈbɑtʃennʲɑ/ | goodbye | phrase | - | | [🔊](audio_dopobachennya) |\n| вибачте | /ˈwɪbɑtʃte/ | sorry | verb | - | imper. pl | [🔊](audio_vybachte) |\n| прошу | /ˈprɔʃu/ | you're welcome | verb | - | also \"I ask\" | [🔊](audio_proshu) |\n| що | /ʃtʃɔ/ | what | pron | - | | [🔊](audio_shcho) |\n| як | /jɑk/ | how | adv | - | | [🔊](audio_yak) |\n| де | /dɛ/ | where | adv | - | | [🔊](audio_de) |\n| хто | /xtɔ/ | who | pron | - | | [🔊](audio_khto) |\n| це | /tʃɛ/ | this is | pron | - | | [🔊](audio_tse) |\n| борщ | /bɔrʃtʃ/ | borsch | noun | m | | [🔊](audio_borshch) |\n| йогурт | /ˈjɔɦurt/ | yogurt | noun | m | | [🔊](audio_yohurt) |\n| желе | /ʒɛˈlɛ/ | jelly | noun | n | indeclinable | [🔊](audio_zhele) |\n| майонез | /mɑjɔˈnɛz/ | mayonnaise | noun | m | | [🔊](audio_mayonez) |\n| шоколад | /ʃɔkɔˈlɑd/ | chocolate | noun | m | | [🔊](audio_shokolad) |\n| чемпіон | /tʃɛmpiˈɔn/ | champion | noun | m | | [🔊](audio_chempion) |\n| центр | /tʃɛntr/ | center | noun | m | | [🔊](audio_tsentr) |\n| цукор | /ˈtsukɔr/ | sugar | noun | m | | [🔊](audio_tsukor) |\n| джинси | /ˈdʒɪnsɪ/ | jeans | noun | pl | | [🔊](audio_dzhynsy) |\n| джаз | /dʒɑz/ | jazz | noun | m | | [🔊](audio_dzhaz) |\n| Європа | /jɛwˈrɔpɑ/ | Europe | noun | f | | [🔊](audio_yevropa) |\n| Україна | /ukrɑˈjinɑ/ | Ukraine | noun | f | | [🔊](audio_ukraina) |\n| Лондон | /ˈlɔndɔn/ | London | noun | m | | [🔊](audio_london) |\n| Київ | /ˈkɪjiu̯/ | Kyiv | noun | m | | [🔊](audio_kyiv) |\n\n# Letter Groups\n\n**Unique Consonants:** Г Ґ Ж Ш Щ Ч Ц\n**Iotated Vowels:** Є Ї Ю Я\n**Modifiers:** Ь '\n\n---\n\n# Summary\n\nCongratulations! You have now met all 33 letters of the Ukrainian alphabet.\n1.  **True Friends:** Familiar faces (A, K, M...)\n2.  **False Friends:** Tricky spies (P=R, C=S...)\n3.  **Strangers:** New shapes (Б, Л, Д...)\n4.  **Hissers:** The texture of the language (Ж, Ш, Ч, Щ)\n5.  **Y-Vowels:** The melody (Я, Ю, Є, Ї)\n\nYou can now pronounce **БОРЩ** (Borshch) correctly. You can ask **ДЕ МЕТРО?** (Where is the metro?). In the next module, we will learn how these words change gender. Yes, words have gender. Don't worry, it's logical!\n",
+    "createdAt": "2025-12-08T21:22:09.871Z",
+    "modifiedAt": "2025-12-08T21:22:09.871Z",
     "version": 2
   },
   "activities": [
     {
+      "id": "act-a1-0-matchup",
+      "type": "match-up",
+      "title": "The Hissing Sounds",
+      "description": "Match the letter to its sound description.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "Ж",
+            "right": "\"S\" in Pleasure (Zh)"
+          },
+          {
+            "left": "Ш",
+            "right": "\"Sh\" in She"
+          },
+          {
+            "left": "Ч",
+            "right": "\"Ch\" in Chair"
+          },
+          {
+            "left": "Щ",
+            "right": "\"Sh\" + \"Ch\" (Fresh cheese)"
+          },
+          {
+            "left": "Ц",
+            "right": "\"Ts\" in Cats"
+          },
+          {
+            "left": "ДЖ",
+            "right": "\"J\" in Jam"
+          },
+          {
+            "left": "ДЗ",
+            "right": "\"Ds\" in Pods"
+          },
+          {
+            "left": "Й",
+            "right": "\"Y\" in Boy (short i)"
+          },
+          {
+            "left": "Г",
+            "right": "\"H\" in Home (soft, breathy)"
+          },
+          {
+            "left": "Ґ",
+            "right": "\"G\" in Go (hard, explosive)"
+          },
+          {
+            "left": "Ь",
+            "right": "Softens previous letter"
+          },
+          {
+            "left": "И",
+            "right": "\"I\" in Sit (hard, guttural)"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.871Z",
+      "modifiedAt": "2025-12-08T21:22:09.871Z"
+    },
+    {
       "id": "act-a1-0-quiz",
       "type": "quiz",
-      "title": "Complete Alphabet Knowledge",
-      "description": "Test your knowledge of the full Ukrainian alphabet!",
+      "title": "The \"Y\" Vowels",
+      "description": "Choose the correct pronunciation for the letter.",
       "content": {
         "type": "quiz",
         "questions": [
           {
-            "question": "What sound does **Ш** make?",
+            "question": "What sound is Я?",
             "options": [
-              "/s/ like \"sun\"",
-              "/ʃ/ like \"shoe\"",
-              "/tʃ/ like \"church\"",
-              "/ts/ like \"cats\""
+              "Ya (Yard)",
+              "Yu (You)",
+              "Ye (Yes)",
+              "Yo (Yonder)"
             ],
-            "correctIndex": 1,
-            "explanation": "Ш makes the \"sh\" sound!"
+            "correctIndex": 0,
+            "explanation": ""
           },
           {
-            "question": "What sound does **Ч** make?",
+            "question": "What sound is Ю?",
             "options": [
-              "/k/ like \"kite\"",
-              "/s/ like \"sun\"",
-              "/tʃ/ like \"church\"",
-              "/ts/ like \"cats\""
+              "Yu (You)",
+              "Ya (Yard)",
+              "Yi (Yield)",
+              "Ye (Yes)"
             ],
-            "correctIndex": 2,
-            "explanation": "Ч makes the \"ch\" sound!"
+            "correctIndex": 0,
+            "explanation": ""
           },
           {
-            "question": "What does the soft sign **Ь** do?",
+            "question": "What sound is Є?",
             "options": [
-              "Makes an \"h\" sound",
-              "Softens the previous consonant",
-              "Makes a vowel sound",
-              "Indicates stress"
+              "Ye (Yes)",
+              "E (Eh)",
+              "Ya (Yard)",
+              "Yo (Yonder)"
             ],
-            "correctIndex": 1,
-            "explanation": "Ь doesn't make a sound - it softens the consonant before it!"
+            "correctIndex": 0,
+            "explanation": ""
           },
           {
-            "question": "Which letter is unique to Ukrainian?",
+            "question": "What sound is Ї?",
+            "options": [
+              "Yi (Yield - two dots, two sounds)",
+              "I (Machine)",
+              "Y (Yard)",
+              "J (Jump)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "What sound is Й?",
+            "options": [
+              "Y (Short I as in Boy)",
+              "J (Jump)",
+              "Ch (Chew)",
+              "Sh (Shoe)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "What sound is Ю in \"МЕНЮ\" (Menu)?",
+            "options": [
+              "U (similar to 'u' in 'menu')",
+              "A (Mena)",
+              "I (Meni)",
+              "O (Meno)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "What sound is Я in \"ІТАЛІЯ\" (Italy)?",
+            "options": [
+              "Ya (Italia)",
+              "Yu (Italiu)",
+              "Yi (Italii)",
+              "Ye (Italie)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "What sound is Є in \"ЄВРОПА\" (Europe)?",
+            "options": [
+              "Ye (Yevropa)",
+              "E (Evropa)",
+              "Ya (Yavropa)",
+              "Yu (Yuvropa)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "What sound is Ї in \"КИЇВ\" (Kyiv)?",
+            "options": [
+              "Yi (Kyiv)",
+              "I (Kyiv)",
+              "Y (Kyyv)",
+              "Ye (Kyev)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Which letter makes the \"Zh\" sound (pleasure)?",
+            "options": [
+              "Ж",
+              "Ш",
+              "Щ",
+              "Ч"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Which letter makes the \"Sh\" sound (shoe)?",
             "options": [
               "Ш",
+              "Ж",
+              "Щ",
+              "Ч"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Which letter makes the \"Ch\" sound (chair)?",
+            "options": [
               "Ч",
-              "Ї",
-              "Ю"
-            ],
-            "correctIndex": 2,
-            "explanation": "Ї exists only in Ukrainian - no other Slavic language has it!"
-          },
-          {
-            "question": "What sound does **Я** make?",
-            "options": [
-              "/a/ like \"father\"",
-              "/ja/ like \"ya\" in \"yard\"",
-              "/i/ like \"machine\"",
-              "/e/ like \"bed\""
-            ],
-            "correctIndex": 1,
-            "explanation": "Я is \"iotated\" - it has a \"y\" sound before the \"a\"!"
-          },
-          {
-            "question": "How does **т** look in italics?",
-            "options": [
-              "Like the letter \"m\"",
-              "Like the letter \"t\"",
-              "Like the letter \"n\"",
-              "Like the letter \"g\""
+              "Ц",
+              "Ш",
+              "Щ"
             ],
             "correctIndex": 0,
-            "explanation": "In italics, т looks like a lowercase m!"
-          },
-          {
-            "question": "What sound does **Ж** make?",
-            "options": [
-              "/z/ like \"zoo\"",
-              "/ʒ/ like \"measure\"",
-              "/dʒ/ like \"judge\"",
-              "/g/ like \"go\""
-            ],
-            "correctIndex": 1,
-            "explanation": "Ж makes the \"zh\" sound like in \"measure\"!"
-          },
-          {
-            "question": "What sound does **Ц** make?",
-            "options": [
-              "/s/ like \"sun\"",
-              "/k/ like \"kite\"",
-              "/ts/ like \"cats\"",
-              "/tʃ/ like \"church\""
-            ],
-            "correctIndex": 2,
-            "explanation": "Ц makes the \"ts\" sound!"
-          },
-          {
-            "question": "What's the difference between Г and Ґ?",
-            "options": [
-              "Г is breathy /h/, Ґ is hard /g/",
-              "They sound the same",
-              "Ґ is soft, Г is hard",
-              "Г is only in Russian"
-            ],
-            "correctIndex": 0,
-            "explanation": "Г is a breathy H sound, while Ґ is the hard G sound!"
-          },
-          {
-            "question": "What sound does **Є** make?",
-            "options": [
-              "/e/ like \"bed\"",
-              "/je/ like \"ye\" in \"yes\"",
-              "/i/ like \"machine\"",
-              "/a/ like \"father\""
-            ],
-            "correctIndex": 1,
-            "explanation": "Є is \"iotated\" - it sounds like \"ye\"!"
-          },
-          {
-            "question": "How many letters are in the Ukrainian alphabet?",
-            "options": [
-              "26",
-              "32",
-              "33",
-              "36"
-            ],
-            "correctIndex": 2,
-            "explanation": "Ukrainian has 33 letters - one more than Russian!"
-          },
-          {
-            "question": "What sound does **Щ** make?",
-            "options": [
-              "/ʃ/ like \"shoe\"",
-              "/ʃtʃ/ like \"sh\" + \"ch\"",
-              "/tʃ/ like \"church\"",
-              "/sk/ like \"skip\""
-            ],
-            "correctIndex": 1,
-            "explanation": "Щ is \"sh\" followed immediately by \"ch\"!"
+            "explanation": ""
           }
         ],
         "shuffleQuestions": true,
@@ -209,64 +274,64 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.083Z",
-      "modifiedAt": "2025-12-06T10:49:20.083Z"
+      "createdAt": "2025-12-08T21:22:09.871Z",
+      "modifiedAt": "2025-12-08T21:22:09.871Z"
     },
     {
       "id": "act-a1-0-matchup",
       "type": "match-up",
-      "title": "Letters and Sounds II",
-      "description": "Match each new letter to its sound.",
+      "title": "Print vs Italic Form Description",
+      "description": "Match the print letter to the description of its common handwritten/italic form.",
       "content": {
         "type": "match-up",
         "pairs": [
           {
-            "left": "Ш",
-            "right": "/ʃ/ like \"shoe\""
+            "left": "т (print)",
+            "right": "often looks like English 'm'"
           },
           {
-            "left": "Ч",
-            "right": "/tʃ/ like \"church\""
+            "left": "п (print)",
+            "right": "often looks like English 'n'"
           },
           {
-            "left": "Ж",
-            "right": "/ʒ/ like \"measure\""
+            "left": "д (print)",
+            "right": "often looks like English 'g'"
           },
           {
-            "left": "Ц",
-            "right": "/ts/ like \"cats\""
+            "left": "и (print)",
+            "right": "often looks like English 'u'"
           },
           {
-            "left": "Щ",
-            "right": "/ʃtʃ/ like \"fresh cheese\""
+            "left": "г (print)",
+            "right": "often looks like a backward 's' (∂)"
           },
           {
-            "left": "Г",
-            "right": "/ɦ/ breathy H"
+            "left": "л (print)",
+            "right": "often looks like an inverted v or hook"
           },
           {
-            "left": "Ґ",
-            "right": "/g/ like \"go\""
+            "left": "ш (print)",
+            "right": "often looks like a 'w'"
           },
           {
-            "left": "Я",
-            "right": "/ja/ like \"yard\""
+            "left": "м (print)",
+            "right": "often looks like an 'M'"
           },
           {
-            "left": "Ю",
-            "right": "/ju/ like \"you\""
+            "left": "а (print)",
+            "right": "often looks like an 'a'"
           },
           {
-            "left": "Є",
-            "right": "/je/ like \"yes\""
+            "left": "в (print)",
+            "right": "often looks like a 'b'"
           },
           {
-            "left": "Ї",
-            "right": "/ji/ like \"yeast\""
+            "left": "з (print)",
+            "right": "often looks like a 'z'"
           },
           {
-            "left": "И",
-            "right": "/ɪ/ like \"bit\""
+            "left": "к (print)",
+            "right": "often looks like a 'k'"
           }
         ],
         "shuffleRight": true
@@ -278,39 +343,52 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.083Z",
-      "modifiedAt": "2025-12-06T10:49:20.083Z"
+      "createdAt": "2025-12-08T21:22:09.871Z",
+      "modifiedAt": "2025-12-08T21:22:09.871Z"
     },
     {
       "id": "act-a1-0-groupsort",
       "type": "group-sort",
-      "title": "Vowel Types",
-      "description": "Sort these vowels into the correct category.",
+      "title": "Letter Categories",
+      "description": "Sort the letters into their phonetic groups.",
       "content": {
         "type": "group-sort",
         "groups": [
           {
-            "id": "simple-vowels",
-            "name": "Simple Vowels",
+            "id": "hissers",
+            "name": "Hissers",
             "items": [
-              "А",
-              "Е",
-              "И",
-              "І",
-              "О",
-              "У"
-            ]
+              "Ж",
+              "Ш",
+              "Ч",
+              "Щ",
+              "Ц",
+              "ДЖ",
+              "ДЗ"
+            ],
+            "nameUk": "Sibilants & Affricates"
           },
           {
-            "id": "iotated-vowels",
-            "name": "Iotated Vowels",
+            "id": "iotated",
+            "name": "Iotated",
             "items": [
-              "Є",
-              "Ї",
+              "Я",
               "Ю",
-              "Я"
+              "Є",
+              "Ї"
             ],
-            "nameUk": "with \"y\" sound"
+            "nameUk": "Y-vowels"
+          },
+          {
+            "id": "unique-consonants--modifiers",
+            "name": "Unique Consonants & Modifiers",
+            "items": [
+              "Г",
+              "Ґ",
+              "Й",
+              "Ь (Soft Sign)",
+              "И (Hard I)"
+            ]
           }
         ],
         "shuffleItems": true
@@ -322,291 +400,64 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.083Z",
-      "modifiedAt": "2025-12-06T10:49:20.083Z"
-    },
-    {
-      "id": "act-a1-0-matchup",
-      "type": "match-up",
-      "title": "Essential Phrases",
-      "description": "Match the Ukrainian phrase to its English meaning.",
-      "content": {
-        "type": "match-up",
-        "pairs": [
-          {
-            "left": "так",
-            "right": "yes"
-          },
-          {
-            "left": "ні",
-            "right": "no"
-          },
-          {
-            "left": "добре",
-            "right": "good/okay"
-          },
-          {
-            "left": "дякую",
-            "right": "thank you"
-          },
-          {
-            "left": "будь ласка",
-            "right": "please"
-          },
-          {
-            "left": "привіт",
-            "right": "hello"
-          },
-          {
-            "left": "до побачення",
-            "right": "goodbye"
-          },
-          {
-            "left": "вибачте",
-            "right": "excuse me"
-          },
-          {
-            "left": "прошу",
-            "right": "you're welcome"
-          },
-          {
-            "left": "що",
-            "right": "what"
-          },
-          {
-            "left": "як",
-            "right": "how"
-          },
-          {
-            "left": "де",
-            "right": "where"
-          }
-        ],
-        "shuffleRight": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.083Z",
-      "modifiedAt": "2025-12-06T10:49:20.083Z"
-    },
-    {
-      "id": "act-a1-0-truefalse",
-      "type": "true-false",
-      "title": "Alphabet Facts",
-      "description": "Decide if each statement is true (Правда) or false (Міф).",
-      "content": {
-        "type": "true-false",
-        "statements": [
-          {
-            "statement": "The letter Ї exists only in Ukrainian.",
-            "isTrue": true,
-            "explanation": "Correct! No other Slavic language has this letter."
-          },
-          {
-            "statement": "The soft sign Ь makes a \"y\" sound.",
-            "isTrue": false,
-            "explanation": "Incorrect. Ь doesn't make a sound - it softens the consonant before it."
-          },
-          {
-            "statement": "Ukrainian has 33 letters in its alphabet.",
-            "isTrue": true,
-            "explanation": "Correct! One more than Russian."
-          },
-          {
-            "statement": "Г and Ґ make the same sound.",
-            "isTrue": false,
-            "explanation": "Incorrect. Г is breathy /h/, Ґ is hard /g/."
-          },
-          {
-            "statement": "In italics, the letter т looks like \"m\".",
-            "isTrue": true,
-            "explanation": "Correct! This surprises many learners."
-          },
-          {
-            "statement": "The letter Я sounds like English \"a\".",
-            "isTrue": false,
-            "explanation": "Incorrect. Я sounds like \"ya\" - it's an iotated vowel."
-          },
-          {
-            "statement": "Ч sounds like \"ch\" in \"church\".",
-            "isTrue": true,
-            "explanation": "Correct! Ч = /tʃ/"
-          },
-          {
-            "statement": "The letter Ґ was suppressed during Soviet times.",
-            "isTrue": true,
-            "explanation": "Correct! It has been restored in independent Ukraine."
-          },
-          {
-            "statement": "И and І make the same sound.",
-            "isTrue": false,
-            "explanation": "Incorrect. И is \"harder\" (like \"bit\"), І is \"clearer\" (like \"machine\")."
-          },
-          {
-            "statement": "Щ combines \"sh\" and \"ch\" sounds.",
-            "isTrue": true,
-            "explanation": "Correct! Щ = /ʃtʃ/"
-          },
-          {
-            "statement": "The word \"що\" is pronounced /so/.",
-            "isTrue": false,
-            "explanation": "Incorrect. \"Що\" is pronounced /shcho/."
-          },
-          {
-            "statement": "\"Дякую\" means \"thank you\".",
-            "isTrue": true,
-            "explanation": "Correct! One of the most useful words to know."
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.083Z",
-      "modifiedAt": "2025-12-06T10:49:20.083Z"
+      "createdAt": "2025-12-08T21:22:09.871Z",
+      "modifiedAt": "2025-12-08T21:22:09.871Z"
     },
     {
       "id": "act-a1-0-fillblank",
       "type": "fill-blank",
-      "title": "Complete the Phrase",
-      "description": "Fill in the missing letter to complete each phrase.",
+      "title": "Complete the Word",
+      "description": "Fill in the missing unique Ukrainian letter.",
       "content": {
         "type": "fill-blank",
         "items": [
           {
-            "prompt": "дяку___у (thank you)",
-            "answer": "ю",
-            "options": [
-              "ю",
-              "у",
-              "о",
-              "а"
-            ]
+            "prompt": "_ Я К У Ю (Thank you)\n   - [!answer] Д\n   - [!options] Д | Т | З | С",
+            "answer": ""
           },
           {
-            "prompt": "___кола (school)",
-            "answer": "ш",
-            "options": [
-              "ш",
-              "с",
-              "щ",
-              "ч"
-            ]
+            "prompt": "П Р И В _ Т (Hi)\n   - [!answer] І\n   - [!options] І | И | Ї | Е",
+            "answer": ""
           },
           {
-            "prompt": "при___іт (hello)",
-            "answer": "в",
-            "options": [
-              "в",
-              "б",
-              "п",
-              "ф"
-            ]
+            "prompt": "Б _ Д Ь  Л А С К А (Please)\n   - [!answer] У\n   - [!options] У | Ю | О | А",
+            "answer": ""
           },
           {
-            "prompt": "___о (what)",
-            "answer": "щ",
-            "options": [
-              "щ",
-              "ш",
-              "ч",
-              "с"
-            ]
+            "prompt": "Б О Р _ (Beet soup)\n   - [!answer] Щ\n   - [!options] Щ | Ш | Ч | Ж",
+            "answer": ""
           },
           {
-            "prompt": "будь ___аска (please)",
-            "answer": "л",
-            "options": [
-              "л",
-              "н",
-              "м",
-              "р"
-            ]
+            "prompt": "_ О  П О Б А Ч Е Н Н Я (Goodbye)\n   - [!answer] Д\n   - [!options] Д | Т | П | Г",
+            "answer": ""
           },
           {
-            "prompt": "___к (yes)",
-            "answer": "та",
-            "options": [
-              "та",
-              "то",
-              "ти",
-              "ту"
-            ]
+            "prompt": "Ш О К О Л А _ (Sweet treat - Chocolate)\n   - [!answer] Д\n   - [!options] Д | Т | П | Б",
+            "answer": ""
           },
           {
-            "prompt": "до___ре (good)",
-            "answer": "б",
-            "options": [
-              "б",
-              "п",
-              "в",
-              "д"
-            ]
+            "prompt": "Д Ж _ З (Music genre - Jazz)\n   - [!answer] А\n   - [!options] А | Е | І | У",
+            "answer": ""
           },
           {
-            "prompt": "н___ (no)",
-            "answer": "і",
-            "hints": [
-              "no"
-            ],
-            "options": [
-              "і",
-              "и",
-              "е",
-              "а"
-            ]
+            "prompt": "Ч Е М П І О _ (Winner - Champion)\n   - [!answer] Н\n   - [!options] Н | П | М | Л",
+            "answer": ""
           },
           {
-            "prompt": "___е (this)",
-            "answer": "ц",
-            "options": [
-              "ц",
-              "с",
-              "ч",
-              "з"
-            ]
+            "prompt": "Л О Н Д О _ (City - London)\n   - [!answer] Н\n   - [!options] Н | П | М | Л",
+            "answer": ""
           },
           {
-            "prompt": "___к (how)",
-            "answer": "я",
-            "options": [
-              "я",
-              "а",
-              "е",
-              "и"
-            ]
+            "prompt": "Ц У К О _ (Sweetener - Sugar)\n    - [!answer] Р\n    - [!options] Р | П | Л | Н",
+            "answer": ""
           },
           {
-            "prompt": "д___ (where)",
-            "answer": "е",
-            "hints": [
-              "where"
-            ],
-            "options": [
-              "е",
-              "є",
-              "и",
-              "і"
-            ]
+            "prompt": "Д Ж И Н С _ (Clothing - Jeans)\n    - [!answer] И\n    - [!options] И | І | Ї | Е",
+            "answer": ""
           },
           {
-            "prompt": "___то (who)",
-            "answer": "х",
-            "options": [
-              "х",
-              "г",
-              "к",
-              "ц"
-            ]
+            "prompt": "Й О Г У Р _ (Dairy food - Yogurt)\n    - [!answer] Т\n    - [!options] Т | Д | П | Б",
+            "answer": ""
           }
         ]
       },
@@ -617,130 +468,411 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.083Z",
-      "modifiedAt": "2025-12-06T10:49:20.083Z"
+      "createdAt": "2025-12-08T21:22:09.871Z",
+      "modifiedAt": "2025-12-08T21:22:09.871Z"
+    },
+    {
+      "id": "act-a1-0-unjumble",
+      "type": "unjumble",
+      "title": "Survival Phrases",
+      "description": "Put the letters in order to form the word.",
+      "content": {
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
+          {
+            "words": [
+              "Т",
+              "А",
+              "К"
+            ],
+            "answer": "ТАК",
+            "translation": "Yes"
+          },
+          {
+            "words": [
+              "І",
+              "Н"
+            ],
+            "answer": "НІ",
+            "translation": "No"
+          },
+          {
+            "words": [
+              "О",
+              "Щ"
+            ],
+            "answer": "ЩО",
+            "translation": "What"
+          },
+          {
+            "words": [
+              "Е",
+              "Д"
+            ],
+            "answer": "ДЕ",
+            "translation": "Where"
+          },
+          {
+            "words": [
+              "О",
+              "Х",
+              "Т"
+            ],
+            "answer": "ХТО",
+            "translation": "Who"
+          },
+          {
+            "words": [
+              "К",
+              "Я"
+            ],
+            "answer": "ЯК",
+            "translation": "How"
+          },
+          {
+            "words": [
+              "Е",
+              "Ц"
+            ],
+            "answer": "ЦЕ",
+            "translation": "This is"
+          },
+          {
+            "words": [
+              "Б",
+              "Р",
+              "Е",
+              "Д",
+              "О"
+            ],
+            "answer": "ДОБРЕ",
+            "translation": "Good"
+          },
+          {
+            "words": [
+              "Т",
+              "М",
+              "Е",
+              "О",
+              "Р"
+            ],
+            "answer": "МЕТРО",
+            "translation": "Metro"
+          },
+          {
+            "words": [
+              "К",
+              "А",
+              "В",
+              "Б",
+              "У"
+            ],
+            "answer": "БУКВА",
+            "translation": "Letter"
+          },
+          {
+            "words": [
+              "О",
+              "В",
+              "Л",
+              "О",
+              "С"
+            ],
+            "answer": "СЛОВО",
+            "translation": "Word"
+          },
+          {
+            "words": [
+              "В",
+              "О",
+              "А",
+              "М"
+            ],
+            "answer": "МОВА",
+            "translation": "Language"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.871Z",
+      "modifiedAt": "2025-12-08T21:22:09.871Z"
+    },
+    {
+      "id": "act-a1-0-quiz",
+      "type": "quiz",
+      "title": "Hard G vs Soft H",
+      "description": "Which letter should be used for the indicated sound?",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "For the soft, breathy 'H' sound (like in \"Home\").",
+            "options": [
+              "Г",
+              "Ґ"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "For the hard, explosive 'G' sound (like in \"Go\").",
+            "options": [
+              "Ґ",
+              "Г"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "For the initial sound in \"Hostomel'\" (city).",
+            "options": [
+              "Г",
+              "Ґ"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "For the initial sound in \"Gudzyk\" (button).",
+            "options": [
+              "Ґ",
+              "Г"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "For the soft 'H' in \"Holova\" (head).",
+            "options": [
+              "Г",
+              "Ґ"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "For the hard 'G' in \"Gava\" (crow).",
+            "options": [
+              "Ґ",
+              "Г"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "For the initial sound in \"Hulia\" (to walk).",
+            "options": [
+              "Г",
+              "Ґ"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "For the initial sound in \"Geografiya\" (geography).",
+            "options": [
+              "Г",
+              "Ґ"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "For the initial sound in \"Gramatyka\" (grammar).",
+            "options": [
+              "Г",
+              "Ґ"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "For the hard 'G' in \"Garderob\" (wardrobe).",
+            "options": [
+              "Ґ",
+              "Г"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "For the soft 'H' in \"Humor\".",
+            "options": [
+              "Г",
+              "Ґ"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "For the soft 'H' in \"Hero\".",
+            "options": [
+              "Г",
+              "Ґ"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.871Z",
+      "modifiedAt": "2025-12-08T21:22:09.871Z"
     },
     {
       "id": "act-a1-0-anagram",
       "type": "anagram",
-      "title": "Phrase Spelling",
-      "description": "Arrange the letters to form the correct word.",
+      "title": "Scrambled Letters",
+      "description": "Unscramble the letters to find the word.",
       "content": {
         "type": "anagram",
         "isAnagram": true,
         "items": [
           {
             "letters": [
-              "а",
+              "у",
+              "б",
               "к",
-              "т"
+              "а",
+              "в"
             ],
-            "answer": "так",
-            "translation": "yes"
+            "answer": "БУКВА (wait - bukva)",
+            "translation": "Letter"
           },
           {
             "letters": [
-              "і",
+              "в",
+              "о",
+              "л",
+              "о",
+              "с"
+            ],
+            "answer": "слово",
+            "translation": "Word"
+          },
+          {
+            "letters": [
+              "д",
+              "о",
+              "н",
+              "Л",
+              "о",
               "н"
             ],
-            "answer": "ні",
-            "translation": "no"
+            "answer": "Лондон",
+            "translation": "City"
           },
           {
             "letters": [
-              "р",
-              "б",
-              "о",
-              "д",
-              "е"
-            ],
-            "answer": "добре",
-            "translation": "good"
-          },
-          {
-            "letters": [
-              "у",
-              "ю",
-              "д",
-              "я",
-              "к"
-            ],
-            "answer": "дякую",
-            "translation": "thank you"
-          },
-          {
-            "letters": [
-              "і",
-              "т",
               "в",
+              "а",
+              "К",
               "и",
-              "п",
-              "р"
+              "ї"
             ],
-            "answer": "привіт",
-            "translation": "hello"
-          },
-          {
-            "letters": [
-              "о",
-              "щ"
-            ],
-            "answer": "що",
-            "translation": "what"
+            "answer": "Київ",
+            "translation": "City"
           },
           {
             "letters": [
               "к",
-              "я"
+              "а",
+              "Т"
             ],
-            "answer": "як",
-            "translation": "how"
-          },
-          {
-            "letters": [
-              "е",
-              "д"
-            ],
-            "answer": "де",
-            "translation": "where"
-          },
-          {
-            "letters": [
-              "о",
-              "т",
-              "х"
-            ],
-            "answer": "хто",
-            "translation": "who"
+            "answer": "Так",
+            "translation": "Yes"
           },
           {
             "letters": [
               "і",
-              "й",
-              "а",
-              "ч"
+              "Н"
             ],
-            "answer": "чай",
-            "translation": "tea"
+            "answer": "Ні",
+            "translation": "No"
           },
           {
             "letters": [
-              "о",
               "а",
-              "л",
+              "р",
               "к",
-              "ш"
-            ],
-            "answer": "школа",
-            "translation": "school"
-          },
-          {
-            "letters": [
-              "е",
+              "О",
+              "у",
               "ц"
             ],
-            "answer": "це",
-            "translation": "this"
+            "answer": "Цукор",
+            "translation": "Sugar"
+          },
+          {
+            "letters": [
+              "щ",
+              "о",
+              "Б",
+              "р"
+            ],
+            "answer": "Борщ",
+            "translation": "Soup"
+          },
+          {
+            "letters": [
+              "з",
+              "а",
+              "Д",
+              "ж"
+            ],
+            "answer": "Джаз",
+            "translation": "Music"
+          },
+          {
+            "letters": [
+              "о",
+              "л",
+              "Ш",
+              "о",
+              "к",
+              "д",
+              "а"
+            ],
+            "answer": "Шоколад",
+            "translation": "Sweet"
+          },
+          {
+            "letters": [
+              "п",
+              "а",
+              "Є",
+              "в",
+              "р",
+              "о"
+            ],
+            "answer": "Європа",
+            "translation": "Continent"
+          },
+          {
+            "letters": [
+              "ю",
+              "к",
+              "у",
+              "я",
+              "Д"
+            ],
+            "answer": "Дякую",
+            "translation": "Thank you"
           }
         ]
       },
@@ -751,222 +883,470 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.083Z",
-      "modifiedAt": "2025-12-06T10:49:20.083Z"
+      "createdAt": "2025-12-08T21:22:09.871Z",
+      "modifiedAt": "2025-12-08T21:22:09.871Z"
+    },
+    {
+      "id": "act-a1-0-truefalse",
+      "type": "true-false",
+      "title": "Letter Facts",
+      "description": "Decide if the statement about the letters is true or false.",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "The letter Щ makes a two-part \"sh-ch\" sound.",
+            "isTrue": true,
+            "explanation": "Correct! Like in \"fresh cheese\"."
+          },
+          {
+            "statement": "The letter Ц makes a \"ch\" sound.",
+            "isTrue": false,
+            "explanation": "Incorrect. Ц makes a \"ts\" sound."
+          },
+          {
+            "statement": "The letter Ь (Soft Sign) has no sound of its own.",
+            "isTrue": true,
+            "explanation": "Correct! It only softens the preceding consonant."
+          },
+          {
+            "statement": "The letter И sounds like \"ee\" in machine.",
+            "isTrue": false,
+            "explanation": "Incorrect. И sounds like \"i\" in sit. І sounds like \"ee\"."
+          },
+          {
+            "statement": "The letter Ї always has a built-in \"y\" sound.",
+            "isTrue": true,
+            "explanation": "Correct! It's \"Yee\"."
+          },
+          {
+            "statement": "The letter Ю makes a \"ya\" sound.",
+            "isTrue": false,
+            "explanation": "Incorrect. Ю makes a \"yu\" sound. Я makes a \"ya\" sound."
+          },
+          {
+            "statement": "The letter Є makes a \"ye\" sound.",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "The letter Ж makes a \"sh\" sound.",
+            "isTrue": false,
+            "explanation": "Incorrect. Ж makes a \"zh\" sound (like 's' in pleasure). Ш makes a \"sh\" sound."
+          },
+          {
+            "statement": "The letters ДЖ form a single \"j\" sound.",
+            "isTrue": true,
+            "explanation": "Correct! Like in \"jam\"."
+          },
+          {
+            "statement": "The letters ДЗ form a \"d-z\" sound as two separate sounds.",
+            "isTrue": false,
+            "explanation": "Incorrect. They form a single \"dz\" sound, like 'ds' in 'pods'."
+          },
+          {
+            "statement": "The letter Й is a consonant.",
+            "isTrue": true,
+            "explanation": "Correct! It's a short 'y' sound."
+          },
+          {
+            "statement": "The italic form of т looks like a 'u'.",
+            "isTrue": false,
+            "explanation": "Incorrect. The italic form of т looks like an 'm'. The italic form of и looks like a 'u'."
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.871Z",
+      "modifiedAt": "2025-12-08T21:22:09.871Z"
     }
   ],
   "vocabulary": {
     "moduleId": "mod-uk-A1-2",
     "level": "A1",
     "phase": "A1.1",
-    "wordCount": 20,
-    "newWordCount": 20,
+    "wordCount": 34,
+    "newWordCount": 34,
     "reviewWordCount": 0,
     "transliterationMode": "full",
     "words": [
       {
-        "id": "v-bukva-(bukva)-0-0",
-        "uk": "буква (bukva)",
-        "en": "letter",
-        "pos": "noun",
-        "ipa": "/ˈbukʋa/",
-        "gender": "f",
-        "note": "alphabet letter",
+        "id": "v-bukva-0-0",
+        "uk": "буква",
+        "en": "noun",
+        "pos": "f",
+        "translit": "/ˈbukwɑ/",
+        "ipa": "letter",
+        "note": "[🔊](audio_bukva)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-slovo-(slovo)-0-1",
-        "uk": "слово (slovo)",
-        "en": "word",
-        "pos": "noun",
-        "ipa": "/ˈslɔʋɔ/",
-        "gender": "n",
-        "note": "basic vocabulary",
+        "id": "v-slovo-0-1",
+        "uk": "слово",
+        "en": "noun",
+        "pos": "n",
+        "translit": "/ˈslɔwɔ/",
+        "ipa": "word",
+        "note": "[🔊](audio_slovo)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-alfavit-(alfavit)-0-2",
-        "uk": "алфавіт (alfavit)",
-        "en": "alphabet",
-        "pos": "noun",
-        "ipa": "/alfaˈʋit/",
-        "gender": "m",
-        "note": "also: абетка",
+        "id": "v-alfavit-0-2",
+        "uk": "алфавіт",
+        "en": "noun",
+        "pos": "m",
+        "translit": "/ɑlfɑˈvit/",
+        "ipa": "alphabet",
+        "note": "[🔊](audio_alfavit)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-mova-(mova)-0-3",
-        "uk": "мова (mova)",
-        "en": "language",
-        "pos": "noun",
-        "ipa": "/ˈmɔʋa/",
-        "gender": "f",
-        "note": "also: speech",
+        "id": "v-mova-0-3",
+        "uk": "мова",
+        "en": "noun",
+        "pos": "f",
+        "translit": "/ˈmɔwɑ/",
+        "ipa": "language",
+        "note": "[🔊](audio_mova)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-ukrayinsьka-(ukrainska)-0-4",
-        "uk": "українська (ukrainska)",
-        "en": "Ukrainian",
-        "pos": "adj",
-        "ipa": "/ukraˈjinska/",
-        "gender": "f",
-        "note": "the language",
+        "id": "v-ukrayinsьka-0-4",
+        "uk": "українська",
+        "en": "adj",
+        "pos": "f",
+        "translit": "/ukrɑˈjinʲsʲkɑ/",
+        "ipa": "Ukrainian",
+        "note": "[🔊](audio_ukrainska)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-anhliysьka-(anhliiska)-0-5",
-        "uk": "англійська (anhliiska)",
-        "en": "English",
-        "pos": "adj",
-        "ipa": "/anˈɦlijska/",
-        "gender": "f",
-        "note": "the language",
+        "id": "v-anhliysьka-0-5",
+        "uk": "англійська",
+        "en": "adj",
+        "pos": "f",
+        "translit": "/ɑnˈɦlʲijsʲkɑ/",
+        "ipa": "English",
+        "note": "[🔊](audio_anhliyska)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-tak-(tak)-0-6",
-        "uk": "так (tak)",
-        "en": "yes",
-        "pos": "particle",
-        "ipa": "/tak/",
-        "note": "affirmative",
+        "id": "v-tak-0-6",
+        "uk": "так",
+        "en": "part",
+        "pos": "-",
+        "translit": "/tɑk/",
+        "ipa": "yes",
+        "note": "[🔊](audio_tak)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-ni-(ni)-0-7",
-        "uk": "ні (ni)",
-        "en": "no",
-        "pos": "particle",
-        "ipa": "/ni/",
-        "note": "negative",
+        "id": "v-ni-0-7",
+        "uk": "ні",
+        "en": "part",
+        "pos": "-",
+        "translit": "/nʲi/",
+        "ipa": "no",
+        "note": "[🔊](audio_ni)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-dobre-(dobre)-0-8",
-        "uk": "добре (dobre)",
-        "en": "good/okay",
-        "pos": "adv",
-        "ipa": "/ˈdɔbrɛ/",
-        "note": "agreement",
+        "id": "v-dobre-0-8",
+        "uk": "добре",
+        "en": "adv",
+        "pos": "-",
+        "translit": "/ˈdɔbrɛ/",
+        "ipa": "good/well",
+        "note": "[🔊](audio_dobre)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-dyakuyu-(dyakuyu)-0-9",
-        "uk": "дякую (dyakuyu)",
-        "en": "thank you",
-        "pos": "verb",
-        "ipa": "/ˈdʲakuju/",
-        "note": "1st person",
+        "id": "v-dyakuyu-0-9",
+        "uk": "дякую",
+        "en": "verb",
+        "pos": "-",
+        "translit": "/ˈdʲɑkuju/",
+        "ipa": "thank you",
+        "note": "[🔊](audio_dyakuyu)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-budь-laska-(bud'-laska)-0-10",
-        "uk": "будь ласка (bud' laska)",
-        "en": "please",
-        "pos": "phrase",
-        "ipa": "/budʲ ˈlaska/",
-        "note": "also: you're welcome",
+        "id": "v-budь-laska-0-10",
+        "uk": "будь ласка",
+        "en": "phrase",
+        "pos": "-",
+        "translit": "/budʲ ˈlɑskɑ/",
+        "ipa": "please",
+        "note": "[🔊](audio_budlaska)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-pryvit-(pryvit)-0-11",
-        "uk": "привіт (pryvit)",
-        "en": "hello",
-        "pos": "interj",
-        "ipa": "/prɪˈʋit/",
-        "note": "informal",
+        "id": "v-pryvit-0-11",
+        "uk": "привіт",
+        "en": "interj",
+        "pos": "-",
+        "translit": "/prɪˈvit/",
+        "ipa": "hi",
+        "note": "[🔊](audio_pryvit)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-do-pobachennya-(do-pobachennya)-0-12",
-        "uk": "до побачення (do pobachennya)",
-        "en": "goodbye",
-        "pos": "phrase",
-        "ipa": "/dɔ pɔˈbatʃɛnʲa/",
-        "note": "formal",
+        "id": "v-do-pobachennya-0-12",
+        "uk": "до побачення",
+        "en": "phrase",
+        "pos": "-",
+        "translit": "/dɔ pɔˈbɑtʃennʲɑ/",
+        "ipa": "goodbye",
+        "note": "[🔊](audio_dopobachennya)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-vybachte-(vybachte)-0-13",
-        "uk": "вибачте (vybachte)",
-        "en": "excuse me",
-        "pos": "verb",
-        "ipa": "/ʋɪˈbatʃtɛ/",
-        "note": "formal/polite",
+        "id": "v-vybachte-0-13",
+        "uk": "вибачте",
+        "en": "verb",
+        "pos": "-",
+        "translit": "/ˈwɪbɑtʃte/",
+        "ipa": "sorry",
+        "note": "[🔊](audio_vybachte)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-proshu-(proshu)-0-14",
-        "uk": "прошу (proshu)",
-        "en": "you're welcome",
-        "pos": "verb",
-        "ipa": "/ˈprɔʃu/",
-        "note": "also: please",
+        "id": "v-proshu-0-14",
+        "uk": "прошу",
+        "en": "verb",
+        "pos": "-",
+        "translit": "/ˈprɔʃu/",
+        "ipa": "you're welcome",
+        "note": "[🔊](audio_proshu)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-laskavo-prosymo-(laskavo-prosymo)-0-15",
-        "uk": "ласкаво просимо (laskavo prosymo)",
-        "en": "welcome",
-        "pos": "phrase",
-        "ipa": "/lasˈkaʋɔ ˈprɔsɪmɔ/",
-        "note": "greeting",
+        "id": "v-shcho-0-15",
+        "uk": "що",
+        "en": "pron",
+        "pos": "-",
+        "translit": "/ʃtʃɔ/",
+        "ipa": "what",
+        "note": "[🔊](audio_shcho)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-shcho-(shcho)-0-16",
-        "uk": "що (shcho)",
-        "en": "what",
-        "pos": "pron",
-        "ipa": "/ʃtʃɔ/",
-        "note": "question word",
+        "id": "v-yak-0-16",
+        "uk": "як",
+        "en": "adv",
+        "pos": "-",
+        "translit": "/jɑk/",
+        "ipa": "how",
+        "note": "[🔊](audio_yak)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-yak-(yak)-0-17",
-        "uk": "як (yak)",
-        "en": "how",
-        "pos": "adv",
-        "ipa": "/jak/",
-        "note": "question word",
+        "id": "v-de-0-17",
+        "uk": "де",
+        "en": "adv",
+        "pos": "-",
+        "translit": "/dɛ/",
+        "ipa": "where",
+        "note": "[🔊](audio_de)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-de-(de)-0-18",
-        "uk": "де (de)",
-        "en": "where",
-        "pos": "adv",
-        "ipa": "/dɛ/",
-        "note": "question word",
+        "id": "v-khto-0-18",
+        "uk": "хто",
+        "en": "pron",
+        "pos": "-",
+        "translit": "/xtɔ/",
+        "ipa": "who",
+        "note": "[🔊](audio_khto)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-khto-(khto)-0-19",
-        "uk": "хто (khto)",
-        "en": "who",
-        "pos": "pron",
-        "ipa": "/xtɔ/",
-        "note": "question word",
+        "id": "v-tse-0-19",
+        "uk": "це",
+        "en": "pron",
+        "pos": "-",
+        "translit": "/tʃɛ/",
+        "ipa": "this is",
+        "note": "[🔊](audio_tse)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-borshch-0-20",
+        "uk": "борщ",
+        "en": "noun",
+        "pos": "m",
+        "translit": "/bɔrʃtʃ/",
+        "ipa": "borsch",
+        "note": "[🔊](audio_borshch)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-yohurt-0-21",
+        "uk": "йогурт",
+        "en": "noun",
+        "pos": "m",
+        "translit": "/ˈjɔɦurt/",
+        "ipa": "yogurt",
+        "note": "[🔊](audio_yohurt)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-zhele-0-22",
+        "uk": "желе",
+        "en": "noun",
+        "pos": "n",
+        "translit": "/ʒɛˈlɛ/",
+        "ipa": "jelly",
+        "note": "[🔊](audio_zhele)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-mayonez-0-23",
+        "uk": "майонез",
+        "en": "noun",
+        "pos": "m",
+        "translit": "/mɑjɔˈnɛz/",
+        "ipa": "mayonnaise",
+        "note": "[🔊](audio_mayonez)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-shokolad-0-24",
+        "uk": "шоколад",
+        "en": "noun",
+        "pos": "m",
+        "translit": "/ʃɔkɔˈlɑd/",
+        "ipa": "chocolate",
+        "note": "[🔊](audio_shokolad)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-chempion-0-25",
+        "uk": "чемпіон",
+        "en": "noun",
+        "pos": "m",
+        "translit": "/tʃɛmpiˈɔn/",
+        "ipa": "champion",
+        "note": "[🔊](audio_chempion)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-tsentr-0-26",
+        "uk": "центр",
+        "en": "noun",
+        "pos": "m",
+        "translit": "/tʃɛntr/",
+        "ipa": "center",
+        "note": "[🔊](audio_tsentr)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-tsukor-0-27",
+        "uk": "цукор",
+        "en": "noun",
+        "pos": "m",
+        "translit": "/ˈtsukɔr/",
+        "ipa": "sugar",
+        "note": "[🔊](audio_tsukor)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-dzhynsy-0-28",
+        "uk": "джинси",
+        "en": "noun",
+        "pos": "pl",
+        "translit": "/ˈdʒɪnsɪ/",
+        "ipa": "jeans",
+        "note": "[🔊](audio_dzhynsy)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-dzhaz-0-29",
+        "uk": "джаз",
+        "en": "noun",
+        "pos": "m",
+        "translit": "/dʒɑz/",
+        "ipa": "jazz",
+        "note": "[🔊](audio_dzhaz)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-yevropa-0-30",
+        "uk": "Європа",
+        "en": "noun",
+        "pos": "f",
+        "translit": "/jɛwˈrɔpɑ/",
+        "ipa": "Europe",
+        "note": "[🔊](audio_yevropa)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-ukrayina-0-31",
+        "uk": "Україна",
+        "en": "noun",
+        "pos": "f",
+        "translit": "/ukrɑˈjinɑ/",
+        "ipa": "Ukraine",
+        "note": "[🔊](audio_ukraina)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-london-0-32",
+        "uk": "Лондон",
+        "en": "noun",
+        "pos": "m",
+        "translit": "/ˈlɔndɔn/",
+        "ipa": "London",
+        "note": "[🔊](audio_london)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-kyyiv-0-33",
+        "uk": "Київ",
+        "en": "noun",
+        "pos": "m",
+        "translit": "/ˈkɪjiu̯/",
+        "ipa": "Kyiv",
+        "note": "[🔊](audio_kyiv)",
         "isNew": true,
         "firstModule": 0
       }

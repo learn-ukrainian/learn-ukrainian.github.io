@@ -2,7 +2,7 @@
 
 **Status:** ✅ COMPLETE (Aligned with Ukrainian State Standard 2024)
 **Modules:** 01-50 (50 modules)
-**Vocabulary Target:** ~1,050 words (level), ~1,800 cumulative
+**Vocabulary Target:** ~1,250 words (level), ~2,150 cumulative
 
 ---
 
@@ -1565,10 +1565,10 @@ With ~1,800 words after A2, learners are prepared for B1 which focuses on:
 ## Implementation Notes
 
 ### Module Types Distribution
-- **Grammar (G)**: 25 modules - 15-20 new words each
+- **Grammar (G)**: 25 modules - 25-30 new words each
 - **Word Formation (WF)**: 6 modules - 30-35 new words each
-- **Vocabulary (V)**: 12 modules - 25-35 new words each
-- **Function (F)**: 3 modules - 20-30 new words each
+- **Vocabulary (V)**: 12 modules - 30-40 new words each
+- **Function (F)**: 3 modules - 25-30 new words each
 - **Review (R)**: 4 modules - 10-20 new words each
 
 ### Immersion Level

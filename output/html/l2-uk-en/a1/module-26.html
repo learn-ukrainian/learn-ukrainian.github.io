@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Module 26: Describing Things — Adjectives | Ukrainian A1</title>
+  <title>Module 26: Modal Verbs | Ukrainian A1</title>
   <style>
 :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -478,17 +518,17 @@ footer {
     </div>
   </div>
   <nav class="nav">
-    <h1>Module 26: Describing Things — Adjectives</h1>
+    <h1>Module 26: Modal Verbs</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Fill</button>
+      <button class="nav-tab" data-section="activity-0">1. Match</button>
       <button class="nav-tab" data-section="activity-1">2. Fill</button>
-      <button class="nav-tab" data-section="activity-2">3. Order</button>
-      <button class="nav-tab" data-section="activity-3">4. Match</button>
-      <button class="nav-tab" data-section="activity-4">5. Match</button>
-      <button class="nav-tab" data-section="activity-5">6. Quiz</button>
-      <button class="nav-tab" data-section="activity-6">7. T/F</button>
-      <button class="nav-tab" data-section="activity-7">8. Sort</button>
+      <button class="nav-tab" data-section="activity-2">3. Sort</button>
+      <button class="nav-tab" data-section="activity-3">4. Quiz</button>
+      <button class="nav-tab" data-section="activity-4">5. Spell</button>
+      <button class="nav-tab" data-section="activity-5">6. Order</button>
+      <button class="nav-tab" data-section="activity-6">7. Fill</button>
+      <button class="nav-tab" data-section="activity-7">8. T/F</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -497,604 +537,313 @@ footer {
     <section id="lesson" class="section active">
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.3</span>
-        <h2 style="font-size:2rem;margin:0.5rem 0">Describing Things — Adjectives</h2>
-        <p style="color:var(--text-muted)">Прикметники — Making Your Ukrainian Colorful</p>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Modal Verbs</h2>
+        <p style="color:var(--text-muted)">Except No Substitutes</p>
       </div>
       
     <div class="card section-intro">
       <h3>📖 Introduction</h3>
       <div class="md-content"><h2 id="warmup">warm-up</h2>
-<h3 id="colorssizesandqualities">Colors, Sizes, and Qualities</h3>
-<p>"A big house." "A beautiful city." "An old book." — Adjectives bring language to life! In Ukrainian, adjectives change their endings to match the nouns they describe.</p>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>Unlike English where "big" stays "big" regardless of the noun, Ukrainian adjectives change: великий будинок (big house-m), велика книга (big book-f), велике місто (big city-n). The adjective agrees with the noun in gender and number!</p>
-</blockquote>
+<p><strong>The Forbidden Fruit</strong></p>
+<p>I eat pizza. (Statement).<br />
+I <strong>want</strong> to eat pizza. (Desire).<br />
+I <strong>can</strong> eat pizza. (Ability).<br />
+I <strong>must</strong> eat pizza. (Necessity / Addiction).</p>
+<p>Verbs are actions.<br />
+Modals are attitudes.<br />
+In this module, we will learn how to add "Attitude" to your sentences.<br />
+You change the world not by doing, but by <strong>wanting</strong> to do.</p>
 <h2 id="presentation">presentation</h2>
-<h3 id="adjectiveagreementthebasics">Adjective Agreement: The Basics</h3>
-<p>Every Ukrainian adjective must agree with its noun in:</p>
+<h3 id="section1towantkhotity">Section 1: To Want (Khotity)</h3>
+<p>This is the engine of life.<br />
+It is an irregular verb (of course).</p>
 <ul>
-<li><strong>Gender</strong>: masculine, feminine, or neuter</li>
-<li><strong>Number</strong>: singular or plural</li>
+<li>Я <strong>хочу</strong> (Khochu - I want).</li>
+<li>Ти <strong>хочеш</strong> (Khochesh).</li>
+<li>Він <strong>хоче</strong> (Khoche).</li>
+<li>Ми <strong>хочемо</strong> (Khochemo).</li>
+<li>Ви <strong>хочете</strong> (Khochete).</li>
+<li>Вони <strong>хочуть</strong> (Khochut').</li>
 </ul>
-<table>
-<thead>
-<tr>
-<th>Gender</th>
-<th>Ending</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Masculine</td>
-<td>-ий/-ій</td>
-<td>новий телефон</td>
-</tr>
-<tr>
-<td>Feminine</td>
-<td>-а/-я</td>
-<td>нова книга</td>
-</tr>
-<tr>
-<td>Neuter</td>
-<td>-е/-є</td>
-<td>нове місто</td>
-</tr>
-<tr>
-<td>Plural</td>
-<td>-і</td>
-<td>нові друзі</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🔍 <strong>Myth Buster</strong></p>
-  <p><strong>Myth:</strong> You need to memorize separate adjectives for each gender.<br />
-  <strong>Fact:</strong> Just learn the masculine form and change the ending! новий → нова → нове → нові. The stem stays the same!</p>
-</blockquote>
-<h3 id="hardstemadjectives">Hard Stem Adjectives (-ий)</h3>
-<p>Most adjectives have hard stems. The masculine form ends in <strong>-ий</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Gender</th>
-<th>Ending</th>
-<th>Example with "новий"</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>M</td>
-<td>-ий</td>
-<td>новий друг (new friend)</td>
-</tr>
-<tr>
-<td>F</td>
-<td>-а</td>
-<td>нова подруга (new girlfriend)</td>
-</tr>
-<tr>
-<td>N</td>
-<td>-е</td>
-<td>нове слово (new word)</td>
-</tr>
-<tr>
-<td>Pl</td>
-<td>-і</td>
-<td>нові слова (new words)</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Common hard stem adjectives:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Masculine</th>
-<th>English</th>
-<th>F</th>
-<th>N</th>
-<th>Pl</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>великий</td>
-<td>big</td>
-<td>велика</td>
-<td>велике</td>
-<td>великі</td>
-</tr>
-<tr>
-<td>малий</td>
-<td>small</td>
-<td>мала</td>
-<td>мале</td>
-<td>малі</td>
-</tr>
-<tr>
-<td>старий</td>
-<td>old</td>
-<td>стара</td>
-<td>старе</td>
-<td>старі</td>
-</tr>
-<tr>
-<td>молодий</td>
-<td>young</td>
-<td>молода</td>
-<td>молоде</td>
-<td>молоді</td>
-</tr>
-<tr>
-<td>гарний</td>
-<td>beautiful</td>
-<td>гарна</td>
-<td>гарне</td>
-<td>гарні</td>
-</tr>
-<tr>
-<td>добрий</td>
-<td>good/kind</td>
-<td>добра</td>
-<td>добре</td>
-<td>добрі</td>
-</tr>
-<tr>
-<td>поганий</td>
-<td>bad</td>
-<td>погана</td>
-<td>погане</td>
-<td>погані</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎬 <strong>Pop Culture Moment: Harry Potter</strong></p>
-  <p>"Це великий замок!" (This is a big castle!) — describing Hogwarts. "Велика зала" (The Great Hall) — feminine! The adjective changes to match.</p>
-</blockquote>
-<h3 id="softstemadjectives">Soft Stem Adjectives (-ій)</h3>
-<p>Some adjectives have soft stems. The masculine form ends in <strong>-ій</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Gender</th>
-<th>Ending</th>
-<th>Example with "синій"</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>M</td>
-<td>-ій</td>
-<td>синій колір (blue color)</td>
-</tr>
-<tr>
-<td>F</td>
-<td>-я</td>
-<td>синя сукня (blue dress)</td>
-</tr>
-<tr>
-<td>N</td>
-<td>-є</td>
-<td>синє небо (blue sky)</td>
-</tr>
-<tr>
-<td>Pl</td>
-<td>-і</td>
-<td>сині очі (blue eyes)</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Common soft stem adjectives:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Masculine</th>
-<th>English</th>
-<th>F</th>
-<th>N</th>
-<th>Pl</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>синій</td>
-<td>blue</td>
-<td>синя</td>
-<td>синє</td>
-<td>сині</td>
-</tr>
-<tr>
-<td>останній</td>
-<td>last</td>
-<td>остання</td>
-<td>останнє</td>
-<td>останні</td>
-</tr>
-<tr>
-<td>домашній</td>
-<td>home/domestic</td>
-<td>домашня</td>
-<td>домашнє</td>
-<td>домашні</td>
-</tr>
-<tr>
-<td>ранній</td>
-<td>early</td>
-<td>рання</td>
-<td>раннє</td>
-<td>ранні</td>
-</tr>
-<tr>
-<td>пізній</td>
-<td>late</td>
-<td>пізня</td>
-<td>пізнє</td>
-<td>пізні</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>⚡ <strong>Pro Tip</strong></p>
-  <p>Most color adjectives are hard stem (червоний, зелений, жовтий), but синій (blue) is soft stem. Notice the soft sign in the ending: син<strong>і</strong>й, син<strong>я</strong>, син<strong>є</strong>!</p>
-</blockquote>
-<h3 id="morecommonadjectives">More Common Adjectives</h3>
-<p><strong>Size and Dimension:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-<th>F</th>
-<th>N</th>
-<th>Pl</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>високий</td>
-<td>tall/high</td>
-<td>висока</td>
-<td>високе</td>
-<td>високі</td>
-</tr>
-<tr>
-<td>низький</td>
-<td>short/low</td>
-<td>низька</td>
-<td>низьке</td>
-<td>низькі</td>
-</tr>
-<tr>
-<td>довгий</td>
-<td>long</td>
-<td>довга</td>
-<td>довге</td>
-<td>довгі</td>
-</tr>
-<tr>
-<td>короткий</td>
-<td>short</td>
-<td>коротка</td>
-<td>коротке</td>
-<td>короткі</td>
-</tr>
-<tr>
-<td>широкий</td>
-<td>wide</td>
-<td>широка</td>
-<td>широке</td>
-<td>широкі</td>
-</tr>
-<tr>
-<td>вузький</td>
-<td>narrow</td>
-<td>вузька</td>
-<td>вузьке</td>
-<td>вузькі</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🌍 <strong>Real World</strong></p>
-  <p>In Ukrainian cities: "широка вулиця" (wide street), "висока будівля" (tall building), "довга черга" (long queue). These phrases help you navigate!</p>
-</blockquote>
-<p><strong>Quality and Character:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-<th>F</th>
-<th>N</th>
-<th>Pl</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>розумний</td>
-<td>smart</td>
-<td>розумна</td>
-<td>розумне</td>
-<td>розумні</td>
-</tr>
-<tr>
-<td>дурний</td>
-<td>stupid</td>
-<td>дурна</td>
-<td>дурне</td>
-<td>дурні</td>
-</tr>
-<tr>
-<td>сильний</td>
-<td>strong</td>
-<td>сильна</td>
-<td>сильне</td>
-<td>сильні</td>
-</tr>
-<tr>
-<td>слабкий</td>
-<td>weak</td>
-<td>слабка</td>
-<td>слабке</td>
-<td>слабкі</td>
-</tr>
-<tr>
-<td>швидкий</td>
-<td>fast</td>
-<td>швидка</td>
-<td>швидке</td>
-<td>швидкі</td>
-</tr>
-<tr>
-<td>повільний</td>
-<td>slow</td>
-<td>повільна</td>
-<td>повільне</td>
-<td>повільні</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎮 <strong>Gamer's Corner</strong></p>
-  <p>In The Witcher games: "сильний монстр" (strong monster), "швидка атака" (fast attack), "розумний вибір" (smart choice). Game descriptions are full of adjectives!</p>
-</blockquote>
-<p><strong>Value and Interest:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-<th>F</th>
-<th>N</th>
-<th>Pl</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>дорогий</td>
-<td>expensive</td>
-<td>дорога</td>
-<td>дороге</td>
-<td>дорогі</td>
-</tr>
-<tr>
-<td>дешевий</td>
-<td>cheap</td>
-<td>дешева</td>
-<td>дешеве</td>
-<td>дешеві</td>
-</tr>
-<tr>
-<td>цікавий</td>
-<td>interesting</td>
-<td>цікава</td>
-<td>цікаве</td>
-<td>цікаві</td>
-</tr>
-<tr>
-<td>нудний</td>
-<td>boring</td>
-<td>нудна</td>
-<td>нудне</td>
-<td>нудні</td>
-</tr>
-<tr>
-<td>важливий</td>
-<td>important</td>
-<td>важлива</td>
-<td>важливе</td>
-<td>важливі</td>
-</tr>
-<tr>
-<td>простий</td>
-<td>simple</td>
-<td>проста</td>
-<td>просте</td>
-<td>прості</td>
-</tr>
-<tr>
-<td>складний</td>
-<td>complex</td>
-<td>складна</td>
-<td>складне</td>
-<td>складні</td>
-</tr>
-</tbody>
-</table>
-<h3 id="wordorder">Word Order</h3>
-<p>In Ukrainian, adjectives typically come <strong>before</strong> the noun (like in English):</p>
+<p><strong>Usage:</strong></p>
 <ul>
-<li>великий будинок (a big house)</li>
-<li>гарна погода (nice weather)</li>
-<li>цікава книга (an interesting book)</li>
-</ul>
-<p>But in poetic or emphatic speech, they can follow:</p>
-<ul>
-<li>людина добра (a kind person — sounds poetic)</li>
+<li>Я хочу піцу (I want pizza - Accusative).</li>
+<li>Я хочу спати (I want to sleep - Infinitive).</li>
 </ul>
 <blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>You can stack multiple adjectives: "великий старий будинок" (a big old house), "гарна молода жінка" (a beautiful young woman). Each adjective must agree with the noun!</p>
+  <p>🌍 <strong>Culture Corner: The Polite Want</strong><br />
+  "Я хочу" can sound demanding to a stranger.<br />
+  To be polite, use: "Я хотів би…" (I would like…).<br />
+  But for A1, "Я хочу" is fine. Just smile.</p>
 </blockquote>
-<h3 id="usingadjectiveswiththisis">Using Adjectives with "Це" (This is)</h3>
-<p>When describing with "це," the adjective often stays in nominative:</p>
+<h3 id="section2tocanmohty">Section 2: To Can (Mohty)</h3>
+<p>This is the engine of possibility.<br />
+Another irregular nice guy.</p>
 <ul>
-<li>Це великий будинок. (This is a big house.)</li>
-<li>Це нова книга. (This is a new book.)</li>
-<li>Це гарне місто. (This is a beautiful city.)</li>
+<li>Я <strong>можу</strong> (Mozhu).</li>
+<li>Ти <strong>можеш</strong>.</li>
+<li>Він <strong>може</strong>.</li>
+<li>Ми <strong>можемо</strong>.</li>
+<li>Ви <strong>можете</strong>.</li>
+<li>Вони <strong>можуть</strong>.</li>
 </ul>
-<h3 id="adjectivesaspredicates">Adjectives as Predicates</h3>
-<p>Adjectives can also come after the verb "бути" (to be):</p>
+<p><strong>Usage:</strong></p>
 <ul>
-<li>Будинок великий. (The house is big.)</li>
-<li>Книга цікава. (The book is interesting.)</li>
-<li>Місто красиве. (The city is beautiful.)</li>
+<li>Я можу це зробити (I can do this).</li>
+<li>Я не можу спати (I cannot sleep).</li>
+<li>Ви можете допомогти? (Can you help?).</li>
+</ul>
+<h3 id="section3mustvsneedmusytyvstreba">Section 3: Must vs Need (Musyty vs Treba)</h3>
+<p>Ukrainian has a personal "Must" and an impersonal "Need".</p>
+<p><strong>1. Musyty (Personal Must/Obligation):</strong></p>
+<ul>
+<li>Я <strong>мушу</strong>.</li>
+<li>Ти <strong>мусиш</strong>.</li>
+<li>Він <strong>мусить</strong>.</li>
+<li>Ми <strong>мусимо</strong>.</li>
+<li>Ви <strong>мусите</strong>.</li>
+<li>Вони <strong>мусять</strong>.<br />
+<em>This is strong. "I am obliged".</em></li>
+</ul>
+<p><strong>2. Treba (Impersonal Need):</strong></p>
+<ul>
+<li><strong>Треба</strong> + Infinitive.</li>
+<li>Мені треба йти. (To me [is] need to go).</li>
+<li>Йому треба спати. (To him [is] need to sleep).<br />
+<em>This is the most common way to say "I need to".</em></li>
 </ul>
 <blockquote>
-  <p>🎯 <strong>Fun Fact</strong></p>
-  <p>Ukrainian has special "short forms" of adjectives that only exist as predicates: "рад" (glad), "готов" (ready), "певен" (sure). But for A1, focus on the regular forms!</p>
+  <p>💡 <strong>Logic Check</strong></p>
+  <ul>
+  <li><strong>Я мушу йти</strong> = It is my duty/obligation to go.</li>
+  <li><strong>Мені треба йти</strong> = It is necessary for me to go (External circumstance or need).<br />
+  In daily life, <strong>Treba</strong> is friendlier.</li>
+  </ul>
+</blockquote>
+<h3 id="section4themodalsandwich">Section 4: The Modal Sandwich</h3>
+<p>Structure:<br />
+<strong>[Subject] + [Modal Verb] + [Infinitive]</strong></p>
+<ul>
+<li>Я [Subject] + <strong>хочу</strong> [Modal] + <strong>їсти</strong> [Infinitive].</li>
+<li>Ти + <strong>можеш</strong> + <strong>говорити</strong>.</li>
+<li>Ми + <strong>мусимо</strong> + <strong>працювати</strong>.</li>
+</ul>
+<p><strong>Negation:</strong><br />
+Put <strong>не</strong> before the Modal.</p>
+<ul>
+<li>Я <strong>не</strong> можу спати.</li>
+<li>Я <strong>не</strong> хочу йти.</li>
+</ul>
+<h3 id="section5mayimozhna">Section 5: May I? (Mozhna)</h3>
+<p>To ask for permission, we rarely use "Can I…?" (Mozhu ya?).<br />
+We use the impersonal <strong>Можна?</strong> (Is it allowed / possible?).</p>
+<ul>
+<li><strong>Можна?</strong> (May I [enter/do it]?).</li>
+<li><strong>Можна</strong> увійти? (May [I] enter?).</li>
+<li><strong>Можна</strong> меню? (May [I have] the menu? - lit: Is menu possible?).</li>
+</ul>
+<p><strong>Answers:</strong></p>
+<ul>
+<li><strong>Можна.</strong> (Yes, allowed).</li>
+<li><strong>Не можна.</strong> (No, forbidden).</li>
+</ul>
+<blockquote>
+  <p>🚫 <strong>Deep Dive: Ne Mozhna vs Ne Mozhu</strong></p>
+  <ul>
+  <li><strong>Я не можу</strong> = I cannot (No ability/time). "I can't lift this car."</li>
+  <li><strong>Не можна</strong> = It is forbidden. "No smoking."<br />
+  If you say "Я не можу курити", it sounds like you don't know how to smoke or your lungs are broken.<br />
+  If you say "Не можна курити", it means "Smoking is not allowed here".</li>
+  </ul>
+</blockquote>
+<h3 id="section6volyawillliberty">Section 6: Volya (Will + Liberty)</h3>
+<p>The noun <strong>Воля</strong> means "Will" (Power of will) AND "Liberty" (Freedom).<br />
+To want (<strong>Хотіти</strong>) is to express your Volya.</p>
+<ul>
+<li><strong>Вільна людина</strong> = Free person / Person with Will.</li>
+<li><strong>Сила волі</strong> = Willpower (Strength of Will).<br />
+Ukrainian grammar respects personal agency.</li>
+</ul>
+<blockquote>
+  <p>🥪 <strong>Culture Corner: The Guest's Obligation</strong><br />
+  If you are a guest, you lose your "Want", and you gain a "Must".<br />
+  Host: "Їжте!" (Eat!).<br />
+  Guest: "Я не можу, я повний." (I can't, I am full).<br />
+  Host: "Треба!" (Need!).<br />
+  Guest: "Ну добре…" (Oh well…).<br />
+  The first "No" is never accepted. The second "No" is polite. The third "No" is real (maybe).</p>
+</blockquote>
+<h3 id="section7futurewants">Section 7: Future Wants</h3>
+<p>How to say "I <strong>will</strong> want"?<br />
+It is complex (Future Tense of imperfective).</p>
+<ul>
+<li>Я <strong>буду хотіти</strong>.</li>
+<li>Я <strong>буду могти</strong> (Rare).<br />
+Usually, we just use the present for near future desires or perfective verbs (Modals 2.0).<br />
+For A1, stick to Present Tense.<br />
+"Я хочу піцу" = I want pizza (Now) or I want pizza (Tomorrow). Context is king.</li>
+</ul>
+<h3 id="section8trebavspotribno">Section 8: Treba vs Potribno</h3>
+<p>You will hear:</p>
+<ul>
+<li><strong>Мені треба</strong> (I need).</li>
+<li><strong>Мені потрібно</strong> (I need).<br />
+What is the difference?<br />
+Very little.</li>
+<li><strong>Треба</strong> is more about action/necessity. "Course correction". (German <em>Treiben</em> - to drive).</li>
+<li><strong>Потрібно</strong> is more about requirement/need. (Noun <em>Potreba</em> - need).<br />
+For A1, just use <strong>Треба</strong>. It is short, punchy, and everyone uses it.</li>
+</ul>
+<blockquote>
+  <p>❓ <strong>Deep Dive: The Existential Treba</strong><br />
+  "Так треба." (It is needed so / It must be so).<br />
+  This is a common phrase to accept destiny or bureaucracy.<br />
+  "Why do we have to wait?"<br />
+  "Так треба."<br />
+  It is the ultimate conversation stopper.</p>
 </blockquote>
 <h2 id="practice">practice</h2>
-<h3 id="exercise1matchtheending">Exercise 1: Match the Ending</h3>
-<p>Choose the correct adjective form:</p>
-<ol>
-<li>___ телефон (новий/нова/нове)</li>
-<li>___ книга (великий/велика/велике)</li>
-<li>___ місто (гарний/гарна/гарне)</li>
-<li>___ друзі (добрий/добра/добрі)</li>
-</ol>
-<h3 id="exercise2describethese">Exercise 2: Describe These</h3>
-<p>Use adjectives to describe:</p>
-<ol>
-<li>Ваш дім (your house) → великий/малий/старий/новий</li>
-<li>Ваше місто (your city) → гарне/цікаве/велике</li>
-<li>Ваш друг (your friend) → добрий/розумний/молодий</li>
-</ol>
-<h3 id="exercise3transform">Exercise 3: Transform</h3>
-<p>Change the adjective to match:</p>
-<ol>
-<li>новий (телефон → книга) → нова книга</li>
-<li>великий (будинок → місто) → велике місто</li>
-<li>гарний (хлопець → дівчина) → гарна дівчина</li>
-</ol>
-<h2 id="production">production</h2>
-<h3 id="taskdescribeyourworld">Task: Describe Your World</h3>
-<p>Write 8 sentences describing:</p>
+<p><strong>Drill 1: Conjugation Check</strong></p>
 <ul>
-<li>Your home (size, age, quality)</li>
-<li>Your city (size, beauty, interest)</li>
-<li>A friend or family member (character, appearance)</li>
-<li>An object you like (quality, value)</li>
+<li>I want -&gt; Я хочу.</li>
+<li>You can -&gt; Ти можеш.</li>
+<li>he must -&gt; Він мусить.</li>
+<li>We want -&gt; Ми хочемо.</li>
+<li>They can -&gt; Вони можуть.</li>
 </ul>
-<p>Use different adjectives for each!</p>
-<hr />
-<hr />
+<p><strong>Drill 2: Treba or Musyty?</strong></p>
+<ul>
+<li>(I need to sleep) -&gt; Мені треба спати.</li>
+<li>(I am strictly obliged to work) -&gt; Я мушу працювати.</li>
+<li>(We need tickets) -&gt; Нам треба квитки.</li>
+</ul>
+<p><strong>Drill 3: Permission</strong></p>
+<ul>
+<li>(May I come in?) -&gt; Можна?</li>
+<li>(No, forbidden) -&gt; Не можна.</li>
+<li>(Yes, allowed) -&gt; Можна.</li>
+</ul>
+<h2 id="production">production</h2>
+<p><strong>Scenario: The Lazy Sunday</strong></p>
+<ul>
+<li><strong>Mom:</strong> Треба прибирати (clean).</li>
+<li><strong>Son:</strong> Я не хочу прибирати.</li>
+<li><strong>Mom:</strong> Ти мусиш. Це твій дім.</li>
+<li><strong>Son:</strong> Я не можу. Я хворий (sick).</li>
+<li><strong>Mom:</strong> Ти не хворий. Ти лінивий (lazy).</li>
+<li><strong>Son:</strong> Можна я буду прибирати завтра?</li>
+<li><strong>Mom:</strong> Ні. Зараз.</li>
+<li><strong>Son:</strong> А можна я подивлюся (watch) фільм, а потім (then) прибирати?</li>
+<li><strong>Mom:</strong> Ти хочеш торгуватися (bargain)?</li>
+<li><strong>Son:</strong> Я хочу компроміс.</li>
+<li><strong>Mom:</strong> Компроміс — це коли ти прибираєш зараз.</li>
+</ul>
+<p><strong>Scenario: The Club Face Control</strong></p>
+<ul>
+<li><strong>Guard:</strong> Добрий вечір. Куди ви йдете?</li>
+<li><strong>You:</strong> Я хочу в клуб.</li>
+<li><strong>Guard:</strong> Не можна.</li>
+<li><strong>You:</strong> Чому не можна?</li>
+<li><strong>Guard:</strong> Ви у "шортах". (Shorts).</li>
+<li><strong>You:</strong> І що?</li>
+<li><strong>Guard:</strong> Тут дрес-код. Треба штани (pants).</li>
+<li><strong>You:</strong> Я можу купити штани?</li>
+<li><strong>Guard:</strong> Ви можете піти в магазин.</li>
+<li><strong>You:</strong> Добре. Я хочу танцювати. Я мушу знайти штани.</li>
+</ul>
+<p><strong>Scenario: The Restaurant Order</strong></p>
+<ul>
+<li><strong>Waiter:</strong> Добрий день. Що ви хочете?</li>
+<li><strong>You:</strong> Я хочу борщ.</li>
+<li><strong>Waiter:</strong> Борщу немає. (Genitive of absence!).</li>
+<li><strong>You:</strong> Ох. А що ви можете запропонувати (offer)?</li>
+<li><strong>Waiter:</strong> Я можу запропонувати вареники.</li>
+<li><strong>You:</strong> Добре. Я хочу вареники.</li>
+<li><strong>You:</strong> Можна рахунок? (Can I have the bill?).</li>
+</ul>
+<blockquote>
+  <p>🧠 <strong>Deep Dive: Wanting Things (Accusative vs Genitive)</strong><br />
+  usually "I want + Accusative".</p>
+  <ul>
+  <li>Я хочу <strong>воду</strong>.<br />
+  But sometimes "I want + Genitive" (Some of).</li>
+  <li>Я хочу <strong>води</strong>. (Some water).<br />
+  For A1, stick to Accusative. It is specific. "I want THE water".</li>
+  </ul>
+</blockquote>
 <hr /></div>
     </div>
   
       
-    <div class="card section-summary">
-      <h3>📋 Summary</h3>
-      <div class="md-content"><blockquote>
-  <p><strong>Congratulations!</strong></p>
-  <p>You can now describe people, places, and things in Ukrainian:</p>
-  <ul>
-  <li><strong>Agreement</strong>: Adjectives match nouns in gender and number</li>
-  <li><strong>Hard stem</strong>: -ий/-а/-е/-і (великий, велика, велике, великі)</li>
-  <li><strong>Soft stem</strong>: -ій/-я/-є/-і (синій, синя, синє, сині)</li>
-  <li><strong>Word order</strong>: Adjective + Noun (гарна погода)</li>
-  </ul>
-  <p><strong>Key Adjective Categories:</strong></p>
-  <ul>
-  <li>Size: великий, малий, високий, низький</li>
-  <li>Quality: гарний, поганий, добрий</li>
-  <li>Character: розумний, сильний, швидкий</li>
-  <li>Value: дорогий, дешевий, цікавий, важливий</li>
-  </ul>
-  <p><strong>Coming Next: Module 27 — Colors & Clothing</strong></p>
-  <p>In the next module, you'll learn:</p>
-  <ul>
-  <li>Colors: червоний, синій, зелений, жовтий…</li>
-  <li>Clothing: сорочка, штани, сукня, взуття…</li>
-  <li>Describing outfits: Вона носить червону сукню.</li>
-  </ul>
-</blockquote></div>
-    </div>
-  
       <div class="btn-group">
         <button class="btn btn-primary" onclick="showSection('activity-0')">Activities →</button>
       </div>
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Adjective Agreement</h3>
+    <section id="activity-0" class="section"><div class="card"><h3>Modal Meanings</h3>
       <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container" class="fill-container"></div>
-      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+      <div class="match-container" id="activity-0-container"><svg class="match-lines" id="activity-0-lines"></svg>
+        <div class="match-column" id="activity-0-left"></div>
+        <div class="match-column" id="activity-0-right"></div>
+      </div>
+      <div class="completion-message" id="activity-0-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Opposites</h3>
+    <section id="activity-1" class="section"><div class="card"><h3>Modal Conjugation</h3>
       <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
       <div id="activity-1-container" class="fill-container"></div>
       <div class="completion-message" id="activity-1-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Adjective Sentences</h3>
+    <section id="activity-2" class="section"><div class="card"><h3>Permission vs Ability</h3>
       <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
-      <div id="activity-2-container" class="order-container"></div>
-      <div class="completion-message" id="activity-2-complete"><h3>Perfect Order!</h3></div>
+      <div class="sort-pool" id="activity-2-pool"><div class="sort-items" id="activity-2-items"></div></div>
+      <div class="sort-groups" id="activity-2-groups"></div>
+      <div class="completion-message" id="activity-2-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Adjective Meanings</h3>
+    <section id="activity-3" class="section"><div class="card"><h3>Logic Check</h3>
       <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-3-container"><svg class="match-lines" id="activity-3-lines"></svg>
-        <div class="match-column" id="activity-3-left"></div>
-        <div class="match-column" id="activity-3-right"></div>
-      </div>
-      <div class="completion-message" id="activity-3-complete"><h3>Perfect!</h3></div>
+      <div id="activity-3-container"></div>
+      <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Adjective Forms</h3>
+    <section id="activity-4" class="section"><div class="card"><h3>Modal Scramble</h3>
       <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-4-container"><svg class="match-lines" id="activity-4-lines"></svg>
-        <div class="match-column" id="activity-4-left"></div>
-        <div class="match-column" id="activity-4-right"></div>
-      </div>
-      <div class="completion-message" id="activity-4-complete"><h3>Perfect!</h3></div>
+      <div id="activity-4-container" class="order-container"></div>
+      <div class="completion-message" id="activity-4-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Adjective Knowledge</h3>
+    <section id="activity-5" class="section"><div class="card"><h3>Sentence Building</h3>
       <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
-      <div id="activity-5-container"></div>
-      <div class="completion-message" id="activity-5-complete"><h3>Complete!</h3></div>
+      <div id="activity-5-container" class="order-container"></div>
+      <div class="completion-message" id="activity-5-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Adjective Facts</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>Translation Challenge</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
-      <div id="activity-6-container"></div>
+      <div id="activity-6-container" class="fill-container"></div>
       <div class="completion-message" id="activity-6-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
     </div></section>
 
-    <section id="activity-7" class="section"><div class="card"><h3>Adjective Types</h3>
-      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/17</span></div>
-      <div class="sort-pool" id="activity-7-pool"><div class="sort-items" id="activity-7-items"></div></div>
-      <div class="sort-groups" id="activity-7-groups"></div>
-      <div class="completion-message" id="activity-7-complete"><h3>All Sorted!</h3></div>
+    <section id="activity-7" class="section"><div class="card"><h3>Modal Facts</h3>
+      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/4</span></div>
+      <div id="activity-7-container"></div>
+      <div class="completion-message" id="activity-7-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
-        <h3>Словник (35)</h3>
+        <h3>Словник (25)</h3>
         <div class="vocab-table-container">
           <table class="vocab-table">
             <thead><tr>
@@ -1104,7 +853,7 @@ footer {
     <th>Переклад</th>
     <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">великий</td><td class="vocab-ipa">wɛˈlɪkɪj</td><td class="vocab-en">big, large</td><td class="vocab-note">велика (f), велике (n)</td></tr><tr><td class="vocab-uk">малий</td><td class="vocab-ipa">mɐˈlɪj</td><td class="vocab-en">small, little</td><td class="vocab-note">мала, мале</td></tr><tr><td class="vocab-uk">високий</td><td class="vocab-ipa">wɪˈsɔkɪj</td><td class="vocab-en">tall, high</td><td class="vocab-note">висока, високе</td></tr><tr><td class="vocab-uk">низький</td><td class="vocab-ipa">ˈnɪzʲkɪj</td><td class="vocab-en">short, low</td><td class="vocab-note">низька, низьке</td></tr><tr><td class="vocab-uk">довгий</td><td class="vocab-ipa">ˈdɔwɦɪj</td><td class="vocab-en">long</td><td class="vocab-note">довга, довге</td></tr><tr><td class="vocab-uk">короткий</td><td class="vocab-ipa">kɔˈrɔtkɪj</td><td class="vocab-en">short</td><td class="vocab-note">коротка, коротке</td></tr><tr><td class="vocab-uk">широкий</td><td class="vocab-ipa">ʃɪˈrɔkɪj</td><td class="vocab-en">wide</td><td class="vocab-note">широка, широке</td></tr><tr><td class="vocab-uk">вузький</td><td class="vocab-ipa">ˈwuzʲkɪj</td><td class="vocab-en">narrow</td><td class="vocab-note">вузька, вузьке</td></tr><tr><td class="vocab-uk">новий</td><td class="vocab-ipa">ˈnɔwɪj</td><td class="vocab-en">new</td><td class="vocab-note">нова, нове</td></tr><tr><td class="vocab-uk">старий</td><td class="vocab-ipa">stɐˈrɪj</td><td class="vocab-en">old</td><td class="vocab-note">стара, старе</td></tr><tr><td class="vocab-uk">молодий</td><td class="vocab-ipa">mɔˈlɔdɪj</td><td class="vocab-en">young</td><td class="vocab-note">молода, молоде</td></tr><tr><td class="vocab-uk">гарний</td><td class="vocab-ipa">ˈɦɑrnɪj</td><td class="vocab-en">beautiful, nice</td><td class="vocab-note">гарна, гарне</td></tr><tr><td class="vocab-uk">красивий</td><td class="vocab-ipa">krɐˈsɪwɪj</td><td class="vocab-en">beautiful</td><td class="vocab-note">красива, красиве</td></tr><tr><td class="vocab-uk">поганий</td><td class="vocab-ipa">pɔˈɦɑnɪj</td><td class="vocab-en">bad</td><td class="vocab-note">погана, погане</td></tr><tr><td class="vocab-uk">добрий</td><td class="vocab-ipa">ˈdɔbrɪj</td><td class="vocab-en">good, kind</td><td class="vocab-note">добра, добре</td></tr><tr><td class="vocab-uk">злий</td><td class="vocab-ipa">zlɪj</td><td class="vocab-en">evil, angry</td><td class="vocab-note">зла, зле</td></tr><tr><td class="vocab-uk">розумний</td><td class="vocab-ipa">rɔˈzumnɪj</td><td class="vocab-en">smart, clever</td><td class="vocab-note">розумна, розумне</td></tr><tr><td class="vocab-uk">дурний</td><td class="vocab-ipa">ˈdurnɪj</td><td class="vocab-en">stupid</td><td class="vocab-note">дурна, дурне</td></tr><tr><td class="vocab-uk">сильний</td><td class="vocab-ipa">ˈsɪlʲnɪj</td><td class="vocab-en">strong</td><td class="vocab-note">сильна, сильне</td></tr><tr><td class="vocab-uk">слабкий</td><td class="vocab-ipa">ˈslɑbkɪj</td><td class="vocab-en">weak</td><td class="vocab-note">слабка, слабке</td></tr><tr><td class="vocab-uk">швидкий</td><td class="vocab-ipa">ˈʃwɪdkɪj</td><td class="vocab-en">fast, quick</td><td class="vocab-note">швидка, швидке</td></tr><tr><td class="vocab-uk">повільний</td><td class="vocab-ipa">pɔˈwilʲnɪj</td><td class="vocab-en">slow</td><td class="vocab-note">повільна, повільне</td></tr><tr><td class="vocab-uk">легкий</td><td class="vocab-ipa">ˈlɛɦkɪj</td><td class="vocab-en">easy, light</td><td class="vocab-note">легка, легке</td></tr><tr><td class="vocab-uk">важкий</td><td class="vocab-ipa">wɐʒˈkɪj</td><td class="vocab-en">heavy, difficult</td><td class="vocab-note">важка, важке</td></tr><tr><td class="vocab-uk">дорогий</td><td class="vocab-ipa">dɔrɔˈɦɪj</td><td class="vocab-en">expensive, dear</td><td class="vocab-note">дорога, дороге</td></tr><tr><td class="vocab-uk">дешевий</td><td class="vocab-ipa">dɛˈʃɛwɪj</td><td class="vocab-en">cheap</td><td class="vocab-note">дешева, дешеве</td></tr><tr><td class="vocab-uk">цікавий</td><td class="vocab-ipa">t͡siˈkɑwɪj</td><td class="vocab-en">interesting</td><td class="vocab-note">цікава, цікаве</td></tr><tr><td class="vocab-uk">нудний</td><td class="vocab-ipa">ˈnudnɪj</td><td class="vocab-en">boring</td><td class="vocab-note">нудна, нудне</td></tr><tr><td class="vocab-uk">простий</td><td class="vocab-ipa">prɔsˈtɪj</td><td class="vocab-en">simple</td><td class="vocab-note">проста, просте</td></tr><tr><td class="vocab-uk">складний</td><td class="vocab-ipa">sklɐdˈnɪj</td><td class="vocab-en">complex</td><td class="vocab-note">складна, складне</td></tr><tr><td class="vocab-uk">важливий</td><td class="vocab-ipa">wɐʒˈlɪwɪj</td><td class="vocab-en">important</td><td class="vocab-note">важлива, важливе</td></tr><tr><td class="vocab-uk">головний</td><td class="vocab-ipa">ɦɔˈlɔwnɪj</td><td class="vocab-en">main</td><td class="vocab-note">головна, головне</td></tr><tr><td class="vocab-uk">різний</td><td class="vocab-ipa">ˈriznɪj</td><td class="vocab-en">different</td><td class="vocab-note">різна, різне</td></tr><tr><td class="vocab-uk">однаковий</td><td class="vocab-ipa">ɔdnɐˈkɔwɪj</td><td class="vocab-en">same, identical</td><td class="vocab-note">однакова, однакове</td></tr><tr><td class="vocab-uk">особливий</td><td class="vocab-ipa">ɔsɔˈblɪwɪj</td><td class="vocab-en">special</td><td class="vocab-note">особлива, особливе</td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">хотіти</td><td class="vocab-ipa">/xɔˈt⁽ʲ⁾itɪ/</td><td class="vocab-en">to want</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('хотіти')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">могти</td><td class="vocab-ipa">/mɔhˈtɪ/</td><td class="vocab-en">can/be able</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('могти')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">мусити</td><td class="vocab-ipa">/ˈmusɪtɪ/</td><td class="vocab-en">must/oblige</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('мусити')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">треба</td><td class="vocab-ipa">/ˈtrɛbɑ/</td><td class="vocab-en">need/necessary</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('треба')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">можна</td><td class="vocab-ipa">/ˈmɔʒnɑ/</td><td class="vocab-en">allowed/may</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('можна')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">хочу</td><td class="vocab-ipa">/ˈxɔtʃu/</td><td class="vocab-en">I want</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('хочу')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">хочеш</td><td class="vocab-ipa">/ˈxɔtʃɛʃ/</td><td class="vocab-en">you want</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('хочеш')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">хоче</td><td class="vocab-ipa">/ˈxɔtʃɛ/</td><td class="vocab-en">he wants</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('хоче')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">хочемо</td><td class="vocab-ipa">/ˈxɔtʃɛmɔ/</td><td class="vocab-en">we want</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('хочемо')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">хочуть</td><td class="vocab-ipa">/ˈxɔtʃutʲ/</td><td class="vocab-en">they want</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('хочуть')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">можу</td><td class="vocab-ipa">/ˈmɔʒu/</td><td class="vocab-en">I can</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('можу')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">можеш</td><td class="vocab-ipa">/ˈmɔʒɛʃ/</td><td class="vocab-en">you can</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('можеш')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">може</td><td class="vocab-ipa">/ˈmɔʒɛ/</td><td class="vocab-en">he can</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('може')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">можемо</td><td class="vocab-ipa">/ˈmɔʒɛmɔ/</td><td class="vocab-en">we can</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('можемо')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">можуть</td><td class="vocab-ipa">/ˈmɔʒutʲ/</td><td class="vocab-en">they can</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('можуть')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">мушу</td><td class="vocab-ipa">/ˈmuʃu/</td><td class="vocab-en">I must</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('мушу')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">бажати</td><td class="vocab-ipa">/bɑˈʒɑtɪ/</td><td class="vocab-en">to wish</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('бажати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">робити</td><td class="vocab-ipa">/rɔˈbɪtɪ/</td><td class="vocab-en">to do</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('робити')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">допомогти</td><td class="vocab-ipa">/dɔpɔmɔhˈtɪ/</td><td class="vocab-en">to help</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('допомогти')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">пропонувати</td><td class="vocab-ipa">/prɔpɔnuˈvɑtɪ/</td><td class="vocab-en">to offer</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('пропонувати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">меню</td><td class="vocab-ipa">/mɛˈnʲu/</td><td class="vocab-en">menu</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('меню')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">рахунок</td><td class="vocab-ipa">/rɑˈxunɔk/</td><td class="vocab-en">bill</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('рахунок')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">лінивий</td><td class="vocab-ipa">/l⁽ʲ⁾iˈnɪvɪj/</td><td class="vocab-en">lazy</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('лінивий')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">хворий</td><td class="vocab-ipa">/ˈxvɔrɪj/</td><td class="vocab-en">sick</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('хворий')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">зайнятий</td><td class="vocab-ipa">/ˈzɑjnʲɑtɪj/</td><td class="vocab-en">busy</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('зайнятий')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1116,8 +865,8 @@ footer {
   </main><footer>Module 26 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"fill-blank","title":"Adjective Agreement","data":{"type":"fill-blank","items":[{"prompt":"Це ___ будинок.","answer":"великий","options":["великий","велика","велике","великі"]},{"prompt":"Це ___ книга.","answer":"цікава","options":["цікава","цікавий","цікаве","цікаві"]},{"prompt":"Це ___ місто.","answer":"гарне","options":["гарне","гарний","гарна","гарні"]},{"prompt":"Це ___ друзі.","answer":"добрі","options":["добрі","добрий","добра","добре"]},{"prompt":"Вона ___ жінка.","answer":"розумна","options":["розумна","розумний","розумне","розумні"]},{"prompt":"Це ___ слово.","answer":"нове","options":["нове","новий","нова","нові"]},{"prompt":"Він ___ чоловік.","answer":"молодий","options":["молодий","молода","молоде","молоді"]},{"prompt":"Це ___ вулиця.","answer":"широка","options":["широка","широкий","широке","широкі"]},{"prompt":"Книга дуже ___.","answer":"цікава","options":["цікава","цікавий","цікаве","цікаві"]},{"prompt":"Погода сьогодні ___.","answer":"гарна","options":["гарна","гарний","гарне","гарні"]},{"prompt":"Це ___ небо.","answer":"синє","options":["синє","синій","синя","сині"]},{"prompt":"Мої батьки ___.","answer":"добрі","options":["добрі","добрий","добра","добре"]}]}},{"id":"activity-1","type":"fill-blank","title":"Opposites","data":{"type":"fill-blank","items":[{"prompt":"Не великий, а ___.","answer":"малий","options":["малий","старий","новий","добрий"]},{"prompt":"Не новий, а ___.","answer":"старий","options":["старий","молодий","великий","малий"]},{"prompt":"Не швидкий, а ___.","answer":"повільний","options":["повільний","сильний","високий","довгий"]},{"prompt":"Не дорогий, а ___.","answer":"дешевий","options":["дешевий","новий","старий","великий"]},{"prompt":"Не високий, а ___.","answer":"низький","options":["низький","довгий","короткий","широкий"]},{"prompt":"Не довгий, а ___.","answer":"короткий","options":["короткий","високий","низький","вузький"]},{"prompt":"Не цікавий, а ___.","answer":"нудний","options":["нудний","простий","складний","важливий"]},{"prompt":"Не добрий, а ___.","answer":"поганий","options":["поганий","злий","дурний","слабкий"]},{"prompt":"Не сильний, а ___.","answer":"слабкий","options":["слабкий","повільний","малий","короткий"]},{"prompt":"Не простий, а ___.","answer":"складний","options":["складний","важливий","цікавий","нудний"]},{"prompt":"Не молодий, а ___.","answer":"старий","options":["старий","новий","великий","малий"]},{"prompt":"Не широкий, а ___.","answer":"вузький","options":["вузький","довгий","короткий","низький"]}]}},{"id":"activity-2","type":"unjumble","title":"Adjective Sentences","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["великий","будинок","Це"],"answer":"Це великий будинок.","translation":"This is a big house."},{"words":["книга","цікава","Ця"],"answer":"Ця книга цікава.","translation":"This book is interesting."},{"words":["гарне","місто","Київ"],"answer":"Київ — гарне місто.","translation":"Kyiv is a beautiful city."},{"words":["Моя","подруга","розумна"],"answer":"Моя подруга розумна.","translation":"My friend is smart. — female"},{"words":["старий","У","мене","телефон"],"answer":"У мене старий телефон.","translation":"I have an old phone."},{"words":["висока","Ця","будівля","дуже"],"answer":"Ця будівля дуже висока.","translation":"This building is very tall."},{"words":["добра","людина","Він"],"answer":"Він добра людина.","translation":"He is a good person."},{"words":["сині","очі","У","неї"],"answer":"У неї сині очі.","translation":"She has blue eyes."},{"words":["нова","машина","Це"],"answer":"Це нова машина.","translation":"This is a new car."},{"words":["довга","вулиця","Ця"],"answer":"Ця вулиця довга.","translation":"This street is long."},{"words":["швидкий","поїзд","Це"],"answer":"Це швидкий поїзд.","translation":"This is a fast train."},{"words":["молоді","студенти","Вони"],"answer":"Вони молоді студенти.","translation":"They are young students."}]}},{"id":"activity-3","type":"match-up","title":"Adjective Meanings","data":{"type":"match-up","pairs":[{"left":"великий","right":"big"},{"left":"малий","right":"small"},{"left":"новий","right":"new"},{"left":"старий","right":"old"},{"left":"гарний","right":"beautiful"},{"left":"поганий","right":"bad"},{"left":"добрий","right":"good, kind"},{"left":"швидкий","right":"fast"},{"left":"повільний","right":"slow"},{"left":"цікавий","right":"interesting"},{"left":"нудний","right":"boring"},{"left":"важливий","right":"important"}],"shuffleRight":true}},{"id":"activity-4","type":"match-up","title":"Adjective Forms","data":{"type":"match-up","pairs":[{"left":"великий","right":"велика"},{"left":"новий","right":"нова"},{"left":"старий","right":"стара"},{"left":"гарний","right":"гарна"},{"left":"синій","right":"синя"},{"left":"добрий","right":"добра"},{"left":"дорогий","right":"дорога"},{"left":"молодий","right":"молода"},{"left":"розумний","right":"розумна"},{"left":"цікавий","right":"цікава"},{"left":"високий","right":"висока"},{"left":"швидкий","right":"швидка"}],"shuffleRight":true}},{"id":"activity-5","type":"quiz","title":"Adjective Knowledge","data":{"type":"quiz","questions":[{"question":"What determines the adjective ending?","options":["The verb","The noun's gender and number","The subject","The sentence position"],"correctIndex":1,"explanation":"Adjectives agree with nouns in gender and number."},{"question":"\"Нова книга\" — what gender is \"книга\"?","options":["Masculine","Feminine","Neuter","Plural"],"correctIndex":1,"explanation":"\"Нова\" is feminine, matching \"книга.\""},{"question":"What's the neuter form of \"великий\"?","options":["велика","велике","великі","великого"],"correctIndex":1,"explanation":"Neuter adjectives end in -е: велике."},{"question":"\"Синій\" is a ___ stem adjective.","options":["Hard","Soft","Mixed","Irregular"],"correctIndex":1,"explanation":"Soft stem: -ій/-я/-є/-і."},{"question":"What's the plural of \"новий\"?","options":["нова","нове","нові","новий"],"correctIndex":2,"explanation":"All plural adjectives end in -і."},{"question":"\"Це гарне місто\" — why \"гарне\"?","options":["Because \"це\" is neuter","Because \"місто\" is neuter","Because it's plural","It's always \"гарне\""],"correctIndex":1,"explanation":"The adjective matches \"місто\" (neuter)."},{"question":"Where do adjectives usually go?","options":["Before the noun","After the noun","After the verb","At the end of the sentence"],"correctIndex":0,"explanation":"Like English: великий будинок (big house)."},{"question":"\"Вона розумна жінка\" — why \"розумна\"?","options":["Because \"жінка\" is feminine","Because \"вона\" is feminine","Because it's plural","Random choice"],"correctIndex":0,"explanation":"Adjective agrees with \"жінка.\""},{"question":"What's the opposite of \"великий\"?","options":["малий","новий","старий","добрий"],"correctIndex":0,"explanation":"Великий (big) ↔ малий (small)."},{"question":"\"Добрі друзі\" — why \"добрі\"?","options":["Because \"друзі\" is masculine","Because \"друзі\" is feminine","Because \"друзі\" is plural","It's always \"добрі\""],"correctIndex":2,"explanation":"Plural adjectives always end in -і."},{"question":"Which is a soft stem adjective?","options":["великий","новий","синій","старий"],"correctIndex":2,"explanation":"\"Синій\" ends in -ій (soft)."},{"question":"\"Цікавий фільм\" → feminine would be:","options":["цікава книга","цікавий книга","цікаве книга","цікаві книга"],"correctIndex":0,"explanation":"Feminine: -ий → -а."}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-6","type":"true-false","title":"Adjective Facts","data":{"type":"true-false","statements":[{"statement":"Adjectives must agree with nouns in gender.","isTrue":true,"explanation":"Correct! Великий (m), велика (f), велике (n)."},{"statement":"All adjectives end in -ий in masculine.","isTrue":false,"explanation":"Incorrect! Soft stem adjectives end in -ій (синій)."},{"statement":"Plural adjectives always end in -і.","isTrue":true,"explanation":"Correct! Нові, великі, гарні — all end in -і."},{"statement":"\"Синій\" is a hard stem adjective.","isTrue":false,"explanation":"Incorrect! \"Синій\" is soft stem (-ій/-я/-є/-і)."},{"statement":"Adjectives usually come before nouns.","isTrue":true,"explanation":"Correct! Like English: гарний день (nice day)."},{"statement":"The adjective ending depends on the verb.","isTrue":false,"explanation":"Incorrect! It depends on the noun's gender and number."},{"statement":"\"Добрий\" and \"добра\" are the same adjective.","isTrue":true,"explanation":"Correct! Just different genders of the same word."},{"statement":"Neuter adjectives end in -е or -є.","isTrue":true,"explanation":"Correct! Велике (hard), синє (soft)."},{"statement":"\"Великий\" and \"малий\" mean the same thing.","isTrue":false,"explanation":"Incorrect! Великий = big, малий = small (opposites)."},{"statement":"You can use multiple adjectives with one noun.","isTrue":true,"explanation":"Correct! \"Великий старий будинок\" (big old house)."},{"statement":"\"Нове\" is masculine.","isTrue":false,"explanation":"Incorrect! \"Нове\" is neuter. Masculine is \"новий.\""},{"statement":"\"Висока будівля\" means \"tall building.\"","isTrue":true,"explanation":"Correct! \"Висока\" (f) matches \"будівля\" (f)."}]}},{"id":"activity-7","type":"group-sort","title":"Adjective Types","data":{"type":"group-sort","groups":[{"id":"hard-stem","name":"Hard Stem","items":["великий","малий","новий","старий","гарний","добрий"],"nameUk":"-ий"},{"id":"soft-stem","name":"Soft Stem","items":["синій","останній","домашній","ранній","пізній"],"nameUk":"-ій"},{"id":"size-adjectives","name":"Size Adjectives","items":["великий","малий","високий","низький","довгий","короткий"]}],"shuffleItems":true}}];
-    const vocabData = [{"uk":"великий","translit":"","en":"big, large","note":"велика (f), велике (n)"},{"uk":"малий","translit":"","en":"small, little","note":"мала, мале"},{"uk":"високий","translit":"","en":"tall, high","note":"висока, високе"},{"uk":"низький","translit":"","en":"short, low","note":"низька, низьке"},{"uk":"довгий","translit":"","en":"long","note":"довга, довге"},{"uk":"короткий","translit":"","en":"short","note":"коротка, коротке"},{"uk":"широкий","translit":"","en":"wide","note":"широка, широке"},{"uk":"вузький","translit":"","en":"narrow","note":"вузька, вузьке"},{"uk":"новий","translit":"","en":"new","note":"нова, нове"},{"uk":"старий","translit":"","en":"old","note":"стара, старе"},{"uk":"молодий","translit":"","en":"young","note":"молода, молоде"},{"uk":"гарний","translit":"","en":"beautiful, nice","note":"гарна, гарне"},{"uk":"красивий","translit":"","en":"beautiful","note":"красива, красиве"},{"uk":"поганий","translit":"","en":"bad","note":"погана, погане"},{"uk":"добрий","translit":"","en":"good, kind","note":"добра, добре"},{"uk":"злий","translit":"","en":"evil, angry","note":"зла, зле"},{"uk":"розумний","translit":"","en":"smart, clever","note":"розумна, розумне"},{"uk":"дурний","translit":"","en":"stupid","note":"дурна, дурне"},{"uk":"сильний","translit":"","en":"strong","note":"сильна, сильне"},{"uk":"слабкий","translit":"","en":"weak","note":"слабка, слабке"},{"uk":"швидкий","translit":"","en":"fast, quick","note":"швидка, швидке"},{"uk":"повільний","translit":"","en":"slow","note":"повільна, повільне"},{"uk":"легкий","translit":"","en":"easy, light","note":"легка, легке"},{"uk":"важкий","translit":"","en":"heavy, difficult","note":"важка, важке"},{"uk":"дорогий","translit":"","en":"expensive, dear","note":"дорога, дороге"},{"uk":"дешевий","translit":"","en":"cheap","note":"дешева, дешеве"},{"uk":"цікавий","translit":"","en":"interesting","note":"цікава, цікаве"},{"uk":"нудний","translit":"","en":"boring","note":"нудна, нудне"},{"uk":"простий","translit":"","en":"simple","note":"проста, просте"},{"uk":"складний","translit":"","en":"complex","note":"складна, складне"},{"uk":"важливий","translit":"","en":"important","note":"важлива, важливе"},{"uk":"головний","translit":"","en":"main","note":"головна, головне"},{"uk":"різний","translit":"","en":"different","note":"різна, різне"},{"uk":"однаковий","translit":"","en":"same, identical","note":"однакова, однакове"},{"uk":"особливий","translit":"","en":"special","note":"особлива, особливе"}];
+    const activitiesData = [{"id":"activity-0","type":"match-up","title":"Modal Meanings","data":{"type":"match-up","pairs":[{"left":"Хочу","right":"I want"},{"left":"Можу","right":"I can"},{"left":"Мушу","right":"I must"},{"left":"Треба","right":"Need to"},{"left":"Можна","right":"Allowed/May"},{"left":"Не можна","right":"Forbidden"},{"left":"Хочеш","right":"You want"},{"left":"Можеш","right":"You can"},{"left":"Мусиш","right":"You must"},{"left":"Хочемо","right":"We want"},{"left":"Можемо","right":"We can"},{"left":"Хочуть","right":"They want"}],"shuffleRight":true}},{"id":"activity-1","type":"fill-blank","title":"Modal Conjugation","data":{"type":"fill-blank","items":[{"prompt":"Я ___ (want) піцу.","answer":"хочу","hints":["want"]},{"prompt":"Ти ___ (can) читати.","answer":"можеш","hints":["can"]},{"prompt":"Він ___ (must) йти.","answer":"мусить","hints":["must"]},{"prompt":"Ми ___ (want) спати.","answer":"хочемо","hints":["want"]},{"prompt":"Ви ___ (can) допомогти?","answer":"можете","hints":["can"]},{"prompt":"Вони ___ (want) їсти.","answer":"хочуть","hints":["want"]},{"prompt":"Я не ___ (can) говорити.","answer":"можу","hints":["can"]},{"prompt":"Вона ___ (must) працювати.","answer":"мусить","hints":["must"]},{"prompt":"Ми не ___ (can) чекати.","answer":"можемо","hints":["can"]},{"prompt":"Ти ___ (want) каву?","answer":"хочеш","hints":["want"]},{"prompt":"Вони ___ (can) плавати.","answer":"можуть","hints":["can"]},{"prompt":"Мені ___ (need) квиток.","answer":"треба","hints":["need"]}]}},{"id":"activity-2","type":"group-sort","title":"Permission vs Ability","data":{"type":"group-sort","groups":[{"id":"permission","name":"Permission","items":["Можна? (May I?)","Не можна (Forbidden)","Тут можна курити?","Можна увійти?","Фотографувати не можна","Тут можна сидіти?"],"nameUk":"Rules"},{"id":"ability","name":"Ability","items":["Я можу плавати","Я можу читати","Ти можеш це зробити?","Я не можу спати","Ми можемо бігати","Вона може співати"],"nameUk":"Self"}],"shuffleItems":true}},{"id":"activity-3","type":"quiz","title":"Logic Check","data":{"type":"quiz","questions":[{"question":"I am very tired.","options":["Я хочу спати.","Я можу спати."],"correctIndex":0,"explanation":""},{"question":"I am at a red light.","options":["Я мушу стояти.","Я хочу стояти."],"correctIndex":0,"explanation":""},{"question":"I see a tasty cake.","options":["Я хочу торт.","Я мушу торт."],"correctIndex":0,"explanation":""},{"question":"I broke my leg.","options":["Я не можу йти.","Не можна йти."],"correctIndex":0,"explanation":""},{"question":"This is a museum.","options":["Тут не можна бігати.","Тут я не можу бігати."],"correctIndex":0,"explanation":""},{"question":"I need to go to the toilet.","options":["Мені треба в туалет.","Я можу в туалет."],"correctIndex":0,"explanation":""},{"question":"Can you help me?","options":["Ви можете допомогти?","Ви хочете допомогти? (Did not ask about desire)."],"correctIndex":0,"explanation":""},{"question":"May I sit here?","options":["Можна тут сісти?","Я можу тут сісти? (Physical ability?)"],"correctIndex":0,"explanation":""},{"question":"I have a meeting at 9:00.","options":["Я мушу бути там.","Я можу бути там."],"correctIndex":0,"explanation":""},{"question":"I hate broccoli.","options":["Я не хочу це.","Я не можу це."],"correctIndex":0,"explanation":""},{"question":"Superman...","options":["може літати.","хоче літати (maybe, but fame is ability)."],"correctIndex":0,"explanation":""},{"question":"Fish...","options":["не можуть говорити.","не хочуть говорити (who knows?)."],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-4","type":"anagram","title":"Modal Scramble","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["ч","у","х","о"],"answer":"хочу","translation":"I want"},{"letters":["ж","у","м","о"],"answer":"можу","translation":"I can"},{"letters":["б","а","т","р","е"],"answer":"треба","translation":"Need"},{"letters":["ш","у","м","у"],"answer":"мушу","translation":"I must"},{"letters":["н","а","ж","о","м"],"answer":"можна","translation":"Allowed"},{"letters":["ш","е","ч","о","х"],"answer":"хочеш","translation":"You want"},{"letters":["ш","е","ж","о","м"],"answer":"можеш","translation":"You can"},{"letters":["м","о","м","о","ж","е"],"answer":"можемо","translation":"We can"},{"letters":["т","ь","у","ч","о","х"],"answer":"хочуть","translation":"They want"},{"letters":["т","ь","у","ж","о","м"],"answer":"можуть","translation":"They can"},{"letters":["с","и","ш","м","у"],"answer":"мусиш","translation":"You must"},{"letters":["т","е","ч","о","х"],"answer":"хочете","translation":"He wants - typo in scramble source? Khoche + ? No. He wants is Khoche. You pl want is Khochete. Scramble: Khochete"}]}},{"id":"activity-5","type":"unjumble","title":"Sentence Building","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["хочу","пити","Я","."],"answer":"Я хочу пити."},{"words":["не","спати","Я","можу","."],"answer":"Я не можу спати."},{"words":["треба","Мені","йти","."],"answer":"Мені треба йти."},{"words":["ти","Що","хочеш","?"],"answer":"Що ти хочеш?"},{"words":["допомогти","Ви","можете","?"],"answer":"Ви можете допомогти?"},{"words":["тут","Не","курити","можна","."],"answer":"Тут не можна курити."},{"words":["ми","Коли","їсти","можемо","?"],"answer":"Коли ми можемо їсти?"},{"words":["жити","Я","тут","хочу","."],"answer":"Я хочу тут жити."},{"words":["мусите","Ви","це","знати","."],"answer":"Ви мусите це знати."},{"words":["каву","Можна","?"],"answer":"Можна каву?"},{"words":["не","Вони","чути","можуть","нас","."],"answer":"Вони не можуть нас чути.","translation":"They cannot hear us"},{"words":["дуже","Я","хочу","спати","."],"answer":"Я дуже хочу спати."}]}},{"id":"activity-6","type":"fill-blank","title":"Translation Challenge","data":{"type":"fill-blank","items":[{"prompt":"I can swim.","answer":"Я можу плавати."},{"prompt":"I want pizza.","answer":"Я хочу піцу."},{"prompt":"I must work.","answer":"Я мушу працювати."},{"prompt":"Need to sleep. (Impersonal)","answer":"Треба спати."},{"prompt":"May I?","answer":"Можна?"},{"prompt":"Forbidden.","answer":"Не можна."},{"prompt":"We want coffee.","answer":"Ми хочемо каву."},{"prompt":"They can dance.","answer":"Вони можуть танцювати."},{"prompt":"She wants to go home.","answer":"Вона хоче йти додому."},{"prompt":"You (formal) must listen.","answer":"Ви мусите слухати."},{"prompt":"I cannot speak.","answer":"Я не можу говорити."},{"prompt":"We need a taxi.","answer":"Нам треба таксі."}]}},{"id":"activity-7","type":"true-false","title":"Modal Facts","data":{"type":"true-false","statements":[{"statement":"I can conjugate **Хотіти** (To want).","isTrue":false,"explanation":""},{"statement":"I can conjugate **Могти** (To be able).","isTrue":false,"explanation":""},{"statement":"I know the difference between **Я не можу** (Ability) and **Не можна** (Permission).","isTrue":false,"explanation":""},{"statement":"I can politely accept my fate: \"Треба працювати\".","isTrue":false,"explanation":""}]}}];
+    const vocabData = [{"uk":"хотіти","translit":"","en":"to want","note":"[🔊](audio_khotity)"},{"uk":"могти","translit":"","en":"can/be able","note":"[🔊](audio_mohty)"},{"uk":"мусити","translit":"","en":"must/oblige","note":"[🔊](audio_musyty)"},{"uk":"треба","translit":"","en":"need/necessary","note":"[🔊](audio_treba)"},{"uk":"можна","translit":"","en":"allowed/may","note":"[🔊](audio_mozhna)"},{"uk":"хочу","translit":"","en":"I want","note":"[🔊](audio_khochu)"},{"uk":"хочеш","translit":"","en":"you want","note":"[🔊](audio_khochesh)"},{"uk":"хоче","translit":"","en":"he wants","note":"[🔊](audio_khoche)"},{"uk":"хочемо","translit":"","en":"we want","note":"[🔊](audio_khochemo)"},{"uk":"хочуть","translit":"","en":"they want","note":"[🔊](audio_khochut)"},{"uk":"можу","translit":"","en":"I can","note":"[🔊](audio_mozhu)"},{"uk":"можеш","translit":"","en":"you can","note":"[🔊](audio_mozhesh)"},{"uk":"може","translit":"","en":"he can","note":"[🔊](audio_mozhe)"},{"uk":"можемо","translit":"","en":"we can","note":"[🔊](audio_mozhemo)"},{"uk":"можуть","translit":"","en":"they can","note":"[🔊](audio_mozhut)"},{"uk":"мушу","translit":"","en":"I must","note":"[🔊](audio_mushu)"},{"uk":"бажати","translit":"","en":"to wish","note":"[🔊](audio_bazhaty)"},{"uk":"робити","translit":"","en":"to do","note":"[🔊](audio_robyty)"},{"uk":"допомогти","translit":"","en":"to help","note":"[🔊](audio_dopomohty)"},{"uk":"пропонувати","translit":"","en":"to offer","note":"[🔊](audio_proponuvaty)"},{"uk":"меню","translit":"","en":"menu","note":"[🔊](audio_menyu)"},{"uk":"рахунок","translit":"","en":"bill","note":"[🔊](audio_rakhunok)"},{"uk":"лінивий","translit":"","en":"lazy","note":"[🔊](audio_linyvyj)"},{"uk":"хворий","translit":"","en":"sick","note":"[🔊](audio_khvoryj)"},{"uk":"зайнятий","translit":"","en":"busy","note":"[🔊](audio_zajnyatyj)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1177,6 +926,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2441,6 +2216,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

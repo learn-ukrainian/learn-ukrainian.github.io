@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Module 23: What Time Is It? | Ukrainian A1</title>
+  <title>Module 23: From Sunrise to Sunset | Ukrainian A1</title>
   <style>
 :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -478,17 +518,17 @@ footer {
     </div>
   </div>
   <nav class="nav">
-    <h1>Module 23: What Time Is It?</h1>
+    <h1>Module 23: From Sunrise to Sunset</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Fill</button>
+      <button class="nav-tab" data-section="activity-0">1. Match</button>
       <button class="nav-tab" data-section="activity-1">2. Fill</button>
-      <button class="nav-tab" data-section="activity-2">3. Order</button>
-      <button class="nav-tab" data-section="activity-3">4. Match</button>
-      <button class="nav-tab" data-section="activity-4">5. Match</button>
-      <button class="nav-tab" data-section="activity-5">6. Quiz</button>
-      <button class="nav-tab" data-section="activity-6">7. T/F</button>
-      <button class="nav-tab" data-section="activity-7">8. Sort</button>
+      <button class="nav-tab" data-section="activity-2">3. Quiz</button>
+      <button class="nav-tab" data-section="activity-3">4. Spell</button>
+      <button class="nav-tab" data-section="activity-4">5. Sort</button>
+      <button class="nav-tab" data-section="activity-5">6. Order</button>
+      <button class="nav-tab" data-section="activity-6">7. Fill</button>
+      <button class="nav-tab" data-section="activity-7">8. T/F</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -497,538 +537,291 @@ footer {
     <section id="lesson" class="section active">
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.3</span>
-        <h2 style="font-size:2rem;margin:0.5rem 0">What Time Is It?</h2>
-        <p style="color:var(--text-muted)">Котра година? — Telling Time and Using the Calendar</p>
+        <h2 style="font-size:2rem;margin:0.5rem 0">From Sunrise to Sunset</h2>
+        <p style="color:var(--text-muted)">What time is it?</p>
       </div>
       
     <div class="card section-intro">
       <h3>📖 Introduction</h3>
       <div class="md-content"><h2 id="warmup">warm-up</h2>
-<h3 id="timeiseverywhere">Time Is Everywhere!</h3>
-<p>Every day we ask: What time is it? When does the train leave? What day is the meeting? In this module, you'll learn to navigate Ukrainian time expressions with confidence.</p>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>Ukrainians use a 24-hour clock in official contexts (trains, TV schedules) but a 12-hour clock in everyday conversation. "О п'ятнадцятій" (at 15:00) becomes "о третій" (at 3) in casual speech.</p>
-</blockquote>
+<p><strong>The Lost Traveler</strong></p>
+<p>You are at the train station. Your train is at 18:00.<br />
+You look at your phone. It is dead.<br />
+You see a clock, but it is broken.<br />
+You ask a passerby: "Котра година?" (What time is it?).<br />
+They say: "Шоста". (Sixth).<br />
+Sixth? Sixth what?<br />
+Welcome to Ukrainian time. Where 6:00 is "The Sixth Hour".</p>
+<p>In this module, we will learn to navigate the day.</p>
 <h2 id="presentation">presentation</h2>
-<h3 id="askingthetime">Asking the Time</h3>
-<p><strong>Котра година?</strong> — What time is it? (literally: "Which hour?")</p>
-<p>This is the standard way to ask the time in Ukrainian.</p>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Котра година?</td>
-<td>What time is it?</td>
-</tr>
-<tr>
-<td>О котрій годині?</td>
-<td>At what time?</td>
-</tr>
-<tr>
-<td>Коли?</td>
-<td>When?</td>
-</tr>
-</tbody>
-</table>
-<h3 id="tellingthehour">Telling the Hour</h3>
-<p>Ukrainian uses ordinal numbers (first, second, third…) for telling hours:</p>
-<table>
-<thead>
-<tr>
-<th>Hour</th>
-<th>Ukrainian</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1:00</td>
-<td>перша година</td>
-<td>Зараз перша година.</td>
-</tr>
-<tr>
-<td>2:00</td>
-<td>друга година</td>
-<td>Зараз друга година.</td>
-</tr>
-<tr>
-<td>3:00</td>
-<td>третя година</td>
-<td>Зараз третя година.</td>
-</tr>
-<tr>
-<td>4:00</td>
-<td>четверта година</td>
-<td>Зараз четверта година.</td>
-</tr>
-<tr>
-<td>5:00</td>
-<td>п'ята година</td>
-<td>Зараз п'ята година.</td>
-</tr>
-<tr>
-<td>6:00</td>
-<td>шоста година</td>
-<td>Зараз шоста година.</td>
-</tr>
-<tr>
-<td>7:00</td>
-<td>сьома година</td>
-<td>Зараз сьома година.</td>
-</tr>
-<tr>
-<td>8:00</td>
-<td>восьма година</td>
-<td>Зараз восьма година.</td>
-</tr>
-<tr>
-<td>9:00</td>
-<td>дев'ята година</td>
-<td>Зараз дев'ята година.</td>
-</tr>
-<tr>
-<td>10:00</td>
-<td>десята година</td>
-<td>Зараз десята година.</td>
-</tr>
-<tr>
-<td>11:00</td>
-<td>одинадцята година</td>
-<td>Зараз одинадцята година.</td>
-</tr>
-<tr>
-<td>12:00</td>
-<td>дванадцята година</td>
-<td>Зараз дванадцята година.</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎬 <strong>Pop Culture Moment: Back to the Future</strong></p>
-  <p>"О котрій годині? — О десятій двадцять одна!" (At what time? — At 10:21!) That's when the DeLorean hits 88 mph!</p>
-</blockquote>
-<h3 id="halfhoursandquarters">Half Hours and Quarters</h3>
-<p>Ukrainian has elegant expressions for half hours and quarters:</p>
-<table>
-<thead>
-<tr>
-<th>Time</th>
-<th>Ukrainian</th>
-<th>Literal Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1:30</td>
-<td>пів на другу</td>
-<td>half to second</td>
-</tr>
-<tr>
-<td>2:30</td>
-<td>пів на третю</td>
-<td>half to third</td>
-</tr>
-<tr>
-<td>3:15</td>
-<td>чверть на четверту</td>
-<td>quarter to fourth</td>
-</tr>
-<tr>
-<td>3:45</td>
-<td>за чверть четверта</td>
-<td>minus quarter fourth</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🔍 <strong>Myth Buster</strong></p>
-  <p><strong>Myth:</strong> "Пів на другу" means half past two.<br />
-  <strong>Fact:</strong> It means half past ONE! The Ukrainian logic is: you're halfway TO the next hour. So "пів на другу" = half toward 2:00 = 1:30.</p>
-</blockquote>
-<h3 id="minutespastandto">Minutes Past and To</h3>
-<p>For other minutes, Ukrainian uses two patterns:</p>
-<p><strong>Minutes PAST the hour:</strong></p>
+<h3 id="section1themagicquestion">Section 1: The Magic Question</h3>
+<p>To ask for time, we don't say "How much clock?". We say:</p>
 <ul>
-<li>5:10 = десять хвилин на шосту (10 minutes toward the sixth)</li>
-<li>5:20 = двадцять хвилин на шосту (20 minutes toward the sixth)</li>
+<li><strong>Котра година?</strong> (Which hour is it? - f).</li>
+<li><strong>Скільки часу?</strong> (How much time?).</li>
 </ul>
-<p><strong>Minutes TO the hour:</strong></p>
+<p>Both are correct. "Котра година?" is arguably more elegant.</p>
+<h3 id="section2numbers1324the24hclock">Section 2: Numbers 13-24 (The 24h Clock)</h3>
+<p>Ukraine uses the 24-hour clock for schedules (trains, official events).<br />
+In casual speech, they use 12-hour.<br />
+But you need to know numbers up to 24.</p>
 <ul>
-<li>5:50 = за десять хвилин шоста (minus 10 minutes sixth)</li>
-<li>5:40 = за двадцять хвилин шоста (minus 20 minutes sixth)</li>
+<li>13 - <strong>Тринадцять</strong> (Three-on-ten).</li>
+<li>14 - <strong>Чотирнадцять</strong>.</li>
+<li>15 - <strong>П'ятнадцять</strong>.</li>
+<li>16 - <strong>Шістнадцять</strong>.</li>
+<li>17 - <strong>Сімнадцять</strong>.</li>
+<li>18 - <strong>Вісімнадцять</strong>.</li>
+<li>19 - <strong>Дев'ятнадцять</strong>.</li>
+<li>20 - <strong>Двадцять</strong>.</li>
+<li>21 - <strong>Двадцять один</strong>.</li>
+<li>30 - <strong>Тридцять</strong>.</li>
+</ul>
+<h3 id="section3tellingtimeonthehour">Section 3: Telling Time (On the Hour)</h3>
+<p>In A1, we keep it simple. We only check "On the Hour" (00:00).<br />
+Ukrainian uses Ordinal Numbers (First, Second, Third) for time.<br />
+It literally says: "It is the Fifth hour."</p>
+<ul>
+<li>01:00 -&gt; <strong>Перша</strong> година. (First hour).</li>
+<li>02:00 -&gt; <strong>Друга</strong> година. (Second hour).</li>
+<li>03:00 -&gt; <strong>Третя</strong> година. (Third hour).</li>
+<li>04:00 -&gt; <strong>Четверта</strong>.</li>
+<li>05:00 -&gt; <strong>П'ята</strong>.</li>
+<li>06:00 -&gt; <strong>Шоста</strong>.</li>
+<li>07:00 -&gt; <strong>Сьома</strong>.</li>
+<li>08:00 -&gt; <strong>Восьма</strong>.</li>
+<li>09:00 -&gt; <strong>Дев'ята</strong>.</li>
+<li>10:00 -&gt; <strong>Десята</strong>.</li>
+<li>11:00 -&gt; <strong>Одинадцята</strong>.</li>
+<li>12:00 -&gt; <strong>Дванадцята</strong>.</li>
 </ul>
 <blockquote>
-  <p>⚡ <strong>Pro Tip</strong></p>
-  <p>In casual speech, many Ukrainians simplify: "П'ята тридцять" (five thirty) or "шоста сорок п'ять" (six forty-five). This is perfectly acceptable!</p>
+  <p>💡 <strong>Pattern Alert</strong><br />
+  Notice they all end in <strong>-а</strong>.<br />
+  Because <strong>Година</strong> (Hour) is Feminine.<br />
+  So number must agree: Persh<strong>a</strong>, Drug<strong>a</strong>, Pyat<strong>a</strong>.</p>
 </blockquote>
-<h3 id="timeprepositions">Time Prepositions</h3>
-<table>
-<thead>
-<tr>
-<th>Preposition</th>
-<th>Meaning</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>о/об</td>
-<td>at</td>
-<td>о третій годині (at 3 o'clock)</td>
-</tr>
-<tr>
-<td>до</td>
-<td>until, by</td>
-<td>до п'ятої години (until 5 o'clock)</td>
-</tr>
-<tr>
-<td>після</td>
-<td>after</td>
-<td>після обіду (after lunch)</td>
-</tr>
-<tr>
-<td>з…до</td>
-<td>from…to</td>
-<td>з дев'ятої до п'ятої (from 9 to 5)</td>
-</tr>
-<tr>
-<td>протягом</td>
-<td>during</td>
-<td>протягом дня (during the day)</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>"О" becomes "об" before vowels: "об одинадцятій" (at 11), "об восьмій" (at 8). This makes pronunciation smoother!</p>
-</blockquote>
-<h3 id="daysoftheweek">Days of the Week</h3>
-<table>
-<thead>
-<tr>
-<th>Day</th>
-<th>Ukrainian</th>
-<th>Abbreviation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Monday</td>
-<td>понеділок</td>
-<td>пн</td>
-</tr>
-<tr>
-<td>Tuesday</td>
-<td>вівторок</td>
-<td>вт</td>
-</tr>
-<tr>
-<td>Wednesday</td>
-<td>середа</td>
-<td>ср</td>
-</tr>
-<tr>
-<td>Thursday</td>
-<td>четвер</td>
-<td>чт</td>
-</tr>
-<tr>
-<td>Friday</td>
-<td>п'ятниця</td>
-<td>пт</td>
-</tr>
-<tr>
-<td>Saturday</td>
-<td>субота</td>
-<td>сб</td>
-</tr>
-<tr>
-<td>Sunday</td>
-<td>неділя</td>
-<td>нд</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🌍 <strong>Real World</strong></p>
-  <p>In Ukraine, the week starts on Monday, not Sunday! This is common across Europe. Calendars and planners reflect this — понеділок is always first.</p>
-</blockquote>
-<p><strong>Using days in sentences:</strong></p>
+<h3 id="section4partsoftheday">Section 4: Parts of the Day</h3>
+<p>When someone says "Five o'clock", is it AM or PM?<br />
+We use parts of the day.</p>
 <ul>
-<li>Сьогодні понеділок. (Today is Monday.)</li>
-<li>У вівторок я працюю. (On Tuesday I work.)</li>
-<li>У середу ми зустрінемося. (On Wednesday we'll meet.)</li>
+<li><strong>Ранок</strong> (Morning) -&gt; <strong>Вранці</strong> (In the morning).</li>
+<li><strong>День</strong> (Day/Afternoon) -&gt; <strong>Вдень</strong> (In the afternoon).</li>
+<li><strong>Вечір</strong> (Evening) -&gt; <strong>Ввечері</strong> (In the evening).</li>
+<li><strong>Ніч</strong> (Night) -&gt; <strong>Вночі</strong> (At night).</li>
 </ul>
-<h3 id="monthsoftheyear">Months of the Year</h3>
-<table>
-<thead>
-<tr>
-<th>Month</th>
-<th>Ukrainian</th>
-<th>Season</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>January</td>
-<td>січень</td>
-<td>winter</td>
-</tr>
-<tr>
-<td>February</td>
-<td>лютий</td>
-<td>winter</td>
-</tr>
-<tr>
-<td>March</td>
-<td>березень</td>
-<td>spring</td>
-</tr>
-<tr>
-<td>April</td>
-<td>квітень</td>
-<td>spring</td>
-</tr>
-<tr>
-<td>May</td>
-<td>травень</td>
-<td>spring</td>
-</tr>
-<tr>
-<td>June</td>
-<td>червень</td>
-<td>summer</td>
-</tr>
-<tr>
-<td>July</td>
-<td>липень</td>
-<td>summer</td>
-</tr>
-<tr>
-<td>August</td>
-<td>серпень</td>
-<td>summer</td>
-</tr>
-<tr>
-<td>September</td>
-<td>вересень</td>
-<td>autumn</td>
-</tr>
-<tr>
-<td>October</td>
-<td>жовтень</td>
-<td>autumn</td>
-</tr>
-<tr>
-<td>November</td>
-<td>листопад</td>
-<td>autumn</td>
-</tr>
-<tr>
-<td>December</td>
-<td>грудень</td>
-<td>winter</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎯 <strong>Fun Fact</strong></p>
-  <p>Ukrainian month names are beautifully descriptive! Листопад (November) literally means "leaf fall." Липень (July) comes from "липа" (linden tree) — when lindens bloom. Травень (May) comes from "трава" (grass)!</p>
-</blockquote>
-<p><strong>Using months in sentences:</strong></p>
+<p><strong>How to combine:</strong></p>
 <ul>
-<li>Зараз січень. (It's January now.)</li>
-<li>Мій день народження у травні. (My birthday is in May.)</li>
-<li>У грудні холодно. (In December it's cold.)</li>
+<li>7:00 -&gt; Сьома година <strong>ранку</strong> (Of morning - Genitive).</li>
+<li>14:00 -&gt; Друга година <strong>дня</strong> (Of day).</li>
+<li>19:00 -&gt; Сьома година <strong>вечора</strong> (Of evening).</li>
+<li>23:00 -&gt; Одинадцята година <strong>ночі</strong> (Of night).</li>
 </ul>
-<h3 id="usefultimeexpressions">Useful Time Expressions</h3>
-<table>
-<thead>
-<tr>
-<th>Expression</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>сьогодні</td>
-<td>today</td>
-</tr>
-<tr>
-<td>зараз</td>
-<td>now</td>
-</tr>
-<tr>
-<td>рано</td>
-<td>early</td>
-</tr>
-<tr>
-<td>пізно</td>
-<td>late</td>
-</tr>
-<tr>
-<td>вчасно</td>
-<td>on time</td>
-</tr>
-<tr>
-<td>вихідні</td>
-<td>weekend</td>
-</tr>
-<tr>
-<td>робочий день</td>
-<td>workday</td>
-</tr>
-</tbody>
-</table>
 <blockquote>
-  <p>🎮 <strong>Gamer's Corner</strong></p>
-  <p>In S.T.A.L.K.E.R., time matters: "Чекай до ночі" (Wait until night), "Повертайся о шостій" (Return at 6). Managing your schedule in the Zone means survival!</p>
+  <p>🌍 <strong>Culture Corner: The Late Dinner</strong><br />
+  Ukrainians stay up late.<br />
+  "Morning" ends at 12:00.<br />
+  "Day" goes until 17:00 or 18:00.<br />
+  "Evening" goes until midnight.<br />
+  You can say "Good evening" (Добрий вечір) at 10 PM.</p>
+</blockquote>
+<h3 id="section5theolocativestructure">Section 5: The "O + Locative" Structure</h3>
+<p>We learned that "One o'clock" is <strong>Перша година</strong>.<br />
+But "AT One o'clock" is <strong>О першій</strong>.<br />
+This little "O" is crucial.<br />
+It acts like a clamp. It holds the time in place.</p>
+<ul>
+<li><strong>Коли</strong> ти прийдеш? (When will you come?)</li>
+<li><strong>О</strong> п'ятій. (At five).</li>
+</ul>
+<p>If you say "П'ята", you are just stating a number ("The fifth").<br />
+If you say "О п'ятій", you are setting an appointment.</p>
+<blockquote>
+  <p>📚 <strong>Deep Dive: The "Godyna" Concept</strong><br />
+  The word <strong>Година</strong> (Hour) is related to the German <em>Stunde</em> or English <em>Good</em>.<br />
+  It implies a "Good time" or a "Fixed time".<br />
+  Interestingly, <strong>Годинник</strong> is a Clock (The thing that measures hours).<br />
+  And <strong>Годитися</strong> means "Is suitable/agreeable".<br />
+  So time in Ukrainian is about "suitability".</p>
+</blockquote>
+<h3 id="section6theapproximatetimeblyzko">Section 6: The Approximate Time (Blyzko)</h3>
+<p>Sometimes you are not sure.<br />
+"Around 5".<br />
+We use <strong>Близько</strong> (Near/Around) + Genitive.<br />
+But let's keep it simple for A1:</p>
+<ul>
+<li><strong>Десь о п'ятій</strong> (Somewhere at five).</li>
+<li><strong>Десь о шостій</strong>.<br />
+"Десь" (Des') is a very useful word. It means "Somewhere/Somehow".</li>
+</ul>
+<blockquote>
+  <p>🚂 <strong>Culture Corner: The Train Schedule (Ukrzaliznytsia)</strong><br />
+  Ukrainian trains (Ukrzaliznytsia) are religious about the 24-hour clock.<br />
+  Your ticket will say <strong>14:00</strong>, never <strong>2:00 PM</strong>.<br />
+  If your ticket says <strong>02:00</strong>, that is 2 AM!<br />
+  Many foreigners miss trains because they mix up 02:00 and 14:00.<br />
+  If you have a train at <strong>00:15</strong>, that is 15 minutes after midnight. Do not arrive at noon!<br />
+  Trains in Ukraine are extremely punctual. If it says 14:00, it leaves at 14:00:00.</p>
+</blockquote>
+<h3 id="section7punctualityinukraine">Section 7: Punctuality in Ukraine</h3>
+<p>Are Ukrainians punctual?</p>
+<ul>
+<li><strong>Business/Trains:</strong> Yes. Very.</li>
+<li><strong>Social:</strong> "Ukrainian Time" exists.</li>
+<li>"Lets meet at 18:00" usually means 18:05 or 18:10.</li>
+<li>But being 30 minutes late is rude.</li>
+<li>"Academic Quarter" (15 mins) is generally forgiven socially.</li>
+</ul>
+<blockquote>
+  <p>⏳ <strong>Deep Dive: The Half-Hour (Polovina)</strong><br />
+  You will hear "Piv na…" (Half on…).<br />
+  <strong>О пів на сьому</strong> (Half on seventh = 6:30).<br />
+  This is A2 grammar. It is complex.<br />
+  For now, if you want to say 6:30, just say:<br />
+  <strong>Шоста тридцять</strong> (Sixth thirty).<br />
+  Everyone understands it. It is digital. It is safe.<br />
+  Avoid "Piv" until you are a Jedi.</p>
 </blockquote>
 <h2 id="practice">practice</h2>
-<h3 id="exercise1tellthetime">Exercise 1: Tell the Time</h3>
-<p>What time is it?</p>
-<ol>
-<li>3:00 → ___ (третя година)</li>
-<li>7:30 → ___ (пів на восьму)</li>
-<li>10:00 → ___ (десята година)</li>
-<li>1:30 → ___ (пів на другу)</li>
-<li>12:00 → ___ (дванадцята година)</li>
-</ol>
-<h3 id="exercise2completetheschedule">Exercise 2: Complete the Schedule</h3>
-<p>Use the correct preposition:</p>
-<ol>
-<li>Я працюю ___ дев'ятої ___ п'ятої. (з…до)</li>
-<li>Ми зустрінемося ___ третій годині. (о)</li>
-<li>___ обіду я читаю. (після)</li>
-<li>Прийди ___ шостої! (до)</li>
-</ol>
-<h3 id="exercise3daysandmonths">Exercise 3: Days and Months</h3>
-<p>Answer in Ukrainian:</p>
-<ol>
-<li>What day is today? → ___</li>
-<li>What month is it? → ___</li>
-<li>When is your birthday? → ___</li>
-</ol>
+<p><strong>Drill 1: Match the Digital to Analog</strong></p>
+<ul>
+<li>13:00 -&gt; Перша година дня.</li>
+<li>15:00 -&gt; Третя година дня.</li>
+<li>09:00 -&gt; Дев'ята година ранку.</li>
+<li>21:00 -&gt; Дев'ята година вечора.</li>
+</ul>
+<p><strong>Drill 2: AM or PM?</strong></p>
+<ul>
+<li>Сніданок (Breakfast) -&gt; Ранок.</li>
+<li>Обід (Lunch) -&gt; День.</li>
+<li>Вечеря (Dinner) -&gt; Вечір.</li>
+<li>Сон (Sleep) -&gt; Ніч.</li>
+</ul>
+<p><strong>Drill 3: The Clock Reader</strong><br />
+Read aloud:</p>
+<ul>
+<li>10:00 (Десята).</li>
+<li>05:00 (П'ята).</li>
+<li>01:00 (Перша).</li>
+<li>12:00 (Дванадцята).</li>
+</ul>
 <h2 id="production">production</h2>
-<h3 id="taskyourweeklyschedule">Task: Your Weekly Schedule</h3>
-<p>Describe your typical week:</p>
+<p><strong>Scenario: The Late Arrival</strong></p>
 <ul>
-<li>У понеділок я працюю з дев'ятої до п'ятої.</li>
-<li>У вівторок я…</li>
-<li>У середу…</li>
+<li><strong>Boss:</strong> Добрий день. Котра година?</li>
+<li><strong>You:</strong> Емм… дев'ята? (Um… ninth?)</li>
+<li><strong>Boss:</strong> Ні. Зараз дев'ята п'ятнадцять (9:15).</li>
+<li><strong>You:</strong> Перепрошую. Автобус…</li>
+<li><strong>Boss:</strong> Робота починається о дев'ятій (09:00).</li>
+<li><strong>You:</strong> Я знаю. Вибачте.</li>
+<li><strong>Boss:</strong> Добре. Працюйте.</li>
+<li><strong>You:</strong> Дякую. Коли обід? (When is lunch?)</li>
+<li><strong>Boss:</strong> (Sighs) Обід о першій. (At 1:00).</li>
 </ul>
-<p>Include:</p>
+<p><strong>Scenario: The Party Invite</strong></p>
 <ul>
-<li>What time you wake up</li>
-<li>What time you work/study</li>
-<li>What you do on weekends</li>
+<li><strong>Oleg:</strong> Привіт! Сьогодні вечірка. (Party today).</li>
+<li><strong>Anna:</strong> Клас! О котрій?</li>
+<li><strong>Oleg:</strong> О восьмій вечора.</li>
+<li><strong>Anna:</strong> Це пізно. Я встаю о шостій ранку.</li>
+<li><strong>Oleg:</strong> Не будь бабусею! (Don't be a grandma!).</li>
+<li><strong>Anna:</strong> Добре, добре. Я буду о восьмій.</li>
+<li><strong>Oleg:</strong> Чекаю!</li>
 </ul>
-<hr />
-<hr />
+<blockquote>
+  <p>⚡ <strong>Grammar Note: At What Time?</strong><br />
+  To say "AT" a time, we use <strong>О</strong> + Locative (kinda).<br />
+  Just memorize the forms for now:</p>
+  <ul>
+  <li>О першій (At 1).</li>
+  <li>О другій (At 2).</li>
+  <li>О третій (At 3).</li>
+  <li>О четвертій (At 4).</li>
+  <li>О п'ятій (At 5).</li>
+  <li>О шостій (At 6).</li>
+  <li>О сьомій (At 7).</li>
+  <li>О восьмій (At 8).</li>
+  <li>О дев'ятій (At 9).</li>
+  <li>О десятій (At 10).</li>
+  <li>О одинадцятій (At 11).</li>
+  <li>О дванадцятій (At 12).<br />
+  Note how -a changes to -iy (mostly). This is the Locative/Genitive overlap for time.<br />
+  Just think: <strong>O … -iy</strong>.</li>
+  </ul>
+</blockquote>
 <hr /></div>
     </div>
   
       
-    <div class="card section-summary">
-      <h3>📋 Summary</h3>
-      <div class="md-content"><blockquote>
-  <p><strong>Congratulations!</strong></p>
-  <p>You can now tell time and use the calendar in Ukrainian:</p>
-  <ul>
-  <li><strong>Clock time</strong>: Котра година? — Третя година. Пів на другу.</li>
-  <li><strong>Time prepositions</strong>: о/об (at), до (until), після (after), з…до (from…to)</li>
-  <li><strong>Days</strong>: понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя</li>
-  <li><strong>Months</strong>: січень through грудень — each with beautiful meanings!</li>
-  <li><strong>Time words</strong>: рано, пізно, вчасно, зараз, сьогодні</li>
-  </ul>
-  <p><strong>Coming Next: Module 24 — Can, Must, Want</strong></p>
-  <p>In the next module, you'll learn modal verbs to express ability, obligation, and desire:</p>
-  <ul>
-  <li>Я можу говорити українською. (I can speak Ukrainian.)</li>
-  <li>Мені треба працювати. (I need to work.)</li>
-  <li>Він хоче відпочити. (He wants to rest.)</li>
-  </ul>
-</blockquote></div>
-    </div>
-  
       <div class="btn-group">
         <button class="btn btn-primary" onclick="showSection('activity-0')">Activities →</button>
       </div>
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Clock Time</h3>
+    <section id="activity-0" class="section"><div class="card"><h3>Digital vs Verbal</h3>
       <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container" class="fill-container"></div>
-      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+      <div class="match-container" id="activity-0-container"><svg class="match-lines" id="activity-0-lines"></svg>
+        <div class="match-column" id="activity-0-left"></div>
+        <div class="match-column" id="activity-0-right"></div>
+      </div>
+      <div class="completion-message" id="activity-0-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Days and Months</h3>
+    <section id="activity-1" class="section"><div class="card"><h3>Time Builder</h3>
       <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
       <div id="activity-1-container" class="fill-container"></div>
       <div class="completion-message" id="activity-1-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Time Sentences</h3>
+    <section id="activity-2" class="section"><div class="card"><h3>Time Logic</h3>
       <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
-      <div id="activity-2-container" class="order-container"></div>
-      <div class="completion-message" id="activity-2-complete"><h3>Perfect Order!</h3></div>
+      <div id="activity-2-container"></div>
+      <div class="completion-message" id="activity-2-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Time Expressions</h3>
+    <section id="activity-3" class="section"><div class="card"><h3>Time Scramble</h3>
       <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-3-container"><svg class="match-lines" id="activity-3-lines"></svg>
-        <div class="match-column" id="activity-3-left"></div>
-        <div class="match-column" id="activity-3-right"></div>
-      </div>
-      <div class="completion-message" id="activity-3-complete"><h3>Perfect!</h3></div>
+      <div id="activity-3-container" class="order-container"></div>
+      <div class="completion-message" id="activity-3-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Months and Seasons</h3>
-      <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-4-container"><svg class="match-lines" id="activity-4-lines"></svg>
-        <div class="match-column" id="activity-4-left"></div>
-        <div class="match-column" id="activity-4-right"></div>
-      </div>
-      <div class="completion-message" id="activity-4-complete"><h3>Perfect!</h3></div>
+    <section id="activity-4" class="section"><div class="card"><h3>Day vs Night</h3>
+      <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/24</span></div>
+      <div class="sort-pool" id="activity-4-pool"><div class="sort-items" id="activity-4-items"></div></div>
+      <div class="sort-groups" id="activity-4-groups"></div>
+      <div class="completion-message" id="activity-4-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Time Knowledge</h3>
+    <section id="activity-5" class="section"><div class="card"><h3>Time Sentences</h3>
       <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
-      <div id="activity-5-container"></div>
-      <div class="completion-message" id="activity-5-complete"><h3>Complete!</h3></div>
+      <div id="activity-5-container" class="order-container"></div>
+      <div class="completion-message" id="activity-5-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Time Facts</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>My Routine</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
-      <div id="activity-6-container"></div>
+      <div id="activity-6-container" class="fill-container"></div>
       <div class="completion-message" id="activity-6-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
     </div></section>
 
-    <section id="activity-7" class="section"><div class="card"><h3>Calendar Items</h3>
-      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/19</span></div>
-      <div class="sort-pool" id="activity-7-pool"><div class="sort-items" id="activity-7-items"></div></div>
-      <div class="sort-groups" id="activity-7-groups"></div>
-      <div class="completion-message" id="activity-7-complete"><h3>All Sorted!</h3></div>
+    <section id="activity-7" class="section"><div class="card"><h3>Time Facts</h3>
+      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/4</span></div>
+      <div id="activity-7-container"></div>
+      <div class="completion-message" id="activity-7-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
-        <h3>Словник (38)</h3>
+        <h3>Словник (25)</h3>
         <div class="vocab-table-container">
           <table class="vocab-table">
             <thead><tr>
@@ -1038,7 +831,7 @@ footer {
     <th>Переклад</th>
     <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">година</td><td class="vocab-ipa">ˈɦɔdɪnɐ</td><td class="vocab-en">hour</td><td class="vocab-note">Also means &quot;o&#039;clock&quot;</td></tr><tr><td class="vocab-uk">хвилина</td><td class="vocab-ipa">xwɪˈlɪnɐ</td><td class="vocab-en">minute</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">секунда</td><td class="vocab-ipa">sɛˈkundɐ</td><td class="vocab-en">second</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">пів</td><td class="vocab-ipa">piw</td><td class="vocab-en">half</td><td class="vocab-note">Used in time: пів на другу</td></tr><tr><td class="vocab-uk">чверть</td><td class="vocab-ipa">t͡ʃwɛrtʲ</td><td class="vocab-en">quarter</td><td class="vocab-note">15 minutes</td></tr><tr><td class="vocab-uk">рано</td><td class="vocab-ipa">ˈrɑnɔ</td><td class="vocab-en">early</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">пізно</td><td class="vocab-ipa">ˈpiznɔ</td><td class="vocab-en">late</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">вчасно</td><td class="vocab-ipa">ˈwt͡ʃɑsnɔ</td><td class="vocab-en">on time</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">понеділок</td><td class="vocab-ipa">pɔnɛˈdʲilɔk</td><td class="vocab-en">Monday</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">вівторок</td><td class="vocab-ipa">ˈwiwtɔrɔk</td><td class="vocab-en">Tuesday</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">середа</td><td class="vocab-ipa">sɛrɛˈdɑ</td><td class="vocab-en">Wednesday</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">четвер</td><td class="vocab-ipa">t͡ʃɛˈtwɛr</td><td class="vocab-en">Thursday</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">п&#039;ятниця</td><td class="vocab-ipa">ˈpjɑtnɪt͡sʲɐ</td><td class="vocab-en">Friday</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">субота</td><td class="vocab-ipa">suˈbɔtɐ</td><td class="vocab-en">Saturday</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">неділя</td><td class="vocab-ipa">nɛˈdʲilʲɐ</td><td class="vocab-en">Sunday</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">тиждень</td><td class="vocab-ipa">ˈtɪʒdɛnʲ</td><td class="vocab-en">week</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">вихідні</td><td class="vocab-ipa">wɪˈxidni</td><td class="vocab-en">weekend</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">робочий день</td><td class="vocab-ipa">rɔˈbɔt͡ʃɪj dɛnʲ</td><td class="vocab-en">workday</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">січень</td><td class="vocab-ipa">ˈsit͡ʃɛnʲ</td><td class="vocab-en">January</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">лютий</td><td class="vocab-ipa">ˈlʲutɪj</td><td class="vocab-en">February</td><td class="vocab-note">Also means &quot;fierce&quot;</td></tr><tr><td class="vocab-uk">березень</td><td class="vocab-ipa">ˈbɛrɛzɛnʲ</td><td class="vocab-en">March</td><td class="vocab-note">From &quot;береза&quot; (birch)</td></tr><tr><td class="vocab-uk">квітень</td><td class="vocab-ipa">ˈkwitɛnʲ</td><td class="vocab-en">April</td><td class="vocab-note">From &quot;квіти&quot; (flowers)</td></tr><tr><td class="vocab-uk">травень</td><td class="vocab-ipa">ˈtrɑwɛnʲ</td><td class="vocab-en">May</td><td class="vocab-note">From &quot;трава&quot; (grass)</td></tr><tr><td class="vocab-uk">червень</td><td class="vocab-ipa">ˈt͡ʃɛrwɛnʲ</td><td class="vocab-en">June</td><td class="vocab-note">From &quot;червоний&quot; (red)</td></tr><tr><td class="vocab-uk">липень</td><td class="vocab-ipa">ˈlɪpɛnʲ</td><td class="vocab-en">July</td><td class="vocab-note">From &quot;липа&quot; (linden)</td></tr><tr><td class="vocab-uk">серпень</td><td class="vocab-ipa">ˈsɛrpɛnʲ</td><td class="vocab-en">August</td><td class="vocab-note">From &quot;серп&quot; (sickle)</td></tr><tr><td class="vocab-uk">вересень</td><td class="vocab-ipa">ˈwɛrɛsɛnʲ</td><td class="vocab-en">September</td><td class="vocab-note">From &quot;верес&quot; (heather)</td></tr><tr><td class="vocab-uk">жовтень</td><td class="vocab-ipa">ˈʒɔwtɛnʲ</td><td class="vocab-en">October</td><td class="vocab-note">From &quot;жовтий&quot; (yellow)</td></tr><tr><td class="vocab-uk">листопад</td><td class="vocab-ipa">lɪstɔˈpɑd</td><td class="vocab-en">November</td><td class="vocab-note">&quot;Leaf fall&quot;</td></tr><tr><td class="vocab-uk">грудень</td><td class="vocab-ipa">ˈɦrudɛnʲ</td><td class="vocab-en">December</td><td class="vocab-note">From &quot;груда&quot; (frozen ground)</td></tr><tr><td class="vocab-uk">сьогодні</td><td class="vocab-ipa">sʲɔˈɦɔdni</td><td class="vocab-en">today</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">зараз</td><td class="vocab-ipa">ˈzɑrɑz</td><td class="vocab-en">now</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">коли</td><td class="vocab-ipa">kɔˈlɪ</td><td class="vocab-en">when</td><td class="vocab-note">Question word</td></tr><tr><td class="vocab-uk">о/об</td><td class="vocab-ipa">ɔ/ɔb</td><td class="vocab-en">at (time)</td><td class="vocab-note">&quot;об&quot; before vowels</td></tr><tr><td class="vocab-uk">до</td><td class="vocab-ipa">dɔ</td><td class="vocab-en">until, to</td><td class="vocab-note">+ genitive</td></tr><tr><td class="vocab-uk">після</td><td class="vocab-ipa">ˈpislʲɐ</td><td class="vocab-en">after</td><td class="vocab-note">+ genitive</td></tr><tr><td class="vocab-uk">з...до</td><td class="vocab-ipa">z...dɔ</td><td class="vocab-en">from...to</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">протягом</td><td class="vocab-ipa">prɔˈtʲɑɦɔm</td><td class="vocab-en">during</td><td class="vocab-note">+ genitive</td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">час</td><td class="vocab-ipa">/tʃɑs/</td><td class="vocab-en">time</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('час')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">година</td><td class="vocab-ipa">/ɦɔˈdɪnɑ/</td><td class="vocab-en">hour</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('година')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">котра</td><td class="vocab-ipa">/kɔtˈrɑ/</td><td class="vocab-en">which (f)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('котра')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">скільки</td><td class="vocab-ipa">/ˈskilʲkɪ/</td><td class="vocab-en">how much</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('скільки')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">ранок</td><td class="vocab-ipa">/ˈrɑnɔk/</td><td class="vocab-en">morning</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('ранок')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">день</td><td class="vocab-ipa">/dɛnʲ/</td><td class="vocab-en">day/afternoon</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('день')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вечір</td><td class="vocab-ipa">/ˈvɛtʃir/</td><td class="vocab-en">evening</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вечір')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">ніч</td><td class="vocab-ipa">/n⁽ʲ⁾itʃ/</td><td class="vocab-en">night</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('ніч')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">перша</td><td class="vocab-ipa">/ˈpɛrʃɑ/</td><td class="vocab-en">first (f)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('перша')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">друга</td><td class="vocab-ipa">/ˈdruɦɑ/</td><td class="vocab-en">second (f)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('друга')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">третя</td><td class="vocab-ipa">/ˈtrɛtʲɑ/</td><td class="vocab-en">third (f)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('третя')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">четверта</td><td class="vocab-ipa">/tʃɛtˈvɛrtɑ/</td><td class="vocab-en">fourth (f)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('четверта')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">п&#039;ята</td><td class="vocab-ipa">/ˈpjɑtɑ/</td><td class="vocab-en">fifth (f)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('п&#039;ята')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">шоста</td><td class="vocab-ipa">/ˈʃɔstɑ/</td><td class="vocab-en">sixth (f)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('шоста')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">сьома</td><td class="vocab-ipa">/ˈsʲɔmɑ/</td><td class="vocab-en">seventh (f)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('сьома')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">восьма</td><td class="vocab-ipa">/ˈvɔsʲmɑ/</td><td class="vocab-en">eighth (f)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('восьма')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">дев&#039;ята</td><td class="vocab-ipa">/dɛˈwjɑtɑ/</td><td class="vocab-en">ninth (f)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('дев&#039;ята')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">десята</td><td class="vocab-ipa">/dɛˈsʲɑtɑ/</td><td class="vocab-en">tenth (f)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('десята')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">одинадцята</td><td class="vocab-ipa">/ɔdɪˈnɑt͡sʲtɑ/</td><td class="vocab-en">eleventh (f)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('одинадцята')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">дванадцята</td><td class="vocab-ipa">/dvɑˈnɑt͡sʲtɑ/</td><td class="vocab-en">twelfth (f)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('дванадцята')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">сніданок</td><td class="vocab-ipa">/sn⁽ʲ⁾iˈdɑnɔk/</td><td class="vocab-en">breakfast</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('сніданок')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">обід</td><td class="vocab-ipa">/ɔˈbid/</td><td class="vocab-en">lunch</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('обід')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вечеря</td><td class="vocab-ipa">/vɛˈtʃɛrʲɑ/</td><td class="vocab-en">dinner</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вечеря')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">коли</td><td class="vocab-ipa">/kɔˈlɪ/</td><td class="vocab-en">when</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('коли')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">зараз</td><td class="vocab-ipa">/ˈzɑrɑz/</td><td class="vocab-en">now</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('зараз')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1050,8 +843,8 @@ footer {
   </main><footer>Module 23 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"fill-blank","title":"Clock Time","data":{"type":"fill-blank","items":[{"prompt":"Зараз ___ година.","answer":"третя","options":["третя","три","третю","третьої"]},{"prompt":"О ___ годині ти прийдеш?","answer":"котрій","options":["котрій","котра","яка","який"]},{"prompt":"Зараз пів на ___.","answer":"другу","options":["другу","друга","два","другій"]},{"prompt":"Я працюю ___ дев'ятої до п'ятої.","answer":"з","options":["з","о","у","на"]},{"prompt":"Зустріч о ___ годині.","answer":"десятій","options":["десятій","десята","десять","десяти"]},{"prompt":"___ обіду я читаю книгу.","answer":"Після","options":["Після","До","О","З"]},{"prompt":"Поїзд відправляється ___ восьмій.","answer":"об","options":["об","о","у","на"]},{"prompt":"Магазин працює ___ дня.","answer":"протягом","options":["протягом","після","перед","у"]},{"prompt":"Прийди ___ шостої години!","answer":"до","options":["до","о","з","після"]},{"prompt":"Зараз ___ на четверту.","answer":"чверть","options":["чверть","пів","четверта","три"]},{"prompt":"Я прокидаюся ___.","answer":"рано","options":["рано","пізно","зараз","вчасно"]},{"prompt":"Він завжди приходить ___.","answer":"вчасно","options":["вчасно","рано","пізно","зараз"]}]}},{"id":"activity-1","type":"fill-blank","title":"Days and Months","data":{"type":"fill-blank","items":[{"prompt":"Перший день тижня — ___.","answer":"понеділок","options":["понеділок","неділя","субота","вівторок"]},{"prompt":"Останній місяць року — ___.","answer":"грудень","options":["грудень","січень","листопад","лютий"]},{"prompt":"У ___ падає листя.","answer":"листопаді","options":["листопаді","травні","липні","січні"]},{"prompt":"Вихідні — це субота і ___.","answer":"неділя","options":["неділя","понеділок","п'ятниця","четвер"]},{"prompt":"Перший весняний місяць — ___.","answer":"березень","options":["березень","квітень","травень","лютий"]},{"prompt":"У ___ найкоротші дні.","answer":"грудні","options":["грудні","червні","березні","вересні"]},{"prompt":"___ — третій день тижня.","answer":"Середа","options":["Середа","Вівторок","Четвер","П'ятниця"]},{"prompt":"Найтепліший місяць — ___.","answer":"липень","options":["липень","січень","квітень","жовтень"]},{"prompt":"У ___ я працюю, а у вихідні відпочиваю.","answer":"робочі дні","options":["робочі дні","вихідні","неділю","суботу"]},{"prompt":"П'ятий місяць року — ___.","answer":"травень","options":["травень","квітень","червень","березень"]},{"prompt":"___ — останній день тижня.","answer":"Неділя","options":["Неділя","Субота","П'ятниця","Понеділок"]},{"prompt":"Зима починається у ___.","answer":"грудні","options":["грудні","листопаді","січні","лютому"]}]}},{"id":"activity-2","type":"unjumble","title":"Time Sentences","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["година","Котра","зараз"],"answer":"Котра зараз година?","translation":"What time is it now?"},{"words":["третій","годині","о","Зустріч"],"answer":"Зустріч о третій годині.","translation":"The meeting is at 3 o'clock."},{"words":["на","пів","Зараз","другу"],"answer":"Зараз пів на другу.","translation":"It's now half past one."},{"words":["понеділок","Сьогодні"],"answer":"Сьогодні понеділок.","translation":"Today is Monday."},{"words":["у","травні","народження","день","Мій"],"answer":"Мій день народження у травні.","translation":"My birthday is in May."},{"words":["до","з","дев'ятої","п'ятої","Я","працюю"],"answer":"Я працюю з дев'ятої до п'ятої.","translation":"I work from 9 to 5."},{"words":["о","відправляється","восьмій","Поїзд"],"answer":"Поїзд відправляється о восьмій.","translation":"The train departs at 8."},{"words":["обіду","Після","я","читаю"],"answer":"Після обіду я читаю.","translation":"After lunch I read."},{"words":["рано","Він","прокидається","завжди"],"answer":"Він завжди прокидається рано.","translation":"He always wakes up early."},{"words":["годині","О","ми","котрій","зустрінемося"],"answer":"О котрій годині ми зустрінемося?","translation":"At what time will we meet?"},{"words":["приходить","вчасно","завжди","Вона"],"answer":"Вона завжди приходить вчасно.","translation":"She always arrives on time."},{"words":["грудні","холодно","У","дуже"],"answer":"У грудні дуже холодно.","translation":"In December it's very cold."}]}},{"id":"activity-3","type":"match-up","title":"Time Expressions","data":{"type":"match-up","pairs":[{"left":"Котра година?","right":"What time is it?"},{"left":"пів на другу","right":"1:30"},{"left":"чверть на третю","right":"2:15"},{"left":"о п'ятій","right":"at 5 o'clock"},{"left":"з дев'ятої до п'ятої","right":"from 9 to 5"},{"left":"понеділок","right":"Monday"},{"left":"неділя","right":"Sunday"},{"left":"січень","right":"January"},{"left":"грудень","right":"December"},{"left":"вихідні","right":"weekend"},{"left":"рано","right":"early"},{"left":"пізно","right":"late"}],"shuffleRight":true}},{"id":"activity-4","type":"match-up","title":"Months and Seasons","data":{"type":"match-up","pairs":[{"left":"січень","right":"winter"},{"left":"лютий","right":"winter"},{"left":"березень","right":"spring"},{"left":"квітень","right":"spring"},{"left":"травень","right":"spring"},{"left":"червень","right":"summer"},{"left":"липень","right":"summer"},{"left":"серпень","right":"summer"},{"left":"вересень","right":"autumn"},{"left":"жовтень","right":"autumn"},{"left":"листопад","right":"autumn"},{"left":"грудень","right":"winter"}],"shuffleRight":true}},{"id":"activity-5","type":"quiz","title":"Time Knowledge","data":{"type":"quiz","questions":[{"question":"What does \"пів на другу\" mean?","options":["2:30","1:30","2:00","1:00"],"correctIndex":1,"explanation":"\"Пів на другу\" = halfway TO 2:00 = 1:30."},{"question":"Which day starts the Ukrainian week?","options":["понеділок (Monday)","неділя (Sunday)","субота (Saturday)","вівторок (Tuesday)"],"correctIndex":0,"explanation":"Ukrainian weeks start on Monday!"},{"question":"What preposition means \"at\" for clock time?","options":["у","о/об","до","з"],"correctIndex":1,"explanation":"\"О/об\" is used for \"at\" with clock time."},{"question":"What is \"листопад\" in English?","options":["October","November","December","September"],"correctIndex":1,"explanation":"Листопад (November) literally means \"leaf fall.\""},{"question":"How do you ask \"At what time?\"","options":["О котрій годині?","Котра година?","Коли?","Скільки часу?"],"correctIndex":0,"explanation":"\"О котрій годині?\" = At what time?"},{"question":"What is the seventh month?","options":["серпень","липень","червень","вересень"],"correctIndex":1,"explanation":"Липень (July) is the 7th month."},{"question":"\"Об одинадцятій\" — why \"об\" and not \"о\"?","options":["Before vowels, \"о\" becomes \"об\"","It's a different word","\"Об\" is more formal","It's an exception"],"correctIndex":0,"explanation":"\"О\" becomes \"об\" before vowels for easier pronunciation."},{"question":"What does \"протягом дня\" mean?","options":["at day","before day","during the day","after day"],"correctIndex":2,"explanation":"\"Протягом\" = during."},{"question":"Which month comes from \"linden tree\" (липа)?","options":["травень","липень","вересень","березень"],"correctIndex":1,"explanation":"Липень (July) — when lindens bloom!"},{"question":"\"Від дев'ятої до п'ятої\" — what does this mean?","options":["at 9 and at 5","from 9 to 5","before 9, after 5","9 or 5"],"correctIndex":1,"explanation":"\"З/від...до\" = from...to."},{"question":"What is \"вихідні\"?","options":["weekend","holidays","workdays","evening"],"correctIndex":0,"explanation":"Вихідні = weekend (Saturday and Sunday)."},{"question":"How do you say \"on time\"?","options":["рано","пізно","вчасно","зараз"],"correctIndex":2,"explanation":"Вчасно = on time."}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-6","type":"true-false","title":"Time Facts","data":{"type":"true-false","statements":[{"statement":"Ukrainian weeks start on Monday.","isTrue":true,"explanation":"Correct! Monday (понеділок) is the first day."},{"statement":"\"Пів на третю\" means 3:30.","isTrue":false,"explanation":"Incorrect! It means 2:30 (halfway TO 3)."},{"statement":"\"Листопад\" literally means \"leaf fall.\"","isTrue":true,"explanation":"Correct! This is November."},{"statement":"\"О восьмій\" uses the form \"о,\" not \"об.\"","isTrue":false,"explanation":"Incorrect! Before vowels (like \"в\" in \"восьмій\"), use \"об\": об восьмій."},{"statement":"\"Травень\" comes from \"трава\" (grass).","isTrue":true,"explanation":"Correct! May is named after grass growing."},{"statement":"In Ukraine, Sunday is the first day of the week.","isTrue":false,"explanation":"Incorrect! Monday is first."},{"statement":"\"Протягом\" means \"during.\"","isTrue":true,"explanation":"Correct! \"Протягом дня\" = during the day."},{"statement":"\"Січень\" is the last month of the year.","isTrue":false,"explanation":"Incorrect! Січень (January) is the first month."},{"statement":"Ukrainians often use 24-hour time officially.","isTrue":true,"explanation":"Correct! Especially for schedules, trains, TV."},{"statement":"\"Робочий день\" means \"workday.\"","isTrue":true,"explanation":"Correct! As opposed to вихідні (weekend)."},{"statement":"\"Рано\" means \"late.\"","isTrue":false,"explanation":"Incorrect! Рано means \"early.\" Пізно means \"late.\""},{"statement":"\"Неділя\" is the last day of the Ukrainian week.","isTrue":true,"explanation":"Correct! Sunday ends the week in Ukraine."}]}},{"id":"activity-7","type":"group-sort","title":"Calendar Items","data":{"type":"group-sort","groups":[{"id":"days-of-the-week","name":"Days of the Week","items":["понеділок","вівторок","середа","четвер","п'ятниця","субота","неділя"]},{"id":"months","name":"Months","items":["січень","лютий","березень","грудень","липень","вересень"]},{"id":"time-words","name":"Time Words","items":["година","хвилина","зараз","рано","пізно","вчасно"]}],"shuffleItems":true}}];
-    const vocabData = [{"uk":"година","translit":"","en":"hour","note":"Also means \"o'clock\""},{"uk":"хвилина","translit":"","en":"minute","note":""},{"uk":"секунда","translit":"","en":"second","note":""},{"uk":"пів","translit":"","en":"half","note":"Used in time: пів на другу"},{"uk":"чверть","translit":"","en":"quarter","note":"15 minutes"},{"uk":"рано","translit":"","en":"early","note":""},{"uk":"пізно","translit":"","en":"late","note":""},{"uk":"вчасно","translit":"","en":"on time","note":""},{"uk":"понеділок","translit":"","en":"Monday","note":""},{"uk":"вівторок","translit":"","en":"Tuesday","note":""},{"uk":"середа","translit":"","en":"Wednesday","note":""},{"uk":"четвер","translit":"","en":"Thursday","note":""},{"uk":"п'ятниця","translit":"","en":"Friday","note":""},{"uk":"субота","translit":"","en":"Saturday","note":""},{"uk":"неділя","translit":"","en":"Sunday","note":""},{"uk":"тиждень","translit":"","en":"week","note":""},{"uk":"вихідні","translit":"","en":"weekend","note":""},{"uk":"робочий день","translit":"","en":"workday","note":""},{"uk":"січень","translit":"","en":"January","note":""},{"uk":"лютий","translit":"","en":"February","note":"Also means \"fierce\""},{"uk":"березень","translit":"","en":"March","note":"From \"береза\" (birch)"},{"uk":"квітень","translit":"","en":"April","note":"From \"квіти\" (flowers)"},{"uk":"травень","translit":"","en":"May","note":"From \"трава\" (grass)"},{"uk":"червень","translit":"","en":"June","note":"From \"червоний\" (red)"},{"uk":"липень","translit":"","en":"July","note":"From \"липа\" (linden)"},{"uk":"серпень","translit":"","en":"August","note":"From \"серп\" (sickle)"},{"uk":"вересень","translit":"","en":"September","note":"From \"верес\" (heather)"},{"uk":"жовтень","translit":"","en":"October","note":"From \"жовтий\" (yellow)"},{"uk":"листопад","translit":"","en":"November","note":"\"Leaf fall\""},{"uk":"грудень","translit":"","en":"December","note":"From \"груда\" (frozen ground)"},{"uk":"сьогодні","translit":"","en":"today","note":""},{"uk":"зараз","translit":"","en":"now","note":""},{"uk":"коли","translit":"","en":"when","note":"Question word"},{"uk":"о/об","translit":"","en":"at (time)","note":"\"об\" before vowels"},{"uk":"до","translit":"","en":"until, to","note":"+ genitive"},{"uk":"після","translit":"","en":"after","note":"+ genitive"},{"uk":"з...до","translit":"","en":"from...to","note":""},{"uk":"протягом","translit":"","en":"during","note":"+ genitive"}];
+    const activitiesData = [{"id":"activity-0","type":"match-up","title":"Digital vs Verbal","data":{"type":"match-up","pairs":[{"left":"07:00","right":"Сьома година ранку"},{"left":"19:00","right":"Сьома година вечора"},{"left":"12:00","right":"Дванадцята (Day)"},{"left":"00:00","right":"Дванадцята (Night)"},{"left":"14:00","right":"Друга година дня"},{"left":"02:00","right":"Друга година ночі"},{"left":"10:00","right":"Десята година"},{"left":"22:00","right":"Десята година вечора"},{"left":"05:00","right":"П'ята година"},{"left":"17:00","right":"П'ята година дня"},{"left":"13:00","right":"Перша година дня"},{"left":"01:00","right":"Перша година ночі"}],"shuffleRight":true}},{"id":"activity-1","type":"fill-blank","title":"Time Builder","data":{"type":"fill-blank","items":[{"prompt":"Зараз ___ (10:00).","answer":"десята","hints":["10:00"]},{"prompt":"Зараз ___ (05:00).","answer":"п'ята","hints":["05:00"]},{"prompt":"Зараз ___ (03:00).","answer":"третя","hints":["03:00"]},{"prompt":"Зараз ___ (08:00).","answer":"восьма","hints":["08:00"]},{"prompt":"Зараз ___ (06:00).","answer":"шоста","hints":["06:00"]},{"prompt":"Зараз ___ (01:00).","answer":"перша","hints":["01:00"]},{"prompt":"Зараз друга година ___ (of the day).","answer":"дня","hints":["of the day"]},{"prompt":"Зараз дев'ята година ___ (of the evening).","answer":"вечора","hints":["of the evening"]},{"prompt":"Зараз сьома година ___ (of the morning).","answer":"ранку","hints":["of the morning"]},{"prompt":"Зараз перша година ___ (of the night).","answer":"ночі","hints":["of the night"]},{"prompt":"Котра ___ (hour)?","answer":"година","hints":["hour"]},{"prompt":"Скільки ___ (time)?","answer":"часу","hints":["time"]}]}},{"id":"activity-2","type":"quiz","title":"Time Logic","data":{"type":"quiz","questions":[{"question":"When do you eat Breakfast (Сніданок)?","options":["О сьомій ранку.","О сьомій вечора."],"correctIndex":0,"explanation":""},{"question":"When do you sleep (Сон)?","options":["Вночі.","Вдень (Only if siesta)."],"correctIndex":0,"explanation":""},{"question":"When is \"Midnight\"?","options":["О дванадцятій ночі.","О дванадцятій дня."],"correctIndex":0,"explanation":""},{"question":"15:00 is...","options":["День.","Ранок."],"correctIndex":0,"explanation":""},{"question":"21:00 is...","options":["Вечір.","Ранок."],"correctIndex":0,"explanation":""},{"question":"\"Добрий ранок\" is appropriate at...","options":["08:00.","14:00."],"correctIndex":0,"explanation":""},{"question":"\"На добраніч\" (Goodnight) is said...","options":["Before sleeping.","At dinner."],"correctIndex":0,"explanation":""},{"question":"Is 13:00 \"Thirteenth hour\"?","options":["Yes.","No, usually \"First hour of day\" in speech."],"correctIndex":1,"explanation":""},{"question":"Work usually starts at...","options":["О дев'ятій (9:00).","О другій (2:00)."],"correctIndex":0,"explanation":""},{"question":"School ends at...","options":["О третій (3:00).","О сьомій (7:00)."],"correctIndex":0,"explanation":""},{"question":"Dinner is at...","options":["О сьомій (7:00 PM).","О сьомій (7:00 AM)."],"correctIndex":0,"explanation":""},{"question":"The sun rises in the...","options":["Ранок.","Вечір."],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-3","type":"anagram","title":"Time Scramble","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["н","и","д","о","г","а"],"answer":"година","translation":"Hour"},{"letters":["о","н","к","а","р"],"answer":"ранок","translation":"Morning"},{"letters":["ч","і","р","в","е"],"answer":"вечір","translation":"Evening"},{"letters":["ь","ч","і","н"],"answer":"ніч","translation":"Night"},{"letters":["н","ь","д","е"],"answer":"день","translation":"Day"},{"letters":["р","ш","а","п","е"],"answer":"перша","translation":"First - f"},{"letters":["г","а","р","у","д"],"answer":"друга","translation":"Second - f"},{"letters":["т","я","т","р","е"],"answer":"третя","translation":"Third - f"},{"letters":["т","а","п","'","я"],"answer":"п'ята","translation":"Fifth - f"},{"letters":["м","а","с","ь","о"],"answer":"сьома","translation":"Seventh -f"},{"letters":["с","я","т","д","е","а"],"answer":"десята","translation":"Tenth - f"},{"letters":["ч","а","с"],"answer":"час","translation":"Time"}]}},{"id":"activity-4","type":"group-sort","title":"Day vs Night","data":{"type":"group-sort","groups":[{"id":"day","name":"Day","items":["09:00","12:00","14:00","16:00","10:00","11:00","13:00","15:00","Сніданок","Обід","Сонце (Sun)","Робота"],"nameUk":"Light"},{"id":"nightevening","name":"Night/Evening","items":["21:00","23:00","00:00","03:00","20:00","22:00","Вечеря","Сон (Sleep)","Місяць (Moon)","Зірки (Stars)","На добраніч","19:00"],"nameUk":"Dark"}],"shuffleItems":true}},{"id":"activity-5","type":"unjumble","title":"Time Sentences","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["година","Котра","?"],"answer":"Котра година?"},{"words":["зараз","дев'ята","Ранок,","."],"answer":"Ранок, зараз дев'ята."},{"words":["п'ята","Зараз","дня","година","."],"answer":"Зараз п'ята година дня."},{"words":["вечір","Добрий","."],"answer":"Добрий вечір."},{"words":["обід","Коли","?"],"answer":"Коли обід?","translation":"When is lunch?"},{"words":["о","Обід","першій","."],"answer":"Обід о першій."},{"words":["третій","о","Зустріч","."],"answer":"Зустріч о третій."},{"words":["працюю","Я","вдень","."],"answer":"Я працюю вдень."},{"words":["сплю","Я","вночі","."],"answer":"Я сплю вночі.","translation":"I sleep at night"},{"words":["сьома","Зараз","."],"answer":"Зараз сьома."},{"words":["часу","Скільки","?"],"answer":"Скільки часу?"},{"words":["маю","часу","Я","не","."],"answer":"Я не маю часу.","translation":"I don't have time"}]}},{"id":"activity-6","type":"fill-blank","title":"My Routine","data":{"type":"fill-blank","items":[{"prompt":"Я встаю (get up) о ___ (7:00).","answer":"сьомій","hints":["7:00"]},{"prompt":"Я снідаю о ___ (8:00).","answer":"восьмій","hints":["8:00"]},{"prompt":"Я працюю о ___ (9:00).","answer":"дев'ятій","hints":["9:00"]},{"prompt":"Я обідаю о ___ (13:00 / First).","answer":"першій","hints":["13:00 / First"]},{"prompt":"Я йду додому о ___ (18:00 / Sixth).","answer":"шостій","hints":["18:00 / Sixth"]},{"prompt":"Я вечеряю о ___ (19:00 / Seventh).","answer":"сьомій","hints":["19:00 / Seventh"]},{"prompt":"Я читаю о ___ (20:00 / Eighth).","answer":"восьмій","hints":["20:00 / Eighth"]},{"prompt":"Я сплю о ___ (23:00 / Eleventh).","answer":"одинадцятій","hints":["23:00 / Eleventh"]},{"prompt":"Добрий ___ (morning).","answer":"ранок","hints":["morning"]},{"prompt":"Добрий ___ (day).","answer":"день","hints":["day"]},{"prompt":"Добрий ___ (evening).","answer":"вечір","hints":["evening"]},{"prompt":"На ___ (goodnight).","answer":"добраніч","hints":["goodnight"]}]}},{"id":"activity-7","type":"true-false","title":"Time Facts","data":{"type":"true-false","statements":[{"statement":"I can count 1-12 in Ordinals (Перша, Друга...).","isTrue":false,"explanation":""},{"statement":"I know Morning, Day, Evening, Night.","isTrue":false,"explanation":""},{"statement":"I can ask \"What time is it?\".","isTrue":false,"explanation":""},{"statement":"I understand \"О котрій?\" (At what time?).","isTrue":false,"explanation":""}]}}];
+    const vocabData = [{"uk":"час","translit":"","en":"time","note":"[🔊](audio_chas)"},{"uk":"година","translit":"","en":"hour","note":"[🔊](audio_hodyna)"},{"uk":"котра","translit":"","en":"which (f)","note":"[🔊](audio_kotra)"},{"uk":"скільки","translit":"","en":"how much","note":"[🔊](audio_skilky)"},{"uk":"ранок","translit":"","en":"morning","note":"[🔊](audio_ranok)"},{"uk":"день","translit":"","en":"day/afternoon","note":"[🔊](audio_den)"},{"uk":"вечір","translit":"","en":"evening","note":"[🔊](audio_vechir)"},{"uk":"ніч","translit":"","en":"night","note":"[🔊](audio_nich)"},{"uk":"перша","translit":"","en":"first (f)","note":"[🔊](audio_persha)"},{"uk":"друга","translit":"","en":"second (f)","note":"[🔊](audio_druha)"},{"uk":"третя","translit":"","en":"third (f)","note":"[🔊](audio_tretya)"},{"uk":"четверта","translit":"","en":"fourth (f)","note":"[🔊](audio_chetverta)"},{"uk":"п'ята","translit":"","en":"fifth (f)","note":"[🔊](audio_pyata)"},{"uk":"шоста","translit":"","en":"sixth (f)","note":"[🔊](audio_shosta)"},{"uk":"сьома","translit":"","en":"seventh (f)","note":"[🔊](audio_syoma)"},{"uk":"восьма","translit":"","en":"eighth (f)","note":"[🔊](audio_vosma)"},{"uk":"дев'ята","translit":"","en":"ninth (f)","note":"[🔊](audio_devyata)"},{"uk":"десята","translit":"","en":"tenth (f)","note":"[🔊](audio_desyata)"},{"uk":"одинадцята","translit":"","en":"eleventh (f)","note":"[🔊](audio_odynadtsyata)"},{"uk":"дванадцята","translit":"","en":"twelfth (f)","note":"[🔊](audio_dvanadtsyata)"},{"uk":"сніданок","translit":"","en":"breakfast","note":"[🔊](audio_snidanok)"},{"uk":"обід","translit":"","en":"lunch","note":"[🔊](audio_obid)"},{"uk":"вечеря","translit":"","en":"dinner","note":"[🔊](audio_vecherya)"},{"uk":"коли","translit":"","en":"when","note":"[🔊](audio_koly)"},{"uk":"зараз","translit":"","en":"now","note":"[🔊](audio_zaraz)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1111,6 +904,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2375,6 +2194,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

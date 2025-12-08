@@ -1,0 +1,1016 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A1-01",
+    "moduleId": "mod-uk-A1-01",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A1",
+    "phase": "A1.1",
+    "moduleNumber": 1,
+    "moduleType": "grammar",
+    "immersionLevel": 0.3,
+    "title": "The Cyrillic Code I",
+    "subtitle": "Cracking the Ukrainian Alphabet: True Friends, False Friends, and New Letters",
+    "description": "Recognize Cyrillic letters that look like English letters",
+    "objectives": [
+      "Recognize Cyrillic letters that look like English letters",
+      "Learn the sounds of \"False Friend\" letters (look same, sound different)",
+      "Read international words in Ukrainian"
+    ],
+    "grammarFocus": [
+      "Letter recognition",
+      "Sound-symbol correspondence"
+    ],
+    "tags": [
+      "alphabet",
+      "cyrillic",
+      "phonetics",
+      "reading"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "full",
+    "sections": [
+      {
+        "id": "section-intro",
+        "name": "Вступ",
+        "nameEn": "Introduction",
+        "type": "intro",
+        "content": "## warm-up\n\n### Welcome to Ukrainian!\n\nYou're about to learn one of the most beautiful alphabets in the world. But here's a secret: **you already know some of it**.\n\nUkrainian uses the Cyrillic alphabet - 33 letters that might look mysterious at first. But don't worry! We're going to crack the code step by step. By the end of this lesson, you'll be reading real Ukrainian words.\n\n> 💡 **Did You Know?**\n>\n> The Cyrillic alphabet was NOT invented by Russians! It was created in the 9th century in Bulgaria by followers of Saints Cyril and Methodius. Ukraine adopted it over 1,000 years ago. Ukrainian Cyrillic has unique letters (Ї, Є, Ґ) that don't exist in Russian!\n\n### The Three Types of Letters\n\nWe'll learn Cyrillic letters in three groups:\n\n| Group | Description | Example |\n|-------|-------------|---------|\n| **True Friends** | Look the same, sound the same | А = A |\n| **False Friends** | Look the same, sound DIFFERENT | В = V (not B!) |\n| **New Letters** | New shapes, new sounds | Б = B |\n\nLet's meet them!\n\n## presentation\n\n### True Friends: Letters You Already Know\n\nThese letters look like English and sound like English. Easy!\n\n| Letter | Sound | Example Word | Translation |\n|--------|-------|--------------|-------------|\n| **А а** | /a/ like \"f**a**ther\" | м**а**м**а** (mama) | mom |\n| **Е е** | /e/ like \"b**e**d\" | м**е**тро (metro) | metro |\n| **І і** | /i/ like \"mach**i**ne\" | рад**і**о (radio) | radio |\n| **О о** | /o/ like \"m**o**re\" | ф**о**т**о** (foto) | photo |\n| **К к** | /k/ like \"**k**ite\" | **к**афе (kafe) | café |\n| **М м** | /m/ like \"**m**other\" | **м**а**м**а (mama) | mom |\n| **Т т** | /t/ like \"**t**op\" | **т**а**т**о (tato) | dad |\n\n> 🎯 **Fun Fact**\n>\n> The word \"мама\" (mama) is almost universal! You'll find similar words for \"mother\" in languages from Spanish to Swahili. It's one of the first sounds babies make everywhere!\n\n### False Friends: The Tricky Ones\n\n**Warning!** These letters LOOK like English letters but make DIFFERENT sounds. This is where most beginners make mistakes.\n\n| Letter | Looks Like | Actually Sounds Like | Example |\n|--------|------------|---------------------|---------|\n| **В в** | B | /v/ like \"**v**an\" | **в**ідео (video) |\n| **Н н** | H | /n/ like \"**n**ose\" | ба**н**а**н** (banan) |\n| **Р р** | P | /r/ like Spanish \"**r**\" (rolled) | **р**адіо (radio) |\n| **С с** | C | /s/ like \"**s**un\" | **с**алат (salat) |\n| **У у** | Y | /u/ like \"b**oo**t\" | с**у**п (sup) |\n| **Х х** | X | /x/ like Scottish \"lo**ch**\" | хокей (khokei) |\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"The letter Р is a P\"\n> **Fact:** Р makes an /r/ sound! Think of it as a \"rotated\" letter. The word \"парк\" (park) sounds like \"park\" in English - both R sounds!\n\nLet's practice the False Friends:\n\n| Ukrainian | Pronunciation | English |\n|-----------|---------------|---------|\n| банк | /bank/ | bank |\n| парк | /park/ | park |\n| турист | /turyst/ | tourist |\n| студент | /student/ | student |\n\n> 🎬 **Pop Culture Moment: S.T.A.L.K.E.R.**\n>\n> The famous Ukrainian video game S.T.A.L.K.E.R. has its name in English letters, but in Ukrainian it would be written \"СТАЛКЕР\" - notice how С = S and Р = R? Now you can read game titles in Ukrainian!\n\n### New Letters: Fresh Shapes\n\nThese letters are completely new - no English lookalikes to confuse you!\n\n| Letter | Sound | Like in English | Example |\n|--------|-------|-----------------|---------|\n| **Б б** | /b/ | **b**all | **б**анк (bank) |\n| **Д д** | /d/ | **d**og | **д**обре (dobre) - good |\n| **З з** | /z/ | **z**oo | пі**з**а (pitsa) |\n| **Л л** | /l/ | **l**amp | **л**имон (lymon) |\n| **П п** | /p/ | **p**en | **п**арк (park) |\n| **Ф ф** | /f/ | **f**an | **ф**утбол (futbol) |\n\n> ⚡ **Pro Tip**\n>\n> The Ukrainian Л (L) looks a bit like an upside-down V or a tent. Think of it as a \"**L**odge\" or tent shape to remember it makes the /l/ sound!\n\n### Let's Read: International Words\n\nNow for the fun part! These words are international - they sound almost the same in Ukrainian and English:\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| мама | mama | mom |\n| тато | tato | dad |\n| банк | bank | bank |\n| парк | park | park |\n| кафе | kafe | café |\n| метро | metro | metro |\n| таксі | taksi | taxi |\n| радіо | radio | radio |\n| піца | pitsa | pizza |\n| суп | sup | soup |\n| салат | salat | salad |\n| лимон | lymon | lemon |\n| банан | banan | banana |\n| хокей | khokei | hockey |\n| футбол | futbol | football |\n| студент | student | student |\n| турист | turyst | tourist |\n| музика | muzyka | music |\n| фото | foto | photo |\n| відео | video | video |\n\n> 🌍 **Real World**\n>\n> Walk through any Ukrainian city and you'll see these words everywhere: БАНК on buildings, МЕТРО signs underground, КАФЕ on restaurant windows. You can already read Ukrainian street signs!\n\n## practice\n\n### Exercise 1: Letter Recognition\n\nWhich group does each letter belong to?\n\n1. А\n   > [!answer] True Friend (looks and sounds like English A)\n\n2. В\n   > [!answer] False Friend (looks like B but sounds like V)\n\n3. Б\n   > [!answer] New Letter (new shape, sounds like B)\n\n4. Р\n   > [!answer] False Friend (looks like P but sounds like R)\n\n5. М\n   > [!answer] True Friend (looks and sounds like English M)\n\n6. Н\n   > [!answer] False Friend (looks like H but sounds like N)\n\n### Exercise 2: Sound It Out\n\nRead these words using what you learned:\n\n1. парк\n   > [!answer] /park/ - park\n\n2. мама\n   > [!answer] /mama/ - mom\n\n3. банк\n   > [!answer] /bank/ - bank\n\n4. радіо\n   > [!answer] /radio/ - radio\n\n5. таксі\n   > [!answer] /taksi/ - taxi\n\n6. музика\n   > [!answer] /muzyka/ - music\n\n## production\n\n### Your First Ukrainian Reading\n\nTry reading these sentences. Don't worry about understanding everything - just practice the sounds!\n\n1. **Мама і тато** (Mama i tato) - Mom and dad\n2. **Банк і парк** (Bank i park) - Bank and park\n3. **Метро і таксі** (Metro i taksi) - Metro and taxi\n\n> 📜 **History Bite**\n>\n> The first printed book in Ukrainian appeared in 1574 in Lviv. That's over 450 years of Ukrainian writing! The alphabet you're learning today connects you to centuries of literature, songs, and stories.\n\n---\n\n\n---\n\n\n---"
+      },
+      {
+        "id": "section-summary",
+        "name": "Підсумок",
+        "nameEn": "Summary",
+        "type": "summary",
+        "content": "> **What You Learned Today**\n>\n> - **True Friends:** А, Е, І, О, К, М, Т - letters that look AND sound like English\n> - **False Friends:** В (/v/), Н (/n/), Р (/r/), С (/s/), У (/u/), Х (/x/) - letters that LOOK like English but sound DIFFERENT\n> - **New Letters:** Б (/b/), Д (/d/), З (/z/), Л (/l/), П (/p/), Ф (/f/) - new shapes with new sounds\n> - You can now read 20 international words in Ukrainian!\n\n> **Coming Next**\n>\n> In Module 02, you'll complete the Cyrillic alphabet:\n> - Unique Ukrainian letters (Ж, Ш, Щ, Ч, Ц)\n> - The mysterious soft sign (Ь)\n> - Iotated vowels (Є, Ї, Ю, Я)\n> - Warning about italic forms that look different!"
+      }
+    ],
+    "rawMarkdown": "---\ntitle: \"The Cyrillic Code I\"\nsubtitle: \"Cracking the Ukrainian Alphabet: True Friends, False Friends, and New Letters\"\nphase: A1.1\nduration: 45\ntransliteration: full\ntags: [alphabet, cyrillic, phonetics, reading]\nobjectives:\n  - Recognize Cyrillic letters that look like English letters\n  - Learn the sounds of \"False Friend\" letters (look same, sound different)\n  - Read international words in Ukrainian\ngrammar:\n  - Letter recognition\n  - Sound-symbol correspondence\n---\n\n# Lesson Content\n\n## warm-up\n\n### Welcome to Ukrainian!\n\nYou're about to learn one of the most beautiful alphabets in the world. But here's a secret: **you already know some of it**.\n\nUkrainian uses the Cyrillic alphabet - 33 letters that might look mysterious at first. But don't worry! We're going to crack the code step by step. By the end of this lesson, you'll be reading real Ukrainian words.\n\n> 💡 **Did You Know?**\n>\n> The Cyrillic alphabet was NOT invented by Russians! It was created in the 9th century in Bulgaria by followers of Saints Cyril and Methodius. Ukraine adopted it over 1,000 years ago. Ukrainian Cyrillic has unique letters (Ї, Є, Ґ) that don't exist in Russian!\n\n### The Three Types of Letters\n\nWe'll learn Cyrillic letters in three groups:\n\n| Group | Description | Example |\n|-------|-------------|---------|\n| **True Friends** | Look the same, sound the same | А = A |\n| **False Friends** | Look the same, sound DIFFERENT | В = V (not B!) |\n| **New Letters** | New shapes, new sounds | Б = B |\n\nLet's meet them!\n\n## presentation\n\n### True Friends: Letters You Already Know\n\nThese letters look like English and sound like English. Easy!\n\n| Letter | Sound | Example Word | Translation |\n|--------|-------|--------------|-------------|\n| **А а** | /a/ like \"f**a**ther\" | м**а**м**а** (mama) | mom |\n| **Е е** | /e/ like \"b**e**d\" | м**е**тро (metro) | metro |\n| **І і** | /i/ like \"mach**i**ne\" | рад**і**о (radio) | radio |\n| **О о** | /o/ like \"m**o**re\" | ф**о**т**о** (foto) | photo |\n| **К к** | /k/ like \"**k**ite\" | **к**афе (kafe) | café |\n| **М м** | /m/ like \"**m**other\" | **м**а**м**а (mama) | mom |\n| **Т т** | /t/ like \"**t**op\" | **т**а**т**о (tato) | dad |\n\n> 🎯 **Fun Fact**\n>\n> The word \"мама\" (mama) is almost universal! You'll find similar words for \"mother\" in languages from Spanish to Swahili. It's one of the first sounds babies make everywhere!\n\n### False Friends: The Tricky Ones\n\n**Warning!** These letters LOOK like English letters but make DIFFERENT sounds. This is where most beginners make mistakes.\n\n| Letter | Looks Like | Actually Sounds Like | Example |\n|--------|------------|---------------------|---------|\n| **В в** | B | /v/ like \"**v**an\" | **в**ідео (video) |\n| **Н н** | H | /n/ like \"**n**ose\" | ба**н**а**н** (banan) |\n| **Р р** | P | /r/ like Spanish \"**r**\" (rolled) | **р**адіо (radio) |\n| **С с** | C | /s/ like \"**s**un\" | **с**алат (salat) |\n| **У у** | Y | /u/ like \"b**oo**t\" | с**у**п (sup) |\n| **Х х** | X | /x/ like Scottish \"lo**ch**\" | хокей (khokei) |\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"The letter Р is a P\"\n> **Fact:** Р makes an /r/ sound! Think of it as a \"rotated\" letter. The word \"парк\" (park) sounds like \"park\" in English - both R sounds!\n\nLet's practice the False Friends:\n\n| Ukrainian | Pronunciation | English |\n|-----------|---------------|---------|\n| банк | /bank/ | bank |\n| парк | /park/ | park |\n| турист | /turyst/ | tourist |\n| студент | /student/ | student |\n\n> 🎬 **Pop Culture Moment: S.T.A.L.K.E.R.**\n>\n> The famous Ukrainian video game S.T.A.L.K.E.R. has its name in English letters, but in Ukrainian it would be written \"СТАЛКЕР\" - notice how С = S and Р = R? Now you can read game titles in Ukrainian!\n\n### New Letters: Fresh Shapes\n\nThese letters are completely new - no English lookalikes to confuse you!\n\n| Letter | Sound | Like in English | Example |\n|--------|-------|-----------------|---------|\n| **Б б** | /b/ | **b**all | **б**анк (bank) |\n| **Д д** | /d/ | **d**og | **д**обре (dobre) - good |\n| **З з** | /z/ | **z**oo | пі**з**а (pitsa) |\n| **Л л** | /l/ | **l**amp | **л**имон (lymon) |\n| **П п** | /p/ | **p**en | **п**арк (park) |\n| **Ф ф** | /f/ | **f**an | **ф**утбол (futbol) |\n\n> ⚡ **Pro Tip**\n>\n> The Ukrainian Л (L) looks a bit like an upside-down V or a tent. Think of it as a \"**L**odge\" or tent shape to remember it makes the /l/ sound!\n\n### Let's Read: International Words\n\nNow for the fun part! These words are international - they sound almost the same in Ukrainian and English:\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| мама | mama | mom |\n| тато | tato | dad |\n| банк | bank | bank |\n| парк | park | park |\n| кафе | kafe | café |\n| метро | metro | metro |\n| таксі | taksi | taxi |\n| радіо | radio | radio |\n| піца | pitsa | pizza |\n| суп | sup | soup |\n| салат | salat | salad |\n| лимон | lymon | lemon |\n| банан | banan | banana |\n| хокей | khokei | hockey |\n| футбол | futbol | football |\n| студент | student | student |\n| турист | turyst | tourist |\n| музика | muzyka | music |\n| фото | foto | photo |\n| відео | video | video |\n\n> 🌍 **Real World**\n>\n> Walk through any Ukrainian city and you'll see these words everywhere: БАНК on buildings, МЕТРО signs underground, КАФЕ on restaurant windows. You can already read Ukrainian street signs!\n\n## practice\n\n### Exercise 1: Letter Recognition\n\nWhich group does each letter belong to?\n\n1. А\n   > [!answer] True Friend (looks and sounds like English A)\n\n2. В\n   > [!answer] False Friend (looks like B but sounds like V)\n\n3. Б\n   > [!answer] New Letter (new shape, sounds like B)\n\n4. Р\n   > [!answer] False Friend (looks like P but sounds like R)\n\n5. М\n   > [!answer] True Friend (looks and sounds like English M)\n\n6. Н\n   > [!answer] False Friend (looks like H but sounds like N)\n\n### Exercise 2: Sound It Out\n\nRead these words using what you learned:\n\n1. парк\n   > [!answer] /park/ - park\n\n2. мама\n   > [!answer] /mama/ - mom\n\n3. банк\n   > [!answer] /bank/ - bank\n\n4. радіо\n   > [!answer] /radio/ - radio\n\n5. таксі\n   > [!answer] /taksi/ - taxi\n\n6. музика\n   > [!answer] /muzyka/ - music\n\n## production\n\n### Your First Ukrainian Reading\n\nTry reading these sentences. Don't worry about understanding everything - just practice the sounds!\n\n1. **Мама і тато** (Mama i tato) - Mom and dad\n2. **Банк і парк** (Bank i park) - Bank and park\n3. **Метро і таксі** (Metro i taksi) - Metro and taxi\n\n> 📜 **History Bite**\n>\n> The first printed book in Ukrainian appeared in 1574 in Lviv. That's over 450 years of Ukrainian writing! The alphabet you're learning today connects you to centuries of literature, songs, and stories.\n\n---\n\n# Activities\n\n## quiz: Letter Sounds\n\n> Test your knowledge of Ukrainian letter sounds!\n\n1. What sound does the Ukrainian letter **В** make?\n   - [ ] /b/ like \"ball\"\n   - [x] /v/ like \"van\"\n   - [ ] /w/ like \"water\"\n   - [ ] /f/ like \"fan\"\n   > В is a False Friend - it looks like B but sounds like V!\n\n2. What sound does the Ukrainian letter **Р** make?\n   - [ ] /p/ like \"pen\"\n   - [ ] /b/ like \"ball\"\n   - [x] /r/ like rolled R\n   - [ ] no sound (silent)\n   > Р is another False Friend - it looks like P but makes an R sound!\n\n3. Which letter makes the /b/ sound in Ukrainian?\n   - [ ] В\n   - [x] Б\n   - [ ] Р\n   - [ ] Д\n   > Б is a New Letter that makes the /b/ sound. В sounds like /v/!\n\n4. What sound does **Н** make in Ukrainian?\n   - [ ] /h/ like \"hat\"\n   - [x] /n/ like \"nose\"\n   - [ ] /m/ like \"mom\"\n   - [ ] silent\n   > Н looks like H but sounds like N - a False Friend!\n\n5. Which letter makes the /s/ sound?\n   - [x] С\n   - [ ] З\n   - [ ] Ц\n   - [ ] Ш\n   > С looks like C but always sounds like /s/ in Ukrainian!\n\n6. What sound does **У** make?\n   - [ ] /y/ like \"yes\"\n   - [ ] /i/ like \"bit\"\n   - [x] /u/ like \"boot\"\n   - [ ] /a/ like \"cat\"\n   > У looks like Y but makes the /u/ sound!\n\n7. Which letter is a \"True Friend\" (same look and sound as English)?\n   - [x] А\n   - [ ] В\n   - [ ] Н\n   - [ ] Р\n   > А looks like A and sounds like A - a True Friend!\n\n8. What sound does **Х** make?\n   - [ ] /h/ like \"hat\"\n   - [x] /x/ like Scottish \"loch\"\n   - [ ] /k/ like \"kite\"\n   - [ ] /z/ like \"zoo\"\n   > Х makes a throaty sound like in \"loch\" or German \"Bach\"!\n\n9. Which letter makes the /l/ sound?\n   - [ ] П\n   - [x] Л\n   - [ ] Д\n   - [ ] Ф\n   > Л (looking like an upside-down V) makes the /l/ sound!\n\n10. What type of letter is **С**?\n    - [ ] True Friend\n    - [x] False Friend\n    - [ ] New Letter\n    - [ ] Not in Ukrainian\n    > С looks like C but sounds like /s/ - a False Friend!\n\n11. Which word is pronounced /bank/?\n    - [x] банк\n    - [ ] панк\n    - [ ] ванк\n    - [ ] танк\n    > банк = /bank/ using Б for /b/, not В!\n\n12. What sound does **Ф** make?\n    - [ ] /v/ like \"van\"\n    - [x] /f/ like \"fan\"\n    - [ ] /p/ like \"pen\"\n    - [ ] /b/ like \"ball\"\n    > Ф is a New Letter making the /f/ sound!\n\n## match-up: Letters and Sounds\n\n> Match each Ukrainian letter to its sound.\n\n| Letter | Sound |\n|--------|-------|\n| В | /v/ like \"van\" |\n| Р | /r/ rolled R |\n| Н | /n/ like \"nose\" |\n| С | /s/ like \"sun\" |\n| У | /u/ like \"boot\" |\n| Б | /b/ like \"ball\" |\n| Л | /l/ like \"lamp\" |\n| Д | /d/ like \"dog\" |\n| П | /p/ like \"pen\" |\n| Ф | /f/ like \"fan\" |\n| З | /z/ like \"zoo\" |\n| Х | /x/ like \"loch\" |\n\n## group-sort: Letter Types\n\n> Sort these letters into the correct category.\n\n### True Friends (same look and sound)\n- А\n- О\n- Е\n- І\n- К\n- М\n- Т\n\n### False Friends (same look, different sound)\n- В\n- Н\n- Р\n- С\n- У\n- Х\n\n### New Letters (new shapes)\n- Б\n- Д\n- З\n- Л\n- П\n- Ф\n\n## match-up: Word Reading\n\n> Match the Ukrainian word to its English meaning.\n\n| Ukrainian | English |\n|-----------|---------|\n| мама | mom |\n| тато | dad |\n| банк | bank |\n| парк | park |\n| кафе | café |\n| метро | metro |\n| таксі | taxi |\n| радіо | radio |\n| суп | soup |\n| салат | salad |\n| музика | music |\n| фото | photo |\n\n## true-false: Letter Knowledge\n\n> Decide if each statement is true (Правда) or false (Міф).\n\n- [x] The letter А sounds the same in Ukrainian and English.\n  > Correct! А is a True Friend - same shape, same sound.\n\n- [ ] The letter В makes a /b/ sound in Ukrainian.\n  > Incorrect. В makes a /v/ sound! Б makes the /b/ sound.\n\n- [x] The letter Р sounds like a rolled R.\n  > Correct! Р looks like P but sounds like R.\n\n- [ ] The letter Н sounds like /h/ in Ukrainian.\n  > Incorrect. Н sounds like /n/! It's a False Friend.\n\n- [x] The word \"парк\" is pronounced /park/.\n  > Correct! П = /p/, а = /a/, Р = /r/, к = /k/.\n\n- [x] Cyrillic was created in Bulgaria, not Russia.\n  > Correct! It was created in the 9th century by Bulgarians.\n\n- [ ] The letter С sounds like /k/ in Ukrainian.\n  > Incorrect. С sounds like /s/! It looks like C but sounds different.\n\n- [x] The letter У sounds like /u/ as in \"boot\".\n  > Correct! У looks like Y but sounds like \"oo\".\n\n- [ ] The word \"банк\" uses the letter В.\n  > Incorrect. \"банк\" uses Б (which makes /b/), not В (which makes /v/).\n\n- [x] \"Метро\" and \"metro\" sound almost the same.\n  > Correct! It's an international word!\n\n- [x] The letter Л looks like an upside-down V.\n  > Correct! And it makes the /l/ sound.\n\n- [ ] Ukrainian Cyrillic is identical to Russian Cyrillic.\n  > Incorrect. Ukrainian has unique letters like Ї, Є, and Ґ!\n\n## fill-in: Complete the Word\n\n> Fill in the missing letter to complete each word.\n\n1. ма___а (mom)\n   > [!answer] м\n   > [!options] м | н | л | р\n\n2. та___о (dad)\n   > [!answer] т\n   > [!options] т | д | п | б\n\n3. ___анк (bank)\n   > [!answer] б\n   > [!options] б | в | п | д\n\n4. ___арк (park)\n   > [!answer] п\n   > [!options] п | б | р | д\n\n5. ка___е (café)\n   > [!answer] ф\n   > [!options] ф | п | в | б\n\n6. мет___о (metro)\n   > [!answer] р\n   > [!options] р | п | л | н\n\n7. так___і (taxi)\n   > [!answer] с\n   > [!options] с | з | ц | к\n\n8. ___адіо (radio)\n   > [!answer] р\n   > [!options] р | п | л | н\n\n9. су___ (soup)\n   > [!answer] п\n   > [!options] п | б | ф | в\n\n10. сала___ (salad)\n    > [!answer] т\n    > [!options] т | д | п | б\n\n11. ___имон (lemon)\n    > [!answer] л\n    > [!options] л | п | д | н\n\n12. ___ото (photo)\n    > [!answer] ф\n    > [!options] ф | п | в | б\n\n## anagram: Word Spelling\n\n> Arrange the letters to form the correct word.\n\n1. а м а м\n   > [!answer] мама\n   > (mom)\n\n2. о т а т\n   > [!answer] тато\n   > (dad)\n\n3. н к а б\n   > [!answer] банк\n   > (bank)\n\n4. р к а п\n   > [!answer] парк\n   > (park)\n\n5. е ф а к\n   > [!answer] кафе\n   > (café)\n\n6. т р о м е\n   > [!answer] метро\n   > (metro)\n\n7. і о д а р\n   > [!answer] радіо\n   > (radio)\n\n8. п у с\n   > [!answer] суп\n   > (soup)\n\n9. т о о ф\n   > [!answer] фото\n   > (photo)\n\n10. к а и з у м\n    > [!answer] музика\n    > (music)\n\n11. т а л а с\n    > [!answer] салат\n    > (salad)\n\n12. о м н и л\n    > [!answer] лимон\n    > (lemon)\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| мама (mama) | /ˈmama/ | mom | noun | f | informal for mother |\n| тато (tato) | /ˈtato/ | dad | noun | m | informal for father |\n| банк (bank) | /bank/ | bank | noun | m | international word |\n| парк (park) | /park/ | park | noun | m | international word |\n| кафе (kafe) | /kaˈfɛ/ | café | noun | n | indeclinable |\n| метро (metro) | /mɛˈtrɔ/ | metro | noun | n | indeclinable |\n| таксі (taksi) | /takˈsi/ | taxi | noun | n | indeclinable |\n| радіо (radio) | /ˈradio/ | radio | noun | n | indeclinable |\n| піца (pitsa) | /ˈpitsa/ | pizza | noun | f | international word |\n| суп (sup) | /sup/ | soup | noun | m | common food word |\n| салат (salat) | /saˈlat/ | salad | noun | m | international word |\n| лимон (lymon) | /lɪˈmɔn/ | lemon | noun | m | international word |\n| банан (banan) | /baˈnan/ | banana | noun | m | international word |\n| хокей (khokei) | /xɔˈkɛj/ | hockey | noun | m | international word |\n| футбол (futbol) | /futˈbɔl/ | football/soccer | noun | m | international word |\n| студент (student) | /stuˈdɛnt/ | student | noun | m | international word |\n| турист (turyst) | /tuˈrɪst/ | tourist | noun | m | international word |\n| музика (muzyka) | /ˈmuzɪka/ | music | noun | f | international word |\n| фото (foto) | /ˈfɔtɔ/ | photo | noun | n | indeclinable |\n| відео (video) | /ˈvidɛɔ/ | video | noun | n | indeclinable |\n\n---\n\n# Summary\n\n> **What You Learned Today**\n>\n> - **True Friends:** А, Е, І, О, К, М, Т - letters that look AND sound like English\n> - **False Friends:** В (/v/), Н (/n/), Р (/r/), С (/s/), У (/u/), Х (/x/) - letters that LOOK like English but sound DIFFERENT\n> - **New Letters:** Б (/b/), Д (/d/), З (/z/), Л (/l/), П (/p/), Ф (/f/) - new shapes with new sounds\n> - You can now read 20 international words in Ukrainian!\n\n> **Coming Next**\n>\n> In Module 02, you'll complete the Cyrillic alphabet:\n> - Unique Ukrainian letters (Ж, Ш, Щ, Ч, Ц)\n> - The mysterious soft sign (Ь)\n> - Iotated vowels (Є, Ї, Ю, Я)\n> - Warning about italic forms that look different!\n",
+    "createdAt": "2025-12-06T10:49:20.081Z",
+    "modifiedAt": "2025-12-06T10:49:20.081Z",
+    "version": 2
+  },
+  "activities": [
+    {
+      "id": "act-a1-0-quiz",
+      "type": "quiz",
+      "title": "Letter Sounds",
+      "description": "Test your knowledge of Ukrainian letter sounds!",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "What sound does the Ukrainian letter **В** make?",
+            "options": [
+              "/b/ like \"ball\"",
+              "/v/ like \"van\"",
+              "/w/ like \"water\"",
+              "/f/ like \"fan\""
+            ],
+            "correctIndex": 1,
+            "explanation": "В is a False Friend - it looks like B but sounds like V!"
+          },
+          {
+            "question": "What sound does the Ukrainian letter **Р** make?",
+            "options": [
+              "/p/ like \"pen\"",
+              "/b/ like \"ball\"",
+              "/r/ like rolled R",
+              "no sound (silent)"
+            ],
+            "correctIndex": 2,
+            "explanation": "Р is another False Friend - it looks like P but makes an R sound!"
+          },
+          {
+            "question": "Which letter makes the /b/ sound in Ukrainian?",
+            "options": [
+              "В",
+              "Б",
+              "Р",
+              "Д"
+            ],
+            "correctIndex": 1,
+            "explanation": "Б is a New Letter that makes the /b/ sound. В sounds like /v/!"
+          },
+          {
+            "question": "What sound does **Н** make in Ukrainian?",
+            "options": [
+              "/h/ like \"hat\"",
+              "/n/ like \"nose\"",
+              "/m/ like \"mom\"",
+              "silent"
+            ],
+            "correctIndex": 1,
+            "explanation": "Н looks like H but sounds like N - a False Friend!"
+          },
+          {
+            "question": "Which letter makes the /s/ sound?",
+            "options": [
+              "С",
+              "З",
+              "Ц",
+              "Ш"
+            ],
+            "correctIndex": 0,
+            "explanation": "С looks like C but always sounds like /s/ in Ukrainian!"
+          },
+          {
+            "question": "What sound does **У** make?",
+            "options": [
+              "/y/ like \"yes\"",
+              "/i/ like \"bit\"",
+              "/u/ like \"boot\"",
+              "/a/ like \"cat\""
+            ],
+            "correctIndex": 2,
+            "explanation": "У looks like Y but makes the /u/ sound!"
+          },
+          {
+            "question": "Which letter is a \"True Friend\" (same look and sound as English)?",
+            "options": [
+              "А",
+              "В",
+              "Н",
+              "Р"
+            ],
+            "correctIndex": 0,
+            "explanation": "А looks like A and sounds like A - a True Friend!"
+          },
+          {
+            "question": "What sound does **Х** make?",
+            "options": [
+              "/h/ like \"hat\"",
+              "/x/ like Scottish \"loch\"",
+              "/k/ like \"kite\"",
+              "/z/ like \"zoo\""
+            ],
+            "correctIndex": 1,
+            "explanation": "Х makes a throaty sound like in \"loch\" or German \"Bach\"!"
+          },
+          {
+            "question": "Which letter makes the /l/ sound?",
+            "options": [
+              "П",
+              "Л",
+              "Д",
+              "Ф"
+            ],
+            "correctIndex": 1,
+            "explanation": "Л (looking like an upside-down V) makes the /l/ sound!"
+          },
+          {
+            "question": "What type of letter is **С**?",
+            "options": [
+              "True Friend",
+              "False Friend",
+              "New Letter",
+              "Not in Ukrainian"
+            ],
+            "correctIndex": 1,
+            "explanation": "С looks like C but sounds like /s/ - a False Friend!"
+          },
+          {
+            "question": "Which word is pronounced /bank/?",
+            "options": [
+              "банк",
+              "панк",
+              "ванк",
+              "танк"
+            ],
+            "correctIndex": 0,
+            "explanation": "банк = /bank/ using Б for /b/, not В!"
+          },
+          {
+            "question": "What sound does **Ф** make?",
+            "options": [
+              "/v/ like \"van\"",
+              "/f/ like \"fan\"",
+              "/p/ like \"pen\"",
+              "/b/ like \"ball\""
+            ],
+            "correctIndex": 1,
+            "explanation": "Ф is a New Letter making the /f/ sound!"
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.081Z",
+      "modifiedAt": "2025-12-06T10:49:20.081Z"
+    },
+    {
+      "id": "act-a1-0-matchup",
+      "type": "match-up",
+      "title": "Letters and Sounds",
+      "description": "Match each Ukrainian letter to its sound.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "В",
+            "right": "/v/ like \"van\""
+          },
+          {
+            "left": "Р",
+            "right": "/r/ rolled R"
+          },
+          {
+            "left": "Н",
+            "right": "/n/ like \"nose\""
+          },
+          {
+            "left": "С",
+            "right": "/s/ like \"sun\""
+          },
+          {
+            "left": "У",
+            "right": "/u/ like \"boot\""
+          },
+          {
+            "left": "Б",
+            "right": "/b/ like \"ball\""
+          },
+          {
+            "left": "Л",
+            "right": "/l/ like \"lamp\""
+          },
+          {
+            "left": "Д",
+            "right": "/d/ like \"dog\""
+          },
+          {
+            "left": "П",
+            "right": "/p/ like \"pen\""
+          },
+          {
+            "left": "Ф",
+            "right": "/f/ like \"fan\""
+          },
+          {
+            "left": "З",
+            "right": "/z/ like \"zoo\""
+          },
+          {
+            "left": "Х",
+            "right": "/x/ like \"loch\""
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.081Z",
+      "modifiedAt": "2025-12-06T10:49:20.081Z"
+    },
+    {
+      "id": "act-a1-0-groupsort",
+      "type": "group-sort",
+      "title": "Letter Types",
+      "description": "Sort these letters into the correct category.",
+      "content": {
+        "type": "group-sort",
+        "groups": [
+          {
+            "id": "true-friends",
+            "name": "True Friends",
+            "items": [
+              "А",
+              "О",
+              "Е",
+              "І",
+              "К",
+              "М",
+              "Т"
+            ],
+            "nameUk": "same look and sound"
+          },
+          {
+            "id": "false-friends",
+            "name": "False Friends",
+            "items": [
+              "В",
+              "Н",
+              "Р",
+              "С",
+              "У",
+              "Х"
+            ],
+            "nameUk": "same look, different sound"
+          },
+          {
+            "id": "new-letters",
+            "name": "New Letters",
+            "items": [
+              "Б",
+              "Д",
+              "З",
+              "Л",
+              "П",
+              "Ф"
+            ],
+            "nameUk": "new shapes"
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.081Z",
+      "modifiedAt": "2025-12-06T10:49:20.081Z"
+    },
+    {
+      "id": "act-a1-0-matchup",
+      "type": "match-up",
+      "title": "Word Reading",
+      "description": "Match the Ukrainian word to its English meaning.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "мама",
+            "right": "mom"
+          },
+          {
+            "left": "тато",
+            "right": "dad"
+          },
+          {
+            "left": "банк",
+            "right": "bank"
+          },
+          {
+            "left": "парк",
+            "right": "park"
+          },
+          {
+            "left": "кафе",
+            "right": "café"
+          },
+          {
+            "left": "метро",
+            "right": "metro"
+          },
+          {
+            "left": "таксі",
+            "right": "taxi"
+          },
+          {
+            "left": "радіо",
+            "right": "radio"
+          },
+          {
+            "left": "суп",
+            "right": "soup"
+          },
+          {
+            "left": "салат",
+            "right": "salad"
+          },
+          {
+            "left": "музика",
+            "right": "music"
+          },
+          {
+            "left": "фото",
+            "right": "photo"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.081Z",
+      "modifiedAt": "2025-12-06T10:49:20.081Z"
+    },
+    {
+      "id": "act-a1-0-truefalse",
+      "type": "true-false",
+      "title": "Letter Knowledge",
+      "description": "Decide if each statement is true (Правда) or false (Міф).",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "The letter А sounds the same in Ukrainian and English.",
+            "isTrue": true,
+            "explanation": "Correct! А is a True Friend - same shape, same sound."
+          },
+          {
+            "statement": "The letter В makes a /b/ sound in Ukrainian.",
+            "isTrue": false,
+            "explanation": "Incorrect. В makes a /v/ sound! Б makes the /b/ sound."
+          },
+          {
+            "statement": "The letter Р sounds like a rolled R.",
+            "isTrue": true,
+            "explanation": "Correct! Р looks like P but sounds like R."
+          },
+          {
+            "statement": "The letter Н sounds like /h/ in Ukrainian.",
+            "isTrue": false,
+            "explanation": "Incorrect. Н sounds like /n/! It's a False Friend."
+          },
+          {
+            "statement": "The word \"парк\" is pronounced /park/.",
+            "isTrue": true,
+            "explanation": "Correct! П = /p/, а = /a/, Р = /r/, к = /k/."
+          },
+          {
+            "statement": "Cyrillic was created in Bulgaria, not Russia.",
+            "isTrue": true,
+            "explanation": "Correct! It was created in the 9th century by Bulgarians."
+          },
+          {
+            "statement": "The letter С sounds like /k/ in Ukrainian.",
+            "isTrue": false,
+            "explanation": "Incorrect. С sounds like /s/! It looks like C but sounds different."
+          },
+          {
+            "statement": "The letter У sounds like /u/ as in \"boot\".",
+            "isTrue": true,
+            "explanation": "Correct! У looks like Y but sounds like \"oo\"."
+          },
+          {
+            "statement": "The word \"банк\" uses the letter В.",
+            "isTrue": false,
+            "explanation": "Incorrect. \"банк\" uses Б (which makes /b/), not В (which makes /v/)."
+          },
+          {
+            "statement": "\"Метро\" and \"metro\" sound almost the same.",
+            "isTrue": true,
+            "explanation": "Correct! It's an international word!"
+          },
+          {
+            "statement": "The letter Л looks like an upside-down V.",
+            "isTrue": true,
+            "explanation": "Correct! And it makes the /l/ sound."
+          },
+          {
+            "statement": "Ukrainian Cyrillic is identical to Russian Cyrillic.",
+            "isTrue": false,
+            "explanation": "Incorrect. Ukrainian has unique letters like Ї, Є, and Ґ!"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.081Z",
+      "modifiedAt": "2025-12-06T10:49:20.081Z"
+    },
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "Complete the Word",
+      "description": "Fill in the missing letter to complete each word.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "ма___а (mom)",
+            "answer": "м",
+            "options": [
+              "м",
+              "н",
+              "л",
+              "р"
+            ]
+          },
+          {
+            "prompt": "та___о (dad)",
+            "answer": "т",
+            "options": [
+              "т",
+              "д",
+              "п",
+              "б"
+            ]
+          },
+          {
+            "prompt": "___анк (bank)",
+            "answer": "б",
+            "options": [
+              "б",
+              "в",
+              "п",
+              "д"
+            ]
+          },
+          {
+            "prompt": "___арк (park)",
+            "answer": "п",
+            "options": [
+              "п",
+              "б",
+              "р",
+              "д"
+            ]
+          },
+          {
+            "prompt": "ка___е (café)",
+            "answer": "ф",
+            "options": [
+              "ф",
+              "п",
+              "в",
+              "б"
+            ]
+          },
+          {
+            "prompt": "мет___о (metro)",
+            "answer": "р",
+            "options": [
+              "р",
+              "п",
+              "л",
+              "н"
+            ]
+          },
+          {
+            "prompt": "так___і (taxi)",
+            "answer": "с",
+            "options": [
+              "с",
+              "з",
+              "ц",
+              "к"
+            ]
+          },
+          {
+            "prompt": "___адіо (radio)",
+            "answer": "р",
+            "options": [
+              "р",
+              "п",
+              "л",
+              "н"
+            ]
+          },
+          {
+            "prompt": "су___ (soup)",
+            "answer": "п",
+            "hints": [
+              "soup"
+            ],
+            "options": [
+              "п",
+              "б",
+              "ф",
+              "в"
+            ]
+          },
+          {
+            "prompt": "сала___ (salad)",
+            "answer": "т",
+            "hints": [
+              "salad"
+            ],
+            "options": [
+              "т",
+              "д",
+              "п",
+              "б"
+            ]
+          },
+          {
+            "prompt": "___имон (lemon)",
+            "answer": "л",
+            "options": [
+              "л",
+              "п",
+              "д",
+              "н"
+            ]
+          },
+          {
+            "prompt": "___ото (photo)",
+            "answer": "ф",
+            "options": [
+              "ф",
+              "п",
+              "в",
+              "б"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.081Z",
+      "modifiedAt": "2025-12-06T10:49:20.081Z"
+    },
+    {
+      "id": "act-a1-0-anagram",
+      "type": "anagram",
+      "title": "Word Spelling",
+      "description": "Arrange the letters to form the correct word.",
+      "content": {
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
+          {
+            "letters": [
+              "а",
+              "м",
+              "а",
+              "м"
+            ],
+            "answer": "мама",
+            "translation": "mom"
+          },
+          {
+            "letters": [
+              "о",
+              "т",
+              "а",
+              "т"
+            ],
+            "answer": "тато",
+            "translation": "dad"
+          },
+          {
+            "letters": [
+              "н",
+              "к",
+              "а",
+              "б"
+            ],
+            "answer": "банк",
+            "translation": "bank"
+          },
+          {
+            "letters": [
+              "р",
+              "к",
+              "а",
+              "п"
+            ],
+            "answer": "парк",
+            "translation": "park"
+          },
+          {
+            "letters": [
+              "е",
+              "ф",
+              "а",
+              "к"
+            ],
+            "answer": "кафе",
+            "translation": "café"
+          },
+          {
+            "letters": [
+              "т",
+              "р",
+              "о",
+              "м",
+              "е"
+            ],
+            "answer": "метро",
+            "translation": "metro"
+          },
+          {
+            "letters": [
+              "і",
+              "о",
+              "д",
+              "а",
+              "р"
+            ],
+            "answer": "радіо",
+            "translation": "radio"
+          },
+          {
+            "letters": [
+              "п",
+              "у",
+              "с"
+            ],
+            "answer": "суп",
+            "translation": "soup"
+          },
+          {
+            "letters": [
+              "т",
+              "о",
+              "о",
+              "ф"
+            ],
+            "answer": "фото",
+            "translation": "photo"
+          },
+          {
+            "letters": [
+              "к",
+              "а",
+              "и",
+              "з",
+              "у",
+              "м"
+            ],
+            "answer": "музика",
+            "translation": "music"
+          },
+          {
+            "letters": [
+              "т",
+              "а",
+              "л",
+              "а",
+              "с"
+            ],
+            "answer": "салат",
+            "translation": "salad"
+          },
+          {
+            "letters": [
+              "о",
+              "м",
+              "н",
+              "и",
+              "л"
+            ],
+            "answer": "лимон",
+            "translation": "lemon"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.081Z",
+      "modifiedAt": "2025-12-06T10:49:20.081Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A1-1",
+    "level": "A1",
+    "phase": "A1.1",
+    "wordCount": 20,
+    "newWordCount": 20,
+    "reviewWordCount": 0,
+    "transliterationMode": "full",
+    "words": [
+      {
+        "id": "v-mama-(mama)-0-0",
+        "uk": "мама (mama)",
+        "en": "mom",
+        "pos": "noun",
+        "ipa": "/ˈmama/",
+        "gender": "f",
+        "note": "informal for mother",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-tato-(tato)-0-1",
+        "uk": "тато (tato)",
+        "en": "dad",
+        "pos": "noun",
+        "ipa": "/ˈtato/",
+        "gender": "m",
+        "note": "informal for father",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-bank-(bank)-0-2",
+        "uk": "банк (bank)",
+        "en": "bank",
+        "pos": "noun",
+        "ipa": "/bank/",
+        "gender": "m",
+        "note": "international word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-park-(park)-0-3",
+        "uk": "парк (park)",
+        "en": "park",
+        "pos": "noun",
+        "ipa": "/park/",
+        "gender": "m",
+        "note": "international word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-kafe-(kafe)-0-4",
+        "uk": "кафе (kafe)",
+        "en": "café",
+        "pos": "noun",
+        "ipa": "/kaˈfɛ/",
+        "gender": "n",
+        "note": "indeclinable",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-metro-(metro)-0-5",
+        "uk": "метро (metro)",
+        "en": "metro",
+        "pos": "noun",
+        "ipa": "/mɛˈtrɔ/",
+        "gender": "n",
+        "note": "indeclinable",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-taksi-(taksi)-0-6",
+        "uk": "таксі (taksi)",
+        "en": "taxi",
+        "pos": "noun",
+        "ipa": "/takˈsi/",
+        "gender": "n",
+        "note": "indeclinable",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-radio-(radio)-0-7",
+        "uk": "радіо (radio)",
+        "en": "radio",
+        "pos": "noun",
+        "ipa": "/ˈradio/",
+        "gender": "n",
+        "note": "indeclinable",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pitsa-(pitsa)-0-8",
+        "uk": "піца (pitsa)",
+        "en": "pizza",
+        "pos": "noun",
+        "ipa": "/ˈpitsa/",
+        "gender": "f",
+        "note": "international word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-sup-(sup)-0-9",
+        "uk": "суп (sup)",
+        "en": "soup",
+        "pos": "noun",
+        "ipa": "/sup/",
+        "gender": "m",
+        "note": "common food word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-salat-(salat)-0-10",
+        "uk": "салат (salat)",
+        "en": "salad",
+        "pos": "noun",
+        "ipa": "/saˈlat/",
+        "gender": "m",
+        "note": "international word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-lymon-(lymon)-0-11",
+        "uk": "лимон (lymon)",
+        "en": "lemon",
+        "pos": "noun",
+        "ipa": "/lɪˈmɔn/",
+        "gender": "m",
+        "note": "international word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-banan-(banan)-0-12",
+        "uk": "банан (banan)",
+        "en": "banana",
+        "pos": "noun",
+        "ipa": "/baˈnan/",
+        "gender": "m",
+        "note": "international word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-khokey-(khokei)-0-13",
+        "uk": "хокей (khokei)",
+        "en": "hockey",
+        "pos": "noun",
+        "ipa": "/xɔˈkɛj/",
+        "gender": "m",
+        "note": "international word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-futbol-(futbol)-0-14",
+        "uk": "футбол (futbol)",
+        "en": "football/soccer",
+        "pos": "noun",
+        "ipa": "/futˈbɔl/",
+        "gender": "m",
+        "note": "international word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-student-(student)-0-15",
+        "uk": "студент (student)",
+        "en": "student",
+        "pos": "noun",
+        "ipa": "/stuˈdɛnt/",
+        "gender": "m",
+        "note": "international word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-turyst-(turyst)-0-16",
+        "uk": "турист (turyst)",
+        "en": "tourist",
+        "pos": "noun",
+        "ipa": "/tuˈrɪst/",
+        "gender": "m",
+        "note": "international word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-muzyka-(muzyka)-0-17",
+        "uk": "музика (muzyka)",
+        "en": "music",
+        "pos": "noun",
+        "ipa": "/ˈmuzɪka/",
+        "gender": "f",
+        "note": "international word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-foto-(foto)-0-18",
+        "uk": "фото (foto)",
+        "en": "photo",
+        "pos": "noun",
+        "ipa": "/ˈfɔtɔ/",
+        "gender": "n",
+        "note": "indeclinable",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-video-(video)-0-19",
+        "uk": "відео (video)",
+        "en": "video",
+        "pos": "noun",
+        "ipa": "/ˈvidɛɔ/",
+        "gender": "n",
+        "note": "indeclinable",
+        "isNew": true,
+        "firstModule": 0
+      }
+    ]
+  }
+}

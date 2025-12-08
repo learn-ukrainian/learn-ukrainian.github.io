@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -481,14 +521,15 @@ footer {
     <h1>Module 11: The Accusative I - Things</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Quiz</button>
-      <button class="nav-tab" data-section="activity-1">2. Match</button>
-      <button class="nav-tab" data-section="activity-2">3. Sort</button>
-      <button class="nav-tab" data-section="activity-3">4. T/F</button>
+      <button class="nav-tab" data-section="activity-0">1. Sort</button>
+      <button class="nav-tab" data-section="activity-1">2. Fill</button>
+      <button class="nav-tab" data-section="activity-2">3. Match</button>
+      <button class="nav-tab" data-section="activity-3">4. Quiz</button>
       <button class="nav-tab" data-section="activity-4">5. Fill</button>
-      <button class="nav-tab" data-section="activity-5">6. Match</button>
-      <button class="nav-tab" data-section="activity-6">7. Spell</button>
-      <button class="nav-tab" data-section="activity-7">8. Fill</button>
+      <button class="nav-tab" data-section="activity-5">6. Fill</button>
+      <button class="nav-tab" data-section="activity-6">7. Order</button>
+      <button class="nav-tab" data-section="activity-7">8. translate</button>
+      <button class="nav-tab" data-section="activity-8">9. Spell</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -498,629 +539,270 @@ footer {
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.2</span>
         <h2 style="font-size:2rem;margin:0.5rem 0">The Accusative I - Things</h2>
-        <p style="color:var(--text-muted)">Direct Objects: Inanimate Nouns</p>
+        <p style="color:var(--text-muted)">The Object of Desire</p>
       </div>
       
-    <div class="card section-content">
-      <h3>Warm Up</h3>
-      <div class="md-content"><p>You've mastered basic sentences like "Це книга." But what happens when the book becomes the object of an action? "I see <strong>the book</strong>" — that's where the accusative case comes in. Welcome to Ukrainian cases!</p>
-<hr /></div>
-    </div>
-  
-    <div class="card section-content">
-      <h3>Lesson</h3>
-      <div class="md-content"><h2 id="whatistheaccusativecase">What is the Accusative Case?</h2>
-<p>In English, we use word order to show who does what: "The dog bites the man" vs "The man bites the dog." In Ukrainian, <strong>case endings</strong> do this job, which means word order is more flexible.</p>
-<p>The <strong>accusative case</strong> (знахідний відмінок) marks the <strong>direct object</strong> — the thing receiving the action.</p>
-<table>
-<thead>
-<tr>
-<th>Nominative (subject)</th>
-<th>Accusative (object)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Книга цікава.</td>
-<td>Я читаю книг<strong>у</strong>.</td>
-</tr>
-<tr>
-<td>The book is interesting.</td>
-<td>I read the book.</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong><br />
-  The word "знахідний" comes from "знаходити" (to find). Think of it as the case that helps you "find" what the action is directed at!</p>
-</blockquote>
-<hr />
-<h2 id="accusativeendingsinanimatenouns">Accusative Endings: Inanimate Nouns</h2>
-<p>Good news! For <strong>inanimate</strong> (non-living) nouns, the accusative is simple:</p>
-<table>
-<thead>
-<tr>
-<th>Gender</th>
-<th>Nominative</th>
-<th>Accusative</th>
-<th>Change</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Masculine</td>
-<td>стіл</td>
-<td>стіл</td>
-<td><strong>no change</strong></td>
-</tr>
-<tr>
-<td>Feminine -а</td>
-<td>книга</td>
-<td>книг<strong>у</strong></td>
-<td>-а → -у</td>
-</tr>
-<tr>
-<td>Feminine -я</td>
-<td>земля</td>
-<td>земл<strong>ю</strong></td>
-<td>-я → -ю</td>
-</tr>
-<tr>
-<td>Neuter</td>
-<td>вікно</td>
-<td>вікно</td>
-<td><strong>no change</strong></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Summary:</strong></p>
+    <div class="card section-intro">
+      <h3>📖 Introduction</h3>
+      <div class="md-content"><h2 id="warmup">warm-up</h2>
+<p><strong>The Object of Desire</strong></p>
+<p>Welcome to Phase A1.2. The city awaits.</p>
+<p>In Phase 1, you learned to describe <em>who</em> you are ("Я студент") and <em>where</em> you are ("Я вдома"). The world was static. You were a statue in a museum.<br />
+Now, you start to move. You interact. You want things. You take things. You see things.</p>
+<p>In English, "I see the <strong>lamp</strong>" and "<strong>The lamp</strong> is here" use the same word: "lamp".<br />
+In Ukrainian, this is impossible.<br />
+When you <em>do something</em> to a word, you change it. You mark it. You tag it as the "target".<br />
+This tag is called the <strong>Accusative Case</strong>.</p>
+<p>Imagine you have a laser pointer.</p>
 <ul>
-<li>Masculine inanimate: no change</li>
-<li>Feminine: -а → -у, -я → -ю</li>
-<li>Neuter: no change</li>
+<li><strong>Subject:</strong> YOU (The Actor).</li>
+<li><strong>Verb:</strong> The Laser Beam (The Action).</li>
+<li><strong>Object:</strong> The Target (The Accusative).</li>
+</ul>
+<p>When the laser hits a Feminine noun, it melts the ending.</p>
+<h2 id="presentation">presentation</h2>
+<h3 id="section1theinvisibleshieldmasculineneuter">Section 1: The Invisible Shield (Masculine &amp; Neuter)</h3>
+<p>Good news. Ukrainian grammar is merciful.<br />
+If a noun is <strong>Masculine Inanimate</strong> (an object, not a person) or <strong>Neuter</strong>, nothing happens. The laser beam bounces off.<br />
+The dictionary form (Nominative) is the same as the target form (Accusative).</p>
+<p><strong>Pattern:</strong> Subject + Verb + Object (No Change)</p>
+<ol>
+<li><p><strong>Masculine (Inanimate)</strong></p>
+<ul>
+<li>Це <strong>телефон</strong>. (Nominative)</li>
+<li>Я бачу <strong>телефон</strong>. (Accusative - No change)</li>
+<li>Він має <strong>паспорт</strong>. (He has a passport.)</li>
+<li>Ми беремо <strong>квиток</strong>. (We take a ticket.)</li></ul></li>
+<li><p><strong>Neuter</strong></p>
+<ul>
+<li>Це <strong>вікно</strong>.</li>
+<li>Я бачу <strong>вікно</strong>. (No change)</li>
+<li>Вона любить <strong>море</strong>. (She loves the sea.)</li>
+<li>Вони п'ють <strong>молоко</strong>. (They drink milk.)</li></ul></li>
+</ol>
+<blockquote>
+  <p>💡 <strong>The Logic</strong><br />
+  Why no change? Because ancient speakers didn't think objects needed special respect. They are just things. "I see a table" is clear enough without a flag.</p>
+</blockquote>
+<h3 id="section2thefemininetransformation">Section 2: The Feminine Transformation (-А -&gt; -У)</h3>
+<p>Here is the magic. Feminine nouns are special. They <em>always</em> react to the laser.<br />
+When a Feminine noun is the target of an action, the final <strong>-А</strong> turns into <strong>-У</strong>.<br />
+If it ends in <strong>-Я</strong>, it turns into <strong>-Ю</strong>.</p>
+<p><strong>The Formula:</strong></p>
+<ul>
+<li><strong>-А</strong> ➡️ <strong>-У</strong></li>
+<li><strong>-Я</strong> ➡️ <strong>-Ю</strong></li>
+</ul>
+<p><strong>Examples:</strong></p>
+<ul>
+<li><strong>Кава</strong> (Coffee) ➡️ Я хочу <strong>каву</strong>. (I want coffee).</li>
+<li><strong>Вода</strong> (Water) ➡️ Він п'є <strong>воду</strong>. (He drinks water).</li>
+<li><strong>Газета</strong> (Newspaper) ➡️ Ми читаємо <strong>газету</strong>. (We read the newspaper).</li>
+<li><strong>Кухня</strong> (Kitchen) ➡️ Я бачу <strong>кухню</strong>. (I see the kitchen).</li>
 </ul>
 <blockquote>
-  <p>🎯 <strong>Fun Fact</strong><br />
-  Only feminine nouns change in the accusative! Masculine inanimate and neuter nouns stay the same. This makes Ukrainian cases easier than you might think.</p>
+  <p>⚡ <strong>Mnemonic: The "Oooo" of Desire</strong><br />
+  When you want something feminine, you say "Oooo!" (I want pizz<strong>u</strong>!).</p>
+  <ul>
+  <li>Піц<strong>а</strong> -&gt; Піц<strong>у</strong>.</li>
+  <li>Книг<strong>а</strong> -&gt; Книг<strong>у</strong>.</li>
+  <li>Віз<strong>а</strong> -&gt; Віз<strong>у</strong>.</li>
+  </ul>
 </blockquote>
-<hr />
-<h2 id="exampleswithcommonverbs">Examples with Common Verbs</h2>
-<h3 id="tosee">Бачити (to see)</h3>
-<table>
-<thead>
-<tr>
-<th>Nominative</th>
-<th>Accusative</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Це стіл.</td>
-<td>Я бачу <strong>стіл</strong>.</td>
-</tr>
-<tr>
-<td>Це книга.</td>
-<td>Я бачу <strong>книгу</strong>.</td>
-</tr>
-<tr>
-<td>Це вікно.</td>
-<td>Я бачу <strong>вікно</strong>.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="toread">Читати (to read)</h3>
-<table>
-<thead>
-<tr>
-<th>Nominative</th>
-<th>Accusative</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Це газета.</td>
-<td>Я читаю <strong>газету</strong>.</td>
-</tr>
-<tr>
-<td>Це журнал.</td>
-<td>Я читаю <strong>журнал</strong>.</td>
-</tr>
-<tr>
-<td>Це лист.</td>
-<td>Я читаю <strong>лист</strong>.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="tohave">Мати (to have)</h3>
-<table>
-<thead>
-<tr>
-<th>Nominative</th>
-<th>Accusative</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Це сумка.</td>
-<td>Я маю <strong>сумку</strong>.</td>
-</tr>
-<tr>
-<td>Це паспорт.</td>
-<td>Я маю <strong>паспорт</strong>.</td>
-</tr>
-<tr>
-<td>Це квиток.</td>
-<td>Я маю <strong>квиток</strong>.</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🌍 <strong>Real World</strong><br />
-  At Ukrainian airports and train stations, you'll hear "Покажіть паспорт" (Show your passport) and "Ваш квиток, будь ласка" (Your ticket, please). Both паспорт and квиток stay unchanged because they're masculine inanimate!</p>
-</blockquote>
-<hr />
-<h2 id="transitiveverbs">Transitive Verbs</h2>
-<p><strong>Transitive verbs</strong> are verbs that take direct objects. They answer "what?" or "whom?"</p>
-<table>
-<thead>
-<tr>
-<th>Verb</th>
-<th>Meaning</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>бачити</td>
-<td>to see</td>
-<td>Я бачу вікно.</td>
-</tr>
-<tr>
-<td>чути</td>
-<td>to hear</td>
-<td>Я чую музику.</td>
-</tr>
-<tr>
-<td>брати</td>
-<td>to take</td>
-<td>Вона бере сумку.</td>
-</tr>
-<tr>
-<td>давати</td>
-<td>to give</td>
-<td>Він дає подарунок.</td>
-</tr>
-<tr>
-<td>мати</td>
-<td>to have</td>
-<td>Ми маємо документ.</td>
-</tr>
-<tr>
-<td>нести</td>
-<td>to carry</td>
-<td>Ти несеш валізу.</td>
-</tr>
-<tr>
-<td>класти</td>
-<td>to put</td>
-<td>Вони кладуть книгу.</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong><br />
-  Some verbs can be either transitive or intransitive depending on context. "Читати" can be "Я читаю книгу" (I'm reading a book) or just "Я читаю" (I'm reading). But when there's an object, it goes in accusative!</p>
-</blockquote>
-<hr />
-<h2 id="moreusefulverbs">More Useful Verbs</h2>
-<h3 id="openclose">Open/Close</h3>
-<table>
-<thead>
-<tr>
-<th>Verb</th>
-<th>Meaning</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>відкривати</td>
-<td>to open</td>
-<td>Я відкриваю двері.</td>
-</tr>
-<tr>
-<td>закривати</td>
-<td>to close</td>
-<td>Вона закриває вікно.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="turnonoff">Turn On/Off</h3>
-<table>
-<thead>
-<tr>
-<th>Verb</th>
-<th>Meaning</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>вмикати</td>
-<td>to turn on</td>
-<td>Він вмикає телевізор.</td>
-</tr>
-<tr>
-<td>вимикати</td>
-<td>to turn off</td>
-<td>Ми вимикаємо світло.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="showhide">Show/Hide</h3>
-<table>
-<thead>
-<tr>
-<th>Verb</th>
-<th>Meaning</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>показувати</td>
-<td>to show</td>
-<td>Ти показуєш фото.</td>
-</tr>
-<tr>
-<td>ховати</td>
-<td>to hide</td>
-<td>Вони ховають ключ.</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎬 <strong>Pop Culture Moment</strong><br />
-  In the Ukrainian dubbing of Harry Potter, the invisibility cloak is called "мантія-невидимка" (invisibility cloak). Harry "ховає" (hides) things under it — ховати takes accusative because the hidden thing is the direct object!</p>
-</blockquote>
-<hr />
-<h2 id="commonobjectnouns">Common Object Nouns</h2>
-<h3 id="documentspaper">Documents &amp; Paper</h3>
-<table>
-<thead>
-<tr>
-<th>Nominative</th>
-<th>Gender</th>
-<th>Accusative</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>газета</td>
-<td>f</td>
-<td>газету</td>
-<td>newspaper</td>
-</tr>
-<tr>
-<td>журнал</td>
-<td>m</td>
-<td>журнал</td>
-<td>magazine</td>
-</tr>
-<tr>
-<td>лист</td>
-<td>m</td>
-<td>лист</td>
-<td>letter</td>
-</tr>
-<tr>
-<td>конверт</td>
-<td>m</td>
-<td>конверт</td>
-<td>envelope</td>
-</tr>
-<tr>
-<td>посилка</td>
-<td>f</td>
-<td>посилку</td>
-<td>package</td>
-</tr>
-<tr>
-<td>документ</td>
-<td>m</td>
-<td>документ</td>
-<td>document</td>
-</tr>
-<tr>
-<td>паспорт</td>
-<td>m</td>
-<td>паспорт</td>
-<td>passport</td>
-</tr>
-<tr>
-<td>квиток</td>
-<td>m</td>
-<td>квиток</td>
-<td>ticket</td>
-</tr>
-</tbody>
-</table>
-<h3 id="containersbags">Containers &amp; Bags</h3>
-<table>
-<thead>
-<tr>
-<th>Nominative</th>
-<th>Gender</th>
-<th>Accusative</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>сумка</td>
-<td>f</td>
-<td>сумку</td>
-<td>bag</td>
-</tr>
-<tr>
-<td>валіза</td>
-<td>f</td>
-<td>валізу</td>
-<td>suitcase</td>
-</tr>
-<tr>
-<td>коробка</td>
-<td>f</td>
-<td>коробку</td>
-<td>box</td>
-</tr>
-<tr>
-<td>подарунок</td>
-<td>m</td>
-<td>подарунок</td>
-<td>gift</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="practicepatterns">Practice Patterns</h2>
-<h3 id="pattern1subjectverbobject">Pattern 1: Subject + Verb + Object</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Я бачу стіл.</td>
-<td>I see the table.</td>
-</tr>
-<tr>
-<td>Вона читає книгу.</td>
-<td>She reads a/the book.</td>
-</tr>
-<tr>
-<td>Ми відкриваємо вікно.</td>
-<td>We open the window.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="pattern2objectquestions">Pattern 2: Object Questions</h3>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Що ти бачиш?</td>
-<td>Я бачу книгу.</td>
-</tr>
-<tr>
-<td>Що він читає?</td>
-<td>Він читає газету.</td>
-</tr>
-<tr>
-<td>Що вона несе?</td>
-<td>Вона несе сумку.</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎮 <strong>Gamer's Corner</strong><br />
-  In Ukrainian video games, inventory items are listed in nominative (коробка, ключ, зброя), but when you "use" them, they switch to accusative: "Використати коробку?" (Use the box?), "Взяти ключ?" (Take the key?).</p>
-</blockquote>
-<hr />
-<h2 id="wordorderflexibility">Word Order Flexibility</h2>
-<p>Because case endings mark grammatical roles, Ukrainian word order is flexible:</p>
-<table>
-<thead>
-<tr>
-<th>Standard Order</th>
-<th>Alternative</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Я читаю книгу.</td>
-<td>Книгу читаю я.</td>
-<td>I read the book.</td>
-</tr>
-<tr>
-<td>Вона бачить стіл.</td>
-<td>Стіл бачить вона.</td>
-<td>She sees the table.</td>
-</tr>
-</tbody>
-</table>
-<p>The emphasis shifts, but the meaning stays the same because the <strong>endings</strong> tell us what's the subject and what's the object.</p>
-<hr /></div>
-    </div>
-  
-    <div class="card section-practice">
-      <h3>Practice</h3>
-      <div class="md-content"><h2 id="exercise1changetoaccusative">Exercise 1: Change to Accusative</h2>
-<p>Convert these nominative nouns to accusative:</p>
+<h3 id="section3verbsofinteraction">Section 3: Verbs of Interaction</h3>
+<p>To use this case, you need verbs that "hit" objects. These are <strong>Transitive Verbs</strong>.</p>
 <ol>
-<li>книга → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>газета → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>стіл → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>вікно → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>сумка → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>журнал → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-</ol>
-<h2 id="exercise2completethesentences">Exercise 2: Complete the Sentences</h2>
-<p>Add the correct accusative form:</p>
-<ol>
-<li>Я бачу <strong><em><em></em></strong><strong><em></em></em></strong>_ (вікно).</li>
-<li>Вона читає <strong><em><em></em></strong><strong><em></em></em></strong>_ (газета).</li>
-<li>Він несе <strong><em><em></em></strong><strong><em></em></em></strong>_ (валіза).</li>
-<li>Ми відкриваємо <strong><em><em></em></strong><strong><em></em></em></strong>_ (двері).</li>
-<li>Ти маєш <strong><em><em></em></strong><strong><em></em></em></strong>_ (паспорт)?</li>
-</ol>
-<h2 id="exercise3translatetoukrainian">Exercise 3: Translate to Ukrainian</h2>
-<ol>
-<li>I see the book. → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>She opens the window. → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>They read the newspaper. → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>He takes the bag. → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-</ol>
-<hr /></div>
-    </div>
-  
-    <div class="card section-content">
-      <h3>Production</h3>
-      <div class="md-content"><h2 id="taskmybelongings">Task: My Belongings</h2>
-<p>Describe 5 things you have using "Я маю…":</p>
-<ol>
-<li>Я маю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Я маю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Я маю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Я маю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Я маю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-</ol>
-<h2 id="taskdailyactions">Task: Daily Actions</h2>
-<p>Describe what you do with objects in your daily life:</p>
-<p><strong>Зранку (In the morning):</strong></p>
+<li><p><strong>Бачити</strong> (To see) - <em>Class II</em></p>
 <ul>
-<li>Я відкриваю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Я беру <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-</ul>
-<p><strong>На роботі/в школі (At work/school):</strong></p>
+<li>Я бачу проблему. (I see a problem.)</li></ul></li>
+<li><p><strong>Чути</strong> (To hear) - <em>Class I</em> (stem: чу-)</p>
 <ul>
-<li>Я читаю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Я пишу <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-</ul>
-<p><strong>Ввечері (In the evening):</strong></p>
+<li>Ти чуєш музику? (Do you hear the music?)</li></ul></li>
+<li><p><strong>Брати</strong> (To take) - <em>Class I</em> (stem: бер-)</p>
 <ul>
-<li>Я вмикаю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Я закриваю <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
+<li>Я беру каву. (I take/order coffee.)</li></ul></li>
+<li><p><strong>Давати</strong> (To give) - <em>Class I</em> (stem: да-)</p>
+<ul>
+<li>Дайте, будь ласка, меню. (Give, please, the menu.)</li></ul></li>
+<li><p><strong>Мати</strong> (To have) - <em>Class I</em></p>
+<ul>
+<li>Я маю ідею. (I have an idea.)</li></ul></li>
+<li><p><strong>Любити</strong> (To love/like) - <em>Class II</em></p>
+<ul>
+<li>Він любить піцу. (He likes pizza.)</li></ul>
+<blockquote>
+  <p>❤️ <strong>Deep Dive: The Verb "To Love"</strong><br />
+  This verb is special. It connects you to the world.<br />
+  Ukrainians use it for food, friends, and hobbies.</p>
+  <ul>
+  <li><strong>Pattern:</strong> Я люблю (I love) + Accusative.</li>
+  <li>"Я люблю каву" (I love coffee).</li>
+  <li>"Я люблю музику" (I love music).<br />
+  Notice the conjugation quirks: <strong>Я любЛю</strong>, <strong>Ти любИш</strong>. This 'L' appears only in the 'I' form. It is called the "fleeting L". It makes the sound softer.</li></ul>
+</blockquote></li>
+</ol>
+<h3 id="section4thehavetrapmati">Section 4: The "Have" Trap (Mati)</h3>
+<p>In English, "I have a passport" is simple.<br />
+In Ukrainian, <code>Мати</code> (To have) is a very useful Class I verb.</p>
+<ul>
+<li><strong>Я маю</strong> (I have)</li>
+<li><strong>Ти маєш</strong> (You have)</li>
+<li><strong>Він має</strong> (He has)</li>
 </ul>
-<hr />
-<hr />
+<p>But there is a secret: Ukrainians often use a different structure ("У мене є…").<br />
+However, for A1, <strong>"Я маю…"</strong> is perfect, clear, and correct. Use it!</p>
+<ul>
+<li>"Я маю квиток." (I have a ticket).</li>
+<li>"Я маю візу." (I have a visa).</li>
+</ul>
+<blockquote>
+  <p>🌍 <strong>Cultural Note: The Power of Giving</strong><br />
+  The verb <strong>Давати</strong> (To give) is culturally huge. Hospitality is about giving.<br />
+  When you visit someone, you bring a <strong>подарунок</strong> (gift).</p>
+  <ul>
+  <li>"Це подарунок для тебе." (This is a gift for you).</li>
+  <li>"Я даю тобі подарунок." (I give you a gift - <em>Note: 'You' changes case here, but let's just smile and hand it over for now!</em>)</li>
+  </ul>
+</blockquote>
+<h3 id="deepdivethelaserbeamtransitivity">Deep Dive: The Laser Beam (Transitivity)</h3>
+<p>Why do some verbs trigger this change and others don't?<br />
+It depends on if the action "transfers" to an object.</p>
+<ul>
+<li><strong>Sleep (Спати):</strong> You sleep. The action stays with you. Nothing else is affected. (Intransitive).</li>
+<li><strong>Read (Читати):</strong> You read… <em>something</em>. The action hits the book. (Transitive).</li>
+</ul>
+<p>In Ukrainian, you must feel this "hit".</p>
+<ul>
+<li>Я йду (I go) -&gt; No object.</li>
+<li>Я бачу (I see) -&gt; Object needed! -&gt; <strong>Accusative Shield ON</strong>.</li>
+</ul>
+<h2 id="practice">practice</h2>
+<p><strong>Drill 1: The Gender Check</strong><br />
+Is it Feminine? If YES -&gt; Change. If NO -&gt; Relax.</p>
+<ol>
+<li><strong>Кава</strong> (F) -&gt; <strong>Каву</strong>.</li>
+<li><strong>Чай</strong> (M) -&gt; <strong>Чай</strong>.</li>
+<li><strong>Віза</strong> (F) -&gt; <strong>Візу</strong>.</li>
+<li><strong>Паспорт</strong> (M) -&gt; <strong>Паспорт</strong>.</li>
+</ol>
+<p><strong>Drill 2: The "Have" Pattern</strong><br />
+Practice saying you have things.</p>
+<ul>
+<li>Я маю (I have) + Книга (Book) = Я маю <strong>книгу</strong>.</li>
+<li>Ти маєш (You have) + Квиток (Ticket) = Ти маєш <strong>квиток</strong>.</li>
+<li>Він має (He has) + Проблема (Problem) = Він має <strong>проблему</strong>.</li>
+</ul>
+<p><strong>Drill 3: The Order</strong><br />
+"I want…" (Я хочу…).</p>
+<ul>
+<li>…water. -&gt; Я хочу <strong>воду</strong>.</li>
+<li>…pizza. -&gt; Я хочу <strong>піцу</strong>.</li>
+<li>…soup. -&gt; Я хочу <strong>борщ</strong>.</li>
+</ul>
+<h2 id="production">production</h2>
+<p><strong>Scenario 1: The Lost Tourist</strong><br />
+You are at the airport. You lost your bag.</p>
+<ul>
+<li><strong>Security:</strong> Що ви шукаєте? (What are you looking for?)</li>
+<li><strong>You:</strong> Я не бачу <strong>валізу</strong>. (I don't see the suitcase).</li>
+<li><strong>Security:</strong> Яка вона? (What is it like?)</li>
+<li><strong>You:</strong> Це велика <strong>валіза</strong>.</li>
+<li><strong>Security:</strong> Це ваша <strong>сумка</strong>?</li>
+<li><strong>You:</strong> Так, я маю <strong>сумку</strong>! Дякую!</li>
+</ul>
+<p><strong>Scenario 2: The Gift</strong><br />
+You give a friend a book.</p>
+<ul>
+<li><strong>You:</strong> Привіт! Я маю <strong>подарунок</strong>.</li>
+<li><strong>Friend:</strong> О! Що це?</li>
+<li><strong>You:</strong> Це цікава <strong>книга</strong>.</li>
+<li><strong>Friend:</strong> Дякую! Я люблю цю <strong>книгу</strong>.</li>
+</ul>
+<blockquote>
+  <p>⚡ <strong>Language Link: The Genitive Shadow</strong><br />
+  We mentioned "He drinks milk" (Accusative).<br />
+  If he does NOT drink milk?<br />
+  "Він не п'є молок<strong>а</strong>."<br />
+  When you negate, the Accusative often turns into the <strong>Genitive</strong>. We will explore this "Case of Absence" soon. For now, keep your sentences positive!</p>
+</blockquote>
 <hr /></div>
     </div>
   
       
-    <div class="card section-summary">
-      <h3>📋 Summary</h3>
-      <div class="md-content"><p>In this module, you learned:</p>
-<ol>
-<li><strong>Accusative case</strong> marks the direct object of transitive verbs</li>
-<li><strong>Inanimate masculine nouns</strong>: no change (стіл → стіл)</li>
-<li><strong>Feminine nouns -а</strong>: change to -у (книга → книгу)</li>
-<li><strong>Feminine nouns -я</strong>: change to -ю (земля → землю)</li>
-<li><strong>Neuter nouns</strong>: no change (вікно → вікно)</li>
-<li><strong>Transitive verbs</strong>: бачити, чути, брати, мати, нести, класти…</li>
-</ol>
-<p><strong>Key patterns:</strong></p>
-<ul>
-<li>Я бачу книгу. (I see the book.)</li>
-<li>Вона читає газету. (She reads the newspaper.)</li>
-<li>Він несе валізу. (He carries the suitcase.)</li>
-<li>Ми відкриваємо вікно. (We open the window.)</li>
-</ul>
-<p>Next module: Accusative for animate nouns (people)! You'll learn that "I see my friend" has different rules than "I see the table."</p></div>
-    </div>
-  
       <div class="btn-group">
         <button class="btn btn-primary" onclick="showSection('activity-0')">Activities →</button>
       </div>
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Accusative Form Recognition</h3>
-      <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container"></div>
-      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+    <section id="activity-0" class="section"><div class="card"><h3>The Changers</h3>
+      <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/40</span></div>
+      <div class="sort-pool" id="activity-0-pool"><div class="sort-items" id="activity-0-items"></div></div>
+      <div class="sort-groups" id="activity-0-groups"></div>
+      <div class="completion-message" id="activity-0-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Verb and Object Pairs</h3>
-      <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-1-container"><svg class="match-lines" id="activity-1-lines"></svg>
-        <div class="match-column" id="activity-1-left"></div>
-        <div class="match-column" id="activity-1-right"></div>
-      </div>
-      <div class="completion-message" id="activity-1-complete"><h3>Perfect!</h3></div>
+    <section id="activity-1" class="section"><div class="card"><h3>The Feminine Ending</h3>
+      <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/16</span></div>
+      <div id="activity-1-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-1-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Changes vs No Change</h3>
-      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
-      <div class="sort-pool" id="activity-2-pool"><div class="sort-items" id="activity-2-items"></div></div>
-      <div class="sort-groups" id="activity-2-groups"></div>
-      <div class="completion-message" id="activity-2-complete"><h3>All Sorted!</h3></div>
+    <section id="activity-2" class="section"><div class="card"><h3>Verb Logic</h3>
+      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/16</span></div>
+      <div class="match-container" id="activity-2-container"><svg class="match-lines" id="activity-2-lines"></svg>
+        <div class="match-column" id="activity-2-left"></div>
+        <div class="match-column" id="activity-2-right"></div>
+      </div>
+      <div class="completion-message" id="activity-2-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Accusative Rules</h3>
+    <section id="activity-3" class="section"><div class="card"><h3>True or False?</h3>
       <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
       <div id="activity-3-container"></div>
       <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Complete with Accusative</h3>
+    <section id="activity-4" class="section"><div class="card"><h3>General Mix</h3>
       <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
       <div id="activity-4-container" class="fill-container"></div>
       <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Nominative to Accusative</h3>
+    <section id="activity-5" class="section"><div class="card"><h3>Accusative Builder</h3>
       <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-5-container"><svg class="match-lines" id="activity-5-lines"></svg>
-        <div class="match-column" id="activity-5-left"></div>
-        <div class="match-column" id="activity-5-right"></div>
-      </div>
-      <div class="completion-message" id="activity-5-complete"><h3>Perfect!</h3></div>
+      <div id="activity-5-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-5-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Object Vocabulary</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>Sentence Builder</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
       <div id="activity-6-container" class="order-container"></div>
       <div class="completion-message" id="activity-6-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
     </div></section>
 
-    <section id="activity-7" class="section"><div class="card"><h3>Verb + Object Sentences</h3>
-      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/12</span></div>
-      <div id="activity-7-container" class="fill-container"></div>
-      <div class="completion-message" id="activity-7-complete"><h3>Complete!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+    <section id="activity-7" class="section"><div class="card"><h3>Travel Mode</h3>
+      <p>Activity type: translate</p>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('activity-8')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-8" class="section"><div class="card"><h3>Object Scramble</h3>
+      <div class="score-display"><span class="score"><span id="activity-8-score">0</span>/12</span></div>
+      <div id="activity-8-container" class="order-container"></div>
+      <div class="completion-message" id="activity-8-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-8')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
-        <h3>Словник (25)</h3>
+        <h3>Словник (26)</h3>
         <div class="vocab-table-container">
           <table class="vocab-table">
             <thead><tr>
@@ -1130,7 +812,7 @@ footer {
     <th>Переклад</th>
     <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">бачити (bachyty)</td><td class="vocab-ipa">/ˈbɑtʃɪtɪ/</td><td class="vocab-en">to see</td><td class="vocab-note">Class II</td></tr><tr><td class="vocab-uk">чути (chuty)</td><td class="vocab-ipa">/ˈtʃutɪ/</td><td class="vocab-en">to hear</td><td class="vocab-note">Class II</td></tr><tr><td class="vocab-uk">брати (braty)</td><td class="vocab-ipa">/ˈbrɑtɪ/</td><td class="vocab-en">to take</td><td class="vocab-note">Class I, беру, береш</td></tr><tr><td class="vocab-uk">давати (davaty)</td><td class="vocab-ipa">/dɑˈvɑtɪ/</td><td class="vocab-en">to give</td><td class="vocab-note">Class I, даю, даєш</td></tr><tr><td class="vocab-uk">мати (maty)</td><td class="vocab-ipa">/ˈmɑtɪ/</td><td class="vocab-en">to have</td><td class="vocab-note">Class I, маю, маєш</td></tr><tr><td class="vocab-uk">нести (nesty)</td><td class="vocab-ipa">/ˈnɛstɪ/</td><td class="vocab-en">to carry</td><td class="vocab-note">Irregular: несу, несеш</td></tr><tr><td class="vocab-uk">класти (klasty)</td><td class="vocab-ipa">/ˈklɑstɪ/</td><td class="vocab-en">to put</td><td class="vocab-note">Class I, кладу, кладеш</td></tr><tr><td class="vocab-uk">відкривати (vidkryvaty)</td><td class="vocab-ipa">/vʲidkrɪˈvɑtɪ/</td><td class="vocab-en">to open</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">закривати (zakryvaty)</td><td class="vocab-ipa">/zɑkrɪˈvɑtɪ/</td><td class="vocab-en">to close</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">вмикати (vmykaty)</td><td class="vocab-ipa">/vmɪˈkɑtɪ/</td><td class="vocab-en">to turn on</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">вимикати (vymykaty)</td><td class="vocab-ipa">/vɪmɪˈkɑtɪ/</td><td class="vocab-en">to turn off</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">показувати (pokazuvaty)</td><td class="vocab-ipa">/pɔkɑˈzuvɑtɪ/</td><td class="vocab-en">to show</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">ховати (khovaty)</td><td class="vocab-ipa">/xɔˈvɑtɪ/</td><td class="vocab-en">to hide</td><td class="vocab-note">Class I</td></tr><tr><td class="vocab-uk">газета (hazeta)</td><td class="vocab-ipa">/ɦɑˈzɛtɑ/</td><td class="vocab-en">newspaper</td><td class="vocab-note">Acc: газету</td></tr><tr><td class="vocab-uk">журнал (zhurnal)</td><td class="vocab-ipa">/ʒurˈnɑl/</td><td class="vocab-en">magazine</td><td class="vocab-note">Acc: журнал</td></tr><tr><td class="vocab-uk">лист (lyst)</td><td class="vocab-ipa">/lɪst/</td><td class="vocab-en">letter</td><td class="vocab-note">Acc: лист</td></tr><tr><td class="vocab-uk">конверт (konvert)</td><td class="vocab-ipa">/kɔnˈvɛrt/</td><td class="vocab-en">envelope</td><td class="vocab-note">Acc: конверт</td></tr><tr><td class="vocab-uk">посилка (posylka)</td><td class="vocab-ipa">/pɔˈsɪlkɑ/</td><td class="vocab-en">package</td><td class="vocab-note">Acc: посилку</td></tr><tr><td class="vocab-uk">подарунок (podarunok)</td><td class="vocab-ipa">/pɔdɑˈrunɔk/</td><td class="vocab-en">gift</td><td class="vocab-note">Acc: подарунок</td></tr><tr><td class="vocab-uk">квиток (kvytok)</td><td class="vocab-ipa">/kvɪˈtɔk/</td><td class="vocab-en">ticket</td><td class="vocab-note">Acc: квиток</td></tr><tr><td class="vocab-uk">паспорт (pasport)</td><td class="vocab-ipa">/ˈpɑspɔrt/</td><td class="vocab-en">passport</td><td class="vocab-note">Acc: паспорт</td></tr><tr><td class="vocab-uk">документ (dokument)</td><td class="vocab-ipa">/dɔkuˈmɛnt/</td><td class="vocab-en">document</td><td class="vocab-note">Acc: документ</td></tr><tr><td class="vocab-uk">сумка (sumka)</td><td class="vocab-ipa">/ˈsumkɑ/</td><td class="vocab-en">bag</td><td class="vocab-note">Acc: сумку</td></tr><tr><td class="vocab-uk">валіза (valiza)</td><td class="vocab-ipa">/vɑˈlʲizɑ/</td><td class="vocab-en">suitcase</td><td class="vocab-note">Acc: валізу</td></tr><tr><td class="vocab-uk">коробка (korobka)</td><td class="vocab-ipa">/kɔˈrɔbkɑ/</td><td class="vocab-en">box</td><td class="vocab-note">Acc: коробку</td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">бачити</td><td class="vocab-ipa">/ˈbɑtʃɪtɪ/</td><td class="vocab-en">to see</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('бачити')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">чути</td><td class="vocab-ipa">/ˈtʃutɪ/</td><td class="vocab-en">to hear</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('чути')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">брати</td><td class="vocab-ipa">/ˈbrɑtɪ/</td><td class="vocab-en">to take</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('брати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">давати</td><td class="vocab-ipa">/dɑˈvɑtɪ/</td><td class="vocab-en">to give</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('давати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">мати</td><td class="vocab-ipa">/ˈmɑtɪ/</td><td class="vocab-en">to have</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('мати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">нести</td><td class="vocab-ipa">/nɛsˈtɪ/</td><td class="vocab-en">to carry</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('нести')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">класти</td><td class="vocab-ipa">/ˈklɑstɪ/</td><td class="vocab-en">to put</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('класти')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">відкривати</td><td class="vocab-ipa">/vʲidkrɪˈvɑtɪ/</td><td class="vocab-en">to open</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('відкривати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">закривати</td><td class="vocab-ipa">/zɑkrɪˈvɑtɪ/</td><td class="vocab-en">to close</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('закривати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">показувати</td><td class="vocab-ipa">/pɔˈkɑzuvɑtɪ/</td><td class="vocab-en">to show</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('показувати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">шукати</td><td class="vocab-ipa">/ʃuˈkɑtɪ/</td><td class="vocab-en">to look for</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('шукати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">знаходити</td><td class="vocab-ipa">/znɑˈxɔdɪtɪ/</td><td class="vocab-en">to find</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('знаходити')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">газета</td><td class="vocab-ipa">/ɦɑˈzɛtɑ/</td><td class="vocab-en">newspaper</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('газета')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">журнал</td><td class="vocab-ipa">/ʒurˈnɑl/</td><td class="vocab-en">magazine</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('журнал')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">лист</td><td class="vocab-ipa">/lɪst/</td><td class="vocab-en">letter</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('лист')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">конверт</td><td class="vocab-ipa">/kɔnˈvɛrt/</td><td class="vocab-en">envelope</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('конверт')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">посилка</td><td class="vocab-ipa">/pɔˈsɪlkɑ/</td><td class="vocab-en">parcel</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('посилка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">подарунок</td><td class="vocab-ipa">/pɔdɑˈrunɔk/</td><td class="vocab-en">gift</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('подарунок')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">квиток</td><td class="vocab-ipa">/kvɪˈtɔk/</td><td class="vocab-en">ticket</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('квиток')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">паспорт</td><td class="vocab-ipa">/ˈpɑspɔrt/</td><td class="vocab-en">passport</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('паспорт')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">документ</td><td class="vocab-ipa">/dɔkuˈmɛnt/</td><td class="vocab-en">document</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('документ')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">сумка</td><td class="vocab-ipa">/ˈsumkɑ/</td><td class="vocab-en">bag</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('сумка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">валіза</td><td class="vocab-ipa">/vɑˈlʲizɑ/</td><td class="vocab-en">suitcase</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('валіза')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">коробка</td><td class="vocab-ipa">/kɔˈrɔbkɑ/</td><td class="vocab-en">box</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('коробка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">проблема</td><td class="vocab-ipa">/prɔˈblɛmɑ/</td><td class="vocab-en">problem</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('проблема')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">ідея</td><td class="vocab-ipa">/iˈdɛjɑ/</td><td class="vocab-en">idea</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('ідея')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1142,8 +824,8 @@ footer {
   </main><footer>Module 11 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"quiz","title":"Accusative Form Recognition","data":{"type":"quiz","questions":[{"question":"книга →","options":["книгу","книга","книгою","книги"],"correctIndex":0,"explanation":"Feminine nouns ending in -а change to -у in accusative."},{"question":"стіл →","options":["стіл","столу","столом","стола"],"correctIndex":0,"explanation":"Masculine inanimate nouns don't change in accusative."},{"question":"газета →","options":["газету","газета","газетою","газети"],"correctIndex":0,"explanation":"Feminine nouns ending in -а change to -у in accusative."},{"question":"вікно →","options":["вікно","вікна","вікном","вікну"],"correctIndex":0,"explanation":"Neuter nouns don't change in accusative."},{"question":"сумка →","options":["сумку","сумка","сумкою","сумки"],"correctIndex":0,"explanation":"Feminine nouns ending in -а change to -у in accusative."},{"question":"журнал →","options":["журнал","журналу","журналом","журнала"],"correctIndex":0,"explanation":"Masculine inanimate nouns don't change in accusative."},{"question":"валіза →","options":["валізу","валіза","валізою","валізи"],"correctIndex":0,"explanation":"Feminine nouns ending in -а change to -у in accusative."},{"question":"паспорт →","options":["паспорт","паспорта","паспорту","паспортом"],"correctIndex":0,"explanation":"Masculine inanimate nouns don't change in accusative."},{"question":"коробка →","options":["коробку","коробка","коробкою","коробки"],"correctIndex":0,"explanation":"Feminine nouns ending in -а change to -у in accusative."},{"question":"документ →","options":["документ","документа","документу","документом"],"correctIndex":0,"explanation":"Masculine inanimate nouns don't change in accusative."},{"question":"посилка →","options":["посилку","посилка","посилкою","посилки"],"correctIndex":0,"explanation":"Feminine nouns ending in -а change to -у in accusative."},{"question":"квиток →","options":["квиток","квитка","квитку","квитком"],"correctIndex":0,"explanation":"Masculine inanimate nouns don't change in accusative."}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-1","type":"match-up","title":"Verb and Object Pairs","data":{"type":"match-up","pairs":[{"left":"читати","right":"книгу"},{"left":"бачити","right":"вікно"},{"left":"нести","right":"сумку"},{"left":"відкривати","right":"двері"},{"left":"вмикати","right":"телевізор"},{"left":"закривати","right":"вікно"},{"left":"брати","right":"паспорт"},{"left":"давати","right":"подарунок"},{"left":"чути","right":"музику"},{"left":"ховати","right":"ключ"},{"left":"показувати","right":"документ"},{"left":"класти","right":"коробку"}],"shuffleRight":true}},{"id":"activity-2","type":"group-sort","title":"Changes vs No Change","data":{"type":"group-sort","groups":[{"id":"changes-in-accusative","name":"Changes in Accusative","items":["книга → книгу","сумка → сумку","газета → газету","валіза → валізу","коробка → коробку","посилка → посилку"]},{"id":"no-change-in-accusative","name":"No Change in Accusative","items":["стіл → стіл","журнал → журнал","паспорт → паспорт","документ → документ","вікно → вікно","квиток → квиток"]}],"shuffleItems":true}},{"id":"activity-3","type":"true-false","title":"Accusative Rules","data":{"type":"true-false","statements":[{"statement":"Masculine inanimate nouns change their ending in the accusative.","isTrue":false,"explanation":"False. Masculine inanimate nouns keep the same form: стіл → стіл."},{"statement":"Feminine nouns ending in -а change to -у in the accusative.","isTrue":true,"explanation":"True. книга → книгу, сумка → сумку."},{"statement":"Neuter nouns change their ending in the accusative.","isTrue":false,"explanation":"False. Neuter nouns stay the same: вікно → вікно."},{"statement":"The accusative case marks the direct object of a verb.","isTrue":true,"explanation":"True. In 'Я читаю книгу', книгу is the direct object."},{"statement":"Word order in Ukrainian is fixed like in English.","isTrue":false,"explanation":"False. Ukrainian word order is flexible because case endings mark grammatical roles."},{"statement":"Feminine nouns ending in -я change to -ю in the accusative.","isTrue":true,"explanation":"True. земля → землю, пісня → пісню."},{"statement":"Transitive verbs take objects in the accusative case.","isTrue":true,"explanation":"True. Verbs like бачити, читати, and брати require accusative objects."},{"statement":"The accusative case is used for the subject of a sentence.","isTrue":false,"explanation":"False. The nominative case marks the subject; accusative marks the object."},{"statement":"Inanimate masculine nouns look the same in nominative and accusative.","isTrue":true,"explanation":"True. стіл, журнал, паспорт don't change form."},{"statement":"Both вікно and двері don't change in the accusative case.","isTrue":true,"explanation":"True. Neuter nouns and these pluralia tantum stay unchanged."},{"statement":"All feminine nouns end in -ою in the accusative case.","isTrue":false,"explanation":"False. Feminine nouns end in -у or -ю in accusative, not -ою."},{"statement":"You can change Ukrainian word order without changing meaning because of case endings.","isTrue":true,"explanation":"True. \"Я читаю книгу\" and \"Книгу читаю я\" mean the same thing."}]}},{"id":"activity-4","type":"fill-blank","title":"Complete with Accusative","data":{"type":"fill-blank","items":[{"prompt":"Я читаю ___.","answer":"книгу","options":["книгу","книга","книги","книгою"]},{"prompt":"Вона бачить ___.","answer":"стіл","options":["стіл","столу","столом","стола"]},{"prompt":"Він несе ___.","answer":"валізу","options":["валізу","валіза","валізи","валізою"]},{"prompt":"Ми відкриваємо ___.","answer":"вікно","options":["вікно","вікна","вікном","вікну"]},{"prompt":"Ти маєш ___?","answer":"паспорт","options":["паспорт","паспорта","паспорту","паспортом"]},{"prompt":"Вони читають ___.","answer":"газету","options":["газету","газета","газети","газетою"]},{"prompt":"Я беру ___.","answer":"сумку","options":["сумку","сумка","сумки","сумкою"]},{"prompt":"Він вмикає ___.","answer":"телевізор","options":["телевізор","телевізора","телевізору","телевізором"]},{"prompt":"Вона показує ___.","answer":"фото","options":["фото","фота","фоту","фотом"]},{"prompt":"Ми закриваємо ___.","answer":"двері","options":["двері","дверей","дверям","дверима"]},{"prompt":"Ти чуєш ___?","answer":"музику","options":["музику","музика","музики","музикою"]},{"prompt":"Я даю ___.","answer":"подарунок","options":["подарунок","подарунка","подарунку","подарунком"]}]}},{"id":"activity-5","type":"match-up","title":"Nominative to Accusative","data":{"type":"match-up","pairs":[{"left":"книга","right":"книгу"},{"left":"газета","right":"газету"},{"left":"сумка","right":"сумку"},{"left":"валіза","right":"валізу"},{"left":"коробка","right":"коробку"},{"left":"посилка","right":"посилку"},{"left":"стіл","right":"стіл"},{"left":"журнал","right":"журнал"},{"left":"вікно","right":"вікно"},{"left":"паспорт","right":"паспорт"},{"left":"документ","right":"документ"},{"left":"квиток","right":"квиток"}],"shuffleRight":true}},{"id":"activity-6","type":"anagram","title":"Object Vocabulary","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["у","к","н","и","г"],"answer":"книгу","translation":"book"},{"letters":["у","т","з","е","г","а"],"answer":"газету","translation":"newspaper"},{"letters":["у","к","м","с","у"],"answer":"сумку","translation":"bag"},{"letters":["р","о","п","т","п","с","а"],"answer":"паспорт","translation":"passport"},{"letters":["к","и","т","о","к","в"],"answer":"квиток","translation":"ticket"},{"letters":["н","о","к","і","в"],"answer":"вікно","translation":"window"},{"letters":["л","і","т","с"],"answer":"стіл","translation":"table"},{"letters":["а","л","ж","р","н","у"],"answer":"журнал","translation":"magazine"},{"letters":["к","у","р","а","д","н","о","п","о"],"answer":"подарунок","translation":"gift"},{"letters":["т","м","е","н","к","д","о","у"],"answer":"документ","translation":"document"},{"letters":["у","з","і","л","а","в"],"answer":"валізу","translation":"suitcase"},{"letters":["у","к","л","и","с","о","п"],"answer":"посилку","translation":"package"}]}},{"id":"activity-7","type":"fill-blank","title":"Verb + Object Sentences","data":{"type":"fill-blank","items":[{"prompt":"Що ти бачиш? — Я бачу ___.","answer":"вікно","options":["вікно","вікна","вікном","вікну"]},{"prompt":"Що вона читає? — Вона читає ___.","answer":"журнал","options":["журнал","журналу","журналом","журнала"]},{"prompt":"Що він несе? — Він несе ___.","answer":"коробку","options":["коробку","коробка","коробки","коробкою"]},{"prompt":"Що ви відкриваєте? — Ми відкриваємо ___.","answer":"двері","options":["двері","дверей","дверям","дверима"]},{"prompt":"Що вони вимикають? — Вони вимикають ___.","answer":"світло","options":["світло","світла","світлом","світлу"]},{"prompt":"Що ти ховаєш? — Я ховаю ___.","answer":"ключ","options":["ключ","ключа","ключем","ключу"]},{"prompt":"Що він дає? — Він дає ___.","answer":"конверт","options":["конверт","конверта","конверту","конвертом"]},{"prompt":"Що вона бере? — Вона бере ___.","answer":"посилку","options":["посилку","посилка","посилки","посилкою"]},{"prompt":"Що ми показуємо? — Ми показуємо ___.","answer":"документ","options":["документ","документа","документу","документом"]},{"prompt":"Що ти кладеш? — Я кладу ___.","answer":"книгу","options":["книгу","книга","книги","книгою"]},{"prompt":"Що він закриває? — Він закриває ___.","answer":"вікно","options":["вікно","вікна","вікном","вікну"]},{"prompt":"Що вона чує? — Вона чує ___.","answer":"музику","options":["музику","музика","музики","музикою"]}]}}];
-    const vocabData = [{"uk":"бачити (bachyty)","translit":"","en":"to see","note":"Class II"},{"uk":"чути (chuty)","translit":"","en":"to hear","note":"Class II"},{"uk":"брати (braty)","translit":"","en":"to take","note":"Class I, беру, береш"},{"uk":"давати (davaty)","translit":"","en":"to give","note":"Class I, даю, даєш"},{"uk":"мати (maty)","translit":"","en":"to have","note":"Class I, маю, маєш"},{"uk":"нести (nesty)","translit":"","en":"to carry","note":"Irregular: несу, несеш"},{"uk":"класти (klasty)","translit":"","en":"to put","note":"Class I, кладу, кладеш"},{"uk":"відкривати (vidkryvaty)","translit":"","en":"to open","note":"Class I"},{"uk":"закривати (zakryvaty)","translit":"","en":"to close","note":"Class I"},{"uk":"вмикати (vmykaty)","translit":"","en":"to turn on","note":"Class I"},{"uk":"вимикати (vymykaty)","translit":"","en":"to turn off","note":"Class I"},{"uk":"показувати (pokazuvaty)","translit":"","en":"to show","note":"Class I"},{"uk":"ховати (khovaty)","translit":"","en":"to hide","note":"Class I"},{"uk":"газета (hazeta)","translit":"","en":"newspaper","note":"Acc: газету"},{"uk":"журнал (zhurnal)","translit":"","en":"magazine","note":"Acc: журнал"},{"uk":"лист (lyst)","translit":"","en":"letter","note":"Acc: лист"},{"uk":"конверт (konvert)","translit":"","en":"envelope","note":"Acc: конверт"},{"uk":"посилка (posylka)","translit":"","en":"package","note":"Acc: посилку"},{"uk":"подарунок (podarunok)","translit":"","en":"gift","note":"Acc: подарунок"},{"uk":"квиток (kvytok)","translit":"","en":"ticket","note":"Acc: квиток"},{"uk":"паспорт (pasport)","translit":"","en":"passport","note":"Acc: паспорт"},{"uk":"документ (dokument)","translit":"","en":"document","note":"Acc: документ"},{"uk":"сумка (sumka)","translit":"","en":"bag","note":"Acc: сумку"},{"uk":"валіза (valiza)","translit":"","en":"suitcase","note":"Acc: валізу"},{"uk":"коробка (korobka)","translit":"","en":"box","note":"Acc: коробку"}];
+    const activitiesData = [{"id":"activity-0","type":"group-sort","title":"The Changers","data":{"type":"group-sort","groups":[{"id":"change","name":"Change","items":["Книга","Газета","Посилка (Parcel)","Сумка (Bag)","Валіза (Suitcase)","Віза","Кава","Вода","Лампа","Гітара","Проблема","Робота","Сім'я","Земля","Кухня","Вулиця (Street)","Кімната","Машина","Адреса (Address)","Карта (Map)"],"nameUk":"-У/-Ю"},{"id":"no-change","name":"No Change","items":["Паспорт","Квиток (Ticket)","Лист (Letter)","Конверт (Envelope)","Подарунок (Gift)","Документ","Журнал","Телефон","Комп'ютер","Вікно","Море","Місто","Сонце","Озеро","Прізвище (Surname)","Ім'я (Name)","Чай","Борщ","Салат","Автобус"]}],"shuffleItems":true}},{"id":"activity-1","type":"fill-blank","title":"The Feminine Ending","data":{"type":"fill-blank","items":[{"prompt":"Я читаю ___ (газета).","answer":"газету","hints":["газета"],"options":["газету","газета","газети","газеті"]},{"prompt":"Він має ___ (проблема).","answer":"проблему","hints":["проблема"],"options":["проблему","проблема","проблеми","проблемі"]},{"prompt":"Ми слухаємо ___ (музика).","answer":"музику","hints":["музика"],"options":["музику","музика","музики","музиці"]},{"prompt":"Дайте, будь ласка, ___ (вода).","answer":"воду","hints":["вода"],"options":["воду","вода","води","воді"]},{"prompt":"Я бачу ___ (машина).","answer":"машину","hints":["машина"],"options":["машину","машина","машини","машині"]},{"prompt":"Ти любиш ___ (піца)?","answer":"піцу","hints":["піца"],"options":["піцу","піца","піци","піці"]},{"prompt":"Вони мають ___ (віза).","answer":"візу","hints":["віза"],"options":["візу","віза","візи","візі"]},{"prompt":"Вона бере ___ (сумка).","answer":"сумку","hints":["сумка"],"options":["сумку","сумка","сумки","сумці"]},{"prompt":"Я бачу ___ (вулиця).","answer":"вулицю","hints":["вулиця"],"options":["вулицю","вулиця","вулиці","вулиці"]},{"prompt":"Він відкриває ___ (коробка).","answer":"коробку","hints":["коробка"],"options":["коробку","коробка","коробки","коробці"]},{"prompt":"Ми маємо ___ (ідея).","answer":"ідею","hints":["ідея"],"options":["ідею","ідея","ідеї","ідеї"]},{"prompt":"Ти бачиш ___ (карта)?","answer":"карту","hints":["карта"],"options":["карту","карта","карти","карті"]},{"prompt":"Я люблю ___ (кава).","answer":"каву","hints":["кава"],"options":["каву","кава","кави","каві"]},{"prompt":"Він бере ___ (газета).","answer":"газету","hints":["газета"],"options":["газету","газета","газети","газеті"]},{"prompt":"Вона має ___ (сестра).","answer":"сестру","hints":["сестра"],"options":["сестру","сестра","сестри","сестрі"]},{"prompt":"Ми бачимо ___ (ріка).","answer":"ріку","hints":["ріка"],"options":["ріку","ріка","ріки","ріці"]}]}},{"id":"activity-2","type":"match-up","title":"Verb Logic","data":{"type":"match-up","pairs":[{"left":"Я читаю...","right":"книгу."},{"left":"Я слухаю...","right":"музику."},{"left":"Я п'ю...","right":"воду."},{"left":"Я їм...","right":"рибу."},{"left":"Я бачу...","right":"проблему."},{"left":"Я купую (buy)...","right":"квиток."},{"left":"Я відкриваю...","right":"вікно."},{"left":"Я закриваю...","right":"двері."},{"left":"Я маю...","right":"пасполрт."},{"left":"Я несу (carry)...","right":"валізу."},{"left":"Я беру...","right":"меню."},{"left":"Я даю...","right":"подарунок."},{"left":"Я кладу (put)...","right":"рюкзак."},{"left":"Я шукаю (look for)...","right":"вихід."},{"left":"Я знаходжу (find)...","right":"адресу."},{"left":"Я чекаю (wait for)...","right":"автобус."}],"shuffleRight":true}},{"id":"activity-3","type":"quiz","title":"True or False?","data":{"type":"quiz","questions":[{"question":"Masculine Inanimate nouns change in the Accusative.","options":["True","False (Only Feminine changes)"],"correctIndex":1,"explanation":""},{"question":"The ending -А changes to -У.","options":["True","False"],"correctIndex":0,"explanation":""},{"question":"\"Я бачу стіл\" is correct.","options":["True","False (Should be стола)"],"correctIndex":0,"explanation":""},{"question":"\"Я хочу кава\" is correct.","options":["True","False (Should be кавУ)"],"correctIndex":1,"explanation":""},{"question":"Neuter nouns (ending in -О/-Е) do not change.","options":["True","False"],"correctIndex":0,"explanation":""},{"question":"\"Я маю вода\" is correct.","options":["True","False (Should be водУ)"],"correctIndex":1,"explanation":""},{"question":"\"Сумка\" becomes \"Сумку\" in Accusative.","options":["True","False"],"correctIndex":0,"explanation":""},{"question":"\"Паспорт\" becomes \"Паспорту\" in Accusative.","options":["True","False (No change for Inanimate Masculine)"],"correctIndex":1,"explanation":""},{"question":"To say \"I see the city\", you say \"Я бачу місто\".","options":["True","False"],"correctIndex":0,"explanation":""},{"question":"To say \"I see the mom\", you say \"Я бачу маму\".","options":["True","False"],"correctIndex":0,"explanation":""},{"question":"\"Я люблю піца\" is correct.","options":["True","False"],"correctIndex":1,"explanation":""},{"question":"\"Він має квиток\" is correct.","options":["True","False"],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-4","type":"fill-blank","title":"General Mix","data":{"type":"fill-blank","items":[{"prompt":"Це мій ___ (паспорт).","answer":"паспорт","hints":["паспорт"],"options":["паспорт","паспорта","паспорту"]},{"prompt":"Я показую ___ (паспорт).","answer":"паспорт","hints":["паспорт"],"options":["паспорт","паспорта","паспорту"]},{"prompt":"Де твоя ___ (віза)?","answer":"віза","hints":["віза"],"options":["віза","візу","візи"]},{"prompt":"Я маю ___ (віза).","answer":"візу","hints":["віза"],"options":["візу","віза","візи"]},{"prompt":"Це цікава ___ (книга).","answer":"книга","hints":["книга"],"options":["книга","книгу","книги"]},{"prompt":"Ми читаємо ___ (книга).","answer":"книгу","hints":["книга"],"options":["книгу","книга","книги"]},{"prompt":"Ось моя ___ (валіза).","answer":"валіза","hints":["валіза"],"options":["валіза","валізу","валізи"]},{"prompt":"Я беру ___ (валіза).","answer":"валізу","hints":["валіза"],"options":["валізу","валіза","валізи"]},{"prompt":"Це гарний ___ (подарунок).","answer":"подарунок","hints":["подарунок"],"options":["подарунок","подарунка","подарунку"]},{"prompt":"Я даю ___ (подарунок).","answer":"подарунок","hints":["подарунок"],"options":["подарунок","подарунка","подарунку"]},{"prompt":"Це смачна ___ (піца).","answer":"піца","hints":["піца"],"options":["піца","піцу","піци"]},{"prompt":"Я їм ___ (піца).","answer":"піцу","hints":["піца"],"options":["піцу","піца","піци"]}]}},{"id":"activity-5","type":"fill-blank","title":"Accusative Builder","data":{"type":"fill-blank","items":[{"prompt":"Я бачу ___ (table).","answer":"стіл","hints":["table"]},{"prompt":"Я беру ___ (book).","answer":"книгу","hints":["book"]},{"prompt":"Я маю ___ (pen/ruchka).","answer":"ручку","hints":["pen/ruchka"]},{"prompt":"Він їсть ___ (soup).","answer":"суп","hints":["soup"]},{"prompt":"Вона п'є ___ (water).","answer":"воду","hints":["water"]},{"prompt":"Ми любимо ___ (music).","answer":"музику","hints":["music"]},{"prompt":"Я купую ___ (bread/khlib).","answer":"хліб","hints":["bread/khlib"]},{"prompt":"Я читаю ___ (newspaper/hazeta).","answer":"газету","hints":["newspaper/hazeta"]},{"prompt":"Ти знаєш ___ (English/anhliyska).","answer":"англійську","hints":["English/anhliyska"]},{"prompt":"Вони мають ___ (car).","answer":"машину","hints":["car"]},{"prompt":"Я бачу ___ (house/budynok).","answer":"будинок","hints":["house/budynok"]},{"prompt":"Я хочу ___ (pizza).","answer":"піцу","hints":["pizza"]}]}},{"id":"activity-6","type":"unjumble","title":"Sentence Builder","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["має","квиток","Він"],"answer":"Він має квиток."},{"words":["піцу","Ми","любимо"],"answer":"Ми любимо піцу."},{"words":["бачу","Я","сумку","твою"],"answer":"Я бачу твою сумку."},{"words":["паспорт","Покажіть","ваш"],"answer":"Покажіть ваш паспорт."},{"words":["газету","Вона","читає"],"answer":"Вона читає газету."},{"words":["бере","Хто","валізу","?"],"answer":"Хто бере валізу?"},{"words":["воду","Я","п'ю"],"answer":"Я п'ю воду."},{"words":["дає","Він","подарунок"],"answer":"Він дає подарунок."},{"words":["маєш","Ти","ідею","?"],"answer":"Ти маєш ідею?"},{"words":["двері","Ми","закриваємо"],"answer":"Ми закриваємо двері."},{"words":["вікно","Хто","відкриває","?"],"answer":"Хто відкриває вікно?"},{"words":["чую","музику","Я","не"],"answer":"Я не чую музику."}]}},{"id":"activity-7","type":"translate","title":"Travel Mode","data":{"type":"translate","items":[{"source":"I see the ticket.","answer":"Я бачу квиток."},{"source":"I have a bag.","answer":"Я маю сумку."},{"source":"He opens the window.","answer":"Він відкриває вікно."},{"source":"She takes the envelope.","answer":"Вона бере конверт."},{"source":"We have a problem.","answer":"Ми маємо проблему."},{"source":"Give (me) water, please.","answer":"Дайте воду, будь ласка."},{"source":"I do not see the passport.","answer":"Я не бачу ваш паспорт."},{"source":"She is reading a magazine.","answer":"Вона читає журнал."},{"source":"We like the city.","answer":"Ми любимо місто."},{"source":"I am taking the suitcase.","answer":"Я беру валізу."},{"source":"Where is the gift?","answer":"Де подарунок?"},{"source":"He gives a ticket.","answer":"Він дає квиток."}],"direction":"to-uk"}},{"id":"activity-8","type":"anagram","title":"Object Scramble","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["в","и","к","о","т","к"],"answer":"квиток","translation":"Ticket"},{"letters":["п","а","р","т","о","с","п"],"answer":"паспорт","translation":"Passport"},{"letters":["в","і","з","а","і","л"],"answer":"валіза","translation":"Suitcase"},{"letters":["к","у","м","с","а"],"answer":"сумка","translation":"Bag"},{"letters":["з","а","в","і"],"answer":"віза","translation":"Visa"},{"letters":["н","в","е","р","т","о","к"],"answer":"конверт","translation":"Envelope"},{"letters":["д","а","р","у","н","о","к","п","о"],"answer":"подарунок","translation":"Gift"},{"letters":["г","а","з","е","т","а"],"answer":"газета","translation":"Newspaper"},{"letters":["р","н","а","л","ж","у"],"answer":"журнал","translation":"Magazine"},{"letters":["б","к","а","о","р","о"],"answer":"коробка","translation":"Box"},{"letters":["д","к","у","м","о","н","е","т"],"answer":"документ","translation":"Document"},{"letters":["б","а","р","о","м","л","е","п"],"answer":"проблема","translation":"Problem"}]}}];
+    const vocabData = [{"uk":"бачити","translit":"","en":"to see","note":"[🔊](audio_bachyty)"},{"uk":"чути","translit":"","en":"to hear","note":"[🔊](audio_chuty)"},{"uk":"брати","translit":"","en":"to take","note":"[🔊](audio_braty)"},{"uk":"давати","translit":"","en":"to give","note":"[🔊](audio_davaty)"},{"uk":"мати","translit":"","en":"to have","note":"[🔊](audio_maty)"},{"uk":"нести","translit":"","en":"to carry","note":"[🔊](audio_nesty)"},{"uk":"класти","translit":"","en":"to put","note":"[🔊](audio_klasty)"},{"uk":"відкривати","translit":"","en":"to open","note":"[🔊](audio_vidkryvaty)"},{"uk":"закривати","translit":"","en":"to close","note":"[🔊](audio_zakryvaty)"},{"uk":"показувати","translit":"","en":"to show","note":"[🔊](audio_pokazuvaty)"},{"uk":"шукати","translit":"","en":"to look for","note":"[🔊](audio_shukaty)"},{"uk":"знаходити","translit":"","en":"to find","note":"[🔊](audio_znakhodyty)"},{"uk":"газета","translit":"","en":"newspaper","note":"[🔊](audio_hazeta)"},{"uk":"журнал","translit":"","en":"magazine","note":"[🔊](audio_zhurnal)"},{"uk":"лист","translit":"","en":"letter","note":"[🔊](audio_lyst)"},{"uk":"конверт","translit":"","en":"envelope","note":"[🔊](audio_konvert)"},{"uk":"посилка","translit":"","en":"parcel","note":"[🔊](audio_posylka)"},{"uk":"подарунок","translit":"","en":"gift","note":"[🔊](audio_podarunok)"},{"uk":"квиток","translit":"","en":"ticket","note":"[🔊](audio_kvytok)"},{"uk":"паспорт","translit":"","en":"passport","note":"[🔊](audio_pasport)"},{"uk":"документ","translit":"","en":"document","note":"[🔊](audio_dokument)"},{"uk":"сумка","translit":"","en":"bag","note":"[🔊](audio_sumka)"},{"uk":"валіза","translit":"","en":"suitcase","note":"[🔊](audio_valiza)"},{"uk":"коробка","translit":"","en":"box","note":"[🔊](audio_korobka)"},{"uk":"проблема","translit":"","en":"problem","note":"[🔊](audio_problema)"},{"uk":"ідея","translit":"","en":"idea","note":"[🔊](audio_ideya)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1203,6 +885,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2467,6 +2175,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

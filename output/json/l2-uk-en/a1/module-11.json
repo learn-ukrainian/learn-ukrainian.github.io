@@ -14,204 +14,540 @@
     "moduleType": "grammar",
     "immersionLevel": 0.3,
     "title": "The Accusative I - Things",
-    "subtitle": "Direct Objects: Inanimate Nouns",
-    "description": "Understand the accusative case for direct objects",
+    "subtitle": "The Object of Desire",
+    "description": "Learner can identify the direct object in a sentence",
     "objectives": [
-      "Understand the accusative case for direct objects",
-      "Apply accusative endings to inanimate nouns",
-      "Use transitive verbs with accusative objects"
+      "Learner can identify the direct object in a sentence",
+      "Learner can apply Accusative case rules to Masculine Inanimate and Neuter nouns (no change)",
+      "Learner can apply Accusative case rules to Feminine nouns (-a -> -u, -ya -> -yu)",
+      "Learner can use verbs of interaction (take, give, see, have)"
     ],
-    "grammarFocus": [
-      "Accusative case (inanimate nouns)",
-      "Transitive verbs"
-    ],
+    "grammarFocus": [],
     "tags": [
       "grammar",
-      "cases",
       "accusative",
-      "nouns"
+      "inanimate",
+      "objects"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "partial",
+    "totalDuration": 60,
+    "transliterationMode": "full",
     "sections": [
       {
-        "id": "section-warm-up",
-        "name": "Warm Up",
-        "type": "content",
-        "content": "You've mastered basic sentences like \"Це книга.\" But what happens when the book becomes the object of an action? \"I see **the book**\" — that's where the accusative case comes in. Welcome to Ukrainian cases!\n\n---"
-      },
-      {
-        "id": "section-lesson",
-        "name": "Lesson",
-        "type": "content",
-        "content": "## What is the Accusative Case?\n\nIn English, we use word order to show who does what: \"The dog bites the man\" vs \"The man bites the dog.\" In Ukrainian, **case endings** do this job, which means word order is more flexible.\n\nThe **accusative case** (знахідний відмінок) marks the **direct object** — the thing receiving the action.\n\n| Nominative (subject) | Accusative (object) |\n|---------------------|---------------------|\n| Книга цікава. | Я читаю книг**у**. |\n| The book is interesting. | I read the book. |\n\n> 💡 **Did You Know?**\n> The word \"знахідний\" comes from \"знаходити\" (to find). Think of it as the case that helps you \"find\" what the action is directed at!\n\n---\n\n## Accusative Endings: Inanimate Nouns\n\nGood news! For **inanimate** (non-living) nouns, the accusative is simple:\n\n| Gender | Nominative | Accusative | Change |\n|--------|------------|------------|--------|\n| Masculine | стіл | стіл | **no change** |\n| Feminine -а | книга | книг**у** | -а → -у |\n| Feminine -я | земля | земл**ю** | -я → -ю |\n| Neuter | вікно | вікно | **no change** |\n\n**Summary:**\n- Masculine inanimate: no change\n- Feminine: -а → -у, -я → -ю\n- Neuter: no change\n\n> 🎯 **Fun Fact**\n> Only feminine nouns change in the accusative! Masculine inanimate and neuter nouns stay the same. This makes Ukrainian cases easier than you might think.\n\n---\n\n## Examples with Common Verbs\n\n### Бачити (to see)\n\n| Nominative | Accusative |\n|------------|------------|\n| Це стіл. | Я бачу **стіл**. |\n| Це книга. | Я бачу **книгу**. |\n| Це вікно. | Я бачу **вікно**. |\n\n### Читати (to read)\n\n| Nominative | Accusative |\n|------------|------------|\n| Це газета. | Я читаю **газету**. |\n| Це журнал. | Я читаю **журнал**. |\n| Це лист. | Я читаю **лист**. |\n\n### Мати (to have)\n\n| Nominative | Accusative |\n|------------|------------|\n| Це сумка. | Я маю **сумку**. |\n| Це паспорт. | Я маю **паспорт**. |\n| Це квиток. | Я маю **квиток**. |\n\n> 🌍 **Real World**\n> At Ukrainian airports and train stations, you'll hear \"Покажіть паспорт\" (Show your passport) and \"Ваш квиток, будь ласка\" (Your ticket, please). Both паспорт and квиток stay unchanged because they're masculine inanimate!\n\n---\n\n## Transitive Verbs\n\n**Transitive verbs** are verbs that take direct objects. They answer \"what?\" or \"whom?\"\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| бачити | to see | Я бачу вікно. |\n| чути | to hear | Я чую музику. |\n| брати | to take | Вона бере сумку. |\n| давати | to give | Він дає подарунок. |\n| мати | to have | Ми маємо документ. |\n| нести | to carry | Ти несеш валізу. |\n| класти | to put | Вони кладуть книгу. |\n\n> 💡 **Did You Know?**\n> Some verbs can be either transitive or intransitive depending on context. \"Читати\" can be \"Я читаю книгу\" (I'm reading a book) or just \"Я читаю\" (I'm reading). But when there's an object, it goes in accusative!\n\n---\n\n## More Useful Verbs\n\n### Open/Close\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| відкривати | to open | Я відкриваю двері. |\n| закривати | to close | Вона закриває вікно. |\n\n### Turn On/Off\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| вмикати | to turn on | Він вмикає телевізор. |\n| вимикати | to turn off | Ми вимикаємо світло. |\n\n### Show/Hide\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| показувати | to show | Ти показуєш фото. |\n| ховати | to hide | Вони ховають ключ. |\n\n> 🎬 **Pop Culture Moment**\n> In the Ukrainian dubbing of Harry Potter, the invisibility cloak is called \"мантія-невидимка\" (invisibility cloak). Harry \"ховає\" (hides) things under it — ховати takes accusative because the hidden thing is the direct object!\n\n---\n\n## Common Object Nouns\n\n### Documents & Paper\n\n| Nominative | Gender | Accusative | English |\n|------------|--------|------------|---------|\n| газета | f | газету | newspaper |\n| журнал | m | журнал | magazine |\n| лист | m | лист | letter |\n| конверт | m | конверт | envelope |\n| посилка | f | посилку | package |\n| документ | m | документ | document |\n| паспорт | m | паспорт | passport |\n| квиток | m | квиток | ticket |\n\n### Containers & Bags\n\n| Nominative | Gender | Accusative | English |\n|------------|--------|------------|---------|\n| сумка | f | сумку | bag |\n| валіза | f | валізу | suitcase |\n| коробка | f | коробку | box |\n| подарунок | m | подарунок | gift |\n\n---\n\n## Practice Patterns\n\n### Pattern 1: Subject + Verb + Object\n\n| Ukrainian | English |\n|-----------|---------|\n| Я бачу стіл. | I see the table. |\n| Вона читає книгу. | She reads a/the book. |\n| Ми відкриваємо вікно. | We open the window. |\n\n### Pattern 2: Object Questions\n\n| Question | Answer |\n|----------|--------|\n| Що ти бачиш? | Я бачу книгу. |\n| Що він читає? | Він читає газету. |\n| Що вона несе? | Вона несе сумку. |\n\n> 🎮 **Gamer's Corner**\n> In Ukrainian video games, inventory items are listed in nominative (коробка, ключ, зброя), but when you \"use\" them, they switch to accusative: \"Використати коробку?\" (Use the box?), \"Взяти ключ?\" (Take the key?).\n\n---\n\n## Word Order Flexibility\n\nBecause case endings mark grammatical roles, Ukrainian word order is flexible:\n\n| Standard Order | Alternative | Meaning |\n|----------------|-------------|---------|\n| Я читаю книгу. | Книгу читаю я. | I read the book. |\n| Вона бачить стіл. | Стіл бачить вона. | She sees the table. |\n\nThe emphasis shifts, but the meaning stays the same because the **endings** tell us what's the subject and what's the object.\n\n---"
-      },
-      {
-        "id": "section-practice",
-        "name": "Практика",
-        "nameEn": "Practice",
-        "type": "practice",
-        "content": "## Exercise 1: Change to Accusative\n\nConvert these nominative nouns to accusative:\n\n1. книга → _______________\n2. газета → _______________\n3. стіл → _______________\n4. вікно → _______________\n5. сумка → _______________\n6. журнал → _______________\n\n## Exercise 2: Complete the Sentences\n\nAdd the correct accusative form:\n\n1. Я бачу _______________ (вікно).\n2. Вона читає _______________ (газета).\n3. Він несе _______________ (валіза).\n4. Ми відкриваємо _______________ (двері).\n5. Ти маєш _______________ (паспорт)?\n\n## Exercise 3: Translate to Ukrainian\n\n1. I see the book. → _______________\n2. She opens the window. → _______________\n3. They read the newspaper. → _______________\n4. He takes the bag. → _______________\n\n---"
-      },
-      {
-        "id": "section-content",
-        "name": "Production",
-        "type": "content",
-        "content": "## Task: My Belongings\n\nDescribe 5 things you have using \"Я маю...\":\n\n1. Я маю _______________\n2. Я маю _______________\n3. Я маю _______________\n4. Я маю _______________\n5. Я маю _______________\n\n## Task: Daily Actions\n\nDescribe what you do with objects in your daily life:\n\n**Зранку (In the morning):**\n- Я відкриваю _______________\n- Я беру _______________\n\n**На роботі/в школі (At work/school):**\n- Я читаю _______________\n- Я пишу _______________\n\n**Ввечері (In the evening):**\n- Я вмикаю _______________\n- Я закриваю _______________\n\n---\n\n\n---\n\n\n---"
-      },
-      {
-        "id": "section-summary",
-        "name": "Підсумок",
-        "nameEn": "Summary",
-        "type": "summary",
-        "content": "In this module, you learned:\n\n1. **Accusative case** marks the direct object of transitive verbs\n2. **Inanimate masculine nouns**: no change (стіл → стіл)\n3. **Feminine nouns -а**: change to -у (книга → книгу)\n4. **Feminine nouns -я**: change to -ю (земля → землю)\n5. **Neuter nouns**: no change (вікно → вікно)\n6. **Transitive verbs**: бачити, чути, брати, мати, нести, класти...\n\n**Key patterns:**\n- Я бачу книгу. (I see the book.)\n- Вона читає газету. (She reads the newspaper.)\n- Він несе валізу. (He carries the suitcase.)\n- Ми відкриваємо вікно. (We open the window.)\n\nNext module: Accusative for animate nouns (people)! You'll learn that \"I see my friend\" has different rules than \"I see the table.\""
+        "id": "section-intro-0",
+        "name": "Вступ",
+        "nameEn": "Introduction",
+        "type": "intro",
+        "content": "## warm-up\n**The Object of Desire**\n\nWelcome to Phase A1.2. The city awaits.\n\nIn Phase 1, you learned to describe *who* you are (\"Я студент\") and *where* you are (\"Я вдома\"). The world was static. You were a statue in a museum.\nNow, you start to move. You interact. You want things. You take things. You see things.\n\nIn English, \"I see the **lamp**\" and \"**The lamp** is here\" use the same word: \"lamp\".\nIn Ukrainian, this is impossible.\nWhen you *do something* to a word, you change it. You mark it. You tag it as the \"target\".\nThis tag is called the **Accusative Case**.\n\nImagine you have a laser pointer.\n- **Subject:** YOU (The Actor).\n- **Verb:** The Laser Beam (The Action).\n- **Object:** The Target (The Accusative).\n\nWhen the laser hits a Feminine noun, it melts the ending.\n\n## presentation\n\n### Section 1: The Invisible Shield (Masculine & Neuter)\n\nGood news. Ukrainian grammar is merciful.\nIf a noun is **Masculine Inanimate** (an object, not a person) or **Neuter**, nothing happens. The laser beam bounces off.\nThe dictionary form (Nominative) is the same as the target form (Accusative).\n\n**Pattern:** Subject + Verb + Object (No Change)\n\n1.  **Masculine (Inanimate)**\n    - Це **телефон**. (Nominative)\n    - Я бачу **телефон**. (Accusative - No change)\n    - Він має **паспорт**. (He has a passport.)\n    - Ми беремо **квиток**. (We take a ticket.)\n\n2.  **Neuter**\n    - Це **вікно**.\n    - Я бачу **вікно**. (No change)\n    - Вона любить **море**. (She loves the sea.)\n    - Вони п'ють **молоко**. (They drink milk.)\n\n> 💡 **The Logic**\n> Why no change? Because ancient speakers didn't think objects needed special respect. They are just things. \"I see a table\" is clear enough without a flag.\n\n### Section 2: The Feminine Transformation (-А -> -У)\n\nHere is the magic. Feminine nouns are special. They *always* react to the laser.\nWhen a Feminine noun is the target of an action, the final **-А** turns into **-У**.\nIf it ends in **-Я**, it turns into **-Ю**.\n\n**The Formula:**\n- **-А** ➡️ **-У**\n- **-Я** ➡️ **-Ю**\n\n**Examples:**\n- **Кава** (Coffee) ➡️ Я хочу **каву**. (I want coffee).\n- **Вода** (Water) ➡️ Він п'є **воду**. (He drinks water).\n- **Газета** (Newspaper) ➡️ Ми читаємо **газету**. (We read the newspaper).\n- **Кухня** (Kitchen) ➡️ Я бачу **кухню**. (I see the kitchen).\n\n> ⚡ **Mnemonic: The \"Oooo\" of Desire**\n> When you want something feminine, you say \"Oooo!\" (I want pizz**u**!).\n> *   Піц**а** -> Піц**у**.\n> *   Книг**а** -> Книг**у**.\n> *   Віз**а** -> Віз**у**.\n\n### Section 3: Verbs of Interaction\n\nTo use this case, you need verbs that \"hit\" objects. These are **Transitive Verbs**.\n\n1.  **Бачити** (To see) - *Class II*\n    - Я бачу проблему. (I see a problem.)\n2.  **Чути** (To hear) - *Class I* (stem: чу-)\n    - Ти чуєш музику? (Do you hear the music?)\n3.  **Брати** (To take) - *Class I* (stem: бер-)\n    - Я беру каву. (I take/order coffee.)\n4.  **Давати** (To give) - *Class I* (stem: да-)\n    - Дайте, будь ласка, меню. (Give, please, the menu.)\n5.  **Мати** (To have) - *Class I*\n    - Я маю ідею. (I have an idea.)\n6.  **Любити** (To love/like) - *Class II*\n    - Він любить піцу. (He likes pizza.)\n\n    > ❤️ **Deep Dive: The Verb \"To Love\"**\n    > This verb is special. It connects you to the world.\n    > Ukrainians use it for food, friends, and hobbies.\n    > - **Pattern:** Я люблю (I love) + Accusative.\n    > - \"Я люблю каву\" (I love coffee).\n    > - \"Я люблю музику\" (I love music).\n    > Notice the conjugation quirks: **Я любЛю**, **Ти любИш**. This 'L' appears only in the 'I' form. It is called the \"fleeting L\". It makes the sound softer.\n\n### Section 4: The \"Have\" Trap (Mati)\n\nIn English, \"I have a passport\" is simple.\nIn Ukrainian, `Мати` (To have) is a very useful Class I verb.\n- **Я маю** (I have)\n- **Ти маєш** (You have)\n- **Він має** (He has)\n\nBut there is a secret: Ukrainians often use a different structure (\"У мене є...\").\nHowever, for A1, **\"Я маю...\"** is perfect, clear, and correct. Use it!\n- \"Я маю квиток.\" (I have a ticket).\n- \"Я маю візу.\" (I have a visa).\n\n> 🌍 **Cultural Note: The Power of Giving**\n> The verb **Давати** (To give) is culturally huge. Hospitality is about giving.\n> When you visit someone, you bring a **подарунок** (gift).\n> - \"Це подарунок для тебе.\" (This is a gift for you).\n> - \"Я даю тобі подарунок.\" (I give you a gift - *Note: 'You' changes case here, but let's just smile and hand it over for now!*)\n\n### Deep Dive: The Laser Beam (Transitivity)\n\nWhy do some verbs trigger this change and others don't?\nIt depends on if the action \"transfers\" to an object.\n- **Sleep (Спати):** You sleep. The action stays with you. Nothing else is affected. (Intransitive).\n- **Read (Читати):** You read... *something*. The action hits the book. (Transitive).\n\nIn Ukrainian, you must feel this \"hit\".\n- Я йду (I go) -> No object.\n- Я бачу (I see) -> Object needed! -> **Accusative Shield ON**.\n\n## practice\n\n**Drill 1: The Gender Check**\nIs it Feminine? If YES -> Change. If NO -> Relax.\n1.  **Кава** (F) -> **Каву**.\n2.  **Чай** (M) -> **Чай**.\n3.  **Віза** (F) -> **Візу**.\n4.  **Паспорт** (M) -> **Паспорт**.\n\n**Drill 2: The \"Have\" Pattern**\nPractice saying you have things.\n- Я маю (I have) + Книга (Book) = Я маю **книгу**.\n- Ти маєш (You have) + Квиток (Ticket) = Ти маєш **квиток**.\n- Він має (He has) + Проблема (Problem) = Він має **проблему**.\n\n**Drill 3: The Order**\n\"I want...\" (Я хочу...).\n- ...water. -> Я хочу **воду**.\n- ...pizza. -> Я хочу **піцу**.\n- ...soup. -> Я хочу **борщ**.\n\n## production\n\n**Scenario 1: The Lost Tourist**\nYou are at the airport. You lost your bag.\n*   **Security:** Що ви шукаєте? (What are you looking for?)\n*   **You:** Я не бачу **валізу**. (I don't see the suitcase).\n*   **Security:** Яка вона? (What is it like?)\n*   **You:** Це велика **валіза**.\n*   **Security:** Це ваша **сумка**?\n*   **You:** Так, я маю **сумку**! Дякую!\n\n**Scenario 2: The Gift**\nYou give a friend a book.\n*   **You:** Привіт! Я маю **подарунок**.\n*   **Friend:** О! Що це?\n*   **You:** Це цікава **книга**.\n*   **Friend:** Дякую! Я люблю цю **книгу**.\n\n> ⚡ **Language Link: The Genitive Shadow**\n> We mentioned \"He drinks milk\" (Accusative).\n> If he does NOT drink milk?\n> \"Він не п'є молок**а**.\"\n> When you negate, the Accusative often turns into the **Genitive**. We will explore this \"Case of Absence\" soon. For now, keep your sentences positive!\n\n---"
       }
     ],
-    "rawMarkdown": "---\ntitle: \"The Accusative I - Things\"\nsubtitle: \"Direct Objects: Inanimate Nouns\"\nphase: A1.2\nduration: 45\ntransliteration: partial\ntags: [grammar, cases, accusative, nouns]\nobjectives:\n  - Understand the accusative case for direct objects\n  - Apply accusative endings to inanimate nouns\n  - Use transitive verbs with accusative objects\ngrammar:\n  - Accusative case (inanimate nouns)\n  - Transitive verbs\n---\n\n# Warm Up\n\nYou've mastered basic sentences like \"Це книга.\" But what happens when the book becomes the object of an action? \"I see **the book**\" — that's where the accusative case comes in. Welcome to Ukrainian cases!\n\n---\n\n# Lesson\n\n## What is the Accusative Case?\n\nIn English, we use word order to show who does what: \"The dog bites the man\" vs \"The man bites the dog.\" In Ukrainian, **case endings** do this job, which means word order is more flexible.\n\nThe **accusative case** (знахідний відмінок) marks the **direct object** — the thing receiving the action.\n\n| Nominative (subject) | Accusative (object) |\n|---------------------|---------------------|\n| Книга цікава. | Я читаю книг**у**. |\n| The book is interesting. | I read the book. |\n\n> 💡 **Did You Know?**\n> The word \"знахідний\" comes from \"знаходити\" (to find). Think of it as the case that helps you \"find\" what the action is directed at!\n\n---\n\n## Accusative Endings: Inanimate Nouns\n\nGood news! For **inanimate** (non-living) nouns, the accusative is simple:\n\n| Gender | Nominative | Accusative | Change |\n|--------|------------|------------|--------|\n| Masculine | стіл | стіл | **no change** |\n| Feminine -а | книга | книг**у** | -а → -у |\n| Feminine -я | земля | земл**ю** | -я → -ю |\n| Neuter | вікно | вікно | **no change** |\n\n**Summary:**\n- Masculine inanimate: no change\n- Feminine: -а → -у, -я → -ю\n- Neuter: no change\n\n> 🎯 **Fun Fact**\n> Only feminine nouns change in the accusative! Masculine inanimate and neuter nouns stay the same. This makes Ukrainian cases easier than you might think.\n\n---\n\n## Examples with Common Verbs\n\n### Бачити (to see)\n\n| Nominative | Accusative |\n|------------|------------|\n| Це стіл. | Я бачу **стіл**. |\n| Це книга. | Я бачу **книгу**. |\n| Це вікно. | Я бачу **вікно**. |\n\n### Читати (to read)\n\n| Nominative | Accusative |\n|------------|------------|\n| Це газета. | Я читаю **газету**. |\n| Це журнал. | Я читаю **журнал**. |\n| Це лист. | Я читаю **лист**. |\n\n### Мати (to have)\n\n| Nominative | Accusative |\n|------------|------------|\n| Це сумка. | Я маю **сумку**. |\n| Це паспорт. | Я маю **паспорт**. |\n| Це квиток. | Я маю **квиток**. |\n\n> 🌍 **Real World**\n> At Ukrainian airports and train stations, you'll hear \"Покажіть паспорт\" (Show your passport) and \"Ваш квиток, будь ласка\" (Your ticket, please). Both паспорт and квиток stay unchanged because they're masculine inanimate!\n\n---\n\n## Transitive Verbs\n\n**Transitive verbs** are verbs that take direct objects. They answer \"what?\" or \"whom?\"\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| бачити | to see | Я бачу вікно. |\n| чути | to hear | Я чую музику. |\n| брати | to take | Вона бере сумку. |\n| давати | to give | Він дає подарунок. |\n| мати | to have | Ми маємо документ. |\n| нести | to carry | Ти несеш валізу. |\n| класти | to put | Вони кладуть книгу. |\n\n> 💡 **Did You Know?**\n> Some verbs can be either transitive or intransitive depending on context. \"Читати\" can be \"Я читаю книгу\" (I'm reading a book) or just \"Я читаю\" (I'm reading). But when there's an object, it goes in accusative!\n\n---\n\n## More Useful Verbs\n\n### Open/Close\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| відкривати | to open | Я відкриваю двері. |\n| закривати | to close | Вона закриває вікно. |\n\n### Turn On/Off\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| вмикати | to turn on | Він вмикає телевізор. |\n| вимикати | to turn off | Ми вимикаємо світло. |\n\n### Show/Hide\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| показувати | to show | Ти показуєш фото. |\n| ховати | to hide | Вони ховають ключ. |\n\n> 🎬 **Pop Culture Moment**\n> In the Ukrainian dubbing of Harry Potter, the invisibility cloak is called \"мантія-невидимка\" (invisibility cloak). Harry \"ховає\" (hides) things under it — ховати takes accusative because the hidden thing is the direct object!\n\n---\n\n## Common Object Nouns\n\n### Documents & Paper\n\n| Nominative | Gender | Accusative | English |\n|------------|--------|------------|---------|\n| газета | f | газету | newspaper |\n| журнал | m | журнал | magazine |\n| лист | m | лист | letter |\n| конверт | m | конверт | envelope |\n| посилка | f | посилку | package |\n| документ | m | документ | document |\n| паспорт | m | паспорт | passport |\n| квиток | m | квиток | ticket |\n\n### Containers & Bags\n\n| Nominative | Gender | Accusative | English |\n|------------|--------|------------|---------|\n| сумка | f | сумку | bag |\n| валіза | f | валізу | suitcase |\n| коробка | f | коробку | box |\n| подарунок | m | подарунок | gift |\n\n---\n\n## Practice Patterns\n\n### Pattern 1: Subject + Verb + Object\n\n| Ukrainian | English |\n|-----------|---------|\n| Я бачу стіл. | I see the table. |\n| Вона читає книгу. | She reads a/the book. |\n| Ми відкриваємо вікно. | We open the window. |\n\n### Pattern 2: Object Questions\n\n| Question | Answer |\n|----------|--------|\n| Що ти бачиш? | Я бачу книгу. |\n| Що він читає? | Він читає газету. |\n| Що вона несе? | Вона несе сумку. |\n\n> 🎮 **Gamer's Corner**\n> In Ukrainian video games, inventory items are listed in nominative (коробка, ключ, зброя), but when you \"use\" them, they switch to accusative: \"Використати коробку?\" (Use the box?), \"Взяти ключ?\" (Take the key?).\n\n---\n\n## Word Order Flexibility\n\nBecause case endings mark grammatical roles, Ukrainian word order is flexible:\n\n| Standard Order | Alternative | Meaning |\n|----------------|-------------|---------|\n| Я читаю книгу. | Книгу читаю я. | I read the book. |\n| Вона бачить стіл. | Стіл бачить вона. | She sees the table. |\n\nThe emphasis shifts, but the meaning stays the same because the **endings** tell us what's the subject and what's the object.\n\n---\n\n# Practice\n\n## Exercise 1: Change to Accusative\n\nConvert these nominative nouns to accusative:\n\n1. книга → _______________\n2. газета → _______________\n3. стіл → _______________\n4. вікно → _______________\n5. сумка → _______________\n6. журнал → _______________\n\n## Exercise 2: Complete the Sentences\n\nAdd the correct accusative form:\n\n1. Я бачу _______________ (вікно).\n2. Вона читає _______________ (газета).\n3. Він несе _______________ (валіза).\n4. Ми відкриваємо _______________ (двері).\n5. Ти маєш _______________ (паспорт)?\n\n## Exercise 3: Translate to Ukrainian\n\n1. I see the book. → _______________\n2. She opens the window. → _______________\n3. They read the newspaper. → _______________\n4. He takes the bag. → _______________\n\n---\n\n# Production\n\n## Task: My Belongings\n\nDescribe 5 things you have using \"Я маю...\":\n\n1. Я маю _______________\n2. Я маю _______________\n3. Я маю _______________\n4. Я маю _______________\n5. Я маю _______________\n\n## Task: Daily Actions\n\nDescribe what you do with objects in your daily life:\n\n**Зранку (In the morning):**\n- Я відкриваю _______________\n- Я беру _______________\n\n**На роботі/в школі (At work/school):**\n- Я читаю _______________\n- Я пишу _______________\n\n**Ввечері (In the evening):**\n- Я вмикаю _______________\n- Я закриваю _______________\n\n---\n\n# Activities\n\n## quiz: Accusative Form Recognition\n> Choose the correct accusative form for each noun.\n\n1. книга →\n   - [x] книгу\n   - [ ] книга\n   - [ ] книгою\n   - [ ] книги\n   > Feminine nouns ending in -а change to -у in accusative.\n\n2. стіл →\n   - [x] стіл\n   - [ ] столу\n   - [ ] столом\n   - [ ] стола\n   > Masculine inanimate nouns don't change in accusative.\n\n3. газета →\n   - [x] газету\n   - [ ] газета\n   - [ ] газетою\n   - [ ] газети\n   > Feminine nouns ending in -а change to -у in accusative.\n\n4. вікно →\n   - [x] вікно\n   - [ ] вікна\n   - [ ] вікном\n   - [ ] вікну\n   > Neuter nouns don't change in accusative.\n\n5. сумка →\n   - [x] сумку\n   - [ ] сумка\n   - [ ] сумкою\n   - [ ] сумки\n   > Feminine nouns ending in -а change to -у in accusative.\n\n6. журнал →\n   - [x] журнал\n   - [ ] журналу\n   - [ ] журналом\n   - [ ] журнала\n   > Masculine inanimate nouns don't change in accusative.\n\n7. валіза →\n   - [x] валізу\n   - [ ] валіза\n   - [ ] валізою\n   - [ ] валізи\n   > Feminine nouns ending in -а change to -у in accusative.\n\n8. паспорт →\n   - [x] паспорт\n   - [ ] паспорта\n   - [ ] паспорту\n   - [ ] паспортом\n   > Masculine inanimate nouns don't change in accusative.\n\n9. коробка →\n   - [x] коробку\n   - [ ] коробка\n   - [ ] коробкою\n   - [ ] коробки\n   > Feminine nouns ending in -а change to -у in accusative.\n\n10. документ →\n    - [x] документ\n    - [ ] документа\n    - [ ] документу\n    - [ ] документом\n    > Masculine inanimate nouns don't change in accusative.\n\n11. посилка →\n    - [x] посилку\n    - [ ] посилка\n    - [ ] посилкою\n    - [ ] посилки\n    > Feminine nouns ending in -а change to -у in accusative.\n\n12. квиток →\n    - [x] квиток\n    - [ ] квитка\n    - [ ] квитку\n    - [ ] квитком\n    > Masculine inanimate nouns don't change in accusative.\n\n## match-up: Verb and Object Pairs\n> Match each verb with its appropriate object in accusative case.\n\n| Left | Right |\n|------|-------|\n| читати | книгу |\n| бачити | вікно |\n| нести | сумку |\n| відкривати | двері |\n| вмикати | телевізор |\n| закривати | вікно |\n| брати | паспорт |\n| давати | подарунок |\n| чути | музику |\n| ховати | ключ |\n| показувати | документ |\n| класти | коробку |\n\n## group-sort: Changes vs No Change\n> Sort these nouns into groups based on whether they change in the accusative case.\n\n### Changes in Accusative\n- книга → книгу\n- сумка → сумку\n- газета → газету\n- валіза → валізу\n- коробка → коробку\n- посилка → посилку\n\n### No Change in Accusative\n- стіл → стіл\n- журнал → журнал\n- паспорт → паспорт\n- документ → документ\n- вікно → вікно\n- квиток → квиток\n\n## true-false: Accusative Rules\n> Decide if each statement about the accusative case is true or false.\n\n- [ ] Masculine inanimate nouns change their ending in the accusative.\n  > False. Masculine inanimate nouns keep the same form: стіл → стіл.\n\n- [x] Feminine nouns ending in -а change to -у in the accusative.\n  > True. книга → книгу, сумка → сумку.\n\n- [ ] Neuter nouns change their ending in the accusative.\n  > False. Neuter nouns stay the same: вікно → вікно.\n\n- [x] The accusative case marks the direct object of a verb.\n  > True. In 'Я читаю книгу', книгу is the direct object.\n\n- [ ] Word order in Ukrainian is fixed like in English.\n  > False. Ukrainian word order is flexible because case endings mark grammatical roles.\n\n- [x] Feminine nouns ending in -я change to -ю in the accusative.\n  > True. земля → землю, пісня → пісню.\n\n- [x] Transitive verbs take objects in the accusative case.\n  > True. Verbs like бачити, читати, and брати require accusative objects.\n\n- [ ] The accusative case is used for the subject of a sentence.\n  > False. The nominative case marks the subject; accusative marks the object.\n\n- [x] Inanimate masculine nouns look the same in nominative and accusative.\n  > True. стіл, журнал, паспорт don't change form.\n\n- [x] Both вікно and двері don't change in the accusative case.\n  > True. Neuter nouns and these pluralia tantum stay unchanged.\n\n- [ ] All feminine nouns end in -ою in the accusative case.\n  > False. Feminine nouns end in -у or -ю in accusative, not -ою.\n\n- [x] You can change Ukrainian word order without changing meaning because of case endings.\n  > True. \"Я читаю книгу\" and \"Книгу читаю я\" mean the same thing.\n\n## fill-in: Complete with Accusative\n> Fill in the blanks with the correct accusative form.\n\n1. Я читаю ___.\n   > [!answer] книгу\n   > [!options] книгу | книга | книги | книгою\n\n2. Вона бачить ___.\n   > [!answer] стіл\n   > [!options] стіл | столу | столом | стола\n\n3. Він несе ___.\n   > [!answer] валізу\n   > [!options] валізу | валіза | валізи | валізою\n\n4. Ми відкриваємо ___.\n   > [!answer] вікно\n   > [!options] вікно | вікна | вікном | вікну\n\n5. Ти маєш ___?\n   > [!answer] паспорт\n   > [!options] паспорт | паспорта | паспорту | паспортом\n\n6. Вони читають ___.\n   > [!answer] газету\n   > [!options] газету | газета | газети | газетою\n\n7. Я беру ___.\n   > [!answer] сумку\n   > [!options] сумку | сумка | сумки | сумкою\n\n8. Він вмикає ___.\n   > [!answer] телевізор\n   > [!options] телевізор | телевізора | телевізору | телевізором\n\n9. Вона показує ___.\n   > [!answer] фото\n   > [!options] фото | фота | фоту | фотом\n\n10. Ми закриваємо ___.\n    > [!answer] двері\n    > [!options] двері | дверей | дверям | дверима\n\n11. Ти чуєш ___?\n    > [!answer] музику\n    > [!options] музику | музика | музики | музикою\n\n12. Я даю ___.\n    > [!answer] подарунок\n    > [!options] подарунок | подарунка | подарунку | подарунком\n\n## match-up: Nominative to Accusative\n> Match each nominative form with its correct accusative form.\n\n| Left | Right |\n|------|-------|\n| книга | книгу |\n| газета | газету |\n| сумка | сумку |\n| валіза | валізу |\n| коробка | коробку |\n| посилка | посилку |\n| стіл | стіл |\n| журнал | журнал |\n| вікно | вікно |\n| паспорт | паспорт |\n| документ | документ |\n| квиток | квиток |\n\n## anagram: Object Vocabulary\n> Unscramble the letters to form accusative case nouns.\n\n1. у к н и г\n   > [!answer] книгу\n   > (book)\n\n2. у т з е г а\n   > [!answer] газету\n   > (newspaper)\n\n3. у к м с у\n   > [!answer] сумку\n   > (bag)\n\n4. р о п т п с а\n   > [!answer] паспорт\n   > (passport)\n\n5. к и т о к в\n   > [!answer] квиток\n   > (ticket)\n\n6. н о к і в\n   > [!answer] вікно\n   > (window)\n\n7. л і т с\n   > [!answer] стіл\n   > (table)\n\n8. а л ж р н у\n   > [!answer] журнал\n   > (magazine)\n\n9. к у р а д н о п о\n   > [!answer] подарунок\n   > (gift)\n\n10. т м е н к д о у\n    > [!answer] документ\n    > (document)\n\n11. у з і л а в\n    > [!answer] валізу\n    > (suitcase)\n\n12. у к л и с о п\n    > [!answer] посилку\n    > (package)\n\n## fill-in: Verb + Object Sentences\n> Complete the question-and-answer pairs with the correct accusative forms.\n\n1. Що ти бачиш? — Я бачу ___.\n   > [!answer] вікно\n   > [!options] вікно | вікна | вікном | вікну\n\n2. Що вона читає? — Вона читає ___.\n   > [!answer] журнал\n   > [!options] журнал | журналу | журналом | журнала\n\n3. Що він несе? — Він несе ___.\n   > [!answer] коробку\n   > [!options] коробку | коробка | коробки | коробкою\n\n4. Що ви відкриваєте? — Ми відкриваємо ___.\n   > [!answer] двері\n   > [!options] двері | дверей | дверям | дверима\n\n5. Що вони вимикають? — Вони вимикають ___.\n   > [!answer] світло\n   > [!options] світло | світла | світлом | світлу\n\n6. Що ти ховаєш? — Я ховаю ___.\n   > [!answer] ключ\n   > [!options] ключ | ключа | ключем | ключу\n\n7. Що він дає? — Він дає ___.\n   > [!answer] конверт\n   > [!options] конверт | конверта | конверту | конвертом\n\n8. Що вона бере? — Вона бере ___.\n   > [!answer] посилку\n   > [!options] посилку | посилка | посилки | посилкою\n\n9. Що ми показуємо? — Ми показуємо ___.\n   > [!answer] документ\n   > [!options] документ | документа | документу | документом\n\n10. Що ти кладеш? — Я кладу ___.\n    > [!answer] книгу\n    > [!options] книгу | книга | книги | книгою\n\n11. Що він закриває? — Він закриває ___.\n    > [!answer] вікно\n    > [!options] вікно | вікна | вікном | вікну\n\n12. Що вона чує? — Вона чує ___.\n    > [!answer] музику\n    > [!options] музику | музика | музики | музикою\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| бачити (bachyty) | /ˈbɑtʃɪtɪ/ | to see | verb | - | Class II |\n| чути (chuty) | /ˈtʃutɪ/ | to hear | verb | - | Class II |\n| брати (braty) | /ˈbrɑtɪ/ | to take | verb | - | Class I, беру, береш |\n| давати (davaty) | /dɑˈvɑtɪ/ | to give | verb | - | Class I, даю, даєш |\n| мати (maty) | /ˈmɑtɪ/ | to have | verb | - | Class I, маю, маєш |\n| нести (nesty) | /ˈnɛstɪ/ | to carry | verb | - | Irregular: несу, несеш |\n| класти (klasty) | /ˈklɑstɪ/ | to put | verb | - | Class I, кладу, кладеш |\n| відкривати (vidkryvaty) | /vʲidkrɪˈvɑtɪ/ | to open | verb | - | Class I |\n| закривати (zakryvaty) | /zɑkrɪˈvɑtɪ/ | to close | verb | - | Class I |\n| вмикати (vmykaty) | /vmɪˈkɑtɪ/ | to turn on | verb | - | Class I |\n| вимикати (vymykaty) | /vɪmɪˈkɑtɪ/ | to turn off | verb | - | Class I |\n| показувати (pokazuvaty) | /pɔkɑˈzuvɑtɪ/ | to show | verb | - | Class I |\n| ховати (khovaty) | /xɔˈvɑtɪ/ | to hide | verb | - | Class I |\n| газета (hazeta) | /ɦɑˈzɛtɑ/ | newspaper | noun | f | Acc: газету |\n| журнал (zhurnal) | /ʒurˈnɑl/ | magazine | noun | m | Acc: журнал |\n| лист (lyst) | /lɪst/ | letter | noun | m | Acc: лист |\n| конверт (konvert) | /kɔnˈvɛrt/ | envelope | noun | m | Acc: конверт |\n| посилка (posylka) | /pɔˈsɪlkɑ/ | package | noun | f | Acc: посилку |\n| подарунок (podarunok) | /pɔdɑˈrunɔk/ | gift | noun | m | Acc: подарунок |\n| квиток (kvytok) | /kvɪˈtɔk/ | ticket | noun | m | Acc: квиток |\n| паспорт (pasport) | /ˈpɑspɔrt/ | passport | noun | m | Acc: паспорт |\n| документ (dokument) | /dɔkuˈmɛnt/ | document | noun | m | Acc: документ |\n| сумка (sumka) | /ˈsumkɑ/ | bag | noun | f | Acc: сумку |\n| валіза (valiza) | /vɑˈlʲizɑ/ | suitcase | noun | f | Acc: валізу |\n| коробка (korobka) | /kɔˈrɔbkɑ/ | box | noun | f | Acc: коробку |\n\n---\n\n# Summary\n\nIn this module, you learned:\n\n1. **Accusative case** marks the direct object of transitive verbs\n2. **Inanimate masculine nouns**: no change (стіл → стіл)\n3. **Feminine nouns -а**: change to -у (книга → книгу)\n4. **Feminine nouns -я**: change to -ю (земля → землю)\n5. **Neuter nouns**: no change (вікно → вікно)\n6. **Transitive verbs**: бачити, чути, брати, мати, нести, класти...\n\n**Key patterns:**\n- Я бачу книгу. (I see the book.)\n- Вона читає газету. (She reads the newspaper.)\n- Він несе валізу. (He carries the suitcase.)\n- Ми відкриваємо вікно. (We open the window.)\n\nNext module: Accusative for animate nouns (people)! You'll learn that \"I see my friend\" has different rules than \"I see the table.\"\n",
-    "createdAt": "2025-12-06T10:49:20.092Z",
-    "modifiedAt": "2025-12-06T10:49:20.092Z",
+    "rawMarkdown": "---\ntitle: The Accusative I - Things\nsubtitle: The Object of Desire\nphase: A1.2\nduration: 60\ntransliteration: full\ntags: [grammar, accusative, inanimate, objects]\nobjectives:\n  - Learner can identify the direct object in a sentence\n  - Learner can apply Accusative case rules to Masculine Inanimate and Neuter nouns (no change)\n  - Learner can apply Accusative case rules to Feminine nouns (-a -> -u, -ya -> -yu)\n  - Learner can use verbs of interaction (take, give, see, have)\n---\n\n# Lesson Content\n\n## warm-up\n**The Object of Desire**\n\nWelcome to Phase A1.2. The city awaits.\n\nIn Phase 1, you learned to describe *who* you are (\"Я студент\") and *where* you are (\"Я вдома\"). The world was static. You were a statue in a museum.\nNow, you start to move. You interact. You want things. You take things. You see things.\n\nIn English, \"I see the **lamp**\" and \"**The lamp** is here\" use the same word: \"lamp\".\nIn Ukrainian, this is impossible.\nWhen you *do something* to a word, you change it. You mark it. You tag it as the \"target\".\nThis tag is called the **Accusative Case**.\n\nImagine you have a laser pointer.\n- **Subject:** YOU (The Actor).\n- **Verb:** The Laser Beam (The Action).\n- **Object:** The Target (The Accusative).\n\nWhen the laser hits a Feminine noun, it melts the ending.\n\n## presentation\n\n### Section 1: The Invisible Shield (Masculine & Neuter)\n\nGood news. Ukrainian grammar is merciful.\nIf a noun is **Masculine Inanimate** (an object, not a person) or **Neuter**, nothing happens. The laser beam bounces off.\nThe dictionary form (Nominative) is the same as the target form (Accusative).\n\n**Pattern:** Subject + Verb + Object (No Change)\n\n1.  **Masculine (Inanimate)**\n    - Це **телефон**. (Nominative)\n    - Я бачу **телефон**. (Accusative - No change)\n    - Він має **паспорт**. (He has a passport.)\n    - Ми беремо **квиток**. (We take a ticket.)\n\n2.  **Neuter**\n    - Це **вікно**.\n    - Я бачу **вікно**. (No change)\n    - Вона любить **море**. (She loves the sea.)\n    - Вони п'ють **молоко**. (They drink milk.)\n\n> 💡 **The Logic**\n> Why no change? Because ancient speakers didn't think objects needed special respect. They are just things. \"I see a table\" is clear enough without a flag.\n\n### Section 2: The Feminine Transformation (-А -> -У)\n\nHere is the magic. Feminine nouns are special. They *always* react to the laser.\nWhen a Feminine noun is the target of an action, the final **-А** turns into **-У**.\nIf it ends in **-Я**, it turns into **-Ю**.\n\n**The Formula:**\n- **-А** ➡️ **-У**\n- **-Я** ➡️ **-Ю**\n\n**Examples:**\n- **Кава** (Coffee) ➡️ Я хочу **каву**. (I want coffee).\n- **Вода** (Water) ➡️ Він п'є **воду**. (He drinks water).\n- **Газета** (Newspaper) ➡️ Ми читаємо **газету**. (We read the newspaper).\n- **Кухня** (Kitchen) ➡️ Я бачу **кухню**. (I see the kitchen).\n\n> ⚡ **Mnemonic: The \"Oooo\" of Desire**\n> When you want something feminine, you say \"Oooo!\" (I want pizz**u**!).\n> *   Піц**а** -> Піц**у**.\n> *   Книг**а** -> Книг**у**.\n> *   Віз**а** -> Віз**у**.\n\n### Section 3: Verbs of Interaction\n\nTo use this case, you need verbs that \"hit\" objects. These are **Transitive Verbs**.\n\n1.  **Бачити** (To see) - *Class II*\n    - Я бачу проблему. (I see a problem.)\n2.  **Чути** (To hear) - *Class I* (stem: чу-)\n    - Ти чуєш музику? (Do you hear the music?)\n3.  **Брати** (To take) - *Class I* (stem: бер-)\n    - Я беру каву. (I take/order coffee.)\n4.  **Давати** (To give) - *Class I* (stem: да-)\n    - Дайте, будь ласка, меню. (Give, please, the menu.)\n5.  **Мати** (To have) - *Class I*\n    - Я маю ідею. (I have an idea.)\n6.  **Любити** (To love/like) - *Class II*\n    - Він любить піцу. (He likes pizza.)\n\n    > ❤️ **Deep Dive: The Verb \"To Love\"**\n    > This verb is special. It connects you to the world.\n    > Ukrainians use it for food, friends, and hobbies.\n    > - **Pattern:** Я люблю (I love) + Accusative.\n    > - \"Я люблю каву\" (I love coffee).\n    > - \"Я люблю музику\" (I love music).\n    > Notice the conjugation quirks: **Я любЛю**, **Ти любИш**. This 'L' appears only in the 'I' form. It is called the \"fleeting L\". It makes the sound softer.\n\n### Section 4: The \"Have\" Trap (Mati)\n\nIn English, \"I have a passport\" is simple.\nIn Ukrainian, `Мати` (To have) is a very useful Class I verb.\n- **Я маю** (I have)\n- **Ти маєш** (You have)\n- **Він має** (He has)\n\nBut there is a secret: Ukrainians often use a different structure (\"У мене є...\").\nHowever, for A1, **\"Я маю...\"** is perfect, clear, and correct. Use it!\n- \"Я маю квиток.\" (I have a ticket).\n- \"Я маю візу.\" (I have a visa).\n\n> 🌍 **Cultural Note: The Power of Giving**\n> The verb **Давати** (To give) is culturally huge. Hospitality is about giving.\n> When you visit someone, you bring a **подарунок** (gift).\n> - \"Це подарунок для тебе.\" (This is a gift for you).\n> - \"Я даю тобі подарунок.\" (I give you a gift - *Note: 'You' changes case here, but let's just smile and hand it over for now!*)\n\n### Deep Dive: The Laser Beam (Transitivity)\n\nWhy do some verbs trigger this change and others don't?\nIt depends on if the action \"transfers\" to an object.\n- **Sleep (Спати):** You sleep. The action stays with you. Nothing else is affected. (Intransitive).\n- **Read (Читати):** You read... *something*. The action hits the book. (Transitive).\n\nIn Ukrainian, you must feel this \"hit\".\n- Я йду (I go) -> No object.\n- Я бачу (I see) -> Object needed! -> **Accusative Shield ON**.\n\n## practice\n\n**Drill 1: The Gender Check**\nIs it Feminine? If YES -> Change. If NO -> Relax.\n1.  **Кава** (F) -> **Каву**.\n2.  **Чай** (M) -> **Чай**.\n3.  **Віза** (F) -> **Візу**.\n4.  **Паспорт** (M) -> **Паспорт**.\n\n**Drill 2: The \"Have\" Pattern**\nPractice saying you have things.\n- Я маю (I have) + Книга (Book) = Я маю **книгу**.\n- Ти маєш (You have) + Квиток (Ticket) = Ти маєш **квиток**.\n- Він має (He has) + Проблема (Problem) = Він має **проблему**.\n\n**Drill 3: The Order**\n\"I want...\" (Я хочу...).\n- ...water. -> Я хочу **воду**.\n- ...pizza. -> Я хочу **піцу**.\n- ...soup. -> Я хочу **борщ**.\n\n## production\n\n**Scenario 1: The Lost Tourist**\nYou are at the airport. You lost your bag.\n*   **Security:** Що ви шукаєте? (What are you looking for?)\n*   **You:** Я не бачу **валізу**. (I don't see the suitcase).\n*   **Security:** Яка вона? (What is it like?)\n*   **You:** Це велика **валіза**.\n*   **Security:** Це ваша **сумка**?\n*   **You:** Так, я маю **сумку**! Дякую!\n\n**Scenario 2: The Gift**\nYou give a friend a book.\n*   **You:** Привіт! Я маю **подарунок**.\n*   **Friend:** О! Що це?\n*   **You:** Це цікава **книга**.\n*   **Friend:** Дякую! Я люблю цю **книгу**.\n\n> ⚡ **Language Link: The Genitive Shadow**\n> We mentioned \"He drinks milk\" (Accusative).\n> If he does NOT drink milk?\n> \"Він не п'є молок**а**.\"\n> When you negate, the Accusative often turns into the **Genitive**. We will explore this \"Case of Absence\" soon. For now, keep your sentences positive!\n\n---\n\n# Activities\n\n## group-sort: The Changers\n\n> Sort the words: Does the ending change in the Accusative case? (Feminine changes, Masculine/Neuter do not).\n\n### Change (-У/-Ю)\n- Книга\n- Газета\n- Посилка (Parcel)\n- Сумка (Bag)\n- Валіза (Suitcase)\n- Віза\n- Кава\n- Вода\n- Лампа\n- Гітара\n- Проблема\n- Робота\n- Сім'я\n- Земля\n- Кухня\n- Вулиця (Street)\n- Кімната\n- Машина\n- Адреса (Address)\n- Карта (Map)\n\n### No Change\n- Паспорт\n- Квиток (Ticket)\n- Лист (Letter)\n- Конверт (Envelope)\n- Подарунок (Gift)\n- Документ\n- Журнал\n- Телефон\n- Комп'ютер\n- Вікно\n- Море\n- Місто\n- Сонце\n- Озеро\n- Прізвище (Surname)\n- Ім'я (Name)\n- Чай\n- Борщ\n- Салат\n- Автобус\n\n## fill-in: The Feminine Ending\n\n> Change the word in parentheses to the Accusative case.\n\n1. Я читаю ___ (газета).\n   > [!answer] газету\n   > [!options] газету | газета | газети | газеті\n\n2. Він має ___ (проблема).\n   > [!answer] проблему\n   > [!options] проблему | проблема | проблеми | проблемі\n\n3. Ми слухаємо ___ (музика).\n   > [!answer] музику\n   > [!options] музику | музика | музики | музиці\n\n4. Дайте, будь ласка, ___ (вода).\n   > [!answer] воду\n   > [!options] воду | вода | води | воді\n\n5. Я бачу ___ (машина).\n   > [!answer] машину\n   > [!options] машину | машина | машини | машині\n\n6. Ти любиш ___ (піца)?\n   > [!answer] піцу\n   > [!options] піцу | піца | піци | піці\n\n7. Вони мають ___ (віза).\n   > [!answer] візу\n   > [!options] візу | віза | візи | візі\n\n8. Вона бере ___ (сумка).\n   > [!answer] сумку\n   > [!options] сумку | сумка | сумки | сумці\n\n9. Я бачу ___ (вулиця).\n   > [!answer] вулицю\n   > [!options] вулицю | вулиця | вулиці | вулиці\n\n10. Він відкриває ___ (коробка).\n    > [!answer] коробку\n    > [!options] коробку | коробка | коробки | коробці\n\n11. Ми маємо ___ (ідея).\n    > [!answer] ідею\n    > [!options] ідею | ідея | ідеї | ідеї\n\n12. Ти бачиш ___ (карта)?\n    > [!answer] карту\n    > [!options] карту | карта | карти | карті\n\n13. Я люблю ___ (кава).\n    > [!answer] каву\n    > [!options] каву | кава | кави | каві\n\n14. Він бере ___ (газета).\n    > [!answer] газету\n    > [!options] газету | газета | газети | газеті\n\n15. Вона має ___ (сестра).\n    > [!answer] сестру\n    > [!options] сестру | сестра | сестри | сестрі\n\n16. Ми бачимо ___ (ріка).\n    > [!answer] ріку\n    > [!options] ріку | ріка | ріки | ріці\n\n## match-up: Verb Logic\n\n> Match the verb to a logical object (in Accusative).\n\n| Left | Right |\n|------|-------|\n| Я читаю... | книгу. |\n| Я слухаю... | музику. |\n| Я п'ю... | воду. |\n| Я їм... | рибу. |\n| Я бачу... | проблему. |\n| Я купую (buy)... | квиток. |\n| Я відкриваю... | вікно. |\n| Я закриваю... | двері. |\n| Я маю... | пасполрт. |\n| Я несу (carry)... | валізу. |\n| Я беру... | меню. |\n| Я даю... | подарунок. |\n| Я кладу (put)... | рюкзак. |\n| Я шукаю (look for)... | вихід. |\n| Я знаходжу (find)... | адресу. |\n| Я чекаю (wait for)... | автобус. |\n\n## quiz: True or False?\n\n> Check your understanding of the Accusative rules.\n\n1. Masculine Inanimate nouns change in the Accusative.\n   - [ ] True\n   - [x] False (Only Feminine changes)\n\n2. The ending -А changes to -У.\n   - [x] True\n   - [ ] False\n\n3. \"Я бачу стіл\" is correct.\n   - [x] True\n   - [ ] False (Should be стола)\n\n4. \"Я хочу кава\" is correct.\n   - [ ] True\n   - [x] False (Should be кавУ)\n\n5. Neuter nouns (ending in -О/-Е) do not change.\n   - [x] True\n   - [ ] False\n\n6. \"Я маю вода\" is correct.\n   - [ ] True\n   - [x] False (Should be водУ)\n\n7. \"Сумка\" becomes \"Сумку\" in Accusative.\n   - [x] True\n   - [ ] False\n\n8. \"Паспорт\" becomes \"Паспорту\" in Accusative.\n   - [ ] True\n   - [x] False (No change for Inanimate Masculine)\n\n9. To say \"I see the city\", you say \"Я бачу місто\".\n   - [x] True\n   - [ ] False\n\n10. To say \"I see the mom\", you say \"Я бачу маму\".\n    - [x] True\n    - [ ] False\n\n11. \"Я люблю піца\" is correct.\n    - [ ] True\n    - [x] False\n\n12. \"Він має квиток\" is correct.\n    - [x] True\n    - [ ] False\n\n## fill-in: General Mix\n\n> Choose the correct form (Nominative or Accusative).\n\n1. Це мій ___ (паспорт).\n   > [!answer] паспорт\n   > [!options] паспорт | паспорта | паспорту\n\n2. Я показую ___ (паспорт).\n   > [!answer] паспорт\n   > [!options] паспорт | паспорта | паспорту\n\n3. Де твоя ___ (віза)?\n   > [!answer] віза\n   > [!options] віза | візу | візи\n\n4. Я маю ___ (віза).\n   > [!answer] візу\n   > [!options] візу | віза | візи\n\n5. Це цікава ___ (книга).\n   > [!answer] книга\n   > [!options] книга | книгу | книги\n\n6. Ми читаємо ___ (книга).\n   > [!answer] книгу\n   > [!options] книгу | книга | книги\n\n7. Ось моя ___ (валіза).\n   > [!answer] валіза\n   > [!options] валіза | валізу | валізи\n\n8. Я беру ___ (валіза).\n   > [!answer] валізу\n   > [!options] валізу | валіза | валізи\n\n9. Це гарний ___ (подарунок).\n   > [!answer] подарунок\n   > [!options] подарунок | подарунка | подарунку\n\n10. Я даю ___ (подарунок).\n    > [!answer] подарунок\n    > [!options] подарунок | подарунка | подарунку\n\n11. Це смачна ___ (піца).\n    > [!answer] піца\n    > [!options] піца | піцу | піци\n\n12. Я їм ___ (піца).\n    > [!answer] піцу\n    > [!options] піцу | піца | піци\n\n\n## fill-in: Accusative Builder\n\n> Complete the sentence with Accusative.\n\n1. Я бачу ___ (table).\n   > [!answer] стіл\n\n2. Я беру ___ (book).\n   > [!answer] книгу\n\n3. Я маю ___ (pen/ruchka).\n   > [!answer] ручку\n\n4. Він їсть ___ (soup).\n   > [!answer] суп\n\n5. Вона п'є ___ (water).\n   > [!answer] воду\n\n6. Ми любимо ___ (music).\n   > [!answer] музику\n\n7. Я купую ___ (bread/khlib).\n   > [!answer] хліб\n\n8. Я читаю ___ (newspaper/hazeta).\n   > [!answer] газету\n\n9. Ти знаєш ___ (English/anhliyska).\n   > [!answer] англійську\n\n10. Вони мають ___ (car).\n    > [!answer] машину\n\n11. Я бачу ___ (house/budynok).\n    > [!answer] будинок\n\n12. Я хочу ___ (pizza).\n    > [!answer] піцу\n\n## unjumble: Sentence Builder\n\n> Build the sentences correctly.\n\n1. має / квиток / Він\n   > [!answer] Він має квиток.\n\n2. піцу / Ми / любимо\n   > [!answer] Ми любимо піцу.\n\n3. бачу / Я / сумку / твою\n   > [!answer] Я бачу твою сумку.\n\n4. паспорт / Покажіть / ваш\n   > [!answer] Покажіть ваш паспорт.\n\n5. газету / Вона / читає\n   > [!answer] Вона читає газету.\n\n6. бере / Хто / валізу / ?\n   > [!answer] Хто бере валізу?\n\n7. воду / Я / п'ю\n   > [!answer] Я п'ю воду.\n\n8. дає / Він / подарунок\n   > [!answer] Він дає подарунок.\n\n9. маєш / Ти / ідею / ?\n   > [!answer] Ти маєш ідею?\n\n10. двері / Ми / закриваємо\n    > [!answer] Ми закриваємо двері.\n\n11. вікно / Хто / відкриває / ?\n    > [!answer] Хто відкриває вікно?\n\n12. чую / музику / Я / не\n    > [!answer] Я не чую музику.\n\n## translate: Travel Mode\n\n> Translate the following sentences into Ukrainian.\n\n1. I see the ticket.\n> [!answer] Я бачу квиток.\n\n2. I have a bag.\n> [!answer] Я маю сумку.\n\n3. He opens the window.\n> [!answer] Він відкриває вікно.\n\n4. She takes the envelope.\n> [!answer] Вона бере конверт.\n\n5. We have a problem.\n> [!answer] Ми маємо проблему.\n\n6. Give (me) water, please.\n> [!answer] Дайте воду, будь ласка.\n\n7. I do not see the passport.\n> [!answer] Я не бачу ваш паспорт.\n\n8. She is reading a magazine.\n> [!answer] Вона читає журнал.\n\n9. We like the city.\n> [!answer] Ми любимо місто.\n\n10. I am taking the suitcase.\n> [!answer] Я беру валізу.\n\n11. Where is the gift?\n> [!answer] Де подарунок?\n\n12. He gives a ticket.\n> [!answer] Він дає квиток.\n\n## anagram: Object Scramble\n\n> Unscramble these common objects.\n\n1. в и к о т к\n   > [!answer] квиток\n   > (Ticket)\n\n2. п а р т о с п\n   > [!answer] паспорт\n   > (Passport)\n\n3. в і з а і л\n   > [!answer] валіза\n   > (Suitcase)\n\n4. к у м с а\n   > [!answer] сумка\n   > (Bag)\n\n5. з а в і\n   > [!answer] віза\n   > (Visa)\n\n6. н в е р т о к\n   > [!answer] конверт\n   > (Envelope)\n\n7. д а р у н о к п о\n   > [!answer] подарунок\n   > (Gift)\n\n8. г а з е т а\n   > [!answer] газета\n   > (Newspaper)\n\n9. р н а л ж у\n   > [!answer] журнал\n   > (Magazine)\n\n10. б к а о р о\n    > [!answer] коробка\n    > (Box)\n\n11. д к у м о н е т\n    > [!answer] документ\n    > (Document)\n\n12. б а р о м л е п\n    > [!answer] проблема\n    > (Problem)\n\n# Summary\n\n**You have unlocked the Laser Beam.**\nYou can now talk about interacting with the world. You don't just exist; you take, give, see, and have.\n- You know that **Tables** don't care about lasers (No change).\n- You know that **Pizzas** and **Visas** change shape (A -> U).\n\n**Checklist:**\n- [ ] I can identify the object in a sentence.\n- [ ] I know that Masculine and Neuter objects usually don't change.\n- [ ] I know that Feminine objects change -A to -U.\n- [ ] I can ask for things (\"Я хочу воду\").\n\n**The Road Ahead:**\nYou have taken the first step into the deep ocean of Ukrainian Cases.\nThis was the \"Accusative of Things\". It allows you to survive in a shop, asking for water and bread.\nBut what about people?\nIn the next module, the laser gets stronger. We will aim it at **People**. What happens when you see a friend? Or a doctor?\nSpoiler: The rules will twist again. A \"Student\" (He) will start to look like he has a \"Feminine\" ending (-a).\nGet ready for **The Animate Accusative**. It is the bridge to social interaction.\n\n# Vocabulary\n\n| Word | IPA | English | Note | Audio |\n|------|-----|---------|------|-------|\n| бачити | /ˈbɑtʃɪtɪ/ | to see | Class II | [🔊](audio_bachyty) |\n| чути | /ˈtʃutɪ/ | to hear | Class I | [🔊](audio_chuty) |\n| брати | /ˈbrɑtɪ/ | to take | Class I | [🔊](audio_braty) |\n| давати | /dɑˈvɑtɪ/ | to give | Class I | [🔊](audio_davaty) |\n| мати | /ˈmɑtɪ/ | to have | Class I | [🔊](audio_maty) |\n| нести | /nɛsˈtɪ/ | to carry | Class I | [🔊](audio_nesty) |\n| класти | /ˈklɑstɪ/ | to put | Class I | [🔊](audio_klasty) |\n| відкривати | /vʲidkrɪˈvɑtɪ/ | to open | Class I | [🔊](audio_vidkryvaty) |\n| закривати | /zɑkrɪˈvɑtɪ/ | to close | Class I | [🔊](audio_zakryvaty) |\n| показувати | /pɔˈkɑzuvɑtɪ/ | to show | Class I | [🔊](audio_pokazuvaty) |\n| шукати | /ʃuˈkɑtɪ/ | to look for | Class I | [🔊](audio_shukaty) |\n| знаходити | /znɑˈxɔdɪtɪ/ | to find | Class II | [🔊](audio_znakhodyty) |\n| газета | /ɦɑˈzɛtɑ/ | newspaper | | [🔊](audio_hazeta) |\n| журнал | /ʒurˈnɑl/ | magazine | | [🔊](audio_zhurnal) |\n| лист | /lɪst/ | letter | | [🔊](audio_lyst) |\n| конверт | /kɔnˈvɛrt/ | envelope | | [🔊](audio_konvert) |\n| посилка | /pɔˈsɪlkɑ/ | parcel | | [🔊](audio_posylka) |\n| подарунок | /pɔdɑˈrunɔk/ | gift | | [🔊](audio_podarunok) |\n| квиток | /kvɪˈtɔk/ | ticket | | [🔊](audio_kvytok) |\n| паспорт | /ˈpɑspɔrt/ | passport | | [🔊](audio_pasport) |\n| документ | /dɔkuˈmɛnt/ | document | | [🔊](audio_dokument) |\n| сумка | /ˈsumkɑ/ | bag | | [🔊](audio_sumka) |\n| валіза | /vɑˈlʲizɑ/ | suitcase | | [🔊](audio_valiza) |\n| коробка | /kɔˈrɔbkɑ/ | box | | [🔊](audio_korobka) |\n| проблема | /prɔˈblɛmɑ/ | problem | | [🔊](audio_problema) |\n| ідея | /iˈdɛjɑ/ | idea | | [🔊](audio_ideya) |\n",
+    "createdAt": "2025-12-08T21:22:09.881Z",
+    "modifiedAt": "2025-12-08T21:22:09.881Z",
     "version": 2
   },
   "activities": [
     {
+      "id": "act-a1-0-groupsort",
+      "type": "group-sort",
+      "title": "The Changers",
+      "description": "Sort the words: Does the ending change in the Accusative case? (Feminine changes, Masculine/Neuter do not).",
+      "content": {
+        "type": "group-sort",
+        "groups": [
+          {
+            "id": "change",
+            "name": "Change",
+            "items": [
+              "Книга",
+              "Газета",
+              "Посилка (Parcel)",
+              "Сумка (Bag)",
+              "Валіза (Suitcase)",
+              "Віза",
+              "Кава",
+              "Вода",
+              "Лампа",
+              "Гітара",
+              "Проблема",
+              "Робота",
+              "Сім'я",
+              "Земля",
+              "Кухня",
+              "Вулиця (Street)",
+              "Кімната",
+              "Машина",
+              "Адреса (Address)",
+              "Карта (Map)"
+            ],
+            "nameUk": "-У/-Ю"
+          },
+          {
+            "id": "no-change",
+            "name": "No Change",
+            "items": [
+              "Паспорт",
+              "Квиток (Ticket)",
+              "Лист (Letter)",
+              "Конверт (Envelope)",
+              "Подарунок (Gift)",
+              "Документ",
+              "Журнал",
+              "Телефон",
+              "Комп'ютер",
+              "Вікно",
+              "Море",
+              "Місто",
+              "Сонце",
+              "Озеро",
+              "Прізвище (Surname)",
+              "Ім'я (Name)",
+              "Чай",
+              "Борщ",
+              "Салат",
+              "Автобус"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.881Z",
+      "modifiedAt": "2025-12-08T21:22:09.881Z"
+    },
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "The Feminine Ending",
+      "description": "Change the word in parentheses to the Accusative case.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Я читаю ___ (газета).",
+            "answer": "газету",
+            "hints": [
+              "газета"
+            ],
+            "options": [
+              "газету",
+              "газета",
+              "газети",
+              "газеті"
+            ]
+          },
+          {
+            "prompt": "Він має ___ (проблема).",
+            "answer": "проблему",
+            "hints": [
+              "проблема"
+            ],
+            "options": [
+              "проблему",
+              "проблема",
+              "проблеми",
+              "проблемі"
+            ]
+          },
+          {
+            "prompt": "Ми слухаємо ___ (музика).",
+            "answer": "музику",
+            "hints": [
+              "музика"
+            ],
+            "options": [
+              "музику",
+              "музика",
+              "музики",
+              "музиці"
+            ]
+          },
+          {
+            "prompt": "Дайте, будь ласка, ___ (вода).",
+            "answer": "воду",
+            "hints": [
+              "вода"
+            ],
+            "options": [
+              "воду",
+              "вода",
+              "води",
+              "воді"
+            ]
+          },
+          {
+            "prompt": "Я бачу ___ (машина).",
+            "answer": "машину",
+            "hints": [
+              "машина"
+            ],
+            "options": [
+              "машину",
+              "машина",
+              "машини",
+              "машині"
+            ]
+          },
+          {
+            "prompt": "Ти любиш ___ (піца)?",
+            "answer": "піцу",
+            "hints": [
+              "піца"
+            ],
+            "options": [
+              "піцу",
+              "піца",
+              "піци",
+              "піці"
+            ]
+          },
+          {
+            "prompt": "Вони мають ___ (віза).",
+            "answer": "візу",
+            "hints": [
+              "віза"
+            ],
+            "options": [
+              "візу",
+              "віза",
+              "візи",
+              "візі"
+            ]
+          },
+          {
+            "prompt": "Вона бере ___ (сумка).",
+            "answer": "сумку",
+            "hints": [
+              "сумка"
+            ],
+            "options": [
+              "сумку",
+              "сумка",
+              "сумки",
+              "сумці"
+            ]
+          },
+          {
+            "prompt": "Я бачу ___ (вулиця).",
+            "answer": "вулицю",
+            "hints": [
+              "вулиця"
+            ],
+            "options": [
+              "вулицю",
+              "вулиця",
+              "вулиці",
+              "вулиці"
+            ]
+          },
+          {
+            "prompt": "Він відкриває ___ (коробка).",
+            "answer": "коробку",
+            "hints": [
+              "коробка"
+            ],
+            "options": [
+              "коробку",
+              "коробка",
+              "коробки",
+              "коробці"
+            ]
+          },
+          {
+            "prompt": "Ми маємо ___ (ідея).",
+            "answer": "ідею",
+            "hints": [
+              "ідея"
+            ],
+            "options": [
+              "ідею",
+              "ідея",
+              "ідеї",
+              "ідеї"
+            ]
+          },
+          {
+            "prompt": "Ти бачиш ___ (карта)?",
+            "answer": "карту",
+            "hints": [
+              "карта"
+            ],
+            "options": [
+              "карту",
+              "карта",
+              "карти",
+              "карті"
+            ]
+          },
+          {
+            "prompt": "Я люблю ___ (кава).",
+            "answer": "каву",
+            "hints": [
+              "кава"
+            ],
+            "options": [
+              "каву",
+              "кава",
+              "кави",
+              "каві"
+            ]
+          },
+          {
+            "prompt": "Він бере ___ (газета).",
+            "answer": "газету",
+            "hints": [
+              "газета"
+            ],
+            "options": [
+              "газету",
+              "газета",
+              "газети",
+              "газеті"
+            ]
+          },
+          {
+            "prompt": "Вона має ___ (сестра).",
+            "answer": "сестру",
+            "hints": [
+              "сестра"
+            ],
+            "options": [
+              "сестру",
+              "сестра",
+              "сестри",
+              "сестрі"
+            ]
+          },
+          {
+            "prompt": "Ми бачимо ___ (ріка).",
+            "answer": "ріку",
+            "hints": [
+              "ріка"
+            ],
+            "options": [
+              "ріку",
+              "ріка",
+              "ріки",
+              "ріці"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.881Z",
+      "modifiedAt": "2025-12-08T21:22:09.881Z"
+    },
+    {
+      "id": "act-a1-0-matchup",
+      "type": "match-up",
+      "title": "Verb Logic",
+      "description": "Match the verb to a logical object (in Accusative).",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "Я читаю...",
+            "right": "книгу."
+          },
+          {
+            "left": "Я слухаю...",
+            "right": "музику."
+          },
+          {
+            "left": "Я п'ю...",
+            "right": "воду."
+          },
+          {
+            "left": "Я їм...",
+            "right": "рибу."
+          },
+          {
+            "left": "Я бачу...",
+            "right": "проблему."
+          },
+          {
+            "left": "Я купую (buy)...",
+            "right": "квиток."
+          },
+          {
+            "left": "Я відкриваю...",
+            "right": "вікно."
+          },
+          {
+            "left": "Я закриваю...",
+            "right": "двері."
+          },
+          {
+            "left": "Я маю...",
+            "right": "пасполрт."
+          },
+          {
+            "left": "Я несу (carry)...",
+            "right": "валізу."
+          },
+          {
+            "left": "Я беру...",
+            "right": "меню."
+          },
+          {
+            "left": "Я даю...",
+            "right": "подарунок."
+          },
+          {
+            "left": "Я кладу (put)...",
+            "right": "рюкзак."
+          },
+          {
+            "left": "Я шукаю (look for)...",
+            "right": "вихід."
+          },
+          {
+            "left": "Я знаходжу (find)...",
+            "right": "адресу."
+          },
+          {
+            "left": "Я чекаю (wait for)...",
+            "right": "автобус."
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.881Z",
+      "modifiedAt": "2025-12-08T21:22:09.881Z"
+    },
+    {
       "id": "act-a1-0-quiz",
       "type": "quiz",
-      "title": "Accusative Form Recognition",
-      "description": "Choose the correct accusative form for each noun.",
+      "title": "True or False?",
+      "description": "Check your understanding of the Accusative rules.",
       "content": {
         "type": "quiz",
         "questions": [
           {
-            "question": "книга →",
+            "question": "Masculine Inanimate nouns change in the Accusative.",
             "options": [
-              "книгу",
-              "книга",
-              "книгою",
-              "книги"
+              "True",
+              "False (Only Feminine changes)"
             ],
-            "correctIndex": 0,
-            "explanation": "Feminine nouns ending in -а change to -у in accusative."
+            "correctIndex": 1,
+            "explanation": ""
           },
           {
-            "question": "стіл →",
+            "question": "The ending -А changes to -У.",
             "options": [
-              "стіл",
-              "столу",
-              "столом",
-              "стола"
+              "True",
+              "False"
             ],
             "correctIndex": 0,
-            "explanation": "Masculine inanimate nouns don't change in accusative."
+            "explanation": ""
           },
           {
-            "question": "газета →",
+            "question": "\"Я бачу стіл\" is correct.",
             "options": [
-              "газету",
-              "газета",
-              "газетою",
-              "газети"
+              "True",
+              "False (Should be стола)"
             ],
             "correctIndex": 0,
-            "explanation": "Feminine nouns ending in -а change to -у in accusative."
+            "explanation": ""
           },
           {
-            "question": "вікно →",
+            "question": "\"Я хочу кава\" is correct.",
             "options": [
-              "вікно",
-              "вікна",
-              "вікном",
-              "вікну"
+              "True",
+              "False (Should be кавУ)"
             ],
-            "correctIndex": 0,
-            "explanation": "Neuter nouns don't change in accusative."
+            "correctIndex": 1,
+            "explanation": ""
           },
           {
-            "question": "сумка →",
+            "question": "Neuter nouns (ending in -О/-Е) do not change.",
             "options": [
-              "сумку",
-              "сумка",
-              "сумкою",
-              "сумки"
+              "True",
+              "False"
             ],
             "correctIndex": 0,
-            "explanation": "Feminine nouns ending in -а change to -у in accusative."
+            "explanation": ""
           },
           {
-            "question": "журнал →",
+            "question": "\"Я маю вода\" is correct.",
             "options": [
-              "журнал",
-              "журналу",
-              "журналом",
-              "журнала"
+              "True",
+              "False (Should be водУ)"
             ],
-            "correctIndex": 0,
-            "explanation": "Masculine inanimate nouns don't change in accusative."
+            "correctIndex": 1,
+            "explanation": ""
           },
           {
-            "question": "валіза →",
+            "question": "\"Сумка\" becomes \"Сумку\" in Accusative.",
             "options": [
-              "валізу",
-              "валіза",
-              "валізою",
-              "валізи"
+              "True",
+              "False"
             ],
             "correctIndex": 0,
-            "explanation": "Feminine nouns ending in -а change to -у in accusative."
+            "explanation": ""
           },
           {
-            "question": "паспорт →",
+            "question": "\"Паспорт\" becomes \"Паспорту\" in Accusative.",
             "options": [
-              "паспорт",
-              "паспорта",
-              "паспорту",
-              "паспортом"
+              "True",
+              "False (No change for Inanimate Masculine)"
             ],
-            "correctIndex": 0,
-            "explanation": "Masculine inanimate nouns don't change in accusative."
+            "correctIndex": 1,
+            "explanation": ""
           },
           {
-            "question": "коробка →",
+            "question": "To say \"I see the city\", you say \"Я бачу місто\".",
             "options": [
-              "коробку",
-              "коробка",
-              "коробкою",
-              "коробки"
+              "True",
+              "False"
             ],
             "correctIndex": 0,
-            "explanation": "Feminine nouns ending in -а change to -у in accusative."
+            "explanation": ""
           },
           {
-            "question": "документ →",
+            "question": "To say \"I see the mom\", you say \"Я бачу маму\".",
             "options": [
-              "документ",
-              "документа",
-              "документу",
-              "документом"
+              "True",
+              "False"
             ],
             "correctIndex": 0,
-            "explanation": "Masculine inanimate nouns don't change in accusative."
+            "explanation": ""
           },
           {
-            "question": "посилка →",
+            "question": "\"Я люблю піца\" is correct.",
             "options": [
-              "посилку",
-              "посилка",
-              "посилкою",
-              "посилки"
+              "True",
+              "False"
             ],
-            "correctIndex": 0,
-            "explanation": "Feminine nouns ending in -а change to -у in accusative."
+            "correctIndex": 1,
+            "explanation": ""
           },
           {
-            "question": "квиток →",
+            "question": "\"Він має квиток\" is correct.",
             "options": [
-              "квиток",
-              "квитка",
-              "квитку",
-              "квитком"
+              "True",
+              "False"
             ],
             "correctIndex": 0,
-            "explanation": "Masculine inanimate nouns don't change in accusative."
+            "explanation": ""
           }
         ],
         "shuffleQuestions": true,
@@ -225,329 +561,159 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.092Z",
-      "modifiedAt": "2025-12-06T10:49:20.092Z"
-    },
-    {
-      "id": "act-a1-0-matchup",
-      "type": "match-up",
-      "title": "Verb and Object Pairs",
-      "description": "Match each verb with its appropriate object in accusative case.",
-      "content": {
-        "type": "match-up",
-        "pairs": [
-          {
-            "left": "читати",
-            "right": "книгу"
-          },
-          {
-            "left": "бачити",
-            "right": "вікно"
-          },
-          {
-            "left": "нести",
-            "right": "сумку"
-          },
-          {
-            "left": "відкривати",
-            "right": "двері"
-          },
-          {
-            "left": "вмикати",
-            "right": "телевізор"
-          },
-          {
-            "left": "закривати",
-            "right": "вікно"
-          },
-          {
-            "left": "брати",
-            "right": "паспорт"
-          },
-          {
-            "left": "давати",
-            "right": "подарунок"
-          },
-          {
-            "left": "чути",
-            "right": "музику"
-          },
-          {
-            "left": "ховати",
-            "right": "ключ"
-          },
-          {
-            "left": "показувати",
-            "right": "документ"
-          },
-          {
-            "left": "класти",
-            "right": "коробку"
-          }
-        ],
-        "shuffleRight": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.092Z",
-      "modifiedAt": "2025-12-06T10:49:20.092Z"
-    },
-    {
-      "id": "act-a1-0-groupsort",
-      "type": "group-sort",
-      "title": "Changes vs No Change",
-      "description": "Sort these nouns into groups based on whether they change in the accusative case.",
-      "content": {
-        "type": "group-sort",
-        "groups": [
-          {
-            "id": "changes-in-accusative",
-            "name": "Changes in Accusative",
-            "items": [
-              "книга → книгу",
-              "сумка → сумку",
-              "газета → газету",
-              "валіза → валізу",
-              "коробка → коробку",
-              "посилка → посилку"
-            ]
-          },
-          {
-            "id": "no-change-in-accusative",
-            "name": "No Change in Accusative",
-            "items": [
-              "стіл → стіл",
-              "журнал → журнал",
-              "паспорт → паспорт",
-              "документ → документ",
-              "вікно → вікно",
-              "квиток → квиток"
-            ]
-          }
-        ],
-        "shuffleItems": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.092Z",
-      "modifiedAt": "2025-12-06T10:49:20.092Z"
-    },
-    {
-      "id": "act-a1-0-truefalse",
-      "type": "true-false",
-      "title": "Accusative Rules",
-      "description": "Decide if each statement about the accusative case is true or false.",
-      "content": {
-        "type": "true-false",
-        "statements": [
-          {
-            "statement": "Masculine inanimate nouns change their ending in the accusative.",
-            "isTrue": false,
-            "explanation": "False. Masculine inanimate nouns keep the same form: стіл → стіл."
-          },
-          {
-            "statement": "Feminine nouns ending in -а change to -у in the accusative.",
-            "isTrue": true,
-            "explanation": "True. книга → книгу, сумка → сумку."
-          },
-          {
-            "statement": "Neuter nouns change their ending in the accusative.",
-            "isTrue": false,
-            "explanation": "False. Neuter nouns stay the same: вікно → вікно."
-          },
-          {
-            "statement": "The accusative case marks the direct object of a verb.",
-            "isTrue": true,
-            "explanation": "True. In 'Я читаю книгу', книгу is the direct object."
-          },
-          {
-            "statement": "Word order in Ukrainian is fixed like in English.",
-            "isTrue": false,
-            "explanation": "False. Ukrainian word order is flexible because case endings mark grammatical roles."
-          },
-          {
-            "statement": "Feminine nouns ending in -я change to -ю in the accusative.",
-            "isTrue": true,
-            "explanation": "True. земля → землю, пісня → пісню."
-          },
-          {
-            "statement": "Transitive verbs take objects in the accusative case.",
-            "isTrue": true,
-            "explanation": "True. Verbs like бачити, читати, and брати require accusative objects."
-          },
-          {
-            "statement": "The accusative case is used for the subject of a sentence.",
-            "isTrue": false,
-            "explanation": "False. The nominative case marks the subject; accusative marks the object."
-          },
-          {
-            "statement": "Inanimate masculine nouns look the same in nominative and accusative.",
-            "isTrue": true,
-            "explanation": "True. стіл, журнал, паспорт don't change form."
-          },
-          {
-            "statement": "Both вікно and двері don't change in the accusative case.",
-            "isTrue": true,
-            "explanation": "True. Neuter nouns and these pluralia tantum stay unchanged."
-          },
-          {
-            "statement": "All feminine nouns end in -ою in the accusative case.",
-            "isTrue": false,
-            "explanation": "False. Feminine nouns end in -у or -ю in accusative, not -ою."
-          },
-          {
-            "statement": "You can change Ukrainian word order without changing meaning because of case endings.",
-            "isTrue": true,
-            "explanation": "True. \"Я читаю книгу\" and \"Книгу читаю я\" mean the same thing."
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.092Z",
-      "modifiedAt": "2025-12-06T10:49:20.092Z"
+      "createdAt": "2025-12-08T21:22:09.881Z",
+      "modifiedAt": "2025-12-08T21:22:09.881Z"
     },
     {
       "id": "act-a1-0-fillblank",
       "type": "fill-blank",
-      "title": "Complete with Accusative",
-      "description": "Fill in the blanks with the correct accusative form.",
+      "title": "General Mix",
+      "description": "Choose the correct form (Nominative or Accusative).",
       "content": {
         "type": "fill-blank",
         "items": [
           {
-            "prompt": "Я читаю ___.",
-            "answer": "книгу",
-            "options": [
-              "книгу",
-              "книга",
-              "книги",
-              "книгою"
-            ]
-          },
-          {
-            "prompt": "Вона бачить ___.",
-            "answer": "стіл",
-            "options": [
-              "стіл",
-              "столу",
-              "столом",
-              "стола"
-            ]
-          },
-          {
-            "prompt": "Він несе ___.",
-            "answer": "валізу",
-            "options": [
-              "валізу",
-              "валіза",
-              "валізи",
-              "валізою"
-            ]
-          },
-          {
-            "prompt": "Ми відкриваємо ___.",
-            "answer": "вікно",
-            "options": [
-              "вікно",
-              "вікна",
-              "вікном",
-              "вікну"
-            ]
-          },
-          {
-            "prompt": "Ти маєш ___?",
+            "prompt": "Це мій ___ (паспорт).",
             "answer": "паспорт",
+            "hints": [
+              "паспорт"
+            ],
             "options": [
               "паспорт",
               "паспорта",
-              "паспорту",
-              "паспортом"
+              "паспорту"
             ]
           },
           {
-            "prompt": "Вони читають ___.",
-            "answer": "газету",
+            "prompt": "Я показую ___ (паспорт).",
+            "answer": "паспорт",
+            "hints": [
+              "паспорт"
+            ],
             "options": [
-              "газету",
-              "газета",
-              "газети",
-              "газетою"
+              "паспорт",
+              "паспорта",
+              "паспорту"
             ]
           },
           {
-            "prompt": "Я беру ___.",
-            "answer": "сумку",
+            "prompt": "Де твоя ___ (віза)?",
+            "answer": "віза",
+            "hints": [
+              "віза"
+            ],
             "options": [
-              "сумку",
-              "сумка",
-              "сумки",
-              "сумкою"
+              "віза",
+              "візу",
+              "візи"
             ]
           },
           {
-            "prompt": "Він вмикає ___.",
-            "answer": "телевізор",
+            "prompt": "Я маю ___ (віза).",
+            "answer": "візу",
+            "hints": [
+              "віза"
+            ],
             "options": [
-              "телевізор",
-              "телевізора",
-              "телевізору",
-              "телевізором"
+              "візу",
+              "віза",
+              "візи"
             ]
           },
           {
-            "prompt": "Вона показує ___.",
-            "answer": "фото",
+            "prompt": "Це цікава ___ (книга).",
+            "answer": "книга",
+            "hints": [
+              "книга"
+            ],
             "options": [
-              "фото",
-              "фота",
-              "фоту",
-              "фотом"
+              "книга",
+              "книгу",
+              "книги"
             ]
           },
           {
-            "prompt": "Ми закриваємо ___.",
-            "answer": "двері",
+            "prompt": "Ми читаємо ___ (книга).",
+            "answer": "книгу",
+            "hints": [
+              "книга"
+            ],
             "options": [
-              "двері",
-              "дверей",
-              "дверям",
-              "дверима"
+              "книгу",
+              "книга",
+              "книги"
             ]
           },
           {
-            "prompt": "Ти чуєш ___?",
-            "answer": "музику",
+            "prompt": "Ось моя ___ (валіза).",
+            "answer": "валіза",
+            "hints": [
+              "валіза"
+            ],
             "options": [
-              "музику",
-              "музика",
-              "музики",
-              "музикою"
+              "валіза",
+              "валізу",
+              "валізи"
             ]
           },
           {
-            "prompt": "Я даю ___.",
+            "prompt": "Я беру ___ (валіза).",
+            "answer": "валізу",
+            "hints": [
+              "валіза"
+            ],
+            "options": [
+              "валізу",
+              "валіза",
+              "валізи"
+            ]
+          },
+          {
+            "prompt": "Це гарний ___ (подарунок).",
             "answer": "подарунок",
+            "hints": [
+              "подарунок"
+            ],
             "options": [
               "подарунок",
               "подарунка",
-              "подарунку",
-              "подарунком"
+              "подарунку"
+            ]
+          },
+          {
+            "prompt": "Я даю ___ (подарунок).",
+            "answer": "подарунок",
+            "hints": [
+              "подарунок"
+            ],
+            "options": [
+              "подарунок",
+              "подарунка",
+              "подарунку"
+            ]
+          },
+          {
+            "prompt": "Це смачна ___ (піца).",
+            "answer": "піца",
+            "hints": [
+              "піца"
+            ],
+            "options": [
+              "піца",
+              "піцу",
+              "піци"
+            ]
+          },
+          {
+            "prompt": "Я їм ___ (піца).",
+            "answer": "піцу",
+            "hints": [
+              "піца"
+            ],
+            "options": [
+              "піцу",
+              "піца",
+              "піци"
             ]
           }
         ]
@@ -559,67 +725,102 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.092Z",
-      "modifiedAt": "2025-12-06T10:49:20.092Z"
+      "createdAt": "2025-12-08T21:22:09.881Z",
+      "modifiedAt": "2025-12-08T21:22:09.881Z"
     },
     {
-      "id": "act-a1-0-matchup",
-      "type": "match-up",
-      "title": "Nominative to Accusative",
-      "description": "Match each nominative form with its correct accusative form.",
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "Accusative Builder",
+      "description": "Complete the sentence with Accusative.",
       "content": {
-        "type": "match-up",
-        "pairs": [
+        "type": "fill-blank",
+        "items": [
           {
-            "left": "книга",
-            "right": "книгу"
+            "prompt": "Я бачу ___ (table).",
+            "answer": "стіл",
+            "hints": [
+              "table"
+            ]
           },
           {
-            "left": "газета",
-            "right": "газету"
+            "prompt": "Я беру ___ (book).",
+            "answer": "книгу",
+            "hints": [
+              "book"
+            ]
           },
           {
-            "left": "сумка",
-            "right": "сумку"
+            "prompt": "Я маю ___ (pen/ruchka).",
+            "answer": "ручку",
+            "hints": [
+              "pen/ruchka"
+            ]
           },
           {
-            "left": "валіза",
-            "right": "валізу"
+            "prompt": "Він їсть ___ (soup).",
+            "answer": "суп",
+            "hints": [
+              "soup"
+            ]
           },
           {
-            "left": "коробка",
-            "right": "коробку"
+            "prompt": "Вона п'є ___ (water).",
+            "answer": "воду",
+            "hints": [
+              "water"
+            ]
           },
           {
-            "left": "посилка",
-            "right": "посилку"
+            "prompt": "Ми любимо ___ (music).",
+            "answer": "музику",
+            "hints": [
+              "music"
+            ]
           },
           {
-            "left": "стіл",
-            "right": "стіл"
+            "prompt": "Я купую ___ (bread/khlib).",
+            "answer": "хліб",
+            "hints": [
+              "bread/khlib"
+            ]
           },
           {
-            "left": "журнал",
-            "right": "журнал"
+            "prompt": "Я читаю ___ (newspaper/hazeta).",
+            "answer": "газету",
+            "hints": [
+              "newspaper/hazeta"
+            ]
           },
           {
-            "left": "вікно",
-            "right": "вікно"
+            "prompt": "Ти знаєш ___ (English/anhliyska).",
+            "answer": "англійську",
+            "hints": [
+              "English/anhliyska"
+            ]
           },
           {
-            "left": "паспорт",
-            "right": "паспорт"
+            "prompt": "Вони мають ___ (car).",
+            "answer": "машину",
+            "hints": [
+              "car"
+            ]
           },
           {
-            "left": "документ",
-            "right": "документ"
+            "prompt": "Я бачу ___ (house/budynok).",
+            "answer": "будинок",
+            "hints": [
+              "house/budynok"
+            ]
           },
           {
-            "left": "квиток",
-            "right": "квиток"
+            "prompt": "Я хочу ___ (pizza).",
+            "answer": "піцу",
+            "hints": [
+              "pizza"
+            ]
           }
-        ],
-        "shuffleRight": true
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -628,163 +829,358 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.092Z",
-      "modifiedAt": "2025-12-06T10:49:20.092Z"
+      "createdAt": "2025-12-08T21:22:09.881Z",
+      "modifiedAt": "2025-12-08T21:22:09.881Z"
+    },
+    {
+      "id": "act-a1-0-unjumble",
+      "type": "unjumble",
+      "title": "Sentence Builder",
+      "description": "Build the sentences correctly.",
+      "content": {
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
+          {
+            "words": [
+              "має",
+              "квиток",
+              "Він"
+            ],
+            "answer": "Він має квиток."
+          },
+          {
+            "words": [
+              "піцу",
+              "Ми",
+              "любимо"
+            ],
+            "answer": "Ми любимо піцу."
+          },
+          {
+            "words": [
+              "бачу",
+              "Я",
+              "сумку",
+              "твою"
+            ],
+            "answer": "Я бачу твою сумку."
+          },
+          {
+            "words": [
+              "паспорт",
+              "Покажіть",
+              "ваш"
+            ],
+            "answer": "Покажіть ваш паспорт."
+          },
+          {
+            "words": [
+              "газету",
+              "Вона",
+              "читає"
+            ],
+            "answer": "Вона читає газету."
+          },
+          {
+            "words": [
+              "бере",
+              "Хто",
+              "валізу",
+              "?"
+            ],
+            "answer": "Хто бере валізу?"
+          },
+          {
+            "words": [
+              "воду",
+              "Я",
+              "п'ю"
+            ],
+            "answer": "Я п'ю воду."
+          },
+          {
+            "words": [
+              "дає",
+              "Він",
+              "подарунок"
+            ],
+            "answer": "Він дає подарунок."
+          },
+          {
+            "words": [
+              "маєш",
+              "Ти",
+              "ідею",
+              "?"
+            ],
+            "answer": "Ти маєш ідею?"
+          },
+          {
+            "words": [
+              "двері",
+              "Ми",
+              "закриваємо"
+            ],
+            "answer": "Ми закриваємо двері."
+          },
+          {
+            "words": [
+              "вікно",
+              "Хто",
+              "відкриває",
+              "?"
+            ],
+            "answer": "Хто відкриває вікно?"
+          },
+          {
+            "words": [
+              "чую",
+              "музику",
+              "Я",
+              "не"
+            ],
+            "answer": "Я не чую музику."
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.881Z",
+      "modifiedAt": "2025-12-08T21:22:09.881Z"
+    },
+    {
+      "id": "act-a1-0-translate",
+      "type": "translate",
+      "title": "Travel Mode",
+      "description": "Translate the following sentences into Ukrainian.",
+      "content": {
+        "type": "translate",
+        "items": [
+          {
+            "source": "I see the ticket.",
+            "answer": "Я бачу квиток."
+          },
+          {
+            "source": "I have a bag.",
+            "answer": "Я маю сумку."
+          },
+          {
+            "source": "He opens the window.",
+            "answer": "Він відкриває вікно."
+          },
+          {
+            "source": "She takes the envelope.",
+            "answer": "Вона бере конверт."
+          },
+          {
+            "source": "We have a problem.",
+            "answer": "Ми маємо проблему."
+          },
+          {
+            "source": "Give (me) water, please.",
+            "answer": "Дайте воду, будь ласка."
+          },
+          {
+            "source": "I do not see the passport.",
+            "answer": "Я не бачу ваш паспорт."
+          },
+          {
+            "source": "She is reading a magazine.",
+            "answer": "Вона читає журнал."
+          },
+          {
+            "source": "We like the city.",
+            "answer": "Ми любимо місто."
+          },
+          {
+            "source": "I am taking the suitcase.",
+            "answer": "Я беру валізу."
+          },
+          {
+            "source": "Where is the gift?",
+            "answer": "Де подарунок?"
+          },
+          {
+            "source": "He gives a ticket.",
+            "answer": "Він дає квиток."
+          }
+        ],
+        "direction": "to-uk"
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.881Z",
+      "modifiedAt": "2025-12-08T21:22:09.881Z"
     },
     {
       "id": "act-a1-0-anagram",
       "type": "anagram",
-      "title": "Object Vocabulary",
-      "description": "Unscramble the letters to form accusative case nouns.",
+      "title": "Object Scramble",
+      "description": "Unscramble these common objects.",
       "content": {
         "type": "anagram",
         "isAnagram": true,
         "items": [
           {
             "letters": [
-              "у",
-              "к",
-              "н",
+              "в",
               "и",
-              "г"
-            ],
-            "answer": "книгу",
-            "translation": "book"
-          },
-          {
-            "letters": [
-              "у",
-              "т",
-              "з",
-              "е",
-              "г",
-              "а"
-            ],
-            "answer": "газету",
-            "translation": "newspaper"
-          },
-          {
-            "letters": [
-              "у",
               "к",
-              "м",
-              "с",
-              "у"
-            ],
-            "answer": "сумку",
-            "translation": "bag"
-          },
-          {
-            "letters": [
-              "р",
               "о",
-              "п",
               "т",
-              "п",
-              "с",
-              "а"
-            ],
-            "answer": "паспорт",
-            "translation": "passport"
-          },
-          {
-            "letters": [
-              "к",
-              "и",
-              "т",
-              "о",
-              "к",
-              "в"
+              "к"
             ],
             "answer": "квиток",
-            "translation": "ticket"
+            "translation": "Ticket"
           },
           {
             "letters": [
-              "н",
-              "о",
-              "к",
-              "і",
-              "в"
-            ],
-            "answer": "вікно",
-            "translation": "window"
-          },
-          {
-            "letters": [
-              "л",
-              "і",
-              "т",
-              "с"
-            ],
-            "answer": "стіл",
-            "translation": "table"
-          },
-          {
-            "letters": [
+              "п",
               "а",
-              "л",
-              "ж",
               "р",
-              "н",
-              "у"
+              "т",
+              "о",
+              "с",
+              "п"
             ],
-            "answer": "журнал",
-            "translation": "magazine"
+            "answer": "паспорт",
+            "translation": "Passport"
+          },
+          {
+            "letters": [
+              "в",
+              "і",
+              "з",
+              "а",
+              "і",
+              "л"
+            ],
+            "answer": "валіза",
+            "translation": "Suitcase"
           },
           {
             "letters": [
               "к",
               "у",
-              "р",
+              "м",
+              "с",
+              "а"
+            ],
+            "answer": "сумка",
+            "translation": "Bag"
+          },
+          {
+            "letters": [
+              "з",
               "а",
+              "в",
+              "і"
+            ],
+            "answer": "віза",
+            "translation": "Visa"
+          },
+          {
+            "letters": [
+              "н",
+              "в",
+              "е",
+              "р",
+              "т",
+              "о",
+              "к"
+            ],
+            "answer": "конверт",
+            "translation": "Envelope"
+          },
+          {
+            "letters": [
               "д",
+              "а",
+              "р",
+              "у",
               "н",
               "о",
+              "к",
               "п",
               "о"
             ],
             "answer": "подарунок",
-            "translation": "gift"
+            "translation": "Gift"
           },
           {
             "letters": [
-              "т",
-              "м",
+              "г",
+              "а",
+              "з",
               "е",
+              "т",
+              "а"
+            ],
+            "answer": "газета",
+            "translation": "Newspaper"
+          },
+          {
+            "letters": [
+              "р",
               "н",
-              "к",
-              "д",
-              "о",
+              "а",
+              "л",
+              "ж",
               "у"
             ],
-            "answer": "документ",
-            "translation": "document"
+            "answer": "журнал",
+            "translation": "Magazine"
           },
           {
             "letters": [
-              "у",
-              "з",
-              "і",
-              "л",
-              "а",
-              "в"
-            ],
-            "answer": "валізу",
-            "translation": "suitcase"
-          },
-          {
-            "letters": [
-              "у",
+              "б",
               "к",
-              "л",
-              "и",
-              "с",
+              "а",
               "о",
+              "р",
+              "о"
+            ],
+            "answer": "коробка",
+            "translation": "Box"
+          },
+          {
+            "letters": [
+              "д",
+              "к",
+              "у",
+              "м",
+              "о",
+              "н",
+              "е",
+              "т"
+            ],
+            "answer": "документ",
+            "translation": "Document"
+          },
+          {
+            "letters": [
+              "б",
+              "а",
+              "р",
+              "о",
+              "м",
+              "л",
+              "е",
               "п"
             ],
-            "answer": "посилку",
-            "translation": "package"
+            "answer": "проблема",
+            "translation": "Problem"
           }
         ]
       },
@@ -795,418 +1191,276 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.092Z",
-      "modifiedAt": "2025-12-06T10:49:20.092Z"
-    },
-    {
-      "id": "act-a1-0-fillblank",
-      "type": "fill-blank",
-      "title": "Verb + Object Sentences",
-      "description": "Complete the question-and-answer pairs with the correct accusative forms.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Що ти бачиш? — Я бачу ___.",
-            "answer": "вікно",
-            "options": [
-              "вікно",
-              "вікна",
-              "вікном",
-              "вікну"
-            ]
-          },
-          {
-            "prompt": "Що вона читає? — Вона читає ___.",
-            "answer": "журнал",
-            "options": [
-              "журнал",
-              "журналу",
-              "журналом",
-              "журнала"
-            ]
-          },
-          {
-            "prompt": "Що він несе? — Він несе ___.",
-            "answer": "коробку",
-            "options": [
-              "коробку",
-              "коробка",
-              "коробки",
-              "коробкою"
-            ]
-          },
-          {
-            "prompt": "Що ви відкриваєте? — Ми відкриваємо ___.",
-            "answer": "двері",
-            "options": [
-              "двері",
-              "дверей",
-              "дверям",
-              "дверима"
-            ]
-          },
-          {
-            "prompt": "Що вони вимикають? — Вони вимикають ___.",
-            "answer": "світло",
-            "options": [
-              "світло",
-              "світла",
-              "світлом",
-              "світлу"
-            ]
-          },
-          {
-            "prompt": "Що ти ховаєш? — Я ховаю ___.",
-            "answer": "ключ",
-            "options": [
-              "ключ",
-              "ключа",
-              "ключем",
-              "ключу"
-            ]
-          },
-          {
-            "prompt": "Що він дає? — Він дає ___.",
-            "answer": "конверт",
-            "options": [
-              "конверт",
-              "конверта",
-              "конверту",
-              "конвертом"
-            ]
-          },
-          {
-            "prompt": "Що вона бере? — Вона бере ___.",
-            "answer": "посилку",
-            "options": [
-              "посилку",
-              "посилка",
-              "посилки",
-              "посилкою"
-            ]
-          },
-          {
-            "prompt": "Що ми показуємо? — Ми показуємо ___.",
-            "answer": "документ",
-            "options": [
-              "документ",
-              "документа",
-              "документу",
-              "документом"
-            ]
-          },
-          {
-            "prompt": "Що ти кладеш? — Я кладу ___.",
-            "answer": "книгу",
-            "options": [
-              "книгу",
-              "книга",
-              "книги",
-              "книгою"
-            ]
-          },
-          {
-            "prompt": "Що він закриває? — Він закриває ___.",
-            "answer": "вікно",
-            "options": [
-              "вікно",
-              "вікна",
-              "вікном",
-              "вікну"
-            ]
-          },
-          {
-            "prompt": "Що вона чує? — Вона чує ___.",
-            "answer": "музику",
-            "options": [
-              "музику",
-              "музика",
-              "музики",
-              "музикою"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.092Z",
-      "modifiedAt": "2025-12-06T10:49:20.092Z"
+      "createdAt": "2025-12-08T21:22:09.881Z",
+      "modifiedAt": "2025-12-08T21:22:09.881Z"
     }
   ],
   "vocabulary": {
     "moduleId": "mod-uk-A1-11",
     "level": "A1",
     "phase": "A1.2",
-    "wordCount": 25,
-    "newWordCount": 25,
+    "wordCount": 26,
+    "newWordCount": 26,
     "reviewWordCount": 0,
-    "transliterationMode": "partial",
+    "transliterationMode": "full",
     "words": [
       {
-        "id": "v-bachyty-(bachyty)-0-0",
-        "uk": "бачити (bachyty)",
+        "id": "v-bachyty-0-0",
+        "uk": "бачити",
         "en": "to see",
-        "pos": "verb",
+        "pos": "Class II",
         "ipa": "/ˈbɑtʃɪtɪ/",
-        "note": "Class II",
+        "note": "[🔊](audio_bachyty)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-chuty-(chuty)-0-1",
-        "uk": "чути (chuty)",
+        "id": "v-chuty-0-1",
+        "uk": "чути",
         "en": "to hear",
-        "pos": "verb",
+        "pos": "Class I",
         "ipa": "/ˈtʃutɪ/",
-        "note": "Class II",
+        "note": "[🔊](audio_chuty)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-braty-(braty)-0-2",
-        "uk": "брати (braty)",
+        "id": "v-braty-0-2",
+        "uk": "брати",
         "en": "to take",
-        "pos": "verb",
+        "pos": "Class I",
         "ipa": "/ˈbrɑtɪ/",
-        "note": "Class I, беру, береш",
+        "note": "[🔊](audio_braty)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-davaty-(davaty)-0-3",
-        "uk": "давати (davaty)",
+        "id": "v-davaty-0-3",
+        "uk": "давати",
         "en": "to give",
-        "pos": "verb",
+        "pos": "Class I",
         "ipa": "/dɑˈvɑtɪ/",
-        "note": "Class I, даю, даєш",
+        "note": "[🔊](audio_davaty)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-maty-(maty)-0-4",
-        "uk": "мати (maty)",
+        "id": "v-maty-0-4",
+        "uk": "мати",
         "en": "to have",
-        "pos": "verb",
+        "pos": "Class I",
         "ipa": "/ˈmɑtɪ/",
-        "note": "Class I, маю, маєш",
+        "note": "[🔊](audio_maty)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-nesty-(nesty)-0-5",
-        "uk": "нести (nesty)",
+        "id": "v-nesty-0-5",
+        "uk": "нести",
         "en": "to carry",
-        "pos": "verb",
-        "ipa": "/ˈnɛstɪ/",
-        "note": "Irregular: несу, несеш",
+        "pos": "Class I",
+        "ipa": "/nɛsˈtɪ/",
+        "note": "[🔊](audio_nesty)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-klasty-(klasty)-0-6",
-        "uk": "класти (klasty)",
+        "id": "v-klasty-0-6",
+        "uk": "класти",
         "en": "to put",
-        "pos": "verb",
+        "pos": "Class I",
         "ipa": "/ˈklɑstɪ/",
-        "note": "Class I, кладу, кладеш",
+        "note": "[🔊](audio_klasty)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-vidkryvaty-(vidkryvaty)-0-7",
-        "uk": "відкривати (vidkryvaty)",
+        "id": "v-vidkryvaty-0-7",
+        "uk": "відкривати",
         "en": "to open",
-        "pos": "verb",
+        "pos": "Class I",
         "ipa": "/vʲidkrɪˈvɑtɪ/",
-        "note": "Class I",
+        "note": "[🔊](audio_vidkryvaty)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-zakryvaty-(zakryvaty)-0-8",
-        "uk": "закривати (zakryvaty)",
+        "id": "v-zakryvaty-0-8",
+        "uk": "закривати",
         "en": "to close",
-        "pos": "verb",
+        "pos": "Class I",
         "ipa": "/zɑkrɪˈvɑtɪ/",
-        "note": "Class I",
+        "note": "[🔊](audio_zakryvaty)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-vmykaty-(vmykaty)-0-9",
-        "uk": "вмикати (vmykaty)",
-        "en": "to turn on",
-        "pos": "verb",
-        "ipa": "/vmɪˈkɑtɪ/",
-        "note": "Class I",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-vymykaty-(vymykaty)-0-10",
-        "uk": "вимикати (vymykaty)",
-        "en": "to turn off",
-        "pos": "verb",
-        "ipa": "/vɪmɪˈkɑtɪ/",
-        "note": "Class I",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-pokazuvaty-(pokazuvaty)-0-11",
-        "uk": "показувати (pokazuvaty)",
+        "id": "v-pokazuvaty-0-9",
+        "uk": "показувати",
         "en": "to show",
-        "pos": "verb",
-        "ipa": "/pɔkɑˈzuvɑtɪ/",
-        "note": "Class I",
+        "pos": "Class I",
+        "ipa": "/pɔˈkɑzuvɑtɪ/",
+        "note": "[🔊](audio_pokazuvaty)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-khovaty-(khovaty)-0-12",
-        "uk": "ховати (khovaty)",
-        "en": "to hide",
-        "pos": "verb",
-        "ipa": "/xɔˈvɑtɪ/",
-        "note": "Class I",
+        "id": "v-shukaty-0-10",
+        "uk": "шукати",
+        "en": "to look for",
+        "pos": "Class I",
+        "ipa": "/ʃuˈkɑtɪ/",
+        "note": "[🔊](audio_shukaty)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-hazeta-(hazeta)-0-13",
-        "uk": "газета (hazeta)",
+        "id": "v-znakhodyty-0-11",
+        "uk": "знаходити",
+        "en": "to find",
+        "pos": "Class II",
+        "ipa": "/znɑˈxɔdɪtɪ/",
+        "note": "[🔊](audio_znakhodyty)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-hazeta-0-12",
+        "uk": "газета",
         "en": "newspaper",
         "pos": "noun",
         "ipa": "/ɦɑˈzɛtɑ/",
-        "gender": "f",
-        "note": "Acc: газету",
+        "note": "[🔊](audio_hazeta)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-zhurnal-(zhurnal)-0-14",
-        "uk": "журнал (zhurnal)",
+        "id": "v-zhurnal-0-13",
+        "uk": "журнал",
         "en": "magazine",
         "pos": "noun",
         "ipa": "/ʒurˈnɑl/",
-        "gender": "m",
-        "note": "Acc: журнал",
+        "note": "[🔊](audio_zhurnal)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-lyst-(lyst)-0-15",
-        "uk": "лист (lyst)",
+        "id": "v-lyst-0-14",
+        "uk": "лист",
         "en": "letter",
         "pos": "noun",
         "ipa": "/lɪst/",
-        "gender": "m",
-        "note": "Acc: лист",
+        "note": "[🔊](audio_lyst)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-konvert-(konvert)-0-16",
-        "uk": "конверт (konvert)",
+        "id": "v-konvert-0-15",
+        "uk": "конверт",
         "en": "envelope",
         "pos": "noun",
         "ipa": "/kɔnˈvɛrt/",
-        "gender": "m",
-        "note": "Acc: конверт",
+        "note": "[🔊](audio_konvert)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-posylka-(posylka)-0-17",
-        "uk": "посилка (posylka)",
-        "en": "package",
+        "id": "v-posylka-0-16",
+        "uk": "посилка",
+        "en": "parcel",
         "pos": "noun",
         "ipa": "/pɔˈsɪlkɑ/",
-        "gender": "f",
-        "note": "Acc: посилку",
+        "note": "[🔊](audio_posylka)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-podarunok-(podarunok)-0-18",
-        "uk": "подарунок (podarunok)",
+        "id": "v-podarunok-0-17",
+        "uk": "подарунок",
         "en": "gift",
         "pos": "noun",
         "ipa": "/pɔdɑˈrunɔk/",
-        "gender": "m",
-        "note": "Acc: подарунок",
+        "note": "[🔊](audio_podarunok)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-kvytok-(kvytok)-0-19",
-        "uk": "квиток (kvytok)",
+        "id": "v-kvytok-0-18",
+        "uk": "квиток",
         "en": "ticket",
         "pos": "noun",
         "ipa": "/kvɪˈtɔk/",
-        "gender": "m",
-        "note": "Acc: квиток",
+        "note": "[🔊](audio_kvytok)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-pasport-(pasport)-0-20",
-        "uk": "паспорт (pasport)",
+        "id": "v-pasport-0-19",
+        "uk": "паспорт",
         "en": "passport",
         "pos": "noun",
         "ipa": "/ˈpɑspɔrt/",
-        "gender": "m",
-        "note": "Acc: паспорт",
+        "note": "[🔊](audio_pasport)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-dokument-(dokument)-0-21",
-        "uk": "документ (dokument)",
+        "id": "v-dokument-0-20",
+        "uk": "документ",
         "en": "document",
         "pos": "noun",
         "ipa": "/dɔkuˈmɛnt/",
-        "gender": "m",
-        "note": "Acc: документ",
+        "note": "[🔊](audio_dokument)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-sumka-(sumka)-0-22",
-        "uk": "сумка (sumka)",
+        "id": "v-sumka-0-21",
+        "uk": "сумка",
         "en": "bag",
         "pos": "noun",
         "ipa": "/ˈsumkɑ/",
-        "gender": "f",
-        "note": "Acc: сумку",
+        "note": "[🔊](audio_sumka)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-valiza-(valiza)-0-23",
-        "uk": "валіза (valiza)",
+        "id": "v-valiza-0-22",
+        "uk": "валіза",
         "en": "suitcase",
         "pos": "noun",
         "ipa": "/vɑˈlʲizɑ/",
-        "gender": "f",
-        "note": "Acc: валізу",
+        "note": "[🔊](audio_valiza)",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-korobka-(korobka)-0-24",
-        "uk": "коробка (korobka)",
+        "id": "v-korobka-0-23",
+        "uk": "коробка",
         "en": "box",
         "pos": "noun",
         "ipa": "/kɔˈrɔbkɑ/",
-        "gender": "f",
-        "note": "Acc: коробку",
+        "note": "[🔊](audio_korobka)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-problema-0-24",
+        "uk": "проблема",
+        "en": "problem",
+        "pos": "noun",
+        "ipa": "/prɔˈblɛmɑ/",
+        "note": "[🔊](audio_problema)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-ideya-0-25",
+        "uk": "ідея",
+        "en": "idea",
+        "pos": "noun",
+        "ipa": "/iˈdɛjɑ/",
+        "note": "[🔊](audio_ideya)",
         "isNew": true,
         "firstModule": 0
       }

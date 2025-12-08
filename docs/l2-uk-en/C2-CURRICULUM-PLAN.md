@@ -3,7 +3,7 @@
 **Status:** 📝 PLANNED
 **Modules:** 01-80 (80 modules)
 **Vocabulary Target:** ~2,000 new words (~25/module)
-**Cumulative Target:** ~11,000+ words after C2
+**Cumulative Target:** ~12,550+ words after C2
 **Immersion:** 2% English / 98% Ukrainian
 
 > **Note:** C2 represents native-like mastery with focus on stylistic perfection, literary creation, and professional specialization.

@@ -46,9 +46,9 @@
 
 | Level | Reading | Practice | Total | New Words/Module |
 |-------|---------|----------|-------|------------------|
-| A1 | 15 min | 45 min | 1h | 15-20 |
-| A2 | 20 min | 45 min | 1h+ | 20-25 |
-| B1 | 30 min | 60 min | 1.5h | 25-30 |
+| A1 | 15 min | 45 min | 1h | 25-30 |
+| A2 | 20 min | 45 min | 1h+ | 25-35 |
+| B1 | 30 min | 60 min | 1.5h | 30-40 |
 | B2 | 40 min | 80 min | 2h | 25-30 |
 | C1 | 45 min | 90 min | 2h+ | 30-35 |
 | C2 | 45 min | 90 min | 2h+ | 30-35 |
@@ -68,6 +68,36 @@ Modules should be **rich, engaging, and comprehensive**. One curriculum module m
 2. **Cultural anchoring** — how does this connect to Ukrainian life?
 3. **Narrative examples** — mini-stories, not isolated sentences
 4. **Practical dialogues** — show the grammar in natural conversation
+
+---
+
+## Showcasing Ukrainian Richness & Beauty
+
+To surprise and impress students, highlighting the beautiful, melodic, and rich nature of the Ukrainian language is paramount. Modules must actively integrate authentic cultural elements, showcase phonetic nuances, and highlight idiomatic expressions.
+
+### 1. Phonetics & Nuance (The Sound of Ukraine)
+- **IPA for All New Vocabulary:** Every new word introduced in the vocabulary table MUST have its full IPA transcription, regardless of level. This ensures pronunciation accuracy from A1.
+- **Key Sound Spotlights:** Explicitly highlight challenging or unique Ukrainian sounds (e.g., Ї, Щ, Г vs Ґ, Ь) with detailed articulation guidance.
+- **Melody Highlights:** Point out how specific sounds or grammatical structures (e.g., iotated vowels, soft signs, sentence stress patterns) contribute to the language's melodic quality.
+
+### 2. Audio Integration (The Voice of Ukraine)
+- **Mandatory Audio:** All new vocabulary, example sentences, key phrases, and dialogues MUST be accompanied by native speaker audio. Placeholder links can be used if actual audio generation is not yet integrated.
+- **Intonation & Rhythm:** Audio should model natural Ukrainian intonation and rhythm, particularly in dialogues and longer texts.
+
+### 3. Richness & Phraseology (The Wisdom of Ukraine)
+- **Proverbs, Idioms & Set Expressions:** From B1+, modules MUST organically integrate Ukrainian proverbs, idioms, and stable phraseological expressions. These should be explained in context, not just listed. Aim for 1-2 new phraseological units per module.
+- **Word Etymology:** Where appropriate, provide brief, engaging insights into the origin or cultural significance of a word.
+
+### 4. Culture, Folklore & History (The Heart of Ukraine)
+- **Beyond Basic Facts:** Engagement boxes should go deeper than simple facts.
+- **Folklore/Traditions Corner (New Box Type):** `> 🎭 **Folklore/Traditions Corner**` for myths, legends, folk customs, and traditions.
+- **Historical Context in Narrative:** Weave historical context naturally into narratives, especially in history and literature modules.
+- **Decolonization Lens:** As per previous guidelines, actively dismantle imperial myths and celebrate Ukrainian achievements.
+
+### 5. Grammatical Elegance (The Logic of Ukraine)
+- **Highlight "Why":** For complex grammar points (cases, aspect, motion verbs), actively explain the elegance and logical beauty of the Ukrainian system, using relatable analogies where possible.
+- **Case System:** Describe cases not just as endings, but as tools for expressing nuance and relationships.
+- **Verbal Aspect:** Explain aspect as the "soul" of verbs, showing how it sculpts meaning.
 
 ---
 
@@ -269,6 +299,18 @@ Modules should be **rich, engaging, and comprehensive**. One curriculum module m
 
 ## Content Depth Requirements
 
+### Vocabulary Policy: Active vs Passive
+
+To ensure narratives are engaging and authentic (especially for History/Culture modules), we distinguish between two types of vocabulary:
+
+1.  **Active Vocabulary (Target):** The ~25-40 specific words listed in the `Vocabulary` table.
+    *   **Rule:** These MUST be drilled in activities.
+    *   **Constraint:** Activities must ONLY test these words (plus prior module words).
+
+2.  **Passive/Contextual Vocabulary:** Additional words used in the narrative to make the story flow or explain complex concepts.
+    *   **Rule:** You ARE ALLOWED to use words outside the target list in the Narrative/Text sections to maintain richness and "Soul".
+    *   **Constraint:** Do not test these in activities unless they are added to the table. Gloss difficult words if necessary.
+
 ### What Counts as "Content Words"
 
 - ✅ Narrative paragraphs, explanations, cultural context
@@ -286,6 +328,7 @@ Modules should be **rich, engaging, and comprehensive**. One curriculum module m
 - [ ] **Mini-dialogues** showing grammar in real conversation
 - [ ] **Usage patterns / Common mistakes** section
 - [ ] **Multiple contextual examples** (not isolated words)
+- [ ] **Phraseology Integration:** Use of proverbs, idioms, or set expressions (from B1+)
 - [ ] **Engagement boxes** (varied types)
 - [ ] **Cultural context** where relevant
 - [ ] **Authentic materials** (real texts, media)
@@ -385,6 +428,7 @@ Use: **Story → Vocabulary-in-Context → Analysis → Retelling**
 | Language Link | 🔗 | Connections to English |
 | Real World | 🌍 | Modern relevance |
 | Pop Culture Moment | 🎬 | Movies, music, games, memes |
+| Folklore/Traditions Corner | 🎭 | Myths, legends, customs, traditions |
 
 ### Format
 
@@ -1170,59 +1214,54 @@ The generator (`scripts/generate.ts`) should:
 
 ---
 
-## Pronunciation Guidance (B2+ Grammar Modules)
+## Pronunciation & Phonetics Guide (All Levels)
 
 ### When Required
 
-Grammar modules at B2+ level that introduce new grammatical forms must include pronunciation guidance:
+Pronunciation guidance must be integrated actively across all modules where new sounds, challenging phonetic distinctions, or specific intonation patterns are introduced.
 
-| Grammar Type | Pronunciation Elements |
-|--------------|----------------------|
-| Passive forms | -ий vs -о endings, stress patterns |
-| Participles | Stress shifts, consonant changes |
-| Complex verb forms | Aspect-related stress |
-| Formal registers | Intonation patterns |
+| Level | Focus Areas |
+|-------|-------------|
+| **A1** | IPA for all new vocabulary, key letter sounds (e.g., Ж, Щ, Ц, Г vs Ґ, Ь, И vs І), basic word stress. |
+| **A2** | IPA for all new vocabulary, aspect-related stress shifts, challenging consonant clusters, basic intonation patterns for questions/statements. |
+| **B1** | IPA for new vocabulary, stress changes in declension/conjugation, sentence rhythm, connected speech phenomena. |
+| **B2+** | All above, plus stylistic intonation, regional accents (recognition), phrase stress, fine-tuning of articulation. |
 
 ### Required Components
 
-1. **IPA transcriptions** for key examples
-2. **Stress pattern tables** showing where stress falls
-3. **Minimal pairs** for forms that sound similar (e.g., написаний vs написано)
-4. **Intonation contours** for sentence-level pronunciation
+1.  **IPA Transcriptions:** MUST be provided for *all new vocabulary* in the vocabulary table.
+2.  **Key Sound Spotlights:** Dedicated sections or engagement boxes for challenging sounds (e.g., Г vs Ґ, Ь, И vs І), providing detailed articulation instructions (mouth position, tongue placement).
+3.  **Stress Pattern Guidance:**
+    *   For words with mobile stress (B1+), provide examples of stress shifts.
+    *   Stress pattern tables for grammatical forms (e.g., passive participles).
+4.  **Minimal Pairs:** For sounds that are easily confused, provide minimal pair examples (e.g., сім / сін).
+5.  **Intonation Contours:** For sentence-level pronunciation, illustrate basic intonation patterns (e.g., for questions, exclamations, neutral statements).
+6.  **Audio Integration (CRITICAL):** All spoken examples (words, phrases, dialogues) MUST have associated native speaker audio.
 
-### Format Example
+### Format Example (IPA for Vocabulary)
 
 ```markdown
-## Вимова
+# Vocabulary
 
-### Наголос
+| Word | IPA | English | POS | Gender | Note | Audio |
+|------|-----|---------|-----|--------|------|-------|
+| слово | /ˈslɔvɔ/ | word | noun | n | | [🔊](link_to_audio) |
+```
 
-| Форма | IPA | Наголос |
-|-------|-----|---------|
-| написа́ний | /nɐpɪˈsɑnɪj/ | на -са- |
-| напи́сано | /nɐˈpɪsɑno/ | на -пи- |
+### Format Example (Key Sound Spotlight)
 
-### Мінімальні пари
-
-| Форма 1 | IPA | Форма 2 | IPA |
-|---------|-----|---------|-----|
-| -ий | /ɪj/ | -о | /o/ |
-
-### Інтонація
-
-| Контекст | Інтонаційний контур |
-|----------|---------------------|
-| Нейтральний | → ↘ |
-| Офіційний | ↗ ↘ |
+```markdown
+> 💡 **Key Sound Spotlight: Г vs Ґ**
+> Ukrainian has two distinct 'G' sounds:
+> - **Г (Hook):** A soft, breathy 'h' sound (like in 'ahoy'). Your throat barely vibrates.
+> - **Ґ (Hook with Hat):** A hard, explosive 'g' sound (like in 'go'). Your throat vibrates strongly.
+> Mispronouncing these can change meaning (e.g., Ганна vs Ґанна). Listen carefully and practice:
+> [🔊](link_to_audio_g) (Ганна) vs [🔊](link_to_audio_g_hat) (Ґанна)
 ```
 
 ### Rationale
 
-At B2+, learners need to:
-- **Produce** accurate pronunciation, not just recognize
-- **Distinguish** similar forms by sound
-- **Match** register through intonation
-- **Self-correct** using stress patterns
+At all levels, accurate pronunciation is foundational. From A1, learners need clear guidance. At B2+, learners need to produce and perceive subtle phonetic and intonational distinctions for native-like fluency and effective communication across all registers.
 
 ---
 

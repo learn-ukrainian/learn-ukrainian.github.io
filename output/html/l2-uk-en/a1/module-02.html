@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -481,13 +521,15 @@ footer {
     <h1>Module 02: The Cyrillic Code II</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Quiz</button>
-      <button class="nav-tab" data-section="activity-1">2. Match</button>
-      <button class="nav-tab" data-section="activity-2">3. Sort</button>
-      <button class="nav-tab" data-section="activity-3">4. Match</button>
-      <button class="nav-tab" data-section="activity-4">5. T/F</button>
-      <button class="nav-tab" data-section="activity-5">6. Fill</button>
-      <button class="nav-tab" data-section="activity-6">7. Spell</button>
+      <button class="nav-tab" data-section="activity-0">1. Match</button>
+      <button class="nav-tab" data-section="activity-1">2. Quiz</button>
+      <button class="nav-tab" data-section="activity-2">3. Match</button>
+      <button class="nav-tab" data-section="activity-3">4. Sort</button>
+      <button class="nav-tab" data-section="activity-4">5. Fill</button>
+      <button class="nav-tab" data-section="activity-5">6. Order</button>
+      <button class="nav-tab" data-section="activity-6">7. Quiz</button>
+      <button class="nav-tab" data-section="activity-7">8. Spell</button>
+      <button class="nav-tab" data-section="activity-8">9. T/F</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -497,426 +539,238 @@ footer {
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.1</span>
         <h2 style="font-size:2rem;margin:0.5rem 0">The Cyrillic Code II</h2>
-        <p style="color:var(--text-muted)">Unique Letters, Soft Sign, and the Italic Warning</p>
+        <p style="color:var(--text-muted)">The Aliens, The Hissers, and The Soft Sign</p>
       </div>
       
     <div class="card section-intro">
       <h3>📖 Introduction</h3>
       <div class="md-content"><h2 id="warmup">warm-up</h2>
-<h3 id="congratulationsyourehalfwaythere">Congratulations - You're Halfway There!</h3>
-<p>In Module 01, you learned 19 letters. Today we complete the Ukrainian alphabet with the remaining 14 letters. By the end of this lesson, you'll be able to read ANY Ukrainian word!</p>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>Ukrainian has 33 letters - one more than Russian (which has 32). The extra letter is <strong>Ґ</strong> - a sound that was banned during Soviet times but has been restored in independent Ukraine!</p>
-</blockquote>
-<h3 id="whatslefttolearn">What's Left to Learn?</h3>
-<p>We have four groups of letters remaining:</p>
-<table>
-<thead>
-<tr>
-<th>Group</th>
-<th>Letters</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Unique Sounds</strong></td>
-<td>Г, Ґ, Ж, Ш, Щ, Ч, Ц</td>
-<td>Sounds not in English</td>
-</tr>
-<tr>
-<td><strong>Iotated Vowels</strong></td>
-<td>Є, Ї, Ю, Я</td>
-<td>Vowels with a "y" prefix</td>
-</tr>
-<tr>
-<td><strong>Hard I</strong></td>
-<td>И</td>
-<td>Between /i/ and /ɪ/</td>
-</tr>
-<tr>
-<td><strong>Soft Sign</strong></td>
-<td>Ь</td>
-<td>Makes previous consonant soft</td>
-</tr>
-</tbody>
-</table>
-<p>Let's crack the rest of the code!</p>
+<p><strong>Entering the Alien Territory: The Sound of Ukrainian Identity.</strong></p>
+<p>In Module 01, we built a foundation with familiar letters, the "True Friends," and demystified the "False Friends" that look like English but sound different. Now, we embark on the final, most exciting stage of our journey into the Ukrainian alphabet: meeting the true "Aliens."</p>
+<p>These are the letters that initially look like enigmatic squiggles, symbols from another galaxy: <strong>Ж, Щ, Є, Ю</strong>. They don't resemble anything in the Latin alphabet, and that's precisely their beauty and power. These unique symbols carry the very essence of Ukrainian phonology, shaping its melody, rhythm, and distinct character. They are not merely letters; they are gateways to the authentic sound of Ukraine, sounds that you will soon learn to love and produce with confidence.</p>
+<p>This module is where the alphabet truly comes alive. We will master the rich, textured "Hissing Sounds" that are a hallmark of Slavic languages. You will learn the "Y-Vowels," which introduce a beautiful softness and fluidity to words. We will tackle the subtle but crucial distinction between the two Ukrainian 'H' sounds (one breathy, one hard). And finally, we will unlock the secret of the "Soft Sign" (Ь) and the "Hard I" (И), which subtly but profoundly shape pronunciation.</p>
+<p>By the end of this intensive session, you will not only recognize every letter of the Ukrainian alphabet but also understand their phonetic nuances. This mastery will enable you to read <em>any</em> Ukrainian word with confidence, whether it's a street sign in Kyiv, a newspaper headline, or the lyrics of a folk song. Get ready to truly hear and produce the sounds of Ukraine!</p>
 <h2 id="presentation">presentation</h2>
-<h3 id="uniqueukrainiansounds">Unique Ukrainian Sounds</h3>
-<p>These letters represent sounds that don't have exact English equivalents, but you'll pick them up quickly!</p>
+<h3 id="group1thehissingbuzzingandwhooshingsoundssibilantsaffricates">Group 1: The Hissing, Buzzing, and Whooshing Sounds (Sibilants &amp; Affricates)</h3>
+<p>These are some of the most characteristic sounds of Ukrainian, often referred to as sibilants and affricates. They add a unique texture and richness to the language, making it distinct from many Western European tongues. Don't be shy; embrace the hiss, the buzz, and the whoosh!</p>
 <table>
 <thead>
 <tr>
 <th>Letter</th>
-<th>Sound</th>
-<th>How to Say It</th>
+<th>Sound (IPA)</th>
+<th>English Approximation</th>
+<th>Shape Mnemonic</th>
 <th>Example</th>
+<th>English Translation</th>
+<th>Audio</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Г г</strong></td>
-<td>/ɦ/</td>
-<td>breathy H (like sighing)</td>
-<td><strong>г</strong>арно (harno) - good/nice</td>
-</tr>
-<tr>
-<td><strong>Ґ ґ</strong></td>
-<td>/g/</td>
-<td>hard G like "<strong>g</strong>o"</td>
-<td><strong>ґ</strong>анок (ganok) - porch</td>
-</tr>
-<tr>
 <td><strong>Ж ж</strong></td>
 <td>/ʒ/</td>
-<td>like "mea<strong>s</strong>ure"</td>
-<td><strong>ж</strong>урнал (zhurnal) - magazine</td>
+<td>Like <strong>s</strong> in plea<strong>s</strong>ure</td>
+<td>A beetle (Zzhhh!)</td>
+<td><strong>Ж</strong>ук</td>
+<td>Beetle</td>
+<td><button class="audio-btn" onclick="openForvo('zh')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>Ш ш</strong></td>
 <td>/ʃ/</td>
-<td>like "<strong>sh</strong>oe"</td>
-<td><strong>ш</strong>кола (shkola) - school</td>
-</tr>
-<tr>
-<td><strong>Щ щ</strong></td>
-<td>/ʃtʃ/</td>
-<td>"sh" + "ch" together</td>
-<td><strong>щ</strong>о (shcho) - what</td>
+<td>Like <strong>sh</strong> in <strong>sh</strong>e</td>
+<td>A pitchfork</td>
+<td><strong>Ш</strong>околад</td>
+<td>Chocolate</td>
+<td><button class="audio-btn" onclick="openForvo('sh')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>Ч ч</strong></td>
 <td>/tʃ/</td>
-<td>like "<strong>ch</strong>urch"</td>
-<td><strong>ч</strong>ай (chai) - tea</td>
+<td>Like <strong>ch</strong> in <strong>ch</strong>air</td>
+<td>An upside-down chair</td>
+<td><strong>Ч</strong>ай</td>
+<td>Tea</td>
+<td><button class="audio-btn" onclick="openForvo('ch')" title="Listen on Forvo (Search)">🔊</button></td>
+</tr>
+<tr>
+<td><strong>Щ щ</strong></td>
+<td>/ʃtʃ/</td>
+<td>Like <strong>sh</strong> + <strong>ch</strong> (as in fre<strong>sh ch</strong>eese)</td>
+<td>Fork with a tail</td>
+<td><strong>Щ</strong>о</td>
+<td>What</td>
+<td><button class="audio-btn" onclick="openForvo('shch')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>Ц ц</strong></td>
 <td>/ts/</td>
-<td>like "ca<strong>ts</strong>"</td>
-<td><strong>ц</strong>е (tse) - this</td>
+<td>Like <strong>ts</strong> in ca<strong>ts</strong></td>
+<td>U with a tail</td>
+<td><strong>Ц</strong>е</td>
+<td>This is</td>
+<td><button class="audio-btn" onclick="openForvo('ts')" title="Listen on Forvo (Search)">🔊</button></td>
+</tr>
+<tr>
+<td><strong>ДЖ дж</strong></td>
+<td>/dʒ/</td>
+<td>Like <strong>j</strong> in <strong>j</strong>am (digraph)</td>
+<td>D + Zh</td>
+<td><strong>Дж</strong>аз</td>
+<td>Jazz</td>
+<td><button class="audio-btn" onclick="openForvo('dj')" title="Listen on Forvo (Search)">🔊</button></td>
+</tr>
+<tr>
+<td><strong>ДЗ дз</strong></td>
+<td>/dz/</td>
+<td>Like <strong>ds</strong> in po<strong>ds</strong></td>
+<td>D + Z</td>
+<td><strong>Дз</strong>він</td>
+<td>Bell</td>
+<td><button class="audio-btn" onclick="openForvo('dz')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 </tbody>
 </table>
 <blockquote>
-  <p>🔍 <strong>Myth Buster</strong></p>
-  <p><strong>Myth:</strong> "Ukrainian Г is just like Russian Г"<br />
-  <strong>Fact:</strong> Ukrainian Г is a soft, breathy /ɦ/ sound, while Russian Г is a hard /g/. The hard G sound in Ukrainian uses the special letter <strong>Ґ</strong> - one of Ukraine's unique letters that was suppressed during Soviet rule!</p>
-</blockquote>
-<h3 id="thehardi">The "Hard I": И</h3>
-<p>This vowel sits between English "i" in "bit" and "ee" in "beet":</p>
-<table>
-<thead>
-<tr>
-<th>Letter</th>
-<th>Sound</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>И и</strong></td>
-<td>/ɪ/</td>
-<td>like "b<strong>i</strong>t" (short)</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>⚡ <strong>Pro Tip</strong></p>
-  <p>Think of <strong>И</strong> as the "hard" version of <strong>І</strong>:</p>
+  <p>⚡ <strong>Pro Tip: Distinguishing Ш (Sh) vs Щ (Shch)</strong><br />
+  Many learners confuse these, but in Ukrainian, they are completely distinct and affect meaning.</p>
   <ul>
-  <li><strong>І</strong> = clear "ee" (machine)</li>
-  <li><strong>И</strong> = shorter, harder "i" (bit)</li>
+  <li><strong>Ш</strong> (Sh): This is a simple, singular "shhh" sound, like telling someone to be quiet.</li>
+  <li><strong>Щ</strong> (Shch): This is a <strong>two-part sound</strong> – a rapid sequence of "sh" followed by "ch". Think of the sound in "fre<strong>sh ch</strong>eese" or "wa<strong>sh ch</strong>othes." It's longer, more complex, and definitely "crunchier." Practice saying "Sh-ch!" together quickly.<br />
+  Mastering this distinction is a key step towards authentic Ukrainian pronunciation.</li>
   </ul>
 </blockquote>
-<h3 id="iotatedvowelstheyfamily">Iotated Vowels: The "Y" Family</h3>
-<p>These vowels start with a /j/ sound (like English "y") before the vowel:</p>
+<h3 id="group2theyvowelsiotated">Group 2: The "Y" Vowels (Iotated)</h3>
+<p>These four vowels are magical. They each have an invisible "Y" sound ([j] in IPA) built into them. This "Y" sound softens the preceding consonant (if there is one) or appears at the beginning of the word if no consonant precedes. They are crucial for the inherent melodic quality of Ukrainian.</p>
 <table>
 <thead>
 <tr>
 <th>Letter</th>
-<th>Sound</th>
-<th>Breakdown</th>
+<th>Sound (IPA)</th>
+<th>English Approximation</th>
+<th>Rules</th>
 <th>Example</th>
+<th>English Translation</th>
+<th>Audio</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>Є є</strong></td>
 <td>/jɛ/</td>
-<td>"y" + "e"</td>
-<td><strong>Є</strong>вропа (Yevropa) - Europe</td>
+<td><strong>Ye</strong>s</td>
+<td>Y + E</td>
+<td><strong>Є</strong>вропа</td>
+<td>Europe</td>
+<td><button class="audio-btn" onclick="openForvo('ye')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>Ї ї</strong></td>
 <td>/ji/</td>
-<td>"y" + "ee"</td>
-<td><strong>ї</strong>сти (yisty) - to eat</td>
+<td><strong>Yie</strong>ld</td>
+<td>Y + I</td>
+<td>Укра<strong>ї</strong>на</td>
+<td>Ukraine</td>
+<td><button class="audio-btn" onclick="openForvo('yi')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>Ю ю</strong></td>
 <td>/ju/</td>
-<td>"y" + "oo"</td>
-<td><strong>ю</strong>рист (yurist) - lawyer</td>
+<td><strong>You</strong></td>
+<td>Y + U</td>
+<td><strong>Ю</strong>пiтер</td>
+<td>Jupiter</td>
+<td><button class="audio-btn" onclick="openForvo('yu')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>Я я</strong></td>
-<td>/ja/</td>
-<td>"y" + "a"</td>
-<td><strong>я</strong> (ya) - I</td>
+<td>/jɑ/</td>
+<td><strong>Ya</strong>rd</td>
+<td>Y + A</td>
+<td><strong>Я</strong></td>
+<td>I</td>
+<td><button class="audio-btn" onclick="openForvo('ya')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 </tbody>
 </table>
 <blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>The letter <strong>Ї</strong> exists ONLY in Ukrainian - no other Slavic language has it! It's used in words like Україна (Ukraina) and їсти (yisty - to eat). This letter is a symbol of Ukrainian linguistic uniqueness!</p>
+  <p>💡 <strong>Did You Know? The Power of Ї</strong><br />
+  The letter <strong>Ї</strong> (Yi) is a unique and cherished symbol of Ukrainian language and identity. It is absent in Russian and other Slavic languages that use Cyrillic (which use variations of 'i' or 'y'). The presence of <strong>Ї</strong> often signifies a true Ukrainian word and its sound contributes to the language's melodic flow. In cities like Mariupol, <strong>Ї</strong> has even been used as a powerful symbol of cultural resistance and defiance against Russification. When you see those two dots, remember: it's <em>always</em> "Yee," a clear, strong sound.</p>
 </blockquote>
-<h3 id="thesoftsign">The Soft Sign: Ь</h3>
-<p>The soft sign doesn't make a sound itself. Instead, it makes the consonant before it "soft" (palatalized):</p>
-<table>
-<thead>
-<tr>
-<th>Without Ь</th>
-<th>With Ь</th>
-<th>Difference</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>кон (kon)</td>
-<td>конь (kon')</td>
-<td>horse (soft n)</td>
-</tr>
-<tr>
-<td>мат (mat)</td>
-<td>мать → мати (maty)</td>
-<td>mother (historical)</td>
-</tr>
-</tbody>
-</table>
+<h3 id="group3thetrickypairgvsh">Group 3: The Tricky Pair (G vs H)</h3>
+<p>This distinction is vital and often challenging for English speakers, as English only has one 'H' sound and one 'G' sound. Ukrainian has two distinct sounds that often get confused.</p>
+<ul>
+<li><strong>Г г</strong> (The Hook) = /ɦ/. This is a breathy, voiced "H" sound. Think of the soft 'h' in "a<strong>h</strong>ead" or the Scottish 'ch' in "lo<strong>ch</strong>" but voiced. Your throat vibrates slightly. It's much softer than the English 'G'.<ul>
+<li><em>Example:</em> <strong>Г</strong>олос (Holos - Voice), <strong>Г</strong>отель (Hotel).</li></ul></li>
+<li><strong>Ґ ґ</strong> (The Hook with a Hat) = /g/. This is the hard, explosive "G" sound, exactly like the 'g' in "<strong>g</strong>o" or "<strong>g</strong>ood". It's less common in Ukrainian but crucial for proper pronunciation of some loanwords.<ul>
+<li><em>Example:</em> <strong>Ґ</strong>удзик (Gudzyk - Button), <strong>Ґ</strong>угл (Google).</li></ul></li>
+</ul>
 <blockquote>
-  <p>🎯 <strong>Fun Fact</strong></p>
-  <p>The soft sign <strong>Ь</strong> is like a "silent softener." When you see it after a consonant, touch your tongue to the roof of your mouth as you say the consonant - that's palatalization!</p>
+  <p>⚡ <strong>Pro Tip: Practice Г (H) vs Ґ (G)</strong><br />
+  Try saying "Hamburger." The initial 'H' sound is similar to Ukrainian <strong>Г</strong>. Now try "Google." The initial 'G' is Ukrainian <strong>Ґ</strong>. Consciously producing these distinct sounds is essential for accuracy at this level.</p>
 </blockquote>
-<h3 id="italicwarninglettersthatchangeshape">⚠️ ITALIC WARNING: Letters That Change Shape!</h3>
-<p>When Ukrainian text is in <em>italics</em>, some letters look completely different! This catches many learners by surprise:</p>
-<table>
-<thead>
-<tr>
-<th>Print</th>
-<th>Italic</th>
-<th>Looks Like</th>
-<th>Watch Out!</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>т</strong></td>
-<td><em>т</em></td>
-<td>m</td>
-<td>Don't confuse with М!</td>
-</tr>
-<tr>
-<td><strong>п</strong></td>
-<td><em>п</em></td>
-<td>n</td>
-<td>Don't confuse with Н!</td>
-</tr>
-<tr>
-<td><strong>д</strong></td>
-<td><em>д</em></td>
-<td>g</td>
-<td>Completely different!</td>
-</tr>
-<tr>
-<td><strong>и</strong></td>
-<td><em>и</em></td>
-<td>u</td>
-<td>Don't confuse with У!</td>
-</tr>
-<tr>
-<td><strong>л</strong></td>
-<td><em>л</em></td>
-<td>hook/л</td>
-<td>Rounded at bottom</td>
-</tr>
-<tr>
-<td><strong>г</strong></td>
-<td><em>г</em></td>
-<td>∂</td>
-<td>Like partial delta</td>
-</tr>
-</tbody>
-</table>
+<h3 id="group4thesilentmodifiersthehardvowel">Group 4: The Silent Modifiers &amp; The Hard Vowel</h3>
+<p>These letters don't make new sounds but subtly (or not so subtly) influence the sounds around them.</p>
+<ul>
+<li><p><strong>Ь</strong> (Soft Sign). This tiny symbol has <strong>no sound</strong> of its own. Its only job is to tell you that the consonant <em>before</em> it should be pronounced "soft" (palatalized). Think of the 'ny' in "o<strong>ny</strong>on" for a soft 'n'.</p>
+<ul>
+<li><em>Example:</em> <strong>Н</strong> (hard N) vs. <strong>НЬ</strong> (soft N). <strong>Л</strong> (hard L) vs. <strong>ЛЬ</strong> (soft L, like in 'li' in 'million').</li>
+<li>The soft sign is a fundamental part of Ukrainian phonology and contributes to its unique melodic quality.</li></ul></li>
+<li><p><strong>И</strong> (Hard I). This letter often looks like a backwards 'N' or a rotated 'H'. It is pronounced /ɪ/, similar to the 'i' in "s<strong>i</strong>t" or the 'u' in "b<strong>u</strong>sh". It's a deep, central vowel sound, distinct from <strong>І</strong> (which is a clear "ee" as in "machine").</p>
+<ul>
+<li><em>Example:</em> <strong>КИЇВ</strong> (Kyiv - note the 'И' then 'Ї'), <strong>РИБА</strong> (Ryba - Fish).</li>
+<li><strong>CRITICAL:</strong> Do NOT confuse <strong>И</strong> with <strong>І</strong>. They are different sounds, and using one for the other will make words unintelligible.</li></ul></li>
+</ul>
 <blockquote>
-  <p>🎬 <strong>Pop Culture Moment: The Witcher</strong></p>
-  <p>"Відьмак" (The Witcher) in italic would be "<em>Відьмак</em>" - notice how the letters change shape! When you see Ukrainian game menus or film credits in italics, remember this warning!</p>
-</blockquote>
-<h3 id="letspracticefullalphabetreading">Let's Practice: Full Alphabet Reading</h3>
-<p>Now you can read ANY Ukrainian word! Try these common phrases:</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Transliteration</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>так</td>
-<td>tak</td>
-<td>yes</td>
-</tr>
-<tr>
-<td>ні</td>
-<td>ni</td>
-<td>no</td>
-</tr>
-<tr>
-<td>добре</td>
-<td>dobre</td>
-<td>good/okay</td>
-</tr>
-<tr>
-<td>дякую</td>
-<td>dyakuyu</td>
-<td>thank you</td>
-</tr>
-<tr>
-<td>будь ласка</td>
-<td>bud' laska</td>
-<td>please</td>
-</tr>
-<tr>
-<td>привіт</td>
-<td>pryvit</td>
-<td>hello (informal)</td>
-</tr>
-<tr>
-<td>до побачення</td>
-<td>do pobachennya</td>
-<td>goodbye</td>
-</tr>
-<tr>
-<td>вибачте</td>
-<td>vybachte</td>
-<td>excuse me</td>
-</tr>
-<tr>
-<td>прошу</td>
-<td>proshu</td>
-<td>you're welcome/please</td>
-</tr>
-<tr>
-<td>що</td>
-<td>shcho</td>
-<td>what</td>
-</tr>
-<tr>
-<td>як</td>
-<td>yak</td>
-<td>how</td>
-</tr>
-<tr>
-<td>де</td>
-<td>de</td>
-<td>where</td>
-</tr>
-<tr>
-<td>хто</td>
-<td>khto</td>
-<td>who</td>
-</tr>
-<tr>
-<td>ласкаво просимо</td>
-<td>laskavo prosymo</td>
-<td>welcome</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🌍 <strong>Real World</strong></p>
-  <p>These are the first words you'll hear and need in Ukraine! "Дякую" (thank you) and "Будь ласка" (please) will get you far in any interaction.</p>
-</blockquote>
-<h3 id="thecompleteukrainianalphabet">The Complete Ukrainian Alphabet</h3>
-<p>Here's your complete reference - all 33 letters!</p>
-<p>| А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я |</p>
-<blockquote>
-  <p>📜 <strong>History Bite</strong></p>
-  <p>Ukrainian was once called "Little Russian" by imperial powers who wanted to suppress it. The word "українська" (Ukrainian) and the distinct alphabet are symbols of national identity and survival through centuries of oppression.</p>
+  <p>🔍 <strong>The "Italic" Warning: Hand-Written Transformations</strong><br />
+  When reading handwritten Ukrainian or certain stylized fonts (especially italics), many Cyrillic letters magically transform, often resembling Latin letters. This can be very confusing, but context and practice will help you.</p>
+  <ul>
+  <li><strong>т</strong> (print) often looks like a handwritten <em>m</em></li>
+  <li><strong>п</strong> (print) often looks like a handwritten <em>n</em></li>
+  <li><strong>д</strong> (print) often looks like a handwritten <em>g</em></li>
+  <li><strong>и</strong> (print) often looks like a handwritten <em>u</em></li>
+  <li><strong>г</strong> (print) often looks like a handwritten <em>backward 's'</em> or <em>∂</em></li>
+  <li><strong>л</strong> (print) often looks like a handwritten <em>inverted v</em> or <em>hook</em></li>
+  <li><strong>ш</strong> (print) often looks like a handwritten <em>w</em><br />
+  Don't panic if you see these; simply remember the original sound and you'll be able to decode it.</li>
+  </ul>
 </blockquote>
 <h2 id="practice">practice</h2>
-<h3 id="exercise1newlettersounds">Exercise 1: New Letter Sounds</h3>
-<p>Match the sound to the letter:</p>
-<ol>
-<li><p>Which letter sounds like "sh" in "shoe"?</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer">Ш</div></div>
-<ol start="2">
-<li><p>Which letter sounds like "ch" in "church"?</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer">Ч</div></div>
-<ol start="3">
-<li><p>Which letter sounds like "y" + "a" together?</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer">Я</div></div>
-<ol start="4">
-<li><p>Which letter is the soft sign?</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer">Ь</div></div>
-<ol start="5">
-<li><p>Which letter is unique to Ukrainian?</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer">Ї (or Ґ)</div></div>
-<ol start="6">
-<li><p>Which letter sounds like "zh" (measure)?</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-5', this)">Показати відповідь</button><div class="answer-block" id="ans-5"><div class="callout callout-answer" data-callout="answer">Ж</div></div>
-<h3 id="exercise2readthewords">Exercise 2: Read the Words</h3>
-<p>Sound out these words:</p>
-<ol>
-<li><p>школа</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-6', this)">Показати відповідь</button><div class="answer-block" id="ans-6"><div class="callout callout-answer" data-callout="answer">/shkola/ - school</div></div>
-<ol start="2">
-<li><p>дякую</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-7', this)">Показати відповідь</button><div class="answer-block" id="ans-7"><div class="callout callout-answer" data-callout="answer">/dyakuyu/ - thank you</div></div>
-<ol start="3">
-<li><p>Україна</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-8', this)">Показати відповідь</button><div class="answer-block" id="ans-8"><div class="callout callout-answer" data-callout="answer">/Ukraina/ - Ukraine</div></div>
-<ol start="4">
-<li><p>що</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-9', this)">Показати відповідь</button><div class="answer-block" id="ans-9"><div class="callout callout-answer" data-callout="answer">/shcho/ - what</div></div>
-<ol start="5">
-<li><p>будь ласка</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-10', this)">Показати відповідь</button><div class="answer-block" id="ans-10"><div class="callout callout-answer" data-callout="answer">/bud' laska/ - please</div></div>
-<ol start="6">
-<li><p>привіт</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-11', this)">Показати відповідь</button><div class="answer-block" id="ans-11"><div class="callout callout-answer" data-callout="answer">/pryvit/ - hello</div></div>
+<p>Let's apply our full alphabet knowledge to some essential Ukrainian survival phrases and common words. Focus on articulating the unique sounds we just learned.</p>
+<p><strong>1. Greetings & Politeness (Revisited):</strong></p>
+<ul>
+<li><strong>ПРИВІТ</strong> <button class="audio-btn" onclick="openForvo('ПРИВІТ')" title="Listen on Forvo">🔊</button> (Pry-vit) — Hi / Hello (Informal). Note the soft <strong>В</strong> and <strong>ТЬ</strong>.</li>
+<li><strong>ДЯКУЮ</strong> <button class="audio-btn" onclick="openForvo('ДЯКУЮ')" title="Listen on Forvo">🔊</button> (Dya-ku-yu) — Thank you. The <strong>ДЯ</strong> has a distinct 'y' glide.</li>
+<li><strong>БУДЬ ЛАСКА</strong> <button class="audio-btn" onclick="openForvo('БУДЬ ЛАСКА')" title="Listen on Forvo">🔊</button> (Bud' las-ka) — Please / You're welcome. The <strong>ДЬ</strong> is a soft 'd'.</li>
+<li><strong>ДО ПОБАЧЕННЯ</strong> <button class="audio-btn" onclick="openForvo('ДО ПОБАЧЕННЯ')" title="Listen on Forvo">🔊</button> (Do po-ba-chen-nya) — Goodbye. Note the <strong>Ч</strong> and soft <strong>ННЯ</strong>.</li>
+<li><strong>ВИБАЧТЕ</strong> <button class="audio-btn" onclick="openForvo('ВИБАЧТЕ')" title="Listen on Forvo">🔊</button> (Vy-bach-te) — Excuse me / Sorry. Hear the <strong>Ч</strong>.</li>
+</ul>
+<p><strong>2. Essential Question Words (The Inquisitors):</strong></p>
+<ul>
+<li><strong>ЩО</strong> <button class="audio-btn" onclick="openForvo('ЩО')" title="Listen on Forvo">🔊</button> (Shcho) — What? This is one of the most common words – master that <strong>Щ</strong> sound!</li>
+<li><strong>ДЕ</strong> <button class="audio-btn" onclick="openForvo('ДЕ')" title="Listen on Forvo">🔊</button> (De) — Where? Simple.</li>
+<li><strong>ХТО</strong> <button class="audio-btn" onclick="openForvo('ХТО')" title="Listen on Forvo">🔊</button> (Khto) — Who? Remember the hard <strong>Х</strong>.</li>
+<li><strong>ЯК</strong> <button class="audio-btn" onclick="openForvo('ЯК')" title="Listen on Forvo">🔊</button> (Yak) — How?</li>
+<li><strong>ЧИЙ</strong> <button class="audio-btn" onclick="openForvo('ЧИЙ')" title="Listen on Forvo">🔊</button> (Chiy) — Whose?</li>
+<li><strong>ЧОМУ</strong> <button class="audio-btn" onclick="openForvo('ЧОМУ')" title="Listen on Forvo">🔊</button> (Chomu) — Why?</li>
+</ul>
+<p><strong>3. Common Ukrainian Words with New Letters:</strong></p>
+<ul>
+<li><strong>БОРЩ</strong> <button class="audio-btn" onclick="openForvo('БОРЩ')" title="Listen on Forvo">🔊</button> (Borshch) — The famous beet soup! All the tricky sounds in one word: Б(B), О(O), Р(R), Щ(Shch)!</li>
+<li><strong>ЖЕЛЕ</strong> <button class="audio-btn" onclick="openForvo('ЖЕЛЕ')" title="Listen on Forvo">🔊</button> (Zhele) — Jelly.</li>
+<li><strong>ЙОГУРТ</strong> <button class="audio-btn" onclick="openForvo('ЙОГУРТ')" title="Listen on Forvo">🔊</button> (Yohurt) — Yogurt. (Note the <strong>Й</strong> for 'y' sound)</li>
+<li><strong>ЦУКОР</strong> <button class="audio-btn" onclick="openForvo('ЦУКОР')" title="Listen on Forvo">🔊</button> (Tsukor) — Sugar.</li>
+<li><strong>ДЖАЗ</strong> <button class="audio-btn" onclick="openForvo('ДЖАЗ')" title="Listen on Forvo">🔊</button> (Dzhaz) — Jazz. (Note the digraph <strong>ДЖ</strong>)</li>
+<li><strong>ЄВРОПА</strong> <button class="audio-btn" onclick="openForvo('ЄВРОПА')" title="Listen on Forvo">🔊</button> (Yevropa) — Europe.</li>
+<li><strong>УКРАЇНА</strong> <button class="audio-btn" onclick="openForvo('УКРАЇНА')" title="Listen on Forvo">🔊</button> (Ukrayina) — Ukraine. The 'И' sound followed by the 'Ї' sound is very distinct.</li>
+</ul>
 <h2 id="production">production</h2>
-<h3 id="yourfirstconversationwords">Your First Conversation Words</h3>
-<p>Practice saying these essential phrases:</p>
-<ol>
-<li><strong>Привіт!</strong> (Pryvit!) - Hello!</li>
-<li><strong>Дякую!</strong> (Dyakuyu!) - Thank you!</li>
-<li><strong>Будь ласка</strong> (Bud' laska) - Please / You're welcome</li>
-<li><strong>Так</strong> (Tak) - Yes</li>
-<li><strong>Ні</strong> (Ni) - No</li>
-<li><strong>Добре</strong> (Dobre) - Good / Okay</li>
-</ol>
-<blockquote>
-  <p>🎭 <strong>Culture Corner</strong></p>
-  <p>Ukrainians appreciate when foreigners try to speak their language! Even a simple "Дякую" (thank you) will bring smiles. Unlike in some countries, people won't switch to English just because your Ukrainian isn't perfect - they'll encourage you!</p>
-</blockquote>
-<hr />
+<p>You are exploring Kyiv's historic Podil district. Everywhere you look, you see signs and hear conversations filled with the sounds you've just mastered.</p>
+<p>You hear someone say: <strong>"Що це?"</strong> (Shcho tse? - What is this?). You understand the <strong>Щ</strong> and <strong>Ц</strong>.<br />
+You see a sign for <strong>"ЦУКЕРКИ"</strong> (Tsukerky - Candies). You easily read the <strong>Ц</strong> and <strong>К</strong>.<br />
+A friend points to a map: <strong>"Ми тут, біля ЖИТНЬОГО РИНКУ."</strong> (My tut, bilia Zhytnioho Rynku - We are here, near the Zhytniy Market). You catch the <strong>Ж</strong>.<br />
+You realize you need to ask for directions. You prepare to say: <strong>"ВИБАЧТЕ, ДЕ ЦЕНТР?"</strong> (Vy-bach-te, de tsentr? - Excuse me, where is the center?).</p>
+<p>You've moved beyond simple recognition. You're beginning to participate in the Ukrainian soundscape.</p>
 <hr />
 <hr /></div>
     </div>
@@ -924,25 +778,15 @@ footer {
       
     <div class="card section-summary">
       <h3>📋 Summary</h3>
-      <div class="md-content"><blockquote>
-  <p><strong>What You Learned Today</strong></p>
-  <ul>
-  <li><strong>Unique Sounds:</strong> Г (/ɦ/), Ґ (/g/), Ж (/ʒ/), Ш (/ʃ/), Щ (/ʃtʃ/), Ч (/tʃ/), Ц (/ts/)</li>
-  <li><strong>Iotated Vowels:</strong> Є (/je/), Ї (/ji/), Ю (/ju/), Я (/ja/) - vowels with "y" prefix</li>
-  <li><strong>Hard I:</strong> И (/ɪ/) - between "bit" and "beat"</li>
-  <li><strong>Soft Sign:</strong> Ь - softens the preceding consonant</li>
-  <li><strong>Italic Warning:</strong> т→m, п→n, д→g - letters that change in italics!</li>
-  <li><strong>Essential phrases:</strong> дякую, будь ласка, привіт, так, ні, добре</li>
-  <li>You now know ALL 33 Ukrainian letters!</li>
-  </ul>
-  <p><strong>Coming Next</strong></p>
-  <p>In Module 03, you'll learn the Gender Code:</p>
-  <ul>
-  <li>How to tell if a word is masculine, feminine, or neuter</li>
-  <li>The four declension families</li>
-  <li>Your first 25 everyday objects!</li>
-  </ul>
-</blockquote></div>
+      <div class="md-content"><p>Congratulations! You have now met all 33 letters of the Ukrainian alphabet.</p>
+<ol>
+<li><strong>True Friends:</strong> Familiar faces (A, K, M…)</li>
+<li><strong>False Friends:</strong> Tricky spies (P=R, C=S…)</li>
+<li><strong>Strangers:</strong> New shapes (Б, Л, Д…)</li>
+<li><strong>Hissers:</strong> The texture of the language (Ж, Ш, Ч, Щ)</li>
+<li><strong>Y-Vowels:</strong> The melody (Я, Ю, Є, Ї)</li>
+</ol>
+<p>You can now pronounce <strong>БОРЩ</strong> (Borshch) correctly. You can ask <strong>ДЕ МЕТРО?</strong> (Where is the metro?). In the next module, we will learn how these words change gender. Yes, words have gender. Don't worry, it's logical!</p></div>
     </div>
   
       <div class="btn-group">
@@ -951,75 +795,89 @@ footer {
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Complete Alphabet Knowledge</h3>
+    <section id="activity-0" class="section"><div class="card"><h3>The Hissing Sounds</h3>
       <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container"></div>
-      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+      <div class="match-container" id="activity-0-container"><svg class="match-lines" id="activity-0-lines"></svg>
+        <div class="match-column" id="activity-0-left"></div>
+        <div class="match-column" id="activity-0-right"></div>
+      </div>
+      <div class="completion-message" id="activity-0-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Letters and Sounds II</h3>
+    <section id="activity-1" class="section"><div class="card"><h3>The &quot;Y&quot; Vowels</h3>
       <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-1-container"><svg class="match-lines" id="activity-1-lines"></svg>
-        <div class="match-column" id="activity-1-left"></div>
-        <div class="match-column" id="activity-1-right"></div>
-      </div>
-      <div class="completion-message" id="activity-1-complete"><h3>Perfect!</h3></div>
+      <div id="activity-1-container"></div>
+      <div class="completion-message" id="activity-1-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Vowel Types</h3>
-      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/10</span></div>
-      <div class="sort-pool" id="activity-2-pool"><div class="sort-items" id="activity-2-items"></div></div>
-      <div class="sort-groups" id="activity-2-groups"></div>
-      <div class="completion-message" id="activity-2-complete"><h3>All Sorted!</h3></div>
+    <section id="activity-2" class="section"><div class="card"><h3>Print vs Italic Form Description</h3>
+      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
+      <div class="match-container" id="activity-2-container"><svg class="match-lines" id="activity-2-lines"></svg>
+        <div class="match-column" id="activity-2-left"></div>
+        <div class="match-column" id="activity-2-right"></div>
+      </div>
+      <div class="completion-message" id="activity-2-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Essential Phrases</h3>
-      <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-3-container"><svg class="match-lines" id="activity-3-lines"></svg>
-        <div class="match-column" id="activity-3-left"></div>
-        <div class="match-column" id="activity-3-right"></div>
-      </div>
-      <div class="completion-message" id="activity-3-complete"><h3>Perfect!</h3></div>
+    <section id="activity-3" class="section"><div class="card"><h3>Letter Categories</h3>
+      <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/16</span></div>
+      <div class="sort-pool" id="activity-3-pool"><div class="sort-items" id="activity-3-items"></div></div>
+      <div class="sort-groups" id="activity-3-groups"></div>
+      <div class="completion-message" id="activity-3-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Alphabet Facts</h3>
+    <section id="activity-4" class="section"><div class="card"><h3>Complete the Word</h3>
       <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
-      <div id="activity-4-container"></div>
+      <div id="activity-4-container" class="fill-container"></div>
       <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Complete the Phrase</h3>
+    <section id="activity-5" class="section"><div class="card"><h3>Survival Phrases</h3>
       <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
-      <div id="activity-5-container" class="fill-container"></div>
-      <div class="completion-message" id="activity-5-complete"><h3>Complete!</h3></div>
+      <div id="activity-5-container" class="order-container"></div>
+      <div class="completion-message" id="activity-5-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Phrase Spelling</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>Hard G vs Soft H</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
-      <div id="activity-6-container" class="order-container"></div>
-      <div class="completion-message" id="activity-6-complete"><h3>Perfect Order!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+      <div id="activity-6-container"></div>
+      <div class="completion-message" id="activity-6-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-7" class="section"><div class="card"><h3>Scrambled Letters</h3>
+      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/12</span></div>
+      <div id="activity-7-container" class="order-container"></div>
+      <div class="completion-message" id="activity-7-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-8')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-8" class="section"><div class="card"><h3>Letter Facts</h3>
+      <div class="score-display"><span class="score"><span id="activity-8-score">0</span>/12</span></div>
+      <div id="activity-8-container"></div>
+      <div class="completion-message" id="activity-8-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-8')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
-        <h3>Словник (20)</h3>
+        <h3>Словник (34)</h3>
         <div class="vocab-table-container">
           <table class="vocab-table">
             <thead><tr>
     <th>Слово</th>
-    
+    <th>Вимова</th>
     <th>IPA</th>
     <th>Переклад</th>
     <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">буква (bukva)</td><td class="vocab-ipa">/ˈbukʋa/</td><td class="vocab-en">letter</td><td class="vocab-note">alphabet letter</td></tr><tr><td class="vocab-uk">слово (slovo)</td><td class="vocab-ipa">/ˈslɔʋɔ/</td><td class="vocab-en">word</td><td class="vocab-note">basic vocabulary</td></tr><tr><td class="vocab-uk">алфавіт (alfavit)</td><td class="vocab-ipa">/alfaˈʋit/</td><td class="vocab-en">alphabet</td><td class="vocab-note">also: абетка</td></tr><tr><td class="vocab-uk">мова (mova)</td><td class="vocab-ipa">/ˈmɔʋa/</td><td class="vocab-en">language</td><td class="vocab-note">also: speech</td></tr><tr><td class="vocab-uk">українська (ukrainska)</td><td class="vocab-ipa">/ukraˈjinska/</td><td class="vocab-en">Ukrainian</td><td class="vocab-note">the language</td></tr><tr><td class="vocab-uk">англійська (anhliiska)</td><td class="vocab-ipa">/anˈɦlijska/</td><td class="vocab-en">English</td><td class="vocab-note">the language</td></tr><tr><td class="vocab-uk">так (tak)</td><td class="vocab-ipa">/tak/</td><td class="vocab-en">yes</td><td class="vocab-note">affirmative</td></tr><tr><td class="vocab-uk">ні (ni)</td><td class="vocab-ipa">/ni/</td><td class="vocab-en">no</td><td class="vocab-note">negative</td></tr><tr><td class="vocab-uk">добре (dobre)</td><td class="vocab-ipa">/ˈdɔbrɛ/</td><td class="vocab-en">good/okay</td><td class="vocab-note">agreement</td></tr><tr><td class="vocab-uk">дякую (dyakuyu)</td><td class="vocab-ipa">/ˈdʲakuju/</td><td class="vocab-en">thank you</td><td class="vocab-note">1st person</td></tr><tr><td class="vocab-uk">будь ласка (bud&#039; laska)</td><td class="vocab-ipa">/budʲ ˈlaska/</td><td class="vocab-en">please</td><td class="vocab-note">also: you&#039;re welcome</td></tr><tr><td class="vocab-uk">привіт (pryvit)</td><td class="vocab-ipa">/prɪˈʋit/</td><td class="vocab-en">hello</td><td class="vocab-note">informal</td></tr><tr><td class="vocab-uk">до побачення (do pobachennya)</td><td class="vocab-ipa">/dɔ pɔˈbatʃɛnʲa/</td><td class="vocab-en">goodbye</td><td class="vocab-note">formal</td></tr><tr><td class="vocab-uk">вибачте (vybachte)</td><td class="vocab-ipa">/ʋɪˈbatʃtɛ/</td><td class="vocab-en">excuse me</td><td class="vocab-note">formal/polite</td></tr><tr><td class="vocab-uk">прошу (proshu)</td><td class="vocab-ipa">/ˈprɔʃu/</td><td class="vocab-en">you&#039;re welcome</td><td class="vocab-note">also: please</td></tr><tr><td class="vocab-uk">ласкаво просимо (laskavo prosymo)</td><td class="vocab-ipa">/lasˈkaʋɔ ˈprɔsɪmɔ/</td><td class="vocab-en">welcome</td><td class="vocab-note">greeting</td></tr><tr><td class="vocab-uk">що (shcho)</td><td class="vocab-ipa">/ʃtʃɔ/</td><td class="vocab-en">what</td><td class="vocab-note">question word</td></tr><tr><td class="vocab-uk">як (yak)</td><td class="vocab-ipa">/jak/</td><td class="vocab-en">how</td><td class="vocab-note">question word</td></tr><tr><td class="vocab-uk">де (de)</td><td class="vocab-ipa">/dɛ/</td><td class="vocab-en">where</td><td class="vocab-note">question word</td></tr><tr><td class="vocab-uk">хто (khto)</td><td class="vocab-ipa">/xtɔ/</td><td class="vocab-en">who</td><td class="vocab-note">question word</td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">буква</td><td class="vocab-translit">/ˈbukwɑ/</td><td class="vocab-ipa">letter</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('буква')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">слово</td><td class="vocab-translit">/ˈslɔwɔ/</td><td class="vocab-ipa">word</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('слово')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">алфавіт</td><td class="vocab-translit">/ɑlfɑˈvit/</td><td class="vocab-ipa">alphabet</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('алфавіт')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">мова</td><td class="vocab-translit">/ˈmɔwɑ/</td><td class="vocab-ipa">language</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('мова')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">українська</td><td class="vocab-translit">/ukrɑˈjinʲsʲkɑ/</td><td class="vocab-ipa">Ukrainian</td><td class="vocab-en">adj</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('українська')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">англійська</td><td class="vocab-translit">/ɑnˈɦlʲijsʲkɑ/</td><td class="vocab-ipa">English</td><td class="vocab-en">adj</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('англійська')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">так</td><td class="vocab-translit">/tɑk/</td><td class="vocab-ipa">yes</td><td class="vocab-en">part</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('так')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">ні</td><td class="vocab-translit">/nʲi/</td><td class="vocab-ipa">no</td><td class="vocab-en">part</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('ні')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">добре</td><td class="vocab-translit">/ˈdɔbrɛ/</td><td class="vocab-ipa">good/well</td><td class="vocab-en">adv</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('добре')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">дякую</td><td class="vocab-translit">/ˈdʲɑkuju/</td><td class="vocab-ipa">thank you</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('дякую')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">будь ласка</td><td class="vocab-translit">/budʲ ˈlɑskɑ/</td><td class="vocab-ipa">please</td><td class="vocab-en">phrase</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('будь ласка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">привіт</td><td class="vocab-translit">/prɪˈvit/</td><td class="vocab-ipa">hi</td><td class="vocab-en">interj</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('привіт')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">до побачення</td><td class="vocab-translit">/dɔ pɔˈbɑtʃennʲɑ/</td><td class="vocab-ipa">goodbye</td><td class="vocab-en">phrase</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('до побачення')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вибачте</td><td class="vocab-translit">/ˈwɪbɑtʃte/</td><td class="vocab-ipa">sorry</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вибачте')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">прошу</td><td class="vocab-translit">/ˈprɔʃu/</td><td class="vocab-ipa">you&#039;re welcome</td><td class="vocab-en">verb</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('прошу')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">що</td><td class="vocab-translit">/ʃtʃɔ/</td><td class="vocab-ipa">what</td><td class="vocab-en">pron</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('що')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">як</td><td class="vocab-translit">/jɑk/</td><td class="vocab-ipa">how</td><td class="vocab-en">adv</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('як')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">де</td><td class="vocab-translit">/dɛ/</td><td class="vocab-ipa">where</td><td class="vocab-en">adv</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('де')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">хто</td><td class="vocab-translit">/xtɔ/</td><td class="vocab-ipa">who</td><td class="vocab-en">pron</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('хто')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">це</td><td class="vocab-translit">/tʃɛ/</td><td class="vocab-ipa">this is</td><td class="vocab-en">pron</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('це')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">борщ</td><td class="vocab-translit">/bɔrʃtʃ/</td><td class="vocab-ipa">borsch</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('борщ')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">йогурт</td><td class="vocab-translit">/ˈjɔɦurt/</td><td class="vocab-ipa">yogurt</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('йогурт')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">желе</td><td class="vocab-translit">/ʒɛˈlɛ/</td><td class="vocab-ipa">jelly</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('желе')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">майонез</td><td class="vocab-translit">/mɑjɔˈnɛz/</td><td class="vocab-ipa">mayonnaise</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('майонез')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">шоколад</td><td class="vocab-translit">/ʃɔkɔˈlɑd/</td><td class="vocab-ipa">chocolate</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('шоколад')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">чемпіон</td><td class="vocab-translit">/tʃɛmpiˈɔn/</td><td class="vocab-ipa">champion</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('чемпіон')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">центр</td><td class="vocab-translit">/tʃɛntr/</td><td class="vocab-ipa">center</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('центр')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">цукор</td><td class="vocab-translit">/ˈtsukɔr/</td><td class="vocab-ipa">sugar</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('цукор')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">джинси</td><td class="vocab-translit">/ˈdʒɪnsɪ/</td><td class="vocab-ipa">jeans</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('джинси')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">джаз</td><td class="vocab-translit">/dʒɑz/</td><td class="vocab-ipa">jazz</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('джаз')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">Європа</td><td class="vocab-translit">/jɛwˈrɔpɑ/</td><td class="vocab-ipa">Europe</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('Європа')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">Україна</td><td class="vocab-translit">/ukrɑˈjinɑ/</td><td class="vocab-ipa">Ukraine</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('Україна')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">Лондон</td><td class="vocab-translit">/ˈlɔndɔn/</td><td class="vocab-ipa">London</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('Лондон')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">Київ</td><td class="vocab-translit">/ˈkɪjiu̯/</td><td class="vocab-ipa">Kyiv</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('Київ')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1031,8 +889,8 @@ footer {
   </main><footer>Module 02 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"quiz","title":"Complete Alphabet Knowledge","data":{"type":"quiz","questions":[{"question":"What sound does **Ш** make?","options":["/s/ like \"sun\"","/ʃ/ like \"shoe\"","/tʃ/ like \"church\"","/ts/ like \"cats\""],"correctIndex":1,"explanation":"Ш makes the \"sh\" sound!"},{"question":"What sound does **Ч** make?","options":["/k/ like \"kite\"","/s/ like \"sun\"","/tʃ/ like \"church\"","/ts/ like \"cats\""],"correctIndex":2,"explanation":"Ч makes the \"ch\" sound!"},{"question":"What does the soft sign **Ь** do?","options":["Makes an \"h\" sound","Softens the previous consonant","Makes a vowel sound","Indicates stress"],"correctIndex":1,"explanation":"Ь doesn't make a sound - it softens the consonant before it!"},{"question":"Which letter is unique to Ukrainian?","options":["Ш","Ч","Ї","Ю"],"correctIndex":2,"explanation":"Ї exists only in Ukrainian - no other Slavic language has it!"},{"question":"What sound does **Я** make?","options":["/a/ like \"father\"","/ja/ like \"ya\" in \"yard\"","/i/ like \"machine\"","/e/ like \"bed\""],"correctIndex":1,"explanation":"Я is \"iotated\" - it has a \"y\" sound before the \"a\"!"},{"question":"How does **т** look in italics?","options":["Like the letter \"m\"","Like the letter \"t\"","Like the letter \"n\"","Like the letter \"g\""],"correctIndex":0,"explanation":"In italics, т looks like a lowercase m!"},{"question":"What sound does **Ж** make?","options":["/z/ like \"zoo\"","/ʒ/ like \"measure\"","/dʒ/ like \"judge\"","/g/ like \"go\""],"correctIndex":1,"explanation":"Ж makes the \"zh\" sound like in \"measure\"!"},{"question":"What sound does **Ц** make?","options":["/s/ like \"sun\"","/k/ like \"kite\"","/ts/ like \"cats\"","/tʃ/ like \"church\""],"correctIndex":2,"explanation":"Ц makes the \"ts\" sound!"},{"question":"What's the difference between Г and Ґ?","options":["Г is breathy /h/, Ґ is hard /g/","They sound the same","Ґ is soft, Г is hard","Г is only in Russian"],"correctIndex":0,"explanation":"Г is a breathy H sound, while Ґ is the hard G sound!"},{"question":"What sound does **Є** make?","options":["/e/ like \"bed\"","/je/ like \"ye\" in \"yes\"","/i/ like \"machine\"","/a/ like \"father\""],"correctIndex":1,"explanation":"Є is \"iotated\" - it sounds like \"ye\"!"},{"question":"How many letters are in the Ukrainian alphabet?","options":["26","32","33","36"],"correctIndex":2,"explanation":"Ukrainian has 33 letters - one more than Russian!"},{"question":"What sound does **Щ** make?","options":["/ʃ/ like \"shoe\"","/ʃtʃ/ like \"sh\" + \"ch\"","/tʃ/ like \"church\"","/sk/ like \"skip\""],"correctIndex":1,"explanation":"Щ is \"sh\" followed immediately by \"ch\"!"}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-1","type":"match-up","title":"Letters and Sounds II","data":{"type":"match-up","pairs":[{"left":"Ш","right":"/ʃ/ like \"shoe\""},{"left":"Ч","right":"/tʃ/ like \"church\""},{"left":"Ж","right":"/ʒ/ like \"measure\""},{"left":"Ц","right":"/ts/ like \"cats\""},{"left":"Щ","right":"/ʃtʃ/ like \"fresh cheese\""},{"left":"Г","right":"/ɦ/ breathy H"},{"left":"Ґ","right":"/g/ like \"go\""},{"left":"Я","right":"/ja/ like \"yard\""},{"left":"Ю","right":"/ju/ like \"you\""},{"left":"Є","right":"/je/ like \"yes\""},{"left":"Ї","right":"/ji/ like \"yeast\""},{"left":"И","right":"/ɪ/ like \"bit\""}],"shuffleRight":true}},{"id":"activity-2","type":"group-sort","title":"Vowel Types","data":{"type":"group-sort","groups":[{"id":"simple-vowels","name":"Simple Vowels","items":["А","Е","И","І","О","У"]},{"id":"iotated-vowels","name":"Iotated Vowels","items":["Є","Ї","Ю","Я"],"nameUk":"with \"y\" sound"}],"shuffleItems":true}},{"id":"activity-3","type":"match-up","title":"Essential Phrases","data":{"type":"match-up","pairs":[{"left":"так","right":"yes"},{"left":"ні","right":"no"},{"left":"добре","right":"good/okay"},{"left":"дякую","right":"thank you"},{"left":"будь ласка","right":"please"},{"left":"привіт","right":"hello"},{"left":"до побачення","right":"goodbye"},{"left":"вибачте","right":"excuse me"},{"left":"прошу","right":"you're welcome"},{"left":"що","right":"what"},{"left":"як","right":"how"},{"left":"де","right":"where"}],"shuffleRight":true}},{"id":"activity-4","type":"true-false","title":"Alphabet Facts","data":{"type":"true-false","statements":[{"statement":"The letter Ї exists only in Ukrainian.","isTrue":true,"explanation":"Correct! No other Slavic language has this letter."},{"statement":"The soft sign Ь makes a \"y\" sound.","isTrue":false,"explanation":"Incorrect. Ь doesn't make a sound - it softens the consonant before it."},{"statement":"Ukrainian has 33 letters in its alphabet.","isTrue":true,"explanation":"Correct! One more than Russian."},{"statement":"Г and Ґ make the same sound.","isTrue":false,"explanation":"Incorrect. Г is breathy /h/, Ґ is hard /g/."},{"statement":"In italics, the letter т looks like \"m\".","isTrue":true,"explanation":"Correct! This surprises many learners."},{"statement":"The letter Я sounds like English \"a\".","isTrue":false,"explanation":"Incorrect. Я sounds like \"ya\" - it's an iotated vowel."},{"statement":"Ч sounds like \"ch\" in \"church\".","isTrue":true,"explanation":"Correct! Ч = /tʃ/"},{"statement":"The letter Ґ was suppressed during Soviet times.","isTrue":true,"explanation":"Correct! It has been restored in independent Ukraine."},{"statement":"И and І make the same sound.","isTrue":false,"explanation":"Incorrect. И is \"harder\" (like \"bit\"), І is \"clearer\" (like \"machine\")."},{"statement":"Щ combines \"sh\" and \"ch\" sounds.","isTrue":true,"explanation":"Correct! Щ = /ʃtʃ/"},{"statement":"The word \"що\" is pronounced /so/.","isTrue":false,"explanation":"Incorrect. \"Що\" is pronounced /shcho/."},{"statement":"\"Дякую\" means \"thank you\".","isTrue":true,"explanation":"Correct! One of the most useful words to know."}]}},{"id":"activity-5","type":"fill-blank","title":"Complete the Phrase","data":{"type":"fill-blank","items":[{"prompt":"дяку___у (thank you)","answer":"ю","options":["ю","у","о","а"]},{"prompt":"___кола (school)","answer":"ш","options":["ш","с","щ","ч"]},{"prompt":"при___іт (hello)","answer":"в","options":["в","б","п","ф"]},{"prompt":"___о (what)","answer":"щ","options":["щ","ш","ч","с"]},{"prompt":"будь ___аска (please)","answer":"л","options":["л","н","м","р"]},{"prompt":"___к (yes)","answer":"та","options":["та","то","ти","ту"]},{"prompt":"до___ре (good)","answer":"б","options":["б","п","в","д"]},{"prompt":"н___ (no)","answer":"і","hints":["no"],"options":["і","и","е","а"]},{"prompt":"___е (this)","answer":"ц","options":["ц","с","ч","з"]},{"prompt":"___к (how)","answer":"я","options":["я","а","е","и"]},{"prompt":"д___ (where)","answer":"е","hints":["where"],"options":["е","є","и","і"]},{"prompt":"___то (who)","answer":"х","options":["х","г","к","ц"]}]}},{"id":"activity-6","type":"anagram","title":"Phrase Spelling","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["а","к","т"],"answer":"так","translation":"yes"},{"letters":["і","н"],"answer":"ні","translation":"no"},{"letters":["р","б","о","д","е"],"answer":"добре","translation":"good"},{"letters":["у","ю","д","я","к"],"answer":"дякую","translation":"thank you"},{"letters":["і","т","в","и","п","р"],"answer":"привіт","translation":"hello"},{"letters":["о","щ"],"answer":"що","translation":"what"},{"letters":["к","я"],"answer":"як","translation":"how"},{"letters":["е","д"],"answer":"де","translation":"where"},{"letters":["о","т","х"],"answer":"хто","translation":"who"},{"letters":["і","й","а","ч"],"answer":"чай","translation":"tea"},{"letters":["о","а","л","к","ш"],"answer":"школа","translation":"school"},{"letters":["е","ц"],"answer":"це","translation":"this"}]}}];
-    const vocabData = [{"uk":"буква (bukva)","translit":"","en":"letter","note":"alphabet letter"},{"uk":"слово (slovo)","translit":"","en":"word","note":"basic vocabulary"},{"uk":"алфавіт (alfavit)","translit":"","en":"alphabet","note":"also: абетка"},{"uk":"мова (mova)","translit":"","en":"language","note":"also: speech"},{"uk":"українська (ukrainska)","translit":"","en":"Ukrainian","note":"the language"},{"uk":"англійська (anhliiska)","translit":"","en":"English","note":"the language"},{"uk":"так (tak)","translit":"","en":"yes","note":"affirmative"},{"uk":"ні (ni)","translit":"","en":"no","note":"negative"},{"uk":"добре (dobre)","translit":"","en":"good/okay","note":"agreement"},{"uk":"дякую (dyakuyu)","translit":"","en":"thank you","note":"1st person"},{"uk":"будь ласка (bud' laska)","translit":"","en":"please","note":"also: you're welcome"},{"uk":"привіт (pryvit)","translit":"","en":"hello","note":"informal"},{"uk":"до побачення (do pobachennya)","translit":"","en":"goodbye","note":"formal"},{"uk":"вибачте (vybachte)","translit":"","en":"excuse me","note":"formal/polite"},{"uk":"прошу (proshu)","translit":"","en":"you're welcome","note":"also: please"},{"uk":"ласкаво просимо (laskavo prosymo)","translit":"","en":"welcome","note":"greeting"},{"uk":"що (shcho)","translit":"","en":"what","note":"question word"},{"uk":"як (yak)","translit":"","en":"how","note":"question word"},{"uk":"де (de)","translit":"","en":"where","note":"question word"},{"uk":"хто (khto)","translit":"","en":"who","note":"question word"}];
+    const activitiesData = [{"id":"activity-0","type":"match-up","title":"The Hissing Sounds","data":{"type":"match-up","pairs":[{"left":"Ж","right":"\"S\" in Pleasure (Zh)"},{"left":"Ш","right":"\"Sh\" in She"},{"left":"Ч","right":"\"Ch\" in Chair"},{"left":"Щ","right":"\"Sh\" + \"Ch\" (Fresh cheese)"},{"left":"Ц","right":"\"Ts\" in Cats"},{"left":"ДЖ","right":"\"J\" in Jam"},{"left":"ДЗ","right":"\"Ds\" in Pods"},{"left":"Й","right":"\"Y\" in Boy (short i)"},{"left":"Г","right":"\"H\" in Home (soft, breathy)"},{"left":"Ґ","right":"\"G\" in Go (hard, explosive)"},{"left":"Ь","right":"Softens previous letter"},{"left":"И","right":"\"I\" in Sit (hard, guttural)"}],"shuffleRight":true}},{"id":"activity-1","type":"quiz","title":"The \"Y\" Vowels","data":{"type":"quiz","questions":[{"question":"What sound is Я?","options":["Ya (Yard)","Yu (You)","Ye (Yes)","Yo (Yonder)"],"correctIndex":0,"explanation":""},{"question":"What sound is Ю?","options":["Yu (You)","Ya (Yard)","Yi (Yield)","Ye (Yes)"],"correctIndex":0,"explanation":""},{"question":"What sound is Є?","options":["Ye (Yes)","E (Eh)","Ya (Yard)","Yo (Yonder)"],"correctIndex":0,"explanation":""},{"question":"What sound is Ї?","options":["Yi (Yield - two dots, two sounds)","I (Machine)","Y (Yard)","J (Jump)"],"correctIndex":0,"explanation":""},{"question":"What sound is Й?","options":["Y (Short I as in Boy)","J (Jump)","Ch (Chew)","Sh (Shoe)"],"correctIndex":0,"explanation":""},{"question":"What sound is Ю in \"МЕНЮ\" (Menu)?","options":["U (similar to 'u' in 'menu')","A (Mena)","I (Meni)","O (Meno)"],"correctIndex":0,"explanation":""},{"question":"What sound is Я in \"ІТАЛІЯ\" (Italy)?","options":["Ya (Italia)","Yu (Italiu)","Yi (Italii)","Ye (Italie)"],"correctIndex":0,"explanation":""},{"question":"What sound is Є in \"ЄВРОПА\" (Europe)?","options":["Ye (Yevropa)","E (Evropa)","Ya (Yavropa)","Yu (Yuvropa)"],"correctIndex":0,"explanation":""},{"question":"What sound is Ї in \"КИЇВ\" (Kyiv)?","options":["Yi (Kyiv)","I (Kyiv)","Y (Kyyv)","Ye (Kyev)"],"correctIndex":0,"explanation":""},{"question":"Which letter makes the \"Zh\" sound (pleasure)?","options":["Ж","Ш","Щ","Ч"],"correctIndex":0,"explanation":""},{"question":"Which letter makes the \"Sh\" sound (shoe)?","options":["Ш","Ж","Щ","Ч"],"correctIndex":0,"explanation":""},{"question":"Which letter makes the \"Ch\" sound (chair)?","options":["Ч","Ц","Ш","Щ"],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-2","type":"match-up","title":"Print vs Italic Form Description","data":{"type":"match-up","pairs":[{"left":"т (print)","right":"often looks like English 'm'"},{"left":"п (print)","right":"often looks like English 'n'"},{"left":"д (print)","right":"often looks like English 'g'"},{"left":"и (print)","right":"often looks like English 'u'"},{"left":"г (print)","right":"often looks like a backward 's' (∂)"},{"left":"л (print)","right":"often looks like an inverted v or hook"},{"left":"ш (print)","right":"often looks like a 'w'"},{"left":"м (print)","right":"often looks like an 'M'"},{"left":"а (print)","right":"often looks like an 'a'"},{"left":"в (print)","right":"often looks like a 'b'"},{"left":"з (print)","right":"often looks like a 'z'"},{"left":"к (print)","right":"often looks like a 'k'"}],"shuffleRight":true}},{"id":"activity-3","type":"group-sort","title":"Letter Categories","data":{"type":"group-sort","groups":[{"id":"hissers","name":"Hissers","items":["Ж","Ш","Ч","Щ","Ц","ДЖ","ДЗ"],"nameUk":"Sibilants & Affricates"},{"id":"iotated","name":"Iotated","items":["Я","Ю","Є","Ї"],"nameUk":"Y-vowels"},{"id":"unique-consonants--modifiers","name":"Unique Consonants & Modifiers","items":["Г","Ґ","Й","Ь (Soft Sign)","И (Hard I)"]}],"shuffleItems":true}},{"id":"activity-4","type":"fill-blank","title":"Complete the Word","data":{"type":"fill-blank","items":[{"prompt":"_ Я К У Ю (Thank you)\n   - [!answer] Д\n   - [!options] Д | Т | З | С","answer":""},{"prompt":"П Р И В _ Т (Hi)\n   - [!answer] І\n   - [!options] І | И | Ї | Е","answer":""},{"prompt":"Б _ Д Ь  Л А С К А (Please)\n   - [!answer] У\n   - [!options] У | Ю | О | А","answer":""},{"prompt":"Б О Р _ (Beet soup)\n   - [!answer] Щ\n   - [!options] Щ | Ш | Ч | Ж","answer":""},{"prompt":"_ О  П О Б А Ч Е Н Н Я (Goodbye)\n   - [!answer] Д\n   - [!options] Д | Т | П | Г","answer":""},{"prompt":"Ш О К О Л А _ (Sweet treat - Chocolate)\n   - [!answer] Д\n   - [!options] Д | Т | П | Б","answer":""},{"prompt":"Д Ж _ З (Music genre - Jazz)\n   - [!answer] А\n   - [!options] А | Е | І | У","answer":""},{"prompt":"Ч Е М П І О _ (Winner - Champion)\n   - [!answer] Н\n   - [!options] Н | П | М | Л","answer":""},{"prompt":"Л О Н Д О _ (City - London)\n   - [!answer] Н\n   - [!options] Н | П | М | Л","answer":""},{"prompt":"Ц У К О _ (Sweetener - Sugar)\n    - [!answer] Р\n    - [!options] Р | П | Л | Н","answer":""},{"prompt":"Д Ж И Н С _ (Clothing - Jeans)\n    - [!answer] И\n    - [!options] И | І | Ї | Е","answer":""},{"prompt":"Й О Г У Р _ (Dairy food - Yogurt)\n    - [!answer] Т\n    - [!options] Т | Д | П | Б","answer":""}]}},{"id":"activity-5","type":"unjumble","title":"Survival Phrases","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["Т","А","К"],"answer":"ТАК","translation":"Yes"},{"words":["І","Н"],"answer":"НІ","translation":"No"},{"words":["О","Щ"],"answer":"ЩО","translation":"What"},{"words":["Е","Д"],"answer":"ДЕ","translation":"Where"},{"words":["О","Х","Т"],"answer":"ХТО","translation":"Who"},{"words":["К","Я"],"answer":"ЯК","translation":"How"},{"words":["Е","Ц"],"answer":"ЦЕ","translation":"This is"},{"words":["Б","Р","Е","Д","О"],"answer":"ДОБРЕ","translation":"Good"},{"words":["Т","М","Е","О","Р"],"answer":"МЕТРО","translation":"Metro"},{"words":["К","А","В","Б","У"],"answer":"БУКВА","translation":"Letter"},{"words":["О","В","Л","О","С"],"answer":"СЛОВО","translation":"Word"},{"words":["В","О","А","М"],"answer":"МОВА","translation":"Language"}]}},{"id":"activity-6","type":"quiz","title":"Hard G vs Soft H","data":{"type":"quiz","questions":[{"question":"For the soft, breathy 'H' sound (like in \"Home\").","options":["Г","Ґ"],"correctIndex":0,"explanation":""},{"question":"For the hard, explosive 'G' sound (like in \"Go\").","options":["Ґ","Г"],"correctIndex":0,"explanation":""},{"question":"For the initial sound in \"Hostomel'\" (city).","options":["Г","Ґ"],"correctIndex":0,"explanation":""},{"question":"For the initial sound in \"Gudzyk\" (button).","options":["Ґ","Г"],"correctIndex":0,"explanation":""},{"question":"For the soft 'H' in \"Holova\" (head).","options":["Г","Ґ"],"correctIndex":0,"explanation":""},{"question":"For the hard 'G' in \"Gava\" (crow).","options":["Ґ","Г"],"correctIndex":0,"explanation":""},{"question":"For the initial sound in \"Hulia\" (to walk).","options":["Г","Ґ"],"correctIndex":0,"explanation":""},{"question":"For the initial sound in \"Geografiya\" (geography).","options":["Г","Ґ"],"correctIndex":0,"explanation":""},{"question":"For the initial sound in \"Gramatyka\" (grammar).","options":["Г","Ґ"],"correctIndex":0,"explanation":""},{"question":"For the hard 'G' in \"Garderob\" (wardrobe).","options":["Ґ","Г"],"correctIndex":0,"explanation":""},{"question":"For the soft 'H' in \"Humor\".","options":["Г","Ґ"],"correctIndex":0,"explanation":""},{"question":"For the soft 'H' in \"Hero\".","options":["Г","Ґ"],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-7","type":"anagram","title":"Scrambled Letters","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["у","б","к","а","в"],"answer":"БУКВА (wait - bukva)","translation":"Letter"},{"letters":["в","о","л","о","с"],"answer":"слово","translation":"Word"},{"letters":["д","о","н","Л","о","н"],"answer":"Лондон","translation":"City"},{"letters":["в","а","К","и","ї"],"answer":"Київ","translation":"City"},{"letters":["к","а","Т"],"answer":"Так","translation":"Yes"},{"letters":["і","Н"],"answer":"Ні","translation":"No"},{"letters":["а","р","к","О","у","ц"],"answer":"Цукор","translation":"Sugar"},{"letters":["щ","о","Б","р"],"answer":"Борщ","translation":"Soup"},{"letters":["з","а","Д","ж"],"answer":"Джаз","translation":"Music"},{"letters":["о","л","Ш","о","к","д","а"],"answer":"Шоколад","translation":"Sweet"},{"letters":["п","а","Є","в","р","о"],"answer":"Європа","translation":"Continent"},{"letters":["ю","к","у","я","Д"],"answer":"Дякую","translation":"Thank you"}]}},{"id":"activity-8","type":"true-false","title":"Letter Facts","data":{"type":"true-false","statements":[{"statement":"The letter Щ makes a two-part \"sh-ch\" sound.","isTrue":true,"explanation":"Correct! Like in \"fresh cheese\"."},{"statement":"The letter Ц makes a \"ch\" sound.","isTrue":false,"explanation":"Incorrect. Ц makes a \"ts\" sound."},{"statement":"The letter Ь (Soft Sign) has no sound of its own.","isTrue":true,"explanation":"Correct! It only softens the preceding consonant."},{"statement":"The letter И sounds like \"ee\" in machine.","isTrue":false,"explanation":"Incorrect. И sounds like \"i\" in sit. І sounds like \"ee\"."},{"statement":"The letter Ї always has a built-in \"y\" sound.","isTrue":true,"explanation":"Correct! It's \"Yee\"."},{"statement":"The letter Ю makes a \"ya\" sound.","isTrue":false,"explanation":"Incorrect. Ю makes a \"yu\" sound. Я makes a \"ya\" sound."},{"statement":"The letter Є makes a \"ye\" sound.","isTrue":true,"explanation":"Correct!"},{"statement":"The letter Ж makes a \"sh\" sound.","isTrue":false,"explanation":"Incorrect. Ж makes a \"zh\" sound (like 's' in pleasure). Ш makes a \"sh\" sound."},{"statement":"The letters ДЖ form a single \"j\" sound.","isTrue":true,"explanation":"Correct! Like in \"jam\"."},{"statement":"The letters ДЗ form a \"d-z\" sound as two separate sounds.","isTrue":false,"explanation":"Incorrect. They form a single \"dz\" sound, like 'ds' in 'pods'."},{"statement":"The letter Й is a consonant.","isTrue":true,"explanation":"Correct! It's a short 'y' sound."},{"statement":"The italic form of т looks like a 'u'.","isTrue":false,"explanation":"Incorrect. The italic form of т looks like an 'm'. The italic form of и looks like a 'u'."}]}}];
+    const vocabData = [{"uk":"буква","translit":"/ˈbukwɑ/","en":"noun","note":"[🔊](audio_bukva)"},{"uk":"слово","translit":"/ˈslɔwɔ/","en":"noun","note":"[🔊](audio_slovo)"},{"uk":"алфавіт","translit":"/ɑlfɑˈvit/","en":"noun","note":"[🔊](audio_alfavit)"},{"uk":"мова","translit":"/ˈmɔwɑ/","en":"noun","note":"[🔊](audio_mova)"},{"uk":"українська","translit":"/ukrɑˈjinʲsʲkɑ/","en":"adj","note":"[🔊](audio_ukrainska)"},{"uk":"англійська","translit":"/ɑnˈɦlʲijsʲkɑ/","en":"adj","note":"[🔊](audio_anhliyska)"},{"uk":"так","translit":"/tɑk/","en":"part","note":"[🔊](audio_tak)"},{"uk":"ні","translit":"/nʲi/","en":"part","note":"[🔊](audio_ni)"},{"uk":"добре","translit":"/ˈdɔbrɛ/","en":"adv","note":"[🔊](audio_dobre)"},{"uk":"дякую","translit":"/ˈdʲɑkuju/","en":"verb","note":"[🔊](audio_dyakuyu)"},{"uk":"будь ласка","translit":"/budʲ ˈlɑskɑ/","en":"phrase","note":"[🔊](audio_budlaska)"},{"uk":"привіт","translit":"/prɪˈvit/","en":"interj","note":"[🔊](audio_pryvit)"},{"uk":"до побачення","translit":"/dɔ pɔˈbɑtʃennʲɑ/","en":"phrase","note":"[🔊](audio_dopobachennya)"},{"uk":"вибачте","translit":"/ˈwɪbɑtʃte/","en":"verb","note":"[🔊](audio_vybachte)"},{"uk":"прошу","translit":"/ˈprɔʃu/","en":"verb","note":"[🔊](audio_proshu)"},{"uk":"що","translit":"/ʃtʃɔ/","en":"pron","note":"[🔊](audio_shcho)"},{"uk":"як","translit":"/jɑk/","en":"adv","note":"[🔊](audio_yak)"},{"uk":"де","translit":"/dɛ/","en":"adv","note":"[🔊](audio_de)"},{"uk":"хто","translit":"/xtɔ/","en":"pron","note":"[🔊](audio_khto)"},{"uk":"це","translit":"/tʃɛ/","en":"pron","note":"[🔊](audio_tse)"},{"uk":"борщ","translit":"/bɔrʃtʃ/","en":"noun","note":"[🔊](audio_borshch)"},{"uk":"йогурт","translit":"/ˈjɔɦurt/","en":"noun","note":"[🔊](audio_yohurt)"},{"uk":"желе","translit":"/ʒɛˈlɛ/","en":"noun","note":"[🔊](audio_zhele)"},{"uk":"майонез","translit":"/mɑjɔˈnɛz/","en":"noun","note":"[🔊](audio_mayonez)"},{"uk":"шоколад","translit":"/ʃɔkɔˈlɑd/","en":"noun","note":"[🔊](audio_shokolad)"},{"uk":"чемпіон","translit":"/tʃɛmpiˈɔn/","en":"noun","note":"[🔊](audio_chempion)"},{"uk":"центр","translit":"/tʃɛntr/","en":"noun","note":"[🔊](audio_tsentr)"},{"uk":"цукор","translit":"/ˈtsukɔr/","en":"noun","note":"[🔊](audio_tsukor)"},{"uk":"джинси","translit":"/ˈdʒɪnsɪ/","en":"noun","note":"[🔊](audio_dzhynsy)"},{"uk":"джаз","translit":"/dʒɑz/","en":"noun","note":"[🔊](audio_dzhaz)"},{"uk":"Європа","translit":"/jɛwˈrɔpɑ/","en":"noun","note":"[🔊](audio_yevropa)"},{"uk":"Україна","translit":"/ukrɑˈjinɑ/","en":"noun","note":"[🔊](audio_ukraina)"},{"uk":"Лондон","translit":"/ˈlɔndɔn/","en":"noun","note":"[🔊](audio_london)"},{"uk":"Київ","translit":"/ˈkɪjiu̯/","en":"noun","note":"[🔊](audio_kyiv)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1092,6 +950,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2356,6 +2240,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

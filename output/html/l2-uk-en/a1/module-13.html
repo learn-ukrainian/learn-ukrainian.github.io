@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -481,14 +521,15 @@ footer {
     <h1>Module 13: The Locative - Where Things Are</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Quiz</button>
-      <button class="nav-tab" data-section="activity-1">2. Match</button>
-      <button class="nav-tab" data-section="activity-2">3. Sort</button>
-      <button class="nav-tab" data-section="activity-3">4. T/F</button>
-      <button class="nav-tab" data-section="activity-4">5. Fill</button>
-      <button class="nav-tab" data-section="activity-5">6. Match</button>
-      <button class="nav-tab" data-section="activity-6">7. Spell</button>
+      <button class="nav-tab" data-section="activity-0">1. Match</button>
+      <button class="nav-tab" data-section="activity-1">2. Fill</button>
+      <button class="nav-tab" data-section="activity-2">3. Quiz</button>
+      <button class="nav-tab" data-section="activity-3">4. Fill</button>
+      <button class="nav-tab" data-section="activity-4">5. Spell</button>
+      <button class="nav-tab" data-section="activity-5">6. Sort</button>
+      <button class="nav-tab" data-section="activity-6">7. Order</button>
       <button class="nav-tab" data-section="activity-7">8. Fill</button>
+      <button class="nav-tab" data-section="activity-8">9. Fill</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -498,738 +539,289 @@ footer {
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.2</span>
         <h2 style="font-size:2rem;margin:0.5rem 0">The Locative - Where Things Are</h2>
-        <p style="color:var(--text-muted)">Location with в/у and на</p>
+        <p style="color:var(--text-muted)">The GPS System</p>
       </div>
       
-    <div class="card section-content">
-      <h3>Warm Up</h3>
-      <div class="md-content"><p>Де ти? Where are you? This simple question requires a powerful grammatical tool: the <strong>locative case</strong> (місцевий відмінок). Every time you say where something is, you'll use this case.</p>
-<hr /></div>
-    </div>
-  
-    <div class="card section-content">
-      <h3>Lesson</h3>
-      <div class="md-content"><h2 id="thelocativecaseoverview">The Locative Case: Overview</h2>
-<p>The locative case answers the question <strong>Де?</strong> (Where?) and is always used with a preposition, most commonly <strong>в/у</strong> (in) or <strong>на</strong> (on/at).</p>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Де ти?</td>
-<td>Я <strong>в кімнаті</strong>. (I'm in the room.)</td>
-</tr>
-<tr>
-<td>Де книга?</td>
-<td>Книга <strong>на столі</strong>. (The book is on the table.)</td>
-</tr>
-<tr>
-<td>Де вони живуть?</td>
-<td>Вони живуть <strong>в Україні</strong>. (They live in Ukraine.)</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong><br />
-  The locative is the only Ukrainian case that <strong>always</strong> requires a preposition. You'll never see a "naked" locative—it's always в/у + locative or на + locative.</p>
-</blockquote>
-<hr />
-<h2 id="prepositionchoicevs">Preposition Choice: В/У vs На</h2>
-<h3 id="ininside">В/У (in, inside)</h3>
-<p>Used for enclosed spaces and countries/cities:</p>
-<table>
-<thead>
-<tr>
-<th>Location Type</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Rooms</td>
-<td>в кімнаті, у ванній</td>
-</tr>
-<tr>
-<td>Buildings</td>
-<td>в магазині, у школі</td>
-</tr>
-<tr>
-<td>Cities</td>
-<td>у Києві, в Одесі</td>
-</tr>
-<tr>
-<td>Countries</td>
-<td>в Україні, у Польщі</td>
-</tr>
-<tr>
-<td>Containers</td>
-<td>у сумці, в коробці</td>
-</tr>
-</tbody>
-</table>
-<h3 id="onat">На (on, at)</h3>
-<p>Used for surfaces, events, and some specific places:</p>
-<table>
-<thead>
-<tr>
-<th>Location Type</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Surfaces</td>
-<td>на столі, на підлозі</td>
-</tr>
-<tr>
-<td>Events</td>
-<td>на концерті, на уроці</td>
-</tr>
-<tr>
-<td>Islands</td>
-<td>на острові</td>
-</tr>
-<tr>
-<td>Public spaces</td>
-<td>на площі, на вулиці</td>
-</tr>
-<tr>
-<td>Work/study</td>
-<td>на роботі, на лекції</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🌍 <strong>Real World</strong><br />
-  <strong>В Україні</strong> vs <strong>на Україні</strong>: Always use "в Україні"! The form "на Україні" was historically used by Russian imperial and Soviet rule to diminish Ukraine's status (implying it was a region rather than a country). Using "в" respects Ukraine as an independent nation.</p>
-</blockquote>
-<hr />
-<h2 id="orthesoundrule">В or У? The Sound Rule</h2>
-<p>Both в and у mean "in," but which one to use?</p>
-<p><strong>Simple rule:</strong></p>
+    <div class="card section-intro">
+      <h3>📖 Introduction</h3>
+      <div class="md-content"><h2 id="warmup">warm-up</h2>
+<p><strong>The GPS System</strong></p>
+<p>You have a laser beam to point at Objects (Accusative).<br />
+You have a Soul Detector to point at People (Animate Accusative).<br />
+But you are floating in space.<br />
+"Is the passport <strong>in</strong> the bag?"<br />
+"Is the phone <strong>on</strong> the table?"<br />
+"Is Ivan <strong>in</strong> Kyiv?"</p>
+<p>To anchor yourself in the universe, you need the <strong>Locative Case</strong>.<br />
+It answers the question <strong>Де?</strong> (Where?).<br />
+It acts like a GPS coordinate.</p>
+<h2 id="presentation">presentation</h2>
+<h3 id="section1themagicendingi">Section 1: The Magic Ending (-I)</h3>
+<p>Good news! This is the easiest case in Ukrainian.<br />
+Almost everyone agrees on one ending: <strong>-І</strong> (ee).</p>
+<p><strong>The Rule:</strong><br />
+To say you are "in" or "on" something, take the noun and change the end to <strong>-і</strong>.</p>
 <ul>
-<li><strong>У</strong> after consonants: Я <strong>у</strong> школі. (after Я, which ends in a vowel sound… wait!)</li>
-<li><strong>В</strong> after vowels: Вона <strong>в</strong> офісі.</li>
+<li><strong>Метро</strong> (Metro) -&gt; У метр<strong>о</strong> (Wait, foreign words don't change).</li>
+<li><strong>Парк</strong> (Park) -&gt; У парк<strong>у</strong> (Wait, park is special? Yes, -y for some big open spaces. Let's start basic).</li>
+<li><strong>Стіл</strong> (Table) -&gt; На стол<strong>і</strong>.</li>
+<li><strong>Кіт</strong> (Cat) -&gt; На кот<strong>і</strong> (On the cat).</li>
+<li><strong>Телефон</strong> -&gt; У телефон<strong>і</strong>.</li>
 </ul>
-<p><strong>Real rule (for clarity):</strong></p>
-<ul>
-<li><strong>У</strong> when it makes pronunciation easier (avoiding consonant clusters)</li>
-<li><strong>В</strong> is the default form</li>
-<li>Both are often interchangeable in modern Ukrainian</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Context</th>
-<th>Preferred</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Я в кімнаті.</td>
-<td>в (after vowel sound)</td>
-</tr>
-<tr>
-<td>Він у школі.</td>
-<td>у (after consonant)</td>
-</tr>
-<tr>
-<td>Вони в Україні.</td>
-<td>в (common usage)</td>
-</tr>
-</tbody>
-</table>
-<p>Don't overthink this—Ukrainians use both freely!</p>
-<hr />
-<h2 id="locativeendingsbygender">Locative Endings by Gender</h2>
-<h3 id="masculinenouns">Masculine Nouns</h3>
-<p>Most masculine nouns take <strong>-і</strong> or <strong>-у</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Nominative</th>
-<th>Locative</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>стіл</td>
-<td>на стол<strong>і</strong></td>
-<td>на столі (on the table)</td>
-</tr>
-<tr>
-<td>дім</td>
-<td>у дом<strong>і</strong></td>
-<td>у домі (in the house)</td>
-</tr>
-<tr>
-<td>банк</td>
-<td>у банк<strong>у</strong></td>
-<td>у банку (in the bank)</td>
-</tr>
-<tr>
-<td>парк</td>
-<td>у парк<strong>у</strong></td>
-<td>у парку (in the park)</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Pattern:</strong></p>
-<ul>
-<li>Hard consonants: usually -і (столі, офісі)</li>
-<li>After г, к, х: usually -у (банку, парку)</li>
-</ul>
-<h3 id="femininenouns">Feminine Nouns</h3>
-<p>Feminine nouns take <strong>-і</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Nominative</th>
-<th>Locative</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>кімната</td>
-<td>у кімнат<strong>і</strong></td>
-<td>у кімнаті (in the room)</td>
-</tr>
-<tr>
-<td>школа</td>
-<td>у школ<strong>і</strong></td>
-<td>у школі (in the school)</td>
-</tr>
-<tr>
-<td>книга</td>
-<td>у книз<strong>і</strong></td>
-<td>у книзі (in the book)</td>
-</tr>
-<tr>
-<td>вулиця</td>
-<td>на вулиц<strong>і</strong></td>
-<td>на вулиці (on the street)</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Note:</strong> Some consonant changes occur: г→з (книга→книзі), к→ц (вулиця stays вулиці)</p>
-<h3 id="neuternouns">Neuter Nouns</h3>
-<p>Neuter nouns also take <strong>-і</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Nominative</th>
-<th>Locative</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>місто</td>
-<td>у міст<strong>і</strong></td>
-<td>у місті (in the city)</td>
-</tr>
-<tr>
-<td>море</td>
-<td>на мор<strong>і</strong></td>
-<td>на морі (at the sea)</td>
-</tr>
-<tr>
-<td>вікно</td>
-<td>на вікн<strong>і</strong></td>
-<td>на вікні (on the window)</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎯 <strong>Fun Fact</strong><br />
-  The ending <strong>-і</strong> is your best friend in the locative! It works for masculine, feminine, AND neuter nouns. When in doubt, try -і!</p>
-</blockquote>
-<hr />
-<h2 id="commonlocationvocabulary">Common Location Vocabulary</h2>
-<h3 id="roomsofthehouse">Rooms of the House</h3>
-<table>
-<thead>
-<tr>
-<th>Nominative</th>
-<th>Locative</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>кімната</td>
-<td>у кімнаті</td>
-<td>room</td>
-</tr>
-<tr>
-<td>кухня</td>
-<td>на кухні</td>
-<td>kitchen</td>
-</tr>
-<tr>
-<td>ванна</td>
-<td>у ванній</td>
-<td>bathroom</td>
-</tr>
-<tr>
-<td>спальня</td>
-<td>у спальні</td>
-<td>bedroom</td>
-</tr>
-<tr>
-<td>вітальня</td>
-<td>у вітальні</td>
-<td>living room</td>
-</tr>
-<tr>
-<td>коридор</td>
-<td>у коридорі</td>
-<td>hallway</td>
-</tr>
-<tr>
-<td>балкон</td>
-<td>на балконі</td>
-<td>balcony</td>
-</tr>
-</tbody>
-</table>
-<h3 id="buildingsplaces">Buildings &amp; Places</h3>
-<table>
-<thead>
-<tr>
-<th>Nominative</th>
-<th>Locative</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>будинок</td>
-<td>у будинку</td>
-<td>building/house</td>
-</tr>
-<tr>
-<td>квартира</td>
-<td>у квартирі</td>
-<td>apartment</td>
-</tr>
-<tr>
-<td>офіс</td>
-<td>в офісі</td>
-<td>office</td>
-</tr>
-<tr>
-<td>школа</td>
-<td>у школі</td>
-<td>school</td>
-</tr>
-<tr>
-<td>університет</td>
-<td>в університеті</td>
-<td>university</td>
-</tr>
-<tr>
-<td>лікарня</td>
-<td>у лікарні</td>
-<td>hospital</td>
-</tr>
-<tr>
-<td>магазин</td>
-<td>у магазині</td>
-<td>store</td>
-</tr>
-<tr>
-<td>аптека</td>
-<td>в аптеці</td>
-<td>pharmacy</td>
-</tr>
-</tbody>
-</table>
-<h3 id="publicplaces">Public Places</h3>
-<table>
-<thead>
-<tr>
-<th>Nominative</th>
-<th>Locative</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ринок</td>
-<td>на ринку</td>
-<td>market</td>
-</tr>
-<tr>
-<td>центр</td>
-<td>у центрі</td>
-<td>center</td>
-</tr>
-<tr>
-<td>ресторан</td>
-<td>у ресторані</td>
-<td>restaurant</td>
-</tr>
-<tr>
-<td>готель</td>
-<td>у готелі</td>
-<td>hotel</td>
-</tr>
-<tr>
-<td>парк</td>
-<td>у парку</td>
-<td>park</td>
-</tr>
-<tr>
-<td>пляж</td>
-<td>на пляжі</td>
-<td>beach</td>
-</tr>
-<tr>
-<td>музей</td>
-<td>у музеї</td>
-<td>museum</td>
-</tr>
-<tr>
-<td>театр</td>
-<td>у театрі</td>
-<td>theater</td>
-</tr>
-<tr>
-<td>кінотеатр</td>
-<td>у кінотеатрі</td>
-<td>cinema</td>
-</tr>
-<tr>
-<td>стадіон</td>
-<td>на стадіоні</td>
-<td>stadium</td>
-</tr>
-<tr>
-<td>церква</td>
-<td>у церкві</td>
-<td>church</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎬 <strong>Pop Culture Moment</strong><br />
-  Kyiv's famous Maidan Nezalezhnosti (Independence Square) uses "на Майдані" because it's an open public square. This square became world-famous during the 2004 Orange Revolution and the 2013-2014 Euromaidan protests.</p>
-</blockquote>
-<hr />
-<h2 id="usagepatterns">Usage Patterns</h2>
-<h3 id="iaminat">"I am in/at…"</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Я в кімнаті.</td>
-<td>I'm in the room.</td>
-</tr>
-<tr>
-<td>Я на роботі.</td>
-<td>I'm at work.</td>
-</tr>
-<tr>
-<td>Я в магазині.</td>
-<td>I'm in the store.</td>
-</tr>
-<tr>
-<td>Я на кухні.</td>
-<td>I'm in the kitchen.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="whereis">"Where is…?"</h3>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Де телефон?</td>
-<td>На столі. (On the table.)</td>
-</tr>
-<tr>
-<td>Де мама?</td>
-<td>У кімнаті. (In the room.)</td>
-</tr>
-<tr>
-<td>Де ти живеш?</td>
-<td>У Львові. (In Lviv.)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="hesheisat">"He/She is at…"</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Вона в школі.</td>
-<td>She's at school.</td>
-</tr>
-<tr>
-<td>Він на роботі.</td>
-<td>He's at work.</td>
-</tr>
-<tr>
-<td>Вони у парку.</td>
-<td>They're in the park.</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="specialcasesvs">Special Cases: На vs В</h2>
-<p>Some places traditionally use <strong>на</strong> even though they're enclosed:</p>
-<table>
-<thead>
-<tr>
-<th>Place</th>
-<th>Preposition</th>
-<th>Why?</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>на пошті</td>
-<td>at the post office</td>
-<td>Traditional</td>
-</tr>
-<tr>
-<td>на вокзалі</td>
-<td>at the train station</td>
-<td>Traditional</td>
-</tr>
-<tr>
-<td>на концерті</td>
-<td>at a concert</td>
-<td>Event</td>
-</tr>
-<tr>
-<td>на уроці</td>
-<td>in class</td>
-<td>Event/session</td>
-</tr>
-<tr>
-<td>на роботі</td>
-<td>at work</td>
-<td>Activity focus</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong><br />
-  The distinction between в and на sometimes reflects historical or cultural perspectives. "На роботі" emphasizes being engaged in work (activity), while "в офісі" emphasizes physical location (building).</p>
-</blockquote>
-<hr />
-<h2 id="locationinukraine">Location in Ukraine</h2>
-<p>Major cities use <strong>в/у</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>City</th>
-<th>Locative</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Київ</td>
-<td>у Києві</td>
-</tr>
-<tr>
-<td>Львів</td>
-<td>у Львові</td>
-</tr>
-<tr>
-<td>Одеса</td>
-<td>в Одесі</td>
-</tr>
-<tr>
-<td>Харків</td>
-<td>у Харкові</td>
-</tr>
-<tr>
-<td>Дніпро</td>
-<td>у Дніпрі</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Remember:</strong> Always <strong>в Україні</strong>, never "на Україні"!</p>
-<hr /></div>
-    </div>
-  
-    <div class="card section-practice">
-      <h3>Practice</h3>
-      <div class="md-content"><h2 id="exercise1addlocativeendings">Exercise 1: Add Locative Endings</h2>
-<p>Convert to locative with the given preposition:</p>
+<p><strong>Basic Pattern:</strong></p>
 <ol>
-<li>кімната (в) → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>стіл (на) → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>магазин (у) → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>місто (в) → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>школа (у) → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
+<li><strong>Masculine:</strong> Стіл -&gt; Столі.</li>
+<li><strong>Feminine:</strong> Кімната -&gt; Кімнаті.</li>
+<li><strong>Neuter:</strong> Місто -&gt; Місті.</li>
 </ol>
-<h2 id="exercise2chooseor">Exercise 2: Choose В/У or На</h2>
-<p>Fill in the correct preposition:</p>
-<ol>
-<li>Я ___ кімнаті.</li>
-<li>Книга ___ столі.</li>
-<li>Вона ___ роботі.</li>
-<li>Ми живемо ___ Україні.</li>
-<li>Вони ___ парку.</li>
-</ol>
-<h2 id="exercise3answer">Exercise 3: Answer "Де?"</h2>
-<p>Answer the questions:</p>
-<ol>
-<li>Де ти? (кімната) → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Де книга? (стіл) → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Де він? (робота) → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Де вони живуть? (Київ) → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-</ol>
-<hr /></div>
-    </div>
-  
-    <div class="card section-content">
-      <h3>Production</h3>
-      <div class="md-content"><h2 id="taskmyhome">Task: My Home</h2>
-<p>Describe where things are in your home:</p>
-<p><strong>Кухня:</strong></p>
+<blockquote>
+  <p>⚠️ <strong>The "-Y" Trap</strong><br />
+  Some masculine words take <strong>-У</strong> instead of <strong>-І</strong>.<br />
+  Usually large, open spaces or structures.</p>
+  <ul>
+  <li><strong>Парк</strong> -&gt; У парк<strong>у</strong>.</li>
+  <li><strong>Банк</strong> -&gt; У банк<strong>у</strong>.</li>
+  <li><strong>Аеропорт</strong> -&gt; В аеропорт<strong>у</strong>.</li>
+  <li><strong>Сад</strong> (Garden) -&gt; У сад<strong>у</strong>.</li>
+  <li><strong>Сніг</strong> (Snow) -&gt; У сніг<strong>у</strong> (In the snow).</li>
+  <li><strong>Лід</strong> (Ice) -&gt; На льод<strong>у</strong> (On the ice).<br />
+  Don't panic. Start with <strong>-І</strong>. If it sounds weird, try <strong>-У</strong>. This intuition will grow with time.</li>
+  </ul>
+</blockquote>
+<h3 id="section2invsonvs">Section 2: In vs On (В vs На)</h3>
+<p><strong>В (or У)</strong> = Inside.<br />
+<strong>На</strong> = On top of / At an event.</p>
+<p><strong>Logic:</strong></p>
 <ul>
-<li>На кухні є <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Холодильник на <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
+<li><strong>В</strong> кімнаті (In the room) - enclosed.</li>
+<li><strong>В</strong> Україні (In Ukraine) - borders.</li>
+<li><strong>На</strong> столі (On the table) - surface.</li>
+<li><strong>На</strong> стіні (On the wall) - surface.</li>
+<li><strong>На</strong> концерті (At a concert) - event.</li>
+<li><strong>На</strong> роботі (At work) - activity/place.</li>
 </ul>
-<p><strong>Кімната:</strong></p>
+<blockquote>
+  <p>💡 <strong>Euphony: В vs У</strong><br />
+  They mean the same thing. We switch them to make music.</p>
+  <ul>
+  <li>Use <strong>В</strong> if the next word starts with a vowel (В аеропорту).</li>
+  <li>Use <strong>У</strong> if the next word starts with a consonant (У парку).</li>
+  <li>Use <strong>В</strong> at the start of a sentence if you want a sharp start.</li>
+  <li>Use <strong>У</strong> at the start for a soft start.<br />
+  Just flow. "Kyyiv" ends in V… so "U Kyyevi".</li>
+  </ul>
+</blockquote>
+<h3 id="section3femininechanges">Section 3: Feminine Changes</h3>
+<p>Feminine words ending in -A change to -I.</p>
 <ul>
-<li>У кімнаті є <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>Телевізор на <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
+<li><strong>Мама</strong> -&gt; На мам<strong>і</strong> (On mom).</li>
+<li><strong>Книга</strong> -&gt; У книз<strong>і</strong> (Book).</li>
+<li><em>Wait!</em> G changes to Z? Yes!</li>
+<li><strong>K</strong> -&gt; <strong>Ts</strong> (Рука -&gt; У руці).</li>
+<li><strong>H</strong> -&gt; <strong>Z</strong> (Нога -&gt; На нозі).</li>
+<li><strong>Kh</strong> -&gt; <strong>S</strong> (Вухо -&gt; У вусі - Ear).</li>
+<li>This is the <strong>Velar Shift</strong>. It happens in Locative.</li>
+<li><em>Do we teach this at A1?</em> Yes, commonly for "Knyha -&gt; Knyzi" and "Ruka -&gt; Rutsi".</li>
 </ul>
-<p><strong>Ванна:</strong></p>
+<blockquote>
+  <p>⚡ <strong>Language Link: Prepositions are Weird</strong><br />
+  In English, you are <strong>on</strong> the bus but <strong>in</strong> the car. You are <strong>at</strong> school but <strong>in</strong> the classroom.<br />
+  Ukrainian is just as weird.</p>
+  <ul>
+  <li><strong>На</strong> роботі (At work).</li>
+  <li><strong>У</strong> школі (At school).</li>
+  <li><strong>На</strong> вулиці (Outside/On street).<br />
+  Don't look for perfect logic. Look for the pattern. <strong>Open/Activity = На</strong>. <strong>Enclosed = В</strong>.</li>
+  </ul>
+</blockquote>
+<h3 id="section4whereisit">Section 4: Where is it?</h3>
+<p><strong>Де</strong> (Where) is your key key.</p>
 <ul>
-<li>У ванній є <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
+<li><strong>Q:</strong> Де телефон? (Where is the phone?)</li>
+<li><strong>A:</strong> Телефон на столі. (The phone is on the table).</li>
 </ul>
-<h2 id="taskwhereareyou">Task: Where Are You?</h2>
-<p>Write sentences about where you typically are at different times:</p>
-<p><strong>Зранку:</strong> Я <strong><em><em></em></strong><strong><em></em></em></strong>_<br />
-<strong>Вдень:</strong> Я <strong><em><em></em></strong><strong><em></em></em></strong>_<br />
-<strong>Ввечері:</strong> Я <strong><em><em></em></strong><strong><em></em></em></strong>_</p>
-<hr />
-<hr />
+<h3 id="section5thenaworldworkinternet">Section 5: The "Na" World (Work &amp; Internet)</h3>
+<p>Where do you work?</p>
+<ul>
+<li>In an office (У офісі).</li>
+<li>In a bank (У банку).</li>
+<li><strong>At work</strong> (На роботі).</li>
+</ul>
+<p>Ukrainian treats "Work" as a state of being, not just a place. Like "On duty".<br />
+Also, the Internet is a surface you surf on.</p>
+<ul>
+<li><strong>В інтернеті</strong> (In the internet) - Wait, V? Yes, modern usage prefers V.</li>
+<li><strong>У фейсбуці</strong> (In Facebook).</li>
+<li><strong>В інстаграмі</strong> (In Instagram).</li>
+<li>But you post a photo <strong>на стіні</strong> (on the wall).</li>
+</ul>
+<p>We also use <strong>На</strong> for events.</p>
+<ul>
+<li><strong>На концерті</strong> (At the concert).</li>
+<li><strong>На уроці</strong> (At the lesson).</li>
+<li><strong>На зустрічі</strong> (At the meeting).</li>
+</ul>
+<blockquote>
+  <p>🎵 <strong>Deep Dive: The Rhythm of V and U</strong><br />
+  Why do we have two words for "In" (<strong>В</strong> and <strong>У</strong>)?<br />
+  It is purely for music (euphony).</p>
+  <ul>
+  <li><strong>В</strong> connects vowels to consonants: "Вона <strong>в</strong> парку". (Vona v parku). Smooth.</li>
+  <li><strong>У</strong> connects consonants to consonants: "Брат <strong>у</strong> парку". (Brat u parku). Easier to say than "Brat v parku".</li>
+  <li><strong>У</strong> connects consonants to vowels: "Він <strong>у</strong> офісі". (Vin u ofisi).<br />
+  Developing this ear takes time. When in doubt, use <strong>У</strong> between consonants and <strong>В</strong> after vowels.</li>
+  </ul>
+  <p>🧭 <strong>Culture Corner: The Center</strong><br />
+  Every Ukrainian city has a "Center" (Tsentr).<br />
+  "Я в центрі" (I am in the center).<br />
+  Meeting "in the center" is the default.<br />
+  It usually means the main square (Maidan) or main street.</p>
+</blockquote>
+<h2 id="practice">practice</h2>
+<p><strong>Drill 1: In or On?</strong></p>
+<ul>
+<li>Table -&gt; <strong>На</strong>.</li>
+<li>Box -&gt; <strong>В</strong>.</li>
+<li>Concert -&gt; <strong>На</strong>.</li>
+<li>Ukraine -&gt; <strong>В</strong>.</li>
+<li>Sofa -&gt; <strong>На</strong>. (Usually "Sit on sofa").</li>
+<li>Internet -&gt; <strong>В</strong> (В інтернеті).</li>
+<li>Instagram -&gt; <strong>В</strong> (В інстаграмі).</li>
+<li>Facebook -&gt; <strong>У</strong> (У фейсбуці).</li>
+</ul>
+<p><strong>Drill 2: The Ending Game</strong><br />
+Add -і (or -у/ні).</p>
+<ul>
+<li>Кімната -&gt; В кімнат<strong>і</strong>.</li>
+<li>Місто -&gt; У міст<strong>і</strong>.</li>
+<li>Парк -&gt; У парк<strong>у</strong>.</li>
+<li>Стіл -&gt; На стол<strong>і</strong>.</li>
+<li>Вікно -&gt; На вікн<strong>і</strong>.</li>
+<li>Стілець (Chair) -&gt; На стільц<strong>і</strong> (Soft sign drops, I adds).</li>
+<li>Ліжко (Bed) -&gt; У ліжк<strong>у</strong> (Irregular -u for Bed? No, usually <em>На ліжку</em>. Or <em>У ліжку</em> under covers. Standard Locative: <em>У ліжку</em>).</li>
+</ul>
+<p><strong>Drill 3: The Shift</strong></p>
+<ul>
+<li>Книга (Book) -&gt; У книз<strong>і</strong>.</li>
+<li>Бібліотека (Library) -&gt; У бібліотец<strong>і</strong>.</li>
+<li>Нога (Leg) -&gt; На ноз<strong>і</strong>.</li>
+<li>Аптека (Pharmacy) -&gt; В аптец<strong>і</strong>.</li>
+<li>Музика (Music) -&gt; У музиц<strong>і</strong>.</li>
+</ul>
+<h2 id="production">production</h2>
+<blockquote>
+  <p>🏠 <strong>Deep Dive: Being "At Home"</strong><br />
+  "Home" is special in every language.</p>
+  <ul>
+  <li>Nominative: <strong>Дім</strong>.</li>
+  <li>Locative: <strong>Вдома</strong>. (One word! Adverb).</li>
+  <li>"Я вдома" = I am at home.</li>
+  <li>Don't say "Я в домі" unless you mean inside the physical building structure.</li>
+  <li>"Де ти?" - "Я вдома". (Where are you? - I am home).</li>
+  </ul>
+</blockquote>
+<p><strong>Scenario: The Lost Tourist</strong></p>
+<ul>
+<li><strong>Tourist:</strong> Добрий день. Де метро?</li>
+<li><strong>Local:</strong> Метро <strong>в центрі</strong>. (Metro is in the center).</li>
+<li><strong>Tourist:</strong> А де центр?</li>
+<li><strong>Local:</strong> Центр там. Ви зараз <strong>на вулиці</strong> Хрещатик. (You are now on Khreshchatyk Street).</li>
+<li><strong>Tourist:</strong> Дякую!</li>
+<li><strong>Local:</strong> Будь ласка! Гарного дня!</li>
+</ul>
+<blockquote>
+  <p>🌍 <strong>Cultural Insight: The Center</strong><br />
+  Every Ukrainian city has a "Center" (<strong>Центр</strong>).<br />
+  It is not just geography; it is the soul of the city.<br />
+  "Я в центрі" means you are where the action is.<br />
+  In Kyiv, the center includes Maidan and Khreshchatyk.</p>
+  <p>🌍 <strong>Culture Corner: The Kitchen</strong></p>
+  <p>In Ukraine, life happens <strong>на кухні</strong> (in the kitchen).<br />
+  Wait, why "On" the kitchen?<br />
+  Actually, standard is <strong>на кухні</strong>. It's considered a work surface/area.<br />
+  Or maybe because historically it was the hearth.<br />
+  We talk, eat, drink tea, and solve world problems <strong>на кухні</strong>.</p>
+</blockquote>
 <hr /></div>
     </div>
   
       
-    <div class="card section-summary">
-      <h3>📋 Summary</h3>
-      <div class="md-content"><p>In this module, you learned:</p>
-<ol>
-<li><strong>Locative case</strong> answers "Де?" (Where?) and always uses a preposition</li>
-<li><strong>В/У</strong> for enclosed spaces, buildings, cities, countries</li>
-<li><strong>На</strong> for surfaces, events, some traditional places</li>
-<li><strong>Endings</strong>: Most nouns take -і; some masculine nouns take -у</li>
-<li><strong>Always</strong> "в Україні" (not "на Україні")</li>
-</ol>
-<p><strong>Key patterns:</strong></p>
-<ul>
-<li>Я в кімнаті. (I'm in the room.)</li>
-<li>Книга на столі. (The book is on the table.)</li>
-<li>Ми живемо в Україні. (We live in Ukraine.)</li>
-<li>Вона на роботі. (She's at work.)</li>
-</ul>
-<p><strong>Remember:</strong> Locative is always с preposition—в/у or на!</p>
-<p>Next module: Possessive pronouns! You'll learn to say "my," "your," "his," "her" in Ukrainian: мій, твій, його, її…</p></div>
-    </div>
-  
       <div class="btn-group">
         <button class="btn btn-primary" onclick="showSection('activity-0')">Activities →</button>
       </div>
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Locative Endings</h3>
+    <section id="activity-0" class="section"><div class="card"><h3>In or On?</h3>
       <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container"></div>
-      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+      <div class="match-container" id="activity-0-container"><svg class="match-lines" id="activity-0-lines"></svg>
+        <div class="match-column" id="activity-0-left"></div>
+        <div class="match-column" id="activity-0-right"></div>
+      </div>
+      <div class="completion-message" id="activity-0-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Place Vocabulary</h3>
+    <section id="activity-1" class="section"><div class="card"><h3>Where are they?</h3>
       <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-1-container"><svg class="match-lines" id="activity-1-lines"></svg>
-        <div class="match-column" id="activity-1-left"></div>
-        <div class="match-column" id="activity-1-right"></div>
-      </div>
-      <div class="completion-message" id="activity-1-complete"><h3>Perfect!</h3></div>
+      <div id="activity-1-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-1-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>В/У vs На</h3>
-      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/24</span></div>
-      <div class="sort-pool" id="activity-2-pool"><div class="sort-items" id="activity-2-items"></div></div>
-      <div class="sort-groups" id="activity-2-groups"></div>
-      <div class="completion-message" id="activity-2-complete"><h3>All Sorted!</h3></div>
+    <section id="activity-2" class="section"><div class="card"><h3>Location Logic</h3>
+      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/8</span></div>
+      <div id="activity-2-container"></div>
+      <div class="completion-message" id="activity-2-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Locative Rules</h3>
+    <section id="activity-3" class="section"><div class="card"><h3>GPS Check</h3>
       <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div id="activity-3-container"></div>
+      <div id="activity-3-container" class="fill-container"></div>
       <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Complete Locative Sentences</h3>
+    <section id="activity-4" class="section"><div class="card"><h3>Hidden Places</h3>
       <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
-      <div id="activity-4-container" class="fill-container"></div>
-      <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
+      <div id="activity-4-container" class="order-container"></div>
+      <div class="completion-message" id="activity-4-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Nominative to Locative</h3>
-      <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-5-container"><svg class="match-lines" id="activity-5-lines"></svg>
-        <div class="match-column" id="activity-5-left"></div>
-        <div class="match-column" id="activity-5-right"></div>
-      </div>
-      <div class="completion-message" id="activity-5-complete"><h3>Perfect!</h3></div>
+    <section id="activity-5" class="section"><div class="card"><h3>Preposition Sorter</h3>
+      <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/24</span></div>
+      <div class="sort-pool" id="activity-5-pool"><div class="sort-items" id="activity-5-items"></div></div>
+      <div class="sort-groups" id="activity-5-groups"></div>
+      <div class="completion-message" id="activity-5-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Location Vocabulary</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>Locator</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
       <div id="activity-6-container" class="order-container"></div>
       <div class="completion-message" id="activity-6-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
     </div></section>
 
-    <section id="activity-7" class="section"><div class="card"><h3>Location Questions and Answers</h3>
+    <section id="activity-7" class="section"><div class="card"><h3>Vowel or Consonant?</h3>
       <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/12</span></div>
       <div id="activity-7-container" class="fill-container"></div>
       <div class="completion-message" id="activity-7-complete"><h3>Complete!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-8')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-8" class="section"><div class="card"><h3>Preposition Logic</h3>
+      <div class="score-display"><span class="score"><span id="activity-8-score">0</span>/12</span></div>
+      <div id="activity-8-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-8-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-8')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
-        <h3>Словник (30)</h3>
+        <h3>Словник (27)</h3>
         <div class="vocab-table-container">
           <table class="vocab-table">
             <thead><tr>
@@ -1239,7 +831,7 @@ footer {
     <th>Переклад</th>
     <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">у/в (u/v)</td><td class="vocab-ipa">/u/, /v/</td><td class="vocab-en">in</td><td class="vocab-note">Location preposition</td></tr><tr><td class="vocab-uk">на (na)</td><td class="vocab-ipa">/nɑ/</td><td class="vocab-en">on, at</td><td class="vocab-note">Surface/event preposition</td></tr><tr><td class="vocab-uk">кімната (kimnata)</td><td class="vocab-ipa">/kʲimˈnɑtɑ/</td><td class="vocab-en">room</td><td class="vocab-note">Loc: у кімнаті</td></tr><tr><td class="vocab-uk">кухня (kukhnya)</td><td class="vocab-ipa">/ˈkuxnʲɑ/</td><td class="vocab-en">kitchen</td><td class="vocab-note">Loc: на кухні</td></tr><tr><td class="vocab-uk">ванна (vanna)</td><td class="vocab-ipa">/ˈvɑnnɑ/</td><td class="vocab-en">bathroom</td><td class="vocab-note">Loc: у ванній</td></tr><tr><td class="vocab-uk">спальня (spal&#039;nya)</td><td class="vocab-ipa">/ˈspɑlʲnʲɑ/</td><td class="vocab-en">bedroom</td><td class="vocab-note">Loc: у спальні</td></tr><tr><td class="vocab-uk">вітальня (vital&#039;nya)</td><td class="vocab-ipa">/vʲiˈtɑlʲnʲɑ/</td><td class="vocab-en">living room</td><td class="vocab-note">Loc: у вітальні</td></tr><tr><td class="vocab-uk">коридор (korydor)</td><td class="vocab-ipa">/kɔrɪˈdɔr/</td><td class="vocab-en">hallway</td><td class="vocab-note">Loc: у коридорі</td></tr><tr><td class="vocab-uk">балкон (balkon)</td><td class="vocab-ipa">/bɑlˈkɔn/</td><td class="vocab-en">balcony</td><td class="vocab-note">Loc: на балконі</td></tr><tr><td class="vocab-uk">поверх (poverkh)</td><td class="vocab-ipa">/ˈpɔvɛrx/</td><td class="vocab-en">floor (story)</td><td class="vocab-note">Loc: на поверсі</td></tr><tr><td class="vocab-uk">будинок (budynok)</td><td class="vocab-ipa">/buˈdɪnɔk/</td><td class="vocab-en">building, house</td><td class="vocab-note">Loc: у будинку</td></tr><tr><td class="vocab-uk">квартира (kvartyra)</td><td class="vocab-ipa">/kvɑrˈtɪrɑ/</td><td class="vocab-en">apartment</td><td class="vocab-note">Loc: у квартирі</td></tr><tr><td class="vocab-uk">офіс (ofis)</td><td class="vocab-ipa">/ɔˈfʲis/</td><td class="vocab-en">office</td><td class="vocab-note">Loc: в офісі</td></tr><tr><td class="vocab-uk">робота (robota)</td><td class="vocab-ipa">/rɔˈbɔtɑ/</td><td class="vocab-en">work, job</td><td class="vocab-note">Loc: на роботі</td></tr><tr><td class="vocab-uk">школа (shkola)</td><td class="vocab-ipa">/ˈʃkɔlɑ/</td><td class="vocab-en">school</td><td class="vocab-note">Loc: у школі</td></tr><tr><td class="vocab-uk">університет (universytet)</td><td class="vocab-ipa">/unʲivɛrsɪˈtɛt/</td><td class="vocab-en">university</td><td class="vocab-note">Loc: в університеті</td></tr><tr><td class="vocab-uk">лікарня (likarnya)</td><td class="vocab-ipa">/lʲiˈkɑrnʲɑ/</td><td class="vocab-en">hospital</td><td class="vocab-note">Loc: у лікарні</td></tr><tr><td class="vocab-uk">магазин (mahazyn)</td><td class="vocab-ipa">/mɑɦɑˈzɪn/</td><td class="vocab-en">store</td><td class="vocab-note">Loc: у магазині</td></tr><tr><td class="vocab-uk">аптека (apteka)</td><td class="vocab-ipa">/ɑpˈtɛkɑ/</td><td class="vocab-en">pharmacy</td><td class="vocab-note">Loc: в аптеці</td></tr><tr><td class="vocab-uk">ринок (rynok)</td><td class="vocab-ipa">/ˈrɪnɔk/</td><td class="vocab-en">market</td><td class="vocab-note">Loc: на ринку</td></tr><tr><td class="vocab-uk">центр (tsentr)</td><td class="vocab-ipa">/tsɛntr/</td><td class="vocab-en">center</td><td class="vocab-note">Loc: у центрі</td></tr><tr><td class="vocab-uk">ресторан (restoran)</td><td class="vocab-ipa">/rɛstɔˈrɑn/</td><td class="vocab-en">restaurant</td><td class="vocab-note">Loc: у ресторані</td></tr><tr><td class="vocab-uk">готель (hotel&#039;)</td><td class="vocab-ipa">/ɦɔˈtɛlʲ/</td><td class="vocab-en">hotel</td><td class="vocab-note">Loc: у готелі</td></tr><tr><td class="vocab-uk">парк (park)</td><td class="vocab-ipa">/pɑrk/</td><td class="vocab-en">park</td><td class="vocab-note">Loc: у парку</td></tr><tr><td class="vocab-uk">пляж (plyazh)</td><td class="vocab-ipa">/plʲɑʒ/</td><td class="vocab-en">beach</td><td class="vocab-note">Loc: на пляжі</td></tr><tr><td class="vocab-uk">музей (muzey)</td><td class="vocab-ipa">/muˈzɛj/</td><td class="vocab-en">museum</td><td class="vocab-note">Loc: у музеї</td></tr><tr><td class="vocab-uk">театр (teatr)</td><td class="vocab-ipa">/tɛˈɑtr/</td><td class="vocab-en">theater</td><td class="vocab-note">Loc: у театрі</td></tr><tr><td class="vocab-uk">кінотеатр (kinoteatr)</td><td class="vocab-ipa">/kʲinɔtɛˈɑtr/</td><td class="vocab-en">cinema</td><td class="vocab-note">Loc: у кінотеатрі</td></tr><tr><td class="vocab-uk">стадіон (stadion)</td><td class="vocab-ipa">/stɑdʲiˈɔn/</td><td class="vocab-en">stadium</td><td class="vocab-note">Loc: на стадіоні</td></tr><tr><td class="vocab-uk">церква (tserkva)</td><td class="vocab-ipa">/ˈtsɛrkvɑ/</td><td class="vocab-en">church</td><td class="vocab-note">Loc: у церкві</td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">де</td><td class="vocab-ipa">/dɛ/</td><td class="vocab-en">where</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('де')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">тут</td><td class="vocab-ipa">/tut/</td><td class="vocab-en">here</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('тут')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">там</td><td class="vocab-ipa">/tɑm/</td><td class="vocab-en">there</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('там')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вдома</td><td class="vocab-ipa">/ˈvdɔmɑ/</td><td class="vocab-en">at home</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вдома')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вулиця</td><td class="vocab-ipa">/ˈvulɪt͡sʲɑ/</td><td class="vocab-en">street</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вулиця')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">площа</td><td class="vocab-ipa">/ˈplɔʃtʃɑ/</td><td class="vocab-en">square</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('площа')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">центр</td><td class="vocab-ipa">/t͡sɛntr/</td><td class="vocab-en">center</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('центр')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">парк</td><td class="vocab-ipa">/pɑrk/</td><td class="vocab-en">park</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('парк')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">банк</td><td class="vocab-ipa">/bɑnk/</td><td class="vocab-en">bank</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('банк')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">офіс</td><td class="vocab-ipa">/ˈɔf⁽ʲ⁾is/</td><td class="vocab-en">office</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('офіс')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">школа</td><td class="vocab-ipa">/ˈʃkɔlɑ/</td><td class="vocab-en">school</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('школа')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">університет</td><td class="vocab-ipa">/un⁽ʲ⁾ivɛrsɪˈtɛt/</td><td class="vocab-en">university</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('університет')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">бібліотека</td><td class="vocab-ipa">/b⁽ʲ⁾ibl⁽ʲ⁾iɔˈtɛkɑ/</td><td class="vocab-en">library</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('бібліотека')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">магазин</td><td class="vocab-ipa">/mɑhɑˈzɪn/</td><td class="vocab-en">shop</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('магазин')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">ринок</td><td class="vocab-ipa">/ˈrɪnɔk/</td><td class="vocab-en">market</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('ринок')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">лікарня</td><td class="vocab-ipa">/l⁽ʲ⁾iˈkɑrnʲɑ/</td><td class="vocab-en">hospital</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('лікарня')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">аптека</td><td class="vocab-ipa">/ɑpˈtɛkɑ/</td><td class="vocab-en">pharmacy</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('аптека')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">готель</td><td class="vocab-ipa">/hɔˈtɛlʲ/</td><td class="vocab-en">hotel</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('готель')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">ресторан</td><td class="vocab-ipa">/rɛstɔˈrɑn/</td><td class="vocab-en">restaurant</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('ресторан')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">кафе</td><td class="vocab-ipa">/kɑˈfɛ/</td><td class="vocab-en">cafe</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('кафе')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">кінотеатр</td><td class="vocab-ipa">/kinɔtɛˈɑtr/</td><td class="vocab-en">cinema</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('кінотеатр')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">театр</td><td class="vocab-ipa">/tɛˈɑtr/</td><td class="vocab-en">theater</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('театр')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">музей</td><td class="vocab-ipa">/muˈzɛj/</td><td class="vocab-en">museum</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('музей')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">пляж</td><td class="vocab-ipa">/plʲɑʒ/</td><td class="vocab-en">beach</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('пляж')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">аеропорт</td><td class="vocab-ipa">/ɑɛrɔˈpɔrt/</td><td class="vocab-en">airport</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('аеропорт')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вокзал</td><td class="vocab-ipa">/vɔkˈzɑl/</td><td class="vocab-en">station (train)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вокзал')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">робота</td><td class="vocab-ipa">/rɔˈbɔtɑ/</td><td class="vocab-en">work</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('робота')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1251,8 +843,8 @@ footer {
   </main><footer>Module 13 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"quiz","title":"Locative Endings","data":{"type":"quiz","questions":[{"question":"кімната → ?","options":["у кімнаті","у кімнату","у кімнатою","на кімнаті"],"correctIndex":0,"explanation":"Feminine nouns take -і in the locative."},{"question":"стіл → ?","options":["на столі","на столу","на столом","в столі"],"correctIndex":0,"explanation":"Masculine nouns usually take -і."},{"question":"місто → ?","options":["у місті","у місту","у містом","на місті"],"correctIndex":0,"explanation":"Neuter nouns take -і in the locative."},{"question":"школа → ?","options":["у школі","у школу","у школою","на школі"],"correctIndex":0,"explanation":"Feminine -а becomes -і in the locative."},{"question":"парк → ?","options":["у парку","у паркі","у парком","на парку"],"correctIndex":0,"explanation":"After к, masculine nouns often take -у."},{"question":"море → ?","options":["на морі","на морю","на морем","у морі"],"correctIndex":0,"explanation":"Neuter -о becomes -і in the locative."},{"question":"ванна → ?","options":["у ванній","у ванну","у ванною","на ванній"],"correctIndex":0,"explanation":"Feminine nouns take -і (ванна → ванній)."},{"question":"офіс → ?","options":["в офісі","в офісу","в офісом","на офісі"],"correctIndex":0,"explanation":"Masculine nouns usually take -і."},{"question":"кухня → ?","options":["на кухні","на кухню","на кухнею","у кухні"],"correctIndex":0,"explanation":"Kitchen uses на, and -я becomes -і."},{"question":"банк → ?","options":["у банку","у банкі","у банком","на банку"],"correctIndex":0,"explanation":"After к, masculine nouns take -у."},{"question":"вулиця → ?","options":["на вулиці","на вулицю","на вулицею","у вулиці"],"correctIndex":0,"explanation":"Street uses на, and -я becomes -і."},{"question":"будинок → ?","options":["у будинку","у будинкі","у будинком","на будинку"],"correctIndex":0,"explanation":"After к, masculine nouns take -у."}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-1","type":"match-up","title":"Place Vocabulary","data":{"type":"match-up","pairs":[{"left":"кімната","right":"room"},{"left":"кухня","right":"kitchen"},{"left":"спальня","right":"bedroom"},{"left":"ванна","right":"bathroom"},{"left":"офіс","right":"office"},{"left":"школа","right":"school"},{"left":"магазин","right":"store"},{"left":"ресторан","right":"restaurant"},{"left":"готель","right":"hotel"},{"left":"парк","right":"park"},{"left":"пляж","right":"beach"},{"left":"театр","right":"theater"}],"shuffleRight":true}},{"id":"activity-2","type":"group-sort","title":"В/У vs На","data":{"type":"group-sort","groups":[{"id":"","name":"В/У","items":["у кімнаті","в офісі","у магазині","у школі","в Україні","у готелі","у музеї","у театрі","у ресторані","у банку","у лікарні","в університеті"],"nameUk":"inside"},{"id":"","name":"На","items":["на столі","на кухні","на роботі","на концерті","на пляжі","на вулиці","на стадіоні","на балконі","на поверсі","на ринку","на уроці","на вокзалі"],"nameUk":"on/at"}],"shuffleItems":true}},{"id":"activity-3","type":"true-false","title":"Locative Rules","data":{"type":"true-false","statements":[{"statement":"The locative case always requires a preposition.","isTrue":true,"explanation":"Correct! Locative is always used with в/у or на—never alone!"},{"statement":"The correct form is 'на Україні' for 'in Ukraine'.","isTrue":false,"explanation":"False! Always use 'в Україні'. This respects Ukraine as a country, not a region."},{"statement":"Most feminine nouns take -і in the locative.","isTrue":true,"explanation":"Correct! кімната → кімнаті, школа → школі, книга → книзі."},{"statement":"На is used for surfaces and events.","isTrue":true,"explanation":"Correct! на столі (on table), на концерті (at concert)."},{"statement":"В and у are completely interchangeable.","isTrue":true,"explanation":"Correct! In modern Ukrainian, both are acceptable. Choice often depends on sound flow."},{"statement":"Neuter nouns take -у in the locative.","isTrue":false,"explanation":"False! Neuter nouns take -і: місто → місті, море → морі."},{"statement":"Masculine nouns after г, к, х usually take -у.","isTrue":true,"explanation":"Correct! банк → банку, парк → парку."},{"statement":"'На роботі' means 'at work'.","isTrue":true,"explanation":"Correct! Work traditionally uses на to emphasize the activity."},{"statement":"Cities use 'на' in the locative.","isTrue":false,"explanation":"False! Cities use в/у: у Києві, у Львові, в Одесі."},{"statement":"Kitchen uses 'на' not 'в'.","isTrue":true,"explanation":"Correct! Ukrainian says 'на кухні' (on/at the kitchen)."},{"statement":"The locative answers the question 'Де?' (Where?).","isTrue":true,"explanation":"Correct! This is the main function of the locative case."},{"statement":"You can use locative without any preposition.","isTrue":false,"explanation":"False! Locative always requires в/у or на."}]}},{"id":"activity-4","type":"fill-blank","title":"Complete Locative Sentences","data":{"type":"fill-blank","items":[{"prompt":"Я ___ кімнаті.","answer":"в","options":["в","на","до","від"]},{"prompt":"Книга ___ столі.","answer":"на","options":["на","в","у","до"]},{"prompt":"Вона ___ роботі.","answer":"на","options":["на","в","у","до"]},{"prompt":"Ми живемо ___ Україні.","answer":"в","options":["в","на","до","від"]},{"prompt":"Діти ___ школі.","answer":"у","options":["у","на","до","від"]},{"prompt":"Я зараз ___ магазині.","answer":"у","options":["у","на","до","від"]},{"prompt":"Вони ___ концерті.","answer":"на","options":["на","в","у","до"]},{"prompt":"Телефон ___ сумці.","answer":"у","options":["у","на","до","від"]},{"prompt":"Він ___ кухні.","answer":"на","options":["на","в","до","від"]},{"prompt":"Ми ___ ресторані.","answer":"у","options":["у","на","до","від"]},{"prompt":"Вона ___ пляжі.","answer":"на","options":["на","в","у","до"]},{"prompt":"Я ___ університеті.","answer":"в","options":["в","на","до","від"]}]}},{"id":"activity-5","type":"match-up","title":"Nominative to Locative","data":{"type":"match-up","pairs":[{"left":"кімната","right":"у кімнаті"},{"left":"стіл","right":"на столі"},{"left":"школа","right":"у школі"},{"left":"місто","right":"у місті"},{"left":"парк","right":"у парку"},{"left":"море","right":"на морі"},{"left":"кухня","right":"на кухні"},{"left":"офіс","right":"в офісі"},{"left":"готель","right":"у готелі"},{"left":"вулиця","right":"на вулиці"},{"left":"театр","right":"у театрі"},{"left":"магазин","right":"у магазині"}],"shuffleRight":true}},{"id":"activity-6","type":"anagram","title":"Location Vocabulary","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["і","н","к","м","а","т","а"],"answer":"кімната","translation":"room"},{"letters":["х","к","у","н","я"],"answer":"кухня","translation":"kitchen"},{"letters":["л","о","к","ш","а"],"answer":"школа","translation":"school"},{"letters":["с","о","т","м","і"],"answer":"місто","translation":"city"},{"letters":["к","п","р","а"],"answer":"парк","translation":"park"},{"letters":["р","о","м","е"],"answer":"море","translation":"sea"},{"letters":["о","і","с","ф"],"answer":"офіс","translation":"office"},{"letters":["л","ь","о","г","т","е"],"answer":"готель","translation":"hotel"},{"letters":["і","ц","л","у","в","я"],"answer":"вулиця","translation":"street"},{"letters":["т","н","а","а","р","о","р","е","с"],"answer":"ресторан","translation":"restaurant"},{"letters":["к","ж","я","п","л"],"answer":"пляж","translation":"beach"},{"letters":["т","р","а","т","е"],"answer":"театр","translation":"theater"}]}},{"id":"activity-7","type":"fill-blank","title":"Location Questions and Answers","data":{"type":"fill-blank","items":[{"prompt":"Де ти? — Я у ___.","answer":"кімнаті","options":["кімнаті","кімната","кімнату","кімнатою"]},{"prompt":"Де книга? — На ___.","answer":"столі","options":["столі","стіл","столу","столом"]},{"prompt":"Де він? — У ___.","answer":"магазині","options":["магазині","магазин","магазину","магазином"]},{"prompt":"Де вона працює? — В ___.","answer":"офісі","options":["офісі","офіс","офісу","офісом"]},{"prompt":"Де діти? — У ___.","answer":"школі","options":["школі","школа","школу","школою"]},{"prompt":"Де ми зараз? — У ___.","answer":"ресторані","options":["ресторані","ресторан","ресторану","рестораном"]},{"prompt":"Де твій телефон? — У ___.","answer":"сумці","options":["сумці","сумка","сумку","сумкою"]},{"prompt":"Де вони живуть? — У ___.","answer":"Києві","options":["Києві","Київ","Києву","Києвом"]},{"prompt":"Де концерт? — У ___.","answer":"театрі","options":["театрі","театр","театру","театром"]},{"prompt":"Де ти був? — На ___.","answer":"пляжі","options":["пляжі","пляж","пляжу","пляжем"]},{"prompt":"Де собака? — У ___.","answer":"парку","options":["парку","парк","паркі","парком"]},{"prompt":"Де вечірка? — На ___.","answer":"балконі","options":["балконі","балкон","балкону","балконом"]}]}}];
-    const vocabData = [{"uk":"у/в (u/v)","translit":"","en":"in","note":"Location preposition"},{"uk":"на (na)","translit":"","en":"on, at","note":"Surface/event preposition"},{"uk":"кімната (kimnata)","translit":"","en":"room","note":"Loc: у кімнаті"},{"uk":"кухня (kukhnya)","translit":"","en":"kitchen","note":"Loc: на кухні"},{"uk":"ванна (vanna)","translit":"","en":"bathroom","note":"Loc: у ванній"},{"uk":"спальня (spal'nya)","translit":"","en":"bedroom","note":"Loc: у спальні"},{"uk":"вітальня (vital'nya)","translit":"","en":"living room","note":"Loc: у вітальні"},{"uk":"коридор (korydor)","translit":"","en":"hallway","note":"Loc: у коридорі"},{"uk":"балкон (balkon)","translit":"","en":"balcony","note":"Loc: на балконі"},{"uk":"поверх (poverkh)","translit":"","en":"floor (story)","note":"Loc: на поверсі"},{"uk":"будинок (budynok)","translit":"","en":"building, house","note":"Loc: у будинку"},{"uk":"квартира (kvartyra)","translit":"","en":"apartment","note":"Loc: у квартирі"},{"uk":"офіс (ofis)","translit":"","en":"office","note":"Loc: в офісі"},{"uk":"робота (robota)","translit":"","en":"work, job","note":"Loc: на роботі"},{"uk":"школа (shkola)","translit":"","en":"school","note":"Loc: у школі"},{"uk":"університет (universytet)","translit":"","en":"university","note":"Loc: в університеті"},{"uk":"лікарня (likarnya)","translit":"","en":"hospital","note":"Loc: у лікарні"},{"uk":"магазин (mahazyn)","translit":"","en":"store","note":"Loc: у магазині"},{"uk":"аптека (apteka)","translit":"","en":"pharmacy","note":"Loc: в аптеці"},{"uk":"ринок (rynok)","translit":"","en":"market","note":"Loc: на ринку"},{"uk":"центр (tsentr)","translit":"","en":"center","note":"Loc: у центрі"},{"uk":"ресторан (restoran)","translit":"","en":"restaurant","note":"Loc: у ресторані"},{"uk":"готель (hotel')","translit":"","en":"hotel","note":"Loc: у готелі"},{"uk":"парк (park)","translit":"","en":"park","note":"Loc: у парку"},{"uk":"пляж (plyazh)","translit":"","en":"beach","note":"Loc: на пляжі"},{"uk":"музей (muzey)","translit":"","en":"museum","note":"Loc: у музеї"},{"uk":"театр (teatr)","translit":"","en":"theater","note":"Loc: у театрі"},{"uk":"кінотеатр (kinoteatr)","translit":"","en":"cinema","note":"Loc: у кінотеатрі"},{"uk":"стадіон (stadion)","translit":"","en":"stadium","note":"Loc: на стадіоні"},{"uk":"церква (tserkva)","translit":"","en":"church","note":"Loc: у церкві"}];
+    const activitiesData = [{"id":"activity-0","type":"match-up","title":"In or On?","data":{"type":"match-up","pairs":[{"left":"Ukraine (Country)","right":"В"},{"left":"Table (Surface)","right":"На"},{"left":"Concert (Event)","right":"На"},{"left":"Room (Enclosed)","right":"В"},{"left":"Work (Activity)","right":"На"},{"left":"Street (Open surface)","right":"На"},{"left":"Park (Place)","right":"У"},{"left":"Bag (Container)","right":"У"},{"left":"Kitchen (Special)","right":"На"},{"left":"Sofa (Surface)","right":"На"},{"left":"Box (Container)","right":"У"},{"left":"Kyiv (City)","right":"У"}],"shuffleRight":true}},{"id":"activity-1","type":"fill-blank","title":"Where are they?","data":{"type":"fill-blank","items":[{"prompt":"Книга на ___ (стіл).","answer":"столі","hints":["стіл"],"options":["столі","стіл","столу"]},{"prompt":"Ми живемо в ___ (Лондон).","answer":"Лондоні","hints":["Лондон"],"options":["Лондоні","Лондон","Лондона"]},{"prompt":"Студент у ___ (бібліотека).","answer":"бібліотеці","hints":["бібліотека"],"options":["бібліотеці","бібліотека","бібліотеки"]},{"prompt":"Кава у ___ (чашка).","answer":"чашці","hints":["чашка"],"options":["чашці","чашка","чашкі"]},{"prompt":"Вони гуляють у ___ (парк).","answer":"парку","hints":["парк"],"options":["парку","паркі","парк"]},{"prompt":"Я зараз на ___ (робота).","answer":"роботі","hints":["робота"],"options":["роботі","робота","роботу"]},{"prompt":"Телефон у ___ (сумка).","answer":"сумці","hints":["сумка"],"options":["сумці","сумка","суми"]},{"prompt":"Ми сидимо на ___ (диван).","answer":"дивані","hints":["диван"],"options":["дивані","диван","дивану"]},{"prompt":"Він працює в ___ (офіс).","answer":"офісі","hints":["офіс"],"options":["офісі","офіс","офіса"]},{"prompt":"Гроші в ___ (банк).","answer":"банку","hints":["банк"],"options":["банку","банкі","банк"]},{"prompt":"Фото на ___ (стіна).","answer":"стіні","hints":["стіна"],"options":["стіні","стіна","стіну"]},{"prompt":"Мама на ___ (кухня).","answer":"кухні","hints":["кухня"],"options":["кухні","кухня","кухню"]}]}},{"id":"activity-2","type":"quiz","title":"Location Logic","data":{"type":"quiz","questions":[{"question":"Where do you sleep?","options":["У ліжку (In bed)","На ліжку (On bed - also possible, but 'In' implies under covers)","Wait, standard is \"У ліжку\" for sleeping."],"correctIndex":2,"explanation":""},{"question":"Where is the concert?","options":["В концерті","На концерті (Event)"],"correctIndex":1,"explanation":""},{"question":"Where are the apples?","options":["На холодильнику","У холодильнику (Inside the fridge)"],"correctIndex":1,"explanation":""},{"question":"Where is Lviv?","options":["В Україні","На Україні (Archaic/incorrect)"],"correctIndex":0,"explanation":""},{"question":"Where do we work?","options":["В офісі","На офісі"],"correctIndex":0,"explanation":""},{"question":"Where is the stamp?","options":["На конверті (On the envelope)","У конверті (Usually inside, but stamps go ON)"],"correctIndex":0,"explanation":""},{"question":"Where are you? (Home)","options":["Вдома","В домі"],"correctIndex":0,"explanation":""},{"question":"Where is the pen?","options":["У руці (In hand)","На руці (On hand - typical for tattoos)"],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-3","type":"fill-blank","title":"GPS Check","data":{"type":"fill-blank","items":[{"prompt":"I am in the park.","answer":"Я у парку."},{"prompt":"The book is on the table.","answer":"Книга на столі."},{"prompt":"We are in Kyiv.","answer":"Ми в Києві. / Ми у Києві."},{"prompt":"Mom is in the kitchen.","answer":"Мама на кухні."},{"prompt":"Dad is at work.","answer":"Тато на роботі."},{"prompt":"The phone is in the bag.","answer":"Телефон у сумці."},{"prompt":"He is in the room.","answer":"Він у кімнаті."},{"prompt":"She is at the concert.","answer":"Вона на концерті."},{"prompt":"The photo is on the wall.","answer":"Фото на стіні."},{"prompt":"Money is in the bank.","answer":"Гроші в банку."},{"prompt":"Where are you?","answer":"Де ти? / Де ви?"},{"prompt":"I am at home.","answer":"Я вдома."}]}},{"id":"activity-4","type":"anagram","title":"Hidden Places","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["к","р","а","п"],"answer":"парк","translation":"Park"},{"letters":["о","ф","с","і"],"answer":"офіс","translation":"Office"},{"letters":["н","к","а","б"],"answer":"банк","translation":"Bank"},{"letters":["х","н","я","к","у"],"answer":"кухня","translation":"Kitchen"},{"letters":["м","і","а","т","н","а","к"],"answer":"кімната","translation":"Room"},{"letters":["л","и","ц","я","в","у"],"answer":"вулиця","translation":"Street"},{"letters":["с","т","о","м","і"],"answer":"місто","translation":"City"},{"letters":["а","ї","н","а","к","р","У"],"answer":"Україна","translation":"Ukraine"},{"letters":["л","о","н","д","и","к","и","х","о"],"answer":"холодильник","translation":"Fridge"},{"letters":["н","а","в","и","д"],"answer":"диван","translation":"Sofa"},{"letters":["к","о","л","ш","а"],"answer":"школа","translation":"School"},{"letters":["л","і","ж","о","к"],"answer":"ліжко","translation":"Bed"}]}},{"id":"activity-5","type":"group-sort","title":"Preposition Sorter","data":{"type":"group-sort","groups":[{"id":"--","name":"В / У","items":["Парк","Банк","Кімната","Місто","Україна","Бібліотека","Офіс","Сумка","Холодильник","Шафа (Wardrobe)","Ресторан","Готель"],"nameUk":"In"},{"id":"","name":"На","items":["Робота","Вулиця","Концерт","Кухня","Стіл","Стіна","Підлога (Floor)","Диван","Пляж (Beach)","Пошта (Post Office - usually Na)","Ринок (Market - usually Na)","Поверх (Floor/Level)"],"nameUk":"On/At"}],"shuffleItems":true}},{"id":"activity-6","type":"unjumble","title":"Locator","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["столі","На","паспорт"],"answer":"Паспорт на столі."},{"words":["Ми","парку","у","гуляємо"],"answer":"Ми гуляємо у парку."},{"words":["в","Він","офісі"],"answer":"Він в офісі."},{"words":["кухні","Мама","на"],"answer":"Мама на кухні."},{"words":["Де","телефон","?"],"answer":"Де телефон?"},{"words":["сумці","У","ключі"],"answer":"Ключі у сумці."},{"words":["на","Я","концерті"],"answer":"Я на концерті."},{"words":["місті","Вони","у"],"answer":"Вони у місті."},{"words":["живе","Вона","Лондоні","в"],"answer":"Вона живе в Лондоні."},{"words":["стіні","Картина","на"],"answer":"Картина на стіні."},{"words":["банку","Гроші","у"],"answer":"Гроші у банку."},{"words":["вдома","Ми"],"answer":"Ми вдома.","translation":"We are at home"}]}},{"id":"activity-7","type":"fill-blank","title":"Vowel or Consonant?","data":{"type":"fill-blank","items":[{"prompt":"___ (В/У) парку.","answer":"У","hints":["В/У"]},{"prompt":"___ (В/У) Києві.","answer":"У","hints":["В/У"]},{"prompt":"___ (В/У) офісі.","answer":"В","hints":["В/У"]},{"prompt":"___ (В/У) аеропорту.","answer":"В","hints":["В/У"]},{"prompt":"___ (В/У) Львові.","answer":"У (L starts with consonant sound, but Lv... U Lvovi is easier).","hints":["В/У"]},{"prompt":"___ (В/У) Америці.","answer":"В","hints":["В/У"]},{"prompt":"___ (В/У) кімнаті.","answer":"У","hints":["В/У"]},{"prompt":"___ (В/У) банку.","answer":"У","hints":["В/У"]},{"prompt":"___ (В/У) Америці.","answer":"В","hints":["В/У"]},{"prompt":"___ (В/У) Одесі.","answer":"В","hints":["В/У"]},{"prompt":"___ (В/У) Львові.","answer":"У","hints":["В/У"]},{"prompt":"___ (В/У) Італії.","answer":"В","hints":["В/У"]}]}},{"id":"activity-8","type":"fill-blank","title":"Preposition Logic","data":{"type":"fill-blank","items":[{"prompt":"Я живу ___ (В/На) Україні.","answer":"В","hints":["В/На"]},{"prompt":"Книга ___ (В/На) столі.","answer":"На","hints":["В/На"]},{"prompt":"Ми ___ (В/На) концерті.","answer":"На","hints":["В/На"]},{"prompt":"Телефон ___ (В/На) сумці.","answer":"В","hints":["В/На"]},{"prompt":"Тато ___ (В/На) роботі.","answer":"На","hints":["В/На"]},{"prompt":"Мама ___ (В/На) кухні.","answer":"На","hints":["В/На"]},{"prompt":"Студент ___ (В/На) бібліотеці.","answer":"В","hints":["В/На"]},{"prompt":"Гроші ___ (В/На) банку.","answer":"В","hints":["В/На"]},{"prompt":"Він ___ (В/На) офісі.","answer":"В","hints":["В/На"]},{"prompt":"Вона ___ (В/На) вулиці.","answer":"На","hints":["В/На"]},{"prompt":"Ми ___ (В/На) місті.","answer":"В","hints":["В/На"]},{"prompt":"Вони ___ (В/На) пляжі.","answer":"На","hints":["В/На"]}]}}];
+    const vocabData = [{"uk":"де","translit":"","en":"where","note":"[🔊](audio_de)"},{"uk":"тут","translit":"","en":"here","note":"[🔊](audio_tut)"},{"uk":"там","translit":"","en":"there","note":"[🔊](audio_tam)"},{"uk":"вдома","translit":"","en":"at home","note":"[🔊](audio_vdoma)"},{"uk":"вулиця","translit":"","en":"street","note":"[🔊](audio_vulytsya)"},{"uk":"площа","translit":"","en":"square","note":"[🔊](audio_ploshcha)"},{"uk":"центр","translit":"","en":"center","note":"[🔊](audio_tsentr)"},{"uk":"парк","translit":"","en":"park","note":"[🔊](audio_park)"},{"uk":"банк","translit":"","en":"bank","note":"[🔊](audio_bank)"},{"uk":"офіс","translit":"","en":"office","note":"[🔊](audio_ofis)"},{"uk":"школа","translit":"","en":"school","note":"[🔊](audio_shkola)"},{"uk":"університет","translit":"","en":"university","note":"[🔊](audio_universytet)"},{"uk":"бібліотека","translit":"","en":"library","note":"[🔊](audio_biblioteka)"},{"uk":"магазин","translit":"","en":"shop","note":"[🔊](audio_mahazyn)"},{"uk":"ринок","translit":"","en":"market","note":"[🔊](audio_rynok)"},{"uk":"лікарня","translit":"","en":"hospital","note":"[🔊](audio_likarnya)"},{"uk":"аптека","translit":"","en":"pharmacy","note":"[🔊](audio_apteka)"},{"uk":"готель","translit":"","en":"hotel","note":"[🔊](audio_hotel)"},{"uk":"ресторан","translit":"","en":"restaurant","note":"[🔊](audio_restoran)"},{"uk":"кафе","translit":"","en":"cafe","note":"[🔊](audio_kafe)"},{"uk":"кінотеатр","translit":"","en":"cinema","note":"[🔊](audio_kinoteatr)"},{"uk":"театр","translit":"","en":"theater","note":"[🔊](audio_teatr)"},{"uk":"музей","translit":"","en":"museum","note":"[🔊](audio_muzej)"},{"uk":"пляж","translit":"","en":"beach","note":"[🔊](audio_plyazh)"},{"uk":"аеропорт","translit":"","en":"airport","note":"[🔊](audio_aeroport)"},{"uk":"вокзал","translit":"","en":"station (train)","note":"[🔊](audio_vokzal)"},{"uk":"робота","translit":"","en":"work","note":"[🔊](audio_robota)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1312,6 +904,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2576,6 +2194,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

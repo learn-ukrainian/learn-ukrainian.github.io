@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Module 24: Can, Must, Want — Modals | Ukrainian A1</title>
+  <title>Module 24: Days and Months | Ukrainian A1</title>
   <style>
 :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -478,16 +518,17 @@ footer {
     </div>
   </div>
   <nav class="nav">
-    <h1>Module 24: Can, Must, Want — Modals</h1>
+    <h1>Module 24: Days and Months</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Fill</button>
-      <button class="nav-tab" data-section="activity-1">2. Fill</button>
-      <button class="nav-tab" data-section="activity-2">3. Order</button>
-      <button class="nav-tab" data-section="activity-3">4. Match</button>
-      <button class="nav-tab" data-section="activity-4">5. Quiz</button>
-      <button class="nav-tab" data-section="activity-5">6. T/F</button>
-      <button class="nav-tab" data-section="activity-6">7. Sort</button>
+      <button class="nav-tab" data-section="activity-0">1. Match</button>
+      <button class="nav-tab" data-section="activity-1">2. Sort</button>
+      <button class="nav-tab" data-section="activity-2">3. Fill</button>
+      <button class="nav-tab" data-section="activity-3">4. Quiz</button>
+      <button class="nav-tab" data-section="activity-4">5. Spell</button>
+      <button class="nav-tab" data-section="activity-5">6. Fill</button>
+      <button class="nav-tab" data-section="activity-6">7. Order</button>
+      <button class="nav-tab" data-section="activity-7">8. T/F</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -496,499 +537,261 @@ footer {
     <section id="lesson" class="section active">
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.3</span>
-        <h2 style="font-size:2rem;margin:0.5rem 0">Can, Must, Want — Modals</h2>
-        <p style="color:var(--text-muted)">Можу, повинен, хочу — Expressing Ability, Obligation, and Desire</p>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Days and Months</h2>
+        <p style="color:var(--text-muted)">The Calendar</p>
       </div>
       
     <div class="card section-intro">
       <h3>📖 Introduction</h3>
       <div class="md-content"><h2 id="warmup">warm-up</h2>
-<h3 id="whatcanyoudo">What Can You Do?</h3>
-<p>"I can swim." "I must work." "I want to rest." — Every day we express ability, obligation, and desire. Ukrainian has rich ways to say all of this!</p>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>Ukrainian distinguishes between "можу" (physical ability/permission) and "вмію" (learned skill). In English, both are "can," but in Ukrainian: "Я можу плавати" (I can swim — conditions allow it) vs. "Я вмію плавати" (I know how to swim — I have the skill)!</p>
-</blockquote>
+<p><strong>The Lost Weekend</strong></p>
+<p>"Let's meet on Sunday."<br />
+"Ok, see you in January."<br />
+Without a calendar, we are lost in the void.<br />
+In Module 23, we conquered Time (09:00).<br />
+In Module 24, we conquer Dates.</p>
+<p>Ukrainian days are ancient. They tell a story about "Work" and "Rest".<br />
+Ukrainian months are poetic. They tell a story about "Nature".<br />
+"Grass-Month", "Snow-Month", "Worm-Month".<br />
+Let's dive in.</p>
 <h2 id="presentation">presentation</h2>
-<h3 id="expressingabilitycan">Expressing Ability: Можу (Can)</h3>
-<p><strong>Можу</strong> expresses physical ability or permission to do something.</p>
-<table>
-<thead>
-<tr>
-<th>Person</th>
-<th>Form</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>я</td>
-<td>можу</td>
-<td>Я можу прийти завтра.</td>
-</tr>
-<tr>
-<td>ти</td>
-<td>можеш</td>
-<td>Ти можеш допомогти?</td>
-</tr>
-<tr>
-<td>він/вона/воно</td>
-<td>може</td>
-<td>Він може говорити українською.</td>
-</tr>
-<tr>
-<td>ми</td>
-<td>можемо</td>
-<td>Ми можемо зустрітися о третій.</td>
-</tr>
-<tr>
-<td>ви</td>
-<td>можете</td>
-<td>Ви можете почекати?</td>
-</tr>
-<tr>
-<td>вони</td>
-<td>можуть</td>
-<td>Вони можуть приїхати.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Structure:</strong> можу + infinitive</p>
+<h3 id="section1thedaysoftheweek">Section 1: The Days of the Week</h3>
+<p>Ukrainian days start on <strong>Monday</strong>. (Sorry, USA).<br />
+The names all revolve around Sunday (Nedilya - No work).</p>
+<ol>
+<li><strong>Понеділок</strong> (Po-nedilok). After-Sunday. (Monday).</li>
+<li><strong>Вівторок</strong> (Vivtorok). Second. (Tuesday).</li>
+<li><strong>Середа</strong> (Sereda). Middle. (Wednesday).</li>
+<li><strong>Четвер</strong> (Chetver). Fourth. (Thursday).</li>
+<li><strong>П'ятниця</strong> (Pyatnytsya). Fifth. (Friday).</li>
+<li><strong>Субота</strong> (Subota). Sabbath. (Saturday).</li>
+<li><strong>Неділя</strong> (Nedilya). No-Work (Ne-dilo). (Sunday).</li>
+</ol>
+<blockquote>
+  <p>🌍 <strong>Culture Corner: The Weekend</strong><br />
+  Everyone loves <strong>П'ятниця</strong> (Friday).<br />
+  But <strong>Неділя</strong> is sacred. Shops are open, but traditional families gather.<br />
+  Note: <strong>Субота</strong> and <strong>Неділя</strong> together are <strong>Вихідні</strong> (The Way-Out days / Weekends).</p>
+</blockquote>
+<h3 id="section2onmondaytheaction">Section 2: On Monday… (The Action)</h3>
+<p>To say "ON" a day, we use <strong>В</strong> or <strong>У</strong> + Accusative.<br />
+Why Accusative? Because days are time-objects we step into.</p>
 <ul>
-<li>Я можу читати українською. (I can read in Ukrainian.)</li>
-<li>Він може допомогти. (He can help.)</li>
-<li>Ми можемо працювати разом. (We can work together.)</li>
+<li><strong>У понеділок</strong> (On Monday).</li>
+<li><strong>У вівторок</strong> (On Tuesday).</li>
+<li><strong>У середу</strong> (On Wednesday - Feminine -a becomes -u).</li>
+<li><strong>У четвер</strong> (On Thursday).</li>
+<li><strong>У п'ятницю</strong> (On Friday - Feminine -ya becomes -yu).</li>
+<li><strong>У суботу</strong> (On Saturday - Feminine -a becomes -u).</li>
+<li><strong>У неділю</strong> (On Sunday - Feminine -ya becomes -yu).</li>
 </ul>
 <blockquote>
-  <p>🎬 <strong>Pop Culture Moment: Spider-Man</strong></p>
-  <p>"З великою силою приходить велика відповідальність" — but first, you need to learn: "Я можу лазити по стінах!" (I can climb walls!)</p>
+  <p>💡 <strong>Pattern Alert</strong><br />
+  Masculine days (Mon, Tue, Thu) do not change ending.<br />
+  Feminine days (Wed, Fri, Sat, Sun) change -a/-ya to <strong>-u/-yu</strong>.<br />
+  Just like "I love pizza" -&gt; "Pizzu". "I love Friday" -&gt; "Pyatnytsyu".</p>
 </blockquote>
-<h3 id="expressingskillknowhowto">Expressing Skill: Вмію (Know How To)</h3>
-<p><strong>Вмію</strong> expresses a learned skill or ability.</p>
-<table>
-<thead>
-<tr>
-<th>Person</th>
-<th>Form</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>я</td>
-<td>вмію</td>
-<td>Я вмію плавати.</td>
-</tr>
-<tr>
-<td>ти</td>
-<td>вмієш</td>
-<td>Ти вмієш готувати?</td>
-</tr>
-<tr>
-<td>він/вона/воно</td>
-<td>вміє</td>
-<td>Вона вміє грати на гітарі.</td>
-</tr>
-<tr>
-<td>ми</td>
-<td>вміємо</td>
-<td>Ми вміємо танцювати.</td>
-</tr>
-<tr>
-<td>ви</td>
-<td>вмієте</td>
-<td>Ви вмієте водити машину?</td>
-</tr>
-<tr>
-<td>вони</td>
-<td>вміють</td>
-<td>Вони вміють говорити трьома мовами.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Structure:</strong> вмію + infinitive</p>
+<h3 id="section3the12monthsofnature">Section 3: The 12 Months of Nature</h3>
+<p>Ukrainian months retain pagan Slavic roots. No "July" (Julius Caesar) or "August" (Augustus).<br />
+They describe what nature is doing.</p>
+<p><strong>Winter (Зима):</strong></p>
+<ol>
+<li><strong>Грудень</strong> (Hrooden' - Frozen clods of earth) - December.</li>
+<li><strong>Січень</strong> (Sichen' - Cutting/Slashing wind) - January.</li>
+<li><strong>Лютий</strong> (Lyutiy - Fierce/Rage) - February.</li>
+</ol>
+<p><strong>Spring (Весна):</strong></p>
+<ol start="4">
+<li><strong>Березень</strong> (Berezen' - Birch tree sap) - March.</li>
+<li><strong>Квітень</strong> (Kviten' - Flowers blooming) - April.</li>
+<li><strong>Травень</strong> (Traven' - Grass growing) - May.</li>
+</ol>
+<p><strong>Summer (Літо):</strong></p>
+<ol start="7">
+<li><strong>Червень</strong> (Cherven' - Red berries/Worms) - June.</li>
+<li><strong>Липень</strong> (Lypen' - Linden trees catch fire/bloom) - July.</li>
+<li><strong>Серпень</strong> (Serpen' - Sickle/Harvest) - August.</li>
+</ol>
+<p><strong>Autumn (Осінь):</strong></p>
+<ol start="10">
+<li><strong>Вересень</strong> (Veresen' - Heather blooms) - September.</li>
+<li><strong>Жовтень</strong> (Zhovten' - Yellow leaves) - October.</li>
+<li><strong>Листопад</strong> (Lystopad - Leaf fall) - November.</li>
+</ol>
+<blockquote>
+  <p>🍃 <strong>Deep Dive: Why so poetic?</strong><br />
+  English uses Latin names imposed by Rome.<br />
+  Ukrainian kept the connection to the land.<br />
+  If you know the name, you know the weather.<br />
+  <strong>Лютий</strong> (February) is truly <strong>Fierce</strong>.<br />
+  <strong>Листопад</strong> (November) is literally <strong>Leaf-Fall</strong>.</p>
+</blockquote>
+<h3 id="section4injanuarylocative">Section 4: In January… (Locative)</h3>
+<p>To say "IN" a month, we use <strong>У/В</strong> + Locative (-i).<br />
+All months are Masculine.<br />
+Most end in a soft sign (-нь).<br />
+So <strong>-нь</strong> becomes <strong>-ні</strong>.</p>
 <ul>
-<li>Я вмію готувати борщ. (I know how to cook borsch.)</li>
-<li>Вона вміє грати на піаніно. (She knows how to play piano.)</li>
-<li>Він не вміє плавати. (He doesn't know how to swim.)</li>
+<li><strong>Січень</strong> ➡️ <strong>У січні</strong>. (In Jan).</li>
+<li><strong>Травень</strong> ➡️ <strong>У травні</strong>. (In May).</li>
+<li><strong>Серпень</strong> ➡️ <strong>У серпні</strong>. (In Aug).</li>
+<li><strong>Листопад</strong> ➡️ <strong>У листопаді</strong> (Hard d -&gt; di).</li>
+<li><strong>Лютий</strong> (Adjective type) ➡️ <strong>У лютому</strong> (Weird exception? No, it acts like an adjective. Let's memorize it as <strong>У лютому</strong>).</li>
+</ul>
+<h3 id="section5theseasons">Section 5: The Seasons</h3>
+<ul>
+<li><strong>Зима</strong> (Winter) ➡️ <strong>Взимку</strong> (In winter - adverb).</li>
+<li><strong>Весна</strong> (Spring) ➡️ <strong>Навесні</strong> (In spring - adverb).</li>
+<li><strong>Літо</strong> (Summer) ➡️ <strong>Влітку</strong> (In summer - adverb).</li>
+<li><strong>Осінь</strong> (Autumn) ➡️ <strong>Восени</strong> (In autumn - adverb).</li>
 </ul>
 <blockquote>
-  <p>🔍 <strong>Myth Buster</strong></p>
-  <p><strong>Myth:</strong> "Можу" and "вмію" are interchangeable.<br />
-  <strong>Fact:</strong> They're different! "Я не можу плавати" = I can't swim right now (pool closed, injured). "Я не вмію плавати" = I never learned to swim.</p>
+  <p>❄️ <strong>Culture Corner: The Holiday Season</strong><br />
+  Winter is the main holiday season.<br />
+  <strong>New Year</strong> (Jan 1) is bigger than Christmas for some.<br />
+  <strong>Christmas</strong> (Jan 7 or Dec 25 - transition period).<br />
+  <strong>Easter</strong> (Velykden') is the biggest Spring holiday.</p>
 </blockquote>
-<h3 id="expressingobligationmustshould">Expressing Obligation: Повинен (Must/Should)</h3>
-<p><strong>Повинен</strong> changes by gender:</p>
-<table>
-<thead>
-<tr>
-<th>Gender</th>
-<th>Form</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Masculine</td>
-<td>повинен</td>
-<td>Я повинен працювати.</td>
-</tr>
-<tr>
-<td>Feminine</td>
-<td>повинна</td>
-<td>Вона повинна вчитися.</td>
-</tr>
-<tr>
-<td>Neuter</td>
-<td>повинне</td>
-<td>Це повинне бути тут.</td>
-</tr>
-<tr>
-<td>Plural</td>
-<td>повинні</td>
-<td>Ми повинні йти.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Structure:</strong> subject + повинен/повинна/повинні + infinitive</p>
+<h3 id="section6thedateformatddmmyyyy">Section 6: The Date Format (DD.MM.YYYY)</h3>
+<p>In Ukraine, the day comes first.<br />
+<strong>01.05.2023</strong> is May 1st, not January 5th.</p>
 <ul>
-<li>Він повинен прийти о дев'ятій. (He must come at 9.)</li>
-<li>Я повинна закінчити роботу. (I must finish the work. — female)</li>
-<li>Ми повинні говорити українською. (We must speak Ukrainian.)</li>
+<li><strong>День</strong> (Day).</li>
+<li><strong>Місяць</strong> (Month).</li>
+<li><strong>Рік</strong> (Year).</li>
+</ul>
+<p>"Яке сьогодні число?" (What number is today?)</p>
+<ul>
+<li>"Сьогодні перше травня." (Today is first [of] May).</li>
+<li>Note: We use Genitive for the month when saying the date. <strong>Травня</strong> (Of May).</li>
 </ul>
 <blockquote>
-  <p>⚡ <strong>Pro Tip</strong></p>
-  <p>"Повинен" matches the SUBJECT's gender, not anything else! A woman says "Я повинна," a man says "Я повинен."</p>
-</blockquote>
-<h3 id="impersonalobligation">Impersonal Obligation: Треба/Потрібно</h3>
-<p><strong>Треба</strong> and <strong>потрібно</strong> are impersonal — they don't change!</p>
-<p><strong>Structure:</strong> Мені/Тобі/Йому… + треба/потрібно + infinitive</p>
-<table>
-<thead>
-<tr>
-<th>Pronoun</th>
-<th>With треба</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Мені</td>
-<td>Мені треба працювати.</td>
-<td>I need to work.</td>
-</tr>
-<tr>
-<td>Тобі</td>
-<td>Тобі треба відпочити.</td>
-<td>You need to rest.</td>
-</tr>
-<tr>
-<td>Йому</td>
-<td>Йому треба вчитися.</td>
-<td>He needs to study.</td>
-</tr>
-<tr>
-<td>Їй</td>
-<td>Їй треба їхати.</td>
-<td>She needs to go.</td>
-</tr>
-<tr>
-<td>Нам</td>
-<td>Нам треба зустрітися.</td>
-<td>We need to meet.</td>
-</tr>
-<tr>
-<td>Вам</td>
-<td>Вам треба почекати.</td>
-<td>You need to wait.</td>
-</tr>
-<tr>
-<td>Їм</td>
-<td>Їм треба допомогти.</td>
-<td>They need help.</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>"Треба" comes from an old word meaning "sacrifice" or "necessity." When you say "мені треба," you're expressing genuine need — not just a wish!</p>
-</blockquote>
-<h3 id="expressingdesirewant">Expressing Desire: Хочу (Want)</h3>
-<table>
-<thead>
-<tr>
-<th>Person</th>
-<th>Form</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>я</td>
-<td>хочу</td>
-<td>Я хочу каву.</td>
-</tr>
-<tr>
-<td>ти</td>
-<td>хочеш</td>
-<td>Ти хочеш їсти?</td>
-</tr>
-<tr>
-<td>він/вона/воно</td>
-<td>хоче</td>
-<td>Він хоче відпочити.</td>
-</tr>
-<tr>
-<td>ми</td>
-<td>хочемо</td>
-<td>Ми хочемо вивчати українську.</td>
-</tr>
-<tr>
-<td>ви</td>
-<td>хочете</td>
-<td>Ви хочете замовити?</td>
-</tr>
-<tr>
-<td>вони</td>
-<td>хочуть</td>
-<td>Вони хочуть приїхати.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Structure:</strong> хочу + infinitive (or + noun in accusative)</p>
-<ul>
-<li>Я хочу спати. (I want to sleep.)</li>
-<li>Вона хоче читати. (She wants to read.)</li>
-<li>Ми хочемо каву. (We want coffee.)</li>
-</ul>
-<blockquote>
-  <p>🎮 <strong>Gamer's Corner</strong></p>
-  <p>In Cyberpunk 2077's Ukrainian localization: "Я хочу жити вічно!" (I want to live forever!) — Johnny Silverhand's eternal quest.</p>
-</blockquote>
-<h3 id="permission">Permission: Можна / Не можна</h3>
-<p><strong>Можна</strong> (allowed/permitted) and <strong>Не можна</strong> (not allowed/forbidden) are impersonal.</p>
-<table>
-<thead>
-<tr>
-<th>Expression</th>
-<th>Meaning</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Можна</td>
-<td>May I? / One can</td>
-<td>Можна увійти?</td>
-</tr>
-<tr>
-<td>Не можна</td>
-<td>One cannot / forbidden</td>
-<td>Тут не можна курити.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Using можна:</strong></p>
-<ul>
-<li>Можна запитати? (May I ask?)</li>
-<li>Можна меню? (May I have a menu?)</li>
-<li>Тут можна фотографувати. (Photography is allowed here.)</li>
-</ul>
-<p><strong>Using не можна:</strong></p>
-<ul>
-<li>Тут не можна курити. (Smoking is not allowed here.)</li>
-<li>Не можна запізнюватися. (Being late is not allowed.)</li>
-<li>Тут не можна паркуватися. (Parking is not allowed here.)</li>
-</ul>
-<blockquote>
-  <p>🌍 <strong>Real World</strong></p>
-  <p>You'll see "Не можна!" signs everywhere in Ukraine — no smoking, no photography, no entry. Now you know what they mean!</p>
-</blockquote>
-<h3 id="summarytablemodals">Summary Table: Modals</h3>
-<table>
-<thead>
-<tr>
-<th>English</th>
-<th>Ukrainian</th>
-<th>Type</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>can (ability)</td>
-<td>можу</td>
-<td>personal</td>
-<td>Я можу допомогти.</td>
-</tr>
-<tr>
-<td>can (skill)</td>
-<td>вмію</td>
-<td>personal</td>
-<td>Я вмію плавати.</td>
-</tr>
-<tr>
-<td>must (personal)</td>
-<td>повинен/повинна</td>
-<td>personal</td>
-<td>Я повинен йти.</td>
-</tr>
-<tr>
-<td>need to</td>
-<td>треба/потрібно</td>
-<td>impersonal</td>
-<td>Мені треба працювати.</td>
-</tr>
-<tr>
-<td>want</td>
-<td>хочу</td>
-<td>personal</td>
-<td>Я хочу каву.</td>
-</tr>
-<tr>
-<td>may/allowed</td>
-<td>можна</td>
-<td>impersonal</td>
-<td>Можна увійти?</td>
-</tr>
-<tr>
-<td>forbidden</td>
-<td>не можна</td>
-<td>impersonal</td>
-<td>Тут не можна курити.</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎯 <strong>Fun Fact</strong></p>
-  <p>Ukrainian modals clearly distinguish personal responsibility (повинен — YOU must) from impersonal necessity (треба — it's necessary). This reflects a cultural emphasis on personal agency!</p>
+  <p>📅 <strong>Deep Dive: The Old New Year</strong><br />
+  Ukraine has a unique holiday: <strong>Old New Year</strong> (Staryi Novyi Rik) on January 14th.<br />
+  It follows the old Julian calendar.<br />
+  People don't work, but they celebrate.<br />
+  It is a second chance to wish "Shchaslyvoho Novoho Roku" (Happy New Year).</p>
+  <p>🛠️ <strong>Deep Dive: The Working Saturday</strong><br />
+  In Ukraine, if a holiday falls on a Tuesday (e.g., Independence Day), the government might create a "Bridge".<br />
+  Monday becomes a holiday too! (4-day weekend).<br />
+  But… you have to pay it back.<br />
+  The previous or next Saturday becomes a <strong>Working Day</strong> (Robocha Subota).<br />
+  People hate it, but they love the 4-day weekend more.<br />
+  So if someone says "I work on Saturday", ask "Is it a working Saturday?" (Tse robocha subota?).</p>
 </blockquote>
 <h2 id="practice">practice</h2>
-<h3 id="exercise1choosetherightmodal">Exercise 1: Choose the Right Modal</h3>
-<ol>
-<li>Я ___ плавати (I know how to swim) → вмію</li>
-<li>Він ___ прийти завтра (He can come tomorrow) → може</li>
-<li>Мені ___ працювати (I need to work) → треба</li>
-<li>Вона ___ відпочити (She wants to rest) → хоче</li>
-<li>Тут не ___ курити (Smoking forbidden) → можна</li>
-</ol>
-<h3 id="exercise2personalvsimpersonal">Exercise 2: Personal vs Impersonal</h3>
-<p>Translate:</p>
-<ol>
-<li>I must go. (male) → Я повинен йти.</li>
-<li>I must go. (female) → Я повинна йти.</li>
-<li>I need to go. → Мені треба йти.</li>
-<li>May I? → Можна?</li>
-</ol>
-<h3 id="exercise3completethedialogue">Exercise 3: Complete the Dialogue</h3>
-<p>A: Ти ___ допомогти?<br />
-B: Так, я ___. Що тобі ___?<br />
-A: Мені ___ знайти книгу.</p>
-<h2 id="production">production</h2>
-<h3 id="taskyourabilities">Task: Your Abilities</h3>
-<p>Write 5 sentences about:</p>
+<p><strong>Drill 1: Day Logic</strong></p>
 <ul>
-<li>What you can do (можу)</li>
-<li>What you know how to do (вмію)</li>
-<li>What you must do today (повинен/треба)</li>
-<li>What you want to do (хочу)</li>
+<li>First day? -&gt; Понеділок.</li>
+<li>Last day? -&gt; Неділя.</li>
+<li>Mid-week? -&gt; Середа.</li>
+<li>Party time? -&gt; П'ятниця.</li>
 </ul>
-<p>Example: Я вмію готувати, але сьогодні я не хочу. Мені треба працювати.</p>
-<hr />
-<hr />
+<p><strong>Drill 2: Construct "On Day"</strong></p>
+<ul>
+<li>Середа -&gt; У середу.</li>
+<li>Субота -&gt; У суботу.</li>
+<li>Четвер -&gt; У четвер.</li>
+<li>Неділя -&gt; У неділю.</li>
+</ul>
+<p><strong>Drill 3: Month Match</strong></p>
+<ul>
+<li>Flowers? -&gt; Квітень.</li>
+<li>Yellow? -&gt; Жовтень.</li>
+<li>Leaves falling? -&gt; Листопад.</li>
+<li>Fierce cold? -&gt; Лютий.</li>
+</ul>
+<h2 id="production">production</h2>
+<p><strong>Scenario: Planning a Trip</strong></p>
+<ul>
+<li><strong>You:</strong> Коли ти їдеш у Львів? (When go you to Lviv?)</li>
+<li><strong>Friend:</strong> Я їду <strong>у суботу</strong>. (On Saturday).</li>
+<li><strong>You:</strong> А коли назад?</li>
+<li><strong>Friend:</strong> <strong>У понеділок</strong>.</li>
+<li><strong>You:</strong> Чудово. Я їду <strong>у серпні</strong>.</li>
+<li><strong>Friend:</strong> О, влітку там гарно. (Oh, in summer there beautiful).</li>
+</ul>
+<p><strong>Scenario: The Birthday</strong></p>
+<ul>
+<li><strong>A:</strong> Коли твій день народження? (When is your birthday?)</li>
+<li><strong>B:</strong> <strong>У жовтні</strong>. А твій?</li>
+<li><strong>A:</strong> <strong>У травні</strong>.</li>
+<li><strong>B:</strong> Ти любиш весну?</li>
+<li><strong>A:</strong> Так, дуже люблю.</li>
+</ul>
 <hr /></div>
     </div>
   
       
-    <div class="card section-summary">
-      <h3>📋 Summary</h3>
-      <div class="md-content"><blockquote>
-  <p><strong>Congratulations!</strong></p>
-  <p>You can now express ability, obligation, and desire in Ukrainian:</p>
-  <ul>
-  <li><strong>Ability</strong>: Я можу допомогти. / Я вмію плавати.</li>
-  <li><strong>Obligation</strong>: Я повинен йти. / Мені треба працювати.</li>
-  <li><strong>Desire</strong>: Я хочу відпочити.</li>
-  <li><strong>Permission</strong>: Можна увійти? / Тут не можна курити.</li>
-  </ul>
-  <p><strong>Key Distinctions:</strong></p>
-  <ul>
-  <li>можу vs вмію: ability/permission vs learned skill</li>
-  <li>повинен vs треба: personal obligation vs impersonal necessity</li>
-  <li>можна vs не можна: allowed vs forbidden</li>
-  </ul>
-  <p><strong>Coming Next: Module 25 — My Daily Routine</strong></p>
-  <p>In the next module, you'll learn reflexive verbs to describe your daily routine:</p>
-  <ul>
-  <li>Я прокидаюся о сьомій. (I wake up at 7.)</li>
-  <li>Я вмиваюся і одягаюся. (I wash and get dressed.)</li>
-  <li>Я лягаю спати о одинадцятій. (I go to bed at 11.)</li>
-  </ul>
-</blockquote></div>
-    </div>
-  
       <div class="btn-group">
         <button class="btn btn-primary" onclick="showSection('activity-0')">Activities →</button>
       </div>
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Modal Verbs</h3>
+    <section id="activity-0" class="section"><div class="card"><h3>Day Translation</h3>
       <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container" class="fill-container"></div>
-      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+      <div class="match-container" id="activity-0-container"><svg class="match-lines" id="activity-0-lines"></svg>
+        <div class="match-column" id="activity-0-left"></div>
+        <div class="match-column" id="activity-0-right"></div>
+      </div>
+      <div class="completion-message" id="activity-0-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Повинен Agreement</h3>
-      <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
-      <div id="activity-1-container" class="fill-container"></div>
-      <div class="completion-message" id="activity-1-complete"><h3>Complete!</h3></div>
+    <section id="activity-1" class="section"><div class="card"><h3>Season Sorter</h3>
+      <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/20</span></div>
+      <div class="sort-pool" id="activity-1-pool"><div class="sort-items" id="activity-1-items"></div></div>
+      <div class="sort-groups" id="activity-1-groups"></div>
+      <div class="completion-message" id="activity-1-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Modal Sentences</h3>
+    <section id="activity-2" class="section"><div class="card"><h3>On The Day</h3>
       <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
-      <div id="activity-2-container" class="order-container"></div>
-      <div class="completion-message" id="activity-2-complete"><h3>Perfect Order!</h3></div>
+      <div id="activity-2-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-2-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Modals and Meanings</h3>
+    <section id="activity-3" class="section"><div class="card"><h3>Month Meanings</h3>
       <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-3-container"><svg class="match-lines" id="activity-3-lines"></svg>
-        <div class="match-column" id="activity-3-left"></div>
-        <div class="match-column" id="activity-3-right"></div>
-      </div>
-      <div class="completion-message" id="activity-3-complete"><h3>Perfect!</h3></div>
+      <div id="activity-3-container"></div>
+      <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Modal Knowledge</h3>
+    <section id="activity-4" class="section"><div class="card"><h3>Day Scramble</h3>
       <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
-      <div id="activity-4-container"></div>
-      <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
+      <div id="activity-4-container" class="order-container"></div>
+      <div class="completion-message" id="activity-4-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Modal Facts</h3>
+    <section id="activity-5" class="section"><div class="card"><h3>When? (General)</h3>
       <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
-      <div id="activity-5-container"></div>
+      <div id="activity-5-container" class="fill-container"></div>
       <div class="completion-message" id="activity-5-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Modal Types</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>Planning</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
-      <div class="sort-pool" id="activity-6-pool"><div class="sort-items" id="activity-6-items"></div></div>
-      <div class="sort-groups" id="activity-6-groups"></div>
-      <div class="completion-message" id="activity-6-complete"><h3>All Sorted!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+      <div id="activity-6-container" class="order-container"></div>
+      <div class="completion-message" id="activity-6-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-7" class="section"><div class="card"><h3>Calendar Logic</h3>
+      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/4</span></div>
+      <div id="activity-7-container"></div>
+      <div class="completion-message" id="activity-7-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
-        <h3>Словник (25)</h3>
+        <h3>Словник (30)</h3>
         <div class="vocab-table-container">
           <table class="vocab-table">
             <thead><tr>
@@ -998,7 +801,7 @@ A: Мені ___ знайти книгу.</p>
     <th>Переклад</th>
     <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">могти</td><td class="vocab-ipa">ˈmɔɦtɪ</td><td class="vocab-en">can, to be able</td><td class="vocab-note">Irregular: можу, можеш...</td></tr><tr><td class="vocab-uk">вміти</td><td class="vocab-ipa">ˈwmitɪ</td><td class="vocab-en">know how to</td><td class="vocab-note">Learned skill</td></tr><tr><td class="vocab-uk">повинен</td><td class="vocab-ipa">pɔˈwɪnɛn</td><td class="vocab-en">must, should (m)</td><td class="vocab-note">Agrees with subject</td></tr><tr><td class="vocab-uk">повинна</td><td class="vocab-ipa">pɔˈwɪnnɐ</td><td class="vocab-en">must, should (f)</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">повинні</td><td class="vocab-ipa">pɔˈwɪnni</td><td class="vocab-en">must, should (pl)</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">мусити</td><td class="vocab-ipa">muˈsɪtɪ</td><td class="vocab-en">must, have to</td><td class="vocab-note">Stronger than повинен</td></tr><tr><td class="vocab-uk">треба</td><td class="vocab-ipa">ˈtrɛbɐ</td><td class="vocab-en">need to, necessary</td><td class="vocab-note">Impersonal</td></tr><tr><td class="vocab-uk">потрібно</td><td class="vocab-ipa">pɔˈtribnɔ</td><td class="vocab-en">need to, necessary</td><td class="vocab-note">Same as треба</td></tr><tr><td class="vocab-uk">необхідно</td><td class="vocab-ipa">nɛɔbˈxidnɔ</td><td class="vocab-en">necessary</td><td class="vocab-note">More formal</td></tr><tr><td class="vocab-uk">можна</td><td class="vocab-ipa">ˈmɔʒnɐ</td><td class="vocab-en">may, allowed</td><td class="vocab-note">Impersonal</td></tr><tr><td class="vocab-uk">не можна</td><td class="vocab-ipa">nɛ ˈmɔʒnɐ</td><td class="vocab-en">forbidden, not allowed</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">дозволено</td><td class="vocab-ipa">dɔzˈwɔlɛnɔ</td><td class="vocab-en">permitted</td><td class="vocab-note">Formal</td></tr><tr><td class="vocab-uk">заборонено</td><td class="vocab-ipa">zɐbɔrɔˈnɛnɔ</td><td class="vocab-en">forbidden</td><td class="vocab-note">Formal</td></tr><tr><td class="vocab-uk">слід</td><td class="vocab-ipa">slid</td><td class="vocab-en">should</td><td class="vocab-note">Impersonal</td></tr><tr><td class="vocab-uk">варто</td><td class="vocab-ipa">ˈwɑrtɔ</td><td class="vocab-en">worth, should</td><td class="vocab-note">Impersonal</td></tr><tr><td class="vocab-uk">здатний</td><td class="vocab-ipa">ˈzdɑtnɪj</td><td class="vocab-en">capable</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">готовий</td><td class="vocab-ipa">ɦɔˈtɔwɪj</td><td class="vocab-en">ready</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">згодний</td><td class="vocab-ipa">ˈzɦɔdnɪj</td><td class="vocab-en">agreeable, willing</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">впевнений</td><td class="vocab-ipa">wpɛwˈnɛnɪj</td><td class="vocab-en">confident, sure</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">певний</td><td class="vocab-ipa">ˈpɛwnɪj</td><td class="vocab-en">certain</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">намагатися</td><td class="vocab-ipa">nɐmɐˈɦɑtɪsʲɐ</td><td class="vocab-en">to try</td><td class="vocab-note">Reflexive</td></tr><tr><td class="vocab-uk">старатися</td><td class="vocab-ipa">stɐˈrɑtɪsʲɐ</td><td class="vocab-en">to try, endeavor</td><td class="vocab-note">Reflexive</td></tr><tr><td class="vocab-uk">пробувати</td><td class="vocab-ipa">prɔbuˈwɑtɪ</td><td class="vocab-en">to try, attempt</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">вдаватися</td><td class="vocab-ipa">wdɐˈwɑtɪsʲɐ</td><td class="vocab-en">to manage, succeed</td><td class="vocab-note">+ infinitive</td></tr><tr><td class="vocab-uk">встигати</td><td class="vocab-ipa">wstɪˈɦɑtɪ</td><td class="vocab-en">to manage (time)</td><td class="vocab-note">Have time for</td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">понеділок</td><td class="vocab-ipa">/pɔnɛˈd⁽ʲ⁾ilɔk/</td><td class="vocab-en">Monday</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('понеділок')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вівторок</td><td class="vocab-ipa">/vivˈtɔrɔk/</td><td class="vocab-en">Tuesday</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вівторок')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">середа</td><td class="vocab-ipa">/sɛrɛˈdɑ/</td><td class="vocab-en">Wednesday</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('середа')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">четвер</td><td class="vocab-ipa">/tʃɛtˈvɛr/</td><td class="vocab-en">Thursday</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('четвер')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">п&#039;ятниця</td><td class="vocab-ipa">/ˈpjɑtnɪt͡sʲɑ/</td><td class="vocab-en">Friday</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('п&#039;ятниця')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">субота</td><td class="vocab-ipa">/suˈbɔtɑ/</td><td class="vocab-en">Saturday</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('субота')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">неділя</td><td class="vocab-ipa">/nɛˈd⁽ʲ⁾ilʲɑ/</td><td class="vocab-en">Sunday</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('неділя')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">зима</td><td class="vocab-ipa">/zɪˈmɑ/</td><td class="vocab-en">Winter</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('зима')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">весна</td><td class="vocab-ipa">/vɛsˈnɑ/</td><td class="vocab-en">Spring</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('весна')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">літо</td><td class="vocab-ipa">/ˈl⁽ʲ⁾itɔ/</td><td class="vocab-en">Summer</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('літо')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">осінь</td><td class="vocab-ipa">/ˈɔs⁽ʲ⁾inʲ/</td><td class="vocab-en">Autumn</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('осінь')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">січень</td><td class="vocab-ipa">/ˈsitʃɛnʲ/</td><td class="vocab-en">January</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('січень')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">лютий</td><td class="vocab-ipa">/ˈlʲutɪj/</td><td class="vocab-en">February</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('лютий')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">березень</td><td class="vocab-ipa">/ˈbɛrɛzɛnʲ/</td><td class="vocab-en">March</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('березень')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">квітень</td><td class="vocab-ipa">/ˈkvitɛnʲ/</td><td class="vocab-en">April</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('квітень')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">травень</td><td class="vocab-ipa">/ˈtrɑvɛnʲ/</td><td class="vocab-en">May</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('травень')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">червень</td><td class="vocab-ipa">/ˈtʃɛrvɛnʲ/</td><td class="vocab-en">June</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('червень')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">липень</td><td class="vocab-ipa">/ˈlɪpɛnʲ/</td><td class="vocab-en">July</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('липень')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">серпень</td><td class="vocab-ipa">/ˈsɛrpɛnʲ/</td><td class="vocab-en">August</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('серпень')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вересень</td><td class="vocab-ipa">/ˈvɛrɛsɛnʲ/</td><td class="vocab-en">September</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вересень')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">жовтень</td><td class="vocab-ipa">/ˈʒɔvtɛnʲ/</td><td class="vocab-en">October</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('жовтень')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">листопад</td><td class="vocab-ipa">/lɪstɔˈpɑd/</td><td class="vocab-en">November</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('листопад')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">грудень</td><td class="vocab-ipa">/ˈhrudɛnʲ/</td><td class="vocab-en">December</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('грудень')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">взимку</td><td class="vocab-ipa">/ˈvzɪmku/</td><td class="vocab-en">in winter</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('взимку')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">навесні</td><td class="vocab-ipa">/nɑvɛsˈn⁽ʲ⁾i/</td><td class="vocab-en">in spring</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('навесні')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">влітку</td><td class="vocab-ipa">/ˈvl⁽ʲ⁾itku/</td><td class="vocab-en">in summer</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('влітку')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">восени</td><td class="vocab-ipa">/vɔsɛˈnɪ/</td><td class="vocab-en">in autumn</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('восени')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">тиждень</td><td class="vocab-ipa">/ˈtɪʒdɛnʲ/</td><td class="vocab-en">week</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('тиждень')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">місяць</td><td class="vocab-ipa">/ˈm⁽ʲ⁾isʲɑt͡sʲ/</td><td class="vocab-en">month/moon</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('місяць')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">рік</td><td class="vocab-ipa">/rik/</td><td class="vocab-en">year</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('рік')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1010,8 +813,8 @@ A: Мені ___ знайти книгу.</p>
   </main><footer>Module 24 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"fill-blank","title":"Modal Verbs","data":{"type":"fill-blank","items":[{"prompt":"Я ___ говорити українською.","answer":"можу","options":["можу","вмію","треба","можна"]},{"prompt":"Вона ___ грати на піаніно.","answer":"вміє","options":["вміє","може","хоче","треба"]},{"prompt":"Мені ___ працювати сьогодні.","answer":"треба","options":["треба","можу","хочу","повинен"]},{"prompt":"Він ___ прийти завтра.","answer":"може","options":["може","вміє","треба","можна"]},{"prompt":"Тут не ___ курити.","answer":"можна","options":["можна","треба","хочу","вмію"]},{"prompt":"Ми ___ вивчати українську.","answer":"хочемо","options":["хочемо","можемо","вміємо","треба"]},{"prompt":"Ти ___ плавати?","answer":"вмієш","options":["вмієш","можеш","хочеш","треба"]},{"prompt":"___ увійти?","answer":"Можна","options":["Можна","Треба","Хочу","Вмію"]},{"prompt":"Вона ___ закінчити роботу.","answer":"повинна","options":["повинна","повинен","повинні","треба"]},{"prompt":"Вони ___ приїхати завтра.","answer":"можуть","options":["можуть","вміють","хочуть","треба"]},{"prompt":"Вам ___ почекати трохи.","answer":"потрібно","options":["потрібно","можна","хочете","вмієте"]},{"prompt":"Я не ___ водити машину.","answer":"вмію","options":["вмію","можу","хочу","треба"]}]}},{"id":"activity-1","type":"fill-blank","title":"Повинен Agreement","data":{"type":"fill-blank","items":[{"prompt":"Він ___ працювати.","answer":"повинен","options":["повинен","повинна","повинні","повинне"]},{"prompt":"Вона ___ вчитися.","answer":"повинна","options":["повинна","повинен","повинні","повинне"]},{"prompt":"Ми ___ йти.","answer":"повинні","options":["повинні","повинен","повинна","повинне"]},{"prompt":"Я (male) ___ прийти о дев'ятій.","answer":"повинен","options":["повинен","повинна","повинні","повинне"]},{"prompt":"Я (female) ___ закінчити роботу.","answer":"повинна","options":["повинна","повинен","повинні","повинне"]},{"prompt":"Ви ___ говорити українською.","answer":"повинні","options":["повинні","повинен","повинна","повинне"]},{"prompt":"Вони ___ допомогти.","answer":"повинні","options":["повинні","повинен","повинна","повинне"]},{"prompt":"Діти ___ спати.","answer":"повинні","options":["повинні","повинен","повинна","повинне"]},{"prompt":"Студентка ___ вивчати.","answer":"повинна","options":["повинна","повинен","повинні","повинне"]},{"prompt":"Студент ___ читати.","answer":"повинен","options":["повинен","повинна","повинні","повинне"]},{"prompt":"Батьки ___ працювати.","answer":"повинні","options":["повинні","повинен","повинна","повинне"]},{"prompt":"Дитина ___ вчитися.","answer":"повинна","options":["повинна","повинен","повинні","повинне"]}]}},{"id":"activity-2","type":"unjumble","title":"Modal Sentences","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["можу","Я","українською","говорити"],"answer":"Я можу говорити українською.","translation":"I can speak Ukrainian."},{"words":["плавати","вмію","Я"],"answer":"Я вмію плавати.","translation":"I know how to swim."},{"words":["працювати","треба","Мені"],"answer":"Мені треба працювати.","translation":"I need to work."},{"words":["повинен","Він","прийти","завтра"],"answer":"Він повинен прийти завтра.","translation":"He must come tomorrow."},{"words":["хоче","відпочити","Вона"],"answer":"Вона хоче відпочити.","translation":"She wants to rest."},{"words":["можна","курити","Тут","не"],"answer":"Тут не можна курити.","translation":"Smoking is not allowed here."},{"words":["допомогти","Ти","можеш"],"answer":"Ти можеш допомогти?","translation":"Can you help?"},{"words":["вмієш","Ти","готувати"],"answer":"Ти вмієш готувати?","translation":"Do you know how to cook?"},{"words":["повинна","йти","Я"],"answer":"Я повинна йти.","translation":"I must go. — female"},{"words":["увійти","Можна"],"answer":"Можна увійти?","translation":"May I come in?"},{"words":["вивчати","хочемо","українську","Ми"],"answer":"Ми хочемо вивчати українську.","translation":"We want to learn Ukrainian."},{"words":["машину","не","водити","вмію","Я"],"answer":"Я не вмію водити машину.","translation":"I don't know how to drive."}]}},{"id":"activity-3","type":"match-up","title":"Modals and Meanings","data":{"type":"match-up","pairs":[{"left":"Я можу допомогти","right":"I can help"},{"left":"Я вмію плавати","right":"I know how to swim"},{"left":"Мені треба працювати","right":"I need to work"},{"left":"Я повинен йти","right":"I must go (male)"},{"left":"Я хочу відпочити","right":"I want to rest"},{"left":"Можна увійти?","right":"May I come in?"},{"left":"Не можна курити","right":"Smoking forbidden"},{"left":"Вона вміє готувати","right":"She knows how to cook"},{"left":"Йому потрібно вчитися","right":"He needs to study"},{"left":"Вона повинна прийти","right":"She must come"},{"left":"Ми хочемо їсти","right":"We want to eat"},{"left":"Тобі треба відпочити","right":"You need to rest"}],"shuffleRight":true}},{"id":"activity-4","type":"quiz","title":"Modal Knowledge","data":{"type":"quiz","questions":[{"question":"What's the difference between \"можу\" and \"вмію\"?","options":["They are the same","\"Можу\" = ability/permission, \"вмію\" = learned skill","\"Вмію\" is more formal","\"Можу\" is only for questions"],"correctIndex":1,"explanation":"\"Можу\" = can (circumstances allow), \"вмію\" = know how to (skill)."},{"question":"How does a woman say \"I must go\"?","options":["Я повинен йти.","Я повинна йти.","Мені треба йти.","Я повинні йти."],"correctIndex":1,"explanation":"\"Повинна\" agrees with feminine subject."},{"question":"Which is impersonal?","options":["хочу","можу","треба","повинен"],"correctIndex":2,"explanation":"\"Треба\" doesn't change — it's impersonal."},{"question":"How do you ask \"May I?\"","options":["Я можу?","Можна?","Треба?","Хочу?"],"correctIndex":1,"explanation":"\"Можна?\" = May I? / Is it allowed?"},{"question":"\"Я не вмію плавати\" means:","options":["I can't swim right now","I never learned to swim","I don't want to swim","Swimming is forbidden"],"correctIndex":1,"explanation":"\"Не вмію\" = lack of skill."},{"question":"Which form means \"forbidden\"?","options":["Треба","Можна","Не можна","Потрібно"],"correctIndex":2,"explanation":"\"Не можна\" = not allowed/forbidden."},{"question":"\"Йому потрібно вчитися\" means:","options":["He needs to study","He wants to study","He can study","He knows how to study"],"correctIndex":0,"explanation":"\"Потрібно\" + dative = need to."},{"question":"Plural of \"повинен\" is:","options":["повинна","повинне","повинні","повинен"],"correctIndex":2,"explanation":"\"Повинні\" for plural subjects: Ми повинні."},{"question":"\"Ти вмієш готувати?\" asks about:","options":["Permission","Skill","Desire","Obligation"],"correctIndex":1,"explanation":"\"Вмієш\" asks about learned skill."},{"question":"\"Можна меню?\" is asking for:","options":["Permission to have the menu","The menu's location","The menu's price","The menu's content"],"correctIndex":0,"explanation":"\"Можна + noun?\" = May I have...?"},{"question":"Which sentence is correct for a male student?","options":["Студент повинен вчитися.","Студент повинна вчитися.","Студент повинні вчитися.","Студент повинне вчитися."],"correctIndex":0,"explanation":"Masculine singular = повинен."},{"question":"\"Нам треба зустрітися\" means:","options":["We can meet","We need to meet","We want to meet","We must meet (personal)"],"correctIndex":1,"explanation":"\"Нам треба\" = we need to."}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-5","type":"true-false","title":"Modal Facts","data":{"type":"true-false","statements":[{"statement":"\"Вмію\" is used for learned skills.","isTrue":true,"explanation":"Correct! \"Я вмію плавати\" = I know how to swim."},{"statement":"\"Можу\" and \"вмію\" are exactly the same.","isTrue":false,"explanation":"Incorrect! \"Можу\" = ability/permission, \"вмію\" = skill."},{"statement":"\"Повинен\" changes based on gender.","isTrue":true,"explanation":"Correct! Повинен (m), повинна (f), повинне (n), повинні (pl)."},{"statement":"\"Треба\" changes based on subject.","isTrue":false,"explanation":"Incorrect! \"Треба\" is impersonal and doesn't change."},{"statement":"\"Можна?\" means \"May I?\"","isTrue":true,"explanation":"Correct! It asks for permission."},{"statement":"Women say \"Я повинен.\"","isTrue":false,"explanation":"Incorrect! Women say \"Я повинна.\""},{"statement":"\"Не можна\" means \"forbidden\" or \"not allowed.\"","isTrue":true,"explanation":"Correct! \"Тут не можна курити\" = No smoking here."},{"statement":"\"Потрібно\" and \"треба\" are similar.","isTrue":true,"explanation":"Correct! Both express necessity impersonally."},{"statement":"\"Хочу\" is impersonal.","isTrue":false,"explanation":"Incorrect! \"Хочу\" is personal: я хочу, ти хочеш, він хоче..."},{"statement":"\"Мені треба\" uses dative case.","isTrue":true,"explanation":"Correct! \"Мені\" is dative of \"я.\""},{"statement":"\"Можна\" always needs a subject.","isTrue":false,"explanation":"Incorrect! \"Можна\" is impersonal — no subject needed."},{"statement":"\"Я можу прийти\" means \"I can come.\"","isTrue":true,"explanation":"Correct! \"Можу\" + infinitive = can do something."}]}},{"id":"activity-6","type":"group-sort","title":"Modal Types","data":{"type":"group-sort","groups":[{"id":"abilitypermission","name":"Ability/Permission","items":["Я можу допомогти.","Він може прийти.","Ми можемо зустрітися."],"nameUk":"можу"},{"id":"skill","name":"Skill","items":["Я вмію плавати.","Вона вміє готувати.","Ти вмієш водити?"],"nameUk":"вмію"},{"id":"obligation","name":"Obligation","items":["Я повинен йти.","Мені треба працювати.","Вона повинна вчитися."],"nameUk":"повинен/треба"},{"id":"desire","name":"Desire","items":["Я хочу каву.","Він хоче відпочити.","Ми хочемо вивчати."],"nameUk":"хочу"}],"shuffleItems":true}}];
-    const vocabData = [{"uk":"могти","translit":"","en":"can, to be able","note":"Irregular: можу, можеш..."},{"uk":"вміти","translit":"","en":"know how to","note":"Learned skill"},{"uk":"повинен","translit":"","en":"must, should (m)","note":"Agrees with subject"},{"uk":"повинна","translit":"","en":"must, should (f)","note":""},{"uk":"повинні","translit":"","en":"must, should (pl)","note":""},{"uk":"мусити","translit":"","en":"must, have to","note":"Stronger than повинен"},{"uk":"треба","translit":"","en":"need to, necessary","note":"Impersonal"},{"uk":"потрібно","translit":"","en":"need to, necessary","note":"Same as треба"},{"uk":"необхідно","translit":"","en":"necessary","note":"More formal"},{"uk":"можна","translit":"","en":"may, allowed","note":"Impersonal"},{"uk":"не можна","translit":"","en":"forbidden, not allowed","note":""},{"uk":"дозволено","translit":"","en":"permitted","note":"Formal"},{"uk":"заборонено","translit":"","en":"forbidden","note":"Formal"},{"uk":"слід","translit":"","en":"should","note":"Impersonal"},{"uk":"варто","translit":"","en":"worth, should","note":"Impersonal"},{"uk":"здатний","translit":"","en":"capable","note":""},{"uk":"готовий","translit":"","en":"ready","note":""},{"uk":"згодний","translit":"","en":"agreeable, willing","note":""},{"uk":"впевнений","translit":"","en":"confident, sure","note":""},{"uk":"певний","translit":"","en":"certain","note":""},{"uk":"намагатися","translit":"","en":"to try","note":"Reflexive"},{"uk":"старатися","translit":"","en":"to try, endeavor","note":"Reflexive"},{"uk":"пробувати","translit":"","en":"to try, attempt","note":""},{"uk":"вдаватися","translit":"","en":"to manage, succeed","note":"+ infinitive"},{"uk":"встигати","translit":"","en":"to manage (time)","note":"Have time for"}];
+    const activitiesData = [{"id":"activity-0","type":"match-up","title":"Day Translation","data":{"type":"match-up","pairs":[{"left":"Monday","right":"Понеділок"},{"left":"Tuesday","right":"Вівторок"},{"left":"Wednesday","right":"Середа"},{"left":"Thursday","right":"Четвер"},{"left":"Friday","right":"П'ятниця"},{"left":"Saturday","right":"Субота"},{"left":"Sunday","right":"Неділя"},{"left":"Weekend","right":"Вихідні"},{"left":"Today","right":"Сьогодні"},{"left":"Tomorrow","right":"Завтра"},{"left":"Yesterday","right":"Вчора"},{"left":"Day","right":"День"}],"shuffleRight":true}},{"id":"activity-1","type":"group-sort","title":"Season Sorter","data":{"type":"group-sort","groups":[{"id":"winter","name":"Winter","items":["Грудень","Січень","Лютий","Cold","Snow"],"nameUk":"Зима"},{"id":"spring","name":"Spring","items":["Березень","Квітень","Травень","Flowers","Green"],"nameUk":"Весна"},{"id":"summer","name":"Summer","items":["Червень","Липень","Серпень","Hot","Sun"],"nameUk":"Літо"},{"id":"autumn","name":"Autumn","items":["Вересень","Жовтень","Листопад","Rain","Yellow leaves"],"nameUk":"Осінь"}],"shuffleItems":true}},{"id":"activity-2","type":"fill-blank","title":"On The Day","data":{"type":"fill-blank","items":[{"prompt":"Я працюю у ___ (Monday).","answer":"понеділок","hints":["Monday"]},{"prompt":"Ми гуляємо у ___ (Sunday).","answer":"неділю","hints":["Sunday"]},{"prompt":"Концерт у ___ (Friday).","answer":"п'ятницю","hints":["Friday"]},{"prompt":"Вона тут у ___ (Wednesday).","answer":"середу","hints":["Wednesday"]},{"prompt":"Спортзал у ___ (Tuesday).","answer":"вівторок","hints":["Tuesday"]},{"prompt":"Зустріч у ___ (Thursday).","answer":"четвер","hints":["Thursday"]},{"prompt":"Я вдома у ___ (Saturday).","answer":"суботу","hints":["Saturday"]},{"prompt":"Ми вільні (free) у ___ (Weekend).","answer":"вихідні","hints":["Weekend"]},{"prompt":"Кафе зачинено у ___ (Monday).","answer":"понеділок","hints":["Monday"]},{"prompt":"Футбол у ___ (Wednesday).","answer":"середу","hints":["Wednesday"]},{"prompt":"Вечірка у ___ (Friday).","answer":"п'ятницю","hints":["Friday"]},{"prompt":"Церква (Church) у ___ (Sunday).","answer":"неділю","hints":["Sunday"]}]}},{"id":"activity-3","type":"quiz","title":"Month Meanings","data":{"type":"quiz","questions":[{"question":"Квітень comes from...","options":["Квіти (Flowers)","Кіт (Cat)"],"correctIndex":0,"explanation":""},{"question":"Листопад means...","options":["Leaf Fall","List Pad (Paper pad)"],"correctIndex":0,"explanation":""},{"question":"Лютий means...","options":["Fierce/Rage","Lovely"],"correctIndex":0,"explanation":""},{"question":"Серпень comes from...","options":["Серп (Sickle)","Серце (Heart)"],"correctIndex":0,"explanation":""},{"question":"Жовтень is...","options":["Yellow (Жовтий)","Life (Життя)"],"correctIndex":0,"explanation":""},{"question":"Травень is...","options":["Grass (Трава)","Tram (Трамвай)"],"correctIndex":0,"explanation":""},{"question":"Січень comes from...","options":["Сікти (To slash/cut)","Сік (Juice)"],"correctIndex":0,"explanation":""},{"question":"Березень is...","options":["Birch Tree (Береза)","Bear (Ведмідь)"],"correctIndex":0,"explanation":""},{"question":"Липень is...","options":["Linden Tree (Липа)","Lip (Губа)"],"correctIndex":0,"explanation":""},{"question":"Грудень is from...","options":["Грудки (Frozen earth clods)","Груди (Chest)"],"correctIndex":0,"explanation":""},{"question":"Вересень is...","options":["Heather (Верес)","Very Soon"],"correctIndex":0,"explanation":""},{"question":"Червень sounds like...","options":["Червоний (Red)","Черевик (Shoe)"],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-4","type":"anagram","title":"Day Scramble","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["д","а","е","с","р","е"],"answer":"середа","translation":"Wed"},{"letters":["б","о","т","а","с","у"],"answer":"субота","translation":"Sat"},{"letters":["д","і","л","я","н","е"],"answer":"неділя","translation":"Sun"},{"letters":["ц","я","т","н","и","п","'","я"],"answer":"п'ятниця","translation":"Fri"},{"letters":["в","т","о","р","о","к","в","і"],"answer":"вівторок","translation":"Tue"},{"letters":["в","е","р","ч","е","т"],"answer":"четвер","translation":"Thu"},{"letters":["д","і","л","о","к","п","о","н","е"],"answer":"понеділок","translation":"Mon"},{"letters":["с","і","ч","е","н","ь"],"answer":"січень","translation":"Jan"},{"letters":["т","р","а","в","е","н","ь"],"answer":"травень","translation":"May"},{"letters":["з","и","м","а"],"answer":"зима","translation":"Winter"},{"letters":["л","і","т","о"],"answer":"літо","translation":"Summer"},{"letters":["о","с","і","н","ь"],"answer":"осінь","translation":"Autumn"}]}},{"id":"activity-5","type":"fill-blank","title":"When? (General)","data":{"type":"fill-blank","items":[{"prompt":"(Jan) ___ холодно.","answer":"У січні"},{"prompt":"(May) ___ гарно.","answer":"У травні"},{"prompt":"(Saturday) ___ я сплю.","answer":"У суботу"},{"prompt":"(Aug) ___ я на морі.","answer":"У серпні"},{"prompt":"(Monday) ___ я на роботі.","answer":"У понеділок"},{"prompt":"(Oct) ___ жовте листя.","answer":"У жовтні"},{"prompt":"(Sunday) ___ ми вдома.","answer":"У неділю"},{"prompt":"(Dec) ___ свята (holidays).","answer":"У грудні"},{"prompt":"(Nov) ___ дощ.","answer":"У листопаді"},{"prompt":"(April) ___ сонце.","answer":"У квітні"},{"prompt":"(Feb) ___ сніг.","answer":"У лютому"},{"prompt":"(July) ___ спекотно (hot).","answer":"У липні"}]}},{"id":"activity-6","type":"unjumble","title":"Planning","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["їду","Я","Київ","у","січні","в","."],"answer":"Я їду в Київ у січні."},{"words":["четвер","у","Зустріч","."],"answer":"Зустріч у четвер."},{"words":["вдома","неділю","Ми","у","."],"answer":"Ми вдома у неділю."},{"words":["холодно","Взимку","."],"answer":"Взимку холодно."},{"words":["гарно","Навесні","."],"answer":"Навесні гарно."},{"words":["на","влітку","морі","Я","."],"answer":"Я на морі влітку."},{"words":["школу","у","Вересень","це","час","в","."],"answer":"Вересень це час в школу."},{"words":["працюю","Я","вівторок","у","."],"answer":"Я працюю у вівторок."},{"words":["в","ми","п'ятницю","У","барі","."],"answer":"У п'ятницю ми в барі."},{"words":["день","Коли","народження","?"],"answer":"Коли день народження?"},{"words":["вечірка","Де","?"],"answer":"Де вечірка?"},{"words":["зараз","Який","місяць","?"],"answer":"Який зараз місяць?","translation":"Which month is now?"}]}},{"id":"activity-7","type":"true-false","title":"Calendar Logic","data":{"type":"true-false","statements":[{"statement":"I can list Mon-Sun.","isTrue":false,"explanation":""},{"statement":"I can list Winter-Spring-Summer-Autumn.","isTrue":false,"explanation":""},{"statement":"I understand that \"On Friday\" changes the ending (-u).","isTrue":false,"explanation":""},{"statement":"I appreciate the poetry of \"Lyutiy\" (Fierce Feb) and \"Lystopad\" (Leaf Fall).","isTrue":false,"explanation":""}]}}];
+    const vocabData = [{"uk":"понеділок","translit":"","en":"Monday","note":"[🔊](audio_ponedilok)"},{"uk":"вівторок","translit":"","en":"Tuesday","note":"[🔊](audio_vivtorok)"},{"uk":"середа","translit":"","en":"Wednesday","note":"[🔊](audio_sereda)"},{"uk":"четвер","translit":"","en":"Thursday","note":"[🔊](audio_chetver)"},{"uk":"п'ятниця","translit":"","en":"Friday","note":"[🔊](audio_pyatnytsya)"},{"uk":"субота","translit":"","en":"Saturday","note":"[🔊](audio_subota)"},{"uk":"неділя","translit":"","en":"Sunday","note":"[🔊](audio_nedilya)"},{"uk":"зима","translit":"","en":"Winter","note":"[🔊](audio_zyma)"},{"uk":"весна","translit":"","en":"Spring","note":"[🔊](audio_vesna)"},{"uk":"літо","translit":"","en":"Summer","note":"[🔊](audio_lito)"},{"uk":"осінь","translit":"","en":"Autumn","note":"[🔊](audio_osin)"},{"uk":"січень","translit":"","en":"January","note":"[🔊](audio_sichen)"},{"uk":"лютий","translit":"","en":"February","note":"[🔊](audio_lyutyj)"},{"uk":"березень","translit":"","en":"March","note":"[🔊](audio_berezen)"},{"uk":"квітень","translit":"","en":"April","note":"[🔊](audio_kviten)"},{"uk":"травень","translit":"","en":"May","note":"[🔊](audio_traven)"},{"uk":"червень","translit":"","en":"June","note":"[🔊](audio_cherven)"},{"uk":"липень","translit":"","en":"July","note":"[🔊](audio_lypen)"},{"uk":"серпень","translit":"","en":"August","note":"[🔊](audio_serpen)"},{"uk":"вересень","translit":"","en":"September","note":"[🔊](audio_veresen)"},{"uk":"жовтень","translit":"","en":"October","note":"[🔊](audio_zhovten)"},{"uk":"листопад","translit":"","en":"November","note":"[🔊](audio_lystopad)"},{"uk":"грудень","translit":"","en":"December","note":"[🔊](audio_hruden)"},{"uk":"взимку","translit":"","en":"in winter","note":"[🔊](audio_vzymku)"},{"uk":"навесні","translit":"","en":"in spring","note":"[🔊](audio_navesni)"},{"uk":"влітку","translit":"","en":"in summer","note":"[🔊](audio_vlitku)"},{"uk":"восени","translit":"","en":"in autumn","note":"[🔊](audio_voseny)"},{"uk":"тиждень","translit":"","en":"week","note":"[🔊](audio_tyzhden)"},{"uk":"місяць","translit":"","en":"month/moon","note":"[🔊](audio_misyats)"},{"uk":"рік","translit":"","en":"year","note":"[🔊](audio_rik)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1071,6 +874,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2335,6 +2164,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

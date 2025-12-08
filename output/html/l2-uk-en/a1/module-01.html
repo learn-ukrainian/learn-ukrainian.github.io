@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -481,13 +521,14 @@ footer {
     <h1>Module 01: The Cyrillic Code I</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Quiz</button>
-      <button class="nav-tab" data-section="activity-1">2. Match</button>
-      <button class="nav-tab" data-section="activity-2">3. Sort</button>
-      <button class="nav-tab" data-section="activity-3">4. Match</button>
-      <button class="nav-tab" data-section="activity-4">5. T/F</button>
-      <button class="nav-tab" data-section="activity-5">6. Fill</button>
-      <button class="nav-tab" data-section="activity-6">7. Spell</button>
+      <button class="nav-tab" data-section="activity-0">1. Match</button>
+      <button class="nav-tab" data-section="activity-1">2. Sort</button>
+      <button class="nav-tab" data-section="activity-2">3. Quiz</button>
+      <button class="nav-tab" data-section="activity-3">4. Fill</button>
+      <button class="nav-tab" data-section="activity-4">5. Spell</button>
+      <button class="nav-tab" data-section="activity-5">6. Spell</button>
+      <button class="nav-tab" data-section="activity-6">7. T/F</button>
+      <button class="nav-tab" data-section="activity-7">8. Match</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -497,437 +538,318 @@ footer {
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.1</span>
         <h2 style="font-size:2rem;margin:0.5rem 0">The Cyrillic Code I</h2>
-        <p style="color:var(--text-muted)">Cracking the Ukrainian Alphabet: True Friends, False Friends, and New Letters</p>
+        <p style="color:var(--text-muted)">True Friends, False Friends, and Strangers</p>
       </div>
       
     <div class="card section-intro">
       <h3>📖 Introduction</h3>
       <div class="md-content"><h2 id="warmup">warm-up</h2>
-<h3 id="welcometoukrainian">Welcome to Ukrainian!</h3>
-<p>You're about to learn one of the most beautiful alphabets in the world. But here's a secret: <strong>you already know some of it</strong>.</p>
-<p>Ukrainian uses the Cyrillic alphabet - 33 letters that might look mysterious at first. But don't worry! We're going to crack the code step by step. By the end of this lesson, you'll be reading real Ukrainian words.</p>
+<p><strong>Welcome to Ukraine.</strong></p>
+<p>Imagine the plane wheels touching down on the runway. You are at <strong>Бориспіль</strong> <button class="audio-btn" onclick="openForvo('Бориспіль')" title="Listen on Forvo">🔊</button> (Boryspil) International Airport, the main gateway to Kyiv. You grab your bag, step into the terminal, and look up. The signs are blue and yellow. Some letters look comforting and familiar: A, T, O, M. Others look vaguely recognizable but wrong, like a backwards "N" or a "P" where an "R" should be. And some look like alien artifacts or tridents.</p>
+<p>Panic? No. This is where your journey begins. You might think you need to memorize 33 random symbols from scratch, but that is a myth. You already know more than half of the Ukrainian alphabet. You just don't know <em>that you know it</em>.</p>
+<p>In this module, we are not going to chant "A, B, C." We are going to play the role of a codebreaker. We will treat the alphabet as a cipher that has three distinct layers: friends you can trust, tricksters that lie to you, and strangers you haven't met yet. By the end of this hour, you won't just know letters; you will be reading words like <strong>ТАКСІ</strong> <button class="audio-btn" onclick="openForvo('ТАКСІ')" title="Listen on Forvo">🔊</button> (Taxi) and <strong>МЕТРО</strong> <button class="audio-btn" onclick="openForvo('МЕТРО')" title="Listen on Forvo">🔊</button> (Metro) without a second thought.</p>
 <blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>The Cyrillic alphabet was NOT invented by Russians! It was created in the 9th century in Bulgaria by followers of Saints Cyril and Methodius. Ukraine adopted it over 1,000 years ago. Ukrainian Cyrillic has unique letters (Ї, Є, Ґ) that don't exist in Russian!</p>
+  <p>💡 <strong>Did You Know?</strong><br />
+  The Cyrillic alphabet was <strong>NOT</strong> invented by Russians! It was created in the late 9th century in the First Bulgarian Empire. It is named after Saint Cyril, a missionary from Byzantium, but it was likely developed by his students, particularly Saint Clement of Ohrid. They based it largely on the Greek alphabet, which explains why so many "math symbols" (like $\pi$ and $\rho$) appear as letters here. Ukraine adopted it over a thousand years ago, long before modern Russia existed.</p>
 </blockquote>
-<h3 id="thethreetypesofletters">The Three Types of Letters</h3>
-<p>We'll learn Cyrillic letters in three groups:</p>
-<table>
-<thead>
-<tr>
-<th>Group</th>
-<th>Description</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>True Friends</strong></td>
-<td>Look the same, sound the same</td>
-<td>А = A</td>
-</tr>
-<tr>
-<td><strong>False Friends</strong></td>
-<td>Look the same, sound DIFFERENT</td>
-<td>В = V (not B!)</td>
-</tr>
-<tr>
-<td><strong>New Letters</strong></td>
-<td>New shapes, new sounds</td>
-<td>Б = B</td>
-</tr>
-</tbody>
-</table>
-<p>Let's meet them!</p>
 <h2 id="presentation">presentation</h2>
-<h3 id="truefriendslettersyoualreadyknow">True Friends: Letters You Already Know</h3>
-<p>These letters look like English and sound like English. Easy!</p>
+<h3 id="thefirstlayertruefriends">The First Layer: True Friends</h3>
+<p>Let's start with the easiest layer. These letters are "True Friends" because they are honest. They look exactly like their English counterparts (the Latin alphabet) and they make the exact same sounds. If you see <strong>А</strong>, you say "Ah". If you see <strong>К</strong>, you say "K".</p>
+<p>There are seven of these honest letters: <strong>А, Е, І, О, К, М, Т</strong>.</p>
+<p>Think of the word <strong>АТОМ</strong> <button class="audio-btn" onclick="openForvo('АТОМ')" title="Listen on Forvo">🔊</button>. In Ukrainian, it is <strong>АТОМ</strong>. Same letters, same meaning.<br />
+Think of <strong>МАМА</strong> <button class="audio-btn" onclick="openForvo('МАМА')" title="Listen on Forvo">🔊</button>. It's <strong>МАМА</strong>.<br />
+Think of <strong>КОТ</strong> <button class="audio-btn" onclick="openForvo('КОТ')" title="Listen on Forvo">🔊</button>. It sounds like "cot", but it means "cat" (specifically a male cat).</p>
 <table>
 <thead>
 <tr>
 <th>Letter</th>
 <th>Sound</th>
-<th>Example Word</th>
-<th>Translation</th>
+<th>Example</th>
+<th>Reading</th>
+<th>Audio</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>А а</strong></td>
-<td>/a/ like "f<strong>a</strong>ther"</td>
-<td>м<strong>а</strong>м<strong>а</strong> (mama)</td>
-<td>mom</td>
+<td>/a/ as in f<strong>a</strong>ther</td>
+<td><strong>А</strong></td>
+<td>/a/ (Ah!)</td>
+<td><button class="audio-btn" onclick="openForvo('a')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>Е е</strong></td>
-<td>/e/ like "b<strong>e</strong>d"</td>
-<td>м<strong>е</strong>тро (metro)</td>
-<td>metro</td>
+<td>/ɛ/ as in p<strong>e</strong>t</td>
+<td><strong>Е</strong></td>
+<td>/e/ (Eh?)</td>
+<td><button class="audio-btn" onclick="openForvo('e')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>І і</strong></td>
-<td>/i/ like "mach<strong>i</strong>ne"</td>
-<td>рад<strong>і</strong>о (radio)</td>
-<td>radio</td>
+<td>/i/ as in mach<strong>i</strong>ne</td>
+<td><strong>І</strong></td>
+<td>/i/ (Ee)</td>
+<td><button class="audio-btn" onclick="openForvo('i')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>О о</strong></td>
-<td>/o/ like "m<strong>o</strong>re"</td>
-<td>ф<strong>о</strong>т<strong>о</strong> (foto)</td>
-<td>photo</td>
+<td>/ɔ/ as in m<strong>o</strong>re</td>
+<td><strong>О</strong></td>
+<td>/o/ (Oh)</td>
+<td><button class="audio-btn" onclick="openForvo('o')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>К к</strong></td>
-<td>/k/ like "<strong>k</strong>ite"</td>
-<td><strong>к</strong>афе (kafe)</td>
-<td>café</td>
+<td>/k/ as in <strong>k</strong>ite</td>
+<td><strong>К</strong></td>
+<td>/k/</td>
+<td><button class="audio-btn" onclick="openForvo('k')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>М м</strong></td>
-<td>/m/ like "<strong>m</strong>other"</td>
-<td><strong>м</strong>а<strong>м</strong>а (mama)</td>
-<td>mom</td>
+<td>/m/ as in <strong>m</strong>ap</td>
+<td><strong>М</strong></td>
+<td>/m/</td>
+<td><button class="audio-btn" onclick="openForvo('m')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>Т т</strong></td>
-<td>/t/ like "<strong>t</strong>op"</td>
-<td><strong>т</strong>а<strong>т</strong>о (tato)</td>
-<td>dad</td>
+<td>/t/ as in <strong>t</strong>ent</td>
+<td><strong>Т</strong></td>
+<td>/t/</td>
+<td><button class="audio-btn" onclick="openForvo('t')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 </tbody>
 </table>
 <blockquote>
-  <p>🎯 <strong>Fun Fact</strong></p>
-  <p>The word "мама" (mama) is almost universal! You'll find similar words for "mother" in languages from Spanish to Swahili. It's one of the first sounds babies make everywhere!</p>
+  <p>⚡ <strong>Pro Tip:</strong><br />
+  Ukrainian <strong>Т</strong> is a "dental" sound. Your tongue should touch your teeth, not the roof of your mouth like in English. It sounds sharper, crisper, and less "airy" than the English T. Try saying "Tennis" but touch your teeth. That's the Ukrainian <strong>Т</strong>.</p>
 </blockquote>
-<h3 id="falsefriendsthetrickyones">False Friends: The Tricky Ones</h3>
-<p><strong>Warning!</strong> These letters LOOK like English letters but make DIFFERENT sounds. This is where most beginners make mistakes.</p>
+<h3 id="thesecondlayerfalsefriends">The Second Layer: False Friends</h3>
+<p>Now we enter the danger zone. These letters are the "tricksters". They look incredibly familiar—you see a "B", a "P", an "H", a "C", an "X", and a "y". But if you pronounce them like English letters, you will be speaking gibberish. These are "False Friends".</p>
+<p>Why do they look like this? Because they come from Greek.</p>
+<ul>
+<li>The letter <strong>Р</strong> looks like a "P", but it is the Greek <em>Rho</em>. It makes the <strong>R</strong> sound (rolled, like in Spanish or Italian).</li>
+<li>The letter <strong>Х</strong> looks like an "X", but it is the Greek <em>Chi</em>. It makes the heavy <strong>H</strong> sound (like in "Loch Ness").</li>
+</ul>
 <table>
 <thead>
 <tr>
 <th>Letter</th>
-<th>Looks Like</th>
-<th>Actually Sounds Like</th>
+<th>Looks like</th>
+<th>Sound</th>
 <th>Example</th>
+<th>Reading</th>
+<th>Audio</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>В в</strong></td>
 <td>B</td>
-<td>/v/ like "<strong>v</strong>an"</td>
-<td><strong>в</strong>ідео (video)</td>
+<td>/v/ as in <strong>v</strong>et</td>
+<td><strong>В</strong>іза</td>
+<td>/vi-za/</td>
+<td><button class="audio-btn" onclick="openForvo('v')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>Н н</strong></td>
 <td>H</td>
-<td>/n/ like "<strong>n</strong>ose"</td>
-<td>ба<strong>н</strong>а<strong>н</strong> (banan)</td>
+<td>/n/ as in <strong>n</strong>et</td>
+<td><strong>Н</strong>і</td>
+<td>/ni/</td>
+<td><button class="audio-btn" onclick="openForvo('n')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>Р р</strong></td>
 <td>P</td>
-<td>/r/ like Spanish "<strong>r</strong>" (rolled)</td>
-<td><strong>р</strong>адіо (radio)</td>
+<td>/r/ trilled (rolled)</td>
+<td><strong>Р</strong>адіо</td>
+<td>/ra-di-o/</td>
+<td><button class="audio-btn" onclick="openForvo('r')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>С с</strong></td>
 <td>C</td>
-<td>/s/ like "<strong>s</strong>un"</td>
-<td><strong>с</strong>алат (salat)</td>
+<td>/s/ as in <strong>s</strong>un (never /k/!)</td>
+<td><strong>С</strong>уп</td>
+<td>/sup/</td>
+<td><button class="audio-btn" onclick="openForvo('s')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>У у</strong></td>
-<td>Y</td>
-<td>/u/ like "b<strong>oo</strong>t"</td>
-<td>с<strong>у</strong>п (sup)</td>
+<td>y</td>
+<td>/u/ as in m<strong>oo</strong>n</td>
+<td><strong>У</strong>рок</td>
+<td>/u-rok/</td>
+<td><button class="audio-btn" onclick="openForvo('u')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>Х х</strong></td>
 <td>X</td>
-<td>/x/ like Scottish "lo<strong>ch</strong>"</td>
-<td>хокей (khokei)</td>
+<td>/x/ as in lo<strong>ch</strong> (hard H)</td>
+<td><strong>Х</strong>аос</td>
+<td>/kha-os/</td>
+<td><button class="audio-btn" onclick="openForvo('kh')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 </tbody>
 </table>
+<p>Let's decode a few "False Friend" words.<br />
+You see <strong>РЕСТОРАН</strong> <button class="audio-btn" onclick="openForvo('РЕСТОРАН')" title="Listen on Forvo">🔊</button>. Your brain says "Pectopah". But now you know:</p>
+<ul>
+<li>P = R</li>
+<li>C = S</li>
+<li>H = N<br />
+It reads <strong>RESTORAN</strong>.</li>
+</ul>
+<p>You see <strong>МЕТРО</strong> <button class="audio-btn" onclick="openForvo('МЕТРО')" title="Listen on Forvo">🔊</button>. It's not "Metpo". It is <strong>METRO</strong>.<br />
+You see <strong>СУП</strong> <button class="audio-btn" onclick="openForvo('СУП')" title="Listen on Forvo">🔊</button>. It's not "Cyn". It is <strong>SUP</strong>.</p>
 <blockquote>
-  <p>🔍 <strong>Myth Buster</strong></p>
-  <p><strong>Myth:</strong> "The letter Р is a P"<br />
-  <strong>Fact:</strong> Р makes an /r/ sound! Think of it as a "rotated" letter. The word "парк" (park) sounds like "park" in English - both R sounds!</p>
+  <p>🔍 <strong>Myth Buster</strong><br />
+  <strong>Myth:</strong> "Ukrainian is just a dialect of Russian."<br />
+  <strong>Fact:</strong> Ukrainian is a separate East Slavic language with a distinct history. While they share an alphabet (mostly), the sounds are different. For example, the Ukrainian <strong>Г</strong> (H) is soft and breathy, while the Russian G is hard (like in "Go"). The Ukrainian <strong>О</strong> is always pronounced "O", whereas in Russian it often turns into "A" when unstressed. They are as different as Spanish and Portuguese.</p>
 </blockquote>
-<p>Let's practice the False Friends:</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Pronunciation</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>банк</td>
-<td>/bank/</td>
-<td>bank</td>
-</tr>
-<tr>
-<td>парк</td>
-<td>/park/</td>
-<td>park</td>
-</tr>
-<tr>
-<td>турист</td>
-<td>/turyst/</td>
-<td>tourist</td>
-</tr>
-<tr>
-<td>студент</td>
-<td>/student/</td>
-<td>student</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎬 <strong>Pop Culture Moment: S.T.A.L.K.E.R.</strong></p>
-  <p>The famous Ukrainian video game S.T.A.L.K.E.R. has its name in English letters, but in Ukrainian it would be written "СТАЛКЕР" - notice how С = S and Р = R? Now you can read game titles in Ukrainian!</p>
-</blockquote>
-<h3 id="newlettersfreshshapes">New Letters: Fresh Shapes</h3>
-<p>These letters are completely new - no English lookalikes to confuse you!</p>
+<h3 id="thethirdlayernewfriends">The Third Layer: New Friends</h3>
+<p>Finally, we meet the strangers. These letters don't look like English letters at all. They are unique shapes that you simply need to memorize. But the good news is: they usually make very simple sounds.</p>
+<ul>
+<li><strong>Б</strong> looks like a 6 or a b with a hat. It is <strong>B</strong>.</li>
+<li><strong>Г</strong> looks like a gallows or a hook. It is the breathy <strong>H</strong> (like in "<strong>h</strong>ome").</li>
+<li><strong>Д</strong> looks like a fortress or a table. It is <strong>D</strong>.</li>
+<li><strong>З</strong> looks like the number 3. It creates the <strong>Z</strong> sound.</li>
+<li><strong>Л</strong> looks like an upside-down V or a lambda. It is <strong>L</strong>.</li>
+<li><strong>П</strong> looks like a mathematical Pi ($\pi$) or a doorway. It is <strong>P</strong>.</li>
+<li><strong>Ф</strong> looks like a circle with a line through it. It is <strong>F</strong>.</li>
+</ul>
 <table>
 <thead>
 <tr>
 <th>Letter</th>
 <th>Sound</th>
-<th>Like in English</th>
 <th>Example</th>
+<th>Reading</th>
+<th>Audio</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>Б б</strong></td>
-<td>/b/</td>
-<td><strong>b</strong>all</td>
-<td><strong>б</strong>анк (bank)</td>
+<td>/b/ as in <strong>b</strong>oy</td>
+<td><strong>Б</strong>анк</td>
+<td>/bank/</td>
+<td><button class="audio-btn" onclick="openForvo('b')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>Д д</strong></td>
-<td>/d/</td>
-<td><strong>d</strong>og</td>
-<td><strong>д</strong>обре (dobre) - good</td>
+<td>/d/ as in <strong>d</strong>og</td>
+<td><strong>Д</strong>ім</td>
+<td>/dim/</td>
+<td><button class="audio-btn" onclick="openForvo('d')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>З з</strong></td>
-<td>/z/</td>
-<td><strong>z</strong>oo</td>
-<td>пі<strong>з</strong>а (pitsa)</td>
+<td>/z/ as in <strong>z</strong>oo</td>
+<td><strong>З</strong>она</td>
+<td>/zo-na/</td>
+<td><button class="audio-btn" onclick="openForvo('z')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>Л л</strong></td>
-<td>/l/</td>
-<td><strong>l</strong>amp</td>
-<td><strong>л</strong>имон (lymon)</td>
+<td>/l/ as in <strong>l</strong>ove</td>
+<td><strong>Л</strong>ампа</td>
+<td>/lam-pa/</td>
+<td><button class="audio-btn" onclick="openForvo('l')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>П п</strong></td>
-<td>/p/</td>
-<td><strong>p</strong>en</td>
-<td><strong>п</strong>арк (park)</td>
+<td>/p/ as in <strong>p</strong>ot</td>
+<td><strong>П</strong>арк</td>
+<td>/park/</td>
+<td><button class="audio-btn" onclick="openForvo('p')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 <tr>
 <td><strong>Ф ф</strong></td>
-<td>/f/</td>
-<td><strong>f</strong>an</td>
-<td><strong>ф</strong>утбол (futbol)</td>
+<td>/f/ as in <strong>f</strong>un</td>
+<td><strong>Ф</strong>ото</td>
+<td>/fo-to/</td>
+<td><button class="audio-btn" onclick="openForvo('f')" title="Listen on Forvo (Search)">🔊</button></td>
 </tr>
 </tbody>
 </table>
+<p><strong>Reading Practice:</strong></p>
+<ul>
+<li><strong>БАНК</strong> <button class="audio-btn" onclick="openForvo('БАНК')" title="Listen on Forvo">🔊</button> (bank) — Bank</li>
+<li><strong>ПАРК</strong> <button class="audio-btn" onclick="openForvo('ПАРК')" title="Listen on Forvo">🔊</button> (park) — Park</li>
+<li><strong>ФОТО</strong> <button class="audio-btn" onclick="openForvo('ФОТО')" title="Listen on Forvo">🔊</button> (fo-to) — Photo</li>
+<li><strong>ЛАМПА</strong> <button class="audio-btn" onclick="openForvo('ЛАМПА')" title="Listen on Forvo">🔊</button> (lam-pa) — Lamp</li>
+<li><strong>ЗОНА</strong> <button class="audio-btn" onclick="openForvo('ЗОНА')" title="Listen on Forvo">🔊</button> (zo-na) — Zone</li>
+</ul>
 <blockquote>
-  <p>⚡ <strong>Pro Tip</strong></p>
-  <p>The Ukrainian Л (L) looks a bit like an upside-down V or a tent. Think of it as a "<strong>L</strong>odge" or tent shape to remember it makes the /l/ sound!</p>
+  <p>🎬 <strong>Pop Culture Moment: S.T.A.L.K.E.R.</strong><br />
+  The famous Ukrainian video game series <strong>S.T.A.L.K.E.R.</strong> is set in the Chornobyl Exclusion <strong>Zone</strong>. In Ukrainian, "Zone" is <strong>ЗОНА</strong> (Zona). When you see <strong>З</strong>, think of the <strong>Z</strong>ig-zag shape. The developers, GSC Game World, are based in Kyiv!</p>
 </blockquote>
-<h3 id="letsreadinternationalwords">Let's Read: International Words</h3>
-<p>Now for the fun part! These words are international - they sound almost the same in Ukrainian and English:</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Transliteration</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>мама</td>
-<td>mama</td>
-<td>mom</td>
-</tr>
-<tr>
-<td>тато</td>
-<td>tato</td>
-<td>dad</td>
-</tr>
-<tr>
-<td>банк</td>
-<td>bank</td>
-<td>bank</td>
-</tr>
-<tr>
-<td>парк</td>
-<td>park</td>
-<td>park</td>
-</tr>
-<tr>
-<td>кафе</td>
-<td>kafe</td>
-<td>café</td>
-</tr>
-<tr>
-<td>метро</td>
-<td>metro</td>
-<td>metro</td>
-</tr>
-<tr>
-<td>таксі</td>
-<td>taksi</td>
-<td>taxi</td>
-</tr>
-<tr>
-<td>радіо</td>
-<td>radio</td>
-<td>radio</td>
-</tr>
-<tr>
-<td>піца</td>
-<td>pitsa</td>
-<td>pizza</td>
-</tr>
-<tr>
-<td>суп</td>
-<td>sup</td>
-<td>soup</td>
-</tr>
-<tr>
-<td>салат</td>
-<td>salat</td>
-<td>salad</td>
-</tr>
-<tr>
-<td>лимон</td>
-<td>lymon</td>
-<td>lemon</td>
-</tr>
-<tr>
-<td>банан</td>
-<td>banan</td>
-<td>banana</td>
-</tr>
-<tr>
-<td>хокей</td>
-<td>khokei</td>
-<td>hockey</td>
-</tr>
-<tr>
-<td>футбол</td>
-<td>futbol</td>
-<td>football</td>
-</tr>
-<tr>
-<td>студент</td>
-<td>student</td>
-<td>student</td>
-</tr>
-<tr>
-<td>турист</td>
-<td>turyst</td>
-<td>tourist</td>
-</tr>
-<tr>
-<td>музика</td>
-<td>muzyka</td>
-<td>music</td>
-</tr>
-<tr>
-<td>фото</td>
-<td>foto</td>
-<td>photo</td>
-</tr>
-<tr>
-<td>відео</td>
-<td>video</td>
-<td>video</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🌍 <strong>Real World</strong></p>
-  <p>Walk through any Ukrainian city and you'll see these words everywhere: БАНК on buildings, МЕТРО signs underground, КАФЕ on restaurant windows. You can already read Ukrainian street signs!</p>
-</blockquote>
+<h3 id="culturalinsightthestreetscape">Cultural Insight: The Streetscape</h3>
+<p>When you walk through a Ukrainian city like Lviv or Odesa, the streetscape is a mix of old and new. You will see <strong>АПТЕКА</strong> <button class="audio-btn" onclick="openForvo('АПТЕКА')" title="Listen on Forvo">🔊</button> (Pharmacy - Apteka) on almost every corner. You will see <strong>БАР</strong> <button class="audio-btn" onclick="openForvo('БАР')" title="Listen on Forvo">🔊</button> (Bar) and <strong>КАФЕ</strong> <button class="audio-btn" onclick="openForvo('КАФЕ')" title="Listen on Forvo">🔊</button> (Kafe). You might see a sign for <strong>НОТАРІУС</strong> <button class="audio-btn" onclick="openForvo('НОТАРІУС')" title="Listen on Forvo">🔊</button> (Notary) or <strong>АДВОКАТ</strong> <button class="audio-btn" onclick="openForvo('АДВОКАТ')" title="Listen on Forvo">🔊</button> (Lawyer).</p>
+<p>Reading these signs is the first step to feeling "at home". You stop being a foreigner who sees random shapes, and you become a reader who sees meaning. Even with just these 19 letters, you can read about 30% of the signs on the street.</p>
 <h2 id="practice">practice</h2>
-<h3 id="exercise1letterrecognition">Exercise 1: Letter Recognition</h3>
-<p>Which group does each letter belong to?</p>
-<ol>
-<li><p>А</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer">True Friend (looks and sounds like English A)</div></div>
-<ol start="2">
-<li><p>В</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer">False Friend (looks like B but sounds like V)</div></div>
-<ol start="3">
-<li><p>Б</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer">New Letter (new shape, sounds like B)</div></div>
-<ol start="4">
-<li><p>Р</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer">False Friend (looks like P but sounds like R)</div></div>
-<ol start="5">
-<li><p>М</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer">True Friend (looks and sounds like English M)</div></div>
-<ol start="6">
-<li><p>Н</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-5', this)">Показати відповідь</button><div class="answer-block" id="ans-5"><div class="callout callout-answer" data-callout="answer">False Friend (looks like H but sounds like N)</div></div>
-<h3 id="exercise2sounditout">Exercise 2: Sound It Out</h3>
-<p>Read these words using what you learned:</p>
-<ol>
-<li><p>парк</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-6', this)">Показати відповідь</button><div class="answer-block" id="ans-6"><div class="callout callout-answer" data-callout="answer">/park/ - park</div></div>
-<ol start="2">
-<li><p>мама</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-7', this)">Показати відповідь</button><div class="answer-block" id="ans-7"><div class="callout callout-answer" data-callout="answer">/mama/ - mom</div></div>
-<ol start="3">
-<li><p>банк</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-8', this)">Показати відповідь</button><div class="answer-block" id="ans-8"><div class="callout callout-answer" data-callout="answer">/bank/ - bank</div></div>
-<ol start="4">
-<li><p>радіо</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-9', this)">Показати відповідь</button><div class="answer-block" id="ans-9"><div class="callout callout-answer" data-callout="answer">/radio/ - radio</div></div>
-<ol start="5">
-<li><p>таксі</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-10', this)">Показати відповідь</button><div class="answer-block" id="ans-10"><div class="callout callout-answer" data-callout="answer">/taksi/ - taxi</div></div>
-<ol start="6">
-<li><p>музика</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-11', this)">Показати відповідь</button><div class="answer-block" id="ans-11"><div class="callout callout-answer" data-callout="answer">/muzyka/ - music</div></div>
+<p>Now, let's combine these three groups to read real international words used in Ukraine every day. Imagine you are walking down <strong>Хрещатик</strong> (Khreshchatyk) Street in Kyiv. You see these signs.</p>
+<p><strong>1. Places:</strong></p>
+<ul>
+<li><strong>МЕТРО</strong> <button class="audio-btn" onclick="openForvo('МЕТРО')" title="Listen on Forvo">🔊</button> (Metro) — Subway</li>
+<li><strong>КАФЕ</strong> <button class="audio-btn" onclick="openForvo('КАФЕ')" title="Listen on Forvo">🔊</button> (Kafe) — Café</li>
+<li><strong>БАР</strong> <button class="audio-btn" onclick="openForvo('БАР')" title="Listen on Forvo">🔊</button> (Bar) — Bar</li>
+<li><strong>ТЕАТР</strong> <button class="audio-btn" onclick="openForvo('ТЕАТР')" title="Listen on Forvo">🔊</button> (Teatr) — Theater</li>
+<li><strong>ПАРК</strong> <button class="audio-btn" onclick="openForvo('ПАРК')" title="Listen on Forvo">🔊</button> (Park) — Park</li>
+<li><strong>РЕСТОРАН</strong> <button class="audio-btn" onclick="openForvo('РЕСТОРАН')" title="Listen on Forvo">🔊</button> (Restoran) — Restaurant</li>
+</ul>
+<p><strong>2. Food:</strong></p>
+<ul>
+<li><strong>САЛАТ</strong> <button class="audio-btn" onclick="openForvo('САЛАТ')" title="Listen on Forvo">🔊</button> (Salat) — Salad</li>
+<li><strong>СУП</strong> <button class="audio-btn" onclick="openForvo('СУП')" title="Listen on Forvo">🔊</button> (Sup) — Soup</li>
+<li><strong>ПІЦА</strong> <button class="audio-btn" onclick="openForvo('ПІЦА')" title="Listen on Forvo">🔊</button> (Pitsa) — Pizza (Note: Ц is T+S, we will learn it later, but here it helps!)</li>
+<li><strong>БАНАН</strong> <button class="audio-btn" onclick="openForvo('БАНАН')" title="Listen on Forvo">🔊</button> (Banan) — Banana</li>
+<li><strong>ЛИМОН</strong> <button class="audio-btn" onclick="openForvo('ЛИМОН')" title="Listen on Forvo">🔊</button> (Lymon) — Lemon</li>
+<li><strong>КАКАО</strong> <button class="audio-btn" onclick="openForvo('КАКАО')" title="Listen on Forvo">🔊</button> (Kakao) — Cocoa</li>
+<li><strong>КАВА</strong> <button class="audio-btn" onclick="openForvo('КАВА')" title="Listen on Forvo">🔊</button> (Kava) — Coffee</li>
+</ul>
+<p><strong>3. People:</strong></p>
+<ul>
+<li><strong>СТУДЕНТ</strong> <button class="audio-btn" onclick="openForvo('СТУДЕНТ')" title="Listen on Forvo">🔊</button> (Student) — Student</li>
+<li><strong>ТУРИСТ</strong> <button class="audio-btn" onclick="openForvo('ТУРИСТ')" title="Listen on Forvo">🔊</button> (Turyst) — Tourist</li>
+<li><strong>ДОКТОР</strong> <button class="audio-btn" onclick="openForvo('ДОКТОР')" title="Listen on Forvo">🔊</button> (Doktor) — Doctor</li>
+<li><strong>АКТОР</strong> <button class="audio-btn" onclick="openForvo('АКТОР')" title="Listen on Forvo">🔊</button> (Aktor) — Actor</li>
+</ul>
+<p>Let's look at a dialogue. Two students, <strong>Оксана</strong> (Oksana) and <strong>Роман</strong> (Roman), are meeting near the metro.</p>
+<p><strong>Oksana:</strong> Привіт! (Pryvit - Hi!)<br />
+<strong>Roman:</strong> Привіт, Оксано!<br />
+<strong>Oksana:</strong> Це метро "Театральна"? (Is this Metro "Teatralna"?)<br />
+<strong>Roman:</strong> Так, це метро. (Yes, this is the metro.)<br />
+<strong>Oksana:</strong> А де кафе? (And where is the café?)<br />
+<strong>Roman:</strong> Кафе там. (The café is there.)</p>
+<p>Notice the structure: <strong>Це X</strong> (This is X). <strong>Де X?</strong> (Where is X?). Simple, right?</p>
 <h2 id="production">production</h2>
-<h3 id="yourfirstukrainianreading">Your First Ukrainian Reading</h3>
-<p>Try reading these sentences. Don't worry about understanding everything - just practice the sounds!</p>
-<ol>
-<li><strong>Мама і тато</strong> (Mama i tato) - Mom and dad</li>
-<li><strong>Банк і парк</strong> (Bank i park) - Bank and park</li>
-<li><strong>Метро і таксі</strong> (Metro i taksi) - Metro and taxi</li>
-</ol>
-<blockquote>
-  <p>📜 <strong>History Bite</strong></p>
-  <p>The first printed book in Ukrainian appeared in 1574 in Lviv. That's over 450 years of Ukrainian writing! The alphabet you're learning today connects you to centuries of literature, songs, and stories.</p>
-</blockquote>
-<hr />
+<p>Now you are ready to navigate a Ukrainian city map. You have the tools to decode signs.</p>
+<p>Imagine you are hungry. You see a sign: <strong>РЕСТОРАН "ОДЕСА"</strong>.</p>
+<ul>
+<li><strong>Р</strong> is R.</li>
+<li><strong>Е</strong> is E.</li>
+<li><strong>С</strong> is S.</li>
+<li><strong>Т</strong> is T.</li>
+<li><strong>О</strong> is O.</li>
+<li><strong>Р</strong> is R.</li>
+<li><strong>А</strong> is A.</li>
+<li><strong>Н</strong> is N.<br />
+= <strong>RESTORAN</strong>.</li>
+</ul>
+<p>Next door, you see <strong>БАНК</strong>.</p>
+<ul>
+<li><strong>Б</strong> is B.</li>
+<li><strong>А</strong> is A.</li>
+<li><strong>Н</strong> is N.</li>
+<li><strong>К</strong> is K.<br />
+= <strong>BANK</strong>.</li>
+</ul>
+<p>You check your <strong>ТЕЛЕФОН</strong> (Phone). You want to call a <strong>ТАКСІ</strong> (Taxi).<br />
+You are reading Ukrainian!</p>
 <hr />
 <hr /></div>
     </div>
@@ -935,23 +857,13 @@ footer {
       
     <div class="card section-summary">
       <h3>📋 Summary</h3>
-      <div class="md-content"><blockquote>
-  <p><strong>What You Learned Today</strong></p>
-  <ul>
-  <li><strong>True Friends:</strong> А, Е, І, О, К, М, Т - letters that look AND sound like English</li>
-  <li><strong>False Friends:</strong> В (/v/), Н (/n/), Р (/r/), С (/s/), У (/u/), Х (/x/) - letters that LOOK like English but sound DIFFERENT</li>
-  <li><strong>New Letters:</strong> Б (/b/), Д (/d/), З (/z/), Л (/l/), П (/p/), Ф (/f/) - new shapes with new sounds</li>
-  <li>You can now read 20 international words in Ukrainian!</li>
-  </ul>
-  <p><strong>Coming Next</strong></p>
-  <p>In Module 02, you'll complete the Cyrillic alphabet:</p>
-  <ul>
-  <li>Unique Ukrainian letters (Ж, Ш, Щ, Ч, Ц)</li>
-  <li>The mysterious soft sign (Ь)</li>
-  <li>Iotated vowels (Є, Ї, Ю, Я)</li>
-  <li>Warning about italic forms that look different!</li>
-  </ul>
-</blockquote></div>
+      <div class="md-content"><p>In this module, you unlocked the first part of the Cyrillic code. You learned:</p>
+<ol>
+<li><strong>True Friends</strong> (А, К, М…) are easy.</li>
+<li><strong>False Friends</strong> (В, Н, Р…) are tricksters—watch out for them!</li>
+<li><strong>New Letters</strong> (Б, Ф, Л…) are just new shapes for familiar sounds.</li>
+</ol>
+<p>You can already read words like <strong>МЕТРО</strong>, <strong>ТАКСІ</strong>, and <strong>РЕСТОРАН</strong>. In the next module, we will learn the "unique" letters that give Ukrainian its distinct sound. До побачення! (Goodbye!)</p></div>
     </div>
   
       <div class="btn-group">
@@ -960,75 +872,82 @@ footer {
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Letter Sounds</h3>
-      <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container"></div>
-      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+    <section id="activity-0" class="section"><div class="card"><h3>True or False Friend?</h3>
+      <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/13</span></div>
+      <div class="match-container" id="activity-0-container"><svg class="match-lines" id="activity-0-lines"></svg>
+        <div class="match-column" id="activity-0-left"></div>
+        <div class="match-column" id="activity-0-right"></div>
+      </div>
+      <div class="completion-message" id="activity-0-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Letters and Sounds</h3>
-      <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-1-container"><svg class="match-lines" id="activity-1-lines"></svg>
-        <div class="match-column" id="activity-1-left"></div>
-        <div class="match-column" id="activity-1-right"></div>
-      </div>
-      <div class="completion-message" id="activity-1-complete"><h3>Perfect!</h3></div>
+    <section id="activity-1" class="section"><div class="card"><h3>Letter Categories</h3>
+      <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/20</span></div>
+      <div class="sort-pool" id="activity-1-pool"><div class="sort-items" id="activity-1-items"></div></div>
+      <div class="sort-groups" id="activity-1-groups"></div>
+      <div class="completion-message" id="activity-1-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Letter Types</h3>
-      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/19</span></div>
-      <div class="sort-pool" id="activity-2-pool"><div class="sort-items" id="activity-2-items"></div></div>
-      <div class="sort-groups" id="activity-2-groups"></div>
-      <div class="completion-message" id="activity-2-complete"><h3>All Sorted!</h3></div>
+    <section id="activity-2" class="section"><div class="card"><h3>Reading International Words</h3>
+      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
+      <div id="activity-2-container"></div>
+      <div class="completion-message" id="activity-2-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Word Reading</h3>
+    <section id="activity-3" class="section"><div class="card"><h3>Missing Letters</h3>
       <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-3-container"><svg class="match-lines" id="activity-3-lines"></svg>
-        <div class="match-column" id="activity-3-left"></div>
-        <div class="match-column" id="activity-3-right"></div>
-      </div>
-      <div class="completion-message" id="activity-3-complete"><h3>Perfect!</h3></div>
+      <div id="activity-3-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Letter Knowledge</h3>
+    <section id="activity-4" class="section"><div class="card"><h3>Build Words</h3>
       <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
-      <div id="activity-4-container"></div>
-      <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
+      <div id="activity-4-container" class="order-container"></div>
+      <div class="completion-message" id="activity-4-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Complete the Word</h3>
+    <section id="activity-5" class="section"><div class="card"><h3>Scrambled Cognates</h3>
       <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
-      <div id="activity-5-container" class="fill-container"></div>
-      <div class="completion-message" id="activity-5-complete"><h3>Complete!</h3></div>
+      <div id="activity-5-container" class="order-container"></div>
+      <div class="completion-message" id="activity-5-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Word Spelling</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>Letter Facts</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
-      <div id="activity-6-container" class="order-container"></div>
-      <div class="completion-message" id="activity-6-complete"><h3>Perfect Order!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+      <div id="activity-6-container"></div>
+      <div class="completion-message" id="activity-6-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-7" class="section"><div class="card"><h3>Word to Category</h3>
+      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/12</span></div>
+      <div class="match-container" id="activity-7-container"><svg class="match-lines" id="activity-7-lines"></svg>
+        <div class="match-column" id="activity-7-left"></div>
+        <div class="match-column" id="activity-7-right"></div>
+      </div>
+      <div class="completion-message" id="activity-7-complete"><h3>Perfect!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
-        <h3>Словник (20)</h3>
+        <h3>Словник (35)</h3>
         <div class="vocab-table-container">
           <table class="vocab-table">
             <thead><tr>
     <th>Слово</th>
-    
+    <th>Вимова</th>
     <th>IPA</th>
     <th>Переклад</th>
     <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">мама (mama)</td><td class="vocab-ipa">/ˈmama/</td><td class="vocab-en">mom</td><td class="vocab-note">informal for mother</td></tr><tr><td class="vocab-uk">тато (tato)</td><td class="vocab-ipa">/ˈtato/</td><td class="vocab-en">dad</td><td class="vocab-note">informal for father</td></tr><tr><td class="vocab-uk">банк (bank)</td><td class="vocab-ipa">/bank/</td><td class="vocab-en">bank</td><td class="vocab-note">international word</td></tr><tr><td class="vocab-uk">парк (park)</td><td class="vocab-ipa">/park/</td><td class="vocab-en">park</td><td class="vocab-note">international word</td></tr><tr><td class="vocab-uk">кафе (kafe)</td><td class="vocab-ipa">/kaˈfɛ/</td><td class="vocab-en">café</td><td class="vocab-note">indeclinable</td></tr><tr><td class="vocab-uk">метро (metro)</td><td class="vocab-ipa">/mɛˈtrɔ/</td><td class="vocab-en">metro</td><td class="vocab-note">indeclinable</td></tr><tr><td class="vocab-uk">таксі (taksi)</td><td class="vocab-ipa">/takˈsi/</td><td class="vocab-en">taxi</td><td class="vocab-note">indeclinable</td></tr><tr><td class="vocab-uk">радіо (radio)</td><td class="vocab-ipa">/ˈradio/</td><td class="vocab-en">radio</td><td class="vocab-note">indeclinable</td></tr><tr><td class="vocab-uk">піца (pitsa)</td><td class="vocab-ipa">/ˈpitsa/</td><td class="vocab-en">pizza</td><td class="vocab-note">international word</td></tr><tr><td class="vocab-uk">суп (sup)</td><td class="vocab-ipa">/sup/</td><td class="vocab-en">soup</td><td class="vocab-note">common food word</td></tr><tr><td class="vocab-uk">салат (salat)</td><td class="vocab-ipa">/saˈlat/</td><td class="vocab-en">salad</td><td class="vocab-note">international word</td></tr><tr><td class="vocab-uk">лимон (lymon)</td><td class="vocab-ipa">/lɪˈmɔn/</td><td class="vocab-en">lemon</td><td class="vocab-note">international word</td></tr><tr><td class="vocab-uk">банан (banan)</td><td class="vocab-ipa">/baˈnan/</td><td class="vocab-en">banana</td><td class="vocab-note">international word</td></tr><tr><td class="vocab-uk">хокей (khokei)</td><td class="vocab-ipa">/xɔˈkɛj/</td><td class="vocab-en">hockey</td><td class="vocab-note">international word</td></tr><tr><td class="vocab-uk">футбол (futbol)</td><td class="vocab-ipa">/futˈbɔl/</td><td class="vocab-en">football/soccer</td><td class="vocab-note">international word</td></tr><tr><td class="vocab-uk">студент (student)</td><td class="vocab-ipa">/stuˈdɛnt/</td><td class="vocab-en">student</td><td class="vocab-note">international word</td></tr><tr><td class="vocab-uk">турист (turyst)</td><td class="vocab-ipa">/tuˈrɪst/</td><td class="vocab-en">tourist</td><td class="vocab-note">international word</td></tr><tr><td class="vocab-uk">музика (muzyka)</td><td class="vocab-ipa">/ˈmuzɪka/</td><td class="vocab-en">music</td><td class="vocab-note">international word</td></tr><tr><td class="vocab-uk">фото (foto)</td><td class="vocab-ipa">/ˈfɔtɔ/</td><td class="vocab-en">photo</td><td class="vocab-note">indeclinable</td></tr><tr><td class="vocab-uk">відео (video)</td><td class="vocab-ipa">/ˈvidɛɔ/</td><td class="vocab-en">video</td><td class="vocab-note">indeclinable</td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">мама</td><td class="vocab-translit">/ˈmɑmɑ/</td><td class="vocab-ipa">mom</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('мама')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">тато</td><td class="vocab-translit">/ˈtɑtɔ/</td><td class="vocab-ipa">dad</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('тато')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">банк</td><td class="vocab-translit">/bɑnk/</td><td class="vocab-ipa">bank</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('банк')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">парк</td><td class="vocab-translit">/pɑrk/</td><td class="vocab-ipa">park</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('парк')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">кафе</td><td class="vocab-translit">/kɑˈfɛ/</td><td class="vocab-ipa">cafe</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('кафе')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">метро</td><td class="vocab-translit">/mɛˈtrɔ/</td><td class="vocab-ipa">metro</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('метро')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">таксі</td><td class="vocab-translit">/tɑkˈsi/</td><td class="vocab-ipa">taxi</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('таксі')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">радіо</td><td class="vocab-translit">/ˈrɑdʲio/</td><td class="vocab-ipa">radio</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('радіо')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">піца</td><td class="vocab-translit">/ˈpitsɑ/</td><td class="vocab-ipa">pizza</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('піца')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">суп</td><td class="vocab-translit">/sup/</td><td class="vocab-ipa">soup</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('суп')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">салат</td><td class="vocab-translit">/sɑˈlɑt/</td><td class="vocab-ipa">salad</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('салат')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">лимон</td><td class="vocab-translit">/lɪˈmɔn/</td><td class="vocab-ipa">lemon</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('лимон')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">банан</td><td class="vocab-translit">/bɑˈnɑn/</td><td class="vocab-ipa">banana</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('банан')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">хокей</td><td class="vocab-translit">/xɔˈkɛj/</td><td class="vocab-ipa">hockey</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('хокей')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">футбол</td><td class="vocab-translit">/futˈbɔl/</td><td class="vocab-ipa">football</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('футбол')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">студент</td><td class="vocab-translit">/stuˈdɛnt/</td><td class="vocab-ipa">student</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('студент')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">турист</td><td class="vocab-translit">/tuˈrɪst/</td><td class="vocab-ipa">tourist</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('турист')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">музика</td><td class="vocab-translit">/ˈmuzɪkɑ/</td><td class="vocab-ipa">music</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('музика')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">фото</td><td class="vocab-translit">/ˈfɔtɔ/</td><td class="vocab-ipa">photo</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('фото')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">відео</td><td class="vocab-translit">/ˈvi.de.o/</td><td class="vocab-ipa">video</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('відео')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">бар</td><td class="vocab-translit">/bɑr/</td><td class="vocab-ipa">bar</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('бар')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">ресторан</td><td class="vocab-translit">/rɛstɔˈrɑn/</td><td class="vocab-ipa">restaurant</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('ресторан')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">доктор</td><td class="vocab-translit">/ˈdɔktɔr/</td><td class="vocab-ipa">doctor</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('доктор')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">актор</td><td class="vocab-translit">/ɑkˈtɔr/</td><td class="vocab-ipa">actor</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('актор')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">опера</td><td class="vocab-translit">/ˈɔpɛrɑ/</td><td class="vocab-ipa">opera</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('опера')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">балет</td><td class="vocab-translit">/bɑˈlɛt/</td><td class="vocab-ipa">ballet</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('балет')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">паспорт</td><td class="vocab-translit">/ˈpɑspɔrt/</td><td class="vocab-ipa">passport</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('паспорт')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">віза</td><td class="vocab-translit">/ˈvizɑ/</td><td class="vocab-ipa">visa</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('віза')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">карта</td><td class="vocab-translit">/ˈkɑrtɑ/</td><td class="vocab-ipa">map</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('карта')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">комета</td><td class="vocab-translit">/kɔˈmɛtɑ/</td><td class="vocab-ipa">comet</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('комета')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">ракета</td><td class="vocab-translit">/rɑˈkɛtɑ/</td><td class="vocab-ipa">rocket</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('ракета')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">телефон</td><td class="vocab-translit">/tɛlɛˈfɔn/</td><td class="vocab-ipa">telephone</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('телефон')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">інтернет</td><td class="vocab-translit">/intɛrˈnɛt/</td><td class="vocab-ipa">internet</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('інтернет')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">какао</td><td class="vocab-translit">/kɑˈkɑo/</td><td class="vocab-ipa">cocoa</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('какао')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">кава</td><td class="vocab-translit">/ˈkɑvɑ/</td><td class="vocab-ipa">coffee</td><td class="vocab-en">noun</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('кава')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1040,8 +959,8 @@ footer {
   </main><footer>Module 01 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"quiz","title":"Letter Sounds","data":{"type":"quiz","questions":[{"question":"What sound does the Ukrainian letter **В** make?","options":["/b/ like \"ball\"","/v/ like \"van\"","/w/ like \"water\"","/f/ like \"fan\""],"correctIndex":1,"explanation":"В is a False Friend - it looks like B but sounds like V!"},{"question":"What sound does the Ukrainian letter **Р** make?","options":["/p/ like \"pen\"","/b/ like \"ball\"","/r/ like rolled R","no sound (silent)"],"correctIndex":2,"explanation":"Р is another False Friend - it looks like P but makes an R sound!"},{"question":"Which letter makes the /b/ sound in Ukrainian?","options":["В","Б","Р","Д"],"correctIndex":1,"explanation":"Б is a New Letter that makes the /b/ sound. В sounds like /v/!"},{"question":"What sound does **Н** make in Ukrainian?","options":["/h/ like \"hat\"","/n/ like \"nose\"","/m/ like \"mom\"","silent"],"correctIndex":1,"explanation":"Н looks like H but sounds like N - a False Friend!"},{"question":"Which letter makes the /s/ sound?","options":["С","З","Ц","Ш"],"correctIndex":0,"explanation":"С looks like C but always sounds like /s/ in Ukrainian!"},{"question":"What sound does **У** make?","options":["/y/ like \"yes\"","/i/ like \"bit\"","/u/ like \"boot\"","/a/ like \"cat\""],"correctIndex":2,"explanation":"У looks like Y but makes the /u/ sound!"},{"question":"Which letter is a \"True Friend\" (same look and sound as English)?","options":["А","В","Н","Р"],"correctIndex":0,"explanation":"А looks like A and sounds like A - a True Friend!"},{"question":"What sound does **Х** make?","options":["/h/ like \"hat\"","/x/ like Scottish \"loch\"","/k/ like \"kite\"","/z/ like \"zoo\""],"correctIndex":1,"explanation":"Х makes a throaty sound like in \"loch\" or German \"Bach\"!"},{"question":"Which letter makes the /l/ sound?","options":["П","Л","Д","Ф"],"correctIndex":1,"explanation":"Л (looking like an upside-down V) makes the /l/ sound!"},{"question":"What type of letter is **С**?","options":["True Friend","False Friend","New Letter","Not in Ukrainian"],"correctIndex":1,"explanation":"С looks like C but sounds like /s/ - a False Friend!"},{"question":"Which word is pronounced /bank/?","options":["банк","панк","ванк","танк"],"correctIndex":0,"explanation":"банк = /bank/ using Б for /b/, not В!"},{"question":"What sound does **Ф** make?","options":["/v/ like \"van\"","/f/ like \"fan\"","/p/ like \"pen\"","/b/ like \"ball\""],"correctIndex":1,"explanation":"Ф is a New Letter making the /f/ sound!"}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-1","type":"match-up","title":"Letters and Sounds","data":{"type":"match-up","pairs":[{"left":"В","right":"/v/ like \"van\""},{"left":"Р","right":"/r/ rolled R"},{"left":"Н","right":"/n/ like \"nose\""},{"left":"С","right":"/s/ like \"sun\""},{"left":"У","right":"/u/ like \"boot\""},{"left":"Б","right":"/b/ like \"ball\""},{"left":"Л","right":"/l/ like \"lamp\""},{"left":"Д","right":"/d/ like \"dog\""},{"left":"П","right":"/p/ like \"pen\""},{"left":"Ф","right":"/f/ like \"fan\""},{"left":"З","right":"/z/ like \"zoo\""},{"left":"Х","right":"/x/ like \"loch\""}],"shuffleRight":true}},{"id":"activity-2","type":"group-sort","title":"Letter Types","data":{"type":"group-sort","groups":[{"id":"true-friends","name":"True Friends","items":["А","О","Е","І","К","М","Т"],"nameUk":"same look and sound"},{"id":"false-friends","name":"False Friends","items":["В","Н","Р","С","У","Х"],"nameUk":"same look, different sound"},{"id":"new-letters","name":"New Letters","items":["Б","Д","З","Л","П","Ф"],"nameUk":"new shapes"}],"shuffleItems":true}},{"id":"activity-3","type":"match-up","title":"Word Reading","data":{"type":"match-up","pairs":[{"left":"мама","right":"mom"},{"left":"тато","right":"dad"},{"left":"банк","right":"bank"},{"left":"парк","right":"park"},{"left":"кафе","right":"café"},{"left":"метро","right":"metro"},{"left":"таксі","right":"taxi"},{"left":"радіо","right":"radio"},{"left":"суп","right":"soup"},{"left":"салат","right":"salad"},{"left":"музика","right":"music"},{"left":"фото","right":"photo"}],"shuffleRight":true}},{"id":"activity-4","type":"true-false","title":"Letter Knowledge","data":{"type":"true-false","statements":[{"statement":"The letter А sounds the same in Ukrainian and English.","isTrue":true,"explanation":"Correct! А is a True Friend - same shape, same sound."},{"statement":"The letter В makes a /b/ sound in Ukrainian.","isTrue":false,"explanation":"Incorrect. В makes a /v/ sound! Б makes the /b/ sound."},{"statement":"The letter Р sounds like a rolled R.","isTrue":true,"explanation":"Correct! Р looks like P but sounds like R."},{"statement":"The letter Н sounds like /h/ in Ukrainian.","isTrue":false,"explanation":"Incorrect. Н sounds like /n/! It's a False Friend."},{"statement":"The word \"парк\" is pronounced /park/.","isTrue":true,"explanation":"Correct! П = /p/, а = /a/, Р = /r/, к = /k/."},{"statement":"Cyrillic was created in Bulgaria, not Russia.","isTrue":true,"explanation":"Correct! It was created in the 9th century by Bulgarians."},{"statement":"The letter С sounds like /k/ in Ukrainian.","isTrue":false,"explanation":"Incorrect. С sounds like /s/! It looks like C but sounds different."},{"statement":"The letter У sounds like /u/ as in \"boot\".","isTrue":true,"explanation":"Correct! У looks like Y but sounds like \"oo\"."},{"statement":"The word \"банк\" uses the letter В.","isTrue":false,"explanation":"Incorrect. \"банк\" uses Б (which makes /b/), not В (which makes /v/)."},{"statement":"\"Метро\" and \"metro\" sound almost the same.","isTrue":true,"explanation":"Correct! It's an international word!"},{"statement":"The letter Л looks like an upside-down V.","isTrue":true,"explanation":"Correct! And it makes the /l/ sound."},{"statement":"Ukrainian Cyrillic is identical to Russian Cyrillic.","isTrue":false,"explanation":"Incorrect. Ukrainian has unique letters like Ї, Є, and Ґ!"}]}},{"id":"activity-5","type":"fill-blank","title":"Complete the Word","data":{"type":"fill-blank","items":[{"prompt":"ма___а (mom)","answer":"м","options":["м","н","л","р"]},{"prompt":"та___о (dad)","answer":"т","options":["т","д","п","б"]},{"prompt":"___анк (bank)","answer":"б","options":["б","в","п","д"]},{"prompt":"___арк (park)","answer":"п","options":["п","б","р","д"]},{"prompt":"ка___е (café)","answer":"ф","options":["ф","п","в","б"]},{"prompt":"мет___о (metro)","answer":"р","options":["р","п","л","н"]},{"prompt":"так___і (taxi)","answer":"с","options":["с","з","ц","к"]},{"prompt":"___адіо (radio)","answer":"р","options":["р","п","л","н"]},{"prompt":"су___ (soup)","answer":"п","hints":["soup"],"options":["п","б","ф","в"]},{"prompt":"сала___ (salad)","answer":"т","hints":["salad"],"options":["т","д","п","б"]},{"prompt":"___имон (lemon)","answer":"л","options":["л","п","д","н"]},{"prompt":"___ото (photo)","answer":"ф","options":["ф","п","в","б"]}]}},{"id":"activity-6","type":"anagram","title":"Word Spelling","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["а","м","а","м"],"answer":"мама","translation":"mom"},{"letters":["о","т","а","т"],"answer":"тато","translation":"dad"},{"letters":["н","к","а","б"],"answer":"банк","translation":"bank"},{"letters":["р","к","а","п"],"answer":"парк","translation":"park"},{"letters":["е","ф","а","к"],"answer":"кафе","translation":"café"},{"letters":["т","р","о","м","е"],"answer":"метро","translation":"metro"},{"letters":["і","о","д","а","р"],"answer":"радіо","translation":"radio"},{"letters":["п","у","с"],"answer":"суп","translation":"soup"},{"letters":["т","о","о","ф"],"answer":"фото","translation":"photo"},{"letters":["к","а","и","з","у","м"],"answer":"музика","translation":"music"},{"letters":["т","а","л","а","с"],"answer":"салат","translation":"salad"},{"letters":["о","м","н","и","л"],"answer":"лимон","translation":"lemon"}]}}];
-    const vocabData = [{"uk":"мама (mama)","translit":"","en":"mom","note":"informal for mother"},{"uk":"тато (tato)","translit":"","en":"dad","note":"informal for father"},{"uk":"банк (bank)","translit":"","en":"bank","note":"international word"},{"uk":"парк (park)","translit":"","en":"park","note":"international word"},{"uk":"кафе (kafe)","translit":"","en":"café","note":"indeclinable"},{"uk":"метро (metro)","translit":"","en":"metro","note":"indeclinable"},{"uk":"таксі (taksi)","translit":"","en":"taxi","note":"indeclinable"},{"uk":"радіо (radio)","translit":"","en":"radio","note":"indeclinable"},{"uk":"піца (pitsa)","translit":"","en":"pizza","note":"international word"},{"uk":"суп (sup)","translit":"","en":"soup","note":"common food word"},{"uk":"салат (salat)","translit":"","en":"salad","note":"international word"},{"uk":"лимон (lymon)","translit":"","en":"lemon","note":"international word"},{"uk":"банан (banan)","translit":"","en":"banana","note":"international word"},{"uk":"хокей (khokei)","translit":"","en":"hockey","note":"international word"},{"uk":"футбол (futbol)","translit":"","en":"football/soccer","note":"international word"},{"uk":"студент (student)","translit":"","en":"student","note":"international word"},{"uk":"турист (turyst)","translit":"","en":"tourist","note":"international word"},{"uk":"музика (muzyka)","translit":"","en":"music","note":"international word"},{"uk":"фото (foto)","translit":"","en":"photo","note":"indeclinable"},{"uk":"відео (video)","translit":"","en":"video","note":"indeclinable"}];
+    const activitiesData = [{"id":"activity-0","type":"match-up","title":"True or False Friend?","data":{"type":"match-up","pairs":[{"left":"А","right":"True Friend (A)"},{"left":"К","right":"True Friend (K)"},{"left":"М","right":"True Friend (M)"},{"left":"Т","right":"True Friend (T)"},{"left":"О","right":"True Friend (O)"},{"left":"Е","right":"True Friend (E)"},{"left":"І","right":"True Friend (I)"},{"left":"В","right":"False Friend (V)"},{"left":"Н","right":"False Friend (N)"},{"left":"Р","right":"False Friend (R)"},{"left":"С","right":"False Friend (S)"},{"left":"Х","right":"False Friend (Kh)"},{"left":"У","right":"False Friend (U)"}],"shuffleRight":true}},{"id":"activity-1","type":"group-sort","title":"Letter Categories","data":{"type":"group-sort","groups":[{"id":"true-friends","name":"True Friends","items":["А","К","М","О","Т","Е","І"]},{"id":"false-friends","name":"False Friends","items":["В","Н","Р","С","У","Х"]},{"id":"new-letters","name":"New Letters","items":["Б","Г","Д","З","Л","П","Ф"]}],"shuffleItems":true}},{"id":"activity-2","type":"quiz","title":"Reading International Words","data":{"type":"quiz","questions":[{"question":"What does МЕТРО mean?","options":["Subway/Metro","Meteor","Meter","Metal"],"correctIndex":0,"explanation":""},{"question":"What does РЕСТОРАН mean?","options":["Restaurant","Restroom","Resort","Restore"],"correctIndex":0,"explanation":""},{"question":"What does СУП mean?","options":["Soup","Soap","Super","Supper"],"correctIndex":0,"explanation":""},{"question":"What does БАНАН mean?","options":["Banana","Bank","Bandana","Banner"],"correctIndex":0,"explanation":""},{"question":"What does ТАКСІ mean?","options":["Taxi","Taxes","Toxic","Task"],"correctIndex":0,"explanation":""},{"question":"What does КОМЕТА mean?","options":["Comet","Comment","Comedy","Committee"],"correctIndex":0,"explanation":""},{"question":"What does РАКЕТА mean?","options":["Rocket","Racket","Raccoon","Rack"],"correctIndex":0,"explanation":""},{"question":"What does ОПЕРА mean?","options":["Opera","Operation","Open","Option"],"correctIndex":0,"explanation":""},{"question":"What does БАЛЕТ mean?","options":["Ballet","Ballot","Bullet","Belt"],"correctIndex":0,"explanation":""},{"question":"What does ПАСПОРТ mean?","options":["Passport","Pass","Port","Sport"],"correctIndex":0,"explanation":""},{"question":"What does ВІЗА mean?","options":["Visa","Visit","Vase","Visor"],"correctIndex":0,"explanation":""},{"question":"What does КАРТА mean?","options":["Map/Card","Cart","Car","Care"],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-3","type":"fill-blank","title":"Missing Letters","data":{"type":"fill-blank","items":[{"prompt":"_ А Н К (Place for money - Bank)","answer":"Б","options":["Б","В","Г","Д"]},{"prompt":"П А _ К (Place with trees - Park)","answer":"Р","options":["Р","П","Н","Л"]},{"prompt":"Т _ К С І (Car for hire - Taxi)","answer":"А","options":["А","О","У","Е"]},{"prompt":"М Е _ Р О (Underground train - Metro)","answer":"Т","options":["Т","М","К","Н"]},{"prompt":"К А _ Е (Place for coffee - Café)","answer":"Ф","options":["Ф","Т","П","Б"]},{"prompt":"Л И М О _ (Yellow fruit - Lemon)","answer":"Н","options":["Н","П","М","Л"]},{"prompt":"С А _ А Т (Healthy food - Salad)","answer":"Л","options":["Л","П","Р","Д"]},{"prompt":"Х О _ Е Й (Ice sport - Hockey)","answer":"К","options":["К","Г","Х","М"]},{"prompt":"Ф У Т Б _ Л (Popular sport - Football)","answer":"О","options":["О","А","У","Е"]},{"prompt":"Т Е Л Е Ф О _ (Communication device - Telephone)","answer":"Н","options":["Н","П","Р","М"]},{"prompt":"І Н Т Е _ Н Е Т (World Wide Web - Internet)","answer":"Р","options":["Р","П","Н","С"]},{"prompt":"К А _ А (Morning drink - Coffee)","answer":"В","options":["В","Б","Ф","П"]}]}},{"id":"activity-4","type":"anagram","title":"Build Words","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["Р","А","Б"],"answer":"БАР","translation":"A place for drinks"},{"letters":["О","Ф","Т","О"],"answer":"ФОТО","translation":"Picture"},{"letters":["М","А","М","А"],"answer":"МАМА","translation":"Mother"},{"letters":["О","Д","К","Т","О","Р"],"answer":"ДОКТОР","translation":"Medical professional"},{"letters":["Р","К","А","П"],"answer":"ПАРК","translation":"Green space"},{"letters":["К","А","Б","Н"],"answer":"БАНК","translation":"Money place"},{"letters":["К","С","І","Т","А"],"answer":"ТАКСІ","translation":"Car service"},{"letters":["Р","А","Д","О","І"],"answer":"РАДІО","translation":"Audio device"},{"letters":["В","І","Е","Д","О"],"answer":"ВІДЕО","translation":"Moving picture"},{"letters":["А","К","В","А"],"answer":"КАВА","translation":"Hot drink"},{"letters":["О","К","А","К","А"],"answer":"КАКАО","translation":"Sweet drink"},{"letters":["А","З","І","В"],"answer":"ВІЗА","translation":"Travel document"}]}},{"id":"activity-5","type":"anagram","title":"Scrambled Cognates","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["а","к","т","с","і"],"answer":"таксі","translation":"taxi"},{"letters":["а","л","с","а","т"],"answer":"салат","translation":"salad"},{"letters":["е","м","т","р","о"],"answer":"метро","translation":"metro"},{"letters":["у","т","р","и","с","т"],"answer":"турист","translation":"tourist"},{"letters":["о","т","ф","о"],"answer":"фото","translation":"photo"},{"letters":["д","і","в","е","о"],"answer":"відео","translation":"video"},{"letters":["з","а","в","і"],"answer":"віза","translation":"visa"},{"letters":["р","т","а","к","а"],"answer":"карта","translation":"map"},{"letters":["е","т","а","к","а","р"],"answer":"ракета","translation":"rocket"},{"letters":["м","о","к","е","т","а"],"answer":"комета","translation":"comet"},{"letters":["р","е","о","п","а"],"answer":"опера","translation":"opera"},{"letters":["л","е","т","б","а"],"answer":"балет","translation":"ballet"}]}},{"id":"activity-6","type":"true-false","title":"Letter Facts","data":{"type":"true-false","statements":[{"statement":"The letter Р sounds like the English R (rolled).","isTrue":true,"explanation":"Correct! It looks like P but sounds like R."},{"statement":"The letter Н sounds like the English H.","isTrue":false,"explanation":"Incorrect. Н sounds like N. The letter for H-sounds is Г or Х."},{"statement":"The letter С always sounds like S, never like K.","isTrue":true,"explanation":"Correct! In Ukrainian, С is always /s/."},{"statement":"Cyrillic was invented by Russians.","isTrue":false,"explanation":"Incorrect. It was created in Bulgaria in the 9th century."},{"statement":"The letter Х makes a sound like in \"Loch\".","isTrue":true,"explanation":"Correct! It is the hard H sound."},{"statement":"The letter В sounds like B.","isTrue":false,"explanation":"Incorrect. В sounds like V (or W)."},{"statement":"The letter У sounds like \"oo\" in \"moon\".","isTrue":true,"explanation":"Correct!"},{"statement":"The letter І sounds like \"eye\".","isTrue":false,"explanation":"Incorrect. І sounds like \"ee\" in \"machine\"."},{"statement":"The letter Е sounds like \"e\" in \"pet\".","isTrue":true,"explanation":"Correct!"},{"statement":"The letter П sounds like N.","isTrue":false,"explanation":"Incorrect. П is P. (Only in italics does *п* look like *n*)."},{"statement":"The letter М is a True Friend.","isTrue":true,"explanation":"Correct! It looks and sounds the same."},{"statement":"The letter К is a False Friend.","isTrue":false,"explanation":"Incorrect. К is a True Friend."}]}},{"id":"activity-7","type":"match-up","title":"Word to Category","data":{"type":"match-up","pairs":[{"left":"БАНАН","right":"Food"},{"left":"ЛИМОН","right":"Food"},{"left":"СУП","right":"Food"},{"left":"ПІЦА","right":"Food"},{"left":"ФУТБОЛ","right":"Sport"},{"left":"ХОКЕЙ","right":"Sport"},{"left":"БАНК","right":"Place"},{"left":"ПАРК","right":"Place"},{"left":"КАФЕ","right":"Place"},{"left":"ТЕАТР","right":"Place"},{"left":"ДОКТОР","right":"Person"},{"left":"СТУДЕНТ","right":"Person"}],"shuffleRight":true}}];
+    const vocabData = [{"uk":"мама","translit":"/ˈmɑmɑ/","en":"noun","note":"[🔊](audio_mama)"},{"uk":"тато","translit":"/ˈtɑtɔ/","en":"noun","note":"[🔊](audio_tato)"},{"uk":"банк","translit":"/bɑnk/","en":"noun","note":"[🔊](audio_bank)"},{"uk":"парк","translit":"/pɑrk/","en":"noun","note":"[🔊](audio_park)"},{"uk":"кафе","translit":"/kɑˈfɛ/","en":"noun","note":"[🔊](audio_kafe)"},{"uk":"метро","translit":"/mɛˈtrɔ/","en":"noun","note":"[🔊](audio_metro)"},{"uk":"таксі","translit":"/tɑkˈsi/","en":"noun","note":"[🔊](audio_taksi)"},{"uk":"радіо","translit":"/ˈrɑdʲio/","en":"noun","note":"[🔊](audio_radio)"},{"uk":"піца","translit":"/ˈpitsɑ/","en":"noun","note":"[🔊](audio_pitsa)"},{"uk":"суп","translit":"/sup/","en":"noun","note":"[🔊](audio_sup)"},{"uk":"салат","translit":"/sɑˈlɑt/","en":"noun","note":"[🔊](audio_salat)"},{"uk":"лимон","translit":"/lɪˈmɔn/","en":"noun","note":"[🔊](audio_lymon)"},{"uk":"банан","translit":"/bɑˈnɑn/","en":"noun","note":"[🔊](audio_banan)"},{"uk":"хокей","translit":"/xɔˈkɛj/","en":"noun","note":"[🔊](audio_xokej)"},{"uk":"футбол","translit":"/futˈbɔl/","en":"noun","note":"[🔊](audio_futbol)"},{"uk":"студент","translit":"/stuˈdɛnt/","en":"noun","note":"[🔊](audio_student)"},{"uk":"турист","translit":"/tuˈrɪst/","en":"noun","note":"[🔊](audio_turist)"},{"uk":"музика","translit":"/ˈmuzɪkɑ/","en":"noun","note":"[🔊](audio_muzyka)"},{"uk":"фото","translit":"/ˈfɔtɔ/","en":"noun","note":"[🔊](audio_foto)"},{"uk":"відео","translit":"/ˈvi.de.o/","en":"noun","note":"[🔊](audio_video)"},{"uk":"бар","translit":"/bɑr/","en":"noun","note":"[🔊](audio_bar)"},{"uk":"ресторан","translit":"/rɛstɔˈrɑn/","en":"noun","note":"[🔊](audio_restoran)"},{"uk":"доктор","translit":"/ˈdɔktɔr/","en":"noun","note":"[🔊](audio_doktor)"},{"uk":"актор","translit":"/ɑkˈtɔr/","en":"noun","note":"[🔊](audio_aktor)"},{"uk":"опера","translit":"/ˈɔpɛrɑ/","en":"noun","note":"[🔊](audio_opera)"},{"uk":"балет","translit":"/bɑˈlɛt/","en":"noun","note":"[🔊](audio_balet)"},{"uk":"паспорт","translit":"/ˈpɑspɔrt/","en":"noun","note":"[🔊](audio_pasport)"},{"uk":"віза","translit":"/ˈvizɑ/","en":"noun","note":"[🔊](audio_viza)"},{"uk":"карта","translit":"/ˈkɑrtɑ/","en":"noun","note":"[🔊](audio_karta)"},{"uk":"комета","translit":"/kɔˈmɛtɑ/","en":"noun","note":"[🔊](audio_kometa)"},{"uk":"ракета","translit":"/rɑˈkɛtɑ/","en":"noun","note":"[🔊](audio_raketa)"},{"uk":"телефон","translit":"/tɛlɛˈfɔn/","en":"noun","note":"[🔊](audio_telefon)"},{"uk":"інтернет","translit":"/intɛrˈnɛt/","en":"noun","note":"[🔊](audio_internet)"},{"uk":"какао","translit":"/kɑˈkɑo/","en":"noun","note":"[🔊](audio_kakao)"},{"uk":"кава","translit":"/ˈkɑvɑ/","en":"noun","note":"[🔊](audio_kava)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1101,6 +1020,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2365,6 +2310,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

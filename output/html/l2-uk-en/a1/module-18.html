@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Module 18: Food &amp; Restaurant | Ukrainian A1</title>
+  <title>Module 18: Food and Restaurant (Extended) | Ukrainian A1</title>
   <style>
 :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -478,17 +518,19 @@ footer {
     </div>
   </div>
   <nav class="nav">
-    <h1>Module 18: Food &amp; Restaurant</h1>
+    <h1>Module 18: Food and Restaurant (Extended)</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Fill</button>
-      <button class="nav-tab" data-section="activity-1">2. Order</button>
-      <button class="nav-tab" data-section="activity-2">3. Match</button>
-      <button class="nav-tab" data-section="activity-3">4. Quiz</button>
-      <button class="nav-tab" data-section="activity-4">5. T/F</button>
-      <button class="nav-tab" data-section="activity-5">6. Sort</button>
-      <button class="nav-tab" data-section="activity-6">7. Spell</button>
-      <button class="nav-tab" data-section="activity-7">8. Match</button>
+      <button class="nav-tab" data-section="activity-0">1. Match</button>
+      <button class="nav-tab" data-section="activity-1">2. Fill</button>
+      <button class="nav-tab" data-section="activity-2">3. Quiz</button>
+      <button class="nav-tab" data-section="activity-3">4. Fill</button>
+      <button class="nav-tab" data-section="activity-4">5. Sort</button>
+      <button class="nav-tab" data-section="activity-5">6. Fill</button>
+      <button class="nav-tab" data-section="activity-6">7. Fill</button>
+      <button class="nav-tab" data-section="activity-7">8. Order</button>
+      <button class="nav-tab" data-section="activity-8">9. Fill</button>
+      <button class="nav-tab" data-section="activity-9">10. Spell</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -497,458 +539,350 @@ footer {
     <section id="lesson" class="section active">
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.2</span>
-        <h2 style="font-size:2rem;margin:0.5rem 0">Food &amp; Restaurant</h2>
-        <p style="color:var(--text-muted)">Navigating Ukrainian menus and ordering meals</p>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Food and Restaurant (Extended)</h2>
+        <p style="color:var(--text-muted)">The Instrumental Feast</p>
       </div>
       
     <div class="card section-intro">
       <h3>📖 Introduction</h3>
       <div class="md-content"><h2 id="warmup">warm-up</h2>
-<h3 id="toeatornottoeat">Їсти чи не їсти? (To Eat or Not to Eat?)</h3>
-<p>One of life's greatest pleasures is food, and Ukrainian cuisine is legendary! From hearty borsch to delicate varenyky, you're about to unlock the delicious world of Ukrainian dining.</p>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>Ukrainian borsch (борщ) was recognized by UNESCO as part of Ukraine's cultural heritage in 2022. Every region and every grandmother has their own secret recipe!</p>
-</blockquote>
+<p><strong>The Hungry Tourist</strong></p>
+<p>You have survived the City (M15). You have counted your Money (M17).<br />
+Now you are starving.<br />
+You enter a "Puzata Hata" (popular bistro chain).<br />
+You see trays of food.<br />
+You want Borscht. But not just any Borscht.<br />
+You want Borscht <strong>with</strong> sour cream.<br />
+You want tea <strong>with</strong> lemon.<br />
+You want bread <strong>with</strong> butter.<br />
+In Module 16, we learned "Without" (Bez + Genitive).<br />
+Today, we learn "With" (Z + Instrumental).<br />
+Life is better with things.</p>
 <h2 id="presentation">presentation</h2>
-<h3 id="restaurantvocabulary">Restaurant Vocabulary</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ресторан</td>
-<td>restaurant</td>
-<td>formal dining</td>
-</tr>
-<tr>
-<td>кафе</td>
-<td>café</td>
-<td>casual dining</td>
-</tr>
-<tr>
-<td>меню</td>
-<td>menu</td>
-<td>indeclinable</td>
-</tr>
-<tr>
-<td>страва</td>
-<td>dish</td>
-<td>main item</td>
-</tr>
-<tr>
-<td>закуска</td>
-<td>appetizer</td>
-<td>starter</td>
-</tr>
-<tr>
-<td>салат</td>
-<td>salad</td>
-<td></td>
-</tr>
-<tr>
-<td>суп</td>
-<td>soup</td>
-<td></td>
-</tr>
-<tr>
-<td>головна страва</td>
-<td>main course</td>
-<td></td>
-</tr>
-<tr>
-<td>десерт</td>
-<td>dessert</td>
-<td></td>
-</tr>
-<tr>
-<td>напій</td>
-<td>drink, beverage</td>
-<td></td>
-</tr>
-</tbody>
-</table>
+<h3 id="section1politeordering">Section 1: Polite Ordering</h3>
+<p>Don't just say "I want" (Я хочу). It's childish.<br />
+Use the Conditional (Polite) mood.</p>
+<ul>
+<li><strong>Male:</strong> Я хотів <strong>би</strong>… (I would like…).</li>
+<li><strong>Female:</strong> Я хотіла <strong>б</strong>… (I would like…).</li>
+<li><strong>Plural/We:</strong> Ми хотіли <strong>б</strong>… (We would like…).</li>
+</ul>
+<p><strong>Pattern:</strong></p>
+<ul>
+<li>"Я хотів би борщ." (I would like borscht).</li>
+<li>"Я хотіла б каву." (I would like coffee).</li>
+</ul>
+<h3 id="section2themagicwithinstrumental">Section 2: The Magic "With" (Instrumental)</h3>
+<p>When you eat X <strong>with</strong> Y, Y changes.<br />
+We use the preposition <strong>З</strong> (With) + <strong>Instrumental Case</strong>.</p>
+<p><strong>The Pattern:</strong></p>
+<ol>
+<li><p><strong>Masculine (Hard):</strong> Add <strong>-ОМ</strong>.</p>
+<ul>
+<li>Лимон -&gt; З лимон<strong>ом</strong>.</li>
+<li>Сир (Cheese) -&gt; З сир<strong>ом</strong>.</li>
+<li>Хліб -&gt; З хліб<strong>ом</strong>.</li></ul></li>
+<li><p><strong>Feminine (Hard -a):</strong> Change to <strong>-ОЮ</strong>.</p>
+<ul>
+<li>Вода -&gt; З вод<strong>ою</strong>.</li>
+<li>Сметана (Sour cream) -&gt; Зі сметан<strong>ою</strong> (Zi for ease).</li>
+<li>Капуста -&gt; З капуст<strong>ою</strong>.</li></ul></li>
+<li><p><strong>Feminine (Soft -ya -i):</strong> Change to <strong>-ЄЮ</strong> or <strong>-Ю</strong>.</p>
+<ul>
+<li>Олія (Oil) -&gt; З олі<strong>єю</strong>.</li>
+<li>Сіль (Salt - F) -&gt; З сілл<strong>ю</strong> (Double L!).</li></ul></li>
+</ol>
 <blockquote>
-  <p>🎬 <strong>Pop Culture Moment: The Witcher</strong></p>
-  <p>Geralt of Rivia might order "Ведьмачий відвар" (Witcher's brew), but you'll probably prefer "Кава з молоком, будь ласка!" (Coffee with milk, please!)</p>
+  <p>💡 <strong>Mnemonic</strong><br />
+  Masculine goes "OM" (Like meditation).<br />
+  Feminine goes "OY-yu" (Like asking "Oy, you!").</p>
 </blockquote>
-<h3 id="orderingfoodusingaccusative">Ordering Food — Using Accusative</h3>
-<p>Remember: when you want something, the noun goes into <strong>accusative case</strong>!</p>
-<table>
-<thead>
-<tr>
-<th>What you want</th>
-<th>Accusative form</th>
-<th>Full sentence</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>кава (f)</td>
-<td>каву</td>
-<td>Я хочу каву.</td>
-</tr>
-<tr>
-<td>чай (m)</td>
-<td>чай</td>
-<td>Я хочу чай.</td>
-</tr>
-<tr>
-<td>суп (m)</td>
-<td>суп</td>
-<td>Я хочу суп.</td>
-</tr>
-<tr>
-<td>вода (f)</td>
-<td>воду</td>
-<td>Я хочу воду.</td>
-</tr>
-<tr>
-<td>пиво (n)</td>
-<td>пиво</td>
-<td>Я хочу пиво.</td>
-</tr>
-</tbody>
-</table>
-<p>Common ordering phrases:</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Я хочу…</td>
-<td>I want…</td>
-</tr>
-<tr>
-<td>Можна…?</td>
-<td>May I have…? / Can I have…?</td>
-</tr>
-<tr>
-<td>Я візьму…</td>
-<td>I'll take…</td>
-</tr>
-<tr>
-<td>Для мене…</td>
-<td>For me…</td>
-</tr>
-</tbody>
-</table>
+<h3 id="section3themenunationaldishes">Section 3: The Menu (National Dishes)</h3>
+<ul>
+<li><strong>Борщ</strong> (Borscht). Beetroot soup. Red gold.<ul>
+<li>Serve with: <strong>Сметаною</strong> (Sour cream) and <strong>Пампушками</strong> (Galic buns - Plural).</li></ul></li>
+<li><strong>Вареники</strong> (Varenyky). Dumplings.<ul>
+<li>With: <strong>Картоплею</strong> (Potato), <strong>М'ясом</strong> (Meat), or <strong>Вишнею</strong> (Cherry).</li></ul></li>
+<li><strong>Сало</strong> (Salo). Cured pork fat.<ul>
+<li>With: <strong>Часником</strong> (Garlic).</li></ul></li>
+<li><strong>Голубці</strong> (Holubtsi). Cabbage rolls.</li>
+<li><strong>Деруни</strong> (Deruny). Potato pancakes.</li>
+</ul>
+<h3 id="section4drinks">Section 4: Drinks</h3>
+<ul>
+<li><strong>Чай</strong> (Tea).</li>
+<li>З цукр<strong>ом</strong> (With sugar).</li>
+<li>З лимон<strong>ом</strong> (With lemon).</li>
+<li>З мед<strong>ом</strong> (With honey).</li>
+<li><strong>Кава</strong> (Coffee).</li>
+<li>З молок<strong>ом</strong> (With milk).</li>
+<li>З вершк<strong>ами</strong> (With cream - Plural).</li>
+</ul>
 <blockquote>
-  <p>⚡ <strong>Pro Tip</strong></p>
-  <p>"Можна…?" is the most polite way to order. It literally means "Is it possible?" and Ukrainians use it constantly!</p>
+  <p>🥣 <strong>Deep Dive: Borscht is not Singular</strong><br />
+  Every family has a different Borscht recipe.<br />
+  Some debate: With beans or without? With meat or vegetarian?<br />
+  But ALL agree: It must be served hot and with <strong>Smetana</strong>.<br />
+  UNESCO recognized Ukrainian Borscht as cultural heritage. It is that serious.</p>
+  <p>🍲 <strong>Culture Corner: The Holy Trinity</strong><br />
+  Ukrainian cuisine rests on three pillars:</p>
+  <ol>
+  <li><strong>Borsch</strong> (Beet soup).</li>
+  <li><strong>Varenyky</strong> (Dumplings).</li>
+  <li><strong>Salo</strong> (Cured pork fat).<br />
+  If you are a vegetarian, aim for Varenyky with potato or cabbage.<br />
+  Salo is often served as an appetizer with garlic and rye bread. It is "Ukrainian Snickers".</li>
+  </ol>
 </blockquote>
-<h3 id="quantitiesusinggenitive">Quantities — Using Genitive</h3>
-<p>When specifying amounts, use <strong>genitive case</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Order</th>
-<th>Structure</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Склянку води</td>
-<td>A glass of water (Gen)</td>
-</tr>
-<tr>
-<td>Чашку кави</td>
-<td>A cup of coffee (Gen)</td>
-</tr>
-<tr>
-<td>Пляшку пива</td>
-<td>A bottle of beer (Gen)</td>
-</tr>
-<tr>
-<td>Порцію салату</td>
-<td>A portion of salad (Gen)</td>
-</tr>
-<tr>
-<td>Тарілку супу</td>
-<td>A plate/bowl of soup (Gen)</td>
-</tr>
-</tbody>
-</table>
+<h3 id="section5thecookingprocess">Section 5: The Cooking Process</h3>
+<p>You don't just eat raw food. You cook it.</p>
+<ul>
+<li><strong>Варити</strong> (To boil). -&gt; <strong>Варений</strong> (Boiled).</li>
+<li><strong>Смажити</strong> (To fry). -&gt; <strong>Смажений</strong> (Fried).</li>
+<li><strong>Пекти</strong> (To bake). -&gt; <strong>Печений</strong> (Baked).</li>
+</ul>
+<p><strong>Common Adjectives:</strong></p>
+<ul>
+<li>Варена картопля (Boiled potato).</li>
+<li>Смажена риба (Fried fish).</li>
+<li>Печена курка (Baked chicken).</li>
+</ul>
 <blockquote>
-  <p>🔍 <strong>Myth Buster</strong></p>
-  <p><strong>Myth:</strong> "Borsch is Russian."<br />
-  <strong>Fact:</strong> Borsch (борщ) is Ukrainian! The word entered English from Ukrainian. UNESCO recognized Ukrainian borsch-making as endangered cultural heritage during Russia's invasion.</p>
+  <p>🍳 <strong>Deep Dive: The Healthy Choice</strong><br />
+  Ukrainian cuisine loves <strong>Varvyn</strong> (Boiling/Stewing) and <strong>Smazhyty</strong> (Frying).<br />
+  "Varenyky" literally means "Boiled things".<br />
+  "Pechenya" is a roast.<br />
+  If you are on a diet, ask: "Це смажене чи варене?" (Is this fried or boiled?).</p>
 </blockquote>
-<h3 id="describingfood">Describing Food</h3>
+<h3 id="section6howdoesittaste">Section 6: How does it taste?</h3>
+<ul>
+<li><strong>Смачно</strong> (Tasty). The most important word.</li>
+<li><strong>Солодко</strong> (Sweetly/Sweet).</li>
+<li><strong>Солоно</strong> (Salty).</li>
+<li><strong>Гірко</strong> (Bitter).</li>
+<li><strong>Кисло</strong> (Sour).</li>
+<li><strong>Гостро</strong> (Spicy/Sharp).</li>
+</ul>
+<p><strong>Dialogue:</strong></p>
+<ul>
+<li>Як суп? (How is the soup?)</li>
+<li>Дуже смачний! (Very tasty - adj).</li>
+<li>Трохи солоний. (A little salty).</li>
+</ul>
 <blockquote>
-  <p>💡 <strong>Preview Vocabulary</strong></p>
-  <p>These cooking terms and taste words are essential for restaurant ordering. You'll learn adjective grammar formally in Module 26, but you can use these descriptive words now as fixed phrases.</p>
+  <p>💸 <strong>Culture Corner: The Tip (Chaiovi)</strong><br />
+  "Чайові" (Tea money).<br />
+  In Ukraine, 10% is standard.<br />
+  Often included in the bill ("Obsluhovuvannya"). Check before you pay.<br />
+  If you leave no tip, the waiter thinks you hated the food.<br />
+  "Решти не треба" (Keep the change - literally "Change not needed").</p>
 </blockquote>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-<th>Use in ordering</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>гарячий</td>
-<td>hot (temperature)</td>
-<td>гарячий суп</td>
-</tr>
-<tr>
-<td>холодний</td>
-<td>cold</td>
-<td>холодна вода</td>
-</tr>
-<tr>
-<td>теплий</td>
-<td>warm</td>
-<td>теплий чай</td>
-</tr>
-<tr>
-<td>смажений</td>
-<td>fried</td>
-<td>смажена риба</td>
-</tr>
-<tr>
-<td>варений</td>
-<td>boiled</td>
-<td>варені яйця</td>
-</tr>
-<tr>
-<td>печений</td>
-<td>baked</td>
-<td>печена картопля</td>
-</tr>
-<tr>
-<td>солодкий</td>
-<td>sweet</td>
-<td>солодкий десерт</td>
-</tr>
-<tr>
-<td>солоний</td>
-<td>salty</td>
-<td>солоний суп</td>
-</tr>
-<tr>
-<td>гострий</td>
-<td>spicy</td>
-<td>гострий соус</td>
-</tr>
-<tr>
-<td>смачний</td>
-<td>tasty, delicious</td>
-<td>Дуже смачно!</td>
-</tr>
-</tbody>
-</table>
+<h3 id="section7thetoolofeating">Section 7: The Tool of Eating</h3>
+<p>Instrumental Case is not just for "Pizza with cheese".<br />
+It is for the <strong>Instrument</strong> you use.</p>
+<ul>
+<li><strong>Їсти виделкою</strong> (To eat <em>with</em> a fork - Vydelka -&gt; Vydelkoyu).</li>
+<li><strong>Їсти ложкою</strong> (To eat <em>with</em> a spoon - Lozhka -&gt; Lozhkoyu).</li>
+<li><strong>Їсти ножем</strong> (To eat <em>with</em> a knife - Nizh -&gt; Nozhem).</li>
+<li><strong>Їсти руками</strong> (To eat <em>with</em> hands - Plural: Rukamy).</li>
+</ul>
 <blockquote>
-  <p>🌍 <strong>Real World</strong></p>
-  <p>When food arrives, Ukrainians say "Смачного!" — the equivalent of "Bon appétit!" (literally "Tasty [eating]!")</p>
+  <p>🥢 <strong>Deep Dive: Sushi in Ukraine</strong><br />
+  Ukrainians love sushi. It is everywhere.<br />
+  You eat sushi <strong>паличками</strong> (with sticks/chopsticks).<br />
+  Or, if no one is looking, <strong>руками</strong>.</p>
 </blockquote>
-<h3 id="restaurantinteraction">Restaurant Interaction</h3>
-<table>
-<thead>
-<tr>
-<th>Stage</th>
-<th>Ukrainian</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Arriving</td>
-<td>Столик на двох, будь ласка.</td>
-<td>A table for two, please.</td>
-</tr>
-<tr>
-<td>Menu</td>
-<td>Можна меню?</td>
-<td>May I have a menu?</td>
-</tr>
-<tr>
-<td>Ordering</td>
-<td>Я візьму борщ і вареники.</td>
-<td>I'll have borsch and varenyky.</td>
-</tr>
-<tr>
-<td>Drinks</td>
-<td>Що будете пити?</td>
-<td>What will you drink?</td>
-</tr>
-<tr>
-<td>Paying</td>
-<td>Рахунок, будь ласка.</td>
-<td>Check, please.</td>
-</tr>
-<tr>
-<td>Compliment</td>
-<td>Дуже смачно! Дякую!</td>
-<td>Very tasty! Thank you!</td>
-</tr>
-</tbody>
-</table>
+<h3 id="section8fastfoodsurvivalmcdonalds">Section 8: Fast Food Survival (McDonald's)</h3>
+<p>McDonald's is a language school. The kiosk speaks Ukrainian.</p>
+<ul>
+<li><strong>Тут чи з собою?</strong> (Here or with self/to go?)</li>
+<li><strong>Без льоду</strong> (Without ice - Genitive).</li>
+<li><strong>З соусом</strong> (With sauce - Instrumental).</li>
+<li><strong>Велика картопля</strong> (Big potato/fries).</li>
+</ul>
+<p><strong>Scenario: The Kiosk of Destiny</strong></p>
+<ul>
+<li><strong>Machine:</strong> Виберіть мову. (Choose language).</li>
+<li><strong>You:</strong> Українська. (Ukrainian).</li>
+<li><strong>Machine:</strong> Тут чи з собою?</li>
+<li><strong>You:</strong> (Presses "Тут").</li>
+<li><strong>Machine:</strong> Ви бажаєте меню? (Do you wish a menu?)</li>
+<li><strong>You:</strong> (Presses "Біг Мак Меню").</li>
+<li><strong>Machine:</strong> Напій? (Drink?)</li>
+<li><strong>You:</strong> (Presses "Кола без льоду").</li>
+<li><strong>Machine:</strong> Соус?</li>
+<li><strong>You:</strong> (Presses "Кетчуп").</li>
+<li><strong>Machine:</strong> Оплата картою.</li>
+<li><strong>You:</strong> (Taps card). "Дякую".</li>
+<li><strong>You:</strong> I survived.</li>
+</ul>
 <blockquote>
-  <p>🎯 <strong>Fun Fact</strong></p>
-  <p>In Ukrainian restaurants, you usually have to ask for the check — it won't come automatically. Say "Рахунок, будь ласка!" when you're ready.</p>
+  <p>☕ <strong>Deep Dive: Kyiv Coffee Culture</strong><br />
+  Kyiv is one of the coffee capitals of Europe. Seriously.<br />
+  You will see "Ravlyk" (Snail) coffee cars and high-end "Third Wave" cafes.</p>
+  <ul>
+  <li><strong>Лате</strong> (Latte).</li>
+  <li><strong>Флет-вайт</strong> (Flat White).</li>
+  <li><strong>Альтернатива</strong> (Alternative milk).</li>
+  <li><strong>На кокосовому</strong> (On coconut [milk] - Locative).</li>
+  <li><strong>На безлактозному</strong> (On lactose-free).<br />
+  Don't ask for "Americano with milk". Ask for a filtration coffee (Фільтр) if you are a hipster.</li>
+  </ul>
 </blockquote>
 <h2 id="practice">practice</h2>
-<h3 id="exercise1ordertheseitems">Exercise 1: Order These Items</h3>
-<p>Put into accusative for ordering:</p>
-<ol>
-<li><p>кава → Я хочу ___</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer">каву</div></div>
-<ol start="2">
-<li><p>вода → Можна ___?</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer">воду</div></div>
-<ol start="3">
-<li><p>суп → Я візьму ___</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer">суп</div></div>
-<ol start="4">
-<li><p>піца → Для мене ___</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer">піцу</div></div>
-<ol start="5">
-<li><p>салат → Я хочу ___</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer">салат</div></div>
-<h3 id="exercise2quantitieswithgenitive">Exercise 2: Quantities with Genitive</h3>
-<p>Complete with genitive:</p>
-<ol>
-<li><p>Склянку ___ (вода)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-5', this)">Показати відповідь</button><div class="answer-block" id="ans-5"><div class="callout callout-answer" data-callout="answer">води</div></div>
-<ol start="2">
-<li><p>Чашку ___ (кава)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-6', this)">Показати відповідь</button><div class="answer-block" id="ans-6"><div class="callout callout-answer" data-callout="answer">кави</div></div>
-<ol start="3">
-<li><p>Порцію ___ (борщ)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-7', this)">Показати відповідь</button><div class="answer-block" id="ans-7"><div class="callout callout-answer" data-callout="answer">борщу</div></div>
-<ol start="4">
-<li><p>Тарілку ___ (суп)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-8', this)">Показати відповідь</button><div class="answer-block" id="ans-8"><div class="callout callout-answer" data-callout="answer">супу</div></div>
-<h2 id="production">production</h2>
-<h3 id="roleplayatarestaurant">Role Play: At a Restaurant</h3>
-<p>Create a dialogue using:</p>
+<p><strong>Drill 1: The Mixer (Masculine)</strong><br />
+Add ingredients (Instrumental -om).</p>
 <ul>
-<li>Greeting and asking for a table</li>
-<li>Asking for menu</li>
-<li>Ordering food and drinks</li>
-<li>Asking for the check</li>
-<li>Paying and leaving</li>
+<li>(Лимон) Чай з ___ -&gt; <strong>лимоном</strong>.</li>
+<li>(Цукор) Кава з ___ -&gt; <strong>цукром</strong>.</li>
+<li>(Мед) Чай з ___ -&gt; <strong>медом</strong>.</li>
+<li>(Сир) Бутерброд з ___ -&gt; <strong>сиром</strong>.</li>
+<li>(Хліб) Суп з ___ -&gt; <strong>хлібом</strong>.</li>
+<li>(Часник) Сало з ___ -&gt; <strong>часником</strong>.</li>
+<li>(Рисом) Плов з ___ -&gt; <strong>рисом</strong>.</li>
+<li>(Лід) Коктейль з ___ -&gt; <strong>льодом</strong>.</li>
+<li>(Соус) Картопля з ___ -&gt; <strong>соусом</strong>.</li>
+<li>(Кетчуп) Макарони з ___ -&gt; <strong>кетчупом</strong>.</li>
 </ul>
-<hr />
-<hr />
+<p><strong>Drill 2: The Mixer (Feminine)</strong><br />
+Add ingredients (Instrumental -oyu).</p>
+<ul>
+<li>(Сметана) Борщ зі ___ -&gt; <strong>сметаною</strong>.</li>
+<li>(Вода) Віскі з ___ -&gt; <strong>водою</strong>.</li>
+<li>(Картопля - Soft) Вареники з ___ -&gt; <strong>картоплею</strong>.</li>
+<li>(Капуста) Пиріг з ___ -&gt; <strong>капустою</strong>.</li>
+<li>(Ковбаса) Піца з ___ -&gt; <strong>ковбасою</strong>.</li>
+<li>(Цибуля - Onion) Салат з ___ -&gt; <strong>цибулею</strong>.</li>
+<li>(Морква - Carrot) Суп з ___ -&gt; <strong>морквою</strong>.</li>
+<li>(Гірчиця - Mustard) Хот-дог з ___ -&gt; <strong>гірчицею</strong>.</li>
+</ul>
+<p><strong>Drill 3: The Tool</strong><br />
+I eat with…</p>
+<ul>
+<li>(Виделка) Я їм ___ -&gt; <strong>виделкою</strong>.</li>
+<li>(Ложка) Я їм ___ -&gt; <strong>ложкою</strong>.</li>
+<li>(Ніж) Я ріжу (cut) ___ -&gt; <strong>ножем</strong>.</li>
+<li>(Руки - pl) Я їм ___ -&gt; <strong>руками</strong>.</li>
+</ul>
+<h2 id="production">production</h2>
+<blockquote>
+  <p>🌍 <strong>Culture Corner: The Toast (Budmo!)</strong><br />
+  When drinking with Ukrainians, look them in the eye.<br />
+  The universal toast is <strong>"Будьмо!"</strong> (Let us be / Cheers).<br />
+  Short, strong, powerful.<br />
+  Clink glasses. Drink. Don't sip vodka. (Actually, sipping is fine, but the myth persists).</p>
+</blockquote>
+<p><strong>Scenario: In the Restaurant</strong></p>
+<ul>
+<li><strong>Waiter:</strong> Добрий вечір. Ось меню.</li>
+<li><strong>You:</strong> Дякую. (Reading…). Я не розумію. Що це?</li>
+<li><strong>Waiter:</strong> Це деруни. Картопляні млинці. (Potato pancakes).</li>
+<li><strong>You:</strong> А, добре. Я хотів би деруни.</li>
+<li><strong>Waiter:</strong> Деруни зі сметаною?</li>
+<li><strong>You:</strong> Так, зі сметаною. І грибами.</li>
+<li><strong>Waiter:</strong> А пити? (And to drink?)</li>
+<li><strong>You:</strong> Чай з лимоном, будь ласка. Без цукру.</li>
+<li><strong>Waiter:</strong> Добре. Рахунок потрібен? (Bill need?)</li>
+<li><strong>You:</strong> Так, пізніше.</li>
+</ul>
+<p><strong>Scenario: Varenyky Dilemma</strong></p>
+<ul>
+<li><strong>You:</strong> Я хотіла б вареники.</li>
+<li><strong>Cook:</strong> З чим? (With what?)</li>
+<li><strong>You:</strong> З м'ясом є? (With meat are there?)</li>
+<li><strong>Cook:</strong> Ні, тільки з картоплею або з капустою.</li>
+<li><strong>You:</strong> Тоді з картоплею. І грибами (mushrooms - plural).</li>
+<li><strong>Cook:</strong> Гарний вибір. Вони варені, не смажені.</li>
+<li><strong>You:</strong> Чудово. Але я хотіла б зі сметаною, а не з маслом.</li>
+<li><strong>Cook:</strong> Без проблем.</li>
+</ul>
 <hr /></div>
     </div>
   
       
-    <div class="card section-summary">
-      <h3>📋 Summary</h3>
-      <div class="md-content"><blockquote>
-  <p><strong>What You Learned Today</strong></p>
-  <ul>
-  <li>Restaurant vocabulary: меню, страва, закуска, напій</li>
-  <li>Ordering with accusative: Я хочу каву</li>
-  <li>Quantities with genitive: Склянку води</li>
-  <li>Key phrases: Можна…? Рахунок, будь ласка!</li>
-  <li>Food descriptions: смажений, варений, гострий</li>
-  </ul>
-  <p><strong>Coming Next</strong></p>
-  <p>In Module 19, you'll practice <strong>At the Café</strong> — a complete functional module:</p>
-  <ul>
-  <li>Full café dialogue practice</li>
-  <li>Common situations and responses</li>
-  <li>Integrating everything you've learned</li>
-  </ul>
-</blockquote></div>
-    </div>
-  
       <div class="btn-group">
         <button class="btn btn-primary" onclick="showSection('activity-0')">Activities →</button>
       </div>
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Restaurant Orders</h3>
+    <section id="activity-0" class="section"><div class="card"><h3>Dish Decoder</h3>
       <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container" class="fill-container"></div>
-      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+      <div class="match-container" id="activity-0-container"><svg class="match-lines" id="activity-0-lines"></svg>
+        <div class="match-column" id="activity-0-left"></div>
+        <div class="match-column" id="activity-0-right"></div>
+      </div>
+      <div class="completion-message" id="activity-0-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Restaurant Sentences</h3>
+    <section id="activity-1" class="section"><div class="card"><h3>With What?</h3>
       <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
-      <div id="activity-1-container" class="order-container"></div>
-      <div class="completion-message" id="activity-1-complete"><h3>Perfect Order!</h3></div>
+      <div id="activity-1-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-1-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Food Vocabulary</h3>
-      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-2-container"><svg class="match-lines" id="activity-2-lines"></svg>
-        <div class="match-column" id="activity-2-left"></div>
-        <div class="match-column" id="activity-2-right"></div>
-      </div>
-      <div class="completion-message" id="activity-2-complete"><h3>Perfect!</h3></div>
+    <section id="activity-2" class="section"><div class="card"><h3>Ordering Etiquette</h3>
+      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/8</span></div>
+      <div id="activity-2-container"></div>
+      <div class="completion-message" id="activity-2-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Restaurant Knowledge</h3>
+    <section id="activity-3" class="section"><div class="card"><h3>The Politeness Filter</h3>
       <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div id="activity-3-container"></div>
+      <div id="activity-3-container" class="fill-container"></div>
       <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Food &amp; Restaurant Facts</h3>
-      <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
-      <div id="activity-4-container"></div>
-      <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
+    <section id="activity-4" class="section"><div class="card"><h3>Instrument Sorter</h3>
+      <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/18</span></div>
+      <div class="sort-pool" id="activity-4-pool"><div class="sort-items" id="activity-4-items"></div></div>
+      <div class="sort-groups" id="activity-4-groups"></div>
+      <div class="completion-message" id="activity-4-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Food Categories</h3>
+    <section id="activity-5" class="section"><div class="card"><h3>Tool Time</h3>
       <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
-      <div class="sort-pool" id="activity-5-pool"><div class="sort-items" id="activity-5-items"></div></div>
-      <div class="sort-groups" id="activity-5-groups"></div>
-      <div class="completion-message" id="activity-5-complete"><h3>All Sorted!</h3></div>
+      <div id="activity-5-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-5-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Food Vocabulary</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>Taste Tester</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
-      <div id="activity-6-container" class="order-container"></div>
-      <div class="completion-message" id="activity-6-complete"><h3>Perfect Order!</h3></div>
+      <div id="activity-6-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-6-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
     </div></section>
 
-    <section id="activity-7" class="section"><div class="card"><h3>Cooking Methods</h3>
+    <section id="activity-7" class="section"><div class="card"><h3>Restaurant Talk</h3>
       <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-7-container"><svg class="match-lines" id="activity-7-lines"></svg>
-        <div class="match-column" id="activity-7-left"></div>
-        <div class="match-column" id="activity-7-right"></div>
-      </div>
-      <div class="completion-message" id="activity-7-complete"><h3>Perfect!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+      <div id="activity-7-container" class="order-container"></div>
+      <div class="completion-message" id="activity-7-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-8')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-8" class="section"><div class="card"><h3>Menu Master</h3>
+      <div class="score-display"><span class="score"><span id="activity-8-score">0</span>/12</span></div>
+      <div id="activity-8-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-8-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-8')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-9')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-9" class="section"><div class="card"><h3>Food Scramble</h3>
+      <div class="score-display"><span class="score"><span id="activity-9-score">0</span>/12</span></div>
+      <div id="activity-9-container" class="order-container"></div>
+      <div class="completion-message" id="activity-9-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-9')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
-        <h3>Словник (46)</h3>
+        <h3>Словник (25)</h3>
         <div class="vocab-table-container">
           <table class="vocab-table">
             <thead><tr>
@@ -958,7 +892,7 @@ footer {
     <th>Переклад</th>
     <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">страва</td><td class="vocab-ipa">/ˈstrɑvɑ/</td><td class="vocab-en">dish</td><td class="vocab-note">main item</td></tr><tr><td class="vocab-uk">закуска</td><td class="vocab-ipa">/zɑˈkuskɑ/</td><td class="vocab-en">appetizer</td><td class="vocab-note">starter</td></tr><tr><td class="vocab-uk">салат</td><td class="vocab-ipa">/sɑˈlɑt/</td><td class="vocab-en">salad</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">суп</td><td class="vocab-ipa">/sup/</td><td class="vocab-en">soup</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">борщ</td><td class="vocab-ipa">/bɔrʃt͡ʃ/</td><td class="vocab-en">borsch</td><td class="vocab-note">Ukrainian beet soup</td></tr><tr><td class="vocab-uk">головна страва</td><td class="vocab-ipa">/ɦɔlɔvˈnɑ ˈstrɑvɑ/</td><td class="vocab-en">main course</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">десерт</td><td class="vocab-ipa">/dɛˈsɛrt/</td><td class="vocab-en">dessert</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">напій</td><td class="vocab-ipa">/nɑˈpʲij/</td><td class="vocab-en">drink, beverage</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">кава</td><td class="vocab-ipa">/ˈkɑvɑ/</td><td class="vocab-en">coffee</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">чай</td><td class="vocab-ipa">/t͡ʃɑj/</td><td class="vocab-en">tea</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">сік</td><td class="vocab-ipa">/sʲik/</td><td class="vocab-en">juice</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">вода</td><td class="vocab-ipa">/vɔˈdɑ/</td><td class="vocab-en">water</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">вино</td><td class="vocab-ipa">/vɪˈnɔ/</td><td class="vocab-en">wine</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">пиво</td><td class="vocab-ipa">/ˈpɪvɔ/</td><td class="vocab-en">beer</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">м&#039;ясо</td><td class="vocab-ipa">/ˈmjɑsɔ/</td><td class="vocab-en">meat</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">курка</td><td class="vocab-ipa">/ˈkurkɑ/</td><td class="vocab-en">chicken</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">риба</td><td class="vocab-ipa">/ˈrɪbɑ/</td><td class="vocab-en">fish</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">овочі</td><td class="vocab-ipa">/ˈɔvɔt͡ʃi/</td><td class="vocab-en">vegetables</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">картопля</td><td class="vocab-ipa">/kɑrˈtɔplʲɑ/</td><td class="vocab-en">potato</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">рис</td><td class="vocab-ipa">/rɪs/</td><td class="vocab-en">rice</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">хліб</td><td class="vocab-ipa">/xlʲib/</td><td class="vocab-en">bread</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">масло</td><td class="vocab-ipa">/ˈmɑslɔ/</td><td class="vocab-en">butter, oil</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">сир</td><td class="vocab-ipa">/sɪr/</td><td class="vocab-en">cheese</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">яйце</td><td class="vocab-ipa">/jɑjˈt͡sɛ/</td><td class="vocab-en">egg</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">ковбаса</td><td class="vocab-ipa">/kɔvbɑˈsɑ/</td><td class="vocab-en">sausage</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">шинка</td><td class="vocab-ipa">/ˈʃɪnkɑ/</td><td class="vocab-en">ham</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">смажений</td><td class="vocab-ipa">/ˈsmɑʒɛnɪj/</td><td class="vocab-en">fried</td><td class="vocab-note">Preview: cooking term</td></tr><tr><td class="vocab-uk">варений</td><td class="vocab-ipa">/ˈvɑrɛnɪj/</td><td class="vocab-en">boiled</td><td class="vocab-note">Preview: cooking term</td></tr><tr><td class="vocab-uk">печений</td><td class="vocab-ipa">/ˈpɛt͡ʃɛnɪj/</td><td class="vocab-en">baked</td><td class="vocab-note">Preview: cooking term</td></tr><tr><td class="vocab-uk">гарячий</td><td class="vocab-ipa">/ɦɑˈrʲɑt͡ʃɪj/</td><td class="vocab-en">hot (temp)</td><td class="vocab-note">Preview: food descriptor</td></tr><tr><td class="vocab-uk">холодний</td><td class="vocab-ipa">/xɔˈlɔdnɪj/</td><td class="vocab-en">cold</td><td class="vocab-note">Preview: food descriptor</td></tr><tr><td class="vocab-uk">теплий</td><td class="vocab-ipa">/ˈtɛplɪj/</td><td class="vocab-en">warm</td><td class="vocab-note">Preview: food descriptor</td></tr><tr><td class="vocab-uk">солодкий</td><td class="vocab-ipa">/sɔˈlɔdkɪj/</td><td class="vocab-en">sweet</td><td class="vocab-note">Preview: taste word</td></tr><tr><td class="vocab-uk">солоний</td><td class="vocab-ipa">/sɔˈlɔnɪj/</td><td class="vocab-en">salty</td><td class="vocab-note">Preview: taste word</td></tr><tr><td class="vocab-uk">гострий</td><td class="vocab-ipa">/ˈɦɔstrɪj/</td><td class="vocab-en">spicy</td><td class="vocab-note">Preview: taste word</td></tr><tr><td class="vocab-uk">смачний</td><td class="vocab-ipa">/ˈsmɑt͡ʃnɪj/</td><td class="vocab-en">tasty</td><td class="vocab-note">Preview: taste word</td></tr><tr><td class="vocab-uk">меню</td><td class="vocab-ipa">/mɛˈnʲu/</td><td class="vocab-en">menu</td><td class="vocab-note">indeclinable</td></tr><tr><td class="vocab-uk">порція</td><td class="vocab-ipa">/ˈpɔrt͡sʲijɑ/</td><td class="vocab-en">portion</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">тарілка</td><td class="vocab-ipa">/tɑˈrʲilkɑ/</td><td class="vocab-en">plate</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">склянка</td><td class="vocab-ipa">/ˈsklʲɑnkɑ/</td><td class="vocab-en">glass</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">пляшка</td><td class="vocab-ipa">/ˈplʲɑʃkɑ/</td><td class="vocab-en">bottle</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">офіціант</td><td class="vocab-ipa">/ɔfʲit͡sʲiˈɑnt/</td><td class="vocab-en">waiter</td><td class="vocab-note">офіціантка (f)</td></tr><tr><td class="vocab-uk">замовлення</td><td class="vocab-ipa">/zɑmɔvˈlɛnʲːɑ/</td><td class="vocab-en">order</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">рахунок</td><td class="vocab-ipa">/rɑˈxunɔk/</td><td class="vocab-en">bill, check</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">чайові</td><td class="vocab-ipa">/t͡ʃɑjɔˈvʲi/</td><td class="vocab-en">tip</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">готівка</td><td class="vocab-ipa">/ɦɔˈtʲivkɑ/</td><td class="vocab-en">cash</td><td class="vocab-note"></td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">хотів би</td><td class="vocab-ipa">/xɔˈtiv bɪ/</td><td class="vocab-en">would like (m)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('хотів би')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">хотіла б</td><td class="vocab-ipa">/xɔˈtilɑ b/</td><td class="vocab-en">would like (f)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('хотіла б')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">з</td><td class="vocab-ipa">/z/</td><td class="vocab-en">with</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('з')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">без</td><td class="vocab-ipa">/bɛz/</td><td class="vocab-en">without</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('без')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">борщ</td><td class="vocab-ipa">/bɔrʃtʃ/</td><td class="vocab-en">borscht</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('борщ')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вареники</td><td class="vocab-ipa">/vɑˈrɛnɪkɪ/</td><td class="vocab-en">dumplings</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вареники')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">сало</td><td class="vocab-ipa">/ˈsɑlɔ/</td><td class="vocab-en">salo</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('сало')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">сметана</td><td class="vocab-ipa">/smɛˈtɑnɑ/</td><td class="vocab-en">sour cream</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('сметана')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">варена</td><td class="vocab-ipa">/vɑˈrɛnɑ/</td><td class="vocab-en">boiled</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('варена')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">смажена</td><td class="vocab-ipa">/ˈsmɑʒɛnɑ/</td><td class="vocab-en">fried</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('смажена')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">меню</td><td class="vocab-ipa">/mɛˈnʲu/</td><td class="vocab-en">menu</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('меню')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">рахунок</td><td class="vocab-ipa">/rɑˈxunɔk/</td><td class="vocab-en">bill</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('рахунок')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">лимон</td><td class="vocab-ipa">/lɪˈmɔn/</td><td class="vocab-en">lemon</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('лимон')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">мед</td><td class="vocab-ipa">/mɛd/</td><td class="vocab-en">honey</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('мед')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">олія</td><td class="vocab-ipa">/ɔˈlijɑ/</td><td class="vocab-en">oil</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('олія')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">сіль</td><td class="vocab-ipa">/s⁽ʲ⁾ilʲ/</td><td class="vocab-en">salt</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('сіль')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">перець</td><td class="vocab-ipa">/ˈpɛrɛt͡sʲ/</td><td class="vocab-en">pepper</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('перець')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">смачного</td><td class="vocab-ipa">/smɑtʃˈnɔɦɔ/</td><td class="vocab-en">bon appétit</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('смачного')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">будьмо</td><td class="vocab-ipa">/ˈbudʲmɔ/</td><td class="vocab-en">cheers</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('будьмо')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">офіціант</td><td class="vocab-ipa">/ɔfit͡s⁽ʲ⁾iˈɑnt/</td><td class="vocab-en">waiter</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('офіціант')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">овочі</td><td class="vocab-ipa">/ˈɔvɔtʃi/</td><td class="vocab-en">vegetables</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('овочі')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">фрукти</td><td class="vocab-ipa">/ˈfruktɪ/</td><td class="vocab-en">fruits</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('фрукти')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">м&#039;ясо</td><td class="vocab-ipa">/ˈmjɑsɔ/</td><td class="vocab-en">meat</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('м&#039;ясо')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">риба</td><td class="vocab-ipa">/ˈrɪbɑ/</td><td class="vocab-en">fish</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('риба')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">курка</td><td class="vocab-ipa">/ˈkurkɑ/</td><td class="vocab-en">chicken</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('курка')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -970,8 +904,8 @@ footer {
   </main><footer>Module 18 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"fill-blank","title":"Restaurant Orders","data":{"type":"fill-blank","items":[{"prompt":"Я хочу ___ (кава).","answer":"каву","hints":["кава"],"options":["каву","кава","кави","кавою"]},{"prompt":"Можна ___ (вода)?","answer":"воду","hints":["вода"],"options":["воду","вода","води","водою"]},{"prompt":"Склянку ___ (сік).","answer":"соку","hints":["сік"],"options":["соку","сік","соком","сокові"]},{"prompt":"Чашку ___ (чай).","answer":"чаю","hints":["чай"],"options":["чаю","чай","чаєм","чаї"]},{"prompt":"Я візьму ___ (борщ).","answer":"борщ","hints":["борщ"],"options":["борщ","борщу","борщем","борщі"]},{"prompt":"Порцію ___ (вареники).","answer":"вареників","hints":["вареники"],"options":["вареників","вареники","варениками","вареникам"]},{"prompt":"Для мене ___ (салат).","answer":"салат","hints":["салат"],"options":["салат","салату","салатом","салаті"]},{"prompt":"Пляшку ___ (вино).","answer":"вина","hints":["вино"],"options":["вина","вино","вином","вині"]},{"prompt":"Тарілку ___ (суп).","answer":"супу","hints":["суп"],"options":["супу","суп","супом","супі"]},{"prompt":"Я хочу ___ (десерт).","answer":"десерт","hints":["десерт"],"options":["десерт","десерту","десертом","десерті"]},{"prompt":"Можна ___ (меню)?","answer":"меню","hints":["меню"],"options":["меню","меню","меню","меню"]},{"prompt":"___ (рахунок), будь ласка.","answer":"Рахунок","hints":["рахунок"],"options":["Рахунок","Рахунку","Рахунком","Рахунки"]}]}},{"id":"activity-1","type":"unjumble","title":"Restaurant Sentences","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["каву","Я","хочу"],"answer":"Я хочу каву.","translation":"I want coffee."},{"words":["будь","меню","Можна","ласка"],"answer":"Можна меню, будь ласка?","translation":"May I have a menu, please?"},{"words":["візьму","борщ","Я"],"answer":"Я візьму борщ.","translation":"I'll take borsch."},{"words":["води","Склянку","ласка","будь"],"answer":"Склянку води, будь ласка.","translation":"A glass of water, please."},{"words":["ласка","Рахунок","будь"],"answer":"Рахунок, будь ласка.","translation":"Check, please."},{"words":["смачно","Дуже","Дякую"],"answer":"Дуже смачно! Дякую!","translation":"Very tasty! Thank you!"},{"words":["двох","Столик","будь","ласка","на"],"answer":"Столик на двох, будь ласка.","translation":"A table for two, please."},{"words":["пити","Що","будете"],"answer":"Що будете пити?","translation":"What will you drink?"},{"words":["мене","салат","Для"],"answer":"Для мене салат.","translation":"For me, salad."},{"words":["кави","чашку","Можна"],"answer":"Можна чашку кави?","translation":"May I have a cup of coffee?"},{"words":["смачного","Вам","Бажаю"],"answer":"Бажаю вам смачного!","translation":"Enjoy your meal!"},{"words":["картою","Платити","готівкою","чи"],"answer":"Платити картою чи готівкою?","translation":"Pay by card or cash?"}]}},{"id":"activity-2","type":"match-up","title":"Food Vocabulary","data":{"type":"match-up","pairs":[{"left":"страва","right":"dish"},{"left":"закуска","right":"appetizer"},{"left":"напій","right":"drink"},{"left":"меню","right":"menu"},{"left":"рахунок","right":"check/bill"},{"left":"офіціант","right":"waiter"},{"left":"замовлення","right":"order"},{"left":"чайові","right":"tip"},{"left":"порція","right":"portion"},{"left":"борщ","right":"borsch"},{"left":"вареники","right":"varenyky"},{"left":"десерт","right":"dessert"}],"shuffleRight":true}},{"id":"activity-3","type":"quiz","title":"Restaurant Knowledge","data":{"type":"quiz","questions":[{"question":"How do you ask for the menu?","options":["Де меню?","Можна меню?","Я хочу меню","Меню, дякую"],"correctIndex":1,"explanation":"\"Можна меню?\" = May I have a menu?"},{"question":"What case do you use with \"Я хочу...\"?","options":["Nominative","Accusative","Genitive","Locative"],"correctIndex":1,"explanation":"Direct objects (what you want) use accusative."},{"question":"How do you say \"A glass of water\"?","options":["Склянка води","Склянку води","Склянка вода","Склянки води"],"correctIndex":1,"explanation":"\"Склянку\" (acc) + \"води\" (gen) = a glass of water."},{"question":"What does \"Смачного!\" mean?","options":["Thank you","Goodbye","Enjoy your meal","Check, please"],"correctIndex":2,"explanation":"\"Смачного!\" = Enjoy your meal! (Bon appétit!)"},{"question":"How do you ask for the check?","options":["Рахунок, будь ласка.","Гроші, будь ласка.","Платити, будь ласка.","Меню, будь ласка."],"correctIndex":0,"explanation":"\"Рахунок, будь ласка\" = Check, please."},{"question":"What is \"закуска\"?","options":["appetizer","main course","dessert","drink"],"correctIndex":0,"explanation":"\"Закуска\" = appetizer, starter."},{"question":"\"Я візьму борщ\" means:","options":["I want borsch","I'll take borsch","Give me borsch","Where is borsch?"],"correctIndex":1,"explanation":"\"Візьму\" is the future form meaning \"I'll take.\""},{"question":"What does \"гарячий\" mean?","options":["hot (temperature)","spicy","cold","tasty"],"correctIndex":0,"explanation":"\"Гарячий\" = hot; \"гострий\" = spicy."},{"question":"How do you say \"for me\"?","options":["Мені","Для мене","У мене","Зі мною"],"correctIndex":1,"explanation":"\"Для мене\" = for me (для + genitive)."},{"question":"What is \"чайові\"?","options":["tea","teapot","tip (gratuity)","tea leaves"],"correctIndex":2,"explanation":"\"Чайові\" = tip (from \"чай\" - tea, like \"tea money\")."},{"question":"\"Столик на двох\" means:","options":["A table for two","Two tables","Table number two","A small table"],"correctIndex":0,"explanation":"\"На двох\" = for two (people)."},{"question":"What does \"смажений\" mean?","options":["fried","boiled","baked","raw"],"correctIndex":0,"explanation":"\"Смажений\" = fried; \"варений\" = boiled; \"печений\" = baked."}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-4","type":"true-false","title":"Food & Restaurant Facts","data":{"type":"true-false","statements":[{"statement":"\"Борщ\" is a traditional Ukrainian dish.","isTrue":true,"explanation":"Correct! Borsch is Ukrainian, recognized by UNESCO."},{"statement":"\"Можна\" is an impolite way to order.","isTrue":false,"explanation":"Incorrect! \"Можна\" is very polite — it means \"May I?\""},{"statement":"Food you want uses accusative case.","isTrue":true,"explanation":"Correct! \"Я хочу каву\" — \"каву\" is accusative."},{"statement":"\"Рахунок\" means \"menu.\"","isTrue":false,"explanation":"Incorrect! \"Рахунок\" = check/bill; \"меню\" = menu."},{"statement":"\"Смачного!\" is said before eating.","isTrue":true,"explanation":"Correct! It's like \"Bon appétit!\""},{"statement":"\"Чайові\" means \"tea.\"","isTrue":false,"explanation":"Incorrect! \"Чайові\" = tip; \"чай\" = tea."},{"statement":"Quantities like \"a cup of\" use genitive case.","isTrue":true,"explanation":"Correct! \"Чашку кави\" — \"кави\" is genitive."},{"statement":"\"Гострий\" means \"hot\" in temperature.","isTrue":false,"explanation":"Incorrect! \"Гострий\" = spicy; \"гарячий\" = hot (temp)."},{"statement":"\"Офіціант\" is a waiter.","isTrue":true,"explanation":"Correct! From French \"officiant.\""},{"statement":"You don't need to ask for the check in Ukraine.","isTrue":false,"explanation":"Incorrect! You must ask: \"Рахунок, будь ласка!\""},{"statement":"\"Вареники\" is a Ukrainian dumpling dish.","isTrue":true,"explanation":"Correct! Filled with potatoes, cheese, cherries, etc."},{"statement":"\"Десерт\" means dessert.","isTrue":true,"explanation":"Correct! Same cognate as English."}]}},{"id":"activity-5","type":"group-sort","title":"Food Categories","data":{"type":"group-sort","groups":[{"id":"","name":"Напої","items":["кава","чай","сік","вода"],"nameUk":"Drinks"},{"id":"","name":"Страви","items":["борщ","вареники","салат","суп"],"nameUk":"Dishes"},{"id":"","name":"Десерти","items":["торт","морозиво","тістечко","шоколад"],"nameUk":"Desserts"}],"shuffleItems":true}},{"id":"activity-6","type":"anagram","title":"Food Vocabulary","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["а","в","а","к"],"answer":"кава","translation":"coffee"},{"letters":["й","а","ч"],"answer":"чай","translation":"tea"},{"letters":["щ","р","о","б"],"answer":"борщ","translation":"borsch"},{"letters":["п","у","с"],"answer":"суп","translation":"soup"},{"letters":["а","д","о","в"],"answer":"вода","translation":"water"},{"letters":["б","і","л","х"],"answer":"хліб","translation":"bread"},{"letters":["о","с","я","м"],"answer":"м'ясо","translation":"meat"},{"letters":["а","б","и","р"],"answer":"риба","translation":"fish"},{"letters":["р","и","с"],"answer":"сир","translation":"cheese"},{"letters":["к","і","с"],"answer":"сік","translation":"juice"},{"letters":["а","в","а","р","т","с"],"answer":"страва","translation":"dish"},{"letters":["ю","н","е","м"],"answer":"меню","translation":"menu"}]}},{"id":"activity-7","type":"match-up","title":"Cooking Methods","data":{"type":"match-up","pairs":[{"left":"смажений","right":"fried"},{"left":"варений","right":"boiled"},{"left":"печений","right":"baked"},{"left":"гарячий","right":"hot"},{"left":"холодний","right":"cold"},{"left":"теплий","right":"warm"},{"left":"солодкий","right":"sweet"},{"left":"солоний","right":"salty"},{"left":"гострий","right":"spicy"},{"left":"смачний","right":"tasty"},{"left":"свіжий","right":"fresh"},{"left":"запечений","right":"baked (au gratin)"}],"shuffleRight":true}}];
-    const vocabData = [{"uk":"страва","translit":"","en":"dish","note":"main item"},{"uk":"закуска","translit":"","en":"appetizer","note":"starter"},{"uk":"салат","translit":"","en":"salad","note":""},{"uk":"суп","translit":"","en":"soup","note":""},{"uk":"борщ","translit":"","en":"borsch","note":"Ukrainian beet soup"},{"uk":"головна страва","translit":"","en":"main course","note":""},{"uk":"десерт","translit":"","en":"dessert","note":""},{"uk":"напій","translit":"","en":"drink, beverage","note":""},{"uk":"кава","translit":"","en":"coffee","note":""},{"uk":"чай","translit":"","en":"tea","note":""},{"uk":"сік","translit":"","en":"juice","note":""},{"uk":"вода","translit":"","en":"water","note":""},{"uk":"вино","translit":"","en":"wine","note":""},{"uk":"пиво","translit":"","en":"beer","note":""},{"uk":"м'ясо","translit":"","en":"meat","note":""},{"uk":"курка","translit":"","en":"chicken","note":""},{"uk":"риба","translit":"","en":"fish","note":""},{"uk":"овочі","translit":"","en":"vegetables","note":""},{"uk":"картопля","translit":"","en":"potato","note":""},{"uk":"рис","translit":"","en":"rice","note":""},{"uk":"хліб","translit":"","en":"bread","note":""},{"uk":"масло","translit":"","en":"butter, oil","note":""},{"uk":"сир","translit":"","en":"cheese","note":""},{"uk":"яйце","translit":"","en":"egg","note":""},{"uk":"ковбаса","translit":"","en":"sausage","note":""},{"uk":"шинка","translit":"","en":"ham","note":""},{"uk":"смажений","translit":"","en":"fried","note":"Preview: cooking term"},{"uk":"варений","translit":"","en":"boiled","note":"Preview: cooking term"},{"uk":"печений","translit":"","en":"baked","note":"Preview: cooking term"},{"uk":"гарячий","translit":"","en":"hot (temp)","note":"Preview: food descriptor"},{"uk":"холодний","translit":"","en":"cold","note":"Preview: food descriptor"},{"uk":"теплий","translit":"","en":"warm","note":"Preview: food descriptor"},{"uk":"солодкий","translit":"","en":"sweet","note":"Preview: taste word"},{"uk":"солоний","translit":"","en":"salty","note":"Preview: taste word"},{"uk":"гострий","translit":"","en":"spicy","note":"Preview: taste word"},{"uk":"смачний","translit":"","en":"tasty","note":"Preview: taste word"},{"uk":"меню","translit":"","en":"menu","note":"indeclinable"},{"uk":"порція","translit":"","en":"portion","note":""},{"uk":"тарілка","translit":"","en":"plate","note":""},{"uk":"склянка","translit":"","en":"glass","note":""},{"uk":"пляшка","translit":"","en":"bottle","note":""},{"uk":"офіціант","translit":"","en":"waiter","note":"офіціантка (f)"},{"uk":"замовлення","translit":"","en":"order","note":""},{"uk":"рахунок","translit":"","en":"bill, check","note":""},{"uk":"чайові","translit":"","en":"tip","note":""},{"uk":"готівка","translit":"","en":"cash","note":""}];
+    const activitiesData = [{"id":"activity-0","type":"match-up","title":"Dish Decoder","data":{"type":"match-up","pairs":[{"left":"Борщ","right":"Beetroot Soup"},{"left":"Вареники","right":"Dumplings"},{"left":"Сало","right":"Cured Pork Fat"},{"left":"Голубці","right":"Cabbage Rolls"},{"left":"Деруни","right":"Potato Pancakes"},{"left":"Котлета","right":"Cutlet / Meatball"},{"left":"Сметана","right":"Sour Cream"},{"left":"Вершки","right":"Cream"},{"left":"Мед","right":"Honey"},{"left":"Олія","right":"Oil"},{"left":"Оцет","right":"Vinegar"},{"left":"Перець","right":"Pepper"}],"shuffleRight":true}},{"id":"activity-1","type":"fill-blank","title":"With What?","data":{"type":"fill-blank","items":[{"prompt":"Чай з лимон___ (lemon).","answer":"ом","hints":["lemon"],"options":["ом","ою","ею"]},{"prompt":"Борщ зі сметан___ (sour cream).","answer":"ою","hints":["sour cream"],"options":["ою","ом","ею"]},{"prompt":"Бутерброд з сир___ (cheese).","answer":"ом","hints":["cheese"],"options":["ом","ою","ею"]},{"prompt":"Вареники з вишн___ (cherry).","answer":"ею","hints":["cherry"],"options":["ею","ою","ом"]},{"prompt":"Кава з молок___ (milk).","answer":"ом","hints":["milk"],"options":["ом","ою","ею"]},{"prompt":"Сало з часник___ (garlic).","answer":"ом","hints":["garlic"],"options":["ом","ою","ею"]},{"prompt":"Риба з рис___ (rice).","answer":"ом","hints":["rice"],"options":["ом","ою","ею"]},{"prompt":"Піца з ковбас___ (sausage).","answer":"ою","hints":["sausage"],"options":["ою","ом","ею"]},{"prompt":"Салат з олі___ (oil).","answer":"єю","hints":["oil"],"options":["єю","ою","ом"]},{"prompt":"Суп з м'яс___ (meat).","answer":"ом","hints":["meat"],"options":["ом","ою","ею"]},{"prompt":"Чай з мед___ (honey).","answer":"ом","hints":["honey"],"options":["ом","ою","ею"]},{"prompt":"Вода з газ___ (gas).","answer":"ом","hints":["gas"],"options":["ом","ою","ею"]}]}},{"id":"activity-2","type":"quiz","title":"Ordering Etiquette","data":{"type":"quiz","questions":[{"question":"How to say \"I want\" politely (Male)?","options":["Я хотів би...","Я хочу! (Demanding)"],"correctIndex":0,"explanation":""},{"question":"How to say \"I want\" politely (Female)?","options":["Я хотіла б...","Я хотів би..."],"correctIndex":0,"explanation":""},{"question":"Preposition for \"With\"?","options":["З / Зі","Без (Without)"],"correctIndex":0,"explanation":""},{"question":"Case for ingredients (With X)?","options":["Instrumental","Nominative"],"correctIndex":0,"explanation":""},{"question":"Borscht is usually served with...","options":["Сметаною (Sour cream).","Кетчупом (Ketchup)."],"correctIndex":0,"explanation":""},{"question":"\"Рахунок\" means...","options":["The Bill.","The Menu."],"correctIndex":0,"explanation":""},{"question":"\"Смачного\" implies...","options":["Bon appétit / Enjoy your meal.","Pay now."],"correctIndex":0,"explanation":""},{"question":"To toast, we say...","options":["Будьмо!","Дякую!"],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-3","type":"fill-blank","title":"The Politeness Filter","data":{"type":"fill-blank","items":[{"prompt":"Я хочу меню. (Male)","answer":"Я хотів би меню"},{"prompt":"Я хочу воду. (Female)","answer":"Я хотіла б воду"},{"prompt":"Ми хочемо піцу. (We)","answer":"Ми хотіли б піцу"},{"prompt":"Я хочу рахунок. (Male)","answer":"Я хотів би рахунок"},{"prompt":"Я хочу чай. (Female)","answer":"Я хотіла б чай"},{"prompt":"Я хочу спати. (I want to sleep - Male)","answer":"Я хотів би спати"},{"prompt":"Я хочу їсти. (I want to eat - Female)","answer":"Я хотіла б їсти"},{"prompt":"Ми хочемо десерт.","answer":"Ми хотіли б десерт"},{"prompt":"Я хочу суп. (Male)","answer":"Я хотів би суп"},{"prompt":"Я хочу каву. (Female)","answer":"Я хотіла б каву"},{"prompt":"Я хочу вийти. (I want to leave/exit - Male)","answer":"Я хотів би вийти"},{"prompt":"Ми хочемо пити. (We want to drink)","answer":"Ми хотіли б пити"}]}},{"id":"activity-4","type":"group-sort","title":"Instrument Sorter","data":{"type":"group-sort","groups":[{"id":"-","name":"-ОМ","items":["Лимон","Цукор","Мед","Сир","Хліб","Часник","Рис","Молоко"],"nameUk":"Masculine/Neut Hard"},{"id":"-","name":"-ОЮ","items":["Вода","Сметана","Капуста","Ковбаса","Риба","Кава"],"nameUk":"Feminine Hard"},{"id":"-","name":"-ЕЮ","items":["Вишня","Олія","Картопля","Диня (Melon)"],"nameUk":"Feminine Soft"}],"shuffleItems":true}},{"id":"activity-5","type":"fill-blank","title":"Tool Time","data":{"type":"fill-blank","items":[{"prompt":"Я їм суп ___ (spoon).","answer":"ложкою","hints":["spoon"]},{"prompt":"Я їм м'ясо ___ (knife).","answer":"ножем","hints":["knife"]},{"prompt":"Я їм салат ___ (fork).","answer":"виделкою","hints":["fork"]},{"prompt":"Я їм піцу ___ (hands).","answer":"руками","hints":["hands"]},{"prompt":"Я їм вареники ___ (fork).","answer":"виделкою","hints":["fork"]},{"prompt":"Я їм рис ___ (chopsticks).","answer":"паличками","hints":["chopsticks"]},{"prompt":"Я пишу (write) ___ (pen - ruchka).","answer":"ручкою","hints":["pen - ruchka"]},{"prompt":"Я малюю (draw) ___ (pencil - olivets - em).","answer":"олівцем","hints":["pencil - olivets - em"]},{"prompt":"Я йду ___ (feet/legs - nohamyd - pl).","answer":"ногами","hints":["feet/legs - nohamyd - pl"]},{"prompt":"Я думаю ___ (head - holova).","answer":"головою","hints":["head - holova"]},{"prompt":"Я дивлюся ___ (eyes - ochy - ma).","answer":"очима","hints":["eyes - ochy - ma"]},{"prompt":"Я їм торт ___ (spoon).","answer":"ложкою","hints":["spoon"]}]}},{"id":"activity-6","type":"fill-blank","title":"Taste Tester","data":{"type":"fill-blank","items":[{"prompt":"Цей торт ___ (sweet).","answer":"солодкий","hints":["sweet"]},{"prompt":"Цей суп ___ (salty).","answer":"солоний","hints":["salty"]},{"prompt":"Ця кава ___ (bitter).","answer":"гірка","hints":["bitter"]},{"prompt":"Це яблуко ___ (sour).","answer":"кисле","hints":["sour"]},{"prompt":"Цей перець ___ (spicy).","answer":"гострий","hints":["spicy"]},{"prompt":"Цей борщ ___ (tasty).","answer":"смачний","hints":["tasty"]},{"prompt":"Лимон ___ (sour).","answer":"кислий","hints":["sour"]},{"prompt":"Цукор ___ (sweet).","answer":"солодкий","hints":["sweet"]},{"prompt":"Сіль ___ (salty).","answer":"солона","hints":["salty"]},{"prompt":"Перець ___ (bitter/spicy).","answer":"гострий","hints":["bitter/spicy"]},{"prompt":"Мед ___ (sweet).","answer":"солодкий","hints":["sweet"]},{"prompt":"Вода ___ (tasty).","answer":"смачна","hints":["tasty"]}]}},{"id":"activity-7","type":"unjumble","title":"Restaurant Talk","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["хотів","Я","меню","би","."],"answer":"Я хотів би меню."},{"words":["сметаною","Борщ","зі","."],"answer":"Борщ зі сметаною."},{"words":["лимоном","Чай","з","."],"answer":"Чай з лимоном."},{"words":["коштує","Скільки","борщ","?"],"answer":"Скільки коштує борщ?"},{"words":["будь ласка","Рахунок,","."],"answer":"Рахунок, будь ласка."},{"words":["хотіла","Я","б","каву","."],"answer":"Я хотіла б каву."},{"words":["з","Вареники","м'ясом","."],"answer":"Вареники з м'ясом."},{"words":["смачного","Вам","!"],"answer":"Вам смачного!"},{"words":["картою","Можна","?"],"answer":"Можна картою?","translation":"Possible with card?"},{"words":["цукром","без","Чай","."],"answer":"Чай без цукру. (Wait, Genitive check! Bez cukrU. M16 recall)."},{"words":["з","Чай","цукром","."],"answer":"Чай з цукром. (Instrumental - with)."},{"words":["молоком","Кава","з","."],"answer":"Кава з молоком."}]}},{"id":"activity-8","type":"fill-blank","title":"Menu Master","data":{"type":"fill-blank","items":[{"prompt":"Борщ зі сметаною","answer":"Borscht with sour cream"},{"prompt":"Чай з лимоном","answer":"Tea with lemon"},{"prompt":"Вареники з картоплею","answer":"Dumplings with potato"},{"prompt":"Сало з часником","answer":"Salo with garlic"},{"prompt":"Кава з молоком","answer":"Coffee with milk"},{"prompt":"Деруни зі сметаною","answer":"Potato pancakes with sour cream"},{"prompt":"Млинці (Pancakes) з медом","answer":"Pancakes with honey"},{"prompt":"Піца з сиром","answer":"Pizza with cheese"},{"prompt":"Салат з олією","answer":"Salad with oil"},{"prompt":"Хліб з маслом (Butter)","answer":"Bread with butter"},{"prompt":"Рис з овочами (Vegetables - pl)","answer":"Rice with vegetables"},{"prompt":"Вода з льодом (Ice - Lid -> Liodom)","answer":"Water with ice"}]}},{"id":"activity-9","type":"anagram","title":"Food Scramble","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["р","о","щ","б"],"answer":"борщ","translation":"Soup"},{"letters":["а","н","а","т","е","м","с"],"answer":"сметана","translation":"Condiment"},{"letters":["и","в","а","р","е","н","и","к"],"answer":"вареники","translation":"Dish"},{"letters":["л","а","с","о"],"answer":"сало","translation":"Fat"},{"letters":["н","и","р","у","д","е"],"answer":"деруни","translation":"Pancakes"},{"letters":["б","л","і","х"],"answer":"хліб","translation":"Bread"},{"letters":["о","л","о","к","о","м"],"answer":"молоко","translation":"Milk"},{"letters":["о","н","л","и","м"],"answer":"лимон","translation":"Lemon"},{"letters":["н","и","к","ч","а","с"],"answer":"часник","translation":"Garlic"},{"letters":["ц","у","к","о","р"],"answer":"цукор","translation":"Sugar"},{"letters":["х","у","н","о","к","р","а"],"answer":"рахунок","translation":"Bill"},{"letters":["м","а","ч","н","о","г","о","с"],"answer":"смачного","translation":"Bon appetit"}]}}];
+    const vocabData = [{"uk":"хотів би","translit":"","en":"would like (m)","note":"[🔊](audio_khotiv_by)"},{"uk":"хотіла б","translit":"","en":"would like (f)","note":"[🔊](audio_khotila_b)"},{"uk":"з","translit":"","en":"with","note":"[🔊](audio_z_inst)"},{"uk":"без","translit":"","en":"without","note":"[🔊](audio_bez)"},{"uk":"борщ","translit":"","en":"borscht","note":"[🔊](audio_borshch)"},{"uk":"вареники","translit":"","en":"dumplings","note":"[🔊](audio_varenyky)"},{"uk":"сало","translit":"","en":"salo","note":"[🔊](audio_salo)"},{"uk":"сметана","translit":"","en":"sour cream","note":"[🔊](audio_smetana)"},{"uk":"варена","translit":"","en":"boiled","note":"[🔊](audio_varena)"},{"uk":"смажена","translit":"","en":"fried","note":"[🔊](audio_smazhena)"},{"uk":"меню","translit":"","en":"menu","note":"[🔊](audio_menu)"},{"uk":"рахунок","translit":"","en":"bill","note":"[🔊](audio_rakhunok)"},{"uk":"лимон","translit":"","en":"lemon","note":"[🔊](audio_lymon)"},{"uk":"мед","translit":"","en":"honey","note":"[🔊](audio_med)"},{"uk":"олія","translit":"","en":"oil","note":"[🔊](audio_oliya)"},{"uk":"сіль","translit":"","en":"salt","note":"[🔊](audio_sil)"},{"uk":"перець","translit":"","en":"pepper","note":"[🔊](audio_perets)"},{"uk":"смачного","translit":"","en":"bon appétit","note":"[🔊](audio_smachnoho)"},{"uk":"будьмо","translit":"","en":"cheers","note":"[🔊](audio_budmo)"},{"uk":"офіціант","translit":"","en":"waiter","note":"[🔊](audio_ofitsiant)"},{"uk":"овочі","translit":"","en":"vegetables","note":"[🔊](audio_ovochi)"},{"uk":"фрукти","translit":"","en":"fruits","note":"[🔊](audio_frukty)"},{"uk":"м'ясо","translit":"","en":"meat","note":"[🔊](audio_myaso)"},{"uk":"риба","translit":"","en":"fish","note":"[🔊](audio_ryba)"},{"uk":"курка","translit":"","en":"chicken","note":"[🔊](audio_kurka)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1031,6 +965,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2295,6 +2255,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

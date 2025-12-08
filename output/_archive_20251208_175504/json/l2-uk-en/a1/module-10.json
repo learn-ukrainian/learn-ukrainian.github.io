@@ -1,0 +1,1185 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A1-10",
+    "moduleId": "mod-uk-A1-10",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A1",
+    "phase": "A1.1",
+    "moduleNumber": 10,
+    "moduleType": "checkpoint",
+    "immersionLevel": 0.3,
+    "title": "Checkpoint: First Contact",
+    "subtitle": "Review of Modules 1-9",
+    "description": "Review Cyrillic alphabet recognition",
+    "objectives": [
+      "Review Cyrillic alphabet recognition",
+      "Practice noun gender identification",
+      "Demonstrate verb conjugation (Class I & II)",
+      "Apply question formation and negation",
+      "Use food vocabulary in context"
+    ],
+    "grammarFocus": [
+      "Review: Noun gender",
+      "Review: Present tense (Class I & II)",
+      "Review: Questions and negation"
+    ],
+    "tags": [
+      "review",
+      "checkpoint",
+      "assessment"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "full",
+    "sections": [
+      {
+        "id": "section-warm-up",
+        "name": "Warm Up",
+        "type": "content",
+        "content": "Вітаємо! (Vitayemo!) — Congratulations! You've completed the first phase of your Ukrainian journey. Let's review everything you've learned in Modules 1-9 before moving forward.\n\n---"
+      },
+      {
+        "id": "section-lesson",
+        "name": "Lesson",
+        "type": "content",
+        "content": "## What You've Learned: A1.1 Overview\n\n### Module 01-02: The Cyrillic Code\n\nYou learned all 33 letters of the Ukrainian alphabet:\n\n| Category | Letters |\n|----------|---------|\n| True Friends | А, Е, І, О, К, М, Т |\n| False Friends | В (v), Н (n), Р (r), С (s), У (u), Х (kh) |\n| New Letters | Б, Д, З, Л, П, Ф, Г, Ґ, Ж, Ш, Щ, Ч, Ц |\n| Iotated Vowels | Є, Ї, Ю, Я |\n| Special | Ь (soft sign), И (hard i) |\n\n**Italic Warnings:** т→m, п→n, д→g, и→u\n\n> 💡 **Quick Review**\n> The False Friends are the trickiest! Remember: В sounds like \"v\", not \"b\". Р sounds like \"r\", not \"p\". Н sounds like \"n\", not \"h\".\n\n---\n\n### Module 03: The Gender Code\n\nUkrainian nouns have three genders, determined by their ending:\n\n| Gender | Ending | Example |\n|--------|--------|---------|\n| Masculine | consonant | стіл (stіl) — table |\n| Feminine | -а, -я | книга (knyha) — book |\n| Neuter | -о, -е | вікно (vikno) — window |\n\n**Exceptions to remember:**\n- тато (tato) — dad (masculine despite -о ending)\n- Soft-sign feminines: ніч (nich) — night (feminine)\n\n---\n\n### Module 04: This Is / I Am\n\nThe zero copula rule: No \"to be\" in present tense!\n\n| English | Ukrainian |\n|---------|-----------|\n| This is a book. | Це книга. (Tse knyha.) |\n| I am a student. | Я студент. (Ya student.) |\n| She is Ukrainian. | Вона українка. (Vona ukrayinka.) |\n\n**Personal pronouns:**\n\n| Singular | Plural |\n|----------|--------|\n| я (ya) — I | ми (my) — we |\n| ти (ty) — you | ви (vy) — you (pl/formal) |\n| він (vin) — he | вони (vony) — they |\n| вона (vona) — she | |\n| воно (vono) — it | |\n\n---\n\n### Module 05: My World - Objects\n\nDemonstratives match the noun's gender:\n\n| Gender | This | That |\n|--------|------|------|\n| Masculine | цей (tsey) | той (toy) |\n| Feminine | ця (tsya) | та (ta) |\n| Neuter | це (tse) | те (te) |\n| Plural | ці (tsi) | ті (ti) |\n\n**Examples:**\n- Цей стіл великий. (This table is big.)\n- Ця книга цікава. (This book is interesting.)\n- Це вікно чисте. (This window is clean.)\n\n---\n\n### Module 06: The Living Verb I\n\nClass I verbs (-ати/-яти) conjugation:\n\n| Person | читати (to read) |\n|--------|------------------|\n| я | читаю |\n| ти | читаєш |\n| він/вона | читає |\n| ми | читаємо |\n| ви | читаєте |\n| вони | читають |\n\n**Pattern:** -ю, -єш, -є, -ємо, -єте, -ють\n\n---\n\n### Module 07: Questions & Negation\n\n**Question words:**\n- Що? (What?) Хто? (Who?) Де? (Where?)\n- Куди? (Where to?) Звідки? (Where from?)\n- Коли? (When?) Чому? (Why?) Як? (How?)\n\n**Yes/No questions:** Add чи or use rising intonation\n- Чи ти читаєш? (Do you read?)\n\n**Negation:** Add не before the verb\n- Я не читаю. (I don't read.)\n\n**Double negation with ніколи:**\n- Я ніколи не запізнююся. (I never am late.)\n\n---\n\n### Module 08: The Living Verb II\n\nClass II verbs (-ити/-іти) conjugation:\n\n| Person | говорити (to speak) |\n|--------|---------------------|\n| я | говорю |\n| ти | говориш |\n| він/вона | говорить |\n| ми | говоримо |\n| ви | говорите |\n| вони | говорять |\n\n**Pattern:** -ю, -иш, -ить, -имо, -ите, -ять\n\n**Irregular verbs:**\n- їсти: я їм, ти їси, він їсть, ми їмо, ви їсте, вони їдять\n- пити: я п'ю, ти п'єш, він п'є, ми п'ємо, ви п'єте, вони п'ють\n\n---\n\n### Module 09: Food & Drinks\n\n**Meals:** сніданок (breakfast), обід (lunch), вечеря (dinner)\n\n**Essential food vocabulary:**\n- борщ, вареники, хліб, м'ясо, курка, риба\n- овочі: картопля, помідор, огірок, цибуля\n- фрукти: яблуко, банан\n- напої: чай, кава, вода, сік, молоко\n\n**Key phrases:**\n- Смачного! (Enjoy your meal!)\n- Смачний/смачна/смачне (delicious)\n\n---"
+      },
+      {
+        "id": "section-practice",
+        "name": "Практика",
+        "nameEn": "Practice",
+        "type": "practice",
+        "content": "## Alphabet Challenge\n\nRead these words aloud:\n\n1. Україна (Ukrayina)\n2. здоров'я (zdorov'ya)\n3. щастя (shchastya)\n4. людина (lyudyna)\n5. працювати (pratsyuvaty)\n\n## Gender Challenge\n\nIdentify the gender (m/f/n):\n\n1. телефон → ___\n2. машина → ___\n3. місто → ___\n4. ніч → ___\n5. тато → ___\n\n## Verb Challenge\n\nConjugate for the given pronoun:\n\n1. читати (ми) → _______________\n2. говорити (вона) → _______________\n3. їсти (я) → _______________\n4. пити (ти) → _______________\n5. любити (вони) → _______________\n\n---"
+      },
+      {
+        "id": "section-content",
+        "name": "Production",
+        "type": "content",
+        "content": "## Self-Introduction\n\nWrite a short self-introduction using what you've learned:\n\nПривіт! Мене звати _______________. Я _______________ (nationality).\nЯ живу в _______________ (city).\nЯ люблю _______________ (food/drink).\nЯ _______________ (activity: read, work, speak Ukrainian...).\n\n## Daily Routine\n\nDescribe your typical day:\n\n**Зранку:** _______________\n**Вдень:** _______________\n**Ввечері:** _______________\n\n---\n\n\n---\n\n\n---"
+      },
+      {
+        "id": "section-summary",
+        "name": "Підсумок",
+        "nameEn": "Summary",
+        "type": "summary",
+        "content": "Congratulations! You've completed Phase A1.1: First Contact!\n\n**You can now:**\n- Read all 33 Cyrillic letters\n- Identify noun gender from word endings\n- Use personal pronouns and demonstratives\n- Conjugate Class I and Class II verbs\n- Form questions and negate sentences\n- Talk about food and drinks\n- Use basic conversational phrases\n\n**Total vocabulary learned:** ~240 words\n\n**Key accomplishments:**\n- ✅ Complete Cyrillic alphabet\n- ✅ Gender system (m/f/n)\n- ✅ Zero copula understanding\n- ✅ Present tense conjugation\n- ✅ Question formation\n- ✅ Negation patterns\n- ✅ Food vocabulary\n\n**What's next in A1.2:**\n- Accusative case (direct objects)\n- Locative case (locations)\n- Genitive case (absence, possession)\n- Numbers and money\n- City navigation\n- Restaurant conversations\n\nМолодець! (Molodets'!) — Well done! You're ready for the next phase!\n\nВперед! (Vpered!) — Forward!"
+      }
+    ],
+    "rawMarkdown": "---\ntitle: \"Checkpoint: First Contact\"\nsubtitle: \"Review of Modules 1-9\"\nphase: A1.1\nduration: 45\ntransliteration: full\ntags: [review, checkpoint, assessment]\nobjectives:\n  - Review Cyrillic alphabet recognition\n  - Practice noun gender identification\n  - Demonstrate verb conjugation (Class I & II)\n  - Apply question formation and negation\n  - Use food vocabulary in context\ngrammar:\n  - Review: Noun gender\n  - Review: Present tense (Class I & II)\n  - Review: Questions and negation\n---\n\n# Warm Up\n\nВітаємо! (Vitayemo!) — Congratulations! You've completed the first phase of your Ukrainian journey. Let's review everything you've learned in Modules 1-9 before moving forward.\n\n---\n\n# Lesson\n\n## What You've Learned: A1.1 Overview\n\n### Module 01-02: The Cyrillic Code\n\nYou learned all 33 letters of the Ukrainian alphabet:\n\n| Category | Letters |\n|----------|---------|\n| True Friends | А, Е, І, О, К, М, Т |\n| False Friends | В (v), Н (n), Р (r), С (s), У (u), Х (kh) |\n| New Letters | Б, Д, З, Л, П, Ф, Г, Ґ, Ж, Ш, Щ, Ч, Ц |\n| Iotated Vowels | Є, Ї, Ю, Я |\n| Special | Ь (soft sign), И (hard i) |\n\n**Italic Warnings:** т→m, п→n, д→g, и→u\n\n> 💡 **Quick Review**\n> The False Friends are the trickiest! Remember: В sounds like \"v\", not \"b\". Р sounds like \"r\", not \"p\". Н sounds like \"n\", not \"h\".\n\n---\n\n### Module 03: The Gender Code\n\nUkrainian nouns have three genders, determined by their ending:\n\n| Gender | Ending | Example |\n|--------|--------|---------|\n| Masculine | consonant | стіл (stіl) — table |\n| Feminine | -а, -я | книга (knyha) — book |\n| Neuter | -о, -е | вікно (vikno) — window |\n\n**Exceptions to remember:**\n- тато (tato) — dad (masculine despite -о ending)\n- Soft-sign feminines: ніч (nich) — night (feminine)\n\n---\n\n### Module 04: This Is / I Am\n\nThe zero copula rule: No \"to be\" in present tense!\n\n| English | Ukrainian |\n|---------|-----------|\n| This is a book. | Це книга. (Tse knyha.) |\n| I am a student. | Я студент. (Ya student.) |\n| She is Ukrainian. | Вона українка. (Vona ukrayinka.) |\n\n**Personal pronouns:**\n\n| Singular | Plural |\n|----------|--------|\n| я (ya) — I | ми (my) — we |\n| ти (ty) — you | ви (vy) — you (pl/formal) |\n| він (vin) — he | вони (vony) — they |\n| вона (vona) — she | |\n| воно (vono) — it | |\n\n---\n\n### Module 05: My World - Objects\n\nDemonstratives match the noun's gender:\n\n| Gender | This | That |\n|--------|------|------|\n| Masculine | цей (tsey) | той (toy) |\n| Feminine | ця (tsya) | та (ta) |\n| Neuter | це (tse) | те (te) |\n| Plural | ці (tsi) | ті (ti) |\n\n**Examples:**\n- Цей стіл великий. (This table is big.)\n- Ця книга цікава. (This book is interesting.)\n- Це вікно чисте. (This window is clean.)\n\n---\n\n### Module 06: The Living Verb I\n\nClass I verbs (-ати/-яти) conjugation:\n\n| Person | читати (to read) |\n|--------|------------------|\n| я | читаю |\n| ти | читаєш |\n| він/вона | читає |\n| ми | читаємо |\n| ви | читаєте |\n| вони | читають |\n\n**Pattern:** -ю, -єш, -є, -ємо, -єте, -ють\n\n---\n\n### Module 07: Questions & Negation\n\n**Question words:**\n- Що? (What?) Хто? (Who?) Де? (Where?)\n- Куди? (Where to?) Звідки? (Where from?)\n- Коли? (When?) Чому? (Why?) Як? (How?)\n\n**Yes/No questions:** Add чи or use rising intonation\n- Чи ти читаєш? (Do you read?)\n\n**Negation:** Add не before the verb\n- Я не читаю. (I don't read.)\n\n**Double negation with ніколи:**\n- Я ніколи не запізнююся. (I never am late.)\n\n---\n\n### Module 08: The Living Verb II\n\nClass II verbs (-ити/-іти) conjugation:\n\n| Person | говорити (to speak) |\n|--------|---------------------|\n| я | говорю |\n| ти | говориш |\n| він/вона | говорить |\n| ми | говоримо |\n| ви | говорите |\n| вони | говорять |\n\n**Pattern:** -ю, -иш, -ить, -имо, -ите, -ять\n\n**Irregular verbs:**\n- їсти: я їм, ти їси, він їсть, ми їмо, ви їсте, вони їдять\n- пити: я п'ю, ти п'єш, він п'є, ми п'ємо, ви п'єте, вони п'ють\n\n---\n\n### Module 09: Food & Drinks\n\n**Meals:** сніданок (breakfast), обід (lunch), вечеря (dinner)\n\n**Essential food vocabulary:**\n- борщ, вареники, хліб, м'ясо, курка, риба\n- овочі: картопля, помідор, огірок, цибуля\n- фрукти: яблуко, банан\n- напої: чай, кава, вода, сік, молоко\n\n**Key phrases:**\n- Смачного! (Enjoy your meal!)\n- Смачний/смачна/смачне (delicious)\n\n---\n\n# Practice\n\n## Alphabet Challenge\n\nRead these words aloud:\n\n1. Україна (Ukrayina)\n2. здоров'я (zdorov'ya)\n3. щастя (shchastya)\n4. людина (lyudyna)\n5. працювати (pratsyuvaty)\n\n## Gender Challenge\n\nIdentify the gender (m/f/n):\n\n1. телефон → ___\n2. машина → ___\n3. місто → ___\n4. ніч → ___\n5. тато → ___\n\n## Verb Challenge\n\nConjugate for the given pronoun:\n\n1. читати (ми) → _______________\n2. говорити (вона) → _______________\n3. їсти (я) → _______________\n4. пити (ти) → _______________\n5. любити (вони) → _______________\n\n---\n\n# Production\n\n## Self-Introduction\n\nWrite a short self-introduction using what you've learned:\n\nПривіт! Мене звати _______________. Я _______________ (nationality).\nЯ живу в _______________ (city).\nЯ люблю _______________ (food/drink).\nЯ _______________ (activity: read, work, speak Ukrainian...).\n\n## Daily Routine\n\nDescribe your typical day:\n\n**Зранку:** _______________\n**Вдень:** _______________\n**Ввечері:** _______________\n\n---\n\n# Activities\n\n## quiz: Alphabet Recognition\n> Identify the correct sound for each Ukrainian letter:\n\n1. What sound does the letter В make?\n   - [x] /v/\n   - [ ] /b/\n   - [ ] /w/\n   - [ ] /p/\n   > В is a \"false friend\" — it looks like English \"B\" but sounds like \"v\" in \"victory\"\n\n2. What sound does the letter Р make?\n   - [x] /r/\n   - [ ] /p/\n   - [ ] /rh/\n   - [ ] /b/\n   > Р is another \"false friend\" — it looks like English \"P\" but sounds like rolled \"r\"\n\n3. What sound does the letter Н make?\n   - [x] /n/\n   - [ ] /h/\n   - [ ] /ng/\n   - [ ] /m/\n   > Н looks like English \"H\" but sounds like \"n\" in \"nose\"\n\n4. What sound does the letter С make?\n   - [x] /s/\n   - [ ] /k/\n   - [ ] /ts/\n   - [ ] /sh/\n   > С looks like English \"C\" but always sounds like \"s\" in \"sun\"\n\n5. What sound does the letter Х make?\n   - [x] /kh/\n   - [ ] /h/\n   - [ ] /ks/\n   - [ ] /sh/\n   > Х sounds like \"ch\" in Scottish \"loch\" or German \"Bach\"\n\n6. What sound does the letter И make?\n   - [x] /ɪ/ (hard i)\n   - [ ] /i/ (soft i)\n   - [ ] /y/\n   - [ ] /u/\n   > И is the \"hard i\" sound, like the \"i\" in English \"bit\"\n\n7. What sound does the letter Є make?\n   - [x] /je/ (ye)\n   - [ ] /e/\n   - [ ] /ay/\n   - [ ] /i/\n   > Є is a iotated vowel: sounds like \"ye\" in \"yes\"\n\n8. What sound does the letter Ї make?\n   - [x] /ji/ (yi)\n   - [ ] /i/\n   - [ ] /ay/\n   - [ ] /e/\n   > Ї sounds like \"yi\" as in \"yeet\"\n\n9. What sound does the letter Ю make?\n   - [x] /ju/ (yu)\n   - [ ] /u/\n   - [ ] /o/\n   - [ ] /i/\n   > Ю sounds like \"yu\" in \"yule\"\n\n10. What sound does the letter Я make?\n    - [x] /ja/ (ya)\n    - [ ] /a/\n    - [ ] /r/\n    - [ ] /i/\n    > Я sounds like \"ya\" in \"yard\"\n\n11. What sound does the letter Ж make?\n    - [x] /ʒ/ (like \"s\" in \"measure\")\n    - [ ] /z/\n    - [ ] /zh/\n    - [ ] /sh/\n    > Ж is the voiced version of Ш — sounds like \"s\" in \"pleasure\"\n\n12. What sound does the letter Ш make?\n    - [x] /ʃ/ (sh)\n    - [ ] /s/\n    - [ ] /zh/\n    - [ ] /ch/\n    > Ш sounds like \"sh\" in \"ship\"\n\n## match-up: Gender Identification\n> Match each noun with its gender (masculine, feminine, or neuter):\n\n| Ukrainian Word | Gender |\n|----------------|--------|\n| стіл (table) | masculine |\n| книга (book) | feminine |\n| вікно (window) | neuter |\n| ніч (night) | feminine |\n| тато (dad) | masculine |\n| море (sea) | neuter |\n| кава (coffee) | feminine |\n| чай (tea) | masculine |\n| молоко (milk) | neuter |\n| вода (water) | feminine |\n| хліб (bread) | masculine |\n| місто (city) | neuter |\n\n## group-sort: Verb Classes\n> Sort these verbs into their correct conjugation classes:\n\n### Class I (-ати/-яти)\n- читати\n- писати\n- працювати\n- слухати\n- знати\n- гуляти\n- малювати\n- думати\n\n### Class II (-ити/-іти)\n- говорити\n- робити\n- бачити\n- любити\n- хотіти\n- ходити\n- вчити\n- дивитися\n\n## true-false: Grammar Rules Review\n> Decide if each statement is true or false:\n\n- [ ] Ukrainian uses \"to be\" in present tense sentences.\n  > False! Ukrainian has zero copula — no \"to be\" in present tense. You say \"Це книга\" not \"Це є книга.\"\n\n- [x] Nouns ending in -о or -е are typically neuter.\n  > True! вікно, море, молоко — all neuter! (Exception: тато is masculine)\n\n- [x] Class I verbs have -є- in their conjugation endings.\n  > True! читаєш, читає, читаємо — the -є- is characteristic of Class I verbs.\n\n- [ ] To negate a sentence, you add \"ні\" before the verb.\n  > False! You add \"не\" before the verb. \"Ні\" means \"no\" as an answer, not negation.\n\n- [x] Ніколи requires double negation (ніколи + не).\n  > True! Я ніколи не запізнююся. Both words are needed in Ukrainian.\n\n- [ ] The demonstrative \"цей\" is used with feminine nouns.\n  > False! Цей is for masculine nouns. Ця is for feminine nouns.\n\n- [x] Masculine nouns typically end in a consonant.\n  > True! стіл, чай, хліб — all masculine, all end in consonants.\n\n- [x] Questions can be formed by adding \"чи\" at the beginning.\n  > True! Чи ти читаєш? = Do you read?\n\n- [ ] All words ending in -а are feminine.\n  > False! While most are (книга, кава), тато (dad) is masculine despite ending in -а.\n\n- [x] The verb їсти is irregular in present tense.\n  > True! я їм, ти їси, він їсть — the stem changes throughout conjugation.\n\n- [ ] The soft sign (ь) makes a vowel sound.\n  > False! The soft sign is silent — it only softens the preceding consonant.\n\n- [x] Double negation is grammatically correct in Ukrainian.\n  > True! Unlike English, Ukrainian uses double negation: Я нічого не хочу (I don't want anything).\n\n## fill-in: Pronoun + Verb Conjugation\n> Fill in the blank with the correctly conjugated verb:\n\n1. Я ___ книгу. (читати — to read)\n   > [!answer] читаю\n   > [!options] читаю | читаєш | читає | читаємо\n\n2. Вона ___ українською. (говорити — to speak)\n   > [!answer] говорить\n   > [!options] говорить | говорю | говориш | говоримо\n\n3. Ми ___ борщ. (їсти — to eat)\n   > [!answer] їмо\n   > [!options] їмо | їм | їси | їдять\n\n4. Ти ___ каву? (пити — to drink)\n   > [!answer] п'єш\n   > [!options] п'єш | п'ю | п'є | п'ємо\n\n5. Вони ___ музику. (любити — to love)\n   > [!answer] люблять\n   > [!options] люблять | люблю | любиш | любить\n\n6. Він ___ у парку. (працювати — to work)\n   > [!answer] працює\n   > [!options] працює | працюю | працюєш | працюємо\n\n7. Ви ___ українську? (знати — to know)\n   > [!answer] знаєте\n   > [!options] знаєте | знаю | знаєш | знаємо\n\n8. Я ___ тебе! (бачити — to see)\n   > [!answer] бачу\n   > [!options] бачу | бачиш | бачить | бачимо\n\n9. Вони ___ вареники. (хотіти — to want)\n   > [!answer] хочуть\n   > [!options] хочуть | хочу | хочеш | хочемо\n\n10. Ми ___ фільм. (дивитися — to watch)\n    > [!answer] дивимося\n    > [!options] дивимося | дивлюся | дивишся | дивляться\n\n11. Ти ___ домашнє завдання? (робити — to do)\n    > [!answer] робиш\n    > [!options] робиш | роблю | робить | роблять\n\n12. Вона ___ сніданок. (готувати — to prepare)\n    > [!answer] готує\n    > [!options] готує | готую | готуєш | готуємо\n\n## match-up: Question Words\n> Match each Ukrainian question word with its English translation:\n\n| Ukrainian | English |\n|-----------|---------|\n| Що? | What? |\n| Хто? | Who? |\n| Де? | Where? |\n| Коли? | When? |\n| Чому? | Why? |\n| Як? | How? |\n| Куди? | Where to? |\n| Звідки? | Where from? |\n| Скільки? | How much? |\n| Який? | Which? |\n| Чий? | Whose? |\n| Котрий? | Which one? |\n\n## anagram: Mixed Review Scramble\n> Unscramble these Ukrainian words:\n\n1. к а р т а\n   > [!answer] карта\n   > (map)\n\n2. к н и г а\n   > [!answer] книга\n   > (book)\n\n3. б о р щ\n   > [!answer] борщ\n   > (borscht)\n\n4. ч а й\n   > [!answer] чай\n   > (tea)\n\n5. к а в а\n   > [!answer] кава\n   > (coffee)\n\n6. с т і л\n   > [!answer] стіл\n   > (table)\n\n7. в і к н о\n   > [!answer] вікно\n   > (window)\n\n8. р и б а\n   > [!answer] риба\n   > (fish)\n\n9. х л і б\n   > [!answer] хліб\n   > (bread)\n\n10. в о д а\n    > [!answer] вода\n    > (water)\n\n11. м о р е\n    > [!answer] море\n    > (sea)\n\n12. м і с т о\n    > [!answer] місто\n    > (city)\n\n## fill-in: Demonstratives Practice\n> Choose the correct demonstrative (this/that) for each noun:\n\n1. ___ стіл великий. (this — masculine)\n   > [!answer] Цей\n   > [!options] Цей | Ця | Це | Ці\n\n2. ___ книга цікава. (this — feminine)\n   > [!answer] Ця\n   > [!options] Ця | Цей | Це | Ці\n\n3. ___ вікно чисте. (this — neuter)\n   > [!answer] Це\n   > [!options] Це | Цей | Ця | Ці\n\n4. ___ вареники смачні. (these — plural)\n   > [!answer] Ці\n   > [!options] Ці | Цей | Ця | Це\n\n5. ___ чоловік мій друг. (that — masculine)\n   > [!answer] Той\n   > [!options] Той | Та | Те | Ті\n\n6. ___ жінка моя мама. (that — feminine)\n   > [!answer] Та\n   > [!options] Та | Той | Те | Ті\n\n7. ___ місто красиве. (that — neuter)\n   > [!answer] Те\n   > [!options] Те | Той | Та | Ті\n\n8. ___ люди українці. (those — plural)\n   > [!answer] Ті\n   > [!options] Ті | Той | Та | Те\n\n9. ___ телефон новий. (this — masculine)\n   > [!answer] Цей\n   > [!options] Цей | Ця | Це | Ці\n\n10. ___ машина швидка. (that — feminine)\n    > [!answer] Та\n    > [!options] Та | Той | Те | Ті\n\n11. ___ діти грають. (these — plural)\n    > [!answer] Ці\n    > [!options] Ці | Цей | Ця | Це\n\n12. ___ молоко свіже. (this — neuter)\n    > [!answer] Це\n    > [!options] Це | Цей | Ця | Ці\n\n## fill-in: Questions and Negation\n> Complete each sentence with the correct question word or negation:\n\n1. ___ ти живеш? (Where do you live?)\n   > [!answer] Де\n   > [!options] Де | Що | Хто | Коли\n\n2. ___ це? — Це мій друг. (Who is this?)\n   > [!answer] Хто\n   > [!options] Хто | Що | Де | Як\n\n3. Я ___ розумію. (I don't understand.)\n   > [!answer] не\n   > [!options] не | ні | так | чи\n\n4. ___ ти читаєш? (Do you read?)\n   > [!answer] Чи\n   > [!options] Чи | Що | Хто | Де\n\n5. Вона ніколи ___ їсть м'ясо. (She never eats meat.)\n   > [!answer] не\n   > [!options] не | ні | так | чи\n\n6. ___ це коштує? (How much does this cost?)\n   > [!answer] Скільки\n   > [!options] Скільки | Що | Де | Як\n\n7. ___, я хочу каву. (Yes, I want coffee.)\n   > [!answer] Так\n   > [!options] Так | Ні | Не | Чи\n\n8. ___ ти працюєш? (When do you work?)\n   > [!answer] Коли\n   > [!options] Коли | Де | Що | Хто\n\n9. ___ справи? (How are things?)\n   > [!answer] Як\n   > [!options] Як | Що | Де | Хто\n\n10. Я ніколи ___ запізнююся. (I never am late.)\n    > [!answer] не\n    > [!options] не | ні | так | чи\n\n11. ___ ти йдеш? (Where are you going to?)\n    > [!answer] Куди\n    > [!options] Куди | Де | Звідки | Коли\n\n12. ___ ти? (Where are you from?)\n    > [!answer] Звідки\n    > [!options] Звідки | Куди | Де | Як\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| перевірка (perevirka) | /pɛrɛˈvʲirkɑ/ | check, review | noun | f | Checkpoint concept |\n| знання (znannya) | /ˈznɑnʲːɑ/ | knowledge | noun | n | What you've gained |\n| прогрес (prohres) | /prɔˈɦrɛs/ | progress | noun | m | Your journey |\n| успіх (uspikh) | /uˈspʲix/ | success | noun | m | Your achievement |\n| молодець (molodets') | /mɔlɔˈdɛtsʲ/ | well done (m) | noun | m | Praise word |\n| молодчина (molodchyna) | /mɔlɔdˈtʃɪnɑ/ | well done (f) | noun | f | Praise word (feminine) |\n| готовий (hotovyy) | /ɦɔˈtɔvɪj/ | ready | adj | m | Changes: готова (f), готове (n) |\n| далі (dali) | /ˈdɑlʲi/ | further, next | adv | - | Moving forward |\n| вперед (vpered) | /ˈvpɛrɛd/ | forward | adv | - | Direction |\n| продовжувати (prodovzhuvaty) | /prɔdɔʋʒuˈvɑtɪ/ | to continue | verb | - | Class I |\n\n---\n\n# Summary\n\nCongratulations! You've completed Phase A1.1: First Contact!\n\n**You can now:**\n- Read all 33 Cyrillic letters\n- Identify noun gender from word endings\n- Use personal pronouns and demonstratives\n- Conjugate Class I and Class II verbs\n- Form questions and negate sentences\n- Talk about food and drinks\n- Use basic conversational phrases\n\n**Total vocabulary learned:** ~240 words\n\n**Key accomplishments:**\n- ✅ Complete Cyrillic alphabet\n- ✅ Gender system (m/f/n)\n- ✅ Zero copula understanding\n- ✅ Present tense conjugation\n- ✅ Question formation\n- ✅ Negation patterns\n- ✅ Food vocabulary\n\n**What's next in A1.2:**\n- Accusative case (direct objects)\n- Locative case (locations)\n- Genitive case (absence, possession)\n- Numbers and money\n- City navigation\n- Restaurant conversations\n\nМолодець! (Molodets'!) — Well done! You're ready for the next phase!\n\nВперед! (Vpered!) — Forward!\n",
+    "createdAt": "2025-12-06T10:49:20.092Z",
+    "modifiedAt": "2025-12-06T10:49:20.092Z",
+    "version": 2
+  },
+  "activities": [
+    {
+      "id": "act-a1-0-quiz",
+      "type": "quiz",
+      "title": "Alphabet Recognition",
+      "description": "Identify the correct sound for each Ukrainian letter:",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "What sound does the letter В make?",
+            "options": [
+              "/v/",
+              "/b/",
+              "/w/",
+              "/p/"
+            ],
+            "correctIndex": 0,
+            "explanation": "В is a \"false friend\" — it looks like English \"B\" but sounds like \"v\" in \"victory\""
+          },
+          {
+            "question": "What sound does the letter Р make?",
+            "options": [
+              "/r/",
+              "/p/",
+              "/rh/",
+              "/b/"
+            ],
+            "correctIndex": 0,
+            "explanation": "Р is another \"false friend\" — it looks like English \"P\" but sounds like rolled \"r\""
+          },
+          {
+            "question": "What sound does the letter Н make?",
+            "options": [
+              "/n/",
+              "/h/",
+              "/ng/",
+              "/m/"
+            ],
+            "correctIndex": 0,
+            "explanation": "Н looks like English \"H\" but sounds like \"n\" in \"nose\""
+          },
+          {
+            "question": "What sound does the letter С make?",
+            "options": [
+              "/s/",
+              "/k/",
+              "/ts/",
+              "/sh/"
+            ],
+            "correctIndex": 0,
+            "explanation": "С looks like English \"C\" but always sounds like \"s\" in \"sun\""
+          },
+          {
+            "question": "What sound does the letter Х make?",
+            "options": [
+              "/kh/",
+              "/h/",
+              "/ks/",
+              "/sh/"
+            ],
+            "correctIndex": 0,
+            "explanation": "Х sounds like \"ch\" in Scottish \"loch\" or German \"Bach\""
+          },
+          {
+            "question": "What sound does the letter И make?",
+            "options": [
+              "/ɪ/ (hard i)",
+              "/i/ (soft i)",
+              "/y/",
+              "/u/"
+            ],
+            "correctIndex": 0,
+            "explanation": "И is the \"hard i\" sound, like the \"i\" in English \"bit\""
+          },
+          {
+            "question": "What sound does the letter Є make?",
+            "options": [
+              "/je/ (ye)",
+              "/e/",
+              "/ay/",
+              "/i/"
+            ],
+            "correctIndex": 0,
+            "explanation": "Є is a iotated vowel: sounds like \"ye\" in \"yes\""
+          },
+          {
+            "question": "What sound does the letter Ї make?",
+            "options": [
+              "/ji/ (yi)",
+              "/i/",
+              "/ay/",
+              "/e/"
+            ],
+            "correctIndex": 0,
+            "explanation": "Ї sounds like \"yi\" as in \"yeet\""
+          },
+          {
+            "question": "What sound does the letter Ю make?",
+            "options": [
+              "/ju/ (yu)",
+              "/u/",
+              "/o/",
+              "/i/"
+            ],
+            "correctIndex": 0,
+            "explanation": "Ю sounds like \"yu\" in \"yule\""
+          },
+          {
+            "question": "What sound does the letter Я make?",
+            "options": [
+              "/ja/ (ya)",
+              "/a/",
+              "/r/",
+              "/i/"
+            ],
+            "correctIndex": 0,
+            "explanation": "Я sounds like \"ya\" in \"yard\""
+          },
+          {
+            "question": "What sound does the letter Ж make?",
+            "options": [
+              "/ʒ/ (like \"s\" in \"measure\")",
+              "/z/",
+              "/zh/",
+              "/sh/"
+            ],
+            "correctIndex": 0,
+            "explanation": "Ж is the voiced version of Ш — sounds like \"s\" in \"pleasure\""
+          },
+          {
+            "question": "What sound does the letter Ш make?",
+            "options": [
+              "/ʃ/ (sh)",
+              "/s/",
+              "/zh/",
+              "/ch/"
+            ],
+            "correctIndex": 0,
+            "explanation": "Ш sounds like \"sh\" in \"ship\""
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.092Z",
+      "modifiedAt": "2025-12-06T10:49:20.092Z"
+    },
+    {
+      "id": "act-a1-0-matchup",
+      "type": "match-up",
+      "title": "Gender Identification",
+      "description": "Match each noun with its gender (masculine, feminine, or neuter):",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "стіл (table)",
+            "right": "masculine"
+          },
+          {
+            "left": "книга (book)",
+            "right": "feminine"
+          },
+          {
+            "left": "вікно (window)",
+            "right": "neuter"
+          },
+          {
+            "left": "ніч (night)",
+            "right": "feminine"
+          },
+          {
+            "left": "тато (dad)",
+            "right": "masculine"
+          },
+          {
+            "left": "море (sea)",
+            "right": "neuter"
+          },
+          {
+            "left": "кава (coffee)",
+            "right": "feminine"
+          },
+          {
+            "left": "чай (tea)",
+            "right": "masculine"
+          },
+          {
+            "left": "молоко (milk)",
+            "right": "neuter"
+          },
+          {
+            "left": "вода (water)",
+            "right": "feminine"
+          },
+          {
+            "left": "хліб (bread)",
+            "right": "masculine"
+          },
+          {
+            "left": "місто (city)",
+            "right": "neuter"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.092Z",
+      "modifiedAt": "2025-12-06T10:49:20.092Z"
+    },
+    {
+      "id": "act-a1-0-groupsort",
+      "type": "group-sort",
+      "title": "Verb Classes",
+      "description": "Sort these verbs into their correct conjugation classes:",
+      "content": {
+        "type": "group-sort",
+        "groups": [
+          {
+            "id": "class-i",
+            "name": "Class I",
+            "items": [
+              "читати",
+              "писати",
+              "працювати",
+              "слухати",
+              "знати",
+              "гуляти",
+              "малювати",
+              "думати"
+            ],
+            "nameUk": "-ати/-яти"
+          },
+          {
+            "id": "class-ii",
+            "name": "Class II",
+            "items": [
+              "говорити",
+              "робити",
+              "бачити",
+              "любити",
+              "хотіти",
+              "ходити",
+              "вчити",
+              "дивитися"
+            ],
+            "nameUk": "-ити/-іти"
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.092Z",
+      "modifiedAt": "2025-12-06T10:49:20.092Z"
+    },
+    {
+      "id": "act-a1-0-truefalse",
+      "type": "true-false",
+      "title": "Grammar Rules Review",
+      "description": "Decide if each statement is true or false:",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "Ukrainian uses \"to be\" in present tense sentences.",
+            "isTrue": false,
+            "explanation": "False! Ukrainian has zero copula — no \"to be\" in present tense. You say \"Це книга\" not \"Це є книга.\""
+          },
+          {
+            "statement": "Nouns ending in -о or -е are typically neuter.",
+            "isTrue": true,
+            "explanation": "True! вікно, море, молоко — all neuter! (Exception: тато is masculine)"
+          },
+          {
+            "statement": "Class I verbs have -є- in their conjugation endings.",
+            "isTrue": true,
+            "explanation": "True! читаєш, читає, читаємо — the -є- is characteristic of Class I verbs."
+          },
+          {
+            "statement": "To negate a sentence, you add \"ні\" before the verb.",
+            "isTrue": false,
+            "explanation": "False! You add \"не\" before the verb. \"Ні\" means \"no\" as an answer, not negation."
+          },
+          {
+            "statement": "Ніколи requires double negation (ніколи + не).",
+            "isTrue": true,
+            "explanation": "True! Я ніколи не запізнююся. Both words are needed in Ukrainian."
+          },
+          {
+            "statement": "The demonstrative \"цей\" is used with feminine nouns.",
+            "isTrue": false,
+            "explanation": "False! Цей is for masculine nouns. Ця is for feminine nouns."
+          },
+          {
+            "statement": "Masculine nouns typically end in a consonant.",
+            "isTrue": true,
+            "explanation": "True! стіл, чай, хліб — all masculine, all end in consonants."
+          },
+          {
+            "statement": "Questions can be formed by adding \"чи\" at the beginning.",
+            "isTrue": true,
+            "explanation": "True! Чи ти читаєш? = Do you read?"
+          },
+          {
+            "statement": "All words ending in -а are feminine.",
+            "isTrue": false,
+            "explanation": "False! While most are (книга, кава), тато (dad) is masculine despite ending in -а."
+          },
+          {
+            "statement": "The verb їсти is irregular in present tense.",
+            "isTrue": true,
+            "explanation": "True! я їм, ти їси, він їсть — the stem changes throughout conjugation."
+          },
+          {
+            "statement": "The soft sign (ь) makes a vowel sound.",
+            "isTrue": false,
+            "explanation": "False! The soft sign is silent — it only softens the preceding consonant."
+          },
+          {
+            "statement": "Double negation is grammatically correct in Ukrainian.",
+            "isTrue": true,
+            "explanation": "True! Unlike English, Ukrainian uses double negation: Я нічого не хочу (I don't want anything)."
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.092Z",
+      "modifiedAt": "2025-12-06T10:49:20.092Z"
+    },
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "Pronoun + Verb Conjugation",
+      "description": "Fill in the blank with the correctly conjugated verb:",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Я ___ книгу. (читати — to read)",
+            "answer": "читаю",
+            "options": [
+              "читаю",
+              "читаєш",
+              "читає",
+              "читаємо"
+            ]
+          },
+          {
+            "prompt": "Вона ___ українською. (говорити — to speak)",
+            "answer": "говорить",
+            "options": [
+              "говорить",
+              "говорю",
+              "говориш",
+              "говоримо"
+            ]
+          },
+          {
+            "prompt": "Ми ___ борщ. (їсти — to eat)",
+            "answer": "їмо",
+            "options": [
+              "їмо",
+              "їм",
+              "їси",
+              "їдять"
+            ]
+          },
+          {
+            "prompt": "Ти ___ каву? (пити — to drink)",
+            "answer": "п'єш",
+            "options": [
+              "п'єш",
+              "п'ю",
+              "п'є",
+              "п'ємо"
+            ]
+          },
+          {
+            "prompt": "Вони ___ музику. (любити — to love)",
+            "answer": "люблять",
+            "options": [
+              "люблять",
+              "люблю",
+              "любиш",
+              "любить"
+            ]
+          },
+          {
+            "prompt": "Він ___ у парку. (працювати — to work)",
+            "answer": "працює",
+            "options": [
+              "працює",
+              "працюю",
+              "працюєш",
+              "працюємо"
+            ]
+          },
+          {
+            "prompt": "Ви ___ українську? (знати — to know)",
+            "answer": "знаєте",
+            "options": [
+              "знаєте",
+              "знаю",
+              "знаєш",
+              "знаємо"
+            ]
+          },
+          {
+            "prompt": "Я ___ тебе! (бачити — to see)",
+            "answer": "бачу",
+            "options": [
+              "бачу",
+              "бачиш",
+              "бачить",
+              "бачимо"
+            ]
+          },
+          {
+            "prompt": "Вони ___ вареники. (хотіти — to want)",
+            "answer": "хочуть",
+            "options": [
+              "хочуть",
+              "хочу",
+              "хочеш",
+              "хочемо"
+            ]
+          },
+          {
+            "prompt": "Ми ___ фільм. (дивитися — to watch)",
+            "answer": "дивимося",
+            "options": [
+              "дивимося",
+              "дивлюся",
+              "дивишся",
+              "дивляться"
+            ]
+          },
+          {
+            "prompt": "Ти ___ домашнє завдання? (робити — to do)",
+            "answer": "робиш",
+            "options": [
+              "робиш",
+              "роблю",
+              "робить",
+              "роблять"
+            ]
+          },
+          {
+            "prompt": "Вона ___ сніданок. (готувати — to prepare)",
+            "answer": "готує",
+            "options": [
+              "готує",
+              "готую",
+              "готуєш",
+              "готуємо"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.092Z",
+      "modifiedAt": "2025-12-06T10:49:20.092Z"
+    },
+    {
+      "id": "act-a1-0-matchup",
+      "type": "match-up",
+      "title": "Question Words",
+      "description": "Match each Ukrainian question word with its English translation:",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "Що?",
+            "right": "What?"
+          },
+          {
+            "left": "Хто?",
+            "right": "Who?"
+          },
+          {
+            "left": "Де?",
+            "right": "Where?"
+          },
+          {
+            "left": "Коли?",
+            "right": "When?"
+          },
+          {
+            "left": "Чому?",
+            "right": "Why?"
+          },
+          {
+            "left": "Як?",
+            "right": "How?"
+          },
+          {
+            "left": "Куди?",
+            "right": "Where to?"
+          },
+          {
+            "left": "Звідки?",
+            "right": "Where from?"
+          },
+          {
+            "left": "Скільки?",
+            "right": "How much?"
+          },
+          {
+            "left": "Який?",
+            "right": "Which?"
+          },
+          {
+            "left": "Чий?",
+            "right": "Whose?"
+          },
+          {
+            "left": "Котрий?",
+            "right": "Which one?"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.092Z",
+      "modifiedAt": "2025-12-06T10:49:20.092Z"
+    },
+    {
+      "id": "act-a1-0-anagram",
+      "type": "anagram",
+      "title": "Mixed Review Scramble",
+      "description": "Unscramble these Ukrainian words:",
+      "content": {
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
+          {
+            "letters": [
+              "к",
+              "а",
+              "р",
+              "т",
+              "а"
+            ],
+            "answer": "карта",
+            "translation": "map"
+          },
+          {
+            "letters": [
+              "к",
+              "н",
+              "и",
+              "г",
+              "а"
+            ],
+            "answer": "книга",
+            "translation": "book"
+          },
+          {
+            "letters": [
+              "б",
+              "о",
+              "р",
+              "щ"
+            ],
+            "answer": "борщ",
+            "translation": "borscht"
+          },
+          {
+            "letters": [
+              "ч",
+              "а",
+              "й"
+            ],
+            "answer": "чай",
+            "translation": "tea"
+          },
+          {
+            "letters": [
+              "к",
+              "а",
+              "в",
+              "а"
+            ],
+            "answer": "кава",
+            "translation": "coffee"
+          },
+          {
+            "letters": [
+              "с",
+              "т",
+              "і",
+              "л"
+            ],
+            "answer": "стіл",
+            "translation": "table"
+          },
+          {
+            "letters": [
+              "в",
+              "і",
+              "к",
+              "н",
+              "о"
+            ],
+            "answer": "вікно",
+            "translation": "window"
+          },
+          {
+            "letters": [
+              "р",
+              "и",
+              "б",
+              "а"
+            ],
+            "answer": "риба",
+            "translation": "fish"
+          },
+          {
+            "letters": [
+              "х",
+              "л",
+              "і",
+              "б"
+            ],
+            "answer": "хліб",
+            "translation": "bread"
+          },
+          {
+            "letters": [
+              "в",
+              "о",
+              "д",
+              "а"
+            ],
+            "answer": "вода",
+            "translation": "water"
+          },
+          {
+            "letters": [
+              "м",
+              "о",
+              "р",
+              "е"
+            ],
+            "answer": "море",
+            "translation": "sea"
+          },
+          {
+            "letters": [
+              "м",
+              "і",
+              "с",
+              "т",
+              "о"
+            ],
+            "answer": "місто",
+            "translation": "city"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.092Z",
+      "modifiedAt": "2025-12-06T10:49:20.092Z"
+    },
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "Demonstratives Practice",
+      "description": "Choose the correct demonstrative (this/that) for each noun:",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "___ стіл великий. (this — masculine)",
+            "answer": "Цей",
+            "options": [
+              "Цей",
+              "Ця",
+              "Це",
+              "Ці"
+            ]
+          },
+          {
+            "prompt": "___ книга цікава. (this — feminine)",
+            "answer": "Ця",
+            "options": [
+              "Ця",
+              "Цей",
+              "Це",
+              "Ці"
+            ]
+          },
+          {
+            "prompt": "___ вікно чисте. (this — neuter)",
+            "answer": "Це",
+            "options": [
+              "Це",
+              "Цей",
+              "Ця",
+              "Ці"
+            ]
+          },
+          {
+            "prompt": "___ вареники смачні. (these — plural)",
+            "answer": "Ці",
+            "options": [
+              "Ці",
+              "Цей",
+              "Ця",
+              "Це"
+            ]
+          },
+          {
+            "prompt": "___ чоловік мій друг. (that — masculine)",
+            "answer": "Той",
+            "options": [
+              "Той",
+              "Та",
+              "Те",
+              "Ті"
+            ]
+          },
+          {
+            "prompt": "___ жінка моя мама. (that — feminine)",
+            "answer": "Та",
+            "options": [
+              "Та",
+              "Той",
+              "Те",
+              "Ті"
+            ]
+          },
+          {
+            "prompt": "___ місто красиве. (that — neuter)",
+            "answer": "Те",
+            "options": [
+              "Те",
+              "Той",
+              "Та",
+              "Ті"
+            ]
+          },
+          {
+            "prompt": "___ люди українці. (those — plural)",
+            "answer": "Ті",
+            "options": [
+              "Ті",
+              "Той",
+              "Та",
+              "Те"
+            ]
+          },
+          {
+            "prompt": "___ телефон новий. (this — masculine)",
+            "answer": "Цей",
+            "options": [
+              "Цей",
+              "Ця",
+              "Це",
+              "Ці"
+            ]
+          },
+          {
+            "prompt": "___ машина швидка. (that — feminine)",
+            "answer": "Та",
+            "options": [
+              "Та",
+              "Той",
+              "Те",
+              "Ті"
+            ]
+          },
+          {
+            "prompt": "___ діти грають. (these — plural)",
+            "answer": "Ці",
+            "options": [
+              "Ці",
+              "Цей",
+              "Ця",
+              "Це"
+            ]
+          },
+          {
+            "prompt": "___ молоко свіже. (this — neuter)",
+            "answer": "Це",
+            "options": [
+              "Це",
+              "Цей",
+              "Ця",
+              "Ці"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.092Z",
+      "modifiedAt": "2025-12-06T10:49:20.092Z"
+    },
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "Questions and Negation",
+      "description": "Complete each sentence with the correct question word or negation:",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "___ ти живеш? (Where do you live?)",
+            "answer": "Де",
+            "options": [
+              "Де",
+              "Що",
+              "Хто",
+              "Коли"
+            ]
+          },
+          {
+            "prompt": "___ це? — Це мій друг. (Who is this?)",
+            "answer": "Хто",
+            "options": [
+              "Хто",
+              "Що",
+              "Де",
+              "Як"
+            ]
+          },
+          {
+            "prompt": "Я ___ розумію. (I don't understand.)",
+            "answer": "не",
+            "options": [
+              "не",
+              "ні",
+              "так",
+              "чи"
+            ]
+          },
+          {
+            "prompt": "___ ти читаєш? (Do you read?)",
+            "answer": "Чи",
+            "options": [
+              "Чи",
+              "Що",
+              "Хто",
+              "Де"
+            ]
+          },
+          {
+            "prompt": "Вона ніколи ___ їсть м'ясо. (She never eats meat.)",
+            "answer": "не",
+            "options": [
+              "не",
+              "ні",
+              "так",
+              "чи"
+            ]
+          },
+          {
+            "prompt": "___ це коштує? (How much does this cost?)",
+            "answer": "Скільки",
+            "options": [
+              "Скільки",
+              "Що",
+              "Де",
+              "Як"
+            ]
+          },
+          {
+            "prompt": "___, я хочу каву. (Yes, I want coffee.)",
+            "answer": "Так",
+            "options": [
+              "Так",
+              "Ні",
+              "Не",
+              "Чи"
+            ]
+          },
+          {
+            "prompt": "___ ти працюєш? (When do you work?)",
+            "answer": "Коли",
+            "options": [
+              "Коли",
+              "Де",
+              "Що",
+              "Хто"
+            ]
+          },
+          {
+            "prompt": "___ справи? (How are things?)",
+            "answer": "Як",
+            "options": [
+              "Як",
+              "Що",
+              "Де",
+              "Хто"
+            ]
+          },
+          {
+            "prompt": "Я ніколи ___ запізнююся. (I never am late.)",
+            "answer": "не",
+            "options": [
+              "не",
+              "ні",
+              "так",
+              "чи"
+            ]
+          },
+          {
+            "prompt": "___ ти йдеш? (Where are you going to?)",
+            "answer": "Куди",
+            "options": [
+              "Куди",
+              "Де",
+              "Звідки",
+              "Коли"
+            ]
+          },
+          {
+            "prompt": "___ ти? (Where are you from?)",
+            "answer": "Звідки",
+            "options": [
+              "Звідки",
+              "Куди",
+              "Де",
+              "Як"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-06T10:49:20.092Z",
+      "modifiedAt": "2025-12-06T10:49:20.092Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A1-10",
+    "level": "A1",
+    "phase": "A1.1",
+    "wordCount": 10,
+    "newWordCount": 10,
+    "reviewWordCount": 0,
+    "transliterationMode": "full",
+    "words": [
+      {
+        "id": "v-perevirka-(perevirka)-0-0",
+        "uk": "перевірка (perevirka)",
+        "en": "check, review",
+        "pos": "noun",
+        "ipa": "/pɛrɛˈvʲirkɑ/",
+        "gender": "f",
+        "note": "Checkpoint concept",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-znannya-(znannya)-0-1",
+        "uk": "знання (znannya)",
+        "en": "knowledge",
+        "pos": "noun",
+        "ipa": "/ˈznɑnʲːɑ/",
+        "gender": "n",
+        "note": "What you've gained",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-prohres-(prohres)-0-2",
+        "uk": "прогрес (prohres)",
+        "en": "progress",
+        "pos": "noun",
+        "ipa": "/prɔˈɦrɛs/",
+        "gender": "m",
+        "note": "Your journey",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-uspikh-(uspikh)-0-3",
+        "uk": "успіх (uspikh)",
+        "en": "success",
+        "pos": "noun",
+        "ipa": "/uˈspʲix/",
+        "gender": "m",
+        "note": "Your achievement",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-molodetsь-(molodets')-0-4",
+        "uk": "молодець (molodets')",
+        "en": "well done (m)",
+        "pos": "noun",
+        "ipa": "/mɔlɔˈdɛtsʲ/",
+        "gender": "m",
+        "note": "Praise word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-molodchyna-(molodchyna)-0-5",
+        "uk": "молодчина (molodchyna)",
+        "en": "well done (f)",
+        "pos": "noun",
+        "ipa": "/mɔlɔdˈtʃɪnɑ/",
+        "gender": "f",
+        "note": "Praise word (feminine)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-hotovyy-(hotovyy)-0-6",
+        "uk": "готовий (hotovyy)",
+        "en": "ready",
+        "pos": "adj",
+        "ipa": "/ɦɔˈtɔvɪj/",
+        "gender": "m",
+        "note": "Changes: готова (f), готове (n)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-dali-(dali)-0-7",
+        "uk": "далі (dali)",
+        "en": "further, next",
+        "pos": "adv",
+        "ipa": "/ˈdɑlʲi/",
+        "note": "Moving forward",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vpered-(vpered)-0-8",
+        "uk": "вперед (vpered)",
+        "en": "forward",
+        "pos": "adv",
+        "ipa": "/ˈvpɛrɛd/",
+        "note": "Direction",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-prodovzhuvaty-(prodovzhuvaty)-0-9",
+        "uk": "продовжувати (prodovzhuvaty)",
+        "en": "to continue",
+        "pos": "verb",
+        "ipa": "/prɔdɔʋʒuˈvɑtɪ/",
+        "note": "Class I",
+        "isNew": true,
+        "firstModule": 0
+      }
+    ]
+  }
+}

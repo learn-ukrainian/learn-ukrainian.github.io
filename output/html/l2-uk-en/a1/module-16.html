@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Module 16: The Genitive I: Absence | Ukrainian A1</title>
+  <title>Module 16: The Genitive Case - Absence | Ukrainian A1</title>
   <style>
 :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -478,17 +518,18 @@ footer {
     </div>
   </div>
   <nav class="nav">
-    <h1>Module 16: The Genitive I: Absence</h1>
+    <h1>Module 16: The Genitive Case - Absence</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Fill</button>
-      <button class="nav-tab" data-section="activity-1">2. Order</button>
-      <button class="nav-tab" data-section="activity-2">3. Match</button>
-      <button class="nav-tab" data-section="activity-3">4. Quiz</button>
-      <button class="nav-tab" data-section="activity-4">5. T/F</button>
-      <button class="nav-tab" data-section="activity-5">6. Sort</button>
-      <button class="nav-tab" data-section="activity-6">7. Spell</button>
-      <button class="nav-tab" data-section="activity-7">8. Match</button>
+      <button class="nav-tab" data-section="activity-0">1. Match</button>
+      <button class="nav-tab" data-section="activity-1">2. Fill</button>
+      <button class="nav-tab" data-section="activity-2">3. Quiz</button>
+      <button class="nav-tab" data-section="activity-3">4. Fill</button>
+      <button class="nav-tab" data-section="activity-4">5. Sort</button>
+      <button class="nav-tab" data-section="activity-5">6. Order</button>
+      <button class="nav-tab" data-section="activity-6">7. Fill</button>
+      <button class="nav-tab" data-section="activity-7">8. Fill</button>
+      <button class="nav-tab" data-section="activity-8">9. Spell</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -497,350 +538,302 @@ footer {
     <section id="lesson" class="section active">
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.2</span>
-        <h2 style="font-size:2rem;margin:0.5rem 0">The Genitive I: Absence</h2>
-        <p style="color:var(--text-muted)">Expressing what&#039;s missing with немає</p>
+        <h2 style="font-size:2rem;margin:0.5rem 0">The Genitive Case - Absence</h2>
+        <p style="color:var(--text-muted)">The Art of Cynicism</p>
       </div>
       
     <div class="card section-intro">
       <h3>📖 Introduction</h3>
       <div class="md-content"><h2 id="warmup">warm-up</h2>
-<h3 id="welcometothegenitivecase">Welcome to the Genitive Case!</h3>
-<p>You've learned to talk about <strong>what exists</strong> and <strong>where things are</strong>. Now it's time to talk about <strong>what's missing</strong>!</p>
-<p>In English, we say "There is no coffee" or "I don't have time." In Ukrainian, we use a special grammatical case called the <strong>genitive</strong> (родовий відмінок).</p>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>The genitive case is one of the most frequently used cases in Ukrainian. It expresses absence, possession, quantities, and much more. Today we focus on <strong>absence</strong> — saying what ISN'T there.</p>
-</blockquote>
-<h2 id="presentation">presentation</h2>
-<h3 id="thegenitiveendings">The Genitive Endings</h3>
-<p>When something <strong>doesn't exist</strong> or you <strong>don't have</strong> something, the noun changes form:</p>
-<table>
-<thead>
-<tr>
-<th>Gender</th>
-<th>Nominative</th>
-<th>Genitive</th>
-<th>Pattern</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Masculine</td>
-<td>час</td>
-<td>час<strong>у</strong></td>
-<td>+ -у/-а</td>
-</tr>
-<tr>
-<td>Masculine</td>
-<td>друг</td>
-<td>друг<strong>а</strong></td>
-<td>+ -а (animate)</td>
-</tr>
-<tr>
-<td>Feminine</td>
-<td>вода</td>
-<td>вод<strong>и</strong></td>
-<td>-а → -и</td>
-</tr>
-<tr>
-<td>Feminine</td>
-<td>ідея</td>
-<td>іде<strong>ї</strong></td>
-<td>-я → -ї</td>
-</tr>
-<tr>
-<td>Neuter</td>
-<td>вікно</td>
-<td>вікн<strong>а</strong></td>
-<td>-о → -а</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>⚡ <strong>Pro Tip</strong></p>
-  <p>Masculine inanimate nouns often take <strong>-у</strong>, while animate masculines take <strong>-а</strong>. This mirrors what you learned about accusative for people!</p>
-</blockquote>
-<h3 id="thereisno">немає — There Is No</h3>
-<p>The word <strong>немає</strong> (or <strong>нема</strong> in speech) means "there is no / there isn't":</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Немає часу.</td>
-<td>There is no time.</td>
-</tr>
-<tr>
-<td>Немає кави.</td>
-<td>There is no coffee.</td>
-</tr>
-<tr>
-<td>Немає проблеми.</td>
-<td>There is no problem.</td>
-</tr>
-<tr>
-<td>Немає сенсу.</td>
-<td>There is no sense/point.</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🔍 <strong>Myth Buster</strong></p>
-  <p><strong>Myth:</strong> Ukrainian must be hard because it has so many cases!<br />
-  <strong>Fact:</strong> English used to have cases too! We lost them about 500 years ago. The endings actually make Ukrainian MORE precise — you always know the grammatical role of a word.</p>
-</blockquote>
-<h3 id="possessionwith">Possession with у мене (не)має</h3>
-<p>To say "I have" or "I don't have," Ukrainian uses a unique construction:</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>Literal</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>У мене є</strong> книга.</td>
-<td>At me is book.</td>
-<td>I have a book.</td>
-</tr>
-<tr>
-<td><strong>У мене немає</strong> книги.</td>
-<td>At me is-not book-GEN.</td>
-<td>I don't have a book.</td>
-</tr>
-</tbody>
-</table>
-<p>The possessor pronouns in genitive:</p>
-<table>
-<thead>
-<tr>
-<th>Pronoun</th>
-<th>With "у"</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>я</td>
-<td>у мене</td>
-<td>I have / at me</td>
-</tr>
-<tr>
-<td>ти</td>
-<td>у тебе</td>
-<td>you have / at you</td>
-</tr>
-<tr>
-<td>він/вона</td>
-<td>у нього/неї</td>
-<td>he/she has</td>
-</tr>
-<tr>
-<td>ми</td>
-<td>у нас</td>
-<td>we have</td>
-</tr>
-<tr>
-<td>ви</td>
-<td>у вас</td>
-<td>you (pl/formal) have</td>
-</tr>
-<tr>
-<td>вони</td>
-<td>у них</td>
-<td>they have</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🌍 <strong>Real World</strong></p>
-  <p>"У мене немає часу" (I don't have time) is one of the most common phrases you'll hear in everyday Ukrainian. Perfect for politely declining invitations!</p>
-</blockquote>
-<h3 id="without">без — Without</h3>
-<p>The preposition <strong>без</strong> (without) also requires genitive:</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Кава без цукру</td>
-<td>Coffee without sugar</td>
-</tr>
-<tr>
-<td>Без проблем!</td>
-<td>No problem! (Without problems!)</td>
-</tr>
-<tr>
-<td>Без причини</td>
-<td>Without reason</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎬 <strong>Pop Culture Moment: The Matrix</strong></p>
-  <p>Remember Neo choosing between pills? In Ukrainian: "Без повернення" (Without return / No going back). The genitive makes everything sound more dramatic!</p>
-</blockquote>
-<h2 id="practice">practice</h2>
-<h3 id="exercise1transformtogenitive">Exercise 1: Transform to Genitive</h3>
-<p>Change these nominative nouns to genitive:</p>
-<ol>
-<li><p>час (time)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer">часу</div></div>
-<ol start="2">
-<li><p>вода (water)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer">води</div></div>
-<ol start="3">
-<li><p>гроші (money)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer">грошей</div></div>
-<ol start="4">
-<li><p>ідея (idea)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer">ідеї</div></div>
-<ol start="5">
-<li><p>допомога (help)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer">допомоги</div></div>
-<ol start="6">
-<li><p>сенс (sense)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-5', this)">Показати відповідь</button><div class="answer-block" id="ans-5"><div class="callout callout-answer" data-callout="answer">сенсу</div></div>
-<h3 id="exercise2completethesentences">Exercise 2: Complete the Sentences</h3>
-<ol>
-<li><p>У мене немає ___ (час).</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-6', this)">Показати відповідь</button><div class="answer-block" id="ans-6"><div class="callout callout-answer" data-callout="answer">часу</div></div>
-<ol start="2">
-<li><p>Тут немає ___ (кава).</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-7', this)">Показати відповідь</button><div class="answer-block" id="ans-7"><div class="callout callout-answer" data-callout="answer">кави</div></div>
-<ol start="3">
-<li><p>Без ___, будь ласка. (цукор)</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-8', this)">Показати відповідь</button><div class="answer-block" id="ans-8"><div class="callout callout-answer" data-callout="answer">цукру</div></div>
-<ol start="4">
-<li><p>У нас немає ___ (проблема).</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-9', this)">Показати відповідь</button><div class="answer-block" id="ans-9"><div class="callout callout-answer" data-callout="answer">проблеми</div></div>
-<ol start="5">
-<li><p>У неї немає ___ (гроші).</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-10', this)">Показати відповідь</button><div class="answer-block" id="ans-10"><div class="callout callout-answer" data-callout="answer">грошей</div></div>
-<h2 id="production">production</h2>
-<h3 id="speakingpractice">Speaking Practice</h3>
-<p>Describe what you DON'T have right now. Use these prompts:</p>
+<p><strong>The Art of Cynicism</strong></p>
+<p>In Module 11, we learned to love things (Accusative: "I love pizza").<br />
+In Module 13, we learned to find things (Locative: "Pizza is on the table").<br />
+In Module 14, we claimed things (Possessive: "It is MY pizza").</p>
+<p>Now, we face the harsh reality.<br />
+Sometimes, there is <strong>no pizza</strong>.<br />
+When something is gone, missing, or absent, we use the <strong>Genitive Case</strong>.<br />
+Also, when we want "Coffee <strong>without</strong> sugar".<br />
+Or when we come <strong>from</strong> Ukraine.</p>
+<p>The Genitive is the "OF" case.</p>
 <ul>
-<li>У мене немає… (час, гроші, ідея)</li>
-<li>Тут немає… (кава, вода, інформація)</li>
-<li>Я хочу каву без… (цукор, молоко)</li>
+<li>Cup <strong>of</strong> tea.</li>
+<li>Resident <strong>of</strong> Kyiv.</li>
+<li>Absence <strong>of</strong> problems.</li>
 </ul>
-<p>Try making 3-4 sentences about what's missing in your life!</p>
-<hr />
-<hr />
+<h2 id="presentation">presentation</h2>
+<h3 id="section1thecodeofabsence">Section 1: The Code of Absence (Немає)</h3>
+<p>To say "There is no X", you cannot just say "No X".<br />
+You must change the word X. You must "break" it to show it isn't there.</p>
+<p><strong>The Trigger Word:</strong> <strong>Немає</strong> (Nemaye).<br />
+Often shortened to <strong>Нема</strong>.</p>
+<p><strong>The Pattern:</strong></p>
+<ol>
+<li><p><strong>Masculine (Hard):</strong> Add <strong>-А</strong>.</p>
+<ul>
+<li>Паспорт -&gt; Немає паспорт<strong>а</strong>.</li>
+<li>Телефон -&gt; Немає телефон<strong>а</strong>.</li>
+<li><em>Wait!</em> This looks like the "Animate Accusative" from Module 12!</li>
+<li>Yes! For masculine, Genitive and Animate Accusative are often twins.</li></ul></li>
+<li><p><strong>Masculine (Soft/Y):</strong> Add <strong>-Я</strong>.</p>
+<ul>
+<li>Чай -&gt; Немає ча<strong>ю</strong> (Irregular? -U happens).</li>
+<li>День -&gt; Немає дн<strong>я</strong>.</li>
+<li>Андрій -&gt; Немає Андрі<strong>я</strong>.</li></ul></li>
+<li><p><strong>Feminine (Hard -a):</strong> Change to <strong>-И</strong>.</p>
+<ul>
+<li>Кава -&gt; Немає кав<strong>и</strong>.</li>
+<li>Мама -&gt; Немає мам<strong>и</strong>.</li>
+<li>Вода -&gt; Немає вод<strong>и</strong>.</li></ul></li>
+<li><p><strong>Feminine (Soft -ya):</strong> Change to <strong>-І</strong>.</p>
+<ul>
+<li>Кухня -&gt; Немає кухн<strong>і</strong>.</li>
+<li>Надія -&gt; Немає наді<strong>ї</strong>.</li></ul></li>
+<li><p><strong>Neuter:</strong> Change -o to <strong>-А</strong>, -e to <strong>-Я</strong>.</p>
+<ul>
+<li>Місто -&gt; Немає міст<strong>а</strong>.</li>
+<li>Море -&gt; Немає мор<strong>я</strong>.</li></ul></li>
+</ol>
+<blockquote>
+  <p>💡 <strong>Mnemonic Shortcut</strong><br />
+  Masculine grows a tail (-a).<br />
+  Feminine gets tough (-y).<br />
+  Neuter mimics Masculine (-a).</p>
+</blockquote>
+<h3 id="section2coffeemathbez">Section 2: Coffee Math (Bez)</h3>
+<p>We use Genitive with the preposition <strong>Без</strong> (Without).</p>
+<ul>
+<li>Кава <strong>без</strong> цукру (Coffee without sugar - Cukor -&gt; Cukru).</li>
+<li>Чай <strong>без</strong> молока (Tea without milk - Moloko -&gt; Moloka).</li>
+<li>Життя <strong>без</strong> музики (Life without music).</li>
+<li>Я <strong>без</strong> телефона (I am without a phone).</li>
+</ul>
+<blockquote>
+  <p>☕ <strong>Deep Dive: The Sugar Crisis</strong><br />
+  If you ask for "Kava z…" (Coffee with…), you need Instrumental Case (Module 18).<br />
+  But A1 students cheat.<br />
+  Instead of saying "With sugar" (Instrumental), they say "Is there sugar?" (Nominative).<br />
+  Whatever you do, don't mix them up.<br />
+  "Bez" ALWAYS triggers Genitive. Always. It demands absence.</p>
+</blockquote>
+<h3 id="section3fromrussiawithlovefromz">Section 3: From Russia with Love (From - Z)</h3>
+<p>Genitive also tells us "From where" (Origin).<br />
+The preposition is <strong>З</strong> (or <strong>Із</strong> / <strong>Зі</strong>).</p>
+<ul>
+<li><strong>З</strong> Україн<strong>и</strong> (From Ukraine).</li>
+<li><strong>З</strong> Америк<strong>и</strong> (From America).</li>
+<li><strong>З</strong> Лондон<strong>а</strong> (From London).</li>
+<li><strong>З</strong> Києв<strong>а</strong> (From Kyiv).</li>
+</ul>
+<p><strong>Conversation:</strong></p>
+<ul>
+<li>Звідки ви? (From where are you?)</li>
+<li>Я з Англії. (I am from England).</li>
+</ul>
+<h3 id="section4havingandnothaving">Section 4: Having and Not Having.</h3>
+<p>Ukrainian doesn't have a simple verb "To Have".<br />
+We use a structure: <strong>"By me is [Subject]"</strong>.</p>
+<ul>
+<li><strong>У мене є</strong> + Nominative (I have).</li>
+<li>У мене є брат. (By me is a brother).</li>
+<li><strong>У мене немає</strong> + Genitive (I don't have).</li>
+<li>У мене немає брат<strong>а</strong>. (By me there is no brother).</li>
+</ul>
+<p>This flip is the hardest part of A1 syntax.</p>
+<ul>
+<li>Positive: <strong>Є</strong> (Is) -&gt; Nominative.</li>
+<li>Negative: <strong>Немає</strong> (Is no) -&gt; Genitive.</li>
+</ul>
+<blockquote>
+  <p>⚡ <strong>Language Link: The Hamlet Question</strong><br />
+  "To be or not to be?"<br />
+  In Ukrainian grammar: "To be (Ye) or Not to have (Nemaye)".</p>
+  <ul>
+  <li><strong>У мене є вода.</strong> (I have water).</li>
+  <li><strong>У мене немає води.</strong> (I don't have water).<br />
+  The object changes case solely because of the "No"!</li>
+  </ul>
+</blockquote>
+<h3 id="section5thecaseofwishing">Section 5: The Case of Wishing</h3>
+<p>Genitive is not just for cynical negation. It is also for optimistic wishing!<br />
+When you wish for something, you wish for "of it".</p>
+<ul>
+<li><strong>Бажаю…</strong> (I wish…)</li>
+<li><strong>Щастя</strong> (Happiness - Genitive of Щастя).</li>
+<li><strong>Здоров'я</strong> (Health - Genitive of Здоров'я).</li>
+<li><strong>Успіху</strong> (Success - Genitive of Успіх).</li>
+<li><strong>Любові</strong> (Love - Genitive of Любов).</li>
+</ul>
+<blockquote>
+  <p>🥂 <strong>Cultural Insight: The Toast</strong><br />
+  In Ukraine, toasts are serious business.<br />
+  You don't just say "Cheers" (Budmo).<br />
+  You make a speech.<br />
+  "Я бажаю вам щастя, здоров'я, успіху і миру." (I wish you happiness, health, success, and peace).<br />
+  All in Genitive. Because you want a <em>quantity</em> of these things.</p>
+  <p>⚡ <strong>Language Link: Where is "OF"?</strong><br />
+  English has the word "Of".<br />
+  Spanish has "De". French "De". German "Von".<br />
+  Ukrainian has… nothing. Use the Genitive ending!</p>
+  <ul>
+  <li>Map <strong>of</strong> Kyiv = Карта Києв<strong>а</strong>.</li>
+  <li>Cup <strong>of</strong> tea = Чашка ча<strong>ю</strong>.</li>
+  <li>President <strong>of</strong> Ukraine = Президент Україн<strong>и</strong>.<br />
+  The ending IS the word "Of".</li>
+  </ul>
+</blockquote>
+<h3 id="section6summaryofendingssingular">Section 6: Summary of Endings (Singular)</h3>
+<p>Let's recap the patterns.</p>
+<ol>
+<li><strong>Hard Masculine:</strong> -a (Pasport -&gt; Pasporta).</li>
+<li><strong>Soft Masculine:</strong> -ya (Likar -&gt; Likarya).</li>
+<li><strong>Hard Feminine:</strong> -y (Mama -&gt; Mamy).</li>
+<li><strong>Soft Feminine:</strong> -i (Kukhnya -&gt; Kukhni).</li>
+<li><strong>Neuter:</strong> -a/-ya (Misto -&gt; Mista).</li>
+</ol>
+<p>It basically sounds like "A" or "Y/I".<br />
+If it sounds like "A", it's probably Masculine or Neuter.<br />
+If it sounds like "Y/I", it's probably Feminine.<br />
+(Rough heuristic).</p>
+<h2 id="practice">practice</h2>
+<p><strong>Drill 1: The Destroyer</strong><br />
+Make these words vanish (Genitive).</p>
+<ul>
+<li>Паспорт -&gt; Немає <strong>паспорта</strong>.</li>
+<li>Віза -&gt; Немає <strong>візи</strong>.</li>
+<li>Час (Time) -&gt; Немає <strong>часу</strong> (-u for abstract/uncountable).</li>
+<li>Гроші (Pl) -&gt; Немає <strong>грошей</strong> (Plural Genitive - tricky, let's stick to singular first? Okay, singular focus).</li>
+<li>Брат -&gt; Немає <strong>брата</strong>.</li>
+<li>Сестра -&gt; Немає <strong>сестри</strong>.</li>
+<li>Кіт (Cat) -&gt; Немає <strong>кота</strong>.</li>
+<li>Собака (Dog) -&gt; Немає <strong>собаки</strong>.</li>
+<li>Телефон -&gt; Немає <strong>телефона</strong>.</li>
+</ul>
+<p><strong>Drill 2: The Origin</strong><br />
+Where are they from?</p>
+<ul>
+<li>(London) -&gt; З Лондон<strong>а</strong>.</li>
+<li>(Kyiv) -&gt; З Києв<strong>а</strong>.</li>
+<li>(Ukraine) -&gt; З Україн<strong>и</strong>.</li>
+<li>(Canada) -&gt; З Канад<strong>и</strong>.</li>
+<li>(Office) -&gt; З офіс<strong>у</strong>.</li>
+<li>(Shop) -&gt; З магазин<strong>у</strong>.</li>
+<li>(Concert) -&gt; З концерт<strong>у</strong>.</li>
+</ul>
+<p><strong>Drill 3: Coffee Order</strong></p>
+<ul>
+<li>Кава без ___ (milk/moloko) -&gt; <strong>молока</strong>.</li>
+<li>Чай без ___ (lemon/lymon) -&gt; <strong>лимона</strong>.</li>
+<li>Вода без ___ (gas/haz) -&gt; <strong>газу</strong>.</li>
+<li>Суп без ___ (meat/myaso) -&gt; <strong>м'яса</strong>.</li>
+<li>Піца без ___ (cheese/syr) -&gt; <strong>сиру</strong>.</li>
+</ul>
+<h2 id="production">production</h2>
+<blockquote>
+  <p>🌍 <strong>Culture Corner: The Empty Bottle</strong><br />
+  In Ukraine, you never leave an empty bottle on the table.<br />
+  "Порожня пляшка на столі — грошей не буде."<br />
+  (Empty bottle on table — there will be no money).<br />
+  You must put the empty bottle on the floor.<br />
+  This is a superstition about <strong>Absence</strong>. We fear the void.</p>
+</blockquote>
+<p><strong>Scenario: At the Border</strong></p>
+<ul>
+<li><strong>Officer:</strong> Добрий день. Ваш паспорт.</li>
+<li><strong>Tourist:</strong> Ось. (Here).</li>
+<li><strong>Officer:</strong> Звідки ви?</li>
+<li><strong>Tourist:</strong> Я з Канади. А ви з Києва?</li>
+<li><strong>Officer:</strong> Ні, я з Львова.</li>
+<li><strong>Tourist:</strong> О, Львів - гарне місто.</li>
+<li><strong>Officer:</strong> Це ваша віза?</li>
+<li><strong>Tourist:</strong> У мене немає візи. Безвіз. (No visa. Visa-free).</li>
+<li><strong>Officer:</strong> А, точно. Мета візиту? (Goal of visit?)</li>
+<li><strong>Tourist:</strong> Туризм.</li>
+<li><strong>Officer:</strong> Ласкаво просимо в Україну.</li>
+</ul>
+<p><strong>Scenario: The Cafe Problem</strong></p>
+<ul>
+<li><strong>You:</strong> Дайте, будь ласка, капучино.</li>
+<li><strong>Barista:</strong> Вибачте, у нас немає молока.</li>
+<li><strong>You:</strong> Немає молока? Капучино без молока?</li>
+<li><strong>Barista:</strong> Так. Це називається еспресо.</li>
+<li><strong>You:</strong> Добре. Дайте еспресо. Без цукру.</li>
+<li><strong>Barista:</strong> Прошу.</li>
+</ul>
 <hr /></div>
     </div>
   
       
-    <div class="card section-summary">
-      <h3>📋 Summary</h3>
-      <div class="md-content"><blockquote>
-  <p><strong>What You Learned Today</strong></p>
-  <ul>
-  <li>The <strong>genitive case</strong> expresses absence: <strong>Немає кави</strong> (There's no coffee)</li>
-  <li>Genitive endings: M: -а/-у, F: -и/-ї, N: -а</li>
-  <li>Possession: <strong>У мене немає</strong> + genitive (I don't have)</li>
-  <li><strong>Без</strong> (without) + genitive: <strong>без цукру</strong> (without sugar)</li>
-  </ul>
-  <p><strong>Coming Next</strong></p>
-  <p>In Module 17, you'll learn <strong>Numbers & Money</strong>:</p>
-  <ul>
-  <li>Cardinals 0-100</li>
-  <li>Currency: гривня, гривні, гривень</li>
-  <li>Using genitive with quantities (5+ items)</li>
-  <li>Asking prices: Скільки коштує?</li>
-  </ul>
-</blockquote></div>
-    </div>
-  
       <div class="btn-group">
         <button class="btn btn-primary" onclick="showSection('activity-0')">Activities →</button>
       </div>
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Genitive Forms</h3>
+    <section id="activity-0" class="section"><div class="card"><h3>Genitive Pairs</h3>
       <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container" class="fill-container"></div>
-      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+      <div class="match-container" id="activity-0-container"><svg class="match-lines" id="activity-0-lines"></svg>
+        <div class="match-column" id="activity-0-left"></div>
+        <div class="match-column" id="activity-0-right"></div>
+      </div>
+      <div class="completion-message" id="activity-0-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Absence Sentences</h3>
+    <section id="activity-1" class="section"><div class="card"><h3>The Cynic</h3>
       <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
-      <div id="activity-1-container" class="order-container"></div>
-      <div class="completion-message" id="activity-1-complete"><h3>Perfect Order!</h3></div>
+      <div id="activity-1-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-1-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Nominative to Genitive</h3>
-      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-2-container"><svg class="match-lines" id="activity-2-lines"></svg>
-        <div class="match-column" id="activity-2-left"></div>
-        <div class="match-column" id="activity-2-right"></div>
-      </div>
-      <div class="completion-message" id="activity-2-complete"><h3>Perfect!</h3></div>
+    <section id="activity-2" class="section"><div class="card"><h3>Logic of Absence</h3>
+      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/8</span></div>
+      <div id="activity-2-container"></div>
+      <div class="completion-message" id="activity-2-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Genitive Knowledge</h3>
+    <section id="activity-3" class="section"><div class="card"><h3>From Where? (Zvidky)</h3>
       <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div id="activity-3-container"></div>
+      <div id="activity-3-container" class="fill-container"></div>
       <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Genitive Facts</h3>
-      <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
-      <div id="activity-4-container"></div>
-      <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
+    <section id="activity-4" class="section"><div class="card"><h3>Have vs Have Not</h3>
+      <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/14</span></div>
+      <div class="sort-pool" id="activity-4-pool"><div class="sort-items" id="activity-4-items"></div></div>
+      <div class="sort-groups" id="activity-4-groups"></div>
+      <div class="completion-message" id="activity-4-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Case Forms</h3>
+    <section id="activity-5" class="section"><div class="card"><h3>Negative Sentence Builder</h3>
       <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
-      <div class="sort-pool" id="activity-5-pool"><div class="sort-items" id="activity-5-items"></div></div>
-      <div class="sort-groups" id="activity-5-groups"></div>
-      <div class="completion-message" id="activity-5-complete"><h3>All Sorted!</h3></div>
+      <div id="activity-5-container" class="order-container"></div>
+      <div class="completion-message" id="activity-5-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Genitive Vocabulary</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>Preposition Picker</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
-      <div id="activity-6-container" class="order-container"></div>
-      <div class="completion-message" id="activity-6-complete"><h3>Perfect Order!</h3></div>
+      <div id="activity-6-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-6-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
     </div></section>
 
-    <section id="activity-7" class="section"><div class="card"><h3>Possession Phrases</h3>
+    <section id="activity-7" class="section"><div class="card"><h3>Of What?</h3>
       <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-7-container"><svg class="match-lines" id="activity-7-lines"></svg>
-        <div class="match-column" id="activity-7-left"></div>
-        <div class="match-column" id="activity-7-right"></div>
-      </div>
-      <div class="completion-message" id="activity-7-complete"><h3>Perfect!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+      <div id="activity-7-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-7-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-8')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-8" class="section"><div class="card"><h3>Genitive Scramble</h3>
+      <div class="score-display"><span class="score"><span id="activity-8-score">0</span>/12</span></div>
+      <div id="activity-8-container" class="order-container"></div>
+      <div class="completion-message" id="activity-8-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-8')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
@@ -855,7 +848,7 @@ footer {
     <th>Переклад</th>
     <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">немає</td><td class="vocab-ipa">/neˈmɑjɛ/</td><td class="vocab-en">there is no</td><td class="vocab-note">+ genitive</td></tr><tr><td class="vocab-uk">нема</td><td class="vocab-ipa">/neˈmɑ/</td><td class="vocab-en">there is no</td><td class="vocab-note">colloquial form</td></tr><tr><td class="vocab-uk">без</td><td class="vocab-ipa">/bɛz/</td><td class="vocab-en">without</td><td class="vocab-note">+ genitive</td></tr><tr><td class="vocab-uk">крім</td><td class="vocab-ipa">/krim/</td><td class="vocab-en">except, besides</td><td class="vocab-note">+ genitive</td></tr><tr><td class="vocab-uk">для</td><td class="vocab-ipa">/dlʲɑ/</td><td class="vocab-en">for</td><td class="vocab-note">+ genitive</td></tr><tr><td class="vocab-uk">у/в</td><td class="vocab-ipa">/u/, /v/</td><td class="vocab-en">at (possession)</td><td class="vocab-note">у мене = I have</td></tr><tr><td class="vocab-uk">час</td><td class="vocab-ipa">/t͡ʃɑs/</td><td class="vocab-en">time</td><td class="vocab-note">часу in genitive</td></tr><tr><td class="vocab-uk">гроші</td><td class="vocab-ipa">/ˈɦrɔʃi/</td><td class="vocab-en">money</td><td class="vocab-note">грошей in genitive</td></tr><tr><td class="vocab-uk">ідея</td><td class="vocab-ipa">/iˈdɛjɑ/</td><td class="vocab-en">idea</td><td class="vocab-note">ідеї in genitive</td></tr><tr><td class="vocab-uk">проблема</td><td class="vocab-ipa">/prɔˈblɛmɑ/</td><td class="vocab-en">problem</td><td class="vocab-note">проблеми in genitive</td></tr><tr><td class="vocab-uk">можливість</td><td class="vocab-ipa">/mɔʒˈlɪvʲistʲ/</td><td class="vocab-en">possibility, opportunity</td><td class="vocab-note">soft stem</td></tr><tr><td class="vocab-uk">причина</td><td class="vocab-ipa">/prɪˈt͡ʃɪnɑ/</td><td class="vocab-en">reason, cause</td><td class="vocab-note">причини in genitive</td></tr><tr><td class="vocab-uk">сенс</td><td class="vocab-ipa">/sɛns/</td><td class="vocab-en">sense, meaning</td><td class="vocab-note">сенсу in genitive</td></tr><tr><td class="vocab-uk">користь</td><td class="vocab-ipa">/ˈkɔrɪstʲ/</td><td class="vocab-en">benefit, use</td><td class="vocab-note">soft stem</td></tr><tr><td class="vocab-uk">значення</td><td class="vocab-ipa">/ˈznɑt͡ʃɛnʲːɑ/</td><td class="vocab-en">meaning, significance</td><td class="vocab-note">neuter -ння</td></tr><tr><td class="vocab-uk">різниця</td><td class="vocab-ipa">/ˈriznɪt͡sʲɑ/</td><td class="vocab-en">difference</td><td class="vocab-note">різниці in genitive</td></tr><tr><td class="vocab-uk">вибір</td><td class="vocab-ipa">/ˈvɪbir/</td><td class="vocab-en">choice</td><td class="vocab-note">вибору in genitive</td></tr><tr><td class="vocab-uk">досвід</td><td class="vocab-ipa">/ˈdɔsvid/</td><td class="vocab-en">experience</td><td class="vocab-note">досвіду in genitive</td></tr><tr><td class="vocab-uk">знання</td><td class="vocab-ipa">/ˈznɑnʲːɑ/</td><td class="vocab-en">knowledge</td><td class="vocab-note">neuter -ння</td></tr><tr><td class="vocab-uk">інформація</td><td class="vocab-ipa">/infɔrˈmɑt͡sʲijɑ/</td><td class="vocab-en">information</td><td class="vocab-note">інформації in genitive</td></tr><tr><td class="vocab-uk">допомога</td><td class="vocab-ipa">/dɔˈpɔmɔɦɑ/</td><td class="vocab-en">help, assistance</td><td class="vocab-note">допомоги in genitive</td></tr><tr><td class="vocab-uk">підтримка</td><td class="vocab-ipa">/pidˈtrɪmkɑ/</td><td class="vocab-en">support</td><td class="vocab-note">підтримки in genitive</td></tr><tr><td class="vocab-uk">увага</td><td class="vocab-ipa">/uˈvɑɦɑ/</td><td class="vocab-en">attention</td><td class="vocab-note">уваги in genitive</td></tr><tr><td class="vocab-uk">терпіння</td><td class="vocab-ipa">/tɛrˈpʲinʲːɑ/</td><td class="vocab-en">patience</td><td class="vocab-note">neuter -ння</td></tr><tr><td class="vocab-uk">сила</td><td class="vocab-ipa">/ˈsɪlɑ/</td><td class="vocab-en">strength, force</td><td class="vocab-note">сили in genitive</td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">немає</td><td class="vocab-ipa">/nɛˈmɑjɛ/</td><td class="vocab-en">there is no</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('немає')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">без</td><td class="vocab-ipa">/bɛz/</td><td class="vocab-en">without</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('без')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">з</td><td class="vocab-ipa">/z/</td><td class="vocab-en">from</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('з')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">звідки</td><td class="vocab-ipa">/ˈzvidkɪ/</td><td class="vocab-en">from where</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('звідки')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">цукор</td><td class="vocab-ipa">/ˈt͡sukɔr/</td><td class="vocab-en">sugar</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('цукор')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">сіль</td><td class="vocab-ipa">/s⁽ʲ⁾ilʲ/</td><td class="vocab-en">salt</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('сіль')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">молоко</td><td class="vocab-ipa">/mɔlɔˈkɔ/</td><td class="vocab-en">milk</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('молоко')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вода</td><td class="vocab-ipa">/vɔˈdɑ/</td><td class="vocab-en">water</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вода')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">газ</td><td class="vocab-ipa">/ɦɑz/</td><td class="vocab-en">gas</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('газ')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">час</td><td class="vocab-ipa">/tʃɑs/</td><td class="vocab-en">time</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('час')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вайфай</td><td class="vocab-ipa">/vɑjˈfɑj/</td><td class="vocab-en">wifi</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вайфай')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">інтернет</td><td class="vocab-ipa">/intɛrˈnɛt/</td><td class="vocab-en">internet</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('інтернет')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">паспорт</td><td class="vocab-ipa">/ˈpɑspɔrt/</td><td class="vocab-en">passport</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('паспорт')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">віза</td><td class="vocab-ipa">/ˈvizɑ/</td><td class="vocab-en">visa</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('віза')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">квиток</td><td class="vocab-ipa">/kvɪˈtɔk/</td><td class="vocab-en">ticket</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('квиток')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">проблема</td><td class="vocab-ipa">/prɔˈblɛmɑ/</td><td class="vocab-en">problem</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('проблема')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">життя</td><td class="vocab-ipa">/ʒɪtˈtʲɑ/</td><td class="vocab-en">life</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('життя')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">порожній</td><td class="vocab-ipa">/pɔˈrɔʒn⁽ʲ⁾ij/</td><td class="vocab-en">empty</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('порожній')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">пляшка</td><td class="vocab-ipa">/ˈplʲɑʃkɑ/</td><td class="vocab-en">bottle</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('пляшка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">повний</td><td class="vocab-ipa">/ˈpɔvnɪj/</td><td class="vocab-en">full</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('повний')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">мало</td><td class="vocab-ipa">/ˈmɑlɔ/</td><td class="vocab-en">few/little</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('мало')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">багато</td><td class="vocab-ipa">/bɑˈɦɑtɔ/</td><td class="vocab-en">many/much</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('багато')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">трохи</td><td class="vocab-ipa">/ˈtrɔxɪ/</td><td class="vocab-en">a little bit</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('трохи')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">капучино</td><td class="vocab-ipa">/kɑpuˈtʃinɔ/</td><td class="vocab-en">cappuccino</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('капучино')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">еспресо</td><td class="vocab-ipa">/ɛsˈprɛsɔ/</td><td class="vocab-en">espresso</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('еспресо')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -867,8 +860,8 @@ footer {
   </main><footer>Module 16 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"fill-blank","title":"Genitive Forms","data":{"type":"fill-blank","items":[{"prompt":"У мене немає ___ (час).","answer":"часу","hints":["час"],"options":["часу","часа","час","часи"]},{"prompt":"Тут немає ___ (кава).","answer":"кави","hints":["кава"],"options":["кави","кава","каву","кавою"]},{"prompt":"Без ___, будь ласка. (цукор)","answer":"цукру","options":["цукру","цукор","цукра","цукром"]},{"prompt":"У нього немає ___ (ідея).","answer":"ідеї","hints":["ідея"],"options":["ідеї","ідея","ідею","ідеєю"]},{"prompt":"Немає ___ (проблема).","answer":"проблеми","hints":["проблема"],"options":["проблеми","проблема","проблему","проблем"]},{"prompt":"У тебе немає ___ (гроші).","answer":"грошей","hints":["гроші"],"options":["грошей","гроші","грошима","грошам"]},{"prompt":"Без ___ (причина).","answer":"причини","hints":["причина"],"options":["причини","причина","причину","причиною"]},{"prompt":"Немає ___ (сенс).","answer":"сенсу","hints":["сенс"],"options":["сенсу","сенс","сенса","сенсом"]},{"prompt":"У нас немає ___ (інформація).","answer":"інформації","hints":["інформація"],"options":["інформації","інформація","інформацію","інформацією"]},{"prompt":"Тут немає ___ (вода).","answer":"води","hints":["вода"],"options":["води","вода","воду","водою"]},{"prompt":"Без ___ (допомога).","answer":"допомоги","hints":["допомога"],"options":["допомоги","допомога","допомогу","допомогою"]},{"prompt":"У них немає ___ (можливість).","answer":"можливості","hints":["можливість"],"options":["можливості","можливість","можливістю","можливостей"]}]}},{"id":"activity-1","type":"unjumble","title":"Absence Sentences","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["немає","мене","часу","У"],"answer":"У мене немає часу.","translation":"I don't have time."},{"words":["немає","Тут","кави"],"answer":"Тут немає кави.","translation":"There's no coffee here."},{"words":["цукру","Без","ласка","будь"],"answer":"Без цукру, будь ласка.","translation":"Without sugar, please."},{"words":["проблеми","немає","У","нас"],"answer":"У нас немає проблеми.","translation":"We don't have a problem."},{"words":["грошей","нього","немає","У"],"answer":"У нього немає грошей.","translation":"He doesn't have money."},{"words":["Немає","сенсу"],"answer":"Немає сенсу.","translation":"There's no point."},{"words":["ідеї","немає","тебе","У"],"answer":"У тебе немає ідеї.","translation":"You don't have an idea."},{"words":["немає","води","Тут"],"answer":"Тут немає води.","translation":"There's no water here."},{"words":["допомоги","Без"],"answer":"Без допомоги.","translation":"Without help."},{"words":["немає","вас","інформації","У"],"answer":"У вас немає інформації.","translation":"You don't have information."},{"words":["причини","без","Він","пішов"],"answer":"Він пішов без причини.","translation":"He left without reason."},{"words":["можливості","У","неї","немає"],"answer":"У неї немає можливості.","translation":"She doesn't have the opportunity."}]}},{"id":"activity-2","type":"match-up","title":"Nominative to Genitive","data":{"type":"match-up","pairs":[{"left":"час","right":"часу"},{"left":"вода","right":"води"},{"left":"кава","right":"кави"},{"left":"гроші","right":"грошей"},{"left":"ідея","right":"ідеї"},{"left":"проблема","right":"проблеми"},{"left":"цукор","right":"цукру"},{"left":"причина","right":"причини"},{"left":"сенс","right":"сенсу"},{"left":"допомога","right":"допомоги"},{"left":"можливість","right":"можливості"},{"left":"інформація","right":"інформації"}],"shuffleRight":true}},{"id":"activity-3","type":"quiz","title":"Genitive Knowledge","data":{"type":"quiz","questions":[{"question":"What case do we use after \"немає\"?","options":["Nominative","Accusative","Genitive","Locative"],"correctIndex":2,"explanation":"The genitive case is always used with немає to express absence."},{"question":"How do you say \"I don't have\" in Ukrainian?","options":["Я не маю","У мене немає","Мені немає","Я немає"],"correctIndex":1,"explanation":"Ukrainian uses \"У мене немає\" + genitive."},{"question":"What is the genitive of \"вода\"?","options":["воду","води","водою","воді"],"correctIndex":1,"explanation":"Feminine -а changes to -и in genitive."},{"question":"What preposition means \"without\"?","options":["з","без","для","у"],"correctIndex":1,"explanation":"\"Без\" means \"without\" and requires genitive."},{"question":"What is the genitive of \"час\"?","options":["часа","часу","часі","часом"],"correctIndex":1,"explanation":"Masculine inanimate nouns often take -у."},{"question":"\"Немає сенсу\" means:","options":["There is sense","There is no point/sense","I have sense","Give me sense"],"correctIndex":1,"explanation":"\"Немає\" + genitive = there is no."},{"question":"What is the genitive of \"гроші\" (money)?","options":["гроші","грошима","грошей","грошам"],"correctIndex":2,"explanation":"Plural nouns have special genitive forms."},{"question":"How do you say \"he doesn't have\"?","options":["Він не має","У нього немає","Його немає","Він немає"],"correctIndex":1,"explanation":"Use \"у нього\" for \"he has\" construction."},{"question":"\"Кава без цукру\" means:","options":["Coffee with sugar","Coffee without sugar","Sugar without coffee","Give me sugar"],"correctIndex":1,"explanation":"\"Без\" + genitive = without."},{"question":"What is the genitive of \"проблема\"?","options":["проблеми","проблему","проблемою","проблемі"],"correctIndex":0,"explanation":"Feminine -а changes to -и."},{"question":"\"У нас немає проблеми\" means:","options":["We have a problem","We don't have a problem","Give us a problem","There is a problem"],"correctIndex":1,"explanation":"\"У нас немає\" + genitive = we don't have."},{"question":"Which is correct for \"without help\"?","options":["без допомоги","без допомога","без допомогу","без допомогою"],"correctIndex":0,"explanation":"\"Без\" requires the genitive form."}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-4","type":"true-false","title":"Genitive Facts","data":{"type":"true-false","statements":[{"statement":"The genitive case is used to express absence.","isTrue":true,"explanation":"Correct! \"Немає\" + genitive = there is no."},{"statement":"\"Немає\" is followed by the accusative case.","isTrue":false,"explanation":"Incorrect! \"Немає\" is always followed by the genitive case."},{"statement":"\"Без\" means \"without\" in Ukrainian.","isTrue":true,"explanation":"Correct! And it requires the genitive case."},{"statement":"Feminine nouns keep -а ending in genitive.","isTrue":false,"explanation":"Incorrect! Feminine -а changes to -и in genitive."},{"statement":"\"У мене немає\" means \"I don't have.\"","isTrue":true,"explanation":"Correct! This is the standard construction for \"not having.\""},{"statement":"Masculine genitive always ends in -а.","isTrue":false,"explanation":"Incorrect! Masculine genitives can end in -у or -а."},{"statement":"\"Грошей\" is the genitive of \"гроші.\"","isTrue":true,"explanation":"Correct! This is the genitive plural form."},{"statement":"\"Без проблем\" uses the nominative case.","isTrue":false,"explanation":"Incorrect! \"Без\" always requires genitive (проблем = genitive plural)."},{"statement":"\"У нього\" means \"he has\" in the possession construction.","isTrue":true,"explanation":"Correct! \"У нього є\" = he has, \"у нього немає\" = he doesn't have."},{"statement":"The genitive is the least common case in Ukrainian.","isTrue":false,"explanation":"Incorrect! The genitive is one of the most frequently used cases."},{"statement":"\"Часу\" is the genitive form of \"час.\"","isTrue":true,"explanation":"Correct! Masculine inanimate nouns often take -у."},{"statement":"\"Ідеї\" is the genitive form of \"ідея.\"","isTrue":true,"explanation":"Correct! Feminine -я changes to -ї in genitive."}]}},{"id":"activity-5","type":"group-sort","title":"Case Forms","data":{"type":"group-sort","groups":[{"id":"nominative","name":"Nominative","items":["час","вода","ідея","проблема"]},{"id":"genitive","name":"Genitive","items":["часу","води","ідеї","проблеми"]},{"id":"accusative","name":"Accusative","items":["воду","ідею","проблему","час"]}],"shuffleItems":true}},{"id":"activity-6","type":"anagram","title":"Genitive Vocabulary","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["с","а","ч","у"],"answer":"часу","translation":"time - genitive"},{"letters":["и","д","о","в"],"answer":"води","translation":"water - genitive"},{"letters":["і","ї","д","е","і"],"answer":"ідеї","translation":"idea - genitive"},{"letters":["и","м","е","л","б","о","р","п"],"answer":"проблеми","translation":"problem - genitive"},{"letters":["у","р","к","у","ц"],"answer":"цукру","translation":"sugar - genitive"},{"letters":["і","ш","о","р","г","е","й"],"answer":"грошей","translation":"money - genitive"},{"letters":["у","с","н","е","с"],"answer":"сенсу","translation":"sense - genitive"},{"letters":["и","н","и","ч","и","р","п"],"answer":"причини","translation":"reason - genitive"},{"letters":["і","г","о","м","о","п","о","д"],"answer":"допомоги","translation":"help - genitive"},{"letters":["і","ї","а","ц","м","р","о","ф","н","і"],"answer":"інформації","translation":"information - genitive"},{"letters":["і","т","с","о","в","и","л","ж","о","м"],"answer":"можливості","translation":"opportunity - genitive"},{"letters":["є","а","м","е","н"],"answer":"немає","translation":"there is no"}]}},{"id":"activity-7","type":"match-up","title":"Possession Phrases","data":{"type":"match-up","pairs":[{"left":"я","right":"у мене"},{"left":"ти","right":"у тебе"},{"left":"він","right":"у нього"},{"left":"вона","right":"у неї"},{"left":"ми","right":"у нас"},{"left":"ви","right":"у вас"},{"left":"вони","right":"у них"},{"left":"мама","right":"у мами"},{"left":"тато","right":"у тата"},{"left":"брат","right":"у брата"},{"left":"сестра","right":"у сестри"},{"left":"друг","right":"у друга"}],"shuffleRight":true}}];
-    const vocabData = [{"uk":"немає","translit":"","en":"there is no","note":"+ genitive"},{"uk":"нема","translit":"","en":"there is no","note":"colloquial form"},{"uk":"без","translit":"","en":"without","note":"+ genitive"},{"uk":"крім","translit":"","en":"except, besides","note":"+ genitive"},{"uk":"для","translit":"","en":"for","note":"+ genitive"},{"uk":"у/в","translit":"","en":"at (possession)","note":"у мене = I have"},{"uk":"час","translit":"","en":"time","note":"часу in genitive"},{"uk":"гроші","translit":"","en":"money","note":"грошей in genitive"},{"uk":"ідея","translit":"","en":"idea","note":"ідеї in genitive"},{"uk":"проблема","translit":"","en":"problem","note":"проблеми in genitive"},{"uk":"можливість","translit":"","en":"possibility, opportunity","note":"soft stem"},{"uk":"причина","translit":"","en":"reason, cause","note":"причини in genitive"},{"uk":"сенс","translit":"","en":"sense, meaning","note":"сенсу in genitive"},{"uk":"користь","translit":"","en":"benefit, use","note":"soft stem"},{"uk":"значення","translit":"","en":"meaning, significance","note":"neuter -ння"},{"uk":"різниця","translit":"","en":"difference","note":"різниці in genitive"},{"uk":"вибір","translit":"","en":"choice","note":"вибору in genitive"},{"uk":"досвід","translit":"","en":"experience","note":"досвіду in genitive"},{"uk":"знання","translit":"","en":"knowledge","note":"neuter -ння"},{"uk":"інформація","translit":"","en":"information","note":"інформації in genitive"},{"uk":"допомога","translit":"","en":"help, assistance","note":"допомоги in genitive"},{"uk":"підтримка","translit":"","en":"support","note":"підтримки in genitive"},{"uk":"увага","translit":"","en":"attention","note":"уваги in genitive"},{"uk":"терпіння","translit":"","en":"patience","note":"neuter -ння"},{"uk":"сила","translit":"","en":"strength, force","note":"сили in genitive"}];
+    const activitiesData = [{"id":"activity-0","type":"match-up","title":"Genitive Pairs","data":{"type":"match-up","pairs":[{"left":"Паспорт","right":"Паспорта"},{"left":"Віза","right":"Візи"},{"left":"Чай","right":"Чаю"},{"left":"Кава","right":"Кави"},{"left":"Брат","right":"Брата"},{"left":"Сестра","right":"Сестри"},{"left":"Місто","right":"Міста"},{"left":"Молоко","right":"Молока"},{"left":"Цукор","right":"Цукру"},{"left":"Україна","right":"України"},{"left":"Автобус","right":"Автобуса"},{"left":"Метро","right":"Метро (Indecl)"}],"shuffleRight":true}},{"id":"activity-1","type":"fill-blank","title":"The Cynic","data":{"type":"fill-blank","items":[{"prompt":"Тут немає ___ (Internet).","answer":"інтернету","hints":["Internet"],"options":["інтернету","інтернет","інтернета"]},{"prompt":"У мене немає ___ (Auto).","answer":"авто","hints":["Auto"],"options":["авто","авта","авту"]},{"prompt":"У нас немає ___ (Time/Chas).","answer":"часу","hints":["Time/Chas"],"options":["часу","часи","час"]},{"prompt":"В офісі немає ___ (Wifi).","answer":"вайфаю","hints":["Wifi"],"options":["вайфаю","вайфай","вайфая"]},{"prompt":"У супі немає ___ (Salt/Sil - f).","answer":"солі","hints":["Salt/Sil - f"],"options":["солі","сіль","солю"]},{"prompt":"У мене немає ___ (Ticket).","answer":"квитка","hints":["Ticket"],"options":["квитка","квиток","квитку"]},{"prompt":"Тут немає ___ (Metro).","answer":"метро","hints":["Metro"],"options":["метро","метра","метру"]},{"prompt":"У магазині немає ___ (Bread/Khlib).","answer":"хліба","hints":["Bread/Khlib"],"options":["хліба","хліб","хлібу"]},{"prompt":"У мене немає ___ (Sister).","answer":"сестри","hints":["Sister"],"options":["сестри","сестра","сестру"]},{"prompt":"У нього немає ___ (Brother).","answer":"брата","hints":["Brother"],"options":["брата","брат","брату"]},{"prompt":"У неї немає ___ (Money/Hroshi - pl).","answer":"грошей","hints":["Money/Hroshi - pl"],"options":["грошей","гроші","гроша"]},{"prompt":"У парку немає ___ (Coffee).","answer":"кави","hints":["Coffee"],"options":["кави","кава","каву"]}]}},{"id":"activity-2","type":"quiz","title":"Logic of Absence","data":{"type":"quiz","questions":[{"question":"I drink tea ___ sugar.","options":["без (without)","від (from)"],"correctIndex":0,"explanation":""},{"question":"I am ___ London.","options":["з (from)","в (in)"],"correctIndex":0,"explanation":""},{"question":"Where is Ivan? \"Його ___\" (He is not here).","options":["немає","ні"],"correctIndex":0,"explanation":""},{"question":"Kava bez ___ (milk).","options":["молока","молоком"],"correctIndex":0,"explanation":""},{"question":"Ya z ___ (Kyiv).","options":["Києва","Київ"],"correctIndex":0,"explanation":""},{"question":"There is no problem. \"Немає ___\".","options":["проблеми","проблема"],"correctIndex":0,"explanation":""},{"question":"Is \"У мене є\" followed by Nominative?","options":["Yes (Problem exists).","No."],"correctIndex":0,"explanation":""},{"question":"Is \"У мене немає\" followed by Nominative?","options":["Yes.","No, Genitive (No of problem)."],"correctIndex":1,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-3","type":"fill-blank","title":"From Where? (Zvidky)","data":{"type":"fill-blank","items":[{"prompt":"Я з ___ (Україна).","answer":"України","hints":["Україна"]},{"prompt":"Він з ___ (Київ).","answer":"Києва","hints":["Київ"]},{"prompt":"Вона з ___ (Америка).","answer":"Америки","hints":["Америка"]},{"prompt":"Ми з ___ (Лондон).","answer":"Лондона","hints":["Лондон"]},{"prompt":"Ти з ___ (Канада)?","answer":"Канади","hints":["Канада"]},{"prompt":"Вони з ___ (Польща - Poland).","answer":"Польщі","hints":["Польща - Poland"]},{"prompt":"Я з ___ (офіс).","answer":"офісу","hints":["офіс"]},{"prompt":"Ми з ___ (магазин).","answer":"магазину","hints":["магазин"]},{"prompt":"Він з ___ (університет).","answer":"університету","hints":["університет"]},{"prompt":"Вона з ___ (робота - activity).","answer":"роботи","hints":["робота - activity"]},{"prompt":"Я з ___ (дім).","answer":"дому","hints":["дім"]},{"prompt":"Ми з ___ (центр).","answer":"центру","hints":["центр"]}]}},{"id":"activity-4","type":"group-sort","title":"Have vs Have Not","data":{"type":"group-sort","groups":[{"id":"nominative","name":"Nominative","items":["У мене є брат","Тут є вайфай","У нас є час","Там є метро","У мами є кава","В офісі є вода"],"nameUk":"Є..."},{"id":"genitive","name":"Genitive","items":["У мене немає брата","Тут немає вайфаю","У нас немає часу","Там немає метро","У мами немає кави","В офісі немає води","Без цукру","З Києва"],"nameUk":"Немає..."}],"shuffleItems":true}},{"id":"activity-5","type":"unjumble","title":"Negative Sentence Builder","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["немає","У","квитка","мене"],"answer":"У мене немає квитка."},{"words":["без","Кава","молока","."],"answer":"Кава без молока."},{"words":["з","Я","Києва","."],"answer":"Я з Києва."},{"words":["інтернету","Тут","немає","."],"answer":"Тут немає інтернету."},{"words":["часу","У","немає","нас"],"answer":"У нас немає часу."},{"words":["візи","немає","Він"],"answer":"У нього немає візи. (Wait, unjumble needs exact words)."},{"words":["автобуса","немає","Там"],"answer":"Там немає автобуса."},{"words":["паспорта","немає","У","неї"],"answer":"У неї немає паспорта."},{"words":["Звідки","ви","?"],"answer":"Звідки ви?"},{"words":["цукру","Чай","без"],"answer":"Чай без цукру."},{"words":["немає","проблеми","Тут"],"answer":"Тут немає проблеми."},{"words":["грошей","немає","?"],"answer":"Немає грошей?"}]}},{"id":"activity-6","type":"fill-blank","title":"Preposition Picker","data":{"type":"fill-blank","items":[{"prompt":"Я ___ (from) Києва.","answer":"з","hints":["from"]},{"prompt":"Кава ___ (without) цукру.","answer":"без","hints":["without"]},{"prompt":"Я живу ___ (in) Лондоні.","answer":"в","hints":["in"]},{"prompt":"Книга ___ (on) столі.","answer":"на","hints":["on"]},{"prompt":"Ми ___ (from) України.","answer":"з","hints":["from"]},{"prompt":"Чай ___ (without) молока.","answer":"без","hints":["without"]},{"prompt":"Я ___ (at) роботі.","answer":"на","hints":["at"]},{"prompt":"Він ___ (in) парку.","answer":"у","hints":["in"]},{"prompt":"Вода ___ (without) газу.","answer":"без","hints":["without"]},{"prompt":"Я йду ___ (from) роботи.","answer":"з","hints":["from"]},{"prompt":"Ми ___ (in) центрі.","answer":"в","hints":["in"]},{"prompt":"Це ___ (from) мене.","answer":"від (Wait! З vs Від. From a person is Від. From a place is З. Let's start with З basic).","hints":["from"]}]}},{"id":"activity-7","type":"fill-blank","title":"Of What?","data":{"type":"fill-blank","items":[{"prompt":"Карта ___ (Kyiv).","answer":"Києва","hints":["Kyiv"]},{"prompt":"Президент ___ (Ukraine).","answer":"України","hints":["Ukraine"]},{"prompt":"Чашка ___ (tea/chaj - u).","answer":"чаю","hints":["tea/chaj - u"]},{"prompt":"Стакан ___ (water/voda).","answer":"води","hints":["water/voda"]},{"prompt":"Центр ___ (city/misto).","answer":"міста","hints":["city/misto"]},{"prompt":"Пляшка ___ (wine/vyno - a).","answer":"вина","hints":["wine/vyno - a"]},{"prompt":"Порція ___ (soup/sup - u).","answer":"супу","hints":["soup/sup - u"]},{"prompt":"Кілограм ___ (sugar/cukor - u).","answer":"цукру","hints":["sugar/cukor - u"]},{"prompt":"Історія ___ (London).","answer":"Лондона","hints":["London"]},{"prompt":"Фото ___ (passport).","answer":"паспорта","hints":["passport"]},{"prompt":"День ___ (Student).","answer":"студента","hints":["Student"]},{"prompt":"Номер ___ (telephone).","answer":"телефона","hints":["telephone"]}]}},{"id":"activity-8","type":"anagram","title":"Genitive Scramble","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["у","к","р","ц","у"],"answer":"цукру","translation":"Sugar - gen"},{"letters":["а","с","у","ч"],"answer":"часу","translation":"Time - gen"},{"letters":["в","и","к","а"],"answer":"вика","translation":"Coffee - gen"},{"letters":["д","и","в","о"],"answer":"води","translation":"Water - gen"},{"letters":["є","м","а","е","н"],"answer":"немає","translation":"There is no"},{"letters":["а","к","т","и","в","к"],"answer":"квитка","translation":"Ticket - gen"},{"letters":["а","т","с","і","м"],"answer":"міста","translation":"City - gen"},{"letters":["а","л","о","к","о","м"],"answer":"молока","translation":"Milk - gen"},{"letters":["у","м","о","д"],"answer":"дому","translation":"Home - gen"},{"letters":["у","т","р","о","п"],"answer":"аеропорту","translation":"Airport - gen"},{"letters":["у","к","н","а","б"],"answer":"банку","translation":"Bank - gen"},{"letters":["у","ф","і","с","о"],"answer":"офісу","translation":"Office - gen"}]}}];
+    const vocabData = [{"uk":"немає","translit":"","en":"there is no","note":"[🔊](audio_nemaye)"},{"uk":"без","translit":"","en":"without","note":"[🔊](audio_bez)"},{"uk":"з","translit":"","en":"from","note":"[🔊](audio_z)"},{"uk":"звідки","translit":"","en":"from where","note":"[🔊](audio_zvidky)"},{"uk":"цукор","translit":"","en":"sugar","note":"[🔊](audio_tsukor)"},{"uk":"сіль","translit":"","en":"salt","note":"[🔊](audio_sil)"},{"uk":"молоко","translit":"","en":"milk","note":"[🔊](audio_moloko)"},{"uk":"вода","translit":"","en":"water","note":"[🔊](audio_voda)"},{"uk":"газ","translit":"","en":"gas","note":"[🔊](audio_haz)"},{"uk":"час","translit":"","en":"time","note":"[🔊](audio_chas)"},{"uk":"вайфай","translit":"","en":"wifi","note":"[🔊](audio_vajfaj)"},{"uk":"інтернет","translit":"","en":"internet","note":"[🔊](audio_internet)"},{"uk":"паспорт","translit":"","en":"passport","note":"[🔊](audio_pasport)"},{"uk":"віза","translit":"","en":"visa","note":"[🔊](audio_viza)"},{"uk":"квиток","translit":"","en":"ticket","note":"[🔊](audio_kvytok)"},{"uk":"проблема","translit":"","en":"problem","note":"[🔊](audio_problema)"},{"uk":"життя","translit":"","en":"life","note":"[🔊](audio_zhyttya)"},{"uk":"порожній","translit":"","en":"empty","note":"[🔊](audio_porozhnij)"},{"uk":"пляшка","translit":"","en":"bottle","note":"[🔊](audio_pliashka)"},{"uk":"повний","translit":"","en":"full","note":"[🔊](audio_povnyj)"},{"uk":"мало","translit":"","en":"few/little","note":"[🔊](audio_malo)"},{"uk":"багато","translit":"","en":"many/much","note":"[🔊](audio_bahato)"},{"uk":"трохи","translit":"","en":"a little bit","note":"[🔊](audio_trokhy)"},{"uk":"капучино","translit":"","en":"cappuccino","note":"[🔊](audio_kapuchyno)"},{"uk":"еспресо","translit":"","en":"espresso","note":"[🔊](audio_espreso)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -928,6 +921,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2192,6 +2211,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

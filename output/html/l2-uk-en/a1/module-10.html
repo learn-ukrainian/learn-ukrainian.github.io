@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Module 10: Checkpoint: First Contact | Ukrainian A1</title>
+  <title>Module 10: Checkpoint - First Contact | Ukrainian A1</title>
   <style>
 :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -478,18 +518,17 @@ footer {
     </div>
   </div>
   <nav class="nav">
-    <h1>Module 10: Checkpoint: First Contact</h1>
+    <h1>Module 10: Checkpoint - First Contact</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Quiz</button>
+      <button class="nav-tab" data-section="activity-0">1. Sort</button>
       <button class="nav-tab" data-section="activity-1">2. Match</button>
-      <button class="nav-tab" data-section="activity-2">3. Sort</button>
-      <button class="nav-tab" data-section="activity-3">4. T/F</button>
-      <button class="nav-tab" data-section="activity-4">5. Fill</button>
+      <button class="nav-tab" data-section="activity-2">3. Fill</button>
+      <button class="nav-tab" data-section="activity-3">4. Match</button>
+      <button class="nav-tab" data-section="activity-4">5. Order</button>
       <button class="nav-tab" data-section="activity-5">6. Match</button>
       <button class="nav-tab" data-section="activity-6">7. Spell</button>
-      <button class="nav-tab" data-section="activity-7">8. Fill</button>
-      <button class="nav-tab" data-section="activity-8">9. Fill</button>
+      <button class="nav-tab" data-section="activity-7">8. Quiz</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -498,407 +537,167 @@ footer {
     <section id="lesson" class="section active">
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.1</span>
-        <h2 style="font-size:2rem;margin:0.5rem 0">Checkpoint: First Contact</h2>
-        <p style="color:var(--text-muted)">Review of Modules 1-9</p>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Checkpoint - First Contact</h2>
+        <p style="color:var(--text-muted)">Review of Modules 01-09</p>
       </div>
       
-    <div class="card section-content">
-      <h3>Warm Up</h3>
-      <div class="md-content"><p>Вітаємо! (Vitayemo!) — Congratulations! You've completed the first phase of your Ukrainian journey. Let's review everything you've learned in Modules 1-9 before moving forward.</p>
-<hr /></div>
-    </div>
-  
-    <div class="card section-content">
-      <h3>Lesson</h3>
-      <div class="md-content"><h2 id="whatyouvelearneda11overview">What You've Learned: A1.1 Overview</h2>
-<h3 id="module0102thecyrilliccode">Module 01-02: The Cyrillic Code</h3>
-<p>You learned all 33 letters of the Ukrainian alphabet:</p>
-<table>
-<thead>
-<tr>
-<th>Category</th>
-<th>Letters</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>True Friends</td>
-<td>А, Е, І, О, К, М, Т</td>
-</tr>
-<tr>
-<td>False Friends</td>
-<td>В (v), Н (n), Р (r), С (s), У (u), Х (kh)</td>
-</tr>
-<tr>
-<td>New Letters</td>
-<td>Б, Д, З, Л, П, Ф, Г, Ґ, Ж, Ш, Щ, Ч, Ц</td>
-</tr>
-<tr>
-<td>Iotated Vowels</td>
-<td>Є, Ї, Ю, Я</td>
-</tr>
-<tr>
-<td>Special</td>
-<td>Ь (soft sign), И (hard i)</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Italic Warnings:</strong> т→m, п→n, д→g, и→u</p>
+    <div class="card section-intro">
+      <h3>📖 Introduction</h3>
+      <div class="md-content"><h2 id="warmup">warm-up</h2>
+<p><strong>You Have Survived First Contact</strong></p>
+<p>Congratulations! You have completed the first phase of your Ukrainian journey: <strong>First Contact (A1.1)</strong>.</p>
+<p>Look back at where you started just ten modules ago.<br />
+Cyrillic was a collection of alien signals. You deciphered them. You learned that <strong>Р</strong> is usually an R, not a P. You learned that <strong>Х</strong> is a sound of friction, not a kiss. You learned that the alphabet is not a wall, but a gate.</p>
+<p>Then you entered the <strong>Matrix of Gender</strong>. You learned that the world is divided into He (M), She (F), and It (N), and that the end of the word is the key to this code. You realized that words dance and change.</p>
+<p>You built the <strong>Engines of Action</strong>. You mastered Class I verbs (like a breath of air) and Class II verbs (like a sharp click). You learned to say "I am," "I want," "I see," and "I love." You moved from being a spectator to a player only through the power of conjugation.</p>
+<p>And finally, you learned <strong>Interaction</strong>. You learned to ask "Who?" "Where?" and "Why?"—the three keys that open any conversation. You learned to navigate the table with food and drink.</p>
 <blockquote>
-  <p>💡 <strong>Quick Review</strong><br />
-  The False Friends are the trickiest! Remember: В sounds like "v", not "b". Р sounds like "r", not "p". Н sounds like "n", not "h".</p>
+  <p>💡 <strong>The Language Learning Curve</strong><br />
+  Learning a language is not a straight line. It is a series of plateaus and steep climbs. You have just finished the first steep climb. You might feel tired. You might feel like you don't know enough. That is normal. The fact that you understand <em>what you don't know</em> is proof of progress!</p>
 </blockquote>
-<hr />
-<h3 id="module03thegendercode">Module 03: The Gender Code</h3>
-<p>Ukrainian nouns have three genders, determined by their ending:</p>
-<table>
-<thead>
-<tr>
-<th>Gender</th>
-<th>Ending</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Masculine</td>
-<td>consonant</td>
-<td>стіл (stіl) — table</td>
-</tr>
-<tr>
-<td>Feminine</td>
-<td>-а, -я</td>
-<td>книга (knyha) — book</td>
-</tr>
-<tr>
-<td>Neuter</td>
-<td>-о, -е</td>
-<td>вікно (vikno) — window</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Exceptions to remember:</strong></p>
-<ul>
-<li>тато (tato) — dad (masculine despite -о ending)</li>
-<li>Soft-sign feminines: ніч (nich) — night (feminine)</li>
-</ul>
-<hr />
-<h3 id="module04thisisiam">Module 04: This Is / I Am</h3>
-<p>The zero copula rule: No "to be" in present tense!</p>
-<table>
-<thead>
-<tr>
-<th>English</th>
-<th>Ukrainian</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>This is a book.</td>
-<td>Це книга. (Tse knyha.)</td>
-</tr>
-<tr>
-<td>I am a student.</td>
-<td>Я студент. (Ya student.)</td>
-</tr>
-<tr>
-<td>She is Ukrainian.</td>
-<td>Вона українка. (Vona ukrayinka.)</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Personal pronouns:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Singular</th>
-<th>Plural</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>я (ya) — I</td>
-<td>ми (my) — we</td>
-</tr>
-<tr>
-<td>ти (ty) — you</td>
-<td>ви (vy) — you (pl/formal)</td>
-</tr>
-<tr>
-<td>він (vin) — he</td>
-<td>вони (vony) — they</td>
-</tr>
-<tr>
-<td>вона (vona) — she</td>
-<td></td>
-</tr>
-<tr>
-<td>воно (vono) — it</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h3 id="module05myworldobjects">Module 05: My World - Objects</h3>
-<p>Demonstratives match the noun's gender:</p>
-<table>
-<thead>
-<tr>
-<th>Gender</th>
-<th>This</th>
-<th>That</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Masculine</td>
-<td>цей (tsey)</td>
-<td>той (toy)</td>
-</tr>
-<tr>
-<td>Feminine</td>
-<td>ця (tsya)</td>
-<td>та (ta)</td>
-</tr>
-<tr>
-<td>Neuter</td>
-<td>це (tse)</td>
-<td>те (te)</td>
-</tr>
-<tr>
-<td>Plural</td>
-<td>ці (tsi)</td>
-<td>ті (ti)</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Examples:</strong></p>
-<ul>
-<li>Цей стіл великий. (This table is big.)</li>
-<li>Ця книга цікава. (This book is interesting.)</li>
-<li>Це вікно чисте. (This window is clean.)</li>
-</ul>
-<hr />
-<h3 id="module06thelivingverbi">Module 06: The Living Verb I</h3>
-<p>Class I verbs (-ати/-яти) conjugation:</p>
-<table>
-<thead>
-<tr>
-<th>Person</th>
-<th>читати (to read)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>я</td>
-<td>читаю</td>
-</tr>
-<tr>
-<td>ти</td>
-<td>читаєш</td>
-</tr>
-<tr>
-<td>він/вона</td>
-<td>читає</td>
-</tr>
-<tr>
-<td>ми</td>
-<td>читаємо</td>
-</tr>
-<tr>
-<td>ви</td>
-<td>читаєте</td>
-</tr>
-<tr>
-<td>вони</td>
-<td>читають</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Pattern:</strong> -ю, -єш, -є, -ємо, -єте, -ють</p>
-<hr />
-<h3 id="module07questionsnegation">Module 07: Questions &amp; Negation</h3>
-<p><strong>Question words:</strong></p>
-<ul>
-<li>Що? (What?) Хто? (Who?) Де? (Where?)</li>
-<li>Куди? (Where to?) Звідки? (Where from?)</li>
-<li>Коли? (When?) Чому? (Why?) Як? (How?)</li>
-</ul>
-<p><strong>Yes/No questions:</strong> Add чи or use rising intonation</p>
-<ul>
-<li>Чи ти читаєш? (Do you read?)</li>
-</ul>
-<p><strong>Negation:</strong> Add не before the verb</p>
-<ul>
-<li>Я не читаю. (I don't read.)</li>
-</ul>
-<p><strong>Double negation with ніколи:</strong></p>
-<ul>
-<li>Я ніколи не запізнююся. (I never am late.)</li>
-</ul>
-<hr />
-<h3 id="module08thelivingverbii">Module 08: The Living Verb II</h3>
-<p>Class II verbs (-ити/-іти) conjugation:</p>
-<table>
-<thead>
-<tr>
-<th>Person</th>
-<th>говорити (to speak)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>я</td>
-<td>говорю</td>
-</tr>
-<tr>
-<td>ти</td>
-<td>говориш</td>
-</tr>
-<tr>
-<td>він/вона</td>
-<td>говорить</td>
-</tr>
-<tr>
-<td>ми</td>
-<td>говоримо</td>
-</tr>
-<tr>
-<td>ви</td>
-<td>говорите</td>
-</tr>
-<tr>
-<td>вони</td>
-<td>говорять</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Pattern:</strong> -ю, -иш, -ить, -имо, -ите, -ять</p>
-<p><strong>Irregular verbs:</strong></p>
-<ul>
-<li>їсти: я їм, ти їси, він їсть, ми їмо, ви їсте, вони їдять</li>
-<li>пити: я п'ю, ти п'єш, він п'є, ми п'ємо, ви п'єте, вони п'ють</li>
-</ul>
-<hr />
-<h3 id="module09fooddrinks">Module 09: Food &amp; Drinks</h3>
-<p><strong>Meals:</strong> сніданок (breakfast), обід (lunch), вечеря (dinner)</p>
-<p><strong>Essential food vocabulary:</strong></p>
-<ul>
-<li>борщ, вареники, хліб, м'ясо, курка, риба</li>
-<li>овочі: картопля, помідор, огірок, цибуля</li>
-<li>фрукти: яблуко, банан</li>
-<li>напої: чай, кава, вода, сік, молоко</li>
-</ul>
-<p><strong>Key phrases:</strong></p>
-<ul>
-<li>Смачного! (Enjoy your meal!)</li>
-<li>Смачний/смачна/смачне (delicious)</li>
-</ul>
-<hr /></div>
-    </div>
-  
-    <div class="card section-practice">
-      <h3>Practice</h3>
-      <div class="md-content"><h2 id="alphabetchallenge">Alphabet Challenge</h2>
-<p>Read these words aloud:</p>
+<h2 id="presentation">presentation</h2>
+<h3 id="reviewathelogicofgender">Review A: The Logic of Gender</h3>
+<p>Everything in Ukrainian has a gender. It is not biological; it is grammatical. It is the rhythm of the language.</p>
+<p><strong>The Golden Rules:</strong></p>
 <ol>
-<li>Україна (Ukrayina)</li>
-<li>здоров'я (zdorov'ya)</li>
-<li>щастя (shchastya)</li>
-<li>людина (lyudyna)</li>
-<li>працювати (pratsyuvaty)</li>
+<li><strong>Masculine (Він):</strong> Hard. Ends in a consonant. Use "Мій" (My), "Цей" (This).<ul>
+<li><em>Symphony:</em> Стіл, Банк, Парк, Телефон.</li></ul></li>
+<li><strong>Feminine (Вона):</strong> Open. Ends in -А or -Я. Use "Моя" (My), "Ця" (This).<ul>
+<li><em>Symphony:</em> Кава, Віза, Земля, Музика.</li></ul></li>
+<li><strong>Neuter (Воно):</strong> Round. Ends in -О or -Е. Use "Моє" (My), "Це" (This).<ul>
+<li><em>Symphony:</em> Вікно, Море, Місто, Сонце.</li></ul></li>
 </ol>
-<h2 id="genderchallenge">Gender Challenge</h2>
-<p>Identify the gender (m/f/n):</p>
-<ol>
-<li>телефон → ___</li>
-<li>машина → ___</li>
-<li>місто → ___</li>
-<li>ніч → ___</li>
-<li>тато → ___</li>
-</ol>
-<h2 id="verbchallenge">Verb Challenge</h2>
-<p>Conjugate for the given pronoun:</p>
-<ol>
-<li>читати (ми) → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>говорити (вона) → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>їсти (я) → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>пити (ти) → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-<li>любити (вони) → <strong><em><em></em></strong><strong><em></em></em></strong>_</li>
-</ol>
-<hr /></div>
-    </div>
-  
-    <div class="card section-content">
-      <h3>Production</h3>
-      <div class="md-content"><h2 id="selfintroduction">Self-Introduction</h2>
-<p>Write a short self-introduction using what you've learned:</p>
-<p>Привіт! Мене звати <strong><em><em></em></strong><strong><em></em></em></strong><em>. Я <strong><em></em></em></strong><strong><em><em></em></strong></em> (nationality).<br />
-Я живу в <strong><em><em></em></strong><strong><em></em></em></strong>_ (city).<br />
-Я люблю <strong><em><em></em></strong><strong><em></em></em></strong>_ (food/drink).<br />
-Я <strong><em><em></em></strong><strong><em></em></em></strong>_ (activity: read, work, speak Ukrainian…).</p>
-<h2 id="dailyroutine">Daily Routine</h2>
-<p>Describe your typical day:</p>
-<p><strong>Зранку:</strong> <strong><em><em></em></strong><strong><em></em></em></strong>_<br />
-<strong>Вдень:</strong> <strong><em><em></em></strong><strong><em></em></em></strong>_<br />
-<strong>Ввечері:</strong> <strong><em><em></em></strong><strong><em></em></em></strong>_</p>
-<hr />
-<hr />
+<blockquote>
+  <p>⚡ <strong>The Exceptions to Watch</strong></p>
+  <ul>
+  <li><strong>Тато</strong> (Dad) ends in -А, but is Masculine (biological).</li>
+  <li><strong>Ніч</strong> (Night) ends in a soft sign, but is Feminine.</li>
+  <li><strong>Ім'я</strong> (Name) ends in -Я, but is Neuter (special group)!</li>
+  </ul>
+</blockquote>
+<h3 id="reviewbtheengineofactionverbs">Review B: The Engine of Action (Verbs)</h3>
+<p>You met the two great families of the Present Tense.</p>
+<p><strong>Class I (-Є- Team)</strong><br />
+These verbs are open, soft, and relaxed. They dominate the language (70%).<br />
+<em>Conjugation Signal:</em> <strong>-Ю / -ЄШ / -ЮТЬ</strong>.<br />
+<em>Heroes:</em> Читати, Знати, Думати, Розуміти.</p>
+<p><strong>Class II (-И- Team)</strong><br />
+These verbs are sharp, precise, and physical. They control your senses and your body.<br />
+<em>Conjugation Signal:</em> <strong>-Ю / -ИШ / -ЯТЬ</strong>.<br />
+<em>Heroes:</em> Говорити, Робити, Бачити, Любити.</p>
+<blockquote>
+  <p>🎭 <strong>Activity: Be the Teacher</strong><br />
+  Explain to an imaginary student why "Я бачу" (I see) is correct, but "Ти бачЄш" is wrong.<br />
+  Answer: Because "Бачити" is Class II! It must be sharp: "Ти бачИш". The logic is strict.</p>
+</blockquote>
+<h3 id="deepdivethephilosophyofgender">Deep Dive: The Philosophy of Gender</h3>
+<p>Why does a table have to be a "He" and a lamp a "She"? It seems unnecessary to an English speaker.<br />
+But in Ukrainian, gender is the <strong>DNA of the sentence</strong>. It determines how adjectives dress ("Гарна кава" vs "Гарний чай"). It determines how verbs move in the past tense (which we will learn in Phase 3). It creates a web of connections that makes poetry and song incredibly rich.<br />
+When you say "Моя добра подруга" (My good friend [f]), every word rhymes and agrees. It is not just grammar; it is rhyme.</p>
+<blockquote>
+  <p>🔗 <strong>Language Link: The Road Ahead (Cases)</strong><br />
+  You have mastered the <strong>Nominative Case</strong> (The Dictionary Form). This is the "subject" form (Who is doing the action?).<br />
+  In Phase A1.2, you will unlock the <strong>Accusative Case</strong> (The Object).</p>
+  <ul>
+  <li>You know: "Це вода" (This is water - Nominative).</li>
+  <li>You will learn: "Я хочу вод<strong>у</strong>" (I want water - Accusative).<br />
+  The word changes because the grammatical relationship changes. Get ready!</li>
+  </ul>
+</blockquote>
+<h3 id="reviewcthequestionsnegation">Review C: The Questions &amp; Negation</h3>
+<p>To speak is to interrogate. You need the "W" words (which are mostly "K" words in Ukrainian).</p>
+<ul>
+<li><strong>Хто?</strong> (Who?) - Use for people.</li>
+<li><strong>Що?</strong> (What?) - Use for things.</li>
+<li><strong>Де?</strong> (Where?) - Use for location (Static).</li>
+<li><strong>Куди?</strong> (Where to?) - Use for direction (Dynamic).</li>
+<li><strong>Чому?</strong> (Why?) - The philosopher's question.</li>
+<li><strong>Як?</strong> (How?) - The mechanic's question.</li>
+</ul>
+<p>And never forget <strong>НЕ</strong> (Not). In Ukrainian, negation is simple but powerful. It stands like a guard immediately before the verb.<br />
+"Я <strong>не</strong> знаю." (I <strong>not</strong> know).</p>
+<h3 id="reviewdthefoodinteraction">Review D: The Food &amp; Interaction</h3>
+<p>Language is not just grammar; it is survival. You learned to say "I want" (<strong>Я хочу</strong>) and "Give me" (<strong>Дайте</strong> - though "I want" is often enough with a polite tone!). You learned that food is culture.</p>
+<blockquote>
+  <p>💡 <strong>The Survival Check</strong><br />
+  If you can say:</p>
+  <ol>
+  <li>"Добрий день."</li>
+  <li>"Я хочу каву."</li>
+  <li>"Дякую."<br />
+  You can survive in Kyiv. Everything else is a bonus.</li>
+  </ol>
+</blockquote>
+<h2 id="practice">practice</h2>
+<p><strong>Drill 1: The Gender Instinct</strong><br />
+Don't think. Just react. Is it He, She, or It?</p>
+<ul>
+<li><strong>Стіл</strong> (Table) -&gt; Hard sound -&gt; <strong>He</strong>.</li>
+<li><strong>Вода</strong> (Water) -&gt; A sound -&gt; <strong>She</strong>.</li>
+<li><strong>Вікно</strong> (Window) -&gt; O sound -&gt; <strong>It</strong>.</li>
+<li><strong>Дядько</strong> (Uncle) -&gt; Ends in O, BUT means a man -&gt; <strong>He</strong> (Biological Gender wins!).</li>
+</ul>
+<p><strong>Drill 2: The Conjugation Rhythm</strong><br />
+Class I flows. Class II hits.</p>
+<ul>
+<li><strong>Чита…</strong> -&gt; <strong>ЮТЬ</strong> (Flow: Chytayut).</li>
+<li><strong>Говор…</strong> -&gt; <strong>ЯТЬ</strong> (Hit: Hovoryat).</li>
+<li><strong>Пи…</strong> -&gt; <strong>ТЬ</strong>? No! <strong>П'ЮТЬ</strong> (Irregular flow).</li>
+</ul>
+<p><strong>Drill 3: The Question Logic</strong><br />
+You have the answer. What is the question?</p>
+<ul>
+<li>Answer: "Я вдома." (I am at home).</li>
+<li>Question: "<strong>Де</strong> ти?" (Where are you?)</li>
+<li>Answer: "Це брат." (This is brother).</li>
+<li>Question: "<strong>Хто</strong> це?" (Who is this?)</li>
+</ul>
+<h2 id="production">production</h2>
+<p><strong>Scenario 1: The Introduction</strong><br />
+You are at a party. Introduce yourself.</p>
+<ul>
+<li><strong>You:</strong> Привіт! Я [Name]. Я студент/турист.</li>
+<li><strong>Stranger:</strong> Дуже приємно. Я Олена.</li>
+<li><strong>You:</strong> Я з Америки/Англії. А ти?</li>
+</ul>
+<p><strong>Scenario 2: The Order</strong><br />
+You are hungry.</p>
+<ul>
+<li><strong>Waiter:</strong> Добрий день.</li>
+<li><strong>You:</strong> Добрий день. Я хочу меню, будь ласка.</li>
+<li><strong>Waiter:</strong> Ось меню.</li>
+<li><strong>You:</strong> Я буду борщ і салат. І воду.</li>
+<li><strong>Waiter:</strong> Смачного!</li>
+<li><strong>You:</strong> Дякую!</li>
+</ul>
+<p><strong>Scenario 3: The Denial</strong><br />
+Someone offers you something you hate.</p>
+<ul>
+<li><strong>Friend:</strong> Ти хочеш горілку? (Do you want vodka?)</li>
+<li><strong>You:</strong> Ні, я <strong>не</strong> хочу. Я <strong>не</strong> п'ю горілку.</li>
+<li><strong>Friend:</strong> Чому?</li>
+<li><strong>You:</strong> Я не люблю. Це не смачно.</li>
+<li><em>(Be strong! Use your negation!)</em></li>
+</ul>
 <hr /></div>
     </div>
   
       
-    <div class="card section-summary">
-      <h3>📋 Summary</h3>
-      <div class="md-content"><p>Congratulations! You've completed Phase A1.1: First Contact!</p>
-<p><strong>You can now:</strong></p>
-<ul>
-<li>Read all 33 Cyrillic letters</li>
-<li>Identify noun gender from word endings</li>
-<li>Use personal pronouns and demonstratives</li>
-<li>Conjugate Class I and Class II verbs</li>
-<li>Form questions and negate sentences</li>
-<li>Talk about food and drinks</li>
-<li>Use basic conversational phrases</li>
-</ul>
-<p><strong>Total vocabulary learned:</strong> ~240 words</p>
-<p><strong>Key accomplishments:</strong></p>
-<ul>
-<li>✅ Complete Cyrillic alphabet</li>
-<li>✅ Gender system (m/f/n)</li>
-<li>✅ Zero copula understanding</li>
-<li>✅ Present tense conjugation</li>
-<li>✅ Question formation</li>
-<li>✅ Negation patterns</li>
-<li>✅ Food vocabulary</li>
-</ul>
-<p><strong>What's next in A1.2:</strong></p>
-<ul>
-<li>Accusative case (direct objects)</li>
-<li>Locative case (locations)</li>
-<li>Genitive case (absence, possession)</li>
-<li>Numbers and money</li>
-<li>City navigation</li>
-<li>Restaurant conversations</li>
-</ul>
-<p>Молодець! (Molodets'!) — Well done! You're ready for the next phase!</p>
-<p>Вперед! (Vpered!) — Forward!</p></div>
-    </div>
-  
       <div class="btn-group">
         <button class="btn btn-primary" onclick="showSection('activity-0')">Activities →</button>
       </div>
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Alphabet Recognition</h3>
-      <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container"></div>
-      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+    <section id="activity-0" class="section"><div class="card"><h3>The Gender Matrix</h3>
+      <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/42</span></div>
+      <div class="sort-pool" id="activity-0-pool"><div class="sort-items" id="activity-0-items"></div></div>
+      <div class="sort-groups" id="activity-0-groups"></div>
+      <div class="completion-message" id="activity-0-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Gender Identification</h3>
+    <section id="activity-1" class="section"><div class="card"><h3>Who is who?</h3>
       <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
       <div class="match-container" id="activity-1-container"><svg class="match-lines" id="activity-1-lines"></svg>
         <div class="match-column" id="activity-1-left"></div>
@@ -908,29 +707,31 @@ footer {
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Verb Classes</h3>
-      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/16</span></div>
-      <div class="sort-pool" id="activity-2-pool"><div class="sort-items" id="activity-2-items"></div></div>
-      <div class="sort-groups" id="activity-2-groups"></div>
-      <div class="completion-message" id="activity-2-complete"><h3>All Sorted!</h3></div>
+    <section id="activity-2" class="section"><div class="card"><h3>Conjugation Master</h3>
+      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
+      <div id="activity-2-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-2-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Grammar Rules Review</h3>
+    <section id="activity-3" class="section"><div class="card"><h3>Question Time</h3>
       <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div id="activity-3-container"></div>
-      <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
+      <div class="match-container" id="activity-3-container"><svg class="match-lines" id="activity-3-lines"></svg>
+        <div class="match-column" id="activity-3-left"></div>
+        <div class="match-column" id="activity-3-right"></div>
+      </div>
+      <div class="completion-message" id="activity-3-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Pronoun + Verb Conjugation</h3>
+    <section id="activity-4" class="section"><div class="card"><h3>Sentence Builder</h3>
       <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
-      <div id="activity-4-container" class="fill-container"></div>
-      <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
+      <div id="activity-4-container" class="order-container"></div>
+      <div class="completion-message" id="activity-4-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Question Words</h3>
+    <section id="activity-5" class="section"><div class="card"><h3>Food Categories</h3>
       <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
       <div class="match-container" id="activity-5-container"><svg class="match-lines" id="activity-5-lines"></svg>
         <div class="match-column" id="activity-5-left"></div>
@@ -940,30 +741,23 @@ footer {
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Mixed Review Scramble</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>Scrambled Review</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
       <div id="activity-6-container" class="order-container"></div>
       <div class="completion-message" id="activity-6-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
     </div></section>
 
-    <section id="activity-7" class="section"><div class="card"><h3>Demonstratives Practice</h3>
+    <section id="activity-7" class="section"><div class="card"><h3>Final Test A1.1</h3>
       <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/12</span></div>
-      <div id="activity-7-container" class="fill-container"></div>
+      <div id="activity-7-container"></div>
       <div class="completion-message" id="activity-7-complete"><h3>Complete!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-8')">Next →</button></div>
-    </div></section>
-
-    <section id="activity-8" class="section"><div class="card"><h3>Questions and Negation</h3>
-      <div class="score-display"><span class="score"><span id="activity-8-score">0</span>/12</span></div>
-      <div id="activity-8-container" class="fill-container"></div>
-      <div class="completion-message" id="activity-8-complete"><h3>Complete!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-8')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
-        <h3>Словник (10)</h3>
+        <h3>Словник (15)</h3>
         <div class="vocab-table-container">
           <table class="vocab-table">
             <thead><tr>
@@ -973,7 +767,7 @@ footer {
     <th>Переклад</th>
     <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">перевірка (perevirka)</td><td class="vocab-ipa">/pɛrɛˈvʲirkɑ/</td><td class="vocab-en">check, review</td><td class="vocab-note">Checkpoint concept</td></tr><tr><td class="vocab-uk">знання (znannya)</td><td class="vocab-ipa">/ˈznɑnʲːɑ/</td><td class="vocab-en">knowledge</td><td class="vocab-note">What you&#039;ve gained</td></tr><tr><td class="vocab-uk">прогрес (prohres)</td><td class="vocab-ipa">/prɔˈɦrɛs/</td><td class="vocab-en">progress</td><td class="vocab-note">Your journey</td></tr><tr><td class="vocab-uk">успіх (uspikh)</td><td class="vocab-ipa">/uˈspʲix/</td><td class="vocab-en">success</td><td class="vocab-note">Your achievement</td></tr><tr><td class="vocab-uk">молодець (molodets&#039;)</td><td class="vocab-ipa">/mɔlɔˈdɛtsʲ/</td><td class="vocab-en">well done (m)</td><td class="vocab-note">Praise word</td></tr><tr><td class="vocab-uk">молодчина (molodchyna)</td><td class="vocab-ipa">/mɔlɔdˈtʃɪnɑ/</td><td class="vocab-en">well done (f)</td><td class="vocab-note">Praise word (feminine)</td></tr><tr><td class="vocab-uk">готовий (hotovyy)</td><td class="vocab-ipa">/ɦɔˈtɔvɪj/</td><td class="vocab-en">ready</td><td class="vocab-note">Changes: готова (f), готове (n)</td></tr><tr><td class="vocab-uk">далі (dali)</td><td class="vocab-ipa">/ˈdɑlʲi/</td><td class="vocab-en">further, next</td><td class="vocab-note">Moving forward</td></tr><tr><td class="vocab-uk">вперед (vpered)</td><td class="vocab-ipa">/ˈvpɛrɛd/</td><td class="vocab-en">forward</td><td class="vocab-note">Direction</td></tr><tr><td class="vocab-uk">продовжувати (prodovzhuvaty)</td><td class="vocab-ipa">/prɔdɔʋʒuˈvɑtɪ/</td><td class="vocab-en">to continue</td><td class="vocab-note">Class I</td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">рев&#039;ю</td><td class="vocab-ipa">/rɛvˈju/</td><td class="vocab-en">review</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('рев&#039;ю')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">тест</td><td class="vocab-ipa">/tɛst/</td><td class="vocab-en">test</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('тест')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">фінал</td><td class="vocab-ipa">/fʲiˈnɑl/</td><td class="vocab-en">final</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('фінал')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">результат</td><td class="vocab-ipa">/rɛzulʲˈtɑt/</td><td class="vocab-en">result</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('результат')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">успіх</td><td class="vocab-ipa">/ˈuspix/</td><td class="vocab-en">success</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('успіх')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">помилка</td><td class="vocab-ipa">/pɔˈmɪlkɑ/</td><td class="vocab-en">mistake</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('помилка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">питання</td><td class="vocab-ipa">/pɪˈtɑnʲːɑ/</td><td class="vocab-en">question</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('питання')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">відповідь</td><td class="vocab-ipa">/ˈvʲidpɔvʲidʲ/</td><td class="vocab-en">answer</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('відповідь')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">оцінка</td><td class="vocab-ipa">/ɔˈtsʲinkɑ/</td><td class="vocab-en">grade/score</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('оцінка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">кінець</td><td class="vocab-ipa">/kʲiˈnɛtsʲ/</td><td class="vocab-en">end</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('кінець')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">початок</td><td class="vocab-ipa">/pɔˈtʃɑtɔk/</td><td class="vocab-en">beginning</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('початок')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вправа</td><td class="vocab-ipa">/ˈvprɑvɑ/</td><td class="vocab-en">exercise</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вправа')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">правило</td><td class="vocab-ipa">/ˈprɑvɪlɔ/</td><td class="vocab-en">rule</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('правило')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">приклад</td><td class="vocab-ipa">/ˈprɪklɑd/</td><td class="vocab-en">example</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('приклад')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">рівень</td><td class="vocab-ipa">/ˈrʲivɛnʲ/</td><td class="vocab-en">level</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('рівень')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -985,8 +779,8 @@ footer {
   </main><footer>Module 10 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"quiz","title":"Alphabet Recognition","data":{"type":"quiz","questions":[{"question":"What sound does the letter В make?","options":["/v/","/b/","/w/","/p/"],"correctIndex":0,"explanation":"В is a \"false friend\" — it looks like English \"B\" but sounds like \"v\" in \"victory\""},{"question":"What sound does the letter Р make?","options":["/r/","/p/","/rh/","/b/"],"correctIndex":0,"explanation":"Р is another \"false friend\" — it looks like English \"P\" but sounds like rolled \"r\""},{"question":"What sound does the letter Н make?","options":["/n/","/h/","/ng/","/m/"],"correctIndex":0,"explanation":"Н looks like English \"H\" but sounds like \"n\" in \"nose\""},{"question":"What sound does the letter С make?","options":["/s/","/k/","/ts/","/sh/"],"correctIndex":0,"explanation":"С looks like English \"C\" but always sounds like \"s\" in \"sun\""},{"question":"What sound does the letter Х make?","options":["/kh/","/h/","/ks/","/sh/"],"correctIndex":0,"explanation":"Х sounds like \"ch\" in Scottish \"loch\" or German \"Bach\""},{"question":"What sound does the letter И make?","options":["/ɪ/ (hard i)","/i/ (soft i)","/y/","/u/"],"correctIndex":0,"explanation":"И is the \"hard i\" sound, like the \"i\" in English \"bit\""},{"question":"What sound does the letter Є make?","options":["/je/ (ye)","/e/","/ay/","/i/"],"correctIndex":0,"explanation":"Є is a iotated vowel: sounds like \"ye\" in \"yes\""},{"question":"What sound does the letter Ї make?","options":["/ji/ (yi)","/i/","/ay/","/e/"],"correctIndex":0,"explanation":"Ї sounds like \"yi\" as in \"yeet\""},{"question":"What sound does the letter Ю make?","options":["/ju/ (yu)","/u/","/o/","/i/"],"correctIndex":0,"explanation":"Ю sounds like \"yu\" in \"yule\""},{"question":"What sound does the letter Я make?","options":["/ja/ (ya)","/a/","/r/","/i/"],"correctIndex":0,"explanation":"Я sounds like \"ya\" in \"yard\""},{"question":"What sound does the letter Ж make?","options":["/ʒ/ (like \"s\" in \"measure\")","/z/","/zh/","/sh/"],"correctIndex":0,"explanation":"Ж is the voiced version of Ш — sounds like \"s\" in \"pleasure\""},{"question":"What sound does the letter Ш make?","options":["/ʃ/ (sh)","/s/","/zh/","/ch/"],"correctIndex":0,"explanation":"Ш sounds like \"sh\" in \"ship\""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-1","type":"match-up","title":"Gender Identification","data":{"type":"match-up","pairs":[{"left":"стіл (table)","right":"masculine"},{"left":"книга (book)","right":"feminine"},{"left":"вікно (window)","right":"neuter"},{"left":"ніч (night)","right":"feminine"},{"left":"тато (dad)","right":"masculine"},{"left":"море (sea)","right":"neuter"},{"left":"кава (coffee)","right":"feminine"},{"left":"чай (tea)","right":"masculine"},{"left":"молоко (milk)","right":"neuter"},{"left":"вода (water)","right":"feminine"},{"left":"хліб (bread)","right":"masculine"},{"left":"місто (city)","right":"neuter"}],"shuffleRight":true}},{"id":"activity-2","type":"group-sort","title":"Verb Classes","data":{"type":"group-sort","groups":[{"id":"class-i","name":"Class I","items":["читати","писати","працювати","слухати","знати","гуляти","малювати","думати"],"nameUk":"-ати/-яти"},{"id":"class-ii","name":"Class II","items":["говорити","робити","бачити","любити","хотіти","ходити","вчити","дивитися"],"nameUk":"-ити/-іти"}],"shuffleItems":true}},{"id":"activity-3","type":"true-false","title":"Grammar Rules Review","data":{"type":"true-false","statements":[{"statement":"Ukrainian uses \"to be\" in present tense sentences.","isTrue":false,"explanation":"False! Ukrainian has zero copula — no \"to be\" in present tense. You say \"Це книга\" not \"Це є книга.\""},{"statement":"Nouns ending in -о or -е are typically neuter.","isTrue":true,"explanation":"True! вікно, море, молоко — all neuter! (Exception: тато is masculine)"},{"statement":"Class I verbs have -є- in their conjugation endings.","isTrue":true,"explanation":"True! читаєш, читає, читаємо — the -є- is characteristic of Class I verbs."},{"statement":"To negate a sentence, you add \"ні\" before the verb.","isTrue":false,"explanation":"False! You add \"не\" before the verb. \"Ні\" means \"no\" as an answer, not negation."},{"statement":"Ніколи requires double negation (ніколи + не).","isTrue":true,"explanation":"True! Я ніколи не запізнююся. Both words are needed in Ukrainian."},{"statement":"The demonstrative \"цей\" is used with feminine nouns.","isTrue":false,"explanation":"False! Цей is for masculine nouns. Ця is for feminine nouns."},{"statement":"Masculine nouns typically end in a consonant.","isTrue":true,"explanation":"True! стіл, чай, хліб — all masculine, all end in consonants."},{"statement":"Questions can be formed by adding \"чи\" at the beginning.","isTrue":true,"explanation":"True! Чи ти читаєш? = Do you read?"},{"statement":"All words ending in -а are feminine.","isTrue":false,"explanation":"False! While most are (книга, кава), тато (dad) is masculine despite ending in -а."},{"statement":"The verb їсти is irregular in present tense.","isTrue":true,"explanation":"True! я їм, ти їси, він їсть — the stem changes throughout conjugation."},{"statement":"The soft sign (ь) makes a vowel sound.","isTrue":false,"explanation":"False! The soft sign is silent — it only softens the preceding consonant."},{"statement":"Double negation is grammatically correct in Ukrainian.","isTrue":true,"explanation":"True! Unlike English, Ukrainian uses double negation: Я нічого не хочу (I don't want anything)."}]}},{"id":"activity-4","type":"fill-blank","title":"Pronoun + Verb Conjugation","data":{"type":"fill-blank","items":[{"prompt":"Я ___ книгу. (читати — to read)","answer":"читаю","options":["читаю","читаєш","читає","читаємо"]},{"prompt":"Вона ___ українською. (говорити — to speak)","answer":"говорить","options":["говорить","говорю","говориш","говоримо"]},{"prompt":"Ми ___ борщ. (їсти — to eat)","answer":"їмо","options":["їмо","їм","їси","їдять"]},{"prompt":"Ти ___ каву? (пити — to drink)","answer":"п'єш","options":["п'єш","п'ю","п'є","п'ємо"]},{"prompt":"Вони ___ музику. (любити — to love)","answer":"люблять","options":["люблять","люблю","любиш","любить"]},{"prompt":"Він ___ у парку. (працювати — to work)","answer":"працює","options":["працює","працюю","працюєш","працюємо"]},{"prompt":"Ви ___ українську? (знати — to know)","answer":"знаєте","options":["знаєте","знаю","знаєш","знаємо"]},{"prompt":"Я ___ тебе! (бачити — to see)","answer":"бачу","options":["бачу","бачиш","бачить","бачимо"]},{"prompt":"Вони ___ вареники. (хотіти — to want)","answer":"хочуть","options":["хочуть","хочу","хочеш","хочемо"]},{"prompt":"Ми ___ фільм. (дивитися — to watch)","answer":"дивимося","options":["дивимося","дивлюся","дивишся","дивляться"]},{"prompt":"Ти ___ домашнє завдання? (робити — to do)","answer":"робиш","options":["робиш","роблю","робить","роблять"]},{"prompt":"Вона ___ сніданок. (готувати — to prepare)","answer":"готує","options":["готує","готую","готуєш","готуємо"]}]}},{"id":"activity-5","type":"match-up","title":"Question Words","data":{"type":"match-up","pairs":[{"left":"Що?","right":"What?"},{"left":"Хто?","right":"Who?"},{"left":"Де?","right":"Where?"},{"left":"Коли?","right":"When?"},{"left":"Чому?","right":"Why?"},{"left":"Як?","right":"How?"},{"left":"Куди?","right":"Where to?"},{"left":"Звідки?","right":"Where from?"},{"left":"Скільки?","right":"How much?"},{"left":"Який?","right":"Which?"},{"left":"Чий?","right":"Whose?"},{"left":"Котрий?","right":"Which one?"}],"shuffleRight":true}},{"id":"activity-6","type":"anagram","title":"Mixed Review Scramble","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["к","а","р","т","а"],"answer":"карта","translation":"map"},{"letters":["к","н","и","г","а"],"answer":"книга","translation":"book"},{"letters":["б","о","р","щ"],"answer":"борщ","translation":"borscht"},{"letters":["ч","а","й"],"answer":"чай","translation":"tea"},{"letters":["к","а","в","а"],"answer":"кава","translation":"coffee"},{"letters":["с","т","і","л"],"answer":"стіл","translation":"table"},{"letters":["в","і","к","н","о"],"answer":"вікно","translation":"window"},{"letters":["р","и","б","а"],"answer":"риба","translation":"fish"},{"letters":["х","л","і","б"],"answer":"хліб","translation":"bread"},{"letters":["в","о","д","а"],"answer":"вода","translation":"water"},{"letters":["м","о","р","е"],"answer":"море","translation":"sea"},{"letters":["м","і","с","т","о"],"answer":"місто","translation":"city"}]}},{"id":"activity-7","type":"fill-blank","title":"Demonstratives Practice","data":{"type":"fill-blank","items":[{"prompt":"___ стіл великий. (this — masculine)","answer":"Цей","options":["Цей","Ця","Це","Ці"]},{"prompt":"___ книга цікава. (this — feminine)","answer":"Ця","options":["Ця","Цей","Це","Ці"]},{"prompt":"___ вікно чисте. (this — neuter)","answer":"Це","options":["Це","Цей","Ця","Ці"]},{"prompt":"___ вареники смачні. (these — plural)","answer":"Ці","options":["Ці","Цей","Ця","Це"]},{"prompt":"___ чоловік мій друг. (that — masculine)","answer":"Той","options":["Той","Та","Те","Ті"]},{"prompt":"___ жінка моя мама. (that — feminine)","answer":"Та","options":["Та","Той","Те","Ті"]},{"prompt":"___ місто красиве. (that — neuter)","answer":"Те","options":["Те","Той","Та","Ті"]},{"prompt":"___ люди українці. (those — plural)","answer":"Ті","options":["Ті","Той","Та","Те"]},{"prompt":"___ телефон новий. (this — masculine)","answer":"Цей","options":["Цей","Ця","Це","Ці"]},{"prompt":"___ машина швидка. (that — feminine)","answer":"Та","options":["Та","Той","Те","Ті"]},{"prompt":"___ діти грають. (these — plural)","answer":"Ці","options":["Ці","Цей","Ця","Це"]},{"prompt":"___ молоко свіже. (this — neuter)","answer":"Це","options":["Це","Цей","Ця","Ці"]}]}},{"id":"activity-8","type":"fill-blank","title":"Questions and Negation","data":{"type":"fill-blank","items":[{"prompt":"___ ти живеш? (Where do you live?)","answer":"Де","options":["Де","Що","Хто","Коли"]},{"prompt":"___ це? — Це мій друг. (Who is this?)","answer":"Хто","options":["Хто","Що","Де","Як"]},{"prompt":"Я ___ розумію. (I don't understand.)","answer":"не","options":["не","ні","так","чи"]},{"prompt":"___ ти читаєш? (Do you read?)","answer":"Чи","options":["Чи","Що","Хто","Де"]},{"prompt":"Вона ніколи ___ їсть м'ясо. (She never eats meat.)","answer":"не","options":["не","ні","так","чи"]},{"prompt":"___ це коштує? (How much does this cost?)","answer":"Скільки","options":["Скільки","Що","Де","Як"]},{"prompt":"___, я хочу каву. (Yes, I want coffee.)","answer":"Так","options":["Так","Ні","Не","Чи"]},{"prompt":"___ ти працюєш? (When do you work?)","answer":"Коли","options":["Коли","Де","Що","Хто"]},{"prompt":"___ справи? (How are things?)","answer":"Як","options":["Як","Що","Де","Хто"]},{"prompt":"Я ніколи ___ запізнююся. (I never am late.)","answer":"не","options":["не","ні","так","чи"]},{"prompt":"___ ти йдеш? (Where are you going to?)","answer":"Куди","options":["Куди","Де","Звідки","Коли"]},{"prompt":"___ ти? (Where are you from?)","answer":"Звідки","options":["Звідки","Куди","Де","Як"]}]}}];
-    const vocabData = [{"uk":"перевірка (perevirka)","translit":"","en":"check, review","note":"Checkpoint concept"},{"uk":"знання (znannya)","translit":"","en":"knowledge","note":"What you've gained"},{"uk":"прогрес (prohres)","translit":"","en":"progress","note":"Your journey"},{"uk":"успіх (uspikh)","translit":"","en":"success","note":"Your achievement"},{"uk":"молодець (molodets')","translit":"","en":"well done (m)","note":"Praise word"},{"uk":"молодчина (molodchyna)","translit":"","en":"well done (f)","note":"Praise word (feminine)"},{"uk":"готовий (hotovyy)","translit":"","en":"ready","note":"Changes: готова (f), готове (n)"},{"uk":"далі (dali)","translit":"","en":"further, next","note":"Moving forward"},{"uk":"вперед (vpered)","translit":"","en":"forward","note":"Direction"},{"uk":"продовжувати (prodovzhuvaty)","translit":"","en":"to continue","note":"Class I"}];
+    const activitiesData = [{"id":"activity-0","type":"group-sort","title":"The Gender Matrix","data":{"type":"group-sort","groups":[{"id":"masculine","name":"Masculine","items":["Студент","Банк","Чай","Борщ","Хліб","Тато","Паспорт","Стілець","Комп'ютер","Телефон","Журнал","Офіс","Директор","Парк"],"nameUk":"Він"},{"id":"feminine","name":"Feminine","items":["Кава","Музика","Вода","Мама","Піца","Ніч","Сім'я","Книга","Кімната","Машина","Лампа","Гітара","Проблема","Робота"],"nameUk":"Вона"},{"id":"neuter","name":"Neuter","items":["Місто","Вікно","Море","Яблуко","Молоко","Морозиво","Сонце","Озеро","Прізвище","Життя","Питання","Завдання","Ім'я","Слово"],"nameUk":"Воно"}],"shuffleItems":true}},{"id":"activity-1","type":"match-up","title":"Who is who?","data":{"type":"match-up","pairs":[{"left":"Я","right":"I"},{"left":"Ти","right":"You (singular)"},{"left":"Він","right":"He"},{"left":"Вона","right":"She"},{"left":"Ми","right":"We"},{"left":"Ви","right":"You (plural/formal)"},{"left":"Вони","right":"They"},{"left":"Воно","right":"It"},{"left":"Мій","right":"My (masc)"},{"left":"Моя","right":"My (fem)"},{"left":"Твій","right":"Your (masc)"},{"left":"Цей","right":"This (masc)"}],"shuffleRight":true}},{"id":"activity-2","type":"fill-blank","title":"Conjugation Master","data":{"type":"fill-blank","items":[{"prompt":"(Читати) Я ___ цікаву книгу.","answer":"читаю","options":["читаю","читаєш","читають","читає"]},{"prompt":"(Говорити) Ти ___ дуже швидко!","answer":"говориш","options":["говориш","говорить","говорите","говорю"]},{"prompt":"(Любити) Ми ___ українську музику.","answer":"любимо","options":["любимо","люблять","любите","любиш"]},{"prompt":"(Робити) Що ви ___ тут?","answer":"робите","options":["робите","робить","роблять","робиш"]},{"prompt":"(Бачити) Він не ___ дорогу.","answer":"бачить","options":["бачить","бачите","бачать","бачиш"]},{"prompt":"(Знати) Вони ___ все.","answer":"знають","options":["знають","знає","знаємо","знаєш"]},{"prompt":"(Ходити) Я часто ___ у парк.","answer":"ходжу","options":["ходжу","ходиш","ходить","ходять"]},{"prompt":"(Пити) Ти ___ каву чи чай?","answer":"п'єш","options":["п'єш","п'є","п'ємо","п'ють"]},{"prompt":"(Їсти) Ми ___ піцу на вечерю.","answer":"їмо","options":["їмо","їсте","їдять","їм"]},{"prompt":"(Спати) Кіт ___ на дивані.","answer":"спить","options":["спить","сплять","спиш","сплю"]},{"prompt":"(Розуміти) Ви мене ___ ?","answer":"розумієте","options":["розумієте","розумієш","розуміють","розуміє"]},{"prompt":"(Жити) Де ти ___ ?","answer":"живеш","options":["живеш","живе","живуть","живу"]}]}},{"id":"activity-3","type":"match-up","title":"Question Time","data":{"type":"match-up","pairs":[{"left":"Хто це?","right":"Це мій брат."},{"left":"Що це?","right":"Це новий телефон."},{"left":"Де ти?","right":"Я в ресторані."},{"left":"Коли урок?","right":"Завтра вранці."},{"left":"Як справи?","right":"Дуже добре, дякую."},{"left":"Чому ти тут?","right":"Тому що я працюю."},{"left":"Скільки коштує?","right":"100 гривень."},{"left":"Куди ми йдемо?","right":"Ми йдемо додому."},{"left":"Звідки ти?","right":"Я з Лондона."},{"left":"Чи ти знаєш?","right":"Так, я знаю."},{"left":"Яка це кава?","right":"Це смачна кава."},{"left":"Чий це дім?","right":"Це мій дім."}],"shuffleRight":true}},{"id":"activity-4","type":"unjumble","title":"Sentence Builder","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["українською","говоримо","Ми","добре"],"answer":"Ми добре говоримо українською."},{"words":["не","Я","джаз","люблю"],"answer":"Я не люблю джаз."},{"words":["знаєш","Ти","де","метро","?"],"answer":"Ти знаєш де метро?"},{"words":["йду","додому","Я","зараз"],"answer":"Я йду додому зараз."},{"words":["коштує","Скільки","ця","піца","?"],"answer":"Скільки коштує ця піца?"},{"words":["працюю","Я","тут","не"],"answer":"Я тут не працюю."},{"words":["хоче","що","Він","?"],"answer":"Що він хоче?","translation":"What does he want?"},{"words":["читаємо","Ми","журнал","новий"],"answer":"Ми читаємо новий журнал."},{"words":["бачите","Ви","там","хто","?"],"answer":"Хто там, ви бачите?","translation":"Strictly: Ви бачите, хто там?"},{"words":["дуже","Це","цікаво"],"answer":"Це дуже цікаво."},{"words":["не","Вони","сплять"],"answer":"Вони не сплять."},{"words":["робиш","Що","ти","?"],"answer":"Що ти робиш?"}]}},{"id":"activity-5","type":"match-up","title":"Food Categories","data":{"type":"match-up","pairs":[{"left":"Борщ","right":"Soup"},{"left":"Кава","right":"Drink"},{"left":"Яблуко","right":"Fruit"},{"left":"Картопля","right":"Vegetable"},{"left":"Курка","right":"Meat"},{"left":"Торт","right":"Dessert"},{"left":"Вода","right":"Drink"},{"left":"Огірок","right":"Vegetable"},{"left":"Чай","right":"Drink"},{"left":"Вино","right":"Alcohol"},{"left":"Хліб","right":"Bakery"},{"left":"Риба","right":"Seafood"}],"shuffleRight":true}},{"id":"activity-6","type":"anagram","title":"Scrambled Review","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["у","к","б","а","в"],"answer":"буква","translation":"A symbol in the alphabet"},{"letters":["о","в","о","л","с"],"answer":"слово","translation":"Unit of language"},{"letters":["а","в","о","м"],"answer":"мова","translation":"Language"},{"letters":["к","о","р","у"],"answer":"урок","translation":"Lesson"},{"letters":["н","і","в"],"answer":"він","translation":"He"},{"letters":["н","а","в","о"],"answer":"вона","translation":"She"},{"letters":["н","о","в","о"],"answer":"воно","translation":"It"},{"letters":["і","я","м","с"],"answer":"сім'я","translation":"Family"},{"letters":["т","о","т","а"],"answer":"тато","translation":"Dad"},{"letters":["а","м","а","м"],"answer":"мама","translation":"Mom"},{"letters":["і","д","о","м"],"answer":"дім","translation":"House"},{"letters":["о","с","т","і","м"],"answer":"місто","translation":"City"}]}},{"id":"activity-7","type":"quiz","title":"Final Test A1.1","data":{"type":"quiz","questions":[{"question":"What is the gender of \"Вікно\" (Window)?","options":["Neuter (-о)","Masculine","Feminine"],"correctIndex":0,"explanation":""},{"question":"\"Вони\" means:","options":["They","We","You"],"correctIndex":0,"explanation":""},{"question":"\"Ти читаєш\" is:","options":["Correct (Class I)","Incorrect (Should be читаїш)"],"correctIndex":0,"explanation":""},{"question":"\"Я люблю...\" means:","options":["I love/like...","I see...","I do..."],"correctIndex":0,"explanation":""},{"question":"\"Хто це?\" asks about:","options":["A person","A thing","A place"],"correctIndex":0,"explanation":""},{"question":"\"Я не розумію\" means:","options":["I don't understand.","I understand.","Do I understand?"],"correctIndex":0,"explanation":""},{"question":"\"Смачного!\" is said:","options":["Before eating (Bon appétit)","Before sleeping","When saying hello"],"correctIndex":0,"explanation":""},{"question":"Is \"Стіл\" Masculine?","options":["Yes","No"],"correctIndex":0,"explanation":""},{"question":"Which verb is Class II?","options":["Говорити","Читати","Мати"],"correctIndex":0,"explanation":""},{"question":"\"Чому?\" means:","options":["Why?","Who?","When?"],"correctIndex":0,"explanation":""},{"question":"\"Я їм\" means:","options":["I eat","I drink","I am"],"correctIndex":0,"explanation":""},{"question":"\"Куди\" asks about:","options":["Direction (Where to)","Location (Where at)","Time"],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}}];
+    const vocabData = [{"uk":"рев'ю","translit":"","en":"review","note":"[🔊](audio_review)"},{"uk":"тест","translit":"","en":"test","note":"[🔊](audio_test)"},{"uk":"фінал","translit":"","en":"final","note":"[🔊](audio_final)"},{"uk":"результат","translit":"","en":"result","note":"[🔊](audio_rezultat)"},{"uk":"успіх","translit":"","en":"success","note":"[🔊](audio_uspih)"},{"uk":"помилка","translit":"","en":"mistake","note":"[🔊](audio_pomylka)"},{"uk":"питання","translit":"","en":"question","note":"[🔊](audio_pytannya)"},{"uk":"відповідь","translit":"","en":"answer","note":"[🔊](audio_vidpovid)"},{"uk":"оцінка","translit":"","en":"grade/score","note":"[🔊](audio_otsinka)"},{"uk":"кінець","translit":"","en":"end","note":"[🔊](audio_kinets)"},{"uk":"початок","translit":"","en":"beginning","note":"[🔊](audio_pochatok)"},{"uk":"вправа","translit":"","en":"exercise","note":"[🔊](audio_vprava)"},{"uk":"правило","translit":"","en":"rule","note":"[🔊](audio_pravylo)"},{"uk":"приклад","translit":"","en":"example","note":"[🔊](audio_pryklad)"},{"uk":"рівень","translit":"","en":"level","note":"[🔊](audio_riven)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1046,6 +840,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2310,6 +2130,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

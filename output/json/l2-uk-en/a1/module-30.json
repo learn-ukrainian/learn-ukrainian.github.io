@@ -13,759 +13,168 @@
     "moduleNumber": 30,
     "moduleType": "checkpoint",
     "immersionLevel": 0.3,
-    "title": "A1 Capstone — Who Am I?",
-    "subtitle": "Хто я? — Complete Review of A1 Ukrainian",
-    "description": "Review all A1 grammar (cases, tenses, modals)",
+    "title": "Final Checkpoint (A1 Mastery)",
+    "subtitle": "The Grand Review",
+    "description": "Verify A1 mastery of Cases (Nom/Gen/Acc/Loc)",
     "objectives": [
-      "Review all A1 grammar (cases, tenses, modals)",
-      "Consolidate vocabulary from all domains",
-      "Demonstrate integrated communication skills",
-      "Self-assess A1 competencies"
+      "Verify A1 mastery of Cases (Nom/Gen/Acc/Loc)",
+      "Verify A1 mastery of Tenses (Past/Present/Future)",
+      "Verify A1 mastery of Prepositions (V/Na/Do/Z/Vid)",
+      "Verify A1 mastery of Gender (M/F/N/Pl)",
+      "Verify A1 mastery of Numbers (1-100)"
     ],
-    "grammarFocus": [
-      "All A1 cases (Nom, Acc, Loc, Gen, Voc)",
-      "Past and future tense",
-      "Modal verbs",
-      "Adjective agreement"
-    ],
+    "grammarFocus": [],
     "tags": [
-      "review",
-      "capstone",
-      "assessment",
-      "comprehensive"
+      "checkpoint",
+      "revision",
+      "test",
+      "mastery",
+      "a1-exam"
     ],
-    "totalDuration": 60,
-    "transliterationMode": "none",
+    "totalDuration": 90,
+    "transliterationMode": "full",
     "sections": [
       {
-        "id": "section-intro",
+        "id": "section-intro-0",
         "name": "Вступ",
         "nameEn": "Introduction",
         "type": "intro",
-        "content": "## warm-up\n\n### You've Made It!\n\nCongratulations! You've completed all 30 modules of A1 Ukrainian. This capstone module will help you review everything and assess your progress.\n\n> 💡 **Did You Know?**\n>\n> At A1 level, you should be able to: introduce yourself, navigate basic situations, understand simple texts, and communicate in everyday contexts. Let's see how far you've come!\n\n## presentation\n\n### What You've Learned: Grammar Overview\n\n#### Cases (Відмінки)\n\n| Case | Question | Usage | Example |\n|------|----------|-------|---------|\n| Nominative | Хто? Що? | Subject | Це **книга**. |\n| Accusative | Кого? Що? | Direct object | Я читаю **книгу**. |\n| Locative | Де? На чому? | Location | Книга на **столі**. |\n| Genitive | Кого? Чого? | Absence, possession | Немає **книги**. |\n| Vocative | — | Addressing | **Марію**! Привіт! |\n\n> 🎬 **Pop Culture Moment: Language Learning Movies**\n>\n> Every great language learning journey has a capstone moment — like in \"Lost in Translation\" when finally, the protagonist understands. Now it's YOUR moment!\n\n#### Verb Tenses\n\n**Present:**\n- Я читаю. (I read/am reading.)\n- Вона працює. (She works/is working.)\n\n**Past (L-participle):**\n- Я читав/читала. (I read/was reading.)\n- Він працював. (He worked.)\n\n**Future (буду + infinitive):**\n- Я буду читати. (I will read.)\n- Вона буде працювати. (She will work.)\n\n#### Modal Verbs\n\n| Modal | Meaning | Example |\n|-------|---------|---------|\n| можу | can (ability) | Я можу допомогти. |\n| вмію | can (skill) | Я вмію плавати. |\n| хочу | want | Я хочу їсти. |\n| повинен | must | Я повинен йти. |\n| треба | need to | Мені треба працювати. |\n\n### What You've Learned: Vocabulary Domains\n\n#### Identity & Family (Modules 1-5, 29)\n- Personal pronouns: я, ти, він, вона, ми, ви, вони\n- Family: батько, мати, брат, сестра, дідусь, бабуся\n- Personal info: ім'я, прізвище, вік, професія\n\n#### Everyday Life (Modules 6-10, 18-19, 25)\n- Daily activities: працювати, їсти, спати, читати\n- Food: хліб, вода, кава, борщ\n- Routine: прокидатися, снідати, працювати\n\n#### Navigation & Places (Modules 13-15)\n- Places: місто, вулиця, магазин, метро\n- Directions: прямо, наліво, направо\n- Prepositions: в/у, на, біля\n\n#### Time & Calendar (Modules 21-23)\n- Days: понеділок, вівторок, середа...\n- Months: січень, лютий, березень...\n- Time: година, хвилина, рано, пізно\n\n#### Descriptions (Modules 26-28)\n- Adjectives: великий, малий, гарний, поганий\n- Colors: білий, чорний, червоний, синій\n- Weather: тепло, холодно, сонячно\n\n> 🌍 **Real World: Your A1 Can-Do List**\n>\n> ✓ Introduce yourself and others\n> ✓ Ask and answer simple questions\n> ✓ Navigate a city and order food\n> ✓ Describe people, places, and things\n> ✓ Talk about past events and future plans\n> ✓ Express ability, necessity, and desire\n\n### A1 Grammar Quick Reference\n\n#### Noun Gender Patterns\n\n| Ending | Gender | Example |\n|--------|--------|---------|\n| consonant | M | стіл, друг |\n| -а/-я | F | книга, земля |\n| -о/-е | N | вікно, море |\n\n#### Adjective Agreement\n\n| | M | F | N | Pl |\n|---|---|---|---|---|\n| Hard | -ий | -а | -е | -і |\n| Soft | -ій | -я | -є | -і |\n\n#### Number Patterns\n\n| Number | Noun Form |\n|--------|-----------|\n| 1 | Nominative singular |\n| 2-4 | Nominative plural |\n| 5-20 | Genitive plural |\n\n> ⚡ **Pro Tip**\n>\n> Review isn't about memorizing — it's about recognizing patterns. If you understand WHY cases change, you'll remember HOW they change!\n\n### Self-Assessment Checklist\n\nRate yourself 1-5 on each skill:\n\n**Reading**\n- [ ] I can read Cyrillic without transliteration\n- [ ] I can understand simple signs and menus\n- [ ] I can read short texts about familiar topics\n\n**Writing**\n- [ ] I can write simple sentences about myself\n- [ ] I can fill out basic forms\n- [ ] I can write short messages\n\n**Speaking**\n- [ ] I can introduce myself\n- [ ] I can order food and ask prices\n- [ ] I can describe my family and daily routine\n\n**Listening**\n- [ ] I can understand simple greetings\n- [ ] I can understand numbers and prices\n- [ ] I can follow basic instructions\n\n> 🎮 **Gamer's Corner: Achievement Unlocked!**\n>\n> You've completed A1! Like finishing a tutorial level, you now have the basic skills to explore the game. A2 awaits with new challenges: all 7 cases, aspect, and complex sentences!\n\n## practice\n\n### Comprehensive Review Exercise\n\nWrite a short paragraph (50+ words) about yourself including:\n- Your name and where you're from\n- Your family (at least 3 members)\n- What you do (work/study)\n- What you like and don't like\n- Your typical day (at least 3 activities)\n\n### Final Grammar Check\n\nTransform these sentences:\n\n1. Present → Past: Я читаю книгу. → ___\n2. Present → Future: Він працює. → ___\n3. Positive → Negative: У мене є брат. → ___\n4. Nominative → Accusative: Це книга. → Я читаю ___\n5. Nominative → Locative: Стіл. → Книга на ___\n\n## production\n\n### Capstone Task: Self-Introduction Video Script\n\nPrepare a 2-minute self-introduction in Ukrainian. Include:\n\n1. **Personal info**: Привіт! Мене звати... Я з...\n2. **Family**: У мене є... Мого батька звати...\n3. **Description**: Я (tall/short), у мене (eye color) очі...\n4. **Daily routine**: Я прокидаюся о... потім я...\n5. **Likes/hobbies**: Я люблю... Я вмію...\n6. **Future plans**: Завтра я буду...\n7. **Weather today**: Сьогодні (weather)...\n\n---\n\n\n---\n\n\n---"
-      },
-      {
-        "id": "section-summary",
-        "name": "Підсумок",
-        "nameEn": "Summary",
-        "type": "summary",
-        "content": "> **Congratulations — A1 Complete!**\n>\n> You've successfully completed A1 Ukrainian! You can now:\n> - **Read** Cyrillic fluently\n> - **Introduce** yourself and your family\n> - **Navigate** cities and order food\n> - **Describe** people, places, and things\n> - **Express** past events and future plans\n> - **Use** 5 of 7 Ukrainian cases\n\n> **Your A1 Achievements:**\n> - Cyrillic alphabet mastery\n> - ~750 vocabulary words\n> - 5 grammatical cases\n> - Past and future tense\n> - Modal verbs\n> - Adjective agreement\n> - Reflexive verbs\n> - Impersonal constructions\n\n> **Next Steps: A2 — Elementary**\n>\n> In A2, you'll learn:\n> - Remaining 2 cases (Dative, Instrumental)\n> - Verbal aspect (perfective/imperfective)\n> - Comparative adjectives\n> - More complex sentences\n> - Extended vocabulary domains\n\n> **Вітаю! Ви молодець!** (Congratulations! You're great!)\n>\n> Your Ukrainian journey has just begun. Keep practicing, and soon you'll be having full conversations in Ukrainian!"
+        "content": "## warm-up\n**The Journey So Far**\n\nYou have climbed the mountain.\n- **Module 1**: You learned letters. \"Baba\". \"Mama\".\n- **Module 10**: You met \"To Be\" and \"To Have\".\n- **Module 20**: You mastered the City and Navigation.\n- **Module 30**: You are here. You speak Ukrainian.\n\nYou can order food. You can find a hotel. You can talk about your family, your job, your past, and your future.\nToday, we verify everything.\n\n**The Four Pillars of A1:**\n1.  **Gender**: Is it He, She, or It?\n2.  **Case**: Who does what to whom? (Subject -> Object).\n3.  **Tense**: When did it happen?\n4.  **Motion**: Where are you going?\n\n## presentation\n\n### Section 1: The Gender Code (Review)\n\nEverything starts with the Endings.\n- **Consonant** -> Masculine (Park, Dim, Brat).\n- **-A / -Ya** -> Feminine (Kava, Mama, Simya).\n- **-O / -E** -> Neuter (Misto, More, Pyvo).\n- **-I / -Y** -> Plural (Parky, Mamy, Mista).\n\n> 💡 **Pro Tip: The Soft Sign (Ь)**\n> It usually feminizes abstract concepts (Liubov, Osin').\n> But sometimes it is masculine (Den', Uchytel').\n> Memorize the gender of words ending in Ь.\n\n### Section 2: The Case System (The Big Four)\n\nWe learned 4 of the 7 cases.\n1.  **Nominative (Subject):** \"Хто? Що?\" (Who? What?). Dictionary form.\n    *   \"*Студент* читає.\"\n2.  **Genitive (Possession/Absence):** \"Кого? Чого?\" (Of whom? Of what?).\n    *   \"Це книга *студента*.\" (Of student).\n    *   \"Немає *студента*.\" (No student).\n    *   \"Я *з Києва*.\" (From Kyiv).\n    *   *Endings:* M -a, F -y.\n3.  **Accusative (Object/Motion):** \"Кого? Що?\" (Whom? What?).\n    *   \"Я бачу *студента*.\" (Animate M changes like Genitive!).\n    *   \"Я бачу *парк*.\" (Inanimate M no change).\n    *   \"Я бачу *маму*.\" (F -> U).\n    *   \"Я їду *в Київ*.\" (Motion).\n4.  **Locative (Location):** \"Де?\" (Where?).\n    *   \"Я *в парку*.\" (In park).\n    *   \"Я *на роботі*.\" (At work).\n    *   *Endings:* Usually -i / -u.\n\n### Section 3: The Verb of Motion (Go)\n\nThe eternal battle: **Йти** (Walk) vs **Їхати** (Drive).\n- **Йти:** Foot. Short distance. \"Я йду в магазин.\"\n- **Їхати:** Wheel. Long distance. City to City. \"Я їду в Львів.\"\n\n**Conjugation (Present):**\n- Я йду / їду\n- Ти йдеш / їдеш\n- Він йде / їде\n- Ми йдемо / їдемо\n- Ви йдете / їдете\n- Вони йдуть / їдуть\n\n### Section 4: Time Travel (Tenses)\n\n**Past (Gender-based):**\n- Masculine: **-в** (Chytav).\n- Feminine: **-ла** (Chytala).\n- Plural: **-ли** (Chytaly).\n\n**Future (Simple):**\n- Will be: **Буду, Будеш, Буде...**\n- Composite: **Буду читати**.\n- Perfective Simple: **Прочитаю** (Start/Finish). *Standard A2 topic, but preview: \"Zrobliu\" (I will do).*\n\n### Section 5: The Magic Word \"Mozhna\"\n\n\"One is permitted\".\n- **Можна?** (May I?).\n- **Можна.** (One may / Yes).\n- **Не можна.** (One may not / Forbidden).\n- **Треба.** (One must / Need).\n\n\"Мені треба йти.\" (To me needs to go -> I must go).\n\n### Section 6: Numbers and Money\n\n- 1 (Odyn), 2 (Dva), 3 (Try).\n- 1 Hryvnia (Hryvnia - F).\n- 2 Hryvni (Nom Plural - sort of). 2, 3, 4 -> Hryvni.\n- 5 Hryven (Gen Plural). 5-20 -> Hryven.\n- **Скільки коштує?** (How much cost-it?).\n\n> 💰 **Culture Corner: The Bill**\n> In Ukraine, you usually say \"**Рахунок, будь ласка**\" (The count, please).\n> Tipping is 10%.\n> You can pay by card / phone everywhere (\"Kartkoyu\" or \"Telefonom\").\n\n### Section 7: Plurality\n\n- **Студент** -> **Студенти**. (-y).\n- **Книга** -> **Книги**. (-y).\n- **Місто** -> **Міста**. (-a).\n- **Друг** -> **Друзі**. (Irregular Sound Change H -> Z).\n\n\n### Section 8: Survival Phrases\n\nIf you forget everything, remember this:\n- **Дякую** (Thank you).\n- **Будь ласка** (Please / You're welcome).\n- **Вибачте** (Sorry).\n- **Я не розумію** (I don't understand).\n- **Допоможіть!** (Help!).\n- **Де туалет?** (Where is the toilet?).\n\n> 🗣️ **Deep Dive: The 7 Cases (A Preview)**\n> In A1, you learned the Big 4.\n> In A2, you will meet the rest of the family:\n> 5.  **Dative (Komu?):** Giving. \"I give *to Mom*.\"\n> 6.  **Instrumental (Kym?):** With. \"I go *with Mom*.\"\n> 7.  **Vocative:** Address. \"O, *Mamo*!\"\n> Do not fear them. They are logical.\n\n> 🥂 **Culture Corner: The Toast**\n> In Ukraine, you never drink without a toast.\n> The most common short toast is \"**Будьмо!**\" (Let us be!).\n> Response: \"**Гей!**\" (Hey!).\n> Repeat 3 times: \"Будьмо! Гей! Будьмо! Гей! Будьмо! Гей-гей-гей!\"\n> It is the heartbeat of a party.\n\n\n### Section 9: Your Superpowers\n\nYou started with \"Baba\". Now?\n1.  **Read Cyrillic:** You see \"Ресторан\" and know it is not \"Pectopah\".\n2.  **Navigate:** You can find the metro, the hotel, and the toilet.\n3.  **Survive:** You can buy food, tickets, and water.\n4.  **Connect:** You can ask \"How are you?\" and understand the answer.\n5.  **Politeness:** You say \"Bud' laska\" and \"Dyakuyu\".\n\nThis is not just grammar. This is freedom.\n\n> 💡 **Did You Know? 45 Million**\n> Ukrainian is spoken by over 45 million people worldwide.\n> It is the second most spoken Slavic language (after Polish? No, after Russian. Polish is #3).\n> It is the 26th most spoken language in the world.\n> And now, +1 speaker. That is you.\n\n## practice\n\n**Drill 1: Identify the Case**\n- **Я бачу маму.** -> Accusative.\n- **Немає мами.** -> Genitive.\n- **Це мама.** -> Nominative.\n- **Я у мами.** (At mom's) -> Genitive (U + Gen for person-location).\n\n**Drill 2: Identify the Gender**\n- **Стіл** -> Masculine.\n- **Вікно** -> Neuter.\n- **Кава** -> Feminine.\n- **Ніч** -> Feminine (Soft sign rule, memorize).\n- **Чай** -> Masculine.\n\n**Drill 3: Motion Logic**\n- (To London) -> Їхати (Far).\n- (To Kitchen) -> Йти (Near).\n- (To Park) -> Йти.\n- (To America) -> Летіти (Fly) or Їхати.\n\n## production\n\n**Scenario: The Final Exam (Border Control)**\n*   **Officer:** Добрий день. Ваші документи?\n*   **You:** Добрий день. Ось паспорт.\n*   **Officer:** Звідки ви?\n*   **You:** Я **з Америки**.\n*   **Officer:** Куди ви їдете?\n*   **You:** Я їду **в Київ**.\n*   **Officer:** Де ви будете жити?\n*   **You:** Я буду жити **в готелі** \"Україна\".\n*   **Officer:** Яка мета (goal) візиту?\n*   **You:** Туризм. Я вивчаю українську мову.\n*   **Officer:** Чудово. Ласкаво просимо.\n\n**Scenario: The Restaurant Review**\n*   **Friends:** Ну, як суп?\n*   **You:** Борщ **дуже смачний**.\n*   **Friends:** А вареники?\n*   **You:** Вареники **холодні**.\n*   **Friends:** Це погано. Треба сказати офіціанту.\n*   **You:** Ні, я не хочу конфлікту. Я просто з'їм (eat up) хліб.\n\n> 🎓 **Deep Dive: Mastery**\n> You now have the keys to the kingdom.\n> A2 will open the doors to **Aspect** (Perfective/Imperfective Nuance), **Dative** (Giving), **Instrumental** (With whom), and complex sentences.\n> But A1 is the foundation. If A1 is weak, A2 collapses.\n> If you failed any test today, go back. Review M10, M20, M29.\n\n---"
       }
     ],
-    "rawMarkdown": "---\ntitle: \"A1 Capstone — Who Am I?\"\nsubtitle: \"Хто я? — Complete Review of A1 Ukrainian\"\nphase: A1.3\nduration: 60\ntransliteration: none\ntags: [review, capstone, assessment, comprehensive]\nobjectives:\n  - Review all A1 grammar (cases, tenses, modals)\n  - Consolidate vocabulary from all domains\n  - Demonstrate integrated communication skills\n  - Self-assess A1 competencies\ngrammar:\n  - All A1 cases (Nom, Acc, Loc, Gen, Voc)\n  - Past and future tense\n  - Modal verbs\n  - Adjective agreement\n---\n\n# Lesson Content\n\n## warm-up\n\n### You've Made It!\n\nCongratulations! You've completed all 30 modules of A1 Ukrainian. This capstone module will help you review everything and assess your progress.\n\n> 💡 **Did You Know?**\n>\n> At A1 level, you should be able to: introduce yourself, navigate basic situations, understand simple texts, and communicate in everyday contexts. Let's see how far you've come!\n\n## presentation\n\n### What You've Learned: Grammar Overview\n\n#### Cases (Відмінки)\n\n| Case | Question | Usage | Example |\n|------|----------|-------|---------|\n| Nominative | Хто? Що? | Subject | Це **книга**. |\n| Accusative | Кого? Що? | Direct object | Я читаю **книгу**. |\n| Locative | Де? На чому? | Location | Книга на **столі**. |\n| Genitive | Кого? Чого? | Absence, possession | Немає **книги**. |\n| Vocative | — | Addressing | **Марію**! Привіт! |\n\n> 🎬 **Pop Culture Moment: Language Learning Movies**\n>\n> Every great language learning journey has a capstone moment — like in \"Lost in Translation\" when finally, the protagonist understands. Now it's YOUR moment!\n\n#### Verb Tenses\n\n**Present:**\n- Я читаю. (I read/am reading.)\n- Вона працює. (She works/is working.)\n\n**Past (L-participle):**\n- Я читав/читала. (I read/was reading.)\n- Він працював. (He worked.)\n\n**Future (буду + infinitive):**\n- Я буду читати. (I will read.)\n- Вона буде працювати. (She will work.)\n\n#### Modal Verbs\n\n| Modal | Meaning | Example |\n|-------|---------|---------|\n| можу | can (ability) | Я можу допомогти. |\n| вмію | can (skill) | Я вмію плавати. |\n| хочу | want | Я хочу їсти. |\n| повинен | must | Я повинен йти. |\n| треба | need to | Мені треба працювати. |\n\n### What You've Learned: Vocabulary Domains\n\n#### Identity & Family (Modules 1-5, 29)\n- Personal pronouns: я, ти, він, вона, ми, ви, вони\n- Family: батько, мати, брат, сестра, дідусь, бабуся\n- Personal info: ім'я, прізвище, вік, професія\n\n#### Everyday Life (Modules 6-10, 18-19, 25)\n- Daily activities: працювати, їсти, спати, читати\n- Food: хліб, вода, кава, борщ\n- Routine: прокидатися, снідати, працювати\n\n#### Navigation & Places (Modules 13-15)\n- Places: місто, вулиця, магазин, метро\n- Directions: прямо, наліво, направо\n- Prepositions: в/у, на, біля\n\n#### Time & Calendar (Modules 21-23)\n- Days: понеділок, вівторок, середа...\n- Months: січень, лютий, березень...\n- Time: година, хвилина, рано, пізно\n\n#### Descriptions (Modules 26-28)\n- Adjectives: великий, малий, гарний, поганий\n- Colors: білий, чорний, червоний, синій\n- Weather: тепло, холодно, сонячно\n\n> 🌍 **Real World: Your A1 Can-Do List**\n>\n> ✓ Introduce yourself and others\n> ✓ Ask and answer simple questions\n> ✓ Navigate a city and order food\n> ✓ Describe people, places, and things\n> ✓ Talk about past events and future plans\n> ✓ Express ability, necessity, and desire\n\n### A1 Grammar Quick Reference\n\n#### Noun Gender Patterns\n\n| Ending | Gender | Example |\n|--------|--------|---------|\n| consonant | M | стіл, друг |\n| -а/-я | F | книга, земля |\n| -о/-е | N | вікно, море |\n\n#### Adjective Agreement\n\n| | M | F | N | Pl |\n|---|---|---|---|---|\n| Hard | -ий | -а | -е | -і |\n| Soft | -ій | -я | -є | -і |\n\n#### Number Patterns\n\n| Number | Noun Form |\n|--------|-----------|\n| 1 | Nominative singular |\n| 2-4 | Nominative plural |\n| 5-20 | Genitive plural |\n\n> ⚡ **Pro Tip**\n>\n> Review isn't about memorizing — it's about recognizing patterns. If you understand WHY cases change, you'll remember HOW they change!\n\n### Self-Assessment Checklist\n\nRate yourself 1-5 on each skill:\n\n**Reading**\n- [ ] I can read Cyrillic without transliteration\n- [ ] I can understand simple signs and menus\n- [ ] I can read short texts about familiar topics\n\n**Writing**\n- [ ] I can write simple sentences about myself\n- [ ] I can fill out basic forms\n- [ ] I can write short messages\n\n**Speaking**\n- [ ] I can introduce myself\n- [ ] I can order food and ask prices\n- [ ] I can describe my family and daily routine\n\n**Listening**\n- [ ] I can understand simple greetings\n- [ ] I can understand numbers and prices\n- [ ] I can follow basic instructions\n\n> 🎮 **Gamer's Corner: Achievement Unlocked!**\n>\n> You've completed A1! Like finishing a tutorial level, you now have the basic skills to explore the game. A2 awaits with new challenges: all 7 cases, aspect, and complex sentences!\n\n## practice\n\n### Comprehensive Review Exercise\n\nWrite a short paragraph (50+ words) about yourself including:\n- Your name and where you're from\n- Your family (at least 3 members)\n- What you do (work/study)\n- What you like and don't like\n- Your typical day (at least 3 activities)\n\n### Final Grammar Check\n\nTransform these sentences:\n\n1. Present → Past: Я читаю книгу. → ___\n2. Present → Future: Він працює. → ___\n3. Positive → Negative: У мене є брат. → ___\n4. Nominative → Accusative: Це книга. → Я читаю ___\n5. Nominative → Locative: Стіл. → Книга на ___\n\n## production\n\n### Capstone Task: Self-Introduction Video Script\n\nPrepare a 2-minute self-introduction in Ukrainian. Include:\n\n1. **Personal info**: Привіт! Мене звати... Я з...\n2. **Family**: У мене є... Мого батька звати...\n3. **Description**: Я (tall/short), у мене (eye color) очі...\n4. **Daily routine**: Я прокидаюся о... потім я...\n5. **Likes/hobbies**: Я люблю... Я вмію...\n6. **Future plans**: Завтра я буду...\n7. **Weather today**: Сьогодні (weather)...\n\n---\n\n# Activities\n\n## fill-in: A1 Grammar Review\n\n> Choose the correct form.\n\n1. Я читаю ___ (книга).\n   > [!answer] книгу\n   > [!options] книгу | книга | книги | книзі\n\n2. Книга на ___ (стіл).\n   > [!answer] столі\n   > [!options] столі | стіл | столу | столом\n\n3. Немає ___ (час).\n   > [!answer] часу\n   > [!options] часу | час | часі | часом\n\n4. Вчора я ___ (читати) книгу.\n   > [!answer] читав\n   > [!options] читав | читаю | буду читати | читати\n\n5. Завтра він ___ працювати.\n   > [!answer] буде\n   > [!options] буде | був | є | працював\n\n6. Я ___ плавати.\n   > [!answer] вмію\n   > [!options] вмію | хочу | можу | треба\n\n7. Мені ___ йти.\n   > [!answer] треба\n   > [!options] треба | можу | хочу | вмію\n\n8. Це ___ книга (new).\n   > [!answer] нова\n   > [!options] нова | новий | нове | нові\n\n9. У мене ___ брат.\n   > [!answer] є\n   > [!options] є | немає | був | буде\n\n10. ___ сьогодні погода?\n    > [!answer] Яка\n    > [!options] Яка | Який | Яке | Які\n\n11. Мого батька ___ Іван.\n    > [!answer] звати\n    > [!options] звати | ім'я | називає | є\n\n12. Я живу ___ Києві.\n    > [!answer] у\n    > [!options] у | на | до | з\n\n## fill-in: Vocabulary Review\n\n> Choose the correct word.\n\n1. Перший день тижня — ___.\n   > [!answer] понеділок\n   > [!options] понеділок | неділя | субота | вівторок\n\n2. Батько батька — це ___.\n   > [!answer] дідусь\n   > [!options] дідусь | дядько | брат | онук\n\n3. Скільки ___ ? (How much does it cost?)\n   > [!answer] коштує\n   > [!options] коштує | є | має | стоїть\n\n4. Сьогодні дуже ___, +35 градусів.\n   > [!answer] спекотно\n   > [!options] спекотно | холодно | морозно | прохолодно\n\n5. ___ дощ. (It's raining.)\n   > [!answer] Йде\n   > [!options] Йде | Є | Дме | Падає\n\n6. Я ___ о сьомій ранку.\n   > [!answer] прокидаюся\n   > [!options] прокидаюся | засинаю | лягаю | виходжу\n\n7. Червоний, синій, зелений — це ___.\n   > [!answer] кольори\n   > [!options] кольори | одяг | погода | час\n\n8. Сорочка, штани, куртка — це ___.\n   > [!answer] одяг\n   > [!options] одяг | кольори | їжа | меблі\n\n9. Велика, мала, гарна — це ___.\n   > [!answer] прикметники\n   > [!options] прикметники | іменники | дієслова | числа\n\n10. Спочатку, потім, ___.\n    > [!answer] нарешті\n    > [!options] нарешті | завжди | ніколи | зараз\n\n11. Навесні, влітку, восени, ___.\n    > [!answer] взимку\n    > [!options] взимку | у зиму | зимою | зимі\n\n12. ___, вівторок, середа, четвер...\n    > [!answer] Понеділок\n    > [!options] Понеділок | Неділя | П'ятниця | Субота\n\n## unjumble: A1 Sentences\n\n> Put the words in the correct order.\n\n1. звати Мене Іван\n   > [!answer] Мене звати Іван.\n   > (My name is Ivan.) [3 words]\n\n2. з України Я\n   > [!answer] Я з України.\n   > (I'm from Ukraine.) [3 words]\n\n3. книгу читаю Я цікаву\n   > [!answer] Я читаю цікаву книгу.\n   > (I'm reading an interesting book.) [4 words]\n\n4. у Києві Мої живуть батьки\n   > [!answer] Мої батьки живуть у Києві.\n   > (My parents live in Kyiv.) [5 words]\n\n5. години о сьомій прокидаюся Я\n   > [!answer] Я прокидаюся о сьомій годині.\n   > (I wake up at 7 o'clock.) [5 words]\n\n6. буду Завтра працювати я\n   > [!answer] Завтра я буду працювати.\n   > (Tomorrow I will work.) [4 words]\n\n7. Вчора холодно було дуже\n   > [!answer] Вчора було дуже холодно.\n   > (Yesterday it was very cold.) [4 words]\n\n8. сестра У є мене\n   > [!answer] У мене є сестра.\n   > (I have a sister.) [4 words]\n\n9. говорити українською Я можу\n   > [!answer] Я можу говорити українською.\n   > (I can speak Ukrainian.) [4 words]\n\n10. працювати Мені треба\n    > [!answer] Мені треба працювати.\n    > (I need to work.) [3 words]\n\n11. носить червону Вона сукню\n    > [!answer] Вона носить червону сукню.\n    > (She wears a red dress.) [4 words]\n\n12. Рахунок ласка будь\n    > [!answer] Рахунок, будь ласка.\n    > (Check, please.) [3 words]\n\n## match-up: A1 Core Grammar\n\n> Match each grammar concept with its example.\n\n| Left | Right |\n|------|-------|\n| Accusative case | Я читаю книгу. |\n| Locative case | Книга на столі. |\n| Genitive case | Немає часу. |\n| Past tense | Вчора я працював. |\n| Future tense | Завтра буду читати. |\n| Modal: ability | Я можу допомогти. |\n| Modal: skill | Я вмію плавати. |\n| Modal: want | Я хочу їсти. |\n| Modal: need | Мені треба йти. |\n| Adjective agreement | Нова книга |\n| Impersonal | Сьогодні холодно. |\n| Reflexive verb | Я вмиваюся. |\n\n## match-up: A1 Vocabulary Themes\n\n> Match each theme with example words.\n\n| Left | Right |\n|------|-------|\n| Family | батько, мати, брат |\n| Time | година, день, тиждень |\n| Colors | червоний, синій, зелений |\n| Weather | тепло, холодно, дощ |\n| Food | борщ, хліб, кава |\n| Clothing | сорочка, штани, куртка |\n| Places | місто, вулиця, магазин |\n| Numbers | один, два, три |\n| Directions | прямо, наліво, направо |\n| Daily routine | прокидатися, снідати |\n| Adjectives | великий, малий, гарний |\n| Modals | можу, хочу, треба |\n\n## quiz: A1 Comprehensive\n\n> Test your A1 knowledge.\n\n1. What case is used for direct objects?\n   - [ ] Nominative\n   - [x] Accusative\n   - [ ] Genitive\n   - [ ] Locative\n   > Direct objects take accusative.\n\n2. How do you say \"I was reading\" (male)?\n   - [ ] Я читаю\n   - [x] Я читав\n   - [ ] Я буду читати\n   - [ ] Я читати\n   > Past tense for male: -в ending.\n\n3. \"У мене немає часу\" — what case is \"часу\"?\n   - [ ] Nominative\n   - [ ] Accusative\n   - [x] Genitive\n   - [ ] Locative\n   > \"Немає\" requires genitive.\n\n4. Which is soft stem?\n   - [ ] великий\n   - [x] синій\n   - [ ] новий\n   - [ ] старий\n   > Soft stem ends in -ій.\n\n5. How do you form future tense?\n   - [ ] Add -ти to verb\n   - [ ] Add -в to verb\n   - [x] буду + infinitive\n   - [ ] Change ending\n   > Compound future: буду + infinitive.\n\n6. \"Прокидатися\" is what type of verb?\n   - [ ] Regular\n   - [ ] Modal\n   - [x] Reflexive\n   - [ ] Impersonal\n   > -ся ending = reflexive.\n\n7. What's the difference between можу and вмію?\n   - [ ] They're the same\n   - [x] Можу = ability, вмію = skill\n   - [ ] Можу is formal\n   - [ ] Вмію is past tense\n   > Important distinction!\n\n8. How many cases have you learned at A1?\n   - [ ] 3\n   - [ ] 4\n   - [x] 5\n   - [ ] 7\n   > Nom, Acc, Loc, Gen, Voc.\n\n9. \"Холодно\" is:\n   - [ ] An adjective\n   - [ ] A noun\n   - [x] An impersonal expression\n   - [ ] A verb\n   > Weather uses impersonal constructions.\n\n10. Ukrainian week starts on:\n    - [x] Monday\n    - [ ] Sunday\n    - [ ] Saturday\n    - [ ] Depends\n    > Понеділок is first.\n\n11. \"П'ять гривень\" — why \"гривень\"?\n    - [ ] Always гривень\n    - [x] Numbers 5+ require genitive plural\n    - [ ] It's nominative\n    - [ ] Exception\n    > Numbers 5-20 use genitive plural.\n\n12. What's next after A1?\n    - [x] A2 — Elementary\n    - [ ] B1 — Intermediate\n    - [ ] A1+ — Advanced Beginner\n    - [ ] A0 — Pre-Beginner\n    > A2 introduces all 7 cases and aspect!\n\n## true-false: A1 Review\n\n> Decide if each statement is true (Правда) or false (Міф).\n\n- [x] A1 covers 5 of 7 Ukrainian cases.\n  > Correct! Nom, Acc, Loc, Gen, Voc. Dative and Instrumental are A2.\n\n- [ ] Past tense endings are the same for all genders.\n  > Incorrect! -в (m), -ла (f), -ло (n), -ли (pl).\n\n- [x] \"Немає\" always takes genitive.\n  > Correct! Немає + genitive.\n\n- [x] Ukrainian adjectives agree with nouns in gender.\n  > Correct! Новий (m), нова (f), нове (n).\n\n- [ ] \"Можна\" requires a subject.\n  > Incorrect! Impersonal — no subject needed.\n\n- [x] \"Синій\" is a soft stem adjective.\n  > Correct! Ends in -ій.\n\n- [ ] Ukrainian has one word for \"blue.\"\n  > Incorrect! Синій (dark) and блакитний (light).\n\n- [x] \"Прокидатися\" is reflexive.\n  > Correct! -ся ending.\n\n- [x] Weather expressions are impersonal.\n  > Correct! \"Холодно\" — no subject.\n\n- [ ] All numbers use the same noun form.\n  > Incorrect! 1 = nom.sg, 2-4 = nom.pl, 5+ = gen.pl.\n\n- [x] \"Чоловік\" can mean both \"husband\" and \"man.\"\n  > Correct! Context determines meaning.\n\n- [x] Ukrainian weeks start on Monday.\n  > Correct! Понеділок is first.\n\n## group-sort: A1 Case Usage\n\n> Sort these sentences by the case of the highlighted noun.\n\n### Nominative\n- Це **книга**.\n- **Я** студент.\n- **Погода** гарна.\n\n### Accusative\n- Я читаю **книгу**.\n- Я бачу **друга**.\n- Я люблю **каву**.\n\n### Locative\n- Книга на **столі**.\n- Я живу в **Києві**.\n- Він у **банку**.\n\n### Genitive\n- Немає **часу**.\n- П'ять **гривень**.\n- Склянка **води**.\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| Review all vocabulary from Modules 1-29 | | | | | |\n\n---\n\n# Summary\n\n> **Congratulations — A1 Complete!**\n>\n> You've successfully completed A1 Ukrainian! You can now:\n> - **Read** Cyrillic fluently\n> - **Introduce** yourself and your family\n> - **Navigate** cities and order food\n> - **Describe** people, places, and things\n> - **Express** past events and future plans\n> - **Use** 5 of 7 Ukrainian cases\n\n> **Your A1 Achievements:**\n> - Cyrillic alphabet mastery\n> - ~750 vocabulary words\n> - 5 grammatical cases\n> - Past and future tense\n> - Modal verbs\n> - Adjective agreement\n> - Reflexive verbs\n> - Impersonal constructions\n\n> **Next Steps: A2 — Elementary**\n>\n> In A2, you'll learn:\n> - Remaining 2 cases (Dative, Instrumental)\n> - Verbal aspect (perfective/imperfective)\n> - Comparative adjectives\n> - More complex sentences\n> - Extended vocabulary domains\n\n> **Вітаю! Ви молодець!** (Congratulations! You're great!)\n>\n> Your Ukrainian journey has just begun. Keep practicing, and soon you'll be having full conversations in Ukrainian!\n",
-    "createdAt": "2025-12-06T10:49:20.104Z",
-    "modifiedAt": "2025-12-06T10:49:20.104Z",
+    "rawMarkdown": "---\ntitle: Final Checkpoint (A1 Mastery)\nsubtitle: The Grand Review\nphase: A1.3\nduration: 90\ntransliteration: full\ntags: [checkpoint, revision, test, mastery, a1-exam]\nobjectives:\n  - Verify A1 mastery of Cases (Nom/Gen/Acc/Loc)\n  - Verify A1 mastery of Tenses (Past/Present/Future)\n  - Verify A1 mastery of Prepositions (V/Na/Do/Z/Vid)\n  - Verify A1 mastery of Gender (M/F/N/Pl)\n  - Verify A1 mastery of Numbers (1-100)\n---\n\n# Lesson Content\n\n## warm-up\n**The Journey So Far**\n\nYou have climbed the mountain.\n- **Module 1**: You learned letters. \"Baba\". \"Mama\".\n- **Module 10**: You met \"To Be\" and \"To Have\".\n- **Module 20**: You mastered the City and Navigation.\n- **Module 30**: You are here. You speak Ukrainian.\n\nYou can order food. You can find a hotel. You can talk about your family, your job, your past, and your future.\nToday, we verify everything.\n\n**The Four Pillars of A1:**\n1.  **Gender**: Is it He, She, or It?\n2.  **Case**: Who does what to whom? (Subject -> Object).\n3.  **Tense**: When did it happen?\n4.  **Motion**: Where are you going?\n\n## presentation\n\n### Section 1: The Gender Code (Review)\n\nEverything starts with the Endings.\n- **Consonant** -> Masculine (Park, Dim, Brat).\n- **-A / -Ya** -> Feminine (Kava, Mama, Simya).\n- **-O / -E** -> Neuter (Misto, More, Pyvo).\n- **-I / -Y** -> Plural (Parky, Mamy, Mista).\n\n> 💡 **Pro Tip: The Soft Sign (Ь)**\n> It usually feminizes abstract concepts (Liubov, Osin').\n> But sometimes it is masculine (Den', Uchytel').\n> Memorize the gender of words ending in Ь.\n\n### Section 2: The Case System (The Big Four)\n\nWe learned 4 of the 7 cases.\n1.  **Nominative (Subject):** \"Хто? Що?\" (Who? What?). Dictionary form.\n    *   \"*Студент* читає.\"\n2.  **Genitive (Possession/Absence):** \"Кого? Чого?\" (Of whom? Of what?).\n    *   \"Це книга *студента*.\" (Of student).\n    *   \"Немає *студента*.\" (No student).\n    *   \"Я *з Києва*.\" (From Kyiv).\n    *   *Endings:* M -a, F -y.\n3.  **Accusative (Object/Motion):** \"Кого? Що?\" (Whom? What?).\n    *   \"Я бачу *студента*.\" (Animate M changes like Genitive!).\n    *   \"Я бачу *парк*.\" (Inanimate M no change).\n    *   \"Я бачу *маму*.\" (F -> U).\n    *   \"Я їду *в Київ*.\" (Motion).\n4.  **Locative (Location):** \"Де?\" (Where?).\n    *   \"Я *в парку*.\" (In park).\n    *   \"Я *на роботі*.\" (At work).\n    *   *Endings:* Usually -i / -u.\n\n### Section 3: The Verb of Motion (Go)\n\nThe eternal battle: **Йти** (Walk) vs **Їхати** (Drive).\n- **Йти:** Foot. Short distance. \"Я йду в магазин.\"\n- **Їхати:** Wheel. Long distance. City to City. \"Я їду в Львів.\"\n\n**Conjugation (Present):**\n- Я йду / їду\n- Ти йдеш / їдеш\n- Він йде / їде\n- Ми йдемо / їдемо\n- Ви йдете / їдете\n- Вони йдуть / їдуть\n\n### Section 4: Time Travel (Tenses)\n\n**Past (Gender-based):**\n- Masculine: **-в** (Chytav).\n- Feminine: **-ла** (Chytala).\n- Plural: **-ли** (Chytaly).\n\n**Future (Simple):**\n- Will be: **Буду, Будеш, Буде...**\n- Composite: **Буду читати**.\n- Perfective Simple: **Прочитаю** (Start/Finish). *Standard A2 topic, but preview: \"Zrobliu\" (I will do).*\n\n### Section 5: The Magic Word \"Mozhna\"\n\n\"One is permitted\".\n- **Можна?** (May I?).\n- **Можна.** (One may / Yes).\n- **Не можна.** (One may not / Forbidden).\n- **Треба.** (One must / Need).\n\n\"Мені треба йти.\" (To me needs to go -> I must go).\n\n### Section 6: Numbers and Money\n\n- 1 (Odyn), 2 (Dva), 3 (Try).\n- 1 Hryvnia (Hryvnia - F).\n- 2 Hryvni (Nom Plural - sort of). 2, 3, 4 -> Hryvni.\n- 5 Hryven (Gen Plural). 5-20 -> Hryven.\n- **Скільки коштує?** (How much cost-it?).\n\n> 💰 **Culture Corner: The Bill**\n> In Ukraine, you usually say \"**Рахунок, будь ласка**\" (The count, please).\n> Tipping is 10%.\n> You can pay by card / phone everywhere (\"Kartkoyu\" or \"Telefonom\").\n\n### Section 7: Plurality\n\n- **Студент** -> **Студенти**. (-y).\n- **Книга** -> **Книги**. (-y).\n- **Місто** -> **Міста**. (-a).\n- **Друг** -> **Друзі**. (Irregular Sound Change H -> Z).\n\n\n### Section 8: Survival Phrases\n\nIf you forget everything, remember this:\n- **Дякую** (Thank you).\n- **Будь ласка** (Please / You're welcome).\n- **Вибачте** (Sorry).\n- **Я не розумію** (I don't understand).\n- **Допоможіть!** (Help!).\n- **Де туалет?** (Where is the toilet?).\n\n> 🗣️ **Deep Dive: The 7 Cases (A Preview)**\n> In A1, you learned the Big 4.\n> In A2, you will meet the rest of the family:\n> 5.  **Dative (Komu?):** Giving. \"I give *to Mom*.\"\n> 6.  **Instrumental (Kym?):** With. \"I go *with Mom*.\"\n> 7.  **Vocative:** Address. \"O, *Mamo*!\"\n> Do not fear them. They are logical.\n\n> 🥂 **Culture Corner: The Toast**\n> In Ukraine, you never drink without a toast.\n> The most common short toast is \"**Будьмо!**\" (Let us be!).\n> Response: \"**Гей!**\" (Hey!).\n> Repeat 3 times: \"Будьмо! Гей! Будьмо! Гей! Будьмо! Гей-гей-гей!\"\n> It is the heartbeat of a party.\n\n\n### Section 9: Your Superpowers\n\nYou started with \"Baba\". Now?\n1.  **Read Cyrillic:** You see \"Ресторан\" and know it is not \"Pectopah\".\n2.  **Navigate:** You can find the metro, the hotel, and the toilet.\n3.  **Survive:** You can buy food, tickets, and water.\n4.  **Connect:** You can ask \"How are you?\" and understand the answer.\n5.  **Politeness:** You say \"Bud' laska\" and \"Dyakuyu\".\n\nThis is not just grammar. This is freedom.\n\n> 💡 **Did You Know? 45 Million**\n> Ukrainian is spoken by over 45 million people worldwide.\n> It is the second most spoken Slavic language (after Polish? No, after Russian. Polish is #3).\n> It is the 26th most spoken language in the world.\n> And now, +1 speaker. That is you.\n\n## practice\n\n**Drill 1: Identify the Case**\n- **Я бачу маму.** -> Accusative.\n- **Немає мами.** -> Genitive.\n- **Це мама.** -> Nominative.\n- **Я у мами.** (At mom's) -> Genitive (U + Gen for person-location).\n\n**Drill 2: Identify the Gender**\n- **Стіл** -> Masculine.\n- **Вікно** -> Neuter.\n- **Кава** -> Feminine.\n- **Ніч** -> Feminine (Soft sign rule, memorize).\n- **Чай** -> Masculine.\n\n**Drill 3: Motion Logic**\n- (To London) -> Їхати (Far).\n- (To Kitchen) -> Йти (Near).\n- (To Park) -> Йти.\n- (To America) -> Летіти (Fly) or Їхати.\n\n## production\n\n**Scenario: The Final Exam (Border Control)**\n*   **Officer:** Добрий день. Ваші документи?\n*   **You:** Добрий день. Ось паспорт.\n*   **Officer:** Звідки ви?\n*   **You:** Я **з Америки**.\n*   **Officer:** Куди ви їдете?\n*   **You:** Я їду **в Київ**.\n*   **Officer:** Де ви будете жити?\n*   **You:** Я буду жити **в готелі** \"Україна\".\n*   **Officer:** Яка мета (goal) візиту?\n*   **You:** Туризм. Я вивчаю українську мову.\n*   **Officer:** Чудово. Ласкаво просимо.\n\n**Scenario: The Restaurant Review**\n*   **Friends:** Ну, як суп?\n*   **You:** Борщ **дуже смачний**.\n*   **Friends:** А вареники?\n*   **You:** Вареники **холодні**.\n*   **Friends:** Це погано. Треба сказати офіціанту.\n*   **You:** Ні, я не хочу конфлікту. Я просто з'їм (eat up) хліб.\n\n> 🎓 **Deep Dive: Mastery**\n> You now have the keys to the kingdom.\n> A2 will open the doors to **Aspect** (Perfective/Imperfective Nuance), **Dative** (Giving), **Instrumental** (With whom), and complex sentences.\n> But A1 is the foundation. If A1 is weak, A2 collapses.\n> If you failed any test today, go back. Review M10, M20, M29.\n\n---\n\n# Activities\n\n## quiz: The Grand Grammar Test\n\n> The Final Boss.\n\n1. \"Я бачу ___.\" (Sister).\n   - [x] сестру (Acc)\n   - [ ] сестри (Gen)\n   - [ ] сестра (Nom)\n\n2. \"Я їду ___.\" (Kyiv).\n   - [x] в Київ (Acc Motion)\n   - [ ] в Києві (Loc Location)\n   - [ ] з Києва (Gen Origin)\n\n3. \"Я живу ___.\" (Lviv).\n   - [x] у Львові (Loc)\n   - [ ] в Львів (Acc)\n   - [ ] Львова (Gen)\n\n4. \"Немає ___.\" (Coffee).\n   - [x] кави (Gen)\n   - [ ] каву (Acc)\n   - [ ] кава (Nom)\n\n5. \"Це ___ паспорт.\" (My - M).\n   - [x] мій\n   - [ ] моя\n   - [ ] моє\n\n6. \"Я ___ книгу.\" (Read - Past M).\n   - [x] читав\n   - [ ] читала\n   - [ ] читали\n\n7. \"Ми ___.\" (Speak - Present).\n   - [x] говоримо\n   - [ ] говорять\n   - [ ] говориш\n\n8. \"Вона ___.\" (Wanted - Past F).\n   - [x] хотіла\n   - [ ] хотів\n   - [ ] хотіли\n\n9. \"Я йду ___.\" (Home).\n   - [x] додому\n   - [ ] вдома\n   - [ ] дім\n\n10. \"Я ___.\" (At home).\n    - [x] вдома\n    - [ ] додому\n    - [ ] з дому\n\n11. \"Скільки ___?\" (Cost).\n    - [x] коштує\n    - [ ] робить\n    - [ ] хоче\n\n12. \"Мені ___ йти.\" (Need).\n    - [x] треба\n    - [ ] хочу\n    - [ ] маю\n\n## match-up: Case Recon\n\n> Identify the Case of the capitalized word.\n\n| Sentence | Case |\n|----------|------|\n| Це МAMA. | Nominative |\n| Я бачу МАМУ. | Accusative |\n| Немає МАМИ. | Genitive |\n| Я прийшов до МАМИ. | Genitive |\n| Я гуляю з МАМОЮ (Wait!) | Instrumental (A2 Preview - Ignore) -> Genitive? No. Stick to A1. |\n| Я люблю КАВУ. | Accusative |\n| Я хочу КАВИ. | Genitive (Partitive) |\n| Я в ПАРКУ. | Locative |\n| Я їду в ПАРК. | Accusative |\n| Я з ПАРКУ. | Genitive |\n| Це мій ДРУГ. | Nominative |\n| Я чекаю ДРУГА. | Accusative (Animate) |\n\n## fill-in: Verb Conjugation\n\n> Complete the conjugation.\n\n1. Я ___ (know).\n   > [!answer] знаю\n\n2. Ти ___ (know).\n   > [!answer] знаєш\n\n3. Він ___ (knows).\n   > [!answer] знає\n\n4. Ми ___ (know).\n   > [!answer] знаємо\n\n5. Ви ___ (know).\n   > [!answer] знаєте\n\n6. Вони ___ (know).\n   > [!answer] знають\n\n7. Я ___ (lived - M).\n   > [!answer] жив\n\n8. Вона ___ (lived - F).\n   > [!answer] жила\n\n9. Ми ___ (lived - Pl).\n   > [!answer] жили\n\n10. Я ___ (will be).\n    > [!answer] буду\n\n11. Ти ___ (will be).\n    > [!answer] будеш\n\n12. Вони ___ (will be).\n    > [!answer] будуть\n\n## group-sort: Gender Sorter\n\n> Sort nouns by gender.\n\n### Masculine\n- Парк\n- Стіл\n- Чай\n- День\n- Брат\n- Батько (Looks F, is M)\n\n### Feminine\n- Мама\n- Кава\n- Ніч\n- Сім'я\n- Україна\n- Вода\n\n### Neuter\n- Місто\n- Вікно\n- Море\n- Пиво\n- Сонце\n- Прізвище\n\n## unjumble: Sentence Construction\n\n> Make a sentence.\n\n1. люблю / Я / Україну / .\n   > [!answer] Я люблю Україну.\n\n2. не / Я / м'ясо / їм / .\n   > [!answer] Я не їм м'ясо.\n\n3. живе / Він / Києві / в / .\n   > [!answer] Він живе в Києві.\n\n4. йдуть / Вони / додому / .\n   > [!answer] Вони йдуть додому.\n\n5. коштує / Скільки / це / ?\n   > [!answer] Скільки це коштує?\n\n6. тебе / звуть / Як / ?\n   > [!answer] Як тебе звуть?\n\n7. гарна / Це / ідея / .\n   > [!answer] Це гарна ідея.\n\n8. маю / Я / питання / .\n   > [!answer] Я маю питання.\n\n9. тут / робиш / Ти / що / ?\n   > [!answer] Що ти тут робиш?\n\n10. ми / Де / ?\n    > [!answer] Де ми?\n\n11. тебе / не / Я / чую / .\n    > [!answer] Я не чую тебе.\n\n12. все / розумію / Я / .\n    > [!answer] Я все розумію.\n\n\n## unjumble: Dialogue Reorder\n\n> Order the dialogue.\n\n1. Hello! / Hello. / How are you? / Normal.\n   > [!answer] Привіт! Привіт. Як справи? Нормально.\n\n2. Who is this? / This is Ivan. / Is he a student? / Yes.\n   > [!answer] Хто це? Це Іван. Він студент? Так.\n\n3. Calculate please. / Card or cash? / Card. / One second.\n   > [!answer] Рахунок, будь ласка. Картка чи готівка? Картка. Секунду.\n\n4. Where are you? / I am at home. / Are you sleeping? / No, I am eating.\n   > [!answer] Де ти? Я вдома. Ти спиш? Ні, я їм.\n\n5. I go to park. / I see a dog. / It is big. / I run.\n   > [!answer] Я йду в парк. Я бачу собаку. Вона велика. Я біжу.\n\n6. Where is metro? / It is there. / Is it far? / No, near.\n   > [!answer] Де метро? Воно там. Це далеко? Ні, близько.\n\n7. What is this? / This is soup. / Is it tasty? / Yes, very.\n   > [!answer] Що це? Це суп. Він смачний? Так, дуже.\n\n8. I love coffee. / But this is tea. / I know. / Drink tea.\n   > [!answer] Я люблю каву. Але це чай. Я знаю. Пий чай.\n\n9. What is your name? / My name is Olena. / Nice to meet you. / Me too.\n   > [!answer] Як тебе звуть? Мене звуть Олена. Приємно познайомитись. Мені теж.\n\n10. Are you from USA? / No, from UK. / London? / Yes.\n    > [!answer] Ти з Америки? Ні, з Англії. Лондон? Так.\n\n11. What time is it? / It is 5 o'clock. / I am late. / Run!\n    > [!answer] Котра година? П'ята година. Я запізнююсь. Біжи!\n\n12. Do you have a ticket? / No. / Why? / No money.\n    > [!answer] У тебе є квиток? Ні. Чому? Немає грошей.\n\n## fill-in: Preposition Final Boss\n\n> V, Na, Do, Z, Vid.\n\n1. Я живу ___ (in) Лондоні.\n   > [!answer] в\n\n2. Я їду ___ (to) Лондон.\n   > [!answer] в\n\n3. Я йду ___ (to) мами.\n   > [!answer] до\n\n4. Я йду ___ (from) роботи.\n   > [!answer] з\n\n5. Книга ___ (on) столі.\n   > [!answer] на\n\n6. Я ___ (from) Канади.\n   > [!answer] з\n\n7. Я йду ___ (homeward).\n   > [!answer] додому\n\n8. Вона ___ (at home).\n   > [!answer] вдома\n\n9. Ми ___ (at) концерті.\n   > [!answer] на\n\n10. Я йду ___ (to) концерт.\n    > [!answer] на\n\n11. Я отримав лист ___ (from) брата.\n    > [!answer] від\n\n12. Я йду ___ (into) парк.\n    > [!answer] в\n\n## true-false: Linguistic Truths\n\n> Check your knowledge.\n\n1. \"Sobaka\" (Dog) is Neuter.\n   - [ ] True\n   - [x] False (Feminine - ends in A)\n\n2. \"Tato\" (Dad) is Feminine because it ends in O.\n   - [ ] True\n   - [x] False (Masculine by meaning)\n\n3. Motion usually uses Accusative.\n   - [x] True\n   - [ ] False\n\n4. Location usually uses Locative.\n   - [x] True\n   - [ ] False\n\n5. \"Mene zvut\" means \"They call me\".\n   - [x] True (Literally)\n   - [ ] False\n\n6. \"U mene ye\" means \"At me is\".\n   - [x] True (I have)\n   - [ ] False\n\n7. \"IA\" (I) is capitalized in Ukrainian.\n   - [ ] True\n   - [x] False (Only at start of sentence. English ego is big, Ukrainian ego is normal).\n\n8. \"Vy\" is polite \"You\".\n   - [x] True\n   - [ ] False\n\n9. \"Ty\" is for friends and God.\n   - [x] True (Religious address is Ty).\n   - [ ] False\n\n10. Ukrainians drink tea with jam.\n    - [x] True (Sometimes).\n    - [ ] False\n\n11. Borsch is a soup.\n    - [x] True\n    - [ ] False (It is a lifestyle).\n\n12. Salo is chocolate.\n    - [ ] True\n    - [x] False (It is pork fat).\n\n# Summary\n\nYou did it.\nA1 is done.\nCelebrate. Put on some Ukrainian music (Okean Elzy). Eat a Varenyk.\nAnd prepare for A2. The Grammar Monster wakes up.\n\n# Vocabulary\n\n| Word | IPA | English | Note | Audio |\n|------|-----|---------|------|-------|\n| екзамен | /ɛkˈzɑmɛn/ | exam | | [🔊](audio_ekzamen) |\n| тест | /tɛst/ | test | | [🔊](audio_test) |\n| результат | /rɛzulʲˈtɑt/ | result | | [🔊](audio_rezultat) |\n| кінець | /kiˈnɛt͡sʲ/ | end | | [🔊](audio_kinets) |\n| початок | /pɔˈtʃɑtɔk/ | beginning | | [🔊](audio_pochatok) |\n| все | /vsɛ/ | everything/all | | [🔊](audio_vse) |\n| нічого | /niˈtʃɔhɔ/ | nothing | | [🔊](audio_nichoh) |\n| життя | /ʒɪtˈtʲɑ/ | life | | [🔊](audio_zhyttya) |\n| мова | /ˈmɔvɑ/ | language | | [🔊](audio_mova) |\n| слово | /ˈslɔvɔ/ | word | | [🔊](audio_slovo) |\n| питання | /pɪˈtɑnʲːɑ/ | question | | [🔊](audio_pytannya) |\n| відповідь | /ˈvidpɔvidʲ/ | answer | | [🔊](audio_vidpovid) |\n| помилка | /pɔˈmɪlkɑ/ | mistake | | [🔊](audio_pomylka) |\n| правильно | /ˈprɑvɪlʲnɔ/ | correct | | [🔊](audio_pravylno) |\n| неправильно | /nɛˈprɑvɪlʲnɔ/ | incorrect | | [🔊](audio_nepravylno) |\n| розуміти | /rɔzuˈmitɪ/ | to understand | | [🔊](audio_rozumity) |\n| знати | /ˈznɑtɪ/ | to know | | [🔊](audio_znaty) |\n| пам'ятати | /pɑmjɑˈtɑtɪ/ | to remember | | [🔊](audio_pamyataty) |\n| вчити | /ˈvtʃɪtɪ/ | to learn/teach | | [🔊](audio_vchyty) |\n| говорити | /hɔvɔˈrɪtɪ/ | to speak | | [🔊](audio_hovoryty) |\n| читати | /tʃɪˈtɑtɪ/ | to read | | [🔊](audio_chytaty) |\n| писати | /pɪˈsɑtɪ/ | to write | | [🔊](audio_pysaty) |\n| слухати | /ˈsluxɑtɪ/ | to listen | | [🔊](audio_slukhaty) |\n| дивитися | /dɪˈvɪtɪsʲɑ/ | to watch | | [🔊](audio_dyvytysya) |\n",
+    "createdAt": "2025-12-08T21:22:09.895Z",
+    "modifiedAt": "2025-12-08T21:22:09.895Z",
     "version": 2
   },
   "activities": [
     {
-      "id": "act-a1-0-fillblank",
-      "type": "fill-blank",
-      "title": "A1 Grammar Review",
-      "description": "Choose the correct form.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Я читаю ___ (книга).",
-            "answer": "книгу",
-            "hints": [
-              "книга"
-            ],
-            "options": [
-              "книгу",
-              "книга",
-              "книги",
-              "книзі"
-            ]
-          },
-          {
-            "prompt": "Книга на ___ (стіл).",
-            "answer": "столі",
-            "hints": [
-              "стіл"
-            ],
-            "options": [
-              "столі",
-              "стіл",
-              "столу",
-              "столом"
-            ]
-          },
-          {
-            "prompt": "Немає ___ (час).",
-            "answer": "часу",
-            "hints": [
-              "час"
-            ],
-            "options": [
-              "часу",
-              "час",
-              "часі",
-              "часом"
-            ]
-          },
-          {
-            "prompt": "Вчора я ___ (читати) книгу.",
-            "answer": "читав",
-            "hints": [
-              "читати"
-            ],
-            "options": [
-              "читав",
-              "читаю",
-              "буду читати",
-              "читати"
-            ]
-          },
-          {
-            "prompt": "Завтра він ___ працювати.",
-            "answer": "буде",
-            "options": [
-              "буде",
-              "був",
-              "є",
-              "працював"
-            ]
-          },
-          {
-            "prompt": "Я ___ плавати.",
-            "answer": "вмію",
-            "options": [
-              "вмію",
-              "хочу",
-              "можу",
-              "треба"
-            ]
-          },
-          {
-            "prompt": "Мені ___ йти.",
-            "answer": "треба",
-            "options": [
-              "треба",
-              "можу",
-              "хочу",
-              "вмію"
-            ]
-          },
-          {
-            "prompt": "Це ___ книга (new).",
-            "answer": "нова",
-            "options": [
-              "нова",
-              "новий",
-              "нове",
-              "нові"
-            ]
-          },
-          {
-            "prompt": "У мене ___ брат.",
-            "answer": "є",
-            "options": [
-              "є",
-              "немає",
-              "був",
-              "буде"
-            ]
-          },
-          {
-            "prompt": "___ сьогодні погода?",
-            "answer": "Яка",
-            "options": [
-              "Яка",
-              "Який",
-              "Яке",
-              "Які"
-            ]
-          },
-          {
-            "prompt": "Мого батька ___ Іван.",
-            "answer": "звати",
-            "options": [
-              "звати",
-              "ім'я",
-              "називає",
-              "є"
-            ]
-          },
-          {
-            "prompt": "Я живу ___ Києві.",
-            "answer": "у",
-            "options": [
-              "у",
-              "на",
-              "до",
-              "з"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.104Z",
-      "modifiedAt": "2025-12-06T10:49:20.104Z"
-    },
-    {
-      "id": "act-a1-0-fillblank",
-      "type": "fill-blank",
-      "title": "Vocabulary Review",
-      "description": "Choose the correct word.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Перший день тижня — ___.",
-            "answer": "понеділок",
-            "options": [
-              "понеділок",
-              "неділя",
-              "субота",
-              "вівторок"
-            ]
-          },
-          {
-            "prompt": "Батько батька — це ___.",
-            "answer": "дідусь",
-            "options": [
-              "дідусь",
-              "дядько",
-              "брат",
-              "онук"
-            ]
-          },
-          {
-            "prompt": "Скільки ___ ? (How much does it cost?)",
-            "answer": "коштує",
-            "options": [
-              "коштує",
-              "є",
-              "має",
-              "стоїть"
-            ]
-          },
-          {
-            "prompt": "Сьогодні дуже ___, +35 градусів.",
-            "answer": "спекотно",
-            "options": [
-              "спекотно",
-              "холодно",
-              "морозно",
-              "прохолодно"
-            ]
-          },
-          {
-            "prompt": "___ дощ. (It's raining.)",
-            "answer": "Йде",
-            "options": [
-              "Йде",
-              "Є",
-              "Дме",
-              "Падає"
-            ]
-          },
-          {
-            "prompt": "Я ___ о сьомій ранку.",
-            "answer": "прокидаюся",
-            "options": [
-              "прокидаюся",
-              "засинаю",
-              "лягаю",
-              "виходжу"
-            ]
-          },
-          {
-            "prompt": "Червоний, синій, зелений — це ___.",
-            "answer": "кольори",
-            "options": [
-              "кольори",
-              "одяг",
-              "погода",
-              "час"
-            ]
-          },
-          {
-            "prompt": "Сорочка, штани, куртка — це ___.",
-            "answer": "одяг",
-            "options": [
-              "одяг",
-              "кольори",
-              "їжа",
-              "меблі"
-            ]
-          },
-          {
-            "prompt": "Велика, мала, гарна — це ___.",
-            "answer": "прикметники",
-            "options": [
-              "прикметники",
-              "іменники",
-              "дієслова",
-              "числа"
-            ]
-          },
-          {
-            "prompt": "Спочатку, потім, ___.",
-            "answer": "нарешті",
-            "options": [
-              "нарешті",
-              "завжди",
-              "ніколи",
-              "зараз"
-            ]
-          },
-          {
-            "prompt": "Навесні, влітку, восени, ___.",
-            "answer": "взимку",
-            "options": [
-              "взимку",
-              "у зиму",
-              "зимою",
-              "зимі"
-            ]
-          },
-          {
-            "prompt": "___, вівторок, середа, четвер...",
-            "answer": "Понеділок",
-            "options": [
-              "Понеділок",
-              "Неділя",
-              "П'ятниця",
-              "Субота"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.104Z",
-      "modifiedAt": "2025-12-06T10:49:20.104Z"
-    },
-    {
-      "id": "act-a1-0-unjumble",
-      "type": "unjumble",
-      "title": "A1 Sentences",
-      "description": "Put the words in the correct order.",
-      "content": {
-        "type": "unjumble",
-        "isUnjumble": true,
-        "items": [
-          {
-            "words": [
-              "звати",
-              "Мене",
-              "Іван"
-            ],
-            "answer": "Мене звати Іван.",
-            "translation": "My name is Ivan."
-          },
-          {
-            "words": [
-              "з",
-              "України",
-              "Я"
-            ],
-            "answer": "Я з України.",
-            "translation": "I'm from Ukraine."
-          },
-          {
-            "words": [
-              "книгу",
-              "читаю",
-              "Я",
-              "цікаву"
-            ],
-            "answer": "Я читаю цікаву книгу.",
-            "translation": "I'm reading an interesting book."
-          },
-          {
-            "words": [
-              "у",
-              "Києві",
-              "Мої",
-              "живуть",
-              "батьки"
-            ],
-            "answer": "Мої батьки живуть у Києві.",
-            "translation": "My parents live in Kyiv."
-          },
-          {
-            "words": [
-              "години",
-              "о",
-              "сьомій",
-              "прокидаюся",
-              "Я"
-            ],
-            "answer": "Я прокидаюся о сьомій годині.",
-            "translation": "I wake up at 7 o'clock."
-          },
-          {
-            "words": [
-              "буду",
-              "Завтра",
-              "працювати",
-              "я"
-            ],
-            "answer": "Завтра я буду працювати.",
-            "translation": "Tomorrow I will work."
-          },
-          {
-            "words": [
-              "Вчора",
-              "холодно",
-              "було",
-              "дуже"
-            ],
-            "answer": "Вчора було дуже холодно.",
-            "translation": "Yesterday it was very cold."
-          },
-          {
-            "words": [
-              "сестра",
-              "У",
-              "є",
-              "мене"
-            ],
-            "answer": "У мене є сестра.",
-            "translation": "I have a sister."
-          },
-          {
-            "words": [
-              "говорити",
-              "українською",
-              "Я",
-              "можу"
-            ],
-            "answer": "Я можу говорити українською.",
-            "translation": "I can speak Ukrainian."
-          },
-          {
-            "words": [
-              "працювати",
-              "Мені",
-              "треба"
-            ],
-            "answer": "Мені треба працювати.",
-            "translation": "I need to work."
-          },
-          {
-            "words": [
-              "носить",
-              "червону",
-              "Вона",
-              "сукню"
-            ],
-            "answer": "Вона носить червону сукню.",
-            "translation": "She wears a red dress."
-          },
-          {
-            "words": [
-              "Рахунок",
-              "ласка",
-              "будь"
-            ],
-            "answer": "Рахунок, будь ласка.",
-            "translation": "Check, please."
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.104Z",
-      "modifiedAt": "2025-12-06T10:49:20.104Z"
-    },
-    {
-      "id": "act-a1-0-matchup",
-      "type": "match-up",
-      "title": "A1 Core Grammar",
-      "description": "Match each grammar concept with its example.",
-      "content": {
-        "type": "match-up",
-        "pairs": [
-          {
-            "left": "Accusative case",
-            "right": "Я читаю книгу."
-          },
-          {
-            "left": "Locative case",
-            "right": "Книга на столі."
-          },
-          {
-            "left": "Genitive case",
-            "right": "Немає часу."
-          },
-          {
-            "left": "Past tense",
-            "right": "Вчора я працював."
-          },
-          {
-            "left": "Future tense",
-            "right": "Завтра буду читати."
-          },
-          {
-            "left": "Modal: ability",
-            "right": "Я можу допомогти."
-          },
-          {
-            "left": "Modal: skill",
-            "right": "Я вмію плавати."
-          },
-          {
-            "left": "Modal: want",
-            "right": "Я хочу їсти."
-          },
-          {
-            "left": "Modal: need",
-            "right": "Мені треба йти."
-          },
-          {
-            "left": "Adjective agreement",
-            "right": "Нова книга"
-          },
-          {
-            "left": "Impersonal",
-            "right": "Сьогодні холодно."
-          },
-          {
-            "left": "Reflexive verb",
-            "right": "Я вмиваюся."
-          }
-        ],
-        "shuffleRight": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.104Z",
-      "modifiedAt": "2025-12-06T10:49:20.104Z"
-    },
-    {
-      "id": "act-a1-0-matchup",
-      "type": "match-up",
-      "title": "A1 Vocabulary Themes",
-      "description": "Match each theme with example words.",
-      "content": {
-        "type": "match-up",
-        "pairs": [
-          {
-            "left": "Family",
-            "right": "батько, мати, брат"
-          },
-          {
-            "left": "Time",
-            "right": "година, день, тиждень"
-          },
-          {
-            "left": "Colors",
-            "right": "червоний, синій, зелений"
-          },
-          {
-            "left": "Weather",
-            "right": "тепло, холодно, дощ"
-          },
-          {
-            "left": "Food",
-            "right": "борщ, хліб, кава"
-          },
-          {
-            "left": "Clothing",
-            "right": "сорочка, штани, куртка"
-          },
-          {
-            "left": "Places",
-            "right": "місто, вулиця, магазин"
-          },
-          {
-            "left": "Numbers",
-            "right": "один, два, три"
-          },
-          {
-            "left": "Directions",
-            "right": "прямо, наліво, направо"
-          },
-          {
-            "left": "Daily routine",
-            "right": "прокидатися, снідати"
-          },
-          {
-            "left": "Adjectives",
-            "right": "великий, малий, гарний"
-          },
-          {
-            "left": "Modals",
-            "right": "можу, хочу, треба"
-          }
-        ],
-        "shuffleRight": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-06T10:49:20.104Z",
-      "modifiedAt": "2025-12-06T10:49:20.104Z"
-    },
-    {
       "id": "act-a1-0-quiz",
       "type": "quiz",
-      "title": "A1 Comprehensive",
-      "description": "Test your A1 knowledge.",
+      "title": "The Grand Grammar Test",
+      "description": "The Final Boss.",
       "content": {
         "type": "quiz",
         "questions": [
           {
-            "question": "What case is used for direct objects?",
+            "question": "\"Я бачу ___.\" (Sister).",
             "options": [
-              "Nominative",
-              "Accusative",
-              "Genitive",
-              "Locative"
-            ],
-            "correctIndex": 1,
-            "explanation": "Direct objects take accusative."
-          },
-          {
-            "question": "How do you say \"I was reading\" (male)?",
-            "options": [
-              "Я читаю",
-              "Я читав",
-              "Я буду читати",
-              "Я читати"
-            ],
-            "correctIndex": 1,
-            "explanation": "Past tense for male: -в ending."
-          },
-          {
-            "question": "\"У мене немає часу\" — what case is \"часу\"?",
-            "options": [
-              "Nominative",
-              "Accusative",
-              "Genitive",
-              "Locative"
-            ],
-            "correctIndex": 2,
-            "explanation": "\"Немає\" requires genitive."
-          },
-          {
-            "question": "Which is soft stem?",
-            "options": [
-              "великий",
-              "синій",
-              "новий",
-              "старий"
-            ],
-            "correctIndex": 1,
-            "explanation": "Soft stem ends in -ій."
-          },
-          {
-            "question": "How do you form future tense?",
-            "options": [
-              "Add -ти to verb",
-              "Add -в to verb",
-              "буду + infinitive",
-              "Change ending"
-            ],
-            "correctIndex": 2,
-            "explanation": "Compound future: буду + infinitive."
-          },
-          {
-            "question": "\"Прокидатися\" is what type of verb?",
-            "options": [
-              "Regular",
-              "Modal",
-              "Reflexive",
-              "Impersonal"
-            ],
-            "correctIndex": 2,
-            "explanation": "-ся ending = reflexive."
-          },
-          {
-            "question": "What's the difference between можу and вмію?",
-            "options": [
-              "They're the same",
-              "Можу = ability, вмію = skill",
-              "Можу is formal",
-              "Вмію is past tense"
-            ],
-            "correctIndex": 1,
-            "explanation": "Important distinction!"
-          },
-          {
-            "question": "How many cases have you learned at A1?",
-            "options": [
-              "3",
-              "4",
-              "5",
-              "7"
-            ],
-            "correctIndex": 2,
-            "explanation": "Nom, Acc, Loc, Gen, Voc."
-          },
-          {
-            "question": "\"Холодно\" is:",
-            "options": [
-              "An adjective",
-              "A noun",
-              "An impersonal expression",
-              "A verb"
-            ],
-            "correctIndex": 2,
-            "explanation": "Weather uses impersonal constructions."
-          },
-          {
-            "question": "Ukrainian week starts on:",
-            "options": [
-              "Monday",
-              "Sunday",
-              "Saturday",
-              "Depends"
+              "сестру (Acc)",
+              "сестри (Gen)",
+              "сестра (Nom)"
             ],
             "correctIndex": 0,
-            "explanation": "Понеділок is first."
+            "explanation": ""
           },
           {
-            "question": "\"П'ять гривень\" — why \"гривень\"?",
+            "question": "\"Я їду ___.\" (Kyiv).",
             "options": [
-              "Always гривень",
-              "Numbers 5+ require genitive plural",
-              "It's nominative",
-              "Exception"
-            ],
-            "correctIndex": 1,
-            "explanation": "Numbers 5-20 use genitive plural."
-          },
-          {
-            "question": "What's next after A1?",
-            "options": [
-              "A2 — Elementary",
-              "B1 — Intermediate",
-              "A1+ — Advanced Beginner",
-              "A0 — Pre-Beginner"
+              "в Київ (Acc Motion)",
+              "в Києві (Loc Location)",
+              "з Києва (Gen Origin)"
             ],
             "correctIndex": 0,
-            "explanation": "A2 introduces all 7 cases and aspect!"
+            "explanation": ""
+          },
+          {
+            "question": "\"Я живу ___.\" (Lviv).",
+            "options": [
+              "у Львові (Loc)",
+              "в Львів (Acc)",
+              "Львова (Gen)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Немає ___.\" (Coffee).",
+            "options": [
+              "кави (Gen)",
+              "каву (Acc)",
+              "кава (Nom)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Це ___ паспорт.\" (My - M).",
+            "options": [
+              "мій",
+              "моя",
+              "моє"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Я ___ книгу.\" (Read - Past M).",
+            "options": [
+              "читав",
+              "читала",
+              "читали"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Ми ___.\" (Speak - Present).",
+            "options": [
+              "говоримо",
+              "говорять",
+              "говориш"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Вона ___.\" (Wanted - Past F).",
+            "options": [
+              "хотіла",
+              "хотів",
+              "хотіли"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Я йду ___.\" (Home).",
+            "options": [
+              "додому",
+              "вдома",
+              "дім"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Я ___.\" (At home).",
+            "options": [
+              "вдома",
+              "додому",
+              "з дому"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Скільки ___?\" (Cost).",
+            "options": [
+              "коштує",
+              "робить",
+              "хоче"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Мені ___ йти.\" (Need).",
+            "options": [
+              "треба",
+              "хочу",
+              "маю"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
           }
         ],
         "shuffleQuestions": true,
@@ -779,76 +188,169 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.104Z",
-      "modifiedAt": "2025-12-06T10:49:20.104Z"
+      "createdAt": "2025-12-08T21:22:09.895Z",
+      "modifiedAt": "2025-12-08T21:22:09.895Z"
     },
     {
-      "id": "act-a1-0-truefalse",
-      "type": "true-false",
-      "title": "A1 Review",
-      "description": "Decide if each statement is true (Правда) or false (Міф).",
+      "id": "act-a1-0-matchup",
+      "type": "match-up",
+      "title": "Case Recon",
+      "description": "Identify the Case of the capitalized word.",
       "content": {
-        "type": "true-false",
-        "statements": [
+        "type": "match-up",
+        "pairs": [
           {
-            "statement": "A1 covers 5 of 7 Ukrainian cases.",
-            "isTrue": true,
-            "explanation": "Correct! Nom, Acc, Loc, Gen, Voc. Dative and Instrumental are A2."
+            "left": "Це МAMA.",
+            "right": "Nominative"
           },
           {
-            "statement": "Past tense endings are the same for all genders.",
-            "isTrue": false,
-            "explanation": "Incorrect! -в (m), -ла (f), -ло (n), -ли (pl)."
+            "left": "Я бачу МАМУ.",
+            "right": "Accusative"
           },
           {
-            "statement": "\"Немає\" always takes genitive.",
-            "isTrue": true,
-            "explanation": "Correct! Немає + genitive."
+            "left": "Немає МАМИ.",
+            "right": "Genitive"
           },
           {
-            "statement": "Ukrainian adjectives agree with nouns in gender.",
-            "isTrue": true,
-            "explanation": "Correct! Новий (m), нова (f), нове (n)."
+            "left": "Я прийшов до МАМИ.",
+            "right": "Genitive"
           },
           {
-            "statement": "\"Можна\" requires a subject.",
-            "isTrue": false,
-            "explanation": "Incorrect! Impersonal — no subject needed."
+            "left": "Я гуляю з МАМОЮ (Wait!)",
+            "right": "Instrumental (A2 Preview - Ignore) -> Genitive? No. Stick to A1."
           },
           {
-            "statement": "\"Синій\" is a soft stem adjective.",
-            "isTrue": true,
-            "explanation": "Correct! Ends in -ій."
+            "left": "Я люблю КАВУ.",
+            "right": "Accusative"
           },
           {
-            "statement": "Ukrainian has one word for \"blue.\"",
-            "isTrue": false,
-            "explanation": "Incorrect! Синій (dark) and блакитний (light)."
+            "left": "Я хочу КАВИ.",
+            "right": "Genitive (Partitive)"
           },
           {
-            "statement": "\"Прокидатися\" is reflexive.",
-            "isTrue": true,
-            "explanation": "Correct! -ся ending."
+            "left": "Я в ПАРКУ.",
+            "right": "Locative"
           },
           {
-            "statement": "Weather expressions are impersonal.",
-            "isTrue": true,
-            "explanation": "Correct! \"Холодно\" — no subject."
+            "left": "Я їду в ПАРК.",
+            "right": "Accusative"
           },
           {
-            "statement": "All numbers use the same noun form.",
-            "isTrue": false,
-            "explanation": "Incorrect! 1 = nom.sg, 2-4 = nom.pl, 5+ = gen.pl."
+            "left": "Я з ПАРКУ.",
+            "right": "Genitive"
           },
           {
-            "statement": "\"Чоловік\" can mean both \"husband\" and \"man.\"",
-            "isTrue": true,
-            "explanation": "Correct! Context determines meaning."
+            "left": "Це мій ДРУГ.",
+            "right": "Nominative"
           },
           {
-            "statement": "Ukrainian weeks start on Monday.",
-            "isTrue": true,
-            "explanation": "Correct! Понеділок is first."
+            "left": "Я чекаю ДРУГА.",
+            "right": "Accusative (Animate)"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.895Z",
+      "modifiedAt": "2025-12-08T21:22:09.895Z"
+    },
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "Verb Conjugation",
+      "description": "Complete the conjugation.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Я ___ (know).",
+            "answer": "знаю",
+            "hints": [
+              "know"
+            ]
+          },
+          {
+            "prompt": "Ти ___ (know).",
+            "answer": "знаєш",
+            "hints": [
+              "know"
+            ]
+          },
+          {
+            "prompt": "Він ___ (knows).",
+            "answer": "знає",
+            "hints": [
+              "knows"
+            ]
+          },
+          {
+            "prompt": "Ми ___ (know).",
+            "answer": "знаємо",
+            "hints": [
+              "know"
+            ]
+          },
+          {
+            "prompt": "Ви ___ (know).",
+            "answer": "знаєте",
+            "hints": [
+              "know"
+            ]
+          },
+          {
+            "prompt": "Вони ___ (know).",
+            "answer": "знають",
+            "hints": [
+              "know"
+            ]
+          },
+          {
+            "prompt": "Я ___ (lived - M).",
+            "answer": "жив",
+            "hints": [
+              "lived - M"
+            ]
+          },
+          {
+            "prompt": "Вона ___ (lived - F).",
+            "answer": "жила",
+            "hints": [
+              "lived - F"
+            ]
+          },
+          {
+            "prompt": "Ми ___ (lived - Pl).",
+            "answer": "жили",
+            "hints": [
+              "lived - Pl"
+            ]
+          },
+          {
+            "prompt": "Я ___ (will be).",
+            "answer": "буду",
+            "hints": [
+              "will be"
+            ]
+          },
+          {
+            "prompt": "Ти ___ (will be).",
+            "answer": "будеш",
+            "hints": [
+              "will be"
+            ]
+          },
+          {
+            "prompt": "Вони ___ (will be).",
+            "answer": "будуть",
+            "hints": [
+              "will be"
+            ]
           }
         ]
       },
@@ -859,51 +361,51 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.104Z",
-      "modifiedAt": "2025-12-06T10:49:20.104Z"
+      "createdAt": "2025-12-08T21:22:09.895Z",
+      "modifiedAt": "2025-12-08T21:22:09.895Z"
     },
     {
       "id": "act-a1-0-groupsort",
       "type": "group-sort",
-      "title": "A1 Case Usage",
-      "description": "Sort these sentences by the case of the highlighted noun.",
+      "title": "Gender Sorter",
+      "description": "Sort nouns by gender.",
       "content": {
         "type": "group-sort",
         "groups": [
           {
-            "id": "nominative",
-            "name": "Nominative",
+            "id": "masculine",
+            "name": "Masculine",
             "items": [
-              "Це **книга**.",
-              "**Я** студент.",
-              "**Погода** гарна."
+              "Парк",
+              "Стіл",
+              "Чай",
+              "День",
+              "Брат",
+              "Батько (Looks F, is M)"
             ]
           },
           {
-            "id": "accusative",
-            "name": "Accusative",
+            "id": "feminine",
+            "name": "Feminine",
             "items": [
-              "Я читаю **книгу**.",
-              "Я бачу **друга**.",
-              "Я люблю **каву**."
+              "Мама",
+              "Кава",
+              "Ніч",
+              "Сім'я",
+              "Україна",
+              "Вода"
             ]
           },
           {
-            "id": "locative",
-            "name": "Locative",
+            "id": "neuter",
+            "name": "Neuter",
             "items": [
-              "Книга на **столі**.",
-              "Я живу в **Києві**.",
-              "Він у **банку**."
-            ]
-          },
-          {
-            "id": "genitive",
-            "name": "Genitive",
-            "items": [
-              "Немає **часу**.",
-              "П'ять **гривень**.",
-              "Склянка **води**."
+              "Місто",
+              "Вікно",
+              "Море",
+              "Пиво",
+              "Сонце",
+              "Прізвище"
             ]
           }
         ],
@@ -916,24 +418,701 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-06T10:49:20.104Z",
-      "modifiedAt": "2025-12-06T10:49:20.104Z"
+      "createdAt": "2025-12-08T21:22:09.895Z",
+      "modifiedAt": "2025-12-08T21:22:09.895Z"
+    },
+    {
+      "id": "act-a1-0-unjumble",
+      "type": "unjumble",
+      "title": "Sentence Construction",
+      "description": "Make a sentence.",
+      "content": {
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
+          {
+            "words": [
+              "люблю",
+              "Я",
+              "Україну",
+              "."
+            ],
+            "answer": "Я люблю Україну."
+          },
+          {
+            "words": [
+              "не",
+              "Я",
+              "м'ясо",
+              "їм",
+              "."
+            ],
+            "answer": "Я не їм м'ясо."
+          },
+          {
+            "words": [
+              "живе",
+              "Він",
+              "Києві",
+              "в",
+              "."
+            ],
+            "answer": "Він живе в Києві."
+          },
+          {
+            "words": [
+              "йдуть",
+              "Вони",
+              "додому",
+              "."
+            ],
+            "answer": "Вони йдуть додому."
+          },
+          {
+            "words": [
+              "коштує",
+              "Скільки",
+              "це",
+              "?"
+            ],
+            "answer": "Скільки це коштує?"
+          },
+          {
+            "words": [
+              "тебе",
+              "звуть",
+              "Як",
+              "?"
+            ],
+            "answer": "Як тебе звуть?"
+          },
+          {
+            "words": [
+              "гарна",
+              "Це",
+              "ідея",
+              "."
+            ],
+            "answer": "Це гарна ідея."
+          },
+          {
+            "words": [
+              "маю",
+              "Я",
+              "питання",
+              "."
+            ],
+            "answer": "Я маю питання."
+          },
+          {
+            "words": [
+              "тут",
+              "робиш",
+              "Ти",
+              "що",
+              "?"
+            ],
+            "answer": "Що ти тут робиш?"
+          },
+          {
+            "words": [
+              "ми",
+              "Де",
+              "?"
+            ],
+            "answer": "Де ми?"
+          },
+          {
+            "words": [
+              "тебе",
+              "не",
+              "Я",
+              "чую",
+              "."
+            ],
+            "answer": "Я не чую тебе."
+          },
+          {
+            "words": [
+              "все",
+              "розумію",
+              "Я",
+              "."
+            ],
+            "answer": "Я все розумію."
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.895Z",
+      "modifiedAt": "2025-12-08T21:22:09.895Z"
+    },
+    {
+      "id": "act-a1-0-unjumble",
+      "type": "unjumble",
+      "title": "Dialogue Reorder",
+      "description": "Order the dialogue.",
+      "content": {
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
+          {
+            "words": [
+              "Hello!",
+              "Hello.",
+              "How are you?",
+              "Normal."
+            ],
+            "answer": "Привіт! Привіт. Як справи? Нормально."
+          },
+          {
+            "words": [
+              "Who is this?",
+              "This is Ivan.",
+              "Is he a student?",
+              "Yes."
+            ],
+            "answer": "Хто це? Це Іван. Він студент? Так."
+          },
+          {
+            "words": [
+              "Calculate please.",
+              "Card or cash?",
+              "Card.",
+              "One second."
+            ],
+            "answer": "Рахунок, будь ласка. Картка чи готівка? Картка. Секунду."
+          },
+          {
+            "words": [
+              "Where are you?",
+              "I am at home.",
+              "Are you sleeping?",
+              "No, I am eating."
+            ],
+            "answer": "Де ти? Я вдома. Ти спиш? Ні, я їм."
+          },
+          {
+            "words": [
+              "I go to park.",
+              "I see a dog.",
+              "It is big.",
+              "I run."
+            ],
+            "answer": "Я йду в парк. Я бачу собаку. Вона велика. Я біжу."
+          },
+          {
+            "words": [
+              "Where is metro?",
+              "It is there.",
+              "Is it far?",
+              "No, near."
+            ],
+            "answer": "Де метро? Воно там. Це далеко? Ні, близько."
+          },
+          {
+            "words": [
+              "What is this?",
+              "This is soup.",
+              "Is it tasty?",
+              "Yes, very."
+            ],
+            "answer": "Що це? Це суп. Він смачний? Так, дуже."
+          },
+          {
+            "words": [
+              "I love coffee.",
+              "But this is tea.",
+              "I know.",
+              "Drink tea."
+            ],
+            "answer": "Я люблю каву. Але це чай. Я знаю. Пий чай."
+          },
+          {
+            "words": [
+              "What is your name?",
+              "My name is Olena.",
+              "Nice to meet you.",
+              "Me too."
+            ],
+            "answer": "Як тебе звуть? Мене звуть Олена. Приємно познайомитись. Мені теж."
+          },
+          {
+            "words": [
+              "Are you from USA?",
+              "No, from UK.",
+              "London?",
+              "Yes."
+            ],
+            "answer": "Ти з Америки? Ні, з Англії. Лондон? Так."
+          },
+          {
+            "words": [
+              "What time is it?",
+              "It is 5 o'clock.",
+              "I am late.",
+              "Run!"
+            ],
+            "answer": "Котра година? П'ята година. Я запізнююсь. Біжи!"
+          },
+          {
+            "words": [
+              "Do you have a ticket?",
+              "No.",
+              "Why?",
+              "No money."
+            ],
+            "answer": "У тебе є квиток? Ні. Чому? Немає грошей."
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.895Z",
+      "modifiedAt": "2025-12-08T21:22:09.895Z"
+    },
+    {
+      "id": "act-a1-0-fillblank",
+      "type": "fill-blank",
+      "title": "Preposition Final Boss",
+      "description": "V, Na, Do, Z, Vid.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Я живу ___ (in) Лондоні.",
+            "answer": "в",
+            "hints": [
+              "in"
+            ]
+          },
+          {
+            "prompt": "Я їду ___ (to) Лондон.",
+            "answer": "в",
+            "hints": [
+              "to"
+            ]
+          },
+          {
+            "prompt": "Я йду ___ (to) мами.",
+            "answer": "до",
+            "hints": [
+              "to"
+            ]
+          },
+          {
+            "prompt": "Я йду ___ (from) роботи.",
+            "answer": "з",
+            "hints": [
+              "from"
+            ]
+          },
+          {
+            "prompt": "Книга ___ (on) столі.",
+            "answer": "на",
+            "hints": [
+              "on"
+            ]
+          },
+          {
+            "prompt": "Я ___ (from) Канади.",
+            "answer": "з",
+            "hints": [
+              "from"
+            ]
+          },
+          {
+            "prompt": "Я йду ___ (homeward).",
+            "answer": "додому",
+            "hints": [
+              "homeward"
+            ]
+          },
+          {
+            "prompt": "Вона ___ (at home).",
+            "answer": "вдома",
+            "hints": [
+              "at home"
+            ]
+          },
+          {
+            "prompt": "Ми ___ (at) концерті.",
+            "answer": "на",
+            "hints": [
+              "at"
+            ]
+          },
+          {
+            "prompt": "Я йду ___ (to) концерт.",
+            "answer": "на",
+            "hints": [
+              "to"
+            ]
+          },
+          {
+            "prompt": "Я отримав лист ___ (from) брата.",
+            "answer": "від",
+            "hints": [
+              "from"
+            ]
+          },
+          {
+            "prompt": "Я йду ___ (into) парк.",
+            "answer": "в",
+            "hints": [
+              "into"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.895Z",
+      "modifiedAt": "2025-12-08T21:22:09.895Z"
+    },
+    {
+      "id": "act-a1-0-truefalse",
+      "type": "true-false",
+      "title": "Linguistic Truths",
+      "description": "Check your knowledge.",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "\"Sobaka\" (Dog) is Neuter.    - [ ] True    - [x] False (Feminine - ends in A)",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Tato\" (Dad) is Feminine because it ends in O.    - [ ] True    - [x] False (Masculine by meaning)",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "Motion usually uses Accusative.    - [x] True    - [ ] False",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "Location usually uses Locative.    - [x] True    - [ ] False",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Mene zvut\" means \"They call me\".    - [x] True (Literally)    - [ ] False",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"U mene ye\" means \"At me is\".    - [x] True (I have)    - [ ] False",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"IA\" (I) is capitalized in Ukrainian.    - [ ] True    - [x] False (Only at start of sentence. English ego is big, Ukrainian ego is normal).",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Vy\" is polite \"You\".    - [x] True    - [ ] False",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Ty\" is for friends and God.    - [x] True (Religious address is Ty).    - [ ] False",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "Ukrainians drink tea with jam.     - [x] True (Sometimes).     - [ ] False",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "Borsch is a soup.     - [x] True     - [ ] False (It is a lifestyle).",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "Salo is chocolate.     - [ ] True     - [x] False (It is pork fat).  # Summary  You did it. A1 is done. Celebrate. Put on some Ukrainian music (Okean Elzy). Eat a Varenyk. And prepare for A2. The Grammar Monster wakes up.",
+            "isTrue": false,
+            "explanation": ""
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-08T21:22:09.895Z",
+      "modifiedAt": "2025-12-08T21:22:09.895Z"
     }
   ],
   "vocabulary": {
     "moduleId": "mod-uk-A1-30",
     "level": "A1",
     "phase": "A1.3",
-    "wordCount": 1,
-    "newWordCount": 1,
+    "wordCount": 24,
+    "newWordCount": 24,
     "reviewWordCount": 0,
-    "transliterationMode": "none",
+    "transliterationMode": "full",
     "words": [
       {
-        "id": "v-review-all-vocabulary-from-modules-1-29-0-0",
-        "uk": "Review all vocabulary from Modules 1-29",
-        "en": "",
+        "id": "v-ekzamen-0-0",
+        "uk": "екзамен",
+        "en": "exam",
         "pos": "noun",
+        "ipa": "/ɛkˈzɑmɛn/",
+        "note": "[🔊](audio_ekzamen)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-test-0-1",
+        "uk": "тест",
+        "en": "test",
+        "pos": "noun",
+        "ipa": "/tɛst/",
+        "note": "[🔊](audio_test)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-rezulьtat-0-2",
+        "uk": "результат",
+        "en": "result",
+        "pos": "noun",
+        "ipa": "/rɛzulʲˈtɑt/",
+        "note": "[🔊](audio_rezultat)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-kinetsь-0-3",
+        "uk": "кінець",
+        "en": "end",
+        "pos": "noun",
+        "ipa": "/kiˈnɛt͡sʲ/",
+        "note": "[🔊](audio_kinets)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pochatok-0-4",
+        "uk": "початок",
+        "en": "beginning",
+        "pos": "noun",
+        "ipa": "/pɔˈtʃɑtɔk/",
+        "note": "[🔊](audio_pochatok)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vse-0-5",
+        "uk": "все",
+        "en": "everything/all",
+        "pos": "noun",
+        "ipa": "/vsɛ/",
+        "note": "[🔊](audio_vse)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-nichoho-0-6",
+        "uk": "нічого",
+        "en": "nothing",
+        "pos": "noun",
+        "ipa": "/niˈtʃɔhɔ/",
+        "note": "[🔊](audio_nichoh)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-zhyttya-0-7",
+        "uk": "життя",
+        "en": "life",
+        "pos": "noun",
+        "ipa": "/ʒɪtˈtʲɑ/",
+        "note": "[🔊](audio_zhyttya)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-mova-0-8",
+        "uk": "мова",
+        "en": "language",
+        "pos": "noun",
+        "ipa": "/ˈmɔvɑ/",
+        "note": "[🔊](audio_mova)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-slovo-0-9",
+        "uk": "слово",
+        "en": "word",
+        "pos": "noun",
+        "ipa": "/ˈslɔvɔ/",
+        "note": "[🔊](audio_slovo)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pytannya-0-10",
+        "uk": "питання",
+        "en": "question",
+        "pos": "noun",
+        "ipa": "/pɪˈtɑnʲːɑ/",
+        "note": "[🔊](audio_pytannya)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vidpovidь-0-11",
+        "uk": "відповідь",
+        "en": "answer",
+        "pos": "noun",
+        "ipa": "/ˈvidpɔvidʲ/",
+        "note": "[🔊](audio_vidpovid)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pomylka-0-12",
+        "uk": "помилка",
+        "en": "mistake",
+        "pos": "noun",
+        "ipa": "/pɔˈmɪlkɑ/",
+        "note": "[🔊](audio_pomylka)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pravylьno-0-13",
+        "uk": "правильно",
+        "en": "correct",
+        "pos": "noun",
+        "ipa": "/ˈprɑvɪlʲnɔ/",
+        "note": "[🔊](audio_pravylno)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-nepravylьno-0-14",
+        "uk": "неправильно",
+        "en": "incorrect",
+        "pos": "noun",
+        "ipa": "/nɛˈprɑvɪlʲnɔ/",
+        "note": "[🔊](audio_nepravylno)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-rozumity-0-15",
+        "uk": "розуміти",
+        "en": "to understand",
+        "pos": "noun",
+        "ipa": "/rɔzuˈmitɪ/",
+        "note": "[🔊](audio_rozumity)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-znaty-0-16",
+        "uk": "знати",
+        "en": "to know",
+        "pos": "noun",
+        "ipa": "/ˈznɑtɪ/",
+        "note": "[🔊](audio_znaty)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pam'yataty-0-17",
+        "uk": "пам'ятати",
+        "en": "to remember",
+        "pos": "noun",
+        "ipa": "/pɑmjɑˈtɑtɪ/",
+        "note": "[🔊](audio_pamyataty)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vchyty-0-18",
+        "uk": "вчити",
+        "en": "to learn/teach",
+        "pos": "noun",
+        "ipa": "/ˈvtʃɪtɪ/",
+        "note": "[🔊](audio_vchyty)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-hovoryty-0-19",
+        "uk": "говорити",
+        "en": "to speak",
+        "pos": "noun",
+        "ipa": "/hɔvɔˈrɪtɪ/",
+        "note": "[🔊](audio_hovoryty)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-chytaty-0-20",
+        "uk": "читати",
+        "en": "to read",
+        "pos": "noun",
+        "ipa": "/tʃɪˈtɑtɪ/",
+        "note": "[🔊](audio_chytaty)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pysaty-0-21",
+        "uk": "писати",
+        "en": "to write",
+        "pos": "noun",
+        "ipa": "/pɪˈsɑtɪ/",
+        "note": "[🔊](audio_pysaty)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-slukhaty-0-22",
+        "uk": "слухати",
+        "en": "to listen",
+        "pos": "noun",
+        "ipa": "/ˈsluxɑtɪ/",
+        "note": "[🔊](audio_slukhaty)",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-dyvytysya-0-23",
+        "uk": "дивитися",
+        "en": "to watch",
+        "pos": "noun",
+        "ipa": "/dɪˈvɪtɪsʲɑ/",
+        "note": "[🔊](audio_dyvytysya)",
         "isNew": true,
         "firstModule": 0
       }

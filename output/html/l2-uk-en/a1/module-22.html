@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Module 22: Tomorrow: Future Tense | Ukrainian A1</title>
+  <title>Module 22: Tomorrow - Future Tense | Ukrainian A1</title>
   <style>
 :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -478,17 +518,18 @@ footer {
     </div>
   </div>
   <nav class="nav">
-    <h1>Module 22: Tomorrow: Future Tense</h1>
+    <h1>Module 22: Tomorrow - Future Tense</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Fill</button>
-      <button class="nav-tab" data-section="activity-1">2. Order</button>
-      <button class="nav-tab" data-section="activity-2">3. Match</button>
-      <button class="nav-tab" data-section="activity-3">4. Quiz</button>
-      <button class="nav-tab" data-section="activity-4">5. T/F</button>
-      <button class="nav-tab" data-section="activity-5">6. Sort</button>
-      <button class="nav-tab" data-section="activity-6">7. Spell</button>
-      <button class="nav-tab" data-section="activity-7">8. Match</button>
+      <button class="nav-tab" data-section="activity-0">1. Quiz</button>
+      <button class="nav-tab" data-section="activity-1">2. Match</button>
+      <button class="nav-tab" data-section="activity-2">3. Fill</button>
+      <button class="nav-tab" data-section="activity-3">4. Sort</button>
+      <button class="nav-tab" data-section="activity-4">5. Fill</button>
+      <button class="nav-tab" data-section="activity-5">6. Fill</button>
+      <button class="nav-tab" data-section="activity-6">7. T/F</button>
+      <button class="nav-tab" data-section="activity-7">8. Order</button>
+      <button class="nav-tab" data-section="activity-8">9. Spell</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -497,470 +538,379 @@ footer {
     <section id="lesson" class="section active">
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.3</span>
-        <h2 style="font-size:2rem;margin:0.5rem 0">Tomorrow: Future Tense</h2>
-        <p style="color:var(--text-muted)">Talking about what will happen</p>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Tomorrow - Future Tense</h2>
+        <p style="color:var(--text-muted)">The Prediction Machine</p>
       </div>
       
     <div class="card section-intro">
       <h3>📖 Introduction</h3>
       <div class="md-content"><h2 id="warmup">warm-up</h2>
-<h3 id="whatwilltomorrowbring">What Will Tomorrow Bring?</h3>
-<p>Yesterday you learned to talk about the past. Today, we look forward! The future tense lets you make plans, express hopes, and discuss what's coming next.</p>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>Ukrainian has THREE ways to express future! Today we learn the most common one: <strong>compound future</strong> (буду + infinitive). It works for almost any situation and is the safest choice for beginners.</p>
-</blockquote>
+<p><strong>The Fortune Teller</strong></p>
+<p>You conquered the Past (Drill 21).<br />
+Now we look forward.<br />
+In English: "I will read."<br />
+In Ukrainian: "Я буду читати."<br />
+It is literally "I will-be to-read."<br />
+This is the easiest tense in the language.<br />
+No gender changes. No weird endings.<br />
+Just <strong>Budu</strong> + <strong>Infinitive</strong>.</p>
 <h2 id="presentation">presentation</h2>
-<h3 id="compoundfutureinfinitive">Compound Future: буду + infinitive</h3>
-<p>The easiest way to form future tense:</p>
+<h3 id="section1themagichelperbutytobe">Section 1: The Magic Helper (Buty - To Be)</h3>
+<p>To make the future (Imperfective), you conjugate <strong>Бути</strong> (To be) and add the dictionary form of the verb.</p>
 <table>
 <thead>
 <tr>
-<th>Subject</th>
-<th>"буду" form</th>
+<th>Pronoun</th>
+<th>Form</th>
 <th>+ Infinitive</th>
 <th>Example</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>я</td>
-<td>буду</td>
+<td>Я</td>
+<td><strong>Буду</strong></td>
 <td>читати</td>
 <td>Я буду читати.</td>
 </tr>
 <tr>
-<td>ти</td>
-<td>будеш</td>
-<td>працювати</td>
-<td>Ти будеш працювати.</td>
+<td>Ти</td>
+<td><strong>Будеш</strong></td>
+<td>читати</td>
+<td>Ти будеш читати.</td>
 </tr>
 <tr>
-<td>він/вона</td>
-<td>буде</td>
-<td>говорити</td>
-<td>Він буде говорити.</td>
+<td>Він/Вона</td>
+<td><strong>Буде</strong></td>
+<td>читати</td>
+<td>Він буде читати.</td>
 </tr>
 <tr>
-<td>ми</td>
-<td>будемо</td>
-<td>вивчати</td>
-<td>Ми будемо вивчати.</td>
+<td>Ми</td>
+<td><strong>Будемо</strong></td>
+<td>читати</td>
+<td>Ми будемо читати.</td>
 </tr>
 <tr>
-<td>ви</td>
-<td>будете</td>
-<td>робити</td>
-<td>Ви будете робити.</td>
+<td>Ви</td>
+<td><strong>Будете</strong></td>
+<td>читати</td>
+<td>Ви будете читати.</td>
 </tr>
 <tr>
-<td>вони</td>
-<td>будуть</td>
-<td>жити</td>
-<td>Вони будуть жити.</td>
+<td>Вони</td>
+<td><strong>Будуть</strong></td>
+<td>читати</td>
+<td>Вони будуть читати.</td>
 </tr>
 </tbody>
 </table>
 <blockquote>
-  <p>⚡ <strong>Pro Tip</strong></p>
-  <p>This is exactly like English "will be doing" — the structure is almost identical! "I will be reading" = "Я буду читати."</p>
+  <p>⚠️ <strong>Only for Process!</strong><br />
+  "Я буду читати" means "I will be reading" (Process).<br />
+  It does not mean "I will finish reading" (Result).<br />
+  A1 Level = Focus on Process.</p>
 </blockquote>
-<h3 id="conjugationoffuture">Conjugation of "бути" (Future)</h3>
-<table>
-<thead>
-<tr>
-<th>Person</th>
-<th>Form</th>
-<th>Pronunciation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>я</td>
-<td>буду</td>
-<td>/ˈbudu/</td>
-</tr>
-<tr>
-<td>ти</td>
-<td>будеш</td>
-<td>/ˈbudɛʃ/</td>
-</tr>
-<tr>
-<td>він/вона/воно</td>
-<td>буде</td>
-<td>/ˈbudɛ/</td>
-</tr>
-<tr>
-<td>ми</td>
-<td>будемо</td>
-<td>/ˈbudɛmɔ/</td>
-</tr>
-<tr>
-<td>ви</td>
-<td>будете</td>
-<td>/ˈbudɛtɛ/</td>
-</tr>
-<tr>
-<td>вони</td>
-<td>будуть</td>
-<td>/ˈbudutʲ/</td>
-</tr>
-</tbody>
-</table>
-<h3 id="examplesincontext">Examples in Context</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Я буду працювати завтра.</td>
-<td>I will work tomorrow.</td>
-</tr>
-<tr>
-<td>Вона буде вивчати українську.</td>
-<td>She will study Ukrainian.</td>
-</tr>
-<tr>
-<td>Ми будемо їсти о шостій.</td>
-<td>We will eat at six.</td>
-</tr>
-<tr>
-<td>Вони будуть жити в Києві.</td>
-<td>They will live in Kyiv.</td>
-</tr>
-<tr>
-<td>Ти будеш дивитися фільм?</td>
-<td>Will you watch a movie?</td>
-</tr>
-</tbody>
-</table>
+<h3 id="section2timemarkerswhen">Section 2: Time Markers (When?)</h3>
+<ul>
+<li><strong>Завтра</strong> (Tomorrow).</li>
+<li><strong>Післязавтра</strong> (Day after tomorrow).</li>
+<li><strong>Скоро</strong> (Soon).</li>
+<li><strong>Потім</strong> (Later/Then).</li>
+</ul>
+<h3 id="section3thenexttime">Section 3: The "Next" Time</h3>
+<p>Use Genitive for "Next X" (Nastupnoho).</p>
+<ul>
+<li><strong>Наступного тижня</strong> (Next week).</li>
+<li><strong>Наступного місяця</strong> (Next month).</li>
+<li><strong>Наступного року</strong> (Next year).</li>
+<li>Exception: <strong>У понеділок</strong> (On Monday - Acc).</li>
+</ul>
+<h3 id="section4thequestionwillyou">Section 4: The Question "Will you?"</h3>
+<ul>
+<li><strong>Ти будеш їсти?</strong> (Will you be eating?)</li>
+<li><strong>Ти будеш пити каву?</strong> (Will you drink coffee?)</li>
+<li><strong>Ми будемо дивитися фільм.</strong> (We will watch a movie).</li>
+<li>Answer: <strong>Буду</strong> (I will) or <strong>Не буду</strong> (I won't).</li>
+</ul>
 <blockquote>
-  <p>🔍 <strong>Myth Buster</strong></p>
-  <p><strong>Myth:</strong> "Future tense is complicated in Ukrainian."<br />
-  <strong>Fact:</strong> Compound future is actually one of the SIMPLEST forms! Just learn 6 forms of "буду" and add any infinitive.</p>
+  <p>🎓 <strong>Deep Dive: The Alternative Future</strong><br />
+  You might hear "Читат<strong>иму</strong>".<br />
+  This is the <em>Synthetic Future</em>.</p>
+  <ul>
+  <li><strong>Читати</strong> + <strong>му</strong> = <strong>Читатиму</strong>. (I will read).</li>
+  <li><strong>Читати</strong> + <strong>меш</strong> = <strong>Читатимеш</strong>. (You will read).<br />
+  It is elegant and shorter.<br />
+  But "Budu + Inf" is universal. Stick to "Budu" for A1.</li>
+  </ul>
 </blockquote>
-<h3 id="futuretimeexpressions">Future Time Expressions</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>завтра</td>
-<td>tomorrow</td>
-</tr>
-<tr>
-<td>післязавтра</td>
-<td>day after tomorrow</td>
-</tr>
-<tr>
-<td>наступного тижня</td>
-<td>next week</td>
-</tr>
-<tr>
-<td>наступного місяця</td>
-<td>next month</td>
-</tr>
-<tr>
-<td>наступного року</td>
-<td>next year</td>
-</tr>
-<tr>
-<td>скоро</td>
-<td>soon</td>
-</tr>
-<tr>
-<td>пізніше</td>
-<td>later</td>
-</tr>
-<tr>
-<td>потім</td>
-<td>then, afterward</td>
-</tr>
-<tr>
-<td>згодом</td>
-<td>later on, eventually</td>
-</tr>
-</tbody>
-</table>
+<h3 id="section5thewillbestate">Section 5: The "Will Be" State</h3>
+<p>Sometimes you just want to say "It will be good".</p>
+<ul>
+<li><strong>Буде добре.</strong> (It will be good).</li>
+<li><strong>Буде весело.</strong> (It will be fun).</li>
+<li><strong>Буде цікаво.</strong> (It will be interesting).</li>
+<li><strong>Я буду вдома.</strong> (I will be at home).</li>
+</ul>
+<h3 id="section6theweatherforecastprognozpohody">Section 6: The Weather Forecast (Prognoz Pohody)</h3>
+<p>Future tense is weather tense.</p>
+<ul>
+<li><strong>Завтра буде сонце.</strong> (Tomorrow will be sun).</li>
+<li><strong>Завтра буде дощ.</strong> (Tomorrow will be rain/rainy).</li>
+<li><strong>Буде тепло.</strong> (It will be warm).</li>
+<li><strong>Буде холодно.</strong> (It will be cold).</li>
+<li><strong>Буде вітер.</strong> (It will be wind).</li>
+</ul>
 <blockquote>
-  <p>🎬 <strong>Pop Culture Moment: Back to the Future</strong></p>
-  <p>In Ukrainian, "Back to the Future" is "Назад у майбутнє." Marty would say: "Я буду подорожувати в часі!" (I will travel through time!)</p>
+  <p>🌦️ <strong>Deep Dive: The Degrees</strong><br />
+  Ukrainians use Celsius.</p>
+  <ul>
+  <li><strong>Плюс 20</strong> (Plus 20) = Warm.</li>
+  <li><strong>Мінус 5</strong> (Minus 5) = Cold.</li>
+  <li><strong>Нуль</strong> (Zero) = Freezing point.<br />
+  "Завтра буде плюс тридцять!" (Tropical heat).</li>
+  </ul>
 </blockquote>
-<h3 id="expressingintentions">Expressing Intentions</h3>
-<p>Beyond "буду," you can express future plans with:</p>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>збираюся</td>
-<td>I'm going to</td>
-<td>Я збираюся читати.</td>
-</tr>
-<tr>
-<td>планую</td>
-<td>I plan to</td>
-<td>Я планую працювати.</td>
-</tr>
-<tr>
-<td>хочу</td>
-<td>I want to</td>
-<td>Я хочу вивчати.</td>
-</tr>
-<tr>
-<td>маю намір</td>
-<td>I intend to</td>
-<td>Я маю намір поїхати.</td>
-</tr>
-<tr>
-<td>сподіваюся</td>
-<td>I hope to</td>
-<td>Сподіваюся побачити.</td>
-</tr>
-<tr>
-<td>обіцяю</td>
-<td>I promise to</td>
-<td>Обіцяю допомогти.</td>
-</tr>
-</tbody>
-</table>
+<h3 id="section7thepromiseobitsianka">Section 7: The Promise (Obitsianka)</h3>
+<p>Using Future tense implies commitment.</p>
+<ul>
+<li><strong>Я буду там.</strong> (I will be there).</li>
+<li><strong>Я це зроблю.</strong> (Perfective - I will get it done).</li>
+<li>A1 Imperfective: <strong>Я буду робити це завтра.</strong> (I will be working on it tomorrow).</li>
+<li>Polite refusal: <strong>Я не зможу.</strong> (I won't be able - Modal preview). Or simply: <strong>Я не буду.</strong> (I won't).</li>
+</ul>
 <blockquote>
-  <p>🌍 <strong>Real World</strong></p>
-  <p>"Що ти будеш робити завтра?" (What will you do tomorrow?) — A perfect conversation starter for making plans with Ukrainian friends!</p>
+  <p>🇺🇦 <strong>Culture Corner: The "Maybe" Future</strong><br />
+  Ukrainians are spontaneous.<br />
+  Plans made weeks in advance often change.<br />
+  "Давай (Let's) завтра на каву?" is a common proposal.<br />
+  Reply: "Подивимось" (We will see).<br />
+  "Подивимось" is the polite way to say "Probably not, but maybe."</p>
 </blockquote>
-<h3 id="questionsandnegation">Questions and Negation</h3>
-<p><strong>Questions:</strong> Simply use question intonation or add "чи":</p>
-<table>
-<thead>
-<tr>
-<th>Statement</th>
-<th>Question</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Ти будеш працювати.</td>
-<td>Ти будеш працювати?</td>
-</tr>
-<tr>
-<td>Вона буде їсти.</td>
-<td>Чи вона буде їсти?</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Negation:</strong> Add "не" before "буду":</p>
-<table>
-<thead>
-<tr>
-<th>Positive</th>
-<th>Negative</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Я буду читати.</td>
-<td>Я <strong>не</strong> буду читати.</td>
-</tr>
-<tr>
-<td>Вона буде працювати.</td>
-<td>Вона <strong>не</strong> буде працювати.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="commonfuturephrases">Common Future Phrases</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Що ти будеш робити?</td>
-<td>What will you do?</td>
-</tr>
-<tr>
-<td>Коли ти будеш вдома?</td>
-<td>When will you be home?</td>
-</tr>
-<tr>
-<td>Все буде добре!</td>
-<td>Everything will be fine!</td>
-</tr>
-<tr>
-<td>Як буде по-українськи…?</td>
-<td>How will it be in Ukrainian…?</td>
-</tr>
-<tr>
-<td>Я буду чекати.</td>
-<td>I will wait.</td>
-</tr>
-</tbody>
-</table>
+<h3 id="section8theweekendvykhidni">Section 8: The Weekend (Vykhidni)</h3>
+<p>The most important plans are for the weekend.</p>
+<ul>
+<li><strong>Вихідні</strong> (Weekend - Plural).</li>
+<li><strong>У вихідні</strong> (On the weekend).</li>
+<li><strong>Що ти будеш робити у вихідні?</strong></li>
+<li><strong>Я буду відпочивати (rest).</strong></li>
+<li><strong>Я буду спати.</strong></li>
+<li><strong>Я буду прибирати (clean).</strong></li>
+</ul>
 <blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>"Все буде добре!" (Everything will be fine!) became a popular phrase of hope and resilience in Ukraine. You'll see it everywhere!</p>
+  <p>🇺🇦 <strong>Culture Corner: The Planning Horizon</strong><br />
+  In the West, calendars are booked months ahead.<br />
+  In Ukraine, spontaneity rules.<br />
+  If you say "Let's meet in 3 weeks," a Ukrainian might laugh.<br />
+  "Я не знаю, що буде завтра!" (I don't know what will be tomorrow).<br />
+  Focus on "Zavtra" (Tomorrow) and "Na vykhidni" (For the weekend).<br />
+  Long-term planning is considered almost bad luck (don't jinx it).</p>
+  <p>🗣️ <strong>Deep Dive: The "Nu, Bu!"</strong><br />
+  When ending a phone call perfectly, Ukrainians say:<br />
+  "Ну, бувай!" (Well, be!).<br />
+  Shortened to: "Ну, бу!" (Well, be!).<br />
+  It is the equivalent of "Later!" or "Ciao!".<br />
+  Use it only with friends. "Давай, бу!"</p>
+  <p>🛠️ <strong>Language Link: The Instrumental Trap</strong><br />
+  You learned: "Я буду вдома" (Locative).<br />
+  But if you say WHAT you will be (profession/role), you need <strong>Instrumental Case</strong>.</p>
+  <ul>
+  <li><strong>Я буду президентом.</strong> (I will be [a] president - Instr).</li>
+  <li><strong>Він буде лікарем.</strong> (He will be [a] doctor - Instr).</li>
+  <li><strong>Вона буде мамою.</strong> (She will be [a] mom - Instr).<br />
+  Don't worry about the endings yet. Just know that "Subject" changes to "Instrument" in the future.</li>
+  </ul>
+</blockquote>
+<h3 id="section9thepoliterefusal">Section 9: The Polite Refusal</h3>
+<p>Ukrainians don't like to say "No".<br />
+Instead, they say what they will be doing instead.</p>
+<ul>
+<li><strong>Ти будеш пити?</strong> (Will you drink?)</li>
+<li><strong>Ні, я буду за кермом.</strong> (No, I will be behind the wheel).</li>
+<li><strong>Ти будеш їсти?</strong></li>
+<li><strong>Ні, я буду на дієті.</strong> (No, I will be on a diet).</li>
+</ul>
+<blockquote>
+  <p>🔮 <strong>Deep Dive: The Fortune Teller</strong><br />
+  Ukrainians love predictions.<br />
+  "A cuckoo bird (Zozulia) counts your years."<br />
+  If you hear "Ku-ku", you count "Roz, dva, try…".<br />
+  That is how many years you have left.<br />
+  Superstition? Maybe. Fun? Yes.</p>
 </blockquote>
 <h2 id="practice">practice</h2>
-<h3 id="exercise1formthefuture">Exercise 1: Form the Future</h3>
-<p>Create sentences with буду + infinitive:</p>
-<ol>
-<li><p>я / читати / книгу</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer">Я буду читати книгу.</div></div>
-<ol start="2">
-<li><p>вона / працювати / завтра</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer">Вона буде працювати завтра.</div></div>
-<ol start="3">
-<li><p>ми / вивчати / українську</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer">Ми будемо вивчати українську.</div></div>
-<ol start="4">
-<li><p>вони / жити / в Києві</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer">Вони будуть жити в Києві.</div></div>
-<h3 id="exercise2choosetherightform">Exercise 2: Choose the Right Form</h3>
-<ol>
-<li><p>Я ___ працювати.</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer">буду</div></div>
-<ol start="2">
-<li><p>Ти ___ читати?</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-5', this)">Показати відповідь</button><div class="answer-block" id="ans-5"><div class="callout callout-answer" data-callout="answer">будеш</div></div>
-<ol start="3">
-<li><p>Вони ___ говорити українською.</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-6', this)">Показати відповідь</button><div class="answer-block" id="ans-6"><div class="callout callout-answer" data-callout="answer">будуть</div></div>
-<ol start="4">
-<li><p>Ми ___ їсти о сьомій.</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-7', this)">Показати відповідь</button><div class="answer-block" id="ans-7"><div class="callout callout-answer" data-callout="answer">будемо</div></div>
-<h2 id="production">production</h2>
-<h3 id="makeyourplans">Make Your Plans</h3>
-<p>What will you do this week? Share your plans:</p>
+<p><strong>Drill 1: The Conjugator</strong><br />
+Conjugate <strong>Слухати</strong> (To listen) in Future.</p>
 <ul>
-<li>Завтра я буду…</li>
-<li>Наступного тижня я буду…</li>
-<li>Скоро я буду…</li>
-<li>Я планую… / Я збираюся…</li>
+<li>(I) Я ___ -&gt; <strong>буду слухати</strong>.</li>
+<li>(You) Ти ___ -&gt; <strong>будеш слухати</strong>.</li>
+<li>(He) Він ___ -&gt; <strong>буде слухати</strong>.</li>
+<li>(We) Ми ___ -&gt; <strong>будемо слухати</strong>.</li>
 </ul>
-<p>Tell us 3-4 of your future plans!</p>
-<hr />
-<hr />
+<p><strong>Drill 2: Tomorrow</strong><br />
+Change Present to Future.</p>
+<ul>
+<li>(Я читаю) -&gt; Завтра я ___ -&gt; <strong>буду читати</strong>.</li>
+<li>(Він знає) -&gt; Завтра він ___ -&gt; <strong>буде знати</strong>.</li>
+<li>(Ми робимо) -&gt; Завтра ми ___ -&gt; <strong>будемо робити</strong>.</li>
+<li>(Вони йдуть) -&gt; Завтра вони ___ -&gt; <strong>будуть йти</strong>.</li>
+</ul>
+<p><strong>Drill 3: The Plan</strong></p>
+<ul>
+<li>(I will be in Kyiv next year) -&gt; Я <strong>буду</strong> в Києві наступного року.</li>
+<li>(We will work tomorrow) -&gt; Ми <strong>будемо</strong> працювати завтра.</li>
+<li>(She will sleep soon) -&gt; Вона <strong>буде</strong> спати скоро.</li>
+</ul>
+<p><strong>Drill 4: Weather Forecast</strong></p>
+<ul>
+<li>(Tomorrow - rain) -&gt; Завтра буде <strong>дощ</strong>.</li>
+<li>(Soon - sun) -&gt; Скоро буде <strong>сонце</strong>.</li>
+<li>(Later - cold) -&gt; Потім буде <strong>холодно</strong>.</li>
+<li>(Monday - warm) -&gt; У понеділок буде <strong>тепло</strong>.</li>
+</ul>
+<p><strong>Drill 5: The Weekend</strong></p>
+<ul>
+<li>(I will rest) -&gt; Я буду <strong>відпочивати</strong>.</li>
+<li>(We will clean) -&gt; Ми будемо <strong>прибирати</strong>.</li>
+<li>(She will cook) -&gt; Вона буде <strong>готувати</strong>.</li>
+<li>(They will sleep) -&gt; Вони будуть <strong>спати</strong>.</li>
+</ul>
+<p><strong>Drill 6: The Refusal</strong></p>
+<ul>
+<li>(Will you work?) -&gt; Ні, я буду <strong>відпочивати</strong>.</li>
+<li>(Will you eat?) -&gt; Ні, я буду <strong>пити</strong>.</li>
+<li>(Will you sleep?) -&gt; Ні, я буду <strong>працювати</strong>.</li>
+<li>(Will you clean?) -&gt; Ні, я буду <strong>дивитися фільм</strong>.</li>
+</ul>
+<h2 id="production">production</h2>
+<blockquote>
+  <p>🔮 <strong>Culture Corner: "Shcho bude, te bude"</strong><br />
+  Ukrainians are sometimes fatalistic.<br />
+  "Що буде, те буде." (What will be, that will be).<br />
+  It means accepting the unpredictable future.<br />
+  Use it when you don't know the outcome but are proceeding anyway.</p>
+  <p>🎱 <strong>Game: The Magic 8-Ball</strong><br />
+  Ask a question. "Я буду багатий?" (Will I be rich?)<br />
+  Answers:</p>
+  <ul>
+  <li><strong>Так, звичайно.</strong> (Yes, of course).</li>
+  <li><strong>Мабуть.</strong> (Probably/Maybe).</li>
+  <li><strong>Точно ні.</strong> (Definitely no).</li>
+  <li><strong>Подивимось.</strong> (We will see).</li>
+  </ul>
+</blockquote>
+<p><strong>Scenario: The Weekend Plan</strong></p>
+<ul>
+<li><strong>Friend:</strong> Що ти будеш робити у суботу?</li>
+<li><strong>You:</strong> Я буду спати до обіду.</li>
+<li><strong>Friend:</strong> А потім?</li>
+<li><strong>You:</strong> Потім я буду снідати і пити каву.</li>
+<li><strong>Friend:</strong> А ввечері?</li>
+<li><strong>You:</strong> Ввечері ми будемо гуляти в парку. А ти?</li>
+<li><strong>Friend:</strong> Я буду працювати.</li>
+<li><strong>You:</strong> Жахливо!</li>
+</ul>
+<p><strong>Scenario: The Prediction</strong></p>
+<ul>
+<li><strong>Fortune Teller:</strong> У майбутньому (In the future) ти будеш жити в Америці.</li>
+<li><strong>Client:</strong> Я? В Америці? Ні, я буду жити в Україні.</li>
+<li><strong>Fortune Teller:</strong> Ти будеш багатим (rich - Instr).</li>
+<li><strong>Client:</strong> Супер. Я буду мати машину?</li>
+<li><strong>Fortune Teller:</strong> Так, ти будеш мати три машини.</li>
+<li><strong>Client:</strong> А дружина?</li>
+<li><strong>Fortune Teller:</strong> Дружини не буде. (There will be no wife - Gen).</li>
+<li><strong>Client:</strong> Ой.</li>
+</ul>
+<p><strong>Scenario: The 5-Year Plan</strong></p>
+<ul>
+<li><strong>HR:</strong> Де ви будете через 5 років? (In 5 years?)</li>
+<li><strong>You:</strong> Я буду босом.</li>
+<li><strong>HR:</strong> Амбітно. А що ви будете робити?</li>
+<li><strong>You:</strong> Я буду пити каву і читати газети.</li>
+<li><strong>HR:</strong> А працювати?</li>
+<li><strong>You:</strong> Ні. Ви будете працювати. Я буду відпочивати.</li>
+<li><strong>HR:</strong> Ми вам зателефонуємо. (We will call you).</li>
+</ul>
 <hr /></div>
     </div>
   
       
-    <div class="card section-summary">
-      <h3>📋 Summary</h3>
-      <div class="md-content"><blockquote>
-  <p><strong>What You Learned Today</strong></p>
-  <ul>
-  <li>Compound future: буду/будеш/буде/будемо/будете/будуть + infinitive</li>
-  <li>Future time expressions: завтра, скоро, наступного тижня</li>
-  <li>Intention verbs: збираюся, планую, хочу</li>
-  <li>Questions and negation in future tense</li>
-  <li>Popular phrase: Все буде добре!</li>
-  </ul>
-  <p><strong>Coming Next</strong></p>
-  <p>In Module 23, you'll learn <strong>What Time Is It?</strong>:</p>
-  <ul>
-  <li>Telling time in Ukrainian</li>
-  <li>Days of the week</li>
-  <li>Months of the year</li>
-  <li>Scheduling and appointments</li>
-  </ul>
-</blockquote></div>
-    </div>
-  
       <div class="btn-group">
         <button class="btn btn-primary" onclick="showSection('activity-0')">Activities →</button>
       </div>
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Future Tense Forms</h3>
+    <section id="activity-0" class="section"><div class="card"><h3>Future Logic</h3>
       <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container" class="fill-container"></div>
+      <div id="activity-0-container"></div>
       <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Future Sentences</h3>
+    <section id="activity-1" class="section"><div class="card"><h3>Who will do it?</h3>
       <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
-      <div id="activity-1-container" class="order-container"></div>
-      <div class="completion-message" id="activity-1-complete"><h3>Perfect Order!</h3></div>
+      <div class="match-container" id="activity-1-container"><svg class="match-lines" id="activity-1-lines"></svg>
+        <div class="match-column" id="activity-1-left"></div>
+        <div class="match-column" id="activity-1-right"></div>
+      </div>
+      <div class="completion-message" id="activity-1-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Present to Future</h3>
+    <section id="activity-2" class="section"><div class="card"><h3>The Future Builder</h3>
       <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-2-container"><svg class="match-lines" id="activity-2-lines"></svg>
-        <div class="match-column" id="activity-2-left"></div>
-        <div class="match-column" id="activity-2-right"></div>
-      </div>
-      <div class="completion-message" id="activity-2-complete"><h3>Perfect!</h3></div>
+      <div id="activity-2-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-2-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Future Tense Knowledge</h3>
-      <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div id="activity-3-container"></div>
-      <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
+    <section id="activity-3" class="section"><div class="card"><h3>Time Sorter II</h3>
+      <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/14</span></div>
+      <div class="sort-pool" id="activity-3-pool"><div class="sort-items" id="activity-3-items"></div></div>
+      <div class="sort-groups" id="activity-3-groups"></div>
+      <div class="completion-message" id="activity-3-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Future Tense Facts</h3>
+    <section id="activity-4" class="section"><div class="card"><h3>The Optimist</h3>
       <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
-      <div id="activity-4-container"></div>
+      <div id="activity-4-container" class="fill-container"></div>
       <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Time Expressions</h3>
+    <section id="activity-5" class="section"><div class="card"><h3>The Pessimist</h3>
       <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
-      <div class="sort-pool" id="activity-5-pool"><div class="sort-items" id="activity-5-items"></div></div>
-      <div class="sort-groups" id="activity-5-groups"></div>
-      <div class="completion-message" id="activity-5-complete"><h3>All Sorted!</h3></div>
+      <div id="activity-5-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-5-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Future Tense Vocabulary</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>Realistic Predictions</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
-      <div id="activity-6-container" class="order-container"></div>
-      <div class="completion-message" id="activity-6-complete"><h3>Perfect Order!</h3></div>
+      <div id="activity-6-container"></div>
+      <div class="completion-message" id="activity-6-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
     </div></section>
 
-    <section id="activity-7" class="section"><div class="card"><h3>Present to Future Intentions</h3>
+    <section id="activity-7" class="section"><div class="card"><h3>Prediction Maker</h3>
       <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-7-container"><svg class="match-lines" id="activity-7-lines"></svg>
-        <div class="match-column" id="activity-7-left"></div>
-        <div class="match-column" id="activity-7-right"></div>
-      </div>
-      <div class="completion-message" id="activity-7-complete"><h3>Perfect!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+      <div id="activity-7-container" class="order-container"></div>
+      <div class="completion-message" id="activity-7-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-8')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-8" class="section"><div class="card"><h3>Future Forms</h3>
+      <div class="score-display"><span class="score"><span id="activity-8-score">0</span>/12</span></div>
+      <div id="activity-8-container" class="order-container"></div>
+      <div class="completion-message" id="activity-8-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-8')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
-        <h3>Словник (30)</h3>
+        <h3>Словник (20)</h3>
         <div class="vocab-table-container">
           <table class="vocab-table">
             <thead><tr>
@@ -970,7 +920,7 @@ footer {
     <th>Переклад</th>
     <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">завтра</td><td class="vocab-ipa">/ˈzɑvtrɑ/</td><td class="vocab-en">tomorrow</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">післязавтра</td><td class="vocab-ipa">/pʲislʲɑˈzɑvtrɑ/</td><td class="vocab-en">day after tomorrow</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">наступного тижня</td><td class="vocab-ipa">/nɑˈstupnɔɦɔ ˈtɪʒnʲɑ/</td><td class="vocab-en">next week</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">наступного місяця</td><td class="vocab-ipa">/nɑˈstupnɔɦɔ ˈmʲisʲɑt͡sʲɑ/</td><td class="vocab-en">next month</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">наступного року</td><td class="vocab-ipa">/nɑˈstupnɔɦɔ ˈrɔku/</td><td class="vocab-en">next year</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">скоро</td><td class="vocab-ipa">/ˈskɔrɔ/</td><td class="vocab-en">soon</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">пізніше</td><td class="vocab-ipa">/ˈpʲiznʲiʃɛ/</td><td class="vocab-en">later</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">потім</td><td class="vocab-ipa">/pɔˈtʲim/</td><td class="vocab-en">then, afterward</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">згодом</td><td class="vocab-ipa">/ˈzɦɔdɔm/</td><td class="vocab-en">later on, eventually</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">буду</td><td class="vocab-ipa">/ˈbudu/</td><td class="vocab-en">will (1st sg)</td><td class="vocab-note">future of бути</td></tr><tr><td class="vocab-uk">будеш</td><td class="vocab-ipa">/ˈbudɛʃ/</td><td class="vocab-en">will (2nd sg)</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">буде</td><td class="vocab-ipa">/ˈbudɛ/</td><td class="vocab-en">will (3rd sg)</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">будемо</td><td class="vocab-ipa">/ˈbudɛmɔ/</td><td class="vocab-en">will (1st pl)</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">будете</td><td class="vocab-ipa">/ˈbudɛtɛ/</td><td class="vocab-en">will (2nd pl)</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">будуть</td><td class="vocab-ipa">/ˈbudutʲ/</td><td class="vocab-en">will (3rd pl)</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">збираюся</td><td class="vocab-ipa">/zbɪˈrɑjusʲɑ/</td><td class="vocab-en">I&#039;m going to</td><td class="vocab-note">intention</td></tr><tr><td class="vocab-uk">планую</td><td class="vocab-ipa">/plɑˈnuju/</td><td class="vocab-en">I plan</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">хочу</td><td class="vocab-ipa">/ˈxɔt͡ʃu/</td><td class="vocab-en">I want</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">маю намір</td><td class="vocab-ipa">/ˈmɑju ˈnɑmʲir/</td><td class="vocab-en">I intend</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">сподіваюся</td><td class="vocab-ipa">/spɔdʲiˈvɑjusʲɑ/</td><td class="vocab-en">I hope</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">обіцяю</td><td class="vocab-ipa">/ɔˈbʲit͡sʲɑju/</td><td class="vocab-en">I promise</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">спробую</td><td class="vocab-ipa">/ˈsprɔbuju/</td><td class="vocab-en">I&#039;ll try</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">постараюся</td><td class="vocab-ipa">/pɔstɑˈrɑjusʲɑ/</td><td class="vocab-en">I&#039;ll do my best</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">мрію</td><td class="vocab-ipa">/ˈmrʲiju/</td><td class="vocab-en">I dream</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">думаю</td><td class="vocab-ipa">/ˈdumɑju/</td><td class="vocab-en">I think</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">вирішив</td><td class="vocab-ipa">/vɪˈrʲiʃɪv/</td><td class="vocab-en">I decided</td><td class="vocab-note">past tense</td></tr><tr><td class="vocab-uk">вже</td><td class="vocab-ipa">/vʒɛ/</td><td class="vocab-en">already</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">ще</td><td class="vocab-ipa">/ʃt͡ʃɛ/</td><td class="vocab-en">still, yet</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">ніколи</td><td class="vocab-ipa">/nʲiˈkɔlɪ/</td><td class="vocab-en">never</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">обов&#039;язково</td><td class="vocab-ipa">/ɔbɔvjɑzˈkɔvɔ/</td><td class="vocab-en">definitely, certainly</td><td class="vocab-note"></td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">завтра</td><td class="vocab-ipa">/ˈzɑwtrɑ/</td><td class="vocab-en">tomorrow</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('завтра')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">післязавтра</td><td class="vocab-ipa">/pisʲlʲɑˈzɑwtrɑ/</td><td class="vocab-en">day after tomorrow</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('післязавтра')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">скоро</td><td class="vocab-ipa">/ˈskɔrɔ/</td><td class="vocab-en">soon</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('скоро')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">потім</td><td class="vocab-ipa">/ˈpɔtim/</td><td class="vocab-en">later/then</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('потім')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">наступного</td><td class="vocab-ipa">/nɑˈstupnɔɦɔ/</td><td class="vocab-en">next (of next)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('наступного')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">майбутнє</td><td class="vocab-ipa">/mɑjˈbutnʲɛ/</td><td class="vocab-en">future (noun)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('майбутнє')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">буду</td><td class="vocab-ipa">/ˈbudu/</td><td class="vocab-en">I will</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('буду')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">будеш</td><td class="vocab-ipa">/ˈbudɛʃ/</td><td class="vocab-en">you will</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('будеш')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">буде</td><td class="vocab-ipa">/ˈbudɛ/</td><td class="vocab-en">he/she will</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('буде')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">будемо</td><td class="vocab-ipa">/ˈbudɛmɔ/</td><td class="vocab-en">we will</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('будемо')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">будете</td><td class="vocab-ipa">/ˈbudɛtɛ/</td><td class="vocab-en">you (pl) will</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('будете')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">будуть</td><td class="vocab-ipa">/ˈbudutʲ/</td><td class="vocab-en">they will</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('будуть')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">ввечері</td><td class="vocab-ipa">/ˈwwɛtʃɛri/</td><td class="vocab-en">in the evening</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('ввечері')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">до обіду</td><td class="vocab-ipa">/dɔ ɔˈbidu/</td><td class="vocab-en">until lunch</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('до обіду')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">субота</td><td class="vocab-ipa">/suˈbɔtɑ/</td><td class="vocab-en">Saturday</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('субота')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">понеділок</td><td class="vocab-ipa">/pɔnɛˈdilɔk/</td><td class="vocab-en">Monday</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('понеділок')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">багатий</td><td class="vocab-ipa">/bɑˈɦɑtɪj/</td><td class="vocab-en">rich</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('багатий')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">щасливий</td><td class="vocab-ipa">/ʃtʃɑsˈlɪwɪj/</td><td class="vocab-en">happy</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('щасливий')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">весело</td><td class="vocab-ipa">/ˈvɛsɛlɔ/</td><td class="vocab-en">fun/merrily</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('весело')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">цікаво</td><td class="vocab-ipa">/tsiˈkɑvɔ/</td><td class="vocab-en">interesting</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('цікаво')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -982,8 +932,8 @@ footer {
   </main><footer>Module 22 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"fill-blank","title":"Future Tense Forms","data":{"type":"fill-blank","items":[{"prompt":"Я ___ читати книгу.","answer":"буду","options":["буду","будеш","буде","будуть"]},{"prompt":"Ти ___ працювати завтра?","answer":"будеш","options":["будеш","буду","буде","будете"]},{"prompt":"Вона ___ вивчати українську.","answer":"буде","options":["буде","буду","будуть","будемо"]},{"prompt":"Ми ___ жити в Києві.","answer":"будемо","options":["будемо","буду","будуть","будете"]},{"prompt":"Вони ___ говорити українською.","answer":"будуть","options":["будуть","буде","будемо","будете"]},{"prompt":"Ви ___ їсти о шостій?","answer":"будете","options":["будете","будуть","будемо","буде"]},{"prompt":"Він ___ дивитися фільм.","answer":"буде","options":["буде","буду","будуть","будемо"]},{"prompt":"Я не ___ працювати.","answer":"буду","options":["буду","будеш","буде","будуть"]},{"prompt":"Хто ___ готувати вечерю?","answer":"буде","options":["буде","буду","будуть","будемо"]},{"prompt":"Ти ___ чекати?","answer":"будеш","options":["будеш","буду","буде","будуть"]},{"prompt":"Ми ___ робити це разом.","answer":"будемо","options":["будемо","буду","будуть","будете"]},{"prompt":"Вони ___ приходити щодня.","answer":"будуть","options":["будуть","буде","будемо","будете"]}]}},{"id":"activity-1","type":"unjumble","title":"Future Sentences","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["читати","буду","книгу","Я"],"answer":"Я буду читати книгу.","translation":"I will read a book."},{"words":["завтра","працювати","Вона","буде"],"answer":"Вона буде працювати завтра.","translation":"She will work tomorrow."},{"words":["українську","вивчати","будемо","Ми"],"answer":"Ми будемо вивчати українську.","translation":"We will study Ukrainian."},{"words":["робити","будеш","Що","ти","завтра"],"answer":"Що ти будеш робити завтра?","translation":"What will you do tomorrow?"},{"words":["буде","Все","добре"],"answer":"Все буде добре!","translation":"Everything will be fine!"},{"words":["чекати","Я","буду"],"answer":"Я буду чекати.","translation":"I will wait."},{"words":["Києві","жити","в","будуть","Вони"],"answer":"Вони будуть жити в Києві.","translation":"They will live in Kyiv."},{"words":["буду","не","працювати","Я"],"answer":"Я не буду працювати.","translation":"I won't work."},{"words":["пізніше","Я","зателефоную","буду"],"answer":"Я буду телефонувати пізніше.","translation":"I will call later."},{"words":["о","Ми","будемо","шостій","їсти"],"answer":"Ми будемо їсти о шостій.","translation":"We will eat at six."},{"words":["скоро","Він","приїде","буде"],"answer":"Він буде приїжджати скоро.","translation":"He will be arriving soon."},{"words":["Коли","вдома","ти","будеш"],"answer":"Коли ти будеш вдома?","translation":"When will you be home?"}]}},{"id":"activity-2","type":"match-up","title":"Present to Future","data":{"type":"match-up","pairs":[{"left":"Я читаю.","right":"Я буду читати."},{"left":"Ти працюєш.","right":"Ти будеш працювати."},{"left":"Вона говорить.","right":"Вона буде говорити."},{"left":"Ми їмо.","right":"Ми будемо їсти."},{"left":"Ви робите.","right":"Ви будете робити."},{"left":"Вони живуть.","right":"Вони будуть жити."},{"left":"Він дивиться.","right":"Він буде дивитися."},{"left":"Вона вчить.","right":"Вона буде вчити."},{"left":"Ми чекаємо.","right":"Ми будемо чекати."},{"left":"Вони їдуть.","right":"Вони будуть їхати."},{"left":"Ти пишеш.","right":"Ти будеш писати."},{"left":"Я сплю.","right":"Я буду спати."}],"shuffleRight":true}},{"id":"activity-3","type":"quiz","title":"Future Tense Knowledge","data":{"type":"quiz","questions":[{"question":"How do you form compound future?","options":["Verb + -му ending","буду + infinitive","Past tense + will","Adding \"завтра\" to present"],"correctIndex":1,"explanation":"Compound future = буду/будеш/буде/etc. + infinitive."},{"question":"What is \"буду\" for \"ми\"?","options":["буду","будеш","будемо","будуть"],"correctIndex":2,"explanation":"Ми будемо (we will)."},{"question":"\"Завтра\" means:","options":["yesterday","tomorrow","today","later"],"correctIndex":1,"explanation":"\"Завтра\" = tomorrow; \"вчора\" = yesterday."},{"question":"How do you say \"I will work\"?","options":["Я працюю","Я працював","Я буду працювати","Я працювати буду"],"correctIndex":2,"explanation":"Standard order: subject + буду + infinitive."},{"question":"How do you negate future tense?","options":["Add \"ні\" at the end","Add \"не\" before \"буду\"","Change the infinitive","Use a different verb"],"correctIndex":1,"explanation":"Negation: Я **не** буду працювати."},{"question":"\"Все буде добре!\" means:","options":["Everything will be fine!","Everything was fine!","Everything is fine!","Nothing will be fine!"],"correctIndex":0,"explanation":"A popular Ukrainian phrase of hope."},{"question":"\"Наступного тижня\" means:","options":["last week","this week","next week","every week"],"correctIndex":2,"explanation":"\"Наступного\" = next; \"минулого\" = last."},{"question":"Which form is for \"вони\" (they)?","options":["буде","будемо","будете","будуть"],"correctIndex":3,"explanation":"Вони будуть (they will)."},{"question":"\"Я збираюся\" means:","options":["I was going to","I'm going to","I used to","I have to"],"correctIndex":1,"explanation":"\"Збираюся\" expresses intention/plans."},{"question":"How do you ask \"Will you work?\"","options":["Ти будеш працювати?","Ти працюватимеш?","Будеш ти працювати?","Працюватимеш ти?"],"correctIndex":0,"explanation":"Question intonation with standard word order."},{"question":"\"Пізніше\" means:","options":["later","earlier","now","never"],"correctIndex":0,"explanation":"\"Пізніше\" = later; \"раніше\" = earlier."},{"question":"In \"Що ти будеш робити?\", what is \"робити\"?","options":["A conjugated verb","An infinitive","A past participle","An adjective"],"correctIndex":1,"explanation":"After \"буду,\" always use infinitive."}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-4","type":"true-false","title":"Future Tense Facts","data":{"type":"true-false","statements":[{"statement":"Compound future uses буду + infinitive.","isTrue":true,"explanation":"Correct! The most common future form."},{"statement":"\"Буду\" changes based on gender.","isTrue":false,"explanation":"Incorrect! \"Буду\" changes based on person, not gender."},{"statement":"\"Завтра\" is a future time word.","isTrue":true,"explanation":"Correct! \"Завтра\" = tomorrow."},{"statement":"You put \"не\" after \"буду\" for negation.","isTrue":false,"explanation":"Incorrect! \"Не\" goes before: Я не буду."},{"statement":"\"Все буде добре!\" is a popular Ukrainian phrase.","isTrue":true,"explanation":"Correct! A phrase of hope and resilience."},{"statement":"\"Післязавтра\" means yesterday.","isTrue":false,"explanation":"Incorrect! \"Післязавтра\" = day after tomorrow."},{"statement":"\"Ми будемо\" means \"we will.\"","isTrue":true,"explanation":"Correct! Ми + будемо + infinitive."},{"statement":"Future tense has gender endings like past tense.","isTrue":false,"explanation":"Incorrect! Future tense (compound) has no gender agreement."},{"statement":"\"Я планую\" expresses future intentions.","isTrue":true,"explanation":"Correct! \"I plan to\" + infinitive."},{"statement":"\"Скоро\" means \"slowly.\"","isTrue":false,"explanation":"Incorrect! \"Скоро\" = soon; \"повільно\" = slowly."},{"statement":"Questions use the same word order with rising intonation.","isTrue":true,"explanation":"Correct! Ти будеш працювати? (rising tone at end)."},{"statement":"\"Будете\" is the form for \"ви.\"","isTrue":true,"explanation":"Correct! Ви будете (you will - formal/plural)."}]}},{"id":"activity-5","type":"group-sort","title":"Time Expressions","data":{"type":"group-sort","groups":[{"id":"past","name":"Past","items":["вчора","позавчора","минулого тижня","раніше"]},{"id":"future","name":"Future","items":["завтра","післязавтра","наступного тижня","скоро"]},{"id":"bothneutral","name":"Both/Neutral","items":["потім","пізніше","згодом","колись"]}],"shuffleItems":true}},{"id":"activity-6","type":"anagram","title":"Future Tense Vocabulary","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["у","д","у","б"],"answer":"буду","translation":"will - 1st person"},{"letters":["ш","е","д","у","б"],"answer":"будеш","translation":"will - 2nd person"},{"letters":["е","д","у","б"],"answer":"буде","translation":"will - 3rd person"},{"letters":["о","м","е","д","у","б"],"answer":"будемо","translation":"will - 1st plural"},{"letters":["ь","т","у","д","у","б"],"answer":"будуть","translation":"will - 3rd plural"},{"letters":["а","р","т","в","а","з"],"answer":"завтра","translation":"tomorrow"},{"letters":["о","р","о","к","с"],"answer":"скоро","translation":"soon"},{"letters":["є","ш","і","н","з","і","п"],"answer":"пізніше","translation":"later"},{"letters":["м","і","т","о","п"],"answer":"потім","translation":"then"},{"letters":["ю","у","н","а","л","п"],"answer":"планую","translation":"I plan"},{"letters":["ю","у","ч","о","х"],"answer":"хочу","translation":"I want"},{"letters":["я","с","ю","а","р","и","б","з"],"answer":"збираюся","translation":"I'm going to"}]}},{"id":"activity-7","type":"match-up","title":"Present to Future Intentions","data":{"type":"match-up","pairs":[{"left":"Я вивчаю українську.","right":"Я буду говорити вільно."},{"left":"Я працюю.","right":"Я буду відпочивати."},{"left":"Я голодний.","right":"Я буду їсти."},{"left":"Я втомлений.","right":"Я буду спати."},{"left":"Я в Україні.","right":"Я буду подорожувати."},{"left":"Я читаю книгу.","right":"Я буду писати рецензію."},{"left":"Я дивлюся фільм.","right":"Я буду обговорювати."},{"left":"Я снідаю.","right":"Я буду працювати."},{"left":"Я вчуся.","right":"Я буду складати іспит."},{"left":"Я готую.","right":"Я буду вечеряти."},{"left":"Я прибираю.","right":"Я буду відпочивати."},{"left":"Я чекаю.","right":"Я буду зустрічатися."}],"shuffleRight":true}}];
-    const vocabData = [{"uk":"завтра","translit":"","en":"tomorrow","note":""},{"uk":"післязавтра","translit":"","en":"day after tomorrow","note":""},{"uk":"наступного тижня","translit":"","en":"next week","note":""},{"uk":"наступного місяця","translit":"","en":"next month","note":""},{"uk":"наступного року","translit":"","en":"next year","note":""},{"uk":"скоро","translit":"","en":"soon","note":""},{"uk":"пізніше","translit":"","en":"later","note":""},{"uk":"потім","translit":"","en":"then, afterward","note":""},{"uk":"згодом","translit":"","en":"later on, eventually","note":""},{"uk":"буду","translit":"","en":"will (1st sg)","note":"future of бути"},{"uk":"будеш","translit":"","en":"will (2nd sg)","note":""},{"uk":"буде","translit":"","en":"will (3rd sg)","note":""},{"uk":"будемо","translit":"","en":"will (1st pl)","note":""},{"uk":"будете","translit":"","en":"will (2nd pl)","note":""},{"uk":"будуть","translit":"","en":"will (3rd pl)","note":""},{"uk":"збираюся","translit":"","en":"I'm going to","note":"intention"},{"uk":"планую","translit":"","en":"I plan","note":""},{"uk":"хочу","translit":"","en":"I want","note":""},{"uk":"маю намір","translit":"","en":"I intend","note":""},{"uk":"сподіваюся","translit":"","en":"I hope","note":""},{"uk":"обіцяю","translit":"","en":"I promise","note":""},{"uk":"спробую","translit":"","en":"I'll try","note":""},{"uk":"постараюся","translit":"","en":"I'll do my best","note":""},{"uk":"мрію","translit":"","en":"I dream","note":""},{"uk":"думаю","translit":"","en":"I think","note":""},{"uk":"вирішив","translit":"","en":"I decided","note":"past tense"},{"uk":"вже","translit":"","en":"already","note":""},{"uk":"ще","translit":"","en":"still, yet","note":""},{"uk":"ніколи","translit":"","en":"never","note":""},{"uk":"обов'язково","translit":"","en":"definitely, certainly","note":""}];
+    const activitiesData = [{"id":"activity-0","type":"quiz","title":"Future Logic","data":{"type":"quiz","questions":[{"question":"Я ___ (will read).","options":["буду читати","буду читав","буде читати"],"correctIndex":0,"explanation":""},{"question":"Ти ___ (will know).","options":["будеш знати","будете знати","буде знати"],"correctIndex":0,"explanation":""},{"question":"Вона ___ (will work).","options":["буде працювати","буду працювати","будуть працювати"],"correctIndex":0,"explanation":""},{"question":"Ми ___ (will rest/vydpochivaty).","options":["будемо відпочивати","будете відпочивати","будуть відпочивати"],"correctIndex":0,"explanation":""},{"question":"Ви ___ (will speak).","options":["будете говорити","будеш говорити","будемо говорити"],"correctIndex":0,"explanation":""},{"question":"Вони ___ (will live).","options":["будуть жити","будемо жити","буде жити"],"correctIndex":0,"explanation":""},{"question":"Завтра ___ (will be) холодно.","options":["буде","будуть","буду"],"correctIndex":0,"explanation":""},{"question":"Я не ___ (will not) їсти.","options":["буду","будеш","буде"],"correctIndex":0,"explanation":""},{"question":"Що ти ___ (will) робити?","options":["будеш","будуть","буде"],"correctIndex":0,"explanation":""},{"question":"Ми ___ (will be) вдома.","options":["будемо","будете","будуть"],"correctIndex":0,"explanation":""},{"question":"Ти ___ (will be) там?","options":["будеш","будете","буду"],"correctIndex":0,"explanation":""},{"question":"Це ___ (will be) цікаво.","options":["буде","будуть","буду"],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-1","type":"match-up","title":"Who will do it?","data":{"type":"match-up","pairs":[{"left":"Я","right":"Буду"},{"left":"Ти","right":"Будеш"},{"left":"Він","right":"Буде"},{"left":"Вона","right":"Буде"},{"left":"Ми","right":"Будемо"},{"left":"Ви","right":"Будете"},{"left":"Вони","right":"Будуть"},{"left":"Воно","right":"Буде"},{"left":"Хто","right":"Буде"},{"left":"Що","right":"Буде"},{"left":"Студенти (They)","right":"Будуть"},{"left":"Лікар (He/She)","right":"Буде"}],"shuffleRight":true}},{"id":"activity-2","type":"fill-blank","title":"The Future Builder","data":{"type":"fill-blank","items":[{"prompt":"Я ___ спати. (I will sleep).","answer":"буду"},{"prompt":"Ти ___ їсти. (You will eat).","answer":"будеш"},{"prompt":"Він ___ писати. (He will write).","answer":"буде"},{"prompt":"Ми ___ гуляти. (We will walk).","answer":"будемо"},{"prompt":"Ви ___ читати. (You will read).","answer":"будете"},{"prompt":"Вони ___ знати. (They will know).","answer":"будуть"},{"prompt":"Мама ___ готувати. (Mom will cook).","answer":"буде"},{"prompt":"Тато ___ працювати. (Dad will work).","answer":"буде"},{"prompt":"Завтра ___ дощ. (Tomorrow will be rain).","answer":"буде"},{"prompt":"Я не ___ пити. (I will not drink).","answer":"буду"},{"prompt":"Ми не ___ говорити. (We will not speak).","answer":"будемо"},{"prompt":"Де ти ___ жити? (Where will you live?).","answer":"будеш"}]}},{"id":"activity-3","type":"group-sort","title":"Time Sorter II","data":{"type":"group-sort","groups":[{"id":"future","name":"Future","items":["Завтра","Післязавтра","Наступного тижня","Наступного місяця","Скоро","Потім","У майбутньому (In future)"]},{"id":"past","name":"Past","items":["Вчора","Позавчора","Минулого тижня","Минулого року","Давно","Раніше","Колись"]}],"shuffleItems":true}},{"id":"activity-4","type":"fill-blank","title":"The Optimist","data":{"type":"fill-blank","items":[{"prompt":"Завтра ___ (will be) сонце.","answer":"буде","hints":["will be"]},{"prompt":"Ми ___ (will be) багаті.","answer":"будемо","hints":["will be"]},{"prompt":"Ти ___ (will be) здоровий.","answer":"будеш","hints":["will be"]},{"prompt":"Вона ___ (will be) щаслива.","answer":"буде","hints":["will be"]},{"prompt":"Все ___ (will be) добре.","answer":"буде","hints":["will be"]},{"prompt":"Я ___ (will have) гроші.","answer":"буду мати","hints":["will have"]},{"prompt":"Ми ___ (will travel) в Європу.","answer":"будемо подорожувати","hints":["will travel"]},{"prompt":"Вони ___ (will love) нас.","answer":"будуть любити","hints":["will love"]},{"prompt":"День ___ (will be) теплий.","answer":"буде","hints":["will be"]},{"prompt":"Робота ___ (will be) цікава.","answer":"буде","hints":["will be"]},{"prompt":"Ми ___ (will rest).","answer":"будемо відпочивати","hints":["will rest"]},{"prompt":"Життя (Life) ___ (will be) супер.","answer":"буде","hints":["will be"]}]}},{"id":"activity-5","type":"fill-blank","title":"The Pessimist","data":{"type":"fill-blank","items":[{"prompt":"Завтра ___ (will be) дощ.","answer":"буде","hints":["will be"]},{"prompt":"Ми ___ (will be) бідні (poor).","answer":"будемо","hints":["will be"]},{"prompt":"Ти ___ (will be) хворий (sick).","answer":"будеш","hints":["will be"]},{"prompt":"Все ___ (will be) погано.","answer":"буде","hints":["will be"]},{"prompt":"Я ___ (will have) проблеми.","answer":"буду мати","hints":["will have"]},{"prompt":"Вони не ___ (will love) нас.","answer":"будуть любити","hints":["will love"]},{"prompt":"Робота ___ (will be) нудна (boring).","answer":"буде","hints":["will be"]},{"prompt":"Ми ___ (will work) завжди.","answer":"будемо працювати","hints":["will work"]},{"prompt":"Ніхто не ___ (will know).","answer":"буде знати","hints":["will know"]},{"prompt":"Це ___ (will be) жахливо.","answer":"буде","hints":["will be"]},{"prompt":"Я не ___ (will sleep).","answer":"буду спати","hints":["will sleep"]},{"prompt":"Ти ___ (will cry/plakaty).","answer":"будеш плакати","hints":["will cry/plakaty"]}]}},{"id":"activity-6","type":"true-false","title":"Realistic Predictions","data":{"type":"true-false","statements":[{"statement":"Завтра буде 50 годин. (50 hours).","isTrue":false,"explanation":""},{"statement":"Взимку (In winter) буде сніг (snow).","isTrue":true,"explanation":""},{"statement":"Я буду спати вночі (at night).","isTrue":true,"explanation":""},{"statement":"Ми будемо їсти каміння (stones).","isTrue":false,"explanation":""},{"statement":"Завтра буде день.","isTrue":true,"explanation":""},{"statement":"Влітку (In summer) буде холодно.","isTrue":false,"explanation":""},{"statement":"Люди будуть жити на Марсі скоро.","isTrue":false,"explanation":""},{"statement":"Вода буде мокра (wet).","isTrue":true,"explanation":""},{"statement":"Ти будеш президентом.","isTrue":false,"explanation":""},{"statement":"Ми будемо говорити українською.","isTrue":false,"explanation":""},{"statement":"Студенти будуть вчити.","isTrue":true,"explanation":""},{"statement":"Сонце буде зелене.","isTrue":false,"explanation":""}]}},{"id":"activity-7","type":"unjumble","title":"Prediction Maker","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["буду","Я","там","."],"answer":"Я буду там."},{"words":["робити","Що","будеш","ти","?"],"answer":"Що ти будеш робити?"},{"words":["будемо","Ми","піцу","їсти","."],"answer":"Ми будемо їсти піцу."},{"words":["буде","Це","весело","."],"answer":"Це буде весело."},{"words":["Завтра","тепло","буде","."],"answer":"Завтра буде тепло."},{"words":["жити","Вони","будуть","тут","."],"answer":"Вони будуть тут жити."},{"words":["не","Я","знати","буду","."],"answer":"Я не буду знати."},{"words":["працювати","Ви","будете","?"],"answer":"Ви будете працювати?"},{"words":["буде","Вона","вдома","."],"answer":"Вона буде вдома."},{"words":["щасливі","Ми","будемо","."],"answer":"Ми будемо щасливі."},{"words":["спати","Він","буде","."],"answer":"Він буде спати."},{"words":["буде","дощ","Скоро","."],"answer":"Скоро буде дощ."}]}},{"id":"activity-8","type":"anagram","title":"Future Forms","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["б","у","д","у"],"answer":"буду","translation":"I will"},{"letters":["б","у","д","е","ш"],"answer":"будеш","translation":"You will"},{"letters":["б","у","д","е"],"answer":"буде","translation":"He will"},{"letters":["б","у","д","е","м","о"],"answer":"будемо","translation":"We will"},{"letters":["б","у","д","е","т","е"],"answer":"будете","translation":"You pl will"},{"letters":["б","у","д","у","т","ь"],"answer":"будуть","translation":"They will"},{"letters":["з","а","в","т","р","а"],"answer":"завтра","translation":"Tomorrow"},{"letters":["с","к","о","р","о"],"answer":"скоро","translation":"Soon"},{"letters":["п","о","т","і","м"],"answer":"потім","translation":"Then"},{"letters":["м","а","й","б","у","т","н","є"],"answer":"майбутнє","translation":"Future"},{"letters":["р","і","к"],"answer":"рік","translation":"Year"},{"letters":["т","и","ж","д","е","н","ь"],"answer":"тиждень","translation":"Week"}]}}];
+    const vocabData = [{"uk":"завтра","translit":"","en":"tomorrow","note":"[🔊](audio_zavtra)"},{"uk":"післязавтра","translit":"","en":"day after tomorrow","note":"[🔊](audio_pisljazavtra)"},{"uk":"скоро","translit":"","en":"soon","note":"[🔊](audio_skoro)"},{"uk":"потім","translit":"","en":"later/then","note":"[🔊](audio_potim)"},{"uk":"наступного","translit":"","en":"next (of next)","note":"[🔊](audio_nastupnoho)"},{"uk":"майбутнє","translit":"","en":"future (noun)","note":"[🔊](audio_maybutnye)"},{"uk":"буду","translit":"","en":"I will","note":"[🔊](audio_budu)"},{"uk":"будеш","translit":"","en":"you will","note":"[🔊](audio_budesh)"},{"uk":"буде","translit":"","en":"he/she will","note":"[🔊](audio_bude)"},{"uk":"будемо","translit":"","en":"we will","note":"[🔊](audio_budemo)"},{"uk":"будете","translit":"","en":"you (pl) will","note":"[🔊](audio_budete)"},{"uk":"будуть","translit":"","en":"they will","note":"[🔊](audio_budut)"},{"uk":"ввечері","translit":"","en":"in the evening","note":"[🔊](audio_vvecheri)"},{"uk":"до обіду","translit":"","en":"until lunch","note":"[🔊](audio_do_obidu)"},{"uk":"субота","translit":"","en":"Saturday","note":"[🔊](audio_subota)"},{"uk":"понеділок","translit":"","en":"Monday","note":"[🔊](audio_ponedilok)"},{"uk":"багатий","translit":"","en":"rich","note":"[🔊](audio_bahatyj)"},{"uk":"щасливий","translit":"","en":"happy","note":"[🔊](audio_shchaslyvyj)"},{"uk":"весело","translit":"","en":"fun/merrily","note":"[🔊](audio_veselo)"},{"uk":"цікаво","translit":"","en":"interesting","note":"[🔊](audio_tsikavo)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1043,6 +993,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2307,6 +2283,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

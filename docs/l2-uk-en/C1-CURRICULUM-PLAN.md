@@ -2,8 +2,8 @@
 
 **Status:** 📝 PLANNED (Upgraded to A1 Quality)
 **Modules:** 01-115 (115 modules)
-**Vocabulary Target:** ~2,800 new words (~24/module)
-**Cumulative Target:** ~9,000+ words after C1
+**Vocabulary Target:** ~2,900 new words (~25/module)
+**Cumulative Target:** ~10,550+ words after C1
 **Immersion:** 5% English / 95% Ukrainian
 
 > **Note:** Folk Culture & Arts (25 modules) moved from B2 for better vocabulary balance.

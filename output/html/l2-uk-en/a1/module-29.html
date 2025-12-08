@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Module 29: My Family | Ukrainian A1</title>
+  <title>Module 29: Prepositions III (Direction vs Location) | Ukrainian A1</title>
   <style>
 :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -478,17 +518,17 @@ footer {
     </div>
   </div>
   <nav class="nav">
-    <h1>Module 29: My Family</h1>
+    <h1>Module 29: Prepositions III (Direction vs Location)</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Fill</button>
+      <button class="nav-tab" data-section="activity-0">1. Match</button>
       <button class="nav-tab" data-section="activity-1">2. Fill</button>
-      <button class="nav-tab" data-section="activity-2">3. Order</button>
-      <button class="nav-tab" data-section="activity-3">4. Match</button>
-      <button class="nav-tab" data-section="activity-4">5. Match</button>
-      <button class="nav-tab" data-section="activity-5">6. Quiz</button>
-      <button class="nav-tab" data-section="activity-6">7. T/F</button>
-      <button class="nav-tab" data-section="activity-7">8. Sort</button>
+      <button class="nav-tab" data-section="activity-2">3. Sort</button>
+      <button class="nav-tab" data-section="activity-3">4. Quiz</button>
+      <button class="nav-tab" data-section="activity-4">5. Order</button>
+      <button class="nav-tab" data-section="activity-5">6. Order</button>
+      <button class="nav-tab" data-section="activity-6">7. Fill</button>
+      <button class="nav-tab" data-section="activity-7">8. T/F</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -497,571 +537,330 @@ footer {
     <section id="lesson" class="section active">
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.3</span>
-        <h2 style="font-size:2rem;margin:0.5rem 0">My Family</h2>
-        <p style="color:var(--text-muted)">Моя родина — Family Members and Relationships</p>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Prepositions III (Direction vs Location)</h2>
+        <p style="color:var(--text-muted)">Moving and Staying</p>
       </div>
       
     <div class="card section-intro">
       <h3>📖 Introduction</h3>
       <div class="md-content"><h2 id="warmup">warm-up</h2>
-<h3 id="whosinyourfamily">Who's in Your Family?</h3>
-<p>Family is at the heart of Ukrainian culture! In this module, you'll learn to talk about parents, siblings, grandparents, and more.</p>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>Ukrainian has both formal and informal words for parents: батько/мати (formal) and тато/мама (informal, like dad/mom). Knowing both helps you adapt to any conversation!</p>
-</blockquote>
+<p><strong>The Box Paradox</strong></p>
+<p>Imagine a box.</p>
+<ol>
+<li>You are inside the box. (Location).</li>
+<li>You walk into the box. (Motion).</li>
+<li>You walk out of the box. (Origin).</li>
+</ol>
+<p>In English, "In" usually works for both 1 and 2. "I am in the park", "I go in the park".<br />
+In Ukrainian, GRAMMAR changes.</p>
+<ul>
+<li><strong>Where? (De?)</strong> -&gt; Uses Locative Case. "Я в парку."</li>
+<li><strong>Where to? (Kudy?)</strong> -&gt; Uses Accusative Case. "Я йду в парк."</li>
+<li><strong>From where? (Zvidky?)</strong> -&gt; Uses Genitive Case. "Я з парку."</li>
+</ul>
+<p>This module is the Grand Unification of Prepositions.</p>
 <h2 id="presentation">presentation</h2>
-<h3 id="immediatefamilyparents">Immediate Family: Parents</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>IPA</th>
-<th>English</th>
-<th>Informal</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>батько</td>
-<td>ˈbɑtʲkɔ</td>
-<td>father</td>
-<td>тато</td>
-</tr>
-<tr>
-<td>мати</td>
-<td>ˈmɑtɪ</td>
-<td>mother</td>
-<td>мама</td>
-</tr>
-<tr>
-<td>батьки</td>
-<td>bɑtʲˈkɪ</td>
-<td>parents</td>
-<td>—</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Examples:</strong></p>
+<h3 id="section1thegoldenquestions">Section 1: The Golden Questions</h3>
+<p>Everything depends on the verb.</p>
 <ul>
-<li>Мій батько працює в банку. (My father works at a bank.)</li>
-<li>Моя мама — лікар. (My mother is a doctor.)</li>
-<li>Мої батьки живуть у Львові. (My parents live in Lviv.)</li>
+<li><strong>Buty / Zhyty / Spaty</strong> (To be / live / sleep) -&gt; Ask <strong>DE?</strong> (Where?).</li>
+<li><strong>Yty / Yikhaty</strong> (To go) -&gt; Ask <strong>KUDY?</strong> (Where to?).</li>
+<li><strong>Pryikhaly</strong> (Arrived) -&gt; Ask <strong>ZVIDKY?</strong> (From where?).</li>
 </ul>
 <blockquote>
-  <p>🔍 <strong>Myth Buster</strong></p>
-  <p><strong>Myth:</strong> "Батьки" can mean just one parent.<br />
-  <strong>Fact:</strong> "Батьки" is always plural (parents). For "a parent," use "один з батьків" (one of the parents).</p>
+  <p>💡 <strong>Pro Tip: The Verb Decides</strong></p>
+  <ul>
+  <li>Verbs of <strong>Stasis</strong> (Standing still) -&gt; Locative.</li>
+  <li>Verbs of <strong>Motion</strong> (Moving towards) -&gt; Accusative.</li>
+  </ul>
 </blockquote>
-<h3 id="immediatefamilysiblings">Immediate Family: Siblings</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>IPA</th>
-<th>English</th>
-<th>Gender</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>брат</td>
-<td>brɑt</td>
-<td>brother</td>
-<td>m</td>
-</tr>
-<tr>
-<td>сестра</td>
-<td>sɛsˈtrɑ</td>
-<td>sister</td>
-<td>f</td>
-</tr>
-<tr>
-<td>брати</td>
-<td>brɑˈtɪ</td>
-<td>brothers</td>
-<td>pl</td>
-</tr>
-<tr>
-<td>сестри</td>
-<td>ˈsɛstrɪ</td>
-<td>sisters</td>
-<td>pl</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Examples:</strong></p>
+<h3 id="section2vuininto">Section 2: V / U (In/Into)</h3>
+<p><strong>Location (De? + Locative):</strong></p>
 <ul>
-<li>У мене є брат. (I have a brother.)</li>
-<li>У мене є сестра. (I have a sister.)</li>
-<li>У мене два брати і одна сестра. (I have two brothers and one sister.)</li>
+<li>Я живу <strong>в Києві</strong>. (I live in Kyiv).</li>
+<li>Я сплю <strong>у готелі</strong>. (I sleep in a hotel).<br />
+<em>Ending: -i / -u</em>.</li>
 </ul>
-<h3 id="immediatefamilychildren">Immediate Family: Children</h3>
+<p><strong>Motion (Kudy? + Accusative):</strong></p>
+<ul>
+<li>Я їду <strong>в Київ</strong>. (I go to Kyiv).</li>
+<li>Я йду <strong>в готель</strong>. (I go to the hotel).<br />
+<em>Ending: No change for inanimate masculine!</em><br />
+<em>Note: Feminine changes: "Я їду в Україну".</em></li>
+</ul>
+<h3 id="section3naononto">Section 3: Na (On/Onto)</h3>
+<p><strong>Location (De? + Locative):</strong></p>
+<ul>
+<li>Я <strong>на роботі</strong>. (I am at work).</li>
+<li>Я <strong>на Хрещатику</strong>. (I am on Khreshchatyk).</li>
+</ul>
+<p><strong>Motion (Kudy? + Accusative):</strong></p>
+<ul>
+<li>Я йду <strong>на роботу</strong>. (I go to work).</li>
+<li>Я йду <strong>на Хрещатик</strong>. (I go to Khreshchatyk).</li>
+</ul>
+<blockquote>
+  <p>🏫 <strong>Culture Corner: Na vs V?</strong><br />
+  Why "Na Roboti"? Why "V Ofisi"?</p>
+  <ul>
+  <li><strong>V</strong> is for enclosed spaces / cities / countries.</li>
+  <li><strong>Na</strong> is for surfaces / events / open spaces.</li>
+  <li><strong>Exception:</strong> Ukraine used to take "Na" in Russian imperial times ("On the borderlands").</li>
+  <li><strong>Rule:</strong> Always say <strong>В Україні</strong> (In Ukraine). It is an independent state, not a territory. "Na Ukraini" is considered archaic and rude effectively.</li>
+  </ul>
+</blockquote>
+<h3 id="section4dototowardsapersonplace">Section 4: Do (To - Towards a person/place)</h3>
+<p>Sometimes we don't enter "Into". We just go "To".<br />
+Uses <strong>Genitive</strong>.</p>
+<ul>
+<li><strong>До</strong> (To / Towards).</li>
+<li>Я йду <strong>додому</strong>. (I go home).</li>
+<li>Я йду <strong>до мами</strong>. (I go to mom).</li>
+<li>Я йду <strong>до лікаря</strong>. (I go to the doctor).<br />
+<em>You cannot go "V Likarya" (Inside the doctor). That would be surgery.</em><br />
+<em>So for people, always use DO.</em></li>
+</ul>
+<h3 id="section5zvidfrom">Section 5: Z / Vid (From)</h3>
+<p><strong>From a Place (Z + Genitive):</strong></p>
+<ul>
+<li>Я <strong>з України</strong>. (I am from Ukraine).</li>
+<li>Я йду <strong>з роботи</strong>. (I go from work).</li>
+<li>Я їду <strong>з Києва</strong>. (I go from Kyiv).</li>
+</ul>
+<p><strong>From a Person (Vid + Genitive):</strong></p>
+<ul>
+<li>Я йду <strong>від лікаря</strong>. (I go from the doctor).</li>
+<li>Це подарунок <strong>від мами</strong>. (This is a gift from mom).</li>
+</ul>
+<h3 id="section6summarytable">Section 6: Summary Table</h3>
 <table>
 <thead>
 <tr>
-<th>Ukrainian</th>
-<th>IPA</th>
-<th>English</th>
-<th>Gender</th>
+<th>Question</th>
+<th>Logic</th>
+<th>Case</th>
+<th>Preposition</th>
+<th>Example</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>син</td>
-<td>sɪn</td>
-<td>son</td>
-<td>m</td>
+<td><strong>De?</strong></td>
+<td>Location</td>
+<td>Locative</td>
+<td>V / Na</td>
+<td>В парку</td>
 </tr>
 <tr>
-<td>дочка</td>
-<td>ˈdɔt͡ʃkɐ</td>
-<td>daughter</td>
-<td>f</td>
+<td><strong>Kudy?</strong></td>
+<td>Motion</td>
+<td>Accusative</td>
+<td>V / Na</td>
+<td>В парк</td>
 </tr>
 <tr>
-<td>дитина</td>
-<td>dɪˈtɪnɐ</td>
-<td>child</td>
-<td>f</td>
+<td><strong>Kudy? (People)</strong></td>
+<td>Motion</td>
+<td>Genitive</td>
+<td>Do</td>
+<td>До мами</td>
 </tr>
 <tr>
-<td>діти</td>
-<td>ˈditɪ</td>
-<td>children</td>
-<td>pl</td>
+<td><strong>Zvidky?</strong></td>
+<td>Origin</td>
+<td>Genitive</td>
+<td>Z / Vid</td>
+<td>З парку</td>
 </tr>
 </tbody>
 </table>
 <blockquote>
-  <p>🎬 <strong>Pop Culture Moment: The Godfather</strong></p>
-  <p>"Він мій хрещений батько" (He is my godfather). Ukrainian also has хрещена мати (godmother), хрещеник (godson), and хрещениця (goddaughter)!</p>
+  <p>🕵️ <strong>Deep Dive: The House (Dim)</strong></p>
+  <ul>
+  <li><strong>Вдома</strong> (At home - Locative-ish Adverb).</li>
+  <li><strong>Додому</strong> (To home - Direction Adverb).</li>
+  <li><strong>З дому</strong> (From home - Genitive).<br />
+  Memorize these three as fixed phrases.</li>
+  </ul>
 </blockquote>
-<h3 id="extendedfamilygrandparents">Extended Family: Grandparents</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>IPA</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>дідусь</td>
-<td>ˈdidusʲ</td>
-<td>grandfather</td>
-</tr>
-<tr>
-<td>бабуся</td>
-<td>bɐˈbusʲɐ</td>
-<td>grandmother</td>
-</tr>
-<tr>
-<td>дідусь і бабуся</td>
-<td>—</td>
-<td>grandparents</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Also:</strong></p>
+<h3 id="section7interrogativewords">Section 7: Interrogative Words</h3>
 <ul>
-<li>прадід (great-grandfather)</li>
-<li>прабабуся (great-grandmother)</li>
+<li><strong>Де ти?</strong> (Where are you?)</li>
+<li><strong>Куди ти йдеш?</strong> (Where are you going?)</li>
+<li><strong>Звідки ти?</strong> (Where are you from?)</li>
 </ul>
+<p><em>Mistake:</em> "Де ти йдеш?" (Where are you walking? - Meaning: In what location are you performing the act of walking?).<br />
+<em>Correct:</em> "Куди ти йдеш?" (What is your destination?).</p>
+<h3 id="section8thetouristtrapcitiesasobjects">Section 8: The Tourist Trap (Cities as Objects)</h3>
+<p>Remember "Location" vs "Motion" with cities?</p>
+<ol>
+<li><strong>Я в Києві</strong> (Locative).</li>
+<li><strong>Я їду в Київ</strong> (Accusative).<br />
+<em>Wait, why "Kyiv" and not "Kyiva"?</em><br />
+<em>Because Inanimate Masculine Nouns DO NOT change in Accusative.</em><br />
+<em>This is a gift from the gods.</em><br />
+<em>London -> London. New York -> New York.</em><br />
+<em>BUT Feminine cities change:</em><br />
+<em>Poltava -> Poltavu. Odesa -> Odesu.</em></li>
+</ol>
 <blockquote>
-  <p>🌍 <strong>Real World</strong></p>
-  <p>Ukrainian grandparents often live with or near their families and play a huge role in raising children. "Бабуся" is often the family's best cook!</p>
+  <p>🧭 <strong>Deep Dive: Prepositions are Maps</strong></p>
+  <ul>
+  <li><strong>V</strong> = Container. (In).</li>
+  <li><strong>Na</strong> = Surface. (On).</li>
+  <li><strong>Do</strong> = Approach. (To).</li>
+  <li><strong>Z</strong> = Exit Container. (From inside).</li>
+  <li><strong>Vid</strong> = Retreat. (From near).</li>
+  <li><strong>Z-pid</strong> = From under. (Yes, really).</li>
+  <li><strong>Cherez</strong> = Through/Across.</li>
+  </ul>
 </blockquote>
-<h3 id="extendedfamilygrandchildren">Extended Family: Grandchildren</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>IPA</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>онук</td>
-<td>ɔˈnuk</td>
-<td>grandson</td>
-</tr>
-<tr>
-<td>онучка</td>
-<td>ɔˈnut͡ʃkɐ</td>
-<td>granddaughter</td>
-</tr>
-<tr>
-<td>онуки</td>
-<td>ɔˈnukɪ</td>
-<td>grandchildren</td>
-</tr>
-</tbody>
-</table>
-<h3 id="extendedfamilyauntsanduncles">Extended Family: Aunts and Uncles</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>IPA</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>дядько</td>
-<td>ˈdʲɐdʲkɔ</td>
-<td>uncle</td>
-</tr>
-<tr>
-<td>тітка</td>
-<td>ˈtitkɐ</td>
-<td>aunt</td>
-</tr>
-</tbody>
-</table>
-<h3 id="cousins">Cousins</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>двоюрідний брат</td>
-<td>male cousin (lit. "second-degree brother")</td>
-</tr>
-<tr>
-<td>двоюрідна сестра</td>
-<td>female cousin (lit. "second-degree sister")</td>
-</tr>
-</tbody>
-</table>
+<h3 id="section9throughcherez">Section 9: Through (Cherez)</h3>
+<p>If you go <em>through</em> a park, use <strong>Через</strong> + Accusative.<br />
+"Я йду через парк." (I walk through the park).<br />
+"Я їду через центр." (I drive through the center).</p>
 <blockquote>
-  <p>⚡ <strong>Pro Tip</strong></p>
-  <p>Ukrainian doesn't have a single word for "cousin" — you specify if they're a cousin-brother or cousin-sister. It's more precise!</p>
+  <p>🔄 <strong>Deep Dive: The Prepositional Dance</strong><br />
+  Prepositions are like dance moves.</p>
+  <ul>
+  <li><strong>V (In)</strong> is an embrace. You are inside.</li>
+  <li><strong>Na (On)</strong> is a handshake. You are on the surface or at an event.</li>
+  <li><strong>Do (To)</strong> is a bow. You approach a person but respect their personal space (you don't go inside them).</li>
+  <li><strong>Z (From)</strong> is leaving a building.</li>
+  <li><strong>Vid (From)</strong> is walking away from a person after the bow.</li>
+  <li><strong>Cherez (Through)</strong> is cutting across the dance floor.</li>
+  </ul>
 </blockquote>
-<h3 id="maritalrelationships">Marital Relationships</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>IPA</th>
-<th>English</th>
-<th>Gender</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>чоловік</td>
-<td>t͡ʃɔlɔˈwik</td>
-<td>husband</td>
-<td>m</td>
-</tr>
-<tr>
-<td>дружина</td>
-<td>druˈʒɪnɐ</td>
-<td>wife</td>
-<td>f</td>
-</tr>
-<tr>
-<td>наречений</td>
-<td>nɐrɛˈt͡ʃɛnɪj</td>
-<td>fiancé</td>
-<td>m</td>
-</tr>
-<tr>
-<td>наречена</td>
-<td>nɐrɛˈt͡ʃɛnɐ</td>
-<td>fiancée</td>
-<td>f</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Dating relationships:</strong></p>
+<h3 id="section10theueuphony">Section 10: The "U" Euphony</h3>
+<p>Ukrainian hates consonant clusters.</p>
 <ul>
-<li>хлопець (boyfriend)</li>
-<li>дівчина (girlfriend)</li>
+<li><strong>V</strong> becomes <strong>U</strong> if the next word starts with a consonant.</li>
+<li>"Я <strong>в</strong> парку" (Okay).</li>
+<li>"Я <strong>у</strong> Львові" (Better than "V Lvovi").</li>
+<li>"Він <strong>у</strong> школі" (He is in school).</li>
+<li>Meaning is identical. Usage depends on flow.</li>
+<li>"U" is melodic. "V" is sharp.</li>
 </ul>
-<blockquote>
-  <p>🎯 <strong>Fun Fact</strong></p>
-  <p>"Чоловік" means both "husband" and "man"! Context tells you which. "Мій чоловік" = my husband, "Цей чоловік" = this man.</p>
-</blockquote>
-<h3 id="maritalstatus">Marital Status</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>одружений</td>
-<td>married (m)</td>
-</tr>
-<tr>
-<td>одружена</td>
-<td>married (f)</td>
-</tr>
-<tr>
-<td>неодружений</td>
-<td>unmarried (m)</td>
-</tr>
-<tr>
-<td>неодружена</td>
-<td>unmarried (f)</td>
-</tr>
-<tr>
-<td>розлучений</td>
-<td>divorced (m)</td>
-</tr>
-<tr>
-<td>розлучена</td>
-<td>divorced (f)</td>
-</tr>
-<tr>
-<td>вдівець</td>
-<td>widower</td>
-</tr>
-<tr>
-<td>вдова</td>
-<td>widow</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Examples:</strong></p>
-<ul>
-<li>Я одружений. (I'm married. — male)</li>
-<li>Вона неодружена. (She's unmarried.)</li>
-<li>Він розлучений. (He's divorced.)</li>
-</ul>
-<h3 id="describingfamilyrelationships">Describing Family Relationships</h3>
-<p><strong>"У мене є…"</strong> (I have…)</p>
-<ul>
-<li>У мене є брат. (I have a brother.)</li>
-<li>У мене є два брати. (I have two brothers.)</li>
-<li>У мене немає сестри. (I don't have a sister.)</li>
-</ul>
-<p><strong>"Мого/Мою звати…"</strong> (My … is called…)</p>
-<ul>
-<li>Мого батька звати Іван. (My father's name is Ivan.)</li>
-<li>Мою маму звати Оксана. (My mother's name is Oksana.)</li>
-</ul>
-<p><strong>Age expressions:</strong></p>
-<ul>
-<li>Моїй сестрі двадцять років. (My sister is 20 years old.)</li>
-<li>Моєму братові тридцять років. (My brother is 30 years old.)</li>
-</ul>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>To say someone's age in Ukrainian, you use dative case + рік/роки/років! But at A1, just learn the patterns: "Йому/Їй X років" (He/She is X years old).</p>
-</blockquote>
-<h3 id="birthorderandage">Birth Order and Age</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>старший</td>
-<td>older (m)</td>
-</tr>
-<tr>
-<td>старша</td>
-<td>older (f)</td>
-</tr>
-<tr>
-<td>молодший</td>
-<td>younger (m)</td>
-</tr>
-<tr>
-<td>молодша</td>
-<td>younger (f)</td>
-</tr>
-<tr>
-<td>середній</td>
-<td>middle (m)</td>
-</tr>
-<tr>
-<td>середня</td>
-<td>middle (f)</td>
-</tr>
-<tr>
-<td>єдиний</td>
-<td>only (m)</td>
-</tr>
-<tr>
-<td>єдина</td>
-<td>only (f)</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Examples:</strong></p>
-<ul>
-<li>Це мій старший брат. (This is my older brother.)</li>
-<li>Вона моя молодша сестра. (She is my younger sister.)</li>
-<li>Я єдина дитина. (I'm an only child. — female)</li>
-</ul>
-<blockquote>
-  <p>🎮 <strong>Gamer's Corner</strong></p>
-  <p>In The Witcher, Geralt has a complex found family: "Цірі — як моя дочка" (Ciri is like my daughter), "Весемір — як мій батько" (Vesemir is like my father). Family isn't always blood!</p>
-</blockquote>
-<h3 id="thecompletefamilytree">The Complete Family Tree</h3>
-<pre><code>прадід + прабабуся
-        |
-    дідусь + бабуся     дідусь + бабуся
-           |                   |
-    дядько/тітка      батько + мати     дядько/тітка
-                            |
-              двоюрідні     брат/сестра    двоюрідні
-                                |
-                          син/дочка
-                                |
-                          онук/онучка
-</code></pre>
 <h2 id="practice">practice</h2>
-<h3 id="exercise1myfamily">Exercise 1: My Family</h3>
-<p>Answer about your family:</p>
-<ol>
-<li>У вас є брат або сестра?</li>
-<li>Як звати ваших батьків?</li>
-<li>Ви одружений/одружена?</li>
-<li>Скільки років вашим батькам?</li>
-</ol>
-<h3 id="exercise2whoiswho">Exercise 2: Who Is Who?</h3>
-<p>Identify relationships:</p>
-<ol>
-<li>Батько мого батька — мій ___ (дідусь)</li>
-<li>Сестра моєї мами — моя ___ (тітка)</li>
-<li>Син мого брата — мій ___ (племінник)</li>
-<li>Дочка моєї сестри — моя ___ (племінниця)</li>
-</ol>
-<h3 id="exercise3familydescription">Exercise 3: Family Description</h3>
-<p>Describe your family using at least 6 family terms.</p>
-<h2 id="production">production</h2>
-<h3 id="taskmyfamilytree">Task: My Family Tree</h3>
-<p>Draw and describe your family tree:</p>
+<p><strong>Drill 1: Logic Check (De vs Kudy)</strong></p>
 <ul>
-<li>Name at least 8 family members</li>
-<li>Include their relationships to you</li>
-<li>Mention ages if you know them</li>
-<li>Describe if they're older/younger</li>
+<li>(I am sleeping) -&gt; Де?</li>
+<li>(I am walking) -&gt; Куди?</li>
+<li>(I am driving) -&gt; Куди?</li>
+<li>(I am eating) -&gt; Де?</li>
 </ul>
-<hr />
-<hr />
+<p><strong>Drill 2: Preposition Choice</strong></p>
+<ul>
+<li>(To Kyiv) -&gt; В Київ.</li>
+<li>(In Kyiv) -&gt; В Києві.</li>
+<li>(To Mom) -&gt; До мами.</li>
+<li>(From Mom) -&gt; Від мами.</li>
+<li>(From Kyiv) -&gt; З Києва.</li>
+</ul>
+<p><strong>Drill 3: Home</strong></p>
+<ul>
+<li>(I am home) -&gt; Я вдома.</li>
+<li>(I go home) -&gt; Я йду додому.</li>
+<li>(I go from home) -&gt; Я йду з дому.</li>
+</ul>
+<h2 id="production">production</h2>
+<p><strong>Scenario: The Taxi Ride</strong></p>
+<ul>
+<li><strong>Driver:</strong> Куди їдемо?</li>
+<li><strong>You:</strong> Я їду <strong>в готель</strong> "Дніпро".</li>
+<li><strong>Driver:</strong> Де це?</li>
+<li><strong>You:</strong> Це <strong>на Хрещатику</strong>.</li>
+<li><strong>Driver:</strong> А звідки ви їдете?</li>
+<li><strong>You:</strong> Я їду <strong>з аеропорту</strong>.</li>
+</ul>
+<p><strong>Scenario: The Lost Tourist</strong></p>
+<ul>
+<li><strong>Tourist:</strong> Перепрошую, де метро?</li>
+<li><strong>Local:</strong> Метро там. Куди вам треба?</li>
+<li><strong>Tourist:</strong> Мені треба <strong>на вокзал</strong> (train station).</li>
+<li><strong>Local:</strong> Ідіть прямо, потім у метро.</li>
+<li><strong>Tourist:</strong> Дякую. Я <strong>з Лондона</strong>, я не знаю місто.</li>
+</ul>
+<blockquote>
+  <p>🚌 <strong>Culture Corner: The Marshrutka Stop</strong><br />
+  In a marshrutka, you must yell your destination to stop.<br />
+  Usually: "<strong>На зупинці!</strong>" (At the stop!).<br />
+  Or be specific: "<strong>На пошті!</strong>" (At the post office!).<br />
+  Uses Locative (Stop at X).</p>
+</blockquote>
 <hr /></div>
     </div>
   
       
-    <div class="card section-summary">
-      <h3>📋 Summary</h3>
-      <div class="md-content"><blockquote>
-  <p><strong>Congratulations!</strong></p>
-  <p>You can now talk about your family in Ukrainian:</p>
-  <ul>
-  <li><strong>Parents</strong>: батько/тато, мати/мама, батьки</li>
-  <li><strong>Siblings</strong>: брат, сестра</li>
-  <li><strong>Grandparents</strong>: дідусь, бабуся</li>
-  <li><strong>Extended family</strong>: дядько, тітка, двоюрідний брат/сестра</li>
-  <li><strong>Marital status</strong>: одружений, неодружений, розлучений</li>
-  </ul>
-  <p><strong>Key Patterns:</strong></p>
-  <ul>
-  <li>У мене є + nominative (I have…)</li>
-  <li>У мене немає + genitive (I don't have…)</li>
-  <li>Мого/Мою … звати … (My … is called …)</li>
-  </ul>
-  <p><strong>Coming Next: Module 30 — A1 Capstone</strong></p>
-  <p>In the final A1 module, you'll review everything:</p>
-  <ul>
-  <li>All three cases (Accusative, Locative, Genitive)</li>
-  <li>Past and future tense</li>
-  <li>All vocabulary domains</li>
-  <li>Comprehensive self-assessment</li>
-  </ul>
-</blockquote></div>
-    </div>
-  
       <div class="btn-group">
         <button class="btn btn-primary" onclick="showSection('activity-0')">Activities →</button>
       </div>
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Family Members</h3>
+    <section id="activity-0" class="section"><div class="card"><h3>Question Match</h3>
       <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container" class="fill-container"></div>
-      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+      <div class="match-container" id="activity-0-container"><svg class="match-lines" id="activity-0-lines"></svg>
+        <div class="match-column" id="activity-0-left"></div>
+        <div class="match-column" id="activity-0-right"></div>
+      </div>
+      <div class="completion-message" id="activity-0-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Family Sentences</h3>
+    <section id="activity-1" class="section"><div class="card"><h3>Preposition Master</h3>
       <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
       <div id="activity-1-container" class="fill-container"></div>
       <div class="completion-message" id="activity-1-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Family Sentences</h3>
+    <section id="activity-2" class="section"><div class="card"><h3>Motion vs Location</h3>
       <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
-      <div id="activity-2-container" class="order-container"></div>
-      <div class="completion-message" id="activity-2-complete"><h3>Perfect Order!</h3></div>
+      <div class="sort-pool" id="activity-2-pool"><div class="sort-items" id="activity-2-items"></div></div>
+      <div class="sort-groups" id="activity-2-groups"></div>
+      <div class="completion-message" id="activity-2-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Family Members</h3>
+    <section id="activity-3" class="section"><div class="card"><h3>Logic Whiz</h3>
       <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-3-container"><svg class="match-lines" id="activity-3-lines"></svg>
-        <div class="match-column" id="activity-3-left"></div>
-        <div class="match-column" id="activity-3-right"></div>
-      </div>
-      <div class="completion-message" id="activity-3-complete"><h3>Perfect!</h3></div>
+      <div id="activity-3-container"></div>
+      <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Family Relationships</h3>
+    <section id="activity-4" class="section"><div class="card"><h3>Scramble Sentences</h3>
       <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-4-container"><svg class="match-lines" id="activity-4-lines"></svg>
-        <div class="match-column" id="activity-4-left"></div>
-        <div class="match-column" id="activity-4-right"></div>
-      </div>
-      <div class="completion-message" id="activity-4-complete"><h3>Perfect!</h3></div>
+      <div id="activity-4-container" class="order-container"></div>
+      <div class="completion-message" id="activity-4-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Family Knowledge</h3>
+    <section id="activity-5" class="section"><div class="card"><h3>Story Reorder (Travel)</h3>
       <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
-      <div id="activity-5-container"></div>
-      <div class="completion-message" id="activity-5-complete"><h3>Complete!</h3></div>
+      <div id="activity-5-container" class="order-container"></div>
+      <div class="completion-message" id="activity-5-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Family Facts</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>My Logic</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
-      <div id="activity-6-container"></div>
+      <div id="activity-6-container" class="fill-container"></div>
       <div class="completion-message" id="activity-6-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
     </div></section>
 
-    <section id="activity-7" class="section"><div class="card"><h3>Family Categories</h3>
-      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/18</span></div>
-      <div class="sort-pool" id="activity-7-pool"><div class="sort-items" id="activity-7-items"></div></div>
-      <div class="sort-groups" id="activity-7-groups"></div>
-      <div class="completion-message" id="activity-7-complete"><h3>All Sorted!</h3></div>
+    <section id="activity-7" class="section"><div class="card"><h3>Grammar Rules</h3>
+      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/4</span></div>
+      <div id="activity-7-container"></div>
+      <div class="completion-message" id="activity-7-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
-        <h3>Словник (35)</h3>
+        <h3>Словник (25)</h3>
         <div class="vocab-table-container">
           <table class="vocab-table">
             <thead><tr>
@@ -1071,7 +870,7 @@ footer {
     <th>Переклад</th>
     <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">сім&#039;я</td><td class="vocab-ipa">ˈsimjɐ</td><td class="vocab-en">family</td><td class="vocab-note">Also: родина</td></tr><tr><td class="vocab-uk">родина</td><td class="vocab-ipa">rɔˈdɪnɐ</td><td class="vocab-en">family</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">батьки</td><td class="vocab-ipa">bɑtʲˈkɪ</td><td class="vocab-en">parents</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">батько</td><td class="vocab-ipa">ˈbɑtʲkɔ</td><td class="vocab-en">father</td><td class="vocab-note">Formal</td></tr><tr><td class="vocab-uk">тато</td><td class="vocab-ipa">ˈtɑtɔ</td><td class="vocab-en">dad</td><td class="vocab-note">Informal</td></tr><tr><td class="vocab-uk">мати</td><td class="vocab-ipa">ˈmɑtɪ</td><td class="vocab-en">mother</td><td class="vocab-note">Formal</td></tr><tr><td class="vocab-uk">мама</td><td class="vocab-ipa">ˈmɑmɐ</td><td class="vocab-en">mom</td><td class="vocab-note">Informal</td></tr><tr><td class="vocab-uk">брат</td><td class="vocab-ipa">brɑt</td><td class="vocab-en">brother</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">сестра</td><td class="vocab-ipa">sɛsˈtrɑ</td><td class="vocab-en">sister</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">дідусь</td><td class="vocab-ipa">ˈdidusʲ</td><td class="vocab-en">grandfather</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">бабуся</td><td class="vocab-ipa">bɐˈbusʲɐ</td><td class="vocab-en">grandmother</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">онук</td><td class="vocab-ipa">ɔˈnuk</td><td class="vocab-en">grandson</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">онучка</td><td class="vocab-ipa">ɔˈnut͡ʃkɐ</td><td class="vocab-en">granddaughter</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">дядько</td><td class="vocab-ipa">ˈdʲɐdʲkɔ</td><td class="vocab-en">uncle</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">тітка</td><td class="vocab-ipa">ˈtitkɐ</td><td class="vocab-en">aunt</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">двоюрідний брат</td><td class="vocab-ipa">dwɔˈjuridnɪj brɑt</td><td class="vocab-en">male cousin</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">двоюрідна сестра</td><td class="vocab-ipa">dwɔˈjuridnɐ sɛsˈtrɑ</td><td class="vocab-en">female cousin</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">син</td><td class="vocab-ipa">sɪn</td><td class="vocab-en">son</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">дочка</td><td class="vocab-ipa">ˈdɔt͡ʃkɐ</td><td class="vocab-en">daughter</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">чоловік</td><td class="vocab-ipa">t͡ʃɔlɔˈwik</td><td class="vocab-en">husband, man</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">дружина</td><td class="vocab-ipa">druˈʒɪnɐ</td><td class="vocab-en">wife</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">хлопець</td><td class="vocab-ipa">ˈxlɔpɛt͡sʲ</td><td class="vocab-en">boyfriend</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">дівчина</td><td class="vocab-ipa">ˈdiwt͡ʃɪnɐ</td><td class="vocab-en">girlfriend</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">наречений</td><td class="vocab-ipa">nɐrɛˈt͡ʃɛnɪj</td><td class="vocab-en">fiancé</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">наречена</td><td class="vocab-ipa">nɐrɛˈt͡ʃɛnɐ</td><td class="vocab-en">fiancée</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">старший</td><td class="vocab-ipa">ˈstɑrʃɪj</td><td class="vocab-en">older</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">молодший</td><td class="vocab-ipa">mɔˈlɔdʃɪj</td><td class="vocab-en">younger</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">середній</td><td class="vocab-ipa">sɛˈrɛdnʲij</td><td class="vocab-en">middle</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">єдиний</td><td class="vocab-ipa">jɛˈdɪnɪj</td><td class="vocab-en">only</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">одружений</td><td class="vocab-ipa">ɔˈdruʒɛnɪj</td><td class="vocab-en">married (m)</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">неодружений</td><td class="vocab-ipa">nɛɔˈdruʒɛnɪj</td><td class="vocab-en">unmarried (m)</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">розлучений</td><td class="vocab-ipa">rɔzˈlut͡ʃɛnɪj</td><td class="vocab-en">divorced (m)</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">вдівець</td><td class="vocab-ipa">wdɔˈwɛt͡sʲ</td><td class="vocab-en">widower</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">вдова</td><td class="vocab-ipa">wdɔˈwɑ</td><td class="vocab-en">widow</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">дитина</td><td class="vocab-ipa">dɪˈtɪnɐ</td><td class="vocab-en">child</td><td class="vocab-note"></td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">де</td><td class="vocab-ipa">/dɛ/</td><td class="vocab-en">where (loc)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('де')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">куди</td><td class="vocab-ipa">/kuˈdɪ/</td><td class="vocab-en">where to</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('куди')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">звідки</td><td class="vocab-ipa">/ˈzvidkɪ/</td><td class="vocab-en">where from</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('звідки')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">тут</td><td class="vocab-ipa">/tut/</td><td class="vocab-en">here</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('тут')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">там</td><td class="vocab-ipa">/tɑm/</td><td class="vocab-en">there</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('там')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вдома</td><td class="vocab-ipa">/ˈvdɔmɑ/</td><td class="vocab-en">at home</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вдома')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">додому</td><td class="vocab-ipa">/dɔˈdɔmu/</td><td class="vocab-en">homeward</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('додому')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">з</td><td class="vocab-ipa">/z/</td><td class="vocab-en">from (place)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('з')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">від</td><td class="vocab-ipa">/vid/</td><td class="vocab-en">from (person)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('від')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">до</td><td class="vocab-ipa">/dɔ/</td><td class="vocab-en">to (person)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('до')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">в</td><td class="vocab-ipa">/v/</td><td class="vocab-en">in/to</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('в')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">на</td><td class="vocab-ipa">/nɑ/</td><td class="vocab-en">on/to</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('на')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">місто</td><td class="vocab-ipa">/ˈmistɔ/</td><td class="vocab-en">city</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('місто')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">країна</td><td class="vocab-ipa">/krɑˈjinɑ/</td><td class="vocab-en">country</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('країна')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вулиця</td><td class="vocab-ipa">/ˈvulɪt͡sʲɑ/</td><td class="vocab-en">street</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вулиця')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">площа</td><td class="vocab-ipa">/ˈplɔʃtʃɑ/</td><td class="vocab-en">square</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('площа')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">магазин</td><td class="vocab-ipa">/mɑɦɑˈzɪn/</td><td class="vocab-en">shop</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('магазин')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">робота</td><td class="vocab-ipa">/rɔˈbɔtɑ/</td><td class="vocab-en">work</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('робота')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">школа</td><td class="vocab-ipa">/ˈʃkɔlɑ/</td><td class="vocab-en">school</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('школа')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">парк</td><td class="vocab-ipa">/pɑrk/</td><td class="vocab-en">park</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('парк')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">ресторан</td><td class="vocab-ipa">/rɛstɔˈrɑn/</td><td class="vocab-en">restaurant</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('ресторан')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">лікар</td><td class="vocab-ipa">/ˈlikɑr/</td><td class="vocab-en">doctor</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('лікар')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">зупинка</td><td class="vocab-ipa">/zuˈpɪnkɑ/</td><td class="vocab-en">stop (bus)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('зупинка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">театр</td><td class="vocab-ipa">/tɛˈɑtr/</td><td class="vocab-en">theater</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('театр')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вокзал</td><td class="vocab-ipa">/vɔkˈzɑl/</td><td class="vocab-en">station</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вокзал')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1083,8 +882,8 @@ footer {
   </main><footer>Module 29 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"fill-blank","title":"Family Members","data":{"type":"fill-blank","items":[{"prompt":"Батько моєї мами — мій ___.","answer":"дідусь","options":["дідусь","дядько","брат","син"]},{"prompt":"Мати мого батька — моя ___.","answer":"бабуся","options":["бабуся","тітка","сестра","дочка"]},{"prompt":"Брат моєї мами — мій ___.","answer":"дядько","options":["дядько","дідусь","брат","батько"]},{"prompt":"Син мого батька — мій ___.","answer":"брат","options":["брат","дядько","онук","син"]},{"prompt":"Дочка моєї сестри — моя ___.","answer":"племінниця","options":["племінниця","онучка","сестра","дочка"]},{"prompt":"Мій ___ — чоловік моєї сестри.","answer":"зять","options":["зять","брат","дядько","син"]},{"prompt":"Моя ___ — дружина мого брата.","answer":"невістка","options":["невістка","сестра","тітка","дочка"]},{"prompt":"___ і мама — це мої батьки.","answer":"Тато","options":["Тато","Брат","Дідусь","Дядько"]},{"prompt":"Син мого сина — мій ___.","answer":"онук","options":["онук","брат","племінник","син"]},{"prompt":"Сестра мого батька — моя ___.","answer":"тітка","options":["тітка","бабуся","сестра","мати"]},{"prompt":"Дочка моїх батьків — моя ___.","answer":"сестра","options":["сестра","дочка","племінниця","тітка"]},{"prompt":"Батьки моїх батьків — мої ___.","answer":"дідусі й бабусі","options":["дідусі й бабусі","дядьки й тітки","брати й сестри","сини й дочки"]}]}},{"id":"activity-1","type":"fill-blank","title":"Family Sentences","data":{"type":"fill-blank","items":[{"prompt":"У мене ___ брат.","answer":"є","options":["є","має","немає","був"]},{"prompt":"Мого батька ___ Іван.","answer":"звати","options":["звати","звуть","називається","ім'я"]},{"prompt":"Моя сестра ___ за лікаря.","answer":"одружена","options":["одружена","одружений","неодружена","розлучена"]},{"prompt":"У мене немає ___.","answer":"сестри","options":["сестри","сестра","сестру","сестрою"]},{"prompt":"Це мій ___ брат.","answer":"старший","options":["старший","старша","старше","старші"]},{"prompt":"Вона моя ___ сестра.","answer":"молодша","options":["молодша","молодший","молодше","молодші"]},{"prompt":"Я ___ дитина в сім'ї.","answer":"єдина","options":["єдина","єдиний","єдине","єдині"]},{"prompt":"Мої батьки ___ у Києві.","answer":"живуть","options":["живуть","живе","живу","живемо"]},{"prompt":"У мене два ___.","answer":"брати","options":["брати","брат","братів","братом"]},{"prompt":"Моїй мамі п'ятдесят ___.","answer":"років","options":["років","рік","роки","року"]},{"prompt":"Він ___ вже десять років.","answer":"одружений","options":["одружений","одружена","неодружений","розлучений"]},{"prompt":"___ родина велика.","answer":"Моя","options":["Моя","Мій","Моє","Мої"]}]}},{"id":"activity-2","type":"unjumble","title":"Family Sentences","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["є","брат","У","мене"],"answer":"У мене є брат.","translation":"I have a brother."},{"words":["звати","батька","Мого","Іван"],"answer":"Мого батька звати Іван.","translation":"My father's name is Ivan."},{"words":["старша","сестра","Це","моя"],"answer":"Це моя старша сестра.","translation":"This is my older sister."},{"words":["живуть","батьки","Мої","у","Львові"],"answer":"Мої батьки живуть у Львові.","translation":"My parents live in Lviv."},{"words":["немає","сестри","У","мене"],"answer":"У мене немає сестри.","translation":"I don't have a sister."},{"words":["працює","Мій","тато","в","банку"],"answer":"Мій тато працює в банку.","translation":"My dad works at a bank."},{"words":["родина","Моя","велика"],"answer":"Моя родина велика.","translation":"My family is big."},{"words":["одружений","Він","вже"],"answer":"Він вже одружений.","translation":"He's already married."},{"words":["двоюрідна","Це","моя","сестра"],"answer":"Це моя двоюрідна сестра.","translation":"This is my cousin — female."},{"words":["п'ятдесят","Моєму","татові","років"],"answer":"Моєму татові п'ятдесят років.","translation":"My dad is 50 years old."},{"words":["маленький","Мій","брат","молодший","ще"],"answer":"Мій молодший брат ще маленький.","translation":"My younger brother is still small."},{"words":["два","У","них","сини"],"answer":"У них два сини.","translation":"They have two sons."}]}},{"id":"activity-3","type":"match-up","title":"Family Members","data":{"type":"match-up","pairs":[{"left":"батько","right":"father"},{"left":"мати","right":"mother"},{"left":"брат","right":"brother"},{"left":"сестра","right":"sister"},{"left":"дідусь","right":"grandfather"},{"left":"бабуся","right":"grandmother"},{"left":"дядько","right":"uncle"},{"left":"тітка","right":"aunt"},{"left":"син","right":"son"},{"left":"дочка","right":"daughter"},{"left":"чоловік","right":"husband"},{"left":"дружина","right":"wife"}],"shuffleRight":true}},{"id":"activity-4","type":"match-up","title":"Family Relationships","data":{"type":"match-up","pairs":[{"left":"батько батька","right":"дідусь"},{"left":"мати мами","right":"бабуся"},{"left":"брат мами","right":"дядько"},{"left":"сестра батька","right":"тітка"},{"left":"син брата","right":"племінник"},{"left":"дочка сестри","right":"племінниця"},{"left":"старша сестра","right":"older sister"},{"left":"молодший брат","right":"younger brother"},{"left":"єдина дитина","right":"only child"},{"left":"одружений","right":"married (m)"},{"left":"розлучена","right":"divorced (f)"},{"left":"наречений","right":"fiancé"}],"shuffleRight":true}},{"id":"activity-5","type":"quiz","title":"Family Knowledge","data":{"type":"quiz","questions":[{"question":"\"Батьки\" means:","options":["Father","Mother","Parents","Children"],"correctIndex":2,"explanation":"\"Батьки\" is plural: parents (both)."},{"question":"What's the informal word for \"mother\"?","options":["мати","мама","батько","тітка"],"correctIndex":1,"explanation":"\"Мама\" is informal, like \"mom.\""},{"question":"\"Двоюрідна сестра\" means:","options":["Sister","Female cousin","Aunt","Niece"],"correctIndex":1,"explanation":"Literally \"second-degree sister.\""},{"question":"How do you say \"I have a brother\"?","options":["Я маю брат","У мене є брат","Мій брат є","Брат у мене"],"correctIndex":1,"explanation":"\"У мене є\" + nominative."},{"question":"\"Чоловік\" can mean:","options":["Only \"husband\"","Only \"man\"","Both \"husband\" and \"man\"","\"Father\""],"correctIndex":2,"explanation":"Context determines meaning."},{"question":"How do you say \"My father's name is Ivan\"?","options":["Мого батька звати Іван.","Мій батько ім'я Іван.","Батько мій Іван.","Ім'я батька Іван."],"correctIndex":0,"explanation":"\"Звати\" + genitive for \"is called.\""},{"question":"\"Єдина дитина\" means:","options":["First child","Last child","Only child (f)","Youngest child"],"correctIndex":2,"explanation":"\"Єдиний/єдина\" = only."},{"question":"What's \"older brother\"?","options":["старший брат","молодший брат","середній брат","великий брат"],"correctIndex":0,"explanation":"\"Старший\" = older."},{"question":"\"Неодружена\" means:","options":["Married (f)","Unmarried (f)","Divorced (f)","Widowed"],"correctIndex":1,"explanation":"\"Не-\" prefix = not."},{"question":"\"Онук\" is:","options":["nephew","grandson","uncle","son"],"correctIndex":1,"explanation":"Онук = grandson, онучка = granddaughter."},{"question":"The parents of your parents are:","options":["тітки й дядьки","дідусі й бабусі","брати й сестри","племінники"],"correctIndex":1,"explanation":"Grandparents."},{"question":"\"Розлучений\" means:","options":["married","single","divorced (m)","widowed"],"correctIndex":2,"explanation":"\"Розлучений/розлучена\" = divorced."}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-6","type":"true-false","title":"Family Facts","data":{"type":"true-false","statements":[{"statement":"\"Батько\" and \"тато\" both mean \"father.\"","isTrue":true,"explanation":"Correct! Formal and informal versions."},{"statement":"\"Батьки\" can refer to just one parent.","isTrue":false,"explanation":"Incorrect! \"Батьки\" is always plural (parents)."},{"statement":"Ukrainian has different words for male and female cousins.","isTrue":true,"explanation":"Correct! Двоюрідний брат / двоюрідна сестра."},{"statement":"\"Чоловік\" only means \"husband.\"","isTrue":false,"explanation":"Incorrect! It also means \"man.\""},{"statement":"\"Старший\" means \"older.\"","isTrue":true,"explanation":"Correct! Старший брат = older brother."},{"statement":"To say \"I have a sister,\" you use genitive.","isTrue":true,"explanation":"Incorrect! You use nominative: \"У мене є сестра.\""},{"statement":"\"Дідусь\" means \"grandfather.\"","isTrue":true,"explanation":"Correct! And \"бабуся\" = grandmother."},{"statement":"\"Одружений\" and \"одружена\" mean the same thing.","isTrue":false,"explanation":"Incorrect! Одружений (m), одружена (f) — different genders."},{"statement":"\"Невістка\" is the wife of your brother.","isTrue":true,"explanation":"Correct! Also can mean daughter-in-law."},{"statement":"\"Зять\" is the husband of your sister.","isTrue":true,"explanation":"Correct! Also can mean son-in-law."},{"statement":"In Ukrainian, weeks start with Sunday.","isTrue":false,"explanation":"Incorrect! Ukrainian weeks start on Monday."},{"statement":"\"Немає сестри\" uses genitive case.","isTrue":true,"explanation":"Correct! \"Немає\" requires genitive."}]}},{"id":"activity-7","type":"group-sort","title":"Family Categories","data":{"type":"group-sort","groups":[{"id":"parents-generation","name":"Parents Generation","items":["батько","мати","дядько","тітка"]},{"id":"grandparents-generation","name":"Grandparents Generation","items":["дідусь","бабуся","прадід","прабабуся"]},{"id":"siblings--cousins","name":"Siblings & Cousins","items":["брат","сестра","двоюрідний брат","двоюрідна сестра"]},{"id":"children-generation","name":"Children Generation","items":["син","дочка","племінник","племінниця","онук","онучка"]}],"shuffleItems":true}}];
-    const vocabData = [{"uk":"сім'я","translit":"","en":"family","note":"Also: родина"},{"uk":"родина","translit":"","en":"family","note":""},{"uk":"батьки","translit":"","en":"parents","note":""},{"uk":"батько","translit":"","en":"father","note":"Formal"},{"uk":"тато","translit":"","en":"dad","note":"Informal"},{"uk":"мати","translit":"","en":"mother","note":"Formal"},{"uk":"мама","translit":"","en":"mom","note":"Informal"},{"uk":"брат","translit":"","en":"brother","note":""},{"uk":"сестра","translit":"","en":"sister","note":""},{"uk":"дідусь","translit":"","en":"grandfather","note":""},{"uk":"бабуся","translit":"","en":"grandmother","note":""},{"uk":"онук","translit":"","en":"grandson","note":""},{"uk":"онучка","translit":"","en":"granddaughter","note":""},{"uk":"дядько","translit":"","en":"uncle","note":""},{"uk":"тітка","translit":"","en":"aunt","note":""},{"uk":"двоюрідний брат","translit":"","en":"male cousin","note":""},{"uk":"двоюрідна сестра","translit":"","en":"female cousin","note":""},{"uk":"син","translit":"","en":"son","note":""},{"uk":"дочка","translit":"","en":"daughter","note":""},{"uk":"чоловік","translit":"","en":"husband, man","note":""},{"uk":"дружина","translit":"","en":"wife","note":""},{"uk":"хлопець","translit":"","en":"boyfriend","note":""},{"uk":"дівчина","translit":"","en":"girlfriend","note":""},{"uk":"наречений","translit":"","en":"fiancé","note":""},{"uk":"наречена","translit":"","en":"fiancée","note":""},{"uk":"старший","translit":"","en":"older","note":""},{"uk":"молодший","translit":"","en":"younger","note":""},{"uk":"середній","translit":"","en":"middle","note":""},{"uk":"єдиний","translit":"","en":"only","note":""},{"uk":"одружений","translit":"","en":"married (m)","note":""},{"uk":"неодружений","translit":"","en":"unmarried (m)","note":""},{"uk":"розлучений","translit":"","en":"divorced (m)","note":""},{"uk":"вдівець","translit":"","en":"widower","note":""},{"uk":"вдова","translit":"","en":"widow","note":""},{"uk":"дитина","translit":"","en":"child","note":""}];
+    const activitiesData = [{"id":"activity-0","type":"match-up","title":"Question Match","data":{"type":"match-up","pairs":[{"left":"Sleeping in bed","right":"Де?"},{"left":"Driving to Lviv","right":"Куди?"},{"left":"Arriving from USA","right":"Звідки?"},{"left":"Walking to park","right":"Куди?"},{"left":"Sitting on chair","right":"Де?"},{"left":"Going to mom","right":"Куди? (До кого?)"},{"left":"Moving to Ukraine","right":"Куди?"},{"left":"Living in Kyiv","right":"Де?"},{"left":"Coming from Grandma","right":"Звідки?"},{"left":"Standing at bus stop","right":"Де?"},{"left":"Running into house","right":"Куди?"},{"left":"Flying from London","right":"Звідки?"}],"shuffleRight":true}},{"id":"activity-1","type":"fill-blank","title":"Preposition Master","data":{"type":"fill-blank","items":[{"prompt":"Я йду ___ (to) магазин.","answer":"в","hints":["to"]},{"prompt":"Я ___ (in) магазині.","answer":"в","hints":["in"]},{"prompt":"Я йду ___ (to) роботи.","answer":"з","hints":["to"]},{"prompt":"Я йду ___ (to) мами.","answer":"до","hints":["to"]},{"prompt":"Я йду ___ (from) лікаря.","answer":"від","hints":["from"]},{"prompt":"Книга ___ (on) столі.","answer":"на","hints":["on"]},{"prompt":"Я кладу книгу ___ (on) стіл.","answer":"на","hints":["on"]},{"prompt":"Ми їдемо ___ (to) Київ.","answer":"в","hints":["to"]},{"prompt":"Ми живемо ___ (in) Києві.","answer":"в","hints":["in"]},{"prompt":"Я ___ (from) України.","answer":"з","hints":["from"]},{"prompt":"Я йду ___ (to/home).","answer":"додому","hints":["to/home"]},{"prompt":"Я ___ (at/home).","answer":"вдома","hints":["at/home"]}]}},{"id":"activity-2","type":"group-sort","title":"Motion vs Location","data":{"type":"group-sort","groups":[{"id":"motion","name":"Motion","items":["Я йду в парк","Ми їдемо додому","Вона летить в Америку","Я кладу ручку на стіл","Ідіть прямо","Ми йдемо в кіно"],"nameUk":"Kudy?"},{"id":"location","name":"Location","items":["Я в парку","Ми вдома","Вона в Америці","Ручка на столі","Тут гарно","Ми в кіно"],"nameUk":"De?"}],"shuffleItems":true}},{"id":"activity-3","type":"quiz","title":"Logic Whiz","data":{"type":"quiz","questions":[{"question":"\"Я йду в парк.\" Case?","options":["Accusative (Motion)","Locative"],"correctIndex":0,"explanation":""},{"question":"\"Я в парку.\" Case?","options":["Locative (Location)","Accusative"],"correctIndex":0,"explanation":""},{"question":"\"Я йду до Олега.\" Why 'Do'?","options":["Oleg is a person.","Oleg is a city."],"correctIndex":0,"explanation":""},{"question":"\"Я з Києва.\" Case?","options":["Genitive (Origin)","Locative"],"correctIndex":0,"explanation":""},{"question":"\"Я в Україні.\" Preposition?","options":["В (In independent state)","На (Wrong/Archaic)"],"correctIndex":0,"explanation":""},{"question":"\"Я йду вдома.\" Meaning?","options":["Walking inside the house.","Walking homeward (Wrong)."],"correctIndex":0,"explanation":""},{"question":"\"Куди?\" means...","options":["Where to? (Whither)","Where? (At)"],"correctIndex":0,"explanation":""},{"question":"\"Звідки?\" means...","options":["From where? (Whence)","Where?"],"correctIndex":0,"explanation":""},{"question":"Can you say \"В Олега\" (Inside Oleg)?","options":["Yes.","No. (Unless surgery)."],"correctIndex":1,"explanation":""},{"question":"\"Я на концерті.\" (At concert).","options":["Event = NA.","Event = V."],"correctIndex":0,"explanation":""},{"question":"\"Я йду на концерт.\"","options":["Accusative.","Locative."],"correctIndex":0,"explanation":""},{"question":"\"Я їду від бабусі.\" (From grandma).","options":["Vid (From person).","Z (From place)."],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-4","type":"unjumble","title":"Scramble Sentences","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["йду","Я","додому","."],"answer":"Я йду додому."},{"words":["парку","Ми","в","."],"answer":"Ми в парку."},{"words":["їде","Він","Київ","в","."],"answer":"Він їде в Київ."},{"words":["з","Я","України","."],"answer":"Я з України."},{"words":["столі","на","Книга","."],"answer":"Книга на столі."},{"words":["на","Я","роботу","йду","."],"answer":"Я йду на роботу."},{"words":["ти","Де","?"],"answer":"Де ти?"},{"words":["ти","Куди","йдеш","?"],"answer":"Куди ти йдеш?"},{"words":["звідки","Ти","?"],"answer":"Ти звідки?"},{"words":["у","Я","лікаря","."],"answer":"Я у лікаря.","translation":"At doctor's - Genitive 'U'"},{"words":["до","йду","Я","лікаря","."],"answer":"Я йду до лікаря."},{"words":["від","йду","Я","лікаря","."],"answer":"Я йду від лікаря."}]}},{"id":"activity-5","type":"unjumble","title":"Story Reorder (Travel)","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["I go to the airport.","I fly to Ukraine.","I am in Kyiv."],"answer":"Я їду в аеропорт. Я лечу в Україну. Я в Києві."},{"words":["I wake up.","I go to work.","I am at work."],"answer":"Я прокидаюся. Я йду на роботу. Я на роботі."},{"words":["I buy a ticket.","I go to the cinema.","I watch a film."],"answer":"Я купую квиток. Я йду в кіно. Я дивлюся фільм."},{"words":["I am home.","I go to the shop.","I buy bread."],"answer":"Я вдома. Я йду в магазин. Я купую хліб."},{"words":["I see a friend.","I go to the cafe.","We drink coffee."],"answer":"Я бачу друга. Я йду в кафе. Ми п'ємо каву."},{"words":["I am hungry.","I go to the restaurant.","I eat borsch."],"answer":"Я голодний. Я йду в ресторан. Я їм борщ."},{"words":["It is morning.","I go to the park.","I run."],"answer":"Ранок. Я йду в парк. Я бігаю."},{"words":["I am tired.","I go home.","I sleep."],"answer":"Я втомився. Я йду додому. Я сплю."},{"words":["I am cold.","I go to the house.","I drink tea."],"answer":"Мені холодно. Я йду в дім. Я п'ю чай."},{"words":["It is summer.","I go to the sea.","I swim."],"answer":"Літо. Я їду на море. Я плаваю."},{"words":["It is work time.","I go to the office.","I work."],"answer":"Час працювати. Я йду в офіс. Я працюю."},{"words":["I need money.","I go to the bank.","I take cash."],"answer":"Мені треба гроші. Я йду в банк. Я беру готівку."}]}},{"id":"activity-6","type":"fill-blank","title":"My Logic","data":{"type":"fill-blank","items":[{"prompt":"Я зараз ___ (location).","answer":"вдома / на роботі","hints":["location"]},{"prompt":"Я хочу поїхати ___ (motion).","answer":"в Україну / на море","hints":["motion"]},{"prompt":"Я ___ (origin).","answer":"з Америки / з Англії","hints":["origin"]},{"prompt":"Завтра я піду ___ (motion).","answer":"на роботу / в парк","hints":["motion"]},{"prompt":"Мій телефон ___ (location).","answer":"на столі / в кишені","hints":["location"]},{"prompt":"Я йду ___ (to person).","answer":"до друга / до мами","hints":["to person"]},{"prompt":"Я йду ___ (from person).","answer":"від друга","hints":["from person"]},{"prompt":"Я йду ___ (from place).","answer":"з роботи","hints":["from place"]},{"prompt":"Зараз я ___ (in city).","answer":"в Києві / в Лондоні","hints":["in city"]},{"prompt":"Я люблю бути ___ (at home).","answer":"вдома","hints":["at home"]},{"prompt":"Я йду ___ (homeward).","answer":"додому","hints":["homeward"]},{"prompt":"Де ти? Я ___ (here).","answer":"тут","hints":["here"]}]}},{"id":"activity-7","type":"true-false","title":"Grammar Rules","data":{"type":"true-false","statements":[{"statement":"I can say \"I am in Kyiv\" (В Києві).","isTrue":false,"explanation":""},{"statement":"I can say \"I go to Kyiv\" (В Київ).","isTrue":false,"explanation":""},{"statement":"I know not to go \"Inside\" people (Do vs V).","isTrue":false,"explanation":""},{"statement":"I know \"Na Ukraini\" is bad manners.","isTrue":false,"explanation":""}]}}];
+    const vocabData = [{"uk":"де","translit":"","en":"where (loc)","note":"[🔊](audio_de)"},{"uk":"куди","translit":"","en":"where to","note":"[🔊](audio_kudy)"},{"uk":"звідки","translit":"","en":"where from","note":"[🔊](audio_zvidky)"},{"uk":"тут","translit":"","en":"here","note":"[🔊](audio_tut)"},{"uk":"там","translit":"","en":"there","note":"[🔊](audio_tam)"},{"uk":"вдома","translit":"","en":"at home","note":"[🔊](audio_vdoma)"},{"uk":"додому","translit":"","en":"homeward","note":"[🔊](audio_dodomu)"},{"uk":"з","translit":"","en":"from (place)","note":"[🔊](audio_z)"},{"uk":"від","translit":"","en":"from (person)","note":"[🔊](audio_vid)"},{"uk":"до","translit":"","en":"to (person)","note":"[🔊](audio_do)"},{"uk":"в","translit":"","en":"in/to","note":"[🔊](audio_v)"},{"uk":"на","translit":"","en":"on/to","note":"[🔊](audio_na)"},{"uk":"місто","translit":"","en":"city","note":"[🔊](audio_misto)"},{"uk":"країна","translit":"","en":"country","note":"[🔊](audio_krajina)"},{"uk":"вулиця","translit":"","en":"street","note":"[🔊](audio_vulytsya)"},{"uk":"площа","translit":"","en":"square","note":"[🔊](audio_ploshcha)"},{"uk":"магазин","translit":"","en":"shop","note":"[🔊](audio_mahazyn)"},{"uk":"робота","translit":"","en":"work","note":"[🔊](audio_robota)"},{"uk":"школа","translit":"","en":"school","note":"[🔊](audio_shkola)"},{"uk":"парк","translit":"","en":"park","note":"[🔊](audio_park)"},{"uk":"ресторан","translit":"","en":"restaurant","note":"[🔊](audio_restoran)"},{"uk":"лікар","translit":"","en":"doctor","note":"[🔊](audio_likar)"},{"uk":"зупинка","translit":"","en":"stop (bus)","note":"[🔊](audio_zupynka)"},{"uk":"театр","translit":"","en":"theater","note":"[🔊](audio_teatr)"},{"uk":"вокзал","translit":"","en":"station","note":"[🔊](audio_vokzal)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1144,6 +943,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2408,6 +2233,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 

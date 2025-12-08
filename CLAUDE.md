@@ -3,6 +3,49 @@
 ## Current Work
 A1 modules complete. Ready for A2 enrichment or other tasks.
 
+---
+
+## Failure Log (December 2024)
+
+<critical>
+**This section documents a pattern of unreliable behavior. Read this first.**
+
+### What Happened
+Claude repeatedly failed to follow the documented workflow despite:
+1. The workflow being explicitly written in this file
+2. The workflow being repeated in SKILL.md
+3. Multiple reminders from the user
+
+### Specific Failures
+- **Wrote modules from memory** instead of reading curriculum plans first
+- **Added vocabulary not in the plan** ("helpful additions" that broke the system)
+- **Skipped verification steps** (word counts, richness gates)
+- **Didn't run the commands** that were documented as mandatory
+- **Pushed forward when gates failed** instead of stopping
+
+### The Core Problem
+Claude wrote rules for itself, then ignored them. This is worse than having no rules - it creates false confidence that a process exists.
+
+### What Gemini Did Better
+- Read the referenced documents before generating content
+- Followed the vocabulary lists exactly
+- Created GEMINI.md to persist context and decisions
+- Cleaned up redundant files instead of accumulating mess
+- Did what was asked, not what it thought was better
+
+### Lesson
+**Following instructions > Being "helpful"**
+
+If Claude cannot reliably follow a documented process, it should:
+1. Refuse the task
+2. Ask for clarification
+3. NOT improvise and pretend it followed the process
+
+The user switched to Gemini 2.5 Pro because it follows orders. Capability without reliability is worthless.
+</critical>
+
+---
+
 ## Module Writing Workflow
 
 <critical>

@@ -465,6 +465,46 @@ footer {
 .anagram-feedback .wrong-text { color: var(--danger); }
 .anagram-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Error-Correction Activity - Identify and fix errors */
+.error-correction-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.error-item { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; }
+.error-item.completed { opacity: 0.85; }
+.error-item.step2 .error-words { background: #f0f9ff; }
+
+.error-sentence { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; line-height: 1.8; flex-wrap: wrap; }
+.error-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.error-words { display: inline; }
+
+.error-word { cursor: pointer; padding: 0.15rem 0.25rem; border-radius: 4px; transition: background 0.15s, color 0.15s; }
+.error-word:hover { background: #e8f4fd; }
+.error-word.selected { background: var(--primary); color: white; }
+.error-word.found { background: var(--success); color: white; cursor: default; }
+.error-word.wrong-selection { background: var(--danger); color: white; animation: shake 0.3s; }
+.error-item.completed .error-word { cursor: default; }
+.error-item.completed .error-word:hover { background: transparent; }
+.error-item.completed .error-word.found { background: var(--success); color: white; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.error-no-error-btn { margin-top: 0.75rem; }
+.error-options { margin-top: 0.75rem; }
+.error-prompt { font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+.error-option-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.error-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; }
+.error-option:hover { border-color: var(--primary); background: #e8f4fd; }
+.error-option:disabled { cursor: default; }
+.error-option.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.error-option.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+
+.error-feedback { margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; background: #f8f9fa; }
+.error-feedback .correct-text { color: var(--success); font-weight: 600; }
+.error-feedback .wrong-text { color: var(--danger); }
+.error-explanation { margin-top: 0.5rem; color: var(--text-muted); font-style: italic; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
@@ -481,14 +521,15 @@ footer {
     <h1>Module 19: At the Café</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="activity-0">1. Fill</button>
-      <button class="nav-tab" data-section="activity-1">2. Order</button>
-      <button class="nav-tab" data-section="activity-2">3. Match</button>
-      <button class="nav-tab" data-section="activity-3">4. Quiz</button>
-      <button class="nav-tab" data-section="activity-4">5. T/F</button>
-      <button class="nav-tab" data-section="activity-5">6. Sort</button>
-      <button class="nav-tab" data-section="activity-6">7. Spell</button>
-      <button class="nav-tab" data-section="activity-7">8. Match</button>
+      <button class="nav-tab" data-section="activity-0">1. Match</button>
+      <button class="nav-tab" data-section="activity-1">2. Fill</button>
+      <button class="nav-tab" data-section="activity-2">3. Quiz</button>
+      <button class="nav-tab" data-section="activity-3">4. Order</button>
+      <button class="nav-tab" data-section="activity-4">5. Sort</button>
+      <button class="nav-tab" data-section="activity-5">6. Match</button>
+      <button class="nav-tab" data-section="activity-6">7. Fill</button>
+      <button class="nav-tab" data-section="activity-7">8. Fill</button>
+      <button class="nav-tab" data-section="activity-8">9. Spell</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -498,343 +539,311 @@ footer {
       <div class="lesson-header">
         <span class="level-badge">A1 · A1.2</span>
         <h2 style="font-size:2rem;margin:0.5rem 0">At the Café</h2>
-        <p style="color:var(--text-muted)">Putting it all together in real conversations</p>
+        <p style="color:var(--text-muted)">The Coffee Shop Simulation</p>
       </div>
       
     <div class="card section-intro">
       <h3>📖 Introduction</h3>
       <div class="md-content"><h2 id="warmup">warm-up</h2>
-<h3 id="timeforcoffee">Час на каву! (Time for Coffee!)</h3>
-<p>You've learned the pieces — now let's put them together! In this module, you'll practice complete café conversations, handling everything from entering to paying.</p>
-<blockquote>
-  <p>💡 <strong>Did You Know?</strong></p>
-  <p>Ukrainian café culture has exploded in recent years. Kyiv, Lviv, and Odesa are famous for their specialty coffee shops. Lviv even has a "Coffee Mining" museum celebrating the city's coffee history!</p>
-</blockquote>
+<p><strong>The Coffee Shop Vibes</strong></p>
+<p>You are in Lviv. The smell of roasted coffee is everywhere.<br />
+You enter "Svit Kavy" or "Lviv Croissants".<br />
+You don't just want coffee. You want an experience.<br />
+You need to find a table. You need to ask about the cheesecake.<br />
+You need to pay without panic.<br />
+In Module 18, you learned the words.<br />
+In Module 19, we put them together into a <strong>Conversation Flow</strong>.<br />
+This module is 100% practical. No new grammar rules. Just survival skills.</p>
 <h2 id="presentation">presentation</h2>
-<h3 id="thecompletecafexperience">The Complete Café Experience</h3>
-<p>A typical café visit has several stages:</p>
-<table>
-<thead>
-<tr>
-<th>Stage</th>
-<th>What Happens</th>
-<th>Key Phrases</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1. Arriving</td>
-<td>Find a table</td>
-<td>Столик на двох, будь ласка</td>
-</tr>
-<tr>
-<td>2. Menu</td>
-<td>Get the menu</td>
-<td>Можна меню?</td>
-</tr>
-<tr>
-<td>3. Deciding</td>
-<td>Look at options</td>
-<td>Що порекомендуєте?</td>
-</tr>
-<tr>
-<td>4. Ordering</td>
-<td>Place your order</td>
-<td>Я візьму… / Для мене…</td>
-</tr>
-<tr>
-<td>5. Eating</td>
-<td>Enjoy!</td>
-<td>Смачного!</td>
-</tr>
-<tr>
-<td>6. Paying</td>
-<td>Get the check</td>
-<td>Рахунок, будь ласка</td>
-</tr>
-<tr>
-<td>7. Leaving</td>
-<td>Thank and go</td>
-<td>Дякую, до побачення!</td>
-</tr>
-</tbody>
-</table>
-<h3 id="dialogue1arrivingandordering">Dialogue 1: Arriving and Ordering</h3>
-<p><strong>Офіціант:</strong> Добрий день! Столик на скільки осіб?<br />
-<strong>Ви:</strong> Добрий день! На двох, будь ласка.<br />
-<strong>Офіціант:</strong> Прошу сюди. Ось меню.<br />
-<strong>Ви:</strong> Дякую. Що порекомендуєте?<br />
-<strong>Офіціант:</strong> Сьогодні рекомендую борщ і вареники з картоплею.<br />
-<strong>Ви:</strong> Добре. Я візьму борщ і каву з молоком.</p>
+<h3 id="section1enteringandseating">Section 1: Entering and Seating</h3>
+<ul>
+<li><strong>Host:</strong> Добрий день. Вас двоє? (Are there two of you?)</li>
+<li><strong>You:</strong> Так, нас двоє. (Yes, us two).</li>
+<li><strong>You:</strong> Ми хотіли б столик біля вікна. (We would like a table by the window).</li>
+<li><strong>You:</strong> Цей стіл вільний? (Is this table free?)</li>
+<li><strong>Host:</strong> Ні, він зайнятий (It is occupied). Прошу сюди. (Please here).</li>
+</ul>
+<h3 id="section2theconsultation">Section 2: The Consultation</h3>
+<p>Don't just point. Ask.</p>
+<ul>
+<li><strong>You:</strong> Я не знаю, що вибрати. (I don't know what to choose).</li>
+<li><strong>You:</strong> Що ви порекомендуєте? (What do you recommend? - Future/Polite).</li>
+<li><strong>Waiter:</strong> Наш фірмовий десерт дуже смачний. (Our signature dessert is very tasty).</li>
+<li><strong>You:</strong> Він солодкий? (Is it sweet?)</li>
+<li><strong>Waiter:</strong> Не дуже. (Not very).</li>
+<li><strong>You:</strong> Тоді я візьму це. (Then I will take this).</li>
+</ul>
+<h3 id="section3thetogoquestion">Section 3: The "To Go" Question</h3>
+<p>In Kyiv, everyone runs.</p>
+<ul>
+<li><strong>Waiter:</strong> Тут чи з собою? (Here or with self/to go?)</li>
+<li><strong>You:</strong> Тут, будь ласка. (Here, please).</li>
+<li><strong>You:</strong> З собою, будь ласка. (To go, please).</li>
+<li><strong>Waiter:</strong> Пакет потрібен? (Bag needed?)</li>
+<li><strong>You:</strong> Ні, дякую. Я маю свій. (No thanks, I have my own).</li>
+</ul>
+<h3 id="section4thebillandpayment">Section 4: The Bill and Payment</h3>
+<ul>
+<li><strong>You:</strong> Можна рахунок? (Possible [to have] bill?)</li>
+<li><strong>Waiter:</strong> Звичайно. Вам разом чи окремо? (Together or separately?)</li>
+<li><strong>You:</strong> Окремо. (Separately).</li>
+<li><strong>Waiter:</strong> Карткою чи готівкою? (Card or cash?)</li>
+<li><strong>You:</strong> Карткою (Instrumental).</li>
+<li><strong>Waiter:</strong> Прикладіть, будь ласка. (Tap, please).</li>
+</ul>
 <blockquote>
-  <p>⚡ <strong>Pro Tip</strong></p>
-  <p>"Прошу" is incredibly versatile! It means "please," "here you go," "you're welcome," and "this way, please" depending on context.</p>
+  <p>📱 <strong>Deep Dive: The Terminal</strong><br />
+  The payment terminal is often called <strong>Термінал</strong>.<br />
+  Sometimes they ask: "У вас є PayPass?"<br />
+  Or they just hold it out.<br />
+  If it beeps green -&gt; <strong>Успішно</strong> (Successful).<br />
+  If it beeps red -&gt; <strong>Відмова</strong> (Decline). Try again.</p>
 </blockquote>
-<h3 id="dialogue2orderingdrinks">Dialogue 2: Ordering Drinks</h3>
-<p><strong>Офіціант:</strong> Що будете пити?<br />
-<strong>Ви:</strong> Можна чашку кави?<br />
-<strong>Офіціант:</strong> Так, звичайно. Чорну каву чи з молоком?<br />
-<strong>Ви:</strong> З молоком, без цукру.<br />
-<strong>Офіціант:</strong> Ще щось?<br />
-<strong>Ви:</strong> Ні, дякую. Це все.</p>
+<h3 id="section5compliments">Section 5: Compliments</h3>
+<p>If you liked it, say it!</p>
+<ul>
+<li><strong>Waiter:</strong> Вам сподобалось? (Did you like it?)</li>
+<li><strong>You:</strong> Так, було дуже смачно! (Yes, it was very tasty!)</li>
+<li><strong>You:</strong> Кава чудова. (Coffee is wonderful).</li>
+<li><strong>You:</strong> Дякую за сервіс. (Thank you for service).</li>
+</ul>
+<h3 id="section6whenthingsgowrongpolitecomplaints">Section 6: When things go wrong (Polite Complaints)</h3>
+<p>Sometimes the soup is cold. Sometimes the waiter forgot you.<br />
+Don't be rude. Be Ukrainian polite.</p>
+<ul>
+<li><strong>Вибачте, суп холодний.</strong> (Excuse me, the soup is cold).</li>
+<li><strong>Вибачте, це не моє замовлення.</strong> (Excuse me, this is not my order).</li>
+<li><strong>Ми чекаємо вже довго.</strong> (We are waiting already long).</li>
+<li><strong>Можна підігріти?</strong> (Is it possible to heat up?)</li>
+</ul>
+<h3 id="section7themostimportantroom">Section 7: The Most Important Room</h3>
+<p>You drink three coffees. Now you need the <strong>Туалет</strong> (Toiletry Room - WC).</p>
+<ul>
+<li><strong>Де тут туалет?</strong> (Where is the toilet here?)</li>
+<li><strong>Він зачинений.</strong> (It is locked/closed).</li>
+<li><strong>Який код?</strong> (Which code?)</li>
+<li><strong>На чеку.</strong> (On the receipt).</li>
+<li><strong>Там зайнято?</strong> (Is it occupied there?)</li>
+</ul>
 <blockquote>
-  <p>🔍 <strong>Myth Buster</strong></p>
-  <p><strong>Myth:</strong> "Ukrainian service is cold and unfriendly."<br />
-  <strong>Fact:</strong> Ukrainians simply have a different service culture — less performative friendliness, more efficiency. A serious waiter isn't rude; they're professional!</p>
+  <p>🥛 <strong>Deep Dive: The Milk Revolution</strong><br />
+  Kyiv cafes are obsessed with milk (moloko).</p>
+  <ul>
+  <li><strong>Звичайне</strong> (Regular/Cow).</li>
+  <li><strong>Безлактозне</strong> (Lactose-free). VERY popular.</li>
+  <li><strong>Рослинне</strong> (Plant-based).</li>
+  <li><strong>Вівсяне</strong> (Oat).</li>
+  <li><strong>Мигдалеве</strong> (Almond).</li>
+  <li><strong>Кокосове</strong> (Coconut).<br />
+  So: "Лате на вівсяному, будь ласка." (Latte on oat, please).</li>
+  </ul>
+  <p>📱 <strong>Culture Corner: The QR Code Menu</strong><br />
+  In many Ukrainian cities, paper menus are disappearing.<br />
+  You see a QR code on the table wood.<br />
+  Scan it. The menu is on your phone.<br />
+  Sometimes you can even pay via the QR code (Expirenza, etc.).<br />
+  If the internet is bad: "У вас є звичайне меню?" (Do you have a regular/normal menu?)</p>
+  <p>📚 <strong>Deep Dive: The Book Cafe (Knyharnia-Kav'yarnia)</strong><br />
+  Ukraine has a massive culture of "Book Cafes".<br />
+  You buy a book, sit down, and order coffee.<br />
+  "Knyharnia-Kav'yarnia Staryho Leva" is iconic.<br />
+  The vibe is quiet, intellectual, and smells of paper and espresso.<br />
+  Don't spill coffee on the unpaid books!</p>
+  <p>🗣️ <strong>Language Link: Proshu vs Bud laska</strong><br />
+  You hear "Proshu" everywhere.</p>
+  <ul>
+  <li><strong>Bud laska:</strong> "Please" (when asking). "Дайте меню, будь ласка."</li>
+  <li><strong>Proshu:</strong> "Here you are" (giving), "Come in" (invitation), or "Pardon?" (didn't hear).</li>
+  <li><strong>Waiter:</strong> "Прошу, ваше меню." (Here is your menu).</li>
+  <li><strong>Waiter:</strong> "Прошу?" (Excus me/What did you say?)<br />
+  Context is king.</li>
+  </ul>
 </blockquote>
-<h3 id="dialogue3paying">Dialogue 3: Paying</h3>
-<p><strong>Ви:</strong> Рахунок, будь ласка.<br />
-<strong>Офіціант:</strong> Так, зараз. Ось ваш рахунок.<br />
-<strong>Ви:</strong> Скільки?<br />
-<strong>Офіціант:</strong> Сто двадцять гривень.<br />
-<strong>Ви:</strong> Платити картою можна?<br />
-<strong>Офіціант:</strong> Так, звичайно.<br />
-<strong>Ви:</strong> Дякую! Було дуже смачно!<br />
-<strong>Офіціант:</strong> Дякую вам! До побачення!</p>
+<h3 id="section8theproperdeparture">Section 8: The Proper Departure</h3>
+<p>In Ukraine, you don't just walk out. You acknowledge the exit.</p>
+<ul>
+<li><strong>Дякую, все було чудово.</strong> (Thank you, everything was wonderful).</li>
+<li><strong>До побачення.</strong> (Until seeing [again]).</li>
+<li><strong>Гарного дня.</strong> (Have a nice day - Genitive).</li>
+<li><strong>Гарного вечора.</strong> (Have a nice evening).</li>
+<li><strong>Навзаєм!</strong> (To you too / Mutually).</li>
+</ul>
 <blockquote>
-  <p>🌍 <strong>Real World</strong></p>
-  <p>Tipping in Ukraine is typically 10-15%, but not always expected. "Чайові" (tips) are appreciated but not mandatory. You can say "Решта — чайові" (Keep the change as a tip).</p>
+  <p>🚪 <strong>Culture Corner: The Door Hold</strong><br />
+  Ukrainian men will almost aggressively hold the door for women.<br />
+  It is considered basic manners.<br />
+  Just say "Dyakuyu".<br />
+  Also, getting up from the table first is usually the man's job to help the woman up (though this is changing in modern Kyiv).</p>
 </blockquote>
-<h3 id="commonsituations">Common Situations</h3>
-<table>
-<thead>
-<tr>
-<th>Situation</th>
-<th>What to Say</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Don't understand menu</td>
-<td>Що це? (What is this?)</td>
-</tr>
-<tr>
-<td>Want a recommendation</td>
-<td>Що порекомендуєте?</td>
-</tr>
-<tr>
-<td>Need more time</td>
-<td>Одну хвилинку, будь ласка.</td>
-</tr>
-<tr>
-<td>Want something else</td>
-<td>Ще щось? — Ні, дякую. Це все.</td>
-</tr>
-<tr>
-<td>Something missing</td>
-<td>Вибачте, у мене немає… (Sorry, I don't have…)</td>
-</tr>
-<tr>
-<td>Food is late</td>
-<td>Вибачте, де моє замовлення?</td>
-</tr>
-<tr>
-<td>Want to pay</td>
-<td>Рахунок, будь ласка.</td>
-</tr>
-<tr>
-<td>Split the bill</td>
-<td>Можна окремо?</td>
-</tr>
-<tr>
-<td>Pay together</td>
-<td>Разом, будь ласка.</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-  <p>🎬 <strong>Pop Culture Moment: Friends in Ukrainian</strong></p>
-  <p>In the Ukrainian dub of Friends, the gang would meet at "Центральна кав'ярня" (Central Perk). "Можна велику каву?" — Could I have a large coffee?</p>
-</blockquote>
-<h3 id="keyvocabularyforcafconversations">Key Vocabulary for Café Conversations</h3>
-<table>
-<thead>
-<tr>
-<th>Ukrainian</th>
-<th>English</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>столик</td>
-<td>table (small)</td>
-</tr>
-<tr>
-<td>порекомендувати</td>
-<td>to recommend</td>
-</tr>
-<tr>
-<td>спробувати</td>
-<td>to try</td>
-</tr>
-<tr>
-<td>візьму</td>
-<td>I'll take</td>
-</tr>
-<tr>
-<td>принесіть</td>
-<td>bring (imperative)</td>
-</tr>
-<tr>
-<td>ще</td>
-<td>more, else, still</td>
-</tr>
-<tr>
-<td>достатньо</td>
-<td>enough</td>
-</tr>
-<tr>
-<td>все</td>
-<td>everything, all</td>
-</tr>
-<tr>
-<td>разом</td>
-<td>together</td>
-</tr>
-<tr>
-<td>окремо</td>
-<td>separately</td>
-</tr>
-</tbody>
-</table>
 <h2 id="practice">practice</h2>
-<h3 id="exercise1completethedialogue">Exercise 1: Complete the Dialogue</h3>
-<p>Fill in the missing parts:</p>
-<p><strong>Офіціант:</strong> Добрий день!<br />
-<strong>Ви:</strong> ___! Столик на ___, будь ласка.</p>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer">Добрий день; двох</div></div>
-<p><strong>Офіціант:</strong> Прошу. Ось меню.<br />
-<strong>Ви:</strong> Дякую. Що ___?</p>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer">порекомендуєте</div></div>
-<p><strong>Офіціант:</strong> Рекомендую борщ.<br />
-<strong>Ви:</strong> Добре. Я ___ борщ.</p>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer">візьму</div></div>
-<h3 id="exercise2howwouldyousay">Exercise 2: How Would You Say…?</h3>
-<ol>
-<li><p>"Can I have the menu?"</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer">Можна меню?</div></div>
-<ol start="2">
-<li><p>"I'll take coffee with milk"</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer">Я візьму каву з молоком.</div></div>
-<ol start="3">
-<li><p>"Check, please"</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-5', this)">Показати відповідь</button><div class="answer-block" id="ans-5"><div class="callout callout-answer" data-callout="answer">Рахунок, будь ласка.</div></div>
-<ol start="4">
-<li><p>"It was very tasty!"</p></li>
-</ol>
-<button class="show-answer-btn" onclick="toggleAnswer('ans-6', this)">Показати відповідь</button><div class="answer-block" id="ans-6"><div class="callout callout-answer" data-callout="answer">Було дуже смачно!</div></div>
+<p><strong>Drill 1: The Entry</strong></p>
+<ul>
+<li>(Table for two) -&gt; <strong>Столик на двох</strong>.</li>
+<li>(Table for one) -&gt; <strong>Столик на одного</strong>.</li>
+<li>(By the window) -&gt; <strong>Біля вікна</strong>.</li>
+<li>(Is it free?) -&gt; <strong>Це вільно?</strong></li>
+<li>(It is occupied) -&gt; <strong>Це зайнято</strong>.</li>
+</ul>
+<p><strong>Drill 2: The Choice</strong></p>
+<ul>
+<li>(What do you recommend?) -&gt; <strong>Що ви порекомендуєте?</strong></li>
+<li>(I will take this) -&gt; <strong>Я візьму це</strong>.</li>
+<li>(Is it fresh?) -&gt; <strong>Це свіже?</strong></li>
+<li>(Is it spicy?) -&gt; <strong>Це гостре?</strong></li>
+</ul>
+<p><strong>Drill 3: The Payment</strong></p>
+<ul>
+<li>(Can I have the bill?) -&gt; <strong>Можна рахунок?</strong></li>
+<li>(Together) -&gt; <strong>Разом</strong>.</li>
+<li>(Separately) -&gt; <strong>Окремо</strong>.</li>
+<li>(Card) -&gt; <strong>Карткою</strong>.</li>
+<li>(Cash) -&gt; <strong>Готівкою</strong>.</li>
+</ul>
+<p><strong>Drill 4: The Problem</strong></p>
+<ul>
+<li>(Soup is cold) -&gt; <strong>Суп холодний</strong>.</li>
+<li>(This is not my order) -&gt; <strong>Це не моє замовлення</strong>.</li>
+<li>(Where is the toilet?) -&gt; <strong>Де туалет?</strong></li>
+<li>(What is the code?) -&gt; <strong>Який код?</strong></li>
+</ul>
+<p><strong>Drill 5: The Review</strong></p>
+<ul>
+<li>(Very tasty) -&gt; <strong>Дуже смачно</strong>.</li>
+<li>(Terrible) -&gt; <strong>Жахливо</strong>.</li>
+<li>(Normal) -&gt; <strong>Нормально</strong>.</li>
+<li>(Expensive) -&gt; <strong>Дорого</strong>.</li>
+<li>(Cheap) -&gt; <strong>Дешево</strong>.</li>
+</ul>
+<p><strong>Drill 6: The Exit</strong></p>
+<ul>
+<li>(Have a nice day) -&gt; <strong>Гарного дня</strong>.</li>
+<li>(Have a nice evening) -&gt; <strong>Гарного вечора</strong>.</li>
+<li>(Mutually/You too) -&gt; <strong>Навзаєм</strong>.</li>
+<li>(Everything was super) -&gt; <strong>Все було супер</strong>.</li>
+</ul>
 <h2 id="production">production</h2>
-<h3 id="roleplaycompletecafvisit">Role Play: Complete Café Visit</h3>
-<p>With a partner or out loud, practice a complete café scenario:</p>
-<ol>
-<li>Enter and get a table</li>
-<li>Ask for menu and recommendation</li>
-<li>Order food and drink</li>
-<li>Ask for the check</li>
-<li>Pay and leave</li>
-</ol>
-<p>Try different variations: ordering for one, ordering for two, splitting the bill!</p>
-<hr />
-<hr />
+<blockquote>
+  <p>🌍 <strong>Culture Corner: The Laptop Nomad</strong><br />
+  In Ukrainian cafes, people sit for hours with laptops.<br />
+  It is culturally acceptable.<br />
+  Just order a coffee every 1-2 hours.<br />
+  Ask: "У вас є вайфай?" (Do you have wifi?)<br />
+  Password is usually on the menu or receipt (Check).</p>
+</blockquote>
+<p><strong>Scenario: The Full Experience</strong></p>
+<ul>
+<li><strong>Barista:</strong> Привіт! Що для вас?</li>
+<li><strong>You:</strong> Привіт. Я хотів би лате.</li>
+<li><strong>Barista:</strong> Яке молоко? Звичайне? (Regular?)</li>
+<li><strong>You:</strong> Ні, на вівсяному (on oat), будь ласка.</li>
+<li><strong>Barista:</strong> Добре. Щось їсти будете?</li>
+<li><strong>You:</strong> Що це таке? (Points to pastry).</li>
+<li><strong>Barista:</strong> Це круасан з мигдалем (with almond).</li>
+<li><strong>You:</strong> О, я люблю мигдаль. Я візьму один.</li>
+<li><strong>Barista:</strong> Тут чи з собою?</li>
+<li><strong>You:</strong> З собою.</li>
+<li><strong>Barista:</strong> Разом 120 гривень.</li>
+<li><strong>You:</strong> (Pays). Дякую.</li>
+<li><strong>Barista:</strong> Гарного дня!</li>
+<li><strong>You:</strong> Навзаєм!</li>
+</ul>
+<p><strong>Scenario: The Date</strong></p>
+<ul>
+<li><strong>Partner:</strong> Що ти будеш? (What will you [have]?)</li>
+<li><strong>You:</strong> Я не знаю. Мабуть, чай.</li>
+<li><strong>Partner:</strong> Я візьму капучино і чизкейк.</li>
+<li><strong>You:</strong> Я теж хочу чизкейк.</li>
+<li><strong>Waiter:</strong> (Arrives).</li>
+<li><strong>You:</strong> Нам, будь ласка, один капучино, один чай і два чизкейки.</li>
+<li><strong>Waiter:</strong> Добре.</li>
+<li><strong>You:</strong> (Later). Вибачте, чай холодний.</li>
+<li><strong>Waiter:</strong> Ой, вибачте! Зараз зміню. (Now I will change).</li>
+<li><strong>You:</strong> Дякую. (Leaving). Було дуже смачно!</li>
+<li><strong>Waiter:</strong> Приходьте ще! (Come again!) </li>
+</ul>
 <hr /></div>
     </div>
   
       
-    <div class="card section-summary">
-      <h3>📋 Summary</h3>
-      <div class="md-content"><blockquote>
-  <p><strong>What You Learned Today</strong></p>
-  <ul>
-  <li>Complete café dialogue flow (arrive → order → pay → leave)</li>
-  <li>Key phrases: Можна…?, Я візьму…, Рахунок, будь ласка</li>
-  <li>How to handle common situations</li>
-  <li>Polite expressions: Прошу, Будь ласка, Дякую</li>
-  </ul>
-  <p><strong>Coming Next</strong></p>
-  <p>In Module 20, you'll complete your <strong>A1.2 Checkpoint</strong>:</p>
-  <ul>
-  <li>Review of accusative, locative, genitive cases</li>
-  <li>Review of possessives and city navigation</li>
-  <li>Comprehensive practice activities</li>
-  </ul>
-</blockquote></div>
-    </div>
-  
       <div class="btn-group">
         <button class="btn btn-primary" onclick="showSection('activity-0')">Activities →</button>
       </div>
     </section>
   
     
-    <section id="activity-0" class="section"><div class="card"><h3>Café Dialogue</h3>
+    <section id="activity-0" class="section"><div class="card"><h3>Cafe Lingo</h3>
       <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/12</span></div>
-      <div id="activity-0-container" class="fill-container"></div>
-      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+      <div class="match-container" id="activity-0-container"><svg class="match-lines" id="activity-0-lines"></svg>
+        <div class="match-column" id="activity-0-left"></div>
+        <div class="match-column" id="activity-0-right"></div>
+      </div>
+      <div class="completion-message" id="activity-0-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
     </div></section>
 
-    <section id="activity-1" class="section"><div class="card"><h3>Café Phrases</h3>
+    <section id="activity-1" class="section"><div class="card"><h3>The Dialogue Builder</h3>
       <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/12</span></div>
-      <div id="activity-1-container" class="order-container"></div>
-      <div class="completion-message" id="activity-1-complete"><h3>Perfect Order!</h3></div>
+      <div id="activity-1-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-1-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
     </div></section>
 
-    <section id="activity-2" class="section"><div class="card"><h3>Café Situations</h3>
-      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-2-container"><svg class="match-lines" id="activity-2-lines"></svg>
-        <div class="match-column" id="activity-2-left"></div>
-        <div class="match-column" id="activity-2-right"></div>
-      </div>
-      <div class="completion-message" id="activity-2-complete"><h3>Perfect!</h3></div>
+    <section id="activity-2" class="section"><div class="card"><h3>Cafe Survival</h3>
+      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/8</span></div>
+      <div id="activity-2-container"></div>
+      <div class="completion-message" id="activity-2-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
 
-    <section id="activity-3" class="section"><div class="card"><h3>Café Conversations</h3>
+    <section id="activity-3" class="section"><div class="card"><h3>Ordering Flow</h3>
       <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
-      <div id="activity-3-container"></div>
-      <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
+      <div id="activity-3-container" class="order-container"></div>
+      <div class="completion-message" id="activity-3-complete"><h3>Perfect Order!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
 
-    <section id="activity-4" class="section"><div class="card"><h3>Café Culture</h3>
+    <section id="activity-4" class="section"><div class="card"><h3>Payment vs Order</h3>
       <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/12</span></div>
-      <div id="activity-4-container"></div>
-      <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
+      <div class="sort-pool" id="activity-4-pool"><div class="sort-items" id="activity-4-items"></div></div>
+      <div class="sort-groups" id="activity-4-groups"></div>
+      <div class="completion-message" id="activity-4-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
 
-    <section id="activity-5" class="section"><div class="card"><h3>Dialogue Stages</h3>
+    <section id="activity-5" class="section"><div class="card"><h3>Problem Solver</h3>
       <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
-      <div class="sort-pool" id="activity-5-pool"><div class="sort-items" id="activity-5-items"></div></div>
-      <div class="sort-groups" id="activity-5-groups"></div>
-      <div class="completion-message" id="activity-5-complete"><h3>All Sorted!</h3></div>
+      <div class="match-container" id="activity-5-container"><svg class="match-lines" id="activity-5-lines"></svg>
+        <div class="match-column" id="activity-5-left"></div>
+        <div class="match-column" id="activity-5-right"></div>
+      </div>
+      <div class="completion-message" id="activity-5-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
 
-    <section id="activity-6" class="section"><div class="card"><h3>Café Phrases</h3>
+    <section id="activity-6" class="section"><div class="card"><h3>Cafe Critics</h3>
       <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/12</span></div>
-      <div id="activity-6-container" class="order-container"></div>
-      <div class="completion-message" id="activity-6-complete"><h3>Perfect Order!</h3></div>
+      <div id="activity-6-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-6-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
     </div></section>
 
-    <section id="activity-7" class="section"><div class="card"><h3>Polite Expressions</h3>
+    <section id="activity-7" class="section"><div class="card"><h3>Missing Link</h3>
       <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/12</span></div>
-      <div class="match-container" id="activity-7-container"><svg class="match-lines" id="activity-7-lines"></svg>
-        <div class="match-column" id="activity-7-left"></div>
-        <div class="match-column" id="activity-7-right"></div>
-      </div>
-      <div class="completion-message" id="activity-7-complete"><h3>Perfect!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+      <div id="activity-7-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-7-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-8')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-8" class="section"><div class="card"><h3>Cafe Scramble</h3>
+      <div class="score-display"><span class="score"><span id="activity-8-score">0</span>/12</span></div>
+      <div id="activity-8-container" class="order-container"></div>
+      <div class="completion-message" id="activity-8-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-8')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
-        <h3>Словник (10)</h3>
+        <h3>Словник (20)</h3>
         <div class="vocab-table-container">
           <table class="vocab-table">
             <thead><tr>
@@ -844,7 +853,7 @@ footer {
     <th>Переклад</th>
     <th>Примітка</th>
   </tr></thead>
-            <tbody><tr><td class="vocab-uk">столик</td><td class="vocab-ipa">/ˈstɔlɪk/</td><td class="vocab-en">table (dim.)</td><td class="vocab-note">diminutive, common in cafés</td></tr><tr><td class="vocab-uk">порекомендувати</td><td class="vocab-ipa">/pɔrɛkɔmɛnduˈvɑtɪ/</td><td class="vocab-en">to recommend</td><td class="vocab-note">порекомендуєте (formal)</td></tr><tr><td class="vocab-uk">спробувати</td><td class="vocab-ipa">/sprɔˈbuvɑtɪ/</td><td class="vocab-en">to try</td><td class="vocab-note">спробуйте! (try it!)</td></tr><tr><td class="vocab-uk">візьму</td><td class="vocab-ipa">/ˈvʲizʲmu/</td><td class="vocab-en">I&#039;ll take</td><td class="vocab-note">future of взяти</td></tr><tr><td class="vocab-uk">принесіть</td><td class="vocab-ipa">/prɪnɛˈsʲitʲ/</td><td class="vocab-en">bring (imp. pl)</td><td class="vocab-note">polite imperative</td></tr><tr><td class="vocab-uk">ще</td><td class="vocab-ipa">/ʃt͡ʃɛ/</td><td class="vocab-en">more, else, still</td><td class="vocab-note">Ще щось?</td></tr><tr><td class="vocab-uk">достатньо</td><td class="vocab-ipa">/dɔsˈtɑtʲnʲɔ/</td><td class="vocab-en">enough</td><td class="vocab-note">Достатньо, дякую</td></tr><tr><td class="vocab-uk">все</td><td class="vocab-ipa">/vsɛ/</td><td class="vocab-en">everything, all</td><td class="vocab-note">Це все</td></tr><tr><td class="vocab-uk">разом</td><td class="vocab-ipa">/ˈrɑzɔm/</td><td class="vocab-en">together</td><td class="vocab-note">paying together</td></tr><tr><td class="vocab-uk">окремо</td><td class="vocab-ipa">/ˈɔkrɛmɔ/</td><td class="vocab-en">separately</td><td class="vocab-note">paying separately</td></tr></tbody>
+            <tbody><tr><td class="vocab-uk">столик</td><td class="vocab-ipa">/ˈstɔlɪk/</td><td class="vocab-en">small table</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('столик')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">порекомендуєте</td><td class="vocab-ipa">/pɔrɛkɔmɛnˈdujɛtɛ/</td><td class="vocab-en">recommend (fut)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('порекомендуєте')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">спробувати</td><td class="vocab-ipa">/ˈsprɔbuvɑtɪ/</td><td class="vocab-en">to try/taste</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('спробувати')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">візьму</td><td class="vocab-ipa">/vizʲˈmu/</td><td class="vocab-en">will take</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('візьму')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">принесіть</td><td class="vocab-ipa">/prɪnɛˈsitʲ/</td><td class="vocab-en">bring (imp)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('принесіть')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">ще</td><td class="vocab-ipa">/ʃtʃɛ/</td><td class="vocab-en">more/still</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('ще')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">достатньо</td><td class="vocab-ipa">/dɔˈstɑtnʲɔ/</td><td class="vocab-en">enough</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('достатньо')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">все</td><td class="vocab-ipa">/vsɛ/</td><td class="vocab-en">all/everything</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('все')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">разом</td><td class="vocab-ipa">/ˈrɑzɔm/</td><td class="vocab-en">together</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('разом')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">окремо</td><td class="vocab-ipa">/ɔˈkrɛmɔ/</td><td class="vocab-en">separately</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('окремо')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">вільний</td><td class="vocab-ipa">/ˈvilʲnɪj/</td><td class="vocab-en">free</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('вільний')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">зайнятий</td><td class="vocab-ipa">/ˈzajnjɑtɪj/</td><td class="vocab-en">occupied</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('зайнятий')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">з собою</td><td class="vocab-ipa">/z sɔˈbɔju/</td><td class="vocab-en">to go (with self)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('з собою')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">тут</td><td class="vocab-ipa">/tut/</td><td class="vocab-en">here</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('тут')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">пакет</td><td class="vocab-ipa">/pɑˈkɛt/</td><td class="vocab-en">bag (plastic/paper)</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('пакет')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">готівка</td><td class="vocab-ipa">/ɦɔˈtivkɑ/</td><td class="vocab-en">cash</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('готівка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">картка</td><td class="vocab-ipa">/ˈkɑrtkɑ/</td><td class="vocab-en">card</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('картка')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">пароль</td><td class="vocab-ipa">/pɑˈrɔlʲ/</td><td class="vocab-en">password</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('пароль')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">чек</td><td class="vocab-ipa">/tʃɛk/</td><td class="vocab-en">receipt/check</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('чек')" title="Listen on Forvo">🔊</button></td></tr><tr><td class="vocab-uk">смачний</td><td class="vocab-ipa">/smɑtʃˈnɪj/</td><td class="vocab-en">tasty</td><td class="vocab-note"><button class="audio-btn" onclick="openForvo('смачний')" title="Listen on Forvo">🔊</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -856,8 +865,8 @@ footer {
   </main><footer>Module 19 · curricula-opus</footer>
   <script>
 
-    const activitiesData = [{"id":"activity-0","type":"fill-blank","title":"Café Dialogue","data":{"type":"fill-blank","items":[{"prompt":"Столик на ___, будь ласка. (two)","answer":"двох","options":["двох","два","дві","двоє"]},{"prompt":"Можна ___? (menu)","answer":"меню","options":["меню","меню","меню","рахунок"]},{"prompt":"Що ___? (do you recommend)","answer":"порекомендуєте","options":["порекомендуєте","рекомендуєте","порекомендувати","рекомендація"]},{"prompt":"Я ___ каву. (will take)","answer":"візьму","options":["візьму","беру","хочу","маю"]},{"prompt":"___, будь ласка. (Check)","answer":"Рахунок","options":["Рахунок","Гроші","Меню","Картка"]},{"prompt":"Платити ___ можна? (by card)","answer":"картою","options":["картою","карткою","картка","карту"]},{"prompt":"Було дуже ___! (tasty)","answer":"смачно","options":["смачно","смачний","смачна","смачне"]},{"prompt":"Каву з ___, будь ласка. (milk)","answer":"молоком","options":["молоком","молоко","молока","молоці"]},{"prompt":"___ цукру. (Without)","answer":"Без","options":["Без","З","До","Від"]},{"prompt":"___ щось? (Something else?)","answer":"Ще","options":["Ще","Інше","Більше","Менше"]},{"prompt":"Ні, дякую. Це ___. (everything)","answer":"все","options":["все","всі","весь","вся"]},{"prompt":"___, до побачення! (Thank you)","answer":"Дякую","options":["Дякую","Прошу","Будь ласка","Вибачте"]}]}},{"id":"activity-1","type":"unjumble","title":"Café Phrases","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["меню","Можна","ласка","будь"],"answer":"Можна меню, будь ласка?","translation":"Can I have the menu, please?"},{"words":["візьму","борщ","Я"],"answer":"Я візьму борщ.","translation":"I'll take borsch."},{"words":["порекомендуєте","Що"],"answer":"Що порекомендуєте?","translation":"What do you recommend?"},{"words":["двох","Столик","будь","ласка","на"],"answer":"Столик на двох, будь ласка.","translation":"A table for two, please."},{"words":["молоком","Каву","будь","ласка","з"],"answer":"Каву з молоком, будь ласка.","translation":"Coffee with milk, please."},{"words":["смачно","Було","дуже"],"answer":"Було дуже смачно!","translation":"It was very tasty!"},{"words":["можна","Платити","картою"],"answer":"Платити картою можна?","translation":"Can I pay by card?"},{"words":["рахунок","будь","ласка","Ось","ваш"],"answer":"Ось ваш рахунок, будь ласка.","translation":"Here's your check, please."},{"words":["цукру","Без","ласка","будь"],"answer":"Без цукру, будь ласка.","translation":"Without sugar, please."},{"words":["дякую","все","Ні","Це"],"answer":"Ні, дякую. Це все.","translation":"No, thank you. That's all."},{"words":["чашку","Можна","кави"],"answer":"Можна чашку кави?","translation":"Can I have a cup of coffee?"},{"words":["до","Дякую","побачення","вам"],"answer":"Дякую вам, до побачення!","translation":"Thank you, goodbye!"}]}},{"id":"activity-2","type":"match-up","title":"Café Situations","data":{"type":"match-up","pairs":[{"left":"Want the menu","right":"Можна меню?"},{"left":"Want a recommendation","right":"Що порекомендуєте?"},{"left":"Ready to order","right":"Я візьму..."},{"left":"Need more time","right":"Одну хвилинку"},{"left":"Ask for the check","right":"Рахунок, будь ласка"},{"left":"Pay together","right":"Разом"},{"left":"Pay separately","right":"Окремо"},{"left":"Leave a tip","right":"Решта — чайові"},{"left":"Compliment the food","right":"Було смачно!"},{"left":"Say goodbye","right":"До побачення!"},{"left":"Thank the waiter","right":"Дякую вам!"},{"left":"Coffee without sugar","right":"Без цукру"}],"shuffleRight":true}},{"id":"activity-3","type":"quiz","title":"Café Conversations","data":{"type":"quiz","questions":[{"question":"How do you ask for a table for two?","options":["Два столики","Столик на двох","Столик два","Двох столиків"],"correctIndex":1,"explanation":"\"На двох\" means \"for two (people).\""},{"question":"What does \"Що порекомендуєте?\" mean?","options":["What is this?","What do you want?","What do you recommend?","What do you have?"],"correctIndex":2,"explanation":"\"Порекомендуєте\" = (you) recommend."},{"question":"\"Я візьму\" means:","options":["I want","I have","I'll take","Give me"],"correctIndex":2,"explanation":"\"Візьму\" is future tense of \"взяти\" (to take)."},{"question":"How do you say \"without sugar\"?","options":["З цукром","Без цукру","Не цукор","Без цукор"],"correctIndex":1,"explanation":"\"Без\" + genitive = without."},{"question":"What does \"Ще щось?\" mean?","options":["Anything else?","What's this?","That's all","Thank you"],"correctIndex":0,"explanation":"\"Ще\" = still/more, \"щось\" = something."},{"question":"\"Разом чи окремо?\" asks about:","options":["Food or drink","Hot or cold","Paying together or separately","Eating here or takeaway"],"correctIndex":2,"explanation":"\"Разом\" = together, \"окремо\" = separately."},{"question":"How do you leave a tip?","options":["Чай, будь ласка","Решта — чайові","Гроші вам","Чайові рахунок"],"correctIndex":1,"explanation":"\"Решта — чайові\" = Keep the change as a tip."},{"question":"\"Прошу\" can mean:","options":["Only \"please\"","Only \"here you go\"","Only \"you're welcome\"","All of the above"],"correctIndex":3,"explanation":"\"Прошу\" is extremely versatile!"},{"question":"What do you say when food is delicious?","options":["Смачного!","Було дуже смачно!","Смачний!","Смачне!"],"correctIndex":1,"explanation":"\"Було смачно\" = It was tasty (past tense)."},{"question":"\"Одну хвилинку\" means:","options":["One moment, please","One hour","One day","One time"],"correctIndex":0,"explanation":"\"Хвилинка\" = minute (diminutive)."},{"question":"How do you ask if card payment is possible?","options":["Платити картою можна?","Картка платити?","Можна гроші карткою?","Платити готівкою?"],"correctIndex":0,"explanation":"\"Картою\" is instrumental case (by card)."},{"question":"\"Це все\" means:","options":["What is this?","That's all/everything","This too","This one"],"correctIndex":1,"explanation":"\"Все\" = everything, all."}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-4","type":"true-false","title":"Café Culture","data":{"type":"true-false","statements":[{"statement":"\"Можна\" is a polite way to make requests.","isTrue":true,"explanation":"Correct! It's the standard polite form."},{"statement":"In Ukraine, the check comes automatically.","isTrue":false,"explanation":"Incorrect! You must ask: \"Рахунок, будь ласка.\""},{"statement":"\"Прошу\" can mean \"please,\" \"here you go,\" or \"you're welcome.\"","isTrue":true,"explanation":"Correct! It's one of the most versatile words."},{"statement":"Tipping is mandatory in Ukraine.","isTrue":false,"explanation":"Incorrect! Tipping is appreciated but not required."},{"statement":"\"Смачного!\" is said before eating.","isTrue":true,"explanation":"Correct! Like \"Bon appétit!\""},{"statement":"\"Візьму\" is present tense.","isTrue":false,"explanation":"Incorrect! \"Візьму\" is future: \"I will take.\""},{"statement":"\"На двох\" means \"for two people.\"","isTrue":true,"explanation":"Correct! Used when asking for a table."},{"statement":"\"Без цукру\" uses accusative case.","isTrue":false,"explanation":"Incorrect! \"Без\" requires genitive: \"цукру.\""},{"statement":"\"Ще щось?\" means \"Anything else?\"","isTrue":true,"explanation":"Correct! Common waiter question."},{"statement":"\"Окремо\" means \"together.\"","isTrue":false,"explanation":"Incorrect! \"Окремо\" = separately; \"разом\" = together."},{"statement":"\"Було смачно\" is past tense.","isTrue":true,"explanation":"Correct! \"Було\" = was; \"є\" = is."},{"statement":"Lviv is famous for its coffee culture.","isTrue":true,"explanation":"Correct! Lviv has many historic cafés and coffee traditions."}]}},{"id":"activity-5","type":"group-sort","title":"Dialogue Stages","data":{"type":"group-sort","groups":[{"id":"arriving","name":"Arriving","items":["Добрий день!","Столик на двох","Прошу сюди"]},{"id":"ordering","name":"Ordering","items":["Можна меню?","Я візьму борщ","Що порекомендуєте?"]},{"id":"paying","name":"Paying","items":["Рахунок, будь ласка","Платити картою","Решта — чайові"]},{"id":"leaving","name":"Leaving","items":["Було смачно!","Дякую вам!","До побачення!"]}],"shuffleItems":true}},{"id":"activity-6","type":"anagram","title":"Café Phrases","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["к","и","л","о","т","с"],"answer":"столик","translation":"small table"},{"letters":["ю","н","е","м"],"answer":"меню","translation":"menu"},{"letters":["к","о","н","у","х","а","р"],"answer":"рахунок","translation":"bill/check"},{"letters":["о","ю","к","р","а","т","к"],"answer":"картою","translation":"by card"},{"letters":["о","м","з","а","р"],"answer":"разом","translation":"together"},{"letters":["о","м","е","р","к","о"],"answer":"окремо","translation":"separately"},{"letters":["о","н","ч","а","м","с"],"answer":"смачно","translation":"tasty"},{"letters":["у","ш","о","р","п"],"answer":"прошу","translation":"please/here you go"},{"letters":["є","щ"],"answer":"ще","translation":"more/else"},{"letters":["е","с","в"],"answer":"все","translation":"everything"},{"letters":["і","в","о","й","а","ч"],"answer":"чайові","translation":"tip"},{"letters":["а","т","ш","е","р"],"answer":"решта","translation":"change"}]}},{"id":"activity-7","type":"match-up","title":"Polite Expressions","data":{"type":"match-up","pairs":[{"left":"Greeting staff","right":"Добрий день!"},{"left":"Asking for menu","right":"Можна меню?"},{"left":"Ordering food","right":"Я візьму..."},{"left":"Asking recommendation","right":"Що порекомендуєте?"},{"left":"Coffee with milk","right":"Кава з молоком"},{"left":"Without sugar","right":"Без цукру"},{"left":"Asking for check","right":"Рахунок, будь ласка"},{"left":"Paying by card","right":"Картою, будь ласка"},{"left":"Leaving a tip","right":"Решта — чайові"},{"left":"Complimenting food","right":"Було дуже смачно!"},{"left":"Thanking waiter","right":"Дякую вам!"},{"left":"Saying goodbye","right":"До побачення!"}],"shuffleRight":true}}];
-    const vocabData = [{"uk":"столик","translit":"","en":"table (dim.)","note":"diminutive, common in cafés"},{"uk":"порекомендувати","translit":"","en":"to recommend","note":"порекомендуєте (formal)"},{"uk":"спробувати","translit":"","en":"to try","note":"спробуйте! (try it!)"},{"uk":"візьму","translit":"","en":"I'll take","note":"future of взяти"},{"uk":"принесіть","translit":"","en":"bring (imp. pl)","note":"polite imperative"},{"uk":"ще","translit":"","en":"more, else, still","note":"Ще щось?"},{"uk":"достатньо","translit":"","en":"enough","note":"Достатньо, дякую"},{"uk":"все","translit":"","en":"everything, all","note":"Це все"},{"uk":"разом","translit":"","en":"together","note":"paying together"},{"uk":"окремо","translit":"","en":"separately","note":"paying separately"}];
+    const activitiesData = [{"id":"activity-0","type":"match-up","title":"Cafe Lingo","data":{"type":"match-up","pairs":[{"left":"Вас двоє?","right":"Are there two of you?"},{"left":"Тут чи з собою?","right":"Here or to go?"},{"left":"Що порекомендуєте?","right":"What do you recommend?"},{"left":"Можна рахунок?","right":"Can I have the bill?"},{"left":"Разом чи окремо?","right":"Together or separate?"},{"left":"Стіл вільний?","right":"Is the table free?"},{"left":"Це зайнято.","right":"It is occupied."},{"left":"Вам сподобалось?","right":"Did you like it?"},{"left":"Було смачно.","right":"It was tasty."},{"left":"Я візьму це.","right":"I will take this."},{"left":"Прикладіть картку.","right":"Tap the card."},{"left":"Пакет потрібен?","right":"Do you need a bag?"}],"shuffleRight":true}},{"id":"activity-1","type":"fill-blank","title":"The Dialogue Builder","data":{"type":"fill-blank","items":[{"prompt":"You: Добрий день.\n   Waiter: Добрий день. ___ (Are you alone/two?)","answer":"Вас двоє?","hints":["Are you alone/two?"],"options":["Вас двоє?","Вас багато?","Де ви?"]},{"prompt":"You: Я буду каву.\n   Waiter: ___ (Here or to go?)","answer":"Тут чи з собою?","hints":["Here or to go?"],"options":["Тут чи з собою?","Кава чи чай?","Рахунок?"]},{"prompt":"You: Можна рахунок?\n   Waiter: ___ (Card or cash?)","answer":"Карткою чи готівкою?","hints":["Card or cash?"],"options":["Карткою чи готівкою?","Разом чи окремо?","Дякую."]},{"prompt":"You: Дякую, до побачення.\n   Waiter: ___ (Have a nice day!)","answer":"Гарного дня!","hints":["Have a nice day!"],"options":["Гарного дня!","Смачного!","Будьмо!"]},{"prompt":"You: Цей стіл вільний?\n   Waiter: Ні, ___ (Occupied).","answer":"він зайнятий","hints":["Occupied"],"options":["він зайнятий","він вільний","він тут"]},{"prompt":"You: Що це?\n   Waiter: Це ___ (Cheesecake).","answer":"чизкейк","hints":["Cheesecake"],"options":["чизкейк","борщ","вода"]},{"prompt":"You: Я хотів би меню.\n   Waiter: Ось, ___ (Please).","answer":"прошу","hints":["Please"],"options":["прошу","дякую","ні"]},{"prompt":"You: Де туалет?\n   Waiter: Там, ___ (Left).","answer":"ліворуч","hints":["Left"],"options":["ліворуч","вгору","вниз"]},{"prompt":"You: У вас є вайфай?\n   Waiter: Так, пароль на ___ (receipt/check).","answer":"чеку","hints":["receipt/check"],"options":["чеку","столі","вікні"]},{"prompt":"You: Було дуже смачно.\n    Waiter: Я ___ (Glad).","answer":"радий","hints":["Glad"],"options":["радий","сумний","зайнятий"]},{"prompt":"You: Я візьму воду.\n    Waiter: З ___ (Lemon)?","answer":"лимоном","hints":["Lemon"],"options":["лимоном","цукром","сіллю"]},{"prompt":"You: Рахунок, будь ласка.\n    Waiter: ___ (Wait/One second).","answer":"Секундочку","hints":["Wait/One second"],"options":["Секундочку","Ніколи","Завтра"]}]}},{"id":"activity-2","type":"quiz","title":"Cafe Survival","data":{"type":"quiz","questions":[{"question":"You want to sit by the window.","options":["Я хотів би столик біля вікна.","Я хочу вікно."],"correctIndex":0,"explanation":""},{"question":"The waiter asks \"Together or separate?\". You pay for yourself only.","options":["Окремо.","Разом."],"correctIndex":0,"explanation":""},{"question":"You don't know what to eat.","options":["Що ви порекомендуєте?","Що це?"],"correctIndex":0,"explanation":""},{"question":"You want to take the food home.","options":["З собою.","Тут."],"correctIndex":0,"explanation":""},{"question":"The food was good.","options":["Було смачно.","Було погано."],"correctIndex":0,"explanation":""},{"question":"The waiter brings the terminal.","options":["Прикласти картку.","Дати готівку."],"correctIndex":0,"explanation":""},{"question":"You need internet.","options":["Який пароль від вайфаю?","Де інтернет?"],"correctIndex":0,"explanation":""},{"question":"\"Вас двоє?\" means...","options":["Are there two of you?","Do you want two?"],"correctIndex":0,"explanation":""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-3","type":"unjumble","title":"Ordering Flow","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["будь ласка","Меню,","."],"answer":"Меню, будь ласка."},{"words":["порекомендуєте","ви","Що","?"],"answer":"Що ви порекомендуєте?"},{"words":["дуже","Це","смачне","."],"answer":"Це дуже смачне."},{"words":["візьму","Я","салат","."],"answer":"Я візьму салат."},{"words":["чи","Тут","собою","з","?"],"answer":"Тут чи з собою?"},{"words":["рахунок","Можна","?"],"answer":"Можна рахунок?"},{"words":["чи","Разом","окремо","?"],"answer":"Разом чи окремо?"},{"words":["карткою","Оплата","."],"answer":"Оплата карткою."},{"words":["смачно","Було","дуже","."],"answer":"Було дуже смачно."},{"words":["за","Дякую","сервіс","."],"answer":"Дякую за сервіс."},{"words":["гарного","Вам","дня","."],"answer":"Вам гарного дня."},{"words":["на","Столик","двох","."],"answer":"Столик на двох."}]}},{"id":"activity-4","type":"group-sort","title":"Payment vs Order","data":{"type":"group-sort","groups":[{"id":"ordering","name":"Ordering","items":["Я хотів би меню","Що це таке?","Я візьму каву","Тут чи з собою?","Що ви порекомендуєте?","Без цукру"]},{"id":"paying","name":"Paying","items":["Можна рахунок?","Разом чи окремо?","Карткою чи готівкою?","Решти не треба","Прикладіть картку","Термінал не працює"]}],"shuffleItems":true}},{"id":"activity-5","type":"match-up","title":"Problem Solver","data":{"type":"match-up","pairs":[{"left":"Суп холодний.","right":"Можна підігріти?"},{"left":"Я не маю інтернету.","right":"Який пароль від вайфаю?"},{"left":"Я хочу в туалет.","right":"Де тут туалет?"},{"left":"Це не моє замовлення.","right":"Вибачте, я не замовляв це."},{"left":"Я не маю готівки.","right":"Можна карткою?"},{"left":"Я не розумію меню.","right":"Що ви порекомендуєте?"},{"left":"Я поспішаю (run/hurry).","right":"Можна рахунок зараз?"},{"left":"Столик зайнятий.","right":"У вас є інший (other) столик?"},{"left":"Меню немає.","right":"Скануйте QR код."},{"left":"Туалет зачинений.","right":"Код на чеку."},{"left":"Тут дорого.","right":"Я візьму тільки чай."},{"left":"Це дуже гостре.","right":"Можна води?"}],"shuffleRight":true}},{"id":"activity-6","type":"fill-blank","title":"Cafe Critics","data":{"type":"fill-blank","items":[{"prompt":"Кава холодна. ___ (Bad).","answer":"Жахливо","hints":["Bad"]},{"prompt":"Десерт солодкий і свіжий. ___ (Good).","answer":"Чудово","hints":["Good"]},{"prompt":"Офіціант грубий (rude). ___ (Bad).","answer":"Жахливо","hints":["Bad"]},{"prompt":"Інтернет швидкий (fast). ___ (Good).","answer":"Чудово","hints":["Good"]},{"prompt":"Ціни високі (high). ___ (Bad).","answer":"Дорого","hints":["Bad"]},{"prompt":"Ціни низькі (low). ___ (Good).","answer":"Дешево","hints":["Good"]},{"prompt":"Музика гучна (loud). ___ (Bad).","answer":"Погано","hints":["Bad"]},{"prompt":"Атмосфера затишна (cozy). ___ (Good).","answer":"Чудово","hints":["Good"]},{"prompt":"Туалет брудний (dirty). ___ (Bad).","answer":"Жахливо","hints":["Bad"]},{"prompt":"Суп смачний. ___ (Good).","answer":"Смачно","hints":["Good"]},{"prompt":"Час очікування (wait time) довгий. ___ (Bad).","answer":"Довго","hints":["Bad"]},{"prompt":"Меню велике. ___ (Good).","answer":"Добре","hints":["Good"]}]}},{"id":"activity-7","type":"fill-blank","title":"Missing Link","data":{"type":"fill-blank","items":[{"prompt":"Столик на ___ (two).","answer":"двох","hints":["two"]},{"prompt":"Тут чи з ___ (self).","answer":"собою","hints":["self"]},{"prompt":"Разом чи ___ (separately).","answer":"окремо","hints":["separately"]},{"prompt":"Оплата ___ (card - instr).","answer":"карткою","hints":["card - instr"]},{"prompt":"Оплата ___ (cash - instr).","answer":"готівкою","hints":["cash - instr"]},{"prompt":"Що ви ___ (recommend).","answer":"порекомендуєте","hints":["recommend"]},{"prompt":"Я ___ (take) це.","answer":"візьму","hints":["take"]},{"prompt":"Було ___ (tasty).","answer":"смачно","hints":["tasty"]},{"prompt":"Пакет ___ (needed)?","answer":"потрібен","hints":["needed"]},{"prompt":"Столик ___ (free)?","answer":"вільний","hints":["free"]},{"prompt":"Столик ___ (occupied).","answer":"зайнятий","hints":["occupied"]},{"prompt":"Біля ___ (window).","answer":"вікна","hints":["window"]}]}},{"id":"activity-8","type":"anagram","title":"Cafe Scramble","data":{"type":"anagram","isAnagram":true,"items":[{"letters":["м","е","н","ю"],"answer":"меню","translation":"Menu"},{"letters":["в","а","к","а"],"answer":"кава","translation":"Coffee"},{"letters":["р","а","х","у","н","о","к"],"answer":"рахунок","translation":"Bill"},{"letters":["о","к","р","е","м","о"],"answer":"окремо","translation":"Separately"},{"letters":["р","а","з","о","м"],"answer":"разом","translation":"Together"},{"letters":["с","о","б","о","ю"],"answer":"собою","translation":"With self - to go"},{"letters":["с","м","а","ч","н","о"],"answer":"смачно","translation":"Tasty"},{"letters":["в","і","л","ь","н","и","й"],"answer":"вільний","translation":"Free"},{"letters":["з","а","й","н","я","т","и","й"],"answer":"зайнятий","translation":"Occupied"},{"letters":["т","е","р","м","і","н","а","л"],"answer":"термінал","translation":"Terminal"},{"letters":["г","о","т","і","в","к","а"],"answer":"готівка","translation":"Cash"},{"letters":["к","а","р","т","к","а"],"answer":"картка","translation":"Card"}]}}];
+    const vocabData = [{"uk":"столик","translit":"","en":"small table","note":"[🔊](audio_stolyk)"},{"uk":"порекомендуєте","translit":"","en":"recommend (fut)","note":"[🔊](audio_porekomenduyete)"},{"uk":"спробувати","translit":"","en":"to try/taste","note":"[🔊](audio_sprobuvaty)"},{"uk":"візьму","translit":"","en":"will take","note":"[🔊](audio_vizmu)"},{"uk":"принесіть","translit":"","en":"bring (imp)","note":"[🔊](audio_prynesit)"},{"uk":"ще","translit":"","en":"more/still","note":"[🔊](audio_shche)"},{"uk":"достатньо","translit":"","en":"enough","note":"[🔊](audio_dostatnyo)"},{"uk":"все","translit":"","en":"all/everything","note":"[🔊](audio_vse)"},{"uk":"разом","translit":"","en":"together","note":"[🔊](audio_razom)"},{"uk":"окремо","translit":"","en":"separately","note":"[🔊](audio_okremo)"},{"uk":"вільний","translit":"","en":"free","note":"[🔊](audio_vilnyj)"},{"uk":"зайнятий","translit":"","en":"occupied","note":"[🔊](audio_zaynyatyj)"},{"uk":"з собою","translit":"","en":"to go (with self)","note":"[🔊](audio_z_soboyu)"},{"uk":"тут","translit":"","en":"here","note":"[🔊](audio_tut)"},{"uk":"пакет","translit":"","en":"bag (plastic/paper)","note":"[🔊](audio_paket)"},{"uk":"готівка","translit":"","en":"cash","note":"[🔊](audio_hotivka)"},{"uk":"картка","translit":"","en":"card","note":"[🔊](audio_kartka)"},{"uk":"пароль","translit":"","en":"password","note":"[🔊](audio_parol)"},{"uk":"чек","translit":"","en":"receipt/check","note":"[🔊](audio_chek)"},{"uk":"смачний","translit":"","en":"tasty","note":"[🔊](audio_smachnyj)"}];
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -917,6 +926,32 @@ function resetActivity(sectionId) {
       resetSelect(sectionId);
       break;
   }
+}
+
+
+
+
+// Forvo Integration (Community Native Audio)
+// Opens a specific word page on Forvo in a popup window.
+function openForvo(text) {
+  if (!text) return;
+
+  // URL Encode the text (handles Cyrillic)
+  const encodedText = encodeURIComponent(text);
+  // Use Search URL with language filter 'uk' to avoid Russian results
+  const url = `https://forvo.com/search/${encodedText}/uk/`;
+
+  // Open popup
+  const width = 800;
+  const height = 600;
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
+
+  window.open(
+    url,
+    'forvo_window',
+    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+  );
 }
 
 // Initialize all activities from activitiesData array
@@ -2181,6 +2216,192 @@ function resetSelect(sectionId) {
   document.getElementById(sectionId + '-score').textContent = '0';
   document.getElementById(sectionId + '-complete')?.classList.remove('show');
   initSelect(sectionId, state.data);
+}
+
+
+// Error-Correction Activity
+// Two-step interaction: 1) Click wrong word, 2) Select correct form
+const errorState = {};
+
+function initErrorCorrection(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  errorState[sectionId] = {
+    score: 0,
+    completed: 0,
+    total: data.items.length,
+    data: data
+  };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'error-item';
+    div.dataset.section = sectionId;
+    div.dataset.idx = i;
+
+    // Parse sentence into clickable words
+    const words = item.sentence.split(/(\s+)/);
+    const wordsHtml = words.map((word, wi) => {
+      if (/^\s+$/.test(word)) return word; // preserve whitespace
+      const isError = item.errorWord && word.replace(/[.,!?;:]/g, '') === item.errorWord;
+      return `<span class="error-word" data-word="${word.replace(/[.,!?;:]/g, '')}" data-is-error="${isError}">${word}</span>`;
+    }).join('');
+
+    const hasNoError = item.errorWord === null;
+
+    div.innerHTML = `
+      <div class="error-sentence" id="${sectionId}-sentence-${i}">
+        <span class="error-number">${i + 1}.</span>
+        <span class="error-words">${wordsHtml}</span>
+        ${hasNoError ? '' : ''}
+      </div>
+      <div class="error-no-error-btn" id="${sectionId}-noerror-${i}">
+        <button class="btn btn-outline btn-sm" onclick="handleNoError('${sectionId}', ${i})">No error</button>
+      </div>
+      <div class="error-options" id="${sectionId}-options-${i}" style="display:none;">
+        <span class="error-prompt">Choose the correct form:</span>
+        <div class="error-option-btns">
+          ${(item.options || []).map(opt =>
+            `<button class="btn btn-outline btn-sm error-option"
+                     data-option="${opt}"
+                     data-correct="${opt === item.correctForm}"
+                     onclick="handleErrorOption('${sectionId}', ${i}, '${opt}', ${opt === item.correctForm})">${opt}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="error-feedback" id="${sectionId}-fb-${i}" style="display:none;"></div>
+    `;
+
+    c.appendChild(div);
+  });
+
+  // Event delegation for word clicks
+  c.addEventListener('click', (e) => {
+    const wordEl = e.target.closest('.error-word');
+    if (wordEl && !wordEl.closest('.error-item').classList.contains('completed')) {
+      const item = wordEl.closest('.error-item');
+      handleWordClick(item.dataset.section, parseInt(item.dataset.idx), wordEl);
+    }
+  });
+}
+
+function handleWordClick(sectionId, idx, wordEl) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (itemEl.classList.contains('step2') || itemEl.classList.contains('completed')) return;
+
+  // Clear previous selection in this item
+  itemEl.querySelectorAll('.error-word.selected').forEach(w => w.classList.remove('selected'));
+
+  const clickedWord = wordEl.dataset.word;
+  const isError = wordEl.dataset.isError === 'true';
+
+  if (isError) {
+    // Correct identification! Move to step 2
+    wordEl.classList.add('selected', 'found');
+    itemEl.classList.add('step2');
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    // Hide no-error button, show options
+    document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+    document.getElementById(`${sectionId}-options-${idx}`).style.display = 'block';
+  } else {
+    // Wrong word selected
+    wordEl.classList.add('selected', 'wrong-selection');
+    setTimeout(() => wordEl.classList.remove('selected', 'wrong-selection'), 500);
+  }
+}
+
+function handleNoError(sectionId, idx) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+  document.getElementById(`${sectionId}-noerror-${idx}`).style.display = 'none';
+
+  if (item.errorWord === null) {
+    // Correct! No error in this sentence
+    state.score += 2; // Full points for no-error items
+    fb.innerHTML = `<span class="correct-text">Correct! No error in this sentence.</span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  } else {
+    // Wrong - there was an error
+    fb.innerHTML = `<span class="wrong-text">There was an error: <strong>${item.errorWord}</strong> → <strong>${item.correctForm}</strong></span>`;
+    if (item.explanation) {
+      fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+    }
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function handleErrorOption(sectionId, idx, option, isCorrect) {
+  const state = errorState[sectionId];
+  const item = state.data.items[idx];
+  const itemEl = document.querySelector(`.error-item[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(`${sectionId}-fb-${idx}`);
+  const optionsEl = document.getElementById(`${sectionId}-options-${idx}`);
+
+  if (itemEl.classList.contains('completed')) return;
+
+  itemEl.classList.add('completed');
+
+  // Highlight correct/wrong options
+  optionsEl.querySelectorAll('.error-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') {
+      btn.classList.add('correct');
+    } else if (btn.dataset.option === option && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  if (isCorrect) {
+    state.score++;
+    fb.innerHTML = `<span class="correct-text">Correct!</span>`;
+  } else {
+    fb.innerHTML = `<span class="wrong-text">The correct form is: <strong>${item.correctForm}</strong></span>`;
+  }
+
+  if (item.explanation) {
+    fb.innerHTML += `<div class="error-explanation">${item.explanation}</div>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById(sectionId + '-score').textContent = state.score;
+
+  state.completed++;
+  checkComplete(sectionId);
+}
+
+function checkComplete(sectionId) {
+  const state = errorState[sectionId];
+  if (state.completed === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetErrorCorrection(sectionId) {
+  const state = errorState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initErrorCorrection(sectionId, state.data);
 }
 
 
