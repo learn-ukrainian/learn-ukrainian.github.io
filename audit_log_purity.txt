@@ -1,0 +1,647 @@
+📚 Vocabulary database loaded for duplicate detection
+
+🔍 Module Audit: l2-uk-en (modules 1-34)
+
+Found 34 modules to audit
+======================================================================
+
+📋 BROKEN-ACTIVITY
+----------------------------------------------------------------------
+
+  Module 3: The Gender Code (A1)
+    ⚠️ Fill-in has 12 blanks but only 0 answers:110
+
+  Module 4: This Is / I Am (A1)
+    ⚠️ Fill-in has 12 blanks but only 8 answers:219
+    ⚠️ Fill-in has 5 blanks but only 0 answers:441
+
+  Module 5: My World: Objects (A1)
+    ⚠️ Fill-in has 12 blanks but only 0 answers:227
+
+  Module 9: Food & Drinks (A1)
+    ⚠️ Fill-in has 12 blanks but only 0 answers:178
+
+📋 VOCAB-DUPLICATE
+----------------------------------------------------------------------
+
+  Module 4: This Is / I Am (A1)
+    ⚠️ 2 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 5: My World: Objects (A1)
+    ⚠️ 9 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 7: Questions & Negation (A1)
+    ⚠️ 6 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 9: Food & Drinks (A1)
+    ⚠️ 20 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 11: The Accusative I - Things (A1)
+    ⚠️ 5 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 12: The Accusative II - People (A1)
+    ⚠️ 7 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 13: The Locative - Where Things Are (A1)
+    ⚠️ 9 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 15: Around the City (A1)
+    ⚠️ 3 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 16: The Genitive Case - Absence (A1)
+    ⚠️ 8 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 17: Numbers and Money (A1)
+    ⚠️ 1 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 18: Food & Shopping (A1)
+    ⚠️ 15 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 19: At the Café (A1)
+    ⚠️ 4 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 20: Checkpoint - Navigation (A1)
+    ⚠️ 18 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 23: From Sunrise to Sunset (A1)
+    ⚠️ 5 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 24: Days and Months (A1)
+    ⚠️ 2 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 25: Transport and Travel (A1)
+    ⚠️ 10 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 26: Modal Verbs (A1)
+    ⚠️ 5 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 27: Description (Adjectives III) (A1)
+    ⚠️ 2 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 28: Description (Adverbs) (A1)
+    ⚠️ 5 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 29: Weather & Nature (A1)
+    ⚠️ 9 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 30: Prepositions III (Direction vs Location) (A1)
+    ⚠️ 19 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 31: Body & Health (A1)
+    ⚠️ 4 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 32: My Family (A1)
+    ⚠️ 10 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 33: Holidays & Traditions (A1)
+    ⚠️ 5 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+  Module 34: Final Checkpoint (A1 Mastery) (A1)
+    ⚠️ 20 vocab word(s) already introduced in earlier modules - remove from this module's vocab
+
+📋 CHECKPOINT
+----------------------------------------------------------------------
+
+  Module 10: Checkpoint - First Contact (A1)
+    ⚠️ Checkpoint missing named character (e.g., "Ліам, 26, Irish, Dublin")
+    ⚠️ Checkpoint missing dialogue tables (Speaker | Ukrainian | English)
+    ℹ️ Checkpoint has only 0 testimonies (recommend 3-4 learner quotes)
+    ℹ️ Checkpoint may lack opening narrative (journal entry, story)
+
+  Module 20: Checkpoint - Navigation (A1)
+    ⚠️ Checkpoint missing named character (e.g., "Ліам, 26, Irish, Dublin")
+    ⚠️ Checkpoint missing dialogue tables (Speaker | Ukrainian | English)
+    ℹ️ Checkpoint has only 0 testimonies (recommend 3-4 learner quotes)
+    ℹ️ Checkpoint may lack opening narrative (journal entry, story)
+
+  Module 30: Prepositions III (Direction vs Location) (A1)
+    ⚠️ Checkpoint missing named character (e.g., "Ліам, 26, Irish, Dublin")
+    ⚠️ Checkpoint missing dialogue tables (Speaker | Ukrainian | English)
+    ℹ️ Checkpoint has only 0 testimonies (recommend 3-4 learner quotes)
+
+  Module 34: Final Checkpoint (A1 Mastery) (A1)
+    ⚠️ Checkpoint missing named character (e.g., "Ліам, 26, Irish, Dublin")
+    ⚠️ Checkpoint missing dialogue tables (Speaker | Ukrainian | English)
+    ℹ️ Checkpoint has only 0 testimonies (recommend 3-4 learner quotes)
+
+📋 REQUIREMENTS
+----------------------------------------------------------------------
+
+  Module 3: The Gender Code (A1)
+    ⚠️ Only 6 activities (A1 requires 8)
+    ℹ️ High vocab count: 36 words (A1 target: 18-25) - consider splitting
+
+  Module 6: The Living Verb I (A1)
+    ℹ️ Activity 5 has only 5 items (A1 target: 12)
+    ℹ️ Activity 8 has only 5 items (A1 target: 12)
+
+  Module 7: Questions & Negation (A1)
+    ℹ️ Activity 5 has only 4 items (A1 target: 12)
+    ℹ️ Activity 8 has only 6 items (A1 target: 12)
+
+  Module 8: The Living Verb II (A1)
+    ℹ️ Activity 4 has only 5 items (A1 target: 12)
+
+  Module 9: Food & Drinks (A1)
+    ℹ️ Activity 2 has only 4 items (A1 target: 12)
+    ℹ️ Activity 9 has only 3 items (A1 target: 12)
+
+  Module 10: Checkpoint - First Contact (A1)
+    ⚠️ Only 15 vocab words (A1 requires 18-25)
+
+  Module 13: The Locative - Where Things Are (A1)
+    ℹ️ Activity 3 has only 8 items (A1 target: 12)
+
+  Module 15: Around the City (A1)
+    ℹ️ Activity 3 has only 8 items (A1 target: 12)
+
+  Module 16: The Genitive Case - Absence (A1)
+    ℹ️ Activity 3 has only 8 items (A1 target: 12)
+
+  Module 17: Numbers and Money (A1)
+    ℹ️ Activity 3 has only 8 items (A1 target: 12)
+
+  Module 18: Food & Shopping (A1)
+    ℹ️ Activity 2 has only 8 items (A1 target: 12)
+    ℹ️ Activity 4 has only 8 items (A1 target: 12)
+
+  Module 19: At the Café (A1)
+    ℹ️ Activity 3 has only 8 items (A1 target: 12)
+
+  Module 28: Description (Adverbs) (A1)
+    ℹ️ Activity 3 has only 8 items (A1 target: 12)
+
+  Module 29: Weather & Nature (A1)
+    ⚠️ Only 5 activities (A1 requires 8)
+    ℹ️ Activity 1 has only 8 items (A1 target: 12)
+    ℹ️ Activity 2 has only 6 items (A1 target: 12)
+    ℹ️ Activity 3 has only 11 items (A1 target: 12)
+    ℹ️ Activity 4 has only 6 items (A1 target: 12)
+    ℹ️ Activity 5 has only 4 items (A1 target: 12)
+
+  Module 31: Body & Health (A1)
+    ⚠️ Only 5 activities (A1 requires 8)
+    ℹ️ Activity 1 has only 10 items (A1 target: 12)
+    ℹ️ Activity 2 has only 6 items (A1 target: 12)
+    ℹ️ Activity 3 has only 10 items (A1 target: 12)
+    ℹ️ Activity 4 has only 5 items (A1 target: 12)
+    ℹ️ Activity 5 has only 3 items (A1 target: 12)
+
+  Module 32: My Family (A1)
+    ⚠️ Only 5 activities (A1 requires 8)
+    ℹ️ Activity 2 has only 6 items (A1 target: 12)
+    ℹ️ Activity 3 has only 6 items (A1 target: 12)
+    ℹ️ Activity 4 has only 6 items (A1 target: 12)
+    ℹ️ Activity 5 has only 4 items (A1 target: 12)
+
+  Module 33: Holidays & Traditions (A1)
+    ⚠️ Only 5 activities (A1 requires 8)
+    ℹ️ Activity 1 has only 5 items (A1 target: 12)
+    ℹ️ Activity 2 has only 6 items (A1 target: 12)
+    ℹ️ Activity 3 has only 5 items (A1 target: 12)
+    ℹ️ Activity 4 has only 5 items (A1 target: 12)
+    ℹ️ Activity 5 has only 3 items (A1 target: 12)
+
+📋 MISSING-CONTENT
+----------------------------------------------------------------------
+
+  Module 3: The Gender Code (A1)
+    ⚠️ No Activities section found
+
+📋 ENRICHMENT
+----------------------------------------------------------------------
+
+  Module 5: My World: Objects (A1)
+    ℹ️ Module mentions dialogue/conversation but has no dialogue tables
+
+  Module 9: Food & Drinks (A1)
+    ℹ️ Module mentions dialogue/conversation but has no dialogue tables
+
+  Module 10: Checkpoint - First Contact (A1)
+    ℹ️ Only 1 engagement box (recommend 2+ per module)
+    ℹ️ Module mentions dialogue/conversation but has no dialogue tables
+
+  Module 11: The Accusative I - Things (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+
+  Module 12: The Accusative II - People (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+
+  Module 13: The Locative - Where Things Are (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+
+  Module 14: Mine and Yours (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+    ℹ️ Module mentions dialogue/conversation but has no dialogue tables
+
+  Module 15: Around the City (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+
+  Module 16: The Genitive Case - Absence (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+    ℹ️ Module mentions dialogue/conversation but has no dialogue tables
+
+  Module 17: Numbers and Money (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+    ℹ️ Module mentions dialogue/conversation but has no dialogue tables
+
+  Module 18: Food & Shopping (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+    ℹ️ Module mentions dialogue/conversation but has no dialogue tables
+
+  Module 19: At the Café (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+    ℹ️ Module mentions dialogue/conversation but has no dialogue tables
+
+  Module 20: Checkpoint - Navigation (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+
+  Module 21: Yesterday - Past Tense (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+    ℹ️ Module mentions dialogue/conversation but has no dialogue tables
+
+  Module 22: Tomorrow - Future Tense (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+
+  Module 23: From Sunrise to Sunset (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+
+  Module 24: Days and Months (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+
+  Module 25: Transport and Travel (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+    ℹ️ Module mentions dialogue/conversation but has no dialogue tables
+
+  Module 26: Modal Verbs (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+    ℹ️ Module mentions dialogue/conversation but has no dialogue tables
+
+  Module 27: Description (Adjectives III) (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+
+  Module 28: Description (Adverbs) (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+
+  Module 29: Weather & Nature (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+    ⚠️ Low content word count: 502 words (A1 should have 600+)
+    ℹ️ Module mentions dialogue/conversation but has no dialogue tables
+
+  Module 30: Prepositions III (Direction vs Location) (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+
+  Module 31: Body & Health (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+    ⚠️ Low content word count: 509 words (A1 should have 600+)
+
+  Module 32: My Family (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+    ⚠️ Low content word count: 381 words (A1 should have 600+)
+
+  Module 33: Holidays & Traditions (A1)
+    ⚠️ No engagement boxes found (💡 Did You Know, ⚡ Pro Tip, etc.)
+    ⚠️ Low content word count: 457 words (A1 should have 600+)
+
+  Module 34: Final Checkpoint (A1 Mastery) (A1)
+    ℹ️ Only 1 engagement box (recommend 2+ per module)
+    ℹ️ Module mentions dialogue/conversation but has no dialogue tables
+
+📋 CONTENT-QUALITY
+----------------------------------------------------------------------
+
+  Module 3: The Gender Code (A1)
+    ℹ️ No cultural context detected - consider adding Ukrainian culture references
+    ⚠️ Grammar module lacks conjugation/declension tables
+
+  Module 6: The Living Verb I (A1)
+    ℹ️ No cultural context detected - consider adding Ukrainian culture references
+
+  Module 11: The Accusative I - Things (A1)
+    ℹ️ No cultural context detected - consider adding Ukrainian culture references
+    ⚠️ Grammar module lacks conjugation/declension tables
+
+  Module 12: The Accusative II - People (A1)
+    ⚠️ Grammar module lacks conjugation/declension tables
+
+  Module 13: The Locative - Where Things Are (A1)
+    ⚠️ Grammar module lacks conjugation/declension tables
+
+  Module 14: Mine and Yours (A1)
+    ℹ️ No cultural context detected - consider adding Ukrainian culture references
+
+  Module 16: The Genitive Case - Absence (A1)
+    ⚠️ Grammar module lacks conjugation/declension tables
+
+  Module 19: At the Café (A1)
+    ⚠️ Low example count: ~10 examples (A1 should have 12+)
+
+  Module 21: Yesterday - Past Tense (A1)
+    ⚠️ Grammar module lacks conjugation/declension tables
+
+  Module 23: From Sunrise to Sunset (A1)
+    ⚠️ Low example count: ~10 examples (A1 should have 12+)
+
+  Module 26: Modal Verbs (A1)
+    ⚠️ Low example count: ~10 examples (A1 should have 12+)
+    ℹ️ No cultural context detected - consider adding Ukrainian culture references
+    ⚠️ Grammar module lacks conjugation/declension tables
+
+  Module 27: Description (Adjectives III) (A1)
+    ⚠️ Grammar module lacks conjugation/declension tables
+
+  Module 28: Description (Adverbs) (A1)
+    ⚠️ Grammar module lacks conjugation/declension tables
+
+  Module 31: Body & Health (A1)
+    ⚠️ Low example count: ~10 examples (A1 should have 12+)
+
+📋 NARRATIVE
+----------------------------------------------------------------------
+
+  Module 3: The Gender Code (A1)
+    ℹ️ Could improve: engagement boxes: 2/3
+
+  Module 11: The Accusative I - Things (A1)
+    ℹ️ Could improve: engagement boxes: 0/3
+
+  Module 12: The Accusative II - People (A1)
+    ℹ️ Could improve: engagement boxes: 0/3
+
+  Module 13: The Locative - Where Things Are (A1)
+    ℹ️ Could improve: engagement boxes: 0/3
+
+  Module 14: Mine and Yours (A1)
+    ℹ️ Could improve: engagement boxes: 0/3
+
+  Module 15: Around the City (A1)
+    ℹ️ Could improve: engagement boxes: 0/3
+
+  Module 16: The Genitive Case - Absence (A1)
+    ℹ️ Could improve: engagement boxes: 0/3
+
+  Module 17: Numbers and Money (A1)
+    ℹ️ Could improve: engagement boxes: 0/3
+
+  Module 18: Food & Shopping (A1)
+    ℹ️ Could improve: engagement boxes: 0/3
+    ℹ️ Text wall detected: 17 consecutive lines without visual break
+
+  Module 19: At the Café (A1)
+    ℹ️ Could improve: engagement boxes: 0/3
+    ℹ️ Text wall detected: 20 consecutive lines without visual break
+
+  Module 21: Yesterday - Past Tense (A1)
+    ℹ️ Could improve: engagement boxes: 0/3
+    ℹ️ Text wall detected: 19 consecutive lines without visual break
+
+  Module 22: Tomorrow - Future Tense (A1)
+    ℹ️ Could improve: engagement boxes: 0/3
+    ℹ️ Text wall detected: 16 consecutive lines without visual break
+
+  Module 23: From Sunrise to Sunset (A1)
+    ℹ️ Could improve: engagement boxes: 0/3
+
+  Module 24: Days and Months (A1)
+    ℹ️ Could improve: engagement boxes: 0/3
+
+  Module 25: Transport and Travel (A1)
+    ℹ️ Could improve: engagement boxes: 0/3
+    ℹ️ Text wall detected: 20 consecutive lines without visual break
+
+  Module 26: Modal Verbs (A1)
+    ℹ️ Could improve: engagement boxes: 0/3
+    ℹ️ Text wall detected: 23 consecutive lines without visual break
+
+  Module 27: Description (Adjectives III) (A1)
+    ℹ️ Could improve: engagement boxes: 0/3
+    ℹ️ Text wall detected: 24 consecutive lines without visual break
+
+  Module 28: Description (Adverbs) (A1)
+    ℹ️ Could improve: engagement boxes: 0/3
+    ℹ️ Text wall detected: 25 consecutive lines without visual break
+
+  Module 29: Weather & Nature (A1)
+    ℹ️ Could improve: engagement boxes: 0/3
+
+  Module 31: Body & Health (A1)
+    ℹ️ Could improve: engagement boxes: 0/3
+
+  Module 32: My Family (A1)
+    ℹ️ Could improve: engagement boxes: 0/3
+
+  Module 33: Holidays & Traditions (A1)
+    ℹ️ Could improve: engagement boxes: 0/3
+
+  Module 34: Final Checkpoint (A1 Mastery) (A1)
+    ℹ️ Could improve: engagement boxes: 1/3
+
+📋 IMMERSION
+----------------------------------------------------------------------
+
+  Module 5: My World: Objects (A1)
+    ⚠️ Immersion imbalance: 13% Ukrainian (target: 30% ±15%) - too much English
+
+  Module 6: The Living Verb I (A1)
+    ⚠️ Immersion imbalance: 12% Ukrainian (target: 30% ±15%) - too much English
+
+  Module 7: Questions & Negation (A1)
+    ⚠️ Immersion imbalance: 14% Ukrainian (target: 30% ±15%) - too much English
+
+  Module 10: Checkpoint - First Contact (A1)
+    ⚠️ Immersion imbalance: 13% Ukrainian (target: 55% ±25%) - too much English
+
+  Module 20: Checkpoint - Navigation (A1)
+    ⚠️ Immersion imbalance: 23% Ukrainian (target: 55% ±25%) - too much English
+
+  Module 30: Prepositions III (Direction vs Location) (A1)
+    ⚠️ Immersion imbalance: 16% Ukrainian (target: 55% ±25%) - too much English
+
+📋 ACTIVITY-ORDER
+----------------------------------------------------------------------
+
+  Module 3: The Gender Code (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: match-up → fill-in → unjumble → true-false → anagram → quiz
+
+  Module 4: This Is / I Am (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: match-up → anagram → fill-in → quiz → group-sort → unjumble → true-false → fill-in
+
+  Module 5: My World: Objects (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: anagram → match-up → fill-in → group-sort → unjumble → quiz → true-false → match-up
+
+  Module 6: The Living Verb I (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: fill-in → anagram → match-up → unjumble → quiz → match-up → true-false → select → group-sort
+
+  Module 8: The Living Verb II (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: group-sort → match-up → unjumble → quiz → true-false → fill-in → anagram → match-up
+
+  Module 9: Food & Drinks (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: match-up → quiz → fill-in → group-sort → unjumble → anagram → match-up → true-false → select
+
+  Module 10: Checkpoint - First Contact (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: group-sort → match-up → fill-in → match-up → unjumble → match-up → anagram → quiz
+
+  Module 11: The Accusative I - Things (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: group-sort → fill-in → match-up → quiz → fill-in → fill-in → unjumble → translate → anagram
+
+  Module 12: The Accusative II - People (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: group-sort → fill-in → match-up → translate → quiz → fill-in → fill-in → unjumble → anagram
+
+  Module 13: The Locative - Where Things Are (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: match-up → fill-in → quiz → fill-in → anagram → group-sort → unjumble → fill-in → fill-in
+
+  Module 15: Around the City (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: match-up → fill-in → quiz → fill-in → group-sort → unjumble → fill-in → fill-in → anagram
+
+  Module 16: The Genitive Case - Absence (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: match-up → fill-in → quiz → fill-in → group-sort → unjumble → fill-in → fill-in → anagram
+
+  Module 17: Numbers and Money (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: match-up → fill-in → quiz → fill-in → group-sort → unjumble → fill-in → fill-in → anagram
+
+  Module 18: Food & Shopping (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: match-up → match-up → fill-in → quiz → fill-in → group-sort → fill-in → fill-in → unjumble → fill-in → anagram
+
+  Module 19: At the Café (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: match-up → fill-in → quiz → unjumble → group-sort → match-up → fill-in → fill-in → anagram
+
+  Module 20: Checkpoint - Navigation (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: quiz → match-up → fill-in → fill-in → match-up → unjumble → group-sort → fill-in → anagram
+
+  Module 22: Tomorrow - Future Tense (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: quiz → match-up → fill-in → group-sort → fill-in → fill-in → true-false → unjumble → anagram
+
+  Module 23: From Sunrise to Sunset (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: match-up → fill-in → quiz → anagram → group-sort → unjumble → fill-in → true-false
+
+  Module 24: Days and Months (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: match-up → group-sort → fill-in → quiz → anagram → fill-in → unjumble → true-false
+
+  Module 25: Transport and Travel (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: match-up → group-sort → fill-in → quiz → anagram → unjumble → fill-in → true-false
+
+  Module 26: Modal Verbs (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: match-up → fill-in → group-sort → quiz → anagram → unjumble → fill-in → true-false
+
+  Module 27: Description (Adjectives III) (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: match-up → fill-in → group-sort → quiz → anagram → unjumble → fill-in → true-false
+
+  Module 28: Description (Adverbs) (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: match-up → fill-in → unjumble → unjumble → group-sort → quiz → anagram → unjumble → fill-in → true-false
+
+  Module 30: Prepositions III (Direction vs Location) (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: match-up → fill-in → group-sort → quiz → unjumble → unjumble → fill-in → true-false
+
+  Module 34: Final Checkpoint (A1 Mastery) (A1)
+    ℹ️ Activity order may be suboptimal (high-load activities before low-load). Current order: quiz → match-up → fill-in → group-sort → unjumble → unjumble → fill-in → true-false
+
+📋 COMPLEXITY
+----------------------------------------------------------------------
+
+  Module 2: The Cyrillic Code II (A1)
+    ℹ️ Unjumble item has 3 words (A1 target: 5-8):331
+
+  Module 3: The Gender Code (A1)
+    ℹ️ Unjumble item has 2 words (A1 target: 5-8):162
+
+  Module 4: This Is / I Am (A1)
+    ℹ️ Unjumble item has 2 words (A1 target: 5-8):361
+
+  Module 5: My World: Objects (A1)
+    ℹ️ Unjumble item has 3 words (A1 target: 5-8):303
+
+  Module 6: The Living Verb I (A1)
+    ℹ️ Unjumble item has 3 words (A1 target: 5-8):302
+
+  Module 7: Questions & Negation (A1)
+    ℹ️ Unjumble item has 4 words (A1 target: 5-8):293
+
+  Module 8: The Living Verb II (A1)
+    ℹ️ Unjumble item has 3 words (A1 target: 5-8):257
+
+  Module 9: Food & Drinks (A1)
+    ℹ️ Unjumble item has 3 words (A1 target: 5-8):251
+    ⚠️ Activity sentences too simple: avg 2 words (A1 target: 5-8)
+
+  Module 10: Checkpoint - First Contact (A1)
+    ℹ️ Unjumble item has 4 words (A1 target: 5-8):304
+
+  Module 11: The Accusative I - Things (A1)
+    ℹ️ Unjumble item has 3 words (A1 target: 5-8):472
+
+  Module 12: The Accusative II - People (A1)
+    ℹ️ Unjumble item has 3 words (A1 target: 5-8):536
+
+  Module 13: The Locative - Where Things Are (A1)
+    ℹ️ Unjumble item has 3 words (A1 target: 5-8):447
+
+  Module 14: Mine and Yours (A1)
+    ℹ️ Unjumble item has 3 words (A1 target: 5-8):410
+
+  Module 15: Around the City (A1)
+    ℹ️ Unjumble item has 3 words (A1 target: 5-8):410
+
+  Module 16: The Genitive Case - Absence (A1)
+    ℹ️ Unjumble item has 4 words (A1 target: 5-8):398
+
+  Module 17: Numbers and Money (A1)
+    ℹ️ Unjumble item has 3 words (A1 target: 5-8):417
+
+  Module 18: Food & Shopping (A1)
+    ℹ️ Unjumble item has 4 words (A1 target: 5-8):560
+
+  Module 19: At the Café (A1)
+    ℹ️ Unjumble item has 3 words (A1 target: 5-8):352
+
+  Module 20: Checkpoint - Navigation (A1)
+    ℹ️ Unjumble item has 4 words (A1 target: 5-8):428
+
+  Module 21: Yesterday - Past Tense (A1)
+    ℹ️ Unjumble item has 4 words (A1 target: 5-8):450
+
+  Module 22: Tomorrow - Future Tense (A1)
+    ℹ️ Unjumble item has 4 words (A1 target: 5-8):522
+
+  Module 23: From Sunrise to Sunset (A1)
+    ℹ️ Unjumble item has 3 words (A1 target: 5-8):422
+
+  Module 24: Days and Months (A1)
+    ℹ️ Unjumble item has 4 words (A1 target: 5-8):431
+
+  Module 25: Transport and Travel (A1)
+    ℹ️ Unjumble item has 4 words (A1 target: 5-8):428
+
+  Module 26: Modal Verbs (A1)
+    ℹ️ Unjumble item has 4 words (A1 target: 5-8):423
+
+  Module 27: Description (Adjectives III) (A1)
+    ℹ️ Unjumble item has 4 words (A1 target: 5-8):458
+
+  Module 28: Description (Adverbs) (A1)
+    ℹ️ Unjumble item has 1 words (A1 target: 5-8):336
+    ℹ️ Unjumble item has 1 words (A1 target: 5-8):370
+    ℹ️ Unjumble item has 4 words (A1 target: 5-8):537
+
+  Module 30: Prepositions III (Direction vs Location) (A1)
+    ℹ️ Unjumble item has 4 words (A1 target: 5-8):349
+    ℹ️ Unjumble item has 3 words (A1 target: 5-8):391
+
+  Module 34: Final Checkpoint (A1 Mastery) (A1)
+    ℹ️ Unjumble item has 4 words (A1 target: 5-8):405
+    ℹ️ Unjumble item has 4 words (A1 target: 5-8):446
+
+======================================================================
+
+📊 SUMMARY
+
+  Modules scanned: 34
+  Modules with issues: 33
+  ❌ Errors: 2
+  ⚠️  Warnings: 92
+  ℹ️  Info: 150
+
+  By Level:
+    Unknown: 0/1 with issues
+    A1: 33/33 with issues
+
+  ✅ Clean modules: 1

@@ -53,7 +53,7 @@ export class AnagramParser extends ActivityParser<AnagramContent> {
 
       // First line has scrambled letters: "а м м а"
       const scrambledLine = lines[0].trim();
-      const letters = scrambledLine.split(/\s+/).map(l => l.trim()).filter(Boolean);
+      const letters = scrambledLine.split(/[\s\/]+/).map(l => l.trim()).filter(Boolean);
 
       // Parse answer from callout
       const answerLines = lines.slice(1).join('\n');

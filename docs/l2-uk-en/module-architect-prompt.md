@@ -54,10 +54,12 @@ Write sections in this order:
    - Surround tables with narrative (no naked tables)
 3. **Activities** — Create using ONLY vocabulary from Step 1
    - Meet activity count for level
-   - Meet items per activity for level
+   - Meet items per activity for level (12+ items)
    - Use 4+ different activity types
-   - Match sentence complexity for level
+   - **Activity Order:** Warm-up (match-up) -> Core (fill-in, quiz) -> Complex (unjumble, translation)
+   - **Unjumble:** Sentences MUST be 5-8 words long (no 3-word sentences!)
 4. **Vocabulary** — Use format for this level
+
 5. **Summary** — Include accurate "Coming Next" for next module
 
 ### Step 3: VERIFY BEFORE DELIVERING
@@ -119,14 +121,16 @@ For each module, verify against the curriculum plan:
 - [ ] Minimum count met (see MODULE-RICHNESS-GUIDELINES-v2.md)
 - [ ] At least 4 different types
 - [ ] All words used are in scope
-- [ ] **No `order:` activities** — replace any `## order:` with `## unjumble:` (sentence word reordering)
+- [ ] **No `order:` activities** — replace any `## order:` with `## unjumble:`
+- [ ] **Unjumble Complexity:** Are sentences 5-8 words long? (Crucial)
+- [ ] **Activity Order:** Simple to Complex flow?
 
 ### 4. Narrative Richness (CRITICAL)
 
 **This is where most modules fail. Check carefully.**
 
 - [ ] Introduction has compelling WHY (not "In this lesson we learn...")
-- [ ] Grammar tables surrounded by narrative (no naked tables)
+- [ ] **Grammar Tables:** Must have explicit headers (Case/Gender/Ending) and be surrounded by text.
 - [ ] Mini-dialogues present and meet count for level
 - [ ] Usage patterns / common mistakes section exists
 - [ ] Content word count meets minimum (excluding tables)
@@ -307,8 +311,8 @@ Violations: X | Severity: High/Medium/Low | Recommendation: Approved/Fix/Rewrite
 ```
 
 **Severity Guide:**
-- **Low**: Minor issues (unjumble word count, missing IPA)
-- **Medium**: Multiple activity issues, missing engagement boxes
+- **Low**: Minor typo, missing one IPA
+- **Medium**: Unjumble too short (<5 words), Activity Order wrong, missing engagement boxes
 - **High**: Narrative richness failure (dry content), grammar scope violations
 - **Rewrite**: Content words <50% of requirement, no dialogues, tables-only module
 

@@ -39,11 +39,11 @@ export const LEVEL_REQUIREMENTS: Record<string, LevelRequirements> = {
     fillInWords: [5, 8],
     unjumbleWords: [5, 8],
     newWordsMin: 18,
-    newWordsMax: 25,
-    minWordCount: 600,
-    engagementBoxes: 2,
-    immersionLevel: 0.30,
-    transliterationMode: 'full',  // Modules 1-10: full transliteration
+    newWordsMax: 30, // Increased to match Guidelines
+    minWordCount: 750, // Increased from 600 to match Guidelines
+    engagementBoxes: 3, // Increased to 3
+    immersionLevel: 0.30, // Note: Overridden by module-audit.ts for M01-M15
+    transliterationMode: 'full',
   },
   'A2': {
     activityCount: 10,
@@ -51,11 +51,11 @@ export const LEVEL_REQUIREMENTS: Record<string, LevelRequirements> = {
     fillInWords: [6, 10],
     unjumbleWords: [6, 10],
     newWordsMin: 22,
-    newWordsMax: 30,
-    minWordCount: 700,
-    engagementBoxes: 2,
+    newWordsMax: 35, // Increased
+    minWordCount: 1000, // Increased from 700 to match Guidelines
+    engagementBoxes: 4, // Increased
     immersionLevel: 0.40,
-    transliterationMode: 'partial',  // Vocab lists only
+    transliterationMode: 'partial',
   },
   'A2+': {
     activityCount: 12,

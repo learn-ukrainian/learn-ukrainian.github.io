@@ -57,6 +57,52 @@ Learners can complete only the levels they need.
 
 ---
 
+### LIT - Ukrainian Literature & Classics
+
+**Focus:** Reading the "Greats" in the original. Evolution of the modern standard (19th Century).
+
+| Module Range | Topic Area |
+|--------------|------------|
+| LIT-001-005 | Ivan Kotliarevsky (Burlesque & Folk Origins) |
+| LIT-006-010 | Hryhorii Kvitka-Osnovianenko (Sentimentalism) |
+| LIT-011-020 | Taras Shevchenko (The Prophet & The Poet) |
+| LIT-021-025 | Panteleimon Kulish (History & Language) |
+| LIT-026-030 | Ivan Nechuy-Levytsky (Realism) |
+| LIT-031+ | 20th Century & Modernism (expandable) |
+
+**Prerequisites:** C1 Core (Modules 1-50 recommended)
+
+---
+
+### RUTH - Ruthenian / Old Ukrainian (XIV-XVIII c.)
+
+**Focus:** The language of the Cossacks, Chronicles, and Polemics.
+
+| Module Range | Topic Area |
+|--------------|------------|
+| RUTH-001-010 | Grand Duchy Period & Legal Language |
+| RUTH-011-020 | Polemical Literature (Defending the Faith) |
+| RUTH-021-030 | Cossack Chronicles & Chancery Styles |
+| RUTH-031+ | Baroque Poetry & Rhetoric |
+
+**Prerequisites:** C1 Core
+
+---
+
+### OES - Old East Slavic / Kyivan Rus' (X-XIII c.)
+
+**Focus:** The Common Ancestor & Linguistic Archaeology.
+
+| Module Range | Topic Area |
+|--------------|------------|
+| OES-001-010 | The Grammar of Rus' (Dual, Aorist, Imperfect) |
+| OES-011-020 | Reading the Primary Chronicle |
+| OES-021-030 | Paleography (Birch Bark Letters & Graffiti) |
+
+**Prerequisites:** Strong grammar interest (Linguistics focus)
+
+---
+
 ### STEM - Science, Technology, Engineering, Mathematics
 
 **Focus:** Scientific and technical Ukrainian for academic and professional use

@@ -270,30 +270,29 @@ function processModule(
 /**
  * Process all modules in a curriculum
  */
-function processAllModules(curriculumPath: string, db: VocabDatabase): ScanResult[] {
-  const modulesDir = path.join(curriculumPath, 'modules');
+async function processAllModules(curriculumPath: string, db: VocabDatabase): Promise<ScanResult[]> {
+  // Use shared file discovery logic
+  const curriculumName = path.basename(curriculumPath);
+
+  // Dynamic import or require since processAllModules was sync-ish in structure but findModuleFiles is async
+  // We need to change processAllModules to async (it is called by main which can await)
+  const { findModuleFiles } = require('./lib/utils/files');
+  const moduleFiles = await findModuleFiles(curriculumName);
+
   const results: ScanResult[] = [];
 
-  const files = fs.readdirSync(modulesDir)
-    .filter(f => f.match(/^module-\d+\.md$/))
-    .sort((a, b) => {
-      const numA = parseInt(a.match(/\d+/)?.[0] || '0');
-      const numB = parseInt(b.match(/\d+/)?.[0] || '0');
-      return numA - numB;
-    });
+  console.log(`Found ${moduleFiles.length} module files\n`);
 
-  console.log(`Found ${files.length} module files\n`);
-
-  for (const file of files) {
-    const moduleNum = parseInt(file.match(/\d+/)?.[0] || '0');
-    const modulePath = path.join(modulesDir, file);
-    const result = processModule(modulePath, moduleNum, db);
+  for (const file of moduleFiles) {
+    const start = Date.now();
+    // processModule is sync, reading file content
+    const result = processModule(file.path, file.moduleNum, db);
     results.push(result);
 
     const total = result.lemmasAdded + result.expressionsAdded + result.lemmasUpdated + result.expressionsUpdated;
     if (total > 0) {
       const exprStr = result.expressionsAdded > 0 ? ` (+${result.expressionsAdded} expr)` : '';
-      console.log(`  Module ${moduleNum.toString().padStart(3)} (${result.level}): ${result.lemmasAdded} lemmas${exprStr}`);
+      console.log(`  Module ${file.moduleNum.toString().padStart(3)} (${result.level}): ${result.lemmasAdded} lemmas${exprStr}`);
     }
   }
 
@@ -304,7 +303,7 @@ function processAllModules(curriculumPath: string, db: VocabDatabase): ScanResul
 // Main
 // =============================================================================
 
-function main(): void {
+async function main(): Promise<void> {
   const args = process.argv.slice(2);
   const curriculum = args[0] || DEFAULT_CURRICULUM;
   const moduleNum = args[1] ? parseInt(args[1]) : null;
@@ -340,11 +339,11 @@ function main(): void {
   let results: ScanResult[];
 
   if (moduleNum) {
-    // Process single module - try both padded and unpadded filenames
-    let modulePath = path.join(curriculumPath, 'modules', `module-${moduleNum.toString().padStart(2, '0')}.md`);
-    if (!fs.existsSync(modulePath)) {
-      modulePath = path.join(curriculumPath, 'modules', `module-${moduleNum}.md`);
-    }
+    // Process single module - try to find it via getModulePath from utils
+    // Using require to avoid top-level import issues if files.ts changed
+    const { getModulePath } = require('./lib/utils/files');
+    const modulePath = getModulePath(curriculum, moduleNum);
+
     if (!fs.existsSync(modulePath)) {
       console.error(`Module not found: ${modulePath}`);
       process.exit(1);
@@ -352,7 +351,7 @@ function main(): void {
     results = [processModule(modulePath, moduleNum, db)];
   } else {
     // Process all modules
-    results = processAllModules(curriculumPath, db);
+    results = await processAllModules(curriculumPath, db);
   }
 
   // Summary
@@ -399,4 +398,7 @@ function main(): void {
   console.log(`\n=== Done ===\n`);
 }
 
-main();
+main().catch(err => {
+  console.error(err);
+  process.exit(1);
+});

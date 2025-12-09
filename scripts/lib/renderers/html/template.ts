@@ -179,8 +179,9 @@ function getActivityLabel(type: string, num: number): string {
     'group-sort': 'Sort',
     'fill-blank': 'Fill',
     'gap-fill': 'Fill',
+    'fill-in': 'Fill',
     'unjumble': 'Order',
-    'anagram': 'Spell',
+    'anagram': 'Anagram',
     'select': 'Select',
     'error-correction': 'Fix',
   };

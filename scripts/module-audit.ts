@@ -30,6 +30,9 @@ import {
   resetVocabDatabase,
   VocabDatabase,
 } from './lib/vocab-sqlite';
+import { execSync } from 'child_process';
+import puppeteer, { Browser } from 'puppeteer';
+import { validateFile } from './validate-html';
 import {
   LevelRequirements,
   LEVEL_REQUIREMENTS,
@@ -43,7 +46,7 @@ import {
 // Types
 // =============================================================================
 
-interface Issue {
+export interface Issue {
   type: 'error' | 'warning' | 'info';
   category: string;
   message: string;
@@ -51,7 +54,7 @@ interface Issue {
   context?: string;
 }
 
-interface ModuleAudit {
+export interface ModuleAudit {
   module: number;
   title: string;
   level: string;
@@ -63,6 +66,7 @@ interface ModuleAudit {
     hasVocabSection: boolean;
     hasSummary: boolean;
     wordCount: number;
+    targetWordCount: number;
     engagementBoxes: number;
     itemsPerActivity: number[];
     vocabDuplicates: string[];  // Words already introduced in earlier modules
@@ -147,11 +151,56 @@ const LEVEL_GRAMMAR: Record<string, GrammarRequirement[]> = {
 // Audit Functions
 // =============================================================================
 
-function auditModule(filePath: string, vocabDb?: VocabDatabase): ModuleAudit {
+import { loadPurityConfig } from './lib/purity-config';
+import { detectLevelFromPath, getGuidelinesForLevel } from './lib/richness-guidelines';
+
+export function auditModule(filePath: string, vocabDb?: VocabDatabase): ModuleAudit {
   const content = fs.readFileSync(filePath, 'utf8');
   const lines = content.split('\n');
   const issues: Issue[] = [];
+
+  const level = detectLevelFromPath(filePath);
+  const guidelines = getGuidelinesForLevel(level);
+  const WORD_COUNT_MIN = guidelines.wordCount;
+
   const vocabDuplicates: string[] = [];
+
+  // Load purity patterns dynamically
+  const purityPatterns = loadPurityConfig();
+
+  // ... (rest of function)
+
+  // ==========================================================================
+  // 0. LINGUISTIC PURITY CHECK (The Shield)
+  // ==========================================================================
+
+  // Exclude frontmatter from purity check
+  const contentBody = content.replace(/^---[\s\S]*?---\n/, '');
+
+  for (const pattern of purityPatterns) {
+    const match = contentBody.match(pattern.regex);
+    if (match) {
+      // Find line number
+      const matchIndex = content.indexOf(match[0]);
+      const lineNum = content.substring(0, matchIndex).split('\n').length;
+
+      issues.push({
+        type: 'error',
+        category: 'linguistic-purity',
+        message: `SURZHYK DETECTED: "${match[0]}". Use "${pattern.correction}" instead. Note: ${pattern.context || ''}`,
+        line: lineNum,
+        context: match[0]
+      });
+    }
+  }
+
+  // Check for Active Participles (generic regex)
+  const activeParticiple = /\b\w+(?:учий|ючий)\b/i;
+  const participleMatch = contentBody.match(activeParticiple);
+  // Filter out legitimate words like "Слідуючий" is already caught, check for others if needed
+  // Note: "Sleduyuschiy" is caught by text pattern usually. 
+  // We'll leave specific participle checks to the table unless we want a broad ban.
+
 
   // Extract frontmatter
   const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
@@ -176,14 +225,20 @@ function auditModule(filePath: string, vocabDb?: VocabDatabase): ModuleAudit {
   // 3. From directory name
   const levelFieldMatch = frontmatter.match(/level:\s*(\w+\+?)/);
   const phaseFieldMatch = frontmatter.match(/phase:\s*([AB][12]\+?)/);
-  const dirMatch = filePath.match(/\/([ab][12](?:-plus)?)\//i);
-  const level = levelFieldMatch
+
+  const declaredLevel = levelFieldMatch
     ? levelFieldMatch[1]
     : phaseFieldMatch
       ? phaseFieldMatch[1].replace(/\.\d+$/, '') // Remove sub-phase: A1.1 -> A1
-      : dirMatch
-        ? dirMatch[1].toUpperCase().replace('-PLUS', '+')
-        : 'Unknown';
+      : null;
+
+  if (declaredLevel && declaredLevel !== level) {
+    issues.push({
+      type: 'warning',
+      category: 'metadata',
+      message: `Module path suggests ${level} but metadata says ${declaredLevel}`,
+    });
+  }
 
   const req = LEVEL_REQUIREMENTS[level];
 
@@ -269,13 +324,13 @@ function auditModule(filePath: string, vocabDb?: VocabDatabase): ModuleAudit {
       const bulletPairs = (actContent.match(/^-\s+.+?\s*::\s*.+$/gm) || []).length;
       itemCount = Math.max(tableRows, bulletPairs);
     } else if (actType === 'group-sort') {
-      itemCount = (actContent.match(/^- .+$/gm) || []).length;
+      itemCount = (actContent.match(/^\s*- .+$/gm) || []).length;
     } else if (actType === 'true-false') {
       // Support both checkbox format and numbered format with [!answer]
-      const checkboxItems = (actContent.match(/^- \[[ x]\]/gm) || []).length;
+      const checkboxItems = (actContent.match(/^\s*- \[[ x]\]/gm) || []).length;
       const numberedItems = (actContent.match(/^\d+\.\s+.+\n\s*>\s*\[!answer\]\s*(true|false)/gim) || []).length;
       itemCount = Math.max(checkboxItems, numberedItems);
-    } else if (actType === 'fill-in' || actType === 'unjumble' || actType === 'anagram') {
+    } else if (actType === 'fill-in' || actType === 'unjumble' || actType === 'anagram' || actType === 'translate') {
       itemCount = (actContent.match(/^\d+\.\s+/gm) || []).length;
     }
 
@@ -443,19 +498,17 @@ function auditModule(filePath: string, vocabDb?: VocabDatabase): ModuleAudit {
 
     // Check vocab count against requirements
     if (req) {
-      if (vocabCount < req.newWordsMin) {
+      // Check for low vocab count (skip if it's a review/checkpoint module)
+      const fm: any = frontmatter;
+      const isReviewModule = (fm.tags && Array.isArray(fm.tags) && (fm.tags.includes('review') || fm.tags.includes('checkpoint'))) || title.toLowerCase().includes('checkpoint');
+      if (!isReviewModule && vocabCount < req.newWordsMin) {
         issues.push({
           type: 'warning',
           category: 'requirements',
           message: `Only ${vocabCount} vocab words (${level} requires ${req.newWordsMin}-${req.newWordsMax})`,
         });
-      } else if (vocabCount > req.newWordsMax + 10) {
-        issues.push({
-          type: 'info',
-          category: 'requirements',
-          message: `High vocab count: ${vocabCount} words (${level} target: ${req.newWordsMin}-${req.newWordsMax}) - consider splitting`,
-        });
       }
+      // Upper limit check removed per user request: "more words is never a problem"
     }
   } else {
     issues.push({
@@ -575,6 +628,13 @@ function auditModule(filePath: string, vocabDb?: VocabDatabase): ModuleAudit {
     });
   }
 
+  // Check for different item patterns
+  const patterns = [
+    /^\d+\. /gm, // Numbered items "1. Question"
+    /^   - \[[ xX]\] /gm, // Option items "- [x] Answer" or "- [ ] Option" (indented)
+    /^   > \[\!answer\]/gm, // Answer blocks
+    /^[-*] [^\n]+(?:\n  > [^\n]+)+/gm // Bullet point with quote block below
+  ];
   // Check for placeholder text
   const placeholders = [
     /TODO/gi,
@@ -900,7 +960,8 @@ function auditModule(filePath: string, vocabDb?: VocabDatabase): ModuleAudit {
     'B2+': { target: 0.92, tolerance: 0.06 },  // 86%-98%
     'C1': { target: 0.95, tolerance: 0.05 },   // 90%-100%
   } : {
-    'A1': { target: 0.30, tolerance: 0.15 },   // Regular modules: 30% ±15%
+    // Regular modules: targets calculated dynamically for A1, static for others
+    'A1': { target: 0, tolerance: 0 }, // Placeholder, will be calculated
     'A2': { target: 0.40, tolerance: 0.15 },
     'A2+': { target: 0.50, tolerance: 0.12 },
     'B1': { target: 0.60, tolerance: 0.10 },
@@ -909,6 +970,21 @@ function auditModule(filePath: string, vocabDb?: VocabDatabase): ModuleAudit {
     'B2+': { target: 0.90, tolerance: 0.08 },
     'C1': { target: 0.95, tolerance: 0.05 },
   };
+
+  // Progressive Immersion for A1: Calculate dynamic target
+  if (level === 'A1' && !isCheckpoint) {
+    const fm: any = frontmatter;
+    // Audit script should get moduleNum from frontmatter or filename
+    const modNum = parseInt(fm.module?.toString() || '0', 10) || parseInt((filePath.match(/(\d+)-/) || [])[1] || '0', 10);
+
+    // A1.1 (0-15): target 15% (allow 5-25%)
+    // A1.2 (16+): target 30% (allow 15-45%)
+    if (modNum <= 15) {
+      immersionConfig['A1'] = { target: 0.15, tolerance: 0.10 };
+    } else {
+      immersionConfig['A1'] = { target: 0.30, tolerance: 0.15 };
+    }
+  }
 
   // Clean text for immersion analysis
   const textForImmersion = mainContent
@@ -1067,7 +1143,7 @@ function auditModule(filePath: string, vocabDb?: VocabDatabase): ModuleAudit {
   const isGrammarModule = frontmatter.match(/tags:.*grammar/i) || title.toLowerCase().includes('grammar') ||
     title.match(/case|відмін|verb|дієсл|aspect|вид/i);
   const hasGrammarTable = content.match(/\|[^|]+\|[^|]+\|[^|]+\|/) &&
-    (content.match(/\|\s*(?:Form|Форма|Case|Відмінок|Singular|Однина|Person|Особа)/i));
+    (content.match(/\|\s*[^|]*?(?:Form|Форма|Case|Відмінок|Singular|Однина|Person|Особа)/i));
 
   if (isGrammarModule && !hasGrammarTable) {
     issues.push({
@@ -1089,6 +1165,7 @@ function auditModule(filePath: string, vocabDb?: VocabDatabase): ModuleAudit {
       hasVocabSection,
       hasSummary,
       wordCount,
+      targetWordCount: WORD_COUNT_MIN,
       engagementBoxes,
       itemsPerActivity,
       vocabDuplicates,
@@ -1275,7 +1352,7 @@ function generateFixPrompt(audit: ModuleAudit): string {
 // Main
 // =============================================================================
 
-function main() {
+async function main() {
   const args = process.argv.slice(2);
 
   // Check for --fix and --gemini flags
@@ -1376,8 +1453,24 @@ function main() {
     ? `${levelFilter.toUpperCase()} level, modules ${minModule}-${maxModule}`
     : `modules ${minModule}-${maxModule}`;
   console.log(`\n🔍 Module Audit: ${lang} (${rangeDesc})\n`);
+
   console.log(`Found ${files.length} modules to audit`);
   console.log('='.repeat(70));
+
+  // Global browser instance for validation
+  let browser: Browser | null = null;
+  let validationEnabled = true;
+
+  // Launch browser for validation
+  try {
+    browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+  } catch (e) {
+    console.warn('⚠️ Warning: Could not launch Puppeteer. HTML validation will be skipped.', e);
+    validationEnabled = false;
+  }
 
   let totalErrors = 0;
   let totalWarnings = 0;
@@ -1386,6 +1479,56 @@ function main() {
 
   for (const file of files) {
     const audit = auditModule(file.path, vocabDb);
+
+    // INTEGRATED HTML VALIDATION
+    if (validationEnabled && browser) {
+      try {
+        // 1. Regenerate HTML
+        const level = file.level.toLowerCase().replace('+', '-plus');
+        const moduleNumStr = path.basename(file.path).match(/^(\d+)/)?.[1];
+
+        if (moduleNumStr) {
+          const outputHtmlPath = path.join(__dirname, '..', 'output', 'html', lang, level, `module-${moduleNumStr}.html`);
+
+          execSync(`npx ts-node scripts/generate.ts ${lang} ${level} ${moduleNumStr}`, { stdio: 'ignore' });
+
+          if (fs.existsSync(outputHtmlPath)) {
+            const htmlResult = await validateFile(browser, outputHtmlPath);
+
+            if (!htmlResult.passed) {
+              htmlResult.errors.forEach(err => {
+                audit.issues.push({
+                  type: 'error',
+                  category: 'broken-activity',
+                  message: `HTML Validation Error: ${err}`,
+                  context: 'Rendering/Interactivity check failed'
+                });
+              });
+              htmlResult.warnings.forEach(warn => {
+                audit.issues.push({
+                  type: 'warning',
+                  category: 'broken-activity',
+                  message: `HTML Validation Warning: ${warn}`,
+                  context: 'Rendering check warning'
+                });
+              });
+            }
+          } else {
+            audit.issues.push({
+              type: 'error',
+              category: 'broken-activity',
+              message: `HTML Generation Failed: Output file not found`,
+            });
+          }
+        }
+      } catch (e: any) {
+        audit.issues.push({
+          type: 'warning',
+          category: 'broken-activity',
+          message: `HTML Validation Crashed: ${e.message}`,
+        });
+      }
+    }
 
     const errors = audit.issues.filter(i => i.type === 'error').length;
     const warnings = audit.issues.filter(i => i.type === 'warning').length;
@@ -1453,6 +1596,7 @@ date: ${new Date().toISOString()}
     'content-quality',
     'narrative',
     'immersion',
+    'linguistic-purity',
     'activity-order',
     'complexity',
   ];
@@ -1550,10 +1694,17 @@ date: ${new Date().toISOString()}
     console.log('');
   }
 
+  // Cleanup browser
+  if (browser) {
+    await browser.close();
+  }
+
   // Exit code
   if (totalErrors > 0) {
     process.exit(1);
   }
 }
 
-main();
+if (require.main === module) {
+  main().catch(console.error);
+}

@@ -1,572 +1,551 @@
 ---
 title: The Gender Code
-subtitle: It's Not Biology, It's Sound and System
+subtitle: He, She, It
 phase: A1.1
-duration: 60
+duration: 45
 transliteration: full
-tags: [grammar, nouns, gender, declension]
+tags: [grammar, nouns, gender]
 objectives:
-  - Learner can identify the grammatical gender (Masculine, Feminine, Neuter) of any noun based on its ending
-  - Learner can classify nouns into the 4 Declension Families, understanding their implications
-  - Learner can predict noun endings and basic declension patterns for upcoming modules
-  - Learner can use basic vocabulary for household, city, and food items
+  - Identify the grammatical gender of nouns (Masculine, Feminine, Neuter)
+  - Understand the 3 basic gender endings (-consonant, -а/я, -о/е)
+  - Sort common objects into gender categories
+grammar:
+  - Noun Gender (Рід іменників)
+  - Basic Nominative Case
 ---
 
 # Lesson Content
 
 ## warm-up
-**The Three Genres of Reality: Masculine, Feminine, and Neuter.**
 
-In English, a table is "it", a lamp is "it", a book is "it". Gender is primarily biological: men are "he", women are "she", everything else is "it". This is simple, but also quite limited in how it describes the world.
+In English, a table is "it". A book is "it". A window is "it". A dog is "it" unless you love him.
+In Ukrainian, a table is "he". A book is "she". And a window is "it".
+This sounds strange to English speakers, but it is the standard for most European languages (French, Spanish, German). For Ukrainians, objects have a "soul" or at least a "personality" determined by their sound.
 
-In Ukrainian, reality is vibrant and nuanced, divided into three fundamental categories of grammatical gender: **Він** (He, Masculine), **Вона** (She, Feminine), and **Воно** (It, Neuter). But here's the crucial point: this is **not** about biology, or even about the intrinsic qualities of the object itself. A sturdy oak tree can be feminine (**дуб** is masculine, but **липа** (linden) is feminine). A powerful river is feminine (**річка**), and a fragile flower can be masculine (**квітка** is actually feminine but similar examples exist).
+Welcome to **Grammatical Gender**. This is one of the biggest differences between English and Ukrainian, but it is also one of the most systematic. Once you learn the pattern, you will see the gender of everything. The world is no longer just "things"; it is a society of "He" things, "She" things, and "It" things.
 
-Grammatical gender in Ukrainian is primarily about **sound and form**. It's a fundamental system that organizes words based on their endings. Think of it like a subtle background music, assigning a certain "feel" to each word. Masculine nouns often have a strong, abrupt ending (a consonant). Feminine nouns have an open, flowing sound (-а, -я). Neuter nouns have a soft, rounded echo (-о, -е).
-
-In this module, you will not only learn to instantly determine the gender of most Ukrainian nouns, but you will also understand the **four fundamental "families" (declensions)** that govern how these words behave. This understanding is critical, as grammatical gender dictates how adjectives, pronouns, and even verb endings will agree with the noun – it's the invisible glue that holds Ukrainian sentences together. By mastering this code, you'll gain an intuitive feel for the language's structure.
-
-> 💡 **Did You Know? Grammatical Gender Across Languages**
-> Ukrainian is far from alone in having grammatical gender. Languages like German (der, die, das), French (le, la), Spanish (el, la), and Russian also have it. Even Old English had grammatical gender! This system isn't random; it often has historical roots, and once you learn the patterns, it becomes a powerful tool for understanding the language's internal logic. It's a core feature that makes Ukrainian rich and expressive.
+> 💡 **Did You Know?**
+>
+> Mark Twain once complained about German gender: *"A person's mouth, neck, bosoms, and elbows are of the male sex... but a young lady is sexless."*
+>
+> Ukrainian is much more logical! You don't need to memorize gender for every word like in German or French. You just look at the **ending**. It rhymes! The end of the word tells you everything you need to know. It is 99% predictable. It is based on **sound**, not meaning.
+> - Words that end abruptly (Consonants) are usually Masculine.
+> - Words that end openly (A/Ya) are usually Feminine.
+> - Words that end roundly (O/E) are usually Neuter.
 
 ## presentation
 
-### The Golden Rule of Endings: Your Instant Gender Detector
-The easiest way to determine a noun's gender is by looking at its **last letter or sound** in its dictionary (nominative singular) form. This rule works for approximately 99% of all Ukrainian nouns.
+### 1. The Golden Rule of Endings
 
-| Gender Category | Typical Ending | Phonetic "Feel" | Examples (Pronunciation) | English Meaning | Audio |
-|-----------------|----------------|-----------------|--------------------------|-----------------|-------|
-| **Masculine (Він)** | **Consonant** | Hard, Abrupt Stop | **Стіл** (/stʲil/), **Банк** (/bɑnk/), **Хліб** (/xlʲib/) | Table, Bank, Bread | [🔊](audio_masc_ex) |
-| **Feminine (Вона)** | **-А** or **-Я** | Open, Flowing Vowel | **Кава** (/ˈkɑvɑ/), **Земля** (/zɛmˈlʲɑ/), **Річка** (/ˈrʲitʃkɑ/) | Coffee, Earth, River | [🔊](audio_fem_ex) |
-| **Neuter (Воно)** | **-О** or **-Е** | Soft, Rounded Vowel | **Вікно** (/vʲiˈknɔ/), **Море** (/ˈmɔrɛ/), **Місто** (/ˈmʲistɔ/) | Window, Sea, City | [🔊](audio_neu_ex) |
+Ukrainian nouns are divided into three families (genders) based on their last letter.
 
-**Crucial Exceptions to Memorize:**
--   **Biologically Male Nouns Ending in -О/-А:** These override the ending rule.
-    *   **Тато** [🔊](audio_tato) (Dad), **Дядько** [🔊](audio_dyadko) (Uncle), **Колега** [🔊](audio_kolega) (Colleague - if male). These are Masculine.
--   **Nouns Ending in -Ь (Soft Sign):** The soft sign can belong to both Masculine and Feminine nouns. You generally have to memorize these.
-    *   **Ніч** [🔊](audio_nich) (Night) - Feminine.
-    *   **Біль** [🔊](audio_bil) (Pain) - Masculine.
-    *   *Rule of Thumb:* If it ends in `-ість`, it's almost always Feminine (**радість** - joy).
+| Gender | Symbol | Endless like... | Examples |
+|--------|--------|-----------------|----------|
+| **Masculine** (Він) | 🎩 | **Consonant** (Hard stop) | **Стіл** (Table), **Парк** (Park), **Банк** (Bank). |
+| **Feminine** (Вона) | 🎀 | **-А** or **-Я** (Open sound) | **Книга** (Book), **Земля** (Earth), **Мама** (Mom). |
+| **Neuter** (Воно) | 🥚 | **-О** or **-Е** (Round sound) | **Вікно** (Window), **Море** (Sea), **Місто** (City). |
 
-> ⚡ **Pro Tip: Hear the Gender**
-> Try to develop an intuitive "feel" for the sounds. A final consonant creates a sense of closure, a Masculine force. An `-а` or `-я` ending feels open, inviting, a Feminine grace. An `-о` or `-е` ending feels neutral, perhaps echoing a calm observation. This is how native speakers often intuitively process gender.
+> ⚡ **Pro Tip**
+>
+> **The 90% Rule:**
+> - If it sounds hard/abrupt at the end (Bank, Park, Bus), it's a **He**.
+> - If it sings "Ahhh" (Kava, Pizza, Visa), it's a **She**.
+> - If it sounds round "Oh/Eh" (Metro, More, Radio), it's an **It**.
+>
+> This works for almost all basic nouns. The main exception is nouns ending in Soft Sign (**-ь**), which can be He or She, but you will learn those one by one.
 
-### The Four Declension Families: Blueprint for Change
-Understanding grammatical gender is the first step. The second, more advanced step, is to recognize that nouns belong to different "Declension Families." These families are crucial because they dictate how noun endings will change when they interact with other words in a sentence (a process called declension, which we will explore in later modules). For now, simply identify which family a noun belongs to based on its gender and ending.
+### 2. Masculine (Чоловічий рід) - The Consonants
+Endings: **Any Consonant**, **-Й**
+words:
+- **Банк** (Bank). Ends in K. Masculine.
+- **Студент** (Student). Ends in T. Masculine.
+- **Музей** (Museum). Ends in Y. Masculine.
+- **Чай** (Tea). Ends in Y. Masculine.
+- **Батько** (Father). Ends in O BUT it means "Father", so it is Masculine by biology.
+- **Дядько** (Uncle). Also Masculine by biology.
 
-**Family 1: The "A" Team (Feminines & Some Masculines in -а/-я)**
--   **Characteristics:** Nouns ending in **-А** or **-Я**.
--   **Members:** The vast majority of Feminine nouns (e.g., **Мама, Карта, Вода, Книга, Річка**). It also includes a small but important group of Masculine nouns that end in **-А** or **-Я** (e.g., **Тато, Микола, Дядько, Суддя** - Judge).
--   *Vibe:* This is the largest and most dynamic family, often associated with living beings and common objects.
+### 3. Feminine (Жіночий рід) - The Divas
+Endings: **-А**, **-Я**
+words:
+- **Кава** (Coffee). Ends in A. Feminine.
+- **Музика** (Music). Ends in A. Feminine.
+- **Ідея** (Idea). Ends in Ya. Feminine.
+- **Сім'я** (Family). Ends in Ya. Feminine.
+- **Україна** (Ukraine). Ends in A. Feminine.
 
-**Family 2: The Solid Core (Masculines & Neuters)**
--   **Characteristics:** Masculine nouns ending in a **Consonant** (e.g., **Дім, Стіл, Студент, Хліб, Чай**) and Neuter nouns ending in **-О** or **-Е** (e.g., **Вікно, Сонце, Море, Місто, Молоко**).
--   *Vibe:* This family represents the stable, tangible world—objects, places, and many abstract concepts. It's robust and foundational.
+*Exception:* Nouns ending in **-ь** (Soft Sign) can be Masculine (День - Day) or Feminine (Ніч - Night). For now, just memorize common ones.
 
-**Family 3: The Soft Feminines**
--   **Characteristics:** Feminine nouns ending in a **Soft Sign (-Ь)** (e.g., **Ніч, Сіль, Осінь, Радість** - joy, **Любов** - love).
--   *Vibe:* This is a smaller but highly expressive family, often denoting abstract qualities, emotions, or concepts that feel ethereal. These endings feel "gentle" or "soft."
+### 4. Neuter (Середній рід) - The Round Ones
+Endings: **-О**, **-Е**
+words:
+- **Місто** (City). Ends in O. Neuter.
+- **Село** (Village). Ends in O. Neuter.
+- **Сонце** (Sun). Ends in E. Neuter.
+- **Море** (Sea). Ends in E. Neuter.
+- **Поле** (Field). Ends in E. Neuter.
 
-**Family 4: The Little Ones (Neuters in -А/-Я)**
--   **Characteristics:** A very small family of Neuter nouns that end in **-А** or **-Я**. These often refer to young creatures or unique concepts.
--   **Members:** **Ім'я** (Name), **Цуценя** (Puppy), **Дівча** (Little girl), **Теля** (Calf).
--   *Vibe:* This family is distinct and often relates to a sense of smallness, youth, or peculiarity.
+### 5. Why Does This Matter? (The Concord Agreement)
 
-Understanding these families now will make learning case endings much easier in future modules, as each family has its own set of rules for how words change.
+You might ask: *"Who cares if a table is a boy?"*
+The language cares. Because adjectives change.
+- A big table = Великий стіл (**-ий** for He).
+- A big book = Велика книга (**-а** for She).
+- A big window = Велике вікно (**-е** for It).
 
-> 🎭 **Culture Corner: Gender and the World Around You**
-> In Ukrainian culture, grammatical gender is so ingrained that it subtly influences perception. Objects can feel "male" or "female" in a way that goes beyond literal gender. A sturdy **стіл** (table, M) is reliably masculine. A flowing **річка** (river, F) has a feminine grace. This linguistic reality deepens the connection between language and the environment, making the world you inhabit through Ukrainian a more personified, character-filled place.
+If you say "Великий книга", it sounds like "He-Big Book". It clashes. It sounds wrong, like playing a wrong note on a piano.
+We will learn adjectives later, but understanding the **Gender of the Noun** is the foundation. You cannot build a house if you don't know the gender of the bricks. Every time you learn a new noun, your brain must categorize it: He, She, or It.
+
+> 🔍 **Deep Dive: The Soft Sign Ambiguity**
+>
+> Why is **День** (Day) masculine but **Ніч** (Night) feminine? They both end in a soft sound.
+> Unfortunately, for words ending in **-ь** or a sibilant (Ж, Ч, Ш), there is no simple rule. You must memorize them.
+> - **Він (He):** День, Біль (Pain), Кінь (Horse), Готель (Hotel).
+> - **Вона (She):** Ніч, Сіль (Salt), Осінь (Autumn), Тінь (Shadow), Любов (Love).
+> *Hint:* Abstract concepts ending in -ість (Radio-activity, Qual-ity) are always Feminine in Ukrainian (Якість, Радість). But for simple words, just treat them as individual personalities you need to meet.
 
 ## practice
 
-Let's do a "Home Tour" through a typical Ukrainian apartment. Identify the gender of each item.
+Let's test the rule. Look at the last letter.
 
-**In the Living Room (Вітальня):**
--   **Диван** [🔊](audio_dyvan) (Sofa) - Consonant, Masculine.
--   **Крісло** [🔊](audio_krislo) (Armchair) - -о, Neuter.
--   **Телевізор** [🔊](audio_televizor) (TV) - Consonant, Masculine.
--   **Картина** [🔊](audio_kartyna) (Painting) - -а, Feminine.
--   **Підлога** [🔊](audio_pidloha) (Floor) - -а, Feminine.
+1. **Лампа** (Lamp). Ends in **-a**. --> **Feminine**.
+2. **Комп'ютер** (Computer). Ends in **-r** (consonant). --> **Masculine**.
+3. **Радіо** (Radio). Ends in **-o**. --> **Neuter**.
 
-**In the Kitchen (Кухня):**
--   **Холодильник** [🔊](audio_xolodylnik) (Fridge) - Consonant, Masculine.
--   **Чашка** [🔊](audio_chashka) (Cup) - -а, Feminine.
--   **Склянка** [🔊](audio_sklyanka) (Glass) - -а, Feminine.
--   **Ніж** [🔊](audio_nizh) (Knife) - Consonant, Masculine.
--   **Тарілка** [🔊](audio_tarilka) (Plate) - -а, Feminine.
-
-**In the Bedroom (Спальня):**
--   **Ліжко** [🔊](audio_lizhko) (Bed) - -о, Neuter.
--   **Шафа** [🔊](audio_shafa) (Wardrobe) - -а, Feminine.
--   **Стіна** [🔊](audio_stina) (Wall) - -а, Feminine.
--   **Вікно** [🔊](audio_vikno) (Window) - -о, Neuter.
--   **Стеля** [🔊](audio_stelya) (Ceiling) - -я, Feminine.
-
-Now, let's stock a grocery basket.
--   **Хліб** [🔊](audio_xlib) (Bread - M)
--   **Молоко** [🔊](audio_moloko) (Milk - N)
--   **Риба** [🔊](audio_ryba) (Fish - F)
--   **Чай** [🔊](audio_chay) (Tea - M)
--   **Вода** [🔊](audio_voda) (Water - F)
--   **Овочі** [🔊](audio_ovochi) (Vegetables - Plural, treated as M for some agreements)
+> 🎭 **Culture Corner**
+>
+> Why is "Ukraine" (**Україна**) feminine? Because it ends in -a!
+> Why is "Kyiv" (**Київ**) masculine? Because it ends in -v!
+> This gender distinction runs deep in poetry and national symbolism. Ukraine is often personified as a Mother (Ненька Україна), a woman with a flower crown (Vinok). Kyiv is the FatherCity.
+> Almost all country names ending in -a are feminine (America, Canada, Poland, Germany - Німеччина).
+> However, cities can be anything. **Львів** (Lviv) is He, **Одеса** (Odesa) is She, and **Рівне** (Rivne) is It!
+> Even rivers have gender. **Дніпро** (Dnipro) ends in -o, so it looks Neuter. However, historically it refers to the ancient god of the river, so in poetry (like Shevchenko's "Roar and groan, broad Dnipro"), the river acts with masculine power. But grammatically? "Dnipro is wide" = "Дніпро широкий" (Masculine adjective!). So Dnipro is a rare exception where an -o noun is masculine, but usually only in poetic contexts. In standard grammar, stick to the ending rules!
 
 ## production
 
-Imagine you are introducing your friends to a Ukrainian family. They are curious about what's what.
+Sort the world around you.
+Look at a **Телефон** (Phone). Consonant 'n'. Masculine.
+Look at a **Машина** (Car). Vowel 'a'. Feminine.
+Look at a **Дерево** (Tree). Vowel 'o'. Neuter.
 
-**Dialogue Practice:**
-**A:** Що це? (What is this?)
-**B:** Це **стіл**.
-**A:** А це? (And this?)
-**B:** Це **лампа**.
-**A:** Зрозуміло. А **кава**? (Understood. And coffee?)
-**B:** **Кава** ось тут. (Coffee is right here.)
-
-**Your Turn:**
-Look around your current room. Point to five items and say their Ukrainian name, then state its gender.
-1.  **КОМП'ЮТЕР.** (Consonant ending -> Він).
-2.  **ДВЕРІ.** (Plural, no single gender).
-3.  **КНИГА.** ( -а ending -> Вона).
-4.  **ЧАШКА.** ( -а ending -> Вона).
-5.  **ТЕЛЕФОН.** (Consonant ending -> Він).
-
-You are beginning to perceive the world through Ukrainian eyes, hearing the subtle gender assigned to every object.
+You act as the "Sorting Hat" for every object you see! This is crucial because adjectives will change to match these genders later (Good Boy vs Good Girl vs Good Thing).
+Try to "gender" 3 things in your room right now.
+- Computer? M.
+- Mug? (Чашка) - F.
+- Window? N.
 
 ---
 
 # Activities
 
-## group-sort: The Three Genders
+## group-sort: Gender Sorting Hat
+> Sort these words by their gender.
 
-> Sort the nouns into the correct gender category based on their endings.
+### Masculine (Consonant)
+- Стіл (Table)
+- Чай (Tea)
+- Сік (Juice)
+- Тато (Father) - *Wait! Dad is He naturally!*
+- Хліб (Bread)
+- Парк (Park)
+- Банк (Bank)
+- Автобус (Bus)
 
-### Masculine (Він)
-- Стіл
-- Банк
-- Борщ
-- Парк
-- Студент
-- Дім
-- Хліб
-- Чай
-- Апельсин
-- Помідор
-- Огірок
-- Телефон
+### Feminine (-a/-ya)
+- Книга (Book)
+- Вода (Water)
+- Кімната (Room)
+- Мама (Mother)
+- Школа (School)
+- Кава (Coffee)
+- Лампа (Lamp)
+- Піца (Pizza)
 
-### Feminine (Вона)
-- Кава
-- Музика
-- Вода
-- Лампа
-- Піца
-- Книга
-- Кімната
-- Річка
-- Риба
-- Картопля
-- Цибуля
-- Школа
+### Neuter (-o/-e)
+- Вікно (Window)
+- Море (Sea)
+- Місто (City)
+- Яблуко (Apple)
+- Сонце (Sun)
+- Радіо (Radio)
+- Метро (Metro)
+- Морозиво (Ice Cream)
 
-### Neuter (Воно)
-- Метро
-- Фото
-- Вікно
-- Яблуко
-- Місто
-- Село
-- Море
-- Молоко
-- М'ясо
-- Університет
-- Крісло
-- Ліжко
+## quiz: Gender Detective
+> Identify the gender of the noun.
 
-## quiz: Predict the Gender
-
-> Look at the ending of the word and choose its gender.
-
-1. СУП (Soup)
-   - [x] Masculine (ends in consonant P)
-   - [ ] Feminine
-   - [ ] Neuter
-
-2. ГІТАРА (Guitar)
-   - [ ] Masculine
-   - [x] Feminine (ends in A)
-   - [ ] Neuter
-
-3. РАДІО (Radio)
-   - [ ] Masculine
-   - [ ] Feminine
-   - [x] Neuter (ends in O)
-
-4. ТЕЛЕФОН (Phone)
-   - [x] Masculine (ends in N)
-   - [ ] Feminine
-   - [ ] Neuter
-
-5. ОЗЕРО (Lake)
-   - [ ] Masculine
-   - [ ] Feminine
-   - [x] Neuter (ends in O)
-
-6. УКРАЇНА (Ukraine)
-   - [ ] Masculine
-   - [x] Feminine (ends in A)
-   - [ ] Neuter
-
-7. ПАСПОРТ (Passport)
+1. **Університет** (University)
    - [x] Masculine (ends in T)
    - [ ] Feminine
    - [ ] Neuter
+   > Consonant ending = Masculine.
 
-8. ПІЦА (Pizza)
+2. **Річка** (River)
    - [ ] Masculine
    - [x] Feminine (ends in A)
    - [ ] Neuter
+   > 'a' ending = Feminine.
 
-9. МОЛОКО (Milk)
+3. **Слово** (Word)
    - [ ] Masculine
    - [ ] Feminine
    - [x] Neuter (ends in O)
+   > 'o' ending = Neuter.
 
-10. ЧАЙ (Tea)
-    - [x] Masculine (ends in Y)
+4. **Дім** (Home)
+   - [x] Masculine (ends in M)
+   - [ ] Feminine
+   - [ ] Neuter
+   > Consonant ending = Masculine.
+
+5. **Земля** (Earth)
+   - [ ] Masculine
+   - [x] Feminine (ends in YA)
+   - [ ] Neuter
+   > 'ya' ending = Feminine.
+
+6. **Яблуко** (Apple)
+   - [ ] Masculine
+   - [ ] Feminine
+   - [x] Neuter
+   > 'o' ending = Neuter.
+
+7. **Телефон** (Phone)
+   - [x] Masculine
+   - [ ] Feminine
+   - [ ] Neuter
+   > Consonant ending = Masculine.
+
+8. **Сім'я** (Family)
+   - [ ] Masculine
+   - [x] Feminine
+   - [ ] Neuter
+   > 'ya' ending = Feminine.
+
+9. **Море** (Sea)
+   - [ ] Masculine
+   - [ ] Feminine
+   - [x] Neuter
+   > 'e' ending = Neuter.
+
+10. **Чай** (Tea)
+    - [x] Masculine
     - [ ] Feminine
     - [ ] Neuter
+    > 'y' (iot) is a consonant sound here = Masculine.
 
-11. РІЧКА (River)
+11. **Тато** (Dad)
+    - [x] Masculine
+    - [ ] Feminine
+    - [ ] Neuter
+    > Exception! Biological gender wins.
+
+12. **Кафе** (Cafe)
     - [ ] Masculine
-    - [x] Feminine (ends in A)
-    - [ ] Neuter
-
-12. ОГІРОК (Cucumber)
-    - [x] Masculine (ends in K)
     - [ ] Feminine
-    - [ ] Neuter
+    - [x] Neuter
+    > Ends in 'e' = Neuter.
 
-## match-up: Word to Declension Family
-
-> Match the word to its Declension Family.
-
+## match-up: Word Endings
+> Match the word to its grammatical ending type.
 | Left | Right |
 |------|-------|
-| Мама | Family 1 ("A" Team) |
-| Тато | Family 1 ("A" Team) |
-| Книга | Family 1 ("A" Team) |
-| Річка | Family 1 ("A" Team) |
-| Стіл | Family 2 (Solid Core) |
-| Дім | Family 2 (Solid Core) |
-| Сонце | Family 2 (Solid Core) |
-| Море | Family 2 (Solid Core) |
-| Ніч | Family 3 (Soft Feminine) |
-| Сіль | Family 3 (Soft Feminine) |
-| Ім'я | Family 4 (The Little Ones) |
-| Цуценя | Family 4 (The Little Ones) |
+| Стіл | Consonant (M) |
+| Вода | -A (F) |
+| Вікно | -O (N) |
+| Море | -E (N) |
+| Музей | -Y (M) |
+| Кухня | -YA (F) |
+| Парк | Consonant (M) |
+| Книга | -A (F) |
+| Місто | -O (N) |
+| Сонце | -E (N) |
+| Чай | -Y (M) |
+| Земля | -YA (F) |
+| Село | -O (N) |
 
-## fill-in: Pronoun Replacement
+## fill-in: Complete the Gender
+> Choose the correct pronoun (Він/Вона/Воно) for the object.
 
-> Which pronoun replaces the noun? (Він, Вона, Воно)
+1. Це **стілець**. ___ тут.
+   > [!answer] Він
+   > [!options] Він | Вона | Воно
 
-1. Де мама? ___ вдома.
-   - [!answer] Вона
-   - [!options] Вона | Він | Воно
+2. Це **шафа** (Wardrobe). ___ там.
+   > [!answer] Вона
+   > [!options] Вона | Він | Воно
 
-2. Де тато? ___ на роботі.
-   - [!answer] Він
-   - [!options] Він | Вона | Воно
+3. Це **ліжко** (Bed). ___ зручне.
+   > [!answer] Воно
+   > [!options] Воно | Він | Воно
 
-3. Це місто. ___ гарне.
-   - [!answer] Воно
-   - [!options] Воно | Він | Вона
+4. Це **чай**. ___ гарячий.
+   > [!answer] Він
+   > [!options] Він | Вона | Воно
 
-4. Де паспорт? ___ тут.
-   - [!answer] Він
-   - [!options] Він | Вона | Воно
+5. Це **річка**. ___ глибока.
+   > [!answer] Вона
+   > [!options] Вона | Він | Воно
 
-5. Книга на столі. ___ цікава.
-   - [!answer] Вона
-   - [!options] Вона | Він | Воно
+6. Це **вікно**. ___ велике.
+   > [!answer] Воно
+   > [!options] Воно | Він | Воно
 
-6. Молоко свіже. ___ біле.
-   - [!answer] Воно
-   - [!options] Воно | Він | Вона
+7. Це **хліб**. ___ смачний.
+   > [!answer] Він
+   > [!options] Він | Вона | Воно
 
-7. Хліб смачний. ___ гарячий.
-   - [!answer] Він
-   - [!options] Він | Вона | Воно
+8. Це **кава**. ___ смачна.
+   > [!answer] Вона
+   > [!options] Вона | Він | Воно
 
-8. Риба тут. ___ велика.
-   - [!answer] Вона
-   - [!options] Вона | Він | Воно
+9. Це **метро**. ___ швидке.
+   > [!answer] Воно
+   > [!options] Воно | Він | Воно
 
-9. Вікно відчинене. ___ чисте.
-   - [!answer] Воно
-   - [!options] Воно | Він | Вона
+10. Це **доктор**. ___ добрий.
+    > [!answer] Він
+    > [!options] Він | Вона | Воно
 
-10. Чай холодний. ___ чорний.
-    - [!answer] Він
-    - [!options] Він | Вона | Воно
+11. Це **мама**. ___ вдома.
+    > [!answer] Вона
+    > [!options] Вона | Він | Воно
 
-11. Школа нова. ___ велика.
-    - [!answer] Вона
-    - [!options] Вона | Він | Воно
+12. Це **сонце**. ___ жовте.
+    > [!answer] Воно
+    > [!options] Воно | Він | Воно
 
-12. Університет старий. ___ відомий.
-    - [!answer] Він
-    - [!options] Він | Вона | Воно
+## anagram: Scramble
+> Build the word.
 
-## unjumble: Gender Sentences
+1. л / і / т / С
+   > [!answer] Стіл
 
-> Put the words in order.
+2. а / м / а / М
+   > [!answer] Мама
+
+3. о / т / с / і / М
+   > [!answer] Місто
 
-1. стіл / Це
-   > [!answer] Це стіл.
-
-2. там / Кава
-   > [!answer] Кава там.
-
-3. гарне / Місто / це
-   > [!answer] Це гарне місто.
-
-4. тут / Яблуко
-   > [!answer] Яблуко тут.
-
-5. великий / Дім
-   > [!answer] Дім великий.
-
-6. свіже / Молоко
-   > [!answer] Молоко свіже.
-
-7. на / Стілець / кухні
-   > [!answer] Стілець на кухні.
-
-8. велика / Річка
-   > [!answer] Річка велика.
-
-9. смачна / Піца
-   > [!answer] Піца смачна.
-
-10. чисте / Вікно
-    > [!answer] Вікно чисте.
-
-11. старий / Університет
-    > [!answer] Університет старий.
-
-12. нова / Школа
-    > [!answer] Школа нова.
-
-## true-false: Gender Rules
-
-> Verify the gender rules.
-
-- [x] Nouns ending in a consonant are usually Masculine.
-  > Correct! Like "стіл" or "дім".
-
-- [ ] Nouns ending in -O are usually Feminine.
-  > Incorrect. Nouns ending in -O are almost always Neuter (unless it's a man like "Тато").
-
-- [x] Nouns ending in -A are usually Feminine.
-  > Correct! Like "мама" or "вода".
-
-- [ ] "Ніч" (Night) is a Masculine noun.
-  > Incorrect. "Ніч" is a Feminine noun (ends in -ь).
-
-- [x] "Тато" (Dad) is a Masculine noun, despite its -о ending.
-  > Correct! Biological gender overrides the ending rule here.
-
-- [ ] "Вікно" (Window) is a Feminine noun.
-  > Incorrect. "Вікно" is Neuter (ends in -о).
-
-- [x] Most nouns ending in -Я are Feminine.
-  > Correct! Like "земля" or "річка".
-
-- [ ] Plural nouns always take Feminine pronouns.
-  > Incorrect. Plural nouns take "Вони" (They) and do not have a grammatical gender.
-
-- [x] "М'ясо" (Meat) is a Neuter noun.
-  > Correct! Ends in -о.
-
-- [ ] "Чай" (Tea) is a Feminine noun.
-  > Incorrect. "Чай" is Masculine (ends in -й, a consonant).
-
-- [x] "Кімната" (Room) is a Feminine noun.
-  > Correct! Ends in -а.
-
-- [ ] "Стілець" (Chair) is a Neuter noun.
-  > Incorrect. "Стілець" is Masculine (ends in -ць, a consonant).
-
-## anagram: Household & Food
-
-> Unscramble the letters to find the word.
-
-1. н і в к о
-   > [!answer] вікно
-   > (window - neuter)
-
-2. п м а л а
-   > [!answer] лампа
-   > (lamp - feminine)
-
-3. л і т с
-   > [!answer] стіл
-   > (table - masculine)
-
-4. л х і б
-   > [!answer] хліб
-   > (bread - masculine)
-
-5. а д о в
-   > [!answer] вода
-   > (water - feminine)
-
-6. к о л о м о
-   > [!answer] молоко
-   > (milk - neuter)
-
-7. й а ч
-   > [!answer] чай
-   > (tea - masculine)
-
-8. р и б а
-   > [!answer] риба
-   > (fish - feminine)
-
-9. ц і п а
-   > [!answer] піца
-   > (pizza - feminine)
-
-10. е р о м
-    > [!answer] море
-    > (sea - neuter)
-
-11. в о о ч і
-    > [!answer] овочі
-    > (vegetables - plural)
-
-12. с у ф т р и
-    > [!answer] фрукти
-    > (fruits - plural)
-
-## quiz: Exceptions to the Rule
-
-> Catch the trick words!
-
-1. What gender is ТАТО (Dad)?
-   - [x] Masculine (Biological gender wins)
-   - [ ] Feminine
-   - [ ] Neuter
-
-2. What gender is ДЯДЬКО (Uncle)?
-   - [x] Masculine (Biological gender)
-   - [ ] Neuter
-   - [ ] Feminine
-
-3. What gender is НІЧ (Night)?
-   - [x] Feminine (Must be memorized)
-   - [ ] Masculine
-   - [ ] Neuter
-
-4. What gender is СІЛЬ (Salt)?
-   - [x] Feminine (Must be memorized)
-   - [ ] Masculine
-   - [ ] Neuter
-
-5. What gender is ІМ'Я (Name)?
-   - [x] Neuter (Family 4, ends in -я)
-   - [ ] Masculine
-   - [ ] Feminine
-
-6. What gender is ЦУЦЕНЯ (Puppy)?
-   - [x] Neuter (Family 4, ends in -я)
-   - [ ] Masculine
-   - [ ] Feminine
-
-7. What gender is КОЛЕГА (Colleague), when referring to a man?
-   - [x] Masculine (Biological gender wins)
-   - [ ] Feminine
-   - [ ] Neuter
-
-8. What gender is МАМА (Mom)?
-   - [x] Feminine (Ends in -а, biological gender aligns)
-   - [ ] Masculine
-   - [ ] Neuter
-
-9. What gender is ПАРК (Park)?
-   - [x] Masculine (Ends in consonant)
-   - [ ] Feminine
-   - [ ] Neuter
-
-10. What gender is КАВА (Coffee)?
-    - [x] Feminine (Ends in -а)
-    - [ ] Masculine
-    - [ ] Neuter
-
-11. What gender is МЕТРО (Metro)?
-    - [x] Neuter (Ends in -о)
-    - [ ] Masculine
-    - [ ] Feminine
-
-12. What gender is ДВЕРІ (Door)?
-    - [x] Plural (no single gender)
-    - [ ] Masculine
-    - [ ] Feminine
+4. г / и / н / К / а
+   > [!answer] Книга
+
+5. о / т / а / Т
+   > [!answer] Тато
+
+6. й / а / Ч
+   > [!answer] Чай
+
+7. а / д / о / В
+   > [!answer] Вода
+
+8. о / н / к / і / В
+   > [!answer] Вікно
+
+9. к / р / а / П
+   > [!answer] Парк
+
+10. і / П / ц / а
+    > [!answer] Піца
+
+11. а / т / ї / К / м / а
+    > [!answer] Кімната
+
+12. е / р / о / М
+    > [!answer] Море
+
+## true-false: Grammar Rules
+> True or False?
+
+- [x] Nouns ending in **-а** are usually Feminine.
+  > Correct. Like Мама, Книга.
+
+- [ ] "Тато" (Dad) is Feminine because it ends in -a.
+  > False! Biological gender wins. Dad is Masculine.
+
+- [x] Nouns ending in a consonant are Masculine.
+  > Correct. Like Дім, Стіл.
+
+- [ ] "Вікно" is Masculine.
+  > False. -o ending makes it Neuter.
+
+- [x] "Дядько" (Uncle) is Masculine.
+  > True. Biological gender override, even though it ends in -o.
+
+- [ ] "Стіл" is Neuter.
+  > False. It ends in a consonant (L), so it is Masculine.
+
+- [x] "Метро" is Neuter.
+  > True. Ends in -o.
+
+- [ ] "Кава" is Masculine.
+  > False. Ends in -a, so Feminine.
+
+- [x] "Музей" (Museum) is Masculine.
+  > True. Ends in 'y' which acts as a consonant.
+
+- [ ] "Ніч" (Night) is always Masculine.
+  > False. Nouns ending in -ь can be Feminine. Ніч is Feminine.
+
+- [x] "Хліб" (Bread) is Masculine.
+  > True. Ends in 'b'.
+
+- [ ] "Море" (Sea) is Feminine.
+  > False. Ends in 'e', so Neuter.
+
+## match-up: House Vocabulary
+> Match the room/furniture to English.
+| Left | Right |
+|------|-------|
+| Стіл | Table |
+| Крісло | Armchair |
+| Ліжко | Bed |
+| Вікно | Window |
+| Двері | Door |
+| Кухня | Kitchen |
+| Кімната | Room |
+| Стіна | Wall |
+| Підлога | Floor |
+| Стеля | Ceiling |
+| Шафа | Wardrobe |
+| Диван | Sofa |
+
+## quiz: Odd One Out
+> Which word has a DIFFERENT gender?
+
+1. Стіл, Дім, Парк, **Книга**
+   - [x] Книга (Feminine, others Masculine)
+   - [ ] Стіл
+   - [ ] Дім
+   > Книга is the only 'She' here.
+
+2. Вікно, Море, Слово, **Стілець**
+   - [x] Стілець (Masculine, others Neuter)
+   - [ ] Вікно
+   - [ ] Море
+   > Стілець ends in consonant 'ts'.
+
+3. Мама, Вода, Школа, **Тато**
+   - [x] Тато (Masculine nature!)
+   - [ ] Мама
+   - [ ] Вода
+   > Tricky! Тато is He, despite the 'a'.
+
+4. Чай, Сік, Хліб, **Кава**
+   - [x] Кава (Feminine, others Masculine)
+   - [ ] Чай
+   - [ ] Сік
+   > Coffee is She, drinks like tea/juice are He.
+
+5. Місто, Село, Море, **Річка**
+   - [x] Річка (Feminine, others Neuter)
+   - [ ] Місто
+   - [ ] Село
+   > River is She.
+
+6. Парк, Банк, Театр, **Школа**
+   - [x] Школа (Feminine, others Masculine)
+   - [ ] Парк
+   - [ ] Банк
+   > School is She.
+
+7. Яблуко, Яйце, Морозиво, **Банан**
+   - [x] Банан (Masculine, others Neuter)
+   - [ ] Яблуко
+   - [ ] Яйце
+   > Banana is He.
+
+8. Україна, Англія, Канада, **Київ**
+   - [x] Київ (Masculine, others Feminine)
+   - [ ] Україна
+   - [ ] Англія
+   > Kyiv is He.
+
+9. Студент, Лікар, Актор, **Студентка**
+   - [x] Студентка (Feminine, others Masculine)
+   - [ ] Студент
+   - [ ] Лікар
+   > Female student.
+
+10. Ніч, Сіль, Тінь, **День**
+    - [x] День (Masculine, others Feminine soft signs)
+    - [ ] Ніч
+    - [ ] Сіль
+    > Day is He. Night, Salt, Shadow are She.
+
+11. Море, Вікно, Сонце, **Хліб**
+    - [x] Хліб (Masculine, others Neuter)
+    - [ ] Море
+    - [ ] Вікно
+    > Bread is He.
+
+12. Диван, Стіл, Стілець, **Шафа**
+    - [x] Шафа (Feminine, others Masculine)
+    - [ ] Диван
+    - [ ] Стіл
+    > Wardrobe is She.
+
+## match-up: The Last Check
+> One final check.
+| Left | Right |
+|------|-------|
+| Стіл | Він (He) |
+| Книга | Вона (She) |
+| Вікно | Воно (It) |
+| Тато | Він (He - Exception) |
+| Кава | Вона (She) |
+| Метро | Воно (It) |
+| Дім | Він (He) |
+| Україна | Вона (She) |
+| Село | Воно (It) |
+| Чай | Він (He) |
+| Річка | Вона (She) |
+| Море | Воно (It) |
 
 ---
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note | Audio |
-|------|-----|---------|-----|--------|------|-------|
-| стіл | /stʲil/ | table | noun | m | | [🔊](audio_stil) |
-| книга | /ˈknɪɦɑ/ | book | noun | f | | [🔊](audio_knyha) |
-| вікно | /vʲiˈknɔ/ | window | noun | n | | [🔊](audio_vikno) |
-| двері | /ˈdvɛrʲi/ | door | noun | pl | plural only! | [🔊](audio_dveri) |
-| кімната | /kʲimˈnɑtɑ/ | room | noun | f | | [🔊](audio_kimnata) |
-| дім | /dʲim/ | home/house | noun | m | | [🔊](audio_dim) |
-| місто | /ˈmʲistɔ/ | city | noun | n | | [🔊](audio_misto) |
-| село | /sɛˈlɔ/ | village | noun | n | | [🔊](audio_selo) |
-| річка | /ˈrʲitʃkɑ/ | river | noun | f | | [🔊](audio_richka) |
-| море | /ˈmɔrɛ/ | sea | noun | n | | [🔊](audio_more) |
-| хліб | /xlʲib/ | bread | noun | m | | [🔊](audio_xlib) |
-| вода | /vɔˈdɑ/ | water | noun | f | | [🔊](audio_voda) |
-| молоко | /mɔlɔˈkɔ/ | milk | noun | n | | [🔊](audio_moloko) |
-| чай | /tʃɑj/ | tea | noun | m | | [🔊](audio_chai) |
-| сік | /sʲik/ | juice | noun | m | | [🔊](audio_sik) |
-| м'ясо | /ˈmʲjɑsɔ/ | meat | noun | n | | [🔊](audio_myaso) |
-| риба | /ˈrɪbɑ/ | fish | noun | f | | [🔊](audio_ryba) |
-| овочі | /ˈɔvɔtʃi/ | vegetables | noun | pl | | [🔊](audio_ovochi) |
-| фрукти | /ˈfruktɪ/ | fruits | noun | pl | | [🔊](audio_frukty) |
-| яблуко | /ˈjɑblukɔ/ | apple | noun | n | | [🔊](audio_yabluko) |
-| апельсин | /ɑpɛlʲˈsɪn/ | orange | noun | m | | [🔊](audio_apelsyn) |
-| картопля | /kɑrˈtɔplʲɑ/ | potato | noun | f | | [🔊](audio_kartoplya) |
-| помідор | /pɔmʲiˈdɔr/ | tomato | noun | m | | [🔊](audio_pomidor) |
-| огірок | /ɔɦʲiˈrɔk/ | cucumber | noun | m | | [🔊](audio_ohirok) |
-| цибуля | /tseˈbulʲɑ/ | onion | noun | f | | [🔊](audio_tsybulya) |
-| стілець | /sʲtʲiˈlɛtsʲ/ | chair | noun | m | | [🔊](audio_stilets) |
-| крісло | /ˈkrʲislɔ/ | armchair | noun | n | | [🔊](audio_krislo) |
-| шафа | /ˈʃɑfɑ/ | wardrobe | noun | f | | [🔊](audio_shafa) |
-| диван | /dɪˈvɑn/ | sofa | noun | m | | [🔊](audio_dyvan) |
-| ліжко | /ˈlʲiʒkɔ/ | bed | noun | n | | [🔊](audio_lizhko) |
-| підлога | /pʲidˈlɔɦɑ/ | floor | noun | f | | [🔊](audio_pidloha) |
-| стеля | /ˈstɛlʲɑ/ | ceiling | noun | f | | [🔊](audio_stelya) |
-| стіна | /sʲtʲiˈnɑ/ | wall | noun | f | | [🔊](audio_stina) |
-| магазин | /mɑɦɑˈzɪn/ | shop | noun | m | | [🔊](audio_mahazyn) |
-| школа | /ˈʃkɔlɑ/ | school | noun | f | | [🔊](audio_shkola) |
-| університет | /unʲivɛrsɪˈtɛt/ | university | noun | m | | [🔊](audio_universytet) |
-
-# Letter Groups
-
-**New Letters (Review):** Є, Ї, Ю, Я, Ж, Ш, Ч, Щ, Г, Ґ
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| стіл | /sʲtʲil/ | table | noun | m | |
+| книга | /ˈknɪɦɑ/ | book | noun | f | |
+| вікно | /v⁽ʲ⁾ikˈnɔ/ | window | noun | n | |
+| двері | /ˈdvɛr⁽ʲ⁾i/ | door | noun | pl | always plural |
+| кімната | /kimˈnɑtɑ/ | room | noun | f | |
+| дім | /dʲim/ | home/house | noun | m | |
+| місто | /ˈm⁽ʲ⁾istɔ/ | city | noun | n | |
+| село | /sɛˈlɔ/ | village | noun | n | |
+| річка | /ˈr⁽ʲ⁾it͡ʃkɑ/ | river | noun | f | |
+| море | /ˈmɔrɛ/ | sea | noun | n | |
+| хліб | /xlʲib/ | bread | noun | m | |
+| вода | /vɔˈdɑ/ | water | noun | f | |
+| молоко | /mɔlɔˈkɔ/ | milk | noun | n | |
+| чай | /t͡ʃɑj/ | tea | noun | m | |
+| сік | /sʲik/ | juice | noun | m | |
+| м'ясо | /ˈmjɑsɔ/ | meat | noun | n | |
+| риба | /ˈrɪbɑ/ | fish | noun | f | |
+| овочі | /ˈɔvɔt͡ʃi/ | vegetables | noun | pl | |
+| фрукти | /ˈfruktɪ/ | fruit | noun | pl | |
+| яблуко | /ˈjɑblukɔ/ | apple | noun | n | |
+| апельсин | /ɑpɛlʲˈsɪn/ | orange | noun | m | |
+| картопля | /kɑrˈtɔplʲɑ/ | potato | noun | f | |
+| помідор | /pɔm⁽ʲ⁾iˈdɔr/ | tomato | noun | m | |
+| огірок | /ɔɦ⁽ʲ⁾iˈrɔk/ | cucumber | noun | m | |
+| цибуля | /t͡sɪˈbulʲɑ/ | onion | noun | f | |
+| стілець | /sʲtʲiˈlɛt͡sʲ/ | chair | noun | m | |
+| крісло | /ˈkr⁽ʲ⁾islɔ/ | armchair | noun | n | |
+| шафа | /ˈʃɑfɑ/ | wardrobe | noun | f | |
+| диван | /dɪˈvɑn/ | sofa | noun | m | |
+| ліжко | /ˈlʲiʒkɔ/ | bed | noun | n | |
+| підлога | /pidˈlɔɦɑ/ | floor | noun | f | |
+| стеля | /ˈstɛlʲɑ/ | ceiling | noun | f | |
+| стіна | /sʲtʲiˈnɑ/ | wall | noun | f | |
+| магазин | /mɑɦɑˈzɪn/ | shop | noun | m | |
+| школа | /ˈʃkɔlɑ/ | school | noun | f | |
+| університет | /un⁽ʲ⁾ivɛrsɪˈtɛt/ | university | noun | m | |
 
 ---
 
 # Summary
 
-In this module, you learned to see the "Gender" of reality, which is primarily determined by a word's ending. This concept of gender is a fundamental organizational principle in Ukrainian.
-1.  **Masculine:** Ends in a Consonant (Стіл, Дім, Чай).
-2.  **Feminine:** Ends in **-А** or **-Я** (Мама, Книга, Річка).
-3.  **Neuter:** Ends in **-О** or **-Е** (Вікно, Місто, Море).
-4.  **Exceptions:** Biological gender for some nouns (Тато) and certain soft-sign Feminines (Ніч).
-
-You also identified the **4 Declension Families** (or groups of nouns) based on these endings. Understanding these families is a powerful predictive tool for how words will change later in sentences. For now, remember: **Sound = Gender, and Gender = Family!**
+> Now you are the Master of Gender. You look at a cup, you see a "She". You look at an apple, you see an "It". This superhero vision is essential because in Ukrainian, words *change* depending on gender. Adjectives, pronouns, and even past tense verbs will all bend to the will of the noun's gender. You also know that biology (like "Dad") beats grammar. In the next module, we will learn to say "I am" and "This is", putting these nouns into your first real sentences.

@@ -1,220 +1,216 @@
 ---
 title: The Cyrillic Code I
-subtitle: True Friends, False Friends, and Strangers
+subtitle: Breaking the Cipher
 phase: A1.1
-duration: 60
+duration: 45
 transliteration: full
-tags: [alphabet, reading, cognates]
+tags: [alphabet, intro]
 objectives:
-  - Learner can recognize and pronounce 19 Cyrillic letters
-  - Learner can identify "True Friends" (letters that look/sound like English)
-  - Learner can identify "False Friends" (look familiar, sound different)
-  - Learner can read 35 international cognates in Ukrainian
-  - Learner can distinguish Ukrainian "И" from "І"
+  - Recognize and read 13 "True Friend" and "False Friend" letters
+  - Read simple international words in Ukrainian
+  - Understand the concept of "False Friends" (Cyrillic vs Latin)
+grammar:
+  - Cyrillic Alphabet (Part 1)
 ---
 
 # Lesson Content
 
 ## warm-up
-**Welcome to Ukraine.**
-
-Imagine the plane wheels touching down on the runway. You are at **Бориспіль** [🔊](audio_boryspil) (Boryspil) International Airport, the main gateway to Kyiv. You grab your bag, step into the terminal, and look up. The signs are blue and yellow. Some letters look comforting and familiar: A, T, O, M. Others look vaguely recognizable but wrong, like a backwards "N" or a "P" where an "R" should be. And some look like alien artifacts or tridents.
-
-Panic? No. This is where your journey begins. You might think you need to memorize 33 random symbols from scratch, but that is a myth. You already know more than half of the Ukrainian alphabet. You just don't know *that you know it*.
-
-In this module, we are not going to chant "A, B, C." We are going to play the role of a codebreaker. We will treat the alphabet as a cipher that has three distinct layers: friends you can trust, tricksters that lie to you, and strangers you haven't met yet. By the end of this hour, you won't just know letters; you will be reading words like **ТАКСІ** [🔊](audio_taksi) (Taxi) and **МЕТРО** [🔊](audio_metro) (Metro) without a second thought.
 
 > 💡 **Did You Know?**
-> The Cyrillic alphabet was **NOT** invented by Russians! It was created in the late 9th century in the First Bulgarian Empire. It is named after Saint Cyril, a missionary from Byzantium, but it was likely developed by his students, particularly Saint Clement of Ohrid. They based it largely on the Greek alphabet, which explains why so many "math symbols" (like $\pi$ and $\rho$) appear as letters here. Ukraine adopted it over a thousand years ago, long before modern Russia existed.
+>
+> The Cyrillic alphabet (кирилиця) is not just "Russian letters." It was developed in the First Bulgarian Empire in the 9th century! It is named after Saint Cyril, a Byzantine monk, though it was likely created by his students, particularly Saint Clement of Ohrid. Today, it is used by over 250 million people, including Ukrainians, Bulgarians, Serbians, and yes, even Mongolians! Unlocking this code opens the door to a massive part of the world.
+>
+> In Ukraine, the alphabet is a symbol of national identity. For centuries, various empires tried to ban the Ukrainian language (Ems Ukaz, Valuev Circular), but the alphabet survived. Learning it is engaging with history.
+
+Welcome to Ukrainian! The first step to unlocking the language is breaking the "Cyrillic Code." It looks mysterious—like secret agent code—but here is a secret: **You already know half of it.**
+
+Many letters are exactly the same as in English. We call them the **True Friends**. You can trust them. Others are **False Friends**—they look familiar but are impostors. We will learn to spot them.
+
+### 1. The True Friends (They look and sound familiar)
+
+These letters are your best friends. They look like English letters and make the same sound. When you see them, read them exactly as you would in English.
+
+Why are they the same? Both the Latin alphabet (used in English) and the Cyrillic alphabet usually share a common ancestor: the Greek alphabet. These letters basically kept their shape and sound over thousands of years. It is a historical bridge connecting our languages.
+
+| Letter | Sound | Example | Note |
+|--------|-------|---------|------|
+| **А а** | /ɑ/ like f**a**ther | **Мама** (Mama) | Open your mouth wide! It's a pure "Ah" sound. |
+| **Е е** | /ɛ/ like p**e**t | **Метро** (Metro) | Short and crisp. Never a diphthong like "Ay". |
+| **І і** | /i/ like mach**i**ne | **Ідея** (Idea) | Uses a dot, just like English 'i'. |
+| **О о** | /ɔ/ like b**o**re | **Опера** (Opera) | Round your lips. It's not the 'o' in 'go'. |
+| **К к** | /k/ like s**k**ate | **Какао** (Cacao) | Hard K sound. Never soft like 'city'. |
+| **М м** | /m/ like **m**ap | **Атом** (Atom) | Just a normal M. |
+| **Т т** | /t/ like **t**ent | **Тот** (Tot) | Make it crisp. Your tongue hits your teeth. |
+
+> ⚡ **Pro Tip**
+>
+> Ukrainian is a **phonetic language**. This means you read exactly what you see. No hidden silent letters (like "k" in "knew") or changing vowels (like "a" in "car" vs "cat"). Once you learn the sound, it never changes! This makes reading Ukrainian actually *easier* than reading English once you know the symbols. You will never have to guess how to pronounce a word. If you see it, you can say it.
 
 ## presentation
 
-### The First Layer: True Friends
-Let's start with the easiest layer. These letters are "True Friends" because they are honest. They look exactly like their English counterparts (the Latin alphabet) and they make the exact same sounds. If you see **А**, you say "Ah". If you see **К**, you say "K".
+Now, meet the **False Friends**. These are the tricksters. They *look* like English letters, but they make a completely different sound. You must rewire your brain to see them differently.
 
-There are seven of these honest letters: **А, Е, І, О, К, М, Т**.
+This usually happened because the Cyrillic alphabet took a Greek shape that Latin didn't use, or used it differently. For example, the Cyrillic **Р** comes from the Greek Rho (**ρ**), which makes an 'r' sound. But to an English speaker, it looks like a 'P'. You have to suppress your instinct to say 'P' and force your brain to roll that 'R'.
 
-Think of the word **АТОМ** [🔊](audio_atom). In Ukrainian, it is **АТОМ**. Same letters, same meaning.
-Think of **МАМА** [🔊](audio_mama). It's **МАМА**.
-Think of **КОТ** [🔊](audio_kot). It sounds like "cot", but it means "cat" (specifically a male cat).
+### 2. The False Friends (Don't trust them!)
 
-| Letter | Sound | Example | Reading | Audio |
-|--------|-------|---------|---------|-------|
-| **А а** | /a/ as in f**a**ther | **А** | /a/ (Ah!) | [🔊](audio_a) |
-| **Е е** | /ɛ/ as in p**e**t | **Е** | /e/ (Eh?) | [🔊](audio_e) |
-| **І і** | /i/ as in mach**i**ne | **І** | /i/ (Ee) | [🔊](audio_i) |
-| **О о** | /ɔ/ as in m**o**re | **О** | /o/ (Oh) | [🔊](audio_o) |
-| **К к** | /k/ as in **k**ite | **К** | /k/ | [🔊](audio_k) |
-| **М м** | /m/ as in **m**ap | **М** | /m/ | [🔊](audio_m) |
-| **Т т** | /t/ as in **t**ent | **Т** | /t/ | [🔊](audio_t) |
+| Letter | Looks like... | But sounds like... | Memory Hook |
+|--------|---------------|-------------------|-------------|
+| **В в** | B | **V** (Very) | **V**ictory sign is V-shaped! It's a V! |
+| **Н н** | H | **N** (No) | Say **H**eck **N**o! It looks like an H but says N. |
+| **Р р** | P | **R** (Run) | **R**olling **P** (Trilled R). Think of Greek Rho. |
+| **С с** | C | **S** (See) | Like in **C**ity or **C**enter. Never a 'K' sound! |
+| **У у** | Y | **U** (Boot) | **Y**ou look cool in boots. It's the 'oo' sound. |
+| **Х х** | X | **Kh** (Loch) | Like clearing your throat (Haa!). Not 'ks'. |
 
-> ⚡ **Pro Tip:**
-> Ukrainian **Т** is a "dental" sound. Your tongue should touch your teeth, not the roof of your mouth like in English. It sounds sharper, crisper, and less "airy" than the English T. Try saying "Tennis" but touch your teeth. That's the Ukrainian **Т**.
+> 🎭 **Culture Corner**
+>
+> That last letter **Х** is very common in Ukrainian. It’s the sound in "Kharkiv" (Харків), the second-largest city in Ukraine, or "Khreshchatyk" (Хрещатик), the main street of Kyiv. It is deeper than an English "h". Imagine you are warming your hands in winter: "Hhhh". It is a "velar fricative"—made at the back of your throat. Unlike in English, where 'h' is just a breath, **Х** has friction.
 
-### The Second Layer: False Friends
-Now we enter the danger zone. These letters are the "tricksters". They look incredibly familiar—you see a "B", a "P", an "H", a "C", an "X", and a "y". But if you pronounce them like English letters, you will be speaking gibberish. These are "False Friends".
+### 3. Let's Read! (International Words)
 
-Why do they look like this? Because they come from Greek.
-- The letter **Р** looks like a "P", but it is the Greek *Rho*. It makes the **R** sound (rolled, like in Spanish or Italian).
-- The letter **Х** looks like an "X", but it is the Greek *Chi*. It makes the heavy **H** sound (like in "Loch Ness").
+Now you have enough letters to read real words. Try to read these international words aloud. Since they are "cognates" (born from the same root), you will understand them instantly.
 
-| Letter | Looks like | Sound | Example | Reading | Audio |
-|--------|------------|-------|---------|---------|-------|
-| **В в** | B | /v/ as in **v**et | **В**іза | /vi-za/ | [🔊](audio_v) |
-| **Н н** | H | /n/ as in **n**et | **Н**і | /ni/ | [🔊](audio_n) |
-| **Р р** | P | /r/ trilled (rolled) | **Р**адіо | /ra-di-o/ | [🔊](audio_r) |
-| **С с** | C | /s/ as in **s**un (never /k/!) | **С**уп | /sup/ | [🔊](audio_s) |
-| **У у** | y | /u/ as in m**oo**n | **У**рок | /u-rok/ | [🔊](audio_u) |
-| **Х х** | X | /x/ as in lo**ch** (hard H) | **Х**аос | /kha-os/ | [🔊](audio_kh) |
+Ukraine is a modern European country, and modern Ukrainian vocabulary is full of these internationalisms. You don't need to learn a new word for "Taxi" or "Radio". They are imports. This means your passive vocabulary is already huge before you even start studying. You just need to recognize them in their Cyrillic dress.
 
-Let's decode a few "False Friend" words.
-You see **РЕСТОРАН** [🔊](audio_restoran). Your brain says "Pectopah". But now you know:
-- P = R
-- C = S
-- H = N
-It reads **RESTORAN**.
+- **Мама** (Ma-ma) — Mother. Universal word!
+- **Таксі** (Tak-si) — Taxi.
+- **Метро** (Me-tro) — Metro / Subway.
+- **Кафе** (Ka-fe) — Cafe.
+- **Спорт** (Sport) — Sport.
+- **Театр** (Te-atr) — Theater.
+- **Ресторан** (Res-to-ran) — Restaurant.
+- **Студент** (Stu-dent) — Student.
 
-You see **МЕТРО** [🔊](audio_metro). It's not "Metpo". It is **METRO**.
-You see **СУП** [🔊](audio_sup). It's not "Cyn". It is **SUP**.
-
-> 🔍 **Myth Buster**
-> **Myth:** "Ukrainian is just a dialect of Russian."
-> **Fact:** Ukrainian is a separate East Slavic language with a distinct history. While they share an alphabet (mostly), the sounds are different. For example, the Ukrainian **Г** (H) is soft and breathy, while the Russian G is hard (like in "Go"). The Ukrainian **О** is always pronounced "O", whereas in Russian it often turns into "A" when unstressed. They are as different as Spanish and Portuguese.
-
-### The Third Layer: New Friends
-Finally, we meet the strangers. These letters don't look like English letters at all. They are unique shapes that you simply need to memorize. But the good news is: they usually make very simple sounds.
-
-- **Б** looks like a 6 or a b with a hat. It is **B**.
-- **Г** looks like a gallows or a hook. It is the breathy **H** (like in "**h**ome").
-- **Д** looks like a fortress or a table. It is **D**.
-- **З** looks like the number 3. It creates the **Z** sound.
-- **Л** looks like an upside-down V or a lambda. It is **L**.
-- **П** looks like a mathematical Pi ($\pi$) or a doorway. It is **P**.
-- **Ф** looks like a circle with a line through it. It is **F**.
-
-| Letter | Sound | Example | Reading | Audio |
-|--------|-------|---------|---------|-------|
-| **Б б** | /b/ as in **b**oy | **Б**анк | /bank/ | [🔊](audio_b) |
-| **Д д** | /d/ as in **d**og | **Д**ім | /dim/ | [🔊](audio_d) |
-| **З з** | /z/ as in **z**oo | **З**она | /zo-na/ | [🔊](audio_z) |
-| **Л л** | /l/ as in **l**ove | **Л**ампа | /lam-pa/ | [🔊](audio_l) |
-| **П п** | /p/ as in **p**ot | **П**арк | /park/ | [🔊](audio_p) |
-| **Ф ф** | /f/ as in **f**un | **Ф**ото | /fo-to/ | [🔊](audio_f) |
-
-**Reading Practice:**
-- **БАНК** [🔊](audio_bank) (bank) — Bank
-- **ПАРК** [🔊](audio_park) (park) — Park
-- **ФОТО** [🔊](audio_foto) (fo-to) — Photo
-- **ЛАМПА** [🔊](audio_lampa) (lam-pa) — Lamp
-- **ЗОНА** [🔊](audio_zona) (zo-na) — Zone
-
-> 🎬 **Pop Culture Moment: S.T.A.L.K.E.R.**
-> The famous Ukrainian video game series **S.T.A.L.K.E.R.** is set in the Chornobyl Exclusion **Zone**. In Ukrainian, "Zone" is **ЗОНА** (Zona). When you see **З**, think of the **Z**ig-zag shape. The developers, GSC Game World, are based in Kyiv!
-
-### Cultural Insight: The Streetscape
-When you walk through a Ukrainian city like Lviv or Odesa, the streetscape is a mix of old and new. You will see **АПТЕКА** [🔊](audio_apteka) (Pharmacy - Apteka) on almost every corner. You will see **БАР** [🔊](audio_bar) (Bar) and **КАФЕ** [🔊](audio_kafe) (Kafe). You might see a sign for **НОТАРІУС** [🔊](audio_notarius) (Notary) or **АДВОКАТ** [🔊](audio_advokat) (Lawyer).
-
-Reading these signs is the first step to feeling "at home". You stop being a foreigner who sees random shapes, and you become a reader who sees meaning. Even with just these 19 letters, you can read about 30% of the signs on the street.
+Do you see? You are already reading Ukrainian! You didn't need a dictionary. You just needed to crack the cipher. This builds confidence immediately. You are not starting from zero; you are starting from a shared European vocabulary.
 
 ## practice
 
-Now, let's combine these three groups to read real international words used in Ukraine every day. Imagine you are walking down **Хрещатик** (Khreshchatyk) Street in Kyiv. You see these signs.
+Let's practice specific confusing letters to ensure you don't fall into their traps.
 
-**1. Places:**
-- **МЕТРО** [🔊](audio_metro) (Metro) — Subway
-- **КАФЕ** [🔊](audio_kafe) (Kafe) — Café
-- **БАР** [🔊](audio_bar) (Bar) — Bar
-- **ТЕАТР** [🔊](audio_teatr) (Teatr) — Theater
-- **ПАРК** [🔊](audio_park) (Park) — Park
-- **РЕСТОРАН** [🔊](audio_restoran) (Restoran) — Restaurant
+**В vs Б (New letter!)**
+We haven't formally learned **Б** yet, but don't confuse it with **В**.
+- **В** (looks like B) = V sound. Example: **Віза** (Visa).
+- **Б** (looks like 6) = B sound. Example: **Банк** (Bank).
 
-**2. Food:**
-- **САЛАТ** [🔊](audio_salat) (Salat) — Salad
-- **СУП** [🔊](audio_sup) (Sup) — Soup
-- **ПІЦА** [🔊](audio_pitsa) (Pitsa) — Pizza (Note: Ц is T+S, we will learn it later, but here it helps!)
-- **БАНАН** [🔊](audio_banan) (Banan) — Banana
-- **ЛИМОН** [🔊](audio_lymon) (Lymon) — Lemon
-- **КАКАО** [🔊](audio_kakao) (Kakao) — Cocoa
-- **КАВА** [🔊](audio_kava) (Kava) — Coffee
+**Н vs Е**
+- **Н** (looks like H) = N sound. Example: **Ні** (No).
+- **Е** (looks like E) = E sound. Example: **Ера** (Era).
 
-**3. People:**
-- **СТУДЕНТ** [🔊](audio_student) (Student) — Student
-- **ТУРИСТ** [🔊](audio_turyst) (Turyst) — Tourist
-- **ДОКТОР** [🔊](audio_doktor) (Doktor) — Doctor
-- **АКТОР** [🔊](audio_aktor) (Aktor) — Actor
-
-Let's look at a dialogue. Two students, **Оксана** (Oksana) and **Роман** (Roman), are meeting near the metro.
-
-**Oksana:** Привіт! (Pryvit - Hi!)
-**Roman:** Привіт, Оксано!
-**Oksana:** Це метро "Театральна"? (Is this Metro "Teatralna"?)
-**Roman:** Так, це метро. (Yes, this is the metro.)
-**Oksana:** А де кафе? (And where is the café?)
-**Roman:** Кафе там. (The café is there.)
-
-Notice the structure: **Це X** (This is X). **Де X?** (Where is X?). Simple, right?
+**Р vs П (New letter!)**
+- **Р** (looks like P) = R sound. Example: **Радіо** (Radio). The 'P' shape is actually the Greek letter Rho.
+- **П** (looks like Goal Post) = P sound. Example: **Парк** (Park).
 
 ## production
 
-Now you are ready to navigate a Ukrainian city map. You have the tools to decode signs.
+Now try to decipher these places in a city. Imagine you are walking down a street in Kyiv. What do the signs say?
 
-Imagine you are hungry. You see a sign: **РЕСТОРАН "ОДЕСА"**.
-- **Р** is R.
-- **Е** is E.
-- **С** is S.
-- **Т** is T.
-- **О** is O.
-- **Р** is R.
-- **А** is A.
-- **Н** is N.
-= **RESTORAN**.
+1. **Бар** (Bar) - A place for drinks.
+2. **Парк** (Park) - A place for walking.
+3. **Банк** (Bank) - A place for money.
+4. **Кафе** (Cafe) - A place for coffee.
+5. **Метро** (Metro) - Underground transport.
 
-Next door, you see **БАНК**.
-- **Б** is B.
-- **А** is A.
-- **Н** is N.
-- **К** is K.
-= **BANK**.
-
-You check your **ТЕЛЕФОН** (Phone). You want to call a **ТАКСІ** (Taxi).
-You are reading Ukrainian!
+> 💡 **Did You Know?**
+>
+> Ukrainian has 33 letters in total. You just learned or touched upon almost half of them in one lesson! The logic is simple: learn the code, unlock the language. There are no "spelling bees" in Ukraine because words are almost always spelled exactly how they sound.
 
 ---
 
 # Activities
 
-## match-up: True or False Friend?
-
-> Sort the letters into the correct category based on whether they sound like their English look-alikes.
-
+## match-up: False Friends
+> Match the tricky Cyrillic letter to its English sound.
 | Left | Right |
 |------|-------|
-| А | True Friend (A) |
-| К | True Friend (K) |
-| М | True Friend (M) |
-| Т | True Friend (T) |
-| О | True Friend (O) |
-| Е | True Friend (E) |
-| І | True Friend (I) |
-| В | False Friend (V) |
-| Н | False Friend (N) |
-| Р | False Friend (R) |
-| С | False Friend (S) |
-| Х | False Friend (Kh) |
-| У | False Friend (U) |
+| В | V (very) |
+| Н | N (no) |
+| Р | R (run) |
+| С | S (see) |
+| У | U (moon) |
+| Х | Kh (loch) |
+| А | A (father) |
+| К | K (kite) |
+| М | M (map) |
+| Т | T (tent) |
+| О | O (more) |
+| І | I (machine) |
 
-## group-sort: Letter Categories
+## quiz: True or False Friend?
+> Is the letter sound the same as in English?
 
-> Sort the letters into "True Friends" (look/sound same), "False Friends" (look same/sound diff), and "New Letters" (look different).
+1. Letter **А**
+   - [x] True Friend (Same sound)
+   - [ ] False Friend (Different sound)
+   > Correct! A sounds like 'a' in 'father'.
+
+2. Letter **Р**
+   - [ ] True Friend
+   - [x] False Friend
+   > Watch out! Cyrillic 'P' sounds like 'R'.
+
+3. Letter **С**
+   - [ ] True Friend
+   - [x] False Friend
+   > Correct. Cyrillic 'C' makes an 'S' sound (like in 'City').
+
+4. Letter **К**
+   - [x] True Friend
+   - [ ] False Friend
+   > Yes, K is K.
+
+5. Letter **В**
+   - [ ] True Friend
+   - [x] False Friend
+   > Correct! B is V!
+
+6. Letter **Н**
+   - [ ] True Friend
+   - [x] False Friend
+   > Correct! H is N.
+
+7. Letter **М**
+   - [x] True Friend
+   - [ ] False Friend
+   > M is M.
+
+8. Letter **Т**
+   - [x] True Friend
+   - [ ] False Friend
+   > T is T.
+
+9. Letter **У**
+   - [ ] True Friend
+   - [x] False Friend
+   > Y is U (oo).
+
+10. Letter **Х**
+   - [ ] True Friend
+   - [x] False Friend
+   > X is Kh.
+
+11. Letter **І**
+   - [x] True Friend
+   - [ ] False Friend
+   > I is I.
+
+12. Letter **Е**
+   - [x] True Friend
+   - [ ] False Friend
+   > E is E.
+
+## group-sort: Letter Types
+> Sort the letters into categories (True Friends vs False Friends).
 
 ### True Friends
-- А
 - К
 - М
-- О
 - Т
-- Е
+- А
+- О
 - І
+- Е
 
 ### False Friends
 - В
@@ -224,361 +220,269 @@ You are reading Ukrainian!
 - У
 - Х
 
-### New Letters
-- Б
-- Г
-- Д
-- З
-- Л
-- П
-- Ф
-
-## quiz: Reading International Words
-
-> Read the Ukrainian word and choose the correct English meaning.
-
-1. What does МЕТРО mean?
-   - [x] Subway/Metro
-   - [ ] Meteor
-   - [ ] Meter
-   - [ ] Metal
-
-2. What does РЕСТОРАН mean?
-   - [x] Restaurant
-   - [ ] Restroom
-   - [ ] Resort
-   - [ ] Restore
-
-3. What does СУП mean?
-   - [x] Soup
-   - [ ] Soap
-   - [ ] Super
-   - [ ] Supper
-
-4. What does БАНАН mean?
-   - [x] Banana
-   - [ ] Bank
-   - [ ] Bandana
-   - [ ] Banner
-
-5. What does ТАКСІ mean?
-   - [x] Taxi
-   - [ ] Taxes
-   - [ ] Toxic
-   - [ ] Task
-
-6. What does КОМЕТА mean?
-   - [x] Comet
-   - [ ] Comment
-   - [ ] Comedy
-   - [ ] Committee
-
-7. What does РАКЕТА mean?
-   - [x] Rocket
-   - [ ] Racket
-   - [ ] Raccoon
-   - [ ] Rack
-
-8. What does ОПЕРА mean?
-   - [x] Opera
-   - [ ] Operation
-   - [ ] Open
-   - [ ] Option
-
-9. What does БАЛЕТ mean?
-   - [x] Ballet
-   - [ ] Ballot
-   - [ ] Bullet
-   - [ ] Belt
-
-10. What does ПАСПОРТ mean?
-    - [x] Passport
-    - [ ] Pass
-    - [ ] Port
-    - [ ] Sport
-
-11. What does ВІЗА mean?
-    - [x] Visa
-    - [ ] Visit
-    - [ ] Vase
-    - [ ] Visor
-
-12. What does КАРТА mean?
-    - [x] Map/Card
-    - [ ] Cart
-    - [ ] Car
-    - [ ] Care
-
 ## fill-in: Missing Letters
+> Complete the word with the correct letter.
 
-> Complete the words with the correct missing letter.
+1. Taxi -> Та__сі
+   - [!answer] к
+   - [!options] к | с | т
 
-1. _ А Н К (Place for money - Bank)
-   > [!answer] Б
-   > [!options] Б | В | Г | Д
+2. Metro -> __етро
+   - [!answer] М
+   - [!options] М | Т | К
 
-2. П А _ К (Place with trees - Park)
-   > [!answer] Р
-   > [!options] Р | П | Н | Л
+3. Restaurant -> Рес__оран
+   - [!answer] т
+   - [!options] т | м | к
 
-3. Т _ К С І (Car for hire - Taxi)
-   > [!answer] А
-   > [!options] А | О | У | Е
+4. Bank -> Бан__
+   - [!answer] к
+   - [!options] к | н | р
 
-4. М Е _ Р О (Underground train - Metro)
-   > [!answer] Т
-   > [!options] Т | М | К | Н
+5. Opera -> Опе__а
+   - [!answer] р
+   - [!options] р | п | в
 
-5. К А _ Е (Place for coffee - Café)
-   > [!answer] Ф
-   > [!options] Ф | Т | П | Б
+6. Park -> __арк
+   - [!answer] П
+   - [!options] П | Р | О
 
-6. Л И М О _ (Yellow fruit - Lemon)
-   > [!answer] Н
-   > [!options] Н | П | М | Л
+7. Park -> Пар__
+   - [!answer] к
+   - [!options] к | м | н
 
-7. С А _ А Т (Healthy food - Salad)
-   > [!answer] Л
-   > [!options] Л | П | Р | Д
+8. Bus -> Автоб__с
+   - [!answer] у
+   - [!options] у | ю | а
 
-8. Х О _ Е Й (Ice sport - Hockey)
-   > [!answer] К
-   > [!options] К | Г | Х | М
+9. Music -> Музи__а
+   - [!answer] к
+   - [!options] к | с | з
 
-9. Ф У Т Б _ Л (Popular sport - Football)
-   > [!answer] О
-   > [!options] О | А | У | Е
+10. Photo -> __ото
+   - [!answer] Ф
+   - [!options] Ф | П | Т
 
-10. Т Е Л Е Ф О _ (Communication device - Telephone)
-    > [!answer] Н
-    > [!options] Н | П | Р | М
+11. Radio -> Ра__іо
+   - [!answer] д
+   - [!options] д | т | р
 
-11. І Н Т Е _ Н Е Т (World Wide Web - Internet)
-    > [!answer] Р
-    > [!options] Р | П | Н | С
+12. Sport -> Спор__
+   - [!answer] т
+   - [!options] т | д | к
 
-12. К А _ А (Morning drink - Coffee)
-    > [!answer] В
-    > [!options] В | Б | Ф | П
+## anagram: Build the Word
+> Put the letters in order to make a word.
 
-## anagram: Build Words
+1. а / к / П / р
+   > [!answer] Парк
 
-> Put the letters in order to form the correct word.
+2. а / м / М / а
+   > [!answer] Мама
 
-1. Р А Б
-   > [!answer] БАР
-   > (A place for drinks)
+3. а / Б / к / н
+   > [!answer] Банк
 
-2. О Ф Т О
-   > [!answer] ФОТО
-   > (Picture)
+4. е / о / т / М / р
+   > [!answer] Метро
 
-3. М А М А
-   > [!answer] МАМА
-   > (Mother)
+5. о / д / і / Р / а
+   > [!answer] Радіо
 
-4. О Д К Т О Р
-   > [!answer] ДОКТОР
-   > (Medical professional)
+6. а / в / К / а
+   > [!answer] Кава
 
-5. Р К А П
-   > [!answer] ПАРК
-   > (Green space)
+7. о / т / Ф / о
+   > [!answer] Фото
 
-6. К А Б Н
-   > [!answer] БАНК
-   > (Money place)
+8. з / і / В / а
+   > [!answer] Віза
 
-7. К С І Т А
-   > [!answer] ТАКСІ
-   > (Car service)
+9. р / а / Б
+   > [!answer] Бар
 
-8. Р А Д О І
-   > [!answer] РАДІО
-   > (Audio device)
+10. у / п / С
+    > [!answer] Суп
 
-9. В І Е Д О
-   > [!answer] ВІДЕО
-   > (Moving picture)
+11. а / л / С / а / т
+    > [!answer] Салат
 
-10. А К В А
-    > [!answer] КАВА
-    > (Hot drink)
+12. а / м / Л / п / а
+    > [!answer] Лампа
 
-11. О К А К А
-    > [!answer] КАКАО
-    > (Sweet drink)
+## true-false: Sound Check
+> Decide if the statement is true.
 
-12. А З І В
-    > [!answer] ВІЗА
-    > (Travel document)
+- [x] The letter **С** always sounds like "S".
+  > True. It never sounds like "K".
 
-## anagram: Scrambled Cognates
+- [ ] The letter **Н** sounds like "H".
+  > False! **Н** sounds like "N". The sound "H" is usually **Х** or **Г**.
 
-> Arrange the letters to form the word. (A1 Special Permission)
+- [x] The letter **В** sounds like "V".
+  > Correct. Like in **V**ictory.
 
-1. а к т с і
-   > [!answer] таксі
-   > (taxi)
+- [ ] The letter **У** sounds like "Y".
+  > False! **У** sounds like "oo" (boot).
 
-2. а л с а т
-   > [!answer] салат
-   > (salad)
+- [x] **Р** sounds like a trilled "R".
+  > True. It's a rolling sound.
 
-3. е м т р о
-   > [!answer] метро
-   > (metro)
+- [ ] **Х** sounds like "X" (ks).
+  > False. It sounds like "Kh" (loch).
 
-4. у т р и с т
-   > [!answer] турист
-   > (tourist)
+- [x] **І** sounds like "ee" in "feet".
+  > True.
 
-5. о т ф о
-   > [!answer] фото
-   > (photo)
+- [ ] **Е** sounds like "a" in "cat".
+  > False. It sounds like "e" in "pet".
 
-6. д і в е о
-   > [!answer] відео
-   > (video)
+- [x] **А** sounds like "a" in "father".
+  > True.
 
-7. з а в і
-   > [!answer] віза
-   > (visa)
+- [ ] **К** is silent in Ukrainian.
+  > False. All letters are pronounced.
 
-8. р т а к а
-   > [!answer] карта
-   > (map)
+- [x] **М** is the same in English and Ukrainian.
+  > True.
 
-9. е т а к а р
-   > [!answer] ракета
-   > (rocket)
+- [ ] **Т** sounds like "D".
+  > False. It is a crisp "T".
 
-10. м о к е т а
-    > [!answer] комета
-    > (comet)
-
-11. р е о п а
-    > [!answer] опера
-    > (opera)
-
-12. л е т б а
-    > [!answer] балет
-    > (ballet)
-
-## true-false: Letter Facts
-
-> Decide if the statement about the alphabet is true or false.
-
-- [x] The letter Р sounds like the English R (rolled).
-  > Correct! It looks like P but sounds like R.
-
-- [ ] The letter Н sounds like the English H.
-  > Incorrect. Н sounds like N. The letter for H-sounds is Г or Х.
-
-- [x] The letter С always sounds like S, never like K.
-  > Correct! In Ukrainian, С is always /s/.
-
-- [ ] Cyrillic was invented by Russians.
-  > Incorrect. It was created in Bulgaria in the 9th century.
-
-- [x] The letter Х makes a sound like in "Loch".
-  > Correct! It is the hard H sound.
-
-- [ ] The letter В sounds like B.
-  > Incorrect. В sounds like V (or W).
-
-- [x] The letter У sounds like "oo" in "moon".
-  > Correct!
-
-- [ ] The letter І sounds like "eye".
-  > Incorrect. І sounds like "ee" in "machine".
-
-- [x] The letter Е sounds like "e" in "pet".
-  > Correct!
-
-- [ ] The letter П sounds like N.
-  > Incorrect. П is P. (Only in italics does *п* look like *n*).
-
-- [x] The letter М is a True Friend.
-  > Correct! It looks and sounds the same.
-
-- [ ] The letter К is a False Friend.
-  > Incorrect. К is a True Friend.
-
-## match-up: Word to Category
-
-> Match the word to its category.
-
+## match-up: Read the Word
+> Match the Ukrainian word to its English meaning.
 | Left | Right |
 |------|-------|
-| БАНАН | Food |
-| ЛИМОН | Food |
-| СУП | Food |
-| ПІЦА | Food |
-| ФУТБОЛ | Sport |
-| ХОКЕЙ | Sport |
-| БАНК | Place |
-| ПАРК | Place |
-| КАФЕ | Place |
-| ТЕАТР | Place |
-| ДОКТОР | Person |
-| СТУДЕНТ | Person |
+| Мама | Mother |
+| Тато | Father |
+| Таксі | Taxi |
+| Кава | Coffee |
+| Піца | Pizza |
+| Салат | Salad |
+| Суп | Soup |
+| Лимон | Lemon |
+| Банан | Banana |
+| Хокей | Hockey |
+| Футбол | Football |
+| Студент | Student |
+
+## quiz: Cultural Context
+> Answer these questions about the alphabet.
+
+1. Who is the Cyrillic alphabet named after?
+   - [x] Saint Cyril
+   - [ ] Saint Nicholas
+   - [ ] Saint Vladimir
+   > It was developed by disciples of Saint Cyril and Methodius.
+
+2. Is Cyrillic only used for Ukrainian?
+   - [ ] Yes
+   - [x] No
+   > It is used by many languages including Bulgarian and Serbian.
+
+3. How many letters are in the Ukrainian alphabet?
+   - [x] 33
+   - [ ] 26
+   - [ ] 40
+   > Correct! 33 letters.
+
+4. Is Ukrainian a phonetic language?
+   - [x] Yes
+   - [ ] No
+   > Yes, you largely read what you see.
+
+5. Which letter sounds like "H" but harder (loch)?
+   - [x] Х
+   - [ ] Г
+   - [ ] К
+   > X is the deep Kh sound.
+
+6. Which letter looks like a goal post?
+   - [x] П
+   - [ ] Л
+   - [ ] Д
+   > П looks like a standard goal post.
+
+7. Which letter is a "False Friend" for H?
+   - [x] Н
+   - [ ] Х
+   - [ ] Г
+   > Cyrillic Н sounds like N.
+
+8. Which country developed the Cyrillic script?
+   - [x] First Bulgarian Empire
+   - [ ] Russian Empire
+   - [ ] Poland
+   > It originated in Bulgaria in the 9th century.
+
+9. Can you read "Metro" in Ukrainian?
+   - [x] Метро
+   - [ ] Мідро
+   - [ ] Мото
+   > Yes, Метро.
+
+10. Can you read "Sport" in Ukrainian?
+    - [x] Спорт
+    - [ ] Спирт
+    - [ ] Спарт
+    > Yes, Спорт.
+
+11. Why are they called "True Friends"?
+    - [x] They look and sound the same
+    - [ ] They are nice letters
+    - [ ] They are easy to write
+    > Similarity makes them friendly.
+
+12. Why are they called "False Friends"?
+    - [x] They trick you (look same, sound different)
+    - [ ] They are hard to write
+    - [ ] They are rare
+    > They are impostors!
 
 ---
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note | Audio |
-|------|-----|---------|-----|--------|------|-------|
-| мама | /ˈmɑmɑ/ | mom | noun | f | | [🔊](audio_mama) |
-| тато | /ˈtɑtɔ/ | dad | noun | m | | [🔊](audio_tato) |
-| банк | /bɑnk/ | bank | noun | m | | [🔊](audio_bank) |
-| парк | /pɑrk/ | park | noun | m | | [🔊](audio_park) |
-| кафе | /kɑˈfɛ/ | cafe | noun | n | indeclinable | [🔊](audio_kafe) |
-| метро | /mɛˈtrɔ/ | metro | noun | n | indeclinable | [🔊](audio_metro) |
-| таксі | /tɑkˈsi/ | taxi | noun | n | indeclinable | [🔊](audio_taksi) |
-| радіо | /ˈrɑdʲio/ | radio | noun | n | indeclinable | [🔊](audio_radio) |
-| піца | /ˈpitsɑ/ | pizza | noun | f | | [🔊](audio_pitsa) |
-| суп | /sup/ | soup | noun | m | | [🔊](audio_sup) |
-| салат | /sɑˈlɑt/ | salad | noun | m | | [🔊](audio_salat) |
-| лимон | /lɪˈmɔn/ | lemon | noun | m | | [🔊](audio_lymon) |
-| банан | /bɑˈnɑn/ | banana | noun | m | | [🔊](audio_banan) |
-| хокей | /xɔˈkɛj/ | hockey | noun | m | | [🔊](audio_xokej) |
-| футбол | /futˈbɔl/ | football | noun | m | | [🔊](audio_futbol) |
-| студент | /stuˈdɛnt/ | student | noun | m | | [🔊](audio_student) |
-| турист | /tuˈrɪst/ | tourist | noun | m | | [🔊](audio_turist) |
-| музика | /ˈmuzɪkɑ/ | music | noun | f | | [🔊](audio_muzyka) |
-| фото | /ˈfɔtɔ/ | photo | noun | n | indeclinable | [🔊](audio_foto) |
-| відео | /ˈvi.de.o/ | video | noun | n | indeclinable | [🔊](audio_video) |
-| бар | /bɑr/ | bar | noun | m | | [🔊](audio_bar) |
-| ресторан | /rɛstɔˈrɑn/ | restaurant | noun | m | | [🔊](audio_restoran) |
-| доктор | /ˈdɔktɔr/ | doctor | noun | m | | [🔊](audio_doktor) |
-| актор | /ɑkˈtɔr/ | actor | noun | m | | [🔊](audio_aktor) |
-| опера | /ˈɔpɛrɑ/ | opera | noun | f | | [🔊](audio_opera) |
-| балет | /bɑˈlɛt/ | ballet | noun | m | | [🔊](audio_balet) |
-| паспорт | /ˈpɑspɔrt/ | passport | noun | m | | [🔊](audio_pasport) |
-| віза | /ˈvizɑ/ | visa | noun | f | | [🔊](audio_viza) |
-| карта | /ˈkɑrtɑ/ | map | noun | f | | [🔊](audio_karta) |
-| комета | /kɔˈmɛtɑ/ | comet | noun | f | | [🔊](audio_kometa) |
-| ракета | /rɑˈkɛtɑ/ | rocket | noun | f | | [🔊](audio_raketa) |
-| телефон | /tɛlɛˈfɔn/ | telephone | noun | m | | [🔊](audio_telefon) |
-| інтернет | /intɛrˈnɛt/ | internet | noun | m | | [🔊](audio_internet) |
-| какао | /kɑˈkɑo/ | cocoa | noun | n | indeclinable | [🔊](audio_kakao) |
-| кава | /ˈkɑvɑ/ | coffee | noun | f | | [🔊](audio_kava) |
-
-# Letter Groups
-
-**True Friends:** А Е І О К М Т
-**False Friends:** В Н Р С У Х
-**New Letters:** Б Д З Л П Ф
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| мама | /ˈmɑmɑ/ | mother | noun | f | |
+| тато | /ˈtɑtɔ/ | father | noun | m | |
+| банк | /bɑnk/ | bank | noun | m | |
+| парк | /pɑrk/ | park | noun | m | |
+| кафе | /kɑˈfɛ/ | cafe | noun | n | indeclinable |
+| метро | /mɛˈtrɔ/ | metro | noun | n | indeclinable |
+| таксі | /tɑkˈsi/ | taxi | noun | n | indeclinable |
+| радіо | /ˈrɑd⁽ʲ⁾ijo/ | radio | noun | n | indeclinable |
+| піца | /ˈp⁽ʲ⁾it͡sɑ/ | pizza | noun | f | |
+| суп | /sup/ | soup | noun | m | |
+| салат | /sɑˈlɑt/ | salad | noun | m | |
+| лимон | /lɪˈmɔn/ | lemon | noun | m | |
+| банан | /bɑˈnɑn/ | banana | noun | m | |
+| хокей | /xɔˈkɛj/ | hockey | noun | m | |
+| футбол | /fudˈbɔl/ | football | noun | m | |
+| студент | /stuˈdɛnt/ | student | noun | m | |
+| турист | /tuˈrɪst/ | tourist | noun | m | |
+| музика | /ˈmuzɪkɑ/ | music | noun | f | |
+| фото | /ˈfɔtɔ/ | photo | noun | n | indeclinable |
+| відео | /ˈvidɛɔ/ | video | noun | n | indeclinable |
+| бар | /bɑr/ | bar | noun | m | |
+| ресторан | /rɛstɔˈrɑn/ | restaurant | noun | m | |
+| доктор | /ˈdɔktɔr/ | doctor | noun | m | |
+| актор | /ɑkˈtɔr/ | actor | noun | m | |
+| опера | /ˈɔpɛrɑ/ | opera | noun | f | |
+| балет | /bɑˈlɛt/ | ballet | noun | m | |
+| паспорт | /ˈpɑspɔrt/ | passport | noun | m | |
+| віза | /ˈvizɑ/ | visa | noun | f | |
+| карта | /ˈkɑrtɑ/ | map | noun | f | |
+| комета | /kɔˈmɛtɑ/ | comet | noun | f | |
+| ракета | /rɑˈkɛtɑ/ | rocket | noun | f | |
+| телефон | /tɛlɛˈfɔn/ | phone | noun | m | |
+| інтернет | /intɛrˈnɛt/ | internet | noun | m | |
+| какао | /kɑˈkɑɔ/ | cocoa | noun | n | indeclinable |
+| кава | /ˈkɑvɑ/ | coffee | noun | f | |
 
 ---
 
 # Summary
 
-In this module, you unlocked the first part of the Cyrillic code. You learned:
-1.  **True Friends** (А, К, М...) are easy.
-2.  **False Friends** (В, Н, Р...) are tricksters—watch out for them!
-3.  **New Letters** (Б, Ф, Л...) are just new shapes for familiar sounds.
-
-You can already read words like **МЕТРО**, **ТАКСІ**, and **РЕСТОРАН**. In the next module, we will learn the "unique" letters that give Ukrainian its distinct sound. До побачення! (Goodbye!)
+> Great job! You have cracked the first layer of the Cyrillic code. You now know the True Friends and the False Friends. You have learned that Ukrainian is phonetic, meaning you read what you see. You also know that **Х** is a deep sound, and **Р** is a rolled sound. In the next module, we will learn the **Unique Letters**—the ones that look completely different, like **Ж** and **Щ**!

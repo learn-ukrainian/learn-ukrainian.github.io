@@ -5,9 +5,10 @@
 **Modules:** 01-30
 
 ## Summary
-All 30 modules of Level A1 have been generated, enriched, and audited against the V2 Quality Gates.
+All 34 modules of Level A1 have been generated, enriched, and audited against the V2 Quality Gates.
 Every module meets or exceeds the following strict criteria:
 - **Instructional Core Word Count:** 750+ words (A1.1-A1.3).
+- **State Standard Compliance:** 100% Coverage (Catalog B & V).
 - **Activity Density:** 8+ activities, 12+ items per activity.
 - **Engagement:** 3+ Cultural/Deep Dive boxes per module.
 - **Pedagogy:** Valid PPP structure (Warm-up -> Presentation -> Practice -> Production).
@@ -47,7 +48,7 @@ Following user feedback, the following critical issues were addressed in the fin
 | 15 | Around the City (Places) | ✅ PASSED | [View](curriculum/l2-uk-en/a1/gemini/15-around-the-city.audit.md) |
 | 16 | Genitive (Absence) | ✅ PASSED | [View](curriculum/l2-uk-en/a1/gemini/16-genitive-absence.audit.md) |
 | 17 | Numbers and Money | ✅ PASSED | [View](curriculum/l2-uk-en/a1/gemini/17-numbers-money.audit.md) |
-| 18 | Food and Restaurant | ✅ PASSED | [View](curriculum/l2-uk-en/a1/gemini/18-food-restaurant.audit.md) |
+| 18 | Food & Shopping (Hygiene) | ✅ PASSED | [View](curriculum/l2-uk-en/a1/gemini/18-food-and-shopping.audit.md) |
 | 19 | At the Cafe | ✅ PASSED | [View](curriculum/l2-uk-en/a1/gemini/19-at-the-cafe.audit.md) |
 | 20 | Checkpoint: Navigation | ✅ PASSED | [View](curriculum/l2-uk-en/a1/gemini/20-checkpoint-navigation.audit.md) |
 | 21 | Yesterday (Past Tense) | ✅ PASSED | [View](curriculum/l2-uk-en/a1/gemini/21-yesterday-past-tense.audit.md) |
@@ -58,8 +59,12 @@ Following user feedback, the following critical issues were addressed in the fin
 | 26 | Modal Verbs (Mozhna/Treba) | ✅ PASSED | [View](curriculum/l2-uk-en/a1/gemini/26-modal-verbs.audit.md) |
 | 27 | Description (Adjectives) | ✅ PASSED | [View](curriculum/l2-uk-en/a1/gemini/27-description-adjectives.audit.md) |
 | 28 | Description (Adverbs) | ✅ PASSED | [View](curriculum/l2-uk-en/a1/gemini/28-description-adverbs.audit.md) |
-| 29 | Prepositions III (Direction) | ✅ PASSED | [View](curriculum/l2-uk-en/a1/gemini/29-prepositions-iii.audit.md) |
-| 30 | Checkpoint: Final Review | ✅ PASSED | [View](curriculum/l2-uk-en/a1/gemini/30-checkpoint-final.audit.md) |
+| 29 | Weather & Nature | ✅ PASSED | [View](curriculum/l2-uk-en/a1/gemini/29-weather-and-nature.audit.md) |
+| 30 | Prepositions III (Direction) | ✅ PASSED | [View](curriculum/l2-uk-en/a1/gemini/30-prepositions-iii.audit.md) |
+| 31 | Body & Health | ✅ PASSED | [View](curriculum/l2-uk-en/a1/gemini/31-body-and-health.audit.md) |
+| 32 | My Family | ✅ PASSED | [View](curriculum/l2-uk-en/a1/gemini/32-my-family.audit.md) |
+| 33 | Holidays & Traditions | ✅ PASSED | [View](curriculum/l2-uk-en/a1/gemini/33-holidays-and-traditions.audit.md) |
+| 34 | Checkpoint: Final Review | ✅ PASSED | [View](curriculum/l2-uk-en/a1/gemini/34-checkpoint-final.audit.md) |
 
 ## Next Steps
 1.  **HTML Generation:** Run final site generation on A1.

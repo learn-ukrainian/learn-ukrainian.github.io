@@ -220,8 +220,8 @@ export function markdownToHtml(markdown: string, options?: MarkdownConverterOpti
  */
 export function parseCallouts(markdown: string): CalloutBlock[] {
   const callouts: CalloutBlock[] = [];
-  // Allow optional leading whitespace for indented callouts (under list items)
-  const regex = /^\s*>\s*\[!(\w+)\]\s*(.+)$/gm;
+  // Allow > or - or * prefix (blockquote or list item)
+  const regex = /^\s*(?:>|-|\*)\s*\[!(\w+)\]\s*(.+)$/gm;
 
   let match;
   while ((match = regex.exec(markdown)) !== null) {

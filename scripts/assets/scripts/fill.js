@@ -36,8 +36,8 @@ function initFill(sectionId, data) {
     // Shuffle options
     const shuffledOptions = [...options].sort(() => Math.random() - 0.5);
 
-    // Replace ___ in the sentence with a dropdown
-    const sentence = (item.prompt || item.sentence || '').replace(/___/g,
+    // Replace 2+ underscores with a dropdown
+    const sentence = (item.prompt || item.sentence || '').replace(/_{2,}/g,
       `<select class="fill-dropdown" data-idx="${i}" data-answer="${item.answer}" data-section="${sectionId}">
         <option value="" disabled selected>—</option>
         ${shuffledOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('')}

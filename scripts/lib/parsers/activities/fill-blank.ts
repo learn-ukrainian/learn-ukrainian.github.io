@@ -38,7 +38,7 @@ export class FillBlankParser extends ActivityParser<FillBlankContent> {
 
       let inAnswerBlock = false;
       for (const line of lines) {
-        if (line.match(/>\s*\[!/)) {
+        if (line.match(/^\s*(?:>|-|\*)\s*\[!/)) {
           inAnswerBlock = true;
         }
         if (inAnswerBlock) {

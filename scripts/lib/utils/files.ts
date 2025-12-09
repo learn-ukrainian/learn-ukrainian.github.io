@@ -130,25 +130,41 @@ export interface ModuleFile {
  * Returns sorted by module number
  */
 export async function findModuleFiles(languagePair: string): Promise<ModuleFile[]> {
-  const modulesDir = getModulesDir(languagePair);
+  const curriculumDir = getCurriculumDir(languagePair);
 
-  if (!fileExists(modulesDir)) {
+  if (!fileExists(curriculumDir)) {
     return [];
   }
 
-  const files = await readdir(modulesDir);
   const moduleFiles: ModuleFile[] = [];
+  const levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']; // Standard levels
 
-  for (const filename of files) {
-    const match = filename.match(/^module-(\d+)\.md$/);
-    if (match) {
-      moduleFiles.push({
-        path: join(modulesDir, filename),
-        filename,
-        moduleNum: parseInt(match[1], 10),
-      });
+  // Helper to process a directory
+  const processDir = async (dirPath: string) => {
+    if (!fileExists(dirPath)) return;
+
+    const files = await readdir(dirPath);
+    for (const filename of files) {
+      // Match standard format: 01-slug.md or legacy module-01.md
+      const match = filename.match(/^(\d+)-.*\.md$/) || filename.match(/^module-(\d+)\.md$/);
+
+      if (match) {
+        moduleFiles.push({
+          path: join(dirPath, filename),
+          filename,
+          moduleNum: parseInt(match[1], 10),
+        });
+      }
     }
+  };
+
+  // 1. Scan level directories (Preferred)
+  for (const level of levels) {
+    await processDir(join(curriculumDir, level));
   }
+
+  // 2. Scan legacy modules/ directory (Fallback)
+  await processDir(join(curriculumDir, 'modules'));
 
   // Sort by module number
   return moduleFiles.sort((a, b) => a.moduleNum - b.moduleNum);
@@ -156,16 +172,50 @@ export async function findModuleFiles(languagePair: string): Promise<ModuleFile[
 
 /**
  * Get path to a specific module file
+ * Scans directories to find the file
  */
 export function getModulePath(languagePair: string, moduleNum: number): string {
-  return join(getModulesDir(languagePair), `module-${moduleNum}.md`);
+  const curriculumDir = getCurriculumDir(languagePair);
+  const levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
+  const numStr = moduleNum.toString().padStart(2, '0');
+
+  // 1. Search in level directories
+  for (const level of levels) {
+    const levelDir = join(curriculumDir, level);
+    if (existsSync(levelDir)) {
+      // synchronous scan needed here as this function is sync? 
+      // Wait, the original function was sync but readdir is async context. 
+      // But getModulePath signature returns string directly, implying sync existence check.
+      // We'll iterate common patterns.
+
+      try {
+        const files = require('fs').readdirSync(levelDir);
+        for (const file of files) {
+          const match = file.match(/^(\d+)-.*\.md$/) || file.match(/^module-(\d+)\.md$/);
+          if (match && parseInt(match[1], 10) === moduleNum) {
+            return join(levelDir, file);
+          }
+        }
+      } catch (e) {
+        // Ignore invalid dirs
+      }
+    }
+  }
+
+  // 2. Fallback to constructed distinct paths (Legacy)
+  const legacyPath = join(curriculumDir, 'modules', `module-${moduleNum}.md`);
+  if (existsSync(legacyPath)) return legacyPath;
+
+  // Return a theoretical path if not found (defaulting to A1 or flat)
+  return legacyPath;
 }
 
 /**
  * Get module number from a file path
  */
 export function getModuleNumFromPath(filePath: string): number | null {
-  const match = basename(filePath).match(/^module-(\d+)\.md$/);
+  const filename = basename(filePath);
+  const match = filename.match(/^(\d+)-.*\.md$/) || filename.match(/^module-(\d+)\.md$/);
   return match ? parseInt(match[1], 10) : null;
 }
 

@@ -17,7 +17,8 @@ export type ActivityType =
   | 'anagram'
   | 'gap-fill'
   | 'select'
-  | 'error-correction';
+  | 'error-correction'
+  | 'fill-in';
 
 // =============================================================================
 // Frontmatter

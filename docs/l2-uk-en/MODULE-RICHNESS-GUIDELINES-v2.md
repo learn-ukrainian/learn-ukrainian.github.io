@@ -13,7 +13,7 @@
 | Metric | A1 | A2 | B1 | B2 | C1 | C2 |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Core Word Count** | **750+** | **1000+** | **1250+** | **1500+** | **1750+** | **2000+** |
-| **Immersion (% Ukr)** | 25% | **40%** | **60%** | 80% | 95% | 100% |
+| **Immersion (% Ukr)** | 15% / 30% | **40%** | **60%** | 80% | 95% | 100% |
 | **Example Sentences** | 12+ | 18+ | 24+ | 28+ | 30+ | 32+ |
 | **Engagement Boxes** | 3+ | 4+ | 5+ | 6+ | 7+ | 8+ |
 | **Mini-Dialogues** | 2+ | 3+ | 4+ | 4+ | 5+ | 5+ |
@@ -98,6 +98,69 @@ To surprise and impress students, highlighting the beautiful, melodic, and rich 
 - **Highlight "Why":** For complex grammar points (cases, aspect, motion verbs), actively explain the elegance and logical beauty of the Ukrainian system, using relatable analogies where possible.
 - **Case System:** Describe cases not just as endings, but as tools for expressing nuance and relationships.
 - **Verbal Aspect:** Explain aspect as the "soul" of verbs, showing how it sculpts meaning.
+
+---
+
+## Linguistic Precision Standards (Grammar Truth)
+
+> **Single Source of Truth** for strict grammatical definitions.
+> **Scope vs. Method:**
+> *   **The Scope (WHAT):** Defined by [`UKRAINIAN-STATE-STANDARD-2024`](file:///Users/krisztiankoos/projects/curricula-opus/docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt). Modules must teach *at least* these competencies.
+> *   **The Method (HOW):** Defined by *this document*. We use specific pedagogical models (e.g., "4 Families") to teach the Standard's requirements effectively.
+> *   *Example:* Standard says "Know noun gender". Guidelines say "Teach Gender via 4-Family Model". Both are true.
+
+### 1. Noun Declension Families (Відміни)
+
+#### Family 1 (Declension I)
+*   **Definition:** Nouns ending in **-А** or **-Я**.
+*   **Gender Scope:**
+    *   **Feminine:** vast majority (*Мама, Робота*).
+    *   **Masculine:** names (*Микола, Ілля*).
+    *   **Common:** dual-gender descriptors (*Сирота, Ненажера*).
+*   **Groups:** Hard (*Мама*), Soft (*Земля*), Mixed (*Межа*).
+
+#### Family 2 (Declension II)
+*   **Definition:**
+    *   **Masculine:** Zero ending (*Стіл*) or ending in **-О** (*Батько, Тато, Дніпро*).
+    *   **Neuter:** Ending in **-О, -Е** (*Вікно, Море*) or **-Я** (but **only** those that do NOT gain suffixes -at/-yat/-en during declension) (*Життя, Весілля, Обличчя*).
+*   **Key Distinction:** If a Neuter noun ends in -Я and keeps its stem simple (*Життя -> Життя*), it is Family 2.
+
+#### Family 3 (Declension III) - "The Consonant Feminines"
+*   **Definition:** **Feminine** nouns ending in a **Consonant**.
+*   **Specific Endings:**
+    1.  **Soft Sign (-Ь):** *Сіль, Осінь, Тінь, Любов, Кров*.
+    2.  **Sibilants (Ж, Ч, Ш):** Hard consonants but historically soft class. Examples: *Ніч, Подорож, Розкіш, Річ*.
+    3.  **Special:** The word *Мати* (Mother).
+*   **Validation Rule:** If it ends in a consonant and is Feminine, it is Family 3. Do NOT say "Ends in Soft Sign" (that excludes *Ніч*).
+
+#### Family 4 (Declension IV) - "The Suffix Gainers"
+*   **Definition:** **Neuter** nouns ending in **-А** or **-Я** that **change their stem** during declension.
+*   **Mechanism:** They gain suffixes **-ат-, -ят-, -ен-**.
+*   **Examples:**
+    *   *Ім'я* (Name) -> *Імені*.
+    *   *Цуценя* (Puppy) -> *Цуценяти*.
+    *   *Дівча* (Girl) -> *Дівчати*.
+*   **Key Distinction:** Family 4 is defined by *behavior* (stem change), not just ending.
+
+### 2. Verb Conjugation Groups (Дієвідміни)
+
+#### Group I (E-Conjugation)
+*   **Stem Ending:** Usually ends in a consonant after dropping -ти.
+*   **Key Vowel:** **-Е-** (or -Є-).
+*   **3rd Plural:** **-УТЬ / -ЮТЬ**.
+*   **Examples:** *Чита-ти -> Чита-ють*, *Писа-ти -> Пиш-уть*.
+
+#### Group II (I-Conjugation)
+*   **Stem Ending:** Usually ends in -и, -і, -ї after lower vowel drop.
+*   **Key Vowel:** **-И-** (or -Ї-).
+*   **3rd Plural:** **-АТЬ / -ЯТЬ**.
+*   **Examples:** *Говори-ти -> Говор-ять*, *Роби-ти -> Роб-лять*.
+
+### 3. Common Falsehoods to Avoid
+
+*   ❌ "All feminine nouns end in -a/-ya." (False: Family 3 exists).
+*   ❌ "Niches (Ніч) ends in a soft sign." (False: Ends in hard sibilant 'ch').
+*   ❌ "Neuters in -ya are always Family 4." (False: *Zhyttya* is Family 2).
 
 ---
 
@@ -606,17 +669,12 @@ Use: **Story → Vocabulary-in-Context → Analysis → Retelling**
 | сестра | sister |
 ```
 
-#### unjumble (4-6 words)
+#### anagram (4-8 letters) - [Use INSTEAD of unjumble for A1]
 ```markdown
-## unjumble: Build Simple Sentences
+## anagram: Build the Word
 
-1. книга / Це / моя
-   > [!answer] Це моя книга.
-   > (This is my book.)
-
-2. бачу / Я / студента
-   > [!answer] Я бачу студента.
-   > (I see the student.)
+1. о / л / к / о / м
+   > [!answer] молоко
 ```
 
 #### quiz

@@ -177,6 +177,7 @@ function renderActivitySection(activity: Activity, index: number, nextSection: s
       return renderSortSection(activity, sectionId, nextSection);
     case 'fill-blank':
     case 'gap-fill':
+    case 'fill-in':
       return renderFillSection(activity, sectionId, nextSection);
     case 'unjumble':
     case 'anagram':
@@ -399,11 +400,16 @@ function renderDataScripts(options: DataScriptOptions): string {
     const type = activity.type;
     const content = activity.content as any;
 
+    // Strip markdown from content to prevent leaked **chars** in UI
+    // We clone the content to avoid mutating the original
+    const cleanContent = JSON.parse(JSON.stringify(content));
+    stripMarkdownDeep(cleanContent);
+
     return {
       id: sectionId,
       type: type,
-      title: activity.title,
-      data: content,
+      title: stripMarkdown(activity.title),
+      data: cleanContent,
     };
   });
 
@@ -416,8 +422,8 @@ function renderDataScripts(options: DataScriptOptions): string {
   }));
 
   return `
-    const activitiesData = ${JSON.stringify(activitiesData)};
-    const vocabData = ${JSON.stringify(vocabData)};
+    var activitiesData = ${JSON.stringify(activitiesData)};
+    var vocabData = ${JSON.stringify(vocabData)};
   `;
 }
 
@@ -443,6 +449,53 @@ function cleanMarkdownForLesson(markdown: string): string {
   cleaned = cleaned.replace(/# (?:Activities|Вправи)[\s\S]*?(?=\n# |$)/, '');
   cleaned = cleaned.replace(/# (?:Vocabulary|Словник)[\s\S]*?(?=\n# |$)/, '');
   return cleaned.trim();
+}
+
+function stripMarkdown(text: string): string {
+  if (!text) return '';
+
+  // Protect fill-in gaps (2+ underscores)
+  const gaps: string[] = [];
+  const protectedText = text.replace(/_{2,}/g, (match) => {
+    gaps.push(match);
+    return `:::GAP${gaps.length - 1}:::`;
+  });
+
+  // Simple stripper: remove **, *, __, _
+  // Also remove links [text](url) -> text
+  const stripped = protectedText
+    .replace(/(\*\*|__)(.*?)\1/g, '$2') // Bold
+    .replace(/(\*|_)(.*?)\1/g, '$2') // Italic
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Links
+    .replace(/`([^`]+)`/g, '$1'); // Code
+
+  // Restore gaps
+  return stripped.replace(/:::GAP(\d+):::/g, (_, idx) => gaps[parseInt(idx)]);
+}
+
+function stripMarkdownDeep(obj: any) {
+  if (typeof obj === 'string') {
+    // We can't inplace replace string if passed as arg, but this is used on object properties
+    return stripMarkdown(obj);
+  } else if (Array.isArray(obj)) {
+    for (let i = 0; i < obj.length; i++) {
+      if (typeof obj[i] === 'string') {
+        obj[i] = stripMarkdown(obj[i]);
+      } else {
+        stripMarkdownDeep(obj[i]);
+      }
+    }
+  } else if (typeof obj === 'object' && obj !== null) {
+    for (const key in obj) {
+      if (typeof obj[key] === 'string') {
+        // Don't strip structural IDs or types if they happen to look like md (unlikely)
+        // But usually safe for content
+        obj[key] = stripMarkdown(obj[key]);
+      } else {
+        stripMarkdownDeep(obj[key]);
+      }
+    }
+  }
 }
 
 // =============================================================================

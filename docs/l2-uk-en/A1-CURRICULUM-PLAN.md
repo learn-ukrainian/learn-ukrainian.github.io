@@ -1,7 +1,7 @@
 # A1 Curriculum Plan: Ukrainian for English Speakers
 
 **Status:** ✅ COMPLETE
-**Modules:** 01-30 (30 modules)
+**Modules:** 01-34 (34 modules)
 **Vocabulary Target:** ~900 words (level), ~900 cumulative
 
 ---
@@ -445,9 +445,6 @@ By module 30, learners can:
 | 12 | Accusative (animate = Gen) | M11 | "I see him/her" |
 | 13 | Locative with в/у, на | M03 gender | "Where is X?" |
 | 14 | Possessive pronouns | M04 pronouns | "My/your X" |
-| 15 | City vocabulary | M13 locative | Navigation |
-| 16 | Genitive (absence) | M03 gender | "There is no X" |
-| 17 | Numbers 0-100 + money | M16 genitive | Prices, quantities |
 | 18 | Food vocabulary | M11, M16, M17 | Restaurant |
 | 19 | Functional: Café | M11-18 | Real interaction |
 | 20 | REVIEW | M11-19 | Consolidation |
@@ -652,21 +649,21 @@ By module 30, learners can:
 
 ---
 
-#### Module 18: Food & Restaurant
-**Grammar:** Accusative + Genitive in food context
+#### Module 18: Food & Shopping
+**Grammar:** Accusative + Genitive in food/shopping context
 
 **Key patterns:**
 - Я хочу каву. (I want coffee. - Acc)
 - Склянку води, будь ласка. (A glass of water, please. - Gen)
-- Скільки коштує піца? (How much is the pizza?)
+- Скільки коштує мило? (How much is the soap?)
 
-**Vocabulary (45 words):**
-страва, закуска, салат, суп, борщ, головна страва, десерт, напій, кава, чай, сік, вода, вино, пиво, м'ясо, курка, риба, овочі, картопля, рис, хліб, масло, сир, яйце, ковбаса, шинка, смажений, варений, печений, гарячий, холодний, солодкий, солоний, гострий, смачний, меню, порція, тарілка, склянка, пляшка, офіціант, замовлення, рахунок, чайові, готівка
+**Vocabulary (55 words):**
+страва, закуска, салат, суп, борщ, десерт, напій, кава, чай, сік, вода, вино, пиво, м'ясо, курка, риба, овочі, картопля, хліб, сир, яйце, смачний, меню, офіціант, рахунок, мило, шампунь, зубна паста, папір, ручка, олівець, зошит, купувати, супермаркет, магазин, пакет, каса, продавець, ціна, знижка, дорого, дешево, відчинено, зачинено
 
 **Signature Activity Concepts:**
 1. Dialogue: Order from a menu
-2. Quiz: Match dish descriptions
-3. Gap-fill: Complete restaurant dialogue
+2. Quiz: Match items to departments (Food vs Hygiene)
+3. Gap-fill: Shopping list completion
 
 ---
 
@@ -726,9 +723,13 @@ By module 30, learners can:
 | 25 | Daily routine + reflexives | M21-24 | Describe day |
 | 26 | Adjective agreement | M03 gender | Descriptions |
 | 27 | Colors & clothing | M26 adj | Appearance |
-| 28 | Weather (impersonal) | M26 adj | Small talk |
-| 29 | Family | M14 poss, M16 gen | Relationships |
-| 30 | FINAL REVIEW | All A1 | Capstone |
+| 28 | Description (Adverbs) | M26 adj | Manner, Frequency, Adverb vs Adjective |
+| 29 | Weather & Nature | M28 adv | Standard 3.11: Nature, Animals, Impersonal |
+| 30 | Prepositions III | M13/15 loc | Direction vs Location (V/Na/Do), Origin (Z/Vid) |
+| 31 | Body & Health | M30 preps | Standard 3.10: Body parts, Pharmacy, "Bolyt" |
+| 32 | My Family | M14 poss, M16 gen | Standard 3.1: Family Members, Genitive Relations |
+| 33 | Holidays & Traditions | M23 time | Standard 3.12: Dates, Greetings, Gifts |
+| 34 | Checkpoint: Final Review | All A1 | Final Exam simulation |
 
 ### Vocabulary Plan A1.3 (260 words)
 
@@ -741,9 +742,13 @@ By module 30, learners can:
 | 25 | 30 | Daily routine | прокидатися, вмиватися, одягатися... |
 | 26 | 35 | Adjectives | великий, малий, новий, старий, гарний... |
 | 27 | 30 | Colors/Clothing | червоний, синій, сорочка, штани... |
-| 28 | 25 | Weather | погода, сонце, дощ, холодно, тепло... |
-| 29 | 35 | Family | мати, батько, брат, сестра, дитина... |
-| 30 | 10 | Review | (consolidation of above) |
+| 28 | 30 | Adverbs | добре, погано, швидко, повільно... |
+| 29 | 35 | Weather & Nature | погода, дощ, сонце, кіт, собака... |
+| 30 | 20 | Prepositions/Motion | куди, звідки, в, на, до, з... |
+| 31 | 30 | Body & Health | голова, болить, лікар, аптека... |
+| 32 | 35 | Family | мама, тато, брат, сестра, сім'я... |
+| 33 | 30 | Holidays | свято, вітати, подарунок, день народження... |
+| 34 | 10 | Review | (consolidation of above) |
 
 ### Module Content Specifications A1.3
 
@@ -912,7 +917,30 @@ By module 30, learners can:
 
 ---
 
-#### Module 28: What's the Weather Like?
+#### Module 28: Description (Adverbs)
+**Grammar:** Adverbs of Manner & Frequency + Comparison with Adjectives
+
+**Formation:**
+- Adjective stem + -о (гарний → гарно, швидкий → швидко)
+- Common irregulars: хороший → добре, поганий → погано
+
+**Key patterns:**
+- Він гарно малює. (He draws beautifully.)
+- Я швидко читаю. (I read fast.)
+- Я ніколи не курю. (I never smoke.)
+- Як справи? - Добре. (How are things? - Good/Well.)
+
+**Vocabulary (30 words):**
+гарно, погано, добре, швидко, повільно, цікаво, нудно, важко, легко, смачно, дорого, дешево, голосно, тихо, весело, сумно, серйозно, жартома, ввічливо, чесно, завжди, часто, зазвичай, іноді, рідко, ніколи, трохи, дуже, занадто, зовсім
+
+**Signature Activity Concepts:**
+1. Transform: Adjective → Adverb
+2. Group-sort: Frequency scale (Always to Never)
+3. Gap-fill: "How do you do it?" scenarios
+
+---
+
+#### Module 29: Weather & Nature
 **Grammar:** Impersonal constructions (weather)
 
 **Weather expressions:**
@@ -920,21 +948,63 @@ By module 30, learners can:
 - Сьогодні тепло/холодно. (It's warm/cold today.)
 - Йде дощ/сніг. (It's raining/snowing.)
 
-**Impersonal patterns:**
-- тепло, холодно, спекотно, прохолодно (warm, cold, hot, cool)
-- No subject needed: "Холодно" = "It's cold"
+**Nature & Pets (Standard 3.11):**
+- Це гарна квітка. (This is a beautiful flower.)
+- У мене є кіт. (I have a cat.)
 
-**Vocabulary (25 words):**
-погода, клімат, температура, градус, тепло, холодно, спекотно, прохолодно, сонячно, хмарно, вітряно, сонце, хмара, вітер, дощ, сніг, туман, грім, блискавка, йде дощ, йде сніг, світить сонце, дме вітер, прогноз, сезон
+**Vocabulary (35 words):**
+погода, температура, тепло, холодно, сонячно, хмарно, сонце, хмара, вітер, дощ, сніг, йде дощ, йде сніг, природа, дерево, квітка, ліс, парк, річка, море, гора, тварина, пес, собака, кіт, кішка, птах, любити природу, гуляти в парку, прогноз
 
 **Signature Activity Concepts:**
 1. Match-up: Weather icon → description
 2. Gap-fill: Weather forecast
-3. Quiz: Dress for the weather
+3. Quiz: Nature vocabulary (Plant vs Animal)
 
 ---
 
-#### Module 29: My Family
+#### Module 30: Prepositions III
+**Grammar:** Direction (Kudy?) vs Location (De?) vs Origin (Zvidky?)
+
+**Prepositions:**
+- Location (De?): в/у, на (Locative)
+- Motion (Kudy?): в/у, на (Accusative); до (Genitive)
+- Origin (Zvidky?): з, від (Genitive)
+
+**Key patterns:**
+- Я в парку. (I am in the park.) --> Я йду в парк. (I go to the park.)
+- Я у лікаря. (I am at the doctor's.) --> Я йду до лікаря. (I go to the doctor.)
+- Я з України. (I am from Ukraine.)
+
+**Vocabulary (20 words):**
+де, куди, звідки, тут, там, вдома, додому, з (from place), від (from person), до (to person), через (through), прямо, назад, близько, далеко
+
+**Signature Activity Concepts:**
+1. Group-sort: Motion words vs Location words
+2. Gap-fill: Choose correct preposition (v/na/do)
+3. Quiz: "Where are you going?" vs "Where are you?"
+
+---
+
+#### Module 31: Body & Health
+**Grammar:** "I have pain" (Болить...) + Body parts
+
+**Key patterns:**
+- Що болить? (What hurts?)
+- У мене болить голова. (My head hurts.)
+- У мене температура. (I have a fever.)
+- Мені погано. (I feel bad.)
+
+**Vocabulary (30 words):**
+голова, рука, нога, живіт, спина, горло, око, вухо, ніс, рот, зуб, тіло, здоров'я, лікар, лікарня, аптека, ліки, таблетка, температура, болить, хворий, здоровий, почуватися, погано, добре, допомагати, викликати, швидка допомога
+
+**Signature Activity Concepts:**
+1. Match-up: Body parts labeling
+2. Dialogue: At the doctor's ("What hurts?")
+3. Quiz: Symptoms vs Solutions (Pharmacy)
+
+---
+
+#### Module 32: My Family
 **Grammar:** Genitive for relationships + possessives
 
 **Family terms:**
@@ -958,26 +1028,44 @@ By module 30, learners can:
 
 ---
 
-#### Module 30: A1 Capstone - Who Am I?
-**Review of:** All A1 modules (1-29)
+#### Module 33: Holidays & Traditions
+**Grammar:** Dates (Genitive of time) + Greetings
+
+**Key patterns:**
+- Коли твій день народження? (When is your birthday?)
+- З Новим роком! (Happy New Year!)
+- Вітаю! (Congratulations!)
+- Я люблю свята. (I love holidays.)
+
+**Vocabulary (30 words):**
+свято, традиція, Новий рік, Різдво, Великдень, день народження, весілля, подарунок, вітати, бажати, щастя, здоров'я, успіху, любові, святкувати, дарувати, отримувати, гості, торт, свічка, квіти, листівка, запрошення, вечірка, музика, танці, радість, веселий, святковий
+
+**Signature Activity Concepts:**
+1. Match-up: Holiday → Greeting
+2. Dialogue: Birthday party invitation
+3. Gap-fill: Write a greeting card
+
+---
+
+#### Module 34: Checkpoint: Final Review (A1 Mastery)
+**Review of:** All A1 modules (1-33)
 
 **Can-do assessment:**
 1. Read Cyrillic fluently (no transliteration)
 2. Introduce myself and family
 3. Describe daily routine
 4. Navigate city and order food
-5. Use all three cases (Acc, Loc, Gen)
-6. Use past and future tense
-7. Use modal verbs
-8. Describe people and things
+5. Use phrases for health and shopping
+6. Talk about weather and holidays
+7. Use past and future tense
+8. Use adverbs to describe actions
 
 **Final tasks:**
 1. Self-introduction monologue
 2. "My typical day" paragraph
-3. Restaurant role-play
-4. City navigation dialogue
-5. Weather small talk
-6. Family tree description
+3. Restaurant/Shop role-play
+4. Doctor visit simulation
+5. Family & Holidays description
 
 **Vocabulary (10 words):** Final review selection
 
@@ -998,11 +1086,14 @@ By module 30, learners can:
 | Time & Calendar | 45 | 23 |
 | Verbs (action) | 80 | 06, 08, 25 |
 | Question words | 25 | 07 |
-| Adjectives | 60 | 26, 27, 28 |
-| Weather | 25 | 28 |
-| Family | 35 | 29 |
-| Function words | 95 | Various |
-| Review/Reinforcement | 100 | 10, 20, 30 |
+| Adjectives | 60 | 26, 27 |
+| Adverbs | 30 | 28 |
+| Weather | 25 | 29 |
+| Prepositions (Motion) | 20 | 30 |
+| Health | 30 | 31 |
+| Family | 35 | 32 |
+| Holidays | 30 | 33 |
+| Review/Reinforcement | 100 | 10, 20, 34 |
 
 ---
 
@@ -1069,9 +1160,13 @@ graph TD
     M17 --> M23[M23 Calendar]
 
     %% Phase A1.3
-    M14 --> M29[M29 Family]
+    M14 --> M32[M32 Family]
     M26[M26 Adjectives] --> M27[M27 Colors]
-    M26 --> M28[M28 Weather]
+    M26 --> M28[M28 Adverbs] 
+    M28 --> M29[M29 Weather]
+    M13 --> M30[M30 Prepositions]
+    M30 --> M31[M31 Health]
+    M23 --> M33[M33 Holidays]
 ```
 
 ---
@@ -1092,9 +1187,9 @@ Before generating any module:
 
 ## Completion Notes
 
-**A1 Level Complete:** All 30 modules built (1-30)
-**Actual vocabulary:** 456 words (stored in vocabulary.csv)
-**Next level:** A2 (modules 31-80) - COMPLETE
+**A1 Level Complete:** All 34 modules built (1-34)
+**Actual vocabulary:** ~500 words (stored in `vocabulary.db` SQLite)
+**Next level:** A2 (Modules 01-50) - COMPLETE
 
 ---
 
