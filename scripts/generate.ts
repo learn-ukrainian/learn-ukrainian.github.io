@@ -584,7 +584,7 @@ async function main() {
       for (const levelFolder of levelFolders) {
         const levelDir = join(langDir, levelFolder);
         const level = levelFolderToDisplay(levelFolder);
-        const mdFiles = (await readdir(levelDir)).filter(f => f.match(/^\d{2}-.*\.md$/));
+        const mdFiles = (await readdir(levelDir)).filter(f => f.match(/^\d{2}-.*\.md$/) || f.match(/^module-\d+\.md$/));
         if (mdFiles.length > 0) {
           allLevelCounts.push({ level, moduleCount: mdFiles.length });
         }
