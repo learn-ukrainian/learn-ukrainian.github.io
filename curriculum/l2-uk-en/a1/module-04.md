@@ -118,9 +118,14 @@ When you use **Ви** (Formal), you usually use **First Name + Patronymic**.
 Using just the First Name with **Ви** is awkward (too intimate yet too formal).
 Using just the Surname is for the army or school ("Shevchenko! To the board!").
 
-> 💡 **Tip**
->
 > As a foreigner, you don't need a patronymic. You are just "Tom". But if you want to impress a boss, call them "Volodymyr Oleksandrovych" (or whatever their name is). It shows massive respect.
+
+## cultural insight: Ukraine, not "The" Ukraine
+"The Ukraine" is incorrect and can be offensive.
+"The" implies a region (like "The Midwest") of an empire, not a sovereign country.
+Ukraine has been independent since 1991. Just say **Ukraine** (**Україна**).
+
+Also: use **Kyiv**, not Kiev. **Kyiv** comes from Ukrainian. **Kiev** comes from Russian. Words matter!
 
 ## narrative: The Party Introduction
 
