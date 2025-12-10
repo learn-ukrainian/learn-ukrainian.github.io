@@ -37,6 +37,7 @@ export interface Frontmatter {
   objectives: string[];
   objectivesUk?: string[];
   grammar?: string[];
+  pedagogy?: 'PPP' | 'TTT' | 'Narrative' | 'CLIL';
 }
 
 // =============================================================================
@@ -317,6 +318,7 @@ export interface VibeLesson {
   phase: string;
   moduleNumber: number;
   moduleType: ModuleType;
+  pedagogy?: string;
   immersionLevel: number;
   title: string;
   titleUk?: string;

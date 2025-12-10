@@ -82,6 +82,7 @@ function buildVibeLesson(parsed: ParsedModule, ctx: RenderContext): VibeLesson {
     phase: frontmatter.phase,
     moduleNumber: frontmatter.module,
     moduleType,
+    pedagogy: frontmatter.pedagogy,
     immersionLevel,
     title: frontmatter.title,
     subtitle: frontmatter.subtitle,

@@ -261,8 +261,8 @@ function generateLevelIndex(
   </header>
   <main>
     ${phases.map(phase => {
-      const phaseModules = modules.filter(m => m.phase === phase);
-      return `
+    const phaseModules = modules.filter(m => m.phase === phase);
+    return `
     <section class="phase-section">
       <div class="phase-header">
         <h2>${phase}</h2>
@@ -270,8 +270,8 @@ function generateLevelIndex(
       </div>
       <div class="tile-grid">
         ${phaseModules.map(m => {
-          const c = getPhaseColor(m.phase);
-          return `
+      const c = getPhaseColor(m.phase);
+      return `
         <a href="module-${padNumber(m.num)}.html" class="tile">
           <div class="tile-header">
             <div class="tile-num" style="background: ${c.bg};">${padNumber(m.num)}</div>
@@ -285,10 +285,10 @@ function generateLevelIndex(
             <span class="tile-meta">${m.duration || 45} min</span>
           </div>
         </a>`;
-        }).join('')}
+    }).join('')}
       </div>
     </section>`;
-    }).join('')}
+  }).join('')}
   </main>
   <footer>curricula-opus · ${level}</footer>
 </body>
@@ -435,7 +435,7 @@ async function main() {
 
     // Process each level folder
     const modules: ModuleInfo[] = [];
-    const navInfo: Map<string, { level: string; num: number; title: string }[]> = new Map();
+    const navInfo: Map<string, { level: string; num: number; title: string; subtitle?: string; phase: string; duration?: number }[]> = new Map();
 
     for (const levelFolder of levelFolders) {
       // Skip if targeting a specific level
@@ -445,7 +445,7 @@ async function main() {
       const level = levelFolderToDisplay(levelFolder);
 
       const mdFiles = (await readdir(levelDir))
-        .filter(f => f.match(/^\d{2}-.*\.md$/))  // Match: 01-slug.md
+        .filter(f => f.match(/^\d{2}-.*\.md$/) || f.match(/^module-\d+\.md$/))  // Match: 01-slug.md OR module-01.md
         .sort();
 
       console.log(`\n  📁 Level ${level} (${mdFiles.length} modules)`);
@@ -454,20 +454,29 @@ async function main() {
       navInfo.set(level, []);
 
       for (const mdFile of mdFiles) {
-        // Extract module number from filename: "01-slug.md" -> 1
-        const moduleNum = parseInt(mdFile.match(/^(\d{2})-/)?.[1] || '0', 10);
+        // Extract module number from filename: "01-slug.md" -> 1 OR "module-01.md" -> 1
+        const moduleNum = parseInt(mdFile.match(/^(\d{2})-/)?.[1] || mdFile.match(/^module-(\d+)/)?.[1] || '0', 10);
 
         try {
           const mdPath = join(levelDir, mdFile);
           const mdContent = await readFile(mdPath, 'utf-8');
 
-          // Quick frontmatter extraction for navigation
+          // Quick frontmatter extraction for navigation AND index
           const fmMatch = mdContent.match(/^---\n([\s\S]*?)\n---/);
           const titleMatch = fmMatch?.[1].match(/^title:\s*["']?(.+?)["']?\s*$/m);
-          const title = titleMatch?.[1] || mdFile.replace(/^\d+-/, '').replace('.md', '');
+          const subtitleMatch = fmMatch?.[1].match(/^subtitle:\s*["']?(.+?)["']?\s*$/m);
+          const phaseMatch = fmMatch?.[1].match(/^phase:\s*["']?(.+?)["']?\s*$/m);
+          const durationMatch = fmMatch?.[1].match(/^duration:\s*(\d+)/m);
 
-          // Add to navInfo
-          navInfo.get(level)!.push({ level, num: moduleNum, title });
+          const title = titleMatch?.[1] || mdFile.replace(/^\d+-/, '').replace('.md', '');
+          const subtitle = subtitleMatch?.[1];
+          const phase = phaseMatch?.[1] || 'A1.1'; // Default fallback
+          const duration = durationMatch ? parseInt(durationMatch[1], 10) : 45;
+
+          const meta = { level, num: moduleNum, title, subtitle, phase, duration };
+
+          // Add to navInfo (used for Prev/Next)
+          navInfo.get(level)!.push(meta);
 
           // If targeting a single module, only fully parse that one
           if (targetModuleNum && moduleNum !== targetModuleNum) continue;
@@ -486,12 +495,7 @@ async function main() {
           const vibeJSON = renderVibeJson(parsed, vibeCtx);
 
           modules.push({
-            num: moduleNum,
-            level: level,
-            title: parsed.frontmatter.title,
-            subtitle: parsed.frontmatter.subtitle,
-            phase: parsed.frontmatter.phase,
-            duration: parsed.frontmatter.duration,
+            ...meta,
             parsed,
             vibeJSON,
           });
@@ -530,7 +534,7 @@ async function main() {
       const levelLower = level.toLowerCase();
       levelModules.sort((a, b) => a.num - b.num);
 
-      console.log(`\n  📁 Level ${level} (${levelModules.length} modules)`);
+      console.log(`\n  📁 Level ${level} (${levelModules.length} modules processed)`);
 
       for (let i = 0; i < levelModules.length; i++) {
         const mod = levelModules[i];
@@ -560,15 +564,17 @@ async function main() {
         );
       }
 
-      // Generate level index
-      if (!targetModuleNum) {
-        const levelIndex = generateLevelIndex(
-          levelModules.map(m => ({ num: m.num, title: m.title, subtitle: m.subtitle, phase: m.phase, duration: m.duration })),
-          level,
-          langPair
-        );
-        await writeHTML(join(OUTPUT_DIR, 'html', langPair, levelLower, 'index.html'), levelIndex);
-      }
+      // Generate Level Index ALWAYS (using light metadata from navInfo)
+      // This ensures the index is updated even if we only re-generated one module
+      const allLevelModules = navInfo.get(level) || [];
+      allLevelModules.sort((a, b) => a.num - b.num);
+
+      const levelIndex = generateLevelIndex(
+        allLevelModules,
+        level,
+        langPair
+      );
+      await writeHTML(join(OUTPUT_DIR, 'html', langPair, levelLower, 'index.html'), levelIndex);
     }
 
     // Generate curriculum index (scan ALL levels, not just processed ones)

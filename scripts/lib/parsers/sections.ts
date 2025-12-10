@@ -50,6 +50,15 @@ const sectionMappings: SectionMapping[] = [
   { pattern: /^# (?:Summary|Підсумок)/i, type: 'summary', titleEn: 'Summary', titleUk: 'Підсумок' },
   { pattern: /^# (?:Vocabulary|Словник)/i, type: 'vocabulary', titleEn: 'Vocabulary', titleUk: 'Словник' },
   { pattern: /^# (?:Activities|Вправи)/i, type: 'activities', titleEn: 'Activities', titleUk: 'Вправи' },
+  // Generic Catch-all for creative titles (must be last to not override specific sections)
+  // Matches any H1 that wasn't matched above? 
+  // Wait, the parser iterates all mappings independently.
+  // We need a regex that matches any # H1 but excludes the specific keywords above.
+  {
+    pattern: /^# (?!Summary|Vocabulary|Activities|Bправи|Словник|Підсумок).+/im,
+    type: 'content',
+    titleEn: 'Lesson',
+  },
 ];
 
 /**
