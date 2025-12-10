@@ -22,7 +22,7 @@ In Ukraine, eye contact (**зоровий контакт**) is intense.
 When you toast (**Будьмо!**), you MUST look in the eyes.
 If you don't, it is bad luck.
 On the street, people look at you. They stare using "The Slavic Stare".
-It is not aggressive. It is just... looking (**дивляться**).
+It is not aggressive. They are simply observing (**дивляться**). It is neutral.
 If you smile at a stranger, they think you are crazy or American.
 Smile only when you have a reason.
 

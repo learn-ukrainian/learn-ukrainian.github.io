@@ -3,12 +3,12 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 825/750
+- **Words:** ✅ 868/750
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/3
+- **Engagement:** ✅ 3/3
 - **Audio:** ✅ 32 links
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
@@ -20,7 +20,8 @@
 | **warm-up** | ✅ | 71 | Included in Core |
 | **presentation** | ✅ | 201 | Included in Core |
 | **narrative: The Dating App profiles** | ✅ | 123 | Included in Core |
-| **cultural insight: The Name Game (Patronymics)** | ✅ | 120 | Included in Core |
+| **cultural insight: The Name Game (Patronymics)** | ✅ | 116 | Included in Core |
+| **cultural insight: Ukraine, not "The" Ukraine** | ✅ | 47 | Included in Core |
 | **narrative: The Party Introduction** | ✅ | 168 | Included in Core |
 | **narrative: At the Border** | ✅ | 70 | Included in Core |
 | **cultural insight: The Bruderschaft** | ✅ | 72 | Included in Core |
