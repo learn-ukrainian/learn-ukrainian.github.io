@@ -246,40 +246,40 @@ If -O, use **Це**.
 ## fill-in: This Object
 > Choose Цей, Ця, Це, or Ці.
 
-1.  **________ сумка.** (Bag - F)
+1.  **___ сумка.**
     > [!answer] Ця
 
-2.  **________ рюкзак.** (Backpack - M)
+2.  **___ рюкзак.**
     > [!answer] Цей
 
-3.  **________ яблуко.** (Apple - N)
+3.  **___ яблуко.**
     > [!answer] Це
 
-4.  **________ ключі.** (Keys - Pl)
+4.  **___ ключі.**
     > [!answer] Ці
 
-5.  **________ гаманець.** (Wallet - M)
-    > [!!answer] Цей
-
-6.  **________ пляшка.** (Bottle - F)
-    > [!answer] Ця
-
-7.  **________ годинник.** (Watch - M)
+5.  **___ гаманець.**
     > [!answer] Цей
 
-8.  **________ фото.** (Photo - N - Indeclinable but acts Neuter)
+6.  **___ пляшка.**
+    > [!answer] Ця
+
+7.  **___ годинник.**
+    > [!answer] Цей
+
+8.  **___ фото.**
     > [!answer] Це
 
-9.  **________ дім.** (House - M)
+9.  **___ дім.**
     > [!answer] Цей
 
-10. **________ кімната.** (Room - F)
+10. **___ кімната.**
     > [!answer] Ця
 
-11. **________ вікна.** (Windows - Pl)
+11. **___ вікна.**
     > [!answer] Ці
 
-12. **________ паспорт.** (M)
+12. **___ паспорт.**
     > [!answer] Цей
 
 ## group-sort: The Gender Sorter 2.0
@@ -493,8 +493,8 @@ If -O, use **Це**.
    > (bag)
 
 7. в и н н и к о д
-   > [!!answer] годинник
-   > (watch/clock - Hint: starts with Г. годинник)
+   > [!answer] годинник
+   > (watch/clock)
 
 8. ч ю л к
    > [!answer] ключ
@@ -519,40 +519,40 @@ If -O, use **Це**.
 ## fill-in: Real World
 > Translate the phrase.
 
-1.  **This phone.** -> **Цей телефон**
+1.  **This phone.** ___
     > [!answer] Цей телефон
 
-2.  **That lamp.** -> **Та лампа**
+2.  **That lamp.** ___
     > [!answer] Та лампа
 
-3.  **This tea.** -> **Цей чай**
+3.  **This tea.** ___
     > [!answer] Цей чай
 
-4.  **These keys.** -> **Ці ключі**
+4.  **These keys.** ___
     > [!answer] Ці ключі
 
-5.  **This soup.** -> **Цей суп**
-    > [!!answer] Цей суп
+5.  **This soup.** ___
+    > [!answer] Цей суп
 
-6.  **That window.** -> **Те вікно**
+6.  **That window.** ___
     > [!answer] Те вікно
 
-7.  **This woman.** -> **Ця жінка**
+7.  **This woman.** ___
     > [!answer] Ця жінка
 
-8.  **This man.** -> **Цей чоловік**
+8.  **This man.** ___
     > [!answer] Цей чоловік
 
-9.  **These students.** -> **Ці студенти**
+9.  **These students.** ___
     > [!answer] Ці студенти
 
-10. **This bag.** -> **Ця сумка**
+10. **This bag.** ___
     > [!answer] Ця сумка
 
-11. **That bag.** -> **Та сумка**
+11. **That bag.** ___
     > [!answer] Та сумка
 
-12. **This money.** -> **Ці гроші**
+12. **This money.** ___
     > [!answer] Ці гроші
 
 
@@ -572,6 +572,8 @@ If -O, use **Це**.
 | Ніж | Лампа |
 | Кава | Годинник |
 | Чай | Телефон |
+| Мікрохвильовка | Ковдра |
+| Склянка | Картина |
 
 ---
 

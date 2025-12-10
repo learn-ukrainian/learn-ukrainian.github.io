@@ -256,40 +256,40 @@ Only the Present is invisible.
 ## fill-in: Verbless Sentences
 > Translate the sentence by removing the verb "to be".
 
-1. **I am Tom.**
+1. **I am Tom.** ___
    > [!answer] Я Том
 
-2. **She is a student.**
+2. **She is a student.** ___
    > [!answer] Вона студентка
 
-3. **We are tourists.**
+3. **We are tourists.** ___
    > [!answer] Ми туристи
 
-4. **This is a book.**
+4. **This is a book.** ___
    > [!answer] Це книга
 
-5. **He is an American.**
+5. **He is an American.** ___
    > [!answer] Він американець
 
-6. **You (formal) are a doctor.**
+6. **You (formal) are a doctor.** ___
    > [!answer] Ви лікар
 
-7. **They are friends.**
+7. **They are friends.** ___
    > [!answer] Вони друзі
 
-8. **Who is this?**
+8. **Who is this?** ___
    > [!answer] Хто це
 
-9. **What is this?**
+9. **What is this?** ___
    > [!answer] Що це
 
-10. **I am Ukrainian (female).**
+10. **I am Ukrainian (female).** ___
     > [!answer] Я українка
 
-11. **It is a window.**
+11. **It is a window.** ___
     > [!answer] Це вікно
 
-12. **He is a musician.**
+12. **He is a musician.** ___
     > [!answer] Він музикант
 
 ## group-sort: Nationality Gender
