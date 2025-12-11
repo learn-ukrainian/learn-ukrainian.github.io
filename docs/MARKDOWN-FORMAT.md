@@ -7,6 +7,40 @@ This document defines the standard markdown format for all curriculum modules. T
 - **Complete**: Covers all content types needed for language learning
 - **Simple**: Easy to parse and render
 
+> [!IMPORTANT]
+> **Strict Header Hierarchy**
+> The generator strictly adheres to the following header levels. Deviating will cause sections to be ignored.
+> *   **H1 (`#`)**: Main Sections (Title, Summary, Activities, Vocabulary).
+> *   **H2 (`##`)**: Content Subsections (Warm-up, Presentation, Activity Items).
+> *   **H3 (`###`)**: Deep nested content (rarely used).
+
+---
+
+## Module Structure
+
+All modules must follow this top-level structure:
+
+```markdown
+---
+frontmatter: ...
+---
+
+# [Module Title]
+
+## [Section: Warm-up]
+## [Section: Main Content]
+
+# Summary
+(H1 Required)
+
+# Activities
+(H1 Required)
+## [Activity Type]: [Title] (H2 Required)
+
+# Vocabulary
+(H1 Required)
+```
+
 ---
 
 ## Content Types

@@ -22,7 +22,7 @@ __pycache__/
 *.so
 
 # Build/Output
-output/
+
 dist/
 build/
 *.tsbuildinfo

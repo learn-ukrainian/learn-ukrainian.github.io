@@ -22,6 +22,7 @@
 - **Production Support**:
     - **Model Answers**: Mandatory for all writing/speaking production tasks (B2+) using `> [!model-answer]`.
     - **Activity Density**: 8+ activities per module, 12+ items per activity.
+    - **Graduated Immersion (A1)**: M01-M10 (Tier 1) allow 1.5 ratio; M11-M24 (Tier 2) allow 0.8; M25+ (Tier 3) strict 0.4.
 
 ### Vocabulary Targets (Updated Dec 2025)
 | Level | Module Target | Cumulative Target | Note |
@@ -58,7 +59,15 @@
 2. **Audit Immediately**: After generating content, use `wc -w` (or equivalent logic) to verify Instructional Core word counts.
 3. **Narrative Vocabulary**: Use "Passive Vocabulary" freely in narratives for richness; restrict "Active Vocabulary" (drills) to the target list.
 4. **Standardized Activities**: Use Markdown types (`quiz`, `match-up`, `fill-in`) mapped from pedagogical concepts (`Production`, `Dialogue`).
-5. **Regenerate HTML**: Always regenerate HTML output immediately after fixing module markdown content to ensure fixes are live.
+5. **Strict Header Hierarchy**: Use `# Summary`, `# Activities`, `# Vocabulary` (H1) for main sections. Use `##` (H2) for content within them.
+6. **Regenerate HTML**: Always regenerate HTML output immediately after fixing module markdown content to ensure fixes are live.
+7. **Strict Scope Enforcement**: NEVER use grammar or vocabulary that has not been explicitly introduced in the current or previous modules. (e.g., No "Model Answers" or "Topic Sentences" in A1 unless taught).
+8. **Decolonization & Patriotism (MANDATORY)**: Every module MUST include:
+   - **Myth Buster box**: Debunk Russian propaganda lies (e.g., "Ukrainian is a dialect", "Lenin created Ukraine").
+   - **History Bite box**: Highlight Ukrainian resistance (Ems Ukaz, Valuev Circular, Executed Renaissance).
+   - **Celebrate Ukrainian identity**: Unique letters (Ї, Є, Ґ, І), distinct linguistic heritage, cultural achievements.
+   - **Use "Prosecutor's Voice"**: Frame facts to actively dismantle imperial narratives.
+   - **Anti-Russian propaganda**: Actively counter common lies about Ukrainian language/culture/history.
 
 ## File Structure Reference
 - **Curriculum Plans**: `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md`

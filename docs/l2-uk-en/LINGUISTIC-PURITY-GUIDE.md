@@ -100,3 +100,15 @@ If you find these errors, use the **> [!WARNING]** alert in the review report:
 
 > [!CAUTION] Grammatical Simplification
 > Vocative missing in Dialogue 2: "Олег, дай мені..." -> "Олеж**е**, дай мені..."
+
+---
+
+## IV. The "No-Sandwich" Rule (Immersion Fidelity)
+
+**Policy:** NEVER mix Ukrainian and English within the same sentence (Code-Switching/Sandwiching).
+
+*   ❌ **Forbidden:** "Tom walks down the вулиця and sees a великий bank."
+*   ✅ **Allowed:** "Том іде по вулиці. Він бачить великий банк. (Tom walks down the street. He sees a big bank.)"
+
+**Rationale:**
+Mixed language creates a pidgin that does not exist in reality. It prevents the brain from switching to "Ukrainian Mode". Even at A1, we use **Pure Ukrainian** sentences, kept simple enough for the level, with full translation or glossary support provided *outside* the sentence.

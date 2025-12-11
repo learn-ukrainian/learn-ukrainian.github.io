@@ -107,14 +107,23 @@ audio: true
      COMMON SECTIONS (ALL VARIANTS)
      ========================================================================================= -->
 
-## Summary
-[Recap 3 main points]
+# Summary
+[Bulleted list of key takeaways. 3-5 points]
+
+1.  **Grammar:** ...
+2.  **Vocabulary:** ...
+3.  **Culture:** ...
+
+---
 
 > [!tip] 🌟 **Pro Tip:** [Final actionable advice]
 
 # Activities
-[Generate 8+ activities as per SKILL.md]
-[Remember: NO YAML. Use markdown format specific to activity type.]
+
+## [Activity Type]: [Title]
+...
+
+---
 
 # Vocabulary
 [Generate Vocabulary Table matching the Level Format (Tier 1-4)]

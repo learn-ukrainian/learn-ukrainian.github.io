@@ -1,70 +1,88 @@
-# Curricula Opus - Language Content Factory
+# Curricula Opus
+
+**A Theory-First Language Learning Platform**
+
+---
 
 ## 🌐 Mission
-Curricula Opus is a pioneering project focused on generating structured, high-quality educational curricula for language acquisition and beyond. Our core mission is to empower learners with a "Theory-First" approach, providing deep contextual understanding alongside practical application.
 
-Initially, we are building a comprehensive curriculum for **Ukrainian as a Second Language (L2) for English speakers**, with plans to expand to other language pairs and subjects like Arts and Sciences.
+Curricula Opus is a comprehensive language learning platform that provides structured, high-quality educational curricula. We believe in a **Theory-First** approach—deep understanding of grammar, culture, and history alongside practical application.
 
-## ✨ Key Features
--   **Comprehensive L2 Ukrainian Curriculum**: A detailed A1 to C1 pathway designed for English-speaking learners.
--   **Theory-First Learning**: Emphasizes foundational understanding of grammar, culture, history, and literature.
--   **Dual Content Output**: 
-    -   **Human-Readable Textbooks**: Detailed lesson content in Markdown (`.md`) and static HTML (`.html`) formats, ideal for deep study and reference.
-    -   **Vibe-Compatible Activities**: Machine-readable JSON files tailored for interactive practice within the Vibe application.
--   **Scalable Architecture**: Designed to easily extend to new language pairs (e.g., Ukrainian L1, English L2 for Hungarians) and diverse subjects (e.g., Literature, History, STEM).
--   **Cultural Immersion**: Integrates cultural nuances, history, and authentic materials from early stages.
+Currently building a complete **Ukrainian as a Second Language (L2)** curriculum for English speakers.
 
-## 🚀 Getting Started
+## ✨ Features
 
-### Project Setup
-1.  **Clone the repository**:
-    ```bash
-    git clone https://github.com/krisztiankoos/curricula-opus.git
-    cd curricula-opus
-    ```
-2.  **Install Dependencies**:
-    ```bash
-    npm install
-    ```
+- **📚 Comprehensive Curriculum** — A1 to C2 pathway aligned with CEFR and Ukrainian State Standards
+- **🎓 Theory-First Approach** — Deep grammar explanations, cultural context, and historical insights
+- **🎮 Interactive Activities** — Drag-and-drop exercises, quizzes, match-ups, and more
+- **🌍 Cultural Immersion** — Authentic materials, folklore, literature, and decolonization lens
+- **📖 Static Textbooks** — Human-readable Markdown and HTML for offline study
 
-### Viewing Content
--   **Curriculum Plans (High-Level)**: Explore the `docs/curriculum/` directory for the overall curriculum roadmap and theoretical approaches.
--   **Course Content (Textbooks)**: Navigate to `course-content/l2-uk-en/`. Each module has a `textbook.md` and `textbook.html` file. Open the `.html` files in your browser to view the lessons.
+## 🚀 Quick Start
 
-### Generating Content
-The `scripts/` directory contains tools to generate various outputs.
+```bash
+# Clone and install
+git clone https://github.com/krisztiankoos/curricula-opus.git
+cd curricula-opus
+npm install
 
--   **Scaffold Course Structure**: To create all module folders and placeholder Markdown files:
-    ```bash
-    npx ts-node scripts/scaffold-structure.ts
-    ```
--   **Convert Markdown to HTML**: To generate HTML from a specific Markdown textbook:
-    ```bash
-    node scripts/convert-md-to-html.js course-content/l2-uk-en/book-01-survivor/module-01-cyrillic/textbook.md
-    ```
-    *(Replace the path with your target Markdown file)*
--   **Generate Vibe JSONs**: *(Currently under development)* This script will eventually take detailed Markdown definitions and output Vibe-compatible JSON files.
-    ```bash
-    # Example (will be expanded as modules are built)
-    npx ts-node scripts/generate-curriculum.ts
-    ```
+# Generate MDX content for Docusaurus
+npm run generate l2-uk-en a1
+
+# Start the interactive learning platform
+cd docusaurus
+npm start
+# Opens at http://localhost:3000/curricula-opus/
+```
 
 ## 📂 Project Structure
 
--   `**docs/**`: High-level curriculum plans, theoretical proposals, and internal documentation (e.g., `CURRICULUM_PLAN.md`).
--   `**scripts/**`: Automation and utility scripts for content generation and format conversion.
--   `**course-content/**`: The primary educational content (textbooks) in Markdown and HTML formats, organized by language pair, book, and module.
--   `**output/vibe-content/**`: Generated Vibe-compatible JSON files for interactive exercises.
--   `**.gemini/GEMINI.md**`: Internal agent memory and project context.
--   `**package.json, node_modules/**`: Standard Node.js project files.
+```
+curricula-opus/
+├── curriculum/l2-uk-en/     # Source curriculum in Markdown
+│   ├── a1/                  # A1 modules (01-30)
+│   ├── a2/                  # A2 modules (01-50)
+│   └── ...                  # B1, B2, C1, C2
+├── docs/l2-uk-en/           # Curriculum plans & guidelines
+├── docusaurus/              # Interactive web platform (Docusaurus)
+│   ├── docs/                # Generated MDX content
+│   └── src/components/      # Interactive activity components
+├── output/                  # Generated static HTML/JSON
+└── scripts/                 # Build & generation tools
+```
 
-## 🤝 Contribution
-Contributions are welcome! Please refer to the `docs/` directory for methodological guidelines and the `scripts/` directory for development tools.
+## 🛠️ Commands
 
-## 🗺️ Future Roadmap
--   **Ukrainian L1 Curriculum**: For native speakers, focusing on literature, history, and advanced linguistic analysis.
--   **English L2 for Ukrainians**.
--   **English L2 for Hungarians** (and other language pairs).
--   **Arts & Sciences Curricula**: Expanding the content factory to subjects beyond language.
+| Command | Description |
+|---------|-------------|
+| `npm run generate l2-uk-en a1` | Generate HTML/JSON for A1 modules |
+| `python3 scripts/audit_module.py <file>` | Audit a module for quality |
+| `npx ts-node scripts/generate-mdx.ts l2-uk-en a1` | Generate MDX for Docusaurus |
+
+## 📈 Progress
+
+| Level | Modules | Status |
+|-------|---------|--------|
+| **A1** | 30 | 11 complete, 19 in progress |
+| **A2** | 50 | Planning complete |
+| **B1** | 80 | Planning complete |
+| **B2** | 125 | Planning complete |
+| **C1** | 115 | Planning complete |
+| **C2** | 80 | Planning complete |
+
+## 🗺️ Roadmap
+
+- [x] A1-C2 Curriculum Planning
+- [x] Interactive Web Platform (Docusaurus)
+- [x] Drag-and-Drop Activities
+- [ ] Complete A1 Content (30 modules)
+- [ ] Audio Integration
+- [ ] Mobile App
+
+## 🤝 Contributing
+
+See `docs/` for content guidelines and `CLAUDE.md` / `GEMINI.md` for AI agent instructions.
 
 ---
+
+**Слава Україні! 🇺🇦**

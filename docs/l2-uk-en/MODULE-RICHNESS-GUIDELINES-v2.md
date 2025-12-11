@@ -8,17 +8,32 @@
 
 <critical>
 
+
 ### Content Requirements by Level (Instructional Core Only*)
 
 | Metric | A1 | A2 | B1 | B2 | C1 | C2 |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Core Word Count** | **750+** | **1000+** | **1250+** | **1500+** | **1750+** | **2000+** |
-| **Immersion (% Ukr)** | 15% / 30% | **40%** | **60%** | 80% | 95% | 100% |
+| **Core Word Count** | **Graduated*** | **1000+** | **1250+** | **1500+** | **1750+** | **2000+** |
+| **Immersion (% Ukr)** | **Graduated** | **40%** | **60%** | 80% | 95% | 100% |
 | **Example Sentences** | 12+ | 18+ | 24+ | 28+ | 30+ | 32+ |
 | **Engagement Boxes** | 3+ | 4+ | 5+ | 6+ | 7+ | 8+ |
 | **Mini-Dialogues** | 2+ | 3+ | 4+ | 4+ | 5+ | 5+ |
 
 *\*Instructional Core Definition: Counts ONLY Warm-up/Presentation (PPP); Diagnostic/Analysis/Deep Dive (TTT); or Introduction/Narrative/Analysis/Grammar in Context (CLIL). Excludes tables, practice drills, and activity instructions.*
+
+> **A1 Core Word Count Graduation:**
+> *   **M01-M05 (Phonetics):** **300 - 450 words**. Focus on high-quality English phonetic explanation & historical context.
+> *   **M06-M10 (First Verbs):** **500 - 650 words**. Introduce simple Ukrainian narratives.
+> *   **M11-M34 (Navigation):** **750+ words**. Full narrative standard.
+
+> **Graduated Immersion & Language Policy (A1 Detail):**
+> *   **M01-M10 (First Contact):** **Theory-First Approach.**
+>     *   **Ukrainian:** 100% Purity in examples/practice (NO mixed sentences).
+>     *   **English:** MANDATORY for detailed Grammar Theory, Phonetic Deep Dives, and Historical Context.
+>     *   *Goal:* We cannot have deep Ukrainian narratives with <50 words. We MUST have deep English theory to compensate and set the "Premium" tone.
+> *   **M11-M34 (Navigation):** **Standard Immersion.**
+>     *   Transition to 100% Ukrainian Narratives as vocabulary allows.
+>     *   English remains for complex grammar explanations and cultural nuances.
 
 ### Activity Requirements by Level
 
@@ -81,9 +96,9 @@ To surprise and impress students, highlighting the beautiful, melodic, and rich 
 - **Melody Highlights:** Point out how specific sounds or grammatical structures (e.g., iotated vowels, soft signs, sentence stress patterns) contribute to the language's melodic quality.
 
 ### 2. Audio Integration (The Voice of Ukraine)
-- **Mandatory Audio:** All new vocabulary, example sentences, key phrases, and dialogues MUST be accompanied by native speaker audio. Placeholder links can be used if actual audio generation is not yet integrated.
-- **Strict Syntax:** Audio links must follow the bolded word: `**Word** [🔊](audio_id)`. The generator uses the bolded word as the search term. Do NOT place the link before the word.
-- **Intonation & Rhythm:** Audio should model natural Ukrainian intonation and rhythm, particularly in dialogues and longer texts.
+- **Audio Policy:** Audio links are NO LONGER MANDATORY in the static markdown.
+- **Generator Responsibility:** The build system will handle audio generation.
+- **Vocab Tables:** You may include an "Interesting Note" column instead of audio links if relevant.
 
 ### 3. Richness & Phraseology (The Wisdom of Ukraine)
 - **Proverbs, Idioms & Set Expressions:** From B1+, modules MUST organically integrate Ukrainian proverbs, idioms, and stable phraseological expressions. These should be explained in context, not just listed. Aim for 1-2 new phraseological units per module.
@@ -592,9 +607,9 @@ Use: **Story → Vocabulary-in-Context → Analysis → Retelling**
 
 **Modules 1-10 (Alphabet/Phonetics):**
 ```
-Це буква А.
-Я бачу слово.
-Він читає текст.
+Це банк. (This is a bank.)
+Кава і чай. (Coffee and tea.)
+Тут парк. (Here is a park.)
 ```
 
 **Modules 11-20 (Basic Grammar):**

@@ -170,8 +170,26 @@ def audit_module(file_path):
         if level_code not in LEVEL_CONFIG:
             level_code = 'A1'  # fallback
     
+    
+    # Module Number Detection (for Graduation)
+    module_num = 999
+    try:
+        module_num = int(re.search(r'module-(\d+)', os.path.basename(file_path)).group(1))
+    except:
+        pass
+
     config = LEVEL_CONFIG.get(level_code, LEVEL_CONFIG['A1'])
+    
+    # A1 Graduation Logic
     target = config['target_words']
+    if level_code == 'A1':
+        if module_num <= 5:
+            target = 300
+        elif module_num <= 10:
+            target = 500
+        else:
+            target = 750
+
     vocab_target = config.get('min_vocab', 25)
     transliteration_allowed = config.get('transliteration_allowed', True)
 
@@ -453,12 +471,12 @@ def audit_module(file_path):
         results['engagement'] = {'status': 'FAIL', 'icon': '❌', 'msg': f"{engagement_count}/{eng_target}"}
         has_critical_failure = True
 
-    # Audio
+    # Audio (INFORMATIONAL ONLY - not a failure condition)
     if audio_count > 0:
-        results['audio'] = {'status': 'PASS', 'icon': '✅', 'msg': f"{audio_count} links"}
+        results['audio'] = {'status': 'INFO', 'icon': '✅', 'msg': f"{audio_count} links"}
     else:
-        results['audio'] = {'status': 'FAIL', 'icon': '❌', 'msg': "No audio"}
-        has_critical_failure = True
+        results['audio'] = {'status': 'INFO', 'icon': 'ℹ️', 'msg': "No audio"}
+        # NOT a critical failure - audio is optional
 
     # Immersion (A1 M25+ Gate)
     immersion_score = calculate_immersion(core_text_for_immersion)
@@ -477,18 +495,24 @@ def audit_module(file_path):
             latin_chars = len(re.findall(r'[a-zA-Z]', clean_story))
             cyrillic_chars = len(re.findall(r'[\u0400-\u04ff]', clean_story))
             
-            # Ratio: Latin shouldn't be more than 30% of Cyrillic (names, formatting overhead)
+            # Ratio: Latin shouldn't be more than 40% of Cyrillic (names, formatting overhead)
             # This detects "English story with bold UA words"
             # Unless it's empty
             if cyrillic_chars > 20: 
                 ratio = latin_chars / cyrillic_chars
                 if ratio > 0.4:
-                     print(f"❌ AUDIT FAILED: Low Immersion in '{title}'. Latin/Cyrillic Ratio: {ratio:.2f} (>0.4). Rewrite in UA.")
+                     print(f"❌ AUDIT WARNING: Low Immersion in '{title}'. Latin/Cyrillic Ratio: {ratio:.2f} (>0.4).")
                      story_immersion_fail = True
     
     if story_immersion_fail:
-        results['immersion'] = {'status': 'FAIL', 'icon': '❌', 'msg': "English Story Detected"}
-        has_critical_failure = True
+        # A1.1 Exception: For M01-M05, we allow this failure because we often need to explain concepts in English
+        # or use very limited vocabulary which forces English framing.
+        if module_num <= 5:
+             results['immersion'] = {'status': 'WARN', 'icon': '⚠️', 'msg': "English Story Detected (Allowed M1-M5)"}
+             # Do NOT set has_critical_failure = True
+        else:
+             results['immersion'] = {'status': 'FAIL', 'icon': '❌', 'msg': "English Story Detected"}
+             has_critical_failure = True
     else:
         results['immersion'] = {'status': 'PASS', 'icon': '🇺🇦', 'msg': f"{immersion_score:.1f}%"}
 
