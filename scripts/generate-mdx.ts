@@ -529,10 +529,42 @@ function processActivities(body: string): { mainContent: string; activitiesJsx: 
 // ============================================================================
 
 function convertCalloutsToAdmonitions(content: string): string {
-    // For now, don't convert callouts - the blockquote format works fine
-    // Converting to admonitions requires careful block parsing to add closing :::
-    // which is complex with multi-line callouts
-    return content;
+    // Convert [!tip], [!note], etc to Docusaurus admonitions format
+    return content.replace(/>\s*\[!(tip|note|warning|important|caution)\]/gi, (_, type) => {
+        return `:::${type.toLowerCase()}`;
+    });
+}
+
+/**
+ * Process dialogue sections to ensure proper line breaks between turns.
+ * Finds ## Dialogue: sections and adds blank lines between consecutive 
+ * lines that start with **Name:** format.
+ */
+function processDialogues(content: string): string {
+    // Find dialogue sections (## Dialogue: ... until next ## or end)
+    const dialogueSectionRegex = /(## Dialogue:[^\n]*\n)([\s\S]*?)(?=\n## |\n# |\n---\n|$)/g;
+
+    return content.replace(dialogueSectionRegex, (match, header, dialogueBody) => {
+        // Split dialogue body into lines
+        const lines = dialogueBody.split('\n');
+        const processedLines: string[] = [];
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            const prevLine = i > 0 ? lines[i - 1] : '';
+
+            // If current line starts with **Name:** and previous line also did,
+            // add a blank line before (unless there's already one)
+            if (/^\*\*[^*]+:\*\*/.test(line.trim())) {
+                if (/^\*\*[^*]+:\*\*/.test(prevLine.trim())) {
+                    processedLines.push('');  // Add blank line
+                }
+            }
+            processedLines.push(line);
+        }
+
+        return header + processedLines.join('\n');
+    });
 }
 
 // ============================================================================
@@ -571,6 +603,9 @@ description: "${escapeJsxString(fm.subtitle || '')}"
 
     // Convert callouts
     let processedContent = convertCalloutsToAdmonitions(mainContent);
+
+    // Process dialogue sections to add line breaks between turns
+    processedContent = processDialogues(processedContent);
 
     // Remove the duplicate H1 title (already in frontmatter)
     processedContent = processedContent.replace(/^#\s+[^\n]+\n/, '');
