@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Background circle with Ukrainian blue -->
+  <circle cx="50" cy="50" r="48" fill="#0057B7"/>
+
+  <!-- Inner yellow circle -->
+  <circle cx="50" cy="50" r="38" fill="#FFD700"/>
+
+  <!-- Book/curriculum symbol -->
+  <g transform="translate(25, 28)">
+    <!-- Open book pages -->
+    <path d="M25 0 L25 35 Q12.5 32 0 35 L0 5 Q12.5 2 25 5" fill="#0057B7"/>
+    <path d="M25 0 L25 35 Q37.5 32 50 35 L50 5 Q37.5 2 25 5" fill="#003b80"/>
+
+    <!-- Page lines on left -->
+    <line x1="5" y1="10" x2="20" y2="8" stroke="#FFD700" stroke-width="2"/>
+    <line x1="5" y1="17" x2="20" y2="15" stroke="#FFD700" stroke-width="2"/>
+    <line x1="5" y1="24" x2="20" y2="22" stroke="#FFD700" stroke-width="2"/>
+
+    <!-- Page lines on right -->
+    <line x1="30" y1="8" x2="45" y2="10" stroke="#FFD700" stroke-width="2"/>
+    <line x1="30" y1="15" x2="45" y2="17" stroke="#FFD700" stroke-width="2"/>
+    <line x1="30" y1="22" x2="45" y2="24" stroke="#FFD700" stroke-width="2"/>
+  </g>
+
+  <!-- "УК" letters (Ukrainian abbreviation) -->
+  <text x="50" y="82" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#0057B7" text-anchor="middle">CO</text>
+</svg>

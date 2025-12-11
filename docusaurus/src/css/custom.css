@@ -1,0 +1,419 @@
+/**
+ * Curricula Opus - Premium Ukrainian Language Learning Platform
+ * Elegant design with Ukrainian-inspired colors and modern aesthetics
+ */
+
+/* ============= DESIGN TOKENS ============= */
+:root {
+  /* Ukrainian-inspired color palette */
+  --co-blue-deep: #0057B7;
+  --co-blue-bright: #1A73E8;
+  --co-blue-light: #4DA3FF;
+  --co-gold: #FFD700;
+  --co-gold-dark: #D4AF37;
+  --co-gold-light: #FFE57F;
+  
+  /* Neutrals */
+  --co-white: #FFFFFF;
+  --co-gray-50: #FAFBFC;
+  --co-gray-100: #F4F5F7;
+  --co-gray-200: #E8EAED;
+  --co-gray-300: #DADCE0;
+  --co-gray-600: #5F6368;
+  --co-gray-800: #3C4043;
+  --co-gray-900: #202124;
+  
+  /* Semantic colors */
+  --co-success: #34A853;
+  --co-success-bg: rgba(52, 168, 83, 0.1);
+  --co-error: #EA4335;
+  --co-error-bg: rgba(234, 67, 53, 0.1);
+  --co-warning: #FBBC04;
+  --co-info: #4285F4;
+  
+  /* Docusaurus overrides */
+  --ifm-color-primary: #0057B7;
+  --ifm-color-primary-dark: #004da5;
+  --ifm-color-primary-darker: #00489b;
+  --ifm-color-primary-darkest: #003b80;
+  --ifm-color-primary-light: #0061c9;
+  --ifm-color-primary-lighter: #0066d3;
+  --ifm-color-primary-lightest: #1A73E8;
+  
+  --ifm-font-family-base: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --ifm-heading-font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --ifm-font-size-base: 16px;
+  --ifm-line-height-base: 1.6;
+  
+  --ifm-code-font-size: 90%;
+  --ifm-heading-font-weight: 700;
+  --ifm-h1-font-size: 2.5rem;
+  --ifm-h2-font-size: 1.75rem;
+  
+  --ifm-border-radius: 12px;
+  --ifm-global-shadow-lw: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --ifm-global-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --ifm-global-shadow-tl: 0 8px 32px rgba(0, 0, 0, 0.16);
+  
+  --docusaurus-highlighted-code-line-bg: rgba(0, 87, 183, 0.1);
+}
+
+/* Dark mode */
+[data-theme='dark'] {
+  --co-gray-50: #1a1a2e;
+  --co-gray-100: #16213e;
+  --co-gray-200: #1f2937;
+  --co-gray-300: #374151;
+  --co-gray-600: #9CA3AF;
+  --co-gray-800: #E5E7EB;
+  --co-gray-900: #F9FAFB;
+  
+  --ifm-color-primary: #5B9BD5;
+  --ifm-color-primary-dark: #4690d0;
+  --ifm-color-primary-darker: #3b88cd;
+  --ifm-color-primary-darkest: #2a74b8;
+  --ifm-color-primary-light: #70a6da;
+  --ifm-color-primary-lighter: #7baedc;
+  --ifm-color-primary-lightest: #9fc4e6;
+  
+  --ifm-background-color: #0f0f1a;
+  --ifm-background-surface-color: #1a1a2e;
+  
+  --docusaurus-highlighted-code-line-bg: rgba(91, 155, 213, 0.2);
+}
+
+/* ============= GLOBAL STYLES ============= */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Premium link transitions */
+a {
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+/* ============= NAVBAR ============= */
+.navbar {
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.9) !important;
+  box-shadow: var(--ifm-global-shadow-lw);
+  border-bottom: 1px solid var(--co-gray-200);
+}
+
+[data-theme='dark'] .navbar {
+  background: rgba(15, 15, 26, 0.9) !important;
+  border-bottom: 1px solid var(--co-gray-300);
+}
+
+.navbar__title {
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--co-blue-deep), var(--co-blue-bright));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.navbar__link {
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 0.5rem 1rem !important;
+  transition: all 0.2s ease;
+}
+
+.navbar__link:hover {
+  background: var(--co-gray-100);
+}
+
+.navbar__link--active {
+  background: rgba(0, 87, 183, 0.1);
+}
+
+/* ============= SIDEBAR ============= */
+.menu__link {
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  margin: 2px 0;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.menu__link:hover {
+  background: var(--co-gray-100);
+  transform: translateX(4px);
+}
+
+.menu__link--active {
+  background: linear-gradient(135deg, rgba(0, 87, 183, 0.1), rgba(26, 115, 232, 0.1));
+  color: var(--co-blue-deep);
+  font-weight: 600;
+  border-left: 3px solid var(--co-blue-deep);
+}
+
+.menu__list-item-collapsible:hover {
+  background: var(--co-gray-50);
+  border-radius: 8px;
+}
+
+/* Category badges */
+.menu__link[href*="/a1"] .menu__link--sublist-caret::before { content: '🟢 '; }
+.menu__link[href*="/a2"] .menu__link--sublist-caret::before { content: '🔵 '; }
+.menu__link[href*="/b1"] .menu__link--sublist-caret::before { content: '🟠 '; }
+.menu__link[href*="/b2"] .menu__link--sublist-caret::before { content: '🔴 '; }
+.menu__link[href*="/c1"] .menu__link--sublist-caret::before { content: '🟣 '; }
+.menu__link[href*="/c2"] .menu__link--sublist-caret::before { content: '⭐ '; }
+
+/* ============= DOCS PAGE ============= */
+.theme-doc-markdown {
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.theme-doc-markdown h1 {
+  background: linear-gradient(135deg, var(--co-blue-deep), var(--co-blue-bright));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid var(--co-gold);
+}
+
+.theme-doc-markdown h2 {
+  color: var(--co-gray-800);
+  margin-top: 2.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--co-gray-200);
+}
+
+.theme-doc-markdown h3 {
+  color: var(--co-blue-deep);
+  margin-top: 2rem;
+}
+
+/* Premium blockquotes */
+.theme-doc-markdown blockquote {
+  border-left: 4px solid var(--co-gold);
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), rgba(212, 175, 55, 0.05));
+  padding: 1rem 1.5rem;
+  border-radius: 0 12px 12px 0;
+  font-style: normal;
+  margin: 1.5rem 0;
+}
+
+/* Tables */
+.theme-doc-markdown table {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--ifm-global-shadow-lw);
+  border: none;
+}
+
+.theme-doc-markdown table th {
+  background: linear-gradient(135deg, var(--co-blue-deep), var(--co-blue-bright));
+  color: white;
+  font-weight: 600;
+  padding: 1rem;
+  border: none;
+}
+
+.theme-doc-markdown table td {
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid var(--co-gray-200);
+}
+
+.theme-doc-markdown table tr:hover {
+  background: var(--co-gray-50);
+}
+
+.theme-doc-markdown table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ============= ADMONITIONS / ALERTS ============= */
+.alert {
+  border-radius: 12px;
+  border-left-width: 4px;
+  padding: 1.25rem;
+  box-shadow: var(--ifm-global-shadow-lw);
+}
+
+.alert--secondary {
+  background: linear-gradient(135deg, rgba(0, 87, 183, 0.08), rgba(26, 115, 232, 0.05));
+  border-left-color: var(--co-blue-deep);
+}
+
+.alert--success {
+  background: var(--co-success-bg);
+  border-left-color: var(--co-success);
+}
+
+.alert--warning {
+  background: rgba(251, 188, 4, 0.1);
+  border-left-color: var(--co-warning);
+}
+
+.alert--danger {
+  background: var(--co-error-bg);
+  border-left-color: var(--co-error);
+}
+
+/* ============= CODE BLOCKS ============= */
+pre {
+  border-radius: 12px !important;
+  box-shadow: var(--ifm-global-shadow-md);
+}
+
+code {
+  background: var(--co-gray-100);
+  padding: 0.2rem 0.4rem;
+  border-radius: 6px;
+  font-size: 0.9em;
+}
+
+/* ============= FOOTER ============= */
+.footer {
+  background: linear-gradient(180deg, #16213e 0%, #0f0f1a 100%) !important;
+  border-top: 4px solid;
+  border-image: linear-gradient(90deg, var(--co-blue-deep), var(--co-gold)) 1;
+}
+
+.footer__title {
+  color: var(--co-gold) !important;
+  font-weight: 700;
+}
+
+.footer__link-item {
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+.footer__link-item:hover {
+  opacity: 1;
+  color: var(--co-gold) !important;
+}
+
+.footer__copyright {
+  opacity: 0.9;
+  font-size: 0.95rem;
+}
+
+/* ============= SCROLLBAR ============= */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--co-gray-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--co-gray-300);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--co-gray-600);
+}
+
+/* ============= ANIMATIONS ============= */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.theme-doc-markdown > * {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* ============= LEVEL BADGES ============= */
+.level-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.level-a1 { background: linear-gradient(135deg, #4CAF50, #45a049); color: white; }
+.level-a2 { background: linear-gradient(135deg, #2196F3, #1976D2); color: white; }
+.level-b1 { background: linear-gradient(135deg, #FF9800, #F57C00); color: white; }
+.level-b2 { background: linear-gradient(135deg, #E91E63, #C2185B); color: white; }
+.level-c1 { background: linear-gradient(135deg, #9C27B0, #7B1FA2); color: white; }
+.level-c2 { background: linear-gradient(135deg, #F44336, #D32F2F); color: white; }
+
+/* ============= UKRAINIAN FLAG ACCENT ============= */
+.ukraine-accent {
+  background: linear-gradient(180deg, var(--co-blue-deep) 50%, var(--co-gold) 50%);
+  height: 4px;
+  border-radius: 2px;
+}
+
+/* ============= RESPONSIVE ============= */
+@media (max-width: 996px) {
+  .theme-doc-markdown h1 {
+    font-size: 2rem;
+  }
+  
+  .theme-doc-markdown h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* ============= GENERATED INDEX PAGES ============= */
+.generatedIndexPage {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.generatedIndexPage h1 {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.generatedIndexPage > p {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--co-gray-600);
+  margin-bottom: 2rem;
+}
+
+/* Module cards in generated index */
+.generatedIndexPage .card {
+  border-radius: 12px;
+  border: 2px solid var(--co-gray-200);
+  box-shadow: var(--ifm-global-shadow-lw);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.generatedIndexPage .card:hover {
+  border-color: var(--co-blue-light);
+  box-shadow: var(--ifm-global-shadow-md);
+  transform: translateY(-4px);
+}
+
+.generatedIndexPage .card h2 {
+  margin: 0;
+  color: var(--ifm-heading-color);
+  border: none;
+  padding: 0;
+}
+
+.generatedIndexPage .card a {
+  text-decoration: none;
+}
