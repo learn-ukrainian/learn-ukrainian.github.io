@@ -16,6 +16,9 @@ export interface ForbiddenPattern {
     context?: string;
 }
 
+/**
+ *
+ */
 export function loadPurityConfig(docsPath: string = 'docs/l2-uk-en/LINGUISTIC-PURITY-GUIDE.md'): ForbiddenPattern[] {
     try {
         const fullPath = path.resolve(process.cwd(), docsPath);
@@ -73,6 +76,9 @@ export function loadPurityConfig(docsPath: string = 'docs/l2-uk-en/LINGUISTIC-PU
     }
 }
 
+/**
+ *
+ */
 function getFallbackPatterns(): ForbiddenPattern[] {
     return [
         { regex: /приймати участь/i, label: 'Приймати участь', correction: 'Брати участь' },

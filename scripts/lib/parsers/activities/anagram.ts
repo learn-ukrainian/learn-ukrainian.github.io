@@ -30,9 +30,15 @@ export interface AnagramContent {
   items: AnagramItem[];
 }
 
+/**
+ *
+ */
 export class AnagramParser extends ActivityParser<AnagramContent> {
   readonly type = 'anagram' as const;
 
+  /**
+   *
+   */
   canParse(header: string): boolean {
     const match = header.match(/^([\w-]+):\s*/);
     if (!match) return false;
@@ -40,6 +46,9 @@ export class AnagramParser extends ActivityParser<AnagramContent> {
     return type === 'anagram' || type === 'letter-scramble' || type === 'word-scramble';
   }
 
+  /**
+   *
+   */
   protected parseContent(content: string, ctx: ParseContext): AnagramContent {
     const items: AnagramItem[] = [];
     const body = this.getContentBody(content);

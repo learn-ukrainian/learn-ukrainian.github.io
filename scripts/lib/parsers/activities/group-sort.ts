@@ -37,9 +37,15 @@
 import { ActivityParser } from './base';
 import { GroupSortContent, SortGroup, SortItem, ParseContext } from '../../types';
 
+/**
+ *
+ */
 export class GroupSortParser extends ActivityParser<GroupSortContent> {
   readonly type = 'group-sort' as const;
 
+  /**
+   *
+   */
   protected parseContent(content: string, ctx: ParseContext): GroupSortContent {
     const groups: SortGroup[] = [];
 

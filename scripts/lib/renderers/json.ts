@@ -57,6 +57,9 @@ export function renderVibeJson(parsed: ParsedModule, ctx: RenderContext): VibeMo
 // Lesson Builder
 // =============================================================================
 
+/**
+ *
+ */
 function buildVibeLesson(parsed: ParsedModule, ctx: RenderContext): VibeLesson {
   const { frontmatter, sections, rawMarkdown } = parsed;
   const now = new Date().toISOString();
@@ -130,6 +133,9 @@ const MODULE_TYPE_MAPPINGS: { type: ModuleType; tags: string[] }[] = [
   { type: 'grammar', tags: ['grammar', 'cases', 'verbs', 'aspect'] },
 ];
 
+/**
+ *
+ */
 function inferModuleType(tags: string[]): ModuleType {
   const tagSet = new Set(tags.map(t => t.toLowerCase()));
 
@@ -146,6 +152,9 @@ function inferModuleType(tags: string[]): ModuleType {
 // Immersion Level
 // =============================================================================
 
+/**
+ *
+ */
 function getImmersionLevel(level: string): number {
   // Returns percentage of Ukrainian content (0.0 = all English, 1.0 = all Ukrainian)
   const levels: Record<string, number> = {
@@ -166,6 +175,9 @@ function getImmersionLevel(level: string): number {
 // Section Builder
 // =============================================================================
 
+/**
+ *
+ */
 function buildVibeSections(sections: { id: string; type: string; title: string; titleUk?: string; content: string }[]): VibeSection[] {
   return sections.map(s => ({
     id: s.id,
@@ -180,6 +192,9 @@ function buildVibeSections(sections: { id: string; type: string; title: string; 
 // Activity Builder
 // =============================================================================
 
+/**
+ *
+ */
 function buildVibeActivity(activity: Activity, level: string): VibeActivity {
   const now = new Date().toISOString();
 
@@ -206,6 +221,9 @@ function buildVibeActivity(activity: Activity, level: string): VibeActivity {
 // Utilities
 // =============================================================================
 
+/**
+ *
+ */
 function padNumber(num: number): string {
   return num.toString().padStart(2, '0');
 }

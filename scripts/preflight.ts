@@ -12,6 +12,9 @@ const LEVEL_CONFIG = {
     'C2': { min_vocab: 25, target_words: 1500 }
 };
 
+/**
+ *
+ */
 async function main() {
     const args = process.argv.slice(2);
     const command = args[0];
@@ -36,6 +39,9 @@ async function main() {
     }
 }
 
+/**
+ *
+ */
 async function checkLevel(level: string) {
     console.log(`\n✈️  Preflight Check: Level ${level}`);
     let errors = 0;
@@ -75,6 +81,9 @@ async function checkLevel(level: string) {
     }
 }
 
+/**
+ *
+ */
 async function checkModule(level: string, num: number) {
     console.log(`\n✈️  Preflight Check: Module ${level} ${num}`);
     let errors = 0;

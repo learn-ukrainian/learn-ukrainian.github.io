@@ -40,11 +40,6 @@ interface ValidationResult {
 // Transliteration Detection
 // =============================================================================
 
-// Pattern: Ukrainian word followed by (latin transliteration)
-// Examples: читати (chytaty), знати (znaty), Я (ya)
-// This catches real transliteration like "читати (chytaty)" but NOT "(book)" or "(masculine)"
-const TRANSLITERATION_PATTERN = /[а-яіїєґ']+\s*\(([a-z']+)\)/gi;
-
 // English words in parentheses that are NOT transliteration (translations, grammar labels)
 const TRANSLATION_WORDS = new Set([
   // Grammar labels
@@ -85,6 +80,9 @@ const TRANSLATION_WORDS = new Set([
   'watched', 'studied', 'transport', 'carry', 'can',
 ]);
 
+/**
+ *
+ */
 function isTransliteration(latinText: string): boolean {
   // If it's a known English word/label, it's NOT transliteration
   if (TRANSLATION_WORDS.has(latinText.toLowerCase())) {
@@ -211,6 +209,9 @@ const POSSESSIVES_MODULE_14 = [
 // Validation Logic
 // =============================================================================
 
+/**
+ *
+ */
 function getLevelFromModule(moduleNum: number): string {
   if (moduleNum <= 30) return 'A1';
   if (moduleNum <= 60) return 'A2';
@@ -221,6 +222,9 @@ function getLevelFromModule(moduleNum: number): string {
   return 'B2+';
 }
 
+/**
+ *
+ */
 function shouldSkipLine(line: string, checkType: string): boolean {
   // Skip answer blocks for all checks
   if (line.includes('[!answer]')) return true;
@@ -239,6 +243,9 @@ function shouldSkipLine(line: string, checkType: string): boolean {
   return false;
 }
 
+/**
+ *
+ */
 function isInVocabSection(lines: string[], lineIdx: number): boolean {
   // Check if current line is within a Vocabulary section
   for (let i = lineIdx; i >= 0; i--) {
@@ -444,6 +451,9 @@ function validateModule(modulePath: string, moduleNum: number): ValidationResult
 // Main
 // =============================================================================
 
+/**
+ *
+ */
 function printSummary(files: { file: string; num: number }[], results: ValidationResult[]) {
   let totalViolations = 0;
   let modulesWithIssues = 0;
@@ -502,6 +512,9 @@ function printSummary(files: { file: string; num: number }[], results: Validatio
   console.log();
 }
 
+/**
+ *
+ */
 function main(): void {
   const args = process.argv.slice(2);
   const lang = args[0] || 'l2-uk-en';

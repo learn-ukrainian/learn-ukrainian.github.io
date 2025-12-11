@@ -35,7 +35,7 @@ const calloutExtension: showdown.ShowdownExtension = {
   replace: (match: string, indent: string, type: string, content: string) => {
     const calloutType = type.toLowerCase() as CalloutType;
     // Process inline markdown (bold, italic) in content
-    let html = content.trim()
+    const html = content.trim()
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(.+?)\*/g, '<em>$1</em>');
     return `${indent}<div class="callout callout-${calloutType}" data-callout="${calloutType}">${html}</div>`;

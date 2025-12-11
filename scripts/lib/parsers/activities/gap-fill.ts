@@ -17,9 +17,15 @@
 import { ActivityParser } from './base';
 import { GapFillContent, GapFillBlank, ParseContext } from '../../types';
 
+/**
+ *
+ */
 export class GapFillParser extends ActivityParser<GapFillContent> {
   readonly type = 'gap-fill' as const;
 
+  /**
+   *
+   */
   protected parseContent(content: string, ctx: ParseContext): GapFillContent {
     // Extract the text with blanks (blockquote lines that aren't callouts)
     const textLines: string[] = [];

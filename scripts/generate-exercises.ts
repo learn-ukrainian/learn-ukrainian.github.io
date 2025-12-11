@@ -82,6 +82,9 @@ interface GeneratedActivity {
 // PARSING FUNCTIONS
 // =============================================================================
 
+/**
+ *
+ */
 function getLevelFromModule(num: number): string {
   if (num <= 30) return 'A1';
   if (num <= 60) return 'A2';
@@ -93,6 +96,9 @@ function getLevelFromModule(num: number): string {
   return 'C1';
 }
 
+/**
+ *
+ */
 function parseVocabulary(content: string): VocabWord[] {
   const words: VocabWord[] = [];
 
@@ -125,6 +131,9 @@ function parseVocabulary(content: string): VocabWord[] {
   return words;
 }
 
+/**
+ *
+ */
 function parseExamples(content: string): ExampleSentence[] {
   const examples: ExampleSentence[] = [];
   const seen = new Set<string>();
@@ -178,6 +187,9 @@ function parseExamples(content: string): ExampleSentence[] {
   return examples;
 }
 
+/**
+ *
+ */
 function parseExistingActivities(content: string): string[] {
   const activities: string[] = [];
   const matches = content.matchAll(/## (quiz|match-up|group-sort|fill-in|true-false|unjumble|order|translate):/gi);
@@ -189,6 +201,9 @@ function parseExistingActivities(content: string): string[] {
   return activities;
 }
 
+/**
+ *
+ */
 function parseGrammarTopics(content: string): string[] {
   const topics: string[] = [];
 
@@ -207,6 +222,9 @@ function parseGrammarTopics(content: string): string[] {
 // Cache for accumulated vocabulary from previous modules
 const vocabCache: Map<number, VocabWord[]> = new Map();
 
+/**
+ *
+ */
 async function loadAccumulatedVocabulary(upToModule: number): Promise<VocabWord[]> {
   // Check cache
   if (vocabCache.has(upToModule)) {
@@ -240,6 +258,9 @@ async function loadAccumulatedVocabulary(upToModule: number): Promise<VocabWord[
   return allVocab;
 }
 
+/**
+ *
+ */
 async function parseModule(modulePath: string): Promise<ModuleData | null> {
   try {
     const content = await readFile(modulePath, 'utf-8');
@@ -279,6 +300,9 @@ async function parseModule(modulePath: string): Promise<ModuleData | null> {
 // ACTIVITY GENERATORS
 // =============================================================================
 
+/**
+ *
+ */
 function generateMatchUp(data: ModuleData, variant: number): GeneratedActivity | null {
   const vocab = data.vocabulary.filter(w => w.english && w.word);
   if (vocab.length < 6) return null;
@@ -307,6 +331,9 @@ function generateMatchUp(data: ModuleData, variant: number): GeneratedActivity |
   };
 }
 
+/**
+ *
+ */
 function generateTrueFalse(data: ModuleData): GeneratedActivity | null {
   const statements: string[] = [];
 
@@ -342,6 +369,9 @@ function generateTrueFalse(data: ModuleData): GeneratedActivity | null {
   };
 }
 
+/**
+ *
+ */
 function generateGroupSort(data: ModuleData): GeneratedActivity | null {
   // Group by gender
   const byGender: Record<string, string[]> = { 'm': [], 'f': [], 'n': [], 'pl': [] };
@@ -382,6 +412,9 @@ function generateGroupSort(data: ModuleData): GeneratedActivity | null {
   };
 }
 
+/**
+ *
+ */
 function generateFillIn(data: ModuleData): GeneratedActivity | null {
   // For early modules (A1), accept shorter phrases; for later modules require longer sentences
   const minLen = data.moduleNum <= 30 ? 5 : 10;
@@ -463,6 +496,9 @@ function generateFillIn(data: ModuleData): GeneratedActivity | null {
   };
 }
 
+/**
+ *
+ */
 function generateQuiz(data: ModuleData, variant: number): GeneratedActivity | null {
   const vocab = data.vocabulary.filter(w => w.english && w.word);
   if (vocab.length < 8) return null;
@@ -497,6 +533,9 @@ function generateQuiz(data: ModuleData, variant: number): GeneratedActivity | nu
   };
 }
 
+/**
+ *
+ */
 function generateUnjumble(data: ModuleData): GeneratedActivity | null {
   // For early modules, accept 2-word phrases; for later, require 3+
   const minWords = data.moduleNum <= 30 ? 2 : 3;
@@ -533,6 +572,9 @@ function generateUnjumble(data: ModuleData): GeneratedActivity | null {
   };
 }
 
+/**
+ *
+ */
 function generateTransform(data: ModuleData): GeneratedActivity | null {
   // This needs grammar-specific logic based on module type
   // For now, return null - will implement per grammar topic
@@ -543,6 +585,9 @@ function generateTransform(data: ModuleData): GeneratedActivity | null {
 // MAIN GENERATOR
 // =============================================================================
 
+/**
+ *
+ */
 function generateActivities(data: ModuleData, enrich: boolean = false): GeneratedActivity[] {
   const activities: GeneratedActivity[] = [];
   const targets = TARGET_ACTIVITIES[data.level] || TARGET_ACTIVITIES['A1'];
@@ -609,10 +654,16 @@ function removeExistingActivities(content: string, types: string[]): string {
   return result;
 }
 
+/**
+ *
+ */
 function formatActivity(activity: GeneratedActivity): string {
   return `## ${activity.type}: ${activity.title}\n\n${activity.content}`;
 }
 
+/**
+ *
+ */
 async function processModule(modulePath: string, dryRun: boolean = false, enrich: boolean = false): Promise<void> {
   const data = await parseModule(modulePath);
   if (!data) {
@@ -684,6 +735,9 @@ async function processModule(modulePath: string, dryRun: boolean = false, enrich
 // CLI
 // =============================================================================
 
+/**
+ *
+ */
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
   const dryRun = args.includes('--dry-run');

@@ -14,6 +14,9 @@ import { parseCallouts, extractAnswer, CalloutBlock } from '../../utils/markdown
 // Base Parser
 // =============================================================================
 
+/**
+ *
+ */
 export abstract class ActivityParser<T extends ActivityContent = ActivityContent> {
   abstract readonly type: ActivityType;
 
@@ -171,7 +174,7 @@ export abstract class ActivityParser<T extends ActivityContent = ActivityContent
    */
   protected getContentBody(content: string): string {
     // Remove leading instructions
-    let body = content.replace(/^(?:>\s*[^\[!].*\n)+/, '');
+    const body = content.replace(/^(?:>\s*[^\[!].*\n)+/, '');
 
     // We keep callout blocks as they contain answers
     return body.trim();

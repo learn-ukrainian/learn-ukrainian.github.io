@@ -17,6 +17,8 @@ connect(async (client: Client) => {
         .container()
         .from('node:20')
         .withWorkdir('/app')
+        .withExec(['apt-get', 'update'])
+        .withExec(['apt-get', 'install', '-y', 'python3'])
         .withFile('package.json', source.file('package.json'))
         .withFile('package-lock.json', source.file('package-lock.json'))
         .withExec(['npm', 'ci']);
@@ -45,8 +47,13 @@ connect(async (client: Client) => {
 
     console.log('✅ Build passed');
 
-    // 6. Custom Audit Gate (if python is available, or use node audit)
-    // For now, we assume Audit is Python-based. We need a container with python+node or install python.
-    // Actually, let's keep it simple: verify generation is enough for now.
+    // 6. Audit Gate (Strict Quality Check)
+    console.log('🔍 Running Audit...');
+    const audit = base
+        .withDirectory('.', source)
+        .withExec(['sh', '-c', 'find curriculum/l2-uk-en -name "module-*.md" -print0 | xargs -0 -n 1 python3 scripts/audit_module.py'])
+        .sync();
+
+    console.log('✅ Audit passed');
 
 }, { LogOutput: process.stdout });

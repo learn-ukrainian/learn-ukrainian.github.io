@@ -34,6 +34,9 @@ const LEVEL_CONFIG = [
   { level: 'b2', start: 161, end: 210 },
 ];
 
+/**
+ *
+ */
 function getLevelForModule(num: number): { level: string; localNum: number } | null {
   for (const cfg of LEVEL_CONFIG) {
     if (num >= cfg.start && num <= cfg.end) {
@@ -46,6 +49,9 @@ function getLevelForModule(num: number): { level: string; localNum: number } | n
   return null;
 }
 
+/**
+ *
+ */
 function slugify(text: string): string {
   return text
     .toLowerCase()
@@ -55,6 +61,9 @@ function slugify(text: string): string {
     .substring(0, 40);
 }
 
+/**
+ *
+ */
 function padNum(n: number): string {
   return String(n).padStart(2, '0');
 }
@@ -71,6 +80,9 @@ interface ModuleMeta {
   newContent: string;
 }
 
+/**
+ *
+ */
 async function parseModuleFile(filePath: string, globalNum: number): Promise<ModuleMeta | null> {
   const content = await readFile(filePath, 'utf-8');
 
@@ -100,7 +112,7 @@ async function parseModuleFile(filePath: string, globalNum: number): Promise<Mod
   const newPath = join(CURRICULUM_DIR, levelInfo.level, newFileName);
 
   // Create new content: remove module: and level: lines from frontmatter
-  let newFm = fm
+  const newFm = fm
     .split('\n')
     .filter(line => !line.match(/^module:\s*\d+/) && !line.match(/^level:\s*/))
     .join('\n');
@@ -120,6 +132,9 @@ async function parseModuleFile(filePath: string, globalNum: number): Promise<Mod
   };
 }
 
+/**
+ *
+ */
 function printMigrationSummary(byLevel: Map<string, ModuleMeta[]>) {
   console.log('📊 Migration Summary:\n');
   for (const [level, mods] of [...byLevel.entries()].sort()) {
@@ -134,6 +149,9 @@ function printMigrationSummary(byLevel: Map<string, ModuleMeta[]>) {
   }
 }
 
+/**
+ *
+ */
 async function main() {
   const dryRun = process.argv.includes('--dry-run');
 

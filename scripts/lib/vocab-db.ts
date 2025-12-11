@@ -71,10 +71,16 @@ export function getLevelFromModule(moduleNum: number): string {
 // Vocabulary Database Class
 // =============================================================================
 
+/**
+ *
+ */
 export class VocabDatabase {
   private entries: Map<string, VocabDbEntry> = new Map();
   private csvPath: string;
 
+  /**
+   *
+   */
   constructor(curriculumPath: string) {
     this.csvPath = path.join(curriculumPath, 'vocabulary.csv');
     this.load();

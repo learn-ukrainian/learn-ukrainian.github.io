@@ -106,24 +106,12 @@ CREATE TRIGGER IF NOT EXISTS expressions_updated_at
 `;
 
 // =============================================================================
-// Level Configuration
-// =============================================================================
-
-const LEVEL_RANGES: Record<string, [number, number]> = {
-  'A1': [1, 30],
-  'A2': [31, 60],
-  'A2+': [61, 80],
-  'B1': [81, 120],
-  'B1+': [121, 160],
-  'B2': [161, 235],
-  'B2+': [236, 310],
-  'C1': [311, 400],
-};
-
-// =============================================================================
 // Main
 // =============================================================================
 
+/**
+ *
+ */
 function main(): void {
   const args = process.argv.slice(2);
   const curriculum = args[0] || DEFAULT_CURRICULUM;
@@ -162,12 +150,6 @@ function main(): void {
   // Create schema
   console.log('Creating schema...');
   db.exec(SCHEMA);
-
-  // Insert level configuration as a reference table
-  const insertLevel = db.prepare(`
-    INSERT INTO lemmas (id, uk, en, pos, first_module, level, notes)
-    VALUES (?, ?, ?, 'meta', ?, ?, ?)
-  `);
 
   // Verify tables exist
   const tables = db.prepare(`

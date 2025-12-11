@@ -34,15 +34,24 @@ export interface SelectContent {
   items: SelectItem[];
 }
 
+/**
+ *
+ */
 export class SelectParser extends ActivityParser<SelectContent> {
   readonly type = 'select' as const;
 
+  /**
+   *
+   */
   canParse(header: string): boolean {
     const match = header.match(/^([\w-]+):\s*/);
     if (!match) return false;
     return match[1].toLowerCase() === 'select';
   }
 
+  /**
+   *
+   */
   protected parseContent(content: string, ctx: ParseContext): SelectContent {
     const items: SelectItem[] = [];
     const body = this.getContentBody(content);

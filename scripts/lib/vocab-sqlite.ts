@@ -89,6 +89,9 @@ export const LEVEL_RANGES: Record<string, [number, number]> = {
   'C1': [311, 400],
 };
 
+/**
+ *
+ */
 export function getLevelFromModule(moduleNum: number): string {
   for (const [level, [start, end]] of Object.entries(LEVEL_RANGES)) {
     if (moduleNum >= start && moduleNum <= end) {
@@ -102,6 +105,9 @@ export function getLevelFromModule(moduleNum: number): string {
 // ID Generation
 // =============================================================================
 
+/**
+ *
+ */
 function transliterateToAscii(uk: string): string {
   const map: Record<string, string> = {
     'а': 'a', 'б': 'b', 'в': 'v', 'г': 'h', 'ґ': 'g',
@@ -124,11 +130,17 @@ function transliterateToAscii(uk: string): string {
     .replace(/^-|-$/g, '');
 }
 
+/**
+ *
+ */
 export function generateLemmaId(uk: string): string {
   const slug = transliterateToAscii(uk);
   return `lemma-${slug}`;
 }
 
+/**
+ *
+ */
 export function generateExpressionId(uk: string): string {
   const slug = transliterateToAscii(uk);
   return `expr-${slug}`;
@@ -199,10 +211,16 @@ export function extractComponents(uk: string): string[] {
 // Vocabulary Database Class
 // =============================================================================
 
+/**
+ *
+ */
 export class VocabDatabase {
   private db: DatabaseType;
   private dbPath: string;
 
+  /**
+   *
+   */
   constructor(curriculumPath: string) {
     this.dbPath = path.join(curriculumPath, 'vocabulary.db');
 
@@ -218,6 +236,9 @@ export class VocabDatabase {
   // Lemma Operations
   // ===========================================================================
 
+  /**
+   *
+   */
   getLemma(uk: string): Lemma | undefined {
     const row = this.db.prepare(`
       SELECT * FROM lemmas WHERE uk = ?
@@ -225,10 +246,16 @@ export class VocabDatabase {
     return row;
   }
 
+  /**
+   *
+   */
   getLemmaById(id: string): Lemma | undefined {
     return this.db.prepare(`SELECT * FROM lemmas WHERE id = ?`).get(id) as Lemma | undefined;
   }
 
+  /**
+   *
+   */
   addLemma(lemma: Omit<Lemma, 'id'>): Lemma {
     const uk = lemma.uk.toLowerCase().trim();
     const id = generateLemmaId(uk);
@@ -283,10 +310,16 @@ export class VocabDatabase {
     return this.getLemmaById(lemmaId)!;
   }
 
+  /**
+   *
+   */
   getAllLemmas(): Lemma[] {
     return this.db.prepare(`SELECT * FROM lemmas ORDER BY first_module, uk`).all() as Lemma[];
   }
 
+  /**
+   *
+   */
   getLemmasByModule(moduleNum: number): Lemma[] {
     return this.db.prepare(`
       SELECT * FROM lemmas WHERE first_module = ? ORDER BY uk
@@ -297,6 +330,9 @@ export class VocabDatabase {
   // Expression Operations
   // ===========================================================================
 
+  /**
+   *
+   */
   getExpression(uk: string): Expression | undefined {
     const row = this.db.prepare(`
       SELECT * FROM expressions WHERE uk = ?
@@ -309,6 +345,9 @@ export class VocabDatabase {
     return row;
   }
 
+  /**
+   *
+   */
   getExpressionById(id: string): Expression | undefined {
     const row = this.db.prepare(`SELECT * FROM expressions WHERE id = ?`).get(id) as Expression | undefined;
     if (row) {
@@ -317,6 +356,9 @@ export class VocabDatabase {
     return row;
   }
 
+  /**
+   *
+   */
   addExpression(expr: Omit<Expression, 'id' | 'components'>, componentWords: string[]): Expression {
     const uk = expr.uk.toLowerCase().trim();
     const id = generateExpressionId(uk);
@@ -364,6 +406,9 @@ export class VocabDatabase {
     return this.getExpressionById(exprId)!;
   }
 
+  /**
+   *
+   */
   private getExpressionComponents(expressionId: string): ExpressionComponent[] {
     return this.db.prepare(`
       SELECT * FROM expression_components
@@ -372,6 +417,9 @@ export class VocabDatabase {
     `).all(expressionId) as ExpressionComponent[];
   }
 
+  /**
+   *
+   */
   private setExpressionComponents(expressionId: string, words: string[]): void {
     // Clear existing components
     this.db.prepare(`DELETE FROM expression_components WHERE expression_id = ?`).run(expressionId);
@@ -389,6 +437,9 @@ export class VocabDatabase {
     }
   }
 
+  /**
+   *
+   */
   getAllExpressions(): Expression[] {
     const rows = this.db.prepare(`SELECT * FROM expressions ORDER BY first_module, uk`).all() as Expression[];
     return rows.map(row => {
@@ -397,6 +448,9 @@ export class VocabDatabase {
     });
   }
 
+  /**
+   *
+   */
   getExpressionsByModule(moduleNum: number): Expression[] {
     const rows = this.db.prepare(`
       SELECT * FROM expressions WHERE first_module = ? ORDER BY uk
@@ -529,6 +583,9 @@ export class VocabDatabase {
   // Statistics
   // ===========================================================================
 
+  /**
+   *
+   */
   getStats(): {
     totalLemmas: number;
     totalExpressions: number;
@@ -587,6 +644,9 @@ export class VocabDatabase {
   // Cleanup
   // ===========================================================================
 
+  /**
+   *
+   */
   close(): void {
     this.db.close();
   }
@@ -598,6 +658,9 @@ export class VocabDatabase {
 
 let dbInstance: VocabDatabase | null = null;
 
+/**
+ *
+ */
 export function getVocabDatabase(curriculumPath: string): VocabDatabase {
   if (!dbInstance) {
     dbInstance = new VocabDatabase(curriculumPath);
@@ -605,6 +668,9 @@ export function getVocabDatabase(curriculumPath: string): VocabDatabase {
   return dbInstance;
 }
 
+/**
+ *
+ */
 export function resetVocabDatabase(): void {
   if (dbInstance) {
     dbInstance.close();

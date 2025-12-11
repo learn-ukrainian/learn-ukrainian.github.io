@@ -31,9 +31,15 @@ export interface UnjumbleContent {
   items: UnjumbleItem[];
 }
 
+/**
+ *
+ */
 export class UnjumbleParser extends ActivityParser<UnjumbleContent> {
   readonly type = 'unjumble' as const;
 
+  /**
+   *
+   */
   canParse(header: string): boolean {
     const match = header.match(/^([\w-]+):\s*/);
     if (!match) return false;
@@ -41,6 +47,9 @@ export class UnjumbleParser extends ActivityParser<UnjumbleContent> {
     return type === 'unjumble' || type === 'unscramble' || type === 'word-order';
   }
 
+  /**
+   *
+   */
   protected parseContent(content: string, ctx: ParseContext): UnjumbleContent {
     const items: UnjumbleItem[] = [];
     const body = this.getContentBody(content);

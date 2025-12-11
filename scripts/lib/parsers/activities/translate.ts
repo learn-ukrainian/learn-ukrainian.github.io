@@ -17,9 +17,15 @@
 import { ActivityParser } from './base';
 import { TranslateContent, TranslateItem, ParseContext } from '../../types';
 
+/**
+ *
+ */
 export class TranslateParser extends ActivityParser<TranslateContent> {
   readonly type = 'translate' as const;
 
+  /**
+   *
+   */
   protected parseContent(content: string, ctx: ParseContext): TranslateContent {
     const items: TranslateItem[] = [];
     const body = this.getContentBody(content);

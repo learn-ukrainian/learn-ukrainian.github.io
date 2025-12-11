@@ -255,6 +255,9 @@ const VOCAB_DB = join(ROOT, 'curriculum', 'l2-uk-en', 'vocabulary.db');
 
 let db: Database.Database;
 
+/**
+ *
+ */
 function getDb(): Database.Database {
   if (!db) {
     db = new Database(VOCAB_DB, { readonly: true });
@@ -262,6 +265,9 @@ function getDb(): Database.Database {
   return db;
 }
 
+/**
+ *
+ */
 function getVocabForModule(moduleNum: number): Lemma[] {
   const stmt = getDb().prepare(`
     SELECT uk, en, pos, gender, first_module
@@ -272,6 +278,9 @@ function getVocabForModule(moduleNum: number): Lemma[] {
   return stmt.all(moduleNum) as Lemma[];
 }
 
+/**
+ *
+ */
 function getAccumulatedVocab(upToModule: number): Lemma[] {
   const stmt = getDb().prepare(`
     SELECT uk, en, pos, gender, first_module
@@ -282,14 +291,23 @@ function getAccumulatedVocab(upToModule: number): Lemma[] {
   return stmt.all(upToModule) as Lemma[];
 }
 
+/**
+ *
+ */
 function getNouns(lemmas: Lemma[]): Lemma[] {
   return lemmas.filter(l => l.pos === 'noun');
 }
 
+/**
+ *
+ */
 function getAdjectives(lemmas: Lemma[]): Lemma[] {
   return lemmas.filter(l => l.pos === 'adj' || l.pos === 'adjective');
 }
 
+/**
+ *
+ */
 function getVerbs(lemmas: Lemma[]): Lemma[] {
   return lemmas.filter(l => l.pos === 'verb');
 }
@@ -298,6 +316,9 @@ function getVerbs(lemmas: Lemma[]): Lemma[] {
 // Utilities
 // =============================================================================
 
+/**
+ *
+ */
 function shuffle<T>(arr: T[]): T[] {
   const result = [...arr];
   for (let i = result.length - 1; i > 0; i--) {
@@ -307,14 +328,23 @@ function shuffle<T>(arr: T[]): T[] {
   return result;
 }
 
+/**
+ *
+ */
 function pick<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+/**
+ *
+ */
 function pickN<T>(arr: T[], n: number): T[] {
   return shuffle(arr).slice(0, Math.min(n, arr.length));
 }
 
+/**
+ *
+ */
 function getLevelConfig(moduleNum: number): LevelConfig {
   for (const config of LEVEL_CONFIGS) {
     if (moduleNum >= config.moduleRange[0] && moduleNum <= config.moduleRange[1]) {
@@ -328,6 +358,9 @@ function getLevelConfig(moduleNum: number): LevelConfig {
 // Sentence Generation
 // =============================================================================
 
+/**
+ *
+ */
 function generateNounSentence(
   noun: Lemma,
   complexity: 'simple' | 'medium' | 'complex' | 'advanced'
@@ -346,6 +379,9 @@ function generateNounSentence(
   return { sentence, answer: noun.uk };
 }
 
+/**
+ *
+ */
 function generateAdjSentence(
   adj: Lemma,
   complexity: 'simple' | 'medium' | 'complex' | 'advanced'
@@ -356,6 +392,9 @@ function generateAdjSentence(
   return { sentence, answer: adj.uk };
 }
 
+/**
+ *
+ */
 function generateVerbSentence(
   verb: Lemma,
   complexity: 'simple' | 'medium' | 'complex' | 'advanced'
@@ -370,6 +409,9 @@ function generateVerbSentence(
 // Activity Generators
 // =============================================================================
 
+/**
+ *
+ */
 function generateFillIn(
   config: LevelConfig,
   currentVocab: Lemma[],
@@ -428,6 +470,9 @@ function generateFillIn(
   return content;
 }
 
+/**
+ *
+ */
 function generateUnjumble(
   config: LevelConfig,
   currentVocab: Lemma[]
@@ -465,6 +510,9 @@ function generateUnjumble(
   return content;
 }
 
+/**
+ *
+ */
 function generateMatchUp(
   config: LevelConfig,
   currentVocab: Lemma[],
@@ -494,6 +542,9 @@ function generateMatchUp(
   return content;
 }
 
+/**
+ *
+ */
 function generateQuiz(
   config: LevelConfig,
   currentVocab: Lemma[],
@@ -530,6 +581,9 @@ function generateQuiz(
   return content;
 }
 
+/**
+ *
+ */
 function generateTrueFalse(
   config: LevelConfig,
   currentVocab: Lemma[],
@@ -560,6 +614,9 @@ function generateTrueFalse(
   return content;
 }
 
+/**
+ *
+ */
 function generateGroupSort(
   config: LevelConfig,
   currentVocab: Lemma[]
@@ -603,6 +660,9 @@ function generateGroupSort(
 // Main Enrichment
 // =============================================================================
 
+/**
+ *
+ */
 function removeActivitiesSection(content: string): string {
   return content.replace(
     /\n# (?:Activities|Вправи)\n[\s\S]*?(?=\n# (?:Vocabulary|Словник|Summary|Підсумок|Review)|---\s*\n# |$)/,
@@ -610,6 +670,9 @@ function removeActivitiesSection(content: string): string {
   ).replace(/\n{3,}/g, '\n\n');
 }
 
+/**
+ *
+ */
 async function enrichModule(moduleNum: number): Promise<void> {
   const padded = String(moduleNum).padStart(2, '0');
   const path = join(MODULES_DIR, `module-${padded}.md`);
@@ -673,6 +736,9 @@ async function enrichModule(moduleNum: number): Promise<void> {
   console.log(`    Done: ${currentVocab.length} current, ${refresherVocab.length} refreshers`);
 }
 
+/**
+ *
+ */
 async function main() {
   const args = process.argv.slice(2);
   if (args.length < 1) {

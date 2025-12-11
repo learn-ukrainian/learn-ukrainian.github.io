@@ -2,20 +2,19 @@ import re
 import sys
 import os
 
-def clean_text(text):
+def clean_for_stats(text):
     """
-    removes content that should not be counted:
-    - Tables
-    - Metadata/Callouts
-    - Images
-    - HTML comments
-    - Headers
+    Removes ONLY metadata that should NOT count towards richness.
+    We KEEP Scaffolding (Context, Explanations) because they are part of the 'Instructional Core' for A1.
     """
-    # 1. Remove Tables (lines starting with vertical bar)
+    # 1. Remove Tables (lines starting with vertical bar) - Vocab lists don't count for core usually
+    # But wait, Richness Guidelines say "Instructional Core" includes narrative.
+    # Exclude metadata tables.
     text = re.sub(r'^\s*\|.*$', '', text, flags=re.MULTILINE)
     
-    # 2. Remove Blockquote Metadata (e.g. > [!answer], > [!options])
-    text = re.sub(r'^\s*>\s*\[!.*$', '', text, flags=re.MULTILINE)
+    # 2. Remove ONLY specific metadata callouts, KEEPING content callouts
+    # Remove > [!answer], > [!options]
+    text = re.sub(r'^\s*>\s*\[!(answer|options|error|id)\].*$', '', text, flags=re.MULTILINE)
 
     # 3. Remove Images / Links with no text
     text = re.sub(r'!\[.*?\]\(.*?\)', '', text)
@@ -26,9 +25,25 @@ def clean_text(text):
     # 5. Remove Headers
     text = re.sub(r'^#+.*$', '', text, flags=re.MULTILINE)
     
-    # 6. Remove frontmatter dividers if present in body
+    # 6. Remove frontmatter dividers
     text = re.sub(r'^---', '', text, flags=re.MULTILINE)
 
+    return text
+
+def clean_for_immersion(text):
+    """
+    Aggressively strips ALL English scaffolding to check the 'Target Language' purity.
+    """
+    # Remove ALL Blockquotes (Headers + Content)
+    # This ensures English translations, Tips, and Notes are excluded from Immersion Calculation
+    text = re.sub(r'^\s*>.*$', '', text, flags=re.MULTILINE)
+    
+    # Remove Tables
+    text = re.sub(r'^\s*\|.*$', '', text, flags=re.MULTILINE)
+    
+    # Remove Headers
+    text = re.sub(r'^#+.*$', '', text, flags=re.MULTILINE)
+    
     return text
 
 def audit_module(file_path):
@@ -84,6 +99,8 @@ def audit_module(file_path):
             'min_items_per_activity': 12,
             'min_types_unique': 4,
             'min_vocab': 20,
+            'min_engagement': 3,
+            'transliteration_allowed': True,
             'priority_types': {'fill-in', 'match-up', 'anagram', 'unjumble', 'quiz'}
         },
         'A2': {
@@ -92,7 +109,9 @@ def audit_module(file_path):
             'min_items_per_activity': 12,
             'min_types_unique': 4,
             'min_vocab': 25,
-            'priority_types': {'error-correction', 'unjumble'}
+            'min_engagement': 4,
+            'transliteration_allowed': False,
+            'priority_types': {'error-correction', 'unjumble', 'fill-in'}
         },
         'B1': {
             'target_words': 1250,
@@ -100,6 +119,8 @@ def audit_module(file_path):
             'min_items_per_activity': 14,
             'min_types_unique': 4,
             'min_vocab': 30,
+            'min_engagement': 5,
+            'transliteration_allowed': False,
             'priority_types': {'fill-in', 'unjumble', 'error-correction'}
         },
         'B2': {
@@ -108,6 +129,8 @@ def audit_module(file_path):
             'min_items_per_activity': 16,
             'min_types_unique': 4,
             'min_vocab': 25,
+            'min_engagement': 6,
+            'transliteration_allowed': False,
             'priority_types': {'fill-in', 'unjumble', 'error-correction'}
         },
         'C1': {
@@ -116,6 +139,8 @@ def audit_module(file_path):
             'min_items_per_activity': 18,
             'min_types_unique': 4,
             'min_vocab': 25,
+            'min_engagement': 7,
+            'transliteration_allowed': False,
             'priority_types': {'fill-in', 'unjumble', 'error-correction'}
         },
         'C2': {
@@ -124,18 +149,31 @@ def audit_module(file_path):
             'min_items_per_activity': 18,
             'min_types_unique': 4,
             'min_vocab': 25,
+            'min_engagement': 8,
+            'transliteration_allowed': False,
             'priority_types': {'fill-in', 'unjumble', 'error-correction'}
         }
     }
+    
+    # Detect level from file path (more reliable than phase)
+    level_from_path = None
+    path_match = re.search(r'/([ab][12c][12]?)/', file_path.lower())
+    if path_match:
+        level_from_path = path_match.group(1).upper()
 
-    level_code = phase.split('.')[0]
+    # Use path-detected level if available, else fall back to phase
+    level_code = level_from_path if level_from_path else phase.split('.')[0]
     if level_code not in LEVEL_CONFIG:
         if level_code.endswith('+'):
              level_code = level_code[:-1]
+        # Normalize C1/C2
+        if level_code not in LEVEL_CONFIG:
+            level_code = 'A1'  # fallback
     
     config = LEVEL_CONFIG.get(level_code, LEVEL_CONFIG['A1'])
     target = config['target_words']
     vocab_target = config.get('min_vocab', 25)
+    transliteration_allowed = config.get('transliteration_allowed', True)
 
     # Extract Pedagogy (Regex fallback since PyYAML is missing)
     pedagogy = "Not Specified"
@@ -312,11 +350,16 @@ def audit_module(file_path):
                 if title == 'Intro/Narrative':
                     is_core = True
         
-        cleaned = clean_text(text)
-        if is_core and not is_excluded:
-            core_text_for_immersion += cleaned + " "
+        # For Stats (Richness) - Include Scaffolding
+        cleaned_stats = clean_for_stats(text)
+        
+        # For Immersion (Purity) - Exclude Scaffolding
+        cleaned_immersion = clean_for_immersion(text)
 
-        words = cleaned.split()
+        if is_core and not is_excluded:
+            core_text_for_immersion += cleaned_immersion + " "
+
+        words = cleaned_stats.split()
         count = len(words)
         
         status_icon = "⚪️"
@@ -359,7 +402,6 @@ def audit_module(file_path):
     # --- 4. Result Gates ---
     results = {}
     has_critical_failure = False
-    print("DEBUG: Starting Gates Check...")
 
 
     # Word Count
@@ -368,7 +410,6 @@ def audit_module(file_path):
     else:
         results['words'] = {'status': 'FAIL', 'icon': '❌', 'msg': f"{total_words}/{target}"}
         has_critical_failure = True
-        print("DEBUG: Failed at Word Count")
 
     # Activity Count
     act_target = config['min_activities']
@@ -377,7 +418,6 @@ def audit_module(file_path):
     else:
         results['activities'] = {'status': 'FAIL', 'icon': '❌', 'msg': f"{activity_count}/{act_target}"}
         has_critical_failure = True
-        print("DEBUG: Failed at Activity Count")
 
     # Density
     failed_density = total_activities - valid_density_count
@@ -387,7 +427,6 @@ def audit_module(file_path):
     else:
         results['density'] = {'status': 'FAIL', 'icon': '❌', 'msg': f"{failed_density} < {dens_threshold}"}
         has_critical_failure = True
-        print("DEBUG: Failed at Density")
 
     # Unique Types
     unique_types = set(found_activity_types)
@@ -397,7 +436,6 @@ def audit_module(file_path):
     else:
         results['unique_types'] = {'status': 'FAIL', 'icon': '❌', 'msg': f"{len(unique_types)}/{type_target} types"}
         has_critical_failure = True
-        print("DEBUG: Failed at Unique Types")
         
     # Priority Check
     priority_intersection = unique_types.intersection(config['priority_types'])
@@ -406,16 +444,14 @@ def audit_module(file_path):
     else:
         results['priority'] = {'status': 'FAIL', 'icon': '❌', 'msg': "No priority types"}
         has_critical_failure = True
-        print("DEBUG: Failed at Priority")
 
-    # Engagement
-    eng_target = 3
+    # Engagement (level-dependent target)
+    eng_target = config.get('min_engagement', 3)
     if engagement_count >= eng_target:
         results['engagement'] = {'status': 'PASS', 'icon': '✅', 'msg': f"{engagement_count}/{eng_target}"}
     else:
         results['engagement'] = {'status': 'FAIL', 'icon': '❌', 'msg': f"{engagement_count}/{eng_target}"}
         has_critical_failure = True
-        print("DEBUG: Failed at Engagement")
 
     # Audio
     if audio_count > 0:
@@ -423,11 +459,64 @@ def audit_module(file_path):
     else:
         results['audio'] = {'status': 'FAIL', 'icon': '❌', 'msg': "No audio"}
         has_critical_failure = True
-        print("DEBUG: Failed at Audio")
 
-    # Immersion
+    # Immersion (A1 M25+ Gate)
     immersion_score = calculate_immersion(core_text_for_immersion)
-    results['immersion'] = {'status': 'INFO', 'icon': '🇺🇦', 'msg': f"{immersion_score:.1f}%"}
+    module_num = int(re.search(r'module-(\d+)', os.path.basename(file_path)).group(1))
+    
+    # Story/Dialogue Immersion Check
+    # We check the SPECIFIC sections, not just the whole core text, to avoid false positives from English instructions
+    story_immersion_fail = False
+    for title, text in section_map.items():
+        if "Story Time" in title or "Dialogue" in title:
+            # Check ratio of Latin vs Cyrillic in this specific section
+            # Filter out translation block in parens (roughly)
+            clean_story = re.sub(r'\([^\)]*\)', '', text)
+            clean_story = clean_for_immersion(clean_story)
+            
+            latin_chars = len(re.findall(r'[a-zA-Z]', clean_story))
+            cyrillic_chars = len(re.findall(r'[\u0400-\u04ff]', clean_story))
+            
+            # Ratio: Latin shouldn't be more than 30% of Cyrillic (names, formatting overhead)
+            # This detects "English story with bold UA words"
+            # Unless it's empty
+            if cyrillic_chars > 20: 
+                ratio = latin_chars / cyrillic_chars
+                if ratio > 0.4:
+                     print(f"❌ AUDIT FAILED: Low Immersion in '{title}'. Latin/Cyrillic Ratio: {ratio:.2f} (>0.4). Rewrite in UA.")
+                     story_immersion_fail = True
+    
+    if story_immersion_fail:
+        results['immersion'] = {'status': 'FAIL', 'icon': '❌', 'msg': "English Story Detected"}
+        has_critical_failure = True
+    else:
+        results['immersion'] = {'status': 'PASS', 'icon': '🇺🇦', 'msg': f"{immersion_score:.1f}%"}
+
+    # Transliteration Policy (A2+ = FORBIDDEN)
+    if not transliteration_allowed:
+        # Check Frontmatter must say 'none'
+        if re.search(r'transliteration:\s*none', frontmatter_str):
+             translit_status = "PASS"
+        else:
+             print(f"❌ AUDIT FAILED: Level {level_code} forbids transliteration. Set 'transliteration: none' in frontmatter.")
+             translit_status = "FAIL"
+             has_critical_failure = True
+        
+        # Also check for Latin text in parentheses after Cyrillic (common transliteration pattern)
+        translit_pattern = re.search(r'[\u0400-\u04ff]+\s*\([A-Za-z]+\)', content)
+        if translit_pattern:
+            print(f"❌ AUDIT FAILED: Transliteration detected: '{translit_pattern.group()}'. Remove Latin in parentheses.")
+            translit_status = "FAIL"
+            has_critical_failure = True
+        
+        results['translit'] = {'status': translit_status, 'icon': '✅' if translit_status=='PASS' else '❌', 'msg': "None (Policy)"}
+    else:
+        results['translit'] = {'status': 'INFO', 'icon': 'ℹ️', 'msg': "Allowed (A1)"}
+
+    if immersion_score < 10.0 and module_num > 5:
+         # Hard Failure for very low immersion
+         has_critical_failure = True
+
     
     # Structure Check
     has_warmup = re.search(r'## warm-up', content, re.IGNORECASE) is not None
@@ -437,7 +526,6 @@ def audit_module(file_path):
     else:
          results['structure'] = {'status': 'FAIL', 'icon': '❌', 'msg': "Missing Sections"}
          has_critical_failure = True
-         print("DEBUG: Failed at Structure (Sections)")
 
     # Define lines_raw early for Linting and Vocab check
     lines_raw = content.split('\n')
@@ -477,7 +565,6 @@ def audit_module(file_path):
     else:
         results['vocab'] = {'status': 'FAIL', 'icon': '❌', 'msg': f"{vocab_count} < {vocab_target}"}
         has_critical_failure = True
-        print("DEBUG: Failed at Vocab Count")
 
     # --- Markdown Linting (Integrated) ---
     lint_errors = []
@@ -534,7 +621,7 @@ def audit_module(file_path):
                           lint_errors.append(f"Line {line_num}: Vocab Audio Error. Cell '{audio_cell}' must contain ONLY '[🔊](audio_...)'. No text, no bolding.")
 
         # 4b. Supported Activity Check
-        VALID_ACTIVITY_TYPES = ["match-up", "gap-fill", "quiz", "true-false", "group-sort", "unjumble", "fill-in", "error-correction", "anagram"]
+        VALID_ACTIVITY_TYPES = ["match-up", "fill-in", "quiz", "true-false", "group-sort", "unjumble", "error-correction", "anagram", "select"]
         if current_activity_type and current_activity_type not in VALID_ACTIVITY_TYPES:
              lint_errors.append(f"Line {line_num}: Invalid Activity Type '{current_activity_type}'. Supported: {', '.join(VALID_ACTIVITY_TYPES)}.")
 
@@ -603,31 +690,39 @@ def audit_module(file_path):
                 lint_errors.append(f"Line {line_num}: T/F Activity contains '[!explanation]'. Remove all hints/solutions.")
             # Ban plain blockquote hints (heuristically)
             # We allow the main instruction which usually asks "Is this...?"
+            # Ban plain blockquote hints (heuristically)
+            # We allow the main instruction which usually asks "Is this...?"
             elif stripped.startswith('> ') and not any(x in stripped for x in ['Is this', 'True', 'False', 'Correct', 'logic', 'agreement']):
                  lint_errors.append(f"Line {line_num}: T/F Activity contains blockquote hint '{stripped}'. Remove hints.")
+
+        # 12. Transliteration Column Check (M21+)
+        if module_num >= 21:
+            # Check Vocab Table Header
+            if 'Start Header Check' not in locals():
+                 Start_Header_Check = True # Just to run this block once per file logically
+            
+            if '|' in stripped and ('| trans' in stripped.lower() or '| вимо' in stripped.lower()):
+                 # This detects explicit headers like "Transliteration" or "Вимова"
+                 lint_errors.append(f"Line {line_num}: Transliteration Column detected in M{module_num} (Policy M21+: None). Remove column.")
 
     # 5. Structural Section Check (Summary & Vocabulary)
     lines = content.split('\n')
     if not any(re.match(r'^#+\s+(Summary|Підсумок)', l, re.IGNORECASE) for l in lines):
         results['structure'] = {'status': 'FAIL', 'icon': '❌', 'msg': "Missing '# Summary'"}
         has_critical_failure = True
-        print("DEBUG: Failed at Structure (Missing Summary)")
     elif not any(re.match(r'^#+\s+(Vocabulary|Словник)', l, re.IGNORECASE) for l in lines):
         results['structure'] = {'status': 'FAIL', 'icon': '❌', 'msg': "Missing '# Vocabulary'"}
         has_critical_failure = True
-        print("DEBUG: Failed at Structure (Missing Vocabulary)")
     # Check for Vocab Table if Vocabulary exists
     elif not any('| Word |' in l or '| Слово |' in l or '| Ukrainian |' in l for l in lines):
         results['structure'] = {'status': 'FAIL', 'icon': '❌', 'msg': "Missing Vocab Table"}
         has_critical_failure = True
-        print("DEBUG: Failed at Structure (Missing Table)")
     else:
         results['structure'] = {'status': 'PASS', 'icon': '✅', 'msg': "Valid Structure"}
 
     if lint_errors:
         results['lint'] = {'status': 'FAIL', 'icon': '❌', 'msg': f"{len(lint_errors)} Format Errors"}
         has_critical_failure = True
-        print("DEBUG: Failed at Lint Errors")
     else:
         results['lint'] = {'status': 'PASS', 'icon': '✅', 'msg': "Clean Format"}
 
@@ -706,14 +801,25 @@ def audit_module(file_path):
     
     if has_critical_failure:
         print("\n❌ AUDIT FAILED. Correct errors before proceeding.")
-        sys.exit(1)
+        return False
     else:
         print("\n✅ AUDIT PASSED.")
-        sys.exit(0)
+        return True
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python3 scripts/audit_module.py <file.md>")
+        print("Usage: python3 scripts/audit_module.py <file.md> [file2.md ...]")
         sys.exit(1)
     else:
-        audit_module(sys.argv[1])
+        any_failure = False
+        for file_path in sys.argv[1:]:
+             print(f"\n{'='*40}")
+             success = audit_module(file_path)
+             if not success:
+                 any_failure = True
+        
+        if any_failure:
+            sys.exit(1)
+        else:
+            sys.exit(0) 
+

@@ -205,6 +205,9 @@ async function checkSectionOrder(page: Page, errors: string[]) {
     }
 }
 
+/**
+ *
+ */
 export async function validateFile(browser: Browser, filePath: string): Promise<ValidationResult> {
     const errors: string[] = [];
     const warnings: string[] = [];
@@ -244,6 +247,9 @@ export async function validateFile(browser: Browser, filePath: string): Promise<
     };
 }
 
+/**
+ *
+ */
 async function main() {
     const args = process.argv.slice(2);
     const targetLang = args[0] || 'l2-uk-en';

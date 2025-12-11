@@ -20,9 +20,15 @@
 import { ActivityParser } from './base';
 import { MatchUpContent, MatchPair, ParseContext } from '../../types';
 
+/**
+ *
+ */
 export class MatchUpParser extends ActivityParser<MatchUpContent> {
   readonly type = 'match-up' as const;
 
+  /**
+   *
+   */
   protected parseContent(content: string, ctx: ParseContext): MatchUpContent {
     const pairs: MatchPair[] = [];
 

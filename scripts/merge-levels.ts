@@ -24,6 +24,9 @@ const MERGES = [
   { source: 'b1+', target: 'b1', targetStartNum: 41 },  // b1 has 40, b1+ starts at 41
 ];
 
+/**
+ *
+ */
 function padNum(n: number): string {
   return String(n).padStart(2, '0');
 }
@@ -37,6 +40,9 @@ const TRANSLIT: Record<string, string> = {
   'ю': 'yu', 'я': 'ya',
 };
 
+/**
+ *
+ */
 function slugify(text: string): string {
   // Transliterate Cyrillic
   let result = text.toLowerCase();
@@ -51,12 +57,18 @@ function slugify(text: string): string {
     .substring(0, 40);
 }
 
+/**
+ *
+ */
 function extractTitle(content: string): string | null {
   const match = content.match(/^title:\s*["']?(.+?)["']?\s*$/m);
   return match ? match[1] : null;
 }
 
 // Update phase in frontmatter (e.g., A2+.1 → A2.4, B1+.1 → B1.5)
+/**
+ *
+ */
 function updatePhase(content: string, sourceLevel: string, targetLevel: string): string {
   // Map plus-level phases to parent level phases
   // A2+.1, A2+.2 → A2.4, A2.5
@@ -88,6 +100,9 @@ function updatePhase(content: string, sourceLevel: string, targetLevel: string):
   return updated;
 }
 
+/**
+ *
+ */
 async function main() {
   const dryRun = process.argv.includes('--dry-run');
 

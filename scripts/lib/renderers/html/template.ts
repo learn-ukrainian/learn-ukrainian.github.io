@@ -12,6 +12,9 @@ import { Activity } from '../../types';
 // Template Class
 // =============================================================================
 
+/**
+ *
+ */
 export class HtmlTemplate {
   private css: string = '';
   private js: string = '';
@@ -193,6 +196,9 @@ function getActivityLabel(type: string, num: number): string {
 // Utility Functions
 // =============================================================================
 
+/**
+ *
+ */
 function escapeHtml(str: string): string {
   return str
     .replace(/&/g, '&amp;')
@@ -202,6 +208,9 @@ function escapeHtml(str: string): string {
     .replace(/'/g, '&#039;');
 }
 
+/**
+ *
+ */
 function padNumber(num: number): string {
   return num.toString().padStart(2, '0');
 }

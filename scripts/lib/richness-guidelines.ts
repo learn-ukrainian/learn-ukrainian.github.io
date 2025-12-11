@@ -13,12 +13,18 @@ export const RICHNESS_GUIDELINES: Record<string, RichnessGuidelines> = {
     C2: { wordCount: 2000, activityCount: 16, itemsPerActivity: 18 },
 };
 
+/**
+ *
+ */
 export function getGuidelinesForLevel(level: string): RichnessGuidelines {
     const upperLevel = level.toUpperCase();
     // Default to A1 if not found or if checking 'A1' explicitly
     return RICHNESS_GUIDELINES[upperLevel] || RICHNESS_GUIDELINES['A1'];
 }
 
+/**
+ *
+ */
 export function detectLevelFromPath(filePath: string): string {
     const match = filePath.match(/\/(a1|a2|b1|b2|c1|c2)\//i);
     return match ? match[1].toUpperCase() : 'A1';

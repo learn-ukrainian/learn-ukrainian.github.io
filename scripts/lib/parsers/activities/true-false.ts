@@ -18,9 +18,15 @@
 import { ActivityParser } from './base';
 import { TrueFalseContent, TrueFalseStatement, ParseContext } from '../../types';
 
+/**
+ *
+ */
 export class TrueFalseParser extends ActivityParser<TrueFalseContent> {
   readonly type = 'true-false' as const;
 
+  /**
+   *
+   */
   protected parseContent(content: string, ctx: ParseContext): TrueFalseContent {
     const statements: TrueFalseStatement[] = [];
     const body = this.getContentBody(content);

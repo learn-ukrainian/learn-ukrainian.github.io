@@ -18,9 +18,15 @@
 import { ActivityParser } from './base';
 import { FillBlankContent, FillBlankItem, ParseContext } from '../../types';
 
+/**
+ *
+ */
 export class FillBlankParser extends ActivityParser<FillBlankContent> {
   readonly type = 'fill-blank' as const;
 
+  /**
+   *
+   */
   protected parseContent(content: string, ctx: ParseContext): FillBlankContent {
     const items: FillBlankItem[] = [];
     const body = this.getContentBody(content);

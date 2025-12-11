@@ -20,9 +20,15 @@
 import { ActivityParser } from './base';
 import { QuizContent, QuizQuestion, ParseContext } from '../../types';
 
+/**
+ *
+ */
 export class QuizParser extends ActivityParser<QuizContent> {
   readonly type = 'quiz' as const;
 
+  /**
+   *
+   */
   protected parseContent(content: string, ctx: ParseContext): QuizContent {
     const questions: QuizQuestion[] = [];
     const body = this.getContentBody(content);

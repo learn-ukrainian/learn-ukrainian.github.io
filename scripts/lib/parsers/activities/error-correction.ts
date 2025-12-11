@@ -25,9 +25,15 @@ import { ParseContext, ErrorCorrectionContent, ErrorCorrectionItem } from '../..
 // Parser
 // =============================================================================
 
+/**
+ *
+ */
 export class ErrorCorrectionParser extends ActivityParser<ErrorCorrectionContent> {
   readonly type = 'error-correction' as const;
 
+  /**
+   *
+   */
   canParse(header: string): boolean {
     const match = header.match(/^([\w-]+):\s*/);
     if (!match) return false;
@@ -35,6 +41,9 @@ export class ErrorCorrectionParser extends ActivityParser<ErrorCorrectionContent
     return type === 'error-correction' || type === 'errorcorrection' || type === 'error-correct';
   }
 
+  /**
+   *
+   */
   protected parseContent(content: string, ctx: ParseContext): ErrorCorrectionContent {
     const items: ErrorCorrectionItem[] = [];
     const body = this.getContentBody(content);
