@@ -12,6 +12,12 @@ import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
 import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
 import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
+import ErrorCorrection, { ErrorCorrectionQuestion } from '@site/src/components/ErrorCorrection';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateQuestion } from '@site/src/components/Translate';
+import Cloze from '@site/src/components/Cloze';
+import DialogueReorder from '@site/src/components/DialogueReorder';
+import MarkTheWords from '@site/src/components/MarkTheWords';
 
 
 
@@ -500,7 +506,7 @@ Now I have new clothes: blue jacket, white shirt, gray pants, black boots. I'm s
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`й и й е н е л з`}
+    scrambled={`н е л е з й и`}
     answer={`зелений`}
     hint={``}
   />
@@ -530,7 +536,7 @@ Now I have new clothes: blue jacket, white shirt, gray pants, black boots. I'm s
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`й и й о л е т о і ф`}
+    scrambled={`е і и в й ф о л т о`}
     answer={`фіолетовий`}
     hint={``}
   />
@@ -660,7 +666,7 @@ Now I have new clothes: blue jacket, white shirt, gray pants, black boots. I'm s
     hint={``}
   />
   <UnjumbleQuestion
-    words={`біла / і / синя / прапор`}
+    words={`синій / і / білий / Прапор`}
     answer={`Прапор синій і білий.`}
     hint={``}
   />

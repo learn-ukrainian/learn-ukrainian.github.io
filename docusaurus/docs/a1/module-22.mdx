@@ -12,6 +12,12 @@ import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
 import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
 import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
+import ErrorCorrection, { ErrorCorrectionQuestion } from '@site/src/components/ErrorCorrection';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateQuestion } from '@site/src/components/Translate';
+import Cloze from '@site/src/components/Cloze';
+import DialogueReorder from '@site/src/components/DialogueReorder';
+import MarkTheWords from '@site/src/components/MarkTheWords';
 
 
 
@@ -477,7 +483,7 @@ At ten, I will already be sleeping. Tomorrow will be a long day!
 
 <Anagram>
   <AnagramQuestion
-    scrambled={`а м р а в т з`}
+    scrambled={`т а р в з а`}
     answer={`завтра`}
     hint={``}
   />
@@ -517,12 +523,12 @@ At ten, I will already be sleeping. Tomorrow will be a long day!
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`о с я ю р а б з и`}
+    scrambled={`и з а ю р б я с`}
     answer={`збираюся`}
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`а м р і м`}
+    scrambled={`і р я м`}
     answer={`мрія`}
     hint={``}
   />

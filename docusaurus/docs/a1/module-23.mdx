@@ -12,6 +12,12 @@ import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
 import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
 import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
+import ErrorCorrection, { ErrorCorrectionQuestion } from '@site/src/components/ErrorCorrection';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateQuestion } from '@site/src/components/Translate';
+import Cloze from '@site/src/components/Cloze';
+import DialogueReorder from '@site/src/components/DialogueReorder';
+import MarkTheWords from '@site/src/components/MarkTheWords';
 
 
 
@@ -501,7 +507,7 @@ On Sunday I rest. In the morning I sleep long — until ten!
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`д е н е і л о п н о к`}
+    scrambled={`н і о о л д п е к`}
     answer={`понеділок`}
     hint={``}
   />
@@ -511,12 +517,12 @@ On Sunday I rest. In the morning I sleep long — until ten!
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`я е р а з`}
+    scrambled={`а р з а з`}
     answer={`зараз`}
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`к е н і д и х в`}
+    scrambled={`и і і в х д н`}
     answer={`вихідні`}
     hint={``}
   />
@@ -531,7 +537,7 @@ On Sunday I rest. In the morning I sleep long — until ten!
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`ь д е н ь г р у`}
+    scrambled={`н г д е у р ь`}
     answer={`грудень`}
     hint={``}
   />
@@ -546,7 +552,7 @@ On Sunday I rest. In the morning I sleep long — until ten!
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`і й е д е н л н`}
+    scrambled={`я д л і е н`}
     answer={`неділя`}
     hint={``}
   />
@@ -661,12 +667,12 @@ On Sunday I rest. In the morning I sleep long — until ten!
     hint={``}
   />
   <UnjumbleQuestion
-    words={`тижня / наступного / до побачення`}
+    words={`наступного / побачення / До / тижня`}
     answer={`До побачення наступного тижня.`}
     hint={``}
   />
   <UnjumbleQuestion
-    words={`ранку / я / зранку / снідаю`}
+    words={`снідаю / Зранку / я`}
     answer={`Зранку я снідаю.`}
     hint={``}
   />

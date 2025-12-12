@@ -12,6 +12,12 @@ import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
 import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
 import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
+import ErrorCorrection, { ErrorCorrectionQuestion } from '@site/src/components/ErrorCorrection';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateQuestion } from '@site/src/components/Translate';
+import Cloze from '@site/src/components/Cloze';
+import DialogueReorder from '@site/src/components/DialogueReorder';
+import MarkTheWords from '@site/src/components/MarkTheWords';
 
 
 
@@ -509,7 +515,7 @@ And the polite responses involve the genitive:
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`і ї е д і`}
+    scrambled={`д ї е і`}
     answer={`ідеї`}
     hint={``}
   />
@@ -524,7 +530,7 @@ And the polite responses involve the genitive:
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`і г о м о п о д`}
+    scrambled={`о о г п д и о м`}
     answer={`допомоги`}
     hint={``}
   />
@@ -609,7 +615,7 @@ And the polite responses involve the genitive:
     hint={``}
   />
   <UnjumbleQuestion
-    words={`цукру / без / каву / будь ласка`}
+    words={`без / цукру / Каву / будь / ласка`}
     answer={`Каву без цукру, будь ласка.`}
     hint={``}
   />
@@ -649,7 +655,7 @@ And the polite responses involve the genitive:
     hint={``}
   />
   <UnjumbleQuestion
-    words={`сиру / на жаль / немає`}
+    words={`жаль / На / немає / сиру`}
     answer={`На жаль, сиру немає.`}
     hint={``}
   />

@@ -12,6 +12,12 @@ import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
 import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
 import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
+import ErrorCorrection, { ErrorCorrectionQuestion } from '@site/src/components/ErrorCorrection';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateQuestion } from '@site/src/components/Translate';
+import Cloze from '@site/src/components/Cloze';
+import DialogueReorder from '@site/src/components/DialogueReorder';
+import MarkTheWords from '@site/src/components/MarkTheWords';
 
 
 
@@ -355,7 +361,7 @@ The phrase "Сідайте, я зараз чай поставлю!" (Sit down, I
 
 <Anagram>
   <AnagramQuestion
-    scrambled={`ш а к у ч`}
+    scrambled={`ш к ч а а`}
     answer={`чашка`}
     hint={``}
   />
@@ -385,12 +391,12 @@ The phrase "Сідайте, я зараз чай поставлю!" (Sit down, I
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`о л з е д р ь к и`}
+    scrambled={`к р е л а д з о`}
     answer={`дзеркало`}
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`л о и д и х о к ь н`}
+    scrambled={`н ь и л д к о и о х л`}
     answer={`холодильник`}
     hint={``}
   />
@@ -400,7 +406,7 @@ The phrase "Сідайте, я зараз чай поставлю!" (Sit down, I
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`ш е о ї л р к а к`}
+    scrambled={`о ь к х д и о л л и н`}
     answer={`холодильник`}
     hint={``}
   />
@@ -410,7 +416,7 @@ The phrase "Сідайте, я зараз чай поставлю!" (Sit down, I
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`р е а л т і к а`}
+    scrambled={`і а т р л к а`}
     answer={`тарілка`}
     hint={``}
   />

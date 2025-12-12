@@ -12,6 +12,12 @@ import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
 import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
 import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
+import ErrorCorrection, { ErrorCorrectionQuestion } from '@site/src/components/ErrorCorrection';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateQuestion } from '@site/src/components/Translate';
+import Cloze from '@site/src/components/Cloze';
+import DialogueReorder from '@site/src/components/DialogueReorder';
+import MarkTheWords from '@site/src/components/MarkTheWords';
 
 
 
@@ -521,7 +527,7 @@ Now I'm drinking a lot of tea with honey and lemon. I'm already feeling better!
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`і д у р г`}
+    scrambled={`и р г у д`}
     answer={`груди`}
     hint={``}
   />
@@ -666,7 +672,7 @@ Now I'm drinking a lot of tea with honey and lemon. I'm already feeling better!
     hint={``}
   />
   <UnjumbleQuestion
-    words={`чаю / з / мед / медом / і / лимоном`}
+    words={`Чай / медом / з / лимоном / і`}
     answer={`Чай з медом і лимоном.`}
     hint={``}
   />

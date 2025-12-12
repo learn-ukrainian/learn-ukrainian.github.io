@@ -12,6 +12,12 @@ import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
 import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
 import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
+import ErrorCorrection, { ErrorCorrectionQuestion } from '@site/src/components/ErrorCorrection';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateQuestion } from '@site/src/components/Translate';
+import Cloze from '@site/src/components/Cloze';
+import DialogueReorder from '@site/src/components/DialogueReorder';
+import MarkTheWords from '@site/src/components/MarkTheWords';
 
 
 
@@ -482,12 +488,12 @@ That's my daily schedule!
 
 <Anagram>
   <AnagramQuestion
-    scrambled={`я т с а и д к у р п и о`}
+    scrambled={`т п и р я о с а и д к`}
     answer={`прокидатися`}
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`а т с я а г о д я`}
+    scrambled={`т я д г я и с о а`}
     answer={`одягатися`}
     hint={``}
   />
@@ -497,22 +503,22 @@ That's my daily schedule!
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`и т я а д і н с`}
+    scrambled={`н і а т и д с`}
     answer={`снідати`}
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`и т я а д і б о`}
+    scrambled={`а о и б і т д`}
     answer={`обідати`}
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`и т я а р е ч е в`}
+    scrambled={`е р е в ч и я т`}
     answer={`вечеряти`}
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`к у ч о п о с`}
+    scrambled={`к п ч с а у т о`}
     answer={`спочатку`}
     hint={``}
   />
@@ -522,7 +528,7 @@ That's my daily schedule!
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`й а з з и ч в а з`}
+    scrambled={`ч з а й з и а в`}
     answer={`зазвичай`}
     hint={``}
   />
@@ -532,7 +538,7 @@ That's my daily schedule!
     hint={``}
   />
   <AnagramQuestion
-    scrambled={`и т я и н а с а з`}
+    scrambled={`а с н т з и а и`}
     answer={`засинати`}
     hint={``}
   />
