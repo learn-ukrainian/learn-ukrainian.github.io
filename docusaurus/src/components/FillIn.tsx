@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import { parseMarkdown } from './utils';
+import ActivityHelp from './ActivityHelp';
 
 // Generate consistent colors for option chips
 const CHIP_COLORS = [
@@ -136,6 +137,7 @@ export default function FillIn({ children }: FillInProps) {
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>✏️</span>
         <span>Fill in the Blank</span>
+        <ActivityHelp activityType="fill-in" />
       </div>
       <div className={styles.activityContent}>
         {children}

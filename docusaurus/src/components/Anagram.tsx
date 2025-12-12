@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import styles from './Activities.module.css';
+import ActivityHelp from './ActivityHelp';
 
 // Generate consistent colors for letters
 const LETTER_COLORS = [
@@ -190,6 +191,7 @@ export default function Anagram({ children }: AnagramProps) {
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>🔤</span>
         <span>Unscramble the Letters</span>
+        <ActivityHelp activityType="anagram" />
       </div>
       <div className={styles.activityContent}>
         {children}

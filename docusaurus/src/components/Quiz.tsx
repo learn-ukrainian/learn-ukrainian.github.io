@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './Activities.module.css';
 import { parseMarkdown } from './utils';
+import ActivityHelp from './ActivityHelp';
 
 interface QuizQuestionProps {
   question: string;
@@ -63,6 +64,7 @@ export default function Quiz({ children }: QuizProps) {
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>📝</span>
         <span>Quiz</span>
+        <ActivityHelp activityType="quiz" />
       </div>
       <div className={styles.activityContent}>
         {children}

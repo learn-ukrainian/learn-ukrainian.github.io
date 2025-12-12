@@ -1,5 +1,18 @@
 import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
+import ActivityHelp from './ActivityHelp';
+
+// Generate consistent colors for words
+const WORD_COLORS = [
+  '#E53935', '#D81B60', '#8E24AA', '#5E35B1', '#3949AB',
+  '#1E88E5', '#039BE5', '#00ACC1', '#00897B', '#43A047',
+  '#7CB342', '#FB8C00', '#F4511E', '#6D4C41'
+];
+
+function getWordColor(word: string, index: number): string {
+  const charSum = word.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  return WORD_COLORS[(charSum + index) % WORD_COLORS.length];
+}
 
 interface GroupSortProps {
   groups: { [key: string]: string[] };
@@ -8,12 +21,19 @@ interface GroupSortProps {
 export default function GroupSort({ groups }: GroupSortProps) {
   const groupNames = Object.keys(groups);
 
-  // Flatten and shuffle all items
+  // Flatten and shuffle all items with colors
   const allItems = useMemo(() => {
-    const items: { word: string; group: string }[] = [];
+    const items: { id: string; word: string; correctGroup: string; color: string }[] = [];
+    let idx = 0;
     for (const [group, words] of Object.entries(groups)) {
       for (const word of words) {
-        items.push({ word, group });
+        items.push({
+          id: `item-${idx}`,
+          word,
+          correctGroup: group,
+          color: getWordColor(word, idx)
+        });
+        idx++;
       }
     }
     // Shuffle
@@ -24,34 +44,119 @@ export default function GroupSort({ groups }: GroupSortProps) {
     return items;
   }, [groups]);
 
-  const [sorted, setSorted] = useState<{ [key: string]: string[] }>(() => {
-    const initial: { [key: string]: string[] } = {};
+  const [sorted, setSorted] = useState<{ [key: string]: typeof allItems }>(() => {
+    const initial: { [key: string]: typeof allItems } = {};
     for (const name of groupNames) {
       initial[name] = [];
     }
     return initial;
   });
 
-  const [remaining, setRemaining] = useState<{ word: string; group: string }[]>(allItems);
+  const [remaining, setRemaining] = useState(allItems);
   const [showResult, setShowResult] = useState(false);
+  const [draggedItem, setDraggedItem] = useState<string | null>(null);
+  const [dragOverGroup, setDragOverGroup] = useState<string | null>(null);
 
-  const handleDrop = (word: string, correctGroup: string, targetGroup: string) => {
-    setRemaining(remaining.filter(item => item.word !== word));
-    setSorted({
-      ...sorted,
-      [targetGroup]: [...sorted[targetGroup], word],
-    });
+  const handleDragStart = (e: React.DragEvent, itemId: string) => {
+    setDraggedItem(itemId);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e: React.DragEvent, groupName?: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setDragOverGroup(groupName || null);
+  };
+
+  const handleDragLeave = () => {
+    setDragOverGroup(null);
+  };
+
+  const handleDropOnGroup = (e: React.DragEvent, targetGroup: string) => {
+    e.preventDefault();
+    if (!draggedItem || showResult) return;
+
+    // Find item in remaining pool or other groups
+    let item = remaining.find(i => i.id === draggedItem);
+    let fromGroup: string | null = null;
+
+    if (!item) {
+      // Check if it's in another group
+      for (const [group, items] of Object.entries(sorted)) {
+        const found = items.find(i => i.id === draggedItem);
+        if (found) {
+          item = found;
+          fromGroup = group;
+          break;
+        }
+      }
+    }
+
+    if (item) {
+      // Remove from source
+      if (fromGroup) {
+        setSorted(prev => ({
+          ...prev,
+          [fromGroup!]: prev[fromGroup!].filter(i => i.id !== draggedItem),
+          [targetGroup]: [...prev[targetGroup], item!]
+        }));
+      } else {
+        setRemaining(prev => prev.filter(i => i.id !== draggedItem));
+        setSorted(prev => ({
+          ...prev,
+          [targetGroup]: [...prev[targetGroup], item!]
+        }));
+      }
+    }
+
+    setDraggedItem(null);
+    setDragOverGroup(null);
+  };
+
+  const handleDropOnPool = (e: React.DragEvent) => {
+    e.preventDefault();
+    if (!draggedItem || showResult) return;
+
+    // Find item in groups
+    for (const [group, items] of Object.entries(sorted)) {
+      const item = items.find(i => i.id === draggedItem);
+      if (item) {
+        setSorted(prev => ({
+          ...prev,
+          [group]: prev[group].filter(i => i.id !== draggedItem)
+        }));
+        setRemaining(prev => [...prev, item]);
+        break;
+      }
+    }
+
+    setDraggedItem(null);
+    setDragOverGroup(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedItem(null);
+    setDragOverGroup(null);
   };
 
   const handleCheck = () => {
     setShowResult(true);
   };
 
+  const handleReset = () => {
+    setRemaining(allItems);
+    const initial: { [key: string]: typeof allItems } = {};
+    for (const name of groupNames) {
+      initial[name] = [];
+    }
+    setSorted(initial);
+    setShowResult(false);
+  };
+
   const isAllCorrect = () => {
-    for (const [group, words] of Object.entries(sorted)) {
-      for (const word of words) {
-        const correctGroup = allItems.find(item => item.word === word)?.group;
-        if (correctGroup !== group) return false;
+    for (const [group, items] of Object.entries(sorted)) {
+      for (const item of items) {
+        if (item.correctGroup !== group) return false;
       }
     }
     return remaining.length === 0;
@@ -62,62 +167,93 @@ export default function GroupSort({ groups }: GroupSortProps) {
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>📊</span>
         <span>Group Sort</span>
+        <ActivityHelp activityType="group-sort" />
       </div>
 
       <div className={styles.groupSortContainer}>
-        {/* Remaining items to sort */}
-        {remaining.length > 0 && (
-          <div className={styles.itemPool}>
-            {remaining.map((item, index) => (
-              <div key={index} className={styles.sortableItem}>
+        {/* Word pool - draggable items */}
+        <div
+          className={`${styles.wordPool} ${dragOverGroup === '__pool__' ? styles.dropTarget : ''}`}
+          onDragOver={(e) => handleDragOver(e, '__pool__')}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDropOnPool}
+        >
+          {remaining.length > 0 ? (
+            remaining.map((item) => (
+              <button
+                key={item.id}
+                className={styles.wordTile}
+                style={{
+                  backgroundColor: item.color,
+                  color: 'white',
+                  cursor: showResult ? 'default' : 'grab'
+                }}
+                draggable={!showResult}
+                onDragStart={(e) => handleDragStart(e, item.id)}
+                onDragEnd={handleDragEnd}
+              >
                 {item.word}
-                <div className={styles.groupButtons}>
-                  {groupNames.map(groupName => (
-                    <button
-                      key={groupName}
-                      className={styles.groupButton}
-                      onClick={() => handleDrop(item.word, item.group, groupName)}
-                    >
-                      → {groupName}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+              </button>
+            ))
+          ) : (
+            <span className={styles.poolEmpty}>All words sorted!</span>
+          )}
+        </div>
 
-        {/* Group containers */}
+        {/* Group containers / buckets */}
         <div className={styles.groupContainers}>
           {groupNames.map(groupName => (
-            <div key={groupName} className={styles.groupBox}>
+            <div
+              key={groupName}
+              className={`${styles.groupBucket} ${dragOverGroup === groupName ? styles.dropTarget : ''}`}
+              onDragOver={(e) => handleDragOver(e, groupName)}
+              onDragLeave={handleDragLeave}
+              onDrop={(e) => handleDropOnGroup(e, groupName)}
+            >
               <h4 className={styles.groupTitle}>{groupName}</h4>
               <div className={styles.groupItems}>
-                {sorted[groupName].map((word, index) => {
-                  const correctGroup = allItems.find(item => item.word === word)?.group;
-                  const isCorrect = correctGroup === groupName;
+                {sorted[groupName].map((item) => {
+                  const isCorrect = item.correctGroup === groupName;
                   return (
-                    <span
-                      key={index}
-                      className={`${styles.sortedItem} ${
+                    <button
+                      key={item.id}
+                      className={`${styles.wordTile} ${
                         showResult ? (isCorrect ? styles.correct : styles.incorrect) : ''
                       }`}
+                      style={{
+                        backgroundColor: showResult ? undefined : item.color,
+                        color: showResult ? undefined : 'white',
+                        cursor: showResult ? 'default' : 'grab'
+                      }}
+                      draggable={!showResult}
+                      onDragStart={(e) => handleDragStart(e, item.id)}
+                      onDragEnd={handleDragEnd}
                     >
-                      {word}
-                    </span>
+                      {item.word}
+                    </button>
                   );
                 })}
+                {sorted[groupName].length === 0 && !showResult && (
+                  <span className={styles.bucketPlaceholder}>Drop words here</span>
+                )}
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {remaining.length === 0 && !showResult && (
-        <button className={styles.submitButton} onClick={handleCheck}>
-          Check Answers
-        </button>
-      )}
+      <div className={styles.buttonRow}>
+        {remaining.length === 0 && !showResult && (
+          <button className={styles.submitButton} onClick={handleCheck}>
+            Check Answers
+          </button>
+        )}
+        {showResult && (
+          <button className={styles.resetButton} onClick={handleReset}>
+            Try Again
+          </button>
+        )}
+      </div>
 
       {showResult && (
         <div className={`${styles.feedback} ${isAllCorrect() ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>

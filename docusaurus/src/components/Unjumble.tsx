@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
+import ActivityHelp from './ActivityHelp';
 
 // Generate consistent colors for words
 const WORD_COLORS = [
@@ -219,6 +220,7 @@ export default function Unjumble({ children }: UnjumbleProps) {
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>🧩</span>
         <span>Build the Sentence</span>
+        <ActivityHelp activityType="unjumble" />
       </div>
       <div className={styles.activityContent}>
         {children}

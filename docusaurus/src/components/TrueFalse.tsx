@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './Activities.module.css';
 import { parseMarkdown } from './utils';
+import ActivityHelp from './ActivityHelp';
 
 interface TrueFalseQuestionProps {
   statement: string;
@@ -61,6 +62,7 @@ export default function TrueFalse({ children }: TrueFalseProps) {
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>✓✗</span>
         <span>True or False</span>
+        <ActivityHelp activityType="true-false" />
       </div>
       <div className={styles.activityContent}>
         {children}

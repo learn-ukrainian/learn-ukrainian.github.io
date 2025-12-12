@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import { parseMarkdown } from './utils';
+import ActivityHelp from './ActivityHelp';
 
 interface MatchPair {
   left: string;
@@ -56,6 +57,7 @@ export default function MatchUp({ pairs }: MatchUpProps) {
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>🔗</span>
         <span>Match Up</span>
+        <ActivityHelp activityType="match-up" />
       </div>
       <div className={styles.matchUpContainer}>
         <div className={styles.matchColumn}>
