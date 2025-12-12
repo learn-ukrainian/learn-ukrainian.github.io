@@ -1,8 +1,8 @@
 # B2 Curriculum Plan: Ukrainian for English Speakers
 
 **Status:** 📝 PLANNED (Updated per State Standard 2024)
-**Modules:** 01-134 (134 modules)
-**Vocabulary Target:** ~3,350 new words (~25/module)
+**Modules:** 01-135 (135 modules)
+**Vocabulary Target:** ~3,375 new words (~25/module)
 **Cumulative Target:** ~7,900+ words after B2
 **Immersion:** 15% English / 85% Ukrainian
 
@@ -1144,7 +1144,7 @@ Participles agree with noun in gender, number, case:
 
 ---
 
-## Phase B2.1b: Grammar Completion (Modules 31-39)
+## Phase B2.1b: Grammar Completion (Modules 31-40)
 
 > **NEW:** Added per Ukrainian State Standard 2024 cross-reference. Addresses gaps in numerals, word formation, one-member sentences, and register coverage.
 
@@ -1167,6 +1167,7 @@ Participles agree with noun in gender, number, case:
 | 37 | Word Formation - Adverb & Integration | 4469-4470 |
 | 38 | One-member Sentences (Односкладні) | 4502-4512 |
 | 39 | Register: Religious & Epistolary Styles | 4551-4559 |
+| 40 | Advanced Pronoun Declension | 4240-4256 |
 
 ### Module Content Specifications B2.1b
 
@@ -1456,7 +1457,43 @@ Participles agree with noun in gender, number, case:
 
 ---
 
-## Phase B2.2: Phraseology & Synonymy (Modules 40-69)
+#### Module 40: Advanced Pronoun Declension
+**Grammar:** Indefinite, negative, and defining pronoun declension
+
+**Indefinite Pronouns (State Standard 4240-4244):**
+- хтось (someone): когось, комусь, кимось
+- щось (something): чогось, чомусь, чимось
+- хто-будь (anyone): кого-будь, кому-будь
+- що-небудь (anything): чого-небудь, чому-небудь
+- якийсь (some kind of): якогось, якомусь
+
+**Negative Pronouns (State Standard 4245-4249):**
+- ніхто (nobody): нікого, нікому, ніким
+- ніщо (nothing): нічого, нічому, нічим
+- ніякий (no kind of): ніякого, ніякому
+- нічий (nobody's): нічийого, нічиєму
+
+**Defining Pronouns (State Standard 4250-4256):**
+- весь/вся/все/всі (all): всього, всьому, всім
+- кожний/кожен (each): кожного, кожному
+- сам (oneself): самого, самому, самим
+- інший (other): іншого, іншому
+
+**Key Usage Patterns:**
+- Double negation: Ніхто нічого не знає. (Nobody knows anything.)
+- With prepositions: ні з ким (with nobody), ні до кого (to nobody)
+
+**Vocabulary (25 words):**
+хтось, щось, когось, чогось, хто-будь, що-небудь, якийсь, чийсь, ніхто, ніщо, нікого, нічого, ніякий, нічий, весь, все, всі, всього, кожний, кожен, сам, самого, інший, іншого, обидва
+
+**Signature Activity Concepts:**
+1. Fill-in: Decline indefinite/negative pronouns
+2. Quiz: Choose correct pronoun form
+3. Transform: Positive → negative with pronouns
+
+---
+
+## Phase B2.2: Phraseology & Synonymy (Modules 41-70)
 
 ### Learning Goals
 - Master Ukrainian proverbs for cultural literacy
@@ -1469,12 +1506,12 @@ Participles agree with noun in gender, number, case:
 
 | Module | Grammar Point | Builds On | Enables |
 |--------|--------------|-----------|---------|
-| 40-43 | Proverbs (4 modules) | B2.1 register | Cultural fluency |
-| 44-47 | Set Expressions (4 modules) | M40-43 | Natural speech |
-| 48-53 | Idioms (6 modules) | M40-47 | Expressive language |
-| 54-65 | Synonyms (12 modules) | All above | Nuanced vocabulary |
-| 66-67 | Advanced Conjunctions | B1 conjunctions | Complex argumentation |
-| 68-69 | Integration & Review | M40-67 | Consolidation |
+| 41-44 | Proverbs (4 modules) | B2.1 register | Cultural fluency |
+| 45-48 | Set Expressions (4 modules) | M41-44 | Natural speech |
+| 49-54 | Idioms (6 modules) | M41-48 | Expressive language |
+| 55-66 | Synonyms (12 modules) | All above | Nuanced vocabulary |
+| 67-68 | Advanced Conjunctions | B1 conjunctions | Complex argumentation |
+| 69-70 | Integration & Review | M41-68 | Consolidation |
 
 ### Module Content Specifications B2.2
 
@@ -2393,12 +2430,12 @@ Participles agree with noun in gender, number, case:
 | Phase | Modules | Count | Type |
 |-------|---------|-------|------|
 | B2.1a | 01-30 | 30 | Grammar & Register |
-| B2.1b | 31-39 | 9 | Numerals, Word Formation, Syntax |
-| B2.2 | 40-69 | 30 | Phraseology & Synonymy |
-| B2.3 | 70-94 | 25 | Ukrainian History |
-| B2.4 | 95-119 | 25 | Biographies |
-| B2.5 | 120-134 | 15 | Skills & Capstone |
-| **TOTAL** | **01-134** | **134** | |
+| B2.1b | 31-40 | 10 | Numerals, Word Formation, Pronouns |
+| B2.2 | 41-70 | 30 | Phraseology & Synonymy |
+| B2.3 | 71-95 | 25 | Ukrainian History |
+| B2.4 | 96-120 | 25 | Biographies |
+| B2.5 | 121-135 | 15 | Skills & Capstone |
+| **TOTAL** | **01-135** | **135** | |
 
 > **Moved to C1:** Folk Culture & Arts (25 modules, ~600 words)
 
@@ -2407,12 +2444,12 @@ Participles agree with noun in gender, number, case:
 | Phase | Target Words | Cumulative |
 |-------|--------------|------------|
 | B2.1a | ~700 | 700 |
-| B2.1b | ~225 | 925 |
-| B2.2 | ~750 | 1,675 |
-| B2.3 | ~600 | 2,275 |
-| B2.4 | ~600 | 2,875 |
-| B2.5 | ~250 | 3,125 |
-| **Total B2** | **~3,125** | **~6,425 cumulative** |
+| B2.1b | ~250 | 950 |
+| B2.2 | ~750 | 1,700 |
+| B2.3 | ~600 | 2,300 |
+| B2.4 | ~600 | 2,900 |
+| B2.5 | ~250 | 3,150 |
+| **Total B2** | **~3,150** | **~6,450 cumulative** |
 
 ---
 
