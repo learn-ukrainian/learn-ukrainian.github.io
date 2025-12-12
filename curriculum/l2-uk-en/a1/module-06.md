@@ -119,6 +119,16 @@ The concept of **гарна праця** (good work, job well done) is highly va
 **Оля:** Чудово! Починаємо?
 **Андрій:** Так, починаємо!
 
+**English Translation:**
+**Olya:** Hi, Andriy! What are you doing?
+**Andriy:** Hi! I am reading a book. And you?
+**Olya:** I am listening to music and thinking.
+**Andriy:** What are you thinking about?
+**Olya:** I am thinking about the exam. Do you know the answers?
+**Andriy:** No, I don't know. But we are working together! You ask, I answer.
+**Olya:** Great! Shall we start?
+**Andriy:** Yes, let's start!
+
 ## Reading Practice: A Day in Kyiv 📖
 
 *Read this short passage about daily actions.*
@@ -136,6 +146,21 @@ The concept of **гарна праця** (good work, job well done) is highly va
 
 **Вихідні:**
 У вихідні вони не **працюють**. Вони **снідають** пізно, **читають** книги, **слухають** музику і **мріють** про відпустку. Вони **знають**, що життя — це баланс: **працюй** добре і **відпочивай** добре!
+
+**English Translation:**
+**Marko and Sofia live in Kyiv.** They are a young couple. Every day they work a lot.
+
+**Morning:**
+In the morning Marko wakes up at seven. He eats breakfast and reads news on the phone. Sofia also wakes up early. She listens to the radio and drinks coffee. They eat breakfast together — this is their tradition.
+
+**Day:**
+Then they work. Marko works in an office. He writes documents, answers letters, and calls clients. Sofia is a teacher. She teaches children and speaks with parents. She loves her work very much.
+
+**Evening:**
+In the evening they rest. Marko plays football with friends. Sofia paints pictures — this is her hobby. Sometimes they walk together in the park or watch films.
+
+**Weekend:**
+On the weekend they do not work. They eat breakfast late, read books, listen to music, and dream about vacation. They know that life is a balance: work well and rest well!
 
 > 📜 **Myth Buster:** Some people think Ukrainian verbs are difficult. Actually, Class I verbs follow a **very regular pattern**. Once you memorize the endings (-ю, -єш, -є, -ємо, -єте, -ють), you can conjugate hundreds of verbs instantly!
 

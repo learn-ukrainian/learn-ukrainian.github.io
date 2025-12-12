@@ -130,6 +130,16 @@ Hi! My name is Olena. I want to tell you about my family. I have a dad, mom, bro
 **Андрій:** Вона вчителька. Вони мають доньку.
 **Оля:** Цікаво! Я хочу познайомитися з ними.
 
+**English Translation:**
+**Andriy:** Olya, do you see that man?
+**Olya:** Which man? Where?
+**Andriy:** Over there, near the cafe. This is our new neighbor!
+**Olya:** Ah, yes! I see him. What is his name?
+**Andriy:** His name is Pavlo. He is a doctor. Do you know his wife?
+**Olya:** No, I don't know her. And who is she?
+**Andriy:** She is a teacher. They have a daughter.
+**Olya:** Interesting! I want to meet them.
+
 Зверни увагу: того чоловіка, його, сусіда — всі у знахідному відмінку!
 
 # Summary

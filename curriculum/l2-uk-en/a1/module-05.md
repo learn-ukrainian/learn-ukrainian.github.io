@@ -106,6 +106,17 @@ The phrase "Сідайте, я зараз чай поставлю!" (Sit down, I
 **Покупець:** Добре, я візьму **той** телефон і **цю** сумку.
 **Продавець:** Чудово! **Ці** товари разом — десять тисяч п'ятсот.
 
+**English Translation:**
+**Seller:** Good day! Can I help you?
+**Buyer:** Yes, thank you. How much is this phone?
+**Seller:** This one? Twelve thousand hryvnias.
+**Buyer:** And that black one there?
+**Seller:** That one is cheaper — ten thousand.
+**Buyer:** And that bag for it?
+**Seller:** This bag? Five hundred hryvnias.
+**Buyer:** Good, I'll take that phone and this bag.
+**Seller:** Great! These goods together — ten thousand five hundred.
+
 ## Reading Practice: My Room 📖
 
 *Practice identifying objects with demonstratives. Read aloud!*

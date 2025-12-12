@@ -154,6 +154,15 @@ Today I go to the store. I need to buy groceries. I take a bag and money. In the
 **Клієнт:** Так, я також хочу тістечко.
 **Офіціант:** Чудово! Зачекайте, будь ласка.
 
+**English Translation:**
+**Waiter:** Good day! What do you want?
+**Client:** Good day! I want coffee, please.
+**Waiter:** Black coffee or with milk?
+**Client:** With milk, thank you. And water too.
+**Waiter:** Good. Coffee and water. Anything else?
+**Client:** Yes, I also want a cake.
+**Waiter:** Great! Wait please.
+
 Каву, воду, тістечко — все це знахідний відмінок!
 
 # Summary

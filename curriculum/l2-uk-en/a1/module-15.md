@@ -178,6 +178,16 @@ When navigating, Ukrainians often use landmarks rather than street names: "бі�
 **Турист:** Дякую велике!
 **Киянин:** Нема за що. Гарного відпочинку!
 
+**English Translation:**
+**Tourist:** Excuse me! How to get to Saint Sophia Cathedral?
+**Kyivan:** Oh, it's not far! Go straight to the intersection.
+**Tourist:** And then?
+**Kyivan:** At the traffic light turn right. Go along Volodymyrska street.
+**Tourist:** Is it far?
+**Kyivan:** No, five minutes on foot. The cathedral will be on the left — it is visible from afar.
+**Tourist:** Thank you very much!
+**Kyivan:** You're welcome. Have a nice rest!
+
 Зверни увагу: прямо, направо, зліва — всі напрямки тут!
 
 # Summary
