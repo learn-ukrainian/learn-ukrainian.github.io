@@ -1,9 +1,9 @@
 # B2 Curriculum Plan: Ukrainian for English Speakers
 
-**Status:** 📝 PLANNED (Restored & Upgraded to A1 Quality)
-**Modules:** 01-125 (125 modules)
-**Vocabulary Target:** ~3,100 new words (~25/module)
-**Cumulative Target:** ~7,650+ words after B2
+**Status:** 📝 PLANNED (Updated per State Standard 2024)
+**Modules:** 01-134 (134 modules)
+**Vocabulary Target:** ~3,350 new words (~25/module)
+**Cumulative Target:** ~7,900+ words after B2
 **Immersion:** 15% English / 85% Ukrainian
 
 > **Note:** Folk Culture & Arts (25 modules) moved to C1 for better vocabulary balance.
@@ -489,6 +489,17 @@ Participles agree with noun in gender, number, case:
 - Ukrainian prefers: людина, яка прочитала
 - Learn for RECOGNITION in older texts
 
+**Synthetic Future Tense (State Standard 4417-4421):**
+- Alternative to compound future (буду + infinitive)
+- Formation: infinitive stem + -иму/-тиму
+- боротися → боротимуся (I will fight)
+- пити → питимеш (you will drink)
+- кричати → кричатиме (he/she will shout)
+- співати → співатимемо (we will sing)
+- мріяти → мріятимуть (they will dream)
+
+> **Note:** More literary/formal than compound future. Common in written Ukrainian.
+
 **Vocabulary (20 words):**
 колишній, минулий, майбутній, теперішній, давній, недавній, попередній, наступний, останній, перший, новоприбулий, новопризначений, новообраний, новостворений, вищезгаданий, нижчепідписаний, так званий, добре відомий, широко вживаний, мало досліджений
 
@@ -832,6 +843,13 @@ Participles agree with noun in gender, number, case:
 - На підставі вищезазначеного... (On the basis of the above...)
 - Просимо надати... (We request that you provide...)
 
+**Advanced Vocative Forms (State Standard 4391-4399):**
+- Formal address: Пане водію, Пані лікарко, Пацієнте
+- With patronymic: Ірино Василівно, Петре Олександровичу
+- Official context: Шановний суде, Високоповажна комісіє
+- Public address: Громадяни України! Шановне товариство!
+- Poetic/elevated: О зоре, прекрасна і неповторна
+
 **Vocabulary (30 words):**
 закон, постанова, указ, розпорядження, наказ, заява, скарга, клопотання, звернення, протокол, акт, довідка, виписка, доручення, довіреність, ліцензія, дозвіл, сертифікат, свідоцтво, посвідчення, підпис, печатка, штамп, реєстрація, затвердження, погодження, виконання, контроль, відповідальність, порушення
 
@@ -911,6 +929,16 @@ Participles agree with noun in gender, number, case:
 - Archaic: отож, воістину, мовив
 - Elevated: краса, велич, доля
 - Poetic: зоря, гай, криниця
+
+**Stylistic Devices (State Standard 4569-4596):**
+- Антоніми: той – цей, давно – щойно, будувати – руйнувати
+- Синоніми: старий, старовинний, давній, древній, архаїчний
+- Омоніми: коло (circle) – коло (near), замóк – зáмок
+- Зменшувально-пестливі: хлопчик, донечка, дощик
+- Згрубілі форми: вітрище, величезний
+- Еліпсис: Максим повернувся? – Так. – Коли? – Учора.
+- Риторичні запитання: І хто б міг подумати?
+- Повтор: Сумно мені, сумно...
 
 **Vocabulary (30 words):**
 автор, письменник, поет, твір, роман, повість, оповідання, вірш, поема, драма, сюжет, герой, персонаж, образ, тема, ідея, стиль, метафора, порівняння, епітет, символ, алегорія, гіпербола, іронія, сатира, ліризм, драматизм, конфлікт, кульмінація, розв'язка
@@ -1116,7 +1144,319 @@ Participles agree with noun in gender, number, case:
 
 ---
 
-## Phase B2.2: Phraseology & Synonymy (Modules 31-60)
+## Phase B2.1b: Grammar Completion (Modules 31-39)
+
+> **NEW:** Added per Ukrainian State Standard 2024 cross-reference. Addresses gaps in numerals, word formation, one-member sentences, and register coverage.
+
+### Learning Goals
+- Master complex numeral declension for dates, times, and statistics
+- Apply word formation patterns productively
+- Understand one-member sentence structures
+- Complete register coverage with religious and epistolary styles
+
+### Grammar Progression
+
+| Module | Grammar Point | State Standard Ref |
+|--------|--------------|-------------------|
+| 31 | Numeral Declension I - Time & Dates | 4193-4197 |
+| 32 | Numeral Declension II - Compound Numbers | 4205-4215 |
+| 33 | Word Formation - Person Suffixes | 4450-4451 |
+| 34 | Word Formation - Abstract Nouns | 4453-4464 |
+| 35 | Word Formation - Place & Object Names | 4450-4460 |
+| 36 | Word Formation - Adjective Formation | 4466-4468 |
+| 37 | Word Formation - Adverb & Integration | 4469-4470 |
+| 38 | One-member Sentences (Односкладні) | 4502-4512 |
+| 39 | Register: Religious & Epistolary Styles | 4551-4559 |
+
+### Module Content Specifications B2.1b
+
+---
+
+#### Module 31: Numeral Declension I - Time & Dates
+**Grammar:** Time and date expressions with declension
+
+**Time Expressions:**
+- о другій годині (at 2 o'clock)
+- пів на першу (half past twelve)
+- двадцять по шостій (twenty past six)
+- за п'ятнадцять третя (quarter to three)
+
+**Date Expressions:**
+- перше січня (January 1st - nominative)
+- першого січня (of January 1st - genitive)
+- до двадцять восьмого лютого (until February 28th)
+
+**Months in Cases:**
+| Month | Genitive | Prepositional |
+|-------|----------|---------------|
+| січень | січня | у січні |
+| лютий | лютого | у лютому |
+| березень | березня | у березні |
+
+**Vocabulary (25 words):**
+година, хвилина, секунда, день, тиждень, місяць, рік, дата, число, час, ранок, обід, вечір, ніч, опівночі, опівдні, розклад, календар, дедлайн, термін, свято, народження, річниця, ювілей, виникнення
+
+**Signature Activity Concepts:**
+1. Quiz: Tell the time in Ukrainian
+2. Fill-in: Complete date expressions
+3. Practice: Schedule reading and writing
+
+---
+
+#### Module 32: Numeral Declension II - Compound Numbers
+**Grammar:** Complex numeral declension with compounds
+
+**Compound Ordinals:**
+- триста вісімдесят перший (381st)
+- триста вісімдесят першого (of 381st - genitive)
+- у триста вісімдесят першому (in 381st - locative)
+
+**Compound Cardinals with Cases:**
+| Number | Genitive | Dative | Instrumental |
+|--------|----------|--------|--------------|
+| 25 | двадцяти п'яти | двадцяти п'яти | двадцятьма п'ятьма |
+| 100 | ста / сотні | сту / сотні | стома |
+| 385 | трьохсот вісімдесяти п'яти | трьомстам вісімдесяти п'яти | трьомастами вісімдесятьма п'ятьма |
+
+**Statistics and Prices:**
+- Населення України — 43 мільйони.
+- За триста п'ятдесят гривень.
+- У двадцять п'ятому році.
+
+**Vocabulary (25 words):**
+число, цифра, кількість, сума, вартість, ціна, відсоток, мільйон, мільярд, половина, чверть, третина, статистика, дані, показник, рейтинг, позиція, місце, номер, порядковий, кількісний, складний, простий, парний, непарний
+
+**Signature Activity Concepts:**
+1. Transform: Write numbers in words
+2. Quiz: Decline compound numbers
+3. Read: Statistical text with numbers
+
+---
+
+#### Module 33: Word Formation - Person Suffixes
+**Grammar:** Forming nouns for people from other words
+
+**Suffix -ар/-яр (profession/activity):**
+- бібліотека → бібліотекар (librarian)
+- ворота → воротар (goalkeeper)
+- вівці → вівчар (shepherd)
+- камінь → каменяр (stonemason)
+
+**Suffix -ач (agent of action):**
+- викладати → викладач (lecturer)
+- читати → читач (reader)
+- глядіти → глядач (viewer)
+- слухати → слухач (listener)
+
+**Suffix -ник (activity/role):**
+- робота → робітник (worker)
+- письмо → письменник (writer)
+- праця → працівник (employee)
+- учень → учeник → ученик (student)
+
+**Vocabulary (25 words):**
+бібліотекар, воротар, вівчар, каменяр, лікар, словник, довідник, викладач, читач, глядач, слухач, споживач, робітник, письменник, працівник, журналіст, спеціаліст, майстер, творець, митець, дослідник, науковець, мовець, носій, представник
+
+**Signature Activity Concepts:**
+1. Match: Base word → person noun
+2. Form: Create person nouns from verbs
+3. Quiz: Choose correct suffix
+
+---
+
+#### Module 34: Word Formation - Abstract Nouns
+**Grammar:** Forming abstract nouns from other words
+
+**Suffix -ння/-ення (action/process):**
+- публікувати → публікування (publishing)
+- забарвлювати → забарвлення (coloring)
+- готувати → готування (preparation)
+- ходити → ходіння (walking)
+
+**Suffix -ість (quality/property):**
+- гордий → гордість (pride)
+- освічений → освіченість (education)
+- гостинний → гостинність (hospitality)
+- можливий → можливість (possibility)
+
+**Suffix -ок (result):**
+- додати → додаток (supplement)
+- здобути → здобуток (achievement)
+- внести → внесок (contribution)
+- показати → показ (show)
+
+**Vocabulary (25 words):**
+публікування, забарвлення, готування, читання, писання, навчання, гордість, освіченість, гостинність, можливість, відповідальність, здатність, додаток, здобуток, внесок, показ, виріб, вимір, перекла́д, досягнення, утворення, походження, значення, пояснення, визначення
+
+**Signature Activity Concepts:**
+1. Transform: Verb → abstract noun
+2. Match: Adjective → quality noun
+3. Quiz: Identify formation pattern
+
+---
+
+#### Module 35: Word Formation - Place & Object Names
+**Grammar:** Forming place and object names
+
+**Suffix -ня (place of activity):**
+- читати → читальня (reading room)
+- спати → спальня (bedroom)
+- їсти → їдальня (canteen)
+- варити → варильня (brewery)
+
+**Suffix -ище (place/area):**
+- клад → кладовище (cemetery)
+- ховати → сховище (storage)
+- пасти → пасовище (pasture)
+- жити → житло + -ище → жи́тлище (dwelling)
+
+**Suffix -арня (workshop/establishment):**
+- лікар → лікарня (hospital)
+- друкар → друкарня (printing house)
+- пекар → пекарня (bakery)
+- перукар → перукарня (hair salon)
+
+**Vocabulary (25 words):**
+читальня, спальня, їдальня, вітальня, пральня, кладовище, сховище, пасовище, звалище, городище, лікарня, друкарня, пекарня, перукарня, аптека, бібліотека, крамниця, майстерня, фабрика, завод, офіс, кабінет, кімната, приміщення, будівля
+
+**Signature Activity Concepts:**
+1. Match: Activity → place name
+2. Form: Create place nouns
+3. Quiz: Choose correct suffix
+
+---
+
+#### Module 36: Word Formation - Adjective Formation
+**Grammar:** Forming adjectives from nouns
+
+**Suffix -ський/-цький (belonging/origin):**
+- Україна → український (Ukrainian)
+- Німеччина → німецький (German)
+- місто → міський (urban)
+- село → сільський (rural)
+
+**Suffix -ний/-альний (quality/relation):**
+- нація → національний (national)
+- музика → музикальний / музичний (musical)
+- центр → центральний (central)
+- професія → професійний (professional)
+
+**Compound Adjectives:**
+- синьо-жовтий (blue-yellow)
+- білолиций (white-faced)
+- науково-публіцистичний (scientific-journalistic)
+- головнокомандувач → who is head commander
+
+**Vocabulary (25 words):**
+український, німецький, міський, сільський, національний, музикальний, центральний, професійний, синьо-жовтий, білолиций, темноволосий, добросердечний, різноманітний, самобутній, своєрідний, первісний, вторинний, основний, додатковий, головний, допоміжний, складний, простий, комплексний, системний
+
+**Signature Activity Concepts:**
+1. Form: Create adjectives from nouns
+2. Match: Adjective pattern → meaning
+3. Analyze: Compound adjective structure
+
+---
+
+#### Module 37: Word Formation - Adverb & Integration
+**Grammar:** Adverb formation and word family review
+
+**Adverbs from Adjectives:**
+- швидкий → швидко (quickly)
+- гарний → гарно (well, nicely)
+- добрий → добре (well)
+- український → по-українськи (in Ukrainian)
+
+**Adverb Patterns:**
+| Pattern | Example | Meaning |
+|---------|---------|---------|
+| Adj + -о | швидко | quickly |
+| Adj + -е | добре | well |
+| по- + Adj + -ськи | по-українськи | in Ukrainian way |
+| по- + Adj + -ому | по-новому | in a new way |
+
+**Diminutives and Augmentatives:**
+- хлопець → хлопчик (little boy)
+- донька → донечка (dear daughter)
+- вітер → вітрище (strong wind)
+- великий → величезний (huge)
+
+**Vocabulary (25 words):**
+швидко, повільно, добре, погано, гарно, далеко, близько, тут, там, завжди, інколи, рідко, часто, по-українськи, по-новому, по-іншому, хлопчик, донечка, сонечко, ніженька, вітрище, холодище, морозище, словотвір, суфікс
+
+**Signature Activity Concepts:**
+1. Form: Create adverbs from adjectives
+2. Transform: Word family chains
+3. Review: All word formation patterns
+
+---
+
+#### Module 38: One-member Sentences (Односкладні)
+**Grammar:** Sentences with one main clause component
+
+**Означено-особові (Definite-personal):**
+- На кручі посадимо молодий сад. (We will plant a young garden on the cliff.)
+- І про мене не забудьте згадати. (Don't forget to mention me.)
+- Дивлюся на тебе й не надивлюся. (I look at you and can't get enough.)
+
+**Неозначено-особові (Indefinite-personal):**
+- Нам подали чаю. (They served us tea.)
+- Перед святом прикрашають будинки. (Before the holiday, they decorate houses.)
+- У селі кажуть... (In the village, they say...)
+
+**Безособові (Impersonal):**
+- Там усе правильно записано. (Everything is correctly written there.)
+- Надворі темніє. (It's getting dark outside.)
+- Мені холодно. (I'm cold.)
+
+**Номінативні (Nominative):**
+- Дорога довга. Чагарі, долини. (A long road. Bushes, valleys.)
+- Ніч. Тиша. Зорі. (Night. Silence. Stars.)
+- Київ! Древня столиця! (Kyiv! Ancient capital!)
+
+**Vocabulary (25 words):**
+односкладний, двоскладний, означено, неозначено, безособовий, номінативний, підмет, присудок, головний, другорядний, члени, речення, структура, синтаксис, конструкція, вираз, форма, модель, зразок, вживання, стилістика, емоційність, лаконічність, імпресіонізм, мінімалізм
+
+**Signature Activity Concepts:**
+1. Identify: Classify sentence types
+2. Transform: Two-member → one-member
+3. Create: Write one-member sentences
+
+---
+
+#### Module 39: Register - Religious & Epistolary Styles
+**Grammar:** Religious and letter-writing registers
+
+**Religious Style (Релігійний стиль):**
+- Liturgical: Господь, благословіння, молитва
+- Biblical: Слава Богу! Христос воскрес! – Воістину воскрес!
+- Elevated: воістину, благословенний, всемогутній
+- Church vocabulary: храм, церква, парафія, священник
+
+**Epistolary Style (Епістолярний стиль):**
+
+| Element | Formal | Informal |
+|---------|--------|----------|
+| Opening | Шановний пане... | Дорогий друже... |
+| Body start | Звертаюся до Вас... | Як ти?... |
+| Closing | З повагою, | Обіймаю, |
+| Signature | [Full name] | [First name] |
+
+**Modern Email Conventions:**
+- Доброго дня! (Good day! - modern greeting)
+- У вкладенні надсилаю... (I'm attaching...)
+- Заздалегідь вдячний/вдячна. (Thank you in advance.)
+
+**Vocabulary (25 words):**
+Господь, Бог, молитва, благословіння, воістину, амінь, храм, церква, священник, парафія, лист, звернення, адресат, відправник, привітання, прощання, підпис, конверт, марка, вкладення, повага, вдячність, побажання, щирість, формальність
+
+**Signature Activity Concepts:**
+1. Identify: Religious vs secular text
+2. Write: Formal letter/email
+3. Transform: Informal → formal letter
+
+---
+
+## Phase B2.2: Phraseology & Synonymy (Modules 40-69)
 
 ### Learning Goals
 - Master Ukrainian proverbs for cultural literacy
@@ -1129,12 +1469,12 @@ Participles agree with noun in gender, number, case:
 
 | Module | Grammar Point | Builds On | Enables |
 |--------|--------------|-----------|---------|
-| 31-34 | Proverbs (4 modules) | B2.1 register | Cultural fluency |
-| 35-38 | Set Expressions (4 modules) | M31-34 | Natural speech |
-| 39-44 | Idioms (6 modules) | M31-38 | Expressive language |
-| 45-56 | Synonyms (12 modules) | All above | Nuanced vocabulary |
-| 57-58 | Advanced Conjunctions | B1 conjunctions | Complex argumentation |
-| 59-60 | Integration & Review | M31-58 | Consolidation |
+| 40-43 | Proverbs (4 modules) | B2.1 register | Cultural fluency |
+| 44-47 | Set Expressions (4 modules) | M40-43 | Natural speech |
+| 48-53 | Idioms (6 modules) | M40-47 | Expressive language |
+| 54-65 | Synonyms (12 modules) | All above | Nuanced vocabulary |
+| 66-67 | Advanced Conjunctions | B1 conjunctions | Complex argumentation |
+| 68-69 | Integration & Review | M40-67 | Consolidation |
 
 ### Module Content Specifications B2.2
 
@@ -2052,12 +2392,13 @@ Participles agree with noun in gender, number, case:
 
 | Phase | Modules | Count | Type |
 |-------|---------|-------|------|
-| B2.1 | 01-30 | 30 | Grammar & Register |
-| B2.2 | 31-60 | 30 | Phraseology & Synonymy |
-| B2.3 | 61-85 | 25 | Ukrainian History |
-| B2.4 | 86-110 | 25 | Biographies |
-| B2.5 | 111-125 | 15 | Skills & Capstone |
-| **TOTAL** | **01-125** | **125** | |
+| B2.1a | 01-30 | 30 | Grammar & Register |
+| B2.1b | 31-39 | 9 | Numerals, Word Formation, Syntax |
+| B2.2 | 40-69 | 30 | Phraseology & Synonymy |
+| B2.3 | 70-94 | 25 | Ukrainian History |
+| B2.4 | 95-119 | 25 | Biographies |
+| B2.5 | 120-134 | 15 | Skills & Capstone |
+| **TOTAL** | **01-134** | **134** | |
 
 > **Moved to C1:** Folk Culture & Arts (25 modules, ~600 words)
 
@@ -2065,12 +2406,13 @@ Participles agree with noun in gender, number, case:
 
 | Phase | Target Words | Cumulative |
 |-------|--------------|------------|
-| B2.1 | ~700 | 700 |
-| B2.2 | ~750 | 1,450 |
-| B2.3 | ~600 | 2,050 |
-| B2.4 | ~600 | 2,650 |
-| B2.5 | ~250 | 2,900 |
-| **Total B2** | **~2,900** | **~6,200 cumulative** |
+| B2.1a | ~700 | 700 |
+| B2.1b | ~225 | 925 |
+| B2.2 | ~750 | 1,675 |
+| B2.3 | ~600 | 2,275 |
+| B2.4 | ~600 | 2,875 |
+| B2.5 | ~250 | 3,125 |
+| **Total B2** | **~3,125** | **~6,425 cumulative** |
 
 ---
 
