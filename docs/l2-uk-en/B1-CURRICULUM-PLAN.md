@@ -10,6 +10,23 @@
 
 **Reference:** `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
 
+### Bilingual Content Strategy (B1 Specific)
+
+**Target Immersion:** 60% Ukrainian / 40% English
+
+B1 modules use a **bilingual approach** for complex grammar concepts:
+- **Ukrainian:** All examples, dialogues, narratives, cultural boxes, activity content
+- **English:** Conceptual explanations ("why does aspect exist?"), decision frameworks, Language Link boxes
+
+**Pattern:** Ukrainian concept → English explanation (using `> 🔗 **Language Link**` boxes)
+
+This approach is pedagogically sound because:
+1. **Cognitive load:** Aspect, motion verbs, participles don't exist in English. L1 explanations free cognitive resources for Ukrainian practice.
+2. **CEFR B1 definition:** Learners "understand main points of clear standard input" — complex metalinguistic explanations in L2 exceed this threshold.
+3. **Research evidence:** Explicit L1 grammar explanations + L2 examples outperforms immersion-only for complex rules.
+
+**Note:** The audit script measures immersion from lesson content only (before `# Activities`). Adding English explanations will lower immersion from ~85% to ~65-70%, which still passes the 60% threshold.
+
 ### Overcoming the Intermediate Plateau
 To help learners bridge the gap from "basic competence" to "independent fluency", this level shifts pedagogical focus:
 

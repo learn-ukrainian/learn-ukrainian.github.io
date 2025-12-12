@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 761/750
+- **Words:** ✅ 916/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -22,7 +22,7 @@
 | **Presentation: Café Vocabulary** | ➖ | 81 | Excluded Type |
 | **Cultural Insight: Café Culture in Ukraine 🇺🇦** | ✅ | 208 | Included in Core |
 | **Reading Practice: У кав'ярні 🗣️** | ✅ | 196 | Included in Core |
-| **Conversation: Замовлення 🗣️** | ✅ | 132 | Included in Core |
+| **Conversation: Замовлення 🗣️** | ✅ | 206 | Included in Core |
 | **fill-in: Café Phrases** | 🎮 | 12 | Activity (12 items) |
 | **match-up: Café Vocabulary** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Café Scenarios** | 🎮 | 12 | Activity (12 items) |

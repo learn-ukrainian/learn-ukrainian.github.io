@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
-import { parseMarkdown } from './utils';
+import { parseMarkdown, shuffle } from './utils';
 import ActivityHelp from './ActivityHelp';
 
 // Generate consistent colors for option chips
@@ -26,14 +26,14 @@ export function FillInQuestion({ sentence, answer, options = [] }: FillInQuestio
   const [showResult, setShowResult] = useState(false);
   const [draggedOption, setDraggedOption] = useState<string | null>(null);
 
-  // Create colored option chips
-  const coloredOptions = useMemo(() =>
-    options.map((opt, idx) => ({
+  // Shuffle and create colored option chips
+  const coloredOptions = useMemo(() => {
+    const shuffled = shuffle([...options]);
+    return shuffled.map((opt, idx) => ({
       text: opt,
       color: getChipColor(opt, idx)
-    })),
-    [options]
-  );
+    }));
+  }, [options]);
 
   const handleSelect = (option: string) => {
     if (showResult) return;

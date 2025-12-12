@@ -92,6 +92,37 @@ After reading the manifest, read the documents it specifies for your level:
 - Format: `**Українською:**` then Ukrainian, then `**English Translation:**` then English
 - B1+ may omit translations or provide partial glosses
 
+### Bilingual Content Patterns (B1-B2)
+
+**Why bilingual?** Complex grammar concepts (aspect, motion verbs, participles) don't exist in English. Explaining the *why* in L1 reduces cognitive load. The audit script measures immersion from **lesson content only** (before `# Activities`).
+
+**Pattern: Ukrainian concept → English explanation**
+
+```markdown
+### Доконаний вид — Результат
+
+Коли ви обираєте доконаний вид, ви фокусуєтеся на:
+- **Результаті** — дія завершена, є підсумок
+
+> 🔗 **When to Use Perfective**
+>
+> Use perfective when you want to say:
+> - "I did it (and it's done)" — completed action with result
+> - "First he did X, then Y..." — sequence of completed actions
+```
+
+**What stays Ukrainian:**
+- All example sentences, dialogues, narratives
+- All cultural boxes (💡, 🎬, 🎭, 🌍)
+- Activity content and instructions
+- Simple grammar rules ("Недоконаний = процес")
+
+**What goes English:**
+- Conceptual explanations ("Why does aspect exist?")
+- Decision frameworks ("When unsure, ask yourself...")
+- English-Ukrainian contrasts (Language Link boxes)
+- Metalinguistic analysis
+
 ### 4. Detailed Grammar Explanations (Theory-First)
 - **Depth:** Explain *why* a rule exists (e.g., "Gender is about sound, not biology").
 - **Structure:** Break down complex rules using analogies.
@@ -297,6 +328,7 @@ This section contains the "Richness & Soul" audit tables. Use the table that mat
      - **Verify:** NO YAML blocks in activities (Pure Markdown only).
      - **Verify:** Correct activity headers (`## type: Title`).
      - **Verify:** Audit report generated in `gemini/`.
+     - **MANDATORY:** All audit reports MUST be saved to `curriculum/l2-uk-en/{level}/gemini/` folder (e.g., `curriculum/l2-uk-en/a2/gemini/module-01-review.md`).
    - **POLISH CHECK:**
      - **Audio:** Are audio buttons `[🔊](audio_id)` working and present for vocab/dialogues?
      - **Layout:** Clean (no bolding in prompts, proper table formatting).
@@ -376,10 +408,14 @@ This section contains the "Richness & Soul" audit tables. Use the table that mat
 13. **Generate Output:**
     Once module passes all checks:
     ```bash
+    # MDX for Docusaurus web lessons
     npm run generate l2-uk-en {level} {module_num}
     # Example: npm run generate l2-uk-en a1 1
+
+    # JSON for Vibe app (optional)
+    npm run generate:json l2-uk-en {level} {module_num}
     ```
-    Verify output in `docusaurus/docs/{level}/module-XX.mdx`
+    Verify MDX output in `docusaurus/docs/{level}/module-XX.mdx`
 
 ## Activity Check Reference
 

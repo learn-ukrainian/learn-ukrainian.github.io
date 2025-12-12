@@ -152,20 +152,20 @@ When navigating, Ukrainians often use landmarks rather than street names: "бі�
 — Дуже дякую за допомогу!
 — Будь ласка! Гарного дня!
 
-**English Translation:**
-
-— Good afternoon! Tell me, please, where is the Museum of Folk Architecture?
-— Good afternoon! It's a bit far from here. You need a bus.
-— And where is the bus stop?
-— Go straight along this street. At the intersection turn left. The stop will be on the right, by the store.
-— What bus number?
-— Number seven. Ride to the "Pyrohiv" station. The museum will be opposite the stop.
-— How long does it take?
-— About twenty minutes by bus.
-— Thank you very much for your help!
-— You're welcome! Have a nice day!
-
-**Comprehension check:** What directions are given? How long is the trip?
+> [!note] English Translation
+>
+> — Good afternoon! Tell me, please, where is the Museum of Folk Architecture?
+> — Good afternoon! It's a bit far from here. You need a bus.
+> — And where is the bus stop?
+> — Go straight along this street. At the intersection turn left. The stop will be on the right, by the store.
+> — What bus number?
+> — Number seven. Ride to the "Pyrohiv" station. The museum will be opposite the stop.
+> — How long does it take?
+> — About twenty minutes by bus.
+> — Thank you very much for your help!
+> — You're welcome! Have a nice day!
+>
+> **Comprehension check:** What directions are given? How long is the trip?
 
 ## Conversation: На вулиці 🗣️
 
@@ -178,18 +178,18 @@ When navigating, Ukrainians often use landmarks rather than street names: "бі�
 **Турист:** Дякую велике!
 **Киянин:** Нема за що. Гарного відпочинку!
 
-**English Translation:**
-**Tourist:** Excuse me! How to get to Saint Sophia Cathedral?
-**Kyivan:** Oh, it's not far! Go straight to the intersection.
-**Tourist:** And then?
-**Kyivan:** At the traffic light turn right. Go along Volodymyrska street.
-**Tourist:** Is it far?
-**Kyivan:** No, five minutes on foot. The cathedral will be on the left — it is visible from afar.
-**Tourist:** Thank you very much!
-**Kyivan:** You're welcome. Have a nice rest!
-
-Зверни увагу: прямо, направо, зліва — всі напрямки тут!
-
+> [!note] English Translation
+> **Tourist:** Excuse me! How to get to Saint Sophia Cathedral?
+> **Kyivan:** Oh, it's not far! Go straight to the intersection.
+> **Tourist:** And then?
+> **Kyivan:** At the traffic light turn right. Go along Volodymyrska street.
+> **Tourist:** Is it far?
+> **Kyivan:** No, five minutes on foot. The cathedral will be on the left — it is visible from afar.
+> **Tourist:** Thank you very much!
+> **Kyivan:** You're welcome. Have a nice rest!
+>
+> Зверни увагу: прямо, направо, зліва — всі напрямки тут!
+>
 # Summary
 
 **Navigation: Getting Around Ukrainian Cities**
@@ -470,19 +470,19 @@ When navigating, Ukrainians often use landmarks rather than street names: "бі�
     > [!answer] ласка
     > [!options] ласка | ласкаво | ласки | ласку
 
-**English Translation:**
-1. Tourist: Where is the metro?
-2. Kyivite: Go straight.
-3. Kyivite: Turn left.
-4. Tourist: Is it far?
-5. Kyivite: No, it is close.
-6. Kyivite: The station is near the stop.
-7. Tourist: How many minutes on foot?
-8. Kyivite: Approximately five minutes.
-9. Tourist: And where is the stop?
-10. Kyivite: On the corner.
-11. Tourist: Thank you for the help!
-12. Kyivite: You are welcome, have a nice day!
+> [!note] English Translation
+> - Tourist: Where is the metro?
+> - Kyivite: Go straight.
+> - Kyivite: Turn left.
+> - Tourist: Is it far?
+> - Kyivite: No, it is close.
+> - Kyivite: The station is near the stop.
+> - Tourist: How many minutes on foot?
+> - Kyivite: Approximately five minutes.
+> - Tourist: And where is the stop?
+> - Kyivite: On the corner.
+> - Tourist: Thank you for the help!
+> - Kyivite: You are welcome, have a nice day!
 
 ## unjumble: Build Navigation Sentences
 > Arrange the words into correct sentences.

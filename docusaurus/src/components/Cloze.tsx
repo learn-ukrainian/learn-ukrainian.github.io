@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
+import { shuffle } from './utils';
 
 interface ClozeBlank {
   index: number;
@@ -14,6 +15,15 @@ interface ClozePassageProps {
 }
 
 export function ClozePassage({ text, blanks }: ClozePassageProps) {
+  // Pre-shuffle options for each blank on mount
+  const shuffledBlanks = useMemo(() =>
+    blanks.map(blank => ({
+      ...blank,
+      options: shuffle([...blank.options])
+    })),
+    [blanks]
+  );
+
   const [selections, setSelections] = useState<Map<number, string>>(new Map());
   const [submitted, setSubmitted] = useState(false);
 
@@ -52,7 +62,7 @@ export function ClozePassage({ text, blanks }: ClozePassageProps) {
       }
 
       const optionIndex = parseInt(match[1], 10);
-      const blank = blanks.find(b => b.index === optionIndex - 1); // Convert 1-based to 0-based
+      const blank = shuffledBlanks.find(b => b.index === optionIndex - 1); // Convert 1-based to 0-based
 
       if (blank) {
         const selected = selections.get(blank.index);

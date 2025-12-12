@@ -15,45 +15,45 @@
     "pedagogy": "PPP",
     "immersionLevel": 0.3,
     "title": "Food & Drinks",
-    "subtitle": "Ukrainian Cuisine — From Borsch to Varenyky",
-    "description": "Learner knows essential food vocabulary",
+    "subtitle": "Ukrainian Cuisine and Ordering at a Restaurant",
+    "description": "Name common Ukrainian foods and drinks",
     "objectives": [
-      "Learner knows essential food vocabulary",
-      "Learner can order food and drinks",
-      "Learner understands Ukrainian food culture"
+      "Name common Ukrainian foods and drinks",
+      "Use їсти (to eat) and пити (to drink) correctly",
+      "Order food at a café or restaurant",
+      "Understand basic Ukrainian cuisine vocabulary"
     ],
     "grammarFocus": [
-      "Uses їсти/пити from M08",
-      "Vocabulary focus module",
-      "Basic food sentences"
+      "Review of їсти, пити (irregular verbs)",
+      "Food vocabulary with correct gender"
     ],
     "tags": [
+      "vocabulary",
       "food",
       "drinks",
-      "vocabulary",
-      "cuisine",
+      "restaurant",
       "culture"
     ],
     "totalDuration": 45,
-    "transliterationMode": "full",
+    "transliterationMode": "partial",
     "sections": [
       {
         "id": "section-content-0",
         "name": "Lesson",
         "type": "content",
-        "content": "> **Ukrainian cuisine is a journey through history!** Every dish tells a story: борщ survived empires, вареники came from ancient traditions, and сало is a source of national pride (and jokes!). Today, you'll learn to eat, drink, and talk about it all in Ukrainian!\n\n## warm-up\n\nYou're hungry in **Полтава**, the heart of Ukrainian cuisine. You enter a restaurant:\n\n\"**Що ви рекомендуєте?**\" *(What do you recommend?)*\n\nThe waiter smiles: \"**Наш борщ — найкращий! А ще вареники з картоплею!**\"  \n*(Our borsch is the best! And also varenyky with potato!)*\n\n\"**Я хочу борщ і вареники!**\" *(I want borsch and varenyky!)*\n\n\"**А що ви п'єте?**\" *(And what will you drink?)*\n\n\"**Я п'ю узвар, будь ласка!**\" *(I drink uzvar, please!)*\n\nYour first Ukrainian meal awaits. Let's learn to order it properly!\n\n> 💡 **Did You Know?**\n>\n> **Борщ** is officially recognized by UNESCO as Ukrainian intangible cultural heritage (2022). Russia tried to claim it as their own, but the world confirmed: борщ is UKRAINIAN! Every time you say \"борщ,\" you're making a cultural statement!\n\n## presentation\n\n### The Three Meals — Три Прийоми Їжі\n\n| Ukrainian | IPA | Meaning | Typical Time |\n|-----------|-----|---------|--------------|\n| **сніданок** | /ˈsnʲidɑnɔk/ | breakfast | 7:00-9:00 |\n| **обід** | /ɔˈbʲid/ | lunch (main meal!) | 12:00-14:00 |\n| **вечеря** | /vɛˈtʃɛrʲɑ/ | dinner | 18:00-20:00 |\n\n**Обід** (lunch) is traditionally the **biggest meal** in Ukraine — unlike in English-speaking countries where dinner is largest!\n\n> 📜 **History Bite: The Sacred Bread**\n>\n> **Хліб** (bread) is sacred in Ukrainian culture. Throwing away bread is considered sinful. The greeting \"Хліб та сіль!\" (Bread and salt!) was traditionally used to welcome guests. At weddings, the couple is greeted with a **коровай** (ceremonial bread)!\n\n### Soup (Перша Страва — First Course)\n\nUkrainians LOVE soup! Lunch almost always starts with soup:\n\n| Ukrainian | IPA | English | Notes |\n|-----------|-----|---------|-------|\n| **борщ** | /bɔrʃtʃ/ | borsch | The national soup! Beet-based, red |\n| **суп** | /sup/ | soup (generic) | Umbrella term |\n| **юшка** | /ˈjuʃkɑ/ | broth | Light soup, often fish |\n| **куряча юшка** | /kuˈrʲɑtʃɑ ˈjuʃkɑ/ | chicken broth | For colds! |\n\n> 🔍 **Myth Buster: \"Borsch is Russian\"**\n>\n> **Lie:** Russia has long claimed borsch as \"Russian.\"\n>\n> **Truth:** Borsch originated in Ukraine and has been documented as Ukrainian for centuries. In 2022, UNESCO added \"Culture of Ukrainian borsch cooking\" to its List of Intangible Cultural Heritage. The world agrees: **борщ = Україна**!\n\n### Traditional Dishes (Традиційні Страви)\n\n| Ukrainian | IPA | English | Description |\n|-----------|-----|---------|-------------|\n| **вареники** | /vɑˈrɛnɪkɪ/ | varenyky (dumplings) | Filled with potato, cheese, cherries... |\n| **голубці** | /ɦɔˈlubtsʲi/ | stuffed cabbage rolls | Meat and rice wrapped in cabbage |\n| **деруни** | /dɛˈrunɪ/ | potato pancakes | Like latkes! Shredded potato |\n| **котлета** | /kɔtˈlɛtɑ/ | cutlet | Ground meat patty |\n| **сало** | /ˈsɑlɔ/ | salo (cured pork fat) | National delicacy! |\n\n> 🎭 **Culture Corner: Сало — The Black Humor of Ukraine**\n>\n> **Сало** (cured pork fat) is both national food AND national joke! Ukrainians have countless jokes about their love for сало:\n> - \"A true Ukrainian loves сало more than his mother-in-law!\"\n> - \"Сало is a Ukrainian vitamin!\"\n>\n> Don't knock it until you try it—especially on black bread with garlic!\n\n### Meat, Fish & Protein (М'ясо, Риба)\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| **м'ясо** | /ˈmjɑsɔ/ | meat | n |\n| **курка** | /ˈkurkɑ/ | chicken | f |\n| **свинина** | /svɪˈnɪnɑ/ | pork | f |\n| **яловичина** | /jɑlɔˈvɪtʃɪnɑ/ | beef | f |\n| **риба** | /ˈrɪbɑ/ | fish | f |\n| **яйце** | /ˈjɑjtsɛ/ | egg | n |\n| **сир** | /sɪr/ | cottage cheese / cheese | m |\n\n> 💡 **Did You Know?**\n>\n> **Сир** in Ukrainian primarily means \"cottage cheese\" (творог in Russian). Hard cheese is sometimes called **сир** too, or more specifically **твердий сир**. When in doubt at a restaurant, ask!\n\n### Vegetables & Fruits (Овочі та Фрукти)\n\n**Овочі (Vegetables):**\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| **картопля** | /kɑrˈtɔplʲɑ/ | potato | f |\n| **помідор** | /pɔmʲiˈdɔr/ | tomato | m |\n| **огірок** | /ɔˈɦʲirɔk/ | cucumber | m |\n| **цибуля** | /tsɪˈbulʲɑ/ | onion | f |\n| **морква** | /ˈmɔrkvɑ/ | carrot | f |\n| **капуста** | /kɑˈpustɑ/ | cabbage | f |\n| **буряк** | /buˈrʲɑk/ | beetroot | m |\n\n**Фрукти (Fruits):**\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| **яблуко** | /ˈjɑblukɔ/ | apple | n |\n| **банан** | /bɑˈnɑn/ | banana | m |\n| **апельсин** | /ɑpɛlʲˈsɪn/ | orange | m |\n| **вишня** | /ˈvɪʃnʲɑ/ | cherry | f |\n| **полуниця** | /pɔluˈnɪtsʲɑ/ | strawberry | f |\n\n> ⚡ **Pro Tip: Буряк = Borsch**\n>\n> **Буряк** (beetroot) is what makes borsch RED! Without буряк, it's not справжній борщ (real borsch)!\n\n### Drinks (Напої)\n\n| Ukrainian | IPA | English | Notes |\n|-----------|-----|---------|-------|\n| **вода** | /vɔˈdɑ/ | water | f |\n| **чай** | /tʃɑj/ | tea | m |\n| **кава** | /ˈkɑvɑ/ | coffee | f |\n| **сік** | /sʲik/ | juice | m |\n| **молоко** | /mɔlɔˈkɔ/ | milk | n |\n| **пиво** | /ˈpɪvɔ/ | beer | n |\n| **вино** | /vɪˈnɔ/ | wine | n |\n| **узвар** | /uzˈvɑr/ | dried fruit compote | m |\n| **компот** | /kɔmˈpɔt/ | compote | m |\n\n> 🎭 **Culture Corner: Кава**\n>\n> Ukraine has a STRONG coffee culture, especially in Львів! \"Львівська кава\" (Lviv coffee) is famous. Львів claims to be where the first coffee house in the Habsburg Empire opened! Order \"кава по-львівськи\" for the authentic experience!\n\n### Useful Food Phrases\n\n| Ukrainian | English |\n|-----------|---------|\n| **Смачно!** | Tasty! Delicious! |\n| **Смачного!** | Bon appétit! (said before eating) |\n| **Я голодний/голодна.** | I'm hungry. (m/f) |\n| **Я хочу їсти.** | I want to eat. |\n| **Я хочу пити.** | I want to drink. |\n| **Що ви рекомендуєте?** | What do you recommend? |\n| **Скільки коштує?** | How much does it cost? |\n| **Рахунок, будь ласка.** | The bill, please. |\n\n## cultural insight\n\n### The Ukrainian Dinner Table\n\nMeals in Ukraine are **social events**. Some traditions:\n\n1. **Wait for everyone** — Don't start until all are seated\n2. **\"Смачного!\"** — Say this to wish others \"bon appétit\"\n3. **Take seconds** — Refusing more food might offend the host!\n4. **Bread on every table** — Always!\n5. **Toasts** — If drinking, be ready for many toasts!\n\n### Regional Specialties\n\n| Region | Specialty | Notes |\n|--------|-----------|-------|\n| **Полтава** | Best borsch | \"Poltava borsch\" is legendary |\n| **Львів** | Coffee, шоколад | Austro-Hungarian influence |\n| **Одеса** | Seafood, вино | Mediterranean flavors |\n| **Закарпаття** | Гуляш, вино | Hungarian influence |\n| **Чернігів** | Варенички з вишнями | Sweet cherry varenyky |\n\n> 📜 **History Bite: Food as Resistance**\n>\n> During the Holodomor (1932-33), Stalin's regime deliberately starved millions of Ukrainians. Today, growing, cooking, and eating Ukrainian food is an act of cultural survival. Every **борщ**, every **вареник** is a statement: \"We survived. We thrive.\"\n\n## dialogue\n\n### Ordering at a Restaurant 🍽️\n\n**Офіціант:** Доброго дня! Що бажаєте?\n*(Good day! What would you like?)*\n\n**Клієнт:** Добрий день! Я хочу борщ і хліб.\n*(Good day! I want borsch and bread.)*\n\n**Офіціант:** Гарний вибір! А на друге?\n*(Good choice! And for second course?)*\n\n**Клієнт:** Що ви рекомендуєте?\n*(What do you recommend?)*\n\n**Офіціант:** Наші вареники з картоплею — дуже смачні!\n*(Our varenyky with potato are very tasty!)*\n\n**Клієнт:** Чудово! Вареники з картоплею.\n*(Wonderful! Varenyky with potato.)*\n\n**Офіціант:** А що ви п'єте?\n*(And what will you drink?)*\n\n**Клієнт:** Я п'ю узвар, будь ласка.\n*(I'll drink uzvar, please.)*\n\n**Офіціант:** Добре! Зараз принесу!\n*(Good! I'll bring it now!)*\n\n... later ...\n\n**Клієнт:** Дуже смачно! Рахунок, будь ласка.\n*(Very tasty! The bill, please.)*\n\n**Офіціант:** Ось, прошу. 250 гривень.\n*(Here you go. 250 hryvnias.)*\n\n**Клієнт:** Дякую!\n*(Thank you!)*\n\n> 🎯 **Fun Fact**\n>\n> Tipping in Ukraine is appreciated but not obligatory. 10% is standard; more for exceptional service. You can say \"**Здачі не треба**\" (Keep the change) if paying cash!\n\n### At the Market 🥕\n\n**Продавець:** Добрий день! Що вам?\n*(Good day! What for you?)*\n\n**Покупець:** Добрий день! Мені потрібні овочі.\n*(Good day! I need vegetables.)*\n\n**Продавець:** Що саме?\n*(What exactly?)*\n\n**Покупець:** Картоплю, моркву, і буряк. Я роблю борщ!\n*(Potatoes, carrots, and beetroot. I'm making borsch!)*\n\n**Продавець:** О, чудово! Скільки картоплі?\n*(Oh, wonderful! How much potato?)*\n\n**Покупець:** Два кілограми, будь ласка.\n*(Two kilograms, please.)*\n\n**Продавець:** А морква?\n*(And carrots?)*\n\n**Покупець:** Півкіло.\n*(Half a kilogram.)*\n\n**Продавець:** Добре. Щось ще?\n*(Good. Anything else?)*\n\n**Покупець:** І яблука! Один кілограм.\n*(And apples! One kilogram.)*\n\n**Продавець:** Разом 85 гривень.\n*(Together 85 hryvnia.)*\n\n**Покупець:** Ось, прошу!\n*(Here you go!)*\n\n## story time\n\n## story time\n\n### Бабусин Борщ — Grandmother's Borsch 📖\n\n**Марічка** lives in **Вінниця**.\n**Бабуся** (Grandmother) lives in **Вінниця**.\n\nСьогодні — свято. (Today is a holiday.)\nМи **робимо** борщ.\n\n**Марічка:** \"Що тут? Картопля? Морква?\"\n**Бабуся:** \"Так. І капуста. І цибуля.\"\n\n**Марічка:** \"А де буряк?\"\n**Бабуся:** \"Ось буряк. Борщ — це буряк!\"\n\n**Марічка:** \"А м'ясо?\"\n**Бабуся:** \"Так, м'ясо. Це яловичина.\"\n\nМи **працюємо**. Бабуся варить. Марічка допомагає.\n\n**Аромат!** (Aroma!)\n\n**Бабуся:** \"Смачного!\"\n**Марічка:** \"Ммм! Дуже смачно!\"\n\nМи **їмо** борщ.\nМи **п'ємо** узвар.\n\n**Марічка:** \"Я люблю борщ!\"\n**Бабуся:** \"Я теж!\"\n\n> 🔍 **Myth Buster: \"One borsch recipe\"**\n>\n> **Truth:** There is NO single borsch recipe! Every region, every family has their own. Some use beans, some don't. Some add prunes! The only rule: буряк (beetroot) and love. Ask 10 Ukrainian grandmothers for their recipe — you'll get 10 different answers!\n\n---"
+        "content": "> **Note:** You've mastered verbs! Now let's fill them with meaning — talking about food! This is pure vocabulary, using the verbs you already know.\n\n## Warm-up: The Universal Language\n\nFood is perhaps the most universal topic. No matter where you go in the world, people love talking about what they eat and drink. In Ukraine, food is not just sustenance — it's **culture, history, and hospitality** wrapped into one delicious package.\n\nWhen you visit Ukraine, you'll encounter dishes that have been perfected over centuries. From the legendary **борщ** (borscht) that every grandmother makes differently, to the beloved **вареники** (dumplings) that appear at every celebration, food tells the story of the Ukrainian people. These aren't just recipes — they're family traditions passed down through generations.\n\nUkrainian cuisine reflects the country's agricultural heritage. The rich black soil (чорнозем) produces some of the best grain, vegetables, and fruits in Europe. That's why bread, potatoes, and beets are central to the diet. Every dish has a story.\n\nIn this module, you'll learn the vocabulary you need to navigate Ukrainian cuisine — from breakfast to dinner, from ordering at a restaurant to shopping at a market. By the end, you'll be able to read a menu, order your meal, and compliment the cook! Get ready to eat your way through Ukrainian!\n\n> 💡 **Cultural Tip:** Ukrainians take food seriously. Refusing food is considered rude. When offered, always accept at least a little! The phrase \"Я вже наївся/наїлася\" (I'm already full) might not work — expect to hear \"Ще трохи!\" (A little more!)\n\n## Presentation: Ukrainian Meals\n\n### 1. The Three Meals (Три прийоми їжі)\n\n| Meal | Ukrainian | Time | Typical Foods |\n|------|-----------|------|---------------|\n| **Breakfast** | **сніданок** | 7:00-9:00 | каша, яйця, бутерброди |\n| **Lunch** | **обід** | 12:00-14:00 | суп/борщ, друге, салат |\n| **Dinner** | **вечеря** | 18:00-20:00 | легка їжа, залишки |\n\n**Useful phrases:**\n- Що на сніданок? (What's for breakfast?)\n- Я снідаю о восьмій. (I have breakfast at 8.)\n- Обід готовий! (Lunch is ready!)\n- Вечеряємо разом? (Shall we have dinner together?)\n\n### 2. Food Categories (Категорії їжі)\n\n**М'ясо (Meat):**\n| Ukrainian | IPA | English |\n|-----------|-----|---------|\n| м'ясо | /mjɑsɔ/ | meat |\n| курка | /ˈkurkɑ/ | chicken |\n| свинина | /svɪˈnɪnɑ/ | pork |\n| яловичина | /jɑlɔˈvɪt͡ʃɪnɑ/ | beef |\n| риба | /ˈrɪbɑ/ | fish |\n\n**Овочі (Vegetables):**\n| Ukrainian | IPA | English |\n|-----------|-----|---------|\n| картопля | /kɑrˈtɔplʲɑ/ | potato |\n| помідор | /pɔmʲiˈdɔr/ | tomato |\n| огірок | /ɔˈɦʲirɔk/ | cucumber |\n| цибуля | /t͡sɪˈbulʲɑ/ | onion |\n| морква | /ˈmɔrkvɑ/ | carrot |\n| капуста | /kɑˈpustɑ/ | cabbage |\n\n**Фрукти (Fruits):**\n| Ukrainian | IPA | English |\n|-----------|-----|---------|\n| яблуко | /ˈjɑblukɔ/ | apple |\n| банан | /bɑˈnɑn/ | banana |\n| апельсин | /ɑpɛlʲˈsɪn/ | orange |\n| виноград | /vɪnɔˈɦrɑd/ | grapes |\n| полуниця | /pɔluˈnɪt͡sʲɑ/ | strawberry |\n\n### 3. Classic Ukrainian Dishes\n\n| Dish | Description |\n|------|-------------|\n| **борщ** | The iconic beet soup — every region has its own recipe |\n| **вареники** | Dumplings filled with potato, cheese, cherries, or meat |\n| **голубці** | Cabbage rolls stuffed with rice and meat |\n| **деруни** | Potato pancakes, often served with smetana |\n| **котлета** | Meat cutlet/patty |\n| **сало** | Cured pork fat — a national treasure! |\n| **пампушки** | Garlic bread rolls served with borsch |\n\n### 4. Drinks (Напої)\n\n| Ukrainian | English | Common Context |\n|-----------|---------|----------------|\n| **вода** | water | Мінеральна чи звичайна? |\n| **чай** | tea | З цукром чи без? |\n| **кава** | coffee | Чорна чи з молоком? |\n| **сік** | juice | Яблучний, апельсиновий |\n| **молоко** | milk | Для каші, для кави |\n| **пиво** | beer | На вечерю |\n| **вино** | wine | Біле чи червоне? |\n| **компот** | fruit drink | Домашній напій |\n\n## Cultural Insight: Борщ — More Than Soup 🇺🇦\n\n**Борщ** is not just soup — it's a symbol of Ukrainian identity. In 2022, UNESCO added Ukrainian borscht to its list of Intangible Cultural Heritage, recognizing it as a uniquely Ukrainian tradition.\n\nEvery Ukrainian grandmother (бабуся) has her own recipe. Some add beans, some add prunes, some serve it with meat, others without. But all agree: борщ must have **буряк** (beets), which gives it the famous red color.\n\nThe proper way to eat борщ:\n1. Add a generous spoonful of **сметана** (sour cream)\n2. Eat with **пампушки** (garlic bread) or dark bread\n3. Say **\"Смачного!\"** before eating\n\n> 📜 **Myth Buster:** Some people call it \"Russian borscht.\" This is false. Борщ is **Ukrainian** in origin, documented in Ukrainian cookbooks for centuries. The UNESCO recognition confirms this cultural ownership.\n\n> 📜 **History Bite:** Борщ sustained Ukrainian families through famines and wars. The Holodomor (1932-33) was a deliberate famine that killed millions of Ukrainians. Today, every bowl of борщ carries this memory — and the resilience of the Ukrainian people.\n\n## Dialogue: At the Café 🗣️\n\n**Офіціант:** Добрий день! Ось меню.\n\n**Клієнт:** Дякую. Що ви порекомендуєте?\n\n**Офіціант:** Сьогодні дуже смачний борщ.\n\n**Клієнт:** Чудово! Я візьму борщ. А що є на друге?\n\n**Офіціант:** Вареники з картоплею або котлета з пюре.\n\n**Клієнт:** Вареники, будь ласка. І салат.\n\n**Офіціант:** Добре. Що будете пити?\n\n**Клієнт:** Компот є?\n\n**Офіціант:** Так, яблучний.\n\n**Клієнт:** Чудово, компот і воду без газу.\n\n**Офіціант:** Все?\n\n**Клієнт:** Так, дякую!\n\n**Офіціант:** Зачекайте, будь ласка. Ваше замовлення буде скоро.\n\n*Пізніше...*\n\n**Офіціант:** Ось ваш борщ. Смачного!\n\n**Клієнт:** Дякую! Виглядає смачно!\n\n**English Translation:**\n**Waiter:** Good day! Here is the menu.\n**Client:** Thank you. What do you recommend?\n**Waiter:** Today the borscht is very delicious.\n**Client:** Great! I will take borscht. And what is for the main course?\n**Waiter:** Varenyky with potatoes or cutlet with puree.\n**Client:** Varenyky, please. And salad.\n**Waiter:** Good. What will you drink?\n**Client:** Is there compote?\n**Waiter:** Yes, apple.\n**Client:** Great, compote and water without gas.\n**Waiter:** Is that all?\n**Client:** Yes, thank you!\n**Waiter:** Wait, please. Your order will be soon.\n*Later...*\n**Waiter:** Here is your borscht. Bon appétit!\n**Client:** Thank you! Looks delicious!\n\n## Reading Practice: Mama's Kitchen 📖\n\n*Read about traditional Ukrainian home cooking.*\n\n**Мамина кухня — найкраща.** Кожної неділі мама готує обід для всієї сім'ї. Це традиція, яка існує багато років.\n\nВона починає рано, о сьомій ранку. Спочатку вона робить **борщ**. Вона бере буряк, картоплю, капусту, моркву і цибулю. Все це вариться три години. Аромат — неймовірний! Вся квартира пахне смачною їжею.\n\nПотім вона ліпить **вареники**. Тісто м'яке і свіже. Начинка — картопля з цибулею. Вареники варяться у воді. Потім — трохи масла і сметани. Вареники — улюблена страва дітей!\n\nНа столі: борщ, вареники, салат зі свіжих овочів, чорний хліб. І, звичайно, **компот** — яблучний, як завжди. Мама завжди готує компот з яблук із саду.\n\nО другій годині вся сім'я сидить за столом. Тато каже: \"**Смачного!**\" Всі їдять і розмовляють. Діти п'ють компот, дорослі — чай. Це — неділя. Це — сім'я. Це — Україна.\n\n**English Translation:**\n**Mama's kitchen is the best.** Every Sunday mom cooks lunch for the whole family. This is a tradition that exists for many years.\n\nShe starts early, at seven in the morning. First she makes **borscht**. She takes beet, potato, cabbage, carrot and onion. All this boils for three hours. The aroma is incredible! The whole apartment smells of delicious food.\n\nThen she shapes **varenyky**. The dough is soft and fresh. The filling is potato with onion. Varenyky boil in water. Then — a little butter and sour cream. Varenyky are the children's favorite dish!\n\nOn the table: borscht, varenyky, salad with fresh vegetables, black bread. And, of course, **compote** — apple, as always. Mom always cooks compote from apples from the garden.\n\nAt two o'clock the whole family sits at the table. Dad says: \"**Bon appétit!**\" Everyone eats and talks. Children drink compote, adults — tea. This is Sunday. This is family. This is Ukraine.\n\n> 💡 **Thinking Trick:** To remember food gender, group by ending: **-а/-я** are usually feminine (вода, кава, картопля), **consonant** are usually masculine (борщ, хліб, сир), and **-о/-е** are usually neuter (молоко, яблуко)."
       },
       {
         "id": "section-summary-1",
         "name": "Підсумок",
         "nameEn": "Summary",
         "type": "summary",
-        "content": "Today you learned **Ukrainian food vocabulary**!\n\n**Meals:**\n- сніданок (breakfast)\n- обід (lunch — the main meal!)\n- вечеря (dinner)\n\n**Key dishes:**\n- борщ — THE national soup (UNESCO-protected!)\n- вареники — dumplings with various fillings\n- котлета — cutlet\n- сало — cured pork fat (national delicacy!)\n\n**Drinks:**\n- вода, чай, кава — water, tea, coffee\n- узвар — traditional dried fruit compote\n\n**Essential phrases:**\n- Смачного! (Bon appétit!)\n- Що ви рекомендуєте? (What do you recommend?)\n- Рахунок, будь ласка. (The bill, please.)\n\n> 🌟 **Pro Tip**\n>\n> Find a Ukrainian restaurant and practice ordering! Say \"**Я хочу борщ і вареники, будь ласка!**\"\n\n---\n\n\n---"
+        "content": "1. **Three meals:** сніданок (breakfast), обід (lunch), вечеря (dinner)\n2. **Key verbs:** їсти (to eat), пити (to drink)\n3. **Classic dishes:** борщ, вареники, голубці, деруни\n4. **Ordering:** \"Я візьму...\" (I'll take...), \"Смачного!\" (Enjoy!)\n5. **Cultural note:** Борщ is Ukrainian, not Russian!\n\n---\n\n> [!tip] 🌟 **Pro Tip:** When eating at a Ukrainian home, always compliment the cook! Say \"Дуже смачно!\" (Very delicious!) — it will make their day.\n\n\n---"
       }
     ],
-    "rawMarkdown": "---\ntitle: Food & Drinks\nsubtitle: Ukrainian Cuisine — From Borsch to Varenyky\nphase: A1.1\nduration: 45\ntransliteration: full\npedagogy: PPP\ntags: [food, drinks, vocabulary, cuisine, culture]\nobjectives:\n  - Learner knows essential food vocabulary\n  - Learner can order food and drinks\n  - Learner understands Ukrainian food culture\ngrammar:\n  - Uses їсти/пити from M08\n  - Vocabulary focus module\n  - Basic food sentences\n---\n\n# Food & Drinks: Ukrainian Cuisine — From Borsch to Varenyky\n\n> **Ukrainian cuisine is a journey through history!** Every dish tells a story: борщ survived empires, вареники came from ancient traditions, and сало is a source of national pride (and jokes!). Today, you'll learn to eat, drink, and talk about it all in Ukrainian!\n\n## warm-up\n\nYou're hungry in **Полтава**, the heart of Ukrainian cuisine. You enter a restaurant:\n\n\"**Що ви рекомендуєте?**\" *(What do you recommend?)*\n\nThe waiter smiles: \"**Наш борщ — найкращий! А ще вареники з картоплею!**\"  \n*(Our borsch is the best! And also varenyky with potato!)*\n\n\"**Я хочу борщ і вареники!**\" *(I want borsch and varenyky!)*\n\n\"**А що ви п'єте?**\" *(And what will you drink?)*\n\n\"**Я п'ю узвар, будь ласка!**\" *(I drink uzvar, please!)*\n\nYour first Ukrainian meal awaits. Let's learn to order it properly!\n\n> 💡 **Did You Know?**\n>\n> **Борщ** is officially recognized by UNESCO as Ukrainian intangible cultural heritage (2022). Russia tried to claim it as their own, but the world confirmed: борщ is UKRAINIAN! Every time you say \"борщ,\" you're making a cultural statement!\n\n## presentation\n\n### The Three Meals — Три Прийоми Їжі\n\n| Ukrainian | IPA | Meaning | Typical Time |\n|-----------|-----|---------|--------------|\n| **сніданок** | /ˈsnʲidɑnɔk/ | breakfast | 7:00-9:00 |\n| **обід** | /ɔˈbʲid/ | lunch (main meal!) | 12:00-14:00 |\n| **вечеря** | /vɛˈtʃɛrʲɑ/ | dinner | 18:00-20:00 |\n\n**Обід** (lunch) is traditionally the **biggest meal** in Ukraine — unlike in English-speaking countries where dinner is largest!\n\n> 📜 **History Bite: The Sacred Bread**\n>\n> **Хліб** (bread) is sacred in Ukrainian culture. Throwing away bread is considered sinful. The greeting \"Хліб та сіль!\" (Bread and salt!) was traditionally used to welcome guests. At weddings, the couple is greeted with a **коровай** (ceremonial bread)!\n\n### Soup (Перша Страва — First Course)\n\nUkrainians LOVE soup! Lunch almost always starts with soup:\n\n| Ukrainian | IPA | English | Notes |\n|-----------|-----|---------|-------|\n| **борщ** | /bɔrʃtʃ/ | borsch | The national soup! Beet-based, red |\n| **суп** | /sup/ | soup (generic) | Umbrella term |\n| **юшка** | /ˈjuʃkɑ/ | broth | Light soup, often fish |\n| **куряча юшка** | /kuˈrʲɑtʃɑ ˈjuʃkɑ/ | chicken broth | For colds! |\n\n> 🔍 **Myth Buster: \"Borsch is Russian\"**\n>\n> **Lie:** Russia has long claimed borsch as \"Russian.\"\n>\n> **Truth:** Borsch originated in Ukraine and has been documented as Ukrainian for centuries. In 2022, UNESCO added \"Culture of Ukrainian borsch cooking\" to its List of Intangible Cultural Heritage. The world agrees: **борщ = Україна**!\n\n### Traditional Dishes (Традиційні Страви)\n\n| Ukrainian | IPA | English | Description |\n|-----------|-----|---------|-------------|\n| **вареники** | /vɑˈrɛnɪkɪ/ | varenyky (dumplings) | Filled with potato, cheese, cherries... |\n| **голубці** | /ɦɔˈlubtsʲi/ | stuffed cabbage rolls | Meat and rice wrapped in cabbage |\n| **деруни** | /dɛˈrunɪ/ | potato pancakes | Like latkes! Shredded potato |\n| **котлета** | /kɔtˈlɛtɑ/ | cutlet | Ground meat patty |\n| **сало** | /ˈsɑlɔ/ | salo (cured pork fat) | National delicacy! |\n\n> 🎭 **Culture Corner: Сало — The Black Humor of Ukraine**\n>\n> **Сало** (cured pork fat) is both national food AND national joke! Ukrainians have countless jokes about their love for сало:\n> - \"A true Ukrainian loves сало more than his mother-in-law!\"\n> - \"Сало is a Ukrainian vitamin!\"\n>\n> Don't knock it until you try it—especially on black bread with garlic!\n\n### Meat, Fish & Protein (М'ясо, Риба)\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| **м'ясо** | /ˈmjɑsɔ/ | meat | n |\n| **курка** | /ˈkurkɑ/ | chicken | f |\n| **свинина** | /svɪˈnɪnɑ/ | pork | f |\n| **яловичина** | /jɑlɔˈvɪtʃɪnɑ/ | beef | f |\n| **риба** | /ˈrɪbɑ/ | fish | f |\n| **яйце** | /ˈjɑjtsɛ/ | egg | n |\n| **сир** | /sɪr/ | cottage cheese / cheese | m |\n\n> 💡 **Did You Know?**\n>\n> **Сир** in Ukrainian primarily means \"cottage cheese\" (творог in Russian). Hard cheese is sometimes called **сир** too, or more specifically **твердий сир**. When in doubt at a restaurant, ask!\n\n### Vegetables & Fruits (Овочі та Фрукти)\n\n**Овочі (Vegetables):**\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| **картопля** | /kɑrˈtɔplʲɑ/ | potato | f |\n| **помідор** | /pɔmʲiˈdɔr/ | tomato | m |\n| **огірок** | /ɔˈɦʲirɔk/ | cucumber | m |\n| **цибуля** | /tsɪˈbulʲɑ/ | onion | f |\n| **морква** | /ˈmɔrkvɑ/ | carrot | f |\n| **капуста** | /kɑˈpustɑ/ | cabbage | f |\n| **буряк** | /buˈrʲɑk/ | beetroot | m |\n\n**Фрукти (Fruits):**\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| **яблуко** | /ˈjɑblukɔ/ | apple | n |\n| **банан** | /bɑˈnɑn/ | banana | m |\n| **апельсин** | /ɑpɛlʲˈsɪn/ | orange | m |\n| **вишня** | /ˈvɪʃnʲɑ/ | cherry | f |\n| **полуниця** | /pɔluˈnɪtsʲɑ/ | strawberry | f |\n\n> ⚡ **Pro Tip: Буряк = Borsch**\n>\n> **Буряк** (beetroot) is what makes borsch RED! Without буряк, it's not справжній борщ (real borsch)!\n\n### Drinks (Напої)\n\n| Ukrainian | IPA | English | Notes |\n|-----------|-----|---------|-------|\n| **вода** | /vɔˈdɑ/ | water | f |\n| **чай** | /tʃɑj/ | tea | m |\n| **кава** | /ˈkɑvɑ/ | coffee | f |\n| **сік** | /sʲik/ | juice | m |\n| **молоко** | /mɔlɔˈkɔ/ | milk | n |\n| **пиво** | /ˈpɪvɔ/ | beer | n |\n| **вино** | /vɪˈnɔ/ | wine | n |\n| **узвар** | /uzˈvɑr/ | dried fruit compote | m |\n| **компот** | /kɔmˈpɔt/ | compote | m |\n\n> 🎭 **Culture Corner: Кава**\n>\n> Ukraine has a STRONG coffee culture, especially in Львів! \"Львівська кава\" (Lviv coffee) is famous. Львів claims to be where the first coffee house in the Habsburg Empire opened! Order \"кава по-львівськи\" for the authentic experience!\n\n### Useful Food Phrases\n\n| Ukrainian | English |\n|-----------|---------|\n| **Смачно!** | Tasty! Delicious! |\n| **Смачного!** | Bon appétit! (said before eating) |\n| **Я голодний/голодна.** | I'm hungry. (m/f) |\n| **Я хочу їсти.** | I want to eat. |\n| **Я хочу пити.** | I want to drink. |\n| **Що ви рекомендуєте?** | What do you recommend? |\n| **Скільки коштує?** | How much does it cost? |\n| **Рахунок, будь ласка.** | The bill, please. |\n\n## cultural insight\n\n### The Ukrainian Dinner Table\n\nMeals in Ukraine are **social events**. Some traditions:\n\n1. **Wait for everyone** — Don't start until all are seated\n2. **\"Смачного!\"** — Say this to wish others \"bon appétit\"\n3. **Take seconds** — Refusing more food might offend the host!\n4. **Bread on every table** — Always!\n5. **Toasts** — If drinking, be ready for many toasts!\n\n### Regional Specialties\n\n| Region | Specialty | Notes |\n|--------|-----------|-------|\n| **Полтава** | Best borsch | \"Poltava borsch\" is legendary |\n| **Львів** | Coffee, шоколад | Austro-Hungarian influence |\n| **Одеса** | Seafood, вино | Mediterranean flavors |\n| **Закарпаття** | Гуляш, вино | Hungarian influence |\n| **Чернігів** | Варенички з вишнями | Sweet cherry varenyky |\n\n> 📜 **History Bite: Food as Resistance**\n>\n> During the Holodomor (1932-33), Stalin's regime deliberately starved millions of Ukrainians. Today, growing, cooking, and eating Ukrainian food is an act of cultural survival. Every **борщ**, every **вареник** is a statement: \"We survived. We thrive.\"\n\n## dialogue\n\n### Ordering at a Restaurant 🍽️\n\n**Офіціант:** Доброго дня! Що бажаєте?\n*(Good day! What would you like?)*\n\n**Клієнт:** Добрий день! Я хочу борщ і хліб.\n*(Good day! I want borsch and bread.)*\n\n**Офіціант:** Гарний вибір! А на друге?\n*(Good choice! And for second course?)*\n\n**Клієнт:** Що ви рекомендуєте?\n*(What do you recommend?)*\n\n**Офіціант:** Наші вареники з картоплею — дуже смачні!\n*(Our varenyky with potato are very tasty!)*\n\n**Клієнт:** Чудово! Вареники з картоплею.\n*(Wonderful! Varenyky with potato.)*\n\n**Офіціант:** А що ви п'єте?\n*(And what will you drink?)*\n\n**Клієнт:** Я п'ю узвар, будь ласка.\n*(I'll drink uzvar, please.)*\n\n**Офіціант:** Добре! Зараз принесу!\n*(Good! I'll bring it now!)*\n\n... later ...\n\n**Клієнт:** Дуже смачно! Рахунок, будь ласка.\n*(Very tasty! The bill, please.)*\n\n**Офіціант:** Ось, прошу. 250 гривень.\n*(Here you go. 250 hryvnias.)*\n\n**Клієнт:** Дякую!\n*(Thank you!)*\n\n> 🎯 **Fun Fact**\n>\n> Tipping in Ukraine is appreciated but not obligatory. 10% is standard; more for exceptional service. You can say \"**Здачі не треба**\" (Keep the change) if paying cash!\n\n### At the Market 🥕\n\n**Продавець:** Добрий день! Що вам?\n*(Good day! What for you?)*\n\n**Покупець:** Добрий день! Мені потрібні овочі.\n*(Good day! I need vegetables.)*\n\n**Продавець:** Що саме?\n*(What exactly?)*\n\n**Покупець:** Картоплю, моркву, і буряк. Я роблю борщ!\n*(Potatoes, carrots, and beetroot. I'm making borsch!)*\n\n**Продавець:** О, чудово! Скільки картоплі?\n*(Oh, wonderful! How much potato?)*\n\n**Покупець:** Два кілограми, будь ласка.\n*(Two kilograms, please.)*\n\n**Продавець:** А морква?\n*(And carrots?)*\n\n**Покупець:** Півкіло.\n*(Half a kilogram.)*\n\n**Продавець:** Добре. Щось ще?\n*(Good. Anything else?)*\n\n**Покупець:** І яблука! Один кілограм.\n*(And apples! One kilogram.)*\n\n**Продавець:** Разом 85 гривень.\n*(Together 85 hryvnia.)*\n\n**Покупець:** Ось, прошу!\n*(Here you go!)*\n\n## story time\n\n## story time\n\n### Бабусин Борщ — Grandmother's Borsch 📖\n\n**Марічка** lives in **Вінниця**.\n**Бабуся** (Grandmother) lives in **Вінниця**.\n\nСьогодні — свято. (Today is a holiday.)\nМи **робимо** борщ.\n\n**Марічка:** \"Що тут? Картопля? Морква?\"\n**Бабуся:** \"Так. І капуста. І цибуля.\"\n\n**Марічка:** \"А де буряк?\"\n**Бабуся:** \"Ось буряк. Борщ — це буряк!\"\n\n**Марічка:** \"А м'ясо?\"\n**Бабуся:** \"Так, м'ясо. Це яловичина.\"\n\nМи **працюємо**. Бабуся варить. Марічка допомагає.\n\n**Аромат!** (Aroma!)\n\n**Бабуся:** \"Смачного!\"\n**Марічка:** \"Ммм! Дуже смачно!\"\n\nМи **їмо** борщ.\nМи **п'ємо** узвар.\n\n**Марічка:** \"Я люблю борщ!\"\n**Бабуся:** \"Я теж!\"\n\n> 🔍 **Myth Buster: \"One borsch recipe\"**\n>\n> **Truth:** There is NO single borsch recipe! Every region, every family has their own. Some use beans, some don't. Some add prunes! The only rule: буряк (beetroot) and love. Ask 10 Ukrainian grandmothers for their recipe — you'll get 10 different answers!\n\n---\n\n# Summary\n\nToday you learned **Ukrainian food vocabulary**!\n\n**Meals:**\n- сніданок (breakfast)\n- обід (lunch — the main meal!)\n- вечеря (dinner)\n\n**Key dishes:**\n- борщ — THE national soup (UNESCO-protected!)\n- вареники — dumplings with various fillings\n- котлета — cutlet\n- сало — cured pork fat (national delicacy!)\n\n**Drinks:**\n- вода, чай, кава — water, tea, coffee\n- узвар — traditional dried fruit compote\n\n**Essential phrases:**\n- Смачного! (Bon appétit!)\n- Що ви рекомендуєте? (What do you recommend?)\n- Рахунок, будь ласка. (The bill, please.)\n\n> 🌟 **Pro Tip**\n>\n> Find a Ukrainian restaurant and practice ordering! Say \"**Я хочу борщ і вареники, будь ласка!**\"\n\n---\n\n# Activities\n\n## match-up: Food Vocabulary\n\n> Match Ukrainian food words to English.\n\n| Left | Right |\n|------|-------|\n| борщ | borsch |\n| вареники | dumplings |\n| хліб | bread |\n| м'ясо | meat |\n| курка | chicken |\n| риба | fish |\n| яйце | egg |\n| картопля | potato |\n| морква | carrot |\n| капуста | cabbage |\n| буряк | beetroot |\n| цибуля | onion |\n\n## match-up: Drinks Vocabulary\n\n> Match Ukrainian drink words to English.\n\n| Left | Right |\n|------|-------|\n| вода | water |\n| чай | tea |\n| кава | coffee |\n| сік | juice |\n| молоко | milk |\n| пиво | beer |\n| вино | wine |\n| узвар | dried fruit compote |\n| компот | compote |\n| газована вода | sparkling water |\n| мінеральна вода | mineral water |\n| гарячий шоколад | hot chocolate |\n\n## fill-in: I Eat / I Drink\n\n> Complete with їсти or пити conjugated correctly.\n\n1. Я ___ борщ. (I eat borsch.)\n   > [!answer] їм\n   > [!options] їм | їси | пʼю | пʼєш\n\n2. Вона ___ каву. (She drinks coffee.)\n   > [!answer] пʼє\n   > [!options] їсть | пʼє | їм | пʼю\n\n3. Ми ___ вареники. (We eat varenyky.)\n   > [!answer] їмо\n   > [!options] їмо | пʼємо | їдять | пʼють\n\n4. Ти ___ чай? (Do you drink tea?)\n   > [!answer] пʼєш\n   > [!options] їси | пʼєш | їсть | пʼє\n\n5. Вони ___ хліб. (They eat bread.)\n   > [!answer] їдять\n   > [!options] їмо | їдять | пʼємо | пʼють\n\n6. Він ___ воду. (He drinks water.)\n   > [!answer] пʼє\n   > [!options] їсть | пʼє | їм | пʼю\n\n7. Ви ___ сало? (Do you eat salo?)\n   > [!answer] їсте\n   > [!options] їсте | пʼєте | їмо | пʼємо\n\n8. Я ___ сік. (I drink juice.)\n   > [!answer] пʼю\n   > [!options] їм | пʼю | їси | пʼєш\n\n9. Вона ___ яблуко. (She eats an apple.)\n   > [!answer] їсть\n   > [!options] їсть | пʼє | їм | пʼю\n\n10. Ми ___ молоко. (We drink milk.)\n    > [!answer] пʼємо\n    > [!options] їмо | пʼємо | їдять | пʼють\n\n11. Ти ___ рибу? (Do you eat fish?)\n    > [!answer] їси\n    > [!options] їси | пʼєш | їсть | пʼє\n\n12. Вони ___ пиво. (They drink beer.)\n    > [!answer] пʼють\n    > [!options] їдять | пʼють | їмо | пʼємо\n\n## quiz: Ukrainian Food Culture\n\n> Test your knowledge of Ukrainian food culture.\n\n1. Which meal is traditionally the biggest in Ukraine?\n   - [ ] Сніданок (breakfast)\n   - [x] Обід (lunch)\n   - [ ] Вечеря (dinner)\n   - [ ] Перекус (snack)\n   > Lunch is the main meal in Ukrainian tradition!\n\n2. What is the key ingredient in борщ?\n   - [ ] Картопля\n   - [x] Буряк\n   - [ ] Капуста\n   - [ ] Морква\n   > Буряк (beetroot) makes borsch red!\n\n3. What do you say before eating?\n   - [ ] Добрий день!\n   - [ ] Дякую!\n   - [x] Смачного!\n   - [ ] До побачення!\n   > Смачного! = Bon appétit!\n\n4. What are вареники?\n   - [ ] Soup\n   - [x] Dumplings\n   - [ ] Bread\n   - [ ] Meat\n   > Varenyky are stuffed dumplings — Ukrainian classic!\n\n5. What is сало?\n   - [ ] Fish\n   - [ ] Vegetables\n   - [x] Cured pork fat\n   - [ ] Cheese\n   > Salo is cured pork fat — Ukrainian delicacy!\n\n6. Which city is famous for coffee?\n   - [ ] Київ\n   - [x] Львів\n   - [ ] Одеса\n   - [ ] Харків\n   > Львів has the strongest coffee culture!\n\n7. What organization recognized borsch as Ukrainian heritage?\n   - [x] UNESCO\n   - [ ] NATO\n   - [ ] EU\n   - [ ] UN\n   > UNESCO added borsch to intangible heritage list in 2022!\n\n8. What is узвар?\n   - [ ] Soup\n   - [x] Dried fruit compote\n   - [ ] Juice\n   - [ ] Beer\n   > Uzvar is traditional dried fruit compote!\n\n9. Saying \"Хліб та сіль!\" means...\n   - [x] Bread and salt — traditional welcome\n   - [ ] I'm hungry\n   - [ ] The food is bad\n   - [ ] Pass the salt\n   > Traditional greeting with bread and salt!\n\n10. What is the correct order of courses?\n    - [x] Soup first, then main course\n    - [ ] Main course, then soup\n    - [ ] Dessert first\n    - [ ] No order\n    > Soup (перша страва) comes first!\n\n11. How much tip is standard in Ukraine?\n    - [ ] 5%\n    - [x] 10%\n    - [ ] 20%\n    - [ ] 25%\n    > 10% is standard for good service!\n\n12. What is коровай?\n    - [ ] Soup\n    - [ ] Drink\n    - [x] Ceremonial wedding bread\n    - [ ] Dessert\n    > Korovai is traditional wedding bread!\n\n## group-sort: Food Categories\n\n> Sort foods into correct categories.\n\n### Овочі (Vegetables)\n- картопля\n- морква\n- цибуля\n- буряк\n- капуста\n- помідор\n- огірок\n\n### Фрукти (Fruits)\n- яблуко\n- банан\n- апельсин\n- вишня\n- полуниця\n- груша\n\n### Напої (Drinks)\n- вода\n- чай\n- кава\n- сік\n- молоко\n- узвар\n\n## fill-in: Restaurant Phrases\n\n> Complete the restaurant conversation.\n\n1. Добрий день! Що ви ___? (What would you like?)\n   > [!answer] бажаєте\n   > [!options] бажаєте | їсте | пʼєте | робите\n\n2. Я ___ борщ, будь ласка. (I want borsch, please.)\n   > [!answer] хочу\n   > [!options] хочу | їм | пʼю | маю\n\n3. Що ви ___? (What do you recommend?)\n   > [!answer] рекомендуєте\n   > [!options] рекомендуєте | робите | бачите | хочете\n\n4. ___ коштує? (How much does it cost?)\n   > [!answer] Скільки\n   > [!options] Скільки | Як | Що | Де\n\n5. ___, будь ласка. (The bill, please.)\n   > [!answer] Рахунок\n   > [!options] Рахунок | Борщ | Меню | Вода\n\n6. Дуже ___! (Very tasty!)\n   > [!answer] смачно\n   > [!options] смачно | добре | гарно | важко\n\n7. ___ не треба. (Keep the change.)\n   > [!answer] Здачі\n   > [!options] Здачі | Гроші | Рахунок | Меню\n\n8. Ще раз ___, будь ласка. (One more water, please.)\n   > [!answer] воду\n   > [!options] воду | води | вода | водою\n\n9. На ___? (For second course?)\n   > [!answer] друге\n   > [!options] друге | перше | третє | останнє\n\n10. Я ___! (I'm hungry!)\n    > [!answer] голодний\n    > [!options] голодний | смачний | готовий | радий\n\n11. Принесіть ___, будь ласка. (Bring the menu, please.)\n    > [!answer] меню\n    > [!options] меню | борщ | рахунок | воду\n\n12. Дякую за ___! (Thanks for dinner!)\n    > [!answer] вечерю\n    > [!options] вечерю | обід | сніданок | їжу\n\n## anagram: Unscramble Food Words\n\n> Form food vocabulary.\n\n1. щ р о б\n   > [!answer] борщ\n   > (borsch)\n\n2. и к н е р а в\n   > [!answer] вареники\n   > (varenyky)\n\n3. б і л х\n   > [!answer] хліб\n   > (bread)\n\n4. о с я м '\n   > [!answer] мʼясо\n   > (meat)\n\n5. а к р у к\n   > [!answer] курка\n   > (chicken)\n\n6. а б и р\n   > [!answer] риба\n   > (fish)\n\n7. я л п о т а р к\n   > [!answer] картопля\n   > (potato)\n\n8. а к в р о м\n   > [!answer] морква\n   > (carrot)\n\n9. к я р у б\n   > [!answer] буряк\n   > (beetroot)\n\n10. а д о в\n    > [!answer] вода\n    > (water)\n\n11. а в а к\n    > [!answer] кава\n    > (coffee)\n\n12. й а ч\n    > [!answer] чай\n    > (tea)\n\n## anagram: Unscramble Food Phrases\n\n> Form common food phrases.\n\n1. о н ч а м с\n   > [!answer] смачно\n   > (tasty)\n\n2. о г о н ч а м с\n   > [!answer] смачного\n   > (bon appétit)\n\n3. о к у н а х р\n   > [!answer] рахунок\n   > (bill)\n\n4. д і б о\n   > [!answer] обід\n   > (lunch)\n\n5. я р е ч е в\n   > [!answer] вечеря\n   > (dinner)\n\n6. к о н а д і н с\n   > [!answer] сніданок\n   > (breakfast)\n\n7. ю н е м\n   > [!answer] меню\n   > (menu)\n\n8. а ж ї\n   > [!answer] їжа\n   > (food)\n\n9. і о п а н\n   > [!answer] напої\n   > (drinks)\n\n10. і ч о в о\n    > [!answer] овочі\n    > (vegetables)\n\n11. и т к у р ф\n    > [!answer] фрукти\n    > (fruits)\n\n12. а в а р т с\n    > [!answer] страва\n    > (dish)\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| їжа | /ˈjiʒɑ/ | food | noun | f | General term |\n| сніданок | /ˈsnʲidɑnɔk/ | breakfast | noun | m | Morning meal |\n| обід | /ɔˈbʲid/ | lunch | noun | m | Main meal of day! |\n| вечеря | /vɛˈtʃɛrʲɑ/ | dinner | noun | f | Evening meal |\n| борщ | /bɔrʃtʃ/ | borsch | noun | m | UNESCO heritage! |\n| суп | /sup/ | soup | noun | m | General term |\n| вареники | /vɑˈrɛnɪkɪ/ | varenyky (dumplings) | noun | pl | With various fillings |\n| хліб | /xlʲib/ | bread | noun | m | Sacred in culture! |\n| м'ясо | /ˈmjɑsɔ/ | meat | noun | n | Generic meat |\n| курка | /ˈkurkɑ/ | chicken | noun | f | Poultry |\n| риба | /ˈrɪbɑ/ | fish | noun | f | Seafood |\n| овочі | /ˈɔvɔtʃʲi/ | vegetables | noun | pl | Always plural |\n| фрукти | /ˈfruktɪ/ | fruits | noun | pl | Always plural |\n| яблуко | /ˈjɑblukɔ/ | apple | noun | n | Common fruit |\n| картопля | /kɑrˈtɔplʲɑ/ | potato | noun | f | Base of many dishes |\n| помідор | /pɔmʲiˈdɔr/ | tomato | noun | m | Summer staple |\n| огірок | /ɔˈɦʲirɔk/ | cucumber | noun | m | Pickle too! |\n| цибуля | /tsɪˈbulʲɑ/ | onion | noun | f | In every dish |\n| буряк | /buˈrʲɑk/ | beetroot | noun | m | Makes borsch red! |\n| сир | /sɪr/ | cottage cheese/cheese | noun | m | Context matters |\n| яйце | /ˈjɑjtsɛ/ | egg | noun | n | Eggs! |\n| чай | /tʃɑj/ | tea | noun | m | Popular drink |\n| кава | /ˈkɑvɑ/ | coffee | noun | f | Lviv favorite! |\n| вода | /vɔˈdɑ/ | water | noun | f | Essential |\n| сік | /sʲik/ | juice | noun | m | Fruit juice |\n| молоко | /mɔlɔˈkɔ/ | milk | noun | n | Dairy |\n| смачний | /ˈsmɑtʃnɪj/ | tasty, delicious (m) | adj | m | Adjective |\n| смачно | /ˈsmɑtʃnɔ/ | tasty (adv) / Delicious! | adv | - | Exclamation |\n| їсти | /ˈjistɪ/ | to eat | verb | - | Irregular! |\n| пити | /ˈpɪtɪ/ | to drink | verb | - | Irregular! |\n",
-    "createdAt": "2025-12-11T19:55:55.583Z",
-    "modifiedAt": "2025-12-11T19:55:55.583Z",
+    "rawMarkdown": "---\ntitle: \"Food & Drinks\"\nsubtitle: \"Ukrainian Cuisine and Ordering at a Restaurant\"\nphase: A1.1\ntransliteration: partial\npedagogy: PPP\nduration: 45\ntags: [vocabulary, food, drinks, restaurant, culture]\nobjectives:\n  - Name common Ukrainian foods and drinks\n  - Use їсти (to eat) and пити (to drink) correctly\n  - Order food at a café or restaurant\n  - Understand basic Ukrainian cuisine vocabulary\ngrammar:\n  - Review of їсти, пити (irregular verbs)\n  - Food vocabulary with correct gender\naudio: false\n---\n\n# Food & Drinks\n\n> **Note:** You've mastered verbs! Now let's fill them with meaning — talking about food! This is pure vocabulary, using the verbs you already know.\n\n## Warm-up: The Universal Language\n\nFood is perhaps the most universal topic. No matter where you go in the world, people love talking about what they eat and drink. In Ukraine, food is not just sustenance — it's **culture, history, and hospitality** wrapped into one delicious package.\n\nWhen you visit Ukraine, you'll encounter dishes that have been perfected over centuries. From the legendary **борщ** (borscht) that every grandmother makes differently, to the beloved **вареники** (dumplings) that appear at every celebration, food tells the story of the Ukrainian people. These aren't just recipes — they're family traditions passed down through generations.\n\nUkrainian cuisine reflects the country's agricultural heritage. The rich black soil (чорнозем) produces some of the best grain, vegetables, and fruits in Europe. That's why bread, potatoes, and beets are central to the diet. Every dish has a story.\n\nIn this module, you'll learn the vocabulary you need to navigate Ukrainian cuisine — from breakfast to dinner, from ordering at a restaurant to shopping at a market. By the end, you'll be able to read a menu, order your meal, and compliment the cook! Get ready to eat your way through Ukrainian!\n\n> 💡 **Cultural Tip:** Ukrainians take food seriously. Refusing food is considered rude. When offered, always accept at least a little! The phrase \"Я вже наївся/наїлася\" (I'm already full) might not work — expect to hear \"Ще трохи!\" (A little more!)\n\n## Presentation: Ukrainian Meals\n\n### 1. The Three Meals (Три прийоми їжі)\n\n| Meal | Ukrainian | Time | Typical Foods |\n|------|-----------|------|---------------|\n| **Breakfast** | **сніданок** | 7:00-9:00 | каша, яйця, бутерброди |\n| **Lunch** | **обід** | 12:00-14:00 | суп/борщ, друге, салат |\n| **Dinner** | **вечеря** | 18:00-20:00 | легка їжа, залишки |\n\n**Useful phrases:**\n- Що на сніданок? (What's for breakfast?)\n- Я снідаю о восьмій. (I have breakfast at 8.)\n- Обід готовий! (Lunch is ready!)\n- Вечеряємо разом? (Shall we have dinner together?)\n\n### 2. Food Categories (Категорії їжі)\n\n**М'ясо (Meat):**\n| Ukrainian | IPA | English |\n|-----------|-----|---------|\n| м'ясо | /mjɑsɔ/ | meat |\n| курка | /ˈkurkɑ/ | chicken |\n| свинина | /svɪˈnɪnɑ/ | pork |\n| яловичина | /jɑlɔˈvɪt͡ʃɪnɑ/ | beef |\n| риба | /ˈrɪbɑ/ | fish |\n\n**Овочі (Vegetables):**\n| Ukrainian | IPA | English |\n|-----------|-----|---------|\n| картопля | /kɑrˈtɔplʲɑ/ | potato |\n| помідор | /pɔmʲiˈdɔr/ | tomato |\n| огірок | /ɔˈɦʲirɔk/ | cucumber |\n| цибуля | /t͡sɪˈbulʲɑ/ | onion |\n| морква | /ˈmɔrkvɑ/ | carrot |\n| капуста | /kɑˈpustɑ/ | cabbage |\n\n**Фрукти (Fruits):**\n| Ukrainian | IPA | English |\n|-----------|-----|---------|\n| яблуко | /ˈjɑblukɔ/ | apple |\n| банан | /bɑˈnɑn/ | banana |\n| апельсин | /ɑpɛlʲˈsɪn/ | orange |\n| виноград | /vɪnɔˈɦrɑd/ | grapes |\n| полуниця | /pɔluˈnɪt͡sʲɑ/ | strawberry |\n\n### 3. Classic Ukrainian Dishes\n\n| Dish | Description |\n|------|-------------|\n| **борщ** | The iconic beet soup — every region has its own recipe |\n| **вареники** | Dumplings filled with potato, cheese, cherries, or meat |\n| **голубці** | Cabbage rolls stuffed with rice and meat |\n| **деруни** | Potato pancakes, often served with smetana |\n| **котлета** | Meat cutlet/patty |\n| **сало** | Cured pork fat — a national treasure! |\n| **пампушки** | Garlic bread rolls served with borsch |\n\n### 4. Drinks (Напої)\n\n| Ukrainian | English | Common Context |\n|-----------|---------|----------------|\n| **вода** | water | Мінеральна чи звичайна? |\n| **чай** | tea | З цукром чи без? |\n| **кава** | coffee | Чорна чи з молоком? |\n| **сік** | juice | Яблучний, апельсиновий |\n| **молоко** | milk | Для каші, для кави |\n| **пиво** | beer | На вечерю |\n| **вино** | wine | Біле чи червоне? |\n| **компот** | fruit drink | Домашній напій |\n\n## Cultural Insight: Борщ — More Than Soup 🇺🇦\n\n**Борщ** is not just soup — it's a symbol of Ukrainian identity. In 2022, UNESCO added Ukrainian borscht to its list of Intangible Cultural Heritage, recognizing it as a uniquely Ukrainian tradition.\n\nEvery Ukrainian grandmother (бабуся) has her own recipe. Some add beans, some add prunes, some serve it with meat, others without. But all agree: борщ must have **буряк** (beets), which gives it the famous red color.\n\nThe proper way to eat борщ:\n1. Add a generous spoonful of **сметана** (sour cream)\n2. Eat with **пампушки** (garlic bread) or dark bread\n3. Say **\"Смачного!\"** before eating\n\n> 📜 **Myth Buster:** Some people call it \"Russian borscht.\" This is false. Борщ is **Ukrainian** in origin, documented in Ukrainian cookbooks for centuries. The UNESCO recognition confirms this cultural ownership.\n\n> 📜 **History Bite:** Борщ sustained Ukrainian families through famines and wars. The Holodomor (1932-33) was a deliberate famine that killed millions of Ukrainians. Today, every bowl of борщ carries this memory — and the resilience of the Ukrainian people.\n\n## Dialogue: At the Café 🗣️\n\n**Офіціант:** Добрий день! Ось меню.\n\n**Клієнт:** Дякую. Що ви порекомендуєте?\n\n**Офіціант:** Сьогодні дуже смачний борщ.\n\n**Клієнт:** Чудово! Я візьму борщ. А що є на друге?\n\n**Офіціант:** Вареники з картоплею або котлета з пюре.\n\n**Клієнт:** Вареники, будь ласка. І салат.\n\n**Офіціант:** Добре. Що будете пити?\n\n**Клієнт:** Компот є?\n\n**Офіціант:** Так, яблучний.\n\n**Клієнт:** Чудово, компот і воду без газу.\n\n**Офіціант:** Все?\n\n**Клієнт:** Так, дякую!\n\n**Офіціант:** Зачекайте, будь ласка. Ваше замовлення буде скоро.\n\n*Пізніше...*\n\n**Офіціант:** Ось ваш борщ. Смачного!\n\n**Клієнт:** Дякую! Виглядає смачно!\n\n**English Translation:**\n**Waiter:** Good day! Here is the menu.\n**Client:** Thank you. What do you recommend?\n**Waiter:** Today the borscht is very delicious.\n**Client:** Great! I will take borscht. And what is for the main course?\n**Waiter:** Varenyky with potatoes or cutlet with puree.\n**Client:** Varenyky, please. And salad.\n**Waiter:** Good. What will you drink?\n**Client:** Is there compote?\n**Waiter:** Yes, apple.\n**Client:** Great, compote and water without gas.\n**Waiter:** Is that all?\n**Client:** Yes, thank you!\n**Waiter:** Wait, please. Your order will be soon.\n*Later...*\n**Waiter:** Here is your borscht. Bon appétit!\n**Client:** Thank you! Looks delicious!\n\n## Reading Practice: Mama's Kitchen 📖\n\n*Read about traditional Ukrainian home cooking.*\n\n**Мамина кухня — найкраща.** Кожної неділі мама готує обід для всієї сім'ї. Це традиція, яка існує багато років.\n\nВона починає рано, о сьомій ранку. Спочатку вона робить **борщ**. Вона бере буряк, картоплю, капусту, моркву і цибулю. Все це вариться три години. Аромат — неймовірний! Вся квартира пахне смачною їжею.\n\nПотім вона ліпить **вареники**. Тісто м'яке і свіже. Начинка — картопля з цибулею. Вареники варяться у воді. Потім — трохи масла і сметани. Вареники — улюблена страва дітей!\n\nНа столі: борщ, вареники, салат зі свіжих овочів, чорний хліб. І, звичайно, **компот** — яблучний, як завжди. Мама завжди готує компот з яблук із саду.\n\nО другій годині вся сім'я сидить за столом. Тато каже: \"**Смачного!**\" Всі їдять і розмовляють. Діти п'ють компот, дорослі — чай. Це — неділя. Це — сім'я. Це — Україна.\n\n**English Translation:**\n**Mama's kitchen is the best.** Every Sunday mom cooks lunch for the whole family. This is a tradition that exists for many years.\n\nShe starts early, at seven in the morning. First she makes **borscht**. She takes beet, potato, cabbage, carrot and onion. All this boils for three hours. The aroma is incredible! The whole apartment smells of delicious food.\n\nThen she shapes **varenyky**. The dough is soft and fresh. The filling is potato with onion. Varenyky boil in water. Then — a little butter and sour cream. Varenyky are the children's favorite dish!\n\nOn the table: borscht, varenyky, salad with fresh vegetables, black bread. And, of course, **compote** — apple, as always. Mom always cooks compote from apples from the garden.\n\nAt two o'clock the whole family sits at the table. Dad says: \"**Bon appétit!**\" Everyone eats and talks. Children drink compote, adults — tea. This is Sunday. This is family. This is Ukraine.\n\n> 💡 **Thinking Trick:** To remember food gender, group by ending: **-а/-я** are usually feminine (вода, кава, картопля), **consonant** are usually masculine (борщ, хліб, сир), and **-о/-е** are usually neuter (молоко, яблуко).\n\n# Summary\n\n1. **Three meals:** сніданок (breakfast), обід (lunch), вечеря (dinner)\n2. **Key verbs:** їсти (to eat), пити (to drink)\n3. **Classic dishes:** борщ, вареники, голубці, деруни\n4. **Ordering:** \"Я візьму...\" (I'll take...), \"Смачного!\" (Enjoy!)\n5. **Cultural note:** Борщ is Ukrainian, not Russian!\n\n---\n\n> [!tip] 🌟 **Pro Tip:** When eating at a Ukrainian home, always compliment the cook! Say \"Дуже смачно!\" (Very delicious!) — it will make their day.\n\n# Activities\n\n## match-up: Food Vocabulary\n> Match the Ukrainian word to its English meaning.\n\n| Ukrainian | English |\n| --- | --- |\n| борщ | beet soup |\n| вареники | dumplings |\n| хліб | bread |\n| м'ясо | meat |\n| риба | fish |\n| курка | chicken |\n| картопля | potato |\n| яблуко | apple |\n| вода | water |\n| кава | coffee |\n| чай | tea |\n| молоко | milk |\n\n## group-sort: Food Categories\n> Sort the foods into the correct category.\n\n| Овочі (Vegetables) | Фрукти (Fruits) |\n| --- | --- |\n| картопля | яблуко |\n| помідор | банан |\n| огірок | апельсин |\n| цибуля | виноград |\n| морква | полуниця |\n| капуста | слива |\n| буряк | груша |\n| часник | вишня |\n| перець | ківі |\n| гриби | персик |\n| квасоля | малина |\n| горох | лимон |\n\n## quiz: Food Knowledge\n> Test your knowledge of Ukrainian food vocabulary.\n\n1. What is \"борщ\"?\n   - [x] Beet soup\n   - [ ] Cabbage soup\n   - [ ] Chicken soup\n   - [ ] Fish soup\n   > Борщ is the iconic Ukrainian beet soup.\n\n2. What are \"вареники\"?\n   - [x] Dumplings\n   - [ ] Pancakes\n   - [ ] Bread rolls\n   - [ ] Meatballs\n   > Вареники are filled dumplings.\n\n3. What does \"сніданок\" mean?\n   - [x] Breakfast\n   - [ ] Lunch\n   - [ ] Dinner\n   - [ ] Snack\n   > Сніданок = breakfast\n\n4. Which verb means \"to eat\"?\n   - [x] їсти\n   - [ ] пити\n   - [ ] брати\n   - [ ] давати\n   > Їсти = to eat\n\n5. What is \"сметана\"?\n   - [x] Sour cream\n   - [ ] Butter\n   - [ ] Cheese\n   - [ ] Yogurt\n   > Сметана is sour cream, essential for борщ!\n\n6. What does \"Смачного!\" mean?\n   - [x] Bon appétit / Enjoy!\n   - [ ] Thank you\n   - [ ] You're welcome\n   - [ ] Goodbye\n   > Said before eating.\n\n7. What is the main ingredient that makes борщ red?\n   - [x] Буряк (beets)\n   - [ ] Помідори (tomatoes)\n   - [ ] Морква (carrots)\n   - [ ] Перець (peppers)\n   > Beets give борщ its signature red color.\n\n8. What are \"голубці\"?\n   - [x] Cabbage rolls\n   - [ ] Meat pies\n   - [ ] Potato pancakes\n   - [ ] Bread\n   > Голубці = stuffed cabbage rolls\n\n9. What is \"компот\"?\n   - [x] Fruit drink\n   - [ ] Wine\n   - [ ] Coffee\n   - [ ] Milk\n   > Компот is a homemade fruit drink.\n\n10. \"Обід\" refers to which meal?\n    - [x] Lunch\n    - [ ] Breakfast\n    - [ ] Dinner\n    - [ ] Snack\n    > Обід = lunch\n\n11. What are \"деруни\"?\n    - [x] Potato pancakes\n    - [ ] Meat patties\n    - [ ] Bread rolls\n    - [ ] Dumplings\n    > Деруни = potato pancakes\n\n12. What does \"пити\" mean?\n    - [x] To drink\n    - [ ] To eat\n    - [ ] To cook\n    - [ ] To order\n    > Пити = to drink\n\n## fill-in: Order at Restaurant\n> Complete the restaurant dialogue.\n\n1. Що ви ___? (порекомендувати - recommend)\n   > [!answer] порекомендуєте\n   > [!options] порекомендуєте | порекомендую | порекомендує | порекомендуємо\n\n2. Я ___ борщ. (взяти - I'll take)\n   > [!answer] візьму\n   > [!options] візьму | візьмеш | візьме | візьмемо\n\n3. Що ви ___ пити? (хотіти)\n   > [!answer] хочете\n   > [!options] хочете | хочу | хоче | хочемо\n\n4. Я ___ каву. (пити)\n   > [!answer] п'ю\n   > [!options] п'ю | п'єш | п'є | п'ємо\n\n5. Вона ___ вареники. (їсти)\n   > [!answer] їсть\n   > [!options] їсть | їм | їси | їмо\n\n6. Ми ___ салат. (хотіти)\n   > [!answer] хочемо\n   > [!options] хочемо | хочу | хочете | хочуть\n\n7. Це дуже ___! (смачний - delicious)\n   > [!answer] смачно\n   > [!options] смачно | смачний | смачна | смачне\n\n8. ___, будь ласка! (Рахунок - bill)\n   > [!answer] Рахунок\n   > [!options] Рахунок | Меню | Стіл | Офіціант\n\n9. Ви ___ чай чи каву? (любити)\n   > [!answer] любите\n   > [!options] любите | люблю | любить | любимо\n\n10. Вони ___ борщ щодня. (їсти)\n    > [!answer] їдять\n    > [!options] їдять | їм | їси | їсть\n\n11. Що на ___? (сніданок)\n    > [!answer] сніданок\n    > [!options] сніданок | обід | вечеря | перекус\n\n12. ___ готовий! (Обід)\n    > [!answer] Обід\n    > [!options] Обід | Сніданок | Вечеря | Чай\n\n## match-up: Drinks\n> Match the drink to its description.\n\n| Напій | Опис |\n| --- | --- |\n| кава | гаряча, з кофеїном |\n| чай | гарячий, з листя |\n| вода | без смаку, H2O |\n| сік | з фруктів |\n| молоко | біле, від корови |\n| компот | домашній, з фруктів |\n| пиво | з хмелю |\n| вино | з винограду |\n| какао | шоколадний напій |\n| кефір | кислий, молочний |\n| лимонад | солодкий, з лимоном |\n| мінералка | з бульбашками |\n\n## anagram: Food Word Scramble\n> Unscramble these food words.\n\n1. щ р о б\n   > [!answer] борщ\n\n2. б і х л\n   > [!answer] хліб\n\n3. о с ' я м\n   > [!answer] м'ясо\n\n4. а в к а\n   > [!answer] кава\n\n5. д о а в\n   > [!answer] вода\n\n6. т л а а с\n   > [!answer] салат\n\n7. й а ч\n   > [!answer] чай\n\n8. а н а м е т с\n   > [!answer] сметана\n\n9. к о о л о м\n   > [!answer] молоко\n\n10. л у к о б я\n    > [!answer] яблуко\n\n11. л о т р а п я к\n    > [!answer] картопля\n\n12. к и н р е в а и\n    > [!answer] вареники\n\n## true-false: Ukrainian Food Culture\n> Decide if the statement is True or False.\n\n- [x] Борщ is a Ukrainian dish, not Russian.\n  > Correct! UNESCO recognized Ukrainian borscht as cultural heritage.\n\n- [ ] Ukrainians eat борщ without сметана.\n  > False! Сметана is essential for борщ.\n\n- [x] \"Смачного\" is said before eating.\n  > Correct! Like \"Bon appétit!\"\n\n- [ ] Сніданок means dinner.\n  > False! Сніданок = breakfast. Вечеря = dinner.\n\n- [x] Вареники can have sweet or savory fillings.\n  > Correct! Potato, cheese, cherries, etc.\n\n- [ ] It's polite to refuse food in Ukrainian homes.\n  > False! Refusing food is considered rude.\n\n- [x] Пампушки are garlic bread rolls served with борщ.\n  > Correct!\n\n- [ ] \"Їсти\" is a regular Class II verb.\n  > False! It's irregular: їм, їси, їсть...\n\n- [x] Компот is a traditional homemade fruit drink.\n  > Correct!\n\n- [ ] Голубці are potato pancakes.\n  > False! Голубці = cabbage rolls. Деруни = potato pancakes.\n\n- [x] Буряк gives борщ its red color.\n  > Correct!\n\n- [ ] \"Обід\" means breakfast.\n  > False! Обід = lunch.\n\n## fill-in: Family Dinner\n> Complete sentences about a Ukrainian family meal.\n\n1. Мама готує ___ для сім'ї. (обід)\n   > [!answer] обід\n   > [!options] обід | сніданок | вечеря | їжа\n\n2. Тато каже: \"___!\" (Смачного)\n   > [!answer] Смачного\n   > [!options] Смачного | Дякую | Привіт | До побачення\n\n3. Діти ___ вареники. (їсти)\n   > [!answer] їдять\n   > [!options] їдять | їм | їси | їсть\n\n4. Бабуся ___ найкращий борщ. (готувати)\n   > [!answer] готує\n   > [!options] готує | готую | готуєш | готуємо\n\n5. Всі ___ компот. (пити)\n   > [!answer] п'ють\n   > [!options] п'ють | п'ю | п'єш | п'ємо\n\n6. Це дуже ___! (смачний)\n   > [!answer] смачно\n   > [!options] смачно | смачний | смачна | смачне\n\n7. Я ___ ще трохи. (хотіти)\n   > [!answer] хочу\n   > [!options] хочу | хочеш | хоче | хочемо\n\n8. Ми ___ за столом. (сидіти)\n   > [!answer] сидимо\n   > [!options] сидимо | сиджу | сидиш | сидять\n\n9. Неділя — це ___ день. (сімейний)\n   > [!answer] сімейний\n   > [!options] сімейний | сімейна | сімейне | сімейні\n\n10. Після обіду ми ___ чай. (пити)\n    > [!answer] п'ємо\n    > [!options] п'ємо | п'ю | п'єш | п'ють\n\n11. ___ смачна! (Їжа)\n    > [!answer] Їжа\n    > [!options] Їжа | Борщ | Хліб | Вода\n\n12. Дякую за ___! (обід)\n    > [!answer] обід\n    > [!options] обід | їжа | страва | смак\n\n---\n\n# Vocabulary\n\n| Ukrainian | IPA | English | POS | Gender | Note |\n| --- | --- | --- | --- | --- | --- |\n| **їжа** | /ˈjiʒɑ/ | food | noun | f | |\n| **сніданок** | /snʲiˈdɑnɔk/ | breakfast | noun | m | |\n| **обід** | /ɔˈbʲid/ | lunch | noun | m | |\n| **вечеря** | /vɛˈt͡ʃɛrʲɑ/ | dinner | noun | f | |\n| **борщ** | /bɔrʃt͡ʃ/ | borscht | noun | m | |\n| **вареники** | /vɑˈrɛnɪkɪ/ | dumplings | noun | pl | |\n| **хліб** | /xlʲib/ | bread | noun | m | |\n| **м'ясо** | /ˈmjɑsɔ/ | meat | noun | n | |\n| **курка** | /ˈkurkɑ/ | chicken | noun | f | |\n| **риба** | /ˈrɪbɑ/ | fish | noun | f | |\n| **овочі** | /ˈɔvɔt͡ʃi/ | vegetables | noun | pl | |\n| **фрукти** | /ˈfruktɪ/ | fruits | noun | pl | |\n| **яблуко** | /ˈjɑblukɔ/ | apple | noun | n | |\n| **банан** | /bɑˈnɑn/ | banana | noun | m | |\n| **картопля** | /kɑrˈtɔplʲɑ/ | potato | noun | f | |\n| **помідор** | /pɔmʲiˈdɔr/ | tomato | noun | m | |\n| **огірок** | /ɔˈɦʲirɔk/ | cucumber | noun | m | |\n| **цибуля** | /t͡sɪˈbulʲɑ/ | onion | noun | f | |\n| **сир** | /sɪr/ | cheese | noun | m | |\n| **яйце** | /ˈjɑjt͡sɛ/ | egg | noun | n | |\n| **чай** | /t͡ʃɑj/ | tea | noun | m | |\n| **кава** | /ˈkɑvɑ/ | coffee | noun | f | |\n| **вода** | /vɔˈdɑ/ | water | noun | f | |\n| **сік** | /sʲik/ | juice | noun | m | |\n| **молоко** | /mɔlɔˈkɔ/ | milk | noun | n | |\n| **смачний** | /ˈsmɑt͡ʃnɪj/ | delicious (m) | adj | m | |\n| **смачно** | /ˈsmɑt͡ʃnɔ/ | delicious (adv) | adv | - | |\n| **Смачного!** | /smɑˈt͡ʃnɔɦɔ/ | Enjoy! | phrase | - | Said before eating |\n| **меню** | /mɛˈnʲu/ | menu | noun | n | |\n| **рахунок** | /rɑˈxunɔk/ | bill | noun | m | |\n",
+    "createdAt": "2025-12-12T19:55:32.037Z",
+    "modifiedAt": "2025-12-12T19:55:32.037Z",
     "version": 2
   },
   "activities": [
@@ -61,13 +61,13 @@
       "id": "act-a1-0-matchup-0",
       "type": "match-up",
       "title": "Food Vocabulary",
-      "description": "Match Ukrainian food words to English.",
+      "description": "Match the Ukrainian word to its English meaning.",
       "content": {
         "type": "match-up",
         "pairs": [
           {
             "left": "борщ",
-            "right": "borsch"
+            "right": "beet soup"
           },
           {
             "left": "вареники",
@@ -82,105 +82,36 @@
             "right": "meat"
           },
           {
-            "left": "курка",
-            "right": "chicken"
-          },
-          {
             "left": "риба",
             "right": "fish"
           },
           {
-            "left": "яйце",
-            "right": "egg"
+            "left": "курка",
+            "right": "chicken"
           },
           {
             "left": "картопля",
             "right": "potato"
           },
           {
-            "left": "морква",
-            "right": "carrot"
+            "left": "яблуко",
+            "right": "apple"
           },
-          {
-            "left": "капуста",
-            "right": "cabbage"
-          },
-          {
-            "left": "буряк",
-            "right": "beetroot"
-          },
-          {
-            "left": "цибуля",
-            "right": "onion"
-          }
-        ],
-        "shuffleRight": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-11T19:55:55.583Z",
-      "modifiedAt": "2025-12-11T19:55:55.583Z"
-    },
-    {
-      "id": "act-a1-0-matchup-1",
-      "type": "match-up",
-      "title": "Drinks Vocabulary",
-      "description": "Match Ukrainian drink words to English.",
-      "content": {
-        "type": "match-up",
-        "pairs": [
           {
             "left": "вода",
             "right": "water"
-          },
-          {
-            "left": "чай",
-            "right": "tea"
           },
           {
             "left": "кава",
             "right": "coffee"
           },
           {
-            "left": "сік",
-            "right": "juice"
+            "left": "чай",
+            "right": "tea"
           },
           {
             "left": "молоко",
             "right": "milk"
-          },
-          {
-            "left": "пиво",
-            "right": "beer"
-          },
-          {
-            "left": "вино",
-            "right": "wine"
-          },
-          {
-            "left": "узвар",
-            "right": "dried fruit compote"
-          },
-          {
-            "left": "компот",
-            "right": "compote"
-          },
-          {
-            "left": "газована вода",
-            "right": "sparkling water"
-          },
-          {
-            "left": "мінеральна вода",
-            "right": "mineral water"
-          },
-          {
-            "left": "гарячий шоколад",
-            "right": "hot chocolate"
           }
         ],
         "shuffleRight": true
@@ -192,138 +123,57 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-11T19:55:55.583Z",
-      "modifiedAt": "2025-12-11T19:55:55.583Z"
+      "createdAt": "2025-12-12T19:55:32.037Z",
+      "modifiedAt": "2025-12-12T19:55:32.037Z"
     },
     {
-      "id": "act-a1-0-fillblank-0",
-      "type": "fill-blank",
-      "title": "I Eat / I Drink",
-      "description": "Complete with їсти or пити conjugated correctly.",
+      "id": "act-a1-0-groupsort-0",
+      "type": "group-sort",
+      "title": "Food Categories",
+      "description": "Sort the foods into the correct category.",
       "content": {
-        "type": "fill-blank",
-        "items": [
+        "type": "group-sort",
+        "groups": [
           {
-            "prompt": "Я ___ борщ. (I eat borsch.)",
-            "answer": "їм",
-            "options": [
-              "їм",
-              "їси",
-              "пʼю",
-              "пʼєш"
-            ]
+            "id": "",
+            "name": "Овочі",
+            "items": [
+              "картопля",
+              "помідор",
+              "огірок",
+              "цибуля",
+              "морква",
+              "капуста",
+              "буряк",
+              "часник",
+              "перець",
+              "гриби",
+              "квасоля",
+              "горох"
+            ],
+            "nameUk": "Vegetables"
           },
           {
-            "prompt": "Вона ___ каву. (She drinks coffee.)",
-            "answer": "пʼє",
-            "options": [
-              "їсть",
-              "пʼє",
-              "їм",
-              "пʼю"
-            ]
-          },
-          {
-            "prompt": "Ми ___ вареники. (We eat varenyky.)",
-            "answer": "їмо",
-            "options": [
-              "їмо",
-              "пʼємо",
-              "їдять",
-              "пʼють"
-            ]
-          },
-          {
-            "prompt": "Ти ___ чай? (Do you drink tea?)",
-            "answer": "пʼєш",
-            "options": [
-              "їси",
-              "пʼєш",
-              "їсть",
-              "пʼє"
-            ]
-          },
-          {
-            "prompt": "Вони ___ хліб. (They eat bread.)",
-            "answer": "їдять",
-            "options": [
-              "їмо",
-              "їдять",
-              "пʼємо",
-              "пʼють"
-            ]
-          },
-          {
-            "prompt": "Він ___ воду. (He drinks water.)",
-            "answer": "пʼє",
-            "options": [
-              "їсть",
-              "пʼє",
-              "їм",
-              "пʼю"
-            ]
-          },
-          {
-            "prompt": "Ви ___ сало? (Do you eat salo?)",
-            "answer": "їсте",
-            "options": [
-              "їсте",
-              "пʼєте",
-              "їмо",
-              "пʼємо"
-            ]
-          },
-          {
-            "prompt": "Я ___ сік. (I drink juice.)",
-            "answer": "пʼю",
-            "options": [
-              "їм",
-              "пʼю",
-              "їси",
-              "пʼєш"
-            ]
-          },
-          {
-            "prompt": "Вона ___ яблуко. (She eats an apple.)",
-            "answer": "їсть",
-            "options": [
-              "їсть",
-              "пʼє",
-              "їм",
-              "пʼю"
-            ]
-          },
-          {
-            "prompt": "Ми ___ молоко. (We drink milk.)",
-            "answer": "пʼємо",
-            "options": [
-              "їмо",
-              "пʼємо",
-              "їдять",
-              "пʼють"
-            ]
-          },
-          {
-            "prompt": "Ти ___ рибу? (Do you eat fish?)",
-            "answer": "їси",
-            "options": [
-              "їси",
-              "пʼєш",
-              "їсть",
-              "пʼє"
-            ]
-          },
-          {
-            "prompt": "Вони ___ пиво. (They drink beer.)",
-            "answer": "пʼють",
-            "options": [
-              "їдять",
-              "пʼють",
-              "їмо",
-              "пʼємо"
-            ]
+            "id": "",
+            "name": "Фрукти",
+            "items": [
+              "яблуко",
+              "банан",
+              "апельсин",
+              "виноград",
+              "полуниця",
+              "слива",
+              "груша",
+              "вишня",
+              "ківі",
+              "персик",
+              "малина",
+              "лимон"
+            ],
+            "nameUk": "Fruits"
           }
-        ]
+        ],
+        "shuffleItems": true
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -332,148 +182,148 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-11T19:55:55.583Z",
-      "modifiedAt": "2025-12-11T19:55:55.583Z"
+      "createdAt": "2025-12-12T19:55:32.037Z",
+      "modifiedAt": "2025-12-12T19:55:32.037Z"
     },
     {
       "id": "act-a1-0-quiz-0",
       "type": "quiz",
-      "title": "Ukrainian Food Culture",
-      "description": "Test your knowledge of Ukrainian food culture.",
+      "title": "Food Knowledge",
+      "description": "Test your knowledge of Ukrainian food vocabulary.",
       "content": {
         "type": "quiz",
         "questions": [
           {
-            "question": "Which meal is traditionally the biggest in Ukraine?",
+            "question": "What is \"борщ\"?",
             "options": [
-              "Сніданок (breakfast)",
-              "Обід (lunch)",
-              "Вечеря (dinner)",
-              "Перекус (snack)"
+              "Beet soup",
+              "Cabbage soup",
+              "Chicken soup",
+              "Fish soup"
             ],
-            "correctIndex": 1,
-            "explanation": "Lunch is the main meal in Ukrainian tradition!"
+            "correctIndex": 0,
+            "explanation": "Борщ is the iconic Ukrainian beet soup."
           },
           {
-            "question": "What is the key ingredient in борщ?",
+            "question": "What are \"вареники\"?",
             "options": [
-              "Картопля",
-              "Буряк",
-              "Капуста",
-              "Морква"
-            ],
-            "correctIndex": 1,
-            "explanation": "Буряк (beetroot) makes borsch red!"
-          },
-          {
-            "question": "What do you say before eating?",
-            "options": [
-              "Добрий день!",
-              "Дякую!",
-              "Смачного!",
-              "До побачення!"
-            ],
-            "correctIndex": 2,
-            "explanation": "Смачного! = Bon appétit!"
-          },
-          {
-            "question": "What are вареники?",
-            "options": [
-              "Soup",
               "Dumplings",
-              "Bread",
-              "Meat"
-            ],
-            "correctIndex": 1,
-            "explanation": "Varenyky are stuffed dumplings — Ukrainian classic!"
-          },
-          {
-            "question": "What is сало?",
-            "options": [
-              "Fish",
-              "Vegetables",
-              "Cured pork fat",
-              "Cheese"
-            ],
-            "correctIndex": 2,
-            "explanation": "Salo is cured pork fat — Ukrainian delicacy!"
-          },
-          {
-            "question": "Which city is famous for coffee?",
-            "options": [
-              "Київ",
-              "Львів",
-              "Одеса",
-              "Харків"
-            ],
-            "correctIndex": 1,
-            "explanation": "Львів has the strongest coffee culture!"
-          },
-          {
-            "question": "What organization recognized borsch as Ukrainian heritage?",
-            "options": [
-              "UNESCO",
-              "NATO",
-              "EU",
-              "UN"
+              "Pancakes",
+              "Bread rolls",
+              "Meatballs"
             ],
             "correctIndex": 0,
-            "explanation": "UNESCO added borsch to intangible heritage list in 2022!"
+            "explanation": "Вареники are filled dumplings."
           },
           {
-            "question": "What is узвар?",
+            "question": "What does \"сніданок\" mean?",
             "options": [
-              "Soup",
-              "Dried fruit compote",
-              "Juice",
-              "Beer"
-            ],
-            "correctIndex": 1,
-            "explanation": "Uzvar is traditional dried fruit compote!"
-          },
-          {
-            "question": "Saying \"Хліб та сіль!\" means...",
-            "options": [
-              "Bread and salt — traditional welcome",
-              "I'm hungry",
-              "The food is bad",
-              "Pass the salt"
+              "Breakfast",
+              "Lunch",
+              "Dinner",
+              "Snack"
             ],
             "correctIndex": 0,
-            "explanation": "Traditional greeting with bread and salt!"
+            "explanation": "Сніданок = breakfast"
           },
           {
-            "question": "What is the correct order of courses?",
+            "question": "Which verb means \"to eat\"?",
             "options": [
-              "Soup first, then main course",
-              "Main course, then soup",
-              "Dessert first",
-              "No order"
+              "їсти",
+              "пити",
+              "брати",
+              "давати"
             ],
             "correctIndex": 0,
-            "explanation": "Soup (перша страва) comes first!"
+            "explanation": "Їсти = to eat"
           },
           {
-            "question": "How much tip is standard in Ukraine?",
+            "question": "What is \"сметана\"?",
             "options": [
-              "5%",
-              "10%",
-              "20%",
-              "25%"
+              "Sour cream",
+              "Butter",
+              "Cheese",
+              "Yogurt"
             ],
-            "correctIndex": 1,
-            "explanation": "10% is standard for good service!"
+            "correctIndex": 0,
+            "explanation": "Сметана is sour cream, essential for борщ!"
           },
           {
-            "question": "What is коровай?",
+            "question": "What does \"Смачного!\" mean?",
             "options": [
-              "Soup",
-              "Drink",
-              "Ceremonial wedding bread",
-              "Dessert"
+              "Bon appétit / Enjoy!",
+              "Thank you",
+              "You're welcome",
+              "Goodbye"
             ],
-            "correctIndex": 2,
-            "explanation": "Korovai is traditional wedding bread!"
+            "correctIndex": 0,
+            "explanation": "Said before eating."
+          },
+          {
+            "question": "What is the main ingredient that makes борщ red?",
+            "options": [
+              "Буряк (beets)",
+              "Помідори (tomatoes)",
+              "Морква (carrots)",
+              "Перець (peppers)"
+            ],
+            "correctIndex": 0,
+            "explanation": "Beets give борщ its signature red color."
+          },
+          {
+            "question": "What are \"голубці\"?",
+            "options": [
+              "Cabbage rolls",
+              "Meat pies",
+              "Potato pancakes",
+              "Bread"
+            ],
+            "correctIndex": 0,
+            "explanation": "Голубці = stuffed cabbage rolls"
+          },
+          {
+            "question": "What is \"компот\"?",
+            "options": [
+              "Fruit drink",
+              "Wine",
+              "Coffee",
+              "Milk"
+            ],
+            "correctIndex": 0,
+            "explanation": "Компот is a homemade fruit drink."
+          },
+          {
+            "question": "\"Обід\" refers to which meal?",
+            "options": [
+              "Lunch",
+              "Breakfast",
+              "Dinner",
+              "Snack"
+            ],
+            "correctIndex": 0,
+            "explanation": "Обід = lunch"
+          },
+          {
+            "question": "What are \"деруни\"?",
+            "options": [
+              "Potato pancakes",
+              "Meat patties",
+              "Bread rolls",
+              "Dumplings"
+            ],
+            "correctIndex": 0,
+            "explanation": "Деруни = potato pancakes"
+          },
+          {
+            "question": "What does \"пити\" mean?",
+            "options": [
+              "To drink",
+              "To eat",
+              "To cook",
+              "To order"
+            ],
+            "correctIndex": 0,
+            "explanation": "Пити = to drink"
           }
         ],
         "shuffleQuestions": true,
@@ -487,196 +337,135 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-11T19:55:55.583Z",
-      "modifiedAt": "2025-12-11T19:55:55.583Z"
+      "createdAt": "2025-12-12T19:55:32.037Z",
+      "modifiedAt": "2025-12-12T19:55:32.037Z"
     },
     {
-      "id": "act-a1-0-groupsort-0",
-      "type": "group-sort",
-      "title": "Food Categories",
-      "description": "Sort foods into correct categories.",
-      "content": {
-        "type": "group-sort",
-        "groups": [
-          {
-            "id": "",
-            "name": "Овочі",
-            "items": [
-              "картопля",
-              "морква",
-              "цибуля",
-              "буряк",
-              "капуста",
-              "помідор",
-              "огірок"
-            ],
-            "nameUk": "Vegetables"
-          },
-          {
-            "id": "",
-            "name": "Фрукти",
-            "items": [
-              "яблуко",
-              "банан",
-              "апельсин",
-              "вишня",
-              "полуниця",
-              "груша"
-            ],
-            "nameUk": "Fruits"
-          },
-          {
-            "id": "",
-            "name": "Напої",
-            "items": [
-              "вода",
-              "чай",
-              "кава",
-              "сік",
-              "молоко",
-              "узвар"
-            ],
-            "nameUk": "Drinks"
-          }
-        ],
-        "shuffleItems": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-11T19:55:55.583Z",
-      "modifiedAt": "2025-12-11T19:55:55.583Z"
-    },
-    {
-      "id": "act-a1-0-fillblank-1",
+      "id": "act-a1-0-fillblank-0",
       "type": "fill-blank",
-      "title": "Restaurant Phrases",
-      "description": "Complete the restaurant conversation.",
+      "title": "Order at Restaurant",
+      "description": "Complete the restaurant dialogue.",
       "content": {
         "type": "fill-blank",
         "items": [
           {
-            "prompt": "Добрий день! Що ви ___? (What would you like?)",
-            "answer": "бажаєте",
+            "prompt": "Що ви ___? (порекомендувати - recommend)",
+            "answer": "порекомендуєте",
             "options": [
-              "бажаєте",
-              "їсте",
-              "пʼєте",
-              "робите"
+              "порекомендуєте",
+              "порекомендую",
+              "порекомендує",
+              "порекомендуємо"
             ]
           },
           {
-            "prompt": "Я ___ борщ, будь ласка. (I want borsch, please.)",
-            "answer": "хочу",
+            "prompt": "Я ___ борщ. (взяти - I'll take)",
+            "answer": "візьму",
             "options": [
+              "візьму",
+              "візьмеш",
+              "візьме",
+              "візьмемо"
+            ]
+          },
+          {
+            "prompt": "Що ви ___ пити? (хотіти)",
+            "answer": "хочете",
+            "options": [
+              "хочете",
               "хочу",
+              "хоче",
+              "хочемо"
+            ]
+          },
+          {
+            "prompt": "Я ___ каву. (пити)",
+            "answer": "п'ю",
+            "options": [
+              "п'ю",
+              "п'єш",
+              "п'є",
+              "п'ємо"
+            ]
+          },
+          {
+            "prompt": "Вона ___ вареники. (їсти)",
+            "answer": "їсть",
+            "options": [
+              "їсть",
               "їм",
-              "пʼю",
-              "маю"
+              "їси",
+              "їмо"
             ]
           },
           {
-            "prompt": "Що ви ___? (What do you recommend?)",
-            "answer": "рекомендуєте",
+            "prompt": "Ми ___ салат. (хотіти)",
+            "answer": "хочемо",
             "options": [
-              "рекомендуєте",
-              "робите",
-              "бачите",
-              "хочете"
+              "хочемо",
+              "хочу",
+              "хочете",
+              "хочуть"
             ]
           },
           {
-            "prompt": "___ коштує? (How much does it cost?)",
-            "answer": "Скільки",
-            "options": [
-              "Скільки",
-              "Як",
-              "Що",
-              "Де"
-            ]
-          },
-          {
-            "prompt": "___, будь ласка. (The bill, please.)",
-            "answer": "Рахунок",
-            "options": [
-              "Рахунок",
-              "Борщ",
-              "Меню",
-              "Вода"
-            ]
-          },
-          {
-            "prompt": "Дуже ___! (Very tasty!)",
+            "prompt": "Це дуже ___! (смачний - delicious)",
             "answer": "смачно",
             "options": [
               "смачно",
-              "добре",
-              "гарно",
-              "важко"
-            ]
-          },
-          {
-            "prompt": "___ не треба. (Keep the change.)",
-            "answer": "Здачі",
-            "options": [
-              "Здачі",
-              "Гроші",
-              "Рахунок",
-              "Меню"
-            ]
-          },
-          {
-            "prompt": "Ще раз ___, будь ласка. (One more water, please.)",
-            "answer": "воду",
-            "options": [
-              "воду",
-              "води",
-              "вода",
-              "водою"
-            ]
-          },
-          {
-            "prompt": "На ___? (For second course?)",
-            "answer": "друге",
-            "options": [
-              "друге",
-              "перше",
-              "третє",
-              "останнє"
-            ]
-          },
-          {
-            "prompt": "Я ___! (I'm hungry!)",
-            "answer": "голодний",
-            "options": [
-              "голодний",
               "смачний",
-              "готовий",
-              "радий"
+              "смачна",
+              "смачне"
             ]
           },
           {
-            "prompt": "Принесіть ___, будь ласка. (Bring the menu, please.)",
-            "answer": "меню",
+            "prompt": "___, будь ласка! (Рахунок - bill)",
+            "answer": "Рахунок",
             "options": [
-              "меню",
-              "борщ",
-              "рахунок",
-              "воду"
+              "Рахунок",
+              "Меню",
+              "Стіл",
+              "Офіціант"
             ]
           },
           {
-            "prompt": "Дякую за ___! (Thanks for dinner!)",
-            "answer": "вечерю",
+            "prompt": "Ви ___ чай чи каву? (любити)",
+            "answer": "любите",
             "options": [
-              "вечерю",
-              "обід",
+              "любите",
+              "люблю",
+              "любить",
+              "любимо"
+            ]
+          },
+          {
+            "prompt": "Вони ___ борщ щодня. (їсти)",
+            "answer": "їдять",
+            "options": [
+              "їдять",
+              "їм",
+              "їси",
+              "їсть"
+            ]
+          },
+          {
+            "prompt": "Що на ___? (сніданок)",
+            "answer": "сніданок",
+            "options": [
               "сніданок",
-              "їжу"
+              "обід",
+              "вечеря",
+              "перекус"
+            ]
+          },
+          {
+            "prompt": "___ готовий! (Обід)",
+            "answer": "Обід",
+            "options": [
+              "Обід",
+              "Сніданок",
+              "Вечеря",
+              "Чай"
             ]
           }
         ]
@@ -688,14 +477,83 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-11T19:55:55.583Z",
-      "modifiedAt": "2025-12-11T19:55:55.583Z"
+      "createdAt": "2025-12-12T19:55:32.037Z",
+      "modifiedAt": "2025-12-12T19:55:32.037Z"
+    },
+    {
+      "id": "act-a1-0-matchup-1",
+      "type": "match-up",
+      "title": "Drinks",
+      "description": "Match the drink to its description.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "кава",
+            "right": "гаряча, з кофеїном"
+          },
+          {
+            "left": "чай",
+            "right": "гарячий, з листя"
+          },
+          {
+            "left": "вода",
+            "right": "без смаку, H2O"
+          },
+          {
+            "left": "сік",
+            "right": "з фруктів"
+          },
+          {
+            "left": "молоко",
+            "right": "біле, від корови"
+          },
+          {
+            "left": "компот",
+            "right": "домашній, з фруктів"
+          },
+          {
+            "left": "пиво",
+            "right": "з хмелю"
+          },
+          {
+            "left": "вино",
+            "right": "з винограду"
+          },
+          {
+            "left": "какао",
+            "right": "шоколадний напій"
+          },
+          {
+            "left": "кефір",
+            "right": "кислий, молочний"
+          },
+          {
+            "left": "лимонад",
+            "right": "солодкий, з лимоном"
+          },
+          {
+            "left": "мінералка",
+            "right": "з бульбашками"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.037Z",
+      "modifiedAt": "2025-12-12T19:55:32.037Z"
     },
     {
       "id": "act-a1-0-anagram-0",
       "type": "anagram",
-      "title": "Unscramble Food Words",
-      "description": "Form food vocabulary.",
+      "title": "Food Word Scramble",
+      "description": "Unscramble these food words.",
       "content": {
         "type": "anagram",
         "isAnagram": true,
@@ -707,120 +565,54 @@
               "о",
               "б"
             ],
-            "answer": "борщ\n(borsch)",
-            "translation": "borsch"
-          },
-          {
-            "letters": [
-              "и",
-              "к",
-              "н",
-              "е",
-              "р",
-              "а",
-              "в"
-            ],
-            "answer": "вареники\n(varenyky)",
-            "translation": "varenyky"
+            "answer": "борщ"
           },
           {
             "letters": [
               "б",
               "і",
-              "л",
-              "х"
+              "х",
+              "л"
             ],
-            "answer": "хліб\n(bread)",
-            "translation": "bread"
+            "answer": "хліб"
           },
           {
             "letters": [
               "о",
               "с",
+              "'",
               "я",
-              "м",
-              "'"
-            ],
-            "answer": "мʼясо\n(meat)",
-            "translation": "meat"
-          },
-          {
-            "letters": [
-              "а",
-              "к",
-              "р",
-              "у",
-              "к"
-            ],
-            "answer": "курка\n(chicken)",
-            "translation": "chicken"
-          },
-          {
-            "letters": [
-              "а",
-              "б",
-              "и",
-              "р"
-            ],
-            "answer": "риба\n(fish)",
-            "translation": "fish"
-          },
-          {
-            "letters": [
-              "я",
-              "л",
-              "п",
-              "о",
-              "т",
-              "а",
-              "р",
-              "к"
-            ],
-            "answer": "картопля\n(potato)",
-            "translation": "potato"
-          },
-          {
-            "letters": [
-              "а",
-              "к",
-              "в",
-              "р",
-              "о",
               "м"
             ],
-            "answer": "морква\n(carrot)",
-            "translation": "carrot"
-          },
-          {
-            "letters": [
-              "к",
-              "я",
-              "р",
-              "у",
-              "б"
-            ],
-            "answer": "буряк\n(beetroot)",
-            "translation": "beetroot"
-          },
-          {
-            "letters": [
-              "а",
-              "д",
-              "о",
-              "в"
-            ],
-            "answer": "вода\n(water)",
-            "translation": "water"
+            "answer": "м'ясо"
           },
           {
             "letters": [
               "а",
               "в",
-              "а",
-              "к"
+              "к",
+              "а"
             ],
-            "answer": "кава\n(coffee)",
-            "translation": "coffee"
+            "answer": "кава"
+          },
+          {
+            "letters": [
+              "д",
+              "о",
+              "а",
+              "в"
+            ],
+            "answer": "вода"
+          },
+          {
+            "letters": [
+              "т",
+              "л",
+              "а",
+              "а",
+              "с"
+            ],
+            "answer": "салат"
           },
           {
             "letters": [
@@ -828,169 +620,67 @@
               "а",
               "ч"
             ],
-            "answer": "чай\n(tea)",
-            "translation": "tea"
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-11T19:55:55.583Z",
-      "modifiedAt": "2025-12-11T19:55:55.583Z"
-    },
-    {
-      "id": "act-a1-0-anagram-1",
-      "type": "anagram",
-      "title": "Unscramble Food Phrases",
-      "description": "Form common food phrases.",
-      "content": {
-        "type": "anagram",
-        "isAnagram": true,
-        "items": [
+            "answer": "чай"
+          },
           {
             "letters": [
-              "о",
+              "а",
               "н",
-              "ч",
               "а",
               "м",
+              "е",
+              "т",
               "с"
             ],
-            "answer": "смачно\n(tasty)",
-            "translation": "tasty"
-          },
-          {
-            "letters": [
-              "о",
-              "г",
-              "о",
-              "н",
-              "ч",
-              "а",
-              "м",
-              "с"
-            ],
-            "answer": "смачного\n(bon appétit)",
-            "translation": "bon appétit"
-          },
-          {
-            "letters": [
-              "о",
-              "к",
-              "у",
-              "н",
-              "а",
-              "х",
-              "р"
-            ],
-            "answer": "рахунок\n(bill)",
-            "translation": "bill"
-          },
-          {
-            "letters": [
-              "д",
-              "і",
-              "б",
-              "о"
-            ],
-            "answer": "обід\n(lunch)",
-            "translation": "lunch"
-          },
-          {
-            "letters": [
-              "я",
-              "р",
-              "е",
-              "ч",
-              "е",
-              "в"
-            ],
-            "answer": "вечеря\n(dinner)",
-            "translation": "dinner"
+            "answer": "сметана"
           },
           {
             "letters": [
               "к",
               "о",
-              "н",
-              "а",
-              "д",
-              "і",
-              "н",
-              "с"
-            ],
-            "answer": "сніданок\n(breakfast)",
-            "translation": "breakfast"
-          },
-          {
-            "letters": [
-              "ю",
-              "н",
-              "е",
+              "о",
+              "л",
+              "о",
               "м"
             ],
-            "answer": "меню\n(menu)",
-            "translation": "menu"
+            "answer": "молоко"
           },
           {
             "letters": [
-              "а",
-              "ж",
-              "ї"
-            ],
-            "answer": "їжа\n(food)",
-            "translation": "food"
-          },
-          {
-            "letters": [
-              "і",
-              "о",
-              "п",
-              "а",
-              "н"
-            ],
-            "answer": "напої\n(drinks)",
-            "translation": "drinks"
-          },
-          {
-            "letters": [
-              "і",
-              "ч",
-              "о",
-              "в",
-              "о"
-            ],
-            "answer": "овочі\n(vegetables)",
-            "translation": "vegetables"
-          },
-          {
-            "letters": [
-              "и",
-              "т",
-              "к",
+              "л",
               "у",
-              "р",
-              "ф"
+              "к",
+              "о",
+              "б",
+              "я"
             ],
-            "answer": "фрукти\n(fruits)",
-            "translation": "fruits"
+            "answer": "яблуко"
           },
           {
             "letters": [
+              "л",
+              "о",
+              "т",
+              "р",
               "а",
+              "п",
+              "я",
+              "к"
+            ],
+            "answer": "картопля"
+          },
+          {
+            "letters": [
+              "к",
+              "и",
+              "н",
+              "р",
+              "е",
               "в",
               "а",
-              "р",
-              "т",
-              "с"
+              "и"
             ],
-            "answer": "страва\n(dish)",
-            "translation": "dish"
+            "answer": "вареники"
           }
         ]
       },
@@ -1001,8 +691,228 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-11T19:55:55.583Z",
-      "modifiedAt": "2025-12-11T19:55:55.583Z"
+      "createdAt": "2025-12-12T19:55:32.037Z",
+      "modifiedAt": "2025-12-12T19:55:32.037Z"
+    },
+    {
+      "id": "act-a1-0-truefalse-0",
+      "type": "true-false",
+      "title": "Ukrainian Food Culture",
+      "description": "Decide if the statement is True or False.",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "Борщ is a Ukrainian dish, not Russian.",
+            "isTrue": true,
+            "explanation": "Correct! UNESCO recognized Ukrainian borscht as cultural heritage."
+          },
+          {
+            "statement": "Ukrainians eat борщ without сметана.",
+            "isTrue": false,
+            "explanation": "False! Сметана is essential for борщ."
+          },
+          {
+            "statement": "\"Смачного\" is said before eating.",
+            "isTrue": true,
+            "explanation": "Correct! Like \"Bon appétit!\""
+          },
+          {
+            "statement": "Сніданок means dinner.",
+            "isTrue": false,
+            "explanation": "False! Сніданок = breakfast. Вечеря = dinner."
+          },
+          {
+            "statement": "Вареники can have sweet or savory fillings.",
+            "isTrue": true,
+            "explanation": "Correct! Potato, cheese, cherries, etc."
+          },
+          {
+            "statement": "It's polite to refuse food in Ukrainian homes.",
+            "isTrue": false,
+            "explanation": "False! Refusing food is considered rude."
+          },
+          {
+            "statement": "Пампушки are garlic bread rolls served with борщ.",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"Їсти\" is a regular Class II verb.",
+            "isTrue": false,
+            "explanation": "False! It's irregular: їм, їси, їсть..."
+          },
+          {
+            "statement": "Компот is a traditional homemade fruit drink.",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "Голубці are potato pancakes.",
+            "isTrue": false,
+            "explanation": "False! Голубці = cabbage rolls. Деруни = potato pancakes."
+          },
+          {
+            "statement": "Буряк gives борщ its red color.",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"Обід\" means breakfast.",
+            "isTrue": false,
+            "explanation": "False! Обід = lunch."
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.037Z",
+      "modifiedAt": "2025-12-12T19:55:32.037Z"
+    },
+    {
+      "id": "act-a1-0-fillblank-1",
+      "type": "fill-blank",
+      "title": "Family Dinner",
+      "description": "Complete sentences about a Ukrainian family meal.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Мама готує ___ для сім'ї. (обід)",
+            "answer": "обід",
+            "options": [
+              "обід",
+              "сніданок",
+              "вечеря",
+              "їжа"
+            ]
+          },
+          {
+            "prompt": "Тато каже: \"___!\" (Смачного)",
+            "answer": "Смачного",
+            "options": [
+              "Смачного",
+              "Дякую",
+              "Привіт",
+              "До побачення"
+            ]
+          },
+          {
+            "prompt": "Діти ___ вареники. (їсти)",
+            "answer": "їдять",
+            "options": [
+              "їдять",
+              "їм",
+              "їси",
+              "їсть"
+            ]
+          },
+          {
+            "prompt": "Бабуся ___ найкращий борщ. (готувати)",
+            "answer": "готує",
+            "options": [
+              "готує",
+              "готую",
+              "готуєш",
+              "готуємо"
+            ]
+          },
+          {
+            "prompt": "Всі ___ компот. (пити)",
+            "answer": "п'ють",
+            "options": [
+              "п'ють",
+              "п'ю",
+              "п'єш",
+              "п'ємо"
+            ]
+          },
+          {
+            "prompt": "Це дуже ___! (смачний)",
+            "answer": "смачно",
+            "options": [
+              "смачно",
+              "смачний",
+              "смачна",
+              "смачне"
+            ]
+          },
+          {
+            "prompt": "Я ___ ще трохи. (хотіти)",
+            "answer": "хочу",
+            "options": [
+              "хочу",
+              "хочеш",
+              "хоче",
+              "хочемо"
+            ]
+          },
+          {
+            "prompt": "Ми ___ за столом. (сидіти)",
+            "answer": "сидимо",
+            "options": [
+              "сидимо",
+              "сиджу",
+              "сидиш",
+              "сидять"
+            ]
+          },
+          {
+            "prompt": "Неділя — це ___ день. (сімейний)",
+            "answer": "сімейний",
+            "options": [
+              "сімейний",
+              "сімейна",
+              "сімейне",
+              "сімейні"
+            ]
+          },
+          {
+            "prompt": "Після обіду ми ___ чай. (пити)",
+            "answer": "п'ємо",
+            "options": [
+              "п'ємо",
+              "п'ю",
+              "п'єш",
+              "п'ють"
+            ]
+          },
+          {
+            "prompt": "___ смачна! (Їжа)",
+            "answer": "Їжа",
+            "options": [
+              "Їжа",
+              "Борщ",
+              "Хліб",
+              "Вода"
+            ]
+          },
+          {
+            "prompt": "Дякую за ___! (обід)",
+            "answer": "обід",
+            "options": [
+              "обід",
+              "їжа",
+              "страва",
+              "смак"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.037Z",
+      "modifiedAt": "2025-12-12T19:55:32.037Z"
     }
   ],
   "vocabulary": {
@@ -1012,329 +922,301 @@
     "wordCount": 30,
     "newWordCount": 30,
     "reviewWordCount": 0,
-    "transliterationMode": "full",
+    "transliterationMode": "partial",
     "words": [
       {
-        "id": "v-yizha-0-0",
-        "uk": "їжа",
+        "id": "v-**yizha**-0-0",
+        "uk": "**їжа**",
         "en": "food",
         "pos": "noun",
         "ipa": "/ˈjiʒɑ/",
         "gender": "f",
-        "note": "General term",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-snidanok-0-1",
-        "uk": "сніданок",
+        "id": "v-**snidanok**-0-1",
+        "uk": "**сніданок**",
         "en": "breakfast",
         "pos": "noun",
-        "ipa": "/ˈsnʲidɑnɔk/",
+        "ipa": "/snʲiˈdɑnɔk/",
         "gender": "m",
-        "note": "Morning meal",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-obid-0-2",
-        "uk": "обід",
+        "id": "v-**obid**-0-2",
+        "uk": "**обід**",
         "en": "lunch",
         "pos": "noun",
         "ipa": "/ɔˈbʲid/",
         "gender": "m",
-        "note": "Main meal of day!",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-vecherya-0-3",
-        "uk": "вечеря",
+        "id": "v-**vecherya**-0-3",
+        "uk": "**вечеря**",
         "en": "dinner",
         "pos": "noun",
-        "ipa": "/vɛˈtʃɛrʲɑ/",
+        "ipa": "/vɛˈt͡ʃɛrʲɑ/",
         "gender": "f",
-        "note": "Evening meal",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-borshch-0-4",
-        "uk": "борщ",
-        "en": "borsch",
+        "id": "v-**borshch**-0-4",
+        "uk": "**борщ**",
+        "en": "borscht",
         "pos": "noun",
-        "ipa": "/bɔrʃtʃ/",
+        "ipa": "/bɔrʃt͡ʃ/",
         "gender": "m",
-        "note": "UNESCO heritage!",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-sup-0-5",
-        "uk": "суп",
-        "en": "soup",
-        "pos": "noun",
-        "ipa": "/sup/",
-        "gender": "m",
-        "note": "General term",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-varenyky-0-6",
-        "uk": "вареники",
-        "en": "varenyky (dumplings)",
+        "id": "v-**varenyky**-0-5",
+        "uk": "**вареники**",
+        "en": "dumplings",
         "pos": "noun",
         "ipa": "/vɑˈrɛnɪkɪ/",
-        "note": "With various fillings",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-khlib-0-7",
-        "uk": "хліб",
+        "id": "v-**khlib**-0-6",
+        "uk": "**хліб**",
         "en": "bread",
         "pos": "noun",
         "ipa": "/xlʲib/",
         "gender": "m",
-        "note": "Sacred in culture!",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-m'yaso-0-8",
-        "uk": "м'ясо",
+        "id": "v-**m'yaso**-0-7",
+        "uk": "**м'ясо**",
         "en": "meat",
         "pos": "noun",
         "ipa": "/ˈmjɑsɔ/",
         "gender": "n",
-        "note": "Generic meat",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-kurka-0-9",
-        "uk": "курка",
+        "id": "v-**kurka**-0-8",
+        "uk": "**курка**",
         "en": "chicken",
         "pos": "noun",
         "ipa": "/ˈkurkɑ/",
         "gender": "f",
-        "note": "Poultry",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-ryba-0-10",
-        "uk": "риба",
+        "id": "v-**ryba**-0-9",
+        "uk": "**риба**",
         "en": "fish",
         "pos": "noun",
         "ipa": "/ˈrɪbɑ/",
         "gender": "f",
-        "note": "Seafood",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-ovochi-0-11",
-        "uk": "овочі",
+        "id": "v-**ovochi**-0-10",
+        "uk": "**овочі**",
         "en": "vegetables",
         "pos": "noun",
-        "ipa": "/ˈɔvɔtʃʲi/",
-        "note": "Always plural",
+        "ipa": "/ˈɔvɔt͡ʃi/",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-frukty-0-12",
-        "uk": "фрукти",
+        "id": "v-**frukty**-0-11",
+        "uk": "**фрукти**",
         "en": "fruits",
         "pos": "noun",
         "ipa": "/ˈfruktɪ/",
-        "note": "Always plural",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-yabluko-0-13",
-        "uk": "яблуко",
+        "id": "v-**yabluko**-0-12",
+        "uk": "**яблуко**",
         "en": "apple",
         "pos": "noun",
         "ipa": "/ˈjɑblukɔ/",
         "gender": "n",
-        "note": "Common fruit",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-kartoplya-0-14",
-        "uk": "картопля",
+        "id": "v-**banan**-0-13",
+        "uk": "**банан**",
+        "en": "banana",
+        "pos": "noun",
+        "ipa": "/bɑˈnɑn/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-**kartoplya**-0-14",
+        "uk": "**картопля**",
         "en": "potato",
         "pos": "noun",
         "ipa": "/kɑrˈtɔplʲɑ/",
         "gender": "f",
-        "note": "Base of many dishes",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-pomidor-0-15",
-        "uk": "помідор",
+        "id": "v-**pomidor**-0-15",
+        "uk": "**помідор**",
         "en": "tomato",
         "pos": "noun",
         "ipa": "/pɔmʲiˈdɔr/",
         "gender": "m",
-        "note": "Summer staple",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-ohirok-0-16",
-        "uk": "огірок",
+        "id": "v-**ohirok**-0-16",
+        "uk": "**огірок**",
         "en": "cucumber",
         "pos": "noun",
         "ipa": "/ɔˈɦʲirɔk/",
         "gender": "m",
-        "note": "Pickle too!",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-tsybulya-0-17",
-        "uk": "цибуля",
+        "id": "v-**tsybulya**-0-17",
+        "uk": "**цибуля**",
         "en": "onion",
         "pos": "noun",
-        "ipa": "/tsɪˈbulʲɑ/",
+        "ipa": "/t͡sɪˈbulʲɑ/",
         "gender": "f",
-        "note": "In every dish",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-buryak-0-18",
-        "uk": "буряк",
-        "en": "beetroot",
-        "pos": "noun",
-        "ipa": "/buˈrʲɑk/",
-        "gender": "m",
-        "note": "Makes borsch red!",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-syr-0-19",
-        "uk": "сир",
-        "en": "cottage cheese/cheese",
+        "id": "v-**syr**-0-18",
+        "uk": "**сир**",
+        "en": "cheese",
         "pos": "noun",
         "ipa": "/sɪr/",
         "gender": "m",
-        "note": "Context matters",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-yaytse-0-20",
-        "uk": "яйце",
+        "id": "v-**yaytse**-0-19",
+        "uk": "**яйце**",
         "en": "egg",
         "pos": "noun",
-        "ipa": "/ˈjɑjtsɛ/",
+        "ipa": "/ˈjɑjt͡sɛ/",
         "gender": "n",
-        "note": "Eggs!",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-chay-0-21",
-        "uk": "чай",
+        "id": "v-**chay**-0-20",
+        "uk": "**чай**",
         "en": "tea",
         "pos": "noun",
-        "ipa": "/tʃɑj/",
+        "ipa": "/t͡ʃɑj/",
         "gender": "m",
-        "note": "Popular drink",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-kava-0-22",
-        "uk": "кава",
+        "id": "v-**kava**-0-21",
+        "uk": "**кава**",
         "en": "coffee",
         "pos": "noun",
         "ipa": "/ˈkɑvɑ/",
         "gender": "f",
-        "note": "Lviv favorite!",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-voda-0-23",
-        "uk": "вода",
+        "id": "v-**voda**-0-22",
+        "uk": "**вода**",
         "en": "water",
         "pos": "noun",
         "ipa": "/vɔˈdɑ/",
         "gender": "f",
-        "note": "Essential",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-sik-0-24",
-        "uk": "сік",
+        "id": "v-**sik**-0-23",
+        "uk": "**сік**",
         "en": "juice",
         "pos": "noun",
         "ipa": "/sʲik/",
         "gender": "m",
-        "note": "Fruit juice",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-moloko-0-25",
-        "uk": "молоко",
+        "id": "v-**moloko**-0-24",
+        "uk": "**молоко**",
         "en": "milk",
         "pos": "noun",
         "ipa": "/mɔlɔˈkɔ/",
         "gender": "n",
-        "note": "Dairy",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-smachnyy-0-26",
-        "uk": "смачний",
-        "en": "tasty, delicious (m)",
+        "id": "v-**smachnyy**-0-25",
+        "uk": "**смачний**",
+        "en": "delicious (m)",
         "pos": "adj",
-        "ipa": "/ˈsmɑtʃnɪj/",
+        "ipa": "/ˈsmɑt͡ʃnɪj/",
         "gender": "m",
-        "note": "Adjective",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-smachno-0-27",
-        "uk": "смачно",
-        "en": "tasty (adv) / Delicious!",
+        "id": "v-**smachno**-0-26",
+        "uk": "**смачно**",
+        "en": "delicious (adv)",
         "pos": "adv",
-        "ipa": "/ˈsmɑtʃnɔ/",
-        "note": "Exclamation",
+        "ipa": "/ˈsmɑt͡ʃnɔ/",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-yisty-0-28",
-        "uk": "їсти",
-        "en": "to eat",
-        "pos": "verb",
-        "ipa": "/ˈjistɪ/",
-        "note": "Irregular!",
+        "id": "v-**smachnoho!**-0-27",
+        "uk": "**Смачного!**",
+        "en": "Enjoy!",
+        "pos": "phrase",
+        "ipa": "/smɑˈt͡ʃnɔɦɔ/",
+        "note": "Said before eating",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-pyty-0-29",
-        "uk": "пити",
-        "en": "to drink",
-        "pos": "verb",
-        "ipa": "/ˈpɪtɪ/",
-        "note": "Irregular!",
+        "id": "v-**menyu**-0-28",
+        "uk": "**меню**",
+        "en": "menu",
+        "pos": "noun",
+        "ipa": "/mɛˈnʲu/",
+        "gender": "n",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-**rakhunok**-0-29",
+        "uk": "**рахунок**",
+        "en": "bill",
+        "pos": "noun",
+        "ipa": "/rɑˈxunɔk/",
+        "gender": "m",
         "isNew": true,
         "firstModule": 0
       }

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 800/750
+- **Words:** ✅ 855/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -22,7 +22,7 @@
 | **Presentation: Telling Time** | ✅ | 144 | Included in Core |
 | **Cultural Insight: Time in Ukraine 🇺🇦** | ✅ | 163 | Included in Core |
 | **Reading Practice: Мій розклад 📖** | ✅ | 169 | Included in Core |
-| **Conversation: Плануємо зустріч 🗣️** | ✅ | 123 | Included in Core |
+| **Conversation: Плануємо зустріч 🗣️** | ✅ | 178 | Included in Core |
 | **fill-in: Time Expressions** | 🎮 | 12 | Activity (12 items) |
 | **match-up: Days and Months** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Time Rules** | 🎮 | 12 | Activity (12 items) |

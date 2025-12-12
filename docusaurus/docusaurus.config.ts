@@ -55,10 +55,46 @@ const config: Config = {
       },
       items: [
         {
-          type: 'docSidebar',
-          sidebarId: 'curriculumSidebar',
-          position: 'left',
           label: 'Curriculum',
+          position: 'left',
+          items: [
+            {
+              label: 'Overview',
+              to: '/docs/intro',
+            },
+            {
+              label: 'A1 - Beginner',
+              to: '/docs/a1/',
+            },
+            {
+              label: 'A2 - Elementary',
+              to: '/docs/a2/',
+            },
+            {
+              label: 'B1 - Intermediate',
+              to: '/docs/b1/',
+            },
+            {
+              label: 'B2 - Upper-Intermediate',
+              to: '/docs/b2/',
+            },
+            {
+              label: 'C1 - Advanced',
+              to: '/docs/c1/',
+            },
+            {
+              label: 'C2 - Mastery',
+              to: '/docs/c2/',
+            },
+            {
+              type: 'html',
+              value: '<hr style="margin: 4px 12px; border-color: var(--ifm-color-emphasis-300);">',
+            },
+            {
+              label: 'LIT - Literature & Classics',
+              to: '/docs/lit/',
+            },
+          ],
         },
         {
           href: 'https://github.com/krisztiankoos/curricula-opus',

@@ -12,12 +12,12 @@ import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
 import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
 import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import ErrorCorrection, { ErrorCorrectionQuestion } from '@site/src/components/ErrorCorrection';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
 import Select, { SelectQuestion } from '@site/src/components/Select';
-import Translate, { TranslateQuestion } from '@site/src/components/Translate';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
 import Cloze from '@site/src/components/Cloze';
 import DialogueReorder from '@site/src/components/DialogueReorder';
-import MarkTheWords from '@site/src/components/MarkTheWords';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 
 
 
@@ -36,7 +36,10 @@ Why? Look at the **end** of the word.
 
 ## Presentation: The 4 Families (Declensions)
 
-:::tip 💡 **Thinking Trick:** Don't ask "Is a table male?" Ask "Does the word end in a consonant?" If yes, it's usually Masculine.
+:::tip
+💡 **Thinking Trick:** Don't ask "Is a table male?" Ask "Does the word end in a consonant?" If yes, it's usually Masculine.
+:::
+
 
 ### 1. Masculine (The Consonants)
 If a word ends in a **Consonant** (Hard or Soft), it is likely Masculine.
@@ -66,8 +69,12 @@ To speak perfect Ukrainian, we group these genders into "Families" (Declensions)
 | **Family 3** | **Feminine** ending in Consonant/Soft Sign | Ніч, Сіль |
 | **Family 4** | **Neuter** ending in -А/-Я (Baby words) | Ім'я, Цуценя |
 
-:::warning **The Trap:** A word ending in **-А** is usually Feminine (Family 1). But **Тато** (Dad) ends in -O, so he is Family 2 (grammatically acting like a noun in -O, though biologically male). Wait, actually **Тато** usually acts like Family 1 in endings! Correction: **Тато** (Dad) is Family 1 because it ends in -a/-o but declines like Mama. **Дядько** (Uncle) is Family 2.
-> *Simplication for A1:* Just look at the ending for now!
+:::warning
+**The Trap:** Usually, words ending in **-О** are Neuter (`It`).
+But **Тато** (Dad) and **Дядько** (Uncle) are **Masculine** (`He`) because they are men.
+Always trust **biology** over endings for people!
+:::
+
 
 ## Cultural Insight: The Soul of Words 🇺🇦
 
@@ -91,7 +98,10 @@ To speak perfect Ukrainian, we group these genders into "Families" (Declensions)
 - **Крісл-о** (ends in O -> It)
 - **Міст-о** (ends in O -> It)
 
-:::tip 🌟 **Pro Tip:** When you learn a new noun, visualize it wearing a tie (Masc), a dress (Fem), or a hat (Neuter). Visual memory is powerful!
+:::tip
+🌟 **Pro Tip:** When you learn a new noun, visualize it wearing a tie (Masc), a dress (Fem), or a hat (Neuter). Visual memory is powerful!
+:::
+
 
 # Summary
 - **Masculine:** Ends in Consonant (Стіл).
@@ -443,7 +453,49 @@ To speak perfect Ukrainian, we group these genders into "Families" (Declensions)
   />
 </TrueFalse>
 
+### Living vs Non-Living
 
+<GroupSort groups={{
+  "Non-Living (Objects)": [
+    "Living (People/Animals)"
+  ],
+  "**Стіл**": [
+    "**Тато**"
+  ],
+  "**Вікно**": [
+    "**Мама**"
+  ],
+  "**Книга**": [
+    "**Жінка**"
+  ],
+  "**Місто**": [
+    "**Кіт**"
+  ],
+  "**Чай**": [
+    "**Студент**"
+  ],
+  "**Дім**": [
+    "**Студентка**"
+  ],
+  "**Море**": [
+    "**Лікар**"
+  ],
+  "**Телефон**": [
+    "**Я**"
+  ],
+  "**Інтернет**": [
+    "**Ти**"
+  ],
+  "**Ліжко**": [
+    "**Ми**"
+  ],
+  "**Стілець**": [
+    "**Ви**"
+  ],
+  "**Шафа**": [
+    "**Вони**"
+  ]
+}} />
 
 ### Noun to Pronoun
 

@@ -1,0 +1,257 @@
+
+========================================
+
+Auditing curriculum/l2-uk-en/b2/03-impersonal-passive-no-to.md (Target: 1500)...
+
+  > mark-the-words: Знайдіть форми на -но/-то: 0 items
+  > group-sort: Дієприкметник чи форма на -но/-то?: 16 items
+  > quiz: Оберіть правильну форму: 16 items
+  > true-false: Правда чи ні?: 16 items
+  > fill-in: Утворіть форму на -но/-то: 16 items
+  > fill-in: Поставте об'єкт у правильний відмінок: 16 items
+  > fill-in: Оберіть дієприкметник чи форму на -но/-то: 16 items
+  > error-correction: Виправте форми: 16 items
+  > error-correction: Виправте об'єкт: 16 items
+  > cloze: Протокол засідання: 2 items
+  > unjumble: Складіть речення: 16 items
+  > unjumble: Офіційні формулювання: 16 items
+  > translate: Перекладіть на українську: 16 items
+  > dialogue-reorder: Розмова в канцелярії: 8 items
+  > select: Оберіть правильні варіанти: 6 items
+  > match-up: Дієприкметник → Форма на -но/-то: 42 items
+❌ AUDIT FAILED: Transliteration detected: 'польській (zrobiono)'. Remove Latin in parentheses.
+
+--- STRICT GATES (Level B2) ---
+Words        ❌ 1109/1500
+Activities   ✅ 16/14
+Density      ❌ 4 < 16
+Unique_types ✅ 12/4 types
+Priority     ✅ Priority types used
+Engagement   ✅ 9/6
+Audio        ℹ️ No audio
+Vocab        ✅ 25/25
+Structure    ✅ Valid Structure
+Lint         ❌ 215 Format Errors
+Immersion    🇺🇦 82.6%
+
+❌ LINT ERRORS FOUND:
+  - Line 454: T/F Activity contains blockquote hint '> [!answer] false'. Remove hints.
+  - Line 455: T/F Activity contains blockquote hint '> Ні, вони незмінні.'. Remove hints.
+  - Line 458: T/F Activity contains blockquote hint '> [!answer] true'. Remove hints.
+  - Line 459: T/F Activity contains blockquote hint '> Так, у ній немає підмета.'. Remove hints.
+  - Line 462: T/F Activity contains blockquote hint '> [!answer] true'. Remove hints.
+  - Line 463: T/F Activity contains blockquote hint '> Так, закритий → закрито.'. Remove hints.
+  - Line 466: T/F Activity contains blockquote hint '> [!answer] false'. Remove hints.
+  - Line 467: T/F Activity contains blockquote hint '> Ні, об'єкт стоїть у знахідному відмінку.'. Remove hints.
+  - Line 470: T/F Activity contains blockquote hint '> [!answer] false'. Remove hints.
+  - Line 471: T/F Activity contains blockquote hint '> Ні, вони є також у польській, чеській та інших слов'янських мовах.'. Remove hints.
+  - Line 474: T/F Activity contains blockquote hint '> [!answer] false'. Remove hints.
+  - Line 475: T/F Activity contains blockquote hint '> Ні, «зроблено» (дія як факт) ≠ «зроблений» (характеристика об'єкта).'. Remove hints.
+  - Line 478: T/F Activity contains blockquote hint '> [!answer] true'. Remove hints.
+  - Line 479: T/F Activity contains blockquote hint '> Так, вони домінують у документах.'. Remove hints.
+  - Line 482: T/F Activity contains blockquote hint '> [!answer] false'. Remove hints.
+  - Line 483: T/F Activity contains blockquote hint '> Ні, «листа» — це об'єкт (знахідний відмінок).'. Remove hints.
+  - Line 486: T/F Activity contains blockquote hint '> [!answer] true'. Remove hints.
+  - Line 487: T/F Activity contains blockquote hint '> Так, закритий → закрито, відкритий → відкрито.'. Remove hints.
+  - Line 490: T/F Activity contains blockquote hint '> [!answer] false'. Remove hints.
+  - Line 491: T/F Activity contains blockquote hint '> Ні, вони безособові і не вказують на виконавця.'. Remove hints.
+  - Line 494: T/F Activity contains blockquote hint '> [!answer] false'. Remove hints.
+  - Line 495: T/F Activity contains blockquote hint '> Ні, це особлива незмінна форма (предикатив).'. Remove hints.
+  - Line 498: T/F Activity contains blockquote hint '> [!answer] false'. Remove hints.
+  - Line 499: T/F Activity contains blockquote hint '> Ні, вони вживаються і в усній (особливо в офіційних ситуаціях).'. Remove hints.
+  - Line 502: T/F Activity contains blockquote hint '> [!answer] true'. Remove hints.
+  - Line 503: T/F Activity contains blockquote hint '> Так, порядок слів гнучкий.'. Remove hints.
+  - Line 506: T/F Activity contains blockquote hint '> [!answer] false'. Remove hints.
+  - Line 507: T/F Activity contains blockquote hint '> Ні, вони позначають завершену дію (результат).'. Remove hints.
+  - Line 510: T/F Activity contains blockquote hint '> [!answer] true'. Remove hints.
+  - Line 511: T/F Activity contains blockquote hint '> Так, від «відкритий» (на -тий) → «відкрито» (на -то).'. Remove hints.
+  - Line 514: T/F Activity contains blockquote hint '> [!answer] false'. Remove hints.
+  - Line 515: T/F Activity contains blockquote hint '> Ні, вони є стандартом наукового стилю.'. Remove hints.
+  - Line 524: Previous Fill-in item missing '> [!answer]'.
+  - Line 523: Fill-in item missing '> [!options]' block.
+  - Line 525: Previous Fill-in item missing '> [!answer]'.
+  - Line 524: Fill-in item missing '> [!options]' block.
+  - Line 526: Previous Fill-in item missing '> [!answer]'.
+  - Line 525: Fill-in item missing '> [!options]' block.
+  - Line 527: Previous Fill-in item missing '> [!answer]'.
+  - Line 526: Fill-in item missing '> [!options]' block.
+  - Line 528: Previous Fill-in item missing '> [!answer]'.
+  - Line 527: Fill-in item missing '> [!options]' block.
+  - Line 529: Previous Fill-in item missing '> [!answer]'.
+  - Line 528: Fill-in item missing '> [!options]' block.
+  - Line 530: Previous Fill-in item missing '> [!answer]'.
+  - Line 529: Fill-in item missing '> [!options]' block.
+  - Line 531: Previous Fill-in item missing '> [!answer]'.
+  - Line 530: Fill-in item missing '> [!options]' block.
+  - Line 532: Previous Fill-in item missing '> [!answer]'.
+  - Line 531: Fill-in item missing '> [!options]' block.
+  - Line 533: Previous Fill-in item missing '> [!answer]'.
+  - Line 532: Fill-in item missing '> [!options]' block.
+  - Line 534: Previous Fill-in item missing '> [!answer]'.
+  - Line 533: Fill-in item missing '> [!options]' block.
+  - Line 535: Previous Fill-in item missing '> [!answer]'.
+  - Line 534: Fill-in item missing '> [!options]' block.
+  - Line 536: Previous Fill-in item missing '> [!answer]'.
+  - Line 535: Fill-in item missing '> [!options]' block.
+  - Line 537: Previous Fill-in item missing '> [!answer]'.
+  - Line 536: Fill-in item missing '> [!options]' block.
+  - Line 538: Previous Fill-in item missing '> [!answer]'.
+  - Line 537: Fill-in item missing '> [!options]' block.
+  - Line 568: Previous Fill-in item missing '> [!answer]'.
+  - Line 567: Fill-in item missing '> [!options]' block.
+  - Line 569: Previous Fill-in item missing '> [!answer]'.
+  - Line 568: Fill-in item missing '> [!options]' block.
+  - Line 570: Previous Fill-in item missing '> [!answer]'.
+  - Line 569: Fill-in item missing '> [!options]' block.
+  - Line 571: Previous Fill-in item missing '> [!answer]'.
+  - Line 570: Fill-in item missing '> [!options]' block.
+  - Line 572: Previous Fill-in item missing '> [!answer]'.
+  - Line 571: Fill-in item missing '> [!options]' block.
+  - Line 573: Previous Fill-in item missing '> [!answer]'.
+  - Line 572: Fill-in item missing '> [!options]' block.
+  - Line 574: Previous Fill-in item missing '> [!answer]'.
+  - Line 573: Fill-in item missing '> [!options]' block.
+  - Line 575: Previous Fill-in item missing '> [!answer]'.
+  - Line 574: Fill-in item missing '> [!options]' block.
+  - Line 576: Previous Fill-in item missing '> [!answer]'.
+  - Line 575: Fill-in item missing '> [!options]' block.
+  - Line 577: Previous Fill-in item missing '> [!answer]'.
+  - Line 576: Fill-in item missing '> [!options]' block.
+  - Line 578: Previous Fill-in item missing '> [!answer]'.
+  - Line 577: Fill-in item missing '> [!options]' block.
+  - Line 579: Previous Fill-in item missing '> [!answer]'.
+  - Line 578: Fill-in item missing '> [!options]' block.
+  - Line 580: Previous Fill-in item missing '> [!answer]'.
+  - Line 579: Fill-in item missing '> [!options]' block.
+  - Line 581: Previous Fill-in item missing '> [!answer]'.
+  - Line 580: Fill-in item missing '> [!options]' block.
+  - Line 582: Previous Fill-in item missing '> [!answer]'.
+  - Line 581: Fill-in item missing '> [!options]' block.
+  - Line 612: Previous Fill-in item missing '> [!answer]'.
+  - Line 611: Fill-in item missing '> [!options]' block.
+  - Line 613: Previous Fill-in item missing '> [!answer]'.
+  - Line 612: Fill-in item missing '> [!options]' block.
+  - Line 614: Previous Fill-in item missing '> [!answer]'.
+  - Line 613: Fill-in item missing '> [!options]' block.
+  - Line 615: Previous Fill-in item missing '> [!answer]'.
+  - Line 614: Fill-in item missing '> [!options]' block.
+  - Line 616: Previous Fill-in item missing '> [!answer]'.
+  - Line 615: Fill-in item missing '> [!options]' block.
+  - Line 617: Previous Fill-in item missing '> [!answer]'.
+  - Line 616: Fill-in item missing '> [!options]' block.
+  - Line 618: Previous Fill-in item missing '> [!answer]'.
+  - Line 617: Fill-in item missing '> [!options]' block.
+  - Line 619: Previous Fill-in item missing '> [!answer]'.
+  - Line 618: Fill-in item missing '> [!options]' block.
+  - Line 620: Previous Fill-in item missing '> [!answer]'.
+  - Line 619: Fill-in item missing '> [!options]' block.
+  - Line 621: Previous Fill-in item missing '> [!answer]'.
+  - Line 620: Fill-in item missing '> [!options]' block.
+  - Line 622: Previous Fill-in item missing '> [!answer]'.
+  - Line 621: Fill-in item missing '> [!options]' block.
+  - Line 623: Previous Fill-in item missing '> [!answer]'.
+  - Line 622: Fill-in item missing '> [!options]' block.
+  - Line 624: Previous Fill-in item missing '> [!answer]'.
+  - Line 623: Fill-in item missing '> [!options]' block.
+  - Line 625: Previous Fill-in item missing '> [!answer]'.
+  - Line 624: Fill-in item missing '> [!options]' block.
+  - Line 626: Previous Fill-in item missing '> [!answer]'.
+  - Line 625: Fill-in item missing '> [!options]' block.
+  - Line 655: Error-correction missing '> [!error]' block.
+  - Line 655: Error-correction missing '> [!answer]' block.
+  - Line 655: Error-correction missing '> [!explanation]' block.
+  - Line 656: Error-correction missing '> [!error]' block.
+  - Line 656: Error-correction missing '> [!answer]' block.
+  - Line 656: Error-correction missing '> [!explanation]' block.
+  - Line 657: Error-correction missing '> [!error]' block.
+  - Line 657: Error-correction missing '> [!answer]' block.
+  - Line 657: Error-correction missing '> [!explanation]' block.
+  - Line 658: Error-correction missing '> [!error]' block.
+  - Line 658: Error-correction missing '> [!answer]' block.
+  - Line 658: Error-correction missing '> [!explanation]' block.
+  - Line 659: Error-correction missing '> [!error]' block.
+  - Line 659: Error-correction missing '> [!answer]' block.
+  - Line 659: Error-correction missing '> [!explanation]' block.
+  - Line 660: Error-correction missing '> [!error]' block.
+  - Line 660: Error-correction missing '> [!answer]' block.
+  - Line 660: Error-correction missing '> [!explanation]' block.
+  - Line 661: Error-correction missing '> [!error]' block.
+  - Line 661: Error-correction missing '> [!answer]' block.
+  - Line 661: Error-correction missing '> [!explanation]' block.
+  - Line 662: Error-correction missing '> [!error]' block.
+  - Line 662: Error-correction missing '> [!answer]' block.
+  - Line 662: Error-correction missing '> [!explanation]' block.
+  - Line 663: Error-correction missing '> [!error]' block.
+  - Line 663: Error-correction missing '> [!answer]' block.
+  - Line 663: Error-correction missing '> [!explanation]' block.
+  - Line 664: Error-correction missing '> [!error]' block.
+  - Line 664: Error-correction missing '> [!answer]' block.
+  - Line 664: Error-correction missing '> [!explanation]' block.
+  - Line 665: Error-correction missing '> [!error]' block.
+  - Line 665: Error-correction missing '> [!answer]' block.
+  - Line 665: Error-correction missing '> [!explanation]' block.
+  - Line 666: Error-correction missing '> [!error]' block.
+  - Line 666: Error-correction missing '> [!answer]' block.
+  - Line 666: Error-correction missing '> [!explanation]' block.
+  - Line 667: Error-correction missing '> [!error]' block.
+  - Line 667: Error-correction missing '> [!answer]' block.
+  - Line 667: Error-correction missing '> [!explanation]' block.
+  - Line 668: Error-correction missing '> [!error]' block.
+  - Line 668: Error-correction missing '> [!answer]' block.
+  - Line 668: Error-correction missing '> [!explanation]' block.
+  - Line 669: Error-correction missing '> [!error]' block.
+  - Line 669: Error-correction missing '> [!answer]' block.
+  - Line 669: Error-correction missing '> [!explanation]' block.
+  - Line 670: Error-correction missing '> [!error]' block.
+  - Line 670: Error-correction missing '> [!explanation]' block.
+  - Line 696: Error-correction missing '> [!error]' block.
+  - Line 696: Error-correction missing '> [!answer]' block.
+  - Line 696: Error-correction missing '> [!explanation]' block.
+  - Line 697: Error-correction missing '> [!error]' block.
+  - Line 697: Error-correction missing '> [!answer]' block.
+  - Line 697: Error-correction missing '> [!explanation]' block.
+  - Line 698: Error-correction missing '> [!error]' block.
+  - Line 698: Error-correction missing '> [!answer]' block.
+  - Line 698: Error-correction missing '> [!explanation]' block.
+  - Line 699: Error-correction missing '> [!error]' block.
+  - Line 699: Error-correction missing '> [!answer]' block.
+  - Line 699: Error-correction missing '> [!explanation]' block.
+  - Line 700: Error-correction missing '> [!error]' block.
+  - Line 700: Error-correction missing '> [!answer]' block.
+  - Line 700: Error-correction missing '> [!explanation]' block.
+  - Line 701: Error-correction missing '> [!error]' block.
+  - Line 701: Error-correction missing '> [!answer]' block.
+  - Line 701: Error-correction missing '> [!explanation]' block.
+  - Line 702: Error-correction missing '> [!error]' block.
+  - Line 702: Error-correction missing '> [!answer]' block.
+  - Line 702: Error-correction missing '> [!explanation]' block.
+  - Line 703: Error-correction missing '> [!error]' block.
+  - Line 703: Error-correction missing '> [!answer]' block.
+  - Line 703: Error-correction missing '> [!explanation]' block.
+  - Line 704: Error-correction missing '> [!error]' block.
+  - Line 704: Error-correction missing '> [!answer]' block.
+  - Line 704: Error-correction missing '> [!explanation]' block.
+  - Line 705: Error-correction missing '> [!error]' block.
+  - Line 705: Error-correction missing '> [!answer]' block.
+  - Line 705: Error-correction missing '> [!explanation]' block.
+  - Line 706: Error-correction missing '> [!error]' block.
+  - Line 706: Error-correction missing '> [!answer]' block.
+  - Line 706: Error-correction missing '> [!explanation]' block.
+  - Line 707: Error-correction missing '> [!error]' block.
+  - Line 707: Error-correction missing '> [!answer]' block.
+  - Line 707: Error-correction missing '> [!explanation]' block.
+  - Line 708: Error-correction missing '> [!error]' block.
+  - Line 708: Error-correction missing '> [!answer]' block.
+  - Line 708: Error-correction missing '> [!explanation]' block.
+  - Line 709: Error-correction missing '> [!error]' block.
+  - Line 709: Error-correction missing '> [!answer]' block.
+  - Line 709: Error-correction missing '> [!explanation]' block.
+  - Line 710: Error-correction missing '> [!error]' block.
+  - Line 710: Error-correction missing '> [!answer]' block.
+  - Line 710: Error-correction missing '> [!explanation]' block.
+  - Line 1101: Transliteration Column detected in M999 (Policy M21+: None). Remove column.
+
+
+Report: /Users/krisztiankoos/projects/curricula-opus/curriculum/l2-uk-en/b2/gemini/03-impersonal-passive-no-to-review.md
+
+❌ AUDIT FAILED. Correct errors before proceeding.

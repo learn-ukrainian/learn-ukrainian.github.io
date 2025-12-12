@@ -12,12 +12,12 @@ import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
 import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
 import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import ErrorCorrection, { ErrorCorrectionQuestion } from '@site/src/components/ErrorCorrection';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
 import Select, { SelectQuestion } from '@site/src/components/Select';
-import Translate, { TranslateQuestion } from '@site/src/components/Translate';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
 import Cloze from '@site/src/components/Cloze';
 import DialogueReorder from '@site/src/components/DialogueReorder';
-import MarkTheWords from '@site/src/components/MarkTheWords';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 
 
 
@@ -117,11 +117,14 @@ When introducing someone, you might say:
 
 Привіт! Мене звати Олена. Я хочу розповісти про мою родину. У мене є тато, мама, брат і сестра. Мого тата звати Михайло. Він працює лікарем. Я дуже люблю мого тата! Мою маму звати Ірина. Вона вчителька. Мого брата звати Денис. Він студент. Я часто бачу мого брата в університеті. Мою сестру звати Катерина. Вона ще школярка. Ми маємо собаку. Його звати Рекс. Я люблю Рекса!
 
-**English Translation:**
+:::note
+English Translation
 
 Hi! My name is Olena. I want to tell you about my family. I have a dad, mom, brother, and sister. My dad's name is Mykhailo. He works as a doctor. I love my dad very much! My mom's name is Iryna. She's a teacher. My brother's name is Denys. He's a student. I often see my brother at the university. My sister's name is Kateryna. She's still a schoolgirl. We have a dog. His name is Rex. I love Rex!
 
 **Comprehension check:** Find all the animate nouns in accusative. Why does "тата" end in -а but "маму" in -у?
+:::
+
 
 ## Conversation: Хто це? 🗣️
 
@@ -134,7 +137,20 @@ Hi! My name is Olena. I want to tell you about my family. I have a dad, mom, bro
 **Андрій:** Вона вчителька. Вони мають доньку.
 **Оля:** Цікаво! Я хочу познайомитися з ними.
 
+:::note
+English Translation
+**Andriy:** Olya, do you see that man?
+**Olya:** Which man? Where?
+**Andriy:** Over there, near the cafe. This is our new neighbor!
+**Olya:** Ah, yes! I see him. What is his name?
+**Andriy:** His name is Pavlo. He is a doctor. Do you know his wife?
+**Olya:** No, I don't know her. And who is she?
+**Andriy:** She is a teacher. They have a daughter.
+**Olya:** Interesting! I want to meet them.
+
 Зверни увагу: того чоловіка, його, сусіда — всі у знахідному відмінку!
+
+:::
 
 # Summary
 
@@ -148,7 +164,10 @@ Hi! My name is Olena. I want to tell you about my family. I have a dad, mom, bro
 
 ---
 
-:::tip 🌟 **Pro Tip:** When you learn a new person word (profession, relationship), note its gender AND practice the accusative immediately: друг → бачу друга, лікар → знаю лікаря.
+:::tip
+🌟 **Pro Tip:** When you learn a new person word (profession, relationship), note its gender AND practice the accusative immediately: друг → бачу друга, лікар → знаю лікаря.
+:::
+
 
 
 # Vocabulary
@@ -340,7 +359,49 @@ Hi! My name is Olena. I want to tell you about my family. I have a dad, mom, bro
   />
 </Quiz>
 
+### By Animacy
 
+<GroupSort groups={{
+  "Inanimate (no change)": [
+    "Animate (special accusative)"
+  ],
+  "стіл": [
+    "друг"
+  ],
+  "книга": [
+    "студент"
+  ],
+  "телефон": [
+    "лікар"
+  ],
+  "вікно": [
+    "вчитель"
+  ],
+  "машина": [
+    "брат"
+  ],
+  "газета": [
+    "сестра"
+  ],
+  "хліб": [
+    "мама"
+  ],
+  "кава": [
+    "тато"
+  ],
+  "документ": [
+    "сусід"
+  ],
+  "квиток": [
+    "колега"
+  ],
+  "журнал": [
+    "директор"
+  ],
+  "сумка": [
+    "водій"
+  ]
+}} />
 
 ### Animacy Rules
 

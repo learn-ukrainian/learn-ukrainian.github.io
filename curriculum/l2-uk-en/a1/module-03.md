@@ -63,8 +63,9 @@ To speak perfect Ukrainian, we group these genders into "Families" (Declensions)
 | **Family 3** | **Feminine** ending in Consonant/Soft Sign | Ніч, Сіль |
 | **Family 4** | **Neuter** ending in -А/-Я (Baby words) | Ім'я, Цуценя |
 
-> [!warning] **The Trap:** A word ending in **-А** is usually Feminine (Family 1). But **Тато** (Dad) ends in -O, so he is Family 2 (grammatically acting like a noun in -O, though biologically male). Wait, actually **Тато** usually acts like Family 1 in endings! Correction: **Тато** (Dad) is Family 1 because it ends in -a/-o but declines like Mama. **Дядько** (Uncle) is Family 2.
-> *Simplication for A1:* Just look at the ending for now!
+> [!warning] **The Trap:** Usually, words ending in **-О** are Neuter (`It`).
+> But **Тато** (Dad) and **Дядько** (Uncle) are **Masculine** (`He`) because they are men.
+> Always trust **biology** over endings for people!
 
 ## Cultural Insight: The Soul of Words 🇺🇦
 

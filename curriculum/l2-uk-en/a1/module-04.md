@@ -508,18 +508,18 @@ How do you say "This is..."? You use **Це** (Tse).
     > [!options] наш | наша | наше | наші
 
 **English Translation:**
-1. **Marko**: Hi! I am Marko. And who are you?
-2. **Anna**: Hi! I am Anna.
-3. **Marko**: Nice to meet you. Are you Ukrainian?
-4. **Anna**: Yes, I am Ukrainian. And you? **Marko**: I am Ukrainian.
-5. **Anna**: And who is this?
-6. **Marko**: This is John. He is American.
-7. **Anna**: Is he a student? **Marko**: Yes, he is a student.
-8. **Anna**: And who is this? **Marko**: This is Maria. She is a student.
-9. **Anna**: Is she Ukrainian? **Marko**: No, she is Canadian.
-10. **Anna**: Understood. We are all students!
-11. **Marko**: Yes! This is the university.
-12. **Anna**: Yes, this is our university.
+- **Marko**: Hi! I am Marko. And who are you?
+- **Anna**: Hi! I am Anna.
+- **Marko**: Nice to meet you. Are you Ukrainian?
+- **Anna**: Yes, I am Ukrainian. And you? **Marko**: I am Ukrainian.
+- **Anna**: And who is this?
+- **Marko**: This is John. He is American.
+- **Anna**: Is he a student? **Marko**: Yes, he is a student.
+- **Anna**: And who is this? **Marko**: This is Maria. She is a student.
+- **Anna**: Is she Ukrainian? **Marko**: No, she is Canadian.
+- **Anna**: Understood. We are all students!
+- **Marko**: Yes! This is the university.
+- **Anna**: Yes, this is our university.
 
 ---
 

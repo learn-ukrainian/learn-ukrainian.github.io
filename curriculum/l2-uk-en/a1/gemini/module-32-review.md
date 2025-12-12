@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 802/750
+- **Words:** ✅ 887/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -22,7 +22,7 @@
 | **Presentation: Family Members** | ✅ | 99 | Included in Core |
 | **Cultural Insight: Family in Ukraine 🇺🇦** | ✅ | 182 | Included in Core |
 | **Reading Practice: Моя родина 📖** | ✅ | 216 | Included in Core |
-| **Conversation: Розкажи про сім'ю 🗣️** | ✅ | 134 | Included in Core |
+| **Conversation: Розкажи про сім'ю 🗣️** | ✅ | 219 | Included in Core |
 | **fill-in: Family Members** | 🎮 | 12 | Activity (12 items) |
 | **match-up: Family Terms** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Family Rules** | 🎮 | 12 | Activity (12 items) |

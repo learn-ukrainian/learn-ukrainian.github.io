@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 752/750
+- **Words:** ✅ 1291/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -21,9 +21,9 @@
 | **Self-Assessment: What You've Learned** | ⚪️ | 275 | Skipped |
 | **Presentation: Quick Reference Guide** | ✅ | 37 | Included in Core |
 | **Cultural Insight: Your Ukrainian Journey 🇺🇦** | ✅ | 337 | Included in Core |
-| **Review: Comprehensive A1.2 Practice** | ⚪️ | 175 | Skipped |
+| **Review: Comprehensive A1.2 Practice** | ✅ | 175 | Included in Core |
 | **Reading Practice: Comprehensive Review 📚** | ✅ | 202 | Included in Core |
-| **Conversation: Putting It All Together 🗣️** | ✅ | 153 | Included in Core |
+| **Conversation: Putting It All Together 🗣️** | ✅ | 242 | Included in Core |
 | **fill-in: Case Practice** | 🎮 | 12 | Activity (12 items) |
 | **match-up: Vocabulary Review** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Scenario Challenge** | 🎮 | 12 | Activity (12 items) |

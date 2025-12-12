@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 785/750
+- **Words:** ✅ 849/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -22,7 +22,7 @@
 | **Presentation: Adverb Formation** | ✅ | 161 | Included in Core |
 | **Cultural Insight: How Ukrainians Do Things 🇺🇦** | ✅ | 155 | Included in Core |
 | **Reading Practice: Як я вчуся 📖** | ✅ | 174 | Included in Core |
-| **Conversation: Як ти це робиш? 🗣️** | ✅ | 125 | Included in Core |
+| **Conversation: Як ти це робиш? 🗣️** | ✅ | 189 | Included in Core |
 | **fill-in: Form Adverbs** | 🎮 | 12 | Activity (12 items) |
 | **match-up: Frequency Scale** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Adverb Rules** | 🎮 | 12 | Activity (12 items) |

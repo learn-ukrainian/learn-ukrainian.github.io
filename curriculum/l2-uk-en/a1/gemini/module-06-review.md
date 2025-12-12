@@ -3,12 +3,12 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 786/500
+- **Words:** ✅ 1033/500
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/3
+- **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
@@ -21,8 +21,8 @@
 | **Warm-up: A World Without Verbs** | ✅ | 216 | Included in Core |
 | **Presentation: Class I Verbs (-ати/-яти)** | ✅ | 146 | Included in Core |
 | **Cultural Insight: The Ukrainian Work Ethic 🇺🇦** | ✅ | 106 | Included in Core |
-| **Dialogue: At the Library 🗣️** | ✅ | 50 | Included in Core |
-| **Reading Practice: A Day in Kyiv 📖** | ✅ | 249 | Included in Core |
+| **Dialogue: At the Library 🗣️** | ✅ | 127 | Included in Core |
+| **Reading Practice: A Day in Kyiv 📖** | ✅ | 419 | Included in Core |
 | **match-up: Pronoun to Ending** | 🎮 | 12 | Activity (12 items) |
 | **group-sort: Infinitive vs Conjugated** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Conjugate the Verb** | 🎮 | 12 | Activity (12 items) |

@@ -9,7 +9,7 @@
   "scripts": {
     "lint": "eslint 'scripts/**/*.ts'",
     "generate": "ts-node scripts/generate-mdx.ts",
-    "generate:all": "ts-node scripts/generate.ts",
+    "generate:json": ".venv/bin/python scripts/generate_json.py",
     "vocab:init": "ts-node scripts/vocab-init.ts",
     "vocab:init:force": "ts-node scripts/vocab-init.ts l2-uk-en --force",
     "vocab:scan": "ts-node scripts/vocab-scan.ts",
@@ -17,8 +17,6 @@
     "vocab:enrich:dry": "ts-node scripts/vocab-enrich.ts l2-uk-en --dry-run",
     "vocab:enrich:force": "ts-node scripts/vocab-enrich.ts l2-uk-en --force",
     "vocab:rebuild": "npm run vocab:init:force && npm run vocab:scan",
-    "test": "ts-node scripts/test-html.ts",
-    "test:html": "ts-node scripts/test-html.ts",
     "claude:deploy": "mkdir -p .claude/skills .claude/commands && cp -r claude_extensions/skills/* .claude/skills/ && cp -r claude_extensions/commands/* .claude/commands/"
   },
   "repository": {

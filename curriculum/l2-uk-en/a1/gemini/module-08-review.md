@@ -3,12 +3,12 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 718/500
+- **Words:** ✅ 921/500
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/3
+- **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
@@ -21,8 +21,8 @@
 | **Warm-up: Two Verb Families** | ✅ | 150 | Included in Core |
 | **Presentation: Class II Verbs (-ити/-іти)** | ✅ | 139 | Included in Core |
 | **Cultural Insight: Food and Hospitality 🇺🇦** | ✅ | 132 | Included in Core |
-| **Dialogue: At the Restaurant 🗣️** | ✅ | 65 | Included in Core |
-| **Reading Practice: Morning Routine 📖** | ✅ | 211 | Included in Core |
+| **Dialogue: At the Restaurant 🗣️** | ✅ | 155 | Included in Core |
+| **Reading Practice: Morning Routine 📖** | ✅ | 324 | Included in Core |
 | **match-up: Class I vs Class II** | 🎮 | 12 | Activity (12 items) |
 | **group-sort: Infinitive Endings** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Conjugate Class II** | 🎮 | 12 | Activity (12 items) |

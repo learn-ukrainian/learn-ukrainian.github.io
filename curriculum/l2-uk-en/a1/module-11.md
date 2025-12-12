@@ -138,11 +138,11 @@ Read this short text and see how much you understand. Translation provided below
 
 Сьогодні я йду в магазин. Мені потрібно купити продукти. Я беру сумку і гроші. У магазині я бачу багато речей. Я хочу хліб, молоко, сир і воду. Я беру хліб — він свіжий! Потім я беру молоко і сир. Де вода? Ось вона! Я беру воду. Тепер я маю все. Я даю гроші касиру. Дякую! До побачення!
 
-**English Translation:**
-
-Today I go to the store. I need to buy groceries. I take a bag and money. In the store I see many things. I want bread, milk, cheese, and water. I take the bread — it's fresh! Then I take milk and cheese. Where's the water? Here it is! I take the water. Now I have everything. I give money to the cashier. Thank you! Goodbye!
-
-**Comprehension check:** Which words are in the accusative case? Can you identify the feminine nouns that changed their ending?
+> [!note] English Translation
+>
+> Today I go to the store. I need to buy groceries. I take a bag and money. In the store I see many things. I want bread, milk, cheese, and water. I take the bread — it's fresh! Then I take milk and cheese. Where's the water? Here it is! I take the water. Now I have everything. I give money to the cashier. Thank you! Goodbye!
+>
+> **Comprehension check:** Which words are in the accusative case? Can you identify the feminine nouns that changed their ending?
 
 ## Conversation: У кафе 🗣️
 
@@ -154,17 +154,17 @@ Today I go to the store. I need to buy groceries. I take a bag and money. In the
 **Клієнт:** Так, я також хочу тістечко.
 **Офіціант:** Чудово! Зачекайте, будь ласка.
 
-**English Translation:**
-**Waiter:** Good day! What do you want?
-**Client:** Good day! I want coffee, please.
-**Waiter:** Black coffee or with milk?
-**Client:** With milk, thank you. And water too.
-**Waiter:** Good. Coffee and water. Anything else?
-**Client:** Yes, I also want a cake.
-**Waiter:** Great! Wait please.
-
-Каву, воду, тістечко — все це знахідний відмінок!
-
+> [!note] English Translation
+> **Waiter:** Good day! What do you want?
+> **Client:** Good day! I want coffee, please.
+> **Waiter:** Black coffee or with milk?
+> **Client:** With milk, thank you. And water too.
+> **Waiter:** Good. Coffee and water. Anything else?
+> **Client:** Yes, I also want a cake.
+> **Waiter:** Great! Wait please.
+>
+> Каву, воду, тістечко — все це знахідний відмінок!
+>
 # Summary
 
 **Your A1.2 Milestone: The Accusative Case**
@@ -459,19 +459,19 @@ Today I go to the store. I need to buy groceries. I take a bag and money. In the
     > [!answer] подарунок
     > [!options] подарунок | подарунка | подарунку | подарунком
 
-**English Translation:**
-1. I want bread.
-2. Give me a newspaper.
-3. I need water.
-4. I am taking milk.
-5. Show me the bag.
-6. I am buying a magazine.
-7. I want coffee.
-8. I need a ticket.
-9. Give me the letter.
-10. Show the document.
-11. I am taking the suitcase.
-12. I want a gift.
+> [!note] English Translation
+> - I want bread.
+> - Give me a newspaper.
+> - I need water.
+> - I am taking milk.
+> - Show me the bag.
+> - I am buying a magazine.
+> - I want coffee.
+> - I need a ticket.
+> - Give me the letter.
+> - Show the document.
+> - I am taking the suitcase.
+> - I want a gift.
 
 ## unjumble: Build Accusative Sentences
 > Arrange the words into correct sentences.

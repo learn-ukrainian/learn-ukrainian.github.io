@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 962/750
+- **Words:** ✅ 1042/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -22,7 +22,7 @@
 | **Presentation: Past Tense Formation** | ✅ | 187 | Included in Core |
 | **Cultural Insight: Storytelling in Ukraine 🇺🇦** | ✅ | 226 | Included in Core |
 | **Reading Practice: Мій учорашній день 📖** | ✅ | 176 | Included in Core |
-| **Conversation: Що ти робив учора? 🗣️** | ✅ | 139 | Included in Core |
+| **Conversation: Що ти робив учора? 🗣️** | ✅ | 219 | Included in Core |
 | **fill-in: Form the Past Tense** | 🎮 | 12 | Activity (12 items) |
 | **match-up: Time Expressions** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Past Tense Rules** | 🎮 | 12 | Activity (12 items) |

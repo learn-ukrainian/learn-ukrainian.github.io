@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 872/750
+- **Words:** ✅ 955/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -22,7 +22,7 @@
 | **Presentation: The Locative Case** | ✅ | 274 | Included in Core |
 | **Cultural Insight: Ukrainian Geography 🇺🇦** | ✅ | 121 | Included in Core |
 | **Reading Practice: Де ти? 📍** | ✅ | 181 | Included in Core |
-| **Conversation: Де зупинка? 🗣️** | ✅ | 150 | Included in Core |
+| **Conversation: Де зупинка? 🗣️** | ✅ | 233 | Included in Core |
 | **fill-in: Locative Formation** | 🎮 | 12 | Activity (12 items) |
 | **match-up: Nominative to Locative** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Choose в/у or на** | 🎮 | 12 | Activity (12 items) |

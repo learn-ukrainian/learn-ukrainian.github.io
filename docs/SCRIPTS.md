@@ -78,7 +78,8 @@ npx ts-node scripts/module-audit.ts l2-uk-en [module_number]
 
 | Script | Purpose | Command |
 |--------|---------|---------|
-| `generate.ts` | Generate HTML + JSON output | `npm run generate` |
+| `generate-mdx.ts` | Generate MDX for Docusaurus | `npm run generate` |
+| `generate_json.py` | Generate JSON for Vibe app | `npm run generate:json` |
 | `module-audit.ts` | Find issues in modules | `npx ts-node scripts/module-audit.ts` |
 | `vocab-init.ts` | Create fresh vocabulary DB | `npm run vocab:init` |
 | `vocab-scan.ts` | Populate DB from modules | `npm run vocab:scan` |
@@ -86,29 +87,46 @@ npx ts-node scripts/module-audit.ts l2-uk-en [module_number]
 | `vocab-audit.ts` | Find unknown/premature words | `npx ts-node scripts/vocab-audit.ts` |
 | `enrich-activities.ts` | Generate activity scaffolds | `npx ts-node scripts/enrich-activities.ts` |
 | `generate-exercises.ts` | Generate exercise templates | `npx ts-node scripts/generate-exercises.ts` |
-| `test-html.ts` | Validate HTML output | `npm run test:html` |
-| `test-json-compat.ts` | Compare JSON output | `npx ts-node scripts/test-json-compat.ts` |
 
 ---
 
 ## Core Scripts
 
-### generate.ts
+### generate-mdx.ts
 
-**Purpose:** Main generator that converts markdown modules to HTML (book-style) and JSON (Vibe import).
+**Purpose:** Generates MDX files for Docusaurus web lessons.
 
 **Usage:**
 ```bash
 npm run generate                    # Generate all modules
-npm run generate l2-uk-en           # Generate specific language pair
-npm run generate l2-uk-en 168       # Generate single module
+npm run generate l2-uk-en           # Generate all levels
+npm run generate l2-uk-en a1        # Generate specific level
+npm run generate l2-uk-en a1 5      # Generate single module
 ```
 
-**Input:** `curriculum/{lang}/modules/module-*.md`
+**Input:** `curriculum/{lang}/{level}/*.md`
 
-**Output:**
-- `output/html/{lang}/{level}/module-XX.html`
-- `output/json/{lang}/{level}/module-XX.json`
+**Output:** `docusaurus/docs/{level}/module-XX.mdx`
+
+---
+
+### generate_json.py
+
+**Purpose:** Generates Vibe-format JSON for app import (Python 3.12).
+
+**Usage:**
+```bash
+npm run generate:json               # Generate all modules
+npm run generate:json l2-uk-en      # Generate all levels
+npm run generate:json l2-uk-en a1   # Generate specific level
+npm run generate:json l2-uk-en a1 5 # Generate single module
+```
+
+**Input:** `curriculum/{lang}/{level}/*.md`
+
+**Output:** `output/json/{lang}/{level}/module-XX.json`
+
+**Note:** Requires Python 3.12 venv (`.venv/bin/python`)
 
 ---
 
@@ -234,32 +252,12 @@ npx ts-node scripts/generate-exercises.ts 5            # Single module
 
 ---
 
-## Test Scripts
-
-### test-html.ts
-
-**Purpose:** Automated validation of generated HTML and JSON output.
-
-```bash
-npm run test:html
-```
-
-### test-json-compat.ts
-
-**Purpose:** Compares JSON output to ensure we don't break Vibe imports.
-
-```bash
-npx ts-node scripts/test-json-compat.ts [moduleNum]
-```
-
----
-
 ## NPM Scripts Summary
 
 ```bash
 # Generation
-npm run generate              # Generate all HTML + JSON
-npm run generate:all          # Same as above
+npm run generate              # Generate MDX for Docusaurus
+npm run generate:json         # Generate JSON for Vibe app (Python)
 
 # Vocabulary Database
 npm run vocab:init            # Create fresh database
@@ -269,9 +267,8 @@ npm run vocab:enrich          # Enrich module vocab sections
 npm run vocab:enrich:dry      # Preview enrichment changes
 npm run vocab:rebuild         # Full rebuild (init:force + scan)
 
-# Testing
-npm run test                  # Run HTML tests
-npm run test:html             # Same as above
+# Claude Skills
+npm run claude:deploy         # Deploy skills to .claude/
 ```
 
 ---
@@ -324,37 +321,29 @@ npx ts-node scripts/module-audit.ts l2-uk-en 31-60
 ## Library Structure
 
 ```
-scripts/lib/
-├── index.ts              # Main exports
-├── types.ts              # TypeScript types (Level, ModuleType, etc.)
-├── vocab-db.ts           # CSV vocabulary (legacy)
-├── vocab-sqlite.ts       # SQLite vocabulary helpers
-├── utils/
-│   ├── index.ts          # Utility exports
-│   ├── files.ts          # File operations
-│   └── markdown.ts       # Markdown parsing helpers
-├── parsers/
-│   ├── index.ts          # Parser exports
-│   ├── frontmatter.ts    # YAML frontmatter parsing
-│   ├── sections.ts       # Section parsing
-│   ├── vocabulary.ts     # Vocabulary table parsing
-│   └── activities/       # Activity type parsers
-│       ├── index.ts
-│       ├── base.ts       # Base activity interface
-│       ├── fill-blank.ts
-│       ├── gap-fill.ts
-│       ├── group-sort.ts
-│       ├── match-up.ts
-│       ├── order.ts
-│       ├── quiz.ts
-│       ├── select.ts
-│       ├── translate.ts
-│       ├── true-false.ts
-│       └── unjumble.ts
-└── renderers/
-    ├── index.ts          # Renderer exports
-    ├── json.ts           # Vibe JSON renderer
-    └── html/
-        ├── index.ts      # HTML renderer
-        └── template.ts   # HTML template
+scripts/
+├── generate-mdx.ts       # MDX generator for Docusaurus
+├── generate_json.py      # Vibe JSON generator (Python)
+├── module-audit.ts       # Module quality checker
+├── vocab-*.ts            # Vocabulary scripts
+└── lib/
+    ├── index.ts          # Main exports
+    ├── types.ts          # TypeScript types (Level, ModuleType, etc.)
+    ├── vocab-db.ts       # CSV vocabulary (legacy)
+    ├── vocab-sqlite.ts   # SQLite vocabulary helpers
+    ├── utils/
+    │   ├── index.ts      # Utility exports
+    │   ├── files.ts      # File operations
+    │   └── markdown.ts   # Markdown parsing helpers
+    ├── parsers/
+    │   ├── index.ts      # Parser exports
+    │   ├── frontmatter.ts    # YAML frontmatter parsing
+    │   ├── sections.ts       # Section parsing
+    │   ├── vocabulary.ts     # Vocabulary table parsing
+    │   └── activities/       # Activity type parsers
+    └── renderers/
+        ├── index.ts      # Renderer exports
+        └── json.ts       # Vibe JSON renderer (TypeScript - legacy)
 ```
+
+**Note:** JSON generation has been ported to Python (`generate_json.py`). The TypeScript JSON renderer remains for reference.

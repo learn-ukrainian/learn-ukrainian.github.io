@@ -106,16 +106,16 @@ The phrase "Сідайте, я зараз чай поставлю!" (Sit down, I
 **Покупець:** Добре, я візьму **той** телефон і **цю** сумку.
 **Продавець:** Чудово! **Ці** товари разом — десять тисяч п'ятсот.
 
-**English Translation:**
-**Seller:** Good day! Can I help you?
-**Buyer:** Yes, thank you. How much is this phone?
-**Seller:** This one? Twelve thousand hryvnias.
-**Buyer:** And that black one there?
-**Seller:** That one is cheaper — ten thousand.
-**Buyer:** And that bag for it?
-**Seller:** This bag? Five hundred hryvnias.
-**Buyer:** Good, I'll take that phone and this bag.
-**Seller:** Great! These goods together — ten thousand five hundred.
+> [!note] English Translation
+> **Seller:** Good day! Can I help you?
+> **Buyer:** Yes, thank you. How much is this phone?
+> **Seller:** This one? Twelve thousand hryvnias.
+> **Buyer:** And that black one there?
+> **Seller:** That one is cheaper — ten thousand.
+> **Buyer:** And that bag for it?
+> **Seller:** This bag? Five hundred hryvnias.
+> **Buyer:** Good, I'll take that phone and this bag.
+> **Seller:** Great! These goods together — ten thousand five hundred.
 
 ## Reading Practice: My Room 📖
 
@@ -465,20 +465,20 @@ The phrase "Сідайте, я зараз чай поставлю!" (Sit down, I
     > [!answer] Ці
     > [!options] Ці | Цей | Ця | Це
 
-**English Translation:**
-1. How much is this phone?
-2. And that black one there?
-3. This bag is beautiful.
-4. I want these glasses.
-5. That price is good.
-6. Show me this watch, please.
-7. Those goods are expensive.
-8. That cup is broken.
-9. I like this color.
-10. This model is new.
-11. Give me that bottle.
-12. These keys are not mine.
-
+> [!note] English Translation
+> - How much is this phone?
+> - And that black one there?
+> - This bag is beautiful.
+> - I want these glasses.
+> - That price is good.
+> - Show me this watch, please.
+> - Those goods are expensive.
+> - That cup is broken.
+> - I like this color.
+> - This model is new.
+> - Give me that bottle.
+> - These keys are not mine.
+>
 ---
 
 # Vocabulary

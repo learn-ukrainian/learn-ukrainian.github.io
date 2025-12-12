@@ -113,11 +113,11 @@ When introducing someone, you might say:
 
 Привіт! Мене звати Олена. Я хочу розповісти про мою родину. У мене є тато, мама, брат і сестра. Мого тата звати Михайло. Він працює лікарем. Я дуже люблю мого тата! Мою маму звати Ірина. Вона вчителька. Мого брата звати Денис. Він студент. Я часто бачу мого брата в університеті. Мою сестру звати Катерина. Вона ще школярка. Ми маємо собаку. Його звати Рекс. Я люблю Рекса!
 
-**English Translation:**
-
-Hi! My name is Olena. I want to tell you about my family. I have a dad, mom, brother, and sister. My dad's name is Mykhailo. He works as a doctor. I love my dad very much! My mom's name is Iryna. She's a teacher. My brother's name is Denys. He's a student. I often see my brother at the university. My sister's name is Kateryna. She's still a schoolgirl. We have a dog. His name is Rex. I love Rex!
-
-**Comprehension check:** Find all the animate nouns in accusative. Why does "тата" end in -а but "маму" in -у?
+> [!note] English Translation
+>
+> Hi! My name is Olena. I want to tell you about my family. I have a dad, mom, brother, and sister. My dad's name is Mykhailo. He works as a doctor. I love my dad very much! My mom's name is Iryna. She's a teacher. My brother's name is Denys. He's a student. I often see my brother at the university. My sister's name is Kateryna. She's still a schoolgirl. We have a dog. His name is Rex. I love Rex!
+>
+> **Comprehension check:** Find all the animate nouns in accusative. Why does "тата" end in -а but "маму" in -у?
 
 ## Conversation: Хто це? 🗣️
 
@@ -130,18 +130,18 @@ Hi! My name is Olena. I want to tell you about my family. I have a dad, mom, bro
 **Андрій:** Вона вчителька. Вони мають доньку.
 **Оля:** Цікаво! Я хочу познайомитися з ними.
 
-**English Translation:**
-**Andriy:** Olya, do you see that man?
-**Olya:** Which man? Where?
-**Andriy:** Over there, near the cafe. This is our new neighbor!
-**Olya:** Ah, yes! I see him. What is his name?
-**Andriy:** His name is Pavlo. He is a doctor. Do you know his wife?
-**Olya:** No, I don't know her. And who is she?
-**Andriy:** She is a teacher. They have a daughter.
-**Olya:** Interesting! I want to meet them.
-
-Зверни увагу: того чоловіка, його, сусіда — всі у знахідному відмінку!
-
+> [!note] English Translation
+> **Andriy:** Olya, do you see that man?
+> **Olya:** Which man? Where?
+> **Andriy:** Over there, near the cafe. This is our new neighbor!
+> **Olya:** Ah, yes! I see him. What is his name?
+> **Andriy:** His name is Pavlo. He is a doctor. Do you know his wife?
+> **Olya:** No, I don't know her. And who is she?
+> **Andriy:** She is a teacher. They have a daughter.
+> **Olya:** Interesting! I want to meet them.
+>
+> Зверни увагу: того чоловіка, його, сусіда — всі у знахідному відмінку!
+>
 # Summary
 
 **The Animacy Rule for Accusative**
@@ -424,19 +424,19 @@ Hi! My name is Olena. I want to tell you about my family. I have a dad, mom, bro
     > [!answer] їхнього собаку
     > [!options] їхнього собаку | їхній собака | їхньому собаці | їхнім собакою
 
-**English Translation:**
-1. Do you see that man?
-2. I know this student.
-3. She loves her brother.
-4. We are waiting for the new doctor.
-5. He sees that girl.
-6. I know your neighbor.
-7. Do you like my friend?
-8. She sees her dad.
-9. We know this teacher.
-10. He is waiting for his friend.
-11. I see our director.
-12. She loves their dog.
+> [!note] English Translation
+> - Do you see that man?
+> - I know this student.
+> - She loves her brother.
+> - We are waiting for the new doctor.
+> - He sees that girl.
+> - I know your neighbor.
+> - Do you like my friend?
+> - She sees her dad.
+> - We know this teacher.
+> - He is waiting for his friend.
+> - I see our director.
+> - She loves their dog.
 
 ## unjumble: Build Sentences with People
 > Arrange the words into correct sentences.

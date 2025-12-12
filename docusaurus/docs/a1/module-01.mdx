@@ -12,12 +12,12 @@ import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
 import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
 import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import ErrorCorrection, { ErrorCorrectionQuestion } from '@site/src/components/ErrorCorrection';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
 import Select, { SelectQuestion } from '@site/src/components/Select';
-import Translate, { TranslateQuestion } from '@site/src/components/Translate';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
 import Cloze from '@site/src/components/Cloze';
 import DialogueReorder from '@site/src/components/DialogueReorder';
-import MarkTheWords from '@site/src/components/MarkTheWords';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 
 
 
@@ -37,7 +37,10 @@ Let's break the code.
 
 ## Presentation: The Three Families
 
-:::tip 💡 **Thinking Trick:** Don't rely on English transliteration. Trust your eyes and the sound. If you see **M**, think "Mmm", not "Em".
+:::tip
+💡 **Thinking Trick:** Don't rely on English transliteration. Trust your eyes and the sound. If you see **M**, think "Mmm", not "Em".
+:::
+
 
 ### 1. The True Friends (Looks like English, Sounds like English)
 These letters are your safe harbor. They look and sound exactly (or almost exactly) like the Latin alphabet you use every day.
@@ -64,7 +67,10 @@ These are the "Tricksters". They look like Latin letters, but they have complete
 | **У у** | /u/ | Looks like Y | It is **U** (Boot) |
 | **Х х** | /x/ | Looks like X | It is **Kh** (Loch Ness) |
 
-:::warning **The "P" Trap:** The letter **Р** is rarely "Puh". It is almost always the rolled **R** sound. The sound "Puh" is represented by the letter **П** (which looks like a Greek Pi).
+:::warning
+**The "P" Trap:** The letter **Р** is rarely "Puh". It is almost always the rolled **R** sound. The sound "Puh" is represented by the letter **П** (which looks like a Greek Pi).
+:::
+
 
 ### 3. The New Friends (Strangers)
 These are completely new shapes. You have no baggage with them, so they are actually easier to learn than the False Friends!
@@ -108,7 +114,10 @@ These are completely new shapes. You have no baggage with them, so they are actu
 4. **Таксі** (Taxi)
 5. **Піца** (Pizza)
 
-:::tip 🌟 **Pro Tip:** Read these out loud. Your mouth needs to get used to the sounds. Don't just read in your head!
+:::tip
+🌟 **Pro Tip:** Read these out loud. Your mouth needs to get used to the sounds. Don't just read in your head!
+:::
+
 
 # Summary
 *   **True Friends:** А, Е, І, О, К, М, Т (Safe!)
@@ -329,76 +338,76 @@ These are completely new shapes. You have no baggage with them, so they are actu
 
 <Quiz>
   <QuizQuestion
-    question={`The sound /n/ (as in No)?`}
-    options={[`**Н**`, `**N**`, `**П**`, `**И**`]}
+    question={`Cyrillic Н (looks like Latin H) makes what sound?`}
+    options={[`/n/ as in "No"`, `/h/ as in "Hello"`, `/p/ as in "Pot"`, `/i/ as in "Machine"`]}
     correctIndex={0}
-    explanation={`The letter H in Ukrainian sounds like N!`}
+    explanation={`Cyrillic Н looks like H but sounds like N!`}
   />
   <QuizQuestion
-    question={`The sound /r/ (rolled)?`}
-    options={[`**Р**`, `**П**`, `**R**`, `**Я**`]}
+    question={`Cyrillic Р (looks like Latin P) makes what sound?`}
+    options={[`/r/ rolled R`, `/p/ as in "Pot"`, `/b/ as in "Boy"`, `/ja/ as in "Yard"`]}
     correctIndex={0}
-    explanation={`Remember: P is for Rrrrumble.`}
+    explanation={`Cyrillic Р looks like P but sounds like rolled R!`}
   />
   <QuizQuestion
-    question={`The sound /v/ (Video)?`}
-    options={[`**В**`, `**Б**`, `**V**`, `**У**`]}
+    question={`Cyrillic В (looks like Latin B) makes what sound?`}
+    options={[`/v/ as in "Video"`, `/b/ as in "Boy"`, `/w/ as in "Water"`, `/u/ as in "Boot"`]}
     correctIndex={0}
-    explanation={`B is actually V.`}
+    explanation={`Cyrillic В looks like B but sounds like V!`}
   />
   <QuizQuestion
-    question={`The sound /s/ (Snake)?`}
-    options={[`**С**`, `**К**`, `**Z**`, `**Ц**`]}
+    question={`Cyrillic С (looks like Latin C) makes what sound?`}
+    options={[`/s/ as in "Snake"`, `/k/ as in "Cat"`, `/z/ as in "Zoo"`, `/ts/ as in "Cats"`]}
     correctIndex={0}
-    explanation={`C is always S.`}
+    explanation={`Cyrillic С looks like C but always sounds like S!`}
   />
   <QuizQuestion
-    question={`The sound /x/ (Loch Ness)?`}
-    options={[`**Х**`, `**К**`, `**Г**`, `**Ж**`]}
+    question={`Cyrillic Х (looks like Latin X) makes what sound?`}
+    options={[`/x/ as in "Loch"`, `/ks/ as in "Box"`, `/h/ as in "Hello"`, `/k/ as in "Kite"`]}
     correctIndex={0}
-    explanation={`X marks the spot (Kh).`}
+    explanation={`Cyrillic Х looks like X but sounds like Scottish "ch" in Loch!`}
   />
   <QuizQuestion
-    question={`The sound /u/ (Boot)?`}
-    options={[`**У**`, `**Ю**`, `**Y**`, `**О**`]}
+    question={`Cyrillic У (looks like Latin Y) makes what sound?`}
+    options={[`/u/ as in "Boot"`, `/j/ as in "Yes"`, `/i/ as in "Machine"`, `/ai/ as in "My"`]}
     correctIndex={0}
-    explanation={`Y looks like U.`}
+    explanation={`Cyrillic У looks like Y but sounds like "oo" in Boot!`}
   />
   <QuizQuestion
-    question={`The sound /i/ (Machine)?`}
-    options={[`**І**`, `**И**`, `**Й**`, `**Е**`]}
+    question={`Cyrillic І makes what sound?`}
+    options={[`/i/ as in "Machine"`, `/ɪ/ as in "Bit"`, `/j/ as in "Yes"`, `/e/ as in "Bed"`]}
     correctIndex={0}
-    explanation={`I with a dot.`}
+    explanation={`І (with dot) is a True Friend - sounds like "ee"!`}
   />
   <QuizQuestion
-    question={`The sound /m/ (Mom)?`}
-    options={[`**М**`, `**Н**`, `**Т**`, `**П**`]}
+    question={`Cyrillic М makes what sound?`}
+    options={[`/m/ as in "Mom"`, `/n/ as in "No"`, `/t/ as in "Top"`, `/p/ as in "Pot"`]}
     correctIndex={0}
-    explanation={`M is M.`}
+    explanation={`М is a True Friend - same as English M!`}
   />
   <QuizQuestion
-    question={`The sound /k/ (Kite)?`}
-    options={[`**К**`, `**Х**`, `**Г**`, `**С**`]}
+    question={`Cyrillic К makes what sound?`}
+    options={[`/k/ as in "Kite"`, `/x/ as in "Loch"`, `/g/ as in "Go"`, `/s/ as in "Snake"`]}
     correctIndex={0}
-    explanation={`K is K.`}
+    explanation={`К is a True Friend - same as English K!`}
   />
   <QuizQuestion
-    question={`The sound /t/ (Top)?`}
-    options={[`**Т**`, `**Г**`, `**П**`, `**М**`]}
+    question={`Cyrillic Т makes what sound?`}
+    options={[`/t/ as in "Top"`, `/g/ as in "Go"`, `/p/ as in "Pot"`, `/m/ as in "Mom"`]}
     correctIndex={0}
-    explanation={`T is T.`}
+    explanation={`Т is a True Friend - same as English T!`}
   />
   <QuizQuestion
-    question={`The sound /d/ (Dog)?`}
-    options={[`**Д**`, `**Т**`, `**Л**`, `**Б**`]}
+    question={`Cyrillic Д makes what sound?`}
+    options={[`/d/ as in "Dog"`, `/t/ as in "Top"`, `/l/ as in "Love"`, `/b/ as in "Boy"`]}
     correctIndex={0}
-    explanation={`Platform D.`}
+    explanation={`Д is a New Friend (Greek Delta) - sounds like D!`}
   />
   <QuizQuestion
-    question={`The sound /p/ (Pot)?`}
-    options={[`**П**`, `**Р**`, `**Л**`, `**Н**`]}
+    question={`Cyrillic П (looks like Greek π) makes what sound?`}
+    options={[`/p/ as in "Pot"`, `/r/ rolled R`, `/l/ as in "Love"`, `/n/ as in "No"`]}
     correctIndex={0}
-    explanation={`Pi is P.`}
+    explanation={`Cyrillic П sounds like P - don't confuse with Р which is R!`}
   />
 </Quiz>
 

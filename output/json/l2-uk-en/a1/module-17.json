@@ -1,0 +1,1170 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A1-17",
+    "moduleId": "mod-uk-A1-17",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A1",
+    "phase": "A1.2",
+    "moduleNumber": 17,
+    "moduleType": "vocabulary",
+    "pedagogy": "PPP",
+    "immersionLevel": 0.3,
+    "title": "Numbers & Money",
+    "subtitle": "Counting and Prices in Ukrainian",
+    "description": "Count from 0-100 in Ukrainian",
+    "objectives": [
+      "Count from 0-100 in Ukrainian",
+      "Understand number patterns",
+      "Use numbers with nouns correctly",
+      "Handle money and prices"
+    ],
+    "grammarFocus": [
+      "Cardinals 1-100",
+      "Number-noun agreement",
+      "Genitive with numbers 5+"
+    ],
+    "tags": [
+      "vocabulary",
+      "numbers",
+      "money",
+      "counting"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "partial",
+    "sections": [
+      {
+        "id": "section-content-0",
+        "name": "Lesson",
+        "type": "content",
+        "content": "> **Note:** Numbers are essential for everyday life — telling time, shopping, giving phone numbers. Master them and Ukraine opens up!\n\n## Warm-up: The Shopping Challenge\n\nImagine you're buying something in Ukraine. The cashier says:\n\n**\"Сто п'ятдесят три гривні.\"** (153 hryvnias.)\n\nCan you understand the price? Can you count your change? This module teaches you the number system that makes all of this possible.\n\nUkrainian numbers follow logical patterns that, once learned, let you count into the millions! Today we focus on 0-100 — the numbers you'll use daily for prices, addresses, phone numbers, and more.\n\nThe Ukrainian number system is similar to English in many ways, but with some unique features. Numbers 11-19 have special forms, and the way numbers combine with nouns depends on the last digit. Don't worry — by the end of this module, it will all make sense!\n\n> 💡 **Thinking Trick:** Learn numbers in groups: 1-10 (base), 11-19 (teens), 20-90 (tens), then combine!\n\n## Presentation: Ukrainian Numbers\n\n### 1. Numbers 0-10\n\n| Number | Ukrainian | Pronunciation |\n|--------|-----------|---------------|\n| 0 | нуль | nulʲ |\n| 1 | один/одна/одне | odYN/odNA/odNE |\n| 2 | два/дві | dva/dvi |\n| 3 | три | try |\n| 4 | чотири | choTYry |\n| 5 | п'ять | pjatʲ |\n| 6 | шість | ʃistʲ |\n| 7 | сім | sim |\n| 8 | вісім | VIsim |\n| 9 | дев'ять | DEVjatʲ |\n| 10 | десять | DEsjatʲ |\n\n**Note:** 1 and 2 have gender forms:\n- **один/одна/одне** — m/f/n (один стіл, одна книга, одне вікно)\n- **два/дві** — m+n/f (два столи, дві книги)\n\n### 2. Numbers 11-19 (Teen Pattern)\n\nThe teens are formed by adding -надцять to the base:\n\n| Number | Ukrainian | Pattern |\n|--------|-----------|---------|\n| 11 | одинадцять | один + надцять |\n| 12 | дванадцять | два + надцять |\n| 13 | тринадцять | три + надцять |\n| 14 | чотирнадцять | чотир + надцять |\n| 15 | п'ятнадцять | п'ят + надцять |\n| 16 | шістнадцять | шіст + надцять |\n| 17 | сімнадцять | сім + надцять |\n| 18 | вісімнадцять | вісім + надцять |\n| 19 | дев'ятнадцять | дев'ят + надцять |\n\n### 3. Tens (20-90)\n\n| Number | Ukrainian |\n|--------|-----------|\n| 20 | двадцять |\n| 30 | тридцять |\n| 40 | сорок |\n| 50 | п'ятдесят |\n| 60 | шістдесят |\n| 70 | сімдесят |\n| 80 | вісімдесят |\n| 90 | дев'яносто |\n| 100 | сто |\n\n**Pattern:** 20-40 use -дцять/-ок, 50-80 use -десят, 90 uses -яносто.\n\n### 4. Combining Numbers\n\nFor 21-99, just combine the ten and unit:\n- 21 = двадцять один\n- 35 = тридцять п'ять\n- 47 = сорок сім\n- 99 = дев'яносто дев'ять\n\n> 📜 **Pattern Summary:**\n> - **1-10:** Base numbers (memorize)\n> - **11-19:** Base + надцять\n> - **20-40:** Special tens\n> - **50-80:** Base + десят\n> - **100:** сто\n\n> 💡 **Did You Know?** The word \"сорок\" (40) comes from an ancient word for \"bundle of furs\" — 40 pelts made one bundle in medieval trade. This shows how numbers often have cultural origins!\n\n## Presentation: Numbers with Nouns\n\n### 5. Number-Noun Agreement\n\nUkrainian nouns change form depending on the number! This is crucial for natural speech:\n\n| Number Type | Noun Form | Example |\n|-------------|-----------|---------|\n| **1** | Nominative singular | одна книг**а** |\n| **2, 3, 4** | Nominative plural | дві книг**и** |\n| **5-20** | Genitive plural | п'ять книг (книг!) |\n| **21, 31...** | Like 1 | двадцять одна книг**а** |\n| **22-24, 32-34...** | Like 2-4 | двадцять дві книг**и** |\n\n**The key insight:** It's the LAST digit that determines the noun form!\n- 21, 31, 41... → like 1 (nominative singular)\n- 22-24, 32-34... → like 2-4 (nominative plural)\n- 25-30, 35-40... → like 5-20 (genitive plural)\n\n### 6. Common Examples\n\n| Number | + гривня | + книга |\n|--------|----------|---------|\n| 1 | гривня | книга |\n| 2 | гривні | книги |\n| 5 | гривень | книг |\n| 21 | гривня | книга |\n| 25 | гривень | книг |\n\n## Cultural Insight: Ukrainian Currency 🇺🇦\n\nThe Ukrainian currency is the **гривня** (hryvnia), abbreviated UAH or ₴. Coins are called **копійки**. The hryvnia is divided into 100 kopiykas, though small coins are rarely used today due to inflation.\n\n- 1 гривня, 2-4 гривні, 5+ гривень\n- 1 копійка, 2-4 копійки, 5+ копійок\n\n**Common money phrases:**\n- Скільки коштує? (How much does it cost?)\n- Це (буде) 150 гривень. (That will be 150 hryvnias.)\n- Дорого! (Expensive!)\n- Дешево! (Cheap!)\n- Знижка (Discount)\n- Решта (Change)\n- Готівка (Cash)\n- Картка (Card)\n- Безготівково (Cashless payment)\n\n**Payment in Ukraine:** Card payments are widely accepted in cities. You can simply say \"Карткою\" (by card) or \"Готівкою\" (in cash) when paying. Apple Pay and Google Pay work at most terminals with contactless payment supported everywhere in major stores and restaurants.\n\n> 📜 **History Bite:** The hryvnia's name comes from \"гривна\" — a medieval Ukrainian unit of weight for silver. The modern hryvnia was introduced in 1996, replacing the Soviet ruble. Each hryvnia note features a Ukrainian historical figure!\n\n## Reading Practice: У магазині 💰\n\n**Українською:**\n\n— Добрий день! Скільки коштує цей сир?\n— Сто двадцять гривень за кілограм.\n— О, дорого! А молоко?\n— Молоко — тридцять п'ять гривень.\n— Добре. Дайте, будь ласка, один літр молока.\n— Тридцять п'ять гривень. Щось ще?\n— Так, хліб. Скільки він коштує?\n— Двадцять три гривні.\n— Добре. Молоко і хліб — скільки разом?\n— П'ятдесят вісім гривень.\n— Ось сто гривень.\n— Ваша решта — сорок дві гривні. Дякую!\n\n**English Translation:**\n\n— Good afternoon! How much is this cheese?\n— 120 hryvnias per kilogram.\n— Oh, expensive! And the milk?\n— Milk is 35 hryvnias.\n— Okay. Give me one liter of milk, please.\n— 35 hryvnias. Anything else?\n— Yes, bread. How much is it?\n— 23 hryvnias.\n— Okay. Milk and bread — how much together?\n— 58 hryvnias.\n— Here's 100 hryvnias.\n— Your change is 42 hryvnias. Thank you!\n\n**Comprehension check:** Practice saying all the prices aloud!\n\n## Conversation: Це скільки? 🗣️\n\n**Покупець:** Скільки коштує ця сумка?\n**Продавець:** П'ятсот гривень.\n**Покупець:** О, занадто дорого! Є знижка?\n**Продавець:** Для вас — чотириста п'ятдесят.\n**Покупець:** Гм... Чотириста?\n**Продавець:** Добре, чотириста двадцять — останнє слово!\n**Покупець:** Згода! Ось п'ятсот.\n**Продавець:** Ваша решта — вісімдесят гривень. Дякую!\n\n**English Translation:**\n**Buyer:** How much does this bag cost?\n**Seller:** Five hundred hryvnias.\n**Buyer:** Oh, too expensive! Is there a discount?\n**Seller:** For you — four hundred fifty.\n**Buyer:** Hmm... Four hundred?\n**Seller:** Okay, four hundred twenty — last word!\n**Buyer:** Agreed! Here is five hundred.\n**Seller:** Your change is eighty hryvnias. Thank you!\n\nЗверни увагу: всі числа в діалозі — практикуй їх!"
+      },
+      {
+        "id": "section-summary-1",
+        "name": "Підсумок",
+        "nameEn": "Summary",
+        "type": "summary",
+        "content": "**Numbers & Money: Essential Skills**\n\n1. **Pattern 1-10:** Memorize base numbers\n2. **Pattern 11-19:** Base + надцять\n3. **Pattern 20-100:** Tens + units\n4. **Number-noun rule:** Last digit determines noun form\n5. **Currency:** гривня/гривні/гривень\n\n---\n\n> [!tip] 🌟 **Pro Tip:** Practice prices constantly! When shopping (even online), try to say the prices in Ukrainian: \"Сто сорок три гривні.\"\n\n\n---"
+      }
+    ],
+    "rawMarkdown": "---\ntitle: \"Numbers & Money\"\nsubtitle: \"Counting and Prices in Ukrainian\"\nphase: A1.2\ntransliteration: partial\npedagogy: PPP\nduration: 45\ntags: [vocabulary, numbers, money, counting]\nobjectives:\n  - Count from 0-100 in Ukrainian\n  - Understand number patterns\n  - Use numbers with nouns correctly\n  - Handle money and prices\ngrammar:\n  - Cardinals 1-100\n  - Number-noun agreement\n  - Genitive with numbers 5+\naudio: false\n---\n\n# Numbers & Money\n\n> **Note:** Numbers are essential for everyday life — telling time, shopping, giving phone numbers. Master them and Ukraine opens up!\n\n## Warm-up: The Shopping Challenge\n\nImagine you're buying something in Ukraine. The cashier says:\n\n**\"Сто п'ятдесят три гривні.\"** (153 hryvnias.)\n\nCan you understand the price? Can you count your change? This module teaches you the number system that makes all of this possible.\n\nUkrainian numbers follow logical patterns that, once learned, let you count into the millions! Today we focus on 0-100 — the numbers you'll use daily for prices, addresses, phone numbers, and more.\n\nThe Ukrainian number system is similar to English in many ways, but with some unique features. Numbers 11-19 have special forms, and the way numbers combine with nouns depends on the last digit. Don't worry — by the end of this module, it will all make sense!\n\n> 💡 **Thinking Trick:** Learn numbers in groups: 1-10 (base), 11-19 (teens), 20-90 (tens), then combine!\n\n## Presentation: Ukrainian Numbers\n\n### 1. Numbers 0-10\n\n| Number | Ukrainian | Pronunciation |\n|--------|-----------|---------------|\n| 0 | нуль | nulʲ |\n| 1 | один/одна/одне | odYN/odNA/odNE |\n| 2 | два/дві | dva/dvi |\n| 3 | три | try |\n| 4 | чотири | choTYry |\n| 5 | п'ять | pjatʲ |\n| 6 | шість | ʃistʲ |\n| 7 | сім | sim |\n| 8 | вісім | VIsim |\n| 9 | дев'ять | DEVjatʲ |\n| 10 | десять | DEsjatʲ |\n\n**Note:** 1 and 2 have gender forms:\n- **один/одна/одне** — m/f/n (один стіл, одна книга, одне вікно)\n- **два/дві** — m+n/f (два столи, дві книги)\n\n### 2. Numbers 11-19 (Teen Pattern)\n\nThe teens are formed by adding -надцять to the base:\n\n| Number | Ukrainian | Pattern |\n|--------|-----------|---------|\n| 11 | одинадцять | один + надцять |\n| 12 | дванадцять | два + надцять |\n| 13 | тринадцять | три + надцять |\n| 14 | чотирнадцять | чотир + надцять |\n| 15 | п'ятнадцять | п'ят + надцять |\n| 16 | шістнадцять | шіст + надцять |\n| 17 | сімнадцять | сім + надцять |\n| 18 | вісімнадцять | вісім + надцять |\n| 19 | дев'ятнадцять | дев'ят + надцять |\n\n### 3. Tens (20-90)\n\n| Number | Ukrainian |\n|--------|-----------|\n| 20 | двадцять |\n| 30 | тридцять |\n| 40 | сорок |\n| 50 | п'ятдесят |\n| 60 | шістдесят |\n| 70 | сімдесят |\n| 80 | вісімдесят |\n| 90 | дев'яносто |\n| 100 | сто |\n\n**Pattern:** 20-40 use -дцять/-ок, 50-80 use -десят, 90 uses -яносто.\n\n### 4. Combining Numbers\n\nFor 21-99, just combine the ten and unit:\n- 21 = двадцять один\n- 35 = тридцять п'ять\n- 47 = сорок сім\n- 99 = дев'яносто дев'ять\n\n> 📜 **Pattern Summary:**\n> - **1-10:** Base numbers (memorize)\n> - **11-19:** Base + надцять\n> - **20-40:** Special tens\n> - **50-80:** Base + десят\n> - **100:** сто\n\n> 💡 **Did You Know?** The word \"сорок\" (40) comes from an ancient word for \"bundle of furs\" — 40 pelts made one bundle in medieval trade. This shows how numbers often have cultural origins!\n\n## Presentation: Numbers with Nouns\n\n### 5. Number-Noun Agreement\n\nUkrainian nouns change form depending on the number! This is crucial for natural speech:\n\n| Number Type | Noun Form | Example |\n|-------------|-----------|---------|\n| **1** | Nominative singular | одна книг**а** |\n| **2, 3, 4** | Nominative plural | дві книг**и** |\n| **5-20** | Genitive plural | п'ять книг (книг!) |\n| **21, 31...** | Like 1 | двадцять одна книг**а** |\n| **22-24, 32-34...** | Like 2-4 | двадцять дві книг**и** |\n\n**The key insight:** It's the LAST digit that determines the noun form!\n- 21, 31, 41... → like 1 (nominative singular)\n- 22-24, 32-34... → like 2-4 (nominative plural)\n- 25-30, 35-40... → like 5-20 (genitive plural)\n\n### 6. Common Examples\n\n| Number | + гривня | + книга |\n|--------|----------|---------|\n| 1 | гривня | книга |\n| 2 | гривні | книги |\n| 5 | гривень | книг |\n| 21 | гривня | книга |\n| 25 | гривень | книг |\n\n## Cultural Insight: Ukrainian Currency 🇺🇦\n\nThe Ukrainian currency is the **гривня** (hryvnia), abbreviated UAH or ₴. Coins are called **копійки**. The hryvnia is divided into 100 kopiykas, though small coins are rarely used today due to inflation.\n\n- 1 гривня, 2-4 гривні, 5+ гривень\n- 1 копійка, 2-4 копійки, 5+ копійок\n\n**Common money phrases:**\n- Скільки коштує? (How much does it cost?)\n- Це (буде) 150 гривень. (That will be 150 hryvnias.)\n- Дорого! (Expensive!)\n- Дешево! (Cheap!)\n- Знижка (Discount)\n- Решта (Change)\n- Готівка (Cash)\n- Картка (Card)\n- Безготівково (Cashless payment)\n\n**Payment in Ukraine:** Card payments are widely accepted in cities. You can simply say \"Карткою\" (by card) or \"Готівкою\" (in cash) when paying. Apple Pay and Google Pay work at most terminals with contactless payment supported everywhere in major stores and restaurants.\n\n> 📜 **History Bite:** The hryvnia's name comes from \"гривна\" — a medieval Ukrainian unit of weight for silver. The modern hryvnia was introduced in 1996, replacing the Soviet ruble. Each hryvnia note features a Ukrainian historical figure!\n\n## Reading Practice: У магазині 💰\n\n**Українською:**\n\n— Добрий день! Скільки коштує цей сир?\n— Сто двадцять гривень за кілограм.\n— О, дорого! А молоко?\n— Молоко — тридцять п'ять гривень.\n— Добре. Дайте, будь ласка, один літр молока.\n— Тридцять п'ять гривень. Щось ще?\n— Так, хліб. Скільки він коштує?\n— Двадцять три гривні.\n— Добре. Молоко і хліб — скільки разом?\n— П'ятдесят вісім гривень.\n— Ось сто гривень.\n— Ваша решта — сорок дві гривні. Дякую!\n\n**English Translation:**\n\n— Good afternoon! How much is this cheese?\n— 120 hryvnias per kilogram.\n— Oh, expensive! And the milk?\n— Milk is 35 hryvnias.\n— Okay. Give me one liter of milk, please.\n— 35 hryvnias. Anything else?\n— Yes, bread. How much is it?\n— 23 hryvnias.\n— Okay. Milk and bread — how much together?\n— 58 hryvnias.\n— Here's 100 hryvnias.\n— Your change is 42 hryvnias. Thank you!\n\n**Comprehension check:** Practice saying all the prices aloud!\n\n## Conversation: Це скільки? 🗣️\n\n**Покупець:** Скільки коштує ця сумка?\n**Продавець:** П'ятсот гривень.\n**Покупець:** О, занадто дорого! Є знижка?\n**Продавець:** Для вас — чотириста п'ятдесят.\n**Покупець:** Гм... Чотириста?\n**Продавець:** Добре, чотириста двадцять — останнє слово!\n**Покупець:** Згода! Ось п'ятсот.\n**Продавець:** Ваша решта — вісімдесят гривень. Дякую!\n\n**English Translation:**\n**Buyer:** How much does this bag cost?\n**Seller:** Five hundred hryvnias.\n**Buyer:** Oh, too expensive! Is there a discount?\n**Seller:** For you — four hundred fifty.\n**Buyer:** Hmm... Four hundred?\n**Seller:** Okay, four hundred twenty — last word!\n**Buyer:** Agreed! Here is five hundred.\n**Seller:** Your change is eighty hryvnias. Thank you!\n\nЗверни увагу: всі числа в діалозі — практикуй їх!\n\n# Summary\n\n**Numbers & Money: Essential Skills**\n\n1. **Pattern 1-10:** Memorize base numbers\n2. **Pattern 11-19:** Base + надцять\n3. **Pattern 20-100:** Tens + units\n4. **Number-noun rule:** Last digit determines noun form\n5. **Currency:** гривня/гривні/гривень\n\n---\n\n> [!tip] 🌟 **Pro Tip:** Practice prices constantly! When shopping (even online), try to say the prices in Ukrainian: \"Сто сорок три гривні.\"\n\n# Activities\n\n## fill-in: Write the Number\n> Write the number in Ukrainian.\n\n1. 5 = ___\n   > [!answer] п'ять\n   > [!options] п'ять | пять | пяти | п'яти\n\n2. 12 = ___\n   > [!answer] дванадцять\n   > [!options] дванадцять | двананцять | дванадцать | дванацять\n\n3. 25 = ___\n   > [!answer] двадцять п'ять\n   > [!options] двадцять п'ять | двацять п'ять | двадцать п'ять | двадцять пять\n\n4. 40 = ___\n   > [!answer] сорок\n   > [!options] сорок | сороки | чотиридесят | сорік\n\n5. 17 = ___\n   > [!answer] сімнадцять\n   > [!options] сімнадцять | сімьнадцять | семнадцять | сімнацять\n\n6. 100 = ___\n   > [!answer] сто\n   > [!options] сто | сота | стоо | сту\n\n7. 33 = ___\n   > [!answer] тридцять три\n   > [!options] тридцять три | трицять три | тридцать три | тридцять тр\n\n8. 68 = ___\n   > [!answer] шістдесят вісім\n   > [!options] шістдесят вісім | шістьдесят вісім | шестьдесят вісім | шістесят вісім\n\n9. 11 = ___\n   > [!answer] одинадцять\n   > [!options] одинадцять | однадцять | одинадцать | одіннадцять\n\n10. 90 = ___\n    > [!answer] дев'яносто\n    > [!options] дев'яносто | дев'ятдесят | девяносто | дев'яність\n\n11. 56 = ___\n    > [!answer] п'ятдесят шість\n    > [!options] п'ятдесят шість | пятдесят шість | п'ятьдесят шість | п'ятдесять шість\n\n12. 74 = ___\n    > [!answer] сімдесят чотири\n    > [!options] сімдесят чотири | сімьдесят чотири | семдесят чотири | сімдесять чотири\n\n## match-up: Number to Word\n> Match the numeral with the Ukrainian word.\n\n| Number | Ukrainian |\n| --- | --- |\n| 3 | три |\n| 7 | сім |\n| 14 | чотирнадцять |\n| 20 | двадцять |\n| 35 | тридцять п'ять |\n| 42 | сорок два |\n| 50 | п'ятдесят |\n| 66 | шістдесят шість |\n| 80 | вісімдесят |\n| 91 | дев'яносто один |\n| 19 | дев'ятнадцять |\n| 15 | п'ятнадцять |\n\n## quiz: Number-Noun Agreement\n> Choose the correct noun form.\n\n1. Одна ___ (гривня)\n   - [x] гривня\n   - [ ] гривні\n   - [ ] гривень\n   - [ ] гривнею\n\n2. Три ___ (книга)\n   - [ ] книга\n   - [x] книги\n   - [ ] книг\n   - [ ] книгою\n\n3. П'ять ___ (гривня)\n   - [ ] гривня\n   - [ ] гривні\n   - [x] гривень\n   - [ ] гривнею\n\n4. Двадцять дві ___ (копійка)\n   - [ ] копійка\n   - [x] копійки\n   - [ ] копійок\n   - [ ] копійкою\n\n5. Сто ___ (гривня)\n   - [ ] гривня\n   - [ ] гривні\n   - [x] гривень\n   - [ ] гривнею\n\n6. Чотири ___ (долар)\n   - [ ] долар\n   - [x] долари\n   - [ ] доларів\n   - [ ] доларом\n\n7. Сім ___ (день)\n   - [ ] день\n   - [ ] дні\n   - [x] днів\n   - [ ] днем\n\n8. Двадцять один ___ (рік)\n   - [x] рік\n   - [ ] роки\n   - [ ] років\n   - [ ] роком\n\n9. Дванадцять ___ (місяць)\n   - [ ] місяць\n   - [ ] місяці\n   - [x] місяців\n   - [ ] місяцем\n\n10. Тридцять три ___ (хвилина)\n    - [ ] хвилина\n    - [x] хвилини\n    - [ ] хвилин\n    - [ ] хвилиною\n\n11. П'ятдесят ___ (копійка)\n    - [ ] копійка\n    - [ ] копійки\n    - [x] копійок\n    - [ ] копійкою\n\n12. Дев'яносто дев'ять ___ (відсоток)\n    - [ ] відсоток\n    - [ ] відсотки\n    - [x] відсотків\n    - [ ] відсотком\n\n## group-sort: Number Patterns\n> Sort numbers by their pattern.\n\n- Teens (11-19): одинадцять\n- Teens (11-19): дванадцять\n- Teens (11-19): тринадцять\n- Tens (20-90): двадцять\n- Tens (20-90): тридцять\n- Tens (20-90): сорок\n- Tens (50-80): п'ятдесят\n- Tens (50-80): шістдесят\n- Tens (50-80): сімдесят\n- Tens (50-80): вісімдесят\n- Special: дев'яносто\n- Special: сто\n\n## true-false: Number Rules\n- [x] \"Один\" has three gender forms.\n- [x] Numbers 11-19 end in \"-надцять.\"\n- [ ] \"Сорок\" means 30.\n- [x] After 5-20, nouns take the genitive plural.\n- [x] \"Два\" becomes \"дві\" for feminine nouns.\n- [ ] \"Дев'яносто\" means 80.\n- [x] The last digit determines noun agreement.\n- [x] \"Гривня\" is Ukrainian currency.\n- [ ] \"П'ятдесят\" means 15.\n- [x] \"Сто\" means 100.\n- [x] Prices are asked with \"Скільки коштує?\"\n- [ ] \"Три гривнень\" is correct.\n\n## anagram: Number Vocabulary\n> Unscramble these number-related words.\n\n1. ь т я ' п\n   > [!answer] п'ять\n\n2. ц я т ь д а в д\n   > [!answer] двадцять\n\n3. к о р о с\n   > [!answer] сорок\n\n4. о т с\n   > [!answer] сто\n\n5. м і с\n   > [!answer] сім\n\n6. я н в и р г\n   > [!answer] гривня\n\n7. а н і ц\n   > [!answer] ціна\n\n8. а к ж и н з\n   > [!answer] знижка\n\n9. о а й п і к к\n   > [!answer] копійка\n\n10. а т ш е р\n    > [!answer] решта\n\n11. о г о р о д\n    > [!answer] дорого\n\n12. о в е ш е д\n    > [!answer] дешево\n\n## fill-in: Prices\n> Write the price in words.\n\n1. 15₴ = ___ гривень\n   > [!answer] п'ятнадцять\n   > [!options] п'ятнадцять | п'ятнадцати | п'ятьнадцять | пятнадцять\n\n2. 23₴ = двадцять три ___\n   > [!answer] гривні\n   > [!options] гривні | гривень | гривня | гривнею\n\n3. 100₴ = сто ___\n   > [!answer] гривень\n   > [!options] гривень | гривні | гривня | гривнею\n\n4. 41₴ = сорок одна ___\n   > [!answer] гривня\n   > [!options] гривня | гривні | гривень | гривнею\n\n5. 50₴ = п'ятдесят ___\n   > [!answer] гривень\n   > [!options] гривень | гривні | гривня | гривнею\n\n6. 72₴ = сімдесят дві ___\n   > [!answer] гривні\n   > [!options] гривні | гривень | гривня | гривнею\n\n7. 84₴ = вісімдесят чотири ___\n   > [!answer] гривні\n   > [!options] гривні | гривень | гривня | гривнею\n\n8. 99₴ = дев'яносто дев'ять ___\n   > [!answer] гривень\n   > [!options] гривень | гривні | гривня | гривнею\n\n9. 31₴ = тридцять одна ___\n   > [!answer] гривня\n   > [!options] гривня | гривні | гривень | гривнею\n\n10. 67₴ = шістдесят сім ___\n    > [!answer] гривень\n    > [!options] гривень | гривні | гривня | гривнею\n\n11. 5₴ = п'ять ___\n    > [!answer] гривень\n    > [!options] гривень | гривні | гривня | гривнею\n\n12. 2₴ = дві ___\n    > [!answer] гривні\n    > [!options] гривні | гривень | гривня | гривнею\n\n## unjumble: Build Price Sentences\n> Arrange the words into correct sentences.\n\n1. коштує / скільки / це\n   > [!answer] Скільки це коштує?\n\n2. гривень / сто / це\n   > [!answer] Це сто гривень.\n\n3. двадцять / п'ять / гривень\n   > [!answer] Двадцять п'ять гривень.\n\n4. дорого / занадто / це\n   > [!answer] Це занадто дорого.\n\n5. знижка / є\n   > [!answer] Є знижка?\n\n6. решта / ваша / сорок / гривень\n   > [!answer] Ваша решта сорок гривень.\n\n7. гривні / ласка / Дайте / будь / три\n   > [!answer] Дайте три гривні, будь ласка.\n\n8. сто / гривень / ось\n   > [!answer] Ось сто гривень.\n\n9. п'ятдесят / скільки / коштує\n   > [!answer] Скільки коштує п'ятдесят?\n\n10. дешево / це / дуже\n    > [!answer] Це дуже дешево.\n\n11. разом / скільки\n    > [!answer] Скільки разом?\n\n12. дякую / решта / ваша\n    > [!answer] Ваша решта, дякую.\n\n---\n\n# Vocabulary\n\n| Ukrainian | IPA | English | Notes |\n| --- | --- | --- | --- |\n| нуль | /nulʲ/ | zero | |\n| один/одна/одне | /oˈdɪn/ | one | m/f/n forms |\n| два/дві | /dvɑ/dvi/ | two | m+n/f forms |\n| три | /trɪ/ | three | |\n| чотири | /t͡ʃoˈtɪrɪ/ | four | |\n| п'ять | /pjɑtʲ/ | five | |\n| шість | /ʃistʲ/ | six | |\n| сім | /sim/ | seven | |\n| вісім | /ˈʋisim/ | eight | |\n| дев'ять | /ˈdɛʋjɑtʲ/ | nine | |\n| десять | /ˈdɛsʲɑtʲ/ | ten | |\n| двадцять | /ˈdʋɑd͡t͡sʲɑtʲ/ | twenty | |\n| тридцять | /ˈtrɪd͡t͡sʲɑtʲ/ | thirty | |\n| сорок | /ˈsorok/ | forty | |\n| п'ятдесят | /pjɑtdɛˈsʲɑt/ | fifty | |\n| сто | /sto/ | hundred | |\n| гривня | /ˈɦrɪʋnʲɑ/ | hryvnia | 1 |\n| гривні | /ˈɦrɪʋni/ | hryvnias | 2-4 |\n| гривень | /ˈɦrɪʋɛnʲ/ | hryvnias | 5+ |\n| копійка | /koˈpijkɑ/ | kopek | 1 |\n| ціна | /t͡siˈnɑ/ | price | |\n| знижка | /ˈznɪʒkɑ/ | discount | |\n| решта | /ˈrɛʃtɑ/ | change | |\n| дорого | /ˈdoroɦo/ | expensive | |\n| дешево | /ˈdɛʃɛʋo/ | cheap | |\n",
+    "createdAt": "2025-12-12T19:55:32.043Z",
+    "modifiedAt": "2025-12-12T19:55:32.043Z",
+    "version": 2
+  },
+  "activities": [
+    {
+      "id": "act-a1-0-fillblank-0",
+      "type": "fill-blank",
+      "title": "Write the Number",
+      "description": "Write the number in Ukrainian.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "5 = ___",
+            "answer": "п'ять",
+            "options": [
+              "п'ять",
+              "пять",
+              "пяти",
+              "п'яти"
+            ]
+          },
+          {
+            "prompt": "12 = ___",
+            "answer": "дванадцять",
+            "options": [
+              "дванадцять",
+              "двананцять",
+              "дванадцать",
+              "дванацять"
+            ]
+          },
+          {
+            "prompt": "25 = ___",
+            "answer": "двадцять п'ять",
+            "options": [
+              "двадцять п'ять",
+              "двацять п'ять",
+              "двадцать п'ять",
+              "двадцять пять"
+            ]
+          },
+          {
+            "prompt": "40 = ___",
+            "answer": "сорок",
+            "options": [
+              "сорок",
+              "сороки",
+              "чотиридесят",
+              "сорік"
+            ]
+          },
+          {
+            "prompt": "17 = ___",
+            "answer": "сімнадцять",
+            "options": [
+              "сімнадцять",
+              "сімьнадцять",
+              "семнадцять",
+              "сімнацять"
+            ]
+          },
+          {
+            "prompt": "100 = ___",
+            "answer": "сто",
+            "options": [
+              "сто",
+              "сота",
+              "стоо",
+              "сту"
+            ]
+          },
+          {
+            "prompt": "33 = ___",
+            "answer": "тридцять три",
+            "options": [
+              "тридцять три",
+              "трицять три",
+              "тридцать три",
+              "тридцять тр"
+            ]
+          },
+          {
+            "prompt": "68 = ___",
+            "answer": "шістдесят вісім",
+            "options": [
+              "шістдесят вісім",
+              "шістьдесят вісім",
+              "шестьдесят вісім",
+              "шістесят вісім"
+            ]
+          },
+          {
+            "prompt": "11 = ___",
+            "answer": "одинадцять",
+            "options": [
+              "одинадцять",
+              "однадцять",
+              "одинадцать",
+              "одіннадцять"
+            ]
+          },
+          {
+            "prompt": "90 = ___",
+            "answer": "дев'яносто",
+            "options": [
+              "дев'яносто",
+              "дев'ятдесят",
+              "девяносто",
+              "дев'яність"
+            ]
+          },
+          {
+            "prompt": "56 = ___",
+            "answer": "п'ятдесят шість",
+            "options": [
+              "п'ятдесят шість",
+              "пятдесят шість",
+              "п'ятьдесят шість",
+              "п'ятдесять шість"
+            ]
+          },
+          {
+            "prompt": "74 = ___",
+            "answer": "сімдесят чотири",
+            "options": [
+              "сімдесят чотири",
+              "сімьдесят чотири",
+              "семдесят чотири",
+              "сімдесять чотири"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.043Z",
+      "modifiedAt": "2025-12-12T19:55:32.043Z"
+    },
+    {
+      "id": "act-a1-0-matchup-0",
+      "type": "match-up",
+      "title": "Number to Word",
+      "description": "Match the numeral with the Ukrainian word.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "3",
+            "right": "три"
+          },
+          {
+            "left": "7",
+            "right": "сім"
+          },
+          {
+            "left": "14",
+            "right": "чотирнадцять"
+          },
+          {
+            "left": "20",
+            "right": "двадцять"
+          },
+          {
+            "left": "35",
+            "right": "тридцять п'ять"
+          },
+          {
+            "left": "42",
+            "right": "сорок два"
+          },
+          {
+            "left": "50",
+            "right": "п'ятдесят"
+          },
+          {
+            "left": "66",
+            "right": "шістдесят шість"
+          },
+          {
+            "left": "80",
+            "right": "вісімдесят"
+          },
+          {
+            "left": "91",
+            "right": "дев'яносто один"
+          },
+          {
+            "left": "19",
+            "right": "дев'ятнадцять"
+          },
+          {
+            "left": "15",
+            "right": "п'ятнадцять"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.043Z",
+      "modifiedAt": "2025-12-12T19:55:32.043Z"
+    },
+    {
+      "id": "act-a1-0-quiz-0",
+      "type": "quiz",
+      "title": "Number-Noun Agreement",
+      "description": "Choose the correct noun form.",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "Одна ___ (гривня)",
+            "options": [
+              "гривня",
+              "гривні",
+              "гривень",
+              "гривнею"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Три ___ (книга)",
+            "options": [
+              "книга",
+              "книги",
+              "книг",
+              "книгою"
+            ],
+            "correctIndex": 1,
+            "explanation": ""
+          },
+          {
+            "question": "П'ять ___ (гривня)",
+            "options": [
+              "гривня",
+              "гривні",
+              "гривень",
+              "гривнею"
+            ],
+            "correctIndex": 2,
+            "explanation": ""
+          },
+          {
+            "question": "Двадцять дві ___ (копійка)",
+            "options": [
+              "копійка",
+              "копійки",
+              "копійок",
+              "копійкою"
+            ],
+            "correctIndex": 1,
+            "explanation": ""
+          },
+          {
+            "question": "Сто ___ (гривня)",
+            "options": [
+              "гривня",
+              "гривні",
+              "гривень",
+              "гривнею"
+            ],
+            "correctIndex": 2,
+            "explanation": ""
+          },
+          {
+            "question": "Чотири ___ (долар)",
+            "options": [
+              "долар",
+              "долари",
+              "доларів",
+              "доларом"
+            ],
+            "correctIndex": 1,
+            "explanation": ""
+          },
+          {
+            "question": "Сім ___ (день)",
+            "options": [
+              "день",
+              "дні",
+              "днів",
+              "днем"
+            ],
+            "correctIndex": 2,
+            "explanation": ""
+          },
+          {
+            "question": "Двадцять один ___ (рік)",
+            "options": [
+              "рік",
+              "роки",
+              "років",
+              "роком"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Дванадцять ___ (місяць)",
+            "options": [
+              "місяць",
+              "місяці",
+              "місяців",
+              "місяцем"
+            ],
+            "correctIndex": 2,
+            "explanation": ""
+          },
+          {
+            "question": "Тридцять три ___ (хвилина)",
+            "options": [
+              "хвилина",
+              "хвилини",
+              "хвилин",
+              "хвилиною"
+            ],
+            "correctIndex": 1,
+            "explanation": ""
+          },
+          {
+            "question": "П'ятдесят ___ (копійка)",
+            "options": [
+              "копійка",
+              "копійки",
+              "копійок",
+              "копійкою"
+            ],
+            "correctIndex": 2,
+            "explanation": ""
+          },
+          {
+            "question": "Дев'яносто дев'ять ___ (відсоток)",
+            "options": [
+              "відсоток",
+              "відсотки",
+              "відсотків",
+              "відсотком"
+            ],
+            "correctIndex": 2,
+            "explanation": ""
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.043Z",
+      "modifiedAt": "2025-12-12T19:55:32.043Z"
+    },
+    {
+      "id": "act-a1-0-groupsort-0",
+      "type": "group-sort",
+      "title": "Number Patterns",
+      "description": "Sort numbers by their pattern.",
+      "content": {
+        "type": "group-sort",
+        "groups": [],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.043Z",
+      "modifiedAt": "2025-12-12T19:55:32.043Z"
+    },
+    {
+      "id": "act-a1-0-truefalse-0",
+      "type": "true-false",
+      "title": "Number Rules",
+      "description": "Number Rules",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "\"Один\" has three gender forms.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "Numbers 11-19 end in \"-надцять.\"",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Сорок\" means 30.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "After 5-20, nouns take the genitive plural.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Два\" becomes \"дві\" for feminine nouns.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Дев'яносто\" means 80.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "The last digit determines noun agreement.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Гривня\" is Ukrainian currency.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"П'ятдесят\" means 15.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Сто\" means 100.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "Prices are asked with \"Скільки коштує?\"",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Три гривнень\" is correct.",
+            "isTrue": false,
+            "explanation": ""
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.043Z",
+      "modifiedAt": "2025-12-12T19:55:32.043Z"
+    },
+    {
+      "id": "act-a1-0-anagram-0",
+      "type": "anagram",
+      "title": "Number Vocabulary",
+      "description": "Unscramble these number-related words.",
+      "content": {
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
+          {
+            "letters": [
+              "ь",
+              "т",
+              "я",
+              "'",
+              "п"
+            ],
+            "answer": "п'ять"
+          },
+          {
+            "letters": [
+              "ц",
+              "я",
+              "т",
+              "ь",
+              "д",
+              "а",
+              "в",
+              "д"
+            ],
+            "answer": "двадцять"
+          },
+          {
+            "letters": [
+              "к",
+              "о",
+              "р",
+              "о",
+              "с"
+            ],
+            "answer": "сорок"
+          },
+          {
+            "letters": [
+              "о",
+              "т",
+              "с"
+            ],
+            "answer": "сто"
+          },
+          {
+            "letters": [
+              "м",
+              "і",
+              "с"
+            ],
+            "answer": "сім"
+          },
+          {
+            "letters": [
+              "я",
+              "н",
+              "в",
+              "и",
+              "р",
+              "г"
+            ],
+            "answer": "гривня"
+          },
+          {
+            "letters": [
+              "а",
+              "н",
+              "і",
+              "ц"
+            ],
+            "answer": "ціна"
+          },
+          {
+            "letters": [
+              "а",
+              "к",
+              "ж",
+              "и",
+              "н",
+              "з"
+            ],
+            "answer": "знижка"
+          },
+          {
+            "letters": [
+              "о",
+              "а",
+              "й",
+              "п",
+              "і",
+              "к",
+              "к"
+            ],
+            "answer": "копійка"
+          },
+          {
+            "letters": [
+              "а",
+              "т",
+              "ш",
+              "е",
+              "р"
+            ],
+            "answer": "решта"
+          },
+          {
+            "letters": [
+              "о",
+              "г",
+              "о",
+              "р",
+              "о",
+              "д"
+            ],
+            "answer": "дорого"
+          },
+          {
+            "letters": [
+              "о",
+              "в",
+              "е",
+              "ш",
+              "е",
+              "д"
+            ],
+            "answer": "дешево"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.043Z",
+      "modifiedAt": "2025-12-12T19:55:32.043Z"
+    },
+    {
+      "id": "act-a1-0-fillblank-1",
+      "type": "fill-blank",
+      "title": "Prices",
+      "description": "Write the price in words.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "15₴ = ___ гривень",
+            "answer": "п'ятнадцять",
+            "options": [
+              "п'ятнадцять",
+              "п'ятнадцати",
+              "п'ятьнадцять",
+              "пятнадцять"
+            ]
+          },
+          {
+            "prompt": "23₴ = двадцять три ___",
+            "answer": "гривні",
+            "options": [
+              "гривні",
+              "гривень",
+              "гривня",
+              "гривнею"
+            ]
+          },
+          {
+            "prompt": "100₴ = сто ___",
+            "answer": "гривень",
+            "options": [
+              "гривень",
+              "гривні",
+              "гривня",
+              "гривнею"
+            ]
+          },
+          {
+            "prompt": "41₴ = сорок одна ___",
+            "answer": "гривня",
+            "options": [
+              "гривня",
+              "гривні",
+              "гривень",
+              "гривнею"
+            ]
+          },
+          {
+            "prompt": "50₴ = п'ятдесят ___",
+            "answer": "гривень",
+            "options": [
+              "гривень",
+              "гривні",
+              "гривня",
+              "гривнею"
+            ]
+          },
+          {
+            "prompt": "72₴ = сімдесят дві ___",
+            "answer": "гривні",
+            "options": [
+              "гривні",
+              "гривень",
+              "гривня",
+              "гривнею"
+            ]
+          },
+          {
+            "prompt": "84₴ = вісімдесят чотири ___",
+            "answer": "гривні",
+            "options": [
+              "гривні",
+              "гривень",
+              "гривня",
+              "гривнею"
+            ]
+          },
+          {
+            "prompt": "99₴ = дев'яносто дев'ять ___",
+            "answer": "гривень",
+            "options": [
+              "гривень",
+              "гривні",
+              "гривня",
+              "гривнею"
+            ]
+          },
+          {
+            "prompt": "31₴ = тридцять одна ___",
+            "answer": "гривня",
+            "options": [
+              "гривня",
+              "гривні",
+              "гривень",
+              "гривнею"
+            ]
+          },
+          {
+            "prompt": "67₴ = шістдесят сім ___",
+            "answer": "гривень",
+            "options": [
+              "гривень",
+              "гривні",
+              "гривня",
+              "гривнею"
+            ]
+          },
+          {
+            "prompt": "5₴ = п'ять ___",
+            "answer": "гривень",
+            "options": [
+              "гривень",
+              "гривні",
+              "гривня",
+              "гривнею"
+            ]
+          },
+          {
+            "prompt": "2₴ = дві ___",
+            "answer": "гривні",
+            "options": [
+              "гривні",
+              "гривень",
+              "гривня",
+              "гривнею"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.043Z",
+      "modifiedAt": "2025-12-12T19:55:32.043Z"
+    },
+    {
+      "id": "act-a1-0-unjumble-0",
+      "type": "unjumble",
+      "title": "Build Price Sentences",
+      "description": "Arrange the words into correct sentences.",
+      "content": {
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
+          {
+            "words": [
+              "коштує",
+              "скільки",
+              "це"
+            ],
+            "answer": "Скільки це коштує?"
+          },
+          {
+            "words": [
+              "гривень",
+              "сто",
+              "це"
+            ],
+            "answer": "Це сто гривень."
+          },
+          {
+            "words": [
+              "двадцять",
+              "п'ять",
+              "гривень"
+            ],
+            "answer": "Двадцять п'ять гривень."
+          },
+          {
+            "words": [
+              "дорого",
+              "занадто",
+              "це"
+            ],
+            "answer": "Це занадто дорого."
+          },
+          {
+            "words": [
+              "знижка",
+              "є"
+            ],
+            "answer": "Є знижка?"
+          },
+          {
+            "words": [
+              "решта",
+              "ваша",
+              "сорок",
+              "гривень"
+            ],
+            "answer": "Ваша решта сорок гривень."
+          },
+          {
+            "words": [
+              "гривні",
+              "ласка",
+              "Дайте",
+              "будь",
+              "три"
+            ],
+            "answer": "Дайте три гривні, будь ласка."
+          },
+          {
+            "words": [
+              "сто",
+              "гривень",
+              "ось"
+            ],
+            "answer": "Ось сто гривень."
+          },
+          {
+            "words": [
+              "п'ятдесят",
+              "скільки",
+              "коштує"
+            ],
+            "answer": "Скільки коштує п'ятдесят?"
+          },
+          {
+            "words": [
+              "дешево",
+              "це",
+              "дуже"
+            ],
+            "answer": "Це дуже дешево."
+          },
+          {
+            "words": [
+              "разом",
+              "скільки"
+            ],
+            "answer": "Скільки разом?"
+          },
+          {
+            "words": [
+              "дякую",
+              "решта",
+              "ваша"
+            ],
+            "answer": "Ваша решта, дякую."
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.043Z",
+      "modifiedAt": "2025-12-12T19:55:32.043Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A1-17",
+    "level": "A1",
+    "phase": "A1.2",
+    "wordCount": 25,
+    "newWordCount": 25,
+    "reviewWordCount": 0,
+    "transliterationMode": "partial",
+    "words": [
+      {
+        "id": "v-nulь-0-0",
+        "uk": "нуль",
+        "en": "zero",
+        "pos": "noun",
+        "ipa": "/nulʲ/",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-odyn/odna/odne-0-1",
+        "uk": "один/одна/одне",
+        "en": "one",
+        "pos": "noun",
+        "ipa": "/oˈdɪn/",
+        "note": "m/f/n forms",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-dva/dvi-0-2",
+        "uk": "два/дві",
+        "en": "two",
+        "pos": "noun",
+        "ipa": "/dvɑ/dvi/",
+        "note": "m+n/f forms",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-try-0-3",
+        "uk": "три",
+        "en": "three",
+        "pos": "noun",
+        "ipa": "/trɪ/",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-chotyry-0-4",
+        "uk": "чотири",
+        "en": "four",
+        "pos": "noun",
+        "ipa": "/t͡ʃoˈtɪrɪ/",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-p'yatь-0-5",
+        "uk": "п'ять",
+        "en": "five",
+        "pos": "noun",
+        "ipa": "/pjɑtʲ/",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-shistь-0-6",
+        "uk": "шість",
+        "en": "six",
+        "pos": "noun",
+        "ipa": "/ʃistʲ/",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-sim-0-7",
+        "uk": "сім",
+        "en": "seven",
+        "pos": "noun",
+        "ipa": "/sim/",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-visim-0-8",
+        "uk": "вісім",
+        "en": "eight",
+        "pos": "noun",
+        "ipa": "/ˈʋisim/",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-dev'yatь-0-9",
+        "uk": "дев'ять",
+        "en": "nine",
+        "pos": "noun",
+        "ipa": "/ˈdɛʋjɑtʲ/",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-desyatь-0-10",
+        "uk": "десять",
+        "en": "ten",
+        "pos": "noun",
+        "ipa": "/ˈdɛsʲɑtʲ/",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-dvadtsyatь-0-11",
+        "uk": "двадцять",
+        "en": "twenty",
+        "pos": "noun",
+        "ipa": "/ˈdʋɑd͡t͡sʲɑtʲ/",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-trydtsyatь-0-12",
+        "uk": "тридцять",
+        "en": "thirty",
+        "pos": "noun",
+        "ipa": "/ˈtrɪd͡t͡sʲɑtʲ/",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-sorok-0-13",
+        "uk": "сорок",
+        "en": "forty",
+        "pos": "noun",
+        "ipa": "/ˈsorok/",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-p'yatdesyat-0-14",
+        "uk": "п'ятдесят",
+        "en": "fifty",
+        "pos": "noun",
+        "ipa": "/pjɑtdɛˈsʲɑt/",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-sto-0-15",
+        "uk": "сто",
+        "en": "hundred",
+        "pos": "noun",
+        "ipa": "/sto/",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-hryvnya-0-16",
+        "uk": "гривня",
+        "en": "hryvnia",
+        "pos": "noun",
+        "ipa": "/ˈɦrɪʋnʲɑ/",
+        "note": "1",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-hryvni-0-17",
+        "uk": "гривні",
+        "en": "hryvnias",
+        "pos": "noun",
+        "ipa": "/ˈɦrɪʋni/",
+        "note": "2-4",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-hryvenь-0-18",
+        "uk": "гривень",
+        "en": "hryvnias",
+        "pos": "noun",
+        "ipa": "/ˈɦrɪʋɛnʲ/",
+        "note": "5+",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-kopiyka-0-19",
+        "uk": "копійка",
+        "en": "kopek",
+        "pos": "noun",
+        "ipa": "/koˈpijkɑ/",
+        "note": "1",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-tsina-0-20",
+        "uk": "ціна",
+        "en": "price",
+        "pos": "noun",
+        "ipa": "/t͡siˈnɑ/",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-znyzhka-0-21",
+        "uk": "знижка",
+        "en": "discount",
+        "pos": "noun",
+        "ipa": "/ˈznɪʒkɑ/",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-reshta-0-22",
+        "uk": "решта",
+        "en": "change",
+        "pos": "noun",
+        "ipa": "/ˈrɛʃtɑ/",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-doroho-0-23",
+        "uk": "дорого",
+        "en": "expensive",
+        "pos": "noun",
+        "ipa": "/ˈdoroɦo/",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-deshevo-0-24",
+        "uk": "дешево",
+        "en": "cheap",
+        "pos": "noun",
+        "ipa": "/ˈdɛʃɛʋo/",
+        "isNew": true,
+        "firstModule": 0
+      }
+    ]
+  }
+}

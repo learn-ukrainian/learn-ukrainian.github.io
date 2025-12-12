@@ -292,91 +292,91 @@ These are completely new shapes. You have no baggage with them, so they are actu
     > (Football)
 
 ## quiz: Letter Identification
-> Which letter makes the sound...
+> What sound does this CYRILLIC letter make? (Not the Latin lookalike!)
 
-1. The sound **/n/** (as in **N**o)?
-   - [x] **Н**
-   - [ ] **N**
-   - [ ] **П**
-   - [ ] **И**
-   > The letter H in Ukrainian sounds like N!
+1. Cyrillic **Н** (looks like Latin H) makes what sound?
+   - [x] /n/ as in "No"
+   - [ ] /h/ as in "Hello"
+   - [ ] /p/ as in "Pot"
+   - [ ] /i/ as in "Machine"
+   > Cyrillic Н looks like H but sounds like N!
 
-2. The sound **/r/** (rolled)?
-   - [x] **Р**
-   - [ ] **П**
-   - [ ] **R**
-   - [ ] **Я**
-   > Remember: P is for Rrrrumble.
+2. Cyrillic **Р** (looks like Latin P) makes what sound?
+   - [x] /r/ rolled R
+   - [ ] /p/ as in "Pot"
+   - [ ] /b/ as in "Boy"
+   - [ ] /ja/ as in "Yard"
+   > Cyrillic Р looks like P but sounds like rolled R!
 
-3. The sound **/v/** (Video)?
-   - [x] **В**
-   - [ ] **Б**
-   - [ ] **V**
-   - [ ] **У**
-   > B is actually V.
+3. Cyrillic **В** (looks like Latin B) makes what sound?
+   - [x] /v/ as in "Video"
+   - [ ] /b/ as in "Boy"
+   - [ ] /w/ as in "Water"
+   - [ ] /u/ as in "Boot"
+   > Cyrillic В looks like B but sounds like V!
 
-4. The sound **/s/** (Snake)?
-   - [x] **С**
-   - [ ] **К**
-   - [ ] **Z**
-   - [ ] **Ц**
-   > C is always S.
+4. Cyrillic **С** (looks like Latin C) makes what sound?
+   - [x] /s/ as in "Snake"
+   - [ ] /k/ as in "Cat"
+   - [ ] /z/ as in "Zoo"
+   - [ ] /ts/ as in "Cats"
+   > Cyrillic С looks like C but always sounds like S!
 
-5. The sound **/x/** (Loch Ness)?
-   - [x] **Х**
-   - [ ] **К**
-   - [ ] **Г**
-   - [ ] **Ж**
-   > X marks the spot (Kh).
+5. Cyrillic **Х** (looks like Latin X) makes what sound?
+   - [x] /x/ as in "Loch"
+   - [ ] /ks/ as in "Box"
+   - [ ] /h/ as in "Hello"
+   - [ ] /k/ as in "Kite"
+   > Cyrillic Х looks like X but sounds like Scottish "ch" in Loch!
 
-6. The sound **/u/** (Boot)?
-   - [x] **У**
-   - [ ] **Ю**
-   - [ ] **Y**
-   - [ ] **О**
-   > Y looks like U.
+6. Cyrillic **У** (looks like Latin Y) makes what sound?
+   - [x] /u/ as in "Boot"
+   - [ ] /j/ as in "Yes"
+   - [ ] /i/ as in "Machine"
+   - [ ] /ai/ as in "My"
+   > Cyrillic У looks like Y but sounds like "oo" in Boot!
 
-7. The sound **/i/** (Machine)?
-   - [x] **І**
-   - [ ] **И**
-   - [ ] **Й**
-   - [ ] **Е**
-   > I with a dot.
+7. Cyrillic **І** makes what sound?
+   - [x] /i/ as in "Machine"
+   - [ ] /ɪ/ as in "Bit"
+   - [ ] /j/ as in "Yes"
+   - [ ] /e/ as in "Bed"
+   > І (with dot) is a True Friend - sounds like "ee"!
 
-8. The sound **/m/** (Mom)?
-   - [x] **М**
-   - [ ] **Н**
-   - [ ] **Т**
-   - [ ] **П**
-   > M is M.
+8. Cyrillic **М** makes what sound?
+   - [x] /m/ as in "Mom"
+   - [ ] /n/ as in "No"
+   - [ ] /t/ as in "Top"
+   - [ ] /p/ as in "Pot"
+   > М is a True Friend - same as English M!
 
-9. The sound **/k/** (Kite)?
-   - [x] **К**
-   - [ ] **Х**
-   - [ ] **Г**
-   - [ ] **С**
-   > K is K.
+9. Cyrillic **К** makes what sound?
+   - [x] /k/ as in "Kite"
+   - [ ] /x/ as in "Loch"
+   - [ ] /g/ as in "Go"
+   - [ ] /s/ as in "Snake"
+   > К is a True Friend - same as English K!
 
-10. The sound **/t/** (Top)?
-    - [x] **Т**
-    - [ ] **Г**
-    - [ ] **П**
-    - [ ] **М**
-    > T is T.
+10. Cyrillic **Т** makes what sound?
+    - [x] /t/ as in "Top"
+    - [ ] /g/ as in "Go"
+    - [ ] /p/ as in "Pot"
+    - [ ] /m/ as in "Mom"
+    > Т is a True Friend - same as English T!
 
-11. The sound **/d/** (Dog)?
-    - [x] **Д**
-    - [ ] **Т**
-    - [ ] **Л**
-    - [ ] **Б**
-    > Platform D.
+11. Cyrillic **Д** makes what sound?
+    - [x] /d/ as in "Dog"
+    - [ ] /t/ as in "Top"
+    - [ ] /l/ as in "Love"
+    - [ ] /b/ as in "Boy"
+    > Д is a New Friend (Greek Delta) - sounds like D!
 
-12. The sound **/p/** (Pot)?
-    - [x] **П**
-    - [ ] **Р**
-    - [ ] **Л**
-    - [ ] **Н**
-    > Pi is P.
+12. Cyrillic **П** (looks like Greek π) makes what sound?
+    - [x] /p/ as in "Pot"
+    - [ ] /r/ rolled R
+    - [ ] /l/ as in "Love"
+    - [ ] /n/ as in "No"
+    > Cyrillic П sounds like P - don't confuse with Р which is R!
 
 ## match-up: Uppercase to Lowercase
 > Match the big letter to its small partner.

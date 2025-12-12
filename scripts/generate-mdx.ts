@@ -90,34 +90,73 @@ interface ParsedMatchPair {
 
 function parseQuizActivity(activityContent: string): ParsedQuizQuestion[] {
     const questions: ParsedQuizQuestion[] = [];
+    const lines = activityContent.trim().split('\n');
 
-    // Split by numbered questions
-    const questionBlocks = activityContent.split(/\n\d+\.\s+/).filter(Boolean);
+    // Detect format: numbered (1. Question) vs nested list (- Question with indented options)
+    const hasNumberedFormat = lines.some(l => /^\d+\.\s+/.test(l.trim()));
 
-    for (const block of questionBlocks) {
-        const lines = block.trim().split('\n');
-        if (lines.length < 2) continue;
+    if (hasNumberedFormat) {
+        // Original numbered format
+        const questionBlocks = activityContent.split(/\n\d+\.\s+/).filter(Boolean);
+        for (const block of questionBlocks) {
+            const blockLines = block.trim().split('\n');
+            if (blockLines.length < 2) continue;
 
-        const question = lines[0].replace(/\*\*/g, '').trim();
-        const options: string[] = [];
-        let correctIndex = 0;
-        let explanation = '';
+            const question = blockLines[0].replace(/\*\*/g, '').trim();
+            const options: string[] = [];
+            let correctIndex = 0;
+            let explanation = '';
 
-        for (let i = 1; i < lines.length; i++) {
-            const line = lines[i].trim();
+            for (let i = 1; i < blockLines.length; i++) {
+                const line = blockLines[i].trim();
+                if (line.startsWith('- [x]')) {
+                    correctIndex = options.length;
+                    options.push(line.replace('- [x]', '').trim());
+                } else if (line.startsWith('- [ ]')) {
+                    options.push(line.replace('- [ ]', '').trim());
+                } else if (line.startsWith('>')) {
+                    explanation = line.replace(/^>\s*/, '').trim();
+                }
+            }
 
-            if (line.startsWith('- [x]')) {
-                correctIndex = options.length;
-                options.push(line.replace('- [x]', '').trim());
-            } else if (line.startsWith('- [ ]')) {
-                options.push(line.replace('- [ ]', '').trim());
-            } else if (line.startsWith('>')) {
-                explanation = line.replace(/^>\s*/, '').trim();
+            if (question && options.length > 0) {
+                questions.push({ question, options, correctIndex, explanation });
+            }
+        }
+    } else {
+        // Nested list format: - Question followed by indented - [x]/- [ ] options
+        let currentQuestion: Partial<ParsedQuizQuestion> | null = null;
+
+        for (const line of lines) {
+            const trimmed = line.trim();
+
+            // Check for parent list item (question) - starts with - but NOT - [ ] or - [x]
+            if (/^-\s+(?!\[[ x]\])/.test(trimmed)) {
+                // Save previous question if exists
+                if (currentQuestion && currentQuestion.question && currentQuestion.options && currentQuestion.options.length > 0) {
+                    questions.push(currentQuestion as ParsedQuizQuestion);
+                }
+                currentQuestion = {
+                    question: trimmed.replace(/^-\s+/, '').trim(),
+                    options: [],
+                    correctIndex: 0,
+                    explanation: ''
+                };
+            } else if (/^\s*-\s*\[x\]/.test(line) && currentQuestion) {
+                // Correct option (indented)
+                currentQuestion.correctIndex = currentQuestion.options!.length;
+                currentQuestion.options!.push(line.replace(/^\s*-\s*\[x\]\s*/, '').trim());
+            } else if (/^\s*-\s*\[ \]/.test(line) && currentQuestion) {
+                // Wrong option (indented)
+                currentQuestion.options!.push(line.replace(/^\s*-\s*\[ \]\s*/, '').trim());
+            } else if (trimmed.startsWith('>') && currentQuestion) {
+                currentQuestion.explanation = trimmed.replace(/^>\s*/, '').trim();
             }
         }
 
-        if (question && options.length > 0) {
-            questions.push({ question, options, correctIndex, explanation });
+        // Don't forget the last question
+        if (currentQuestion && currentQuestion.question && currentQuestion.options && currentQuestion.options.length > 0) {
+            questions.push(currentQuestion as ParsedQuizQuestion);
         }
     }
 
@@ -126,19 +165,36 @@ function parseQuizActivity(activityContent: string): ParsedQuizQuestion[] {
 
 function parseMatchUpActivity(activityContent: string): ParsedMatchPair[] {
     const pairs: ParsedMatchPair[] = [];
+    const lines = activityContent.trim().split('\n');
 
-    // Find the table
+    // Try table format first
     const tableMatch = activityContent.match(/\|[^\n]+\|\n\|[-\s|]+\|\n((?:\|[^\n]+\|\n?)+)/);
-    if (!tableMatch) return pairs;
+    if (tableMatch) {
+        const rows = tableMatch[1].trim().split('\n');
+        for (const row of rows) {
+            const cells = row.split('|').filter(c => c.trim());
+            if (cells.length >= 2) {
+                pairs.push({
+                    left: cells[0].trim(),
+                    right: cells[1].trim()
+                });
+            }
+        }
+        if (pairs.length > 0) return pairs;
+    }
 
-    const rows = tableMatch[1].trim().split('\n');
-    for (const row of rows) {
-        const cells = row.split('|').filter(c => c.trim());
-        if (cells.length >= 2) {
-            pairs.push({
-                left: cells[0].trim(),
-                right: cells[1].trim()
-            });
+    // Try list format: - left | right
+    for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.startsWith('-') && trimmed.includes('|')) {
+            const content = trimmed.replace(/^-\s*/, '');
+            const parts = content.split('|').map(p => p.trim());
+            if (parts.length >= 2) {
+                pairs.push({
+                    left: parts[0],
+                    right: parts[1]
+                });
+            }
         }
     }
 
@@ -188,18 +244,74 @@ interface ParsedGroupSort {
 
 function parseGroupSortActivity(activityContent: string): ParsedGroupSort {
     const groups: { [key: string]: string[] } = {};
+    const lines = activityContent.trim().split('\n');
 
-    // Split by ### headers
+    // First try: table-based format (A2+)
+    // | Item | Category |
+    // | футбол | Командні |
+    const tableRows = activityContent.match(/^\|[^|]+\|[^|]+\|$/gm);
+    if (tableRows && tableRows.length > 1) {
+        for (const row of tableRows) {
+            if (row.includes('---')) continue;
+            const cols = row.split('|').map(c => c.trim()).filter(Boolean);
+            if (cols.length >= 2) {
+                const item = cols[0];
+                const category = cols[1];
+                if (category.toLowerCase() === 'category' ||
+                    category.toLowerCase() === 'group' ||
+                    category.toLowerCase() === 'категорія') continue;
+
+                if (!groups[category]) {
+                    groups[category] = [];
+                }
+                groups[category].push(item);
+            }
+        }
+        if (Object.keys(groups).length > 0) {
+            return { groups };
+        }
+    }
+
+    // Second try: Categories line + "- item: Category" format (B1+)
+    // Categories: Cat1, Cat2, Cat3
+    // - item1: Cat1
+    // - item2: Cat2
+    for (const line of lines) {
+        const trimmed = line.trim();
+        // Match: - item: Category
+        if (trimmed.startsWith('-') && trimmed.includes(':')) {
+            const content = trimmed.replace(/^-\s*/, '');
+            const lastColonIndex = content.lastIndexOf(':');
+            if (lastColonIndex > 0) {
+                const item = content.substring(0, lastColonIndex).trim();
+                const category = content.substring(lastColonIndex + 1).trim();
+                if (item && category) {
+                    if (!groups[category]) {
+                        groups[category] = [];
+                    }
+                    groups[category].push(item);
+                }
+            }
+        }
+    }
+    if (Object.keys(groups).length > 0) {
+        return { groups };
+    }
+
+    // Third try: ### header format (A1)
+    // ### Group Name
+    // - item1
+    // - item2
     const groupBlocks = activityContent.split(/\n###\s+/).filter(Boolean);
 
     for (const block of groupBlocks) {
-        const lines = block.trim().split('\n');
-        if (lines.length < 2) continue;
+        const blockLines = block.trim().split('\n');
+        if (blockLines.length < 2) continue;
 
-        const groupName = lines[0].trim();
+        const groupName = blockLines[0].trim();
         const items: string[] = [];
 
-        for (const line of lines.slice(1)) {
+        for (const line of blockLines.slice(1)) {
             const trimmed = line.trim();
             if (trimmed.startsWith('-')) {
                 items.push(trimmed.replace(/^-\s*/, '').trim());
@@ -332,46 +444,83 @@ interface ParsedMarkTheWordsData {
 
 function parseTrueFalseActivity(activityContent: string): ParsedTrueFalseItem[] {
     const items: ParsedTrueFalseItem[] = [];
-
-    // Split by checkbox items: - [x] or - [ ]
     const lines = activityContent.split('\n');
-    let currentItem: Partial<ParsedTrueFalseItem> | null = null;
 
-    for (const line of lines) {
-        const trimmed = line.trim();
+    // Detect format:
+    // Format A (simple): - [x] Statement or - [ ] Statement
+    // Format B (nested): - Statement followed by indented - [x] Правда / - [ ] Міф
+    const hasNestedFormat = lines.some(l => /^\s+-\s*\[[ x]\]\s*(Правда|Міф|True|False)/i.test(l));
 
-        if (trimmed.startsWith('- [x]')) {
-            // Save previous item if exists
-            if (currentItem && currentItem.statement) {
-                items.push(currentItem as ParsedTrueFalseItem);
-            }
-            currentItem = {
-                statement: trimmed.replace('- [x]', '').trim(),
-                isTrue: true,
-                explanation: ''
-            };
-        } else if (trimmed.startsWith('- [ ]')) {
-            // Save previous item if exists
-            if (currentItem && currentItem.statement) {
-                items.push(currentItem as ParsedTrueFalseItem);
-            }
-            currentItem = {
-                statement: trimmed.replace('- [ ]', '').trim(),
-                isTrue: false,
-                explanation: ''
-            };
-        } else if (trimmed.startsWith('>') && currentItem) {
-            // This is an explanation for the current item
-            const explanation = trimmed.replace(/^>\s*/, '').trim();
-            if (explanation) {
-                currentItem.explanation = (currentItem.explanation ? currentItem.explanation + ' ' : '') + explanation;
+    if (hasNestedFormat) {
+        // Nested format: - Statement with indented answer options
+        let currentStatement = '';
+        let isTrue = false;
+        let explanation = '';
+
+        for (const line of lines) {
+            const trimmed = line.trim();
+
+            // Check for parent list item (statement) - starts with - but NOT - [ ] or - [x]
+            if (/^-\s+(?!\[[ x]\])/.test(trimmed)) {
+                // Save previous item if exists
+                if (currentStatement) {
+                    items.push({ statement: currentStatement, isTrue, explanation });
+                }
+                currentStatement = trimmed.replace(/^-\s+/, '').trim();
+                isTrue = false;
+                explanation = '';
+            } else if (/^\s*-\s*\[x\]\s*(Правда|True)/i.test(line)) {
+                // Checked "True/Правда" - statement is true
+                isTrue = true;
+            } else if (/^\s*-\s*\[x\]\s*(Міф|False)/i.test(line)) {
+                // Checked "False/Myth" - statement is false
+                isTrue = false;
+            } else if (trimmed.startsWith('>') && currentStatement) {
+                const exp = trimmed.replace(/^>\s*/, '').trim();
+                if (exp) explanation = (explanation ? explanation + ' ' : '') + exp;
             }
         }
-    }
 
-    // Don't forget the last item
-    if (currentItem && currentItem.statement) {
-        items.push(currentItem as ParsedTrueFalseItem);
+        // Don't forget the last item
+        if (currentStatement) {
+            items.push({ statement: currentStatement, isTrue, explanation });
+        }
+    } else {
+        // Simple format: - [x] Statement (true) or - [ ] Statement (false)
+        let currentItem: Partial<ParsedTrueFalseItem> | null = null;
+
+        for (const line of lines) {
+            const trimmed = line.trim();
+
+            if (trimmed.startsWith('- [x]')) {
+                if (currentItem && currentItem.statement) {
+                    items.push(currentItem as ParsedTrueFalseItem);
+                }
+                currentItem = {
+                    statement: trimmed.replace('- [x]', '').trim(),
+                    isTrue: true,
+                    explanation: ''
+                };
+            } else if (trimmed.startsWith('- [ ]')) {
+                if (currentItem && currentItem.statement) {
+                    items.push(currentItem as ParsedTrueFalseItem);
+                }
+                currentItem = {
+                    statement: trimmed.replace('- [ ]', '').trim(),
+                    isTrue: false,
+                    explanation: ''
+                };
+            } else if (trimmed.startsWith('>') && currentItem) {
+                const explanation = trimmed.replace(/^>\s*/, '').trim();
+                if (explanation) {
+                    currentItem.explanation = (currentItem.explanation ? currentItem.explanation + ' ' : '') + explanation;
+                }
+            }
+        }
+
+        if (currentItem && currentItem.statement) {
+            items.push(currentItem as ParsedTrueFalseItem);
+        }
     }
 
     return items;
@@ -549,17 +698,27 @@ function parseMarkTheWordsActivity(activityContent: string): ParsedMarkTheWordsD
 
     for (const line of lines) {
         const trimmed = line.trim();
+        // Skip horizontal rules and empty lines
+        if (trimmed === '---' || trimmed === '') continue;
+        // Skip stage indicators
+        if (trimmed.startsWith('stage:')) continue;
+        // Skip "Correct words:" lines (alternative format)
+        if (trimmed.toLowerCase().startsWith('correct words:')) continue;
+
         if (trimmed.startsWith('>') && !instruction) {
             instruction = trimmed.replace(/^>\s*/, '').trim();
         } else if (trimmed && !trimmed.startsWith('>')) {
-            // This is the text with [bracketed] words
-            text = trimmed;
-            // Extract bracketed words
+            // Check if this line has [bracketed] words - this is the text to mark
             const matches = trimmed.match(/\[([^\]]+)\]/g);
-            if (matches) {
+            if (matches && matches.length > 0) {
+                text = trimmed;
+                // Extract bracketed words
                 for (const match of matches) {
                     correctWords.push(match.slice(1, -1)); // Remove brackets
                 }
+            } else if (!text) {
+                // If no brackets and no text yet, this is the instruction
+                instruction = trimmed;
             }
         }
     }
@@ -688,7 +847,7 @@ function errorCorrectionToJsx(items: ParsedErrorCorrectionItem[], title: string)
 
     const itemsJsx = items.map(item => {
         const optionsStr = item.options.map(o => '`' + escapeJsxString(o) + '`').join(', ');
-        return `  <ErrorCorrectionQuestion
+        return `  <ErrorCorrectionItem
     sentence=${wrapForJsx(item.sentence)}
     error=${wrapForJsx(item.error)}
     answer=${wrapForJsx(item.answer)}
@@ -730,7 +889,7 @@ function translateToJsx(questions: ParsedTranslateQuestion[], title: string): st
 
     const questionsJsx = questions.map(q => {
         const optionsStr = q.options.map(o => '`' + escapeJsxString(o) + '`').join(', ');
-        return `  <TranslateQuestion
+        return `  <TranslateItem
     prompt=${wrapForJsx(q.prompt)}
     options={[${optionsStr}]}
     correctIndex={${q.correctIndex}}
@@ -773,13 +932,17 @@ function markTheWordsToJsx(data: ParsedMarkTheWordsData, title: string): string 
 
     const wordsStr = data.correctWords.map(w => '`' + escapeJsxString(w) + '`').join(', ');
 
-    return `### ${title}
+    // Include instruction as a paragraph if present
+    const instructionParagraph = data.instruction ? `\n\n${data.instruction}\n` : '';
 
-<MarkTheWords
-  instruction=${wrapForJsx(data.instruction)}
-  text=${wrapForJsx(data.text)}
-  correctWords={[${wordsStr}]}
-/>`;
+    return `### ${title}${instructionParagraph}
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text=${wrapForJsx(data.text)}
+    correctWords={[${wordsStr}]}
+  />
+</MarkTheWords>`;
 }
 
 // ============================================================================
@@ -883,10 +1046,55 @@ function processActivities(body: string): { mainContent: string; activitiesJsx: 
 // ============================================================================
 
 function convertCalloutsToAdmonitions(content: string): string {
-    // Convert [!tip], [!note], etc to Docusaurus admonitions format
-    return content.replace(/>\s*\[!(tip|note|warning|important|caution)\]/gi, (_, type) => {
-        return `:::${type.toLowerCase()}`;
-    });
+    // Convert GitHub-style callouts [!tip], [!note], etc to Docusaurus admonitions
+    // Handles multi-line blockquote callouts properly
+
+    const lines = content.split('\n');
+    const result: string[] = [];
+    let i = 0;
+
+    while (i < lines.length) {
+        const line = lines[i];
+
+        // Check for callout start: > [!type] or > [!type] Title
+        const calloutMatch = line.match(/^>\s*\[!(tip|note|warning|important|caution)\](.*)$/i);
+
+        if (calloutMatch) {
+            const type = calloutMatch[1].toLowerCase();
+            const titlePart = calloutMatch[2].trim();
+
+            // Start collecting callout content
+            const calloutLines: string[] = [];
+
+            // If there's content on the same line as the callout type
+            if (titlePart) {
+                calloutLines.push(titlePart);
+            }
+
+            i++;
+
+            // Collect all subsequent blockquote lines as callout content
+            while (i < lines.length && lines[i].startsWith('>')) {
+                // Remove the > prefix and trim
+                const contentLine = lines[i].replace(/^>\s?/, '');
+                calloutLines.push(contentLine);
+                i++;
+            }
+
+            // Build the Docusaurus admonition
+            result.push(`:::${type}`);
+            for (const cl of calloutLines) {
+                result.push(cl);
+            }
+            result.push(':::');
+            result.push(''); // Add blank line after admonition
+        } else {
+            result.push(line);
+            i++;
+        }
+    }
+
+    return result.join('\n');
 }
 
 /**
@@ -941,12 +1149,12 @@ import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
 import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
 import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import ErrorCorrection, { ErrorCorrectionQuestion } from '@site/src/components/ErrorCorrection';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
 import Select, { SelectQuestion } from '@site/src/components/Select';
-import Translate, { TranslateQuestion } from '@site/src/components/Translate';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
 import Cloze from '@site/src/components/Cloze';
 import DialogueReorder from '@site/src/components/DialogueReorder';
-import MarkTheWords from '@site/src/components/MarkTheWords';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 `;
 
     // Build frontmatter

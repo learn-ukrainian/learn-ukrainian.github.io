@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 785/750
+- **Words:** ✅ 841/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -22,7 +22,7 @@
 | **Presentation: Food Categories** | ✅ | 101 | Included in Core |
 | **Cultural Insight: Ukrainian Food Culture 🇺🇦** | ✅ | 166 | Included in Core |
 | **Reading Practice: На ринку 🛒** | ✅ | 159 | Included in Core |
-| **Conversation: У супермаркеті 🗣️** | ✅ | 111 | Included in Core |
+| **Conversation: У супермаркеті 🗣️** | ✅ | 167 | Included in Core |
 | **fill-in: Food Categories** | 🎮 | 12 | Activity (12 items) |
 | **match-up: Ukrainian to English** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Shopping Phrases** | 🎮 | 12 | Activity (12 items) |

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 785/750
+- **Words:** ✅ 854/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -22,7 +22,7 @@
 | **Presentation: Colors** | ✅ | 87 | Included in Core |
 | **Cultural Insight: Colors of Ukraine 🇺🇦** | ✅ | 171 | Included in Core |
 | **Reading Practice: У магазині одягу 📖** | ✅ | 214 | Included in Core |
-| **Conversation: Що ти носиш? 🗣️** | ✅ | 118 | Included in Core |
+| **Conversation: Що ти носиш? 🗣️** | ✅ | 187 | Included in Core |
 | **fill-in: Color Agreement** | 🎮 | 12 | Activity (12 items) |
 | **match-up: Clothing Items** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Color Rules** | 🎮 | 12 | Activity (12 items) |

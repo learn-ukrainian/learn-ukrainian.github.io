@@ -3,12 +3,12 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 803/750
+- **Words:** ✅ 869/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/3
+- **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
@@ -21,8 +21,8 @@
 | **Warm-up: The Missing Piece** | ✅ | 169 | Included in Core |
 | **Presentation: The Accusative Case** | ✅ | 190 | Included in Core |
 | **Cultural Insight: Ukrainian Gift-Giving 🇺🇦** | ✅ | 125 | Included in Core |
-| **Reading Practice: У магазині ☕** | ✅ | 162 | Included in Core |
-| **Conversation: У кафе 🗣️** | ✅ | 137 | Included in Core |
+| **Reading Practice: У магазині ☕** | ✅ | 168 | Included in Core |
+| **Conversation: У кафе 🗣️** | ✅ | 197 | Included in Core |
 | **fill-in: Accusative Formation** | 🎮 | 12 | Activity (12 items) |
 | **match-up: Nominative to Accusative** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Choose the Correct Form** | 🎮 | 12 | Activity (12 items) |

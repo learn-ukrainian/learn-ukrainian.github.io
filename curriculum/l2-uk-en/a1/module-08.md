@@ -131,18 +131,18 @@ Ukrainian hosts will often say **"Ви мало їсте!"** (You're eating too 
 **Офіціант:** Ось ваше замовлення. Смачного!
 **Клієнт:** Дякую! Виглядає смачно!
 
-**English Translation:**
-**Waiter:** Good evening! What do you want to order?
-**Client:** Good evening! We want borscht and varenyky.
-**Waiter:** Great! And what will you drink?
-**Client:** I will drink water. And she — coffee.
-**Waiter:** Good. Do you like spicy dishes?
-**Client:** Yes, we like! Add garlic, please.
-**Waiter:** Of course! Anything else?
-**Client:** No, thank you. We are waiting for the order.
-*Later...*
-**Waiter:** Here is your order. Bon appétit!
-**Client:** Thank you! Looks delicious!
+> [!note] English Translation
+> **Waiter:** Good evening! What do you want to order?
+> **Client:** Good evening! We want borscht and varenyky.
+> **Waiter:** Great! And what will you drink?
+> **Client:** I will drink water. And she — coffee.
+> **Waiter:** Good. Do you like spicy dishes?
+> **Client:** Yes, we like! Add garlic, please.
+> **Waiter:** Of course! Anything else?
+> **Client:** No, thank you. We are waiting for the order.
+> *Later...*
+> **Waiter:** Here is your order. Bon appétit!
+> **Client:** Thank you! Looks delicious!
 
 ## Reading Practice: Morning Routine 📖
 
@@ -158,19 +158,19 @@ Ukrainian hosts will often say **"Ви мало їсте!"** (You're eating too 
 
 Олег **любить** свій ранок. Він **знає**: добрий ранок — добрий день!
 
-**English Translation:**
-**Oleh wakes up at seven.** He sees the sun behind the window. He loves morning — this is his favorite time.
-
-First Oleh **does** exercises. Then he **goes** to the bathroom. There he **washes** and **shaves**. After that he **dresses** and **sits down** to have breakfast.
-
-What does Oleh **eat** for breakfast? He **eats** porridge with fruits. What does he **drink**? He **drinks** coffee with milk.
-
-Then Oleh **leaves** home. He **goes** to work. He **sees** neighbors and **says** "Good morning!" They **answer**: "Good morning, Oleh!"
-
-Oleh **loves** his morning. He **knows**: good morning — good day!
-
-> 📜 **Myth Buster:** Some learners think Class II verbs are "harder" than Class I. Actually, both classes are equally logical. The "difficulty" is just unfamiliarity. After practice, Class II feels just as natural!
-
+> [!note] English Translation
+> **Oleh wakes up at seven.** He sees the sun behind the window. He loves morning — this is his favorite time.
+>
+> First Oleh **does** exercises. Then he **goes** to the bathroom. There he **washes** and **shaves**. After that he **dresses** and **sits down** to have breakfast.
+>
+> What does Oleh **eat** for breakfast? He **eats** porridge with fruits. What does he **drink**? He **drinks** coffee with milk.
+>
+> Then Oleh **leaves** home. He **goes** to work. He **sees** neighbors and **says** "Good morning!" They **answer**: "Good morning, Oleh!"
+>
+> Oleh **loves** his morning. He **knows**: good morning — good day!
+>
+> > 📜 **Myth Buster:** Some learners think Class II verbs are "harder" than Class I. Actually, both classes are equally logical. The "difficulty" is just unfamiliarity. After practice, Class II feels just as natural!
+>
 # Summary
 
 1. **Class II verbs** end in **-ити/-іти** (говорити, любити, бачити)
@@ -506,20 +506,20 @@ Oleh **loves** his morning. He **knows**: good morning — good day!
     > [!answer] любимо
     > [!options] любимо | люблю | любиш | люблять
 
-**English Translation:**
-1. We want borscht and varenyky.
-2. What do you want to drink?
-3. I am drinking water.
-4. She is drinking coffee.
-5. Do you like spicy dishes?
-6. Yes, we like!
-7. What are you eating?
-8. I am eating a salad.
-9. They are waiting for the order.
-10. I see the waiter.
-11. Do you speak Ukrainian?
-12. We love this place.
-
+> [!note] English Translation
+> - We want borscht and varenyky.
+> - What do you want to drink?
+> - I am drinking water.
+> - She is drinking coffee.
+> - Do you like spicy dishes?
+> - Yes, we like!
+> - What are you eating?
+> - I am eating a salad.
+> - They are waiting for the order.
+> - I see the waiter.
+> - Do you speak Ukrainian?
+> - We love this place.
+>
 ---
 
 # Vocabulary

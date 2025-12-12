@@ -1,0 +1,1196 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A1-24",
+    "moduleId": "mod-uk-A1-24",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A1",
+    "phase": "A1.3",
+    "moduleNumber": 24,
+    "moduleType": "grammar",
+    "pedagogy": "PPP",
+    "immersionLevel": 0.3,
+    "title": "Can, Must, Want - Modal Verbs",
+    "subtitle": "Expressing Ability, Obligation, and Desire",
+    "description": "Express ability with можу and вмію",
+    "objectives": [
+      "Express ability with можу and вмію",
+      "Express obligation with повинен and треба",
+      "Express desire with хочу",
+      "Distinguish between modal nuances"
+    ],
+    "grammarFocus": [
+      "Modal verbs (можу, вмію, повинен, треба, хочу)",
+      "Modal + infinitive construction",
+      "Impersonal constructions (треба, можна)"
+    ],
+    "tags": [
+      "grammar",
+      "modals",
+      "ability",
+      "obligation"
+    ],
+    "totalDuration": 50,
+    "transliterationMode": "partial",
+    "sections": [
+      {
+        "id": "section-content-0",
+        "name": "Lesson",
+        "type": "content",
+        "content": "> **Note:** Modal verbs add power to your Ukrainian! Express what you CAN do, MUST do, and WANT to do.\n\n## Warm-up: What Can You Do?\n\nThink about your abilities. Can you swim? Can you speak Ukrainian? Now think about obligations. What must you do today? And desires — what do you want to do this weekend?\n\nModal verbs are the key to expressing these ideas. They combine with infinitives to create powerful statements about ability, necessity, and desire.\n\nUkrainian modal verbs work similarly to English modals, but with some interesting differences. Some modals conjugate for person (like можу), while others are impersonal (like треба). Some express ability (можу), while others express knowledge (вмію).\n\nMastering modals will dramatically expand what you can express in Ukrainian. Instead of just stating facts, you can discuss possibilities, obligations, permissions, and wishes!\n\nThis module covers the essential modal verbs you need for everyday conversation. By the end, you'll be able to say what you can do, what you must do, and what you want to do.\n\n> 💡 **Thinking Trick:** Think of modals as \"helper verbs\" — they help express HOW you relate to an action (ability, obligation, desire), then the infinitive tells WHAT the action is.\n\n## Presentation: Modal Verbs\n\n### Expressing Ability: можу vs вмію\n\nUkrainian distinguishes between physical/circumstantial ability (можу) and learned skill (вмію):\n\n**Можу (can, am able to) — Possibility/Circumstance:**\n\n| Person | Form |\n|--------|------|\n| я | можу |\n| ти | можеш |\n| він/вона | може |\n| ми | можемо |\n| ви | можете |\n| вони | можуть |\n\n**Examples:**\n- Я можу прийти о п'ятій. (I can come at 5.) — physical possibility\n- Вона не може працювати сьогодні. (She can't work today.) — circumstance\n- Ми можемо допомогти. (We can help.) — willingness\n\n**Вмію (know how to) — Learned Skill:**\n\n| Person | Form |\n|--------|------|\n| я | вмію |\n| ти | вмієш |\n| він/вона | вміє |\n| ми | вміємо |\n| ви | вмієте |\n| вони | вміють |\n\n**Examples:**\n- Я вмію плавати. (I know how to swim.) — learned skill\n- Вона вміє готувати. (She knows how to cook.) — ability\n- Ми вміємо говорити українською. (We can speak Ukrainian.) — competence\n\n**Key difference:**\n- \"Я можу плавати\" = I can swim (right now, conditions allow)\n- \"Я вмію плавати\" = I know how to swim (I learned it)\n\n### Expressing Obligation: повинен vs треба\n\n**Повинен (must, should) — Personal Obligation:**\n\n| Gender | Form |\n|--------|------|\n| я (m.) | повинен |\n| я (f.) | повинна |\n| він | повинен |\n| вона | повинна |\n| ми/вони | повинні |\n\n**Examples:**\n- Я повинен працювати. (I must work.) — male speaker\n- Вона повинна відповісти. (She must answer.)\n- Ми повинні допомогти. (We must help.)\n\n**Треба (need to) — Impersonal Necessity:**\nThis is an IMPERSONAL construction — it doesn't conjugate:\n\nStructure: (Dative) + треба + infinitive\n\n**Examples:**\n- Треба працювати. (One needs to work. / Work is needed.)\n- Мені треба йти. (I need to go.) — literally \"To me it's needed to go\"\n- Тобі треба відпочити. (You need to rest.)\n- Нам треба поговорити. (We need to talk.)\n\n**Related constructions:**\n- Потрібно (is needed) — similar to треба\n- Необхідно (is necessary) — more formal\n- Слід (should) — advice\n\n> 📜 **Pattern Summary:**\n> - **можу** = can (circumstance, permission)\n> - **вмію** = can (learned skill)\n> - **повинен** = must (personal duty, agrees with gender)\n> - **треба** = need to (impersonal, with dative)\n\n### Expressing Desire: хочу\n\n**Хочу (want to):**\n\n| Person | Form |\n|--------|------|\n| я | хочу |\n| ти | хочеш |\n| він/вона | хоче |\n| ми | хочемо |\n| ви | хочете |\n| вони | хочуть |\n\n**Examples:**\n- Я хочу навчитися. (I want to learn.)\n- Вона хоче поїхати. (She wants to go.)\n- Ми хочемо побачити. (We want to see.)\n\n### Permission: можна vs не можна\n\n**Impersonal permission:**\n- Можна? (May I? Is it allowed?)\n- Можна увійти? (May I enter?)\n- Тут не можна курити. (Smoking is not allowed here.)\n- Мені можна йти? (May I go?)\n\n> 💡 **Did You Know?** \"Треба\" comes from a Old Slavic word meaning \"necessary, needed.\" It's impersonal — the action is needed, not the person who needs it. That's why Ukrainian uses dative: \"Мені треба\" = \"To-me is-needed\" — elegant!\n\n## Cultural Insight: Expressing Politeness 🇺🇦\n\nUkrainians use modal verbs to soften requests and sound more polite:\n\n**Direct (less polite):**\n- Дай мені каву. (Give me coffee.)\n\n**With modals (polite):**\n- Можеш дати мені каву? (Can you give me coffee?)\n- Чи можна каву? (May I have coffee?)\n- Я би хотів каву. (I would like coffee.)\n\n**Obligation in culture:**\n- \"Повинен\" sounds strong — use for real duties\n- \"Треба\" is softer — good for suggestions\n- \"Варто\" (it's worth) — even softer advice\n\n**Common polite phrases:**\n- Чи можу я...? (May I...?)\n- Я хотів би... (I would like...)\n- Вам не важко...? (Would you mind...?)\n\n> 📜 **History Bite:** During Soviet times, language was used as a tool of control. Phrases like \"ми повинні\" (we must) were everywhere — duty to the state. Today, Ukrainians often prefer softer constructions, reflecting a move toward personal choice and freedom!\n\n> 📜 **Myth Buster:** Some claim Ukrainian lacks nuance for polite requests. In reality, Ukrainian has rich modal constructions for expressing different levels of politeness, permission, and obligation — often more precise than English!\n\n## Reading Practice: Мої плани 📖\n\n**Українською:**\n\nСьогодні в мене багато справ. Спочатку я повинен піти на роботу. Потім мені треба зустрітися з другом — ми хочемо поговорити про проект.\n\nЯ вмію програмувати, тому можу допомогти йому. Він не вміє писати код, але хоче навчитися. Я повинен пояснити все повільно.\n\nУвечері мені треба купити продукти. Я хочу приготувати вечерю. Вмію готувати кілька українських страв — борщ, вареники, котлети.\n\nО дев'ятій я можу відпочити. Хочу подивитися фільм або почитати книжку. Але спочатку повинен закінчити всі справи!\n\n**English Translation:**\n\nToday I have a lot of tasks. First, I must go to work. Then I need to meet with a friend — we want to talk about a project.\n\nI know how to program, so I can help him. He doesn't know how to write code, but wants to learn. I must explain everything slowly.\n\nIn the evening I need to buy groceries. I want to cook dinner. I know how to make several Ukrainian dishes — borscht, varenyky, cutlets.\n\nAt nine I can rest. I want to watch a movie or read a book. But first I must finish all the tasks!\n\n**Practice:** Write about what YOU must, can, and want to do today!\n\n## Conversation: Плануємо разом 🗣️\n\n**Олег:** Привіт! Що хочеш робити у вихідні?\n**Наталя:** Привіт! Хочу поїхати за місто. А ти?\n**Олег:** Я повинен працювати в суботу. Але в неділю можу!\n**Наталя:** Чудово! Ти вмієш водити машину?\n**Олег:** Так, вмію. Можемо поїхати на моїй машині.\n**Наталя:** Супер! Мені треба взяти їжу.\n**Олег:** А мені треба заправити машину.\n**Наталя:** Тоді можемо виїхати о десятій?\n**Олег:** Так, о десятій підходить. До неділі!\n\nЗверни увагу: хочу, повинен, можу, вмію, треба — всі модальні дієслова!"
+      },
+      {
+        "id": "section-summary-1",
+        "name": "Підсумок",
+        "nameEn": "Summary",
+        "type": "summary",
+        "content": "**Modal Verbs Essentials**\n\n1. **Ability:** можу (circumstance), вмію (learned skill)\n2. **Obligation:** повинен (personal), треба (impersonal + dative)\n3. **Desire:** хочу + infinitive\n4. **Permission:** можна (allowed), не можна (forbidden)\n\n---\n\n> [!tip] 🌟 **Pro Tip:** Use \"вмію\" for skills you've learned, \"можу\" for things you're able to do right now. \"Вмію плавати\" = I know how; \"Можу плавати сьогодні\" = I can swim today!\n\n\n---"
+      }
+    ],
+    "rawMarkdown": "---\ntitle: \"Can, Must, Want - Modal Verbs\"\nsubtitle: \"Expressing Ability, Obligation, and Desire\"\nphase: A1.3\ntransliteration: partial\npedagogy: PPP\nduration: 50\ntags: [grammar, modals, ability, obligation]\nobjectives:\n  - Express ability with можу and вмію\n  - Express obligation with повинен and треба\n  - Express desire with хочу\n  - Distinguish between modal nuances\ngrammar:\n  - Modal verbs (можу, вмію, повинен, треба, хочу)\n  - Modal + infinitive construction\n  - Impersonal constructions (треба, можна)\naudio: false\n---\n\n# Can, Must, Want - Modal Verbs\n\n> **Note:** Modal verbs add power to your Ukrainian! Express what you CAN do, MUST do, and WANT to do.\n\n## Warm-up: What Can You Do?\n\nThink about your abilities. Can you swim? Can you speak Ukrainian? Now think about obligations. What must you do today? And desires — what do you want to do this weekend?\n\nModal verbs are the key to expressing these ideas. They combine with infinitives to create powerful statements about ability, necessity, and desire.\n\nUkrainian modal verbs work similarly to English modals, but with some interesting differences. Some modals conjugate for person (like можу), while others are impersonal (like треба). Some express ability (можу), while others express knowledge (вмію).\n\nMastering modals will dramatically expand what you can express in Ukrainian. Instead of just stating facts, you can discuss possibilities, obligations, permissions, and wishes!\n\nThis module covers the essential modal verbs you need for everyday conversation. By the end, you'll be able to say what you can do, what you must do, and what you want to do.\n\n> 💡 **Thinking Trick:** Think of modals as \"helper verbs\" — they help express HOW you relate to an action (ability, obligation, desire), then the infinitive tells WHAT the action is.\n\n## Presentation: Modal Verbs\n\n### Expressing Ability: можу vs вмію\n\nUkrainian distinguishes between physical/circumstantial ability (можу) and learned skill (вмію):\n\n**Можу (can, am able to) — Possibility/Circumstance:**\n\n| Person | Form |\n|--------|------|\n| я | можу |\n| ти | можеш |\n| він/вона | може |\n| ми | можемо |\n| ви | можете |\n| вони | можуть |\n\n**Examples:**\n- Я можу прийти о п'ятій. (I can come at 5.) — physical possibility\n- Вона не може працювати сьогодні. (She can't work today.) — circumstance\n- Ми можемо допомогти. (We can help.) — willingness\n\n**Вмію (know how to) — Learned Skill:**\n\n| Person | Form |\n|--------|------|\n| я | вмію |\n| ти | вмієш |\n| він/вона | вміє |\n| ми | вміємо |\n| ви | вмієте |\n| вони | вміють |\n\n**Examples:**\n- Я вмію плавати. (I know how to swim.) — learned skill\n- Вона вміє готувати. (She knows how to cook.) — ability\n- Ми вміємо говорити українською. (We can speak Ukrainian.) — competence\n\n**Key difference:**\n- \"Я можу плавати\" = I can swim (right now, conditions allow)\n- \"Я вмію плавати\" = I know how to swim (I learned it)\n\n### Expressing Obligation: повинен vs треба\n\n**Повинен (must, should) — Personal Obligation:**\n\n| Gender | Form |\n|--------|------|\n| я (m.) | повинен |\n| я (f.) | повинна |\n| він | повинен |\n| вона | повинна |\n| ми/вони | повинні |\n\n**Examples:**\n- Я повинен працювати. (I must work.) — male speaker\n- Вона повинна відповісти. (She must answer.)\n- Ми повинні допомогти. (We must help.)\n\n**Треба (need to) — Impersonal Necessity:**\nThis is an IMPERSONAL construction — it doesn't conjugate:\n\nStructure: (Dative) + треба + infinitive\n\n**Examples:**\n- Треба працювати. (One needs to work. / Work is needed.)\n- Мені треба йти. (I need to go.) — literally \"To me it's needed to go\"\n- Тобі треба відпочити. (You need to rest.)\n- Нам треба поговорити. (We need to talk.)\n\n**Related constructions:**\n- Потрібно (is needed) — similar to треба\n- Необхідно (is necessary) — more formal\n- Слід (should) — advice\n\n> 📜 **Pattern Summary:**\n> - **можу** = can (circumstance, permission)\n> - **вмію** = can (learned skill)\n> - **повинен** = must (personal duty, agrees with gender)\n> - **треба** = need to (impersonal, with dative)\n\n### Expressing Desire: хочу\n\n**Хочу (want to):**\n\n| Person | Form |\n|--------|------|\n| я | хочу |\n| ти | хочеш |\n| він/вона | хоче |\n| ми | хочемо |\n| ви | хочете |\n| вони | хочуть |\n\n**Examples:**\n- Я хочу навчитися. (I want to learn.)\n- Вона хоче поїхати. (She wants to go.)\n- Ми хочемо побачити. (We want to see.)\n\n### Permission: можна vs не можна\n\n**Impersonal permission:**\n- Можна? (May I? Is it allowed?)\n- Можна увійти? (May I enter?)\n- Тут не можна курити. (Smoking is not allowed here.)\n- Мені можна йти? (May I go?)\n\n> 💡 **Did You Know?** \"Треба\" comes from a Old Slavic word meaning \"necessary, needed.\" It's impersonal — the action is needed, not the person who needs it. That's why Ukrainian uses dative: \"Мені треба\" = \"To-me is-needed\" — elegant!\n\n## Cultural Insight: Expressing Politeness 🇺🇦\n\nUkrainians use modal verbs to soften requests and sound more polite:\n\n**Direct (less polite):**\n- Дай мені каву. (Give me coffee.)\n\n**With modals (polite):**\n- Можеш дати мені каву? (Can you give me coffee?)\n- Чи можна каву? (May I have coffee?)\n- Я би хотів каву. (I would like coffee.)\n\n**Obligation in culture:**\n- \"Повинен\" sounds strong — use for real duties\n- \"Треба\" is softer — good for suggestions\n- \"Варто\" (it's worth) — even softer advice\n\n**Common polite phrases:**\n- Чи можу я...? (May I...?)\n- Я хотів би... (I would like...)\n- Вам не важко...? (Would you mind...?)\n\n> 📜 **History Bite:** During Soviet times, language was used as a tool of control. Phrases like \"ми повинні\" (we must) were everywhere — duty to the state. Today, Ukrainians often prefer softer constructions, reflecting a move toward personal choice and freedom!\n\n> 📜 **Myth Buster:** Some claim Ukrainian lacks nuance for polite requests. In reality, Ukrainian has rich modal constructions for expressing different levels of politeness, permission, and obligation — often more precise than English!\n\n## Reading Practice: Мої плани 📖\n\n**Українською:**\n\nСьогодні в мене багато справ. Спочатку я повинен піти на роботу. Потім мені треба зустрітися з другом — ми хочемо поговорити про проект.\n\nЯ вмію програмувати, тому можу допомогти йому. Він не вміє писати код, але хоче навчитися. Я повинен пояснити все повільно.\n\nУвечері мені треба купити продукти. Я хочу приготувати вечерю. Вмію готувати кілька українських страв — борщ, вареники, котлети.\n\nО дев'ятій я можу відпочити. Хочу подивитися фільм або почитати книжку. Але спочатку повинен закінчити всі справи!\n\n**English Translation:**\n\nToday I have a lot of tasks. First, I must go to work. Then I need to meet with a friend — we want to talk about a project.\n\nI know how to program, so I can help him. He doesn't know how to write code, but wants to learn. I must explain everything slowly.\n\nIn the evening I need to buy groceries. I want to cook dinner. I know how to make several Ukrainian dishes — borscht, varenyky, cutlets.\n\nAt nine I can rest. I want to watch a movie or read a book. But first I must finish all the tasks!\n\n**Practice:** Write about what YOU must, can, and want to do today!\n\n## Conversation: Плануємо разом 🗣️\n\n**Олег:** Привіт! Що хочеш робити у вихідні?\n**Наталя:** Привіт! Хочу поїхати за місто. А ти?\n**Олег:** Я повинен працювати в суботу. Але в неділю можу!\n**Наталя:** Чудово! Ти вмієш водити машину?\n**Олег:** Так, вмію. Можемо поїхати на моїй машині.\n**Наталя:** Супер! Мені треба взяти їжу.\n**Олег:** А мені треба заправити машину.\n**Наталя:** Тоді можемо виїхати о десятій?\n**Олег:** Так, о десятій підходить. До неділі!\n\nЗверни увагу: хочу, повинен, можу, вмію, треба — всі модальні дієслова!\n\n# Summary\n\n**Modal Verbs Essentials**\n\n1. **Ability:** можу (circumstance), вмію (learned skill)\n2. **Obligation:** повинен (personal), треба (impersonal + dative)\n3. **Desire:** хочу + infinitive\n4. **Permission:** можна (allowed), не можна (forbidden)\n\n---\n\n> [!tip] 🌟 **Pro Tip:** Use \"вмію\" for skills you've learned, \"можу\" for things you're able to do right now. \"Вмію плавати\" = I know how; \"Можу плавати сьогодні\" = I can swim today!\n\n# Activities\n\n## fill-in: Choose the Modal\n> Complete with the correct modal verb.\n\n1. Я ___ плавати, я навчився в дитинстві. (know how to)\n   > [!answer] вмію\n   > [!options] можу | вмію | хочу | повинен\n\n2. Вона не ___ прийти, вона зайнята. (can - circumstance)\n   > [!answer] може\n   > [!options] може | вміє | хоче | повинна\n\n3. Мені ___ йти на роботу. (need to)\n   > [!answer] треба\n   > [!options] треба | необхідно | можна | вмію\n\n4. Я ___ допомогти вам? (may I)\n   > [!answer] можу\n   > [!options] можу | вмію | хочу | повинен\n\n5. Ти ___ готувати? (know how to)\n   > [!answer] вмієш\n   > [!options] можеш | вмієш | хочеш | повинен\n\n6. Ми ___ поговорити. (need to)\n   > [!answer] повинні\n   > [!options] можемо | вміємо | повинні | хочемо\n\n7. Він ___ навчитися. (wants to)\n   > [!answer] хоче\n   > [!options] може | вміє | хоче | повинен\n\n8. Тут не ___ курити. (allowed)\n   > [!answer] можна\n   > [!options] можна | треба | повинно | вміє\n\n9. Мені ___ відпочити. (need)\n   > [!answer] треба\n   > [!options] можу | вмію | треба | хочу\n\n10. Я ___ закінчити проект. (must)\n    > [!answer] повинен\n    > [!options] можу | вмію | хочу | повинен\n\n11. Вона ___ говорити трьома мовами. (knows how)\n    > [!answer] вміє\n    > [!options] може | вміє | хоче | повинна\n\n12. Ми ___ поїхати за місто. (want)\n    > [!answer] хочемо\n    > [!options] можемо | вміємо | хочемо | повинні\n\n## match-up: Modal Meanings\n> Match Ukrainian with English.\n\n| Ukrainian | English |\n| --- | --- |\n| можу | I can (circumstance) |\n| вмію | I know how |\n| повинен | I must |\n| хочу | I want |\n| треба | need to (impersonal) |\n| можна | it's allowed |\n| не можна | not allowed |\n| варто | it's worth |\n| слід | should (advice) |\n| необхідно | necessary |\n| потрібно | needed |\n| здатний | capable |\n\n## quiz: Modal Rules\n> Choose the correct answer.\n\n1. \"Вмію плавати\" means:\n   - [x] I know how to swim (learned skill)\n   - [ ] I can swim right now\n   - [ ] I want to swim\n   - [ ] I must swim\n\n2. \"Мені треба\" uses which case?\n   - [x] Dative\n   - [ ] Nominative\n   - [ ] Accusative\n   - [ ] Genitive\n\n3. \"Повинен\" agrees with:\n   - [x] Gender of the subject\n   - [ ] Person only\n   - [ ] Nothing\n   - [ ] The infinitive\n\n4. For asking permission, use:\n   - [x] Чи можу я...?\n   - [ ] Чи вмію я...?\n   - [ ] Чи повинен я...?\n   - [ ] Чи треба я...?\n\n5. \"Треба\" is:\n   - [x] Impersonal (doesn't conjugate)\n   - [ ] Personal (conjugates)\n   - [ ] Not used\n   - [ ] Only for questions\n\n6. \"Не можна\" means:\n   - [x] Not allowed\n   - [ ] Cannot\n   - [ ] Don't want\n   - [ ] Don't know how\n\n7. \"Я повинна\" indicates the speaker is:\n   - [x] Female\n   - [ ] Male\n   - [ ] Plural\n   - [ ] Neuter\n\n8. Difference between можу and вмію:\n   - [x] Можу = circumstance, вмію = skill\n   - [ ] No difference\n   - [ ] Можу = skill, вмію = want\n   - [ ] Both mean want\n\n9. \"Хочу навчитися\" means:\n   - [x] I want to learn\n   - [ ] I can learn\n   - [ ] I must learn\n   - [ ] I know how to learn\n\n10. \"Нам треба поговорити\" means:\n    - [x] We need to talk\n    - [ ] We can talk\n    - [ ] We want to talk\n    - [ ] We must talk (obligation)\n\n11. To soften a request, use:\n    - [x] Modal verbs\n    - [ ] Imperative only\n    - [ ] No verbs\n    - [ ] Past tense\n\n12. \"Варто\" expresses:\n    - [x] Worth doing (soft advice)\n    - [ ] Must do\n    - [ ] Can do\n    - [ ] Want to do\n\n## group-sort: Modal Categories\n> Sort modals by their function.\n\n- Ability: можу\n- Ability: вмію\n- Ability: здатний\n- Obligation: повинен\n- Obligation: треба\n- Obligation: мусити\n- Desire: хочу\n- Desire: бажаю\n- Desire: мрію\n- Permission: можна\n- Permission: дозволено\n- Permission: не можна\n\n## true-false: Modal Facts\n- [x] \"Можу\" expresses circumstantial ability.\n- [x] \"Вмію\" expresses learned skill.\n- [ ] \"Треба\" conjugates for person.\n- [x] \"Повинен\" agrees with gender.\n- [x] \"Мені треба\" uses dative case.\n- [ ] \"Можу\" and \"вмію\" are identical.\n- [x] \"Не можна\" means not allowed.\n- [ ] \"Хочу\" doesn't take an infinitive.\n- [x] \"Повинна\" is feminine form.\n- [x] \"Можна\" asks permission.\n- [ ] \"Треба\" is a personal verb.\n- [x] Modals combine with infinitives.\n\n## anagram: Modal Vocabulary\n> Unscramble these modal words.\n\n1. у ж о м\n   > [!answer] можу\n\n2. ю і м в\n   > [!answer] вмію\n\n3. н е н в и о п\n   > [!answer] повинен\n\n4. у ч о х\n   > [!answer] хочу\n\n5. а б е р т\n   > [!answer] треба\n\n6. а н ж о м\n   > [!answer] можна\n\n7. і н н и в о п\n   > [!answer] повинні\n\n8. ш е ж о м\n   > [!answer] можеш\n\n9. о н б і р т о п\n   > [!answer] потрібно\n\n10. д н е о в о л з о\n    > [!answer] дозволено\n\n11. о р а в т\n    > [!answer] варто\n\n12. д і л с\n    > [!answer] слід\n\n## fill-in: Modal Sentences\n> Complete with the correct modal form.\n\n1. Я не ___ прийти, бо зайнятий. (can)\n   > [!answer] можу\n   > [!options] можу | вмію | хочу | повинен\n\n2. Вона ___ грати на піаніно. (knows how)\n   > [!answer] вміє\n   > [!options] може | вміє | хоче | повинна\n\n3. Ми ___ закінчити проект. (must - plural)\n   > [!answer] повинні\n   > [!options] можемо | вміємо | повинні | хочемо\n\n4. Тобі ___ відпочити. (need)\n   > [!answer] треба\n   > [!options] можна | вмієш | треба | хочеш\n\n5. Вони ___ поїхати на море. (want)\n   > [!answer] хочуть\n   > [!options] можуть | вміють | хочуть | повинні\n\n6. ___ увійти? (May I)\n   > [!answer] Можна\n   > [!options] Можна | Треба | Вмію | Хочу\n\n7. Ви ___ говорити українською? (Can - skill)\n   > [!answer] вмієте\n   > [!options] можете | вмієте | хочете | повинні\n\n8. Мені ___ купити продукти. (need)\n   > [!answer] треба\n   > [!options] можу | вмію | треба | хочу\n\n9. Тут не ___ фотографувати. (allowed)\n   > [!answer] можна\n   > [!options] можна | треба | вміє | хоче\n\n10. Я ___ допомогти. (want)\n    > [!answer] хочу\n    > [!options] можу | вмію | хочу | повинен\n\n11. Він ___ працювати в суботу. (must)\n    > [!answer] повинен\n    > [!options] може | вміє | хоче | повинен\n\n12. Нам ___ поговорити. (need - impersonal)\n    > [!answer] треба\n    > [!options] можемо | вміємо | треба | хочемо\n\n## unjumble: Build Modal Sentences\n> Arrange words into correct sentences.\n\n1. плавати / я / вмію\n   > [!answer] Я вмію плавати.\n\n2. працювати / треба / мені\n   > [!answer] Мені треба працювати.\n\n3. допомогти / можу / я / вам\n   > [!answer] Я можу вам допомогти.\n\n4. поїхати / хочемо / ми / море / на\n   > [!answer] Ми хочемо поїхати на море.\n\n5. повинна / вона / відповісти\n   > [!answer] Вона повинна відповісти.\n\n6. курити / тут / не / можна\n   > [!answer] Тут не можна курити.\n\n7. готувати / вона / вміє\n   > [!answer] Вона вміє готувати.\n\n8. треба / нам / поговорити\n   > [!answer] Нам треба поговорити.\n\n9. хочу / навчитися / я\n   > [!answer] Я хочу навчитися.\n\n10. прийти / не / я / можу\n    > [!answer] Я не можу прийти.\n\n11. повинен / закінчити / я / проект\n    > [!answer] Я повинен закінчити проект.\n\n12. увійти / можна\n    > [!answer] Можна увійти?\n\n---\n\n# Vocabulary\n\n| Ukrainian | IPA | English | Example |\n| --- | --- | --- | --- |\n| могти | /moɦˈtɪ/ | to be able to | Я можу. |\n| вміти | /ˈʋmitɪ/ | to know how | Я вмію. |\n| повинен | /poˈʋɪnɛn/ | must (m.) | Я повинен. |\n| повинна | /poˈʋɪnnɑ/ | must (f.) | Вона повинна. |\n| мусити | /muˈsɪtɪ/ | must | Я мушу. |\n| треба | /ˈtrɛbɑ/ | need to (impers.) | Мені треба. |\n| потрібно | /poˈtribno/ | needed | Потрібно зробити. |\n| необхідно | /nɛobˈxidno/ | necessary | Необхідно знати. |\n| можна | /ˈmoʒnɑ/ | allowed, may | Можна увійти? |\n| не можна | /nɛ ˈmoʒnɑ/ | not allowed | Тут не можна. |\n| дозволено | /dozˈʋolɛno/ | permitted | Це дозволено. |\n| заборонено | /zɑboroˈnɛno/ | forbidden | Заборонено курити. |\n| слід | /slid/ | should | Слід подумати. |\n| варто | /ˈʋɑrto/ | worth (doing) | Варто спробувати. |\n| здатний | /ˈzdɑtnɪj/ | capable | Він здатний. |\n| готовий | /ɦoˈtoʋɪj/ | ready | Я готовий. |\n| згодний | /ˈzɦodnɪj/ | willing | Вони згодні. |\n| впевнений | /ʋpɛʋˈnɛnɪj/ | confident | Я впевнений. |\n| намагатися | /nɑmɑˈɦɑtɪsʲɑ/ | to try | Намагаюся. |\n| старатися | /stɑˈrɑtɪsʲɑ/ | to try hard | Стараюся. |\n| пробувати | /probuˈʋɑtɪ/ | to try | Пробую. |\n| вдаватися | /ʋdɑˈʋɑtɪsʲɑ/ | to succeed | Мені вдається. |\n| встигати | /ʋstɪˈɦɑtɪ/ | to manage, be on time | Встигаю. |\n| мати змогу | /ˈmɑtɪ ˈzmoɦu/ | to have the ability | Маю змогу. |\n| бути в змозі | /ˈbutɪ ʋ ˈzmozi/ | to be in a position | Я в змозі. |\n",
+    "createdAt": "2025-12-12T19:55:32.048Z",
+    "modifiedAt": "2025-12-12T19:55:32.048Z",
+    "version": 2
+  },
+  "activities": [
+    {
+      "id": "act-a1-0-fillblank-0",
+      "type": "fill-blank",
+      "title": "Choose the Modal",
+      "description": "Complete with the correct modal verb.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Я ___ плавати, я навчився в дитинстві. (know how to)",
+            "answer": "вмію",
+            "options": [
+              "можу",
+              "вмію",
+              "хочу",
+              "повинен"
+            ]
+          },
+          {
+            "prompt": "Вона не ___ прийти, вона зайнята. (can - circumstance)",
+            "answer": "може",
+            "options": [
+              "може",
+              "вміє",
+              "хоче",
+              "повинна"
+            ]
+          },
+          {
+            "prompt": "Мені ___ йти на роботу. (need to)",
+            "answer": "треба",
+            "options": [
+              "треба",
+              "необхідно",
+              "можна",
+              "вмію"
+            ]
+          },
+          {
+            "prompt": "Я ___ допомогти вам? (may I)",
+            "answer": "можу",
+            "options": [
+              "можу",
+              "вмію",
+              "хочу",
+              "повинен"
+            ]
+          },
+          {
+            "prompt": "Ти ___ готувати? (know how to)",
+            "answer": "вмієш",
+            "options": [
+              "можеш",
+              "вмієш",
+              "хочеш",
+              "повинен"
+            ]
+          },
+          {
+            "prompt": "Ми ___ поговорити. (need to)",
+            "answer": "повинні",
+            "options": [
+              "можемо",
+              "вміємо",
+              "повинні",
+              "хочемо"
+            ]
+          },
+          {
+            "prompt": "Він ___ навчитися. (wants to)",
+            "answer": "хоче",
+            "options": [
+              "може",
+              "вміє",
+              "хоче",
+              "повинен"
+            ]
+          },
+          {
+            "prompt": "Тут не ___ курити. (allowed)",
+            "answer": "можна",
+            "options": [
+              "можна",
+              "треба",
+              "повинно",
+              "вміє"
+            ]
+          },
+          {
+            "prompt": "Мені ___ відпочити. (need)",
+            "answer": "треба",
+            "options": [
+              "можу",
+              "вмію",
+              "треба",
+              "хочу"
+            ]
+          },
+          {
+            "prompt": "Я ___ закінчити проект. (must)",
+            "answer": "повинен",
+            "options": [
+              "можу",
+              "вмію",
+              "хочу",
+              "повинен"
+            ]
+          },
+          {
+            "prompt": "Вона ___ говорити трьома мовами. (knows how)",
+            "answer": "вміє",
+            "options": [
+              "може",
+              "вміє",
+              "хоче",
+              "повинна"
+            ]
+          },
+          {
+            "prompt": "Ми ___ поїхати за місто. (want)",
+            "answer": "хочемо",
+            "options": [
+              "можемо",
+              "вміємо",
+              "хочемо",
+              "повинні"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.048Z",
+      "modifiedAt": "2025-12-12T19:55:32.048Z"
+    },
+    {
+      "id": "act-a1-0-matchup-0",
+      "type": "match-up",
+      "title": "Modal Meanings",
+      "description": "Match Ukrainian with English.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "можу",
+            "right": "I can (circumstance)"
+          },
+          {
+            "left": "вмію",
+            "right": "I know how"
+          },
+          {
+            "left": "повинен",
+            "right": "I must"
+          },
+          {
+            "left": "хочу",
+            "right": "I want"
+          },
+          {
+            "left": "треба",
+            "right": "need to (impersonal)"
+          },
+          {
+            "left": "можна",
+            "right": "it's allowed"
+          },
+          {
+            "left": "не можна",
+            "right": "not allowed"
+          },
+          {
+            "left": "варто",
+            "right": "it's worth"
+          },
+          {
+            "left": "слід",
+            "right": "should (advice)"
+          },
+          {
+            "left": "необхідно",
+            "right": "necessary"
+          },
+          {
+            "left": "потрібно",
+            "right": "needed"
+          },
+          {
+            "left": "здатний",
+            "right": "capable"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.048Z",
+      "modifiedAt": "2025-12-12T19:55:32.048Z"
+    },
+    {
+      "id": "act-a1-0-quiz-0",
+      "type": "quiz",
+      "title": "Modal Rules",
+      "description": "Choose the correct answer.",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "\"Вмію плавати\" means:",
+            "options": [
+              "I know how to swim (learned skill)",
+              "I can swim right now",
+              "I want to swim",
+              "I must swim"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Мені треба\" uses which case?",
+            "options": [
+              "Dative",
+              "Nominative",
+              "Accusative",
+              "Genitive"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Повинен\" agrees with:",
+            "options": [
+              "Gender of the subject",
+              "Person only",
+              "Nothing",
+              "The infinitive"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "For asking permission, use:",
+            "options": [
+              "Чи можу я...?",
+              "Чи вмію я...?",
+              "Чи повинен я...?",
+              "Чи треба я...?"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Треба\" is:",
+            "options": [
+              "Impersonal (doesn't conjugate)",
+              "Personal (conjugates)",
+              "Not used",
+              "Only for questions"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Не можна\" means:",
+            "options": [
+              "Not allowed",
+              "Cannot",
+              "Don't want",
+              "Don't know how"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Я повинна\" indicates the speaker is:",
+            "options": [
+              "Female",
+              "Male",
+              "Plural",
+              "Neuter"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Difference between можу and вмію:",
+            "options": [
+              "Можу = circumstance, вмію = skill",
+              "No difference",
+              "Можу = skill, вмію = want",
+              "Both mean want"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Хочу навчитися\" means:",
+            "options": [
+              "I want to learn",
+              "I can learn",
+              "I must learn",
+              "I know how to learn"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Нам треба поговорити\" means:",
+            "options": [
+              "We need to talk",
+              "We can talk",
+              "We want to talk",
+              "We must talk (obligation)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "To soften a request, use:",
+            "options": [
+              "Modal verbs",
+              "Imperative only",
+              "No verbs",
+              "Past tense"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Варто\" expresses:",
+            "options": [
+              "Worth doing (soft advice)",
+              "Must do",
+              "Can do",
+              "Want to do"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.048Z",
+      "modifiedAt": "2025-12-12T19:55:32.048Z"
+    },
+    {
+      "id": "act-a1-0-groupsort-0",
+      "type": "group-sort",
+      "title": "Modal Categories",
+      "description": "Sort modals by their function.",
+      "content": {
+        "type": "group-sort",
+        "groups": [],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.048Z",
+      "modifiedAt": "2025-12-12T19:55:32.048Z"
+    },
+    {
+      "id": "act-a1-0-truefalse-0",
+      "type": "true-false",
+      "title": "Modal Facts",
+      "description": "Modal Facts",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "\"Можу\" expresses circumstantial ability.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Вмію\" expresses learned skill.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Треба\" conjugates for person.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Повинен\" agrees with gender.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Мені треба\" uses dative case.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Можу\" and \"вмію\" are identical.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Не можна\" means not allowed.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Хочу\" doesn't take an infinitive.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Повинна\" is feminine form.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Можна\" asks permission.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Треба\" is a personal verb.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "Modals combine with infinitives.",
+            "isTrue": true,
+            "explanation": ""
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.048Z",
+      "modifiedAt": "2025-12-12T19:55:32.048Z"
+    },
+    {
+      "id": "act-a1-0-anagram-0",
+      "type": "anagram",
+      "title": "Modal Vocabulary",
+      "description": "Unscramble these modal words.",
+      "content": {
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
+          {
+            "letters": [
+              "у",
+              "ж",
+              "о",
+              "м"
+            ],
+            "answer": "можу"
+          },
+          {
+            "letters": [
+              "ю",
+              "і",
+              "м",
+              "в"
+            ],
+            "answer": "вмію"
+          },
+          {
+            "letters": [
+              "н",
+              "е",
+              "н",
+              "в",
+              "и",
+              "о",
+              "п"
+            ],
+            "answer": "повинен"
+          },
+          {
+            "letters": [
+              "у",
+              "ч",
+              "о",
+              "х"
+            ],
+            "answer": "хочу"
+          },
+          {
+            "letters": [
+              "а",
+              "б",
+              "е",
+              "р",
+              "т"
+            ],
+            "answer": "треба"
+          },
+          {
+            "letters": [
+              "а",
+              "н",
+              "ж",
+              "о",
+              "м"
+            ],
+            "answer": "можна"
+          },
+          {
+            "letters": [
+              "і",
+              "н",
+              "н",
+              "и",
+              "в",
+              "о",
+              "п"
+            ],
+            "answer": "повинні"
+          },
+          {
+            "letters": [
+              "ш",
+              "е",
+              "ж",
+              "о",
+              "м"
+            ],
+            "answer": "можеш"
+          },
+          {
+            "letters": [
+              "о",
+              "н",
+              "б",
+              "і",
+              "р",
+              "т",
+              "о",
+              "п"
+            ],
+            "answer": "потрібно"
+          },
+          {
+            "letters": [
+              "д",
+              "н",
+              "е",
+              "о",
+              "в",
+              "о",
+              "л",
+              "з",
+              "о"
+            ],
+            "answer": "дозволено"
+          },
+          {
+            "letters": [
+              "о",
+              "р",
+              "а",
+              "в",
+              "т"
+            ],
+            "answer": "варто"
+          },
+          {
+            "letters": [
+              "д",
+              "і",
+              "л",
+              "с"
+            ],
+            "answer": "слід"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.048Z",
+      "modifiedAt": "2025-12-12T19:55:32.048Z"
+    },
+    {
+      "id": "act-a1-0-fillblank-1",
+      "type": "fill-blank",
+      "title": "Modal Sentences",
+      "description": "Complete with the correct modal form.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Я не ___ прийти, бо зайнятий. (can)",
+            "answer": "можу",
+            "options": [
+              "можу",
+              "вмію",
+              "хочу",
+              "повинен"
+            ]
+          },
+          {
+            "prompt": "Вона ___ грати на піаніно. (knows how)",
+            "answer": "вміє",
+            "options": [
+              "може",
+              "вміє",
+              "хоче",
+              "повинна"
+            ]
+          },
+          {
+            "prompt": "Ми ___ закінчити проект. (must - plural)",
+            "answer": "повинні",
+            "options": [
+              "можемо",
+              "вміємо",
+              "повинні",
+              "хочемо"
+            ]
+          },
+          {
+            "prompt": "Тобі ___ відпочити. (need)",
+            "answer": "треба",
+            "options": [
+              "можна",
+              "вмієш",
+              "треба",
+              "хочеш"
+            ]
+          },
+          {
+            "prompt": "Вони ___ поїхати на море. (want)",
+            "answer": "хочуть",
+            "options": [
+              "можуть",
+              "вміють",
+              "хочуть",
+              "повинні"
+            ]
+          },
+          {
+            "prompt": "___ увійти? (May I)",
+            "answer": "Можна",
+            "options": [
+              "Можна",
+              "Треба",
+              "Вмію",
+              "Хочу"
+            ]
+          },
+          {
+            "prompt": "Ви ___ говорити українською? (Can - skill)",
+            "answer": "вмієте",
+            "options": [
+              "можете",
+              "вмієте",
+              "хочете",
+              "повинні"
+            ]
+          },
+          {
+            "prompt": "Мені ___ купити продукти. (need)",
+            "answer": "треба",
+            "options": [
+              "можу",
+              "вмію",
+              "треба",
+              "хочу"
+            ]
+          },
+          {
+            "prompt": "Тут не ___ фотографувати. (allowed)",
+            "answer": "можна",
+            "options": [
+              "можна",
+              "треба",
+              "вміє",
+              "хоче"
+            ]
+          },
+          {
+            "prompt": "Я ___ допомогти. (want)",
+            "answer": "хочу",
+            "options": [
+              "можу",
+              "вмію",
+              "хочу",
+              "повинен"
+            ]
+          },
+          {
+            "prompt": "Він ___ працювати в суботу. (must)",
+            "answer": "повинен",
+            "options": [
+              "може",
+              "вміє",
+              "хоче",
+              "повинен"
+            ]
+          },
+          {
+            "prompt": "Нам ___ поговорити. (need - impersonal)",
+            "answer": "треба",
+            "options": [
+              "можемо",
+              "вміємо",
+              "треба",
+              "хочемо"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.048Z",
+      "modifiedAt": "2025-12-12T19:55:32.048Z"
+    },
+    {
+      "id": "act-a1-0-unjumble-0",
+      "type": "unjumble",
+      "title": "Build Modal Sentences",
+      "description": "Arrange words into correct sentences.",
+      "content": {
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
+          {
+            "words": [
+              "плавати",
+              "я",
+              "вмію"
+            ],
+            "answer": "Я вмію плавати."
+          },
+          {
+            "words": [
+              "працювати",
+              "треба",
+              "мені"
+            ],
+            "answer": "Мені треба працювати."
+          },
+          {
+            "words": [
+              "допомогти",
+              "можу",
+              "я",
+              "вам"
+            ],
+            "answer": "Я можу вам допомогти."
+          },
+          {
+            "words": [
+              "поїхати",
+              "хочемо",
+              "ми",
+              "море",
+              "на"
+            ],
+            "answer": "Ми хочемо поїхати на море."
+          },
+          {
+            "words": [
+              "повинна",
+              "вона",
+              "відповісти"
+            ],
+            "answer": "Вона повинна відповісти."
+          },
+          {
+            "words": [
+              "курити",
+              "тут",
+              "не",
+              "можна"
+            ],
+            "answer": "Тут не можна курити."
+          },
+          {
+            "words": [
+              "готувати",
+              "вона",
+              "вміє"
+            ],
+            "answer": "Вона вміє готувати."
+          },
+          {
+            "words": [
+              "треба",
+              "нам",
+              "поговорити"
+            ],
+            "answer": "Нам треба поговорити."
+          },
+          {
+            "words": [
+              "хочу",
+              "навчитися",
+              "я"
+            ],
+            "answer": "Я хочу навчитися."
+          },
+          {
+            "words": [
+              "прийти",
+              "не",
+              "я",
+              "можу"
+            ],
+            "answer": "Я не можу прийти."
+          },
+          {
+            "words": [
+              "повинен",
+              "закінчити",
+              "я",
+              "проект"
+            ],
+            "answer": "Я повинен закінчити проект."
+          },
+          {
+            "words": [
+              "увійти",
+              "можна"
+            ],
+            "answer": "Можна увійти?"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.048Z",
+      "modifiedAt": "2025-12-12T19:55:32.048Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A1-24",
+    "level": "A1",
+    "phase": "A1.3",
+    "wordCount": 25,
+    "newWordCount": 25,
+    "reviewWordCount": 0,
+    "transliterationMode": "partial",
+    "words": [
+      {
+        "id": "v-mohty-0-0",
+        "uk": "могти",
+        "en": "to be able to",
+        "pos": "noun",
+        "ipa": "/moɦˈtɪ/",
+        "note": "Я можу.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vmity-0-1",
+        "uk": "вміти",
+        "en": "to know how",
+        "pos": "noun",
+        "ipa": "/ˈʋmitɪ/",
+        "note": "Я вмію.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-povynen-0-2",
+        "uk": "повинен",
+        "en": "must (m.)",
+        "pos": "noun",
+        "ipa": "/poˈʋɪnɛn/",
+        "note": "Я повинен.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-povynna-0-3",
+        "uk": "повинна",
+        "en": "must (f.)",
+        "pos": "noun",
+        "ipa": "/poˈʋɪnnɑ/",
+        "note": "Вона повинна.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-musyty-0-4",
+        "uk": "мусити",
+        "en": "must",
+        "pos": "noun",
+        "ipa": "/muˈsɪtɪ/",
+        "note": "Я мушу.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-treba-0-5",
+        "uk": "треба",
+        "en": "need to (impers.)",
+        "pos": "noun",
+        "ipa": "/ˈtrɛbɑ/",
+        "note": "Мені треба.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-potribno-0-6",
+        "uk": "потрібно",
+        "en": "needed",
+        "pos": "noun",
+        "ipa": "/poˈtribno/",
+        "note": "Потрібно зробити.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-neobkhidno-0-7",
+        "uk": "необхідно",
+        "en": "necessary",
+        "pos": "noun",
+        "ipa": "/nɛobˈxidno/",
+        "note": "Необхідно знати.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-mozhna-0-8",
+        "uk": "можна",
+        "en": "allowed, may",
+        "pos": "noun",
+        "ipa": "/ˈmoʒnɑ/",
+        "note": "Можна увійти?",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-ne-mozhna-0-9",
+        "uk": "не можна",
+        "en": "not allowed",
+        "pos": "noun",
+        "ipa": "/nɛ ˈmoʒnɑ/",
+        "note": "Тут не можна.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-dozvoleno-0-10",
+        "uk": "дозволено",
+        "en": "permitted",
+        "pos": "noun",
+        "ipa": "/dozˈʋolɛno/",
+        "note": "Це дозволено.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-zaboroneno-0-11",
+        "uk": "заборонено",
+        "en": "forbidden",
+        "pos": "noun",
+        "ipa": "/zɑboroˈnɛno/",
+        "note": "Заборонено курити.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-slid-0-12",
+        "uk": "слід",
+        "en": "should",
+        "pos": "noun",
+        "ipa": "/slid/",
+        "note": "Слід подумати.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-varto-0-13",
+        "uk": "варто",
+        "en": "worth (doing)",
+        "pos": "noun",
+        "ipa": "/ˈʋɑrto/",
+        "note": "Варто спробувати.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-zdatnyy-0-14",
+        "uk": "здатний",
+        "en": "capable",
+        "pos": "noun",
+        "ipa": "/ˈzdɑtnɪj/",
+        "note": "Він здатний.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-hotovyy-0-15",
+        "uk": "готовий",
+        "en": "ready",
+        "pos": "noun",
+        "ipa": "/ɦoˈtoʋɪj/",
+        "note": "Я готовий.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-zhodnyy-0-16",
+        "uk": "згодний",
+        "en": "willing",
+        "pos": "noun",
+        "ipa": "/ˈzɦodnɪj/",
+        "note": "Вони згодні.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vpevnenyy-0-17",
+        "uk": "впевнений",
+        "en": "confident",
+        "pos": "noun",
+        "ipa": "/ʋpɛʋˈnɛnɪj/",
+        "note": "Я впевнений.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-namahatysya-0-18",
+        "uk": "намагатися",
+        "en": "to try",
+        "pos": "noun",
+        "ipa": "/nɑmɑˈɦɑtɪsʲɑ/",
+        "note": "Намагаюся.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-staratysya-0-19",
+        "uk": "старатися",
+        "en": "to try hard",
+        "pos": "noun",
+        "ipa": "/stɑˈrɑtɪsʲɑ/",
+        "note": "Стараюся.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-probuvaty-0-20",
+        "uk": "пробувати",
+        "en": "to try",
+        "pos": "noun",
+        "ipa": "/probuˈʋɑtɪ/",
+        "note": "Пробую.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vdavatysya-0-21",
+        "uk": "вдаватися",
+        "en": "to succeed",
+        "pos": "noun",
+        "ipa": "/ʋdɑˈʋɑtɪsʲɑ/",
+        "note": "Мені вдається.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vstyhaty-0-22",
+        "uk": "встигати",
+        "en": "to manage, be on time",
+        "pos": "noun",
+        "ipa": "/ʋstɪˈɦɑtɪ/",
+        "note": "Встигаю.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-maty-zmohu-0-23",
+        "uk": "мати змогу",
+        "en": "to have the ability",
+        "pos": "noun",
+        "ipa": "/ˈmɑtɪ ˈzmoɦu/",
+        "note": "Маю змогу.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-buty-v-zmozi-0-24",
+        "uk": "бути в змозі",
+        "en": "to be in a position",
+        "pos": "noun",
+        "ipa": "/ˈbutɪ ʋ ˈzmozi/",
+        "note": "Я в змозі.",
+        "isNew": true,
+        "firstModule": 0
+      }
+    ]
+  }
+}

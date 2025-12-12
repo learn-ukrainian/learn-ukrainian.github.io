@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
-import { parseMarkdown } from './utils';
+import { parseMarkdown, shuffle } from './utils';
 import ActivityHelp from './ActivityHelp';
 
 interface QuizQuestionProps {
@@ -11,26 +11,34 @@ interface QuizQuestionProps {
 }
 
 export function QuizQuestion({ question, options, correctIndex, explanation }: QuizQuestionProps) {
+  // Shuffle options on mount, tracking original indices
+  const shuffledOptions = useMemo(() => {
+    const indexed = options.map((opt, i) => ({ opt, originalIndex: i }));
+    return shuffle(indexed);
+  }, [options]);
+
   const [selected, setSelected] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
 
-  const handleSelect = (index: number) => {
+  const handleSelect = (shuffledIndex: number) => {
     if (showResult) return;
-    setSelected(index);
+    setSelected(shuffledIndex);
     setShowResult(true);
   };
 
-  const isCorrect = selected === correctIndex;
+  // Find the shuffled index of the correct answer
+  const correctShuffledIndex = shuffledOptions.findIndex(o => o.originalIndex === correctIndex);
+  const isCorrect = selected === correctShuffledIndex;
 
   return (
     <div className={styles.quizQuestion}>
       <p className={styles.questionText}>{parseMarkdown(question)}</p>
       <div className={styles.options}>
-        {options.map((option, index) => (
+        {shuffledOptions.map((item, index) => (
           <button
             key={index}
             className={`${styles.option} ${showResult
-              ? index === correctIndex
+              ? index === correctShuffledIndex
                 ? styles.correct
                 : index === selected
                   ? styles.incorrect
@@ -40,7 +48,7 @@ export function QuizQuestion({ question, options, correctIndex, explanation }: Q
             onClick={() => handleSelect(index)}
             disabled={showResult}
           >
-            {parseMarkdown(option)}
+            {parseMarkdown(item.opt)}
           </button>
         ))}
       </div>

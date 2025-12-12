@@ -15,382 +15,102 @@
     "pedagogy": "PPP",
     "immersionLevel": 0.3,
     "title": "The Living Verb I",
-    "subtitle": "Present Tense Class I Verbs — Making Things Happen",
-    "description": "Learner can conjugate Class I verbs (-ати/-яти) in present tense",
+    "subtitle": "Present Tense Class I Verbs (-ати/-яти)",
+    "description": "Conjugate Class I verbs (-ати) in present tense",
     "objectives": [
-      "Learner can conjugate Class I verbs (-ати/-яти) in present tense",
-      "Learner can form simple action sentences",
-      "Learner understands personal verb endings"
+      "Conjugate Class I verbs (-ати) in present tense",
+      "Use common action verbs in sentences",
+      "Understand the vowel shift pattern (-ати → -аю, -аєш, etc.)",
+      "Form basic statements about daily actions"
     ],
     "grammarFocus": [
-      "Present tense conjugation",
-      "Class I verbs (-ати/-яти stem)",
-      "Personal endings pattern"
+      "Present tense conjugation (Class I)",
+      "Subject-verb agreement"
     ],
     "tags": [
+      "grammar",
       "verbs",
-      "conjugation",
       "present-tense",
-      "class-1"
+      "conjugation"
     ],
     "totalDuration": 45,
-    "transliterationMode": "full",
+    "transliterationMode": "partial",
     "sections": [
       {
         "id": "section-content-0",
         "name": "Lesson",
         "type": "content",
-        "content": "> **Verbs bring Ukrainian to life!** Until now, you've named things and pointed at them. Now you'll make them DO something. With Class I verbs, you'll read, write, work, play, sing, and dream—all in Ukrainian!\n\n## warm-up\n\nYou're visiting a Ukrainian friend in **Львів**. They describe their day:\n\n\"**Я читаю** книгу.\" *(I read a book.)*  \n\"**Ти працюєш** тут?\" *(Do you work here?)*  \n\"**Ми слухаємо** музику.\" *(We listen to music.)*\n\nEvery verb changes based on WHO is doing the action. \"I read\" = **читаю**. \"You read\" = **читаєш**. This is called **conjugation**, and it's the heartbeat of Ukrainian grammar!\n\n> 💡 **Did You Know?**\n>\n> Ukrainian verbs have TWO main classes based on their infinitive endings. Class I verbs end in **-ати** or **-яти** (like читати, працювати). Class II verbs end in **-ити** or **-іти** (like говорити). Today we master Class I!\n\n## presentation\n\n### The Infinitive — The Verb's Dictionary Form\n\nEvery verb has an **infinitive** form (the \"to ___\" form in English):\n\n| Infinitive | Meaning | Class |\n|------------|---------|-------|\n| **чит-ати** | to read | I (-ати) |\n| **пис-ати** | to write | I (-ати) |\n| **працюв-ати** | to work | I (-ати) |\n| **слух-ати** | to listen | I (-ати) |\n| **гр-ати** | to play | I (-ати) |\n\nThe **stem** is what's left when you remove **-ати/-яти**.\n\n> 📜 **History Bite: The Infinitive Through Time**\n>\n> The Ukrainian infinitive ending **-ти** comes from Proto-Slavic and is shared with other Slavic languages. But Ukrainian preserved the full **-ати** form while some languages shortened it. When you say \"читати,\" you're speaking a form that Kyivan Rus' chroniclers used 1,000 years ago!\n\n### Class I Conjugation — The Pattern\n\nTo conjugate Class I verbs, remove **-ти** and add personal endings:\n\n**читати** (to read) → stem: **чита-**\n\n| Person | Pronoun | Ending | Full Form | Meaning |\n|--------|---------|--------|-----------|---------|\n| 1st sing | я | **-ю** | чита**ю** | I read |\n| 2nd sing | ти | **-єш** | чита**єш** | you read |\n| 3rd sing | він/вона | **-є** | чита**є** | he/she reads |\n| 1st pl | ми | **-ємо** | чита**ємо** | we read |\n| 2nd pl | ви | **-єте** | чита**єте** | you (pl/formal) read |\n| 3rd pl | вони | **-ють** | чита**ють** | they read |\n\n> ⚡ **Pro Tip: The є Pattern**\n>\n> Notice how **є** appears in most endings: -єш, -є, -ємо, -єте, -ють! This is the signature of Class I verbs. If you see these endings, you know it's Class I!\n\n### More Class I Verbs in Action\n\n**писати** (to write) → stem: **пиш-** (consonant change!)\n\n| Pronoun | Form | Example |\n|---------|------|---------|\n| я | пишу | Я **пишу** лист. (I write a letter.) |\n| ти | пишеш | Ти **пишеш** добре! (You write well!) |\n| він/вона | пише | Вона **пише** книгу. (She writes a book.) |\n| ми | пишемо | Ми **пишемо** разом. (We write together.) |\n| ви | пишете | Ви **пишете** швидко? (Do you write fast?) |\n| вони | пишуть | Вони **пишуть** щодня. (They write daily.) |\n\n> 🔍 **Myth Buster: \"Ukrainian conjugation is random\"**\n>\n> **Lie:** Some learners think verb forms are unpredictable.\n>\n> **Truth:** Ukrainian conjugation follows clear patterns! Class I verbs use the є-series endings (читаю, читаєш, читає...). Class II verbs use a different pattern. Once you learn the class, you can predict most forms!\n\n### The Daily Routine Verbs\n\n| Infinitive | Meaning | я-form | Notes |\n|------------|---------|--------|-------|\n| **снідати** | to have breakfast | снідаю | From \"сніданок\" |\n| **обідати** | to have lunch | обідаю | From \"обід\" |\n| **вечеряти** | to have dinner | вечеряю | From \"вечеря\" |\n| **працювати** | to work | працюю | -ювати verbs |\n| **відпочивати** | to rest | відпочиваю | Long but regular! |\n| **гуляти** | to walk, stroll | гуляю | Pleasant activity |\n\n> 🎭 **Culture Corner: Ukrainian Meals**\n>\n> **Сніданок** (breakfast) is typically lighter: каша, хліб з маслом, чай.  \n> **Обід** (lunch) is the main meal: борщ, other soup, main course.  \n> **Вечеря** (dinner) is medium: often leftovers or lighter dishes.  \n> Ukrainians say \"**Смачного!**\" (Bon appétit!) before eating!\n\n### Creative Verbs\n\n| Infinitive | Meaning | я-form | Example |\n|------------|---------|--------|---------|\n| **грати** | to play | граю | Я **граю** на гітарі. |\n| **співати** | to sing | співаю | Вона **співає** пісню. |\n| **танцювати** | to dance | танцюю | Ми **танцюємо** разом. |\n| **малювати** | to draw, paint | малюю | Він **малює** картину. |\n| **мріяти** | to dream | мрію | Я **мрію** про щастя. |\n| **думати** | to think | думаю | Я так **думаю**. |\n\n### Communication Verbs\n\n| Infinitive | Meaning | я-form | Example |\n|------------|---------|--------|---------|\n| **слухати** | to listen | слухаю | Я **слухаю** музику. |\n| **чекати** | to wait | чекаю | Ми **чекаємо** на тебе. |\n| **питати** | to ask | питаю | Вона **питає** вчителя. |\n| **відповідати** | to answer | відповідаю | Він **відповідає** правильно. |\n| **знати** | to know | знаю | Я **знаю** українську! |\n| **розуміти** | to understand | розумію | Ви **розумієте** мене? |\n\n> 💡 **Did You Know?**\n>\n> The verb **розуміти** (to understand) comes from **розум** (mind, reason). When you say \"Я розумію,\" you're literally saying \"I grasp with my mind\"!\n\n## cultural insight\n\n### The Ukrainian Work Ethic\n\nThe verb **працювати** (to work) is central to Ukrainian identity. The proverb says:\n\n**\"Праця людину годує, а лінь — марнує.\"**  \n*(Work feeds a person, but laziness wastes them.)*\n\nUkrainians value hard work deeply. When someone says \"**Я працюю**\" (I work), it carries pride. The word **працьовитий** (hard-working) is a high compliment!\n\n### Building Sentences\n\nNow let's put verbs in sentences:\n\n**Pattern: Subject + Verb + Object**\n\n| Ukrainian | Literal | English |\n|-----------|---------|---------|\n| Я **читаю** книгу. | I read book. | I'm reading a book. |\n| Ти **слухаєш** музику. | You listen music. | You're listening to music. |\n| Він **пише** лист. | He writes letter. | He's writing a letter. |\n| Ми **гуляємо** в парку. | We walk in park. | We're walking in the park. |\n| Вони **грають** у футбол. | They play in football. | They're playing football. |\n\n> 📜 **History Bite: Verbs of Resistance**\n>\n> During Soviet times, Ukrainian verbs of communication—**читати**, **писати**, **співати**—became acts of resistance. When the regime banned Ukrainian books, people who **читали українською** (read in Ukrainian) were quiet rebels. Today, these same verbs carry the pride of cultural survival!\n\n## dialogue\n\n## dialogue\n\n### At Work 💼\n\n**Андрій:** Привіт! Що ти робиш?\n*(Pryvit! Shcho ty robysh?)*\nHi! What are you doing?\n\n**Оксана:** Я працюю. Пишу звіт.\n*(Ya pratsyuyu. Pyshu zvit.)*\nI'm working. Writing a report.\n\n**Андрій:** Ти слухаєш музику?\n*(Ty slukhayesh muzyku?)*\nDo you listen to music?\n\n**Оксана:** Так, я слухаю музику, коли працюю.\n*(Tak, ya slukhayu muzyku, koly pratsyuyu.)*\nYes, I listen to music when I work.\n\n**Андрій:** Що ти слухаєш?\n*(Shcho ty slukhayesh?)*\nWhat do you listen to?\n\n**Оксана:** Українські пісні! Я люблю співати!\n*(Ukrayinski pisni! Ya lyublyu spivaty!)*\nUkrainian songs! I love to sing!\n\n**Андрій:** О, я теж!\n*(O, ya tezh!)*\nOh, me too!\n\n> 🎯 **Fun Fact**\n>\n> Notice \"**Що ти робиш?**\" (What are you doing?) — a super useful phrase! **Робити** (to do/make) is Class II, but you'll learn it next module!\n\n### Daily Routine 🌅\n\n**Марія:** Коли ти снідаєш?\n*(Koly ty snidayesh?)*\nWhen do you have breakfast?\n\n**Петро:** Я снідаю о восьмій. А ти?\n*(Ya snidayu o vosmiy. A ty?)*\nI have breakfast at eight. And you?\n\n**Марія:** Я снідаю о сьомій. Потім працюю.\n*(Ya snidayu o siyomiy. Potim pratsyuyu.)*\nI have breakfast at seven. Then I work.\n\n**Петро:** А коли обідаєш?\n*(A koly obidayesh?)*\nAnd when do you have lunch?\n\n**Марія:** Обідаю о першій. А вечеряю о сьомій.\n*(Obidayu o pershiy. A vecheryayu o somiy.)*\nI have lunch at one. And I have dinner at seven.\n\n**Петро:** Ти завжди так плануєш?\n*(Ty zavzhdy tak planuyesh?)*\nDo you always plan like this?\n\n**Марія:** Так! Я люблю порядок!\n*(Tak! Ya lyublyu poryadok!)*\nYes! I love order!\n\n> 💡 **Did You Know?**\n>\n> Ukrainians typically have their biggest meal at **обід** (lunch), not dinner. The traditional lunch includes soup (often борщ), a main course, and sometimes dessert!\n\n## story time\n\n### День Богдана — Bogdan's Day 📖\n\n**Богдан** — українець. Він живе в Харкові. (Bogdan lives in Kharkiv.)\n\n**Ранок.**\nБогдан снідає. Каша і чай.\nВін читає новини.\n\n**Робота.**\nБогдан — програміст.\nВін працює. Він пише код.\nКолеги питають. Богдан відповідає.\n\n**Обід.**\nБогдан обідає. Суп і салат.\n\"Смачного!\"\nВін слухає музику. Він думає.\n\n**Вечір.**\nБогдан гуляє. Парк.\nВін мріє про відпустку.\nВін вечеряє. Родина.\nСин грає на піаніно. Дочка малює.\nБогдан відпочиває.\n\nВін думає: **\"Я люблю цей день!\"**\n\n> 🔍 **Myth Buster: \"Kharkiv is Russian-speaking\"**\n>\n> **Truth:** **Харків** was historically bilingual, but since 2022, Ukrainian has become the dominant language. Young Kharkivites proudly **говорять українською** (speak Ukrainian), and the city has become a symbol of Ukrainian resilience!\n\n---"
+        "content": "> **Note:** Until now, you've described things. Now it's time to **do** things! Verbs bring your Ukrainian to life.\n\n## Warm-up: A World Without Verbs\n\nImagine trying to communicate without verbs:\n- ❌ \"I... book.\" (What about the book? Read? Write? Want?)\n- ❌ \"She... Kyiv.\" (Lives? Travels? Loves?)\n- ❌ \"We... music.\" (Listen? Play? Love?)\n\nVerbs are the **engine** of every sentence. Without verbs, we can only name things. With verbs, we bring those things to **life**!\n\nIn this module, you'll learn how Ukrainian verbs change their endings based on who is doing the action — this is called **conjugation**. Every language with conjugation follows a system. Ukrainian's system is remarkably **logical and predictable** — once you master it, you can express almost anything.\n\nThink about English for a moment. We say \"I read\" but \"she reads\" (adding -s). That small change shows who is doing the action. Ukrainian does the same thing, but with more distinct endings that tell you exactly who is doing what.\n\n> 💡 **Good News:** Ukrainian verbs are simpler than English in one way: **there's no \"do/does\" helper!**\n> - English: \"Do you read?\" / \"She reads.\" / \"I don't read.\"\n> - Ukrainian: \"Ти читаєш?\" / \"Вона читає.\" / \"Я не читаю.\"\n\nNo extra words needed — the verb ending says it all! This makes Ukrainian sentences shorter and more direct. Many learners find this easier than English once they get used to it.\n\n## Presentation: Class I Verbs (-ати/-яти)\n\n### 1. What is a Conjugation Class?\n\nUkrainian verbs belong to different **classes** based on their infinitive ending. Today we learn **Class I** — the most common type!\n\n**Class I markers:**\n- Infinitive ends in **-ати** or **-яти**\n- Examples: читати (to read), знати (to know), працювати (to work)\n\n### 2. The Conjugation Pattern\n\nTo conjugate, we:\n1. Remove **-ати** from the infinitive\n2. Add the personal ending\n\n**Example: читати (to read)**\n\n| Person | Pronoun | Ending | Conjugated | Translation |\n|--------|---------|--------|------------|-------------|\n| 1st sg | я | -ю | чита**ю** | I read |\n| 2nd sg | ти | -єш | чита**єш** | you read |\n| 3rd sg | він/вона | -є | чита**є** | he/she reads |\n| 1st pl | ми | -ємо | чита**ємо** | we read |\n| 2nd pl | ви | -єте | чита**єте** | you (pl/formal) read |\n| 3rd pl | вони | -ють | чита**ють** | they read |\n\n> 📜 **Pattern Summary:**\n> **-ю, -єш, -є, -ємо, -єте, -ють**\n\n### 3. More Examples\n\n**знати (to know):**\n| я знаю | ти знаєш | він/вона знає | ми знаємо | ви знаєте | вони знають |\n\n**працювати (to work):**\n| я працюю | ти працюєш | він/вона працює | ми працюємо | ви працюєте | вони працюють |\n\n**слухати (to listen):**\n| я слухаю | ти слухаєш | він/вона слухає | ми слухаємо | ви слухаєте | вони слухають |\n\n### 4. Questions and Negation\n\n**Questions** — just add question intonation (or \"чи\"):\n- Ти читаєш? / Чи ти читаєш? (Do you read?)\n- Вона працює? (Does she work?)\n\n**Negation** — add **не** before the verb:\n- Я **не** читаю. (I don't read.)\n- Вони **не** знають. (They don't know.)\n\n> ⚠️ **Common Mistake:** Don't add \"do\" like in English!\n> - ❌ \"Ти робиш читаєш?\"\n> - ✅ \"Ти читаєш?\"\n\n## Cultural Insight: The Ukrainian Work Ethic 🇺🇦\n\nUkrainians are known for their **працьовитість** (work ethic). The verb **працювати** (to work) is essential in daily life.\n\nCommon phrases:\n- **Де ти працюєш?** — Where do you work?\n- **Я працюю в офісі.** — I work in an office.\n- **Вона багато працює.** — She works a lot.\n\nThe concept of **гарна праця** (good work, job well done) is highly valued. You'll often hear \"Працюй добре!\" (Work well!) as encouragement.\n\n> 💡 **Did You Know?** The word **робота** (work) comes from *раб* (slave) historically, but today it simply means job/work. The verb **робити** (to do/make) is Class II — we'll learn it in Module 08!\n\n## Dialogue: At the Library 🗣️\n\n**Оля:** Привіт, Андрію! Що ти робиш?\n**Андрій:** Привіт! Я читаю книгу. А ти?\n**Оля:** Я слухаю музику і думаю.\n**Андрій:** Про що ти думаєш?\n**Оля:** Думаю про екзамен. Ти знаєш відповіді?\n**Андрій:** Ні, я не знаю. Але ми разом працюємо! Ти питаєш, я відповідаю.\n**Оля:** Чудово! Починаємо?\n**Андрій:** Так, починаємо!\n\n**English Translation:**\n**Olya:** Hi, Andriy! What are you doing?\n**Andriy:** Hi! I am reading a book. And you?\n**Olya:** I am listening to music and thinking.\n**Andriy:** What are you thinking about?\n**Olya:** I am thinking about the exam. Do you know the answers?\n**Andriy:** No, I don't know. But we are working together! You ask, I answer.\n**Olya:** Great! Shall we start?\n**Andriy:** Yes, let's start!\n\n## Reading Practice: A Day in Kyiv 📖\n\n*Read this short passage about daily actions.*\n\n**Марко і Софія живуть у Києві.** Вони — молода пара. Кожен день вони багато **працюють**.\n\n**Ранок:**\nВранці Марко **прокидається** о сьомій. Він **снідає** і **читає** новини на телефоні. Софія теж **прокидається** рано. Вона **слухає** радіо і **п'є** каву. Вони разом **снідають** — це їхня традиція.\n\n**День:**\nПотім вони **працюють**. Марко **працює** в офісі. Він **пише** документи, **відповідає** на листи і **телефонує** клієнтам. Софія — вчителька. Вона **навчає** дітей і **розмовляє** з батьками. Вона дуже **любить** свою роботу.\n\n**Вечір:**\nУвечері вони **відпочивають**. Марко **грає** у футбол з друзями. Софія **малює** картини — це її хобі. Іноді вони разом **гуляють** у парку або **дивляться** фільми.\n\n**Вихідні:**\nУ вихідні вони не **працюють**. Вони **снідають** пізно, **читають** книги, **слухають** музику і **мріють** про відпустку. Вони **знають**, що життя — це баланс: **працюй** добре і **відпочивай** добре!\n\n**English Translation:**\n**Marko and Sofia live in Kyiv.** They are a young couple. Every day they work a lot.\n\n**Morning:**\nIn the morning Marko wakes up at seven. He eats breakfast and reads news on the phone. Sofia also wakes up early. She listens to the radio and drinks coffee. They eat breakfast together — this is their tradition.\n\n**Day:**\nThen they work. Marko works in an office. He writes documents, answers letters, and calls clients. Sofia is a teacher. She teaches children and speaks with parents. She loves her work very much.\n\n**Evening:**\nIn the evening they rest. Marko plays football with friends. Sofia paints pictures — this is her hobby. Sometimes they walk together in the park or watch films.\n\n**Weekend:**\nOn the weekend they do not work. They eat breakfast late, read books, listen to music, and dream about vacation. They know that life is a balance: work well and rest well!\n\n> 📜 **Myth Buster:** Some people think Ukrainian verbs are difficult. Actually, Class I verbs follow a **very regular pattern**. Once you memorize the endings (-ю, -єш, -є, -ємо, -єте, -ють), you can conjugate hundreds of verbs instantly!\n\n**Дії (Actions):** читає, снідає, слухає, працюють, пише, відповідає, навчає, розмовляє, відпочивають, грає, малює, знають, гуляють, дивляться, мріють."
       },
       {
         "id": "section-summary-1",
         "name": "Підсумок",
         "nameEn": "Summary",
         "type": "summary",
-        "content": "Today you learned to conjugate **Class I verbs** (-ати/-яти)!\n\n**The Pattern:**\n\n| Person | Ending | читати |\n|--------|--------|--------|\n| я | -ю | читаю |\n| ти | -єш | читаєш |\n| він/вона | -є | читає |\n| ми | -ємо | читаємо |\n| ви | -єте | читаєте |\n| вони | -ють | читають |\n\n**Key verbs learned:**\n- Daily: снідати, обідати, вечеряти, працювати, відпочивати\n- Creative: грати, співати, танцювати, малювати, мріяти\n- Communication: слухати, питати, відповідати, знати, розуміти\n\n> 🌟 **Pro Tip**\n>\n> Practice conjugation by describing YOUR day: \"Я снідаю о...\", \"Я працюю...\", \"Я читаю...\"!\n\n---\n\n\n---"
+        "content": "1. **Class I verbs** end in **-ати/-яти** (читати, знати, працювати)\n2. **Endings:** -ю, -єш, -є, -ємо, -єте, -ють\n3. **No helpers:** Ukrainian doesn't use \"do/does\"\n4. **Negation:** Simply add **не** before the verb\n\n---\n\n> [!tip] 🌟 **Pro Tip:** Practice conjugating every new verb you learn! Say all 6 forms: \"читаю, читаєш, читає, читаємо, читаєте, читають.\"\n\n\n---"
       }
     ],
-    "rawMarkdown": "---\ntitle: The Living Verb I\nsubtitle: Present Tense Class I Verbs — Making Things Happen\nphase: A1.1\nduration: 45\ntransliteration: full\npedagogy: PPP\ntags: [verbs, conjugation, present-tense, class-1]\nobjectives:\n  - Learner can conjugate Class I verbs (-ати/-яти) in present tense\n  - Learner can form simple action sentences\n  - Learner understands personal verb endings\ngrammar:\n  - Present tense conjugation\n  - Class I verbs (-ати/-яти stem)\n  - Personal endings pattern\n---\n\n# The Living Verb I: Present Tense Class I Verbs — Making Things Happen\n\n> **Verbs bring Ukrainian to life!** Until now, you've named things and pointed at them. Now you'll make them DO something. With Class I verbs, you'll read, write, work, play, sing, and dream—all in Ukrainian!\n\n## warm-up\n\nYou're visiting a Ukrainian friend in **Львів**. They describe their day:\n\n\"**Я читаю** книгу.\" *(I read a book.)*  \n\"**Ти працюєш** тут?\" *(Do you work here?)*  \n\"**Ми слухаємо** музику.\" *(We listen to music.)*\n\nEvery verb changes based on WHO is doing the action. \"I read\" = **читаю**. \"You read\" = **читаєш**. This is called **conjugation**, and it's the heartbeat of Ukrainian grammar!\n\n> 💡 **Did You Know?**\n>\n> Ukrainian verbs have TWO main classes based on their infinitive endings. Class I verbs end in **-ати** or **-яти** (like читати, працювати). Class II verbs end in **-ити** or **-іти** (like говорити). Today we master Class I!\n\n## presentation\n\n### The Infinitive — The Verb's Dictionary Form\n\nEvery verb has an **infinitive** form (the \"to ___\" form in English):\n\n| Infinitive | Meaning | Class |\n|------------|---------|-------|\n| **чит-ати** | to read | I (-ати) |\n| **пис-ати** | to write | I (-ати) |\n| **працюв-ати** | to work | I (-ати) |\n| **слух-ати** | to listen | I (-ати) |\n| **гр-ати** | to play | I (-ати) |\n\nThe **stem** is what's left when you remove **-ати/-яти**.\n\n> 📜 **History Bite: The Infinitive Through Time**\n>\n> The Ukrainian infinitive ending **-ти** comes from Proto-Slavic and is shared with other Slavic languages. But Ukrainian preserved the full **-ати** form while some languages shortened it. When you say \"читати,\" you're speaking a form that Kyivan Rus' chroniclers used 1,000 years ago!\n\n### Class I Conjugation — The Pattern\n\nTo conjugate Class I verbs, remove **-ти** and add personal endings:\n\n**читати** (to read) → stem: **чита-**\n\n| Person | Pronoun | Ending | Full Form | Meaning |\n|--------|---------|--------|-----------|---------|\n| 1st sing | я | **-ю** | чита**ю** | I read |\n| 2nd sing | ти | **-єш** | чита**єш** | you read |\n| 3rd sing | він/вона | **-є** | чита**є** | he/she reads |\n| 1st pl | ми | **-ємо** | чита**ємо** | we read |\n| 2nd pl | ви | **-єте** | чита**єте** | you (pl/formal) read |\n| 3rd pl | вони | **-ють** | чита**ють** | they read |\n\n> ⚡ **Pro Tip: The є Pattern**\n>\n> Notice how **є** appears in most endings: -єш, -є, -ємо, -єте, -ють! This is the signature of Class I verbs. If you see these endings, you know it's Class I!\n\n### More Class I Verbs in Action\n\n**писати** (to write) → stem: **пиш-** (consonant change!)\n\n| Pronoun | Form | Example |\n|---------|------|---------|\n| я | пишу | Я **пишу** лист. (I write a letter.) |\n| ти | пишеш | Ти **пишеш** добре! (You write well!) |\n| він/вона | пише | Вона **пише** книгу. (She writes a book.) |\n| ми | пишемо | Ми **пишемо** разом. (We write together.) |\n| ви | пишете | Ви **пишете** швидко? (Do you write fast?) |\n| вони | пишуть | Вони **пишуть** щодня. (They write daily.) |\n\n> 🔍 **Myth Buster: \"Ukrainian conjugation is random\"**\n>\n> **Lie:** Some learners think verb forms are unpredictable.\n>\n> **Truth:** Ukrainian conjugation follows clear patterns! Class I verbs use the є-series endings (читаю, читаєш, читає...). Class II verbs use a different pattern. Once you learn the class, you can predict most forms!\n\n### The Daily Routine Verbs\n\n| Infinitive | Meaning | я-form | Notes |\n|------------|---------|--------|-------|\n| **снідати** | to have breakfast | снідаю | From \"сніданок\" |\n| **обідати** | to have lunch | обідаю | From \"обід\" |\n| **вечеряти** | to have dinner | вечеряю | From \"вечеря\" |\n| **працювати** | to work | працюю | -ювати verbs |\n| **відпочивати** | to rest | відпочиваю | Long but regular! |\n| **гуляти** | to walk, stroll | гуляю | Pleasant activity |\n\n> 🎭 **Culture Corner: Ukrainian Meals**\n>\n> **Сніданок** (breakfast) is typically lighter: каша, хліб з маслом, чай.  \n> **Обід** (lunch) is the main meal: борщ, other soup, main course.  \n> **Вечеря** (dinner) is medium: often leftovers or lighter dishes.  \n> Ukrainians say \"**Смачного!**\" (Bon appétit!) before eating!\n\n### Creative Verbs\n\n| Infinitive | Meaning | я-form | Example |\n|------------|---------|--------|---------|\n| **грати** | to play | граю | Я **граю** на гітарі. |\n| **співати** | to sing | співаю | Вона **співає** пісню. |\n| **танцювати** | to dance | танцюю | Ми **танцюємо** разом. |\n| **малювати** | to draw, paint | малюю | Він **малює** картину. |\n| **мріяти** | to dream | мрію | Я **мрію** про щастя. |\n| **думати** | to think | думаю | Я так **думаю**. |\n\n### Communication Verbs\n\n| Infinitive | Meaning | я-form | Example |\n|------------|---------|--------|---------|\n| **слухати** | to listen | слухаю | Я **слухаю** музику. |\n| **чекати** | to wait | чекаю | Ми **чекаємо** на тебе. |\n| **питати** | to ask | питаю | Вона **питає** вчителя. |\n| **відповідати** | to answer | відповідаю | Він **відповідає** правильно. |\n| **знати** | to know | знаю | Я **знаю** українську! |\n| **розуміти** | to understand | розумію | Ви **розумієте** мене? |\n\n> 💡 **Did You Know?**\n>\n> The verb **розуміти** (to understand) comes from **розум** (mind, reason). When you say \"Я розумію,\" you're literally saying \"I grasp with my mind\"!\n\n## cultural insight\n\n### The Ukrainian Work Ethic\n\nThe verb **працювати** (to work) is central to Ukrainian identity. The proverb says:\n\n**\"Праця людину годує, а лінь — марнує.\"**  \n*(Work feeds a person, but laziness wastes them.)*\n\nUkrainians value hard work deeply. When someone says \"**Я працюю**\" (I work), it carries pride. The word **працьовитий** (hard-working) is a high compliment!\n\n### Building Sentences\n\nNow let's put verbs in sentences:\n\n**Pattern: Subject + Verb + Object**\n\n| Ukrainian | Literal | English |\n|-----------|---------|---------|\n| Я **читаю** книгу. | I read book. | I'm reading a book. |\n| Ти **слухаєш** музику. | You listen music. | You're listening to music. |\n| Він **пише** лист. | He writes letter. | He's writing a letter. |\n| Ми **гуляємо** в парку. | We walk in park. | We're walking in the park. |\n| Вони **грають** у футбол. | They play in football. | They're playing football. |\n\n> 📜 **History Bite: Verbs of Resistance**\n>\n> During Soviet times, Ukrainian verbs of communication—**читати**, **писати**, **співати**—became acts of resistance. When the regime banned Ukrainian books, people who **читали українською** (read in Ukrainian) were quiet rebels. Today, these same verbs carry the pride of cultural survival!\n\n## dialogue\n\n## dialogue\n\n### At Work 💼\n\n**Андрій:** Привіт! Що ти робиш?\n*(Pryvit! Shcho ty robysh?)*\nHi! What are you doing?\n\n**Оксана:** Я працюю. Пишу звіт.\n*(Ya pratsyuyu. Pyshu zvit.)*\nI'm working. Writing a report.\n\n**Андрій:** Ти слухаєш музику?\n*(Ty slukhayesh muzyku?)*\nDo you listen to music?\n\n**Оксана:** Так, я слухаю музику, коли працюю.\n*(Tak, ya slukhayu muzyku, koly pratsyuyu.)*\nYes, I listen to music when I work.\n\n**Андрій:** Що ти слухаєш?\n*(Shcho ty slukhayesh?)*\nWhat do you listen to?\n\n**Оксана:** Українські пісні! Я люблю співати!\n*(Ukrayinski pisni! Ya lyublyu spivaty!)*\nUkrainian songs! I love to sing!\n\n**Андрій:** О, я теж!\n*(O, ya tezh!)*\nOh, me too!\n\n> 🎯 **Fun Fact**\n>\n> Notice \"**Що ти робиш?**\" (What are you doing?) — a super useful phrase! **Робити** (to do/make) is Class II, but you'll learn it next module!\n\n### Daily Routine 🌅\n\n**Марія:** Коли ти снідаєш?\n*(Koly ty snidayesh?)*\nWhen do you have breakfast?\n\n**Петро:** Я снідаю о восьмій. А ти?\n*(Ya snidayu o vosmiy. A ty?)*\nI have breakfast at eight. And you?\n\n**Марія:** Я снідаю о сьомій. Потім працюю.\n*(Ya snidayu o siyomiy. Potim pratsyuyu.)*\nI have breakfast at seven. Then I work.\n\n**Петро:** А коли обідаєш?\n*(A koly obidayesh?)*\nAnd when do you have lunch?\n\n**Марія:** Обідаю о першій. А вечеряю о сьомій.\n*(Obidayu o pershiy. A vecheryayu o somiy.)*\nI have lunch at one. And I have dinner at seven.\n\n**Петро:** Ти завжди так плануєш?\n*(Ty zavzhdy tak planuyesh?)*\nDo you always plan like this?\n\n**Марія:** Так! Я люблю порядок!\n*(Tak! Ya lyublyu poryadok!)*\nYes! I love order!\n\n> 💡 **Did You Know?**\n>\n> Ukrainians typically have their biggest meal at **обід** (lunch), not dinner. The traditional lunch includes soup (often борщ), a main course, and sometimes dessert!\n\n## story time\n\n### День Богдана — Bogdan's Day 📖\n\n**Богдан** — українець. Він живе в Харкові. (Bogdan lives in Kharkiv.)\n\n**Ранок.**\nБогдан снідає. Каша і чай.\nВін читає новини.\n\n**Робота.**\nБогдан — програміст.\nВін працює. Він пише код.\nКолеги питають. Богдан відповідає.\n\n**Обід.**\nБогдан обідає. Суп і салат.\n\"Смачного!\"\nВін слухає музику. Він думає.\n\n**Вечір.**\nБогдан гуляє. Парк.\nВін мріє про відпустку.\nВін вечеряє. Родина.\nСин грає на піаніно. Дочка малює.\nБогдан відпочиває.\n\nВін думає: **\"Я люблю цей день!\"**\n\n> 🔍 **Myth Buster: \"Kharkiv is Russian-speaking\"**\n>\n> **Truth:** **Харків** was historically bilingual, but since 2022, Ukrainian has become the dominant language. Young Kharkivites proudly **говорять українською** (speak Ukrainian), and the city has become a symbol of Ukrainian resilience!\n\n---\n\n# Summary\n\nToday you learned to conjugate **Class I verbs** (-ати/-яти)!\n\n**The Pattern:**\n\n| Person | Ending | читати |\n|--------|--------|--------|\n| я | -ю | читаю |\n| ти | -єш | читаєш |\n| він/вона | -є | читає |\n| ми | -ємо | читаємо |\n| ви | -єте | читаєте |\n| вони | -ють | читають |\n\n**Key verbs learned:**\n- Daily: снідати, обідати, вечеряти, працювати, відпочивати\n- Creative: грати, співати, танцювати, малювати, мріяти\n- Communication: слухати, питати, відповідати, знати, розуміти\n\n> 🌟 **Pro Tip**\n>\n> Practice conjugation by describing YOUR day: \"Я снідаю о...\", \"Я працюю...\", \"Я читаю...\"!\n\n---\n\n# Activities\n\n## fill-in: Conjugate читати\n\n> Complete with the correct form of читати (to read).\n\n1. Я ___ книгу. (I read a book.)\n   > [!answer] читаю\n   > [!options] читаю | читаєш | читає | читаємо\n\n2. Ти ___ газету? (Do you read the newspaper?)\n   > [!answer] читаєш\n   > [!options] читаю | читаєш | читає | читають\n\n3. Вона ___ роман. (She reads a novel.)\n   > [!answer] читає\n   > [!options] читаю | читаєш | читає | читаємо\n\n4. Ми ___ разом. (We read together.)\n   > [!answer] читаємо\n   > [!options] читаю | читаємо | читаєте | читають\n\n5. Ви ___ швидко? (Do you read fast?)\n   > [!answer] читаєте\n   > [!options] читаєш | читаємо | читаєте | читають\n\n6. Вони ___ вірші. (They read poems.)\n   > [!answer] читають\n   > [!options] читає | читаємо | читаєте | читають\n\n7. Він ___ новини. (He reads news.)\n   > [!answer] читає\n   > [!options] читаю | читаєш | читає | читають\n\n8. Я не ___ це. (I don't read this.)\n   > [!answer] читаю\n   > [!options] читаю | читаєш | читає | читаємо\n\n9. Що ти ___? (What do you read?)\n   > [!answer] читаєш\n   > [!options] читаю | читаєш | читає | читають\n\n10. Вони завжди ___. (They always read.)\n    > [!answer] читають\n    > [!options] читає | читаємо | читаєте | читають\n\n11. Ми не ___ газети. (We don't read newspapers.)\n    > [!answer] читаємо\n    > [!options] читаю | читаємо | читаєте | читають\n\n12. Вона часто ___. (She often reads.)\n    > [!answer] читає\n    > [!options] читаю | читаєш | читає | читають\n\n## fill-in: Mixed Verb Conjugation\n\n> Complete with the correct verb form.\n\n1. Я ___ на роботі. (працювати - I work at the office.)\n   > [!answer] працюю\n   > [!options] працюю | працюєш | працює | працюємо\n\n2. Ти ___ українською? (знати - Do you know Ukrainian?)\n   > [!answer] знаєш\n   > [!options] знаю | знаєш | знає | знають\n\n3. Вона ___ пісню. (співати - She sings a song.)\n   > [!answer] співає\n   > [!options] співаю | співаєш | співає | співають\n\n4. Ми ___ на тебе. (чекати - We wait for you.)\n   > [!answer] чекаємо\n   > [!options] чекаю | чекаємо | чекаєте | чекають\n\n5. Вони ___ музику. (слухати - They listen to music.)\n   > [!answer] слухають\n   > [!options] слухаю | слухає | слухаємо | слухають\n\n6. Він ___ картину. (малювати - He paints a picture.)\n   > [!answer] малює\n   > [!options] малюю | малюєш | малює | малюють\n\n7. Ви мене ___? (розуміти - Do you understand me?)\n   > [!answer] розумієте\n   > [!options] розумію | розумієш | розумієте | розуміють\n\n8. Я ___ о восьмій. (снідати - I have breakfast at eight.)\n   > [!answer] снідаю\n   > [!options] снідаю | снідаєш | снідає | снідаємо\n\n9. Ти що ___? (думати - What do you think?)\n   > [!answer] думаєш\n   > [!options] думаю | думаєш | думає | думають\n\n10. Вони ___ в парку. (гуляти - They walk in the park.)\n    > [!answer] гуляють\n    > [!options] гуляю | гуляє | гуляємо | гуляють\n\n11. Ми ___ на гітарі. (грати - We play guitar.)\n    > [!answer] граємо\n    > [!options] граю | граєш | граємо | грають\n\n12. Вона ___ про море. (мріяти - She dreams about the sea.)\n    > [!answer] мріє\n    > [!options] мрію | мрієш | мріє | мріють\n\n## match-up: Infinitive to я-Form\n\n> Match each infinitive to its я-form.\n\n| Left | Right |\n|------|-------|\n| читати | читаю |\n| писати | пишу |\n| працювати | працюю |\n| слухати | слухаю |\n| знати | знаю |\n| розуміти | розумію |\n| снідати | снідаю |\n| обідати | обідаю |\n| гуляти | гуляю |\n| грати | граю |\n| співати | співаю |\n| мріяти | мрію |\n\n## quiz: Identify the Correct Form\n\n> Choose the correct conjugation.\n\n1. \"We write\" in Ukrainian is:\n   - [ ] пишу\n   - [ ] пишеш\n   - [x] пишемо\n   - [ ] пишуть\n   > ми → -емо ending\n\n2. \"They listen\" in Ukrainian is:\n   - [ ] слухаю\n   - [ ] слухає\n   - [ ] слухаємо\n   - [x] слухають\n   > вони → -ють ending\n\n3. \"She works\" in Ukrainian is:\n   - [ ] працюю\n   - [ ] працюєш\n   - [x] працює\n   - [ ] працюють\n   > вона → -є ending\n\n4. \"I know\" in Ukrainian is:\n   - [x] знаю\n   - [ ] знаєш\n   - [ ] знає\n   - [ ] знають\n   > я → -ю ending\n\n5. \"You (formal) understand\" is:\n   - [ ] розумію\n   - [ ] розуміє\n   - [x] розумієте\n   - [ ] розуміють\n   > ви → -єте ending\n\n6. \"He sings\" in Ukrainian is:\n   - [ ] співаю\n   - [ ] співаєш\n   - [x] співає\n   - [ ] співають\n   > він → -є ending\n\n7. \"You (informal) play\" is:\n   - [ ] граю\n   - [x] граєш\n   - [ ] грає\n   - [ ] граємо\n   > ти → -єш ending\n\n8. \"They dream\" in Ukrainian is:\n   - [ ] мрію\n   - [ ] мріє\n   - [ ] мріємо\n   - [x] мріють\n   > вони → -ють ending\n\n9. \"I wait\" in Ukrainian is:\n   - [x] чекаю\n   - [ ] чекаєш\n   - [ ] чекає\n   - [ ] чекають\n   > я → -ю ending\n\n10. \"We have dinner\" is:\n    - [ ] вечеряю\n    - [ ] вечеряє\n    - [x] вечеряємо\n    - [ ] вечеряють\n    > ми → -ємо ending\n\n11. \"She thinks\" in Ukrainian is:\n    - [ ] думаю\n    - [ ] думаєш\n    - [x] думає\n    - [ ] думають\n    > вона → -є ending\n\n12. \"They draw\" in Ukrainian is:\n    - [ ] малюю\n    - [ ] малює\n    - [ ] малюємо\n    - [x] малюють\n    > вони → -ють ending\n\n## match-up: Verb Meaning\n\n> Match Ukrainian verbs to their English meanings.\n\n| Left | Right |\n|------|-------|\n| читати | to read |\n| писати | to write |\n| слухати | to listen |\n| працювати | to work |\n| відпочивати | to rest |\n| снідати | to have breakfast |\n| обідати | to have lunch |\n| вечеряти | to have dinner |\n| гуляти | to walk, stroll |\n| грати | to play |\n| співати | to sing |\n| малювати | to draw, paint |\n\n## unjumble: Build Sentences\n\n> Arrange words to form correct sentences.\n\n1. книгу / я / читаю\n   > [!answer] Я читаю книгу.\n   > (I read a book.)\n\n2. музику / слухає / вона\n   > [!answer] Вона слухає музику.\n   > (She listens to music.)\n\n3. працюємо / ми / разом\n   > [!answer] Ми працюємо разом.\n   > (We work together.)\n\n4. грають / футбол / вони / у\n   > [!answer] Вони грають у футбол.\n   > (They play football.)\n\n5. снідаю / я / о восьмій\n   > [!answer] Я снідаю о восьмій.\n   > (I have breakfast at eight.)\n\n6. пише / лист / він\n   > [!answer] Він пише лист.\n   > (He writes a letter.)\n\n7. українську / ти / знаєш\n   > [!answer] Ти знаєш українську.\n   > (You know Ukrainian.)\n\n8. співає / пісню / вона / українську\n   > [!answer] Вона співає українську пісню.\n   > (She sings a Ukrainian song.)\n\n9. гуляємо / парку / в / ми\n   > [!answer] Ми гуляємо в парку.\n   > (We walk in the park.)\n\n10. малюють / картину / вони\n    > [!answer] Вони малюють картину.\n    > (They paint a picture.)\n\n11. відпочиваю / я / ввечері\n    > [!answer] Я відпочиваю ввечері.\n    > (I rest in the evening.)\n\n12. чекаємо / ми / на / тебе\n    > [!answer] Ми чекаємо на тебе.\n    > (We wait for you.)\n\n## anagram: Unscramble Verbs\n\n> Form verb infinitives from scrambled letters.\n\n1. и т а т и ч\n   > [!answer] читати\n   > (to read)\n\n2. и т а с и п\n   > [!answer] писати\n   > (to write)\n\n3. и т а х у л с\n   > [!answer] слухати\n   > (to listen)\n\n4. и т а н з\n   > [!answer] знати\n   > (to know)\n\n5. и т і м у з о р\n   > [!answer] розуміти\n   > (to understand)\n\n6. и т а т і д і н с\n   > [!answer] снідати\n   > (to have breakfast)\n\n7. и т а р г\n   > [!answer] грати\n   > (to play)\n\n8. и т а в і п с\n   > [!answer] співати\n   > (to sing)\n\n9. и т а ю л а м\n   > [!answer] малювати\n   > (to draw)\n\n10. и т а я і р м\n    > [!answer] мріяти\n    > (to dream)\n\n11. и т а м у д\n    > [!answer] думати\n    > (to think)\n\n12. и т а л я у г\n    > [!answer] гуляти\n    > (to walk)\n\n## anagram: Unscramble Conjugated Forms\n\n> Form conjugated verb forms.\n\n1. ю а т и ч\n   > [!answer] читаю\n   > (I read)\n\n2. ш є а т и ч\n   > [!answer] читаєш\n   > (you read)\n\n3. є а т и ч\n   > [!answer] читає\n   > (he/she reads)\n\n4. о м є а т и ч\n   > [!answer] читаємо\n   > (we read)\n\n5. ь т ю а т и ч\n   > [!answer] читають\n   > (they read)\n\n6. ю а ц ю р а п\n   > [!answer] працюю\n   > (I work)\n\n7. є у а ц ю р а п\n   > [!answer] працює\n   > (he/she works)\n\n8. ю а н з\n   > [!answer] знаю\n   > (I know)\n\n9. є а н з\n   > [!answer] знає\n   > (he/she knows)\n\n10. о м є і м у з о р\n    > [!answer] розуміємо\n    > (we understand)\n\n11. ь т ю а х у л с\n    > [!answer] слухають\n    > (they listen)\n\n12. о м є а р г\n    > [!answer] граємо\n    > (we play)\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| читати | /tʃɪˈtɑtɪ/ | to read | verb | - | Class I |\n| писати | /pɪˈsɑtɪ/ | to write | verb | - | Class I, stem change: пиш- |\n| знати | /znɑˈtɪ/ | to know | verb | - | Class I |\n| розуміти | /rɔzuˈmʲitɪ/ | to understand | verb | - | Class I |\n| слухати | /ˈsluxɑtɪ/ | to listen | verb | - | Class I |\n| чекати | /tʃɛˈkɑtɪ/ | to wait | verb | - | Class I |\n| питати | /pɪˈtɑtɪ/ | to ask | verb | - | Class I |\n| відповідати | /wʲidpɔwʲiˈdɑtɪ/ | to answer | verb | - | Class I |\n| працювати | /prɑˈtsʲuvɑtɪ/ | to work | verb | - | Class I, -ювати type |\n| відпочивати | /wʲidpɔtʃɪˈvɑtɪ/ | to rest | verb | - | Class I |\n| снідати | /ˈsnʲidɑtɪ/ | to have breakfast | verb | - | Class I |\n| обідати | /ɔˈbʲidɑtɪ/ | to have lunch | verb | - | Class I |\n| вечеряти | /vɛˈtʃɛrʲɑtɪ/ | to have dinner | verb | - | Class I |\n| гуляти | /ɦuˈlʲɑtɪ/ | to walk, stroll | verb | - | Class I |\n| грати | /ˈɦrɑtɪ/ | to play | verb | - | Class I |\n| співати | /spʲiˈvɑtɪ/ | to sing | verb | - | Class I |\n| танцювати | /tɑnˈtsʲuvɑtɪ/ | to dance | verb | - | Class I, -ювати type |\n| малювати | /mɑˈlʲuvɑtɪ/ | to draw, paint | verb | - | Class I, -ювати type |\n| думати | /ˈdumɑtɪ/ | to think | verb | - | Class I |\n| мріяти | /mrʲiˈjɑtɪ/ | to dream | verb | - | Class I |\n| починати | /pɔtʃɪˈnɑtɪ/ | to begin, start | verb | - | Class I |\n| закінчувати | /zɑˈkʲintʃuvɑtɪ/ | to finish | verb | - | Class I, -увати type |\n| шукати | /ʃuˈkɑtɪ/ | to search, look for | verb | - | Class I |\n| знаходити | /znɑˈxɔdɪtɪ/ | to find | verb | - | Class II (preview!) |\n| називати | /nɑzɪˈvɑtɪ/ | to call, name | verb | - | Class I |\n",
-    "createdAt": "2025-12-11T19:55:55.581Z",
-    "modifiedAt": "2025-12-11T19:55:55.581Z",
+    "rawMarkdown": "---\ntitle: \"The Living Verb I\"\nsubtitle: \"Present Tense Class I Verbs (-ати/-яти)\"\nphase: A1.1\ntransliteration: partial\npedagogy: PPP\nduration: 45\ntags: [grammar, verbs, present-tense, conjugation]\nobjectives:\n  - Conjugate Class I verbs (-ати) in present tense\n  - Use common action verbs in sentences\n  - Understand the vowel shift pattern (-ати → -аю, -аєш, etc.)\n  - Form basic statements about daily actions\ngrammar:\n  - Present tense conjugation (Class I)\n  - Subject-verb agreement\naudio: false\n---\n\n# The Living Verb I\n\n> **Note:** Until now, you've described things. Now it's time to **do** things! Verbs bring your Ukrainian to life.\n\n## Warm-up: A World Without Verbs\n\nImagine trying to communicate without verbs:\n- ❌ \"I... book.\" (What about the book? Read? Write? Want?)\n- ❌ \"She... Kyiv.\" (Lives? Travels? Loves?)\n- ❌ \"We... music.\" (Listen? Play? Love?)\n\nVerbs are the **engine** of every sentence. Without verbs, we can only name things. With verbs, we bring those things to **life**!\n\nIn this module, you'll learn how Ukrainian verbs change their endings based on who is doing the action — this is called **conjugation**. Every language with conjugation follows a system. Ukrainian's system is remarkably **logical and predictable** — once you master it, you can express almost anything.\n\nThink about English for a moment. We say \"I read\" but \"she reads\" (adding -s). That small change shows who is doing the action. Ukrainian does the same thing, but with more distinct endings that tell you exactly who is doing what.\n\n> 💡 **Good News:** Ukrainian verbs are simpler than English in one way: **there's no \"do/does\" helper!**\n> - English: \"Do you read?\" / \"She reads.\" / \"I don't read.\"\n> - Ukrainian: \"Ти читаєш?\" / \"Вона читає.\" / \"Я не читаю.\"\n\nNo extra words needed — the verb ending says it all! This makes Ukrainian sentences shorter and more direct. Many learners find this easier than English once they get used to it.\n\n## Presentation: Class I Verbs (-ати/-яти)\n\n### 1. What is a Conjugation Class?\n\nUkrainian verbs belong to different **classes** based on their infinitive ending. Today we learn **Class I** — the most common type!\n\n**Class I markers:**\n- Infinitive ends in **-ати** or **-яти**\n- Examples: читати (to read), знати (to know), працювати (to work)\n\n### 2. The Conjugation Pattern\n\nTo conjugate, we:\n1. Remove **-ати** from the infinitive\n2. Add the personal ending\n\n**Example: читати (to read)**\n\n| Person | Pronoun | Ending | Conjugated | Translation |\n|--------|---------|--------|------------|-------------|\n| 1st sg | я | -ю | чита**ю** | I read |\n| 2nd sg | ти | -єш | чита**єш** | you read |\n| 3rd sg | він/вона | -є | чита**є** | he/she reads |\n| 1st pl | ми | -ємо | чита**ємо** | we read |\n| 2nd pl | ви | -єте | чита**єте** | you (pl/formal) read |\n| 3rd pl | вони | -ють | чита**ють** | they read |\n\n> 📜 **Pattern Summary:**\n> **-ю, -єш, -є, -ємо, -єте, -ють**\n\n### 3. More Examples\n\n**знати (to know):**\n| я знаю | ти знаєш | він/вона знає | ми знаємо | ви знаєте | вони знають |\n\n**працювати (to work):**\n| я працюю | ти працюєш | він/вона працює | ми працюємо | ви працюєте | вони працюють |\n\n**слухати (to listen):**\n| я слухаю | ти слухаєш | він/вона слухає | ми слухаємо | ви слухаєте | вони слухають |\n\n### 4. Questions and Negation\n\n**Questions** — just add question intonation (or \"чи\"):\n- Ти читаєш? / Чи ти читаєш? (Do you read?)\n- Вона працює? (Does she work?)\n\n**Negation** — add **не** before the verb:\n- Я **не** читаю. (I don't read.)\n- Вони **не** знають. (They don't know.)\n\n> ⚠️ **Common Mistake:** Don't add \"do\" like in English!\n> - ❌ \"Ти робиш читаєш?\"\n> - ✅ \"Ти читаєш?\"\n\n## Cultural Insight: The Ukrainian Work Ethic 🇺🇦\n\nUkrainians are known for their **працьовитість** (work ethic). The verb **працювати** (to work) is essential in daily life.\n\nCommon phrases:\n- **Де ти працюєш?** — Where do you work?\n- **Я працюю в офісі.** — I work in an office.\n- **Вона багато працює.** — She works a lot.\n\nThe concept of **гарна праця** (good work, job well done) is highly valued. You'll often hear \"Працюй добре!\" (Work well!) as encouragement.\n\n> 💡 **Did You Know?** The word **робота** (work) comes from *раб* (slave) historically, but today it simply means job/work. The verb **робити** (to do/make) is Class II — we'll learn it in Module 08!\n\n## Dialogue: At the Library 🗣️\n\n**Оля:** Привіт, Андрію! Що ти робиш?\n**Андрій:** Привіт! Я читаю книгу. А ти?\n**Оля:** Я слухаю музику і думаю.\n**Андрій:** Про що ти думаєш?\n**Оля:** Думаю про екзамен. Ти знаєш відповіді?\n**Андрій:** Ні, я не знаю. Але ми разом працюємо! Ти питаєш, я відповідаю.\n**Оля:** Чудово! Починаємо?\n**Андрій:** Так, починаємо!\n\n**English Translation:**\n**Olya:** Hi, Andriy! What are you doing?\n**Andriy:** Hi! I am reading a book. And you?\n**Olya:** I am listening to music and thinking.\n**Andriy:** What are you thinking about?\n**Olya:** I am thinking about the exam. Do you know the answers?\n**Andriy:** No, I don't know. But we are working together! You ask, I answer.\n**Olya:** Great! Shall we start?\n**Andriy:** Yes, let's start!\n\n## Reading Practice: A Day in Kyiv 📖\n\n*Read this short passage about daily actions.*\n\n**Марко і Софія живуть у Києві.** Вони — молода пара. Кожен день вони багато **працюють**.\n\n**Ранок:**\nВранці Марко **прокидається** о сьомій. Він **снідає** і **читає** новини на телефоні. Софія теж **прокидається** рано. Вона **слухає** радіо і **п'є** каву. Вони разом **снідають** — це їхня традиція.\n\n**День:**\nПотім вони **працюють**. Марко **працює** в офісі. Він **пише** документи, **відповідає** на листи і **телефонує** клієнтам. Софія — вчителька. Вона **навчає** дітей і **розмовляє** з батьками. Вона дуже **любить** свою роботу.\n\n**Вечір:**\nУвечері вони **відпочивають**. Марко **грає** у футбол з друзями. Софія **малює** картини — це її хобі. Іноді вони разом **гуляють** у парку або **дивляться** фільми.\n\n**Вихідні:**\nУ вихідні вони не **працюють**. Вони **снідають** пізно, **читають** книги, **слухають** музику і **мріють** про відпустку. Вони **знають**, що життя — це баланс: **працюй** добре і **відпочивай** добре!\n\n**English Translation:**\n**Marko and Sofia live in Kyiv.** They are a young couple. Every day they work a lot.\n\n**Morning:**\nIn the morning Marko wakes up at seven. He eats breakfast and reads news on the phone. Sofia also wakes up early. She listens to the radio and drinks coffee. They eat breakfast together — this is their tradition.\n\n**Day:**\nThen they work. Marko works in an office. He writes documents, answers letters, and calls clients. Sofia is a teacher. She teaches children and speaks with parents. She loves her work very much.\n\n**Evening:**\nIn the evening they rest. Marko plays football with friends. Sofia paints pictures — this is her hobby. Sometimes they walk together in the park or watch films.\n\n**Weekend:**\nOn the weekend they do not work. They eat breakfast late, read books, listen to music, and dream about vacation. They know that life is a balance: work well and rest well!\n\n> 📜 **Myth Buster:** Some people think Ukrainian verbs are difficult. Actually, Class I verbs follow a **very regular pattern**. Once you memorize the endings (-ю, -єш, -є, -ємо, -єте, -ють), you can conjugate hundreds of verbs instantly!\n\n**Дії (Actions):** читає, снідає, слухає, працюють, пише, відповідає, навчає, розмовляє, відпочивають, грає, малює, знають, гуляють, дивляться, мріють.\n\n# Summary\n\n1. **Class I verbs** end in **-ати/-яти** (читати, знати, працювати)\n2. **Endings:** -ю, -єш, -є, -ємо, -єте, -ють\n3. **No helpers:** Ukrainian doesn't use \"do/does\"\n4. **Negation:** Simply add **не** before the verb\n\n---\n\n> [!tip] 🌟 **Pro Tip:** Practice conjugating every new verb you learn! Say all 6 forms: \"читаю, читаєш, читає, читаємо, читаєте, читають.\"\n\n# Activities\n\n## match-up: Pronoun to Ending\n> Match the pronoun to its present tense ending (Class I).\n\n| Pronoun | Ending |\n| --- | --- |\n| я | -ю |\n| ти | -єш |\n| він/вона | -є |\n| ми | -ємо |\n| ви | -єте |\n| вони | -ють |\n| я (again) | -ю |\n| ти (again) | -єш |\n| він | -є |\n| вона | -є |\n| ми (again) | -ємо |\n| вони (again) | -ють |\n\n## group-sort: Infinitive vs Conjugated\n> Sort words into Infinitive forms vs Conjugated forms.\n\n| Infinitive | Conjugated |\n| --- | --- |\n| читати | читаю |\n| знати | знаєш |\n| працювати | працює |\n| слухати | слухаємо |\n| писати | пишете |\n| думати | думають |\n| грати | граю |\n| співати | співаєш |\n| малювати | малює |\n| питати | питаємо |\n| відповідати | відповідаєте |\n| танцювати | танцюють |\n\n## quiz: Conjugate the Verb\n> Choose the correct conjugation for the given pronoun.\n\n1. (я) читати\n   - [x] читаю\n   - [ ] читаєш\n   - [ ] читає\n   - [ ] читаємо\n   > First person singular → -ю\n\n2. (ти) знати\n   - [x] знаєш\n   - [ ] знаю\n   - [ ] знає\n   - [ ] знаємо\n   > Second person singular → -єш\n\n3. (він) працювати\n   - [x] працює\n   - [ ] працюю\n   - [ ] працюєш\n   - [ ] працюємо\n   > Third person singular → -є\n\n4. (ми) слухати\n   - [x] слухаємо\n   - [ ] слухаю\n   - [ ] слухаєте\n   - [ ] слухають\n   > First person plural → -ємо\n\n5. (ви) думати\n   - [x] думаєте\n   - [ ] думаю\n   - [ ] думаємо\n   - [ ] думають\n   > Second person plural → -єте\n\n6. (вони) грати\n   - [x] грають\n   - [ ] граю\n   - [ ] граємо\n   - [ ] граєте\n   > Third person plural → -ють\n\n7. (я) питати\n   - [x] питаю\n   - [ ] питаєш\n   - [ ] питає\n   - [ ] питаємо\n   > First person singular → -ю\n\n8. (вона) малювати\n   - [x] малює\n   - [ ] малюю\n   - [ ] малюєш\n   - [ ] малюємо\n   > Third person singular → -є\n\n9. (ти) співати\n   - [x] співаєш\n   - [ ] співаю\n   - [ ] співає\n   - [ ] співаємо\n   > Second person singular → -єш\n\n10. (ми) танцювати\n    - [x] танцюємо\n    - [ ] танцюю\n    - [ ] танцюєте\n    - [ ] танцюють\n    > First person plural → -ємо\n\n11. (вони) відповідати\n    - [x] відповідають\n    - [ ] відповідаю\n    - [ ] відповідаємо\n    - [ ] відповідаєте\n    > Third person plural → -ють\n\n12. (він) починати\n    - [x] починає\n    - [ ] починаю\n    - [ ] починаєш\n    - [ ] починаємо\n    > Third person singular → -є\n\n## fill-in: Complete with Correct Form\n> Conjugate the verb in parentheses for the subject.\n\n1. Я ___ книгу. (читати)\n   > [!answer] читаю\n   > [!options] читаю | читаєш | читає | читаємо\n\n2. Ти ___ українську? (знати)\n   > [!answer] знаєш\n   > [!options] знаєш | знаю | знає | знаємо\n\n3. Вона ___ в офісі. (працювати)\n   > [!answer] працює\n   > [!options] працює | працюю | працюєш | працюємо\n\n4. Ми ___ музику. (слухати)\n   > [!answer] слухаємо\n   > [!options] слухаємо | слухаю | слухаєш | слухають\n\n5. Вони ___ вранці. (снідати)\n   > [!answer] снідають\n   > [!options] снідають | снідаю | снідаємо | снідаєте\n\n6. Ви ___ про що? (думати)\n   > [!answer] думаєте\n   > [!options] думаєте | думаю | думаємо | думають\n\n7. Він ___ футбол. (грати)\n   > [!answer] грає\n   > [!options] грає | граю | граєш | граємо\n\n8. Я ___ картину. (малювати)\n   > [!answer] малюю\n   > [!options] малюю | малюєш | малює | малюємо\n\n9. Ти ___ українською? (розмовляти)\n   > [!answer] розмовляєш\n   > [!options] розмовляєш | розмовляю | розмовляє | розмовляємо\n\n10. Вони не ___ це слово. (знати)\n    > [!answer] знають\n    > [!options] знають | знаю | знаємо | знаєте\n\n11. Ми ___ разом. (працювати)\n    > [!answer] працюємо\n    > [!options] працюємо | працюю | працюєш | працюють\n\n12. Вона ___ пісню. (співати)\n    > [!answer] співає\n    > [!options] співає | співаю | співаєш | співаємо\n\n## match-up: Verb Vocabulary\n> Match Ukrainian verbs to their English meanings.\n\n| Ukrainian | English |\n| --- | --- |\n| читати | to read |\n| писати | to write |\n| знати | to know |\n| розуміти | to understand |\n| слухати | to listen |\n| чекати | to wait |\n| питати | to ask |\n| відповідати | to answer |\n| працювати | to work |\n| відпочивати | to rest |\n| снідати | to have breakfast |\n| обідати | to have lunch |\n\n## anagram: Verb Scramble\n> Unscramble these Class I verb infinitives.\n\n1. и ч и т т а\n   > [!answer] читати\n\n2. с а т и п и\n   > [!answer] писати\n\n3. т а з н и\n   > [!answer] знати\n\n4. с т а х л у и\n   > [!answer] слухати\n\n5. п а ц р ю в а т и\n   > [!answer] працювати\n\n6. ч е к а т и\n   > [!answer] чекати\n\n7. п а т и т и\n   > [!answer] питати\n\n8. т а ю м и в а л\n   > [!answer] малювати\n\n9. г р а т и\n   > [!answer] грати\n\n10. с п і в а т и\n    > [!answer] співати\n\n11. т а ц ю н в а и т\n    > [!answer] танцювати\n\n12. д а м у т и\n    > [!answer] думати\n\n## true-false: Verb Rules\n> Decide if the statement is True or False.\n\n- [x] Class I verbs end in -ати or -яти.\n  > Correct! Examples: читати, знати.\n\n- [ ] The ending for \"я\" is -єш.\n  > False! \"Я\" uses -ю. \"Ти\" uses -єш.\n\n- [x] \"Вони читають\" is the correct form for \"they read.\"\n  > Correct! 3rd person plural → -ють.\n\n- [ ] To make a question, you add \"do\" before the verb.\n  > False! Ukrainian doesn't use \"do\" — just question intonation.\n\n- [x] To negate, add \"не\" before the verb.\n  > Correct! \"Я не читаю\" = I don't read.\n\n- [ ] \"Ми працюємо\" means \"I work.\"\n  > False! \"Ми\" = we. \"Я працюю\" = I work.\n\n- [x] The stem of \"читати\" is \"чита-\".\n  > Correct! Remove -ти to get the stem.\n\n- [ ] All Ukrainian verbs follow the same conjugation pattern.\n  > False! Class II verbs have different endings (Module 08).\n\n- [x] \"Він знає\" and \"Вона знає\" have the same verb form.\n  > Correct! 3rd person singular is the same for all genders.\n\n- [ ] \"Ви\" always means multiple people.\n  > False! \"Ви\" can be formal singular too.\n\n- [x] \"Чекати\" means \"to wait.\"\n  > Correct! Я чекаю = I wait.\n\n- [ ] \"Відповідати\" is a Class II verb.\n  > False! It ends in -ати, so it's Class I.\n\n## fill-in: Dialogue Practice\n> Complete the conversation with correct verb forms.\n\n1. — Що ти ___? (робити - informal)\n   > [!answer] робиш\n   > [!options] робиш | роблю | робить | робимо\n\n2. — Я ___ книгу. (читати)\n   > [!answer] читаю\n   > [!options] читаю | читаєш | читає | читаємо\n\n3. — Ти ___ українською? (розуміти)\n   > [!answer] розумієш\n   > [!options] розумієш | розумію | розуміє | розуміємо\n\n4. — Так, я ___. (розуміти)\n   > [!answer] розумію\n   > [!options] розумію | розумієш | розуміє | розуміємо\n\n5. — А де Марко ___? (працювати)\n   > [!answer] працює\n   > [!options] працює | працюю | працюєш | працюємо\n\n6. — Він ___ в офісі. (працювати)\n   > [!answer] працює\n   > [!options] працює | працюю | працюєш | працюємо\n\n7. — Вони ___ музику? (слухати)\n   > [!answer] слухають\n   > [!options] слухають | слухаю | слухаємо | слухаєте\n\n8. — Ні, вони не ___. (слухати)\n   > [!answer] слухають\n   > [!options] слухають | слухаю | слухаємо | слухаєте\n\n9. — Ми сьогодні ___ разом. (обідати)\n   > [!answer] обідаємо\n   > [!options] обідаємо | обідаю | обідаєш | обідають\n\n10. — Чудово! Я ___ час. (мати)\n    > [!answer] маю\n    > [!options] маю | маєш | має | маємо\n\n11. — Ви ___ цей ресторан? (знати)\n    > [!answer] знаєте\n    > [!options] знаєте | знаю | знаємо | знають\n\n12. — Так, ми там часто ___. (снідати)\n    > [!answer] снідаємо\n    > [!options] снідаємо | снідаю | снідаєш | снідають\n\n**English Translation:**\n1. — What are you doing?\n2. — I am reading a book.\n3. — Do you understand Ukrainian?\n4. — Yes, I understand.\n5. — And where does Marko work?\n6. — He works in an office.\n7. — Do they listen to music?\n8. — No, they don't listen.\n9. — We are having lunch together today.\n10. — Great! I have time.\n11. — Do you know this restaurant?\n12. — Yes, we often have breakfast there.\n\n---\n\n# Vocabulary\n\n| Ukrainian | IPA | English | POS | Gender | Note |\n| --- | --- | --- | --- | --- | --- |\n| **читати** | /t͡ʃɪˈtɑtɪ/ | to read | verb | - | Class I |\n| **писати** | /pɪˈsɑtɪ/ | to write | verb | - | Class I |\n| **знати** | /znɑˈtɪ/ | to know | verb | - | Class I |\n| **розуміти** | /rɔzuˈmʲitɪ/ | to understand | verb | - | Class I |\n| **слухати** | /ˈsluхɑtɪ/ | to listen | verb | - | Class I |\n| **чекати** | /t͡ʃɛˈkɑtɪ/ | to wait | verb | - | Class I |\n| **питати** | /pɪˈtɑtɪ/ | to ask | verb | - | Class I |\n| **відповідати** | /vidpɔvʲiˈdɑtɪ/ | to answer | verb | - | Class I |\n| **працювати** | /prɑˈt͡sʲuvɑtɪ/ | to work | verb | - | Class I |\n| **відпочивати** | /vidpɔˈt͡ʃɪvɑtɪ/ | to rest | verb | - | Class I |\n| **снідати** | /snʲiˈdɑtɪ/ | to have breakfast | verb | - | Class I |\n| **обідати** | /ɔˈbʲidɑtɪ/ | to have lunch | verb | - | Class I |\n| **вечеряти** | /vɛˈt͡ʃɛrʲɑtɪ/ | to have dinner | verb | - | Class I |\n| **гуляти** | /ɦuˈlʲɑtɪ/ | to walk/stroll | verb | - | Class I |\n| **грати** | /ˈɦrɑtɪ/ | to play | verb | - | Class I |\n| **співати** | /spʲiˈvɑtɪ/ | to sing | verb | - | Class I |\n| **танцювати** | /tɑnˈt͡sʲuvɑtɪ/ | to dance | verb | - | Class I |\n| **малювати** | /mɑˈlʲuvɑtɪ/ | to draw/paint | verb | - | Class I |\n| **думати** | /ˈdumɑtɪ/ | to think | verb | - | Class I |\n| **мріяти** | /ˈmrʲijɑtɪ/ | to dream | verb | - | Class I |\n| **починати** | /pɔt͡ʃɪˈnɑtɪ/ | to begin | verb | - | Class I |\n| **закінчувати** | /zɑˈkint͡ʃuvɑtɪ/ | to finish | verb | - | Class I |\n| **шукати** | /ʃuˈkɑtɪ/ | to search | verb | - | Class I |\n| **знаходити** | /znɑˈxɔdɪtɪ/ | to find | verb | - | Actually Class II ending |\n| **називати** | /nɑzɪˈvɑtɪ/ | to name/call | verb | - | Class I |\n",
+    "createdAt": "2025-12-12T19:55:32.035Z",
+    "modifiedAt": "2025-12-12T19:55:32.035Z",
     "version": 2
   },
   "activities": [
     {
-      "id": "act-a1-0-fillblank-0",
-      "type": "fill-blank",
-      "title": "Conjugate читати",
-      "description": "Complete with the correct form of читати (to read).",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Я ___ книгу. (I read a book.)",
-            "answer": "читаю",
-            "options": [
-              "читаю",
-              "читаєш",
-              "читає",
-              "читаємо"
-            ]
-          },
-          {
-            "prompt": "Ти ___ газету? (Do you read the newspaper?)",
-            "answer": "читаєш",
-            "options": [
-              "читаю",
-              "читаєш",
-              "читає",
-              "читають"
-            ]
-          },
-          {
-            "prompt": "Вона ___ роман. (She reads a novel.)",
-            "answer": "читає",
-            "options": [
-              "читаю",
-              "читаєш",
-              "читає",
-              "читаємо"
-            ]
-          },
-          {
-            "prompt": "Ми ___ разом. (We read together.)",
-            "answer": "читаємо",
-            "options": [
-              "читаю",
-              "читаємо",
-              "читаєте",
-              "читають"
-            ]
-          },
-          {
-            "prompt": "Ви ___ швидко? (Do you read fast?)",
-            "answer": "читаєте",
-            "options": [
-              "читаєш",
-              "читаємо",
-              "читаєте",
-              "читають"
-            ]
-          },
-          {
-            "prompt": "Вони ___ вірші. (They read poems.)",
-            "answer": "читають",
-            "options": [
-              "читає",
-              "читаємо",
-              "читаєте",
-              "читають"
-            ]
-          },
-          {
-            "prompt": "Він ___ новини. (He reads news.)",
-            "answer": "читає",
-            "options": [
-              "читаю",
-              "читаєш",
-              "читає",
-              "читають"
-            ]
-          },
-          {
-            "prompt": "Я не ___ це. (I don't read this.)",
-            "answer": "читаю",
-            "options": [
-              "читаю",
-              "читаєш",
-              "читає",
-              "читаємо"
-            ]
-          },
-          {
-            "prompt": "Що ти ___? (What do you read?)",
-            "answer": "читаєш",
-            "options": [
-              "читаю",
-              "читаєш",
-              "читає",
-              "читають"
-            ]
-          },
-          {
-            "prompt": "Вони завжди ___. (They always read.)",
-            "answer": "читають",
-            "options": [
-              "читає",
-              "читаємо",
-              "читаєте",
-              "читають"
-            ]
-          },
-          {
-            "prompt": "Ми не ___ газети. (We don't read newspapers.)",
-            "answer": "читаємо",
-            "options": [
-              "читаю",
-              "читаємо",
-              "читаєте",
-              "читають"
-            ]
-          },
-          {
-            "prompt": "Вона часто ___. (She often reads.)",
-            "answer": "читає",
-            "options": [
-              "читаю",
-              "читаєш",
-              "читає",
-              "читають"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-11T19:55:55.581Z",
-      "modifiedAt": "2025-12-11T19:55:55.581Z"
-    },
-    {
-      "id": "act-a1-0-fillblank-1",
-      "type": "fill-blank",
-      "title": "Mixed Verb Conjugation",
-      "description": "Complete with the correct verb form.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Я ___ на роботі. (працювати - I work at the office.)",
-            "answer": "працюю",
-            "options": [
-              "працюю",
-              "працюєш",
-              "працює",
-              "працюємо"
-            ]
-          },
-          {
-            "prompt": "Ти ___ українською? (знати - Do you know Ukrainian?)",
-            "answer": "знаєш",
-            "options": [
-              "знаю",
-              "знаєш",
-              "знає",
-              "знають"
-            ]
-          },
-          {
-            "prompt": "Вона ___ пісню. (співати - She sings a song.)",
-            "answer": "співає",
-            "options": [
-              "співаю",
-              "співаєш",
-              "співає",
-              "співають"
-            ]
-          },
-          {
-            "prompt": "Ми ___ на тебе. (чекати - We wait for you.)",
-            "answer": "чекаємо",
-            "options": [
-              "чекаю",
-              "чекаємо",
-              "чекаєте",
-              "чекають"
-            ]
-          },
-          {
-            "prompt": "Вони ___ музику. (слухати - They listen to music.)",
-            "answer": "слухають",
-            "options": [
-              "слухаю",
-              "слухає",
-              "слухаємо",
-              "слухають"
-            ]
-          },
-          {
-            "prompt": "Він ___ картину. (малювати - He paints a picture.)",
-            "answer": "малює",
-            "options": [
-              "малюю",
-              "малюєш",
-              "малює",
-              "малюють"
-            ]
-          },
-          {
-            "prompt": "Ви мене ___? (розуміти - Do you understand me?)",
-            "answer": "розумієте",
-            "options": [
-              "розумію",
-              "розумієш",
-              "розумієте",
-              "розуміють"
-            ]
-          },
-          {
-            "prompt": "Я ___ о восьмій. (снідати - I have breakfast at eight.)",
-            "answer": "снідаю",
-            "options": [
-              "снідаю",
-              "снідаєш",
-              "снідає",
-              "снідаємо"
-            ]
-          },
-          {
-            "prompt": "Ти що ___? (думати - What do you think?)",
-            "answer": "думаєш",
-            "options": [
-              "думаю",
-              "думаєш",
-              "думає",
-              "думають"
-            ]
-          },
-          {
-            "prompt": "Вони ___ в парку. (гуляти - They walk in the park.)",
-            "answer": "гуляють",
-            "options": [
-              "гуляю",
-              "гуляє",
-              "гуляємо",
-              "гуляють"
-            ]
-          },
-          {
-            "prompt": "Ми ___ на гітарі. (грати - We play guitar.)",
-            "answer": "граємо",
-            "options": [
-              "граю",
-              "граєш",
-              "граємо",
-              "грають"
-            ]
-          },
-          {
-            "prompt": "Вона ___ про море. (мріяти - She dreams about the sea.)",
-            "answer": "мріє",
-            "options": [
-              "мрію",
-              "мрієш",
-              "мріє",
-              "мріють"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-11T19:55:55.581Z",
-      "modifiedAt": "2025-12-11T19:55:55.581Z"
-    },
-    {
       "id": "act-a1-0-matchup-0",
       "type": "match-up",
-      "title": "Infinitive to я-Form",
-      "description": "Match each infinitive to its я-form.",
+      "title": "Pronoun to Ending",
+      "description": "Match the pronoun to its present tense ending (Class I).",
       "content": {
         "type": "match-up",
         "pairs": [
           {
-            "left": "читати",
-            "right": "читаю"
+            "left": "я",
+            "right": "-ю"
           },
           {
-            "left": "писати",
-            "right": "пишу"
+            "left": "ти",
+            "right": "-єш"
           },
           {
-            "left": "працювати",
-            "right": "працюю"
+            "left": "він/вона",
+            "right": "-є"
           },
           {
-            "left": "слухати",
-            "right": "слухаю"
+            "left": "ми",
+            "right": "-ємо"
           },
           {
-            "left": "знати",
-            "right": "знаю"
+            "left": "ви",
+            "right": "-єте"
           },
           {
-            "left": "розуміти",
-            "right": "розумію"
+            "left": "вони",
+            "right": "-ють"
           },
           {
-            "left": "снідати",
-            "right": "снідаю"
+            "left": "я (again)",
+            "right": "-ю"
           },
           {
-            "left": "обідати",
-            "right": "обідаю"
+            "left": "ти (again)",
+            "right": "-єш"
           },
           {
-            "left": "гуляти",
-            "right": "гуляю"
+            "left": "він",
+            "right": "-є"
           },
           {
-            "left": "грати",
-            "right": "граю"
+            "left": "вона",
+            "right": "-є"
           },
           {
-            "left": "співати",
-            "right": "співаю"
+            "left": "ми (again)",
+            "right": "-ємо"
           },
           {
-            "left": "мріяти",
-            "right": "мрію"
+            "left": "вони (again)",
+            "right": "-ють"
           }
         ],
         "shuffleRight": true
@@ -402,148 +122,205 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-11T19:55:55.581Z",
-      "modifiedAt": "2025-12-11T19:55:55.581Z"
+      "createdAt": "2025-12-12T19:55:32.035Z",
+      "modifiedAt": "2025-12-12T19:55:32.035Z"
+    },
+    {
+      "id": "act-a1-0-groupsort-0",
+      "type": "group-sort",
+      "title": "Infinitive vs Conjugated",
+      "description": "Sort words into Infinitive forms vs Conjugated forms.",
+      "content": {
+        "type": "group-sort",
+        "groups": [
+          {
+            "id": "infinitive",
+            "name": "Infinitive",
+            "items": [
+              "читати",
+              "знати",
+              "працювати",
+              "слухати",
+              "писати",
+              "думати",
+              "грати",
+              "співати",
+              "малювати",
+              "питати",
+              "відповідати",
+              "танцювати"
+            ]
+          },
+          {
+            "id": "conjugated",
+            "name": "Conjugated",
+            "items": [
+              "читаю",
+              "знаєш",
+              "працює",
+              "слухаємо",
+              "пишете",
+              "думають",
+              "граю",
+              "співаєш",
+              "малює",
+              "питаємо",
+              "відповідаєте",
+              "танцюють"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.035Z",
+      "modifiedAt": "2025-12-12T19:55:32.035Z"
     },
     {
       "id": "act-a1-0-quiz-0",
       "type": "quiz",
-      "title": "Identify the Correct Form",
-      "description": "Choose the correct conjugation.",
+      "title": "Conjugate the Verb",
+      "description": "Choose the correct conjugation for the given pronoun.",
       "content": {
         "type": "quiz",
         "questions": [
           {
-            "question": "\"We write\" in Ukrainian is:",
+            "question": "(я) читати",
             "options": [
-              "пишу",
-              "пишеш",
-              "пишемо",
-              "пишуть"
+              "читаю",
+              "читаєш",
+              "читає",
+              "читаємо"
             ],
-            "correctIndex": 2,
-            "explanation": "ми → -емо ending"
+            "correctIndex": 0,
+            "explanation": "First person singular → -ю"
           },
           {
-            "question": "\"They listen\" in Ukrainian is:",
+            "question": "(ти) знати",
             "options": [
-              "слухаю",
-              "слухає",
-              "слухаємо",
-              "слухають"
+              "знаєш",
+              "знаю",
+              "знає",
+              "знаємо"
             ],
-            "correctIndex": 3,
-            "explanation": "вони → -ють ending"
+            "correctIndex": 0,
+            "explanation": "Second person singular → -єш"
           },
           {
-            "question": "\"She works\" in Ukrainian is:",
+            "question": "(він) працювати",
             "options": [
+              "працює",
               "працюю",
               "працюєш",
-              "працює",
-              "працюють"
-            ],
-            "correctIndex": 2,
-            "explanation": "вона → -є ending"
-          },
-          {
-            "question": "\"I know\" in Ukrainian is:",
-            "options": [
-              "знаю",
-              "знаєш",
-              "знає",
-              "знають"
+              "працюємо"
             ],
             "correctIndex": 0,
-            "explanation": "я → -ю ending"
+            "explanation": "Third person singular → -є"
           },
           {
-            "question": "\"You (formal) understand\" is:",
+            "question": "(ми) слухати",
             "options": [
-              "розумію",
-              "розуміє",
-              "розумієте",
-              "розуміють"
-            ],
-            "correctIndex": 2,
-            "explanation": "ви → -єте ending"
-          },
-          {
-            "question": "\"He sings\" in Ukrainian is:",
-            "options": [
-              "співаю",
-              "співаєш",
-              "співає",
-              "співають"
-            ],
-            "correctIndex": 2,
-            "explanation": "він → -є ending"
-          },
-          {
-            "question": "\"You (informal) play\" is:",
-            "options": [
-              "граю",
-              "граєш",
-              "грає",
-              "граємо"
-            ],
-            "correctIndex": 1,
-            "explanation": "ти → -єш ending"
-          },
-          {
-            "question": "\"They dream\" in Ukrainian is:",
-            "options": [
-              "мрію",
-              "мріє",
-              "мріємо",
-              "мріють"
-            ],
-            "correctIndex": 3,
-            "explanation": "вони → -ють ending"
-          },
-          {
-            "question": "\"I wait\" in Ukrainian is:",
-            "options": [
-              "чекаю",
-              "чекаєш",
-              "чекає",
-              "чекають"
+              "слухаємо",
+              "слухаю",
+              "слухаєте",
+              "слухають"
             ],
             "correctIndex": 0,
-            "explanation": "я → -ю ending"
+            "explanation": "First person plural → -ємо"
           },
           {
-            "question": "\"We have dinner\" is:",
+            "question": "(ви) думати",
             "options": [
-              "вечеряю",
-              "вечеряє",
-              "вечеряємо",
-              "вечеряють"
-            ],
-            "correctIndex": 2,
-            "explanation": "ми → -ємо ending"
-          },
-          {
-            "question": "\"She thinks\" in Ukrainian is:",
-            "options": [
+              "думаєте",
               "думаю",
-              "думаєш",
-              "думає",
+              "думаємо",
               "думають"
             ],
-            "correctIndex": 2,
-            "explanation": "вона → -є ending"
+            "correctIndex": 0,
+            "explanation": "Second person plural → -єте"
           },
           {
-            "question": "\"They draw\" in Ukrainian is:",
+            "question": "(вони) грати",
             "options": [
-              "малюю",
-              "малює",
-              "малюємо",
-              "малюють"
+              "грають",
+              "граю",
+              "граємо",
+              "граєте"
             ],
-            "correctIndex": 3,
-            "explanation": "вони → -ють ending"
+            "correctIndex": 0,
+            "explanation": "Third person plural → -ють"
+          },
+          {
+            "question": "(я) питати",
+            "options": [
+              "питаю",
+              "питаєш",
+              "питає",
+              "питаємо"
+            ],
+            "correctIndex": 0,
+            "explanation": "First person singular → -ю"
+          },
+          {
+            "question": "(вона) малювати",
+            "options": [
+              "малює",
+              "малюю",
+              "малюєш",
+              "малюємо"
+            ],
+            "correctIndex": 0,
+            "explanation": "Third person singular → -є"
+          },
+          {
+            "question": "(ти) співати",
+            "options": [
+              "співаєш",
+              "співаю",
+              "співає",
+              "співаємо"
+            ],
+            "correctIndex": 0,
+            "explanation": "Second person singular → -єш"
+          },
+          {
+            "question": "(ми) танцювати",
+            "options": [
+              "танцюємо",
+              "танцюю",
+              "танцюєте",
+              "танцюють"
+            ],
+            "correctIndex": 0,
+            "explanation": "First person plural → -ємо"
+          },
+          {
+            "question": "(вони) відповідати",
+            "options": [
+              "відповідають",
+              "відповідаю",
+              "відповідаємо",
+              "відповідаєте"
+            ],
+            "correctIndex": 0,
+            "explanation": "Third person plural → -ють"
+          },
+          {
+            "question": "(він) починати",
+            "options": [
+              "починає",
+              "починаю",
+              "починаєш",
+              "починаємо"
+            ],
+            "correctIndex": 0,
+            "explanation": "Third person singular → -є"
           }
         ],
         "shuffleQuestions": true,
@@ -557,13 +334,153 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-11T19:55:55.581Z",
-      "modifiedAt": "2025-12-11T19:55:55.581Z"
+      "createdAt": "2025-12-12T19:55:32.035Z",
+      "modifiedAt": "2025-12-12T19:55:32.035Z"
+    },
+    {
+      "id": "act-a1-0-fillblank-0",
+      "type": "fill-blank",
+      "title": "Complete with Correct Form",
+      "description": "Conjugate the verb in parentheses for the subject.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Я ___ книгу. (читати)",
+            "answer": "читаю",
+            "options": [
+              "читаю",
+              "читаєш",
+              "читає",
+              "читаємо"
+            ]
+          },
+          {
+            "prompt": "Ти ___ українську? (знати)",
+            "answer": "знаєш",
+            "options": [
+              "знаєш",
+              "знаю",
+              "знає",
+              "знаємо"
+            ]
+          },
+          {
+            "prompt": "Вона ___ в офісі. (працювати)",
+            "answer": "працює",
+            "options": [
+              "працює",
+              "працюю",
+              "працюєш",
+              "працюємо"
+            ]
+          },
+          {
+            "prompt": "Ми ___ музику. (слухати)",
+            "answer": "слухаємо",
+            "options": [
+              "слухаємо",
+              "слухаю",
+              "слухаєш",
+              "слухають"
+            ]
+          },
+          {
+            "prompt": "Вони ___ вранці. (снідати)",
+            "answer": "снідають",
+            "options": [
+              "снідають",
+              "снідаю",
+              "снідаємо",
+              "снідаєте"
+            ]
+          },
+          {
+            "prompt": "Ви ___ про що? (думати)",
+            "answer": "думаєте",
+            "options": [
+              "думаєте",
+              "думаю",
+              "думаємо",
+              "думають"
+            ]
+          },
+          {
+            "prompt": "Він ___ футбол. (грати)",
+            "answer": "грає",
+            "options": [
+              "грає",
+              "граю",
+              "граєш",
+              "граємо"
+            ]
+          },
+          {
+            "prompt": "Я ___ картину. (малювати)",
+            "answer": "малюю",
+            "options": [
+              "малюю",
+              "малюєш",
+              "малює",
+              "малюємо"
+            ]
+          },
+          {
+            "prompt": "Ти ___ українською? (розмовляти)",
+            "answer": "розмовляєш",
+            "options": [
+              "розмовляєш",
+              "розмовляю",
+              "розмовляє",
+              "розмовляємо"
+            ]
+          },
+          {
+            "prompt": "Вони не ___ це слово. (знати)",
+            "answer": "знають",
+            "options": [
+              "знають",
+              "знаю",
+              "знаємо",
+              "знаєте"
+            ]
+          },
+          {
+            "prompt": "Ми ___ разом. (працювати)",
+            "answer": "працюємо",
+            "options": [
+              "працюємо",
+              "працюю",
+              "працюєш",
+              "працюють"
+            ]
+          },
+          {
+            "prompt": "Вона ___ пісню. (співати)",
+            "answer": "співає",
+            "options": [
+              "співає",
+              "співаю",
+              "співаєш",
+              "співаємо"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.035Z",
+      "modifiedAt": "2025-12-12T19:55:32.035Z"
     },
     {
       "id": "act-a1-0-matchup-1",
       "type": "match-up",
-      "title": "Verb Meaning",
+      "title": "Verb Vocabulary",
       "description": "Match Ukrainian verbs to their English meanings.",
       "content": {
         "type": "match-up",
@@ -577,8 +494,28 @@
             "right": "to write"
           },
           {
+            "left": "знати",
+            "right": "to know"
+          },
+          {
+            "left": "розуміти",
+            "right": "to understand"
+          },
+          {
             "left": "слухати",
             "right": "to listen"
+          },
+          {
+            "left": "чекати",
+            "right": "to wait"
+          },
+          {
+            "left": "питати",
+            "right": "to ask"
+          },
+          {
+            "left": "відповідати",
+            "right": "to answer"
           },
           {
             "left": "працювати",
@@ -595,26 +532,6 @@
           {
             "left": "обідати",
             "right": "to have lunch"
-          },
-          {
-            "left": "вечеряти",
-            "right": "to have dinner"
-          },
-          {
-            "left": "гуляти",
-            "right": "to walk, stroll"
-          },
-          {
-            "left": "грати",
-            "right": "to play"
-          },
-          {
-            "left": "співати",
-            "right": "to sing"
-          },
-          {
-            "left": "малювати",
-            "right": "to draw, paint"
           }
         ],
         "shuffleRight": true
@@ -626,147 +543,14 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-11T19:55:55.581Z",
-      "modifiedAt": "2025-12-11T19:55:55.581Z"
-    },
-    {
-      "id": "act-a1-0-unjumble-0",
-      "type": "unjumble",
-      "title": "Build Sentences",
-      "description": "Arrange words to form correct sentences.",
-      "content": {
-        "type": "unjumble",
-        "isUnjumble": true,
-        "items": [
-          {
-            "words": [
-              "книгу",
-              "я",
-              "читаю"
-            ],
-            "answer": "Я читаю книгу.\n(I read a book.)",
-            "translation": "I read a book."
-          },
-          {
-            "words": [
-              "музику",
-              "слухає",
-              "вона"
-            ],
-            "answer": "Вона слухає музику.\n(She listens to music.)",
-            "translation": "She listens to music."
-          },
-          {
-            "words": [
-              "працюємо",
-              "ми",
-              "разом"
-            ],
-            "answer": "Ми працюємо разом.\n(We work together.)",
-            "translation": "We work together."
-          },
-          {
-            "words": [
-              "грають",
-              "футбол",
-              "вони",
-              "у"
-            ],
-            "answer": "Вони грають у футбол.\n(They play football.)",
-            "translation": "They play football."
-          },
-          {
-            "words": [
-              "снідаю",
-              "я",
-              "о восьмій"
-            ],
-            "answer": "Я снідаю о восьмій.\n(I have breakfast at eight.)",
-            "translation": "I have breakfast at eight."
-          },
-          {
-            "words": [
-              "пише",
-              "лист",
-              "він"
-            ],
-            "answer": "Він пише лист.\n(He writes a letter.)",
-            "translation": "He writes a letter."
-          },
-          {
-            "words": [
-              "українську",
-              "ти",
-              "знаєш"
-            ],
-            "answer": "Ти знаєш українську.\n(You know Ukrainian.)",
-            "translation": "You know Ukrainian."
-          },
-          {
-            "words": [
-              "співає",
-              "пісню",
-              "вона",
-              "українську"
-            ],
-            "answer": "Вона співає українську пісню.\n(She sings a Ukrainian song.)",
-            "translation": "She sings a Ukrainian song."
-          },
-          {
-            "words": [
-              "гуляємо",
-              "парку",
-              "в",
-              "ми"
-            ],
-            "answer": "Ми гуляємо в парку.\n(We walk in the park.)",
-            "translation": "We walk in the park."
-          },
-          {
-            "words": [
-              "малюють",
-              "картину",
-              "вони"
-            ],
-            "answer": "Вони малюють картину.\n(They paint a picture.)",
-            "translation": "They paint a picture."
-          },
-          {
-            "words": [
-              "відпочиваю",
-              "я",
-              "ввечері"
-            ],
-            "answer": "Я відпочиваю ввечері.\n(I rest in the evening.)",
-            "translation": "I rest in the evening."
-          },
-          {
-            "words": [
-              "чекаємо",
-              "ми",
-              "на",
-              "тебе"
-            ],
-            "answer": "Ми чекаємо на тебе.\n(We wait for you.)",
-            "translation": "We wait for you."
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-11T19:55:55.581Z",
-      "modifiedAt": "2025-12-11T19:55:55.581Z"
+      "createdAt": "2025-12-12T19:55:32.035Z",
+      "modifiedAt": "2025-12-12T19:55:32.035Z"
     },
     {
       "id": "act-a1-0-anagram-0",
       "type": "anagram",
-      "title": "Unscramble Verbs",
-      "description": "Form verb infinitives from scrambled letters.",
+      "title": "Verb Scramble",
+      "description": "Unscramble these Class I verb infinitives.",
       "content": {
         "type": "anagram",
         "isAnagram": true,
@@ -774,154 +558,142 @@
           {
             "letters": [
               "и",
-              "т",
-              "а",
-              "т",
+              "ч",
               "и",
-              "ч"
+              "т",
+              "т",
+              "а"
             ],
-            "answer": "читати\n(to read)",
-            "translation": "to read"
+            "answer": "читати"
           },
           {
             "letters": [
-              "и",
-              "т",
-              "а",
               "с",
+              "а",
+              "т",
               "и",
-              "п"
+              "п",
+              "и"
             ],
-            "answer": "писати\n(to write)",
-            "translation": "to write"
+            "answer": "писати"
           },
           {
             "letters": [
-              "и",
+              "т",
+              "а",
+              "з",
+              "н",
+              "и"
+            ],
+            "answer": "знати"
+          },
+          {
+            "letters": [
+              "с",
               "т",
               "а",
               "х",
-              "у",
               "л",
-              "с"
-            ],
-            "answer": "слухати\n(to listen)",
-            "translation": "to listen"
-          },
-          {
-            "letters": [
-              "и",
-              "т",
-              "а",
-              "н",
-              "з"
-            ],
-            "answer": "знати\n(to know)",
-            "translation": "to know"
-          },
-          {
-            "letters": [
-              "и",
-              "т",
-              "і",
-              "м",
               "у",
-              "з",
-              "о",
-              "р"
+              "и"
             ],
-            "answer": "розуміти\n(to understand)",
-            "translation": "to understand"
+            "answer": "слухати"
           },
           {
             "letters": [
-              "и",
-              "т",
-              "а",
-              "т",
-              "і",
-              "д",
-              "і",
-              "н",
-              "с"
-            ],
-            "answer": "снідати\n(to have breakfast)",
-            "translation": "to have breakfast"
-          },
-          {
-            "letters": [
-              "и",
-              "т",
-              "а",
-              "р",
-              "г"
-            ],
-            "answer": "грати\n(to play)",
-            "translation": "to play"
-          },
-          {
-            "letters": [
-              "и",
-              "т",
-              "а",
-              "в",
-              "і",
               "п",
-              "с"
+              "а",
+              "ц",
+              "р",
+              "ю",
+              "в",
+              "а",
+              "т",
+              "и"
             ],
-            "answer": "співати\n(to sing)",
-            "translation": "to sing"
+            "answer": "працювати"
           },
           {
             "letters": [
+              "ч",
+              "е",
+              "к",
+              "а",
+              "т",
+              "и"
+            ],
+            "answer": "чекати"
+          },
+          {
+            "letters": [
+              "п",
+              "а",
+              "т",
               "и",
+              "т",
+              "и"
+            ],
+            "answer": "питати"
+          },
+          {
+            "letters": [
               "т",
               "а",
               "ю",
-              "л",
+              "м",
+              "и",
+              "в",
               "а",
-              "м"
+              "л"
             ],
-            "answer": "малювати\n(to draw)",
-            "translation": "to draw"
+            "answer": "малювати"
           },
           {
             "letters": [
-              "и",
-              "т",
-              "а",
-              "я",
-              "і",
+              "г",
               "р",
-              "м"
+              "а",
+              "т",
+              "и"
             ],
-            "answer": "мріяти\n(to dream)",
-            "translation": "to dream"
+            "answer": "грати"
           },
           {
             "letters": [
-              "и",
+              "с",
+              "п",
+              "і",
+              "в",
+              "а",
               "т",
+              "и"
+            ],
+            "answer": "співати"
+          },
+          {
+            "letters": [
+              "т",
+              "а",
+              "ц",
+              "ю",
+              "н",
+              "в",
+              "а",
+              "и",
+              "т"
+            ],
+            "answer": "танцювати"
+          },
+          {
+            "letters": [
+              "д",
               "а",
               "м",
               "у",
-              "д"
-            ],
-            "answer": "думати\n(to think)",
-            "translation": "to think"
-          },
-          {
-            "letters": [
-              "и",
               "т",
-              "а",
-              "л",
-              "я",
-              "у",
-              "г"
+              "и"
             ],
-            "answer": "гуляти\n(to walk)",
-            "translation": "to walk"
+            "answer": "думати"
           }
         ]
       },
@@ -932,165 +704,76 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-11T19:55:55.581Z",
-      "modifiedAt": "2025-12-11T19:55:55.581Z"
+      "createdAt": "2025-12-12T19:55:32.035Z",
+      "modifiedAt": "2025-12-12T19:55:32.035Z"
     },
     {
-      "id": "act-a1-0-anagram-1",
-      "type": "anagram",
-      "title": "Unscramble Conjugated Forms",
-      "description": "Form conjugated verb forms.",
+      "id": "act-a1-0-truefalse-0",
+      "type": "true-false",
+      "title": "Verb Rules",
+      "description": "Decide if the statement is True or False.",
       "content": {
-        "type": "anagram",
-        "isAnagram": true,
-        "items": [
+        "type": "true-false",
+        "statements": [
           {
-            "letters": [
-              "ю",
-              "а",
-              "т",
-              "и",
-              "ч"
-            ],
-            "answer": "читаю\n(I read)",
-            "translation": "I read"
+            "statement": "Class I verbs end in -ати or -яти.",
+            "isTrue": true,
+            "explanation": "Correct! Examples: читати, знати."
           },
           {
-            "letters": [
-              "ш",
-              "є",
-              "а",
-              "т",
-              "и",
-              "ч"
-            ],
-            "answer": "читаєш\n(you read)",
-            "translation": "you read"
+            "statement": "The ending for \"я\" is -єш.",
+            "isTrue": false,
+            "explanation": "False! \"Я\" uses -ю. \"Ти\" uses -єш."
           },
           {
-            "letters": [
-              "є",
-              "а",
-              "т",
-              "и",
-              "ч"
-            ],
-            "answer": "читає\n(he/she reads)",
-            "translation": "he/she reads"
+            "statement": "\"Вони читають\" is the correct form for \"they read.\"",
+            "isTrue": true,
+            "explanation": "Correct! 3rd person plural → -ють."
           },
           {
-            "letters": [
-              "о",
-              "м",
-              "є",
-              "а",
-              "т",
-              "и",
-              "ч"
-            ],
-            "answer": "читаємо\n(we read)",
-            "translation": "we read"
+            "statement": "To make a question, you add \"do\" before the verb.",
+            "isTrue": false,
+            "explanation": "False! Ukrainian doesn't use \"do\" — just question intonation."
           },
           {
-            "letters": [
-              "ь",
-              "т",
-              "ю",
-              "а",
-              "т",
-              "и",
-              "ч"
-            ],
-            "answer": "читають\n(they read)",
-            "translation": "they read"
+            "statement": "To negate, add \"не\" before the verb.",
+            "isTrue": true,
+            "explanation": "Correct! \"Я не читаю\" = I don't read."
           },
           {
-            "letters": [
-              "ю",
-              "а",
-              "ц",
-              "ю",
-              "р",
-              "а",
-              "п"
-            ],
-            "answer": "працюю\n(I work)",
-            "translation": "I work"
+            "statement": "\"Ми працюємо\" means \"I work.\"",
+            "isTrue": false,
+            "explanation": "False! \"Ми\" = we. \"Я працюю\" = I work."
           },
           {
-            "letters": [
-              "є",
-              "у",
-              "а",
-              "ц",
-              "ю",
-              "р",
-              "а",
-              "п"
-            ],
-            "answer": "працює\n(he/she works)",
-            "translation": "he/she works"
+            "statement": "The stem of \"читати\" is \"чита-\".",
+            "isTrue": true,
+            "explanation": "Correct! Remove -ти to get the stem."
           },
           {
-            "letters": [
-              "ю",
-              "а",
-              "н",
-              "з"
-            ],
-            "answer": "знаю\n(I know)",
-            "translation": "I know"
+            "statement": "All Ukrainian verbs follow the same conjugation pattern.",
+            "isTrue": false,
+            "explanation": "False! Class II verbs have different endings (Module 08)."
           },
           {
-            "letters": [
-              "є",
-              "а",
-              "н",
-              "з"
-            ],
-            "answer": "знає\n(he/she knows)",
-            "translation": "he/she knows"
+            "statement": "\"Він знає\" and \"Вона знає\" have the same verb form.",
+            "isTrue": true,
+            "explanation": "Correct! 3rd person singular is the same for all genders."
           },
           {
-            "letters": [
-              "о",
-              "м",
-              "є",
-              "і",
-              "м",
-              "у",
-              "з",
-              "о",
-              "р"
-            ],
-            "answer": "розуміємо\n(we understand)",
-            "translation": "we understand"
+            "statement": "\"Ви\" always means multiple people.",
+            "isTrue": false,
+            "explanation": "False! \"Ви\" can be formal singular too."
           },
           {
-            "letters": [
-              "ь",
-              "т",
-              "ю",
-              "а",
-              "х",
-              "у",
-              "л",
-              "с"
-            ],
-            "answer": "слухають\n(they listen)",
-            "translation": "they listen"
+            "statement": "\"Чекати\" means \"to wait.\"",
+            "isTrue": true,
+            "explanation": "Correct! Я чекаю = I wait."
           },
           {
-            "letters": [
-              "о",
-              "м",
-              "є",
-              "а",
-              "р",
-              "г"
-            ],
-            "answer": "граємо\n(we play)",
-            "translation": "we play"
+            "statement": "\"Відповідати\" is a Class II verb.",
+            "isTrue": false,
+            "explanation": "False! It ends in -ати, so it's Class I."
           }
         ]
       },
@@ -1101,8 +784,196 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-11T19:55:55.581Z",
-      "modifiedAt": "2025-12-11T19:55:55.581Z"
+      "createdAt": "2025-12-12T19:55:32.035Z",
+      "modifiedAt": "2025-12-12T19:55:32.035Z"
+    },
+    {
+      "id": "act-a1-0-fillblank-1",
+      "type": "fill-blank",
+      "title": "Dialogue Practice",
+      "description": "Complete the conversation with correct verb forms.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "— Що ти ___? (робити - informal)",
+            "answer": "робиш",
+            "options": [
+              "робиш",
+              "роблю",
+              "робить",
+              "робимо"
+            ]
+          },
+          {
+            "prompt": "— Я ___ книгу. (читати)",
+            "answer": "читаю",
+            "options": [
+              "читаю",
+              "читаєш",
+              "читає",
+              "читаємо"
+            ]
+          },
+          {
+            "prompt": "— Ти ___ українською? (розуміти)",
+            "answer": "розумієш",
+            "options": [
+              "розумієш",
+              "розумію",
+              "розуміє",
+              "розуміємо"
+            ]
+          },
+          {
+            "prompt": "— Так, я ___. (розуміти)",
+            "answer": "розумію",
+            "options": [
+              "розумію",
+              "розумієш",
+              "розуміє",
+              "розуміємо"
+            ]
+          },
+          {
+            "prompt": "— А де Марко ___? (працювати)",
+            "answer": "працює",
+            "options": [
+              "працює",
+              "працюю",
+              "працюєш",
+              "працюємо"
+            ]
+          },
+          {
+            "prompt": "— Він ___ в офісі. (працювати)",
+            "answer": "працює",
+            "options": [
+              "працює",
+              "працюю",
+              "працюєш",
+              "працюємо"
+            ]
+          },
+          {
+            "prompt": "— Вони ___ музику? (слухати)",
+            "answer": "слухають",
+            "options": [
+              "слухають",
+              "слухаю",
+              "слухаємо",
+              "слухаєте"
+            ]
+          },
+          {
+            "prompt": "— Ні, вони не ___. (слухати)",
+            "answer": "слухають",
+            "options": [
+              "слухають",
+              "слухаю",
+              "слухаємо",
+              "слухаєте"
+            ]
+          },
+          {
+            "prompt": "— Ми сьогодні ___ разом. (обідати)",
+            "answer": "обідаємо",
+            "options": [
+              "обідаємо",
+              "обідаю",
+              "обідаєш",
+              "обідають"
+            ]
+          },
+          {
+            "prompt": "— Чудово! Я ___ час. (мати)",
+            "answer": "маю",
+            "options": [
+              "маю",
+              "маєш",
+              "має",
+              "маємо"
+            ]
+          },
+          {
+            "prompt": "— Ви ___ цей ресторан? (знати)",
+            "answer": "знаєте",
+            "options": [
+              "знаєте",
+              "знаю",
+              "знаємо",
+              "знають"
+            ]
+          },
+          {
+            "prompt": "— Так, ми там часто ___. (снідати)",
+            "answer": "снідаємо",
+            "options": [
+              "снідаємо",
+              "снідаю",
+              "снідаєш",
+              "снідають"
+            ]
+          },
+          {
+            "prompt": "— What are you doing?",
+            "answer": ""
+          },
+          {
+            "prompt": "— I am reading a book.",
+            "answer": ""
+          },
+          {
+            "prompt": "— Do you understand Ukrainian?",
+            "answer": ""
+          },
+          {
+            "prompt": "— Yes, I understand.",
+            "answer": ""
+          },
+          {
+            "prompt": "— And where does Marko work?",
+            "answer": ""
+          },
+          {
+            "prompt": "— He works in an office.",
+            "answer": ""
+          },
+          {
+            "prompt": "— Do they listen to music?",
+            "answer": ""
+          },
+          {
+            "prompt": "— No, they don't listen.",
+            "answer": ""
+          },
+          {
+            "prompt": "— We are having lunch together today.",
+            "answer": ""
+          },
+          {
+            "prompt": "— Great! I have time.",
+            "answer": ""
+          },
+          {
+            "prompt": "— Do you know this restaurant?",
+            "answer": ""
+          },
+          {
+            "prompt": "— Yes, we often have breakfast there.",
+            "answer": ""
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.035Z",
+      "modifiedAt": "2025-12-12T19:55:32.035Z"
     }
   ],
   "vocabulary": {
@@ -1112,31 +983,31 @@
     "wordCount": 25,
     "newWordCount": 25,
     "reviewWordCount": 0,
-    "transliterationMode": "full",
+    "transliterationMode": "partial",
     "words": [
       {
-        "id": "v-chytaty-0-0",
-        "uk": "читати",
+        "id": "v-**chytaty**-0-0",
+        "uk": "**читати**",
         "en": "to read",
         "pos": "verb",
-        "ipa": "/tʃɪˈtɑtɪ/",
+        "ipa": "/t͡ʃɪˈtɑtɪ/",
         "note": "Class I",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-pysaty-0-1",
-        "uk": "писати",
+        "id": "v-**pysaty**-0-1",
+        "uk": "**писати**",
         "en": "to write",
         "pos": "verb",
         "ipa": "/pɪˈsɑtɪ/",
-        "note": "Class I, stem change: пиш-",
+        "note": "Class I",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-znaty-0-2",
-        "uk": "знати",
+        "id": "v-**znaty**-0-2",
+        "uk": "**знати**",
         "en": "to know",
         "pos": "verb",
         "ipa": "/znɑˈtɪ/",
@@ -1145,8 +1016,8 @@
         "firstModule": 0
       },
       {
-        "id": "v-rozumity-0-3",
-        "uk": "розуміти",
+        "id": "v-**rozumity**-0-3",
+        "uk": "**розуміти**",
         "en": "to understand",
         "pos": "verb",
         "ipa": "/rɔzuˈmʲitɪ/",
@@ -1155,28 +1026,28 @@
         "firstModule": 0
       },
       {
-        "id": "v-slukhaty-0-4",
-        "uk": "слухати",
+        "id": "v-**slukhaty**-0-4",
+        "uk": "**слухати**",
         "en": "to listen",
         "pos": "verb",
-        "ipa": "/ˈsluxɑtɪ/",
+        "ipa": "/ˈsluхɑtɪ/",
         "note": "Class I",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-chekaty-0-5",
-        "uk": "чекати",
+        "id": "v-**chekaty**-0-5",
+        "uk": "**чекати**",
         "en": "to wait",
         "pos": "verb",
-        "ipa": "/tʃɛˈkɑtɪ/",
+        "ipa": "/t͡ʃɛˈkɑtɪ/",
         "note": "Class I",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-pytaty-0-6",
-        "uk": "питати",
+        "id": "v-**pytaty**-0-6",
+        "uk": "**питати**",
         "en": "to ask",
         "pos": "verb",
         "ipa": "/pɪˈtɑtɪ/",
@@ -1185,48 +1056,48 @@
         "firstModule": 0
       },
       {
-        "id": "v-vidpovidaty-0-7",
-        "uk": "відповідати",
+        "id": "v-**vidpovidaty**-0-7",
+        "uk": "**відповідати**",
         "en": "to answer",
         "pos": "verb",
-        "ipa": "/wʲidpɔwʲiˈdɑtɪ/",
+        "ipa": "/vidpɔvʲiˈdɑtɪ/",
         "note": "Class I",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-pratsyuvaty-0-8",
-        "uk": "працювати",
+        "id": "v-**pratsyuvaty**-0-8",
+        "uk": "**працювати**",
         "en": "to work",
         "pos": "verb",
-        "ipa": "/prɑˈtsʲuvɑtɪ/",
-        "note": "Class I, -ювати type",
+        "ipa": "/prɑˈt͡sʲuvɑtɪ/",
+        "note": "Class I",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-vidpochyvaty-0-9",
-        "uk": "відпочивати",
+        "id": "v-**vidpochyvaty**-0-9",
+        "uk": "**відпочивати**",
         "en": "to rest",
         "pos": "verb",
-        "ipa": "/wʲidpɔtʃɪˈvɑtɪ/",
+        "ipa": "/vidpɔˈt͡ʃɪvɑtɪ/",
         "note": "Class I",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-snidaty-0-10",
-        "uk": "снідати",
+        "id": "v-**snidaty**-0-10",
+        "uk": "**снідати**",
         "en": "to have breakfast",
         "pos": "verb",
-        "ipa": "/ˈsnʲidɑtɪ/",
+        "ipa": "/snʲiˈdɑtɪ/",
         "note": "Class I",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-obidaty-0-11",
-        "uk": "обідати",
+        "id": "v-**obidaty**-0-11",
+        "uk": "**обідати**",
         "en": "to have lunch",
         "pos": "verb",
         "ipa": "/ɔˈbʲidɑtɪ/",
@@ -1235,19 +1106,19 @@
         "firstModule": 0
       },
       {
-        "id": "v-vecheryaty-0-12",
-        "uk": "вечеряти",
+        "id": "v-**vecheryaty**-0-12",
+        "uk": "**вечеряти**",
         "en": "to have dinner",
         "pos": "verb",
-        "ipa": "/vɛˈtʃɛrʲɑtɪ/",
+        "ipa": "/vɛˈt͡ʃɛrʲɑtɪ/",
         "note": "Class I",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-hulyaty-0-13",
-        "uk": "гуляти",
-        "en": "to walk, stroll",
+        "id": "v-**hulyaty**-0-13",
+        "uk": "**гуляти**",
+        "en": "to walk/stroll",
         "pos": "verb",
         "ipa": "/ɦuˈlʲɑtɪ/",
         "note": "Class I",
@@ -1255,8 +1126,8 @@
         "firstModule": 0
       },
       {
-        "id": "v-hraty-0-14",
-        "uk": "грати",
+        "id": "v-**hraty**-0-14",
+        "uk": "**грати**",
         "en": "to play",
         "pos": "verb",
         "ipa": "/ˈɦrɑtɪ/",
@@ -1265,8 +1136,8 @@
         "firstModule": 0
       },
       {
-        "id": "v-spivaty-0-15",
-        "uk": "співати",
+        "id": "v-**spivaty**-0-15",
+        "uk": "**співати**",
         "en": "to sing",
         "pos": "verb",
         "ipa": "/spʲiˈvɑtɪ/",
@@ -1275,28 +1146,28 @@
         "firstModule": 0
       },
       {
-        "id": "v-tantsyuvaty-0-16",
-        "uk": "танцювати",
+        "id": "v-**tantsyuvaty**-0-16",
+        "uk": "**танцювати**",
         "en": "to dance",
         "pos": "verb",
-        "ipa": "/tɑnˈtsʲuvɑtɪ/",
-        "note": "Class I, -ювати type",
+        "ipa": "/tɑnˈt͡sʲuvɑtɪ/",
+        "note": "Class I",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-malyuvaty-0-17",
-        "uk": "малювати",
-        "en": "to draw, paint",
+        "id": "v-**malyuvaty**-0-17",
+        "uk": "**малювати**",
+        "en": "to draw/paint",
         "pos": "verb",
         "ipa": "/mɑˈlʲuvɑtɪ/",
-        "note": "Class I, -ювати type",
+        "note": "Class I",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-dumaty-0-18",
-        "uk": "думати",
+        "id": "v-**dumaty**-0-18",
+        "uk": "**думати**",
         "en": "to think",
         "pos": "verb",
         "ipa": "/ˈdumɑtɪ/",
@@ -1305,39 +1176,39 @@
         "firstModule": 0
       },
       {
-        "id": "v-mriyaty-0-19",
-        "uk": "мріяти",
+        "id": "v-**mriyaty**-0-19",
+        "uk": "**мріяти**",
         "en": "to dream",
         "pos": "verb",
-        "ipa": "/mrʲiˈjɑtɪ/",
+        "ipa": "/ˈmrʲijɑtɪ/",
         "note": "Class I",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-pochynaty-0-20",
-        "uk": "починати",
-        "en": "to begin, start",
+        "id": "v-**pochynaty**-0-20",
+        "uk": "**починати**",
+        "en": "to begin",
         "pos": "verb",
-        "ipa": "/pɔtʃɪˈnɑtɪ/",
+        "ipa": "/pɔt͡ʃɪˈnɑtɪ/",
         "note": "Class I",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-zakinchuvaty-0-21",
-        "uk": "закінчувати",
+        "id": "v-**zakinchuvaty**-0-21",
+        "uk": "**закінчувати**",
         "en": "to finish",
         "pos": "verb",
-        "ipa": "/zɑˈkʲintʃuvɑtɪ/",
-        "note": "Class I, -увати type",
+        "ipa": "/zɑˈkint͡ʃuvɑtɪ/",
+        "note": "Class I",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-shukaty-0-22",
-        "uk": "шукати",
-        "en": "to search, look for",
+        "id": "v-**shukaty**-0-22",
+        "uk": "**шукати**",
+        "en": "to search",
         "pos": "verb",
         "ipa": "/ʃuˈkɑtɪ/",
         "note": "Class I",
@@ -1345,19 +1216,19 @@
         "firstModule": 0
       },
       {
-        "id": "v-znakhodyty-0-23",
-        "uk": "знаходити",
+        "id": "v-**znakhodyty**-0-23",
+        "uk": "**знаходити**",
         "en": "to find",
         "pos": "verb",
         "ipa": "/znɑˈxɔdɪtɪ/",
-        "note": "Class II (preview!)",
+        "note": "Actually Class II ending",
         "isNew": true,
         "firstModule": 0
       },
       {
-        "id": "v-nazyvaty-0-24",
-        "uk": "називати",
-        "en": "to call, name",
+        "id": "v-**nazyvaty**-0-24",
+        "uk": "**називати**",
+        "en": "to name/call",
         "pos": "verb",
         "ipa": "/nɑzɪˈvɑtɪ/",
         "note": "Class I",

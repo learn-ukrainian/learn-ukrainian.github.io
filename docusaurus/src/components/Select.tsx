@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
+import { shuffle } from './utils';
 
 interface SelectQuestionProps {
   question: string;
@@ -10,6 +11,9 @@ interface SelectQuestionProps {
 }
 
 export function SelectQuestion({ question, options, correctAnswers, explanation }: SelectQuestionProps) {
+  // Shuffle options on mount
+  const shuffledOptions = useMemo(() => shuffle([...options]), [options]);
+
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [submitted, setSubmitted] = useState(false);
 
@@ -66,7 +70,7 @@ export function SelectQuestion({ question, options, correctAnswers, explanation 
       <p className={styles.questionText}>{question}</p>
 
       <div className={styles.checkboxOptions}>
-        {options.map((option, idx) => (
+        {shuffledOptions.map((option, idx) => (
           <div
             key={idx}
             className={`${styles.checkboxOption} ${getOptionClass(option)}`}

@@ -25,6 +25,11 @@
 > *   **M01-M05 (Phonetics):** **300 - 450 words**. Focus on high-quality English phonetic explanation & historical context.
 > *   **M06-M10 (First Verbs):** **500 - 650 words**. Introduce simple Ukrainian narratives.
 > *   **M11-M34 (Navigation):** **750+ words**. Full narrative standard.
+>
+> **LIT Track (Specialization) Target:**
+> *   **Word Count:** **2500+ words**.
+> *   **Rationale:** No gamified activities. Focus is on deep reading (Long-form articles, Literary Criticism, Biography).
+> *   **Structure:** Essentially a university seminar reader.
 
 > **Graduated Immersion & Language Policy (A1 Detail):**
 > *   **M01-M10 (First Contact):** **Theory-First Approach.**
@@ -34,6 +39,90 @@
 > *   **M11-M34 (Navigation):** **Standard Immersion.**
 >     *   Transition to 100% Ukrainian Narratives as vocabulary allows.
 >     *   English remains for complex grammar explanations and cultural nuances.
+
+> **Immersion Implementation Guide (B1-C2):**
+>
+> | Level | Target | Write IN UKRAINIAN | Write IN ENGLISH |
+> |-------|--------|-------------------|------------------|
+> | **B1** | **60%** | Narratives, dialogues, examples, cultural notes, simple grammar explanations, activity instructions | Complex grammar theory (aspect logic, tense sequencing), metalinguistic analysis, contrastive linguistics |
+> | **B2** | **80%** | All B1 Ukrainian content + grammar explanations, usage patterns, common mistakes | Only subtle linguistic nuances, English-Ukrainian contrasts, etymology notes |
+> | **C1** | **95%** | Everything except Language Link boxes | Only `🔗 Language Link` boxes for English-Ukrainian comparison |
+> | **C2** | **100%** | EVERYTHING including all explanations | Nothing — full native immersion |
+>
+> **B1 (60%) Concrete Examples:**
+> *   ✅ UKRAINIAN: "Дієслова доконаного виду показують завершену дію." (Simple rule)
+> *   ✅ UKRAINIAN: "Читав (impf) — тривала дія. Прочитав (pf) — завершена дія." (Examples)
+> *   ✅ UKRAINIAN: All narratives, dialogues, cultural boxes
+> *   ✅ ENGLISH: "The perfective aspect in Ukrainian encodes 'result reached' — the action has a natural endpoint that was achieved. This differs from English, which uses perfect tenses (have done) for a similar but not identical concept."
+> *   ✅ ENGLISH: Complex analysis like "Why Slavic aspect isn't the same as English tense"
+>
+> **B2 (80%) — Shift to Ukrainian explanations:**
+> *   ✅ UKRAINIAN: "Доконаний вид виражає результат. Коли ви кажете 'прочитав', ви маєте на увазі, що книга закінчена."
+> *   ✅ ENGLISH: Only for English-specific contrasts: "Unlike Ukrainian aspect, English uses..."
+>
+> **C1 (95%) — Near-total immersion:**
+> *   ✅ UKRAINIAN: All grammar, all explanations, all cultural content
+> *   ✅ ENGLISH: Only in dedicated `🔗 Language Link` boxes for cross-linguistic awareness
+>
+> **LIT Track (Specialization) — 100% Ukrainian:**
+> *   ✅ UKRAINIAN: Everything. Context, analysis, glossaries (UA-UA).
+> *   ❌ ENGLISH: Forbidden. No Language Links. No translations.
+>
+> **C2 (100%) — Full native experience:**
+> *   ✅ UKRAINIAN: Everything — learner operates as near-native
+> *   ❌ ENGLISH: Not used at all
+
+### Bilingual Content Patterns (B1-B2)
+
+**Why bilingual?** Complex grammar concepts like aspect, motion verbs, and participles don't exist in English. Explaining the *why* in L1 (English) reduces cognitive load, allowing learners to focus on Ukrainian examples. The audit script measures immersion from lesson content only (before `# Activities`).
+
+**Pattern: Ukrainian concept → English explanation**
+
+```markdown
+### Доконаний вид — Результат
+
+Коли ви обираєте доконаний вид, ви фокусуєтеся на:
+- **Результаті** — дія завершена, є підсумок
+- **Одноразовості** — конкретна, окрема дія
+
+| Приклад | Контекст | Чому доконаний? |
+|---------|----------|-----------------|
+| Я **прочитав** книгу. | Результат | Книга прочитана |
+
+> 🔗 **When to Use Perfective**
+>
+> Use perfective when you want to say:
+> - "I did it (and it's done)" — completed action with result
+> - "I managed to..." — achievement
+> - "First he did X, then Y..." — sequence of completed actions
+>
+> **Key insight:** If the action has a clear endpoint that was reached, it's perfective.
+```
+
+**Pattern: Decision framework in English**
+
+```markdown
+> 🔗 **Context Triggers: A Decision Framework**
+>
+> | Question | If YES → | If NO → |
+> |----------|----------|---------|
+> | Was this a one-time completed event? | Perfective | Keep checking |
+> | Did it happen regularly/habitually? | Imperfective | Keep checking |
+> | Was it the background for another action? | Imperfective | Perfective |
+```
+
+**What stays Ukrainian:**
+- All example sentences
+- All dialogues and narratives
+- All cultural context boxes (💡, 🎬, 🎭, 🌍)
+- Activity content and instructions
+- Simple grammar rules ("Недоконаний = процес")
+
+**What goes English:**
+- Conceptual explanations ("Why does aspect exist?")
+- Decision frameworks and flowcharts
+- English-Ukrainian contrasts (Language Link boxes)
+- Metalinguistic analysis
 
 ### Activity Requirements by Level
 
@@ -1373,7 +1462,7 @@ We'll revisit after testing with real learners.
 
 ### Generator Adaptation
 
-The generator (`scripts/generate.ts`) should:
+The generators (`generate-mdx.ts` for web, `generate_json.py` for Vibe) should:
 1. Accept module markdown as input
 2. Optionally split into multiple Vibe lessons
 3. Maintain cross-references between lessons

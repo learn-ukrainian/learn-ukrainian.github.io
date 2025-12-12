@@ -1,0 +1,1345 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A1-15",
+    "moduleId": "mod-uk-A1-15",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A1",
+    "phase": "A1.2",
+    "moduleNumber": 15,
+    "moduleType": "vocabulary",
+    "pedagogy": "PPP",
+    "immersionLevel": 0.3,
+    "title": "Around the City",
+    "subtitle": "Navigation and Directions",
+    "description": "Ask and give directions",
+    "objectives": [
+      "Ask and give directions",
+      "Use directional expressions (прямо, наліво, направо)",
+      "Navigate city locations with locative case",
+      "Understand common navigation phrases"
+    ],
+    "grammarFocus": [
+      "Locative case in context",
+      "Directional expressions",
+      "Motion verbs (preview)"
+    ],
+    "tags": [
+      "vocabulary",
+      "navigation",
+      "directions",
+      "city"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "partial",
+    "sections": [
+      {
+        "id": "section-content-0",
+        "name": "Lesson",
+        "type": "content",
+        "content": "> **Note:** You know WHERE things are (locative). Now learn to GET there! Navigation is essential for traveling in Ukraine.\n\n## Warm-up: Lost in the City\n\nImagine you're a tourist in Kyiv. You want to find the metro station. What do you need to know?\n\n1. **How to ask:** Де метро? / Як дістатися до метро?\n2. **How to understand:** Прямо, потім наліво.\n3. **How to confirm:** Це далеко? / Дякую!\n\nUkrainian cities are full of helpful people, but you need the vocabulary to communicate! This module gives you the essential phrases for navigating any Ukrainian city. Whether you're looking for a metro station, a restaurant, or a famous landmark, these phrases will help you find your way.\n\nNavigation vocabulary is among the most practical skills you'll develop. Unlike grammar rules that require memorization, direction words are used so frequently that you'll internalize them quickly. Once you master these 30+ words, you can confidently explore any Ukrainian city!\n\nThe good news: Ukrainian directions are logical and straightforward. There are no complex verb conjugations to worry about — most direction words are adverbs that never change form. Прямо is always прямо, whether you're telling one person or a group!\n\n> 💡 **Thinking Trick:** Learn directions in pairs: наліво (left) ↔ направо (right), прямо (straight) ↔ назад (back), далеко (far) ↔ близько (near).\n\n## Presentation: Navigation Vocabulary\n\n### 1. Basic Directions\n\n| Ukrainian | Pronunciation | English |\n|-----------|---------------|---------|\n| **прямо** | PRYAMO | straight |\n| **наліво** | naLIvo | to the left |\n| **направо** | naPRAvo | to the right |\n| **назад** | naZAD | back |\n\nThese are **adverbs** — they don't change form!\n\n**Examples:**\n- Ідіть **прямо**. (Go straight.)\n- Поверніть **наліво**. (Turn left.)\n- Поверніть **направо**. (Turn right.)\n- Поверніться **назад**. (Go back.)\n\n### 2. Distance and Location\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| **далеко** | far | Це далеко? (Is it far?) |\n| **близько** | near, close | Метро близько. (The metro is near.) |\n| **поруч** | next to, nearby | Аптека поруч. (The pharmacy is nearby.) |\n| **навпроти** | opposite, across | Банк навпроти. (The bank is opposite.) |\n| **за** | behind | За будинком. (Behind the building.) |\n| **перед** | in front of | Перед театром. (In front of the theater.) |\n| **між** | between | Між магазином і банком. (Between the store and the bank.) |\n| **біля** | near, by | Біля зупинки. (By the bus stop.) |\n\n### 3. City Landmarks\n\nEvery city has key reference points. Learn these for navigation:\n\n| Ukrainian | English |\n|-----------|---------|\n| **вулиця** | street |\n| **провулок** | lane, alley |\n| **площа** | square |\n| **проспект** | avenue |\n| **бульвар** | boulevard |\n| **набережна** | embankment |\n| **міст** | bridge |\n| **перехрестя** | intersection |\n| **світлофор** | traffic light |\n| **зупинка** | bus/tram stop |\n| **станція** | station |\n| **вхід** | entrance |\n| **вихід** | exit |\n\n> 📜 **Pattern Summary:**\n> - **Directions:** прямо, наліво, направо, назад\n> - **Distance:** далеко, близько, поруч\n> - **Position:** навпроти, за, перед, між, біля\n\n> 💡 **Did You Know?** Kyiv's main street is **Хрещатик** (Khreshchatyk), named after the Khreshchatyk stream that once flowed through the valley. It's been the heart of the city for centuries!\n\n### 4. Key Navigation Phrases\n\nMaster these essential questions and answers:\n\n| Question | Translation |\n|----------|-------------|\n| Де знаходиться...? | Where is...? |\n| Як дістатися до...? | How to get to...? |\n| Це далеко? | Is it far? |\n| Скільки хвилин пішки? | How many minutes on foot? |\n| Де найближча зупинка? | Where is the nearest stop? |\n\n| Answer | Translation |\n|--------|-------------|\n| Ідіть прямо. | Go straight. |\n| Поверніть наліво/направо. | Turn left/right. |\n| Це на розі. | It's on the corner. |\n| Приблизно 5 хвилин. | About 5 minutes. |\n| Ви на місці! | You're there! (You've arrived!) |\n\n## Cultural Insight: Ukrainian City Navigation 🇺🇦\n\nUkrainian cities have some unique navigation features that differ from Western European or American cities:\n\n- **Metro stations** are deep underground (some of the deepest in the world for Cold War protection). Kyiv's Arsenalna station is the deepest metro station in the world at 105.5 meters!\n- **Marshrutkas** (маршрутки) are minibuses that follow set routes — call out your stop! They're cheap and efficient but can be crowded during rush hour. Tell the driver \"Зупиніть, будь ласка!\" when you want to get off.\n- **Address system:** Street name + building number (вулиця Шевченка, 15). Ukrainian addresses put the street type first: \"vulytsia\" (street), \"prospekt\" (avenue), \"ploshcha\" (square).\n- **Numbered buildings** may have multiple корпуси (buildings labeled А, Б, В), which can be confusing for visitors. Always confirm the корпус number!\n\nHelpful vocabulary:\n- **Маршрутка** — shared minibus\n- **Тролейбус** — trolleybus (electric bus with overhead wires)\n- **Трамвай** — tram\n- **Таксі** — taxi (Uber and Bolt also work in major cities)\n- **Пішки** — on foot\n\nWhen navigating, Ukrainians often use landmarks rather than street names: \"біля великого магазину\" (by the big store), \"за церквою\" (behind the church). Learning landmark vocabulary will make directions much easier to follow!\n\n> 📜 **History Bite:** Before Soviet-era renaming, many Ukrainian streets had historical names. Since 2014 (and especially 2022), Ukraine has been actively \"de-communizing\" — renaming streets to honor Ukrainian heroes instead of Soviet figures. You might see old and new names on maps!\n\n## Reading Practice: Як дістатися до музею? 🗺️\n\n**Українською:**\n\n— Добрий день! Скажіть, будь ласка, де Музей народної архітектури?\n— Добрий день! Це трохи далеко звідси. Вам потрібен автобус.\n— А де зупинка автобуса?\n— Ідіть прямо по цій вулиці. На перехресті поверніть наліво. Зупинка буде справа, біля магазину.\n— Який номер автобуса?\n— Сьомий. Їдьте до станції \"Пирогів\". Музей буде навпроти зупинки.\n— Скільки це займає часу?\n— Приблизно двадцять хвилин на автобусі.\n— Дуже дякую за допомогу!\n— Будь ласка! Гарного дня!\n\n**English Translation:**\n\n— Good afternoon! Tell me, please, where is the Museum of Folk Architecture?\n— Good afternoon! It's a bit far from here. You need a bus.\n— And where is the bus stop?\n— Go straight along this street. At the intersection turn left. The stop will be on the right, by the store.\n— What bus number?\n— Number seven. Ride to the \"Pyrohiv\" station. The museum will be opposite the stop.\n— How long does it take?\n— About twenty minutes by bus.\n— Thank you very much for your help!\n— You're welcome! Have a nice day!\n\n**Comprehension check:** What directions are given? How long is the trip?\n\n## Conversation: На вулиці 🗣️\n\n**Турист:** Вибачте! Як дістатися до Софійського собору?\n**Киянин:** О, це недалеко! Ідіть прямо до перехрестя.\n**Турист:** А потім?\n**Киянин:** На світлофорі поверніть направо. Ідіть по Володимирській вулиці.\n**Турист:** Це далеко?\n**Киянин:** Ні, п'ять хвилин пішки. Собор буде зліва — його видно здалеку.\n**Турист:** Дякую велике!\n**Киянин:** Нема за що. Гарного відпочинку!\n\n**English Translation:**\n**Tourist:** Excuse me! How to get to Saint Sophia Cathedral?\n**Kyivan:** Oh, it's not far! Go straight to the intersection.\n**Tourist:** And then?\n**Kyivan:** At the traffic light turn right. Go along Volodymyrska street.\n**Tourist:** Is it far?\n**Kyivan:** No, five minutes on foot. The cathedral will be on the left — it is visible from afar.\n**Tourist:** Thank you very much!\n**Kyivan:** You're welcome. Have a nice rest!\n\nЗверни увагу: прямо, направо, зліва — всі напрямки тут!"
+      },
+      {
+        "id": "section-summary-1",
+        "name": "Підсумок",
+        "nameEn": "Summary",
+        "type": "summary",
+        "content": "**Navigation: Getting Around Ukrainian Cities**\n\n1. **Basic directions:** прямо, наліво, направо, назад\n2. **Distance words:** далеко, близько, поруч\n3. **Position words:** навпроти, за, перед, між, біля\n4. **Key question:** Як дістатися до...? (How to get to...?)\n5. **Transport options:** метро, автобус, трамвай, маршрутка, таксі, пішки\n\n---\n\n> [!tip] 🌟 **Pro Tip:** When asking for directions, always add \"будь ласка\" and \"дякую!\" Ukrainians appreciate politeness and will often walk you partway if you seem lost!\n\n\n---"
+      }
+    ],
+    "rawMarkdown": "---\ntitle: \"Around the City\"\nsubtitle: \"Navigation and Directions\"\nphase: A1.2\ntransliteration: partial\npedagogy: PPP\nduration: 45\ntags: [vocabulary, navigation, directions, city]\nobjectives:\n  - Ask and give directions\n  - Use directional expressions (прямо, наліво, направо)\n  - Navigate city locations with locative case\n  - Understand common navigation phrases\ngrammar:\n  - Locative case in context\n  - Directional expressions\n  - Motion verbs (preview)\naudio: false\n---\n\n# Around the City\n\n> **Note:** You know WHERE things are (locative). Now learn to GET there! Navigation is essential for traveling in Ukraine.\n\n## Warm-up: Lost in the City\n\nImagine you're a tourist in Kyiv. You want to find the metro station. What do you need to know?\n\n1. **How to ask:** Де метро? / Як дістатися до метро?\n2. **How to understand:** Прямо, потім наліво.\n3. **How to confirm:** Це далеко? / Дякую!\n\nUkrainian cities are full of helpful people, but you need the vocabulary to communicate! This module gives you the essential phrases for navigating any Ukrainian city. Whether you're looking for a metro station, a restaurant, or a famous landmark, these phrases will help you find your way.\n\nNavigation vocabulary is among the most practical skills you'll develop. Unlike grammar rules that require memorization, direction words are used so frequently that you'll internalize them quickly. Once you master these 30+ words, you can confidently explore any Ukrainian city!\n\nThe good news: Ukrainian directions are logical and straightforward. There are no complex verb conjugations to worry about — most direction words are adverbs that never change form. Прямо is always прямо, whether you're telling one person or a group!\n\n> 💡 **Thinking Trick:** Learn directions in pairs: наліво (left) ↔ направо (right), прямо (straight) ↔ назад (back), далеко (far) ↔ близько (near).\n\n## Presentation: Navigation Vocabulary\n\n### 1. Basic Directions\n\n| Ukrainian | Pronunciation | English |\n|-----------|---------------|---------|\n| **прямо** | PRYAMO | straight |\n| **наліво** | naLIvo | to the left |\n| **направо** | naPRAvo | to the right |\n| **назад** | naZAD | back |\n\nThese are **adverbs** — they don't change form!\n\n**Examples:**\n- Ідіть **прямо**. (Go straight.)\n- Поверніть **наліво**. (Turn left.)\n- Поверніть **направо**. (Turn right.)\n- Поверніться **назад**. (Go back.)\n\n### 2. Distance and Location\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| **далеко** | far | Це далеко? (Is it far?) |\n| **близько** | near, close | Метро близько. (The metro is near.) |\n| **поруч** | next to, nearby | Аптека поруч. (The pharmacy is nearby.) |\n| **навпроти** | opposite, across | Банк навпроти. (The bank is opposite.) |\n| **за** | behind | За будинком. (Behind the building.) |\n| **перед** | in front of | Перед театром. (In front of the theater.) |\n| **між** | between | Між магазином і банком. (Between the store and the bank.) |\n| **біля** | near, by | Біля зупинки. (By the bus stop.) |\n\n### 3. City Landmarks\n\nEvery city has key reference points. Learn these for navigation:\n\n| Ukrainian | English |\n|-----------|---------|\n| **вулиця** | street |\n| **провулок** | lane, alley |\n| **площа** | square |\n| **проспект** | avenue |\n| **бульвар** | boulevard |\n| **набережна** | embankment |\n| **міст** | bridge |\n| **перехрестя** | intersection |\n| **світлофор** | traffic light |\n| **зупинка** | bus/tram stop |\n| **станція** | station |\n| **вхід** | entrance |\n| **вихід** | exit |\n\n> 📜 **Pattern Summary:**\n> - **Directions:** прямо, наліво, направо, назад\n> - **Distance:** далеко, близько, поруч\n> - **Position:** навпроти, за, перед, між, біля\n\n> 💡 **Did You Know?** Kyiv's main street is **Хрещатик** (Khreshchatyk), named after the Khreshchatyk stream that once flowed through the valley. It's been the heart of the city for centuries!\n\n### 4. Key Navigation Phrases\n\nMaster these essential questions and answers:\n\n| Question | Translation |\n|----------|-------------|\n| Де знаходиться...? | Where is...? |\n| Як дістатися до...? | How to get to...? |\n| Це далеко? | Is it far? |\n| Скільки хвилин пішки? | How many minutes on foot? |\n| Де найближча зупинка? | Where is the nearest stop? |\n\n| Answer | Translation |\n|--------|-------------|\n| Ідіть прямо. | Go straight. |\n| Поверніть наліво/направо. | Turn left/right. |\n| Це на розі. | It's on the corner. |\n| Приблизно 5 хвилин. | About 5 minutes. |\n| Ви на місці! | You're there! (You've arrived!) |\n\n## Cultural Insight: Ukrainian City Navigation 🇺🇦\n\nUkrainian cities have some unique navigation features that differ from Western European or American cities:\n\n- **Metro stations** are deep underground (some of the deepest in the world for Cold War protection). Kyiv's Arsenalna station is the deepest metro station in the world at 105.5 meters!\n- **Marshrutkas** (маршрутки) are minibuses that follow set routes — call out your stop! They're cheap and efficient but can be crowded during rush hour. Tell the driver \"Зупиніть, будь ласка!\" when you want to get off.\n- **Address system:** Street name + building number (вулиця Шевченка, 15). Ukrainian addresses put the street type first: \"vulytsia\" (street), \"prospekt\" (avenue), \"ploshcha\" (square).\n- **Numbered buildings** may have multiple корпуси (buildings labeled А, Б, В), which can be confusing for visitors. Always confirm the корпус number!\n\nHelpful vocabulary:\n- **Маршрутка** — shared minibus\n- **Тролейбус** — trolleybus (electric bus with overhead wires)\n- **Трамвай** — tram\n- **Таксі** — taxi (Uber and Bolt also work in major cities)\n- **Пішки** — on foot\n\nWhen navigating, Ukrainians often use landmarks rather than street names: \"біля великого магазину\" (by the big store), \"за церквою\" (behind the church). Learning landmark vocabulary will make directions much easier to follow!\n\n> 📜 **History Bite:** Before Soviet-era renaming, many Ukrainian streets had historical names. Since 2014 (and especially 2022), Ukraine has been actively \"de-communizing\" — renaming streets to honor Ukrainian heroes instead of Soviet figures. You might see old and new names on maps!\n\n## Reading Practice: Як дістатися до музею? 🗺️\n\n**Українською:**\n\n— Добрий день! Скажіть, будь ласка, де Музей народної архітектури?\n— Добрий день! Це трохи далеко звідси. Вам потрібен автобус.\n— А де зупинка автобуса?\n— Ідіть прямо по цій вулиці. На перехресті поверніть наліво. Зупинка буде справа, біля магазину.\n— Який номер автобуса?\n— Сьомий. Їдьте до станції \"Пирогів\". Музей буде навпроти зупинки.\n— Скільки це займає часу?\n— Приблизно двадцять хвилин на автобусі.\n— Дуже дякую за допомогу!\n— Будь ласка! Гарного дня!\n\n**English Translation:**\n\n— Good afternoon! Tell me, please, where is the Museum of Folk Architecture?\n— Good afternoon! It's a bit far from here. You need a bus.\n— And where is the bus stop?\n— Go straight along this street. At the intersection turn left. The stop will be on the right, by the store.\n— What bus number?\n— Number seven. Ride to the \"Pyrohiv\" station. The museum will be opposite the stop.\n— How long does it take?\n— About twenty minutes by bus.\n— Thank you very much for your help!\n— You're welcome! Have a nice day!\n\n**Comprehension check:** What directions are given? How long is the trip?\n\n## Conversation: На вулиці 🗣️\n\n**Турист:** Вибачте! Як дістатися до Софійського собору?\n**Киянин:** О, це недалеко! Ідіть прямо до перехрестя.\n**Турист:** А потім?\n**Киянин:** На світлофорі поверніть направо. Ідіть по Володимирській вулиці.\n**Турист:** Це далеко?\n**Киянин:** Ні, п'ять хвилин пішки. Собор буде зліва — його видно здалеку.\n**Турист:** Дякую велике!\n**Киянин:** Нема за що. Гарного відпочинку!\n\n**English Translation:**\n**Tourist:** Excuse me! How to get to Saint Sophia Cathedral?\n**Kyivan:** Oh, it's not far! Go straight to the intersection.\n**Tourist:** And then?\n**Kyivan:** At the traffic light turn right. Go along Volodymyrska street.\n**Tourist:** Is it far?\n**Kyivan:** No, five minutes on foot. The cathedral will be on the left — it is visible from afar.\n**Tourist:** Thank you very much!\n**Kyivan:** You're welcome. Have a nice rest!\n\nЗверни увагу: прямо, направо, зліва — всі напрямки тут!\n\n# Summary\n\n**Navigation: Getting Around Ukrainian Cities**\n\n1. **Basic directions:** прямо, наліво, направо, назад\n2. **Distance words:** далеко, близько, поруч\n3. **Position words:** навпроти, за, перед, між, біля\n4. **Key question:** Як дістатися до...? (How to get to...?)\n5. **Transport options:** метро, автобус, трамвай, маршрутка, таксі, пішки\n\n---\n\n> [!tip] 🌟 **Pro Tip:** When asking for directions, always add \"будь ласка\" and \"дякую!\" Ukrainians appreciate politeness and will often walk you partway if you seem lost!\n\n# Activities\n\n## fill-in: Direction Words\n> Choose the correct direction word.\n\n1. Ідіть ___ до перехрестя. (straight)\n   > [!answer] прямо\n   > [!options] прямо | наліво | направо | назад\n\n2. Поверніть ___. (left)\n   > [!answer] наліво\n   > [!options] наліво | направо | прямо | назад\n\n3. Банк знаходиться ___. (opposite)\n   > [!answer] навпроти\n   > [!options] навпроти | поруч | далеко | близько\n\n4. Метро ___? (far)\n   > [!answer] далеко\n   > [!options] далеко | близько | прямо | наліво\n\n5. Аптека ___ зупинки. (near)\n   > [!answer] біля\n   > [!options] біля | за | на | в\n\n6. Магазин ___ банком і аптекою. (between)\n   > [!answer] між\n   > [!options] між | за | біля | перед\n\n7. Зупинка ___ будинком. (behind)\n   > [!answer] за\n   > [!options] за | перед | біля | між\n\n8. Кафе ___ театром. (in front of)\n   > [!answer] перед\n   > [!options] перед | за | біля | між\n\n9. Поверніть ___. (right)\n   > [!answer] направо\n   > [!options] направо | наліво | прямо | назад\n\n10. Парк ___. (nearby)\n    > [!answer] поруч\n    > [!options] поруч | далеко | назад | прямо\n\n11. Ідіть ___. (back)\n    > [!answer] назад\n    > [!options] назад | прямо | наліво | направо\n\n12. Музей ___. (close)\n    > [!answer] близько\n    > [!options] близько | далеко | поруч | біля\n\n## match-up: Opposites\n> Match the direction with its opposite.\n\n| Direction | Opposite |\n| --- | --- |\n| наліво | направо |\n| прямо | назад |\n| далеко | близько |\n| за | перед |\n| вхід | вихід |\n| вверх | вниз |\n| туди | сюди |\n| куди | звідки |\n| початок | кінець |\n| сходи | спуск |\n| схід | захід |\n| північ | південь |\n\n## quiz: Navigation Scenarios\n> Choose the correct answer.\n\n1. You want to ask \"Where is the metro?\" You say:\n   - [x] Де метро?\n   - [ ] Де в метро?\n   - [ ] Як метро?\n   - [ ] Що метро?\n\n2. Someone tells you to turn left. They say:\n   - [x] Поверніть наліво.\n   - [ ] Поверніть направо.\n   - [ ] Ідіть прямо.\n   - [ ] Йдіть назад.\n\n3. The museum is opposite the theater. This means:\n   - [x] Музей навпроти театру.\n   - [ ] Музей за театром.\n   - [ ] Музей поруч театру.\n   - [ ] Музей в театрі.\n\n4. You want to ask \"How do I get to the park?\" You say:\n   - [x] Як дістатися до парку?\n   - [ ] Де дістатися до парку?\n   - [ ] Що дістатися до парку?\n   - [ ] Коли дістатися до парку?\n\n5. \"It's far\" in Ukrainian is:\n   - [x] Це далеко.\n   - [ ] Це близько.\n   - [ ] Це поруч.\n   - [ ] Це прямо.\n\n6. \"The pharmacy is nearby\" means:\n   - [x] Аптека поруч.\n   - [ ] Аптека далеко.\n   - [ ] Аптека прямо.\n   - [ ] Аптека назад.\n\n7. \"Go straight\" is:\n   - [x] Ідіть прямо.\n   - [ ] Ідіть наліво.\n   - [ ] Ідіть направо.\n   - [ ] Ідіть назад.\n\n8. Where would you find a зупинка?\n   - [x] Where buses and trams stop\n   - [ ] Inside a building\n   - [ ] At a restaurant\n   - [ ] In a park\n\n9. \"Turn right at the traffic light\" is:\n   - [x] На світлофорі поверніть направо.\n   - [ ] На світлофорі поверніть наліво.\n   - [ ] На світлофорі ідіть прямо.\n   - [ ] На світлофорі йдіть назад.\n\n10. \"Перехрестя\" refers to:\n    - [x] An intersection\n    - [ ] A bus stop\n    - [ ] A bridge\n    - [ ] A park\n\n11. How do you say \"on foot\"?\n    - [x] Пішки\n    - [ ] Автобусом\n    - [ ] Метро\n    - [ ] Таксі\n\n12. \"Вхід\" is the opposite of:\n    - [x] Вихід\n    - [ ] Прямо\n    - [ ] Зупинка\n    - [ ] Станція\n\n## group-sort: Location Words\n> Sort words by category.\n\n- Directions: прямо\n- Directions: наліво\n- Directions: направо\n- Directions: назад\n- Distance: далеко\n- Distance: близько\n- Distance: поруч\n- Position: навпроти\n- Position: за\n- Position: перед\n- Position: між\n- Position: біля\n\n## true-false: Navigation Facts\n- [x] \"Прямо\" means \"straight ahead.\"\n- [x] \"Наліво\" and \"направо\" are opposite directions.\n- [ ] \"Далеко\" means \"nearby.\"\n- [x] \"Біля\" means \"near\" or \"by.\"\n- [ ] \"Зупинка\" is a traffic light.\n- [x] \"Перехрестя\" is an intersection.\n- [x] \"Вхід\" means entrance.\n- [ ] \"Пішки\" means by car.\n- [x] \"Як дістатися до...?\" means \"How to get to...?\"\n- [ ] \"Навпроти\" means behind.\n- [x] \"Поруч\" means nearby.\n- [x] The Kyiv metro is famous for its depth.\n\n## anagram: City Vocabulary\n> Unscramble these city navigation words.\n\n1. о м я р п\n   > [!answer] прямо\n\n2. о в і л а н\n   > [!answer] наліво\n\n3. о в а р п а н\n   > [!answer] направо\n\n4. о к е л а д\n   > [!answer] далеко\n\n5. о к ь з и л б\n   > [!answer] близько\n\n6. а к н и п у з\n   > [!answer] зупинка\n\n7. я і ц н а т с\n   > [!answer] станція\n\n8. р о ф о л т і в с\n   > [!answer] світлофор\n\n9. я т с е р х е р е п\n   > [!answer] перехрестя\n\n10. а щ о л п\n    > [!answer] площа\n\n11. я ц и л у в\n    > [!answer] вулиця\n\n12. о р т е м\n    > [!answer] метро\n\n## fill-in: Complete the Dialogue\n> Complete the navigation dialogue.\n\n1. Турист: Де ___? (metro)\n   > [!answer] метро\n   > [!options] метро | автобус | таксі | машина\n\n2. Киянин: Ідіть ___. (straight)\n   > [!answer] прямо\n   > [!options] прямо | наліво | направо | назад\n\n3. Киянин: Поверніть ___. (left)\n   > [!answer] наліво\n   > [!options] наліво | направо | прямо | назад\n\n4. Турист: Це ___? (far)\n   > [!answer] далеко\n   > [!options] далеко | близько | тут | там\n\n5. Киянин: Ні, ___. (close)\n   > [!answer] близько\n   > [!options] близько | далеко | прямо | поруч\n\n6. Киянин: Станція ___ зупинки. (near)\n   > [!answer] біля\n   > [!options] біля | за | на | в\n\n7. Турист: Скільки ___ пішки? (minutes)\n   > [!answer] хвилин\n   > [!options] хвилин | годин | метрів | кілометрів\n\n8. Киянин: Приблизно п'ять ___. (minutes)\n   > [!answer] хвилин\n   > [!options] хвилин | годин | метрів | кроків\n\n9. Турист: А де ___? (stop)\n   > [!answer] зупинка\n   > [!options] зупинка | станція | метро | вихід\n\n10. Киянин: На ___. (corner)\n    > [!answer] розі\n    > [!options] розі | вулиці | площі | мості\n\n11. Турист: Дякую за ___! (help)\n    > [!answer] допомогу\n    > [!options] допомогу | допомога | допомозі | допомогою\n\n12. Киянин: Будь ___, гарного дня! (please/welcome)\n    > [!answer] ласка\n    > [!options] ласка | ласкаво | ласки | ласку\n\n**English Translation:**\n1. Tourist: Where is the metro?\n2. Kyivite: Go straight.\n3. Kyivite: Turn left.\n4. Tourist: Is it far?\n5. Kyivite: No, it is close.\n6. Kyivite: The station is near the stop.\n7. Tourist: How many minutes on foot?\n8. Kyivite: Approximately five minutes.\n9. Tourist: And where is the stop?\n10. Kyivite: On the corner.\n11. Tourist: Thank you for the help!\n12. Kyivite: You are welcome, have a nice day!\n\n## unjumble: Build Navigation Sentences\n> Arrange the words into correct sentences.\n\n1. прямо / ідіть / перехрестя / до\n   > [!answer] Ідіть прямо до перехрестя.\n\n2. метро / де / знаходиться\n   > [!answer] Де знаходиться метро?\n\n3. наліво / світлофорі / на / поверніть\n   > [!answer] На світлофорі поверніть наліво.\n\n4. далеко / це / не\n   > [!answer] Це не далеко.\n\n5. зупинка / біля / магазину\n   > [!answer] Зупинка біля магазину.\n\n6. хвилин / п'ять / пішки\n   > [!answer] П'ять хвилин пішки.\n\n7. театру / музей / навпроти\n   > [!answer] Музей навпроти театру.\n\n8. дістатися / як / парку / до\n   > [!answer] Як дістатися до парку?\n\n9. поруч / аптека / тут\n   > [!answer] Аптека тут поруч.\n\n10. направо / потім / поверніть\n    > [!answer] Потім поверніть направо.\n\n11. близько / станція / дуже\n    > [!answer] Станція дуже близько.\n\n12. допомогу / за / дякую\n    > [!answer] Дякую за допомогу.\n\n---\n\n# Vocabulary\n\n| Ukrainian | IPA | English | Usage |\n| --- | --- | --- | --- |\n| вулиця | /ˈʋulɪt͡sʲɑ/ | street | на вулиці |\n| провулок | /proˈʋulok/ | lane, alley | у провулку |\n| площа | /ˈploʃt͡ʃɑ/ | square | на площі |\n| проспект | /prosˈpɛkt/ | avenue | на проспекті |\n| бульвар | /bulʲˈʋɑr/ | boulevard | на бульварі |\n| набережна | /nɑbɛˈrɛʒnɑ/ | embankment | на набережній |\n| міст | /mist/ | bridge | на мості |\n| перехрестя | /pɛrɛˈxrɛstʲɑ/ | intersection | на перехресті |\n| світлофор | /sʋitloˈfor/ | traffic light | на світлофорі |\n| зупинка | /zuˈpɪnkɑ/ | stop | на зупинці |\n| станція | /ˈstɑnt͡sijɑ/ | station | на станції |\n| вхід | /ʋxid/ | entrance | біля входу |\n| вихід | /ˈʋɪxid/ | exit | біля виходу |\n| прямо | /ˈprʲɑmo/ | straight | adverb |\n| наліво | /nɑˈliʋo/ | to the left | adverb |\n| направо | /nɑˈprɑʋo/ | to the right | adverb |\n| назад | /nɑˈzɑd/ | back | adverb |\n| далеко | /dɑˈlɛko/ | far | adverb |\n| близько | /ˈblɪzʲko/ | near, close | adverb |\n| поруч | /ˈporut͡ʃ/ | nearby | adverb |\n| навпроти | /nɑʋˈprotɪ/ | opposite | adverb |\n| за | /zɑ/ | behind | + Inst |\n| перед | /ˈpɛrɛd/ | in front of | + Inst |\n| між | /miʒ/ | between | + Inst |\n| біля | /ˈbilʲɑ/ | near, by | + Gen |\n| через | /ˈt͡ʃɛrɛz/ | across, through | + Acc |\n| до | /do/ | to | + Gen |\n| від | /ʋid/ | from | + Gen |\n| пішки | /ˈpiʃkɪ/ | on foot | adverb |\n| метро | /mɛˈtro/ | metro | у метро |\n| автобус | /ɑʋˈtobus/ | bus | на автобусі |\n| трамвай | /trɑmˈʋɑj/ | tram | на трамваї |\n| маршрутка | /mɑrʃˈrutkɑ/ | minibus | на маршрутці |\n| таксі | /tɑkˈsi/ | taxi | на таксі |\n",
+    "createdAt": "2025-12-12T19:55:32.042Z",
+    "modifiedAt": "2025-12-12T19:55:32.042Z",
+    "version": 2
+  },
+  "activities": [
+    {
+      "id": "act-a1-0-fillblank-0",
+      "type": "fill-blank",
+      "title": "Direction Words",
+      "description": "Choose the correct direction word.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Ідіть ___ до перехрестя. (straight)",
+            "answer": "прямо",
+            "options": [
+              "прямо",
+              "наліво",
+              "направо",
+              "назад"
+            ]
+          },
+          {
+            "prompt": "Поверніть ___. (left)",
+            "answer": "наліво",
+            "options": [
+              "наліво",
+              "направо",
+              "прямо",
+              "назад"
+            ]
+          },
+          {
+            "prompt": "Банк знаходиться ___. (opposite)",
+            "answer": "навпроти",
+            "options": [
+              "навпроти",
+              "поруч",
+              "далеко",
+              "близько"
+            ]
+          },
+          {
+            "prompt": "Метро ___? (far)",
+            "answer": "далеко",
+            "options": [
+              "далеко",
+              "близько",
+              "прямо",
+              "наліво"
+            ]
+          },
+          {
+            "prompt": "Аптека ___ зупинки. (near)",
+            "answer": "біля",
+            "options": [
+              "біля",
+              "за",
+              "на",
+              "в"
+            ]
+          },
+          {
+            "prompt": "Магазин ___ банком і аптекою. (between)",
+            "answer": "між",
+            "options": [
+              "між",
+              "за",
+              "біля",
+              "перед"
+            ]
+          },
+          {
+            "prompt": "Зупинка ___ будинком. (behind)",
+            "answer": "за",
+            "options": [
+              "за",
+              "перед",
+              "біля",
+              "між"
+            ]
+          },
+          {
+            "prompt": "Кафе ___ театром. (in front of)",
+            "answer": "перед",
+            "options": [
+              "перед",
+              "за",
+              "біля",
+              "між"
+            ]
+          },
+          {
+            "prompt": "Поверніть ___. (right)",
+            "answer": "направо",
+            "options": [
+              "направо",
+              "наліво",
+              "прямо",
+              "назад"
+            ]
+          },
+          {
+            "prompt": "Парк ___. (nearby)",
+            "answer": "поруч",
+            "options": [
+              "поруч",
+              "далеко",
+              "назад",
+              "прямо"
+            ]
+          },
+          {
+            "prompt": "Ідіть ___. (back)",
+            "answer": "назад",
+            "options": [
+              "назад",
+              "прямо",
+              "наліво",
+              "направо"
+            ]
+          },
+          {
+            "prompt": "Музей ___. (close)",
+            "answer": "близько",
+            "options": [
+              "близько",
+              "далеко",
+              "поруч",
+              "біля"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.042Z",
+      "modifiedAt": "2025-12-12T19:55:32.042Z"
+    },
+    {
+      "id": "act-a1-0-matchup-0",
+      "type": "match-up",
+      "title": "Opposites",
+      "description": "Match the direction with its opposite.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "наліво",
+            "right": "направо"
+          },
+          {
+            "left": "прямо",
+            "right": "назад"
+          },
+          {
+            "left": "далеко",
+            "right": "близько"
+          },
+          {
+            "left": "за",
+            "right": "перед"
+          },
+          {
+            "left": "вхід",
+            "right": "вихід"
+          },
+          {
+            "left": "вверх",
+            "right": "вниз"
+          },
+          {
+            "left": "туди",
+            "right": "сюди"
+          },
+          {
+            "left": "куди",
+            "right": "звідки"
+          },
+          {
+            "left": "початок",
+            "right": "кінець"
+          },
+          {
+            "left": "сходи",
+            "right": "спуск"
+          },
+          {
+            "left": "схід",
+            "right": "захід"
+          },
+          {
+            "left": "північ",
+            "right": "південь"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.042Z",
+      "modifiedAt": "2025-12-12T19:55:32.042Z"
+    },
+    {
+      "id": "act-a1-0-quiz-0",
+      "type": "quiz",
+      "title": "Navigation Scenarios",
+      "description": "Choose the correct answer.",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "You want to ask \"Where is the metro?\" You say:",
+            "options": [
+              "Де метро?",
+              "Де в метро?",
+              "Як метро?",
+              "Що метро?"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Someone tells you to turn left. They say:",
+            "options": [
+              "Поверніть наліво.",
+              "Поверніть направо.",
+              "Ідіть прямо.",
+              "Йдіть назад."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "The museum is opposite the theater. This means:",
+            "options": [
+              "Музей навпроти театру.",
+              "Музей за театром.",
+              "Музей поруч театру.",
+              "Музей в театрі."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "You want to ask \"How do I get to the park?\" You say:",
+            "options": [
+              "Як дістатися до парку?",
+              "Де дістатися до парку?",
+              "Що дістатися до парку?",
+              "Коли дістатися до парку?"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"It's far\" in Ukrainian is:",
+            "options": [
+              "Це далеко.",
+              "Це близько.",
+              "Це поруч.",
+              "Це прямо."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"The pharmacy is nearby\" means:",
+            "options": [
+              "Аптека поруч.",
+              "Аптека далеко.",
+              "Аптека прямо.",
+              "Аптека назад."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Go straight\" is:",
+            "options": [
+              "Ідіть прямо.",
+              "Ідіть наліво.",
+              "Ідіть направо.",
+              "Ідіть назад."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Where would you find a зупинка?",
+            "options": [
+              "Where buses and trams stop",
+              "Inside a building",
+              "At a restaurant",
+              "In a park"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Turn right at the traffic light\" is:",
+            "options": [
+              "На світлофорі поверніть направо.",
+              "На світлофорі поверніть наліво.",
+              "На світлофорі ідіть прямо.",
+              "На світлофорі йдіть назад."
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Перехрестя\" refers to:",
+            "options": [
+              "An intersection",
+              "A bus stop",
+              "A bridge",
+              "A park"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "How do you say \"on foot\"?",
+            "options": [
+              "Пішки",
+              "Автобусом",
+              "Метро",
+              "Таксі"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Вхід\" is the opposite of:",
+            "options": [
+              "Вихід",
+              "Прямо",
+              "Зупинка",
+              "Станція"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.042Z",
+      "modifiedAt": "2025-12-12T19:55:32.042Z"
+    },
+    {
+      "id": "act-a1-0-groupsort-0",
+      "type": "group-sort",
+      "title": "Location Words",
+      "description": "Sort words by category.",
+      "content": {
+        "type": "group-sort",
+        "groups": [],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.042Z",
+      "modifiedAt": "2025-12-12T19:55:32.042Z"
+    },
+    {
+      "id": "act-a1-0-truefalse-0",
+      "type": "true-false",
+      "title": "Navigation Facts",
+      "description": "Navigation Facts",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "\"Прямо\" means \"straight ahead.\"",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Наліво\" and \"направо\" are opposite directions.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Далеко\" means \"nearby.\"",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Біля\" means \"near\" or \"by.\"",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Зупинка\" is a traffic light.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Перехрестя\" is an intersection.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Вхід\" means entrance.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Пішки\" means by car.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Як дістатися до...?\" means \"How to get to...?\"",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Навпроти\" means behind.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Поруч\" means nearby.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "The Kyiv metro is famous for its depth.",
+            "isTrue": true,
+            "explanation": ""
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.042Z",
+      "modifiedAt": "2025-12-12T19:55:32.042Z"
+    },
+    {
+      "id": "act-a1-0-anagram-0",
+      "type": "anagram",
+      "title": "City Vocabulary",
+      "description": "Unscramble these city navigation words.",
+      "content": {
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
+          {
+            "letters": [
+              "о",
+              "м",
+              "я",
+              "р",
+              "п"
+            ],
+            "answer": "прямо"
+          },
+          {
+            "letters": [
+              "о",
+              "в",
+              "і",
+              "л",
+              "а",
+              "н"
+            ],
+            "answer": "наліво"
+          },
+          {
+            "letters": [
+              "о",
+              "в",
+              "а",
+              "р",
+              "п",
+              "а",
+              "н"
+            ],
+            "answer": "направо"
+          },
+          {
+            "letters": [
+              "о",
+              "к",
+              "е",
+              "л",
+              "а",
+              "д"
+            ],
+            "answer": "далеко"
+          },
+          {
+            "letters": [
+              "о",
+              "к",
+              "ь",
+              "з",
+              "и",
+              "л",
+              "б"
+            ],
+            "answer": "близько"
+          },
+          {
+            "letters": [
+              "а",
+              "к",
+              "н",
+              "и",
+              "п",
+              "у",
+              "з"
+            ],
+            "answer": "зупинка"
+          },
+          {
+            "letters": [
+              "я",
+              "і",
+              "ц",
+              "н",
+              "а",
+              "т",
+              "с"
+            ],
+            "answer": "станція"
+          },
+          {
+            "letters": [
+              "р",
+              "о",
+              "ф",
+              "о",
+              "л",
+              "т",
+              "і",
+              "в",
+              "с"
+            ],
+            "answer": "світлофор"
+          },
+          {
+            "letters": [
+              "я",
+              "т",
+              "с",
+              "е",
+              "р",
+              "х",
+              "е",
+              "р",
+              "е",
+              "п"
+            ],
+            "answer": "перехрестя"
+          },
+          {
+            "letters": [
+              "а",
+              "щ",
+              "о",
+              "л",
+              "п"
+            ],
+            "answer": "площа"
+          },
+          {
+            "letters": [
+              "я",
+              "ц",
+              "и",
+              "л",
+              "у",
+              "в"
+            ],
+            "answer": "вулиця"
+          },
+          {
+            "letters": [
+              "о",
+              "р",
+              "т",
+              "е",
+              "м"
+            ],
+            "answer": "метро"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.042Z",
+      "modifiedAt": "2025-12-12T19:55:32.042Z"
+    },
+    {
+      "id": "act-a1-0-fillblank-1",
+      "type": "fill-blank",
+      "title": "Complete the Dialogue",
+      "description": "Complete the navigation dialogue.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Турист: Де ___? (metro)",
+            "answer": "метро",
+            "options": [
+              "метро",
+              "автобус",
+              "таксі",
+              "машина"
+            ]
+          },
+          {
+            "prompt": "Киянин: Ідіть ___. (straight)",
+            "answer": "прямо",
+            "options": [
+              "прямо",
+              "наліво",
+              "направо",
+              "назад"
+            ]
+          },
+          {
+            "prompt": "Киянин: Поверніть ___. (left)",
+            "answer": "наліво",
+            "options": [
+              "наліво",
+              "направо",
+              "прямо",
+              "назад"
+            ]
+          },
+          {
+            "prompt": "Турист: Це ___? (far)",
+            "answer": "далеко",
+            "options": [
+              "далеко",
+              "близько",
+              "тут",
+              "там"
+            ]
+          },
+          {
+            "prompt": "Киянин: Ні, ___. (close)",
+            "answer": "близько",
+            "options": [
+              "близько",
+              "далеко",
+              "прямо",
+              "поруч"
+            ]
+          },
+          {
+            "prompt": "Киянин: Станція ___ зупинки. (near)",
+            "answer": "біля",
+            "options": [
+              "біля",
+              "за",
+              "на",
+              "в"
+            ]
+          },
+          {
+            "prompt": "Турист: Скільки ___ пішки? (minutes)",
+            "answer": "хвилин",
+            "options": [
+              "хвилин",
+              "годин",
+              "метрів",
+              "кілометрів"
+            ]
+          },
+          {
+            "prompt": "Киянин: Приблизно п'ять ___. (minutes)",
+            "answer": "хвилин",
+            "options": [
+              "хвилин",
+              "годин",
+              "метрів",
+              "кроків"
+            ]
+          },
+          {
+            "prompt": "Турист: А де ___? (stop)",
+            "answer": "зупинка",
+            "options": [
+              "зупинка",
+              "станція",
+              "метро",
+              "вихід"
+            ]
+          },
+          {
+            "prompt": "Киянин: На ___. (corner)",
+            "answer": "розі",
+            "options": [
+              "розі",
+              "вулиці",
+              "площі",
+              "мості"
+            ]
+          },
+          {
+            "prompt": "Турист: Дякую за ___! (help)",
+            "answer": "допомогу",
+            "options": [
+              "допомогу",
+              "допомога",
+              "допомозі",
+              "допомогою"
+            ]
+          },
+          {
+            "prompt": "Киянин: Будь ___, гарного дня! (please/welcome)",
+            "answer": "ласка",
+            "options": [
+              "ласка",
+              "ласкаво",
+              "ласки",
+              "ласку"
+            ]
+          },
+          {
+            "prompt": "Tourist: Where is the metro?",
+            "answer": ""
+          },
+          {
+            "prompt": "Kyivite: Go straight.",
+            "answer": ""
+          },
+          {
+            "prompt": "Kyivite: Turn left.",
+            "answer": ""
+          },
+          {
+            "prompt": "Tourist: Is it far?",
+            "answer": ""
+          },
+          {
+            "prompt": "Kyivite: No, it is close.",
+            "answer": ""
+          },
+          {
+            "prompt": "Kyivite: The station is near the stop.",
+            "answer": ""
+          },
+          {
+            "prompt": "Tourist: How many minutes on foot?",
+            "answer": ""
+          },
+          {
+            "prompt": "Kyivite: Approximately five minutes.",
+            "answer": ""
+          },
+          {
+            "prompt": "Tourist: And where is the stop?",
+            "answer": ""
+          },
+          {
+            "prompt": "Kyivite: On the corner.",
+            "answer": ""
+          },
+          {
+            "prompt": "Tourist: Thank you for the help!",
+            "answer": ""
+          },
+          {
+            "prompt": "Kyivite: You are welcome, have a nice day!",
+            "answer": ""
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.042Z",
+      "modifiedAt": "2025-12-12T19:55:32.042Z"
+    },
+    {
+      "id": "act-a1-0-unjumble-0",
+      "type": "unjumble",
+      "title": "Build Navigation Sentences",
+      "description": "Arrange the words into correct sentences.",
+      "content": {
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
+          {
+            "words": [
+              "прямо",
+              "ідіть",
+              "перехрестя",
+              "до"
+            ],
+            "answer": "Ідіть прямо до перехрестя."
+          },
+          {
+            "words": [
+              "метро",
+              "де",
+              "знаходиться"
+            ],
+            "answer": "Де знаходиться метро?"
+          },
+          {
+            "words": [
+              "наліво",
+              "світлофорі",
+              "на",
+              "поверніть"
+            ],
+            "answer": "На світлофорі поверніть наліво."
+          },
+          {
+            "words": [
+              "далеко",
+              "це",
+              "не"
+            ],
+            "answer": "Це не далеко."
+          },
+          {
+            "words": [
+              "зупинка",
+              "біля",
+              "магазину"
+            ],
+            "answer": "Зупинка біля магазину."
+          },
+          {
+            "words": [
+              "хвилин",
+              "п'ять",
+              "пішки"
+            ],
+            "answer": "П'ять хвилин пішки."
+          },
+          {
+            "words": [
+              "театру",
+              "музей",
+              "навпроти"
+            ],
+            "answer": "Музей навпроти театру."
+          },
+          {
+            "words": [
+              "дістатися",
+              "як",
+              "парку",
+              "до"
+            ],
+            "answer": "Як дістатися до парку?"
+          },
+          {
+            "words": [
+              "поруч",
+              "аптека",
+              "тут"
+            ],
+            "answer": "Аптека тут поруч."
+          },
+          {
+            "words": [
+              "направо",
+              "потім",
+              "поверніть"
+            ],
+            "answer": "Потім поверніть направо."
+          },
+          {
+            "words": [
+              "близько",
+              "станція",
+              "дуже"
+            ],
+            "answer": "Станція дуже близько."
+          },
+          {
+            "words": [
+              "допомогу",
+              "за",
+              "дякую"
+            ],
+            "answer": "Дякую за допомогу."
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.042Z",
+      "modifiedAt": "2025-12-12T19:55:32.042Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A1-15",
+    "level": "A1",
+    "phase": "A1.2",
+    "wordCount": 34,
+    "newWordCount": 34,
+    "reviewWordCount": 0,
+    "transliterationMode": "partial",
+    "words": [
+      {
+        "id": "v-vulytsya-0-0",
+        "uk": "вулиця",
+        "en": "street",
+        "pos": "noun",
+        "ipa": "/ˈʋulɪt͡sʲɑ/",
+        "note": "на вулиці",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-provulok-0-1",
+        "uk": "провулок",
+        "en": "lane, alley",
+        "pos": "noun",
+        "ipa": "/proˈʋulok/",
+        "note": "у провулку",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-ploshcha-0-2",
+        "uk": "площа",
+        "en": "square",
+        "pos": "noun",
+        "ipa": "/ˈploʃt͡ʃɑ/",
+        "note": "на площі",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-prospekt-0-3",
+        "uk": "проспект",
+        "en": "avenue",
+        "pos": "noun",
+        "ipa": "/prosˈpɛkt/",
+        "note": "на проспекті",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-bulьvar-0-4",
+        "uk": "бульвар",
+        "en": "boulevard",
+        "pos": "noun",
+        "ipa": "/bulʲˈʋɑr/",
+        "note": "на бульварі",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-naberezhna-0-5",
+        "uk": "набережна",
+        "en": "embankment",
+        "pos": "noun",
+        "ipa": "/nɑbɛˈrɛʒnɑ/",
+        "note": "на набережній",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-mist-0-6",
+        "uk": "міст",
+        "en": "bridge",
+        "pos": "noun",
+        "ipa": "/mist/",
+        "note": "на мості",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-perekhrestya-0-7",
+        "uk": "перехрестя",
+        "en": "intersection",
+        "pos": "noun",
+        "ipa": "/pɛrɛˈxrɛstʲɑ/",
+        "note": "на перехресті",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-svitlofor-0-8",
+        "uk": "світлофор",
+        "en": "traffic light",
+        "pos": "noun",
+        "ipa": "/sʋitloˈfor/",
+        "note": "на світлофорі",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-zupynka-0-9",
+        "uk": "зупинка",
+        "en": "stop",
+        "pos": "noun",
+        "ipa": "/zuˈpɪnkɑ/",
+        "note": "на зупинці",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-stantsiya-0-10",
+        "uk": "станція",
+        "en": "station",
+        "pos": "noun",
+        "ipa": "/ˈstɑnt͡sijɑ/",
+        "note": "на станції",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vkhid-0-11",
+        "uk": "вхід",
+        "en": "entrance",
+        "pos": "noun",
+        "ipa": "/ʋxid/",
+        "note": "біля входу",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vykhid-0-12",
+        "uk": "вихід",
+        "en": "exit",
+        "pos": "noun",
+        "ipa": "/ˈʋɪxid/",
+        "note": "біля виходу",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pryamo-0-13",
+        "uk": "прямо",
+        "en": "straight",
+        "pos": "noun",
+        "ipa": "/ˈprʲɑmo/",
+        "note": "adverb",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-nalivo-0-14",
+        "uk": "наліво",
+        "en": "to the left",
+        "pos": "noun",
+        "ipa": "/nɑˈliʋo/",
+        "note": "adverb",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-napravo-0-15",
+        "uk": "направо",
+        "en": "to the right",
+        "pos": "noun",
+        "ipa": "/nɑˈprɑʋo/",
+        "note": "adverb",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-nazad-0-16",
+        "uk": "назад",
+        "en": "back",
+        "pos": "noun",
+        "ipa": "/nɑˈzɑd/",
+        "note": "adverb",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-daleko-0-17",
+        "uk": "далеко",
+        "en": "far",
+        "pos": "noun",
+        "ipa": "/dɑˈlɛko/",
+        "note": "adverb",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-blyzьko-0-18",
+        "uk": "близько",
+        "en": "near, close",
+        "pos": "noun",
+        "ipa": "/ˈblɪzʲko/",
+        "note": "adverb",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-poruch-0-19",
+        "uk": "поруч",
+        "en": "nearby",
+        "pos": "noun",
+        "ipa": "/ˈporut͡ʃ/",
+        "note": "adverb",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-navproty-0-20",
+        "uk": "навпроти",
+        "en": "opposite",
+        "pos": "noun",
+        "ipa": "/nɑʋˈprotɪ/",
+        "note": "adverb",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-za-0-21",
+        "uk": "за",
+        "en": "behind",
+        "pos": "noun",
+        "ipa": "/zɑ/",
+        "note": "+ Inst",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pered-0-22",
+        "uk": "перед",
+        "en": "in front of",
+        "pos": "noun",
+        "ipa": "/ˈpɛrɛd/",
+        "note": "+ Inst",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-mizh-0-23",
+        "uk": "між",
+        "en": "between",
+        "pos": "noun",
+        "ipa": "/miʒ/",
+        "note": "+ Inst",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-bilya-0-24",
+        "uk": "біля",
+        "en": "near, by",
+        "pos": "noun",
+        "ipa": "/ˈbilʲɑ/",
+        "note": "+ Gen",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-cherez-0-25",
+        "uk": "через",
+        "en": "across, through",
+        "pos": "noun",
+        "ipa": "/ˈt͡ʃɛrɛz/",
+        "note": "+ Acc",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-do-0-26",
+        "uk": "до",
+        "en": "to",
+        "pos": "noun",
+        "ipa": "/do/",
+        "note": "+ Gen",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vid-0-27",
+        "uk": "від",
+        "en": "from",
+        "pos": "noun",
+        "ipa": "/ʋid/",
+        "note": "+ Gen",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pishky-0-28",
+        "uk": "пішки",
+        "en": "on foot",
+        "pos": "noun",
+        "ipa": "/ˈpiʃkɪ/",
+        "note": "adverb",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-metro-0-29",
+        "uk": "метро",
+        "en": "metro",
+        "pos": "noun",
+        "ipa": "/mɛˈtro/",
+        "note": "у метро",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-avtobus-0-30",
+        "uk": "автобус",
+        "en": "bus",
+        "pos": "noun",
+        "ipa": "/ɑʋˈtobus/",
+        "note": "на автобусі",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-tramvay-0-31",
+        "uk": "трамвай",
+        "en": "tram",
+        "pos": "noun",
+        "ipa": "/trɑmˈʋɑj/",
+        "note": "на трамваї",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-marshrutka-0-32",
+        "uk": "маршрутка",
+        "en": "minibus",
+        "pos": "noun",
+        "ipa": "/mɑrʃˈrutkɑ/",
+        "note": "на маршрутці",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-taksi-0-33",
+        "uk": "таксі",
+        "en": "taxi",
+        "pos": "noun",
+        "ipa": "/tɑkˈsi/",
+        "note": "на таксі",
+        "isNew": true,
+        "firstModule": 0
+      }
+    ]
+  }
+}

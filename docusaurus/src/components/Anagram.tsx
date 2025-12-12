@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
+import { shuffleNotCorrect } from './utils';
 
 // Generate consistent colors for letters
 const LETTER_COLORS = [
@@ -22,15 +23,20 @@ interface AnagramQuestionProps {
 }
 
 export function AnagramQuestion({ scrambled, answer, hint }: AnagramQuestionProps) {
-  // Parse scrambled letters (space-separated)
-  const letters = useMemo(() =>
-    scrambled.split(' ').filter(l => l.trim()).map((letter, idx) => ({
+  // Parse scrambled letters (space-separated) and shuffle so they're never in correct order
+  const letters = useMemo(() => {
+    const rawLetters = scrambled.split(' ').filter(l => l.trim());
+    const correctOrder = answer.split('');
+
+    // Shuffle ensuring letters are NOT in the correct answer order
+    const shuffled = shuffleNotCorrect(rawLetters, correctOrder);
+
+    return shuffled.map((letter, idx) => ({
       id: `letter-${idx}`,
       char: letter,
       color: getLetterColor(letter, idx)
-    })),
-    [scrambled]
-  );
+    }));
+  }, [scrambled, answer]);
 
   const [availableLetters, setAvailableLetters] = useState(letters);
   const [selectedLetters, setSelectedLetters] = useState<typeof letters>([]);

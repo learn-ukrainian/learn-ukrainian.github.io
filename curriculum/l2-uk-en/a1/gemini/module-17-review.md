@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 775/750
+- **Words:** ✅ 829/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -23,7 +23,7 @@
 | **Presentation: Numbers with Nouns** | ✅ | 51 | Included in Core |
 | **Cultural Insight: Ukrainian Currency 🇺🇦** | ✅ | 169 | Included in Core |
 | **Reading Practice: У магазині 💰** | ✅ | 155 | Included in Core |
-| **Conversation: Це скільки? 🗣️** | ✅ | 107 | Included in Core |
+| **Conversation: Це скільки? 🗣️** | ✅ | 161 | Included in Core |
 | **fill-in: Write the Number** | 🎮 | 12 | Activity (12 items) |
 | **match-up: Number to Word** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Number-Noun Agreement** | 🎮 | 12 | Activity (12 items) |

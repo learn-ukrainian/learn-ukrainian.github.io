@@ -1,0 +1,1195 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A1-16",
+    "moduleId": "mod-uk-A1-16",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A1",
+    "phase": "A1.2",
+    "moduleNumber": 16,
+    "moduleType": "grammar",
+    "pedagogy": "PPP",
+    "immersionLevel": 0.3,
+    "title": "The Genitive I: Absence",
+    "subtitle": "Expressing 'No' and 'Without'",
+    "description": "Understand the genitive case for absence",
+    "objectives": [
+      "Understand the genitive case for absence",
+      "Form genitive endings for all genders",
+      "Use немає (there is no) correctly",
+      "Express absence and lack with без (without)"
+    ],
+    "grammarFocus": [
+      "Genitive case (basic)",
+      "Negation with немає",
+      "Preposition без"
+    ],
+    "tags": [
+      "grammar",
+      "cases",
+      "genitive",
+      "negation"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "partial",
+    "sections": [
+      {
+        "id": "section-content-0",
+        "name": "Lesson",
+        "type": "content",
+        "content": "> **Note:** The genitive case has many uses. Today we learn its first function: expressing that something **doesn't exist** or is **absent**.\n\n## Warm-up: The Missing Coffee\n\nImagine this situation: You're in a café. You order coffee. The waiter says:\n\n**\"Вибачте, кави немає.\"** (Sorry, there's no coffee.)\n\nWhat happened to \"кава\"? It became \"кави\"! When something is absent, Ukrainian doesn't just say \"no coffee\" — it changes the noun's form to the **genitive case**.\n\nThis is your introduction to Ukraine's most versatile case. The genitive has more uses than any other case, but today we focus on just one: expressing that something is absent or lacking.\n\nThe genitive is used with:\n- **немає** (there is no)\n- **нема** (informal: there's no)\n- **без** (without)\n- **у мене немає** (I don't have)\n\nUnderstanding this pattern opens up a whole new range of expression. You can now say what you DON'T have, what ISN'T there, and what you want WITHOUT something!\n\n> 💡 **Thinking Trick:** Think of it this way: The genitive is the \"of\" case. \"Немає кави\" literally means \"There is no (of) coffee\" — the coffee that would exist is absent.\n\n## Presentation: The Genitive Case\n\n### 1. Genitive Endings\n\nThe genitive changes noun endings based on gender:\n\n| Gender | Nominative | Genitive Ending | Example |\n|--------|------------|-----------------|---------|\n| **Masculine** | -Ø (consonant) | **-а / -у** | друг → друг**а**, час → час**у** |\n| **Feminine** | -а / -я | **-и / -і** | книг**а** → книг**и**, земл**я** → земл**і** |\n| **Neuter** | -о / -е | **-а** | вікн**о** → вікн**а**, мор**е** → мор**я** |\n\n**Masculine -а vs -у:**\n- **-а** for animate, concrete nouns: друг → друга, студент → студента\n- **-у** for abstract, mass nouns: час → часу, цукор → цукру\n\n### 2. Using немає (There Is No)\n\n**Немає** is the negative form of \"є\" (there is). It ALWAYS takes genitive!\n\n| Nominative | Genitive | Sentence |\n|------------|----------|----------|\n| кава (f) | кави | Кави **немає**. (There's no coffee.) |\n| час (m) | часу | Часу **немає**. (There's no time.) |\n| вода (f) | води | Води **немає**. (There's no water.) |\n| молоко (n) | молока | Молока **немає**. (There's no milk.) |\n\n**Word order:** In Ukrainian, the genitive noun often comes BEFORE немає:\n- Кави немає. (Coffee there-is-no.)\n- Часу немає. (Time there-is-no.)\n\n### 3. У мене немає... (I Don't Have...)\n\nTo say you don't have something, use \"у мене немає\" + genitive:\n\n| What you don't have | Sentence |\n|--------------------|----------|\n| час (time) | У мене немає **часу**. (I don't have time.) |\n| гроші (money) | У мене немає **грошей**. (I don't have money.) |\n| машина (car) | У мене немає **машини**. (I don't have a car.) |\n| ідея (idea) | У мене немає **ідеї**. (I don't have an idea.) |\n\n**For other people:**\n- У тебе немає... (You don't have...)\n- У нього немає... (He doesn't have...)\n- У неї немає... (She doesn't have...)\n- У нас немає... (We don't have...)\n\n> 📜 **Pattern Summary:**\n> - **Masculine:** -а (animate/concrete) or -у (abstract/mass)\n> - **Feminine:** -и (after hard consonant) or -і (after soft consonant/й)\n> - **Neuter:** -а\n\n### 4. Без (Without) + Genitive\n\nThe preposition **без** (without) also requires the genitive:\n\n| Without... | Ukrainian |\n|------------|-----------|\n| without sugar | без **цукру** |\n| without milk | без **молока** |\n| without money | без **грошей** |\n| without a car | без **машини** |\n| without problems | без **проблем** |\n\n**Common phrases:**\n- Каву без цукру, будь ласка. (Coffee without sugar, please.)\n- Чай без молока. (Tea without milk.)\n- Він прийшов без грошей. (He came without money.)\n\n> 💡 **Did You Know?** The genitive case is the second most common case in Ukrainian after the nominative. Mastering it will dramatically improve your ability to understand and produce natural Ukrainian!\n\n## Cultural Insight: Ukrainian Hospitality 🇺🇦\n\nIn Ukrainian culture, hospitality (гостинність) is sacred. A host will always offer food and drink, and refusing can be seen as impolite! Common situations:\n\nWhen you visit a Ukrainian home, you might hear:\n- \"Будете чай?\" (Will you have tea?)\n- \"Може, кави?\" (Maybe coffee?)\n\nAnd the polite responses involve the genitive:\n- \"Дякую, але я **без цукру**.\" (Thanks, but I'm without sugar = I don't take sugar.)\n- \"Ні, дякую, **часу немає**.\" (No thanks, there's no time.)\n\n> 📜 **Myth Buster:** Some people think Ukrainian grammar is \"basically Russian.\" False! While both languages have the genitive, Ukrainian uses it differently in many contexts. For example, the Ukrainian \"у мене є\" construction differs from Russian influence.\n\n> 📜 **History Bite:** The genitive case has ancient Proto-Slavic origins, dating back over 1,500 years. Its original meaning related to \"belonging\" and \"origin\" — which is why we still call it the genitive (from Latin \"genus\" = birth, origin).\n\n## Reading Practice: У магазині 🛒\n\n**Українською:**\n\n— Добрий день! Чи є у вас свіжа риба?\n— На жаль, риби сьогодні немає.\n— А курка?\n— Курка є! Скільки вам?\n— Один кілограм, будь ласка. А є молоко?\n— Так, молоко є. Але сиру немає — уже все продали.\n— Добре. Тоді молоко і курку. І хліб — чорний, без добавок.\n— Звичайно! Ще щось?\n— Ні, дякую, грошей більше немає!\n— Це буде 150 гривень.\n— Ось, будь ласка. До побачення!\n\n**English Translation:**\n\n— Good afternoon! Do you have fresh fish?\n— Unfortunately, there's no fish today.\n— What about chicken?\n— There is chicken! How much for you?\n— One kilogram, please. And is there milk?\n— Yes, there's milk. But there's no cheese — they already sold everything.\n— Okay. Then milk and chicken. And bread — black, without additives.\n— Of course! Anything else?\n— No, thank you, there's no more money!\n— That will be 150 hryvnias.\n— Here you go. Goodbye!\n\n**Comprehension check:** Which words are in the genitive? Why?\n\n## Conversation: Проблеми 🗣️\n\n**Олександр:** Привіт! Як справи?\n**Марина:** Привіт. Погано. У мене сьогодні немає часу!\n**Олександр:** Чому?\n**Марина:** Багато роботи. І грошей немає — зарплату ще не дали.\n**Олександр:** Розумію. У мене теж проблеми. Машини немає — у ремонті.\n**Марина:** Без машини важко?\n**Олександр:** Так, їжджу автобусом. Довго, але що робити?\n**Марина:** Ну, тримайся! Без труднощів немає успіху!\n\nЗверни увагу: часу, грошей, машини, труднощів, успіху — все це родовий відмінок!"
+      },
+      {
+        "id": "section-summary-1",
+        "name": "Підсумок",
+        "nameEn": "Summary",
+        "type": "summary",
+        "content": "**The Genitive Case: Expressing Absence**\n\n1. **немає** + genitive = there is no...\n2. **у мене немає** + genitive = I don't have...\n3. **без** + genitive = without...\n4. **Endings:** m: -а/-у, f: -и/-і, n: -а\n5. **Common words:** часу, грошей, води, молока, ідеї\n\n---\n\n> [!tip] 🌟 **Pro Tip:** Practice negative sentences! Instead of just learning \"кава,\" learn \"кави немає.\" This builds automatic genitive reflexes.\n\n\n---"
+      }
+    ],
+    "rawMarkdown": "---\ntitle: \"The Genitive I: Absence\"\nsubtitle: \"Expressing 'No' and 'Without'\"\nphase: A1.2\ntransliteration: partial\npedagogy: PPP\nduration: 45\ntags: [grammar, cases, genitive, negation]\nobjectives:\n  - Understand the genitive case for absence\n  - Form genitive endings for all genders\n  - Use немає (there is no) correctly\n  - Express absence and lack with без (without)\ngrammar:\n  - Genitive case (basic)\n  - Negation with немає\n  - Preposition без\naudio: false\n---\n\n# The Genitive I: Absence\n\n> **Note:** The genitive case has many uses. Today we learn its first function: expressing that something **doesn't exist** or is **absent**.\n\n## Warm-up: The Missing Coffee\n\nImagine this situation: You're in a café. You order coffee. The waiter says:\n\n**\"Вибачте, кави немає.\"** (Sorry, there's no coffee.)\n\nWhat happened to \"кава\"? It became \"кави\"! When something is absent, Ukrainian doesn't just say \"no coffee\" — it changes the noun's form to the **genitive case**.\n\nThis is your introduction to Ukraine's most versatile case. The genitive has more uses than any other case, but today we focus on just one: expressing that something is absent or lacking.\n\nThe genitive is used with:\n- **немає** (there is no)\n- **нема** (informal: there's no)\n- **без** (without)\n- **у мене немає** (I don't have)\n\nUnderstanding this pattern opens up a whole new range of expression. You can now say what you DON'T have, what ISN'T there, and what you want WITHOUT something!\n\n> 💡 **Thinking Trick:** Think of it this way: The genitive is the \"of\" case. \"Немає кави\" literally means \"There is no (of) coffee\" — the coffee that would exist is absent.\n\n## Presentation: The Genitive Case\n\n### 1. Genitive Endings\n\nThe genitive changes noun endings based on gender:\n\n| Gender | Nominative | Genitive Ending | Example |\n|--------|------------|-----------------|---------|\n| **Masculine** | -Ø (consonant) | **-а / -у** | друг → друг**а**, час → час**у** |\n| **Feminine** | -а / -я | **-и / -і** | книг**а** → книг**и**, земл**я** → земл**і** |\n| **Neuter** | -о / -е | **-а** | вікн**о** → вікн**а**, мор**е** → мор**я** |\n\n**Masculine -а vs -у:**\n- **-а** for animate, concrete nouns: друг → друга, студент → студента\n- **-у** for abstract, mass nouns: час → часу, цукор → цукру\n\n### 2. Using немає (There Is No)\n\n**Немає** is the negative form of \"є\" (there is). It ALWAYS takes genitive!\n\n| Nominative | Genitive | Sentence |\n|------------|----------|----------|\n| кава (f) | кави | Кави **немає**. (There's no coffee.) |\n| час (m) | часу | Часу **немає**. (There's no time.) |\n| вода (f) | води | Води **немає**. (There's no water.) |\n| молоко (n) | молока | Молока **немає**. (There's no milk.) |\n\n**Word order:** In Ukrainian, the genitive noun often comes BEFORE немає:\n- Кави немає. (Coffee there-is-no.)\n- Часу немає. (Time there-is-no.)\n\n### 3. У мене немає... (I Don't Have...)\n\nTo say you don't have something, use \"у мене немає\" + genitive:\n\n| What you don't have | Sentence |\n|--------------------|----------|\n| час (time) | У мене немає **часу**. (I don't have time.) |\n| гроші (money) | У мене немає **грошей**. (I don't have money.) |\n| машина (car) | У мене немає **машини**. (I don't have a car.) |\n| ідея (idea) | У мене немає **ідеї**. (I don't have an idea.) |\n\n**For other people:**\n- У тебе немає... (You don't have...)\n- У нього немає... (He doesn't have...)\n- У неї немає... (She doesn't have...)\n- У нас немає... (We don't have...)\n\n> 📜 **Pattern Summary:**\n> - **Masculine:** -а (animate/concrete) or -у (abstract/mass)\n> - **Feminine:** -и (after hard consonant) or -і (after soft consonant/й)\n> - **Neuter:** -а\n\n### 4. Без (Without) + Genitive\n\nThe preposition **без** (without) also requires the genitive:\n\n| Without... | Ukrainian |\n|------------|-----------|\n| without sugar | без **цукру** |\n| without milk | без **молока** |\n| without money | без **грошей** |\n| without a car | без **машини** |\n| without problems | без **проблем** |\n\n**Common phrases:**\n- Каву без цукру, будь ласка. (Coffee without sugar, please.)\n- Чай без молока. (Tea without milk.)\n- Він прийшов без грошей. (He came without money.)\n\n> 💡 **Did You Know?** The genitive case is the second most common case in Ukrainian after the nominative. Mastering it will dramatically improve your ability to understand and produce natural Ukrainian!\n\n## Cultural Insight: Ukrainian Hospitality 🇺🇦\n\nIn Ukrainian culture, hospitality (гостинність) is sacred. A host will always offer food and drink, and refusing can be seen as impolite! Common situations:\n\nWhen you visit a Ukrainian home, you might hear:\n- \"Будете чай?\" (Will you have tea?)\n- \"Може, кави?\" (Maybe coffee?)\n\nAnd the polite responses involve the genitive:\n- \"Дякую, але я **без цукру**.\" (Thanks, but I'm without sugar = I don't take sugar.)\n- \"Ні, дякую, **часу немає**.\" (No thanks, there's no time.)\n\n> 📜 **Myth Buster:** Some people think Ukrainian grammar is \"basically Russian.\" False! While both languages have the genitive, Ukrainian uses it differently in many contexts. For example, the Ukrainian \"у мене є\" construction differs from Russian influence.\n\n> 📜 **History Bite:** The genitive case has ancient Proto-Slavic origins, dating back over 1,500 years. Its original meaning related to \"belonging\" and \"origin\" — which is why we still call it the genitive (from Latin \"genus\" = birth, origin).\n\n## Reading Practice: У магазині 🛒\n\n**Українською:**\n\n— Добрий день! Чи є у вас свіжа риба?\n— На жаль, риби сьогодні немає.\n— А курка?\n— Курка є! Скільки вам?\n— Один кілограм, будь ласка. А є молоко?\n— Так, молоко є. Але сиру немає — уже все продали.\n— Добре. Тоді молоко і курку. І хліб — чорний, без добавок.\n— Звичайно! Ще щось?\n— Ні, дякую, грошей більше немає!\n— Це буде 150 гривень.\n— Ось, будь ласка. До побачення!\n\n**English Translation:**\n\n— Good afternoon! Do you have fresh fish?\n— Unfortunately, there's no fish today.\n— What about chicken?\n— There is chicken! How much for you?\n— One kilogram, please. And is there milk?\n— Yes, there's milk. But there's no cheese — they already sold everything.\n— Okay. Then milk and chicken. And bread — black, without additives.\n— Of course! Anything else?\n— No, thank you, there's no more money!\n— That will be 150 hryvnias.\n— Here you go. Goodbye!\n\n**Comprehension check:** Which words are in the genitive? Why?\n\n## Conversation: Проблеми 🗣️\n\n**Олександр:** Привіт! Як справи?\n**Марина:** Привіт. Погано. У мене сьогодні немає часу!\n**Олександр:** Чому?\n**Марина:** Багато роботи. І грошей немає — зарплату ще не дали.\n**Олександр:** Розумію. У мене теж проблеми. Машини немає — у ремонті.\n**Марина:** Без машини важко?\n**Олександр:** Так, їжджу автобусом. Довго, але що робити?\n**Марина:** Ну, тримайся! Без труднощів немає успіху!\n\nЗверни увагу: часу, грошей, машини, труднощів, успіху — все це родовий відмінок!\n\n# Summary\n\n**The Genitive Case: Expressing Absence**\n\n1. **немає** + genitive = there is no...\n2. **у мене немає** + genitive = I don't have...\n3. **без** + genitive = without...\n4. **Endings:** m: -а/-у, f: -и/-і, n: -а\n5. **Common words:** часу, грошей, води, молока, ідеї\n\n---\n\n> [!tip] 🌟 **Pro Tip:** Practice negative sentences! Instead of just learning \"кава,\" learn \"кави немає.\" This builds automatic genitive reflexes.\n\n# Activities\n\n## fill-in: Genitive Formation\n> Change the nominative to genitive.\n\n1. Немає ___ (кава).\n   > [!answer] кави\n   > [!options] кави | каву | кава | каві\n\n2. У мене немає ___ (час).\n   > [!answer] часу\n   > [!options] часу | часа | час | часі\n\n3. Немає ___ (вода).\n   > [!answer] води\n   > [!options] води | воду | вода | воді\n\n4. Без ___ (цукор).\n   > [!answer] цукру\n   > [!options] цукру | цукор | цукра | цукрі\n\n5. Немає ___ (молоко).\n   > [!answer] молока\n   > [!options] молока | молоку | молоко | молоці\n\n6. У нього немає ___ (машина).\n   > [!answer] машини\n   > [!options] машини | машину | машина | машині\n\n7. Без ___ (проблема).\n   > [!answer] проблеми\n   > [!options] проблеми | проблему | проблема | проблемі\n\n8. Немає ___ (ідея).\n   > [!answer] ідеї\n   > [!options] ідеї | ідею | ідея | ідеї\n\n9. У неї немає ___ (сестра).\n   > [!answer] сестри\n   > [!options] сестри | сестру | сестра | сестрі\n\n10. Без ___ (причина).\n    > [!answer] причини\n    > [!options] причини | причину | причина | причині\n\n11. Немає ___ (сенс).\n    > [!answer] сенсу\n    > [!options] сенсу | сенса | сенс | сенсі\n\n12. У нас немає ___ (інформація).\n    > [!answer] інформації\n    > [!options] інформації | інформацію | інформація | інформаціє\n\n## match-up: Nominative to Genitive\n> Match the nominative with its genitive form.\n\n| Nominative | Genitive |\n| --- | --- |\n| кава | кави |\n| час | часу |\n| вода | води |\n| молоко | молока |\n| цукор | цукру |\n| машина | машини |\n| ідея | ідеї |\n| гроші | грошей |\n| проблема | проблеми |\n| хліб | хліба |\n| сир | сиру |\n| риба | риби |\n\n## quiz: Choosing the Right Case\n> Select the correct form for each sentence.\n\n1. У мене немає ___. (time)\n   - [x] часу\n   - [ ] час\n   - [ ] часі\n   - [ ] часом\n\n2. Кави сьогодні ___. (there is no)\n   - [x] немає\n   - [ ] не є\n   - [ ] ні\n   - [ ] без\n\n3. Каву ___ цукру, будь ласка. (without)\n   - [x] без\n   - [ ] немає\n   - [ ] не\n   - [ ] від\n\n4. ___ грошей немає. (I don't have)\n   - [x] У мене\n   - [ ] Мене\n   - [ ] Мій\n   - [ ] Мене є\n\n5. Молока ___. (there is no)\n   - [x] немає\n   - [ ] не є\n   - [ ] нема\n   - [ ] немає, нема (both correct)\n\n6. Він прийшов без ___. (money)\n   - [x] грошей\n   - [ ] гроші\n   - [ ] грошами\n   - [ ] грошах\n\n7. ___ немає проблем. (She doesn't have)\n   - [x] У неї\n   - [ ] Вона\n   - [ ] Її\n   - [ ] Ній\n\n8. Чаю ___? (is there no)\n   - [x] немає\n   - [ ] не є\n   - [ ] ні\n   - [ ] без\n\n9. Без ___ важко. (help)\n   - [x] допомоги\n   - [ ] допомогу\n   - [ ] допомога\n   - [ ] допомозі\n\n10. У нас немає ___. (car)\n    - [x] машини\n    - [ ] машину\n    - [ ] машина\n    - [ ] машині\n\n11. Сиру ___. (there is no)\n    - [x] немає\n    - [ ] не є\n    - [ ] ні\n    - [ ] без\n\n12. Без ___ не обійтися. (water)\n    - [x] води\n    - [ ] воду\n    - [ ] вода\n    - [ ] воді\n\n## group-sort: Genitive Endings by Gender\n> Sort these genitive forms by their gender.\n\n- Masculine: часу\n- Masculine: хліба\n- Masculine: цукру\n- Masculine: сиру\n- Feminine: кави\n- Feminine: води\n- Feminine: машини\n- Feminine: ідеї\n- Neuter: молока\n- Neuter: вікна\n- Neuter: моря\n- Plural: грошей\n\n## true-false: Genitive Rules\n- [x] \"Немає\" requires the genitive case.\n- [x] The feminine genitive ending is typically -и or -і.\n- [ ] \"Каву немає\" is grammatically correct.\n- [x] \"Без\" is always followed by the genitive.\n- [x] Masculine abstract nouns often take -у in genitive.\n- [ ] The genitive is only used for absence.\n- [x] \"У мене немає часу\" means \"I don't have time.\"\n- [ ] Neuter nouns don't change in the genitive.\n- [x] \"Кави немає\" means \"There is no coffee.\"\n- [x] The word order is flexible (кави немає = немає кави).\n- [ ] \"Без\" means \"with.\"\n- [x] \"Грошей\" is the genitive plural of \"гроші.\"\n\n## anagram: Genitive Vocabulary\n> Unscramble words commonly used with genitive.\n\n1. є а м е н\n   > [!answer] немає\n\n2. з е б\n   > [!answer] без\n\n3. у с а ч\n   > [!answer] часу\n\n4. и в а к\n   > [!answer] кави\n\n5. й е ш о р г\n   > [!answer] грошей\n\n6. и д о в\n   > [!answer] води\n\n7. а к о л о м\n   > [!answer] молока\n\n8. и н и ш а м\n   > [!answer] машини\n\n9. д ї е і\n   > [!answer] ідеї\n\n10. у р к у ц\n    > [!answer] цукру\n\n11. и м е л б о р п\n    > [!answer] проблеми\n\n12. о о г п д и о м\n    > [!answer] допомоги\n\n## fill-in: Complete Negative Sentences\n> Complete the sentences with the correct genitive form.\n\n1. У кафе немає ___. (milk)\n   > [!answer] молока\n   > [!options] молока | молоку | молоко | молоці\n\n2. Чай без ___, будь ласка. (sugar)\n   > [!answer] цукру\n   > [!options] цукру | цукор | цукра | цукрі\n\n3. У мене немає ___. (idea)\n   > [!answer] ідеї\n   > [!options] ідеї | ідею | ідея | ідеє\n\n4. Сьогодні немає ___. (time)\n   > [!answer] часу\n   > [!options] часу | часа | час | часі\n\n5. Він прийшов без ___. (car)\n   > [!answer] машини\n   > [!options] машини | машину | машина | машині\n\n6. На жаль, ___ немає. (coffee)\n   > [!answer] кави\n   > [!options] кави | каву | кава | каві\n\n7. У них немає ___. (money)\n   > [!answer] грошей\n   > [!options] грошей | гроші | грошам | грошах\n\n8. Без ___ не можна. (water)\n   > [!answer] води\n   > [!options] води | воду | вода | воді\n\n9. У магазині немає ___. (bread)\n   > [!answer] хліба\n   > [!options] хліба | хлібу | хліб | хлібі\n\n10. Кава без ___. (milk)\n    > [!answer] молока\n    > [!options] молока | молоку | молоко | молоці\n\n11. У неї немає ___. (sister)\n    > [!answer] сестри\n    > [!options] сестри | сестру | сестра | сестрі\n\n12. Без ___ важко жити. (help)\n    > [!answer] допомоги\n    > [!options] допомоги | допомогу | допомога | допомозі\n\n## unjumble: Build Negative Sentences\n> Arrange the words into correct sentences.\n\n1. немає / кави / сьогодні\n   > [!answer] Сьогодні кави немає.\n\n2. часу / у / мене / немає\n   > [!answer] У мене немає часу.\n\n3. без / цукру / Каву / будь / ласка\n   > [!answer] Каву без цукру, будь ласка.\n\n4. грошей / немає / у / нього\n   > [!answer] У нього немає грошей.\n\n5. молока / без / чай\n   > [!answer] Чай без молока.\n\n6. води / немає / тут\n   > [!answer] Тут води немає.\n\n7. машини / у / неї / немає\n   > [!answer] У неї немає машини.\n\n8. проблеми / без / це\n   > [!answer] Це без проблеми.\n\n9. хліба / магазині / у / немає\n   > [!answer] У магазині немає хліба.\n\n10. ідеї / у / мене / немає\n    > [!answer] У мене немає ідеї.\n\n11. жаль / На / немає / сиру\n    > [!answer] На жаль, сиру немає.\n\n12. допомоги / без / важко\n    > [!answer] Без допомоги важко.\n\n---\n\n# Vocabulary\n\n| Ukrainian | IPA | English | Genitive |\n| --- | --- | --- | --- |\n| немає | /nɛˈmɑjɛ/ | there is no | — |\n| нема | /nɛˈmɑ/ | there's no (informal) | — |\n| без | /bɛz/ | without | + Gen |\n| час | /t͡ʃɑs/ | time | часу |\n| гроші | /ˈɦroʃi/ | money | грошей |\n| ідея | /iˈdɛjɑ/ | idea | ідеї |\n| проблема | /proˈblɛmɑ/ | problem | проблеми |\n| можливість | /moʒˈlɪʋistʲ/ | possibility | можливості |\n| причина | /prɪˈt͡ʃɪnɑ/ | reason | причини |\n| сенс | /sɛns/ | sense, meaning | сенсу |\n| користь | /ˈkorɪstʲ/ | benefit, use | користі |\n| значення | /znɑˈt͡ʃɛnʲɑ/ | meaning | значення |\n| різниця | /ˈriznɪt͡sʲɑ/ | difference | різниці |\n| вибір | /ˈʋɪbir/ | choice | вибору |\n| досвід | /ˈdosʋid/ | experience | досвіду |\n| знання | /ˈznɑnʲɑ/ | knowledge | знання |\n| інформація | /informɑˈt͡sijɑ/ | information | інформації |\n| допомога | /dopoˈmoɦɑ/ | help | допомоги |\n| підтримка | /pidˈtrɪmkɑ/ | support | підтримки |\n| увага | /uˈʋɑɦɑ/ | attention | уваги |\n| терпіння | /tɛrˈpinʲɑ/ | patience | терпіння |\n| сила | /ˈsɪlɑ/ | strength | сили |\n| цукор | /ˈt͡sukɔr/ | sugar | цукру |\n| хліб | /xlib/ | bread | хліба |\n| сир | /sɪr/ | cheese | сиру |\n",
+    "createdAt": "2025-12-12T19:55:32.043Z",
+    "modifiedAt": "2025-12-12T19:55:32.043Z",
+    "version": 2
+  },
+  "activities": [
+    {
+      "id": "act-a1-0-fillblank-0",
+      "type": "fill-blank",
+      "title": "Genitive Formation",
+      "description": "Change the nominative to genitive.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Немає ___.",
+            "answer": "кави",
+            "options": [
+              "кави",
+              "каву",
+              "кава",
+              "каві"
+            ]
+          },
+          {
+            "prompt": "У мене немає ___.",
+            "answer": "часу",
+            "options": [
+              "часу",
+              "часа",
+              "час",
+              "часі"
+            ]
+          },
+          {
+            "prompt": "Немає ___.",
+            "answer": "води",
+            "options": [
+              "води",
+              "воду",
+              "вода",
+              "воді"
+            ]
+          },
+          {
+            "prompt": "Без ___.",
+            "answer": "цукру",
+            "options": [
+              "цукру",
+              "цукор",
+              "цукра",
+              "цукрі"
+            ]
+          },
+          {
+            "prompt": "Немає ___.",
+            "answer": "молока",
+            "options": [
+              "молока",
+              "молоку",
+              "молоко",
+              "молоці"
+            ]
+          },
+          {
+            "prompt": "У нього немає ___.",
+            "answer": "машини",
+            "options": [
+              "машини",
+              "машину",
+              "машина",
+              "машині"
+            ]
+          },
+          {
+            "prompt": "Без ___.",
+            "answer": "проблеми",
+            "options": [
+              "проблеми",
+              "проблему",
+              "проблема",
+              "проблемі"
+            ]
+          },
+          {
+            "prompt": "Немає ___.",
+            "answer": "ідеї",
+            "options": [
+              "ідеї",
+              "ідею",
+              "ідея",
+              "ідеї"
+            ]
+          },
+          {
+            "prompt": "У неї немає ___.",
+            "answer": "сестри",
+            "options": [
+              "сестри",
+              "сестру",
+              "сестра",
+              "сестрі"
+            ]
+          },
+          {
+            "prompt": "Без ___.",
+            "answer": "причини",
+            "options": [
+              "причини",
+              "причину",
+              "причина",
+              "причині"
+            ]
+          },
+          {
+            "prompt": "Немає ___.",
+            "answer": "сенсу",
+            "options": [
+              "сенсу",
+              "сенса",
+              "сенс",
+              "сенсі"
+            ]
+          },
+          {
+            "prompt": "У нас немає ___.",
+            "answer": "інформації",
+            "options": [
+              "інформації",
+              "інформацію",
+              "інформація",
+              "інформаціє"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.043Z",
+      "modifiedAt": "2025-12-12T19:55:32.043Z"
+    },
+    {
+      "id": "act-a1-0-matchup-0",
+      "type": "match-up",
+      "title": "Nominative to Genitive",
+      "description": "Match the nominative with its genitive form.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "кава",
+            "right": "кави"
+          },
+          {
+            "left": "час",
+            "right": "часу"
+          },
+          {
+            "left": "вода",
+            "right": "води"
+          },
+          {
+            "left": "молоко",
+            "right": "молока"
+          },
+          {
+            "left": "цукор",
+            "right": "цукру"
+          },
+          {
+            "left": "машина",
+            "right": "машини"
+          },
+          {
+            "left": "ідея",
+            "right": "ідеї"
+          },
+          {
+            "left": "гроші",
+            "right": "грошей"
+          },
+          {
+            "left": "проблема",
+            "right": "проблеми"
+          },
+          {
+            "left": "хліб",
+            "right": "хліба"
+          },
+          {
+            "left": "сир",
+            "right": "сиру"
+          },
+          {
+            "left": "риба",
+            "right": "риби"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.043Z",
+      "modifiedAt": "2025-12-12T19:55:32.043Z"
+    },
+    {
+      "id": "act-a1-0-quiz-0",
+      "type": "quiz",
+      "title": "Choosing the Right Case",
+      "description": "Select the correct form for each sentence.",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "У мене немає ___. (time)",
+            "options": [
+              "часу",
+              "час",
+              "часі",
+              "часом"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Кави сьогодні ___. (there is no)",
+            "options": [
+              "немає",
+              "не є",
+              "ні",
+              "без"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Каву ___ цукру, будь ласка. (without)",
+            "options": [
+              "без",
+              "немає",
+              "не",
+              "від"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "___ грошей немає. (I don't have)",
+            "options": [
+              "У мене",
+              "Мене",
+              "Мій",
+              "Мене є"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Молока ___. (there is no)",
+            "options": [
+              "немає",
+              "не є",
+              "нема",
+              "немає, нема (both correct)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Він прийшов без ___. (money)",
+            "options": [
+              "грошей",
+              "гроші",
+              "грошами",
+              "грошах"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "___ немає проблем. (She doesn't have)",
+            "options": [
+              "У неї",
+              "Вона",
+              "Її",
+              "Ній"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Чаю ___? (is there no)",
+            "options": [
+              "немає",
+              "не є",
+              "ні",
+              "без"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Без ___ важко. (help)",
+            "options": [
+              "допомоги",
+              "допомогу",
+              "допомога",
+              "допомозі"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "У нас немає ___. (car)",
+            "options": [
+              "машини",
+              "машину",
+              "машина",
+              "машині"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Сиру ___. (there is no)",
+            "options": [
+              "немає",
+              "не є",
+              "ні",
+              "без"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Без ___ не обійтися. (water)",
+            "options": [
+              "води",
+              "воду",
+              "вода",
+              "воді"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.043Z",
+      "modifiedAt": "2025-12-12T19:55:32.043Z"
+    },
+    {
+      "id": "act-a1-0-groupsort-0",
+      "type": "group-sort",
+      "title": "Genitive Endings by Gender",
+      "description": "Sort these genitive forms by their gender.",
+      "content": {
+        "type": "group-sort",
+        "groups": [],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.043Z",
+      "modifiedAt": "2025-12-12T19:55:32.043Z"
+    },
+    {
+      "id": "act-a1-0-truefalse-0",
+      "type": "true-false",
+      "title": "Genitive Rules",
+      "description": "Genitive Rules",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "\"Немає\" requires the genitive case.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "The feminine genitive ending is typically -и or -і.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Каву немає\" is grammatically correct.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Без\" is always followed by the genitive.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "Masculine abstract nouns often take -у in genitive.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "The genitive is only used for absence.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"У мене немає часу\" means \"I don't have time.\"",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "Neuter nouns don't change in the genitive.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Кави немає\" means \"There is no coffee.\"",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "The word order is flexible (кави немає = немає кави).",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Без\" means \"with.\"",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Грошей\" is the genitive plural of \"гроші.\"",
+            "isTrue": true,
+            "explanation": ""
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.043Z",
+      "modifiedAt": "2025-12-12T19:55:32.043Z"
+    },
+    {
+      "id": "act-a1-0-anagram-0",
+      "type": "anagram",
+      "title": "Genitive Vocabulary",
+      "description": "Unscramble words commonly used with genitive.",
+      "content": {
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
+          {
+            "letters": [
+              "є",
+              "а",
+              "м",
+              "е",
+              "н"
+            ],
+            "answer": "немає"
+          },
+          {
+            "letters": [
+              "з",
+              "е",
+              "б"
+            ],
+            "answer": "без"
+          },
+          {
+            "letters": [
+              "у",
+              "с",
+              "а",
+              "ч"
+            ],
+            "answer": "часу"
+          },
+          {
+            "letters": [
+              "и",
+              "в",
+              "а",
+              "к"
+            ],
+            "answer": "кави"
+          },
+          {
+            "letters": [
+              "й",
+              "е",
+              "ш",
+              "о",
+              "р",
+              "г"
+            ],
+            "answer": "грошей"
+          },
+          {
+            "letters": [
+              "и",
+              "д",
+              "о",
+              "в"
+            ],
+            "answer": "води"
+          },
+          {
+            "letters": [
+              "а",
+              "к",
+              "о",
+              "л",
+              "о",
+              "м"
+            ],
+            "answer": "молока"
+          },
+          {
+            "letters": [
+              "и",
+              "н",
+              "и",
+              "ш",
+              "а",
+              "м"
+            ],
+            "answer": "машини"
+          },
+          {
+            "letters": [
+              "д",
+              "ї",
+              "е",
+              "і"
+            ],
+            "answer": "ідеї"
+          },
+          {
+            "letters": [
+              "у",
+              "р",
+              "к",
+              "у",
+              "ц"
+            ],
+            "answer": "цукру"
+          },
+          {
+            "letters": [
+              "и",
+              "м",
+              "е",
+              "л",
+              "б",
+              "о",
+              "р",
+              "п"
+            ],
+            "answer": "проблеми"
+          },
+          {
+            "letters": [
+              "о",
+              "о",
+              "г",
+              "п",
+              "д",
+              "и",
+              "о",
+              "м"
+            ],
+            "answer": "допомоги"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.043Z",
+      "modifiedAt": "2025-12-12T19:55:32.043Z"
+    },
+    {
+      "id": "act-a1-0-fillblank-1",
+      "type": "fill-blank",
+      "title": "Complete Negative Sentences",
+      "description": "Complete the sentences with the correct genitive form.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "У кафе немає ___. (milk)",
+            "answer": "молока",
+            "options": [
+              "молока",
+              "молоку",
+              "молоко",
+              "молоці"
+            ]
+          },
+          {
+            "prompt": "Чай без ___, будь ласка. (sugar)",
+            "answer": "цукру",
+            "options": [
+              "цукру",
+              "цукор",
+              "цукра",
+              "цукрі"
+            ]
+          },
+          {
+            "prompt": "У мене немає ___. (idea)",
+            "answer": "ідеї",
+            "options": [
+              "ідеї",
+              "ідею",
+              "ідея",
+              "ідеє"
+            ]
+          },
+          {
+            "prompt": "Сьогодні немає ___. (time)",
+            "answer": "часу",
+            "options": [
+              "часу",
+              "часа",
+              "час",
+              "часі"
+            ]
+          },
+          {
+            "prompt": "Він прийшов без ___. (car)",
+            "answer": "машини",
+            "options": [
+              "машини",
+              "машину",
+              "машина",
+              "машині"
+            ]
+          },
+          {
+            "prompt": "На жаль, ___ немає. (coffee)",
+            "answer": "кави",
+            "options": [
+              "кави",
+              "каву",
+              "кава",
+              "каві"
+            ]
+          },
+          {
+            "prompt": "У них немає ___. (money)",
+            "answer": "грошей",
+            "options": [
+              "грошей",
+              "гроші",
+              "грошам",
+              "грошах"
+            ]
+          },
+          {
+            "prompt": "Без ___ не можна. (water)",
+            "answer": "води",
+            "options": [
+              "води",
+              "воду",
+              "вода",
+              "воді"
+            ]
+          },
+          {
+            "prompt": "У магазині немає ___. (bread)",
+            "answer": "хліба",
+            "options": [
+              "хліба",
+              "хлібу",
+              "хліб",
+              "хлібі"
+            ]
+          },
+          {
+            "prompt": "Кава без ___. (milk)",
+            "answer": "молока",
+            "options": [
+              "молока",
+              "молоку",
+              "молоко",
+              "молоці"
+            ]
+          },
+          {
+            "prompt": "У неї немає ___. (sister)",
+            "answer": "сестри",
+            "options": [
+              "сестри",
+              "сестру",
+              "сестра",
+              "сестрі"
+            ]
+          },
+          {
+            "prompt": "Без ___ важко жити. (help)",
+            "answer": "допомоги",
+            "options": [
+              "допомоги",
+              "допомогу",
+              "допомога",
+              "допомозі"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.043Z",
+      "modifiedAt": "2025-12-12T19:55:32.043Z"
+    },
+    {
+      "id": "act-a1-0-unjumble-0",
+      "type": "unjumble",
+      "title": "Build Negative Sentences",
+      "description": "Arrange the words into correct sentences.",
+      "content": {
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
+          {
+            "words": [
+              "немає",
+              "кави",
+              "сьогодні"
+            ],
+            "answer": "Сьогодні кави немає."
+          },
+          {
+            "words": [
+              "часу",
+              "у",
+              "мене",
+              "немає"
+            ],
+            "answer": "У мене немає часу."
+          },
+          {
+            "words": [
+              "без",
+              "цукру",
+              "Каву",
+              "будь",
+              "ласка"
+            ],
+            "answer": "Каву без цукру, будь ласка."
+          },
+          {
+            "words": [
+              "грошей",
+              "немає",
+              "у",
+              "нього"
+            ],
+            "answer": "У нього немає грошей."
+          },
+          {
+            "words": [
+              "молока",
+              "без",
+              "чай"
+            ],
+            "answer": "Чай без молока."
+          },
+          {
+            "words": [
+              "води",
+              "немає",
+              "тут"
+            ],
+            "answer": "Тут води немає."
+          },
+          {
+            "words": [
+              "машини",
+              "у",
+              "неї",
+              "немає"
+            ],
+            "answer": "У неї немає машини."
+          },
+          {
+            "words": [
+              "проблеми",
+              "без",
+              "це"
+            ],
+            "answer": "Це без проблеми."
+          },
+          {
+            "words": [
+              "хліба",
+              "магазині",
+              "у",
+              "немає"
+            ],
+            "answer": "У магазині немає хліба."
+          },
+          {
+            "words": [
+              "ідеї",
+              "у",
+              "мене",
+              "немає"
+            ],
+            "answer": "У мене немає ідеї."
+          },
+          {
+            "words": [
+              "жаль",
+              "На",
+              "немає",
+              "сиру"
+            ],
+            "answer": "На жаль, сиру немає."
+          },
+          {
+            "words": [
+              "допомоги",
+              "без",
+              "важко"
+            ],
+            "answer": "Без допомоги важко."
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.043Z",
+      "modifiedAt": "2025-12-12T19:55:32.043Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A1-16",
+    "level": "A1",
+    "phase": "A1.2",
+    "wordCount": 25,
+    "newWordCount": 25,
+    "reviewWordCount": 0,
+    "transliterationMode": "partial",
+    "words": [
+      {
+        "id": "v-nemaye-0-0",
+        "uk": "немає",
+        "en": "there is no",
+        "pos": "noun",
+        "ipa": "/nɛˈmɑjɛ/",
+        "note": "—",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-nema-0-1",
+        "uk": "нема",
+        "en": "there's no (informal)",
+        "pos": "noun",
+        "ipa": "/nɛˈmɑ/",
+        "note": "—",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-bez-0-2",
+        "uk": "без",
+        "en": "without",
+        "pos": "noun",
+        "ipa": "/bɛz/",
+        "note": "+ Gen",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-chas-0-3",
+        "uk": "час",
+        "en": "time",
+        "pos": "noun",
+        "ipa": "/t͡ʃɑs/",
+        "note": "часу",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-hroshi-0-4",
+        "uk": "гроші",
+        "en": "money",
+        "pos": "noun",
+        "ipa": "/ˈɦroʃi/",
+        "note": "грошей",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-ideya-0-5",
+        "uk": "ідея",
+        "en": "idea",
+        "pos": "noun",
+        "ipa": "/iˈdɛjɑ/",
+        "note": "ідеї",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-problema-0-6",
+        "uk": "проблема",
+        "en": "problem",
+        "pos": "noun",
+        "ipa": "/proˈblɛmɑ/",
+        "note": "проблеми",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-mozhlyvistь-0-7",
+        "uk": "можливість",
+        "en": "possibility",
+        "pos": "noun",
+        "ipa": "/moʒˈlɪʋistʲ/",
+        "note": "можливості",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-prychyna-0-8",
+        "uk": "причина",
+        "en": "reason",
+        "pos": "noun",
+        "ipa": "/prɪˈt͡ʃɪnɑ/",
+        "note": "причини",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-sens-0-9",
+        "uk": "сенс",
+        "en": "sense, meaning",
+        "pos": "noun",
+        "ipa": "/sɛns/",
+        "note": "сенсу",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-korystь-0-10",
+        "uk": "користь",
+        "en": "benefit, use",
+        "pos": "noun",
+        "ipa": "/ˈkorɪstʲ/",
+        "note": "користі",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-znachennya-0-11",
+        "uk": "значення",
+        "en": "meaning",
+        "pos": "noun",
+        "ipa": "/znɑˈt͡ʃɛnʲɑ/",
+        "note": "значення",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-riznytsya-0-12",
+        "uk": "різниця",
+        "en": "difference",
+        "pos": "noun",
+        "ipa": "/ˈriznɪt͡sʲɑ/",
+        "note": "різниці",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vybir-0-13",
+        "uk": "вибір",
+        "en": "choice",
+        "pos": "noun",
+        "ipa": "/ˈʋɪbir/",
+        "note": "вибору",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-dosvid-0-14",
+        "uk": "досвід",
+        "en": "experience",
+        "pos": "noun",
+        "ipa": "/ˈdosʋid/",
+        "note": "досвіду",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-znannya-0-15",
+        "uk": "знання",
+        "en": "knowledge",
+        "pos": "noun",
+        "ipa": "/ˈznɑnʲɑ/",
+        "note": "знання",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-informatsiya-0-16",
+        "uk": "інформація",
+        "en": "information",
+        "pos": "noun",
+        "ipa": "/informɑˈt͡sijɑ/",
+        "note": "інформації",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-dopomoha-0-17",
+        "uk": "допомога",
+        "en": "help",
+        "pos": "noun",
+        "ipa": "/dopoˈmoɦɑ/",
+        "note": "допомоги",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pidtrymka-0-18",
+        "uk": "підтримка",
+        "en": "support",
+        "pos": "noun",
+        "ipa": "/pidˈtrɪmkɑ/",
+        "note": "підтримки",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-uvaha-0-19",
+        "uk": "увага",
+        "en": "attention",
+        "pos": "noun",
+        "ipa": "/uˈʋɑɦɑ/",
+        "note": "уваги",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-terpinnya-0-20",
+        "uk": "терпіння",
+        "en": "patience",
+        "pos": "noun",
+        "ipa": "/tɛrˈpinʲɑ/",
+        "note": "терпіння",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-syla-0-21",
+        "uk": "сила",
+        "en": "strength",
+        "pos": "noun",
+        "ipa": "/ˈsɪlɑ/",
+        "note": "сили",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-tsukor-0-22",
+        "uk": "цукор",
+        "en": "sugar",
+        "pos": "noun",
+        "ipa": "/ˈt͡sukɔr/",
+        "note": "цукру",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-khlib-0-23",
+        "uk": "хліб",
+        "en": "bread",
+        "pos": "noun",
+        "ipa": "/xlib/",
+        "note": "хліба",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-syr-0-24",
+        "uk": "сир",
+        "en": "cheese",
+        "pos": "noun",
+        "ipa": "/sɪr/",
+        "note": "сиру",
+        "isNew": true,
+        "firstModule": 0
+      }
+    ]
+  }
+}

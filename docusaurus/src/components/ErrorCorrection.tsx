@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
+import { shuffle } from './utils';
 
 interface ErrorCorrectionItemProps {
   sentence: string;
@@ -19,6 +20,9 @@ export function ErrorCorrectionItem({
   options,
   explanation,
 }: ErrorCorrectionItemProps) {
+  // Shuffle options on mount
+  const shuffledOptions = useMemo(() => shuffle([...options]), [options]);
+
   const [step, setStep] = useState<Step>('identify');
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
   const [selectedFix, setSelectedFix] = useState<string | null>(null);
@@ -129,11 +133,11 @@ export function ErrorCorrectionItem({
       )}
 
       {/* Options - only in fix step */}
-      {step === 'fix' && options.length > 0 && (
+      {step === 'fix' && shuffledOptions.length > 0 && (
         <div className={styles.fixOptions}>
           <p className={styles.fixPrompt}>Choose the correct form for "<strong>{selectedWord}</strong>":</p>
           <div className={styles.optionChips}>
-            {options.map((option, idx) => (
+            {shuffledOptions.map((option, idx) => (
               <button
                 key={idx}
                 className={styles.chip}

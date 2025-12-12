@@ -8,45 +8,38 @@ Curricula-Opus (CO) is a content factory that generates Ukrainian language learn
 ┌─────────────────────────────────────────────────────────────────┐
 │                     SOURCE (Markdown)                           │
 │                                                                 │
-│   curriculum/l2-uk-en/modules/module-*.md                       │
+│   curriculum/l2-uk-en/{level}/*.md                              │
 │   - Frontmatter (YAML metadata)                                 │
 │   - Lesson content (sections)                                   │
 │   - Activities (## quiz:, ## match-up:, etc.)                   │
 │   - Vocabulary tables                                           │
 └─────────────────────────────────────────────────────────────────┘
                               │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                     GENERATOR                                    │
-│                                                                 │
-│   scripts/generate.ts                                           │
-│   scripts/lib/                                                  │
-│   ├── parsers/      → Parse markdown into structured data       │
-│   ├── renderers/    → Generate HTML and JSON output             │
-│   └── utils/        → Markdown conversion, file handling        │
-└─────────────────────────────────────────────────────────────────┘
-                              │
               ┌───────────────┴───────────────┐
               ▼                               ▼
 ┌─────────────────────────┐     ┌─────────────────────────┐
-│     HTML OUTPUT         │     │     JSON OUTPUT         │
-│     (Book-style)        │     │     (For Vibe)          │
+│   generate-mdx.ts       │     │   generate_json.py      │
+│   (TypeScript)          │     │   (Python 3.12)         │
+└───────────┬─────────────┘     └───────────┬─────────────┘
+            ▼                               ▼
+┌─────────────────────────┐     ┌─────────────────────────┐
+│     MDX OUTPUT          │     │     JSON OUTPUT         │
+│     (Docusaurus)        │     │     (For Vibe)          │
 │                         │     │                         │
-│ output/html/l2-uk-en/   │     │ output/json/l2-uk-en/   │
-│ - Readable lessons      │     │ - moduleType            │
-│ - Nav tabs              │     │ - immersionLevel        │
-│ - Vocab tables          │     │ - sections (raw md)     │
-│ - Interactive quizzes   │     │ - rawMarkdown           │
-└─────────────────────────┘     └───────────┬─────────────┘
-                                            │
-                                            ▼
-                                ┌─────────────────────────┐
-                                │     VIBE APP            │
-                                │                         │
-                                │ - Extracts activities   │
-                                │ - Creates flash cards   │
-                                │ - Interactive workbook  │
-                                └─────────────────────────┘
+│ docusaurus/docs/{level}/│     │ output/json/l2-uk-en/   │
+│ - Interactive lessons   │     │ - moduleType            │
+│ - React components      │     │ - immersionLevel        │
+│ - Live activities       │     │ - sections (raw md)     │
+└───────────┬─────────────┘     └───────────┬─────────────┘
+            ▼                               ▼
+┌─────────────────────────┐     ┌─────────────────────────┐
+│     DOCUSAURUS WEB      │     │     VIBE APP            │
+│                         │     │                         │
+│ - Static site           │     │ - Extracts activities   │
+│ - GitHub Pages          │     │ - Creates flash cards   │
+│ - krisztiankoos.github  │     │ - Interactive workbook  │
+│   .io/curricula-opus    │     │                         │
+└─────────────────────────┘     └─────────────────────────┘
 ```
 
 ## Directory Structure
@@ -55,40 +48,43 @@ Curricula-Opus (CO) is a content factory that generates Ukrainian language learn
 curricula-opus/
 ├── curriculum/                    # SOURCE OF TRUTH
 │   └── l2-uk-en/
-│       ├── modules/               # 190 module markdown files
-│       │   ├── module-01.md       # A1: The Cyrillic Code I
-│       │   ├── module-168.md      # B2: History: Kyivan Rus II
-│       │   └── ...
+│       ├── a1/                    # A1 modules (30)
+│       ├── a2/                    # A2 modules (50)
+│       ├── b1/                    # B1 modules (80)
+│       ├── b2/                    # B2 modules (125)
+│       ├── c1/                    # C1 modules (115)
+│       ├── c2/                    # C2 modules (80)
 │       ├── vocabulary.db          # SQLite vocabulary database
 │       └── *-CURRICULUM-PLAN.md   # Level planning docs
 │
 ├── scripts/                       # GENERATOR CODE
-│   ├── generate.ts                # Main entry point
-│   ├── lib/
-│   │   ├── parsers/               # Markdown parsing
-│   │   │   ├── frontmatter.ts     # YAML frontmatter
-│   │   │   ├── sections.ts        # Section extraction
-│   │   │   ├── vocabulary.ts      # Vocab table parsing
-│   │   │   └── activities/        # Activity parsers
-│   │   │       ├── quiz.ts
-│   │   │       ├── match-up.ts
-│   │   │       └── ...
-│   │   ├── renderers/
-│   │   │   ├── html/              # HTML generation
-│   │   │   │   ├── index.ts       # Main renderer
-│   │   │   │   └── template.ts    # HTML template
-│   │   │   └── json.ts            # JSON generation
-│   │   ├── utils/
-│   │   │   └── markdown.ts        # MD→HTML conversion
-│   │   └── types.ts               # TypeScript types
-│   └── assets/
-│       ├── styles/                # CSS files
-│       └── scripts/               # JS for interactivity
+│   ├── generate-mdx.ts            # MDX generator (Docusaurus)
+│   ├── generate_json.py           # JSON generator (Python)
+│   ├── module-audit.ts            # Module quality checker
+│   ├── vocab-*.ts                 # Vocabulary scripts
+│   └── lib/
+│       ├── parsers/               # Markdown parsing
+│       │   ├── frontmatter.ts
+│       │   ├── sections.ts
+│       │   ├── vocabulary.ts
+│       │   └── activities/
+│       ├── renderers/
+│       │   └── json.ts            # JSON renderer (legacy TS)
+│       ├── utils/
+│       │   └── markdown.ts
+│       └── types.ts
+│
+├── docusaurus/                    # DOCUSAURUS PROJECT
+│   ├── docs/                      # Generated MDX files
+│   │   ├── a1/module-XX.mdx
+│   │   └── ...
+│   └── src/components/            # React activity components
+│       ├── Quiz.tsx
+│       ├── MatchUp.tsx
+│       ├── FillIn.tsx
+│       └── ...
 │
 ├── output/                        # GENERATED OUTPUT
-│   ├── html/l2-uk-en/             # Web-viewable lessons
-│   │   ├── a1/module-01.html
-│   │   └── ...
 │   └── json/l2-uk-en/             # Vibe import data
 │       ├── a1/module-01.json
 │       └── ...
@@ -96,7 +92,7 @@ curricula-opus/
 └── docs/                          # DOCUMENTATION
     ├── ARCHITECTURE.md            # This file
     ├── MARKDOWN-FORMAT.md         # Markdown syntax spec
-    └── VIBE-IMPORT-INSTRUCTIONS.md
+    └── SCRIPTS.md                 # Scripts reference
 ```
 
 ## Module Types
@@ -173,41 +169,35 @@ curricula-opus/
 | B2+ | 201-240 | 0.90 | 10% | 90% |
 | C1 | 241+ | 0.95 | 5% | 95% |
 
-## HTML Output
+## Docusaurus Web Output
 
-HTML is designed as a **book** - readable content with navigation.
+The web interface uses Docusaurus with custom React components for interactive activities.
 
-### Structure
+### Activity Components
 
-```html
-<nav>
-  [Lesson] [Activities] [Vocab]  <!-- Nav tabs -->
-</nav>
-<main>
-  <section id="lesson">
-    <!-- All lesson sections in order -->
-    <div class="card section-intro">...</div>
-    <div class="card section-content">...</div>
-    <div class="card section-practice">...</div>
-    <div class="card section-summary">...</div>
-  </section>
-  <section id="quiz">
-    <!-- Interactive quiz -->
-  </section>
-  <section id="vocab">
-    <!-- Vocabulary table -->
-    <table class="vocab-table">...</table>
-  </section>
-</main>
-```
+Located in `docusaurus/src/components/`:
+
+| Component | Activity Type | Description |
+|-----------|--------------|-------------|
+| `Quiz.tsx` | quiz | Multiple choice with single answer |
+| `MatchUp.tsx` | match-up | Drag & drop pair matching |
+| `FillIn.tsx` | fill-in | Gap fill with dropdowns |
+| `GroupSort.tsx` | group-sort | Sort items into categories |
+| `Unjumble.tsx` | unjumble | Reorder words into sentences |
+| `TrueFalse.tsx` | true-false | Statement validation |
+| `Anagram.tsx` | anagram | Letter unscrambling (A1 only) |
+| `ErrorCorrection.tsx` | error-correction | Find and fix errors (A2+) |
+| `Cloze.tsx` | cloze | Passage completion (A2+) |
+| `Select.tsx` | select | Multi-checkbox selection |
+| `Translate.tsx` | translate | Translation multiple choice |
 
 ### Features
 
-- **Nav tabs**: Jump between Lesson, Activities, Vocab
-- **Section cards**: Each markdown section rendered as a card
-- **Vocab table**: Styled table with Слово, Вимова, Переклад columns
-- **Answer toggles**: `> [!answer]` rendered with Show/Hide buttons
-- **Interactive quizzes**: Quiz activities with scoring
+- **Interactive activities**: All activities with immediate feedback
+- **Answer shuffling**: Options randomized on each page load
+- **Progress tracking**: Visual feedback for correct/incorrect
+- **Mobile responsive**: Works on all device sizes
+- **GitHub Pages**: Deployed to krisztiankoos.github.io/curricula-opus
 
 ## Markdown Format
 
@@ -242,14 +232,15 @@ See `docs/MARKDOWN-FORMAT.md` for the complete spec.
 ## Generator Usage
 
 ```bash
-# Generate all modules
-npx ts-node scripts/generate.ts
+# Generate MDX for Docusaurus
+npm run generate                    # All modules
+npm run generate l2-uk-en a1        # Specific level
+npm run generate l2-uk-en a1 5      # Single module
 
-# Generate specific language pair
-npx ts-node scripts/generate.ts l2-uk-en
-
-# Generate single module
-npx ts-node scripts/generate.ts l2-uk-en 168
+# Generate JSON for Vibe app
+npm run generate:json               # All modules
+npm run generate:json l2-uk-en a1   # Specific level
+npm run generate:json l2-uk-en a1 5 # Single module
 ```
 
 ## Vocabulary Management
@@ -299,14 +290,15 @@ When creating new modules or rewriting existing ones:
    └── npm run vocab:enrich   # Generate Словник sections from database
 
 4. OUTPUT GENERATION
-   └── npm run generate l2-uk-en   # Generate HTML + JSON outputs
+   ├── npm run generate l2-uk-en       # Generate MDX for Docusaurus
+   └── npm run generate:json l2-uk-en  # Generate JSON for Vibe app
 ```
 
 ### Why This Order?
 
 1. **vocab:scan** must run after content is written to detect new vocabulary
 2. **vocab:enrich** generates consistent Словник sections with correct IPA and first-module tracking
-3. **generate** produces final outputs from enriched modules
+3. **generate** produces MDX for web, **generate:json** produces JSON for Vibe app
 
 ### Module Quality Checklist
 

@@ -153,23 +153,23 @@ The proper way to eat борщ:
 
 **Клієнт:** Дякую! Виглядає смачно!
 
-**English Translation:**
-**Waiter:** Good day! Here is the menu.
-**Client:** Thank you. What do you recommend?
-**Waiter:** Today the borscht is very delicious.
-**Client:** Great! I will take borscht. And what is for the main course?
-**Waiter:** Varenyky with potatoes or cutlet with puree.
-**Client:** Varenyky, please. And salad.
-**Waiter:** Good. What will you drink?
-**Client:** Is there compote?
-**Waiter:** Yes, apple.
-**Client:** Great, compote and water without gas.
-**Waiter:** Is that all?
-**Client:** Yes, thank you!
-**Waiter:** Wait, please. Your order will be soon.
-*Later...*
-**Waiter:** Here is your borscht. Bon appétit!
-**Client:** Thank you! Looks delicious!
+> [!note] English Translation
+> **Waiter:** Good day! Here is the menu.
+> **Client:** Thank you. What do you recommend?
+> **Waiter:** Today the borscht is very delicious.
+> **Client:** Great! I will take borscht. And what is for the main course?
+> **Waiter:** Varenyky with potatoes or cutlet with puree.
+> **Client:** Varenyky, please. And salad.
+> **Waiter:** Good. What will you drink?
+> **Client:** Is there compote?
+> **Waiter:** Yes, apple.
+> **Client:** Great, compote and water without gas.
+> **Waiter:** Is that all?
+> **Client:** Yes, thank you!
+> **Waiter:** Wait, please. Your order will be soon.
+> *Later...*
+> **Waiter:** Here is your borscht. Bon appétit!
+> **Client:** Thank you! Looks delicious!
 
 ## Reading Practice: Mama's Kitchen 📖
 
@@ -185,19 +185,19 @@ The proper way to eat борщ:
 
 О другій годині вся сім'я сидить за столом. Тато каже: "**Смачного!**" Всі їдять і розмовляють. Діти п'ють компот, дорослі — чай. Це — неділя. Це — сім'я. Це — Україна.
 
-**English Translation:**
-**Mama's kitchen is the best.** Every Sunday mom cooks lunch for the whole family. This is a tradition that exists for many years.
-
-She starts early, at seven in the morning. First she makes **borscht**. She takes beet, potato, cabbage, carrot and onion. All this boils for three hours. The aroma is incredible! The whole apartment smells of delicious food.
-
-Then she shapes **varenyky**. The dough is soft and fresh. The filling is potato with onion. Varenyky boil in water. Then — a little butter and sour cream. Varenyky are the children's favorite dish!
-
-On the table: borscht, varenyky, salad with fresh vegetables, black bread. And, of course, **compote** — apple, as always. Mom always cooks compote from apples from the garden.
-
-At two o'clock the whole family sits at the table. Dad says: "**Bon appétit!**" Everyone eats and talks. Children drink compote, adults — tea. This is Sunday. This is family. This is Ukraine.
-
-> 💡 **Thinking Trick:** To remember food gender, group by ending: **-а/-я** are usually feminine (вода, кава, картопля), **consonant** are usually masculine (борщ, хліб, сир), and **-о/-е** are usually neuter (молоко, яблуко).
-
+> [!note] English Translation
+> **Mama's kitchen is the best.** Every Sunday mom cooks lunch for the whole family. This is a tradition that exists for many years.
+>
+> She starts early, at seven in the morning. First she makes **borscht**. She takes beet, potato, cabbage, carrot and onion. All this boils for three hours. The aroma is incredible! The whole apartment smells of delicious food.
+>
+> Then she shapes **varenyky**. The dough is soft and fresh. The filling is potato with onion. Varenyky boil in water. Then — a little butter and sour cream. Varenyky are the children's favorite dish!
+>
+> On the table: borscht, varenyky, salad with fresh vegetables, black bread. And, of course, **compote** — apple, as always. Mom always cooks compote from apples from the garden.
+>
+> At two o'clock the whole family sits at the table. Dad says: "**Bon appétit!**" Everyone eats and talks. Children drink compote, adults — tea. This is Sunday. This is family. This is Ukraine.
+>
+> > 💡 **Thinking Trick:** To remember food gender, group by ending: **-а/-я** are usually feminine (вода, кава, картопля), **consonant** are usually masculine (борщ, хліб, сир), and **-о/-е** are usually neuter (молоко, яблуко).
+>
 # Summary
 
 1. **Three meals:** сніданок (breakfast), обід (lunch), вечеря (dinner)

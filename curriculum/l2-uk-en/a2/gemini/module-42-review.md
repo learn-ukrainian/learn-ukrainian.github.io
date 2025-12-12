@@ -1,0 +1,35 @@
+
+========================================
+
+Auditing curriculum/l2-uk-en/a2/module-42.md (Target: 1000)...
+
+  > mark-the-words: Find Professions 🏷️ [stage:recognition]: 0 items
+  > fill-in: Work Vocabulary [stage:discrimination]: 12 items
+  > cloze: Career Story [stage:discrimination]: 0 items
+  > error-correction: Fix the Mistakes [stage:controlled]: 12 items
+  > dialogue-reorder: Put the Conversation in Order [stage:controlled]: 5 items
+  > match-up: Profession → Workplace [stage:discrimination]: 12 items
+  > quiz: Work Knowledge [stage:recognition]: 12 items
+  > true-false: Work Facts [stage:recognition]: 12 items
+  > group-sort: Work Categories [stage:discrimination]: 23 items
+  > unjumble: Build Sentences [stage:controlled]: 12 items
+  > unjumble: Complex Work Sentences [stage:production]: 12 items
+  > fill-in: Instrumental Case with Professions [stage:production]: 12 items
+❌ AUDIT WARNING: Low Immersion in 'Mini-Dialogues: At Work'. Latin/Cyrillic Ratio: 1.10 (>0.4).
+
+--- STRICT GATES (Level A2) ---
+Words        ❌ 738/1000
+Activities   ✅ 12/10
+Density      ❌ 3 < 12
+Unique_types ✅ 10/4 types
+Priority     ✅ Priority types used
+Engagement   ✅ 6/4
+Audio        ℹ️ No audio
+Vocab        ✅ 32/25
+Structure    ✅ Valid Structure
+Lint         ✅ Clean Format
+Immersion    ❌ English Story Detected
+
+Report: /Users/krisztiankoos/projects/curricula-opus/curriculum/l2-uk-en/a2/gemini/module-42-review.md
+
+❌ AUDIT FAILED. Correct errors before proceeding.

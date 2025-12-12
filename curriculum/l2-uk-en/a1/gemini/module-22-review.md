@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 918/750
+- **Words:** ✅ 998/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -22,7 +22,7 @@
 | **Presentation: Compound Future** | ✅ | 212 | Included in Core |
 | **Cultural Insight: Future Plans in Ukraine 🇺🇦** | ✅ | 180 | Included in Core |
 | **Reading Practice: Мої плани на завтра 📖** | ✅ | 185 | Included in Core |
-| **Conversation: Що будеш робити? 🗣️** | ✅ | 132 | Included in Core |
+| **Conversation: Що будеш робити? 🗣️** | ✅ | 212 | Included in Core |
 | **fill-in: Form the Future** | 🎮 | 12 | Activity (12 items) |
 | **match-up: Future Time Expressions** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Future Tense Rules** | 🎮 | 12 | Activity (12 items) |

@@ -12,12 +12,12 @@ import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
 import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
 import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import ErrorCorrection, { ErrorCorrectionQuestion } from '@site/src/components/ErrorCorrection';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
 import Select, { SelectQuestion } from '@site/src/components/Select';
-import Translate, { TranslateQuestion } from '@site/src/components/Translate';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
 import Cloze from '@site/src/components/Cloze';
 import DialogueReorder from '@site/src/components/DialogueReorder';
-import MarkTheWords from '@site/src/components/MarkTheWords';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 
 
 
@@ -36,7 +36,10 @@ Imagine a zoo of insects:
 
 ## Presentation: The Hidden Y's (Iotation)
 
-:::tip 💡 **Thinking Trick:** Some vowels have a built-in "Y" sound at the start. We call this "Iotation". It's a 2-for-1 deal.
+:::tip
+💡 **Thinking Trick:** Some vowels have a built-in "Y" sound at the start. We call this "Iotation". It's a 2-for-1 deal.
+:::
+
 
 ### 1. The Iotated Vowels (Y + Vowel)
 These letters are the secret to Ukrainian melody. They soften the consonant before them.
@@ -48,7 +51,10 @@ These letters are the secret to Ukrainian melody. They soften the consonant befo
 | **Є є** | /jɛ/ | Y + E | **Ye**s |
 | **Ї ї** | /ji/ | Y + I | **Yie**ld |
 
-:::warning **Uniquely Ukrainian:** The letter **Ї** (with two dots) is a symbol of Ukrainian identity. It sounds like "Yi" (Yeast). Russian does not have this letter.
+:::warning
+**Uniquely Ukrainian:** The letter **Ї** (with two dots) is a symbol of Ukrainian identity. It sounds like "Yi" (Yeast). Russian does not have this letter.
+:::
+
 
 ### 2. The Unique Consonants
 Beyond the "Insect Zoo", we have a few more friends:
@@ -94,7 +100,10 @@ This letter has **NO SOUND**. It is a modifier. It tells you to pronounce the pr
 2. **Сіль** (Salt)
 3. **День** (Day)
 
-:::tip 🌟 **Pro Tip:** Your tongue should touch the roof of your mouth for Soft Sounds. Smile a bit when you say them!
+:::tip
+🌟 **Pro Tip:** Your tongue should touch the roof of your mouth for Soft Sounds. Smile a bit when you say them!
+:::
+
 
 # Summary
 *   **Hushing Sounds:** Ж (Zh), Ш (Sh), Ч (Ch), Щ (Shch).
@@ -167,7 +176,29 @@ This letter has **NO SOUND**. It is a modifier. It tells you to pronounce the pr
   { left: `**Ї**`, right: `Yi (Yield)` }
 ]} />
 
+### Vowel Types
 
+<GroupSort groups={{
+  "Iotated (Y + Sound)": [
+    "Simple (Pure)",
+    "**Я**",
+    "**Ю**",
+    "**Є**",
+    "**Ї**"
+  ],
+  "Simple (Pure)": [
+    "**А**",
+    "**У**",
+    "**Е**",
+    "**І**",
+    "**О**",
+    "**И**"
+  ],
+  "**-**": [
+    "**-**",
+    "**-**"
+  ]
+}} />
 
 ### Reading Challenge
 

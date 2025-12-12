@@ -1,0 +1,1262 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A1-23",
+    "moduleId": "mod-uk-A1-23",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A1",
+    "phase": "A1.3",
+    "moduleNumber": 23,
+    "moduleType": "vocabulary",
+    "pedagogy": "PPP",
+    "immersionLevel": 0.3,
+    "title": "What Time Is It?",
+    "subtitle": "Clock Time and Calendar",
+    "description": "Tell time on the clock",
+    "objectives": [
+      "Tell time on the clock",
+      "Use days and months",
+      "Schedule appointments",
+      "Ask about time"
+    ],
+    "grammarFocus": [
+      "Clock time expressions",
+      "Days of the week",
+      "Months of the year",
+      "Temporal prepositions"
+    ],
+    "tags": [
+      "vocabulary",
+      "time",
+      "calendar",
+      "scheduling"
+    ],
+    "totalDuration": 50,
+    "transliterationMode": "partial",
+    "sections": [
+      {
+        "id": "section-content-0",
+        "name": "Lesson",
+        "type": "content",
+        "content": "> **Note:** Time is essential for scheduling, meeting people, and navigating daily life! Learn to tell time and use the calendar in Ukrainian.\n\n## Warm-up: When Do You...?\n\nWhat time do you wake up? What day of the week is your favorite? When is your birthday?\n\nTime vocabulary is essential for everyday life. Whether you're scheduling a meeting, catching a train, or planning a holiday, you need to know how Ukrainians talk about time.\n\nUkrainian time expressions have some unique features. Clock time uses ordinal numbers (\"перша година\" = first hour = 1 o'clock). Days start with Monday (понеділок), not Sunday. And months have beautiful Slavic names reflecting nature and seasons!\n\nBy mastering this module, you'll be able to ask \"Котра година?\" (What time is it?), understand schedules, and talk about when things happen. This combines with past and future tense to give you full temporal control over your Ukrainian conversations!\n\nUkrainian time culture is generally relaxed, but punctuality is appreciated in business settings. Arriving 5-10 minutes late to social events is normal. Understanding local expectations helps you navigate Ukrainian life successfully.\n\n> 💡 **Thinking Trick:** Ukrainian months are named for natural phenomena — like \"листопад\" (November = falling leaves). Learning the etymology helps remember them!\n\n## Presentation: Telling Time\n\n### Asking About Time\n\n| Ukrainian | English |\n|-----------|---------|\n| Котра година? | What time is it? |\n| О котрій годині? | At what time? |\n| Коли? | When? |\n| Скільки часу? | What's the time? (informal) |\n\n### Hours (Ordinal Numbers)\n\nUkrainian uses ORDINAL (first, second) not cardinal (one, two) numbers for hours:\n\n| Time | Ukrainian | Literal |\n|------|-----------|---------|\n| 1:00 | Перша година | First hour |\n| 2:00 | Друга година | Second hour |\n| 3:00 | Третя година | Third hour |\n| 4:00 | Четверта година | Fourth hour |\n| 5:00 | П'ята година | Fifth hour |\n| 6:00 | Шоста година | Sixth hour |\n| 7:00 | Сьома година | Seventh hour |\n| 8:00 | Восьма година | Eighth hour |\n| 9:00 | Дев'ята година | Ninth hour |\n| 10:00 | Десята година | Tenth hour |\n| 11:00 | Одинадцята година | Eleventh hour |\n| 12:00 | Дванадцята година | Twelfth hour |\n\n**Shortcut:** In casual speech, you can say just the ordinal: \"Зараз шоста\" (It's now six).\n\n### Half Hours and Quarters\n\n| Expression | Meaning | Example |\n|------------|---------|---------|\n| пів на [next hour] | half past | пів на другу = 1:30 |\n| чверть на [next hour] | quarter past | чверть на третю = 2:15 |\n| за чверть [hour] | quarter to | за чверть друга = 1:45 |\n| [number] хвилин на [hour] | X minutes past | п'ять хвилин на третю = 2:05 |\n\n**Key pattern:** Half hours use \"пів на\" + NEXT hour (пів на третю = 2:30, literally \"half toward the third\")\n\n> 📜 **Pattern Summary:**\n> - **Full hours:** Ordinal + година (перша година)\n> - **Half past:** Пів на + next hour (пів на другу = 1:30)\n> - **Quarter to:** За чверть + hour (за чверть друга = 1:45)\n\n### Days of the Week\n\n| Ukrainian | English | Etymology |\n|-----------|---------|-----------|\n| понеділок | Monday | \"after quiet\" (after Sunday rest) |\n| вівторок | Tuesday | \"second\" |\n| середа | Wednesday | \"middle\" |\n| четвер | Thursday | \"fourth\" |\n| п'ятниця | Friday | \"fifth\" |\n| субота | Saturday | from Hebrew \"Sabbath\" |\n| неділя | Sunday | \"non-work day\" |\n\n**Usage:**\n- У понеділок я працюю. (On Monday I work.)\n- До суботи! (See you Saturday!)\n- Вихідні — субота і неділя. (Weekend — Saturday and Sunday.)\n\n### Months of the Year\n\n| Ukrainian | English | Etymology |\n|-----------|---------|-----------|\n| січень | January | cutting (wood in winter) |\n| лютий | February | fierce/severe (cold) |\n| березень | March | birch trees |\n| квітень | April | flowers |\n| травень | May | grass |\n| червень | June | red (berries) |\n| липень | July | linden trees |\n| серпень | August | sickle (harvest) |\n| вересень | September | heather |\n| жовтень | October | yellow (leaves) |\n| листопад | November | falling leaves |\n| грудень | December | frozen soil (груда) |\n\n> 💡 **Did You Know?** Ukrainian months are NOT borrowed from Latin like in English. They're original Slavic names describing nature! \"Листопад\" (November) = \"falling leaves\" — isn't that beautiful?\n\n### Time Parts of Day\n\n| Ukrainian | English |\n|-----------|---------|\n| ранок | morning |\n| день | day, afternoon |\n| вечір | evening |\n| ніч | night |\n| зранку | in the morning |\n| вдень | during the day |\n| ввечері | in the evening |\n| вночі | at night |\n\n## Cultural Insight: Time in Ukraine 🇺🇦\n\n**Punctuality culture:**\n- Business: Be on time (10 minutes early is good)\n- Social events: 15-30 minutes late is acceptable\n- Parties: People often arrive 30+ minutes late\n- Trains: Run on time! Don't be late!\n\n**Calendar differences:**\n- Week starts on Monday (not Sunday)\n- 24-hour clock is common (especially written)\n- \"У понеділок о восьмій\" = On Monday at 8\n\n**Common phrases:**\n- \"Зараз немає часу.\" (I don't have time now.)\n- \"Вже пізно!\" (It's already late!)\n- \"Ще рано.\" (It's still early.)\n\n> 📜 **History Bite:** The Ukrainian calendar was reformed multiple times. Under Austria-Hungary (western Ukraine), the Gregorian calendar was adopted earlier than in the Russian Empire. Today, Ukraine celebrates Christmas on December 25 (Western) AND January 7 (Orthodox), reflecting this complex history!\n\n> 📜 **Myth Buster:** Some claim Ukrainian month names are \"corrupted Russian.\" In fact, Ukrainian months PRESERVE ancient Slavic names that Russian replaced with Latin borrowings (январь, февраль). Ukrainian листопад (November) is the ORIGINAL Slavic term!\n\n## Reading Practice: Мій розклад 📖\n\n**Українською:**\n\nЯ студент. У мене є розклад.\n\nУ понеділок я прокидаюся о сьомій годині. О восьмій я снідаю. О дев'ятій починаються заняття. Обід о першій. Заняття закінчуються о четвертій.\n\nУ вівторок і четвер я ходжу на спортзал. Тренування починається о шостій вечора і триває дві години.\n\nУ суботу я зазвичай зустрічаюся з друзями. Ми йдемо в кафе о третій або в кіно ввечері.\n\nУ неділю я відпочиваю. Зранку сплю довго — до десятої!\n\n**English Translation:**\n\nI'm a student. I have a schedule.\n\nOn Monday I wake up at seven o'clock. At eight I have breakfast. At nine classes begin. Lunch at one. Classes end at four.\n\nOn Tuesday and Thursday I go to the gym. Training starts at six in the evening and lasts two hours.\n\nOn Saturday I usually meet with friends. We go to a café at three or to the movies in the evening.\n\nOn Sunday I rest. In the morning I sleep long — until ten!\n\n**Practice:** Write YOUR weekly schedule using Ukrainian time expressions!\n\n## Conversation: Плануємо зустріч 🗣️\n\n**Марія:** Привіт! Коли ти вільна?\n**Олена:** Привіт! Залежить. Який день?\n**Марія:** Може, у середу?\n**Олена:** У середу я працюю до п'ятої. А потім вільна.\n**Марія:** Чудово! О шостій підходить?\n**Олена:** Так, о шостій добре. Де зустрінемося?\n**Марія:** Біля метро \"Хрещатик\"?\n**Олена:** Домовилися! До середи!\n**Марія:** Бувай!\n\n**English Translation:**\n**Maria:** Hi! When are you free?\n**Olena:** Hi! It depends. Which day?\n**Maria:** Maybe on Wednesday?\n**Olena:** On Wednesday I work until five. And then I'm free.\n**Maria:** Great! Does six o'clock work?\n**Olena:** Yes, six o'clock is good. Where will we meet?\n**Maria:** Near \"Khreshchatyk\" metro?\n**Olena:** Agreed! Until Wednesday!\n**Maria:** Bye!\n\nЗверни увагу: у середу, о шостій, до п'ятої — часові вирази!"
+      },
+      {
+        "id": "section-summary-1",
+        "name": "Підсумок",
+        "nameEn": "Summary",
+        "type": "summary",
+        "content": "**What Time Is It? — Time Essentials**\n\n1. **Asking time:** Котра година? О котрій?\n2. **Hours:** Ordinals (перша, друга, третя...)\n3. **Half hours:** Пів на + next hour\n4. **Days:** понеділок - неділя (Monday - Sunday)\n5. **Months:** Beautiful Slavic nature names\n\n---\n\n> [!tip] 🌟 **Pro Tip:** Remember \"пів на другу\" = 1:30 (half toward the second hour). It's the NEXT hour, not the current one!\n\n\n---"
+      }
+    ],
+    "rawMarkdown": "---\ntitle: \"What Time Is It?\"\nsubtitle: \"Clock Time and Calendar\"\nphase: A1.3\ntransliteration: partial\npedagogy: PPP\nduration: 50\ntags: [vocabulary, time, calendar, scheduling]\nobjectives:\n  - Tell time on the clock\n  - Use days and months\n  - Schedule appointments\n  - Ask about time\ngrammar:\n  - Clock time expressions\n  - Days of the week\n  - Months of the year\n  - Temporal prepositions\naudio: false\n---\n\n# What Time Is It?\n\n> **Note:** Time is essential for scheduling, meeting people, and navigating daily life! Learn to tell time and use the calendar in Ukrainian.\n\n## Warm-up: When Do You...?\n\nWhat time do you wake up? What day of the week is your favorite? When is your birthday?\n\nTime vocabulary is essential for everyday life. Whether you're scheduling a meeting, catching a train, or planning a holiday, you need to know how Ukrainians talk about time.\n\nUkrainian time expressions have some unique features. Clock time uses ordinal numbers (\"перша година\" = first hour = 1 o'clock). Days start with Monday (понеділок), not Sunday. And months have beautiful Slavic names reflecting nature and seasons!\n\nBy mastering this module, you'll be able to ask \"Котра година?\" (What time is it?), understand schedules, and talk about when things happen. This combines with past and future tense to give you full temporal control over your Ukrainian conversations!\n\nUkrainian time culture is generally relaxed, but punctuality is appreciated in business settings. Arriving 5-10 minutes late to social events is normal. Understanding local expectations helps you navigate Ukrainian life successfully.\n\n> 💡 **Thinking Trick:** Ukrainian months are named for natural phenomena — like \"листопад\" (November = falling leaves). Learning the etymology helps remember them!\n\n## Presentation: Telling Time\n\n### Asking About Time\n\n| Ukrainian | English |\n|-----------|---------|\n| Котра година? | What time is it? |\n| О котрій годині? | At what time? |\n| Коли? | When? |\n| Скільки часу? | What's the time? (informal) |\n\n### Hours (Ordinal Numbers)\n\nUkrainian uses ORDINAL (first, second) not cardinal (one, two) numbers for hours:\n\n| Time | Ukrainian | Literal |\n|------|-----------|---------|\n| 1:00 | Перша година | First hour |\n| 2:00 | Друга година | Second hour |\n| 3:00 | Третя година | Third hour |\n| 4:00 | Четверта година | Fourth hour |\n| 5:00 | П'ята година | Fifth hour |\n| 6:00 | Шоста година | Sixth hour |\n| 7:00 | Сьома година | Seventh hour |\n| 8:00 | Восьма година | Eighth hour |\n| 9:00 | Дев'ята година | Ninth hour |\n| 10:00 | Десята година | Tenth hour |\n| 11:00 | Одинадцята година | Eleventh hour |\n| 12:00 | Дванадцята година | Twelfth hour |\n\n**Shortcut:** In casual speech, you can say just the ordinal: \"Зараз шоста\" (It's now six).\n\n### Half Hours and Quarters\n\n| Expression | Meaning | Example |\n|------------|---------|---------|\n| пів на [next hour] | half past | пів на другу = 1:30 |\n| чверть на [next hour] | quarter past | чверть на третю = 2:15 |\n| за чверть [hour] | quarter to | за чверть друга = 1:45 |\n| [number] хвилин на [hour] | X minutes past | п'ять хвилин на третю = 2:05 |\n\n**Key pattern:** Half hours use \"пів на\" + NEXT hour (пів на третю = 2:30, literally \"half toward the third\")\n\n> 📜 **Pattern Summary:**\n> - **Full hours:** Ordinal + година (перша година)\n> - **Half past:** Пів на + next hour (пів на другу = 1:30)\n> - **Quarter to:** За чверть + hour (за чверть друга = 1:45)\n\n### Days of the Week\n\n| Ukrainian | English | Etymology |\n|-----------|---------|-----------|\n| понеділок | Monday | \"after quiet\" (after Sunday rest) |\n| вівторок | Tuesday | \"second\" |\n| середа | Wednesday | \"middle\" |\n| четвер | Thursday | \"fourth\" |\n| п'ятниця | Friday | \"fifth\" |\n| субота | Saturday | from Hebrew \"Sabbath\" |\n| неділя | Sunday | \"non-work day\" |\n\n**Usage:**\n- У понеділок я працюю. (On Monday I work.)\n- До суботи! (See you Saturday!)\n- Вихідні — субота і неділя. (Weekend — Saturday and Sunday.)\n\n### Months of the Year\n\n| Ukrainian | English | Etymology |\n|-----------|---------|-----------|\n| січень | January | cutting (wood in winter) |\n| лютий | February | fierce/severe (cold) |\n| березень | March | birch trees |\n| квітень | April | flowers |\n| травень | May | grass |\n| червень | June | red (berries) |\n| липень | July | linden trees |\n| серпень | August | sickle (harvest) |\n| вересень | September | heather |\n| жовтень | October | yellow (leaves) |\n| листопад | November | falling leaves |\n| грудень | December | frozen soil (груда) |\n\n> 💡 **Did You Know?** Ukrainian months are NOT borrowed from Latin like in English. They're original Slavic names describing nature! \"Листопад\" (November) = \"falling leaves\" — isn't that beautiful?\n\n### Time Parts of Day\n\n| Ukrainian | English |\n|-----------|---------|\n| ранок | morning |\n| день | day, afternoon |\n| вечір | evening |\n| ніч | night |\n| зранку | in the morning |\n| вдень | during the day |\n| ввечері | in the evening |\n| вночі | at night |\n\n## Cultural Insight: Time in Ukraine 🇺🇦\n\n**Punctuality culture:**\n- Business: Be on time (10 minutes early is good)\n- Social events: 15-30 minutes late is acceptable\n- Parties: People often arrive 30+ minutes late\n- Trains: Run on time! Don't be late!\n\n**Calendar differences:**\n- Week starts on Monday (not Sunday)\n- 24-hour clock is common (especially written)\n- \"У понеділок о восьмій\" = On Monday at 8\n\n**Common phrases:**\n- \"Зараз немає часу.\" (I don't have time now.)\n- \"Вже пізно!\" (It's already late!)\n- \"Ще рано.\" (It's still early.)\n\n> 📜 **History Bite:** The Ukrainian calendar was reformed multiple times. Under Austria-Hungary (western Ukraine), the Gregorian calendar was adopted earlier than in the Russian Empire. Today, Ukraine celebrates Christmas on December 25 (Western) AND January 7 (Orthodox), reflecting this complex history!\n\n> 📜 **Myth Buster:** Some claim Ukrainian month names are \"corrupted Russian.\" In fact, Ukrainian months PRESERVE ancient Slavic names that Russian replaced with Latin borrowings (январь, февраль). Ukrainian листопад (November) is the ORIGINAL Slavic term!\n\n## Reading Practice: Мій розклад 📖\n\n**Українською:**\n\nЯ студент. У мене є розклад.\n\nУ понеділок я прокидаюся о сьомій годині. О восьмій я снідаю. О дев'ятій починаються заняття. Обід о першій. Заняття закінчуються о четвертій.\n\nУ вівторок і четвер я ходжу на спортзал. Тренування починається о шостій вечора і триває дві години.\n\nУ суботу я зазвичай зустрічаюся з друзями. Ми йдемо в кафе о третій або в кіно ввечері.\n\nУ неділю я відпочиваю. Зранку сплю довго — до десятої!\n\n**English Translation:**\n\nI'm a student. I have a schedule.\n\nOn Monday I wake up at seven o'clock. At eight I have breakfast. At nine classes begin. Lunch at one. Classes end at four.\n\nOn Tuesday and Thursday I go to the gym. Training starts at six in the evening and lasts two hours.\n\nOn Saturday I usually meet with friends. We go to a café at three or to the movies in the evening.\n\nOn Sunday I rest. In the morning I sleep long — until ten!\n\n**Practice:** Write YOUR weekly schedule using Ukrainian time expressions!\n\n## Conversation: Плануємо зустріч 🗣️\n\n**Марія:** Привіт! Коли ти вільна?\n**Олена:** Привіт! Залежить. Який день?\n**Марія:** Може, у середу?\n**Олена:** У середу я працюю до п'ятої. А потім вільна.\n**Марія:** Чудово! О шостій підходить?\n**Олена:** Так, о шостій добре. Де зустрінемося?\n**Марія:** Біля метро \"Хрещатик\"?\n**Олена:** Домовилися! До середи!\n**Марія:** Бувай!\n\n**English Translation:**\n**Maria:** Hi! When are you free?\n**Olena:** Hi! It depends. Which day?\n**Maria:** Maybe on Wednesday?\n**Olena:** On Wednesday I work until five. And then I'm free.\n**Maria:** Great! Does six o'clock work?\n**Olena:** Yes, six o'clock is good. Where will we meet?\n**Maria:** Near \"Khreshchatyk\" metro?\n**Olena:** Agreed! Until Wednesday!\n**Maria:** Bye!\n\nЗверни увагу: у середу, о шостій, до п'ятої — часові вирази!\n\n# Summary\n\n**What Time Is It? — Time Essentials**\n\n1. **Asking time:** Котра година? О котрій?\n2. **Hours:** Ordinals (перша, друга, третя...)\n3. **Half hours:** Пів на + next hour\n4. **Days:** понеділок - неділя (Monday - Sunday)\n5. **Months:** Beautiful Slavic nature names\n\n---\n\n> [!tip] 🌟 **Pro Tip:** Remember \"пів на другу\" = 1:30 (half toward the second hour). It's the NEXT hour, not the current one!\n\n# Activities\n\n## fill-in: Time Expressions\n> Complete with the correct time expression.\n\n1. Зараз ___ година. (3:00)\n   > [!answer] третя\n   > [!options] третя | три | третій | третього\n\n2. Пів на ___. (2:30)\n   > [!answer] третю\n   > [!options] другу | третю | дві | три\n\n3. Заняття ___ понеділок. (on Monday)\n   > [!answer] у\n   > [!options] у | на | в | до\n\n4. О ___ годині? (what time)\n   > [!answer] котрій\n   > [!options] котрій | якій | скільки | коли\n\n5. ___ ранку я снідаю. (in the morning)\n   > [!answer] Зранку\n   > [!options] Зранку | Ранок | Ранку | В ранок\n\n6. Я буду там ___ шостій. (at 6)\n   > [!answer] о\n   > [!options] о | у | в | на\n\n7. День народження в ___. (April)\n   > [!answer] квітні\n   > [!options] квітень | квітня | квітні | квітню\n\n8. Тиждень починається з ___. (Monday)\n   > [!answer] понеділка\n   > [!options] понеділок | понеділка | понеділку | понеділком\n\n9. ___ чверть друга. (quarter to 2)\n   > [!answer] За\n   > [!options] За | На | До | О\n\n10. Заняття ___ о четвертій. (end)\n    > [!answer] закінчуються\n    > [!options] закінчуються | починаються | тривають | є\n\n11. П'ятниця — ___ день тижня. (fifth)\n    > [!answer] п'ятий\n    > [!options] п'ятий | п'ять | п'ятниця | п'ятого\n\n12. ___ сьома ранку. (it's 7 AM)\n    > [!answer] Зараз\n    > [!options] Зараз | Є | Була | Буде\n\n## match-up: Days and Months\n> Match Ukrainian with English.\n\n| Ukrainian | English |\n| --- | --- |\n| понеділок | Monday |\n| середа | Wednesday |\n| п'ятниця | Friday |\n| неділя | Sunday |\n| січень | January |\n| квітень | April |\n| липень | July |\n| жовтень | October |\n| листопад | November |\n| грудень | December |\n| вихідні | weekend |\n| тиждень | week |\n\n## quiz: Time Rules\n> Choose the correct answer.\n\n1. \"Котра година?\" means:\n   - [x] What time is it?\n   - [ ] What day is it?\n   - [ ] What month is it?\n   - [ ] What year is it?\n\n2. \"Пів на третю\" means:\n   - [x] 2:30\n   - [ ] 3:30\n   - [ ] 3:00\n   - [ ] 2:00\n\n3. Ukrainian weeks start on:\n   - [x] Monday\n   - [ ] Sunday\n   - [ ] Saturday\n   - [ ] Tuesday\n\n4. \"Листопад\" is:\n   - [x] November\n   - [ ] October\n   - [ ] December\n   - [ ] September\n\n5. \"О котрій годині?\" asks:\n   - [x] At what time?\n   - [ ] What time is it?\n   - [ ] What day?\n   - [ ] How long?\n\n6. Ukrainian hours use:\n   - [x] Ordinal numbers (first, second)\n   - [ ] Cardinal numbers (one, two)\n   - [ ] Roman numerals\n   - [ ] No numbers\n\n7. \"За чверть друга\" means:\n   - [x] 1:45\n   - [ ] 2:15\n   - [ ] 2:45\n   - [ ] 1:15\n\n8. \"Ввечері\" means:\n   - [x] In the evening\n   - [ ] In the morning\n   - [ ] At night\n   - [ ] During the day\n\n9. Ukrainian month names describe:\n   - [x] Nature and seasons\n   - [ ] Roman gods\n   - [ ] Numbers\n   - [ ] Latin words\n\n10. \"У понеділок\" means:\n    - [x] On Monday\n    - [ ] Monday's\n    - [ ] Until Monday\n    - [ ] From Monday\n\n11. \"Зараз\" means:\n    - [x] Now\n    - [ ] Later\n    - [ ] Earlier\n    - [ ] Tomorrow\n\n12. \"Вихідні\" refers to:\n    - [x] Weekend (Saturday-Sunday)\n    - [ ] Holidays\n    - [ ] Workdays\n    - [ ] Vacation\n\n## group-sort: Parts of Day\n> Sort time expressions by part of day.\n\n- Morning: зранку\n- Morning: о сьомій\n- Morning: о восьмій\n- Afternoon: о першій\n- Afternoon: вдень\n- Afternoon: о третій\n- Evening: ввечері\n- Evening: о шостій\n- Evening: о сьомій вечора\n- Night: вночі\n- Night: опівночі\n- Night: о другій ночі\n\n## true-false: Time Facts\n- [x] \"Котра година?\" asks what time it is.\n- [x] Ukrainian weeks start on Monday.\n- [ ] \"Пів на другу\" means 2:30.\n- [x] \"Листопад\" means \"falling leaves.\"\n- [x] Ukrainian uses ordinal numbers for hours.\n- [ ] \"Ввечері\" means in the morning.\n- [x] \"Неділя\" means Sunday.\n- [ ] Ukrainian months are borrowed from Latin.\n- [x] \"За чверть\" means quarter to.\n- [x] \"Понеділок\" is the first day of the week.\n- [ ] \"Зранку\" means at night.\n- [x] \"Вихідні\" means weekend.\n\n## anagram: Time Vocabulary\n> Unscramble these time words.\n\n1. а н и д о г\n   > [!answer] година\n\n2. н і о о л д п е к\n   > [!answer] понеділок\n\n3. а е р е с д\n   > [!answer] середа\n\n4. а р з а з\n   > [!answer] зараз\n\n5. и і і в х д н\n   > [!answer] вихідні\n\n6. е н ь ж о т в\n   > [!answer] жовтень\n\n7. п а д о с и т л\n   > [!answer] листопад\n\n8. н г д е у р ь\n   > [!answer] грудень\n\n9. о к р а н\n   > [!answer] ранок\n\n10. р і ч в е\n    > [!answer] вечір\n\n11. я д л і е н\n    > [!answer] неділя\n\n12. ь т р е в ч\n    > [!answer] чверть\n\n## fill-in: My Schedule\n> Complete the schedule sentences.\n\n1. Я прокидаюся о ___ ранку. (7:00)\n   > [!answer] сьомій\n   > [!options] сьомій | сім | сьома | сьомого\n\n2. Заняття починаються о ___. (9:00)\n   > [!answer] дев'ятій\n   > [!options] дев'ять | дев'ятій | дев'ята | дев'ятого\n\n3. Обід о ___ дня. (1:00 PM)\n   > [!answer] першій\n   > [!options] перша | першій | один | першого\n\n4. Робота закінчується о ___. (5:00)\n   > [!answer] п'ятій\n   > [!options] п'ять | п'ятій | п'ята | п'ятого\n\n5. У ___ я ходжу на спортзал. (Tuesday)\n   > [!answer] вівторок\n   > [!options] вівторок | вівторка | вівторку | вівторком\n\n6. Тренування о ___вечора. (6:00)\n   > [!answer] шостій\n   > [!options] шість | шостій | шоста | шостого\n\n7. У ___ я відпочиваю. (weekend)\n   > [!answer] вихідні\n   > [!options] вихідні | вихідних | вихідними | вихідний\n\n8. Я сплю до ___. (10:00)\n   > [!answer] десятої\n   > [!options] десять | десятої | десята | десятий\n\n9. Ми зустрічаємося о ___ на другу. (2:30)\n   > [!answer] пів\n   > [!options] пів | половина | півтора | полудень\n\n10. Фільм починається о ___. (8:00 PM)\n    > [!answer] восьмій\n    > [!options] вісім | восьмій | восьма | восьмого\n\n11. У ___ я працюю. (Monday)\n    > [!answer] понеділок\n    > [!options] понеділок | понеділка | понеділку | понеділком\n\n12. Свято в ___. (December)\n    > [!answer] грудні\n    > [!options] грудень | грудня | грудні | груднем\n\n## unjumble: Build Time Sentences\n> Arrange words into correct sentences.\n\n1. година / котра\n   > [!answer] Котра година?\n\n2. зараз / третя / година\n   > [!answer] Зараз третя година.\n\n3. понеділок / я / у / працюю\n   > [!answer] У понеділок я працюю.\n\n4. о / годині / шостій / ми / зустрінемося\n   > [!answer] Ми зустрінемося о шостій годині.\n\n5. народження / мій / в / квітні / день\n   > [!answer] Мій день народження в квітні.\n\n6. на / пів / другу / зараз\n   > [!answer] Зараз пів на другу.\n\n7. вихідні / я / у / відпочиваю\n   > [!answer] У вихідні я відпочиваю.\n\n8. наступного / побачення / До / тижня\n   > [!answer] До побачення наступного тижня.\n\n9. снідаю / Зранку / я\n   > [!answer] Зранку я снідаю.\n\n10. ввечері / дивлюся / я / фільм\n    > [!answer] Ввечері я дивлюся фільм.\n\n11. о / починається / дев'ятій / робота\n    > [!answer] Робота починається о дев'ятій.\n\n12. закінчується / о / п'ятій / урок\n    > [!answer] Урок закінчується о п'ятій.\n\n---\n\n# Vocabulary\n\n| Ukrainian | IPA | English | Example |\n| --- | --- | --- | --- |\n| година | /ɦoˈdɪnɑ/ | hour, o'clock | Котра година? |\n| хвилина | /xʋɪˈlɪnɑ/ | minute | П'ять хвилин. |\n| секунда | /sɛˈkundɑ/ | second | Одна секунда. |\n| пів | /piʋ/ | half | Пів на другу. |\n| чверть | /t͡ʃʋɛrtʲ/ | quarter | За чверть друга. |\n| рано | /ˈrɑno/ | early | Ще рано. |\n| пізно | /ˈpizno/ | late | Вже пізно! |\n| вчасно | /ˈʋt͡ʃɑsno/ | on time | Приїхав вчасно. |\n| понеділок | /ponɛˈdilok/ | Monday | У понеділок. |\n| вівторок | /ʋiʋˈtorok/ | Tuesday | У вівторок. |\n| середа | /sɛrɛˈdɑ/ | Wednesday | У середу. |\n| четвер | /t͡ʃɛˈtʋɛr/ | Thursday | У четвер. |\n| п'ятниця | /pjɑtˈnɪt͡sʲɑ/ | Friday | У п'ятницю. |\n| субота | /suˈbotɑ/ | Saturday | У суботу. |\n| неділя | /nɛˈdilʲɑ/ | Sunday | У неділю. |\n| тиждень | /ˈtɪʒdɛnʲ/ | week | Наступного тижня. |\n| місяць | /ˈmisʲɑt͡sʲ/ | month | Цього місяця. |\n| рік | /rik/ | year | Наступного року. |\n| сьогодні | /sʲoˈɦodni/ | today | Сьогодні понеділок. |\n| зараз | /ˈzɑrɑz/ | now | Зараз третя. |\n| коли | /koˈlɪ/ | when | Коли ти вільний? |\n| о котрій | /o koˈtrij/ | at what time | О котрій зустрінемося? |\n| о/об | /o/, /ob/ | at (time) | О сьомій. |\n| до | /do/ | until, by | До п'ятої. |\n| після | /ˈpislʲɑ/ | after | Після роботи. |\n| перед | /ˈpɛrɛd/ | before | Перед обідом. |\n| з…до | /z...do/ | from...to | З дев'ятої до п'ятої. |\n| протягом | /proˈtʲɑɦom/ | during | Протягом дня. |\n| вихідні | /ʋɪˈxidni/ | weekend | У вихідні. |\n| робочий день | /roˈbot͡ʃɪj dɛnʲ/ | workday | Сьогодні робочий день. |\n",
+    "createdAt": "2025-12-12T19:55:32.048Z",
+    "modifiedAt": "2025-12-12T19:55:32.048Z",
+    "version": 2
+  },
+  "activities": [
+    {
+      "id": "act-a1-0-fillblank-0",
+      "type": "fill-blank",
+      "title": "Time Expressions",
+      "description": "Complete with the correct time expression.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Зараз ___ година. (3:00)",
+            "answer": "третя",
+            "options": [
+              "третя",
+              "три",
+              "третій",
+              "третього"
+            ]
+          },
+          {
+            "prompt": "Пів на ___. (2:30)",
+            "answer": "третю",
+            "options": [
+              "другу",
+              "третю",
+              "дві",
+              "три"
+            ]
+          },
+          {
+            "prompt": "Заняття ___ понеділок. (on Monday)",
+            "answer": "у",
+            "options": [
+              "у",
+              "на",
+              "в",
+              "до"
+            ]
+          },
+          {
+            "prompt": "О ___ годині? (what time)",
+            "answer": "котрій",
+            "options": [
+              "котрій",
+              "якій",
+              "скільки",
+              "коли"
+            ]
+          },
+          {
+            "prompt": "___ ранку я снідаю. (in the morning)",
+            "answer": "Зранку",
+            "options": [
+              "Зранку",
+              "Ранок",
+              "Ранку",
+              "В ранок"
+            ]
+          },
+          {
+            "prompt": "Я буду там ___ шостій. (at 6)",
+            "answer": "о",
+            "options": [
+              "о",
+              "у",
+              "в",
+              "на"
+            ]
+          },
+          {
+            "prompt": "День народження в ___. (April)",
+            "answer": "квітні",
+            "options": [
+              "квітень",
+              "квітня",
+              "квітні",
+              "квітню"
+            ]
+          },
+          {
+            "prompt": "Тиждень починається з ___. (Monday)",
+            "answer": "понеділка",
+            "options": [
+              "понеділок",
+              "понеділка",
+              "понеділку",
+              "понеділком"
+            ]
+          },
+          {
+            "prompt": "___ чверть друга. (quarter to 2)",
+            "answer": "За",
+            "options": [
+              "За",
+              "На",
+              "До",
+              "О"
+            ]
+          },
+          {
+            "prompt": "Заняття ___ о четвертій. (end)",
+            "answer": "закінчуються",
+            "options": [
+              "закінчуються",
+              "починаються",
+              "тривають",
+              "є"
+            ]
+          },
+          {
+            "prompt": "П'ятниця — ___ день тижня. (fifth)",
+            "answer": "п'ятий",
+            "options": [
+              "п'ятий",
+              "п'ять",
+              "п'ятниця",
+              "п'ятого"
+            ]
+          },
+          {
+            "prompt": "___ сьома ранку. (it's 7 AM)",
+            "answer": "Зараз",
+            "options": [
+              "Зараз",
+              "Є",
+              "Була",
+              "Буде"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.048Z",
+      "modifiedAt": "2025-12-12T19:55:32.048Z"
+    },
+    {
+      "id": "act-a1-0-matchup-0",
+      "type": "match-up",
+      "title": "Days and Months",
+      "description": "Match Ukrainian with English.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "понеділок",
+            "right": "Monday"
+          },
+          {
+            "left": "середа",
+            "right": "Wednesday"
+          },
+          {
+            "left": "п'ятниця",
+            "right": "Friday"
+          },
+          {
+            "left": "неділя",
+            "right": "Sunday"
+          },
+          {
+            "left": "січень",
+            "right": "January"
+          },
+          {
+            "left": "квітень",
+            "right": "April"
+          },
+          {
+            "left": "липень",
+            "right": "July"
+          },
+          {
+            "left": "жовтень",
+            "right": "October"
+          },
+          {
+            "left": "листопад",
+            "right": "November"
+          },
+          {
+            "left": "грудень",
+            "right": "December"
+          },
+          {
+            "left": "вихідні",
+            "right": "weekend"
+          },
+          {
+            "left": "тиждень",
+            "right": "week"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.048Z",
+      "modifiedAt": "2025-12-12T19:55:32.048Z"
+    },
+    {
+      "id": "act-a1-0-quiz-0",
+      "type": "quiz",
+      "title": "Time Rules",
+      "description": "Choose the correct answer.",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "\"Котра година?\" means:",
+            "options": [
+              "What time is it?",
+              "What day is it?",
+              "What month is it?",
+              "What year is it?"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Пів на третю\" means:",
+            "options": [
+              "2:30",
+              "3:30",
+              "3:00",
+              "2:00"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Ukrainian weeks start on:",
+            "options": [
+              "Monday",
+              "Sunday",
+              "Saturday",
+              "Tuesday"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Листопад\" is:",
+            "options": [
+              "November",
+              "October",
+              "December",
+              "September"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"О котрій годині?\" asks:",
+            "options": [
+              "At what time?",
+              "What time is it?",
+              "What day?",
+              "How long?"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Ukrainian hours use:",
+            "options": [
+              "Ordinal numbers (first, second)",
+              "Cardinal numbers (one, two)",
+              "Roman numerals",
+              "No numbers"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"За чверть друга\" means:",
+            "options": [
+              "1:45",
+              "2:15",
+              "2:45",
+              "1:15"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Ввечері\" means:",
+            "options": [
+              "In the evening",
+              "In the morning",
+              "At night",
+              "During the day"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Ukrainian month names describe:",
+            "options": [
+              "Nature and seasons",
+              "Roman gods",
+              "Numbers",
+              "Latin words"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"У понеділок\" means:",
+            "options": [
+              "On Monday",
+              "Monday's",
+              "Until Monday",
+              "From Monday"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Зараз\" means:",
+            "options": [
+              "Now",
+              "Later",
+              "Earlier",
+              "Tomorrow"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Вихідні\" refers to:",
+            "options": [
+              "Weekend (Saturday-Sunday)",
+              "Holidays",
+              "Workdays",
+              "Vacation"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.048Z",
+      "modifiedAt": "2025-12-12T19:55:32.048Z"
+    },
+    {
+      "id": "act-a1-0-groupsort-0",
+      "type": "group-sort",
+      "title": "Parts of Day",
+      "description": "Sort time expressions by part of day.",
+      "content": {
+        "type": "group-sort",
+        "groups": [],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.048Z",
+      "modifiedAt": "2025-12-12T19:55:32.048Z"
+    },
+    {
+      "id": "act-a1-0-truefalse-0",
+      "type": "true-false",
+      "title": "Time Facts",
+      "description": "Time Facts",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "\"Котра година?\" asks what time it is.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "Ukrainian weeks start on Monday.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Пів на другу\" means 2:30.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Листопад\" means \"falling leaves.\"",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "Ukrainian uses ordinal numbers for hours.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Ввечері\" means in the morning.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Неділя\" means Sunday.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "Ukrainian months are borrowed from Latin.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"За чверть\" means quarter to.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Понеділок\" is the first day of the week.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Зранку\" means at night.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Вихідні\" means weekend.",
+            "isTrue": true,
+            "explanation": ""
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.048Z",
+      "modifiedAt": "2025-12-12T19:55:32.048Z"
+    },
+    {
+      "id": "act-a1-0-anagram-0",
+      "type": "anagram",
+      "title": "Time Vocabulary",
+      "description": "Unscramble these time words.",
+      "content": {
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
+          {
+            "letters": [
+              "а",
+              "н",
+              "и",
+              "д",
+              "о",
+              "г"
+            ],
+            "answer": "година"
+          },
+          {
+            "letters": [
+              "н",
+              "і",
+              "о",
+              "о",
+              "л",
+              "д",
+              "п",
+              "е",
+              "к"
+            ],
+            "answer": "понеділок"
+          },
+          {
+            "letters": [
+              "а",
+              "е",
+              "р",
+              "е",
+              "с",
+              "д"
+            ],
+            "answer": "середа"
+          },
+          {
+            "letters": [
+              "а",
+              "р",
+              "з",
+              "а",
+              "з"
+            ],
+            "answer": "зараз"
+          },
+          {
+            "letters": [
+              "и",
+              "і",
+              "і",
+              "в",
+              "х",
+              "д",
+              "н"
+            ],
+            "answer": "вихідні"
+          },
+          {
+            "letters": [
+              "е",
+              "н",
+              "ь",
+              "ж",
+              "о",
+              "т",
+              "в"
+            ],
+            "answer": "жовтень"
+          },
+          {
+            "letters": [
+              "п",
+              "а",
+              "д",
+              "о",
+              "с",
+              "и",
+              "т",
+              "л"
+            ],
+            "answer": "листопад"
+          },
+          {
+            "letters": [
+              "н",
+              "г",
+              "д",
+              "е",
+              "у",
+              "р",
+              "ь"
+            ],
+            "answer": "грудень"
+          },
+          {
+            "letters": [
+              "о",
+              "к",
+              "р",
+              "а",
+              "н"
+            ],
+            "answer": "ранок"
+          },
+          {
+            "letters": [
+              "р",
+              "і",
+              "ч",
+              "в",
+              "е"
+            ],
+            "answer": "вечір"
+          },
+          {
+            "letters": [
+              "я",
+              "д",
+              "л",
+              "і",
+              "е",
+              "н"
+            ],
+            "answer": "неділя"
+          },
+          {
+            "letters": [
+              "ь",
+              "т",
+              "р",
+              "е",
+              "в",
+              "ч"
+            ],
+            "answer": "чверть"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.048Z",
+      "modifiedAt": "2025-12-12T19:55:32.048Z"
+    },
+    {
+      "id": "act-a1-0-fillblank-1",
+      "type": "fill-blank",
+      "title": "My Schedule",
+      "description": "Complete the schedule sentences.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Я прокидаюся о ___ ранку. (7:00)",
+            "answer": "сьомій",
+            "options": [
+              "сьомій",
+              "сім",
+              "сьома",
+              "сьомого"
+            ]
+          },
+          {
+            "prompt": "Заняття починаються о ___. (9:00)",
+            "answer": "дев'ятій",
+            "options": [
+              "дев'ять",
+              "дев'ятій",
+              "дев'ята",
+              "дев'ятого"
+            ]
+          },
+          {
+            "prompt": "Обід о ___ дня. (1:00 PM)",
+            "answer": "першій",
+            "options": [
+              "перша",
+              "першій",
+              "один",
+              "першого"
+            ]
+          },
+          {
+            "prompt": "Робота закінчується о ___. (5:00)",
+            "answer": "п'ятій",
+            "options": [
+              "п'ять",
+              "п'ятій",
+              "п'ята",
+              "п'ятого"
+            ]
+          },
+          {
+            "prompt": "У ___ я ходжу на спортзал. (Tuesday)",
+            "answer": "вівторок",
+            "options": [
+              "вівторок",
+              "вівторка",
+              "вівторку",
+              "вівторком"
+            ]
+          },
+          {
+            "prompt": "Тренування о ___вечора. (6:00)",
+            "answer": "шостій",
+            "options": [
+              "шість",
+              "шостій",
+              "шоста",
+              "шостого"
+            ]
+          },
+          {
+            "prompt": "У ___ я відпочиваю. (weekend)",
+            "answer": "вихідні",
+            "options": [
+              "вихідні",
+              "вихідних",
+              "вихідними",
+              "вихідний"
+            ]
+          },
+          {
+            "prompt": "Я сплю до ___. (10:00)",
+            "answer": "десятої",
+            "options": [
+              "десять",
+              "десятої",
+              "десята",
+              "десятий"
+            ]
+          },
+          {
+            "prompt": "Ми зустрічаємося о ___ на другу. (2:30)",
+            "answer": "пів",
+            "options": [
+              "пів",
+              "половина",
+              "півтора",
+              "полудень"
+            ]
+          },
+          {
+            "prompt": "Фільм починається о ___. (8:00 PM)",
+            "answer": "восьмій",
+            "options": [
+              "вісім",
+              "восьмій",
+              "восьма",
+              "восьмого"
+            ]
+          },
+          {
+            "prompt": "У ___ я працюю. (Monday)",
+            "answer": "понеділок",
+            "options": [
+              "понеділок",
+              "понеділка",
+              "понеділку",
+              "понеділком"
+            ]
+          },
+          {
+            "prompt": "Свято в ___. (December)",
+            "answer": "грудні",
+            "options": [
+              "грудень",
+              "грудня",
+              "грудні",
+              "груднем"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.048Z",
+      "modifiedAt": "2025-12-12T19:55:32.048Z"
+    },
+    {
+      "id": "act-a1-0-unjumble-0",
+      "type": "unjumble",
+      "title": "Build Time Sentences",
+      "description": "Arrange words into correct sentences.",
+      "content": {
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
+          {
+            "words": [
+              "година",
+              "котра"
+            ],
+            "answer": "Котра година?"
+          },
+          {
+            "words": [
+              "зараз",
+              "третя",
+              "година"
+            ],
+            "answer": "Зараз третя година."
+          },
+          {
+            "words": [
+              "понеділок",
+              "я",
+              "у",
+              "працюю"
+            ],
+            "answer": "У понеділок я працюю."
+          },
+          {
+            "words": [
+              "о",
+              "годині",
+              "шостій",
+              "ми",
+              "зустрінемося"
+            ],
+            "answer": "Ми зустрінемося о шостій годині."
+          },
+          {
+            "words": [
+              "народження",
+              "мій",
+              "в",
+              "квітні",
+              "день"
+            ],
+            "answer": "Мій день народження в квітні."
+          },
+          {
+            "words": [
+              "на",
+              "пів",
+              "другу",
+              "зараз"
+            ],
+            "answer": "Зараз пів на другу."
+          },
+          {
+            "words": [
+              "вихідні",
+              "я",
+              "у",
+              "відпочиваю"
+            ],
+            "answer": "У вихідні я відпочиваю."
+          },
+          {
+            "words": [
+              "наступного",
+              "побачення",
+              "До",
+              "тижня"
+            ],
+            "answer": "До побачення наступного тижня."
+          },
+          {
+            "words": [
+              "снідаю",
+              "Зранку",
+              "я"
+            ],
+            "answer": "Зранку я снідаю."
+          },
+          {
+            "words": [
+              "ввечері",
+              "дивлюся",
+              "я",
+              "фільм"
+            ],
+            "answer": "Ввечері я дивлюся фільм."
+          },
+          {
+            "words": [
+              "о",
+              "починається",
+              "дев'ятій",
+              "робота"
+            ],
+            "answer": "Робота починається о дев'ятій."
+          },
+          {
+            "words": [
+              "закінчується",
+              "о",
+              "п'ятій",
+              "урок"
+            ],
+            "answer": "Урок закінчується о п'ятій."
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.048Z",
+      "modifiedAt": "2025-12-12T19:55:32.048Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A1-23",
+    "level": "A1",
+    "phase": "A1.3",
+    "wordCount": 30,
+    "newWordCount": 30,
+    "reviewWordCount": 0,
+    "transliterationMode": "partial",
+    "words": [
+      {
+        "id": "v-hodyna-0-0",
+        "uk": "година",
+        "en": "hour, o'clock",
+        "pos": "noun",
+        "ipa": "/ɦoˈdɪnɑ/",
+        "note": "Котра година?",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-khvylyna-0-1",
+        "uk": "хвилина",
+        "en": "minute",
+        "pos": "noun",
+        "ipa": "/xʋɪˈlɪnɑ/",
+        "note": "П'ять хвилин.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-sekunda-0-2",
+        "uk": "секунда",
+        "en": "second",
+        "pos": "noun",
+        "ipa": "/sɛˈkundɑ/",
+        "note": "Одна секунда.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-piv-0-3",
+        "uk": "пів",
+        "en": "half",
+        "pos": "noun",
+        "ipa": "/piʋ/",
+        "note": "Пів на другу.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-chvertь-0-4",
+        "uk": "чверть",
+        "en": "quarter",
+        "pos": "noun",
+        "ipa": "/t͡ʃʋɛrtʲ/",
+        "note": "За чверть друга.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-rano-0-5",
+        "uk": "рано",
+        "en": "early",
+        "pos": "noun",
+        "ipa": "/ˈrɑno/",
+        "note": "Ще рано.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pizno-0-6",
+        "uk": "пізно",
+        "en": "late",
+        "pos": "noun",
+        "ipa": "/ˈpizno/",
+        "note": "Вже пізно!",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vchasno-0-7",
+        "uk": "вчасно",
+        "en": "on time",
+        "pos": "noun",
+        "ipa": "/ˈʋt͡ʃɑsno/",
+        "note": "Приїхав вчасно.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-ponedilok-0-8",
+        "uk": "понеділок",
+        "en": "Monday",
+        "pos": "noun",
+        "ipa": "/ponɛˈdilok/",
+        "note": "У понеділок.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vivtorok-0-9",
+        "uk": "вівторок",
+        "en": "Tuesday",
+        "pos": "noun",
+        "ipa": "/ʋiʋˈtorok/",
+        "note": "У вівторок.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-sereda-0-10",
+        "uk": "середа",
+        "en": "Wednesday",
+        "pos": "noun",
+        "ipa": "/sɛrɛˈdɑ/",
+        "note": "У середу.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-chetver-0-11",
+        "uk": "четвер",
+        "en": "Thursday",
+        "pos": "noun",
+        "ipa": "/t͡ʃɛˈtʋɛr/",
+        "note": "У четвер.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-p'yatnytsya-0-12",
+        "uk": "п'ятниця",
+        "en": "Friday",
+        "pos": "noun",
+        "ipa": "/pjɑtˈnɪt͡sʲɑ/",
+        "note": "У п'ятницю.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-subota-0-13",
+        "uk": "субота",
+        "en": "Saturday",
+        "pos": "noun",
+        "ipa": "/suˈbotɑ/",
+        "note": "У суботу.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-nedilya-0-14",
+        "uk": "неділя",
+        "en": "Sunday",
+        "pos": "noun",
+        "ipa": "/nɛˈdilʲɑ/",
+        "note": "У неділю.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-tyzhdenь-0-15",
+        "uk": "тиждень",
+        "en": "week",
+        "pos": "noun",
+        "ipa": "/ˈtɪʒdɛnʲ/",
+        "note": "Наступного тижня.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-misyatsь-0-16",
+        "uk": "місяць",
+        "en": "month",
+        "pos": "noun",
+        "ipa": "/ˈmisʲɑt͡sʲ/",
+        "note": "Цього місяця.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-rik-0-17",
+        "uk": "рік",
+        "en": "year",
+        "pos": "noun",
+        "ipa": "/rik/",
+        "note": "Наступного року.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-sьohodni-0-18",
+        "uk": "сьогодні",
+        "en": "today",
+        "pos": "noun",
+        "ipa": "/sʲoˈɦodni/",
+        "note": "Сьогодні понеділок.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-zaraz-0-19",
+        "uk": "зараз",
+        "en": "now",
+        "pos": "noun",
+        "ipa": "/ˈzɑrɑz/",
+        "note": "Зараз третя.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-koly-0-20",
+        "uk": "коли",
+        "en": "when",
+        "pos": "noun",
+        "ipa": "/koˈlɪ/",
+        "note": "Коли ти вільний?",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-o-kotriy-0-21",
+        "uk": "о котрій",
+        "en": "at what time",
+        "pos": "noun",
+        "ipa": "/o koˈtrij/",
+        "note": "О котрій зустрінемося?",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-o/ob-0-22",
+        "uk": "о/об",
+        "en": "at (time)",
+        "pos": "noun",
+        "ipa": "/o/, /ob/",
+        "note": "О сьомій.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-do-0-23",
+        "uk": "до",
+        "en": "until, by",
+        "pos": "noun",
+        "ipa": "/do/",
+        "note": "До п'ятої.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pislya-0-24",
+        "uk": "після",
+        "en": "after",
+        "pos": "noun",
+        "ipa": "/ˈpislʲɑ/",
+        "note": "Після роботи.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pered-0-25",
+        "uk": "перед",
+        "en": "before",
+        "pos": "noun",
+        "ipa": "/ˈpɛrɛd/",
+        "note": "Перед обідом.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-z…do-0-26",
+        "uk": "з…до",
+        "en": "from...to",
+        "pos": "noun",
+        "ipa": "/z...do/",
+        "note": "З дев'ятої до п'ятої.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-protyahom-0-27",
+        "uk": "протягом",
+        "en": "during",
+        "pos": "noun",
+        "ipa": "/proˈtʲɑɦom/",
+        "note": "Протягом дня.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vykhidni-0-28",
+        "uk": "вихідні",
+        "en": "weekend",
+        "pos": "noun",
+        "ipa": "/ʋɪˈxidni/",
+        "note": "У вихідні.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-robochyy-denь-0-29",
+        "uk": "робочий день",
+        "en": "workday",
+        "pos": "noun",
+        "ipa": "/roˈbot͡ʃɪj dɛnʲ/",
+        "note": "Сьогодні робочий день.",
+        "isNew": true,
+        "firstModule": 0
+      }
+    ]
+  }
+}

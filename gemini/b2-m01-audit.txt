@@ -1,0 +1,90 @@
+
+========================================
+
+Auditing curriculum/l2-uk-en/b2/01-passive-voice-complete-system.md (Target: 1500)...
+
+  > mark-the-words: Знайдіть пасивні конструкції [stage: recognition]: 16 items
+  > group-sort: Класифікуйте пасивні форми [stage: recognition]: 16 items
+  > quiz: Визначте тип пасиву [stage: discrimination]: 16 items
+  > true-false: Перевірте свої знання [stage: discrimination]: 16 items
+  > fill-in: Оберіть правильну пасивну форму [stage: controlled]: 16 items
+  > fill-in: Узгодження дієприкметників [stage: controlled]: 16 items
+  > fill-in: Трансформація активний → пасивний [stage: controlled]: 16 items
+  > error-correction: Знайдіть і виправте помилки [stage: controlled]: 16 items
+  > error-correction: Стилістичні помилки [stage: controlled]: 16 items
+  > cloze: Пасив у контексті [stage: controlled]: 16 items
+  > unjumble: Складіть пасивні речення [stage: production]: 16 items
+  > unjumble: Складні пасивні речення [stage: production]: 16 items
+  > translate: Перекладіть на українську [stage: production]: 16 items
+  > dialogue-reorder: Впорядкуйте діалог [stage: production]: 21 items
+  > select: Оберіть усі правильні варіанти [stage: discrimination]: 8 items
+  > match-up: З'єднайте пари [stage: recognition]: 42 items
+
+--- STRICT GATES (Level B2) ---
+Words        ✅ 1675/1500
+Activities   ✅ 16/14
+Density      ❌ 1 < 16
+Unique_types ✅ 12/4 types
+Priority     ✅ Priority types used
+Engagement   ✅ 7/6
+Audio        ℹ️ No audio
+Vocab        ✅ 25/25
+Structure    ✅ Valid Structure
+Lint         ❌ 49 Format Errors
+Immersion    🇺🇦 84.6%
+
+❌ LINT ERRORS FOUND:
+  - Line 565: T/F Activity contains blockquote hint '> Правильно! Дієприкметникова, безособова (-но/-то), рефлексивна (-ся) та 3-я особа множини.'. Remove hints.
+  - Line 568: T/F Activity contains blockquote hint '> Неправильно! Форми на -но/-то НІКОЛИ не змінюються — вони завжди однакові.'. Remove hints.
+  - Line 571: T/F Activity contains blockquote hint '> Правильно! "Книг**у** написано" — книгу (знахідний), а не книга (називний).'. Remove hints.
+  - Line 574: T/F Activity contains blockquote hint '> Неправильно! Для офіційних документів характерна саме форма на -но/-то.'. Remove hints.
+  - Line 577: T/F Activity contains blockquote hint '> Правильно! "Написан**а** книга", "написан**ий** лист", "написан**е** слово".'. Remove hints.
+  - Line 580: T/F Activity contains blockquote hint '> Неправильно! Усі чотири форми українська успадкувала від праслов'янської мови.'. Remove hints.
+  - Line 583: T/F Activity contains blockquote hint '> Правильно! "Книга пишеться" = процес триває.'. Remove hints.
+  - Line 586: T/F Activity contains blockquote hint '> Неправильно! Це правильна і дуже природна форма пасиву для розмовного мовлення.'. Remove hints.
+  - Line 589: T/F Activity contains blockquote hint '> Правильно! Кожна форма має свій "стилістичний дім".'. Remove hints.
+  - Line 592: T/F Activity contains blockquote hint '> Неправильно! Пасив змінює фокус речення і може мати стилістичні наслідки.'. Remove hints.
+  - Line 595: T/F Activity contains blockquote hint '> Правильно! Вони надають тексту образності та описовості.'. Remove hints.
+  - Line 598: T/F Activity contains blockquote hint '> Неправильно! Це правильна українська конструкція для минулого часу.'. Remove hints.
+  - Line 601: T/F Activity contains blockquote hint '> Правильно! Це одна з головних функцій пасиву.'. Remove hints.
+  - Line 604: T/F Activity contains blockquote hint '> Неправильно! Науковий стиль активно використовує рефлексивний пасив.'. Remove hints.
+  - Line 607: T/F Activity contains blockquote hint '> Правильно! Ці форми особливо розвинулися в документах Гетьманщини.'. Remove hints.
+  - Line 610: T/F Activity contains blockquote hint '> Неправильно! Англійська має одну основну форму, українська — чотири.'. Remove hints.
+  - Line 1084: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1088: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1092: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1096: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1100: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1104: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1108: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1112: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1116: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1120: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1124: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1128: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1132: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1136: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1140: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1144: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1152: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1156: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1160: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1164: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1168: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1172: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1176: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1180: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1184: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1188: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1192: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1196: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1200: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1204: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1208: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1212: Unjumble Word Mismatch - Jumbled words don't match answer words.
+  - Line 1484: Transliteration Column detected in M999 (Policy M21+: None). Remove column.
+
+
+Report: /Users/krisztiankoos/projects/curricula-opus/curriculum/l2-uk-en/b2/gemini/01-passive-voice-complete-system-review.md
+
+❌ AUDIT FAILED. Correct errors before proceeding.

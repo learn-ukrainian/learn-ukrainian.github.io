@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 845/750
+- **Words:** ✅ 929/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -22,7 +22,7 @@
 | **Presentation: Reflexive Verbs** | ✅ | 133 | Included in Core |
 | **Cultural Insight: Daily Life in Ukraine 🇺🇦** | ✅ | 159 | Included in Core |
 | **Reading Practice: Мій типовий день 📖** | ✅ | 234 | Included in Core |
-| **Conversation: Твій ранок 🗣️** | ✅ | 140 | Included in Core |
+| **Conversation: Твій ранок 🗣️** | ✅ | 224 | Included in Core |
 | **fill-in: Reflexive Verbs** | 🎮 | 12 | Activity (12 items) |
 | **match-up: Daily Activities** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Routine Rules** | 🎮 | 12 | Activity (12 items) |

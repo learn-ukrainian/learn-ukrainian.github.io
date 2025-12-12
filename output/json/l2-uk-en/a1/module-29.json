@@ -1,0 +1,1232 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A1-29",
+    "moduleId": "mod-uk-A1-29",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A1",
+    "phase": "A1.3",
+    "moduleNumber": 29,
+    "moduleType": "vocabulary",
+    "pedagogy": "PPP",
+    "immersionLevel": 0.3,
+    "title": "Weather & Nature",
+    "subtitle": "Impersonal Constructions",
+    "description": "Describe weather conditions",
+    "objectives": [
+      "Describe weather conditions",
+      "Use impersonal weather constructions",
+      "Talk about nature and seasons",
+      "Discuss animals and plants"
+    ],
+    "grammarFocus": [
+      "Impersonal constructions (weather)",
+      "Weather vocabulary",
+      "Seasons and nature"
+    ],
+    "tags": [
+      "vocabulary",
+      "weather",
+      "nature",
+      "impersonal"
+    ],
+    "totalDuration": 50,
+    "transliterationMode": "partial",
+    "sections": [
+      {
+        "id": "section-content-0",
+        "name": "Lesson",
+        "type": "content",
+        "content": "> **Note:** Weather and nature are everyday topics! Learn to describe what you see outside and talk about seasons.\n\n## Warm-up: What's the Weather Like?\n\nLook outside! Is it sunny or cloudy? Warm or cold? What season is it?\n\nWeather is one of the most common conversation topics worldwide. In Ukraine, weather varies dramatically — hot continental summers, cold winters, beautiful springs and autumns. Learning weather vocabulary lets you participate in small talk and plan activities.\n\nUkrainian weather expressions often use IMPERSONAL constructions. Instead of \"It is cold\" (with \"it\" as subject), Ukrainian says \"Холодно\" — just the state, no subject! This is a fundamental difference from English and makes Ukrainian weather expressions very direct.\n\nNature vocabulary is also essential for appreciating Ukraine's beautiful landscapes — the Carpathian mountains, vast steppe, and famous sunflower fields!\n\nBy mastering this module, you'll be able to discuss weather, describe seasons, and talk about the natural world around you.\n\n> 💡 **Thinking Trick:** Ukrainian weather is SUBJECTLESS. Don't look for \"it\"! Just say the condition: Холодно. Тепло. Сонячно. Direct and elegant!\n\n## Presentation: Weather Expressions\n\n### Impersonal Weather Constructions\n\nUkrainian expresses weather states WITHOUT a subject:\n\n| Ukrainian | English | Structure |\n|-----------|---------|-----------|\n| Тепло. | It's warm. | Just the adverb! |\n| Холодно. | It's cold. | No subject! |\n| Жарко. | It's hot. | Direct style. |\n| Сонячно. | It's sunny. | |\n| Хмарно. | It's cloudy. | |\n| Вітряно. | It's windy. | |\n\n**With \"є\" (is) — optional:**\n- Погода гарна. (The weather is nice.)\n- Сьогодні тепло. (Today it's warm.)\n- Надворі холодно. (It's cold outside.)\n\n### Action Weather (йде/падає)\n\nSome weather conditions use verbs:\n\n| Ukrainian | English |\n|-----------|---------|\n| Йде дощ. | It's raining. (lit: Rain goes.) |\n| Йде сніг. | It's snowing. (lit: Snow goes.) |\n| Падає сніг. | Snow is falling. |\n\n**Past and future:**\n- Учора йшов дощ. (Yesterday it rained.)\n- Завтра буде сніг. (Tomorrow there will be snow.)\n\n> 📜 **Pattern Summary:**\n> - **State:** Adverb alone (Холодно. Тепло.)\n> - **Rain/Snow:** Йде дощ. Йде сніг.\n> - **Question:** Яка погода? (What's the weather?)\n\n### Seasons (Пори року)\n\n| Season | Ukrainian | Months |\n|--------|-----------|--------|\n| Spring | весна | березень, квітень, травень |\n| Summer | літо | червень, липень, серпень |\n| Autumn | осінь (f.) | вересень, жовтень, листопад |\n| Winter | зима | грудень, січень, лютий |\n\n**Locative forms (in + season):**\n- навесні (in spring)\n- влітку (in summer)\n- восени (in autumn)\n- взимку (in winter)\n\n**Examples:**\n- Навесні тепло і гарно. (In spring it's warm and nice.)\n- Влітку жарко. (In summer it's hot.)\n- Восени часто йде дощ. (In autumn it often rains.)\n- Взимку холодно і снігу. (In winter it's cold and snowy.)\n\n### Nature Vocabulary\n\n**Plants:**\n| Ukrainian | English |\n|-----------|---------|\n| дерево | tree |\n| квітка | flower |\n| трава | grass |\n| ліс | forest |\n| поле | field |\n\n**Animals:**\n| Ukrainian | English |\n|-----------|---------|\n| собака/пес | dog |\n| кіт/кішка | cat |\n| птах | bird |\n| риба | fish |\n\n**Landscape:**\n| Ukrainian | English |\n|-----------|---------|\n| гора | mountain |\n| річка | river |\n| море | sea |\n| озеро | lake |\n| парк | park |\n\n> 💡 **Did You Know?** Ukraine has incredibly diverse nature — from the Carpathian mountains in the west to the Black Sea coast in the south. \"Синьогора\" (Blue Mountain) is a famous Carpathian peak. And the famous sunflower fields are truly magnificent in summer!\n\n## Cultural Insight: Nature in Ukrainian Culture 🇺🇦\n\n**Nature in Ukrainian identity:**\nUkraine is called \"the breadbasket of Europe\" for its fertile soil. Nature symbolism is everywhere:\n\n- **Соняшник (Sunflower):** Symbol of Ukraine, famous fields in summer\n- **Калина (Guelder rose):** National symbol, appears in folk songs\n- **Степ (Steppe):** The vast grasslands, celebrated in poetry\n- **Дніпро (Dnipro River):** \"Father Dnipro\" — central to Ukrainian history\n\n**Weather proverbs:**\n- \"Як грім у травні, буде хліб добрий.\" (Thunder in May means good bread.)\n- \"Зимою сніг — влітку хліб.\" (Winter snow — summer bread.)\n\n**Pet culture:**\nUkrainians love pets! Cats (коти) and dogs (собаки) are popular. Many Ukrainians rescued pets during war evacuations — pets are family!\n\n> 📜 **History Bite:** The steppe was homeland to Cossacks who fought for Ukrainian freedom. Poems by Taras Shevchenko celebrate the steppe's beauty. Russian destruction now threatens Ukraine's nature — but Ukrainians protect their land!\n\n> 📜 **Myth Buster:** Some claim Ukraine is \"just flat plains.\" FALSE! Ukraine has the Carpathian Mountains (up to 2061m), beautiful Black Sea coast, and diverse ecosystems. Its nature rivals Western European countries!\n\n## Reading Practice: Прогноз погоди 📖\n\n**Українською:**\n\nДоброго ранку! Ось прогноз погоди на сьогодні.\n\nЗараз на вулиці сонячно і тепло. Температура — плюс двадцять градусів. Чудова погода для прогулянки в парку!\n\nВдень буде хмарно. Можливо, ввечері піде дощ. Візьміть парасолю!\n\nЗавтра очікується похолодання. Температура знизиться до п'ятнадцяти градусів. Буде вітряно.\n\nНа вихідних повернеться сонце. Субота і неділя будуть теплі — ідеально для поїздки за місто!\n\nБережіть себе і гарного дня!\n\n**English Translation:**\n\nGood morning! Here's the weather forecast for today.\n\nRight now outside it's sunny and warm. Temperature — plus twenty degrees. Wonderful weather for a walk in the park!\n\nDuring the day it will be cloudy. Possibly, in the evening it will rain. Take an umbrella!\n\nTomorrow a cold spell is expected. Temperature will drop to fifteen degrees. It will be windy.\n\nOn the weekend the sun will return. Saturday and Sunday will be warm — ideal for a trip out of the city!\n\nTake care and have a nice day!\n\n## Conversation: Яка погода? 🗣️\n\n**Ігор:** Привіт! Яка сьогодні погода?\n**Марія:** Привіт! Тепло, але хмарно.\n**Ігор:** Буде дощ?\n**Марія:** Можливо ввечері. А що?\n**Ігор:** Хочу піти гуляти в парк.\n**Марія:** Візьми парасолю на всяк випадок!\n**Ігор:** Гарна ідея. А завтра?\n**Марія:** Завтра буде сонячно і тепліше.\n**Ігор:** Чудово! Тоді поїдемо за місто.\n**Марія:** Я теж хочу! Там красива природа!\n\n**English Translation:**\n**Ihor:** Hi! What's the weather like today?\n**Maria:** Hi! Warm, but cloudy.\n**Ihor:** Will it rain?\n**Maria:** Possibly in the evening. Why?\n**Ihor:** I want to go for a walk in the park.\n**Maria:** Take an umbrella just in case!\n**Ihor:** Good idea. And tomorrow?\n**Maria:** Tomorrow will be sunny and warmer.\n**Ihor:** Great! Then we will go out of town.\n**Maria:** I want to too! The nature is beautiful there!\n\nЗверни увагу: тепло, хмарно, сонячно — всі безособові конструкції!"
+      },
+      {
+        "id": "section-summary-1",
+        "name": "Підсумок",
+        "nameEn": "Summary",
+        "type": "summary",
+        "content": "**Weather & Nature Essentials**\n\n1. **Impersonal:** Холодно. Тепло. Сонячно. (no subject!)\n2. **Rain/Snow:** Йде дощ. Йде сніг.\n3. **Seasons:** навесні, влітку, восени, взимку\n4. **Question:** Яка погода? Яка сьогодні погода?\n\n---\n\n> [!tip] 🌟 **Pro Tip:** Remember: Ukrainian weather has NO \"it\"! Don't say \"Це холодно\" — just \"Холодно.\" Direct and natural!\n\n\n---"
+      }
+    ],
+    "rawMarkdown": "---\ntitle: \"Weather & Nature\"\nsubtitle: \"Impersonal Constructions\"\nphase: A1.3\ntransliteration: partial\npedagogy: PPP\nduration: 50\ntags: [vocabulary, weather, nature, impersonal]\nobjectives:\n  - Describe weather conditions\n  - Use impersonal weather constructions\n  - Talk about nature and seasons\n  - Discuss animals and plants\ngrammar:\n  - Impersonal constructions (weather)\n  - Weather vocabulary\n  - Seasons and nature\naudio: false\n---\n\n# Weather & Nature\n\n> **Note:** Weather and nature are everyday topics! Learn to describe what you see outside and talk about seasons.\n\n## Warm-up: What's the Weather Like?\n\nLook outside! Is it sunny or cloudy? Warm or cold? What season is it?\n\nWeather is one of the most common conversation topics worldwide. In Ukraine, weather varies dramatically — hot continental summers, cold winters, beautiful springs and autumns. Learning weather vocabulary lets you participate in small talk and plan activities.\n\nUkrainian weather expressions often use IMPERSONAL constructions. Instead of \"It is cold\" (with \"it\" as subject), Ukrainian says \"Холодно\" — just the state, no subject! This is a fundamental difference from English and makes Ukrainian weather expressions very direct.\n\nNature vocabulary is also essential for appreciating Ukraine's beautiful landscapes — the Carpathian mountains, vast steppe, and famous sunflower fields!\n\nBy mastering this module, you'll be able to discuss weather, describe seasons, and talk about the natural world around you.\n\n> 💡 **Thinking Trick:** Ukrainian weather is SUBJECTLESS. Don't look for \"it\"! Just say the condition: Холодно. Тепло. Сонячно. Direct and elegant!\n\n## Presentation: Weather Expressions\n\n### Impersonal Weather Constructions\n\nUkrainian expresses weather states WITHOUT a subject:\n\n| Ukrainian | English | Structure |\n|-----------|---------|-----------|\n| Тепло. | It's warm. | Just the adverb! |\n| Холодно. | It's cold. | No subject! |\n| Жарко. | It's hot. | Direct style. |\n| Сонячно. | It's sunny. | |\n| Хмарно. | It's cloudy. | |\n| Вітряно. | It's windy. | |\n\n**With \"є\" (is) — optional:**\n- Погода гарна. (The weather is nice.)\n- Сьогодні тепло. (Today it's warm.)\n- Надворі холодно. (It's cold outside.)\n\n### Action Weather (йде/падає)\n\nSome weather conditions use verbs:\n\n| Ukrainian | English |\n|-----------|---------|\n| Йде дощ. | It's raining. (lit: Rain goes.) |\n| Йде сніг. | It's snowing. (lit: Snow goes.) |\n| Падає сніг. | Snow is falling. |\n\n**Past and future:**\n- Учора йшов дощ. (Yesterday it rained.)\n- Завтра буде сніг. (Tomorrow there will be snow.)\n\n> 📜 **Pattern Summary:**\n> - **State:** Adverb alone (Холодно. Тепло.)\n> - **Rain/Snow:** Йде дощ. Йде сніг.\n> - **Question:** Яка погода? (What's the weather?)\n\n### Seasons (Пори року)\n\n| Season | Ukrainian | Months |\n|--------|-----------|--------|\n| Spring | весна | березень, квітень, травень |\n| Summer | літо | червень, липень, серпень |\n| Autumn | осінь (f.) | вересень, жовтень, листопад |\n| Winter | зима | грудень, січень, лютий |\n\n**Locative forms (in + season):**\n- навесні (in spring)\n- влітку (in summer)\n- восени (in autumn)\n- взимку (in winter)\n\n**Examples:**\n- Навесні тепло і гарно. (In spring it's warm and nice.)\n- Влітку жарко. (In summer it's hot.)\n- Восени часто йде дощ. (In autumn it often rains.)\n- Взимку холодно і снігу. (In winter it's cold and snowy.)\n\n### Nature Vocabulary\n\n**Plants:**\n| Ukrainian | English |\n|-----------|---------|\n| дерево | tree |\n| квітка | flower |\n| трава | grass |\n| ліс | forest |\n| поле | field |\n\n**Animals:**\n| Ukrainian | English |\n|-----------|---------|\n| собака/пес | dog |\n| кіт/кішка | cat |\n| птах | bird |\n| риба | fish |\n\n**Landscape:**\n| Ukrainian | English |\n|-----------|---------|\n| гора | mountain |\n| річка | river |\n| море | sea |\n| озеро | lake |\n| парк | park |\n\n> 💡 **Did You Know?** Ukraine has incredibly diverse nature — from the Carpathian mountains in the west to the Black Sea coast in the south. \"Синьогора\" (Blue Mountain) is a famous Carpathian peak. And the famous sunflower fields are truly magnificent in summer!\n\n## Cultural Insight: Nature in Ukrainian Culture 🇺🇦\n\n**Nature in Ukrainian identity:**\nUkraine is called \"the breadbasket of Europe\" for its fertile soil. Nature symbolism is everywhere:\n\n- **Соняшник (Sunflower):** Symbol of Ukraine, famous fields in summer\n- **Калина (Guelder rose):** National symbol, appears in folk songs\n- **Степ (Steppe):** The vast grasslands, celebrated in poetry\n- **Дніпро (Dnipro River):** \"Father Dnipro\" — central to Ukrainian history\n\n**Weather proverbs:**\n- \"Як грім у травні, буде хліб добрий.\" (Thunder in May means good bread.)\n- \"Зимою сніг — влітку хліб.\" (Winter snow — summer bread.)\n\n**Pet culture:**\nUkrainians love pets! Cats (коти) and dogs (собаки) are popular. Many Ukrainians rescued pets during war evacuations — pets are family!\n\n> 📜 **History Bite:** The steppe was homeland to Cossacks who fought for Ukrainian freedom. Poems by Taras Shevchenko celebrate the steppe's beauty. Russian destruction now threatens Ukraine's nature — but Ukrainians protect their land!\n\n> 📜 **Myth Buster:** Some claim Ukraine is \"just flat plains.\" FALSE! Ukraine has the Carpathian Mountains (up to 2061m), beautiful Black Sea coast, and diverse ecosystems. Its nature rivals Western European countries!\n\n## Reading Practice: Прогноз погоди 📖\n\n**Українською:**\n\nДоброго ранку! Ось прогноз погоди на сьогодні.\n\nЗараз на вулиці сонячно і тепло. Температура — плюс двадцять градусів. Чудова погода для прогулянки в парку!\n\nВдень буде хмарно. Можливо, ввечері піде дощ. Візьміть парасолю!\n\nЗавтра очікується похолодання. Температура знизиться до п'ятнадцяти градусів. Буде вітряно.\n\nНа вихідних повернеться сонце. Субота і неділя будуть теплі — ідеально для поїздки за місто!\n\nБережіть себе і гарного дня!\n\n**English Translation:**\n\nGood morning! Here's the weather forecast for today.\n\nRight now outside it's sunny and warm. Temperature — plus twenty degrees. Wonderful weather for a walk in the park!\n\nDuring the day it will be cloudy. Possibly, in the evening it will rain. Take an umbrella!\n\nTomorrow a cold spell is expected. Temperature will drop to fifteen degrees. It will be windy.\n\nOn the weekend the sun will return. Saturday and Sunday will be warm — ideal for a trip out of the city!\n\nTake care and have a nice day!\n\n## Conversation: Яка погода? 🗣️\n\n**Ігор:** Привіт! Яка сьогодні погода?\n**Марія:** Привіт! Тепло, але хмарно.\n**Ігор:** Буде дощ?\n**Марія:** Можливо ввечері. А що?\n**Ігор:** Хочу піти гуляти в парк.\n**Марія:** Візьми парасолю на всяк випадок!\n**Ігор:** Гарна ідея. А завтра?\n**Марія:** Завтра буде сонячно і тепліше.\n**Ігор:** Чудово! Тоді поїдемо за місто.\n**Марія:** Я теж хочу! Там красива природа!\n\n**English Translation:**\n**Ihor:** Hi! What's the weather like today?\n**Maria:** Hi! Warm, but cloudy.\n**Ihor:** Will it rain?\n**Maria:** Possibly in the evening. Why?\n**Ihor:** I want to go for a walk in the park.\n**Maria:** Take an umbrella just in case!\n**Ihor:** Good idea. And tomorrow?\n**Maria:** Tomorrow will be sunny and warmer.\n**Ihor:** Great! Then we will go out of town.\n**Maria:** I want to too! The nature is beautiful there!\n\nЗверни увагу: тепло, хмарно, сонячно — всі безособові конструкції!\n\n# Summary\n\n**Weather & Nature Essentials**\n\n1. **Impersonal:** Холодно. Тепло. Сонячно. (no subject!)\n2. **Rain/Snow:** Йде дощ. Йде сніг.\n3. **Seasons:** навесні, влітку, восени, взимку\n4. **Question:** Яка погода? Яка сьогодні погода?\n\n---\n\n> [!tip] 🌟 **Pro Tip:** Remember: Ukrainian weather has NO \"it\"! Don't say \"Це холодно\" — just \"Холодно.\" Direct and natural!\n\n# Activities\n\n## fill-in: Weather Conditions\n> Complete with the correct weather expression.\n\n1. Сьогодні ___ і гарно. (sunny)\n   > [!answer] сонячно\n   > [!options] сонячно | хмарно | холодно | вітряно\n\n2. На вулиці ___. (cold)\n   > [!answer] холодно\n   > [!options] тепло | холодно | сонячно | хмарно\n\n3. Взимку ___ сніг. (goes/falls)\n   > [!answer] йде\n   > [!options] йде | іде | падає | є\n\n4. ___ дощ! (It's raining)\n   > [!answer] Йде\n   > [!options] Йде | Є | Буде | Був\n\n5. Небо сіре — ___. (cloudy)\n   > [!answer] хмарно\n   > [!options] сонячно | хмарно | ясно | горить\n\n6. ___ дуже спекотно. (In summer)\n   > [!answer] Влітку\n   > [!options] Влітку | Взимку | Навесні | Восени\n\n7. ___ тепло і гарно. (In spring)\n   > [!answer] Навесні\n   > [!options] Влітку | Взимку | Навесні | Восени\n\n8. Яка сьогодні ___? (weather)\n   > [!answer] погода\n   > [!options] погода | гора | природа | весна\n\n9. Надворі ___ сильний. (wind)\n   > [!answer] вітер\n   > [!options] дощ | сніг | вітер | сонце\n\n10. Завтра буде ___. (warmer)\n    > [!answer] тепліше\n    > [!options] тепло | тепліше | холодно | сонячно\n\n11. ___ часто падає листя. (In autumn)\n    > [!answer] Восени\n    > [!options] Влітку | Взимку | Навесні | Восени\n\n12. Какая ___ зима! (cold)\n    > [!answer] холодна\n    > [!options] холодний | холодна | холодне | холодні\n\n## match-up: Seasons & Weather\n> Match Ukrainian with English.\n\n| Ukrainian | English |\n| --- | --- |\n| весна | spring |\n| літо | summer |\n| осінь | autumn |\n| зима | winter |\n| сонячно | sunny |\n| хмарно | cloudy |\n| холодно | cold |\n| тепло | warm |\n| йде дощ | it's raining |\n| йде сніг | it's snowing |\n| вітер | wind |\n| погода | weather |\n\n## quiz: Weather Rules\n> Choose the correct answer.\n\n1. \"Холодно\" in Ukrainian has:\n   - [x] No subject (impersonal)\n   - [ ] Subject \"it\"\n   - [ ] Subject \"weather\"\n   - [ ] Past tense\n\n2. \"Йде дощ\" literally means:\n   - [x] Rain goes\n   - [ ] Rain is\n   - [ ] Rain falls only\n   - [ ] Rain stops\n\n3. \"Влітку\" means:\n   - [x] In summer\n   - [ ] In winter\n   - [ ] In spring\n   - [ ] In autumn\n\n4. To ask about weather, say:\n   - [x] Яка погода?\n   - [ ] Що погода?\n   - [ ] Коли погода?\n   - [ ] Як погода?\n\n5. Ukraine's national flower symbol is:\n   - [x] Калина (Guelder rose)\n   - [ ] Троянда (Rose)\n   - [ ] Тюльпан (Tulip)\n   - [ ] Лілія (Lily)\n\n6. \"Навесні\" is the locative of:\n   - [x] Весна (spring)\n   - [ ] Літо (summer)\n   - [ ] Осінь (autumn)\n   - [ ] Зима (winter)\n\n7. Ukrainian weather expressions are:\n   - [x] Impersonal (no subject)\n   - [ ] Always past tense\n   - [ ] Always future\n   - [ ] With \"це\"\n\n8. \"Пес\" and \"собака\" both mean:\n   - [x] Dog\n   - [ ] Cat\n   - [ ] Bird\n   - [ ] Fish\n\n9. \"Дерево\" means:\n   - [x] Tree\n   - [ ] Flower\n   - [ ] Grass\n   - [ ] Forest\n\n10. \"Восени\" means:\n    - [x] In autumn\n    - [ ] In summer\n    - [ ] In spring\n    - [ ] In winter\n\n11. The Dnieper River in Ukrainian is:\n    - [x] Дніпро\n    - [ ] Дунай\n    - [ ] Десна\n    - [ ] Дон\n\n12. \"Парасоля\" is:\n    - [x] Umbrella\n    - [ ] Raincoat\n    - [ ] Boots\n    - [ ] Hat\n\n## group-sort: Seasons & Months\n> Sort months by season.\n\n- Spring: березень\n- Spring: квітень\n- Spring: травень\n- Summer: червень\n- Summer: липень\n- Summer: серпень\n- Autumn: вересень\n- Autumn: жовтень\n- Autumn: листопад\n- Winter: грудень\n- Winter: січень\n- Winter: лютий\n\n## true-false: Weather Facts\n- [x] Ukrainian weather is impersonal (no \"it\").\n- [x] \"Йде дощ\" means it's raining.\n- [ ] \"Влітку\" means in winter.\n- [x] Ukraine has the Carpathian Mountains.\n- [x] Sunflowers are a Ukrainian symbol.\n- [ ] \"Холодно\" needs a subject in Ukrainian.\n- [x] \"Кіт\" means cat.\n- [ ] \"Ліс\" means field.\n- [x] \"Гора\" means mountain.\n- [x] \"Навесні\" means in spring.\n- [ ] Ukraine has no coastline.\n- [x] \"Погода\" means weather.\n\n## anagram: Weather Vocabulary\n> Unscramble these weather words.\n\n1. о н я ч н о с\n   > [!answer] сонячно\n\n2. о н д о л о х\n   > [!answer] холодно\n\n3. щ о д\n   > [!answer] дощ\n\n4. г і н с\n   > [!answer] сніг\n\n5. р е т і в\n   > [!answer] вітер\n\n6. а н с е в\n   > [!answer] весна\n\n7. о т і л\n   > [!answer] літо\n\n8. ь н і с о\n   > [!answer] осінь\n\n9. а м и з\n   > [!answer] зима\n\n10. о в е р е д\n    > [!answer] дерево\n\n11. а к т і в к\n    > [!answer] квітка\n\n12. а р о г\n    > [!answer] гора\n\n## fill-in: Seasons & Nature\n> Complete with the correct word.\n\n1. ___ цвітуть квіти. (In spring)\n   > [!answer] Навесні\n   > [!options] Навесні | Влітку | Восени | Взимку\n\n2. У мене є ___ і кіт. (dog)\n   > [!answer] собака\n   > [!options] собака | птах | риба | кінь\n\n3. В Україні є красиві ___. (mountains)\n   > [!answer] гори\n   > [!options] моря | гори | ліси | поля\n\n4. Я люблю ___ в лісі. (to walk)\n   > [!answer] гуляти\n   > [!options] гуляти | спати | їсти | пити\n\n5. Карпати — це українські ___. (mountains)\n   > [!answer] гори\n   > [!options] гори | ліси | річки | моря\n\n6. ___ дуже холодно. (In winter)\n   > [!answer] Взимку\n   > [!options] Навесні | Влітку | Восени | Взимку\n\n7. Дніпро — це велика ___. (river)\n   > [!answer] річка\n   > [!options] гора | річка | квітка | птах\n\n8. На ___ росте трава. (field)\n   > [!answer] полі\n   > [!options] горі | полі | морі | небі\n\n9. Соняшники цвітуть ___. (in summer)\n   > [!answer] влітку\n   > [!options] навесні | влітку | восени | взимку\n\n10. Калина — ___ України. (symbol of)\n    > [!answer] символ\n    > [!options] символ | колір | назва | столиця\n\n11. У ___ падає листя. (In autumn)\n    > [!answer] осінь\n    > [!options] весну | літо | осінь | зиму\n\n12. Я люблю ___! (nature)\n    > [!answer] природу\n    > [!options] погоду | природу | країну | роботу\n\n## unjumble: Build Weather Sentences\n> Arrange words into correct sentences.\n\n1. сьогодні / погода / яка\n   > [!answer] Яка сьогодні погода?\n\n2. холодно / і / хмарно\n   > [!answer] Холодно і хмарно.\n\n3. дощ / йде / сьогодні\n   > [!answer] Сьогодні йде дощ.\n\n4. сонячно / буде / завтра\n   > [!answer] Завтра буде сонячно.\n\n5. влітку / жарко\n   > [!answer] Влітку жарко.\n\n6. взимку / сніг / падає\n   > [!answer] Взимку падає сніг.\n\n7. парасолю / візьми\n   > [!answer] Візьми парасолю!\n\n8. красива / природа / яка\n   > [!answer] Яка красива природа!\n\n9. є / мене / у / кіт\n   > [!answer] У мене є кіт.\n\n10. гори / люблю / я\n    > [!answer] Я люблю гори.\n\n11. тепло / навесні\n    > [!answer] Навесні тепло.\n\n12. дуже / сьогодні / вітряно\n    > [!answer] Сьогодні дуже вітряно.\n\n---\n\n# Vocabulary\n\n| Ukrainian | IPA | English | Example |\n| --- | --- | --- | --- |\n| погода | /poˈɦodɑ/ | weather | Яка погода? |\n| температура | /tɛmpɛrɑˈturɑ/ | temperature | Яка температура? |\n| тепло | /ˈtɛplo/ | warm | Сьогодні тепло. |\n| холодно | /ˈxolodno/ | cold | Надворі холодно. |\n| жарко | /ˈʒɑrko/ | hot | Влітку жарко. |\n| сонячно | /ˈsonʲɑt͡ʃno/ | sunny | Буде сонячно. |\n| хмарно | /ˈxmɑrno/ | cloudy | Зараз хмарно. |\n| вітряно | /ˈʋitrʲɑno/ | windy | Сьогодні вітряно. |\n| сонце | /ˈsont͡sɛ/ | sun | Сяє сонце. |\n| хмара | /ˈxmɑrɑ/ | cloud | На небі хмари. |\n| вітер | /ˈʋitɛr/ | wind | Сильний вітер. |\n| дощ | /doʃt͡ʃ/ | rain | Йде дощ. |\n| сніг | /sniɦ/ | snow | Падає сніг. |\n| весна | /ʋɛsˈnɑ/ | spring | Весна прийшла! |\n| літо | /ˈlito/ | summer | Люблю літо. |\n| осінь | /ˈosinʲ/ | autumn | Осінь — гарна. |\n| зима | /zɪˈmɑ/ | winter | Зима холодна. |\n| природа | /prɪˈrodɑ/ | nature | Красива природа. |\n| дерево | /ˈdɛrɛʋo/ | tree | Велике дерево. |\n| квітка | /ˈkʋitkɑ/ | flower | Гарна квітка. |\n| ліс | /lis/ | forest | Ходжу в ліс. |\n| парк | /pɑrk/ | park | Гуляю в парку. |\n| річка | /ˈrit͡ʃkɑ/ | river | Широка річка. |\n| море | /ˈmorɛ/ | sea | Чорне море. |\n| гора | /ɦoˈrɑ/ | mountain | Висока гора. |\n| пес/собака | /pɛs/, /soˈbɑkɑ/ | dog | У мене є пес. |\n| кіт/кішка | /kit/, /ˈkiʃkɑ/ | cat | Маленький кіт. |\n| птах | /ptɑx/ | bird | Птах співає. |\n| парасоля | /pɑrɑˈsolʲɑ/ | umbrella | Візьми парасолю. |\n| прогноз | /proɦˈnoz/ | forecast | Прогноз погоди. |\n",
+    "createdAt": "2025-12-12T19:55:32.052Z",
+    "modifiedAt": "2025-12-12T19:55:32.052Z",
+    "version": 2
+  },
+  "activities": [
+    {
+      "id": "act-a1-0-fillblank-0",
+      "type": "fill-blank",
+      "title": "Weather Conditions",
+      "description": "Complete with the correct weather expression.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Сьогодні ___ і гарно. (sunny)",
+            "answer": "сонячно",
+            "options": [
+              "сонячно",
+              "хмарно",
+              "холодно",
+              "вітряно"
+            ]
+          },
+          {
+            "prompt": "На вулиці ___. (cold)",
+            "answer": "холодно",
+            "options": [
+              "тепло",
+              "холодно",
+              "сонячно",
+              "хмарно"
+            ]
+          },
+          {
+            "prompt": "Взимку ___ сніг. (goes/falls)",
+            "answer": "йде",
+            "options": [
+              "йде",
+              "іде",
+              "падає",
+              "є"
+            ]
+          },
+          {
+            "prompt": "___ дощ! (It's raining)",
+            "answer": "Йде",
+            "options": [
+              "Йде",
+              "Є",
+              "Буде",
+              "Був"
+            ]
+          },
+          {
+            "prompt": "Небо сіре — ___. (cloudy)",
+            "answer": "хмарно",
+            "options": [
+              "сонячно",
+              "хмарно",
+              "ясно",
+              "горить"
+            ]
+          },
+          {
+            "prompt": "___ дуже спекотно. (In summer)",
+            "answer": "Влітку",
+            "options": [
+              "Влітку",
+              "Взимку",
+              "Навесні",
+              "Восени"
+            ]
+          },
+          {
+            "prompt": "___ тепло і гарно. (In spring)",
+            "answer": "Навесні",
+            "options": [
+              "Влітку",
+              "Взимку",
+              "Навесні",
+              "Восени"
+            ]
+          },
+          {
+            "prompt": "Яка сьогодні ___? (weather)",
+            "answer": "погода",
+            "options": [
+              "погода",
+              "гора",
+              "природа",
+              "весна"
+            ]
+          },
+          {
+            "prompt": "Надворі ___ сильний. (wind)",
+            "answer": "вітер",
+            "options": [
+              "дощ",
+              "сніг",
+              "вітер",
+              "сонце"
+            ]
+          },
+          {
+            "prompt": "Завтра буде ___. (warmer)",
+            "answer": "тепліше",
+            "options": [
+              "тепло",
+              "тепліше",
+              "холодно",
+              "сонячно"
+            ]
+          },
+          {
+            "prompt": "___ часто падає листя. (In autumn)",
+            "answer": "Восени",
+            "options": [
+              "Влітку",
+              "Взимку",
+              "Навесні",
+              "Восени"
+            ]
+          },
+          {
+            "prompt": "Какая ___ зима! (cold)",
+            "answer": "холодна",
+            "options": [
+              "холодний",
+              "холодна",
+              "холодне",
+              "холодні"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.052Z",
+      "modifiedAt": "2025-12-12T19:55:32.052Z"
+    },
+    {
+      "id": "act-a1-0-matchup-0",
+      "type": "match-up",
+      "title": "Seasons & Weather",
+      "description": "Match Ukrainian with English.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "весна",
+            "right": "spring"
+          },
+          {
+            "left": "літо",
+            "right": "summer"
+          },
+          {
+            "left": "осінь",
+            "right": "autumn"
+          },
+          {
+            "left": "зима",
+            "right": "winter"
+          },
+          {
+            "left": "сонячно",
+            "right": "sunny"
+          },
+          {
+            "left": "хмарно",
+            "right": "cloudy"
+          },
+          {
+            "left": "холодно",
+            "right": "cold"
+          },
+          {
+            "left": "тепло",
+            "right": "warm"
+          },
+          {
+            "left": "йде дощ",
+            "right": "it's raining"
+          },
+          {
+            "left": "йде сніг",
+            "right": "it's snowing"
+          },
+          {
+            "left": "вітер",
+            "right": "wind"
+          },
+          {
+            "left": "погода",
+            "right": "weather"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.052Z",
+      "modifiedAt": "2025-12-12T19:55:32.052Z"
+    },
+    {
+      "id": "act-a1-0-quiz-0",
+      "type": "quiz",
+      "title": "Weather Rules",
+      "description": "Choose the correct answer.",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "\"Холодно\" in Ukrainian has:",
+            "options": [
+              "No subject (impersonal)",
+              "Subject \"it\"",
+              "Subject \"weather\"",
+              "Past tense"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Йде дощ\" literally means:",
+            "options": [
+              "Rain goes",
+              "Rain is",
+              "Rain falls only",
+              "Rain stops"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Влітку\" means:",
+            "options": [
+              "In summer",
+              "In winter",
+              "In spring",
+              "In autumn"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "To ask about weather, say:",
+            "options": [
+              "Яка погода?",
+              "Що погода?",
+              "Коли погода?",
+              "Як погода?"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Ukraine's national flower symbol is:",
+            "options": [
+              "Калина (Guelder rose)",
+              "Троянда (Rose)",
+              "Тюльпан (Tulip)",
+              "Лілія (Lily)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Навесні\" is the locative of:",
+            "options": [
+              "Весна (spring)",
+              "Літо (summer)",
+              "Осінь (autumn)",
+              "Зима (winter)"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Ukrainian weather expressions are:",
+            "options": [
+              "Impersonal (no subject)",
+              "Always past tense",
+              "Always future",
+              "With \"це\""
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Пес\" and \"собака\" both mean:",
+            "options": [
+              "Dog",
+              "Cat",
+              "Bird",
+              "Fish"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Дерево\" means:",
+            "options": [
+              "Tree",
+              "Flower",
+              "Grass",
+              "Forest"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Восени\" means:",
+            "options": [
+              "In autumn",
+              "In summer",
+              "In spring",
+              "In winter"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "The Dnieper River in Ukrainian is:",
+            "options": [
+              "Дніпро",
+              "Дунай",
+              "Десна",
+              "Дон"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Парасоля\" is:",
+            "options": [
+              "Umbrella",
+              "Raincoat",
+              "Boots",
+              "Hat"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.052Z",
+      "modifiedAt": "2025-12-12T19:55:32.052Z"
+    },
+    {
+      "id": "act-a1-0-groupsort-0",
+      "type": "group-sort",
+      "title": "Seasons & Months",
+      "description": "Sort months by season.",
+      "content": {
+        "type": "group-sort",
+        "groups": [],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.052Z",
+      "modifiedAt": "2025-12-12T19:55:32.052Z"
+    },
+    {
+      "id": "act-a1-0-truefalse-0",
+      "type": "true-false",
+      "title": "Weather Facts",
+      "description": "Weather Facts",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "Ukrainian weather is impersonal (no \"it\").",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Йде дощ\" means it's raining.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Влітку\" means in winter.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "Ukraine has the Carpathian Mountains.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "Sunflowers are a Ukrainian symbol.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Холодно\" needs a subject in Ukrainian.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Кіт\" means cat.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Ліс\" means field.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Гора\" means mountain.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Навесні\" means in spring.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "Ukraine has no coastline.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Погода\" means weather.",
+            "isTrue": true,
+            "explanation": ""
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.052Z",
+      "modifiedAt": "2025-12-12T19:55:32.052Z"
+    },
+    {
+      "id": "act-a1-0-anagram-0",
+      "type": "anagram",
+      "title": "Weather Vocabulary",
+      "description": "Unscramble these weather words.",
+      "content": {
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
+          {
+            "letters": [
+              "о",
+              "н",
+              "я",
+              "ч",
+              "н",
+              "о",
+              "с"
+            ],
+            "answer": "сонячно"
+          },
+          {
+            "letters": [
+              "о",
+              "н",
+              "д",
+              "о",
+              "л",
+              "о",
+              "х"
+            ],
+            "answer": "холодно"
+          },
+          {
+            "letters": [
+              "щ",
+              "о",
+              "д"
+            ],
+            "answer": "дощ"
+          },
+          {
+            "letters": [
+              "г",
+              "і",
+              "н",
+              "с"
+            ],
+            "answer": "сніг"
+          },
+          {
+            "letters": [
+              "р",
+              "е",
+              "т",
+              "і",
+              "в"
+            ],
+            "answer": "вітер"
+          },
+          {
+            "letters": [
+              "а",
+              "н",
+              "с",
+              "е",
+              "в"
+            ],
+            "answer": "весна"
+          },
+          {
+            "letters": [
+              "о",
+              "т",
+              "і",
+              "л"
+            ],
+            "answer": "літо"
+          },
+          {
+            "letters": [
+              "ь",
+              "н",
+              "і",
+              "с",
+              "о"
+            ],
+            "answer": "осінь"
+          },
+          {
+            "letters": [
+              "а",
+              "м",
+              "и",
+              "з"
+            ],
+            "answer": "зима"
+          },
+          {
+            "letters": [
+              "о",
+              "в",
+              "е",
+              "р",
+              "е",
+              "д"
+            ],
+            "answer": "дерево"
+          },
+          {
+            "letters": [
+              "а",
+              "к",
+              "т",
+              "і",
+              "в",
+              "к"
+            ],
+            "answer": "квітка"
+          },
+          {
+            "letters": [
+              "а",
+              "р",
+              "о",
+              "г"
+            ],
+            "answer": "гора"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.052Z",
+      "modifiedAt": "2025-12-12T19:55:32.052Z"
+    },
+    {
+      "id": "act-a1-0-fillblank-1",
+      "type": "fill-blank",
+      "title": "Seasons & Nature",
+      "description": "Complete with the correct word.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "___ цвітуть квіти. (In spring)",
+            "answer": "Навесні",
+            "options": [
+              "Навесні",
+              "Влітку",
+              "Восени",
+              "Взимку"
+            ]
+          },
+          {
+            "prompt": "У мене є ___ і кіт. (dog)",
+            "answer": "собака",
+            "options": [
+              "собака",
+              "птах",
+              "риба",
+              "кінь"
+            ]
+          },
+          {
+            "prompt": "В Україні є красиві ___. (mountains)",
+            "answer": "гори",
+            "options": [
+              "моря",
+              "гори",
+              "ліси",
+              "поля"
+            ]
+          },
+          {
+            "prompt": "Я люблю ___ в лісі. (to walk)",
+            "answer": "гуляти",
+            "options": [
+              "гуляти",
+              "спати",
+              "їсти",
+              "пити"
+            ]
+          },
+          {
+            "prompt": "Карпати — це українські ___. (mountains)",
+            "answer": "гори",
+            "options": [
+              "гори",
+              "ліси",
+              "річки",
+              "моря"
+            ]
+          },
+          {
+            "prompt": "___ дуже холодно. (In winter)",
+            "answer": "Взимку",
+            "options": [
+              "Навесні",
+              "Влітку",
+              "Восени",
+              "Взимку"
+            ]
+          },
+          {
+            "prompt": "Дніпро — це велика ___. (river)",
+            "answer": "річка",
+            "options": [
+              "гора",
+              "річка",
+              "квітка",
+              "птах"
+            ]
+          },
+          {
+            "prompt": "На ___ росте трава. (field)",
+            "answer": "полі",
+            "options": [
+              "горі",
+              "полі",
+              "морі",
+              "небі"
+            ]
+          },
+          {
+            "prompt": "Соняшники цвітуть ___. (in summer)",
+            "answer": "влітку",
+            "options": [
+              "навесні",
+              "влітку",
+              "восени",
+              "взимку"
+            ]
+          },
+          {
+            "prompt": "Калина — ___ України. (symbol of)",
+            "answer": "символ",
+            "options": [
+              "символ",
+              "колір",
+              "назва",
+              "столиця"
+            ]
+          },
+          {
+            "prompt": "У ___ падає листя. (In autumn)",
+            "answer": "осінь",
+            "options": [
+              "весну",
+              "літо",
+              "осінь",
+              "зиму"
+            ]
+          },
+          {
+            "prompt": "Я люблю ___! (nature)",
+            "answer": "природу",
+            "options": [
+              "погоду",
+              "природу",
+              "країну",
+              "роботу"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.052Z",
+      "modifiedAt": "2025-12-12T19:55:32.052Z"
+    },
+    {
+      "id": "act-a1-0-unjumble-0",
+      "type": "unjumble",
+      "title": "Build Weather Sentences",
+      "description": "Arrange words into correct sentences.",
+      "content": {
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
+          {
+            "words": [
+              "сьогодні",
+              "погода",
+              "яка"
+            ],
+            "answer": "Яка сьогодні погода?"
+          },
+          {
+            "words": [
+              "холодно",
+              "і",
+              "хмарно"
+            ],
+            "answer": "Холодно і хмарно."
+          },
+          {
+            "words": [
+              "дощ",
+              "йде",
+              "сьогодні"
+            ],
+            "answer": "Сьогодні йде дощ."
+          },
+          {
+            "words": [
+              "сонячно",
+              "буде",
+              "завтра"
+            ],
+            "answer": "Завтра буде сонячно."
+          },
+          {
+            "words": [
+              "влітку",
+              "жарко"
+            ],
+            "answer": "Влітку жарко."
+          },
+          {
+            "words": [
+              "взимку",
+              "сніг",
+              "падає"
+            ],
+            "answer": "Взимку падає сніг."
+          },
+          {
+            "words": [
+              "парасолю",
+              "візьми"
+            ],
+            "answer": "Візьми парасолю!"
+          },
+          {
+            "words": [
+              "красива",
+              "природа",
+              "яка"
+            ],
+            "answer": "Яка красива природа!"
+          },
+          {
+            "words": [
+              "є",
+              "мене",
+              "у",
+              "кіт"
+            ],
+            "answer": "У мене є кіт."
+          },
+          {
+            "words": [
+              "гори",
+              "люблю",
+              "я"
+            ],
+            "answer": "Я люблю гори."
+          },
+          {
+            "words": [
+              "тепло",
+              "навесні"
+            ],
+            "answer": "Навесні тепло."
+          },
+          {
+            "words": [
+              "дуже",
+              "сьогодні",
+              "вітряно"
+            ],
+            "answer": "Сьогодні дуже вітряно."
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.052Z",
+      "modifiedAt": "2025-12-12T19:55:32.052Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A1-29",
+    "level": "A1",
+    "phase": "A1.3",
+    "wordCount": 30,
+    "newWordCount": 30,
+    "reviewWordCount": 0,
+    "transliterationMode": "partial",
+    "words": [
+      {
+        "id": "v-pohoda-0-0",
+        "uk": "погода",
+        "en": "weather",
+        "pos": "noun",
+        "ipa": "/poˈɦodɑ/",
+        "note": "Яка погода?",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-temperatura-0-1",
+        "uk": "температура",
+        "en": "temperature",
+        "pos": "noun",
+        "ipa": "/tɛmpɛrɑˈturɑ/",
+        "note": "Яка температура?",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-teplo-0-2",
+        "uk": "тепло",
+        "en": "warm",
+        "pos": "noun",
+        "ipa": "/ˈtɛplo/",
+        "note": "Сьогодні тепло.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-kholodno-0-3",
+        "uk": "холодно",
+        "en": "cold",
+        "pos": "noun",
+        "ipa": "/ˈxolodno/",
+        "note": "Надворі холодно.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-zharko-0-4",
+        "uk": "жарко",
+        "en": "hot",
+        "pos": "noun",
+        "ipa": "/ˈʒɑrko/",
+        "note": "Влітку жарко.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-sonyachno-0-5",
+        "uk": "сонячно",
+        "en": "sunny",
+        "pos": "noun",
+        "ipa": "/ˈsonʲɑt͡ʃno/",
+        "note": "Буде сонячно.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-khmarno-0-6",
+        "uk": "хмарно",
+        "en": "cloudy",
+        "pos": "noun",
+        "ipa": "/ˈxmɑrno/",
+        "note": "Зараз хмарно.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vitryano-0-7",
+        "uk": "вітряно",
+        "en": "windy",
+        "pos": "noun",
+        "ipa": "/ˈʋitrʲɑno/",
+        "note": "Сьогодні вітряно.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-sontse-0-8",
+        "uk": "сонце",
+        "en": "sun",
+        "pos": "noun",
+        "ipa": "/ˈsont͡sɛ/",
+        "note": "Сяє сонце.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-khmara-0-9",
+        "uk": "хмара",
+        "en": "cloud",
+        "pos": "noun",
+        "ipa": "/ˈxmɑrɑ/",
+        "note": "На небі хмари.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-viter-0-10",
+        "uk": "вітер",
+        "en": "wind",
+        "pos": "noun",
+        "ipa": "/ˈʋitɛr/",
+        "note": "Сильний вітер.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-doshch-0-11",
+        "uk": "дощ",
+        "en": "rain",
+        "pos": "noun",
+        "ipa": "/doʃt͡ʃ/",
+        "note": "Йде дощ.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-snih-0-12",
+        "uk": "сніг",
+        "en": "snow",
+        "pos": "noun",
+        "ipa": "/sniɦ/",
+        "note": "Падає сніг.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vesna-0-13",
+        "uk": "весна",
+        "en": "spring",
+        "pos": "noun",
+        "ipa": "/ʋɛsˈnɑ/",
+        "note": "Весна прийшла!",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-lito-0-14",
+        "uk": "літо",
+        "en": "summer",
+        "pos": "noun",
+        "ipa": "/ˈlito/",
+        "note": "Люблю літо.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-osinь-0-15",
+        "uk": "осінь",
+        "en": "autumn",
+        "pos": "noun",
+        "ipa": "/ˈosinʲ/",
+        "note": "Осінь — гарна.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-zyma-0-16",
+        "uk": "зима",
+        "en": "winter",
+        "pos": "noun",
+        "ipa": "/zɪˈmɑ/",
+        "note": "Зима холодна.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pryroda-0-17",
+        "uk": "природа",
+        "en": "nature",
+        "pos": "noun",
+        "ipa": "/prɪˈrodɑ/",
+        "note": "Красива природа.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-derevo-0-18",
+        "uk": "дерево",
+        "en": "tree",
+        "pos": "noun",
+        "ipa": "/ˈdɛrɛʋo/",
+        "note": "Велике дерево.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-kvitka-0-19",
+        "uk": "квітка",
+        "en": "flower",
+        "pos": "noun",
+        "ipa": "/ˈkʋitkɑ/",
+        "note": "Гарна квітка.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-lis-0-20",
+        "uk": "ліс",
+        "en": "forest",
+        "pos": "noun",
+        "ipa": "/lis/",
+        "note": "Ходжу в ліс.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-park-0-21",
+        "uk": "парк",
+        "en": "park",
+        "pos": "noun",
+        "ipa": "/pɑrk/",
+        "note": "Гуляю в парку.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-richka-0-22",
+        "uk": "річка",
+        "en": "river",
+        "pos": "noun",
+        "ipa": "/ˈrit͡ʃkɑ/",
+        "note": "Широка річка.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-more-0-23",
+        "uk": "море",
+        "en": "sea",
+        "pos": "noun",
+        "ipa": "/ˈmorɛ/",
+        "note": "Чорне море.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-hora-0-24",
+        "uk": "гора",
+        "en": "mountain",
+        "pos": "noun",
+        "ipa": "/ɦoˈrɑ/",
+        "note": "Висока гора.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pes/sobaka-0-25",
+        "uk": "пес/собака",
+        "en": "dog",
+        "pos": "noun",
+        "ipa": "/pɛs/, /soˈbɑkɑ/",
+        "note": "У мене є пес.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-kit/kishka-0-26",
+        "uk": "кіт/кішка",
+        "en": "cat",
+        "pos": "noun",
+        "ipa": "/kit/, /ˈkiʃkɑ/",
+        "note": "Маленький кіт.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-ptakh-0-27",
+        "uk": "птах",
+        "en": "bird",
+        "pos": "noun",
+        "ipa": "/ptɑx/",
+        "note": "Птах співає.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-parasolya-0-28",
+        "uk": "парасоля",
+        "en": "umbrella",
+        "pos": "noun",
+        "ipa": "/pɑrɑˈsolʲɑ/",
+        "note": "Візьми парасолю.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-prohnoz-0-29",
+        "uk": "прогноз",
+        "en": "forecast",
+        "pos": "noun",
+        "ipa": "/proɦˈnoz/",
+        "note": "Прогноз погоди.",
+        "isNew": true,
+        "firstModule": 0
+      }
+    ]
+  }
+}

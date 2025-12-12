@@ -12,12 +12,12 @@ import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
 import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
 import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import ErrorCorrection, { ErrorCorrectionQuestion } from '@site/src/components/ErrorCorrection';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
 import Select, { SelectQuestion } from '@site/src/components/Select';
-import Translate, { TranslateQuestion } from '@site/src/components/Translate';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
 import Cloze from '@site/src/components/Cloze';
 import DialogueReorder from '@site/src/components/DialogueReorder';
-import MarkTheWords from '@site/src/components/MarkTheWords';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 
 
 
@@ -185,6 +185,18 @@ That's my daily schedule!
 **Ігор:** О восьмій. А ти?
 **Марина:** Я о пів на дев'яту. Не люблю поспішати!
 
+**English Translation:**
+**Ihor:** When do you usually wake up?
+**Maryna:** At seven. And you?
+**Ihor:** I get up at half past six.
+**Maryna:** So early! What do you do in the morning?
+**Ihor:** First I exercise. Then I wash and have breakfast.
+**Maryna:** And what do you eat for breakfast?
+**Ihor:** Usually porridge and coffee. I dress quickly and run to work.
+**Maryna:** When do you leave?
+**Ihor:** At eight. And you?
+**Maryna:** I [leave] at half past eight. I don't like to rush!
+
 Зверни увагу: прокидаєшся, встаю, вмиваюсь, одягаюсь — всі дієслова розпорядку!
 
 # Summary
@@ -198,7 +210,10 @@ That's my daily schedule!
 
 ---
 
-:::tip 🌟 **Pro Tip:** When describing your routine, start with time expressions (о сьомій...) and use sequence words (спочатку, потім) to connect activities naturally!
+:::tip
+🌟 **Pro Tip:** When describing your routine, start with time expressions (о сьомій...) and use sequence words (спочатку, потім) to connect activities naturally!
+:::
+
 
 
 # Vocabulary

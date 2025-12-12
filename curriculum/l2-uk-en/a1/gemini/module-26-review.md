@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 860/750
+- **Words:** ✅ 927/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -22,7 +22,7 @@
 | **Presentation: Adjective Agreement** | ✅ | 181 | Included in Core |
 | **Cultural Insight: Describing Ukraine 🇺🇦** | ✅ | 156 | Included in Core |
 | **Reading Practice: Мій дім 📖** | ✅ | 212 | Included in Core |
-| **Conversation: Опиши це! 🗣️** | ✅ | 130 | Included in Core |
+| **Conversation: Опиши це! 🗣️** | ✅ | 197 | Included in Core |
 | **fill-in: Adjective Agreement** | 🎮 | 12 | Activity (12 items) |
 | **match-up: Adjective Pairs** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Adjective Rules** | 🎮 | 12 | Activity (12 items) |

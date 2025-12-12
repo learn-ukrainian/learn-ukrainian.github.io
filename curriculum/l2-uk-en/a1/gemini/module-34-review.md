@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 937/750
+- **Words:** ✅ 1212/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -22,9 +22,9 @@
 | **Presentation: Grammar Mastery** | ✅ | 155 | Included in Core |
 | **Presentation: Vocabulary Mastery** | ➖ | 121 | Excluded Type |
 | **Cultural Insight: You're Now Part of the Community! 🇺🇦** | ✅ | 193 | Included in Core |
-| **Summary: Am I Ready for A2?** | ➖ | 84 | Excluded Type |
+| **Summary: Am I Ready for A2?** | ✅ | 84 | Included in Core |
 | **Reading Practice: Моя подорож до A2 📖** | ✅ | 234 | Included in Core |
-| **Conversation: Що далі? 🗣️** | ✅ | 128 | Included in Core |
+| **Conversation: Що далі? 🗣️** | ✅ | 198 | Included in Core |
 | **fill-in: Grammar Review** | 🎮 | 12 | Activity (12 items) |
 | **match-up: Cases Review** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Comprehensive A1 Review** | 🎮 | 12 | Activity (12 items) |

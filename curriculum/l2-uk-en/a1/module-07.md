@@ -146,19 +146,19 @@ Common polite phrases:
 **Турист:** Дякую за допомогу!
 **Працівник:** Будь ласка!
 
-**English Translation:**
-**Tourist:** Good day! Excuse me, where is the train station?
-**Employee:** Good day! Train station? Straight, then to the left.
-**Tourist:** Thank you! And how much does the bus cost?
-**Employee:** Bus? Twelve hryvnias.
-**Tourist:** And the metro?
-**Employee:** Metro is eight hryvnias.
-**Tourist:** Is there an ATM nearby?
-**Employee:** Yes, the ATM is around the corner.
-**Tourist:** Great! Do you know when the museum opens?
-**Employee:** No, unfortunately, I don't know. But there is information online.
-**Tourist:** Thank you for help!
-**Employee:** You're welcome!
+> [!note] English Translation
+> **Tourist:** Good day! Excuse me, where is the train station?
+> **Employee:** Good day! Train station? Straight, then to the left.
+> **Tourist:** Thank you! And how much does the bus cost?
+> **Employee:** Bus? Twelve hryvnias.
+> **Tourist:** And the metro?
+> **Employee:** Metro is eight hryvnias.
+> **Tourist:** Is there an ATM nearby?
+> **Employee:** Yes, the ATM is around the corner.
+> **Tourist:** Great! Do you know when the museum opens?
+> **Employee:** No, unfortunately, I don't know. But there is information online.
+> **Tourist:** Thank you for help!
+> **Employee:** You're welcome!
 
 ## Reading Practice: Questions Everywhere 📖
 
@@ -176,21 +176,21 @@ Common polite phrases:
 
 Марія **не** розуміє все. Вона питає ще: "**Що** ви сказали?" Люди повторюють: "Прямо! Направо! П'ять! Сорок!" Тепер Марія розуміє. Вона **не** загубилася більше.
 
-**English Translation:**
-**Maria is in a new city.** She doesn't know the way. She asks:
-- **Where** is the city center?
-- **How** to get to the museum?
-- **How much** does the ticket cost?
-
-People answer:
-- Center? Straight, then to the right.
-- Museum? By bus number five.
-- Ticket? Forty hryvnias.
-
-Maria doesn't understand everything. She asks again: "**What** did you say?" People repeat: "Straight! To the right! Five! Forty!" Now Maria understands. She is not lost anymore.
-
-> 📜 **Myth Buster:** Some learners think Ukrainian word order is "free." It's actually **flexible** but not random. Word order changes emphasis, not meaning. "Де ти?" and "Ти де?" both mean "Where are you?" but the second emphasizes "where."
-
+> [!note] English Translation
+> **Maria is in a new city.** She doesn't know the way. She asks:
+> - **Where** is the city center?
+> - **How** to get to the museum?
+> - **How much** does the ticket cost?
+>
+> People answer:
+> - Center? Straight, then to the right.
+> - Museum? By bus number five.
+> - Ticket? Forty hryvnias.
+>
+> Maria doesn't understand everything. She asks again: "**What** did you say?" People repeat: "Straight! To the right! Five! Forty!" Now Maria understands. She is not lost anymore.
+>
+> > 📜 **Myth Buster:** Some learners think Ukrainian word order is "free." It's actually **flexible** but not random. Word order changes emphasis, not meaning. "Де ти?" and "Ти де?" both mean "Where are you?" but the second emphasizes "where."
+>
 # Summary
 
 1. **Yes/No questions:** Use rising intonation or add **чи** at the start

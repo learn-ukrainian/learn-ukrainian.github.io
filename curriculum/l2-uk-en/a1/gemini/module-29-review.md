@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 807/750
+- **Words:** ✅ 880/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -22,7 +22,7 @@
 | **Presentation: Weather Expressions** | ✅ | 189 | Included in Core |
 | **Cultural Insight: Nature in Ukrainian Culture 🇺🇦** | ✅ | 177 | Included in Core |
 | **Reading Practice: Прогноз погоди 📖** | ✅ | 156 | Included in Core |
-| **Conversation: Яка погода? 🗣️** | ✅ | 114 | Included in Core |
+| **Conversation: Яка погода? 🗣️** | ✅ | 187 | Included in Core |
 | **fill-in: Weather Conditions** | 🎮 | 12 | Activity (12 items) |
 | **match-up: Seasons & Weather** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Weather Rules** | 🎮 | 12 | Activity (12 items) |

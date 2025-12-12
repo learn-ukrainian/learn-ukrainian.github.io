@@ -37,8 +37,9 @@ npx ts-node scripts/module-audit.ts l2-uk-en 1-30 --fix
 ### After editing modules
 
 ```bash
-# Regenerate HTML/JSON
-npx ts-node scripts/generate.ts l2-uk-en [module_number]
+# Regenerate output
+npm run generate l2-uk-en a1 [module_number]      # MDX for Docusaurus
+npm run generate:json l2-uk-en a1 [module_number] # JSON for Vibe
 
 # Rebuild vocabulary database
 npm run vocab:rebuild
@@ -244,7 +245,7 @@ The following words were already introduced in earlier modules:
 3. **Review warnings** - Should fix for quality
 4. **Generate fix prompts** if needed
 5. **Edit modules** using prompts
-6. **Regenerate output** (`scripts/generate.ts`)
+6. **Regenerate output** (`npm run generate` for MDX, `npm run generate:json` for Vibe)
 7. **Rebuild vocab DB** (`npm run vocab:rebuild`)
 8. **Re-run audit** to verify fixes
 
@@ -265,7 +266,8 @@ When adding/removing vocabulary words:
 | Script | Purpose |
 |--------|---------|
 | `scripts/module-audit.ts` | Main audit script |
-| `scripts/generate.ts` | Generate HTML/JSON from markdown |
+| `scripts/generate-mdx.ts` | Generate MDX for Docusaurus |
+| `scripts/generate_json.py` | Generate JSON for Vibe app |
 | `scripts/vocab-init.ts` | Initialize vocabulary.db |
 | `scripts/vocab-scan.ts` | Populate vocabulary.db from modules |
 | `scripts/vocab-enrich.ts` | Enrich module vocabulary sections |

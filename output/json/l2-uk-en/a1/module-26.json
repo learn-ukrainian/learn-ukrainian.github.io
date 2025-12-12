@@ -1,0 +1,1253 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A1-26",
+    "moduleId": "mod-uk-A1-26",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A1",
+    "phase": "A1.3",
+    "moduleNumber": 26,
+    "moduleType": "grammar",
+    "pedagogy": "PPP",
+    "immersionLevel": 0.3,
+    "title": "Describing Things - Adjectives",
+    "subtitle": "Gender Agreement in Adjectives",
+    "description": "Use adjectives with correct gender agreement",
+    "objectives": [
+      "Use adjectives with correct gender agreement",
+      "Describe people and objects",
+      "Apply hard and soft adjective endings",
+      "Build descriptive sentences"
+    ],
+    "grammarFocus": [
+      "Adjective gender agreement",
+      "Hard stem adjectives (-ий/-а/-е)",
+      "Soft stem adjectives (-ій/-я/-є)",
+      "Plural adjective endings (-і)"
+    ],
+    "tags": [
+      "grammar",
+      "adjectives",
+      "gender",
+      "agreement"
+    ],
+    "totalDuration": 50,
+    "transliterationMode": "partial",
+    "sections": [
+      {
+        "id": "section-content-0",
+        "name": "Lesson",
+        "type": "content",
+        "content": "> **Note:** Adjectives make your Ukrainian richer and more expressive! Learn how they agree with nouns in gender and number.\n\n## Warm-up: What's It Like?\n\nLook around you. Can you describe what you see? A big table? A new book? A beautiful city?\n\nAdjectives are words that describe nouns. In Ukrainian, adjectives AGREE with the nouns they describe — they take different endings based on the noun's gender (masculine, feminine, neuter) and number (singular, plural).\n\nThis agreement system is elegant and logical. Once you learn the patterns, you can describe anything! The key is remembering that adjectives act like \"mirrors\" — they reflect the gender of the noun they modify.\n\nUkrainian has two main types of adjectives: hard stem (ending in consonants like -ий) and soft stem (ending in -ій). Both follow predictable patterns, just with slightly different endings.\n\nBy mastering adjective agreement, you'll be able to describe people, places, objects, and feelings with precision and fluency!\n\n> 💡 **Thinking Trick:** The adjective ending \"-ий/-а/-е/-і\" mirrors noun patterns: \"-ий\" for masculine (like consonant-ending nouns), \"-а\" for feminine (like -а nouns), \"-е\" for neuter (like -о/-е nouns).\n\n## Presentation: Adjective Agreement\n\n### Hard Stem Adjectives (-ий)\n\nMost Ukrainian adjectives are \"hard stem\" — their masculine form ends in -ий:\n\n| Gender | Ending | Example |\n|--------|--------|---------|\n| Masculine | -ий | новий будинок (new building) |\n| Feminine | -а | нова книга (new book) |\n| Neuter | -е | нове місто (new city) |\n| Plural | -і | нові друзі (new friends) |\n\n**More examples:**\n| Adjective | M | F | N | Pl |\n|-----------|---|---|---|-----|\n| великий (big) | великий | велика | велике | великі |\n| малий (small) | малий | мала | мале | малі |\n| старий (old) | старий | стара | старе | старі |\n| гарний (beautiful) | гарний | гарна | гарне | гарні |\n| добрий (good) | добрий | добра | добре | добрі |\n\n### Soft Stem Adjectives (-ій)\n\nSome adjectives are \"soft stem\" — their masculine form ends in -ій:\n\n| Gender | Ending | Example |\n|--------|--------|---------|\n| Masculine | -ій | синій автобус (blue bus) |\n| Feminine | -я | синя сукня (blue dress) |\n| Neuter | -є | синє небо (blue sky) |\n| Plural | -і | сині очі (blue eyes) |\n\n**Common soft adjectives:**\n| Adjective | M | F | N | Pl |\n|-----------|---|---|---|-----|\n| синій (blue) | синій | синя | синє | сині |\n| останній (last) | останній | остання | останнє | останні |\n| домашній (home) | домашній | домашня | домашнє | домашні |\n| ранній (early) | ранній | рання | раннє | ранні |\n\n> 📜 **Pattern Summary:**\n> - **Hard stem:** -ий/-а/-е/-і (новий, нова, нове, нові)\n> - **Soft stem:** -ій/-я/-є/-і (синій, синя, синє, сині)\n> - Plural is always -і for both types!\n\n### Common Descriptive Adjectives\n\n**Size:**\n- великий (big) / малий (small)\n- високий (tall) / низький (short)\n- довгий (long) / короткий (short)\n- широкий (wide) / вузький (narrow)\n\n**Quality:**\n- гарний (beautiful) / поганий (bad)\n- добрий (good) / злий (evil)\n- новий (new) / старий (old)\n- молодий (young) / старий (old)\n\n**Character:**\n- розумний (smart) / дурний (stupid)\n- сильний (strong) / слабкий (weak)\n- швидкий (fast) / повільний (slow)\n\n**Value:**\n- дорогий (expensive) / дешевий (cheap)\n- цікавий (interesting) / нудний (boring)\n- важливий (important) / головний (main)\n\n> 💡 **Did You Know?** Ukrainian adjectives are more specific than English ones. \"Старий\" means old for things AND people (no separate \"elderly\"). But \"молодий\" specifically means \"young\" — precise and elegant!\n\n## Cultural Insight: Describing Ukraine 🇺🇦\n\nUkrainians love to describe their homeland with rich adjectives:\n\n**Describing places:**\n- Гарне місто (beautiful city)\n- Стара вулиця (old street)\n- Зелений парк (green park)\n- Широка річка (wide river)\n\n**Describing people:**\n- Добра людина (good person)\n- Розумна дівчина (smart girl)\n- Сильний чоловік (strong man)\n- Гостинна родина (hospitable family)\n\n**Patriotic descriptions:**\n- Незалежна Україна (Independent Ukraine)\n- Вільний народ (Free people)\n- Давня культура (Ancient culture)\n- Славна історія (Glorious history)\n\n> 📜 **History Bite:** Under colonial rule, Ukrainians were often described in negative terms by oppressors. Russian propaganda called Ukrainian culture \"малоросійська\" (Little Russian) — diminutive and dismissive. Today, Ukrainians proudly use adjectives like \"великий\" (great), \"древній\" (ancient), and \"самобутній\" (unique) to describe their culture!\n\n> 📜 **Myth Buster:** Some claim Ukrainian is \"less developed\" than Russian. In fact, Ukrainian has MORE adjective forms, more nuanced descriptive vocabulary, and richer poetic traditions. Ukrainian adjectives can express subtleties that Russian simply cannot!\n\n## Reading Practice: Мій дім 📖\n\n**Українською:**\n\nУ мене є гарна квартира в старому будинку. Будинок високий — десять поверхів. Моя квартира на п'ятому поверсі.\n\nУ квартирі є велика вітальня. Там стоїть новий диван і старе крісло. На стіні висить красива картина. Вікна широкі, тому кімната світла.\n\nКухня невелика, але зручна. Там є новий холодильник і стара плита. На столі завжди свіжі квіти — я люблю гарні речі!\n\nМоя спальня маленька, але затишна. Там м'яке ліжко і велика шафа. Стіни блакитні — це мій улюблений колір.\n\nЯ дуже люблю свою квартиру!\n\n**English Translation:**\n\nI have a nice apartment in an old building. The building is tall — ten floors. My apartment is on the fifth floor.\n\nIn the apartment there is a big living room. There stands a new sofa and an old armchair. On the wall hangs a beautiful painting. The windows are wide, so the room is bright.\n\nThe kitchen is not big, but convenient. There is a new refrigerator and an old stove. On the table there are always fresh flowers — I love beautiful things!\n\nMy bedroom is small, but cozy. There is a soft bed and a big wardrobe. The walls are light blue — it's my favorite color.\n\nI really love my apartment!\n\n**Practice:** Describe YOUR room using at least 5 adjectives!\n\n## Conversation: Опиши це! 🗣️\n\n**Катерина:** Дивись! Нова машина!\n**Олексій:** О, яка красива! Великий автомобіль!\n**Катерина:** Так, і дорогий, напевно.\n**Олексій:** А який колір?\n**Катерина:** Синій. Гарний синій колір.\n**Олексій:** Краще, ніж моя стара машина!\n**Катерина:** Твоя теж непогана. Маленька, але зручна.\n**Олексій:** Ти права. Головне — вона надійна!\n**Катерина:** Так, це важливо. Нова машина — не завжди краща.\n\n**English Translation:**\n**Kateryna:** Look! A new car!\n**Oleksiy:** Oh, how beautiful! A big car!\n**Kateryna:** Yes, and expensive, probably.\n**Oleksiy:** And what color?\n**Kateryna:** Blue. A beautiful blue color.\n**Oleksiy:** Better than my old car!\n**Kateryna:** Yours is also not bad. Small, but convenient.\n**Oleksiy:** You are right. The main thing — it is reliable!\n**Kateryna:** Yes, that is important. A new car is not always better.\n\nЗверни увагу: нова, красива, великий, дорогий, синій, стара — всі прикметники!"
+      },
+      {
+        "id": "section-summary-1",
+        "name": "Підсумок",
+        "nameEn": "Summary",
+        "type": "summary",
+        "content": "**Adjective Agreement Essentials**\n\n1. **Hard stem:** -ий (m), -а (f), -е (n), -і (pl)\n2. **Soft stem:** -ій (m), -я (f), -є (n), -і (pl)\n3. **Adjectives agree with nouns in gender and number**\n4. **Common pairs:** великий/малий, новий/старий, гарний/поганий\n\n---\n\n> [!tip] 🌟 **Pro Tip:** When learning new nouns, always learn an adjective with them: \"новий будинок,\" \"гарна книга,\" \"велике місто.\" This builds agreement intuition!\n\n\n---"
+      }
+    ],
+    "rawMarkdown": "---\ntitle: \"Describing Things - Adjectives\"\nsubtitle: \"Gender Agreement in Adjectives\"\nphase: A1.3\ntransliteration: partial\npedagogy: PPP\nduration: 50\ntags: [grammar, adjectives, gender, agreement]\nobjectives:\n  - Use adjectives with correct gender agreement\n  - Describe people and objects\n  - Apply hard and soft adjective endings\n  - Build descriptive sentences\ngrammar:\n  - Adjective gender agreement\n  - Hard stem adjectives (-ий/-а/-е)\n  - Soft stem adjectives (-ій/-я/-є)\n  - Plural adjective endings (-і)\naudio: false\n---\n\n# Describing Things - Adjectives\n\n> **Note:** Adjectives make your Ukrainian richer and more expressive! Learn how they agree with nouns in gender and number.\n\n## Warm-up: What's It Like?\n\nLook around you. Can you describe what you see? A big table? A new book? A beautiful city?\n\nAdjectives are words that describe nouns. In Ukrainian, adjectives AGREE with the nouns they describe — they take different endings based on the noun's gender (masculine, feminine, neuter) and number (singular, plural).\n\nThis agreement system is elegant and logical. Once you learn the patterns, you can describe anything! The key is remembering that adjectives act like \"mirrors\" — they reflect the gender of the noun they modify.\n\nUkrainian has two main types of adjectives: hard stem (ending in consonants like -ий) and soft stem (ending in -ій). Both follow predictable patterns, just with slightly different endings.\n\nBy mastering adjective agreement, you'll be able to describe people, places, objects, and feelings with precision and fluency!\n\n> 💡 **Thinking Trick:** The adjective ending \"-ий/-а/-е/-і\" mirrors noun patterns: \"-ий\" for masculine (like consonant-ending nouns), \"-а\" for feminine (like -а nouns), \"-е\" for neuter (like -о/-е nouns).\n\n## Presentation: Adjective Agreement\n\n### Hard Stem Adjectives (-ий)\n\nMost Ukrainian adjectives are \"hard stem\" — their masculine form ends in -ий:\n\n| Gender | Ending | Example |\n|--------|--------|---------|\n| Masculine | -ий | новий будинок (new building) |\n| Feminine | -а | нова книга (new book) |\n| Neuter | -е | нове місто (new city) |\n| Plural | -і | нові друзі (new friends) |\n\n**More examples:**\n| Adjective | M | F | N | Pl |\n|-----------|---|---|---|-----|\n| великий (big) | великий | велика | велике | великі |\n| малий (small) | малий | мала | мале | малі |\n| старий (old) | старий | стара | старе | старі |\n| гарний (beautiful) | гарний | гарна | гарне | гарні |\n| добрий (good) | добрий | добра | добре | добрі |\n\n### Soft Stem Adjectives (-ій)\n\nSome adjectives are \"soft stem\" — their masculine form ends in -ій:\n\n| Gender | Ending | Example |\n|--------|--------|---------|\n| Masculine | -ій | синій автобус (blue bus) |\n| Feminine | -я | синя сукня (blue dress) |\n| Neuter | -є | синє небо (blue sky) |\n| Plural | -і | сині очі (blue eyes) |\n\n**Common soft adjectives:**\n| Adjective | M | F | N | Pl |\n|-----------|---|---|---|-----|\n| синій (blue) | синій | синя | синє | сині |\n| останній (last) | останній | остання | останнє | останні |\n| домашній (home) | домашній | домашня | домашнє | домашні |\n| ранній (early) | ранній | рання | раннє | ранні |\n\n> 📜 **Pattern Summary:**\n> - **Hard stem:** -ий/-а/-е/-і (новий, нова, нове, нові)\n> - **Soft stem:** -ій/-я/-є/-і (синій, синя, синє, сині)\n> - Plural is always -і for both types!\n\n### Common Descriptive Adjectives\n\n**Size:**\n- великий (big) / малий (small)\n- високий (tall) / низький (short)\n- довгий (long) / короткий (short)\n- широкий (wide) / вузький (narrow)\n\n**Quality:**\n- гарний (beautiful) / поганий (bad)\n- добрий (good) / злий (evil)\n- новий (new) / старий (old)\n- молодий (young) / старий (old)\n\n**Character:**\n- розумний (smart) / дурний (stupid)\n- сильний (strong) / слабкий (weak)\n- швидкий (fast) / повільний (slow)\n\n**Value:**\n- дорогий (expensive) / дешевий (cheap)\n- цікавий (interesting) / нудний (boring)\n- важливий (important) / головний (main)\n\n> 💡 **Did You Know?** Ukrainian adjectives are more specific than English ones. \"Старий\" means old for things AND people (no separate \"elderly\"). But \"молодий\" specifically means \"young\" — precise and elegant!\n\n## Cultural Insight: Describing Ukraine 🇺🇦\n\nUkrainians love to describe their homeland with rich adjectives:\n\n**Describing places:**\n- Гарне місто (beautiful city)\n- Стара вулиця (old street)\n- Зелений парк (green park)\n- Широка річка (wide river)\n\n**Describing people:**\n- Добра людина (good person)\n- Розумна дівчина (smart girl)\n- Сильний чоловік (strong man)\n- Гостинна родина (hospitable family)\n\n**Patriotic descriptions:**\n- Незалежна Україна (Independent Ukraine)\n- Вільний народ (Free people)\n- Давня культура (Ancient culture)\n- Славна історія (Glorious history)\n\n> 📜 **History Bite:** Under colonial rule, Ukrainians were often described in negative terms by oppressors. Russian propaganda called Ukrainian culture \"малоросійська\" (Little Russian) — diminutive and dismissive. Today, Ukrainians proudly use adjectives like \"великий\" (great), \"древній\" (ancient), and \"самобутній\" (unique) to describe their culture!\n\n> 📜 **Myth Buster:** Some claim Ukrainian is \"less developed\" than Russian. In fact, Ukrainian has MORE adjective forms, more nuanced descriptive vocabulary, and richer poetic traditions. Ukrainian adjectives can express subtleties that Russian simply cannot!\n\n## Reading Practice: Мій дім 📖\n\n**Українською:**\n\nУ мене є гарна квартира в старому будинку. Будинок високий — десять поверхів. Моя квартира на п'ятому поверсі.\n\nУ квартирі є велика вітальня. Там стоїть новий диван і старе крісло. На стіні висить красива картина. Вікна широкі, тому кімната світла.\n\nКухня невелика, але зручна. Там є новий холодильник і стара плита. На столі завжди свіжі квіти — я люблю гарні речі!\n\nМоя спальня маленька, але затишна. Там м'яке ліжко і велика шафа. Стіни блакитні — це мій улюблений колір.\n\nЯ дуже люблю свою квартиру!\n\n**English Translation:**\n\nI have a nice apartment in an old building. The building is tall — ten floors. My apartment is on the fifth floor.\n\nIn the apartment there is a big living room. There stands a new sofa and an old armchair. On the wall hangs a beautiful painting. The windows are wide, so the room is bright.\n\nThe kitchen is not big, but convenient. There is a new refrigerator and an old stove. On the table there are always fresh flowers — I love beautiful things!\n\nMy bedroom is small, but cozy. There is a soft bed and a big wardrobe. The walls are light blue — it's my favorite color.\n\nI really love my apartment!\n\n**Practice:** Describe YOUR room using at least 5 adjectives!\n\n## Conversation: Опиши це! 🗣️\n\n**Катерина:** Дивись! Нова машина!\n**Олексій:** О, яка красива! Великий автомобіль!\n**Катерина:** Так, і дорогий, напевно.\n**Олексій:** А який колір?\n**Катерина:** Синій. Гарний синій колір.\n**Олексій:** Краще, ніж моя стара машина!\n**Катерина:** Твоя теж непогана. Маленька, але зручна.\n**Олексій:** Ти права. Головне — вона надійна!\n**Катерина:** Так, це важливо. Нова машина — не завжди краща.\n\n**English Translation:**\n**Kateryna:** Look! A new car!\n**Oleksiy:** Oh, how beautiful! A big car!\n**Kateryna:** Yes, and expensive, probably.\n**Oleksiy:** And what color?\n**Kateryna:** Blue. A beautiful blue color.\n**Oleksiy:** Better than my old car!\n**Kateryna:** Yours is also not bad. Small, but convenient.\n**Oleksiy:** You are right. The main thing — it is reliable!\n**Kateryna:** Yes, that is important. A new car is not always better.\n\nЗверни увагу: нова, красива, великий, дорогий, синій, стара — всі прикметники!\n\n# Summary\n\n**Adjective Agreement Essentials**\n\n1. **Hard stem:** -ий (m), -а (f), -е (n), -і (pl)\n2. **Soft stem:** -ій (m), -я (f), -є (n), -і (pl)\n3. **Adjectives agree with nouns in gender and number**\n4. **Common pairs:** великий/малий, новий/старий, гарний/поганий\n\n---\n\n> [!tip] 🌟 **Pro Tip:** When learning new nouns, always learn an adjective with them: \"новий будинок,\" \"гарна книга,\" \"велике місто.\" This builds agreement intuition!\n\n# Activities\n\n## fill-in: Adjective Agreement\n> Choose the correct adjective form.\n\n1. Це ___ книга. (new - f.)\n   > [!answer] нова\n   > [!options] новий | нова | нове | нові\n\n2. ___ будинок. (big - m.)\n   > [!answer] Великий\n   > [!options] Великий | Велика | Велике | Великі\n\n3. Це ___ місто. (beautiful - n.)\n   > [!answer] гарне\n   > [!options] гарний | гарна | гарне | гарні\n\n4. ___ друзі. (good - pl.)\n   > [!answer] Добрі\n   > [!options] Добрий | Добра | Добре | Добрі\n\n5. Це ___ автобус. (blue - m.)\n   > [!answer] синій\n   > [!options] синя | синій | синє | сині\n\n6. ___ сукня. (blue - f.)\n   > [!answer] Синя\n   > [!options] Синя | Синій | Синє | Сині\n\n7. ___ дівчина. (young - f.)\n   > [!answer] Молода\n   > [!options] Молодий | Молода | Молоде | Молоді\n\n8. Це ___ чоловік. (old - m.)\n   > [!answer] старий\n   > [!options] старий | стара | старе | старі\n\n9. ___ місце. (interesting - n.)\n   > [!answer] Цікаве\n   > [!options] Цікавий | Цікава | Цікаве | Цікаві\n\n10. ___ люди. (smart - pl.)\n    > [!answer] Розумні\n    > [!options] Розумний | Розумна | Розумне | Розумні\n\n11. Це ___ машина. (expensive - f.)\n    > [!answer] дорога\n    > [!options] дорогий | дорога | дороге | дорогі\n\n12. ___ небо. (blue - n.)\n    > [!answer] Синє\n    > [!options] Синя | Синій | Синє | Сині\n\n## match-up: Adjective Pairs\n> Match adjectives with their opposites.\n\n| Adjective | Opposite |\n| --- | --- |\n| великий | малий |\n| новий | старий |\n| високий | низький |\n| довгий | короткий |\n| добрий | злий |\n| швидкий | повільний |\n| дорогий | дешевий |\n| сильний | слабкий |\n| цікавий | нудний |\n| гарний | поганий |\n| широкий | вузький |\n| розумний | дурний |\n\n## quiz: Adjective Rules\n> Choose the correct answer.\n\n1. Feminine hard adjectives end in:\n   - [x] -а\n   - [ ] -ий\n   - [ ] -е\n   - [ ] -і\n\n2. Soft stem masculine adjectives end in:\n   - [x] -ій\n   - [ ] -ий\n   - [ ] -а\n   - [ ] -е\n\n3. \"Гарне місто\" — the adjective is:\n   - [x] Neuter\n   - [ ] Masculine\n   - [ ] Feminine\n   - [ ] Plural\n\n4. Plural adjectives always end in:\n   - [x] -і\n   - [ ] -а\n   - [ ] -е\n   - [ ] -ий\n\n5. \"Синя сукня\" uses:\n   - [x] Soft stem feminine\n   - [ ] Hard stem feminine\n   - [ ] Hard stem masculine\n   - [ ] Neuter\n\n6. \"Добрий\" is a:\n   - [x] Hard stem adjective\n   - [ ] Soft stem adjective\n   - [ ] Not an adjective\n   - [ ] Verb\n\n7. The neuter ending for hard adjectives is:\n   - [x] -е\n   - [ ] -а\n   - [ ] -ий\n   - [ ] -і\n\n8. \"Нові друзі\" — друзі is:\n   - [x] Plural\n   - [ ] Singular masculine\n   - [ ] Singular feminine\n   - [ ] Neuter\n\n9. Adjectives agree with nouns in:\n   - [x] Gender and number\n   - [ ] Only gender\n   - [ ] Only number\n   - [ ] Nothing\n\n10. \"Останній\" is:\n    - [x] Soft stem masculine\n    - [ ] Hard stem masculine\n    - [ ] Feminine\n    - [ ] Plural\n\n11. \"Велике\" is:\n    - [x] Neuter singular\n    - [ ] Masculine\n    - [ ] Feminine\n    - [ ] Plural\n\n12. \"Сині очі\" — \"сині\" is:\n    - [x] Plural\n    - [ ] Singular\n    - [ ] Masculine\n    - [ ] Neuter\n\n## group-sort: Hard vs Soft Stem\n> Sort adjectives by stem type.\n\n- Hard Stem: великий\n- Hard Stem: новий\n- Hard Stem: гарний\n- Hard Stem: добрий\n- Hard Stem: старий\n- Hard Stem: молодий\n- Soft Stem: синій\n- Soft Stem: останній\n- Soft Stem: домашній\n- Soft Stem: ранній\n- Soft Stem: пізній\n- Soft Stem: середній\n\n## true-false: Adjective Facts\n- [x] Hard stem masculine ends in -ий.\n- [x] Soft stem feminine ends in -я.\n- [ ] Plural adjectives end in -а.\n- [x] \"Нова\" is feminine.\n- [x] Adjectives agree with nouns in gender.\n- [ ] \"Синій\" is a hard stem adjective.\n- [x] \"Велике\" is neuter.\n- [ ] \"Добрі\" is singular.\n- [x] Neuter hard adjectives end in -е.\n- [x] \"Гарний\" means beautiful.\n- [ ] Soft stem neuter ends in -е.\n- [x] \"Старі друзі\" is plural.\n\n## anagram: Adjective Vocabulary\n> Unscramble these adjectives.\n\n1. й и к и л е в\n   > [!answer] великий\n\n2. г а н р й и\n   > [!answer] гарний\n\n3. й и в о н\n   > [!answer] новий\n\n4. й и р а т с\n   > [!answer] старий\n\n5. й і н и с\n   > [!answer] синій\n\n6. л и й м о о д\n   > [!answer] молодий\n\n7. й и н м у з о р\n   > [!answer] розумний\n\n8. й и в а к і ц\n   > [!answer] цікавий\n\n9. и о й р г д о\n   > [!answer] дорогий\n\n10. в ь і й п о н и л\n    > [!answer] повільний\n\n11. а в о н\n    > [!answer] нова\n\n12. е н р а г\n    > [!answer] гарне\n\n## fill-in: Describe It\n> Complete with the correct adjective form.\n\n1. Це ___ квартира. (beautiful - f.)\n   > [!answer] гарна\n   > [!options] гарний | гарна | гарне | гарні\n\n2. Там ___ вікно. (big - n.)\n   > [!answer] велике\n   > [!options] великий | велика | велике | великі\n\n3. Я бачу ___ машину. (new - f.)\n   > [!answer] нову\n   > [!options] новий | нова | нову | нові\n\n4. Це ___ будинки. (old - pl.)\n   > [!answer] старі\n   > [!options] старий | стара | старе | старі\n\n5. Мій друг ___. (smart - m.)\n   > [!answer] розумний\n   > [!options] розумний | розумна | розумне | розумні\n\n6. Ця дівчина ___. (young - f.)\n   > [!answer] молода\n   > [!options] молодий | молода | молоде | молоді\n\n7. Це ___ небо. (blue - n.)\n   > [!answer] синє\n   > [!options] синій | синя | синє | сині\n\n8. Я люблю ___ книги. (interesting - pl.)\n   > [!answer] цікаві\n   > [!options] цікавий | цікава | цікаве | цікаві\n\n9. Це ___ кава! (good - f.)\n   > [!answer] добра\n   > [!options] добрий | добра | добре | добрі\n\n10. ___ ранок! (good - m.)\n    > [!answer] Добрий\n    > [!options] Добрий | Добра | Добре | Добрі\n\n11. Це ___ завдання. (difficult - n.)\n    > [!answer] важке\n    > [!options] важкий | важка | важке | важкі\n\n12. ___ люди! (kind - pl.)\n    > [!answer] Добрі\n    > [!options] Добрий | Добра | Добре | Добрі\n\n## unjumble: Build Descriptive Sentences\n> Arrange words into correct sentences.\n\n1. книга / цікава / це\n   > [!answer] Це цікава книга.\n\n2. великий / це / будинок\n   > [!answer] Це великий будинок.\n\n3. гарне / яке / місто\n   > [!answer] Яке гарне місто!\n\n4. друг / мій / добрий\n   > [!answer] Мій друг добрий.\n\n5. нові / це / друзі\n   > [!answer] Це нові друзі.\n\n6. машина / красива / яка\n   > [!answer] Яка красива машина!\n\n7. старе / це / крісло\n   > [!answer] Це старе крісло.\n\n8. дівчина / розумна / ця\n   > [!answer] Ця дівчина розумна.\n\n9. сині / очі / у / неї\n   > [!answer] У неї сині очі.\n\n10. маленька / квартира / моя\n    > [!answer] Моя квартира маленька.\n\n11. новий / дуже / телефон / це\n    > [!answer] Це дуже новий телефон.\n\n12. молодий / він / чоловік\n    > [!answer] Він молодий чоловік.\n\n---\n\n# Vocabulary\n\n| Ukrainian | IPA | English | Example |\n| --- | --- | --- | --- |\n| великий | /ʋɛˈlɪkɪj/ | big | Великий будинок. |\n| малий | /mɑˈlɪj/ | small | Мала кімната. |\n| високий | /ʋɪˈsokɪj/ | tall | Високий чоловік. |\n| низький | /ˈnɪzʲkɪj/ | short (height) | Низький стіл. |\n| довгий | /ˈdoʋɦɪj/ | long | Довга дорога. |\n| короткий | /koˈrotkɪj/ | short | Коротке волосся. |\n| широкий | /ʃɪˈrokɪj/ | wide | Широка вулиця. |\n| вузький | /ˈʋuzʲkɪj/ | narrow | Вузький коридор. |\n| новий | /noˈʋɪj/ | new | Нова книга. |\n| старий | /stɑˈrɪj/ | old | Старе місто. |\n| молодий | /moloˈdɪj/ | young | Молода жінка. |\n| гарний | /ˈɦɑrnɪj/ | beautiful | Гарне місто. |\n| красивий | /krɑˈsɪʋɪj/ | beautiful | Красива картина. |\n| поганий | /poˈɦɑnɪj/ | bad | Погана погода. |\n| добрий | /ˈdobrɪj/ | good | Добрий день! |\n| злий | /zlɪj/ | evil, angry | Злий пес. |\n| розумний | /rozˈumnɪj/ | smart | Розумна дитина. |\n| дурний | /ˈdurnɪj/ | stupid | Дурна помилка. |\n| сильний | /ˈsɪlʲnɪj/ | strong | Сильний чоловік. |\n| слабкий | /slɑbˈkɪj/ | weak | Слабкий чай. |\n| швидкий | /ˈʃʋɪdkɪj/ | fast | Швидкий потяг. |\n| повільний | /poˈʋilʲnɪj/ | slow | Повільний темп. |\n| легкий | /ˈlɛɦkɪj/ | light, easy | Легке завдання. |\n| важкий | /ʋɑʒˈkɪj/ | heavy, difficult | Важка сумка. |\n| дорогий | /doroˈɦɪj/ | expensive | Дорогий телефон. |\n| дешевий | /dɛˈʃɛʋɪj/ | cheap | Дешева їжа. |\n| цікавий | /t͡siˈkɑʋɪj/ | interesting | Цікава книга. |\n| нудний | /ˈnudnɪj/ | boring | Нудний фільм. |\n| синій | /ˈsɪnʲij/ | blue | Синє небо. |\n| останній | /osˈtɑnʲij/ | last | Остання сторінка. |\n",
+    "createdAt": "2025-12-12T19:55:32.050Z",
+    "modifiedAt": "2025-12-12T19:55:32.050Z",
+    "version": 2
+  },
+  "activities": [
+    {
+      "id": "act-a1-0-fillblank-0",
+      "type": "fill-blank",
+      "title": "Adjective Agreement",
+      "description": "Choose the correct adjective form.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Це ___ книга. (new - f.)",
+            "answer": "нова",
+            "options": [
+              "новий",
+              "нова",
+              "нове",
+              "нові"
+            ]
+          },
+          {
+            "prompt": "___ будинок. (big - m.)",
+            "answer": "Великий",
+            "options": [
+              "Великий",
+              "Велика",
+              "Велике",
+              "Великі"
+            ]
+          },
+          {
+            "prompt": "Це ___ місто. (beautiful - n.)",
+            "answer": "гарне",
+            "options": [
+              "гарний",
+              "гарна",
+              "гарне",
+              "гарні"
+            ]
+          },
+          {
+            "prompt": "___ друзі. (good - pl.)",
+            "answer": "Добрі",
+            "options": [
+              "Добрий",
+              "Добра",
+              "Добре",
+              "Добрі"
+            ]
+          },
+          {
+            "prompt": "Це ___ автобус. (blue - m.)",
+            "answer": "синій",
+            "options": [
+              "синя",
+              "синій",
+              "синє",
+              "сині"
+            ]
+          },
+          {
+            "prompt": "___ сукня. (blue - f.)",
+            "answer": "Синя",
+            "options": [
+              "Синя",
+              "Синій",
+              "Синє",
+              "Сині"
+            ]
+          },
+          {
+            "prompt": "___ дівчина. (young - f.)",
+            "answer": "Молода",
+            "options": [
+              "Молодий",
+              "Молода",
+              "Молоде",
+              "Молоді"
+            ]
+          },
+          {
+            "prompt": "Це ___ чоловік. (old - m.)",
+            "answer": "старий",
+            "options": [
+              "старий",
+              "стара",
+              "старе",
+              "старі"
+            ]
+          },
+          {
+            "prompt": "___ місце. (interesting - n.)",
+            "answer": "Цікаве",
+            "options": [
+              "Цікавий",
+              "Цікава",
+              "Цікаве",
+              "Цікаві"
+            ]
+          },
+          {
+            "prompt": "___ люди. (smart - pl.)",
+            "answer": "Розумні",
+            "options": [
+              "Розумний",
+              "Розумна",
+              "Розумне",
+              "Розумні"
+            ]
+          },
+          {
+            "prompt": "Це ___ машина. (expensive - f.)",
+            "answer": "дорога",
+            "options": [
+              "дорогий",
+              "дорога",
+              "дороге",
+              "дорогі"
+            ]
+          },
+          {
+            "prompt": "___ небо. (blue - n.)",
+            "answer": "Синє",
+            "options": [
+              "Синя",
+              "Синій",
+              "Синє",
+              "Сині"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.050Z",
+      "modifiedAt": "2025-12-12T19:55:32.050Z"
+    },
+    {
+      "id": "act-a1-0-matchup-0",
+      "type": "match-up",
+      "title": "Adjective Pairs",
+      "description": "Match adjectives with their opposites.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "великий",
+            "right": "малий"
+          },
+          {
+            "left": "новий",
+            "right": "старий"
+          },
+          {
+            "left": "високий",
+            "right": "низький"
+          },
+          {
+            "left": "довгий",
+            "right": "короткий"
+          },
+          {
+            "left": "добрий",
+            "right": "злий"
+          },
+          {
+            "left": "швидкий",
+            "right": "повільний"
+          },
+          {
+            "left": "дорогий",
+            "right": "дешевий"
+          },
+          {
+            "left": "сильний",
+            "right": "слабкий"
+          },
+          {
+            "left": "цікавий",
+            "right": "нудний"
+          },
+          {
+            "left": "гарний",
+            "right": "поганий"
+          },
+          {
+            "left": "широкий",
+            "right": "вузький"
+          },
+          {
+            "left": "розумний",
+            "right": "дурний"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.050Z",
+      "modifiedAt": "2025-12-12T19:55:32.050Z"
+    },
+    {
+      "id": "act-a1-0-quiz-0",
+      "type": "quiz",
+      "title": "Adjective Rules",
+      "description": "Choose the correct answer.",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "Feminine hard adjectives end in:",
+            "options": [
+              "-а",
+              "-ий",
+              "-е",
+              "-і"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Soft stem masculine adjectives end in:",
+            "options": [
+              "-ій",
+              "-ий",
+              "-а",
+              "-е"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Гарне місто\" — the adjective is:",
+            "options": [
+              "Neuter",
+              "Masculine",
+              "Feminine",
+              "Plural"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Plural adjectives always end in:",
+            "options": [
+              "-і",
+              "-а",
+              "-е",
+              "-ий"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Синя сукня\" uses:",
+            "options": [
+              "Soft stem feminine",
+              "Hard stem feminine",
+              "Hard stem masculine",
+              "Neuter"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Добрий\" is a:",
+            "options": [
+              "Hard stem adjective",
+              "Soft stem adjective",
+              "Not an adjective",
+              "Verb"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "The neuter ending for hard adjectives is:",
+            "options": [
+              "-е",
+              "-а",
+              "-ий",
+              "-і"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Нові друзі\" — друзі is:",
+            "options": [
+              "Plural",
+              "Singular masculine",
+              "Singular feminine",
+              "Neuter"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "Adjectives agree with nouns in:",
+            "options": [
+              "Gender and number",
+              "Only gender",
+              "Only number",
+              "Nothing"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Останній\" is:",
+            "options": [
+              "Soft stem masculine",
+              "Hard stem masculine",
+              "Feminine",
+              "Plural"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Велике\" is:",
+            "options": [
+              "Neuter singular",
+              "Masculine",
+              "Feminine",
+              "Plural"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          },
+          {
+            "question": "\"Сині очі\" — \"сині\" is:",
+            "options": [
+              "Plural",
+              "Singular",
+              "Masculine",
+              "Neuter"
+            ],
+            "correctIndex": 0,
+            "explanation": ""
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.050Z",
+      "modifiedAt": "2025-12-12T19:55:32.050Z"
+    },
+    {
+      "id": "act-a1-0-groupsort-0",
+      "type": "group-sort",
+      "title": "Hard vs Soft Stem",
+      "description": "Sort adjectives by stem type.",
+      "content": {
+        "type": "group-sort",
+        "groups": [],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.050Z",
+      "modifiedAt": "2025-12-12T19:55:32.050Z"
+    },
+    {
+      "id": "act-a1-0-truefalse-0",
+      "type": "true-false",
+      "title": "Adjective Facts",
+      "description": "Adjective Facts",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "Hard stem masculine ends in -ий.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "Soft stem feminine ends in -я.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "Plural adjectives end in -а.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Нова\" is feminine.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "Adjectives agree with nouns in gender.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Синій\" is a hard stem adjective.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Велике\" is neuter.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Добрі\" is singular.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "Neuter hard adjectives end in -е.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Гарний\" means beautiful.",
+            "isTrue": true,
+            "explanation": ""
+          },
+          {
+            "statement": "Soft stem neuter ends in -е.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Старі друзі\" is plural.",
+            "isTrue": true,
+            "explanation": ""
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.050Z",
+      "modifiedAt": "2025-12-12T19:55:32.050Z"
+    },
+    {
+      "id": "act-a1-0-anagram-0",
+      "type": "anagram",
+      "title": "Adjective Vocabulary",
+      "description": "Unscramble these adjectives.",
+      "content": {
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
+          {
+            "letters": [
+              "й",
+              "и",
+              "к",
+              "и",
+              "л",
+              "е",
+              "в"
+            ],
+            "answer": "великий"
+          },
+          {
+            "letters": [
+              "г",
+              "а",
+              "н",
+              "р",
+              "й",
+              "и"
+            ],
+            "answer": "гарний"
+          },
+          {
+            "letters": [
+              "й",
+              "и",
+              "в",
+              "о",
+              "н"
+            ],
+            "answer": "новий"
+          },
+          {
+            "letters": [
+              "й",
+              "и",
+              "р",
+              "а",
+              "т",
+              "с"
+            ],
+            "answer": "старий"
+          },
+          {
+            "letters": [
+              "й",
+              "і",
+              "н",
+              "и",
+              "с"
+            ],
+            "answer": "синій"
+          },
+          {
+            "letters": [
+              "л",
+              "и",
+              "й",
+              "м",
+              "о",
+              "о",
+              "д"
+            ],
+            "answer": "молодий"
+          },
+          {
+            "letters": [
+              "й",
+              "и",
+              "н",
+              "м",
+              "у",
+              "з",
+              "о",
+              "р"
+            ],
+            "answer": "розумний"
+          },
+          {
+            "letters": [
+              "й",
+              "и",
+              "в",
+              "а",
+              "к",
+              "і",
+              "ц"
+            ],
+            "answer": "цікавий"
+          },
+          {
+            "letters": [
+              "и",
+              "о",
+              "й",
+              "р",
+              "г",
+              "д",
+              "о"
+            ],
+            "answer": "дорогий"
+          },
+          {
+            "letters": [
+              "в",
+              "ь",
+              "і",
+              "й",
+              "п",
+              "о",
+              "н",
+              "и",
+              "л"
+            ],
+            "answer": "повільний"
+          },
+          {
+            "letters": [
+              "а",
+              "в",
+              "о",
+              "н"
+            ],
+            "answer": "нова"
+          },
+          {
+            "letters": [
+              "е",
+              "н",
+              "р",
+              "а",
+              "г"
+            ],
+            "answer": "гарне"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.050Z",
+      "modifiedAt": "2025-12-12T19:55:32.050Z"
+    },
+    {
+      "id": "act-a1-0-fillblank-1",
+      "type": "fill-blank",
+      "title": "Describe It",
+      "description": "Complete with the correct adjective form.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Це ___ квартира. (beautiful - f.)",
+            "answer": "гарна",
+            "options": [
+              "гарний",
+              "гарна",
+              "гарне",
+              "гарні"
+            ]
+          },
+          {
+            "prompt": "Там ___ вікно. (big - n.)",
+            "answer": "велике",
+            "options": [
+              "великий",
+              "велика",
+              "велике",
+              "великі"
+            ]
+          },
+          {
+            "prompt": "Я бачу ___ машину. (new - f.)",
+            "answer": "нову",
+            "options": [
+              "новий",
+              "нова",
+              "нову",
+              "нові"
+            ]
+          },
+          {
+            "prompt": "Це ___ будинки. (old - pl.)",
+            "answer": "старі",
+            "options": [
+              "старий",
+              "стара",
+              "старе",
+              "старі"
+            ]
+          },
+          {
+            "prompt": "Мій друг ___. (smart - m.)",
+            "answer": "розумний",
+            "options": [
+              "розумний",
+              "розумна",
+              "розумне",
+              "розумні"
+            ]
+          },
+          {
+            "prompt": "Ця дівчина ___. (young - f.)",
+            "answer": "молода",
+            "options": [
+              "молодий",
+              "молода",
+              "молоде",
+              "молоді"
+            ]
+          },
+          {
+            "prompt": "Це ___ небо. (blue - n.)",
+            "answer": "синє",
+            "options": [
+              "синій",
+              "синя",
+              "синє",
+              "сині"
+            ]
+          },
+          {
+            "prompt": "Я люблю ___ книги. (interesting - pl.)",
+            "answer": "цікаві",
+            "options": [
+              "цікавий",
+              "цікава",
+              "цікаве",
+              "цікаві"
+            ]
+          },
+          {
+            "prompt": "Це ___ кава! (good - f.)",
+            "answer": "добра",
+            "options": [
+              "добрий",
+              "добра",
+              "добре",
+              "добрі"
+            ]
+          },
+          {
+            "prompt": "___ ранок! (good - m.)",
+            "answer": "Добрий",
+            "options": [
+              "Добрий",
+              "Добра",
+              "Добре",
+              "Добрі"
+            ]
+          },
+          {
+            "prompt": "Це ___ завдання. (difficult - n.)",
+            "answer": "важке",
+            "options": [
+              "важкий",
+              "важка",
+              "важке",
+              "важкі"
+            ]
+          },
+          {
+            "prompt": "___ люди! (kind - pl.)",
+            "answer": "Добрі",
+            "options": [
+              "Добрий",
+              "Добра",
+              "Добре",
+              "Добрі"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.050Z",
+      "modifiedAt": "2025-12-12T19:55:32.050Z"
+    },
+    {
+      "id": "act-a1-0-unjumble-0",
+      "type": "unjumble",
+      "title": "Build Descriptive Sentences",
+      "description": "Arrange words into correct sentences.",
+      "content": {
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
+          {
+            "words": [
+              "книга",
+              "цікава",
+              "це"
+            ],
+            "answer": "Це цікава книга."
+          },
+          {
+            "words": [
+              "великий",
+              "це",
+              "будинок"
+            ],
+            "answer": "Це великий будинок."
+          },
+          {
+            "words": [
+              "гарне",
+              "яке",
+              "місто"
+            ],
+            "answer": "Яке гарне місто!"
+          },
+          {
+            "words": [
+              "друг",
+              "мій",
+              "добрий"
+            ],
+            "answer": "Мій друг добрий."
+          },
+          {
+            "words": [
+              "нові",
+              "це",
+              "друзі"
+            ],
+            "answer": "Це нові друзі."
+          },
+          {
+            "words": [
+              "машина",
+              "красива",
+              "яка"
+            ],
+            "answer": "Яка красива машина!"
+          },
+          {
+            "words": [
+              "старе",
+              "це",
+              "крісло"
+            ],
+            "answer": "Це старе крісло."
+          },
+          {
+            "words": [
+              "дівчина",
+              "розумна",
+              "ця"
+            ],
+            "answer": "Ця дівчина розумна."
+          },
+          {
+            "words": [
+              "сині",
+              "очі",
+              "у",
+              "неї"
+            ],
+            "answer": "У неї сині очі."
+          },
+          {
+            "words": [
+              "маленька",
+              "квартира",
+              "моя"
+            ],
+            "answer": "Моя квартира маленька."
+          },
+          {
+            "words": [
+              "новий",
+              "дуже",
+              "телефон",
+              "це"
+            ],
+            "answer": "Це дуже новий телефон."
+          },
+          {
+            "words": [
+              "молодий",
+              "він",
+              "чоловік"
+            ],
+            "answer": "Він молодий чоловік."
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-12T19:55:32.050Z",
+      "modifiedAt": "2025-12-12T19:55:32.050Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A1-26",
+    "level": "A1",
+    "phase": "A1.3",
+    "wordCount": 30,
+    "newWordCount": 30,
+    "reviewWordCount": 0,
+    "transliterationMode": "partial",
+    "words": [
+      {
+        "id": "v-velykyy-0-0",
+        "uk": "великий",
+        "en": "big",
+        "pos": "noun",
+        "ipa": "/ʋɛˈlɪkɪj/",
+        "note": "Великий будинок.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-malyy-0-1",
+        "uk": "малий",
+        "en": "small",
+        "pos": "noun",
+        "ipa": "/mɑˈlɪj/",
+        "note": "Мала кімната.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vysokyy-0-2",
+        "uk": "високий",
+        "en": "tall",
+        "pos": "noun",
+        "ipa": "/ʋɪˈsokɪj/",
+        "note": "Високий чоловік.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-nyzьkyy-0-3",
+        "uk": "низький",
+        "en": "short (height)",
+        "pos": "noun",
+        "ipa": "/ˈnɪzʲkɪj/",
+        "note": "Низький стіл.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-dovhyy-0-4",
+        "uk": "довгий",
+        "en": "long",
+        "pos": "noun",
+        "ipa": "/ˈdoʋɦɪj/",
+        "note": "Довга дорога.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-korotkyy-0-5",
+        "uk": "короткий",
+        "en": "short",
+        "pos": "noun",
+        "ipa": "/koˈrotkɪj/",
+        "note": "Коротке волосся.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-shyrokyy-0-6",
+        "uk": "широкий",
+        "en": "wide",
+        "pos": "noun",
+        "ipa": "/ʃɪˈrokɪj/",
+        "note": "Широка вулиця.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vuzьkyy-0-7",
+        "uk": "вузький",
+        "en": "narrow",
+        "pos": "noun",
+        "ipa": "/ˈʋuzʲkɪj/",
+        "note": "Вузький коридор.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-novyy-0-8",
+        "uk": "новий",
+        "en": "new",
+        "pos": "noun",
+        "ipa": "/noˈʋɪj/",
+        "note": "Нова книга.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-staryy-0-9",
+        "uk": "старий",
+        "en": "old",
+        "pos": "noun",
+        "ipa": "/stɑˈrɪj/",
+        "note": "Старе місто.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-molodyy-0-10",
+        "uk": "молодий",
+        "en": "young",
+        "pos": "noun",
+        "ipa": "/moloˈdɪj/",
+        "note": "Молода жінка.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-harnyy-0-11",
+        "uk": "гарний",
+        "en": "beautiful",
+        "pos": "noun",
+        "ipa": "/ˈɦɑrnɪj/",
+        "note": "Гарне місто.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-krasyvyy-0-12",
+        "uk": "красивий",
+        "en": "beautiful",
+        "pos": "noun",
+        "ipa": "/krɑˈsɪʋɪj/",
+        "note": "Красива картина.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pohanyy-0-13",
+        "uk": "поганий",
+        "en": "bad",
+        "pos": "noun",
+        "ipa": "/poˈɦɑnɪj/",
+        "note": "Погана погода.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-dobryy-0-14",
+        "uk": "добрий",
+        "en": "good",
+        "pos": "noun",
+        "ipa": "/ˈdobrɪj/",
+        "note": "Добрий день!",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-zlyy-0-15",
+        "uk": "злий",
+        "en": "evil, angry",
+        "pos": "noun",
+        "ipa": "/zlɪj/",
+        "note": "Злий пес.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-rozumnyy-0-16",
+        "uk": "розумний",
+        "en": "smart",
+        "pos": "noun",
+        "ipa": "/rozˈumnɪj/",
+        "note": "Розумна дитина.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-durnyy-0-17",
+        "uk": "дурний",
+        "en": "stupid",
+        "pos": "noun",
+        "ipa": "/ˈdurnɪj/",
+        "note": "Дурна помилка.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-sylьnyy-0-18",
+        "uk": "сильний",
+        "en": "strong",
+        "pos": "noun",
+        "ipa": "/ˈsɪlʲnɪj/",
+        "note": "Сильний чоловік.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-slabkyy-0-19",
+        "uk": "слабкий",
+        "en": "weak",
+        "pos": "noun",
+        "ipa": "/slɑbˈkɪj/",
+        "note": "Слабкий чай.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-shvydkyy-0-20",
+        "uk": "швидкий",
+        "en": "fast",
+        "pos": "noun",
+        "ipa": "/ˈʃʋɪdkɪj/",
+        "note": "Швидкий потяг.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-povilьnyy-0-21",
+        "uk": "повільний",
+        "en": "slow",
+        "pos": "noun",
+        "ipa": "/poˈʋilʲnɪj/",
+        "note": "Повільний темп.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-lehkyy-0-22",
+        "uk": "легкий",
+        "en": "light, easy",
+        "pos": "noun",
+        "ipa": "/ˈlɛɦkɪj/",
+        "note": "Легке завдання.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vazhkyy-0-23",
+        "uk": "важкий",
+        "en": "heavy, difficult",
+        "pos": "noun",
+        "ipa": "/ʋɑʒˈkɪj/",
+        "note": "Важка сумка.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-dorohyy-0-24",
+        "uk": "дорогий",
+        "en": "expensive",
+        "pos": "noun",
+        "ipa": "/doroˈɦɪj/",
+        "note": "Дорогий телефон.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-deshevyy-0-25",
+        "uk": "дешевий",
+        "en": "cheap",
+        "pos": "noun",
+        "ipa": "/dɛˈʃɛʋɪj/",
+        "note": "Дешева їжа.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-tsikavyy-0-26",
+        "uk": "цікавий",
+        "en": "interesting",
+        "pos": "noun",
+        "ipa": "/t͡siˈkɑʋɪj/",
+        "note": "Цікава книга.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-nudnyy-0-27",
+        "uk": "нудний",
+        "en": "boring",
+        "pos": "noun",
+        "ipa": "/ˈnudnɪj/",
+        "note": "Нудний фільм.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-syniy-0-28",
+        "uk": "синій",
+        "en": "blue",
+        "pos": "noun",
+        "ipa": "/ˈsɪnʲij/",
+        "note": "Синє небо.",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-ostanniy-0-29",
+        "uk": "останній",
+        "en": "last",
+        "pos": "noun",
+        "ipa": "/osˈtɑnʲij/",
+        "note": "Остання сторінка.",
+        "isNew": true,
+        "firstModule": 0
+      }
+    ]
+  }
+}

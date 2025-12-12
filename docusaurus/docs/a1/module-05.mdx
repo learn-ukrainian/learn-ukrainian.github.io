@@ -12,12 +12,12 @@ import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
 import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
 import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import ErrorCorrection, { ErrorCorrectionQuestion } from '@site/src/components/ErrorCorrection';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
 import Select, { SelectQuestion } from '@site/src/components/Select';
-import Translate, { TranslateQuestion } from '@site/src/components/Translate';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
 import Cloze from '@site/src/components/Cloze';
 import DialogueReorder from '@site/src/components/DialogueReorder';
-import MarkTheWords from '@site/src/components/MarkTheWords';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 
 
 
@@ -118,6 +118,28 @@ The phrase "Сідайте, я зараз чай поставлю!" (Sit down, I
 
 **Продавець:** Чудово! **Ці** товари разом — десять тисяч п'ятсот.
 
+:::note
+English Translation
+**Seller:** Good day! Can I help you?
+
+**Buyer:** Yes, thank you. How much is this phone?
+
+**Seller:** This one? Twelve thousand hryvnias.
+
+**Buyer:** And that black one there?
+
+**Seller:** That one is cheaper — ten thousand.
+
+**Buyer:** And that bag for it?
+
+**Seller:** This bag? Five hundred hryvnias.
+
+**Buyer:** Good, I'll take that phone and this bag.
+
+**Seller:** Great! These goods together — ten thousand five hundred.
+:::
+
+
 ## Reading Practice: My Room 📖
 
 *Practice identifying objects with demonstratives. Read aloud!*
@@ -141,7 +163,10 @@ The phrase "Сідайте, я зараз чай поставлю!" (Sit down, I
 
 ---
 
-:::tip 🌟 **Pro Tip:** Walk around your room and practice pointing: "Цей стіл. Ця книга. Це вікно." Repetition builds instinct!
+:::tip
+🌟 **Pro Tip:** Walk around your room and practice pointing: "Цей стіл. Ця книга. Це вікно." Repetition builds instinct!
+:::
+
 
 
 # Vocabulary
@@ -196,7 +221,49 @@ The phrase "Сідайте, я зараз чай поставлю!" (Sit down, I
 
 
 
+### This vs That
 
+<GroupSort groups={{
+  "That (Far)": [
+    "This (Near)"
+  ],
+  "той стіл": [
+    "цей стіл"
+  ],
+  "та кава": [
+    "ця кава"
+  ],
+  "те місто": [
+    "це місто"
+  ],
+  "ті друзі": [
+    "ці друзі"
+  ],
+  "той телефон": [
+    "цей телефон"
+  ],
+  "та сумка": [
+    "ця сумка"
+  ],
+  "те вікно": [
+    "це вікно"
+  ],
+  "ті ключі": [
+    "ці ключі"
+  ],
+  "той чоловік": [
+    "цей чоловік"
+  ],
+  "та жінка": [
+    "ця жінка"
+  ],
+  "те слово": [
+    "це слово"
+  ],
+  "ті книги": [
+    "ці книги"
+  ]
+}} />
 
 ### Choose the Correct Demonstrative
 

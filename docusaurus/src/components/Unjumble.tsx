@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
+import { shuffleNotCorrect } from './utils';
 
 // Generate consistent colors for words
 const WORD_COLORS = [
@@ -21,15 +22,20 @@ interface UnjumbleQuestionProps {
 }
 
 export function UnjumbleQuestion({ words, answer, hint }: UnjumbleQuestionProps) {
-  // Parse words (can be separated by /, |, or ,)
-  const wordList = useMemo(() =>
-    words.split(/[\/|,]\s*/).map((w, idx) => ({
+  // Parse words (can be separated by /, |, or ,) and shuffle so they're never in correct order
+  const wordList = useMemo(() => {
+    const rawWords = words.split(/[\/|,]\s*/).map(w => w.trim());
+    const correctOrder = answer.split(/\s+/);
+
+    // Shuffle ensuring words are NOT in the correct answer order
+    const shuffled = shuffleNotCorrect(rawWords, correctOrder);
+
+    return shuffled.map((word, idx) => ({
       id: `word-${idx}`,
-      text: w.trim(),
-      color: getWordColor(w.trim(), idx)
-    })),
-    [words]
-  );
+      text: word,
+      color: getWordColor(word, idx)
+    }));
+  }, [words, answer]);
 
   const [availableWords, setAvailableWords] = useState(wordList);
   const [selectedWords, setSelectedWords] = useState<typeof wordList>([]);

@@ -3,12 +3,12 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 777/500
+- **Words:** ✅ 1064/500
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/3
+- **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/20
 - **Structure:** ✅ Valid Structure
@@ -21,8 +21,8 @@
 | **Warm-up: The Universal Language** | ✅ | 228 | Included in Core |
 | **Presentation: Ukrainian Meals** | ✅ | 39 | Included in Core |
 | **Cultural Insight: Борщ — More Than Soup 🇺🇦** | ✅ | 168 | Included in Core |
-| **Dialogue: At the Café 🗣️** | ✅ | 80 | Included in Core |
-| **Reading Practice: Mama's Kitchen 📖** | ✅ | 237 | Included in Core |
+| **Dialogue: At the Café 🗣️** | ✅ | 196 | Included in Core |
+| **Reading Practice: Mama's Kitchen 📖** | ✅ | 408 | Included in Core |
 | **match-up: Food Vocabulary** | 🎮 | 12 | Activity (12 items) |
 | **group-sort: Food Categories** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Food Knowledge** | 🎮 | 12 | Activity (12 items) |

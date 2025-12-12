@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
+import { shuffle } from './utils';
 
 interface TranslateItemProps {
   source: string;
@@ -21,12 +22,10 @@ export function TranslateItem({
   const [submitted, setSubmitted] = useState(false);
 
   // Generate options if not provided: correct answer + alternatives + distractors
+  // Then shuffle so correct answer isn't always first
   const displayOptions = useMemo(() => {
-    if (options.length > 0) return options;
-
-    // Create options from answer and alternatives
-    const allCorrect = [answer, ...alternatives];
-    return allCorrect;
+    const opts = options.length > 0 ? options : [answer, ...alternatives];
+    return shuffle([...opts]);
   }, [options, answer, alternatives]);
 
   const handleSelect = (option: string) => {

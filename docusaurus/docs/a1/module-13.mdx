@@ -12,12 +12,12 @@ import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
 import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
 import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import ErrorCorrection, { ErrorCorrectionQuestion } from '@site/src/components/ErrorCorrection';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
 import Select, { SelectQuestion } from '@site/src/components/Select';
-import Translate, { TranslateQuestion } from '@site/src/components/Translate';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
 import Cloze from '@site/src/components/Cloze';
 import DialogueReorder from '@site/src/components/DialogueReorder';
-import MarkTheWords from '@site/src/components/MarkTheWords';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 
 
 
@@ -144,6 +144,16 @@ At 9:00 I go to work. I work in an office. At 13:00 I have lunch at a café near
 **Турист:** Дуже дякую за допомогу!
 **Киянин:** Будь ласка! Гарного дня!
 
+**English Translation:**
+**Tourist:** Excuse me, where is the bus stop?
+**Kyivan:** Straight ahead. The stop is on the corner, near the bank.
+**Tourist:** Thank you! And where is the nearest metro?
+**Kyivan:** The metro station is not far. Go straight, then left. It is in that big building.
+**Tourist:** Is it far to the center?
+**Kyivan:** No, by metro — five minutes. At the central station exit to Khreshchatyk.
+**Tourist:** Thank you very much for help!
+**Kyivan:** You're welcome! Have a nice day!
+
 Зверни увагу: на розі, у будинку, на метро, на станції — всі у місцевому відмінку!
 
 # Summary
@@ -158,7 +168,10 @@ At 9:00 I go to work. I work in an office. At 13:00 I have lunch at a café near
 
 ---
 
-:::tip 🌟 **Pro Tip:** When you learn place nouns, always learn them WITH their preposition: "в магазині", "на вулиці", "в Україні". This way you'll never mix them up!
+:::tip
+🌟 **Pro Tip:** When you learn place nouns, always learn them WITH their preposition: "в магазині", "на вулиці", "в Україні". This way you'll never mix them up!
+:::
+
 
 
 # Vocabulary
@@ -360,7 +373,49 @@ At 9:00 I go to work. I work in an office. At 13:00 I have lunch at a café near
   />
 </Quiz>
 
+### в/у or на
 
+<GroupSort groups={{
+  "на (on/at)": [
+    "в/у (inside)"
+  ],
+  "вулиця": [
+    "кімната"
+  ],
+  "робота": [
+    "офіс"
+  ],
+  "концерт": [
+    "магазин"
+  ],
+  "урок": [
+    "школа"
+  ],
+  "ринок": [
+    "бібліотека"
+  ],
+  "стадіон": [
+    "Україна"
+  ],
+  "площа": [
+    "місто"
+  ],
+  "море": [
+    "будинок"
+  ],
+  "острів": [
+    "ресторан"
+  ],
+  "пляж": [
+    "аптека"
+  ],
+  "фестиваль": [
+    "музей"
+  ],
+  "подія": [
+    "театр"
+  ]
+}} />
 
 ### Locative Rules
 

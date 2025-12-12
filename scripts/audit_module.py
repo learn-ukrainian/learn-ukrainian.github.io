@@ -152,6 +152,16 @@ def audit_module(file_path):
             'min_engagement': 8,
             'transliteration_allowed': False,
             'priority_types': {'fill-in', 'unjumble', 'error-correction'}
+        },
+        'LIT': {
+            'target_words': 2000,
+            'min_activities': 0,
+            'min_items_per_activity': 0,
+            'min_types_unique': 0,
+            'min_vocab': 0,
+            'min_engagement': 4,
+            'transliteration_allowed': False,
+            'priority_types': set()
         }
     }
     
@@ -161,8 +171,11 @@ def audit_module(file_path):
     if path_match:
         level_from_path = path_match.group(1).upper()
 
-    # Use path-detected level if available, else fall back to phase
-    level_code = level_from_path if level_from_path else phase.split('.')[0]
+    # Use path-detected level if available, but allow Phase 'LIT' to override
+    if phase == 'LIT':
+        level_code = 'LIT'
+    else:
+        level_code = level_from_path if level_from_path else phase.split('.')[0]
     if level_code not in LEVEL_CONFIG:
         if level_code.endswith('+'):
              level_code = level_code[:-1]
@@ -174,7 +187,15 @@ def audit_module(file_path):
     # Module Number Detection (for Graduation)
     module_num = 999
     try:
-        module_num = int(re.search(r'module-(\d+)', os.path.basename(file_path)).group(1))
+        # Try numeric first
+        m = re.search(r'module-(\d+)', os.path.basename(file_path))
+        if m:
+            module_num = int(m.group(1))
+        else:
+            # Try LIT-XXX
+            m = re.search(r'module-LIT-(\d+)', os.path.basename(file_path))
+            if m:
+                module_num = int(m.group(1))
     except:
         pass
 
@@ -259,19 +280,35 @@ def audit_module(file_path):
 
     # --- 3. Filtering and Analysis ---
     
-    # Keywords
-    core_keywords = ["warm-up", "presentation", "introduction", "narrative", "context", "diagnostic", "cultural", "culture", "story", "dialogue", "reading", "deep dive", "riddle", "insight", "conversation"]
-    activity_keywords_list = ["match-up", "gap-fill", "quiz", "true-false", "group-sort", "unjumble", "transform", "fill-in", "error-correction", "anagram"]
-    exclude_keywords = ["activities", "activity", "production", "summary", "vocabulary", "check"]
+    # Keywords (still used for detecting activity types)
+    core_keywords = ["warm-up", "presentation", "introduction", "narrative", "context", "diagnostic", "cultural", "culture", "story", "dialogue", "reading", "deep dive", "riddle", "insight", "conversation", "review", "concept", "core", "usage", "matters", "transformation", "memory", "tip", "pattern", "summary",
+        # Ukrainian equivalents for B1+ modules
+        "діагностика", "аналіз", "занурення", "глибоке", "помилки", "культур", "розмова", "текст", "діалог", "читання", "підсумок"]
+    activity_keywords_list = ["match-up", "gap-fill", "quiz", "true-false", "group-sort", "unjumble", "transform", "fill-in", "error-correction", "anagram", "cloze", "select", "translate", "dialogue-reorder", "mark-the-words"]
+    exclude_keywords = ["activities", "activity", "production", "vocabulary", "check"]
     
-    # Metrics
-    total_words = 0
+    # --- SIMPLE CORE WORD COUNT: Everything before # Activities ---
+    # This is the user's preferred approach - core = all content above the Activities section
+    activities_pattern = re.compile(r'^# Activities', re.MULTILINE | re.IGNORECASE)
+    activities_match = activities_pattern.search(body)
+    if activities_match:
+        core_content = body[:activities_match.start()]
+    else:
+        # If no Activities section, everything is core content
+        core_content = body
+    
+    # Clean and count words in core content (excluding tables)
+    # Tables start with | and shouldn't count as core instructional words
+    core_lines = [line for line in core_content.split('\n') if not line.strip().startswith('|')]
+    core_no_tables = '\n'.join(core_lines)
+    core_cleaned = clean_for_stats(core_no_tables)
+    total_words = len(core_cleaned.split())
+    
+    # Metrics (activity-related)
     activity_count = 0
     found_activity_types = []
     valid_density_count = 0
     total_activities = 0
-    
-    # Regex metrics
     # Engagement: Count inclusive of both Legacy Emojis AND Standard Callouts
     engagement_pattern = re.compile(r'(>\s*[💡⚡🎬🎭🔗🌍🎁🗣️🏠🧭🚌🚇🎟️📱🕵️🌤️🌦️🎱🔮🇺🇦🕰️❓🛠️💂🥪🍺🛍️🏫🏥💊👵🔬🎨🔄📅🍃❄️🚂⏳📚🍲🥣🥗🥙🥚🥛🧩⚠️🛑])|(>\s*\[!(note|tip|warning|caution|important|cultural)\])')
     engagement_count = len(engagement_pattern.findall(content))
@@ -307,8 +344,15 @@ def audit_module(file_path):
         # Exclude checkboxes
         bullets = len(re.findall(r'^\s*-\s+[^\[]', text, re.MULTILINE))
         
+        # 5. Cloze Placeholders ({1}, {2}, etc.)
+        cloze_placeholders = len(re.findall(r'\{\d+\}', text))
+        
+        # 6. Mark-the-words Brackets ([word])
+        # Exclude markdown links [text](url) and callouts [!answer]
+        mark_words = len([m for m in re.findall(r'\[([^\]]+)\]', text) if not m.startswith('!') and not re.match(r'[^\]]+\]\(', m)])
+        
         # Debug print if low count found
-        # print(f"DEBUG: N={numbered} T={table_count} C={checkboxes} B={bullets}")
+        # print(f"DEBUG: N={numbered} T={table_count} C={checkboxes} B={bullets} CL={cloze_placeholders} MW={mark_words}")
         
         # Priority Logic to avoid double counting (e.g. Questions + Options)
         # 1. Numbered Lists are usually the distinct "Items" (Questions, Puzzles)
@@ -317,10 +361,16 @@ def audit_module(file_path):
         # 2. Key-Value Tables (Match-up)
         elif table_count > 0:
             return table_count
-        # 3. Checkboxes (True/False - if not numbered)
+        # 3. Cloze placeholders (passage-level blanks)
+        elif cloze_placeholders > 0:
+            return cloze_placeholders
+        # 4. Mark-the-words brackets
+        elif mark_words > 0:
+            return mark_words
+        # 5. Checkboxes (True/False - if not numbered)
         elif checkboxes > 0:
             return checkboxes
-        # 4. Bullets (Fallback)
+        # 6. Bullets (Fallback)
         else:
             return bullets
 
@@ -333,7 +383,6 @@ def audit_module(file_path):
         cyrillic_chars = len(re.findall(r'[\u0400-\u04ff]', clean_text))
         return (cyrillic_chars / total_chars) * 100
 
-    core_text_for_immersion = ""
     table_rows = []
     
     print(f"\nAuditing {file_path} (Target: {target})...\n")
@@ -370,12 +419,6 @@ def audit_module(file_path):
         
         # For Stats (Richness) - Include Scaffolding
         cleaned_stats = clean_for_stats(text)
-        
-        # For Immersion (Purity) - Exclude Scaffolding
-        cleaned_immersion = clean_for_immersion(text)
-
-        if is_core and not is_excluded:
-            core_text_for_immersion += cleaned_immersion + " "
 
         words = cleaned_stats.split()
         count = len(words)
@@ -404,7 +447,7 @@ def audit_module(file_path):
             display_count = items
 
         elif is_core and not is_excluded:
-            total_words += count
+            # Note: total_words already calculated from content before # Activities
             status_icon = "✅"
             note = "Included in Core"
             display_count = count
@@ -440,11 +483,13 @@ def audit_module(file_path):
     # Density
     failed_density = total_activities - valid_density_count
     dens_threshold = config['min_items_per_activity']
-    if failed_density == 0 and total_activities > 0:
+    if (failed_density == 0 and total_activities > 0) or (act_target == 0 and total_activities == 0):
         results['density'] = {'status': 'PASS', 'icon': '✅', 'msg': f"All > {dens_threshold}"}
     else:
         results['density'] = {'status': 'FAIL', 'icon': '❌', 'msg': f"{failed_density} < {dens_threshold}"}
-        has_critical_failure = True
+        # Only mark critical failure if activities were expected
+        if act_target > 0:
+             has_critical_failure = True
 
     # Unique Types
     unique_types = set(found_activity_types)
@@ -456,12 +501,16 @@ def audit_module(file_path):
         has_critical_failure = True
         
     # Priority Check
-    priority_intersection = unique_types.intersection(config['priority_types'])
-    if priority_intersection:
-        results['priority'] = {'status': 'PASS', 'icon': '✅', 'msg': "Priority types used"}
+    if not config['priority_types']:
+         # If no priority types defined (e.g. LIT), this is a PASS
+         results['priority'] = {'status': 'PASS', 'icon': '✅', 'msg': "N/A (LIT)"}
     else:
-        results['priority'] = {'status': 'FAIL', 'icon': '❌', 'msg': "No priority types"}
-        has_critical_failure = True
+        priority_intersection = unique_types.intersection(config['priority_types'])
+        if priority_intersection:
+            results['priority'] = {'status': 'PASS', 'icon': '✅', 'msg': "Priority types used"}
+        else:
+            results['priority'] = {'status': 'FAIL', 'icon': '❌', 'msg': "No priority types"}
+            has_critical_failure = True
 
     # Engagement (level-dependent target)
     eng_target = config.get('min_engagement', 3)
@@ -479,8 +528,22 @@ def audit_module(file_path):
         # NOT a critical failure - audio is optional
 
     # Immersion (A1 M25+ Gate)
-    immersion_score = calculate_immersion(core_text_for_immersion)
-    module_num = int(re.search(r'module-(\d+)', os.path.basename(file_path)).group(1))
+    # Calculate immersion from LESSON CONTENT ONLY (before # Activities)
+    # This excludes all activity markup and focuses on instructional text
+    core_immersion_text = clean_for_immersion(core_content)
+    immersion_score = calculate_immersion(core_immersion_text)
+    
+    module_num = 999
+    try:
+        m = re.search(r'module-(\d+)', os.path.basename(file_path))
+        if m:
+             module_num = int(m.group(1))
+        else:
+             m = re.search(r'module-LIT-(\d+)', os.path.basename(file_path))
+             if m:
+                  module_num = int(m.group(1))
+    except:
+        pass
     
     # Story/Dialogue Immersion Check
     # We check the SPECIFIC sections, not just the whole core text, to avoid false positives from English instructions
@@ -527,11 +590,21 @@ def audit_module(file_path):
              has_critical_failure = True
         
         # Also check for Latin text in parentheses after Cyrillic (common transliteration pattern)
-        translit_pattern = re.search(r'[\u0400-\u04ff]+\s*\([A-Za-z]+\)', content)
-        if translit_pattern:
-            print(f"❌ AUDIT FAILED: Transliteration detected: '{translit_pattern.group()}'. Remove Latin in parentheses.")
-            translit_status = "FAIL"
-            has_critical_failure = True
+        # BUT: Exclude activity hints (lines with ___ blanks) and grammar annotations (Dat, Acc, etc.)
+        for line in content.split('\n'):
+            # Skip lines with fill-in blanks - these have English hints at end
+            if '___' in line or '[___:' in line:
+                continue
+            # Skip lines with grammar case abbreviations
+            if re.search(r'\((Dat|Acc|Gen|Loc|Ins|Nom|Voc)\)', line):
+                continue
+            # Check for real transliteration: Cyrillic word immediately followed by (Latin)
+            translit_pattern = re.search(r'[\u0400-\u04ff]+\s*\([A-Za-z]+\)', line)
+            if translit_pattern:
+                print(f"❌ AUDIT FAILED: Transliteration detected: '{translit_pattern.group()}'. Remove Latin in parentheses.")
+                translit_status = "FAIL"
+                has_critical_failure = True
+                break
         
         results['translit'] = {'status': translit_status, 'icon': '✅' if translit_status=='PASS' else '❌', 'msg': "None (Policy)"}
     else:
@@ -718,14 +791,15 @@ def audit_module(file_path):
             answer_match = re.match(r'>\s*\[!answer\]\s*(.+)$', stripped)
             if answer_match and 'current_unjumble_words' in dir():
                 answer_text = answer_match.group(1).strip()
-                # Remove punctuation for comparison
-                answer_clean = re.sub(r'[.,!?;:]', '', answer_text).lower()
+                # Remove punctuation for comparison (including em-dash and en-dash)
+                answer_clean = re.sub(r'[.,!?;:\-—–]', '', answer_text).lower()
                 answer_word_set = set(answer_clean.split())
                 
-                # Parse jumbled words (split by / or spaces)
-                jumbled_clean = re.sub(r'[.,!?;:]', '', current_unjumble_words).lower()
-                if '/' in current_unjumble_words:
-                    jumbled_word_set = set(w.strip() for w in jumbled_clean.split('/'))
+                # Parse jumbled words (split by / or | or spaces)
+                jumbled_clean = re.sub(r'[.,!?;:\-—–]', '', current_unjumble_words).lower()
+                if '/' in current_unjumble_words or '|' in current_unjumble_words:
+                    separator = '/' if '/' in current_unjumble_words else '|'
+                    jumbled_word_set = set(w.strip() for w in jumbled_clean.split(separator if separator == '/' else '|'))
                 else:
                     jumbled_word_set = set(jumbled_clean.split())
                 
@@ -883,14 +957,14 @@ def audit_module(file_path):
 
     # 5. Structural Section Check (Summary & Vocabulary)
     lines = content.split('\n')
-    if not any(re.match(r'^#+\s+(Summary|Підсумок)', l, re.IGNORECASE) for l in lines):
+    if not any(re.match(r'^#+\s+(Summary|Підсумок)', l.strip(), re.IGNORECASE) for l in lines):
         results['structure'] = {'status': 'FAIL', 'icon': '❌', 'msg': "Missing '# Summary'"}
         has_critical_failure = True
-    elif not any(re.match(r'^#+\s+(Vocabulary|Словник)', l, re.IGNORECASE) for l in lines):
+    elif not any(re.match(r'^#+\s+(Vocabulary|Словник)', l.strip(), re.IGNORECASE) for l in lines):
         results['structure'] = {'status': 'FAIL', 'icon': '❌', 'msg': "Missing '# Vocabulary'"}
         has_critical_failure = True
     # Check for Vocab Table if Vocabulary exists
-    elif not any('| Word |' in l or '| Слово |' in l or '| Ukrainian |' in l for l in lines):
+    elif not any('| Word |' in l or 'Слово' in l or 'Термін' in l or '| Ukrainian |' in l for l in lines):
         results['structure'] = {'status': 'FAIL', 'icon': '❌', 'msg': "Missing Vocab Table"}
         has_critical_failure = True
     else:

@@ -125,9 +125,10 @@ npm run vocab:rebuild
 
 ### Step 4: GENERATE AND VERIFY
 ```bash
-npx ts-node scripts/generate.ts l2-uk-en [moduleNum]
+npm run generate l2-uk-en a1 [moduleNum]    # MDX for Docusaurus
+npm run generate:json l2-uk-en a1 [moduleNum]  # JSON for Vibe app
 ```
-- Check HTML output in browser
+- Check Docusaurus output in browser (http://localhost:3000)
 - Verify activities work correctly
 </instructions>
 
@@ -247,14 +248,15 @@ Level and module number are derived from the file path, not frontmatter.
 ## Commands Reference
 
 ```bash
-# Generate all levels
-npx ts-node scripts/generate.ts l2-uk-en
+# Generate MDX (Docusaurus web lessons)
+npm run generate l2-uk-en              # All levels
+npm run generate l2-uk-en a1           # Specific level
+npm run generate l2-uk-en a1 5         # Specific module
 
-# Generate specific level
-npx ts-node scripts/generate.ts l2-uk-en a1
-
-# Generate specific module (level + module number)
-npx ts-node scripts/generate.ts l2-uk-en a1 5
+# Generate JSON (Vibe app import)
+npm run generate:json l2-uk-en         # All levels
+npm run generate:json l2-uk-en a1      # Specific level
+npm run generate:json l2-uk-en a1 5    # Specific module
 
 # Enrich vocabulary
 npm run vocab:enrich l2-uk-en [moduleNum]

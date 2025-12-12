@@ -4,9 +4,32 @@
 **Modules:** 01-135 (135 modules)
 **Vocabulary Target:** ~3,375 new words (~25/module)
 **Cumulative Target:** ~7,900+ words after B2
-**Immersion:** 15% English / 85% Ukrainian
+**Immersion:** 20% English / 80% Ukrainian
 
 > **Note:** Folk Culture & Arts (25 modules) moved to C1 for better vocabulary balance.
+
+---
+
+### Bilingual Content Strategy (B2 Specific)
+
+**Target Immersion:** 80% Ukrainian / 20% English
+
+B2 modules use a **reduced bilingual approach** compared to B1:
+- **Ukrainian:** All examples, dialogues, narratives, cultural content, activities, and most explanations
+- **English:** Only for the most complex metalinguistic concepts (passive voice nuances, register system theory, participle formation logic)
+
+**Pattern:** Use `> 🔗 **Language Link**` boxes sparingly for cross-linguistic insights:
+
+```markdown
+> 🔗 **Register Shift**
+>
+> Ukrainian differentiates official/scientific/colloquial registers more sharply than English.
+> The passive construction "Наказ видано" signals bureaucratic register instantly.
+```
+
+**Why less English than B1?** At B2, learners have internalized aspect and basic grammar. The cognitive load for new concepts (passive, participles, register) is lower because learners can build on existing Ukrainian knowledge.
+
+**Audit threshold:** Immersion must stay ≥60% for lesson content (before `# Activities`).
 
 ---
 

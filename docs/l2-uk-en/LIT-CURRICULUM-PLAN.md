@@ -1,18 +1,19 @@
 # LIT Curriculum Plan: Ukrainian Literature & Classics
 
-**Status:** 📝 PLANNED
+**Status:** 📝 ACTIVE
 **Modules:** LIT-001-030 (30 modules, expandable)
 **Track:** Specialization (LIT)
-**Prerequisite:** C1 Core (Modules 01-50 recommended)
+**Prerequisite:** C1 Core (Strict)
+**Immersion:** 100% Ukrainian (No English)
 
 ## Track Overview
 
-This track is designed for learners who want to read Ukrainian classics in the original. It focuses on the "Golden Age" of Ukrainian literature (19th century) and the evolution of the modern standard language.
+This track is designed for **Advanced (C1)** learners who want to move from being a "reader" to a "scholar". It focuses on the "Golden Age" of Ukrainian literature (19th century) and the evolution of the modern standard language.
 
 **Goals:**
-1.  **Cultural Fluency:** Understand the quotes, characters, and memes that every educated Ukrainian knows.
-2.  **Stylistic Appreciation:** Recognize the evolution of literary style from Burlesque to Realism.
-3.  **Reading Endurance:** Ability to read long, unabridged texts.
+1.  **Direct Contact:** Read full texts (via UkrLib), not just excerpts.
+2.  **Philological Analysis:** Write deep argumentative essays (300+ words).
+3.  **Cultural Fluency:** Understand the soul of the nation through its sacred texts.
 
 ## Module Content Specifications
 

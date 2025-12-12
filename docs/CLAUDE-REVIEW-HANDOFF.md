@@ -163,7 +163,8 @@ scripts/
 
 ### Key Scripts
 - `scripts/audit_module.py` - Run module audits
-- `scripts/generate.ts` - Generate HTML/JSON output
+- `scripts/generate-mdx.ts` - Generate MDX for Docusaurus
+- `scripts/generate_json.py` - Generate JSON for Vibe app
 - `scripts/scope-validator.ts` - Check grammar scope
 
 ---

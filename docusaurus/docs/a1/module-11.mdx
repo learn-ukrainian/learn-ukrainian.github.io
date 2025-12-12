@@ -12,12 +12,12 @@ import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
 import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
 import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import ErrorCorrection, { ErrorCorrectionQuestion } from '@site/src/components/ErrorCorrection';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
 import Select, { SelectQuestion } from '@site/src/components/Select';
-import Translate, { TranslateQuestion } from '@site/src/components/Translate';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
 import Cloze from '@site/src/components/Cloze';
 import DialogueReorder from '@site/src/components/DialogueReorder';
-import MarkTheWords from '@site/src/components/MarkTheWords';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 
 
 
@@ -142,11 +142,14 @@ Read this short text and see how much you understand. Translation provided below
 
 Сьогодні я йду в магазин. Мені потрібно купити продукти. Я беру сумку і гроші. У магазині я бачу багато речей. Я хочу хліб, молоко, сир і воду. Я беру хліб — він свіжий! Потім я беру молоко і сир. Де вода? Ось вона! Я беру воду. Тепер я маю все. Я даю гроші касиру. Дякую! До побачення!
 
-**English Translation:**
+:::note
+English Translation
 
 Today I go to the store. I need to buy groceries. I take a bag and money. In the store I see many things. I want bread, milk, cheese, and water. I take the bread — it's fresh! Then I take milk and cheese. Where's the water? Here it is! I take the water. Now I have everything. I give money to the cashier. Thank you! Goodbye!
 
 **Comprehension check:** Which words are in the accusative case? Can you identify the feminine nouns that changed their ending?
+:::
+
 
 ## Conversation: У кафе 🗣️
 
@@ -158,7 +161,19 @@ Today I go to the store. I need to buy groceries. I take a bag and money. In the
 **Клієнт:** Так, я також хочу тістечко.
 **Офіціант:** Чудово! Зачекайте, будь ласка.
 
+:::note
+English Translation
+**Waiter:** Good day! What do you want?
+**Client:** Good day! I want coffee, please.
+**Waiter:** Black coffee or with milk?
+**Client:** With milk, thank you. And water too.
+**Waiter:** Good. Coffee and water. Anything else?
+**Client:** Yes, I also want a cake.
+**Waiter:** Great! Wait please.
+
 Каву, воду, тістечко — все це знахідний відмінок!
+
+:::
 
 # Summary
 
@@ -172,7 +187,10 @@ Today I go to the store. I need to buy groceries. I take a bag and money. In the
 
 ---
 
-:::tip 🌟 **Pro Tip:** When you learn new nouns, always note their gender. Gender determines accusative endings! Masculine and neuter = easy (no change). Feminine = change the vowel.
+:::tip
+🌟 **Pro Tip:** When you learn new nouns, always note their gender. Gender determines accusative endings! Masculine and neuter = easy (no change). Feminine = change the vowel.
+:::
+
 
 
 # Vocabulary
@@ -369,7 +387,49 @@ Today I go to the store. I need to buy groceries. I take a bag and money. In the
   />
 </Quiz>
 
+### By Gender & Accusative Change
 
+<GroupSort groups={{
+  "No Change (Masc/Neuter)": [
+    "Changes (Feminine)"
+  ],
+  "стіл → стіл": [
+    "книга → книгу"
+  ],
+  "телефон → телефон": [
+    "газета → газету"
+  ],
+  "вікно → вікно": [
+    "вода → воду"
+  ],
+  "місто → місто": [
+    "кава → каву"
+  ],
+  "хліб → хліб": [
+    "сумка → сумку"
+  ],
+  "молоко → молоко": [
+    "машина → машину"
+  ],
+  "паспорт → паспорт": [
+    "земля → землю"
+  ],
+  "подарунок → подарунок": [
+    "музика → музику"
+  ],
+  "документ → документ": [
+    "піца → піцу"
+  ],
+  "ключ → ключ": [
+    "лампа → лампу"
+  ],
+  "квиток → квиток": [
+    "вулиця → вулицю"
+  ],
+  "журнал → журнал": [
+    "година → годину"
+  ]
+}} />
 
 ### Accusative Rules
 
