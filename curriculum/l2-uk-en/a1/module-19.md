@@ -475,7 +475,7 @@ Ukrainian café culture blends Central European traditions with local flavors. T
 ## unjumble: Build Café Sentences
 > Arrange the words into correct sentences.
 
-1. двох / на / столик / будь ласка
+1. Столик / двох / на / будь / ласка
    > [!answer] Столик на двох, будь ласка.
 
 2. візьму / я / каву
@@ -487,7 +487,7 @@ Ukrainian café culture blends Central European traditions with local flavors. T
 4. цукру / без / латте
    > [!answer] Латте без цукру.
 
-5. будь ласка / рахунок
+5. Рахунок / ласка / будь
    > [!answer] Рахунок, будь ласка.
 
 6. смачно / дуже / було

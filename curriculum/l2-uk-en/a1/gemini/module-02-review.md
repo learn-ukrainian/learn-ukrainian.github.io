@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 314/300
+- **Words:** ✅ 464/300
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -21,7 +21,7 @@
 | **Warm-up: The Insect Zoo** | ✅ | 85 | Included in Core |
 | **Presentation: The Hidden Y's (Iotation)** | ✅ | 113 | Included in Core |
 | **Cultural Insight: The Letter G (Г vs Ґ) 🇺🇦** | ✅ | 76 | Included in Core |
-| **Reading Practice: The New World 📖** | ➖ | 150 | Excluded Type |
+| **Reading Practice: The New World 📖** | ✅ | 150 | Included in Core |
 | **match-up: Insect Sounds** | 🎮 | 12 | Activity (12 items) |
 | **group-sort: Vowel Types** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Reading Challenge** | 🎮 | 12 | Activity (12 items) |

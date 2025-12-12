@@ -384,7 +384,7 @@ The proper way to eat борщ:
 2. б і х л
    > [!answer] хліб
 
-3. о с я м
+3. о с ' я м
    > [!answer] м'ясо
 
 4. а в к а

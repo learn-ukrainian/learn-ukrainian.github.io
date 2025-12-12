@@ -422,7 +422,7 @@ The Ukrainian currency is the **гривня** (hryvnia), abbreviated UAH or ₴
 8. а к ж и н з
    > [!answer] знижка
 
-9. я і ц н о к
+9. о а й п і к к
    > [!answer] копійка
 
 10. а т ш е р
@@ -506,7 +506,7 @@ The Ukrainian currency is the **гривня** (hryvnia), abbreviated UAH or ₴
 6. решта / ваша / сорок / гривень
    > [!answer] Ваша решта сорок гривень.
 
-7. будь ласка / дайте / три / гривні
+7. гривні / ласка / Дайте / будь / три
    > [!answer] Дайте три гривні, будь ласка.
 
 8. сто / гривень / ось

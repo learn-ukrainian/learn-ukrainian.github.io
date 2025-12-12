@@ -369,7 +369,7 @@ Finally I returned from the Carpathians to Kyiv. I came home tired, but happy!
 ## anagram: Preposition Vocabulary
 > Unscramble these preposition words.
 
-1. і к у д
+1. и к у д
    > [!answer] куди
 
 2. е д

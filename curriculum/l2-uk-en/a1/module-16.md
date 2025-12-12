@@ -392,7 +392,7 @@ And the polite responses involve the genitive:
 8. и н и ш а м
    > [!answer] машини
 
-9. і ї е д і
+9. д ї е і
    > [!answer] ідеї
 
 10. у р к у ц
@@ -401,7 +401,7 @@ And the polite responses involve the genitive:
 11. и м е л б о р п
     > [!answer] проблеми
 
-12. і г о м о п о д
+12. о о г п д и о м
     > [!answer] допомоги
 
 ## fill-in: Complete Negative Sentences
@@ -464,7 +464,7 @@ And the polite responses involve the genitive:
 2. часу / у / мене / немає
    > [!answer] У мене немає часу.
 
-3. цукру / без / каву / будь ласка
+3. без / цукру / Каву / будь / ласка
    > [!answer] Каву без цукру, будь ласка.
 
 4. грошей / немає / у / нього
@@ -488,7 +488,7 @@ And the polite responses involve the genitive:
 10. ідеї / у / мене / немає
     > [!answer] У мене немає ідеї.
 
-11. сиру / на жаль / немає
+11. жаль / На / немає / сиру
     > [!answer] На жаль, сиру немає.
 
 12. допомоги / без / важко

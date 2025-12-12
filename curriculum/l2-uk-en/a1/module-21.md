@@ -367,7 +367,7 @@ At nine, I came back home. I watched the news and read a book. Then I went to sl
 1. в а ч и т
    > [!answer] читав
 
-2. а л и в о р г
+2. в г л и о о р а
    > [!answer] говорила
 
 3. л и б у
@@ -391,7 +391,7 @@ At nine, I came back home. I watched the news and read a book. Then I went to sl
 9. и л а х у л с
    > [!answer] слухали
 
-10. о р о ч в
+10. о а в р ч
     > [!answer] вчора
 
 11. о н в а д
@@ -457,7 +457,7 @@ At nine, I came back home. I watched the news and read a book. Then I went to sl
 1. вчора / працювала / Марія
    > [!answer] Вчора Марія працювала.
 
-2. український / вивчали / ми / мову
+2. українську / вивчали / Ми / мову
    > [!answer] Ми вивчали українську мову.
 
 3. каву / ранку / пив / він / з

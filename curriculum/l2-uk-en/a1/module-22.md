@@ -376,7 +376,7 @@ At ten, I will already be sleeping. Tomorrow will be a long day!
 ## anagram: Future Vocabulary
 > Unscramble these future-related words.
 
-1. а м р а в т з
+1. т а р в з а
    > [!answer] завтра
 
 2. д у б у
@@ -400,10 +400,10 @@ At ten, I will already be sleeping. Tomorrow will be a long day!
 8. ю н а л п у
    > [!answer] планую
 
-9. о с я ю р а б з и
+9. и з а ю р б я с
    > [!answer] збираюся
 
-10. а м р і м
+10. і р я м
     > [!answer] мрія
 
 11. н а л п

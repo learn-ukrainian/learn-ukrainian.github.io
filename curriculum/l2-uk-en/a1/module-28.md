@@ -410,7 +410,7 @@ I hope to speak freely soon!
 10. о к д і р
     > [!answer] рідко
 
-11. і л о к і н
+11. н к і и о л
     > [!answer] ніколи
 
 12. е ж у д

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 382/300
+- **Words:** ✅ 524/300
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -21,7 +21,7 @@
 | **Warm-up: The Three Boxes** | ✅ | 55 | Included in Core |
 | **Presentation: The 4 Families (Declensions)** | ✅ | 225 | Included in Core |
 | **Cultural Insight: The Soul of Words 🇺🇦** | ✅ | 61 | Included in Core |
-| **Story Time: The Room (Practice) 📖** | ➖ | 142 | Excluded Type |
+| **Story Time: The Room (Practice) 📖** | ✅ | 142 | Included in Core |
 | **group-sort: Gender Sorting** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Predict the Gender** | 🎮 | 12 | Activity (12 items) |
 | **match-up: Word to Gender** | 🎮 | 16 | Activity (16 items) |

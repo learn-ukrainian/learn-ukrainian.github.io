@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 540/500
+- **Words:** ✅ 777/500
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -22,7 +22,7 @@
 | **Presentation: Ukrainian Meals** | ✅ | 39 | Included in Core |
 | **Cultural Insight: Борщ — More Than Soup 🇺🇦** | ✅ | 168 | Included in Core |
 | **Dialogue: At the Café 🗣️** | ✅ | 80 | Included in Core |
-| **Reading Practice: Mama's Kitchen 📖** | ➖ | 237 | Excluded Type |
+| **Reading Practice: Mama's Kitchen 📖** | ✅ | 237 | Included in Core |
 | **match-up: Food Vocabulary** | 🎮 | 12 | Activity (12 items) |
 | **group-sort: Food Categories** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Food Knowledge** | 🎮 | 12 | Activity (12 items) |

@@ -394,16 +394,16 @@ On Sunday I rest. In the morning I sleep long — until ten!
 1. а н и д о г
    > [!answer] година
 
-2. д е н е і л о п н о к
+2. н і о о л д п е к
    > [!answer] понеділок
 
 3. а е р е с д
    > [!answer] середа
 
-4. я е р а з
+4. а р з а з
    > [!answer] зараз
 
-5. к е н і д и х в
+5. и і і в х д н
    > [!answer] вихідні
 
 6. е н ь ж о т в
@@ -412,7 +412,7 @@ On Sunday I rest. In the morning I sleep long — until ten!
 7. п а д о с и т л
    > [!answer] листопад
 
-8. ь д е н ь г р у
+8. н г д е у р ь
    > [!answer] грудень
 
 9. о к р а н
@@ -421,7 +421,7 @@ On Sunday I rest. In the morning I sleep long — until ten!
 10. р і ч в е
     > [!answer] вечір
 
-11. і й е д е н л н
+11. я д л і е н
     > [!answer] неділя
 
 12. ь т р е в ч
@@ -502,10 +502,10 @@ On Sunday I rest. In the morning I sleep long — until ten!
 7. вихідні / я / у / відпочиваю
    > [!answer] У вихідні я відпочиваю.
 
-8. тижня / наступного / до побачення
+8. наступного / побачення / До / тижня
    > [!answer] До побачення наступного тижня.
 
-9. ранку / я / зранку / снідаю
+9. снідаю / Зранку / я
    > [!answer] Зранку я снідаю.
 
 10. ввечері / дивлюся / я / фільм

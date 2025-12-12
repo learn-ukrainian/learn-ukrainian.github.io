@@ -371,7 +371,7 @@ Ukrainian hosts will often say **"Ви мало їсте!"** (You're eating too 
 5. т и и х о д
    > [!answer] ходити
 
-6. т і д и с і
+6. д и і т и с
    > [!answer] сидіти
 
 7. т и т я о с
@@ -389,7 +389,7 @@ Ukrainian hosts will often say **"Ви мало їсте!"** (You're eating too 
 11. и т и ч в
     > [!answer] вчити
 
-12. т і т о х і
+12. т о х т і и
     > [!answer] хотіти
 
 ## true-false: Class II Rules

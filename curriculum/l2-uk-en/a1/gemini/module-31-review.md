@@ -1,9 +1,9 @@
 # Audit Report: module-31.md
 **Phase:** A1.3 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 750
-**Overall Status:** ❌ FAIL
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ❌ 708/750
+- **Words:** ✅ 766/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -20,7 +20,7 @@
 | **Intro/Narrative** | ✅ | 22 | Included in Core |
 | **Warm-up: How Are You Feeling?** | ✅ | 138 | Included in Core |
 | **Presentation: Body Parts** | ✅ | 124 | Included in Core |
-| **Cultural Insight: Healthcare in Ukraine 🇺🇦** | ✅ | 156 | Included in Core |
+| **Cultural Insight: Healthcare in Ukraine 🇺🇦** | ✅ | 214 | Included in Core |
 | **Reading Practice: У лікаря 📖** | ✅ | 153 | Included in Core |
 | **Conversation: Як ти себе почуваєш? 🗣️** | ✅ | 115 | Included in Core |
 | **fill-in: Body Parts** | 🎮 | 12 | Activity (12 items) |

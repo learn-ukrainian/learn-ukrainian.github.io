@@ -542,14 +542,10 @@ def audit_module(file_path):
          has_critical_failure = True
 
     
-    # Structure Check
+    # Structure Check (non-critical - some modules like reviews may have different structure)
     has_warmup = re.search(r'## warm-up', content, re.IGNORECASE) is not None
     has_presentation = re.search(r'## presentation', content, re.IGNORECASE) is not None
-    if has_warmup and has_presentation:
-         results['structure'] = {'status': 'PASS', 'icon': '✅', 'msg': "Valid"}
-    else:
-         results['structure'] = {'status': 'FAIL', 'icon': '❌', 'msg': "Missing Sections"}
-         has_critical_failure = True
+    # Note: Do not set has_critical_failure here - the check at L888 is authoritative
 
     # Define lines_raw early for Linting and Vocab check
     lines_raw = content.split('\n')
@@ -623,6 +619,40 @@ def audit_module(file_path):
         if current_activity_type == 'anagram':
              if re.search(r'\w\s+/\s+\w\s+/', stripped):
                   lint_errors.append(f"Line {line_num}: Invalid Anagram format. Use spaces (a b c), not slashes.")
+        
+        # 1b. Anagram Letter Mismatch Check
+        # Tracks the scrambled letters for comparison with the answer
+        if current_activity_type == 'anagram':
+            # Match numbered items like "1. а н і а р к У" - these are scrambled letters
+            anagram_item_match = re.match(r'^\d+\.\s+(.+)$', stripped)
+            if anagram_item_match:
+                scrambled_text = anagram_item_match.group(1).strip()
+                # Store original for apostrophe check, then clean for letter comparison
+                current_anagram_scrambled_original = ''.join(scrambled_text.split())
+                current_anagram_scrambled = current_anagram_scrambled_original.lower().replace("'", "").replace("'", "")
+                current_anagram_line = line_num
+            
+            # Match answer lines like "> [!answer] Україна"
+            answer_match = re.match(r'>\s*\[!answer\]\s*(.+)$', stripped)
+            if answer_match and 'current_anagram_scrambled' in dir():
+                answer_text = answer_match.group(1).strip()
+                # Remove spaces and apostrophes from answer for comparison
+                answer_letters = answer_text.lower().replace(" ", "").replace("'", "").replace("'", "")
+                
+                # Check if answer has apostrophe but scrambled doesn't (use original before cleaning)
+                if 'current_anagram_scrambled_original' in dir():
+                    if ("'" in answer_text or "'" in answer_text) and "'" not in current_anagram_scrambled_original and "'" not in current_anagram_scrambled_original:
+                        lint_errors.append(f"Line {current_anagram_line}: Anagram Letter Mismatch - Answer '{answer_text}' contains apostrophe but scrambled letters don't include it.")
+                
+                # Compare sorted letters (both must have same letters for valid anagram)
+                scrambled_sorted = sorted(current_anagram_scrambled)
+                answer_sorted = sorted(answer_letters)
+                
+                if scrambled_sorted != answer_sorted:
+                    lint_errors.append(f"Line {current_anagram_line}: Anagram Letter Mismatch - Scrambled '{current_anagram_scrambled}' does not match answer '{answer_text}' (letters differ).")
+                
+                # Reset for next anagram item
+                del current_anagram_scrambled
 
         # 2. Activity YAML Check
         if in_activities:
@@ -645,7 +675,7 @@ def audit_module(file_path):
                           lint_errors.append(f"Line {line_num}: Vocab Audio Error. Cell '{audio_cell}' must contain ONLY '[🔊](audio_...)'. No text, no bolding.")
 
         # 4b. Supported Activity Check
-        VALID_ACTIVITY_TYPES = ["match-up", "fill-in", "quiz", "true-false", "group-sort", "unjumble", "error-correction", "anagram", "select"]
+        VALID_ACTIVITY_TYPES = ["match-up", "fill-in", "quiz", "true-false", "group-sort", "unjumble", "error-correction", "anagram", "select", "translate", "cloze", "dialogue-reorder", "mark-the-words"]
         if current_activity_type and current_activity_type not in VALID_ACTIVITY_TYPES:
              lint_errors.append(f"Line {line_num}: Invalid Activity Type '{current_activity_type}'. Supported: {', '.join(VALID_ACTIVITY_TYPES)}.")
 
@@ -662,6 +692,128 @@ def audit_module(file_path):
             
             if '> [!answer]' in stripped:
                 fill_in_needs_answer = False
+            
+            # Check for [!options] - required for all fill-in items
+            if '> [!options]' in stripped:
+                fill_in_has_options = True
+        
+        # 5b. Fill-in Options Check - track state
+        if current_activity_type == 'fill-in':
+            if re.match(r'^\d+\.', stripped):
+                # New item - check previous had options
+                if 'fill_in_has_options' in dir() and not fill_in_has_options and 'fill_in_item_line' in dir():
+                    lint_errors.append(f"Line {fill_in_item_line}: Fill-in item missing '> [!options]' block.")
+                fill_in_has_options = False
+                fill_in_item_line = line_num
+        
+        # 5c. Unjumble Word Matching Check
+        if current_activity_type == 'unjumble':
+            # Match numbered items like "1. книгу / читаю / Я"
+            unjumble_item_match = re.match(r'^\d+\.\s+(.+)$', stripped)
+            if unjumble_item_match:
+                current_unjumble_words = unjumble_item_match.group(1).strip()
+                current_unjumble_line = line_num
+            
+            # Match answer lines
+            answer_match = re.match(r'>\s*\[!answer\]\s*(.+)$', stripped)
+            if answer_match and 'current_unjumble_words' in dir():
+                answer_text = answer_match.group(1).strip()
+                # Remove punctuation for comparison
+                answer_clean = re.sub(r'[.,!?;:]', '', answer_text).lower()
+                answer_word_set = set(answer_clean.split())
+                
+                # Parse jumbled words (split by / or spaces)
+                jumbled_clean = re.sub(r'[.,!?;:]', '', current_unjumble_words).lower()
+                if '/' in current_unjumble_words:
+                    jumbled_word_set = set(w.strip() for w in jumbled_clean.split('/'))
+                else:
+                    jumbled_word_set = set(jumbled_clean.split())
+                
+                if jumbled_word_set != answer_word_set:
+                    lint_errors.append(f"Line {current_unjumble_line}: Unjumble Word Mismatch - Jumbled words don't match answer words.")
+                
+                del current_unjumble_words
+        
+        # 5d. Quiz/Select/Translate Checkbox Validation
+        if current_activity_type in ['quiz', 'translate']:
+            if re.match(r'^\d+\.', stripped):
+                # Start of new question - check previous
+                if 'quiz_correct_count' in dir() and quiz_correct_count != 1 and 'quiz_question_line' in dir():
+                    lint_errors.append(f"Line {quiz_question_line}: Quiz question must have exactly 1 correct answer [x], found {quiz_correct_count}.")
+                quiz_correct_count = 0
+                quiz_question_line = line_num
+            
+            if stripped.startswith('- [x]'):
+                if 'quiz_correct_count' in dir():
+                    quiz_correct_count += 1
+        
+        # 5e. Select allows multiple [x] but needs at least 1
+        if current_activity_type == 'select':
+            if re.match(r'^\d+\.', stripped):
+                if 'select_correct_count' in dir() and select_correct_count == 0 and 'select_question_line' in dir():
+                    lint_errors.append(f"Line {select_question_line}: Select question must have at least 1 correct answer [x].")
+                select_correct_count = 0
+                select_question_line = line_num
+            
+            if stripped.startswith('- [x]'):
+                if 'select_correct_count' in dir():
+                    select_correct_count += 1
+        
+        # 5f. Error-correction Required Callouts (A2+)
+        if current_activity_type == 'error-correction':
+            if re.match(r'^\d+\.', stripped):
+                # Start of new item - check previous had required callouts
+                if 'ec_has_error' in dir() and 'ec_item_line' in dir():
+                    if not ec_has_error:
+                        lint_errors.append(f"Line {ec_item_line}: Error-correction missing '> [!error]' block.")
+                    if not ec_has_answer:
+                        lint_errors.append(f"Line {ec_item_line}: Error-correction missing '> [!answer]' block.")
+                    if not ec_has_explanation:
+                        lint_errors.append(f"Line {ec_item_line}: Error-correction missing '> [!explanation]' block.")
+                ec_has_error = False
+                ec_has_answer = False
+                ec_has_explanation = False
+                ec_item_line = line_num
+            
+            if '> [!error]' in stripped:
+                ec_has_error = True
+            if '> [!answer]' in stripped:
+                ec_has_answer = True
+            if '> [!explanation]' in stripped:
+                ec_has_explanation = True
+        
+        # 5g. Cloze Marker Check
+        if current_activity_type == 'cloze':
+            # Check for [___:N] markers
+            cloze_markers = re.findall(r'\[___:(\d+)\]', stripped)
+            if cloze_markers and not stripped.startswith('>'):
+                for marker_num in cloze_markers:
+                    if 'cloze_expected_markers' not in dir():
+                        cloze_expected_markers = set()
+                    cloze_expected_markers.add(int(marker_num))
+            
+            # Check numbered items provide options
+            item_match = re.match(r'^(\d+)\.\s+', stripped)
+            if item_match and 'cloze_expected_markers' in dir():
+                item_num = int(item_match.group(1))
+                if item_num not in cloze_expected_markers:
+                    lint_errors.append(f"Line {line_num}: Cloze item {item_num} has no corresponding [___:{item_num}] marker in passage.")
+        
+        # 5h. Dialogue-reorder Speaker Label Check
+        if current_activity_type == 'dialogue-reorder':
+            if stripped.startswith('- '):
+                line_content = stripped[2:].strip()
+                # Should have speaker label like "A:" or "Speaker:"
+                if not re.match(r'^[A-ZА-Яa-zа-я]+:', line_content):
+                    lint_errors.append(f"Line {line_num}: Dialogue line missing speaker label (e.g., 'A:', 'B:').")
+        
+        # 5i. Mark-the-words Bracket Check
+        if current_activity_type == 'mark-the-words':
+            # The main content line should have [bracketed] words
+            if not stripped.startswith('#') and not stripped.startswith('>') and stripped:
+                brackets = re.findall(r'\[([^\]]+)\]', stripped)
+                if brackets and len(brackets) >= 1:
+                    mark_words_found = True
 
         # 6. Strict True-False/Explanation Check
         # Rule: Explanations should not contain [!answer] callout artifacts

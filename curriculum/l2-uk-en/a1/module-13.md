@@ -355,7 +355,7 @@ At 9:00 I go to work. I work in an office. At 13:00 I have lunch at a café near
 6. о т с і м
    > [!answer] місто
 
-7. а і н ц л у в
+7. ц и у я в л
    > [!answer] вулиця
 
 8. к р а п
@@ -364,10 +364,10 @@ At 9:00 I go to work. I work in an office. At 13:00 I have lunch at a café near
 9. н а р о т с е р
    > [!answer] ресторан
 
-10. я р а н л і к і
+10. к а л я н і р
     > [!answer] лікарня
 
-11. а к а т п е а
+11. а е п а т к
     > [!answer] аптека
 
 12. ь л т е о г

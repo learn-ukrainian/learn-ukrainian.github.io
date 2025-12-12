@@ -1,0 +1,1435 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A1-05",
+    "moduleId": "mod-uk-A1-05",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A1",
+    "phase": "A1.1",
+    "moduleNumber": 5,
+    "moduleType": "vocabulary",
+    "pedagogy": "PPP",
+    "immersionLevel": 0.3,
+    "title": "My World - Objects",
+    "subtitle": "Demonstratives — Pointing at the World Around You",
+    "description": "Learner can use цей/ця/це/ці to indicate objects",
+    "objectives": [
+      "Learner can use цей/ця/це/ці to indicate objects",
+      "Learner can use той/та/те/ті for distant objects",
+      "Learner knows common household object vocabulary"
+    ],
+    "grammarFocus": [
+      "Demonstrative pronouns (this/that)",
+      "Gender agreement with demonstratives",
+      "Nominative case forms"
+    ],
+    "tags": [
+      "demonstratives",
+      "objects",
+      "household",
+      "vocabulary"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "full",
+    "sections": [
+      {
+        "id": "section-content-0",
+        "name": "Lesson",
+        "type": "content",
+        "content": "> **Point at anything!** With demonstratives like **цей** (this-m), **ця** (this-f), and **це** (this-n), you can identify every object around you. And once you master gender agreement, you'll sound like a native pointing things out!\n\n## warm-up\n\nYou're in a Ukrainian **магазин** (store), shopping for home items. The salesperson asks:\n\n\"**Що вам потрібно?**\" (What do you need?)\n\nYou point: \"**Цей стілець**, **ця лампа**, і **це дзеркало**, будь ласка!\"  \n*(This chair, this lamp, and this mirror, please!)*\n\nThree objects. Three different demonstratives: **цей**, **ця**, **це**. Why? Because they match the **gender** of the nouns!\n\nIn Ukrainian, even \"this\" and \"that\" have to agree with what you're pointing at!\n\n> 💡 **Did You Know?**\n>\n> The Ukrainian demonstrative system is more complex than English, but it's beautifully logical. Once you know the gender, the demonstrative follows automatically. English simplified this—\"this book, this table, this window\" all use the same word. Ukrainian preserved the fuller system!\n\n## presentation\n\n### The Demonstratives — Цей, Ця, Це, Ці\n\n**\"This\" in Ukrainian changes based on gender:**\n\n| Gender | \"This\" | \"That\" | Example |\n|--------|--------|--------|---------|\n| Masculine | **цей** | **той** | **Цей** стіл. (This table.) |\n| Feminine | **ця** | **та** | **Ця** книга. (This book.) |\n| Neuter | **це** | **те** | **Це** вікно. (This window.) |\n| Plural | **ці** | **ті** | **Ці** речі. (These things.) |\n\n> 📜 **History Bite: Pointing Across Centuries**\n>\n> The demonstrative system in Ukrainian traces back to Proto-Slavic, over 1,500 years ago. When Kyivan Rus' scribes wrote chronicles, they used these same forms! The difference between **цей** (close) and **той** (far) mirrors the Latin \"hic\" vs \"ille\" that gave English \"this\" vs \"that.\"\n\n### How to Choose the Right Demonstrative\n\n**Step 1: Identify the noun's gender**\n- Стіл (table) = masculine → **цей** стіл\n- Книга (book) = feminine → **ця** книга\n- Вікно (window) = neuter → **це** вікно\n\n**Step 2: Close or Far?**\n- Close to speaker → **цей/ця/це/ці**\n- Far from speaker → **той/та/те/ті**\n\n| Situation | Masculine | Feminine | Neuter | Plural |\n|-----------|-----------|----------|--------|--------|\n| **This** (close) | цей | ця | це | ці |\n| **That** (far) | той | та | те | ті |\n\n> ⚡ **Pro Tip: Це as \"This Is\"**\n>\n> Remember: **Це** has TWO uses!\n> 1. **Demonstrative** (neuter): **Це** вікно = This window\n> 2. **Identifier** (any gender): **Це** друг = This is a friend\n>\n> Context makes it clear which one you mean!\n\n### The Full Picture\n\n| Word | IPA | Meaning | Usage |\n|------|-----|---------|-------|\n| **цей** | /tsɛj/ | this (m) | цей стілець |\n| **ця** | /tsʲɑ/ | this (f) | ця чашка |\n| **це** | /tsɛ/ | this (n) | це крісло |\n| **ці** | /tsʲi/ | these (pl) | ці речі |\n| **той** | /tɔj/ | that (m) | той диван |\n| **та** | /tɑ/ | that (f) | та лампа |\n| **те** | /tɛ/ | that (n) | те ліжко |\n| **ті** | /tʲi/ | those (pl) | ті стільці |\n\n> 🔍 **Myth Buster: \"Ukrainian is just harder Russian\"**\n>\n> **Lie:** Some claim Ukrainian added complexity for no reason.\n>\n> **Truth:** Both Ukrainian and Russian inherited the Proto-Slavic demonstrative system. But Ukrainian preserved MORE of the original distinctions! Russian merged some forms; Ukrainian kept them separate. Learning Ukrainian demonstratives = learning how Slavic languages originally worked.\n\n## cultural insight\n\n### Household Objects — Building Your World\n\nLet's learn the names of objects around you, grouped by room:\n\n**🍳 Kitchen (Кухня)**\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| **чашка** | /ˈtʃɑʃkɑ/ | cup | f |\n| **ложка** | /ˈlɔʒkɑ/ | spoon | f |\n| **виделка** | /vɪˈdɛlkɑ/ | fork | f |\n| **ніж** | /nʲiʒ/ | knife | m |\n| **тарілка** | /tɑˈrʲilkɑ/ | plate | f |\n| **склянка** | /ˈsklʲɑnkɑ/ | glass | f |\n| **пляшка** | /ˈplʲɑʃkɑ/ | bottle | f |\n| **холодильник** | /xɔlɔˈdɪlʲnɪk/ | refrigerator | m |\n| **плита** | /plɪˈtɑ/ | stove | f |\n| **мікрохвильовка** | /mʲikrɔxvɪˈlʲɔwkɑ/ | microwave | f |\n\n**🛋️ Living Room (Вітальня)**\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| **диван** | /dɪˈvɑn/ | sofa | m |\n| **крісло** | /ˈkrʲislɔ/ | armchair | n |\n| **стілець** | /stʲiˈlɛtsʲ/ | chair | m |\n| **лампа** | /ˈlɑmpɑ/ | lamp | f |\n| **годинник** | /ɦɔˈdɪnːɪk/ | clock, watch | m |\n| **дзеркало** | /ˈdzɛrkɑlɔ/ | mirror | n |\n| **картина** | /kɑrˈtɪnɑ/ | picture, painting | f |\n| **телевізор** | /tɛlɛˈwʲizɔr/ | television | m |\n\n> 🎭 **Culture Corner: The Ukrainian Home**\n>\n> Traditional Ukrainian homes feature **рушники** (embroidered towels) on walls, **ікони** (icons) in the corner, and always a welcoming **стіл** (table) ready for guests. The saying \"**Гість у хату — Бог у хату**\" means \"A guest in the house is God in the house\"!\n\n**🛏️ Bedroom (Спальня)**\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| **ліжко** | /ˈlʲiʒkɔ/ | bed | n |\n| **шафа** | /ˈʃɑfɑ/ | wardrobe | f |\n| **подушка** | /pɔˈduʃkɑ/ | pillow | f |\n| **ковдра** | /ˈkɔvdrɑ/ | blanket | f |\n\n**📱 Personal Items (Особисті речі)**\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| **телефон** | /tɛlɛˈfɔn/ | phone | m |\n| **комп'ютер** | /kɔmˈpjutɛr/ | computer | m |\n| **ключ** | /klʲutʃ/ | key | m |\n| **сумка** | /ˈsumkɑ/ | bag | f |\n| **рюкзак** | /rʲukˈzɑk/ | backpack | m |\n| **гаманець** | /ɦɑmɑˈnɛtsʲ/ | wallet | m |\n\n> 💡 **Did You Know?**\n>\n> The word **телефон** came to Ukrainian from Greek (τηλέφωνον) via German, while **комп'ютер** came from English. Ukrainian readily adopts international technology words while keeping its native words for traditional objects!\n\n## dialogue\n\n## dialogue\n\n### Shopping for Furniture 🛒\n\n**Продавець:** Добрий день!\n*(Sobryi den!)*\nGood day!\n\n**Оксана:** Добрий день! Цей стілець. Це дерево?\n*(Dobryi den! Tsey stilets. Tse derevo?)*\nGood day! This chair. Is it wood?\n\n**Продавець:** Так, це дерево. Цей стілець дуже зручний.\n*(Tak, tse derevo. Tsey stilets duzhe zruchnyi.)*\nYes, it is wood. This chair is very comfortable.\n\n**Оксана:** А та лампа?\n*(A ta lampa?)*\nAnd that lamp?\n\n**Продавець:** Та лампа? Вона нова.\n*(Ta lampa? Vona nova.)*\nThat lamp? It is new.\n\n**Оксана:** А це дзеркало? Воно гарне!\n*(A tse dzerkalo? Vono harne!)*\nAnd this mirror? It's beautiful!\n\n**Продавець:** Так. Цей стілець, та лампа і це дзеркало?\n*(Tak. Tsey stilets, ta lampa i tse dzerkalo?)*\nYes. This chair, that lamp, and this mirror?\n\n**Оксана:** Так, дякую!\n*(Tak, dyakuyu!)*\nYes, thank you!\n\n> 🎯 **Fun Fact**\n>\n> Notice how Оксана uses **цей** (m), **та** (f), and **це** (n) correctly for each object. Even \"And that lamp?\" requires gender matching!\n\n### At Home 🏠\n\n**Тарас:** Де мій телефон?\n*(De miy telefon?)*\nWhere's my phone?\n\n**Ольга:** Ось він! Цей стіл.\n*(Os vin! Tsey stil.)*\nHere it is! This table.\n\n**Тарас:** Дякую! А де ключі?\n*(Dyakuyu! A de klyuchi?)*\nThanks! And where are the keys?\n\n**Ольга:** Ті ключі? Ось ця сумка.\n*(Ti klyuchi? Os tsya sumka.)*\nThose keys? Here is this bag.\n\n**Тарас:** А цей гаманець мій?\n*(A tsey hamanets miy?)*\nAnd is this wallet mine?\n\n**Ольга:** Ні, той — твій. Цей — мій!\n*(Ni, toy — tviy. Tsey — miy!)*\nNo, that one is yours. This one is mine!\n\n> 💡 **Did You Know?**\n>\n> Ukrainian often drops the noun when the demonstrative is understood: \"**Цей** — мій\" (This one is mine) instead of \"**Цей гаманець** — мій.\"\n\n## story time\n\n### New Apartment (Нова Квартира) 📖\n\n**Марина** (Maryna) and **Дмитро** (Dmytro) are in **Одеса**.\n\nThis is a **квартира** (apartment).\n\n**Дмитро:** \"**Ця** кімната — супер!\"\n**Марина:** \"Так! Ось тут **ліжко**. А там — **шафа**.\"\n\n**Кухня.**\n**Дмитро:** \"Де **ці** речі?\" (Where go these things?)\n**Марина:** \"**Ця** чашка — тут. **Ці** ложки — там.\"\n\n**Дмитро:** \"**Ця** картина чудова! Хто це?\"\n**Марина:** \"Це моя бабуся. Карпати.\"\n\n**Лампа.** **Стіл.**\n**Дзеркало.** **Стіна.**\n**Годинник.**\n\n**Дмитро:** \"Тепер тут затишно!\" (Now it is cozy!)\n\n**Марина:** \"**Цей** дім — мій новий дім. **Ці** стіни... **Ця** підлога... **Це** вікно... **Це** море...\"\n\n**Дмитро:** \"А **той** диван?\"\n**Марина:** \"О, **той** диван! Він важкий!\" (It is heavy!)\n\n**Друзі.** **Допомога.**\n\n> 📜 **History Bite: Odesa — The Pearl of the Black Sea**\n>\n> **Одеса** (never \"Odessa\" — that's the Russian form!) was built as a multiethnic port city. Its famous humor, called \"одеський гумор,\" mixes Ukrainian, Russian, Yiddish, and Greek influences. Today, Odesa proudly reclaims its Ukrainian identity, with Ukrainian language use increasing dramatically since 2022.\n\n---"
+      },
+      {
+        "id": "section-summary-1",
+        "name": "Підсумок",
+        "nameEn": "Summary",
+        "type": "summary",
+        "content": "Today you mastered **demonstrative pronouns** — the words for \"this\" and \"that\"!\n\n**Close objects (цей-series):**\n| Gender | Word | Example |\n|--------|------|---------|\n| Masculine | **цей** | цей стілець (this chair) |\n| Feminine | **ця** | ця лампа (this lamp) |\n| Neuter | **це** | це крісло (this armchair) |\n| Plural | **ці** | ці речі (these things) |\n\n**Distant objects (той-series):**\n| Gender | Word | Example |\n|--------|------|---------|\n| Masculine | **той** | той диван (that sofa) |\n| Feminine | **та** | та шафа (that wardrobe) |\n| Neuter | **те** | те вікно (that window) |\n| Plural | **ті** | ті стільці (those chairs) |\n\n**Household vocabulary:** 40 new words for kitchen, bedroom, and living room objects!\n\n> 🌟 **Pro Tip**\n>\n> Practice pointing at objects around you and saying the correct demonstrative: \"**Це** моя кава\" (This is my coffee), \"**Цей** стіл великий\" (This table is big), \"**Та** книга цікава\" (That book is interesting)!\n\n---\n\n\n---"
+      }
+    ],
+    "rawMarkdown": "---\ntitle: My World - Objects\nsubtitle: Demonstratives — Pointing at the World Around You\nphase: A1.1\nduration: 45\ntransliteration: full\npedagogy: PPP\ntags: [demonstratives, objects, household, vocabulary]\nobjectives:\n  - Learner can use цей/ця/це/ці to indicate objects\n  - Learner can use той/та/те/ті for distant objects\n  - Learner knows common household object vocabulary\ngrammar:\n  - Demonstrative pronouns (this/that)\n  - Gender agreement with demonstratives\n  - Nominative case forms\n---\n\n# My World — Objects: Pointing at the World Around You\n\n> **Point at anything!** With demonstratives like **цей** (this-m), **ця** (this-f), and **це** (this-n), you can identify every object around you. And once you master gender agreement, you'll sound like a native pointing things out!\n\n## warm-up\n\nYou're in a Ukrainian **магазин** (store), shopping for home items. The salesperson asks:\n\n\"**Що вам потрібно?**\" (What do you need?)\n\nYou point: \"**Цей стілець**, **ця лампа**, і **це дзеркало**, будь ласка!\"  \n*(This chair, this lamp, and this mirror, please!)*\n\nThree objects. Three different demonstratives: **цей**, **ця**, **це**. Why? Because they match the **gender** of the nouns!\n\nIn Ukrainian, even \"this\" and \"that\" have to agree with what you're pointing at!\n\n> 💡 **Did You Know?**\n>\n> The Ukrainian demonstrative system is more complex than English, but it's beautifully logical. Once you know the gender, the demonstrative follows automatically. English simplified this—\"this book, this table, this window\" all use the same word. Ukrainian preserved the fuller system!\n\n## presentation\n\n### The Demonstratives — Цей, Ця, Це, Ці\n\n**\"This\" in Ukrainian changes based on gender:**\n\n| Gender | \"This\" | \"That\" | Example |\n|--------|--------|--------|---------|\n| Masculine | **цей** | **той** | **Цей** стіл. (This table.) |\n| Feminine | **ця** | **та** | **Ця** книга. (This book.) |\n| Neuter | **це** | **те** | **Це** вікно. (This window.) |\n| Plural | **ці** | **ті** | **Ці** речі. (These things.) |\n\n> 📜 **History Bite: Pointing Across Centuries**\n>\n> The demonstrative system in Ukrainian traces back to Proto-Slavic, over 1,500 years ago. When Kyivan Rus' scribes wrote chronicles, they used these same forms! The difference between **цей** (close) and **той** (far) mirrors the Latin \"hic\" vs \"ille\" that gave English \"this\" vs \"that.\"\n\n### How to Choose the Right Demonstrative\n\n**Step 1: Identify the noun's gender**\n- Стіл (table) = masculine → **цей** стіл\n- Книга (book) = feminine → **ця** книга\n- Вікно (window) = neuter → **це** вікно\n\n**Step 2: Close or Far?**\n- Close to speaker → **цей/ця/це/ці**\n- Far from speaker → **той/та/те/ті**\n\n| Situation | Masculine | Feminine | Neuter | Plural |\n|-----------|-----------|----------|--------|--------|\n| **This** (close) | цей | ця | це | ці |\n| **That** (far) | той | та | те | ті |\n\n> ⚡ **Pro Tip: Це as \"This Is\"**\n>\n> Remember: **Це** has TWO uses!\n> 1. **Demonstrative** (neuter): **Це** вікно = This window\n> 2. **Identifier** (any gender): **Це** друг = This is a friend\n>\n> Context makes it clear which one you mean!\n\n### The Full Picture\n\n| Word | IPA | Meaning | Usage |\n|------|-----|---------|-------|\n| **цей** | /tsɛj/ | this (m) | цей стілець |\n| **ця** | /tsʲɑ/ | this (f) | ця чашка |\n| **це** | /tsɛ/ | this (n) | це крісло |\n| **ці** | /tsʲi/ | these (pl) | ці речі |\n| **той** | /tɔj/ | that (m) | той диван |\n| **та** | /tɑ/ | that (f) | та лампа |\n| **те** | /tɛ/ | that (n) | те ліжко |\n| **ті** | /tʲi/ | those (pl) | ті стільці |\n\n> 🔍 **Myth Buster: \"Ukrainian is just harder Russian\"**\n>\n> **Lie:** Some claim Ukrainian added complexity for no reason.\n>\n> **Truth:** Both Ukrainian and Russian inherited the Proto-Slavic demonstrative system. But Ukrainian preserved MORE of the original distinctions! Russian merged some forms; Ukrainian kept them separate. Learning Ukrainian demonstratives = learning how Slavic languages originally worked.\n\n## cultural insight\n\n### Household Objects — Building Your World\n\nLet's learn the names of objects around you, grouped by room:\n\n**🍳 Kitchen (Кухня)**\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| **чашка** | /ˈtʃɑʃkɑ/ | cup | f |\n| **ложка** | /ˈlɔʒkɑ/ | spoon | f |\n| **виделка** | /vɪˈdɛlkɑ/ | fork | f |\n| **ніж** | /nʲiʒ/ | knife | m |\n| **тарілка** | /tɑˈrʲilkɑ/ | plate | f |\n| **склянка** | /ˈsklʲɑnkɑ/ | glass | f |\n| **пляшка** | /ˈplʲɑʃkɑ/ | bottle | f |\n| **холодильник** | /xɔlɔˈdɪlʲnɪk/ | refrigerator | m |\n| **плита** | /plɪˈtɑ/ | stove | f |\n| **мікрохвильовка** | /mʲikrɔxvɪˈlʲɔwkɑ/ | microwave | f |\n\n**🛋️ Living Room (Вітальня)**\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| **диван** | /dɪˈvɑn/ | sofa | m |\n| **крісло** | /ˈkrʲislɔ/ | armchair | n |\n| **стілець** | /stʲiˈlɛtsʲ/ | chair | m |\n| **лампа** | /ˈlɑmpɑ/ | lamp | f |\n| **годинник** | /ɦɔˈdɪnːɪk/ | clock, watch | m |\n| **дзеркало** | /ˈdzɛrkɑlɔ/ | mirror | n |\n| **картина** | /kɑrˈtɪnɑ/ | picture, painting | f |\n| **телевізор** | /tɛlɛˈwʲizɔr/ | television | m |\n\n> 🎭 **Culture Corner: The Ukrainian Home**\n>\n> Traditional Ukrainian homes feature **рушники** (embroidered towels) on walls, **ікони** (icons) in the corner, and always a welcoming **стіл** (table) ready for guests. The saying \"**Гість у хату — Бог у хату**\" means \"A guest in the house is God in the house\"!\n\n**🛏️ Bedroom (Спальня)**\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| **ліжко** | /ˈlʲiʒkɔ/ | bed | n |\n| **шафа** | /ˈʃɑfɑ/ | wardrobe | f |\n| **подушка** | /pɔˈduʃkɑ/ | pillow | f |\n| **ковдра** | /ˈkɔvdrɑ/ | blanket | f |\n\n**📱 Personal Items (Особисті речі)**\n\n| Ukrainian | IPA | English | Gender |\n|-----------|-----|---------|--------|\n| **телефон** | /tɛlɛˈfɔn/ | phone | m |\n| **комп'ютер** | /kɔmˈpjutɛr/ | computer | m |\n| **ключ** | /klʲutʃ/ | key | m |\n| **сумка** | /ˈsumkɑ/ | bag | f |\n| **рюкзак** | /rʲukˈzɑk/ | backpack | m |\n| **гаманець** | /ɦɑmɑˈnɛtsʲ/ | wallet | m |\n\n> 💡 **Did You Know?**\n>\n> The word **телефон** came to Ukrainian from Greek (τηλέφωνον) via German, while **комп'ютер** came from English. Ukrainian readily adopts international technology words while keeping its native words for traditional objects!\n\n## dialogue\n\n## dialogue\n\n### Shopping for Furniture 🛒\n\n**Продавець:** Добрий день!\n*(Sobryi den!)*\nGood day!\n\n**Оксана:** Добрий день! Цей стілець. Це дерево?\n*(Dobryi den! Tsey stilets. Tse derevo?)*\nGood day! This chair. Is it wood?\n\n**Продавець:** Так, це дерево. Цей стілець дуже зручний.\n*(Tak, tse derevo. Tsey stilets duzhe zruchnyi.)*\nYes, it is wood. This chair is very comfortable.\n\n**Оксана:** А та лампа?\n*(A ta lampa?)*\nAnd that lamp?\n\n**Продавець:** Та лампа? Вона нова.\n*(Ta lampa? Vona nova.)*\nThat lamp? It is new.\n\n**Оксана:** А це дзеркало? Воно гарне!\n*(A tse dzerkalo? Vono harne!)*\nAnd this mirror? It's beautiful!\n\n**Продавець:** Так. Цей стілець, та лампа і це дзеркало?\n*(Tak. Tsey stilets, ta lampa i tse dzerkalo?)*\nYes. This chair, that lamp, and this mirror?\n\n**Оксана:** Так, дякую!\n*(Tak, dyakuyu!)*\nYes, thank you!\n\n> 🎯 **Fun Fact**\n>\n> Notice how Оксана uses **цей** (m), **та** (f), and **це** (n) correctly for each object. Even \"And that lamp?\" requires gender matching!\n\n### At Home 🏠\n\n**Тарас:** Де мій телефон?\n*(De miy telefon?)*\nWhere's my phone?\n\n**Ольга:** Ось він! Цей стіл.\n*(Os vin! Tsey stil.)*\nHere it is! This table.\n\n**Тарас:** Дякую! А де ключі?\n*(Dyakuyu! A de klyuchi?)*\nThanks! And where are the keys?\n\n**Ольга:** Ті ключі? Ось ця сумка.\n*(Ti klyuchi? Os tsya sumka.)*\nThose keys? Here is this bag.\n\n**Тарас:** А цей гаманець мій?\n*(A tsey hamanets miy?)*\nAnd is this wallet mine?\n\n**Ольга:** Ні, той — твій. Цей — мій!\n*(Ni, toy — tviy. Tsey — miy!)*\nNo, that one is yours. This one is mine!\n\n> 💡 **Did You Know?**\n>\n> Ukrainian often drops the noun when the demonstrative is understood: \"**Цей** — мій\" (This one is mine) instead of \"**Цей гаманець** — мій.\"\n\n## story time\n\n### New Apartment (Нова Квартира) 📖\n\n**Марина** (Maryna) and **Дмитро** (Dmytro) are in **Одеса**.\n\nThis is a **квартира** (apartment).\n\n**Дмитро:** \"**Ця** кімната — супер!\"\n**Марина:** \"Так! Ось тут **ліжко**. А там — **шафа**.\"\n\n**Кухня.**\n**Дмитро:** \"Де **ці** речі?\" (Where go these things?)\n**Марина:** \"**Ця** чашка — тут. **Ці** ложки — там.\"\n\n**Дмитро:** \"**Ця** картина чудова! Хто це?\"\n**Марина:** \"Це моя бабуся. Карпати.\"\n\n**Лампа.** **Стіл.**\n**Дзеркало.** **Стіна.**\n**Годинник.**\n\n**Дмитро:** \"Тепер тут затишно!\" (Now it is cozy!)\n\n**Марина:** \"**Цей** дім — мій новий дім. **Ці** стіни... **Ця** підлога... **Це** вікно... **Це** море...\"\n\n**Дмитро:** \"А **той** диван?\"\n**Марина:** \"О, **той** диван! Він важкий!\" (It is heavy!)\n\n**Друзі.** **Допомога.**\n\n> 📜 **History Bite: Odesa — The Pearl of the Black Sea**\n>\n> **Одеса** (never \"Odessa\" — that's the Russian form!) was built as a multiethnic port city. Its famous humor, called \"одеський гумор,\" mixes Ukrainian, Russian, Yiddish, and Greek influences. Today, Odesa proudly reclaims its Ukrainian identity, with Ukrainian language use increasing dramatically since 2022.\n\n---\n\n# Summary\n\nToday you mastered **demonstrative pronouns** — the words for \"this\" and \"that\"!\n\n**Close objects (цей-series):**\n| Gender | Word | Example |\n|--------|------|---------|\n| Masculine | **цей** | цей стілець (this chair) |\n| Feminine | **ця** | ця лампа (this lamp) |\n| Neuter | **це** | це крісло (this armchair) |\n| Plural | **ці** | ці речі (these things) |\n\n**Distant objects (той-series):**\n| Gender | Word | Example |\n|--------|------|---------|\n| Masculine | **той** | той диван (that sofa) |\n| Feminine | **та** | та шафа (that wardrobe) |\n| Neuter | **те** | те вікно (that window) |\n| Plural | **ті** | ті стільці (those chairs) |\n\n**Household vocabulary:** 40 new words for kitchen, bedroom, and living room objects!\n\n> 🌟 **Pro Tip**\n>\n> Practice pointing at objects around you and saying the correct demonstrative: \"**Це** моя кава\" (This is my coffee), \"**Цей** стіл великий\" (This table is big), \"**Та** книга цікава\" (That book is interesting)!\n\n---\n\n# Activities\n\n## match-up: Object to Demonstrative\n\n> Match each object to the correct \"this\" form.\n\n| Left | Right |\n|------|-------|\n| стілець (chair-m) | цей |\n| лампа (lamp-f) | ця |\n| крісло (armchair-n) | це |\n| диван (sofa-m) | цей |\n| шафа (wardrobe-f) | ця |\n| ліжко (bed-n) | це |\n| чашка (cup-f) | ця |\n| годинник (clock-m) | цей |\n| дзеркало (mirror-n) | це |\n| тарілка (plate-f) | ця |\n| ключ (key-m) | цей |\n| сумка (bag-f) | ця |\n\n## fill-in: Complete with Demonstratives\n\n> Fill in the correct demonstrative: цей, ця, це, ці.\n\n1. ___ стіл великий. (This table is big.)\n   > [!answer] Цей\n   > [!options] Цей | Ця | Це | Ці\n\n2. ___ книга цікава. (This book is interesting.)\n   > [!answer] Ця\n   > [!options] Цей | Ця | Це | Ці\n\n3. ___ вікно чисте. (This window is clean.)\n   > [!answer] Це\n   > [!options] Цей | Ця | Це | Ці\n\n4. ___ стільці нові. (These chairs are new.)\n   > [!answer] Ці\n   > [!options] Цей | Ця | Це | Ці\n\n5. ___ ложка срібна. (This spoon is silver.)\n   > [!answer] Ця\n   > [!options] Цей | Ця | Це | Ці\n\n6. ___ ніж гострий. (This knife is sharp.)\n   > [!answer] Цей\n   > [!options] Цей | Ця | Це | Ці\n\n7. ___ дзеркало старе. (This mirror is old.)\n   > [!answer] Це\n   > [!options] Цей | Ця | Це | Ці\n\n8. ___ лампи яскраві. (These lamps are bright.)\n   > [!answer] Ці\n   > [!options] Цей | Ця | Це | Ці\n\n9. ___ диван зручний. (This sofa is comfortable.)\n   > [!answer] Цей\n   > [!options] Цей | Ця | Це | Ці\n\n10. ___ картина красива. (This painting is beautiful.)\n    > [!answer] Ця\n    > [!options] Цей | Ця | Це | Ці\n\n11. ___ крісло м'яке. (This armchair is soft.)\n    > [!answer] Це\n    > [!options] Цей | Ця | Це | Ці\n\n12. ___ телефон мій. (This phone is mine.)\n    > [!answer] Цей\n    > [!options] Цей | Ця | Це | Ці\n\n## fill-in: Complete with \"That\" Demonstratives\n\n> Fill in the correct demonstrative: той, та, те, ті.\n\n1. Дай мені ___ книгу. (Give me that book.)\n   > [!answer] ту\n   > [!options] той | ту | те | ті\n\n2. ___ стілець там. (That chair is there.)\n   > [!answer] Той\n   > [!options] Той | Та | Те | Ті\n\n3. ___ вікно закрите. (That window is closed.)\n   > [!answer] Те\n   > [!options] Той | Та | Те | Ті\n\n4. ___ речі не мої. (Those things are not mine.)\n   > [!answer] Ті\n   > [!options] Той | Та | Ті | Те\n\n5. ___ лампа стара. (That lamp is old.)\n   > [!answer] Та\n   > [!options] Той | Та | Те | Ті\n\n6. ___ диван важкий. (That sofa is heavy.)\n   > [!answer] Той\n   > [!options] Той | Та | Те | Ті\n\n7. ___ дзеркало розбите. (That mirror is broken.)\n   > [!answer] Те\n   > [!options] Той | Та | Те | Ті\n\n8. ___ ключі де? (Where are those keys?)\n   > [!answer] Ті\n   > [!options] Той | Та | Ті | Те\n\n9. ___ сумка моя. (That bag is mine.)\n   > [!answer] Та\n   > [!options] Той | Та | Те | Ті\n\n10. ___ годинник зламаний. (That clock is broken.)\n    > [!answer] Той\n    > [!options] Той | Та | Те | Ті\n\n11. ___ крісло старе. (That armchair is old.)\n    > [!answer] Те\n    > [!options] Той | Та | Те | Ті\n\n12. ___ ложки брудні. (Those spoons are dirty.)\n    > [!answer] Ті\n    > [!options] Той | Та | Ті | Те\n\n## quiz: Gender Recognition for Objects\n\n> Identify the gender to choose the correct demonstrative.\n\n1. What demonstrative fits **чашка** (cup)?\n   - [ ] цей\n   - [x] ця\n   - [ ] це\n   - [ ] ці\n   > чашка ends in -а = feminine = ця\n\n2. What demonstrative fits **телефон** (phone)?\n   - [x] цей\n   - [ ] ця\n   - [ ] це\n   - [ ] ці\n   > телефон ends in consonant = masculine = цей\n\n3. What demonstrative fits **крісло** (armchair)?\n   - [ ] цей\n   - [ ] ця\n   - [x] це\n   - [ ] ці\n   > крісло ends in -о = neuter = це\n\n4. What demonstrative fits **ключі** (keys)?\n   - [ ] цей\n   - [ ] ця\n   - [ ] це\n   - [x] ці\n   > ключі is plural = ці\n\n5. What demonstrative fits **ніж** (knife)?\n   - [x] цей\n   - [ ] ця\n   - [ ] це\n   - [ ] ці\n   > ніж ends in consonant = masculine = цей\n\n6. What demonstrative fits **тарілка** (plate)?\n   - [ ] цей\n   - [x] ця\n   - [ ] це\n   - [ ] ці\n   > тарілка ends in -а = feminine = ця\n\n7. What demonstrative fits **вікно** (window)?\n   - [ ] цей\n   - [ ] ця\n   - [x] це\n   - [ ] ці\n   > вікно ends in -о = neuter = це\n\n8. What demonstrative fits **лампа** (lamp)?\n   - [ ] цей\n   - [x] ця\n   - [ ] це\n   - [ ] ці\n   > лампа ends in -а = feminine = ця\n\n9. What demonstrative fits **комп'ютер** (computer)?\n   - [x] цей\n   - [ ] ця\n   - [ ] це\n   - [ ] ці\n   > комп'ютер ends in consonant = masculine = цей\n\n10. What demonstrative fits **дзеркало** (mirror)?\n    - [ ] цей\n    - [ ] ця\n    - [x] це\n    - [ ] ці\n    > дзеркало ends in -о = neuter = це\n\n11. What demonstrative fits **сумка** (bag)?\n    - [ ] цей\n    - [x] ця\n    - [ ] це\n    - [ ] ці\n    > сумка ends in -а = feminine = ця\n\n12. What demonstrative fits **годинник** (clock)?\n    - [x] цей\n    - [ ] ця\n    - [ ] це\n    - [ ] ці\n    > годинник ends in consonant = masculine = цей\n\n## match-up: Kitchen Vocabulary\n\n> Match Ukrainian kitchen words to English.\n\n| Left | Right |\n|------|-------|\n| чашка | cup |\n| ложка | spoon |\n| виделка | fork |\n| ніж | knife |\n| тарілка | plate |\n| склянка | glass |\n| пляшка | bottle |\n| холодильник | refrigerator |\n| плита | stove |\n| мікрохвильовка | microwave |\n| каструля | pot |\n| сковорода | frying pan |\n\n## match-up: Living Room Vocabulary\n\n> Match Ukrainian living room words to English.\n\n| Left | Right |\n|------|-------|\n| диван | sofa |\n| крісло | armchair |\n| стілець | chair |\n| стіл | table |\n| лампа | lamp |\n| годинник | clock |\n| дзеркало | mirror |\n| картина | picture, painting |\n| телевізор | television |\n| килим | carpet, rug |\n| шафа | wardrobe, cabinet |\n| полиця | shelf |\n\n## anagram: Unscramble Household Objects\n\n> Form household vocabulary words.\n\n1. а к ш а ч\n   > [!answer] чашка\n   > (cup - feminine)\n\n2. а к ж о л\n   > [!answer] ложка\n   > (spoon - feminine)\n\n3. ж і н\n   > [!answer] ніж\n   > (knife - masculine)\n\n4. а к л і р а т\n   > [!answer] тарілка\n   > (plate - feminine)\n\n5. н а в и д\n   > [!answer] диван\n   > (sofa - masculine)\n\n6. о л с і р к\n   > [!answer] крісло\n   > (armchair - neuter)\n\n7. а п м а л\n   > [!answer] лампа\n   > (lamp - feminine)\n\n8. о л а к р з е д\n   > [!answer] дзеркало\n   > (mirror - neuter)\n\n9. к и н н и д о г\n   > [!answer] годинник\n   > (clock - masculine)\n\n10. а н і т р а к\n    > [!answer] картина\n    > (painting - feminine)\n\n11. н о ф е л е т\n    > [!answer] телефон\n    > (phone - masculine)\n\n12. ч ю л к\n    > [!answer] ключ\n    > (key - masculine)\n\n## anagram: Unscramble Demonstratives\n\n> Form demonstrative pronouns.\n\n1. й е ц\n   > [!answer] цей\n   > (this - masculine)\n\n2. я ц\n   > [!answer] ця\n   > (this - feminine)\n\n3. е ц\n   > [!answer] це\n   > (this - neuter)\n\n4. і ц\n   > [!answer] ці\n   > (these - plural)\n\n5. й о т\n   > [!answer] той\n   > (that - masculine)\n\n6. а т\n   > [!answer] та\n   > (that - feminine)\n\n7. е т\n   > [!answer] те\n   > (that - neuter)\n\n8. і т\n   > [!answer] ті\n   > (those - plural)\n\n9. ь о с\n   > [!answer] ось\n   > (here is)\n\n10. о т\n    > [!answer] то\n    > (that is)\n\n11. м а т\n    > [!answer] там\n    > (there)\n\n12. т у т\n    > [!answer] тут\n    > (here)\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| цей | /tsɛj/ | this (m) | pron | m | Masc demonstrative |\n| ця | /tsʲɑ/ | this (f) | pron | f | Fem demonstrative |\n| це | /tsɛ/ | this (n) | pron | n | Neut demonstrative |\n| ці | /tsʲi/ | these | pron | pl | Plural demonstrative |\n| той | /tɔj/ | that (m) | pron | m | Distant masc |\n| та | /tɑ/ | that (f) | pron | f | Distant fem |\n| те | /tɛ/ | that (n) | pron | n | Distant neut |\n| ті | /tʲi/ | those | pron | pl | Distant plural |\n| чашка | /ˈtʃɑʃkɑ/ | cup | noun | f | Kitchen item |\n| ложка | /ˈlɔʒkɑ/ | spoon | noun | f | Kitchen item |\n| виделка | /vɪˈdɛlkɑ/ | fork | noun | f | Kitchen item |\n| ніж | /nʲiʒ/ | knife | noun | m | Kitchen item |\n| тарілка | /tɑˈrʲilkɑ/ | plate | noun | f | Kitchen item |\n| склянка | /ˈsklʲɑnkɑ/ | glass | noun | f | Drinking glass |\n| пляшка | /ˈplʲɑʃkɑ/ | bottle | noun | f | Container |\n| сумка | /ˈsumkɑ/ | bag | noun | f | Personal item |\n| рюкзак | /rʲukˈzɑk/ | backpack | noun | m | Personal item |\n| гаманець | /ɦɑmɑˈnɛtsʲ/ | wallet | noun | m | Personal item |\n| телефон | /tɛlɛˈfɔn/ | telephone, phone | noun | m | Technology |\n| комп'ютер | /kɔmˈpjutɛr/ | computer | noun | m | Technology |\n| ключ | /klʲutʃ/ | key | noun | m | Personal item |\n| двері | /ˈdvɛrʲi/ | door | noun | pl | Always plural |\n| вікно | /wʲikˈnɔ/ | window | noun | n | Architecture |\n| стіна | /stʲiˈnɑ/ | wall | noun | f | Architecture |\n| підлога | /pʲidˈlɔɦɑ/ | floor | noun | f | Architecture |\n| стеля | /ˈstɛlʲɑ/ | ceiling | noun | f | Architecture |\n| лампа | /ˈlɑmpɑ/ | lamp | noun | f | Furniture |\n| годинник | /ɦɔˈdɪnːɪk/ | clock, watch | noun | m | Time device |\n| дзеркало | /ˈdzɛrkɑlɔ/ | mirror | noun | n | Furniture |\n| картина | /kɑrˈtɪnɑ/ | picture, painting | noun | f | Wall decoration |\n| стілець | /stʲiˈlɛtsʲ/ | chair | noun | m | Furniture |\n| крісло | /ˈkrʲislɔ/ | armchair | noun | n | Furniture |\n| диван | /dɪˈvɑn/ | sofa | noun | m | Furniture |\n| ліжко | /ˈlʲiʒkɔ/ | bed | noun | n | Furniture |\n| шафа | /ˈʃɑfɑ/ | wardrobe, cabinet | noun | f | Furniture |\n| холодильник | /xɔlɔˈdɪlʲnɪk/ | refrigerator | noun | m | Appliance |\n| плита | /plɪˈtɑ/ | stove | noun | f | Appliance |\n| мікрохвильовка | /mʲikrɔxvɪˈlʲɔwkɑ/ | microwave | noun | f | Appliance |\n| праска | /ˈprɑskɑ/ | iron | noun | f | Appliance |\n| пилосос | /pɪlɔˈsɔs/ | vacuum cleaner | noun | m | Appliance |\n",
+    "createdAt": "2025-12-11T19:55:55.581Z",
+    "modifiedAt": "2025-12-11T19:55:55.581Z",
+    "version": 2
+  },
+  "activities": [
+    {
+      "id": "act-a1-0-matchup-0",
+      "type": "match-up",
+      "title": "Object to Demonstrative",
+      "description": "Match each object to the correct \"this\" form.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "стілець (chair-m)",
+            "right": "цей"
+          },
+          {
+            "left": "лампа (lamp-f)",
+            "right": "ця"
+          },
+          {
+            "left": "крісло (armchair-n)",
+            "right": "це"
+          },
+          {
+            "left": "диван (sofa-m)",
+            "right": "цей"
+          },
+          {
+            "left": "шафа (wardrobe-f)",
+            "right": "ця"
+          },
+          {
+            "left": "ліжко (bed-n)",
+            "right": "це"
+          },
+          {
+            "left": "чашка (cup-f)",
+            "right": "ця"
+          },
+          {
+            "left": "годинник (clock-m)",
+            "right": "цей"
+          },
+          {
+            "left": "дзеркало (mirror-n)",
+            "right": "це"
+          },
+          {
+            "left": "тарілка (plate-f)",
+            "right": "ця"
+          },
+          {
+            "left": "ключ (key-m)",
+            "right": "цей"
+          },
+          {
+            "left": "сумка (bag-f)",
+            "right": "ця"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-11T19:55:55.581Z",
+      "modifiedAt": "2025-12-11T19:55:55.581Z"
+    },
+    {
+      "id": "act-a1-0-fillblank-0",
+      "type": "fill-blank",
+      "title": "Complete with Demonstratives",
+      "description": "Fill in the correct demonstrative: цей, ця, це, ці.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "___ стіл великий. (This table is big.)",
+            "answer": "Цей",
+            "options": [
+              "Цей",
+              "Ця",
+              "Це",
+              "Ці"
+            ]
+          },
+          {
+            "prompt": "___ книга цікава. (This book is interesting.)",
+            "answer": "Ця",
+            "options": [
+              "Цей",
+              "Ця",
+              "Це",
+              "Ці"
+            ]
+          },
+          {
+            "prompt": "___ вікно чисте. (This window is clean.)",
+            "answer": "Це",
+            "options": [
+              "Цей",
+              "Ця",
+              "Це",
+              "Ці"
+            ]
+          },
+          {
+            "prompt": "___ стільці нові. (These chairs are new.)",
+            "answer": "Ці",
+            "options": [
+              "Цей",
+              "Ця",
+              "Це",
+              "Ці"
+            ]
+          },
+          {
+            "prompt": "___ ложка срібна. (This spoon is silver.)",
+            "answer": "Ця",
+            "options": [
+              "Цей",
+              "Ця",
+              "Це",
+              "Ці"
+            ]
+          },
+          {
+            "prompt": "___ ніж гострий. (This knife is sharp.)",
+            "answer": "Цей",
+            "options": [
+              "Цей",
+              "Ця",
+              "Це",
+              "Ці"
+            ]
+          },
+          {
+            "prompt": "___ дзеркало старе. (This mirror is old.)",
+            "answer": "Це",
+            "options": [
+              "Цей",
+              "Ця",
+              "Це",
+              "Ці"
+            ]
+          },
+          {
+            "prompt": "___ лампи яскраві. (These lamps are bright.)",
+            "answer": "Ці",
+            "options": [
+              "Цей",
+              "Ця",
+              "Це",
+              "Ці"
+            ]
+          },
+          {
+            "prompt": "___ диван зручний. (This sofa is comfortable.)",
+            "answer": "Цей",
+            "options": [
+              "Цей",
+              "Ця",
+              "Це",
+              "Ці"
+            ]
+          },
+          {
+            "prompt": "___ картина красива. (This painting is beautiful.)",
+            "answer": "Ця",
+            "options": [
+              "Цей",
+              "Ця",
+              "Це",
+              "Ці"
+            ]
+          },
+          {
+            "prompt": "___ крісло м'яке. (This armchair is soft.)",
+            "answer": "Це",
+            "options": [
+              "Цей",
+              "Ця",
+              "Це",
+              "Ці"
+            ]
+          },
+          {
+            "prompt": "___ телефон мій. (This phone is mine.)",
+            "answer": "Цей",
+            "options": [
+              "Цей",
+              "Ця",
+              "Це",
+              "Ці"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-11T19:55:55.581Z",
+      "modifiedAt": "2025-12-11T19:55:55.581Z"
+    },
+    {
+      "id": "act-a1-0-fillblank-1",
+      "type": "fill-blank",
+      "title": "Complete with \"That\" Demonstratives",
+      "description": "Fill in the correct demonstrative: той, та, те, ті.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Дай мені ___ книгу. (Give me that book.)",
+            "answer": "ту",
+            "options": [
+              "той",
+              "ту",
+              "те",
+              "ті"
+            ]
+          },
+          {
+            "prompt": "___ стілець там. (That chair is there.)",
+            "answer": "Той",
+            "options": [
+              "Той",
+              "Та",
+              "Те",
+              "Ті"
+            ]
+          },
+          {
+            "prompt": "___ вікно закрите. (That window is closed.)",
+            "answer": "Те",
+            "options": [
+              "Той",
+              "Та",
+              "Те",
+              "Ті"
+            ]
+          },
+          {
+            "prompt": "___ речі не мої. (Those things are not mine.)",
+            "answer": "Ті",
+            "options": [
+              "Той",
+              "Та",
+              "Ті",
+              "Те"
+            ]
+          },
+          {
+            "prompt": "___ лампа стара. (That lamp is old.)",
+            "answer": "Та",
+            "options": [
+              "Той",
+              "Та",
+              "Те",
+              "Ті"
+            ]
+          },
+          {
+            "prompt": "___ диван важкий. (That sofa is heavy.)",
+            "answer": "Той",
+            "options": [
+              "Той",
+              "Та",
+              "Те",
+              "Ті"
+            ]
+          },
+          {
+            "prompt": "___ дзеркало розбите. (That mirror is broken.)",
+            "answer": "Те",
+            "options": [
+              "Той",
+              "Та",
+              "Те",
+              "Ті"
+            ]
+          },
+          {
+            "prompt": "___ ключі де? (Where are those keys?)",
+            "answer": "Ті",
+            "options": [
+              "Той",
+              "Та",
+              "Ті",
+              "Те"
+            ]
+          },
+          {
+            "prompt": "___ сумка моя. (That bag is mine.)",
+            "answer": "Та",
+            "options": [
+              "Той",
+              "Та",
+              "Те",
+              "Ті"
+            ]
+          },
+          {
+            "prompt": "___ годинник зламаний. (That clock is broken.)",
+            "answer": "Той",
+            "options": [
+              "Той",
+              "Та",
+              "Те",
+              "Ті"
+            ]
+          },
+          {
+            "prompt": "___ крісло старе. (That armchair is old.)",
+            "answer": "Те",
+            "options": [
+              "Той",
+              "Та",
+              "Те",
+              "Ті"
+            ]
+          },
+          {
+            "prompt": "___ ложки брудні. (Those spoons are dirty.)",
+            "answer": "Ті",
+            "options": [
+              "Той",
+              "Та",
+              "Ті",
+              "Те"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-11T19:55:55.581Z",
+      "modifiedAt": "2025-12-11T19:55:55.581Z"
+    },
+    {
+      "id": "act-a1-0-quiz-0",
+      "type": "quiz",
+      "title": "Gender Recognition for Objects",
+      "description": "Identify the gender to choose the correct demonstrative.",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "What demonstrative fits **чашка** (cup)?",
+            "options": [
+              "цей",
+              "ця",
+              "це",
+              "ці"
+            ],
+            "correctIndex": 1,
+            "explanation": "чашка ends in -а = feminine = ця"
+          },
+          {
+            "question": "What demonstrative fits **телефон** (phone)?",
+            "options": [
+              "цей",
+              "ця",
+              "це",
+              "ці"
+            ],
+            "correctIndex": 0,
+            "explanation": "телефон ends in consonant = masculine = цей"
+          },
+          {
+            "question": "What demonstrative fits **крісло** (armchair)?",
+            "options": [
+              "цей",
+              "ця",
+              "це",
+              "ці"
+            ],
+            "correctIndex": 2,
+            "explanation": "крісло ends in -о = neuter = це"
+          },
+          {
+            "question": "What demonstrative fits **ключі** (keys)?",
+            "options": [
+              "цей",
+              "ця",
+              "це",
+              "ці"
+            ],
+            "correctIndex": 3,
+            "explanation": "ключі is plural = ці"
+          },
+          {
+            "question": "What demonstrative fits **ніж** (knife)?",
+            "options": [
+              "цей",
+              "ця",
+              "це",
+              "ці"
+            ],
+            "correctIndex": 0,
+            "explanation": "ніж ends in consonant = masculine = цей"
+          },
+          {
+            "question": "What demonstrative fits **тарілка** (plate)?",
+            "options": [
+              "цей",
+              "ця",
+              "це",
+              "ці"
+            ],
+            "correctIndex": 1,
+            "explanation": "тарілка ends in -а = feminine = ця"
+          },
+          {
+            "question": "What demonstrative fits **вікно** (window)?",
+            "options": [
+              "цей",
+              "ця",
+              "це",
+              "ці"
+            ],
+            "correctIndex": 2,
+            "explanation": "вікно ends in -о = neuter = це"
+          },
+          {
+            "question": "What demonstrative fits **лампа** (lamp)?",
+            "options": [
+              "цей",
+              "ця",
+              "це",
+              "ці"
+            ],
+            "correctIndex": 1,
+            "explanation": "лампа ends in -а = feminine = ця"
+          },
+          {
+            "question": "What demonstrative fits **комп'ютер** (computer)?",
+            "options": [
+              "цей",
+              "ця",
+              "це",
+              "ці"
+            ],
+            "correctIndex": 0,
+            "explanation": "комп'ютер ends in consonant = masculine = цей"
+          },
+          {
+            "question": "What demonstrative fits **дзеркало** (mirror)?",
+            "options": [
+              "цей",
+              "ця",
+              "це",
+              "ці"
+            ],
+            "correctIndex": 2,
+            "explanation": "дзеркало ends in -о = neuter = це"
+          },
+          {
+            "question": "What demonstrative fits **сумка** (bag)?",
+            "options": [
+              "цей",
+              "ця",
+              "це",
+              "ці"
+            ],
+            "correctIndex": 1,
+            "explanation": "сумка ends in -а = feminine = ця"
+          },
+          {
+            "question": "What demonstrative fits **годинник** (clock)?",
+            "options": [
+              "цей",
+              "ця",
+              "це",
+              "ці"
+            ],
+            "correctIndex": 0,
+            "explanation": "годинник ends in consonant = masculine = цей"
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-11T19:55:55.581Z",
+      "modifiedAt": "2025-12-11T19:55:55.581Z"
+    },
+    {
+      "id": "act-a1-0-matchup-1",
+      "type": "match-up",
+      "title": "Kitchen Vocabulary",
+      "description": "Match Ukrainian kitchen words to English.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "чашка",
+            "right": "cup"
+          },
+          {
+            "left": "ложка",
+            "right": "spoon"
+          },
+          {
+            "left": "виделка",
+            "right": "fork"
+          },
+          {
+            "left": "ніж",
+            "right": "knife"
+          },
+          {
+            "left": "тарілка",
+            "right": "plate"
+          },
+          {
+            "left": "склянка",
+            "right": "glass"
+          },
+          {
+            "left": "пляшка",
+            "right": "bottle"
+          },
+          {
+            "left": "холодильник",
+            "right": "refrigerator"
+          },
+          {
+            "left": "плита",
+            "right": "stove"
+          },
+          {
+            "left": "мікрохвильовка",
+            "right": "microwave"
+          },
+          {
+            "left": "каструля",
+            "right": "pot"
+          },
+          {
+            "left": "сковорода",
+            "right": "frying pan"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-11T19:55:55.581Z",
+      "modifiedAt": "2025-12-11T19:55:55.581Z"
+    },
+    {
+      "id": "act-a1-0-matchup-2",
+      "type": "match-up",
+      "title": "Living Room Vocabulary",
+      "description": "Match Ukrainian living room words to English.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "диван",
+            "right": "sofa"
+          },
+          {
+            "left": "крісло",
+            "right": "armchair"
+          },
+          {
+            "left": "стілець",
+            "right": "chair"
+          },
+          {
+            "left": "стіл",
+            "right": "table"
+          },
+          {
+            "left": "лампа",
+            "right": "lamp"
+          },
+          {
+            "left": "годинник",
+            "right": "clock"
+          },
+          {
+            "left": "дзеркало",
+            "right": "mirror"
+          },
+          {
+            "left": "картина",
+            "right": "picture, painting"
+          },
+          {
+            "left": "телевізор",
+            "right": "television"
+          },
+          {
+            "left": "килим",
+            "right": "carpet, rug"
+          },
+          {
+            "left": "шафа",
+            "right": "wardrobe, cabinet"
+          },
+          {
+            "left": "полиця",
+            "right": "shelf"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-11T19:55:55.581Z",
+      "modifiedAt": "2025-12-11T19:55:55.581Z"
+    },
+    {
+      "id": "act-a1-0-anagram-0",
+      "type": "anagram",
+      "title": "Unscramble Household Objects",
+      "description": "Form household vocabulary words.",
+      "content": {
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
+          {
+            "letters": [
+              "а",
+              "к",
+              "ш",
+              "а",
+              "ч"
+            ],
+            "answer": "чашка\n(cup - feminine)",
+            "translation": "cup - feminine"
+          },
+          {
+            "letters": [
+              "а",
+              "к",
+              "ж",
+              "о",
+              "л"
+            ],
+            "answer": "ложка\n(spoon - feminine)",
+            "translation": "spoon - feminine"
+          },
+          {
+            "letters": [
+              "ж",
+              "і",
+              "н"
+            ],
+            "answer": "ніж\n(knife - masculine)",
+            "translation": "knife - masculine"
+          },
+          {
+            "letters": [
+              "а",
+              "к",
+              "л",
+              "і",
+              "р",
+              "а",
+              "т"
+            ],
+            "answer": "тарілка\n(plate - feminine)",
+            "translation": "plate - feminine"
+          },
+          {
+            "letters": [
+              "н",
+              "а",
+              "в",
+              "и",
+              "д"
+            ],
+            "answer": "диван\n(sofa - masculine)",
+            "translation": "sofa - masculine"
+          },
+          {
+            "letters": [
+              "о",
+              "л",
+              "с",
+              "і",
+              "р",
+              "к"
+            ],
+            "answer": "крісло\n(armchair - neuter)",
+            "translation": "armchair - neuter"
+          },
+          {
+            "letters": [
+              "а",
+              "п",
+              "м",
+              "а",
+              "л"
+            ],
+            "answer": "лампа\n(lamp - feminine)",
+            "translation": "lamp - feminine"
+          },
+          {
+            "letters": [
+              "о",
+              "л",
+              "а",
+              "к",
+              "р",
+              "з",
+              "е",
+              "д"
+            ],
+            "answer": "дзеркало\n(mirror - neuter)",
+            "translation": "mirror - neuter"
+          },
+          {
+            "letters": [
+              "к",
+              "и",
+              "н",
+              "н",
+              "и",
+              "д",
+              "о",
+              "г"
+            ],
+            "answer": "годинник\n(clock - masculine)",
+            "translation": "clock - masculine"
+          },
+          {
+            "letters": [
+              "а",
+              "н",
+              "і",
+              "т",
+              "р",
+              "а",
+              "к"
+            ],
+            "answer": "картина\n(painting - feminine)",
+            "translation": "painting - feminine"
+          },
+          {
+            "letters": [
+              "н",
+              "о",
+              "ф",
+              "е",
+              "л",
+              "е",
+              "т"
+            ],
+            "answer": "телефон\n(phone - masculine)",
+            "translation": "phone - masculine"
+          },
+          {
+            "letters": [
+              "ч",
+              "ю",
+              "л",
+              "к"
+            ],
+            "answer": "ключ\n(key - masculine)",
+            "translation": "key - masculine"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-11T19:55:55.581Z",
+      "modifiedAt": "2025-12-11T19:55:55.581Z"
+    },
+    {
+      "id": "act-a1-0-anagram-1",
+      "type": "anagram",
+      "title": "Unscramble Demonstratives",
+      "description": "Form demonstrative pronouns.",
+      "content": {
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
+          {
+            "letters": [
+              "й",
+              "е",
+              "ц"
+            ],
+            "answer": "цей\n(this - masculine)",
+            "translation": "this - masculine"
+          },
+          {
+            "letters": [
+              "я",
+              "ц"
+            ],
+            "answer": "ця\n(this - feminine)",
+            "translation": "this - feminine"
+          },
+          {
+            "letters": [
+              "е",
+              "ц"
+            ],
+            "answer": "це\n(this - neuter)",
+            "translation": "this - neuter"
+          },
+          {
+            "letters": [
+              "і",
+              "ц"
+            ],
+            "answer": "ці\n(these - plural)",
+            "translation": "these - plural"
+          },
+          {
+            "letters": [
+              "й",
+              "о",
+              "т"
+            ],
+            "answer": "той\n(that - masculine)",
+            "translation": "that - masculine"
+          },
+          {
+            "letters": [
+              "а",
+              "т"
+            ],
+            "answer": "та\n(that - feminine)",
+            "translation": "that - feminine"
+          },
+          {
+            "letters": [
+              "е",
+              "т"
+            ],
+            "answer": "те\n(that - neuter)",
+            "translation": "that - neuter"
+          },
+          {
+            "letters": [
+              "і",
+              "т"
+            ],
+            "answer": "ті\n(those - plural)",
+            "translation": "those - plural"
+          },
+          {
+            "letters": [
+              "ь",
+              "о",
+              "с"
+            ],
+            "answer": "ось\n(here is)",
+            "translation": "here is"
+          },
+          {
+            "letters": [
+              "о",
+              "т"
+            ],
+            "answer": "то\n(that is)",
+            "translation": "that is"
+          },
+          {
+            "letters": [
+              "м",
+              "а",
+              "т"
+            ],
+            "answer": "там\n(there)",
+            "translation": "there"
+          },
+          {
+            "letters": [
+              "т",
+              "у",
+              "т"
+            ],
+            "answer": "тут\n(here)",
+            "translation": "here"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-11T19:55:55.581Z",
+      "modifiedAt": "2025-12-11T19:55:55.581Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A1-5",
+    "level": "A1",
+    "phase": "A1.1",
+    "wordCount": 40,
+    "newWordCount": 40,
+    "reviewWordCount": 0,
+    "transliterationMode": "full",
+    "words": [
+      {
+        "id": "v-tsey-0-0",
+        "uk": "цей",
+        "en": "this (m)",
+        "pos": "pron",
+        "ipa": "/tsɛj/",
+        "gender": "m",
+        "note": "Masc demonstrative",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-tsya-0-1",
+        "uk": "ця",
+        "en": "this (f)",
+        "pos": "pron",
+        "ipa": "/tsʲɑ/",
+        "gender": "f",
+        "note": "Fem demonstrative",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-tse-0-2",
+        "uk": "це",
+        "en": "this (n)",
+        "pos": "pron",
+        "ipa": "/tsɛ/",
+        "gender": "n",
+        "note": "Neut demonstrative",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-tsi-0-3",
+        "uk": "ці",
+        "en": "these",
+        "pos": "pron",
+        "ipa": "/tsʲi/",
+        "note": "Plural demonstrative",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-toy-0-4",
+        "uk": "той",
+        "en": "that (m)",
+        "pos": "pron",
+        "ipa": "/tɔj/",
+        "gender": "m",
+        "note": "Distant masc",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-ta-0-5",
+        "uk": "та",
+        "en": "that (f)",
+        "pos": "pron",
+        "ipa": "/tɑ/",
+        "gender": "f",
+        "note": "Distant fem",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-te-0-6",
+        "uk": "те",
+        "en": "that (n)",
+        "pos": "pron",
+        "ipa": "/tɛ/",
+        "gender": "n",
+        "note": "Distant neut",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-ti-0-7",
+        "uk": "ті",
+        "en": "those",
+        "pos": "pron",
+        "ipa": "/tʲi/",
+        "note": "Distant plural",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-chashka-0-8",
+        "uk": "чашка",
+        "en": "cup",
+        "pos": "noun",
+        "ipa": "/ˈtʃɑʃkɑ/",
+        "gender": "f",
+        "note": "Kitchen item",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-lozhka-0-9",
+        "uk": "ложка",
+        "en": "spoon",
+        "pos": "noun",
+        "ipa": "/ˈlɔʒkɑ/",
+        "gender": "f",
+        "note": "Kitchen item",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vydelka-0-10",
+        "uk": "виделка",
+        "en": "fork",
+        "pos": "noun",
+        "ipa": "/vɪˈdɛlkɑ/",
+        "gender": "f",
+        "note": "Kitchen item",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-nizh-0-11",
+        "uk": "ніж",
+        "en": "knife",
+        "pos": "noun",
+        "ipa": "/nʲiʒ/",
+        "gender": "m",
+        "note": "Kitchen item",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-tarilka-0-12",
+        "uk": "тарілка",
+        "en": "plate",
+        "pos": "noun",
+        "ipa": "/tɑˈrʲilkɑ/",
+        "gender": "f",
+        "note": "Kitchen item",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-sklyanka-0-13",
+        "uk": "склянка",
+        "en": "glass",
+        "pos": "noun",
+        "ipa": "/ˈsklʲɑnkɑ/",
+        "gender": "f",
+        "note": "Drinking glass",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-plyashka-0-14",
+        "uk": "пляшка",
+        "en": "bottle",
+        "pos": "noun",
+        "ipa": "/ˈplʲɑʃkɑ/",
+        "gender": "f",
+        "note": "Container",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-sumka-0-15",
+        "uk": "сумка",
+        "en": "bag",
+        "pos": "noun",
+        "ipa": "/ˈsumkɑ/",
+        "gender": "f",
+        "note": "Personal item",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-ryukzak-0-16",
+        "uk": "рюкзак",
+        "en": "backpack",
+        "pos": "noun",
+        "ipa": "/rʲukˈzɑk/",
+        "gender": "m",
+        "note": "Personal item",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-hamanetsь-0-17",
+        "uk": "гаманець",
+        "en": "wallet",
+        "pos": "noun",
+        "ipa": "/ɦɑmɑˈnɛtsʲ/",
+        "gender": "m",
+        "note": "Personal item",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-telefon-0-18",
+        "uk": "телефон",
+        "en": "telephone, phone",
+        "pos": "noun",
+        "ipa": "/tɛlɛˈfɔn/",
+        "gender": "m",
+        "note": "Technology",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-komp'yuter-0-19",
+        "uk": "комп'ютер",
+        "en": "computer",
+        "pos": "noun",
+        "ipa": "/kɔmˈpjutɛr/",
+        "gender": "m",
+        "note": "Technology",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-klyuch-0-20",
+        "uk": "ключ",
+        "en": "key",
+        "pos": "noun",
+        "ipa": "/klʲutʃ/",
+        "gender": "m",
+        "note": "Personal item",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-dveri-0-21",
+        "uk": "двері",
+        "en": "door",
+        "pos": "noun",
+        "ipa": "/ˈdvɛrʲi/",
+        "note": "Always plural",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vikno-0-22",
+        "uk": "вікно",
+        "en": "window",
+        "pos": "noun",
+        "ipa": "/wʲikˈnɔ/",
+        "gender": "n",
+        "note": "Architecture",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-stina-0-23",
+        "uk": "стіна",
+        "en": "wall",
+        "pos": "noun",
+        "ipa": "/stʲiˈnɑ/",
+        "gender": "f",
+        "note": "Architecture",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pidloha-0-24",
+        "uk": "підлога",
+        "en": "floor",
+        "pos": "noun",
+        "ipa": "/pʲidˈlɔɦɑ/",
+        "gender": "f",
+        "note": "Architecture",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-stelya-0-25",
+        "uk": "стеля",
+        "en": "ceiling",
+        "pos": "noun",
+        "ipa": "/ˈstɛlʲɑ/",
+        "gender": "f",
+        "note": "Architecture",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-lampa-0-26",
+        "uk": "лампа",
+        "en": "lamp",
+        "pos": "noun",
+        "ipa": "/ˈlɑmpɑ/",
+        "gender": "f",
+        "note": "Furniture",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-hodynnyk-0-27",
+        "uk": "годинник",
+        "en": "clock, watch",
+        "pos": "noun",
+        "ipa": "/ɦɔˈdɪnːɪk/",
+        "gender": "m",
+        "note": "Time device",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-dzerkalo-0-28",
+        "uk": "дзеркало",
+        "en": "mirror",
+        "pos": "noun",
+        "ipa": "/ˈdzɛrkɑlɔ/",
+        "gender": "n",
+        "note": "Furniture",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-kartyna-0-29",
+        "uk": "картина",
+        "en": "picture, painting",
+        "pos": "noun",
+        "ipa": "/kɑrˈtɪnɑ/",
+        "gender": "f",
+        "note": "Wall decoration",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-stiletsь-0-30",
+        "uk": "стілець",
+        "en": "chair",
+        "pos": "noun",
+        "ipa": "/stʲiˈlɛtsʲ/",
+        "gender": "m",
+        "note": "Furniture",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-krislo-0-31",
+        "uk": "крісло",
+        "en": "armchair",
+        "pos": "noun",
+        "ipa": "/ˈkrʲislɔ/",
+        "gender": "n",
+        "note": "Furniture",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-dyvan-0-32",
+        "uk": "диван",
+        "en": "sofa",
+        "pos": "noun",
+        "ipa": "/dɪˈvɑn/",
+        "gender": "m",
+        "note": "Furniture",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-lizhko-0-33",
+        "uk": "ліжко",
+        "en": "bed",
+        "pos": "noun",
+        "ipa": "/ˈlʲiʒkɔ/",
+        "gender": "n",
+        "note": "Furniture",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-shafa-0-34",
+        "uk": "шафа",
+        "en": "wardrobe, cabinet",
+        "pos": "noun",
+        "ipa": "/ˈʃɑfɑ/",
+        "gender": "f",
+        "note": "Furniture",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-kholodylьnyk-0-35",
+        "uk": "холодильник",
+        "en": "refrigerator",
+        "pos": "noun",
+        "ipa": "/xɔlɔˈdɪlʲnɪk/",
+        "gender": "m",
+        "note": "Appliance",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-plyta-0-36",
+        "uk": "плита",
+        "en": "stove",
+        "pos": "noun",
+        "ipa": "/plɪˈtɑ/",
+        "gender": "f",
+        "note": "Appliance",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-mikrokhvylьovka-0-37",
+        "uk": "мікрохвильовка",
+        "en": "microwave",
+        "pos": "noun",
+        "ipa": "/mʲikrɔxvɪˈlʲɔwkɑ/",
+        "gender": "f",
+        "note": "Appliance",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-praska-0-38",
+        "uk": "праска",
+        "en": "iron",
+        "pos": "noun",
+        "ipa": "/ˈprɑskɑ/",
+        "gender": "f",
+        "note": "Appliance",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pylosos-0-39",
+        "uk": "пилосос",
+        "en": "vacuum cleaner",
+        "pos": "noun",
+        "ipa": "/pɪlɔˈsɔs/",
+        "gender": "m",
+        "note": "Appliance",
+        "isNew": true,
+        "firstModule": 0
+      }
+    ]
+  }
+}

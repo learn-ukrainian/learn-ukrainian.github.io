@@ -351,7 +351,7 @@ Hi! My name is Olena. I want to tell you about my family. I have a dad, mom, bro
 8. й і д о в
    > [!answer] водій
 
-9. р е ж е н е м
+9. е ж е м е р н д
    > [!answer] менеджер
 
 10. р о т к е р и д

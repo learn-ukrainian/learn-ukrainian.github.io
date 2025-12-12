@@ -238,7 +238,7 @@ To speak perfect Ukrainian, we group these genders into "Families" (Declensions)
    > [!answer] стіл
    > (Table)
 
-6. к о т
+6. т к і
    > [!answer] кіт
    > (Cat)
 

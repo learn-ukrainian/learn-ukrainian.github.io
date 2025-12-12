@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 466/300
+- **Words:** ✅ 622/300
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -22,7 +22,7 @@
 | **Presentation: The Pointing Words** | ✅ | 171 | Included in Core |
 | **Cultural Insight: The Ukrainian Kitchen 🇺🇦** | ✅ | 121 | Included in Core |
 | **Dialogue: At the Electronics Store 🗣️** | ✅ | 58 | Included in Core |
-| **Reading Practice: My Room 📖** | ➖ | 156 | Excluded Type |
+| **Reading Practice: My Room 📖** | ✅ | 156 | Included in Core |
 | **group-sort: Gender Matching** | 🎮 | 12 | Activity (12 items) |
 | **group-sort: This vs That** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Choose the Correct Demonstrative** | 🎮 | 12 | Activity (12 items) |

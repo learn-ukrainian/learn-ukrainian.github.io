@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 602/500
+- **Words:** ✅ 779/500
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -23,7 +23,7 @@
 | **Presentation: Saying No** | ✅ | 103 | Included in Core |
 | **Cultural Insight: Ukrainian Directness 🇺🇦** | ✅ | 101 | Included in Core |
 | **Dialogue: At the Information Desk 🗣️** | ✅ | 67 | Included in Core |
-| **Reading Practice: Questions Everywhere 📖** | ➖ | 177 | Excluded Type |
+| **Reading Practice: Questions Everywhere 📖** | ✅ | 177 | Included in Core |
 | **match-up: Question Words** | 🎮 | 12 | Activity (12 items) |
 | **group-sort: Positive vs Negative** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Form the Question** | 🎮 | 12 | Activity (12 items) |

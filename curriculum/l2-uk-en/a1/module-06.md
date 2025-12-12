@@ -349,7 +349,7 @@ The concept of **гарна праця** (good work, job well done) is highly va
 ## anagram: Verb Scramble
 > Unscramble these Class I verb infinitives.
 
-1. т а ч и т а
+1. и ч и т т а
    > [!answer] читати
 
 2. с а т и п и
@@ -370,7 +370,7 @@ The concept of **гарна праця** (good work, job well done) is highly va
 7. п а т и т и
    > [!answer] питати
 
-8. д а л ю в м а и т
+8. т а ю м и в а л
    > [!answer] малювати
 
 9. г р а т и

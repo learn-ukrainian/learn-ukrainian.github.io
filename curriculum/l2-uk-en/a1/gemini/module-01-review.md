@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 326/300
+- **Words:** ✅ 484/300
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -21,7 +21,7 @@
 | **Warm-up: The Decoding Game** | ✅ | 88 | Included in Core |
 | **Presentation: The Three Families** | ✅ | 123 | Included in Core |
 | **Cultural Insight: Not "Russian Letters" 🇺🇦** | ✅ | 78 | Included in Core |
-| **Reading Practice: Decoding the Matrix 📖** | ➖ | 158 | Excluded Type |
+| **Reading Practice: Decoding the Matrix 📖** | ✅ | 158 | Included in Core |
 | **match-up: False Friends** | 🎮 | 12 | Activity (12 items) |
 | **group-sort: Alphabet Families** | 🎮 | 12 | Activity (12 items) |
 | **quiz: International Words** | 🎮 | 12 | Activity (12 items) |

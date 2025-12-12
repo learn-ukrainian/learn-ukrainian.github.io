@@ -11,20 +11,23 @@ This document provides **activity templates and examples** for each CEFR level. 
 
 ---
 
-## Supported Activity Types
+## Supported Activity Types (13 Total)
 
-| Type | Parser | Description |
-|------|--------|-------------|
-| `quiz` | Yes | Multiple choice questions |
-| `match-up` | Yes | Match pairs (Ukrainian ↔ English, etc.) |
-| `group-sort` | Yes | Sort items into categories |
-| `fill-in` | Yes | Gap fill with options |
-| `true-false` | Yes | True/false statements |
-| `unjumble` | Yes | Reorder words into sentence |
-| `select` | Yes | Word selection from options |
-| `anagram` | Yes | Letter unscrambling (A1 only) |
-| `translate` | Yes | Translation exercise |
-| `error-correction` | Planned (#94) | Find and fix errors (A2+) |
+| Type | Parser | Level | Description |
+|------|--------|-------|-------------|
+| `quiz` | ✅ | A1+ | Multiple choice questions |
+| `match-up` | ✅ | A1+ | Match pairs (Ukrainian ↔ English, etc.) |
+| `group-sort` | ✅ | A1+ | Sort items into categories |
+| `fill-in` | ✅ | A1+ | Gap fill with options |
+| `true-false` | ✅ | A1+ | True/false statements |
+| `unjumble` | ✅ | A1+ | Reorder words into sentence |
+| `anagram` | ✅ | A1 M01-10 only | Letter unscrambling (Cyrillic scaffolding) |
+| `error-correction` | ✅ | A2+ | Find and fix errors |
+| `cloze` | ✅ | A2+ | Passage with multiple dropdown blanks |
+| `dialogue-reorder` | ✅ | A2+ | Put dialogue lines in correct order |
+| `mark-the-words` | ✅ | A2+ | Click/tap words matching criteria |
+| `select` | ✅ | A2+ | Multi-checkbox selection |
+| `translate` | ✅ | A2+ | Translation choice exercise |
 
 ---
 
@@ -41,7 +44,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 
 ---
 
-## A1 Level (Modules 1-30) — Breakthrough
+## A1 Level (Modules 1-34) — Breakthrough
 
 ### CEFR A1 Can-Do Statements
 - Can understand and use familiar everyday expressions
@@ -60,7 +63,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 | **group-sort** | Analysis | Classify by category |
 | **anagram** | Recognition | Letter unscrambling (A1 only - Cyrillic scaffolding) |
 
-> **Note:** See `MODULE-RICHNESS-GUIDELINES.md` for activity counts per level.
+> **Note:** See `MODULE-RICHNESS-GUIDELINES-v2.md` for activity counts per level.
 
 ### A1 Sentence Complexity
 

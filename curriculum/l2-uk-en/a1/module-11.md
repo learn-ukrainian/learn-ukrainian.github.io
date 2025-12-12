@@ -396,7 +396,7 @@ Today I go to the store. I need to buy groceries. I take a bag and money. In the
 11. и т а в и р к а з
     > [!answer] закривати
 
-12. и т а в о з а к о п
+12. к и а о п у т з в а
     > [!answer] показувати
 
 ## fill-in: Complete the Dialogue

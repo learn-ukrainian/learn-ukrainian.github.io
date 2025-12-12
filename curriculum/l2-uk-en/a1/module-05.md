@@ -328,7 +328,7 @@ The phrase "Сідайте, я зараз чай поставлю!" (Sit down, I
 ## anagram: Unscramble Objects
 > Unscramble the letters to form object vocabulary.
 
-1. ш а к у ч
+1. ш к ч а а
    > [!answer] чашка
 
 2. і л с т
@@ -346,22 +346,22 @@ The phrase "Сідайте, я зараз чай поставлю!" (Sit down, I
 6. а м п л а
    > [!answer] лампа
 
-7. о л з е д р ь к и
+7. к р е л а д з о
    > [!answer] дзеркало
 
-8. л о и д и х о к ь н
+8. н ь и л д к о и о х л
    > [!answer] холодильник
 
 9. р с о к і л
    > [!answer] крісло
 
-10. ш е о ї л р к а к
+10. о ь к х д и о л л и н
     > [!answer] холодильник
 
 11. а с у м к
     > [!answer] сумка
 
-12. р е а л т і к а
+12. і а т р л к а
     > [!answer] тарілка
 
 ## true-false: Demonstrative Rules

@@ -388,7 +388,7 @@ Now I have new clothes: blue jacket, white shirt, gray pants, black boots. I'm s
 3. й и н о в р е ч
    > [!answer] червоний
 
-4. й и й е н е л з
+4. н е л е з й и
    > [!answer] зелений
 
 5. й и н р о ч
@@ -406,7 +406,7 @@ Now I have new clothes: blue jacket, white shirt, gray pants, black boots. I'm s
 9. й и т н и к а л б
    > [!answer] блакитний
 
-10. й и й о л е т о і ф
+10. е і и в й ф о л т о
     > [!answer] фіолетовий
 
 11. й и в е н ч и р о к
@@ -496,7 +496,7 @@ Now I have new clothes: blue jacket, white shirt, gray pants, black boots. I'm s
 9. колір / улюблений / мій / синій
    > [!answer] Мій улюблений колір синій.
 
-10. біла / і / синя / прапор
+10. синій / і / білий / Прапор
     > [!answer] Прапор синій і білий.
 
 11. кросівки / нові / білі

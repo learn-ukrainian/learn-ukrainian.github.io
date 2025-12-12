@@ -289,7 +289,8 @@ npm run claude:deploy
 
 - `docs/ARCHITECTURE.md` - System architecture
 - `docs/MARKDOWN-FORMAT.md` - Markdown syntax spec (all activity formats)
+- `docs/ACTIVITY-MARKDOWN-REFERENCE.md` - **Activity syntax patterns for AI agents** (READ THIS when writing activities)
 - `docs/SCRIPTS.md` - Scripts reference
 - `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` - Quality standards + activity matrix
 - `docs/l2-uk-en/claude-review-prompt.md` - Review prompts
-- `docusaurus/docs/activity-test.md` - Activity markdown format patterns (for AI agents)
+- `docusaurus/docs/activity-test.mdx` - Interactive activity demo (live preview)

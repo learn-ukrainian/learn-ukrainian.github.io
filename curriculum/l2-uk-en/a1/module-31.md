@@ -404,7 +404,7 @@ Now I'm drinking a lot of tea with honey and lemon. I'm already feeling better!
 7. т і в и ж
    > [!answer] живіт
 
-8. і д у р г
+8. и р г у д
    > [!answer] груди
 
 9. е ц р е с
@@ -503,7 +503,7 @@ Now I'm drinking a lot of tea with honey and lemon. I'm already feeling better!
 10. ліки / купив / я
     > [!answer] Я купив ліки.
 
-11. чаю / з / мед / медом / і / лимоном
+11. Чай / медом / з / лимоном / і
     > [!answer] Чай з медом і лимоном.
 
 12. почуваюся / краще / вже / я

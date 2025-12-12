@@ -1,0 +1,1483 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-01",
+    "moduleId": "mod-uk-A2-01",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.1",
+    "moduleNumber": 1,
+    "moduleType": "grammar",
+    "pedagogy": "PPP",
+    "immersionLevel": 0.4,
+    "title": "The Dative I - Pronouns",
+    "subtitle": "мені, тобі, йому... — Giving and Receiving in Ukrainian",
+    "description": "Learner can use dative case pronouns (мені, тобі, йому, їй, нам, вам, їм)",
+    "objectives": [
+      "Learner can use dative case pronouns (мені, тобі, йому, їй, нам, вам, їм)",
+      "Learner understands dative for expressing feelings (мені холодно)",
+      "Learner can use подобатися and потрібно + dative constructions"
+    ],
+    "grammarFocus": [
+      "Dative case pronouns",
+      "Dative for feelings/states",
+      "подобатися + dative pattern"
+    ],
+    "tags": [
+      "dative",
+      "cases",
+      "pronouns",
+      "grammar"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-content-0",
+        "name": "Lesson",
+        "type": "content",
+        "content": "> **Welcome to A2!** You've conquered the basics, now it's time to complete the 7-case system. Today: the **Dative case** (Давальний відмінок) — the case of giving, receiving, feeling, and needing. When someone gives something TO YOU, you go to **dative**!\n\n## warm-up\n\nYou're hiking in the **Карпати** (Carpathians) with Ukrainian friends. It's cold!\n\n\"**Тобі** холодно?\" *(Are you cold? — lit: \"To you cold?\")*  \n\"Так, **мені** дуже холодно!\" *(Yes, I'm very cold!)*  \n\"Ось **тобі** чай!\" *(Here's tea for you!)*  \n\"Дякую! **Мені** краще!\" *(Thank you! I feel better!)*\n\nNotice: **мені, тобі** — these are dative pronouns. In Ukrainian, you don't \"feel cold\" — cold comes \"to you\" (тобі холодно)!\n\n> 💡 **Did You Know?**\n>\n> The Dative case answers the question **Кому?** (To whom?) and **Чому?** (To what?). It's essential for:\n> - Giving: Я даю **тобі** книгу. (I give you a book.)\n> - Feelings: **Мені** сумно. (I'm sad.)\n> - Needing: **Йому** потрібна допомога. (He needs help.)\n\n## presentation\n\n### The Dative Pronouns — Давальний Відмінок Займенників\n\nThe Dative is the 5th case you're learning (after Nominative, Accusative, Genitive, Locative).\n\n| Nominative | Dative | English |\n|------------|--------|---------|\n| я | **мені** | to me |\n| ти | **тобі** | to you |\n| він | **йому** | to him |\n| вона | **їй** | to her |\n| воно | **йому** | to it |\n| ми | **нам** | to us |\n| ви | **вам** | to you (formal/plural) |\n| вони | **їм** | to them |\n\n> 📜 **History Bite: The Dative's Ancient Role**\n>\n> The Dative case comes from Proto-Indo-European and originally marked the recipient of an action. Sanskrit, Latin, Greek, German, and Ukrainian all preserve this case! When you say \"мені,\" you're using a grammatical structure that's over 5,000 years old!\n\n### Pattern 1: Giving Verbs + Dative\n\nWhen you give, show, send, or explain something — the PERSON receiving goes in dative:\n\n| Ukrainian | Pattern | Translation |\n|-----------|---------|-------------|\n| Я даю **тобі** книгу. | verb + DAT + ACC | I give you a book. |\n| Вона показує **мені** фото. | verb + DAT + ACC | She shows me a photo. |\n| Він пише **їй** листа. | verb + DAT + ACC | He writes her a letter. |\n| Ми посилаємо **їм** подарунок. | verb + DAT + ACC | We send them a gift. |\n\n**Key giving verbs:**\n- давати (to give)\n- показувати (to show)\n- посилати (to send)\n- розповідати (to tell/narrate)\n- пояснювати (to explain)\n\n> ⚡ **Pro Tip: Double Object Verbs**\n>\n> Verbs like \"give\" have TWO objects:\n> - WHAT you give = **Accusative** (книгу)\n> - TO WHOM you give = **Dative** (тобі)\n>\n> Pattern: VERB + DATIVE + ACCUSATIVE\n\n### Pattern 2: Feelings & States — \"It's cold TO ME\"\n\nIn Ukrainian, many feelings don't use \"I am X\" — instead, X comes \"to you\":\n\n| Ukrainian | Literal | Natural English |\n|-----------|---------|-----------------|\n| **Мені** холодно. | To-me cold. | I'm cold. |\n| **Тобі** жарко? | To-you hot? | Are you hot? |\n| **Йому** сумно. | To-him sad. | He's sad. |\n| **Їй** весело! | To-her fun! | She's having fun! |\n| **Нам** нудно. | To-us boring. | We're bored. |\n| **Їм** цікаво. | To-them interesting. | They're interested. |\n\n> 🔍 **Myth Buster: \"Ukrainian is just like Russian\"**\n>\n> **Lie:** Some claim Ukrainian dative is identical to Russian.\n>\n> **Truth:** While the concept is similar, Ukrainian has unique pronunciation and some different endings. For example, Ukrainian **їй** (to her) sounds distinctly different from Russian \"ей.\" Many dative expressions also differ in usage!\n\n### Common Dative State Words\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| **холодно** | /ˈxɔlɔdnɔ/ | cold | Мені холодно. |\n| **жарко** | /ˈʒɑrkɔ/ | hot | Тобі жарко? |\n| **тепло** | /ˈtɛplɔ/ | warm | Їй тепло. |\n| **сумно** | /ˈsumnɔ/ | sad | Йому сумно. |\n| **весело** | /ˈvɛsɛlɔ/ | fun, merry | Нам весело! |\n| **нудно** | /ˈnudnɔ/ | boring | Їм нудно. |\n| **цікаво** | /tsʲiˈkɑvɔ/ | interesting | Мені цікаво. |\n| **страшно** | /ˈstrɑʃnɔ/ | scary, afraid | Тобі страшно? |\n| **легко** | /ˈlɛɦkɔ/ | easy | Їй легко. |\n| **важко** | /ˈvɑʒkɔ/ | difficult | Йому важко. |\n| **приємно** | /prɪˈjɛmnɔ/ | pleasant | Мені приємно. |\n| **погано** | /pɔˈɦɑnɔ/ | bad, unwell | Мені погано. |\n\n### Pattern 3: Подобатися — \"To Please\"\n\nThe verb **подобатися** (to please, to be liked) ALWAYS needs dative:\n\n| Ukrainian | Literal | Natural English |\n|-----------|---------|-----------------|\n| **Мені** подобається музика. | To-me pleases music. | I like music. |\n| **Тобі** подобається Україна? | To-you pleases Ukraine? | Do you like Ukraine? |\n| **Йому** подобаються книги. | To-him please books. | He likes books. |\n| **Їй** подобається танцювати. | To-her pleases to-dance. | She likes to dance. |\n\n> 💡 **Did You Know?**\n>\n> Unlike English \"I like X,\" Ukrainian says \"X pleases to-me.\" So the subject is what you like, and YOU go in dative! \n> - \"Мені подобається **кава**\" = Кава pleases me = Мені подобається це.\n> - Зауважте: кава є граматичним підметом тут!\n\n### Pattern 4: Потрібно/Треба — \"Is Needed\"\n\nFor expressing need, use **потрібно/потрібен** or **треба** + dative:\n\n| Ukrainian | Pattern | Translation |\n|-----------|---------|-------------|\n| **Мені** потрібна допомога. | DAT + потрібна + NOM | I need help. |\n| **Тобі** треба відпочити. | DAT + треба + INF | You need to rest. |\n| **Йому** потрібен час. | DAT + потрібен + NOM | He needs time. |\n| **Їм** потрібні гроші. | DAT + потрібні + NOM | They need money. |\n\n**Note:** потрібен/потрібна/потрібне/потрібні agrees with what's needed (the nominative noun).\n\n> 🎭 **Culture Corner: Expressing Care Through Dative**\n>\n> Ukrainian uses dative to show care and concern:\n> - \"**Тобі** як?\" (How are you? — lit: \"To-you how?\")\n> - \"**Тобі** допомогти?\" (Can I help you? — lit: \"To-you to-help?\")\n>\n> This grammatical structure reflects how Ukrainians think about interpersonal care — they ask what comes \"to you,\" not just \"about you.\"\n\n## cultural insight\n\n### The Dative of Feeling\n\nThe dative for feelings shows a fascinating worldview: in Ukrainian, you don't \"possess\" feelings — they come to you. Compare:\n\n| English Pattern | Ukrainian Pattern |\n|-----------------|-------------------|\n| I **AM** cold. | Cold **COMES TO** me. |\n| I **FEEL** sad. | Sadness **IS AT** me. |\n| I **LIKE** music. | Music **PLEASES** me. |\n\nThis isn't just grammar — it reflects a different way of experiencing the world!\n\n> 📜 **History Bite: Dative Across Slavic Languages**\n>\n> All Slavic languages use dative for feelings, but Ukrainian preserved more expressive forms than some others. The phrase \"Як тобі?\" (How's it going for you?) is warm and personal in a way that direct translations can't capture. It shows how grammar carries culture!\n\n## dialogue\n\n### The Mountain Hike 🏔️\n\n**Оксана:** Ой, мені так холодно!\n*(Oh, I'm so cold!)*\n\n**Тарас:** Тобі дати куртку?\n*(Should I give you a jacket?)*\n\n**Оксана:** Так, будь ласка! Дякую тобі!\n*(Yes, please! Thank you!)*\n\n**Тарас:** Нема за що. Тобі тепло?\n*(You're welcome. Are you warm?)*\n\n**Оксана:** Так, мені вже краще! А тобі не холодно?\n*(Yes, I'm better now! And aren't you cold?)*\n\n**Тарас:** Ні, мені добре. Мені подобається гуляти в горах!\n*(No, I'm fine. I like hiking in the mountains!)*\n\n**Оксана:** Мені теж! Йому треба показати наші Карпати!\n*(Me too! We should show him our Carpathians!)*\n\n**Тарас:** Кому?\n*(To whom?)*\n\n**Оксана:** Нашому другові з Канади. Йому тут сподобається!\n*(Our friend from Canada. He'll like it here!)*\n\n> 🎯 **Fun Fact**\n>\n> The **Карпати** (Carpathians) are Ukraine's major mountain range. They're famous for Hutsul culture, wooden churches, and stunning nature. \"Мені подобаються Карпати\" is something every Ukrainian mountain lover says!\n\n### At the Doctor's 🏥\n\n**Лікар:** Добрий день! Що вам?\n*(Good day! What's the matter?)*\n\n**Пацієнт:** Добрий день. Мені погано.\n*(Good day. I feel unwell.)*\n\n**Лікар:** Що саме вам болить?\n*(What exactly hurts you?)*\n\n**Пацієнт:** Мені боляче тут. І мені холодно.\n*(It hurts here. And I'm cold.)*\n\n**Лікар:** Вам потрібно відпочити. Я дам вам ліки.\n*(You need to rest. I'll give you medicine.)*\n\n**Пацієнт:** Дякую вам, лікарю!\n*(Thank you, doctor!)*\n\n**Лікар:** Прошу! Вам скоро стане краще!\n*(You're welcome! You'll feel better soon!)*\n\n> 💡 **Did You Know?**\n>\n> Notice **лікарю** (vocative!) when addressing the doctor. Also, \"Що вам?\" is a common way to ask \"What's wrong?\" — literally \"What to-you?\"\n\n## story time\n\n### Перший Концерт — The First Concert 📖\n\n**Софія** is 10 years old. Today is special — her first concert!\n\n\"**Мені** так хвилююче!\" she tells her мама. (I'm so excited! — lit: \"To-me so exciting!\")\n\n\"**Тобі** подобається ця група?\" мама asks. (Do you like this band?)\n\n\"Так! **Мені** дуже подобаються їхні пісні!\"\n\nAt the concert hall, it's crowded. \"**Нам** тут,\" тато shows the seats.\n\nThe lights dim. Софія squeezes мама's hand. \"**Мені** трохи страшно,\" she whispers. (I'm a little scared.)\n\n\"Не хвилюйся. **Тобі** сподобається!\" мама reassures her.\n\nThe music starts. BOOM! The bass hits. \"**Мені** подобається!!\" Софія screams.\n\nThe band plays for two hours. Софія dances. **Їй** весело! (She's having fun!)\n\nAfter the concert, Софія is exhausted but happy.\n\n\"**Тобі** сподобалось?\" тато asks. (Did you like it?)\n\n\"Так! **Мені** дуже сподобалось! Дякую **вам**!\" (Yes! I loved it! Thank you to you [both]!)\n\nOn the way home, Софія falls asleep in the car. **Їй** снились пісні. (She dreamed of songs.)\n\n\"**Їй** було добре,\" мама smiles to тато. (She had a good time.)\n\n\"**Нам** теж,\" тато answers. (Us too.)\n\nNext week, Софія tells her best friend everything:\n\n\"**Тобі** треба побачити їх! **Мені** так сподобалось! **Їм** треба приїхати знову!\"\n\nHer friend laughs: \"**Мені** теж хочеться піти на концерт!\"\n\n\"Тоді **нам** треба попросити батьків!\"\n\n> 🔍 **Myth Buster: \"Cases are too hard\"**\n>\n> **Reality Check:** You just read an entire story using dative naturally! With exposure and practice, cases become intuitive. Ukrainian children learn them by age 3 — you can too!\n\n---"
+      },
+      {
+        "id": "section-summary-1",
+        "name": "Підсумок",
+        "nameEn": "Summary",
+        "type": "summary",
+        "content": "Today you learned the **Dative Case Pronouns** (Давальний відмінок)!\n\n**The forms:**\n| Nominative | Dative |\n|------------|--------|\n| я | мені |\n| ти | тобі |\n| він/воно | йому |\n| вона | їй |\n| ми | нам |\n| ви | вам |\n| вони | їм |\n\n**Key patterns:**\n1. **Giving:** Я даю **тобі** книгу.\n2. **Feelings:** **Мені** холодно.\n3. **Liking:** **Їй** подобається музика.\n4. **Needing:** **Йому** потрібна допомога.\n\n> 🌟 **Pro Tip**\n>\n> Practice by replacing \"I am X\" with \"Мені X\" for feelings. Say your own states throughout the day: Мені жарко, мені холодно, мені цікаво!\n\n---\n\n\n---"
+      }
+    ],
+    "rawMarkdown": "---\ntitle: The Dative I - Pronouns\nsubtitle: мені, тобі, йому... — Giving and Receiving in Ukrainian\nphase: A2.1\nduration: 45\ntransliteration: none\npedagogy: PPP\ntags: [dative, cases, pronouns, grammar]\nobjectives:\n  - Learner can use dative case pronouns (мені, тобі, йому, їй, нам, вам, їм)\n  - Learner understands dative for expressing feelings (мені холодно)\n  - Learner can use подобатися and потрібно + dative constructions\ngrammar:\n  - Dative case pronouns\n  - Dative for feelings/states\n  - подобатися + dative pattern\n---\n\n# The Dative I - Pronouns: мені, тобі, йому... — Giving and Receiving\n\n> **Welcome to A2!** You've conquered the basics, now it's time to complete the 7-case system. Today: the **Dative case** (Давальний відмінок) — the case of giving, receiving, feeling, and needing. When someone gives something TO YOU, you go to **dative**!\n\n## warm-up\n\nYou're hiking in the **Карпати** (Carpathians) with Ukrainian friends. It's cold!\n\n\"**Тобі** холодно?\" *(Are you cold? — lit: \"To you cold?\")*  \n\"Так, **мені** дуже холодно!\" *(Yes, I'm very cold!)*  \n\"Ось **тобі** чай!\" *(Here's tea for you!)*  \n\"Дякую! **Мені** краще!\" *(Thank you! I feel better!)*\n\nNotice: **мені, тобі** — these are dative pronouns. In Ukrainian, you don't \"feel cold\" — cold comes \"to you\" (тобі холодно)!\n\n> 💡 **Did You Know?**\n>\n> The Dative case answers the question **Кому?** (To whom?) and **Чому?** (To what?). It's essential for:\n> - Giving: Я даю **тобі** книгу. (I give you a book.)\n> - Feelings: **Мені** сумно. (I'm sad.)\n> - Needing: **Йому** потрібна допомога. (He needs help.)\n\n## presentation\n\n### The Dative Pronouns — Давальний Відмінок Займенників\n\nThe Dative is the 5th case you're learning (after Nominative, Accusative, Genitive, Locative).\n\n| Nominative | Dative | English |\n|------------|--------|---------|\n| я | **мені** | to me |\n| ти | **тобі** | to you |\n| він | **йому** | to him |\n| вона | **їй** | to her |\n| воно | **йому** | to it |\n| ми | **нам** | to us |\n| ви | **вам** | to you (formal/plural) |\n| вони | **їм** | to them |\n\n> 📜 **History Bite: The Dative's Ancient Role**\n>\n> The Dative case comes from Proto-Indo-European and originally marked the recipient of an action. Sanskrit, Latin, Greek, German, and Ukrainian all preserve this case! When you say \"мені,\" you're using a grammatical structure that's over 5,000 years old!\n\n### Pattern 1: Giving Verbs + Dative\n\nWhen you give, show, send, or explain something — the PERSON receiving goes in dative:\n\n| Ukrainian | Pattern | Translation |\n|-----------|---------|-------------|\n| Я даю **тобі** книгу. | verb + DAT + ACC | I give you a book. |\n| Вона показує **мені** фото. | verb + DAT + ACC | She shows me a photo. |\n| Він пише **їй** листа. | verb + DAT + ACC | He writes her a letter. |\n| Ми посилаємо **їм** подарунок. | verb + DAT + ACC | We send them a gift. |\n\n**Key giving verbs:**\n- давати (to give)\n- показувати (to show)\n- посилати (to send)\n- розповідати (to tell/narrate)\n- пояснювати (to explain)\n\n> ⚡ **Pro Tip: Double Object Verbs**\n>\n> Verbs like \"give\" have TWO objects:\n> - WHAT you give = **Accusative** (книгу)\n> - TO WHOM you give = **Dative** (тобі)\n>\n> Pattern: VERB + DATIVE + ACCUSATIVE\n\n### Pattern 2: Feelings & States — \"It's cold TO ME\"\n\nIn Ukrainian, many feelings don't use \"I am X\" — instead, X comes \"to you\":\n\n| Ukrainian | Literal | Natural English |\n|-----------|---------|-----------------|\n| **Мені** холодно. | To-me cold. | I'm cold. |\n| **Тобі** жарко? | To-you hot? | Are you hot? |\n| **Йому** сумно. | To-him sad. | He's sad. |\n| **Їй** весело! | To-her fun! | She's having fun! |\n| **Нам** нудно. | To-us boring. | We're bored. |\n| **Їм** цікаво. | To-them interesting. | They're interested. |\n\n> 🔍 **Myth Buster: \"Ukrainian is just like Russian\"**\n>\n> **Lie:** Some claim Ukrainian dative is identical to Russian.\n>\n> **Truth:** While the concept is similar, Ukrainian has unique pronunciation and some different endings. For example, Ukrainian **їй** (to her) sounds distinctly different from Russian \"ей.\" Many dative expressions also differ in usage!\n\n### Common Dative State Words\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| **холодно** | /ˈxɔlɔdnɔ/ | cold | Мені холодно. |\n| **жарко** | /ˈʒɑrkɔ/ | hot | Тобі жарко? |\n| **тепло** | /ˈtɛplɔ/ | warm | Їй тепло. |\n| **сумно** | /ˈsumnɔ/ | sad | Йому сумно. |\n| **весело** | /ˈvɛsɛlɔ/ | fun, merry | Нам весело! |\n| **нудно** | /ˈnudnɔ/ | boring | Їм нудно. |\n| **цікаво** | /tsʲiˈkɑvɔ/ | interesting | Мені цікаво. |\n| **страшно** | /ˈstrɑʃnɔ/ | scary, afraid | Тобі страшно? |\n| **легко** | /ˈlɛɦkɔ/ | easy | Їй легко. |\n| **важко** | /ˈvɑʒkɔ/ | difficult | Йому важко. |\n| **приємно** | /prɪˈjɛmnɔ/ | pleasant | Мені приємно. |\n| **погано** | /pɔˈɦɑnɔ/ | bad, unwell | Мені погано. |\n\n### Pattern 3: Подобатися — \"To Please\"\n\nThe verb **подобатися** (to please, to be liked) ALWAYS needs dative:\n\n| Ukrainian | Literal | Natural English |\n|-----------|---------|-----------------|\n| **Мені** подобається музика. | To-me pleases music. | I like music. |\n| **Тобі** подобається Україна? | To-you pleases Ukraine? | Do you like Ukraine? |\n| **Йому** подобаються книги. | To-him please books. | He likes books. |\n| **Їй** подобається танцювати. | To-her pleases to-dance. | She likes to dance. |\n\n> 💡 **Did You Know?**\n>\n> Unlike English \"I like X,\" Ukrainian says \"X pleases to-me.\" So the subject is what you like, and YOU go in dative! \n> - \"Мені подобається **кава**\" = Кава pleases me = Мені подобається це.\n> - Зауважте: кава є граматичним підметом тут!\n\n### Pattern 4: Потрібно/Треба — \"Is Needed\"\n\nFor expressing need, use **потрібно/потрібен** or **треба** + dative:\n\n| Ukrainian | Pattern | Translation |\n|-----------|---------|-------------|\n| **Мені** потрібна допомога. | DAT + потрібна + NOM | I need help. |\n| **Тобі** треба відпочити. | DAT + треба + INF | You need to rest. |\n| **Йому** потрібен час. | DAT + потрібен + NOM | He needs time. |\n| **Їм** потрібні гроші. | DAT + потрібні + NOM | They need money. |\n\n**Note:** потрібен/потрібна/потрібне/потрібні agrees with what's needed (the nominative noun).\n\n> 🎭 **Culture Corner: Expressing Care Through Dative**\n>\n> Ukrainian uses dative to show care and concern:\n> - \"**Тобі** як?\" (How are you? — lit: \"To-you how?\")\n> - \"**Тобі** допомогти?\" (Can I help you? — lit: \"To-you to-help?\")\n>\n> This grammatical structure reflects how Ukrainians think about interpersonal care — they ask what comes \"to you,\" not just \"about you.\"\n\n## cultural insight\n\n### The Dative of Feeling\n\nThe dative for feelings shows a fascinating worldview: in Ukrainian, you don't \"possess\" feelings — they come to you. Compare:\n\n| English Pattern | Ukrainian Pattern |\n|-----------------|-------------------|\n| I **AM** cold. | Cold **COMES TO** me. |\n| I **FEEL** sad. | Sadness **IS AT** me. |\n| I **LIKE** music. | Music **PLEASES** me. |\n\nThis isn't just grammar — it reflects a different way of experiencing the world!\n\n> 📜 **History Bite: Dative Across Slavic Languages**\n>\n> All Slavic languages use dative for feelings, but Ukrainian preserved more expressive forms than some others. The phrase \"Як тобі?\" (How's it going for you?) is warm and personal in a way that direct translations can't capture. It shows how grammar carries culture!\n\n## dialogue\n\n### The Mountain Hike 🏔️\n\n**Оксана:** Ой, мені так холодно!\n*(Oh, I'm so cold!)*\n\n**Тарас:** Тобі дати куртку?\n*(Should I give you a jacket?)*\n\n**Оксана:** Так, будь ласка! Дякую тобі!\n*(Yes, please! Thank you!)*\n\n**Тарас:** Нема за що. Тобі тепло?\n*(You're welcome. Are you warm?)*\n\n**Оксана:** Так, мені вже краще! А тобі не холодно?\n*(Yes, I'm better now! And aren't you cold?)*\n\n**Тарас:** Ні, мені добре. Мені подобається гуляти в горах!\n*(No, I'm fine. I like hiking in the mountains!)*\n\n**Оксана:** Мені теж! Йому треба показати наші Карпати!\n*(Me too! We should show him our Carpathians!)*\n\n**Тарас:** Кому?\n*(To whom?)*\n\n**Оксана:** Нашому другові з Канади. Йому тут сподобається!\n*(Our friend from Canada. He'll like it here!)*\n\n> 🎯 **Fun Fact**\n>\n> The **Карпати** (Carpathians) are Ukraine's major mountain range. They're famous for Hutsul culture, wooden churches, and stunning nature. \"Мені подобаються Карпати\" is something every Ukrainian mountain lover says!\n\n### At the Doctor's 🏥\n\n**Лікар:** Добрий день! Що вам?\n*(Good day! What's the matter?)*\n\n**Пацієнт:** Добрий день. Мені погано.\n*(Good day. I feel unwell.)*\n\n**Лікар:** Що саме вам болить?\n*(What exactly hurts you?)*\n\n**Пацієнт:** Мені боляче тут. І мені холодно.\n*(It hurts here. And I'm cold.)*\n\n**Лікар:** Вам потрібно відпочити. Я дам вам ліки.\n*(You need to rest. I'll give you medicine.)*\n\n**Пацієнт:** Дякую вам, лікарю!\n*(Thank you, doctor!)*\n\n**Лікар:** Прошу! Вам скоро стане краще!\n*(You're welcome! You'll feel better soon!)*\n\n> 💡 **Did You Know?**\n>\n> Notice **лікарю** (vocative!) when addressing the doctor. Also, \"Що вам?\" is a common way to ask \"What's wrong?\" — literally \"What to-you?\"\n\n## story time\n\n### Перший Концерт — The First Concert 📖\n\n**Софія** is 10 years old. Today is special — her first concert!\n\n\"**Мені** так хвилююче!\" she tells her мама. (I'm so excited! — lit: \"To-me so exciting!\")\n\n\"**Тобі** подобається ця група?\" мама asks. (Do you like this band?)\n\n\"Так! **Мені** дуже подобаються їхні пісні!\"\n\nAt the concert hall, it's crowded. \"**Нам** тут,\" тато shows the seats.\n\nThe lights dim. Софія squeezes мама's hand. \"**Мені** трохи страшно,\" she whispers. (I'm a little scared.)\n\n\"Не хвилюйся. **Тобі** сподобається!\" мама reassures her.\n\nThe music starts. BOOM! The bass hits. \"**Мені** подобається!!\" Софія screams.\n\nThe band plays for two hours. Софія dances. **Їй** весело! (She's having fun!)\n\nAfter the concert, Софія is exhausted but happy.\n\n\"**Тобі** сподобалось?\" тато asks. (Did you like it?)\n\n\"Так! **Мені** дуже сподобалось! Дякую **вам**!\" (Yes! I loved it! Thank you to you [both]!)\n\nOn the way home, Софія falls asleep in the car. **Їй** снились пісні. (She dreamed of songs.)\n\n\"**Їй** було добре,\" мама smiles to тато. (She had a good time.)\n\n\"**Нам** теж,\" тато answers. (Us too.)\n\nNext week, Софія tells her best friend everything:\n\n\"**Тобі** треба побачити їх! **Мені** так сподобалось! **Їм** треба приїхати знову!\"\n\nHer friend laughs: \"**Мені** теж хочеться піти на концерт!\"\n\n\"Тоді **нам** треба попросити батьків!\"\n\n> 🔍 **Myth Buster: \"Cases are too hard\"**\n>\n> **Reality Check:** You just read an entire story using dative naturally! With exposure and practice, cases become intuitive. Ukrainian children learn them by age 3 — you can too!\n\n---\n\n# Summary\n\nToday you learned the **Dative Case Pronouns** (Давальний відмінок)!\n\n**The forms:**\n| Nominative | Dative |\n|------------|--------|\n| я | мені |\n| ти | тобі |\n| він/воно | йому |\n| вона | їй |\n| ми | нам |\n| ви | вам |\n| вони | їм |\n\n**Key patterns:**\n1. **Giving:** Я даю **тобі** книгу.\n2. **Feelings:** **Мені** холодно.\n3. **Liking:** **Їй** подобається музика.\n4. **Needing:** **Йому** потрібна допомога.\n\n> 🌟 **Pro Tip**\n>\n> Practice by replacing \"I am X\" with \"Мені X\" for feelings. Say your own states throughout the day: Мені жарко, мені холодно, мені цікаво!\n\n---\n\n# Activities\n\n## match-up: Nominative to Dative\n\n> Match personal pronouns to their dative forms.\n\n| Left | Right |\n|------|-------|\n| я | мені |\n| ти | тобі |\n| він | йому |\n| вона | їй |\n| воно | йому |\n| ми | нам |\n| ви | вам |\n| вони | їм |\n| хто | кому |\n| що | чому |\n| кожен | кожному |\n| ніхто | нікому |\n\n## fill-in: Who Feels What?\n\n> Complete with the correct dative pronoun.\n\n1. ___ холодно. (I'm cold.)\n   > [!answer] Мені\n   > [!options] Я | Мені | Мене | Мною\n\n2. ___ жарко? (Are you hot?)\n   > [!answer] Тобі\n   > [!options] Ти | Тобі | Тебе | Тобою\n\n3. ___ сумно. (He's sad.)\n   > [!answer] Йому\n   > [!options] Він | Йому | Його | Ним\n\n4. ___ весело! (She's having fun!)\n   > [!answer] Їй\n   > [!options] Вона | Їй | Її | Нею\n\n5. ___ цікаво. (We're interested.)\n   > [!answer] Нам\n   > [!options] Ми | Нам | Нас | Нами\n\n6. ___ потрібна допомога? (Do you need help?)\n   > [!answer] Вам\n   > [!options] Ви | Вам | Вас | Вами\n\n7. ___ подобається борщ. (They like borscht.)\n   > [!answer] Їм\n   > [!options] Вони | Їм | Їх | Ними\n\n8. ___ легко говорити українською. (It's easy for her to speak Ukrainian.)\n   > [!answer] Їй\n   > [!options] Вона | Їй | Її | Нею\n\n9. ___ важко зрозуміти. (It's hard for me to understand.)\n   > [!answer] Мені\n   > [!options] Я | Мені | Мене | Мною\n\n10. ___ потрібен час. (He needs time.)\n    > [!answer] Йому\n    > [!options] Він | Йому | Його | Ним\n\n11. ___ нудно тут. (We're bored here.)\n    > [!answer] Нам\n    > [!options] Ми | Нам | Нас | Нами\n\n12. ___ приємно познайомитися! (Nice to meet you!)\n    > [!answer] Мені\n    > [!options] Я | Мені | Мене | Мною\n\n## fill-in: Giving Verbs\n\n> Complete with the correct dative pronoun.\n\n1. Я даю ___ книгу. (I give you a book.)\n   > [!answer] тобі\n   > [!options] ти | тобі | тебе | тобою\n\n2. Вона показує ___ фотографії. (She shows me photographs.)\n   > [!answer] мені\n   > [!options] я | мені | мене | мною\n\n3. Він пише ___ листа. (He writes her a letter.)\n   > [!answer] їй\n   > [!options] вона | їй | її | нею\n\n4. Ми посилаємо ___ подарунок. (We send them a gift.)\n   > [!answer] їм\n   > [!options] вони | їм | їх | ними\n\n5. Тато розповідає ___ історію. (Dad tells us a story.)\n   > [!answer] нам\n   > [!options] ми | нам | нас | нами\n\n6. Вчитель пояснює ___ граматику. (The teacher explains grammar to you.)\n   > [!answer] вам\n   > [!options] ви | вам | вас | вами\n\n7. Дай ___ воду, будь ласка. (Give him water, please.)\n   > [!answer] йому\n   > [!options] він | йому | його | ним\n\n8. Покажи ___ фото! (Show me the photo!)\n   > [!answer] мені\n   > [!options] я | мені | мене | мною\n\n9. Вона купує ___ квіти. (She buys flowers for him.)\n   > [!answer] йому\n   > [!options] він | йому | його | ним\n\n10. Ми допомагаємо ___. (We help them.)\n    > [!answer] їм\n    > [!options] вони | їм | їх | ними\n\n11. Він читає ___ книгу. (He reads us a book.)\n    > [!answer] нам\n    > [!options] ми | нам | нас | нами\n\n12. Поясни ___! (Explain to me!)\n    > [!answer] мені\n    > [!options] я | мені | мене | мною\n\n## quiz: Dative Logic\n\n> Choose the correct answer about dative usage.\n\n1. In \"Мені холодно,\" what case is \"мені\"?\n   - [ ] Nominative\n   - [ ] Accusative\n   - [x] Dative\n   - [ ] Genitive\n   > Мені = dative form of я\n\n2. \"Подобається\" always requires which case for the person?\n   - [ ] Nominative\n   - [ ] Accusative\n   - [x] Dative\n   - [ ] Genitive\n   > Мені подобається = Dative + подобається\n\n3. In \"Я даю тобі книгу,\" \"книгу\" is in which case?\n   - [ ] Nominative\n   - [x] Accusative\n   - [ ] Dative\n   - [ ] Genitive\n   > книгу = what is given = Accusative\n\n4. \"Їй\" is the dative form of:\n   - [ ] він\n   - [x] вона\n   - [ ] вони\n   - [ ] воно\n   > вона → їй\n\n5. Which sentence is correct?\n   - [x] Мені потрібна допомога.\n   - [ ] Я потрібна допомога.\n   - [ ] Мене потрібна допомога.\n   - [ ] Мною потрібна допомога.\n   > Dative + потрібна = need\n\n6. \"Нам\" is the dative form of:\n   - [ ] я\n   - [ ] ви\n   - [x] ми\n   - [ ] вони\n   > ми → нам\n\n7. Which verb typically takes a dative object?\n   - [ ] бачити (to see)\n   - [x] допомагати (to help)\n   - [ ] читати (to read)\n   - [ ] їсти (to eat)\n   > допомагати кому? = help whom (dative)\n\n8. \"Йому\" can be the dative of:\n   - [ ] вона only\n   - [ ] він only\n   - [x] він or воно\n   - [ ] вони\n   > Both він and воно → йому in dative\n\n9. In \"Тобі сподобається,\" the subject is:\n   - [ ] ти\n   - [ ] тобі\n   - [x] implied (what will be liked)\n   - [ ] none\n   > The thing being liked is the subject; \"тобі\" is dative\n\n10. Which question does dative answer?\n    - [ ] Хто? Що?\n    - [ ] Кого? Чого?\n    - [x] Кому? Чому?\n    - [ ] Ким? Чим?\n    > Dative answers Кому? (to whom?)\n\n11. \"Їм\" is the dative form of:\n    - [ ] ми\n    - [ ] ви\n    - [ ] він/вона\n    - [x] вони\n    > вони → їм\n\n12. Which is a feeling expression with dative?\n    - [ ] Я холодний.\n    - [x] Мені холодно.\n    - [ ] Мене холодно.\n    - [ ] Мною холодно.\n    > Dative + state word = feeling\n\n## group-sort: Feeling Categories\n\n> Sort these state words into categories.\n\n### Temperature\n- холодно\n- жарко\n- тепло\n\n### Emotions\n- сумно\n- весело\n- страшно\n\n### Physical State\n- погано\n- боляче\n- легко\n\n### Mental State\n- цікаво\n- нудно\n- важко\n\n## match-up: Antonyms\n\n> Match opposites.\n\n| Left | Right |\n|------|-------|\n| холодно | жарко |\n| сумно | весело |\n| легко | важко |\n| цікаво | нудно |\n| добре | погано |\n| приємно | неприємно |\n| тут | там |\n| мені | тобі |\n| нам | вам |\n| йому | їй |\n| він | вона |\n| холодний | гарячий |\n\n## unjumble: Sentence Builder\n\n> Arrange words into correct sentences.\n\n1. мені / музика / подобається\n   > [!answer] Мені подобається музика.\n   > (I like music.)\n\n2. холодно / тобі\n   > [!answer] Тобі холодно?\n   > (Are you cold?)\n\n3. книгу / даю / тобі / я\n   > [!answer] Я даю тобі книгу.\n   > (I give you a book.)\n\n4. сумно / йому / дуже\n   > [!answer] Йому дуже сумно.\n   > (He's very sad.)\n\n5. відпочити / треба / їй\n   > [!answer] Їй треба відпочити.\n   > (She needs to rest.)\n\n6. показує / мені / вона / фото\n   > [!answer] Вона показує мені фото.\n   > (She shows me a photo.)\n\n7. потрібна / нам / допомога\n   > [!answer] Нам потрібна допомога.\n   > (We need help.)\n\n8. подобається / Україна / їм\n   > [!answer] Їм подобається Україна.\n   > (They like Ukraine.)\n\n9. весело / нам / тут\n   > [!answer] Нам тут весело.\n   > (We're having fun here.)\n\n10. допомагаємо / ми / їм\n    > [!answer] Ми допомагаємо їм.\n    > (We help them.)\n\n11. вам / я / розповім\n    > [!answer] Я вам розповім.\n    > (I'll tell you.)\n\n12. легко / це / мені\n    > [!answer] Мені це легко.\n    > (This is easy for me.)\n\n## fill-in: подобатися Sentences\n\n> Complete with the correct form.\n\n1. ___ подобається Київ. (I like Kyiv.)\n   > [!answer] Мені\n   > [!options] Я | Мені | Мене | Мною\n\n2. ___ подобаються вареники? (Do you like varenyky?)\n   > [!answer] Тобі\n   > [!options] Ти | Тобі | Тебе | Тобою\n\n3. ___ сподобався концерт. (She liked the concert.)\n   > [!answer] Їй\n   > [!options] Вона | Їй | Її | Нею\n\n4. ___ подобається працювати тут. (He likes working here.)\n   > [!answer] Йому\n   > [!options] Він | Йому | Його | Ним\n\n5. ___ подобаються гори. (We like mountains.)\n   > [!answer] Нам\n   > [!options] Ми | Нам | Нас | Нами\n\n6. ___ сподобається Україна! (You'll like Ukraine!)\n   > [!answer] Вам\n   > [!options] Ви | Вам | Вас | Вами\n\n7. ___ не подобається ця музика. (They don't like this music.)\n   > [!answer] Їм\n   > [!options] Вони | Їм | Їх | Ними\n\n8. ___ сподобалось? (Did you like it?)\n   > [!answer] Тобі\n   > [!options] Ти | Тобі | Тебе | Тобою\n\n9. Чи ___ подобається українська кухня? (Do you like Ukrainian cuisine?)\n   > [!answer] вам\n   > [!options] ви | вам | вас | вами\n\n10. ___ дуже сподобався фільм. (I really liked the movie.)\n    > [!answer] Мені\n    > [!options] Я | Мені | Мене | Мною\n\n11. ___ не подобається холод. (He doesn't like the cold.)\n    > [!answer] Йому\n    > [!options] Він | Йому | Його | Ним\n\n12. ___ завжди подобалось читати. (She always liked reading.)\n    > [!answer] Їй\n    > [!options] Вона | Їй | Її | Нею\n\n## anagram: Unscramble Dative Pronouns\n\n> Form dative pronouns.\n\n1. і н е м\n   > [!answer] мені\n   > (to me)\n\n2. і б о т\n   > [!answer] тобі\n   > (to you)\n\n3. у м о й\n   > [!answer] йому\n   > (to him)\n\n4. й ї\n   > [!answer] їй\n   > (to her)\n\n5. м а н\n   > [!answer] нам\n   > (to us)\n\n6. м а в\n   > [!answer] вам\n   > (to you pl.)\n\n7. м ї\n   > [!answer] їм\n   > (to them)\n\n8. у м о к\n   > [!answer] кому\n   > (to whom)\n\n9. о н д о л о х\n   > [!answer] холодно\n   > (cold)\n\n10. о к р а ж\n    > [!answer] жарко\n    > (hot)\n\n11. о л е с е в\n    > [!answer] весело\n    > (fun)\n\n12. о н д у н\n    > [!answer] нудно\n    > (boring)\n\n## true-false: Dative Grammar Check\n\n1. \"Мені\" is the dative form of \"я\".\n   - [x] Правда\n   - [ ] Неправда\n\n2. \"Подобатися\" requires the accusative case.\n   - [ ] Правда\n   - [x] Неправда\n\n3. In \"Мені холодно,\" \"мені\" is the grammatical subject.\n   - [ ] Правда\n   - [x] Неправда\n\n4. \"Йому\" can mean both \"to him\" and \"to it.\"\n   - [x] Правда\n   - [ ] Неправда\n\n5. \"Тобі\" is the dative form of \"ти.\"\n   - [x] Правда\n   - [ ] Неправда\n\n6. Dative answers the question \"Кого?\"\n   - [ ] Правда\n   - [x] Неправда\n\n7. \"Їй\" is the dative form of \"вона.\"\n   - [x] Правда\n   - [ ] Неправда\n\n8. \"Нам потрібна допомога\" = \"We need help.\"\n   - [x] Правда\n   - [ ] Неправда\n\n9. \"Давати\" takes only accusative objects.\n   - [ ] Правда\n   - [x] Неправда\n\n10. \"Їм\" is the dative form of \"вони.\"\n    - [x] Правда\n    - [ ] Неправда\n\n11. In \"Мені сумно,\" \"сумно\" is the subject.\n    - [ ] Правда\n    - [x] Неправда\n\n12. \"Вам\" can be formal singular or plural.\n    - [x] Правда\n    - [ ] Неправда\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| мені | /mɛˈnʲi/ | to me | pron | - | Dative of я |\n| тобі | /tɔˈbʲi/ | to you | pron | - | Dative of ти |\n| йому | /jɔˈmu/ | to him/it | pron | - | Dative of він/воно |\n| їй | /jij/ | to her | pron | - | Dative of вона |\n| нам | /nɑm/ | to us | pron | - | Dative of ми |\n| вам | /vɑm/ | to you (formal/pl) | pron | - | Dative of ви |\n| їм | /jim/ | to them | pron | - | Dative of вони |\n| подобатися | /pɔdɔˈbɑtɪsʲɑ/ | to please, be liked | verb | - | + Dative |\n| сподобатися | /spɔdɔˈbɑtɪsʲɑ/ | to like (perfective) | verb | - | + Dative |\n| потрібно | /pɔˈtrʲibnɔ/ | is needed | pred | - | + Dative |\n| треба | /ˈtrɛbɑ/ | is necessary | pred | - | + Dative |\n| холодно | /ˈxɔlɔdnɔ/ | cold (impersonal) | pred | - | State word |\n| жарко | /ˈʒɑrkɔ/ | hot (impersonal) | pred | - | State word |\n| тепло | /ˈtɛplɔ/ | warm (impersonal) | pred | - | State word |\n| сумно | /ˈsumnɔ/ | sad (impersonal) | pred | - | State word |\n| весело | /ˈvɛsɛlɔ/ | fun, merry | pred | - | State word |\n| цікаво | /tsʲiˈkɑvɔ/ | interesting | pred | - | State word |\n| нудно | /ˈnudnɔ/ | boring | pred | - | State word |\n| легко | /ˈlɛɦkɔ/ | easy | pred | - | State word |\n| важко | /ˈvɑʒkɔ/ | difficult | pred | - | State word |\n| страшно | /ˈstrɑʃnɔ/ | scary, afraid | pred | - | State word |\n| приємно | /prɪˈjɛmnɔ/ | pleasant | pred | - | \"Nice to meet you\" |\n| погано | /pɔˈɦɑnɔ/ | bad, unwell | pred | - | State word |\n| боляче | /bɔˈlʲɑtʃɛ/ | painful | pred | - | State word |\n| давати | /dɑˈvɑtɪ/ | to give | verb | - | + Dat + Acc |\n| показувати | /pɔkɑˈzuvɑtɪ/ | to show | verb | - | + Dat + Acc |\n| пояснювати | /pɔjɑˈsnʲuvɑtɪ/ | to explain | verb | - | + Dat + Acc |\n| допомагати | /dɔpɔmɑˈɦɑtɪ/ | to help | verb | - | + Dative |\n| посилати | /pɔsɪˈlɑtɪ/ | to send | verb | - | + Dat + Acc |\n",
+    "createdAt": "2025-12-11T15:25:25.613Z",
+    "modifiedAt": "2025-12-11T15:25:25.613Z",
+    "version": 2
+  },
+  "activities": [
+    {
+      "id": "act-a1-0-matchup-0",
+      "type": "match-up",
+      "title": "Nominative to Dative",
+      "description": "Match personal pronouns to their dative forms.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "я",
+            "right": "мені"
+          },
+          {
+            "left": "ти",
+            "right": "тобі"
+          },
+          {
+            "left": "він",
+            "right": "йому"
+          },
+          {
+            "left": "вона",
+            "right": "їй"
+          },
+          {
+            "left": "воно",
+            "right": "йому"
+          },
+          {
+            "left": "ми",
+            "right": "нам"
+          },
+          {
+            "left": "ви",
+            "right": "вам"
+          },
+          {
+            "left": "вони",
+            "right": "їм"
+          },
+          {
+            "left": "хто",
+            "right": "кому"
+          },
+          {
+            "left": "що",
+            "right": "чому"
+          },
+          {
+            "left": "кожен",
+            "right": "кожному"
+          },
+          {
+            "left": "ніхто",
+            "right": "нікому"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-11T15:25:25.613Z",
+      "modifiedAt": "2025-12-11T15:25:25.613Z"
+    },
+    {
+      "id": "act-a1-0-fillblank-0",
+      "type": "fill-blank",
+      "title": "Who Feels What?",
+      "description": "Complete with the correct dative pronoun.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "___ холодно. (I'm cold.)",
+            "answer": "Мені",
+            "options": [
+              "Я",
+              "Мені",
+              "Мене",
+              "Мною"
+            ]
+          },
+          {
+            "prompt": "___ жарко? (Are you hot?)",
+            "answer": "Тобі",
+            "options": [
+              "Ти",
+              "Тобі",
+              "Тебе",
+              "Тобою"
+            ]
+          },
+          {
+            "prompt": "___ сумно. (He's sad.)",
+            "answer": "Йому",
+            "options": [
+              "Він",
+              "Йому",
+              "Його",
+              "Ним"
+            ]
+          },
+          {
+            "prompt": "___ весело! (She's having fun!)",
+            "answer": "Їй",
+            "options": [
+              "Вона",
+              "Їй",
+              "Її",
+              "Нею"
+            ]
+          },
+          {
+            "prompt": "___ цікаво. (We're interested.)",
+            "answer": "Нам",
+            "options": [
+              "Ми",
+              "Нам",
+              "Нас",
+              "Нами"
+            ]
+          },
+          {
+            "prompt": "___ потрібна допомога? (Do you need help?)",
+            "answer": "Вам",
+            "options": [
+              "Ви",
+              "Вам",
+              "Вас",
+              "Вами"
+            ]
+          },
+          {
+            "prompt": "___ подобається борщ. (They like borscht.)",
+            "answer": "Їм",
+            "options": [
+              "Вони",
+              "Їм",
+              "Їх",
+              "Ними"
+            ]
+          },
+          {
+            "prompt": "___ легко говорити українською. (It's easy for her to speak Ukrainian.)",
+            "answer": "Їй",
+            "options": [
+              "Вона",
+              "Їй",
+              "Її",
+              "Нею"
+            ]
+          },
+          {
+            "prompt": "___ важко зрозуміти. (It's hard for me to understand.)",
+            "answer": "Мені",
+            "options": [
+              "Я",
+              "Мені",
+              "Мене",
+              "Мною"
+            ]
+          },
+          {
+            "prompt": "___ потрібен час. (He needs time.)",
+            "answer": "Йому",
+            "options": [
+              "Він",
+              "Йому",
+              "Його",
+              "Ним"
+            ]
+          },
+          {
+            "prompt": "___ нудно тут. (We're bored here.)",
+            "answer": "Нам",
+            "options": [
+              "Ми",
+              "Нам",
+              "Нас",
+              "Нами"
+            ]
+          },
+          {
+            "prompt": "___ приємно познайомитися! (Nice to meet you!)",
+            "answer": "Мені",
+            "options": [
+              "Я",
+              "Мені",
+              "Мене",
+              "Мною"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-11T15:25:25.613Z",
+      "modifiedAt": "2025-12-11T15:25:25.613Z"
+    },
+    {
+      "id": "act-a1-0-fillblank-1",
+      "type": "fill-blank",
+      "title": "Giving Verbs",
+      "description": "Complete with the correct dative pronoun.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Я даю ___ книгу. (I give you a book.)",
+            "answer": "тобі",
+            "options": [
+              "ти",
+              "тобі",
+              "тебе",
+              "тобою"
+            ]
+          },
+          {
+            "prompt": "Вона показує ___ фотографії. (She shows me photographs.)",
+            "answer": "мені",
+            "options": [
+              "я",
+              "мені",
+              "мене",
+              "мною"
+            ]
+          },
+          {
+            "prompt": "Він пише ___ листа. (He writes her a letter.)",
+            "answer": "їй",
+            "options": [
+              "вона",
+              "їй",
+              "її",
+              "нею"
+            ]
+          },
+          {
+            "prompt": "Ми посилаємо ___ подарунок. (We send them a gift.)",
+            "answer": "їм",
+            "options": [
+              "вони",
+              "їм",
+              "їх",
+              "ними"
+            ]
+          },
+          {
+            "prompt": "Тато розповідає ___ історію. (Dad tells us a story.)",
+            "answer": "нам",
+            "options": [
+              "ми",
+              "нам",
+              "нас",
+              "нами"
+            ]
+          },
+          {
+            "prompt": "Вчитель пояснює ___ граматику. (The teacher explains grammar to you.)",
+            "answer": "вам",
+            "options": [
+              "ви",
+              "вам",
+              "вас",
+              "вами"
+            ]
+          },
+          {
+            "prompt": "Дай ___ воду, будь ласка. (Give him water, please.)",
+            "answer": "йому",
+            "options": [
+              "він",
+              "йому",
+              "його",
+              "ним"
+            ]
+          },
+          {
+            "prompt": "Покажи ___ фото! (Show me the photo!)",
+            "answer": "мені",
+            "options": [
+              "я",
+              "мені",
+              "мене",
+              "мною"
+            ]
+          },
+          {
+            "prompt": "Вона купує ___ квіти. (She buys flowers for him.)",
+            "answer": "йому",
+            "options": [
+              "він",
+              "йому",
+              "його",
+              "ним"
+            ]
+          },
+          {
+            "prompt": "Ми допомагаємо ___. (We help them.)",
+            "answer": "їм",
+            "options": [
+              "вони",
+              "їм",
+              "їх",
+              "ними"
+            ]
+          },
+          {
+            "prompt": "Він читає ___ книгу. (He reads us a book.)",
+            "answer": "нам",
+            "options": [
+              "ми",
+              "нам",
+              "нас",
+              "нами"
+            ]
+          },
+          {
+            "prompt": "Поясни ___! (Explain to me!)",
+            "answer": "мені",
+            "options": [
+              "я",
+              "мені",
+              "мене",
+              "мною"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-11T15:25:25.613Z",
+      "modifiedAt": "2025-12-11T15:25:25.613Z"
+    },
+    {
+      "id": "act-a1-0-quiz-0",
+      "type": "quiz",
+      "title": "Dative Logic",
+      "description": "Choose the correct answer about dative usage.",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "In \"Мені холодно,\" what case is \"мені\"?",
+            "options": [
+              "Nominative",
+              "Accusative",
+              "Dative",
+              "Genitive"
+            ],
+            "correctIndex": 2,
+            "explanation": "Мені = dative form of я"
+          },
+          {
+            "question": "\"Подобається\" always requires which case for the person?",
+            "options": [
+              "Nominative",
+              "Accusative",
+              "Dative",
+              "Genitive"
+            ],
+            "correctIndex": 2,
+            "explanation": "Мені подобається = Dative + подобається"
+          },
+          {
+            "question": "In \"Я даю тобі книгу,\" \"книгу\" is in which case?",
+            "options": [
+              "Nominative",
+              "Accusative",
+              "Dative",
+              "Genitive"
+            ],
+            "correctIndex": 1,
+            "explanation": "книгу = what is given = Accusative"
+          },
+          {
+            "question": "\"Їй\" is the dative form of:",
+            "options": [
+              "він",
+              "вона",
+              "вони",
+              "воно"
+            ],
+            "correctIndex": 1,
+            "explanation": "вона → їй"
+          },
+          {
+            "question": "Which sentence is correct?",
+            "options": [
+              "Мені потрібна допомога.",
+              "Я потрібна допомога.",
+              "Мене потрібна допомога.",
+              "Мною потрібна допомога."
+            ],
+            "correctIndex": 0,
+            "explanation": "Dative + потрібна = need"
+          },
+          {
+            "question": "\"Нам\" is the dative form of:",
+            "options": [
+              "я",
+              "ви",
+              "ми",
+              "вони"
+            ],
+            "correctIndex": 2,
+            "explanation": "ми → нам"
+          },
+          {
+            "question": "Which verb typically takes a dative object?",
+            "options": [
+              "бачити (to see)",
+              "допомагати (to help)",
+              "читати (to read)",
+              "їсти (to eat)"
+            ],
+            "correctIndex": 1,
+            "explanation": "допомагати кому? = help whom (dative)"
+          },
+          {
+            "question": "\"Йому\" can be the dative of:",
+            "options": [
+              "вона only",
+              "він only",
+              "він or воно",
+              "вони"
+            ],
+            "correctIndex": 2,
+            "explanation": "Both він and воно → йому in dative"
+          },
+          {
+            "question": "In \"Тобі сподобається,\" the subject is:",
+            "options": [
+              "ти",
+              "тобі",
+              "implied (what will be liked)",
+              "none"
+            ],
+            "correctIndex": 2,
+            "explanation": "The thing being liked is the subject; \"тобі\" is dative"
+          },
+          {
+            "question": "Which question does dative answer?",
+            "options": [
+              "Хто? Що?",
+              "Кого? Чого?",
+              "Кому? Чому?",
+              "Ким? Чим?"
+            ],
+            "correctIndex": 2,
+            "explanation": "Dative answers Кому? (to whom?)"
+          },
+          {
+            "question": "\"Їм\" is the dative form of:",
+            "options": [
+              "ми",
+              "ви",
+              "він/вона",
+              "вони"
+            ],
+            "correctIndex": 3,
+            "explanation": "вони → їм"
+          },
+          {
+            "question": "Which is a feeling expression with dative?",
+            "options": [
+              "Я холодний.",
+              "Мені холодно.",
+              "Мене холодно.",
+              "Мною холодно."
+            ],
+            "correctIndex": 1,
+            "explanation": "Dative + state word = feeling"
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-11T15:25:25.613Z",
+      "modifiedAt": "2025-12-11T15:25:25.613Z"
+    },
+    {
+      "id": "act-a1-0-groupsort-0",
+      "type": "group-sort",
+      "title": "Feeling Categories",
+      "description": "Sort these state words into categories.",
+      "content": {
+        "type": "group-sort",
+        "groups": [
+          {
+            "id": "temperature",
+            "name": "Temperature",
+            "items": [
+              "холодно",
+              "жарко",
+              "тепло"
+            ]
+          },
+          {
+            "id": "emotions",
+            "name": "Emotions",
+            "items": [
+              "сумно",
+              "весело",
+              "страшно"
+            ]
+          },
+          {
+            "id": "physical-state",
+            "name": "Physical State",
+            "items": [
+              "погано",
+              "боляче",
+              "легко"
+            ]
+          },
+          {
+            "id": "mental-state",
+            "name": "Mental State",
+            "items": [
+              "цікаво",
+              "нудно",
+              "важко"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-11T15:25:25.613Z",
+      "modifiedAt": "2025-12-11T15:25:25.613Z"
+    },
+    {
+      "id": "act-a1-0-matchup-1",
+      "type": "match-up",
+      "title": "Antonyms",
+      "description": "Match opposites.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "холодно",
+            "right": "жарко"
+          },
+          {
+            "left": "сумно",
+            "right": "весело"
+          },
+          {
+            "left": "легко",
+            "right": "важко"
+          },
+          {
+            "left": "цікаво",
+            "right": "нудно"
+          },
+          {
+            "left": "добре",
+            "right": "погано"
+          },
+          {
+            "left": "приємно",
+            "right": "неприємно"
+          },
+          {
+            "left": "тут",
+            "right": "там"
+          },
+          {
+            "left": "мені",
+            "right": "тобі"
+          },
+          {
+            "left": "нам",
+            "right": "вам"
+          },
+          {
+            "left": "йому",
+            "right": "їй"
+          },
+          {
+            "left": "він",
+            "right": "вона"
+          },
+          {
+            "left": "холодний",
+            "right": "гарячий"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-11T15:25:25.613Z",
+      "modifiedAt": "2025-12-11T15:25:25.613Z"
+    },
+    {
+      "id": "act-a1-0-unjumble-0",
+      "type": "unjumble",
+      "title": "Sentence Builder",
+      "description": "Arrange words into correct sentences.",
+      "content": {
+        "type": "unjumble",
+        "isUnjumble": true,
+        "items": [
+          {
+            "words": [
+              "мені",
+              "музика",
+              "подобається"
+            ],
+            "answer": "Мені подобається музика.\n(I like music.)",
+            "translation": "I like music."
+          },
+          {
+            "words": [
+              "холодно",
+              "тобі"
+            ],
+            "answer": "Тобі холодно?\n(Are you cold?)",
+            "translation": "Are you cold?"
+          },
+          {
+            "words": [
+              "книгу",
+              "даю",
+              "тобі",
+              "я"
+            ],
+            "answer": "Я даю тобі книгу.\n(I give you a book.)",
+            "translation": "I give you a book."
+          },
+          {
+            "words": [
+              "сумно",
+              "йому",
+              "дуже"
+            ],
+            "answer": "Йому дуже сумно.\n(He's very sad.)",
+            "translation": "He's very sad."
+          },
+          {
+            "words": [
+              "відпочити",
+              "треба",
+              "їй"
+            ],
+            "answer": "Їй треба відпочити.\n(She needs to rest.)",
+            "translation": "She needs to rest."
+          },
+          {
+            "words": [
+              "показує",
+              "мені",
+              "вона",
+              "фото"
+            ],
+            "answer": "Вона показує мені фото.\n(She shows me a photo.)",
+            "translation": "She shows me a photo."
+          },
+          {
+            "words": [
+              "потрібна",
+              "нам",
+              "допомога"
+            ],
+            "answer": "Нам потрібна допомога.\n(We need help.)",
+            "translation": "We need help."
+          },
+          {
+            "words": [
+              "подобається",
+              "Україна",
+              "їм"
+            ],
+            "answer": "Їм подобається Україна.\n(They like Ukraine.)",
+            "translation": "They like Ukraine."
+          },
+          {
+            "words": [
+              "весело",
+              "нам",
+              "тут"
+            ],
+            "answer": "Нам тут весело.\n(We're having fun here.)",
+            "translation": "We're having fun here."
+          },
+          {
+            "words": [
+              "допомагаємо",
+              "ми",
+              "їм"
+            ],
+            "answer": "Ми допомагаємо їм.\n(We help them.)",
+            "translation": "We help them."
+          },
+          {
+            "words": [
+              "вам",
+              "я",
+              "розповім"
+            ],
+            "answer": "Я вам розповім.\n(I'll tell you.)",
+            "translation": "I'll tell you."
+          },
+          {
+            "words": [
+              "легко",
+              "це",
+              "мені"
+            ],
+            "answer": "Мені це легко.\n(This is easy for me.)",
+            "translation": "This is easy for me."
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-11T15:25:25.613Z",
+      "modifiedAt": "2025-12-11T15:25:25.613Z"
+    },
+    {
+      "id": "act-a1-0-fillblank-2",
+      "type": "fill-blank",
+      "title": "подобатися Sentences",
+      "description": "Complete with the correct form.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "___ подобається Київ. (I like Kyiv.)",
+            "answer": "Мені",
+            "options": [
+              "Я",
+              "Мені",
+              "Мене",
+              "Мною"
+            ]
+          },
+          {
+            "prompt": "___ подобаються вареники? (Do you like varenyky?)",
+            "answer": "Тобі",
+            "options": [
+              "Ти",
+              "Тобі",
+              "Тебе",
+              "Тобою"
+            ]
+          },
+          {
+            "prompt": "___ сподобався концерт. (She liked the concert.)",
+            "answer": "Їй",
+            "options": [
+              "Вона",
+              "Їй",
+              "Її",
+              "Нею"
+            ]
+          },
+          {
+            "prompt": "___ подобається працювати тут. (He likes working here.)",
+            "answer": "Йому",
+            "options": [
+              "Він",
+              "Йому",
+              "Його",
+              "Ним"
+            ]
+          },
+          {
+            "prompt": "___ подобаються гори. (We like mountains.)",
+            "answer": "Нам",
+            "options": [
+              "Ми",
+              "Нам",
+              "Нас",
+              "Нами"
+            ]
+          },
+          {
+            "prompt": "___ сподобається Україна! (You'll like Ukraine!)",
+            "answer": "Вам",
+            "options": [
+              "Ви",
+              "Вам",
+              "Вас",
+              "Вами"
+            ]
+          },
+          {
+            "prompt": "___ не подобається ця музика. (They don't like this music.)",
+            "answer": "Їм",
+            "options": [
+              "Вони",
+              "Їм",
+              "Їх",
+              "Ними"
+            ]
+          },
+          {
+            "prompt": "___ сподобалось? (Did you like it?)",
+            "answer": "Тобі",
+            "options": [
+              "Ти",
+              "Тобі",
+              "Тебе",
+              "Тобою"
+            ]
+          },
+          {
+            "prompt": "Чи ___ подобається українська кухня? (Do you like Ukrainian cuisine?)",
+            "answer": "вам",
+            "options": [
+              "ви",
+              "вам",
+              "вас",
+              "вами"
+            ]
+          },
+          {
+            "prompt": "___ дуже сподобався фільм. (I really liked the movie.)",
+            "answer": "Мені",
+            "options": [
+              "Я",
+              "Мені",
+              "Мене",
+              "Мною"
+            ]
+          },
+          {
+            "prompt": "___ не подобається холод. (He doesn't like the cold.)",
+            "answer": "Йому",
+            "options": [
+              "Він",
+              "Йому",
+              "Його",
+              "Ним"
+            ]
+          },
+          {
+            "prompt": "___ завжди подобалось читати. (She always liked reading.)",
+            "answer": "Їй",
+            "options": [
+              "Вона",
+              "Їй",
+              "Її",
+              "Нею"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-11T15:25:25.613Z",
+      "modifiedAt": "2025-12-11T15:25:25.613Z"
+    },
+    {
+      "id": "act-a1-0-anagram-0",
+      "type": "anagram",
+      "title": "Unscramble Dative Pronouns",
+      "description": "Form dative pronouns.",
+      "content": {
+        "type": "anagram",
+        "isAnagram": true,
+        "items": [
+          {
+            "letters": [
+              "і",
+              "н",
+              "е",
+              "м"
+            ],
+            "answer": "мені\n(to me)",
+            "translation": "to me"
+          },
+          {
+            "letters": [
+              "і",
+              "б",
+              "о",
+              "т"
+            ],
+            "answer": "тобі\n(to you)",
+            "translation": "to you"
+          },
+          {
+            "letters": [
+              "у",
+              "м",
+              "о",
+              "й"
+            ],
+            "answer": "йому\n(to him)",
+            "translation": "to him"
+          },
+          {
+            "letters": [
+              "й",
+              "ї"
+            ],
+            "answer": "їй\n(to her)",
+            "translation": "to her"
+          },
+          {
+            "letters": [
+              "м",
+              "а",
+              "н"
+            ],
+            "answer": "нам\n(to us)",
+            "translation": "to us"
+          },
+          {
+            "letters": [
+              "м",
+              "а",
+              "в"
+            ],
+            "answer": "вам\n(to you pl.)",
+            "translation": "to you pl."
+          },
+          {
+            "letters": [
+              "м",
+              "ї"
+            ],
+            "answer": "їм\n(to them)",
+            "translation": "to them"
+          },
+          {
+            "letters": [
+              "у",
+              "м",
+              "о",
+              "к"
+            ],
+            "answer": "кому\n(to whom)",
+            "translation": "to whom"
+          },
+          {
+            "letters": [
+              "о",
+              "н",
+              "д",
+              "о",
+              "л",
+              "о",
+              "х"
+            ],
+            "answer": "холодно\n(cold)",
+            "translation": "cold"
+          },
+          {
+            "letters": [
+              "о",
+              "к",
+              "р",
+              "а",
+              "ж"
+            ],
+            "answer": "жарко\n(hot)",
+            "translation": "hot"
+          },
+          {
+            "letters": [
+              "о",
+              "л",
+              "е",
+              "с",
+              "е",
+              "в"
+            ],
+            "answer": "весело\n(fun)",
+            "translation": "fun"
+          },
+          {
+            "letters": [
+              "о",
+              "н",
+              "д",
+              "у",
+              "н"
+            ],
+            "answer": "нудно\n(boring)",
+            "translation": "boring"
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-11T15:25:25.613Z",
+      "modifiedAt": "2025-12-11T15:25:25.613Z"
+    },
+    {
+      "id": "act-a1-0-truefalse-0",
+      "type": "true-false",
+      "title": "Dative Grammar Check",
+      "description": "Dative Grammar Check",
+      "content": {
+        "type": "true-false",
+        "statements": [
+          {
+            "statement": "\"Мені\" is the dative form of \"я\".",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Подобатися\" requires the accusative case.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "In \"Мені холодно,\" \"мені\" is the grammatical subject.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Йому\" can mean both \"to him\" and \"to it.\"",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Тобі\" is the dative form of \"ти.\"",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "Dative answers the question \"Кого?\"",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Їй\" is the dative form of \"вона.\"",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Нам потрібна допомога\" = \"We need help.\"",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Давати\" takes only accusative objects.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Їм\" is the dative form of \"вони.\"",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "In \"Мені сумно,\" \"сумно\" is the subject.",
+            "isTrue": false,
+            "explanation": ""
+          },
+          {
+            "statement": "\"Вам\" can be formal singular or plural.",
+            "isTrue": false,
+            "explanation": ""
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-11T15:25:25.613Z",
+      "modifiedAt": "2025-12-11T15:25:25.613Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-1",
+    "level": "A2",
+    "phase": "A2.1",
+    "wordCount": 29,
+    "newWordCount": 29,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "v-meni-0-0",
+        "uk": "мені",
+        "en": "to me",
+        "pos": "pron",
+        "ipa": "/mɛˈnʲi/",
+        "note": "Dative of я",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-tobi-0-1",
+        "uk": "тобі",
+        "en": "to you",
+        "pos": "pron",
+        "ipa": "/tɔˈbʲi/",
+        "note": "Dative of ти",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-yomu-0-2",
+        "uk": "йому",
+        "en": "to him/it",
+        "pos": "pron",
+        "ipa": "/jɔˈmu/",
+        "note": "Dative of він/воно",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-yiy-0-3",
+        "uk": "їй",
+        "en": "to her",
+        "pos": "pron",
+        "ipa": "/jij/",
+        "note": "Dative of вона",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-nam-0-4",
+        "uk": "нам",
+        "en": "to us",
+        "pos": "pron",
+        "ipa": "/nɑm/",
+        "note": "Dative of ми",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vam-0-5",
+        "uk": "вам",
+        "en": "to you (formal/pl)",
+        "pos": "pron",
+        "ipa": "/vɑm/",
+        "note": "Dative of ви",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-yim-0-6",
+        "uk": "їм",
+        "en": "to them",
+        "pos": "pron",
+        "ipa": "/jim/",
+        "note": "Dative of вони",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-podobatysya-0-7",
+        "uk": "подобатися",
+        "en": "to please, be liked",
+        "pos": "verb",
+        "ipa": "/pɔdɔˈbɑtɪsʲɑ/",
+        "note": "+ Dative",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-spodobatysya-0-8",
+        "uk": "сподобатися",
+        "en": "to like (perfective)",
+        "pos": "verb",
+        "ipa": "/spɔdɔˈbɑtɪsʲɑ/",
+        "note": "+ Dative",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-potribno-0-9",
+        "uk": "потрібно",
+        "en": "is needed",
+        "pos": "pred",
+        "ipa": "/pɔˈtrʲibnɔ/",
+        "note": "+ Dative",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-treba-0-10",
+        "uk": "треба",
+        "en": "is necessary",
+        "pos": "pred",
+        "ipa": "/ˈtrɛbɑ/",
+        "note": "+ Dative",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-kholodno-0-11",
+        "uk": "холодно",
+        "en": "cold (impersonal)",
+        "pos": "pred",
+        "ipa": "/ˈxɔlɔdnɔ/",
+        "note": "State word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-zharko-0-12",
+        "uk": "жарко",
+        "en": "hot (impersonal)",
+        "pos": "pred",
+        "ipa": "/ˈʒɑrkɔ/",
+        "note": "State word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-teplo-0-13",
+        "uk": "тепло",
+        "en": "warm (impersonal)",
+        "pos": "pred",
+        "ipa": "/ˈtɛplɔ/",
+        "note": "State word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-sumno-0-14",
+        "uk": "сумно",
+        "en": "sad (impersonal)",
+        "pos": "pred",
+        "ipa": "/ˈsumnɔ/",
+        "note": "State word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-veselo-0-15",
+        "uk": "весело",
+        "en": "fun, merry",
+        "pos": "pred",
+        "ipa": "/ˈvɛsɛlɔ/",
+        "note": "State word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-tsikavo-0-16",
+        "uk": "цікаво",
+        "en": "interesting",
+        "pos": "pred",
+        "ipa": "/tsʲiˈkɑvɔ/",
+        "note": "State word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-nudno-0-17",
+        "uk": "нудно",
+        "en": "boring",
+        "pos": "pred",
+        "ipa": "/ˈnudnɔ/",
+        "note": "State word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-lehko-0-18",
+        "uk": "легко",
+        "en": "easy",
+        "pos": "pred",
+        "ipa": "/ˈlɛɦkɔ/",
+        "note": "State word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-vazhko-0-19",
+        "uk": "важко",
+        "en": "difficult",
+        "pos": "pred",
+        "ipa": "/ˈvɑʒkɔ/",
+        "note": "State word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-strashno-0-20",
+        "uk": "страшно",
+        "en": "scary, afraid",
+        "pos": "pred",
+        "ipa": "/ˈstrɑʃnɔ/",
+        "note": "State word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pryyemno-0-21",
+        "uk": "приємно",
+        "en": "pleasant",
+        "pos": "pred",
+        "ipa": "/prɪˈjɛmnɔ/",
+        "note": "\"Nice to meet you\"",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pohano-0-22",
+        "uk": "погано",
+        "en": "bad, unwell",
+        "pos": "pred",
+        "ipa": "/pɔˈɦɑnɔ/",
+        "note": "State word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-bolyache-0-23",
+        "uk": "боляче",
+        "en": "painful",
+        "pos": "pred",
+        "ipa": "/bɔˈlʲɑtʃɛ/",
+        "note": "State word",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-davaty-0-24",
+        "uk": "давати",
+        "en": "to give",
+        "pos": "verb",
+        "ipa": "/dɑˈvɑtɪ/",
+        "note": "+ Dat + Acc",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-pokazuvaty-0-25",
+        "uk": "показувати",
+        "en": "to show",
+        "pos": "verb",
+        "ipa": "/pɔkɑˈzuvɑtɪ/",
+        "note": "+ Dat + Acc",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-poyasnyuvaty-0-26",
+        "uk": "пояснювати",
+        "en": "to explain",
+        "pos": "verb",
+        "ipa": "/pɔjɑˈsnʲuvɑtɪ/",
+        "note": "+ Dat + Acc",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-dopomahaty-0-27",
+        "uk": "допомагати",
+        "en": "to help",
+        "pos": "verb",
+        "ipa": "/dɔpɔmɑˈɦɑtɪ/",
+        "note": "+ Dative",
+        "isNew": true,
+        "firstModule": 0
+      },
+      {
+        "id": "v-posylaty-0-28",
+        "uk": "посилати",
+        "en": "to send",
+        "pos": "verb",
+        "ipa": "/pɔsɪˈlɑtɪ/",
+        "note": "+ Dat + Acc",
+        "isNew": true,
+        "firstModule": 0
+      }
+    ]
+  }
+}

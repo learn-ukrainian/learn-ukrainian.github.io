@@ -489,7 +489,7 @@ Ukrainians take hospitality seriously. If you visit a Ukrainian home, expect to 
 1. коштує / скільки / яблука
    > [!answer] Скільки коштує яблука?
 
-2. будь ласка / кілограм / дайте / один
+2. один / Дайте / кілограм / будь / ласка
    > [!answer] Дайте один кілограм, будь ласка.
 
 3. молока / літр / один
@@ -510,7 +510,7 @@ Ukrainians take hospitality seriously. If you visit a Ukrainian home, expect to 
 8. продукти / молочні / де
    > [!answer] Де молочні продукти?
 
-9. будь ласка / води / пляшку
+9. ласка / води / Пляшку / будь
    > [!answer] Пляшку води, будь ласка.
 
 10. дуже / смачно

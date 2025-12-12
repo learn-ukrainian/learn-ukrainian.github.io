@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 537/500
+- **Words:** ✅ 786/500
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -22,7 +22,7 @@
 | **Presentation: Class I Verbs (-ати/-яти)** | ✅ | 146 | Included in Core |
 | **Cultural Insight: The Ukrainian Work Ethic 🇺🇦** | ✅ | 106 | Included in Core |
 | **Dialogue: At the Library 🗣️** | ✅ | 50 | Included in Core |
-| **Reading Practice: A Day in Kyiv 📖** | ➖ | 249 | Excluded Type |
+| **Reading Practice: A Day in Kyiv 📖** | ✅ | 249 | Included in Core |
 | **match-up: Pronoun to Ending** | 🎮 | 12 | Activity (12 items) |
 | **group-sort: Infinitive vs Conjugated** | 🎮 | 12 | Activity (12 items) |
 | **quiz: Conjugate the Verb** | 🎮 | 12 | Activity (12 items) |
