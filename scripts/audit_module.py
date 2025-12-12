@@ -260,9 +260,9 @@ def audit_module(file_path):
     # --- 3. Filtering and Analysis ---
     
     # Keywords
-    core_keywords = ["warm-up", "presentation", "introduction", "narrative", "context", "diagnostic", "cultural", "culture", "story", "dialogue", "reading", "deep dive", "riddle", "insight"]
+    core_keywords = ["warm-up", "presentation", "introduction", "narrative", "context", "diagnostic", "cultural", "culture", "story", "dialogue", "reading", "deep dive", "riddle", "insight", "conversation"]
     activity_keywords_list = ["match-up", "gap-fill", "quiz", "true-false", "group-sort", "unjumble", "transform", "fill-in", "error-correction", "anagram"]
-    exclude_keywords = ["activities", "activity", "practice", "production", "summary", "vocabulary", "check"]
+    exclude_keywords = ["activities", "activity", "production", "summary", "vocabulary", "check"]
     
     # Metrics
     total_words = 0

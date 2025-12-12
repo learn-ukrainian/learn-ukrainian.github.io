@@ -86,6 +86,12 @@ After reading the manifest, read the documents it specifies for your level:
 | **C1** | **95%** | **Full Immersion.** English only for "Language Link" boxes. |
 | **C2** | **100%** | **Native.** No English support. |
 
+**Reading Practice Sections:**
+- Use `## Reading Practice: Title` for Ukrainian reading passages
+- **A1-A2 MANDATORY:** Always include English translation after Ukrainian text
+- Format: `**Українською:**` then Ukrainian, then `**English Translation:**` then English
+- B1+ may omit translations or provide partial glosses
+
 ### 4. Detailed Grammar Explanations (Theory-First)
 - **Depth:** Explain *why* a rule exists (e.g., "Gender is about sound, not biology").
 - **Structure:** Break down complex rules using analogies.

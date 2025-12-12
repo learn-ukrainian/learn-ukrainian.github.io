@@ -35,7 +35,23 @@ Take a moment to appreciate what you've accomplished! In just 9 modules, you've 
 
 That's a lot! This checkpoint will help you consolidate everything before moving forward to A1.2, where you'll learn cases, possessives, and city navigation.
 
+Remember, learning a language is a marathon, not a sprint. Some concepts may feel challenging at first, but with consistent practice, they become second nature. The most important thing is to keep going and not be afraid to make mistakes — every mistake is a learning opportunity!
+
 > 💡 **Study Tip:** If you struggle with any section below, go back to the corresponding module and review. There's no shame in revisiting — that's how learning works!
+
+## Presentation: Your A1.1 Journey Map
+
+This checkpoint consolidates all the skills you've developed in Modules 01-09. Think of it as a tour through everything you've learned:
+
+**The Building Blocks:**
+1. **Cyrillic Mastery** (M01-02): You can now read Ukrainian script fluently
+2. **Gender Recognition** (M03): One look at a word and you know m/f/n
+3. **Pointing Words** (M05): цей, ця, це, ці помагають нам!
+4. **Verb Power** (M06, M08): Present tense is yours to command
+5. **Question Skills** (M07): Що? Де? Коли? Чому? Як?
+6. **Food Talk** (M09): Борщ, вареники, смачно!
+
+Below you'll find quick reviews and practice activities for each area. Добре! Почнімо!
 
 ## Review: The Cyrillic Alphabet (Modules 01-02)
 
@@ -63,15 +79,21 @@ Watch these letters in italic — they look different!
 
 ### The Three-Second Gender Rule
 
+Look at the ending of the noun in its dictionary form (nominative case). This tells you the gender almost every time:
+
 | Ending | Gender | Examples |
 |--------|--------|----------|
 | Consonant | **Masculine** | стіл, банк, друг |
 | -а / -я | **Feminine** | книга, земля, кава |
 | -о / -е | **Neuter** | вікно, море, яблуко |
 
+**Why Gender Matters:**
+Gender determines agreement with adjectives, demonstratives, and past tense verbs. Getting gender wrong is like saying "this tables" in English — grammatically incorrect!
+
 **Exceptions to know:**
 - **Тато** (dad) = masculine despite -о ending
 - **Ніч** (night) = feminine despite consonant ending
+- **Ім'я** (name) = neuter despite -я ending
 
 ## Review: Verbs (Modules 06, 08)
 
@@ -124,6 +146,34 @@ Watch these letters in italic — they look different!
 - Я читаю → Я **не** читаю
 - Вона працює → Вона **не** працює
 
+## Reading Practice: Наш сніданок ☕
+
+Read this short text and see how much you understand. Translation provided below for A1 support.
+
+**Українською:**
+
+Доброго ранку! Мене звати Оксана. Я українка. Я живу в Києві. Зараз ми снідаємо. Я їм вареники з сиром. Вони дуже смачні! Мій тато п'є каву, а мама п'є чай. Мій брат Андрій їсть хліб з маслом. Ми любимо наш сніданок.
+
+— Що ти хочеш, Андрію? — питає мама.
+— Я хочу сік, будь ласка, — відповідає Андрій.
+— Тримай! — каже мама.
+— Дякую!
+
+Після сніданку я йду на роботу, а Андрій йде до школи. Гарного дня!
+
+**English Translation:**
+
+Good morning! My name is Oksana. I am Ukrainian. I live in Kyiv. Right now we are having breakfast. I'm eating varenyky with cheese. They are very tasty! My dad drinks coffee, and mom drinks tea. My brother Andriy eats bread with butter. We love our breakfast.
+
+— What do you want, Andriy? — asks mom.
+— I want juice, please, — answers Andriy.
+— Here you go! — says mom.
+— Thank you!
+
+After breakfast I go to work, and Andriy goes to school. Have a nice day!
+
+**Comprehension check:** How many family members are mentioned? What does each person eat or drink? Can you identify all the verbs?
+
 ## Cultural Insight: What You've Learned 🇺🇦
 
 In these 9 modules, you've also absorbed Ukrainian culture:
@@ -132,18 +182,23 @@ In these 9 modules, you've also absorbed Ukrainian culture:
 - Ukrainian has unique letters (Ї, Є, Ґ, І) that mark it as distinct from Russian
 - The language survived centuries of suppression (Ems Ukaz, Valuev Circular)
 - Speaking Ukrainian today is an act of cultural affirmation
+- The Ukrainian alphabet has 33 letters, including the apostrophe as a spelling marker
 
 **Hospitality:**
 - Refusing food is rude — always accept at least a little
 - "Смачного!" before eating, "Дякую!" after
 - The phrase "Ще трохи?" (A little more?) is inevitable
+- Ukrainian hospitality is legendary — guests are treated like family
 
 **Food:**
-- Борщ is Ukrainian, recognized by UNESCO
-- Every grandmother has her own recipe
-- Food carries memory — Holodomor, resilience, family
+- Борщ is Ukrainian, recognized by UNESCO in 2022 as intangible cultural heritage
+- Every grandmother has her own recipe passed down through generations
+- Food carries memory — the Holodomor (1932-33), resilience, family bonds
+- Traditional meals mark holidays: кутя at Christmas, паска at Easter
 
 > 📜 **History Bite:** You've begun your journey with the Ukrainian language at a critical time. The language is thriving, with more Ukrainians than ever choosing to speak it daily. Your learning supports this cultural renaissance!
+
+> 💡 **Did You Know?** The Ukrainian language has been spoken for over 1,000 years. The oldest known Ukrainian text, the Ostroh Bible, was printed in 1581. Ukrainian is the third most spoken Slavic language after Russian and Polish, with over 40 million native speakers worldwide!
 
 # Summary
 
@@ -483,95 +538,83 @@ In these 9 modules, you've also absorbed Ukrainian culture:
 ## true-false: Comprehensive Review
 
 - [x] Ukrainian has 33 letters in its alphabet.
-  > Correct!
-
 - [ ] "В" sounds like English "b".
-  > False! В = v
-
 - [x] Nouns ending in -а are usually feminine.
-  > Correct! (книга, кава)
-
 - [ ] "Ми працюємо" is Class II conjugation.
-  > False! Працювати is Class I.
-
 - [x] To negate, add "не" before the verb.
-  > Correct!
-
 - [ ] Борщ is a Russian dish.
-  > False! Борщ is Ukrainian.
-
 - [x] "Їсти" is an irregular verb.
-  > Correct! їм, їси, їсть...
-
 - [ ] "Де" means "when".
-  > False! Де = where. Коли = when.
-
 - [x] "Смачного" is said before eating.
-  > Correct!
-
 - [ ] Class II verbs end in -єть in 3rd person singular.
-  > False! Class II: -ить (говорить)
-
 - [x] Ukrainian has unique letters that Russian doesn't have.
-  > Correct! Ї, Є, Ґ, І
-
 - [ ] "Ця книга" means "This is a book".
-  > False! "Ця книга" = "This book". "Це книга" = "This is a book."
 
 ## anagram: Vocabulary Scramble
 > Unscramble words from all modules.
 
-1. ч и т а т и
+1. а т ч и и т
    > [!answer] читати
 
-2. б о р щ
+2. щ р о б
    > [!answer] борщ
 
-3. г о в о р и т и
+3. р о г т и и в о
    > [!answer] говорити
 
-4. с н і д а н о к
+4. о н д а к і н с
    > [!answer] сніданок
 
-5. к н и г а
+5. н г а и к
    > [!answer] книга
 
-6. в а р е н и к и
+6. к и р е а н в и
    > [!answer] вареники
 
-7. п р а ц ю в а т и
+7. т в а ц ю р а п и
    > [!answer] працювати
 
-8. у к р а ї н с ь к а
+8. к ь с н а ї р у к а
    > [!answer] українська
 
-9. л ю б и т и
+9. т и б ю л и
    > [!answer] любити
 
-10. с м е т а н а
+10. н а м е т а с
     > [!answer] сметана
 
-11. д я к у ю
+11. ю к у я д
     > [!answer] дякую
 
-12. д о б р е
+12. р е о д б
     > [!answer] добре
+
 
 ---
 
 # Vocabulary
 
-This module is a review. No new vocabulary.
+This module consolidates key vocabulary from Modules 01-09.
 
-| Ukrainian | English | Module |
-| --- | --- | --- |
-| алфавіт | alphabet | M01-02 |
-| буква | letter | M01-02 |
-| читати | to read | M06 |
-| говорити | to speak | M08 |
-| їсти | to eat | M08-09 |
-| пити | to drink | M08-09 |
-| борщ | borscht | M09 |
-| вареники | dumplings | M09 |
-| сніданок | breakfast | M09 |
-| дякую | thank you | M02 |
+| Ukrainian | IPA | English | Module |
+| --- | --- | --- | --- |
+| алфавіт | /ɑɫfɐˈʋit/ | alphabet | M01-02 |
+| буква | /ˈbukʋɐ/ | letter | M01-02 |
+| читати | /t͡ʃɪˈtɑtɪ/ | to read | M06 |
+| говорити | /ɦoʋoˈrɪtɪ/ | to speak | M08 |
+| їсти | /ˈjistɪ/ | to eat | M08-09 |
+| пити | /ˈpɪtɪ/ | to drink | M08-09 |
+| борщ | /borʃt͡ʃ/ | borscht | M09 |
+| вареники | /ʋɐˈrɛnɪkɪ/ | dumplings | M09 |
+| сніданок | /sniˈdɑnok/ | breakfast | M09 |
+| дякую | /ˈdʲɑkuju/ | thank you | M02 |
+| стіл | /stil/ | table | M03 |
+| книга | /ˈknɪɦɐ/ | book | M03 |
+| вікно | /ʋikˈnɔ/ | window | M03 |
+| працювати | /prɐt͡sʲuˈʋɑtɪ/ | to work | M06 |
+| хотіти | /xoˈtitɪ/ | to want | M08 |
+| любити | /lʲuˈbɪtɪ/ | to love | M08 |
+| де | /dɛ/ | where | M07 |
+| що | /ʃt͡ʃɔ/ | what | M07 |
+| смачно | /ˈsmɑt͡ʃno/ | tasty | M09 |
+| кава | /ˈkɑʋɐ/ | coffee | M09 |
