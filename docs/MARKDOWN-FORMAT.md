@@ -733,7 +733,7 @@ Open-ended practice...
 
 The vocabulary section format varies by level to support immersion progression. The parser (`scripts/lib/parsers/vocabulary.ts`) supports all formats dynamically.
 
-### Tier 1: A1 (Modules 1-30) — Maximum Scaffolding
+### Tier 1: A1 (All Modules) — Maximum Scaffolding
 
 ```markdown
 # Vocabulary
@@ -753,7 +753,7 @@ The vocabulary section format varies by level to support immersion progression. 
 - Gender for nouns: m, f, n, pl (use `-` for non-nouns)
 - Notes for conjugation hints, usage, cognates
 
-### Tier 2: A2-A2+ (Modules 31-80) — Intermediate Support
+### Tier 2: A2 (All Modules) — Intermediate Support
 
 Same 6-column format as Tier 1:
 
@@ -772,7 +772,7 @@ Same 6-column format as Tier 1:
 - Continue IPA for new vocabulary
 - Shorter notes (learners more independent)
 
-### Tier 3: B1 (Modules 81-160) — Transitional
+### Tier 3: B1 (All Modules) — Transitional
 
 ```markdown
 # Словник
@@ -790,7 +790,7 @@ Same 6-column format as Tier 1:
 - POS abbreviations: ім (noun), дієсл (verb), прикм (adj), присл (adv), прийм (prep)
 - No separate gender column (include in Примітка if needed)
 
-### Tier 4: B2+ (Modules 161+) — Immersive
+### Tier 4: B2, C1, C2 (All Modules) — Immersive
 
 ```markdown
 # Словник
@@ -810,7 +810,7 @@ Same 6-column format as Tier 1:
 
 ### Review Vocabulary Section (B1+ only)
 
-For modules 81+, include cross-references to recurring words:
+For B1+ modules, include cross-references to recurring words:
 
 ```markdown
 # Review Vocabulary

@@ -178,7 +178,7 @@ npm run generate:json l2-uk-en a1 [moduleNum]  # JSON for Vibe app
 ### Anagram Phaseout (A1 Only)
 - **A1 Modules 01-10**: Allowed (scaffolding for Cyrillic learners)
 - **A1 Modules 11-20**: Reduce usage (transition period)
-- **A1 Modules 21-30**: Avoid (use unjumble instead)
+- **A1 Modules 21-34**: Avoid (use unjumble instead)
 - **A2+**: NOT ALLOWED
 
 ### Engagement Box Types
@@ -193,7 +193,7 @@ npm run generate:json l2-uk-en a1 [moduleNum]  # JSON for Vibe app
 ```
 curricula-opus/
 ├── curriculum/l2-uk-en/
-│   ├── a1/               # A1 modules (30 modules)
+│   ├── a1/               # A1 modules (34 modules)
 │   ├── a2/               # A2 modules (50 modules)
 │   ├── b1/               # B1 modules (80 modules)
 │   ├── b2/               # B2 modules (125 modules)
@@ -214,7 +214,7 @@ curricula-opus/
 
 Modules use level-relative numbering with slugified titles:
 - `a1/01-the-cyrillic-code-i.md` (first A1 module)
-- `a1/30-checkpoint-a1.md` (last A1 module)
+- `a1/34-checkpoint-a1.md` (last A1 module)
 - `b1/01-dative-case.md` (first B1 module)
 
 Level and module number are derived from the file path, not frontmatter.
@@ -223,7 +223,7 @@ Level and module number are derived from the file path, not frontmatter.
 
 | Level | Folder | Modules | Vocab Target | Description |
 |-------|--------|---------|--------------|-------------|
-| A1 | `a1/` | 30 | ~750 | Beginner - Cyrillic, basic phrases, simple grammar |
+| A1 | `a1/` | 34 | ~750 | Beginner - Cyrillic, basic phrases, simple grammar |
 | A2 | `a2/` | 50 | ~1,050 | Elementary - All 7 cases, aspect basics, comparison |
 | B1 | `b1/` | 80 | ~1,500 | Intermediate - Aspect mastery, motion verbs, complex sentences |
 | B2 | `b2/` | 125 | ~2,900 | Advanced - Literature, academic, professional |
@@ -242,7 +242,7 @@ Level and module number are derived from the file path, not frontmatter.
 
 - **Modules 1-10 (A1.1)**: Full transliteration `Слово (Slovo)`
 - **Modules 11-20 (A1.2)**: Vocab lists only, sentences Cyrillic
-- **Modules 21-30 (A1.3)**: First occurrence only
+- **Modules 21-34 (A1.3)**: First occurrence only
 - **A2+ (modules 31+)**: No transliteration
 
 ## Commands Reference
@@ -280,7 +280,7 @@ npm run claude:deploy
 
 | Level | Modules | Status |
 |-------|---------|--------|
-| A1 | 01-30 | ✅ Complete |
+| A1 | 01-34 | ✅ Complete |
 | A2 | 01-50 | ⏳ Needs full enrichment |
 | B1 | 01-80 | ⏳ Needs creation |
 | B2 | 01-125 | ⏳ Needs creation |

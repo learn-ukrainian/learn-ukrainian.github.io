@@ -13,7 +13,7 @@
 
 | Metric | A1 | A2 | B1-grammar | B1-vocab | B2-grammar | B2-vocab | C1 | C2 |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Module Range** | M01-30 | M01-50 | **M01-45** | **M46-80** | **M01-40** | **M41-125** | M01-115 | M01-80 |
+| **Module Range** | M01-34 | M01-50 | **M01-45** | **M46-80** | **M01-40** | **M41-125** | M01-115 | M01-80 |
 | **Core Word Count** | **Graduated*** | **1000+** | **1250+** | **1250+** | **1500+** | **1500+** | **1750+** | **2000+** |
 | **Immersion (% Ukr)** | **10-40%*** | **40-50%** | **50-55%** | **65-70%** | **65-70%** | **80-85%** | 95% | 100% |
 | **Min Vocab Words** | 20+ | 25+ | **20+** | **30+** | **20+** | **30+** | 25+ | 25+ |
@@ -139,7 +139,7 @@
 |-------|------------|----------------|-------|------------------|
 | A1 | 8+ | 12+ | 4+ | Recognition → Production (no stages needed) |
 | A2 | 10+ | 12+ | 5+ | Recognition → Discrimination → Controlled → Production |
-| B1 | 12+ | 14+ | 5+ | Full stage sequence with observe-first sections |
+| B1 | 12+ | 14+ | 5+ | Full stage sequence |
 | B2 | 14+ | 16+ | 5+ | Full stage sequence, heavier on production |
 | C1 | 16+ | 18+ | 5+ | Production-heavy, subtle discrimination |
 | C2 | 16+ | 18+ | 5+ | Production-heavy, native-level complexity |
@@ -1108,17 +1108,6 @@ Use: **Story → Vocabulary-in-Context → Analysis → Retelling**
    > (I think that he will come to the meeting tomorrow.)
 ```
 
-#### transform
-```markdown
-## transform: Complete Transformations
-
-1. Active → Passive: "Студент читає книгу."
-   > [!answer] Книга читається студентом.
-
-2. Direct → Indirect: Він сказав: "Я прийду завтра."
-   > [!answer] Він сказав, що він прийде завтра.
-```
-
 #### error-correction (1-2 errors, 10-16 words)
 ```markdown
 ## error-correction: Find and Fix
@@ -1169,17 +1158,6 @@ Use: **Story → Vocabulary-in-Context → Analysis → Retelling**
 
 1. сонця / Споглядаючи / древнім / захід / над / містом / він / глибокий / відчув / із / зв'язок / минулим
    > [!answer] Споглядаючи захід сонця над древнім містом, він відчув глибокий зв'язок із минулим.
-```
-
-#### transform: Register Shifts
-```markdown
-## transform: Change Register
-
-1. Colloquial → Formal: "Він сказав, що зробить це завтра."
-   > [!answer] Він повідомив, що виконає це завдання наступного дня.
-
-2. Formal → Colloquial: "Внаслідок несприятливих погодних умов захід було скасовано."
-   > [!answer] Через погану погоду захід відмінили.
 ```
 
 #### error-correction: Subtle Style Errors (2+ errors, 14-20 words)
@@ -1729,7 +1707,7 @@ Notice how we use "грати в" (play) with ball sports...
 |-------|---------|--------------|
 | A1 | 30 | Simple sentences, basic activities, anagram allowed |
 | A2 | 50 | All cases, aspect, error-correction introduced |
-| B1 | 80 | Conditionals, participles, transform activities |
+| B1 | 80 | Conditionals, participles, full activity palette |
 | B2 | 125 | Literary style, register variation, subtle errors |
 | C1 | 115 | Academic discourse, specialized topics |
 | C2 | 80 | Native-level complexity, professional specialization |

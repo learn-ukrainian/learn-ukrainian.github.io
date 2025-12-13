@@ -51,12 +51,14 @@ Before reading ANY other document, internalize these:
 
 | Level | Core Words | Activities | Items/Activity | Transliteration |
 |-------|------------|------------|----------------|-----------------|
-| A1 | 750+ | 8+ | 12+ | ALLOWED (first-occurrence) |
+| A1 | 300/500/750* | 8+ | 12+ | ALLOWED (first-occurrence) |
 | A2 | 1000+ | 10+ | 12+ | ⛔ FORBIDDEN |
 | B1 | 1250+ | 12+ | 14+ | ⛔ FORBIDDEN |
 | B2 | 1500+ | 14+ | 16+ | ⛔ FORBIDDEN |
 | C1 | 1750+ | 16+ | 18+ | ⛔ FORBIDDEN |
 | C2 | 2000+ | 16+ | 18+ | ⛔ FORBIDDEN |
+
+*A1 Core Word Count Graduated: M01-05 (300+), M06-10 (500+), M11-34 (750+)
 
 **VERIFICATION:** Run `python3 scripts/audit_module.py {file}` to verify word count.
 
@@ -176,8 +178,9 @@ npm run generate l2-uk-en {level} {module_num}
 ## Level Quick Reference
 
 ### A1 (Modules 01-34)
+- **Word Count:** Graduated (M01-05: 300+, M06-10: 500+, M11-34: 750+)
 - **Transliteration:** ALLOWED (first-occurrence only, phases out by M20)
-- **Immersion:** 15-30% Ukrainian
+- **Immersion:** 10-40% Ukrainian (graduated by module)
 - **Pedagogy:** PPP (Present-Practice-Produce)
 - **Cases:** Nom, Acc (M11+), Loc (M13+), Gen (M16+)
 - **Verbs:** Present (M06+), Past/Future (M21+)

@@ -97,7 +97,7 @@ VALID_ACTIVITY_TYPES = [
 # Activity keywords for detection
 ACTIVITY_KEYWORDS = [
     "match-up", "gap-fill", "quiz", "true-false", "group-sort", "unjumble",
-    "transform", "fill-in", "error-correction", "anagram", "cloze",
+    "fill-in", "error-correction", "anagram", "cloze",
     "select", "translate", "dialogue-reorder", "mark-the-words"
 ]
 

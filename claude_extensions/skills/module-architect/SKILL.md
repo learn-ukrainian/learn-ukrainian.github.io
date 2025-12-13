@@ -14,7 +14,7 @@ Before ANY module work, verify these **10 Critical Rules**:
 | 2 | ☐ Check grammar allowed at this module | See Каталог В in `{LEVEL}-CURRICULUM-PLAN.md` |
 | 3 | ☐ Know your word count target | **A1:** M01-M05 (300+), M06-M10 (500+), M11+ (750+) |
 | 4 | ☐ Vocabulary table at END of file | NOT in YAML frontmatter |
-| 5 | ☐ Section headers lowercase | `## warm-up` NOT `## Warm-Up` |
+| 5 | ☐ Activity headers: Title case after colon | `## fill-in: Case Practice` NOT `## fill-in: case practice` |
 | 6 | ☐ Activity headers: `## type: Title` | `## fill-in: Case Practice` |
 | 7 | ☐ Fill-in placeholder: `___` | Three underscores only |
 | 8 | ☐ 8+ activities, 12+ items each | Non-negotiable |
@@ -79,7 +79,7 @@ After reading the manifest, read the documents it specifies for your level:
 
 | Level | Ukrainian % | Strategy |
 |-------|------------|----------|
-| **A1** | **Prog.** | **Progressive Immersion.**<br>• **A1.1 (M01-M15): 15%** (5-25%). Heavy English scaffolding. Deep theory via English.<br>• **A1.2 (M16-M30): 30%** (15-45%). Transition phase. |
+| **A1** | **Prog.** | **Progressive Immersion.**<br>• **A1.1 (M01-M15): 15%** (5-25%). Heavy English scaffolding. Deep theory via English.<br>• **A1.2 (M16-M34): 30%** (15-45%). Transition phase. |
 | **A2** | **40%** | **Guided.** Aspect/Case theory in English. Simple instructions in Ukr. |
 | **B1-grammar** | **50%** | **M01-45.** Aspect, motion verbs, complex sentences, participles. More English for grammar theory. |
 | **B1-vocab** | **70%** | **M46-80.** Abstract concepts, opinions, media, society. Higher immersion for vocabulary acquisition. |
@@ -425,7 +425,7 @@ This section contains the "Richness & Soul" audit tables. Use the table that mat
 |-------|-------|-------|-------|----------------------|
 | **A1** | 8+ | 12+ | 4+ | fill-in ×2, match-up ×2, anagram ×2 (M01-10), unjumble ×1, quiz ×1 |
 | **A2** | 10+ | 12+ | 5+ | fill-in ×2, unjumble ×2, error-correction ×1, cloze ×1, mark-the-words ×1, dialogue-reorder ×1 |
-| **B1** | 12+ | 14+ | 5+ | fill-in ×2, unjumble ×2, error-correction ×2, cloze ×1, mark-the-words ×1, observe-first ×1 |
+| **B1** | 12+ | 14+ | 5+ | fill-in ×2, unjumble ×2, error-correction ×2, cloze ×1, mark-the-words ×1, translate ×1 |
 | **B2** | 14+ | 16+ | 5+ | fill-in ×3, unjumble ×2, error-correction ×2, cloze ×1, translate ×1, select ×1 |
 | **C1** | 16+ | 18+ | 5+ | cloze ×3, error-correction ×3, translate ×2, fill-in ×2, unjumble ×2, select ×1 |
 | **C2** | 16+ | 18+ | 5+ | cloze ×3, error-correction ×3, translate ×2, fill-in ×2, unjumble ×2, select ×1 |
@@ -447,7 +447,6 @@ This section contains the "Richness & Soul" audit tables. Use the table that mat
 | dialogue-reorder | ❌ | 1+ | 1+ | 1+ | 1+ | — | production |
 | select | ❌ | opt | 1+ | 1+ | 1+ | 1+ | discrimination |
 | translate | ❌ | opt | 1+ | 1+ | 2+ | 2+ | production |
-| observe-first | ❌ | opt | 1+ | 1+ | — | — | recognition |
 
 **Legend:** `2+` = minimum, `opt` = optional, `❌` = not allowed, `—` = rarely used
 
@@ -473,7 +472,7 @@ This section contains the "Richness & Soul" audit tables. Use the table that mat
 | `mark-the-words` | A2 | Click words matching criteria | Case recognition, word class awareness |
 | `select` | A2 (optional) | Multi-checkbox selection | Multiple valid answers, register variants |
 | `translate` | A2 (optional) | Select correct translation | Production practice, alternative awareness |
-| `observe-first` | B1 | Pattern discovery section | Inductive grammar teaching |
+| `> [!observe]` | B1 | Inline pattern discovery callout | Inductive grammar teaching (NOT an activity type) |
 
 ### Activity Sequencing by Level
 
@@ -488,12 +487,14 @@ match-up → group-sort → quiz → true-false → fill-in → anagram → unju
 [controlled] fill-in/cloze/error-correction → [production] translate/dialogue-reorder
 ```
 
-**B1-B2:** Full stage sequence with observe-first
+**B1-B2:** Full stage sequence
 ```
-[observe-first section] → [recognition] mark-the-words →
-[discrimination] select → [controlled] fill-in/cloze/error-correction ×2 →
+[recognition] mark-the-words → [discrimination] select →
+[controlled] fill-in/cloze/error-correction ×2 →
 [production] translate/unjumble/dialogue-reorder
 ```
+
+**Note:** Use `> [!observe]` callout inline BEFORE grammar explanations (content pattern, not activity).
 
 **C1-C2:** Production-heavy, subtle discrimination
 ```
@@ -507,7 +508,7 @@ Sequence activities receptive → productive:
 
 | Stage | Icon | Activities | Purpose |
 |-------|------|------------|---------|
-| **Recognition** | 🔍 | mark-the-words, observe-first | Can learner identify the pattern? |
+| **Recognition** | 🔍 | mark-the-words, match-up, group-sort | Can learner identify the pattern? |
 | **Discrimination** | 👂 | select, true-false (subtle) | Can learner distinguish correct from incorrect? |
 | **Controlled** | ✏️ | fill-in, cloze, error-correction | Can learner produce with scaffolding? |
 | **Production** | ✍️ | translate, dialogue-reorder, unjumble | Can learner produce independently? |
@@ -528,11 +529,11 @@ Add `[stage: xxx]` to activity headers:
 | **mark-the-words** | Recognition stage, case identification, word classes | Production practice needed |
 | **select** | Multiple valid answers exist (cases, synonyms, register) | Single correct answer |
 | **translate** | Testing production accuracy with alternatives | Very early A2 |
-| **observe-first** | Introducing new grammar pattern inductively | Simple vocabulary modules |
+| **`> [!observe]`** | Inline pattern discovery before grammar explanations (B1-B2) | Simple vocabulary modules, C1-C2 |
 
-### Observe-First Section Guidelines
+### Observe-First Content Pattern (NOT an Activity Type)
 
-Use `> [!observe]` callout before grammar explanations (B1-B2):
+Use `> [!observe]` callout INLINE before grammar explanations (B1-B2). This is a **content pattern**, not an activity type:
 
 ```markdown
 > [!observe]
