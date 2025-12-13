@@ -31,6 +31,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
+          routeBasePath: '/', // Docs at root instead of /docs/
           // Editing disabled
         },
         blog: false,
@@ -64,27 +65,27 @@ const config: Config = {
             },
             {
               label: 'A1 - Beginner',
-              to: '/docs/a1/',
+              to: '/a1/',
             },
             {
               label: 'A2 - Elementary',
-              to: '/docs/a2/',
+              to: '/a2/',
             },
             {
               label: 'B1 - Intermediate',
-              to: '/docs/b1/',
+              to: '/b1/',
             },
             {
               label: 'B2 - Upper-Intermediate',
-              to: '/docs/b2/',
+              to: '/b2/',
             },
             {
               label: 'C1 - Advanced',
-              to: '/docs/c1/',
+              to: '/c1/',
             },
             {
               label: 'C2 - Mastery',
-              to: '/docs/c2/',
+              to: '/c2/',
             },
             {
               type: 'html',
@@ -92,7 +93,7 @@ const config: Config = {
             },
             {
               label: 'LIT - Literature & Classics',
-              to: '/docs/lit/',
+              to: '/lit/',
             },
           ],
         },
@@ -111,15 +112,15 @@ const config: Config = {
           items: [
             {
               label: 'A1 - Beginner',
-              to: '/docs/a1/',
+              to: '/a1/',
             },
             {
               label: 'A2 - Elementary',
-              to: '/docs/a2/',
+              to: '/a2/',
             },
             {
               label: 'B1 - Intermediate',
-              to: '/docs/b1/',
+              to: '/b1/',
             },
           ],
         },
@@ -128,15 +129,15 @@ const config: Config = {
           items: [
             {
               label: 'B2 - Upper-Intermediate',
-              to: '/docs/b2/',
+              to: '/b2/',
             },
             {
               label: 'C1 - Advanced',
-              to: '/docs/c1/',
+              to: '/c1/',
             },
             {
               label: 'C2 - Mastery',
-              to: '/docs/c2/',
+              to: '/c2/',
             },
           ],
         },
