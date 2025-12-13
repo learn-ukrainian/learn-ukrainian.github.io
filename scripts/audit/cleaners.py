@@ -118,6 +118,8 @@ def extract_ukrainian_sentences(text: str) -> list[str]:
     - Table rows (lines starting with |)
     - Numbered list headers (lines like **1. Title:**)
     - Lines starting with # (markdown headers)
+    - Bullet point lists (lines starting with - or *)
+    - Blockquote callout headers (lines starting with >)
     """
     sentences = []
 
@@ -126,18 +128,27 @@ def extract_ukrainian_sentences(text: str) -> list[str]:
     prose_lines = []
     for line in lines:
         stripped = line.strip()
+        # Skip table rows
         if stripped.startswith('|'):
             continue
+        # Skip headers
         if stripped.startswith('#'):
             continue
+        # Skip numbered lists
         if re.match(r'^\*?\*?\d+\.', stripped):
+            continue
+        # Skip bullet point lists (common for letter/word lists)
+        if re.match(r'^[-*]\s', stripped):
+            continue
+        # Skip blockquote callout headers (e.g., "> 💡 **Did You Know**")
+        if re.match(r'^>\s*[💡⚡🎬🎭🔗🌍🎁🗣️🏠🔍]', stripped):
             continue
         prose_lines.append(line)
 
     prose_text = '\n'.join(prose_lines)
 
-    # Split by sentence-ending punctuation
-    raw_sentences = re.split(r'[.!?]', prose_text)
+    # Split by sentence-ending punctuation AND em-dashes (common in Ukrainian text)
+    raw_sentences = re.split(r'[.!?—]', prose_text)
     for sent in raw_sentences:
         cyrillic_chars = len(re.findall(r'[\u0400-\u04ff]', sent))
         if cyrillic_chars > 5:
