@@ -3,20 +3,25 @@ module: 15
 title: "Функціональні стилі: вступ"
 level: B2
 phase: B2.1a
-estimated_time: 55
-prerequisites:
-  - b2/11-multi-clause-sentences
-  - b2/14-stylistic-connectors
-theme: "Style awareness"
+duration: 55
+transliteration: none
+tags: functional-styles, register, official-style, academic-style, journalistic-style
+objectives:
+  - Identify the five functional styles of Ukrainian language
+  - Recognize stylistic markers in different text types
+  - Adapt language appropriately to different communicative contexts
+grammar:
+  - Official style markers (passive -но/-то, formulaic expressions)
+  - Academic style markers (terminology, logical connectors)
+  - Journalistic style markers (rhetorical questions, evaluation)
+  - Literary style markers (imagery, tropes, inversion)
+  - Colloquial style markers (ellipsis, particles, interjections)
 pedagogy: TTT
-cefr_can_do:
-  - "Can identify the five functional styles of Ukrainian"
-  - "Can recognize stylistic markers in texts"
-  - "Can adapt language to different communicative contexts"
-decolonization_note: "Ukrainian has a rich system of functional styles developed through centuries of literary and scholarly tradition. This module introduces the foundation for authentic register awareness."
 ---
 
 # Діагностика
+
+> **For English Speakers:** This diagnostic helps you recognize that the same message can be expressed in completely different ways depending on context. Just as English has formal (legal documents) vs. informal (text messages) registers, Ukrainian has a well-defined system of five functional styles.
 
 > Прочитайте чотири версії одного повідомлення. Визначте стиль кожної.
 
@@ -36,6 +41,9 @@ decolonization_note: "Ukrainian has a rich system of functional styles developed
 
 ---
 
+> [!tip] Register Recognition
+> Notice how Version A uses passive constructions ("затверджено") and formal document references—hallmarks of official style. Version C uses colloquial markers like "типу" (like, sort of) that would never appear in formal writing.
+
 > [!question] Питання для роздумів
 > 1. Яка аудиторія кожної версії?
 > 2. Де б ви зустріли кожен текст?
@@ -44,6 +52,8 @@ decolonization_note: "Ukrainian has a rich system of functional styles developed
 ---
 
 # Аналіз: П'ять функціональних стилів
+
+> **For English Speakers:** Ukrainian linguists traditionally identify five "functional styles" (функціональні стилі). This classification is more rigidly defined than English style categories. Think of it as the linguistic equivalent of dress codes: just as you wouldn't wear beach attire to a business meeting, you wouldn't use colloquial markers in a legal document.
 
 ## Система функціональних стилів української мови
 
@@ -55,9 +65,14 @@ decolonization_note: "Ukrainian has a rich system of functional styles developed
 | 4 | **Художній** | Література, мистецтво | Естетичний вплив |
 | 5 | **Розмовний** | Побут, неформальне спілкування | Комунікація |
 
+> [!note] Comparison with English
+> While English also has registers (formal, informal, academic, journalistic), Ukrainian's system is more codified and taught explicitly in schools. Mixing styles inappropriately is considered a serious stylistic error in Ukrainian—more so than in English.
+
 ---
 
 ## 1. Офіційно-діловий стиль
+
+> **For English Speakers:** The official-business style is equivalent to English "legalese" or bureaucratic language. It uses impersonal passive constructions extensively—the Ukrainian -но/-то forms (like "затверджено" = "has been approved") are its hallmark.
 
 | Ознака | Опис | Приклад |
 |--------|------|---------|
@@ -73,6 +88,8 @@ decolonization_note: "Ukrainian has a rich system of functional styles developed
 
 ## 2. Науковий стиль
 
+> **For English Speakers:** Academic Ukrainian resembles English academic prose: terminology-heavy, impersonal, and highly structured. However, Ukrainian academic writing often uses the "authorial we" (ми) and passive constructions ("було досліджено" = "it was researched") even more than English.
+
 | Ознака | Опис | Приклад |
 |--------|------|---------|
 | **Лексика** | Терміни, дефініції | гіпотеза, парадигма |
@@ -87,6 +104,8 @@ decolonization_note: "Ukrainian has a rich system of functional styles developed
 
 ## 3. Публіцистичний стиль
 
+> **For English Speakers:** Journalistic style in Ukrainian serves both to inform and persuade—think op-eds and feature articles. It combines factual reporting with rhetorical flourishes, evaluative vocabulary, and calls to action. This style is more openly opinionated than Anglo-American journalism traditions.
+
 | Ознака | Опис | Приклад |
 |--------|------|---------|
 | **Лексика** | Оцінна, емоційна | шокуючий, скандальний |
@@ -97,9 +116,14 @@ decolonization_note: "Ukrainian has a rich system of functional styles developed
 **Приклад:**
 «Чому влада ігнорує голос народу? Тисячі людей вийшли на вулиці, вимагаючи змін. Час діяти — зараз!»
 
+> [!warning] False Friends
+> The word "публіцистичний" doesn't mean "publicity" or "public relations"—it refers to journalism and public discourse. Similarly, "публіцистика" means journalism/commentary, not advertising.
+
 ---
 
 ## 4. Художній стиль
+
+> **For English Speakers:** Literary style is the domain of fiction, poetry, and creative prose. Like English literary language, it prizes imagery, metaphor, and individual voice. Ukrainian literature has a rich tradition of linguistic experimentation, from Shevchenko's romanticism to modernist innovations.
 
 | Ознака | Опис | Приклад |
 |--------|------|---------|
@@ -115,6 +139,8 @@ decolonization_note: "Ukrainian has a rich system of functional styles developed
 
 ## 5. Розмовний стиль
 
+> **For English Speakers:** Colloquial style is everyday spoken Ukrainian—what you'd use with friends and family. Key markers include discourse particles (ну, ж, же, от), ellipsis (dropping words the context makes clear), interjections, and informal vocabulary. Note: "шо" is a colloquial variant of "що" (what)—perfectly fine in conversation but inappropriate in formal writing.
+
 | Ознака | Опис | Приклад |
 |--------|------|---------|
 | **Лексика** | Просторіччя, сленг | класний, прикольний |
@@ -125,13 +151,20 @@ decolonization_note: "Ukrainian has a rich system of functional styles developed
 **Приклад:**
 «— Ну як там у тебе? — Та нічого, нормально. Ти чув про Сашка? — Ні, а шо?»
 
+> [!important] Register Awareness
+> Using colloquial markers like "типу," "класно," or "шо" in formal contexts is a common learner error. These words instantly signal informality—avoid them in official documents, academic writing, or professional correspondence.
+
 ---
 
 # Поглиблений аналіз
 
+> **For English Speakers:** To master Ukrainian register, you need to recognize stylistic markers—specific vocabulary, grammatical constructions, and syntactic patterns that signal which style you're reading or should use. This section provides diagnostic tools for style identification.
+
 ## Стилістичні маркери
 
 ### Лексичні маркери
+
+> **For English Speakers:** Lexical markers are the "vocabulary fingerprints" of each style. Just as English legal documents use "hereby," "pursuant to," and "aforementioned," Ukrainian official style has its own characteristic lexicon.
 
 | Стиль | Характерна лексика |
 |-------|-------------------|
@@ -145,6 +178,8 @@ decolonization_note: "Ukrainian has a rich system of functional styles developed
 
 ### Граматичні маркери
 
+> **For English Speakers:** Grammar reveals style as much as vocabulary. The passive -но/-то forms are the defining feature of official Ukrainian. Academic writing uses the "timeless present" (describing general truths) and the authorial "we." Colloquial speech drops words that context makes clear—a process called ellipsis.
+
 | Стиль | Граматичні особливості |
 |-------|----------------------|
 | Офіційно-діловий | Пасив -но/-то, інфінітивні конструкції |
@@ -157,6 +192,8 @@ decolonization_note: "Ukrainian has a rich system of functional styles developed
 
 ## Змішування стилів
 
+> **For English Speakers:** In practice, pure styles are rare. Most texts blend elements from multiple styles. The key is to blend consciously and appropriately. Popular science mixes academic precision with journalistic accessibility. Advertising combines persuasion (journalistic) with informal appeal (colloquial).
+
 У реальному мовленні стилі можуть змішуватися:
 
 | Ситуація | Приклад |
@@ -166,9 +203,14 @@ decolonization_note: "Ukrainian has a rich system of functional styles developed
 | Рекламний | Публіцистичний + розмовний |
 | Есеїстичний | Науковий + художній |
 
+> [!caution] Style Clash
+> Random mixing of styles creates dissonance. Using official vocabulary ("відповідно до") in a love poem or colloquial fillers ("типу") in a legal document is jarring and inappropriate. Blend deliberately, not accidentally.
+
 ---
 
 ## Вибір стилю: фактори
+
+> **For English Speakers:** Choosing the right style depends on the rhetorical situation—who your audience is, what you want to achieve, where the communication takes place, and what format you're using. Ask yourself these questions before writing:
 
 | Фактор | Питання | Вплив |
 |--------|---------|-------|
@@ -181,9 +223,13 @@ decolonization_note: "Ukrainian has a rich system of functional styles developed
 
 # Занурення
 
+> **For English Speakers:** This immersion section demonstrates how the same event can be reported in five completely different styles. Pay attention to the vocabulary, sentence structure, and overall tone of each version.
+
 ## Текст 1: Одна подія — п'ять стилів
 
 **Подія:** Новий закон про мову набув чинності.
+
+> **For English Speakers:** Notice how each version presents the same news but for different audiences and purposes. The official version is impersonal and formulaic; the colloquial version uses discourse particles and informal contractions.
 
 ---
 
@@ -214,6 +260,8 @@ decolonization_note: "Ukrainian has a rich system of functional styles developed
 
 ## Текст 2: Стилістичні дисонанси
 
+> **For English Speakers:** These examples show what happens when styles clash inappropriately. Each sentence mixes formal and informal elements in ways that sound absurd to native speakers—like writing "Pursuant to Section 3.2, this party is totally stoked about the agreement" in English.
+
 **Неправильне використання стилю (знайдіть помилку):**
 
 ❌ «Відповідно до наказу № 123, ми тут усі в шоці від того, що сталося. Типу, це взагалі нічого собі!»
@@ -226,7 +274,11 @@ decolonization_note: "Ukrainian has a rich system of functional styles developed
 
 # Діалоги
 
+> **For English Speakers:** These dialogues illustrate common situations where register choice matters. Pay attention to how characters discuss appropriate vs. inappropriate style choices.
+
 ## Діалог 1: Вибір стилю
+
+> **For English Speakers:** This dialogue shows a student learning that writing to a university dean requires official style—similar to how you wouldn't start an email to your university president with "Hey, what's up?"
 
 ---
 
@@ -246,6 +298,8 @@ decolonization_note: "Ukrainian has a rich system of functional styles developed
 
 ## Діалог 2: Аналіз тексту
 
+> **For English Speakers:** This dialogue demonstrates a common editing situation: using overly academic language in journalism. The editor explains that newspaper readers expect accessible language, not academic jargon.
+
 ---
 
 **Редактор:** Цей текст для газети, а звучить як дисертація.
@@ -261,6 +315,8 @@ decolonization_note: "Ukrainian has a rich system of functional styles developed
 ---
 
 ## Діалог 3: Змішування стилів
+
+> **For English Speakers:** This dialogue explores when style mixing is appropriate. Advertising often blends styles deliberately—but a bank's advertising needs more formality to build trust than, say, a youth clothing brand.
 
 ---
 
@@ -280,7 +336,7 @@ decolonization_note: "Ukrainian has a rich system of functional styles developed
 
 # Культурна примітка
 
-> [!culture] Функціональні стилі та українська ідентичність
+> [!cultural] Функціональні стилі та українська ідентичність
 >
 > Система функціональних стилів української мови формувалася століттями:
 >
@@ -299,7 +355,9 @@ decolonization_note: "Ukrainian has a rich system of functional styles developed
 
 ---
 
-# Підсумок
+# Summary
+
+## The Five Functional Styles at a Glance
 
 | Стиль | Сфера | Ключові ознаки |
 |-------|-------|----------------|
@@ -309,310 +367,376 @@ decolonization_note: "Ukrainian has a rich system of functional styles developed
 | Художній | Література | Образність, тропи, індивідуальність |
 | Розмовний | Побут | Простота, еліпсис, емоційність |
 
+## Key Takeaways for English Speakers
+
 **Вибір стилю залежить від:**
-1. Адресата (аудиторії)
-2. Мети комунікації
-3. Контексту (ситуації)
-4. Жанру (формату)
+1. Адресата (аудиторії) — Who will read/hear this?
+2. Мети комунікації — What am I trying to achieve?
+3. Контексту (ситуації) — Where does this communication occur?
+4. Жанру (формату) — What type of text is this?
+
+## Common Errors to Avoid
+
+- **Mixing colloquial and official language**: Words like "типу," "класно," "шо" are never appropriate in formal contexts
+- **Using academic terminology in journalism**: Newspaper readers expect accessible language
+- **Applying official formulas in creative writing**: "Затверджено наказом" doesn't belong in poetry
+
+## Quick Style Identification
+
+When you encounter a text, ask yourself:
+- Does it use -но/-то passive forms? → Likely official or academic
+- Does it use rhetorical questions and evaluative language? → Likely journalistic
+- Does it use ellipsis and discourse particles (ну, ж, же)? → Likely colloquial
+- Does it use imagery and metaphors? → Likely literary
 
 ---
 
-# Вправи
+# Activities
 
-## mark-the-words
-prompt: Клацніть на слова, характерні для офіційно-ділового стилю
-passage: Відповідно до наказу затверджено нову редакцію Положення. Контроль покладено на заступника. Це прикольно. Крім того, важливо зазначити. Ого, як цікаво!
-correct: Відповідно, наказу, затверджено, редакцію, Положення, покладено
+## mark-the-words: Клацніть на слова, характерні для офіційно-ділового стилю
 
----
+Відповідно до наказу затверджено нову редакцію Положення. Контроль покладено на заступника. Це прикольно. Крім того, важливо зазначити. Ого, як цікаво!
 
-## group-sort
-prompt: Розподіліть слова за стилями
-groups:
-  - name: "Офіційно-діловий"
-    items:
-      - "наказ"
-      - "затверджено"
-      - "відповідно"
-      - "Положення"
-  - name: "Розмовний"
-    items:
-      - "класно"
-      - "типу"
-      - "нормально"
-      - "ну"
+> [!correct]
+> Відповідно, наказу, затверджено, редакцію, Положення, покладено
 
 ---
 
-## quiz
-prompt: Який стиль використовується в наукових статтях?
-answer: Науковий
-options:
-  - Науковий
-  - Офіційно-діловий
-  - Розмовний
-  - Публіцистичний
+## group-sort: Розподіліть слова за стилями
+
+- Офіційно-діловий: наказ | затверджено | відповідно | Положення
+- Розмовний: класно | типу | нормально | ну
 
 ---
 
-## quiz
-prompt: Яка ознака характерна для публіцистичного стилю?
-answer: Риторичні питання
-options:
-  - Риторичні питання
-  - Канцеляризми
-  - Терміни
-  - Еліпсис
+## quiz: Який стиль використовується в наукових статтях?
+
+- [x] Науковий
+- [ ] Офіційно-діловий
+- [ ] Розмовний
+- [ ] Публіцистичний
 
 ---
 
-## true-false
-prompt: Визначте, чи правильні твердження
-statements:
-  - text: "Офіційно-діловий стиль використовує форми на -но/-то"
-    answer: true
-  - text: "Розмовний стиль характерний для наукових текстів"
-    answer: false
-  - text: "Публіцистичний стиль використовує оцінну лексику"
-    answer: true
-  - text: "Художній стиль уникає метафор"
-    answer: false
-  - text: "Стилі можна змішувати свідомо"
-    answer: true
-  - text: "В українській мові є 7 функціональних стилів"
-    answer: false
+## quiz: Яка ознака характерна для публіцистичного стилю?
+
+- [x] Риторичні питання
+- [ ] Канцеляризми
+- [ ] Терміни
+- [ ] Еліпсис
 
 ---
 
-## fill-in
-type: dropdown
-prompt: Визначте стиль
-template: "«Наказом затверджено Положення...» — це {{blank}} стиль."
-blanks:
-  - options:
-      - "[офіційно-діловий]"
-      - "науковий"
-      - "художній"
+## true-false: Визначте, чи правильні твердження
+
+- [x] Офіційно-діловий стиль використовує форми на -но/-то
+- [ ] Розмовний стиль характерний для наукових текстів
+- [x] Публіцистичний стиль використовує оцінну лексику
+- [ ] Художній стиль уникає метафор
+- [x] Стилі можна змішувати свідомо
+- [ ] В українській мові є 7 функціональних стилів
 
 ---
 
-## fill-in
-type: dropdown
-prompt: Визначте стиль
-template: "«Дослідження показало, що кореляція становить...» — це {{blank}} стиль."
-blanks:
-  - options:
-      - "[науковий]"
-      - "розмовний"
-      - "публіцистичний"
+## fill-in: Визначте стиль
+
+1. «Наказом затверджено Положення...» — це ___ стиль.
+
+> [!answer]
+> офіційно-діловий
+
+> [!options]
+> офіційно-діловий | науковий | художній
 
 ---
 
-## fill-in
-type: dropdown
-prompt: Визначте стиль
-template: "«Чому влада ігнорує голос народу?» — це {{blank}} стиль."
-blanks:
-  - options:
-      - "[публіцистичний]"
-      - "офіційно-діловий"
-      - "науковий"
+## fill-in: Визначте стиль (2)
+
+1. «Дослідження показало, що кореляція становить...» — це ___ стиль.
+
+> [!answer]
+> науковий
+
+> [!options]
+> науковий | розмовний | публіцистичний
 
 ---
 
-## error-correction
-prompt: Виправте стилістичну невідповідність
-sentences:
-  - incorrect: "Наказом № 123 типу затверджено нормативку."
-    correct: "Наказом № 123 затверджено нормативний акт."
-    hint: "«Типу» і «нормативка» — розмовні, не офіційні"
-  - incorrect: "Дослідження показало, шо там усе класно вийшло."
-    correct: "Дослідження показало, що результати позитивні."
-    hint: "«Шо» і «класно» — розмовні, не наукові"
-  - incorrect: "Відповідно до закону, все буде круто!"
-    correct: "Відповідно до закону, ситуація покращиться."
-    hint: "«Круто» — розмовне, не офіційне"
-  - incorrect: "Серце моє затверджено наказом кохання."
-    correct: "Серце моє палає коханням."
-    hint: "«Наказ» — офіційне, не художнє"
+## fill-in: Визначте стиль (3)
+
+1. «Чому влада ігнорує голос народу?» — це ___ стиль.
+
+> [!answer]
+> публіцистичний
+
+> [!options]
+> публіцистичний | офіційно-діловий | науковий
 
 ---
 
-## error-correction
-prompt: Визначте стиль і виправте
-sentences:
-  - incorrect: "У науковій статті: «Короче, гіпотеза підтвердилась»."
-    correct: "Таким чином, гіпотезу підтверджено."
-    hint: "«Короче» — розмовне"
-  - incorrect: "У законі: «Громадяни мають право, і це реально важливо»."
-    correct: "Громадяни мають право, що забезпечує..."
-    hint: "«Реально» — розмовне"
-  - incorrect: "У романі: «Згідно з почуттями, затверджую любов»."
-    correct: "Любов переповнювала серце."
-    hint: "«Згідно з», «затверджую» — офіційні"
-  - incorrect: "У газеті: «Кореляція змінних свідчить про проблему»."
-    correct: "Зв'язок між цими явищами свідчить про проблему."
-    hint: "«Кореляція змінних» — занадто науково для газети"
+## error-correction: Виправте стилістичну невідповідність
+
+- Наказом № 123 типу затверджено нормативку.
+
+> [!error]
+> типу, нормативку
+
+> [!answer]
+> Наказом № 123 затверджено нормативний акт.
+
+> [!explanation]
+> «Типу» і «нормативка» — розмовні слова, не офіційні.
 
 ---
 
-## cloze
-passage: |
-  В українській мові є п'ять функціональних стилів. [1] стиль використовується в документах і законах. [2] стиль характерний для наукових текстів. [3] стиль властивий ЗМІ. [4] стиль — для літератури. [5] стиль — для повсякденного спілкування.
-blanks:
-  - answer: "Офіційно-діловий"
-    options: ["Офіційно-діловий", "Науковий", "Художній"]
-  - answer: "Науковий"
-    options: ["Науковий", "Розмовний", "Публіцистичний"]
-  - answer: "Публіцистичний"
-    options: ["Публіцистичний", "Офіційно-діловий", "Художній"]
-  - answer: "Художній"
-    options: ["Художній", "Науковий", "Розмовний"]
-  - answer: "Розмовний"
-    options: ["Розмовний", "Офіційно-діловий", "Науковий"]
+- Дослідження показало, шо там усе класно вийшло.
+
+> [!error]
+> шо, класно
+
+> [!answer]
+> Дослідження показало, що результати позитивні.
+
+> [!explanation]
+> «Шо» і «класно» — розмовні слова, не наукові.
 
 ---
 
-## unjumble
-prompt: Відновіть офіційно-діловий текст
-jumbled:
-  - "наказом / затверджено / нову / редакцію / Положення"
-  - "контроль / покладено / на / заступника / директора"
-  - "відповідно / до / Закону / України"
-  - "набирає / чинності / з / 01.01.2025"
-solutions:
-  - "Наказом затверджено нову редакцію Положення."
-  - "Контроль покладено на заступника директора."
-  - "Відповідно до Закону України..."
-  - "Набирає чинності з 01.01.2025."
+- Відповідно до закону, все буде круто!
+
+> [!error]
+> круто
+
+> [!answer]
+> Відповідно до закону, ситуація покращиться.
+
+> [!explanation]
+> «Круто» — розмовне слово, не офіційне.
 
 ---
 
-## unjumble
-prompt: Відновіть науковий текст
-jumbled:
-  - "дослідження / показало / що / рівень / кореляції / високий"
-  - "гіпотезу / підтверджено / експериментально"
-  - "результати / свідчать / про / значущість / даних"
-  - "таким / чином / висновок / очевидний"
-solutions:
-  - "Дослідження показало, що рівень кореляції високий."
-  - "Гіпотезу підтверджено експериментально."
-  - "Результати свідчать про значущість даних."
-  - "Таким чином, висновок очевидний."
+- Серце моє затверджено наказом кохання.
+
+> [!error]
+> затверджено наказом
+
+> [!answer]
+> Серце моє палає коханням.
+
+> [!explanation]
+> «Затверджено наказом» — офіційна конструкція, не художня.
 
 ---
 
-## translate
-prompt: Визначте стиль
-sentences:
-  - source: "Pursuant to Decree No. 123, the following is hereby approved..."
-    answer: "Офіційно-діловий"
-    options:
-      - "Офіційно-діловий"
-      - "Науковий"
-      - "Розмовний"
-  - source: "The correlation coefficient indicates statistical significance."
-    answer: "Науковий"
-    options:
-      - "Науковий"
-      - "Публіцистичний"
-      - "Художній"
-  - source: "Why does the government ignore the voice of the people?"
-    answer: "Публіцистичний"
-    options:
-      - "Публіцистичний"
-      - "Офіційно-діловий"
-      - "Розмовний"
-  - source: "The evening descended upon the city like a tired traveler."
-    answer: "Художній"
-    options:
-      - "Художній"
-      - "Науковий"
-      - "Публіцистичний"
+## error-correction: Визначте стиль і виправте
+
+- У науковій статті: «Короче, гіпотеза підтвердилась».
+
+> [!error]
+> Короче
+
+> [!answer]
+> Таким чином, гіпотезу підтверджено.
+
+> [!explanation]
+> «Короче» — розмовне слово, не наукове.
 
 ---
 
-## dialogue-reorder
-prompt: Розставте репліки в правильному порядку
-lines:
-  - id: a
-    text: "Студент: Як написати лист до декана?"
-  - id: b
-    text: "Викладач: Який стиль потрібен?"
-  - id: c
-    text: "Студент: Офіційно-діловий?"
-  - id: d
-    text: "Викладач: Правильно. Значить: «Шановний пане декане...»"
-  - id: e
-    text: "Студент: Не «Привіт»?"
-  - id: f
-    text: "Викладач: Ні, «привіт» — розмовний стиль."
-order: [a, b, c, d, e, f]
+- У законі: «Громадяни мають право, і це реально важливо».
+
+> [!error]
+> реально важливо
+
+> [!answer]
+> Громадяни мають право, що забезпечує...
+
+> [!explanation]
+> «Реально» — розмовне слово, не офіційне.
 
 ---
 
-## select
-type: checkbox
-prompt: Виберіть ВСІ ознаки офіційно-ділового стилю
-options:
-  - text: "Канцеляризми"
-    correct: true
-  - text: "Пасивні конструкції -но/-то"
-    correct: true
-  - text: "Метафори і порівняння"
-    correct: false
-  - text: "Стандартні формули"
-    correct: true
-  - text: "Сленг і просторіччя"
-    correct: false
-  - text: "Безособовість"
-    correct: true
+- У романі: «Згідно з почуттями, затверджую любов».
+
+> [!error]
+> Згідно з, затверджую
+
+> [!answer]
+> Любов переповнювала серце.
+
+> [!explanation]
+> «Згідно з», «затверджую» — офіційна лексика, не художня.
 
 ---
 
-## select
-type: checkbox
-prompt: Виберіть ВСІ стилі української мови
-options:
-  - text: "Офіційно-діловий"
-    correct: true
-  - text: "Науковий"
-    correct: true
-  - text: "Технічний"
-    correct: false
-  - text: "Публіцистичний"
-    correct: true
-  - text: "Художній"
-    correct: true
-  - text: "Розмовний"
-    correct: true
+- У газеті: «Кореляція змінних свідчить про проблему».
+
+> [!error]
+> Кореляція змінних
+
+> [!answer]
+> Зв'язок між цими явищами свідчить про проблему.
+
+> [!explanation]
+> «Кореляція змінних» — занадто науково для газети.
 
 ---
 
-## match-up
-prompt: З'єднайте стиль зі сферою використання
-pairs:
-  - left: "Офіційно-діловий"
-    right: "Документи, закони"
-  - left: "Науковий"
-    right: "Наукові статті, дисертації"
-  - left: "Публіцистичний"
-    right: "Газети, телебачення"
-  - left: "Художній"
-    right: "Романи, вірші"
-  - left: "Розмовний"
-    right: "Повсякденне спілкування"
-  - left: "Науково-популярний"
-    right: "Популяризація науки"
-  - left: "Епістолярний"
-    right: "Листи, повідомлення"
-  - left: "Рекламний"
-    right: "Маркетинг, оголошення"
+## cloze: П'ять функціональних стилів
+
+В українській мові є п'ять функціональних стилів. ___[Офіційно-діловий|Науковий|Художній] стиль використовується в документах і законах. ___[Науковий|Розмовний|Публіцистичний] стиль характерний для наукових текстів. ___[Публіцистичний|Офіційно-діловий|Художній] стиль властивий ЗМІ. ___[Художній|Науковий|Розмовний] стиль — для літератури. ___[Розмовний|Офіційно-діловий|Науковий] стиль — для повсякденного спілкування.
 
 ---
 
-# Словник
+## unjumble: Відновіть офіційно-діловий текст
+
+- наказом | затверджено | нову | редакцію | Положення
+
+> [!answer]
+> Наказом затверджено нову редакцію Положення.
+
+---
+
+- контроль | покладено | на | заступника | директора
+
+> [!answer]
+> Контроль покладено на заступника директора.
+
+---
+
+- відповідно | до | Закону | України
+
+> [!answer]
+> Відповідно до Закону України...
+
+---
+
+- набирає | чинності | з | 01.01.2025
+
+> [!answer]
+> Набирає чинності з 01.01.2025.
+
+---
+
+## unjumble: Відновіть науковий текст
+
+- дослідження | показало | що | рівень | кореляції | високий
+
+> [!answer]
+> Дослідження показало, що рівень кореляції високий.
+
+---
+
+- гіпотезу | підтверджено | експериментально
+
+> [!answer]
+> Гіпотезу підтверджено експериментально.
+
+---
+
+- результати | свідчать | про | значущість | даних
+
+> [!answer]
+> Результати свідчать про значущість даних.
+
+---
+
+- таким | чином | висновок | очевидний
+
+> [!answer]
+> Таким чином, висновок очевидний.
+
+---
+
+## translate: Визначте стиль за англійським текстом
+
+- Pursuant to Decree No. 123, the following is hereby approved...
+
+> [!answer]
+> Офіційно-діловий
+
+> [!options]
+> Офіційно-діловий | Науковий | Розмовний
+
+---
+
+- The correlation coefficient indicates statistical significance.
+
+> [!answer]
+> Науковий
+
+> [!options]
+> Науковий | Публіцистичний | Художній
+
+---
+
+- Why does the government ignore the voice of the people?
+
+> [!answer]
+> Публіцистичний
+
+> [!options]
+> Публіцистичний | Офіційно-діловий | Розмовний
+
+---
+
+- The evening descended upon the city like a tired traveler.
+
+> [!answer]
+> Художній
+
+> [!options]
+> Художній | Науковий | Публіцистичний
+
+---
+
+## dialogue-reorder: Розставте репліки в правильному порядку
+
+1. Студент: Як написати лист до декана?
+2. Викладач: Який стиль потрібен?
+3. Студент: Офіційно-діловий?
+4. Викладач: Правильно. Значить: «Шановний пане декане...»
+5. Студент: Не «Привіт»?
+6. Викладач: Ні, «привіт» — розмовний стиль.
+
+---
+
+## select: Виберіть ВСІ ознаки офіційно-ділового стилю
+
+- [x] Канцеляризми
+- [x] Пасивні конструкції -но/-то
+- [ ] Метафори і порівняння
+- [x] Стандартні формули
+- [ ] Сленг і просторіччя
+- [x] Безособовість
+
+---
+
+## select: Виберіть ВСІ стилі української мови
+
+- [x] Офіційно-діловий
+- [x] Науковий
+- [ ] Технічний
+- [x] Публіцистичний
+- [x] Художній
+- [x] Розмовний
+
+---
+
+## match-up: З'єднайте стиль зі сферою використання
+
+- Офіційно-діловий :: Документи, закони
+- Науковий :: Наукові статті, дисертації
+- Публіцистичний :: Газети, телебачення
+- Художній :: Романи, вірші
+- Розмовний :: Повсякденне спілкування
+- Науково-популярний :: Популяризація науки
+- Епістолярний :: Листи, повідомлення
+- Рекламний :: Маркетинг, оголошення
+
+---
+
+# Vocabulary
 
 | Слово | Переклад | Примітки |
 |-------|----------|----------|

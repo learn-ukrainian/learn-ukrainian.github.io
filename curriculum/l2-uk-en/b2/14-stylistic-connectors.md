@@ -3,21 +3,25 @@ module: 14
 title: "Стилістичні сполучні засоби"
 level: B2
 phase: B2.1a
-estimated_time: 55
-prerequisites:
-  - b2/11-multi-clause-sentences
-  - b2/12-parenthetical-expressions
-  - b2/13-emphasis-and-inversion
-theme: "Text cohesion"
+duration: 55
+transliteration: none
+tags: discourse-markers, connectors, cohesion, academic-writing, text-structure
+objectives:
+  - Use discourse markers to create coherent and well-structured texts
+  - Select appropriate connectors for different registers and contexts
+  - Structure extended arguments logically using Ukrainian linking devices
+grammar:
+  - Sequence markers (по-перше, далі, нарешті)
+  - Addition markers (крім того, до того ж, більше того)
+  - Contrast markers (проте, однак, натомість)
+  - Cause-effect markers (тому, через це, внаслідок)
+  - Conclusion markers (отже, таким чином, загалом)
 pedagogy: TTT
-cefr_can_do:
-  - "Can use a variety of discourse markers to create coherent texts"
-  - "Can select appropriate connectors for different registers"
-  - "Can structure extended arguments logically"
-decolonization_note: "Discourse markers are essential for sophisticated Ukrainian communication. This module develops skills for academic, professional, and literary expression."
 ---
 
 # Діагностика
+
+> **For English Speakers:** This module teaches you Ukrainian discourse markers—the words and phrases that connect ideas, structure arguments, and create coherent texts. English equivalents include "firstly," "however," "moreover," "therefore," "in conclusion." Mastering these is essential for academic, professional, and sophisticated communication.
 
 > Прочитайте текст. Які слова зв'язують речення між собою?
 
@@ -32,11 +36,18 @@ decolonization_note: "Discourse markers are essential for sophisticated Ukrainia
 > 2. Які — протиставлення?
 > 3. Які — доповнення інформації?
 
+> [!tip] Reading Strategy
+> When reading Ukrainian texts, identify discourse markers first. They create a "map" of the argument—showing where points are listed, where contrast occurs, and where conclusions are drawn. This helps comprehension significantly.
+
 ---
 
 # Аналіз: Категорії сполучних засобів
 
-## 1. Послідовність (Sequence)
+> **For English Speakers:** Ukrainian discourse markers fall into six main categories, each serving a specific logical function. Learning these categories helps you choose the right connector for your intended meaning.
+
+## 1. Послідовність
+
+> **For English Speakers:** Sequence markers structure your argument in numbered or ordered steps. Use «по-перше, по-друге, по-третє» (firstly, secondly, thirdly) for formal enumeration, or «насамперед» (first of all) to emphasize the starting point.
 
 | Сполучник | Значення | Приклад |
 |-----------|----------|---------|
@@ -49,9 +60,14 @@ decolonization_note: "Discourse markers are essential for sophisticated Ukrainia
 | **нарешті** | finally | Нарешті, підсумуємо. |
 | **насамкінець** | lastly | Насамкінець, подякуємо всім. |
 
+> [!note] Punctuation Rule
+> All sequence markers take a comma after them when they start a sentence: «По-перше, ...», «Насамперед, ...», «Нарешті, ...»
+
 ---
 
-## 2. Доповнення (Addition)
+## 2. Доповнення
+
+> **For English Speakers:** Addition markers pile on more information—like English "moreover," "besides," "furthermore," "in addition." Use them when adding supporting points, not contradicting.
 
 | Сполучник | Значення | Приклад |
 |-----------|----------|---------|
@@ -66,7 +82,9 @@ decolonization_note: "Discourse markers are essential for sophisticated Ukrainia
 
 ---
 
-## 3. Протиставлення (Contrast)
+## 3. Протиставлення
+
+> **For English Speakers:** Contrast markers signal disagreement, exception, or contradiction—like English "however," "nevertheless," "on the other hand," "instead." These are crucial for balanced argumentation and acknowledging counterpoints.
 
 | Сполучник | Значення | Приклад |
 |-----------|----------|---------|
@@ -79,9 +97,14 @@ decolonization_note: "Discourse markers are essential for sophisticated Ukrainia
 | **тим не менш** | nevertheless | Тим не менш, результат позитивний. |
 | **навпаки** | on the contrary | Навпаки, ситуація покращилась. |
 
+> [!warning] Common Error
+> Don't use «крім того» (besides/in addition) when you mean «проте» (however). This is a frequent mistake among learners. «Крім того» adds information; «проте» introduces contrast.
+
 ---
 
-## 4. Причина і наслідок (Cause & Effect)
+## 4. Причина і наслідок
+
+> **For English Speakers:** Cause-effect markers show logical relationships between events. Use «оскільки» or «адже» for causes (since, because), and «тому», «через це», «внаслідок» for effects (therefore, as a result).
 
 | Сполучник | Значення | Приклад |
 |-----------|----------|---------|
@@ -96,7 +119,9 @@ decolonization_note: "Discourse markers are essential for sophisticated Ukrainia
 
 ---
 
-## 5. Висновок (Conclusion)
+## 5. Висновок
+
+> **For English Speakers:** Conclusion markers wrap up your argument—like English "therefore," "thus," "in conclusion," "in summary." Use these to signal that you're drawing final thoughts from the preceding discussion.
 
 | Сполучник | Значення | Приклад |
 |-----------|----------|---------|
@@ -109,9 +134,14 @@ decolonization_note: "Discourse markers are essential for sophisticated Ukrainia
 | **врешті-решт** | eventually | Врешті-решт все владналося. |
 | **словом** | in a word | Словом, проект успішний. |
 
+> [!important] Academic Writing
+> In academic and professional texts, «таким чином» (thus) and «отже» (therefore) are the most common conclusion markers. «Словом» (in a word) is more informal and suits journalism or speeches.
+
 ---
 
-## 6. Уточнення та приклади (Clarification)
+## 6. Уточнення та приклади
+
+> **For English Speakers:** Clarification markers specify, explain, or give examples—like English "that is," "namely," "for example," "for instance." Use them to make abstract points concrete.
 
 | Сполучник | Значення | Приклад |
 |-----------|----------|---------|
@@ -128,7 +158,11 @@ decolonization_note: "Discourse markers are essential for sophisticated Ukrainia
 
 # Поглиблений аналіз
 
+> **For English Speakers:** Beyond basic meaning, discourse markers carry register information. Some are formal (academic, business), others neutral (everyday), and some informal (colloquial). Choosing the right register marker is crucial for appropriate communication.
+
 ## Регістрова належність
+
+> **For English Speakers:** This table shows which connectors belong to which register. Using «таким чином» in casual speech sounds overly formal; using «ну» or «типу» in academic writing sounds inappropriate.
 
 | Регістр | Сполучники |
 |---------|------------|
@@ -141,6 +175,8 @@ decolonization_note: "Discourse markers are essential for sophisticated Ukrainia
 
 ## Позиція в реченні
 
+> **For English Speakers:** Most Ukrainian connectors appear at the start of sentences, but some can go in the middle for a different effect. «Також» (also) and «однак» (however) work well mid-sentence, creating smoother flow. Paired connectors must be used together for balanced structures.
+
 | Позиція | Сполучники | Приклад |
 |---------|------------|---------|
 | **На початку** | Отже, проте, крім того | **Отже**, підсумуємо. |
@@ -151,6 +187,8 @@ decolonization_note: "Discourse markers are essential for sophisticated Ukrainia
 
 ## Пунктуація сполучників
 
+> **For English Speakers:** Ukrainian punctuation rules for discourse markers differ from English. Most sentence-initial connectors require a comma after them. This is a common error area for learners.
+
 | Сполучник | Пунктуація | Приклад |
 |-----------|------------|---------|
 | **Отже, однак, проте** | Кома після | Отже**,** почнемо. |
@@ -158,11 +196,18 @@ decolonization_note: "Discourse markers are essential for sophisticated Ukrainia
 | **По-перше, по-друге** | Кома після | По-перше**,** це важливо. |
 | **Не лише... а й** | Без коми | Не лише красиво, а й практично. |
 
+> [!caution] Watch These Pairs
+> Some similar-looking connectors have different punctuation rules. «Проте,» (however) takes a comma, but «тому» (therefore) usually doesn't when followed by a subject. When in doubt, consult a style guide or dictionary.
+
 ---
 
 # Занурення
 
+> **For English Speakers:** These authentic texts demonstrate how discourse markers function across different genres: academic, journalistic, business, and essay writing. Notice how marker choice reflects register and creates text cohesion.
+
 ## Текст 1: Академічний стиль
+
+> **For English Speakers:** Academic Ukrainian uses formal connectors like «насамперед» (first of all), «зокрема» (in particular), «проте» (however), and «таким чином» (thus). Notice the systematic use of markers to structure the argument.
 
 ---
 
@@ -178,6 +223,8 @@ decolonization_note: "Discourse markers are essential for sophisticated Ukrainia
 
 ## Текст 2: Публіцистичний стиль
 
+> **For English Speakers:** Journalistic Ukrainian balances formal and accessible language. Notice how «однак» (however), «зокрема» (in particular), and «отже» (therefore) create clear logical flow while remaining readable.
+
 ---
 
 **Газетна колонка:**
@@ -191,6 +238,8 @@ decolonization_note: "Discourse markers are essential for sophisticated Ukrainia
 ---
 
 ## Текст 3: Діловий стиль
+
+> **For English Speakers:** Business Ukrainian is structured and purposeful. Presentations use sequence markers («по-перше», «по-друге») to organize points and conclusion markers («на завершення») to wrap up clearly.
 
 ---
 
@@ -208,6 +257,8 @@ decolonization_note: "Discourse markers are essential for sophisticated Ukrainia
 
 ## Текст 4: Аргументативне есе
 
+> **For English Speakers:** Argumentative essays use discourse markers to present both sides of an issue. Notice the pattern: first present your points («по-перше», «по-друге», «більше того»), then acknowledge counterarguments («проте», «зокрема»), and conclude («таким чином», «отже»).
+
 ---
 
 **«Переваги дистанційної роботи»**
@@ -222,7 +273,11 @@ decolonization_note: "Discourse markers are essential for sophisticated Ukrainia
 
 # Діалоги
 
+> **For English Speakers:** These dialogues demonstrate how native speakers discuss and use discourse markers. Notice the metalinguistic awareness—educated Ukrainians consciously think about connector choice when writing and editing.
+
 ## Діалог 1: На семінарі
+
+> **For English Speakers:** This dialogue shows a writing seminar where students learn to choose the right connector for the logical relationship they want to express.
 
 ---
 
@@ -244,6 +299,8 @@ decolonization_note: "Discourse markers are essential for sophisticated Ukrainia
 
 ## Діалог 2: Редагування есе
 
+> **For English Speakers:** This dialogue shows an editor helping an author improve text cohesion. Notice how simply adding the right connector transforms choppy sentences into flowing prose.
+
 ---
 
 **Редактор:** Текст хороший, але потрібно більше зв'язків.
@@ -263,6 +320,8 @@ decolonization_note: "Discourse markers are essential for sophisticated Ukrainia
 ---
 
 ## Діалог 3: Підготовка презентації
+
+> **For English Speakers:** Business presentations benefit greatly from clear structure markers. This dialogue shows practical advice for organizing your ideas professionally.
 
 ---
 
@@ -284,6 +343,8 @@ decolonization_note: "Discourse markers are essential for sophisticated Ukrainia
 
 # Культурна примітка
 
+> **For English Speakers:** Discourse markers are deeply embedded in Ukrainian rhetorical tradition. From Cossack political documents to modern academic writing, logical structure signaled through connectors has been highly valued.
+
 > [!culture] Сполучники в українській риториці
 >
 > Українська ораторська традиція цінує логічність і структурованість. Сполучні засоби — важливий інструмент:
@@ -299,322 +360,404 @@ decolonization_note: "Discourse markers are essential for sophisticated Ukrainia
 >
 > **Порада:** Опанування сполучників — ключ до переконливої комунікації.
 
----
-
-# Підсумок
-
-| Функція | Ключові сполучники |
-|---------|-------------------|
-| Послідовність | по-перше, далі, нарешті |
-| Доповнення | крім того, до того ж, більше того |
-| Протиставлення | проте, однак, натомість |
-| Причина-наслідок | тому, через це, внаслідок |
-| Висновок | отже, таким чином, загалом |
-| Уточнення | тобто, а саме, наприклад |
-
-**Правила вживання:**
-1. Обирайте сполучник відповідно до регістру
-2. Слідкуйте за пунктуацією
-3. Не зловживайте одним сполучником
+> [!tip] Career Impact
+> Mastering Ukrainian discourse markers significantly improves your professional writing. Job applications, business proposals, and academic papers all require coherent logical structure. Using appropriate connectors marks you as an educated, sophisticated communicator.
 
 ---
 
-# Вправи
+# Summary
 
-## mark-the-words
-prompt: Клацніть на всі сполучні слова і вирази
-passage: По-перше, проблема існує. Крім того, вона зростає. Проте, є надія. Тому діємо. Отже, підсумуємо. Наприклад, у сфері освіти зміни очевидні.
-correct: По-перше, Крім того, Проте, Тому, Отже, Наприклад
+> **For English Speakers:** This table summarizes the six categories of Ukrainian discourse markers. Mastering these enables you to write coherent, well-structured texts in any register—academic, professional, journalistic, or conversational.
 
----
+| Функція | Ключові сполучники | English Equivalent |
+|---------|-------------------|-------------------|
+| Послідовність | по-перше, далі, нарешті | firstly, further, finally |
+| Доповнення | крім того, до того ж, більше того | besides, moreover, furthermore |
+| Протиставлення | проте, однак, натомість | however, nevertheless, instead |
+| Причина-наслідок | тому, через це, внаслідок | therefore, because of this, as a result |
+| Висновок | отже, таким чином, загалом | so/therefore, thus, in general |
+| Уточнення | тобто, а саме, наприклад | that is, namely, for example |
 
-## group-sort
-prompt: Розподіліть сполучники за функцією
-groups:
-  - name: "Протиставлення"
-    items:
-      - "проте"
-      - "однак"
-      - "натомість"
-      - "навпаки"
-  - name: "Доповнення"
-    items:
-      - "крім того"
-      - "до того ж"
-      - "більше того"
-      - "також"
+**Правила вживання (Usage Rules):**
+1. Обирайте сполучник відповідно до регістру — Choose connectors appropriate to the register
+2. Слідкуйте за пунктуацією — Watch punctuation (most initial markers take a comma)
+3. Не зловживайте одним сполучником — Vary your connectors (don't overuse one)
 
----
-
-## quiz
-prompt: Який сполучник виражає висновок?
-answer: отже
-options:
-  - отже
-  - проте
-  - крім того
-  - наприклад
+**Key Patterns for Essays:**
+- Introduction: «Насамперед...» / «По-перше...»
+- Adding points: «Крім того...» / «До того ж...»
+- Contrast: «Проте...» / «Однак...»
+- Conclusion: «Отже...» / «Таким чином...»
 
 ---
 
-## quiz
-prompt: Яка пунктуація правильна?
-answer: Проте, є проблеми.
-options:
-  - Проте, є проблеми.
-  - Проте є проблеми.
-  - Проте; є проблеми.
-  - Проте: є проблеми.
+# Activities
+
+## mark-the-words: Знайдіть сполучні засоби
+
+> **For English Speakers:** Look for discourse markers that connect ideas—words like "firstly," "however," "therefore," "for example" in their Ukrainian equivalents.
+
+По-перше, проблема існує. Крім того, вона зростає. Проте, є надія. Тому діємо. Отже, підсумуємо. Наприклад, у сфері освіти зміни очевидні.
+
+> [!correct] По-перше, Крім того, Проте, Тому, Отже, Наприклад
 
 ---
 
-## true-false
-prompt: Визначте, чи правильні твердження
-statements:
-  - text: "«Отже» виражає протиставлення"
-    answer: false
-  - text: "«Крім того» додає інформацію"
-    answer: true
-  - text: "«Проте» — формальний варіант «але»"
-    answer: true
-  - text: "«По-перше» завжди стоїть на початку речення"
-    answer: true
-  - text: "«Тому» виражає причину"
-    answer: false
-  - text: "«Наприклад» вводить ілюстрацію"
-    answer: true
+## group-sort: Розподіліть сполучники за функцією
+
+> **For English Speakers:** Sort these connectors by their function: contrast markers (like "however") vs. addition markers (like "moreover").
+
+- Протиставлення: проте | однак | натомість | навпаки
+- Доповнення: крім того | до того ж | більше того | також
 
 ---
 
-## fill-in
-type: dropdown
-prompt: Виберіть сполучник для протиставлення
-template: "План хороший. {{blank}}, є ризики."
-blanks:
-  - options:
-      - "[Проте]"
-      - "Крім того"
-      - "Отже"
+## quiz: Функції сполучників
+
+> **For English Speakers:** Understanding which connector does what is essential for coherent writing in Ukrainian.
+
+1. Який сполучник виражає висновок?
+   - [x] отже
+   - [ ] проте
+   - [ ] крім того
+   - [ ] наприклад
+
+2. Яка пунктуація правильна?
+   - [x] Проте, є проблеми.
+   - [ ] Проте є проблеми.
+   - [ ] Проте; є проблеми.
+   - [ ] Проте: є проблеми.
+
+3. Який сполучник виражає причину?
+   - [x] оскільки
+   - [ ] отже
+   - [ ] натомість
+   - [ ] крім того
+
+4. Який сполучник виражає доповнення?
+   - [x] до того ж
+   - [ ] проте
+   - [ ] тому
+   - [ ] таким чином
+
+5. Який сполучник вводить приклад?
+   - [x] наприклад
+   - [ ] однак
+   - [ ] отже
+   - [ ] тим не менш
+
+6. Який сполучник виражає протиставлення?
+   - [x] натомість
+   - [ ] крім того
+   - [ ] по-перше
+   - [ ] також
+
+7. Який сполучник вказує на послідовність?
+   - [x] далі
+   - [ ] проте
+   - [ ] тому
+   - [ ] наприклад
+
+8. Який сполучник підсумовує?
+   - [x] загалом
+   - [ ] крім того
+   - [ ] натомість
+   - [ ] оскільки
 
 ---
 
-## fill-in
-type: dropdown
-prompt: Виберіть сполучник для висновку
-template: "{{blank}}, проект успішний."
-blanks:
-  - options:
-      - "[Таким чином]"
-      - "Крім того"
-      - "Наприклад"
+## true-false: Правда чи ні?
+
+Визначте, чи правильні твердження:
+
+- [ ] «Отже» виражає протиставлення
+- [x] «Крім того» додає інформацію
+- [x] «Проте» — формальний варіант «але»
+- [x] «По-перше» завжди стоїть на початку речення
+- [ ] «Тому» виражає причину
+- [x] «Наприклад» вводить ілюстрацію
+- [x] «Таким чином» підсумовує
+- [ ] «Натомість» виражає доповнення
+- [x] «Однак» — синонім «проте»
+- [ ] «Зокрема» виражає протиставлення
+- [x] «Оскільки» виражає причину
+- [x] Після «по-перше» ставиться кома
 
 ---
 
-## fill-in
-type: dropdown
-prompt: Виберіть сполучник для доповнення
-template: "Він має досвід. {{blank}}, він добре знає ринок."
-blanks:
-  - options:
-      - "[Крім того]"
-      - "Проте"
-      - "Отже"
+## fill-in: Виберіть правильний сполучник
+
+> **For English Speakers:** Choose the connector that fits the logical relationship between the clauses.
+
+1. План хороший. ___, є ризики.
+   > [!answer] Проте
+   > [!options] Проте | Крім того | Отже
+
+2. ___, проект успішний.
+   > [!answer] Таким чином
+   > [!options] Таким чином | Крім того | Наприклад
+
+3. Він має досвід. ___, він добре знає ринок.
+   > [!answer] Крім того
+   > [!options] Крім того | Проте | Отже
+
+4. ___, визначимо основні цілі.
+   > [!answer] Насамперед
+   > [!options] Насамперед | Проте | Тому
+
+5. Ситуація складна. ___, є рішення.
+   > [!answer] Однак
+   > [!options] Однак | Також | По-перше
+
+6. Вона вчиться добре. ___, працює part-time.
+   > [!answer] До того ж
+   > [!options] До того ж | Натомість | Отже
+
+7. ___, розглянемо альтернативи.
+   > [!answer] Далі
+   > [!options] Далі | Проте | Тому
+
+8. Результати позитивні. ___, можемо продовжувати.
+   > [!answer] Отже
+   > [!options] Отже | Крім того | Наприклад
 
 ---
 
-## error-correction
-prompt: Виправте неправильний вибір сполучника
-sentences:
-  - incorrect: "Проект успішний. Проте, він теж прибутковий."
-    correct: "Проект успішний. Крім того, він прибутковий."
-    hint: "«Проте» — протиставлення, тут потрібне доповнення"
-  - incorrect: "Крім того, є серйозні проблеми. Ми не можемо продовжувати."
-    correct: "Проте, є серйозні проблеми. Тому ми не можемо продовжувати."
-    hint: "«Крім того» — доповнення, тут потрібне протиставлення"
-  - incorrect: "Отже, проблема існує. По-перше, її потрібно вирішити."
-    correct: "По-перше, проблема існує. Отже, її потрібно вирішити."
-    hint: "«Отже» — висновок, він іде в кінці, не на початку"
-  - incorrect: "Наприклад, підсумуємо сказане."
-    correct: "Отже, підсумуємо сказане."
-    hint: "«Наприклад» — ілюстрація, не висновок"
+## error-correction: Виправте сполучники
+
+> **For English Speakers:** Each sentence uses the wrong connector. Identify and correct it.
+
+1. Проект успішний. Проте, він теж прибутковий.
+   > [!error] Проте
+   > [!answer] Проект успішний. Крім того, він прибутковий.
+   > [!explanation] «Проте» means "however" (contrast), but we need addition here. Use «Крім того» (besides).
+
+2. Крім того, є серйозні проблеми. Ми не можемо продовжувати.
+   > [!error] Крім того
+   > [!answer] Проте, є серйозні проблеми. Тому ми не можемо продовжувати.
+   > [!explanation] «Крім того» adds information, but we need contrast here. Use «Проте» (however).
+
+3. Отже, проблема існує. По-перше, її потрібно вирішити.
+   > [!error] Отже
+   > [!answer] По-перше, проблема існує. Отже, її потрібно вирішити.
+   > [!explanation] «Отже» (therefore) draws conclusions—it should come last, not first.
+
+4. Наприклад, підсумуємо сказане.
+   > [!error] Наприклад
+   > [!answer] Отже, підсумуємо сказане.
+   > [!explanation] «Наприклад» introduces examples, not conclusions. Use «Отже» (therefore).
+
+5. Проте є проблеми.
+   > [!error] Проте є
+   > [!answer] Проте, є проблеми.
+   > [!explanation] After «проте» we need a comma.
+
+6. По-перше це важливо.
+   > [!error] По-перше це
+   > [!answer] По-перше, це важливо.
+   > [!explanation] After «по-перше» we need a comma.
+
+7. Крім того, він також, має досвід.
+   > [!error] також,
+   > [!answer] Крім того, він також має досвід.
+   > [!explanation] No comma needed after «також».
+
+8. Отже: підсумуємо.
+   > [!error] Отже:
+   > [!answer] Отже, підсумуємо.
+   > [!explanation] After «отже» use a comma, not a colon.
 
 ---
 
-## error-correction
-prompt: Виправте пунктуацію
-sentences:
-  - incorrect: "Проте є проблеми."
-    correct: "Проте, є проблеми."
-    hint: "Після «проте» потрібна кома"
-  - incorrect: "По-перше це важливо."
-    correct: "По-перше, це важливо."
-    hint: "Після «по-перше» потрібна кома"
-  - incorrect: "Крім того, він також, має досвід."
-    correct: "Крім того, він також має досвід."
-    hint: "Після «також» кома не потрібна"
-  - incorrect: "Отже: підсумуємо."
-    correct: "Отже, підсумуємо."
-    hint: "Після «отже» — кома, не двокрапка"
+## cloze: Теорія сполучників
+
+> **For English Speakers:** Fill in the blanks to complete this explanation of Ukrainian discourse markers.
+
+Сполучні засоби допомагають структурувати текст. Для вказівки на ___[послідовність|протиставлення|причину] використовуємо «по-перше», «далі», «нарешті». Для ___[доповнення|протиставлення|висновку] — «крім того», «до того ж». Для ___[протиставлення|доповнення|послідовності] — «проте», «однак», «натомість». Для висновку — «___[отже|крім того|наприклад]», «таким чином». Для прикладів — «___[наприклад|отже|проте]», «зокрема».
 
 ---
 
-## cloze
-passage: |
-  Сполучні засоби допомагають структурувати текст. Для вказівки на [1] використовуємо «по-перше», «далі», «нарешті». Для [2] — «крім того», «до того ж». Для [3] — «проте», «однак», «натомість». Для висновку — «[4]», «таким чином». Для прикладів — «[5]», «зокрема».
-blanks:
-  - answer: "послідовність"
-    options: ["послідовність", "протиставлення", "причину"]
-  - answer: "доповнення"
-    options: ["доповнення", "протиставлення", "висновку"]
-  - answer: "протиставлення"
-    options: ["протиставлення", "доповнення", "послідовності"]
-  - answer: "отже"
-    options: ["отже", "крім того", "наприклад"]
-  - answer: "наприклад"
-    options: ["наприклад", "отже", "проте"]
+## unjumble: Складіть речення зі сполучниками
+
+> **For English Speakers:** Arrange the words to form coherent sentences with discourse markers.
+
+1. по-перше | проблема | існує | давно
+   > [!answer] По-перше, проблема існує давно.
+
+2. крім | того | вона | зростає
+   > [!answer] Крім того, вона зростає.
+
+3. проте | є | рішення | вже
+   > [!answer] Проте, є вже рішення.
+
+4. отже | діємо | негайно
+   > [!answer] Отже, діємо негайно.
+
+5. насамперед | визначимо | цілі
+   > [!answer] Насамперед, визначимо цілі.
+
+6. далі | проаналізуємо | ризики
+   > [!answer] Далі, проаналізуємо ризики.
+
+7. нарешті | приймемо | рішення | остаточне
+   > [!answer] Нарешті, приймемо остаточне рішення.
+
+8. таким | чином | план | готовий
+   > [!answer] Таким чином, план готовий.
 
 ---
 
-## unjumble
-prompt: Складіть логічний текст із сполучниками
-jumbled:
-  - "по-перше / проблема / існує / давно"
-  - "крім / того / вона / зростає"
-  - "проте / є / рішення"
-  - "отже / діємо / негайно"
-solutions:
-  - "По-перше, проблема існує давно."
-  - "Крім того, вона зростає."
-  - "Проте, є рішення."
-  - "Отже, діємо негайно."
+## translate: Оберіть найкращий переклад
+
+> **For English Speakers:** Choose the translation that uses the appropriate Ukrainian connector.
+
+1. However, there are problems.
+   - [x] Проте, є проблеми.
+   - [ ] Крім того, є проблеми.
+   - [ ] Отже, є проблеми.
+
+2. In addition, he has experience.
+   - [x] Крім того, він має досвід.
+   - [ ] Проте, він має досвід.
+   - [ ] Отже, він має досвід.
+
+3. Therefore, we must act.
+   - [x] Тому ми маємо діяти.
+   - [ ] Проте ми маємо діяти.
+   - [ ] Крім того, ми маємо діяти.
+
+4. For example, in education...
+   - [x] Наприклад, у сфері освіти...
+   - [ ] Отже, у сфері освіти...
+   - [ ] Проте, у сфері освіти...
+
+5. On the other hand, there are advantages.
+   - [x] З іншого боку, є переваги.
+   - [ ] Крім того, є переваги.
+   - [ ] Тому є переваги.
+
+6. Nevertheless, we continue.
+   - [x] Тим не менш, ми продовжуємо.
+   - [ ] Також ми продовжуємо.
+   - [ ] По-перше, ми продовжуємо.
+
+7. In conclusion, the project succeeded.
+   - [x] На завершення, проект успішний.
+   - [ ] Наприклад, проект успішний.
+   - [ ] Крім того, проект успішний.
+
+8. Since he knew, he was silent.
+   - [x] Оскільки він знав, то мовчав.
+   - [ ] Проте він знав, то мовчав.
+   - [ ] Також він знав, то мовчав.
 
 ---
 
-## unjumble
-prompt: Відновіть порядок аргументів
-jumbled:
-  - "насамперед / визначимо / цілі"
-  - "далі / проаналізуємо / ризики"
-  - "нарешті / приймемо / рішення"
-  - "таким / чином / план / готовий"
-solutions:
-  - "Насамперед, визначимо цілі."
-  - "Далі, проаналізуємо ризики."
-  - "Нарешті, приймемо рішення."
-  - "Таким чином, план готовий."
+## dialogue-reorder: Розмова про сполучники
+
+Розставте репліки в правильному порядку:
+
+1. Автор: Як зробити текст більш зв'язним?
+2. Редактор: Використовуй сполучники.
+3. Автор: Які саме?
+4. Редактор: Для послідовності — «по-перше», «далі». Для контрасту — «проте».
+5. Автор: А для висновку?
+6. Редактор: «Отже» або «таким чином».
 
 ---
 
-## translate
-prompt: Оберіть найкращий переклад
-sentences:
-  - source: "However, there are problems."
-    answer: "Проте, є проблеми."
-    options:
-      - "Проте, є проблеми."
-      - "Крім того, є проблеми."
-      - "Отже, є проблеми."
-  - source: "In addition, he has experience."
-    answer: "Крім того, він має досвід."
-    options:
-      - "Крім того, він має досвід."
-      - "Проте, він має досвід."
-      - "Отже, він має досвід."
-  - source: "Therefore, we must act."
-    answer: "Тому ми маємо діяти."
-    options:
-      - "Тому ми маємо діяти."
-      - "Проте ми маємо діяти."
-      - "Крім того, ми маємо діяти."
-  - source: "For example, in education..."
-    answer: "Наприклад, у сфері освіти..."
-    options:
-      - "Наприклад, у сфері освіти..."
-      - "Отже, у сфері освіти..."
-      - "Проте, у сфері освіти..."
+## select: Виберіть ВСІ сполучники протиставлення
+
+- [x] проте
+- [x] однак
+- [ ] крім того
+- [x] натомість
+- [ ] отже
+- [x] тим не менш
 
 ---
 
-## dialogue-reorder
-prompt: Розставте репліки в правильному порядку
-lines:
-  - id: a
-    text: "Автор: Як зробити текст більш зв'язним?"
-  - id: b
-    text: "Редактор: Використовуй сполучники."
-  - id: c
-    text: "Автор: Які саме?"
-  - id: d
-    text: "Редактор: Для послідовності — «по-перше», «далі». Для контрасту — «проте»."
-  - id: e
-    text: "Автор: А для висновку?"
-  - id: f
-    text: "Редактор: «Отже» або «таким чином»."
-order: [a, b, c, d, e, f]
+## select: Виберіть ВСІ сполучники з комою
+
+- [x] проте
+- [ ] тому
+- [x] по-перше
+- [ ] також
+- [x] отже
+- [x] крім того
 
 ---
 
-## select
-type: checkbox
-prompt: Виберіть ВСІ сполучники протиставлення
-options:
-  - text: "проте"
-    correct: true
-  - text: "однак"
-    correct: true
-  - text: "крім того"
-    correct: false
-  - text: "натомість"
-    correct: true
-  - text: "отже"
-    correct: false
-  - text: "тим не менш"
-    correct: true
+## match-up: Сполучник ↔ Функція
+
+> **For English Speakers:** Match each connector with its function.
+
+- по-перше :: послідовність
+- крім того :: доповнення
+- проте :: протиставлення
+- тому :: наслідок
+- отже :: висновок
+- наприклад :: ілюстрація
+- тобто :: уточнення
+- оскільки :: причина
 
 ---
 
-## select
-type: checkbox
-prompt: Виберіть ВСІ сполучники, після яких ставиться кома
-options:
-  - text: "проте"
-    correct: true
-  - text: "тому"
-    correct: false
-  - text: "по-перше"
-    correct: true
-  - text: "також"
-    correct: false
-  - text: "отже"
-    correct: true
-  - text: "крім того"
-    correct: true
+## quiz: Регістрова належність
+
+> **For English Speakers:** Different connectors belong to different registers—formal, neutral, or informal.
+
+1. Який сполучник найбільш формальний?
+   - [x] таким чином
+   - [ ] ну
+   - [ ] значить
+   - [ ] типу
+
+2. Який сполучник характерний для розмовної мови?
+   - [x] ну
+   - [ ] внаслідок
+   - [ ] натомість
+   - [ ] однак
+
+3. Який сполучник найкращий для академічного тексту?
+   - [x] отже
+   - [ ] типу
+   - [ ] ну от
+   - [ ] значить
+
+4. Який сполучник підходить для ділового листування?
+   - [x] крім того
+   - [ ] ну
+   - [ ] типу
+   - [ ] значить
+
+5. Який сполучник нейтральний?
+   - [x] тому
+   - [ ] внаслідок
+   - [ ] ну
+   - [ ] типу
+
+6. Який сполучник використовують у науковому стилі?
+   - [x] відповідно
+   - [ ] ну
+   - [ ] значить
+   - [ ] типу
+
+7. Який сполучник характерний для публіцистики?
+   - [x] проте
+   - [ ] типу
+   - [ ] ну от
+   - [ ] значить
+
+8. Який сполучник неформальний?
+   - [x] значить
+   - [ ] таким чином
+   - [ ] внаслідок
+   - [ ] натомість
 
 ---
 
-## match-up
-prompt: З'єднайте сполучник з функцією
-pairs:
-  - left: "по-перше"
-    right: "послідовність"
-  - left: "крім того"
-    right: "доповнення"
-  - left: "проте"
-    right: "протиставлення"
-  - left: "тому"
-    right: "наслідок"
-  - left: "отже"
-    right: "висновок"
-  - left: "наприклад"
-    right: "ілюстрація"
-  - left: "тобто"
-    right: "уточнення"
-  - left: "оскільки"
-    right: "причина"
-
----
-
-# Словник
+# Vocabulary
 
 | Слово | Переклад | Примітки |
 |-------|----------|----------|

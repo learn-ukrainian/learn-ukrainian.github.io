@@ -3,19 +3,25 @@ module: 13
 title: "Емфаза та інверсія"
 level: B2
 phase: B2.1a
-estimated_time: 55
-prerequisites:
-  - b2/11-multi-clause-sentences
-theme: "Stylistic impact"
+duration: 55
+transliteration: none
+tags: word-order, emphasis, inversion, stylistics, syntax
+objectives:
+  - Use word order variation for emphasis and stylistic effect
+  - Recognize and produce inverted sentences in appropriate contexts
+  - Distinguish neutral and marked word order
+grammar:
+  - Neutral vs. marked word order (SVO variants)
+  - Theme-rheme structure (тема-рема)
+  - V-S inversion for narrative effect
+  - Object fronting for contrast (topicalization)
+  - Emphatic particles (саме, же/ж)
 pedagogy: TTT
-cefr_can_do:
-  - "Can use word order variation for emphasis and stylistic effect"
-  - "Can recognize and produce inverted sentences in appropriate contexts"
-  - "Can distinguish neutral and marked word order"
-decolonization_note: "Ukrainian's flexible word order offers expressive possibilities not available in English. This module develops skills for sophisticated, authentic expression."
 ---
 
 # Діагностика
+
+> **For English Speakers:** Ukrainian has remarkably flexible word order compared to English. While English uses stress and intonation for emphasis ("JOHN came" vs "John CAME"), Ukrainian achieves the same effects by moving words around in the sentence. This module teaches you to use word order as a powerful expressive tool.
 
 > Порівняйте пари речень. Яка різниця в акцентах?
 
@@ -36,11 +42,13 @@ decolonization_note: "Ukrainian's flexible word order offers expressive possibil
 
 # Аналіз: Порядок слів в українській мові
 
+> **For English Speakers:** Ukrainian word order is "free" but definitely not random. Every rearrangement carries specific meaning. The basic (neutral) order is SVO like English, but moving elements creates emphasis, contrast, or narrative effects.
+
 ## Нейтральний vs. Маркований порядок
 
 | Тип | Характеристика | Приклад |
 |-----|----------------|---------|
-| **Нейтральний (SVO)** | Підмет → Присудок → Додаток | Іван читає книгу. |
+| **Нейтральний** | Підмет → Присудок → Додаток | Іван читає книгу. |
 | **Маркований** | Зміщення для акценту | Книгу читає Іван. |
 
 > [!important] Головний принцип
@@ -49,6 +57,8 @@ decolonization_note: "Ukrainian's flexible word order offers expressive possibil
 ---
 
 ## Тема і рема
+
+> **For English Speakers:** Theme (тема) is what you're talking ABOUT—the given information. Rheme (рема) is what you're SAYING about it—the new information. In neutral order, theme comes first, rheme last. Inversion reverses this for emphasis.
 
 | Поняття | Опис | Позиція |
 |---------|------|---------|
@@ -59,11 +69,20 @@ decolonization_note: "Ukrainian's flexible word order offers expressive possibil
 - Нейтрально: **Іван** (тема) **прийшов** (рема). — Хто прийшов? Іван.
 - Інверсія: **Прийшов** (тема) **Іван** (рема). — Що сталося? Прийшов Іван.
 
+> [!tip] Quick Test for Theme vs Rheme
+> The theme answers: "What are we talking about?"
+> The rheme answers: "What are we saying about it?"
+> New information gravitates to the end of the sentence.
+
 ---
 
 # Типи інверсії
 
+> **For English Speakers:** There are four main types of inversion in Ukrainian. Each creates a different stylistic effect, from fairy-tale narration to contrastive emphasis.
+
 ## 1. Дієслово перед підметом (V-S)
+
+> **For English Speakers:** This is like English "There came a stranger" or "Then spoke the king." It creates a narrative, storytelling effect—very common in folk tales and literature.
 
 Створює ефект оповіді, наративу:
 
@@ -73,9 +92,14 @@ decolonization_note: "Ukrainian's flexible word order offers expressive possibil
 | Дощ пішов. | Пішов дощ. | Несподіваність |
 | Весна настала. | Настала весна. | Поетичність |
 
+> [!note] Fairy Tale Formula
+> Almost all Ukrainian fairy tales begin with V-S inversion: "Жив-був дід..." (There lived an old man), "Стояла хатинка..." (There stood a little house). This immediately signals "story mode" to the listener.
+
 ---
 
 ## 2. Додаток перед дієсловом (O-V)
+
+> **For English Speakers:** This is "topicalization"—putting the object first for contrast. Compare English "This book, I've read" (marked) vs "I've read this book" (neutral). Ukrainian does this more freely.
 
 Створює контраст або акцент на об'єкті:
 
@@ -89,9 +113,11 @@ decolonization_note: "Ukrainian's flexible word order offers expressive possibil
 
 ## 3. Присудок у кінці (S-O-V)
 
+> **For English Speakers:** Moving the verb to the end creates a literary, elevated tone—like Biblical English "And he the truth spoke." Use it for solemn or retrospective statements.
+
 Літературний, книжний ефект:
 
-| Нейтрально (SVO) | Інверсія (SOV) | Стиль |
+| Нейтрально | Інверсія | Стиль |
 |------------------|----------------|-------|
 | Він взяв книгу. | Він книгу взяв. | Літературний |
 | Вона сказала правду. | Вона правду сказала. | Урочистий |
@@ -100,6 +126,8 @@ decolonization_note: "Ukrainian's flexible word order offers expressive possibil
 ---
 
 ## 4. Обставина на початку
+
+> **For English Speakers:** Putting time or place adverbials first sets the scene—like English "Yesterday, something happened" or "In Paris, we met." This is the most natural inversion for English speakers.
 
 Встановлює сцену, контекст:
 
@@ -112,6 +140,8 @@ decolonization_note: "Ukrainian's flexible word order offers expressive possibil
 ---
 
 # Поглиблений аналіз
+
+> **For English Speakers:** This section covers additional emphatic devices beyond word order—particles like «саме» (precisely) and «ж/же» (indeed/really), plus repetition patterns for intensity.
 
 ## Функції інверсії
 
@@ -128,17 +158,25 @@ decolonization_note: "Ukrainian's flexible word order offers expressive possibil
 
 ## Емфатичні конструкції
 
+> **For English Speakers:** Beyond word order, Ukrainian uses emphatic particles to add force to statements. These are similar to English stress patterns: "It was HE who...", "He DOES know", "This IS true."
+
 ### Конструкція «це... що»
+
+> **For English Speakers:** This is the Ukrainian equivalent of English "It is X who/that..." cleft sentences. It isolates one element for special emphasis.
 
 **Нейтрально:** Він сказав правду.
 **Емфаза:** **Це він** сказав правду. (It was HE who told the truth.)
 
 ### Частка «саме»
 
+> **For English Speakers:** «Саме» means "precisely" or "exactly" and creates strong emphasis on the following word. It's like saying "It was PRECISELY him" or "THIS VERY book."
+
 **Нейтрально:** Він це зробив.
 **Емфаза:** **Саме він** це зробив. (It was precisely HE who did this.)
 
 ### Частка «же» / «ж»
+
+> **For English Speakers:** «Ж/же» adds emotional force, like English emphatic "do/does" (He DOES know) or tag expressions (It IS true, isn't it?). After vowels, use «ж»; after consonants, use «же».
 
 **Нейтрально:** Він знає.
 **Емфаза:** Він **же** знає! (He DOES know!)
@@ -147,15 +185,25 @@ decolonization_note: "Ukrainian's flexible word order offers expressive possibil
 
 ## Повтори для підсилення
 
+> **For English Speakers:** Repetition works differently in Ukrainian than English. While English often avoids repetition as redundant, Ukrainian uses it deliberately for emotional and rhetorical effect. Compare English "Go! Go faster!" with Ukrainian "Іди, іди швидше!" — the repetition sounds natural, even necessary.
+
 | Тип | Приклад | Ефект |
 |-----|---------|-------|
 | **Лексичний повтор** | Іди, іди швидше! | Наполегливість |
 | **Синтаксичний паралелізм** | Він прийшов, побачив, переміг. | Ритм |
 | **Анафора** | Чому ти мовчиш? Чому не відповідаєш? | Емоційність |
 
+> [!tip] Parallelism in Action
+> The famous phrase «Прийшов, побачив, переміг» (Veni, vidi, vici) demonstrates how verb-only sequences create memorable, rhythmic statements. Use similar structures for impact.
+
+> [!warning] Common Mistake
+> Don't confuse emphatic particles «саме» and «ж/же» with question particles. «Саме» emphasizes identity (It was HIM), while «ж/же» adds emotional force (But it IS true!). Neither forms a question.
+
 ---
 
 # Занурення
+
+> **For English Speakers:** These authentic texts demonstrate how inversion functions across different registers. Notice how literary texts use more V-S inversion, while contrastive dialogues use O-V topicalization.
 
 ## Текст 1: Літературний стиль (активна інверсія)
 
@@ -229,6 +277,8 @@ decolonization_note: "Ukrainian's flexible word order offers expressive possibil
 
 # Діалоги
 
+> **For English Speakers:** These dialogues demonstrate how native speakers discuss and explain word order concepts. Notice the metalinguistic awareness—Ukrainians often consciously think about word order choices when editing or teaching.
+
 ## Діалог 1: Пояснення акценту
 
 ---
@@ -287,6 +337,9 @@ decolonization_note: "Ukrainian's flexible word order offers expressive possibil
 
 # Культурна примітка
 
+> [!important] Why This Matters for Fluency
+> Mastering word order is a key marker of advanced Ukrainian proficiency. Native speakers use inversion instinctively to create emphasis, tell stories, and express emotions. Learning to use it naturally will make your Ukrainian sound significantly more authentic.
+
 > [!culture] Порядок слів і українська ідентичність
 >
 > Гнучкий порядок слів — одна з характерних рис української мови. Це дозволяє:
@@ -303,7 +356,9 @@ decolonization_note: "Ukrainian's flexible word order offers expressive possibil
 
 ---
 
-# Підсумок
+# Summary
+
+> **For English Speakers:** This table summarizes the four main types of inversion and their effects. Remember: Ukrainian word order is meaningful—every change signals something to the listener, whether emphasis, contrast, narrative style, or emotional intensity.
 
 | Тип інверсії | Ефект | Приклад |
 |--------------|-------|---------|
@@ -312,309 +367,398 @@ decolonization_note: "Ukrainian's flexible word order offers expressive possibil
 | S-O-V | Літературність, урочистість | Він книгу взяв. |
 | Обставина на початку | Встановлення контексту | Учора він прийшов. |
 
-**Емфатичні засоби:**
-- «Саме» для точного вказування
-- «Же/ж» для підсилення
-- Повтори для наполегливості
+**Емфатичні засоби (Emphatic Devices):**
+- «Саме» для точного вказування — precisely, exactly
+- «Же/ж» для підсилення — emphatic do/does
+- Повтори для наполегливості — repetition for insistence
+
+**Практичні поради (Practical Tips):**
+- Use V-S inversion when telling stories or describing events
+- Use O-V inversion when contrasting or comparing objects
+- Use «саме» when you want to emphasize "this specific one"
+- Use «ж/же» when you want to express emotional certainty
+
+**Common Errors to Avoid:**
+- Don't overuse inversion in everyday speech — it sounds literary or artificial
+- Don't use V-S inversion for simple statements of fact
+- Remember that emphatic particles follow the word they emphasize (він же, саме він)
+- Don't confuse contrastive topicalization with simple word scrambling
+
+**Register Awareness:**
+- **Formal/Literary:** More inversion, especially V-S and S-O-V patterns
+- **Conversational:** Less inversion, mostly for contrast (O-V)
+- **Journalism:** Balanced use, depends on article type
+- **Folk/Poetry:** Abundant inversion for rhythm and atmosphere
 
 ---
 
-# Вправи
+# Activities
 
-## mark-the-words
-prompt: Клацніть на речення з інверсією (неnейтральний порядок слів)
-passage: Іван прийшов о восьмій. Прийшли гості неочікувано. Цю книгу я вже читав. Марія купила хліб. Почався дощ. Вечір був тихий.
-correct: Прийшли гості неочікувано, Цю книгу я вже читав, Почався дощ
+## mark-the-words: Знайдіть речення з інверсією
 
----
+> **For English Speakers:** Inversion means non-standard word order. Look for sentences where the verb comes before the subject (V-S) or the object comes before the verb (O-V).
 
-## group-sort
-prompt: Розподіліть речення за типом порядку слів
-groups:
-  - name: "Нейтральний порядок (SVO)"
-    items:
-      - "Іван читає книгу."
-      - "Марія купила хліб."
-      - "Він прийшов учора."
-      - "Вона любить музику."
-  - name: "Інверсія"
-    items:
-      - "Прийшов Іван."
-      - "Цю книгу я читав."
-      - "Книгу він взяв."
-      - "Настала весна."
+Іван прийшов о восьмій. Прийшли гості неочікувано. Цю книгу я вже читав. Марія купила хліб. Почався дощ. Вечір був тихий.
+
+> [!correct] Прийшли гості неочікувано, Цю книгу я вже читав, Почався дощ
 
 ---
 
-## quiz
-prompt: Яка функція інверсії «Прийшли гості»?
-answer: Наративність, створення ефекту оповіді
-options:
-  - Наративність, створення ефекту оповіді
-  - Питання
-  - Заперечення
-  - Пом'якшення
+## group-sort: Нейтральний vs. Інверсія
+
+> **For English Speakers:** Neutral order in Ukrainian is typically SVO (Subject-Verb-Object), like English. Inverted sentences rearrange this for stylistic effect.
+
+- Нейтральний порядок: Іван читає книгу. | Марія купила хліб. | Він прийшов учора. | Вона любить музику.
+- Інверсія: Прийшов Іван. | Цю книгу я читав. | Книгу він взяв. | Настала весна.
 
 ---
 
-## quiz
-prompt: Яка частка підсилює акцент на слові?
-answer: саме
-options:
-  - саме
-  - не
-  - чи
-  - ні
+## quiz: Функції інверсії
+
+> **For English Speakers:** Understanding WHY Ukrainians invert word order helps you use it naturally.
+
+1. Яка функція інверсії «Прийшли гості»?
+   - [x] Наративність, створення ефекту оповіді
+   - [ ] Питання
+   - [ ] Заперечення
+   - [ ] Пом'якшення
+
+2. Яка частка підсилює акцент на слові?
+   - [x] саме
+   - [ ] не
+   - [ ] чи
+   - [ ] ні
+
+3. Яка функція інверсії «Цю книгу я читав»?
+   - [x] Контраст, топікалізація
+   - [ ] Питання
+   - [ ] Наративність
+   - [ ] Офіційність
+
+4. Яку функцію виконує порядок S-O-V?
+   - [x] Літературний, книжний ефект
+   - [ ] Розмовний стиль
+   - [ ] Технічний стиль
+   - [ ] Дитячий стиль
+
+5. Частка «ж/же» виражає:
+   - [x] Емоційне підсилення
+   - [ ] Заперечення
+   - [ ] Питання
+   - [ ] Умову
+
+6. Рема в реченні — це:
+   - [x] Нова, головна інформація
+   - [ ] Відома інформація
+   - [ ] Дієслово
+   - [ ] Підмет
+
+7. Тема в реченні стоїть:
+   - [x] На початку
+   - [ ] У кінці
+   - [ ] У середині
+   - [ ] Перед комою
+
+8. Інверсія V-S характерна для:
+   - [x] Казок і оповідей
+   - [ ] Наукових статей
+   - [ ] Технічних інструкцій
+   - [ ] Рекламних текстів
 
 ---
 
-## true-false
-prompt: Визначте, чи правильні твердження
-statements:
-  - text: "В українській мові порядок слів абсолютно вільний і не впливає на значення"
-    answer: false
-  - text: "Інверсія V-S часто використовується в казках і оповідях"
-    answer: true
-  - text: "«Цю книгу я читав» — приклад топікалізації об'єкта"
-    answer: true
-  - text: "Рема — це відома інформація на початку речення"
-    answer: false
-  - text: "Частка «саме» підсилює акцент на наступному слові"
-    answer: true
-  - text: "Офіційний стиль ніколи не використовує інверсію"
-    answer: false
+## true-false: Правда чи ні?
+
+Визначте, чи правильні твердження:
+
+- [ ] В українській мові порядок слів абсолютно вільний і не впливає на значення
+- [x] Інверсія V-S часто використовується в казках і оповідях
+- [x] «Цю книгу я читав» — приклад топікалізації об'єкта
+- [ ] Рема — це відома інформація на початку речення
+- [x] Частка «саме» підсилює акцент на наступному слові
+- [ ] Офіційний стиль ніколи не використовує інверсію
+- [x] Тема — це вихідна точка, відома інформація
+- [ ] Інверсія завжди звучить неприродно
+- [x] «Прийшов Іван» має наративний ефект
+- [ ] Порядок слів в українській жорсткий, як в англійській
+- [x] Емфатичні частки «ж/же» підсилюють попереднє слово
+- [x] Порядок S-O-V створює літературний ефект
 
 ---
 
-## fill-in
-type: dropdown
-prompt: Виберіть речення з наративною інверсією
-template: "Яке речення має наративний стиль? {{blank}}"
-blanks:
-  - options:
-      - "[Жив-був дід.]"
-      - "Дід жив."
-      - "Старий дід жив."
+## fill-in: Виберіть правильний варіант
+
+> **For English Speakers:** Choose the particle or word order that achieves the stated stylistic effect.
+
+1. ___ він це зробив! (підсилення)
+   > [!answer] Саме
+   > [!options] Саме | Не | Чи
+
+2. Це ___ правда! (емоційне підсилення)
+   > [!answer] ж
+   > [!options] ж | чи | не
+
+3. ___ настала весна. (наративний стиль)
+   > [!answer] І
+   > [!options] І | Потім | Тому
+
+4. ___ книгу я вже читав. (контраст)
+   > [!answer] Цю
+   > [!options] Цю | Ту | Яку
+
+5. ___ до села чоловік. (казковий початок)
+   > [!answer] Прийшов
+   > [!options] Прийшов | Чоловік | Селом
+
+6. Каву люблю, а чай — ___. (контрастне заперечення)
+   > [!answer] ні
+   > [!options] ні | так | дуже
+
+7. ___ він знає правду! (емфаза)
+   > [!answer] Адже
+   > [!options] Адже | Чи | Не
+
+8. В ___ живу, а працюю у Львові. (паралельний контраст)
+   > [!answer] Києві
+   > [!options] Києві | місті | домі
 
 ---
 
-## fill-in
-type: dropdown
-prompt: Виберіть підсилювальну частку
-template: "{{blank}} він це зробив!"
-blanks:
-  - options:
-      - "[Саме]"
-      - "Не"
-      - "Чи"
+## error-correction: Додайте емфазу
+
+> **For English Speakers:** Transform neutral sentences into emphatic ones using particles or word order changes.
+
+1. Він це зробив.
+   > [!error] Він
+   > [!answer] Саме він це зробив.
+   > [!explanation] Частка «саме» підсилює акцент на підметі.
+
+2. Це правда.
+   > [!error] Це правда.
+   > [!answer] Це ж правда!
+   > [!explanation] Частка «ж» додає емоційного підсилення.
+
+3. Я цю книгу читав.
+   > [!error] Я цю книгу
+   > [!answer] Цю книгу я вже читав.
+   > [!explanation] Топікалізація: об'єкт на початок для контрасту.
+
+4. Гості прийшли.
+   > [!error] Гості прийшли.
+   > [!answer] Прийшли гості.
+   > [!explanation] Інверсія V-S створює наративний ефект.
+
+5. Я люблю каву, а чай не дуже.
+   > [!error] Я люблю каву
+   > [!answer] Каву люблю, а чай — не дуже.
+   > [!explanation] Об'єкт на початок для контрастного паралелізму.
+
+6. Він читав цю книгу, а ту не читав.
+   > [!error] Він читав цю книгу
+   > [!answer] Цю книгу він читав, а ту — не читав.
+   > [!explanation] Топікалізація обох об'єктів підкреслює контраст.
+
+7. Вона працює вранці, а ввечері відпочиває.
+   > [!error] Вона працює вранці
+   > [!answer] Вранці вона працює, а ввечері — відпочиває.
+   > [!explanation] Обставини часу на початок для структурованого контрасту.
+
+8. Я живу в Києві, а брат живе у Львові.
+   > [!error] Я живу в Києві
+   > [!answer] Я в Києві живу, а брат — у Львові.
+   > [!explanation] Паралельна структура з обставинами місця.
 
 ---
 
-## fill-in
-type: dropdown
-prompt: Яке речення підкреслює контраст?
-template: "{{blank}}"
-blanks:
-  - options:
-      - "[Музику люблю, а танці — ні.]"
-      - "Я люблю музику."
-      - "Музика хороша."
+## cloze: Теорія порядку слів
+
+> **For English Speakers:** Fill in the blanks to complete this summary of Ukrainian word order theory.
+
+В українській мові порядок слів ___[вільний|жорсткий|фіксований], але не випадковий. Зміна порядку слів змінює ___[акцент|час|особу] речення. Нова інформація (рема) зазвичай стоїть у ___[кінці|початку|середині] речення. Інверсія V-S (дієслово перед підметом) створює ефект ___[наративності|питання|заперечення]. Частка «___[саме|не|чи]» підсилює акцент на наступному слові.
 
 ---
 
-## error-correction
-prompt: Зробіть речення більш емфатичним (підсилене)
-sentences:
-  - incorrect: "Він це зробив."
-    correct: "Саме він це зробив."
-    hint: "Додайте частку «саме» для підсилення"
-  - incorrect: "Це правда."
-    correct: "Це ж правда!"
-    hint: "Додайте частку «ж» для емоційного підсилення"
-  - incorrect: "Я цю книгу читав."
-    correct: "Цю книгу я вже читав."
-    hint: "Перемістіть об'єкт на початок для топікалізації"
-  - incorrect: "Гості прийшли."
-    correct: "Прийшли гості."
-    hint: "Інверсія V-S для наративності"
+## unjumble: Складіть речення з інверсією
+
+> **For English Speakers:** Arrange the words to create sentences with narrative inversion (V-S order).
+
+1. прийшов | до | села | чоловік | невідомий
+   > [!answer] Прийшов до села чоловік невідомий.
+
+2. настала | нарешті | весна | довгоочікувана
+   > [!answer] Настала нарешті весна довгоочікувана.
+
+3. зійшла | на | небо | зоря | яскрава
+   > [!answer] Зійшла на небо зоря яскрава.
+
+4. почався | сильний | дощ | раптово
+   > [!answer] Почався раптово сильний дощ.
+
+5. цю | книгу | я | читав | а | ту | ні
+   > [!answer] Цю книгу я читав, а ту — ні.
+
+6. музику | він | любить | а | танці | ненавидить
+   > [!answer] Музику він любить, а танці ненавидить.
+
+7. каву | п'ю | вранці | а | чай | увечері
+   > [!answer] Каву п'ю вранці, а чай — увечері.
+
+8. в | Києві | живу | а | працюю | у | Львові
+   > [!answer] В Києві живу, а працюю у Львові.
 
 ---
 
-## error-correction
-prompt: Виправте порядок слів для контрастного акценту
-sentences:
-  - incorrect: "Я люблю каву, а чай не дуже."
-    correct: "Каву люблю, а чай — не дуже."
-    hint: "Об'єкт на початок для контрасту"
-  - incorrect: "Він читав цю книгу, а ту не читав."
-    correct: "Цю книгу він читав, а ту — не читав."
-    hint: "Топікалізація обох об'єктів"
-  - incorrect: "Вона працює вранці, а ввечері відпочиває."
-    correct: "Вранці вона працює, а ввечері — відпочиває."
-    hint: "Обставини часу на початок для контрасту"
-  - incorrect: "Я живу в Києві, а брат живе у Львові."
-    correct: "Я в Києві живу, а брат — у Львові."
-    hint: "Перестановка для паралелізму і контрасту"
+## translate: Оберіть переклад з акцентом
+
+> **For English Speakers:** Choose the translation that best captures the emphasis indicated in parentheses.
+
+1. It was John who came. (emphasis on John)
+   - [x] Саме Іван прийшов.
+   - [ ] Іван прийшов.
+   - [ ] Прийшов Іван.
+
+2. This book I've already read. (contrast)
+   - [x] Цю книгу я вже читав.
+   - [ ] Я читав цю книгу.
+   - [ ] Я вже прочитав книгу.
+
+3. And then came spring. (narrative)
+   - [x] І настала весна.
+   - [ ] І весна настала.
+   - [ ] Весна тоді настала.
+
+4. Coffee I like, but tea — not really. (contrast)
+   - [x] Каву люблю, а чай — не дуже.
+   - [ ] Я люблю каву, але не чай.
+   - [ ] Люблю каву, не люблю чай.
+
+5. He DOES know! (emphatic)
+   - [x] Він же знає!
+   - [ ] Він знає.
+   - [ ] Чи він знає?
+
+6. It was precisely HE who did it. (strong emphasis)
+   - [x] Саме він це зробив.
+   - [ ] Він це зробив.
+   - [ ] Це він зробив.
+
+7. There lived an old man... (fairy tale)
+   - [x] Жив-був дід...
+   - [ ] Дід жив...
+   - [ ] Був дід, він жив...
+
+8. In Kyiv I live, but in Lviv I work. (parallel contrast)
+   - [x] У Києві живу, а у Львові працюю.
+   - [ ] Я живу в Києві і працюю у Львові.
+   - [ ] Живу в Києві, працюю у Львові.
 
 ---
 
-## cloze
-passage: |
-  В українській мові порядок слів [1], але не випадковий. Зміна порядку слів змінює [2] речення. Нова інформація (рема) зазвичай стоїть у [3] речення. Інверсія V-S (дієслово перед підметом) створює ефект [4]. Частка «[5]» підсилює акцент на наступному слові.
-blanks:
-  - answer: "вільний"
-    options: ["вільний", "жорсткий", "фіксований"]
-  - answer: "акцент"
-    options: ["акцент", "час", "особу"]
-  - answer: "кінці"
-    options: ["кінці", "початку", "середині"]
-  - answer: "наративності"
-    options: ["наративності", "питання", "заперечення"]
-  - answer: "саме"
-    options: ["саме", "не", "чи"]
+## dialogue-reorder: Пояснення інверсії
+
+Розставте репліки в правильному порядку:
+
+1. Студент: Чому в казках дієслово на початку?
+2. Викладач: Це наративний стиль. Створює ефект оповіді.
+3. Студент: А «Жив-був дід» — це теж інверсія?
+4. Викладач: Так. Нейтрально було б «Дід жив».
+5. Студент: Чому так не кажуть?
+6. Викладач: Бо казки мають свій стиль. Інверсія — його частина.
 
 ---
 
-## unjumble
-prompt: Складіть речення з наративною інверсією
-jumbled:
-  - "прийшов / до / села / чоловік / невідомий"
-  - "настала / нарешті / весна / довгоочікувана"
-  - "зійшла / на / небо / зоря / яскрава"
-  - "почався / сильний / дощ / раптово"
-solutions:
-  - "Прийшов до села чоловік невідомий."
-  - "Настала нарешті весна довгоочікувана."
-  - "Зійшла на небо зоря яскрава."
-  - "Почався раптово сильний дощ."
+## select: Виберіть ВСІ функції інверсії
+
+- [x] Наративність
+- [x] Контраст
+- [ ] Заперечення
+- [x] Емоційність
+- [x] Поетичність
+- [x] Питання
 
 ---
 
-## unjumble
-prompt: Складіть речення з контрастивним акцентом
-jumbled:
-  - "цю / книгу / я / читав / а / ту / ні"
-  - "музику / він / любить / а / танці / ненавидить"
-  - "каву / п'ю / вранці / а / чай / увечері"
-  - "в / Києві / живу / а / працюю / у / Львові"
-solutions:
-  - "Цю книгу я читав, а ту — ні."
-  - "Музику він любить, а танці ненавидить."
-  - "Каву п'ю вранці, а чай — увечері."
-  - "В Києві живу, а працюю у Львові."
+## select: Виберіть ВСІ речення з інверсією
+
+- [x] Прийшов Іван.
+- [ ] Іван прийшов.
+- [x] Цю книгу я читав.
+- [ ] Я читав книгу.
+- [x] Настала весна.
+- [ ] Весна настала.
 
 ---
 
-## translate
-prompt: Оберіть переклад з відповідним акцентом
-sentences:
-  - source: "It was John who came." (emphasis on John)
-    answer: "Саме Іван прийшов."
-    options:
-      - "Саме Іван прийшов."
-      - "Іван прийшов."
-      - "Прийшов Іван."
-  - source: "This book I've already read." (contrast)
-    answer: "Цю книгу я вже читав."
-    options:
-      - "Цю книгу я вже читав."
-      - "Я читав цю книгу."
-      - "Я вже прочитав книгу."
-  - source: "And then came spring." (narrative)
-    answer: "І настала весна."
-    options:
-      - "І настала весна."
-      - "І весна настала."
-      - "Весна тоді настала."
-  - source: "Coffee I like, but tea — not really." (contrast)
-    answer: "Каву люблю, а чай — не дуже."
-    options:
-      - "Каву люблю, а чай — не дуже."
-      - "Я люблю каву, але не чай."
-      - "Люблю каву, не люблю чай."
+## match-up: Тип інверсії ↔ Приклад
+
+> **For English Speakers:** Match each type of inversion with its example.
+
+- V-S (дієслово перед підметом) :: Прийшов Іван.
+- O-V (об'єкт перед дієсловом) :: Цю книгу я читав.
+- S-O-V (присудок у кінці) :: Він книгу взяв.
+- Обставина на початку :: Учора він прийшов.
+- Емфаза з «саме» :: Саме він це зробив.
+- Емфаза з «ж» :: Він же знає!
+- Контрастивна топікалізація :: Каву люблю, а чай — ні.
+- Наративний початок :: Жив-був дід...
 
 ---
 
-## dialogue-reorder
-prompt: Розставте репліки в правильному порядку
-lines:
-  - id: a
-    text: "Студент: Чому в казках дієслово на початку?"
-  - id: b
-    text: "Викладач: Це наративний стиль. Створює ефект оповіді."
-  - id: c
-    text: "Студент: А «Жив-був дід» — це теж інверсія?"
-  - id: d
-    text: "Викладач: Так. Нейтрально було б «Дід жив»."
-  - id: e
-    text: "Студент: Чому так не кажуть?"
-  - id: f
-    text: "Викладач: Бо казки мають свій стиль. Інверсія — його частина."
-order: [a, b, c, d, e, f]
+## quiz: Стильові особливості
+
+> **For English Speakers:** Match the type of inversion with the register or genre where it's most common.
+
+1. Який порядок слів характерний для народних казок?
+   - [x] V-S (дієслово перед підметом)
+   - [ ] O-V (об'єкт перед дієсловом)
+   - [ ] Нейтральний порядок
+   - [ ] Питальний порядок
+
+2. Який тип інверсії найчастіше використовується для контрасту?
+   - [x] O-V (об'єкт на початок)
+   - [ ] V-S (дієслово на початок)
+   - [ ] Нейтральний порядок
+   - [ ] Присудок у кінці
+
+3. Який стиль характерний для порядку S-O-V?
+   - [x] Літературний, піднесений
+   - [ ] Розмовний, повсякденний
+   - [ ] Технічний, науковий
+   - [ ] Рекламний
+
+4. У якому контексті найчастіше використовується частка «ж/же»?
+   - [x] Емоційне підтвердження
+   - [ ] Запитання
+   - [ ] Заперечення
+   - [ ] Умова
+
+5. Яку функцію виконує обставина на початку речення?
+   - [x] Встановлює контекст, сцену
+   - [ ] Заперечує попередню інформацію
+   - [ ] Ставить запитання
+   - [ ] Виражає сумнів
+
+6. Який тип інверсії характерний для офіційно-ділового стилю?
+   - [x] Пасивні конструкції з V-S
+   - [ ] Контрастивна топікалізація
+   - [ ] Емфатичні частки
+   - [ ] Лексичні повтори
+
+7. Яка частка підкреслює точність вказування?
+   - [x] саме
+   - [ ] ж
+   - [ ] не
+   - [ ] чи
+
+8. Що таке «топікалізація» в українському синтаксисі?
+   - [x] Винесення елемента на початок речення
+   - [ ] Постановка запитання
+   - [ ] Формування заперечення
+   - [ ] Скорочення речення
 
 ---
 
-## select
-type: checkbox
-prompt: Виберіть ВСІ функції інверсії
-options:
-  - text: "Наративність"
-    correct: true
-  - text: "Контраст"
-    correct: true
-  - text: "Заперечення"
-    correct: false
-  - text: "Емоційність"
-    correct: true
-  - text: "Поетичність"
-    correct: true
-  - text: "Питання"
-    correct: true
-
----
-
-## select
-type: checkbox
-prompt: Виберіть ВСІ речення з інверсією
-options:
-  - text: "Прийшов Іван."
-    correct: true
-  - text: "Іван прийшов."
-    correct: false
-  - text: "Цю книгу я читав."
-    correct: true
-  - text: "Я читав книгу."
-    correct: false
-  - text: "Настала весна."
-    correct: true
-  - text: "Весна настала."
-    correct: false
-
----
-
-## match-up
-prompt: З'єднайте тип інверсії з прикладом
-pairs:
-  - left: "V-S (дієслово перед підметом)"
-    right: "Прийшов Іван."
-  - left: "O-V (об'єкт перед дієсловом)"
-    right: "Цю книгу я читав."
-  - left: "S-O-V (присудок у кінці)"
-    right: "Він книгу взяв."
-  - left: "Обставина на початку"
-    right: "Учора він прийшов."
-  - left: "Емфаза з «саме»"
-    right: "Саме він це зробив."
-  - left: "Емфаза з «ж»"
-    right: "Він же знає!"
-  - left: "Контрастивна топікалізація"
-    right: "Каву люблю, а чай — ні."
-  - left: "Наративний початок"
-    right: "Жив-був дід..."
-
----
-
-# Словник
+# Vocabulary
 
 | Слово | Переклад | Примітки |
 |-------|----------|----------|

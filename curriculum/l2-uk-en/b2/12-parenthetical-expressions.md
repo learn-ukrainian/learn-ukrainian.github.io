@@ -3,40 +3,47 @@ module: 12
 title: "Вставні слова та вирази"
 level: B2
 phase: B2.1a
-estimated_time: 55
-prerequisites:
-  - b2/11-multi-clause-sentences
-theme: "Smooth discourse"
+duration: 55
+transliteration: none
+tags: parentheticals, discourse-markers, punctuation, register
+objectives:
+  - Use parenthetical expressions to add nuance and speaker attitude
+  - Correctly punctuate sentences with insertions
+  - Select appropriate parentheticals for different registers
+grammar:
+  - Parenthetical words (вставні слова) vs. sentence members
+  - Parenthetical phrases and clauses (вставні вирази, вставні речення)
+  - Inserted constructions (вставлені конструкції)
+  - Punctuation with commas, dashes, and parentheses
 pedagogy: TTT
-cefr_can_do:
-  - "Can use parenthetical expressions to add nuance and attitude"
-  - "Can correctly punctuate sentences with insertions"
-  - "Can select appropriate parentheticals for different registers"
-decolonization_note: "Parenthetical expressions add texture to Ukrainian discourse. This module develops skills for sophisticated expression across registers."
 ---
 
 # Діагностика
+
+> **For English Speakers:** Parenthetical expressions (вставні слова) are words that express the speaker's attitude toward what they're saying—without being grammatically essential to the sentence. English uses similar devices: "perhaps," "of course," "unfortunately," "in my opinion." Ukrainian has a rich system of these, and they're ALWAYS set off by commas.
 
 > Прочитайте речення. Яку функцію виконують виділені слова?
 
 ---
 
-1. Він, **мабуть**, прийде завтра.
-2. **По-перше**, це неправильно.
-3. Погода, **на мою думку**, зміниться.
-4. Це, **власне**, і є головна проблема.
-5. **Отже**, підведемо підсумки.
+1. Він, **мабуть**, прийде завтра. *(He'll probably come tomorrow.)*
+2. **По-перше**, це неправильно. *(Firstly, this is wrong.)*
+3. Погода, **на мою думку**, зміниться. *(The weather, in my opinion, will change.)*
+4. Це, **власне**, і є головна проблема. *(This, actually, is the main problem.)*
+5. **Отже**, підведемо підсумки. *(So, let's summarize.)*
 
 ---
 
-> [!question] Питання для роздумів
-> 1. Чи змінюють ці слова основний зміст речення?
-> 2. Яке ставлення мовця вони виражають?
-> 3. Як вони виділяються на письмі?
+> [!note] Reflection Questions
+> 1. Чи змінюють ці слова основний зміст речення? *(Do these words change the core meaning?)*
+> 2. Яке ставлення мовця вони виражають? *(What speaker attitude do they express?)*
+> 3. Як вони виділяються на письмі? *(How are they marked in writing?)*
 
 ---
 
 # Аналіз: Типи вставних слів і виразів
+
+> **For English Speakers:** This section categorizes Ukrainian parentheticals by their semantic function. English has similar categories, but Ukrainian makes more systematic use of them—especially in formal writing. Mastering these adds sophistication to your Ukrainian.
 
 ## Що таке вставні слова?
 
@@ -45,13 +52,18 @@ decolonization_note: "Parenthetical expressions add texture to Ukrainian discour
 | **Функція** | Виражають ставлення мовця до висловлювання |
 | **Граматика** | Не є членами речення |
 | **Пунктуація** | Виділяються комами |
-| **Інтонація** | Вимовляються окремо, з паузами |
+| **Інтонація** | Читаються окремо, з паузами |
+
+> [!important] Key Difference from English
+> In English, parentheticals like "however" or "therefore" are sometimes NOT set off by commas, especially in informal writing. In Ukrainian, commas around вставні слова are MANDATORY—no exceptions!
 
 ---
 
 ## Категорії вставних слів
 
 ### 1. Впевненість / Модальність
+
+> **For English Speakers:** These words express certainty and conviction. They're the Ukrainian equivalents of "certainly," "undoubtedly," "of course." Use them when you want to emphasize that something is definitely true.
 
 | Вставне слово | Значення | Приклад |
 |---------------|----------|---------|
@@ -66,6 +78,8 @@ decolonization_note: "Parenthetical expressions add texture to Ukrainian discour
 
 ### 2. Невпевненість / Припущення
 
+> **For English Speakers:** These express doubt, possibility, or hedging—like English "perhaps," "maybe," "possibly." They soften statements and make them less direct, which is important for polite communication in Ukrainian.
+
 | Вставне слово | Значення | Приклад |
 |---------------|----------|---------|
 | **мабуть** | perhaps, probably | Мабуть, він не знає. |
@@ -79,6 +93,8 @@ decolonization_note: "Parenthetical expressions add texture to Ukrainian discour
 
 ### 3. Джерело інформації
 
+> **For English Speakers:** These phrases cite the source of information, like English "in my opinion," "according to experts," "as they say." Essential for academic and journalistic writing where attribution matters.
+
 | Вставний вираз | Значення | Приклад |
 |----------------|----------|---------|
 | **на мою думку** | in my opinion | На мою думку, це правильно. |
@@ -90,6 +106,8 @@ decolonization_note: "Parenthetical expressions add texture to Ukrainian discour
 ---
 
 ### 4. Порядок думок
+
+> **For English Speakers:** These organize your argument, like English "firstly, secondly, finally, therefore." They're crucial for structured writing and presentations, signaling to your audience how ideas connect.
 
 | Вставне слово | Значення | Приклад |
 |---------------|----------|---------|
@@ -104,6 +122,8 @@ decolonization_note: "Parenthetical expressions add texture to Ukrainian discour
 
 ### 5. Емоції та оцінка
 
+> **For English Speakers:** These express the speaker's emotional reaction to what they're saying—fortunately, unfortunately, strangely. They add personal coloring to otherwise neutral statements.
+
 | Вставне слово | Значення | Приклад |
 |---------------|----------|---------|
 | **на щастя** | fortunately | На щастя, все обійшлось. |
@@ -115,6 +135,8 @@ decolonization_note: "Parenthetical expressions add texture to Ukrainian discour
 ---
 
 ### 6. Зв'язок з попереднім
+
+> **For English Speakers:** These connect your current statement to what came before—like English "actually, besides, however, instead." They create logical flow between sentences and paragraphs.
 
 | Вставне слово | Значення | Приклад |
 |---------------|----------|---------|
@@ -129,6 +151,13 @@ decolonization_note: "Parenthetical expressions add texture to Ukrainian discour
 
 # Поглиблений аналіз
 
+> **For English Speakers:** This section covers nuances that make your Ukrainian sound natural—position affects emphasis, and there's an important distinction between parenthetical words (вставні) and inserted constructions (вставлені). Mastering these subtle differences will help you sound more sophisticated in both spoken and written Ukrainian.
+
+> [!tip] Common Mistakes by English Speakers
+> 1. **Omitting commas** — English often skips commas with words like "however"; Ukrainian never does
+> 2. **Overusing parentheticals** — Filling every sentence with "мабуть" or "власне" sounds uncertain
+> 3. **Wrong category** — Using certainty words (безумовно) when you mean doubt (можливо)
+
 ## Позиція вставних слів у реченні
 
 | Позиція | Приклад | Ефект |
@@ -137,21 +166,28 @@ decolonization_note: "Parenthetical expressions add texture to Ukrainian discour
 | **Усередині** | Він, **мабуть**, прийде. | Нейтрально |
 | **У кінці** | Він прийде, **мабуть**. | Додумування |
 
+> [!tip] Stylistic Effect
+> Position at the start emphasizes uncertainty/attitude. Position at the end creates an afterthought effect ("he'll come... probably"). Middle position is neutral.
+
 ---
 
 ## Вставні речення
 
+> **For English Speakers:** Beyond single words, entire phrases can function as parentheticals. These "parenthetical sentences" (вставні речення) work like English phrases "if I'm not mistaken," "I must say," or "as I see it." They always take commas on both sides.
+
 Крім окремих слів, можуть бути цілі вставні речення:
 
 **Приклади:**
-- «Це, **як на мене**, помилка.»
-- «Він, **якщо не помиляюсь**, з Києва.»
-- «Книга, **треба сказати**, дуже цікава.»
-- «Ситуація, **слід визнати**, складна.»
+- «Це, **як на мене**, помилка.» *(This, as I see it, is a mistake.)*
+- «Він, **якщо не помиляюсь**, з Києва.» *(He, if I'm not mistaken, is from Kyiv.)*
+- «Книга, **треба сказати**, дуже цікава.» *(The book, I must say, is very interesting.)*
+- «Ситуація, **слід визнати**, складна.» *(The situation, it must be admitted, is complex.)*
 
 ---
 
 ## Вставлені конструкції
+
+> **For English Speakers:** Don't confuse вставні слова (express attitude) with вставлені конструкції (add factual information). The punctuation differs! Parenthetical words express how the speaker FEELS about what they're saying, while inserted constructions add FACTS that clarify or expand the statement.
 
 На відміну від вставних, **вставлені конструкції** — це додаткова інформація:
 
@@ -160,9 +196,11 @@ decolonization_note: "Parenthetical expressions add texture to Ukrainian discour
 | **Вставне** (ставлення) | Він, мабуть, прийде. |
 | **Вставлене** (факт) | Він (мій брат) прийде. |
 
-> [!important] Пунктуація
+> [!warning] Punctuation Matters!
 > - Вставні слова — коми
 > - Вставлені конструкції — дужки або тире
+>
+> Wrong punctuation changes meaning or creates errors!
 
 ---
 
@@ -176,12 +214,16 @@ decolonization_note: "Parenthetical expressions add texture to Ukrainian discour
 | **нарешті** | Нарешті, ми закінчили. | Він нарешті прийшов. |
 | **загалом** | Загалом, все добре. | Він загалом задоволений. |
 
-> [!tip] Як відрізнити?
+> [!tip] How to Tell the Difference
 > Вставне можна вилучити без втрати змісту. Член речення — ні.
+>
+> Test: If you can remove the word and the sentence still makes complete sense, it's parenthetical. If removing it changes the meaning, it's a sentence member.
 
 ---
 
 # Занурення
+
+> **For English Speakers:** These authentic texts demonstrate how parentheticals function across different registers—academic, journalistic, literary, and business. Notice how they add nuance without changing core meaning.
 
 ## Текст 1: Академічний стиль
 
@@ -190,6 +232,9 @@ decolonization_note: "Parenthetical expressions add texture to Ukrainian discour
 **Уривок з дослідження:**
 
 По-перше, слід зазначити, що результати, безперечно, підтверджують гіпотезу. По-друге, як свідчать дані, спостерігається позитивна кореляція. Загалом, дослідження, на нашу думку, відкриває нові перспективи. Проте, слід визнати, залишаються питання, які, очевидно, потребують подальшого вивчення.
+
+> [!note] Academic Writing Pattern
+> Academic Ukrainian relies heavily on parentheticals for hedging (мабуть, ймовірно), organizing (по-перше, по-друге), and citing sources (на думку експертів, за словами дослідників).
 
 ---
 
@@ -229,21 +274,25 @@ decolonization_note: "Parenthetical expressions add texture to Ukrainian discour
 
 # Діалоги
 
+> **For English Speakers:** These dialogues show how parentheticals function in natural conversation. Notice how speakers use them to soften statements, express opinions diplomatically, and organize their thoughts.
+
 ## Діалог 1: Обговорення ситуації
 
 ---
 
-**Олена:** Мабуть, він не знав про зустріч.
+**Олена:** Мабуть, він не знав про зустріч. *(Perhaps he didn't know about the meeting.)*
 
-**Ігор:** Здається, хтось мав його попередити.
+**Ігор:** Здається, хтось мав його попередити. *(It seems someone should have warned him.)*
 
-**Олена:** Щоправда, графік змінився в останній момент.
+**Олена:** Щоправда, графік змінився в останній момент. *(To be fair, the schedule changed at the last moment.)*
 
-**Ігор:** На жаль, це вже не вперше.
+**Ігор:** На жаль, це вже не вперше. *(Unfortunately, this isn't the first time.)*
 
-**Олена:** Проте, слід визнати, він завжди намагається.
+**Олена:** Проте, слід визнати, він завжди намагається. *(However, it must be admitted, he always tries.)*
 
-**Ігор:** Безперечно. Загалом, він надійний колега.
+**Ігор:** Безперечно. Загалом, він надійний колега. *(Unquestionably. Overall, he's a reliable colleague.)*
+
+Notice how the speakers use parentheticals to soften criticism and maintain politeness—a key function in Ukrainian workplace communication.
 
 ---
 
@@ -281,6 +330,8 @@ decolonization_note: "Parenthetical expressions add texture to Ukrainian discour
 
 **Редактор:** Немає точного числа. Якщо помічаєте повтори — скорочуйте.
 
+> **For English Speakers:** This dialogue illustrates a common editing issue. Overusing parentheticals makes writing sound hedging and uncertain. Balance is key—use them for emphasis and nuance, not as filler.
+
 ---
 
 # Культурна примітка
@@ -299,323 +350,412 @@ decolonization_note: "Parenthetical expressions add texture to Ukrainian discour
 >
 > **Порада:** Уникайте надмірного використання — це може звучати невпевнено.
 
----
+> **For English Speakers:** Ukrainian parentheticals serve important social functions. Using «мабуть» (perhaps) instead of stating something directly is a politeness strategy—it softens criticism and shows humility. Compare: "This is wrong" vs. "This is, perhaps, wrong." The second sounds less confrontational. This indirect style is valued in Ukrainian professional and academic communication.
 
-# Підсумок
-
-| Категорія | Приклади |
-|-----------|----------|
-| Впевненість | безумовно, безперечно, звичайно |
-| Невпевненість | мабуть, можливо, здається |
-| Джерело | на мою думку, за словами, як відомо |
-| Порядок | по-перше, нарешті, отже |
-| Емоції | на щастя, на жаль, дивно |
-| Зв'язок | власне, крім того, проте |
-
-**Пунктуаційне правило:**
-- Вставні слова виділяються **комами**
-- На початку — кома після
-- В середині — коми з обох боків
-- У кінці — кома перед
+> [!note] Register Awareness
+> Different registers favor different parentheticals:
+> - **Academic:** По-перше, по-друге, загалом, безперечно
+> - **Journalistic:** На жаль, щоправда, проте
+> - **Conversational:** Мабуть, здається, до речі
+> - **Business:** Крім того, загалом, зокрема
+>
+> Mixing registers sounds awkward—use formal parentheticals in formal contexts!
 
 ---
 
-# Вправи
+# Summary
 
-## mark-the-words
-prompt: Клацніть на всі вставні слова і вирази
-passage: Мабуть, він не прийде. На жаль, погода зіпсувалася. Він, звичайно, намагався допомогти. По-перше, це дорого. До речі, я бачив його вчора.
-correct: Мабуть, На жаль, звичайно, По-перше, До речі
+> **For English Speakers:** This table summarizes the six main categories of Ukrainian parentheticals. Understanding these categories helps you choose the right word for your communicative intent—whether softening a statement, organizing arguments, or expressing emotions.
 
----
+| Категорія | Приклади | English Equivalent |
+|-----------|----------|---------------------|
+| Впевненість | безумовно, безперечно, звичайно | certainly, undoubtedly, of course |
+| Невпевненість | мабуть, можливо, здається | perhaps, possibly, it seems |
+| Джерело | на мою думку, за словами, як відомо | in my opinion, according to, as is known |
+| Порядок | по-перше, нарешті, отже | firstly, finally, therefore |
+| Емоції | на щастя, на жаль, дивно | fortunately, unfortunately, strangely |
+| Зв'язок | власне, крім того, проте | actually, besides, however |
 
-## group-sort
-prompt: Розподіліть вставні слова за значенням
-groups:
-  - name: "Впевненість"
-    items:
-      - "безумовно"
-      - "безперечно"
-      - "звичайно"
-      - "справді"
-  - name: "Невпевненість"
-    items:
-      - "мабуть"
-      - "можливо"
-      - "здається"
-      - "либонь"
+**Пунктуаційне правило (Punctuation Rule):**
+- Вставні слова виділяються **комами** — always set off by commas
+- На початку — кома після — comma after
+- В середині — коми з обох боків — commas on both sides
+- У кінці — кома перед — comma before
 
----
-
-## quiz
-prompt: Яка пунктуація правильна?
-answer: Мабуть, він прийде.
-options:
-  - Мабуть, він прийде.
-  - Мабуть він прийде.
-  - Мабуть; він прийде.
-  - Мабуть: він прийде.
+**Ключові відмінності:**
+- Вставне слово виражає ставлення, не є членом речення
+- Вставлена конструкція додає факт, виділяється дужками або тире
+- Деякі слова можуть бути і вставними, і членами речення (перевірка: чи можна вилучити?)
 
 ---
 
-## quiz
-prompt: Яке вставне слово виражає жаль?
-answer: на жаль
-options:
-  - на жаль
-  - мабуть
-  - звичайно
-  - отже
+# Activities
+
+## mark-the-words: Клацніть на всі вставні слова і вирази
+
+> **For English Speakers:** Parenthetical expressions are set off by commas and express speaker attitude. Look for words like "probably" (мабуть), "unfortunately" (на жаль), "of course" (звичайно).
+
+Мабуть, він не прийде. На жаль, погода зіпсувалася. Він, звичайно, намагався допомогти. По-перше, це дорого. До речі, я бачив його вчора.
+
+> [!correct] Мабуть, На жаль, звичайно, По-перше, До речі
 
 ---
 
-## true-false
-prompt: Визначте, чи правильні твердження
-statements:
-  - text: "Вставні слова є членами речення"
-    answer: false
-  - text: "Вставні слова виділяються комами"
-    answer: true
-  - text: "«Мабуть» виражає впевненість"
-    answer: false
-  - text: "«На мою думку» — вставний вираз"
-    answer: true
-  - text: "Вставне слово можна вилучити без втрати змісту"
-    answer: true
-  - text: "«Безумовно» виражає невпевненість"
-    answer: false
+## group-sort: Розподіліть вставні слова за значенням
+
+> **For English Speakers:** Certainty markers express confidence; uncertainty markers express doubt or possibility.
+
+- Впевненість: безумовно | безперечно | звичайно | справді
+- Невпевненість: мабуть | можливо | здається | либонь
 
 ---
 
-## fill-in
-type: dropdown
-prompt: Виберіть вставне слово для вираження впевненості
-template: "{{blank}}, це правильне рішення."
-blanks:
-  - options:
-      - "[Безумовно]"
-      - "Мабуть"
-      - "Можливо"
+## quiz: Вставні слова та пунктуація
+
+> **For English Speakers:** Parenthetical words in Ukrainian ALWAYS require commas—unlike English, where placement can be flexible.
+
+1. Яка пунктуація правильна?
+   - [x] Мабуть, він прийде.
+   - [ ] Мабуть він прийде.
+   - [ ] Мабуть; він прийде.
+   - [ ] Мабуть: він прийде.
+
+2. Яке вставне слово виражає жаль?
+   - [x] на жаль
+   - [ ] мабуть
+   - [ ] звичайно
+   - [ ] отже
+
+3. Яке вставне слово виражає впевненість?
+   - [x] безумовно
+   - [ ] мабуть
+   - [ ] можливо
+   - [ ] либонь
+
+4. Яке вставне слово означає "by the way"?
+   - [x] до речі
+   - [ ] на жаль
+   - [ ] проте
+   - [ ] отже
+
+5. Як правильно виділити вставне слово в середині речення?
+   - [x] Комами з обох боків
+   - [ ] Тільки комою перед
+   - [ ] Тільки комою після
+   - [ ] Дужками
+
+6. Яке слово виражає висновок?
+   - [x] отже
+   - [ ] мабуть
+   - [ ] до речі
+   - [ ] либонь
+
+7. Яке вставне слово характерне для західної України?
+   - [x] либонь
+   - [ ] мабуть
+   - [ ] звичайно
+   - [ ] безумовно
+
+8. Яке слово означає "in my opinion"?
+   - [x] на мою думку
+   - [ ] на щастя
+   - [ ] звичайно
+   - [ ] проте
 
 ---
 
-## fill-in
-type: dropdown
-prompt: Виберіть вставне слово для вираження жалю
-template: "{{blank}}, він не зміг прийти."
-blanks:
-  - options:
-      - "[На жаль]"
-      - "На щастя"
-      - "До речі"
+## true-false: Правда чи ні?
+
+Визначте, чи правильні твердження:
+
+- [ ] Вставні слова є членами речення
+- [x] Вставні слова виділяються комами
+- [ ] «Мабуть» виражає впевненість
+- [x] «На мою думку» — вставний вираз
+- [x] Вставне слово можна вилучити без втрати змісту
+- [ ] «Безумовно» виражає невпевненість
+- [x] Вставні слова вимовляються окремо, з паузами
+- [ ] «На жаль» виражає радість
+- [x] «По-перше» використовується для структурування думок
+- [ ] «Здається» виражає повну впевненість
+- [x] Вставлені конструкції виділяються дужками або тире
+- [x] Вставні речення також виділяються комами
 
 ---
 
-## fill-in
-type: dropdown
-prompt: Виберіть вставний вираз для вказівки на джерело
-template: "{{blank}}, ситуація покращиться."
-blanks:
-  - options:
-      - "[За словами експертів]"
-      - "Мабуть"
-      - "Звичайно"
+## fill-in: Виберіть вставне слово
+
+> **For English Speakers:** Match the parenthetical to its function: certainty, uncertainty, emotion, or sequence.
+
+1. ___, це правильне рішення.
+   > [!answer] Безумовно
+   > [!options] Безумовно | Мабуть | Можливо
+
+2. ___, він не зміг прийти.
+   > [!answer] На жаль
+   > [!options] На жаль | На щастя | До речі
+
+3. ___, ситуація покращиться.
+   > [!answer] За словами експертів
+   > [!options] За словами експертів | Мабуть | Звичайно
+
+4. ___, потрібно проаналізувати дані.
+   > [!answer] По-перше
+   > [!options] По-перше | На жаль | Мабуть
+
+5. Він, ___, не знав про зустріч.
+   > [!answer] мабуть
+   > [!options] мабуть | безумовно | справді
+
+6. ___, все закінчилось добре.
+   > [!answer] На щастя
+   > [!options] На щастя | На жаль | Проте
+
+7. ___, я бачив його вчора.
+   > [!answer] До речі
+   > [!options] До речі | Безумовно | По-друге
+
+8. ___, підведемо підсумки.
+   > [!answer] Отже
+   > [!options] Отже | Мабуть | До речі
 
 ---
 
-## error-correction
-prompt: Виправте пунктуаційну помилку
-sentences:
-  - incorrect: "Мабуть він не знає."
-    correct: "Мабуть, він не знає."
-    hint: "Кома після вставного слова на початку"
-  - incorrect: "Він мабуть не прийде."
-    correct: "Він, мабуть, не прийде."
-    hint: "Коми з обох боків вставного слова"
-  - incorrect: "На жаль він захворів."
-    correct: "На жаль, він захворів."
-    hint: "Кома після вставного виразу"
-  - incorrect: "Це, власне і є проблема."
-    correct: "Це, власне, і є проблема."
-    hint: "Кома після «власне»"
+## error-correction: Виправте пунктуаційну помилку
+
+> **For English Speakers:** Remember: comma AFTER parentheticals at the start, commas on BOTH sides in the middle.
+
+1. Мабуть він не знає.
+   > [!error] Мабуть він
+   > [!answer] Мабуть, він не знає.
+   > [!explanation] Кома після вставного слова на початку. Comma required after the parenthetical at the start.
+
+2. Він мабуть не прийде.
+   > [!error] Він мабуть не
+   > [!answer] Він, мабуть, не прийде.
+   > [!explanation] Коми з обох боків вставного слова в середині речення.
+
+3. На жаль він захворів.
+   > [!error] На жаль він
+   > [!answer] На жаль, він захворів.
+   > [!explanation] Кома після вставного виразу.
+
+4. Це, власне і є проблема.
+   > [!error] власне і
+   > [!answer] Це, власне, і є проблема.
+   > [!explanation] Кома після «власне».
+
+5. На щастя, він захворів і не прийшов.
+   > [!error] На щастя
+   > [!answer] На жаль, він захворів і не прийшов.
+   > [!explanation] Хвороба — не щастя. Illness is not fortunate!
+
+6. Безумовно, можливо він прийде.
+   > [!error] Безумовно, можливо
+   > [!answer] Можливо, він прийде.
+   > [!explanation] «Безумовно» і «можливо» — протилежні за значенням.
+
+7. Мабуть, я абсолютно впевнений у цьому.
+   > [!error] Мабуть
+   > [!answer] Безумовно, я абсолютно впевнений у цьому.
+   > [!explanation] «Мабуть» виражає невпевненість, not certainty.
+
+8. На жаль, він здоровий і прийде.
+   > [!error] На жаль
+   > [!answer] На щастя, він здоровий і прийде.
+   > [!explanation] Здоров'я — позитивне явище. Health is positive!
 
 ---
 
-## error-correction
-prompt: Виберіть правильне вставне слово за контекстом
-sentences:
-  - incorrect: "На щастя, він захворів і не прийшов."
-    correct: "На жаль, він захворів і не прийшов."
-    hint: "Хвороба — не щастя"
-  - incorrect: "Безумовно, можливо він прийде."
-    correct: "Можливо, він прийде."
-    hint: "«Безумовно» і «можливо» — протилежні за значенням"
-  - incorrect: "Мабуть, я абсолютно впевнений у цьому."
-    correct: "Безумовно, я абсолютно впевнений у цьому."
-    hint: "«Мабуть» виражає невпевненість"
-  - incorrect: "На жаль, він здоровий і прийде."
-    correct: "На щастя, він здоровий і прийде."
-    hint: "Здоров'я — позитивне явище"
+## cloze: Теорія вставних слів
+
+> **For English Speakers:** Fill in the blanks to complete this grammar summary about parenthetical expressions.
+
+Вставні слова — це слова, які виражають ___[ставлення|зміст|питання] мовця до висловлювання. Вони не є ___[членами|частинами|елементами] речення і виділяються ___[комами|тире|дужками]. Якщо вставне слово стоїть на початку речення, після нього ставиться кома. Якщо в середині — коми з ___[обох|одного|трьох] боків. Наприклад, слово «мабуть» виражає ___[невпевненість|впевненість|радість], а «безумовно» — впевненість.
 
 ---
 
-## cloze
-passage: |
-  Вставні слова — це слова, які виражають [1] мовця до висловлювання. Вони не є [2] речення і виділяються [3]. Якщо вставне слово стоїть на початку речення, після нього ставиться кома. Якщо в середині — коми з [4] боків. Наприклад, слово «мабуть» виражає [5], а «безумовно» — впевненість.
-blanks:
-  - answer: "ставлення"
-    options: ["ставлення", "зміст", "питання"]
-  - answer: "членами"
-    options: ["членами", "частинами", "елементами"]
-  - answer: "комами"
-    options: ["комами", "тире", "дужками"]
-  - answer: "обох"
-    options: ["обох", "одного", "трьох"]
-  - answer: "невпевненість"
-    options: ["невпевненість", "впевненість", "радість"]
+## unjumble: Складіть речення з вставним словом
+
+> **For English Speakers:** Remember to add commas around parenthetical expressions!
+
+1. мабуть | він | не | знає | правди
+   > [!answer] Мабуть, він не знає правди.
+
+2. на | жаль | погода | зіпсувалася
+   > [!answer] На жаль, погода зіпсувалася.
+
+3. по-перше | це | занадто | дорого
+   > [!answer] По-перше, це занадто дорого.
+
+4. до | речі | я | бачив | його | вчора
+   > [!answer] До речі, я бачив його вчора.
+
+5. він | звичайно | допоможе | нам
+   > [!answer] Він, звичайно, допоможе нам.
+
+6. ситуація | безперечно | покращиться
+   > [!answer] Ситуація, безперечно, покращиться.
+
+7. книга | на | мою | думку | цікава
+   > [!answer] Книга, на мою думку, цікава.
+
+8. результат | загалом | позитивний
+   > [!answer] Результат, загалом, позитивний.
 
 ---
 
-## unjumble
-prompt: Складіть речення з вставним словом
-jumbled:
-  - "мабуть / він / не / знає / правди"
-  - "на / жаль / погода / зіпсувалася"
-  - "по-перше / це / занадто / дорого"
-  - "до / речі / я / бачив / його / вчора"
-solutions:
-  - "Мабуть, він не знає правди."
-  - "На жаль, погода зіпсувалася."
-  - "По-перше, це занадто дорого."
-  - "До речі, я бачив його вчора."
+## translate: Оберіть найкращий переклад
+
+> **For English Speakers:** Check comma placement carefully—it's the key difference between correct and incorrect options!
+
+1. Unfortunately, he can't come.
+   - [x] На жаль, він не може прийти.
+   - [ ] Жаль він не може прийти.
+   - [ ] На жаль він не може прийти.
+
+2. In my opinion, this is correct.
+   - [x] На мою думку, це правильно.
+   - [ ] Моя думка це правильно.
+   - [ ] На мою думку це правильно.
+
+3. Firstly, we need to discuss the budget.
+   - [x] По-перше, потрібно обговорити бюджет.
+   - [ ] Перше потрібно обговорити бюджет.
+   - [ ] По-перше потрібно обговорити бюджет.
+
+4. He will, perhaps, arrive tomorrow.
+   - [x] Він, мабуть, приїде завтра.
+   - [ ] Він мабуть приїде завтра.
+   - [ ] Він, мабуть приїде завтра.
+
+5. Of course, I will help.
+   - [x] Звичайно, я допоможу.
+   - [ ] Звичайно я допоможу.
+   - [ ] Звичайно; я допоможу.
+
+6. By the way, where is the station?
+   - [x] До речі, де вокзал?
+   - [ ] До речі де вокзал?
+   - [ ] Речі, де вокзал?
+
+7. Fortunately, everything worked out.
+   - [x] На щастя, все вдалося.
+   - [ ] На щастя все вдалося.
+   - [ ] Щастя, все вдалося.
+
+8. Therefore, let's summarize.
+   - [x] Отже, підсумуємо.
+   - [ ] Отже підсумуємо.
+   - [ ] Отже: підсумуємо.
 
 ---
 
-## unjumble
-prompt: Вставте вставне слово в середину речення
-jumbled:
-  - "він / звичайно / допоможе / нам"
-  - "ситуація / безперечно / покращиться"
-  - "книга / на / мою / думку / цікава"
-  - "результат / загалом / позитивний"
-solutions:
-  - "Він, звичайно, допоможе нам."
-  - "Ситуація, безперечно, покращиться."
-  - "Книга, на мою думку, цікава."
-  - "Результат, загалом, позитивний."
+## dialogue-reorder: Розмова про вставні слова
+
+Розставте репліки в правильному порядку:
+
+1. Студент: Як виділяти вставні слова?
+2. Викладач: Комами.
+3. Студент: А якщо на початку речення?
+4. Викладач: Кома після вставного слова.
+5. Студент: А в середині?
+6. Викладач: Коми з обох боків.
 
 ---
 
-## translate
-prompt: Оберіть найкращий переклад
-sentences:
-  - source: "Unfortunately, he can't come."
-    answer: "На жаль, він не може прийти."
-    options:
-      - "На жаль, він не може прийти."
-      - "Жаль він не може прийти."
-      - "На жаль він не може прийти."
-  - source: "In my opinion, this is correct."
-    answer: "На мою думку, це правильно."
-    options:
-      - "На мою думку, це правильно."
-      - "Моя думка це правильно."
-      - "На мою думку це правильно."
-  - source: "Firstly, we need to discuss the budget."
-    answer: "По-перше, потрібно обговорити бюджет."
-    options:
-      - "По-перше, потрібно обговорити бюджет."
-      - "Перше потрібно обговорити бюджет."
-      - "По-перше потрібно обговорити бюджет."
-  - source: "He will, perhaps, arrive tomorrow."
-    answer: "Він, мабуть, приїде завтра."
-    options:
-      - "Він, мабуть, приїде завтра."
-      - "Він мабуть приїде завтра."
-      - "Він, мабуть приїде завтра."
+## select: Виберіть ВСІ вставні слова невпевненості
+
+- [x] мабуть
+- [ ] безумовно
+- [x] можливо
+- [ ] звичайно
+- [x] здається
+- [ ] справді
 
 ---
 
-## dialogue-reorder
-prompt: Розставте репліки в правильному порядку
-lines:
-  - id: a
-    text: "Студент: Як виділяти вставні слова?"
-  - id: b
-    text: "Викладач: Комами."
-  - id: c
-    text: "Студент: А якщо на початку речення?"
-  - id: d
-    text: "Викладач: Кома після вставного слова."
-  - id: e
-    text: "Студент: А в середині?"
-  - id: f
-    text: "Викладач: Коми з обох боків."
-order: [a, b, c, d, e, f]
+## select: Виберіть ВСІ правильно пунктуовані речення
+
+- [x] Мабуть, він не прийде.
+- [ ] Мабуть він не прийде.
+- [x] Він, звичайно, допоможе.
+- [ ] На жаль він захворів.
+- [x] По-перше, це дорого.
+- [ ] До речі я бачив його.
 
 ---
 
-## select
-type: checkbox
-prompt: Виберіть ВСІ вставні слова, що виражають невпевненість
-options:
-  - text: "мабуть"
-    correct: true
-  - text: "безумовно"
-    correct: false
-  - text: "можливо"
-    correct: true
-  - text: "звичайно"
-    correct: false
-  - text: "здається"
-    correct: true
-  - text: "справді"
-    correct: false
+## match-up: Вставне слово ↔ Значення
+
+> **For English Speakers:** Match each parenthetical with its meaning/function.
+
+- мабуть :: невпевненість, припущення
+- безумовно :: повна впевненість
+- на жаль :: вираження жалю
+- на щастя :: вираження радості
+- по-перше :: порядок думок
+- до речі :: доповнення, асоціація
+- власне :: уточнення суті
+- отже :: висновок
 
 ---
 
-## select
-type: checkbox
-prompt: Виберіть ВСІ правильно розставлені речення
-options:
-  - text: "Мабуть, він не прийде."
-    correct: true
-  - text: "Мабуть він не прийде."
-    correct: false
-  - text: "Він, звичайно, допоможе."
-    correct: true
-  - text: "На жаль він захворів."
-    correct: false
-  - text: "По-перше, це дорого."
-    correct: true
-  - text: "До речі я бачив його."
-    correct: false
+## quiz: Стиль і регістр
+
+> **For English Speakers:** Choose the appropriate parenthetical for each context—formal or informal.
+
+1. Яке вставне слово найбільш офіційне?
+   - [x] безперечно
+   - [ ] мабуть
+   - [ ] здається
+   - [ ] либонь
+
+2. Для наукової статті найкраще підходить:
+   - [x] загалом
+   - [ ] до речі
+   - [ ] либонь
+   - [ ] видно
+
+3. Яке слово типове для розмовного стилю?
+   - [x] здається
+   - [ ] безперечно
+   - [ ] безумовно
+   - [ ] на нашу думку
+
+4. Для ділового листа доречно використати:
+   - [x] крім того
+   - [ ] либонь
+   - [ ] чесно кажучи
+   - [ ] типу
+
+5. Яке вставне слово є регіональним?
+   - [x] либонь
+   - [ ] мабуть
+   - [ ] очевидно
+   - [ ] проте
+
+6. У газетній статті часто зустрічається:
+   - [x] щоправда
+   - [ ] чесно кажучи
+   - [ ] типу
+   - [ ] ну
+
+7. Який вираз підходить для академічного тексту?
+   - [x] на думку дослідників
+   - [ ] як на мене
+   - [ ] чесно кажучи
+   - [ ] ну типу
+
+8. Яке слово НЕ слід використовувати в офіційних документах?
+   - [x] чесно кажучи
+   - [ ] безумовно
+   - [ ] загалом
+   - [ ] проте
 
 ---
 
-## match-up
-prompt: З'єднайте вставне слово з його значенням
-pairs:
-  - left: "мабуть"
-    right: "невпевненість, припущення"
-  - left: "безумовно"
-    right: "повна впевненість"
-  - left: "на жаль"
-    right: "вираження жалю"
-  - left: "на щастя"
-    right: "вираження радості"
-  - left: "по-перше"
-    right: "порядок думок"
-  - left: "до речі"
-    right: "доповнення, асоціація"
-  - left: "власне"
-    right: "уточнення суті"
-  - left: "отже"
-    right: "висновок"
-
----
-
-# Словник
+# Vocabulary
 
 | Слово | Переклад | Примітки |
 |-------|----------|----------|
