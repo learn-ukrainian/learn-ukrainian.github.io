@@ -60,7 +60,7 @@ const config: Config = {
           items: [
             {
               label: 'Overview',
-              to: '/',
+              to: '/docs/intro',
             },
             {
               label: 'A1 - Beginner',
