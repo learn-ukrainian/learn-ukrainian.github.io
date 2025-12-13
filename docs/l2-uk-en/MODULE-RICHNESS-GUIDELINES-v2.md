@@ -11,13 +11,15 @@
 
 ### Content Requirements by Level (Instructional Core Only*)
 
-| Metric | A1 | A2 | B1 | B2 | C1 | C2 |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Core Word Count** | **Graduated*** | **1000+** | **1250+** | **1500+** | **1750+** | **2000+** |
-| **Immersion (% Ukr)** | **Graduated** | **40%** | **60%** | 80% | 95% | 100% |
-| **Example Sentences** | 12+ | 18+ | 24+ | 28+ | 30+ | 32+ |
-| **Engagement Boxes** | 3+ | 4+ | 5+ | 6+ | 7+ | 8+ |
-| **Mini-Dialogues** | 2+ | 3+ | 4+ | 4+ | 5+ | 5+ |
+| Metric | A1 | A2 | B1-grammar | B1-vocab | B2-grammar | B2-vocab | C1 | C2 |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Module Range** | M01-34 | M01-50 | **M01-45** | **M46-80** | **M01-40** | **M41-125** | M01-115 | M01-80 |
+| **Core Word Count** | **Graduated*** | **1000+** | **1250+** | **1250+** | **1500+** | **1500+** | **1750+** | **2000+** |
+| **Immersion (% Ukr)** | **Graduated** | **40%** | **50%** | **70%** | **70%** | **85%** | 95% | 100% |
+| **Min Vocab Words** | 20+ | 25+ | **20+** | **30+** | **20+** | **30+** | 25+ | 25+ |
+| **Example Sentences** | 12+ | 18+ | 24+ | 24+ | 28+ | 28+ | 30+ | 32+ |
+| **Engagement Boxes** | 3+ | 4+ | 5+ | 5+ | 6+ | 6+ | 7+ | 8+ |
+| **Mini-Dialogues** | 2+ | 3+ | 4+ | 4+ | 4+ | 4+ | 5+ | 5+ |
 
 *\*Instructional Core Definition: Counts ONLY Warm-up/Presentation (PPP); Diagnostic/Analysis/Deep Dive (TTT); or Introduction/Narrative/Analysis/Grammar in Context (CLIL). Excludes tables, practice drills, and activity instructions.*
 
@@ -44,21 +46,30 @@
 >
 > | Level | Target | Write IN UKRAINIAN | Write IN ENGLISH |
 > |-------|--------|-------------------|------------------|
-> | **B1** | **60%** | Narratives, dialogues, examples, cultural notes, simple grammar explanations, activity instructions | Complex grammar theory (aspect logic, tense sequencing), metalinguistic analysis, contrastive linguistics |
-> | **B2** | **80%** | All B1 Ukrainian content + grammar explanations, usage patterns, common mistakes | Only subtle linguistic nuances, English-Ukrainian contrasts, etymology notes |
+> | **B1-grammar** (M01-45) | **50%** | Narratives, dialogues, examples, cultural notes | More English for grammar theory (aspect, motion verbs, complex sentences) |
+> | **B1-vocab** (M46-80) | **70%** | Narratives, dialogues, examples, cultural notes, simple explanations | Limited English for abstract concept definitions |
+> | **B2-grammar** (M01-40) | **70%** | Narratives, dialogues, examples, simple grammar rules | Complex grammar theory (passive voice, participles, register rules) |
+> | **B2-vocab** (M41-125) | **85%** | Narratives, dialogues, all explanations in Ukrainian | Only historical/cultural context requiring English clarification |
 > | **C1** | **95%** | Everything except Language Link boxes | Only `🔗 Language Link` boxes for English-Ukrainian comparison |
 > | **C2** | **100%** | EVERYTHING including all explanations | Nothing — full native immersion |
 >
-> **B1 (60%) Concrete Examples:**
-> *   ✅ UKRAINIAN: "Дієслова доконаного виду показують завершену дію." (Simple rule)
+> **B1-grammar (50%) Concrete Examples:**
 > *   ✅ UKRAINIAN: "Читав (impf) — тривала дія. Прочитав (pf) — завершена дія." (Examples)
 > *   ✅ UKRAINIAN: All narratives, dialogues, cultural boxes
-> *   ✅ ENGLISH: "The perfective aspect in Ukrainian encodes 'result reached' — the action has a natural endpoint that was achieved. This differs from English, which uses perfect tenses (have done) for a similar but not identical concept."
-> *   ✅ ENGLISH: Complex analysis like "Why Slavic aspect isn't the same as English tense"
+> *   ✅ ENGLISH: "The perfective aspect in Ukrainian encodes 'result reached'..." (Complex grammar theory)
+> *   ✅ ENGLISH: Decision frameworks, metalinguistic analysis
 >
-> **B2 (80%) — Shift to Ukrainian explanations:**
-> *   ✅ UKRAINIAN: "Доконаний вид виражає результат. Коли ви кажете 'прочитав', ви маєте на увазі, що книга закінчена."
-> *   ✅ ENGLISH: Only for English-specific contrasts: "Unlike Ukrainian aspect, English uses..."
+> **B1-vocab (70%) — Higher immersion for vocabulary:**
+> *   ✅ UKRAINIAN: Narratives, dialogues, examples, simple explanations, cultural boxes
+> *   ✅ ENGLISH: Only abstract concept definitions where needed
+>
+> **B2-grammar (70%) — Ukrainian grammar rules, English for complex theory:**
+> *   ✅ UKRAINIAN: "Пасивний стан утворюється за допомогою..." (Grammar rules in Ukrainian)
+> *   ✅ ENGLISH: Complex grammar theory (passive voice logic, register distinctions)
+>
+> **B2-vocab (85%) — Near-immersion, transition to C1:**
+> *   ✅ UKRAINIAN: All narratives, dialogues, explanations, cultural content
+> *   ✅ ENGLISH: Only historical/cultural context requiring English clarification
 >
 > **C1 (95%) — Near-total immersion:**
 > *   ✅ UKRAINIAN: All grammar, all explanations, all cultural content
@@ -156,6 +167,19 @@
 **Legend:** `2+` = minimum count, `opt` = optional, `❌` = not allowed, `—` = rarely used
 
 **Note:** `observe-first` is a **pedagogical content pattern** (using `> [!observe]` callout inline), not an activity type. Use it before grammar explanations for inductive pattern discovery (recommended B1-B2).
+
+### B1-B2 Grammar vs Vocabulary Activity Priorities
+
+| Focus | Module Range | Priority Activities | Avoid | Rationale |
+|-------|--------------|---------------------|-------|-----------|
+| **B1-grammar** | M01-45 | error-correction, fill-in, unjumble, cloze | — | Aspect, motion verbs, complex sentences require controlled practice |
+| **B1-vocab** | M46-80 | match-up, mark-the-words, translate, quiz | group-sort | Vocabulary acquisition needs recognition/translation, not categorization |
+| **B2-grammar** | M01-40 | error-correction, fill-in, unjumble, cloze | — | Passive voice, participles, register require precision drilling |
+| **B2-vocab** | M41-125 | match-up, mark-the-words, translate, quiz | group-sort | Phraseology/history vocabulary benefits from matching and translation |
+
+**Grammar Module Focus:** Activities that develop grammatical accuracy through controlled practice and error awareness.
+
+**Vocabulary Module Focus:** Activities that build word recognition and translation fluency. Avoid group-sort (cognitive overload when learning new topic vocabulary).
 
 **C1-C2 Rationale:** At advanced levels, learners need more production practice (cloze ×3, translate ×2) and less basic recognition (mark-the-words removed). Error-correction remains high (×3) for metalinguistic awareness.
 

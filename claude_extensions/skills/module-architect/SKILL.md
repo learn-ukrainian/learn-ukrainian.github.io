@@ -81,8 +81,10 @@ After reading the manifest, read the documents it specifies for your level:
 |-------|------------|----------|
 | **A1** | **Prog.** | **Progressive Immersion.**<br>• **A1.1 (M01-M15): 15%** (5-25%). Heavy English scaffolding. Deep theory via English.<br>• **A1.2 (M16-M30): 30%** (15-45%). Transition phase. |
 | **A2** | **40%** | **Guided.** Aspect/Case theory in English. Simple instructions in Ukr. |
-| **B1** | **60%** | **Transitional.** Simple grammar in Ukr. Complex theory in English. |
-| **B2** | **80%** | **Immersion.** Mostly Ukr. English for subtle nuances only. |
+| **B1-grammar** | **50%** | **M01-45.** Aspect, motion verbs, complex sentences, participles. More English for grammar theory. |
+| **B1-vocab** | **70%** | **M46-80.** Abstract concepts, opinions, media, society. Higher immersion for vocabulary acquisition. |
+| **B2-grammar** | **70%** | **M01-40.** Passive voice, participles, register. Matches B2 baseline. |
+| **B2-vocab** | **85%** | **M41-125.** Phraseology, history, biographies. Transitions toward C1 (95%). |
 | **C1** | **95%** | **Full Immersion.** English only for "Language Link" boxes. |
 | **C2** | **100%** | **Native.** No English support. |
 
@@ -450,6 +452,17 @@ This section contains the "Richness & Soul" audit tables. Use the table that mat
 **Legend:** `2+` = minimum, `opt` = optional, `❌` = not allowed, `—` = rarely used
 
 **C1-C2 Rationale:** Production-heavy distribution. More cloze (×3) for contextual mastery, more translate (×2) for production. Less fill-in drilling, no mark-the-words (too basic).
+
+### B1-B2 Grammar vs Vocabulary Activity Priorities
+
+| Focus | Module Range | Priority Activities | Rationale |
+|-------|--------------|---------------------|-----------|
+| **B1-grammar** | M01-45 | error-correction, fill-in, unjumble, cloze | Aspect, motion verbs, complex sentences require controlled practice and error awareness |
+| **B1-vocab** | M46-80 | match-up, mark-the-words, translate, quiz | Vocabulary acquisition benefits from recognition and translation practice |
+| **B2-grammar** | M01-40 | error-correction, fill-in, unjumble, cloze | Passive voice, participles, register require precision drilling |
+| **B2-vocab** | M41-125 | match-up, mark-the-words, translate, quiz | Phraseology and topical vocabulary need matching and translation |
+
+**Note:** Grammar modules may include group-sort for concept categorization. Vocabulary modules should NOT use group-sort (cognitive overload with new words).
 
 ### New Activity Types (A2+)
 

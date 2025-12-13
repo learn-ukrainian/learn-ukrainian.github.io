@@ -113,16 +113,67 @@ def audit_module(file_path):
             'transliteration_allowed': False,
             'priority_types': {'error-correction', 'unjumble', 'fill-in'}
         },
+        # B1 Grammar-focused (M01-45): Aspect, Motion Verbs, Complex Sentences, Participles
+        'B1-grammar': {
+            'target_words': 1250,
+            'min_activities': 12,
+            'min_items_per_activity': 14,
+            'min_types_unique': 4,
+            'min_vocab': 20,  # Lower vocab, grammar is focus
+            'min_engagement': 5,
+            'min_immersion': 50,  # More English scaffolding for grammar explanations
+            'transliteration_allowed': False,
+            'priority_types': {'error-correction', 'fill-in', 'unjumble', 'cloze'}
+        },
+        # B1 Vocabulary-focused (M46-80): Abstract Concepts, Opinions, Media, Society
+        'B1-vocab': {
+            'target_words': 1250,
+            'min_activities': 12,
+            'min_items_per_activity': 14,
+            'min_types_unique': 4,
+            'min_vocab': 30,  # Higher vocab, vocabulary is focus
+            'min_engagement': 5,
+            'min_immersion': 70,  # More Ukrainian exposure
+            'transliteration_allowed': False,
+            'priority_types': {'match-up', 'mark-the-words', 'translate', 'quiz'}
+        },
+        # B1 fallback (for transition)
         'B1': {
             'target_words': 1250,
             'min_activities': 12,
             'min_items_per_activity': 14,
             'min_types_unique': 4,
-            'min_vocab': 30,
+            'min_vocab': 25,
             'min_engagement': 5,
+            'min_immersion': 60,
             'transliteration_allowed': False,
             'priority_types': {'fill-in', 'unjumble', 'error-correction'}
         },
+        # B2 Grammar-focused (M01-40): Passive Voice, Participles, Register
+        'B2-grammar': {
+            'target_words': 1500,
+            'min_activities': 14,
+            'min_items_per_activity': 16,
+            'min_types_unique': 4,
+            'min_vocab': 20,  # Lower vocab, grammar is focus
+            'min_engagement': 6,
+            'min_immersion': 70,  # Matches B2 baseline, grammar still needs some scaffolding
+            'transliteration_allowed': False,
+            'priority_types': {'error-correction', 'fill-in', 'unjumble', 'cloze'}
+        },
+        # B2 Vocabulary-focused (M41-125): Phraseology, History, Biographies
+        'B2-vocab': {
+            'target_words': 1500,
+            'min_activities': 14,
+            'min_items_per_activity': 16,
+            'min_types_unique': 4,
+            'min_vocab': 30,  # Higher vocab, vocabulary is focus
+            'min_engagement': 6,
+            'min_immersion': 85,  # Transition toward C1 (95%), allows some English for historical context
+            'transliteration_allowed': False,
+            'priority_types': {'match-up', 'mark-the-words', 'translate', 'quiz'}
+        },
+        # B2 fallback (for transition)
         'B2': {
             'target_words': 1500,
             'min_activities': 14,
@@ -130,6 +181,7 @@ def audit_module(file_path):
             'min_types_unique': 4,
             'min_vocab': 25,
             'min_engagement': 6,
+            'min_immersion': 65,
             'transliteration_allowed': False,
             'priority_types': {'fill-in', 'unjumble', 'error-correction'}
         },
@@ -199,7 +251,31 @@ def audit_module(file_path):
     except:
         pass
 
-    config = LEVEL_CONFIG.get(level_code, LEVEL_CONFIG['A1'])
+    # --- Focus Detection (Grammar vs Vocabulary) ---
+    # 1. Check frontmatter for explicit focus: field
+    focus_match = re.search(r'^focus:\s*(grammar|vocab|vocabulary)$', frontmatter_str, re.MULTILINE | re.IGNORECASE)
+    module_focus = None
+    if focus_match:
+        focus_val = focus_match.group(1).lower()
+        module_focus = 'grammar' if focus_val == 'grammar' else 'vocab'
+
+    # 2. Auto-detect based on module number if no explicit focus
+    if module_focus is None:
+        if level_code == 'B1':
+            # B1: M01-45 = grammar, M46-80 = vocab
+            module_focus = 'grammar' if module_num <= 45 else 'vocab'
+        elif level_code == 'B2':
+            # B2: M01-40 = grammar, M41-125 = vocab
+            module_focus = 'grammar' if module_num <= 40 else 'vocab'
+
+    # 3. Select config based on level + focus
+    config_key = level_code
+    if module_focus and level_code in ('B1', 'B2'):
+        specific_key = f"{level_code}-{module_focus}"
+        if specific_key in LEVEL_CONFIG:
+            config_key = specific_key
+
+    config = LEVEL_CONFIG.get(config_key, LEVEL_CONFIG['A1'])
     
     # A1 Graduation Logic
     target = config['target_words']
@@ -577,7 +653,14 @@ def audit_module(file_path):
              results['immersion'] = {'status': 'FAIL', 'icon': '❌', 'msg': "English Story Detected"}
              has_critical_failure = True
     else:
-        results['immersion'] = {'status': 'PASS', 'icon': '🇺🇦', 'msg': f"{immersion_score:.1f}%"}
+        # Check against min_immersion threshold (B1/B2 grammar vs vocab differentiation)
+        min_immersion = config.get('min_immersion', 0)
+        if min_immersion > 0 and immersion_score < min_immersion:
+            focus_label = f" ({module_focus})" if module_focus else ""
+            results['immersion'] = {'status': 'WARN', 'icon': '⚠️', 'msg': f"{immersion_score:.1f}% (min {min_immersion}%{focus_label})"}
+        else:
+            focus_label = f" ({module_focus})" if module_focus else ""
+            results['immersion'] = {'status': 'PASS', 'icon': '🇺🇦', 'msg': f"{immersion_score:.1f}%{focus_label}"}
 
     # Transliteration Policy (A2+ = FORBIDDEN)
     if not transliteration_allowed:
@@ -899,18 +982,48 @@ def audit_module(file_path):
             if not re.match(r'- \[[ xX]\]', stripped):
                  lint_errors.append(f"Line {line_num}: Invalid Checkbox format. Use '- [ ]' or '- [x]'.")
 
-        # 8. AI Monologue / Slop Check
-        # Keywords that suggest the AI is talking to itself or the user in the content body
-        monologue_patterns = [
+        # 8. AI Monologue / Slop Check + AI Confusion Artifacts
+        # Keywords that suggest the AI is talking to itself, leaking thinking, or self-correcting
+        ai_contamination_patterns = [
+            # Original monologue patterns
             r"Let's say",
             r"context suggests",
             r"Usually '.*' here",
             r'\bAI:',
-            r'printed your printing'
+            r'printed your printing',
+            # AI Confusion artifacts (from detect_ai_confusion.py)
+            r"\bCorrection:",
+            r"\bWait, actually",
+            r"\bWait, no\b",
+            r"\bOops\b",
+            r"\bNote to self\b",
+            r"\bAI note\b",
+            r"\bignore this\b",
+            r"\bdisregard this\b",
+            r"\bLet's change\b",
+            r"\bRewrite this\b",
+            r"\bDraft:\b",
+            r"\bCheck this\b",
+            r"\bI made a mistake\b",
+            r"\bSelf-correction\b",
+            r"\bApologies\b",
+            r"\bSorry,\b",
+            r"\bAs an AI\b",
+            r"\bMy previous\b",
+            r"\bIn the previous\b",
         ]
-        for pat in monologue_patterns:
+        for pat in ai_contamination_patterns:
             if re.search(pat, stripped, re.IGNORECASE):
-                lint_errors.append(f"Line {line_num}: Potential AI Monologue detected ('{pat}'). Please remove.")
+                # Filter out false positives: "Wait!" in dialogue (bold text)
+                if "Wait" in pat and "**" in stripped:
+                    continue
+                # Filter out false positives: "Sorry!" in dialogue
+                if "Sorry" in pat and "**" in stripped:
+                    continue
+                # Filter out legitimate activity type references
+                if "error-correction" in stripped.lower():
+                    continue
+                lint_errors.append(f"Line {line_num}: AI Contamination detected ('{pat}'). Remove thinking/self-correction artifacts.")
 
         # 9. Audio Artifact Check (Strict: Vocab Only)
         # We allow 'audio_' ONLY if we are inside the Vocabulary section.
