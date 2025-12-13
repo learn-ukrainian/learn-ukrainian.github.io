@@ -17,7 +17,7 @@
     "vocab:enrich:dry": "ts-node scripts/vocab-enrich.ts l2-uk-en --dry-run",
     "vocab:enrich:force": "ts-node scripts/vocab-enrich.ts l2-uk-en --force",
     "vocab:rebuild": "npm run vocab:init:force && npm run vocab:scan",
-    "claude:deploy": "mkdir -p .claude/skills .claude/commands .claude/stages && cp -r claude_extensions/skills/* .claude/skills/ && cp -r claude_extensions/commands/* .claude/commands/ && cp -r claude_extensions/stages/* .claude/stages/"
+    "claude:deploy": "mkdir -p .claude/skills .claude/commands .claude/stages .agent/workflows && cp -r claude_extensions/skills/* .claude/skills/ && cp -r claude_extensions/commands/* .claude/commands/ && cp -r claude_extensions/stages/* .claude/stages/ && cp -r claude_extensions/commands/* .agent/workflows/"
   },
   "repository": {
     "type": "git",

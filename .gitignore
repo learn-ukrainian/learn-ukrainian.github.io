@@ -47,3 +47,4 @@ tmp/
 temp/
 *.tmp
 .venv/
+.agent/
