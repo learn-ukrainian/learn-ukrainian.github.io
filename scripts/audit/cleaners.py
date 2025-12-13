@@ -38,6 +38,11 @@ def clean_for_immersion(text: str) -> str:
     """
     Cleans text for immersion calculation. Keeps blockquotes (engagement boxes)
     as they are part of the learning content and contribute to immersion.
+
+    Removes markdown syntax elements that would incorrectly count as non-Ukrainian:
+    - URLs in markdown links
+    - Callout type markers like [!note], [!tip], etc.
+    - Image syntax
     """
     # Remove ONLY metadata callouts (not engagement boxes)
     text = re.sub(r'^\s*>\s*\[!(answer|options|error|id)\].*$', '', text, flags=re.MULTILINE)
@@ -47,6 +52,15 @@ def clean_for_immersion(text: str) -> str:
 
     # Remove Headers
     text = re.sub(r'^#+.*$', '', text, flags=re.MULTILINE)
+
+    # Remove URLs from markdown links [text](url) -> text
+    text = re.sub(r'\[([^\]]*)\]\([^)]+\)', r'\1', text)
+
+    # Remove callout type markers [!note], [!tip], [!warning], etc.
+    text = re.sub(r'\[![a-zA-Z-]+\]', '', text)
+
+    # Remove image syntax ![alt](url)
+    text = re.sub(r'!\[[^\]]*\]\([^)]+\)', '', text)
 
     return text
 
@@ -66,15 +80,29 @@ def extract_core_content(body: str) -> str:
 
 
 def calculate_immersion(text: str) -> float:
-    """Calculate percentage of Cyrillic characters in text."""
+    """
+    Calculate percentage of Cyrillic characters in text.
+
+    Only counts alphabetic characters (Cyrillic vs Latin).
+    Excludes: numbers, punctuation, markdown syntax - these are universal.
+    """
     if not text:
         return 0.0
+
+    # Remove whitespace
     clean_text = re.sub(r'\s+', '', text)
     if not clean_text:
         return 0.0
-    total_chars = len(clean_text)
+
+    # Count only alphabetic characters (Cyrillic + Latin)
     cyrillic_chars = len(re.findall(r'[\u0400-\u04ff]', clean_text))
-    return (cyrillic_chars / total_chars) * 100
+    latin_chars = len(re.findall(r'[a-zA-Z]', clean_text))
+
+    total_alpha = cyrillic_chars + latin_chars
+    if total_alpha == 0:
+        return 100.0  # No alphabetic text = consider fully immersed
+
+    return (cyrillic_chars / total_alpha) * 100
 
 
 def count_words(text: str) -> int:

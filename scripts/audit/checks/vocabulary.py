@@ -18,13 +18,19 @@ def extract_vocab_from_section(content: str) -> set[str]:
     )
     if vocab_match:
         vocab_text = vocab_match.group(0)
-        # Extract from table rows (first column after |)
-        rows = re.findall(r'\|\s*([^|]+?)\s*\|', vocab_text)
-        for row in rows:
-            words = re.findall(r'[\u0400-\u04ff]+', row)
-            for w in words:
-                if len(w) > 1:
-                    vocab_words.add(w.lower())
+        # Extract from table rows line by line (first column)
+        for line in vocab_text.split('\n'):
+            if line.strip().startswith('|') and '---' not in line:
+                parts = line.split('|')
+                if len(parts) >= 2:
+                    first_col = parts[1].strip()
+                    # Skip header row
+                    if first_col.lower() in ('word', 'слово'):
+                        continue
+                    words = re.findall(r'[\u0400-\u04ff]+', first_col)
+                    for w in words:
+                        if len(w) > 1:
+                            vocab_words.add(w.lower())
     return vocab_words
 
 

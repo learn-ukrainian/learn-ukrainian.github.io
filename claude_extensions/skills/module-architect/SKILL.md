@@ -86,7 +86,7 @@ After reading the manifest, read the documents it specifies for your level:
 | **B2-grammar** | **70%** | **M01-40.** Passive voice, participles, register. Matches B2 baseline. |
 | **B2-vocab** | **85%** | **M41-125.** Phraseology, history, biographies. Transitions toward C1 (95%). |
 | **C1** | **95%** | **Full Immersion.** English only for "Language Link" boxes. |
-| **C2** | **100%** | **Native.** No English support. |
+| **C2** | **95-100%** | **Native.** No English. Up to 5% Latin/Greek scholarly terms allowed. |
 
 **Reading Practice Sections:**
 - Use `## Reading Practice: Title` for Ukrainian reading passages
@@ -423,7 +423,7 @@ This section contains the "Richness & Soul" audit tables. Use the table that mat
 
 | Level | Count | Items | Types | Mandatory Activities |
 |-------|-------|-------|-------|----------------------|
-| **A1** | 8+ | 12+ | 4+ | fill-in ×2, match-up ×2, anagram ×2 (M01-10), unjumble ×1, quiz ×1 |
+| **A1** | 8+ | 12+ | 4+ | fill-in ×2, match-up ×2, anagram ×2 (M01-10) OR unjumble ×2 (M11+), quiz ×1 |
 | **A2** | 10+ | 12+ | 5+ | fill-in ×2, unjumble ×2, error-correction ×1, cloze ×1, mark-the-words ×1, dialogue-reorder ×1 |
 | **B1** | 12+ | 14+ | 5+ | fill-in ×2, unjumble ×2, error-correction ×2, cloze ×1, mark-the-words ×1, translate ×1 |
 | **B2** | 14+ | 16+ | 5+ | fill-in ×3, unjumble ×2, error-correction ×2, cloze ×1, translate ×1, select ×1 |
@@ -439,8 +439,8 @@ This section contains the "Richness & Soul" audit tables. Use the table that mat
 | quiz | 1+ | 1+ | 1+ | 1+ | 1+ | 1+ | discrimination |
 | true-false | 1+ | 1+ | 1+ | 1+ | — | — | discrimination |
 | group-sort | 1+ | 1+ | 1+ | 1+ | 1+ | 1+ | recognition |
-| anagram | 2+ (M01-10) | ❌ | ❌ | ❌ | ❌ | ❌ | recognition |
-| unjumble | 1+ | 2+ | 2+ | 2+ | 2+ | 2+ | production |
+| anagram | 2+ (M01-10 only) | ❌ | ❌ | ❌ | ❌ | ❌ | recognition |
+| unjumble | 2+ (M11+ only) | 2+ | 2+ | 2+ | 2+ | 2+ | production |
 | error-correction | ❌ | 1+ | 2+ | 2+ | 3+ | 3+ | controlled |
 | cloze | ❌ | 1+ | 1+ | 1+ | 3+ | 3+ | controlled |
 | mark-the-words | ❌ | 1+ | 1+ | 1+ | — | — | recognition |

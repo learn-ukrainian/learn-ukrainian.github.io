@@ -21,7 +21,8 @@ def generate_report(
     pedagogical_violations: list[dict],
     recommendation: str,
     reasons: list[str],
-    severity: int
+    severity: int,
+    low_density_activities: list[dict] = None
 ) -> str:
     """Generate markdown report content."""
     report_lines = []
@@ -55,7 +56,7 @@ def generate_report(
 
     report_lines.append("## Gates")
     keys_order = ['words', 'activities', 'density', 'unique_types', 'priority',
-                  'engagement', 'audio', 'vocab', 'structure', 'lint', 'pedagogy']
+                  'engagement', 'audio', 'vocab', 'structure', 'lint', 'pedagogy', 'immersion']
     for k in keys_order:
         r = results.get(k)
         if r:
@@ -63,6 +64,22 @@ def generate_report(
                 report_lines.append(f"- **{k.capitalize()}:** {r.icon} {r.msg}")
             else:  # dict
                 report_lines.append(f"- **{k.capitalize()}:** {r['icon']} {r['msg']}")
+
+    # Add low density activities section if any
+    if low_density_activities:
+        report_lines.append("")
+        report_lines.append("## Low Density Activities")
+        report_lines.append("| Activity | Type | Items | Required | Fix |")
+        report_lines.append("|----------|------|-------|----------|-----|")
+        for act in low_density_activities:
+            title = act['title']
+            act_type = act['type']
+            items = act['items']
+            target = act['target']
+            missing = target - items
+            fix = f"Add {missing} more items"
+            report_lines.append(f"| {title} | {act_type} | {items} | {target} | {fix} |")
+        report_lines.append("")
 
     report_lines.append("")
     report_lines.append("## Section Audit")
@@ -200,3 +217,51 @@ def print_immersion_fix_hints(
         else:
             print(f"   FIX: Add English context where needed")
             print(f"   FIX: Ensure translations are provided for complex passages")
+
+
+def print_low_density_activities(low_density_activities: list[dict]) -> None:
+    """Print which activities have insufficient items and how to fix them."""
+    if not low_density_activities:
+        return
+
+    print(f"\n📊 ACTIVITIES WITH LOW DENSITY:")
+    for act in low_density_activities:
+        title = act['title']
+        act_type = act['type']
+        items = act['items']
+        target = act['target']
+        missing = target - items
+
+        print(f"  ❌ {title}")
+        print(f"     Current: {items} items | Required: {target} | Add: {missing} more")
+
+        # Type-specific suggestions
+        if act_type == 'fill-in':
+            print(f"     → Add {missing} more gap-fill sentences with [blank] placeholders")
+        elif act_type == 'match-up':
+            print(f"     → Add {missing} more matching pairs (Ukrainian ↔ English)")
+        elif act_type == 'quiz':
+            print(f"     → Add {missing} more multiple-choice questions")
+        elif act_type == 'true-false':
+            print(f"     → Add {missing} more true/false statements")
+        elif act_type == 'unjumble':
+            print(f"     → Add {missing} more sentences to unscramble")
+        elif act_type == 'group-sort':
+            print(f"     → Add {missing} more items to sort into categories")
+        elif act_type == 'error-correction':
+            print(f"     → Add {missing} more sentences with errors to find")
+        elif act_type == 'cloze':
+            print(f"     → Add {missing} more blanks in the passage")
+        elif act_type == 'anagram':
+            print(f"     → Add {missing} more words to unscramble")
+        elif act_type == 'translate':
+            print(f"     → Add {missing} more translation items")
+        elif act_type == 'mark-the-words':
+            print(f"     → Add {missing} more words to mark in the text")
+        elif act_type == 'dialogue-reorder':
+            print(f"     → Add {missing} more dialogue lines to reorder")
+        elif act_type == 'select':
+            print(f"     → Add {missing} more multi-select questions")
+        else:
+            print(f"     → Add {missing} more items to this activity")
+    print("")

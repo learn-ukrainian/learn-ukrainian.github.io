@@ -134,12 +134,14 @@ def run_pedagogical_checks(
     # 1. Grammar level violations
     all_violations.extend(check_grammar_violations(core_content, level_code, module_num))
 
-    # 2. Sentence complexity
-    all_violations.extend(check_sentence_complexity(core_content, level_code))
+    # 2. Sentence complexity (skip for B2/C1/C2/LIT - advanced levels allow complex sentences)
+    if level_code not in ('B2', 'C1', 'C2', 'LIT'):
+        all_violations.extend(check_sentence_complexity(core_content, level_code))
 
-    # 3. Vocabulary violations
-    vocab_words = extract_vocab_from_section(content)
-    all_violations.extend(check_vocab_violations(content, core_content, vocab_words))
+    # 3. Vocabulary violations (skip for C1/C2/LIT - advanced levels, vocab database not yet populated)
+    if level_code not in ('C1', 'C2', 'LIT'):
+        vocab_words = extract_vocab_from_section(content)
+        all_violations.extend(check_vocab_violations(content, core_content, vocab_words))
 
     # 4. Activity sequencing
     all_violations.extend(check_activity_sequencing(content, pedagogy))
@@ -147,8 +149,10 @@ def run_pedagogical_checks(
     # 5. Answer position bias
     all_violations.extend(check_answer_position_bias(content))
 
-    # 6. Duplicate content
-    all_violations.extend(check_duplicate_content(content))
+    # 6. Duplicate content (exclude frontmatter to avoid false positives from objectives)
+    body_match = re.match(r'^---\n.*?\n---\n(.*)', content, re.DOTALL)
+    body_content = body_match.group(1) if body_match else content
+    all_violations.extend(check_duplicate_content(body_content))
 
     # 7. Activity variety
     all_violations.extend(check_activity_variety(content))

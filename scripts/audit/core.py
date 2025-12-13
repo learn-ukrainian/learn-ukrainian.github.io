@@ -17,6 +17,7 @@ from .config import (
     VALID_ACTIVITY_TYPES,
     AI_CONTAMINATION_PATTERNS,
     REQUIRED_METADATA,
+    ACTIVITY_MIN_ITEMS,
     get_a1_immersion_range,
     get_level_config,
     get_word_target,
@@ -56,6 +57,7 @@ from .report import (
     print_pedagogical_violations,
     print_recommendation,
     print_immersion_fix_hints,
+    print_low_density_activities,
 )
 
 
@@ -143,7 +145,8 @@ def detect_focus(frontmatter_str: str, level_code: str, module_num: int) -> str 
 
 def parse_sections(body: str) -> dict[str, str]:
     """Parse body into sections."""
-    sections = re.split(r'\n##\s+(.*?)\n', body)
+    # Split on both # and ## headers to properly separate activities from Summary/Vocabulary
+    sections = re.split(r'\n#{1,2}\s+(.*?)\n', body)
     section_map = {}
 
     if sections[0].strip():
@@ -399,6 +402,7 @@ def audit_module(file_path: str) -> bool:
     valid_density_count = 0
     total_activities = 0
     table_rows = []
+    low_density_activities = []  # Track activities with insufficient items
 
     print(f"\nAuditing {file_path} (Target: {target})...\n")
 
@@ -443,14 +447,26 @@ def audit_module(file_path: str) -> bool:
             total_activities += 1
 
             items = count_items(text)
-            density_target = config['min_items_per_activity']
+            # Use activity-specific minimum if available, else fall back to level default
+            density_target = ACTIVITY_MIN_ITEMS.get(
+                matched_act_type,
+                config['min_items_per_activity']
+            )
 
             if items >= density_target:
                 valid_density_count += 1
+            else:
+                # Track low density activities for reporting
+                low_density_activities.append({
+                    'title': title,
+                    'type': matched_act_type,
+                    'items': items,
+                    'target': density_target
+                })
 
             status_icon = "🎮"
-            note = f"Activity ({items} items)"
-            print(f"  > {title}: {items} items")
+            note = f"Activity ({items} items, min {density_target})"
+            print(f"  > {title}: {items} items (min {density_target})")
             display_count = items
 
         elif is_core and not is_excluded:
@@ -484,6 +500,8 @@ def audit_module(file_path: str) -> bool:
     results['density'] = evaluate_density(failed_density, total_activities, dens_threshold, act_target)
     if results['density'].status == 'FAIL' and act_target > 0:
         has_critical_failure = True
+        # Print which activities need more items
+        print_low_density_activities(low_density_activities)
 
     unique_types = set(found_activity_types)
     type_target = config['min_types_unique']
@@ -581,7 +599,8 @@ def audit_module(file_path: str) -> bool:
         file_path, phase, level_code, pedagogy, target,
         has_critical_failure, results, table_rows,
         lint_errors, pedagogical_violations,
-        recommendation, reasons, severity
+        recommendation, reasons, severity,
+        low_density_activities
     )
     report_path = save_report(file_path, report_content)
     print(f"\nReport: {report_path}")

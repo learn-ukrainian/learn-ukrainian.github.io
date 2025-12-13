@@ -49,7 +49,7 @@
 > | **B2-grammar** (M01-40) | **65-70%** | Narratives, dialogues, examples, simple grammar rules | Complex grammar theory (passive voice, participles, register rules) |
 > | **B2-vocab** (M41-125) | **80-85%** | Narratives, dialogues, all explanations in Ukrainian | Only historical/cultural context requiring English clarification |
 > | **C1** (M01-115) | **95%** | Everything except Language Link boxes | Only `🔗 Language Link` boxes for English-Ukrainian comparison |
-> | **C2** (M01-80) | **100%** | EVERYTHING including all explanations | Nothing — full native immersion |
+> | **C2** (M01-80) | **95-100%** | EVERYTHING including all explanations | Up to 5% Latin/Greek scholarly terms allowed |
 >
 > **B1-grammar (50-55%) Concrete Examples:**
 > *   ✅ UKRAINIAN: "Читав (impf) — тривала дія. Прочитав (pf) — завершена дія." (Examples)
@@ -73,13 +73,14 @@
 > *   ✅ UKRAINIAN: All grammar, all explanations, all cultural content
 > *   ✅ ENGLISH: Only in dedicated `🔗 Language Link` boxes for cross-linguistic awareness
 >
-> **LIT Track (Specialization) — 100% Ukrainian:**
+> **LIT Track (Specialization) — 95-100% Ukrainian:**
 > *   ✅ UKRAINIAN: Everything. Context, analysis, glossaries (UA-UA).
+> *   ⚠️ ALLOWED: Up to 5% Latin/Greek scholarly terms (e.g., "damnatio memoriae", "genius loci")
 > *   ❌ ENGLISH: Forbidden. No Language Links. No translations.
 >
-> **C2 (100%) — Full native experience:**
+> **C2 (95-100%) — Near-native experience:**
 > *   ✅ UKRAINIAN: Everything — learner operates as near-native
-> *   ❌ ENGLISH: Not used at all
+> *   ⚠️ ALLOWED: Up to 5% Latin/Greek scholarly terms
 
 ### Bilingual Content Patterns (B1-B2)
 
@@ -153,8 +154,8 @@
 | **quiz** | 1+ | 1+ | 1+ | 1+ | 1+ | 1+ |
 | **true-false** | 1+ | 1+ | 1+ | 1+ | — | — |
 | **group-sort** | 1+ | 1+ | 1+ | 1+ | 1+ | 1+ |
-| **anagram** | 2+ (M01-10) | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **unjumble** | 1+ | 2+ | 2+ | 2+ | 2+ | 2+ |
+| **anagram** | 2+ (M01-10 only) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **unjumble** | 2+ (M11+ only) | 2+ | 2+ | 2+ | 2+ | 2+ |
 | **error-correction** | ❌ | 1+ | 2+ | 2+ | 3+ | 3+ |
 | **cloze** | ❌ | 1+ | 1+ | 1+ | 3+ | 3+ |
 | **mark-the-words** | ❌ | 1+ | 1+ | 1+ | — | — |
