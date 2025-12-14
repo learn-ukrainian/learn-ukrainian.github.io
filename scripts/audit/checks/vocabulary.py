@@ -341,3 +341,210 @@ def count_vocab_rows(content: str) -> int:
         ])
         return max(0, v_rows - 1)  # Subtract header
     return 0
+
+
+def get_plan_path(level: str) -> Path:
+    """Get the path to the curriculum plan for a level."""
+    return Path(__file__).parent.parent.parent.parent / f"docs/l2-uk-en/{level.upper()}-CURRICULUM-PLAN.md"
+
+
+def parse_plan_vocabulary(plan_path: Path, module_num: int) -> set[str]:
+    """
+    Extract vocabulary list for a specific module from the curriculum plan.
+
+    The plan uses format: **Vocabulary (N words):**
+    followed by a comma-separated list of words.
+
+    Args:
+        plan_path: Path to the curriculum plan file
+        module_num: Module number to find vocabulary for
+
+    Returns:
+        Set of vocabulary words (lowercase) from the plan
+    """
+    if not plan_path.exists():
+        return set()
+
+    try:
+        content = plan_path.read_text(encoding='utf-8')
+    except Exception:
+        return set()
+
+    vocab_words = set()
+
+    # Find the module section (#### Module N: or ### Module N:)
+    # Pattern matches module headers like "#### Module 01:" or "### Module 05:"
+    module_pattern = rf'###?\s*Module\s*0?{module_num}\s*[:.].*?(?=###?\s*Module\s*\d|---|\Z)'
+    module_match = re.search(module_pattern, content, re.DOTALL | re.IGNORECASE)
+
+    if not module_match:
+        return set()
+
+    module_text = module_match.group(0)
+
+    # Find vocabulary specification: **Vocabulary (N words):**
+    vocab_pattern = r'\*\*Vocabulary\s*\([^)]+\):\*\*\s*\n?([^\n*]+(?:\n[^\n*#]+)*)'
+    vocab_match = re.search(vocab_pattern, module_text, re.IGNORECASE)
+
+    if vocab_match:
+        vocab_list = vocab_match.group(1).strip()
+        # Split by comma and clean each word
+        for word in vocab_list.split(','):
+            word = word.strip()
+            # Extract just the Ukrainian word (skip parenthetical notes)
+            word = re.sub(r'\([^)]*\)', '', word).strip()
+            # Skip empty or very short words
+            if len(word) >= 2:
+                # Handle ranges like "один-двадцять (20)" - extract first word
+                if '-' in word and not re.search(r'[\u0400-\u04ff].*-.*[\u0400-\u04ff]', word):
+                    word = word.split('-')[0].strip()
+                # Extract Ukrainian words only
+                uk_words = re.findall(r'[\u0400-\u04ff]+', word.lower())
+                for uk in uk_words:
+                    if len(uk) >= 2:
+                        vocab_words.add(uk)
+
+    return vocab_words
+
+
+def check_vocab_matches_plan(
+    module_path: str,
+    level: str,
+    module_num: int,
+    module_vocab: set[str]
+) -> list[dict]:
+    """
+    Compare module vocabulary section against curriculum plan.
+
+    Args:
+        module_path: Path to the module file (for error messages)
+        level: Level code (A1, A2, etc.)
+        module_num: Module number
+        module_vocab: Vocabulary words from the module's vocabulary section
+
+    Returns:
+        List of violations with type 'VOCAB_PLAN_MISMATCH'
+    """
+    violations = []
+    plan_path = get_plan_path(level)
+
+    if not plan_path.exists():
+        # No plan file = no enforcement (plan not yet created)
+        return violations
+
+    plan_vocab = parse_plan_vocabulary(plan_path, module_num)
+
+    if not plan_vocab:
+        # No vocabulary spec in plan for this module = no enforcement
+        return violations
+
+    # Normalize module vocab to lowercase for comparison
+    module_vocab_lower = {w.lower() for w in module_vocab if len(w) >= 2}
+
+    # Find improvised words (in module but not in plan)
+    improvised = module_vocab_lower - plan_vocab - COMMON_WORDS
+    if improvised:
+        # Filter to significant improvisation (more than 3 words)
+        if len(improvised) > 3:
+            sample = list(improvised)[:5]
+            violations.append({
+                'type': 'VOCAB_PLAN_MISMATCH',
+                'issue': f"Improvised vocabulary ({len(improvised)} words not in plan): {', '.join(sample)}...",
+                'fix': "Remove words not in curriculum plan, or update the plan first if words are needed."
+            })
+
+    # Find missing words (in plan but not in module) - WARNING only
+    missing = plan_vocab - module_vocab_lower
+    if missing:
+        # Filter out common words that don't need explicit declaration
+        missing = missing - COMMON_WORDS
+        if len(missing) > 5:
+            sample = list(missing)[:5]
+            violations.append({
+                'type': 'VOCAB_PLAN_MISSING',
+                'issue': f"Missing vocabulary from plan ({len(missing)} words): {', '.join(sample)}...",
+                'fix': "Add missing words from curriculum plan to module vocabulary section."
+            })
+
+    return violations
+
+
+# Metalanguage terms by level that must be taught before use
+METALANGUAGE_BY_LEVEL = {
+    'A1': {
+        'іменник', 'дієслово', 'прикметник', 'займенник',
+        'однина', 'множина', 'рід', 'чоловічий', 'жіночий', 'середній'
+    },
+    'A2': {
+        'відмінок', 'називний', 'знахідний', 'родовий', 'давальний',
+        'орудний', 'місцевий', 'кличний', 'час', 'теперішній',
+        'минулий', 'майбутній', 'вид', 'доконаний', 'недоконаний'
+    },
+    'B1': {
+        'дієприкметник', 'дієприслівник', 'пасивний', 'активний',
+        'умовний', 'наказовий', 'спосіб', 'стан', 'інфінітив'
+    },
+    'B2': {
+        'стиль', 'регістр', 'синонім', 'антонім', 'фразеологізм',
+        'метафора', 'омонім', 'пароним'
+    },
+    'C1': {
+        'персоніфікація', 'алітерація', 'метонімія', 'гіпербола',
+        'літота', 'оксиморон', 'епітет', 'порівняння'
+    },
+    'C2': {
+        'парцеляція', 'анафора', 'епіфора', 'градація',
+        'інверсія', 'еліпсис', 'паралелізм', 'антитеза'
+    }
+}
+
+
+def check_metalanguage_scaffolding(
+    content: str,
+    vocab_words: set[str],
+    level: str
+) -> list[dict]:
+    """
+    Check if grammatical/linguistic terms used in instructions are taught first.
+
+    At A1-A2, grammar terms should appear in vocabulary before being used
+    in Ukrainian instructions. This ensures learners understand instructions.
+
+    Args:
+        content: Full module content
+        vocab_words: Words from the module's vocabulary section
+        level: Level code
+
+    Returns:
+        List of violations for untaught metalanguage terms
+    """
+    violations = []
+
+    # Get metalanguage for this level and all earlier levels
+    level_order = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+    current_idx = level_order.index(level.upper()) if level.upper() in level_order else 0
+
+    relevant_metalang = set()
+    for i in range(current_idx + 1):
+        relevant_metalang.update(METALANGUAGE_BY_LEVEL.get(level_order[i], set()))
+
+    # Find metalanguage terms used in content but not in vocabulary
+    content_lower = content.lower()
+    vocab_lower = {w.lower() for w in vocab_words}
+
+    used_but_not_taught = []
+    for term in relevant_metalang:
+        if term in content_lower and term not in vocab_lower:
+            # Check it's used in Ukrainian context (not just in English explanations)
+            # Look for the term near Ukrainian text
+            if re.search(rf'\b{term}\b', content_lower):
+                used_but_not_taught.append(term)
+
+    if used_but_not_taught:
+        violations.append({
+            'type': 'METALANGUAGE',
+            'issue': f"Metalanguage terms used but not in vocabulary: {', '.join(used_but_not_taught[:5])}",
+            'fix': "Add these grammar terms to vocabulary with translations, or use English equivalents."
+        })
+
+    return violations

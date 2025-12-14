@@ -32,7 +32,12 @@ from .checks import (
     run_pedagogical_checks,
     count_items,
 )
-from .checks.vocabulary import count_vocab_rows
+from .checks.vocabulary import (
+    count_vocab_rows,
+    extract_vocab_from_section,
+    check_vocab_matches_plan,
+    check_metalanguage_scaffolding,
+)
 from .gates import (
     GateResult,
     evaluate_word_count,
@@ -540,6 +545,20 @@ def audit_module(file_path: str) -> bool:
     pedagogical_violations = run_pedagogical_checks(
         content, core_content, level_code, module_num, pedagogy
     )
+
+    # Run vocabulary plan compliance checks
+    vocab_words = extract_vocab_from_section(content)
+    plan_violations = check_vocab_matches_plan(
+        file_path, level_code, module_num, vocab_words
+    )
+    pedagogical_violations.extend(plan_violations)
+
+    # Run metalanguage scaffolding check
+    metalang_violations = check_metalanguage_scaffolding(
+        content, vocab_words, level_code
+    )
+    pedagogical_violations.extend(metalang_violations)
+
     results['pedagogy'] = evaluate_pedagogy(len(pedagogical_violations))
     if results['pedagogy'].status == 'FAIL':
         has_critical_failure = True
