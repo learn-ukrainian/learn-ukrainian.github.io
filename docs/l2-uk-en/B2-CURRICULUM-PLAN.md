@@ -2309,7 +2309,7 @@ Participles agree with noun in gender, number, case:
 
 ---
 
-## Phase B2.3: Ukrainian History (Modules 61-85)
+## Phase B2.3: Ukrainian History (Modules 71-95)
 
 ### Learning Goals
 - Understand Ukrainian history from origins to present
@@ -2321,47 +2321,47 @@ Participles agree with noun in gender, number, case:
 
 | # | Title | Type | Focus | Key Vocabulary |
 |---|-------|------|-------|----------------|
-| 61 | Kyivan Rus — Beginnings | History | Trypillia, Slavs, Kyiv founding | князь, плем'я, держава |
-| 62 | Kyivan Rus — Golden Age | History | Volodymyr, Yaroslav | хрещення, літопис, собор |
-| 63 | Mongol Invasion | History | 1240, fragmentation | орда, навала, знищення |
-| 64 | Grand Duchy of Lithuania | History | Ruthenian autonomy | велике князівство, автономія |
-| 65 | Polish-Lithuanian Commonwealth | History | Lublin, Polonization | унія, шляхта, кріпацтво |
-| 66 | Cossack Origins | History | Sich, frontier life | січ, козак, вільність |
-| 67 | Khmelnytsky Uprising | History | 1648 revolution | повстання, гетьман, воля |
-| 68 | Pereiaslav Myths ⚠️ | History | 1654 treaty myths | договір, міф, маніпуляція |
-| 69 | Hetmanate Period | History | Cossack state, Mazepa | гетьманщина, автономія |
-| 70 | Ruina & Division | History | Decline, foreign control | руїна, поділ, занепад |
-| 71 | Russian Imperial Rule | History | Ems Ukaz, Russification | русифікація, заборона |
-| 72 | Austrian Galicia | History | Western Ukraine revival | Галичина, відродження |
-| 73 | National Revival | History | Shevchenko, Franko | національний рух, інтелігенція |
-| 74 | WWI & Revolution | History | 1914-1918, empires fall | війна, революція, імперія |
-| 75 | UNR & ZUNR | History | 1918-1921 statehood | незалежність, республіка |
-| 76 | Soviet 1920s | History | Ukrainization | українізація, коренізація |
-| 77 | Holodomor ⚠️ | History | 1932-33 genocide | голодомор, геноцид, терор |
-| 78 | WWII | History | Occupation, UPA | окупація, визволення, опір |
-| 79 | Soviet Post-War | History | Russification, industry | індустріалізація, репресії |
-| 80 | Dissidents & Sixties | History | Stus, Chornovil | дисидент, шістдесятник |
-| 81 | Chornobyl | History | 1986 disaster | катастрофа, радіація |
-| 82 | Independence 1991 | History | Referendum, new state | референдум, незалежність |
-| 83 | Orange Revolution | History | 2004 democracy | революція, демократія |
-| 84 | Euromaidan ⚠️ | History | 2013-14 dignity | гідність, революція |
-| 85 | Russia's War ⚠️ | History | 2014-present | агресія, спротив, перемога |
+| 71 | Kyivan Rus — Beginnings | History | Trypillia, Slavs, Kyiv founding | князь, плем'я, держава |
+| 72 | Kyivan Rus — Golden Age | History | Volodymyr, Yaroslav | хрещення, літопис, собор |
+| 73 | Mongol Invasion | History | 1240, fragmentation | орда, навала, знищення |
+| 74 | Grand Duchy of Lithuania | History | Ruthenian autonomy | велике князівство, автономія |
+| 75 | Polish-Lithuanian Commonwealth | History | Lublin, Polonization | унія, шляхта, кріпацтво |
+| 76 | Cossack Origins | History | Sich, frontier life | січ, козак, вільність |
+| 77 | Khmelnytsky Uprising | History | 1648 revolution | повстання, гетьман, воля |
+| 78 | Pereiaslav Myths ⚠️ | History | 1654 treaty myths | договір, міф, маніпуляція |
+| 79 | Hetmanate Period | History | Cossack state, Mazepa | гетьманщина, автономія |
+| 80 | Ruina & Division | History | Decline, foreign control | руїна, поділ, занепад |
+| 81 | Russian Imperial Rule | History | Ems Ukaz, Russification | русифікація, заборона |
+| 82 | Austrian Galicia | History | Western Ukraine revival | Галичина, відродження |
+| 83 | National Revival | History | Shevchenko, Franko | національний рух, інтелігенція |
+| 84 | WWI & Revolution | History | 1914-1918, empires fall | війна, революція, імперія |
+| 85 | UNR & ZUNR | History | 1918-1921 statehood | незалежність, республіка |
+| 86 | Soviet 1920s | History | Ukrainization | українізація, коренізація |
+| 87 | Holodomor ⚠️ | History | 1932-33 genocide | голодомор, геноцид, терор |
+| 88 | WWII | History | Occupation, UPA | окупація, визволення, опір |
+| 89 | Soviet Post-War | History | Russification, industry | індустріалізація, репресії |
+| 90 | Dissidents & Sixties | History | Stus, Chornovil | дисидент, шістдесятник |
+| 91 | Chornobyl | History | 1986 disaster | катастрофа, радіація |
+| 92 | Independence 1991 | History | Referendum, new state | референдум, незалежність |
+| 93 | Orange Revolution | History | 2004 democracy | революція, демократія |
+| 94 | Euromaidan ⚠️ | History | 2013-14 dignity | гідність, революція |
+| 95 | Russia's War ⚠️ | History | 2014-present | агресія, спротив, перемога |
 
 ### Vocabulary Plan B2.3 (~600 words)
 
 | Module Range | Words | Domain |
 |--------------|-------|--------|
-| 61-63 | 75 | Medieval: князь, віче, дружина, хрещення, монголи |
-| 64-65 | 50 | Commonwealth: шляхта, магнат, унія, кріпацтво |
-| 66-70 | 100 | Cossack: січ, гетьман, козак, повстання, договір |
-| 71-73 | 75 | 19th c.: русифікація, відродження, інтелігенція |
-| 74-77 | 100 | Early 20th c.: революція, незалежність, голодомор |
-| 78-82 | 100 | Soviet & independence: окупація, дисидент, референдум |
-| 83-85 | 100 | Modern: майдан, анексія, агресія, спротив, перемога |
+| 71-73 | 75 | Medieval: князь, віче, дружина, хрещення, монголи |
+| 74-75 | 50 | Commonwealth: шляхта, магнат, унія, кріпацтво |
+| 76-80 | 100 | Cossack: січ, гетьман, козак, повстання, договір |
+| 81-83 | 75 | 19th c.: русифікація, відродження, інтелігенція |
+| 84-87 | 100 | Early 20th c.: революція, незалежність, голодомор |
+| 88-92 | 100 | Soviet & independence: окупація, дисидент, референдум |
+| 93-95 | 100 | Modern: майдан, анексія, агресія, спротив, перемога |
 
 ---
 
-## Phase B2.4: Biographies (Modules 86-110)
+## Phase B2.4: Biographies (Modules 96-120)
 
 ### Learning Goals
 - Know iconic Ukrainian figures (women and men)
@@ -2371,38 +2371,38 @@ Participles agree with noun in gender, number, case:
 
 ### Module Specifications
 
-**Women (Modules 86-98):**
+**Women (Modules 96-108):**
 | # | Title | Years | Focus |
 |---|-------|-------|-------|
-| 86 | Роксолана | 1502-1558 | Sultana, power |
-| 87 | Ганна Барвінок | 1828-1911 | First female writer |
-| 88 | Софія Окуневська | 1865-1926 | First female doctor |
-| 89 | Леся Українка | 1871-1913 | National icon |
-| 90 | Соломія Крушельницька | 1872-1952 | Opera legend |
-| 91 | Ольга Басараб | 1889-1924 | Spy, fighter |
-| 92 | Берта Рапопорт | 1891-1979 | Ship captain |
-| 93 | Олена Степанів | 1892-1963 | First female officer |
-| 94 | Віра Холодна | 1893-1919 | Silent cinema queen |
-| 95 | Катерина Білокур | 1900-1961 | Folk artist |
-| 96 | Марія Примаченко | 1909-1997 | Folk artist |
-| 97 | Ліна Костенко | 1930- | Poet |
-| 98 | Квітка Цісик | 1953-1998 | Ukrainian diaspora voice |
+| 96 | Роксолана | 1502-1558 | Sultana, power |
+| 97 | Ганна Барвінок | 1828-1911 | First female writer |
+| 98 | Софія Окуневська | 1865-1926 | First female doctor |
+| 99 | Леся Українка | 1871-1913 | National icon |
+| 100 | Соломія Крушельницька | 1872-1952 | Opera legend |
+| 101 | Ольга Басараб | 1889-1924 | Spy, fighter |
+| 102 | Берта Рапопорт | 1891-1979 | Ship captain |
+| 103 | Олена Степанів | 1892-1963 | First female officer |
+| 104 | Віра Холодна | 1893-1919 | Silent cinema queen |
+| 105 | Катерина Білокур | 1900-1961 | Folk artist |
+| 106 | Марія Примаченко | 1909-1997 | Folk artist |
+| 107 | Ліна Костенко | 1930- | Poet |
+| 108 | Квітка Цісик | 1953-1998 | Ukrainian diaspora voice |
 
-**Men (Modules 99-109):**
+**Men (Modules 109-119):**
 | # | Title | Years | Focus |
 |---|-------|-------|-------|
-| 99 | Григорій Сковорода | 1722-1794 | Philosopher |
-| 100 | Тарас Шевченко | 1814-1861 | The Prophet |
-| 101 | Іван Франко | 1856-1916 | The Titan |
-| 102 | Михайло Грушевський | 1866-1934 | Historian, statesman |
-| 103 | Богдан Хмельницький | 1595-1657 | The Hetman |
-| 104 | Іван Мазепа | 1639-1709 | The Patron |
-| 105 | Микола Хвильовий | 1893-1933 | "Away from Moscow" |
-| 106 | Василь Стус | 1938-1985 | Dissident poet |
-| 107 | В'ячеслав Чорновіл | 1937-1999 | Independence leader |
-| 108 | Леонід Каденюк | 1951-2018 | First astronaut |
-| 109 | Валерій Залужний | 1973- | Defense strategy |
-| 110 | B2.4 Checkpoint | Review | Assessment |
+| 109 | Григорій Сковорода | 1722-1794 | Philosopher |
+| 110 | Тарас Шевченко | 1814-1861 | The Prophet |
+| 111 | Іван Франко | 1856-1916 | The Titan |
+| 112 | Михайло Грушевський | 1866-1934 | Historian, statesman |
+| 113 | Богдан Хмельницький | 1595-1657 | The Hetman |
+| 114 | Іван Мазепа | 1639-1709 | The Patron |
+| 115 | Микола Хвильовий | 1893-1933 | "Away from Moscow" |
+| 116 | Василь Стус | 1938-1985 | Dissident poet |
+| 117 | В'ячеслав Чорновіл | 1937-1999 | Independence leader |
+| 118 | Леонід Каденюк | 1951-2018 | First astronaut |
+| 119 | Валерій Залужний | 1973- | Defense strategy |
+| 120 | B2.4 Checkpoint | Review | Assessment |
 
 ### Vocabulary Plan B2.4 (~600 words)
 - Biography terms: народився, виріс, навчався, працював, створив, помер
@@ -2411,7 +2411,7 @@ Participles agree with noun in gender, number, case:
 
 ---
 
-## Phase B2.5: Advanced Skills & Capstone (Modules 111-125)
+## Phase B2.5: Advanced Skills & Capstone (Modules 121-135)
 
 ### Learning Goals
 - Build advanced domain vocabulary
@@ -2423,21 +2423,21 @@ Participles agree with noun in gender, number, case:
 
 | # | Title | Type | Focus |
 |---|-------|------|-------|
-| 111 | Medicine Advanced | Vocabulary | Diagnosis, anatomy |
-| 112 | Technology & AI | Vocabulary | Software, data |
-| 113 | Science & Research | Vocabulary | Hypothesis, theory |
-| 114 | Arts & Literature | Vocabulary | Genre, metaphor |
-| 115 | Psychology & Mind | Vocabulary | Consciousness |
-| 116 | Ukrainian Mentality | Culture | Cordocentrism |
-| 117 | Diaspora | Culture | Communities abroad |
-| 118 | Religion in Ukraine | Culture | Orthodox, Greek Catholic |
-| 119 | Academic Writing | Skills | Essays, citations |
-| 120 | Text Analysis | Skills | Literature, speeches |
-| 121 | Capstone: Project | Project | Research |
-| 122 | Capstone: Presentation | Project | Defense |
-| 123 | B2 Review I | Review | Grammar, vocabulary |
-| 124 | B2 Review II | Review | History, culture |
-| 125 | **B2 FINAL EXAM** | Exam | Certification |
+| 121 | Medicine Advanced | Vocabulary | Diagnosis, anatomy |
+| 122 | Technology & AI | Vocabulary | Software, data |
+| 123 | Science & Research | Vocabulary | Hypothesis, theory |
+| 124 | Arts & Literature | Vocabulary | Genre, metaphor |
+| 125 | Psychology & Mind | Vocabulary | Consciousness |
+| 126 | Ukrainian Mentality | Culture | Cordocentrism |
+| 127 | Diaspora | Culture | Communities abroad |
+| 128 | Religion in Ukraine | Culture | Orthodox, Greek Catholic |
+| 129 | Academic Writing | Skills | Essays, citations |
+| 130 | Text Analysis | Skills | Literature, speeches |
+| 131 | Capstone: Project | Project | Research |
+| 132 | Capstone: Presentation | Project | Defense |
+| 133 | B2 Review I | Review | Grammar, vocabulary |
+| 134 | B2 Review II | Review | History, culture |
+| 135 | **B2 FINAL EXAM** | Exam | Certification |
 
 ### Vocabulary Plan B2.5 (~250 words)
 - Domain: діагноз, алгоритм, гіпотеза, метафора, свідомість
@@ -2503,7 +2503,7 @@ These modules explicitly address Russian historical narratives:
 4. Production: Rewrite in different register
 5. Quiz: Phraseology meaning
 
-### H-Modules (History/Biography: M61-109)
+### H-Modules (History/Biography: M71-119)
 1. Quiz: Fact checking (reading comprehension)
 2. Match-up: Event to date/person
 3. Production: Summarize historical event
@@ -2549,37 +2549,37 @@ graph TD
         M25[M25 Practice] --> M26[M26 Domain Vocab]
     end
 
-    %% Phase B2.2: Phraseology
+    %% Phase B2.2: Phraseology (M41-70)
     subgraph B2_2 [Phase B2.2: Phraseology]
-        M31[M31 Proverbs] --> M35[M35 Set Expr]
-        M35 --> M39[M39 Idioms]
-        M39 --> M45[M45 Synonyms]
-        M45 --> M57[M57 Adv Conj]
+        M41[M41 Proverbs] --> M45[M45 Set Expr]
+        M45 --> M49[M49 Idioms]
+        M49 --> M55[M55 Synonyms]
+        M55 --> M67[M67 Adv Conj]
     end
 
-    %% Phase B2.3: History
+    %% Phase B2.3: History (M71-95)
     subgraph B2_3 [Phase B2.3: History]
-        M61[M61 Kyivan Rus] --> M66[M66 Cossacks]
-        M66 --> M71[M71 Imperial Rule]
-        M71 --> M74[M74 Revolution]
-        M74 --> M78[M78 WWII]
-        M78 --> M82[M82 Independence]
-        M82 --> M85[M85 Modern War]
+        M71[M71 Kyivan Rus] --> M76[M76 Cossacks]
+        M76 --> M81[M81 Imperial Rule]
+        M81 --> M84[M84 Revolution]
+        M84 --> M88[M88 WWII]
+        M88 --> M92[M92 Independence]
+        M92 --> M95[M95 Modern War]
     end
 
-    %% Phase B2.4: Biographies
+    %% Phase B2.4: Biographies (M96-120)
     subgraph B2_4 [Phase B2.4: Biographies]
-        M86[M86 Women] --> M99[M99 Men]
-        M66 --> M103[M103 Khmelnytsky]
-        M73 --> M100[M100 Shevchenko]
-        M85 --> M109[M109 Zaluzhnyi]
+        M96[M96 Women] --> M109[M109 Men]
+        M76 --> M113[M113 Khmelnytsky]
+        M83 --> M110[M110 Shevchenko]
+        M95 --> M119[M119 Zaluzhnyi]
     end
 
     %% Connections
-    M30 --> M31
-    M60 --> M61
-    M14 --> M57
-    M25 --> M61
+    M40 --> M41
+    M70 --> M71
+    M14 --> M67
+    M25 --> M71
 ```
 ```
 
@@ -2604,11 +2604,11 @@ Before generating any B2 module:
 
 | Phase | Modules | Status |
 |-------|---------|--------|
-| B2.1 | 01-30 | 📝 Planned |
-| B2.2 | 31-60 | 📝 Planned |
-| B2.3 | 61-85 | 📝 Planned |
-| B2.4 | 86-110 | 📝 Planned |
-| B2.5 | 111-125 | 📝 Planned |
+| B2.1 | 01-40 | 📝 Planned |
+| B2.2 | 41-70 | 📝 Planned |
+| B2.3 | 71-95 | 📝 Planned |
+| B2.4 | 96-120 | 📝 Planned |
+| B2.5 | 121-135 | 📝 Planned |
 
 ---
 

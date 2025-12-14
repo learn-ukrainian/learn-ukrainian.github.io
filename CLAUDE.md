@@ -1,7 +1,7 @@
 # CLAUDE.md - Project Instructions
 
 ## Current Work
-A1 modules complete. Ready for A2 enrichment or other tasks.
+A1 needs improvement before completion. See `docs/l2-uk-en/A1-IMPROVEMENT-PLAN.md`.
 
 ---
 
@@ -209,7 +209,7 @@ Level and module number are derived from the file path, not frontmatter.
 | A1 | `a1/` | 34 | ~750 | Beginner - Cyrillic, basic phrases, simple grammar |
 | A2 | `a2/` | 50 | ~1,050 | Elementary - All 7 cases, aspect basics, comparison |
 | B1 | `b1/` | 80 | ~1,500 | Intermediate - Aspect mastery, motion verbs, complex sentences |
-| B2 | `b2/` | 125 | ~2,900 | Advanced - Literature, academic, professional |
+| B2 | `b2/` | 135 | ~2,900 | Advanced - Literature, academic, professional |
 | C1 | `c1/` | 115 | ~2,800 | Proficient - Full complexity, specialized topics |
 | C2 | `c2/` | 80 | ~2,000 | Mastery - Native-level proficiency |
 
@@ -259,16 +259,28 @@ npm run claude:deploy
 | B1 | `# Словник` | Слово \| Вимова \| Переклад \| ЧМ \| Примітка |
 | B2, C1, C2 | `# Словник` | Слово \| Переклад \| Примітки |
 
-## Enrichment Status
+## Level Status
 
-| Level | Modules | Status |
-|-------|---------|--------|
-| A1 | 01-34 | ✅ Complete |
-| A2 | 01-50 | ⏳ Needs full enrichment |
-| B1 | 01-80 | ⏳ Needs creation |
-| B2 | 01-125 | ⏳ Needs creation |
-| C1 | 01-115 | ⏳ Needs creation |
-| C2 | 01-80 | ⏳ Needs creation |
+| Level | Modules Built | Improvement | Vocab Finalized | Next Step |
+|-------|---------------|-------------|-----------------|-----------|
+| A1 | 20/34 | ⏳ Needed | ❌ | Improve plan → Build 21-34 → Fix 1-20 → Finalize vocab |
+| A2 | 0/50 | ⏳ Needed | ❌ | Waiting for A1 |
+| B1 | 0/80 | ⏳ Needed | ❌ | Waiting for A1 + A2 |
+| B2 | 0/135 | ⏳ Needed | ❌ | Waiting for A1-B1 |
+| C1 | 0/115 | ⏳ Needed | ❌ | Waiting for A1-B2 |
+| C2 | 0/80 | ⏳ Needed | ❌ | Waiting for A1-C1 |
+
+**Vocabulary is cumulative** - each level depends on all previous levels being finalized first.
+
+**Per-level workflow:**
+1. Improve curriculum plan (vocab targets, grammar scope)
+2. Update prompts & audit config
+3. Build all modules
+4. Fix modules based on audit
+5. Finalize vocabulary → rebuild DB
+6. THEN next level can begin
+
+See `docs/l2-uk-en/VOCABULARY-HANDLING-SYSTEM.md` for details.
 
 ## Documentation Links
 
