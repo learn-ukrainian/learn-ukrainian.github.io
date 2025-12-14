@@ -1,0 +1,38 @@
+# Audit Report: 03-the-gender-code.md
+**Phase:** A1 | **Level:** A1 | **Pedagogy:** "PPP" | **Target:** 300
+**Overall Status:** ✅ PASS
+
+## Gates
+- **Words:** ✅ 1092/300
+- **Activities:** ✅ 8/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 7/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 4/3
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 33/20
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Immersion:** 🇺🇦 14.6% (target 5-15% (M03))
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **The Gender Code** | ⚪️ | 0 | Skipped |
+| **Warm-up** | ✅ | 170 | Included in Core |
+| **Presentation** | ✅ | 295 | Included in Core |
+| **Practice** | ⚪️ | 280 | Skipped |
+| **Production** | ➖ | 102 | Excluded Type |
+| **Cultural Insight** | ✅ | 149 | Included in Core |
+| **Summary** | ✅ | 96 | Included in Core |
+| **Activities** | ➖ | 0 | Excluded Type |
+| **quiz: Gender Recognition** | 🎮 | 12 | Activity (12 items, min 8) |
+| **match-up: Gender Pairs** | 🎮 | 12 | Activity (12 items, min 8) |
+| **group-sort: Sort by Gender** | 🎮 | 29 | Activity (29 items, min 8) |
+| **fill-in: Complete with Gender** | 🎮 | 12 | Activity (12 items, min 8) |
+| **true-false: Gender Rules** | 🎮 | 12 | Activity (12 items, min 8) |
+| **anagram: Build the Word** | 🎮 | 12 | Activity (12 items, min 8) |
+| **anagram: More Words** | 🎮 | 12 | Activity (12 items, min 8) |
+| **unjumble: Build Gender Sentences** | 🎮 | 8 | Activity (8 items, min 6) |
+| **Vocabulary** | ➖ | 0 | Excluded Type |

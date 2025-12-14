@@ -50,9 +50,10 @@ Review the module, fix violations, repeat until PASS.
 - [ ] See `{LEVEL}-CURRICULUM-PLAN.md` Каталог В
 
 ### 3. Vocabulary Constraints
-- [ ] Activities use ONLY vocabulary from table + prior modules
-- [ ] No invented words
+- [ ] Vocabulary table present with required columns
 - [ ] IPA present for all vocabulary (A1-B1)
+- [ ] Uses vocabulary from curriculum plan
+- **Note:** Cross-module vocab validation deferred to `npm run vocab:rebuild`
 
 ### 4. Activity Constraints
 - [ ] Count meets minimum (8-16+ by level)

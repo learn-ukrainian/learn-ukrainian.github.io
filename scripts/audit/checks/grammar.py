@@ -86,7 +86,8 @@ def check_sentence_complexity(text: str, level_code: str) -> list[dict]:
 
     sentences = extract_ukrainian_sentences(text)
     for sent in sentences:
-        words = re.findall(r'[\u0400-\u04ff]+', sent)
+        # Only count words with 2+ characters (excludes single-letter endings like -а/-я/-о/-е)
+        words = re.findall(r'[\u0400-\u04ff]{2,}', sent)
         if len(words) > max_words:
             violations.append({
                 'type': 'COMPLEXITY',

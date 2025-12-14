@@ -45,16 +45,35 @@ Stage 1 → Stage 2 → Stage 3 → Stage 4 (review/fix loop) → OUTPUT
 3. Loop until PASS
 4. Generate MDX and JSON output
 
-### Read These Documents
+### Quick Reference (Read First)
 
-Before starting:
-1. `docs/l2-uk-en/READING-MANIFEST.md`
-2. `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md`
-3. `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
+1. **Quick-ref for level:** `claude_extensions/quick-ref/{level}.md` (~100 lines)
+   - Frontmatter template, targets, activity mix, pre-flight checklist
+2. **Philosophy guide:** `claude_extensions/quick-ref/philosophy.md` (~150 lines)
+   - Soul standard, Truth standard, cultural specificity, linguistic purity
 
-### Stage Instructions
+### Curriculum Plan (Extract Only Your Module)
 
-Read stage-specific instructions as needed:
+**DO NOT read the entire curriculum plan file.** Use grep to extract only your module:
+
+```bash
+grep -A 50 "Module {NUM}:" docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md
+```
+
+This gives you ONLY the vocabulary and grammar scope for your specific module (~50 lines).
+
+### Pre-flight Checklist
+
+Before writing, confirm from quick-ref:
+- [ ] All frontmatter fields ready (copy template)
+- [ ] Vocabulary list from curriculum plan
+- [ ] Activity count + types match level requirements
+- [ ] Immersion target known
+- [ ] No duplicate explanations planned
+
+### Stage Instructions (if needed)
+
+Only read stage docs for complex cases:
 - `.claude/stages/stage-1-skeleton.md`
 - `.claude/stages/stage-2-content.md`
 - `.claude/stages/stage-3-activities.md`

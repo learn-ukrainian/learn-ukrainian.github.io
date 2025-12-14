@@ -51,8 +51,18 @@ GRAMMAR_CONSTRAINTS = {
 # Ukrainian case ending patterns (simplified detection)
 CASE_PATTERNS = {
     'dative': [
-        r'\b\w+ові\b', r'\b\w+еві\b', r'\b\w+єві\b',
-        r'\bмені\b', r'\bтобі\b', r'\bйому\b', r'\bїй\b', r'\bнам\b', r'\bвам\b', r'\bїм\b',
+        # -ові/-еві/-єві endings are dative ONLY when NOT preceded by locative prepositions
+        # в Києві, у Львові = LOCATIVE (allowed at A1 from M13)
+        # дати братові = DATIVE (not allowed at A1)
+        # Use negative lookbehind to exclude locative contexts
+        r'(?<![вуВУ]\s)\b\w+ові\b(?!\s*[,.])',  # Not after в/у
+        r'(?<![вуВУ]\s)\b\w+еві\b(?!\s*[,.])',  # Not after в/у
+        r'(?<![вуВУ]\s)\b\w+єві\b(?!\s*[,.])',  # Not after в/у
+        # Dative pronouns - but NOT їм which is also verb "I eat" from їсти
+        # їм is only dative in context like "подобається їм", "дати їм"
+        r'\bмені\b', r'\bтобі\b', r'\bйому\b', r'\bїй\b', r'\bнам\b', r'\bвам\b',
+        # їм as dative: only when preceded by dative-taking verbs
+        r'(?:подобається|дати|сказати|показати|допомогти)\s+їм\b',
         r'\b\w+і\b.*подобається',
     ],
     'instrumental': [
@@ -72,10 +82,19 @@ CASE_PATTERNS = {
         r'\bчитаючи\b', r'\bговорячи\b', r'\bйдучи\b',
     ],
     'subordinate_markers': [
-        r'\bякий\b', r'\bяка\b', r'\bяке\b', r'\bякі\b',
-        r'\bщо\b(?!\s*це)',
-        r'\bколи\b', r'\bякщо\b', r'\bтому що\b', r'\bбо\b',
-        r'\bхоча\b', r'\bщоб\b', r'\bпоки\b', r'\bдоки\b',
+        # Relative pronouns (який/яка/яке/які) - only flag when preceded by a noun/comma
+        # This indicates a relative clause, not a question
+        r',\s*який\s+[а-яіїєґ]', r',\s*яка\s+[а-яіїєґ]', r',\s*яке\s+[а-яіїєґ]', r',\s*які\s+[а-яіїєґ]',
+        # "що" as subordinate - only when preceded by verb/clause (not sentence-initial questions)
+        # Pattern: verb + що + word (subordinate) vs. Що + word? (question)
+        r'[а-яіїєґ],?\s+що\s+(?!це\b)[а-яіїєґ]',
+        # Temporal/conditional conjunctions as subordinate (preceded by main clause)
+        # коли/якщо at sentence start are questions/conditionals, not subordinate
+        r'[а-яіїєґ],?\s+коли\s+[а-яіїєґ]',
+        r'\bякщо\s+[а-яіїєґ]', r'\bтому що\s+[а-яіїєґ]',
+        # "бо" (because) - require following word, exclude accent marks breaking word boundary
+        r'(?<![а-яіїєґА-ЯІЇЄҐ\u0301])бо\s+[а-яіїєґ]',
+        r'\bхоча\s+[а-яіїєґ]', r'\bщоб\s+[а-яіїєґ]', r'\bпоки\s+[а-яіїєґ]', r'\bдоки\s+[а-яіїєґ]',
     ],
 }
 

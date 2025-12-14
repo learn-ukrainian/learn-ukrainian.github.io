@@ -106,8 +106,6 @@ export function AnagramQuestion({ scrambled, answer, hint }: AnagramQuestionProp
 
   return (
     <div className={styles.anagramQuestion}>
-      {hint && <p className={styles.hint}>💡 Hint: {hint}</p>}
-
       {/* Answer Zone */}
       <div
         className={`${styles.answerZone} ${showResult ? (isCorrect ? styles.correct : styles.incorrect) : ''}`}

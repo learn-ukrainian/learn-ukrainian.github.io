@@ -79,57 +79,40 @@ The user switched to Gemini 2.5 Pro because it follows orders. Capability withou
 
 <constraints>
 ### NEVER Do These
-- NEVER add activities without rebuilding vocabulary first
 - NEVER keep old activities when enriching - DELETE ALL and recreate
-- NEVER skip the 3-step enrichment workflow
 - NEVER create activities with fewer items than level requirements
 - NEVER write sentences shorter than level requirements
 - NEVER use vocabulary words not in the module's vocabulary section
 
 ### ALWAYS Do These
-- ALWAYS follow the 3-step enrichment workflow in exact order
 - ALWAYS delete ALL existing activities before creating new ones
-- ALWAYS run vocab:enrich after narrative changes
 - ALWAYS verify activity answers are correct
 - ALWAYS use vocabulary from the module's vocabulary section
+- ALWAYS add vocabulary that the curriculum plan demands
 </constraints>
 
-## Module Enrichment Workflow
+## Parallel Module Creation
 
 <instructions>
-**This is the ONLY correct way to enrich a module. No shortcuts.**
+**Modules can be created in parallel.** Vocabulary validation is deferred to the end.
 
-### Step 1: ENRICH NARRATIVE CONTENT
-- Make lesson rich with examples, engagement boxes, explanations
-- Add: 💡 Did You Know, 🎬 Pop Culture Moment, 🌍 Real World, etc.
-- Ensure 12+ example sentences for A1, more for higher levels
-- DO NOT touch activities section yet
+### Per-Module Workflow
+1. **READ** the curriculum plan for vocabulary and grammar scope
+2. **WRITE** the module with all required sections
+3. **RUN AUDIT** to check structure, activities, pedagogy
+4. **FIX** any issues until audit passes
 
-### Step 2: REBUILD VOCABULARY
+### After All Modules Complete
 ```bash
-npm run vocab:enrich l2-uk-en [moduleNum]
+npm run vocab:rebuild    # Build master vocabulary database
 ```
-- Captures ALL words from enriched lesson
-- Must run AFTER narrative changes, BEFORE activities
-- **If vocab:enrich made changes**, also run:
-```bash
-npm run vocab:rebuild
-```
-- This rebuilds the master vocabulary database (vocabulary.csv)
+This validates vocabulary across all modules at once.
 
-### Step 3: COMPLETELY RECREATE ALL ACTIVITIES
-- **DELETE every existing activity** - no exceptions
-- Create fresh activities using ONLY vocabulary from Step 2
-- Meet all quality requirements (see Activity Requirements below)
-- Verify every answer is correct
-
-### Step 4: GENERATE AND VERIFY
+### Generate Output
 ```bash
 npm run generate l2-uk-en a1 [moduleNum]    # MDX for Docusaurus
 npm run generate:json l2-uk-en a1 [moduleNum]  # JSON for Vibe app
 ```
-- Check Docusaurus output in browser (http://localhost:3000)
-- Verify activities work correctly
 </instructions>
 
 ## Activity & Content Requirements

@@ -15,1135 +15,294 @@
     "pedagogy": "PPP",
     "immersionLevel": 0.3,
     "title": "At the Café",
-    "subtitle": "Ordering Food and Drinks",
-    "description": "Order food and drinks at a café",
+    "titleUk": null,
+    "subtitle": "Ordering Food and Drinks in Ukrainian",
+    "description": "Learner can order food and drinks at a café",
     "objectives": [
-      "Order food and drinks at a café",
-      "Use polite request forms",
-      "Handle café interactions confidently",
-      "Understand waiter questions"
+      "Learner can order food and drinks at a café",
+      "Learner can ask for recommendations",
+      "Learner can request the bill",
+      "Learner can use functional phrases with Accusative, Genitive, and Locative cases"
     ],
+    "objectivesUk": null,
     "grammarFocus": [
-      "Polite imperatives",
-      "Accusative in ordering",
-      "Functional integration"
+      "Functional integration of Accusative, Genitive, and Locative cases",
+      "Polite imperative forms (принесіть, візьміть)",
+      "Future tense (візьму from взяти)"
     ],
     "tags": [
-      "vocabulary",
+      "functional",
       "café",
       "ordering",
-      "dialogue"
+      "restaurant",
+      "food",
+      "drinks",
+      "politeness"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "partial",
+    "totalDuration": 60,
+    "transliterationMode": "vocab-only",
     "sections": [
       {
-        "id": "section-content-0",
-        "name": "Lesson",
+        "id": "section-1",
+        "name": "At the Café",
+        "nameEn": null,
         "type": "content",
-        "content": "> **Note:** Cafés are everywhere in Ukraine! Master these phrases and you'll enjoy countless кави and торти (cakes) across the country.\n\n## Warm-up: Your First Ukrainian Café\n\nPicture this: You walk into a cozy café in Lviv. The aroma of fresh coffee fills the air. A friendly waiter approaches and says:\n\n**\"Добрий день! Столик на одного?\"** (Good afternoon! A table for one?)\n\nWhat do you say? How do you order? How do you ask for the bill?\n\nCafé culture is central to Ukrainian life, especially in cities like Lviv, Kyiv, and Odesa. Ukrainians often spend hours at cafés — working, meeting friends, or simply enjoying their улюблена кава (favorite coffee). Learning café vocabulary isn't just practical — it's your entry point to Ukrainian social life!\n\nUkrainian cafés offer excellent coffee (often better and cheaper than in Western Europe), delicious pastries, and a welcoming atmosphere. Whether you want a quick espresso or a leisurely lunch, this module gives you all the language you need.\n\nThis module brings together vocabulary and grammar from previous lessons. You'll use the accusative case for ordering, the genitive for quantities, locative for locations, and polite expressions for requests. It's a practical integration of everything you've learned in A1.2!\n\n> 💡 **Thinking Trick:** Think of café dialogue as a script with three acts: 1) Greeting & seating, 2) Ordering, 3) Paying. Learn the key phrases for each act!\n\n## Presentation: Café Vocabulary\n\n### 1. Arriving at the Café\n\n| Ukrainian | English |\n|-----------|---------|\n| Столик на одного/двох | Table for one/two |\n| Вільний столик? | Is there a free table? |\n| Можна меню? | Can I have a menu? |\n| Що порекомендуєте? | What do you recommend? |\n| У вас є Wi-Fi? | Do you have Wi-Fi? |\n\n### 2. Ordering Food & Drinks\n\n**Key phrases:**\n| Ukrainian | English |\n|-----------|---------|\n| Я візьму... | I'll take/have... |\n| Мені, будь ласка... | For me, please... |\n| Можна...? | Can I have...? |\n| Принесіть, будь ласка... | Please bring... |\n| Ще одну/один/одне | One more |\n| Без цукру | Without sugar |\n| З молоком | With milk |\n\n**Common café items:**\n| Ukrainian | English |\n|-----------|---------|\n| кава | coffee |\n| еспресо | espresso |\n| латте | latte |\n| капучіно | cappuccino |\n| чай | tea |\n| вода | water |\n| сік | juice |\n| тістечко | pastry/cake |\n| круасан | croissant |\n| сендвіч | sandwich |\n| салат | salad |\n| суп | soup |\n| десерт | dessert |\n\n### 3. Waiter Questions\n\nA waiter might ask:\n| Ukrainian | English |\n|-----------|---------|\n| Що замовите? | What will you order? |\n| Ви готові замовляти? | Are you ready to order? |\n| Ще щось? | Anything else? |\n| Як каву? | How do you like your coffee? |\n| З молоком? З цукром? | With milk? With sugar? |\n| Щось на десерт? | Something for dessert? |\n\n### 4. Paying\n\n| Ukrainian | English |\n|-----------|---------|\n| Рахунок, будь ласка. | The bill, please. |\n| Можна рахунок? | Can I have the bill? |\n| Картою чи готівкою? | By card or cash? |\n| Карткою. / Готівкою. | By card. / Cash. |\n| Окремо, будь ласка. | Separately, please. |\n| Разом. | Together. |\n| Дякую, було дуже смачно! | Thank you, it was delicious! |\n| Решту залиште собі. | Keep the change. |\n\n> 📜 **Pattern Summary:**\n> - **Ordering:** Я візьму... / Мені, будь ласка... / Можна...?\n> - **Specifying:** Без цукру, з молоком\n> - **Paying:** Рахунок, будь ласка. Карткою/Готівкою.\n\n> 💡 **Did You Know?** Lviv is known as the coffee capital of Ukraine. Legend says an Armenian merchant brought coffee to the city in the 17th century. Today, Lviv has over 600 cafés — more per capita than any other Ukrainian city!\n\n## Cultural Insight: Café Culture in Ukraine 🇺🇦\n\nUkrainian café culture blends Central European traditions with local flavors. The tradition runs deep, especially in western Ukraine, which was historically influenced by Austro-Hungarian and Polish cafe traditions:\n\n- **Львівська кава** — Lviv-style coffee, often served in tiny cups with thick grounds\n- **Меланж** — Viennese-style coffee with milk, popular since Habsburg times\n- **Глінтвейн** — Mulled wine in winter\n- **Узвар** — Traditional Ukrainian dried fruit drink\n\n**Café etiquette:**\n- It's perfectly acceptable to sit for hours with one coffee — this is the norm, not an exception\n- Tipping is appreciated but not mandatory (10% is generous)\n- \"Можна рахунок?\" is the polite way to ask for the bill\n- Many cafés offer English menus, but trying Ukrainian earns respect!\n\n> 📜 **History Bite:** Under Polish rule (16th-17th centuries), coffee houses became centers of intellectual life in Ukrainian cities like Lviv. This café culture survived Soviet suppression and is thriving today. Each café tells a story!\n\n> 📜 **Myth Buster:** Some claim café culture in Ukraine is a \"post-Soviet Western import.\" In reality, coffee houses existed in Ukraine centuries before the Soviet Union. The Soviets actually suppressed café culture, seeing it as \"bourgeois.\" Today's revival is a return to Ukrainian roots, not imitation of the West!\n\n## Reading Practice: У кав'ярні 🗣️\n\n**Українською:**\n\n— Добрий день! Вітаємо в нашому кафе.\n— Добрий день! Столик на двох, будь ласка.\n— Ось меню. Ви готові замовляти?\n— Ще хвилинку... Добре, я візьму капучіно.\n— А для вас?\n— Мені латте з мигдальним молоком, будь ласка.\n— Щось на десерт?\n— Так, один чізкейк і тістечко \"Наполеон\".\n— Чудово! Ваше замовлення зараз буде.\n...\n— Ось ваші кави і десерти. Смачного!\n— Дякую!\n...\n— Рахунок, будь ласка.\n— 285 гривень. Карткою чи готівкою?\n— Карткою.\n— Дякуємо за візит! До побачення!\n\n**English Translation:**\n\n— Good afternoon! Welcome to our café.\n— Good afternoon! A table for two, please.\n— Here's the menu. Are you ready to order?\n— One more minute... Okay, I'll have a cappuccino.\n— And for you?\n— A latte with almond milk for me, please.\n— Anything for dessert?\n— Yes, one cheesecake and a \"Napoleon\" pastry.\n— Wonderful! Your order will be ready soon.\n...\n— Here are your coffees and desserts. Enjoy!\n— Thank you!\n...\n— The bill, please.\n— 285 hryvnias. By card or cash?\n— By card.\n— Thank you for your visit! Goodbye!\n\n**Practice:** Role-play this dialogue with a partner!\n\n## Conversation: Замовлення 🗣️\n\n**Офіціант:** Добрий день! Ви готові замовляти?\n**Клієнт:** Так. Мені еспресо, будь ласка.\n**Офіціант:** Звичайний чи подвійний?\n**Клієнт:** Подвійний. І воду, будь ласка.\n**Офіціант:** З газом чи без?\n**Клієнт:** Без газу.\n**Офіціант:** Щось ще?\n**Клієнт:** Так, тістечко. Що порекомендуєте?\n**Офіціант:** Наш чізкейк дуже популярний!\n**Клієнт:** Добре, візьму чізкейк.\n**Офіціант:** Зараз принесу. Щось ще?\n**Клієнт:** Ні, це все. Дякую!\n\n**English Translation:**\n**Waiter:** Good day! Are you ready to order?\n**Client:** Yes. Espresso for me, please.\n**Waiter:** Regular or double?\n**Client:** Double. And water, please.\n**Waiter:** Sparkling or still (lit. with gas or without)?\n**Client:** Still.\n**Waiter:** Anything else?\n**Client:** Yes, a cake. What do you recommend?\n**Waiter:** Our cheesecake is very popular!\n**Client:** Good, I will take cheesecake.\n**Waiter:** I will bring it right away. Anything else?\n**Client:** No, that's all. Thank you!\n\nЗверни увагу: еспресо, воду, тістечко, чізкейк — все це знахідний відмінок (accusative)!"
+        "content": "## Warm-up\n\nYou've learned cases, possessives, and numbers. Now it's time to combine everything in a real Ukrainian scenario: **at the café**! Ukrainian café culture is vibrant—from traditional cafés serving борщ and вареники to modern coffee shops in Lviv and Kyiv. Let's learn how to order like a local.\n\n## Presentation\n\n### Key Café Phrases\n\nWhen you walk into a Ukrainian café, you'll use phrases you've already learned—but combined in natural ways:\n\n**Entering and Seating:**\n- **Столик на двох, будь ласка.** (Table for two, please.)\n- **Можна меню?** (Can I have a menu?)\n- **Де туалет?** (Where is the restroom?)\n\n**Ordering:**\n- **Що порекомендуєте?** (What do you recommend?)\n- **Я візьму каву.** (I'll take coffee.)\n- **Принесіть, будь ласка, борщ.** (Please bring borscht.)\n- **Ще один салат, будь ласка.** (One more salad, please.)\n\n**Paying:**\n- **Рахунок, будь ласка.** (Check, please.)\n- **Разом чи окремо?** (Together or separately?)\n- **Це все.** (That's everything.)\n- **Дякую, було дуже смачно!** (Thank you, it was very delicious!)\n\n> [!tip] **Did You Know?**\n>\n> In Ukraine, it's common to spend HOURS at a café—reading, working, chatting with friends. Unlike in some countries where cafés rush you out, Ukrainian cafés welcome you to stay. Order one coffee, enjoy the atmosphere, and relax. This is called \"кавова культура\" (coffee culture).\n\n### Grammar Integration\n\nNotice how you're using multiple cases in one conversation:\n\n| Case | Usage | Example |\n|------|-------|---------|\n| **Nominative** | Subject | **Я** візьму каву. (I'll take coffee.) |\n| **Accusative** | Direct object | Я візьму **каву**. (I'll take coffee.) |\n| **Genitive** | Quantity | Склянку **води**, будь ласка. (A glass of water, please.) |\n| **Locative** | Location | Ми в **кафе**. (We're at the café.) |\n\nYou're not learning new grammar—you're **combining** what you know into real interactions.\n\n> [!example] **Pop Culture Moment: Lviv's Coffee Legend**\n>\n> Lviv is Ukraine's coffee capital! Legend says the first café in Central Europe opened in Lviv in 1683. Today, Lviv has hundreds of unique coffee shops—from traditional \"kavyarni\" to modern third-wave cafés. If you visit, try \"кава по-львівськи\" (Lviv-style coffee)—strong, aromatic, and served with chocolate.\n\n### Mini-Dialogue 1: Ordering Coffee\n\n**In a Lviv café:**\n\n— Доброго дня! Столик на одну, будь ласка.\n— Звісно, ось біля вікна. Меню.\n— Дякую. Що порекомендуєте?\n— Наша кава по-львівськи дуже смачна.\n— Чудово! Я візьму каву по-львівськи і круасан.\n— Молоко? (Milk?)\n— Так, будь ласка.\n— Одну хвилинку.\n\nTranslation:\n— Good afternoon! Table for one, please.\n— Of course, here by the window. Menu.\n— Thank you. What do you recommend?\n— Our Lviv-style coffee is very delicious.\n— Wonderful! I'll take Lviv-style coffee and a croissant.\n— Milk?\n— Yes, please.\n— One moment.\n\n### Mini-Dialogue 2: Lunch with a Friend\n\n**At a traditional Ukrainian café:**\n\n— Привіт! Я тут.\n— О, привіт! Замовляємо?\n— Так. Я візьму борщ і вареники.\n— А я візьму салат і рибу. Принесіть, будь ласка, ще хліб.\n— І воду, будь ласка.\n— Це все?\n— Так, достатньо. Рахунок, будь ласка, окремо.\n\nTranslation:\n— Hi! I'm here.\n— Oh, hi! Shall we order?\n— Yes. I'll take borscht and varenyky.\n— And I'll take salad and fish. Please bring more bread.\n— And water, please.\n— Is that everything?\n— Yes, that's enough. Check, please, separately.\n\n> [!info] **Real World: Paying Separately**\n>\n> In Ukraine, it's normal to ask for **окремі рахунки** (separate checks) when dining with friends. The waiter won't be surprised—it's standard practice. Just say: \"Рахунок окремо, будь ласка.\"\n\n## Practice\n\n### Common Waiter Questions\n\nHere's what you'll hear from waiters:\n\n| Waiter Says | You Respond |\n|-------------|-------------|\n| Що бажаєте? (What would you like?) | Я візьму каву. (I'll take coffee.) |\n| Цукор? (Sugar?) | Так / Ні, дякую. (Yes / No, thank you.) |\n| Ще щось? (Anything else?) | Так, ще салат. / Ні, це все. (Yes, one more salad. / No, that's all.) |\n| Разом чи окремо? (Together or separately?) | Разом, будь ласка. (Together, please.) |\n\n### Useful Verb Forms\n\nYou'll use these verb forms constantly:\n\n- **візьму** (I'll take) — from **взяти** (to take)\n- **порекомендуєте** (you recommend) — from **порекомендувати** (to recommend)\n- **принесіть** (bring!) — imperative from **принести** (to bring)\n- **спробувати** (to try) — \"Можна спробувати?\" (Can I try?)\n\n> [!warning] **Common Mistake: \"Я хочу\" vs \"Я візьму\"**\n>\n> In English, we say \"I want coffee.\" In Ukrainian, saying **\"Я хочу каву\"** is grammatically correct but sounds DEMANDING—like a child wanting candy.\n>\n> **Polite way:** \"Я візьму каву, будь ласка.\" (I'll take coffee, please.)\n> **Even more polite:** \"Можна каву?\" (May I have coffee?)\n>\n> Remember: **\"візьму\"** is polite, **\"хочу\"** is direct.\n\n### Mini-Dialogue 3: Sweet Tooth\n\n**At a dessert café in Kyiv:**\n\n— Добрий вечір! Що порекомендуєте на десерт?\n— У нас чудовий медівник і наполеон.\n— О, я люблю наполеон! Візьму наполеон і чай.\n— Який чай? Чорний чи трав'яний? (Black or herbal?)\n— Трав'яний, будь ласка. Цукор? Ні, дякую.\n— Одну хвилину.\n\nTranslation:\n— Good evening! What do you recommend for dessert?\n— We have wonderful honey cake and napoleon.\n— Oh, I love napoleon! I'll take napoleon and tea.\n— Which tea? Black or herbal?\n— Herbal, please. Sugar? No, thank you.\n— One moment.\n\n> [!example] **Pop Culture Moment: Dessert Culture**\n>\n> Ukrainians LOVE desserts. Popular sweets include:\n> - **Медівник** (Honey cake) — layers of honey and cream\n> - **Наполеон** — puff pastry with custard\n> - **Київський торт** (Kyiv cake) — hazelnut meringue, a Kyiv specialty\n>\n> Fun fact: \"Київський торт\" was created in 1956 and became so popular that it's now exported worldwide!\n\n## Production\n\n### Your Turn: Practice Scenarios\n\n**Scenario 1:** You're at a café. You want coffee and a croissant. Ask for a table, order politely, and ask for the check.\n\n**Model Answer:**\n— Доброго дня! Столик на одну, будь ласка.\n— (Waiter seats you)\n— Дякую. Можна меню?\n— (Waiter brings menu)\n— Я візьму каву і круасан. Молоко? Так, будь ласка.\n— (After eating)\n— Рахунок, будь ласка. Дякую, було смачно!\n\n**Scenario 2:** You're with a friend. You want separate checks. Order borscht and ask for bread.\n\n**Model Answer:**\n— Я візьму борщ, будь ласка.\n— Принесіть, будь ласка, ще хліб.\n— (After eating)\n— Рахунок окремо, будь ласка.\n\n## Cultural Insight\n\n### Ukrainian Café Etiquette\n\n**Tipping:**\nTipping is becoming more common in Ukraine, especially in cities. 10% is standard for good service. You can say: **\"Дякую за обслуговування\"** (Thank you for the service).\n\n> [!tip] **Pro Tip: How to Tip**\n>\n> Leave cash on the table or tell the waiter you don't need change: **\"Не треба решти\"** (No need for change). Many cafés now accept card tips, but cash is still appreciated!\n\n**Coffee Culture:**\n- **Kyiv** has modern specialty coffee shops with international styles.\n- **Lviv** is famous for traditional coffee culture—expect cozy, historic cafés.\n- **Odesa** has seaside cafés with Mediterranean vibes.\n\n**Meal Times:**\n- **Сніданок** (Breakfast): 7-9 AM\n- **Обід** (Lunch): 12-2 PM — the main meal\n- **Вечеря** (Dinner): 6-8 PM\n\n> [!info] **Real World: \"Будь ласка\" Is Magic**\n>\n> Add **\"будь ласка\"** (please) to EVERYTHING. Ukrainians appreciate politeness, and this tiny phrase makes you sound friendly and respectful:\n> - Рахунок, **будь ласка**.\n> - Каву, **будь ласка**.\n> - Ще води, **будь ласка**.\n\n---"
       },
       {
-        "id": "section-summary-1",
-        "name": "Підсумок",
-        "nameEn": "Summary",
+        "id": "section-2",
+        "name": "Summary",
+        "nameEn": null,
         "type": "summary",
-        "content": "**At the Café: Complete Ordering Guide**\n\n1. **Arriving:** Столик на двох, будь ласка.\n2. **Menu:** Можна меню? Що порекомендуєте?\n3. **Ordering:** Я візьму... / Мені, будь ласка...\n4. **Specifying:** Без цукру, з молоком\n5. **Paying:** Рахунок, будь ласка. Карткою.\n\n---\n\n> [!tip] 🌟 **Pro Tip:** When unsure what to order, ask \"Що порекомендуєте?\" (What do you recommend?) — Ukrainians love to share their favorites!\n\n\n---"
+        "content": "You can now:\n- ✅ Ask for a table and menu\n- ✅ Order food and drinks politely\n- ✅ Ask for recommendations\n- ✅ Request the bill (together or separately)\n- ✅ Use functional phrases combining Accusative, Genitive, and Locative cases\n\nRemember:\n- Use **\"візьму\"** instead of **\"хочу\"** when ordering\n- **\"Будь ласка\"** is your best friend\n- **\"Рахунок окремо\"** = separate checks\n- Spend time at cafés—it's part of Ukrainian culture!\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| столик | /ˈstɔlɪk/ | table (small) | noun | m | diminutive of стіл |\n| порекомендувати | /porɛkomɛnduˈvɑtɪ/ | to recommend | verb | - | perfective |\n| спробувати | /sprobuˈvɑtɪ/ | to try | verb | - | perfective |\n| візьму | /ˈvʲizʲmu/ | I'll take | verb | - | future of взяти |\n| принесіть | /prɪnɛˈsʲitʲ/ | bring (imperative) | verb | - | perfective |\n| ще | /ʃt͡ʃɛ/ | still, more, another | adverb | - | |\n| достатньо | /dosˈtɑtʲnʲo/ | enough | adverb | - | |\n| все | /fsɛ/ | everything, all | pronoun | - | |\n| разом | /ˈrɑzom/ | together | adverb | - | |\n| окремо | /ˈokrɛmo/ | separately | adverb | - | |\n| рахунок | /rɑˈxunok/ | check, bill | noun | m | |\n| меню | /mɛˈnju/ | menu | noun | n | |\n| замовляти | /zɑmovˈlʲɑtɪ/ | to order | verb | - | imperfective |\n| замовити | /zɑˈmovɪtɪ/ | to order | verb | - | perfective |\n| офіціант | /ofʲit͡sʲiˈɑnt/ | waiter | noun | m | |\n| офіціантка | /ofʲit͡sʲiˈɑntkɑ/ | waitress | noun | f | |\n| чай | /t͡ʃɑj/ | tea | noun | m | |\n| кава | /ˈkɑvɑ/ | coffee | noun | f | |\n| круасан | /kruɑˈsɑn/ | croissant | noun | m | |\n| смачно | /ˈsmɑt͡ʃno/ | delicious (adverb) | adverb | - | |\n| чорний | /ˈt͡ʃornɪj/ | black | adjective | m | |\n| трав'яний | /trɑvʲˈjɑnɪj/ | herbal | adjective | m | |\n| цукор | /ˈt͡sukɔr/ | sugar | noun | m | |\n| молоко | /moloˈko/ | milk | noun | n | |\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Café Vocabulary\n\n> Match the Ukrainian phrases with their English meanings.\n\n| Ukrainian | English |\n|-----------|---------|\n| столик | table (small) |\n| рахунок | check, bill |\n| меню | menu |\n| візьму | I'll take |\n| принесіть | bring (imperative) |\n| порекомендуєте | you recommend |\n| спробувати | to try |\n| достатньо | enough |\n| разом | together |\n| окремо | separately |\n| ще | more, another |\n| все | everything |\n\n## quiz: Waiter Questions\n\n> Choose the correct response to each waiter's question.\n\n1. Waiter: \"Що бажаєте?\" — What should you say?\n   - [x] Я візьму каву, будь ласка.\n   - [ ] Я хочу каву зараз!\n   - [ ] Каву мені!\n   - [ ] Дайте каву!\n   > \"Я візьму\" is the polite way to order.\n\n2. Waiter: \"Цукор?\" — What does this mean?\n   - [ ] Cream?\n   - [x] Sugar?\n   - [ ] Milk?\n   - [ ] Ice?\n   > \"Цукор\" = sugar\n\n3. Waiter: \"Ще щось?\" — What is the waiter asking?\n   - [ ] Is this correct?\n   - [ ] Are you ready?\n   - [x] Anything else?\n   - [ ] Is this enough?\n   > \"Ще щось\" = anything else, something more\n\n4. Waiter: \"Разом чи окремо?\" — What is the question about?\n   - [ ] Hot or cold?\n   - [ ] Here or to go?\n   - [x] Together or separately? (the bill)\n   - [ ] With or without?\n   > Asking about splitting the check\n\n5. What does \"візьму\" mean?\n   - [ ] I want\n   - [x] I'll take\n   - [ ] I have\n   - [ ] I need\n   > Future form of взяти (to take)\n\n6. What does \"принесіть\" mean?\n   - [ ] Take\n   - [x] Bring\n   - [ ] Show\n   - [ ] Give\n   > Imperative form of принести\n\n7. What does \"достатньо\" mean?\n   - [ ] Everything\n   - [ ] More\n   - [x] Enough\n   - [ ] Together\n   > Достатньо = enough\n\n8. What does \"окремо\" mean?\n   - [ ] Together\n   - [x] Separately\n   - [ ] Everything\n   - [ ] More\n   > Окремо = separately\n\n## fill-in: Complete the Café Dialogue\n\n> Fill in the blanks with the correct words.\n\n1. Доброго дня! ___ на двох, будь ласка.\n   > [!answer] Столик\n   > [!options] Столик | Стіл | Меню | Рахунок\n\n2. Дякую. Можна ___?\n   > [!answer] меню\n   > [!options] меню | стіл | каву | воду\n\n3. Що ___? (What do you recommend?)\n   > [!answer] порекомендуєте\n   > [!options] порекомендуєте | візьму | принесіть | спробую\n\n4. Я ___ каву з молоком. (I'll take)\n   > [!answer] візьму\n   > [!options] візьму | хочу | беру | маю\n\n5. ___, будь ласка, ще хліб. (Bring)\n   > [!answer] Принесіть\n   > [!options] Принесіть | Візьміть | Дайте | Покажіть\n\n6. ___ щось? (Anything else?)\n   > [!answer] Ще\n   > [!options] Ще | Вже | Все | Так\n\n7. Ні, це ___. (That's everything)\n   > [!answer] все\n   > [!options] все | добре | так | достатньо\n\n8. ___, будь ласка. (Check, please)\n   > [!answer] Рахунок\n   > [!options] Рахунок | Меню | Столик | Гроші\n\n9. Разом чи ___? (Together or separately?)\n   > [!answer] окремо\n   > [!options] окремо | разом | все | достатньо\n\n10. Це ___. (That's enough)\n    > [!answer] достатньо\n    > [!options] достатньо | все | добре | так\n\n11. Дякую, було дуже ___! (delicious)\n    > [!answer] смачно\n    > [!options] смачно | добре | гарно | чудово\n\n12. ___, будь ласка, воду. (Bring)\n    > [!answer] Принесіть\n    > [!options] Принесіть | Візьміть | Дайте | Покажіть\n\n## true-false: Café Etiquette\n\n> Decide if each statement is true or false.\n\n- [x] In Ukraine, it's normal to spend hours at a café.\n  > Correct! Ukrainian café culture encourages lingering.\n\n- [ ] You should say \"Я хочу каву\" when ordering.\n  > Incorrect! \"Я візьму каву\" is more polite. \"Я хочу\" sounds demanding.\n\n- [x] Asking for separate checks is common in Ukraine.\n  > Correct! \"Рахунок окремо\" is standard practice.\n\n- [ ] Tipping is never expected in Ukraine.\n  > Incorrect! 10% is becoming standard for good service.\n\n- [x] Lviv is famous for its coffee culture.\n  > Correct! Lviv has hundreds of unique cafés and a rich coffee history.\n\n- [x] \"Будь ласка\" should be added to most requests.\n  > Correct! Politeness is highly valued in Ukrainian culture.\n\n- [ ] You should rush to leave after finishing your coffee.\n  > Incorrect! Ukrainian cafés welcome you to stay and relax.\n\n- [x] \"Візьму\" is the polite way to say \"I'll take.\"\n  > Correct! It's less direct than \"хочу\" (I want).\n\n- [x] The waiter will ask \"Разом чи окремо?\" when bringing the bill.\n  > Correct! This means \"Together or separately?\"\n\n- [ ] \"Меню\" means \"table\" in Ukrainian.\n  > Incorrect! \"Меню\" means menu. \"Стіл\" or \"столик\" means table.\n\n- [x] \"Ще\" means \"more\" or \"another.\"\n  > Correct! \"Ще один салат\" = one more salad.\n\n- [x] Київський торт is a famous Kyiv dessert.\n  > Correct! It's a hazelnut meringue cake created in 1956.\n\n## group-sort: Café Phrases by Function\n\n> Sort these phrases by when you would use them.\n\n### Entering & Seating\n- Столик на двох, будь ласка\n- Можна меню?\n- Де туалет?\n\n### Ordering\n- Що порекомендуєте?\n- Я візьму каву\n- Принесіть, будь ласка, борщ\n- Ще один салат, будь ласка\n\n### Paying\n- Рахунок, будь ласка\n- Разом чи окремо?\n- Це все\n- Дякую, було дуже смачно\n\n## unjumble: Order the Café Sentences\n\n> Put the words in the correct order to form sentences.\n\n1. будь / столик / ласка / двох / на\n   > [!answer] Столик на двох, будь ласка.\n   > (Table for two, please.) [5 words]\n\n2. візьму / я / каву / молоком / з\n   > [!answer] Я візьму каву з молоком.\n   > (I'll take coffee with milk.) [5 words]\n\n3. що / порекомендуєте / ?\n   > [!answer] Що порекомендуєте?\n   > (What do you recommend?) [2 words]\n\n4. будь / ласка / принесіть / хліб / ще\n   > [!answer] Принесіть, будь ласка, ще хліб.\n   > (Please bring more bread.) [5 words]\n\n5. окремо / будь / рахунок / ласка\n   > [!answer] Рахунок окремо, будь ласка.\n   > (Check separately, please.) [4 words]\n\n6. все / це\n   > [!answer] Це все.\n   > (That's everything.) [2 words]\n\n7. дуже / було / дякую / смачно\n   > [!answer] Дякую, було дуже смачно!\n   > (Thank you, it was very delicious!) [4 words]\n\n8. чи / разом / окремо / ?\n   > [!answer] Разом чи окремо?\n   > [!answer-alt] Окремо чи разом?\n   > (Together or separately?) [3 words]\n\n9. достатньо / це\n   > [!answer] Це достатньо.\n   > (That's enough.) [2 words]\n\n10. можна / меню / ?\n    > [!answer] Можна меню?\n    > (Can I have a menu?) [2 words]\n\n11. ще / щось / ?\n    > [!answer] Ще щось?\n    > (Anything else?) [2 words]\n\n12. ласка / будь / воду / принесіть\n    > [!answer] Принесіть, будь ласка, воду.\n    > (Please bring water.) [4 words]\n\n## fill-in: Polite vs Direct\n\n> Choose the more polite option for each situation.\n\n1. You want coffee. ___ (What should you say?)\n   > [!answer] Я візьму каву, будь ласка.\n   > [!options] Я хочу каву! | Я візьму каву, будь ласка. | Дайте мені каву! | Каву!\n\n2. You need the menu. ___ (What's the polite way?)\n   > [!answer] Можна меню?\n   > [!options] Дайте меню! | Меню! | Можна меню? | Я хочу меню!\n\n3. You want more bread. ___ (How do you ask?)\n   > [!answer] Принесіть, будь ласка, ще хліб.\n   > [!options] Хліб! | Дайте хліб! | Я хочу хліб! | Принесіть, будь ласка, ще хліб.\n\n4. You're ready for the check. ___\n   > [!answer] Рахунок, будь ласка.\n   > [!options] Рахунок! | Дайте рахунок! | Рахунок, будь ласка. | Я хочу рахунок!\n\n5. You want to try something. ___\n   > [!answer] Можна спробувати?\n   > [!options] Я хочу спробувати! | Дайте спробувати! | Можна спробувати? | Спробую!\n\n6. You want to thank the waiter. ___\n   > [!answer] Дякую, було дуже смачно!\n   > [!options] Добре. | Нормально. | Дякую, було дуже смачно! | Так.\n\n7. The waiter asks \"Ще щось?\" You're done. ___\n   > [!answer] Ні, це все. Дякую.\n   > [!options] Ні! | Все! | Достатньо! | Ні, це все. Дякую.\n\n8. You want to split the check. ___\n   > [!answer] Рахунок окремо, будь ласка.\n   > [!options] Окремо! | Рахунок окремо, будь ласка. | Платимо окремо! | Я плачу окремо!\n\n9. You want another coffee. ___\n   > [!answer] Ще одну каву, будь ласка.\n   > [!options] Ще каву! | Я хочу ще каву! | Ще одну каву, будь ласка. | Каву ще раз!\n\n10. You want to know the recommendation. ___\n    > [!answer] Що порекомендуєте?\n    > [!options] Що тут смачне? | Що мені взяти? | Що порекомендуєте? | Що маєте?\n\n11. You're satisfied with the service. ___\n    > [!answer] Дякую за обслуговування!\n    > [!options] Добре. | Так. | Дякую за обслуговування! | Нормально.\n\n12. You want to thank for good service. ___\n    > [!answer] Дякую за обслуговування!\n    > [!options] Добре! | Дякую за обслуговування! | Нормально! | Гаразд!\n\n## quiz: Café Situations\n\n> Choose the best answer for each situation.\n\n1. You walk into a café with a friend. What do you say first?\n   - [ ] Рахунок, будь ласка.\n   - [x] Столик на двох, будь ласка.\n   - [ ] Меню, будь ласка.\n   - [ ] Я візьму каву.\n   > First, ask for a table!\n\n2. The waiter brings the menu. What's your response?\n   - [x] Дякую.\n   - [ ] Добре.\n   - [ ] Так.\n   - [ ] Нормально.\n   > Always say thank you (Дякую)!\n\n3. You don't know what to order. What do you ask?\n   - [ ] Що тут є?\n   - [x] Що порекомендуєте?\n   - [ ] Що маєте?\n   - [ ] Що смачне?\n   > \"Що порекомендуєте?\" is the polite way to ask for recommendations.\n\n4. You want coffee. What's the polite order?\n   - [ ] Я хочу каву!\n   - [x] Я візьму каву, будь ласка.\n   - [ ] Каву!\n   - [ ] Дайте каву!\n   > \"Візьму\" is polite, \"хочу\" is too direct.\n\n5. The waiter asks \"З цукром?\" You want sugar. What do you say?\n   - [ ] Ні\n   - [x] Так, будь ласка\n   - [ ] Без цукру\n   - [ ] Може бути\n   > \"Так, будь ласка\" = Yes, please\n\n6. You want more bread. What do you say?\n   - [ ] Хліб!\n   - [ ] Дайте хліб!\n   - [x] Принесіть, будь ласка, ще хліб.\n   - [ ] Я хочу хліб!\n   > \"Принесіть, будь ласка\" is the polite imperative.\n\n7. The waiter asks \"Ще щось?\" You're finished ordering. What do you say?\n   - [x] Ні, це все. Дякую.\n   - [ ] Ні!\n   - [ ] Все!\n   - [ ] Достатньо!\n   > Always add \"Дякую\" for politeness.\n\n8. You've finished eating. What do you ask for?\n   - [ ] Меню\n   - [ ] Столик\n   - [x] Рахунок\n   - [ ] Воду\n   > \"Рахунок\" = check/bill\n\n9. The waiter asks \"Разом чи окремо?\" You want to split. What do you say?\n   - [ ] Разом\n   - [x] Окремо, будь ласка\n   - [ ] Ні\n   - [ ] Так\n   > \"Окремо\" = separately\n\n10. You're leaving. What's a nice thing to say?\n    - [ ] До побачення.\n    - [x] Дякую, було дуже смачно!\n    - [ ] Гаразд.\n    - [ ] Добре.\n    > Compliment the food!\n\n11. Where is Lviv's coffee culture most famous?\n    - [ ] Kyiv\n    - [x] Lviv\n    - [ ] Odesa\n    - [ ] Kharkiv\n    > Lviv is Ukraine's coffee capital!\n\n12. What dessert is a Kyiv specialty?\n    - [ ] Медівник\n    - [ ] Наполеон\n    - [x] Київський торт\n    - [ ] Тірамісу\n    > Київський торт (Kyiv cake) is the specialty!"
       }
     ],
-    "rawMarkdown": "---\ntitle: \"At the Café\"\nsubtitle: \"Ordering Food and Drinks\"\nphase: A1.2\ntransliteration: partial\npedagogy: PPP\nduration: 45\ntags: [vocabulary, café, ordering, dialogue]\nobjectives:\n  - Order food and drinks at a café\n  - Use polite request forms\n  - Handle café interactions confidently\n  - Understand waiter questions\ngrammar:\n  - Polite imperatives\n  - Accusative in ordering\n  - Functional integration\naudio: false\n---\n\n# At the Café\n\n> **Note:** Cafés are everywhere in Ukraine! Master these phrases and you'll enjoy countless кави and торти (cakes) across the country.\n\n## Warm-up: Your First Ukrainian Café\n\nPicture this: You walk into a cozy café in Lviv. The aroma of fresh coffee fills the air. A friendly waiter approaches and says:\n\n**\"Добрий день! Столик на одного?\"** (Good afternoon! A table for one?)\n\nWhat do you say? How do you order? How do you ask for the bill?\n\nCafé culture is central to Ukrainian life, especially in cities like Lviv, Kyiv, and Odesa. Ukrainians often spend hours at cafés — working, meeting friends, or simply enjoying their улюблена кава (favorite coffee). Learning café vocabulary isn't just practical — it's your entry point to Ukrainian social life!\n\nUkrainian cafés offer excellent coffee (often better and cheaper than in Western Europe), delicious pastries, and a welcoming atmosphere. Whether you want a quick espresso or a leisurely lunch, this module gives you all the language you need.\n\nThis module brings together vocabulary and grammar from previous lessons. You'll use the accusative case for ordering, the genitive for quantities, locative for locations, and polite expressions for requests. It's a practical integration of everything you've learned in A1.2!\n\n> 💡 **Thinking Trick:** Think of café dialogue as a script with three acts: 1) Greeting & seating, 2) Ordering, 3) Paying. Learn the key phrases for each act!\n\n## Presentation: Café Vocabulary\n\n### 1. Arriving at the Café\n\n| Ukrainian | English |\n|-----------|---------|\n| Столик на одного/двох | Table for one/two |\n| Вільний столик? | Is there a free table? |\n| Можна меню? | Can I have a menu? |\n| Що порекомендуєте? | What do you recommend? |\n| У вас є Wi-Fi? | Do you have Wi-Fi? |\n\n### 2. Ordering Food & Drinks\n\n**Key phrases:**\n| Ukrainian | English |\n|-----------|---------|\n| Я візьму... | I'll take/have... |\n| Мені, будь ласка... | For me, please... |\n| Можна...? | Can I have...? |\n| Принесіть, будь ласка... | Please bring... |\n| Ще одну/один/одне | One more |\n| Без цукру | Without sugar |\n| З молоком | With milk |\n\n**Common café items:**\n| Ukrainian | English |\n|-----------|---------|\n| кава | coffee |\n| еспресо | espresso |\n| латте | latte |\n| капучіно | cappuccino |\n| чай | tea |\n| вода | water |\n| сік | juice |\n| тістечко | pastry/cake |\n| круасан | croissant |\n| сендвіч | sandwich |\n| салат | salad |\n| суп | soup |\n| десерт | dessert |\n\n### 3. Waiter Questions\n\nA waiter might ask:\n| Ukrainian | English |\n|-----------|---------|\n| Що замовите? | What will you order? |\n| Ви готові замовляти? | Are you ready to order? |\n| Ще щось? | Anything else? |\n| Як каву? | How do you like your coffee? |\n| З молоком? З цукром? | With milk? With sugar? |\n| Щось на десерт? | Something for dessert? |\n\n### 4. Paying\n\n| Ukrainian | English |\n|-----------|---------|\n| Рахунок, будь ласка. | The bill, please. |\n| Можна рахунок? | Can I have the bill? |\n| Картою чи готівкою? | By card or cash? |\n| Карткою. / Готівкою. | By card. / Cash. |\n| Окремо, будь ласка. | Separately, please. |\n| Разом. | Together. |\n| Дякую, було дуже смачно! | Thank you, it was delicious! |\n| Решту залиште собі. | Keep the change. |\n\n> 📜 **Pattern Summary:**\n> - **Ordering:** Я візьму... / Мені, будь ласка... / Можна...?\n> - **Specifying:** Без цукру, з молоком\n> - **Paying:** Рахунок, будь ласка. Карткою/Готівкою.\n\n> 💡 **Did You Know?** Lviv is known as the coffee capital of Ukraine. Legend says an Armenian merchant brought coffee to the city in the 17th century. Today, Lviv has over 600 cafés — more per capita than any other Ukrainian city!\n\n## Cultural Insight: Café Culture in Ukraine 🇺🇦\n\nUkrainian café culture blends Central European traditions with local flavors. The tradition runs deep, especially in western Ukraine, which was historically influenced by Austro-Hungarian and Polish cafe traditions:\n\n- **Львівська кава** — Lviv-style coffee, often served in tiny cups with thick grounds\n- **Меланж** — Viennese-style coffee with milk, popular since Habsburg times\n- **Глінтвейн** — Mulled wine in winter\n- **Узвар** — Traditional Ukrainian dried fruit drink\n\n**Café etiquette:**\n- It's perfectly acceptable to sit for hours with one coffee — this is the norm, not an exception\n- Tipping is appreciated but not mandatory (10% is generous)\n- \"Можна рахунок?\" is the polite way to ask for the bill\n- Many cafés offer English menus, but trying Ukrainian earns respect!\n\n> 📜 **History Bite:** Under Polish rule (16th-17th centuries), coffee houses became centers of intellectual life in Ukrainian cities like Lviv. This café culture survived Soviet suppression and is thriving today. Each café tells a story!\n\n> 📜 **Myth Buster:** Some claim café culture in Ukraine is a \"post-Soviet Western import.\" In reality, coffee houses existed in Ukraine centuries before the Soviet Union. The Soviets actually suppressed café culture, seeing it as \"bourgeois.\" Today's revival is a return to Ukrainian roots, not imitation of the West!\n\n## Reading Practice: У кав'ярні 🗣️\n\n**Українською:**\n\n— Добрий день! Вітаємо в нашому кафе.\n— Добрий день! Столик на двох, будь ласка.\n— Ось меню. Ви готові замовляти?\n— Ще хвилинку... Добре, я візьму капучіно.\n— А для вас?\n— Мені латте з мигдальним молоком, будь ласка.\n— Щось на десерт?\n— Так, один чізкейк і тістечко \"Наполеон\".\n— Чудово! Ваше замовлення зараз буде.\n...\n— Ось ваші кави і десерти. Смачного!\n— Дякую!\n...\n— Рахунок, будь ласка.\n— 285 гривень. Карткою чи готівкою?\n— Карткою.\n— Дякуємо за візит! До побачення!\n\n**English Translation:**\n\n— Good afternoon! Welcome to our café.\n— Good afternoon! A table for two, please.\n— Here's the menu. Are you ready to order?\n— One more minute... Okay, I'll have a cappuccino.\n— And for you?\n— A latte with almond milk for me, please.\n— Anything for dessert?\n— Yes, one cheesecake and a \"Napoleon\" pastry.\n— Wonderful! Your order will be ready soon.\n...\n— Here are your coffees and desserts. Enjoy!\n— Thank you!\n...\n— The bill, please.\n— 285 hryvnias. By card or cash?\n— By card.\n— Thank you for your visit! Goodbye!\n\n**Practice:** Role-play this dialogue with a partner!\n\n## Conversation: Замовлення 🗣️\n\n**Офіціант:** Добрий день! Ви готові замовляти?\n**Клієнт:** Так. Мені еспресо, будь ласка.\n**Офіціант:** Звичайний чи подвійний?\n**Клієнт:** Подвійний. І воду, будь ласка.\n**Офіціант:** З газом чи без?\n**Клієнт:** Без газу.\n**Офіціант:** Щось ще?\n**Клієнт:** Так, тістечко. Що порекомендуєте?\n**Офіціант:** Наш чізкейк дуже популярний!\n**Клієнт:** Добре, візьму чізкейк.\n**Офіціант:** Зараз принесу. Щось ще?\n**Клієнт:** Ні, це все. Дякую!\n\n**English Translation:**\n**Waiter:** Good day! Are you ready to order?\n**Client:** Yes. Espresso for me, please.\n**Waiter:** Regular or double?\n**Client:** Double. And water, please.\n**Waiter:** Sparkling or still (lit. with gas or without)?\n**Client:** Still.\n**Waiter:** Anything else?\n**Client:** Yes, a cake. What do you recommend?\n**Waiter:** Our cheesecake is very popular!\n**Client:** Good, I will take cheesecake.\n**Waiter:** I will bring it right away. Anything else?\n**Client:** No, that's all. Thank you!\n\nЗверни увагу: еспресо, воду, тістечко, чізкейк — все це знахідний відмінок (accusative)!\n\n# Summary\n\n**At the Café: Complete Ordering Guide**\n\n1. **Arriving:** Столик на двох, будь ласка.\n2. **Menu:** Можна меню? Що порекомендуєте?\n3. **Ordering:** Я візьму... / Мені, будь ласка...\n4. **Specifying:** Без цукру, з молоком\n5. **Paying:** Рахунок, будь ласка. Карткою.\n\n---\n\n> [!tip] 🌟 **Pro Tip:** When unsure what to order, ask \"Що порекомендуєте?\" (What do you recommend?) — Ukrainians love to share their favorites!\n\n# Activities\n\n## fill-in: Café Phrases\n> Complete with the correct word.\n\n1. Столик на ___, будь ласка. (two)\n   > [!answer] двох\n   > [!options] двох | два | дві | двоє\n\n2. Я ___ капучіно. (will take)\n   > [!answer] візьму\n   > [!options] візьму | беру | хочу | маю\n\n3. Каву без ___. (sugar)\n   > [!answer] цукру\n   > [!options] цукру | цукор | цукром | цукрі\n\n4. ___, будь ласка. (The bill)\n   > [!answer] Рахунок\n   > [!options] Рахунок | Меню | Каву | Воду\n\n5. Латте з ___. (milk)\n   > [!answer] молоком\n   > [!options] молоком | молоко | молока | молоці\n\n6. Ще ___? (anything)\n   > [!answer] щось\n   > [!options] щось | всьо | нічого | яке\n\n7. Можна ___? (menu)\n   > [!answer] меню\n   > [!options] меню | меня | менюо | менує\n\n8. Карткою ___ готівкою? (or)\n   > [!answer] чи\n   > [!options] чи | або | і | та\n\n9. Було дуже ___! (delicious)\n   > [!answer] смачно\n   > [!options] смачно | смачний | смачна | смачне\n\n10. Що ___? (do you recommend)\n    > [!answer] порекомендуєте\n    > [!options] порекомендуєте | рекомендуєте | порадите | скажете\n\n11. Ви ___ замовляти? (ready)\n    > [!answer] готові\n    > [!options] готові | готовий | готова | готове\n\n12. Решту ___ собі. (keep)\n    > [!answer] залиште\n    > [!options] залиште | залишіть | лишіть | лишайте\n\n## match-up: Café Vocabulary\n> Match the Ukrainian with the English.\n\n| Ukrainian | English |\n| --- | --- |\n| кава | coffee |\n| меню | menu |\n| рахунок | bill |\n| столик | table |\n| офіціант | waiter |\n| замовлення | order |\n| десерт | dessert |\n| тістечко | pastry |\n| смачного | enjoy |\n| готівка | cash |\n| картка | card |\n| знижка | discount |\n\n## quiz: Café Scenarios\n> Choose the correct response.\n\n1. The waiter asks \"Що замовите?\" You want coffee. You say:\n   - [x] Каву, будь ласка.\n   - [ ] Кава, будь ласка.\n   - [ ] Кави, будь ласка.\n   - [ ] Кавою, будь ласка.\n\n2. You want a table for three. You say:\n   - [x] Столик на трьох, будь ласка.\n   - [ ] Столик три, будь ласка.\n   - [ ] Три столики, будь ласка.\n   - [ ] Столик для три.\n\n3. You want coffee without sugar. You say:\n   - [x] Каву без цукру.\n   - [ ] Каву без цукор.\n   - [ ] Каву не цукор.\n   - [ ] Каву цукру без.\n\n4. You want to pay by card. You say:\n   - [x] Карткою.\n   - [ ] Картка.\n   - [ ] Карткою будь ласка.\n   - [ ] Картки.\n\n5. The waiter asks \"Ще щось?\" You're done ordering. You say:\n   - [x] Ні, це все. Дякую.\n   - [ ] Так, все.\n   - [ ] Ні, щось.\n   - [ ] Все ще.\n\n6. You want to ask for the bill. You say:\n   - [x] Рахунок, будь ласка.\n   - [ ] Гроші, будь ласка.\n   - [ ] Ціна, будь ласка.\n   - [ ] Оплата, будь ласка.\n\n7. You want coffee with milk. You say:\n   - [x] Каву з молоком.\n   - [ ] Каву і молоко.\n   - [ ] Каву молоко.\n   - [ ] Каву в молоці.\n\n8. \"Смачного!\" means:\n   - [x] Enjoy your meal!\n   - [ ] Goodbye!\n   - [ ] Thank you!\n   - [ ] You're welcome!\n\n9. You want recommendations. You ask:\n   - [x] Що порекомендуєте?\n   - [ ] Що є?\n   - [ ] Що робите?\n   - [ ] Що маєте?\n\n10. You want to pay separately. You say:\n    - [x] Окремо, будь ласка.\n    - [ ] Разом, будь ласка.\n    - [ ] Один, будь ласка.\n    - [ ] Два, будь ласка.\n\n11. \"Подвійний еспресо\" means:\n    - [x] Double espresso\n    - [ ] Single espresso\n    - [ ] Large espresso\n    - [ ] Cold espresso\n\n12. You loved the food. You say:\n    - [x] Було дуже смачно!\n    - [ ] Було дуже гарно!\n    - [ ] Було дуже добре!\n    - [ ] Було дуже швидко!\n\n## group-sort: Café Actions\n> Sort phrases by dialogue stage.\n\n- Arriving: Столик на двох\n- Arriving: Вільний столик?\n- Arriving: Можна меню?\n- Ordering: Я візьму каву\n- Ordering: Мені латте\n- Ordering: Без цукру\n- Ordering: З молоком\n- Paying: Рахунок будь ласка\n- Paying: Карткою\n- Paying: Готівкою\n- Paying: Окремо\n- Leaving: Дякую смачно\n\n## true-false: Café Culture\n- [x] \"Я візьму\" means \"I'll have/take.\"\n- [x] Lviv is known for its café culture.\n- [ ] \"Рахунок\" means menu.\n- [x] \"Без газу\" means without gas (still water).\n- [ ] Tipping is mandatory in Ukrainian cafés.\n- [x] \"Столик на двох\" means a table for two.\n- [x] \"Карткою\" means by card.\n- [ ] \"Смачного\" means goodbye.\n- [x] Coffee culture in Ukraine dates back centuries.\n- [x] \"Готівкою\" means in cash.\n- [ ] \"Меню\" requires the genitive case.\n- [x] It's acceptable to sit for hours at a Ukrainian café.\n\n## anagram: Café Words\n> Unscramble these café words.\n\n1. а в а к\n   > [!answer] кава\n\n2. ю н е м\n   > [!answer] меню\n\n3. к о н у х а р\n   > [!answer] рахунок\n\n4. т р е с е д\n   > [!answer] десерт\n\n5. к а т р а к\n   > [!answer] картка\n\n6. я н л е н в а м о з\n   > [!answer] замовлення\n\n7. т н а і ц і ф о\n   > [!answer] офіціант\n\n8. к и л о т с\n   > [!answer] столик\n\n9. о н ч а м с\n   > [!answer] смачно\n\n10. а к в і т о г\n    > [!answer] готівка\n\n11. р о к у ц\n    > [!answer] цукор\n\n12. о к о л о м\n    > [!answer] молоко\n\n## fill-in: Complete the Order\n> Complete the café dialogue.\n\n1. — Добрий день! Столик на ___? (one)\n   > [!answer] одного\n   > [!options] одного | один | одне | одну\n\n2. — Можна ___? (menu)\n   > [!answer] меню\n   > [!options] меню | меня | менює | меноу\n\n3. — Я ___ капучіно. (will take)\n   > [!answer] візьму\n   > [!options] візьму | беру | хочу | маю\n\n4. — З цукром чи ___? (without)\n   > [!answer] без\n   > [!options] без | не | ні | не з\n\n5. — ___ цукру, будь ласка. (Without)\n   > [!answer] Без\n   > [!options] Без | Не | Ні | Не з\n\n6. — Ще ___? (anything)\n   > [!answer] щось\n   > [!options] щось | все | нічого | якось\n\n7. — Ні, це ___. (all)\n   > [!answer] все\n   > [!options] все | всьо | усе | весь\n\n8. — ___, будь ласка. (The bill)\n   > [!answer] Рахунок\n   > [!options] Рахунок | Меню | Гроші | Ціну\n\n9. — 85 гривень. ___ чи готівкою? (By card)\n   > [!answer] Карткою\n   > [!options] Карткою | Картка | Карткі | Карткою\n\n10. — ___. (By card)\n    > [!answer] Карткою\n    > [!options] Карткою | Картка | Наявку | Грошима\n\n11. — Дякую, було дуже ___! (delicious)\n    > [!answer] смачно\n    > [!options] смачно | смачний | смачна | смачне\n\n12. — До ___! (goodbye)\n    > [!answer] побачення\n    > [!options] побачення | зустрічі | завтра | вечора\n\n## unjumble: Build Café Sentences\n> Arrange the words into correct sentences.\n\n1. Столик / двох / на / будь / ласка\n   > [!answer] Столик на двох, будь ласка.\n\n2. візьму / я / каву\n   > [!answer] Я візьму каву.\n\n3. меню / можна\n   > [!answer] Можна меню?\n\n4. цукру / без / латте\n   > [!answer] Латте без цукру.\n\n5. Рахунок / ласка / будь\n   > [!answer] Рахунок, будь ласка.\n\n6. смачно / дуже / було\n   > [!answer] Було дуже смачно!\n\n7. порекомендуєте / що\n   > [!answer] Що порекомендуєте?\n\n8. молоком / з / каву\n   > [!answer] Каву з молоком.\n\n9. карткою / готівкою / чи\n   > [!answer] Карткою чи готівкою?\n\n10. це / все / ні\n    > [!answer] Ні, це все.\n\n11. замовляти / готові / ви\n    > [!answer] Ви готові замовляти?\n\n12. дякую / допомогу / за\n    > [!answer] Дякую за допомогу.\n\n---\n\n# Vocabulary\n\n| Ukrainian | IPA | English | Usage |\n| --- | --- | --- | --- |\n| столик | /ˈstolɪk/ | table | на столик |\n| меню | /mɛˈnʲu/ | menu | можна меню |\n| замовити | /zɑˈmoʋɪtɪ/ | to order | я замовлю |\n| замовлення | /zɑmoʋˈlɛnʲɑ/ | order | ваше замовлення |\n| офіціант | /ofit͡siˈɑnt/ | waiter | офіціанте! |\n| офіціантка | /ofit͡siˈɑntkɑ/ | waitress | офіціантко! |\n| рахунок | /rɑˈxunok/ | bill | рахунок, будь ласка |\n| чайові | /t͡ʃɑjoˈʋi/ | tip | залишити чайові |\n| візьму | /ˈʋizʲmu/ | I'll take | я візьму |\n| порекомендуєте | /porɛkomɛnˈdujɛtɛ/ | you recommend | що порекомендуєте |\n| принесіть | /prɪnɛˈsitʲ/ | bring (imp.) | принесіть, будь ласка |\n| готовий | /ɦoˈtoʋɪj/ | ready | я готовий |\n| окремо | /okˈrɛmo/ | separately | окремо, будь ласка |\n| разом | /ˈrɑzom/ | together | разом, будь ласка |\n| еспресо | /ɛsˈprɛso/ | espresso | подвійний еспресо |\n| капучіно | /kɑpuˈt͡ʃino/ | cappuccino | один капучіно |\n| латте | /ˈlɑtɛ/ | latte | латте з молоком |\n| тістечко | /tisˈtɛt͡ʃko/ | pastry/cake | одне тістечко |\n| десерт | /dɛˈsɛrt/ | dessert | на десерт |\n| смачного | /smɑt͡ʃˈnoɦo/ | enjoy your meal | — |\n",
-    "createdAt": "2025-12-12T19:55:32.045Z",
-    "modifiedAt": "2025-12-12T19:55:32.045Z",
+    "rawMarkdown": "---\nmodule: a1-19\ntitle: \"At the Café\"\nsubtitle: \"Ordering Food and Drinks in Ukrainian\"\nversion: \"1.0\"\nphase: \"A1.2\"\npedagogy: \"PPP\"\nduration: 60\ntransliteration: \"vocab-only\"\ntags:\n  - functional\n  - café\n  - ordering\n  - restaurant\n  - food\n  - drinks\n  - politeness\ngrammar:\n  - \"Functional integration of Accusative, Genitive, and Locative cases\"\n  - \"Polite imperative forms (принесіть, візьміть)\"\n  - \"Future tense (візьму from взяти)\"\nobjectives:\n  - \"Learner can order food and drinks at a café\"\n  - \"Learner can ask for recommendations\"\n  - \"Learner can request the bill\"\n  - \"Learner can use functional phrases with Accusative, Genitive, and Locative cases\"\nvocabulary_count: 24\n---\n\n# At the Café\n\n## Warm-up\n\nYou've learned cases, possessives, and numbers. Now it's time to combine everything in a real Ukrainian scenario: **at the café**! Ukrainian café culture is vibrant—from traditional cafés serving борщ and вареники to modern coffee shops in Lviv and Kyiv. Let's learn how to order like a local.\n\n## Presentation\n\n### Key Café Phrases\n\nWhen you walk into a Ukrainian café, you'll use phrases you've already learned—but combined in natural ways:\n\n**Entering and Seating:**\n- **Столик на двох, будь ласка.** (Table for two, please.)\n- **Можна меню?** (Can I have a menu?)\n- **Де туалет?** (Where is the restroom?)\n\n**Ordering:**\n- **Що порекомендуєте?** (What do you recommend?)\n- **Я візьму каву.** (I'll take coffee.)\n- **Принесіть, будь ласка, борщ.** (Please bring borscht.)\n- **Ще один салат, будь ласка.** (One more salad, please.)\n\n**Paying:**\n- **Рахунок, будь ласка.** (Check, please.)\n- **Разом чи окремо?** (Together or separately?)\n- **Це все.** (That's everything.)\n- **Дякую, було дуже смачно!** (Thank you, it was very delicious!)\n\n> [!tip] **Did You Know?**\n>\n> In Ukraine, it's common to spend HOURS at a café—reading, working, chatting with friends. Unlike in some countries where cafés rush you out, Ukrainian cafés welcome you to stay. Order one coffee, enjoy the atmosphere, and relax. This is called \"кавова культура\" (coffee culture).\n\n### Grammar Integration\n\nNotice how you're using multiple cases in one conversation:\n\n| Case | Usage | Example |\n|------|-------|---------|\n| **Nominative** | Subject | **Я** візьму каву. (I'll take coffee.) |\n| **Accusative** | Direct object | Я візьму **каву**. (I'll take coffee.) |\n| **Genitive** | Quantity | Склянку **води**, будь ласка. (A glass of water, please.) |\n| **Locative** | Location | Ми в **кафе**. (We're at the café.) |\n\nYou're not learning new grammar—you're **combining** what you know into real interactions.\n\n> [!example] **Pop Culture Moment: Lviv's Coffee Legend**\n>\n> Lviv is Ukraine's coffee capital! Legend says the first café in Central Europe opened in Lviv in 1683. Today, Lviv has hundreds of unique coffee shops—from traditional \"kavyarni\" to modern third-wave cafés. If you visit, try \"кава по-львівськи\" (Lviv-style coffee)—strong, aromatic, and served with chocolate.\n\n### Mini-Dialogue 1: Ordering Coffee\n\n**In a Lviv café:**\n\n— Доброго дня! Столик на одну, будь ласка.\n— Звісно, ось біля вікна. Меню.\n— Дякую. Що порекомендуєте?\n— Наша кава по-львівськи дуже смачна.\n— Чудово! Я візьму каву по-львівськи і круасан.\n— Молоко? (Milk?)\n— Так, будь ласка.\n— Одну хвилинку.\n\nTranslation:\n— Good afternoon! Table for one, please.\n— Of course, here by the window. Menu.\n— Thank you. What do you recommend?\n— Our Lviv-style coffee is very delicious.\n— Wonderful! I'll take Lviv-style coffee and a croissant.\n— Milk?\n— Yes, please.\n— One moment.\n\n### Mini-Dialogue 2: Lunch with a Friend\n\n**At a traditional Ukrainian café:**\n\n— Привіт! Я тут.\n— О, привіт! Замовляємо?\n— Так. Я візьму борщ і вареники.\n— А я візьму салат і рибу. Принесіть, будь ласка, ще хліб.\n— І воду, будь ласка.\n— Це все?\n— Так, достатньо. Рахунок, будь ласка, окремо.\n\nTranslation:\n— Hi! I'm here.\n— Oh, hi! Shall we order?\n— Yes. I'll take borscht and varenyky.\n— And I'll take salad and fish. Please bring more bread.\n— And water, please.\n— Is that everything?\n— Yes, that's enough. Check, please, separately.\n\n> [!info] **Real World: Paying Separately**\n>\n> In Ukraine, it's normal to ask for **окремі рахунки** (separate checks) when dining with friends. The waiter won't be surprised—it's standard practice. Just say: \"Рахунок окремо, будь ласка.\"\n\n## Practice\n\n### Common Waiter Questions\n\nHere's what you'll hear from waiters:\n\n| Waiter Says | You Respond |\n|-------------|-------------|\n| Що бажаєте? (What would you like?) | Я візьму каву. (I'll take coffee.) |\n| Цукор? (Sugar?) | Так / Ні, дякую. (Yes / No, thank you.) |\n| Ще щось? (Anything else?) | Так, ще салат. / Ні, це все. (Yes, one more salad. / No, that's all.) |\n| Разом чи окремо? (Together or separately?) | Разом, будь ласка. (Together, please.) |\n\n### Useful Verb Forms\n\nYou'll use these verb forms constantly:\n\n- **візьму** (I'll take) — from **взяти** (to take)\n- **порекомендуєте** (you recommend) — from **порекомендувати** (to recommend)\n- **принесіть** (bring!) — imperative from **принести** (to bring)\n- **спробувати** (to try) — \"Можна спробувати?\" (Can I try?)\n\n> [!warning] **Common Mistake: \"Я хочу\" vs \"Я візьму\"**\n>\n> In English, we say \"I want coffee.\" In Ukrainian, saying **\"Я хочу каву\"** is grammatically correct but sounds DEMANDING—like a child wanting candy.\n>\n> **Polite way:** \"Я візьму каву, будь ласка.\" (I'll take coffee, please.)\n> **Even more polite:** \"Можна каву?\" (May I have coffee?)\n>\n> Remember: **\"візьму\"** is polite, **\"хочу\"** is direct.\n\n### Mini-Dialogue 3: Sweet Tooth\n\n**At a dessert café in Kyiv:**\n\n— Добрий вечір! Що порекомендуєте на десерт?\n— У нас чудовий медівник і наполеон.\n— О, я люблю наполеон! Візьму наполеон і чай.\n— Який чай? Чорний чи трав'яний? (Black or herbal?)\n— Трав'яний, будь ласка. Цукор? Ні, дякую.\n— Одну хвилину.\n\nTranslation:\n— Good evening! What do you recommend for dessert?\n— We have wonderful honey cake and napoleon.\n— Oh, I love napoleon! I'll take napoleon and tea.\n— Which tea? Black or herbal?\n— Herbal, please. Sugar? No, thank you.\n— One moment.\n\n> [!example] **Pop Culture Moment: Dessert Culture**\n>\n> Ukrainians LOVE desserts. Popular sweets include:\n> - **Медівник** (Honey cake) — layers of honey and cream\n> - **Наполеон** — puff pastry with custard\n> - **Київський торт** (Kyiv cake) — hazelnut meringue, a Kyiv specialty\n>\n> Fun fact: \"Київський торт\" was created in 1956 and became so popular that it's now exported worldwide!\n\n## Production\n\n### Your Turn: Practice Scenarios\n\n**Scenario 1:** You're at a café. You want coffee and a croissant. Ask for a table, order politely, and ask for the check.\n\n**Model Answer:**\n— Доброго дня! Столик на одну, будь ласка.\n— (Waiter seats you)\n— Дякую. Можна меню?\n— (Waiter brings menu)\n— Я візьму каву і круасан. Молоко? Так, будь ласка.\n— (After eating)\n— Рахунок, будь ласка. Дякую, було смачно!\n\n**Scenario 2:** You're with a friend. You want separate checks. Order borscht and ask for bread.\n\n**Model Answer:**\n— Я візьму борщ, будь ласка.\n— Принесіть, будь ласка, ще хліб.\n— (After eating)\n— Рахунок окремо, будь ласка.\n\n## Cultural Insight\n\n### Ukrainian Café Etiquette\n\n**Tipping:**\nTipping is becoming more common in Ukraine, especially in cities. 10% is standard for good service. You can say: **\"Дякую за обслуговування\"** (Thank you for the service).\n\n> [!tip] **Pro Tip: How to Tip**\n>\n> Leave cash on the table or tell the waiter you don't need change: **\"Не треба решти\"** (No need for change). Many cafés now accept card tips, but cash is still appreciated!\n\n**Coffee Culture:**\n- **Kyiv** has modern specialty coffee shops with international styles.\n- **Lviv** is famous for traditional coffee culture—expect cozy, historic cafés.\n- **Odesa** has seaside cafés with Mediterranean vibes.\n\n**Meal Times:**\n- **Сніданок** (Breakfast): 7-9 AM\n- **Обід** (Lunch): 12-2 PM — the main meal\n- **Вечеря** (Dinner): 6-8 PM\n\n> [!info] **Real World: \"Будь ласка\" Is Magic**\n>\n> Add **\"будь ласка\"** (please) to EVERYTHING. Ukrainians appreciate politeness, and this tiny phrase makes you sound friendly and respectful:\n> - Рахунок, **будь ласка**.\n> - Каву, **будь ласка**.\n> - Ще води, **будь ласка**.\n\n---\n\n# Summary\n\nYou can now:\n- ✅ Ask for a table and menu\n- ✅ Order food and drinks politely\n- ✅ Ask for recommendations\n- ✅ Request the bill (together or separately)\n- ✅ Use functional phrases combining Accusative, Genitive, and Locative cases\n\nRemember:\n- Use **\"візьму\"** instead of **\"хочу\"** when ordering\n- **\"Будь ласка\"** is your best friend\n- **\"Рахунок окремо\"** = separate checks\n- Spend time at cafés—it's part of Ukrainian culture!\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| столик | /ˈstɔlɪk/ | table (small) | noun | m | diminutive of стіл |\n| порекомендувати | /porɛkomɛnduˈvɑtɪ/ | to recommend | verb | - | perfective |\n| спробувати | /sprobuˈvɑtɪ/ | to try | verb | - | perfective |\n| візьму | /ˈvʲizʲmu/ | I'll take | verb | - | future of взяти |\n| принесіть | /prɪnɛˈsʲitʲ/ | bring (imperative) | verb | - | perfective |\n| ще | /ʃt͡ʃɛ/ | still, more, another | adverb | - | |\n| достатньо | /dosˈtɑtʲnʲo/ | enough | adverb | - | |\n| все | /fsɛ/ | everything, all | pronoun | - | |\n| разом | /ˈrɑzom/ | together | adverb | - | |\n| окремо | /ˈokrɛmo/ | separately | adverb | - | |\n| рахунок | /rɑˈxunok/ | check, bill | noun | m | |\n| меню | /mɛˈnju/ | menu | noun | n | |\n| замовляти | /zɑmovˈlʲɑtɪ/ | to order | verb | - | imperfective |\n| замовити | /zɑˈmovɪtɪ/ | to order | verb | - | perfective |\n| офіціант | /ofʲit͡sʲiˈɑnt/ | waiter | noun | m | |\n| офіціантка | /ofʲit͡sʲiˈɑntkɑ/ | waitress | noun | f | |\n| чай | /t͡ʃɑj/ | tea | noun | m | |\n| кава | /ˈkɑvɑ/ | coffee | noun | f | |\n| круасан | /kruɑˈsɑn/ | croissant | noun | m | |\n| смачно | /ˈsmɑt͡ʃno/ | delicious (adverb) | adverb | - | |\n| чорний | /ˈt͡ʃornɪj/ | black | adjective | m | |\n| трав'яний | /trɑvʲˈjɑnɪj/ | herbal | adjective | m | |\n| цукор | /ˈt͡sukɔr/ | sugar | noun | m | |\n| молоко | /moloˈko/ | milk | noun | n | |\n\n---\n\n# Activities\n\n## match-up: Café Vocabulary\n\n> Match the Ukrainian phrases with their English meanings.\n\n| Ukrainian | English |\n|-----------|---------|\n| столик | table (small) |\n| рахунок | check, bill |\n| меню | menu |\n| візьму | I'll take |\n| принесіть | bring (imperative) |\n| порекомендуєте | you recommend |\n| спробувати | to try |\n| достатньо | enough |\n| разом | together |\n| окремо | separately |\n| ще | more, another |\n| все | everything |\n\n## quiz: Waiter Questions\n\n> Choose the correct response to each waiter's question.\n\n1. Waiter: \"Що бажаєте?\" — What should you say?\n   - [x] Я візьму каву, будь ласка.\n   - [ ] Я хочу каву зараз!\n   - [ ] Каву мені!\n   - [ ] Дайте каву!\n   > \"Я візьму\" is the polite way to order.\n\n2. Waiter: \"Цукор?\" — What does this mean?\n   - [ ] Cream?\n   - [x] Sugar?\n   - [ ] Milk?\n   - [ ] Ice?\n   > \"Цукор\" = sugar\n\n3. Waiter: \"Ще щось?\" — What is the waiter asking?\n   - [ ] Is this correct?\n   - [ ] Are you ready?\n   - [x] Anything else?\n   - [ ] Is this enough?\n   > \"Ще щось\" = anything else, something more\n\n4. Waiter: \"Разом чи окремо?\" — What is the question about?\n   - [ ] Hot or cold?\n   - [ ] Here or to go?\n   - [x] Together or separately? (the bill)\n   - [ ] With or without?\n   > Asking about splitting the check\n\n5. What does \"візьму\" mean?\n   - [ ] I want\n   - [x] I'll take\n   - [ ] I have\n   - [ ] I need\n   > Future form of взяти (to take)\n\n6. What does \"принесіть\" mean?\n   - [ ] Take\n   - [x] Bring\n   - [ ] Show\n   - [ ] Give\n   > Imperative form of принести\n\n7. What does \"достатньо\" mean?\n   - [ ] Everything\n   - [ ] More\n   - [x] Enough\n   - [ ] Together\n   > Достатньо = enough\n\n8. What does \"окремо\" mean?\n   - [ ] Together\n   - [x] Separately\n   - [ ] Everything\n   - [ ] More\n   > Окремо = separately\n\n## fill-in: Complete the Café Dialogue\n\n> Fill in the blanks with the correct words.\n\n1. Доброго дня! ___ на двох, будь ласка.\n   > [!answer] Столик\n   > [!options] Столик | Стіл | Меню | Рахунок\n\n2. Дякую. Можна ___?\n   > [!answer] меню\n   > [!options] меню | стіл | каву | воду\n\n3. Що ___? (What do you recommend?)\n   > [!answer] порекомендуєте\n   > [!options] порекомендуєте | візьму | принесіть | спробую\n\n4. Я ___ каву з молоком. (I'll take)\n   > [!answer] візьму\n   > [!options] візьму | хочу | беру | маю\n\n5. ___, будь ласка, ще хліб. (Bring)\n   > [!answer] Принесіть\n   > [!options] Принесіть | Візьміть | Дайте | Покажіть\n\n6. ___ щось? (Anything else?)\n   > [!answer] Ще\n   > [!options] Ще | Вже | Все | Так\n\n7. Ні, це ___. (That's everything)\n   > [!answer] все\n   > [!options] все | добре | так | достатньо\n\n8. ___, будь ласка. (Check, please)\n   > [!answer] Рахунок\n   > [!options] Рахунок | Меню | Столик | Гроші\n\n9. Разом чи ___? (Together or separately?)\n   > [!answer] окремо\n   > [!options] окремо | разом | все | достатньо\n\n10. Це ___. (That's enough)\n    > [!answer] достатньо\n    > [!options] достатньо | все | добре | так\n\n11. Дякую, було дуже ___! (delicious)\n    > [!answer] смачно\n    > [!options] смачно | добре | гарно | чудово\n\n12. ___, будь ласка, воду. (Bring)\n    > [!answer] Принесіть\n    > [!options] Принесіть | Візьміть | Дайте | Покажіть\n\n## true-false: Café Etiquette\n\n> Decide if each statement is true or false.\n\n- [x] In Ukraine, it's normal to spend hours at a café.\n  > Correct! Ukrainian café culture encourages lingering.\n\n- [ ] You should say \"Я хочу каву\" when ordering.\n  > Incorrect! \"Я візьму каву\" is more polite. \"Я хочу\" sounds demanding.\n\n- [x] Asking for separate checks is common in Ukraine.\n  > Correct! \"Рахунок окремо\" is standard practice.\n\n- [ ] Tipping is never expected in Ukraine.\n  > Incorrect! 10% is becoming standard for good service.\n\n- [x] Lviv is famous for its coffee culture.\n  > Correct! Lviv has hundreds of unique cafés and a rich coffee history.\n\n- [x] \"Будь ласка\" should be added to most requests.\n  > Correct! Politeness is highly valued in Ukrainian culture.\n\n- [ ] You should rush to leave after finishing your coffee.\n  > Incorrect! Ukrainian cafés welcome you to stay and relax.\n\n- [x] \"Візьму\" is the polite way to say \"I'll take.\"\n  > Correct! It's less direct than \"хочу\" (I want).\n\n- [x] The waiter will ask \"Разом чи окремо?\" when bringing the bill.\n  > Correct! This means \"Together or separately?\"\n\n- [ ] \"Меню\" means \"table\" in Ukrainian.\n  > Incorrect! \"Меню\" means menu. \"Стіл\" or \"столик\" means table.\n\n- [x] \"Ще\" means \"more\" or \"another.\"\n  > Correct! \"Ще один салат\" = one more salad.\n\n- [x] Київський торт is a famous Kyiv dessert.\n  > Correct! It's a hazelnut meringue cake created in 1956.\n\n## group-sort: Café Phrases by Function\n\n> Sort these phrases by when you would use them.\n\n### Entering & Seating\n- Столик на двох, будь ласка\n- Можна меню?\n- Де туалет?\n\n### Ordering\n- Що порекомендуєте?\n- Я візьму каву\n- Принесіть, будь ласка, борщ\n- Ще один салат, будь ласка\n\n### Paying\n- Рахунок, будь ласка\n- Разом чи окремо?\n- Це все\n- Дякую, було дуже смачно\n\n## unjumble: Order the Café Sentences\n\n> Put the words in the correct order to form sentences.\n\n1. будь / столик / ласка / двох / на\n   > [!answer] Столик на двох, будь ласка.\n   > (Table for two, please.) [5 words]\n\n2. візьму / я / каву / молоком / з\n   > [!answer] Я візьму каву з молоком.\n   > (I'll take coffee with milk.) [5 words]\n\n3. що / порекомендуєте / ?\n   > [!answer] Що порекомендуєте?\n   > (What do you recommend?) [2 words]\n\n4. будь / ласка / принесіть / хліб / ще\n   > [!answer] Принесіть, будь ласка, ще хліб.\n   > (Please bring more bread.) [5 words]\n\n5. окремо / будь / рахунок / ласка\n   > [!answer] Рахунок окремо, будь ласка.\n   > (Check separately, please.) [4 words]\n\n6. все / це\n   > [!answer] Це все.\n   > (That's everything.) [2 words]\n\n7. дуже / було / дякую / смачно\n   > [!answer] Дякую, було дуже смачно!\n   > (Thank you, it was very delicious!) [4 words]\n\n8. чи / разом / окремо / ?\n   > [!answer] Разом чи окремо?\n   > [!answer-alt] Окремо чи разом?\n   > (Together or separately?) [3 words]\n\n9. достатньо / це\n   > [!answer] Це достатньо.\n   > (That's enough.) [2 words]\n\n10. можна / меню / ?\n    > [!answer] Можна меню?\n    > (Can I have a menu?) [2 words]\n\n11. ще / щось / ?\n    > [!answer] Ще щось?\n    > (Anything else?) [2 words]\n\n12. ласка / будь / воду / принесіть\n    > [!answer] Принесіть, будь ласка, воду.\n    > (Please bring water.) [4 words]\n\n## fill-in: Polite vs Direct\n\n> Choose the more polite option for each situation.\n\n1. You want coffee. ___ (What should you say?)\n   > [!answer] Я візьму каву, будь ласка.\n   > [!options] Я хочу каву! | Я візьму каву, будь ласка. | Дайте мені каву! | Каву!\n\n2. You need the menu. ___ (What's the polite way?)\n   > [!answer] Можна меню?\n   > [!options] Дайте меню! | Меню! | Можна меню? | Я хочу меню!\n\n3. You want more bread. ___ (How do you ask?)\n   > [!answer] Принесіть, будь ласка, ще хліб.\n   > [!options] Хліб! | Дайте хліб! | Я хочу хліб! | Принесіть, будь ласка, ще хліб.\n\n4. You're ready for the check. ___\n   > [!answer] Рахунок, будь ласка.\n   > [!options] Рахунок! | Дайте рахунок! | Рахунок, будь ласка. | Я хочу рахунок!\n\n5. You want to try something. ___\n   > [!answer] Можна спробувати?\n   > [!options] Я хочу спробувати! | Дайте спробувати! | Можна спробувати? | Спробую!\n\n6. You want to thank the waiter. ___\n   > [!answer] Дякую, було дуже смачно!\n   > [!options] Добре. | Нормально. | Дякую, було дуже смачно! | Так.\n\n7. The waiter asks \"Ще щось?\" You're done. ___\n   > [!answer] Ні, це все. Дякую.\n   > [!options] Ні! | Все! | Достатньо! | Ні, це все. Дякую.\n\n8. You want to split the check. ___\n   > [!answer] Рахунок окремо, будь ласка.\n   > [!options] Окремо! | Рахунок окремо, будь ласка. | Платимо окремо! | Я плачу окремо!\n\n9. You want another coffee. ___\n   > [!answer] Ще одну каву, будь ласка.\n   > [!options] Ще каву! | Я хочу ще каву! | Ще одну каву, будь ласка. | Каву ще раз!\n\n10. You want to know the recommendation. ___\n    > [!answer] Що порекомендуєте?\n    > [!options] Що тут смачне? | Що мені взяти? | Що порекомендуєте? | Що маєте?\n\n11. You're satisfied with the service. ___\n    > [!answer] Дякую за обслуговування!\n    > [!options] Добре. | Так. | Дякую за обслуговування! | Нормально.\n\n12. You want to thank for good service. ___\n    > [!answer] Дякую за обслуговування!\n    > [!options] Добре! | Дякую за обслуговування! | Нормально! | Гаразд!\n\n## quiz: Café Situations\n\n> Choose the best answer for each situation.\n\n1. You walk into a café with a friend. What do you say first?\n   - [ ] Рахунок, будь ласка.\n   - [x] Столик на двох, будь ласка.\n   - [ ] Меню, будь ласка.\n   - [ ] Я візьму каву.\n   > First, ask for a table!\n\n2. The waiter brings the menu. What's your response?\n   - [x] Дякую.\n   - [ ] Добре.\n   - [ ] Так.\n   - [ ] Нормально.\n   > Always say thank you (Дякую)!\n\n3. You don't know what to order. What do you ask?\n   - [ ] Що тут є?\n   - [x] Що порекомендуєте?\n   - [ ] Що маєте?\n   - [ ] Що смачне?\n   > \"Що порекомендуєте?\" is the polite way to ask for recommendations.\n\n4. You want coffee. What's the polite order?\n   - [ ] Я хочу каву!\n   - [x] Я візьму каву, будь ласка.\n   - [ ] Каву!\n   - [ ] Дайте каву!\n   > \"Візьму\" is polite, \"хочу\" is too direct.\n\n5. The waiter asks \"З цукром?\" You want sugar. What do you say?\n   - [ ] Ні\n   - [x] Так, будь ласка\n   - [ ] Без цукру\n   - [ ] Може бути\n   > \"Так, будь ласка\" = Yes, please\n\n6. You want more bread. What do you say?\n   - [ ] Хліб!\n   - [ ] Дайте хліб!\n   - [x] Принесіть, будь ласка, ще хліб.\n   - [ ] Я хочу хліб!\n   > \"Принесіть, будь ласка\" is the polite imperative.\n\n7. The waiter asks \"Ще щось?\" You're finished ordering. What do you say?\n   - [x] Ні, це все. Дякую.\n   - [ ] Ні!\n   - [ ] Все!\n   - [ ] Достатньо!\n   > Always add \"Дякую\" for politeness.\n\n8. You've finished eating. What do you ask for?\n   - [ ] Меню\n   - [ ] Столик\n   - [x] Рахунок\n   - [ ] Воду\n   > \"Рахунок\" = check/bill\n\n9. The waiter asks \"Разом чи окремо?\" You want to split. What do you say?\n   - [ ] Разом\n   - [x] Окремо, будь ласка\n   - [ ] Ні\n   - [ ] Так\n   > \"Окремо\" = separately\n\n10. You're leaving. What's a nice thing to say?\n    - [ ] До побачення.\n    - [x] Дякую, було дуже смачно!\n    - [ ] Гаразд.\n    - [ ] Добре.\n    > Compliment the food!\n\n11. Where is Lviv's coffee culture most famous?\n    - [ ] Kyiv\n    - [x] Lviv\n    - [ ] Odesa\n    - [ ] Kharkiv\n    > Lviv is Ukraine's coffee capital!\n\n12. What dessert is a Kyiv specialty?\n    - [ ] Медівник\n    - [ ] Наполеон\n    - [x] Київський торт\n    - [ ] Тірамісу\n    > Київський торт (Kyiv cake) is the specialty!\n",
+    "createdAt": "2025-12-13T23:47:22.490346Z",
+    "modifiedAt": "2025-12-13T23:47:22.490346Z",
     "version": 2
   },
-  "activities": [
-    {
-      "id": "act-a1-0-fillblank-0",
-      "type": "fill-blank",
-      "title": "Café Phrases",
-      "description": "Complete with the correct word.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Столик на ___, будь ласка. (two)",
-            "answer": "двох",
-            "options": [
-              "двох",
-              "два",
-              "дві",
-              "двоє"
-            ]
-          },
-          {
-            "prompt": "Я ___ капучіно. (will take)",
-            "answer": "візьму",
-            "options": [
-              "візьму",
-              "беру",
-              "хочу",
-              "маю"
-            ]
-          },
-          {
-            "prompt": "Каву без ___. (sugar)",
-            "answer": "цукру",
-            "options": [
-              "цукру",
-              "цукор",
-              "цукром",
-              "цукрі"
-            ]
-          },
-          {
-            "prompt": "___, будь ласка. (The bill)",
-            "answer": "Рахунок",
-            "options": [
-              "Рахунок",
-              "Меню",
-              "Каву",
-              "Воду"
-            ]
-          },
-          {
-            "prompt": "Латте з ___. (milk)",
-            "answer": "молоком",
-            "options": [
-              "молоком",
-              "молоко",
-              "молока",
-              "молоці"
-            ]
-          },
-          {
-            "prompt": "Ще ___? (anything)",
-            "answer": "щось",
-            "options": [
-              "щось",
-              "всьо",
-              "нічого",
-              "яке"
-            ]
-          },
-          {
-            "prompt": "Можна ___? (menu)",
-            "answer": "меню",
-            "options": [
-              "меню",
-              "меня",
-              "менюо",
-              "менує"
-            ]
-          },
-          {
-            "prompt": "Карткою ___ готівкою? (or)",
-            "answer": "чи",
-            "options": [
-              "чи",
-              "або",
-              "і",
-              "та"
-            ]
-          },
-          {
-            "prompt": "Було дуже ___! (delicious)",
-            "answer": "смачно",
-            "options": [
-              "смачно",
-              "смачний",
-              "смачна",
-              "смачне"
-            ]
-          },
-          {
-            "prompt": "Що ___? (do you recommend)",
-            "answer": "порекомендуєте",
-            "options": [
-              "порекомендуєте",
-              "рекомендуєте",
-              "порадите",
-              "скажете"
-            ]
-          },
-          {
-            "prompt": "Ви ___ замовляти? (ready)",
-            "answer": "готові",
-            "options": [
-              "готові",
-              "готовий",
-              "готова",
-              "готове"
-            ]
-          },
-          {
-            "prompt": "Решту ___ собі. (keep)",
-            "answer": "залиште",
-            "options": [
-              "залиште",
-              "залишіть",
-              "лишіть",
-              "лишайте"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.045Z",
-      "modifiedAt": "2025-12-12T19:55:32.045Z"
-    },
-    {
-      "id": "act-a1-0-matchup-0",
-      "type": "match-up",
-      "title": "Café Vocabulary",
-      "description": "Match the Ukrainian with the English.",
-      "content": {
-        "type": "match-up",
-        "pairs": [
-          {
-            "left": "кава",
-            "right": "coffee"
-          },
-          {
-            "left": "меню",
-            "right": "menu"
-          },
-          {
-            "left": "рахунок",
-            "right": "bill"
-          },
-          {
-            "left": "столик",
-            "right": "table"
-          },
-          {
-            "left": "офіціант",
-            "right": "waiter"
-          },
-          {
-            "left": "замовлення",
-            "right": "order"
-          },
-          {
-            "left": "десерт",
-            "right": "dessert"
-          },
-          {
-            "left": "тістечко",
-            "right": "pastry"
-          },
-          {
-            "left": "смачного",
-            "right": "enjoy"
-          },
-          {
-            "left": "готівка",
-            "right": "cash"
-          },
-          {
-            "left": "картка",
-            "right": "card"
-          },
-          {
-            "left": "знижка",
-            "right": "discount"
-          }
-        ],
-        "shuffleRight": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.045Z",
-      "modifiedAt": "2025-12-12T19:55:32.045Z"
-    },
-    {
-      "id": "act-a1-0-quiz-0",
-      "type": "quiz",
-      "title": "Café Scenarios",
-      "description": "Choose the correct response.",
-      "content": {
-        "type": "quiz",
-        "questions": [
-          {
-            "question": "The waiter asks \"Що замовите?\" You want coffee. You say:",
-            "options": [
-              "Каву, будь ласка.",
-              "Кава, будь ласка.",
-              "Кави, будь ласка.",
-              "Кавою, будь ласка."
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "You want a table for three. You say:",
-            "options": [
-              "Столик на трьох, будь ласка.",
-              "Столик три, будь ласка.",
-              "Три столики, будь ласка.",
-              "Столик для три."
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "You want coffee without sugar. You say:",
-            "options": [
-              "Каву без цукру.",
-              "Каву без цукор.",
-              "Каву не цукор.",
-              "Каву цукру без."
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "You want to pay by card. You say:",
-            "options": [
-              "Карткою.",
-              "Картка.",
-              "Карткою будь ласка.",
-              "Картки."
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "The waiter asks \"Ще щось?\" You're done ordering. You say:",
-            "options": [
-              "Ні, це все. Дякую.",
-              "Так, все.",
-              "Ні, щось.",
-              "Все ще."
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "You want to ask for the bill. You say:",
-            "options": [
-              "Рахунок, будь ласка.",
-              "Гроші, будь ласка.",
-              "Ціна, будь ласка.",
-              "Оплата, будь ласка."
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "You want coffee with milk. You say:",
-            "options": [
-              "Каву з молоком.",
-              "Каву і молоко.",
-              "Каву молоко.",
-              "Каву в молоці."
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Смачного!\" means:",
-            "options": [
-              "Enjoy your meal!",
-              "Goodbye!",
-              "Thank you!",
-              "You're welcome!"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "You want recommendations. You ask:",
-            "options": [
-              "Що порекомендуєте?",
-              "Що є?",
-              "Що робите?",
-              "Що маєте?"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "You want to pay separately. You say:",
-            "options": [
-              "Окремо, будь ласка.",
-              "Разом, будь ласка.",
-              "Один, будь ласка.",
-              "Два, будь ласка."
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Подвійний еспресо\" means:",
-            "options": [
-              "Double espresso",
-              "Single espresso",
-              "Large espresso",
-              "Cold espresso"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "You loved the food. You say:",
-            "options": [
-              "Було дуже смачно!",
-              "Було дуже гарно!",
-              "Було дуже добре!",
-              "Було дуже швидко!"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          }
-        ],
-        "shuffleQuestions": true,
-        "shuffleOptions": true,
-        "showCorrectAnswers": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.045Z",
-      "modifiedAt": "2025-12-12T19:55:32.045Z"
-    },
-    {
-      "id": "act-a1-0-groupsort-0",
-      "type": "group-sort",
-      "title": "Café Actions",
-      "description": "Sort phrases by dialogue stage.",
-      "content": {
-        "type": "group-sort",
-        "groups": [],
-        "shuffleItems": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.045Z",
-      "modifiedAt": "2025-12-12T19:55:32.045Z"
-    },
-    {
-      "id": "act-a1-0-truefalse-0",
-      "type": "true-false",
-      "title": "Café Culture",
-      "description": "Café Culture",
-      "content": {
-        "type": "true-false",
-        "statements": [
-          {
-            "statement": "\"Я візьму\" means \"I'll have/take.\"",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "Lviv is known for its café culture.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Рахунок\" means menu.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Без газу\" means without gas (still water).",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "Tipping is mandatory in Ukrainian cafés.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Столик на двох\" means a table for two.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Карткою\" means by card.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Смачного\" means goodbye.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "Coffee culture in Ukraine dates back centuries.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Готівкою\" means in cash.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Меню\" requires the genitive case.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "It's acceptable to sit for hours at a Ukrainian café.",
-            "isTrue": true,
-            "explanation": ""
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.045Z",
-      "modifiedAt": "2025-12-12T19:55:32.045Z"
-    },
-    {
-      "id": "act-a1-0-anagram-0",
-      "type": "anagram",
-      "title": "Café Words",
-      "description": "Unscramble these café words.",
-      "content": {
-        "type": "anagram",
-        "isAnagram": true,
-        "items": [
-          {
-            "letters": [
-              "а",
-              "в",
-              "а",
-              "к"
-            ],
-            "answer": "кава"
-          },
-          {
-            "letters": [
-              "ю",
-              "н",
-              "е",
-              "м"
-            ],
-            "answer": "меню"
-          },
-          {
-            "letters": [
-              "к",
-              "о",
-              "н",
-              "у",
-              "х",
-              "а",
-              "р"
-            ],
-            "answer": "рахунок"
-          },
-          {
-            "letters": [
-              "т",
-              "р",
-              "е",
-              "с",
-              "е",
-              "д"
-            ],
-            "answer": "десерт"
-          },
-          {
-            "letters": [
-              "к",
-              "а",
-              "т",
-              "р",
-              "а",
-              "к"
-            ],
-            "answer": "картка"
-          },
-          {
-            "letters": [
-              "я",
-              "н",
-              "л",
-              "е",
-              "н",
-              "в",
-              "а",
-              "м",
-              "о",
-              "з"
-            ],
-            "answer": "замовлення"
-          },
-          {
-            "letters": [
-              "т",
-              "н",
-              "а",
-              "і",
-              "ц",
-              "і",
-              "ф",
-              "о"
-            ],
-            "answer": "офіціант"
-          },
-          {
-            "letters": [
-              "к",
-              "и",
-              "л",
-              "о",
-              "т",
-              "с"
-            ],
-            "answer": "столик"
-          },
-          {
-            "letters": [
-              "о",
-              "н",
-              "ч",
-              "а",
-              "м",
-              "с"
-            ],
-            "answer": "смачно"
-          },
-          {
-            "letters": [
-              "а",
-              "к",
-              "в",
-              "і",
-              "т",
-              "о",
-              "г"
-            ],
-            "answer": "готівка"
-          },
-          {
-            "letters": [
-              "р",
-              "о",
-              "к",
-              "у",
-              "ц"
-            ],
-            "answer": "цукор"
-          },
-          {
-            "letters": [
-              "о",
-              "к",
-              "о",
-              "л",
-              "о",
-              "м"
-            ],
-            "answer": "молоко"
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.045Z",
-      "modifiedAt": "2025-12-12T19:55:32.045Z"
-    },
-    {
-      "id": "act-a1-0-fillblank-1",
-      "type": "fill-blank",
-      "title": "Complete the Order",
-      "description": "Complete the café dialogue.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "— Добрий день! Столик на ___? (one)",
-            "answer": "одного",
-            "options": [
-              "одного",
-              "один",
-              "одне",
-              "одну"
-            ]
-          },
-          {
-            "prompt": "— Можна ___? (menu)",
-            "answer": "меню",
-            "options": [
-              "меню",
-              "меня",
-              "менює",
-              "меноу"
-            ]
-          },
-          {
-            "prompt": "— Я ___ капучіно. (will take)",
-            "answer": "візьму",
-            "options": [
-              "візьму",
-              "беру",
-              "хочу",
-              "маю"
-            ]
-          },
-          {
-            "prompt": "— З цукром чи ___? (without)",
-            "answer": "без",
-            "options": [
-              "без",
-              "не",
-              "ні",
-              "не з"
-            ]
-          },
-          {
-            "prompt": "— ___ цукру, будь ласка. (Without)",
-            "answer": "Без",
-            "options": [
-              "Без",
-              "Не",
-              "Ні",
-              "Не з"
-            ]
-          },
-          {
-            "prompt": "— Ще ___? (anything)",
-            "answer": "щось",
-            "options": [
-              "щось",
-              "все",
-              "нічого",
-              "якось"
-            ]
-          },
-          {
-            "prompt": "— Ні, це ___. (all)",
-            "answer": "все",
-            "options": [
-              "все",
-              "всьо",
-              "усе",
-              "весь"
-            ]
-          },
-          {
-            "prompt": "— ___, будь ласка. (The bill)",
-            "answer": "Рахунок",
-            "options": [
-              "Рахунок",
-              "Меню",
-              "Гроші",
-              "Ціну"
-            ]
-          },
-          {
-            "prompt": "— 85 гривень. ___ чи готівкою? (By card)",
-            "answer": "Карткою",
-            "options": [
-              "Карткою",
-              "Картка",
-              "Карткі",
-              "Карткою"
-            ]
-          },
-          {
-            "prompt": "— ___. (By card)",
-            "answer": "Карткою",
-            "options": [
-              "Карткою",
-              "Картка",
-              "Наявку",
-              "Грошима"
-            ]
-          },
-          {
-            "prompt": "— Дякую, було дуже ___! (delicious)",
-            "answer": "смачно",
-            "options": [
-              "смачно",
-              "смачний",
-              "смачна",
-              "смачне"
-            ]
-          },
-          {
-            "prompt": "— До ___! (goodbye)",
-            "answer": "побачення",
-            "options": [
-              "побачення",
-              "зустрічі",
-              "завтра",
-              "вечора"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.045Z",
-      "modifiedAt": "2025-12-12T19:55:32.045Z"
-    },
-    {
-      "id": "act-a1-0-unjumble-0",
-      "type": "unjumble",
-      "title": "Build Café Sentences",
-      "description": "Arrange the words into correct sentences.",
-      "content": {
-        "type": "unjumble",
-        "isUnjumble": true,
-        "items": [
-          {
-            "words": [
-              "Столик",
-              "двох",
-              "на",
-              "будь",
-              "ласка"
-            ],
-            "answer": "Столик на двох, будь ласка."
-          },
-          {
-            "words": [
-              "візьму",
-              "я",
-              "каву"
-            ],
-            "answer": "Я візьму каву."
-          },
-          {
-            "words": [
-              "меню",
-              "можна"
-            ],
-            "answer": "Можна меню?"
-          },
-          {
-            "words": [
-              "цукру",
-              "без",
-              "латте"
-            ],
-            "answer": "Латте без цукру."
-          },
-          {
-            "words": [
-              "Рахунок",
-              "ласка",
-              "будь"
-            ],
-            "answer": "Рахунок, будь ласка."
-          },
-          {
-            "words": [
-              "смачно",
-              "дуже",
-              "було"
-            ],
-            "answer": "Було дуже смачно!"
-          },
-          {
-            "words": [
-              "порекомендуєте",
-              "що"
-            ],
-            "answer": "Що порекомендуєте?"
-          },
-          {
-            "words": [
-              "молоком",
-              "з",
-              "каву"
-            ],
-            "answer": "Каву з молоком."
-          },
-          {
-            "words": [
-              "карткою",
-              "готівкою",
-              "чи"
-            ],
-            "answer": "Карткою чи готівкою?"
-          },
-          {
-            "words": [
-              "це",
-              "все",
-              "ні"
-            ],
-            "answer": "Ні, це все."
-          },
-          {
-            "words": [
-              "замовляти",
-              "готові",
-              "ви"
-            ],
-            "answer": "Ви готові замовляти?"
-          },
-          {
-            "words": [
-              "дякую",
-              "допомогу",
-              "за"
-            ],
-            "answer": "Дякую за допомогу."
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.045Z",
-      "modifiedAt": "2025-12-12T19:55:32.045Z"
-    }
-  ],
+  "activities": [],
   "vocabulary": {
     "moduleId": "mod-uk-A1-19",
     "level": "A1",
     "phase": "A1.2",
-    "wordCount": 20,
-    "newWordCount": 20,
+    "wordCount": 24,
+    "newWordCount": 24,
     "reviewWordCount": 0,
-    "transliterationMode": "partial",
+    "transliterationMode": "vocab-only",
     "words": [
       {
-        "id": "v-stolyk-0-0",
+        "id": "vocab-1",
         "uk": "столик",
-        "en": "table",
+        "ipa": "/ˈstɔlɪk/",
+        "en": "table (small)",
         "pos": "noun",
-        "ipa": "/ˈstolɪk/",
-        "note": "на столик",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "m",
+        "note": "diminutive of стіл"
       },
       {
-        "id": "v-menyu-0-1",
+        "id": "vocab-2",
+        "uk": "порекомендувати",
+        "ipa": "/porɛkomɛnduˈvɑtɪ/",
+        "en": "to recommend",
+        "pos": "verb",
+        "gender": null,
+        "note": "perfective"
+      },
+      {
+        "id": "vocab-3",
+        "uk": "спробувати",
+        "ipa": "/sprobuˈvɑtɪ/",
+        "en": "to try",
+        "pos": "verb",
+        "gender": null,
+        "note": "perfective"
+      },
+      {
+        "id": "vocab-4",
+        "uk": "візьму",
+        "ipa": "/ˈvʲizʲmu/",
+        "en": "I'll take",
+        "pos": "verb",
+        "gender": null,
+        "note": "future of взяти"
+      },
+      {
+        "id": "vocab-5",
+        "uk": "принесіть",
+        "ipa": "/prɪnɛˈsʲitʲ/",
+        "en": "bring (imperative)",
+        "pos": "verb",
+        "gender": null,
+        "note": "perfective"
+      },
+      {
+        "id": "vocab-6",
+        "uk": "ще",
+        "ipa": "/ʃt͡ʃɛ/",
+        "en": "still, more, another",
+        "pos": "adverb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-7",
+        "uk": "достатньо",
+        "ipa": "/dosˈtɑtʲnʲo/",
+        "en": "enough",
+        "pos": "adverb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-8",
+        "uk": "все",
+        "ipa": "/fsɛ/",
+        "en": "everything, all",
+        "pos": "pronoun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-9",
+        "uk": "разом",
+        "ipa": "/ˈrɑzom/",
+        "en": "together",
+        "pos": "adverb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-10",
+        "uk": "окремо",
+        "ipa": "/ˈokrɛmo/",
+        "en": "separately",
+        "pos": "adverb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-11",
+        "uk": "рахунок",
+        "ipa": "/rɑˈxunok/",
+        "en": "check, bill",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-12",
         "uk": "меню",
+        "ipa": "/mɛˈnju/",
         "en": "menu",
         "pos": "noun",
-        "ipa": "/mɛˈnʲu/",
-        "note": "можна меню",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "n",
+        "note": ""
       },
       {
-        "id": "v-zamovyty-0-2",
-        "uk": "замовити",
+        "id": "vocab-13",
+        "uk": "замовляти",
+        "ipa": "/zɑmovˈlʲɑtɪ/",
         "en": "to order",
-        "pos": "noun",
-        "ipa": "/zɑˈmoʋɪtɪ/",
-        "note": "я замовлю",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "verb",
+        "gender": null,
+        "note": "imperfective"
       },
       {
-        "id": "v-zamovlennya-0-3",
-        "uk": "замовлення",
-        "en": "order",
-        "pos": "noun",
-        "ipa": "/zɑmoʋˈlɛnʲɑ/",
-        "note": "ваше замовлення",
-        "isNew": true,
-        "firstModule": 0
+        "id": "vocab-14",
+        "uk": "замовити",
+        "ipa": "/zɑˈmovɪtɪ/",
+        "en": "to order",
+        "pos": "verb",
+        "gender": null,
+        "note": "perfective"
       },
       {
-        "id": "v-ofitsiant-0-4",
+        "id": "vocab-15",
         "uk": "офіціант",
+        "ipa": "/ofʲit͡sʲiˈɑnt/",
         "en": "waiter",
         "pos": "noun",
-        "ipa": "/ofit͡siˈɑnt/",
-        "note": "офіціанте!",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-ofitsiantka-0-5",
+        "id": "vocab-16",
         "uk": "офіціантка",
+        "ipa": "/ofʲit͡sʲiˈɑntkɑ/",
         "en": "waitress",
         "pos": "noun",
-        "ipa": "/ofit͡siˈɑntkɑ/",
-        "note": "офіціантко!",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-rakhunok-0-6",
-        "uk": "рахунок",
-        "en": "bill",
+        "id": "vocab-17",
+        "uk": "чай",
+        "ipa": "/t͡ʃɑj/",
+        "en": "tea",
         "pos": "noun",
-        "ipa": "/rɑˈxunok/",
-        "note": "рахунок, будь ласка",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-chayovi-0-7",
-        "uk": "чайові",
-        "en": "tip",
+        "id": "vocab-18",
+        "uk": "кава",
+        "ipa": "/ˈkɑvɑ/",
+        "en": "coffee",
         "pos": "noun",
-        "ipa": "/t͡ʃɑjoˈʋi/",
-        "note": "залишити чайові",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-vizьmu-0-8",
-        "uk": "візьму",
-        "en": "I'll take",
+        "id": "vocab-19",
+        "uk": "круасан",
+        "ipa": "/kruɑˈsɑn/",
+        "en": "croissant",
         "pos": "noun",
-        "ipa": "/ˈʋizʲmu/",
-        "note": "я візьму",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-porekomenduyete-0-9",
-        "uk": "порекомендуєте",
-        "en": "you recommend",
-        "pos": "noun",
-        "ipa": "/porɛkomɛnˈdujɛtɛ/",
-        "note": "що порекомендуєте",
-        "isNew": true,
-        "firstModule": 0
+        "id": "vocab-20",
+        "uk": "смачно",
+        "ipa": "/ˈsmɑt͡ʃno/",
+        "en": "delicious (adverb)",
+        "pos": "adverb",
+        "gender": null,
+        "note": ""
       },
       {
-        "id": "v-prynesitь-0-10",
-        "uk": "принесіть",
-        "en": "bring (imp.)",
-        "pos": "noun",
-        "ipa": "/prɪnɛˈsitʲ/",
-        "note": "принесіть, будь ласка",
-        "isNew": true,
-        "firstModule": 0
+        "id": "vocab-21",
+        "uk": "чорний",
+        "ipa": "/ˈt͡ʃornɪj/",
+        "en": "black",
+        "pos": "adjective",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-hotovyy-0-11",
-        "uk": "готовий",
-        "en": "ready",
-        "pos": "noun",
-        "ipa": "/ɦoˈtoʋɪj/",
-        "note": "я готовий",
-        "isNew": true,
-        "firstModule": 0
+        "id": "vocab-22",
+        "uk": "трав'яний",
+        "ipa": "/trɑvʲˈjɑnɪj/",
+        "en": "herbal",
+        "pos": "adjective",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-okremo-0-12",
-        "uk": "окремо",
-        "en": "separately",
+        "id": "vocab-23",
+        "uk": "цукор",
+        "ipa": "/ˈt͡sukɔr/",
+        "en": "sugar",
         "pos": "noun",
-        "ipa": "/okˈrɛmo/",
-        "note": "окремо, будь ласка",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-razom-0-13",
-        "uk": "разом",
-        "en": "together",
+        "id": "vocab-24",
+        "uk": "молоко",
+        "ipa": "/moloˈko/",
+        "en": "milk",
         "pos": "noun",
-        "ipa": "/ˈrɑzom/",
-        "note": "разом, будь ласка",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-espreso-0-14",
-        "uk": "еспресо",
-        "en": "espresso",
-        "pos": "noun",
-        "ipa": "/ɛsˈprɛso/",
-        "note": "подвійний еспресо",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-kapuchino-0-15",
-        "uk": "капучіно",
-        "en": "cappuccino",
-        "pos": "noun",
-        "ipa": "/kɑpuˈt͡ʃino/",
-        "note": "один капучіно",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-latte-0-16",
-        "uk": "латте",
-        "en": "latte",
-        "pos": "noun",
-        "ipa": "/ˈlɑtɛ/",
-        "note": "латте з молоком",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-tistechko-0-17",
-        "uk": "тістечко",
-        "en": "pastry/cake",
-        "pos": "noun",
-        "ipa": "/tisˈtɛt͡ʃko/",
-        "note": "одне тістечко",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-desert-0-18",
-        "uk": "десерт",
-        "en": "dessert",
-        "pos": "noun",
-        "ipa": "/dɛˈsɛrt/",
-        "note": "на десерт",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-smachnoho-0-19",
-        "uk": "смачного",
-        "en": "enjoy your meal",
-        "pos": "noun",
-        "ipa": "/smɑt͡ʃˈnoɦo/",
-        "note": "—",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "n",
+        "note": ""
       }
-    ]
+    ],
+    "reviewWords": []
   }
 }

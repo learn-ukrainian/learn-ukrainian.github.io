@@ -28,6 +28,7 @@ from .activities import (
     check_matchup_misuse,
     check_activity_level_restrictions,
     check_activity_focus_alignment,
+    check_anagram_min_letters,
     count_items,
 )
 from .pedagogy import (
@@ -56,6 +57,7 @@ __all__ = [
     'check_matchup_misuse',
     'check_activity_level_restrictions',
     'check_activity_focus_alignment',
+    'check_anagram_min_letters',
     'count_items',
     # Pedagogy
     'run_pedagogical_checks',

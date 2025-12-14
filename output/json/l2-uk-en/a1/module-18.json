@@ -15,1165 +15,499 @@
     "pedagogy": "PPP",
     "immersionLevel": 0.3,
     "title": "Food & Shopping",
-    "subtitle": "Essential Food Vocabulary",
-    "description": "Learn essential food vocabulary",
+    "titleUk": null,
+    "subtitle": "Practical vocabulary for market and store",
+    "description": "Learner can order food items using accusative case",
     "objectives": [
-      "Learn essential food vocabulary",
-      "Use genitive in shopping contexts",
-      "Order food and drinks",
-      "Navigate a grocery store"
+      "Learner can order food items using accusative case",
+      "Learner can request quantities using genitive case",
+      "Learner can ask prices and make purchases",
+      "Learner can distinguish between food and non-food items"
     ],
+    "objectivesUk": null,
     "grammarFocus": [
-      "Accusative in \"I want X\"",
-      "Genitive for quantities",
-      "Shopping expressions"
+      "Accusative case for direct objects (review)",
+      "Genitive case for quantities (review)",
+      "Price questions with Скільки коштує"
     ],
     "tags": [
-      "vocabulary",
       "food",
       "shopping",
-      "everyday"
+      "vocabulary",
+      "accusative",
+      "genitive"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "partial",
+    "totalDuration": "60 min",
+    "transliterationMode": "vocab-only",
     "sections": [
       {
-        "id": "section-content-0",
-        "name": "Lesson",
+        "id": "section-1",
+        "name": "Food & Shopping",
+        "nameEn": null,
         "type": "content",
-        "content": "> **Note:** Food is life — and in Ukraine, food is culture! Learn the vocabulary that will let you shop, order, and enjoy Ukrainian cuisine.\n\n## Warm-up: At the Market\n\nUkrainian markets are vibrant places full of fresh produce, homemade goods, and friendly vendors. Imagine you're at a market and want to buy fruit. You need to know:\n\n- **Names of foods:** яблуко (apple), помідор (tomato), хліб (bread)\n- **Quantities:** кілограм, літр, шматок\n- **Key phrases:** Скільки коштує? Дайте, будь ласка...\n\nUkrainian cuisine is diverse and delicious! From the famous борщ (borscht) to вареники (dumplings), learning food vocabulary opens up a world of culinary experiences. Markets are also wonderful places to practice your Ukrainian — vendors are usually patient and appreciative when foreigners try to speak their language!\n\nThis module focuses on everyday food vocabulary that you'll use constantly. We'll cover basic food categories, shopping phrases, and the grammar you need to order and buy with confidence. By the end of this lesson, you'll be able to navigate any grocery store or market, ask about prices, specify quantities, and complete transactions in Ukrainian. This practical vocabulary will be useful every single day of your time in Ukraine!\n\nThe vocabulary in this module is organized by category for easy memorization. Learn the category names first, then add specific items. This method is proven to help language learners retain vocabulary more effectively than random word lists.\n\n> 💡 **Thinking Trick:** Organize food vocabulary by category: молочні (dairy), м'ясні (meat), овочі (vegetables), фрукти (fruits), напої (drinks).\n\n## Presentation: Food Categories\n\n### 1. Basic Food Groups\n\n**Молочні продукти (Dairy):**\n| Ukrainian | English |\n|-----------|---------|\n| молоко | milk |\n| сир | cheese |\n| масло | butter |\n| сметана | sour cream |\n| йогурт | yogurt |\n| кефір | kefir |\n\n**М'ясо та риба (Meat & Fish):**\n| Ukrainian | English |\n|-----------|---------|\n| м'ясо | meat |\n| курка | chicken |\n| свинина | pork |\n| яловичина | beef |\n| риба | fish |\n| ковбаса | sausage |\n\n**Овочі (Vegetables):**\n| Ukrainian | English |\n|-----------|---------|\n| картопля | potato |\n| морква | carrot |\n| цибуля | onion |\n| часник | garlic |\n| помідор | tomato |\n| огірок | cucumber |\n| капуста | cabbage |\n| буряк | beetroot |\n\n**Фрукти (Fruits):**\n| Ukrainian | English |\n|-----------|---------|\n| яблуко | apple |\n| банан | banana |\n| апельсин | orange |\n| виноград | grapes |\n| полуниця | strawberry |\n| груша | pear |\n\n### 2. Bakery & Basics\n\n| Ukrainian | English |\n|-----------|---------|\n| хліб | bread |\n| булка | roll |\n| батон | baguette |\n| яйце | egg |\n| борошно | flour |\n| цукор | sugar |\n| сіль | salt |\n| перець | pepper |\n| олія | oil |\n\n> 📜 **Pattern Summary:**\n> - **Dairy:** молочні продукти\n> - **Meat:** м'ясо, м'ясні\n> - **Vegetables:** овочі\n> - **Fruits:** фрукти\n> - **Beverages:** напої\n\n### 3. Drinks (Напої)\n\n| Ukrainian | English |\n|-----------|---------|\n| вода | water |\n| сік | juice |\n| кава | coffee |\n| чай | tea |\n| пиво | beer |\n| вино | wine |\n| компот | fruit drink |\n| мінералка | mineral water |\n\n> 💡 **Did You Know?** Борщ (borscht), the famous beetroot soup, is a UNESCO-recognized Ukrainian cultural heritage dish. It's more than food — it's a national symbol!\n\n### 4. Shopping Phrases\n\n**At the store:**\n| Ukrainian | English |\n|-----------|---------|\n| Скільки коштує? | How much does it cost? |\n| Дайте, будь ласка... | Give me, please... |\n| Один кілограм | One kilogram |\n| Пів кіло | Half a kilo |\n| Один літр | One liter |\n| Ще щось? | Anything else? |\n| Це все. | That's all. |\n| Рахунок, будь ласка. | The bill, please. |\n\n**Quantity words:**\n- кілограм (kg) — кілограм яблук\n- літр (L) — літр молока\n- шматок (piece) — шматок хліба\n- пляшка (bottle) — пляшка води\n- пакет (package) — пакет соку\n\n## Cultural Insight: Ukrainian Food Culture 🇺🇦\n\nUkrainian cuisine reflects the country's agricultural heritage. Some iconic dishes include:\n\n- **Борщ** — beetroot soup with cabbage, potatoes, and meat\n- **Вареники** — dumplings filled with potato, cheese, or cherries\n- **Голубці** — stuffed cabbage rolls\n- **Сало** — cured pork fat (a national delicacy)\n- **Пампушки** — garlic bread served with borscht\n\nUkrainians take hospitality seriously. If you visit a Ukrainian home, expect to be fed generously! Refusing food can be considered impolite, so learn to say \"Дуже смачно!\" (Very delicious!) even when you're full.\n\n> 📜 **Myth Buster:** Russian propaganda sometimes claims borscht as a \"Russian dish.\" In 2022, UNESCO officially recognized borscht as Ukrainian cultural heritage. The dish originated in Ukraine and has been central to Ukrainian cuisine for centuries!\n\n> 📜 **History Bite:** Ukraine is known as the \"breadbasket of Europe\" for its fertile black soil (чорнозем). Ukrainian wheat has fed millions throughout history. This agricultural wealth is reflected in the abundance of bread varieties and grain-based dishes in Ukrainian cuisine.\n\n## Reading Practice: На ринку 🛒\n\n**Українською:**\n\n— Добрий день! Почім картопля?\n— Двадцять гривень за кілограм.\n— Гарна ціна! Два кіло, будь ласка.\n— Ось, прошу. Ще щось?\n— Так, помідори. Вони свіжі?\n— Так, сьогоднішні! Тридцять гривень кіло.\n— Добре, один кілограм. І яблука — скільки?\n— Яблука — двадцять п'ять.\n— Півтора кілограми, будь ласка.\n— Усе разом — сто п'ять гривень.\n— Ось сто десять.\n— Ваша решта — п'ять гривень. Дякую!\n\n**English Translation:**\n\n— Good afternoon! How much are the potatoes?\n— Twenty hryvnias per kilogram.\n— Good price! Two kilos, please.\n— Here you go. Anything else?\n— Yes, tomatoes. Are they fresh?\n— Yes, from today! Thirty hryvnias per kilo.\n— Okay, one kilogram. And the apples — how much?\n— Apples are twenty-five.\n— One and a half kilograms, please.\n— Everything together is 105 hryvnias.\n— Here's 110.\n— Your change is five hryvnias. Thank you!\n\n**Comprehension check:** What did the customer buy? Calculate the total!\n\n## Conversation: У супермаркеті 🗣️\n\n**Покупець:** Вибачте, де молочні продукти?\n**Продавець:** Прямо, потім наліво. Другий ряд.\n**Покупець:** Дякую! А хліб?\n**Продавець:** Хліб — біля каси, справа.\n**Покупець:** А де я можу знайти овочі?\n**Продавець:** Овочі та фрукти — в кінці залу.\n**Покупець:** Супер, дякую за допомогу!\n\n**English Translation:**\n**Shopper:** Excuse me, where are dairy products?\n**Shop Assistant:** Straight, then left. Second aisle.\n**Shopper:** Thank you! And bread?\n**Shop Assistant:** Bread is near the checkout, on the right.\n**Shopper:** And where can I find vegetables?\n**Shop Assistant:** Vegetables and fruits are at the end of the hall.\n**Shopper:** Super, thank you for help!\n\nЗверни увагу: молочні продукти, хліб, овочі, фрукти — все це їжа!"
+        "content": "## Warm-up\n\nYou're in Kyiv, and your fridge is empty. Time to go shopping! In Ukraine, you have many choices: the **супермаркет** (supermarket), a traditional **ринок** (market), or small **магазини** (stores) scattered throughout every neighborhood. Each place has its own character and culture.\n\nToday, you'll learn how to navigate Ukrainian stores and cafés with confidence. You'll order food, ask for prices, and even do some everyday shopping beyond the grocery aisle.\n\n> 💡 **Did You Know?**\n>\n> Ukrainians love their **ринки** (markets)! Fresh produce, homemade cheeses, and seasonal fruits are sold by vendors who've been selling at the same spot for decades. It's not just shopping—it's a social experience. You greet the vendors, they remember your preferences, and you bargain a little. Try saying \"Скільки коштує?\" (How much is it?) at Besarabsky Market in Kyiv!\n\n## Presentation\n\n### Grammar Review: Accusative and Genitive Together\n\nYou've already learned the **accusative case** (M11: direct objects) and the **genitive case** (M16: absence and possession). Now you'll use BOTH in real shopping situations.\n\n**Патерн 1: Знахідний відмінок (Accusative for \"I want X\")**\n\nЯ хочу **каву**. (I want coffee.)\nВона бере **хліб**. (She takes bread.)\nМи купуємо **рибу**. (We buy fish.)\nТи візьмеш **салат**? (Will you take a salad?)\nВони купують **овочі**. (They buy vegetables.)\nЯ хочу **суп** та **хліб**. (I want soup and bread.)\n\n**Патерн 2: Родовий відмінок для кількості (Genitive for quantities)**\n\nСклянку **води**, будь ласка. (A glass **of water**, please.)\nКілограм **яблук**. (A kilogram **of apples**.)\nПачку **цукру**. (A pack **of sugar**.)\nПляшку **вина**. (A bottle **of wine**.)\nЧашку **кави**. (A cup **of coffee**.)\n\n**Патерн 3: Питання про ціну (Asking prices)**\n\nСкільки коштує **мило**? (How much is the soap?)\nСкільки коштує **сир**? (How much is the cheese?)\nСкільки коштує **хліб**? (How much is the bread?)\nСкільки коштує **кава**? (How much is the coffee?)\n\nNotice: After \"скільки коштує\" (how much is/does it cost?), the noun stays in **nominative** because the question is \"What costs how much?\"\n\n> 🌍 **Реальний світ: У супермаркеті (Real World: At the Supermarket)**\n>\n> Супермаркети в Україні працюють як у всьому світі. (Supermarkets in Ukraine work like everywhere in the world.) You grab a **пакет** (bag) or basket at the entrance, pick your items, and pay at the **каса** (checkout). Але є культурна порада: українські касири дуже швидкі! (But here's a cultural tip: Ukrainian cashiers are VERY fast!) Have your money ready! Багато магазинів мають ваги для овочів окремо. (Many stores have scales for vegetables separately.) Look for the digital scales in the produce section.\n\n> 💡 **Чи знаєте ви? (Did You Know?)**\n>\n> Популярні українські супермаркети: **Сільпо** (Silpo), **АТБ** (ATB), **Новус** (Novus), **Фора** (Fora). (Popular Ukrainian supermarkets: Silpo, ATB, Novus, Fora.) Кожен має свою атмосферу! (Each has its own atmosphere!) ATB is budget-friendly, Silpo is mid-range with good quality, and Novus is more upscale. Де ви любите робити покупки? (Where do you like to shop?)\n\n### Vocabulary Groups\n\nLet's organize the vocabulary into practical categories you'll encounter when shopping.\n\n**Їжа (Food Items)**\n\n| Українською | What It Means |\n|-------------|---------------|\n| Я хочу **страву**. | I want a dish. |\n| Це **закуска**. | This is an appetizer. |\n| **Борщ** дуже смачний. | Borscht is very tasty. |\n| У меню є **десерт**? | Is there dessert on the menu? |\n| **М'ясо** свіже. | The meat is fresh. |\n| **Овочі** тут дешеві. | Vegetables are cheap here. |\n\n**Напої (Beverages)**\n\n| Українською | What It Means |\n|-------------|---------------|\n| Склянку **води**, будь ласка. | A glass of water, please. |\n| **Кава** чи **чай**? | Coffee or tea? |\n| **Сік** апельсиновий. | Orange juice. |\n| Пляшку **вина**. | A bottle of wine. |\n| **Пиво** холодне. | The beer is cold. |\n\n**Продукти (Basic Groceries)**\n\n| Українською | What It Means |\n|-------------|---------------|\n| Я купую **хліб**. | I buy bread. |\n| **Сир** дуже смачний. | The cheese is very tasty. |\n| **Яйця** в холодильнику. | Eggs are in the fridge. |\n| **Картопля** свіжа. | The potatoes are fresh. |\n| **Курка** дешева. | The chicken is cheap. |\n\n**Інше (Non-Food Items)**\n\n| Українською | What It Means |\n|-------------|---------------|\n| Скільки коштує **мило**? | How much is the soap? |\n| Я шукаю **зубну пасту**. | I'm looking for toothpaste. |\n| Я хочу **ручку**. | I want a pen. |\n| Де **папір**? | Where is paper? |\n| **Шампунь** дорогий. | The shampoo is expensive. |\n\n> 🎬 **Pop Culture Moment: S.T.A.L.K.E.R. – Grocery Run Edition**\n>\n> In the iconic Ukrainian game *S.T.A.L.K.E.R.*, your character scavenges for supplies in the Chornobyl zone. Imagine if you could just go to a **магазин** instead! \"Я хочу **консерви** та **хліб**!\" (I want canned food and bread!). Sadly, no cashiers in the Zone—just mutants and radiation. Real-life Ukrainian stores are much friendlier, we promise.\n\n## Practice\n\n### Mini-Dialogue 1: At the Café\n\n**Context:** Марія and Іван are at a cozy café in Lviv.\n\n— Що ти будеш замовляти? (What will you order?)\n— Я візьму **каву** та **десерт**. А ти? (I'll take coffee and dessert. And you?)\n— Я хочу **чай** та **салат**, будь ласка. (I want tea and salad, please.)\n— **Офіціант**! Можна **меню**? (Waiter! Can we have the menu?)\n— Так, зараз принесу. (Yes, I'll bring it now.)\n\n> **Grammar Note:** Візьму = \"I'll take\" (future tense, perfective). Don't worry about aspect yet—just learn it as a useful phrase for ordering.\n\n### Mini-Dialogue 2: At the Store\n\n**Context:** Олег is buying groceries at a neighborhood магазин.\n\n— Добрий день! Скільки коштує **хліб**? (Good day! How much is the bread?)\n— 25 гривень. (25 hryvnias.)\n— Добре. Ще **молоко** та **сир**. (Good. Also milk and cheese.)\n— Разом 120 гривень. (120 hryvnias total.)\n— Ось **гроші**. Дякую! (Here's the money. Thank you!)\n— Дякую! До побачення! (Thank you! Goodbye!)\n\n> **Cultural Tip:** In small Ukrainian stores, it's polite to greet the **продавець** (salesperson) when you enter and say \"Дякую, до побачення\" when you leave—even if you don't buy anything!\n\n### Mini-Dialogue 3: Asking for Help\n\n**Context:** Anna is looking for hygiene products at a супермаркет.\n\n— Вибачте, де **мило** та **шампунь**? (Excuse me, where are soap and shampoo?)\n— Другий поверх, секція \"Гігієна\". (Second floor, \"Hygiene\" section.)\n— А **зубна паста** там теж? (Is toothpaste there too?)\n— Так, все там. (Yes, everything is there.)\n— Дякую! (Thank you!)\n\n### Mini-Dialogue 4: At the Market\n\n**Context:** Petro is shopping at a Kyiv ринок (market).\n\n— Добрий день! Скільки коштує **картопля**? (Good day! How much are the potatoes?)\n— Двадцять гривень кілограм. Дуже свіжа! (Twenty hryvnias per kilogram. Very fresh!)\n— Добре. Я візьму два кілограми. (Good. I'll take two kilograms.)\n— А **овочі**? **Помідори** дуже смачні! (And vegetables? The tomatoes are very tasty!)\n— Ні, дякую. Тільки **картопля**. (No, thank you. Just potatoes.)\n— Сорок гривень, будь ласка. (Forty hryvnias, please.)\n— Ось гроші. Дякую! (Here's the money. Thank you!)\n— Дякую! Хорошого дня! (Thank you! Have a good day!)\n\n> 🎯 **Fun Fact: Supermarket Floors**\n>\n> Larger Ukrainian супермаркети often have multiple floors. Food is usually on the ground floor (перший поверх), and household goods upstairs. Escalators often have flat sections—perfect for rolling shopping carts up!\n\n## Production\n\n### Usage Patterns: How to Order Like a Local\n\n**У ресторані/кафе (At a restaurant/café):**\n1. **Привіт! Можна меню?** (Hi! Can I have the menu?)\n2. **Я візьму...** (I'll take...)\n3. **Рахунок, будь ласка.** (The bill, please.)\n4. **Смачного!** (Enjoy your meal!)\n5. **Було дуже смачно!** (It was very tasty!)\n\n**У магазині (At a store):**\n1. **Скільки коштує [item]?** (How much is [item]?)\n2. **Я хочу [item], будь ласка.** (I want [item], please.)\n3. **Ще щось?** — **Ні, дякую, все.** (Anything else? — No, thank you, that's all.)\n4. **Де овочі?** (Where are the vegetables?)\n5. **Це свіже?** (Is this fresh?)\n\n**Поширені помилки (Common mistakes):**\n- ❌ \"Я хочу кава\" → ✅ \"Я хочу **каву**\" (знахідний відмінок! / accusative!)\n- ❌ \"Скільки є хліб?\" → ✅ \"Скільки **коштує** хліб?\" (використовуйте \"коштує\" для ціни / use \"коштує\" for price)\n- ❌ \"Одна вода\" → ✅ \"Склянку **води**\" (родовий відмінок для кількості / genitive for quantities)\n- ❌ \"Каса там\" → ✅ \"Каса там?\" (не забувайте знак питання! / don't forget the question mark!)\n- ❌ \"Хліб дорого\" → ✅ \"Хліб дорогий\" (дорогий = прикметник / expensive = adjective)\n\n### Real-World Scenarios\n\n**Scenario 1: Ordering Lunch**\n\nYou're at a Ukrainian **їдальня** (canteen). The menu board lists: борщ (30 грн), вареники (45 грн), салат (25 грн), компот (15 грн).\n\nWhat you say:\n\"Добрий день! Я візьму **борщ**, **вареники** та **компот**. Скільки разом?\"\n\n**Scenario 2: Grocery Shopping**\n\nYou need: bread, milk, eggs, cheese. You're at a **магазин** near your apartment.\n\nWhat you say:\n\"Я хочу **хліб**, **молоко**, десять **яєць** та **сир**, будь ласка.\"\n\n**Scenario 3: Buying Supplies**\n\nYou're a student and need: notebook, 2 pens, paper.\n\nWhat you say:\n\"Я хочу **зошит**, дві **ручки** та **папір**.\"\n\n> 📜 **History Bite: Ukrainian Cuisine Heritage**\n>\n> Ukrainian food culture is ancient! Borsch appears in 16th-century cookbooks. Varenyky (dumplings) have been a staple for centuries. During Soviet times, Ukrainian dishes were often rebranded as \"Russian,\" but they originated in Ukrainian villages and Cossack kitchens. Today, UNESCO recognizes Ukrainian **borsch culture** as endangered heritage (2022), protecting its authenticity.\n\n## Cultural Insight\n\n### The Ukrainian Shopping Experience\n\n**Markets vs. Supermarkets**\n\n**Ринок (Market):**\n- Fresh, seasonal produce\n- Personal relationships with vendors\n- Bargaining is acceptable\n- Cash only, usually\n- Open mornings (7 AM–2 PM peak)\n\n**Супермаркет:**\n- Western-style shopping\n- Fixed prices\n- Card payments accepted\n- Open late (some 24/7)\n- Self-service\n\n**Local магазин:**\n- Neighborhood stores\n- Personal service (you ask, they get it)\n- Good for quick purchases\n- Often family-run\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Ukrainians only shop at markets.\"\n> **Fact:** While traditional **ринки** remain popular—especially for fresh produce—modern Ukrainians shop at supermarkets like Silpo, ATB, and Novus just like people everywhere. The mix of old and new is what makes Ukrainian shopping culture unique!\n\n### Food as Identity\n\nFor Ukrainians, food is deeply connected to **identity** and **home**. Борщ isn't just soup—it's a symbol of family, tradition, and survival. During the Holodomor (1932-33 famine-genocide), millions of Ukrainians starved while grain was exported. Today, every bowl of borsch carries that historical memory.\n\nWhen you order Ukrainian food, you're participating in a living tradition that survived empires, wars, and attempts to erase it.\n\n**Українська кухня (Ukrainian cuisine):**\n- **Борщ** – червоний суп (beet soup with sour cream)\n- **Вареники** – дуже смачно! (dumplings: potato, cheese, or cherry)\n- **Сало** – національна страва (cured pork fat, a delicacy!)\n- **Голубці** – рис у капусті (cabbage rolls with rice)\n- **Деруни** – картопляна страва (potato pancakes)\n- **Сирники** – сирна страва (cheese pancakes)\n- **Холодець** – традиційна страва (meat jelly)\n- **Пампушки** – дуже смачно! (garlic rolls with borscht)\n\n> 🎭 **Folklore Corner: Bread as Sacred**\n>\n> In Ukrainian tradition, **хліб** (bread) is sacred. Guests are greeted with **хліб-сіль** (bread and salt) as a sign of hospitality. Dropping bread on the floor requires picking it up and kissing it as an apology. This reverence comes from centuries of agricultural culture where grain was life itself.\n\n---"
       },
       {
-        "id": "section-summary-1",
-        "name": "Підсумок",
-        "nameEn": "Summary",
+        "id": "section-2",
+        "name": "Summary",
+        "nameEn": null,
         "type": "summary",
-        "content": "**Food & Shopping: Essential Vocabulary**\n\n1. **Food categories:** молочні, м'ясо, овочі, фрукти, напої\n2. **Key question:** Скільки коштує? / Почім...?\n3. **Ordering:** Дайте, будь ласка...\n4. **Quantities:** кілограм, літр, шматок, пляшка\n5. **Iconic dish:** борщ (UNESCO Ukrainian heritage)\n\n---\n\n> [!tip] 🌟 **Pro Tip:** At markets, you can negotiate! \"Може, дешевше?\" (Maybe cheaper?) is perfectly acceptable for vegetables and fruits.\n\n\n---\n\n\n---\n\n> [!tip] 🌟 **Bonus:** \"Смачного!\" (Enjoy your meal!) — Say this before eating!"
+        "content": "You've learned how to navigate Ukrainian food and shopping contexts using **accusative** (direct objects) and **genitive** (quantities) cases. You can now:\n\n- Order food and drinks at a café or restaurant\n- Ask prices and buy groceries\n- Request quantities (a glass of..., a kilo of...)\n- Distinguish between food and non-food vocabulary\n- Understand Ukrainian shopping culture (markets, stores, supermarkets)\n\n**Key phrases to remember:**\n- Я хочу... (I want...)\n- Скільки коштує...? (How much is...?)\n- Я візьму... (I'll take...)\n- Рахунок, будь ласка. (The bill, please.)\n\n**Cultural insights gained:**\n- Markets vs. supermarkets in Ukraine\n- Bread as sacred in Ukrainian culture\n- Food as identity and historical memory\n- How to shop like a local\n\nNext module (M19: At the Café), you'll practice full café dialogues using all the cases you've learned!\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| страва | /ˈstrɑwɑ/ | dish | noun | f | |\n| закуска | /zɑˈkuskɑ/ | appetizer | noun | f | |\n| салат | /sɑˈlɑt/ | salad | noun | m | |\n| суп | /sup/ | soup | noun | m | |\n| борщ | /bɔrʃt͡ʃ/ | borscht | noun | m | |\n| десерт | /dɛˈsɛrt/ | dessert | noun | m | |\n| напій | /nɑˈpij/ | beverage | noun | m | |\n| кава | /ˈkɑwɑ/ | coffee | noun | f | |\n| чай | /t͡ʃɑj/ | tea | noun | m | |\n| сік | /sik/ | juice | noun | m | |\n| вода | /wɔˈdɑ/ | water | noun | f | |\n| вино | /wɪˈnɔ/ | wine | noun | n | |\n| пиво | /ˈpɪwɔ/ | beer | noun | n | |\n| м'ясо | /ˈmjɑsɔ/ | meat | noun | n | |\n| курка | /ˈkurkɑ/ | chicken | noun | f | |\n| риба | /ˈrɪbɑ/ | fish | noun | f | |\n| овочі | /ˈɔwɔt͡ʃi/ | vegetables | noun | pl | |\n| картопля | /kɑrˈtɔplʲɑ/ | potato | noun | f | |\n| хліб | /xlib/ | bread | noun | m | |\n| сир | /sɪr/ | cheese | noun | m | |\n| яйце | /ˈjɑjt͡sɛ/ | egg | noun | n | |\n| смачний | /ˈsmɑt͡ʃnɪj/ | tasty | adj | m | |\n| меню | /mɛˈnju/ | menu | noun | n | |\n| офіціант | /ɔfit͡siˈɑnt/ | waiter | noun | m | |\n| офіціантка | /ɔfit͡siˈɑntkɑ/ | waitress | noun | f | |\n| рахунок | /rɑˈxunɔk/ | bill/check | noun | m | |\n| мило | /ˈmɪlɔ/ | soap | noun | n | |\n| шампунь | /ʃɑmˈpunʲ/ | shampoo | noun | m | |\n| зубна паста | /ˈzubnɑ ˈpɑstɑ/ | toothpaste | noun | f | |\n| папір | /pɑˈpir/ | paper | noun | m | |\n| ручка | /ˈrut͡ʃkɑ/ | pen | noun | f | |\n| олівець | /ɔˈliwɛt͡sʲ/ | pencil | noun | m | |\n| зошит | /ˈzɔʃɪt/ | notebook | noun | m | |\n| купувати | /kupuˈwɑtɪ/ | to buy | verb | - | купую, купуєш |\n| супермаркет | /supɛrˈmɑrkɛt/ | supermarket | noun | m | |\n| магазин | /mɑɦɑˈzɪn/ | store | noun | m | |\n| пакет | /pɑˈkɛt/ | bag | noun | m | |\n| каса | /ˈkɑsɑ/ | checkout | noun | f | |\n| продавець | /prɔdɑˈwɛt͡sʲ/ | salesperson (m) | noun | m | |\n| продавчиня | /prɔdɑwˈt͡ʃɪnʲɑ/ | salesperson (f) | noun | f | |\n| ціна | /t͡siˈnɑ/ | price | noun | f | |\n| знижка | /ˈznɪʒkɑ/ | discount | noun | f | |\n| дорого | /ˈdɔrɔɦɔ/ | expensive | adv | - | |\n| дешево | /dɛˈʃɛwɔ/ | cheap | adv | - | |\n| відчинено | /widt͡ʃɪˈnɛnɔ/ | open | adv | - | |\n| зачинено | /zɑt͡ʃɪˈnɛnɔ/ | closed | adv | - | |\n| свіжий | /ˈswʲiʒɪj/ | fresh | adj | m | |\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Food & Drinks Vocabulary\n> Match the Ukrainian words with their English meanings.\n\n| Ukrainian | English |\n|-----------|---------|\n| кава | coffee |\n| чай | tea |\n| вода | water |\n| сік | juice |\n| хліб | bread |\n| м'ясо | meat |\n| риба | fish |\n| сир | cheese |\n| яйце | egg |\n| салат | salad |\n| борщ | borscht |\n| десерт | dessert |\n\n## fill-in: Shopping Phrases\n> Fill in the blank with the correct word.\n\n1. Скільки ___ хліб? (How much is bread?)\n   > [!answer] коштує\n   > [!options] коштує | є | має | бере\n\n2. Я ___ каву. (I want coffee.)\n   > [!answer] хочу\n   > [!options] хочу | хоче | хочеш | хочуть\n\n3. Я хочу ___, будь ласка. (I want bread, please.)\n   > [!answer] хліб\n   > [!options] хліб | хліба | хлібу | хлібом\n\n4. Склянку ___, будь ласка. (A glass of water, please.)\n   > [!answer] води\n   > [!options] води | вода | воду | водою\n\n5. Ми ___ овочі. (We buy vegetables.)\n   > [!answer] купуємо\n   > [!options] купуємо | купую | купуєш | купує\n\n6. ___, будь ласка. (The bill, please.)\n   > [!answer] Рахунок\n   > [!options] Рахунок | Рахунку | Рахунком | Рахунки\n\n7. У меню є ___? (Is there dessert on the menu?)\n   > [!answer] десерт\n   > [!options] десерт | десерту | десерті | десертом\n\n8. Я шукаю зубну ___. (I'm looking for toothpaste.)\n   > [!answer] пасту\n   > [!options] пасту | паста | пасти | пастою\n\n9. Я хочу ___. (I want a pen.)\n   > [!answer] ручку\n   > [!options] ручку | ручка | ручки | ручкою\n\n10. Магазин ___ о восьмій. (The store opens at 8.)\n    > [!answer] відчинено\n    > [!options] відчинено | зачинено | відчиняє | зачиняє\n\n11. Це дуже ___. (This is very expensive.)\n    > [!answer] дорого\n    > [!options] дорого | дешево | коштує | ціна\n\n12. Я візьму ___ та салат. (I'll take soup and salad.)\n    > [!answer] суп\n    > [!options] суп | супу | супом | супи\n\n## group-sort: Food vs Non-Food Items\n> Sort these items into food and non-food categories.\n\n### Food Items\n- кава\n- хліб\n- м'ясо\n- сир\n- овочі\n- борщ\n- риба\n- яйце\n\n### Non-Food Items\n- мило\n- шампунь\n- зубна паста\n- папір\n- ручка\n- олівець\n- зошит\n- пакет\n\n## quiz: Shopping Situations\n> Choose the correct answer.\n\n1. You want to ask the price of cheese. What do you say?\n   - [ ] Скільки є сир?\n   - [x] Скільки коштує сир?\n   - [ ] Який сир?\n   - [ ] Чому сир?\n   > \"Скільки коштує?\" = \"How much does it cost?\"\n\n2. How do you order coffee in accusative case?\n   - [ ] Я хочу кава.\n   - [x] Я хочу каву.\n   - [ ] Я хочу кави.\n   - [ ] Я хочу кавою.\n   > Feminine -а becomes -у in accusative: кава → каву\n\n3. What does \"офіціант\" mean?\n   - [ ] office\n   - [x] waiter\n   - [ ] official\n   - [ ] restaurant\n   > офіціант = waiter (masculine)\n\n4. You want to ask for the bill. What do you say?\n   - [ ] Меню, будь ласка.\n   - [ ] Вода, будь ласка.\n   - [x] Рахунок, будь ласка.\n   - [ ] Гроші, будь ласка.\n   > Рахунок = bill/check\n\n5. Which word means \"cheap\"?\n   - [ ] дорого\n   - [x] дешево\n   - [ ] ціна\n   - [ ] знижка\n   > дешево = cheap (adverb)\n\n6. How do you say \"a glass of water\" using genitive?\n   - [ ] Склянка вода\n   - [ ] Склянку воду\n   - [x] Склянку води\n   - [ ] Склянка води\n   > Genitive for quantities: вода → води\n\n7. Where do you pay at a supermarket?\n   - [ ] магазин\n   - [ ] пакет\n   - [x] каса\n   - [ ] супермаркет\n   > каса = checkout/cashier\n\n8. What does \"відчинено\" mean?\n   - [ ] closed\n   - [x] open\n   - [ ] expensive\n   - [ ] cheap\n   > відчинено = open (adverb)\n\n9. Which is NOT a beverage?\n   - [ ] кава\n   - [ ] чай\n   - [ ] сік\n   - [x] хліб\n   > хліб = bread (not a drink)\n\n10. You're buying groceries. What do you say?\n    - [ ] Я читаю хліб.\n    - [x] Я купую хліб.\n    - [ ] Я пишу хліб.\n    - [ ] Я бачу хліб.\n    > купувати = to buy\n\n11. Which word means \"tasty\"?\n    - [ ] страва\n    - [x] смачний\n    - [ ] меню\n    - [ ] закуска\n    > смачний = tasty (adjective)\n\n12. How do you say \"I'll take bread, please\"?\n    - [ ] Я хочу хліб, будь ласка.\n    - [x] Я візьму хліб, будь ласка.\n    - [ ] Я читаю хліб, будь ласка.\n    - [ ] Скільки коштує хліб?\n    > \"Я візьму...\" = \"I'll take...\"\n\n## true-false: Shopping Culture\n> Decide if each statement is true or false.\n\n- [x] Ukrainian markets (ринки) are popular for fresh produce.\n  > Correct! Markets remain a beloved shopping tradition.\n\n- [ ] You should never greet the salesperson in a small Ukrainian store.\n  > Incorrect! It's polite to greet them when entering and leaving.\n\n- [x] \"Скільки коштує?\" means \"How much does it cost?\"\n  > Correct! This is the standard phrase for asking prices.\n\n- [ ] Bread (хліб) has no cultural significance in Ukraine.\n  > Incorrect! Bread is sacred in Ukrainian culture (хліб-сіль tradition).\n\n- [x] Ukrainian supermarkets often have multiple floors.\n  > Correct! Larger stores put food downstairs, household goods upstairs.\n\n- [ ] You use accusative case for quantities like \"a glass of water.\"\n  > Incorrect! You use genitive: \"склянку води\" (genitive of вода).\n\n- [x] UNESCO recognizes Ukrainian borsch culture as endangered heritage.\n  > Correct! This recognition came in 2022.\n\n- [ ] \"Дешево\" means \"expensive.\"\n  > Incorrect! Дешево = cheap. Дорого = expensive.\n\n- [x] \"Каса\" is where you pay at a supermarket.\n  > Correct! Каса = checkout/cashier.\n\n- [ ] Ukrainians only use cash, never cards.\n  > Incorrect! Modern supermarkets accept card payments.\n\n- [x] \"Офіціантка\" is the feminine form of \"waiter.\"\n  > Correct! офіціант (m), офіціантка (f).\n\n- [ ] It's rude to ask \"Ще щось?\" (Anything else?) in a store.\n  > Incorrect! This is a standard polite question from salespeople.\n\n## unjumble: Shopping Sentences\n> Put the words in the correct order to form sentences.\n\n1. хочу / Я / каву\n   > [!answer] Я хочу каву.\n   > (I want coffee.) [3 words]\n\n2. коштує / Скільки / хліб\n   > [!answer] Скільки коштує хліб?\n   > (How much is bread?) [3 words]\n\n3. візьму / Я / будь ласка / сир\n   > [!answer] Я візьму сир, будь ласка.\n   > (I'll take cheese, please.) [5 words]\n\n4. води / Склянку / будь ласка\n   > [!answer] Склянку води, будь ласка.\n   > (A glass of water, please.) [4 words]\n\n5. купуємо / Ми / овочі / та / м'ясо\n   > [!answer] Ми купуємо овочі та м'ясо.\n   > (We buy vegetables and meat.) [5 words]\n\n6. є / меню / У / десерт\n   > [!answer] У меню є десерт?\n   > (Is there dessert on the menu?) [4 words]\n\n7. Рахунок / будь ласка\n   > [!answer] Рахунок, будь ласка.\n   > (The bill, please.) [3 words]\n\n8. дуже / Борщ / смачний\n   > [!answer] Борщ дуже смачний.\n   > (Borscht is very tasty.) [3 words]\n\n9. шукаю / Я / зубну / пасту\n   > [!answer] Я шукаю зубну пасту.\n   > (I'm looking for toothpaste.) [4 words]\n\n10. магазин / де / Вибачте\n    > [!answer] Вибачте, де магазин?\n    > (Excuse me, where is the store?) [4 words]\n\n11. візьму / Я / суп / та / салат\n    > [!answer] Я візьму суп та салат.\n    > (I'll take soup and salad.) [5 words]\n\n12. відчинено / Магазин / о / восьмій\n    > [!answer] Магазин відчинено о восьмій.\n    > (The store opens at 8.) [4 words]\n\n## match-up: Non-Food Items\n> Match items with their English meanings.\n\n| Ukrainian | English |\n|-----------|---------|\n| мило | soap |\n| шампунь | shampoo |\n| зубна паста | toothpaste |\n| папір | paper |\n| ручка | pen |\n| олівець | pencil |\n| зошит | notebook |\n| пакет | bag |\n| каса | checkout |\n| продавець | salesperson |\n| супермаркет | supermarket |\n| магазин | store |\n\n## fill-in: Café Dialogue\n> Complete the café conversation with the correct words.\n\n1. — Що ти будеш ___? (What will you order?)\n   > [!answer] замовляти\n   > [!options] замовляти | замовити | замовляє | замовляю\n\n2. — Я візьму каву та ___. (I'll take coffee and dessert.)\n   > [!answer] десерт\n   > [!options] десерт | десерту | десерті | десертом\n\n3. — Я хочу чай та ___, будь ласка. (I want tea and salad, please.)\n   > [!answer] салат\n   > [!options] салат | салату | салаті | салатом\n\n4. — ___! Можна меню? (Waiter! Can we have the menu?)\n   > [!answer] Офіціант\n   > [!options] Офіціант | Офіціанта | Офіціанту | Офіціантом\n\n5. — Так, ___ принесу. (Yes, I'll bring it now.)\n   > [!answer] зараз\n   > [!options] зараз | потім | вчора | завтра\n\n6. — Скільки коштує ___? (How much is the soup?)\n   > [!answer] суп\n   > [!options] суп | супу | супом | супи\n\n7. — ___ 45 гривень. (Together 45 hryvnias.)\n   > [!answer] Разом\n   > [!options] Разом | Окремо | Скільки | Ціна\n\n8. — ___, будь ласка. (The bill, please.)\n   > [!answer] Рахунок\n   > [!options] Рахунок | Меню | Каву | Чай\n\n9. — Ось ___. Дякую! (Here's the money. Thank you!)\n   > [!answer] гроші\n   > [!options] гроші | грошей | грошам | грошима\n\n10. — Дякую! ___ побачення! (Thank you! Goodbye!)\n    > [!answer] До\n    > [!options] До | Від | На | У\n\n11. — Це дуже ___. (This is very tasty.)\n    > [!answer] смачно\n    > [!options] смачно | смачний | смачна | смачне\n\n12. — Пляшку ___, будь ласка. (A bottle of wine, please.)\n    > [!answer] вина\n    > [!options] вина | вино | виною | вину\n\n## group-sort: Beverages vs Food vs Items\n> Sort these words into three categories.\n\n### Beverages (Напої)\n- кава\n- чай\n- сік\n- вода\n- вино\n- пиво\n\n### Food (Їжа)\n- хліб\n- сир\n- м'ясо\n- риба\n- овочі\n- яйце\n- борщ\n- салат\n\n### Store Items (Товари)\n- мило\n- шампунь\n- зубна паста\n- папір\n- ручка\n- олівець\n- зошит\n- пакет"
       }
     ],
-    "rawMarkdown": "---\ntitle: \"Food & Shopping\"\nsubtitle: \"Essential Food Vocabulary\"\nphase: A1.2\ntransliteration: partial\npedagogy: PPP\nduration: 45\ntags: [vocabulary, food, shopping, everyday]\nobjectives:\n  - Learn essential food vocabulary\n  - Use genitive in shopping contexts\n  - Order food and drinks\n  - Navigate a grocery store\ngrammar:\n  - Accusative in \"I want X\"\n  - Genitive for quantities\n  - Shopping expressions\naudio: false\n---\n\n# Food & Shopping\n\n> **Note:** Food is life — and in Ukraine, food is culture! Learn the vocabulary that will let you shop, order, and enjoy Ukrainian cuisine.\n\n## Warm-up: At the Market\n\nUkrainian markets are vibrant places full of fresh produce, homemade goods, and friendly vendors. Imagine you're at a market and want to buy fruit. You need to know:\n\n- **Names of foods:** яблуко (apple), помідор (tomato), хліб (bread)\n- **Quantities:** кілограм, літр, шматок\n- **Key phrases:** Скільки коштує? Дайте, будь ласка...\n\nUkrainian cuisine is diverse and delicious! From the famous борщ (borscht) to вареники (dumplings), learning food vocabulary opens up a world of culinary experiences. Markets are also wonderful places to practice your Ukrainian — vendors are usually patient and appreciative when foreigners try to speak their language!\n\nThis module focuses on everyday food vocabulary that you'll use constantly. We'll cover basic food categories, shopping phrases, and the grammar you need to order and buy with confidence. By the end of this lesson, you'll be able to navigate any grocery store or market, ask about prices, specify quantities, and complete transactions in Ukrainian. This practical vocabulary will be useful every single day of your time in Ukraine!\n\nThe vocabulary in this module is organized by category for easy memorization. Learn the category names first, then add specific items. This method is proven to help language learners retain vocabulary more effectively than random word lists.\n\n> 💡 **Thinking Trick:** Organize food vocabulary by category: молочні (dairy), м'ясні (meat), овочі (vegetables), фрукти (fruits), напої (drinks).\n\n## Presentation: Food Categories\n\n### 1. Basic Food Groups\n\n**Молочні продукти (Dairy):**\n| Ukrainian | English |\n|-----------|---------|\n| молоко | milk |\n| сир | cheese |\n| масло | butter |\n| сметана | sour cream |\n| йогурт | yogurt |\n| кефір | kefir |\n\n**М'ясо та риба (Meat & Fish):**\n| Ukrainian | English |\n|-----------|---------|\n| м'ясо | meat |\n| курка | chicken |\n| свинина | pork |\n| яловичина | beef |\n| риба | fish |\n| ковбаса | sausage |\n\n**Овочі (Vegetables):**\n| Ukrainian | English |\n|-----------|---------|\n| картопля | potato |\n| морква | carrot |\n| цибуля | onion |\n| часник | garlic |\n| помідор | tomato |\n| огірок | cucumber |\n| капуста | cabbage |\n| буряк | beetroot |\n\n**Фрукти (Fruits):**\n| Ukrainian | English |\n|-----------|---------|\n| яблуко | apple |\n| банан | banana |\n| апельсин | orange |\n| виноград | grapes |\n| полуниця | strawberry |\n| груша | pear |\n\n### 2. Bakery & Basics\n\n| Ukrainian | English |\n|-----------|---------|\n| хліб | bread |\n| булка | roll |\n| батон | baguette |\n| яйце | egg |\n| борошно | flour |\n| цукор | sugar |\n| сіль | salt |\n| перець | pepper |\n| олія | oil |\n\n> 📜 **Pattern Summary:**\n> - **Dairy:** молочні продукти\n> - **Meat:** м'ясо, м'ясні\n> - **Vegetables:** овочі\n> - **Fruits:** фрукти\n> - **Beverages:** напої\n\n### 3. Drinks (Напої)\n\n| Ukrainian | English |\n|-----------|---------|\n| вода | water |\n| сік | juice |\n| кава | coffee |\n| чай | tea |\n| пиво | beer |\n| вино | wine |\n| компот | fruit drink |\n| мінералка | mineral water |\n\n> 💡 **Did You Know?** Борщ (borscht), the famous beetroot soup, is a UNESCO-recognized Ukrainian cultural heritage dish. It's more than food — it's a national symbol!\n\n### 4. Shopping Phrases\n\n**At the store:**\n| Ukrainian | English |\n|-----------|---------|\n| Скільки коштує? | How much does it cost? |\n| Дайте, будь ласка... | Give me, please... |\n| Один кілограм | One kilogram |\n| Пів кіло | Half a kilo |\n| Один літр | One liter |\n| Ще щось? | Anything else? |\n| Це все. | That's all. |\n| Рахунок, будь ласка. | The bill, please. |\n\n**Quantity words:**\n- кілограм (kg) — кілограм яблук\n- літр (L) — літр молока\n- шматок (piece) — шматок хліба\n- пляшка (bottle) — пляшка води\n- пакет (package) — пакет соку\n\n## Cultural Insight: Ukrainian Food Culture 🇺🇦\n\nUkrainian cuisine reflects the country's agricultural heritage. Some iconic dishes include:\n\n- **Борщ** — beetroot soup with cabbage, potatoes, and meat\n- **Вареники** — dumplings filled with potato, cheese, or cherries\n- **Голубці** — stuffed cabbage rolls\n- **Сало** — cured pork fat (a national delicacy)\n- **Пампушки** — garlic bread served with borscht\n\nUkrainians take hospitality seriously. If you visit a Ukrainian home, expect to be fed generously! Refusing food can be considered impolite, so learn to say \"Дуже смачно!\" (Very delicious!) even when you're full.\n\n> 📜 **Myth Buster:** Russian propaganda sometimes claims borscht as a \"Russian dish.\" In 2022, UNESCO officially recognized borscht as Ukrainian cultural heritage. The dish originated in Ukraine and has been central to Ukrainian cuisine for centuries!\n\n> 📜 **History Bite:** Ukraine is known as the \"breadbasket of Europe\" for its fertile black soil (чорнозем). Ukrainian wheat has fed millions throughout history. This agricultural wealth is reflected in the abundance of bread varieties and grain-based dishes in Ukrainian cuisine.\n\n## Reading Practice: На ринку 🛒\n\n**Українською:**\n\n— Добрий день! Почім картопля?\n— Двадцять гривень за кілограм.\n— Гарна ціна! Два кіло, будь ласка.\n— Ось, прошу. Ще щось?\n— Так, помідори. Вони свіжі?\n— Так, сьогоднішні! Тридцять гривень кіло.\n— Добре, один кілограм. І яблука — скільки?\n— Яблука — двадцять п'ять.\n— Півтора кілограми, будь ласка.\n— Усе разом — сто п'ять гривень.\n— Ось сто десять.\n— Ваша решта — п'ять гривень. Дякую!\n\n**English Translation:**\n\n— Good afternoon! How much are the potatoes?\n— Twenty hryvnias per kilogram.\n— Good price! Two kilos, please.\n— Here you go. Anything else?\n— Yes, tomatoes. Are they fresh?\n— Yes, from today! Thirty hryvnias per kilo.\n— Okay, one kilogram. And the apples — how much?\n— Apples are twenty-five.\n— One and a half kilograms, please.\n— Everything together is 105 hryvnias.\n— Here's 110.\n— Your change is five hryvnias. Thank you!\n\n**Comprehension check:** What did the customer buy? Calculate the total!\n\n## Conversation: У супермаркеті 🗣️\n\n**Покупець:** Вибачте, де молочні продукти?\n**Продавець:** Прямо, потім наліво. Другий ряд.\n**Покупець:** Дякую! А хліб?\n**Продавець:** Хліб — біля каси, справа.\n**Покупець:** А де я можу знайти овочі?\n**Продавець:** Овочі та фрукти — в кінці залу.\n**Покупець:** Супер, дякую за допомогу!\n\n**English Translation:**\n**Shopper:** Excuse me, where are dairy products?\n**Shop Assistant:** Straight, then left. Second aisle.\n**Shopper:** Thank you! And bread?\n**Shop Assistant:** Bread is near the checkout, on the right.\n**Shopper:** And where can I find vegetables?\n**Shop Assistant:** Vegetables and fruits are at the end of the hall.\n**Shopper:** Super, thank you for help!\n\nЗверни увагу: молочні продукти, хліб, овочі, фрукти — все це їжа!\n\n# Summary\n\n**Food & Shopping: Essential Vocabulary**\n\n1. **Food categories:** молочні, м'ясо, овочі, фрукти, напої\n2. **Key question:** Скільки коштує? / Почім...?\n3. **Ordering:** Дайте, будь ласка...\n4. **Quantities:** кілограм, літр, шматок, пляшка\n5. **Iconic dish:** борщ (UNESCO Ukrainian heritage)\n\n---\n\n> [!tip] 🌟 **Pro Tip:** At markets, you can negotiate! \"Може, дешевше?\" (Maybe cheaper?) is perfectly acceptable for vegetables and fruits.\n\n# Activities\n\n## fill-in: Food Categories\n> Choose the correct category.\n\n1. Молоко — це ___ продукт.\n   > [!answer] молочний\n   > [!options] молочний | м'ясний | овочевий | фруктовий\n\n2. Курка — це ___.\n   > [!answer] м'ясо\n   > [!options] м'ясо | молоко | овоч | фрукт\n\n3. Картопля — це ___.\n   > [!answer] овоч\n   > [!options] овоч | фрукт | м'ясо | молоко\n\n4. Яблуко — це ___.\n   > [!answer] фрукт\n   > [!options] фрукт | овоч | м'ясо | молоко\n\n5. Хліб — це ___ продукт.\n   > [!answer] хлібобулочний\n   > [!options] хлібобулочний | молочний | м'ясний | овочевий\n\n6. Риба — це ___.\n   > [!answer] морепродукт\n   > [!options] морепродукт | м'ясо | молоко | овоч\n\n7. Сік — це ___.\n   > [!answer] напій\n   > [!options] напій | їжа | овоч | фрукт\n\n8. Сметана — це ___ продукт.\n   > [!answer] молочний\n   > [!options] молочний | м'ясний | овочевий | фруктовий\n\n9. Помідор — це ___.\n   > [!answer] овоч\n   > [!options] овоч | фрукт | м'ясо | молоко\n\n10. Банан — це ___.\n    > [!answer] фрукт\n    > [!options] фрукт | овоч | м'ясо | хліб\n\n11. Ковбаса — це ___ продукт.\n    > [!answer] м'ясний\n    > [!options] м'ясний | молочний | овочевий | фруктовий\n\n12. Вода — це ___.\n    > [!answer] напій\n    > [!options] напій | їжа | овоч | молоко\n\n## match-up: Ukrainian to English\n> Match the food word with its translation.\n\n| Ukrainian | English |\n| --- | --- |\n| хліб | bread |\n| молоко | milk |\n| м'ясо | meat |\n| картопля | potato |\n| яблуко | apple |\n| яйце | egg |\n| риба | fish |\n| сир | cheese |\n| цукор | sugar |\n| вода | water |\n| курка | chicken |\n| сіль | salt |\n\n## quiz: Shopping Phrases\n> Choose the correct phrase.\n\n1. You want to ask \"How much?\" You say:\n   - [x] Скільки коштує?\n   - [ ] Де це?\n   - [ ] Що це?\n   - [ ] Як це?\n\n2. You want one kilogram of apples. You say:\n   - [x] Один кілограм яблук, будь ласка.\n   - [ ] Один яблуко, будь ласка.\n   - [ ] Яблука один, будь ласка.\n   - [ ] Кілограм один яблук.\n\n3. \"Ще щось?\" means:\n   - [x] Anything else?\n   - [ ] How much?\n   - [ ] Where is it?\n   - [ ] What is this?\n\n4. To say \"That's all,\" you say:\n   - [x] Це все.\n   - [ ] Це не все.\n   - [ ] Ще щось.\n   - [ ] Скільки?\n\n5. \"Дайте, будь ласка...\" means:\n   - [x] Give me, please...\n   - [ ] How much is...\n   - [ ] Where is...\n   - [ ] I don't want...\n\n6. \"Пів кіло\" means:\n   - [x] Half a kilo\n   - [ ] One kilo\n   - [ ] Two kilos\n   - [ ] Three kilos\n\n7. \"Молочний продукт\" refers to:\n   - [x] A dairy product\n   - [ ] A meat product\n   - [ ] A vegetable\n   - [ ] A fruit\n\n8. \"Борщ\" is:\n   - [x] Beetroot soup\n   - [ ] Meat stew\n   - [ ] Fried potatoes\n   - [ ] Chicken salad\n\n9. Which is NOT a vegetable?\n   - [ ] Картопля\n   - [ ] Морква\n   - [x] Яблуко\n   - [ ] Цибуля\n\n10. \"Смачного!\" means:\n    - [x] Enjoy your meal!\n    - [ ] How much?\n    - [ ] Thank you!\n    - [ ] Goodbye!\n\n11. \"Напій\" refers to:\n    - [x] A drink\n    - [ ] Food\n    - [ ] Meat\n    - [ ] Vegetables\n\n12. \"Решта\" means:\n    - [x] Change (money back)\n    - [ ] Price\n    - [ ] Discount\n    - [ ] Total\n\n## group-sort: Food Categories\n> Sort foods into their categories.\n\n- Dairy: молоко\n- Dairy: сир\n- Dairy: сметана\n- Meat: курка\n- Meat: ковбаса\n- Meat: свинина\n- Vegetables: картопля\n- Vegetables: помідор\n- Vegetables: огірок\n- Fruits: яблуко\n- Fruits: банан\n- Fruits: груша\n\n## true-false: Food Facts\n- [x] \"Борщ\" is a UNESCO-recognized Ukrainian dish.\n- [x] \"Молоко\" means milk.\n- [ ] \"Картопля\" is a fruit.\n- [x] \"Дайте, будь ласка\" means \"Give me, please.\"\n- [ ] \"Сир\" means meat.\n- [x] Ukraine is called the \"breadbasket of Europe.\"\n- [x] \"Скільки коштує?\" asks about price.\n- [ ] \"Напій\" means food.\n- [x] \"Вареники\" are Ukrainian dumplings.\n- [x] \"Сало\" is cured pork fat.\n- [ ] \"Яблуко\" is a vegetable.\n- [x] You can negotiate prices at Ukrainian markets.\n\n## anagram: Food Vocabulary\n> Unscramble these food words.\n\n1. б і л х\n   > [!answer] хліб\n\n2. о к о л о м\n   > [!answer] молоко\n\n3. я л п о т р а к\n   > [!answer] картопля\n\n4. о к у л б я\n   > [!answer] яблуко\n\n5. а к р у к\n   > [!answer] курка\n\n6. а д о в\n   > [!answer] вода\n\n7. р и с\n   > [!answer] сир\n\n8. ь л і с\n   > [!answer] сіль\n\n9. р о к у ц\n   > [!answer] цукор\n\n10. а б и р\n    > [!answer] риба\n\n11. а в а к\n    > [!answer] кава\n\n12. щ р о б\n    > [!answer] борщ\n\n## fill-in: At the Market\n> Complete the shopping dialogue.\n\n1. — Добрий день! Скільки ___ картопля? (costs)\n   > [!answer] коштує\n   > [!options] коштує | коштують | коштувати | коштуй\n\n2. — Двадцять гривень за ___. (kilogram)\n   > [!answer] кілограм\n   > [!options] кілограм | кілограми | кілограмів | кілограмом\n\n3. — Два ___, будь ласка. (kilos)\n   > [!answer] кіло\n   > [!options] кіло | кілограм | кілограми | кілограмів\n\n4. — Ось, прошу. Ще ___? (anything)\n   > [!answer] щось\n   > [!options] щось | щоновь | все | нічого\n\n5. — Так, ___. (tomatoes)\n   > [!answer] помідори\n   > [!options] помідори | помідор | помідорів | помідорами\n\n6. — Тридцять гривень ___. (per kilo)\n   > [!answer] кіло\n   > [!options] кіло | за кілограм | кілограмів | кілограми\n\n7. — Добре, один ___. (kilogram)\n   > [!answer] кілограм\n   > [!options] кілограм | кіло | кілограми | кілограмів\n\n8. — Усе ___ — сто гривень. (together)\n   > [!answer] разом\n   > [!options] разом | все | окремо | загалом\n\n9. — Ось сто ___. (hryvnias)\n   > [!answer] гривень\n   > [!options] гривень | гривні | гривня | гривнею\n\n10. — Ваша ___ — п'ять гривень. (change)\n    > [!answer] решта\n    > [!options] решта | ціна | знижка | гроші\n\n11. — ___! (thank you)\n    > [!answer] Дякую\n    > [!options] Дякую | Будь ласка | Вибачте | Прошу\n\n12. — До ___! (goodbye - lit. \"to seeing\")\n    > [!answer] побачення\n    > [!options] побачення | зустрічі | завтра | вечора\n\n## unjumble: Build Shopping Sentences\n> Arrange the words into correct sentences.\n\n1. коштує / скільки / яблука\n   > [!answer] Скільки коштує яблука?\n\n2. один / Дайте / кілограм / будь / ласка\n   > [!answer] Дайте один кілограм, будь ласка.\n\n3. молока / літр / один\n   > [!answer] Один літр молока.\n\n4. це / все\n   > [!answer] Це все.\n\n5. свіжий / хліб\n   > [!answer] Свіжий хліб.\n\n6. смачного\n   > [!answer] Смачного!\n\n7. гривень / разом / сто\n   > [!answer] Разом сто гривень.\n\n8. продукти / молочні / де\n   > [!answer] Де молочні продукти?\n\n9. ласка / води / Пляшку / будь\n   > [!answer] Пляшку води, будь ласка.\n\n10. дуже / смачно\n    > [!answer] Дуже смачно!\n\n11. хліб / свіжий / є\n    > [!answer] Є свіжий хліб?\n\n12. за / дякую / допомогу\n    > [!answer] Дякую за допомогу.\n\n---\n\n# Vocabulary\n\n| Ukrainian | IPA | English | Category |\n| --- | --- | --- | --- |\n| хліб | /xlib/ | bread | bakery |\n| молоко | /moloˈko/ | milk | dairy |\n| сир | /sɪr/ | cheese | dairy |\n| масло | /ˈmɑslo/ | butter | dairy |\n| сметана | /smɛˈtɑnɑ/ | sour cream | dairy |\n| м'ясо | /ˈmjɑso/ | meat | meat |\n| курка | /ˈkurkɑ/ | chicken | meat |\n| риба | /ˈrɪbɑ/ | fish | meat |\n| ковбаса | /koʋbɑˈsɑ/ | sausage | meat |\n| яйце | /jɑjˈt͡sɛ/ | egg | basics |\n| картопля | /kɑrˈtoplʲɑ/ | potato | vegetables |\n| морква | /ˈmorkʋɑ/ | carrot | vegetables |\n| цибуля | /t͡sɪˈbulʲɑ/ | onion | vegetables |\n| помідор | /pomiˈdor/ | tomato | vegetables |\n| огірок | /oɦiˈrok/ | cucumber | vegetables |\n| капуста | /kɑˈpustɑ/ | cabbage | vegetables |\n| буряк | /burˈjɑk/ | beetroot | vegetables |\n| яблуко | /ˈjɑbluko/ | apple | fruits |\n| банан | /bɑˈnɑn/ | banana | fruits |\n| груша | /ˈɦruʃɑ/ | pear | fruits |\n| вода | /ʋoˈdɑ/ | water | drinks |\n| сік | /sik/ | juice | drinks |\n| кава | /ˈkɑʋɑ/ | coffee | drinks |\n| чай | /t͡ʃɑj/ | tea | drinks |\n| борщ | /borʃt͡ʃ/ | borscht | dishes |\n\n---\n\n> [!tip] 🌟 **Bonus:** \"Смачного!\" (Enjoy your meal!) — Say this before eating!\n",
-    "createdAt": "2025-12-12T19:55:32.044Z",
-    "modifiedAt": "2025-12-12T19:55:32.044Z",
+    "rawMarkdown": "---\nmodule: a1-18\ntitle: \"Food & Shopping\"\nsubtitle: \"Practical vocabulary for market and store\"\nversion: \"1.0\"\nphase: \"A1.2\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: \"vocab-only\"\ntags:\n  - food\n  - shopping\n  - vocabulary\n  - accusative\n  - genitive\ngrammar:\n  - \"Accusative case for direct objects (review)\"\n  - \"Genitive case for quantities (review)\"\n  - \"Price questions with Скільки коштує\"\nobjectives:\n  - \"Learner can order food items using accusative case\"\n  - \"Learner can request quantities using genitive case\"\n  - \"Learner can ask prices and make purchases\"\n  - \"Learner can distinguish between food and non-food items\"\nvocabulary_count: 45\n---\n\n# Food & Shopping\n\n## Warm-up\n\nYou're in Kyiv, and your fridge is empty. Time to go shopping! In Ukraine, you have many choices: the **супермаркет** (supermarket), a traditional **ринок** (market), or small **магазини** (stores) scattered throughout every neighborhood. Each place has its own character and culture.\n\nToday, you'll learn how to navigate Ukrainian stores and cafés with confidence. You'll order food, ask for prices, and even do some everyday shopping beyond the grocery aisle.\n\n> 💡 **Did You Know?**\n>\n> Ukrainians love their **ринки** (markets)! Fresh produce, homemade cheeses, and seasonal fruits are sold by vendors who've been selling at the same spot for decades. It's not just shopping—it's a social experience. You greet the vendors, they remember your preferences, and you bargain a little. Try saying \"Скільки коштує?\" (How much is it?) at Besarabsky Market in Kyiv!\n\n## Presentation\n\n### Grammar Review: Accusative and Genitive Together\n\nYou've already learned the **accusative case** (M11: direct objects) and the **genitive case** (M16: absence and possession). Now you'll use BOTH in real shopping situations.\n\n**Патерн 1: Знахідний відмінок (Accusative for \"I want X\")**\n\nЯ хочу **каву**. (I want coffee.)\nВона бере **хліб**. (She takes bread.)\nМи купуємо **рибу**. (We buy fish.)\nТи візьмеш **салат**? (Will you take a salad?)\nВони купують **овочі**. (They buy vegetables.)\nЯ хочу **суп** та **хліб**. (I want soup and bread.)\n\n**Патерн 2: Родовий відмінок для кількості (Genitive for quantities)**\n\nСклянку **води**, будь ласка. (A glass **of water**, please.)\nКілограм **яблук**. (A kilogram **of apples**.)\nПачку **цукру**. (A pack **of sugar**.)\nПляшку **вина**. (A bottle **of wine**.)\nЧашку **кави**. (A cup **of coffee**.)\n\n**Патерн 3: Питання про ціну (Asking prices)**\n\nСкільки коштує **мило**? (How much is the soap?)\nСкільки коштує **сир**? (How much is the cheese?)\nСкільки коштує **хліб**? (How much is the bread?)\nСкільки коштує **кава**? (How much is the coffee?)\n\nNotice: After \"скільки коштує\" (how much is/does it cost?), the noun stays in **nominative** because the question is \"What costs how much?\"\n\n> 🌍 **Реальний світ: У супермаркеті (Real World: At the Supermarket)**\n>\n> Супермаркети в Україні працюють як у всьому світі. (Supermarkets in Ukraine work like everywhere in the world.) You grab a **пакет** (bag) or basket at the entrance, pick your items, and pay at the **каса** (checkout). Але є культурна порада: українські касири дуже швидкі! (But here's a cultural tip: Ukrainian cashiers are VERY fast!) Have your money ready! Багато магазинів мають ваги для овочів окремо. (Many stores have scales for vegetables separately.) Look for the digital scales in the produce section.\n\n> 💡 **Чи знаєте ви? (Did You Know?)**\n>\n> Популярні українські супермаркети: **Сільпо** (Silpo), **АТБ** (ATB), **Новус** (Novus), **Фора** (Fora). (Popular Ukrainian supermarkets: Silpo, ATB, Novus, Fora.) Кожен має свою атмосферу! (Each has its own atmosphere!) ATB is budget-friendly, Silpo is mid-range with good quality, and Novus is more upscale. Де ви любите робити покупки? (Where do you like to shop?)\n\n### Vocabulary Groups\n\nLet's organize the vocabulary into practical categories you'll encounter when shopping.\n\n**Їжа (Food Items)**\n\n| Українською | What It Means |\n|-------------|---------------|\n| Я хочу **страву**. | I want a dish. |\n| Це **закуска**. | This is an appetizer. |\n| **Борщ** дуже смачний. | Borscht is very tasty. |\n| У меню є **десерт**? | Is there dessert on the menu? |\n| **М'ясо** свіже. | The meat is fresh. |\n| **Овочі** тут дешеві. | Vegetables are cheap here. |\n\n**Напої (Beverages)**\n\n| Українською | What It Means |\n|-------------|---------------|\n| Склянку **води**, будь ласка. | A glass of water, please. |\n| **Кава** чи **чай**? | Coffee or tea? |\n| **Сік** апельсиновий. | Orange juice. |\n| Пляшку **вина**. | A bottle of wine. |\n| **Пиво** холодне. | The beer is cold. |\n\n**Продукти (Basic Groceries)**\n\n| Українською | What It Means |\n|-------------|---------------|\n| Я купую **хліб**. | I buy bread. |\n| **Сир** дуже смачний. | The cheese is very tasty. |\n| **Яйця** в холодильнику. | Eggs are in the fridge. |\n| **Картопля** свіжа. | The potatoes are fresh. |\n| **Курка** дешева. | The chicken is cheap. |\n\n**Інше (Non-Food Items)**\n\n| Українською | What It Means |\n|-------------|---------------|\n| Скільки коштує **мило**? | How much is the soap? |\n| Я шукаю **зубну пасту**. | I'm looking for toothpaste. |\n| Я хочу **ручку**. | I want a pen. |\n| Де **папір**? | Where is paper? |\n| **Шампунь** дорогий. | The shampoo is expensive. |\n\n> 🎬 **Pop Culture Moment: S.T.A.L.K.E.R. – Grocery Run Edition**\n>\n> In the iconic Ukrainian game *S.T.A.L.K.E.R.*, your character scavenges for supplies in the Chornobyl zone. Imagine if you could just go to a **магазин** instead! \"Я хочу **консерви** та **хліб**!\" (I want canned food and bread!). Sadly, no cashiers in the Zone—just mutants and radiation. Real-life Ukrainian stores are much friendlier, we promise.\n\n## Practice\n\n### Mini-Dialogue 1: At the Café\n\n**Context:** Марія and Іван are at a cozy café in Lviv.\n\n— Що ти будеш замовляти? (What will you order?)\n— Я візьму **каву** та **десерт**. А ти? (I'll take coffee and dessert. And you?)\n— Я хочу **чай** та **салат**, будь ласка. (I want tea and salad, please.)\n— **Офіціант**! Можна **меню**? (Waiter! Can we have the menu?)\n— Так, зараз принесу. (Yes, I'll bring it now.)\n\n> **Grammar Note:** Візьму = \"I'll take\" (future tense, perfective). Don't worry about aspect yet—just learn it as a useful phrase for ordering.\n\n### Mini-Dialogue 2: At the Store\n\n**Context:** Олег is buying groceries at a neighborhood магазин.\n\n— Добрий день! Скільки коштує **хліб**? (Good day! How much is the bread?)\n— 25 гривень. (25 hryvnias.)\n— Добре. Ще **молоко** та **сир**. (Good. Also milk and cheese.)\n— Разом 120 гривень. (120 hryvnias total.)\n— Ось **гроші**. Дякую! (Here's the money. Thank you!)\n— Дякую! До побачення! (Thank you! Goodbye!)\n\n> **Cultural Tip:** In small Ukrainian stores, it's polite to greet the **продавець** (salesperson) when you enter and say \"Дякую, до побачення\" when you leave—even if you don't buy anything!\n\n### Mini-Dialogue 3: Asking for Help\n\n**Context:** Anna is looking for hygiene products at a супермаркет.\n\n— Вибачте, де **мило** та **шампунь**? (Excuse me, where are soap and shampoo?)\n— Другий поверх, секція \"Гігієна\". (Second floor, \"Hygiene\" section.)\n— А **зубна паста** там теж? (Is toothpaste there too?)\n— Так, все там. (Yes, everything is there.)\n— Дякую! (Thank you!)\n\n### Mini-Dialogue 4: At the Market\n\n**Context:** Petro is shopping at a Kyiv ринок (market).\n\n— Добрий день! Скільки коштує **картопля**? (Good day! How much are the potatoes?)\n— Двадцять гривень кілограм. Дуже свіжа! (Twenty hryvnias per kilogram. Very fresh!)\n— Добре. Я візьму два кілограми. (Good. I'll take two kilograms.)\n— А **овочі**? **Помідори** дуже смачні! (And vegetables? The tomatoes are very tasty!)\n— Ні, дякую. Тільки **картопля**. (No, thank you. Just potatoes.)\n— Сорок гривень, будь ласка. (Forty hryvnias, please.)\n— Ось гроші. Дякую! (Here's the money. Thank you!)\n— Дякую! Хорошого дня! (Thank you! Have a good day!)\n\n> 🎯 **Fun Fact: Supermarket Floors**\n>\n> Larger Ukrainian супермаркети often have multiple floors. Food is usually on the ground floor (перший поверх), and household goods upstairs. Escalators often have flat sections—perfect for rolling shopping carts up!\n\n## Production\n\n### Usage Patterns: How to Order Like a Local\n\n**У ресторані/кафе (At a restaurant/café):**\n1. **Привіт! Можна меню?** (Hi! Can I have the menu?)\n2. **Я візьму...** (I'll take...)\n3. **Рахунок, будь ласка.** (The bill, please.)\n4. **Смачного!** (Enjoy your meal!)\n5. **Було дуже смачно!** (It was very tasty!)\n\n**У магазині (At a store):**\n1. **Скільки коштує [item]?** (How much is [item]?)\n2. **Я хочу [item], будь ласка.** (I want [item], please.)\n3. **Ще щось?** — **Ні, дякую, все.** (Anything else? — No, thank you, that's all.)\n4. **Де овочі?** (Where are the vegetables?)\n5. **Це свіже?** (Is this fresh?)\n\n**Поширені помилки (Common mistakes):**\n- ❌ \"Я хочу кава\" → ✅ \"Я хочу **каву**\" (знахідний відмінок! / accusative!)\n- ❌ \"Скільки є хліб?\" → ✅ \"Скільки **коштує** хліб?\" (використовуйте \"коштує\" для ціни / use \"коштує\" for price)\n- ❌ \"Одна вода\" → ✅ \"Склянку **води**\" (родовий відмінок для кількості / genitive for quantities)\n- ❌ \"Каса там\" → ✅ \"Каса там?\" (не забувайте знак питання! / don't forget the question mark!)\n- ❌ \"Хліб дорого\" → ✅ \"Хліб дорогий\" (дорогий = прикметник / expensive = adjective)\n\n### Real-World Scenarios\n\n**Scenario 1: Ordering Lunch**\n\nYou're at a Ukrainian **їдальня** (canteen). The menu board lists: борщ (30 грн), вареники (45 грн), салат (25 грн), компот (15 грн).\n\nWhat you say:\n\"Добрий день! Я візьму **борщ**, **вареники** та **компот**. Скільки разом?\"\n\n**Scenario 2: Grocery Shopping**\n\nYou need: bread, milk, eggs, cheese. You're at a **магазин** near your apartment.\n\nWhat you say:\n\"Я хочу **хліб**, **молоко**, десять **яєць** та **сир**, будь ласка.\"\n\n**Scenario 3: Buying Supplies**\n\nYou're a student and need: notebook, 2 pens, paper.\n\nWhat you say:\n\"Я хочу **зошит**, дві **ручки** та **папір**.\"\n\n> 📜 **History Bite: Ukrainian Cuisine Heritage**\n>\n> Ukrainian food culture is ancient! Borsch appears in 16th-century cookbooks. Varenyky (dumplings) have been a staple for centuries. During Soviet times, Ukrainian dishes were often rebranded as \"Russian,\" but they originated in Ukrainian villages and Cossack kitchens. Today, UNESCO recognizes Ukrainian **borsch culture** as endangered heritage (2022), protecting its authenticity.\n\n## Cultural Insight\n\n### The Ukrainian Shopping Experience\n\n**Markets vs. Supermarkets**\n\n**Ринок (Market):**\n- Fresh, seasonal produce\n- Personal relationships with vendors\n- Bargaining is acceptable\n- Cash only, usually\n- Open mornings (7 AM–2 PM peak)\n\n**Супермаркет:**\n- Western-style shopping\n- Fixed prices\n- Card payments accepted\n- Open late (some 24/7)\n- Self-service\n\n**Local магазин:**\n- Neighborhood stores\n- Personal service (you ask, they get it)\n- Good for quick purchases\n- Often family-run\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Ukrainians only shop at markets.\"\n> **Fact:** While traditional **ринки** remain popular—especially for fresh produce—modern Ukrainians shop at supermarkets like Silpo, ATB, and Novus just like people everywhere. The mix of old and new is what makes Ukrainian shopping culture unique!\n\n### Food as Identity\n\nFor Ukrainians, food is deeply connected to **identity** and **home**. Борщ isn't just soup—it's a symbol of family, tradition, and survival. During the Holodomor (1932-33 famine-genocide), millions of Ukrainians starved while grain was exported. Today, every bowl of borsch carries that historical memory.\n\nWhen you order Ukrainian food, you're participating in a living tradition that survived empires, wars, and attempts to erase it.\n\n**Українська кухня (Ukrainian cuisine):**\n- **Борщ** – червоний суп (beet soup with sour cream)\n- **Вареники** – дуже смачно! (dumplings: potato, cheese, or cherry)\n- **Сало** – національна страва (cured pork fat, a delicacy!)\n- **Голубці** – рис у капусті (cabbage rolls with rice)\n- **Деруни** – картопляна страва (potato pancakes)\n- **Сирники** – сирна страва (cheese pancakes)\n- **Холодець** – традиційна страва (meat jelly)\n- **Пампушки** – дуже смачно! (garlic rolls with borscht)\n\n> 🎭 **Folklore Corner: Bread as Sacred**\n>\n> In Ukrainian tradition, **хліб** (bread) is sacred. Guests are greeted with **хліб-сіль** (bread and salt) as a sign of hospitality. Dropping bread on the floor requires picking it up and kissing it as an apology. This reverence comes from centuries of agricultural culture where grain was life itself.\n\n---\n\n# Summary\n\nYou've learned how to navigate Ukrainian food and shopping contexts using **accusative** (direct objects) and **genitive** (quantities) cases. You can now:\n\n- Order food and drinks at a café or restaurant\n- Ask prices and buy groceries\n- Request quantities (a glass of..., a kilo of...)\n- Distinguish between food and non-food vocabulary\n- Understand Ukrainian shopping culture (markets, stores, supermarkets)\n\n**Key phrases to remember:**\n- Я хочу... (I want...)\n- Скільки коштує...? (How much is...?)\n- Я візьму... (I'll take...)\n- Рахунок, будь ласка. (The bill, please.)\n\n**Cultural insights gained:**\n- Markets vs. supermarkets in Ukraine\n- Bread as sacred in Ukrainian culture\n- Food as identity and historical memory\n- How to shop like a local\n\nNext module (M19: At the Café), you'll practice full café dialogues using all the cases you've learned!\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| страва | /ˈstrɑwɑ/ | dish | noun | f | |\n| закуска | /zɑˈkuskɑ/ | appetizer | noun | f | |\n| салат | /sɑˈlɑt/ | salad | noun | m | |\n| суп | /sup/ | soup | noun | m | |\n| борщ | /bɔrʃt͡ʃ/ | borscht | noun | m | |\n| десерт | /dɛˈsɛrt/ | dessert | noun | m | |\n| напій | /nɑˈpij/ | beverage | noun | m | |\n| кава | /ˈkɑwɑ/ | coffee | noun | f | |\n| чай | /t͡ʃɑj/ | tea | noun | m | |\n| сік | /sik/ | juice | noun | m | |\n| вода | /wɔˈdɑ/ | water | noun | f | |\n| вино | /wɪˈnɔ/ | wine | noun | n | |\n| пиво | /ˈpɪwɔ/ | beer | noun | n | |\n| м'ясо | /ˈmjɑsɔ/ | meat | noun | n | |\n| курка | /ˈkurkɑ/ | chicken | noun | f | |\n| риба | /ˈrɪbɑ/ | fish | noun | f | |\n| овочі | /ˈɔwɔt͡ʃi/ | vegetables | noun | pl | |\n| картопля | /kɑrˈtɔplʲɑ/ | potato | noun | f | |\n| хліб | /xlib/ | bread | noun | m | |\n| сир | /sɪr/ | cheese | noun | m | |\n| яйце | /ˈjɑjt͡sɛ/ | egg | noun | n | |\n| смачний | /ˈsmɑt͡ʃnɪj/ | tasty | adj | m | |\n| меню | /mɛˈnju/ | menu | noun | n | |\n| офіціант | /ɔfit͡siˈɑnt/ | waiter | noun | m | |\n| офіціантка | /ɔfit͡siˈɑntkɑ/ | waitress | noun | f | |\n| рахунок | /rɑˈxunɔk/ | bill/check | noun | m | |\n| мило | /ˈmɪlɔ/ | soap | noun | n | |\n| шампунь | /ʃɑmˈpunʲ/ | shampoo | noun | m | |\n| зубна паста | /ˈzubnɑ ˈpɑstɑ/ | toothpaste | noun | f | |\n| папір | /pɑˈpir/ | paper | noun | m | |\n| ручка | /ˈrut͡ʃkɑ/ | pen | noun | f | |\n| олівець | /ɔˈliwɛt͡sʲ/ | pencil | noun | m | |\n| зошит | /ˈzɔʃɪt/ | notebook | noun | m | |\n| купувати | /kupuˈwɑtɪ/ | to buy | verb | - | купую, купуєш |\n| супермаркет | /supɛrˈmɑrkɛt/ | supermarket | noun | m | |\n| магазин | /mɑɦɑˈzɪn/ | store | noun | m | |\n| пакет | /pɑˈkɛt/ | bag | noun | m | |\n| каса | /ˈkɑsɑ/ | checkout | noun | f | |\n| продавець | /prɔdɑˈwɛt͡sʲ/ | salesperson (m) | noun | m | |\n| продавчиня | /prɔdɑwˈt͡ʃɪnʲɑ/ | salesperson (f) | noun | f | |\n| ціна | /t͡siˈnɑ/ | price | noun | f | |\n| знижка | /ˈznɪʒkɑ/ | discount | noun | f | |\n| дорого | /ˈdɔrɔɦɔ/ | expensive | adv | - | |\n| дешево | /dɛˈʃɛwɔ/ | cheap | adv | - | |\n| відчинено | /widt͡ʃɪˈnɛnɔ/ | open | adv | - | |\n| зачинено | /zɑt͡ʃɪˈnɛnɔ/ | closed | adv | - | |\n| свіжий | /ˈswʲiʒɪj/ | fresh | adj | m | |\n\n---\n\n# Activities\n\n## match-up: Food & Drinks Vocabulary\n> Match the Ukrainian words with their English meanings.\n\n| Ukrainian | English |\n|-----------|---------|\n| кава | coffee |\n| чай | tea |\n| вода | water |\n| сік | juice |\n| хліб | bread |\n| м'ясо | meat |\n| риба | fish |\n| сир | cheese |\n| яйце | egg |\n| салат | salad |\n| борщ | borscht |\n| десерт | dessert |\n\n## fill-in: Shopping Phrases\n> Fill in the blank with the correct word.\n\n1. Скільки ___ хліб? (How much is bread?)\n   > [!answer] коштує\n   > [!options] коштує | є | має | бере\n\n2. Я ___ каву. (I want coffee.)\n   > [!answer] хочу\n   > [!options] хочу | хоче | хочеш | хочуть\n\n3. Я хочу ___, будь ласка. (I want bread, please.)\n   > [!answer] хліб\n   > [!options] хліб | хліба | хлібу | хлібом\n\n4. Склянку ___, будь ласка. (A glass of water, please.)\n   > [!answer] води\n   > [!options] води | вода | воду | водою\n\n5. Ми ___ овочі. (We buy vegetables.)\n   > [!answer] купуємо\n   > [!options] купуємо | купую | купуєш | купує\n\n6. ___, будь ласка. (The bill, please.)\n   > [!answer] Рахунок\n   > [!options] Рахунок | Рахунку | Рахунком | Рахунки\n\n7. У меню є ___? (Is there dessert on the menu?)\n   > [!answer] десерт\n   > [!options] десерт | десерту | десерті | десертом\n\n8. Я шукаю зубну ___. (I'm looking for toothpaste.)\n   > [!answer] пасту\n   > [!options] пасту | паста | пасти | пастою\n\n9. Я хочу ___. (I want a pen.)\n   > [!answer] ручку\n   > [!options] ручку | ручка | ручки | ручкою\n\n10. Магазин ___ о восьмій. (The store opens at 8.)\n    > [!answer] відчинено\n    > [!options] відчинено | зачинено | відчиняє | зачиняє\n\n11. Це дуже ___. (This is very expensive.)\n    > [!answer] дорого\n    > [!options] дорого | дешево | коштує | ціна\n\n12. Я візьму ___ та салат. (I'll take soup and salad.)\n    > [!answer] суп\n    > [!options] суп | супу | супом | супи\n\n## group-sort: Food vs Non-Food Items\n> Sort these items into food and non-food categories.\n\n### Food Items\n- кава\n- хліб\n- м'ясо\n- сир\n- овочі\n- борщ\n- риба\n- яйце\n\n### Non-Food Items\n- мило\n- шампунь\n- зубна паста\n- папір\n- ручка\n- олівець\n- зошит\n- пакет\n\n## quiz: Shopping Situations\n> Choose the correct answer.\n\n1. You want to ask the price of cheese. What do you say?\n   - [ ] Скільки є сир?\n   - [x] Скільки коштує сир?\n   - [ ] Який сир?\n   - [ ] Чому сир?\n   > \"Скільки коштує?\" = \"How much does it cost?\"\n\n2. How do you order coffee in accusative case?\n   - [ ] Я хочу кава.\n   - [x] Я хочу каву.\n   - [ ] Я хочу кави.\n   - [ ] Я хочу кавою.\n   > Feminine -а becomes -у in accusative: кава → каву\n\n3. What does \"офіціант\" mean?\n   - [ ] office\n   - [x] waiter\n   - [ ] official\n   - [ ] restaurant\n   > офіціант = waiter (masculine)\n\n4. You want to ask for the bill. What do you say?\n   - [ ] Меню, будь ласка.\n   - [ ] Вода, будь ласка.\n   - [x] Рахунок, будь ласка.\n   - [ ] Гроші, будь ласка.\n   > Рахунок = bill/check\n\n5. Which word means \"cheap\"?\n   - [ ] дорого\n   - [x] дешево\n   - [ ] ціна\n   - [ ] знижка\n   > дешево = cheap (adverb)\n\n6. How do you say \"a glass of water\" using genitive?\n   - [ ] Склянка вода\n   - [ ] Склянку воду\n   - [x] Склянку води\n   - [ ] Склянка води\n   > Genitive for quantities: вода → води\n\n7. Where do you pay at a supermarket?\n   - [ ] магазин\n   - [ ] пакет\n   - [x] каса\n   - [ ] супермаркет\n   > каса = checkout/cashier\n\n8. What does \"відчинено\" mean?\n   - [ ] closed\n   - [x] open\n   - [ ] expensive\n   - [ ] cheap\n   > відчинено = open (adverb)\n\n9. Which is NOT a beverage?\n   - [ ] кава\n   - [ ] чай\n   - [ ] сік\n   - [x] хліб\n   > хліб = bread (not a drink)\n\n10. You're buying groceries. What do you say?\n    - [ ] Я читаю хліб.\n    - [x] Я купую хліб.\n    - [ ] Я пишу хліб.\n    - [ ] Я бачу хліб.\n    > купувати = to buy\n\n11. Which word means \"tasty\"?\n    - [ ] страва\n    - [x] смачний\n    - [ ] меню\n    - [ ] закуска\n    > смачний = tasty (adjective)\n\n12. How do you say \"I'll take bread, please\"?\n    - [ ] Я хочу хліб, будь ласка.\n    - [x] Я візьму хліб, будь ласка.\n    - [ ] Я читаю хліб, будь ласка.\n    - [ ] Скільки коштує хліб?\n    > \"Я візьму...\" = \"I'll take...\"\n\n## true-false: Shopping Culture\n> Decide if each statement is true or false.\n\n- [x] Ukrainian markets (ринки) are popular for fresh produce.\n  > Correct! Markets remain a beloved shopping tradition.\n\n- [ ] You should never greet the salesperson in a small Ukrainian store.\n  > Incorrect! It's polite to greet them when entering and leaving.\n\n- [x] \"Скільки коштує?\" means \"How much does it cost?\"\n  > Correct! This is the standard phrase for asking prices.\n\n- [ ] Bread (хліб) has no cultural significance in Ukraine.\n  > Incorrect! Bread is sacred in Ukrainian culture (хліб-сіль tradition).\n\n- [x] Ukrainian supermarkets often have multiple floors.\n  > Correct! Larger stores put food downstairs, household goods upstairs.\n\n- [ ] You use accusative case for quantities like \"a glass of water.\"\n  > Incorrect! You use genitive: \"склянку води\" (genitive of вода).\n\n- [x] UNESCO recognizes Ukrainian borsch culture as endangered heritage.\n  > Correct! This recognition came in 2022.\n\n- [ ] \"Дешево\" means \"expensive.\"\n  > Incorrect! Дешево = cheap. Дорого = expensive.\n\n- [x] \"Каса\" is where you pay at a supermarket.\n  > Correct! Каса = checkout/cashier.\n\n- [ ] Ukrainians only use cash, never cards.\n  > Incorrect! Modern supermarkets accept card payments.\n\n- [x] \"Офіціантка\" is the feminine form of \"waiter.\"\n  > Correct! офіціант (m), офіціантка (f).\n\n- [ ] It's rude to ask \"Ще щось?\" (Anything else?) in a store.\n  > Incorrect! This is a standard polite question from salespeople.\n\n## unjumble: Shopping Sentences\n> Put the words in the correct order to form sentences.\n\n1. хочу / Я / каву\n   > [!answer] Я хочу каву.\n   > (I want coffee.) [3 words]\n\n2. коштує / Скільки / хліб\n   > [!answer] Скільки коштує хліб?\n   > (How much is bread?) [3 words]\n\n3. візьму / Я / будь ласка / сир\n   > [!answer] Я візьму сир, будь ласка.\n   > (I'll take cheese, please.) [5 words]\n\n4. води / Склянку / будь ласка\n   > [!answer] Склянку води, будь ласка.\n   > (A glass of water, please.) [4 words]\n\n5. купуємо / Ми / овочі / та / м'ясо\n   > [!answer] Ми купуємо овочі та м'ясо.\n   > (We buy vegetables and meat.) [5 words]\n\n6. є / меню / У / десерт\n   > [!answer] У меню є десерт?\n   > (Is there dessert on the menu?) [4 words]\n\n7. Рахунок / будь ласка\n   > [!answer] Рахунок, будь ласка.\n   > (The bill, please.) [3 words]\n\n8. дуже / Борщ / смачний\n   > [!answer] Борщ дуже смачний.\n   > (Borscht is very tasty.) [3 words]\n\n9. шукаю / Я / зубну / пасту\n   > [!answer] Я шукаю зубну пасту.\n   > (I'm looking for toothpaste.) [4 words]\n\n10. магазин / де / Вибачте\n    > [!answer] Вибачте, де магазин?\n    > (Excuse me, where is the store?) [4 words]\n\n11. візьму / Я / суп / та / салат\n    > [!answer] Я візьму суп та салат.\n    > (I'll take soup and salad.) [5 words]\n\n12. відчинено / Магазин / о / восьмій\n    > [!answer] Магазин відчинено о восьмій.\n    > (The store opens at 8.) [4 words]\n\n## match-up: Non-Food Items\n> Match items with their English meanings.\n\n| Ukrainian | English |\n|-----------|---------|\n| мило | soap |\n| шампунь | shampoo |\n| зубна паста | toothpaste |\n| папір | paper |\n| ручка | pen |\n| олівець | pencil |\n| зошит | notebook |\n| пакет | bag |\n| каса | checkout |\n| продавець | salesperson |\n| супермаркет | supermarket |\n| магазин | store |\n\n## fill-in: Café Dialogue\n> Complete the café conversation with the correct words.\n\n1. — Що ти будеш ___? (What will you order?)\n   > [!answer] замовляти\n   > [!options] замовляти | замовити | замовляє | замовляю\n\n2. — Я візьму каву та ___. (I'll take coffee and dessert.)\n   > [!answer] десерт\n   > [!options] десерт | десерту | десерті | десертом\n\n3. — Я хочу чай та ___, будь ласка. (I want tea and salad, please.)\n   > [!answer] салат\n   > [!options] салат | салату | салаті | салатом\n\n4. — ___! Можна меню? (Waiter! Can we have the menu?)\n   > [!answer] Офіціант\n   > [!options] Офіціант | Офіціанта | Офіціанту | Офіціантом\n\n5. — Так, ___ принесу. (Yes, I'll bring it now.)\n   > [!answer] зараз\n   > [!options] зараз | потім | вчора | завтра\n\n6. — Скільки коштує ___? (How much is the soup?)\n   > [!answer] суп\n   > [!options] суп | супу | супом | супи\n\n7. — ___ 45 гривень. (Together 45 hryvnias.)\n   > [!answer] Разом\n   > [!options] Разом | Окремо | Скільки | Ціна\n\n8. — ___, будь ласка. (The bill, please.)\n   > [!answer] Рахунок\n   > [!options] Рахунок | Меню | Каву | Чай\n\n9. — Ось ___. Дякую! (Here's the money. Thank you!)\n   > [!answer] гроші\n   > [!options] гроші | грошей | грошам | грошима\n\n10. — Дякую! ___ побачення! (Thank you! Goodbye!)\n    > [!answer] До\n    > [!options] До | Від | На | У\n\n11. — Це дуже ___. (This is very tasty.)\n    > [!answer] смачно\n    > [!options] смачно | смачний | смачна | смачне\n\n12. — Пляшку ___, будь ласка. (A bottle of wine, please.)\n    > [!answer] вина\n    > [!options] вина | вино | виною | вину\n\n## group-sort: Beverages vs Food vs Items\n> Sort these words into three categories.\n\n### Beverages (Напої)\n- кава\n- чай\n- сік\n- вода\n- вино\n- пиво\n\n### Food (Їжа)\n- хліб\n- сир\n- м'ясо\n- риба\n- овочі\n- яйце\n- борщ\n- салат\n\n### Store Items (Товари)\n- мило\n- шампунь\n- зубна паста\n- папір\n- ручка\n- олівець\n- зошит\n- пакет\n",
+    "createdAt": "2025-12-13T23:49:13.613762Z",
+    "modifiedAt": "2025-12-13T23:49:13.613762Z",
     "version": 2
   },
-  "activities": [
-    {
-      "id": "act-a1-0-fillblank-0",
-      "type": "fill-blank",
-      "title": "Food Categories",
-      "description": "Choose the correct category.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Молоко — це ___ продукт.",
-            "answer": "молочний",
-            "options": [
-              "молочний",
-              "м'ясний",
-              "овочевий",
-              "фруктовий"
-            ]
-          },
-          {
-            "prompt": "Курка — це ___.",
-            "answer": "м'ясо",
-            "options": [
-              "м'ясо",
-              "молоко",
-              "овоч",
-              "фрукт"
-            ]
-          },
-          {
-            "prompt": "Картопля — це ___.",
-            "answer": "овоч",
-            "options": [
-              "овоч",
-              "фрукт",
-              "м'ясо",
-              "молоко"
-            ]
-          },
-          {
-            "prompt": "Яблуко — це ___.",
-            "answer": "фрукт",
-            "options": [
-              "фрукт",
-              "овоч",
-              "м'ясо",
-              "молоко"
-            ]
-          },
-          {
-            "prompt": "Хліб — це ___ продукт.",
-            "answer": "хлібобулочний",
-            "options": [
-              "хлібобулочний",
-              "молочний",
-              "м'ясний",
-              "овочевий"
-            ]
-          },
-          {
-            "prompt": "Риба — це ___.",
-            "answer": "морепродукт",
-            "options": [
-              "морепродукт",
-              "м'ясо",
-              "молоко",
-              "овоч"
-            ]
-          },
-          {
-            "prompt": "Сік — це ___.",
-            "answer": "напій",
-            "options": [
-              "напій",
-              "їжа",
-              "овоч",
-              "фрукт"
-            ]
-          },
-          {
-            "prompt": "Сметана — це ___ продукт.",
-            "answer": "молочний",
-            "options": [
-              "молочний",
-              "м'ясний",
-              "овочевий",
-              "фруктовий"
-            ]
-          },
-          {
-            "prompt": "Помідор — це ___.",
-            "answer": "овоч",
-            "options": [
-              "овоч",
-              "фрукт",
-              "м'ясо",
-              "молоко"
-            ]
-          },
-          {
-            "prompt": "Банан — це ___.",
-            "answer": "фрукт",
-            "options": [
-              "фрукт",
-              "овоч",
-              "м'ясо",
-              "хліб"
-            ]
-          },
-          {
-            "prompt": "Ковбаса — це ___ продукт.",
-            "answer": "м'ясний",
-            "options": [
-              "м'ясний",
-              "молочний",
-              "овочевий",
-              "фруктовий"
-            ]
-          },
-          {
-            "prompt": "Вода — це ___.",
-            "answer": "напій",
-            "options": [
-              "напій",
-              "їжа",
-              "овоч",
-              "молоко"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.044Z",
-      "modifiedAt": "2025-12-12T19:55:32.044Z"
-    },
-    {
-      "id": "act-a1-0-matchup-0",
-      "type": "match-up",
-      "title": "Ukrainian to English",
-      "description": "Match the food word with its translation.",
-      "content": {
-        "type": "match-up",
-        "pairs": [
-          {
-            "left": "хліб",
-            "right": "bread"
-          },
-          {
-            "left": "молоко",
-            "right": "milk"
-          },
-          {
-            "left": "м'ясо",
-            "right": "meat"
-          },
-          {
-            "left": "картопля",
-            "right": "potato"
-          },
-          {
-            "left": "яблуко",
-            "right": "apple"
-          },
-          {
-            "left": "яйце",
-            "right": "egg"
-          },
-          {
-            "left": "риба",
-            "right": "fish"
-          },
-          {
-            "left": "сир",
-            "right": "cheese"
-          },
-          {
-            "left": "цукор",
-            "right": "sugar"
-          },
-          {
-            "left": "вода",
-            "right": "water"
-          },
-          {
-            "left": "курка",
-            "right": "chicken"
-          },
-          {
-            "left": "сіль",
-            "right": "salt"
-          }
-        ],
-        "shuffleRight": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.044Z",
-      "modifiedAt": "2025-12-12T19:55:32.044Z"
-    },
-    {
-      "id": "act-a1-0-quiz-0",
-      "type": "quiz",
-      "title": "Shopping Phrases",
-      "description": "Choose the correct phrase.",
-      "content": {
-        "type": "quiz",
-        "questions": [
-          {
-            "question": "You want to ask \"How much?\" You say:",
-            "options": [
-              "Скільки коштує?",
-              "Де це?",
-              "Що це?",
-              "Як це?"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "You want one kilogram of apples. You say:",
-            "options": [
-              "Один кілограм яблук, будь ласка.",
-              "Один яблуко, будь ласка.",
-              "Яблука один, будь ласка.",
-              "Кілограм один яблук."
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Ще щось?\" means:",
-            "options": [
-              "Anything else?",
-              "How much?",
-              "Where is it?",
-              "What is this?"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "To say \"That's all,\" you say:",
-            "options": [
-              "Це все.",
-              "Це не все.",
-              "Ще щось.",
-              "Скільки?"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Дайте, будь ласка...\" means:",
-            "options": [
-              "Give me, please...",
-              "How much is...",
-              "Where is...",
-              "I don't want..."
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Пів кіло\" means:",
-            "options": [
-              "Half a kilo",
-              "One kilo",
-              "Two kilos",
-              "Three kilos"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Молочний продукт\" refers to:",
-            "options": [
-              "A dairy product",
-              "A meat product",
-              "A vegetable",
-              "A fruit"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Борщ\" is:",
-            "options": [
-              "Beetroot soup",
-              "Meat stew",
-              "Fried potatoes",
-              "Chicken salad"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Which is NOT a vegetable?",
-            "options": [
-              "Картопля",
-              "Морква",
-              "Яблуко",
-              "Цибуля"
-            ],
-            "correctIndex": 2,
-            "explanation": ""
-          },
-          {
-            "question": "\"Смачного!\" means:",
-            "options": [
-              "Enjoy your meal!",
-              "How much?",
-              "Thank you!",
-              "Goodbye!"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Напій\" refers to:",
-            "options": [
-              "A drink",
-              "Food",
-              "Meat",
-              "Vegetables"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Решта\" means:",
-            "options": [
-              "Change (money back)",
-              "Price",
-              "Discount",
-              "Total"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          }
-        ],
-        "shuffleQuestions": true,
-        "shuffleOptions": true,
-        "showCorrectAnswers": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.044Z",
-      "modifiedAt": "2025-12-12T19:55:32.044Z"
-    },
-    {
-      "id": "act-a1-0-groupsort-0",
-      "type": "group-sort",
-      "title": "Food Categories",
-      "description": "Sort foods into their categories.",
-      "content": {
-        "type": "group-sort",
-        "groups": [],
-        "shuffleItems": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.044Z",
-      "modifiedAt": "2025-12-12T19:55:32.044Z"
-    },
-    {
-      "id": "act-a1-0-truefalse-0",
-      "type": "true-false",
-      "title": "Food Facts",
-      "description": "Food Facts",
-      "content": {
-        "type": "true-false",
-        "statements": [
-          {
-            "statement": "\"Борщ\" is a UNESCO-recognized Ukrainian dish.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Молоко\" means milk.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Картопля\" is a fruit.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Дайте, будь ласка\" means \"Give me, please.\"",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Сир\" means meat.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "Ukraine is called the \"breadbasket of Europe.\"",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Скільки коштує?\" asks about price.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Напій\" means food.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Вареники\" are Ukrainian dumplings.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Сало\" is cured pork fat.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Яблуко\" is a vegetable.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "You can negotiate prices at Ukrainian markets.",
-            "isTrue": true,
-            "explanation": ""
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.044Z",
-      "modifiedAt": "2025-12-12T19:55:32.044Z"
-    },
-    {
-      "id": "act-a1-0-anagram-0",
-      "type": "anagram",
-      "title": "Food Vocabulary",
-      "description": "Unscramble these food words.",
-      "content": {
-        "type": "anagram",
-        "isAnagram": true,
-        "items": [
-          {
-            "letters": [
-              "б",
-              "і",
-              "л",
-              "х"
-            ],
-            "answer": "хліб"
-          },
-          {
-            "letters": [
-              "о",
-              "к",
-              "о",
-              "л",
-              "о",
-              "м"
-            ],
-            "answer": "молоко"
-          },
-          {
-            "letters": [
-              "я",
-              "л",
-              "п",
-              "о",
-              "т",
-              "р",
-              "а",
-              "к"
-            ],
-            "answer": "картопля"
-          },
-          {
-            "letters": [
-              "о",
-              "к",
-              "у",
-              "л",
-              "б",
-              "я"
-            ],
-            "answer": "яблуко"
-          },
-          {
-            "letters": [
-              "а",
-              "к",
-              "р",
-              "у",
-              "к"
-            ],
-            "answer": "курка"
-          },
-          {
-            "letters": [
-              "а",
-              "д",
-              "о",
-              "в"
-            ],
-            "answer": "вода"
-          },
-          {
-            "letters": [
-              "р",
-              "и",
-              "с"
-            ],
-            "answer": "сир"
-          },
-          {
-            "letters": [
-              "ь",
-              "л",
-              "і",
-              "с"
-            ],
-            "answer": "сіль"
-          },
-          {
-            "letters": [
-              "р",
-              "о",
-              "к",
-              "у",
-              "ц"
-            ],
-            "answer": "цукор"
-          },
-          {
-            "letters": [
-              "а",
-              "б",
-              "и",
-              "р"
-            ],
-            "answer": "риба"
-          },
-          {
-            "letters": [
-              "а",
-              "в",
-              "а",
-              "к"
-            ],
-            "answer": "кава"
-          },
-          {
-            "letters": [
-              "щ",
-              "р",
-              "о",
-              "б"
-            ],
-            "answer": "борщ"
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.044Z",
-      "modifiedAt": "2025-12-12T19:55:32.044Z"
-    },
-    {
-      "id": "act-a1-0-fillblank-1",
-      "type": "fill-blank",
-      "title": "At the Market",
-      "description": "Complete the shopping dialogue.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "— Добрий день! Скільки ___ картопля? (costs)",
-            "answer": "коштує",
-            "options": [
-              "коштує",
-              "коштують",
-              "коштувати",
-              "коштуй"
-            ]
-          },
-          {
-            "prompt": "— Двадцять гривень за ___. (kilogram)",
-            "answer": "кілограм",
-            "options": [
-              "кілограм",
-              "кілограми",
-              "кілограмів",
-              "кілограмом"
-            ]
-          },
-          {
-            "prompt": "— Два ___, будь ласка. (kilos)",
-            "answer": "кіло",
-            "options": [
-              "кіло",
-              "кілограм",
-              "кілограми",
-              "кілограмів"
-            ]
-          },
-          {
-            "prompt": "— Ось, прошу. Ще ___? (anything)",
-            "answer": "щось",
-            "options": [
-              "щось",
-              "щоновь",
-              "все",
-              "нічого"
-            ]
-          },
-          {
-            "prompt": "— Так, ___. (tomatoes)",
-            "answer": "помідори",
-            "options": [
-              "помідори",
-              "помідор",
-              "помідорів",
-              "помідорами"
-            ]
-          },
-          {
-            "prompt": "— Тридцять гривень ___. (per kilo)",
-            "answer": "кіло",
-            "options": [
-              "кіло",
-              "за кілограм",
-              "кілограмів",
-              "кілограми"
-            ]
-          },
-          {
-            "prompt": "— Добре, один ___. (kilogram)",
-            "answer": "кілограм",
-            "options": [
-              "кілограм",
-              "кіло",
-              "кілограми",
-              "кілограмів"
-            ]
-          },
-          {
-            "prompt": "— Усе ___ — сто гривень. (together)",
-            "answer": "разом",
-            "options": [
-              "разом",
-              "все",
-              "окремо",
-              "загалом"
-            ]
-          },
-          {
-            "prompt": "— Ось сто ___. (hryvnias)",
-            "answer": "гривень",
-            "options": [
-              "гривень",
-              "гривні",
-              "гривня",
-              "гривнею"
-            ]
-          },
-          {
-            "prompt": "— Ваша ___ — п'ять гривень. (change)",
-            "answer": "решта",
-            "options": [
-              "решта",
-              "ціна",
-              "знижка",
-              "гроші"
-            ]
-          },
-          {
-            "prompt": "— ___! (thank you)",
-            "answer": "Дякую",
-            "options": [
-              "Дякую",
-              "Будь ласка",
-              "Вибачте",
-              "Прошу"
-            ]
-          },
-          {
-            "prompt": "— До ___! (goodbye - lit. \"to seeing\")",
-            "answer": "побачення",
-            "options": [
-              "побачення",
-              "зустрічі",
-              "завтра",
-              "вечора"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.044Z",
-      "modifiedAt": "2025-12-12T19:55:32.044Z"
-    },
-    {
-      "id": "act-a1-0-unjumble-0",
-      "type": "unjumble",
-      "title": "Build Shopping Sentences",
-      "description": "Arrange the words into correct sentences.",
-      "content": {
-        "type": "unjumble",
-        "isUnjumble": true,
-        "items": [
-          {
-            "words": [
-              "коштує",
-              "скільки",
-              "яблука"
-            ],
-            "answer": "Скільки коштує яблука?"
-          },
-          {
-            "words": [
-              "один",
-              "Дайте",
-              "кілограм",
-              "будь",
-              "ласка"
-            ],
-            "answer": "Дайте один кілограм, будь ласка."
-          },
-          {
-            "words": [
-              "молока",
-              "літр",
-              "один"
-            ],
-            "answer": "Один літр молока."
-          },
-          {
-            "words": [
-              "це",
-              "все"
-            ],
-            "answer": "Це все."
-          },
-          {
-            "words": [
-              "свіжий",
-              "хліб"
-            ],
-            "answer": "Свіжий хліб."
-          },
-          {
-            "words": [
-              "смачного"
-            ],
-            "answer": "Смачного!"
-          },
-          {
-            "words": [
-              "гривень",
-              "разом",
-              "сто"
-            ],
-            "answer": "Разом сто гривень."
-          },
-          {
-            "words": [
-              "продукти",
-              "молочні",
-              "де"
-            ],
-            "answer": "Де молочні продукти?"
-          },
-          {
-            "words": [
-              "ласка",
-              "води",
-              "Пляшку",
-              "будь"
-            ],
-            "answer": "Пляшку води, будь ласка."
-          },
-          {
-            "words": [
-              "дуже",
-              "смачно"
-            ],
-            "answer": "Дуже смачно!"
-          },
-          {
-            "words": [
-              "хліб",
-              "свіжий",
-              "є"
-            ],
-            "answer": "Є свіжий хліб?"
-          },
-          {
-            "words": [
-              "за",
-              "дякую",
-              "допомогу"
-            ],
-            "answer": "Дякую за допомогу."
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.044Z",
-      "modifiedAt": "2025-12-12T19:55:32.044Z"
-    }
-  ],
+  "activities": [],
   "vocabulary": {
     "moduleId": "mod-uk-A1-18",
     "level": "A1",
     "phase": "A1.2",
-    "wordCount": 25,
-    "newWordCount": 25,
+    "wordCount": 47,
+    "newWordCount": 47,
     "reviewWordCount": 0,
-    "transliterationMode": "partial",
+    "transliterationMode": "vocab-only",
     "words": [
       {
-        "id": "v-khlib-0-0",
-        "uk": "хліб",
-        "en": "bread",
+        "id": "vocab-1",
+        "uk": "страва",
+        "ipa": "/ˈstrɑwɑ/",
+        "en": "dish",
         "pos": "noun",
-        "ipa": "/xlib/",
-        "note": "bakery",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-moloko-0-1",
-        "uk": "молоко",
-        "en": "milk",
+        "id": "vocab-2",
+        "uk": "закуска",
+        "ipa": "/zɑˈkuskɑ/",
+        "en": "appetizer",
         "pos": "noun",
-        "ipa": "/moloˈko/",
-        "note": "dairy",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-syr-0-2",
-        "uk": "сир",
-        "en": "cheese",
+        "id": "vocab-3",
+        "uk": "салат",
+        "ipa": "/sɑˈlɑt/",
+        "en": "salad",
         "pos": "noun",
-        "ipa": "/sɪr/",
-        "note": "dairy",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-maslo-0-3",
-        "uk": "масло",
-        "en": "butter",
+        "id": "vocab-4",
+        "uk": "суп",
+        "ipa": "/sup/",
+        "en": "soup",
         "pos": "noun",
-        "ipa": "/ˈmɑslo/",
-        "note": "dairy",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-smetana-0-4",
-        "uk": "сметана",
-        "en": "sour cream",
-        "pos": "noun",
-        "ipa": "/smɛˈtɑnɑ/",
-        "note": "dairy",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-m'yaso-0-5",
-        "uk": "м'ясо",
-        "en": "meat",
-        "pos": "noun",
-        "ipa": "/ˈmjɑso/",
-        "note": "meat",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-kurka-0-6",
-        "uk": "курка",
-        "en": "chicken",
-        "pos": "noun",
-        "ipa": "/ˈkurkɑ/",
-        "note": "meat",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-ryba-0-7",
-        "uk": "риба",
-        "en": "fish",
-        "pos": "noun",
-        "ipa": "/ˈrɪbɑ/",
-        "note": "meat",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-kovbasa-0-8",
-        "uk": "ковбаса",
-        "en": "sausage",
-        "pos": "noun",
-        "ipa": "/koʋbɑˈsɑ/",
-        "note": "meat",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-yaytse-0-9",
-        "uk": "яйце",
-        "en": "egg",
-        "pos": "noun",
-        "ipa": "/jɑjˈt͡sɛ/",
-        "note": "basics",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-kartoplya-0-10",
-        "uk": "картопля",
-        "en": "potato",
-        "pos": "noun",
-        "ipa": "/kɑrˈtoplʲɑ/",
-        "note": "vegetables",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-morkva-0-11",
-        "uk": "морква",
-        "en": "carrot",
-        "pos": "noun",
-        "ipa": "/ˈmorkʋɑ/",
-        "note": "vegetables",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-tsybulya-0-12",
-        "uk": "цибуля",
-        "en": "onion",
-        "pos": "noun",
-        "ipa": "/t͡sɪˈbulʲɑ/",
-        "note": "vegetables",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-pomidor-0-13",
-        "uk": "помідор",
-        "en": "tomato",
-        "pos": "noun",
-        "ipa": "/pomiˈdor/",
-        "note": "vegetables",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-ohirok-0-14",
-        "uk": "огірок",
-        "en": "cucumber",
-        "pos": "noun",
-        "ipa": "/oɦiˈrok/",
-        "note": "vegetables",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-kapusta-0-15",
-        "uk": "капуста",
-        "en": "cabbage",
-        "pos": "noun",
-        "ipa": "/kɑˈpustɑ/",
-        "note": "vegetables",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-buryak-0-16",
-        "uk": "буряк",
-        "en": "beetroot",
-        "pos": "noun",
-        "ipa": "/burˈjɑk/",
-        "note": "vegetables",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-yabluko-0-17",
-        "uk": "яблуко",
-        "en": "apple",
-        "pos": "noun",
-        "ipa": "/ˈjɑbluko/",
-        "note": "fruits",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-banan-0-18",
-        "uk": "банан",
-        "en": "banana",
-        "pos": "noun",
-        "ipa": "/bɑˈnɑn/",
-        "note": "fruits",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-hrusha-0-19",
-        "uk": "груша",
-        "en": "pear",
-        "pos": "noun",
-        "ipa": "/ˈɦruʃɑ/",
-        "note": "fruits",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-voda-0-20",
-        "uk": "вода",
-        "en": "water",
-        "pos": "noun",
-        "ipa": "/ʋoˈdɑ/",
-        "note": "drinks",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-sik-0-21",
-        "uk": "сік",
-        "en": "juice",
-        "pos": "noun",
-        "ipa": "/sik/",
-        "note": "drinks",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-kava-0-22",
-        "uk": "кава",
-        "en": "coffee",
-        "pos": "noun",
-        "ipa": "/ˈkɑʋɑ/",
-        "note": "drinks",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-chay-0-23",
-        "uk": "чай",
-        "en": "tea",
-        "pos": "noun",
-        "ipa": "/t͡ʃɑj/",
-        "note": "drinks",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-borshch-0-24",
+        "id": "vocab-5",
         "uk": "борщ",
+        "ipa": "/bɔrʃt͡ʃ/",
         "en": "borscht",
         "pos": "noun",
-        "ipa": "/borʃt͡ʃ/",
-        "note": "dishes",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-6",
+        "uk": "десерт",
+        "ipa": "/dɛˈsɛrt/",
+        "en": "dessert",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-7",
+        "uk": "напій",
+        "ipa": "/nɑˈpij/",
+        "en": "beverage",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-8",
+        "uk": "кава",
+        "ipa": "/ˈkɑwɑ/",
+        "en": "coffee",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-9",
+        "uk": "чай",
+        "ipa": "/t͡ʃɑj/",
+        "en": "tea",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-10",
+        "uk": "сік",
+        "ipa": "/sik/",
+        "en": "juice",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-11",
+        "uk": "вода",
+        "ipa": "/wɔˈdɑ/",
+        "en": "water",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-12",
+        "uk": "вино",
+        "ipa": "/wɪˈnɔ/",
+        "en": "wine",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-13",
+        "uk": "пиво",
+        "ipa": "/ˈpɪwɔ/",
+        "en": "beer",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-14",
+        "uk": "м'ясо",
+        "ipa": "/ˈmjɑsɔ/",
+        "en": "meat",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-15",
+        "uk": "курка",
+        "ipa": "/ˈkurkɑ/",
+        "en": "chicken",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-16",
+        "uk": "риба",
+        "ipa": "/ˈrɪbɑ/",
+        "en": "fish",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-17",
+        "uk": "овочі",
+        "ipa": "/ˈɔwɔt͡ʃi/",
+        "en": "vegetables",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-18",
+        "uk": "картопля",
+        "ipa": "/kɑrˈtɔplʲɑ/",
+        "en": "potato",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-19",
+        "uk": "хліб",
+        "ipa": "/xlib/",
+        "en": "bread",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-20",
+        "uk": "сир",
+        "ipa": "/sɪr/",
+        "en": "cheese",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-21",
+        "uk": "яйце",
+        "ipa": "/ˈjɑjt͡sɛ/",
+        "en": "egg",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-22",
+        "uk": "смачний",
+        "ipa": "/ˈsmɑt͡ʃnɪj/",
+        "en": "tasty",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-23",
+        "uk": "меню",
+        "ipa": "/mɛˈnju/",
+        "en": "menu",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-24",
+        "uk": "офіціант",
+        "ipa": "/ɔfit͡siˈɑnt/",
+        "en": "waiter",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-25",
+        "uk": "офіціантка",
+        "ipa": "/ɔfit͡siˈɑntkɑ/",
+        "en": "waitress",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-26",
+        "uk": "рахунок",
+        "ipa": "/rɑˈxunɔk/",
+        "en": "bill/check",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-27",
+        "uk": "мило",
+        "ipa": "/ˈmɪlɔ/",
+        "en": "soap",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-28",
+        "uk": "шампунь",
+        "ipa": "/ʃɑmˈpunʲ/",
+        "en": "shampoo",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-29",
+        "uk": "зубна паста",
+        "ipa": "/ˈzubnɑ ˈpɑstɑ/",
+        "en": "toothpaste",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-30",
+        "uk": "папір",
+        "ipa": "/pɑˈpir/",
+        "en": "paper",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-31",
+        "uk": "ручка",
+        "ipa": "/ˈrut͡ʃkɑ/",
+        "en": "pen",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-32",
+        "uk": "олівець",
+        "ipa": "/ɔˈliwɛt͡sʲ/",
+        "en": "pencil",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-33",
+        "uk": "зошит",
+        "ipa": "/ˈzɔʃɪt/",
+        "en": "notebook",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-34",
+        "uk": "купувати",
+        "ipa": "/kupuˈwɑtɪ/",
+        "en": "to buy",
+        "pos": "verb",
+        "gender": null,
+        "note": "купую, купуєш"
+      },
+      {
+        "id": "vocab-35",
+        "uk": "супермаркет",
+        "ipa": "/supɛrˈmɑrkɛt/",
+        "en": "supermarket",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-36",
+        "uk": "магазин",
+        "ipa": "/mɑɦɑˈzɪn/",
+        "en": "store",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-37",
+        "uk": "пакет",
+        "ipa": "/pɑˈkɛt/",
+        "en": "bag",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-38",
+        "uk": "каса",
+        "ipa": "/ˈkɑsɑ/",
+        "en": "checkout",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-39",
+        "uk": "продавець",
+        "ipa": "/prɔdɑˈwɛt͡sʲ/",
+        "en": "salesperson (m)",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-40",
+        "uk": "продавчиня",
+        "ipa": "/prɔdɑwˈt͡ʃɪnʲɑ/",
+        "en": "salesperson (f)",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-41",
+        "uk": "ціна",
+        "ipa": "/t͡siˈnɑ/",
+        "en": "price",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-42",
+        "uk": "знижка",
+        "ipa": "/ˈznɪʒkɑ/",
+        "en": "discount",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-43",
+        "uk": "дорого",
+        "ipa": "/ˈdɔrɔɦɔ/",
+        "en": "expensive",
+        "pos": "adv",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-44",
+        "uk": "дешево",
+        "ipa": "/dɛˈʃɛwɔ/",
+        "en": "cheap",
+        "pos": "adv",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-45",
+        "uk": "відчинено",
+        "ipa": "/widt͡ʃɪˈnɛnɔ/",
+        "en": "open",
+        "pos": "adv",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-46",
+        "uk": "зачинено",
+        "ipa": "/zɑt͡ʃɪˈnɛnɔ/",
+        "en": "closed",
+        "pos": "adv",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-47",
+        "uk": "свіжий",
+        "ipa": "/ˈswʲiʒɪj/",
+        "en": "fresh",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
       }
-    ]
+    ],
+    "reviewWords": []
   }
 }

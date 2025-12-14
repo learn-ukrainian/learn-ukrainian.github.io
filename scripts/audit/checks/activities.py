@@ -326,3 +326,38 @@ def count_items(text: str) -> int:
         return checkboxes
     else:
         return bullets
+
+
+def check_anagram_min_letters(content: str) -> list[dict]:
+    """Check that anagram items have at least 3 letters (1-2 letters are pointless)."""
+    violations = []
+
+    # Find all anagram activities
+    anagram_pattern = r'##\s*anagram:\s*([^\n]+)\n(.*?)(?=\n##|\n#\s|\Z)'
+    anagrams = re.findall(anagram_pattern, content, re.DOTALL | re.IGNORECASE)
+
+    for title, body in anagrams:
+        # Find numbered items: "1. а б в" or "1. а / б / в"
+        items = re.findall(r'\d+\.\s*([^\n]+)', body)
+
+        for i, item in enumerate(items, 1):
+            # Extract letters (space or slash separated)
+            letters = re.split(r'[\s/]+', item.strip())
+            letters = [l.strip() for l in letters if l.strip() and not l.startswith('>')]
+
+            if len(letters) <= 2:
+                violations.append({
+                    'type': 'ANAGRAM_TOO_SHORT',
+                    'issue': f"Anagram '{title.strip()}' item {i} has only {len(letters)} letter(s): '{item.strip()}'",
+                    'fix': "Anagram items must have at least 3 letters. Remove or replace with longer words."
+                })
+
+            # Check for uppercase letters
+            if any(re.match(r'[А-ЯІЇЄҐ]', l) for l in letters):
+                violations.append({
+                    'type': 'ANAGRAM_UPPERCASE',
+                    'issue': f"Anagram '{title.strip()}' item {i} uses uppercase: '{item.strip()}'",
+                    'fix': "Use lowercase letters in anagram items."
+                })
+
+    return violations

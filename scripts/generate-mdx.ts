@@ -125,8 +125,9 @@ function parseQuizActivity(activityContent: string): ParsedQuizQuestion[] {
     const questions: ParsedQuizQuestion[] = [];
     const lines = activityContent.trim().split('\n');
 
-    // Detect format: numbered (1. Question) vs nested list (- Question with indented options)
+    // Detect format: numbered (1. Question) vs nested list (- Question with indented options) vs --- separated
     const hasNumberedFormat = lines.some(l => /^\d+\.\s+/.test(l.trim()));
+    const hasSeparatorFormat = activityContent.includes('\n---\n');
 
     if (hasNumberedFormat) {
         // Original numbered format
@@ -141,6 +142,48 @@ function parseQuizActivity(activityContent: string): ParsedQuizQuestion[] {
             let explanation = '';
 
             for (let i = 1; i < blockLines.length; i++) {
+                const line = blockLines[i].trim();
+                if (line.startsWith('- [x]')) {
+                    correctIndex = options.length;
+                    options.push(line.replace('- [x]', '').trim());
+                } else if (line.startsWith('- [ ]')) {
+                    options.push(line.replace('- [ ]', '').trim());
+                } else if (line.startsWith('>')) {
+                    explanation = line.replace(/^>\s*/, '').trim();
+                }
+            }
+
+            if (question && options.length > 0) {
+                questions.push({ question, options, correctIndex, explanation });
+            }
+        }
+    } else if (hasSeparatorFormat) {
+        // --- separated format: Question text followed by - [ ]/- [x] options, separated by ---
+        const questionBlocks = activityContent.split(/\n---\n/).filter(Boolean);
+        for (const block of questionBlocks) {
+            const blockLines = block.trim().split('\n');
+            if (blockLines.length < 2) continue;
+
+            // Find question text (lines before the first - [ ] or - [x])
+            let questionLines: string[] = [];
+            let optionStartIndex = 0;
+            for (let i = 0; i < blockLines.length; i++) {
+                const trimmed = blockLines[i].trim();
+                if (trimmed.startsWith('- [')) {
+                    optionStartIndex = i;
+                    break;
+                }
+                if (trimmed && !trimmed.startsWith('>')) {
+                    questionLines.push(trimmed);
+                }
+            }
+
+            const question = questionLines.join(' ').replace(/\*\*/g, '').trim();
+            const options: string[] = [];
+            let correctIndex = 0;
+            let explanation = '';
+
+            for (let i = optionStartIndex; i < blockLines.length; i++) {
                 const line = blockLines[i].trim();
                 if (line.startsWith('- [x]')) {
                     correctIndex = options.length;
@@ -216,12 +259,18 @@ function parseMatchUpActivity(activityContent: string): ParsedMatchPair[] {
         if (pairs.length > 0) return pairs;
     }
 
-    // Try list format: - left | right
+    // Try list format: - left | right  OR  - left :: right
     for (const line of lines) {
         const trimmed = line.trim();
-        if (trimmed.startsWith('-') && trimmed.includes('|')) {
+        if (trimmed.startsWith('-')) {
             const content = trimmed.replace(/^-\s*/, '');
-            const parts = content.split('|').map(p => p.trim());
+            // Try :: separator first, then | separator
+            let parts: string[] = [];
+            if (content.includes('::')) {
+                parts = content.split('::').map(p => p.trim());
+            } else if (content.includes('|')) {
+                parts = content.split('|').map(p => p.trim());
+            }
             if (parts.length >= 2) {
                 pairs.push({
                     left: parts[0],
@@ -402,7 +451,7 @@ function parseAnagramActivity(activityContent: string): ParsedAnagramItem[] {
         const lines = block.trim().split('\n');
         if (lines.length < 2) continue;
 
-        const scrambled = lines[0].trim();
+        const scrambled = lines[0].trim().replace(/^\d+\.\s*/, '');
         let answer = '';
         let hint = '';
 
@@ -443,7 +492,7 @@ function parseUnjumbleActivity(activityContent: string): ParsedUnjumbleItem[] {
             const blockLines = block.trim().split('\n');
             if (blockLines.length < 2) continue;
 
-            const words = blockLines[0].trim();
+            const words = blockLines[0].trim().replace(/^\d+\.\s*/, '');
             let answer = '';
             let hint = '';
             let nextIsAnswer = false;
@@ -837,8 +886,9 @@ function parseTranslateActivity(activityContent: string): ParsedTranslateQuestio
     const questions: ParsedTranslateQuestion[] = [];
     const lines = activityContent.trim().split('\n');
 
-    // Detect format: numbered (1. Question) vs nested list (- Question with indented options)
+    // Detect format: numbered (1. Question) vs nested list (- Question with indented options) vs --- separated
     const hasNumberedFormat = lines.some(l => /^\d+\.\s+/.test(l.trim()));
+    const hasSeparatorFormat = activityContent.includes('\n---\n');
 
     if (hasNumberedFormat) {
         // Numbered format
@@ -853,6 +903,48 @@ function parseTranslateActivity(activityContent: string): ParsedTranslateQuestio
             let explanation = '';
 
             for (let i = 1; i < blockLines.length; i++) {
+                const line = blockLines[i].trim();
+                if (line.startsWith('- [x]')) {
+                    correctIndex = options.length;
+                    options.push(line.replace('- [x]', '').trim());
+                } else if (line.startsWith('- [ ]')) {
+                    options.push(line.replace('- [ ]', '').trim());
+                } else if (line.startsWith('>')) {
+                    explanation = line.replace(/^>\s*/, '').trim();
+                }
+            }
+
+            if (prompt && options.length > 0) {
+                questions.push({ prompt, options, correctIndex, explanation });
+            }
+        }
+    } else if (hasSeparatorFormat) {
+        // --- separated format: Prompt text followed by - [ ]/- [x] options, separated by ---
+        const questionBlocks = activityContent.split(/\n---\n/).filter(Boolean);
+        for (const block of questionBlocks) {
+            const blockLines = block.trim().split('\n');
+            if (blockLines.length < 2) continue;
+
+            // Find prompt text (lines before the first - [ ] or - [x])
+            let promptLines: string[] = [];
+            let optionStartIndex = 0;
+            for (let i = 0; i < blockLines.length; i++) {
+                const trimmed = blockLines[i].trim();
+                if (trimmed.startsWith('- [')) {
+                    optionStartIndex = i;
+                    break;
+                }
+                if (trimmed && !trimmed.startsWith('>')) {
+                    promptLines.push(trimmed);
+                }
+            }
+
+            const prompt = promptLines.join(' ').replace(/\*\*/g, '').trim();
+            const options: string[] = [];
+            let correctIndex = 0;
+            let explanation = '';
+
+            for (let i = optionStartIndex; i < blockLines.length; i++) {
                 const line = blockLines[i].trim();
                 if (line.startsWith('- [x]')) {
                     correctIndex = options.length;
@@ -953,6 +1045,7 @@ function parseClozeActivity(activityContent: string): ParsedClozeData {
 function parseDialogueReorderActivity(activityContent: string): ParsedDialogueLine[] {
     const lines: ParsedDialogueLine[] = [];
 
+    // First, try format with speaker labels: - А: Text or - A: Text
     for (const line of activityContent.split('\n')) {
         const trimmed = line.trim();
         // Match format: - А: Text or - A: Text
@@ -965,13 +1058,32 @@ function parseDialogueReorderActivity(activityContent: string): ParsedDialogueLi
         }
     }
 
+    // If no lines with speaker labels found, try speakerless format
+    if (lines.length === 0) {
+        for (const line of activityContent.split('\n')) {
+            const trimmed = line.trim();
+            // Skip answer blocks and empty lines
+            if (trimmed.startsWith('>') || trimmed === '' || trimmed === '---') continue;
+            // Match simple format: - Text (without speaker label)
+            if (trimmed.startsWith('-')) {
+                const text = trimmed.replace(/^-\s*/, '').trim();
+                if (text) {
+                    lines.push({
+                        speaker: '', // No speaker label
+                        text: text
+                    });
+                }
+            }
+        }
+    }
+
     return lines;
 }
 
 function parseMarkTheWordsActivity(activityContent: string): ParsedMarkTheWordsData {
     const lines = activityContent.trim().split('\n');
     let instruction = '';
-    let text = '';
+    let textParts: string[] = [];
     const correctWords: string[] = [];
 
     for (const line of lines) {
@@ -986,22 +1098,40 @@ function parseMarkTheWordsActivity(activityContent: string): ParsedMarkTheWordsD
         if (trimmed.startsWith('>') && !instruction) {
             instruction = trimmed.replace(/^>\s*/, '').trim();
         } else if (trimmed && !trimmed.startsWith('>')) {
-            // Check if this line has [bracketed] words - this is the text to mark
-            const matches = trimmed.match(/\[([^\]]+)\]/g);
-            if (matches && matches.length > 0) {
-                text = trimmed;
-                // Extract bracketed words
-                for (const match of matches) {
-                    correctWords.push(match.slice(1, -1)); // Remove brackets
+            // Check for new format: [word](correct) or [word](wrong)
+            const newFormatMatches = trimmed.match(/\[([^\]]+)\]\((correct|wrong)\)/g);
+            if (newFormatMatches && newFormatMatches.length > 0) {
+                textParts.push(trimmed);
+                // Extract only words marked as correct
+                for (const match of newFormatMatches) {
+                    const wordMatch = match.match(/\[([^\]]+)\]\((correct|wrong)\)/);
+                    if (wordMatch && wordMatch[2] === 'correct') {
+                        correctWords.push(wordMatch[1]);
+                    }
                 }
-            } else if (!text) {
-                // If no brackets and no text yet, this is the instruction
-                instruction = trimmed;
+            } else {
+                // Check for old format: [bracketed] words without (correct)/(wrong)
+                const oldFormatMatches = trimmed.match(/\[([^\]]+)\]/g);
+                if (oldFormatMatches && oldFormatMatches.length > 0) {
+                    textParts.push(trimmed);
+                    // Extract bracketed words (all are correct in old format)
+                    for (const match of oldFormatMatches) {
+                        correctWords.push(match.slice(1, -1)); // Remove brackets
+                    }
+                } else if (textParts.length === 0) {
+                    // If no brackets and no text yet, this is the instruction
+                    instruction = trimmed;
+                }
             }
         }
     }
 
-    // Remove brackets from text for display
+    // Combine all text parts
+    let text = textParts.join(' ');
+
+    // Remove [word](correct) and [word](wrong) markers, keeping just the word
+    text = text.replace(/\[([^\]]+)\]\((correct|wrong)\)/g, '$1');
+    // Also handle old format: remove just the brackets
     text = text.replace(/\[([^\]]+)\]/g, '$1');
 
     return { instruction, text, correctWords };
@@ -1078,7 +1208,6 @@ function anagramToJsx(items: ParsedAnagramItem[], title: string): string {
     const itemsJsx = items.map(item => `  <AnagramQuestion
     scrambled=${wrapForJsx(item.scrambled)}
     answer=${wrapForJsx(item.answer)}
-    hint=${wrapForJsx(item.hint)}
   />`).join('\n');
 
     return `### ${title}
@@ -1094,7 +1223,6 @@ function unjumbleToJsx(items: ParsedUnjumbleItem[], title: string): string {
     const itemsJsx = items.map(item => `  <UnjumbleQuestion
     words=${wrapForJsx(item.words)}
     answer=${wrapForJsx(item.answer)}
-    hint=${wrapForJsx(item.hint)}
   />`).join('\n');
 
     return `### ${title}

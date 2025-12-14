@@ -133,8 +133,6 @@ export function UnjumbleQuestion({ words, answer, hint }: UnjumbleQuestionProps)
 
   return (
     <div className={styles.unjumbleQuestion}>
-      {hint && <p className={styles.hint}>💡 {hint}</p>}
-
       {/* Sentence Builder Zone */}
       <div
         className={`${styles.sentenceBuilder} ${showResult ? (isCorrect ? styles.correct : styles.incorrect) : ''}`}

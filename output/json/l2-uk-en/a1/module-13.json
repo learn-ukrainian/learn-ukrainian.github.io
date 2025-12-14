@@ -14,1272 +14,354 @@
     "moduleType": "grammar",
     "pedagogy": "PPP",
     "immersionLevel": 0.3,
-    "title": "The Locative: Where Things Are",
-    "subtitle": "Location with в/у and на",
-    "description": "Understand the locative case for location",
+    "title": "The Locative - Where Things Are",
+    "titleUk": null,
+    "subtitle": "Finding Your Way Around Ukrainian Spaces",
+    "description": "Learner can ask and answer 'Where is X?' using locative case",
     "objectives": [
-      "Understand the locative case for location",
-      "Choose correctly between в/у and на",
-      "Form locative endings for all genders",
-      "Answer \"where\" questions about locations"
+      "Learner can ask and answer 'Where is X?' using locative case",
+      "Learner can distinguish between в/у and на prepositions",
+      "Learner can describe locations of people and objects",
+      "Learner can name common places in Ukrainian"
     ],
+    "objectivesUk": null,
     "grammarFocus": [
-      "Locative case",
-      "Prepositions в/у and на"
+      "locative-case",
+      "prepositions-v-u-na"
     ],
     "tags": [
       "grammar",
-      "cases",
-      "locative",
-      "prepositions",
-      "location"
+      "locative-case",
+      "places",
+      "prepositions"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "partial",
+    "totalDuration": 60,
+    "transliterationMode": "vocabulary",
     "sections": [
       {
-        "id": "section-content-0",
-        "name": "Lesson",
+        "id": "section-1",
+        "name": "The Locative - Where Things Are",
+        "nameEn": null,
         "type": "content",
-        "content": "> **Note:** You've mastered the accusative for objects. Now learn the **locative** — saying where things **are** or where actions **happen**!\n\n## Warm-up: The Location Question\n\nEvery conversation involves location. Where are you? Where do you live? Where is the café?\n\nIn Ukrainian, answering \"where?\" requires a special case: the **Locative** (місцевий відмінок). Unlike English, you can't just say \"I'm in Kyiv\" — you need to change the noun's ending AND choose the right preposition.\n\nCompare English to Ukrainian:\n- English: \"I am **in** Kyiv.\" (one preposition, no noun change)\n- Ukrainian: \"Я **в** Києв**і**.\" (preposition + noun ending change)\n\nThis might seem like extra work, but it actually makes Ukrainian incredibly **precise**. You always know exactly where something is — inside, on top, at an event — just from the grammar!\n\n> 💡 **Thinking Trick:** The locative answers **де?** (where?). If you can ask \"where?\" the answer needs locative case.\n\n## Presentation: The Locative Case\n\n### 1. Two Key Prepositions\n\nUkrainian uses two main prepositions for location:\n\n| Preposition | Basic Meaning | Examples |\n|-------------|---------------|----------|\n| **в/у** | inside, in | в кімнаті (in the room), у магазині (in the store) |\n| **на** | on (surface), at (events/places) | на столі (on the table), на концерті (at the concert) |\n\n**When to use в vs у?**\n- Use **в** before consonants: в Києві, в школі\n- Use **у** before vowels or after vowels: у Львові, я у Львові\n- Both are correct in many contexts — it's about **звукова гармонія** (sound harmony)\n\n### 2. Locative Endings\n\nThe locative case changes noun endings based on gender:\n\n| Gender | Nominative | Locative Ending | Example |\n|--------|------------|-----------------|---------|\n| **Masculine** | -Ø (consonant) | **-і / -у** | стіл → на стол**і**, банк → у банк**у** |\n| **Feminine** | -а/-я | **-і** | кімнат**а** → в кімнат**і**, земл**я** → на земл**і** |\n| **Neuter** | -о/-е | **-і** | вікн**о** → на вікн**і**, мор**е** → на мор**і** |\n\n**The pattern is simple:** Most nouns take **-і** in locative!\n\n### 3. Exceptions and Special Cases\n\nSome masculine nouns take **-у** instead of **-і**:\n- **Large spaces:** ліс → у ліс**у**, сад → у сад**у**\n- **Abstract concepts:** банк → у банк**у**, клас → у клас**і** (either works)\n\nSoft-stem consonants (ь, й, etc.) may cause vowel changes:\n- день → у дн**і** (the е drops)\n- чай → у ча**ї** (insert ї)\n\n> 📜 **Pattern Summary:**\n> - **Masculine:** -і or -у (often -у for places)\n> - **Feminine:** -і (always)\n> - **Neuter:** -і (always)\n\n> 💡 **Did You Know?** The locative is one of the seven cases in Ukrainian. It's the only case that ALWAYS requires a preposition — you never see locative without в/у, на, по, or при!\n\n### 4. в/у vs на — Choosing Correctly\n\nThis is where learners often struggle. Here's a guide:\n\n| Use **в/у** (inside) | Use **на** (on/at) |\n|---------------------|-------------------|\n| в кімнаті (in a room) | на вулиці (on the street) |\n| в місті (in a city) | на майдані (in a square) |\n| у магазині (in a store) | на ринку (at the market) |\n| в Україні (in Ukraine) 🇺🇦 | на концерті (at a concert) |\n| у школі (in/at school) | на роботі (at work) |\n\n**Special cases:**\n- **Ukraine uses в**: в Україні (NOT на Україні — this is the Russian-influenced form!)\n- **Events use на**: на зустрічі, на святі, на уроці\n- **Islands and some regions use на**: на Ямайці, на Поліссі\n\n> 📜 **Myth Buster:** The form \"на Україні\" was pushed during Russian imperial and Soviet rule to imply Ukraine was merely a region (\"on the borderland\"), not a country. Correct Ukrainian uses **в Україні** — recognizing Ukraine as a sovereign nation with an interior.\n\n## Cultural Insight: Ukrainian Geography 🇺🇦\n\nUkraine is the largest country entirely within Europe! Some key locations you'll encounter:\n\n- **Київ** (Kyiv) — столиця, серце України (capital, heart of Ukraine)\n- **Львів** — культурна столиця заходу (western cultural capital)\n- **Одеса** — місто на Чорному морі (city on the Black Sea)\n- **Харків** — найбільше місто на сході (largest eastern city)\n- **Карпати** — мальовничі гори на заході (beautiful mountains in the west)\n\nNotice: \"в Києві\", \"у Львові\", \"в Одесі\" — but \"на морі\", \"на горі\" (sea and mountain surfaces).\n\n> 📜 **History Bite:** The name \"Україна\" likely comes from \"край\" (land/edge) — not \"borderland\" as Russian propaganda claims. Historical documents show \"Україна\" meant \"homeland\" or \"our land\" to Ukrainians. The meaning was distorted by imperial narratives.\n\n## Reading Practice: Де ти? 📍\n\n**Українською:**\n\nПривіт! Мене звати Тарас. Я зараз у Києві. Я живу в центрі міста. Моя квартира на третьому поверсі. Сьогодні ранок. Я на кухні, п'ю каву. Мій кіт на вікні — він любить дивитися на вулицю. Моя сестра у своїй кімнаті. Вона працює на комп'ютері.\n\nО 9:00 я йду на роботу. Я працюю в офісі. О 13:00 я обідаю в кафе біля роботи. Ввечері я зустрічаюся з друзями у ресторані. А де ти зараз?\n\n**English Translation:**\n\nHi! My name is Taras. I'm now in Kyiv. I live in the city center. My apartment is on the third floor. Today is morning. I'm in the kitchen, drinking coffee. My cat is on the window — he likes to look at the street. My sister is in her room. She's working on the computer.\n\nAt 9:00 I go to work. I work in an office. At 13:00 I have lunch at a café near work. In the evening I meet with friends at a restaurant. And where are you now?\n\n**Comprehension check:** Find every locative form. Which use в/у and which use на?\n\n## Conversation: Де зупинка? 🗣️\n\n**Турист:** Вибачте, де зупинка автобуса?\n**Киянин:** Прямо. Зупинка на розі, біля банку.\n**Турист:** Дякую! А де найближче метро?\n**Киянин:** Станція метро недалеко. Ідіть прямо, потім наліво. Вона у тому великому будинку.\n**Турист:** Чи далеко до центру?\n**Киянин:** Ні, на метро — п'ять хвилин. На центральній станції вихід на Хрещатик.\n**Турист:** Дуже дякую за допомогу!\n**Киянин:** Будь ласка! Гарного дня!\n\n**English Translation:**\n**Tourist:** Excuse me, where is the bus stop?\n**Kyivan:** Straight ahead. The stop is on the corner, near the bank.\n**Tourist:** Thank you! And where is the nearest metro?\n**Kyivan:** The metro station is not far. Go straight, then left. It is in that big building.\n**Tourist:** Is it far to the center?\n**Kyivan:** No, by metro — five minutes. At the central station exit to Khreshchatyk.\n**Tourist:** Thank you very much for help!\n**Kyivan:** You're welcome! Have a nice day!\n\nЗверни увагу: на розі, у будинку, на метро, на станції — всі у місцевому відмінку!"
+        "content": "## Warm-up\n\nImagine you're meeting a friend in Kyiv. They text you: \"Де ти?\" (Where are you?). You need to answer: \"Я в кафе\" (I'm in a café), \"Я на роботі\" (I'm at work), or \"Я в центрі\" (I'm downtown). In Ukrainian, when you say WHERE something is, the noun changes its ending - this is the **locative case** (місцевий відмінок).\n\nThe locative case answers one key question: **Де?** (Where?)\n\nYou've already learned how to say \"This is X\" (nominative) and \"I see X\" (accusative). Now you'll learn how to say \"I'm IN/AT/ON X\" - the grammar of location.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian has two words that both mean \"in\": **в** and **у**. They're the same preposition - **у** is used before consonant clusters to make pronunciation easier. Think of it like English \"a\" vs \"an\"!\n> - **в кімнаті** (in the room) - easy to say\n> - **у Львові** (in Lviv) - **у** makes the consonant cluster smoother\n\n## Presentation\n\n### The Locative Case: How It Works\n\nThe locative case (місцевий відмінок) is ALWAYS used with a preposition. You never use locative alone. The two main prepositions are:\n\n**в/у** = in, inside (enclosed spaces)\n**на** = on, at (surfaces, events, some fixed locations)\n\nHere's the basic pattern:\n\n| Nominative (Де це?) | Locative (Де ти?) | English |\n|---------------------|-------------------|---------|\n| Це **кімната** | Я **в кімнаті** | I'm in the room |\n| Це **банк** | Я **в банку** | I'm in the bank |\n| Це **місто** | Я **в місті** | I'm in the city |\n| Це **стіл** | Книга **на столі** | The book is on the table |\n| Це **робота** | Я **на роботі** | I'm at work |\n\n### Locative Endings: The Pattern\n\nThe locative case adds specific endings to nouns:\n\n**Masculine nouns:**\n- Most add **-і**: банк → **в банку** (wait, this is **-у**!)\n- Hard stems get **-у**: банк → в банк**у**, парк → у парк**у**\n- Soft stems get **-і**: музей → у музе**ї**, Київ → у Києв**і**\n\n**Feminine nouns (-а/-я):**\n- -а becomes **-і**: кімната → в кімнат**і**\n- -я becomes **-і**: кухня → на кухн**і**\n\n**Neuter nouns (-о/-е):**\n- -о becomes **-і**: місто → в міст**і**\n- -е becomes **-і**: море → на мор**і**\n\n> 🎯 **Key Pattern**\n>\n> Most nouns in locative end in **-і** or **-у** (for masculine). Think of locative as \"the **-і** case\" - it's the most common ending!\n\n### в/у vs на: Which Preposition?\n\nThis is one of the trickiest parts of Ukrainian - when to use **в/у** vs **на**. Here's the logic:\n\n**Use в/у (inside):**\n- Enclosed buildings: **в кімнаті, у магазині, в школі**\n- Cities and countries: **у Києві, в Україні, у Львові**\n- Containers: **у сумці, в коробці**\n\n**Use на (on/at):**\n- Surfaces: **на столі, на підлозі, на стіні**\n- Events: **на концерті, на зустрічі**\n- Open spaces: **на вулиці, на площі, на пляжі**\n- Fixed expressions: **на роботі, на уроці, на балконі**\n- Some countries/regions: **на Кавказі, на Волині** (historical usage)\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Ukrainians say 'в Україні' to oppose Russian 'на Украине'\"\n> **Fact:** Ukrainian has ALWAYS been \"в Україні\" - it's grammatically correct because Ukraine is a country (enclosed territory). Russian propagandists use \"на\" to imply Ukraine is just a \"borderland\" region. The grammar itself is political resistance.\n\n**Mini-Dialogue 1:**\n\n— Де ти?\n— Я **в кафе** на площі Ринок.\n— А де твій брат?\n— Він **на роботі** зараз.\n— Ваша робота **в центрі**?\n— Так, **у великому** офісі біля парку.\n\n(Notice how **на** is used for \"at work\" - a fixed expression, but **в** is used for \"in the center\" - an enclosed area)\n\n### Practice Examples\n\nLet's see locative in real sentences:\n\n1. **Я живу в Києві.** (I live in Kyiv.)\n2. **Книга на столі.** (The book is on the table.)\n3. **Ми в школі.** (We're at school.)\n4. **Вона в магазині.** (She's in the shop.)\n5. **Діти на пляжі.** (The children are at the beach.)\n6. **Ваш паспорт у сумці?** (Is your passport in the bag?)\n7. **Студенти в бібліотеці.** (The students are in the library.)\n8. **Фільм на великому екрані.** (The film is on the big screen.)\n9. **Ми чекаємо на зупинці.** (We're waiting at the stop.)\n10. **Моя квартира на третьому поверсі.** (My apartment is on the third floor.)\n11. **У нашому місті є старий театр.** (In our city there's an old theater.)\n12. **Концерт у великому залі.** (The concert is in a large hall.)\n\n> 🎬 **Pop Culture Moment: S.T.A.L.K.E.R.**\n>\n> In the legendary Ukrainian game S.T.A.L.K.E.R., you hear locative case constantly:\n> - \"Я **в Зоні**\" (I'm in the Zone)\n> - \"Артефакт **на складі**\" (Artifact at the warehouse)\n> - \"Сталкери **у барі**\" (Stalkers in the bar)\n>\n> The game was made by GSC Game World in Kyiv - and yes, they use proper Ukrainian locative grammar!\n\n## Practice\n\n### Usage Patterns: Where в/у, Where на\n\n**Common places with в/у:**\n\n| Place | Example |\n|-------|---------|\n| у кімнаті | Діти в кімнаті. (Children are in the room.) |\n| в школі | Урок у школі. (Lesson is at school.) |\n| у магазині | Я у магазині. (I'm in the shop.) |\n| в кафе | Зустріч у кафе. (Meeting is in a café.) |\n| у Львові | Ми у Львові. (We're in Lviv.) |\n| в Україні | Життя в Україні. (Life in Ukraine.) |\n\n**Common places with на:**\n\n| Place | Example |\n|-------|---------|\n| на столі | Чашка на столі. (Cup is on the table.) |\n| на роботі | Тато на роботі. (Dad is at work.) |\n| на вулиці | Люди на вулиці. (People are on the street.) |\n| на концерті | Ми на концерті. (We're at a concert.) |\n| на пляжі | Вони на пляжі. (They're at the beach.) |\n| на балконі | Кіт на балконі. (Cat is on the balcony.) |\n\n**Mini-Dialogue 2:**\n\n— Вибачте, де аптека?\n— Аптека **на площі**, біля готелю.\n— А банк теж там?\n— Ні, банк **на вулиці** Шевченка, **у центрі**.\n— Дякую!\n— Будь ласка! А ви **в готелі** чи **в квартирі**?\n— **В готелі** \"Україна\", **на третьому** поверсі.\n\n> 🌍 **Real World: Ukrainian Addresses**\n>\n> When writing addresses in Ukrainian, you use locative:\n> - вулиця Хрещатик, **будинок** 24, **квартира** 5\n> - But when STATING location: \"Я живу **на вулиці** Хрещатик, **у будинку** 24.\"\n>\n> The preposition matters!\n\n### Common Mistakes & How to Avoid Them\n\n**Mistake 1:** Using nominative instead of locative\n❌ Я в кімната. (I'm in room-NOMINATIVE)\n✅ Я в кімнаті. (I'm in room-LOCATIVE)\n\n**Mistake 2:** Forgetting the preposition\n❌ Я кімнаті. (Missing в/у)\n✅ Я в кімнаті.\n\n**Mistake 3:** Wrong preposition choice\n❌ Я на Україні. (Russian propaganda form)\n✅ Я в Україні. (Correct Ukrainian)\n\n**Mistake 4:** Wrong ending for masculine\n❌ Я в банкі. (Bank ends in -і, but sounds unnatural)\n✅ Я в банку. (Hard masculine → -у)\n\n**Mistake 5:** Mixing в and у randomly\n❌ Я в Львові. (Hard to pronounce)\n✅ Я у Львові. (у before consonant cluster)\n\n> ⚡ **Pro Tip**\n>\n> If you're not sure whether to use **-і** or **-у** for masculine nouns, try saying it out loud. Ukrainians use **-у** when it sounds smoother (банк**у**, парк**у**), and **-і** when the stem is soft (музе**ї**, Києв**і**).\n\n**Mini-Dialogue 3:**\n\n— Твоя книга **на столі**?\n— Ні, вона **в сумці**.\n— А телефон?\n— Телефон **у кімнаті**, **на ліжку**.\n— Ти завжди все забуваєш!\n— Так, вибач. Моя голова **на місяці**! (My head is on the moon! - Ukrainian idiom for \"spacing out\")\n\n## Production\n\nNow it's your turn! Practice asking and answering \"Where?\" questions.\n\n**Scenario 1: Meeting a Friend**\n\nYou're texting with your Ukrainian friend. Answer their questions using locative case:\n\n1. Де ти зараз? (Where are you now?)\n   - → (Create your own answer: Я в кафе / Я вдома / Я на роботі...)\n\n2. Де твій телефон? (Where is your phone?)\n   - → (Він на столі / Він у сумці / Він у кімнаті...)\n\n3. Де ти живеш? (Where do you live?)\n   - → (Я живу в Києві / у Львові / в Одесі...)\n\n**Scenario 2: Lost Items**\n\nYour roommate can't find things. Help them by saying where each item is:\n\n- Паспорт? → (**у шафі** / on the shelf)\n- Ключі? → (**на столі** / on the table)\n- Книга? → (**в кімнаті** / in the room)\n- Чашка? → (**на кухні** / in the kitchen)\n\n**Scenario 3: City Tour**\n\nYou're showing a friend around your city. Create 5 sentences describing where things are:\n\nExample: **У нашому місті є старий парк. Парк у центрі.**\n\n> 🎭 **Cultural Insight: Space in Ukrainian Life**\n>\n> Ukrainians have a special relationship with space. The phrase \"своє місце\" (one's own place) is sacred - whether it's your seat at the table, your corner in the office, or your homeland. The locative case isn't just grammar - it's how Ukrainians define belonging.\n>\n> \"Де твоє місце?\" (Where is your place?) is both a literal question and an existential one.\n\n---"
       },
       {
-        "id": "section-summary-1",
-        "name": "Підсумок",
-        "nameEn": "Summary",
+        "id": "section-2",
+        "name": "Summary",
+        "nameEn": null,
         "type": "summary",
-        "content": "**The Locative Case: Answering \"Where?\"**\n\n1. **Main prepositions:** в/у (inside) and на (on/at)\n2. **Standard ending:** -і for most nouns\n3. **Masculine exception:** -у for some places (у лісу, у саду)\n4. **в Україні** — always, never \"на\"!\n5. **Events:** always use на (на концерті, на уроці)\n\n---\n\n> [!tip] 🌟 **Pro Tip:** When you learn place nouns, always learn them WITH their preposition: \"в магазині\", \"на вулиці\", \"в Україні\". This way you'll never mix them up!\n\n\n---"
+        "content": "You've mastered the locative case! Here's what you learned:\n\n✅ **The locative case answers: Де? (Where?)**\n✅ **Always used WITH a preposition: в/у or на**\n✅ **Endings: mostly -і (feminine, neuter, soft masculine) or -у (hard masculine)**\n✅ **в/у = inside enclosed spaces, cities, countries**\n✅ **на = on surfaces, at events, some fixed locations**\n✅ **в Україні (not на Україні) - grammar is political resistance**\n\n**Key Sentences to Remember:**\n\n- Де ти? — Я **в кафе**.\n- Де книга? — Вона **на столі**.\n- Де ти живеш? — Я живу **в Києві**.\n- Де твоя робота? — Моя робота **в центрі**.\n\nNext up: You'll learn possessive pronouns (мій, твій, його...) so you can say \"MY book is on the table\" and \"HIS work is in the center\"!\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| у | /u/ | in, inside | prep | - | before clusters |\n| в | /v/ | in, inside | prep | - | before single consonants |\n| на | /nɑ/ | on, at | prep | - | |\n| кімната | /ˈkimnɑtɑ/ | room | noun | f | |\n| кухня | /ˈkuxnʲɑ/ | kitchen | noun | f | |\n| ванна | /ˈvɑnːɑ/ | bathroom | noun | f | |\n| спальня | /ˈspɑlʲnʲɑ/ | bedroom | noun | f | |\n| вітальня | /viˈtɑlʲnʲɑ/ | living room | noun | f | |\n| коридор | /kɔrɪˈdɔr/ | corridor, hallway | noun | m | |\n| балкон | /bɑlˈkɔn/ | balcony | noun | m | |\n| поверх | /ˈpɔwɛrx/ | floor (level) | noun | m | |\n| будинок | /ˈbudɪnɔk/ | building, house | noun | m | |\n| квартира | /kwɑrˈtɪrɑ/ | apartment | noun | f | |\n| офіс | /ˈɔfis/ | office | noun | m | |\n| робота | /rɔˈbɔtɑ/ | work, job | noun | f | |\n| школа | /ˈʃkɔlɑ/ | school | noun | f | |\n| університет | /unʲivɛrsɪˈtɛt/ | university | noun | m | |\n| лікарня | /liˈkɑrnʲɑ/ | hospital | noun | f | |\n| магазин | /mɑɦɑˈzɪn/ | shop, store | noun | m | |\n| аптека | /ɑpˈtɛkɑ/ | pharmacy | noun | f | |\n| ринок | /ˈrɪnɔk/ | market | noun | m | |\n| центр | /t͡sɛntr/ | center | noun | m | |\n| ресторан | /rɛstɔˈrɑn/ | restaurant | noun | m | |\n| готель | /ɦɔˈtɛlʲ/ | hotel | noun | m | |\n| парк | /pɑrk/ | park | noun | m | |\n| пляж | /plʲɑʒ/ | beach | noun | m | |\n| музей | /muˈzɛj/ | museum | noun | m | |\n| театр | /tɛˈɑtr/ | theater | noun | m | |\n| кінотеатр | /kinɔtɛˈɑtr/ | cinema | noun | m | |\n| стадіон | /stɑdiˈɔn/ | stadium | noun | m | |\n| церква | /ˈt͡sɛrkwɑ/ | church | noun | f | |\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## quiz: Where Is It?\n> Choose the correct locative form.\n\n1. Де ти? — Я ___ кафе.\n   - [ ] на\n   - [x] в\n   - [ ] у\n   - [ ] біля\n   > Enclosed space (café) uses в.\n\n2. Де книга? — Вона ___ столі.\n   - [x] на\n   - [ ] в\n   - [ ] у\n   - [ ] під\n   > Tables are surfaces, so we use на.\n\n3. Де ти живеш? — Я живу ___ Києві.\n   - [ ] в\n   - [x] у\n   - [ ] на\n   - [ ] при\n   > Lviv (Київ) has consonant cluster, so у is used.\n\n4. Де твоя робота? — ___ центрі.\n   - [x] У\n   - [ ] В\n   - [ ] На\n   - [ ] Від\n   > Center (центр) starts with consonant cluster, so у.\n\n5. Де діти? — Вони ___ школі.\n   - [ ] на\n   - [x] у\n   - [ ] біля\n   - [ ] коло\n   > Enclosed building (school) uses у/в.\n\n6. Де чашка? — ___ кухні.\n   - [ ] В\n   - [x] На\n   - [ ] У\n   - [ ] Під\n   > Kitchen is an enclosed space, uses на when referring to the room.\n\n7. Де концерт? — ___ стадіоні.\n   - [ ] в\n   - [x] на\n   - [ ] у\n   - [ ] при\n   > Events use на.\n\n8. Де ваша квартира? — ___ третьому поверсі.\n   - [x] На\n   - [ ] В\n   - [ ] У\n   - [ ] Під\n   > Floor levels use на.\n\n9. Де ти працюєш? — Я працюю ___ офісі.\n   - [ ] на\n   - [x] в\n   - [ ] під\n   - [ ] біля\n   > Enclosed workspace uses в/у.\n\n10. Де твій паспорт? — ___ сумці.\n    - [ ] На\n    - [x] У\n    - [ ] В\n    - [ ] Під\n    > Container (bag) uses у.\n\n11. Де музей? — ___ центрі міста.\n    - [x] У\n    - [ ] В\n    - [ ] На\n    - [ ] Від\n    > Center has consonant cluster.\n\n12. Де вони? — Вони ___ пляжі.\n    - [x] на\n    - [ ] в\n    - [ ] у\n    - [ ] під\n    > Open space (beach) uses на.\n\n## match-up: Places and Locations\n> Match each place with the correct locative form.\n\n| Nominative | Locative |\n|------------|----------|\n| кімната | у кімнаті |\n| стіл | на столі |\n| магазин | у магазині |\n| робота | на роботі |\n| Київ | у Києві |\n| пляж | на пляжі |\n| школа | у школі |\n| балкон | на балконі |\n| музей | у музеї |\n| центр | у центрі |\n| парк | у парку |\n| вулиця | на вулиці |\n\n## fill-in: Complete the Locative\n> Fill in the blank with the correct locative form.\n\n1. Я живу в ___.\n   > [!answer] Києві\n   > [!options] Київ | Києві | Києва | Києву\n\n2. Книга на ___.\n   > [!answer] столі\n   > [!options] стіл | столі | столу | стола\n\n3. Діти в ___.\n   > [!answer] школі\n   > [!options] школа | школі | школу | школи\n\n4. Ми на ___.\n   > [!answer] роботі\n   > [!options] робота | роботі | роботу | роботи\n\n5. Вона у ___.\n   > [!answer] магазині\n   > [!options] магазин | магазині | магазину | магазина\n\n6. Концерт на ___.\n   > [!answer] стадіоні\n   > [!options] стадіон | стадіоні | стадіону | стадіона\n\n7. Чашка на ___.\n   > [!answer] кухні\n   > [!options] кухня | кухні | кухню | кухні\n\n8. Студенти в ___.\n   > [!answer] бібліотеці\n   > [!options] бібліотека | бібліотеці | бібліотеку | бібліотеки\n\n9. Квартира на третьому ___.\n   > [!answer] поверсі\n   > [!options] поверх | поверсі | поверху | поверха\n\n10. Ми у ___.\n    > [!answer] Львові\n    > [!options] Львів | Львові | Львову | Львова\n\n11. Кіт на ___.\n    > [!answer] балконі\n    > [!options] балкон | балконі | балкону | балкона\n\n12. Зустріч у ___.\n    > [!answer] кафе\n    > [!options] кафе | кафі | кафу | кафею\n    > Note: кафе is neuter and doesn't change in locative.\n\n## group-sort: в/у or на?\n> Sort these locations by which preposition they take.\n\n### в/у (inside)\n- у кімнаті\n- в школі\n- у магазині\n- в Києві\n- у парку\n- в офісі\n- у музеї\n- в ресторані\n- у готелі\n- в центрі\n- у лікарні\n- в театрі\n\n### на (on/at)\n- на столі\n- на роботі\n- на пляжі\n- на балконі\n- на вулиці\n- на концерті\n- на стадіоні\n- на площі\n- на поверсі\n- на ринку\n- на уроці\n- на зустрічі\n\n## true-false: Locative Rules\n> Decide if each statement is true or false.\n\n- [x] The locative case always requires a preposition (в/у or на).\n  > Correct! You never use locative without a preposition.\n\n- [ ] Locative case is used to show direction (where you're going).\n  > Incorrect! Locative shows LOCATION (where you are). Direction uses accusative.\n\n- [x] \"У\" and \"в\" are the same preposition, just different forms.\n  > Correct! \"У\" is used before consonant clusters for easier pronunciation.\n\n- [ ] All cities use \"на\" (e.g., на Києві).\n  > Incorrect! Cities use \"в/у\" (у Києві, в Одесі).\n\n- [x] Most feminine nouns ending in -а change to -і in locative.\n  > Correct! кімната → в кімнаті, школа → у школі.\n\n- [ ] Masculine nouns always end in -і in locative.\n  > Incorrect! Hard masculine nouns often end in -у (у банку, в парку).\n\n- [x] The phrase \"в Україні\" (not \"на Україні\") is politically significant.\n  > Correct! Russian uses \"на\" to imply Ukraine is just a borderland region.\n\n- [x] \"На роботі\" is a fixed expression.\n  > Correct! You always say \"на роботі\" (at work), never \"в роботі\".\n\n- [ ] You can use locative case without a preposition in questions.\n  > Incorrect! Even in questions, you need a preposition: \"Де ти?\" → \"В кафе.\"\n\n- [x] Events (concerts, meetings) use \"на\".\n  > Correct! на концерті, на зустрічі, на уроці.\n\n- [ ] \"На столі\" means \"to the table.\"\n  > Incorrect! \"На столі\" means \"ON the table\" (location). Direction would be accusative.\n\n- [x] Some masculine nouns have -ові ending in locative for people.\n  > Correct! на батькові, на дідові (though less common in modern Ukrainian).\n\n## unjumble: Where Questions and Answers\n> Put the words in the correct order.\n\n1. ти / Де / ?\n   > [!answer] Де ти?\n   > (Where are you?) [2 words]\n\n2. кафе / Я / в\n   > [!answer] Я в кафе.\n   > (I'm in a café.) [3 words]\n\n3. на / Книга / столі\n   > [!answer] Книга на столі.\n   > (The book is on the table.) [3 words]\n\n4. у / живу / Я / Києві\n   > [!answer] Я живу у Києві.\n   > (I live in Kyiv.) [4 words]\n\n5. Діти / школі / в\n   > [!answer] Діти в школі.\n   > (The children are at school.) [3 words]\n\n6. роботі / на / Вона\n   > [!answer] Вона на роботі.\n   > (She's at work.) [3 words]\n\n7. у / Ми / центрі / магазині / в\n   > [!answer] Ми в магазині у центрі.\n   > (We're in a shop in the center.) [5 words]\n\n8. Де / паспорт / твій / ?\n   > [!answer] Де твій паспорт?\n   > (Where is your passport?) [3 words]\n\n9. У / він / сумці\n   > [!answer] Він у сумці.\n   > (It's in the bag.) [3 words]\n\n10. на / Концерт / стадіоні\n    > [!answer] Концерт на стадіоні.\n    > (The concert is at the stadium.) [3 words]\n\n11. пляжі / на / зараз / Вони\n    > [!answer] Вони зараз на пляжі.\n    > (They're at the beach now.) [4 words]\n\n12. у / Студенти / бібліотеці\n    > [!answer] Студенти у бібліотеці.\n    > (The students are in the library.) [3 words]\n\n## fill-in: Preposition Choice\n> Choose в/у or на.\n\n1. Я ___ кімнаті.\n   > [!answer] в\n   > [!options] в | на | у | під\n\n2. Книга ___ столі.\n   > [!answer] на\n   > [!options] на | в | біля | під\n\n3. Ми ___ Львові.\n   > [!answer] у\n   > [!options] в | на | у | при\n\n4. Вона ___ роботі.\n   > [!answer] на\n   > [!options] в | на | у | від\n\n5. Діти ___ школі.\n   > [!answer] у\n   > [!options] в | на | у | коло\n\n6. Концерт ___ стадіоні.\n   > [!answer] на\n   > [!options] в | на | у | при\n\n7. Я живу ___ Україні.\n   > [!answer] в\n   > [!options] в | на | у | від\n\n8. Чашка ___ кухні.\n   > [!answer] на\n   > [!options] на | в | коло | біля\n\n9. Ми ___ центрі.\n   > [!answer] у\n   > [!options] в | на | у | від\n\n10. Вони ___ пляжі.\n    > [!answer] на\n    > [!options] на | в | біля | коло\n\n11. Твій телефон ___ сумці?\n    > [!answer] у\n    > [!options] у | на | біля | коло\n\n12. Зустріч ___ офісі.\n    > [!answer] в\n    > [!options] в | на | у | при\n\n## match-up: Nominative to Locative\n> Match the nominative form to its locative form.\n\n| Nominative | Locative (with preposition) |\n|------------|------------------------------|\n| кімната | в кімнаті |\n| банк | у банку |\n| місто | в місті |\n| робота | на роботі |\n| стіл | на столі |\n| Львів | у Львові |\n| школа | в школі |\n| концерт | на концерті |\n| офіс | в офісі |\n| пляж | на пляжі |\n| центр | у центрі |\n| балкон | на балконі |\n\n## quiz: Translation Practice\n> Choose the correct Ukrainian translation.\n\n1. I'm at work.\n   - [x] Я на роботі.\n   - [ ] Я в роботі.\n   - [ ] Я у роботі.\n   - [ ] Я робота.\n   > Fixed expression: на роботі.\n\n2. The book is on the table.\n   - [x] Книга на столі.\n   - [ ] Книга в столі.\n   - [ ] Книга у столі.\n   - [ ] Книга стіл.\n   > Surface uses на.\n\n3. We live in Kyiv.\n   - [ ] Ми живемо в Київі.\n   - [x] Ми живемо у Києві.\n   - [ ] Ми живемо на Києві.\n   - [ ] Ми живемо Київ.\n   > Consonant cluster requires у.\n\n4. She's in the shop.\n   - [ ] Вона на магазині.\n   - [x] Вона у магазині.\n   - [ ] Вона магазин.\n   - [ ] Вона в магазин.\n   > Enclosed space, consonant cluster → у магазині.\n\n5. The children are at school.\n   - [x] Діти в школі.\n   - [ ] Діти на школі.\n   - [ ] Діти школа.\n   - [ ] Діти у школу.\n   > Enclosed building uses в/у.\n\n6. I'm in Ukraine.\n   - [x] Я в Україні.\n   - [ ] Я на Україні.\n   - [ ] Я у Україні.\n   - [ ] Я Україна.\n   > Countries use в/у (politically significant!).\n\n7. The concert is at the stadium.\n   - [ ] Концерт у стадіоні.\n   - [x] Концерт на стадіоні.\n   - [ ] Концерт в стадіоні.\n   - [ ] Концерт стадіон.\n   > Events use на.\n\n8. Your passport is in the bag.\n   - [ ] Твій паспорт на сумці.\n   - [x] Твій паспорт у сумці.\n   - [ ] Твій паспорт в сумці.\n   - [ ] Твій паспорт сумка.\n   > Container, consonant cluster → у сумці.\n\n9. We're in the center.\n   - [x] Ми у центрі.\n   - [ ] Ми на центрі.\n   - [ ] Ми в центрі.\n   - [ ] Ми центр.\n   > Consonant cluster → у центрі.\n\n10. They're at the beach.\n    - [x] Вони на пляжі.\n    - [ ] Вони в пляжі.\n    - [ ] Вони у пляжі.\n    - [ ] Вони пляж.\n    > Open space uses на.\n\n11. The cup is in the kitchen.\n    - [x] Чашка на кухні.\n    - [ ] Чашка в кухні.\n    - [ ] Чашка у кухні.\n    - [ ] Чашка кухня.\n    > Room name uses на (though в is also acceptable).\n\n12. My apartment is on the third floor.\n    - [x] Моя квартира на третьому поверсі.\n    - [ ] Моя квартира в третьому поверсі.\n    - [ ] Моя квартира у третьому поверсі.\n    - [ ] Моя квартира третій поверх.\n    > Floor levels use на."
       }
     ],
-    "rawMarkdown": "---\ntitle: \"The Locative: Where Things Are\"\nsubtitle: \"Location with в/у and на\"\nphase: A1.2\ntransliteration: partial\npedagogy: PPP\nduration: 45\ntags: [grammar, cases, locative, prepositions, location]\nobjectives:\n  - Understand the locative case for location\n  - Choose correctly between в/у and на\n  - Form locative endings for all genders\n  - Answer \"where\" questions about locations\ngrammar:\n  - Locative case\n  - Prepositions в/у and на\naudio: false\n---\n\n# The Locative: Where Things Are\n\n> **Note:** You've mastered the accusative for objects. Now learn the **locative** — saying where things **are** or where actions **happen**!\n\n## Warm-up: The Location Question\n\nEvery conversation involves location. Where are you? Where do you live? Where is the café?\n\nIn Ukrainian, answering \"where?\" requires a special case: the **Locative** (місцевий відмінок). Unlike English, you can't just say \"I'm in Kyiv\" — you need to change the noun's ending AND choose the right preposition.\n\nCompare English to Ukrainian:\n- English: \"I am **in** Kyiv.\" (one preposition, no noun change)\n- Ukrainian: \"Я **в** Києв**і**.\" (preposition + noun ending change)\n\nThis might seem like extra work, but it actually makes Ukrainian incredibly **precise**. You always know exactly where something is — inside, on top, at an event — just from the grammar!\n\n> 💡 **Thinking Trick:** The locative answers **де?** (where?). If you can ask \"where?\" the answer needs locative case.\n\n## Presentation: The Locative Case\n\n### 1. Two Key Prepositions\n\nUkrainian uses two main prepositions for location:\n\n| Preposition | Basic Meaning | Examples |\n|-------------|---------------|----------|\n| **в/у** | inside, in | в кімнаті (in the room), у магазині (in the store) |\n| **на** | on (surface), at (events/places) | на столі (on the table), на концерті (at the concert) |\n\n**When to use в vs у?**\n- Use **в** before consonants: в Києві, в школі\n- Use **у** before vowels or after vowels: у Львові, я у Львові\n- Both are correct in many contexts — it's about **звукова гармонія** (sound harmony)\n\n### 2. Locative Endings\n\nThe locative case changes noun endings based on gender:\n\n| Gender | Nominative | Locative Ending | Example |\n|--------|------------|-----------------|---------|\n| **Masculine** | -Ø (consonant) | **-і / -у** | стіл → на стол**і**, банк → у банк**у** |\n| **Feminine** | -а/-я | **-і** | кімнат**а** → в кімнат**і**, земл**я** → на земл**і** |\n| **Neuter** | -о/-е | **-і** | вікн**о** → на вікн**і**, мор**е** → на мор**і** |\n\n**The pattern is simple:** Most nouns take **-і** in locative!\n\n### 3. Exceptions and Special Cases\n\nSome masculine nouns take **-у** instead of **-і**:\n- **Large spaces:** ліс → у ліс**у**, сад → у сад**у**\n- **Abstract concepts:** банк → у банк**у**, клас → у клас**і** (either works)\n\nSoft-stem consonants (ь, й, etc.) may cause vowel changes:\n- день → у дн**і** (the е drops)\n- чай → у ча**ї** (insert ї)\n\n> 📜 **Pattern Summary:**\n> - **Masculine:** -і or -у (often -у for places)\n> - **Feminine:** -і (always)\n> - **Neuter:** -і (always)\n\n> 💡 **Did You Know?** The locative is one of the seven cases in Ukrainian. It's the only case that ALWAYS requires a preposition — you never see locative without в/у, на, по, or при!\n\n### 4. в/у vs на — Choosing Correctly\n\nThis is where learners often struggle. Here's a guide:\n\n| Use **в/у** (inside) | Use **на** (on/at) |\n|---------------------|-------------------|\n| в кімнаті (in a room) | на вулиці (on the street) |\n| в місті (in a city) | на майдані (in a square) |\n| у магазині (in a store) | на ринку (at the market) |\n| в Україні (in Ukraine) 🇺🇦 | на концерті (at a concert) |\n| у школі (in/at school) | на роботі (at work) |\n\n**Special cases:**\n- **Ukraine uses в**: в Україні (NOT на Україні — this is the Russian-influenced form!)\n- **Events use на**: на зустрічі, на святі, на уроці\n- **Islands and some regions use на**: на Ямайці, на Поліссі\n\n> 📜 **Myth Buster:** The form \"на Україні\" was pushed during Russian imperial and Soviet rule to imply Ukraine was merely a region (\"on the borderland\"), not a country. Correct Ukrainian uses **в Україні** — recognizing Ukraine as a sovereign nation with an interior.\n\n## Cultural Insight: Ukrainian Geography 🇺🇦\n\nUkraine is the largest country entirely within Europe! Some key locations you'll encounter:\n\n- **Київ** (Kyiv) — столиця, серце України (capital, heart of Ukraine)\n- **Львів** — культурна столиця заходу (western cultural capital)\n- **Одеса** — місто на Чорному морі (city on the Black Sea)\n- **Харків** — найбільше місто на сході (largest eastern city)\n- **Карпати** — мальовничі гори на заході (beautiful mountains in the west)\n\nNotice: \"в Києві\", \"у Львові\", \"в Одесі\" — but \"на морі\", \"на горі\" (sea and mountain surfaces).\n\n> 📜 **History Bite:** The name \"Україна\" likely comes from \"край\" (land/edge) — not \"borderland\" as Russian propaganda claims. Historical documents show \"Україна\" meant \"homeland\" or \"our land\" to Ukrainians. The meaning was distorted by imperial narratives.\n\n## Reading Practice: Де ти? 📍\n\n**Українською:**\n\nПривіт! Мене звати Тарас. Я зараз у Києві. Я живу в центрі міста. Моя квартира на третьому поверсі. Сьогодні ранок. Я на кухні, п'ю каву. Мій кіт на вікні — він любить дивитися на вулицю. Моя сестра у своїй кімнаті. Вона працює на комп'ютері.\n\nО 9:00 я йду на роботу. Я працюю в офісі. О 13:00 я обідаю в кафе біля роботи. Ввечері я зустрічаюся з друзями у ресторані. А де ти зараз?\n\n**English Translation:**\n\nHi! My name is Taras. I'm now in Kyiv. I live in the city center. My apartment is on the third floor. Today is morning. I'm in the kitchen, drinking coffee. My cat is on the window — he likes to look at the street. My sister is in her room. She's working on the computer.\n\nAt 9:00 I go to work. I work in an office. At 13:00 I have lunch at a café near work. In the evening I meet with friends at a restaurant. And where are you now?\n\n**Comprehension check:** Find every locative form. Which use в/у and which use на?\n\n## Conversation: Де зупинка? 🗣️\n\n**Турист:** Вибачте, де зупинка автобуса?\n**Киянин:** Прямо. Зупинка на розі, біля банку.\n**Турист:** Дякую! А де найближче метро?\n**Киянин:** Станція метро недалеко. Ідіть прямо, потім наліво. Вона у тому великому будинку.\n**Турист:** Чи далеко до центру?\n**Киянин:** Ні, на метро — п'ять хвилин. На центральній станції вихід на Хрещатик.\n**Турист:** Дуже дякую за допомогу!\n**Киянин:** Будь ласка! Гарного дня!\n\n**English Translation:**\n**Tourist:** Excuse me, where is the bus stop?\n**Kyivan:** Straight ahead. The stop is on the corner, near the bank.\n**Tourist:** Thank you! And where is the nearest metro?\n**Kyivan:** The metro station is not far. Go straight, then left. It is in that big building.\n**Tourist:** Is it far to the center?\n**Kyivan:** No, by metro — five minutes. At the central station exit to Khreshchatyk.\n**Tourist:** Thank you very much for help!\n**Kyivan:** You're welcome! Have a nice day!\n\nЗверни увагу: на розі, у будинку, на метро, на станції — всі у місцевому відмінку!\n\n# Summary\n\n**The Locative Case: Answering \"Where?\"**\n\n1. **Main prepositions:** в/у (inside) and на (on/at)\n2. **Standard ending:** -і for most nouns\n3. **Masculine exception:** -у for some places (у лісу, у саду)\n4. **в Україні** — always, never \"на\"!\n5. **Events:** always use на (на концерті, на уроці)\n\n---\n\n> [!tip] 🌟 **Pro Tip:** When you learn place nouns, always learn them WITH their preposition: \"в магазині\", \"на вулиці\", \"в Україні\". This way you'll never mix them up!\n\n# Activities\n\n## fill-in: Locative Formation\n> Add the correct locative ending.\n\n1. Я живу в кімнат___.\n   > [!answer] і\n   > [!options] і | у | ою | а\n\n2. Книга на стол___.\n   > [!answer] і\n   > [!options] і | у | ом | а\n\n3. Вона працює в офіс___.\n   > [!answer] і\n   > [!options] і | у | ом | а\n\n4. Ми у магазин___.\n   > [!answer] і\n   > [!options] і | у | ом | а\n\n5. Діти на вулиц___.\n   > [!answer] і\n   > [!options] і | у | ею | а\n\n6. Він у школ___.\n   > [!answer] і\n   > [!options] і | у | ою | а\n\n7. Кіт на вікн___.\n   > [!answer] і\n   > [!options] і | у | ом | а\n\n8. Я в Київ___.\n   > [!answer] і\n   > [!options] і | у | ом | а\n\n9. Вона на робот___.\n   > [!answer] і\n   > [!options] і | у | ою | а\n\n10. Ми у ресторан___.\n    > [!answer] і\n    > [!options] і | у | ом | а\n\n11. Він у парк___.\n    > [!answer] у\n    > [!options] у | і | ом | а\n\n12. Вони на концерт___.\n    > [!answer] і\n    > [!options] і | у | ом | а\n\n## match-up: Nominative to Locative\n> Match the nominative with its locative form.\n\n| Nominative | Locative |\n| --- | --- |\n| кімната | в кімнаті |\n| кухня | на кухні |\n| офіс | в офісі |\n| магазин | у магазині |\n| вулиця | на вулиці |\n| школа | у школі |\n| місто | у місті |\n| ресторан | у ресторані |\n| парк | у парку |\n| стіл | на столі |\n| вікно | на вікні |\n| Україна | в Україні |\n\n## quiz: Choose в/у or на\n> Select the correct preposition.\n\n1. Я живу ___ Києві.\n   - [x] в\n   - [ ] на\n   - [ ] до\n   - [ ] з\n\n2. Книга лежить ___ столі.\n   - [ ] в\n   - [x] на\n   - [ ] до\n   - [ ] з\n\n3. Вона працює ___ офісі.\n   - [x] в\n   - [ ] на\n   - [ ] до\n   - [ ] з\n\n4. Ми ___ концерті.\n   - [ ] в\n   - [x] на\n   - [ ] до\n   - [ ] з\n\n5. Він ___ вулиці.\n   - [ ] в\n   - [x] на\n   - [ ] до\n   - [ ] з\n\n6. Діти ___ школі.\n   - [x] у\n   - [ ] на\n   - [ ] до\n   - [ ] з\n\n7. Ми живемо ___ Україні.\n   - [x] в\n   - [ ] на\n   - [ ] до\n   - [ ] з\n\n8. Вона ___ роботі.\n   - [ ] в\n   - [x] на\n   - [ ] до\n   - [ ] з\n\n9. Він ___ магазині.\n   - [x] у\n   - [ ] на\n   - [ ] до\n   - [ ] з\n\n10. Ми зустрінемося ___ кафе.\n    - [x] в\n    - [ ] на\n    - [ ] до\n    - [ ] з\n\n11. Вони ___ ринку.\n    - [ ] в\n    - [x] на\n    - [ ] до\n    - [ ] з\n\n12. Я ___ університеті.\n    - [x] в\n    - [ ] на\n    - [ ] до\n    - [ ] з\n\n## group-sort: в/у or на\n> Sort places by their preposition.\n\n| в/у (inside) | на (on/at) |\n| --- | --- |\n| кімната | вулиця |\n| офіс | робота |\n| магазин | концерт |\n| школа | урок |\n| бібліотека | ринок |\n| Україна | стадіон |\n| місто | площа |\n| будинок | море |\n| ресторан | острів |\n| аптека | пляж |\n| музей | фестиваль |\n| театр | подія |\n\n## true-false: Locative Rules\n- [x] The locative case is used to answer \"де?\" (where?).\n- [x] The most common locative ending is -і.\n- [ ] You can use the locative without a preposition.\n- [x] \"В Україні\" is the correct form for \"in Ukraine.\"\n- [ ] \"На Україні\" is correct modern Ukrainian.\n- [x] \"На концерті\" means \"at the concert.\"\n- [x] \"В кімнаті\" means \"in the room.\"\n- [ ] All masculine nouns take -і in locative.\n- [x] \"У парку\" is an acceptable locative form.\n- [ ] \"На\" is used for all indoor locations.\n- [x] The locative always requires a preposition.\n- [x] \"У\" is used before vowels or after vowels.\n\n## anagram: Places Vocabulary\n> Unscramble these location words.\n\n1. а т н а м і к\n   > [!answer] кімната\n\n2. я н х у к\n   > [!answer] кухня\n\n3. с і ф о\n   > [!answer] офіс\n\n4. н и з а г а м\n   > [!answer] магазин\n\n5. а л о к ш\n   > [!answer] школа\n\n6. о т с і м\n   > [!answer] місто\n\n7. ц и у я в л\n   > [!answer] вулиця\n\n8. к р а п\n   > [!answer] парк\n\n9. н а р о т с е р\n   > [!answer] ресторан\n\n10. к а л я н і р\n    > [!answer] лікарня\n\n11. а е п а т к\n    > [!answer] аптека\n\n12. ь л т е о г\n    > [!answer] готель\n\n## fill-in: Where Questions\n> Answer with the correct locative form.\n\n1. Де ти? — Я в ___ (школа).\n   > [!answer] школі\n   > [!options] школі | школу | школа | школою\n\n2. Де книга? — На ___ (стіл).\n   > [!answer] столі\n   > [!options] столі | столу | стіл | столом\n\n3. Де мама? — На ___ (кухня).\n   > [!answer] кухні\n   > [!options] кухні | кухню | кухня | кухнею\n\n4. Де він працює? — В ___ (офіс).\n   > [!answer] офісі\n   > [!options] офісі | офісу | офіс | офісом\n\n5. Де ви живете? — В ___ (Київ).\n   > [!answer] Києві\n   > [!options] Києві | Київу | Київ | Києвом\n\n6. Де кіт? — На ___ (вікно).\n   > [!answer] вікні\n   > [!options] вікні | вікну | вікно | вікном\n\n7. Де діти? — У ___ (парк).\n   > [!answer] парку\n   > [!options] парку | паркі | парк | парком\n\n8. Де концерт? — У ___ (театр).\n   > [!answer] театрі\n   > [!options] театрі | театру | театр | театром\n\n9. Де ви? — На ___ (вулиця).\n   > [!answer] вулиці\n   > [!options] вулиці | вулицю | вулиця | вулицею\n\n10. Де магазин? — На ___ (площа).\n    > [!answer] площі\n    > [!options] площі | площу | площа | площею\n\n11. Де ресторан? — В ___ (центр).\n    > [!answer] центрі\n    > [!options] центрі | центру | центр | центром\n\n12. Де аптека? — На ___ (ріг).\n    > [!answer] розі\n    > [!options] розі | рогу | ріг | рогом\n\n## unjumble: Build Location Sentences\n> Arrange the words into correct sentences.\n\n1. в / я / кімнаті\n   > [!answer] Я в кімнаті.\n\n2. на / книга / столі\n   > [!answer] Книга на столі.\n\n3. працює / в / вона / офісі\n   > [!answer] Вона працює в офісі.\n\n4. діти / у / школі\n   > [!answer] Діти у школі.\n\n5. на / кіт / вікні\n   > [!answer] Кіт на вікні.\n\n6. Києві / ми / у\n   > [!answer] Ми у Києві.\n\n7. на / вона / роботі\n   > [!answer] Вона на роботі.\n\n8. у / він / магазині\n   > [!answer] Він у магазині.\n\n9. на / концерті / ми\n   > [!answer] Ми на концерті.\n\n10. в / живуть / Україні / вони\n    > [!answer] Вони живуть в Україні.\n\n11. на / зупинка / розі\n    > [!answer] Зупинка на розі.\n\n12. у / я / ресторані\n    > [!answer] Я у ресторані.\n\n---\n\n# Vocabulary\n\n| Ukrainian | IPA | English | Gender | Locative |\n| --- | --- | --- | --- | --- |\n| кімната | /kimˈnɑtɑ/ | room | f | у кімнаті |\n| кухня | /ˈkuxnʲɑ/ | kitchen | f | на кухні |\n| ванна | /ˈʋɑnnɑ/ | bathroom | f | у ванній |\n| спальня | /ˈspɑlʲnʲɑ/ | bedroom | f | у спальні |\n| вітальня | /ʋiˈtɑlʲnʲɑ/ | living room | f | у вітальні |\n| коридор | /korɪˈdor/ | hallway | m | у коридорі |\n| балкон | /bɑlˈkon/ | balcony | m | на балконі |\n| поверх | /ˈpoʋɛrx/ | floor (level) | m | на поверсі |\n| будинок | /buˈdɪnok/ | building/house | m | у будинку |\n| квартира | /kʋɑrˈtɪrɑ/ | apartment | f | у квартирі |\n| офіс | /ˈofis/ | office | m | в офісі |\n| робота | /roˈbotɑ/ | work | f | на роботі |\n| школа | /ˈʃkolɑ/ | school | f | у школі |\n| університет | /uniʋɛrsɪˈtɛt/ | university | m | в університеті |\n| лікарня | /liˈkɑrnʲɑ/ | hospital | f | у лікарні |\n| магазин | /mɑɦɑˈzɪn/ | store | m | у магазині |\n| аптека | /ɑpˈtɛkɑ/ | pharmacy | f | в аптеці |\n| ринок | /ˈrɪnok/ | market | m | на ринку |\n| центр | /ˈt͡sɛntr/ | center | m | у центрі |\n| ресторан | /rɛstoˈrɑn/ | restaurant | m | у ресторані |\n| готель | /ɦoˈtɛlʲ/ | hotel | m | у готелі |\n| парк | /pɑrk/ | park | m | у парку |\n| пляж | /plʲɑʒ/ | beach | m | на пляжі |\n| музей | /muˈzɛj/ | museum | m | у музеї |\n| театр | /tɛˈɑtr/ | theater | m | у театрі |\n| кінотеатр | /kinotɛˈɑtr/ | cinema | m | у кінотеатрі |\n| стадіон | /stɑdiˈon/ | stadium | m | на стадіоні |\n| церква | /ˈt͡sɛrkʋɑ/ | church | f | у церкві |\n| вулиця | /ˈʋulɪt͡sʲɑ/ | street | f | на вулиці |\n| площа | /ˈploʃt͡ʃɑ/ | square | f | на площі |\n",
-    "createdAt": "2025-12-12T19:55:32.040Z",
-    "modifiedAt": "2025-12-12T19:55:32.040Z",
+    "rawMarkdown": "---\nmodule: a1-13\ntitle: \"The Locative - Where Things Are\"\nsubtitle: \"Finding Your Way Around Ukrainian Spaces\"\nversion: \"1.0\"\nphase: \"A1.2\"\npedagogy: \"PPP\"\nobjectives:\n  - \"Learner can ask and answer 'Where is X?' using locative case\"\n  - \"Learner can distinguish between в/у and на prepositions\"\n  - \"Learner can describe locations of people and objects\"\n  - \"Learner can name common places in Ukrainian\"\nvocabulary_count: 30\nduration: 60\ntransliteration: \"vocabulary\"\ntags:\n  - grammar\n  - locative-case\n  - places\n  - prepositions\ngrammar:\n  - locative-case\n  - prepositions-v-u-na\n---\n\n# The Locative - Where Things Are\n\n## Warm-up\n\nImagine you're meeting a friend in Kyiv. They text you: \"Де ти?\" (Where are you?). You need to answer: \"Я в кафе\" (I'm in a café), \"Я на роботі\" (I'm at work), or \"Я в центрі\" (I'm downtown). In Ukrainian, when you say WHERE something is, the noun changes its ending - this is the **locative case** (місцевий відмінок).\n\nThe locative case answers one key question: **Де?** (Where?)\n\nYou've already learned how to say \"This is X\" (nominative) and \"I see X\" (accusative). Now you'll learn how to say \"I'm IN/AT/ON X\" - the grammar of location.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian has two words that both mean \"in\": **в** and **у**. They're the same preposition - **у** is used before consonant clusters to make pronunciation easier. Think of it like English \"a\" vs \"an\"!\n> - **в кімнаті** (in the room) - easy to say\n> - **у Львові** (in Lviv) - **у** makes the consonant cluster smoother\n\n## Presentation\n\n### The Locative Case: How It Works\n\nThe locative case (місцевий відмінок) is ALWAYS used with a preposition. You never use locative alone. The two main prepositions are:\n\n**в/у** = in, inside (enclosed spaces)\n**на** = on, at (surfaces, events, some fixed locations)\n\nHere's the basic pattern:\n\n| Nominative (Де це?) | Locative (Де ти?) | English |\n|---------------------|-------------------|---------|\n| Це **кімната** | Я **в кімнаті** | I'm in the room |\n| Це **банк** | Я **в банку** | I'm in the bank |\n| Це **місто** | Я **в місті** | I'm in the city |\n| Це **стіл** | Книга **на столі** | The book is on the table |\n| Це **робота** | Я **на роботі** | I'm at work |\n\n### Locative Endings: The Pattern\n\nThe locative case adds specific endings to nouns:\n\n**Masculine nouns:**\n- Most add **-і**: банк → **в банку** (wait, this is **-у**!)\n- Hard stems get **-у**: банк → в банк**у**, парк → у парк**у**\n- Soft stems get **-і**: музей → у музе**ї**, Київ → у Києв**і**\n\n**Feminine nouns (-а/-я):**\n- -а becomes **-і**: кімната → в кімнат**і**\n- -я becomes **-і**: кухня → на кухн**і**\n\n**Neuter nouns (-о/-е):**\n- -о becomes **-і**: місто → в міст**і**\n- -е becomes **-і**: море → на мор**і**\n\n> 🎯 **Key Pattern**\n>\n> Most nouns in locative end in **-і** or **-у** (for masculine). Think of locative as \"the **-і** case\" - it's the most common ending!\n\n### в/у vs на: Which Preposition?\n\nThis is one of the trickiest parts of Ukrainian - when to use **в/у** vs **на**. Here's the logic:\n\n**Use в/у (inside):**\n- Enclosed buildings: **в кімнаті, у магазині, в школі**\n- Cities and countries: **у Києві, в Україні, у Львові**\n- Containers: **у сумці, в коробці**\n\n**Use на (on/at):**\n- Surfaces: **на столі, на підлозі, на стіні**\n- Events: **на концерті, на зустрічі**\n- Open spaces: **на вулиці, на площі, на пляжі**\n- Fixed expressions: **на роботі, на уроці, на балконі**\n- Some countries/regions: **на Кавказі, на Волині** (historical usage)\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Ukrainians say 'в Україні' to oppose Russian 'на Украине'\"\n> **Fact:** Ukrainian has ALWAYS been \"в Україні\" - it's grammatically correct because Ukraine is a country (enclosed territory). Russian propagandists use \"на\" to imply Ukraine is just a \"borderland\" region. The grammar itself is political resistance.\n\n**Mini-Dialogue 1:**\n\n— Де ти?\n— Я **в кафе** на площі Ринок.\n— А де твій брат?\n— Він **на роботі** зараз.\n— Ваша робота **в центрі**?\n— Так, **у великому** офісі біля парку.\n\n(Notice how **на** is used for \"at work\" - a fixed expression, but **в** is used for \"in the center\" - an enclosed area)\n\n### Practice Examples\n\nLet's see locative in real sentences:\n\n1. **Я живу в Києві.** (I live in Kyiv.)\n2. **Книга на столі.** (The book is on the table.)\n3. **Ми в школі.** (We're at school.)\n4. **Вона в магазині.** (She's in the shop.)\n5. **Діти на пляжі.** (The children are at the beach.)\n6. **Ваш паспорт у сумці?** (Is your passport in the bag?)\n7. **Студенти в бібліотеці.** (The students are in the library.)\n8. **Фільм на великому екрані.** (The film is on the big screen.)\n9. **Ми чекаємо на зупинці.** (We're waiting at the stop.)\n10. **Моя квартира на третьому поверсі.** (My apartment is on the third floor.)\n11. **У нашому місті є старий театр.** (In our city there's an old theater.)\n12. **Концерт у великому залі.** (The concert is in a large hall.)\n\n> 🎬 **Pop Culture Moment: S.T.A.L.K.E.R.**\n>\n> In the legendary Ukrainian game S.T.A.L.K.E.R., you hear locative case constantly:\n> - \"Я **в Зоні**\" (I'm in the Zone)\n> - \"Артефакт **на складі**\" (Artifact at the warehouse)\n> - \"Сталкери **у барі**\" (Stalkers in the bar)\n>\n> The game was made by GSC Game World in Kyiv - and yes, they use proper Ukrainian locative grammar!\n\n## Practice\n\n### Usage Patterns: Where в/у, Where на\n\n**Common places with в/у:**\n\n| Place | Example |\n|-------|---------|\n| у кімнаті | Діти в кімнаті. (Children are in the room.) |\n| в школі | Урок у школі. (Lesson is at school.) |\n| у магазині | Я у магазині. (I'm in the shop.) |\n| в кафе | Зустріч у кафе. (Meeting is in a café.) |\n| у Львові | Ми у Львові. (We're in Lviv.) |\n| в Україні | Життя в Україні. (Life in Ukraine.) |\n\n**Common places with на:**\n\n| Place | Example |\n|-------|---------|\n| на столі | Чашка на столі. (Cup is on the table.) |\n| на роботі | Тато на роботі. (Dad is at work.) |\n| на вулиці | Люди на вулиці. (People are on the street.) |\n| на концерті | Ми на концерті. (We're at a concert.) |\n| на пляжі | Вони на пляжі. (They're at the beach.) |\n| на балконі | Кіт на балконі. (Cat is on the balcony.) |\n\n**Mini-Dialogue 2:**\n\n— Вибачте, де аптека?\n— Аптека **на площі**, біля готелю.\n— А банк теж там?\n— Ні, банк **на вулиці** Шевченка, **у центрі**.\n— Дякую!\n— Будь ласка! А ви **в готелі** чи **в квартирі**?\n— **В готелі** \"Україна\", **на третьому** поверсі.\n\n> 🌍 **Real World: Ukrainian Addresses**\n>\n> When writing addresses in Ukrainian, you use locative:\n> - вулиця Хрещатик, **будинок** 24, **квартира** 5\n> - But when STATING location: \"Я живу **на вулиці** Хрещатик, **у будинку** 24.\"\n>\n> The preposition matters!\n\n### Common Mistakes & How to Avoid Them\n\n**Mistake 1:** Using nominative instead of locative\n❌ Я в кімната. (I'm in room-NOMINATIVE)\n✅ Я в кімнаті. (I'm in room-LOCATIVE)\n\n**Mistake 2:** Forgetting the preposition\n❌ Я кімнаті. (Missing в/у)\n✅ Я в кімнаті.\n\n**Mistake 3:** Wrong preposition choice\n❌ Я на Україні. (Russian propaganda form)\n✅ Я в Україні. (Correct Ukrainian)\n\n**Mistake 4:** Wrong ending for masculine\n❌ Я в банкі. (Bank ends in -і, but sounds unnatural)\n✅ Я в банку. (Hard masculine → -у)\n\n**Mistake 5:** Mixing в and у randomly\n❌ Я в Львові. (Hard to pronounce)\n✅ Я у Львові. (у before consonant cluster)\n\n> ⚡ **Pro Tip**\n>\n> If you're not sure whether to use **-і** or **-у** for masculine nouns, try saying it out loud. Ukrainians use **-у** when it sounds smoother (банк**у**, парк**у**), and **-і** when the stem is soft (музе**ї**, Києв**і**).\n\n**Mini-Dialogue 3:**\n\n— Твоя книга **на столі**?\n— Ні, вона **в сумці**.\n— А телефон?\n— Телефон **у кімнаті**, **на ліжку**.\n— Ти завжди все забуваєш!\n— Так, вибач. Моя голова **на місяці**! (My head is on the moon! - Ukrainian idiom for \"spacing out\")\n\n## Production\n\nNow it's your turn! Practice asking and answering \"Where?\" questions.\n\n**Scenario 1: Meeting a Friend**\n\nYou're texting with your Ukrainian friend. Answer their questions using locative case:\n\n1. Де ти зараз? (Where are you now?)\n   - → (Create your own answer: Я в кафе / Я вдома / Я на роботі...)\n\n2. Де твій телефон? (Where is your phone?)\n   - → (Він на столі / Він у сумці / Він у кімнаті...)\n\n3. Де ти живеш? (Where do you live?)\n   - → (Я живу в Києві / у Львові / в Одесі...)\n\n**Scenario 2: Lost Items**\n\nYour roommate can't find things. Help them by saying where each item is:\n\n- Паспорт? → (**у шафі** / on the shelf)\n- Ключі? → (**на столі** / on the table)\n- Книга? → (**в кімнаті** / in the room)\n- Чашка? → (**на кухні** / in the kitchen)\n\n**Scenario 3: City Tour**\n\nYou're showing a friend around your city. Create 5 sentences describing where things are:\n\nExample: **У нашому місті є старий парк. Парк у центрі.**\n\n> 🎭 **Cultural Insight: Space in Ukrainian Life**\n>\n> Ukrainians have a special relationship with space. The phrase \"своє місце\" (one's own place) is sacred - whether it's your seat at the table, your corner in the office, or your homeland. The locative case isn't just grammar - it's how Ukrainians define belonging.\n>\n> \"Де твоє місце?\" (Where is your place?) is both a literal question and an existential one.\n\n---\n\n# Summary\n\nYou've mastered the locative case! Here's what you learned:\n\n✅ **The locative case answers: Де? (Where?)**\n✅ **Always used WITH a preposition: в/у or на**\n✅ **Endings: mostly -і (feminine, neuter, soft masculine) or -у (hard masculine)**\n✅ **в/у = inside enclosed spaces, cities, countries**\n✅ **на = on surfaces, at events, some fixed locations**\n✅ **в Україні (not на Україні) - grammar is political resistance**\n\n**Key Sentences to Remember:**\n\n- Де ти? — Я **в кафе**.\n- Де книга? — Вона **на столі**.\n- Де ти живеш? — Я живу **в Києві**.\n- Де твоя робота? — Моя робота **в центрі**.\n\nNext up: You'll learn possessive pronouns (мій, твій, його...) so you can say \"MY book is on the table\" and \"HIS work is in the center\"!\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| у | /u/ | in, inside | prep | - | before clusters |\n| в | /v/ | in, inside | prep | - | before single consonants |\n| на | /nɑ/ | on, at | prep | - | |\n| кімната | /ˈkimnɑtɑ/ | room | noun | f | |\n| кухня | /ˈkuxnʲɑ/ | kitchen | noun | f | |\n| ванна | /ˈvɑnːɑ/ | bathroom | noun | f | |\n| спальня | /ˈspɑlʲnʲɑ/ | bedroom | noun | f | |\n| вітальня | /viˈtɑlʲnʲɑ/ | living room | noun | f | |\n| коридор | /kɔrɪˈdɔr/ | corridor, hallway | noun | m | |\n| балкон | /bɑlˈkɔn/ | balcony | noun | m | |\n| поверх | /ˈpɔwɛrx/ | floor (level) | noun | m | |\n| будинок | /ˈbudɪnɔk/ | building, house | noun | m | |\n| квартира | /kwɑrˈtɪrɑ/ | apartment | noun | f | |\n| офіс | /ˈɔfis/ | office | noun | m | |\n| робота | /rɔˈbɔtɑ/ | work, job | noun | f | |\n| школа | /ˈʃkɔlɑ/ | school | noun | f | |\n| університет | /unʲivɛrsɪˈtɛt/ | university | noun | m | |\n| лікарня | /liˈkɑrnʲɑ/ | hospital | noun | f | |\n| магазин | /mɑɦɑˈzɪn/ | shop, store | noun | m | |\n| аптека | /ɑpˈtɛkɑ/ | pharmacy | noun | f | |\n| ринок | /ˈrɪnɔk/ | market | noun | m | |\n| центр | /t͡sɛntr/ | center | noun | m | |\n| ресторан | /rɛstɔˈrɑn/ | restaurant | noun | m | |\n| готель | /ɦɔˈtɛlʲ/ | hotel | noun | m | |\n| парк | /pɑrk/ | park | noun | m | |\n| пляж | /plʲɑʒ/ | beach | noun | m | |\n| музей | /muˈzɛj/ | museum | noun | m | |\n| театр | /tɛˈɑtr/ | theater | noun | m | |\n| кінотеатр | /kinɔtɛˈɑtr/ | cinema | noun | m | |\n| стадіон | /stɑdiˈɔn/ | stadium | noun | m | |\n| церква | /ˈt͡sɛrkwɑ/ | church | noun | f | |\n\n---\n\n# Activities\n\n## quiz: Where Is It?\n> Choose the correct locative form.\n\n1. Де ти? — Я ___ кафе.\n   - [ ] на\n   - [x] в\n   - [ ] у\n   - [ ] біля\n   > Enclosed space (café) uses в.\n\n2. Де книга? — Вона ___ столі.\n   - [x] на\n   - [ ] в\n   - [ ] у\n   - [ ] під\n   > Tables are surfaces, so we use на.\n\n3. Де ти живеш? — Я живу ___ Києві.\n   - [ ] в\n   - [x] у\n   - [ ] на\n   - [ ] при\n   > Lviv (Київ) has consonant cluster, so у is used.\n\n4. Де твоя робота? — ___ центрі.\n   - [x] У\n   - [ ] В\n   - [ ] На\n   - [ ] Від\n   > Center (центр) starts with consonant cluster, so у.\n\n5. Де діти? — Вони ___ школі.\n   - [ ] на\n   - [x] у\n   - [ ] біля\n   - [ ] коло\n   > Enclosed building (school) uses у/в.\n\n6. Де чашка? — ___ кухні.\n   - [ ] В\n   - [x] На\n   - [ ] У\n   - [ ] Під\n   > Kitchen is an enclosed space, uses на when referring to the room.\n\n7. Де концерт? — ___ стадіоні.\n   - [ ] в\n   - [x] на\n   - [ ] у\n   - [ ] при\n   > Events use на.\n\n8. Де ваша квартира? — ___ третьому поверсі.\n   - [x] На\n   - [ ] В\n   - [ ] У\n   - [ ] Під\n   > Floor levels use на.\n\n9. Де ти працюєш? — Я працюю ___ офісі.\n   - [ ] на\n   - [x] в\n   - [ ] під\n   - [ ] біля\n   > Enclosed workspace uses в/у.\n\n10. Де твій паспорт? — ___ сумці.\n    - [ ] На\n    - [x] У\n    - [ ] В\n    - [ ] Під\n    > Container (bag) uses у.\n\n11. Де музей? — ___ центрі міста.\n    - [x] У\n    - [ ] В\n    - [ ] На\n    - [ ] Від\n    > Center has consonant cluster.\n\n12. Де вони? — Вони ___ пляжі.\n    - [x] на\n    - [ ] в\n    - [ ] у\n    - [ ] під\n    > Open space (beach) uses на.\n\n## match-up: Places and Locations\n> Match each place with the correct locative form.\n\n| Nominative | Locative |\n|------------|----------|\n| кімната | у кімнаті |\n| стіл | на столі |\n| магазин | у магазині |\n| робота | на роботі |\n| Київ | у Києві |\n| пляж | на пляжі |\n| школа | у школі |\n| балкон | на балконі |\n| музей | у музеї |\n| центр | у центрі |\n| парк | у парку |\n| вулиця | на вулиці |\n\n## fill-in: Complete the Locative\n> Fill in the blank with the correct locative form.\n\n1. Я живу в ___.\n   > [!answer] Києві\n   > [!options] Київ | Києві | Києва | Києву\n\n2. Книга на ___.\n   > [!answer] столі\n   > [!options] стіл | столі | столу | стола\n\n3. Діти в ___.\n   > [!answer] школі\n   > [!options] школа | школі | школу | школи\n\n4. Ми на ___.\n   > [!answer] роботі\n   > [!options] робота | роботі | роботу | роботи\n\n5. Вона у ___.\n   > [!answer] магазині\n   > [!options] магазин | магазині | магазину | магазина\n\n6. Концерт на ___.\n   > [!answer] стадіоні\n   > [!options] стадіон | стадіоні | стадіону | стадіона\n\n7. Чашка на ___.\n   > [!answer] кухні\n   > [!options] кухня | кухні | кухню | кухні\n\n8. Студенти в ___.\n   > [!answer] бібліотеці\n   > [!options] бібліотека | бібліотеці | бібліотеку | бібліотеки\n\n9. Квартира на третьому ___.\n   > [!answer] поверсі\n   > [!options] поверх | поверсі | поверху | поверха\n\n10. Ми у ___.\n    > [!answer] Львові\n    > [!options] Львів | Львові | Львову | Львова\n\n11. Кіт на ___.\n    > [!answer] балконі\n    > [!options] балкон | балконі | балкону | балкона\n\n12. Зустріч у ___.\n    > [!answer] кафе\n    > [!options] кафе | кафі | кафу | кафею\n    > Note: кафе is neuter and doesn't change in locative.\n\n## group-sort: в/у or на?\n> Sort these locations by which preposition they take.\n\n### в/у (inside)\n- у кімнаті\n- в школі\n- у магазині\n- в Києві\n- у парку\n- в офісі\n- у музеї\n- в ресторані\n- у готелі\n- в центрі\n- у лікарні\n- в театрі\n\n### на (on/at)\n- на столі\n- на роботі\n- на пляжі\n- на балконі\n- на вулиці\n- на концерті\n- на стадіоні\n- на площі\n- на поверсі\n- на ринку\n- на уроці\n- на зустрічі\n\n## true-false: Locative Rules\n> Decide if each statement is true or false.\n\n- [x] The locative case always requires a preposition (в/у or на).\n  > Correct! You never use locative without a preposition.\n\n- [ ] Locative case is used to show direction (where you're going).\n  > Incorrect! Locative shows LOCATION (where you are). Direction uses accusative.\n\n- [x] \"У\" and \"в\" are the same preposition, just different forms.\n  > Correct! \"У\" is used before consonant clusters for easier pronunciation.\n\n- [ ] All cities use \"на\" (e.g., на Києві).\n  > Incorrect! Cities use \"в/у\" (у Києві, в Одесі).\n\n- [x] Most feminine nouns ending in -а change to -і in locative.\n  > Correct! кімната → в кімнаті, школа → у школі.\n\n- [ ] Masculine nouns always end in -і in locative.\n  > Incorrect! Hard masculine nouns often end in -у (у банку, в парку).\n\n- [x] The phrase \"в Україні\" (not \"на Україні\") is politically significant.\n  > Correct! Russian uses \"на\" to imply Ukraine is just a borderland region.\n\n- [x] \"На роботі\" is a fixed expression.\n  > Correct! You always say \"на роботі\" (at work), never \"в роботі\".\n\n- [ ] You can use locative case without a preposition in questions.\n  > Incorrect! Even in questions, you need a preposition: \"Де ти?\" → \"В кафе.\"\n\n- [x] Events (concerts, meetings) use \"на\".\n  > Correct! на концерті, на зустрічі, на уроці.\n\n- [ ] \"На столі\" means \"to the table.\"\n  > Incorrect! \"На столі\" means \"ON the table\" (location). Direction would be accusative.\n\n- [x] Some masculine nouns have -ові ending in locative for people.\n  > Correct! на батькові, на дідові (though less common in modern Ukrainian).\n\n## unjumble: Where Questions and Answers\n> Put the words in the correct order.\n\n1. ти / Де / ?\n   > [!answer] Де ти?\n   > (Where are you?) [2 words]\n\n2. кафе / Я / в\n   > [!answer] Я в кафе.\n   > (I'm in a café.) [3 words]\n\n3. на / Книга / столі\n   > [!answer] Книга на столі.\n   > (The book is on the table.) [3 words]\n\n4. у / живу / Я / Києві\n   > [!answer] Я живу у Києві.\n   > (I live in Kyiv.) [4 words]\n\n5. Діти / школі / в\n   > [!answer] Діти в школі.\n   > (The children are at school.) [3 words]\n\n6. роботі / на / Вона\n   > [!answer] Вона на роботі.\n   > (She's at work.) [3 words]\n\n7. у / Ми / центрі / магазині / в\n   > [!answer] Ми в магазині у центрі.\n   > (We're in a shop in the center.) [5 words]\n\n8. Де / паспорт / твій / ?\n   > [!answer] Де твій паспорт?\n   > (Where is your passport?) [3 words]\n\n9. У / він / сумці\n   > [!answer] Він у сумці.\n   > (It's in the bag.) [3 words]\n\n10. на / Концерт / стадіоні\n    > [!answer] Концерт на стадіоні.\n    > (The concert is at the stadium.) [3 words]\n\n11. пляжі / на / зараз / Вони\n    > [!answer] Вони зараз на пляжі.\n    > (They're at the beach now.) [4 words]\n\n12. у / Студенти / бібліотеці\n    > [!answer] Студенти у бібліотеці.\n    > (The students are in the library.) [3 words]\n\n## fill-in: Preposition Choice\n> Choose в/у or на.\n\n1. Я ___ кімнаті.\n   > [!answer] в\n   > [!options] в | на | у | під\n\n2. Книга ___ столі.\n   > [!answer] на\n   > [!options] на | в | біля | під\n\n3. Ми ___ Львові.\n   > [!answer] у\n   > [!options] в | на | у | при\n\n4. Вона ___ роботі.\n   > [!answer] на\n   > [!options] в | на | у | від\n\n5. Діти ___ школі.\n   > [!answer] у\n   > [!options] в | на | у | коло\n\n6. Концерт ___ стадіоні.\n   > [!answer] на\n   > [!options] в | на | у | при\n\n7. Я живу ___ Україні.\n   > [!answer] в\n   > [!options] в | на | у | від\n\n8. Чашка ___ кухні.\n   > [!answer] на\n   > [!options] на | в | коло | біля\n\n9. Ми ___ центрі.\n   > [!answer] у\n   > [!options] в | на | у | від\n\n10. Вони ___ пляжі.\n    > [!answer] на\n    > [!options] на | в | біля | коло\n\n11. Твій телефон ___ сумці?\n    > [!answer] у\n    > [!options] у | на | біля | коло\n\n12. Зустріч ___ офісі.\n    > [!answer] в\n    > [!options] в | на | у | при\n\n## match-up: Nominative to Locative\n> Match the nominative form to its locative form.\n\n| Nominative | Locative (with preposition) |\n|------------|------------------------------|\n| кімната | в кімнаті |\n| банк | у банку |\n| місто | в місті |\n| робота | на роботі |\n| стіл | на столі |\n| Львів | у Львові |\n| школа | в школі |\n| концерт | на концерті |\n| офіс | в офісі |\n| пляж | на пляжі |\n| центр | у центрі |\n| балкон | на балконі |\n\n## quiz: Translation Practice\n> Choose the correct Ukrainian translation.\n\n1. I'm at work.\n   - [x] Я на роботі.\n   - [ ] Я в роботі.\n   - [ ] Я у роботі.\n   - [ ] Я робота.\n   > Fixed expression: на роботі.\n\n2. The book is on the table.\n   - [x] Книга на столі.\n   - [ ] Книга в столі.\n   - [ ] Книга у столі.\n   - [ ] Книга стіл.\n   > Surface uses на.\n\n3. We live in Kyiv.\n   - [ ] Ми живемо в Київі.\n   - [x] Ми живемо у Києві.\n   - [ ] Ми живемо на Києві.\n   - [ ] Ми живемо Київ.\n   > Consonant cluster requires у.\n\n4. She's in the shop.\n   - [ ] Вона на магазині.\n   - [x] Вона у магазині.\n   - [ ] Вона магазин.\n   - [ ] Вона в магазин.\n   > Enclosed space, consonant cluster → у магазині.\n\n5. The children are at school.\n   - [x] Діти в школі.\n   - [ ] Діти на школі.\n   - [ ] Діти школа.\n   - [ ] Діти у школу.\n   > Enclosed building uses в/у.\n\n6. I'm in Ukraine.\n   - [x] Я в Україні.\n   - [ ] Я на Україні.\n   - [ ] Я у Україні.\n   - [ ] Я Україна.\n   > Countries use в/у (politically significant!).\n\n7. The concert is at the stadium.\n   - [ ] Концерт у стадіоні.\n   - [x] Концерт на стадіоні.\n   - [ ] Концерт в стадіоні.\n   - [ ] Концерт стадіон.\n   > Events use на.\n\n8. Your passport is in the bag.\n   - [ ] Твій паспорт на сумці.\n   - [x] Твій паспорт у сумці.\n   - [ ] Твій паспорт в сумці.\n   - [ ] Твій паспорт сумка.\n   > Container, consonant cluster → у сумці.\n\n9. We're in the center.\n   - [x] Ми у центрі.\n   - [ ] Ми на центрі.\n   - [ ] Ми в центрі.\n   - [ ] Ми центр.\n   > Consonant cluster → у центрі.\n\n10. They're at the beach.\n    - [x] Вони на пляжі.\n    - [ ] Вони в пляжі.\n    - [ ] Вони у пляжі.\n    - [ ] Вони пляж.\n    > Open space uses на.\n\n11. The cup is in the kitchen.\n    - [x] Чашка на кухні.\n    - [ ] Чашка в кухні.\n    - [ ] Чашка у кухні.\n    - [ ] Чашка кухня.\n    > Room name uses на (though в is also acceptable).\n\n12. My apartment is on the third floor.\n    - [x] Моя квартира на третьому поверсі.\n    - [ ] Моя квартира в третьому поверсі.\n    - [ ] Моя квартира у третьому поверсі.\n    - [ ] Моя квартира третій поверх.\n    > Floor levels use на.\n\n",
+    "createdAt": "2025-12-13T23:40:34.381665Z",
+    "modifiedAt": "2025-12-13T23:40:34.381665Z",
     "version": 2
   },
-  "activities": [
-    {
-      "id": "act-a1-0-fillblank-0",
-      "type": "fill-blank",
-      "title": "Locative Formation",
-      "description": "Add the correct locative ending.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Я живу в кімнат___.",
-            "answer": "і",
-            "options": [
-              "і",
-              "у",
-              "ою",
-              "а"
-            ]
-          },
-          {
-            "prompt": "Книга на стол___.",
-            "answer": "і",
-            "options": [
-              "і",
-              "у",
-              "ом",
-              "а"
-            ]
-          },
-          {
-            "prompt": "Вона працює в офіс___.",
-            "answer": "і",
-            "options": [
-              "і",
-              "у",
-              "ом",
-              "а"
-            ]
-          },
-          {
-            "prompt": "Ми у магазин___.",
-            "answer": "і",
-            "options": [
-              "і",
-              "у",
-              "ом",
-              "а"
-            ]
-          },
-          {
-            "prompt": "Діти на вулиц___.",
-            "answer": "і",
-            "options": [
-              "і",
-              "у",
-              "ею",
-              "а"
-            ]
-          },
-          {
-            "prompt": "Він у школ___.",
-            "answer": "і",
-            "options": [
-              "і",
-              "у",
-              "ою",
-              "а"
-            ]
-          },
-          {
-            "prompt": "Кіт на вікн___.",
-            "answer": "і",
-            "options": [
-              "і",
-              "у",
-              "ом",
-              "а"
-            ]
-          },
-          {
-            "prompt": "Я в Київ___.",
-            "answer": "і",
-            "options": [
-              "і",
-              "у",
-              "ом",
-              "а"
-            ]
-          },
-          {
-            "prompt": "Вона на робот___.",
-            "answer": "і",
-            "options": [
-              "і",
-              "у",
-              "ою",
-              "а"
-            ]
-          },
-          {
-            "prompt": "Ми у ресторан___.",
-            "answer": "і",
-            "options": [
-              "і",
-              "у",
-              "ом",
-              "а"
-            ]
-          },
-          {
-            "prompt": "Він у парк___.",
-            "answer": "у",
-            "options": [
-              "у",
-              "і",
-              "ом",
-              "а"
-            ]
-          },
-          {
-            "prompt": "Вони на концерт___.",
-            "answer": "і",
-            "options": [
-              "і",
-              "у",
-              "ом",
-              "а"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.040Z",
-      "modifiedAt": "2025-12-12T19:55:32.040Z"
-    },
-    {
-      "id": "act-a1-0-matchup-0",
-      "type": "match-up",
-      "title": "Nominative to Locative",
-      "description": "Match the nominative with its locative form.",
-      "content": {
-        "type": "match-up",
-        "pairs": [
-          {
-            "left": "кімната",
-            "right": "в кімнаті"
-          },
-          {
-            "left": "кухня",
-            "right": "на кухні"
-          },
-          {
-            "left": "офіс",
-            "right": "в офісі"
-          },
-          {
-            "left": "магазин",
-            "right": "у магазині"
-          },
-          {
-            "left": "вулиця",
-            "right": "на вулиці"
-          },
-          {
-            "left": "школа",
-            "right": "у школі"
-          },
-          {
-            "left": "місто",
-            "right": "у місті"
-          },
-          {
-            "left": "ресторан",
-            "right": "у ресторані"
-          },
-          {
-            "left": "парк",
-            "right": "у парку"
-          },
-          {
-            "left": "стіл",
-            "right": "на столі"
-          },
-          {
-            "left": "вікно",
-            "right": "на вікні"
-          },
-          {
-            "left": "Україна",
-            "right": "в Україні"
-          }
-        ],
-        "shuffleRight": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.040Z",
-      "modifiedAt": "2025-12-12T19:55:32.040Z"
-    },
-    {
-      "id": "act-a1-0-quiz-0",
-      "type": "quiz",
-      "title": "Choose в/у or на",
-      "description": "Select the correct preposition.",
-      "content": {
-        "type": "quiz",
-        "questions": [
-          {
-            "question": "Я живу ___ Києві.",
-            "options": [
-              "в",
-              "на",
-              "до",
-              "з"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Книга лежить ___ столі.",
-            "options": [
-              "в",
-              "на",
-              "до",
-              "з"
-            ],
-            "correctIndex": 1,
-            "explanation": ""
-          },
-          {
-            "question": "Вона працює ___ офісі.",
-            "options": [
-              "в",
-              "на",
-              "до",
-              "з"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Ми ___ концерті.",
-            "options": [
-              "в",
-              "на",
-              "до",
-              "з"
-            ],
-            "correctIndex": 1,
-            "explanation": ""
-          },
-          {
-            "question": "Він ___ вулиці.",
-            "options": [
-              "в",
-              "на",
-              "до",
-              "з"
-            ],
-            "correctIndex": 1,
-            "explanation": ""
-          },
-          {
-            "question": "Діти ___ школі.",
-            "options": [
-              "у",
-              "на",
-              "до",
-              "з"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Ми живемо ___ Україні.",
-            "options": [
-              "в",
-              "на",
-              "до",
-              "з"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Вона ___ роботі.",
-            "options": [
-              "в",
-              "на",
-              "до",
-              "з"
-            ],
-            "correctIndex": 1,
-            "explanation": ""
-          },
-          {
-            "question": "Він ___ магазині.",
-            "options": [
-              "у",
-              "на",
-              "до",
-              "з"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Ми зустрінемося ___ кафе.",
-            "options": [
-              "в",
-              "на",
-              "до",
-              "з"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Вони ___ ринку.",
-            "options": [
-              "в",
-              "на",
-              "до",
-              "з"
-            ],
-            "correctIndex": 1,
-            "explanation": ""
-          },
-          {
-            "question": "Я ___ університеті.",
-            "options": [
-              "в",
-              "на",
-              "до",
-              "з"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          }
-        ],
-        "shuffleQuestions": true,
-        "shuffleOptions": true,
-        "showCorrectAnswers": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.040Z",
-      "modifiedAt": "2025-12-12T19:55:32.040Z"
-    },
-    {
-      "id": "act-a1-0-groupsort-0",
-      "type": "group-sort",
-      "title": "в/у or на",
-      "description": "Sort places by their preposition.",
-      "content": {
-        "type": "group-sort",
-        "groups": [
-          {
-            "id": "",
-            "name": "в/у",
-            "items": [
-              "кімната",
-              "офіс",
-              "магазин",
-              "школа",
-              "бібліотека",
-              "Україна",
-              "місто",
-              "будинок",
-              "ресторан",
-              "аптека",
-              "музей",
-              "театр"
-            ],
-            "nameUk": "inside"
-          },
-          {
-            "id": "",
-            "name": "на",
-            "items": [
-              "вулиця",
-              "робота",
-              "концерт",
-              "урок",
-              "ринок",
-              "стадіон",
-              "площа",
-              "море",
-              "острів",
-              "пляж",
-              "фестиваль",
-              "подія"
-            ],
-            "nameUk": "on/at"
-          }
-        ],
-        "shuffleItems": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.040Z",
-      "modifiedAt": "2025-12-12T19:55:32.040Z"
-    },
-    {
-      "id": "act-a1-0-truefalse-0",
-      "type": "true-false",
-      "title": "Locative Rules",
-      "description": "Locative Rules",
-      "content": {
-        "type": "true-false",
-        "statements": [
-          {
-            "statement": "The locative case is used to answer \"де?\" (where?).",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "The most common locative ending is -і.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "You can use the locative without a preposition.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "\"В Україні\" is the correct form for \"in Ukraine.\"",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"На Україні\" is correct modern Ukrainian.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "\"На концерті\" means \"at the concert.\"",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"В кімнаті\" means \"in the room.\"",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "All masculine nouns take -і in locative.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "\"У парку\" is an acceptable locative form.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"На\" is used for all indoor locations.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "The locative always requires a preposition.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"У\" is used before vowels or after vowels.",
-            "isTrue": true,
-            "explanation": ""
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.040Z",
-      "modifiedAt": "2025-12-12T19:55:32.040Z"
-    },
-    {
-      "id": "act-a1-0-anagram-0",
-      "type": "anagram",
-      "title": "Places Vocabulary",
-      "description": "Unscramble these location words.",
-      "content": {
-        "type": "anagram",
-        "isAnagram": true,
-        "items": [
-          {
-            "letters": [
-              "а",
-              "т",
-              "н",
-              "а",
-              "м",
-              "і",
-              "к"
-            ],
-            "answer": "кімната"
-          },
-          {
-            "letters": [
-              "я",
-              "н",
-              "х",
-              "у",
-              "к"
-            ],
-            "answer": "кухня"
-          },
-          {
-            "letters": [
-              "с",
-              "і",
-              "ф",
-              "о"
-            ],
-            "answer": "офіс"
-          },
-          {
-            "letters": [
-              "н",
-              "и",
-              "з",
-              "а",
-              "г",
-              "а",
-              "м"
-            ],
-            "answer": "магазин"
-          },
-          {
-            "letters": [
-              "а",
-              "л",
-              "о",
-              "к",
-              "ш"
-            ],
-            "answer": "школа"
-          },
-          {
-            "letters": [
-              "о",
-              "т",
-              "с",
-              "і",
-              "м"
-            ],
-            "answer": "місто"
-          },
-          {
-            "letters": [
-              "ц",
-              "и",
-              "у",
-              "я",
-              "в",
-              "л"
-            ],
-            "answer": "вулиця"
-          },
-          {
-            "letters": [
-              "к",
-              "р",
-              "а",
-              "п"
-            ],
-            "answer": "парк"
-          },
-          {
-            "letters": [
-              "н",
-              "а",
-              "р",
-              "о",
-              "т",
-              "с",
-              "е",
-              "р"
-            ],
-            "answer": "ресторан"
-          },
-          {
-            "letters": [
-              "к",
-              "а",
-              "л",
-              "я",
-              "н",
-              "і",
-              "р"
-            ],
-            "answer": "лікарня"
-          },
-          {
-            "letters": [
-              "а",
-              "е",
-              "п",
-              "а",
-              "т",
-              "к"
-            ],
-            "answer": "аптека"
-          },
-          {
-            "letters": [
-              "ь",
-              "л",
-              "т",
-              "е",
-              "о",
-              "г"
-            ],
-            "answer": "готель"
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.040Z",
-      "modifiedAt": "2025-12-12T19:55:32.040Z"
-    },
-    {
-      "id": "act-a1-0-fillblank-1",
-      "type": "fill-blank",
-      "title": "Where Questions",
-      "description": "Answer with the correct locative form.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Де ти? — Я в ___.",
-            "answer": "школі",
-            "options": [
-              "школі",
-              "школу",
-              "школа",
-              "школою"
-            ]
-          },
-          {
-            "prompt": "Де книга? — На ___.",
-            "answer": "столі",
-            "options": [
-              "столі",
-              "столу",
-              "стіл",
-              "столом"
-            ]
-          },
-          {
-            "prompt": "Де мама? — На ___.",
-            "answer": "кухні",
-            "options": [
-              "кухні",
-              "кухню",
-              "кухня",
-              "кухнею"
-            ]
-          },
-          {
-            "prompt": "Де він працює? — В ___.",
-            "answer": "офісі",
-            "options": [
-              "офісі",
-              "офісу",
-              "офіс",
-              "офісом"
-            ]
-          },
-          {
-            "prompt": "Де ви живете? — В ___.",
-            "answer": "Києві",
-            "options": [
-              "Києві",
-              "Київу",
-              "Київ",
-              "Києвом"
-            ]
-          },
-          {
-            "prompt": "Де кіт? — На ___.",
-            "answer": "вікні",
-            "options": [
-              "вікні",
-              "вікну",
-              "вікно",
-              "вікном"
-            ]
-          },
-          {
-            "prompt": "Де діти? — У ___.",
-            "answer": "парку",
-            "options": [
-              "парку",
-              "паркі",
-              "парк",
-              "парком"
-            ]
-          },
-          {
-            "prompt": "Де концерт? — У ___.",
-            "answer": "театрі",
-            "options": [
-              "театрі",
-              "театру",
-              "театр",
-              "театром"
-            ]
-          },
-          {
-            "prompt": "Де ви? — На ___.",
-            "answer": "вулиці",
-            "options": [
-              "вулиці",
-              "вулицю",
-              "вулиця",
-              "вулицею"
-            ]
-          },
-          {
-            "prompt": "Де магазин? — На ___.",
-            "answer": "площі",
-            "options": [
-              "площі",
-              "площу",
-              "площа",
-              "площею"
-            ]
-          },
-          {
-            "prompt": "Де ресторан? — В ___.",
-            "answer": "центрі",
-            "options": [
-              "центрі",
-              "центру",
-              "центр",
-              "центром"
-            ]
-          },
-          {
-            "prompt": "Де аптека? — На ___.",
-            "answer": "розі",
-            "options": [
-              "розі",
-              "рогу",
-              "ріг",
-              "рогом"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.040Z",
-      "modifiedAt": "2025-12-12T19:55:32.040Z"
-    },
-    {
-      "id": "act-a1-0-unjumble-0",
-      "type": "unjumble",
-      "title": "Build Location Sentences",
-      "description": "Arrange the words into correct sentences.",
-      "content": {
-        "type": "unjumble",
-        "isUnjumble": true,
-        "items": [
-          {
-            "words": [
-              "в",
-              "я",
-              "кімнаті"
-            ],
-            "answer": "Я в кімнаті."
-          },
-          {
-            "words": [
-              "на",
-              "книга",
-              "столі"
-            ],
-            "answer": "Книга на столі."
-          },
-          {
-            "words": [
-              "працює",
-              "в",
-              "вона",
-              "офісі"
-            ],
-            "answer": "Вона працює в офісі."
-          },
-          {
-            "words": [
-              "діти",
-              "у",
-              "школі"
-            ],
-            "answer": "Діти у школі."
-          },
-          {
-            "words": [
-              "на",
-              "кіт",
-              "вікні"
-            ],
-            "answer": "Кіт на вікні."
-          },
-          {
-            "words": [
-              "Києві",
-              "ми",
-              "у"
-            ],
-            "answer": "Ми у Києві."
-          },
-          {
-            "words": [
-              "на",
-              "вона",
-              "роботі"
-            ],
-            "answer": "Вона на роботі."
-          },
-          {
-            "words": [
-              "у",
-              "він",
-              "магазині"
-            ],
-            "answer": "Він у магазині."
-          },
-          {
-            "words": [
-              "на",
-              "концерті",
-              "ми"
-            ],
-            "answer": "Ми на концерті."
-          },
-          {
-            "words": [
-              "в",
-              "живуть",
-              "Україні",
-              "вони"
-            ],
-            "answer": "Вони живуть в Україні."
-          },
-          {
-            "words": [
-              "на",
-              "зупинка",
-              "розі"
-            ],
-            "answer": "Зупинка на розі."
-          },
-          {
-            "words": [
-              "у",
-              "я",
-              "ресторані"
-            ],
-            "answer": "Я у ресторані."
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.040Z",
-      "modifiedAt": "2025-12-12T19:55:32.040Z"
-    }
-  ],
+  "activities": [],
   "vocabulary": {
     "moduleId": "mod-uk-A1-13",
     "level": "A1",
     "phase": "A1.2",
-    "wordCount": 30,
-    "newWordCount": 30,
+    "wordCount": 31,
+    "newWordCount": 31,
     "reviewWordCount": 0,
-    "transliterationMode": "partial",
+    "transliterationMode": "vocabulary",
     "words": [
       {
-        "id": "v-kimnata-0-0",
+        "id": "vocab-1",
+        "uk": "у",
+        "ipa": "/u/",
+        "en": "in, inside",
+        "pos": "prep",
+        "gender": null,
+        "note": "before clusters"
+      },
+      {
+        "id": "vocab-2",
+        "uk": "в",
+        "ipa": "/v/",
+        "en": "in, inside",
+        "pos": "prep",
+        "gender": null,
+        "note": "before single consonants"
+      },
+      {
+        "id": "vocab-3",
+        "uk": "на",
+        "ipa": "/nɑ/",
+        "en": "on, at",
+        "pos": "prep",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-4",
         "uk": "кімната",
+        "ipa": "/ˈkimnɑtɑ/",
         "en": "room",
-        "pos": "f",
-        "ipa": "/kimˈnɑtɑ/",
-        "note": "у кімнаті",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-kukhnya-0-1",
+        "id": "vocab-5",
         "uk": "кухня",
-        "en": "kitchen",
-        "pos": "f",
         "ipa": "/ˈkuxnʲɑ/",
-        "note": "на кухні",
-        "isNew": true,
-        "firstModule": 0
+        "en": "kitchen",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-vanna-0-2",
+        "id": "vocab-6",
         "uk": "ванна",
+        "ipa": "/ˈvɑnːɑ/",
         "en": "bathroom",
-        "pos": "f",
-        "ipa": "/ˈʋɑnnɑ/",
-        "note": "у ванній",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-spalьnya-0-3",
+        "id": "vocab-7",
         "uk": "спальня",
-        "en": "bedroom",
-        "pos": "f",
         "ipa": "/ˈspɑlʲnʲɑ/",
-        "note": "у спальні",
-        "isNew": true,
-        "firstModule": 0
+        "en": "bedroom",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-vitalьnya-0-4",
+        "id": "vocab-8",
         "uk": "вітальня",
+        "ipa": "/viˈtɑlʲnʲɑ/",
         "en": "living room",
-        "pos": "f",
-        "ipa": "/ʋiˈtɑlʲnʲɑ/",
-        "note": "у вітальні",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-korydor-0-5",
+        "id": "vocab-9",
         "uk": "коридор",
-        "en": "hallway",
-        "pos": "m",
-        "ipa": "/korɪˈdor/",
-        "note": "у коридорі",
-        "isNew": true,
-        "firstModule": 0
+        "ipa": "/kɔrɪˈdɔr/",
+        "en": "corridor, hallway",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-balkon-0-6",
+        "id": "vocab-10",
         "uk": "балкон",
+        "ipa": "/bɑlˈkɔn/",
         "en": "balcony",
-        "pos": "m",
-        "ipa": "/bɑlˈkon/",
-        "note": "на балконі",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-poverkh-0-7",
+        "id": "vocab-11",
         "uk": "поверх",
+        "ipa": "/ˈpɔwɛrx/",
         "en": "floor (level)",
-        "pos": "m",
-        "ipa": "/ˈpoʋɛrx/",
-        "note": "на поверсі",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-budynok-0-8",
+        "id": "vocab-12",
         "uk": "будинок",
-        "en": "building/house",
-        "pos": "m",
-        "ipa": "/buˈdɪnok/",
-        "note": "у будинку",
-        "isNew": true,
-        "firstModule": 0
+        "ipa": "/ˈbudɪnɔk/",
+        "en": "building, house",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-kvartyra-0-9",
+        "id": "vocab-13",
         "uk": "квартира",
+        "ipa": "/kwɑrˈtɪrɑ/",
         "en": "apartment",
-        "pos": "f",
-        "ipa": "/kʋɑrˈtɪrɑ/",
-        "note": "у квартирі",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-ofis-0-10",
+        "id": "vocab-14",
         "uk": "офіс",
+        "ipa": "/ˈɔfis/",
         "en": "office",
-        "pos": "m",
-        "ipa": "/ˈofis/",
-        "note": "в офісі",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-robota-0-11",
+        "id": "vocab-15",
         "uk": "робота",
-        "en": "work",
-        "pos": "f",
-        "ipa": "/roˈbotɑ/",
-        "note": "на роботі",
-        "isNew": true,
-        "firstModule": 0
+        "ipa": "/rɔˈbɔtɑ/",
+        "en": "work, job",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-shkola-0-12",
+        "id": "vocab-16",
         "uk": "школа",
+        "ipa": "/ˈʃkɔlɑ/",
         "en": "school",
-        "pos": "f",
-        "ipa": "/ˈʃkolɑ/",
-        "note": "у школі",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-universytet-0-13",
+        "id": "vocab-17",
         "uk": "університет",
+        "ipa": "/unʲivɛrsɪˈtɛt/",
         "en": "university",
-        "pos": "m",
-        "ipa": "/uniʋɛrsɪˈtɛt/",
-        "note": "в університеті",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-likarnya-0-14",
+        "id": "vocab-18",
         "uk": "лікарня",
-        "en": "hospital",
-        "pos": "f",
         "ipa": "/liˈkɑrnʲɑ/",
-        "note": "у лікарні",
-        "isNew": true,
-        "firstModule": 0
+        "en": "hospital",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-mahazyn-0-15",
+        "id": "vocab-19",
         "uk": "магазин",
-        "en": "store",
-        "pos": "m",
         "ipa": "/mɑɦɑˈzɪn/",
-        "note": "у магазині",
-        "isNew": true,
-        "firstModule": 0
+        "en": "shop, store",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-apteka-0-16",
+        "id": "vocab-20",
         "uk": "аптека",
-        "en": "pharmacy",
-        "pos": "f",
         "ipa": "/ɑpˈtɛkɑ/",
-        "note": "в аптеці",
-        "isNew": true,
-        "firstModule": 0
+        "en": "pharmacy",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-rynok-0-17",
+        "id": "vocab-21",
         "uk": "ринок",
+        "ipa": "/ˈrɪnɔk/",
         "en": "market",
-        "pos": "m",
-        "ipa": "/ˈrɪnok/",
-        "note": "на ринку",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-tsentr-0-18",
+        "id": "vocab-22",
         "uk": "центр",
+        "ipa": "/t͡sɛntr/",
         "en": "center",
-        "pos": "m",
-        "ipa": "/ˈt͡sɛntr/",
-        "note": "у центрі",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-restoran-0-19",
+        "id": "vocab-23",
         "uk": "ресторан",
+        "ipa": "/rɛstɔˈrɑn/",
         "en": "restaurant",
-        "pos": "m",
-        "ipa": "/rɛstoˈrɑn/",
-        "note": "у ресторані",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-hotelь-0-20",
+        "id": "vocab-24",
         "uk": "готель",
+        "ipa": "/ɦɔˈtɛlʲ/",
         "en": "hotel",
-        "pos": "m",
-        "ipa": "/ɦoˈtɛlʲ/",
-        "note": "у готелі",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-park-0-21",
+        "id": "vocab-25",
         "uk": "парк",
-        "en": "park",
-        "pos": "m",
         "ipa": "/pɑrk/",
-        "note": "у парку",
-        "isNew": true,
-        "firstModule": 0
+        "en": "park",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-plyazh-0-22",
+        "id": "vocab-26",
         "uk": "пляж",
-        "en": "beach",
-        "pos": "m",
         "ipa": "/plʲɑʒ/",
-        "note": "на пляжі",
-        "isNew": true,
-        "firstModule": 0
+        "en": "beach",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-muzey-0-23",
+        "id": "vocab-27",
         "uk": "музей",
-        "en": "museum",
-        "pos": "m",
         "ipa": "/muˈzɛj/",
-        "note": "у музеї",
-        "isNew": true,
-        "firstModule": 0
+        "en": "museum",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-teatr-0-24",
+        "id": "vocab-28",
         "uk": "театр",
-        "en": "theater",
-        "pos": "m",
         "ipa": "/tɛˈɑtr/",
-        "note": "у театрі",
-        "isNew": true,
-        "firstModule": 0
+        "en": "theater",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-kinoteatr-0-25",
+        "id": "vocab-29",
         "uk": "кінотеатр",
+        "ipa": "/kinɔtɛˈɑtr/",
         "en": "cinema",
-        "pos": "m",
-        "ipa": "/kinotɛˈɑtr/",
-        "note": "у кінотеатрі",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-stadion-0-26",
+        "id": "vocab-30",
         "uk": "стадіон",
+        "ipa": "/stɑdiˈɔn/",
         "en": "stadium",
-        "pos": "m",
-        "ipa": "/stɑdiˈon/",
-        "note": "на стадіоні",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-tserkva-0-27",
+        "id": "vocab-31",
         "uk": "церква",
+        "ipa": "/ˈt͡sɛrkwɑ/",
         "en": "church",
-        "pos": "f",
-        "ipa": "/ˈt͡sɛrkʋɑ/",
-        "note": "у церкві",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-vulytsya-0-28",
-        "uk": "вулиця",
-        "en": "street",
-        "pos": "f",
-        "ipa": "/ˈʋulɪt͡sʲɑ/",
-        "note": "на вулиці",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-ploshcha-0-29",
-        "uk": "площа",
-        "en": "square",
-        "pos": "f",
-        "ipa": "/ˈploʃt͡ʃɑ/",
-        "note": "на площі",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
       }
-    ]
+    ],
+    "reviewWords": []
   }
 }

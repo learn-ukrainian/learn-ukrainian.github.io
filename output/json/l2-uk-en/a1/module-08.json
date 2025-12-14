@@ -15,1221 +15,300 @@
     "pedagogy": "PPP",
     "immersionLevel": 0.3,
     "title": "The Living Verb II",
-    "subtitle": "Present Tense Class II Verbs (-ити/-іти)",
-    "description": "Conjugate Class II verbs (-ити) in present tense",
+    "titleUk": null,
+    "subtitle": "Class II Conjugation (-ити verbs)",
+    "description": "Learner can conjugate Class II verbs (-ити) in present tense",
     "objectives": [
-      "Conjugate Class II verbs (-ити) in present tense",
-      "Distinguish between Class I and Class II patterns",
-      "Use common irregular verbs (їсти, пити, бути)",
-      "Build more complex action sentences"
+      "Learner can conjugate Class II verbs (-ити) in present tense",
+      "Learner can distinguish between Class I (-ати) and Class II (-ити) verbs",
+      "Learner can use common irregular verbs (їсти, пити)",
+      "Learner can form basic sentences with action verbs"
     ],
+    "objectivesUk": null,
     "grammarFocus": [
-      "Present tense conjugation (Class II)",
-      "Irregular verbs"
+      "Class II verb conjugation (-ити)",
+      "Irregular verbs: їсти, пити, хотіти",
+      "Consonant mutation in first person singular"
     ],
     "tags": [
-      "grammar",
       "verbs",
-      "present-tense",
-      "conjugation"
+      "conjugation",
+      "class-ii",
+      "irregular-verbs"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "partial",
+    "totalDuration": "60 min",
+    "transliterationMode": "full",
     "sections": [
       {
-        "id": "section-content-0",
-        "name": "Lesson",
+        "id": "section-1",
+        "name": "The Living Verb II",
+        "nameEn": null,
         "type": "content",
-        "content": "> **Note:** You've mastered Class I verbs (-ати). Now meet their cousin: Class II verbs (-ити)! Different endings, same logical system.\n\n## Warm-up: Two Verb Families\n\nIn Module 06, you learned verbs like **читати** (to read) and **працювати** (to work). These are Class I verbs — they end in **-ати** or **-яти**.\n\nNow imagine you want to say:\n- \"I speak\" (говорити → говорю)\n- \"She loves\" (любити → любить)\n- \"They see\" (бачити → бачать)\n\nThese verbs end in **-ити** or **-іти** — and they conjugate differently! This is **Class II**.\n\nThe good news? The system is just as logical. Once you memorize the Class II endings, you can conjugate hundreds more verbs. That's the power of patterns!\n\nThink of verb classes like dance styles — both are dancing, but the steps are different. Class I uses one set of moves, Class II uses another. But both get you to the same destination: expressing action!\n\n> 💡 **Key Insight:** Class I ends like \"є\" (читаЄ), Class II ends like \"ить\" (говорИТЬ). Listen for this difference!\n\n## Presentation: Class II Verbs (-ити/-іти)\n\n### 1. The Class II Pattern\n\n**Infinitive markers:** ends in **-ити**, **-іти**, or **-їти**\nExamples: говорити (to speak), любити (to love), бачити (to see)\n\n**Conjugation pattern — говорити (to speak):**\n\n| Person | Pronoun | Ending | Conjugated | Translation |\n|--------|---------|--------|------------|-------------|\n| 1st sg | я | -ю/-лю | говор**ю** | I speak |\n| 2nd sg | ти | -иш | говор**иш** | you speak |\n| 3rd sg | він/вона | -ить | говор**ить** | he/she speaks |\n| 1st pl | ми | -имо | говор**имо** | we speak |\n| 2nd pl | ви | -ите | говор**ите** | you (pl/formal) speak |\n| 3rd pl | вони | -ять | говор**ять** | they speak |\n\n> 📜 **Pattern Summary:**\n> **-ю/-лю, -иш, -ить, -имо, -ите, -ять**\n\n### 2. Comparing Class I and Class II\n\n| | Class I (-ати) | Class II (-ити) |\n|---|----------------|-----------------|\n| **I** | читаЮ | говорЮ |\n| **you** | читаЄШ | говорИШ |\n| **he/she** | читаЄ | говорИТЬ |\n| **we** | читаЄМО | говорИМО |\n| **you (pl)** | читаЄТЕ | говорИТЕ |\n| **they** | читаЮТЬ | говорЯТЬ |\n\n**Notice the vowel difference:** Class I = Є, Class II = И\n\n### 3. More Class II Examples\n\n**любити (to love):**\n| я люблю | ти любиш | він/вона любить | ми любимо | ви любите | вони люблять |\n\n**бачити (to see):**\n| я бачу | ти бачиш | він/вона бачить | ми бачимо | ви бачите | вони бачать |\n\n**робити (to do/make):**\n| я роблю | ти робиш | він/вона робить | ми робимо | ви робите | вони роблять |\n\n> ⚠️ **Watch for L-softening:** Some verbs add \"л\" in 1st person singular:\n> - любити → люб**л**ю (not \"любю\")\n> - робити → роб**л**ю (not \"робю\")\n\n### 4. Essential Irregular Verbs\n\nThese verbs are super common but don't follow standard patterns:\n\n**їсти (to eat):**\n| я їм | ти їси | він/вона їсть | ми їмо | ви їсте | вони їдять |\n\n**пити (to drink):**\n| я п'ю | ти п'єш | він/вона п'є | ми п'ємо | ви п'єте | вони п'ють |\n\n**бути (to be) - Future only at A1:**\n| я буду | ти будеш | він/вона буде | ми будемо | ви будете | вони будуть |\n\n> 💡 **Remember:** \"Бути\" (to be) is rare in present tense — Ukrainian uses the Zero Copula from Module 04. But we use \"бути\" for future: \"Я буду читати\" (I will read).\n\n## Cultural Insight: Food and Hospitality 🇺🇦\n\nThe verbs **їсти** (to eat) and **пити** (to drink) are essential for Ukrainian hospitality! When visiting a Ukrainian home, expect to hear:\n\n- **Їж!** / **Їжте!** — Eat! (informal/formal)\n- **Пий!** / **Пийте!** — Drink! (informal/formal)\n- **Ще трохи?** — A little more?\n- **Ти голодний/голодна?** — Are you hungry?\n\nThe phrase **\"Смачного!\"** (Enjoy your meal!) is said before eating — it's like \"Bon appétit!\"\n\nUkrainian hosts will often say **\"Ви мало їсте!\"** (You're eating too little!) even if you've had three servings. Refusing food is almost impossible — and considered rude. Just smile and eat!\n\n> 📜 **History Bite:** The verb **їсти** comes from the Proto-Slavic *jěsti. Ukrainian preserved the \"ї\" sound that many languages lost. This ancient word connects Ukrainians to their linguistic roots going back over a thousand years.\n\n## Dialogue: At the Restaurant 🗣️\n\n**Офіціант:** Добрий вечір! Що ви хочете замовити?\n**Клієнт:** Добрий вечір! Ми хочемо борщ і вареники.\n**Офіціант:** Чудово! А що ви будете пити?\n**Клієнт:** Я буду пити воду. А вона — каву.\n**Офіціант:** Добре. Ви любите гострі страви?\n**Клієнт:** Так, ми любимо! Додайте часник, будь ласка.\n**Офіціант:** Звичайно! Ще щось?\n**Клієнт:** Ні, дякую. Ми чекаємо замовлення.\n*Пізніше...*\n**Офіціант:** Ось ваше замовлення. Смачного!\n**Клієнт:** Дякую! Виглядає смачно!\n\n**English Translation:**\n**Waiter:** Good evening! What do you want to order?\n**Client:** Good evening! We want borscht and varenyky.\n**Waiter:** Great! And what will you drink?\n**Client:** I will drink water. And she — coffee.\n**Waiter:** Good. Do you like spicy dishes?\n**Client:** Yes, we like! Add garlic, please.\n**Waiter:** Of course! Anything else?\n**Client:** No, thank you. We are waiting for the order.\n*Later...*\n**Waiter:** Here is your order. Bon appétit!\n**Client:** Thank you! Looks delicious!\n\n## Reading Practice: Morning Routine 📖\n\n*Read about daily actions using Class II verbs.*\n\n**Олег прокидається о сьомій.** Він бачить сонце за вікном. Він любить ранок — це його улюблений час.\n\nСпочатку Олег **робить** зарядку. Потім він **іде** до ванної. Там він **миється** і **голиться**. Після цього він **одягається** і **сідає** снідати.\n\nЩо Олег **їсть** на сніданок? Він **їсть** кашу з фруктами. Що він **п'є**? Він **п'є** каву з молоком.\n\nПотім Олег **виходить** з дому. Він **іде** на роботу. Він **бачить** сусідів і **говорить** \"Доброго ранку!\" Вони **відповідають**: \"Доброго ранку, Олеже!\"\n\nОлег **любить** свій ранок. Він **знає**: добрий ранок — добрий день!\n\n**English Translation:**\n**Oleh wakes up at seven.** He sees the sun behind the window. He loves morning — this is his favorite time.\n\nFirst Oleh **does** exercises. Then he **goes** to the bathroom. There he **washes** and **shaves**. After that he **dresses** and **sits down** to have breakfast.\n\nWhat does Oleh **eat** for breakfast? He **eats** porridge with fruits. What does he **drink**? He **drinks** coffee with milk.\n\nThen Oleh **leaves** home. He **goes** to work. He **sees** neighbors and **says** \"Good morning!\" They **answer**: \"Good morning, Oleh!\"\n\nOleh **loves** his morning. He **knows**: good morning — good day!\n\n> 📜 **Myth Buster:** Some learners think Class II verbs are \"harder\" than Class I. Actually, both classes are equally logical. The \"difficulty\" is just unfamiliarity. After practice, Class II feels just as natural!"
+        "content": "## Warm-up\n\nYou've already learned Class I verbs that end in **-ати** (читати, писати, працювати). But what about verbs like **говорити** (hovorýty) \"to speak\" and **робити** (róbyty) \"to do\"? These belong to **Class II** — the **-ити** family. They're everywhere in Ukrainian, powering actions from speaking and seeing to loving and wanting. Let's unlock this essential verb group!\n\n## Presentation\n\n### Class II Conjugation Pattern\n\nClass II verbs end in **-ити** or **-іти** in the infinitive. When you conjugate them, they follow a different pattern from Class I. Here's the key change:\n\n**Conjugation formula:** Drop **-ити/-іти**, add these endings:\n\n| Person | Singular | Plural |\n|--------|----------|--------|\n| 1st (I, we) | **-ю** / **-у** | **-имо** |\n| 2nd (you) | **-иш** | **-ите** |\n| 3rd (he/she/they) | **-ить** | **-ять** / **-ать** |\n\n**Example: говорити (hovorýty) — to speak**\n\n| Person | Ukrainian | Transliteration | English |\n|--------|-----------|-----------------|---------|\n| я | говор**ю** (hovorjú) | говорю | I speak |\n| ти | говор**иш** (hovórysh) | говориш | you speak |\n| він/вона | говор**ить** (hovóryt') | говорить | he/she speaks |\n| ми | говор**имо** (hovorýmo) | говоримо | we speak |\n| ви | говор**ите** (hovorýte) | говорите | you (pl/formal) speak |\n| вони | говор**ять** (hovórjat') | говорять | they speak |\n\n> [!tip] **Did You Know?**\n>\n> The **-ити** ending is ancient! It comes from Proto-Slavic and is shared with Polish, Czech, and other Slavic languages. When you say **говорити**, you're using a verb form that's over 1,000 years old.\n\n### Key Examples with Class II Verbs\n\nLet's see these verbs in action:\n\n1. **Я говорю українською.** (Ja hovorjú ukrajíns'koju.)\n   *I speak Ukrainian.*\n\n2. **Ти робиш вправу?** (Ty róbysh vpravu?)\n   *Do you do an exercise?*\n\n3. **Вона бачить студента.** (Voná báchyt' studénta.)\n   *She sees the student.*\n\n4. **Ми дивимося фільм.** (My dývymos'a fil'm.)\n   *We watch a movie.*\n\n5. **Ви ходите в університет?** (Vy khódyte v universytét?)\n   *Do you go to university?*\n\n6. **Вони люблять Україну.** (Voný ljublját' Ukrajínu.)\n   *They love Ukraine.*\n\n7. **Я сиджу вдома.** (Ja sydžú vdóma.)\n   *I sit at home.*\n\n8. **Він стоїть біля вікна.** (Vin stojít' bílja vikná.)\n   *He stands by the window.*\n\n9. **Вона спить.** (Voná spyt'.)\n   *She sleeps.*\n\n10. **Ми вчимо українську мову.** (My vchýmo ukrajíns'ku móvu.)\n    *We study the Ukrainian language.*\n\n11. **Ти пам'ятаєш це слово?** (Ty pam'játaješ tse slóvo?)\n    *Do you remember this word?*\n\n12. **Вони просять допомогу.** (Voný prósjat' dopomóhu.)\n    *They ask for help.*\n\n### Irregular Verbs: їсти, пити, хотіти\n\nSome common verbs don't follow the standard pattern. Here are three essentials:\n\n**їсти (jisty) — to eat**\n\n| я їм | ти їси | він/вона їсть | ми їмо | ви їсте | вони їдять |\n|------|--------|---------------|--------|---------|-----------|\n\n**пити (pýty) — to drink**\n\n| я п'ю | ти п'єш | він/вона п'є | ми п'ємо | ви п'єте | вони п'ють |\n|-------|---------|--------------|----------|----------|-----------|\n\n**хотіти (khotíty) — to want**\n\n| я хочу | ти хочеш | він/вона хоче | ми хочемо | ви хочете | вони хочуть |\n|--------|----------|---------------|-----------|-----------|------------|\n\n13. **Вона п'є каву.** (Voná p'jé kávu.)\n    *She drinks coffee.*\n\n14. **Ми хочемо вчитися.** (My khóchemo vchýtysja.)\n    *We want to study.*\n\n15. **Ти хочеш борщ?** (Ty khóchesh borshch?)\n    *Do you want borscht?*\n\n> [!example] **Pop Culture Moment**\n>\n> In the Ukrainian dub of *Harry Potter*, when Ron says \"I want to eat,\" it's **\"Я хочу їсти\"** (Ja khochú jisty). Two irregular verbs in one sentence! Ukrainian kids learn these patterns from the movies they love.\n\n## Practice\n\n### Mini-Dialogue 1: At the Café in Lviv\n\n**Марко:** Привіт, Олено! Ти п'єш каву? (Pryvít, Oleno! Ty p'jésh kávu?)\n*Hi, Olena! Are you drinking coffee?*\n\n**Олена:** Так, я п'ю каву. Я також читаю книгу. (Tak, ja p'jú kávu. Ja takózh chytáju knýhu.)\n*Yes, I'm drinking coffee. I also read a book.*\n\n**Марко:** Я хочу їсти. Ти любиш борщ? (Ja khochú jisty. Ty ljubljúsh borshch?)\n*I want to eat. Do you love borscht?*\n\n**Олена:** Так, я дуже люблю борщ! (Tak, ja dúzhe ljubljú borshch!)\n*Yes, I love borscht very much!*\n\n### Mini-Dialogue 2: On Campus in Kyiv\n\n**Іван:** Ти бачиш Катю? (Ty báchysh Kátju?)\n*Do you see Katya?*\n\n**Марія:** Так, вона стоїть біля вікна. (Tak, voná stojít' bílja vikná.)\n*Yes, she stands by the window.*\n\n**Іван:** Вона телефонує? (Voná telefonúje?)\n*Is she calling?*\n\n**Марія:** Так, вона говорить українською. (Tak, voná hovóryt' ukrajíns'koju.)\n*Yes, she speaks Ukrainian.*\n\n### Pattern Recognition\n\nNotice how Class II verbs change their stem slightly:\n\n- **робити** → роб**лю** (not \"робю\")\n- **ходити** → ход**жу** (not \"ходю\")\n- **любити** → люб**лю** (not \"любю\")\n\nThis is called **consonant mutation** — certain letters change before the **-ю** ending. You'll pick up these patterns naturally as you practice!\n\n> [!warning] **Common Mistake**\n>\n> Don't confuse **Class I** and **Class II** endings! Class I uses **-аю/-ають**, Class II uses **-ю/-ять**. Compare:\n> - **читати** (Class I): читаЮ, читаЄш, читаЄ, читаЮТЬ\n> - **говорити** (Class II): говорЮ, говорИШ, говорИТЬ, говорЯТЬ\n>\n> The vowels are different!\n\n## Production\n\nNow it's your turn! Try forming sentences:\n\n**Model:**\n- Я **говорю** українською. (I speak Ukrainian.)\n- Ти **робиш** вправу. (You do an exercise.)\n\n**Your turn (mental practice):**\n- What do you love? → Я **люблю** ___.\n- What do you see? → Я **бачу** ___.\n- What do you want? → Я **хочу** ___.\n\n## Cultural Insight\n\n### The Beauty of Ukrainian Verb Logic\n\nUkrainian verbs are incredibly precise. Notice how **ходити** (to walk/go on foot) and **їздити** (to ride/go by vehicle) are two different verbs? In English, we just say \"go,\" but Ukrainian forces you to think: *How are you traveling?*\n\nThis precision extends to posture verbs too:\n- **сидіти** (to sit) — you're seated\n- **стояти** (to stand) — you're standing\n- **лежати** (to lie) — you're lying down\n\nUkrainians use these constantly:\n- **Де ти?** — **Я сиджу в кафе.** (Where are you? — I'm sitting in a café.)\n\n> [!info] **Real World Usage**\n>\n> When Ukrainians greet each other on the phone, they often say:\n> **— Привіт! Як справи?** (Hi! How are things?)\n> **— Добре, дякую!** (Good, thanks!)\n>\n> Notice **дякую** (thank) — from the verb **дякувати** (to thank). You've just learned how to express gratitude properly!\n\n> [!tip] **Grammar Elegance**\n>\n> Why do some verbs change their consonant? Notice: **робити** → **роблю** (not *робю*), **ходити** → **ходжу** (not *ходю*). This is called **consonant mutation** — the final consonant of the stem changes before **-ю** to make pronunciation smoother. Ukrainian inherited this elegant feature from Proto-Slavic!\n\n---"
       },
       {
-        "id": "section-summary-1",
-        "name": "Підсумок",
-        "nameEn": "Summary",
+        "id": "section-2",
+        "name": "Summary",
+        "nameEn": null,
         "type": "summary",
-        "content": "1. **Class II verbs** end in **-ити/-іти** (говорити, любити, бачити)\n2. **Endings:** -ю/-лю, -иш, -ить, -имо, -ите, -ять\n3. **Key difference:** Class I = -є endings, Class II = -ить endings\n4. **L-softening:** Some verbs add \"л\" in 1st person (люблю, роблю)\n5. **Irregulars:** їсти, пити, бути are high-frequency exceptions\n\n---\n\n> [!tip] 🌟 **Pro Tip:** When learning a new verb, always check: does it end in -ати (Class I) or -ити (Class II)? This tells you which ending pattern to use!\n\n\n---"
+        "content": "You've now mastered **Class II verbs (-ити)**! Here's what you can do:\n\n- Conjugate regular Class II verbs (говорити, робити, бачити, любити)\n- Use irregular verbs (їсти, пити, хотіти)\n- Distinguish between Class I (-ати) and Class II (-ити) patterns\n- Form sentences about daily actions\n\n**Key Pattern:**\n- **Class II:** Drop -ити → add -ю/-иш/-ить/-имо/-ите/-ять\n\nWith Class I and Class II verbs combined, you can now express hundreds of actions in Ukrainian. Вітаю! (Congratulations!)\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| говорити | /ɦɔvɔˈrɪtɪ/ | to speak | verb | - | Class II: говорю, говориш, говорить |\n| робити | /ˈrɔbɪtɪ/ | to do, to make | verb | - | Class II: роблю, робиш, робить |\n| бачити | /ˈbɑt͡ʃɪtɪ/ | to see | verb | - | Class II: бачу, бачиш, бачить |\n| дивитися | /dɪˈvɪtɪsʲɑ/ | to watch, to look | verb | - | Reflexive: дивлюся, дивишся |\n| ходити | /xɔˈdɪtɪ/ | to walk, to go (on foot) | verb | - | Class II: ходжу, ходиш, ходить |\n| їздити | /ˈjizdɪtɪ/ | to ride, to go (by vehicle) | verb | - | Class II: їжджу, їздиш, їздить |\n| летіти | /lɛˈtitɪ/ | to fly | verb | - | Class II: лечу, летиш, летить |\n| бігти | /ˈbiɦtɪ/ | to run | verb | - | Irregular: біжу, біжиш, біжить |\n| сидіти | /sɪˈditɪ/ | to sit | verb | - | Class II: сиджу, сидиш, сидить |\n| стояти | /stɔˈjɑtɪ/ | to stand | verb | - | Class II: стою, стоїш, стоїть |\n| лежати | /lɛˈʒɑtɪ/ | to lie | verb | - | Class II: лежу, лежиш, лежить |\n| спати | /ˈspɑtɪ/ | to sleep | verb | - | Class II: сплю, спиш, спить |\n| любити | /lʲuˈbɪtɪ/ | to love | verb | - | Class II: люблю, любиш, любить |\n| хотіти | /xɔˈtitɪ/ | to want | verb | - | Irregular: хочу, хочеш, хоче |\n| вчити | /ˈvt͡ʃɪtɪ/ | to study, to learn | verb | - | Class II: вчу, вчиш, вчить |\n| вчитися | /ˈvt͡ʃɪtɪsʲɑ/ | to study (oneself) | verb | - | Reflexive: вчуся, вчишся |\n| пам'ятати | /pɑˈmʲjɑtɑtɪ/ | to remember | verb | - | Class I: пам'ятаю, пам'ятаєш |\n| забувати | /zɑbuˈvɑtɪ/ | to forget | verb | - | Class I: забуваю, забуваєш |\n| їсти | /ˈjistɪ/ | to eat | verb | - | Irregular: їм, їси, їсть |\n| пити | /ˈpɪtɪ/ | to drink | verb | - | Irregular: п'ю, п'єш, п'є |\n| просити | /ˈprɔsɪtɪ/ | to ask, to request | verb | - | Class II: прошу, просиш, просить |\n| дякувати | /dʲɑkuˈvɑtɪ/ | to thank | verb | - | Class I: дякую, дякуєш |\n| вітати | /viˈtɑtɪ/ | to greet | verb | - | Class I: вітаю, вітаєш |\n| телефонувати | /tɛlɛfɔnuˈvɑtɪ/ | to call (by phone) | verb | - | Class I: телефоную, телефонуєш |\n| купувати | /kupuˈvɑtɪ/ | to buy | verb | - | Class I: купую, купуєш |\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## quiz: Class II or Class I?\n> Identify which conjugation class each verb belongs to.\n\n1. говорити\n   - [x] Class II (-ити)\n   - [ ] Class I (-ати)\n   > говорити ends in -ити, so it's Class II\n\n2. читати\n   - [ ] Class II (-ити)\n   - [x] Class I (-ати)\n   > читати ends in -ати, so it's Class I\n\n3. любити\n   - [x] Class II (-ити)\n   - [ ] Class I (-ати)\n   > любити ends in -ити, so it's Class II\n\n4. працювати\n   - [ ] Class II (-ити)\n   - [x] Class I (-ати)\n   > працювати ends in -ати (actually -ювати), so it's Class I\n\n5. бачити\n   - [x] Class II (-ити)\n   - [ ] Class I (-ати)\n   > бачити ends in -ити, so it's Class II\n\n6. знати\n   - [ ] Class II (-ити)\n   - [x] Class I (-ати)\n   > знати ends in -ати, so it's Class I\n\n7. ходити\n   - [x] Class II (-ити)\n   - [ ] Class I (-ати)\n   > ходити ends in -ити, so it's Class II\n\n8. писати\n   - [ ] Class II (-ити)\n   - [x] Class I (-ати)\n   > писати ends in -ати, so it's Class I\n\n9. робити\n   - [x] Class II (-ити)\n   - [ ] Class I (-ати)\n   > робити ends in -ити, so it's Class II\n\n10. дякувати\n    - [ ] Class II (-ити)\n    - [x] Class I (-ати)\n    > дякувати ends in -ати (actually -увати), so it's Class I\n\n11. спати\n    - [x] Class II (-ити)\n    - [ ] Class I (-ати)\n    > спати ends in -ати but behaves like Class II with palatalized stem\n\n12. вчити\n    - [x] Class II (-ити)\n    - [ ] Class I (-ати)\n    > вчити ends in -ити, so it's Class II\n\n## match-up: Verbs and Actions\n> Match each Ukrainian verb to its English meaning.\n\n| Ukrainian | English |\n|-----------|---------|\n| говорити | to speak |\n| робити | to do, to make |\n| бачити | to see |\n| любити | to love |\n| хотіти | to want |\n| їсти | to eat |\n| пити | to drink |\n| ходити | to walk, to go (on foot) |\n| спати | to sleep |\n| стояти | to stand |\n| сидіти | to sit |\n| дивитися | to watch |\n\n## fill-in: Conjugate the Verb\n> Choose the correct conjugated form for each sentence.\n\n1. Я ___ українською.\n   > [!answer] говорю\n   > [!options] говорю | говориш | говорить | говорять\n\n2. Ти ___ каву?\n   > [!answer] п'єш\n   > [!options] п'ю | п'єш | п'є | п'ють\n\n3. Вона ___ книгу.\n   > [!answer] читає\n   > [!options] читаю | читаєш | читає | читають\n\n4. Ми ___ у кафе.\n   > [!answer] сидимо\n   > [!options] сиджу | сидиш | сидить | сидимо\n\n5. Ви ___ фільм?\n   > [!answer] дивитеся\n   > [!options] дивлюся | дивишся | дивиться | дивитеся\n\n6. Вони ___ в університет.\n   > [!answer] ходять\n   > [!options] ходжу | ходиш | ходить | ходять\n\n7. Він ___ фільм.\n   > [!answer] дивиться\n   > [!options] дивлюся | дивишся | дивиться | дивляться\n\n8. Я ___ Україну.\n   > [!answer] люблю\n   > [!options] люблю | любиш | любить | люблять\n\n9. Ти ___ вправу?\n   > [!answer] робиш\n   > [!options] роблю | робиш | робить | роблять\n\n10. Вона ___ біля вікна.\n    > [!answer] стоїть\n    > [!options] стою | стоїш | стоїть | стоять\n\n11. Ми ___ вчитися.\n    > [!answer] хочемо\n    > [!options] хочу | хочеш | хоче | хочемо\n\n12. Вони ___.\n    > [!answer] сплять\n    > [!options] сплю | спиш | спить | сплять\n\n## anagram: Build the Verb\n> Arrange the letters to form the correct Ukrainian verb.\n\n1. г о в о р и т и\n   > [!answer] говорити\n   > (to speak)\n\n2. р о б и т и\n   > [!answer] робити\n   > (to do, to make)\n\n3. б а ч и т и\n   > [!answer] бачити\n   > (to see)\n\n4. л ю б и т и\n   > [!answer] любити\n   > (to love)\n\n5. х о т і т и\n   > [!answer] хотіти\n   > (to want)\n\n6. ї с т и\n   > [!answer] їсти\n   > (to eat)\n\n7. п и т и\n   > [!answer] пити\n   > (to drink)\n\n8. х о д и т и\n   > [!answer] ходити\n   > (to walk)\n\n9. с п а т и\n   > [!answer] спати\n   > (to sleep)\n\n10. с т о я т и\n    > [!answer] стояти\n    > (to stand)\n\n11. с и д і т и\n    > [!answer] сидіти\n    > (to sit)\n\n12. в ч и т и\n    > [!answer] вчити\n    > (to study)\n\n## true-false: Grammar Rules\n> Decide if each statement is true or false.\n\n- [x] Class II verbs end in -ити or -іти in the infinitive.\n  > Correct! This is the defining feature of Class II verbs.\n\n- [ ] The verb \"читати\" is Class II.\n  > Incorrect! \"читати\" ends in -ати, so it's Class I.\n\n- [x] Irregular verbs like їсти and пити don't follow standard conjugation patterns.\n  > Correct! These verbs have unique conjugation forms.\n\n- [x] In Class II, the first person singular ending is -ю or -у.\n  > Correct! я говорю, я роблю (with consonant mutation).\n\n- [ ] The verb \"говорити\" conjugates as \"я говорую.\"\n  > Incorrect! It's \"я говорю\" (not \"говорую\").\n\n- [x] \"Дякувати\" is a Class I verb.\n  > Correct! It ends in -увати, which is a Class I pattern.\n\n- [ ] All verbs ending in -ати are Class I.\n  > Incorrect! \"спати\" ends in -ати but behaves like Class II in some forms.\n\n- [x] The third person plural ending for Class II is -ять or -ать.\n  > Correct! вони говорять, вони роблять.\n\n- [x] \"Я хочу\" is an irregular form.\n  > Correct! хотіти is irregular: хочу, хочеш, хоче.\n\n- [ ] Class II verbs don't have consonant mutations.\n  > Incorrect! Many do: робити → роблю, ходити → ходжу.\n\n- [x] \"П'ю\" is the first person singular of \"пити.\"\n  > Correct! я п'ю (I drink).\n\n- [x] Ukrainian distinguishes between ходити (on foot) and їздити (by vehicle).\n  > Correct! This precision is a beautiful feature of Ukrainian.\n\n## group-sort: Verb Types\n> Sort these verbs by their conjugation class.\n\n### Class I (-ати)\n- читати\n- писати\n- працювати\n- знати\n- дякувати\n- телефонувати\n\n### Class II (-ити)\n- говорити\n- робити\n- бачити\n- любити\n- ходити\n- вчити\n\n### Irregular\n- їсти\n- пити\n- хотіти\n\n## unjumble: Form Sentences\n> Put the words in the correct order to form Ukrainian sentences.\n\n1. говорю / Я / українською\n   > [!answer] Я говорю українською.\n   > (I speak Ukrainian.)\n\n2. робиш / Ти / книгу / ?\n   > [!answer] Ти робиш книгу?\n   > (Are you making a book?)\n\n3. бачить / Вона / студента\n   > [!answer] Вона бачить студента.\n   > (She sees the student.)\n\n4. люблять / Вони / Україну\n   > [!answer] Вони люблять Україну.\n   > (They love Ukraine.)\n\n5. хочу / Я / їсти\n   > [!answer] Я хочу їсти.\n   > (I want to eat.)\n\n6. п'є / Вона / каву\n   > [!answer] Вона п'є каву.\n   > (She drinks coffee.)\n\n7. ходимо / Ми / в / університет\n   > [!answer] Ми ходимо в університет.\n   > (We go to university.)\n\n8. сплять / Вони\n   > [!answer] Вони сплять.\n   > (They sleep.)\n\n9. стоїть / Він / біля / вікна\n   > [!answer] Він стоїть біля вікна.\n   > (He stands by the window.)\n\n10. сиджу / Я / вдома\n    > [!answer] Я сиджу вдома.\n    > (I sit at home.)\n\n11. дивимося / Ми / фільм\n    > [!answer] Ми дивимося фільм.\n    > (We watch a movie.)\n\n12. вчите / Ви / українську / мову / ?\n    > [!answer] Ви вчите українську мову?\n    > (Do you study the Ukrainian language?)\n\n## fill-in: Complete the Dialogue\n> Fill in the blanks with the correct verb forms.\n\n1. Марія: Привіт! Ти ___ книгу?\n   > [!answer] читаєш\n   > [!options] читаю | читаєш | читає | читають\n\n2. Петро: Так, я ___ книгу.\n   > [!answer] читаю\n   > [!options] читаю | читаєш | читає | читають\n\n3. Марія: Я ___ каву зараз.\n   > [!answer] п'ю\n   > [!options] п'ю | п'єш | п'є | п'ють\n\n4. Петро: Я ___ музику!\n   > [!answer] люблю\n   > [!options] люблю | любиш | любить | люблять\n\n5. Марія: Ти ___ в університет?\n   > [!answer] ходиш\n   > [!options] ходжу | ходиш | ходить | ходять\n\n6. Петро: Так, я ___ українську мову.\n   > [!answer] вчу\n   > [!options] вчу | вчиш | вчить | вчать\n\n7. Марія: Ти ___ українську?\n   > [!answer] любиш\n   > [!options] люблю | любиш | любить | люблять\n\n8. Петро: Так! Я ___ українську мову!\n   > [!answer] люблю\n   > [!options] люблю | любиш | любить | люблять\n\n9. Марія: Я ___ вивчати більше.\n   > [!answer] хочу\n   > [!options] хочу | хочеш | хоче | хочуть\n\n10. Петро: Ти ___ борщ?\n    > [!answer] любиш\n    > [!options] люблю | любиш | любить | люблять\n\n11. Марія: Так, я дуже ___ борщ!\n    > [!answer] люблю\n    > [!options] люблю | любиш | любить | люблять\n\n12. Петро: Ти ___ фільм сьогодні?\n    > [!answer] дивишся\n    > [!options] дивлюся | дивишся | дивиться | дивляться\n\n13. Марія: Так, я ___ фільм!\n    > [!answer] дивлюся\n    > [!options] дивлюся | дивишся | дивиться | дивляться\n\n## quiz: Choose the Right Verb\n> Select the verb that best completes each sentence.\n\n1. Я ___ українською кожен день.\n   - [x] говорю\n   - [ ] читаю\n   - [ ] п'ю\n   - [ ] сплю\n   > You \"speak\" Ukrainian (говорю).\n\n2. Вона ___ студента біля університету.\n   - [ ] говорить\n   - [x] бачить\n   - [ ] п'є\n   - [ ] спить\n   > You \"see\" a student (бачить).\n\n3. Ми ___ вдома ввечері.\n   - [ ] говоримо\n   - [ ] ходимо\n   - [x] сидимо\n   - [ ] їмо\n   > You \"sit\" at home (сидимо).\n\n4. Ти ___ каву чи чай?\n   - [ ] їси\n   - [x] п'єш\n   - [ ] робиш\n   - [ ] ходиш\n   > You \"drink\" coffee or tea (п'єш).\n\n5. Вони ___ фільм у кінотеатрі.\n   - [ ] п'ють\n   - [ ] їдять\n   - [x] дивляться\n   - [ ] сплять\n   > You \"watch\" a movie (дивляться).\n\n6. Він ___ в університет щодня.\n   - [x] ходить\n   - [ ] п'є\n   - [ ] спить\n   - [ ] їсть\n   > You \"go\" to university on foot (ходить).\n\n7. Я ___ українську мову.\n   - [x] вчу\n   - [ ] п'ю\n   - [ ] роблю\n   - [ ] спишу\n   > You \"study\" Ukrainian (вчу).\n\n8. Вона ___ Україну дуже сильно.\n   - [ ] бачить\n   - [x] любить\n   - [ ] п'є\n   - [ ] спить\n   > You \"love\" Ukraine (любить).\n\n9. Ми ___ вивчати українську.\n   - [x] хочемо\n   - [ ] п'ємо\n   - [ ] їмо\n   - [ ] сплять\n   > You \"want\" to study Ukrainian (хочемо).\n\n10. Ти ___ біля дверей?\n    - [ ] сидиш\n    - [x] стоїш\n    - [ ] лежиш\n    - [ ] спиш\n    > You \"stand\" by the door (стоїш).\n\n11. Вони ___ вночі.\n    - [ ] ходять\n    - [ ] п'ють\n    - [ ] їдять\n    - [x] сплять\n    > You \"sleep\" at night (сплять).\n\n12. Я ___ вправу зараз.\n    - [x] роблю\n    - [ ] п'ю\n    - [ ] бачу\n    - [ ] сплю\n    > You \"do\" an exercise (роблю)."
       }
     ],
-    "rawMarkdown": "---\ntitle: \"The Living Verb II\"\nsubtitle: \"Present Tense Class II Verbs (-ити/-іти)\"\nphase: A1.1\ntransliteration: partial\npedagogy: PPP\nduration: 45\ntags: [grammar, verbs, present-tense, conjugation]\nobjectives:\n  - Conjugate Class II verbs (-ити) in present tense\n  - Distinguish between Class I and Class II patterns\n  - Use common irregular verbs (їсти, пити, бути)\n  - Build more complex action sentences\ngrammar:\n  - Present tense conjugation (Class II)\n  - Irregular verbs\naudio: false\n---\n\n# The Living Verb II\n\n> **Note:** You've mastered Class I verbs (-ати). Now meet their cousin: Class II verbs (-ити)! Different endings, same logical system.\n\n## Warm-up: Two Verb Families\n\nIn Module 06, you learned verbs like **читати** (to read) and **працювати** (to work). These are Class I verbs — they end in **-ати** or **-яти**.\n\nNow imagine you want to say:\n- \"I speak\" (говорити → говорю)\n- \"She loves\" (любити → любить)\n- \"They see\" (бачити → бачать)\n\nThese verbs end in **-ити** or **-іти** — and they conjugate differently! This is **Class II**.\n\nThe good news? The system is just as logical. Once you memorize the Class II endings, you can conjugate hundreds more verbs. That's the power of patterns!\n\nThink of verb classes like dance styles — both are dancing, but the steps are different. Class I uses one set of moves, Class II uses another. But both get you to the same destination: expressing action!\n\n> 💡 **Key Insight:** Class I ends like \"є\" (читаЄ), Class II ends like \"ить\" (говорИТЬ). Listen for this difference!\n\n## Presentation: Class II Verbs (-ити/-іти)\n\n### 1. The Class II Pattern\n\n**Infinitive markers:** ends in **-ити**, **-іти**, or **-їти**\nExamples: говорити (to speak), любити (to love), бачити (to see)\n\n**Conjugation pattern — говорити (to speak):**\n\n| Person | Pronoun | Ending | Conjugated | Translation |\n|--------|---------|--------|------------|-------------|\n| 1st sg | я | -ю/-лю | говор**ю** | I speak |\n| 2nd sg | ти | -иш | говор**иш** | you speak |\n| 3rd sg | він/вона | -ить | говор**ить** | he/she speaks |\n| 1st pl | ми | -имо | говор**имо** | we speak |\n| 2nd pl | ви | -ите | говор**ите** | you (pl/formal) speak |\n| 3rd pl | вони | -ять | говор**ять** | they speak |\n\n> 📜 **Pattern Summary:**\n> **-ю/-лю, -иш, -ить, -имо, -ите, -ять**\n\n### 2. Comparing Class I and Class II\n\n| | Class I (-ати) | Class II (-ити) |\n|---|----------------|-----------------|\n| **I** | читаЮ | говорЮ |\n| **you** | читаЄШ | говорИШ |\n| **he/she** | читаЄ | говорИТЬ |\n| **we** | читаЄМО | говорИМО |\n| **you (pl)** | читаЄТЕ | говорИТЕ |\n| **they** | читаЮТЬ | говорЯТЬ |\n\n**Notice the vowel difference:** Class I = Є, Class II = И\n\n### 3. More Class II Examples\n\n**любити (to love):**\n| я люблю | ти любиш | він/вона любить | ми любимо | ви любите | вони люблять |\n\n**бачити (to see):**\n| я бачу | ти бачиш | він/вона бачить | ми бачимо | ви бачите | вони бачать |\n\n**робити (to do/make):**\n| я роблю | ти робиш | він/вона робить | ми робимо | ви робите | вони роблять |\n\n> ⚠️ **Watch for L-softening:** Some verbs add \"л\" in 1st person singular:\n> - любити → люб**л**ю (not \"любю\")\n> - робити → роб**л**ю (not \"робю\")\n\n### 4. Essential Irregular Verbs\n\nThese verbs are super common but don't follow standard patterns:\n\n**їсти (to eat):**\n| я їм | ти їси | він/вона їсть | ми їмо | ви їсте | вони їдять |\n\n**пити (to drink):**\n| я п'ю | ти п'єш | він/вона п'є | ми п'ємо | ви п'єте | вони п'ють |\n\n**бути (to be) - Future only at A1:**\n| я буду | ти будеш | він/вона буде | ми будемо | ви будете | вони будуть |\n\n> 💡 **Remember:** \"Бути\" (to be) is rare in present tense — Ukrainian uses the Zero Copula from Module 04. But we use \"бути\" for future: \"Я буду читати\" (I will read).\n\n## Cultural Insight: Food and Hospitality 🇺🇦\n\nThe verbs **їсти** (to eat) and **пити** (to drink) are essential for Ukrainian hospitality! When visiting a Ukrainian home, expect to hear:\n\n- **Їж!** / **Їжте!** — Eat! (informal/formal)\n- **Пий!** / **Пийте!** — Drink! (informal/formal)\n- **Ще трохи?** — A little more?\n- **Ти голодний/голодна?** — Are you hungry?\n\nThe phrase **\"Смачного!\"** (Enjoy your meal!) is said before eating — it's like \"Bon appétit!\"\n\nUkrainian hosts will often say **\"Ви мало їсте!\"** (You're eating too little!) even if you've had three servings. Refusing food is almost impossible — and considered rude. Just smile and eat!\n\n> 📜 **History Bite:** The verb **їсти** comes from the Proto-Slavic *jěsti. Ukrainian preserved the \"ї\" sound that many languages lost. This ancient word connects Ukrainians to their linguistic roots going back over a thousand years.\n\n## Dialogue: At the Restaurant 🗣️\n\n**Офіціант:** Добрий вечір! Що ви хочете замовити?\n**Клієнт:** Добрий вечір! Ми хочемо борщ і вареники.\n**Офіціант:** Чудово! А що ви будете пити?\n**Клієнт:** Я буду пити воду. А вона — каву.\n**Офіціант:** Добре. Ви любите гострі страви?\n**Клієнт:** Так, ми любимо! Додайте часник, будь ласка.\n**Офіціант:** Звичайно! Ще щось?\n**Клієнт:** Ні, дякую. Ми чекаємо замовлення.\n*Пізніше...*\n**Офіціант:** Ось ваше замовлення. Смачного!\n**Клієнт:** Дякую! Виглядає смачно!\n\n**English Translation:**\n**Waiter:** Good evening! What do you want to order?\n**Client:** Good evening! We want borscht and varenyky.\n**Waiter:** Great! And what will you drink?\n**Client:** I will drink water. And she — coffee.\n**Waiter:** Good. Do you like spicy dishes?\n**Client:** Yes, we like! Add garlic, please.\n**Waiter:** Of course! Anything else?\n**Client:** No, thank you. We are waiting for the order.\n*Later...*\n**Waiter:** Here is your order. Bon appétit!\n**Client:** Thank you! Looks delicious!\n\n## Reading Practice: Morning Routine 📖\n\n*Read about daily actions using Class II verbs.*\n\n**Олег прокидається о сьомій.** Він бачить сонце за вікном. Він любить ранок — це його улюблений час.\n\nСпочатку Олег **робить** зарядку. Потім він **іде** до ванної. Там він **миється** і **голиться**. Після цього він **одягається** і **сідає** снідати.\n\nЩо Олег **їсть** на сніданок? Він **їсть** кашу з фруктами. Що він **п'є**? Він **п'є** каву з молоком.\n\nПотім Олег **виходить** з дому. Він **іде** на роботу. Він **бачить** сусідів і **говорить** \"Доброго ранку!\" Вони **відповідають**: \"Доброго ранку, Олеже!\"\n\nОлег **любить** свій ранок. Він **знає**: добрий ранок — добрий день!\n\n**English Translation:**\n**Oleh wakes up at seven.** He sees the sun behind the window. He loves morning — this is his favorite time.\n\nFirst Oleh **does** exercises. Then he **goes** to the bathroom. There he **washes** and **shaves**. After that he **dresses** and **sits down** to have breakfast.\n\nWhat does Oleh **eat** for breakfast? He **eats** porridge with fruits. What does he **drink**? He **drinks** coffee with milk.\n\nThen Oleh **leaves** home. He **goes** to work. He **sees** neighbors and **says** \"Good morning!\" They **answer**: \"Good morning, Oleh!\"\n\nOleh **loves** his morning. He **knows**: good morning — good day!\n\n> 📜 **Myth Buster:** Some learners think Class II verbs are \"harder\" than Class I. Actually, both classes are equally logical. The \"difficulty\" is just unfamiliarity. After practice, Class II feels just as natural!\n\n# Summary\n\n1. **Class II verbs** end in **-ити/-іти** (говорити, любити, бачити)\n2. **Endings:** -ю/-лю, -иш, -ить, -имо, -ите, -ять\n3. **Key difference:** Class I = -є endings, Class II = -ить endings\n4. **L-softening:** Some verbs add \"л\" in 1st person (люблю, роблю)\n5. **Irregulars:** їсти, пити, бути are high-frequency exceptions\n\n---\n\n> [!tip] 🌟 **Pro Tip:** When learning a new verb, always check: does it end in -ати (Class I) or -ити (Class II)? This tells you which ending pattern to use!\n\n# Activities\n\n## match-up: Class I vs Class II\n> Match the verb to its class.\n\n| Verb | Class |\n| --- | --- |\n| читати | Class I |\n| говорити | Class II |\n| працювати | Class I |\n| любити | Class II |\n| знати | Class I |\n| бачити | Class II |\n| слухати | Class I |\n| робити | Class II |\n| питати | Class I |\n| ходити | Class II |\n| грати | Class I |\n| сидіти | Class II |\n\n## group-sort: Infinitive Endings\n> Sort verbs by their infinitive ending.\n\n| -ати/-яти (Class I) | -ити/-іти (Class II) |\n| --- | --- |\n| читати | говорити |\n| знати | любити |\n| працювати | бачити |\n| слухати | робити |\n| питати | ходити |\n| грати | сидіти |\n| думати | їздити |\n| малювати | стояти |\n| співати | лежати |\n| танцювати | летіти |\n| снідати | просити |\n| чекати | вчити |\n\n## quiz: Conjugate Class II\n> Choose the correct conjugation.\n\n1. (я) говорити\n   - [x] говорю\n   - [ ] говориш\n   - [ ] говорить\n   - [ ] говоримо\n   > First person singular → -ю\n\n2. (ти) любити\n   - [x] любиш\n   - [ ] люблю\n   - [ ] любить\n   - [ ] любимо\n   > Second person singular → -иш\n\n3. (він) бачити\n   - [x] бачить\n   - [ ] бачу\n   - [ ] бачиш\n   - [ ] бачимо\n   > Third person singular → -ить\n\n4. (ми) робити\n   - [x] робимо\n   - [ ] роблю\n   - [ ] робиш\n   - [ ] роблять\n   > First person plural → -имо\n\n5. (ви) ходити\n   - [x] ходите\n   - [ ] ходжу\n   - [ ] ходимо\n   - [ ] ходять\n   > Second person plural → -ите\n\n6. (вони) сидіти\n   - [x] сидять\n   - [ ] сиджу\n   - [ ] сидить\n   - [ ] сидимо\n   > Third person plural → -ять\n\n7. (я) їсти\n   - [x] їм\n   - [ ] їси\n   - [ ] їсть\n   - [ ] їмо\n   > Irregular: їм\n\n8. (вона) пити\n   - [x] п'є\n   - [ ] п'ю\n   - [ ] п'єш\n   - [ ] п'ємо\n   > Irregular: п'є\n\n9. (ти) вчити\n   - [x] вчиш\n   - [ ] вчу\n   - [ ] вчить\n   - [ ] вчимо\n   > Second person singular → -иш\n\n10. (ми) просити\n    - [x] просимо\n    - [ ] прошу\n    - [ ] просиш\n    - [ ] просять\n    > First person plural → -имо\n\n11. (вони) хотіти\n    - [x] хочуть\n    - [ ] хочу\n    - [ ] хочеш\n    - [ ] хочемо\n    > Third person plural (irregular)\n\n12. (я) любити\n    - [x] люблю\n    - [ ] любиш\n    - [ ] любить\n    - [ ] любимо\n    > Note the л-softening: люблю\n\n## fill-in: Complete with Class II\n> Conjugate the Class II verb correctly.\n\n1. Я ___ українською. (говорити)\n   > [!answer] говорю\n   > [!options] говорю | говориш | говорить | говоримо\n\n2. Ти ___ цю книгу? (любити)\n   > [!answer] любиш\n   > [!options] любиш | люблю | любить | любимо\n\n3. Вона ___ мене. (бачити)\n   > [!answer] бачить\n   > [!options] бачить | бачу | бачиш | бачимо\n\n4. Ми ___ домашнє завдання. (робити)\n   > [!answer] робимо\n   > [!options] робимо | роблю | робиш | роблять\n\n5. Вони ___ до школи. (ходити)\n   > [!answer] ходять\n   > [!options] ходять | ходжу | ходиш | ходимо\n\n6. Він ___ на стільці. (сидіти)\n   > [!answer] сидить\n   > [!options] сидить | сиджу | сидиш | сидимо\n\n7. Я ___ кашу. (їсти)\n   > [!answer] їм\n   > [!options] їм | їси | їсть | їмо\n\n8. Ти ___ каву? (пити)\n   > [!answer] п'єш\n   > [!options] п'єш | п'ю | п'є | п'ємо\n\n9. Вони ___ допомоги. (просити)\n   > [!answer] просять\n   > [!options] просять | прошу | просиш | просимо\n\n10. Ми ___ українську. (вчити)\n    > [!answer] вчимо\n    > [!options] вчимо | вчу | вчиш | вчать\n\n11. Ви ___ чай? (хотіти)\n    > [!answer] хочете\n    > [!options] хочете | хочу | хочеш | хочуть\n\n12. Вона ___ шоколад. (любити)\n    > [!answer] любить\n    > [!options] любить | люблю | любиш | люблять\n\n## match-up: Verb Vocabulary\n> Match Ukrainian verbs to English meanings.\n\n| Ukrainian | English |\n| --- | --- |\n| говорити | to speak |\n| любити | to love |\n| бачити | to see |\n| робити | to do/make |\n| ходити | to walk/go |\n| їздити | to travel (by vehicle) |\n| сидіти | to sit |\n| стояти | to stand |\n| лежати | to lie down |\n| спати | to sleep |\n| їсти | to eat |\n| пити | to drink |\n\n## anagram: Class II Verb Scramble\n> Unscramble the Class II verbs.\n\n1. р и о в о г и т\n   > [!answer] говорити\n\n2. т ю б и л и\n   > [!answer] любити\n\n3. т и и б а ч\n   > [!answer] бачити\n\n4. т и б о р и\n   > [!answer] робити\n\n5. т и и х о д\n   > [!answer] ходити\n\n6. д и і т и с\n   > [!answer] сидіти\n\n7. т и т я о с\n   > [!answer] стояти\n\n8. а т и с п\n   > [!answer] спати\n\n9. т и ж а л е\n   > [!answer] лежати\n\n10. т и с и р о п\n    > [!answer] просити\n\n11. и т и ч в\n    > [!answer] вчити\n\n12. т о х т і и\n    > [!answer] хотіти\n\n## true-false: Class II Rules\n> Decide if the statement is True or False.\n\n- [x] Class II verbs end in -ити or -іти.\n  > Correct! говорити, любити, бачити\n\n- [ ] The 3rd person singular ending is -є for Class II.\n  > False! Class II uses -ить. Class I uses -є.\n\n- [x] \"Люблю\" has an extra \"л\" compared to \"любити.\"\n  > Correct! This is called l-softening.\n\n- [ ] \"Їсти\" follows the regular Class II pattern.\n  > False! It's irregular: їм, їси, їсть...\n\n- [x] \"Вони говорять\" is the correct 3rd person plural.\n  > Correct! -ять is the Class II plural ending.\n\n- [ ] Class I and Class II have identical endings.\n  > False! They have different vowels: є vs и.\n\n- [x] \"Робити\" conjugates as \"роблю\" in first person.\n  > Correct! The \"л\" appears in 1st person.\n\n- [ ] \"Пити\" conjugates as \"питю.\"\n  > False! It's irregular: п'ю, п'єш, п'є...\n\n- [x] Both Class I and Class II use -ю for 1st person singular.\n  > Correct! читаю (I), говорю (II)\n\n- [ ] \"Бачать\" is the 3rd person plural of \"бачити.\"\n  > Correct! вони бачать\n\n- [x] \"Сидіти\" is a Class II verb.\n  > Correct! It ends in -іти.\n\n- [ ] All -ити verbs have l-softening.\n  > False! Only some (любити → люблю, but бачити → бачу).\n\n## fill-in: Restaurant Dialogue\n> Complete the restaurant conversation.\n\n1. Ми ___ борщ і вареники. (хотіти)\n   > [!answer] хочемо\n   > [!options] хочемо | хочу | хочеш | хочуть\n\n2. Що ви ___ пити? (хотіти)\n   > [!answer] хочете\n   > [!options] хочете | хочу | хочемо | хочуть\n\n3. Я ___ воду. (пити)\n   > [!answer] п'ю\n   > [!options] п'ю | п'єш | п'є | п'ємо\n\n4. Вона ___ каву. (пити)\n   > [!answer] п'є\n   > [!options] п'є | п'ю | п'єш | п'ємо\n\n5. Ви ___ гострі страви? (любити)\n   > [!answer] любите\n   > [!options] любите | люблю | любить | люблять\n\n6. Так, ми ___! (любити)\n   > [!answer] любимо\n   > [!options] любимо | люблю | любиш | люблять\n\n7. Що ви ___? (їсти)\n   > [!answer] їсте\n   > [!options] їсте | їм | їси | їдять\n\n8. Я ___ салат. (їсти)\n   > [!answer] їм\n   > [!options] їм | їси | їсть | їмо\n\n9. Вони ___ замовлення. (чекати - Class I!)\n   > [!answer] чекають\n   > [!options] чекають | чекаю | чекаєш | чекаємо\n\n10. Я ___ офіціанта. (бачити)\n    > [!answer] бачу\n    > [!options] бачу | бачиш | бачить | бачимо\n\n11. Ви ___ українською? (говорити)\n    > [!answer] говорите\n    > [!options] говорите | говорю | говоримо | говорять\n\n12. Ми ___ це місце. (любити)\n    > [!answer] любимо\n    > [!options] любимо | люблю | любиш | люблять\n\n**English Translation:**\n1. We want borscht and varenyky.\n2. What do you want to drink?\n3. I am drinking water.\n4. She is drinking coffee.\n5. Do you like spicy dishes?\n6. Yes, we like!\n7. What are you eating?\n8. I am eating a salad.\n9. They are waiting for the order.\n10. I see the waiter.\n11. Do you speak Ukrainian?\n12. We love this place.\n\n---\n\n# Vocabulary\n\n| Ukrainian | IPA | English | POS | Gender | Note |\n| --- | --- | --- | --- | --- | --- |\n| **говорити** | /ɦɔvɔˈrɪtɪ/ | to speak | verb | - | Class II |\n| **робити** | /rɔˈbɪtɪ/ | to do/make | verb | - | Class II, л-soft |\n| **бачити** | /ˈbɑt͡ʃɪtɪ/ | to see | verb | - | Class II |\n| **дивитися** | /dɪˈvɪtɪsʲɑ/ | to watch | verb | - | Class II, reflexive |\n| **ходити** | /xɔˈdɪtɪ/ | to walk | verb | - | Class II |\n| **їздити** | /ˈjizdɪtɪ/ | to travel | verb | - | Class II |\n| **летіти** | /lɛˈtʲitɪ/ | to fly | verb | - | Class II |\n| **бігти** | /ˈbʲiɦtɪ/ | to run | verb | - | Irregular |\n| **сидіти** | /sɪˈdʲitɪ/ | to sit | verb | - | Class II |\n| **стояти** | /stɔˈjɑtɪ/ | to stand | verb | - | Class II |\n| **лежати** | /lɛˈʒɑtɪ/ | to lie down | verb | - | Class II |\n| **спати** | /ˈspɑtɪ/ | to sleep | verb | - | Class II |\n| **любити** | /lʲuˈbɪtɪ/ | to love | verb | - | Class II, л-soft |\n| **хотіти** | /xɔˈtʲitɪ/ | to want | verb | - | Irregular |\n| **вчити** | /ˈu̯t͡ʃɪtɪ/ | to teach/learn | verb | - | Class II |\n| **вчитися** | /ˈu̯t͡ʃɪtɪsʲɑ/ | to study | verb | - | Reflexive |\n| **пам'ятати** | /pɑmjaˈtɑtɪ/ | to remember | verb | - | Class I! |\n| **забувати** | /zɑbuˈvɑtɪ/ | to forget | verb | - | Class I! |\n| **їсти** | /ˈjistɪ/ | to eat | verb | - | Irregular |\n| **пити** | /ˈpɪtɪ/ | to drink | verb | - | Irregular |\n| **просити** | /prɔˈsɪtɪ/ | to ask/request | verb | - | Class II |\n| **дякувати** | /dʲɑˈkuvɑtɪ/ | to thank | verb | - | Class I! |\n| **вітати** | /vʲiˈtɑtɪ/ | to greet | verb | - | Class I! |\n| **телефонувати** | /tɛlɛfɔˈnuvɑtɪ/ | to call (phone) | verb | - | Class I! |\n| **купувати** | /kuˈpuvɑtɪ/ | to buy | verb | - | Class I! |\n",
-    "createdAt": "2025-12-12T19:55:32.036Z",
-    "modifiedAt": "2025-12-12T19:55:32.036Z",
+    "rawMarkdown": "---\nmodule: a1-08\ntitle: \"The Living Verb II\"\nsubtitle: \"Class II Conjugation (-ити verbs)\"\nversion: \"1.0\"\nphase: \"A1.1\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: \"full\"\ntags:\n  - verbs\n  - conjugation\n  - class-ii\n  - irregular-verbs\ngrammar:\n  - \"Class II verb conjugation (-ити)\"\n  - \"Irregular verbs: їсти, пити, хотіти\"\n  - \"Consonant mutation in first person singular\"\nobjectives:\n  - \"Learner can conjugate Class II verbs (-ити) in present tense\"\n  - \"Learner can distinguish between Class I (-ати) and Class II (-ити) verbs\"\n  - \"Learner can use common irregular verbs (їсти, пити)\"\n  - \"Learner can form basic sentences with action verbs\"\nvocabulary_count: 25\n---\n\n# The Living Verb II\n\n## Warm-up\n\nYou've already learned Class I verbs that end in **-ати** (читати, писати, працювати). But what about verbs like **говорити** (hovorýty) \"to speak\" and **робити** (róbyty) \"to do\"? These belong to **Class II** — the **-ити** family. They're everywhere in Ukrainian, powering actions from speaking and seeing to loving and wanting. Let's unlock this essential verb group!\n\n## Presentation\n\n### Class II Conjugation Pattern\n\nClass II verbs end in **-ити** or **-іти** in the infinitive. When you conjugate them, they follow a different pattern from Class I. Here's the key change:\n\n**Conjugation formula:** Drop **-ити/-іти**, add these endings:\n\n| Person | Singular | Plural |\n|--------|----------|--------|\n| 1st (I, we) | **-ю** / **-у** | **-имо** |\n| 2nd (you) | **-иш** | **-ите** |\n| 3rd (he/she/they) | **-ить** | **-ять** / **-ать** |\n\n**Example: говорити (hovorýty) — to speak**\n\n| Person | Ukrainian | Transliteration | English |\n|--------|-----------|-----------------|---------|\n| я | говор**ю** (hovorjú) | говорю | I speak |\n| ти | говор**иш** (hovórysh) | говориш | you speak |\n| він/вона | говор**ить** (hovóryt') | говорить | he/she speaks |\n| ми | говор**имо** (hovorýmo) | говоримо | we speak |\n| ви | говор**ите** (hovorýte) | говорите | you (pl/formal) speak |\n| вони | говор**ять** (hovórjat') | говорять | they speak |\n\n> [!tip] **Did You Know?**\n>\n> The **-ити** ending is ancient! It comes from Proto-Slavic and is shared with Polish, Czech, and other Slavic languages. When you say **говорити**, you're using a verb form that's over 1,000 years old.\n\n### Key Examples with Class II Verbs\n\nLet's see these verbs in action:\n\n1. **Я говорю українською.** (Ja hovorjú ukrajíns'koju.)\n   *I speak Ukrainian.*\n\n2. **Ти робиш вправу?** (Ty róbysh vpravu?)\n   *Do you do an exercise?*\n\n3. **Вона бачить студента.** (Voná báchyt' studénta.)\n   *She sees the student.*\n\n4. **Ми дивимося фільм.** (My dývymos'a fil'm.)\n   *We watch a movie.*\n\n5. **Ви ходите в університет?** (Vy khódyte v universytét?)\n   *Do you go to university?*\n\n6. **Вони люблять Україну.** (Voný ljublját' Ukrajínu.)\n   *They love Ukraine.*\n\n7. **Я сиджу вдома.** (Ja sydžú vdóma.)\n   *I sit at home.*\n\n8. **Він стоїть біля вікна.** (Vin stojít' bílja vikná.)\n   *He stands by the window.*\n\n9. **Вона спить.** (Voná spyt'.)\n   *She sleeps.*\n\n10. **Ми вчимо українську мову.** (My vchýmo ukrajíns'ku móvu.)\n    *We study the Ukrainian language.*\n\n11. **Ти пам'ятаєш це слово?** (Ty pam'játaješ tse slóvo?)\n    *Do you remember this word?*\n\n12. **Вони просять допомогу.** (Voný prósjat' dopomóhu.)\n    *They ask for help.*\n\n### Irregular Verbs: їсти, пити, хотіти\n\nSome common verbs don't follow the standard pattern. Here are three essentials:\n\n**їсти (jisty) — to eat**\n\n| я їм | ти їси | він/вона їсть | ми їмо | ви їсте | вони їдять |\n|------|--------|---------------|--------|---------|-----------|\n\n**пити (pýty) — to drink**\n\n| я п'ю | ти п'єш | він/вона п'є | ми п'ємо | ви п'єте | вони п'ють |\n|-------|---------|--------------|----------|----------|-----------|\n\n**хотіти (khotíty) — to want**\n\n| я хочу | ти хочеш | він/вона хоче | ми хочемо | ви хочете | вони хочуть |\n|--------|----------|---------------|-----------|-----------|------------|\n\n13. **Вона п'є каву.** (Voná p'jé kávu.)\n    *She drinks coffee.*\n\n14. **Ми хочемо вчитися.** (My khóchemo vchýtysja.)\n    *We want to study.*\n\n15. **Ти хочеш борщ?** (Ty khóchesh borshch?)\n    *Do you want borscht?*\n\n> [!example] **Pop Culture Moment**\n>\n> In the Ukrainian dub of *Harry Potter*, when Ron says \"I want to eat,\" it's **\"Я хочу їсти\"** (Ja khochú jisty). Two irregular verbs in one sentence! Ukrainian kids learn these patterns from the movies they love.\n\n## Practice\n\n### Mini-Dialogue 1: At the Café in Lviv\n\n**Марко:** Привіт, Олено! Ти п'єш каву? (Pryvít, Oleno! Ty p'jésh kávu?)\n*Hi, Olena! Are you drinking coffee?*\n\n**Олена:** Так, я п'ю каву. Я також читаю книгу. (Tak, ja p'jú kávu. Ja takózh chytáju knýhu.)\n*Yes, I'm drinking coffee. I also read a book.*\n\n**Марко:** Я хочу їсти. Ти любиш борщ? (Ja khochú jisty. Ty ljubljúsh borshch?)\n*I want to eat. Do you love borscht?*\n\n**Олена:** Так, я дуже люблю борщ! (Tak, ja dúzhe ljubljú borshch!)\n*Yes, I love borscht very much!*\n\n### Mini-Dialogue 2: On Campus in Kyiv\n\n**Іван:** Ти бачиш Катю? (Ty báchysh Kátju?)\n*Do you see Katya?*\n\n**Марія:** Так, вона стоїть біля вікна. (Tak, voná stojít' bílja vikná.)\n*Yes, she stands by the window.*\n\n**Іван:** Вона телефонує? (Voná telefonúje?)\n*Is she calling?*\n\n**Марія:** Так, вона говорить українською. (Tak, voná hovóryt' ukrajíns'koju.)\n*Yes, she speaks Ukrainian.*\n\n### Pattern Recognition\n\nNotice how Class II verbs change their stem slightly:\n\n- **робити** → роб**лю** (not \"робю\")\n- **ходити** → ход**жу** (not \"ходю\")\n- **любити** → люб**лю** (not \"любю\")\n\nThis is called **consonant mutation** — certain letters change before the **-ю** ending. You'll pick up these patterns naturally as you practice!\n\n> [!warning] **Common Mistake**\n>\n> Don't confuse **Class I** and **Class II** endings! Class I uses **-аю/-ають**, Class II uses **-ю/-ять**. Compare:\n> - **читати** (Class I): читаЮ, читаЄш, читаЄ, читаЮТЬ\n> - **говорити** (Class II): говорЮ, говорИШ, говорИТЬ, говорЯТЬ\n>\n> The vowels are different!\n\n## Production\n\nNow it's your turn! Try forming sentences:\n\n**Model:**\n- Я **говорю** українською. (I speak Ukrainian.)\n- Ти **робиш** вправу. (You do an exercise.)\n\n**Your turn (mental practice):**\n- What do you love? → Я **люблю** ___.\n- What do you see? → Я **бачу** ___.\n- What do you want? → Я **хочу** ___.\n\n## Cultural Insight\n\n### The Beauty of Ukrainian Verb Logic\n\nUkrainian verbs are incredibly precise. Notice how **ходити** (to walk/go on foot) and **їздити** (to ride/go by vehicle) are two different verbs? In English, we just say \"go,\" but Ukrainian forces you to think: *How are you traveling?*\n\nThis precision extends to posture verbs too:\n- **сидіти** (to sit) — you're seated\n- **стояти** (to stand) — you're standing\n- **лежати** (to lie) — you're lying down\n\nUkrainians use these constantly:\n- **Де ти?** — **Я сиджу в кафе.** (Where are you? — I'm sitting in a café.)\n\n> [!info] **Real World Usage**\n>\n> When Ukrainians greet each other on the phone, they often say:\n> **— Привіт! Як справи?** (Hi! How are things?)\n> **— Добре, дякую!** (Good, thanks!)\n>\n> Notice **дякую** (thank) — from the verb **дякувати** (to thank). You've just learned how to express gratitude properly!\n\n> [!tip] **Grammar Elegance**\n>\n> Why do some verbs change their consonant? Notice: **робити** → **роблю** (not *робю*), **ходити** → **ходжу** (not *ходю*). This is called **consonant mutation** — the final consonant of the stem changes before **-ю** to make pronunciation smoother. Ukrainian inherited this elegant feature from Proto-Slavic!\n\n---\n\n# Summary\n\nYou've now mastered **Class II verbs (-ити)**! Here's what you can do:\n\n- Conjugate regular Class II verbs (говорити, робити, бачити, любити)\n- Use irregular verbs (їсти, пити, хотіти)\n- Distinguish between Class I (-ати) and Class II (-ити) patterns\n- Form sentences about daily actions\n\n**Key Pattern:**\n- **Class II:** Drop -ити → add -ю/-иш/-ить/-имо/-ите/-ять\n\nWith Class I and Class II verbs combined, you can now express hundreds of actions in Ukrainian. Вітаю! (Congratulations!)\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| говорити | /ɦɔvɔˈrɪtɪ/ | to speak | verb | - | Class II: говорю, говориш, говорить |\n| робити | /ˈrɔbɪtɪ/ | to do, to make | verb | - | Class II: роблю, робиш, робить |\n| бачити | /ˈbɑt͡ʃɪtɪ/ | to see | verb | - | Class II: бачу, бачиш, бачить |\n| дивитися | /dɪˈvɪtɪsʲɑ/ | to watch, to look | verb | - | Reflexive: дивлюся, дивишся |\n| ходити | /xɔˈdɪtɪ/ | to walk, to go (on foot) | verb | - | Class II: ходжу, ходиш, ходить |\n| їздити | /ˈjizdɪtɪ/ | to ride, to go (by vehicle) | verb | - | Class II: їжджу, їздиш, їздить |\n| летіти | /lɛˈtitɪ/ | to fly | verb | - | Class II: лечу, летиш, летить |\n| бігти | /ˈbiɦtɪ/ | to run | verb | - | Irregular: біжу, біжиш, біжить |\n| сидіти | /sɪˈditɪ/ | to sit | verb | - | Class II: сиджу, сидиш, сидить |\n| стояти | /stɔˈjɑtɪ/ | to stand | verb | - | Class II: стою, стоїш, стоїть |\n| лежати | /lɛˈʒɑtɪ/ | to lie | verb | - | Class II: лежу, лежиш, лежить |\n| спати | /ˈspɑtɪ/ | to sleep | verb | - | Class II: сплю, спиш, спить |\n| любити | /lʲuˈbɪtɪ/ | to love | verb | - | Class II: люблю, любиш, любить |\n| хотіти | /xɔˈtitɪ/ | to want | verb | - | Irregular: хочу, хочеш, хоче |\n| вчити | /ˈvt͡ʃɪtɪ/ | to study, to learn | verb | - | Class II: вчу, вчиш, вчить |\n| вчитися | /ˈvt͡ʃɪtɪsʲɑ/ | to study (oneself) | verb | - | Reflexive: вчуся, вчишся |\n| пам'ятати | /pɑˈmʲjɑtɑtɪ/ | to remember | verb | - | Class I: пам'ятаю, пам'ятаєш |\n| забувати | /zɑbuˈvɑtɪ/ | to forget | verb | - | Class I: забуваю, забуваєш |\n| їсти | /ˈjistɪ/ | to eat | verb | - | Irregular: їм, їси, їсть |\n| пити | /ˈpɪtɪ/ | to drink | verb | - | Irregular: п'ю, п'єш, п'є |\n| просити | /ˈprɔsɪtɪ/ | to ask, to request | verb | - | Class II: прошу, просиш, просить |\n| дякувати | /dʲɑkuˈvɑtɪ/ | to thank | verb | - | Class I: дякую, дякуєш |\n| вітати | /viˈtɑtɪ/ | to greet | verb | - | Class I: вітаю, вітаєш |\n| телефонувати | /tɛlɛfɔnuˈvɑtɪ/ | to call (by phone) | verb | - | Class I: телефоную, телефонуєш |\n| купувати | /kupuˈvɑtɪ/ | to buy | verb | - | Class I: купую, купуєш |\n\n---\n\n# Activities\n\n## quiz: Class II or Class I?\n> Identify which conjugation class each verb belongs to.\n\n1. говорити\n   - [x] Class II (-ити)\n   - [ ] Class I (-ати)\n   > говорити ends in -ити, so it's Class II\n\n2. читати\n   - [ ] Class II (-ити)\n   - [x] Class I (-ати)\n   > читати ends in -ати, so it's Class I\n\n3. любити\n   - [x] Class II (-ити)\n   - [ ] Class I (-ати)\n   > любити ends in -ити, so it's Class II\n\n4. працювати\n   - [ ] Class II (-ити)\n   - [x] Class I (-ати)\n   > працювати ends in -ати (actually -ювати), so it's Class I\n\n5. бачити\n   - [x] Class II (-ити)\n   - [ ] Class I (-ати)\n   > бачити ends in -ити, so it's Class II\n\n6. знати\n   - [ ] Class II (-ити)\n   - [x] Class I (-ати)\n   > знати ends in -ати, so it's Class I\n\n7. ходити\n   - [x] Class II (-ити)\n   - [ ] Class I (-ати)\n   > ходити ends in -ити, so it's Class II\n\n8. писати\n   - [ ] Class II (-ити)\n   - [x] Class I (-ати)\n   > писати ends in -ати, so it's Class I\n\n9. робити\n   - [x] Class II (-ити)\n   - [ ] Class I (-ати)\n   > робити ends in -ити, so it's Class II\n\n10. дякувати\n    - [ ] Class II (-ити)\n    - [x] Class I (-ати)\n    > дякувати ends in -ати (actually -увати), so it's Class I\n\n11. спати\n    - [x] Class II (-ити)\n    - [ ] Class I (-ати)\n    > спати ends in -ати but behaves like Class II with palatalized stem\n\n12. вчити\n    - [x] Class II (-ити)\n    - [ ] Class I (-ати)\n    > вчити ends in -ити, so it's Class II\n\n## match-up: Verbs and Actions\n> Match each Ukrainian verb to its English meaning.\n\n| Ukrainian | English |\n|-----------|---------|\n| говорити | to speak |\n| робити | to do, to make |\n| бачити | to see |\n| любити | to love |\n| хотіти | to want |\n| їсти | to eat |\n| пити | to drink |\n| ходити | to walk, to go (on foot) |\n| спати | to sleep |\n| стояти | to stand |\n| сидіти | to sit |\n| дивитися | to watch |\n\n## fill-in: Conjugate the Verb\n> Choose the correct conjugated form for each sentence.\n\n1. Я ___ українською.\n   > [!answer] говорю\n   > [!options] говорю | говориш | говорить | говорять\n\n2. Ти ___ каву?\n   > [!answer] п'єш\n   > [!options] п'ю | п'єш | п'є | п'ють\n\n3. Вона ___ книгу.\n   > [!answer] читає\n   > [!options] читаю | читаєш | читає | читають\n\n4. Ми ___ у кафе.\n   > [!answer] сидимо\n   > [!options] сиджу | сидиш | сидить | сидимо\n\n5. Ви ___ фільм?\n   > [!answer] дивитеся\n   > [!options] дивлюся | дивишся | дивиться | дивитеся\n\n6. Вони ___ в університет.\n   > [!answer] ходять\n   > [!options] ходжу | ходиш | ходить | ходять\n\n7. Він ___ фільм.\n   > [!answer] дивиться\n   > [!options] дивлюся | дивишся | дивиться | дивляться\n\n8. Я ___ Україну.\n   > [!answer] люблю\n   > [!options] люблю | любиш | любить | люблять\n\n9. Ти ___ вправу?\n   > [!answer] робиш\n   > [!options] роблю | робиш | робить | роблять\n\n10. Вона ___ біля вікна.\n    > [!answer] стоїть\n    > [!options] стою | стоїш | стоїть | стоять\n\n11. Ми ___ вчитися.\n    > [!answer] хочемо\n    > [!options] хочу | хочеш | хоче | хочемо\n\n12. Вони ___.\n    > [!answer] сплять\n    > [!options] сплю | спиш | спить | сплять\n\n## anagram: Build the Verb\n> Arrange the letters to form the correct Ukrainian verb.\n\n1. г о в о р и т и\n   > [!answer] говорити\n   > (to speak)\n\n2. р о б и т и\n   > [!answer] робити\n   > (to do, to make)\n\n3. б а ч и т и\n   > [!answer] бачити\n   > (to see)\n\n4. л ю б и т и\n   > [!answer] любити\n   > (to love)\n\n5. х о т і т и\n   > [!answer] хотіти\n   > (to want)\n\n6. ї с т и\n   > [!answer] їсти\n   > (to eat)\n\n7. п и т и\n   > [!answer] пити\n   > (to drink)\n\n8. х о д и т и\n   > [!answer] ходити\n   > (to walk)\n\n9. с п а т и\n   > [!answer] спати\n   > (to sleep)\n\n10. с т о я т и\n    > [!answer] стояти\n    > (to stand)\n\n11. с и д і т и\n    > [!answer] сидіти\n    > (to sit)\n\n12. в ч и т и\n    > [!answer] вчити\n    > (to study)\n\n## true-false: Grammar Rules\n> Decide if each statement is true or false.\n\n- [x] Class II verbs end in -ити or -іти in the infinitive.\n  > Correct! This is the defining feature of Class II verbs.\n\n- [ ] The verb \"читати\" is Class II.\n  > Incorrect! \"читати\" ends in -ати, so it's Class I.\n\n- [x] Irregular verbs like їсти and пити don't follow standard conjugation patterns.\n  > Correct! These verbs have unique conjugation forms.\n\n- [x] In Class II, the first person singular ending is -ю or -у.\n  > Correct! я говорю, я роблю (with consonant mutation).\n\n- [ ] The verb \"говорити\" conjugates as \"я говорую.\"\n  > Incorrect! It's \"я говорю\" (not \"говорую\").\n\n- [x] \"Дякувати\" is a Class I verb.\n  > Correct! It ends in -увати, which is a Class I pattern.\n\n- [ ] All verbs ending in -ати are Class I.\n  > Incorrect! \"спати\" ends in -ати but behaves like Class II in some forms.\n\n- [x] The third person plural ending for Class II is -ять or -ать.\n  > Correct! вони говорять, вони роблять.\n\n- [x] \"Я хочу\" is an irregular form.\n  > Correct! хотіти is irregular: хочу, хочеш, хоче.\n\n- [ ] Class II verbs don't have consonant mutations.\n  > Incorrect! Many do: робити → роблю, ходити → ходжу.\n\n- [x] \"П'ю\" is the first person singular of \"пити.\"\n  > Correct! я п'ю (I drink).\n\n- [x] Ukrainian distinguishes between ходити (on foot) and їздити (by vehicle).\n  > Correct! This precision is a beautiful feature of Ukrainian.\n\n## group-sort: Verb Types\n> Sort these verbs by their conjugation class.\n\n### Class I (-ати)\n- читати\n- писати\n- працювати\n- знати\n- дякувати\n- телефонувати\n\n### Class II (-ити)\n- говорити\n- робити\n- бачити\n- любити\n- ходити\n- вчити\n\n### Irregular\n- їсти\n- пити\n- хотіти\n\n## unjumble: Form Sentences\n> Put the words in the correct order to form Ukrainian sentences.\n\n1. говорю / Я / українською\n   > [!answer] Я говорю українською.\n   > (I speak Ukrainian.)\n\n2. робиш / Ти / книгу / ?\n   > [!answer] Ти робиш книгу?\n   > (Are you making a book?)\n\n3. бачить / Вона / студента\n   > [!answer] Вона бачить студента.\n   > (She sees the student.)\n\n4. люблять / Вони / Україну\n   > [!answer] Вони люблять Україну.\n   > (They love Ukraine.)\n\n5. хочу / Я / їсти\n   > [!answer] Я хочу їсти.\n   > (I want to eat.)\n\n6. п'є / Вона / каву\n   > [!answer] Вона п'є каву.\n   > (She drinks coffee.)\n\n7. ходимо / Ми / в / університет\n   > [!answer] Ми ходимо в університет.\n   > (We go to university.)\n\n8. сплять / Вони\n   > [!answer] Вони сплять.\n   > (They sleep.)\n\n9. стоїть / Він / біля / вікна\n   > [!answer] Він стоїть біля вікна.\n   > (He stands by the window.)\n\n10. сиджу / Я / вдома\n    > [!answer] Я сиджу вдома.\n    > (I sit at home.)\n\n11. дивимося / Ми / фільм\n    > [!answer] Ми дивимося фільм.\n    > (We watch a movie.)\n\n12. вчите / Ви / українську / мову / ?\n    > [!answer] Ви вчите українську мову?\n    > (Do you study the Ukrainian language?)\n\n## fill-in: Complete the Dialogue\n> Fill in the blanks with the correct verb forms.\n\n1. Марія: Привіт! Ти ___ книгу?\n   > [!answer] читаєш\n   > [!options] читаю | читаєш | читає | читають\n\n2. Петро: Так, я ___ книгу.\n   > [!answer] читаю\n   > [!options] читаю | читаєш | читає | читають\n\n3. Марія: Я ___ каву зараз.\n   > [!answer] п'ю\n   > [!options] п'ю | п'єш | п'є | п'ють\n\n4. Петро: Я ___ музику!\n   > [!answer] люблю\n   > [!options] люблю | любиш | любить | люблять\n\n5. Марія: Ти ___ в університет?\n   > [!answer] ходиш\n   > [!options] ходжу | ходиш | ходить | ходять\n\n6. Петро: Так, я ___ українську мову.\n   > [!answer] вчу\n   > [!options] вчу | вчиш | вчить | вчать\n\n7. Марія: Ти ___ українську?\n   > [!answer] любиш\n   > [!options] люблю | любиш | любить | люблять\n\n8. Петро: Так! Я ___ українську мову!\n   > [!answer] люблю\n   > [!options] люблю | любиш | любить | люблять\n\n9. Марія: Я ___ вивчати більше.\n   > [!answer] хочу\n   > [!options] хочу | хочеш | хоче | хочуть\n\n10. Петро: Ти ___ борщ?\n    > [!answer] любиш\n    > [!options] люблю | любиш | любить | люблять\n\n11. Марія: Так, я дуже ___ борщ!\n    > [!answer] люблю\n    > [!options] люблю | любиш | любить | люблять\n\n12. Петро: Ти ___ фільм сьогодні?\n    > [!answer] дивишся\n    > [!options] дивлюся | дивишся | дивиться | дивляться\n\n13. Марія: Так, я ___ фільм!\n    > [!answer] дивлюся\n    > [!options] дивлюся | дивишся | дивиться | дивляться\n\n## quiz: Choose the Right Verb\n> Select the verb that best completes each sentence.\n\n1. Я ___ українською кожен день.\n   - [x] говорю\n   - [ ] читаю\n   - [ ] п'ю\n   - [ ] сплю\n   > You \"speak\" Ukrainian (говорю).\n\n2. Вона ___ студента біля університету.\n   - [ ] говорить\n   - [x] бачить\n   - [ ] п'є\n   - [ ] спить\n   > You \"see\" a student (бачить).\n\n3. Ми ___ вдома ввечері.\n   - [ ] говоримо\n   - [ ] ходимо\n   - [x] сидимо\n   - [ ] їмо\n   > You \"sit\" at home (сидимо).\n\n4. Ти ___ каву чи чай?\n   - [ ] їси\n   - [x] п'єш\n   - [ ] робиш\n   - [ ] ходиш\n   > You \"drink\" coffee or tea (п'єш).\n\n5. Вони ___ фільм у кінотеатрі.\n   - [ ] п'ють\n   - [ ] їдять\n   - [x] дивляться\n   - [ ] сплять\n   > You \"watch\" a movie (дивляться).\n\n6. Він ___ в університет щодня.\n   - [x] ходить\n   - [ ] п'є\n   - [ ] спить\n   - [ ] їсть\n   > You \"go\" to university on foot (ходить).\n\n7. Я ___ українську мову.\n   - [x] вчу\n   - [ ] п'ю\n   - [ ] роблю\n   - [ ] спишу\n   > You \"study\" Ukrainian (вчу).\n\n8. Вона ___ Україну дуже сильно.\n   - [ ] бачить\n   - [x] любить\n   - [ ] п'є\n   - [ ] спить\n   > You \"love\" Ukraine (любить).\n\n9. Ми ___ вивчати українську.\n   - [x] хочемо\n   - [ ] п'ємо\n   - [ ] їмо\n   - [ ] сплять\n   > You \"want\" to study Ukrainian (хочемо).\n\n10. Ти ___ біля дверей?\n    - [ ] сидиш\n    - [x] стоїш\n    - [ ] лежиш\n    - [ ] спиш\n    > You \"stand\" by the door (стоїш).\n\n11. Вони ___ вночі.\n    - [ ] ходять\n    - [ ] п'ють\n    - [ ] їдять\n    - [x] сплять\n    > You \"sleep\" at night (сплять).\n\n12. Я ___ вправу зараз.\n    - [x] роблю\n    - [ ] п'ю\n    - [ ] бачу\n    - [ ] сплю\n    > You \"do\" an exercise (роблю).\n",
+    "createdAt": "2025-12-13T23:37:50.650825Z",
+    "modifiedAt": "2025-12-13T23:37:50.650825Z",
     "version": 2
   },
-  "activities": [
-    {
-      "id": "act-a1-0-matchup-0",
-      "type": "match-up",
-      "title": "Class I vs Class II",
-      "description": "Match the verb to its class.",
-      "content": {
-        "type": "match-up",
-        "pairs": [
-          {
-            "left": "читати",
-            "right": "Class I"
-          },
-          {
-            "left": "говорити",
-            "right": "Class II"
-          },
-          {
-            "left": "працювати",
-            "right": "Class I"
-          },
-          {
-            "left": "любити",
-            "right": "Class II"
-          },
-          {
-            "left": "знати",
-            "right": "Class I"
-          },
-          {
-            "left": "бачити",
-            "right": "Class II"
-          },
-          {
-            "left": "слухати",
-            "right": "Class I"
-          },
-          {
-            "left": "робити",
-            "right": "Class II"
-          },
-          {
-            "left": "питати",
-            "right": "Class I"
-          },
-          {
-            "left": "ходити",
-            "right": "Class II"
-          },
-          {
-            "left": "грати",
-            "right": "Class I"
-          },
-          {
-            "left": "сидіти",
-            "right": "Class II"
-          }
-        ],
-        "shuffleRight": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.036Z",
-      "modifiedAt": "2025-12-12T19:55:32.036Z"
-    },
-    {
-      "id": "act-a1-0-groupsort-0",
-      "type": "group-sort",
-      "title": "Infinitive Endings",
-      "description": "Sort verbs by their infinitive ending.",
-      "content": {
-        "type": "group-sort",
-        "groups": [
-          {
-            "id": "--",
-            "name": "-ати/-яти",
-            "items": [
-              "читати",
-              "знати",
-              "працювати",
-              "слухати",
-              "питати",
-              "грати",
-              "думати",
-              "малювати",
-              "співати",
-              "танцювати",
-              "снідати",
-              "чекати"
-            ],
-            "nameUk": "Class I"
-          },
-          {
-            "id": "--",
-            "name": "-ити/-іти",
-            "items": [
-              "говорити",
-              "любити",
-              "бачити",
-              "робити",
-              "ходити",
-              "сидіти",
-              "їздити",
-              "стояти",
-              "лежати",
-              "летіти",
-              "просити",
-              "вчити"
-            ],
-            "nameUk": "Class II"
-          }
-        ],
-        "shuffleItems": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.036Z",
-      "modifiedAt": "2025-12-12T19:55:32.036Z"
-    },
-    {
-      "id": "act-a1-0-quiz-0",
-      "type": "quiz",
-      "title": "Conjugate Class II",
-      "description": "Choose the correct conjugation.",
-      "content": {
-        "type": "quiz",
-        "questions": [
-          {
-            "question": "(я) говорити",
-            "options": [
-              "говорю",
-              "говориш",
-              "говорить",
-              "говоримо"
-            ],
-            "correctIndex": 0,
-            "explanation": "First person singular → -ю"
-          },
-          {
-            "question": "(ти) любити",
-            "options": [
-              "любиш",
-              "люблю",
-              "любить",
-              "любимо"
-            ],
-            "correctIndex": 0,
-            "explanation": "Second person singular → -иш"
-          },
-          {
-            "question": "(він) бачити",
-            "options": [
-              "бачить",
-              "бачу",
-              "бачиш",
-              "бачимо"
-            ],
-            "correctIndex": 0,
-            "explanation": "Third person singular → -ить"
-          },
-          {
-            "question": "(ми) робити",
-            "options": [
-              "робимо",
-              "роблю",
-              "робиш",
-              "роблять"
-            ],
-            "correctIndex": 0,
-            "explanation": "First person plural → -имо"
-          },
-          {
-            "question": "(ви) ходити",
-            "options": [
-              "ходите",
-              "ходжу",
-              "ходимо",
-              "ходять"
-            ],
-            "correctIndex": 0,
-            "explanation": "Second person plural → -ите"
-          },
-          {
-            "question": "(вони) сидіти",
-            "options": [
-              "сидять",
-              "сиджу",
-              "сидить",
-              "сидимо"
-            ],
-            "correctIndex": 0,
-            "explanation": "Third person plural → -ять"
-          },
-          {
-            "question": "(я) їсти",
-            "options": [
-              "їм",
-              "їси",
-              "їсть",
-              "їмо"
-            ],
-            "correctIndex": 0,
-            "explanation": "Irregular: їм"
-          },
-          {
-            "question": "(вона) пити",
-            "options": [
-              "п'є",
-              "п'ю",
-              "п'єш",
-              "п'ємо"
-            ],
-            "correctIndex": 0,
-            "explanation": "Irregular: п'є"
-          },
-          {
-            "question": "(ти) вчити",
-            "options": [
-              "вчиш",
-              "вчу",
-              "вчить",
-              "вчимо"
-            ],
-            "correctIndex": 0,
-            "explanation": "Second person singular → -иш"
-          },
-          {
-            "question": "(ми) просити",
-            "options": [
-              "просимо",
-              "прошу",
-              "просиш",
-              "просять"
-            ],
-            "correctIndex": 0,
-            "explanation": "First person plural → -имо"
-          },
-          {
-            "question": "(вони) хотіти",
-            "options": [
-              "хочуть",
-              "хочу",
-              "хочеш",
-              "хочемо"
-            ],
-            "correctIndex": 0,
-            "explanation": "Third person plural (irregular)"
-          },
-          {
-            "question": "(я) любити",
-            "options": [
-              "люблю",
-              "любиш",
-              "любить",
-              "любимо"
-            ],
-            "correctIndex": 0,
-            "explanation": "Note the л-softening: люблю"
-          }
-        ],
-        "shuffleQuestions": true,
-        "shuffleOptions": true,
-        "showCorrectAnswers": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.036Z",
-      "modifiedAt": "2025-12-12T19:55:32.036Z"
-    },
-    {
-      "id": "act-a1-0-fillblank-0",
-      "type": "fill-blank",
-      "title": "Complete with Class II",
-      "description": "Conjugate the Class II verb correctly.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Я ___ українською. (говорити)",
-            "answer": "говорю",
-            "options": [
-              "говорю",
-              "говориш",
-              "говорить",
-              "говоримо"
-            ]
-          },
-          {
-            "prompt": "Ти ___ цю книгу? (любити)",
-            "answer": "любиш",
-            "options": [
-              "любиш",
-              "люблю",
-              "любить",
-              "любимо"
-            ]
-          },
-          {
-            "prompt": "Вона ___ мене. (бачити)",
-            "answer": "бачить",
-            "options": [
-              "бачить",
-              "бачу",
-              "бачиш",
-              "бачимо"
-            ]
-          },
-          {
-            "prompt": "Ми ___ домашнє завдання. (робити)",
-            "answer": "робимо",
-            "options": [
-              "робимо",
-              "роблю",
-              "робиш",
-              "роблять"
-            ]
-          },
-          {
-            "prompt": "Вони ___ до школи. (ходити)",
-            "answer": "ходять",
-            "options": [
-              "ходять",
-              "ходжу",
-              "ходиш",
-              "ходимо"
-            ]
-          },
-          {
-            "prompt": "Він ___ на стільці. (сидіти)",
-            "answer": "сидить",
-            "options": [
-              "сидить",
-              "сиджу",
-              "сидиш",
-              "сидимо"
-            ]
-          },
-          {
-            "prompt": "Я ___ кашу. (їсти)",
-            "answer": "їм",
-            "options": [
-              "їм",
-              "їси",
-              "їсть",
-              "їмо"
-            ]
-          },
-          {
-            "prompt": "Ти ___ каву? (пити)",
-            "answer": "п'єш",
-            "options": [
-              "п'єш",
-              "п'ю",
-              "п'є",
-              "п'ємо"
-            ]
-          },
-          {
-            "prompt": "Вони ___ допомоги. (просити)",
-            "answer": "просять",
-            "options": [
-              "просять",
-              "прошу",
-              "просиш",
-              "просимо"
-            ]
-          },
-          {
-            "prompt": "Ми ___ українську. (вчити)",
-            "answer": "вчимо",
-            "options": [
-              "вчимо",
-              "вчу",
-              "вчиш",
-              "вчать"
-            ]
-          },
-          {
-            "prompt": "Ви ___ чай? (хотіти)",
-            "answer": "хочете",
-            "options": [
-              "хочете",
-              "хочу",
-              "хочеш",
-              "хочуть"
-            ]
-          },
-          {
-            "prompt": "Вона ___ шоколад. (любити)",
-            "answer": "любить",
-            "options": [
-              "любить",
-              "люблю",
-              "любиш",
-              "люблять"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.036Z",
-      "modifiedAt": "2025-12-12T19:55:32.036Z"
-    },
-    {
-      "id": "act-a1-0-matchup-1",
-      "type": "match-up",
-      "title": "Verb Vocabulary",
-      "description": "Match Ukrainian verbs to English meanings.",
-      "content": {
-        "type": "match-up",
-        "pairs": [
-          {
-            "left": "говорити",
-            "right": "to speak"
-          },
-          {
-            "left": "любити",
-            "right": "to love"
-          },
-          {
-            "left": "бачити",
-            "right": "to see"
-          },
-          {
-            "left": "робити",
-            "right": "to do/make"
-          },
-          {
-            "left": "ходити",
-            "right": "to walk/go"
-          },
-          {
-            "left": "їздити",
-            "right": "to travel (by vehicle)"
-          },
-          {
-            "left": "сидіти",
-            "right": "to sit"
-          },
-          {
-            "left": "стояти",
-            "right": "to stand"
-          },
-          {
-            "left": "лежати",
-            "right": "to lie down"
-          },
-          {
-            "left": "спати",
-            "right": "to sleep"
-          },
-          {
-            "left": "їсти",
-            "right": "to eat"
-          },
-          {
-            "left": "пити",
-            "right": "to drink"
-          }
-        ],
-        "shuffleRight": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.036Z",
-      "modifiedAt": "2025-12-12T19:55:32.036Z"
-    },
-    {
-      "id": "act-a1-0-anagram-0",
-      "type": "anagram",
-      "title": "Class II Verb Scramble",
-      "description": "Unscramble the Class II verbs.",
-      "content": {
-        "type": "anagram",
-        "isAnagram": true,
-        "items": [
-          {
-            "letters": [
-              "р",
-              "и",
-              "о",
-              "в",
-              "о",
-              "г",
-              "и",
-              "т"
-            ],
-            "answer": "говорити"
-          },
-          {
-            "letters": [
-              "т",
-              "ю",
-              "б",
-              "и",
-              "л",
-              "и"
-            ],
-            "answer": "любити"
-          },
-          {
-            "letters": [
-              "т",
-              "и",
-              "и",
-              "б",
-              "а",
-              "ч"
-            ],
-            "answer": "бачити"
-          },
-          {
-            "letters": [
-              "т",
-              "и",
-              "б",
-              "о",
-              "р",
-              "и"
-            ],
-            "answer": "робити"
-          },
-          {
-            "letters": [
-              "т",
-              "и",
-              "и",
-              "х",
-              "о",
-              "д"
-            ],
-            "answer": "ходити"
-          },
-          {
-            "letters": [
-              "д",
-              "и",
-              "і",
-              "т",
-              "и",
-              "с"
-            ],
-            "answer": "сидіти"
-          },
-          {
-            "letters": [
-              "т",
-              "и",
-              "т",
-              "я",
-              "о",
-              "с"
-            ],
-            "answer": "стояти"
-          },
-          {
-            "letters": [
-              "а",
-              "т",
-              "и",
-              "с",
-              "п"
-            ],
-            "answer": "спати"
-          },
-          {
-            "letters": [
-              "т",
-              "и",
-              "ж",
-              "а",
-              "л",
-              "е"
-            ],
-            "answer": "лежати"
-          },
-          {
-            "letters": [
-              "т",
-              "и",
-              "с",
-              "и",
-              "р",
-              "о",
-              "п"
-            ],
-            "answer": "просити"
-          },
-          {
-            "letters": [
-              "и",
-              "т",
-              "и",
-              "ч",
-              "в"
-            ],
-            "answer": "вчити"
-          },
-          {
-            "letters": [
-              "т",
-              "о",
-              "х",
-              "т",
-              "і",
-              "и"
-            ],
-            "answer": "хотіти"
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.036Z",
-      "modifiedAt": "2025-12-12T19:55:32.036Z"
-    },
-    {
-      "id": "act-a1-0-truefalse-0",
-      "type": "true-false",
-      "title": "Class II Rules",
-      "description": "Decide if the statement is True or False.",
-      "content": {
-        "type": "true-false",
-        "statements": [
-          {
-            "statement": "Class II verbs end in -ити or -іти.",
-            "isTrue": true,
-            "explanation": "Correct! говорити, любити, бачити"
-          },
-          {
-            "statement": "The 3rd person singular ending is -є for Class II.",
-            "isTrue": false,
-            "explanation": "False! Class II uses -ить. Class I uses -є."
-          },
-          {
-            "statement": "\"Люблю\" has an extra \"л\" compared to \"любити.\"",
-            "isTrue": true,
-            "explanation": "Correct! This is called l-softening."
-          },
-          {
-            "statement": "\"Їсти\" follows the regular Class II pattern.",
-            "isTrue": false,
-            "explanation": "False! It's irregular: їм, їси, їсть..."
-          },
-          {
-            "statement": "\"Вони говорять\" is the correct 3rd person plural.",
-            "isTrue": true,
-            "explanation": "Correct! -ять is the Class II plural ending."
-          },
-          {
-            "statement": "Class I and Class II have identical endings.",
-            "isTrue": false,
-            "explanation": "False! They have different vowels: є vs и."
-          },
-          {
-            "statement": "\"Робити\" conjugates as \"роблю\" in first person.",
-            "isTrue": true,
-            "explanation": "Correct! The \"л\" appears in 1st person."
-          },
-          {
-            "statement": "\"Пити\" conjugates as \"питю.\"",
-            "isTrue": false,
-            "explanation": "False! It's irregular: п'ю, п'єш, п'є..."
-          },
-          {
-            "statement": "Both Class I and Class II use -ю for 1st person singular.",
-            "isTrue": true,
-            "explanation": "Correct! читаю (I), говорю (II)"
-          },
-          {
-            "statement": "\"Бачать\" is the 3rd person plural of \"бачити.\"",
-            "isTrue": false,
-            "explanation": "Correct! вони бачать"
-          },
-          {
-            "statement": "\"Сидіти\" is a Class II verb.",
-            "isTrue": true,
-            "explanation": "Correct! It ends in -іти."
-          },
-          {
-            "statement": "All -ити verbs have l-softening.",
-            "isTrue": false,
-            "explanation": "False! Only some (любити → люблю, but бачити → бачу)."
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.036Z",
-      "modifiedAt": "2025-12-12T19:55:32.036Z"
-    },
-    {
-      "id": "act-a1-0-fillblank-1",
-      "type": "fill-blank",
-      "title": "Restaurant Dialogue",
-      "description": "Complete the restaurant conversation.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Ми ___ борщ і вареники. (хотіти)",
-            "answer": "хочемо",
-            "options": [
-              "хочемо",
-              "хочу",
-              "хочеш",
-              "хочуть"
-            ]
-          },
-          {
-            "prompt": "Що ви ___ пити? (хотіти)",
-            "answer": "хочете",
-            "options": [
-              "хочете",
-              "хочу",
-              "хочемо",
-              "хочуть"
-            ]
-          },
-          {
-            "prompt": "Я ___ воду. (пити)",
-            "answer": "п'ю",
-            "options": [
-              "п'ю",
-              "п'єш",
-              "п'є",
-              "п'ємо"
-            ]
-          },
-          {
-            "prompt": "Вона ___ каву. (пити)",
-            "answer": "п'є",
-            "options": [
-              "п'є",
-              "п'ю",
-              "п'єш",
-              "п'ємо"
-            ]
-          },
-          {
-            "prompt": "Ви ___ гострі страви? (любити)",
-            "answer": "любите",
-            "options": [
-              "любите",
-              "люблю",
-              "любить",
-              "люблять"
-            ]
-          },
-          {
-            "prompt": "Так, ми ___! (любити)",
-            "answer": "любимо",
-            "options": [
-              "любимо",
-              "люблю",
-              "любиш",
-              "люблять"
-            ]
-          },
-          {
-            "prompt": "Що ви ___? (їсти)",
-            "answer": "їсте",
-            "options": [
-              "їсте",
-              "їм",
-              "їси",
-              "їдять"
-            ]
-          },
-          {
-            "prompt": "Я ___ салат. (їсти)",
-            "answer": "їм",
-            "options": [
-              "їм",
-              "їси",
-              "їсть",
-              "їмо"
-            ]
-          },
-          {
-            "prompt": "Вони ___ замовлення. (чекати - Class I!)",
-            "answer": "чекають",
-            "options": [
-              "чекають",
-              "чекаю",
-              "чекаєш",
-              "чекаємо"
-            ]
-          },
-          {
-            "prompt": "Я ___ офіціанта. (бачити)",
-            "answer": "бачу",
-            "options": [
-              "бачу",
-              "бачиш",
-              "бачить",
-              "бачимо"
-            ]
-          },
-          {
-            "prompt": "Ви ___ українською? (говорити)",
-            "answer": "говорите",
-            "options": [
-              "говорите",
-              "говорю",
-              "говоримо",
-              "говорять"
-            ]
-          },
-          {
-            "prompt": "Ми ___ це місце. (любити)",
-            "answer": "любимо",
-            "options": [
-              "любимо",
-              "люблю",
-              "любиш",
-              "люблять"
-            ]
-          },
-          {
-            "prompt": "We want borscht and varenyky.",
-            "answer": ""
-          },
-          {
-            "prompt": "What do you want to drink?",
-            "answer": ""
-          },
-          {
-            "prompt": "I am drinking water.",
-            "answer": ""
-          },
-          {
-            "prompt": "She is drinking coffee.",
-            "answer": ""
-          },
-          {
-            "prompt": "Do you like spicy dishes?",
-            "answer": ""
-          },
-          {
-            "prompt": "Yes, we like!",
-            "answer": ""
-          },
-          {
-            "prompt": "What are you eating?",
-            "answer": ""
-          },
-          {
-            "prompt": "I am eating a salad.",
-            "answer": ""
-          },
-          {
-            "prompt": "They are waiting for the order.",
-            "answer": ""
-          },
-          {
-            "prompt": "I see the waiter.",
-            "answer": ""
-          },
-          {
-            "prompt": "Do you speak Ukrainian?",
-            "answer": ""
-          },
-          {
-            "prompt": "We love this place.",
-            "answer": ""
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.036Z",
-      "modifiedAt": "2025-12-12T19:55:32.036Z"
-    }
-  ],
+  "activities": [],
   "vocabulary": {
-    "moduleId": "mod-uk-A1-8",
+    "moduleId": "mod-uk-A1-08",
     "level": "A1",
     "phase": "A1.1",
     "wordCount": 25,
     "newWordCount": 25,
     "reviewWordCount": 0,
-    "transliterationMode": "partial",
+    "transliterationMode": "full",
     "words": [
       {
-        "id": "v-**hovoryty**-0-0",
-        "uk": "**говорити**",
+        "id": "vocab-1",
+        "uk": "говорити",
+        "ipa": "/ɦɔvɔˈrɪtɪ/",
         "en": "to speak",
         "pos": "verb",
-        "ipa": "/ɦɔvɔˈrɪtɪ/",
-        "note": "Class II",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Class II: говорю, говориш, говорить"
       },
       {
-        "id": "v-**robyty**-0-1",
-        "uk": "**робити**",
-        "en": "to do/make",
+        "id": "vocab-2",
+        "uk": "робити",
+        "ipa": "/ˈrɔbɪtɪ/",
+        "en": "to do, to make",
         "pos": "verb",
-        "ipa": "/rɔˈbɪtɪ/",
-        "note": "Class II, л-soft",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Class II: роблю, робиш, робить"
       },
       {
-        "id": "v-**bachyty**-0-2",
-        "uk": "**бачити**",
+        "id": "vocab-3",
+        "uk": "бачити",
+        "ipa": "/ˈbɑt͡ʃɪtɪ/",
         "en": "to see",
         "pos": "verb",
-        "ipa": "/ˈbɑt͡ʃɪtɪ/",
-        "note": "Class II",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Class II: бачу, бачиш, бачить"
       },
       {
-        "id": "v-**dyvytysya**-0-3",
-        "uk": "**дивитися**",
-        "en": "to watch",
-        "pos": "verb",
+        "id": "vocab-4",
+        "uk": "дивитися",
         "ipa": "/dɪˈvɪtɪsʲɑ/",
-        "note": "Class II, reflexive",
-        "isNew": true,
-        "firstModule": 0
+        "en": "to watch, to look",
+        "pos": "verb",
+        "gender": null,
+        "note": "Reflexive: дивлюся, дивишся"
       },
       {
-        "id": "v-**khodyty**-0-4",
-        "uk": "**ходити**",
-        "en": "to walk",
-        "pos": "verb",
+        "id": "vocab-5",
+        "uk": "ходити",
         "ipa": "/xɔˈdɪtɪ/",
-        "note": "Class II",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-**yizdyty**-0-5",
-        "uk": "**їздити**",
-        "en": "to travel",
+        "en": "to walk, to go (on foot)",
         "pos": "verb",
-        "ipa": "/ˈjizdɪtɪ/",
-        "note": "Class II",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Class II: ходжу, ходиш, ходить"
       },
       {
-        "id": "v-**letity**-0-6",
-        "uk": "**летіти**",
+        "id": "vocab-6",
+        "uk": "їздити",
+        "ipa": "/ˈjizdɪtɪ/",
+        "en": "to ride, to go (by vehicle)",
+        "pos": "verb",
+        "gender": null,
+        "note": "Class II: їжджу, їздиш, їздить"
+      },
+      {
+        "id": "vocab-7",
+        "uk": "летіти",
+        "ipa": "/lɛˈtitɪ/",
         "en": "to fly",
         "pos": "verb",
-        "ipa": "/lɛˈtʲitɪ/",
-        "note": "Class II",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Class II: лечу, летиш, летить"
       },
       {
-        "id": "v-**bihty**-0-7",
-        "uk": "**бігти**",
+        "id": "vocab-8",
+        "uk": "бігти",
+        "ipa": "/ˈbiɦtɪ/",
         "en": "to run",
         "pos": "verb",
-        "ipa": "/ˈbʲiɦtɪ/",
-        "note": "Irregular",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Irregular: біжу, біжиш, біжить"
       },
       {
-        "id": "v-**sydity**-0-8",
-        "uk": "**сидіти**",
+        "id": "vocab-9",
+        "uk": "сидіти",
+        "ipa": "/sɪˈditɪ/",
         "en": "to sit",
         "pos": "verb",
-        "ipa": "/sɪˈdʲitɪ/",
-        "note": "Class II",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Class II: сиджу, сидиш, сидить"
       },
       {
-        "id": "v-**stoyaty**-0-9",
-        "uk": "**стояти**",
+        "id": "vocab-10",
+        "uk": "стояти",
+        "ipa": "/stɔˈjɑtɪ/",
         "en": "to stand",
         "pos": "verb",
-        "ipa": "/stɔˈjɑtɪ/",
-        "note": "Class II",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Class II: стою, стоїш, стоїть"
       },
       {
-        "id": "v-**lezhaty**-0-10",
-        "uk": "**лежати**",
-        "en": "to lie down",
-        "pos": "verb",
+        "id": "vocab-11",
+        "uk": "лежати",
         "ipa": "/lɛˈʒɑtɪ/",
-        "note": "Class II",
-        "isNew": true,
-        "firstModule": 0
+        "en": "to lie",
+        "pos": "verb",
+        "gender": null,
+        "note": "Class II: лежу, лежиш, лежить"
       },
       {
-        "id": "v-**spaty**-0-11",
-        "uk": "**спати**",
+        "id": "vocab-12",
+        "uk": "спати",
+        "ipa": "/ˈspɑtɪ/",
         "en": "to sleep",
         "pos": "verb",
-        "ipa": "/ˈspɑtɪ/",
-        "note": "Class II",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Class II: сплю, спиш, спить"
       },
       {
-        "id": "v-**lyubyty**-0-12",
-        "uk": "**любити**",
+        "id": "vocab-13",
+        "uk": "любити",
+        "ipa": "/lʲuˈbɪtɪ/",
         "en": "to love",
         "pos": "verb",
-        "ipa": "/lʲuˈbɪtɪ/",
-        "note": "Class II, л-soft",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Class II: люблю, любиш, любить"
       },
       {
-        "id": "v-**khotity**-0-13",
-        "uk": "**хотіти**",
+        "id": "vocab-14",
+        "uk": "хотіти",
+        "ipa": "/xɔˈtitɪ/",
         "en": "to want",
         "pos": "verb",
-        "ipa": "/xɔˈtʲitɪ/",
-        "note": "Irregular",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Irregular: хочу, хочеш, хоче"
       },
       {
-        "id": "v-**vchyty**-0-14",
-        "uk": "**вчити**",
-        "en": "to teach/learn",
+        "id": "vocab-15",
+        "uk": "вчити",
+        "ipa": "/ˈvt͡ʃɪtɪ/",
+        "en": "to study, to learn",
         "pos": "verb",
-        "ipa": "/ˈu̯t͡ʃɪtɪ/",
-        "note": "Class II",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Class II: вчу, вчиш, вчить"
       },
       {
-        "id": "v-**vchytysya**-0-15",
-        "uk": "**вчитися**",
-        "en": "to study",
+        "id": "vocab-16",
+        "uk": "вчитися",
+        "ipa": "/ˈvt͡ʃɪtɪsʲɑ/",
+        "en": "to study (oneself)",
         "pos": "verb",
-        "ipa": "/ˈu̯t͡ʃɪtɪsʲɑ/",
-        "note": "Reflexive",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Reflexive: вчуся, вчишся"
       },
       {
-        "id": "v-**pam'yataty**-0-16",
-        "uk": "**пам'ятати**",
+        "id": "vocab-17",
+        "uk": "пам'ятати",
+        "ipa": "/pɑˈmʲjɑtɑtɪ/",
         "en": "to remember",
         "pos": "verb",
-        "ipa": "/pɑmjaˈtɑtɪ/",
-        "note": "Class I!",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Class I: пам'ятаю, пам'ятаєш"
       },
       {
-        "id": "v-**zabuvaty**-0-17",
-        "uk": "**забувати**",
+        "id": "vocab-18",
+        "uk": "забувати",
+        "ipa": "/zɑbuˈvɑtɪ/",
         "en": "to forget",
         "pos": "verb",
-        "ipa": "/zɑbuˈvɑtɪ/",
-        "note": "Class I!",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Class I: забуваю, забуваєш"
       },
       {
-        "id": "v-**yisty**-0-18",
-        "uk": "**їсти**",
+        "id": "vocab-19",
+        "uk": "їсти",
+        "ipa": "/ˈjistɪ/",
         "en": "to eat",
         "pos": "verb",
-        "ipa": "/ˈjistɪ/",
-        "note": "Irregular",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Irregular: їм, їси, їсть"
       },
       {
-        "id": "v-**pyty**-0-19",
-        "uk": "**пити**",
+        "id": "vocab-20",
+        "uk": "пити",
+        "ipa": "/ˈpɪtɪ/",
         "en": "to drink",
         "pos": "verb",
-        "ipa": "/ˈpɪtɪ/",
-        "note": "Irregular",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Irregular: п'ю, п'єш, п'є"
       },
       {
-        "id": "v-**prosyty**-0-20",
-        "uk": "**просити**",
-        "en": "to ask/request",
+        "id": "vocab-21",
+        "uk": "просити",
+        "ipa": "/ˈprɔsɪtɪ/",
+        "en": "to ask, to request",
         "pos": "verb",
-        "ipa": "/prɔˈsɪtɪ/",
-        "note": "Class II",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Class II: прошу, просиш, просить"
       },
       {
-        "id": "v-**dyakuvaty**-0-21",
-        "uk": "**дякувати**",
+        "id": "vocab-22",
+        "uk": "дякувати",
+        "ipa": "/dʲɑkuˈvɑtɪ/",
         "en": "to thank",
         "pos": "verb",
-        "ipa": "/dʲɑˈkuvɑtɪ/",
-        "note": "Class I!",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Class I: дякую, дякуєш"
       },
       {
-        "id": "v-**vitaty**-0-22",
-        "uk": "**вітати**",
+        "id": "vocab-23",
+        "uk": "вітати",
+        "ipa": "/viˈtɑtɪ/",
         "en": "to greet",
         "pos": "verb",
-        "ipa": "/vʲiˈtɑtɪ/",
-        "note": "Class I!",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Class I: вітаю, вітаєш"
       },
       {
-        "id": "v-**telefonuvaty**-0-23",
-        "uk": "**телефонувати**",
-        "en": "to call (phone)",
+        "id": "vocab-24",
+        "uk": "телефонувати",
+        "ipa": "/tɛlɛfɔnuˈvɑtɪ/",
+        "en": "to call (by phone)",
         "pos": "verb",
-        "ipa": "/tɛlɛfɔˈnuvɑtɪ/",
-        "note": "Class I!",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Class I: телефоную, телефонуєш"
       },
       {
-        "id": "v-**kupuvaty**-0-24",
-        "uk": "**купувати**",
+        "id": "vocab-25",
+        "uk": "купувати",
+        "ipa": "/kupuˈvɑtɪ/",
         "en": "to buy",
         "pos": "verb",
-        "ipa": "/kuˈpuvɑtɪ/",
-        "note": "Class I!",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "Class I: купую, купуєш"
       }
-    ]
+    ],
+    "reviewWords": []
   }
 }

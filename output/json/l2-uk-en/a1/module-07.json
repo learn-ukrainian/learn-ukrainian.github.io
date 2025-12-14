@@ -15,1115 +15,329 @@
     "pedagogy": "PPP",
     "immersionLevel": 0.3,
     "title": "Questions & Negation",
-    "subtitle": "Asking Questions and Saying No in Ukrainian",
-    "description": "Form yes/no questions with чи",
+    "titleUk": null,
+    "subtitle": "Asking Questions and Saying No",
+    "description": "Ask yes/no questions using 'чи'",
     "objectives": [
-      "Form yes/no questions with чи",
-      "Use question words (що, хто, де, коли, чому, як)",
-      "Negate sentences with не",
-      "Understand word order in questions"
+      "Ask yes/no questions using 'чи'",
+      "Form questions with question words (що, хто, де, коли, etc.)",
+      "Make negative statements with 'не'",
+      "Understand frequency adverbs (завжди, часто, іноді, ніколи)"
     ],
+    "objectivesUk": null,
     "grammarFocus": [
-      "Question formation (чи, intonation)",
-      "Question words (interrogatives)",
-      "Negation with не"
+      "Yes/no questions with чи",
+      "Question words (що, хто, де, куди, звідки, коли, чому, як, скільки)",
+      "Negation with не",
+      "Double negation with ніколи",
+      "Frequency adverbs"
     ],
     "tags": [
-      "grammar",
       "questions",
       "negation",
-      "conversation"
+      "question-words",
+      "frequency-adverbs"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "partial",
+    "totalDuration": "60 min",
+    "transliterationMode": "full",
     "sections": [
       {
-        "id": "section-content-0",
-        "name": "Lesson",
+        "id": "section-1",
+        "name": "Questions & Negation",
+        "nameEn": null,
         "type": "content",
-        "content": "> **Note:** You can make statements. Now it's time to **ask** and **deny**! Questions and negation are essential for real conversation.\n\n## Warm-up: The Curious Mind\n\nConversation is a two-way street. You don't just make statements — you ask questions, express doubt, and sometimes say \"no.\" In this module, you'll learn the tools to do all of this in Ukrainian.\n\nThink about how often you ask questions in daily life:\n- \"Where is the train station?\" (Де вокзал?)\n- \"What time is it?\" (Котра година?)\n- \"Do you speak English?\" (Ви говорите англійською?)\n\nAnd how often you need to negate:\n- \"I don't understand.\" (Я не розумію.)\n- \"This isn't my coffee.\" (Це не моя кава.)\n- \"She doesn't work here.\" (Вона тут не працює.)\n\nUkrainian makes both of these remarkably simple. Questions require no special word order changes — just intonation or a small word. Negation is just one word: **не**. Let's master both!\n\n> 💡 **Good News:** Unlike English, Ukrainian doesn't need \"do/does\" for questions or negation. This makes sentences shorter and more direct.\n\n## Presentation: Asking Questions\n\n### 1. Yes/No Questions — Two Methods\n\n**Method A: Intonation Only**\nSimply raise your voice at the end:\n- Statement: Ти читаєш. (You read.)\n- Question: Ти читаєш**?** ↗ (Do you read?)\n\n**Method B: Add \"Чи\" at the Start**\nThe word **чи** signals a yes/no question explicitly:\n- Чи ти читаєш? (Do you read?)\n- Чи вона працює? (Does she work?)\n- Чи ви розумієте? (Do you understand?)\n\n> 📜 **Style Note:** In speech, intonation alone is common. In writing or formal contexts, \"чи\" adds clarity.\n\n### 2. Question Words (Питальні слова)\n\nThese words ask for specific information:\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| **що** | /ʃt͡ʃɔ/ | what | Що це? (What is this?) |\n| **хто** | /xtɔ/ | who | Хто це? (Who is this?) |\n| **де** | /dɛ/ | where | Де ти? (Where are you?) |\n| **куди** | /kuˈdɪ/ | where to | Куди ти йдеш? (Where are you going?) |\n| **звідки** | /ˈzvʲidkɪ/ | where from | Звідки ви? (Where are you from?) |\n| **коли** | /kɔˈlɪ/ | when | Коли? (When?) |\n| **чому** | /t͡ʃɔˈmu/ | why | Чому ні? (Why not?) |\n| **як** | /jɑk/ | how | Як справи? (How are things?) |\n| **скільки** | /ˈskʲilʲkɪ/ | how many/much | Скільки коштує? (How much?) |\n| **який/яка/яке** | /jaˈkɪj/ | which/what kind | Який колір? (What color?) |\n\n### 3. Word Order in Questions\n\nUkrainian word order is flexible! The question word usually comes **first**:\n- **Де** ти працюєш? (Where do you work?)\n- **Що** ви читаєте? (What are you reading?)\n- **Хто** це? (Who is this?)\n\nBut you can also emphasize different parts:\n- Ти **де** працюєш? (emphasizes \"where\")\n- Ви **що** читаєте? (emphasizes \"what\")\n\n> ⚠️ **Note:** Unlike English, Ukrainian doesn't change verb order for questions. \"You work\" → \"Where you work?\" (not \"Where do you work?\")\n\n## Presentation: Saying No\n\n### 1. The Magic Word: Не\n\nTo negate any verb, just add **не** directly before it:\n- Я читаю. → Я **не** читаю. (I don't read.)\n- Вона працює. → Вона **не** працює. (She doesn't work.)\n- Вони знають. → Вони **не** знають. (They don't know.)\n\n### 2. Double Negation is Required!\n\nIn English, we say \"I don't know **anything**.\" In Ukrainian, you MUST use double negation:\n- Я **нічого** **не** знаю. (I don't know anything. — literally: \"I nothing not know.\")\n- Вона **ніколи** **не** працює. (She never works.)\n- **Ніхто** **не** розуміє. (Nobody understands.)\n\n| Positive | Negative |\n|----------|----------|\n| хтось (someone) | ніхто (no one) |\n| щось (something) | нічого (nothing) |\n| колись (sometime) | ніколи (never) |\n| десь (somewhere) | ніде (nowhere) |\n\n### 3. Answering Questions\n\n| Answer | Example |\n|--------|---------|\n| **Так** (Yes) | — Ти студент? — Так. |\n| **Ні** (No) | — Ти працюєш? — Ні, я не працюю. |\n\n> 💡 **Shortcut:** You can answer with just \"Так\" or \"Ні\" — no need to repeat the whole sentence.\n\n## Cultural Insight: Ukrainian Directness 🇺🇦\n\nUkrainians are known for being direct. If you ask a question, expect a clear answer! Unlike some cultures where people hedge or avoid saying \"no,\" Ukrainians typically give straight answers.\n\nCommon polite phrases:\n- **На жаль, ні.** — Unfortunately, no.\n- **Вибачте, я не знаю.** — Sorry, I don't know.\n- **Перепрошую?** — Pardon? (asking to repeat)\n- **Що, вибачте?** — What, sorry?\n\n> 📜 **History Bite:** The phrase **\"Слава Україні!\"** (Glory to Ukraine!) became a question-and-response during the independence movement. The answer is **\"Героям слава!\"** (Glory to the heroes!) — showing how questions and answers can carry deep cultural meaning.\n\n## Dialogue: At the Information Desk 🗣️\n\n**Турист:** Добрий день! Вибачте, де вокзал?\n**Працівник:** Добрий день! Вокзал? Прямо, потім наліво.\n**Турист:** Дякую! А скільки це коштує автобус?\n**Працівник:** Автобус? Дванадцять гривень.\n**Турист:** А метро?\n**Працівник:** Метро вісім гривень.\n**Турист:** Чи є банкомат поруч?\n**Працівник:** Так, банкомат за рогом.\n**Турист:** Чудово! Ви не знаєте, коли відкривається музей?\n**Працівник:** Ні, на жаль, я не знаю. Але є інформація онлайн.\n**Турист:** Дякую за допомогу!\n**Працівник:** Будь ласка!\n\n**English Translation:**\n**Tourist:** Good day! Excuse me, where is the train station?\n**Employee:** Good day! Train station? Straight, then to the left.\n**Tourist:** Thank you! And how much does the bus cost?\n**Employee:** Bus? Twelve hryvnias.\n**Tourist:** And the metro?\n**Employee:** Metro is eight hryvnias.\n**Tourist:** Is there an ATM nearby?\n**Employee:** Yes, the ATM is around the corner.\n**Tourist:** Great! Do you know when the museum opens?\n**Employee:** No, unfortunately, I don't know. But there is information online.\n**Tourist:** Thank you for help!\n**Employee:** You're welcome!\n\n## Reading Practice: Questions Everywhere 📖\n\n*Read this short text full of questions.*\n\n**Марія в новому місті.** Вона не знає дорогу. Вона питає:\n- **Де** центр міста?\n- **Як** дістатися до музею?\n- **Скільки** коштує квиток?\n\nЛюди відповідають:\n- Центр? Прямо, потім направо.\n- Музей? Автобусом номер п'ять.\n- Квиток? Сорок гривень.\n\nМарія **не** розуміє все. Вона питає ще: \"**Що** ви сказали?\" Люди повторюють: \"Прямо! Направо! П'ять! Сорок!\" Тепер Марія розуміє. Вона **не** загубилася більше.\n\n**English Translation:**\n**Maria is in a new city.** She doesn't know the way. She asks:\n- **Where** is the city center?\n- **How** to get to the museum?\n- **How much** does the ticket cost?\n\nPeople answer:\n- Center? Straight, then to the right.\n- Museum? By bus number five.\n- Ticket? Forty hryvnias.\n\nMaria doesn't understand everything. She asks again: \"**What** did you say?\" People repeat: \"Straight! To the right! Five! Forty!\" Now Maria understands. She is not lost anymore.\n\n> 📜 **Myth Buster:** Some learners think Ukrainian word order is \"free.\" It's actually **flexible** but not random. Word order changes emphasis, not meaning. \"Де ти?\" and \"Ти де?\" both mean \"Where are you?\" but the second emphasizes \"where.\""
+        "content": "## Warm-up\n\nYou've learned to make statements in Ukrainian: \"Я читаю книгу\" (I read a book). But conversations aren't just statements - they're questions and answers, agreements and disagreements!\n\nIn English, asking \"Do you read?\" requires changing word order or adding \"do/does\". Ukrainian is simpler - you just add the little word **чи** at the beginning! And saying \"no\"? Just put **не** before the verb.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian is very flexible with questions. You can ask \"Чи ти читаєш?\" (formal) or just \"Ти читаєш?\" (casual, with rising intonation). Both work! Context and tone tell you it's a question.\n\n## Presentation\n\n### Yes/No Questions with Чи\n\nThe simplest way to turn any statement into a yes/no question is to add **чи** at the beginning:\n\n| Statement | Question (with чи) |\n|-----------|-------------------|\n| Ти читаєш. (Ty chytayesh) | **Чи** ти читаєш? (Chy ty chytayesh?) |\n| You read. | Do you read? |\n| Вона працює. (Vona pratsyuye) | **Чи** вона працює? (Chy vona pratsyuye?) |\n| She works. | Does she work? |\n| Ми знаємо. (My znayemo) | **Чи** ми знаємо? (Chy my znayemo?) |\n| We know. | Do we know? |\n\n**The pattern:** Чи + subject + verb?\n\nIn casual speech, Ukrainians often skip **чи** and just use rising intonation:\n- Ти читаєш? ↗ (You read? = Do you read?)\n\n**Answering:**\n- **Так** (Tak) = Yes\n- **Ні** (Ni) = No\n\n> 🎬 **Pop Culture Moment**\n>\n> In the Ukrainian dub of Marvel's Avengers, when someone asks \"Ти читаєш?\" (Do you read this?), they skip **чи** because it's action-packed! But in formal meetings, they use \"Чи ви читаєте?\" (Do you [formal] read?). Same question, different register!\n\n**Mini-Dialogue 1: At a Café**\n\n— Чи ти хочеш каву? (Chy ty khochesh kavu?)\n— Так, дякую! (Tak, dyakuyu!)\n— Чи ти знаєш, де туалет? (Chy ty znayesh, de tualet?)\n— Ні, не знаю. (Ni, ne znayu.)\n\n### Question Words\n\nUkrainian has question words (like English \"what, who, where\") that replace the unknown part of the sentence:\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| **що** (Shcho) | /ʃt͡ʃɔ/ | what | Що ти читаєш? (What do you read?) |\n| **хто** (Khto) | /xtɔ/ | who | Хто працює? (Who works?) |\n| **де** (De) | /dɛ/ | where (location) | Де ти? (Where are you?) |\n| **куди** (Kudy) | /ˈkudɪ/ | where (to) | Куди ти йдеш? (Where are you going?) |\n| **звідки** (Zvidky) | /ˈzʲʋidkɪ/ | where from | Звідки ти? (Where are you from?) |\n| **коли** (Koly) | /kɔˈlɪ/ | when | Коли ти працюєш? (When do you work?) |\n| **чому** (Chomu) | /t͡ʃɔˈmu/ | why | Чому ти читаєш? (Why do you read?) |\n| **як** (Yak) | /jɑk/ | how | Як ти? (How are you?) |\n| **скільки** (Skilky) | /ˈskilʲkɪ/ | how much/many | Скільки це коштує? (How much is this?) |\n\n**Pattern:** Question word + verb + rest of sentence\n\nNotice: Unlike English, you don't need \"do/does\" - the question word itself signals it's a question!\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Question words must come first in Ukrainian.\"\n> **Fact:** While they usually do, Ukrainians often move them for emphasis! \"Ти куди йдеш?\" (You where going? = Where exactly are you going?) feels more urgent than \"Куди ти йдеш?\"\n\n**Mini-Dialogue 2: Getting to Know Someone**\n\n— Як тебе звуть? (Yak tebe zvut?) — What's your name?\n— Мене звуть Марко. (Mene zvut Marko.) — My name is Marko.\n— Звідки ти? (Zvidky ty?) — Where are you from?\n— Я з Києва. А ти? (Ya z Kyyeva. A ty?) — I'm from Kyiv. And you?\n— Я з Америки. (Ya z Ameryky.) — I'm from America.\n\n### Negation with Не\n\nTo make a verb negative, just put **не** (ne) before it. Simple!\n\n| Positive | Negative |\n|----------|----------|\n| Я читаю. (Ya chytayu) | Я **не** читаю. (Ya **ne** chytayu) |\n| I read. | I don't read. |\n| Вона працює. (Vona pratsyuye) | Вона **не** працює. (Vona **ne** pratsyuye) |\n| She works. | She doesn't work. |\n| Ми знаємо. (My znayemo) | Ми **не** знаємо. (My **ne** znayemo) |\n| We know. | We don't know. |\n\n**Key difference from English:** In Ukrainian, you don't need \"don't/doesn't/didn't\" - just **не + verb**!\n\n**Common negative constructions:**\n- Я не розумію. (Ya ne rozumiyu) = I don't understand.\n- Я не знаю. (Ya ne znayu) = I don't know.\n- Це не правда. (Tse ne pravda) = That's not true.\n\n> 🌍 **Real World**\n>\n> Ukrainians are very direct with negation. If you ask \"Чи ти знаєш?\" (Do you know?), a simple \"Ні, не знаю\" (No, I don't know) is perfectly polite. No need to soften it with \"I'm afraid I don't...\" like in English!\n\n**Mini-Dialogue 3: Misunderstandings**\n\n— Чи ти говориш англійською? (Chy ty hovorysh anhliyskoyu?)\n— Так, говорю. А ти? (Tak, hovoryu. A ty?)\n— Ні, я не говорю англійською. Я говорю українською. (Ni, ya ne hovoryu anhliyskoyu. Ya hovoryu ukrayinskoyu.)\n— Добре! Ми говоримо українською! (Dobre! My hovorymo ukrayinskoyu!)\n\n### Frequency Adverbs\n\nWhen talking about how often you do things, Ukrainian uses these adverbs:\n\n| Adverb | IPA | English | Example |\n|--------|-----|---------|---------|\n| **завжди** (zavzhdy) | /ˈzɑʋʒdɪ/ | always | Я завжди читаю. (I always read.) |\n| **часто** (chasto) | /ˈt͡ʃɑstɔ/ | often | Вона часто працює. (She often works.) |\n| **іноді** (inodi) | /iˈnɔdi/ | sometimes | Ми іноді говоримо. (We sometimes talk.) |\n| **рідко** (ridko) | /ˈridkɔ/ | rarely | Він рідко пише. (He rarely writes.) |\n| **ніколи** (nikoly) | /nʲiˈkɔlɪ/ | never | Я ніколи не п'ю каву. (I never drink coffee.) |\n| **звичайно** (zvychayno) | /zvɪˈt͡ʃɑjnɔ/ | usually | Я звичайно снідаю вдома. (I usually have breakfast at home.) |\n\n**Important:** **Ніколи** (never) is already negative, but Ukrainian uses **double negation** - you still add **не**!\n\n- Я **ніколи не** п'ю каву. (I never drink coffee.) ✅\n- Я ніколи п'ю каву. ❌ (Wrong - missing не!)\n\nThis is called **double negation** and it's mandatory in Ukrainian (unlike English where \"I never don't drink\" would be wrong).\n\n> 💡 **Did You Know?**\n>\n> Ukrainian loves double negation! \"Я нічого не знаю\" (I nothing don't know = I don't know anything) feels natural to Ukrainians. This pattern comes from older Slavic languages and makes negation extra clear.\n\n## Practice\n\nNow you know:\n- ✅ How to ask yes/no questions with **чи**\n- ✅ Question words (що, хто, де, куди, коли, чому, як, скільки)\n- ✅ How to say no with **не**\n- ✅ Frequency adverbs (завжди, часто, іноді, рідко, ніколи, звичайно)\n\nLet's practice!\n\n## Production\n\n**Task: Create a conversation**\n\nImagine you meet someone new at a café in Lviv. Use what you learned to:\n1. Ask their name (Як тебе звуть?)\n2. Ask where they're from (Звідки ти?)\n3. Ask if they read Ukrainian (Чи ти читаєш українською?)\n4. Say something you don't do (Я не...)\n5. Say something you always do (Я завжди...)\n\n**Model Answer:**\n\n— Привіт! Як тебе звуть? (Hi! What's your name?)\n— Мене звуть Оля. А тебе? (My name is Olya. And yours?)\n— Марко. Звідки ти? (Marko. Where are you from?)\n— Я з Львова. А ти? (I'm from Lviv. And you?)\n— Я з Києва. Чи ти читаєш українською? (I'm from Kyiv. Do you read in Ukrainian?)\n— Так! Я завжди читаю українською. А ти? (Yes! I always read in Ukrainian. And you?)\n— Я часто читаю, але іноді не розумію. (I often read, but sometimes I don't understand.)\n— Нічого! Це нормально. (No problem! That's normal.)\n\n## Cultural Insight\n\n**Ukrainian Directness with Questions**\n\nUkrainians are generally more direct than English speakers when asking questions. Simple questions are common even with new acquaintances - especially from older generations.\n\nThis isn't rude - it's genuine interest! Ukrainians value honesty and directness in conversation.\n\n**Common Questions You'll Hear:**\n- Звідки ти? (Where are you from?)\n- Що ти робиш? (What do you do?)\n- Чому ти вивчаєш українську? (Why do you study Ukrainian?)\n- Чи ти хочеш каву? (Do you want coffee?)\n\n> 🎭 **Culture Corner**\n>\n> When Ukrainians ask \"Як справи?\" (How are things?), they actually want to know! Unlike the English \"How are you?\" (often just a greeting), Ukrainians expect a real answer. Feel free to say \"Не дуже добре\" (Not so great) - they'll ask why and genuinely care.\n\n---"
       },
       {
-        "id": "section-summary-1",
-        "name": "Підсумок",
-        "nameEn": "Summary",
+        "id": "section-2",
+        "name": "Summary",
+        "nameEn": null,
         "type": "summary",
-        "content": "1. **Yes/No questions:** Use rising intonation or add **чи** at the start\n2. **Question words:** що, хто, де, куди, коли, чому, як, скільки\n3. **Negation:** Add **не** before the verb\n4. **Double negation:** Required in Ukrainian (нічого не знаю)\n5. **Answers:** Так (yes), Ні (no)\n\n---\n\n> [!tip] 🌟 **Pro Tip:** Practice question-answer pairs! Ask yourself questions in Ukrainian and answer them. It's the fastest way to internalize these patterns.\n\n\n---"
+        "content": "**Questions with Чи:**\n- Чи + subject + verb? = Yes/no question\n- Так (yes) / Ні (no)\n\n**Question Words:**\n- що (what), хто (who), де (where), куди (where to), звідки (where from)\n- коли (when), чому (why), як (how), скільки (how much/many)\n\n**Negation:**\n- не + verb = negative\n- ніколи (never) STILL needs не: \"Я ніколи не...\"\n\n**Frequency:**\n- завжди (always), часто (often), звичайно (usually)\n- іноді (sometimes), рідко (rarely), ніколи (never)\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## quiz: Question Word Meanings\n\n1. What does \"де\" mean?\n   - [ ] what\n   - [ ] who\n   - [x] where\n   - [ ] when\n   > де (de) = where (location)\n\n2. Which question word means \"why\"?\n   - [ ] що\n   - [ ] як\n   - [x] чому\n   - [ ] коли\n   > чому (chomu) = why\n\n3. How do you say \"when\" in Ukrainian?\n   - [ ] де\n   - [x] коли\n   - [ ] куди\n   - [ ] скільки\n   > коли (koly) = when\n\n4. What does \"хто\" mean?\n   - [ ] what\n   - [x] who\n   - [ ] how\n   - [ ] where\n   > хто (khto) = who\n\n5. Which word asks \"where to\" (direction)?\n   - [ ] де\n   - [ ] звідки\n   - [x] куди\n   - [ ] коли\n   > куди (kudy) = where to (direction)\n\n6. How do you say \"how much/many\"?\n   - [ ] як\n   - [ ] що\n   - [x] скільки\n   - [ ] коли\n   > скільки (skilky) = how much/many\n\n7. What does \"звідки\" mean?\n   - [ ] where\n   - [ ] where to\n   - [x] where from\n   - [ ] when\n   > звідки (zvidky) = where from\n\n8. Which word means \"what\"?\n   - [x] що\n   - [ ] хто\n   - [ ] де\n   - [ ] як\n   > що (shcho) = what\n\n9. How do you say \"how\"?\n   - [ ] що\n   - [ ] чому\n   - [x] як\n   - [ ] коли\n   > як (yak) = how\n\n10. What is the question word for \"who\"?\n    - [ ] що\n    - [x] хто\n    - [ ] де\n    - [ ] чому\n    > хто (khto) = who\n\n11. Which means \"where\" (location)?\n    - [x] де\n    - [ ] куди\n    - [ ] звідки\n    - [ ] коли\n    > де (de) = where (location)\n\n12. How do you ask \"why\" in Ukrainian?\n    - [ ] що\n    - [ ] як\n    - [ ] коли\n    - [x] чому\n    > чому (chomu) = why\n\n## match-up: Question Words to Context\n\n| Question Word | Context |\n|---------------|---------|\n| що | asking about objects or actions |\n| хто | asking about people |\n| де | asking about location |\n| куди | asking about destination |\n| звідки | asking about origin |\n| коли | asking about time |\n| чому | asking for reason |\n| як | asking about manner or state |\n| скільки | asking about quantity |\n| чи | asking yes/no questions |\n\n## fill-in: Complete Questions\n\n1. ___ ти читаєш? (What do you read?)\n   > [!answer] Що\n   > [!options] Що | Хто | Де | Коли\n\n2. ___ ти? (Where are you?)\n   > [!answer] Де\n   > [!options] Де | Куди | Звідки | Коли\n\n3. ___ ти працюєш? (When do you work?)\n   > [!answer] Коли\n   > [!options] Коли | Де | Що | Як\n\n4. ___ ти? (How are you?)\n   > [!answer] Як\n   > [!options] Як | Що | Хто | Де\n\n5. ___ працює? (Who works?)\n   > [!answer] Хто\n   > [!options] Хто | Що | Де | Коли\n\n6. ___ ти йдеш? (Where are you going?)\n   > [!answer] Куди\n   > [!options] Куди | Де | Звідки | Що\n\n7. ___ ти вивчаєш українську? (Why do you study Ukrainian?)\n   > [!answer] Чому\n   > [!options] Чому | Що | Як | Коли\n\n8. ___ ти? (Where are you from?)\n   > [!answer] Звідки\n   > [!options] Звідки | Де | Куди | Хто\n\n9. ___ це коштує? (How much is this?)\n   > [!answer] Скільки\n   > [!options] Скільки | Що | Як | Коли\n\n10. ___ ти знаєш? (Do you know?)\n    > [!answer] Чи\n    > [!options] Чи | Що | Хто | Де\n\n11. ___ тебе звуть? (What is your name? lit. How do they call you?)\n    > [!answer] Як\n    > [!options] Як | Що | Хто | Де\n\n12. ___ ти говориш? (What language do you speak?)\n    > [!answer] Що\n    > [!options] Що | Як | Де | Коли\n\n## true-false: Question and Negation Rules\n\n- [x] \"Чи\" at the beginning of a sentence signals a yes/no question.\n  > Correct! Чи + subject + verb = yes/no question\n\n- [ ] Ukrainian question words require \"do/does\" like English.\n  > Incorrect! Ukrainian doesn't need auxiliary verbs for questions.\n\n- [x] \"Не\" goes directly before the verb to make it negative.\n  > Correct! Я не читаю = I don't read\n\n- [ ] \"Ніколи\" (never) doesn't need \"не\" because it's already negative.\n  > Incorrect! Ukrainian uses double negation: \"Я ніколи не...\"\n\n- [x] You can skip \"чи\" in casual speech and use rising intonation instead.\n  > Correct! \"Ти читаєш?\" ↗ is common in casual conversation.\n\n- [ ] \"Де\" and \"куди\" mean exactly the same thing.\n  > Incorrect! \"Де\" = where (location), \"куди\" = where to (direction)\n\n- [x] \"Звідки\" asks about origin or source.\n  > Correct! Звідки ти? = Where are you from?\n\n- [x] Ukrainian uses double negation with words like \"ніколи\" (never).\n  > Correct! \"Я ніколи не п'ю каву\" = I never drink coffee\n\n- [ ] \"Що\" can only mean \"what\", never \"that\".\n  > Incorrect! \"Що\" means both \"what\" (question) and \"that\" (conjunction), depending on context.\n\n- [x] Frequency adverbs like \"завжди\" (always) can come before or after the verb.\n  > Correct! Both \"Я завжди читаю\" and \"Я читаю завжди\" work.\n\n- [ ] To ask \"how are you\", Ukrainians always say \"Як справи?\"\n  > Incorrect! They can also say \"Як ти?\" (How are you?) or \"Як діла?\" (How are things?)\n\n- [x] \"Так\" means yes and \"ні\" means no.\n  > Correct! Basic yes/no answers.\n\n## group-sort: Frequency Adverbs\n\n### Always/Usually\n- завжди\n- звичайно\n- часто\n\n### Sometimes/Rarely\n- іноді\n- рідко\n- не завжди\n\n### Never (with double negation)\n- ніколи не читаю\n- ніколи не пишу\n\n## fill-in: Add Negation\n\n1. Я ___ читаю українською. (I don't read in Ukrainian.)\n   > [!answer] не\n   > [!options] не | ні | ніколи | чи\n\n2. Вона ___ працює сьогодні. (She doesn't work today.)\n   > [!answer] не\n   > [!options] не | ні | ніколи | що\n\n3. Ми ___ знаємо. (We don't know.)\n   > [!answer] не\n   > [!options] не | ні | чи | як\n\n4. Ти ___ розумієш? (You don't understand?)\n   > [!answer] не\n   > [!options] не | ні | ніколи | де\n\n5. Я ___ ___ п'ю каву. (I never drink coffee.) [Two blanks!]\n   > [!answer] ніколи не\n   > [!options] ніколи не | не ніколи | ні не | не ні\n\n6. Він ___ говорить англійською. (He doesn't speak English.)\n   > [!answer] не\n   > [!options] не | ні | ніколи | чи\n\n7. Вони ___ пишуть листи. (They don't write letters.)\n   > [!answer] не\n   > [!options] не | ні | що | як\n\n8. Я ___ хочу чаю. (I don't want tea.)\n   > [!answer] не\n   > [!options] не | ні | ніколи | чи\n\n9. Це ___ правда. (That's not true.)\n   > [!answer] не\n   > [!options] не | ні | ніколи | що\n\n10. Чи ти ___ знаєш? (Don't you know?)\n    > [!answer] не\n    > [!options] не | ні | ніколи | що\n\n11. Ми ___ ___ їмо м'ясо. (We never eat meat.)\n    > [!answer] ніколи не\n    > [!options] ніколи не | не ніколи | ні не | не ні\n\n12. Вона ___ слухає музику. (She doesn't listen to music.)\n    > [!answer] не\n    > [!options] не | ні | ніколи | чи\n\n## anagram: Question Words\n\n1. Щ О\n   > [!answer] що\n   > (what)\n\n2. Х Т О\n   > [!answer] хто\n   > (who)\n\n3. Д Е\n   > [!answer] де\n   > (where)\n\n4. Я К\n   > [!answer] як\n   > (how)\n\n5. Ч И\n   > [!answer] чи\n   > (yes/no question particle)\n\n6. Н І\n   > [!answer] ні\n   > (no)\n\n7. Т А К\n   > [!answer] так\n   > (yes)\n\n8. К О Л И\n   > [!answer] коли\n   > (when)\n\n9. Ч О М У\n   > [!answer] чому\n   > (why)\n\n10. К У Д И\n    > [!answer] куди\n    > (where to)\n\n11. З В І Д К И\n    > [!answer] звідки\n    > (where from)\n\n12. С К І Л Ь К И\n    > [!answer] скільки\n    > (how much/many)\n\n## anagram: Frequency Words\n\n1. З А В Ж Д И\n   > [!answer] завжди\n   > (always)\n\n2. Ч А С Т О\n   > [!answer] часто\n   > (often)\n\n3. І Н О Д І\n   > [!answer] іноді\n   > (sometimes)\n\n4. Р І Д К О\n   > [!answer] рідко\n   > (rarely)\n\n5. Н І К О Л И\n   > [!answer] ніколи\n   > (never)\n\n6. З В И Ч А Й Н О\n   > [!answer] звичайно\n   > (usually)\n\n7. Н Е\n   > [!answer] не\n   > (not)\n\n8. Ч И\n   > [!answer] чи\n   > (whether, if)\n\n## unjumble: Build Questions\n\n1. читаєш / Що / ти\n   > [!answer] Що ти читаєш?\n   > (What do you read?)\n\n2. ти / Де\n   > [!answer] Де ти?\n   > (Where are you?)\n\n3. працює / Хто\n   > [!answer] Хто працює?\n   > (Who works?)\n\n4. Куди / йдеш / ти\n   > [!answer] Куди ти йдеш?\n   > (Where are you going?)\n\n5. ти / Коли / працюєш\n   > [!answer] Коли ти працюєш?\n   > (When do you work?)\n\n6. Як / ти\n   > [!answer] Як ти?\n   > (How are you?)\n\n7. Чи / читаєш / ти\n   > [!answer] Чи ти читаєш?\n   > (Do you read?)\n\n8. коштує / Скільки / це\n   > [!answer] Скільки це коштує?\n   > (How much is this?)\n\n9. вивчаєш / ти / Чому / українську\n   > [!answer] Чому ти вивчаєш українську?\n   > (Why do you study Ukrainian?)\n\n10. Звідки / ти\n    > [!answer] Звідки ти?\n    > (Where are you from?)\n\n11. говорить / Хто / українською\n    > [!answer] Хто говорить українською?\n    > (Who speaks Ukrainian?)\n\n12. знаєш / ти / Чи\n    > [!answer] Чи ти знаєш?\n    > (Do you know?)\n\n## unjumble: Negative Sentences\n\n1. не / Я / читаю\n   > [!answer] Я не читаю.\n   > (I don't read.)\n\n2. працює / не / Вона\n   > [!answer] Вона не працює.\n   > (She doesn't work.)\n\n3. знаємо / Ми / не\n   > [!answer] Ми не знаємо.\n   > (We don't know.)\n\n4. ніколи / п'ю / каву / Я / не\n   > [!answer] Я ніколи не п'ю каву.\n   > (I never drink coffee.)\n\n5. Він / не / говорить / англійською\n   > [!answer] Він не говорить англійською.\n   > (He doesn't speak English.)\n\n6. розумію / Я / не\n   > [!answer] Я не розумію.\n   > (I don't understand.)\n\n7. не / Це / правда\n   > [!answer] Це не правда.\n   > (That's not true.)\n\n8. не / Ти / пишеш\n   > [!answer] Ти не пишеш.\n   > (You don't write.)\n\n9. їмо / ніколи / м'ясо / Ми / не\n   > [!answer] Ми ніколи не їмо м'ясо.\n   > (We never eat meat.)\n\n10. не / Вони / слухають / музику\n    > [!answer] Вони не слухають музику.\n    > (They don't listen to music.)\n\n11. працюю / не / Я / сьогодні\n    > [!answer] Я не працюю сьогодні.\n    > (I don't work today.)\n\n12. не / хочу / Я / чаю\n    > [!answer] Я не хочу чаю.\n    > (I don't want tea.)\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| що | /ʃt͡ʃɔ/ | what | pronoun | - | question word |\n| хто | /xtɔ/ | who | pronoun | - | question word |\n| де | /dɛ/ | where | adverb | - | location |\n| куди | /ˈkudɪ/ | where (to) | adverb | - | direction |\n| звідки | /ˈzʲʋidkɪ/ | where from | adverb | - | origin |\n| коли | /kɔˈlɪ/ | when | adverb | - | time |\n| чому | /t͡ʃɔˈmu/ | why | adverb | - | reason |\n| як | /jɑk/ | how | adverb | - | manner/state |\n| скільки | /ˈskilʲkɪ/ | how much/many | adverb | - | quantity |\n| який | /jɑˈkɪj/ | which, what kind | pronoun | m | яка (f), яке (n) |\n| чи | /t͡ʃɪ/ | whether, if | particle | - | yes/no question |\n| так | /tɑk/ | yes | particle | - | affirmative |\n| ні | /ni/ | no | particle | - | negative |\n| не | /nɛ/ | not | particle | - | negation |\n| ніколи | /nʲiˈkɔlɪ/ | never | adverb | - | requires \"не\" |\n| завжди | /ˈzɑʋʒdɪ/ | always | adverb | - | frequency |\n| часто | /ˈt͡ʃɑstɔ/ | often | adverb | - | frequency |\n| іноді | /iˈnɔdi/ | sometimes | adverb | - | frequency |\n| рідко | /ˈridkɔ/ | rarely | adverb | - | frequency |\n| звичайно | /zvɪˈt͡ʃɑjnɔ/ | usually | adverb | - | frequency |\n| йти | /jˈtɪ/ | to go (on foot) | verb | - | йду, йдеш, йде (M06) |\n| звати | /ˈzvɑtɪ/ | to call, name | verb | - | звуть = they call |\n| нічого | /nʲit͡ʃɔˈhɔ/ | nothing, it's okay | pronoun | - | reassuring phrase |\n| робити | /rɔˈbɪtɪ/ | to do, make | verb | - | роблю, робиш |\n| вивчати | /vɪvˈt͡ʃɑtɪ/ | to study, learn | verb | - | вивчаю, вивчаєш |\n| працювати | /prɑt͡sʲuˈvɑtɪ/ | to work | verb | - | працює, працюєш (M06) |\n| розуміти | /rɔzuˈmitɪ/ | to understand | verb | - | розумію, розумієш (M06) |\n| Київ | /ˈkɪjiu̯/ | Kyiv (capital) | noun | m | gen: Києва |"
       }
     ],
-    "rawMarkdown": "---\ntitle: \"Questions & Negation\"\nsubtitle: \"Asking Questions and Saying No in Ukrainian\"\nphase: A1.1\ntransliteration: partial\npedagogy: PPP\nduration: 45\ntags: [grammar, questions, negation, conversation]\nobjectives:\n  - Form yes/no questions with чи\n  - Use question words (що, хто, де, коли, чому, як)\n  - Negate sentences with не\n  - Understand word order in questions\ngrammar:\n  - Question formation (чи, intonation)\n  - Question words (interrogatives)\n  - Negation with не\naudio: false\n---\n\n# Questions & Negation\n\n> **Note:** You can make statements. Now it's time to **ask** and **deny**! Questions and negation are essential for real conversation.\n\n## Warm-up: The Curious Mind\n\nConversation is a two-way street. You don't just make statements — you ask questions, express doubt, and sometimes say \"no.\" In this module, you'll learn the tools to do all of this in Ukrainian.\n\nThink about how often you ask questions in daily life:\n- \"Where is the train station?\" (Де вокзал?)\n- \"What time is it?\" (Котра година?)\n- \"Do you speak English?\" (Ви говорите англійською?)\n\nAnd how often you need to negate:\n- \"I don't understand.\" (Я не розумію.)\n- \"This isn't my coffee.\" (Це не моя кава.)\n- \"She doesn't work here.\" (Вона тут не працює.)\n\nUkrainian makes both of these remarkably simple. Questions require no special word order changes — just intonation or a small word. Negation is just one word: **не**. Let's master both!\n\n> 💡 **Good News:** Unlike English, Ukrainian doesn't need \"do/does\" for questions or negation. This makes sentences shorter and more direct.\n\n## Presentation: Asking Questions\n\n### 1. Yes/No Questions — Two Methods\n\n**Method A: Intonation Only**\nSimply raise your voice at the end:\n- Statement: Ти читаєш. (You read.)\n- Question: Ти читаєш**?** ↗ (Do you read?)\n\n**Method B: Add \"Чи\" at the Start**\nThe word **чи** signals a yes/no question explicitly:\n- Чи ти читаєш? (Do you read?)\n- Чи вона працює? (Does she work?)\n- Чи ви розумієте? (Do you understand?)\n\n> 📜 **Style Note:** In speech, intonation alone is common. In writing or formal contexts, \"чи\" adds clarity.\n\n### 2. Question Words (Питальні слова)\n\nThese words ask for specific information:\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| **що** | /ʃt͡ʃɔ/ | what | Що це? (What is this?) |\n| **хто** | /xtɔ/ | who | Хто це? (Who is this?) |\n| **де** | /dɛ/ | where | Де ти? (Where are you?) |\n| **куди** | /kuˈdɪ/ | where to | Куди ти йдеш? (Where are you going?) |\n| **звідки** | /ˈzvʲidkɪ/ | where from | Звідки ви? (Where are you from?) |\n| **коли** | /kɔˈlɪ/ | when | Коли? (When?) |\n| **чому** | /t͡ʃɔˈmu/ | why | Чому ні? (Why not?) |\n| **як** | /jɑk/ | how | Як справи? (How are things?) |\n| **скільки** | /ˈskʲilʲkɪ/ | how many/much | Скільки коштує? (How much?) |\n| **який/яка/яке** | /jaˈkɪj/ | which/what kind | Який колір? (What color?) |\n\n### 3. Word Order in Questions\n\nUkrainian word order is flexible! The question word usually comes **first**:\n- **Де** ти працюєш? (Where do you work?)\n- **Що** ви читаєте? (What are you reading?)\n- **Хто** це? (Who is this?)\n\nBut you can also emphasize different parts:\n- Ти **де** працюєш? (emphasizes \"where\")\n- Ви **що** читаєте? (emphasizes \"what\")\n\n> ⚠️ **Note:** Unlike English, Ukrainian doesn't change verb order for questions. \"You work\" → \"Where you work?\" (not \"Where do you work?\")\n\n## Presentation: Saying No\n\n### 1. The Magic Word: Не\n\nTo negate any verb, just add **не** directly before it:\n- Я читаю. → Я **не** читаю. (I don't read.)\n- Вона працює. → Вона **не** працює. (She doesn't work.)\n- Вони знають. → Вони **не** знають. (They don't know.)\n\n### 2. Double Negation is Required!\n\nIn English, we say \"I don't know **anything**.\" In Ukrainian, you MUST use double negation:\n- Я **нічого** **не** знаю. (I don't know anything. — literally: \"I nothing not know.\")\n- Вона **ніколи** **не** працює. (She never works.)\n- **Ніхто** **не** розуміє. (Nobody understands.)\n\n| Positive | Negative |\n|----------|----------|\n| хтось (someone) | ніхто (no one) |\n| щось (something) | нічого (nothing) |\n| колись (sometime) | ніколи (never) |\n| десь (somewhere) | ніде (nowhere) |\n\n### 3. Answering Questions\n\n| Answer | Example |\n|--------|---------|\n| **Так** (Yes) | — Ти студент? — Так. |\n| **Ні** (No) | — Ти працюєш? — Ні, я не працюю. |\n\n> 💡 **Shortcut:** You can answer with just \"Так\" or \"Ні\" — no need to repeat the whole sentence.\n\n## Cultural Insight: Ukrainian Directness 🇺🇦\n\nUkrainians are known for being direct. If you ask a question, expect a clear answer! Unlike some cultures where people hedge or avoid saying \"no,\" Ukrainians typically give straight answers.\n\nCommon polite phrases:\n- **На жаль, ні.** — Unfortunately, no.\n- **Вибачте, я не знаю.** — Sorry, I don't know.\n- **Перепрошую?** — Pardon? (asking to repeat)\n- **Що, вибачте?** — What, sorry?\n\n> 📜 **History Bite:** The phrase **\"Слава Україні!\"** (Glory to Ukraine!) became a question-and-response during the independence movement. The answer is **\"Героям слава!\"** (Glory to the heroes!) — showing how questions and answers can carry deep cultural meaning.\n\n## Dialogue: At the Information Desk 🗣️\n\n**Турист:** Добрий день! Вибачте, де вокзал?\n**Працівник:** Добрий день! Вокзал? Прямо, потім наліво.\n**Турист:** Дякую! А скільки це коштує автобус?\n**Працівник:** Автобус? Дванадцять гривень.\n**Турист:** А метро?\n**Працівник:** Метро вісім гривень.\n**Турист:** Чи є банкомат поруч?\n**Працівник:** Так, банкомат за рогом.\n**Турист:** Чудово! Ви не знаєте, коли відкривається музей?\n**Працівник:** Ні, на жаль, я не знаю. Але є інформація онлайн.\n**Турист:** Дякую за допомогу!\n**Працівник:** Будь ласка!\n\n**English Translation:**\n**Tourist:** Good day! Excuse me, where is the train station?\n**Employee:** Good day! Train station? Straight, then to the left.\n**Tourist:** Thank you! And how much does the bus cost?\n**Employee:** Bus? Twelve hryvnias.\n**Tourist:** And the metro?\n**Employee:** Metro is eight hryvnias.\n**Tourist:** Is there an ATM nearby?\n**Employee:** Yes, the ATM is around the corner.\n**Tourist:** Great! Do you know when the museum opens?\n**Employee:** No, unfortunately, I don't know. But there is information online.\n**Tourist:** Thank you for help!\n**Employee:** You're welcome!\n\n## Reading Practice: Questions Everywhere 📖\n\n*Read this short text full of questions.*\n\n**Марія в новому місті.** Вона не знає дорогу. Вона питає:\n- **Де** центр міста?\n- **Як** дістатися до музею?\n- **Скільки** коштує квиток?\n\nЛюди відповідають:\n- Центр? Прямо, потім направо.\n- Музей? Автобусом номер п'ять.\n- Квиток? Сорок гривень.\n\nМарія **не** розуміє все. Вона питає ще: \"**Що** ви сказали?\" Люди повторюють: \"Прямо! Направо! П'ять! Сорок!\" Тепер Марія розуміє. Вона **не** загубилася більше.\n\n**English Translation:**\n**Maria is in a new city.** She doesn't know the way. She asks:\n- **Where** is the city center?\n- **How** to get to the museum?\n- **How much** does the ticket cost?\n\nPeople answer:\n- Center? Straight, then to the right.\n- Museum? By bus number five.\n- Ticket? Forty hryvnias.\n\nMaria doesn't understand everything. She asks again: \"**What** did you say?\" People repeat: \"Straight! To the right! Five! Forty!\" Now Maria understands. She is not lost anymore.\n\n> 📜 **Myth Buster:** Some learners think Ukrainian word order is \"free.\" It's actually **flexible** but not random. Word order changes emphasis, not meaning. \"Де ти?\" and \"Ти де?\" both mean \"Where are you?\" but the second emphasizes \"where.\"\n\n# Summary\n\n1. **Yes/No questions:** Use rising intonation or add **чи** at the start\n2. **Question words:** що, хто, де, куди, коли, чому, як, скільки\n3. **Negation:** Add **не** before the verb\n4. **Double negation:** Required in Ukrainian (нічого не знаю)\n5. **Answers:** Так (yes), Ні (no)\n\n---\n\n> [!tip] 🌟 **Pro Tip:** Practice question-answer pairs! Ask yourself questions in Ukrainian and answer them. It's the fastest way to internalize these patterns.\n\n# Activities\n\n## match-up: Question Words\n> Match the Ukrainian question word to its English meaning.\n\n| Ukrainian | English |\n| --- | --- |\n| що | what |\n| хто | who |\n| де | where |\n| куди | where to |\n| звідки | where from |\n| коли | when |\n| чому | why |\n| як | how |\n| скільки | how many |\n| який | which |\n| чи | (yes/no marker) |\n| що ще | what else |\n\n## group-sort: Positive vs Negative\n> Sort words into Positive or Negative categories.\n\n| Positive | Negative |\n| --- | --- |\n| так | ні |\n| хтось | ніхто |\n| щось | нічого |\n| колись | ніколи |\n| десь | ніде |\n| завжди | ніколи |\n| часто | рідко |\n| все | нічого |\n| всі | ніхто |\n| всюди | ніде |\n| іноді | ніколи |\n| багато | мало |\n\n## quiz: Form the Question\n> Choose the correct question form.\n\n1. ___ ти читаєш? (Do you read?)\n   - [x] Чи\n   - [ ] Що\n   - [ ] Як\n   - [ ] Коли\n   > Yes/no question → Чи\n\n2. ___ це? (What is this?)\n   - [x] Що\n   - [ ] Хто\n   - [ ] Де\n   - [ ] Чи\n   > Asking about a thing → Що\n\n3. ___ він? (Who is he?)\n   - [x] Хто\n   - [ ] Що\n   - [ ] Де\n   - [ ] Як\n   > Asking about a person → Хто\n\n4. ___ ти живеш? (Where do you live?)\n   - [x] Де\n   - [ ] Куди\n   - [ ] Звідки\n   - [ ] Коли\n   > Location → Де\n\n5. ___ ти йдеш? (Where are you going?)\n   - [x] Куди\n   - [ ] Де\n   - [ ] Звідки\n   - [ ] Як\n   > Direction (to) → Куди\n\n6. ___ ви? (Where are you from?)\n   - [x] Звідки\n   - [ ] Де\n   - [ ] Куди\n   - [ ] Коли\n   > Origin → Звідки\n\n7. ___ це коштує? (How much does this cost?)\n   - [x] Скільки\n   - [ ] Що\n   - [ ] Як\n   - [ ] Коли\n   > Amount → Скільки\n\n8. ___ ти приїдеш? (When will you arrive?)\n   - [x] Коли\n   - [ ] Де\n   - [ ] Як\n   - [ ] Чому\n   > Time → Коли\n\n9. ___ ти не працюєш? (Why don't you work?)\n   - [x] Чому\n   - [ ] Як\n   - [ ] Коли\n   - [ ] Де\n   > Reason → Чому\n\n10. ___ справи? (How are things?)\n    - [x] Як\n    - [ ] Що\n    - [ ] Де\n    - [ ] Коли\n    > Manner → Як\n\n11. ___ колір ти любиш? (Which color do you like?)\n    - [x] Який\n    - [ ] Що\n    - [ ] Як\n    - [ ] Де\n    > Asking about type → Який\n\n12. ___ ви розумієте? (Do you understand?)\n    - [x] Чи\n    - [ ] Що\n    - [ ] Як\n    - [ ] Де\n    > Yes/no question → Чи\n\n## fill-in: Negate the Sentence\n> Add \"не\" to make the sentence negative.\n\n1. Я ___ розумію. (I don't understand.)\n   > [!answer] не\n   > [!options] не | ні | ніколи | нічого\n\n2. Вона ___ працює сьогодні. (She doesn't work today.)\n   > [!answer] не\n   > [!options] не | ні | ніколи | нічого\n\n3. Вони ___ знають відповідь. (They don't know the answer.)\n   > [!answer] не\n   > [!options] не | ні | ніколи | ніхто\n\n4. Ми ___ чекаємо. (We are not waiting.)\n   > [!answer] не\n   > [!options] не | ні | ніколи | нічого\n\n5. Він ___ говорить українською. (He doesn't speak Ukrainian.)\n   > [!answer] не\n   > [!options] не | ні | ніколи | ніхто\n\n6. Це ___ моя книга. (This is not my book.)\n   > [!answer] не\n   > [!options] не | ні | нічого | ніхто\n\n7. Я ___ хочу. (I don't want.)\n   > [!answer] не\n   > [!options] не | ні | ніколи | нічого\n\n8. Вона ___ читає газети. (She doesn't read newspapers.)\n   > [!answer] не\n   > [!options] не | ні | ніколи | нічого\n\n9. Ви ___ розумієте? (You don't understand?)\n   > [!answer] не\n   > [!options] не | ні | ніколи | ніхто\n\n10. Тут ___ холодно. (It's not cold here.)\n    > [!answer] не\n    > [!options] не | ні | нічого | ніколи\n\n11. Я ___ бачу. (I don't see.)\n    > [!answer] не\n    > [!options] не | ні | ніхто | нічого\n\n12. Вони ___ снідають вранці. (They don't have breakfast in the morning.)\n    > [!answer] не\n    > [!options] не | ні | ніколи | нічого\n\n## match-up: Question and Answer\n> Match the question to the logical answer.\n\n| Question | Answer |\n| --- | --- |\n| Де ти? | Я вдома. |\n| Хто це? | Це мій друг. |\n| Що це? | Це книга. |\n| Коли? | Завтра. |\n| Скільки коштує? | Сто гривень. |\n| Звідки ви? | З України. |\n| Чи ви студент? | Так, я студент. |\n| Чому ні? | Бо я зайнятий. |\n| Як справи? | Добре, дякую. |\n| Куди ти йдеш? | До магазину. |\n| Який це колір? | Синій. |\n| Що ти робиш? | Читаю книгу. |\n\n## anagram: Question Word Scramble\n> Unscramble the question words.\n\n1. о щ\n   > [!answer] що\n\n2. о т х\n   > [!answer] хто\n\n3. е д\n   > [!answer] де\n\n4. д у к и\n   > [!answer] куди\n\n5. и л о к\n   > [!answer] коли\n\n6. м у о ч\n   > [!answer] чому\n\n7. к я\n   > [!answer] як\n\n8. к і л и ь с к\n   > [!answer] скільки\n\n9. к д і в и з\n   > [!answer] звідки\n\n10. й и к я\n    > [!answer] який\n\n11. и ч\n    > [!answer] чи\n\n12. а к я\n    > [!answer] яка\n\n## true-false: Question & Negation Rules\n> Decide if the statement is True or False.\n\n- [x] \"Чи\" is used to mark yes/no questions.\n  > Correct! \"Чи ти читаєш?\" = Do you read?\n\n- [ ] Ukrainian requires \"do/does\" for questions.\n  > False! Just use intonation or \"чи.\"\n\n- [x] \"Не\" comes before the verb to negate.\n  > Correct! \"Я не читаю\" = I don't read.\n\n- [ ] \"Де\" means \"when.\"\n  > False! \"Де\" = where. \"Коли\" = when.\n\n- [x] Double negation is required in Ukrainian.\n  > Correct! \"Я нічого не знаю\" = I don't know anything.\n\n- [ ] \"Звідки\" asks about destination.\n  > False! \"Звідки\" = where from. \"Куди\" = where to.\n\n- [x] \"Так\" means \"yes\" and \"ні\" means \"no.\"\n  > Correct!\n\n- [ ] Question words always come at the end.\n  > False! They usually come first.\n\n- [x] \"Скільки\" asks about quantity.\n  > Correct! \"Скільки коштує?\" = How much?\n\n- [ ] \"Чому\" means \"how.\"\n  > False! \"Чому\" = why. \"Як\" = how.\n\n- [x] Word order is flexible in Ukrainian questions.\n  > Correct! \"Де ти?\" and \"Ти де?\" are both valid.\n\n- [ ] \"Ніхто\" means \"someone.\"\n  > False! \"Ніхто\" = nobody. \"Хтось\" = someone.\n\n## fill-in: Dialogue Completion\n> Complete the conversation with questions or negations.\n\n1. — ___ це? — Це музей. (What is this?)\n   > [!answer] Що\n   > [!options] Що | Хто | Де | Як\n\n2. — ___ ти? — Я біля станції. (Where are you?)\n   > [!answer] Де\n   > [!options] Де | Куди | Звідки | Коли\n\n3. — ___ ти йдеш? — До магазину. (Where are you going?)\n   > [!answer] Куди\n   > [!options] Куди | Де | Звідки | Як\n\n4. — Ти розумієш? — Ні, я ___ розумію. (No, I don't understand.)\n   > [!answer] не\n   > [!options] не | ні | нічого | ніколи\n\n5. — ___ ви? — Я з Канади. (Where are you from?)\n   > [!answer] Звідки\n   > [!options] Звідки | Де | Куди | Коли\n\n6. — ___ коштує квиток? — Сорок гривень. (How much is the ticket?)\n   > [!answer] Скільки\n   > [!options] Скільки | Що | Як | Коли\n\n7. — ___ ви студент? — Так, я студент. (Are you a student?)\n   > [!answer] Чи\n   > [!options] Чи | Що | Хто | Де\n\n8. — ___ ти не працюєш? — Бо вихідний. (Why don't you work?)\n   > [!answer] Чому\n   > [!options] Чому | Як | Коли | Де\n\n9. — Хтось тут? — Ні, тут ___. (No, nobody's here.)\n   > [!answer] нікого\n   > [!options] нікого | ніхто | нічого | ніколи\n\n10. — ___ справи? — Добре, дякую. (How are things?)\n    > [!answer] Як\n    > [!options] Як | Що | Де | Коли\n\n11. — Вона знає? — Ні, вона ___ знає. (No, she doesn't know.)\n    > [!answer] не\n    > [!options] не | ні | нічого | ніколи\n\n12. — ___ приїде автобус? — О десятій. (When will the bus arrive?)\n    > [!answer] Коли\n    > [!options] Коли | Де | Як | Скільки\n\n---\n\n# Vocabulary\n\n| Ukrainian | IPA | English | POS | Gender | Note |\n| --- | --- | --- | --- | --- | --- |\n| **що** | /ʃt͡ʃɔ/ | what | pron | - | Question word |\n| **хто** | /xtɔ/ | who | pron | - | Question word |\n| **де** | /dɛ/ | where | adv | - | Location |\n| **куди** | /kuˈdɪ/ | where to | adv | - | Direction |\n| **звідки** | /ˈzvʲidkɪ/ | where from | adv | - | Origin |\n| **коли** | /kɔˈlɪ/ | when | adv | - | Time |\n| **чому** | /t͡ʃɔˈmu/ | why | adv | - | Reason |\n| **як** | /jɑk/ | how | adv | - | Manner |\n| **скільки** | /ˈskʲilʲkɪ/ | how many/much | adv | - | Quantity |\n| **який** | /jaˈkɪj/ | which (m) | adj | m | Type |\n| **яка** | /jaˈkɑ/ | which (f) | adj | f | Type |\n| **яке** | /jaˈkɛ/ | which (n) | adj | n | Type |\n| **чи** | /t͡ʃɪ/ | (yes/no marker) | part | - | Question particle |\n| **так** | /tɑk/ | yes | part | - | Affirmative |\n| **ні** | /nʲi/ | no | part | - | Negative |\n| **не** | /nɛ/ | not | part | - | Negation |\n| **ніколи** | /nʲiˈkɔlɪ/ | never | adv | - | Negative time |\n| **завжди** | /ˈzɑu̯ʒdɪ/ | always | adv | - | Positive time |\n| **часто** | /ˈt͡ʃɑstɔ/ | often | adv | - | Frequency |\n| **іноді** | /iˈnɔdʲi/ | sometimes | adv | - | Frequency |\n| **рідко** | /ˈrʲidkɔ/ | rarely | adv | - | Frequency |\n| **звичайно** | /zvɪˈt͡ʃɑjnɔ/ | usually | adv | - | Frequency |\n",
-    "createdAt": "2025-12-12T19:55:32.036Z",
-    "modifiedAt": "2025-12-12T19:55:32.036Z",
+    "rawMarkdown": "---\nmodule: a1-07\ntitle: \"Questions & Negation\"\nsubtitle: \"Asking Questions and Saying No\"\nversion: \"1.0\"\nphase: \"A1.1\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: \"full\"\ntags:\n  - questions\n  - negation\n  - question-words\n  - frequency-adverbs\ngrammar:\n  - \"Yes/no questions with чи\"\n  - \"Question words (що, хто, де, куди, звідки, коли, чому, як, скільки)\"\n  - \"Negation with не\"\n  - \"Double negation with ніколи\"\n  - \"Frequency adverbs\"\nobjectives:\n  - \"Ask yes/no questions using 'чи'\"\n  - \"Form questions with question words (що, хто, де, коли, etc.)\"\n  - \"Make negative statements with 'не'\"\n  - \"Understand frequency adverbs (завжди, часто, іноді, ніколи)\"\nvocabulary_count: 28\n---\n\n# Questions & Negation\n\n## Warm-up\n\nYou've learned to make statements in Ukrainian: \"Я читаю книгу\" (I read a book). But conversations aren't just statements - they're questions and answers, agreements and disagreements!\n\nIn English, asking \"Do you read?\" requires changing word order or adding \"do/does\". Ukrainian is simpler - you just add the little word **чи** at the beginning! And saying \"no\"? Just put **не** before the verb.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian is very flexible with questions. You can ask \"Чи ти читаєш?\" (formal) or just \"Ти читаєш?\" (casual, with rising intonation). Both work! Context and tone tell you it's a question.\n\n## Presentation\n\n### Yes/No Questions with Чи\n\nThe simplest way to turn any statement into a yes/no question is to add **чи** at the beginning:\n\n| Statement | Question (with чи) |\n|-----------|-------------------|\n| Ти читаєш. (Ty chytayesh) | **Чи** ти читаєш? (Chy ty chytayesh?) |\n| You read. | Do you read? |\n| Вона працює. (Vona pratsyuye) | **Чи** вона працює? (Chy vona pratsyuye?) |\n| She works. | Does she work? |\n| Ми знаємо. (My znayemo) | **Чи** ми знаємо? (Chy my znayemo?) |\n| We know. | Do we know? |\n\n**The pattern:** Чи + subject + verb?\n\nIn casual speech, Ukrainians often skip **чи** and just use rising intonation:\n- Ти читаєш? ↗ (You read? = Do you read?)\n\n**Answering:**\n- **Так** (Tak) = Yes\n- **Ні** (Ni) = No\n\n> 🎬 **Pop Culture Moment**\n>\n> In the Ukrainian dub of Marvel's Avengers, when someone asks \"Ти читаєш?\" (Do you read this?), they skip **чи** because it's action-packed! But in formal meetings, they use \"Чи ви читаєте?\" (Do you [formal] read?). Same question, different register!\n\n**Mini-Dialogue 1: At a Café**\n\n— Чи ти хочеш каву? (Chy ty khochesh kavu?)\n— Так, дякую! (Tak, dyakuyu!)\n— Чи ти знаєш, де туалет? (Chy ty znayesh, de tualet?)\n— Ні, не знаю. (Ni, ne znayu.)\n\n### Question Words\n\nUkrainian has question words (like English \"what, who, where\") that replace the unknown part of the sentence:\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| **що** (Shcho) | /ʃt͡ʃɔ/ | what | Що ти читаєш? (What do you read?) |\n| **хто** (Khto) | /xtɔ/ | who | Хто працює? (Who works?) |\n| **де** (De) | /dɛ/ | where (location) | Де ти? (Where are you?) |\n| **куди** (Kudy) | /ˈkudɪ/ | where (to) | Куди ти йдеш? (Where are you going?) |\n| **звідки** (Zvidky) | /ˈzʲʋidkɪ/ | where from | Звідки ти? (Where are you from?) |\n| **коли** (Koly) | /kɔˈlɪ/ | when | Коли ти працюєш? (When do you work?) |\n| **чому** (Chomu) | /t͡ʃɔˈmu/ | why | Чому ти читаєш? (Why do you read?) |\n| **як** (Yak) | /jɑk/ | how | Як ти? (How are you?) |\n| **скільки** (Skilky) | /ˈskilʲkɪ/ | how much/many | Скільки це коштує? (How much is this?) |\n\n**Pattern:** Question word + verb + rest of sentence\n\nNotice: Unlike English, you don't need \"do/does\" - the question word itself signals it's a question!\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Question words must come first in Ukrainian.\"\n> **Fact:** While they usually do, Ukrainians often move them for emphasis! \"Ти куди йдеш?\" (You where going? = Where exactly are you going?) feels more urgent than \"Куди ти йдеш?\"\n\n**Mini-Dialogue 2: Getting to Know Someone**\n\n— Як тебе звуть? (Yak tebe zvut?) — What's your name?\n— Мене звуть Марко. (Mene zvut Marko.) — My name is Marko.\n— Звідки ти? (Zvidky ty?) — Where are you from?\n— Я з Києва. А ти? (Ya z Kyyeva. A ty?) — I'm from Kyiv. And you?\n— Я з Америки. (Ya z Ameryky.) — I'm from America.\n\n### Negation with Не\n\nTo make a verb negative, just put **не** (ne) before it. Simple!\n\n| Positive | Negative |\n|----------|----------|\n| Я читаю. (Ya chytayu) | Я **не** читаю. (Ya **ne** chytayu) |\n| I read. | I don't read. |\n| Вона працює. (Vona pratsyuye) | Вона **не** працює. (Vona **ne** pratsyuye) |\n| She works. | She doesn't work. |\n| Ми знаємо. (My znayemo) | Ми **не** знаємо. (My **ne** znayemo) |\n| We know. | We don't know. |\n\n**Key difference from English:** In Ukrainian, you don't need \"don't/doesn't/didn't\" - just **не + verb**!\n\n**Common negative constructions:**\n- Я не розумію. (Ya ne rozumiyu) = I don't understand.\n- Я не знаю. (Ya ne znayu) = I don't know.\n- Це не правда. (Tse ne pravda) = That's not true.\n\n> 🌍 **Real World**\n>\n> Ukrainians are very direct with negation. If you ask \"Чи ти знаєш?\" (Do you know?), a simple \"Ні, не знаю\" (No, I don't know) is perfectly polite. No need to soften it with \"I'm afraid I don't...\" like in English!\n\n**Mini-Dialogue 3: Misunderstandings**\n\n— Чи ти говориш англійською? (Chy ty hovorysh anhliyskoyu?)\n— Так, говорю. А ти? (Tak, hovoryu. A ty?)\n— Ні, я не говорю англійською. Я говорю українською. (Ni, ya ne hovoryu anhliyskoyu. Ya hovoryu ukrayinskoyu.)\n— Добре! Ми говоримо українською! (Dobre! My hovorymo ukrayinskoyu!)\n\n### Frequency Adverbs\n\nWhen talking about how often you do things, Ukrainian uses these adverbs:\n\n| Adverb | IPA | English | Example |\n|--------|-----|---------|---------|\n| **завжди** (zavzhdy) | /ˈzɑʋʒdɪ/ | always | Я завжди читаю. (I always read.) |\n| **часто** (chasto) | /ˈt͡ʃɑstɔ/ | often | Вона часто працює. (She often works.) |\n| **іноді** (inodi) | /iˈnɔdi/ | sometimes | Ми іноді говоримо. (We sometimes talk.) |\n| **рідко** (ridko) | /ˈridkɔ/ | rarely | Він рідко пише. (He rarely writes.) |\n| **ніколи** (nikoly) | /nʲiˈkɔlɪ/ | never | Я ніколи не п'ю каву. (I never drink coffee.) |\n| **звичайно** (zvychayno) | /zvɪˈt͡ʃɑjnɔ/ | usually | Я звичайно снідаю вдома. (I usually have breakfast at home.) |\n\n**Important:** **Ніколи** (never) is already negative, but Ukrainian uses **double negation** - you still add **не**!\n\n- Я **ніколи не** п'ю каву. (I never drink coffee.) ✅\n- Я ніколи п'ю каву. ❌ (Wrong - missing не!)\n\nThis is called **double negation** and it's mandatory in Ukrainian (unlike English where \"I never don't drink\" would be wrong).\n\n> 💡 **Did You Know?**\n>\n> Ukrainian loves double negation! \"Я нічого не знаю\" (I nothing don't know = I don't know anything) feels natural to Ukrainians. This pattern comes from older Slavic languages and makes negation extra clear.\n\n## Practice\n\nNow you know:\n- ✅ How to ask yes/no questions with **чи**\n- ✅ Question words (що, хто, де, куди, коли, чому, як, скільки)\n- ✅ How to say no with **не**\n- ✅ Frequency adverbs (завжди, часто, іноді, рідко, ніколи, звичайно)\n\nLet's practice!\n\n## Production\n\n**Task: Create a conversation**\n\nImagine you meet someone new at a café in Lviv. Use what you learned to:\n1. Ask their name (Як тебе звуть?)\n2. Ask where they're from (Звідки ти?)\n3. Ask if they read Ukrainian (Чи ти читаєш українською?)\n4. Say something you don't do (Я не...)\n5. Say something you always do (Я завжди...)\n\n**Model Answer:**\n\n— Привіт! Як тебе звуть? (Hi! What's your name?)\n— Мене звуть Оля. А тебе? (My name is Olya. And yours?)\n— Марко. Звідки ти? (Marko. Where are you from?)\n— Я з Львова. А ти? (I'm from Lviv. And you?)\n— Я з Києва. Чи ти читаєш українською? (I'm from Kyiv. Do you read in Ukrainian?)\n— Так! Я завжди читаю українською. А ти? (Yes! I always read in Ukrainian. And you?)\n— Я часто читаю, але іноді не розумію. (I often read, but sometimes I don't understand.)\n— Нічого! Це нормально. (No problem! That's normal.)\n\n## Cultural Insight\n\n**Ukrainian Directness with Questions**\n\nUkrainians are generally more direct than English speakers when asking questions. Simple questions are common even with new acquaintances - especially from older generations.\n\nThis isn't rude - it's genuine interest! Ukrainians value honesty and directness in conversation.\n\n**Common Questions You'll Hear:**\n- Звідки ти? (Where are you from?)\n- Що ти робиш? (What do you do?)\n- Чому ти вивчаєш українську? (Why do you study Ukrainian?)\n- Чи ти хочеш каву? (Do you want coffee?)\n\n> 🎭 **Culture Corner**\n>\n> When Ukrainians ask \"Як справи?\" (How are things?), they actually want to know! Unlike the English \"How are you?\" (often just a greeting), Ukrainians expect a real answer. Feel free to say \"Не дуже добре\" (Not so great) - they'll ask why and genuinely care.\n\n---\n\n# Summary\n\n**Questions with Чи:**\n- Чи + subject + verb? = Yes/no question\n- Так (yes) / Ні (no)\n\n**Question Words:**\n- що (what), хто (who), де (where), куди (where to), звідки (where from)\n- коли (when), чому (why), як (how), скільки (how much/many)\n\n**Negation:**\n- не + verb = negative\n- ніколи (never) STILL needs не: \"Я ніколи не...\"\n\n**Frequency:**\n- завжди (always), часто (often), звичайно (usually)\n- іноді (sometimes), рідко (rarely), ніколи (never)\n\n---\n\n# Activities\n\n## quiz: Question Word Meanings\n\n1. What does \"де\" mean?\n   - [ ] what\n   - [ ] who\n   - [x] where\n   - [ ] when\n   > де (de) = where (location)\n\n2. Which question word means \"why\"?\n   - [ ] що\n   - [ ] як\n   - [x] чому\n   - [ ] коли\n   > чому (chomu) = why\n\n3. How do you say \"when\" in Ukrainian?\n   - [ ] де\n   - [x] коли\n   - [ ] куди\n   - [ ] скільки\n   > коли (koly) = when\n\n4. What does \"хто\" mean?\n   - [ ] what\n   - [x] who\n   - [ ] how\n   - [ ] where\n   > хто (khto) = who\n\n5. Which word asks \"where to\" (direction)?\n   - [ ] де\n   - [ ] звідки\n   - [x] куди\n   - [ ] коли\n   > куди (kudy) = where to (direction)\n\n6. How do you say \"how much/many\"?\n   - [ ] як\n   - [ ] що\n   - [x] скільки\n   - [ ] коли\n   > скільки (skilky) = how much/many\n\n7. What does \"звідки\" mean?\n   - [ ] where\n   - [ ] where to\n   - [x] where from\n   - [ ] when\n   > звідки (zvidky) = where from\n\n8. Which word means \"what\"?\n   - [x] що\n   - [ ] хто\n   - [ ] де\n   - [ ] як\n   > що (shcho) = what\n\n9. How do you say \"how\"?\n   - [ ] що\n   - [ ] чому\n   - [x] як\n   - [ ] коли\n   > як (yak) = how\n\n10. What is the question word for \"who\"?\n    - [ ] що\n    - [x] хто\n    - [ ] де\n    - [ ] чому\n    > хто (khto) = who\n\n11. Which means \"where\" (location)?\n    - [x] де\n    - [ ] куди\n    - [ ] звідки\n    - [ ] коли\n    > де (de) = where (location)\n\n12. How do you ask \"why\" in Ukrainian?\n    - [ ] що\n    - [ ] як\n    - [ ] коли\n    - [x] чому\n    > чому (chomu) = why\n\n## match-up: Question Words to Context\n\n| Question Word | Context |\n|---------------|---------|\n| що | asking about objects or actions |\n| хто | asking about people |\n| де | asking about location |\n| куди | asking about destination |\n| звідки | asking about origin |\n| коли | asking about time |\n| чому | asking for reason |\n| як | asking about manner or state |\n| скільки | asking about quantity |\n| чи | asking yes/no questions |\n\n## fill-in: Complete Questions\n\n1. ___ ти читаєш? (What do you read?)\n   > [!answer] Що\n   > [!options] Що | Хто | Де | Коли\n\n2. ___ ти? (Where are you?)\n   > [!answer] Де\n   > [!options] Де | Куди | Звідки | Коли\n\n3. ___ ти працюєш? (When do you work?)\n   > [!answer] Коли\n   > [!options] Коли | Де | Що | Як\n\n4. ___ ти? (How are you?)\n   > [!answer] Як\n   > [!options] Як | Що | Хто | Де\n\n5. ___ працює? (Who works?)\n   > [!answer] Хто\n   > [!options] Хто | Що | Де | Коли\n\n6. ___ ти йдеш? (Where are you going?)\n   > [!answer] Куди\n   > [!options] Куди | Де | Звідки | Що\n\n7. ___ ти вивчаєш українську? (Why do you study Ukrainian?)\n   > [!answer] Чому\n   > [!options] Чому | Що | Як | Коли\n\n8. ___ ти? (Where are you from?)\n   > [!answer] Звідки\n   > [!options] Звідки | Де | Куди | Хто\n\n9. ___ це коштує? (How much is this?)\n   > [!answer] Скільки\n   > [!options] Скільки | Що | Як | Коли\n\n10. ___ ти знаєш? (Do you know?)\n    > [!answer] Чи\n    > [!options] Чи | Що | Хто | Де\n\n11. ___ тебе звуть? (What is your name? lit. How do they call you?)\n    > [!answer] Як\n    > [!options] Як | Що | Хто | Де\n\n12. ___ ти говориш? (What language do you speak?)\n    > [!answer] Що\n    > [!options] Що | Як | Де | Коли\n\n## true-false: Question and Negation Rules\n\n- [x] \"Чи\" at the beginning of a sentence signals a yes/no question.\n  > Correct! Чи + subject + verb = yes/no question\n\n- [ ] Ukrainian question words require \"do/does\" like English.\n  > Incorrect! Ukrainian doesn't need auxiliary verbs for questions.\n\n- [x] \"Не\" goes directly before the verb to make it negative.\n  > Correct! Я не читаю = I don't read\n\n- [ ] \"Ніколи\" (never) doesn't need \"не\" because it's already negative.\n  > Incorrect! Ukrainian uses double negation: \"Я ніколи не...\"\n\n- [x] You can skip \"чи\" in casual speech and use rising intonation instead.\n  > Correct! \"Ти читаєш?\" ↗ is common in casual conversation.\n\n- [ ] \"Де\" and \"куди\" mean exactly the same thing.\n  > Incorrect! \"Де\" = where (location), \"куди\" = where to (direction)\n\n- [x] \"Звідки\" asks about origin or source.\n  > Correct! Звідки ти? = Where are you from?\n\n- [x] Ukrainian uses double negation with words like \"ніколи\" (never).\n  > Correct! \"Я ніколи не п'ю каву\" = I never drink coffee\n\n- [ ] \"Що\" can only mean \"what\", never \"that\".\n  > Incorrect! \"Що\" means both \"what\" (question) and \"that\" (conjunction), depending on context.\n\n- [x] Frequency adverbs like \"завжди\" (always) can come before or after the verb.\n  > Correct! Both \"Я завжди читаю\" and \"Я читаю завжди\" work.\n\n- [ ] To ask \"how are you\", Ukrainians always say \"Як справи?\"\n  > Incorrect! They can also say \"Як ти?\" (How are you?) or \"Як діла?\" (How are things?)\n\n- [x] \"Так\" means yes and \"ні\" means no.\n  > Correct! Basic yes/no answers.\n\n## group-sort: Frequency Adverbs\n\n### Always/Usually\n- завжди\n- звичайно\n- часто\n\n### Sometimes/Rarely\n- іноді\n- рідко\n- не завжди\n\n### Never (with double negation)\n- ніколи не читаю\n- ніколи не пишу\n\n## fill-in: Add Negation\n\n1. Я ___ читаю українською. (I don't read in Ukrainian.)\n   > [!answer] не\n   > [!options] не | ні | ніколи | чи\n\n2. Вона ___ працює сьогодні. (She doesn't work today.)\n   > [!answer] не\n   > [!options] не | ні | ніколи | що\n\n3. Ми ___ знаємо. (We don't know.)\n   > [!answer] не\n   > [!options] не | ні | чи | як\n\n4. Ти ___ розумієш? (You don't understand?)\n   > [!answer] не\n   > [!options] не | ні | ніколи | де\n\n5. Я ___ ___ п'ю каву. (I never drink coffee.) [Two blanks!]\n   > [!answer] ніколи не\n   > [!options] ніколи не | не ніколи | ні не | не ні\n\n6. Він ___ говорить англійською. (He doesn't speak English.)\n   > [!answer] не\n   > [!options] не | ні | ніколи | чи\n\n7. Вони ___ пишуть листи. (They don't write letters.)\n   > [!answer] не\n   > [!options] не | ні | що | як\n\n8. Я ___ хочу чаю. (I don't want tea.)\n   > [!answer] не\n   > [!options] не | ні | ніколи | чи\n\n9. Це ___ правда. (That's not true.)\n   > [!answer] не\n   > [!options] не | ні | ніколи | що\n\n10. Чи ти ___ знаєш? (Don't you know?)\n    > [!answer] не\n    > [!options] не | ні | ніколи | що\n\n11. Ми ___ ___ їмо м'ясо. (We never eat meat.)\n    > [!answer] ніколи не\n    > [!options] ніколи не | не ніколи | ні не | не ні\n\n12. Вона ___ слухає музику. (She doesn't listen to music.)\n    > [!answer] не\n    > [!options] не | ні | ніколи | чи\n\n## anagram: Question Words\n\n1. Щ О\n   > [!answer] що\n   > (what)\n\n2. Х Т О\n   > [!answer] хто\n   > (who)\n\n3. Д Е\n   > [!answer] де\n   > (where)\n\n4. Я К\n   > [!answer] як\n   > (how)\n\n5. Ч И\n   > [!answer] чи\n   > (yes/no question particle)\n\n6. Н І\n   > [!answer] ні\n   > (no)\n\n7. Т А К\n   > [!answer] так\n   > (yes)\n\n8. К О Л И\n   > [!answer] коли\n   > (when)\n\n9. Ч О М У\n   > [!answer] чому\n   > (why)\n\n10. К У Д И\n    > [!answer] куди\n    > (where to)\n\n11. З В І Д К И\n    > [!answer] звідки\n    > (where from)\n\n12. С К І Л Ь К И\n    > [!answer] скільки\n    > (how much/many)\n\n## anagram: Frequency Words\n\n1. З А В Ж Д И\n   > [!answer] завжди\n   > (always)\n\n2. Ч А С Т О\n   > [!answer] часто\n   > (often)\n\n3. І Н О Д І\n   > [!answer] іноді\n   > (sometimes)\n\n4. Р І Д К О\n   > [!answer] рідко\n   > (rarely)\n\n5. Н І К О Л И\n   > [!answer] ніколи\n   > (never)\n\n6. З В И Ч А Й Н О\n   > [!answer] звичайно\n   > (usually)\n\n7. Н Е\n   > [!answer] не\n   > (not)\n\n8. Ч И\n   > [!answer] чи\n   > (whether, if)\n\n## unjumble: Build Questions\n\n1. читаєш / Що / ти\n   > [!answer] Що ти читаєш?\n   > (What do you read?)\n\n2. ти / Де\n   > [!answer] Де ти?\n   > (Where are you?)\n\n3. працює / Хто\n   > [!answer] Хто працює?\n   > (Who works?)\n\n4. Куди / йдеш / ти\n   > [!answer] Куди ти йдеш?\n   > (Where are you going?)\n\n5. ти / Коли / працюєш\n   > [!answer] Коли ти працюєш?\n   > (When do you work?)\n\n6. Як / ти\n   > [!answer] Як ти?\n   > (How are you?)\n\n7. Чи / читаєш / ти\n   > [!answer] Чи ти читаєш?\n   > (Do you read?)\n\n8. коштує / Скільки / це\n   > [!answer] Скільки це коштує?\n   > (How much is this?)\n\n9. вивчаєш / ти / Чому / українську\n   > [!answer] Чому ти вивчаєш українську?\n   > (Why do you study Ukrainian?)\n\n10. Звідки / ти\n    > [!answer] Звідки ти?\n    > (Where are you from?)\n\n11. говорить / Хто / українською\n    > [!answer] Хто говорить українською?\n    > (Who speaks Ukrainian?)\n\n12. знаєш / ти / Чи\n    > [!answer] Чи ти знаєш?\n    > (Do you know?)\n\n## unjumble: Negative Sentences\n\n1. не / Я / читаю\n   > [!answer] Я не читаю.\n   > (I don't read.)\n\n2. працює / не / Вона\n   > [!answer] Вона не працює.\n   > (She doesn't work.)\n\n3. знаємо / Ми / не\n   > [!answer] Ми не знаємо.\n   > (We don't know.)\n\n4. ніколи / п'ю / каву / Я / не\n   > [!answer] Я ніколи не п'ю каву.\n   > (I never drink coffee.)\n\n5. Він / не / говорить / англійською\n   > [!answer] Він не говорить англійською.\n   > (He doesn't speak English.)\n\n6. розумію / Я / не\n   > [!answer] Я не розумію.\n   > (I don't understand.)\n\n7. не / Це / правда\n   > [!answer] Це не правда.\n   > (That's not true.)\n\n8. не / Ти / пишеш\n   > [!answer] Ти не пишеш.\n   > (You don't write.)\n\n9. їмо / ніколи / м'ясо / Ми / не\n   > [!answer] Ми ніколи не їмо м'ясо.\n   > (We never eat meat.)\n\n10. не / Вони / слухають / музику\n    > [!answer] Вони не слухають музику.\n    > (They don't listen to music.)\n\n11. працюю / не / Я / сьогодні\n    > [!answer] Я не працюю сьогодні.\n    > (I don't work today.)\n\n12. не / хочу / Я / чаю\n    > [!answer] Я не хочу чаю.\n    > (I don't want tea.)\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| що | /ʃt͡ʃɔ/ | what | pronoun | - | question word |\n| хто | /xtɔ/ | who | pronoun | - | question word |\n| де | /dɛ/ | where | adverb | - | location |\n| куди | /ˈkudɪ/ | where (to) | adverb | - | direction |\n| звідки | /ˈzʲʋidkɪ/ | where from | adverb | - | origin |\n| коли | /kɔˈlɪ/ | when | adverb | - | time |\n| чому | /t͡ʃɔˈmu/ | why | adverb | - | reason |\n| як | /jɑk/ | how | adverb | - | manner/state |\n| скільки | /ˈskilʲkɪ/ | how much/many | adverb | - | quantity |\n| який | /jɑˈkɪj/ | which, what kind | pronoun | m | яка (f), яке (n) |\n| чи | /t͡ʃɪ/ | whether, if | particle | - | yes/no question |\n| так | /tɑk/ | yes | particle | - | affirmative |\n| ні | /ni/ | no | particle | - | negative |\n| не | /nɛ/ | not | particle | - | negation |\n| ніколи | /nʲiˈkɔlɪ/ | never | adverb | - | requires \"не\" |\n| завжди | /ˈzɑʋʒdɪ/ | always | adverb | - | frequency |\n| часто | /ˈt͡ʃɑstɔ/ | often | adverb | - | frequency |\n| іноді | /iˈnɔdi/ | sometimes | adverb | - | frequency |\n| рідко | /ˈridkɔ/ | rarely | adverb | - | frequency |\n| звичайно | /zvɪˈt͡ʃɑjnɔ/ | usually | adverb | - | frequency |\n| йти | /jˈtɪ/ | to go (on foot) | verb | - | йду, йдеш, йде (M06) |\n| звати | /ˈzvɑtɪ/ | to call, name | verb | - | звуть = they call |\n| нічого | /nʲit͡ʃɔˈhɔ/ | nothing, it's okay | pronoun | - | reassuring phrase |\n| робити | /rɔˈbɪtɪ/ | to do, make | verb | - | роблю, робиш |\n| вивчати | /vɪvˈt͡ʃɑtɪ/ | to study, learn | verb | - | вивчаю, вивчаєш |\n| працювати | /prɑt͡sʲuˈvɑtɪ/ | to work | verb | - | працює, працюєш (M06) |\n| розуміти | /rɔzuˈmitɪ/ | to understand | verb | - | розумію, розумієш (M06) |\n| Київ | /ˈkɪjiu̯/ | Kyiv (capital) | noun | m | gen: Києва |\n",
+    "createdAt": "2025-12-13T22:38:10.324049Z",
+    "modifiedAt": "2025-12-13T22:38:10.324049Z",
     "version": 2
   },
-  "activities": [
-    {
-      "id": "act-a1-0-matchup-0",
-      "type": "match-up",
-      "title": "Question Words",
-      "description": "Match the Ukrainian question word to its English meaning.",
-      "content": {
-        "type": "match-up",
-        "pairs": [
-          {
-            "left": "що",
-            "right": "what"
-          },
-          {
-            "left": "хто",
-            "right": "who"
-          },
-          {
-            "left": "де",
-            "right": "where"
-          },
-          {
-            "left": "куди",
-            "right": "where to"
-          },
-          {
-            "left": "звідки",
-            "right": "where from"
-          },
-          {
-            "left": "коли",
-            "right": "when"
-          },
-          {
-            "left": "чому",
-            "right": "why"
-          },
-          {
-            "left": "як",
-            "right": "how"
-          },
-          {
-            "left": "скільки",
-            "right": "how many"
-          },
-          {
-            "left": "який",
-            "right": "which"
-          },
-          {
-            "left": "чи",
-            "right": "(yes/no marker)"
-          },
-          {
-            "left": "що ще",
-            "right": "what else"
-          }
-        ],
-        "shuffleRight": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.036Z",
-      "modifiedAt": "2025-12-12T19:55:32.036Z"
-    },
-    {
-      "id": "act-a1-0-groupsort-0",
-      "type": "group-sort",
-      "title": "Positive vs Negative",
-      "description": "Sort words into Positive or Negative categories.",
-      "content": {
-        "type": "group-sort",
-        "groups": [
-          {
-            "id": "positive",
-            "name": "Positive",
-            "items": [
-              "так",
-              "хтось",
-              "щось",
-              "колись",
-              "десь",
-              "завжди",
-              "часто",
-              "все",
-              "всі",
-              "всюди",
-              "іноді",
-              "багато"
-            ]
-          },
-          {
-            "id": "negative",
-            "name": "Negative",
-            "items": [
-              "ні",
-              "ніхто",
-              "нічого",
-              "ніколи",
-              "ніде",
-              "ніколи",
-              "рідко",
-              "нічого",
-              "ніхто",
-              "ніде",
-              "ніколи",
-              "мало"
-            ]
-          }
-        ],
-        "shuffleItems": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.036Z",
-      "modifiedAt": "2025-12-12T19:55:32.036Z"
-    },
-    {
-      "id": "act-a1-0-quiz-0",
-      "type": "quiz",
-      "title": "Form the Question",
-      "description": "Choose the correct question form.",
-      "content": {
-        "type": "quiz",
-        "questions": [
-          {
-            "question": "___ ти читаєш? (Do you read?)",
-            "options": [
-              "Чи",
-              "Що",
-              "Як",
-              "Коли"
-            ],
-            "correctIndex": 0,
-            "explanation": "Yes/no question → Чи"
-          },
-          {
-            "question": "___ це? (What is this?)",
-            "options": [
-              "Що",
-              "Хто",
-              "Де",
-              "Чи"
-            ],
-            "correctIndex": 0,
-            "explanation": "Asking about a thing → Що"
-          },
-          {
-            "question": "___ він? (Who is he?)",
-            "options": [
-              "Хто",
-              "Що",
-              "Де",
-              "Як"
-            ],
-            "correctIndex": 0,
-            "explanation": "Asking about a person → Хто"
-          },
-          {
-            "question": "___ ти живеш? (Where do you live?)",
-            "options": [
-              "Де",
-              "Куди",
-              "Звідки",
-              "Коли"
-            ],
-            "correctIndex": 0,
-            "explanation": "Location → Де"
-          },
-          {
-            "question": "___ ти йдеш? (Where are you going?)",
-            "options": [
-              "Куди",
-              "Де",
-              "Звідки",
-              "Як"
-            ],
-            "correctIndex": 0,
-            "explanation": "Direction (to) → Куди"
-          },
-          {
-            "question": "___ ви? (Where are you from?)",
-            "options": [
-              "Звідки",
-              "Де",
-              "Куди",
-              "Коли"
-            ],
-            "correctIndex": 0,
-            "explanation": "Origin → Звідки"
-          },
-          {
-            "question": "___ це коштує? (How much does this cost?)",
-            "options": [
-              "Скільки",
-              "Що",
-              "Як",
-              "Коли"
-            ],
-            "correctIndex": 0,
-            "explanation": "Amount → Скільки"
-          },
-          {
-            "question": "___ ти приїдеш? (When will you arrive?)",
-            "options": [
-              "Коли",
-              "Де",
-              "Як",
-              "Чому"
-            ],
-            "correctIndex": 0,
-            "explanation": "Time → Коли"
-          },
-          {
-            "question": "___ ти не працюєш? (Why don't you work?)",
-            "options": [
-              "Чому",
-              "Як",
-              "Коли",
-              "Де"
-            ],
-            "correctIndex": 0,
-            "explanation": "Reason → Чому"
-          },
-          {
-            "question": "___ справи? (How are things?)",
-            "options": [
-              "Як",
-              "Що",
-              "Де",
-              "Коли"
-            ],
-            "correctIndex": 0,
-            "explanation": "Manner → Як"
-          },
-          {
-            "question": "___ колір ти любиш? (Which color do you like?)",
-            "options": [
-              "Який",
-              "Що",
-              "Як",
-              "Де"
-            ],
-            "correctIndex": 0,
-            "explanation": "Asking about type → Який"
-          },
-          {
-            "question": "___ ви розумієте? (Do you understand?)",
-            "options": [
-              "Чи",
-              "Що",
-              "Як",
-              "Де"
-            ],
-            "correctIndex": 0,
-            "explanation": "Yes/no question → Чи"
-          }
-        ],
-        "shuffleQuestions": true,
-        "shuffleOptions": true,
-        "showCorrectAnswers": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.036Z",
-      "modifiedAt": "2025-12-12T19:55:32.036Z"
-    },
-    {
-      "id": "act-a1-0-fillblank-0",
-      "type": "fill-blank",
-      "title": "Negate the Sentence",
-      "description": "Add \"не\" to make the sentence negative.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Я ___ розумію. (I don't understand.)",
-            "answer": "не",
-            "options": [
-              "не",
-              "ні",
-              "ніколи",
-              "нічого"
-            ]
-          },
-          {
-            "prompt": "Вона ___ працює сьогодні. (She doesn't work today.)",
-            "answer": "не",
-            "options": [
-              "не",
-              "ні",
-              "ніколи",
-              "нічого"
-            ]
-          },
-          {
-            "prompt": "Вони ___ знають відповідь. (They don't know the answer.)",
-            "answer": "не",
-            "options": [
-              "не",
-              "ні",
-              "ніколи",
-              "ніхто"
-            ]
-          },
-          {
-            "prompt": "Ми ___ чекаємо. (We are not waiting.)",
-            "answer": "не",
-            "options": [
-              "не",
-              "ні",
-              "ніколи",
-              "нічого"
-            ]
-          },
-          {
-            "prompt": "Він ___ говорить українською. (He doesn't speak Ukrainian.)",
-            "answer": "не",
-            "options": [
-              "не",
-              "ні",
-              "ніколи",
-              "ніхто"
-            ]
-          },
-          {
-            "prompt": "Це ___ моя книга. (This is not my book.)",
-            "answer": "не",
-            "options": [
-              "не",
-              "ні",
-              "нічого",
-              "ніхто"
-            ]
-          },
-          {
-            "prompt": "Я ___ хочу. (I don't want.)",
-            "answer": "не",
-            "options": [
-              "не",
-              "ні",
-              "ніколи",
-              "нічого"
-            ]
-          },
-          {
-            "prompt": "Вона ___ читає газети. (She doesn't read newspapers.)",
-            "answer": "не",
-            "options": [
-              "не",
-              "ні",
-              "ніколи",
-              "нічого"
-            ]
-          },
-          {
-            "prompt": "Ви ___ розумієте? (You don't understand?)",
-            "answer": "не",
-            "options": [
-              "не",
-              "ні",
-              "ніколи",
-              "ніхто"
-            ]
-          },
-          {
-            "prompt": "Тут ___ холодно. (It's not cold here.)",
-            "answer": "не",
-            "options": [
-              "не",
-              "ні",
-              "нічого",
-              "ніколи"
-            ]
-          },
-          {
-            "prompt": "Я ___ бачу. (I don't see.)",
-            "answer": "не",
-            "options": [
-              "не",
-              "ні",
-              "ніхто",
-              "нічого"
-            ]
-          },
-          {
-            "prompt": "Вони ___ снідають вранці. (They don't have breakfast in the morning.)",
-            "answer": "не",
-            "options": [
-              "не",
-              "ні",
-              "ніколи",
-              "нічого"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.036Z",
-      "modifiedAt": "2025-12-12T19:55:32.036Z"
-    },
-    {
-      "id": "act-a1-0-matchup-1",
-      "type": "match-up",
-      "title": "Question and Answer",
-      "description": "Match the question to the logical answer.",
-      "content": {
-        "type": "match-up",
-        "pairs": [
-          {
-            "left": "Де ти?",
-            "right": "Я вдома."
-          },
-          {
-            "left": "Хто це?",
-            "right": "Це мій друг."
-          },
-          {
-            "left": "Що це?",
-            "right": "Це книга."
-          },
-          {
-            "left": "Коли?",
-            "right": "Завтра."
-          },
-          {
-            "left": "Скільки коштує?",
-            "right": "Сто гривень."
-          },
-          {
-            "left": "Звідки ви?",
-            "right": "З України."
-          },
-          {
-            "left": "Чи ви студент?",
-            "right": "Так, я студент."
-          },
-          {
-            "left": "Чому ні?",
-            "right": "Бо я зайнятий."
-          },
-          {
-            "left": "Як справи?",
-            "right": "Добре, дякую."
-          },
-          {
-            "left": "Куди ти йдеш?",
-            "right": "До магазину."
-          },
-          {
-            "left": "Який це колір?",
-            "right": "Синій."
-          },
-          {
-            "left": "Що ти робиш?",
-            "right": "Читаю книгу."
-          }
-        ],
-        "shuffleRight": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.036Z",
-      "modifiedAt": "2025-12-12T19:55:32.036Z"
-    },
-    {
-      "id": "act-a1-0-anagram-0",
-      "type": "anagram",
-      "title": "Question Word Scramble",
-      "description": "Unscramble the question words.",
-      "content": {
-        "type": "anagram",
-        "isAnagram": true,
-        "items": [
-          {
-            "letters": [
-              "о",
-              "щ"
-            ],
-            "answer": "що"
-          },
-          {
-            "letters": [
-              "о",
-              "т",
-              "х"
-            ],
-            "answer": "хто"
-          },
-          {
-            "letters": [
-              "е",
-              "д"
-            ],
-            "answer": "де"
-          },
-          {
-            "letters": [
-              "д",
-              "у",
-              "к",
-              "и"
-            ],
-            "answer": "куди"
-          },
-          {
-            "letters": [
-              "и",
-              "л",
-              "о",
-              "к"
-            ],
-            "answer": "коли"
-          },
-          {
-            "letters": [
-              "м",
-              "у",
-              "о",
-              "ч"
-            ],
-            "answer": "чому"
-          },
-          {
-            "letters": [
-              "к",
-              "я"
-            ],
-            "answer": "як"
-          },
-          {
-            "letters": [
-              "к",
-              "і",
-              "л",
-              "и",
-              "ь",
-              "с",
-              "к"
-            ],
-            "answer": "скільки"
-          },
-          {
-            "letters": [
-              "к",
-              "д",
-              "і",
-              "в",
-              "и",
-              "з"
-            ],
-            "answer": "звідки"
-          },
-          {
-            "letters": [
-              "й",
-              "и",
-              "к",
-              "я"
-            ],
-            "answer": "який"
-          },
-          {
-            "letters": [
-              "и",
-              "ч"
-            ],
-            "answer": "чи"
-          },
-          {
-            "letters": [
-              "а",
-              "к",
-              "я"
-            ],
-            "answer": "яка"
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.036Z",
-      "modifiedAt": "2025-12-12T19:55:32.036Z"
-    },
-    {
-      "id": "act-a1-0-truefalse-0",
-      "type": "true-false",
-      "title": "Question & Negation Rules",
-      "description": "Decide if the statement is True or False.",
-      "content": {
-        "type": "true-false",
-        "statements": [
-          {
-            "statement": "\"Чи\" is used to mark yes/no questions.",
-            "isTrue": true,
-            "explanation": "Correct! \"Чи ти читаєш?\" = Do you read?"
-          },
-          {
-            "statement": "Ukrainian requires \"do/does\" for questions.",
-            "isTrue": false,
-            "explanation": "False! Just use intonation or \"чи.\""
-          },
-          {
-            "statement": "\"Не\" comes before the verb to negate.",
-            "isTrue": true,
-            "explanation": "Correct! \"Я не читаю\" = I don't read."
-          },
-          {
-            "statement": "\"Де\" means \"when.\"",
-            "isTrue": false,
-            "explanation": "False! \"Де\" = where. \"Коли\" = when."
-          },
-          {
-            "statement": "Double negation is required in Ukrainian.",
-            "isTrue": true,
-            "explanation": "Correct! \"Я нічого не знаю\" = I don't know anything."
-          },
-          {
-            "statement": "\"Звідки\" asks about destination.",
-            "isTrue": false,
-            "explanation": "False! \"Звідки\" = where from. \"Куди\" = where to."
-          },
-          {
-            "statement": "\"Так\" means \"yes\" and \"ні\" means \"no.\"",
-            "isTrue": true,
-            "explanation": "Correct!"
-          },
-          {
-            "statement": "Question words always come at the end.",
-            "isTrue": false,
-            "explanation": "False! They usually come first."
-          },
-          {
-            "statement": "\"Скільки\" asks about quantity.",
-            "isTrue": true,
-            "explanation": "Correct! \"Скільки коштує?\" = How much?"
-          },
-          {
-            "statement": "\"Чому\" means \"how.\"",
-            "isTrue": false,
-            "explanation": "False! \"Чому\" = why. \"Як\" = how."
-          },
-          {
-            "statement": "Word order is flexible in Ukrainian questions.",
-            "isTrue": true,
-            "explanation": "Correct! \"Де ти?\" and \"Ти де?\" are both valid."
-          },
-          {
-            "statement": "\"Ніхто\" means \"someone.\"",
-            "isTrue": false,
-            "explanation": "False! \"Ніхто\" = nobody. \"Хтось\" = someone."
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.036Z",
-      "modifiedAt": "2025-12-12T19:55:32.036Z"
-    },
-    {
-      "id": "act-a1-0-fillblank-1",
-      "type": "fill-blank",
-      "title": "Dialogue Completion",
-      "description": "Complete the conversation with questions or negations.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "— ___ це? — Це музей. (What is this?)",
-            "answer": "Що",
-            "options": [
-              "Що",
-              "Хто",
-              "Де",
-              "Як"
-            ]
-          },
-          {
-            "prompt": "— ___ ти? — Я біля станції. (Where are you?)",
-            "answer": "Де",
-            "options": [
-              "Де",
-              "Куди",
-              "Звідки",
-              "Коли"
-            ]
-          },
-          {
-            "prompt": "— ___ ти йдеш? — До магазину. (Where are you going?)",
-            "answer": "Куди",
-            "options": [
-              "Куди",
-              "Де",
-              "Звідки",
-              "Як"
-            ]
-          },
-          {
-            "prompt": "— Ти розумієш? — Ні, я ___ розумію. (No, I don't understand.)",
-            "answer": "не",
-            "options": [
-              "не",
-              "ні",
-              "нічого",
-              "ніколи"
-            ]
-          },
-          {
-            "prompt": "— ___ ви? — Я з Канади. (Where are you from?)",
-            "answer": "Звідки",
-            "options": [
-              "Звідки",
-              "Де",
-              "Куди",
-              "Коли"
-            ]
-          },
-          {
-            "prompt": "— ___ коштує квиток? — Сорок гривень. (How much is the ticket?)",
-            "answer": "Скільки",
-            "options": [
-              "Скільки",
-              "Що",
-              "Як",
-              "Коли"
-            ]
-          },
-          {
-            "prompt": "— ___ ви студент? — Так, я студент. (Are you a student?)",
-            "answer": "Чи",
-            "options": [
-              "Чи",
-              "Що",
-              "Хто",
-              "Де"
-            ]
-          },
-          {
-            "prompt": "— ___ ти не працюєш? — Бо вихідний. (Why don't you work?)",
-            "answer": "Чому",
-            "options": [
-              "Чому",
-              "Як",
-              "Коли",
-              "Де"
-            ]
-          },
-          {
-            "prompt": "— Хтось тут? — Ні, тут ___. (No, nobody's here.)",
-            "answer": "нікого",
-            "options": [
-              "нікого",
-              "ніхто",
-              "нічого",
-              "ніколи"
-            ]
-          },
-          {
-            "prompt": "— ___ справи? — Добре, дякую. (How are things?)",
-            "answer": "Як",
-            "options": [
-              "Як",
-              "Що",
-              "Де",
-              "Коли"
-            ]
-          },
-          {
-            "prompt": "— Вона знає? — Ні, вона ___ знає. (No, she doesn't know.)",
-            "answer": "не",
-            "options": [
-              "не",
-              "ні",
-              "нічого",
-              "ніколи"
-            ]
-          },
-          {
-            "prompt": "— ___ приїде автобус? — О десятій. (When will the bus arrive?)",
-            "answer": "Коли",
-            "options": [
-              "Коли",
-              "Де",
-              "Як",
-              "Скільки"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.036Z",
-      "modifiedAt": "2025-12-12T19:55:32.036Z"
-    }
-  ],
+  "activities": [],
   "vocabulary": {
-    "moduleId": "mod-uk-A1-7",
+    "moduleId": "mod-uk-A1-07",
     "level": "A1",
     "phase": "A1.1",
-    "wordCount": 22,
-    "newWordCount": 22,
+    "wordCount": 28,
+    "newWordCount": 28,
     "reviewWordCount": 0,
-    "transliterationMode": "partial",
+    "transliterationMode": "full",
     "words": [
       {
-        "id": "v-**shcho**-0-0",
-        "uk": "**що**",
-        "en": "what",
-        "pos": "pron",
+        "id": "vocab-1",
+        "uk": "що",
         "ipa": "/ʃt͡ʃɔ/",
-        "note": "Question word",
-        "isNew": true,
-        "firstModule": 0
+        "en": "what",
+        "pos": "pronoun",
+        "gender": null,
+        "note": "question word"
       },
       {
-        "id": "v-**khto**-0-1",
-        "uk": "**хто**",
-        "en": "who",
-        "pos": "pron",
+        "id": "vocab-2",
+        "uk": "хто",
         "ipa": "/xtɔ/",
-        "note": "Question word",
-        "isNew": true,
-        "firstModule": 0
+        "en": "who",
+        "pos": "pronoun",
+        "gender": null,
+        "note": "question word"
       },
       {
-        "id": "v-**de**-0-2",
-        "uk": "**де**",
-        "en": "where",
-        "pos": "adv",
+        "id": "vocab-3",
+        "uk": "де",
         "ipa": "/dɛ/",
-        "note": "Location",
-        "isNew": true,
-        "firstModule": 0
+        "en": "where",
+        "pos": "adverb",
+        "gender": null,
+        "note": "location"
       },
       {
-        "id": "v-**kudy**-0-3",
-        "uk": "**куди**",
-        "en": "where to",
-        "pos": "adv",
-        "ipa": "/kuˈdɪ/",
-        "note": "Direction",
-        "isNew": true,
-        "firstModule": 0
+        "id": "vocab-4",
+        "uk": "куди",
+        "ipa": "/ˈkudɪ/",
+        "en": "where (to)",
+        "pos": "adverb",
+        "gender": null,
+        "note": "direction"
       },
       {
-        "id": "v-**zvidky**-0-4",
-        "uk": "**звідки**",
+        "id": "vocab-5",
+        "uk": "звідки",
+        "ipa": "/ˈzʲʋidkɪ/",
         "en": "where from",
-        "pos": "adv",
-        "ipa": "/ˈzvʲidkɪ/",
-        "note": "Origin",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adverb",
+        "gender": null,
+        "note": "origin"
       },
       {
-        "id": "v-**koly**-0-5",
-        "uk": "**коли**",
-        "en": "when",
-        "pos": "adv",
+        "id": "vocab-6",
+        "uk": "коли",
         "ipa": "/kɔˈlɪ/",
-        "note": "Time",
-        "isNew": true,
-        "firstModule": 0
+        "en": "when",
+        "pos": "adverb",
+        "gender": null,
+        "note": "time"
       },
       {
-        "id": "v-**chomu**-0-6",
-        "uk": "**чому**",
-        "en": "why",
-        "pos": "adv",
+        "id": "vocab-7",
+        "uk": "чому",
         "ipa": "/t͡ʃɔˈmu/",
-        "note": "Reason",
-        "isNew": true,
-        "firstModule": 0
+        "en": "why",
+        "pos": "adverb",
+        "gender": null,
+        "note": "reason"
       },
       {
-        "id": "v-**yak**-0-7",
-        "uk": "**як**",
-        "en": "how",
-        "pos": "adv",
+        "id": "vocab-8",
+        "uk": "як",
         "ipa": "/jɑk/",
-        "note": "Manner",
-        "isNew": true,
-        "firstModule": 0
+        "en": "how",
+        "pos": "adverb",
+        "gender": null,
+        "note": "manner/state"
       },
       {
-        "id": "v-**skilьky**-0-8",
-        "uk": "**скільки**",
-        "en": "how many/much",
-        "pos": "adv",
-        "ipa": "/ˈskʲilʲkɪ/",
-        "note": "Quantity",
-        "isNew": true,
-        "firstModule": 0
+        "id": "vocab-9",
+        "uk": "скільки",
+        "ipa": "/ˈskilʲkɪ/",
+        "en": "how much/many",
+        "pos": "adverb",
+        "gender": null,
+        "note": "quantity"
       },
       {
-        "id": "v-**yakyy**-0-9",
-        "uk": "**який**",
-        "en": "which (m)",
-        "pos": "adj",
-        "ipa": "/jaˈkɪj/",
+        "id": "vocab-10",
+        "uk": "який",
+        "ipa": "/jɑˈkɪj/",
+        "en": "which, what kind",
+        "pos": "pronoun",
         "gender": "m",
-        "note": "Type",
-        "isNew": true,
-        "firstModule": 0
+        "note": "яка (f), яке (n)"
       },
       {
-        "id": "v-**yaka**-0-10",
-        "uk": "**яка**",
-        "en": "which (f)",
-        "pos": "adj",
-        "ipa": "/jaˈkɑ/",
-        "gender": "f",
-        "note": "Type",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-**yake**-0-11",
-        "uk": "**яке**",
-        "en": "which (n)",
-        "pos": "adj",
-        "ipa": "/jaˈkɛ/",
-        "gender": "n",
-        "note": "Type",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-**chy**-0-12",
-        "uk": "**чи**",
-        "en": "(yes/no marker)",
-        "pos": "part",
+        "id": "vocab-11",
+        "uk": "чи",
         "ipa": "/t͡ʃɪ/",
-        "note": "Question particle",
-        "isNew": true,
-        "firstModule": 0
+        "en": "whether, if",
+        "pos": "particle",
+        "gender": null,
+        "note": "yes/no question"
       },
       {
-        "id": "v-**tak**-0-13",
-        "uk": "**так**",
-        "en": "yes",
-        "pos": "part",
+        "id": "vocab-12",
+        "uk": "так",
         "ipa": "/tɑk/",
-        "note": "Affirmative",
-        "isNew": true,
-        "firstModule": 0
+        "en": "yes",
+        "pos": "particle",
+        "gender": null,
+        "note": "affirmative"
       },
       {
-        "id": "v-**ni**-0-14",
-        "uk": "**ні**",
+        "id": "vocab-13",
+        "uk": "ні",
+        "ipa": "/ni/",
         "en": "no",
-        "pos": "part",
-        "ipa": "/nʲi/",
-        "note": "Negative",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "particle",
+        "gender": null,
+        "note": "negative"
       },
       {
-        "id": "v-**ne**-0-15",
-        "uk": "**не**",
-        "en": "not",
-        "pos": "part",
+        "id": "vocab-14",
+        "uk": "не",
         "ipa": "/nɛ/",
-        "note": "Negation",
-        "isNew": true,
-        "firstModule": 0
+        "en": "not",
+        "pos": "particle",
+        "gender": null,
+        "note": "negation"
       },
       {
-        "id": "v-**nikoly**-0-16",
-        "uk": "**ніколи**",
-        "en": "never",
-        "pos": "adv",
+        "id": "vocab-15",
+        "uk": "ніколи",
         "ipa": "/nʲiˈkɔlɪ/",
-        "note": "Negative time",
-        "isNew": true,
-        "firstModule": 0
+        "en": "never",
+        "pos": "adverb",
+        "gender": null,
+        "note": "requires \"не\""
       },
       {
-        "id": "v-**zavzhdy**-0-17",
-        "uk": "**завжди**",
+        "id": "vocab-16",
+        "uk": "завжди",
+        "ipa": "/ˈzɑʋʒdɪ/",
         "en": "always",
-        "pos": "adv",
-        "ipa": "/ˈzɑu̯ʒdɪ/",
-        "note": "Positive time",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adverb",
+        "gender": null,
+        "note": "frequency"
       },
       {
-        "id": "v-**chasto**-0-18",
-        "uk": "**часто**",
-        "en": "often",
-        "pos": "adv",
+        "id": "vocab-17",
+        "uk": "часто",
         "ipa": "/ˈt͡ʃɑstɔ/",
-        "note": "Frequency",
-        "isNew": true,
-        "firstModule": 0
+        "en": "often",
+        "pos": "adverb",
+        "gender": null,
+        "note": "frequency"
       },
       {
-        "id": "v-**inodi**-0-19",
-        "uk": "**іноді**",
+        "id": "vocab-18",
+        "uk": "іноді",
+        "ipa": "/iˈnɔdi/",
         "en": "sometimes",
-        "pos": "adv",
-        "ipa": "/iˈnɔdʲi/",
-        "note": "Frequency",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adverb",
+        "gender": null,
+        "note": "frequency"
       },
       {
-        "id": "v-**ridko**-0-20",
-        "uk": "**рідко**",
+        "id": "vocab-19",
+        "uk": "рідко",
+        "ipa": "/ˈridkɔ/",
         "en": "rarely",
-        "pos": "adv",
-        "ipa": "/ˈrʲidkɔ/",
-        "note": "Frequency",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adverb",
+        "gender": null,
+        "note": "frequency"
       },
       {
-        "id": "v-**zvychayno**-0-21",
-        "uk": "**звичайно**",
-        "en": "usually",
-        "pos": "adv",
+        "id": "vocab-20",
+        "uk": "звичайно",
         "ipa": "/zvɪˈt͡ʃɑjnɔ/",
-        "note": "Frequency",
-        "isNew": true,
-        "firstModule": 0
+        "en": "usually",
+        "pos": "adverb",
+        "gender": null,
+        "note": "frequency"
+      },
+      {
+        "id": "vocab-21",
+        "uk": "йти",
+        "ipa": "/jˈtɪ/",
+        "en": "to go (on foot)",
+        "pos": "verb",
+        "gender": null,
+        "note": "йду, йдеш, йде (M06)"
+      },
+      {
+        "id": "vocab-22",
+        "uk": "звати",
+        "ipa": "/ˈzvɑtɪ/",
+        "en": "to call, name",
+        "pos": "verb",
+        "gender": null,
+        "note": "звуть = they call"
+      },
+      {
+        "id": "vocab-23",
+        "uk": "нічого",
+        "ipa": "/nʲit͡ʃɔˈhɔ/",
+        "en": "nothing, it's okay",
+        "pos": "pronoun",
+        "gender": null,
+        "note": "reassuring phrase"
+      },
+      {
+        "id": "vocab-24",
+        "uk": "робити",
+        "ipa": "/rɔˈbɪtɪ/",
+        "en": "to do, make",
+        "pos": "verb",
+        "gender": null,
+        "note": "роблю, робиш"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "вивчати",
+        "ipa": "/vɪvˈt͡ʃɑtɪ/",
+        "en": "to study, learn",
+        "pos": "verb",
+        "gender": null,
+        "note": "вивчаю, вивчаєш"
+      },
+      {
+        "id": "vocab-26",
+        "uk": "працювати",
+        "ipa": "/prɑt͡sʲuˈvɑtɪ/",
+        "en": "to work",
+        "pos": "verb",
+        "gender": null,
+        "note": "працює, працюєш (M06)"
+      },
+      {
+        "id": "vocab-27",
+        "uk": "розуміти",
+        "ipa": "/rɔzuˈmitɪ/",
+        "en": "to understand",
+        "pos": "verb",
+        "gender": null,
+        "note": "розумію, розумієш (M06)"
+      },
+      {
+        "id": "vocab-28",
+        "uk": "Київ",
+        "ipa": "/ˈkɪjiu̯/",
+        "en": "Kyiv (capital)",
+        "pos": "noun",
+        "gender": "m",
+        "note": "gen: Києва"
       }
-    ]
+    ],
+    "reviewWords": []
   }
 }

@@ -28,6 +28,7 @@ from .activities import (
     check_matchup_misuse,
     check_activity_level_restrictions,
     check_activity_focus_alignment,
+    check_anagram_min_letters,
 )
 
 
@@ -35,8 +36,29 @@ def check_duplicate_content(content: str) -> list[dict]:
     """Check for duplicate/copy-pasted sentences."""
     violations = []
 
+    # Pre-filter content to remove activity syntax that shouldn't be checked
+    # Remove quiz options (- [ ] or - [x]), fill-in options/answers, table rows
+    filtered_lines = []
+    for line in content.split('\n'):
+        stripped = line.strip()
+        # Skip quiz checkbox options
+        if re.match(r'^-\s*\[[ x]\]', stripped):
+            continue
+        # Skip blockquote callouts (options, answers, etc.)
+        if re.match(r'^>\s*\[!', stripped):
+            continue
+        # Skip table rows
+        if stripped.startswith('|'):
+            continue
+        # Skip fill-in options inline format
+        if '|' in stripped and len(stripped.split('|')) >= 3:
+            continue
+        filtered_lines.append(line)
+
+    filtered_content = '\n'.join(filtered_lines)
+
     sentences = []
-    for sent in re.findall(r'[А-ЯІЇЄҐа-яіїєґ][^.!?]*[.!?]', content):
+    for sent in re.findall(r'[А-ЯІЇЄҐа-яіїєґ][^.!?]*[.!?]', filtered_content):
         words = re.findall(r'[\u0400-\u04ff]+', sent)
         if len(words) >= 5:
             normalized = ' '.join(w.lower() for w in words)
@@ -147,12 +169,9 @@ def run_pedagogical_checks(
     if vocab_items and level_code not in ('LIT',):
         sync_vocab_to_db(level_code, module_num, vocab_items)
 
-    # Check vocabulary violations (skip for C1/C2/LIT - advanced levels)
-    if level_code not in ('C1', 'C2', 'LIT'):
-        vocab_words = extract_vocab_from_section(content)
-        # Get cumulative vocabulary from database (words from previous modules)
-        cumulative_vocab = get_cumulative_vocab(level_code, module_num)
-        all_violations.extend(check_vocab_violations(content, core_content, vocab_words, cumulative_vocab))
+    # Vocabulary violations check DISABLED for parallel module creation
+    # Vocab is validated at the end when all modules are complete
+    # See: npm run vocab:rebuild (after all modules done)
 
     # 4. Activity sequencing
     all_violations.extend(check_activity_sequencing(content, pedagogy))
@@ -188,5 +207,8 @@ def run_pedagogical_checks(
 
     # 14. Activity focus alignment (B1/B2)
     all_violations.extend(check_activity_focus_alignment(content, level_code, module_num, frontmatter_str))
+
+    # 15. Anagram minimum letters (must have 3+ letters)
+    all_violations.extend(check_anagram_min_letters(content))
 
     return all_violations

@@ -1,0 +1,38 @@
+# Audit Report: 14-mine-and-yours.md
+**Phase:** A1 | **Level:** A1 | **Pedagogy:** "PPP" | **Target:** 750
+**Overall Status:** ✅ PASS
+
+## Gates
+- **Words:** ✅ 1213/750
+- **Activities:** ✅ 8/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 6/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 7/3
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 32/20
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Immersion:** 🇺🇦 29.3% (target 25-35% (M14))
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Mine and Yours** | ⚪️ | 0 | Skipped |
+| **Warm-up** | ✅ | 105 | Included in Core |
+| **Presentation** | ✅ | 366 | Included in Core |
+| **Practice** | ⚪️ | 225 | Skipped |
+| **Production** | ➖ | 212 | Excluded Type |
+| **Cultural Insight** | ✅ | 206 | Included in Core |
+| **Summary** | ✅ | 99 | Included in Core |
+| **Activities** | ➖ | 0 | Excluded Type |
+| **match-up: Possessive Forms** | 🎮 | 12 | Activity (12 items, min 8) |
+| **group-sort: Gender Agreement** | 🎮 | 24 | Activity (24 items, min 8) |
+| **quiz: Choose the Correct Possessive** | 🎮 | 12 | Activity (12 items, min 8) |
+| **true-false: Possessive Rules** | 🎮 | 12 | Activity (12 items, min 8) |
+| **fill-in: Complete with Possessives** | 🎮 | 15 | Activity (15 items, min 8) |
+| **unjumble: Build Sentences** | 🎮 | 15 | Activity (15 items, min 6) |
+| **group-sort: Інваріантні vs Змінні** | 🎮 | 11 | Activity (11 items, min 8) |
+| **quiz: Cultural Context** | 🎮 | 12 | Activity (12 items, min 8) |
+| **Vocabulary** | ➖ | 0 | Excluded Type |

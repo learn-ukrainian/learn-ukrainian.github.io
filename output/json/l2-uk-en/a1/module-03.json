@@ -15,1344 +15,487 @@
     "pedagogy": "PPP",
     "immersionLevel": 0.3,
     "title": "The Gender Code",
-    "subtitle": "It's About Sound, Not Biology",
-    "description": "Identify the gender of Ukrainian nouns by their ending",
+    "titleUk": null,
+    "subtitle": "Unlocking Ukrainian Gender Patterns",
+    "description": "Learner can identify the gender of Ukrainian nouns by their ending",
     "objectives": [
-      "Identify the gender of Ukrainian nouns by their ending",
-      "Understand the 3 gender categories: Masculine, Feminine, Neuter",
-      "Recognize basic gender exceptions (Family relations)",
-      "Classify common objects and food items by gender"
+      "Learner can identify the gender of Ukrainian nouns by their ending",
+      "Learner can categorize nouns into the 4 declension families",
+      "Learner can recognize gender patterns: consonant (m), -а/-я (f), -о/-е (n)"
     ],
+    "objectivesUk": null,
     "grammarFocus": [
-      "Nouns: Gender (M/F/N Introduction)",
-      "Nouns: Basic Declension Groups (Concept)",
-      "Pronouns: Personal (Vin/Vona/Vono)"
+      "noun-gender-m-f-n",
+      "declension-families-4"
     ],
     "tags": [
       "grammar",
-      "nouns",
-      "gender"
+      "gender",
+      "declension",
+      "noun-patterns"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "partial",
+    "totalDuration": 60,
+    "transliterationMode": "full",
     "sections": [
       {
-        "id": "section-content-0",
-        "name": "Lesson",
+        "id": "section-1",
+        "name": "The Gender Code",
+        "nameEn": null,
         "type": "content",
-        "content": "> **Note:** Welcome to the most important concept in Ukrainian grammar. Every noun has a \"gender\". This isn't about biology; it's about **sound**. Words have a musical \"family\" they belong to, and this determines how they dance (change) in a sentence.\n\n## Warm-up: The Three Boxes\nImagine three boxes on a table. Every object in the universe fits into one of them.\n1. **Він (He):** Masculine\n2. **Вона (She):** Feminine\n3. **Воно (It):** Neuter\n\nIn English, \"Table\" is \"It\". In Ukrainian, **Стіл** (Table) is \"He\". **Книга** (Book) is \"She\". **Вікно** (Window) is \"It\".\nWhy? Look at the **end** of the word.\n\n## Presentation: The 4 Families (Declensions)\n\n> [!tip] 💡 **Thinking Trick:** Don't ask \"Is a table male?\" Ask \"Does the word end in a consonant?\" If yes, it's usually Masculine.\n\n### 1. Masculine (The Consonants)\nIf a word ends in a **Consonant** (Hard or Soft), it is likely Masculine.\n- **Стіл** (Table) - Ends in L. Masculine.\n- **Банк** (Bank) - Ends in K. Masculine.\n- **Чай** (Tea) - Ends in Y. Masculine.\n\n### 2. Feminine (The A-Team)\nIf a word ends in **-А** or **-Я**, it is likely Feminine.\n- **Мама** (Mom) - Ends in A. Feminine.\n- **Книга** (Book) - Ends in A. Feminine.\n- **Земля** (Earth) - Ends in Ya. Feminine.\n\n### 3. Neuter (The O-E Circles)\nIf a word ends in **-О** or **-Е**, it is Neuter.\n- **Вікно** (Window) - Ends in O. Neuter.\n- **Море** (Sea) - Ends in E. Neuter.\n- **Місто** (City) - Ends in O. Neuter.\n\n### 4. The 4 Declension Families (Advanced Theory)\nTo speak perfect Ukrainian, we group these genders into \"Families\" (Declensions) based on how they change.\n\n| Family | Description | Examples |\n| --- | --- | --- |\n| **Family 1** | **Feminine** ending in -А/-Я | Жінка, Земля |\n| **Family 2** | **Masculine** (Consonant) + **Neuter** (-О/-Е) | Стіл, Вікно |\n| **Family 3** | **Feminine** ending in Consonant/Soft Sign | Ніч, Сіль |\n| **Family 4** | **Neuter** ending in -А/-Я (Baby words) | Ім'я, Цуценя |\n\n> [!warning] **The Trap:** A word ending in **-А** is usually Feminine (Family 1). But **Тато** (Dad) ends in -O, so he is Family 2 (grammatically acting like a noun in -O, though biologically male). Wait, actually **Тато** usually acts like Family 1 in endings! Correction: **Тато** (Dad) is Family 1 because it ends in -a/-o but declines like Mama. **Дядько** (Uncle) is Family 2.\n> *Simplication for A1:* Just look at the ending for now!\n\n## Cultural Insight: The Soul of Words 🇺🇦\n\n> 💡 **Did You Know?**\n>\n> In Ukrainian folklore, the **Moon** (Місяць) is Masculine (\"He\"), and the **Star** (Зірка) is Feminine (\"She\"). In poetry, they are often lovers.\n> In German, Moon is Masculine and Sun is Feminine. In French, Moon is Feminine and Sun is Masculine.\n> Ukrainian sees the **Sun** (Сонце) as Neuter (\"It\" - a celestial force)!\n\n## Story Time: The Room (Practice) 📖\n*Let's label the world around us. Look at the endings!*\n\nЦе **кімната** (fem). Тут є **стіл** (masc) і **крісло** (neut).\nНа столі є **книга** (fem). Це цікава книга.\nТам є **вікно** (neut). Через вікно я бачу **місто** (neut).\nЦе мій **дім** (masc).\n\n**Analysis:**\n- **Кімнат-а** (ends in A -> She)\n- **Стіл-ø** (ends in consonant -> He)\n- **Крісл-о** (ends in O -> It)\n- **Міст-о** (ends in O -> It)\n\n> [!tip] 🌟 **Pro Tip:** When you learn a new noun, visualize it wearing a tie (Masc), a dress (Fem), or a hat (Neuter). Visual memory is powerful!"
+        "content": "## Warm-up\n\nHave you ever wondered why some languages assign gender to objects? In Ukrainian, **every noun has a gender** — masculine, feminine, or neuter. But it's not random! Ukrainian gives you **visible clues** right in the word's ending.\n\nThink of it like a secret code: the last letter reveals the gender. And once you crack the code, you'll never forget it.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian noun gender is more predictable than German or French! In Ukrainian, **95% of the time**, you can guess the gender just by looking at the ending. No memorization needed — just pattern recognition.\n\nLet's start with a game. Look at these three words:\n\n- **Стіл** (stil) — table\n- **Книга** (knyha) — book\n- **Вікно** (vikno) — window\n\nOne ends in a consonant. One ends in **-а**. One ends in **-о**. Can you guess which is masculine, feminine, and neuter?\n\n> [!answer]\n> Стіл (consonant) = masculine. Книга (-а) = feminine. Вікно (-о) = neuter.\n\nCongratulations — you've just learned the **Ukrainian Gender Code**!\n\n## Presentation\n\n### The Three Genders\n\nUkrainian nouns fall into three gender categories, and each has a signature ending:\n\n| Gender | Ending Pattern | Examples |\n|--------|---------------|----------|\n| **Masculine** (чоловічий рід) | Consonant (б, т, л, н, р...) | стіл (table), хліб (bread), дім (house) |\n| **Feminine** (жіночий рід) | **-а** or **-я** | книга (book), кімната (room), земля (earth) |\n| **Neuter** (середній рід) | **-о** or **-е** | вікно (window), місто (city), море (sea) |\n\nThis is your **foundational pattern**. Memorize it once, and you'll recognize thousands of words.\n\n> 🎬 **Pop Culture Moment: S.T.A.L.K.E.R.**\n>\n> In the iconic Ukrainian game *S.T.A.L.K.E.R.*, you explore locations like **Прип'ять** (Prypiat — feminine, ends in soft sign), **місто** (city — neuter, ends in -о), and **будинок** (building — masculine, consonant ending). Even in post-apocalyptic Ukraine, grammar survives!\n\n### Why Gender Matters\n\nYou might think: \"Why do I need to know if a table is masculine?\"\n\nBecause in Ukrainian, **gender affects everything**:\n- Adjectives change endings to match: **новий стіл** (new table, m) vs **нова книга** (new book, f)\n- Pronouns refer back by gender: **він** (he/it, for masculine nouns), **вона** (she/it, feminine), **воно** (it, neuter)\n- Case endings (accusative, locative, etc.) depend on gender\n\n**Gender is the foundation of Ukrainian grammar.** Get it right now, and the rest will flow naturally.\n\n### Mini-Dialogue: At Home\n\n**Марко:** Де моя **книга**? (Where is my book?)\n**Таня:** Твоя **книга** на **столі**. (Your book is on the table.)\n**Марко:** А де **вікно**? (And where is the window?)\n**Таня:** **Вікно** там. (The window is there.)\n\nNotice:\n- **книга** (book, feminine) — ends in **-а**\n- **стіл** (table, masculine) — ends in consonant **-л**\n- **вікно** (window, neuter) — ends in **-о**\n\nEvery noun in this dialogue follows the pattern.\n\n> 🌍 **Real World: Ukrainian Home Vocabulary**\n>\n> When Ukrainians describe their home, they naturally use all three genders:\n> - **Кімната** (room — f), **підлога** (floor — f), **стеля** (ceiling — f)\n> - **Стіл** (table — m), **стілець** (chair — m), **диван** (sofa — m)\n> - **Вікно** (window — n), **ліжко** (bed — n), **крісло** (armchair — n)\n>\n> Practice these words, and you'll describe any Ukrainian apartment!\n\n## Practice\n\n### The 4 Declension Families (Відміни)\n\nNow here's where it gets smart. Ukrainian doesn't just have 3 genders — it organizes nouns into **4 declension families** based on how they change in different cases (accusative, locative, etc.).\n\nYou don't need to memorize case endings yet. But recognizing the **family pattern** now will save you months of confusion later.\n\n| Family | Definition | Examples |\n|--------|------------|----------|\n| **Family 1** | Nouns ending in **-а** or **-я** (mostly feminine) | мама (mom), земля (earth), кімната (room) |\n| **Family 2** | Masculine consonant endings + Neuter **-о/-е** | стіл (m), вікно (n), море (n) |\n| **Family 3** | Feminine nouns ending in **consonant** (rare but important) | ніч (night), любов (love) |\n| **Family 4** | Neuter nouns ending in **-а/-я** with stem changes **-ат-/-ят-/-ен-** | ім'я (name → імені), теля (calf → теляти) |\n\n**Key Insight:** Family 1 and Family 2 cover **90% of Ukrainian nouns**. Family 3 and Family 4 are smaller but essential for advanced fluency.\n\nFor now, focus on recognizing the **ending pattern**. Later modules will teach how each family changes in different cases.\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"All feminine nouns end in -а or -я.\"\n> **Fact:** Most do (Family 1), but Family 3 feminines end in **consonants** like **ніч** (night) and **любов** (love). These are essential words — don't skip them!\n\n### Common Patterns to Memorize\n\n**Masculine (-consonant):**\n- Food: хліб (bread), сир (cheese), сік (juice)\n- Places: дім (house), магазин (store), університет (university)\n- Furniture: стіл (table), стілець (chair), диван (sofa)\n\n**Feminine (-а/-я):**\n- Rooms: кімната (room), школа (school)\n- Food: вода (water), картопля (potato), цибуля (onion)\n- Furniture: шафа (wardrobe)\n\n**Neuter (-о/-е):**\n- Places: місто (city), село (village), море (sea)\n- Objects: вікно (window), яблуко (apple), м'ясо (meat)\n- Furniture: ліжко (bed), крісло (armchair)\n\n### Mini-Dialogue: At the Market\n\n**Марія:** Хліб, молоко і вода, будь ласка.\n**Продавець:** Яблуко теж?\n**Марія:** Так, картопля і апельсин.\n\nSee how gender flows naturally in conversation? You're not translating — you're **thinking in Ukrainian patterns**.\n\n> 🎯 **Pro Tip: The -о/-е Neuter Trick**\n>\n> Almost **all food words ending in -о or -е are neuter**: молоко (milk), яйце (egg), яблуко (apple), м'ясо (meat), вино (wine).\n>\n> Exception: Овочі (vegetables, plural only), фрукти (fruits, plural only).\n\n## Production\n\nNow it's your turn! Practice identifying gender and families.\n\n**Task 1:** Read these words aloud and identify their gender:\n1. Двері (door) — ?\n2. Річка (river) — ?\n3. Море (sea) — ?\n4. Хліб (bread) — ?\n\n> [!answer]\n> 1. Двері — plural only (no gender)\n> 2. Річка — feminine (-а)\n> 3. Море — neuter (-е)\n> 4. Хліб — masculine (consonant)\n\n**Task 2:** Sort these words into declension families:\n- Стіна, вікно, підлога, стіл, крісло, шафа\n\n> [!answer]\n> Family 1: стіна, підлога, шафа.\n>\n> Family 2: стіл, вікно, крісло.\n\nExcellent! You've just analyzed 6 nouns like a linguist.\n\n## Cultural Insight\n\n### Why Ukrainian Gender Patterns Are Elegant\n\nUnlike English (which mostly lost grammatical gender), Ukrainian preserves a **transparent gender system**. You don't need to memorize arbitrary labels — the word itself tells you.\n\nCompare:\n- **German:** *der Tisch* (m), *die Tür* (f), *das Fenster* (n) — you must memorize articles.\n- **Ukrainian:** стіл (ends in consonant = m), двері (plural only), вікно (ends in -о = n) — the ending IS the clue!\n\nThis pattern consistency makes Ukrainian **easier to learn** than languages with hidden gender markers.\n\n> 🎭 **Folklore Corner: Gendered Personification**\n>\n> In Ukrainian folk songs and poetry, **nature is personified by gender**:\n> - **Земля** (earth — feminine) is often called \"mother\" (Земля-матінка).\n> - **Місяць** (moon — masculine) is portrayed as a protector or wanderer.\n> - **Сонце** (sun — neuter) represents life and warmth without gender.\n>\n> Gender isn't just grammar — it shapes how Ukrainians see the world!\n\n---"
       },
       {
-        "id": "section-summary-1",
-        "name": "Підсумок",
-        "nameEn": "Summary",
+        "id": "section-2",
+        "name": "Summary",
+        "nameEn": null,
         "type": "summary",
-        "content": "- **Masculine:** Ends in Consonant (Стіл).\n- **Feminine:** Ends in -А / -Я (Мама).\n- **Neuter:** Ends in -О / -Е (Вікно).\n- **Exceptions:** Words like *Тато* (Dad) are Masculine but act like Family 1. Words like *Ніч* (Night) are Feminine (Family 3).\n\n---\n\n\n---"
+        "content": "**You've unlocked the Ukrainian Gender Code!**\n\n**Three Genders:**\n- Masculine: consonant ending (стіл, хліб, дім)\n- Feminine: -а/-я (книга, кімната, земля)\n- Neuter: -о/-е (вікно, місто, море)\n\n**Four Declension Families:**\n1. -а/-я feminines (мама, земля)\n2. Consonant masculines + -о/-е neuters (стіл, вікно)\n3. Soft -ь feminines (ніч, любов)\n4. -а neuters with stem changes (ім'я, теля)\n\n**Why It Matters:**\nGender affects adjectives, pronouns, and case endings. Master gender now, and everything else becomes easier.\n\n**Next Module:** You'll learn how to say \"This is...\" and use pronouns — building on the gender foundation you just mastered.\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## quiz: Gender Recognition\n\n1. What gender is the noun \"книга\"?\n   - [ ] Masculine\n   - [x] Feminine\n   - [ ] Neuter\n   - [ ] Plural only\n   > Nouns ending in -а are typically feminine.\n\n2. What gender is \"вікно\"?\n   - [ ] Masculine\n   - [x] Neuter\n   - [ ] Feminine\n   - [ ] No gender\n   > Nouns ending in -о are neuter.\n\n3. What gender is \"стіл\"?\n   - [x] Masculine\n   - [ ] Feminine\n   - [ ] Neuter\n   - [ ] Unknown\n   > Nouns ending in a consonant are typically masculine.\n\n4. Which family does \"ніч\" belong to?\n   - [ ] Family 1\n   - [ ] Family 2\n   - [x] Family 3\n   - [ ] Family 4\n   > Feminine nouns ending in consonants are Family 3.\n\n5. Which ending is typical for neuter nouns?\n   - [ ] -а\n   - [ ] consonant\n   - [x] -о or -е\n   - [ ] -і\n   > Neuter nouns end in -о or -е.\n\n6. How many declension families exist in Ukrainian?\n   - [ ] 2\n   - [ ] 3\n   - [x] 4\n   - [ ] 5\n   > There are 4 declension families.\n\n7. What gender is \"море\"?\n   - [ ] Masculine\n   - [ ] Feminine\n   - [x] Neuter\n   - [ ] Plural\n   > \"Море\" ends in -е, so it's neuter.\n\n8. Which noun is masculine?\n   - [x] хліб\n   - [ ] вода\n   - [ ] вікно\n   - [ ] кімната\n   > \"Хліб\" ends in a consonant, so it's masculine.\n\n9. Which noun is feminine?\n   - [ ] стіл\n   - [x] школа\n   - [ ] місто\n   - [ ] море\n   > \"Школа\" ends in -а, so it's feminine.\n\n10. Can you predict gender from the ending 95% of the time?\n    - [x] Yes\n    - [ ] No\n    - [ ] Only for feminines\n    - [ ] Only for neuters\n    > Ukrainian gender is highly predictable from endings!\n\n11. What is Family 4 known for?\n    - [ ] Consonant endings\n    - [ ] -а/-я feminines\n    - [x] Neuter nouns with stem changes\n    - [ ] Plural forms\n    > Family 4 neuters gain suffixes like -ат-, -ят-, -ен-.\n\n12. Which word is neuter?\n    - [ ] дім\n    - [ ] кімната\n    - [x] яблуко\n    - [ ] магазин\n    > \"Яблуко\" ends in -о, so it's neuter.\n\n## match-up: Gender Pairs\n\n| Ukrainian | English |\n|-----------|---------|\n| стіл | table |\n| книга | book |\n| вікно | window |\n| двері | door |\n| кімната | room |\n| дім | house |\n| місто | city |\n| хліб | bread |\n| вода | water |\n| молоко | milk |\n| яблуко | apple |\n| стілець | chair |\n\n## group-sort: Sort by Gender\n\n### Masculine\n- стіл\n- хліб\n- дім\n- стілець\n- диван\n- магазин\n- апельсин\n- помідор\n- огірок\n\n### Feminine\n- книга\n- кімната\n- вода\n- картопля\n- цибуля\n- шафа\n- стіна\n- підлога\n- стеля\n- школа\n- річка\n\n### Neuter\n- вікно\n- місто\n- село\n- море\n- молоко\n- м'ясо\n- яблуко\n- крісло\n- ліжко\n\n## fill-in: Complete with Gender\n\n1. ___ є masculine noun.\n   > [!answer] Стіл\n   > [!options] Стіл | Книга | Вікно | Кімната\n\n2. ___ ends in -а, so it's feminine.\n   > [!answer] Кімната\n   > [!options] Кімната | Стіл | Вікно | Море\n\n3. ___ is a neuter noun ending in -о.\n   > [!answer] Вікно\n   > [!options] Вікно | Стіл | Книга | Двері\n\n4. ___ is masculine because it ends in a consonant.\n   > [!answer] Хліб\n   > [!options] Хліб | Вода | Молоко | Школа\n\n5. ___ is feminine and ends in -я.\n   > [!answer] Земля\n   > [!options] Земля | Море | Дім | Стіл\n\n6. ___ is neuter and means \"sea\".\n   > [!answer] Море\n   > [!options] Море | Річка | Вода | Дім\n\n7. ___ is masculine and means \"house\".\n   > [!answer] Дім\n   > [!options] Дім | Кімната | Вікно | Вода\n\n8. ___ is feminine and means \"water\".\n   > [!answer] Вода\n   > [!options] Вода | Молоко | Сік | Чай\n\n9. ___ is neuter and means \"milk\".\n   > [!answer] Молоко\n   > [!options] Молоко | Вода | Сік | Чай\n\n10. ___ is masculine and means \"juice\".\n    > [!answer] Сік\n    > [!options] Сік | Вода | Молоко | Вино\n\n11. ___ is neuter and means \"apple\".\n    > [!answer] Яблуко\n    > [!options] Яблуко | Апельсин | Картопля | Помідор\n\n12. ___ is feminine and means \"potato\".\n    > [!answer] Картопля\n    > [!options] Картопля | Апельсин | Огірок | Яблуко\n\n## true-false: Gender Rules\n\n- [x] Masculine nouns typically end in a consonant.\n  > Correct! Examples: стіл, хліб, дім.\n\n- [x] Feminine nouns typically end in -а or -я.\n  > Correct! Examples: книга, земля, кімната.\n\n- [x] Neuter nouns typically end in -о or -е.\n  > Correct! Examples: вікно, місто, море.\n\n- [ ] All feminine nouns end in -а or -я.\n  > Incorrect! Family 3 feminines end in consonants: ніч, любов.\n\n- [x] There are 4 declension families in Ukrainian.\n  > Correct! Families 1, 2, 3, and 4.\n\n- [ ] Gender is random in Ukrainian.\n  > Incorrect! Gender is predictable from word endings 95% of the time.\n\n- [x] Gender affects adjective endings.\n  > Correct! Adjectives must agree with noun gender.\n\n- [x] Gender affects case endings.\n  > Correct! Masculine, feminine, and neuter have different case patterns.\n\n- [ ] \"Двері\" has a gender.\n  > Incorrect! \"Двері\" is plural only and has no singular gender.\n\n- [x] Family 2 includes both masculine and neuter nouns.\n  > Correct! Masculine consonant endings + neuter -о/-е.\n\n- [ ] You must memorize gender for every noun.\n  > Incorrect! You can predict gender from the ending pattern.\n\n- [x] \"Ім'я\" is a special neuter noun (Family 4).\n  > Correct! It changes stem in declension: ім'я → імені.\n\n## anagram: Build the Word\n\n1. С Т І Л\n   > [!answer] стіл\n   > (table)\n\n2. К Н И Г А\n   > [!answer] книга\n   > (book)\n\n3. В І К Н О\n   > [!answer] вікно\n   > (window)\n\n4. Д В Е Р І\n   > [!answer] двері\n   > (door)\n\n5. К І М Н А Т А\n   > [!answer] кімната\n   > (room)\n\n6. Д І М\n   > [!answer] дім\n   > (house)\n\n7. М І С Т О\n   > [!answer] місто\n   > (city)\n\n8. С Е Л О\n   > [!answer] село\n   > (village)\n\n9. Р І Ч К А\n   > [!answer] річка\n   > (river)\n\n10. М О Р Е\n    > [!answer] море\n    > (sea)\n\n11. Х Л І Б\n    > [!answer] хліб\n    > (bread)\n\n12. В О Д А\n    > [!answer] вода\n    > (water)\n\n## anagram: More Words\n\n1. М О Л О К О\n   > [!answer] молоко\n   > (milk)\n\n2. Я Б Л У К О\n   > [!answer] яблуко\n   > (apple)\n\n3. М ' Я С О\n   > [!answer] м'ясо\n   > (meat)\n\n4. Р И Б А\n   > [!answer] риба\n   > (fish)\n\n5. О В О Ч І\n   > [!answer] овочі\n   > (vegetables)\n\n6. К А Р Т О П Л Я\n   > [!answer] картопля\n   > (potato)\n\n7. П О М І Д О Р\n   > [!answer] помідор\n   > (tomato)\n\n8. С Т І Л Е Ц Ь\n   > [!answer] стілець\n   > (chair)\n\n9. К Р І С Л О\n   > [!answer] крісло\n   > (armchair)\n\n10. Ш А Ф А\n    > [!answer] шафа\n    > (wardrobe)\n\n11. Д И В А Н\n    > [!answer] диван\n    > (sofa)\n\n12. Л І Ж К О\n    > [!answer] ліжко\n    > (bed)\n\n## unjumble: Build Sentences\n\n1. стіл / Це\n   > [!answer] Це стіл.\n   > (This is a table.)\n\n2. книга / Це\n   > [!answer] Це книга.\n   > (This is a book.)\n\n3. вікно / Це\n   > [!answer] Це вікно.\n   > (This is a window.)\n\n4. кімната / велика / Це\n   > [!answer] Це велика кімната.\n   > (This is a big room.)\n\n5. дім / новий / Це\n   > [!answer] Це новий дім.\n   > (This is a new house.)\n\n6. море / гарне / Це\n   > [!answer] Це гарне море.\n   > (This is a beautiful sea.)\n\n7. хліб / смачний / Це\n   > [!answer] Це смачний хліб.\n   > (This is tasty bread.)\n\n8. вода / холодна / Це\n   > [!answer] Це холодна вода.\n   > (This is cold water.)\n\n9. молоко / свіже / Це\n   > [!answer] Це свіже молоко.\n   > (This is fresh milk.)\n\n10. яблуко / червоне / Це\n    > [!answer] Це червоне яблуко.\n    > (This is a red apple.)\n\n11. стілець / зручний / Це\n    > [!answer] Це зручний стілець.\n    > (This is a comfortable chair.)\n\n12. шафа / велика / Це\n    > [!answer] Це велика шафа.\n    > (This is a big wardrobe.)\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| стіл | /stil/ | table | noun | m | |\n| книга | /ˈknɪɦɑ/ | book | noun | f | |\n| вікно | /wʲikˈnɔ/ | window | noun | n | |\n| двері | /ˈdwɛrʲi/ | door | noun | pl | plural only |\n| кімната | /ˈkimnɑtɑ/ | room | noun | f | |\n| дім | /dim/ | house | noun | m | |\n| місто | /ˈmistɔ/ | city | noun | n | |\n| село | /sɛˈlɔ/ | village | noun | n | |\n| річка | /ˈrit͡ʃkɑ/ | river | noun | f | |\n| море | /ˈmɔrɛ/ | sea | noun | n | |\n| хліб | /xlʲib/ | bread | noun | m | |\n| вода | /vɔˈdɑ/ | water | noun | f | |\n| молоко | /mɔlɔˈkɔ/ | milk | noun | n | |\n| чай | /t͡ʃɑj/ | tea | noun | m | |\n| сік | /sik/ | juice | noun | m | |\n| м'ясо | /ˈmjɑsɔ/ | meat | noun | n | |\n| риба | /ˈrɪbɑ/ | fish | noun | f | |\n| овочі | /ˈɔvɔt͡ʃi/ | vegetables | noun | pl | plural only |\n| фрукти | /ˈfruktɪ/ | fruits | noun | pl | plural only |\n| яблуко | /ˈjɑblukɔ/ | apple | noun | n | |\n| апельсин | /ɑpɛlʲˈsɪn/ | orange | noun | m | |\n| картопля | /kɑrˈtɔplʲɑ/ | potato | noun | f | |\n| помідор | /pɔmiˈdɔr/ | tomato | noun | m | |\n| огірок | /ɔˈɦirɔk/ | cucumber | noun | m | |\n| цибуля | /t͡sɪˈbulʲɑ/ | onion | noun | f | |\n| стілець | /ˈstilɛt͡sʲ/ | chair | noun | m | |\n| крісло | /ˈkrislɔ/ | armchair | noun | n | |\n| шафа | /ˈʃɑfɑ/ | wardrobe | noun | f | |\n| диван | /dɪˈvɑn/ | sofa | noun | m | |\n| ліжко | /ˈlʲiʒkɔ/ | bed | noun | n | |\n| підлога | /pidˈlɔɦɑ/ | floor | noun | f | |\n| стеля | /ˈstɛlʲɑ/ | ceiling | noun | f | |\n| стіна | /stiˈnɑ/ | wall | noun | f | |\n| магазин | /mɑɦɑˈzɪn/ | store | noun | m | |\n| школа | /ˈʃkɔlɑ/ | school | noun | f | |\n| університет | /unʲivɛrsɪˈtɛt/ | university | noun | m | |\n| земля | /zɛmˈlʲɑ/ | earth | noun | f | |\n| ніч | /nit͡ʃ/ | night | noun | f | Family 3 |\n| любов | /lʲuˈbɔw/ | love | noun | f | Family 3 |\n| ім'я | /ˈimjɑ/ | name | noun | n | Family 4 |\n| мама | /ˈmɑmɑ/ | mom | noun | f | |\n| теля | /tɛˈlʲɑ/ | calf | noun | n | Family 4 |\n| Марко | /ˈmɑrkɔ/ | Marko | name | m | male name |\n| Таня | /ˈtɑnʲɑ/ | Tanya | name | f | female name |\n| Марія | /mɑˈrijɑ/ | Maria | name | f | female name |\n| продавець | /prɔdɑˈvɛt͡sʲ/ | seller | noun | m | |"
       }
     ],
-    "rawMarkdown": "---\ntitle: The Gender Code\nsubtitle: It's About Sound, Not Biology\nphase: A1.1\ntransliteration: partial\npedagogy: PPP\nduration: 45\ntags: [grammar, nouns, gender]\nobjectives:\n  - Identify the gender of Ukrainian nouns by their ending\n  - Understand the 3 gender categories: Masculine, Feminine, Neuter\n  - Recognize basic gender exceptions (Family relations)\n  - Classify common objects and food items by gender\ngrammar:\n  - Nouns: Gender (M/F/N Introduction)\n  - Nouns: Basic Declension Groups (Concept)\n  - Pronouns: Personal (Vin/Vona/Vono)\naudio: false\n---\n\n# The Gender Code\n\n> **Note:** Welcome to the most important concept in Ukrainian grammar. Every noun has a \"gender\". This isn't about biology; it's about **sound**. Words have a musical \"family\" they belong to, and this determines how they dance (change) in a sentence.\n\n## Warm-up: The Three Boxes\nImagine three boxes on a table. Every object in the universe fits into one of them.\n1. **Він (He):** Masculine\n2. **Вона (She):** Feminine\n3. **Воно (It):** Neuter\n\nIn English, \"Table\" is \"It\". In Ukrainian, **Стіл** (Table) is \"He\". **Книга** (Book) is \"She\". **Вікно** (Window) is \"It\".\nWhy? Look at the **end** of the word.\n\n## Presentation: The 4 Families (Declensions)\n\n> [!tip] 💡 **Thinking Trick:** Don't ask \"Is a table male?\" Ask \"Does the word end in a consonant?\" If yes, it's usually Masculine.\n\n### 1. Masculine (The Consonants)\nIf a word ends in a **Consonant** (Hard or Soft), it is likely Masculine.\n- **Стіл** (Table) - Ends in L. Masculine.\n- **Банк** (Bank) - Ends in K. Masculine.\n- **Чай** (Tea) - Ends in Y. Masculine.\n\n### 2. Feminine (The A-Team)\nIf a word ends in **-А** or **-Я**, it is likely Feminine.\n- **Мама** (Mom) - Ends in A. Feminine.\n- **Книга** (Book) - Ends in A. Feminine.\n- **Земля** (Earth) - Ends in Ya. Feminine.\n\n### 3. Neuter (The O-E Circles)\nIf a word ends in **-О** or **-Е**, it is Neuter.\n- **Вікно** (Window) - Ends in O. Neuter.\n- **Море** (Sea) - Ends in E. Neuter.\n- **Місто** (City) - Ends in O. Neuter.\n\n### 4. The 4 Declension Families (Advanced Theory)\nTo speak perfect Ukrainian, we group these genders into \"Families\" (Declensions) based on how they change.\n\n| Family | Description | Examples |\n| --- | --- | --- |\n| **Family 1** | **Feminine** ending in -А/-Я | Жінка, Земля |\n| **Family 2** | **Masculine** (Consonant) + **Neuter** (-О/-Е) | Стіл, Вікно |\n| **Family 3** | **Feminine** ending in Consonant/Soft Sign | Ніч, Сіль |\n| **Family 4** | **Neuter** ending in -А/-Я (Baby words) | Ім'я, Цуценя |\n\n> [!warning] **The Trap:** A word ending in **-А** is usually Feminine (Family 1). But **Тато** (Dad) ends in -O, so he is Family 2 (grammatically acting like a noun in -O, though biologically male). Wait, actually **Тато** usually acts like Family 1 in endings! Correction: **Тато** (Dad) is Family 1 because it ends in -a/-o but declines like Mama. **Дядько** (Uncle) is Family 2.\n> *Simplication for A1:* Just look at the ending for now!\n\n## Cultural Insight: The Soul of Words 🇺🇦\n\n> 💡 **Did You Know?**\n>\n> In Ukrainian folklore, the **Moon** (Місяць) is Masculine (\"He\"), and the **Star** (Зірка) is Feminine (\"She\"). In poetry, they are often lovers.\n> In German, Moon is Masculine and Sun is Feminine. In French, Moon is Feminine and Sun is Masculine.\n> Ukrainian sees the **Sun** (Сонце) as Neuter (\"It\" - a celestial force)!\n\n## Story Time: The Room (Practice) 📖\n*Let's label the world around us. Look at the endings!*\n\nЦе **кімната** (fem). Тут є **стіл** (masc) і **крісло** (neut).\nНа столі є **книга** (fem). Це цікава книга.\nТам є **вікно** (neut). Через вікно я бачу **місто** (neut).\nЦе мій **дім** (masc).\n\n**Analysis:**\n- **Кімнат-а** (ends in A -> She)\n- **Стіл-ø** (ends in consonant -> He)\n- **Крісл-о** (ends in O -> It)\n- **Міст-о** (ends in O -> It)\n\n> [!tip] 🌟 **Pro Tip:** When you learn a new noun, visualize it wearing a tie (Masc), a dress (Fem), or a hat (Neuter). Visual memory is powerful!\n\n# Summary\n- **Masculine:** Ends in Consonant (Стіл).\n- **Feminine:** Ends in -А / -Я (Мама).\n- **Neuter:** Ends in -О / -Е (Вікно).\n- **Exceptions:** Words like *Тато* (Dad) are Masculine but act like Family 1. Words like *Ніч* (Night) are Feminine (Family 3).\n\n---\n\n# Activities\n\n## group-sort: Gender Sorting\n> Drag the words into the correct gender box.\n\n| Masculine (Він) | Feminine (Вона) | Neuter (Воно) |\n| --- | --- | --- |\n| **Стіл** | **Книга** | **Вікно** |\n| **Дім** | **Кімната** | **Море** |\n| **Чай** | **Вода** | **Місто** |\n| **Сік** | **Земля** | **Яблуко** |\n| **Телефон** | **Мама** | **М'ясо** |\n| **Магазин** | **Америка** | **Сонце** |\n| **Борщ** | **Піца** | **Дерево** |\n| **-** | **-** | **-** |\n| **Кіт** | **Хата** | **Поле** |\n| **-** | **-** | **-** |\n| **-** | **-** | **-** |\n| **-** | **-** | **-** |\n\n## quiz: Predict the Gender\n> Look at the ending and guess the gender.\n\n1. **Молоко** (Milk)\n   - [x] Neuter (Воно)\n   - [ ] Masculine (Він)\n   - [ ] Feminine (Вона)\n   > Ends in -O.\n\n2. **Телефон** (Phone)\n   - [x] Masculine (Він)\n   - [ ] Neuter (Воно)\n   - [ ] Feminine (Вона)\n   > Ends in Consonant (N).\n\n3. **Кава** (Coffee)\n   - [x] Feminine (Вона)\n   - [ ] Masculine (Він)\n   - [ ] Neuter (Воно)\n   > Ends in -A.\n\n4. **Ніч** (Night) - *Tricky!*\n   - [x] Feminine (Вона)\n   - [ ] Masculine (Він)\n   - [ ] Neuter (Воно)\n   > Exception! Ends in a soft consonant, but it is Feminine (Family 3).\n\n5. **Офіс** (Office)\n   - [x] Masculine (Він)\n   - [ ] Feminine (Вона)\n   - [ ] Neuter (Воно)\n   > Consonant ending.\n\n6. **М'ясо** (Meat)\n   - [x] Neuter (Воно)\n   - [ ] Masculine (Він)\n   - [ ] Feminine (Вона)\n   > Ends in -O.\n\n7. **Риба** (Fish)\n   - [x] Feminine (Вона)\n   - [ ] Masculine (Він)\n   - [ ] Neuter (Воно)\n   > Ends in -A.\n\n8. **Інтернет** (Internet)\n   - [x] Masculine (Він)\n   - [ ] Neuter (Воно)\n   - [ ] Feminine (Вона)\n   > Consonant.\n\n9. **Дерево** (Tree)\n   - [x] Neuter (Воно)\n   - [ ] Masculine (Він)\n   - [ ] Feminine (Вона)\n   > Ends in -O.\n\n10. **Школа** (School)\n    - [x] Feminine (Вона)\n    - [ ] Masculine (Він)\n    - [ ] Neuter (Воно)\n    > Ends in -A.\n\n11. **Студент** (Student)\n    - [x] Masculine (Він)\n    - [ ] Feminine (Вона)\n    - [ ] Neuter (Воно)\n    > Consonant.\n\n12. **Студентка** (Student F)\n    - [x] Feminine (Вона)\n    - [ ] Masculine (Він)\n    - [ ] Neuter (Воно)\n    > Ends in -A.\n\n## match-up: Word to Gender\n> Connect the word to its gender pronoun.\n\n| Word | Pronoun |\n| --- | --- |\n| **Студент** | Він |\n| **Студентка** | Вона |\n| **Село** | Воно |\n| **Україна** | Вона |\n| **Київ** | Він |\n| **Крісло** | Воно |\n| **Сонце** | Воно |\n| **Стіна** | Вона |\n| **Підлога** | Вона |\n| **Диван** | Він |\n| **Стеля** | Вона |\n| **Шафа** | Вона |\n| **Студент** | Він |\n| **Кіт** | Він |\n| **Собака** | Він/Вона (Usually M) |\n| **Чай** | Він |\n\n## anagram: Build a Noun\n> Unscramble these nouns. (Spaces between letters!)\n\n1. в і к н о\n   > [!answer] вікно\n   > (Window)\n\n2. к н и г а\n   > [!answer] книга\n   > (Book)\n\n3. м і с т о\n   > [!answer] місто\n   > (City)\n\n4. д і м\n   > [!answer] дім\n   > (Home)\n\n5. с т і л\n   > [!answer] стіл\n   > (Table)\n\n6. т к і\n   > [!answer] кіт\n   > (Cat)\n\n7. в о д а\n   > [!answer] вода\n   > (Water)\n\n8. ч а й\n   > [!answer] чай\n   > (Tea)\n\n9. с і к\n   > [!answer] сік\n   > (Juice)\n\n10. с е л о\n    > [!answer] село\n    > (Village)\n\n11. р і ч к а\n    > [!answer] річка\n    > (River)\n\n12. х л і б\n    > [!answer] хліб\n    > (Bread)\n\n## fill-in: Ending Detective\n> Choose the correct ending for the gender.\n\n1. Мам___ (Feminine)\n   > [!answer] а\n   > [!options] а | о | у | е\n\n2. Тат___ (Masculine...ish)\n   > [!answer] о\n   > [!options] о | е | и | і\n\n3. Мор___ (Neuter)\n   > [!answer] е\n   > [!options] е | а | и | у\n\n4. Яблук___ (Neuter)\n   > [!answer] о\n   > [!options] о | а | и | у\n\n5. Книг___ (Feminine)\n   > [!answer] а\n   > [!options] а | о | у | е\n\n6. Вікн___ (Neuter)\n   > [!answer] о\n   > [!options] о | а | и | е\n\n7. Вод___ (Feminine)\n   > [!answer] а\n   > [!options] а | о | у | і\n\n8. Сі___ (Masculine / Juice)\n   > [!answer] к\n   > [!options] к | а | о | е\n\n9. Дім___ (Masculine / Home)\n   > [!answer] -\n   > [!options] - | а | о | е\n\n10. Сті___ (Masculine / Table)\n    > [!answer] л\n    > [!options] л | а | о | е\n\n11. Сел___ (Neuter / Village)\n    > [!answer] о\n    > [!options] о | а | и | е\n\n12. Річк___ (Feminine / River)\n    > [!answer] а\n    > [!options] а | о | у | і\n\n## true-false: Gender Rules\n> Decide if the statement is True or False.\n\n- [x] Words ending in -А are usually Feminine.\n  > True!\n\n- [ ] Words ending in -О are usually Masculine.\n  > False! They are Neuter.\n\n- [x] **Тато** (Dad) is biologically Masculine.\n  > True! Even if he ends in -o/a.\n\n- [ ] **Стіл** (Table) is Neuter because it is an object.\n  > False! Grammatically, Стіл is Masculine (\"He\").\n\n- [ ] Consonants endings are usually Feminine.\n  > False! They are Masculine.\n\n- [x] **Вікно** is Neuter.\n  > True!\n\n- [ ] **Дім** (Home) is Feminine.\n  > False! It ends in M. Masculine.\n\n- [x] **Мама** is Feminine.\n  > True! Ends in A.\n\n- [ ] **Чай** is Neuter.\n  > False! It ends in \"Y\" (Consonant sound). Masculine.\n\n- [x] **Море** is Neuter.\n  > True! Ends in E.\n\n- [ ] **Село** is Feminine.\n  > False! Ends in O. Neuter.\n\n- [x] **Річка** is Feminine.\n  > True! Ends in A.\n\n## group-sort: Living vs Non-Living\n> Just for fun, sort these. (Note: Gender applies to both!)\n\n| Living (People/Animals) | Non-Living (Objects) |\n| --- | --- |\n| **Тато** | **Стіл** |\n| **Мама** | **Вікно** |\n| **Жінка** | **Книга** |\n| **Кіт** | **Місто** |\n| **Студент** | **Чай** |\n| **Студентка** | **Дім** |\n| **Лікар** | **Море** |\n| **Я** | **Телефон** |\n| **Ти** | **Інтернет** |\n| **Ми** | **Ліжко** |\n| **Ви** | **Стілець** |\n| **Вони** | **Шафа** |\n\n## match-up: Noun to Pronoun\n> Start to replace nouns with \"He/She/It\".\n\n| Noun | Pronoun |\n| --- | --- |\n| **Стіл** | Він |\n| **Мама** | Вона |\n| **Вікно** | Воно |\n| **Кіт** | Він |\n| **Книга** | Вона |\n| **Море** | Воно |\n| **Чай** | Він |\n| **Кава** | Вона |\n| **Яблуко** | Воно |\n| **Телефон** | Він |\n| **Земля** | Вона |\n| **Місто** | Воно |\n| **Мама** | **Вікно** |\n| **Жінка** | **Книга** |\n| **Кіт** | **Місто** |\n\n## quiz: The Odd One Out\n> Which word has a DIFFERENT gender?\n\n1. Group 1\n   - [x] **Книга** (Fem)\n   - [ ] **Стіл** (Masc)\n   - [ ] **Дім** (Masc)\n   - [ ] **Банк** (Masc)\n\n2. Group 2\n   - [x] **Вікно** (Neut)\n   - [ ] **Мама** (Fem)\n   - [ ] **Кава** (Fem)\n   - [ ] **Земля** (Fem)\n\n3. Group 3 (\"H\" words)\n   - [x] **Г** (H)\n   - [ ] **Х** (Kh)\n   - [ ] **Ч** (Ch)\n   - [ ] **Ш** (Sh)\n   > H sound.\n\n4. Group 4 (Ending -A)\n   - [x] **Телефон** (Masc)\n   - [ ] **Мама** (Fem)\n   - [ ] **Книга** (Fem)\n   - [ ] **Вода** (Fem)\n   > Consonant end.\n\n5. Group 5 (Ending -O)\n   - [x] **Стіл** (Masc)\n   - [ ] **Вікно** (Neut)\n   - [ ] **Місто** (Neut)\n   - [ ] **Яблуко** (Neut)\n   > Consonant end.\n\n6. Group 6 (Liquids)\n   - [x] **Яблуко** (Solid)\n   - [ ] **Вода** (Liquid)\n   - [ ] **Чай** (Liquid)\n   - [ ] **Молоко** (Liquid)\n   > Fruit.\n\n7. Group 7 (People)\n   - [x] **Кіт** (Animal)\n   - [ ] **Студент** (Person)\n   - [ ] **Мама** (Person)\n   - [ ] **Тато** (Person)\n   > Cat.\n\n8. Group 8 (Furniture)\n   - [x] **Студент** (Person)\n   - [ ] **Стіл** (Furniture)\n   - [ ] **Крісло** (Furniture)\n   - [ ] **Ліжко** (Furniture)\n   > Person.\n\n9. Group 9 (City)\n   - [x] **Село** (Village)\n   - [ ] **Метро** (City)\n   - [ ] **Таксі** (City)\n   - [ ] **Кафе** (City)\n   > Rural.\n\n10. Group 10 (Food)\n    - [x] **Стілець** (Furniture)\n    - [ ] **Борщ** (Food)\n    - [ ] **Піца** (Food)\n    - [ ] **Суп** (Food)\n    > Can't eat it.\n\n11. Group 11 (Drinks)\n    - [x] **Хліб** (Solid)\n    - [ ] **Чай** (Drink)\n    - [ ] **Кава** (Drink)\n    - [ ] **Сік** (Drink)\n    > Bread.\n\n12. Group 12 (Soft Sign)\n    - [x] **Кіт** (Hard)\n    - [ ] **Сіль** (Soft)\n    - [ ] **День** (Soft)\n    - [ ] **Тінь** (Soft)\n    > No soft sign.\n\n---\n\n# Vocabulary\n\n| Ukrainian | English | Pronunciation (IPA) | Notes |\n| --- | --- | --- | --- |\n| **стіл** | table | /st⁽ʲ⁾il/ | |\n| **книга** | book | /ˈknɪ.ɦɑ/ | |\n| **вікно** | window | /v⁽ʲ⁾ikˈnɔ/ | |\n| **двері** | door | /ˈdvɛ.r⁽ʲ⁾i/ | Plural only |\n| **кімната** | room | /kimˈnɑ.tɑ/ | |\n| **дім** | home/house | /d⁽ʲ⁾im/ | |\n| **місто** | city | /ˈm⁽ʲ⁾is.tɔ/ | |\n| **село** | village | /seˈlɔ/ | |\n| **річка** | river | /ˈr⁽ʲ⁾it͡ʃ.kɑ/ | |\n| **море** | sea | /ˈmɔ.rɛ/ | |\n| **хліб** | bread | /xl⁽ʲ⁾ib/ | |\n| **вода** | water | /vɔˈdɑ/ | |\n| **молоко** | milk | /mɔ.lɔˈkɔ/ | |\n| **чай** | tea | /t͡ʃɑj/ | |\n| **сік** | juice | /s⁽ʲ⁾ik/ | |\n| **м'ясо** | meat | /ˈmjɑ.sɔ/ | |\n| **риба** | fish | /ˈrɪ.bɑ/ | |\n| **овочі** | vegetables | /ˈɔ.vɔ.t͡ʃi/ | |\n| **фрукти** | fruits | /ˈfruk.tɪ/ | |\n| **яблуко** | apple | /ˈjɑ.blu.kɔ/ | |\n| **апельсин** | orange | /ɑ.pelʲˈsɪn/ | |\n| **картопля** | potato | /kɑrˈtɔ.plʲɑ/ | |\n| **помідор** | tomato | /pɔ.m⁽ʲ⁾iˈdɔr/ | |\n| **огірок** | cucumber | /ɔ.ɦiˈrɔk/ | |\n| **цибуля** | onion | /t͡sɪˈbu.lʲɑ/ | |\n| **стілець** | chair | /s⁽ʲ⁾t⁽ʲ⁾iˈlɛt͡sʲ/ | |\n| **крісло** | armchair | /ˈkr⁽ʲ⁾is.lɔ/ | |\n| **шафа** | wardrobe | /ˈʃɑ.fɑ/ | |\n| **диван** | sofa | /dɪˈvɑn/ | |\n| **ліжко** | bed | /ˈl⁽ʲ⁾iʒ.kɔ/ | |\n| **підлога** | floor | /pidˈlɔ.ɦɑ/ | |\n| **стеля** | ceiling | /ˈstɛ.lʲɑ/ | |\n| **стіна** | wall | /s⁽ʲ⁾t⁽ʲ⁾iˈnɑ/ | |\n| **магазин** | shop | /mɑ.ɦɑˈzɪn/ | |\n| **школа** | school | /ˈʃkɔ.lɑ/ | |\n| **університет** | university | /u.n⁽ʲ⁾i.vɛr.sɪˈtɛt/ | |\n",
-    "createdAt": "2025-12-12T19:55:32.032Z",
-    "modifiedAt": "2025-12-12T19:55:32.032Z",
+    "rawMarkdown": "---\nmodule: a1-03\ntitle: \"The Gender Code\"\nsubtitle: \"Unlocking Ukrainian Gender Patterns\"\nversion: \"1.0\"\nphase: \"A1.1\"\npedagogy: \"PPP\"\nduration: 60\ntransliteration: \"full\"\ntags: [\"grammar\", \"gender\", \"declension\", \"noun-patterns\"]\ngrammar: [\"noun-gender-m-f-n\", \"declension-families-4\"]\nobjectives:\n  - \"Learner can identify the gender of Ukrainian nouns by their ending\"\n  - \"Learner can categorize nouns into the 4 declension families\"\n  - \"Learner can recognize gender patterns: consonant (m), -а/-я (f), -о/-е (n)\"\nvocabulary_count: 36\n---\n\n# The Gender Code\n\n## Warm-up\n\nHave you ever wondered why some languages assign gender to objects? In Ukrainian, **every noun has a gender** — masculine, feminine, or neuter. But it's not random! Ukrainian gives you **visible clues** right in the word's ending.\n\nThink of it like a secret code: the last letter reveals the gender. And once you crack the code, you'll never forget it.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian noun gender is more predictable than German or French! In Ukrainian, **95% of the time**, you can guess the gender just by looking at the ending. No memorization needed — just pattern recognition.\n\nLet's start with a game. Look at these three words:\n\n- **Стіл** (stil) — table\n- **Книга** (knyha) — book\n- **Вікно** (vikno) — window\n\nOne ends in a consonant. One ends in **-а**. One ends in **-о**. Can you guess which is masculine, feminine, and neuter?\n\n> [!answer]\n> Стіл (consonant) = masculine. Книга (-а) = feminine. Вікно (-о) = neuter.\n\nCongratulations — you've just learned the **Ukrainian Gender Code**!\n\n## Presentation\n\n### The Three Genders\n\nUkrainian nouns fall into three gender categories, and each has a signature ending:\n\n| Gender | Ending Pattern | Examples |\n|--------|---------------|----------|\n| **Masculine** (чоловічий рід) | Consonant (б, т, л, н, р...) | стіл (table), хліб (bread), дім (house) |\n| **Feminine** (жіночий рід) | **-а** or **-я** | книга (book), кімната (room), земля (earth) |\n| **Neuter** (середній рід) | **-о** or **-е** | вікно (window), місто (city), море (sea) |\n\nThis is your **foundational pattern**. Memorize it once, and you'll recognize thousands of words.\n\n> 🎬 **Pop Culture Moment: S.T.A.L.K.E.R.**\n>\n> In the iconic Ukrainian game *S.T.A.L.K.E.R.*, you explore locations like **Прип'ять** (Prypiat — feminine, ends in soft sign), **місто** (city — neuter, ends in -о), and **будинок** (building — masculine, consonant ending). Even in post-apocalyptic Ukraine, grammar survives!\n\n### Why Gender Matters\n\nYou might think: \"Why do I need to know if a table is masculine?\"\n\nBecause in Ukrainian, **gender affects everything**:\n- Adjectives change endings to match: **новий стіл** (new table, m) vs **нова книга** (new book, f)\n- Pronouns refer back by gender: **він** (he/it, for masculine nouns), **вона** (she/it, feminine), **воно** (it, neuter)\n- Case endings (accusative, locative, etc.) depend on gender\n\n**Gender is the foundation of Ukrainian grammar.** Get it right now, and the rest will flow naturally.\n\n### Mini-Dialogue: At Home\n\n**Марко:** Де моя **книга**? (Where is my book?)\n**Таня:** Твоя **книга** на **столі**. (Your book is on the table.)\n**Марко:** А де **вікно**? (And where is the window?)\n**Таня:** **Вікно** там. (The window is there.)\n\nNotice:\n- **книга** (book, feminine) — ends in **-а**\n- **стіл** (table, masculine) — ends in consonant **-л**\n- **вікно** (window, neuter) — ends in **-о**\n\nEvery noun in this dialogue follows the pattern.\n\n> 🌍 **Real World: Ukrainian Home Vocabulary**\n>\n> When Ukrainians describe their home, they naturally use all three genders:\n> - **Кімната** (room — f), **підлога** (floor — f), **стеля** (ceiling — f)\n> - **Стіл** (table — m), **стілець** (chair — m), **диван** (sofa — m)\n> - **Вікно** (window — n), **ліжко** (bed — n), **крісло** (armchair — n)\n>\n> Practice these words, and you'll describe any Ukrainian apartment!\n\n## Practice\n\n### The 4 Declension Families (Відміни)\n\nNow here's where it gets smart. Ukrainian doesn't just have 3 genders — it organizes nouns into **4 declension families** based on how they change in different cases (accusative, locative, etc.).\n\nYou don't need to memorize case endings yet. But recognizing the **family pattern** now will save you months of confusion later.\n\n| Family | Definition | Examples |\n|--------|------------|----------|\n| **Family 1** | Nouns ending in **-а** or **-я** (mostly feminine) | мама (mom), земля (earth), кімната (room) |\n| **Family 2** | Masculine consonant endings + Neuter **-о/-е** | стіл (m), вікно (n), море (n) |\n| **Family 3** | Feminine nouns ending in **consonant** (rare but important) | ніч (night), любов (love) |\n| **Family 4** | Neuter nouns ending in **-а/-я** with stem changes **-ат-/-ят-/-ен-** | ім'я (name → імені), теля (calf → теляти) |\n\n**Key Insight:** Family 1 and Family 2 cover **90% of Ukrainian nouns**. Family 3 and Family 4 are smaller but essential for advanced fluency.\n\nFor now, focus on recognizing the **ending pattern**. Later modules will teach how each family changes in different cases.\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"All feminine nouns end in -а or -я.\"\n> **Fact:** Most do (Family 1), but Family 3 feminines end in **consonants** like **ніч** (night) and **любов** (love). These are essential words — don't skip them!\n\n### Common Patterns to Memorize\n\n**Masculine (-consonant):**\n- Food: хліб (bread), сир (cheese), сік (juice)\n- Places: дім (house), магазин (store), університет (university)\n- Furniture: стіл (table), стілець (chair), диван (sofa)\n\n**Feminine (-а/-я):**\n- Rooms: кімната (room), школа (school)\n- Food: вода (water), картопля (potato), цибуля (onion)\n- Furniture: шафа (wardrobe)\n\n**Neuter (-о/-е):**\n- Places: місто (city), село (village), море (sea)\n- Objects: вікно (window), яблуко (apple), м'ясо (meat)\n- Furniture: ліжко (bed), крісло (armchair)\n\n### Mini-Dialogue: At the Market\n\n**Марія:** Хліб, молоко і вода, будь ласка.\n**Продавець:** Яблуко теж?\n**Марія:** Так, картопля і апельсин.\n\nSee how gender flows naturally in conversation? You're not translating — you're **thinking in Ukrainian patterns**.\n\n> 🎯 **Pro Tip: The -о/-е Neuter Trick**\n>\n> Almost **all food words ending in -о or -е are neuter**: молоко (milk), яйце (egg), яблуко (apple), м'ясо (meat), вино (wine).\n>\n> Exception: Овочі (vegetables, plural only), фрукти (fruits, plural only).\n\n## Production\n\nNow it's your turn! Practice identifying gender and families.\n\n**Task 1:** Read these words aloud and identify their gender:\n1. Двері (door) — ?\n2. Річка (river) — ?\n3. Море (sea) — ?\n4. Хліб (bread) — ?\n\n> [!answer]\n> 1. Двері — plural only (no gender)\n> 2. Річка — feminine (-а)\n> 3. Море — neuter (-е)\n> 4. Хліб — masculine (consonant)\n\n**Task 2:** Sort these words into declension families:\n- Стіна, вікно, підлога, стіл, крісло, шафа\n\n> [!answer]\n> Family 1: стіна, підлога, шафа.\n>\n> Family 2: стіл, вікно, крісло.\n\nExcellent! You've just analyzed 6 nouns like a linguist.\n\n## Cultural Insight\n\n### Why Ukrainian Gender Patterns Are Elegant\n\nUnlike English (which mostly lost grammatical gender), Ukrainian preserves a **transparent gender system**. You don't need to memorize arbitrary labels — the word itself tells you.\n\nCompare:\n- **German:** *der Tisch* (m), *die Tür* (f), *das Fenster* (n) — you must memorize articles.\n- **Ukrainian:** стіл (ends in consonant = m), двері (plural only), вікно (ends in -о = n) — the ending IS the clue!\n\nThis pattern consistency makes Ukrainian **easier to learn** than languages with hidden gender markers.\n\n> 🎭 **Folklore Corner: Gendered Personification**\n>\n> In Ukrainian folk songs and poetry, **nature is personified by gender**:\n> - **Земля** (earth — feminine) is often called \"mother\" (Земля-матінка).\n> - **Місяць** (moon — masculine) is portrayed as a protector or wanderer.\n> - **Сонце** (sun — neuter) represents life and warmth without gender.\n>\n> Gender isn't just grammar — it shapes how Ukrainians see the world!\n\n---\n\n# Summary\n\n**You've unlocked the Ukrainian Gender Code!**\n\n**Three Genders:**\n- Masculine: consonant ending (стіл, хліб, дім)\n- Feminine: -а/-я (книга, кімната, земля)\n- Neuter: -о/-е (вікно, місто, море)\n\n**Four Declension Families:**\n1. -а/-я feminines (мама, земля)\n2. Consonant masculines + -о/-е neuters (стіл, вікно)\n3. Soft -ь feminines (ніч, любов)\n4. -а neuters with stem changes (ім'я, теля)\n\n**Why It Matters:**\nGender affects adjectives, pronouns, and case endings. Master gender now, and everything else becomes easier.\n\n**Next Module:** You'll learn how to say \"This is...\" and use pronouns — building on the gender foundation you just mastered.\n\n---\n\n# Activities\n\n## quiz: Gender Recognition\n\n1. What gender is the noun \"книга\"?\n   - [ ] Masculine\n   - [x] Feminine\n   - [ ] Neuter\n   - [ ] Plural only\n   > Nouns ending in -а are typically feminine.\n\n2. What gender is \"вікно\"?\n   - [ ] Masculine\n   - [x] Neuter\n   - [ ] Feminine\n   - [ ] No gender\n   > Nouns ending in -о are neuter.\n\n3. What gender is \"стіл\"?\n   - [x] Masculine\n   - [ ] Feminine\n   - [ ] Neuter\n   - [ ] Unknown\n   > Nouns ending in a consonant are typically masculine.\n\n4. Which family does \"ніч\" belong to?\n   - [ ] Family 1\n   - [ ] Family 2\n   - [x] Family 3\n   - [ ] Family 4\n   > Feminine nouns ending in consonants are Family 3.\n\n5. Which ending is typical for neuter nouns?\n   - [ ] -а\n   - [ ] consonant\n   - [x] -о or -е\n   - [ ] -і\n   > Neuter nouns end in -о or -е.\n\n6. How many declension families exist in Ukrainian?\n   - [ ] 2\n   - [ ] 3\n   - [x] 4\n   - [ ] 5\n   > There are 4 declension families.\n\n7. What gender is \"море\"?\n   - [ ] Masculine\n   - [ ] Feminine\n   - [x] Neuter\n   - [ ] Plural\n   > \"Море\" ends in -е, so it's neuter.\n\n8. Which noun is masculine?\n   - [x] хліб\n   - [ ] вода\n   - [ ] вікно\n   - [ ] кімната\n   > \"Хліб\" ends in a consonant, so it's masculine.\n\n9. Which noun is feminine?\n   - [ ] стіл\n   - [x] школа\n   - [ ] місто\n   - [ ] море\n   > \"Школа\" ends in -а, so it's feminine.\n\n10. Can you predict gender from the ending 95% of the time?\n    - [x] Yes\n    - [ ] No\n    - [ ] Only for feminines\n    - [ ] Only for neuters\n    > Ukrainian gender is highly predictable from endings!\n\n11. What is Family 4 known for?\n    - [ ] Consonant endings\n    - [ ] -а/-я feminines\n    - [x] Neuter nouns with stem changes\n    - [ ] Plural forms\n    > Family 4 neuters gain suffixes like -ат-, -ят-, -ен-.\n\n12. Which word is neuter?\n    - [ ] дім\n    - [ ] кімната\n    - [x] яблуко\n    - [ ] магазин\n    > \"Яблуко\" ends in -о, so it's neuter.\n\n## match-up: Gender Pairs\n\n| Ukrainian | English |\n|-----------|---------|\n| стіл | table |\n| книга | book |\n| вікно | window |\n| двері | door |\n| кімната | room |\n| дім | house |\n| місто | city |\n| хліб | bread |\n| вода | water |\n| молоко | milk |\n| яблуко | apple |\n| стілець | chair |\n\n## group-sort: Sort by Gender\n\n### Masculine\n- стіл\n- хліб\n- дім\n- стілець\n- диван\n- магазин\n- апельсин\n- помідор\n- огірок\n\n### Feminine\n- книга\n- кімната\n- вода\n- картопля\n- цибуля\n- шафа\n- стіна\n- підлога\n- стеля\n- школа\n- річка\n\n### Neuter\n- вікно\n- місто\n- село\n- море\n- молоко\n- м'ясо\n- яблуко\n- крісло\n- ліжко\n\n## fill-in: Complete with Gender\n\n1. ___ є masculine noun.\n   > [!answer] Стіл\n   > [!options] Стіл | Книга | Вікно | Кімната\n\n2. ___ ends in -а, so it's feminine.\n   > [!answer] Кімната\n   > [!options] Кімната | Стіл | Вікно | Море\n\n3. ___ is a neuter noun ending in -о.\n   > [!answer] Вікно\n   > [!options] Вікно | Стіл | Книга | Двері\n\n4. ___ is masculine because it ends in a consonant.\n   > [!answer] Хліб\n   > [!options] Хліб | Вода | Молоко | Школа\n\n5. ___ is feminine and ends in -я.\n   > [!answer] Земля\n   > [!options] Земля | Море | Дім | Стіл\n\n6. ___ is neuter and means \"sea\".\n   > [!answer] Море\n   > [!options] Море | Річка | Вода | Дім\n\n7. ___ is masculine and means \"house\".\n   > [!answer] Дім\n   > [!options] Дім | Кімната | Вікно | Вода\n\n8. ___ is feminine and means \"water\".\n   > [!answer] Вода\n   > [!options] Вода | Молоко | Сік | Чай\n\n9. ___ is neuter and means \"milk\".\n   > [!answer] Молоко\n   > [!options] Молоко | Вода | Сік | Чай\n\n10. ___ is masculine and means \"juice\".\n    > [!answer] Сік\n    > [!options] Сік | Вода | Молоко | Вино\n\n11. ___ is neuter and means \"apple\".\n    > [!answer] Яблуко\n    > [!options] Яблуко | Апельсин | Картопля | Помідор\n\n12. ___ is feminine and means \"potato\".\n    > [!answer] Картопля\n    > [!options] Картопля | Апельсин | Огірок | Яблуко\n\n## true-false: Gender Rules\n\n- [x] Masculine nouns typically end in a consonant.\n  > Correct! Examples: стіл, хліб, дім.\n\n- [x] Feminine nouns typically end in -а or -я.\n  > Correct! Examples: книга, земля, кімната.\n\n- [x] Neuter nouns typically end in -о or -е.\n  > Correct! Examples: вікно, місто, море.\n\n- [ ] All feminine nouns end in -а or -я.\n  > Incorrect! Family 3 feminines end in consonants: ніч, любов.\n\n- [x] There are 4 declension families in Ukrainian.\n  > Correct! Families 1, 2, 3, and 4.\n\n- [ ] Gender is random in Ukrainian.\n  > Incorrect! Gender is predictable from word endings 95% of the time.\n\n- [x] Gender affects adjective endings.\n  > Correct! Adjectives must agree with noun gender.\n\n- [x] Gender affects case endings.\n  > Correct! Masculine, feminine, and neuter have different case patterns.\n\n- [ ] \"Двері\" has a gender.\n  > Incorrect! \"Двері\" is plural only and has no singular gender.\n\n- [x] Family 2 includes both masculine and neuter nouns.\n  > Correct! Masculine consonant endings + neuter -о/-е.\n\n- [ ] You must memorize gender for every noun.\n  > Incorrect! You can predict gender from the ending pattern.\n\n- [x] \"Ім'я\" is a special neuter noun (Family 4).\n  > Correct! It changes stem in declension: ім'я → імені.\n\n## anagram: Build the Word\n\n1. С Т І Л\n   > [!answer] стіл\n   > (table)\n\n2. К Н И Г А\n   > [!answer] книга\n   > (book)\n\n3. В І К Н О\n   > [!answer] вікно\n   > (window)\n\n4. Д В Е Р І\n   > [!answer] двері\n   > (door)\n\n5. К І М Н А Т А\n   > [!answer] кімната\n   > (room)\n\n6. Д І М\n   > [!answer] дім\n   > (house)\n\n7. М І С Т О\n   > [!answer] місто\n   > (city)\n\n8. С Е Л О\n   > [!answer] село\n   > (village)\n\n9. Р І Ч К А\n   > [!answer] річка\n   > (river)\n\n10. М О Р Е\n    > [!answer] море\n    > (sea)\n\n11. Х Л І Б\n    > [!answer] хліб\n    > (bread)\n\n12. В О Д А\n    > [!answer] вода\n    > (water)\n\n## anagram: More Words\n\n1. М О Л О К О\n   > [!answer] молоко\n   > (milk)\n\n2. Я Б Л У К О\n   > [!answer] яблуко\n   > (apple)\n\n3. М ' Я С О\n   > [!answer] м'ясо\n   > (meat)\n\n4. Р И Б А\n   > [!answer] риба\n   > (fish)\n\n5. О В О Ч І\n   > [!answer] овочі\n   > (vegetables)\n\n6. К А Р Т О П Л Я\n   > [!answer] картопля\n   > (potato)\n\n7. П О М І Д О Р\n   > [!answer] помідор\n   > (tomato)\n\n8. С Т І Л Е Ц Ь\n   > [!answer] стілець\n   > (chair)\n\n9. К Р І С Л О\n   > [!answer] крісло\n   > (armchair)\n\n10. Ш А Ф А\n    > [!answer] шафа\n    > (wardrobe)\n\n11. Д И В А Н\n    > [!answer] диван\n    > (sofa)\n\n12. Л І Ж К О\n    > [!answer] ліжко\n    > (bed)\n\n## unjumble: Build Sentences\n\n1. стіл / Це\n   > [!answer] Це стіл.\n   > (This is a table.)\n\n2. книга / Це\n   > [!answer] Це книга.\n   > (This is a book.)\n\n3. вікно / Це\n   > [!answer] Це вікно.\n   > (This is a window.)\n\n4. кімната / велика / Це\n   > [!answer] Це велика кімната.\n   > (This is a big room.)\n\n5. дім / новий / Це\n   > [!answer] Це новий дім.\n   > (This is a new house.)\n\n6. море / гарне / Це\n   > [!answer] Це гарне море.\n   > (This is a beautiful sea.)\n\n7. хліб / смачний / Це\n   > [!answer] Це смачний хліб.\n   > (This is tasty bread.)\n\n8. вода / холодна / Це\n   > [!answer] Це холодна вода.\n   > (This is cold water.)\n\n9. молоко / свіже / Це\n   > [!answer] Це свіже молоко.\n   > (This is fresh milk.)\n\n10. яблуко / червоне / Це\n    > [!answer] Це червоне яблуко.\n    > (This is a red apple.)\n\n11. стілець / зручний / Це\n    > [!answer] Це зручний стілець.\n    > (This is a comfortable chair.)\n\n12. шафа / велика / Це\n    > [!answer] Це велика шафа.\n    > (This is a big wardrobe.)\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| стіл | /stil/ | table | noun | m | |\n| книга | /ˈknɪɦɑ/ | book | noun | f | |\n| вікно | /wʲikˈnɔ/ | window | noun | n | |\n| двері | /ˈdwɛrʲi/ | door | noun | pl | plural only |\n| кімната | /ˈkimnɑtɑ/ | room | noun | f | |\n| дім | /dim/ | house | noun | m | |\n| місто | /ˈmistɔ/ | city | noun | n | |\n| село | /sɛˈlɔ/ | village | noun | n | |\n| річка | /ˈrit͡ʃkɑ/ | river | noun | f | |\n| море | /ˈmɔrɛ/ | sea | noun | n | |\n| хліб | /xlʲib/ | bread | noun | m | |\n| вода | /vɔˈdɑ/ | water | noun | f | |\n| молоко | /mɔlɔˈkɔ/ | milk | noun | n | |\n| чай | /t͡ʃɑj/ | tea | noun | m | |\n| сік | /sik/ | juice | noun | m | |\n| м'ясо | /ˈmjɑsɔ/ | meat | noun | n | |\n| риба | /ˈrɪbɑ/ | fish | noun | f | |\n| овочі | /ˈɔvɔt͡ʃi/ | vegetables | noun | pl | plural only |\n| фрукти | /ˈfruktɪ/ | fruits | noun | pl | plural only |\n| яблуко | /ˈjɑblukɔ/ | apple | noun | n | |\n| апельсин | /ɑpɛlʲˈsɪn/ | orange | noun | m | |\n| картопля | /kɑrˈtɔplʲɑ/ | potato | noun | f | |\n| помідор | /pɔmiˈdɔr/ | tomato | noun | m | |\n| огірок | /ɔˈɦirɔk/ | cucumber | noun | m | |\n| цибуля | /t͡sɪˈbulʲɑ/ | onion | noun | f | |\n| стілець | /ˈstilɛt͡sʲ/ | chair | noun | m | |\n| крісло | /ˈkrislɔ/ | armchair | noun | n | |\n| шафа | /ˈʃɑfɑ/ | wardrobe | noun | f | |\n| диван | /dɪˈvɑn/ | sofa | noun | m | |\n| ліжко | /ˈlʲiʒkɔ/ | bed | noun | n | |\n| підлога | /pidˈlɔɦɑ/ | floor | noun | f | |\n| стеля | /ˈstɛlʲɑ/ | ceiling | noun | f | |\n| стіна | /stiˈnɑ/ | wall | noun | f | |\n| магазин | /mɑɦɑˈzɪn/ | store | noun | m | |\n| школа | /ˈʃkɔlɑ/ | school | noun | f | |\n| університет | /unʲivɛrsɪˈtɛt/ | university | noun | m | |\n| земля | /zɛmˈlʲɑ/ | earth | noun | f | |\n| ніч | /nit͡ʃ/ | night | noun | f | Family 3 |\n| любов | /lʲuˈbɔw/ | love | noun | f | Family 3 |\n| ім'я | /ˈimjɑ/ | name | noun | n | Family 4 |\n| мама | /ˈmɑmɑ/ | mom | noun | f | |\n| теля | /tɛˈlʲɑ/ | calf | noun | n | Family 4 |\n| Марко | /ˈmɑrkɔ/ | Marko | name | m | male name |\n| Таня | /ˈtɑnʲɑ/ | Tanya | name | f | female name |\n| Марія | /mɑˈrijɑ/ | Maria | name | f | female name |\n| продавець | /prɔdɑˈvɛt͡sʲ/ | seller | noun | m | |\n",
+    "createdAt": "2025-12-13T22:17:26.993838Z",
+    "modifiedAt": "2025-12-13T22:17:26.993838Z",
     "version": 2
   },
-  "activities": [
-    {
-      "id": "act-a1-0-groupsort-0",
-      "type": "group-sort",
-      "title": "Gender Sorting",
-      "description": "Drag the words into the correct gender box.",
-      "content": {
-        "type": "group-sort",
-        "groups": [
-          {
-            "id": "masculine",
-            "name": "Masculine",
-            "items": [
-              "**Стіл**",
-              "**Дім**",
-              "**Чай**",
-              "**Сік**",
-              "**Телефон**",
-              "**Магазин**",
-              "**Борщ**",
-              "**-**",
-              "**Кіт**",
-              "**-**",
-              "**-**",
-              "**-**"
-            ],
-            "nameUk": "Він"
-          },
-          {
-            "id": "feminine",
-            "name": "Feminine",
-            "items": [
-              "**Книга**",
-              "**Кімната**",
-              "**Вода**",
-              "**Земля**",
-              "**Мама**",
-              "**Америка**",
-              "**Піца**",
-              "**-**",
-              "**Хата**",
-              "**-**",
-              "**-**",
-              "**-**"
-            ],
-            "nameUk": "Вона"
-          },
-          {
-            "id": "neuter",
-            "name": "Neuter",
-            "items": [
-              "**Вікно**",
-              "**Море**",
-              "**Місто**",
-              "**Яблуко**",
-              "**М'ясо**",
-              "**Сонце**",
-              "**Дерево**",
-              "**-**",
-              "**Поле**",
-              "**-**",
-              "**-**",
-              "**-**"
-            ],
-            "nameUk": "Воно"
-          }
-        ],
-        "shuffleItems": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.032Z",
-      "modifiedAt": "2025-12-12T19:55:32.032Z"
-    },
-    {
-      "id": "act-a1-0-quiz-0",
-      "type": "quiz",
-      "title": "Predict the Gender",
-      "description": "Look at the ending and guess the gender.",
-      "content": {
-        "type": "quiz",
-        "questions": [
-          {
-            "question": "**Молоко** (Milk)",
-            "options": [
-              "Neuter (Воно)",
-              "Masculine (Він)",
-              "Feminine (Вона)"
-            ],
-            "correctIndex": 0,
-            "explanation": "Ends in -O."
-          },
-          {
-            "question": "**Телефон** (Phone)",
-            "options": [
-              "Masculine (Він)",
-              "Neuter (Воно)",
-              "Feminine (Вона)"
-            ],
-            "correctIndex": 0,
-            "explanation": "Ends in Consonant (N)."
-          },
-          {
-            "question": "**Кава** (Coffee)",
-            "options": [
-              "Feminine (Вона)",
-              "Masculine (Він)",
-              "Neuter (Воно)"
-            ],
-            "correctIndex": 0,
-            "explanation": "Ends in -A."
-          },
-          {
-            "question": "**Ніч** (Night) - *Tricky!*",
-            "options": [
-              "Feminine (Вона)",
-              "Masculine (Він)",
-              "Neuter (Воно)"
-            ],
-            "correctIndex": 0,
-            "explanation": "Exception! Ends in a soft consonant, but it is Feminine (Family 3)."
-          },
-          {
-            "question": "**Офіс** (Office)",
-            "options": [
-              "Masculine (Він)",
-              "Feminine (Вона)",
-              "Neuter (Воно)"
-            ],
-            "correctIndex": 0,
-            "explanation": "Consonant ending."
-          },
-          {
-            "question": "**М'ясо** (Meat)",
-            "options": [
-              "Neuter (Воно)",
-              "Masculine (Він)",
-              "Feminine (Вона)"
-            ],
-            "correctIndex": 0,
-            "explanation": "Ends in -O."
-          },
-          {
-            "question": "**Риба** (Fish)",
-            "options": [
-              "Feminine (Вона)",
-              "Masculine (Він)",
-              "Neuter (Воно)"
-            ],
-            "correctIndex": 0,
-            "explanation": "Ends in -A."
-          },
-          {
-            "question": "**Інтернет** (Internet)",
-            "options": [
-              "Masculine (Він)",
-              "Neuter (Воно)",
-              "Feminine (Вона)"
-            ],
-            "correctIndex": 0,
-            "explanation": "Consonant."
-          },
-          {
-            "question": "**Дерево** (Tree)",
-            "options": [
-              "Neuter (Воно)",
-              "Masculine (Він)",
-              "Feminine (Вона)"
-            ],
-            "correctIndex": 0,
-            "explanation": "Ends in -O."
-          },
-          {
-            "question": "**Школа** (School)",
-            "options": [
-              "Feminine (Вона)",
-              "Masculine (Він)",
-              "Neuter (Воно)"
-            ],
-            "correctIndex": 0,
-            "explanation": "Ends in -A."
-          },
-          {
-            "question": "**Студент** (Student)",
-            "options": [
-              "Masculine (Він)",
-              "Feminine (Вона)",
-              "Neuter (Воно)"
-            ],
-            "correctIndex": 0,
-            "explanation": "Consonant."
-          },
-          {
-            "question": "**Студентка** (Student F)",
-            "options": [
-              "Feminine (Вона)",
-              "Masculine (Він)",
-              "Neuter (Воно)"
-            ],
-            "correctIndex": 0,
-            "explanation": "Ends in -A."
-          }
-        ],
-        "shuffleQuestions": true,
-        "shuffleOptions": true,
-        "showCorrectAnswers": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.032Z",
-      "modifiedAt": "2025-12-12T19:55:32.032Z"
-    },
-    {
-      "id": "act-a1-0-matchup-0",
-      "type": "match-up",
-      "title": "Word to Gender",
-      "description": "Connect the word to its gender pronoun.",
-      "content": {
-        "type": "match-up",
-        "pairs": [
-          {
-            "left": "**Студент**",
-            "right": "Він"
-          },
-          {
-            "left": "**Студентка**",
-            "right": "Вона"
-          },
-          {
-            "left": "**Село**",
-            "right": "Воно"
-          },
-          {
-            "left": "**Україна**",
-            "right": "Вона"
-          },
-          {
-            "left": "**Київ**",
-            "right": "Він"
-          },
-          {
-            "left": "**Крісло**",
-            "right": "Воно"
-          },
-          {
-            "left": "**Сонце**",
-            "right": "Воно"
-          },
-          {
-            "left": "**Стіна**",
-            "right": "Вона"
-          },
-          {
-            "left": "**Підлога**",
-            "right": "Вона"
-          },
-          {
-            "left": "**Диван**",
-            "right": "Він"
-          },
-          {
-            "left": "**Стеля**",
-            "right": "Вона"
-          },
-          {
-            "left": "**Шафа**",
-            "right": "Вона"
-          },
-          {
-            "left": "**Студент**",
-            "right": "Він"
-          },
-          {
-            "left": "**Кіт**",
-            "right": "Він"
-          },
-          {
-            "left": "**Собака**",
-            "right": "Він/Вона (Usually M)"
-          },
-          {
-            "left": "**Чай**",
-            "right": "Він"
-          }
-        ],
-        "shuffleRight": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.032Z",
-      "modifiedAt": "2025-12-12T19:55:32.032Z"
-    },
-    {
-      "id": "act-a1-0-anagram-0",
-      "type": "anagram",
-      "title": "Build a Noun",
-      "description": "Unscramble these nouns. (Spaces between letters!)",
-      "content": {
-        "type": "anagram",
-        "isAnagram": true,
-        "items": [
-          {
-            "letters": [
-              "в",
-              "і",
-              "к",
-              "н",
-              "о"
-            ],
-            "answer": "вікно\n(Window)",
-            "translation": "Window"
-          },
-          {
-            "letters": [
-              "к",
-              "н",
-              "и",
-              "г",
-              "а"
-            ],
-            "answer": "книга\n(Book)",
-            "translation": "Book"
-          },
-          {
-            "letters": [
-              "м",
-              "і",
-              "с",
-              "т",
-              "о"
-            ],
-            "answer": "місто\n(City)",
-            "translation": "City"
-          },
-          {
-            "letters": [
-              "д",
-              "і",
-              "м"
-            ],
-            "answer": "дім\n(Home)",
-            "translation": "Home"
-          },
-          {
-            "letters": [
-              "с",
-              "т",
-              "і",
-              "л"
-            ],
-            "answer": "стіл\n(Table)",
-            "translation": "Table"
-          },
-          {
-            "letters": [
-              "т",
-              "к",
-              "і"
-            ],
-            "answer": "кіт\n(Cat)",
-            "translation": "Cat"
-          },
-          {
-            "letters": [
-              "в",
-              "о",
-              "д",
-              "а"
-            ],
-            "answer": "вода\n(Water)",
-            "translation": "Water"
-          },
-          {
-            "letters": [
-              "ч",
-              "а",
-              "й"
-            ],
-            "answer": "чай\n(Tea)",
-            "translation": "Tea"
-          },
-          {
-            "letters": [
-              "с",
-              "і",
-              "к"
-            ],
-            "answer": "сік\n(Juice)",
-            "translation": "Juice"
-          },
-          {
-            "letters": [
-              "с",
-              "е",
-              "л",
-              "о"
-            ],
-            "answer": "село\n(Village)",
-            "translation": "Village"
-          },
-          {
-            "letters": [
-              "р",
-              "і",
-              "ч",
-              "к",
-              "а"
-            ],
-            "answer": "річка\n(River)",
-            "translation": "River"
-          },
-          {
-            "letters": [
-              "х",
-              "л",
-              "і",
-              "б"
-            ],
-            "answer": "хліб\n(Bread)",
-            "translation": "Bread"
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.032Z",
-      "modifiedAt": "2025-12-12T19:55:32.032Z"
-    },
-    {
-      "id": "act-a1-0-fillblank-0",
-      "type": "fill-blank",
-      "title": "Ending Detective",
-      "description": "Choose the correct ending for the gender.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Мам___",
-            "answer": "а",
-            "options": [
-              "а",
-              "о",
-              "у",
-              "е"
-            ]
-          },
-          {
-            "prompt": "Тат___",
-            "answer": "о",
-            "options": [
-              "о",
-              "е",
-              "и",
-              "і"
-            ]
-          },
-          {
-            "prompt": "Мор___",
-            "answer": "е",
-            "options": [
-              "е",
-              "а",
-              "и",
-              "у"
-            ]
-          },
-          {
-            "prompt": "Яблук___",
-            "answer": "о",
-            "options": [
-              "о",
-              "а",
-              "и",
-              "у"
-            ]
-          },
-          {
-            "prompt": "Книг___",
-            "answer": "а",
-            "options": [
-              "а",
-              "о",
-              "у",
-              "е"
-            ]
-          },
-          {
-            "prompt": "Вікн___",
-            "answer": "о",
-            "options": [
-              "о",
-              "а",
-              "и",
-              "е"
-            ]
-          },
-          {
-            "prompt": "Вод___",
-            "answer": "а",
-            "options": [
-              "а",
-              "о",
-              "у",
-              "і"
-            ]
-          },
-          {
-            "prompt": "Сі___",
-            "answer": "к",
-            "options": [
-              "к",
-              "а",
-              "о",
-              "е"
-            ]
-          },
-          {
-            "prompt": "Дім___",
-            "answer": "-",
-            "options": [
-              "-",
-              "а",
-              "о",
-              "е"
-            ]
-          },
-          {
-            "prompt": "Сті___",
-            "answer": "л",
-            "options": [
-              "л",
-              "а",
-              "о",
-              "е"
-            ]
-          },
-          {
-            "prompt": "Сел___",
-            "answer": "о",
-            "options": [
-              "о",
-              "а",
-              "и",
-              "е"
-            ]
-          },
-          {
-            "prompt": "Річк___",
-            "answer": "а",
-            "options": [
-              "а",
-              "о",
-              "у",
-              "і"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.032Z",
-      "modifiedAt": "2025-12-12T19:55:32.032Z"
-    },
-    {
-      "id": "act-a1-0-truefalse-0",
-      "type": "true-false",
-      "title": "Gender Rules",
-      "description": "Decide if the statement is True or False.",
-      "content": {
-        "type": "true-false",
-        "statements": [
-          {
-            "statement": "Words ending in -А are usually Feminine.",
-            "isTrue": true,
-            "explanation": "True!"
-          },
-          {
-            "statement": "Words ending in -О are usually Masculine.",
-            "isTrue": false,
-            "explanation": "False! They are Neuter."
-          },
-          {
-            "statement": "**Тато** (Dad) is biologically Masculine.",
-            "isTrue": true,
-            "explanation": "True! Even if he ends in -o/a."
-          },
-          {
-            "statement": "**Стіл** (Table) is Neuter because it is an object.",
-            "isTrue": false,
-            "explanation": "False! Grammatically, Стіл is Masculine (\"He\")."
-          },
-          {
-            "statement": "Consonants endings are usually Feminine.",
-            "isTrue": false,
-            "explanation": "False! They are Masculine."
-          },
-          {
-            "statement": "**Вікно** is Neuter.",
-            "isTrue": true,
-            "explanation": "True!"
-          },
-          {
-            "statement": "**Дім** (Home) is Feminine.",
-            "isTrue": false,
-            "explanation": "False! It ends in M. Masculine."
-          },
-          {
-            "statement": "**Мама** is Feminine.",
-            "isTrue": true,
-            "explanation": "True! Ends in A."
-          },
-          {
-            "statement": "**Чай** is Neuter.",
-            "isTrue": false,
-            "explanation": "False! It ends in \"Y\" (Consonant sound). Masculine."
-          },
-          {
-            "statement": "**Море** is Neuter.",
-            "isTrue": true,
-            "explanation": "True! Ends in E."
-          },
-          {
-            "statement": "**Село** is Feminine.",
-            "isTrue": false,
-            "explanation": "False! Ends in O. Neuter."
-          },
-          {
-            "statement": "**Річка** is Feminine.",
-            "isTrue": true,
-            "explanation": "True! Ends in A."
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.032Z",
-      "modifiedAt": "2025-12-12T19:55:32.032Z"
-    },
-    {
-      "id": "act-a1-0-groupsort-1",
-      "type": "group-sort",
-      "title": "Living vs Non-Living",
-      "description": "Just for fun, sort these. (Note: Gender applies to both!)",
-      "content": {
-        "type": "group-sort",
-        "groups": [
-          {
-            "id": "living",
-            "name": "Living",
-            "items": [
-              "**Тато**",
-              "**Мама**",
-              "**Жінка**",
-              "**Кіт**",
-              "**Студент**",
-              "**Студентка**",
-              "**Лікар**",
-              "**Я**",
-              "**Ти**",
-              "**Ми**",
-              "**Ви**",
-              "**Вони**"
-            ],
-            "nameUk": "People/Animals"
-          },
-          {
-            "id": "non-living",
-            "name": "Non-Living",
-            "items": [
-              "**Стіл**",
-              "**Вікно**",
-              "**Книга**",
-              "**Місто**",
-              "**Чай**",
-              "**Дім**",
-              "**Море**",
-              "**Телефон**",
-              "**Інтернет**",
-              "**Ліжко**",
-              "**Стілець**",
-              "**Шафа**"
-            ],
-            "nameUk": "Objects"
-          }
-        ],
-        "shuffleItems": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.032Z",
-      "modifiedAt": "2025-12-12T19:55:32.032Z"
-    },
-    {
-      "id": "act-a1-0-matchup-1",
-      "type": "match-up",
-      "title": "Noun to Pronoun",
-      "description": "Start to replace nouns with \"He/She/It\".",
-      "content": {
-        "type": "match-up",
-        "pairs": [
-          {
-            "left": "**Стіл**",
-            "right": "Він"
-          },
-          {
-            "left": "**Мама**",
-            "right": "Вона"
-          },
-          {
-            "left": "**Вікно**",
-            "right": "Воно"
-          },
-          {
-            "left": "**Кіт**",
-            "right": "Він"
-          },
-          {
-            "left": "**Книга**",
-            "right": "Вона"
-          },
-          {
-            "left": "**Море**",
-            "right": "Воно"
-          },
-          {
-            "left": "**Чай**",
-            "right": "Він"
-          },
-          {
-            "left": "**Кава**",
-            "right": "Вона"
-          },
-          {
-            "left": "**Яблуко**",
-            "right": "Воно"
-          },
-          {
-            "left": "**Телефон**",
-            "right": "Він"
-          },
-          {
-            "left": "**Земля**",
-            "right": "Вона"
-          },
-          {
-            "left": "**Місто**",
-            "right": "Воно"
-          },
-          {
-            "left": "**Мама**",
-            "right": "**Вікно**"
-          },
-          {
-            "left": "**Жінка**",
-            "right": "**Книга**"
-          },
-          {
-            "left": "**Кіт**",
-            "right": "**Місто**"
-          }
-        ],
-        "shuffleRight": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.032Z",
-      "modifiedAt": "2025-12-12T19:55:32.032Z"
-    },
-    {
-      "id": "act-a1-0-quiz-1",
-      "type": "quiz",
-      "title": "The Odd One Out",
-      "description": "Which word has a DIFFERENT gender?",
-      "content": {
-        "type": "quiz",
-        "questions": [
-          {
-            "question": "Group 1",
-            "options": [
-              "**Книга** (Fem)",
-              "**Стіл** (Masc)",
-              "**Дім** (Masc)",
-              "**Банк** (Masc)"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Group 2",
-            "options": [
-              "**Вікно** (Neut)",
-              "**Мама** (Fem)",
-              "**Кава** (Fem)",
-              "**Земля** (Fem)"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Group 3 (\"H\" words)",
-            "options": [
-              "**Г** (H)",
-              "**Х** (Kh)",
-              "**Ч** (Ch)",
-              "**Ш** (Sh)"
-            ],
-            "correctIndex": 0,
-            "explanation": "H sound."
-          },
-          {
-            "question": "Group 4 (Ending -A)",
-            "options": [
-              "**Телефон** (Masc)",
-              "**Мама** (Fem)",
-              "**Книга** (Fem)",
-              "**Вода** (Fem)"
-            ],
-            "correctIndex": 0,
-            "explanation": "Consonant end."
-          },
-          {
-            "question": "Group 5 (Ending -O)",
-            "options": [
-              "**Стіл** (Masc)",
-              "**Вікно** (Neut)",
-              "**Місто** (Neut)",
-              "**Яблуко** (Neut)"
-            ],
-            "correctIndex": 0,
-            "explanation": "Consonant end."
-          },
-          {
-            "question": "Group 6 (Liquids)",
-            "options": [
-              "**Яблуко** (Solid)",
-              "**Вода** (Liquid)",
-              "**Чай** (Liquid)",
-              "**Молоко** (Liquid)"
-            ],
-            "correctIndex": 0,
-            "explanation": "Fruit."
-          },
-          {
-            "question": "Group 7 (People)",
-            "options": [
-              "**Кіт** (Animal)",
-              "**Студент** (Person)",
-              "**Мама** (Person)",
-              "**Тато** (Person)"
-            ],
-            "correctIndex": 0,
-            "explanation": "Cat."
-          },
-          {
-            "question": "Group 8 (Furniture)",
-            "options": [
-              "**Студент** (Person)",
-              "**Стіл** (Furniture)",
-              "**Крісло** (Furniture)",
-              "**Ліжко** (Furniture)"
-            ],
-            "correctIndex": 0,
-            "explanation": "Person."
-          },
-          {
-            "question": "Group 9 (City)",
-            "options": [
-              "**Село** (Village)",
-              "**Метро** (City)",
-              "**Таксі** (City)",
-              "**Кафе** (City)"
-            ],
-            "correctIndex": 0,
-            "explanation": "Rural."
-          },
-          {
-            "question": "Group 10 (Food)",
-            "options": [
-              "**Стілець** (Furniture)",
-              "**Борщ** (Food)",
-              "**Піца** (Food)",
-              "**Суп** (Food)"
-            ],
-            "correctIndex": 0,
-            "explanation": "Can't eat it."
-          },
-          {
-            "question": "Group 11 (Drinks)",
-            "options": [
-              "**Хліб** (Solid)",
-              "**Чай** (Drink)",
-              "**Кава** (Drink)",
-              "**Сік** (Drink)"
-            ],
-            "correctIndex": 0,
-            "explanation": "Bread."
-          },
-          {
-            "question": "Group 12 (Soft Sign)",
-            "options": [
-              "**Кіт** (Hard)",
-              "**Сіль** (Soft)",
-              "**День** (Soft)",
-              "**Тінь** (Soft)"
-            ],
-            "correctIndex": 0,
-            "explanation": "No soft sign."
-          }
-        ],
-        "shuffleQuestions": true,
-        "shuffleOptions": true,
-        "showCorrectAnswers": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.032Z",
-      "modifiedAt": "2025-12-12T19:55:32.032Z"
-    }
-  ],
+  "activities": [],
   "vocabulary": {
-    "moduleId": "mod-uk-A1-3",
+    "moduleId": "mod-uk-A1-03",
     "level": "A1",
     "phase": "A1.1",
-    "wordCount": 36,
-    "newWordCount": 36,
+    "wordCount": 46,
+    "newWordCount": 46,
     "reviewWordCount": 0,
-    "transliterationMode": "partial",
+    "transliterationMode": "full",
     "words": [
       {
-        "id": "v-**stil**-0-0",
-        "uk": "**стіл**",
-        "en": "/st⁽ʲ⁾il/",
+        "id": "vocab-1",
+        "uk": "стіл",
+        "ipa": "/stil/",
+        "en": "table",
         "pos": "noun",
-        "ipa": "table",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-**knyha**-0-1",
-        "uk": "**книга**",
-        "en": "/ˈknɪ.ɦɑ/",
+        "id": "vocab-2",
+        "uk": "книга",
+        "ipa": "/ˈknɪɦɑ/",
+        "en": "book",
         "pos": "noun",
-        "ipa": "book",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-**vikno**-0-2",
-        "uk": "**вікно**",
-        "en": "/v⁽ʲ⁾ikˈnɔ/",
+        "id": "vocab-3",
+        "uk": "вікно",
+        "ipa": "/wʲikˈnɔ/",
+        "en": "window",
         "pos": "noun",
-        "ipa": "window",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "n",
+        "note": ""
       },
       {
-        "id": "v-**dveri**-0-3",
-        "uk": "**двері**",
-        "en": "/ˈdvɛ.r⁽ʲ⁾i/",
+        "id": "vocab-4",
+        "uk": "двері",
+        "ipa": "/ˈdwɛrʲi/",
+        "en": "door",
         "pos": "noun",
-        "ipa": "door",
-        "note": "Plural only",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "plural only"
       },
       {
-        "id": "v-**kimnata**-0-4",
-        "uk": "**кімната**",
-        "en": "/kimˈnɑ.tɑ/",
+        "id": "vocab-5",
+        "uk": "кімната",
+        "ipa": "/ˈkimnɑtɑ/",
+        "en": "room",
         "pos": "noun",
-        "ipa": "room",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-**dim**-0-5",
-        "uk": "**дім**",
-        "en": "/d⁽ʲ⁾im/",
+        "id": "vocab-6",
+        "uk": "дім",
+        "ipa": "/dim/",
+        "en": "house",
         "pos": "noun",
-        "ipa": "home/house",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-**misto**-0-6",
-        "uk": "**місто**",
-        "en": "/ˈm⁽ʲ⁾is.tɔ/",
+        "id": "vocab-7",
+        "uk": "місто",
+        "ipa": "/ˈmistɔ/",
+        "en": "city",
         "pos": "noun",
-        "ipa": "city",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "n",
+        "note": ""
       },
       {
-        "id": "v-**selo**-0-7",
-        "uk": "**село**",
-        "en": "/seˈlɔ/",
+        "id": "vocab-8",
+        "uk": "село",
+        "ipa": "/sɛˈlɔ/",
+        "en": "village",
         "pos": "noun",
-        "ipa": "village",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "n",
+        "note": ""
       },
       {
-        "id": "v-**richka**-0-8",
-        "uk": "**річка**",
-        "en": "/ˈr⁽ʲ⁾it͡ʃ.kɑ/",
+        "id": "vocab-9",
+        "uk": "річка",
+        "ipa": "/ˈrit͡ʃkɑ/",
+        "en": "river",
         "pos": "noun",
-        "ipa": "river",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-**more**-0-9",
-        "uk": "**море**",
-        "en": "/ˈmɔ.rɛ/",
+        "id": "vocab-10",
+        "uk": "море",
+        "ipa": "/ˈmɔrɛ/",
+        "en": "sea",
         "pos": "noun",
-        "ipa": "sea",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "n",
+        "note": ""
       },
       {
-        "id": "v-**khlib**-0-10",
-        "uk": "**хліб**",
-        "en": "/xl⁽ʲ⁾ib/",
+        "id": "vocab-11",
+        "uk": "хліб",
+        "ipa": "/xlʲib/",
+        "en": "bread",
         "pos": "noun",
-        "ipa": "bread",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-**voda**-0-11",
-        "uk": "**вода**",
-        "en": "/vɔˈdɑ/",
+        "id": "vocab-12",
+        "uk": "вода",
+        "ipa": "/vɔˈdɑ/",
+        "en": "water",
         "pos": "noun",
-        "ipa": "water",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-**moloko**-0-12",
-        "uk": "**молоко**",
-        "en": "/mɔ.lɔˈkɔ/",
+        "id": "vocab-13",
+        "uk": "молоко",
+        "ipa": "/mɔlɔˈkɔ/",
+        "en": "milk",
         "pos": "noun",
-        "ipa": "milk",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "n",
+        "note": ""
       },
       {
-        "id": "v-**chay**-0-13",
-        "uk": "**чай**",
-        "en": "/t͡ʃɑj/",
+        "id": "vocab-14",
+        "uk": "чай",
+        "ipa": "/t͡ʃɑj/",
+        "en": "tea",
         "pos": "noun",
-        "ipa": "tea",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-**sik**-0-14",
-        "uk": "**сік**",
-        "en": "/s⁽ʲ⁾ik/",
+        "id": "vocab-15",
+        "uk": "сік",
+        "ipa": "/sik/",
+        "en": "juice",
         "pos": "noun",
-        "ipa": "juice",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-**m'yaso**-0-15",
-        "uk": "**м'ясо**",
-        "en": "/ˈmjɑ.sɔ/",
+        "id": "vocab-16",
+        "uk": "м'ясо",
+        "ipa": "/ˈmjɑsɔ/",
+        "en": "meat",
         "pos": "noun",
-        "ipa": "meat",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "n",
+        "note": ""
       },
       {
-        "id": "v-**ryba**-0-16",
-        "uk": "**риба**",
-        "en": "/ˈrɪ.bɑ/",
+        "id": "vocab-17",
+        "uk": "риба",
+        "ipa": "/ˈrɪbɑ/",
+        "en": "fish",
         "pos": "noun",
-        "ipa": "fish",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-**ovochi**-0-17",
-        "uk": "**овочі**",
-        "en": "/ˈɔ.vɔ.t͡ʃi/",
+        "id": "vocab-18",
+        "uk": "овочі",
+        "ipa": "/ˈɔvɔt͡ʃi/",
+        "en": "vegetables",
         "pos": "noun",
-        "ipa": "vegetables",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "plural only"
       },
       {
-        "id": "v-**frukty**-0-18",
-        "uk": "**фрукти**",
-        "en": "/ˈfruk.tɪ/",
+        "id": "vocab-19",
+        "uk": "фрукти",
+        "ipa": "/ˈfruktɪ/",
+        "en": "fruits",
         "pos": "noun",
-        "ipa": "fruits",
-        "isNew": true,
-        "firstModule": 0
+        "gender": null,
+        "note": "plural only"
       },
       {
-        "id": "v-**yabluko**-0-19",
-        "uk": "**яблуко**",
-        "en": "/ˈjɑ.blu.kɔ/",
+        "id": "vocab-20",
+        "uk": "яблуко",
+        "ipa": "/ˈjɑblukɔ/",
+        "en": "apple",
         "pos": "noun",
-        "ipa": "apple",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "n",
+        "note": ""
       },
       {
-        "id": "v-**apelьsyn**-0-20",
-        "uk": "**апельсин**",
-        "en": "/ɑ.pelʲˈsɪn/",
+        "id": "vocab-21",
+        "uk": "апельсин",
+        "ipa": "/ɑpɛlʲˈsɪn/",
+        "en": "orange",
         "pos": "noun",
-        "ipa": "orange",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-**kartoplya**-0-21",
-        "uk": "**картопля**",
-        "en": "/kɑrˈtɔ.plʲɑ/",
+        "id": "vocab-22",
+        "uk": "картопля",
+        "ipa": "/kɑrˈtɔplʲɑ/",
+        "en": "potato",
         "pos": "noun",
-        "ipa": "potato",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-**pomidor**-0-22",
-        "uk": "**помідор**",
-        "en": "/pɔ.m⁽ʲ⁾iˈdɔr/",
+        "id": "vocab-23",
+        "uk": "помідор",
+        "ipa": "/pɔmiˈdɔr/",
+        "en": "tomato",
         "pos": "noun",
-        "ipa": "tomato",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-**ohirok**-0-23",
-        "uk": "**огірок**",
-        "en": "/ɔ.ɦiˈrɔk/",
+        "id": "vocab-24",
+        "uk": "огірок",
+        "ipa": "/ɔˈɦirɔk/",
+        "en": "cucumber",
         "pos": "noun",
-        "ipa": "cucumber",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-**tsybulya**-0-24",
-        "uk": "**цибуля**",
-        "en": "/t͡sɪˈbu.lʲɑ/",
+        "id": "vocab-25",
+        "uk": "цибуля",
+        "ipa": "/t͡sɪˈbulʲɑ/",
+        "en": "onion",
         "pos": "noun",
-        "ipa": "onion",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-**stiletsь**-0-25",
-        "uk": "**стілець**",
-        "en": "/s⁽ʲ⁾t⁽ʲ⁾iˈlɛt͡sʲ/",
+        "id": "vocab-26",
+        "uk": "стілець",
+        "ipa": "/ˈstilɛt͡sʲ/",
+        "en": "chair",
         "pos": "noun",
-        "ipa": "chair",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-**krislo**-0-26",
-        "uk": "**крісло**",
-        "en": "/ˈkr⁽ʲ⁾is.lɔ/",
+        "id": "vocab-27",
+        "uk": "крісло",
+        "ipa": "/ˈkrislɔ/",
+        "en": "armchair",
         "pos": "noun",
-        "ipa": "armchair",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "n",
+        "note": ""
       },
       {
-        "id": "v-**shafa**-0-27",
-        "uk": "**шафа**",
-        "en": "/ˈʃɑ.fɑ/",
+        "id": "vocab-28",
+        "uk": "шафа",
+        "ipa": "/ˈʃɑfɑ/",
+        "en": "wardrobe",
         "pos": "noun",
-        "ipa": "wardrobe",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-**dyvan**-0-28",
-        "uk": "**диван**",
-        "en": "/dɪˈvɑn/",
+        "id": "vocab-29",
+        "uk": "диван",
+        "ipa": "/dɪˈvɑn/",
+        "en": "sofa",
         "pos": "noun",
-        "ipa": "sofa",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-**lizhko**-0-29",
-        "uk": "**ліжко**",
-        "en": "/ˈl⁽ʲ⁾iʒ.kɔ/",
+        "id": "vocab-30",
+        "uk": "ліжко",
+        "ipa": "/ˈlʲiʒkɔ/",
+        "en": "bed",
         "pos": "noun",
-        "ipa": "bed",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "n",
+        "note": ""
       },
       {
-        "id": "v-**pidloha**-0-30",
-        "uk": "**підлога**",
-        "en": "/pidˈlɔ.ɦɑ/",
+        "id": "vocab-31",
+        "uk": "підлога",
+        "ipa": "/pidˈlɔɦɑ/",
+        "en": "floor",
         "pos": "noun",
-        "ipa": "floor",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-**stelya**-0-31",
-        "uk": "**стеля**",
-        "en": "/ˈstɛ.lʲɑ/",
+        "id": "vocab-32",
+        "uk": "стеля",
+        "ipa": "/ˈstɛlʲɑ/",
+        "en": "ceiling",
         "pos": "noun",
-        "ipa": "ceiling",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-**stina**-0-32",
-        "uk": "**стіна**",
-        "en": "/s⁽ʲ⁾t⁽ʲ⁾iˈnɑ/",
+        "id": "vocab-33",
+        "uk": "стіна",
+        "ipa": "/stiˈnɑ/",
+        "en": "wall",
         "pos": "noun",
-        "ipa": "wall",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-**mahazyn**-0-33",
-        "uk": "**магазин**",
-        "en": "/mɑ.ɦɑˈzɪn/",
+        "id": "vocab-34",
+        "uk": "магазин",
+        "ipa": "/mɑɦɑˈzɪn/",
+        "en": "store",
         "pos": "noun",
-        "ipa": "shop",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-**shkola**-0-34",
-        "uk": "**школа**",
-        "en": "/ˈʃkɔ.lɑ/",
+        "id": "vocab-35",
+        "uk": "школа",
+        "ipa": "/ˈʃkɔlɑ/",
+        "en": "school",
         "pos": "noun",
-        "ipa": "school",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-**universytet**-0-35",
-        "uk": "**університет**",
-        "en": "/u.n⁽ʲ⁾i.vɛr.sɪˈtɛt/",
+        "id": "vocab-36",
+        "uk": "університет",
+        "ipa": "/unʲivɛrsɪˈtɛt/",
+        "en": "university",
         "pos": "noun",
-        "ipa": "university",
-        "isNew": true,
-        "firstModule": 0
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-37",
+        "uk": "земля",
+        "ipa": "/zɛmˈlʲɑ/",
+        "en": "earth",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-38",
+        "uk": "ніч",
+        "ipa": "/nit͡ʃ/",
+        "en": "night",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Family 3"
+      },
+      {
+        "id": "vocab-39",
+        "uk": "любов",
+        "ipa": "/lʲuˈbɔw/",
+        "en": "love",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Family 3"
+      },
+      {
+        "id": "vocab-40",
+        "uk": "ім'я",
+        "ipa": "/ˈimjɑ/",
+        "en": "name",
+        "pos": "noun",
+        "gender": "n",
+        "note": "Family 4"
+      },
+      {
+        "id": "vocab-41",
+        "uk": "мама",
+        "ipa": "/ˈmɑmɑ/",
+        "en": "mom",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-42",
+        "uk": "теля",
+        "ipa": "/tɛˈlʲɑ/",
+        "en": "calf",
+        "pos": "noun",
+        "gender": "n",
+        "note": "Family 4"
+      },
+      {
+        "id": "vocab-43",
+        "uk": "Марко",
+        "ipa": "/ˈmɑrkɔ/",
+        "en": "Marko",
+        "pos": "name",
+        "gender": "m",
+        "note": "male name"
+      },
+      {
+        "id": "vocab-44",
+        "uk": "Таня",
+        "ipa": "/ˈtɑnʲɑ/",
+        "en": "Tanya",
+        "pos": "name",
+        "gender": "f",
+        "note": "female name"
+      },
+      {
+        "id": "vocab-45",
+        "uk": "Марія",
+        "ipa": "/mɑˈrijɑ/",
+        "en": "Maria",
+        "pos": "name",
+        "gender": "f",
+        "note": "female name"
+      },
+      {
+        "id": "vocab-46",
+        "uk": "продавець",
+        "ipa": "/prɔdɑˈvɛt͡sʲ/",
+        "en": "seller",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
       }
-    ]
+    ],
+    "reviewWords": []
   }
 }
