@@ -37,6 +37,16 @@ from .pedagogy import (
     check_ipa_validation,
     check_topic_consistency,
 )
+from .markdown_format import (
+    check_markdown_format,
+    check_quiz_format,
+    check_true_false_format,
+    check_unjumble_format,
+    check_matchup_format,
+    check_fill_in_format,
+    check_error_correction_format,
+    check_cloze_format,
+)
 
 __all__ = [
     # Grammar
@@ -64,4 +74,13 @@ __all__ = [
     'check_duplicate_content',
     'check_ipa_validation',
     'check_topic_consistency',
+    # Markdown Format
+    'check_markdown_format',
+    'check_quiz_format',
+    'check_true_false_format',
+    'check_unjumble_format',
+    'check_matchup_format',
+    'check_fill_in_format',
+    'check_error_correction_format',
+    'check_cloze_format',
 ]

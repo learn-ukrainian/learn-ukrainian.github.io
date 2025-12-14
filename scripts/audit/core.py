@@ -31,6 +31,7 @@ from .cleaners import (
 from .checks import (
     run_pedagogical_checks,
     count_items,
+    check_markdown_format,
 )
 from .checks.vocabulary import (
     count_vocab_rows,
@@ -263,9 +264,13 @@ def run_lint_checks(content: str, section_map: dict, module_num: int) -> list[st
                 lint_errors.append(f"Line {line_num}: T/F Activity contains '[!explanation]'. Remove all hints/solutions.")
 
         # 12. Transliteration Column Check (M21+)
+        # Note: Only flag "transliteration" or "translit", NOT "translation"
         if module_num >= 21:
-            if '|' in stripped and ('| trans' in stripped.lower() or '| вимо' in stripped.lower()):
-                lint_errors.append(f"Line {line_num}: Transliteration Column detected in M{module_num} (Policy M21+: None). Remove column.")
+            if '|' in stripped:
+                lower_stripped = stripped.lower()
+                # Check for transliteration columns but NOT translation columns
+                if ('| translit' in lower_stripped or '| вимо' in lower_stripped):
+                    lint_errors.append(f"Line {line_num}: Transliteration Column detected in M{module_num} (Policy M21+: None). Remove column.")
 
     return lint_errors
 
@@ -547,25 +552,37 @@ def audit_module(file_path: str) -> bool:
     )
 
     # Run vocabulary plan compliance checks
+    # VOCAB_PLAN_MISSING is now BLOCKING - core vocab from plan must be present
     vocab_words = extract_vocab_from_section(content)
     plan_violations = check_vocab_matches_plan(
         file_path, level_code, module_num, vocab_words
     )
-    pedagogical_violations.extend(plan_violations)
+
+    # Separate blocking violations (missing core vocab) from warnings
+    vocab_blocking = [v for v in plan_violations if v['type'] == 'VOCAB_PLAN_MISSING']
+    vocab_warnings = [v for v in plan_violations if v['type'] != 'VOCAB_PLAN_MISSING']
+
+    # Missing core vocab is a blocking failure
+    if vocab_blocking:
+        has_critical_failure = True
 
     # Run metalanguage scaffolding check
     metalang_violations = check_metalanguage_scaffolding(
-        content, vocab_words, level_code
+        content, vocab_words, level_code, module_num
     )
     pedagogical_violations.extend(metalang_violations)
+
+    # Run markdown format checks
+    markdown_violations = check_markdown_format(content)
+    pedagogical_violations.extend(markdown_violations)
 
     results['pedagogy'] = evaluate_pedagogy(len(pedagogical_violations))
     if results['pedagogy'].status == 'FAIL':
         has_critical_failure = True
 
-    # Immersion
-    core_immersion_text = clean_for_immersion(core_content)
-    immersion_score = calculate_immersion(core_immersion_text)
+    # Immersion (includes Activities + Summary - full learner experience)
+    full_immersion_text = clean_for_immersion(body)
+    immersion_score = calculate_immersion(full_immersion_text)
 
     # Immersion targets
     if config.get('immersion_graduated') and level_code == 'A1':
@@ -607,18 +624,34 @@ def audit_module(file_path: str) -> bool:
     print_lint_errors(lint_errors)
     print_pedagogical_violations(pedagogical_violations)
 
-    # Recommendation
+    # Print vocab blocking errors (these fail the audit)
+    if vocab_blocking:
+        print("\n❌ MISSING CORE VOCABULARY (blocking):")
+        for v in vocab_blocking:
+            print(f"  [{v['type']}] {v['issue']}")
+            print(f"     → FIX: {v['fix']}")
+
+    # Print vocab warnings (informational only)
+    if vocab_warnings:
+        print("\n⚠️  VOCABULARY WARNINGS (informational):")
+        for v in vocab_warnings:
+            print(f"  [{v['type']}] {v['issue']}")
+            print(f"     → FIX: {v['fix']}")
+
+    # Recommendation - include all vocab issues in severity
+    all_violations_for_severity = pedagogical_violations + vocab_blocking + vocab_warnings
     recommendation, reasons, severity = compute_recommendation(
-        pedagogical_violations, lint_errors, results, immersion_score,
+        all_violations_for_severity, lint_errors, results, immersion_score,
         min_imm, max_imm, level_code
     )
     print_recommendation(recommendation, reasons, severity)
 
-    # Generate and save report
+    # Generate and save report (include all violations)
+    all_violations_for_report = pedagogical_violations + vocab_blocking + vocab_warnings
     report_content = generate_report(
         file_path, phase, level_code, pedagogy, target,
         has_critical_failure, results, table_rows,
-        lint_errors, pedagogical_violations,
+        lint_errors, all_violations_for_report,
         recommendation, reasons, severity,
         low_density_activities
     )

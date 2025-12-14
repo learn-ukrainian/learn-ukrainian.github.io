@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1071/750
+- **Words:** ✅ 1123/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -14,13 +14,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 30.8% (target 25-35% (M16))
+- **Immersion:** 🇺🇦 31.9% (target 25-40% (M16))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **The Genitive I - Absence** | ⚪️ | 0 | Skipped |
-| **Warm-up** | ✅ | 114 | Included in Core |
+| **Warm-up** | ✅ | 166 | Included in Core |
 | **Presentation** | ✅ | 321 | Included in Core |
 | **Practice** | ⚪️ | 102 | Skipped |
 | **Cultural Insight** | ✅ | 411 | Included in Core |

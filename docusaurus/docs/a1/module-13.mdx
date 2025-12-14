@@ -5,20 +5,18 @@ title: "The Locative - Where Things Are"
 description: "Finding Your Way Around Ukrainian Spaces"
 ---
 
-import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
-import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
+import Quiz from '@site/src/components/Quiz';
 import MatchUp from '@site/src/components/MatchUp';
-import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
-import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
-import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Select, { SelectQuestion } from '@site/src/components/Select';
-import Translate, { TranslateItem } from '@site/src/components/Translate';
-import Cloze, { ClozePassage } from '@site/src/components/Cloze';
-import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
-import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import DialogueReorder from '@site/src/components/DialogueReorder';
 
 
 # The Locative - Where Things Are
@@ -36,6 +34,16 @@ You've already learned how to say "This is X" (nominative) and "I see X" (accusa
 > Ukrainian has two words that both mean "in": **в** and **у**. They're the same preposition - **у** is used before consonant clusters to make pronunciation easier. Think of it like English "a" vs "an"!
 > - **в кімнаті** (in the room) - easy to say
 > - **у Львові** (in Lviv) - **у** makes the consonant cluster smoother
+
+:::info[🎧 External Resources]
+
+**Podcast:** [ULP 2-66 | Locative Case with Places](https://www.ukrainianlessons.com/episode66/) — Share memories using locative
+
+**Podcast:** [ULP 2-67 | Telling Time + Locative](https://www.ukrainianlessons.com/episode67/) — Locative case with ordinal numbers
+
+**Prepositions:** [Prepositions with Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Which preposition uses which case
+:::
+
 
 ## Presentation
 
@@ -254,7 +262,7 @@ Example: **У нашому місті є старий парк. Парк у це
 
 ---
 
-# Summary
+## 📋 Summary
 
 You've mastered the locative case! Here's what you learned:
 
@@ -276,7 +284,7 @@ Next up: You'll learn possessive pronouns (мій, твій, його...) so you
 
 ---
 
-# Vocabulary
+## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
@@ -318,94 +326,114 @@ Next up: You'll learn possessive pronouns (мій, твій, його...) so you
 
 ---
 
-## 🎮 Activities
+## 🎯 Activities
 
 ### Where Is It?
 
-*Choose the correct locative form.*
-
-
-<Quiz>
-  <QuizQuestion
-    question={`1. Де ти? — Я ___ кафе.`}
-    options={[`на`, `в`, `у`, `біля`]}
-    correctIndex={1}
-    explanation={`Enclosed space (café) uses в.`}
-  />
-  <QuizQuestion
-    question={`Де книга? — Вона ___ столі.`}
-    options={[`на`, `в`, `у`, `під`]}
-    correctIndex={0}
-    explanation={`Tables are surfaces, so we use на.`}
-  />
-  <QuizQuestion
-    question={`Де ти живеш? — Я живу ___ Києві.`}
-    options={[`в`, `у`, `на`, `при`]}
-    correctIndex={1}
-    explanation={`Lviv (Київ) has consonant cluster, so у is used.`}
-  />
-  <QuizQuestion
-    question={`Де твоя робота? — ___ центрі.`}
-    options={[`У`, `В`, `На`, `Від`]}
-    correctIndex={0}
-    explanation={`Center (центр) starts with consonant cluster, so у.`}
-  />
-  <QuizQuestion
-    question={`Де діти? — Вони ___ школі.`}
-    options={[`на`, `у`, `біля`, `коло`]}
-    correctIndex={1}
-    explanation={`Enclosed building (school) uses у/в.`}
-  />
-  <QuizQuestion
-    question={`Де чашка? — ___ кухні.`}
-    options={[`В`, `На`, `У`, `Під`]}
-    correctIndex={1}
-    explanation={`Kitchen is an enclosed space, uses на when referring to the room.`}
-  />
-  <QuizQuestion
-    question={`Де концерт? — ___ стадіоні.`}
-    options={[`в`, `на`, `у`, `при`]}
-    correctIndex={1}
-    explanation={`Events use на.`}
-  />
-  <QuizQuestion
-    question={`Де ваша квартира? — ___ третьому поверсі.`}
-    options={[`На`, `В`, `У`, `Під`]}
-    correctIndex={0}
-    explanation={`Floor levels use на.`}
-  />
-  <QuizQuestion
-    question={`Де ти працюєш? — Я працюю ___ офісі.`}
-    options={[`на`, `в`, `під`, `біля`]}
-    correctIndex={1}
-    explanation={`Enclosed workspace uses в/у.`}
-  />
-  <QuizQuestion
-    question={`Де твій паспорт? — ___ сумці.`}
-    options={[`На`, `У`, `В`, `Під`]}
-    correctIndex={1}
-    explanation={`Container (bag) uses у.`}
-  />
-  <QuizQuestion
-    question={`Де музей? — ___ центрі міста.`}
-    options={[`У`, `В`, `На`, `Від`]}
-    correctIndex={0}
-    explanation={`Center has consonant cluster.`}
-  />
-  <QuizQuestion
-    question={`Де вони? — Вони ___ пляжі.`}
-    options={[`на`, `в`, `у`, `під`]}
-    correctIndex={0}
-    explanation={`Open space (beach) uses на.`}
-  />
-</Quiz>
+<Quiz questions={[
+  {
+    question: `Де ти? — Я ___ кафе.`,
+    options: [
+      { text: `на`, correct: false },
+      { text: `в`, correct: true },
+      { text: `у`, correct: false },
+      { text: `біля`, correct: false }
+    ]
+  },  {
+    question: `Де книга? — Вона ___ столі.`,
+    options: [
+      { text: `на`, correct: true },
+      { text: `в`, correct: false },
+      { text: `у`, correct: false },
+      { text: `під`, correct: false }
+    ]
+  },  {
+    question: `Де ти живеш? — Я живу ___ Києві.`,
+    options: [
+      { text: `в`, correct: false },
+      { text: `у`, correct: true },
+      { text: `на`, correct: false },
+      { text: `при`, correct: false }
+    ]
+  },  {
+    question: `Де твоя робота? — ___ центрі.`,
+    options: [
+      { text: `У`, correct: true },
+      { text: `В`, correct: false },
+      { text: `На`, correct: false },
+      { text: `Від`, correct: false }
+    ]
+  },  {
+    question: `Де діти? — Вони ___ школі.`,
+    options: [
+      { text: `на`, correct: false },
+      { text: `у`, correct: true },
+      { text: `біля`, correct: false },
+      { text: `коло`, correct: false }
+    ]
+  },  {
+    question: `Де чашка? — ___ кухні.`,
+    options: [
+      { text: `В`, correct: false },
+      { text: `На`, correct: true },
+      { text: `У`, correct: false },
+      { text: `Під`, correct: false }
+    ]
+  },  {
+    question: `Де концерт? — ___ стадіоні.`,
+    options: [
+      { text: `в`, correct: false },
+      { text: `на`, correct: true },
+      { text: `у`, correct: false },
+      { text: `при`, correct: false }
+    ]
+  },  {
+    question: `Де ваша квартира? — ___ третьому поверсі.`,
+    options: [
+      { text: `На`, correct: true },
+      { text: `В`, correct: false },
+      { text: `У`, correct: false },
+      { text: `Під`, correct: false }
+    ]
+  },  {
+    question: `Де ти працюєш? — Я працюю ___ офісі.`,
+    options: [
+      { text: `на`, correct: false },
+      { text: `в`, correct: true },
+      { text: `під`, correct: false },
+      { text: `біля`, correct: false }
+    ]
+  },  {
+    question: `Де твій паспорт? — ___ сумці.`,
+    options: [
+      { text: `На`, correct: false },
+      { text: `У`, correct: true },
+      { text: `В`, correct: false },
+      { text: `Під`, correct: false }
+    ]
+  },  {
+    question: `Де музей? — ___ центрі міста.`,
+    options: [
+      { text: `У`, correct: true },
+      { text: `В`, correct: false },
+      { text: `На`, correct: false },
+      { text: `Від`, correct: false }
+    ]
+  },  {
+    question: `Де вони? — Вони ___ пляжі.`,
+    options: [
+      { text: `на`, correct: true },
+      { text: `в`, correct: false },
+      { text: `у`, correct: false },
+      { text: `під`, correct: false }
+    ]
+  }
+]} />
 
 ### Places and Locations
 
-*Match each place with the correct locative form.*
-
-
 <MatchUp pairs={[
+  { left: `Nominative`, right: `Locative` },
   { left: `кімната`, right: `у кімнаті` },
   { left: `стіл`, right: `на столі` },
   { left: `магазин`, right: `у магазині` },
@@ -422,306 +450,194 @@ Next up: You'll learn possessive pronouns (мій, твій, його...) so you
 
 ### Complete the Locative
 
-*Fill in the blank with the correct locative form.*
-
-
-<FillIn>
-  <FillInQuestion
-    sentence={`1. Я живу в ___.`}
-    answer={`Києві`}
-    options={[`Київ`, `Києві`, `Києва`, `Києву`]}
-  />
-  <FillInQuestion
-    sentence={`Книга на ___.`}
-    answer={`столі`}
-    options={[`стіл`, `столі`, `столу`, `стола`]}
-  />
-  <FillInQuestion
-    sentence={`Діти в ___.`}
-    answer={`школі`}
-    options={[`школа`, `школі`, `школу`, `школи`]}
-  />
-  <FillInQuestion
-    sentence={`Ми на ___.`}
-    answer={`роботі`}
-    options={[`робота`, `роботі`, `роботу`, `роботи`]}
-  />
-  <FillInQuestion
-    sentence={`Вона у ___.`}
-    answer={`магазині`}
-    options={[`магазин`, `магазині`, `магазину`, `магазина`]}
-  />
-  <FillInQuestion
-    sentence={`Концерт на ___.`}
-    answer={`стадіоні`}
-    options={[`стадіон`, `стадіоні`, `стадіону`, `стадіона`]}
-  />
-  <FillInQuestion
-    sentence={`Чашка на ___.`}
-    answer={`кухні`}
-    options={[`кухня`, `кухні`, `кухню`, `кухні`]}
-  />
-  <FillInQuestion
-    sentence={`Студенти в ___.`}
-    answer={`бібліотеці`}
-    options={[`бібліотека`, `бібліотеці`, `бібліотеку`, `бібліотеки`]}
-  />
-  <FillInQuestion
-    sentence={`Квартира на третьому ___.`}
-    answer={`поверсі`}
-    options={[`поверх`, `поверсі`, `поверху`, `поверха`]}
-  />
-  <FillInQuestion
-    sentence={`Ми у ___.`}
-    answer={`Львові`}
-    options={[`Львів`, `Львові`, `Львову`, `Львова`]}
-  />
-  <FillInQuestion
-    sentence={`Кіт на ___.`}
-    answer={`балконі`}
-    options={[`балкон`, `балконі`, `балкону`, `балкона`]}
-  />
-  <FillInQuestion
-    sentence={`Зустріч у ___.`}
-    answer={`кафе`}
-    options={[`кафе`, `кафі`, `кафу`, `кафею`]}
-  />
-</FillIn>
+<FillIn items={[
+  {
+    sentence: `Я живу в ___.`,
+    answer: `Києві`,
+    options: [`Київ`, `Києві`, `Києва`, `Києву`]
+  },  {
+    sentence: `Книга на ___.`,
+    answer: `столі`,
+    options: [`стіл`, `столі`, `столу`, `стола`]
+  },  {
+    sentence: `Діти в ___.`,
+    answer: `школі`,
+    options: [`школа`, `школі`, `школу`, `школи`]
+  },  {
+    sentence: `Ми на ___.`,
+    answer: `роботі`,
+    options: [`робота`, `роботі`, `роботу`, `роботи`]
+  },  {
+    sentence: `Вона у ___.`,
+    answer: `магазині`,
+    options: [`магазин`, `магазині`, `магазину`, `магазина`]
+  },  {
+    sentence: `Концерт на ___.`,
+    answer: `стадіоні`,
+    options: [`стадіон`, `стадіоні`, `стадіону`, `стадіона`]
+  },  {
+    sentence: `Чашка на ___.`,
+    answer: `кухні`,
+    options: [`кухня`, `кухні`, `кухню`, `кухні`]
+  },  {
+    sentence: `Студенти в ___.`,
+    answer: `бібліотеці`,
+    options: [`бібліотека`, `бібліотеці`, `бібліотеку`, `бібліотеки`]
+  },  {
+    sentence: `Квартира на третьому ___.`,
+    answer: `поверсі`,
+    options: [`поверх`, `поверсі`, `поверху`, `поверха`]
+  },  {
+    sentence: `Ми у ___.`,
+    answer: `Львові`,
+    options: [`Львів`, `Львові`, `Львову`, `Львова`]
+  },  {
+    sentence: `Кіт на ___.`,
+    answer: `балконі`,
+    options: [`балкон`, `балконі`, `балкону`, `балкона`]
+  },  {
+    sentence: `Зустріч у ___.`,
+    answer: `кафе`,
+    options: [`кафе`, `кафі`, `кафу`, `кафею`]
+  }
+]} />
 
 ### в/у or на?
 
-*Sort these locations by which preposition they take.*
-
-
 <GroupSort groups={{
-  "### в/у (inside)": [
-    "у кімнаті",
-    "в школі",
-    "у магазині",
-    "в Києві",
-    "у парку",
-    "в офісі",
-    "у музеї",
-    "в ресторані",
-    "у готелі",
-    "в центрі",
-    "у лікарні",
-    "в театрі"
-  ],
-  "на (on/at)": [
-    "на столі",
-    "на роботі",
-    "на пляжі",
-    "на балконі",
-    "на вулиці",
-    "на концерті",
-    "на стадіоні",
-    "на площі",
-    "на поверсі",
-    "на ринку",
-    "на уроці",
-    "на зустрічі"
-  ]
+  "в/у (inside)": ["у кімнаті", "в школі", "у магазині", "в Києві", "у парку", "в офісі", "у музеї", "в ресторані", "у готелі", "в центрі", "у лікарні", "в театрі"],
+  "на (on/at)": ["на столі", "на роботі", "на пляжі", "на балконі", "на вулиці", "на концерті", "на стадіоні", "на площі", "на поверсі", "на ринку", "на уроці", "на зустрічі"]
 }} />
 
 ### Locative Rules
 
-*Decide if each statement is true or false.*
-
-
-<TrueFalse>
-  <TrueFalseQuestion
-    statement={`The locative case always requires a preposition (в/у or на).`}
-    isTrue={true}
-    explanation={`Correct! You never use locative without a preposition.`}
-  />
-  <TrueFalseQuestion
-    statement={`Locative case is used to show direction (where you're going).`}
-    isTrue={false}
-    explanation={`Incorrect! Locative shows LOCATION (where you are). Direction uses accusative.`}
-  />
-  <TrueFalseQuestion
-    statement={`"У" and "в" are the same preposition, just different forms.`}
-    isTrue={true}
-    explanation={`Correct! "У" is used before consonant clusters for easier pronunciation.`}
-  />
-  <TrueFalseQuestion
-    statement={`All cities use "на" (e.g., на Києві).`}
-    isTrue={false}
-    explanation={`Incorrect! Cities use "в/у" (у Києві, в Одесі).`}
-  />
-  <TrueFalseQuestion
-    statement={`Most feminine nouns ending in -а change to -і in locative.`}
-    isTrue={true}
-    explanation={`Correct! кімната → в кімнаті, школа → у школі.`}
-  />
-  <TrueFalseQuestion
-    statement={`Masculine nouns always end in -і in locative.`}
-    isTrue={false}
-    explanation={`Incorrect! Hard masculine nouns often end in -у (у банку, в парку).`}
-  />
-  <TrueFalseQuestion
-    statement={`The phrase "в Україні" (not "на Україні") is politically significant.`}
-    isTrue={true}
-    explanation={`Correct! Russian uses "на" to imply Ukraine is just a borderland region.`}
-  />
-  <TrueFalseQuestion
-    statement={`"На роботі" is a fixed expression.`}
-    isTrue={true}
-    explanation={`Correct! You always say "на роботі" (at work), never "в роботі".`}
-  />
-  <TrueFalseQuestion
-    statement={`You can use locative case without a preposition in questions.`}
-    isTrue={false}
-    explanation={`Incorrect! Even in questions, you need a preposition: "Де ти?" → "В кафе."`}
-  />
-  <TrueFalseQuestion
-    statement={`Events (concerts, meetings) use "на".`}
-    isTrue={true}
-    explanation={`Correct! на концерті, на зустрічі, на уроці.`}
-  />
-  <TrueFalseQuestion
-    statement={`"На столі" means "to the table."`}
-    isTrue={false}
-    explanation={`Incorrect! "На столі" means "ON the table" (location). Direction would be accusative.`}
-  />
-  <TrueFalseQuestion
-    statement={`Some masculine nouns have -ові ending in locative for people.`}
-    isTrue={true}
-    explanation={`Correct! на батькові, на дідові (though less common in modern Ukrainian).`}
-  />
-</TrueFalse>
+<TrueFalse items={[
+  {
+    statement: `The locative case always requires a preposition (в/у or на).`,
+    isTrue: true,
+    explanation: `Correct! You never use locative without a preposition.`
+  },  {
+    statement: `Locative case is used to show direction (where you're going).`,
+    isTrue: false,
+    explanation: `Incorrect! Locative shows LOCATION (where you are). Direction uses accusative.`
+  },  {
+    statement: `\"У\" and \"в\" are the same preposition, just different forms.`,
+    isTrue: true,
+    explanation: `Correct! \"У\" is used before consonant clusters for easier pronunciation.`
+  },  {
+    statement: `All cities use \"на\" (e.g., на Києві).`,
+    isTrue: false,
+    explanation: `Incorrect! Cities use \"в/у\" (у Києві, в Одесі).`
+  },  {
+    statement: `Most feminine nouns ending in -а change to -і in locative.`,
+    isTrue: true,
+    explanation: `Correct! кімната → в кімнаті, школа → у школі.`
+  },  {
+    statement: `Masculine nouns always end in -і in locative.`,
+    isTrue: false,
+    explanation: `Incorrect! Hard masculine nouns often end in -у (у банку, в парку).`
+  },  {
+    statement: `The phrase \"в Україні\" (not \"на Україні\") is politically significant.`,
+    isTrue: true,
+    explanation: `Correct! Russian uses \"на\" to imply Ukraine is just a borderland region.`
+  },  {
+    statement: `\"На роботі\" is a fixed expression.`,
+    isTrue: true,
+    explanation: `Correct! You always say \"на роботі\" (at work), never \"в роботі\".`
+  },  {
+    statement: `You can use locative case without a preposition in questions.`,
+    isTrue: false,
+    explanation: `Incorrect! Even in questions, you need a preposition: \"Де ти?\" → \"В кафе.\"`
+  },  {
+    statement: `Events (concerts, meetings) use \"на\".`,
+    isTrue: true,
+    explanation: `Correct! на концерті, на зустрічі, на уроці.`
+  },  {
+    statement: `\"На столі\" means \"to the table.\"`,
+    isTrue: false,
+    explanation: `Incorrect! \"На столі\" means \"ON the table\" (location). Direction would be accusative.`
+  },  {
+    statement: `Some masculine nouns have -ові ending in locative for people.`,
+    isTrue: true,
+    explanation: `Correct! на батькові, на дідові (though less common in modern Ukrainian).`
+  }
+]} />
 
 ### Where Questions and Answers
 
-*Put the words in the correct order.*
-
-
-<Unjumble>
-  <UnjumbleQuestion
-    words={`ти / Де / ?`}
-    answer={`Де ти?`}
-  />
-  <UnjumbleQuestion
-    words={`кафе / Я / в`}
-    answer={`Я в кафе.`}
-  />
-  <UnjumbleQuestion
-    words={`на / Книга / столі`}
-    answer={`Книга на столі.`}
-  />
-  <UnjumbleQuestion
-    words={`у / живу / Я / Києві`}
-    answer={`Я живу у Києві.`}
-  />
-  <UnjumbleQuestion
-    words={`Діти / школі / в`}
-    answer={`Діти в школі.`}
-  />
-  <UnjumbleQuestion
-    words={`роботі / на / Вона`}
-    answer={`Вона на роботі.`}
-  />
-  <UnjumbleQuestion
-    words={`у / Ми / центрі / магазині / в`}
-    answer={`Ми в магазині у центрі.`}
-  />
-  <UnjumbleQuestion
-    words={`Де / паспорт / твій / ?`}
-    answer={`Де твій паспорт?`}
-  />
-  <UnjumbleQuestion
-    words={`У / він / сумці`}
-    answer={`Він у сумці.`}
-  />
-  <UnjumbleQuestion
-    words={`на / Концерт / стадіоні`}
-    answer={`Концерт на стадіоні.`}
-  />
-  <UnjumbleQuestion
-    words={`пляжі / на / зараз / Вони`}
-    answer={`Вони зараз на пляжі.`}
-  />
-  <UnjumbleQuestion
-    words={`у / Студенти / бібліотеці`}
-    answer={`Студенти у бібліотеці.`}
-  />
-</Unjumble>
+<Unjumble items={[
+  { jumbled: `ти / Де / ?`, answer: `Де ти?` },
+  { jumbled: `кафе / Я / в`, answer: `Я в кафе.` },
+  { jumbled: `на / Книга / столі`, answer: `Книга на столі.` },
+  { jumbled: `у / живу / Я / Києві`, answer: `Я живу у Києві.` },
+  { jumbled: `Діти / школі / в`, answer: `Діти в школі.` },
+  { jumbled: `роботі / на / Вона`, answer: `Вона на роботі.` },
+  { jumbled: `у / Ми / центрі / магазині / в`, answer: `Ми в магазині у центрі.` },
+  { jumbled: `Де / паспорт / твій / ?`, answer: `Де твій паспорт?` },
+  { jumbled: `У / він / сумці`, answer: `Він у сумці.` },
+  { jumbled: `на / Концерт / стадіоні`, answer: `Концерт на стадіоні.` },
+  { jumbled: `пляжі / на / зараз / Вони`, answer: `Вони зараз на пляжі.` },
+  { jumbled: `у / Студенти / бібліотеці`, answer: `Студенти у бібліотеці.` }
+]} />
 
 ### Preposition Choice
 
-*Choose в/у or на.*
-
-
-<FillIn>
-  <FillInQuestion
-    sentence={`1. Я ___ кімнаті.`}
-    answer={`в`}
-    options={[`в`, `на`, `у`, `під`]}
-  />
-  <FillInQuestion
-    sentence={`Книга ___ столі.`}
-    answer={`на`}
-    options={[`на`, `в`, `біля`, `під`]}
-  />
-  <FillInQuestion
-    sentence={`Ми ___ Львові.`}
-    answer={`у`}
-    options={[`в`, `на`, `у`, `при`]}
-  />
-  <FillInQuestion
-    sentence={`Вона ___ роботі.`}
-    answer={`на`}
-    options={[`в`, `на`, `у`, `від`]}
-  />
-  <FillInQuestion
-    sentence={`Діти ___ школі.`}
-    answer={`у`}
-    options={[`в`, `на`, `у`, `коло`]}
-  />
-  <FillInQuestion
-    sentence={`Концерт ___ стадіоні.`}
-    answer={`на`}
-    options={[`в`, `на`, `у`, `при`]}
-  />
-  <FillInQuestion
-    sentence={`Я живу ___ Україні.`}
-    answer={`в`}
-    options={[`в`, `на`, `у`, `від`]}
-  />
-  <FillInQuestion
-    sentence={`Чашка ___ кухні.`}
-    answer={`на`}
-    options={[`на`, `в`, `коло`, `біля`]}
-  />
-  <FillInQuestion
-    sentence={`Ми ___ центрі.`}
-    answer={`у`}
-    options={[`в`, `на`, `у`, `від`]}
-  />
-  <FillInQuestion
-    sentence={`Вони ___ пляжі.`}
-    answer={`на`}
-    options={[`на`, `в`, `біля`, `коло`]}
-  />
-  <FillInQuestion
-    sentence={`Твій телефон ___ сумці?`}
-    answer={`у`}
-    options={[`у`, `на`, `біля`, `коло`]}
-  />
-  <FillInQuestion
-    sentence={`Зустріч ___ офісі.`}
-    answer={`в`}
-    options={[`в`, `на`, `у`, `при`]}
-  />
-</FillIn>
+<FillIn items={[
+  {
+    sentence: `Я ___ кімнаті.`,
+    answer: `в`,
+    options: [`в`, `на`, `у`, `під`]
+  },  {
+    sentence: `Книга ___ столі.`,
+    answer: `на`,
+    options: [`на`, `в`, `біля`, `під`]
+  },  {
+    sentence: `Ми ___ Львові.`,
+    answer: `у`,
+    options: [`в`, `на`, `у`, `при`]
+  },  {
+    sentence: `Вона ___ роботі.`,
+    answer: `на`,
+    options: [`в`, `на`, `у`, `від`]
+  },  {
+    sentence: `Діти ___ школі.`,
+    answer: `у`,
+    options: [`в`, `на`, `у`, `коло`]
+  },  {
+    sentence: `Концерт ___ стадіоні.`,
+    answer: `на`,
+    options: [`в`, `на`, `у`, `при`]
+  },  {
+    sentence: `Я живу ___ Україні.`,
+    answer: `в`,
+    options: [`в`, `на`, `у`, `від`]
+  },  {
+    sentence: `Чашка ___ кухні.`,
+    answer: `на`,
+    options: [`на`, `в`, `коло`, `біля`]
+  },  {
+    sentence: `Ми ___ центрі.`,
+    answer: `у`,
+    options: [`в`, `на`, `у`, `від`]
+  },  {
+    sentence: `Вони ___ пляжі.`,
+    answer: `на`,
+    options: [`на`, `в`, `біля`, `коло`]
+  },  {
+    sentence: `Твій телефон ___ сумці?`,
+    answer: `у`,
+    options: [`у`, `на`, `біля`, `коло`]
+  },  {
+    sentence: `Зустріч ___ офісі.`,
+    answer: `в`,
+    options: [`в`, `на`, `у`, `при`]
+  }
+]} />
 
 ### Nominative to Locative
 
-*Match the nominative form to its locative form.*
-
-
 <MatchUp pairs={[
+  { left: `Nominative`, right: `Locative (with preposition)` },
   { left: `кімната`, right: `в кімнаті` },
   { left: `банк`, right: `у банку` },
   { left: `місто`, right: `в місті` },
@@ -738,82 +654,102 @@ Next up: You'll learn possessive pronouns (мій, твій, його...) so you
 
 ### Translation Practice
 
-*Choose the correct Ukrainian translation.*
-
-
-<Quiz>
-  <QuizQuestion
-    question={`1. I'm at work.`}
-    options={[`Я на роботі.`, `Я в роботі.`, `Я у роботі.`, `Я робота.`]}
-    correctIndex={0}
-    explanation={`Fixed expression: на роботі.`}
-  />
-  <QuizQuestion
-    question={`The book is on the table.`}
-    options={[`Книга на столі.`, `Книга в столі.`, `Книга у столі.`, `Книга стіл.`]}
-    correctIndex={0}
-    explanation={`Surface uses на.`}
-  />
-  <QuizQuestion
-    question={`We live in Kyiv.`}
-    options={[`Ми живемо в Київі.`, `Ми живемо у Києві.`, `Ми живемо на Києві.`, `Ми живемо Київ.`]}
-    correctIndex={1}
-    explanation={`Consonant cluster requires у.`}
-  />
-  <QuizQuestion
-    question={`She's in the shop.`}
-    options={[`Вона на магазині.`, `Вона у магазині.`, `Вона магазин.`, `Вона в магазин.`]}
-    correctIndex={1}
-    explanation={`Enclosed space, consonant cluster → у магазині.`}
-  />
-  <QuizQuestion
-    question={`The children are at school.`}
-    options={[`Діти в школі.`, `Діти на школі.`, `Діти школа.`, `Діти у школу.`]}
-    correctIndex={0}
-    explanation={`Enclosed building uses в/у.`}
-  />
-  <QuizQuestion
-    question={`I'm in Ukraine.`}
-    options={[`Я в Україні.`, `Я на Україні.`, `Я у Україні.`, `Я Україна.`]}
-    correctIndex={0}
-    explanation={`Countries use в/у (politically significant!).`}
-  />
-  <QuizQuestion
-    question={`The concert is at the stadium.`}
-    options={[`Концерт у стадіоні.`, `Концерт на стадіоні.`, `Концерт в стадіоні.`, `Концерт стадіон.`]}
-    correctIndex={1}
-    explanation={`Events use на.`}
-  />
-  <QuizQuestion
-    question={`Your passport is in the bag.`}
-    options={[`Твій паспорт на сумці.`, `Твій паспорт у сумці.`, `Твій паспорт в сумці.`, `Твій паспорт сумка.`]}
-    correctIndex={1}
-    explanation={`Container, consonant cluster → у сумці.`}
-  />
-  <QuizQuestion
-    question={`We're in the center.`}
-    options={[`Ми у центрі.`, `Ми на центрі.`, `Ми в центрі.`, `Ми центр.`]}
-    correctIndex={0}
-    explanation={`Consonant cluster → у центрі.`}
-  />
-  <QuizQuestion
-    question={`They're at the beach.`}
-    options={[`Вони на пляжі.`, `Вони в пляжі.`, `Вони у пляжі.`, `Вони пляж.`]}
-    correctIndex={0}
-    explanation={`Open space uses на.`}
-  />
-  <QuizQuestion
-    question={`The cup is in the kitchen.`}
-    options={[`Чашка на кухні.`, `Чашка в кухні.`, `Чашка у кухні.`, `Чашка кухня.`]}
-    correctIndex={0}
-    explanation={`Room name uses на (though в is also acceptable).`}
-  />
-  <QuizQuestion
-    question={`My apartment is on the third floor.`}
-    options={[`Моя квартира на третьому поверсі.`, `Моя квартира в третьому поверсі.`, `Моя квартира у третьому поверсі.`, `Моя квартира третій поверх.`]}
-    correctIndex={0}
-    explanation={`Floor levels use на.`}
-  />
-</Quiz>
-
-
+<Quiz questions={[
+  {
+    question: `I'm at work.`,
+    options: [
+      { text: `Я на роботі.`, correct: true },
+      { text: `Я в роботі.`, correct: false },
+      { text: `Я у роботі.`, correct: false },
+      { text: `Я робота.`, correct: false }
+    ]
+  },  {
+    question: `The book is on the table.`,
+    options: [
+      { text: `Книга на столі.`, correct: true },
+      { text: `Книга в столі.`, correct: false },
+      { text: `Книга у столі.`, correct: false },
+      { text: `Книга стіл.`, correct: false }
+    ]
+  },  {
+    question: `We live in Kyiv.`,
+    options: [
+      { text: `Ми живемо в Київі.`, correct: false },
+      { text: `Ми живемо у Києві.`, correct: true },
+      { text: `Ми живемо на Києві.`, correct: false },
+      { text: `Ми живемо Київ.`, correct: false }
+    ]
+  },  {
+    question: `She's in the shop.`,
+    options: [
+      { text: `Вона на магазині.`, correct: false },
+      { text: `Вона у магазині.`, correct: true },
+      { text: `Вона магазин.`, correct: false },
+      { text: `Вона в магазин.`, correct: false }
+    ]
+  },  {
+    question: `The children are at school.`,
+    options: [
+      { text: `Діти в школі.`, correct: true },
+      { text: `Діти на школі.`, correct: false },
+      { text: `Діти школа.`, correct: false },
+      { text: `Діти у школу.`, correct: false }
+    ]
+  },  {
+    question: `I'm in Ukraine.`,
+    options: [
+      { text: `Я в Україні.`, correct: true },
+      { text: `Я на Україні.`, correct: false },
+      { text: `Я у Україні.`, correct: false },
+      { text: `Я Україна.`, correct: false }
+    ]
+  },  {
+    question: `The concert is at the stadium.`,
+    options: [
+      { text: `Концерт у стадіоні.`, correct: false },
+      { text: `Концерт на стадіоні.`, correct: true },
+      { text: `Концерт в стадіоні.`, correct: false },
+      { text: `Концерт стадіон.`, correct: false }
+    ]
+  },  {
+    question: `Your passport is in the bag.`,
+    options: [
+      { text: `Твій паспорт на сумці.`, correct: false },
+      { text: `Твій паспорт у сумці.`, correct: true },
+      { text: `Твій паспорт в сумці.`, correct: false },
+      { text: `Твій паспорт сумка.`, correct: false }
+    ]
+  },  {
+    question: `We're in the center.`,
+    options: [
+      { text: `Ми у центрі.`, correct: true },
+      { text: `Ми на центрі.`, correct: false },
+      { text: `Ми в центрі.`, correct: false },
+      { text: `Ми центр.`, correct: false }
+    ]
+  },  {
+    question: `They're at the beach.`,
+    options: [
+      { text: `Вони на пляжі.`, correct: true },
+      { text: `Вони в пляжі.`, correct: false },
+      { text: `Вони у пляжі.`, correct: false },
+      { text: `Вони пляж.`, correct: false }
+    ]
+  },  {
+    question: `The cup is in the kitchen.`,
+    options: [
+      { text: `Чашка на кухні.`, correct: true },
+      { text: `Чашка в кухні.`, correct: false },
+      { text: `Чашка у кухні.`, correct: false },
+      { text: `Чашка кухня.`, correct: false }
+    ]
+  },  {
+    question: `My apartment is on the third floor.`,
+    options: [
+      { text: `Моя квартира на третьому поверсі.`, correct: true },
+      { text: `Моя квартира в третьому поверсі.`, correct: false },
+      { text: `Моя квартира у третьому поверсі.`, correct: false },
+      { text: `Моя квартира третій поверх.`, correct: false }
+    ]
+  }
+]} />

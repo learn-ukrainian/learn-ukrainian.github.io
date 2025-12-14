@@ -9,1203 +9,372 @@
     "visibility": "public",
     "language": "uk",
     "targetLevel": "A1",
-    "phase": "A1.3",
+    "phase": "A1.3 - Consolidation",
     "moduleNumber": 33,
-    "moduleType": "culture",
+    "moduleType": "grammar",
     "pedagogy": "PPP",
     "immersionLevel": 0.3,
     "title": "Holidays & Traditions",
-    "subtitle": "Ukrainian Celebrations",
-    "description": "Name major Ukrainian holidays",
+    "titleUk": null,
+    "subtitle": "Свята і традиції",
+    "description": "Learner can name major Ukrainian holidays",
     "objectives": [
-      "Name major Ukrainian holidays",
-      "Describe celebration traditions",
-      "Use holiday greetings",
-      "Discuss seasonal celebrations"
+      "Learner can name major Ukrainian holidays",
+      "Learner can give holiday greetings",
+      "Learner can talk about birthday celebrations",
+      "Learner can express wishes"
     ],
+    "objectivesUk": null,
     "grammarFocus": [
-      "Holiday vocabulary",
-      "Greeting expressions",
-      "Celebration verbs"
+      "Holiday greetings",
+      "Date expressions (Genitive)",
+      "Wish expressions"
     ],
     "tags": [
-      "vocabulary",
       "holidays",
       "traditions",
-      "culture"
+      "greetings",
+      "celebrations"
     ],
-    "totalDuration": 50,
-    "transliterationMode": "partial",
+    "totalDuration": "60 min",
+    "transliterationMode": "first-occurrence",
     "sections": [
       {
-        "id": "section-content-0",
-        "name": "Lesson",
+        "id": "section-1",
+        "name": "Holidays & Traditions",
+        "nameEn": null,
         "type": "content",
-        "content": "> **Note:** Ukrainian holidays reflect a rich blend of Christian, pagan, and national traditions. Learn to celebrate!\n\n## Warm-up: What Do You Celebrate?\n\nWhat are your favorite holidays? How do you celebrate them? Who do you celebrate with?\n\nUkrainian holidays are a beautiful mix of Christian traditions (Christmas, Easter), national celebrations (Independence Day), and ancient pagan festivals with Slavic roots. Many holidays combine all these elements!\n\nFamily gatherings, traditional food, folk songs, and special rituals make Ukrainian holidays unique and memorable. Learning about them helps you understand Ukrainian culture deeply.\n\nThis module introduces major Ukrainian holidays, traditional greetings, and celebration vocabulary. Whether you're in Ukraine during a holiday or celebrating with Ukrainian friends abroad, this knowledge will help you participate meaningfully!\n\nUkrainian holiday traditions survived decades of Soviet suppression. Today, celebrating them is an act of cultural pride and national identity. Especially during war, holidays take on special significance — connecting Ukrainians to their heritage and hope for the future.\n\n> 💡 **Thinking Trick:** Most holiday greetings start with \"З\" (with) + holiday name in Instrumental case: \"З Новим роком!\" (With New Year!)\n\n## Presentation: Major Holidays\n\n### Winter Holidays (Зимові свята)\n\n| Holiday | Date | Greeting |\n|---------|------|----------|\n| Новий рік | December 31 - January 1 | З Новим роком! |\n| Різдво | January 7 (December 25 too) | З Різдвом! |\n| Старий Новий рік | January 13-14 | Зі Старим Новим роком! |\n| Водохреща | January 19 | З Водохрещею! |\n\n**New Year (Новий рік):**\n- Biggest celebration in Ukraine\n- Fireworks at midnight\n- New Year's Tree (Новорічна ялинка)\n- Дід Мороз (Father Frost) and Снігуронька (Snow Maiden)\n- Big feast with Olivier salad\n\n**Christmas (Різдво):**\n- January 7 (Orthodox) AND December 25 (Western)\n- 12 dishes on Christmas Eve (Святвечір)\n- Кутя (kutia) — traditional wheat dish\n- Колядки (carols) sung door to door\n- Вертеп (nativity scenes)\n\n### Spring Holidays (Весняні свята)\n\n| Holiday | Date | Greeting |\n|---------|------|----------|\n| Великдень (Пасха) | Movable (spring) | Христос Воскрес! |\n| День матері | 2nd Sunday of May | Зі святом! |\n| День вишиванки | 3rd Thursday of May | Зі святом! |\n\n**Easter (Великдень):**\n- Most important religious holiday\n- Писанки (decorated eggs)\n- Паска (Easter bread)\n- \"Христос Воскрес!\" — \"Воістину Воскрес!\"\n- Church blessing of Easter baskets\n\n### Summer & Autumn Holidays (Літні й осінні свята)\n\n| Holiday | Date | Greeting |\n|---------|------|----------|\n| Івана Купала | June 23-24 | Зі святом! |\n| День Незалежності | August 24 | З Днем Незалежності! |\n| День захисників | October 1 (moved from Feb 23) | З Днем захисників! |\n\n**Independence Day (День Незалежності):**\n- August 24, 1991 — Ukraine declared independence\n- Parades, concerts, flags everywhere\n- National pride and unity\n- Especially meaningful during wartime\n\n> 📜 **Pattern Summary:**\n> - **Greetings:** З + holiday (Instrumental)\n> - **Easter response:** Христос Воскрес! → Воістину Воскрес!\n> - **Winter holidays:** Новий рік, Різдво most important\n> - **Spring:** Великдень most important\n\n### Holiday Vocabulary\n\n| Ukrainian | English |\n|-----------|---------|\n| свято | holiday, celebration |\n| святкувати | to celebrate |\n| відзначати | to mark, celebrate |\n| подарунок | gift |\n| вітати | to congratulate |\n| листівка | greeting card |\n| гостi | guests |\n| частувати | to treat (with food) |\n| традиція | tradition |\n| святковий | festive |\n\n> 💡 **Did You Know?** Ukrainian Easter eggs (писанки) are famous worldwide! The intricate geometric patterns are created with wax-resist dyeing, passed down through generations. Each symbol has meaning — waves represent life, triangles represent family, and spirals represent eternity!\n\n## Cultural Insight: Ukrainian Holiday Spirit 🇺🇦\n\n**Hospitality during holidays:**\n- Homes are open to visitors\n- Tables overflowing with food\n- \"Сідай, їж!\" (Sit, eat!) — constant refrain\n- Never refuse food — it's insulting!\n- Share even in hard times\n\n**Family traditions:**\n- Multigenerational celebrations\n- Traditional songs and toasts\n- Folk costumes (вишиванки) worn\n- Stories passed down orally\n- Photo albums reviewed together\n\n**Wartime holidays:**\n- Celebrations continue despite war\n- Honoring fallen heroes\n- Supporting soldiers\n- Power outages don't stop gatherings\n- Candlelight Christmas dinners\n- Hope and resilience celebrated\n\n> 📜 **History Bite:** Soviet authorities tried to replace religious holidays with state celebrations. Christmas was banned; \"New Year\" was promoted instead. Despite this, Ukrainians secretly maintained traditions. Today, both religious and secular holidays thrive — a victory of cultural preservation!\n\n> 📜 **Myth Buster:** Some claim Ukrainian Christmas is \"just Russian Orthodox Christmas.\" FALSE! Ukrainian Christmas has unique traditions: Кутя (kutia), Вертеп (nativity plays), Колядки (carols) — all distinctly Ukrainian, preserved through centuries of cultural pressure!\n\n## Reading Practice: Різдво в Україні 📖\n\n**Українською:**\n\nРіздво — одне з найважливіших свят в Україні. Святкуємо його сьомого січня за православним календарем, але тепер також і двадцять п'ятого грудня.\n\nНапередодні Різдва — Святвечір. Вся сім'я збирається за столом. На столі дванадцять пісних страв — на честь дванадцяти апостолів. Головна страва — кутя з пшениці, меду, маку і горіхів.\n\nПісля вечері починаються колядки. Діти і дорослі ходять від дому до дому, співають і отримують солодощі та гроші.\n\nНа Різдво обмінюємося подарунками. Діти вірять, що їх приносить Святий Миколай. Всі вітають одне одного: \"З Різдвом Христовим!\"\n\nРіздвяні свята тривають до Водохреща — дев'ятнадцятого січня. Це час радості, сім'ї і надії!\n\n**English Translation:**\n\nChristmas is one of the most important holidays in Ukraine. We celebrate it on January 7 according to the Orthodox calendar, but now also on December 25.\n\nOn Christmas Eve — Sviatvechir. The whole family gathers at the table. On the table are twelve Lenten dishes — in honor of the twelve apostles. The main dish is kutia from wheat, honey, poppy seeds and nuts.\n\nAfter dinner, carols begin. Children and adults go from house to house, sing and receive sweets and money.\n\nOn Christmas we exchange gifts. Children believe that Saint Nicholas brings them. Everyone greets each other: \"Merry Christmas!\"\n\nChristmas holidays last until Epiphany — January 19. It's a time of joy, family and hope!\n\n## Conversation: Святкуємо разом! 🗣️\n\n**Ольга:** З Новим роком! 🎉\n**Михайло:** З Новим роком! Як святкував?\n**Ольга:** Чудово! Були з родиною. А ти?\n**Михайло:** Ми теж вдома. Готували салат олів'є, дивились телевізор.\n**Ольга:** А о північ?\n**Михайло:** О, феєрверки були прекрасні!\n**Ольга:** Так, у нас теж! А подарунки?\n**Михайло:** Так, обмінялися. Я отримав нову книжку.\n**Ольга:** Гарно! Бажаю щасливого року!\n**Михайло:** Дякую, тобі також! Щастя, здоров'я, миру!\n\n**English Translation:**\n**Olha:** Happy New Year! 🎉\n**Mykhailo:** Happy New Year! How did you celebrate?\n**Olha:** Wonderful! We were with family. And you?\n**Mykhailo:** We were also at home. Prepared Olivier salad, watched TV.\n**Olha:** And at midnight?\n**Mykhailo:** Oh, the fireworks were beautiful!\n**Olha:** Yes, ours too! And gifts?\n**Mykhailo:** Yes, we exchanged. I received a new book.\n**Olha:** Nice! I wish you a happy year!\n**Mykhailo:** Thank you, you too! Happiness, health, peace!\n\nЗверни увагу: З Новим роком, святкував, подарунки, бажаю — святкова лексика!"
+        "content": "## Warm-up\n\n> 💡 **Щасливих свят! (Happy Holidays!)**\n>\n> Ukrainians love to celebrate! From New Year to Easter, holidays bring families together.\n> — **З Новим роком!** (Happy New Year!)\n> — **З Днем народження!** (Happy Birthday!)\n> — **Вітаю!** (Congratulations!)\n>\n> Learn these greetings as fixed phrases — you'll analyze the grammar at A2!\n\n> [!resources] 🎧 External Resources\n>\n> **Greetings:** [Greetings for Every Occasion](https://www.ukrainianlessons.com/greetings/) — All Ukrainian greetings with audio\n>\n> **Christmas:** [When is Ukrainian Christmas](https://www.ukrainianlessons.com/ukrainian-christmas/) — Christmas traditions explained\n>\n> **Easter:** [Easter Greetings](https://www.ukrainianlessons.com/easter-greetings/) — Authentic Easter phrases\n\n---"
       },
       {
-        "id": "section-summary-1",
-        "name": "Підсумок",
-        "nameEn": "Summary",
+        "id": "section-2",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| свято | /ˈswjɑtɔ/ | holiday | n | n | |\n| традиція | /trɑˈdɪtsʲijɑ/ | tradition | n | f | |\n| Новий рік | /nɔˈwɪj rʲik/ | New Year | n | m | |\n| Різдво | /rʲizˈdwɔ/ | Christmas | n | n | January 7 |\n| Великдень | /wɛˈlɪkdɛnʲ/ | Easter | n | m | |\n| день народження | /dɛnʲ nɑˈrɔdʒɛnʲːɑ/ | birthday | n | m | |\n| весілля | /wɛˈsʲilʲːɑ/ | wedding | n | n | |\n| подарунок | /pɔdɑˈrunɔk/ | gift/present | n | m | |\n| вітати | /wʲiˈtɑtɪ/ | to congratulate | v | — | |\n| бажати | /bɑˈʒɑtɪ/ | to wish | v | — | |\n| щастя | /ˈʃtʃɑstʲɑ/ | happiness | n | n | |\n| здоров'я | /zdɔˈrɔwjɑ/ | health | n | n | |\n| успіху | /usˈpʲixu/ | success (Gen) | n | m | \"бажаю успіху\" |\n| любові | /lʲuˈbɔwʲi/ | love (Gen) | n | f | \"бажаю любові\" |\n| святкувати | /swʲɑtˈkuwɑtɪ/ | to celebrate | v | — | |\n| дарувати | /dɑruˈwɑtɪ/ | to give (as gift) | v | — | |\n| отримувати | /ɔˈtrɪmuwɑtɪ/ | to receive | v | — | |\n| гості | /ˈhɔstʲi/ | guests | n | pl | |\n| торт | /tɔrt/ | cake | n | m | |\n| свічка | /ˈswʲitʃkɑ/ | candle | n | f | |\n| квіти | /ˈkwʲitɪ/ | flowers | n | pl | |\n| листівка | /lɪsˈtʲiwkɑ/ | card (greeting) | n | f | |\n| запрошення | /zɑprɔˈʃɛnʲːɑ/ | invitation | n | n | |\n| вечірка | /wɛˈtʃʲirkɑ/ | party | n | f | |\n| музика | /ˈmuzɪkɑ/ | music | n | f | |\n| танці | /ˈtɑntsʲi/ | dancing | n | pl | |\n| радість | /ˈrɑdʲistʲ/ | joy | n | f | |\n| веселий | /wɛˈsɛlɪj/ | cheerful | adj | m | |\n| святковий | /swʲɑtˈkɔwɪj/ | festive | adj | m | |\n| вітання | /wʲiˈtɑnʲːɑ/ | greeting | n | n | |\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Grammar",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Holiday Greetings\n\n> [!observe] Спостереження (Pattern Discovery)\n>\n> Learn these greetings as fixed phrases:\n> - **З Новим роком!** (Happy New Year!)\n> - **З Різдвом!** (Merry Christmas!)\n> - **З Великоднем!** (Happy Easter!)\n> - **З Днем народження!** (Happy Birthday!)\n>\n> Memorize these complete phrases! The grammar will be explained at A2.\n\n### Common Holiday Greetings\n\n| Holiday | Greeting | Translation |\n|---------|----------|-------------|\n| Новий рік | З Новим роком! | Happy New Year! |\n| Різдво | З Різдвом! | Merry Christmas! |\n| Великдень | З Великоднем! | Happy Easter! |\n| День народження | З Днем народження! | Happy Birthday! |\n| Весілля | З весіллям! | Congratulations on your wedding! |\n| 8 березня | З восьмим березня! | Happy Women's Day! |\n\n---\n\n## Making Wishes\n\n| Ukrainian | English |\n|-----------|---------|\n| Бажаю **щастя**! | I wish you happiness! |\n| Бажаю **здоров'я**! | I wish you health! |\n| Бажаю **успіху**! | I wish you success! |\n| Бажаю **любові**! | I wish you love! |\n\n**Pattern:** Бажаю + Genitive (what you wish)\n\n---\n\n## When Is Your Birthday?\n\n| Question | Answer |\n|----------|--------|\n| **Коли** твій день народження? | Мій день народження **двадцятого травня**. |\n| (When is your birthday?) | (My birthday is on May 20th.) |\n\n**Note:** Dates use **Genitive case**: двадцятого травня (of the 20th of May)\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Examples in Context",
+        "nameEn": null,
+        "type": "content",
+        "content": "> [!example] Привітання (Greetings)\n>\n> - **З Новим роком!** (Happy New Year!)\n> - **З Різдвом Христовим!** (Merry Christmas!)\n> - **З Великоднем!** (Happy Easter!)\n> - **З Днем народження!** (Happy Birthday!)\n> - **Вітаю!** (Congratulations!)\n> - **Щасливих свят!** (Happy holidays!)\n> - **Веселих свят!** (Merry holidays!)\n\n> [!example] Побажання (Wishes)\n>\n> - Бажаю **щастя і здоров'я**! (I wish you happiness and health!)\n> - Бажаю **успіху** у всьому! (I wish you success in everything!)\n> - Бажаю **любові і радості**! (I wish you love and joy!)\n> - **Хай щастить!** (Good luck!)\n> - **Многая літа!** (Many years! — traditional birthday wish)\n> - Нехай здійсняться всі мрії! (May all dreams come true!)\n\n> [!example] Святкування (Celebrating)\n>\n> - Ми **святкуємо** Новий рік вдома. (We celebrate New Year at home.)\n> - Вона **дарує** подарунок. (She gives a gift.)\n> - Я **отримав** квіти. (I received flowers.)\n> - На столі великий **торт**. (There's a big cake on the table.)\n> - **Гості** прийшли на вечірку. (Guests came to the party.)\n> - Ми співаємо і **танцюємо**. (We sing and dance.)\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Dialogues",
+        "nameEn": null,
+        "type": "content",
+        "content": "> [!conversation] З Днем народження! (Happy Birthday!)\n>\n> — З Днем народження, Оксано!\n> — Дякую!\n> — Ось тобі подарунок.\n> — О, дякую! Заходь, будь ласка. Є торт і музика!\n> — Чудово! Бажаю тобі щастя і здоров'я!\n>\n> — Happy Birthday, Oksana!\n> — Thank you!\n> — Here's a gift for you.\n> — Oh, thank you! Come in, please. There's cake and music!\n> — Wonderful! I wish you happiness and health!\n\n> [!conversation] Новий рік (New Year)\n>\n> — З Новим роком!\n> — З Новим роком! Бажаю щастя, здоров'я і любові!\n> — Дякую! Тобі теж!\n> — Що ти робиш на Новий рік?\n> — Святкую вдома. Моя родина завжди разом.\n>\n> — Happy New Year!\n> — Happy New Year! I wish happiness, health and love!\n> — Thank you! You too!\n> — What do you do for New Year?\n> — I celebrate at home. My family is always together.\n\n> [!conversation] Коли твій день народження? (When Is Your Birthday?)\n>\n> — Коли твій день народження?\n> — П'ятнадцятого липня. А твій?\n> — Мій — десятого грудня.\n> — Як ти святкуєш?\n> — Зазвичай вечірка, торт, подарунки!\n>\n> — When is your birthday?\n> — July 15th. And yours?\n> — Mine is December 10th.\n> — How do you celebrate?\n> — Usually a party, cake, presents!\n\n---\n\n> 💡 **Різдво — 25 грудня! (Christmas — December 25!)**\n>\n> Since 2023, Ukraine officially celebrates Christmas (Різдво) on **December 25th** (not January 7th anymore). Ukraine switched from the Julian to the Gregorian calendar for religious holidays. This aligns Ukraine with Western Christmas traditions!\n\n> 🌍 **Українські свята (Ukrainian Holidays)**\n>\n> **Новий рік** (Jan 1) — З Новим роком! Святкуємо з родиною.\n> **Різдво** (Dec 25) — З Різдвом! Дванадцять страв на Святвечір.\n> **Великдень** (Easter) — З Великоднем! Писанки і паска.\n> **8 березня** — З восьмим березня! Квіти і подарунки для жінок.\n>\n> These are the biggest celebrations with family dinners and special traditions.\n\n> ⚡ **Myth vs Fact**\n>\n> **Myth:** \"Ukraine still celebrates Christmas on January 7th\"\n> **Fact:** Since 2023, Ukraine officially celebrates Christmas on December 25th! The Ukrainian Orthodox Church and Greek Catholic Church switched to the Gregorian calendar. Some families still celebrate both dates, but December 25th is now the official holiday!\n\n> 🎭 **Традиційне святкування (Traditional Celebrations)**\n>\n> On Christmas Eve (Святвечір), families prepare 12 meatless dishes (дванадцять страв). The meal starts when the first star appears in the sky. Traditional dishes include kutia (кутя — wheat with honey), borscht (борщ), and varenyky (вареники)!\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Вправи (Activities)",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Holidays and Greetings\n\nMatch the holiday with its greeting.\n\n- Новий рік :: З Новим роком!\n- Різдво :: З Різдвом!\n- Великдень :: З Великоднем!\n- День народження :: З Днем народження!\n- Весілля :: З весіллям!\n- 8 березня :: З восьмим березня!\n- Свята :: Веселих свят!\n- Загальне :: Вітаю!\n- Побажання щастя :: Бажаю щастя!\n- Побажання здоров'я :: Бажаю здоров'я!\n- Успіх :: Бажаю успіху!\n- Удача :: Хай щастить!\n\n---\n\n## match-up: Celebration Vocabulary\n\nMatch the Ukrainian word with its English meaning.\n\n- свято :: holiday\n- подарунок :: gift\n- торт :: cake\n- свічка :: candle\n- квіти :: flowers\n- гості :: guests\n- вечірка :: party\n- музика :: music\n- танці :: dancing\n- радість :: joy\n- щастя :: happiness\n- листівка :: greeting card\n\n---\n\n## group-sort: Holidays by Season\n\n> Sort holidays by when they occur.\n\n### Зима (Winter)\n- Новий рік\n- Різдво\n- Святий Миколай\n\n### Весна (Spring)\n- Великдень\n- 8 березня\n- 1 травня\n\n### Будь-коли (Any Time)\n- День народження\n- Весілля\n- Ювілей\n\n---\n\n## group-sort: Holiday Activities\n\n> Sort words by what you DO vs what you GIVE.\n\n### Дії (Actions)\n- святкувати\n- вітати\n- бажати\n- танцювати\n- співати\n\n### Подарунки (Gifts)\n- подарунок\n- квіти\n- торт\n- листівка\n- цукерки\n- шоколад\n\n---\n\n## fill-in: Привітання (Greetings)\n\n> Choose the correct greeting.\n\n1. Перше січня. ___!\n   > [!answer] З Новим роком\n   > [!options] З Новим роком | З Різдвом | З Великоднем | З Днем народження\n\n2. Сьомого січня. ___!\n   > [!answer] З Різдвом\n   > [!options] З Різдвом | З Новим роком | З Великоднем | З весіллям\n\n3. Весна, яйця, паска. ___!\n   > [!answer] З Великоднем\n   > [!options] З Великоднем | З Різдвом | З Новим роком | З Днем народження\n\n4. Торт зі свічками. ___!\n   > [!answer] З Днем народження\n   > [!options] З Днем народження | З Новим роком | З Різдвом | З Великоднем\n\n5. Наречений і наречена. ___!\n   > [!answer] З весіллям\n   > [!options] З весіллям | З Днем народження | З Новим роком | З Різдвом\n\n6. Восьме березня. ___!\n   > [!answer] З восьмим березня\n   > [!options] З восьмим березня | З Новим роком | З Різдвом | З весіллям\n\n7. Я бажаю тобі ___ і здоров'я!\n   > [!answer] щастя\n   > [!options] щастя | подарунок | торт | квіти\n\n8. Бажаю ___ у навчанні!\n   > [!answer] успіху\n   > [!options] успіху | торт | квіти | музику\n\n9. ___ свят!\n   > [!answer] Веселих\n   > [!options] Веселих | Веселий | Весела | Веселе\n\n10. ___! Ви одружуєтесь!\n    > [!answer] Вітаю\n    > [!options] Вітаю | Дякую | Вибачте | Привіт\n\n11. ___ літа! (Birthday wish)\n    > [!answer] Многая\n    > [!options] Многая | Багато | Довгі | Веселі\n\n12. Хай ___! (Good luck!)\n    > [!answer] щастить\n    > [!options] щастить | буде | йде | робить\n\n---\n\n## fill-in: Святкування (Celebrating)\n\n> Choose the correct word.\n\n1. Ми ___ Новий рік вдома.\n   > [!answer] святкуємо\n   > [!options] святкуємо | дарую | отримую | танцюю\n\n2. Вона ___ мені подарунок.\n   > [!answer] дарує\n   > [!options] дарує | святкує | отримує | бажає\n\n3. Я ___ квіти на день народження.\n   > [!answer] отримав\n   > [!options] отримав | дарував | святкував | бажав\n\n4. На столі великий ___.\n   > [!answer] торт\n   > [!options] торт | гість | музика | танці\n\n5. На торті п'ять ___.\n   > [!answer] свічок\n   > [!options] свічок | подарунків | квітів | гостей\n\n6. ___ прийшли на вечірку.\n   > [!answer] Гості\n   > [!options] Гості | Торт | Музика | Танці\n\n7. Ми танцюємо під ___.\n   > [!answer] музику\n   > [!options] музику | торт | свічку | подарунок\n\n8. Це ___ на мій день народження.\n   > [!answer] запрошення\n   > [!options] запрошення | танці | музика | гості\n\n9. Яка гарна ___! Дякую!\n   > [!answer] листівка\n   > [!options] листівка | музика | танці | вечірка\n\n10. У мене ___ настрій!\n    > [!answer] святковий\n    > [!options] святковий | свято | святкувати | свічка\n\n11. Це дуже ___ вечірка!\n    > [!answer] весела\n    > [!options] весела | веселий | веселе | веселі\n\n12. Скільки ___ у вас на день народження!\n    > [!answer] радості\n    > [!options] радості | радість | радісний | радісна\n\n---\n\n## quiz: Holiday Knowledge\n\nChoose the correct answer.\n\n1. When is Ukrainian Christmas (Різдво)?\n   - [x] January 7\n   - [ ] December 25\n   - [ ] January 1\n   - [ ] December 31\n\n2. What is \"Новий рік\"?\n   - [x] New Year\n   - [ ] Christmas\n   - [ ] Easter\n   - [ ] Birthday\n\n3. What do you say for \"Happy Birthday\"?\n   - [x] З Днем народження!\n   - [ ] З Новим роком!\n   - [ ] З Різдвом!\n   - [ ] З Великоднем!\n\n4. What is \"Великдень\"?\n   - [x] Easter\n   - [ ] Christmas\n   - [ ] New Year\n   - [ ] Birthday\n\n5. \"Бажаю щастя!\" means:\n   - [x] I wish you happiness!\n   - [ ] Happy birthday!\n   - [ ] Merry Christmas!\n   - [ ] Good morning!\n\n6. A traditional birthday song wish in Ukrainian:\n   - [x] Многая літа!\n   - [ ] З Новим роком!\n   - [ ] Хай щастить!\n   - [ ] Вітаю!\n\n7. What do you say for \"Merry Christmas\"?\n   - [x] З Різдвом!\n   - [ ] З Новим роком!\n   - [ ] З Днем народження!\n   - [ ] З Великоднем!\n\n8. What is \"подарунок\"?\n   - [x] Gift/present\n   - [ ] Cake\n   - [ ] Party\n   - [ ] Greeting\n\n---\n\n## unjumble: Holiday Sentences\n\nPut the words in the correct order.\n\n1. роком / З / Новим\n   > [!answer] З Новим роком!\n\n2. народження / Днем / З\n   > [!answer] З Днем народження!\n\n3. здоров'я / Бажаю / і / щастя\n   > [!answer] Бажаю щастя і здоров'я!\n\n4. рік / Новий / святкуємо / ми / вдома\n   > [!answer] Ми святкуємо Новий рік вдома.\n\n5. подарунок / ось / тобі\n   > [!answer] Ось тобі подарунок.\n\n6. народження / твій / коли / день\n   > [!answer] Коли твій день народження?\n\n7. торт / столі / на / великий\n   > [!answer] На столі великий торт.\n\n8. прийшли / гості / на вечірку\n   > [!answer] Гості прийшли на вечірку.\n\n9. весіллям / вітаю / З\n   > [!answer] Вітаю! З весіллям!\n\n10. свят / веселих / вам\n   > [!answer] Веселих свят вам!\n\n11. танцюємо / ми / і / співаємо\n   > [!answer] Ми співаємо і танцюємо.\n\n12. отримав / він / квіти\n   > [!answer] Він отримав квіти.\n\n\n---\n\n## true-false: Holiday Facts\n\nIs this true or false?\n\n- [x] Ukrainian Christmas is on January 7th.\n- [ ] \"З Новим роком!\" means \"Merry Christmas!\".\n  > Incorrect! it means \"Happy New Year!\"\n\n- [x] \"Бажаю\" means \"I wish.\".\n- [x] \"Подарунок\" means \"gift.\".\n- [ ] \"Великдень\" is New Year.\n  > Incorrect! it's Easter\n\n- [x] Ukrainian greetings start with \"З\" + holiday name.\n- [x] \"Торт\" means \"cake.\".\n- [ ] \"Гості\" means \"gifts.\".\n  > Incorrect! it means \"guests\"\n\n- [x] \"Святкувати\" means \"to celebrate.\".\n- [x] \"Многая літа!\" is a traditional birthday wish.\n- [ ] March 8th is only celebrated in Ukraine.\n  > Incorrect! it's International Women's Day\n\n- [x] \"Вітаю!\" means \"Congratulations!\".\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Підсумок (Summary)",
+        "nameEn": null,
         "type": "summary",
-        "content": "**Holidays & Traditions Essentials**\n\n1. **Greetings:** З + holiday (Instrumental)\n2. **Winter:** Новий рік, Різдво (January 7 & December 25)\n3. **Spring:** Великдень (Easter) with писанки\n4. **National:** День Незалежності (August 24)\n\n---\n\n> [!tip] 🌟 **Pro Tip:** The most important phrases: \"З Новим роком!\" (Happy New Year), \"З Різдвом!\" (Merry Christmas), \"Христос Воскрес!\" (Christ is Risen — Easter)!\n\n\n---"
+        "content": "Ви навчилися говорити про свята та традиції! (You've learned about holidays and traditions!)\n\n**Що ви вивчили (What you learned):**\n\n- **Свята (Holidays):** Новий рік, Різдво, Великдень, день народження, весілля\n- **Привітання (Greetings):** З Новим роком! З Днем народження! Христос воскрес!\n- **Побажання (Wishes):** Бажаю щастя/здоров'я/успіху/любові! Хай щастить! Многая літа!\n- **Дієслова (Verbs):** святкувати, дарувати, отримувати\n- **Вечірка (Party):** гості, торт, свічка, квіти, музика, танці, подарунок\n- **Дата (Date):** Коли твій день народження? + родовий відмінок\n- **Різдво в Україні:** 7 січня (Юліанський календар)\n\n---\n\n**Наступний урок:** Підсумковий модуль A1!"
       }
     ],
-    "rawMarkdown": "---\ntitle: \"Holidays & Traditions\"\nsubtitle: \"Ukrainian Celebrations\"\nphase: A1.3\ntransliteration: partial\npedagogy: PPP\nduration: 50\ntags: [vocabulary, holidays, traditions, culture]\nobjectives:\n  - Name major Ukrainian holidays\n  - Describe celebration traditions\n  - Use holiday greetings\n  - Discuss seasonal celebrations\ngrammar:\n  - Holiday vocabulary\n  - Greeting expressions\n  - Celebration verbs\naudio: false\n---\n\n# Holidays & Traditions\n\n> **Note:** Ukrainian holidays reflect a rich blend of Christian, pagan, and national traditions. Learn to celebrate!\n\n## Warm-up: What Do You Celebrate?\n\nWhat are your favorite holidays? How do you celebrate them? Who do you celebrate with?\n\nUkrainian holidays are a beautiful mix of Christian traditions (Christmas, Easter), national celebrations (Independence Day), and ancient pagan festivals with Slavic roots. Many holidays combine all these elements!\n\nFamily gatherings, traditional food, folk songs, and special rituals make Ukrainian holidays unique and memorable. Learning about them helps you understand Ukrainian culture deeply.\n\nThis module introduces major Ukrainian holidays, traditional greetings, and celebration vocabulary. Whether you're in Ukraine during a holiday or celebrating with Ukrainian friends abroad, this knowledge will help you participate meaningfully!\n\nUkrainian holiday traditions survived decades of Soviet suppression. Today, celebrating them is an act of cultural pride and national identity. Especially during war, holidays take on special significance — connecting Ukrainians to their heritage and hope for the future.\n\n> 💡 **Thinking Trick:** Most holiday greetings start with \"З\" (with) + holiday name in Instrumental case: \"З Новим роком!\" (With New Year!)\n\n## Presentation: Major Holidays\n\n### Winter Holidays (Зимові свята)\n\n| Holiday | Date | Greeting |\n|---------|------|----------|\n| Новий рік | December 31 - January 1 | З Новим роком! |\n| Різдво | January 7 (December 25 too) | З Різдвом! |\n| Старий Новий рік | January 13-14 | Зі Старим Новим роком! |\n| Водохреща | January 19 | З Водохрещею! |\n\n**New Year (Новий рік):**\n- Biggest celebration in Ukraine\n- Fireworks at midnight\n- New Year's Tree (Новорічна ялинка)\n- Дід Мороз (Father Frost) and Снігуронька (Snow Maiden)\n- Big feast with Olivier salad\n\n**Christmas (Різдво):**\n- January 7 (Orthodox) AND December 25 (Western)\n- 12 dishes on Christmas Eve (Святвечір)\n- Кутя (kutia) — traditional wheat dish\n- Колядки (carols) sung door to door\n- Вертеп (nativity scenes)\n\n### Spring Holidays (Весняні свята)\n\n| Holiday | Date | Greeting |\n|---------|------|----------|\n| Великдень (Пасха) | Movable (spring) | Христос Воскрес! |\n| День матері | 2nd Sunday of May | Зі святом! |\n| День вишиванки | 3rd Thursday of May | Зі святом! |\n\n**Easter (Великдень):**\n- Most important religious holiday\n- Писанки (decorated eggs)\n- Паска (Easter bread)\n- \"Христос Воскрес!\" — \"Воістину Воскрес!\"\n- Church blessing of Easter baskets\n\n### Summer & Autumn Holidays (Літні й осінні свята)\n\n| Holiday | Date | Greeting |\n|---------|------|----------|\n| Івана Купала | June 23-24 | Зі святом! |\n| День Незалежності | August 24 | З Днем Незалежності! |\n| День захисників | October 1 (moved from Feb 23) | З Днем захисників! |\n\n**Independence Day (День Незалежності):**\n- August 24, 1991 — Ukraine declared independence\n- Parades, concerts, flags everywhere\n- National pride and unity\n- Especially meaningful during wartime\n\n> 📜 **Pattern Summary:**\n> - **Greetings:** З + holiday (Instrumental)\n> - **Easter response:** Христос Воскрес! → Воістину Воскрес!\n> - **Winter holidays:** Новий рік, Різдво most important\n> - **Spring:** Великдень most important\n\n### Holiday Vocabulary\n\n| Ukrainian | English |\n|-----------|---------|\n| свято | holiday, celebration |\n| святкувати | to celebrate |\n| відзначати | to mark, celebrate |\n| подарунок | gift |\n| вітати | to congratulate |\n| листівка | greeting card |\n| гостi | guests |\n| частувати | to treat (with food) |\n| традиція | tradition |\n| святковий | festive |\n\n> 💡 **Did You Know?** Ukrainian Easter eggs (писанки) are famous worldwide! The intricate geometric patterns are created with wax-resist dyeing, passed down through generations. Each symbol has meaning — waves represent life, triangles represent family, and spirals represent eternity!\n\n## Cultural Insight: Ukrainian Holiday Spirit 🇺🇦\n\n**Hospitality during holidays:**\n- Homes are open to visitors\n- Tables overflowing with food\n- \"Сідай, їж!\" (Sit, eat!) — constant refrain\n- Never refuse food — it's insulting!\n- Share even in hard times\n\n**Family traditions:**\n- Multigenerational celebrations\n- Traditional songs and toasts\n- Folk costumes (вишиванки) worn\n- Stories passed down orally\n- Photo albums reviewed together\n\n**Wartime holidays:**\n- Celebrations continue despite war\n- Honoring fallen heroes\n- Supporting soldiers\n- Power outages don't stop gatherings\n- Candlelight Christmas dinners\n- Hope and resilience celebrated\n\n> 📜 **History Bite:** Soviet authorities tried to replace religious holidays with state celebrations. Christmas was banned; \"New Year\" was promoted instead. Despite this, Ukrainians secretly maintained traditions. Today, both religious and secular holidays thrive — a victory of cultural preservation!\n\n> 📜 **Myth Buster:** Some claim Ukrainian Christmas is \"just Russian Orthodox Christmas.\" FALSE! Ukrainian Christmas has unique traditions: Кутя (kutia), Вертеп (nativity plays), Колядки (carols) — all distinctly Ukrainian, preserved through centuries of cultural pressure!\n\n## Reading Practice: Різдво в Україні 📖\n\n**Українською:**\n\nРіздво — одне з найважливіших свят в Україні. Святкуємо його сьомого січня за православним календарем, але тепер також і двадцять п'ятого грудня.\n\nНапередодні Різдва — Святвечір. Вся сім'я збирається за столом. На столі дванадцять пісних страв — на честь дванадцяти апостолів. Головна страва — кутя з пшениці, меду, маку і горіхів.\n\nПісля вечері починаються колядки. Діти і дорослі ходять від дому до дому, співають і отримують солодощі та гроші.\n\nНа Різдво обмінюємося подарунками. Діти вірять, що їх приносить Святий Миколай. Всі вітають одне одного: \"З Різдвом Христовим!\"\n\nРіздвяні свята тривають до Водохреща — дев'ятнадцятого січня. Це час радості, сім'ї і надії!\n\n**English Translation:**\n\nChristmas is one of the most important holidays in Ukraine. We celebrate it on January 7 according to the Orthodox calendar, but now also on December 25.\n\nOn Christmas Eve — Sviatvechir. The whole family gathers at the table. On the table are twelve Lenten dishes — in honor of the twelve apostles. The main dish is kutia from wheat, honey, poppy seeds and nuts.\n\nAfter dinner, carols begin. Children and adults go from house to house, sing and receive sweets and money.\n\nOn Christmas we exchange gifts. Children believe that Saint Nicholas brings them. Everyone greets each other: \"Merry Christmas!\"\n\nChristmas holidays last until Epiphany — January 19. It's a time of joy, family and hope!\n\n## Conversation: Святкуємо разом! 🗣️\n\n**Ольга:** З Новим роком! 🎉\n**Михайло:** З Новим роком! Як святкував?\n**Ольга:** Чудово! Були з родиною. А ти?\n**Михайло:** Ми теж вдома. Готували салат олів'є, дивились телевізор.\n**Ольга:** А о північ?\n**Михайло:** О, феєрверки були прекрасні!\n**Ольга:** Так, у нас теж! А подарунки?\n**Михайло:** Так, обмінялися. Я отримав нову книжку.\n**Ольга:** Гарно! Бажаю щасливого року!\n**Михайло:** Дякую, тобі також! Щастя, здоров'я, миру!\n\n**English Translation:**\n**Olha:** Happy New Year! 🎉\n**Mykhailo:** Happy New Year! How did you celebrate?\n**Olha:** Wonderful! We were with family. And you?\n**Mykhailo:** We were also at home. Prepared Olivier salad, watched TV.\n**Olha:** And at midnight?\n**Mykhailo:** Oh, the fireworks were beautiful!\n**Olha:** Yes, ours too! And gifts?\n**Mykhailo:** Yes, we exchanged. I received a new book.\n**Olha:** Nice! I wish you a happy year!\n**Mykhailo:** Thank you, you too! Happiness, health, peace!\n\nЗверни увагу: З Новим роком, святкував, подарунки, бажаю — святкова лексика!\n\n# Summary\n\n**Holidays & Traditions Essentials**\n\n1. **Greetings:** З + holiday (Instrumental)\n2. **Winter:** Новий рік, Різдво (January 7 & December 25)\n3. **Spring:** Великдень (Easter) with писанки\n4. **National:** День Незалежності (August 24)\n\n---\n\n> [!tip] 🌟 **Pro Tip:** The most important phrases: \"З Новим роком!\" (Happy New Year), \"З Різдвом!\" (Merry Christmas), \"Христос Воскрес!\" (Christ is Risen — Easter)!\n\n# Activities\n\n## fill-in: Holiday Greetings\n> Complete the greeting with the correct form.\n\n1. З Новим ___! (New Year)\n   > [!answer] роком\n   > [!options] рік | роком | року | години\n\n2. З ___! (Christmas)\n   > [!answer] Різдвом\n   > [!options] Різдво | Різдвом | Різдва | Різдву\n\n3. Христос ___! (is risen)\n   > [!answer] Воскрес\n   > [!options] Воскрес | Воскресе | Воскресла | Воскреснув\n\n4. З Днем ___! (Independence)\n   > [!answer] Незалежності\n   > [!options] Незалежність | Незалежності | Незалежністю | Незалежний\n\n5. Зі святом ___! (Mother's)\n   > [!answer] матері\n   > [!options] мати | матері | мама | матір\n\n6. ___ Воскрес! (Truly - Easter response)\n   > [!answer] Воістину\n   > [!options] Воістину | Правда | Так | Звичайно\n\n7. Щасливого ___! (year)\n   > [!answer] року\n   > [!options] рік | року | роком | роки\n\n8. Бажаю ___ і здоров'я! (happiness)\n   > [!answer] щастя\n   > [!options] щастя | щасливий | щаслива | щасливі\n\n9. З Днем ___ (birthday)\n   > [!answer] народження\n   > [!options] народження | народити | народний | народ\n\n10. Веселих ___! (holidays)\n    > [!answer] свят\n    > [!options] свят | свято | святом | свята\n\n11. З ___ Купала! (Ivan)\n    > [!answer] Івана\n    > [!options] Іван | Івана | Іваном | Івану\n\n12. Радісних ___ свят! (Easter)\n    > [!answer] Великодніх\n    > [!options] Великодніх | Великдень | Великоднем | Великодній\n\n## match-up: Holidays & Dates\n> Match holidays with their dates.\n\n| Holiday | Date |\n| --- | --- |\n| Новий рік | January 1 |\n| Різдво (Orthodox) | January 7 |\n| Старий Новий рік | January 13-14 |\n| Водохреща | January 19 |\n| Великдень | Spring (movable) |\n| День матері | 2nd Sunday, May |\n| День вишиванки | 3rd Thursday, May |\n| Івана Купала | June 23-24 |\n| День Незалежності | August 24 |\n| Різдво (Western) | December 25 |\n| День захисників | October 1 |\n| Святвечір | January 6 |\n\n## quiz: Holiday Rules\n> Choose the correct answer.\n\n1. Most important winter holiday in Ukraine:\n   - [x] Новий рік\n   - [ ] Halloween\n   - [ ] Valentine's Day\n   - [ ] Thanksgiving\n\n2. \"Христос Воскрес\" is said on:\n   - [x] Easter (Великдень)\n   - [ ] Christmas\n   - [ ] New Year\n   - [ ] Independence Day\n\n3. Response to \"Христос Воскрес\":\n   - [x] Воістину Воскрес!\n   - [ ] Дякую!\n   - [ ] І вам!\n   - [ ] Добре!\n\n4. Писанки are:\n   - [x] Decorated Easter eggs\n   - [ ] Christmas cookies\n   - [ ] New Year cards\n   - [ ] Birthday cakes\n\n5. How many dishes on Christmas Eve?\n   - [x] 12\n   - [ ] 7\n   - [ ] 3\n   - [ ] 24\n\n6. Кутя is made from:\n   - [x] Wheat, honey, poppy seeds\n   - [ ] Meat and potatoes\n   - [ ] Fish and rice\n   - [ ] Vegetables only\n\n7. Ukraine's Independence Day is:\n   - [x] August 24\n   - [ ] July 4\n   - [ ] January 1\n   - [ ] May 9\n\n8. Дід Мороз is:\n   - [x] Ukrainian Santa (Father Frost)\n   - [ ] Easter bunny\n   - [ ] Halloween ghost\n   - [ ] Spring spirit\n\n9. Holiday greetings use:\n   - [x] З + Instrumental case\n   - [ ] На + Accusative\n   - [ ] В + Locative\n   - [ ] До + Genitive\n\n10. Колядки are:\n    - [x] Christmas carols\n    - [ ] Easter prayers\n    - [ ] Birthday songs\n    - [ ] National anthem\n\n11. Святвечір is:\n    - [x] Christmas Eve\n    - [ ] New Year's Eve\n    - [ ] Easter morning\n    - [ ] Independence Day\n\n12. \"Вітаю\" means:\n    - [x] I congratulate\n    - [ ] I sing\n    - [ ] I eat\n    - [ ] I dance\n\n## group-sort: Seasons & Holidays\n> Sort holidays by season.\n\n- Winter: Новий рік\n- Winter: Різдво\n- Winter: Водохреща\n- Winter: Старий Новий рік\n- Spring: Великдень\n- Spring: День матері\n- Spring: День вишиванки\n- Summer: Івана Купала\n- Summer: День Незалежності\n- Summer: День Конституції\n- Autumn: День захисників\n- Autumn: День вчителя\n\n## true-false: Holiday Facts\n- [x] Новий рік is the biggest celebration.\n- [x] Orthodox Christmas is January 7.\n- [ ] Ukraine only celebrates December 25 Christmas.\n- [x] Писанки are Easter eggs.\n- [x] 12 dishes are served on Christmas Eve.\n- [ ] \"Воістину Воскрес\" is a New Year greeting.\n- [x] Independence Day is August 24.\n- [ ] Колядки are New Year songs.\n- [x] Дід Мороз brings New Year gifts.\n- [x] Кутя is a traditional Christmas dish.\n- [ ] Halloween is a major Ukrainian holiday.\n- [x] Holidays survived Soviet suppression.\n\n## anagram: Holiday Vocabulary\n> Unscramble these holiday words.\n\n1. о т я в с\n   > [!answer] свято\n\n2. в о з д і Р\n   > [!answer] Різдво\n\n3. в к й і Н р о и\n   > [!answer] Новий рік\n\n4. н е ь д и к л е В\n   > [!answer] Великдень\n\n5. к о н у р а д о п\n   > [!answer] подарунок\n\n6. я і ц и д а р т\n   > [!answer] традиція\n\n7. і т с о г\n   > [!answer] гості\n\n8. и т а в у к т я в с\n   > [!answer] святкувати\n\n9. и к н а с и п\n   > [!answer] писанки\n\n10. я т у к\n    > [!answer] кутя\n\n11. и к д я л о к\n    > [!answer] колядки\n\n12. і т и в л і ц с\n    > [!answer] листівці\n\n## fill-in: Celebration Words\n> Complete the sentences.\n\n1. Ми ___ Різдво вдома. (celebrate)\n   > [!answer] святкуємо\n   > [!options] святкуємо | працюємо | спимо | їдемо\n\n2. Я купив ___ для мами. (gift)\n   > [!answer] подарунок\n   > [!options] подарунок | листівку | їжу | квіти\n\n3. До нас прийшли ___. (guests)\n   > [!answer] гості\n   > [!options] гості | друзі | родичі | діти\n\n4. Діти співають ___. (carols)\n   > [!answer] колядки\n   > [!options] колядки | пісні | вірші | казки\n\n5. На Великдень робимо ___. (Easter eggs)\n   > [!answer] писанки\n   > [!options] писанки | яйця | паску | кутю\n\n6. На столі дванадцять ___. (dishes)\n   > [!answer] страв\n   > [!options] страв | тарілок | ложок | вилок\n\n7. ___ з сім'єю! (Celebrate!)\n   > [!answer] Святкуй\n   > [!options] Святкуй | Працюй | Спи | Йди\n\n8. Це наша сімейна ___. (tradition)\n   > [!answer] традиція\n   > [!options] традиція | проблема | історія | мрія\n\n9. Я надсилаю ___ друзям. (cards)\n   > [!answer] листівки\n   > [!options] листівки | подарунки | листи | гроші\n\n10. ___ стіл приготували! (Festive)\n    > [!answer] Святковий\n    > [!options] Святковий | Великий | Смачний | Гарний\n\n11. О ___ б'ють куранти. (midnight)\n    > [!answer] півночі\n    > [!options] півночі | опівдні | ранку | вечора\n\n12. Ми ___ одне одного. (congratulate)\n    > [!answer] вітаємо\n    > [!options] вітаємо | любимо | знаємо | бачимо\n\n## unjumble: Build Holiday Sentences\n> Arrange words into correct sentences.\n\n1. Новим / З / роком\n   > [!answer] З Новим роком!\n\n2. Різдвом / З\n   > [!answer] З Різдвом!\n\n3. Воскрес / Христос\n   > [!answer] Христос Воскрес!\n\n4. Воістину / Воскрес\n   > [!answer] Воістину Воскрес!\n\n5. святкуємо / сім'єю / ми / з\n   > [!answer] Ми святкуємо з сім'єю.\n\n6. Ми / обмінюємося / подарунками\n   > [!answer] Ми обмінюємося подарунками.\n\n7. колядки / співають / діти\n   > [!answer] Діти співають колядки.\n\n8. гості / до / нас / прийшли\n   > [!answer] До нас прийшли гості.\n\n9. традиція / це / наша\n   > [!answer] Це наша традиція.\n\n10. страв / на / столі / дванадцять\n    > [!answer] На столі дванадцять страв.\n\n11. року / щасливого / бажаю\n    > [!answer] Бажаю щасливого року!\n\n12. здоров'я / щастя / миру / і\n    > [!answer] Щастя, здоров'я і миру!\n\n---\n\n# Vocabulary\n\n| Ukrainian | IPA | English | Example |\n| --- | --- | --- | --- |\n| свято | /ˈsʋʲɑto/ | holiday | Яке свято! |\n| святкувати | /sʋʲɑtˈkuʋɑtɪ/ | to celebrate | Ми святкуємо. |\n| вітати | /ʋiˈtɑtɪ/ | to congratulate | Вітаю тебе! |\n| подарунок | /podɑˈrunok/ | gift | Гарний подарунок. |\n| традиція | /trɑˈdɪt͡sʲijɑ/ | tradition | Наша традиція. |\n| гості | /ˈɦosti/ | guests | Прийшли гості. |\n| Новий рік | /noˈʋɪj rik/ | New Year | З Новим роком! |\n| Різдво | /rizdˈʋo/ | Christmas | З Різдвом! |\n| Великдень | /ʋɛlɪkˈdɛnʲ/ | Easter | Христос Воскрес! |\n| кутя | /kuˈtʲɑ/ | kutia (Christmas dish) | Смачна кутя. |\n| писанки | /pɪˈsɑnkɪ/ | decorated eggs | Гарні писанки. |\n| колядки | /koˈlʲɑdkɪ/ | Christmas carols | Співають колядки. |\n| ялинка | /jɑˈlɪnkɑ/ | Christmas tree | Прикрашена ялинка. |\n| незалежність | /nɛzɑˈlɛʒnistʲ/ | independence | День Незалежності. |\n| святковий | /sʋʲɑtˈkoʋɪj/ | festive | Святковий настрій. |\n| листівка | /lɪsˈtiʋkɑ/ | greeting card | Надсилаю листівку. |\n| бажати | /bɑˈʒɑtɪ/ | to wish | Бажаю щастя! |\n| щастя | /ˈʃt͡ʃɑsʲtʲɑ/ | happiness | Бажаю щастя! |\n| здоров'я | /zdoˈroʋjɑ/ | health | Бажаю здоров'я! |\n| мир | /mɪr/ | peace | Бажаю миру! |\n| частувати | /t͡ʃɑstuˈʋɑtɪ/ | to treat (food) | Частуйся! |\n| обмінюватися | /obmiˈnʲuʋɑtɪsʲɑ/ | to exchange | Обмінюємося подарунками. |\n| феєрверк | /fɛjɛrˈʋɛrk/ | fireworks | Гарні феєрверки! |\n| опівночі | /oˈpiʋnot͡ʃi/ | at midnight | Куранти о півночі. |\n| радість | /ˈrɑdistʲ/ | joy | Яка радість! |\n",
-    "createdAt": "2025-12-12T19:55:32.055Z",
-    "modifiedAt": "2025-12-12T19:55:32.055Z",
+    "rawMarkdown": "---\nmodule: a1-33\ntitle: \"Holidays & Traditions\"\nsubtitle: \"Свята і традиції\"\nversion: \"1.0\"\nphase: \"A1.3 - Consolidation\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: \"first-occurrence\"\ntags:\n  - holidays\n  - traditions\n  - greetings\n  - celebrations\ngrammar:\n  - Holiday greetings\n  - Date expressions (Genitive)\n  - Wish expressions\nobjectives:\n  - \"Learner can name major Ukrainian holidays\"\n  - \"Learner can give holiday greetings\"\n  - \"Learner can talk about birthday celebrations\"\n  - \"Learner can express wishes\"\nvocabulary_count: 30\n---\n\n# Holidays & Traditions\n\n## Warm-up\n\n> 💡 **Щасливих свят! (Happy Holidays!)**\n>\n> Ukrainians love to celebrate! From New Year to Easter, holidays bring families together.\n> — **З Новим роком!** (Happy New Year!)\n> — **З Днем народження!** (Happy Birthday!)\n> — **Вітаю!** (Congratulations!)\n>\n> Learn these greetings as fixed phrases — you'll analyze the grammar at A2!\n\n> [!resources] 🎧 External Resources\n>\n> **Greetings:** [Greetings for Every Occasion](https://www.ukrainianlessons.com/greetings/) — All Ukrainian greetings with audio\n>\n> **Christmas:** [When is Ukrainian Christmas](https://www.ukrainianlessons.com/ukrainian-christmas/) — Christmas traditions explained\n>\n> **Easter:** [Easter Greetings](https://www.ukrainianlessons.com/easter-greetings/) — Authentic Easter phrases\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| свято | /ˈswjɑtɔ/ | holiday | n | n | |\n| традиція | /trɑˈdɪtsʲijɑ/ | tradition | n | f | |\n| Новий рік | /nɔˈwɪj rʲik/ | New Year | n | m | |\n| Різдво | /rʲizˈdwɔ/ | Christmas | n | n | January 7 |\n| Великдень | /wɛˈlɪkdɛnʲ/ | Easter | n | m | |\n| день народження | /dɛnʲ nɑˈrɔdʒɛnʲːɑ/ | birthday | n | m | |\n| весілля | /wɛˈsʲilʲːɑ/ | wedding | n | n | |\n| подарунок | /pɔdɑˈrunɔk/ | gift/present | n | m | |\n| вітати | /wʲiˈtɑtɪ/ | to congratulate | v | — | |\n| бажати | /bɑˈʒɑtɪ/ | to wish | v | — | |\n| щастя | /ˈʃtʃɑstʲɑ/ | happiness | n | n | |\n| здоров'я | /zdɔˈrɔwjɑ/ | health | n | n | |\n| успіху | /usˈpʲixu/ | success (Gen) | n | m | \"бажаю успіху\" |\n| любові | /lʲuˈbɔwʲi/ | love (Gen) | n | f | \"бажаю любові\" |\n| святкувати | /swʲɑtˈkuwɑtɪ/ | to celebrate | v | — | |\n| дарувати | /dɑruˈwɑtɪ/ | to give (as gift) | v | — | |\n| отримувати | /ɔˈtrɪmuwɑtɪ/ | to receive | v | — | |\n| гості | /ˈhɔstʲi/ | guests | n | pl | |\n| торт | /tɔrt/ | cake | n | m | |\n| свічка | /ˈswʲitʃkɑ/ | candle | n | f | |\n| квіти | /ˈkwʲitɪ/ | flowers | n | pl | |\n| листівка | /lɪsˈtʲiwkɑ/ | card (greeting) | n | f | |\n| запрошення | /zɑprɔˈʃɛnʲːɑ/ | invitation | n | n | |\n| вечірка | /wɛˈtʃʲirkɑ/ | party | n | f | |\n| музика | /ˈmuzɪkɑ/ | music | n | f | |\n| танці | /ˈtɑntsʲi/ | dancing | n | pl | |\n| радість | /ˈrɑdʲistʲ/ | joy | n | f | |\n| веселий | /wɛˈsɛlɪj/ | cheerful | adj | m | |\n| святковий | /swʲɑtˈkɔwɪj/ | festive | adj | m | |\n| вітання | /wʲiˈtɑnʲːɑ/ | greeting | n | n | |\n\n---\n\n# Grammar\n\n## Holiday Greetings\n\n> [!observe] Спостереження (Pattern Discovery)\n>\n> Learn these greetings as fixed phrases:\n> - **З Новим роком!** (Happy New Year!)\n> - **З Різдвом!** (Merry Christmas!)\n> - **З Великоднем!** (Happy Easter!)\n> - **З Днем народження!** (Happy Birthday!)\n>\n> Memorize these complete phrases! The grammar will be explained at A2.\n\n### Common Holiday Greetings\n\n| Holiday | Greeting | Translation |\n|---------|----------|-------------|\n| Новий рік | З Новим роком! | Happy New Year! |\n| Різдво | З Різдвом! | Merry Christmas! |\n| Великдень | З Великоднем! | Happy Easter! |\n| День народження | З Днем народження! | Happy Birthday! |\n| Весілля | З весіллям! | Congratulations on your wedding! |\n| 8 березня | З восьмим березня! | Happy Women's Day! |\n\n---\n\n## Making Wishes\n\n| Ukrainian | English |\n|-----------|---------|\n| Бажаю **щастя**! | I wish you happiness! |\n| Бажаю **здоров'я**! | I wish you health! |\n| Бажаю **успіху**! | I wish you success! |\n| Бажаю **любові**! | I wish you love! |\n\n**Pattern:** Бажаю + Genitive (what you wish)\n\n---\n\n## When Is Your Birthday?\n\n| Question | Answer |\n|----------|--------|\n| **Коли** твій день народження? | Мій день народження **двадцятого травня**. |\n| (When is your birthday?) | (My birthday is on May 20th.) |\n\n**Note:** Dates use **Genitive case**: двадцятого травня (of the 20th of May)\n\n---\n\n# Examples in Context\n\n> [!example] Привітання (Greetings)\n>\n> - **З Новим роком!** (Happy New Year!)\n> - **З Різдвом Христовим!** (Merry Christmas!)\n> - **З Великоднем!** (Happy Easter!)\n> - **З Днем народження!** (Happy Birthday!)\n> - **Вітаю!** (Congratulations!)\n> - **Щасливих свят!** (Happy holidays!)\n> - **Веселих свят!** (Merry holidays!)\n\n> [!example] Побажання (Wishes)\n>\n> - Бажаю **щастя і здоров'я**! (I wish you happiness and health!)\n> - Бажаю **успіху** у всьому! (I wish you success in everything!)\n> - Бажаю **любові і радості**! (I wish you love and joy!)\n> - **Хай щастить!** (Good luck!)\n> - **Многая літа!** (Many years! — traditional birthday wish)\n> - Нехай здійсняться всі мрії! (May all dreams come true!)\n\n> [!example] Святкування (Celebrating)\n>\n> - Ми **святкуємо** Новий рік вдома. (We celebrate New Year at home.)\n> - Вона **дарує** подарунок. (She gives a gift.)\n> - Я **отримав** квіти. (I received flowers.)\n> - На столі великий **торт**. (There's a big cake on the table.)\n> - **Гості** прийшли на вечірку. (Guests came to the party.)\n> - Ми співаємо і **танцюємо**. (We sing and dance.)\n\n---\n\n# Dialogues\n\n> [!conversation] З Днем народження! (Happy Birthday!)\n>\n> — З Днем народження, Оксано!\n> — Дякую!\n> — Ось тобі подарунок.\n> — О, дякую! Заходь, будь ласка. Є торт і музика!\n> — Чудово! Бажаю тобі щастя і здоров'я!\n>\n> — Happy Birthday, Oksana!\n> — Thank you!\n> — Here's a gift for you.\n> — Oh, thank you! Come in, please. There's cake and music!\n> — Wonderful! I wish you happiness and health!\n\n> [!conversation] Новий рік (New Year)\n>\n> — З Новим роком!\n> — З Новим роком! Бажаю щастя, здоров'я і любові!\n> — Дякую! Тобі теж!\n> — Що ти робиш на Новий рік?\n> — Святкую вдома. Моя родина завжди разом.\n>\n> — Happy New Year!\n> — Happy New Year! I wish happiness, health and love!\n> — Thank you! You too!\n> — What do you do for New Year?\n> — I celebrate at home. My family is always together.\n\n> [!conversation] Коли твій день народження? (When Is Your Birthday?)\n>\n> — Коли твій день народження?\n> — П'ятнадцятого липня. А твій?\n> — Мій — десятого грудня.\n> — Як ти святкуєш?\n> — Зазвичай вечірка, торт, подарунки!\n>\n> — When is your birthday?\n> — July 15th. And yours?\n> — Mine is December 10th.\n> — How do you celebrate?\n> — Usually a party, cake, presents!\n\n---\n\n> 💡 **Різдво — 25 грудня! (Christmas — December 25!)**\n>\n> Since 2023, Ukraine officially celebrates Christmas (Різдво) on **December 25th** (not January 7th anymore). Ukraine switched from the Julian to the Gregorian calendar for religious holidays. This aligns Ukraine with Western Christmas traditions!\n\n> 🌍 **Українські свята (Ukrainian Holidays)**\n>\n> **Новий рік** (Jan 1) — З Новим роком! Святкуємо з родиною.\n> **Різдво** (Dec 25) — З Різдвом! Дванадцять страв на Святвечір.\n> **Великдень** (Easter) — З Великоднем! Писанки і паска.\n> **8 березня** — З восьмим березня! Квіти і подарунки для жінок.\n>\n> These are the biggest celebrations with family dinners and special traditions.\n\n> ⚡ **Myth vs Fact**\n>\n> **Myth:** \"Ukraine still celebrates Christmas on January 7th\"\n> **Fact:** Since 2023, Ukraine officially celebrates Christmas on December 25th! The Ukrainian Orthodox Church and Greek Catholic Church switched to the Gregorian calendar. Some families still celebrate both dates, but December 25th is now the official holiday!\n\n> 🎭 **Традиційне святкування (Traditional Celebrations)**\n>\n> On Christmas Eve (Святвечір), families prepare 12 meatless dishes (дванадцять страв). The meal starts when the first star appears in the sky. Traditional dishes include kutia (кутя — wheat with honey), borscht (борщ), and varenyky (вареники)!\n\n---\n\n# Вправи (Activities)\n\n## match-up: Holidays and Greetings\n\nMatch the holiday with its greeting.\n\n- Новий рік :: З Новим роком!\n- Різдво :: З Різдвом!\n- Великдень :: З Великоднем!\n- День народження :: З Днем народження!\n- Весілля :: З весіллям!\n- 8 березня :: З восьмим березня!\n- Свята :: Веселих свят!\n- Загальне :: Вітаю!\n- Побажання щастя :: Бажаю щастя!\n- Побажання здоров'я :: Бажаю здоров'я!\n- Успіх :: Бажаю успіху!\n- Удача :: Хай щастить!\n\n---\n\n## match-up: Celebration Vocabulary\n\nMatch the Ukrainian word with its English meaning.\n\n- свято :: holiday\n- подарунок :: gift\n- торт :: cake\n- свічка :: candle\n- квіти :: flowers\n- гості :: guests\n- вечірка :: party\n- музика :: music\n- танці :: dancing\n- радість :: joy\n- щастя :: happiness\n- листівка :: greeting card\n\n---\n\n## group-sort: Holidays by Season\n\n> Sort holidays by when they occur.\n\n### Зима (Winter)\n- Новий рік\n- Різдво\n- Святий Миколай\n\n### Весна (Spring)\n- Великдень\n- 8 березня\n- 1 травня\n\n### Будь-коли (Any Time)\n- День народження\n- Весілля\n- Ювілей\n\n---\n\n## group-sort: Holiday Activities\n\n> Sort words by what you DO vs what you GIVE.\n\n### Дії (Actions)\n- святкувати\n- вітати\n- бажати\n- танцювати\n- співати\n\n### Подарунки (Gifts)\n- подарунок\n- квіти\n- торт\n- листівка\n- цукерки\n- шоколад\n\n---\n\n## fill-in: Привітання (Greetings)\n\n> Choose the correct greeting.\n\n1. Перше січня. ___!\n   > [!answer] З Новим роком\n   > [!options] З Новим роком | З Різдвом | З Великоднем | З Днем народження\n\n2. Сьомого січня. ___!\n   > [!answer] З Різдвом\n   > [!options] З Різдвом | З Новим роком | З Великоднем | З весіллям\n\n3. Весна, яйця, паска. ___!\n   > [!answer] З Великоднем\n   > [!options] З Великоднем | З Різдвом | З Новим роком | З Днем народження\n\n4. Торт зі свічками. ___!\n   > [!answer] З Днем народження\n   > [!options] З Днем народження | З Новим роком | З Різдвом | З Великоднем\n\n5. Наречений і наречена. ___!\n   > [!answer] З весіллям\n   > [!options] З весіллям | З Днем народження | З Новим роком | З Різдвом\n\n6. Восьме березня. ___!\n   > [!answer] З восьмим березня\n   > [!options] З восьмим березня | З Новим роком | З Різдвом | З весіллям\n\n7. Я бажаю тобі ___ і здоров'я!\n   > [!answer] щастя\n   > [!options] щастя | подарунок | торт | квіти\n\n8. Бажаю ___ у навчанні!\n   > [!answer] успіху\n   > [!options] успіху | торт | квіти | музику\n\n9. ___ свят!\n   > [!answer] Веселих\n   > [!options] Веселих | Веселий | Весела | Веселе\n\n10. ___! Ви одружуєтесь!\n    > [!answer] Вітаю\n    > [!options] Вітаю | Дякую | Вибачте | Привіт\n\n11. ___ літа! (Birthday wish)\n    > [!answer] Многая\n    > [!options] Многая | Багато | Довгі | Веселі\n\n12. Хай ___! (Good luck!)\n    > [!answer] щастить\n    > [!options] щастить | буде | йде | робить\n\n---\n\n## fill-in: Святкування (Celebrating)\n\n> Choose the correct word.\n\n1. Ми ___ Новий рік вдома.\n   > [!answer] святкуємо\n   > [!options] святкуємо | дарую | отримую | танцюю\n\n2. Вона ___ мені подарунок.\n   > [!answer] дарує\n   > [!options] дарує | святкує | отримує | бажає\n\n3. Я ___ квіти на день народження.\n   > [!answer] отримав\n   > [!options] отримав | дарував | святкував | бажав\n\n4. На столі великий ___.\n   > [!answer] торт\n   > [!options] торт | гість | музика | танці\n\n5. На торті п'ять ___.\n   > [!answer] свічок\n   > [!options] свічок | подарунків | квітів | гостей\n\n6. ___ прийшли на вечірку.\n   > [!answer] Гості\n   > [!options] Гості | Торт | Музика | Танці\n\n7. Ми танцюємо під ___.\n   > [!answer] музику\n   > [!options] музику | торт | свічку | подарунок\n\n8. Це ___ на мій день народження.\n   > [!answer] запрошення\n   > [!options] запрошення | танці | музика | гості\n\n9. Яка гарна ___! Дякую!\n   > [!answer] листівка\n   > [!options] листівка | музика | танці | вечірка\n\n10. У мене ___ настрій!\n    > [!answer] святковий\n    > [!options] святковий | свято | святкувати | свічка\n\n11. Це дуже ___ вечірка!\n    > [!answer] весела\n    > [!options] весела | веселий | веселе | веселі\n\n12. Скільки ___ у вас на день народження!\n    > [!answer] радості\n    > [!options] радості | радість | радісний | радісна\n\n---\n\n## quiz: Holiday Knowledge\n\nChoose the correct answer.\n\n1. When is Ukrainian Christmas (Різдво)?\n   - [x] January 7\n   - [ ] December 25\n   - [ ] January 1\n   - [ ] December 31\n\n2. What is \"Новий рік\"?\n   - [x] New Year\n   - [ ] Christmas\n   - [ ] Easter\n   - [ ] Birthday\n\n3. What do you say for \"Happy Birthday\"?\n   - [x] З Днем народження!\n   - [ ] З Новим роком!\n   - [ ] З Різдвом!\n   - [ ] З Великоднем!\n\n4. What is \"Великдень\"?\n   - [x] Easter\n   - [ ] Christmas\n   - [ ] New Year\n   - [ ] Birthday\n\n5. \"Бажаю щастя!\" means:\n   - [x] I wish you happiness!\n   - [ ] Happy birthday!\n   - [ ] Merry Christmas!\n   - [ ] Good morning!\n\n6. A traditional birthday song wish in Ukrainian:\n   - [x] Многая літа!\n   - [ ] З Новим роком!\n   - [ ] Хай щастить!\n   - [ ] Вітаю!\n\n7. What do you say for \"Merry Christmas\"?\n   - [x] З Різдвом!\n   - [ ] З Новим роком!\n   - [ ] З Днем народження!\n   - [ ] З Великоднем!\n\n8. What is \"подарунок\"?\n   - [x] Gift/present\n   - [ ] Cake\n   - [ ] Party\n   - [ ] Greeting\n\n---\n\n## unjumble: Holiday Sentences\n\nPut the words in the correct order.\n\n1. роком / З / Новим\n   > [!answer] З Новим роком!\n\n2. народження / Днем / З\n   > [!answer] З Днем народження!\n\n3. здоров'я / Бажаю / і / щастя\n   > [!answer] Бажаю щастя і здоров'я!\n\n4. рік / Новий / святкуємо / ми / вдома\n   > [!answer] Ми святкуємо Новий рік вдома.\n\n5. подарунок / ось / тобі\n   > [!answer] Ось тобі подарунок.\n\n6. народження / твій / коли / день\n   > [!answer] Коли твій день народження?\n\n7. торт / столі / на / великий\n   > [!answer] На столі великий торт.\n\n8. прийшли / гості / на вечірку\n   > [!answer] Гості прийшли на вечірку.\n\n9. весіллям / вітаю / З\n   > [!answer] Вітаю! З весіллям!\n\n10. свят / веселих / вам\n   > [!answer] Веселих свят вам!\n\n11. танцюємо / ми / і / співаємо\n   > [!answer] Ми співаємо і танцюємо.\n\n12. отримав / він / квіти\n   > [!answer] Він отримав квіти.\n\n\n---\n\n## true-false: Holiday Facts\n\nIs this true or false?\n\n- [x] Ukrainian Christmas is on January 7th.\n- [ ] \"З Новим роком!\" means \"Merry Christmas!\".\n  > Incorrect! it means \"Happy New Year!\"\n\n- [x] \"Бажаю\" means \"I wish.\".\n- [x] \"Подарунок\" means \"gift.\".\n- [ ] \"Великдень\" is New Year.\n  > Incorrect! it's Easter\n\n- [x] Ukrainian greetings start with \"З\" + holiday name.\n- [x] \"Торт\" means \"cake.\".\n- [ ] \"Гості\" means \"gifts.\".\n  > Incorrect! it means \"guests\"\n\n- [x] \"Святкувати\" means \"to celebrate.\".\n- [x] \"Многая літа!\" is a traditional birthday wish.\n- [ ] March 8th is only celebrated in Ukraine.\n  > Incorrect! it's International Women's Day\n\n- [x] \"Вітаю!\" means \"Congratulations!\".\n\n---\n\n# Підсумок (Summary)\n\nВи навчилися говорити про свята та традиції! (You've learned about holidays and traditions!)\n\n**Що ви вивчили (What you learned):**\n\n- **Свята (Holidays):** Новий рік, Різдво, Великдень, день народження, весілля\n- **Привітання (Greetings):** З Новим роком! З Днем народження! Христос воскрес!\n- **Побажання (Wishes):** Бажаю щастя/здоров'я/успіху/любові! Хай щастить! Многая літа!\n- **Дієслова (Verbs):** святкувати, дарувати, отримувати\n- **Вечірка (Party):** гості, торт, свічка, квіти, музика, танці, подарунок\n- **Дата (Date):** Коли твій день народження? + родовий відмінок\n- **Різдво в Україні:** 7 січня (Юліанський календар)\n\n---\n\n**Наступний урок:** Підсумковий модуль A1!\n",
+    "createdAt": "2025-12-14T15:48:09.040644Z",
+    "modifiedAt": "2025-12-14T15:48:09.040644Z",
     "version": 2
   },
-  "activities": [
-    {
-      "id": "act-a1-0-fillblank-0",
-      "type": "fill-blank",
-      "title": "Holiday Greetings",
-      "description": "Complete the greeting with the correct form.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "З Новим ___! (New Year)",
-            "answer": "роком",
-            "options": [
-              "рік",
-              "роком",
-              "року",
-              "години"
-            ]
-          },
-          {
-            "prompt": "З ___! (Christmas)",
-            "answer": "Різдвом",
-            "options": [
-              "Різдво",
-              "Різдвом",
-              "Різдва",
-              "Різдву"
-            ]
-          },
-          {
-            "prompt": "Христос ___! (is risen)",
-            "answer": "Воскрес",
-            "options": [
-              "Воскрес",
-              "Воскресе",
-              "Воскресла",
-              "Воскреснув"
-            ]
-          },
-          {
-            "prompt": "З Днем ___! (Independence)",
-            "answer": "Незалежності",
-            "options": [
-              "Незалежність",
-              "Незалежності",
-              "Незалежністю",
-              "Незалежний"
-            ]
-          },
-          {
-            "prompt": "Зі святом ___! (Mother's)",
-            "answer": "матері",
-            "options": [
-              "мати",
-              "матері",
-              "мама",
-              "матір"
-            ]
-          },
-          {
-            "prompt": "___ Воскрес! (Truly - Easter response)",
-            "answer": "Воістину",
-            "options": [
-              "Воістину",
-              "Правда",
-              "Так",
-              "Звичайно"
-            ]
-          },
-          {
-            "prompt": "Щасливого ___! (year)",
-            "answer": "року",
-            "options": [
-              "рік",
-              "року",
-              "роком",
-              "роки"
-            ]
-          },
-          {
-            "prompt": "Бажаю ___ і здоров'я! (happiness)",
-            "answer": "щастя",
-            "options": [
-              "щастя",
-              "щасливий",
-              "щаслива",
-              "щасливі"
-            ]
-          },
-          {
-            "prompt": "З Днем ___",
-            "answer": "народження",
-            "options": [
-              "народження",
-              "народити",
-              "народний",
-              "народ"
-            ]
-          },
-          {
-            "prompt": "Веселих ___! (holidays)",
-            "answer": "свят",
-            "options": [
-              "свят",
-              "свято",
-              "святом",
-              "свята"
-            ]
-          },
-          {
-            "prompt": "З ___ Купала! (Ivan)",
-            "answer": "Івана",
-            "options": [
-              "Іван",
-              "Івана",
-              "Іваном",
-              "Івану"
-            ]
-          },
-          {
-            "prompt": "Радісних ___ свят! (Easter)",
-            "answer": "Великодніх",
-            "options": [
-              "Великодніх",
-              "Великдень",
-              "Великоднем",
-              "Великодній"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.055Z",
-      "modifiedAt": "2025-12-12T19:55:32.055Z"
-    },
-    {
-      "id": "act-a1-0-matchup-0",
-      "type": "match-up",
-      "title": "Holidays & Dates",
-      "description": "Match holidays with their dates.",
-      "content": {
-        "type": "match-up",
-        "pairs": [
-          {
-            "left": "Новий рік",
-            "right": "January 1"
-          },
-          {
-            "left": "Різдво (Orthodox)",
-            "right": "January 7"
-          },
-          {
-            "left": "Старий Новий рік",
-            "right": "January 13-14"
-          },
-          {
-            "left": "Водохреща",
-            "right": "January 19"
-          },
-          {
-            "left": "Великдень",
-            "right": "Spring (movable)"
-          },
-          {
-            "left": "День матері",
-            "right": "2nd Sunday, May"
-          },
-          {
-            "left": "День вишиванки",
-            "right": "3rd Thursday, May"
-          },
-          {
-            "left": "Івана Купала",
-            "right": "June 23-24"
-          },
-          {
-            "left": "День Незалежності",
-            "right": "August 24"
-          },
-          {
-            "left": "Різдво (Western)",
-            "right": "December 25"
-          },
-          {
-            "left": "День захисників",
-            "right": "October 1"
-          },
-          {
-            "left": "Святвечір",
-            "right": "January 6"
-          }
-        ],
-        "shuffleRight": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.055Z",
-      "modifiedAt": "2025-12-12T19:55:32.055Z"
-    },
-    {
-      "id": "act-a1-0-quiz-0",
-      "type": "quiz",
-      "title": "Holiday Rules",
-      "description": "Choose the correct answer.",
-      "content": {
-        "type": "quiz",
-        "questions": [
-          {
-            "question": "Most important winter holiday in Ukraine:",
-            "options": [
-              "Новий рік",
-              "Halloween",
-              "Valentine's Day",
-              "Thanksgiving"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Христос Воскрес\" is said on:",
-            "options": [
-              "Easter (Великдень)",
-              "Christmas",
-              "New Year",
-              "Independence Day"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Response to \"Христос Воскрес\":",
-            "options": [
-              "Воістину Воскрес!",
-              "Дякую!",
-              "І вам!",
-              "Добре!"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Писанки are:",
-            "options": [
-              "Decorated Easter eggs",
-              "Christmas cookies",
-              "New Year cards",
-              "Birthday cakes"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "How many dishes on Christmas Eve?",
-            "options": [
-              "12",
-              "7",
-              "3",
-              "24"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Кутя is made from:",
-            "options": [
-              "Wheat, honey, poppy seeds",
-              "Meat and potatoes",
-              "Fish and rice",
-              "Vegetables only"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Ukraine's Independence Day is:",
-            "options": [
-              "August 24",
-              "July 4",
-              "January 1",
-              "May 9"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Дід Мороз is:",
-            "options": [
-              "Ukrainian Santa (Father Frost)",
-              "Easter bunny",
-              "Halloween ghost",
-              "Spring spirit"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Holiday greetings use:",
-            "options": [
-              "З + Instrumental case",
-              "На + Accusative",
-              "В + Locative",
-              "До + Genitive"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Колядки are:",
-            "options": [
-              "Christmas carols",
-              "Easter prayers",
-              "Birthday songs",
-              "National anthem"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Святвечір is:",
-            "options": [
-              "Christmas Eve",
-              "New Year's Eve",
-              "Easter morning",
-              "Independence Day"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Вітаю\" means:",
-            "options": [
-              "I congratulate",
-              "I sing",
-              "I eat",
-              "I dance"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          }
-        ],
-        "shuffleQuestions": true,
-        "shuffleOptions": true,
-        "showCorrectAnswers": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.055Z",
-      "modifiedAt": "2025-12-12T19:55:32.055Z"
-    },
-    {
-      "id": "act-a1-0-groupsort-0",
-      "type": "group-sort",
-      "title": "Seasons & Holidays",
-      "description": "Sort holidays by season.",
-      "content": {
-        "type": "group-sort",
-        "groups": [],
-        "shuffleItems": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.055Z",
-      "modifiedAt": "2025-12-12T19:55:32.055Z"
-    },
-    {
-      "id": "act-a1-0-truefalse-0",
-      "type": "true-false",
-      "title": "Holiday Facts",
-      "description": "Holiday Facts",
-      "content": {
-        "type": "true-false",
-        "statements": [
-          {
-            "statement": "Новий рік is the biggest celebration.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "Orthodox Christmas is January 7.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "Ukraine only celebrates December 25 Christmas.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "Писанки are Easter eggs.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "12 dishes are served on Christmas Eve.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Воістину Воскрес\" is a New Year greeting.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "Independence Day is August 24.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "Колядки are New Year songs.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "Дід Мороз brings New Year gifts.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "Кутя is a traditional Christmas dish.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "Halloween is a major Ukrainian holiday.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "Holidays survived Soviet suppression.",
-            "isTrue": true,
-            "explanation": ""
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.055Z",
-      "modifiedAt": "2025-12-12T19:55:32.055Z"
-    },
-    {
-      "id": "act-a1-0-anagram-0",
-      "type": "anagram",
-      "title": "Holiday Vocabulary",
-      "description": "Unscramble these holiday words.",
-      "content": {
-        "type": "anagram",
-        "isAnagram": true,
-        "items": [
-          {
-            "letters": [
-              "о",
-              "т",
-              "я",
-              "в",
-              "с"
-            ],
-            "answer": "свято"
-          },
-          {
-            "letters": [
-              "в",
-              "о",
-              "з",
-              "д",
-              "і",
-              "Р"
-            ],
-            "answer": "Різдво"
-          },
-          {
-            "letters": [
-              "в",
-              "к",
-              "й",
-              "і",
-              "Н",
-              "р",
-              "о",
-              "и"
-            ],
-            "answer": "Новий рік"
-          },
-          {
-            "letters": [
-              "н",
-              "е",
-              "ь",
-              "д",
-              "и",
-              "к",
-              "л",
-              "е",
-              "В"
-            ],
-            "answer": "Великдень"
-          },
-          {
-            "letters": [
-              "к",
-              "о",
-              "н",
-              "у",
-              "р",
-              "а",
-              "д",
-              "о",
-              "п"
-            ],
-            "answer": "подарунок"
-          },
-          {
-            "letters": [
-              "я",
-              "і",
-              "ц",
-              "и",
-              "д",
-              "а",
-              "р",
-              "т"
-            ],
-            "answer": "традиція"
-          },
-          {
-            "letters": [
-              "і",
-              "т",
-              "с",
-              "о",
-              "г"
-            ],
-            "answer": "гості"
-          },
-          {
-            "letters": [
-              "и",
-              "т",
-              "а",
-              "в",
-              "у",
-              "к",
-              "т",
-              "я",
-              "в",
-              "с"
-            ],
-            "answer": "святкувати"
-          },
-          {
-            "letters": [
-              "и",
-              "к",
-              "н",
-              "а",
-              "с",
-              "и",
-              "п"
-            ],
-            "answer": "писанки"
-          },
-          {
-            "letters": [
-              "я",
-              "т",
-              "у",
-              "к"
-            ],
-            "answer": "кутя"
-          },
-          {
-            "letters": [
-              "и",
-              "к",
-              "д",
-              "я",
-              "л",
-              "о",
-              "к"
-            ],
-            "answer": "колядки"
-          },
-          {
-            "letters": [
-              "і",
-              "т",
-              "и",
-              "в",
-              "л",
-              "і",
-              "ц",
-              "с"
-            ],
-            "answer": "листівці"
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.055Z",
-      "modifiedAt": "2025-12-12T19:55:32.055Z"
-    },
-    {
-      "id": "act-a1-0-fillblank-1",
-      "type": "fill-blank",
-      "title": "Celebration Words",
-      "description": "Complete the sentences.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Ми ___ Різдво вдома. (celebrate)",
-            "answer": "святкуємо",
-            "options": [
-              "святкуємо",
-              "працюємо",
-              "спимо",
-              "їдемо"
-            ]
-          },
-          {
-            "prompt": "Я купив ___ для мами. (gift)",
-            "answer": "подарунок",
-            "options": [
-              "подарунок",
-              "листівку",
-              "їжу",
-              "квіти"
-            ]
-          },
-          {
-            "prompt": "До нас прийшли ___. (guests)",
-            "answer": "гості",
-            "options": [
-              "гості",
-              "друзі",
-              "родичі",
-              "діти"
-            ]
-          },
-          {
-            "prompt": "Діти співають ___. (carols)",
-            "answer": "колядки",
-            "options": [
-              "колядки",
-              "пісні",
-              "вірші",
-              "казки"
-            ]
-          },
-          {
-            "prompt": "На Великдень робимо ___. (Easter eggs)",
-            "answer": "писанки",
-            "options": [
-              "писанки",
-              "яйця",
-              "паску",
-              "кутю"
-            ]
-          },
-          {
-            "prompt": "На столі дванадцять ___. (dishes)",
-            "answer": "страв",
-            "options": [
-              "страв",
-              "тарілок",
-              "ложок",
-              "вилок"
-            ]
-          },
-          {
-            "prompt": "___ з сім'єю! (Celebrate!)",
-            "answer": "Святкуй",
-            "options": [
-              "Святкуй",
-              "Працюй",
-              "Спи",
-              "Йди"
-            ]
-          },
-          {
-            "prompt": "Це наша сімейна ___. (tradition)",
-            "answer": "традиція",
-            "options": [
-              "традиція",
-              "проблема",
-              "історія",
-              "мрія"
-            ]
-          },
-          {
-            "prompt": "Я надсилаю ___ друзям. (cards)",
-            "answer": "листівки",
-            "options": [
-              "листівки",
-              "подарунки",
-              "листи",
-              "гроші"
-            ]
-          },
-          {
-            "prompt": "___ стіл приготували! (Festive)",
-            "answer": "Святковий",
-            "options": [
-              "Святковий",
-              "Великий",
-              "Смачний",
-              "Гарний"
-            ]
-          },
-          {
-            "prompt": "О ___ б'ють куранти. (midnight)",
-            "answer": "півночі",
-            "options": [
-              "півночі",
-              "опівдні",
-              "ранку",
-              "вечора"
-            ]
-          },
-          {
-            "prompt": "Ми ___ одне одного. (congratulate)",
-            "answer": "вітаємо",
-            "options": [
-              "вітаємо",
-              "любимо",
-              "знаємо",
-              "бачимо"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.055Z",
-      "modifiedAt": "2025-12-12T19:55:32.055Z"
-    },
-    {
-      "id": "act-a1-0-unjumble-0",
-      "type": "unjumble",
-      "title": "Build Holiday Sentences",
-      "description": "Arrange words into correct sentences.",
-      "content": {
-        "type": "unjumble",
-        "isUnjumble": true,
-        "items": [
-          {
-            "words": [
-              "Новим",
-              "З",
-              "роком"
-            ],
-            "answer": "З Новим роком!"
-          },
-          {
-            "words": [
-              "Різдвом",
-              "З"
-            ],
-            "answer": "З Різдвом!"
-          },
-          {
-            "words": [
-              "Воскрес",
-              "Христос"
-            ],
-            "answer": "Христос Воскрес!"
-          },
-          {
-            "words": [
-              "Воістину",
-              "Воскрес"
-            ],
-            "answer": "Воістину Воскрес!"
-          },
-          {
-            "words": [
-              "святкуємо",
-              "сім'єю",
-              "ми",
-              "з"
-            ],
-            "answer": "Ми святкуємо з сім'єю."
-          },
-          {
-            "words": [
-              "Ми",
-              "обмінюємося",
-              "подарунками"
-            ],
-            "answer": "Ми обмінюємося подарунками."
-          },
-          {
-            "words": [
-              "колядки",
-              "співають",
-              "діти"
-            ],
-            "answer": "Діти співають колядки."
-          },
-          {
-            "words": [
-              "гості",
-              "до",
-              "нас",
-              "прийшли"
-            ],
-            "answer": "До нас прийшли гості."
-          },
-          {
-            "words": [
-              "традиція",
-              "це",
-              "наша"
-            ],
-            "answer": "Це наша традиція."
-          },
-          {
-            "words": [
-              "страв",
-              "на",
-              "столі",
-              "дванадцять"
-            ],
-            "answer": "На столі дванадцять страв."
-          },
-          {
-            "words": [
-              "року",
-              "щасливого",
-              "бажаю"
-            ],
-            "answer": "Бажаю щасливого року!"
-          },
-          {
-            "words": [
-              "здоров'я",
-              "щастя",
-              "миру",
-              "і"
-            ],
-            "answer": "Щастя, здоров'я і миру!"
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.055Z",
-      "modifiedAt": "2025-12-12T19:55:32.055Z"
-    }
-  ],
+  "activities": [],
   "vocabulary": {
     "moduleId": "mod-uk-A1-33",
     "level": "A1",
-    "phase": "A1.3",
-    "wordCount": 25,
-    "newWordCount": 25,
+    "phase": "A1.3 - Consolidation",
+    "wordCount": 30,
+    "newWordCount": 30,
     "reviewWordCount": 0,
-    "transliterationMode": "partial",
+    "transliterationMode": "first-occurrence",
     "words": [
       {
-        "id": "v-svyato-0-0",
+        "id": "vocab-1",
         "uk": "свято",
+        "ipa": "/ˈswjɑtɔ/",
         "en": "holiday",
-        "pos": "noun",
-        "ipa": "/ˈsʋʲɑto/",
-        "note": "Яке свято!",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "n",
+        "gender": "n",
+        "note": ""
       },
       {
-        "id": "v-svyatkuvaty-0-1",
-        "uk": "святкувати",
-        "en": "to celebrate",
-        "pos": "noun",
-        "ipa": "/sʋʲɑtˈkuʋɑtɪ/",
-        "note": "Ми святкуємо.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-vitaty-0-2",
-        "uk": "вітати",
-        "en": "to congratulate",
-        "pos": "noun",
-        "ipa": "/ʋiˈtɑtɪ/",
-        "note": "Вітаю тебе!",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-podarunok-0-3",
-        "uk": "подарунок",
-        "en": "gift",
-        "pos": "noun",
-        "ipa": "/podɑˈrunok/",
-        "note": "Гарний подарунок.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-tradytsiya-0-4",
+        "id": "vocab-2",
         "uk": "традиція",
+        "ipa": "/trɑˈdɪtsʲijɑ/",
         "en": "tradition",
-        "pos": "noun",
-        "ipa": "/trɑˈdɪt͡sʲijɑ/",
-        "note": "Наша традиція.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "n",
+        "gender": "f",
+        "note": ""
       },
       {
-        "id": "v-hosti-0-5",
-        "uk": "гості",
-        "en": "guests",
-        "pos": "noun",
-        "ipa": "/ˈɦosti/",
-        "note": "Прийшли гості.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-novyy-rik-0-6",
+        "id": "vocab-3",
         "uk": "Новий рік",
+        "ipa": "/nɔˈwɪj rʲik/",
         "en": "New Year",
-        "pos": "noun",
-        "ipa": "/noˈʋɪj rik/",
-        "note": "З Новим роком!",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "n",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-rizdvo-0-7",
+        "id": "vocab-4",
         "uk": "Різдво",
+        "ipa": "/rʲizˈdwɔ/",
         "en": "Christmas",
-        "pos": "noun",
-        "ipa": "/rizdˈʋo/",
-        "note": "З Різдвом!",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "n",
+        "gender": "n",
+        "note": "January 7"
       },
       {
-        "id": "v-velykdenь-0-8",
+        "id": "vocab-5",
         "uk": "Великдень",
+        "ipa": "/wɛˈlɪkdɛnʲ/",
         "en": "Easter",
-        "pos": "noun",
-        "ipa": "/ʋɛlɪkˈdɛnʲ/",
-        "note": "Христос Воскрес!",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "n",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-kutya-0-9",
-        "uk": "кутя",
-        "en": "kutia (Christmas dish)",
-        "pos": "noun",
-        "ipa": "/kuˈtʲɑ/",
-        "note": "Смачна кутя.",
-        "isNew": true,
-        "firstModule": 0
+        "id": "vocab-6",
+        "uk": "день народження",
+        "ipa": "/dɛnʲ nɑˈrɔdʒɛnʲːɑ/",
+        "en": "birthday",
+        "pos": "n",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-pysanky-0-10",
-        "uk": "писанки",
-        "en": "decorated eggs",
-        "pos": "noun",
-        "ipa": "/pɪˈsɑnkɪ/",
-        "note": "Гарні писанки.",
-        "isNew": true,
-        "firstModule": 0
+        "id": "vocab-7",
+        "uk": "весілля",
+        "ipa": "/wɛˈsʲilʲːɑ/",
+        "en": "wedding",
+        "pos": "n",
+        "gender": "n",
+        "note": ""
       },
       {
-        "id": "v-kolyadky-0-11",
-        "uk": "колядки",
-        "en": "Christmas carols",
-        "pos": "noun",
-        "ipa": "/koˈlʲɑdkɪ/",
-        "note": "Співають колядки.",
-        "isNew": true,
-        "firstModule": 0
+        "id": "vocab-8",
+        "uk": "подарунок",
+        "ipa": "/pɔdɑˈrunɔk/",
+        "en": "gift/present",
+        "pos": "n",
+        "gender": "m",
+        "note": ""
       },
       {
-        "id": "v-yalynka-0-12",
-        "uk": "ялинка",
-        "en": "Christmas tree",
-        "pos": "noun",
-        "ipa": "/jɑˈlɪnkɑ/",
-        "note": "Прикрашена ялинка.",
-        "isNew": true,
-        "firstModule": 0
+        "id": "vocab-9",
+        "uk": "вітати",
+        "ipa": "/wʲiˈtɑtɪ/",
+        "en": "to congratulate",
+        "pos": "v",
+        "gender": null,
+        "note": ""
       },
       {
-        "id": "v-nezalezhnistь-0-13",
-        "uk": "незалежність",
-        "en": "independence",
-        "pos": "noun",
-        "ipa": "/nɛzɑˈlɛʒnistʲ/",
-        "note": "День Незалежності.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-svyatkovyy-0-14",
-        "uk": "святковий",
-        "en": "festive",
-        "pos": "noun",
-        "ipa": "/sʋʲɑtˈkoʋɪj/",
-        "note": "Святковий настрій.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-lystivka-0-15",
-        "uk": "листівка",
-        "en": "greeting card",
-        "pos": "noun",
-        "ipa": "/lɪsˈtiʋkɑ/",
-        "note": "Надсилаю листівку.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-bazhaty-0-16",
+        "id": "vocab-10",
         "uk": "бажати",
-        "en": "to wish",
-        "pos": "noun",
         "ipa": "/bɑˈʒɑtɪ/",
-        "note": "Бажаю щастя!",
-        "isNew": true,
-        "firstModule": 0
+        "en": "to wish",
+        "pos": "v",
+        "gender": null,
+        "note": ""
       },
       {
-        "id": "v-shchastya-0-17",
+        "id": "vocab-11",
         "uk": "щастя",
+        "ipa": "/ˈʃtʃɑstʲɑ/",
         "en": "happiness",
-        "pos": "noun",
-        "ipa": "/ˈʃt͡ʃɑsʲtʲɑ/",
-        "note": "Бажаю щастя!",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "n",
+        "gender": "n",
+        "note": ""
       },
       {
-        "id": "v-zdorov'ya-0-18",
+        "id": "vocab-12",
         "uk": "здоров'я",
+        "ipa": "/zdɔˈrɔwjɑ/",
         "en": "health",
-        "pos": "noun",
-        "ipa": "/zdoˈroʋjɑ/",
-        "note": "Бажаю здоров'я!",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "n",
+        "gender": "n",
+        "note": ""
       },
       {
-        "id": "v-myr-0-19",
-        "uk": "мир",
-        "en": "peace",
-        "pos": "noun",
-        "ipa": "/mɪr/",
-        "note": "Бажаю миру!",
-        "isNew": true,
-        "firstModule": 0
+        "id": "vocab-13",
+        "uk": "успіху",
+        "ipa": "/usˈpʲixu/",
+        "en": "success (Gen)",
+        "pos": "n",
+        "gender": "m",
+        "note": "\"бажаю успіху\""
       },
       {
-        "id": "v-chastuvaty-0-20",
-        "uk": "частувати",
-        "en": "to treat (food)",
-        "pos": "noun",
-        "ipa": "/t͡ʃɑstuˈʋɑtɪ/",
-        "note": "Частуйся!",
-        "isNew": true,
-        "firstModule": 0
+        "id": "vocab-14",
+        "uk": "любові",
+        "ipa": "/lʲuˈbɔwʲi/",
+        "en": "love (Gen)",
+        "pos": "n",
+        "gender": "f",
+        "note": "\"бажаю любові\""
       },
       {
-        "id": "v-obminyuvatysya-0-21",
-        "uk": "обмінюватися",
-        "en": "to exchange",
-        "pos": "noun",
-        "ipa": "/obmiˈnʲuʋɑtɪsʲɑ/",
-        "note": "Обмінюємося подарунками.",
-        "isNew": true,
-        "firstModule": 0
+        "id": "vocab-15",
+        "uk": "святкувати",
+        "ipa": "/swʲɑtˈkuwɑtɪ/",
+        "en": "to celebrate",
+        "pos": "v",
+        "gender": null,
+        "note": ""
       },
       {
-        "id": "v-feyerverk-0-22",
-        "uk": "феєрверк",
-        "en": "fireworks",
-        "pos": "noun",
-        "ipa": "/fɛjɛrˈʋɛrk/",
-        "note": "Гарні феєрверки!",
-        "isNew": true,
-        "firstModule": 0
+        "id": "vocab-16",
+        "uk": "дарувати",
+        "ipa": "/dɑruˈwɑtɪ/",
+        "en": "to give (as gift)",
+        "pos": "v",
+        "gender": null,
+        "note": ""
       },
       {
-        "id": "v-opivnochi-0-23",
-        "uk": "опівночі",
-        "en": "at midnight",
-        "pos": "noun",
-        "ipa": "/oˈpiʋnot͡ʃi/",
-        "note": "Куранти о півночі.",
-        "isNew": true,
-        "firstModule": 0
+        "id": "vocab-17",
+        "uk": "отримувати",
+        "ipa": "/ɔˈtrɪmuwɑtɪ/",
+        "en": "to receive",
+        "pos": "v",
+        "gender": null,
+        "note": ""
       },
       {
-        "id": "v-radistь-0-24",
+        "id": "vocab-18",
+        "uk": "гості",
+        "ipa": "/ˈhɔstʲi/",
+        "en": "guests",
+        "pos": "n",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-19",
+        "uk": "торт",
+        "ipa": "/tɔrt/",
+        "en": "cake",
+        "pos": "n",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-20",
+        "uk": "свічка",
+        "ipa": "/ˈswʲitʃkɑ/",
+        "en": "candle",
+        "pos": "n",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-21",
+        "uk": "квіти",
+        "ipa": "/ˈkwʲitɪ/",
+        "en": "flowers",
+        "pos": "n",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-22",
+        "uk": "листівка",
+        "ipa": "/lɪsˈtʲiwkɑ/",
+        "en": "card (greeting)",
+        "pos": "n",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-23",
+        "uk": "запрошення",
+        "ipa": "/zɑprɔˈʃɛnʲːɑ/",
+        "en": "invitation",
+        "pos": "n",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-24",
+        "uk": "вечірка",
+        "ipa": "/wɛˈtʃʲirkɑ/",
+        "en": "party",
+        "pos": "n",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-25",
+        "uk": "музика",
+        "ipa": "/ˈmuzɪkɑ/",
+        "en": "music",
+        "pos": "n",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-26",
+        "uk": "танці",
+        "ipa": "/ˈtɑntsʲi/",
+        "en": "dancing",
+        "pos": "n",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-27",
         "uk": "радість",
+        "ipa": "/ˈrɑdʲistʲ/",
         "en": "joy",
-        "pos": "noun",
-        "ipa": "/ˈrɑdistʲ/",
-        "note": "Яка радість!",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "n",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-28",
+        "uk": "веселий",
+        "ipa": "/wɛˈsɛlɪj/",
+        "en": "cheerful",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-29",
+        "uk": "святковий",
+        "ipa": "/swʲɑtˈkɔwɪj/",
+        "en": "festive",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-30",
+        "uk": "вітання",
+        "ipa": "/wʲiˈtɑnʲːɑ/",
+        "en": "greeting",
+        "pos": "n",
+        "gender": "n",
+        "note": ""
       }
-    ]
+    ],
+    "reviewWords": []
   }
 }

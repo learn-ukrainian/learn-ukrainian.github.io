@@ -5,20 +5,18 @@ title: "Checkpoint - First Contact"
 description: "Review and consolidation of modules 1-9"
 ---
 
-import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
-import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
+import Quiz from '@site/src/components/Quiz';
 import MatchUp from '@site/src/components/MatchUp';
-import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
-import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
-import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Select, { SelectQuestion } from '@site/src/components/Select';
-import Translate, { TranslateItem } from '@site/src/components/Translate';
-import Cloze, { ClozePassage } from '@site/src/components/Cloze';
-import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
-import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import DialogueReorder from '@site/src/components/DialogueReorder';
 
 
 # Checkpoint - First Contact
@@ -407,7 +405,35 @@ After 10 modules, you have achieved:
 
 ---
 
-# Vocabulary
+# Self-Assessment Rubric
+
+Rate yourself 1-5 on each can-do statement (1 = cannot do, 5 = can do confidently):
+
+### Reading & Recognition
+- [ ] I can recognize all 33 Cyrillic letters
+- [ ] I can read simple Ukrainian words without transliteration
+- [ ] I can identify noun gender by word ending (-а/-я = f, -о/-е = n, consonant = m)
+
+### Grammar
+- [ ] I can conjugate Class I verbs (читати → читаю, читаєш, читає...)
+- [ ] I can conjugate Class II verbs (говорити → говорю, говориш, говорить...)
+- [ ] I can form questions with хто, що, де, куди, звідки
+- [ ] I can negate sentences with не + verb
+
+### Speaking & Interaction
+- [ ] I can introduce myself (name, nationality, profession)
+- [ ] I can greet people (Привіт! Добрий день!)
+- [ ] I can ask and answer simple questions about myself
+- [ ] I can order basic food and drinks
+
+### Scoring
+- **25-30 points**: Ready for A1.2! Proceed to Module 11.
+- **18-24 points**: Review weak areas, then continue.
+- **Under 18 points**: Revisit Modules 1-9 before continuing.
+
+---
+
+## 📚 Vocabulary
 
 **Review Vocabulary (25 key words from Modules 1-9):**
 
@@ -442,74 +468,98 @@ After 10 modules, you have achieved:
 
 ---
 
+:::info[🎧 External Resources]
+
+**Alphabet Review:** [Ukrainian Alphabet](https://www.ukrainianlessons.com/ukrainian-alphabet/) — All 33 letters with pronunciation guide
+
+**Beginner Episodes:** [Top 10 Podcast Episodes for Beginners](https://www.ukrainianlessons.com/episodes-for-ukrainian-language-beginners/) — Perfect for A1.1 review
+
+**Getting Started:** [How to Begin Learning Ukrainian](https://www.ukrainianlessons.com/begin-learning-ukrainian/) — 5 steps with free resources
+:::
 
 
 ---
 
-## 🎮 Activities
+
+
+---
+
+## 🎯 Activities
 
 ### Reading Comprehension
 
-*Read the text and answer the questions.*
-
-
-<Quiz>
-  <QuizQuestion
-    question={`Хто це? (Who is this?)`}
-    options={[`Марко`, `студентка`, `Київ`, `кімната`]}
-    correctIndex={0}
-    explanation={``}
-  />
-  <QuizQuestion
-    question={`Де живе Марко? (Where does Marko live?)`}
-    options={[`у кімнаті`, `у Києві`, `на столі`, `у кафе`]}
-    correctIndex={1}
-    explanation={``}
-  />
-  <QuizQuestion
-    question={`Що є в кімнаті? (What is in the room?)`}
-    options={[`тільки стіл`, `кава і книга`, `стіл, крісло і ліжко`, `тільки ліжко`]}
-    correctIndex={2}
-    explanation={``}
-  />
-  <QuizQuestion
-    question={`Що є на столі? (What is on the table?)`}
-    options={[`крісло`, `ліжко`, `книга і кава`, `стіл`]}
-    correctIndex={2}
-    explanation={``}
-  />
-  <QuizQuestion
-    question={`Що любить Марко? (What does Marko like?)`}
-    options={[`книгу`, `каву`, `стіл`, `кімнату`]}
-    correctIndex={1}
-    explanation={``}
-  />
-  <QuizQuestion
-    question={`Марко — хто? (Marko is...?)`}
-    options={[`студент`, `лікар`, `професор`, `турист`]}
-    correctIndex={0}
-    explanation={``}
-  />
-  <QuizQuestion
-    question={`Що Марко питає? (What does Marko ask?)`}
-    options={[`Де ти живеш?`, `Як тебе звати?`, `Що ти любиш?`, `Скільки тобі років?`]}
-    correctIndex={2}
-    explanation={``}
-  />
-  <QuizQuestion
-    question={`Це чия кімната? (Whose room is this?)`}
-    options={[`твоя`, `Маркова`, `наша`, `їхня`]}
-    correctIndex={1}
-    explanation={``}
-  />
-</Quiz>
+<Quiz questions={[
+  {
+    question: `Хто це? (Who is this?)`,
+    options: [
+      { text: `Марко`, correct: true },
+      { text: `студентка`, correct: false },
+      { text: `Київ`, correct: false },
+      { text: `кімната`, correct: false }
+    ]
+  },  {
+    question: `Де живе Марко? (Where does Marko live?)`,
+    options: [
+      { text: `у кімнаті`, correct: false },
+      { text: `у Києві`, correct: true },
+      { text: `на столі`, correct: false },
+      { text: `у кафе`, correct: false }
+    ]
+  },  {
+    question: `Що є в кімнаті? (What is in the room?)`,
+    options: [
+      { text: `тільки стіл`, correct: false },
+      { text: `кава і книга`, correct: false },
+      { text: `стіл, крісло і ліжко`, correct: true },
+      { text: `тільки ліжко`, correct: false }
+    ]
+  },  {
+    question: `Що є на столі? (What is on the table?)`,
+    options: [
+      { text: `крісло`, correct: false },
+      { text: `ліжко`, correct: false },
+      { text: `книга і кава`, correct: true },
+      { text: `стіл`, correct: false }
+    ]
+  },  {
+    question: `Що любить Марко? (What does Marko like?)`,
+    options: [
+      { text: `книгу`, correct: false },
+      { text: `каву`, correct: true },
+      { text: `стіл`, correct: false },
+      { text: `кімнату`, correct: false }
+    ]
+  },  {
+    question: `Марко — хто? (Marko is...?)`,
+    options: [
+      { text: `студент`, correct: true },
+      { text: `лікар`, correct: false },
+      { text: `професор`, correct: false },
+      { text: `турист`, correct: false }
+    ]
+  },  {
+    question: `Що Марко питає? (What does Marko ask?)`,
+    options: [
+      { text: `Де ти живеш?`, correct: false },
+      { text: `Як тебе звати?`, correct: false },
+      { text: `Що ти любиш?`, correct: true },
+      { text: `Скільки тобі років?`, correct: false }
+    ]
+  },  {
+    question: `Це чия кімната? (Whose room is this?)`,
+    options: [
+      { text: `твоя`, correct: false },
+      { text: `Маркова`, correct: true },
+      { text: `наша`, correct: false },
+      { text: `їхня`, correct: false }
+    ]
+  }
+]} />
 
 ### Gender Recognition
 
-*Match each noun with its correct gender.*
-
-
 <MatchUp pairs={[
+  { left: `Ukrainian`, right: `Gender` },
   { left: `книга`, right: `feminine` },
   { left: `стіл`, right: `masculine` },
   { left: `вікно`, right: `neuter` },
@@ -526,451 +576,351 @@ After 10 modules, you have achieved:
 
 ### Demonstratives Agreement
 
-*Choose the correct demonstrative form (цей/ця/це/ці).*
-
-
-<FillIn>
-  <FillInQuestion
-    sentence={`1. ___ книга дуже цікава.`}
-    answer={`Ця`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`___ стіл новий.`}
-    answer={`Цей`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`___ вікно велике.`}
-    answer={`Це`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`___ двері старі.`}
-    answer={`Ці`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`___ кава гаряча.`}
-    answer={`Ця`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`___ чай холодний.`}
-    answer={`Цей`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`___ місто гарне.`}
-    answer={`Це`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`___ книги нові.`}
-    answer={`Ці`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`___ хлопець студент.`}
-    answer={`Цей`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`___ дівчина українка.`}
-    answer={`Ця`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`___ слово українське.`}
-    answer={`Це`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`___ слова цікаві.`}
-    answer={`Ці`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-</FillIn>
+<FillIn items={[
+  {
+    sentence: `___ книга дуже цікава.`,
+    answer: `Ця`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `___ стіл новий.`,
+    answer: `Цей`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `___ вікно велике.`,
+    answer: `Це`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `___ двері старі.`,
+    answer: `Ці`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `___ кава гаряча.`,
+    answer: `Ця`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `___ чай холодний.`,
+    answer: `Цей`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `___ місто гарне.`,
+    answer: `Це`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `___ книги нові.`,
+    answer: `Ці`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `___ хлопець студент.`,
+    answer: `Цей`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `___ дівчина українка.`,
+    answer: `Ця`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `___ слово українське.`,
+    answer: `Це`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `___ слова цікаві.`,
+    answer: `Ці`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  }
+]} />
 
 ### Verb Conjugation Classes
 
-*Sort these verbs by conjugation class.*
-
-
 <GroupSort groups={{
-  "### Class I (-ати)": [
-    "читати",
-    "писати",
-    "знати",
-    "працювати",
-    "гуляти",
-    "снідати",
-    "обідати",
-    "вечеряти"
-  ],
-  "Class II (-ити)": [
-    "говорити",
-    "робити",
-    "любити",
-    "ходити",
-    "вчити",
-    "телефонувати",
-    "бачити",
-    "дивитися"
-  ],
-  "Irregular": [
-    "їсти",
-    "пити",
-    "бути"
-  ]
+  "Class I (-ати)": ["читати", "писати", "знати", "працювати", "гуляти", "снідати", "обідати", "вечеряти"],
+  "Class II (-ити)": ["говорити", "робити", "любити", "ходити", "вчити", "телефонувати", "бачити", "дивитися"],
+  "Irregular": ["їсти", "пити", "бути"]
 }} />
 
 ### Verb Conjugation (Class I)
 
-*Conjugate the verb "читати" (to read) correctly.*
-
-
-<FillIn>
-  <FillInQuestion
-    sentence={`1. Я ___ книгу.`}
-    answer={`читаю`}
-    options={[`читаю`, `читаєш`, `читає`, `читають`]}
-  />
-  <FillInQuestion
-    sentence={`Ти ___ газету.`}
-    answer={`читаєш`}
-    options={[`читаю`, `читаєш`, `читає`, `читають`]}
-  />
-  <FillInQuestion
-    sentence={`Він ___ журнал.`}
-    answer={`читає`}
-    options={[`читаю`, `читаєш`, `читає`, `читають`]}
-  />
-  <FillInQuestion
-    sentence={`Ми ___ українською.`}
-    answer={`читаємо`}
-    options={[`читаємо`, `читаєте`, `читають`, `читаю`]}
-  />
-  <FillInQuestion
-    sentence={`Ви ___ англійською.`}
-    answer={`читаєте`}
-    options={[`читаємо`, `читаєте`, `читають`, `читаю`]}
-  />
-  <FillInQuestion
-    sentence={`Вони ___ багато.`}
-    answer={`читають`}
-    options={[`читаємо`, `читаєте`, `читають`, `читаю`]}
-  />
-  <FillInQuestion
-    sentence={`Вона ___ книгу про Україну.`}
-    answer={`читає`}
-    options={[`читаю`, `читаєш`, `читає`, `читають`]}
-  />
-  <FillInQuestion
-    sentence={`Ти ___ цікаві книги?`}
-    answer={`читаєш`}
-    options={[`читаю`, `читаєш`, `читає`, `читають`]}
-  />
-  <FillInQuestion
-    sentence={`Я ___ щодня.`}
-    answer={`читаю`}
-    options={[`читаю`, `читаєш`, `читає`, `читають`]}
-  />
-  <FillInQuestion
-    sentence={`Вони ___ українські книги.`}
-    answer={`читають`}
-    options={[`читаємо`, `читаєте`, `читають`, `читаю`]}
-  />
-  <FillInQuestion
-    sentence={`Ми ___ українською мовою.`}
-    answer={`читаємо`}
-    options={[`читаємо`, `читаєте`, `читають`, `читаю`]}
-  />
-  <FillInQuestion
-    sentence={`Ви ___ швидко?`}
-    answer={`читаєте`}
-    options={[`читаємо`, `читаєте`, `читають`, `читаю`]}
-  />
-</FillIn>
+<FillIn items={[
+  {
+    sentence: `Я ___ книгу.`,
+    answer: `читаю`,
+    options: [`читаю`, `читаєш`, `читає`, `читають`]
+  },  {
+    sentence: `Ти ___ газету.`,
+    answer: `читаєш`,
+    options: [`читаю`, `читаєш`, `читає`, `читають`]
+  },  {
+    sentence: `Він ___ журнал.`,
+    answer: `читає`,
+    options: [`читаю`, `читаєш`, `читає`, `читають`]
+  },  {
+    sentence: `Ми ___ українською.`,
+    answer: `читаємо`,
+    options: [`читаємо`, `читаєте`, `читають`, `читаю`]
+  },  {
+    sentence: `Ви ___ англійською.`,
+    answer: `читаєте`,
+    options: [`читаємо`, `читаєте`, `читають`, `читаю`]
+  },  {
+    sentence: `Вони ___ багато.`,
+    answer: `читають`,
+    options: [`читаємо`, `читаєте`, `читають`, `читаю`]
+  },  {
+    sentence: `Вона ___ книгу про Україну.`,
+    answer: `читає`,
+    options: [`читаю`, `читаєш`, `читає`, `читають`]
+  },  {
+    sentence: `Ти ___ цікаві книги?`,
+    answer: `читаєш`,
+    options: [`читаю`, `читаєш`, `читає`, `читають`]
+  },  {
+    sentence: `Я ___ щодня.`,
+    answer: `читаю`,
+    options: [`читаю`, `читаєш`, `читає`, `читають`]
+  },  {
+    sentence: `Вони ___ українські книги.`,
+    answer: `читають`,
+    options: [`читаємо`, `читаєте`, `читають`, `читаю`]
+  },  {
+    sentence: `Ми ___ українською мовою.`,
+    answer: `читаємо`,
+    options: [`читаємо`, `читаєте`, `читають`, `читаю`]
+  },  {
+    sentence: `Ви ___ швидко?`,
+    answer: `читаєте`,
+    options: [`читаємо`, `читаєте`, `читають`, `читаю`]
+  }
+]} />
 
 ### Verb Conjugation (Class II)
 
-*Conjugate the verb "говорити" (to speak) correctly.*
-
-
-<FillIn>
-  <FillInQuestion
-    sentence={`1. Я ___ українською.`}
-    answer={`говорю`}
-    options={[`говорю`, `говориш`, `говорить`, `говорять`]}
-  />
-  <FillInQuestion
-    sentence={`Ти ___ англійською.`}
-    answer={`говориш`}
-    options={[`говорю`, `говориш`, `говорить`, `говорять`]}
-  />
-  <FillInQuestion
-    sentence={`Він ___ швидко.`}
-    answer={`говорить`}
-    options={[`говорю`, `говориш`, `говорить`, `говорять`]}
-  />
-  <FillInQuestion
-    sentence={`Ми ___ повільно.`}
-    answer={`говоримо`}
-    options={[`говоримо`, `говорите`, `говорять`, `говорю`]}
-  />
-  <FillInQuestion
-    sentence={`Ви ___ голосно.`}
-    answer={`говорите`}
-    options={[`говоримо`, `говорите`, `говорять`, `говорю`]}
-  />
-  <FillInQuestion
-    sentence={`Вони ___ тихо.`}
-    answer={`говорять`}
-    options={[`говоримо`, `говорите`, `говорять`, `говорю`]}
-  />
-  <FillInQuestion
-    sentence={`Вона ___ українською і англійською.`}
-    answer={`говорить`}
-    options={[`говорю`, `говориш`, `говорить`, `говорять`]}
-  />
-  <FillInQuestion
-    sentence={`Ти ___ добре українською?`}
-    answer={`говориш`}
-    options={[`говорю`, `говориш`, `говорить`, `говорять`]}
-  />
-  <FillInQuestion
-    sentence={`Я ___ з друзями.`}
-    answer={`говорю`}
-    options={[`говорю`, `говориш`, `говорить`, `говорять`]}
-  />
-  <FillInQuestion
-    sentence={`Вони ___ багато.`}
-    answer={`говорять`}
-    options={[`говоримо`, `говорите`, `говорять`, `говорю`]}
-  />
-  <FillInQuestion
-    sentence={`Ми ___ українською мовою.`}
-    answer={`говоримо`}
-    options={[`говоримо`, `говорите`, `говорять`, `говорю`]}
-  />
-  <FillInQuestion
-    sentence={`Ви ___ правильно?`}
-    answer={`говорите`}
-    options={[`говоримо`, `говорите`, `говорять`, `говорю`]}
-  />
-</FillIn>
+<FillIn items={[
+  {
+    sentence: `Я ___ українською.`,
+    answer: `говорю`,
+    options: [`говорю`, `говориш`, `говорить`, `говорять`]
+  },  {
+    sentence: `Ти ___ англійською.`,
+    answer: `говориш`,
+    options: [`говорю`, `говориш`, `говорить`, `говорять`]
+  },  {
+    sentence: `Він ___ швидко.`,
+    answer: `говорить`,
+    options: [`говорю`, `говориш`, `говорить`, `говорять`]
+  },  {
+    sentence: `Ми ___ повільно.`,
+    answer: `говоримо`,
+    options: [`говоримо`, `говорите`, `говорять`, `говорю`]
+  },  {
+    sentence: `Ви ___ голосно.`,
+    answer: `говорите`,
+    options: [`говоримо`, `говорите`, `говорять`, `говорю`]
+  },  {
+    sentence: `Вони ___ тихо.`,
+    answer: `говорять`,
+    options: [`говоримо`, `говорите`, `говорять`, `говорю`]
+  },  {
+    sentence: `Вона ___ українською і англійською.`,
+    answer: `говорить`,
+    options: [`говорю`, `говориш`, `говорить`, `говорять`]
+  },  {
+    sentence: `Ти ___ добре українською?`,
+    answer: `говориш`,
+    options: [`говорю`, `говориш`, `говорить`, `говорять`]
+  },  {
+    sentence: `Я ___ з друзями.`,
+    answer: `говорю`,
+    options: [`говорю`, `говориш`, `говорить`, `говорять`]
+  },  {
+    sentence: `Вони ___ багато.`,
+    answer: `говорять`,
+    options: [`говоримо`, `говорите`, `говорять`, `говорю`]
+  },  {
+    sentence: `Ми ___ українською мовою.`,
+    answer: `говоримо`,
+    options: [`говоримо`, `говорите`, `говорять`, `говорю`]
+  },  {
+    sentence: `Ви ___ правильно?`,
+    answer: `говорите`,
+    options: [`говоримо`, `говорите`, `говорять`, `говорю`]
+  }
+]} />
 
 ### Grammar Rules Review
 
-*Decide if each statement is true or false.*
-
-
-<TrueFalse>
-  <TrueFalseQuestion
-    statement={`Ukrainian has 33 letters in its alphabet.`}
-    isTrue={true}
-    explanation={`Correct! 33 letters total.`}
-  />
-  <TrueFalseQuestion
-    statement={`The letter "Г" sounds like hard "g" in "go".`}
-    isTrue={false}
-    explanation={`Incorrect! Г = /ɦ/ (breathy h). Hard /g/ is Ґ.`}
-  />
-  <TrueFalseQuestion
-    statement={`Feminine nouns typically end in -а or -я.`}
-    isTrue={true}
-    explanation={`Correct! Examples: книга, земля, Україна.`}
-  />
-  <TrueFalseQuestion
-    statement={`Ukrainian uses "to be" (є) in all present tense sentences.`}
-    isTrue={false}
-    explanation={`Incorrect! Ukrainian has zero copula: "Я студент" (no є needed).`}
-  />
-  <TrueFalseQuestion
-    statement={`"Це" can mean both "this" (neuter) and "this is".`}
-    isTrue={true}
-    explanation={`Correct! Це вікно (this window), Це книга (This is a book).`}
-  />
-  <TrueFalseQuestion
-    statement={`Class I verbs end in -ати/-яти.`}
-    isTrue={true}
-    explanation={`Correct! Examples: читати, писати, знати.`}
-  />
-  <TrueFalseQuestion
-    statement={`Class II verbs use -ють in the 3rd person plural.`}
-    isTrue={false}
-    explanation={`Incorrect! Class II uses -ять: говорять, роблять.`}
-  />
-  <TrueFalseQuestion
-    statement={`Questions can be formed by adding "чи" at the beginning.`}
-    isTrue={true}
-    explanation={`Correct! Чи ти студент? (Are you a student?)`}
-  />
-  <TrueFalseQuestion
-    statement={`Negation in Ukrainian uses "ні" before the verb.`}
-    isTrue={false}
-    explanation={`Incorrect! Negation uses "не": Я не читаю (I don't read).`}
-  />
-  <TrueFalseQuestion
-    statement={`"Борщ" is a traditional Ukrainian soup.`}
-    isTrue={true}
-    explanation={`Correct! UNESCO recognized Ukrainian borsch culture!`}
-  />
-  <TrueFalseQuestion
-    statement={`"Смачного!" means "Bon appétit!" in Ukrainian.`}
-    isTrue={true}
-    explanation={`Correct! Used when someone starts eating.`}
-  />
-  <TrueFalseQuestion
-    statement={`All Ukrainian verbs are regular.`}
-    isTrue={false}
-    explanation={`Incorrect! There are irregulars like їсти (їм, їси, їсть) and пити (п'ю, п'єш, п'є).`}
-  />
-</TrueFalse>
+<TrueFalse items={[
+  {
+    statement: `Ukrainian has 33 letters in its alphabet.`,
+    isTrue: true,
+    explanation: `Correct! 33 letters total.`
+  },  {
+    statement: `The letter \"Г\" sounds like hard \"g\" in \"go\".`,
+    isTrue: false,
+    explanation: `Incorrect! Г = /ɦ/ (breathy h). Hard /g/ is Ґ.`
+  },  {
+    statement: `Feminine nouns typically end in -а or -я.`,
+    isTrue: true,
+    explanation: `Correct! Examples: книга, земля, Україна.`
+  },  {
+    statement: `Ukrainian uses \"to be\" (є) in all present tense sentences.`,
+    isTrue: false,
+    explanation: `Incorrect! Ukrainian has zero copula: \"Я студент\" (no є needed).`
+  },  {
+    statement: `\"Це\" can mean both \"this\" (neuter) and \"this is\".`,
+    isTrue: true,
+    explanation: `Correct! Це вікно (this window), Це книга (This is a book).`
+  },  {
+    statement: `Class I verbs end in -ати/-яти.`,
+    isTrue: true,
+    explanation: `Correct! Examples: читати, писати, знати.`
+  },  {
+    statement: `Class II verbs use -ють in the 3rd person plural.`,
+    isTrue: false,
+    explanation: `Incorrect! Class II uses -ять: говорять, роблять.`
+  },  {
+    statement: `Questions can be formed by adding \"чи\" at the beginning.`,
+    isTrue: true,
+    explanation: `Correct! Чи ти студент? (Are you a student?)`
+  },  {
+    statement: `Negation in Ukrainian uses \"ні\" before the verb.`,
+    isTrue: false,
+    explanation: `Incorrect! Negation uses \"не\": Я не читаю (I don't read).`
+  },  {
+    statement: `\"Борщ\" is a traditional Ukrainian soup.`,
+    isTrue: true,
+    explanation: `Correct! UNESCO recognized Ukrainian borsch culture!`
+  },  {
+    statement: `\"Смачного!\" means \"Bon appétit!\" in Ukrainian.`,
+    isTrue: true,
+    explanation: `Correct! Used when someone starts eating.`
+  },  {
+    statement: `All Ukrainian verbs are regular.`,
+    isTrue: false,
+    explanation: `Incorrect! There are irregulars like їсти (їм, їси, їсть) and пити (п'ю, п'єш, п'є).`
+  }
+]} />
 
 ### Question Words
 
-*Choose the correct question word.*
-
-
-<Quiz>
-  <QuizQuestion
-    question={`1. ___ це? (What is this?)`}
-    options={[`Що`, `Хто`, `Де`, `Як`]}
-    correctIndex={0}
-    explanation={`Що = what (for things)`}
-  />
-  <QuizQuestion
-    question={`___ він? (Who is he?)`}
-    options={[`Що`, `Хто`, `Де`, `Коли`]}
-    correctIndex={1}
-    explanation={`Хто = who (for people)`}
-  />
-  <QuizQuestion
-    question={`___ ти живеш? (Where do you live?)`}
-    options={[`Що`, `Хто`, `Де`, `Куди`]}
-    correctIndex={2}
-    explanation={`Де = where (location)`}
-  />
-  <QuizQuestion
-    question={`___ справи? (How are things?)`}
-    options={[`Що`, `Де`, `Коли`, `Як`]}
-    correctIndex={3}
-    explanation={`Як = how`}
-  />
-  <QuizQuestion
-    question={`___ ти вдома? (When are you home?)`}
-    options={[`Що`, `Де`, `Коли`, `Як`]}
-    correctIndex={2}
-    explanation={`Коли = when`}
-  />
-  <QuizQuestion
-    question={`___ ти тут? (Why are you here?)`}
-    options={[`Що`, `Хто`, `Де`, `Чому`]}
-    correctIndex={3}
-    explanation={`Чому = why`}
-  />
-  <QuizQuestion
-    question={`___ це коштує? (How much does this cost?)`}
-    options={[`Що`, `Як`, `Коли`, `Скільки`]}
-    correctIndex={3}
-    explanation={`Скільки = how much/many`}
-  />
-  <QuizQuestion
-    question={`___ ти йдеш? (Where are you going?)`}
-    options={[`Де`, `Куди`, `Коли`, `Що`]}
-    correctIndex={1}
-    explanation={`Куди = where to (direction)`}
-  />
-  <QuizQuestion
-    question={`___ ти робиш? (What are you doing?)`}
-    options={[`Що`, `Хто`, `Де`, `Як`]}
-    correctIndex={0}
-    explanation={`Що = what`}
-  />
-  <QuizQuestion
-    question={`___ ти вивчаєш українську? (Why are you studying Ukrainian?)`}
-    options={[`Що`, `Як`, `Чому`, `Коли`]}
-    correctIndex={2}
-    explanation={`Чому = why`}
-  />
-  <QuizQuestion
-    question={`___ ти? (Who are you?)`}
-    options={[`Що`, `Хто`, `Де`, `Як`]}
-    correctIndex={1}
-    explanation={`Хто = who`}
-  />
-  <QuizQuestion
-    question={`___ ти говориш українською? (How do you speak Ukrainian?)`}
-    options={[`Що`, `Де`, `Коли`, `Як`]}
-    correctIndex={3}
-    explanation={`Як = how`}
-  />
-</Quiz>
+<Quiz questions={[
+  {
+    question: `___ це? (What is this?)`,
+    options: [
+      { text: `Що`, correct: true },
+      { text: `Хто`, correct: false },
+      { text: `Де`, correct: false },
+      { text: `Як`, correct: false }
+    ]
+  },  {
+    question: `___ він? (Who is he?)`,
+    options: [
+      { text: `Що`, correct: false },
+      { text: `Хто`, correct: true },
+      { text: `Де`, correct: false },
+      { text: `Коли`, correct: false }
+    ]
+  },  {
+    question: `___ ти живеш? (Where do you live?)`,
+    options: [
+      { text: `Що`, correct: false },
+      { text: `Хто`, correct: false },
+      { text: `Де`, correct: true },
+      { text: `Куди`, correct: false }
+    ]
+  },  {
+    question: `___ справи? (How are things?)`,
+    options: [
+      { text: `Що`, correct: false },
+      { text: `Де`, correct: false },
+      { text: `Коли`, correct: false },
+      { text: `Як`, correct: true }
+    ]
+  },  {
+    question: `___ ти вдома? (When are you home?)`,
+    options: [
+      { text: `Що`, correct: false },
+      { text: `Де`, correct: false },
+      { text: `Коли`, correct: true },
+      { text: `Як`, correct: false }
+    ]
+  },  {
+    question: `___ ти тут? (Why are you here?)`,
+    options: [
+      { text: `Що`, correct: false },
+      { text: `Хто`, correct: false },
+      { text: `Де`, correct: false },
+      { text: `Чому`, correct: true }
+    ]
+  },  {
+    question: `___ це коштує? (How much does this cost?)`,
+    options: [
+      { text: `Що`, correct: false },
+      { text: `Як`, correct: false },
+      { text: `Коли`, correct: false },
+      { text: `Скільки`, correct: true }
+    ]
+  },  {
+    question: `___ ти йдеш? (Where are you going?)`,
+    options: [
+      { text: `Де`, correct: false },
+      { text: `Куди`, correct: true },
+      { text: `Коли`, correct: false },
+      { text: `Що`, correct: false }
+    ]
+  },  {
+    question: `___ ти робиш? (What are you doing?)`,
+    options: [
+      { text: `Що`, correct: true },
+      { text: `Хто`, correct: false },
+      { text: `Де`, correct: false },
+      { text: `Як`, correct: false }
+    ]
+  },  {
+    question: `___ ти вивчаєш українську? (Why are you studying Ukrainian?)`,
+    options: [
+      { text: `Що`, correct: false },
+      { text: `Як`, correct: false },
+      { text: `Чому`, correct: true },
+      { text: `Коли`, correct: false }
+    ]
+  },  {
+    question: `___ ти? (Who are you?)`,
+    options: [
+      { text: `Що`, correct: false },
+      { text: `Хто`, correct: true },
+      { text: `Де`, correct: false },
+      { text: `Як`, correct: false }
+    ]
+  },  {
+    question: `___ ти говориш українською? (How do you speak Ukrainian?)`,
+    options: [
+      { text: `Що`, correct: false },
+      { text: `Де`, correct: false },
+      { text: `Коли`, correct: false },
+      { text: `Як`, correct: true }
+    ]
+  }
+]} />
 
 ### Cyrillic Practice
 
-*Unscramble the letters to form Ukrainian words.*
-
-
-<Anagram>
-  <AnagramQuestion
-    scrambled={`к н и г а`}
-    answer={`книга`}
-  />
-  <AnagramQuestion
-    scrambled={`с т і л`}
-    answer={`стіл`}
-  />
-  <AnagramQuestion
-    scrambled={`в і к н о`}
-    answer={`вікно`}
-  />
-  <AnagramQuestion
-    scrambled={`к а в а`}
-    answer={`кава`}
-  />
-  <AnagramQuestion
-    scrambled={`ч а й`}
-    answer={`чай`}
-  />
-  <AnagramQuestion
-    scrambled={`х л і б`}
-    answer={`хліб`}
-  />
-  <AnagramQuestion
-    scrambled={`в о д а`}
-    answer={`вода`}
-  />
-  <AnagramQuestion
-    scrambled={`м і с т о`}
-    answer={`місто`}
-  />
-  <AnagramQuestion
-    scrambled={`б о р щ`}
-    answer={`борщ`}
-  />
-  <AnagramQuestion
-    scrambled={`д я к у ю`}
-    answer={`дякую`}
-  />
-  <AnagramQuestion
-    scrambled={`м о в а`}
-    answer={`мова`}
-  />
-  <AnagramQuestion
-    scrambled={`у к р а ї н а`}
-    answer={`Україна`}
-  />
-</Anagram>
+<Anagram items={[
+  { scrambled: `к н и г а`, answer: `книга`, hint: `` },
+  { scrambled: `с т і л`, answer: `стіл`, hint: `` },
+  { scrambled: `в і к н о`, answer: `вікно`, hint: `` },
+  { scrambled: `к а в а`, answer: `кава`, hint: `` },
+  { scrambled: `ч а й`, answer: `чай`, hint: `` },
+  { scrambled: `х л і б`, answer: `хліб`, hint: `` },
+  { scrambled: `в о д а`, answer: `вода`, hint: `` },
+  { scrambled: `м і с т о`, answer: `місто`, hint: `` },
+  { scrambled: `б о р щ`, answer: `борщ`, hint: `` },
+  { scrambled: `д я к у ю`, answer: `дякую`, hint: `` },
+  { scrambled: `м о в а`, answer: `мова`, hint: `` },
+  { scrambled: `у к р а ї н а`, answer: `Україна`, hint: `` }
+]} />
 
 ### Food & Drinks
 
-*Match Ukrainian food/drink words with their English translations.*
-
-
 <MatchUp pairs={[
+  { left: `Ukrainian`, right: `English` },
   { left: `борщ`, right: `borsch (beet soup)` },
   { left: `вареники`, right: `varenyky (dumplings)` },
   { left: `хліб`, right: `bread` },
@@ -987,70 +937,54 @@ After 10 modules, you have achieved:
 
 ### Negation Practice
 
-*Add the correct negative form. Remember: **не** goes directly before the word being negated.*
-
-
-<FillIn>
-  <FillInQuestion
-    sentence={`1. Я ___ читаю газету.`}
-    answer={`не`}
-    options={[`не`, `ні`, `ніколи`, `немає`]}
-  />
-  <FillInQuestion
-    sentence={`Вона ___ говорить англійською.`}
-    answer={`не`}
-    options={[`не`, `ні`, `ніколи`, `немає`]}
-  />
-  <FillInQuestion
-    sentence={`Ми ___ п'ємо каву.`}
-    answer={`не`}
-    options={[`не`, `ні`, `ніколи`, `немає`]}
-  />
-  <FillInQuestion
-    sentence={`Ти ___ їси м'ясо?`}
-    answer={`не`}
-    options={[`не`, `ні`, `ніколи`, `немає`]}
-  />
-  <FillInQuestion
-    sentence={`Він ___ студент.`}
-    answer={`не`}
-    options={[`не`, `ні`, `ніколи`, `немає`]}
-  />
-  <FillInQuestion
-    sentence={`Вони ___ живуть тут.`}
-    answer={`не`}
-    options={[`не`, `ні`, `ніколи`, `немає`]}
-  />
-  <FillInQuestion
-    sentence={`Я ___ знаю цього слова.`}
-    answer={`не`}
-    options={[`не`, `ні`, `ніколи`, `немає`]}
-  />
-  <FillInQuestion
-    sentence={`Це ___ моя книга.`}
-    answer={`не`}
-    options={[`не`, `ні`, `ніколи`, `немає`]}
-  />
-  <FillInQuestion
-    sentence={`Ви ___ працюєте сьогодні?`}
-    answer={`не`}
-    options={[`не`, `ні`, `ніколи`, `немає`]}
-  />
-  <FillInQuestion
-    sentence={`Вона ___ українка.`}
-    answer={`не`}
-    options={[`не`, `ні`, `ніколи`, `немає`]}
-  />
-  <FillInQuestion
-    sentence={`Я ___ вчу цю мову.`}
-    answer={`не`}
-    options={[`не`, `ні`, `ніколи`, `немає`]}
-  />
-  <FillInQuestion
-    sentence={`Ти ___ любиш борщ?`}
-    answer={`не`}
-    options={[`не`, `ні`, `ніколи`, `немає`]}
-  />
-</FillIn>
-
-
+<FillIn items={[
+  {
+    sentence: `Я ___ читаю газету.`,
+    answer: `не`,
+    options: [`не`, `ні`, `ніколи`, `немає`]
+  },  {
+    sentence: `Вона ___ говорить англійською.`,
+    answer: `не`,
+    options: [`не`, `ні`, `ніколи`, `немає`]
+  },  {
+    sentence: `Ми ___ п'ємо каву.`,
+    answer: `не`,
+    options: [`не`, `ні`, `ніколи`, `немає`]
+  },  {
+    sentence: `Ти ___ їси м'ясо?`,
+    answer: `не`,
+    options: [`не`, `ні`, `ніколи`, `немає`]
+  },  {
+    sentence: `Він ___ студент.`,
+    answer: `не`,
+    options: [`не`, `ні`, `ніколи`, `немає`]
+  },  {
+    sentence: `Вони ___ живуть тут.`,
+    answer: `не`,
+    options: [`не`, `ні`, `ніколи`, `немає`]
+  },  {
+    sentence: `Я ___ знаю цього слова.`,
+    answer: `не`,
+    options: [`не`, `ні`, `ніколи`, `немає`]
+  },  {
+    sentence: `Це ___ моя книга.`,
+    answer: `не`,
+    options: [`не`, `ні`, `ніколи`, `немає`]
+  },  {
+    sentence: `Ви ___ працюєте сьогодні?`,
+    answer: `не`,
+    options: [`не`, `ні`, `ніколи`, `немає`]
+  },  {
+    sentence: `Вона ___ українка.`,
+    answer: `не`,
+    options: [`не`, `ні`, `ніколи`, `немає`]
+  },  {
+    sentence: `Я ___ вчу цю мову.`,
+    answer: `не`,
+    options: [`не`, `ні`, `ніколи`, `немає`]
+  },  {
+    sentence: `Ти ___ любиш борщ?`,
+    answer: `не`,
+    options: [`не`, `ні`, `ніколи`, `немає`]
+  }
+]} />

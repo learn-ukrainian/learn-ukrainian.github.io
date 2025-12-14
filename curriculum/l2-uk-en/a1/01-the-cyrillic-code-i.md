@@ -32,6 +32,16 @@ You're about to crack a code that 45 million people use every day. The Ukrainian
 
 Think of learning Cyrillic like learning to read again. But this time, it only takes a few hours instead of a few years. By the end of this module, you'll be reading real Ukrainian words. Let's start with the letters you already know.
 
+> [!resources] 🎧 Pronunciation Resources
+>
+> **YouTube:** [Ukrainian Lessons - Ukrainian Alphabet](https://www.ukrainianlessons.com/ukrainian-alphabet/) — Full guide with video pronunciation by Anna Ohoiko
+>
+> **Interactive:** [Talk Ukrainian - Alphabet with Audio](https://talkukrainian.com/ukrainian-alphabet/) — All 33 letters with IPA and native audio
+>
+> **Word Lookup:** [Forvo Ukrainian Dictionary](https://forvo.com/languages/uk/) — 100,000+ words pronounced by native speakers
+>
+> **Practice:** [Ukrainian Course - Lesson 1](https://www.ukrainiancourse.com/free-ukrainian-courses/lesson-1-the-ukrainian-alphabet/) — Interactive alphabet exercises
+
 ## Presentation
 
 ### The True Friends (7 letters)

@@ -34,6 +34,14 @@ Food is at the heart of Ukrainian culture. From the world-famous **борщ** (b
 >
 > **Борщ** (borshch) entered English directly from Ukrainian, not Russian! UNESCO recognized Ukrainian borshch cooking culture as part of Ukraine's intangible cultural heritage in 2022. Each region of Ukraine has its own borshch recipe — some add beans, others use mushrooms, but beets (буряк) are always the star.
 
+> [!resources] 🎧 External Resources
+>
+> **Food Guide:** [40+ Ukrainian Dishes](https://www.ukrainianlessons.com/ukrainian-food/) — Complete guide with photos
+>
+> **Podcast:** [ULP 1-12 | Ordering Food](https://www.ukrainianlessons.com/episode12/) — Where and how to order in Ukrainian
+>
+> **Quick Lesson:** [FMU 1-16 | Order at Restaurant](https://www.ukrainianlessons.com/fmu16/) — Essential restaurant phrases
+
 In this module, you'll learn the vocabulary to navigate Ukrainian meals, from **сніданок** (breakfast) to **вечеря** (dinner). You'll also practice using the verbs **їсти** (to eat) and **пити** (to drink) that you learned in Module 08.
 
 ## Presentation

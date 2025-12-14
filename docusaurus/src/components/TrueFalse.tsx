@@ -52,11 +52,18 @@ export function TrueFalseQuestion({ statement, isTrue, explanation }: TrueFalseQ
   );
 }
 
-interface TrueFalseProps {
-  children: React.ReactNode;
+interface TrueFalseItem {
+  statement: string;
+  isTrue: boolean;
+  explanation?: string;
 }
 
-export default function TrueFalse({ children }: TrueFalseProps) {
+interface TrueFalseProps {
+  items?: TrueFalseItem[];
+  children?: React.ReactNode;
+}
+
+export default function TrueFalse({ items, children }: TrueFalseProps) {
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
@@ -65,7 +72,14 @@ export default function TrueFalse({ children }: TrueFalseProps) {
         <ActivityHelp activityType="true-false" />
       </div>
       <div className={styles.activityContent}>
-        {children}
+        {items ? items.map((item, index) => (
+          <TrueFalseQuestion
+            key={index}
+            statement={item.statement}
+            isTrue={item.isTrue}
+            explanation={item.explanation}
+          />
+        )) : children}
       </div>
     </div>
   );

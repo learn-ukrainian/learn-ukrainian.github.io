@@ -5,20 +5,18 @@ title: "Numbers & Money"
 description: "Counting and Shopping in Ukraine"
 ---
 
-import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
-import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
+import Quiz from '@site/src/components/Quiz';
 import MatchUp from '@site/src/components/MatchUp';
-import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
-import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
-import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Select, { SelectQuestion } from '@site/src/components/Select';
-import Translate, { TranslateItem } from '@site/src/components/Translate';
-import Cloze, { ClozePassage } from '@site/src/components/Cloze';
-import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
-import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import DialogueReorder from '@site/src/components/DialogueReorder';
 
 
 # Numbers & Money
@@ -30,6 +28,16 @@ You're at a market in Kyiv. The vendor says "Двадцять гривень." D
 > 💡 **Did You Know?**
 >
 > The Ukrainian currency is called **гривня** (hryvnia). It's one of the oldest currency names in Europe, dating back to Kyivan Rus' in the 11th century! The word originally meant "neck ring" - a silver ornament worn by wealthy citizens.
+
+:::info[🎧 External Resources]
+
+**Numbers:** [Numbers in Ukrainian](https://www.ukrainianlessons.com/numbers/) — Full list with audio and illustrations
+
+**Nouns After Numbers:** [How to Use Nouns After Numbers](https://www.ukrainianlessons.com/nouns-after-numbers/) — 1, 2-4, 5+ agreement rules
+
+**Podcast:** [ULP 1-19 | Phone Numbers](https://www.ukrainianlessons.com/episode19/) — Practice numbers 100-1000
+:::
+
 
 ## Presentation
 
@@ -267,7 +275,7 @@ But don't expect it - Ukrainians respect fair pricing!
 
 ---
 
-# Summary
+## 📋 Summary
 
 In this module, you learned:
 
@@ -283,7 +291,7 @@ You can now count, ask prices, and shop confidently in Ukraine!
 ---
 
 
-# Vocabulary
+## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
@@ -323,17 +331,14 @@ You can now count, ask prices, and shop confidently in Ukraine!
 | готівка | /ɦɔˈtivkɑ/ | cash | noun | f | - |
 | картка | /ˈkɑrtkɑ/ | card | noun | f | credit/debit card |
 
-
 ---
 
-## 🎮 Activities
+## 🎯 Activities
 
 ### Numbers and Words
 
-*Match the Ukrainian numbers with their Arabic numerals.*
-
-
 <MatchUp pairs={[
+  { left: `Ukrainian`, right: `Numeral` },
   { left: `п'ять`, right: `5` },
   { left: `десять`, right: `10` },
   { left: `п'ятнадцять`, right: `15` },
@@ -350,354 +355,281 @@ You can now count, ask prices, and shop confidently in Ukraine!
 
 ### Complete with Numbers
 
-*Choose the correct number word.*
-
-
-<FillIn>
-  <FillInQuestion
-    sentence={`1. У мене ___ гривень. (I have ___ hryvnias.) [10]`}
-    answer={`десять`}
-    options={[`десять`, `п'ять`, `двадцять`, `сто`]}
-  />
-  <FillInQuestion
-    sentence={`Це коштує ___ гривень. (This costs ___ hryvnias.) [50]`}
-    answer={`п'ятдесят`}
-    options={[`п'ятнадцять`, `п'ятдесят`, `п'ять`, `сорок`]}
-  />
-  <FillInQuestion
-    sentence={`Вона має ___ років. (She is ___ years old.) [23]`}
-    answer={`двадцять три`}
-    options={[`двадцять три`, `тридцять два`, `двадцять`, `три`]}
-  />
-  <FillInQuestion
-    sentence={`Автобус номер ___. (Bus number ___.) [40]`}
-    answer={`сорок`}
-    options={[`чотири`, `чотирнадцять`, `сорок`, `чотирдесят`]}
-  />
-  <FillInQuestion
-    sentence={`___ студентів у класі. (___ students in the class.) [15]`}
-    answer={`П'ятнадцять`}
-    options={[`П'ять`, `П'ятнадцять`, `П'ятдесят`, `Шістнадцять`]}
-  />
-  <FillInQuestion
-    sentence={`Хліб коштує ___ гривень. (Bread costs ___ hryvnias.) [8]`}
-    answer={`вісім`}
-    options={[`вісім`, `вісімнадцять`, `вісімдесят`, `сім`]}
-  />
-  <FillInQuestion
-    sentence={`Я маю ___ рік. (I am ___ years old.) [21]`}
-    answer={`двадцять один`}
-    options={[`один`, `двадцять`, `двадцять один`, `одинадцять`]}
-  />
-  <FillInQuestion
-    sentence={`Це коштує ___ гривень. (This costs ___ hryvnias.) [100]`}
-    answer={`сто`}
-    options={[`десять`, `сто`, `вісімдесят`, `дев'яносто`]}
-  />
-  <FillInQuestion
-    sentence={`У мене є ___ копійок. (I have ___ kopecks.) [75]`}
-    answer={`сімдесят п'ять`}
-    options={[`сімдесят п'ять`, `сім`, `п'ятдесят сім`, `п'ять`]}
-  />
-  <FillInQuestion
-    sentence={`Каса номер ___. (Cashier number ___.) [7]`}
-    answer={`сім`}
-    options={[`сім`, `сімдесят`, `сімнадцять`, `вісім`]}
-  />
-  <FillInQuestion
-    sentence={`___ книг на столі. (___ books on the table.) [12]`}
-    answer={`Дванадцять`}
-    options={[`Два`, `Дванадцять`, `Двадцять`, `Двадцять два`]}
-  />
-  <FillInQuestion
-    sentence={`Молоко коштує ___ гривень. (Milk costs ___ hryvnias.) [20]`}
-    answer={`двадцять`}
-    options={[`двадцять`, `два`, `дванадцять`, `сто`]}
-  />
-</FillIn>
+<FillIn items={[
+  {
+    sentence: `У мене ___ гривень. (I have ___ hryvnias.) [10]`,
+    answer: `десять`,
+    options: [`десять`, `п'ять`, `двадцять`, `сто`]
+  },  {
+    sentence: `Це коштує ___ гривень. (This costs ___ hryvnias.) [50]`,
+    answer: `п'ятдесят`,
+    options: [`п'ятнадцять`, `п'ятдесят`, `п'ять`, `сорок`]
+  },  {
+    sentence: `Вона має ___ років. (She is ___ years old.) [23]`,
+    answer: `двадцять три`,
+    options: [`двадцять три`, `тридцять два`, `двадцять`, `три`]
+  },  {
+    sentence: `Автобус номер ___. (Bus number ___.) [40]`,
+    answer: `сорок`,
+    options: [`чотири`, `чотирнадцять`, `сорок`, `чотирдесят`]
+  },  {
+    sentence: `___ студентів у класі. (___ students in the class.) [15]`,
+    answer: `П'ятнадцять`,
+    options: [`П'ять`, `П'ятнадцять`, `П'ятдесят`, `Шістнадцять`]
+  },  {
+    sentence: `Хліб коштує ___ гривень. (Bread costs ___ hryvnias.) [8]`,
+    answer: `вісім`,
+    options: [`вісім`, `вісімнадцять`, `вісімдесят`, `сім`]
+  },  {
+    sentence: `Я маю ___ рік. (I am ___ years old.) [21]`,
+    answer: `двадцять один`,
+    options: [`один`, `двадцять`, `двадцять один`, `одинадцять`]
+  },  {
+    sentence: `Це коштує ___ гривень. (This costs ___ hryvnias.) [100]`,
+    answer: `сто`,
+    options: [`десять`, `сто`, `вісімдесят`, `дев'яносто`]
+  },  {
+    sentence: `У мене є ___ копійок. (I have ___ kopecks.) [75]`,
+    answer: `сімдесят п'ять`,
+    options: [`сімдесят п'ять`, `сім`, `п'ятдесят сім`, `п'ять`]
+  },  {
+    sentence: `Каса номер ___. (Cashier number ___.) [7]`,
+    answer: `сім`,
+    options: [`сім`, `сімдесят`, `сімнадцять`, `вісім`]
+  },  {
+    sentence: `___ книг на столі. (___ books on the table.) [12]`,
+    answer: `Дванадцять`,
+    options: [`Два`, `Дванадцять`, `Двадцять`, `Двадцять два`]
+  },  {
+    sentence: `Молоко коштує ___ гривень. (Milk costs ___ hryvnias.) [20]`,
+    answer: `двадцять`,
+    options: [`двадцять`, `два`, `дванадцять`, `сто`]
+  }
+]} />
 
 ### Number Grammar
 
-*Select the correct answer.*
-
-
-<Quiz>
-  <QuizQuestion
-    question={`1. How do you say "one hryvnia"?`}
-    options={[`одна гривня`, `один гривень`, `одне гривня`, `одні гривні`]}
-    correctIndex={0}
-    explanation={`гривня is feminine, so use одна`}
-  />
-  <QuizQuestion
-    question={`How do you say "two hryvnias"?`}
-    options={[`два гривні`, `дві гривні`, `два гривня`, `дві гривень`]}
-    correctIndex={1}
-    explanation={`2-4 use nominative plural: дві гривні (feminine form)`}
-  />
-  <QuizQuestion
-    question={`How do you say "five hryvnias"?`}
-    options={[`п'ять гривні`, `п'ять гривня`, `п'ять гривень`, `п'яти гривень`]}
-    correctIndex={2}
-    explanation={`5+ use genitive plural: гривень`}
-  />
-  <QuizQuestion
-    question={`What does "Скільки коштує?" mean?`}
-    options={[`How many do you have?`, `How much does it cost?`, `Where is it?`, `What is this?`]}
-    correctIndex={1}
-    explanation={`Key shopping phrase!`}
-  />
-  <QuizQuestion
-    question={`Which number has a gender distinction?`}
-    options={[`один (only)`, `два/дві`, `три`, `всі вище (all above)`]}
-    correctIndex={1}
-    explanation={`Both 1 and 2 have gender: один/одна/одне and два/дві`}
-  />
-  <QuizQuestion
-    question={`What is the genitive plural of "студент"?`}
-    options={[`студенти`, `студента`, `студентів`, `студентам`]}
-    correctIndex={2}
-    explanation={`Used with 5+: п'ять студентів`}
-  />
-  <QuizQuestion
-    question={`How do you say "expensive" in Ukrainian?`}
-    options={[`дешево`, `дорого`, `знижка`, `ціна`]}
-    correctIndex={1}
-    explanation={`дорого = expensive`}
-  />
-  <QuizQuestion
-    question={`What does "готівка" mean?`}
-    options={[`card`, `cash`, `discount`, `receipt`]}
-    correctIndex={1}
-    explanation={`готівка = cash, картка = card`}
-  />
-  <QuizQuestion
-    question={`Which is the correct pattern: п'ятдесят?`}
-    options={[`50`, `15`, `5`, `500`]}
-    correctIndex={0}
-    explanation={`п'ять + десят = fifty`}
-  />
-  <QuizQuestion
-    question={`What case do numbers 5+ require?`}
-    options={[`nominative`, `accusative`, `genitive plural`, `locative`]}
-    correctIndex={2}
-    explanation={`5+ always use genitive plural`}
-  />
-  <QuizQuestion
-    question={`How do you say "twenty-three"?`}
-    options={[`двадцять і три`, `двадцять три`, `тридцять два`, `три двадцять`]}
-    correctIndex={1}
-    explanation={`No connector "and" in Ukrainian numbers`}
-  />
-  <QuizQuestion
-    question={`What is the Ukrainian currency called?`}
-    options={[`карбованець`, `гривня`, `рубль`, `копійка`]}
-    correctIndex={1}
-    explanation={`гривня (hryvnia) is the current currency`}
-  />
-</Quiz>
+<Quiz questions={[
+  {
+    question: `How do you say \"one hryvnia\"?`,
+    options: [
+      { text: `одна гривня`, correct: true },
+      { text: `один гривень`, correct: false },
+      { text: `одне гривня`, correct: false },
+      { text: `одні гривні`, correct: false }
+    ]
+  },  {
+    question: `How do you say \"two hryvnias\"?`,
+    options: [
+      { text: `два гривні`, correct: false },
+      { text: `дві гривні`, correct: true },
+      { text: `два гривня`, correct: false },
+      { text: `дві гривень`, correct: false }
+    ]
+  },  {
+    question: `How do you say \"five hryvnias\"?`,
+    options: [
+      { text: `п'ять гривні`, correct: false },
+      { text: `п'ять гривня`, correct: false },
+      { text: `п'ять гривень`, correct: true },
+      { text: `п'яти гривень`, correct: false }
+    ]
+  },  {
+    question: `What does \"Скільки коштує?\" mean?`,
+    options: [
+      { text: `How many do you have?`, correct: false },
+      { text: `How much does it cost?`, correct: true },
+      { text: `Where is it?`, correct: false },
+      { text: `What is this?`, correct: false }
+    ]
+  },  {
+    question: `Which number has a gender distinction?`,
+    options: [
+      { text: `один (only)`, correct: false },
+      { text: `два/дві`, correct: true },
+      { text: `три`, correct: false },
+      { text: `всі вище (all above)`, correct: false }
+    ]
+  },  {
+    question: `What is the genitive plural of \"студент\"?`,
+    options: [
+      { text: `студенти`, correct: false },
+      { text: `студента`, correct: false },
+      { text: `студентів`, correct: true },
+      { text: `студентам`, correct: false }
+    ]
+  },  {
+    question: `How do you say \"expensive\" in Ukrainian?`,
+    options: [
+      { text: `дешево`, correct: false },
+      { text: `дорого`, correct: true },
+      { text: `знижка`, correct: false },
+      { text: `ціна`, correct: false }
+    ]
+  },  {
+    question: `What does \"готівка\" mean?`,
+    options: [
+      { text: `card`, correct: false },
+      { text: `cash`, correct: true },
+      { text: `discount`, correct: false },
+      { text: `receipt`, correct: false }
+    ]
+  },  {
+    question: `Which is the correct pattern: п'ятдесят?`,
+    options: [
+      { text: `50`, correct: true },
+      { text: `15`, correct: false },
+      { text: `5`, correct: false },
+      { text: `500`, correct: false }
+    ]
+  },  {
+    question: `What case do numbers 5+ require?`,
+    options: [
+      { text: `nominative`, correct: false },
+      { text: `accusative`, correct: false },
+      { text: `genitive plural`, correct: true },
+      { text: `locative`, correct: false }
+    ]
+  },  {
+    question: `How do you say \"twenty-three\"?`,
+    options: [
+      { text: `двадцять і три`, correct: false },
+      { text: `двадцять три`, correct: true },
+      { text: `тридцять два`, correct: false },
+      { text: `три двадцять`, correct: false }
+    ]
+  },  {
+    question: `What is the Ukrainian currency called?`,
+    options: [
+      { text: `карбованець`, correct: false },
+      { text: `гривня`, correct: true },
+      { text: `рубль`, correct: false },
+      { text: `копійка`, correct: false }
+    ]
+  }
+]} />
 
 ### Money Facts
 
-*Decide if each statement is true or false.*
-
-
-<TrueFalse>
-  <TrueFalseQuestion
-    statement={`The Ukrainian currency is called гривня.`}
-    isTrue={true}
-    explanation={`Correct! It's been used since 1996.`}
-  />
-  <TrueFalseQuestion
-    statement={`Numbers 2-4 use genitive plural forms.`}
-    isTrue={false}
-    explanation={`Incorrect! Numbers 2-4 use nominative plural. Only 5+ use genitive plural.`}
-  />
-  <TrueFalseQuestion
-    statement={`The number 2 has different forms for different genders.`}
-    isTrue={true}
-    explanation={`Correct! два (m/n) vs дві (f)`}
-  />
-  <TrueFalseQuestion
-    statement={`"Дорого" means "cheap."`}
-    isTrue={false}
-    explanation={`Incorrect! "Дорого" means expensive. "Дешево" means cheap.`}
-  />
-  <TrueFalseQuestion
-    statement={`The hryvnia symbol is ₴.`}
-    isTrue={true}
-    explanation={`Correct! It's a stylized Г with two lines.`}
-  />
-  <TrueFalseQuestion
-    statement={`Bargaining is not common in Ukrainian supermarkets.`}
-    isTrue={true}
-    explanation={`Correct! Prices are fixed in shops.`}
-  />
-  <TrueFalseQuestion
-    statement={`"Готівка" means "card."`}
-    isTrue={false}
-    explanation={`Incorrect! "Готівка" means cash. "Картка" means card.`}
-  />
-  <TrueFalseQuestion
-    statement={`The word "гривня" dates back to Kyivan Rus'.`}
-    isTrue={true}
-    explanation={`Correct! It meant a silver neck ring.`}
-  />
-  <TrueFalseQuestion
-    statement={`Numbers 5-20 use nominative case.`}
-    isTrue={false}
-    explanation={`Incorrect! They use genitive plural.`}
-  />
-  <TrueFalseQuestion
-    statement={`"Скільки коштує?" is the phrase for asking prices.`}
-    isTrue={true}
-    explanation={`Correct! Essential shopping phrase.`}
-  />
-  <TrueFalseQuestion
-    statement={`One hundred is "дев'яносто."`}
-    isTrue={false}
-    explanation={`Incorrect! One hundred is "сто." Дев'яносто is ninety.`}
-  />
-  <TrueFalseQuestion
-    statement={`Ukrainian banknotes feature historical figures.`}
-    isTrue={true}
-    explanation={`Correct! Each denomination honors Ukrainian leaders and cultural icons.`}
-  />
-</TrueFalse>
+<TrueFalse items={[
+  {
+    statement: `The Ukrainian currency is called гривня.`,
+    isTrue: true,
+    explanation: `Correct! It's been used since 1996.`
+  },  {
+    statement: `Numbers 2-4 use genitive plural forms.`,
+    isTrue: false,
+    explanation: `Incorrect! Numbers 2-4 use nominative plural. Only 5+ use genitive plural.`
+  },  {
+    statement: `The number 2 has different forms for different genders.`,
+    isTrue: true,
+    explanation: `Correct! два (m/n) vs дві (f)`
+  },  {
+    statement: `\"Дорого\" means \"cheap.\"`,
+    isTrue: false,
+    explanation: `Incorrect! \"Дорого\" means expensive. \"Дешево\" means cheap.`
+  },  {
+    statement: `The hryvnia symbol is ₴.`,
+    isTrue: true,
+    explanation: `Correct! It's a stylized Г with two lines.`
+  },  {
+    statement: `Bargaining is not common in Ukrainian supermarkets.`,
+    isTrue: true,
+    explanation: `Correct! Prices are fixed in shops.`
+  },  {
+    statement: `\"Готівка\" means \"card.\"`,
+    isTrue: false,
+    explanation: `Incorrect! \"Готівка\" means cash. \"Картка\" means card.`
+  },  {
+    statement: `The word \"гривня\" dates back to Kyivan Rus'.`,
+    isTrue: true,
+    explanation: `Correct! It meant a silver neck ring.`
+  },  {
+    statement: `Numbers 5-20 use nominative case.`,
+    isTrue: false,
+    explanation: `Incorrect! They use genitive plural.`
+  },  {
+    statement: `\"Скільки коштує?\" is the phrase for asking prices.`,
+    isTrue: true,
+    explanation: `Correct! Essential shopping phrase.`
+  },  {
+    statement: `One hundred is \"дев'яносто.\"`,
+    isTrue: false,
+    explanation: `Incorrect! One hundred is \"сто.\" Дев'яносто is ninety.`
+  },  {
+    statement: `Ukrainian banknotes feature historical figures.`,
+    isTrue: true,
+    explanation: `Correct! Each denomination honors Ukrainian leaders and cultural icons.`
+  }
+]} />
 
 ### Number Categories
 
-*Sort these numbers into the correct categories by their case requirements.*
-
-
 <GroupSort groups={{
-  "### Nominative Singular (1)": [
-    "один студент",
-    "одна гривня",
-    "одне вікно"
-  ],
-  "Nominative Plural (2-4)": [
-    "два студенти",
-    "три гривні",
-    "чотири вікна"
-  ],
-  "Genitive Plural (5+)": [
-    "п'ять студентів",
-    "десять гривень",
-    "двадцять вікон",
-    "сто книг"
-  ]
+  "Nominative Singular (1)": ["один студент", "одна гривня", "одне вікно"],
+  "Nominative Plural (2-4)": ["два студенти", "три гривні", "чотири вікна"],
+  "Genitive Plural (5+)": ["п'ять студентів", "десять гривень", "двадцять вікон", "сто книг"]
 }} />
 
 ### Build Shopping Sentences
 
-*Put the words in the correct order to form sentences.*
-
-
-<Unjumble>
-  <UnjumbleQuestion
-    words={`коштує / Скільки / хліб / ?`}
-    answer={`Скільки коштує хліб?`}
-  />
-  <UnjumbleQuestion
-    words={`гривень / Це / десять / коштує / .`}
-    answer={`Це коштує десять гривень.`}
-  />
-  <UnjumbleQuestion
-    words={`У / є / гроші / мене / .`}
-    answer={`У мене є гроші.`}
-  />
-  <UnjumbleQuestion
-    words={`дорого / Це / !`}
-    answer={`Це дорого!`}
-  />
-  <UnjumbleQuestion
-    words={`дешево / дуже / Це / .`}
-    answer={`Це дуже дешево.`}
-  />
-  <UnjumbleQuestion
-    words={`каса / Де / ?`}
-    answer={`Де каса?`}
-  />
-  <UnjumbleQuestion
-    words={`платити / Можна / карткою / ?`}
-    answer={`Можна платити карткою?`}
-  />
-  <UnjumbleQuestion
-    words={`гривень / двадцять / П'ять / коштує / .`}
-    answer={`П'ять коштує двадцять гривень.`}
-  />
-  <UnjumbleQuestion
-    words={`Одна / будь / кава / ласка / , / .`}
-    answer={`Одна кава, будь ласка.`}
-  />
-  <UnjumbleQuestion
-    words={`студентів / П'ятнадцять / класі / у / .`}
-    answer={`П'ятнадцять студентів у класі.`}
-  />
-  <UnjumbleQuestion
-    words={`гривні / Дві / решта / - / .`}
-    answer={`Дві гривні - решта.`}
-  />
-  <UnjumbleQuestion
-    words={`сто / Всього / гривень / .`}
-    answer={`Всього сто гривень.`}
-  />
-</Unjumble>
+<Unjumble items={[
+  { jumbled: `коштує / Скільки / хліб / ?`, answer: `Скільки коштує хліб?` },
+  { jumbled: `гривень / Це / десять / коштує / .`, answer: `Це коштує десять гривень.` },
+  { jumbled: `У / є / гроші / мене / .`, answer: `У мене є гроші.` },
+  { jumbled: `дорого / Це / !`, answer: `Це дорого!` },
+  { jumbled: `дешево / дуже / Це / .`, answer: `Це дуже дешево.` },
+  { jumbled: `каса / Де / ?`, answer: `Де каса?` },
+  { jumbled: `платити / Можна / карткою / ?`, answer: `Можна платити карткою?` },
+  { jumbled: `гривень / двадцять / П'ять / коштує / .`, answer: `П'ять коштує двадцять гривень.` },
+  { jumbled: `Одна / будь / кава / ласка / , / .`, answer: `Одна кава, будь ласка.` },
+  { jumbled: `студентів / П'ятнадцять / класі / у / .`, answer: `П'ятнадцять студентів у класі.` },
+  { jumbled: `гривні / Дві / решта / - / .`, answer: `Дві гривні - решта.` },
+  { jumbled: `сто / Всього / гривень / .`, answer: `Всього сто гривень.` }
+]} />
 
 ### Shopping Dialogue
 
-*Complete the dialogue with the correct words.*
-
-
-<FillIn>
-  <FillInQuestion
-    sentence={`1. Доброго дня! Що ___? (Good afternoon! What ___ you want?)`}
-    answer={`бажаєте`}
-    options={[`бажаєте`, `є`, `коштує`, `маю`]}
-  />
-  <FillInQuestion
-    sentence={`___ коштує молоко? (___ does milk cost?)`}
-    answer={`Скільки`}
-    options={[`Скільки`, `Що`, `Де`, `Хто`]}
-  />
-  <FillInQuestion
-    sentence={`Двадцять ___. (Twenty ___.)`}
-    answer={`гривень`}
-    options={[`гривня`, `гривні`, `гривень`, `гривнів`]}
-  />
-  <FillInQuestion
-    sentence={`Добре. Одне молоко, ___ ласка. (Okay. One milk, ___.)`}
-    answer={`будь`}
-    options={[`будь`, `є`, `маю`, `дякую`]}
-  />
-  <FillInQuestion
-    sentence={`Можна платити ___? (Can I pay by ___?)`}
-    answer={`карткою`}
-    options={[`картка`, `карткою`, `картки`, `карток`]}
-  />
-  <FillInQuestion
-    sentence={`Так, звичайно. ___! (Yes, of course. ___!)`}
-    answer={`Дякую`}
-    options={[`Дякую`, `Привіт`, `До побачення`, `Вибачте`]}
-  />
-  <FillInQuestion
-    sentence={`Ось ваше молоко. ___ гривень, будь ласка. (Here's your milk. ___ hryvnias, please.)`}
-    answer={`Двадцять`}
-    options={[`Два`, `Двадцять`, `Дванадцять`, `Сто`]}
-  />
-  <FillInQuestion
-    sentence={`У вас є ___? (Do you have ___?)`}
-    answer={`гроші`}
-    options={[`гроші`, `решта`, `знижка`, `картка`]}
-  />
-</FillIn>
+<FillIn items={[
+  {
+    sentence: `Доброго дня! Що ___? (Good afternoon! What ___ you want?)`,
+    answer: `бажаєте`,
+    options: [`бажаєте`, `є`, `коштує`, `маю`]
+  },  {
+    sentence: `___ коштує молоко? (___ does milk cost?)`,
+    answer: `Скільки`,
+    options: [`Скільки`, `Що`, `Де`, `Хто`]
+  },  {
+    sentence: `Двадцять ___. (Twenty ___.)`,
+    answer: `гривень`,
+    options: [`гривня`, `гривні`, `гривень`, `гривнів`]
+  },  {
+    sentence: `Добре. Одне молоко, ___ ласка. (Okay. One milk, ___.)`,
+    answer: `будь`,
+    options: [`будь`, `є`, `маю`, `дякую`]
+  },  {
+    sentence: `Можна платити ___? (Can I pay by ___?)`,
+    answer: `карткою`,
+    options: [`картка`, `карткою`, `картки`, `карток`]
+  },  {
+    sentence: `Так, звичайно. ___! (Yes, of course. ___!)`,
+    answer: `Дякую`,
+    options: [`Дякую`, `Привіт`, `До побачення`, `Вибачте`]
+  },  {
+    sentence: `Ось ваше молоко. ___ гривень, будь ласка. (Here's your milk. ___ hryvnias, please.)`,
+    answer: `Двадцять`,
+    options: [`Два`, `Двадцять`, `Дванадцять`, `Сто`]
+  },  {
+    sentence: `У вас є ___? (Do you have ___?)`,
+    answer: `гроші`,
+    options: [`гроші`, `решта`, `знижка`, `картка`]
+  }
+]} />
 
 ### Shopping Vocabulary
 
-*Match the Ukrainian shopping terms with their English meanings.*
-
-
 <MatchUp pairs={[
+  { left: `Ukrainian`, right: `English` },
   { left: `ціна`, right: `price` },
   { left: `знижка`, right: `discount` },
   { left: `решта`, right: `change (money back)` },
@@ -714,82 +646,102 @@ You can now count, ask prices, and shop confidently in Ukraine!
 
 ### Currency and Numbers
 
-*Test your knowledge of Ukrainian money and counting.*
-
-
-<Quiz>
-  <QuizQuestion
-    question={`1. How much is п'ятдесят гривень?`}
-    options={[`5 hryvnias`, `15 hryvnias`, `50 hryvnias`, `500 hryvnias`]}
-    correctIndex={2}
-    explanation={`п'ятдесят = fifty`}
-  />
-  <QuizQuestion
-    question={`Which coin is NOT used in Ukraine?`}
-    options={[`1 копійка`, `5 рублів`, `50 копійок`, `1 гривня`]}
-    correctIndex={1}
-    explanation={`Ukraine uses hryvnias and kopecks, not rubles`}
-  />
-  <QuizQuestion
-    question={`Complete: одна гривня, дві ___, п'ять ___.`}
-    options={[`гривня, гривня`, `гривні, гривень`, `гривні, гривні`, `гривень, гривень`]}
-    correctIndex={1}
-    explanation={`Pattern: 1 sg, 2-4 nom.pl, 5+ gen.pl`}
-  />
-  <QuizQuestion
-    question={`What does "знижка" mean?`}
-    options={[`price`, `discount`, `receipt`, `change`]}
-    correctIndex={1}
-    explanation={`знижка = discount`}
-  />
-  <QuizQuestion
-    question={`Which is the correct form: "три ___"?`}
-    options={[`студент`, `студента`, `студенти`, `студентів`]}
-    correctIndex={2}
-    explanation={`2-4 use nominative plural`}
-  />
-  <QuizQuestion
-    question={`How do you say "ninety" in Ukrainian?`}
-    options={[`дев'ять`, `дев'ятнадцять`, `дев'яносто`, `сто`]}
-    correctIndex={2}
-    explanation={`дев'яносто = 90`}
-  />
-  <QuizQuestion
-    question={`What is the smaller unit of Ukrainian currency?`}
-    options={[`цент`, `копійка`, `долар`, `рубль`]}
-    correctIndex={1}
-    explanation={`1 hryvnia = 100 kopecks`}
-  />
-  <QuizQuestion
-    question={`How do you ask "How much does it cost?" in Ukrainian?`}
-    options={[`Скільки коштує?`, `Що це?`, `Де каса?`, `Можна платити?`]}
-    correctIndex={0}
-    explanation={`Скільки коштує? is the standard phrase`}
-  />
-  <QuizQuestion
-    question={`Which number requires genitive plural?`}
-    options={[`два`, `чотири`, `п'ять`, `один`]}
-    correctIndex={2}
-    explanation={`5+ use genitive plural`}
-  />
-  <QuizQuestion
-    question={`What does "решта" mean?`}
-    options={[`receipt`, `total`, `change (money returned)`, `discount`]}
-    correctIndex={2}
-    explanation={`решта = change you get back`}
-  />
-  <QuizQuestion
-    question={`How do you say "forty" in Ukrainian?`}
-    options={[`чотири`, `чотирнадцять`, `сорок`, `чотирдесят`]}
-    correctIndex={2}
-    explanation={`сорок is the unique form for 40`}
-  />
-  <QuizQuestion
-    question={`Complete the phrase: "Можна платити ___?" (Can I pay by card?)`}
-    options={[`картка`, `карткою`, `картки`, `карток`]}
-    correctIndex={1}
-    explanation={`Instrumental case after "платити": карткою`}
-  />
-</Quiz>
-
-
+<Quiz questions={[
+  {
+    question: `How much is п'ятдесят гривень?`,
+    options: [
+      { text: `5 hryvnias`, correct: false },
+      { text: `15 hryvnias`, correct: false },
+      { text: `50 hryvnias`, correct: true },
+      { text: `500 hryvnias`, correct: false }
+    ]
+  },  {
+    question: `Which coin is NOT used in Ukraine?`,
+    options: [
+      { text: `1 копійка`, correct: false },
+      { text: `5 рублів`, correct: true },
+      { text: `50 копійок`, correct: false },
+      { text: `1 гривня`, correct: false }
+    ]
+  },  {
+    question: `Complete: одна гривня, дві ___, п'ять ___.`,
+    options: [
+      { text: `гривня, гривня`, correct: false },
+      { text: `гривні, гривень`, correct: true },
+      { text: `гривні, гривні`, correct: false },
+      { text: `гривень, гривень`, correct: false }
+    ]
+  },  {
+    question: `What does \"знижка\" mean?`,
+    options: [
+      { text: `price`, correct: false },
+      { text: `discount`, correct: true },
+      { text: `receipt`, correct: false },
+      { text: `change`, correct: false }
+    ]
+  },  {
+    question: `Which is the correct form: \"три ___\"?`,
+    options: [
+      { text: `студент`, correct: false },
+      { text: `студента`, correct: false },
+      { text: `студенти`, correct: true },
+      { text: `студентів`, correct: false }
+    ]
+  },  {
+    question: `How do you say \"ninety\" in Ukrainian?`,
+    options: [
+      { text: `дев'ять`, correct: false },
+      { text: `дев'ятнадцять`, correct: false },
+      { text: `дев'яносто`, correct: true },
+      { text: `сто`, correct: false }
+    ]
+  },  {
+    question: `What is the smaller unit of Ukrainian currency?`,
+    options: [
+      { text: `цент`, correct: false },
+      { text: `копійка`, correct: true },
+      { text: `долар`, correct: false },
+      { text: `рубль`, correct: false }
+    ]
+  },  {
+    question: `How do you ask \"How much does it cost?\" in Ukrainian?`,
+    options: [
+      { text: `Скільки коштує?`, correct: true },
+      { text: `Що це?`, correct: false },
+      { text: `Де каса?`, correct: false },
+      { text: `Можна платити?`, correct: false }
+    ]
+  },  {
+    question: `Which number requires genitive plural?`,
+    options: [
+      { text: `два`, correct: false },
+      { text: `чотири`, correct: false },
+      { text: `п'ять`, correct: true },
+      { text: `один`, correct: false }
+    ]
+  },  {
+    question: `What does \"решта\" mean?`,
+    options: [
+      { text: `receipt`, correct: false },
+      { text: `total`, correct: false },
+      { text: `change (money returned)`, correct: true },
+      { text: `discount`, correct: false }
+    ]
+  },  {
+    question: `How do you say \"forty\" in Ukrainian?`,
+    options: [
+      { text: `чотири`, correct: false },
+      { text: `чотирнадцять`, correct: false },
+      { text: `сорок`, correct: true },
+      { text: `чотирдесят`, correct: false }
+    ]
+  },  {
+    question: `Complete the phrase: \"Можна платити ___?\" (Can I pay by card?)`,
+    options: [
+      { text: `картка`, correct: false },
+      { text: `карткою`, correct: true },
+      { text: `картки`, correct: false },
+      { text: `карток`, correct: false }
+    ]
+  }
+]} />

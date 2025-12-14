@@ -5,20 +5,18 @@ title: "The Cyrillic Code II"
 description: "The Final 14 Letters"
 ---
 
-import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
-import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
+import Quiz from '@site/src/components/Quiz';
 import MatchUp from '@site/src/components/MatchUp';
-import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
-import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
-import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Select, { SelectQuestion } from '@site/src/components/Select';
-import Translate, { TranslateItem } from '@site/src/components/Translate';
-import Cloze, { ClozePassage } from '@site/src/components/Cloze';
-import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
-import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import DialogueReorder from '@site/src/components/DialogueReorder';
 
 
 # The Cyrillic Code II
@@ -28,6 +26,18 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 Welcome back, code-breaker! In Module 1, you cracked 19 letters. That's already more than half the Ukrainian Cyrillic alphabet. Today, you'll conquer the final 14 letters. Some of these are completely unique to Ukrainian. They're the reason Ukrainian sounds different from Russian, Polish, or any other Slavic language.
 
 By the end of this module, you'll be able to read **любов** (love), **дякую** (thank you), **Київ** (Kyiv), and **борщ** (borscht). You'll understand why Ukrainian is one of the most melodic Slavic languages. And you'll know how to avoid the dreaded italic trap that trips up every beginner.
+
+:::info[🎧 Pronunciation Resources]
+
+**YouTube:** [Ukrainian Lessons Channel](https://www.youtube.com/@ukrainianlessons) — Beginner videos for alphabet and pronunciation
+
+**Podcast:** [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/) — Season 1 for beginners, with native speaker audio
+
+**Г vs Ґ:** [Omniglot - Ukrainian](https://www.omniglot.com/writing/ukrainian.htm) — Detailed explanation of the unique Ukrainian sounds
+
+**Practice Sounds:** [ENGin Program - Pronunciation Basics](https://www.enginprogram.org/post/ukrainian-pronunciation-basics-a-guide-for-learners) — Tips for tricky sounds (Щ, Ї, rolled Р)
+:::
+
 
 ## Presentation
 
@@ -226,7 +236,7 @@ You know every single one now. Congratulations!
 
 ---
 
-# Summary
+## 📋 Summary
 
 In this module, you learned the final 14 letters of Ukrainian Cyrillic:
 
@@ -246,7 +256,7 @@ Next module, we'll start learning about noun gender and why it matters!
 
 ---
 
-# Vocabulary
+## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
@@ -292,338 +302,291 @@ Next module, we'll start learning about noun gender and why it matters!
 
 ---
 
-## 🎮 Activities
+## 🎯 Activities
 
+### Letter Sounds
 
+<MatchUp pairs={[
+  { left: `Г`, right: `h (like \"ahead\")` },
+  { left: `Ґ`, right: `g (like \"go\")` },
+  { left: `Ж`, right: `zh (like \"pleasure\")` },
+  { left: `Ш`, right: `sh (like \"shop\")` },
+  { left: `Щ`, right: `shch (like \"borshch\")` },
+  { left: `Ч`, right: `ch (like \"church\")` },
+  { left: `Ц`, right: `ts (like \"cats\")` },
+  { left: `Є`, right: `ye (like \"yes\")` },
+  { left: `Ї`, right: `yi (like \"yeet\")` },
+  { left: `Ю`, right: `yu (like \"you\")` },
+  { left: `Я`, right: `ya (like \"yacht\")` },
+  { left: `Ь`, right: `soft sign (no sound)` }
+]} />
 
 ### Alphabet Knowledge
 
-*Select the correct answer.*
-
-
-<Quiz>
-  <QuizQuestion
-    question={`1. Which letter makes the "h" sound in Ukrainian?`}
-    options={[`Ґ`, `Г`, `Х`, `К`]}
-    correctIndex={1}
-    explanation={`Г (hook) makes the soft "h" sound.`}
-  />
-  <QuizQuestion
-    question={`What does the letter Ї sound like?`}
-    options={[`ya`, `ye`, `yi`, `yu`]}
-    correctIndex={2}
-    explanation={`Ї is the iotated "yi" sound, as in Київ (Kyiv).`}
-  />
-  <QuizQuestion
-    question={`Which letter makes the "shch" sound in борщ?`}
-    options={[`Ш`, `Ч`, `Щ`, `Ц`]}
-    correctIndex={2}
-    explanation={`Щ makes the distinctive "shch" blend.`}
-  />
-  <QuizQuestion
-    question={`What is special about the letter Ь?`}
-    options={[`It makes a "y" sound`, `It softens the consonant before it`, `It makes an "e" sound`, `It's silent and has no effect`]}
-    correctIndex={1}
-    explanation={`The soft sign Ь softens the preceding consonant.`}
-  />
-  <QuizQuestion
-    question={`Which letter makes the "ts" sound?`}
-    options={[`С`, `З`, `Ц`, `Ч`]}
-    correctIndex={2}
-    explanation={`Ц makes the sharp "ts" sound, as in центр.`}
-  />
-  <QuizQuestion
-    question={`What does Є sound like?`}
-    options={[`ye`, `e`, `yi`, `ya`]}
-    correctIndex={0}
-    explanation={`Є is the iotated "ye" sound, as in Європа.`}
-  />
-  <QuizQuestion
-    question={`How do you pronounce Київ in Ukrainian?`}
-    options={[`Keev`, `Kiev`, `Kyiv`, `Kee-iv`]}
-    correctIndex={2}
-    explanation={`Київ is pronounced Kyiv with the iotated Ї sound.`}
-  />
-  <QuizQuestion
-    question={`Which letter was lost in Russian but kept in Ukrainian?`}
-    options={[`Г`, `Ґ`, `Щ`, `Є`]}
-    correctIndex={1}
-    explanation={`Ґ (hard g) exists only in Ukrainian, not Russian.`}
-  />
-  <QuizQuestion
-    question={`What sound does Ж make?`}
-    options={[`sh`, `zh`, `j`, `ch`]}
-    correctIndex={1}
-    explanation={`Ж makes the "zh" sound like "s" in "pleasure."`}
-  />
-  <QuizQuestion
-    question={`In italic/cursive, which letter looks like Latin "m"?`}
-    options={[`т`, `м`, `п`, `н`]}
-    correctIndex={0}
-    explanation={`Italic т looks like "m" but still sounds like "t."`}
-  />
-  <QuizQuestion
-    question={`Which of these is a iotated vowel?`}
-    options={[`А`, `Е`, `Ю`, `И`]}
-    correctIndex={2}
-    explanation={`Ю is iotated (yu sound). А, Е, И are not iotated.`}
-  />
-  <QuizQuestion
-    question={`What does Я sound like?`}
-    options={[`ye`, `ya`, `yi`, `y`]}
-    correctIndex={1}
-    explanation={`Я makes the "ya" sound as in як (how).`}
-  />
-</Quiz>
+<Quiz questions={[
+  {
+    question: `Which letter makes the \"h\" sound in Ukrainian?`,
+    options: [
+      { text: `Ґ`, correct: false },
+      { text: `Г`, correct: true },
+      { text: `Х`, correct: false },
+      { text: `К`, correct: false }
+    ]
+  },  {
+    question: `What does the letter Ї sound like?`,
+    options: [
+      { text: `ya`, correct: false },
+      { text: `ye`, correct: false },
+      { text: `yi`, correct: true },
+      { text: `yu`, correct: false }
+    ]
+  },  {
+    question: `Which letter makes the \"shch\" sound in борщ?`,
+    options: [
+      { text: `Ш`, correct: false },
+      { text: `Ч`, correct: false },
+      { text: `Щ`, correct: true },
+      { text: `Ц`, correct: false }
+    ]
+  },  {
+    question: `What is special about the letter Ь?`,
+    options: [
+      { text: `It makes a \"y\" sound`, correct: false },
+      { text: `It softens the consonant before it`, correct: true },
+      { text: `It makes an \"e\" sound`, correct: false },
+      { text: `It's silent and has no effect`, correct: false }
+    ]
+  },  {
+    question: `Which letter makes the \"ts\" sound?`,
+    options: [
+      { text: `С`, correct: false },
+      { text: `З`, correct: false },
+      { text: `Ц`, correct: true },
+      { text: `Ч`, correct: false }
+    ]
+  },  {
+    question: `What does Є sound like?`,
+    options: [
+      { text: `ye`, correct: true },
+      { text: `e`, correct: false },
+      { text: `yi`, correct: false },
+      { text: `ya`, correct: false }
+    ]
+  },  {
+    question: `How do you pronounce Київ in Ukrainian?`,
+    options: [
+      { text: `Keev`, correct: false },
+      { text: `Kiev`, correct: false },
+      { text: `Kyiv`, correct: true },
+      { text: `Kee-iv`, correct: false }
+    ]
+  },  {
+    question: `Which letter was lost in Russian but kept in Ukrainian?`,
+    options: [
+      { text: `Г`, correct: false },
+      { text: `Ґ`, correct: true },
+      { text: `Щ`, correct: false },
+      { text: `Є`, correct: false }
+    ]
+  },  {
+    question: `What sound does Ж make?`,
+    options: [
+      { text: `sh`, correct: false },
+      { text: `zh`, correct: true },
+      { text: `j`, correct: false },
+      { text: `ch`, correct: false }
+    ]
+  },  {
+    question: `In italic/cursive, which letter looks like Latin \"m\"?`,
+    options: [
+      { text: `т`, correct: true },
+      { text: `м`, correct: false },
+      { text: `п`, correct: false },
+      { text: `н`, correct: false }
+    ]
+  },  {
+    question: `Which of these is a iotated vowel?`,
+    options: [
+      { text: `А`, correct: false },
+      { text: `Е`, correct: false },
+      { text: `Ю`, correct: true },
+      { text: `И`, correct: false }
+    ]
+  },  {
+    question: `What does Я sound like?`,
+    options: [
+      { text: `ye`, correct: false },
+      { text: `ya`, correct: true },
+      { text: `yi`, correct: false },
+      { text: `y`, correct: false }
+    ]
+  }
+]} />
 
 ### Letter Categories
 
-*Sort these letters into the correct categories.*
-
-
 <GroupSort groups={{
-  "### Unique Seven (Unusual Consonants)": [
-    "Г",
-    "Ґ",
-    "Ж",
-    "Ш",
-    "Щ",
-    "Ч",
-    "Ц"
-  ],
-  "Iotated Vowels (Built-in Y Sound)": [
-    "Є",
-    "Ї",
-    "Ю",
-    "Я"
-  ],
-  "Special Letters": [
-    "Ь",
-    "И",
-    "Й"
-  ]
+  "Unique Seven (Unusual Consonants)": ["Г", "Ґ", "Ж", "Ш", "Щ", "Ч", "Ц"],
+  "Iotated Vowels (Built-in Y Sound)": ["Є", "Ї", "Ю", "Я"],
+  "Special Letters": ["Ь", "И", "Й"]
 }} />
 
 ### Build Ukrainian Words
 
-*Arrange the letters to form the correct word.*
-
-
-<Anagram>
-  <AnagramQuestion
-    scrambled={`д я к у ю`}
-    answer={`дякую`}
-  />
-  <AnagramQuestion
-    scrambled={`п р и в і т`}
-    answer={`привіт`}
-  />
-  <AnagramQuestion
-    scrambled={`б о р щ`}
-    answer={`борщ`}
-  />
-  <AnagramQuestion
-    scrambled={`ц у к о р`}
-    answer={`цукор`}
-  />
-  <AnagramQuestion
-    scrambled={`ц е н т р`}
-    answer={`центр`}
-  />
-  <AnagramQuestion
-    scrambled={`д ж а з`}
-    answer={`джаз`}
-  />
-  <AnagramQuestion
-    scrambled={`х т о`}
-    answer={`хто`}
-  />
-  <AnagramQuestion
-    scrambled={`ж е л е`}
-    answer={`желе`}
-  />
-  <AnagramQuestion
-    scrambled={`м а й о н е з`}
-    answer={`майонез`}
-  />
-  <AnagramQuestion
-    scrambled={`ч е м п і о н`}
-    answer={`чемпіон`}
-  />
-</Anagram>
+<Anagram items={[
+  { scrambled: `д я к у ю`, answer: `дякую`, hint: `` },
+  { scrambled: `п р и в і т`, answer: `привіт`, hint: `` },
+  { scrambled: `б о р щ`, answer: `борщ`, hint: `` },
+  { scrambled: `ц у к о р`, answer: `цукор`, hint: `` },
+  { scrambled: `ц е н т р`, answer: `центр`, hint: `` },
+  { scrambled: `д ж а з`, answer: `джаз`, hint: `` },
+  { scrambled: `х т о`, answer: `хто`, hint: `` },
+  { scrambled: `ж е л е`, answer: `желе`, hint: `` },
+  { scrambled: `м а й о н е з`, answer: `майонез`, hint: `` },
+  { scrambled: `ч е м п і о н`, answer: `чемпіон`, hint: `` }
+]} />
 
 ### Complete the Greetings
 
-*Fill in the blank with the correct Ukrainian word.*
-
-
-<FillIn>
-  <FillInQuestion
-    sentence={`1. ___ (Hello!)`}
-    answer={`Привіт`}
-    options={[`Привіт`, `Дякую`, `Добре`, `Так`]}
-  />
-  <FillInQuestion
-    sentence={`___ (Thank you)`}
-    answer={`Дякую`}
-    options={[`Дякую`, `Будь ласка`, `До побачення`, `Привіт`]}
-  />
-  <FillInQuestion
-    sentence={`___ (Please / You're welcome)`}
-    answer={`Будь ласка`}
-    options={[`Будь ласка`, `Дякую`, `Вибачте`, `Так`]}
-  />
-  <FillInQuestion
-    sentence={`___ (Goodbye)`}
-    answer={`До побачення`}
-    options={[`До побачення`, `Привіт`, `Дякую`, `Ні`]}
-  />
-  <FillInQuestion
-    sentence={`___ (Excuse me / Sorry)`}
-    answer={`Вибачте`}
-    options={[`Вибачте`, `Будь ласка`, `Дякую`, `Добре`]}
-  />
-  <FillInQuestion
-    sentence={`___ (Yes)`}
-    answer={`Так`}
-    options={[`Так`, `Ні`, `Що`, `Як`]}
-  />
-  <FillInQuestion
-    sentence={`___ (No)`}
-    answer={`Ні`}
-    options={[`Ні`, `Так`, `Де`, `Хто`]}
-  />
-  <FillInQuestion
-    sentence={`___ (Good / Well)`}
-    answer={`Добре`}
-    options={[`Добре`, `Дякую`, `Так`, `Ні`]}
-  />
-  <FillInQuestion
-    sentence={`___ (What?)`}
-    answer={`Що`}
-    options={[`Що`, `Як`, `Де`, `Хто`]}
-  />
-  <FillInQuestion
-    sentence={`___ (How?)`}
-    answer={`Як`}
-    options={[`Як`, `Що`, `Де`, `Хто`]}
-  />
-  <FillInQuestion
-    sentence={`___ (Where?)`}
-    answer={`Де`}
-    options={[`Де`, `Що`, `Як`, `Хто`]}
-  />
-  <FillInQuestion
-    sentence={`___ (Who?)`}
-    answer={`Хто`}
-    options={[`Хто`, `Що`, `Як`, `Де`]}
-  />
-  <FillInQuestion
-    sentence={`___ (Welcome)`}
-    answer={`Ласкаво просимо`}
-    options={[`Ласкаво просимо`, `Привіт`, `Дякую`, `До побачення`]}
-  />
-</FillIn>
+<FillIn items={[
+  {
+    sentence: `___ (Hello!)`,
+    answer: `Привіт`,
+    options: [`Привіт`, `Дякую`, `Добре`, `Так`]
+  },  {
+    sentence: `___ (Thank you)`,
+    answer: `Дякую`,
+    options: [`Дякую`, `Будь ласка`, `До побачення`, `Привіт`]
+  },  {
+    sentence: `___ (Please / You're welcome)`,
+    answer: `Будь ласка`,
+    options: [`Будь ласка`, `Дякую`, `Вибачте`, `Так`]
+  },  {
+    sentence: `___ (Goodbye)`,
+    answer: `До побачення`,
+    options: [`До побачення`, `Привіт`, `Дякую`, `Ні`]
+  },  {
+    sentence: `___ (Excuse me / Sorry)`,
+    answer: `Вибачте`,
+    options: [`Вибачте`, `Будь ласка`, `Дякую`, `Добре`]
+  },  {
+    sentence: `___ (Yes)`,
+    answer: `Так`,
+    options: [`Так`, `Ні`, `Що`, `Як`]
+  },  {
+    sentence: `___ (No)`,
+    answer: `Ні`,
+    options: [`Ні`, `Так`, `Де`, `Хто`]
+  },  {
+    sentence: `___ (Good / Well)`,
+    answer: `Добре`,
+    options: [`Добре`, `Дякую`, `Так`, `Ні`]
+  },  {
+    sentence: `___ (What?)`,
+    answer: `Що`,
+    options: [`Що`, `Як`, `Де`, `Хто`]
+  },  {
+    sentence: `___ (How?)`,
+    answer: `Як`,
+    options: [`Як`, `Що`, `Де`, `Хто`]
+  },  {
+    sentence: `___ (Where?)`,
+    answer: `Де`,
+    options: [`Де`, `Що`, `Як`, `Хто`]
+  },  {
+    sentence: `___ (Who?)`,
+    answer: `Хто`,
+    options: [`Хто`, `Що`, `Як`, `Де`]
+  },  {
+    sentence: `___ (Welcome)`,
+    answer: `Ласкаво просимо`,
+    options: [`Ласкаво просимо`, `Привіт`, `Дякую`, `До побачення`]
+  }
+]} />
 
 ### Alphabet Facts
 
-*Decide if each statement is true or false.*
+<TrueFalse items={[
+  {
+    statement: `The letter Г makes an \"h\" sound, not a \"g\" sound.`,
+    isTrue: true,
+    explanation: `Correct! Г is a soft breathy \"h\" sound.`
+  },  {
+    statement: `Ґ exists in Ukrainian but was lost in Russian.`,
+    isTrue: true,
+    explanation: `Correct! Ґ is unique to Ukrainian and a few other languages.`
+  },  {
+    statement: `The letter Ї sounds like \"e\" in English.`,
+    isTrue: false,
+    explanation: `Incorrect! Ї sounds like \"yi\" (as in Kyiv).`
+  },  {
+    statement: `Щ makes the \"shch\" sound in борщ.`,
+    isTrue: true,
+    explanation: `Correct! Щ is the distinctive \"shch\" blend.`
+  },  {
+    statement: `The soft sign Ь makes a \"y\" sound.`,
+    isTrue: false,
+    explanation: `Incorrect! Ь has no sound of its own; it softens the consonant before it.`
+  },  {
+    statement: `There are four iotated vowels in Ukrainian: Є, Ї, Ю, Я.`,
+    isTrue: true,
+    explanation: `Correct! These all have a built-in \"y\" sound.`
+  },  {
+    statement: `Київ should be pronounced \"Keev\" like in Russian.`,
+    isTrue: false,
+    explanation: `Incorrect! In Ukrainian, it's Kyiv with the \"yi\" sound from Ї.`
+  },  {
+    statement: `The Ukrainian alphabet has 33 letters total.`,
+    isTrue: true,
+    explanation: `Correct! 33 letters including all the unique Ukrainian ones.`
+  },  {
+    statement: `Italic т looks like \"t\" in Latin script.`,
+    isTrue: false,
+    explanation: `Incorrect! Italic т looks like \"m\" but still sounds like \"t.\"`
+  },  {
+    statement: `UNESCO recognized Ukrainian borscht culture as endangered heritage.`,
+    isTrue: true,
+    explanation: `Correct! In 2022, due to the war.`
+  },  {
+    statement: `Є sounds like \"ye\" as in \"yes.\"`,
+    isTrue: true,
+    explanation: `Correct! Є is the iotated \"ye\" sound.`
+  },  {
+    statement: `The letter И is the same as І in Ukrainian.`,
+    isTrue: false,
+    explanation: `Incorrect! И is a hard \"i\" sound, while І is a soft \"ee\" sound.`
+  }
+]} />
 
+### Ukrainian Cities
 
-<TrueFalse>
-  <TrueFalseQuestion
-    statement={`The letter Г makes an "h" sound, not a "g" sound.`}
-    isTrue={true}
-    explanation={`Correct! Г is a soft breathy "h" sound.`}
-  />
-  <TrueFalseQuestion
-    statement={`Ґ exists in Ukrainian but was lost in Russian.`}
-    isTrue={true}
-    explanation={`Correct! Ґ is unique to Ukrainian and a few other languages.`}
-  />
-  <TrueFalseQuestion
-    statement={`The letter Ї sounds like "e" in English.`}
-    isTrue={false}
-    explanation={`Incorrect! Ї sounds like "yi" (as in Kyiv).`}
-  />
-  <TrueFalseQuestion
-    statement={`Щ makes the "shch" sound in борщ.`}
-    isTrue={true}
-    explanation={`Correct! Щ is the distinctive "shch" blend.`}
-  />
-  <TrueFalseQuestion
-    statement={`The soft sign Ь makes a "y" sound.`}
-    isTrue={false}
-    explanation={`Incorrect! Ь has no sound of its own; it softens the consonant before it.`}
-  />
-  <TrueFalseQuestion
-    statement={`There are four iotated vowels in Ukrainian: Є, Ї, Ю, Я.`}
-    isTrue={true}
-    explanation={`Correct! These all have a built-in "y" sound.`}
-  />
-  <TrueFalseQuestion
-    statement={`Київ should be pronounced "Keev" like in Russian.`}
-    isTrue={false}
-    explanation={`Incorrect! In Ukrainian, it's Kyiv with the "yi" sound from Ї.`}
-  />
-  <TrueFalseQuestion
-    statement={`The Ukrainian alphabet has 33 letters total.`}
-    isTrue={true}
-    explanation={`Correct! 33 letters including all the unique Ukrainian ones.`}
-  />
-  <TrueFalseQuestion
-    statement={`Italic т looks like "t" in Latin script.`}
-    isTrue={false}
-    explanation={`Incorrect! Italic т looks like "m" but still sounds like "t."`}
-  />
-  <TrueFalseQuestion
-    statement={`UNESCO recognized Ukrainian borscht culture as endangered heritage.`}
-    isTrue={true}
-    explanation={`Correct! In 2022, due to the war.`}
-  />
-  <TrueFalseQuestion
-    statement={`Є sounds like "ye" as in "yes."`}
-    isTrue={true}
-    explanation={`Correct! Є is the iotated "ye" sound.`}
-  />
-  <TrueFalseQuestion
-    statement={`The letter И is the same as І in Ukrainian.`}
-    isTrue={false}
-    explanation={`Incorrect! И is a hard "i" sound, while І is a soft "ee" sound.`}
-  />
-</TrueFalse>
+<MatchUp pairs={[
+  { left: `Київ`, right: `Kyiv` },
+  { left: `Львів`, right: `Lviv` },
+  { left: `Одеса`, right: `Odesa` },
+  { left: `Харків`, right: `Kharkiv` },
+  { left: `Дніпро`, right: `Dnipro` },
+  { left: `Україна`, right: `Ukraine` },
+  { left: `Лондон`, right: `London` },
+  { left: `Європа`, right: `Europe` }
+]} />
 
+### Food Vocabulary
 
-
-
+<MatchUp pairs={[
+  { left: `борщ`, right: `borscht` },
+  { left: `йогурт`, right: `yogurt` },
+  { left: `желе`, right: `jelly` },
+  { left: `майонез`, right: `mayonnaise` },
+  { left: `шоколад`, right: `chocolate` },
+  { left: `цукор`, right: `sugar` },
+  { left: `буква`, right: `letter` },
+  { left: `слово`, right: `word` }
+]} />
 
 ### Print vs Italic Confusion
 
-*Sort these letters by whether they look confusing in italic.*
-
-
 <GroupSort groups={{
-  "### Looks Different in Italic (Trap Letters)": [
-    "т",
-    "п",
-    "д",
-    "и",
-    "л",
-    "г"
-  ],
-  "Looks Similar in Italic": [
-    "а",
-    "б",
-    "в",
-    "е",
-    "к",
-    "м",
-    "н",
-    "о",
-    "с",
-    "ф",
-    "х"
-  ]
+  "Looks Different in Italic (Trap Letters)": ["т", "п", "д", "и", "л", "г"],
+  "Looks Similar in Italic": ["а", "б", "в", "е", "к", "м", "н", "о", "с", "ф", "х"]
 }} />
-
-

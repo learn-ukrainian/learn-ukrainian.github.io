@@ -68,7 +68,7 @@ def clean_for_immersion(text: str) -> str:
 def extract_core_content(body: str) -> str:
     """
     Extract content before the Activities section.
-    This is the 'instructional core' for word count and immersion.
+    This is the 'instructional core' for word count (not immersion).
     """
     # Match both English-only and bilingual headers
     activities_pattern = re.compile(r'^# (?:Activities|Вправи)', re.MULTILINE | re.IGNORECASE)
@@ -120,6 +120,8 @@ def extract_ukrainian_sentences(text: str) -> list[str]:
     - Lines starting with # (markdown headers)
     - Bullet point lists (lines starting with - or *)
     - Blockquote callout headers (lines starting with >)
+    - Blockquote bullet points (lines like "> - item")
+    - Grammatical pattern demonstrations (lines with X / Y / Z alternatives)
     """
     sentences = []
 
@@ -142,6 +144,12 @@ def extract_ukrainian_sentences(text: str) -> list[str]:
             continue
         # Skip blockquote callout headers (e.g., "> 💡 **Did You Know**")
         if re.match(r'^>\s*[💡⚡🎬🎭🔗🌍🎁🗣️🏠🔍]', stripped):
+            continue
+        # Skip blockquote bullet points (e.g., "> - Hard: ...")
+        if re.match(r'^>\s*[-*]\s', stripped):
+            continue
+        # Skip grammatical pattern demonstrations with / alternatives (e.g., "X / Y / Z")
+        if stripped.count(' / ') >= 2:
             continue
         prose_lines.append(line)
 

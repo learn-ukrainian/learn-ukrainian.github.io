@@ -3,23 +3,23 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1201/500
+- **Words:** ✅ 1244/500
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 24/20
+- **Vocab:** ✅ 37/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 19.5% (target 15-25% (M06))
+- **Immersion:** 🇺🇦 26.5% (target 15-35% (M06))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **The Living Verb I** | ⚪️ | 187 | Skipped |
+| **The Living Verb I** | ⚪️ | 230 | Skipped |
 | **Warm-up** | ✅ | 45 | Included in Core |
 | **Presentation** | ✅ | 449 | Included in Core |
 | **Practice** | ⚪️ | 215 | Skipped |

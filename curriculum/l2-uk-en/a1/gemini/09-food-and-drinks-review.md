@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 1885/500 (>1500 may be too long)
+- **Words:** ⚠️ 1932/500 (>1500 may be too long)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -14,13 +14,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 15.4% (target 15-25% (M09))
+- **Immersion:** 🇺🇦 17.4% (target 15-35% (M09))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Food & Drinks** | ⚪️ | 0 | Skipped |
-| **Warm-up** | ✅ | 137 | Included in Core |
+| **Warm-up** | ✅ | 184 | Included in Core |
 | **Presentation** | ✅ | 1014 | Included in Core |
 | **Practice** | ⚪️ | 288 | Skipped |
 | **Production** | ➖ | 188 | Excluded Type |

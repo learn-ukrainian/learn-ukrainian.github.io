@@ -1,0 +1,636 @@
+---
+module: a1-29
+title: "Weather & Nature"
+subtitle: "Seasons, Weather & The Natural World"
+version: "1.0"
+phase: "A1.3 - Consolidation"
+pedagogy: "PPP"
+duration: "60 min"
+transliteration: "first-occurrence"
+tags:
+  - weather
+  - nature
+  - seasons
+  - pets
+  - impersonal
+grammar:
+  - Impersonal weather expressions
+  - Nature vocabulary
+  - Pet vocabulary
+objectives:
+  - "Learner can describe the weather"
+  - "Learner can ask about weather conditions"
+  - "Learner can name common plants and animals"
+  - "Learner can use impersonal expressions (cold, warm, hot)"
+vocabulary_count: 35
+---
+
+# Weather & Nature
+
+## Warm-up
+
+> 💡 **Яка сьогодні погода? (What's the Weather Like Today?)**
+>
+> Weather expressions in Ukrainian are special — they often don't have a subject!
+> — **Тепло.** (It's warm.) — No "it" needed!
+> — **Холодно.** (It's cold.)
+> — **Йде дощ.** (It's raining. — Literally: "Rain goes.")
+>
+> These are called **impersonal expressions** — they describe conditions, not actions of a person.
+
+> [!resources] 🎧 External Resources
+>
+> **Weather Vocabulary:** [Яка погода?](https://www.ukrainianlessons.com/weather-vocabulary/) — Complete weather vocabulary with audio
+>
+> **Months & Nature:** [Ukrainian Month Names](https://www.ukrainianlessons.com/months/) — Nature-based month origins
+>
+> **Winter:** [Winter Vocabulary](https://www.ukrainianlessons.com/winter-vocabulary/) — Seasonal vocabulary
+
+---
+
+# Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| погода | /pɔˈhɔdɑ/ | weather | n | f | |
+| температура | /tempɛrɑˈturɑ/ | temperature | n | f | |
+| тепло | /ˈteplɔ/ | warm | adv | — | impersonal |
+| холодно | /ˈxɔlɔdnɔ/ | cold | adv | — | impersonal |
+| жарко | /ˈʒɑrkɔ/ | hot | adv | — | impersonal |
+| сонячно | /ˈsɔnʲɑtʃnɔ/ | sunny | adv | — | impersonal |
+| хмарно | /ˈxmɑrnɔ/ | cloudy | adv | — | impersonal |
+| вітряно | /ˈwʲitrʲɑnɔ/ | windy | adv | — | impersonal |
+| сонце | /ˈsɔntsɛ/ | sun | n | n | |
+| хмара | /ˈxmɑrɑ/ | cloud | n | f | |
+| вітер | /ˈwʲitɛr/ | wind | n | m | |
+| дощ | /dɔʃtʃ/ | rain | n | m | |
+| сніг | /snʲih/ | snow | n | m | |
+| йде дощ | /jdɛ dɔʃtʃ/ | it's raining | expr | — | literally "rain goes" |
+| йде сніг | /jdɛ snʲih/ | it's snowing | expr | — | literally "snow goes" |
+| природа | /prɪˈrɔdɑ/ | nature | n | f | |
+| дерево | /ˈdɛrɛwɔ/ | tree | n | n | |
+| квітка | /ˈkwʲitkɑ/ | flower | n | f | |
+| ліс | /lʲis/ | forest | n | m | |
+| парк | /pɑrk/ | park | n | m | |
+| річка | /ˈrʲitʃkɑ/ | river | n | f | |
+| море | /ˈmɔrɛ/ | sea | n | n | |
+| гора | /hɔˈrɑ/ | mountain | n | f | |
+| озеро | /ˈɔzɛrɔ/ | lake | n | n | |
+| тварина | /twɑˈrɪnɑ/ | animal | n | f | |
+| пес | /pɛs/ | dog (male) | n | m | |
+| собака | /sɔˈbɑkɑ/ | dog | n | f | general term |
+| кіт | /kʲit/ | cat (male) | n | m | |
+| кішка | /ˈkʲiʃkɑ/ | cat (female) | n | f | |
+| птах | /ptɑx/ | bird | n | m | |
+| риба | /ˈrɪbɑ/ | fish | n | f | |
+| весна | /wɛsˈnɑ/ | spring | n | f | season |
+| літо | /ˈlʲitɔ/ | summer | n | n | season |
+| осінь | /ˈɔsʲinʲ/ | autumn | n | f | season |
+| зима | /zɪˈmɑ/ | winter | n | f | season |
+
+---
+
+# Grammar
+
+## Impersonal Weather Expressions
+
+> [!observe] Спостереження (Pattern Discovery)
+>
+> Look at these sentences:
+> - **Тепло.** (It's warm.)
+> - **Холодно.** (It's cold.)
+> - **Сонячно.** (It's sunny.)
+> - **Хмарно.** (It's cloudy.)
+>
+> No subject! No "it"! Ukrainian just states the condition directly.
+
+### Weather Vocabulary
+
+| Expression | Meaning | Example |
+|------------|---------|---------|
+| Тепло | It's warm | Сьогодні **тепло**. |
+| Холодно | It's cold | Взимку **холодно**. |
+| Жарко | It's hot | Влітку **жарко**. |
+| Сонячно | It's sunny | Сьогодні **сонячно**. |
+| Хмарно | It's cloudy | Вчора було **хмарно**. |
+| Вітряно | It's windy | Надворі **вітряно**. |
+
+### Rain and Snow
+
+For rain and snow, Ukrainian uses "йде" (goes):
+
+| Expression | Meaning | Notes |
+|------------|---------|-------|
+| **Йде дощ.** | It's raining. | Literally: "Rain goes." |
+| **Йде сніг.** | It's snowing. | Literally: "Snow goes." |
+| **Був дощ.** | It rained. | Past tense |
+| **Буде сніг.** | It will snow. | Future tense |
+
+---
+
+## Asking About Weather
+
+| Question | Answer |
+|----------|--------|
+| **Яка сьогодні погода?** | Сьогодні тепло. / Сонячно. |
+| (What's the weather like today?) | (It's warm today. / It's sunny.) |
+| **Як надворі?** | Холодно і вітряно. |
+| (How is it outside?) | (Cold and windy.) |
+
+---
+
+## Seasons
+
+| Season | When? | Weather |
+|--------|-------|---------|
+| **Весна** (spring) | березень-травень | Тепло, йде дощ |
+| **Літо** (summer) | червень-серпень | Жарко, сонячно |
+| **Осінь** (autumn) | вересень-листопад | Холодно, хмарно, дощ |
+| **Зима** (winter) | грудень-лютий | Холодно, йде сніг |
+
+---
+
+# Examples in Context
+
+> [!example] Погода в Україні (Weather in Ukraine)
+>
+> - **Влітку** в Україні **жарко**. (In summer in Ukraine it's hot.)
+> - **Взимку** в Карпатах **йде сніг**. (In winter in the Carpathians it snows.)
+> - **Весною** тепло і **йде дощ**. (In spring it's warm and it rains.)
+> - **Восени** часто **хмарно**. (In autumn it's often cloudy.)
+> - У Львові сьогодні **вітряно**. (In Lviv today it's windy.)
+> - В Одесі завжди **сонячно**. (In Odesa it's always sunny.)
+
+> [!example] Природа України (Ukrainian Nature)
+>
+> - Україна має гарну **природу**. (Ukraine has beautiful nature.)
+> - У Карпатах є **гори** і **ліси**. (In the Carpathians there are mountains and forests.)
+> - **Дніпро** — це велика **річка**. (The Dnipro is a big river.)
+> - **Чорне море** — на півдні. (The Black Sea is in the south.)
+> - У **парку** багато **дерев** і **квіток**. (In the park there are many trees and flowers.)
+> - Я люблю **озеро** Світязь. (I love Lake Svityaz.)
+
+> [!example] Тварини (Animals)
+>
+> - У мене є **собака**. (I have a dog.)
+> - Моя **кішка** — біла. (My cat is white.)
+> - У парку багато **птахів**. (In the park there are many birds.)
+> - У річці є **риба**. (In the river there are fish.)
+> - Мій **пес** дуже веселий. (My dog is very cheerful.)
+> - Її **кіт** — рудий. (Her cat is ginger.)
+
+---
+
+# Dialogues
+
+> [!conversation] Яка погода? (What's the Weather?)
+>
+> — Привіт! Яка сьогодні погода?
+> — Сьогодні **сонячно** і **тепло**!
+> — Добре! Ходімо гуляти в парк!
+> — Так, чудова ідея!
+>
+> — Hi! What's the weather like today?
+> — Today it's sunny and warm!
+> — Good! Let's go for a walk in the park!
+> — Yes, great idea!
+
+> [!conversation] Твої тварини (Your Pets)
+>
+> — У тебе є тварини?
+> — Так, у мене є **кіт** і **собака**.
+> — О, класно! Як їх звати?
+> — Кота звати Мурчик, а собаку — Рекс.
+>
+> — Do you have any pets?
+> — Yes, I have a cat and a dog.
+> — Oh, cool! What are their names?
+> — The cat's name is Murchyk, and the dog's is Rex.
+
+> [!conversation] Яка твоя улюблена пора року? (What's Your Favorite Season?)
+>
+> — Яка твоя улюблена пора року?
+> — Я люблю **літо**, бо **жарко** і **сонячно**.
+> — А я люблю **зиму** — **йде сніг**!
+> — Кожному своє!
+>
+> — What's your favorite season?
+> — I love summer because it's hot and sunny.
+> — And I love winter — it snows!
+> — To each their own!
+
+> [!conversation] На прогулянці (On a Walk)
+>
+> — Яка гарна погода сьогодні!
+> — Так, дуже **тепло** і **сонячно**.
+> — Дивись! Тут красива **квітка**!
+> — І багато **птахів** у **парку**.
+> — Мені подобається **природа**.
+> — Я теж люблю гуляти **надворі**.
+>
+> — What beautiful weather today!
+> — Yes, very warm and sunny.
+> — Look! There's a beautiful flower here!
+> — And lots of birds in the park.
+> — I like nature.
+> — I also love walking outside.
+
+---
+
+> 💡 **Дощ vs Сніг (Rain vs Snow)**
+>
+> Both use "йде" (goes): **Йде дощ** (it's raining), **Йде сніг** (it's snowing). Think of rain and snow as "going" or "falling"!
+
+> 🌍 **Клімат України (Ukraine's Climate)**
+>
+> В Україні чотири пори року: **весна, літо, осінь, зима**. Взимку дуже **холодно** (до -20°C на півночі!). Влітку **жарко** (25-35°C). У Карпатах багато **снігу**, а біля Чорного моря завжди **тепло**.
+>
+> Ukraine has four seasons. Winters are very cold (up to -20°C in the north!). Summers are hot. The Carpathians get lots of snow, and the Black Sea coast is always mild.
+
+> ⚡ **Myth vs Fact**
+>
+> **Myth:** "Ukrainian nature is just endless flat steppes"
+> **Fact:** Ukraine has incredible diversity! The Carpathian Mountains, ancient forests, the Dnipro River, the Black Sea coast, and countless lakes. From alpine meadows to sandy beaches — Ukraine's nature is stunning!
+
+> 🎭 **Природа в українських піснях (Nature in Ukrainian Songs)**
+>
+> Ukrainian folk songs often mention nature: "Ой у лузі червона калина" (Oh, the red viburnum in the meadow), "Місяць на небі" (The moon in the sky). Nature is central to Ukrainian culture and poetry!
+
+---
+
+# Вправи (Activities)
+
+## match-up: Weather Expressions
+
+Match the Ukrainian expression with its English meaning.
+
+- Тепло :: It's warm
+- Холодно :: It's cold
+- Жарко :: It's hot
+- Сонячно :: It's sunny
+- Хмарно :: It's cloudy
+- Вітряно :: It's windy
+- Йде дощ :: It's raining
+- Йде сніг :: It's snowing
+- Яка погода? :: What's the weather?
+- Як надворі? :: How is it outside?
+- Сьогодні тепло :: It's warm today
+- Влітку жарко :: In summer it's hot
+
+---
+
+## match-up: Nature Vocabulary
+
+Match the Ukrainian word with its English meaning.
+
+- сонце :: sun
+- хмара :: cloud
+- вітер :: wind
+- дощ :: rain
+- сніг :: snow
+- дерево :: tree
+- квітка :: flower
+- ліс :: forest
+- річка :: river
+- море :: sea
+- гора :: mountain
+- озеро :: lake
+
+---
+
+## group-sort: Seasons
+
+> Sort weather descriptions by season.
+
+### Весна (Spring)
+- тепло
+- йде дощ
+- квітки
+
+### Літо (Summer)
+- жарко
+- сонячно
+- море
+
+### Осінь (Autumn)
+- холодно
+- хмарно
+- вітряно
+
+### Зима (Winter)
+- мороз
+- йде сніг
+- холодно взимку
+
+---
+
+## group-sort: Animals vs Plants
+
+> Sort vocabulary into categories.
+
+### Тварини (Animals)
+- собака
+- кіт
+- птах
+- риба
+- пес
+- кішка
+
+### Рослини (Plants)
+- дерево
+- квітка
+- ліс
+- трава
+- парк
+- сад
+
+---
+
+## fill-in: Яка погода? (What's the Weather?)
+
+> Choose the correct weather expression.
+
+1. Сьогодні світить сонце. ___.
+   > [!answer] Сонячно
+   > [!options] Сонячно | Хмарно | Холодно | Вітряно
+
+2. На небі багато хмар. ___.
+   > [!answer] Хмарно
+   > [!options] Хмарно | Сонячно | Жарко | Тепло
+
+3. Температура +30°C! ___.
+   > [!answer] Жарко
+   > [!options] Жарко | Холодно | Хмарно | Вітряно
+
+4. Температура -10°C. ___.
+   > [!answer] Холодно
+   > [!options] Холодно | Жарко | Тепло | Сонячно
+
+5. Дує сильний вітер. ___.
+   > [!answer] Вітряно
+   > [!options] Вітряно | Хмарно | Сонячно | Тепло
+
+6. Падає біла вода з неба. ___.
+   > [!answer] Йде сніг
+   > [!options] Йде сніг | Йде дощ | Сонячно | Жарко
+
+7. Падає вода з неба. ___.
+   > [!answer] Йде дощ
+   > [!options] Йде дощ | Йде сніг | Хмарно | Вітряно
+
+8. Температура +20°C. Приємна погода. ___.
+   > [!answer] Тепло
+   > [!options] Тепло | Холодно | Жарко | Хмарно
+
+9. Взимку в Карпатах завжди ___.
+   > [!answer] холодно
+   > [!options] холодно | жарко | тепло | сонячно
+
+10. Влітку в Одесі завжди ___.
+    > [!answer] жарко
+    > [!options] жарко | холодно | йде сніг | хмарно
+
+11. Восени часто ___.
+    > [!answer] хмарно
+    > [!options] хмарно | жарко | сонячно | тепло
+
+12. Весною вже не ___, а тепло.
+    > [!answer] холодно
+    > [!options] холодно | жарко | сонячно | вітряно
+
+---
+
+## fill-in: Природа і тварини (Nature and Animals)
+
+> Choose the correct word.
+
+1. У мене є ___ Рекс.
+   > [!answer] пес
+   > [!options] пес | кіт | птах | риба
+
+2. Моя ___ — біла і пухнаста.
+   > [!answer] кішка
+   > [!options] кішка | собака | риба | птах
+
+3. Дніпро — це велика ___.
+   > [!answer] річка
+   > [!options] річка | море | гора | озеро
+
+4. У Карпатах є високі ___.
+   > [!answer] гори
+   > [!options] гори | річки | озера | моря
+
+5. У парку багато красивих ___.
+   > [!answer] квіток
+   > [!options] квіток | гір | морів | птахів
+
+6. Влітку ми їдемо на ___.
+   > [!answer] море
+   > [!options] море | гору | ліс | річку
+
+7. У ___ живе багато тварин.
+   > [!answer] лісі
+   > [!options] лісі | морі | горі | парку
+
+8. На дереві сидить ___.
+   > [!answer] птах
+   > [!options] птах | риба | кіт | собака
+
+9. У мене є акваріум з ___.
+   > [!answer] рибою
+   > [!options] рибою | котом | собакою | птахом
+
+10. ___ — це найбільша річка України.
+    > [!answer] Дніпро
+    > [!options] Дніпро | Карпати | Одеса | Львів
+
+11. Чорне ___ — на півдні України.
+    > [!answer] море
+    > [!options] море | озеро | річка | ліс
+
+12. У парку росте багато ___.
+    > [!answer] дерев
+    > [!options] дерев | гір | морів | птахів
+
+---
+
+## quiz: What Season?
+
+Choose the correct season.
+
+1. Йде сніг, холодно
+   - [x] Зима
+   - [ ] Літо
+   - [ ] Весна
+   - [ ] Осінь
+
+2. Жарко, сонячно, море
+   - [x] Літо
+   - [ ] Зима
+   - [ ] Весна
+   - [ ] Осінь
+
+3. Тепло, квіти, йде дощ
+   - [x] Весна
+   - [ ] Літо
+   - [ ] Зима
+   - [ ] Осінь
+
+4. Холодно, хмарно, вітряно
+   - [x] Осінь
+   - [ ] Літо
+   - [ ] Весна
+   - [ ] Зима
+
+5. Діти грають у сніг
+   - [x] Зима
+   - [ ] Літо
+   - [ ] Весна
+   - [ ] Осінь
+
+6. Люди на пляжі
+   - [x] Літо
+   - [ ] Зима
+   - [ ] Осінь
+   - [ ] Весна
+
+7. Листя падає з дерев
+   - [x] Осінь
+   - [ ] Літо
+   - [ ] Весна
+   - [ ] Зима
+
+8. Птахи повертаються з півдня
+   - [x] Весна
+   - [ ] Осінь
+   - [ ] Зима
+   - [ ] Літо
+
+---
+
+## quiz: Animal or Plant?
+
+Choose the correct category.
+
+1. Собака
+   - [x] Тварина
+   - [ ] Рослина
+
+2. Дерево
+   - [x] Рослина
+   - [ ] Тварина
+
+3. Кіт
+   - [x] Тварина
+   - [ ] Рослина
+
+4. Квітка
+   - [x] Рослина
+   - [ ] Тварина
+
+5. Птах
+   - [x] Тварина
+   - [ ] Рослина
+
+6. Ліс
+   - [x] Рослина
+   - [ ] Тварина
+
+7. Риба
+   - [x] Тварина
+   - [ ] Рослина
+
+8. Трава
+   - [x] Рослина
+   - [ ] Тварина
+
+---
+
+## unjumble: Weather Sentences
+
+Put the words in the correct order.
+
+1. погода / яка / сьогодні
+   > [!answer] Яка сьогодні погода?
+
+2. тепло / сьогодні / і / сонячно
+   > [!answer] Сьогодні тепло і сонячно.
+
+3. йде / взимку / сніг
+   > [!answer] Взимку йде сніг.
+
+4. жарко / влітку / дуже
+   > [!answer] Влітку дуже жарко.
+
+5. дощ / весною / йде
+   > [!answer] Весною йде дощ.
+
+6. є / у мене / собака
+   > [!answer] У мене є собака.
+
+7. кіт / мій / білий
+   > [!answer] Мій кіт білий.
+
+8. багато / у парку / дерев
+   > [!answer] У парку багато дерев.
+
+9. гори / в Карпатах / є
+   > [!answer] В Карпатах є гори.
+
+10. річка / Дніпро / велика
+   > [!answer] Дніпро — велика річка.
+
+11. люблю / я / море
+   > [!answer] Я люблю море.
+
+12. холодно / надворі / сьогодні
+   > [!answer] Сьогодні надворі холодно.
+
+
+---
+
+## true-false: Weather and Nature Facts
+
+Is this true or false?
+
+- [x] "Йде дощ" means "It's raining.".
+- [ ] "Йде сніг" means "It's cold.".
+  > Incorrect! it means "it's snowing"
+
+- [x] Ukrainian weather expressions don't need a subject.
+- [ ] "Тепло" means "hot.".
+  > Incorrect! it means "warm"
+
+- [x] "Жарко" means "hot.".
+- [ ] Ukraine has only steppes.
+  > Incorrect! it has mountains, forests, seas
+
+- [x] The Carpathians are mountains in Ukraine.
+- [x] "Собака" and "пес" both mean "dog.".
+- [ ] "Кіт" means "a female cat.".
+  > Incorrect! it means "male cat"
+
+- [x] "Влітку" means "in summer.".
+- [ ] "Взимку" means "in autumn.".
+  > Incorrect! it means "in winter"
+
+- [x] The Dnipro is a river.
+
+---
+
+# Підсумок (Summary)
+
+Ви навчилися говорити про погоду та природу! (You've learned about weather and nature!)
+
+**Що ви вивчили (What you learned):**
+
+- **Погода (Weather):** тепло, холодно, жарко, сонячно, хмарно, вітряно, йде дощ, йде сніг
+- **Іменники погоди (Weather nouns):** погода, температура, сонце, хмара, вітер
+- **Природа (Nature):** дерево, квітка, ліс, парк, річка, море, гора, озеро
+- **Тварини (Animals):** пес, кіт, птах, риба
+- **Пори року (Seasons):** весна, літо, осінь, зима
+- **Безособові речення (Impersonal):** Тепло. Холодно. Йде дощ.
+
+---
+
+**Наступний урок:** Прийменники напрямку та місця!

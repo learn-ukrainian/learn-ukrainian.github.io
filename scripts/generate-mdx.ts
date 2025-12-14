@@ -1373,8 +1373,8 @@ function markTheWordsToJsx(data: ParsedMarkTheWordsData, title: string): string 
 // ============================================================================
 
 function processActivities(body: string): { mainContent: string; activitiesJsx: string } {
-    // Find Activities section
-    const activitiesMatch = body.match(/# Activities\n([\s\S]*?)(?=\n# Vocabulary|\n---\n# Vocabulary|$)/);
+    // Find Activities section (stops at Vocabulary, Summary, or end of file)
+    const activitiesMatch = body.match(/# Activities\n([\s\S]*?)(?=\n# (?:Vocabulary|Словник|Summary|Підсумок)|\n---\n# |$)/);
 
     if (!activitiesMatch) {
         return { mainContent: body, activitiesJsx: '' };
@@ -1383,12 +1383,12 @@ function processActivities(body: string): { mainContent: string; activitiesJsx: 
     const activitiesSection = activitiesMatch[1];
 
     // Remove activities from main content
-    const mainContent = body.replace(/# Activities\n[\s\S]*?(?=\n# Vocabulary|\n---\n# Vocabulary|$)/, '');
+    const mainContent = body.replace(/# Activities\n[\s\S]*?(?=\n# (?:Vocabulary|Словник|Summary|Підсумок)|\n---\n# |$)/, '');
 
     // Parse individual activities
     const activityBlocks = activitiesSection.split(/\n## /).filter(Boolean);
 
-    let activitiesJsx = '## 🎮 Activities\n\n';
+    let activitiesJsx = '';
 
     for (const block of activityBlocks) {
         const typeMatch = block.match(/^(\w[\w-]*?):\s*(.+?)(?:\n|$)/);
@@ -1477,8 +1477,89 @@ function processActivities(body: string): { mainContent: string; activitiesJsx: 
 }
 
 // ============================================================================
-// CONTENT CONVERTERS  
+// SECTION EXTRACTOR
 // ============================================================================
+
+interface ExtractedSections {
+    lesson: string;      // Main lesson content (grammar, dialogues, examples)
+    vocabulary: string;  // # Vocabulary section
+    summary: string;     // # Summary or # Підсумок section
+    resources: string;   // > [!resources] callout
+}
+
+/**
+ * Extract and separate content into logical sections for reordering.
+ * Layout order: Lesson → Resources → Summary → Activities → Vocabulary
+ */
+function extractSections(content: string): ExtractedSections {
+    let vocabulary = '';
+    let summary = '';
+    let resources = '';
+    const lessonParts: string[] = [];
+
+    // Split content by H1 headers, keeping the headers
+    const sections = content.split(/(?=^# )/m).filter(s => s.trim());
+
+    for (const section of sections) {
+        const headerMatch = section.match(/^# (.+?)(?:\n|$)/);
+        if (!headerMatch) {
+            lessonParts.push(section);
+            continue;
+        }
+
+        const headerName = headerMatch[1].trim().toLowerCase();
+
+        if (headerName === 'vocabulary' || headerName === 'словник') {
+            vocabulary = section.trim();
+        } else if (headerName === 'summary' || headerName === 'підсумок') {
+            summary = section.trim();
+        } else {
+            // Everything else is lesson content (Grammar, Examples, Dialogues, etc.)
+            lessonParts.push(section);
+        }
+    }
+
+    let lesson = lessonParts.join('\n\n');
+
+    // Extract Resources callout from lesson content
+    const resourcesMatch = lesson.match(/(^>\s*\[!resources\][^\n]*\n(?:>.*\n)*)/m);
+    if (resourcesMatch) {
+        const resourceContent = resourcesMatch[1]
+            .split('\n')
+            .map(line => line.replace(/^>\s?/, ''))
+            .join('\n')
+            .replace(/^\[!resources\]\s*/, '')
+            .trim();
+        resources = `## 🎧 External Resources\n\n${resourceContent}`;
+        lesson = lesson.replace(resourcesMatch[1], '');
+    }
+
+    // Clean up lesson content (remove extra blank lines)
+    lesson = lesson.replace(/\n{3,}/g, '\n\n').trim();
+
+    return { lesson, vocabulary, summary, resources };
+}
+
+// ============================================================================
+// CONTENT CONVERTERS
+// ============================================================================
+
+// Map custom callout types to Docusaurus admonition types and styles
+const CALLOUT_MAP: Record<string, { type: string; icon?: string; title?: string }> = {
+    // Standard Docusaurus types
+    'tip': { type: 'tip' },
+    'note': { type: 'note' },
+    'warning': { type: 'warning' },
+    'important': { type: 'warning' },
+    'caution': { type: 'caution' },
+    'info': { type: 'info' },
+    // Custom curriculum types mapped to appropriate styles
+    'observe': { type: 'tip', icon: '🔍', title: 'Pattern Discovery' },
+    'resources': { type: 'info', icon: '🎧', title: 'External Resources' },
+    'example': { type: 'info', icon: '📝', title: 'Example' },
+    'conversation': { type: 'note', icon: '💬', title: 'Conversation' },
+    'summary': { type: 'note', icon: '📋', title: 'Summary' },
+};
 
 function convertCalloutsToAdmonitions(content: string): string {
     // Convert GitHub-style callouts [!tip], [!note], etc to Docusaurus admonitions
@@ -1488,15 +1569,20 @@ function convertCalloutsToAdmonitions(content: string): string {
     const result: string[] = [];
     let i = 0;
 
+    // Build regex from all known callout types
+    const calloutTypes = Object.keys(CALLOUT_MAP).join('|');
+    const calloutRegex = new RegExp(`^>\\s*\\[!(${calloutTypes})\\](.*)$`, 'i');
+
     while (i < lines.length) {
         const line = lines[i];
 
         // Check for callout start: > [!type] or > [!type] Title
-        const calloutMatch = line.match(/^>\s*\[!(tip|note|warning|important|caution)\](.*)$/i);
+        const calloutMatch = line.match(calloutRegex);
 
         if (calloutMatch) {
-            const type = calloutMatch[1].toLowerCase();
+            const rawType = calloutMatch[1].toLowerCase();
             const titlePart = calloutMatch[2].trim();
+            const mapping = CALLOUT_MAP[rawType] || { type: 'note' };
 
             // Start collecting callout content
             const calloutLines: string[] = [];
@@ -1516,8 +1602,13 @@ function convertCalloutsToAdmonitions(content: string): string {
                 i++;
             }
 
-            // Build the Docusaurus admonition
-            result.push(`:::${type}`);
+            // Build the Docusaurus admonition with optional custom title
+            const customTitle = mapping.title && !titlePart ? `[${mapping.icon || ''} ${mapping.title}]` : '';
+            if (customTitle) {
+                result.push(`:::${mapping.type}${customTitle}`);
+            } else {
+                result.push(`:::${mapping.type}`);
+            }
             for (const cl of calloutLines) {
                 result.push(cl);
             }
@@ -1601,10 +1692,10 @@ description: "${escapeJsxString(fm.subtitle || '')}"
 ---
 `;
 
-    // Process activities - extract and convert to JSX
+    // Process activities - convert to JSX components inline
     const { mainContent, activitiesJsx } = processActivities(body);
 
-    // Convert callouts
+    // Convert callouts to Docusaurus admonitions
     let processedContent = convertCalloutsToAdmonitions(mainContent);
 
     // Process dialogue sections to add line breaks between turns
@@ -1613,18 +1704,24 @@ description: "${escapeJsxString(fm.subtitle || '')}"
     // Remove the duplicate H1 title (already in frontmatter)
     processedContent = processedContent.replace(/^#\s+[^\n]+\n/, '');
 
-    // Combine all - don't add duplicate title, source MD has it
-    const mdx = `${frontmatter}
-${imports}
+    // Convert Summary and Vocabulary H1 to H2 for right-side TOC visibility
+    processedContent = processedContent.replace(/^# (Summary|Підсумок)/gm, '## 📋 $1');
+    processedContent = processedContent.replace(/^# (Vocabulary|Словник)/gm, '## 📚 $1');
 
-${processedContent}
+    // Build MDX - exact MD order, activities JSX replaces # Activities section
+    const mdxParts = [
+        frontmatter,
+        imports,
+        '',
+        processedContent,
+    ];
 
----
+    // Add Activities JSX (replaces removed # Activities section)
+    if (activitiesJsx.trim()) {
+        mdxParts.push('---', '', '## 🎯 Activities', '', activitiesJsx);
+    }
 
-${activitiesJsx}
-`;
-
-    return mdx;
+    return mdxParts.join('\n');
 }
 
 // ============================================================================

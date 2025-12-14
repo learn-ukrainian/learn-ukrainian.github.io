@@ -114,19 +114,27 @@ Maximum 3 fix iterations per stage. If still failing after 3:
 
 ## Output on PASS
 
-When all checks pass:
+When audit passes, run the full pipeline:
 
 ```bash
-# Generate final output
-npm run generate l2-uk-en {level} {module_num}
-npm run generate:json l2-uk-en {level} {module_num}
+# Full pipeline: lint → generate MDX → validate MDX → validate HTML
+npm run pipeline l2-uk-en {level} {module_num}
 
-# Run final audit
-python3 scripts/audit_module.py {file_path}
+# Also generate JSON for Vibe app
+npm run generate:json l2-uk-en {level} {module_num}
 ```
+
+The pipeline validates:
+1. **Lint**: MD format compliance
+2. **Generate**: Creates MDX for Docusaurus
+3. **Validate MDX**: Ensures no content loss during conversion
+4. **Validate HTML**: Headless browser check for rendering errors
+
+**Note:** HTML validation requires dev server running (`cd docusaurus && npm start`)
 
 Report:
 - Final audit score
+- Pipeline status (PASS/FAIL)
 - MDX file location
 - JSON file location
 - "MODULE APPROVED"

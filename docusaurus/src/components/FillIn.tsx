@@ -127,11 +127,18 @@ export function FillInQuestion({ sentence, answer, options = [] }: FillInQuestio
   );
 }
 
-interface FillInProps {
-  children: React.ReactNode;
+interface FillInItem {
+  sentence: string;
+  answer: string;
+  options?: string[];
 }
 
-export default function FillIn({ children }: FillInProps) {
+interface FillInProps {
+  items?: FillInItem[];
+  children?: React.ReactNode;
+}
+
+export default function FillIn({ items, children }: FillInProps) {
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
@@ -140,7 +147,14 @@ export default function FillIn({ children }: FillInProps) {
         <ActivityHelp activityType="fill-in" />
       </div>
       <div className={styles.activityContent}>
-        {children}
+        {items ? items.map((item, index) => (
+          <FillInQuestion
+            key={index}
+            sentence={item.sentence}
+            answer={item.answer}
+            options={item.options}
+          />
+        )) : children}
       </div>
     </div>
   );

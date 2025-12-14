@@ -185,11 +185,18 @@ export function AnagramQuestion({ scrambled, answer, hint }: AnagramQuestionProp
   );
 }
 
-interface AnagramProps {
-  children: React.ReactNode;
+interface AnagramItem {
+  scrambled: string;
+  answer: string;
+  hint?: string;
 }
 
-export default function Anagram({ children }: AnagramProps) {
+interface AnagramProps {
+  items?: AnagramItem[];
+  children?: React.ReactNode;
+}
+
+export default function Anagram({ items, children }: AnagramProps) {
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
@@ -198,7 +205,14 @@ export default function Anagram({ children }: AnagramProps) {
         <ActivityHelp activityType="anagram" />
       </div>
       <div className={styles.activityContent}>
-        {children}
+        {items ? items.map((item, index) => (
+          <AnagramQuestion
+            key={index}
+            scrambled={item.scrambled}
+            answer={item.answer}
+            hint={item.hint}
+          />
+        )) : children}
       </div>
     </div>
   );

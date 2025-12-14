@@ -5,20 +5,18 @@ title: "Aspect in Future"
 description: "Буду + infinitive vs synthetic forms vs perfective"
 ---
 
-import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
-import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
+import Quiz from '@site/src/components/Quiz';
 import MatchUp from '@site/src/components/MatchUp';
-import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
-import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
-import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Select, { SelectQuestion } from '@site/src/components/Select';
-import Translate, { TranslateItem } from '@site/src/components/Translate';
-import Cloze, { ClozePassage } from '@site/src/components/Cloze';
-import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
-import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import DialogueReorder from '@site/src/components/DialogueReorder';
 
 
 # Вид у майбутньому часі — Три способи
@@ -33,12 +31,14 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 
 All three translate as "I will read," but they're not interchangeable. Let's see why.
 
-> [!observe] Compare these sentences:
-> - Завтра я **буду працювати** вдома. (Tomorrow I'll be working from home.)
-> - Завтра я **працюватиму** вдома. (Tomorrow I'll work from home.)
-> - Завтра я **закінчу** проект. (Tomorrow I'll finish the project.)
->
-> Which sentences describe ongoing activity? Which one describes a completed result?
+:::tip[Compare these sentences:]
+- Завтра я **буду працювати** вдома. (Tomorrow I'll be working from home.)
+- Завтра я **працюватиму** вдома. (Tomorrow I'll work from home.)
+- Завтра я **закінчу** проект. (Tomorrow I'll finish the project.)
+
+Which sentences describe ongoing activity? Which one describes a completed result?
+:::
+
 
 **Швидкий тест:**
 
@@ -375,7 +375,7 @@ Choose the most appropriate form based on context:
 
 ---
 
-# Summary
+## 📋 Summary
 
 У цьому модулі ви вивчили:
 
@@ -405,7 +405,7 @@ Choose the most appropriate form based on context:
 
 ---
 
-# Словник
+## 📚 Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|
@@ -436,106 +436,130 @@ Choose the most appropriate form based on context:
 
 ---
 
-## 🎮 Activities
+## 🎯 Activities
 
 ### Three Future Forms
 
-*Choose the correct answer about Ukrainian future tense.*
-
-
-<Quiz>
-  <QuizQuestion
-    question={`1. What auxiliary verb forms the compound future?`}
-    options={[`мати`, `бути`, `хотіти`, `могти`]}
-    correctIndex={1}
-    explanation={`The compound future uses бути: буду + infinitive.`}
-  />
-  <QuizQuestion
-    question={`Which form is more formal in written Ukrainian?`}
-    options={[`буду читати`, `читатиму`, `Both are equally formal`, `Neither is formal`]}
-    correctIndex={1}
-    explanation={`The synthetic form (-тиму) is preferred in formal writing.`}
-  />
-  <QuizQuestion
-    question={`"Я прочитаю" is which type of future?`}
-    options={[`Compound imperfective`, `Synthetic imperfective`, `Simple perfective`, `Compound perfective`]}
-    correctIndex={2}
-    explanation={`Perfective verbs use simple conjugation for future meaning.`}
-  />
-  <QuizQuestion
-    question={`What does "буду працювати" emphasize?`}
-    options={[`Ongoing activity`, `Completed result`, `Single event`, `Promise`]}
-    correctIndex={0}
-    explanation={`Imperfective future describes ongoing/continuous activity.`}
-  />
-  <QuizQuestion
-    question={`Which ending marks 1st person singular synthetic future?`}
-    options={[`-тимеш`, `-тиму`, `-тиме`, `-тимуть`]}
-    correctIndex={1}
-    explanation={`1st sg: -тиму (читатиму, працюватиму).`}
-  />
-  <QuizQuestion
-    question={`"Напишу листа" — what does this express?`}
-    options={[`Ongoing writing process`, `Completed letter as result`, `Writing in general`, `Habitual writing`]}
-    correctIndex={1}
-    explanation={`Perfective future = completed action with result.`}
-  />
-  <QuizQuestion
-    question={`In news broadcasts, which form is preferred?`}
-    options={[`буду + infinitive`, `-тиму form`, `Perfective only`, `Mixed forms`]}
-    correctIndex={1}
-    explanation={`News uses synthetic forms for formality.`}
-  />
-  <QuizQuestion
-    question={`What's the 3rd person plural of "читатиму"?`}
-    options={[`читатимемо`, `читатимете`, `читатимуть`, `читатиме`]}
-    correctIndex={2}
-    explanation={`3rd pl: -тимуть → читатимуть.`}
-  />
-  <QuizQuestion
-    question={`"Обов'язково подзвоню" expresses...`}
-    options={[`A definite promise`, `An ongoing activity`, `Uncertainty`, `A repeated action`]}
-    correctIndex={0}
-    explanation={`Perfective + обов'язково = definite commitment to complete.`}
-  />
-  <QuizQuestion
-    question={`Which is correct for "Tomorrow I'll be working"?`}
-    options={[`Завтра буду працювати`, `Завтра працював`, `Завтра попрацюю`, `Завтра працюю`]}
-    correctIndex={0}
-    explanation={`Ongoing future activity = imperfective compound.`}
-  />
-  <QuizQuestion
-    question={`The synthetic future is unique to...`}
-    options={[`Russian`, `Ukrainian`, `All Slavic languages`, `Polish only`]}
-    correctIndex={1}
-    explanation={`Ukrainian preserved the synthetic future; Russian lost it.`}
-  />
-  <QuizQuestion
-    question={`"Мабуть, він прийде" — what does "мабуть" indicate?`}
-    options={[`Certainty`, `Probability`, `Impossibility`, `Obligation`]}
-    correctIndex={1}
-    explanation={`Мабуть = perhaps, probably.`}
-  />
-  <QuizQuestion
-    question={`Which form for "I intend to study Ukrainian"?`}
-    options={[`Я маю намір вивчити українську`, `Я вивчую українську`, `Я вивчив українську`, `Я вивчувати українську`]}
-    correctIndex={0}
-    explanation={`"Маю намір" + infinitive for intentions.`}
-  />
-  <QuizQuestion
-    question={`"Чекатимемо" — parse this form:`}
-    options={[`1st sg compound`, `3rd pl synthetic`, `1st pl synthetic`, `2nd pl synthetic`]}
-    correctIndex={2}
-    explanation={`чекати + -мемо = 1st pl synthetic future.`}
-  />
-</Quiz>
+<Quiz questions={[
+  {
+    question: `What auxiliary verb forms the compound future?`,
+    options: [
+      { text: `мати`, correct: false },
+      { text: `бути`, correct: true },
+      { text: `хотіти`, correct: false },
+      { text: `могти`, correct: false }
+    ]
+  },  {
+    question: `Which form is more formal in written Ukrainian?`,
+    options: [
+      { text: `буду читати`, correct: false },
+      { text: `читатиму`, correct: true },
+      { text: `Both are equally formal`, correct: false },
+      { text: `Neither is formal`, correct: false }
+    ]
+  },  {
+    question: `\"Я прочитаю\" is which type of future?`,
+    options: [
+      { text: `Compound imperfective`, correct: false },
+      { text: `Synthetic imperfective`, correct: false },
+      { text: `Simple perfective`, correct: true },
+      { text: `Compound perfective`, correct: false }
+    ]
+  },  {
+    question: `What does \"буду працювати\" emphasize?`,
+    options: [
+      { text: `Ongoing activity`, correct: true },
+      { text: `Completed result`, correct: false },
+      { text: `Single event`, correct: false },
+      { text: `Promise`, correct: false }
+    ]
+  },  {
+    question: `Which ending marks 1st person singular synthetic future?`,
+    options: [
+      { text: `-тимеш`, correct: false },
+      { text: `-тиму`, correct: true },
+      { text: `-тиме`, correct: false },
+      { text: `-тимуть`, correct: false }
+    ]
+  },  {
+    question: `\"Напишу листа\" — what does this express?`,
+    options: [
+      { text: `Ongoing writing process`, correct: false },
+      { text: `Completed letter as result`, correct: true },
+      { text: `Writing in general`, correct: false },
+      { text: `Habitual writing`, correct: false }
+    ]
+  },  {
+    question: `In news broadcasts, which form is preferred?`,
+    options: [
+      { text: `буду + infinitive`, correct: false },
+      { text: `-тиму form`, correct: true },
+      { text: `Perfective only`, correct: false },
+      { text: `Mixed forms`, correct: false }
+    ]
+  },  {
+    question: `What's the 3rd person plural of \"читатиму\"?`,
+    options: [
+      { text: `читатимемо`, correct: false },
+      { text: `читатимете`, correct: false },
+      { text: `читатимуть`, correct: true },
+      { text: `читатиме`, correct: false }
+    ]
+  },  {
+    question: `\"Обов'язково подзвоню\" expresses...`,
+    options: [
+      { text: `A definite promise`, correct: true },
+      { text: `An ongoing activity`, correct: false },
+      { text: `Uncertainty`, correct: false },
+      { text: `A repeated action`, correct: false }
+    ]
+  },  {
+    question: `Which is correct for \"Tomorrow I'll be working\"?`,
+    options: [
+      { text: `Завтра буду працювати`, correct: true },
+      { text: `Завтра працював`, correct: false },
+      { text: `Завтра попрацюю`, correct: false },
+      { text: `Завтра працюю`, correct: false }
+    ]
+  },  {
+    question: `The synthetic future is unique to...`,
+    options: [
+      { text: `Russian`, correct: false },
+      { text: `Ukrainian`, correct: true },
+      { text: `All Slavic languages`, correct: false },
+      { text: `Polish only`, correct: false }
+    ]
+  },  {
+    question: `\"Мабуть, він прийде\" — what does \"мабуть\" indicate?`,
+    options: [
+      { text: `Certainty`, correct: false },
+      { text: `Probability`, correct: true },
+      { text: `Impossibility`, correct: false },
+      { text: `Obligation`, correct: false }
+    ]
+  },  {
+    question: `Which form for \"I intend to study Ukrainian\"?`,
+    options: [
+      { text: `Я маю намір вивчити українську`, correct: true },
+      { text: `Я вивчую українську`, correct: false },
+      { text: `Я вивчив українську`, correct: false },
+      { text: `Я вивчувати українську`, correct: false }
+    ]
+  },  {
+    question: `\"Чекатимемо\" — parse this form:`,
+    options: [
+      { text: `1st sg compound`, correct: false },
+      { text: `3rd pl synthetic`, correct: false },
+      { text: `1st pl synthetic`, correct: true },
+      { text: `2nd pl synthetic`, correct: false }
+    ]
+  }
+]} />
 
 ### Future Time Markers
 
-*Match the Ukrainian time expressions with their English meanings.*
-
-
 <MatchUp pairs={[
+  { left: `Ukrainian`, right: `English` },
   { left: `завтра`, right: `tomorrow` },
   { left: `післязавтра`, right: `day after tomorrow` },
   { left: `скоро`, right: `soon` },
@@ -554,1071 +578,594 @@ Choose the most appropriate form based on context:
 
 ### Compound Future — буду + infinitive
 
-*Fill in the blank with the correct form of бути.*
-
-
-<FillIn>
-  <FillInQuestion
-    sentence={`1. Я ___ читати книгу завтра. (1st sg)`}
-    answer={`буду`}
-    options={[`буду`, `будеш`, `буде`, `будемо`]}
-  />
-  <FillInQuestion
-    sentence={`Ти ___ працювати в суботу? (2nd sg)`}
-    answer={`будеш`}
-    options={[`буду`, `будеш`, `буде`, `будуть`]}
-  />
-  <FillInQuestion
-    sentence={`Вона ___ готувати вечерю. (3rd sg)`}
-    answer={`буде`}
-    options={[`буду`, `будеш`, `буде`, `будуть`]}
-  />
-  <FillInQuestion
-    sentence={`Ми ___ чекати на тебе. (1st pl)`}
-    answer={`будемо`}
-    options={[`буде`, `будемо`, `будете`, `будуть`]}
-  />
-  <FillInQuestion
-    sentence={`Вони ___ дивитися фільм. (3rd pl)`}
-    answer={`будуть`}
-    options={[`буде`, `будемо`, `будете`, `будуть`]}
-  />
-  <FillInQuestion
-    sentence={`Ви ___ вивчати українську? (2nd pl)`}
-    answer={`будете`}
-    options={[`буде`, `будемо`, `будете`, `будуть`]}
-  />
-  <FillInQuestion
-    sentence={`Він ___ допомагати нам. (3rd sg)`}
-    answer={`буде`}
-    options={[`буду`, `будеш`, `буде`, `будуть`]}
-  />
-  <FillInQuestion
-    sentence={`Я ___ писати звіт весь день. (1st sg)`}
-    answer={`буду`}
-    options={[`буду`, `будеш`, `буде`, `будемо`]}
-  />
-  <FillInQuestion
-    sentence={`Ти ___ жити в Києві? (2nd sg)`}
-    answer={`будеш`}
-    options={[`буду`, `будеш`, `буде`, `будуть`]}
-  />
-  <FillInQuestion
-    sentence={`Ми ___ зустрічатися щотижня. (1st pl)`}
-    answer={`будемо`}
-    options={[`буде`, `будемо`, `будете`, `будуть`]}
-  />
-  <FillInQuestion
-    sentence={`Вони ___ подорожувати влітку. (3rd pl)`}
-    answer={`будуть`}
-    options={[`буде`, `будемо`, `будете`, `будуть`]}
-  />
-  <FillInQuestion
-    sentence={`Ви ___ відпочивати на морі? (2nd pl)`}
-    answer={`будете`}
-    options={[`буде`, `будемо`, `будете`, `будуть`]}
-  />
-  <FillInQuestion
-    sentence={`Вона ___ навчатися в університеті. (3rd sg)`}
-    answer={`буде`}
-    options={[`буду`, `будеш`, `буде`, `будуть`]}
-  />
-  <FillInQuestion
-    sentence={`Я ___ слухати музику. (1st sg)`}
-    answer={`буду`}
-    options={[`буду`, `будеш`, `буде`, `будемо`]}
-  />
-</FillIn>
+<FillIn items={[
+  {
+    sentence: `Я ___ читати книгу завтра. (1st sg)`,
+    answer: `буду`,
+    options: [`буду`, `будеш`, `буде`, `будемо`]
+  },  {
+    sentence: `Ти ___ працювати в суботу? (2nd sg)`,
+    answer: `будеш`,
+    options: [`буду`, `будеш`, `буде`, `будуть`]
+  },  {
+    sentence: `Вона ___ готувати вечерю. (3rd sg)`,
+    answer: `буде`,
+    options: [`буду`, `будеш`, `буде`, `будуть`]
+  },  {
+    sentence: `Ми ___ чекати на тебе. (1st pl)`,
+    answer: `будемо`,
+    options: [`буде`, `будемо`, `будете`, `будуть`]
+  },  {
+    sentence: `Вони ___ дивитися фільм. (3rd pl)`,
+    answer: `будуть`,
+    options: [`буде`, `будемо`, `будете`, `будуть`]
+  },  {
+    sentence: `Ви ___ вивчати українську? (2nd pl)`,
+    answer: `будете`,
+    options: [`буде`, `будемо`, `будете`, `будуть`]
+  },  {
+    sentence: `Він ___ допомагати нам. (3rd sg)`,
+    answer: `буде`,
+    options: [`буду`, `будеш`, `буде`, `будуть`]
+  },  {
+    sentence: `Я ___ писати звіт весь день. (1st sg)`,
+    answer: `буду`,
+    options: [`буду`, `будеш`, `буде`, `будемо`]
+  },  {
+    sentence: `Ти ___ жити в Києві? (2nd sg)`,
+    answer: `будеш`,
+    options: [`буду`, `будеш`, `буде`, `будуть`]
+  },  {
+    sentence: `Ми ___ зустрічатися щотижня. (1st pl)`,
+    answer: `будемо`,
+    options: [`буде`, `будемо`, `будете`, `будуть`]
+  },  {
+    sentence: `Вони ___ подорожувати влітку. (3rd pl)`,
+    answer: `будуть`,
+    options: [`буде`, `будемо`, `будете`, `будуть`]
+  },  {
+    sentence: `Ви ___ відпочивати на морі? (2nd pl)`,
+    answer: `будете`,
+    options: [`буде`, `будемо`, `будете`, `будуть`]
+  },  {
+    sentence: `Вона ___ навчатися в університеті. (3rd sg)`,
+    answer: `буде`,
+    options: [`буду`, `будеш`, `буде`, `будуть`]
+  },  {
+    sentence: `Я ___ слухати музику. (1st sg)`,
+    answer: `буду`,
+    options: [`буду`, `будеш`, `буде`, `будемо`]
+  }
+]} />
 
 ### Synthetic Future — -тиму forms
 
-*Fill in the blank with the correct synthetic future form.*
-
-
-<FillIn>
-  <FillInQuestion
-    sentence={`1. Я ___ над проектом. (працювати)`}
-    answer={`працюватиму`}
-    options={[`працюватиму`, `працюватимеш`, `працюватиме`, `працюватимуть`]}
-  />
-  <FillInQuestion
-    sentence={`Він ___ нові слова щодня. (вивчати)`}
-    answer={`вивчатиме`}
-    options={[`вивчатиму`, `вивчатимеш`, `вивчатиме`, `вивчатимуть`]}
-  />
-  <FillInQuestion
-    sentence={`Ми ___ документи електронною поштою. (надсилати)`}
-    answer={`надсилатимемо`}
-    options={[`надсилатиму`, `надсилатиме`, `надсилатимемо`, `надсилатимуть`]}
-  />
-  <FillInQuestion
-    sentence={`Ти ___ кожен день? (тренуватися)`}
-    answer={`тренуватимешся`}
-    options={[`тренуватимуся`, `тренуватимешся`, `тренуватиметься`, `тренуватимуться`]}
-  />
-  <FillInQuestion
-    sentence={`Вона ___ за якість. (відповідати)`}
-    answer={`відповідатиме`}
-    options={[`відповідатиму`, `відповідатимеш`, `відповідатиме`, `відповідатимуть`]}
-  />
-  <FillInQuestion
-    sentence={`Вони ___ на морі. (відпочивати)`}
-    answer={`відпочиватимуть`}
-    options={[`відпочиватиму`, `відпочиватиме`, `відпочиватимемо`, `відпочиватимуть`]}
-  />
-  <FillInQuestion
-    sentence={`Ви ___ нас регулярно? (відвідувати)`}
-    answer={`відвідуватимете`}
-    options={[`відвідуватиму`, `відвідуватиме`, `відвідуватимемо`, `відвідуватимете`]}
-  />
-  <FillInQuestion
-    sentence={`Я ___ українською. (говорити)`}
-    answer={`говоритиму`}
-    options={[`говоритиму`, `говоритимеш`, `говоритиме`, `говоритимуть`]}
-  />
-  <FillInQuestion
-    sentence={`Він ___ у ресторані. (обідати)`}
-    answer={`обідатиме`}
-    options={[`обідатиму`, `обідатимеш`, `обідатиме`, `обідатимемо`]}
-  />
-  <FillInQuestion
-    sentence={`Ми ___ щотижня. (зустрічатися)`}
-    answer={`зустрічатимемося`}
-    options={[`зустрічатимуся`, `зустрічатиметься`, `зустрічатимемося`, `зустрічатимуться`]}
-  />
-  <FillInQuestion
-    sentence={`Ти ___ над цим питанням? (думати)`}
-    answer={`думатимеш`}
-    options={[`думатиму`, `думатимеш`, `думатиме`, `думатимуть`]}
-  />
-  <FillInQuestion
-    sentence={`Вона ___ у нашій команді. (працювати)`}
-    answer={`працюватиме`}
-    options={[`працюватиму`, `працюватимеш`, `працюватиме`, `працюватимуть`]}
-  />
-  <FillInQuestion
-    sentence={`Вони ___ нас про все. (повідомляти)`}
-    answer={`повідомлятимуть`}
-    options={[`повідомлятиму`, `повідомлятиме`, `повідомлятимемо`, `повідомлятимуть`]}
-  />
-  <FillInQuestion
-    sentence={`Я ___ роман. (писати)`}
-    answer={`писатиму`}
-    options={[`писатиму`, `писатимеш`, `писатиме`, `писатимуть`]}
-  />
-</FillIn>
+<FillIn items={[
+  {
+    sentence: `Я ___ над проектом. (працювати)`,
+    answer: `працюватиму`,
+    options: [`працюватиму`, `працюватимеш`, `працюватиме`, `працюватимуть`]
+  },  {
+    sentence: `Він ___ нові слова щодня. (вивчати)`,
+    answer: `вивчатиме`,
+    options: [`вивчатиму`, `вивчатимеш`, `вивчатиме`, `вивчатимуть`]
+  },  {
+    sentence: `Ми ___ документи електронною поштою. (надсилати)`,
+    answer: `надсилатимемо`,
+    options: [`надсилатиму`, `надсилатиме`, `надсилатимемо`, `надсилатимуть`]
+  },  {
+    sentence: `Ти ___ кожен день? (тренуватися)`,
+    answer: `тренуватимешся`,
+    options: [`тренуватимуся`, `тренуватимешся`, `тренуватиметься`, `тренуватимуться`]
+  },  {
+    sentence: `Вона ___ за якість. (відповідати)`,
+    answer: `відповідатиме`,
+    options: [`відповідатиму`, `відповідатимеш`, `відповідатиме`, `відповідатимуть`]
+  },  {
+    sentence: `Вони ___ на морі. (відпочивати)`,
+    answer: `відпочиватимуть`,
+    options: [`відпочиватиму`, `відпочиватиме`, `відпочиватимемо`, `відпочиватимуть`]
+  },  {
+    sentence: `Ви ___ нас регулярно? (відвідувати)`,
+    answer: `відвідуватимете`,
+    options: [`відвідуватиму`, `відвідуватиме`, `відвідуватимемо`, `відвідуватимете`]
+  },  {
+    sentence: `Я ___ українською. (говорити)`,
+    answer: `говоритиму`,
+    options: [`говоритиму`, `говоритимеш`, `говоритиме`, `говоритимуть`]
+  },  {
+    sentence: `Він ___ у ресторані. (обідати)`,
+    answer: `обідатиме`,
+    options: [`обідатиму`, `обідатимеш`, `обідатиме`, `обідатимемо`]
+  },  {
+    sentence: `Ми ___ щотижня. (зустрічатися)`,
+    answer: `зустрічатимемося`,
+    options: [`зустрічатимуся`, `зустрічатиметься`, `зустрічатимемося`, `зустрічатимуться`]
+  },  {
+    sentence: `Ти ___ над цим питанням? (думати)`,
+    answer: `думатимеш`,
+    options: [`думатиму`, `думатимеш`, `думатиме`, `думатимуть`]
+  },  {
+    sentence: `Вона ___ у нашій команді. (працювати)`,
+    answer: `працюватиме`,
+    options: [`працюватиму`, `працюватимеш`, `працюватиме`, `працюватимуть`]
+  },  {
+    sentence: `Вони ___ нас про все. (повідомляти)`,
+    answer: `повідомлятимуть`,
+    options: [`повідомлятиму`, `повідомлятиме`, `повідомлятимемо`, `повідомлятимуть`]
+  },  {
+    sentence: `Я ___ роман. (писати)`,
+    answer: `писатиму`,
+    options: [`писатиму`, `писатимеш`, `писатиме`, `писатимуть`]
+  }
+]} />
 
 ### Future Tense Rules
 
-*Decide if each statement is true or false.*
-
-
-<TrueFalse>
-  <TrueFalseQuestion
-    statement={`The compound future uses буду + imperfective infinitive.`}
-    isTrue={true}
-    explanation={`Correct! буду читати, буду працювати, etc.`}
-  />
-  <TrueFalseQuestion
-    statement={`Perfective verbs need "буду" for future meaning.`}
-    isTrue={false}
-    explanation={`Incorrect! Perfective verbs form future by simple conjugation: прочитаю, напишу.`}
-  />
-  <TrueFalseQuestion
-    statement={`The synthetic future is more formal than compound.`}
-    isTrue={true}
-    explanation={`Correct! -тиму forms are preferred in formal writing and broadcasts.`}
-  />
-  <TrueFalseQuestion
-    statement={`Russian also uses the synthetic future (-тиму).`}
-    isTrue={false}
-    explanation={`Incorrect! Ukrainian preserved this form; Russian lost it centuries ago.`}
-  />
-  <TrueFalseQuestion
-    statement={`"Напишу" already means "I will write."`}
-    isTrue={true}
-    explanation={`Correct! Perfective present forms have future meaning.`}
-  />
-  <TrueFalseQuestion
-    statement={`"Буду" and "-тиму" forms express different aspects.`}
-    isTrue={false}
-    explanation={`Incorrect! Both are imperfective; they differ in register/formality.`}
-  />
-  <TrueFalseQuestion
-    statement={`News anchors prefer synthetic over compound forms.`}
-    isTrue={true}
-    explanation={`Correct! "Президент зустрічатиметься" sounds more professional.`}
-  />
-  <TrueFalseQuestion
-    statement={`Perfective future describes ongoing processes.`}
-    isTrue={false}
-    explanation={`Incorrect! Perfective future = completed result, not process.`}
-  />
-  <TrueFalseQuestion
-    statement={`"Мабуть" indicates probability, not certainty.`}
-    isTrue={true}
-    explanation={`Correct! Мабуть = perhaps, probably.`}
-  />
-  <TrueFalseQuestion
-    statement={`"Я буду прочитати" is grammatically correct.`}
-    isTrue={false}
-    explanation={`Incorrect! "Буду" only combines with imperfective infinitives.`}
-  />
-  <TrueFalseQuestion
-    statement={`The 3rd person plural synthetic ending is -тимуть.`}
-    isTrue={true}
-    explanation={`Correct! читатимуть, працюватимуть, etc.`}
-  />
-  <TrueFalseQuestion
-    statement={`Compound and synthetic forms have different aspectual meanings.`}
-    isTrue={false}
-    explanation={`Incorrect! Both are imperfective — differ only in style/register.`}
-  />
-  <TrueFalseQuestion
-    statement={`"Обов'язково подзвоню" is a firm promise.`}
-    isTrue={true}
-    explanation={`Correct! Perfective + обов'язково = definite commitment.`}
-  />
-  <TrueFalseQuestion
-    statement={`Synthetic future cannot be used with reflexive verbs.`}
-    isTrue={false}
-    explanation={`Incorrect! тренуватимуся, зустрічатиметься work fine.`}
-  />
-</TrueFalse>
+<TrueFalse items={[
+  {
+    statement: `The compound future uses буду + imperfective infinitive.`,
+    isTrue: true,
+    explanation: `Correct! буду читати, буду працювати, etc.`
+  },  {
+    statement: `Perfective verbs need \"буду\" for future meaning.`,
+    isTrue: false,
+    explanation: `Incorrect! Perfective verbs form future by simple conjugation: прочитаю, напишу.`
+  },  {
+    statement: `The synthetic future is more formal than compound.`,
+    isTrue: true,
+    explanation: `Correct! -тиму forms are preferred in formal writing and broadcasts.`
+  },  {
+    statement: `Russian also uses the synthetic future (-тиму).`,
+    isTrue: false,
+    explanation: `Incorrect! Ukrainian preserved this form; Russian lost it centuries ago.`
+  },  {
+    statement: `\"Напишу\" already means \"I will write.\"`,
+    isTrue: true,
+    explanation: `Correct! Perfective present forms have future meaning.`
+  },  {
+    statement: `\"Буду\" and \"-тиму\" forms express different aspects.`,
+    isTrue: false,
+    explanation: `Incorrect! Both are imperfective; they differ in register/formality.`
+  },  {
+    statement: `News anchors prefer synthetic over compound forms.`,
+    isTrue: true,
+    explanation: `Correct! \"Президент зустрічатиметься\" sounds more professional.`
+  },  {
+    statement: `Perfective future describes ongoing processes.`,
+    isTrue: false,
+    explanation: `Incorrect! Perfective future = completed result, not process.`
+  },  {
+    statement: `\"Мабуть\" indicates probability, not certainty.`,
+    isTrue: true,
+    explanation: `Correct! Мабуть = perhaps, probably.`
+  },  {
+    statement: `\"Я буду прочитати\" is grammatically correct.`,
+    isTrue: false,
+    explanation: `Incorrect! \"Буду\" only combines with imperfective infinitives.`
+  },  {
+    statement: `The 3rd person plural synthetic ending is -тимуть.`,
+    isTrue: true,
+    explanation: `Correct! читатимуть, працюватимуть, etc.`
+  },  {
+    statement: `Compound and synthetic forms have different aspectual meanings.`,
+    isTrue: false,
+    explanation: `Incorrect! Both are imperfective — differ only in style/register.`
+  },  {
+    statement: `\"Обов'язково подзвоню\" is a firm promise.`,
+    isTrue: true,
+    explanation: `Correct! Perfective + обов'язково = definite commitment.`
+  },  {
+    statement: `Synthetic future cannot be used with reflexive verbs.`,
+    isTrue: false,
+    explanation: `Incorrect! тренуватимуся, зустрічатиметься work fine.`
+  }
+]} />
 
 ### Future Forms by Type
 
-*Sort these verb forms into the correct categories.*
-
-
 <GroupSort groups={{
-  "### Compound (буду + inf)": [
-    "буду читати",
-    "будеш працювати",
-    "буде готувати",
-    "будемо чекати",
-    "будуть дивитися"
-  ],
-  "Synthetic (-тиму)": [
-    "читатиму",
-    "працюватимеш",
-    "готуватиме",
-    "чекатимемо",
-    "дивитимуться"
-  ],
-  "Simple Perfective": [
-    "прочитаю",
-    "напишеш",
-    "зробить",
-    "закінчимо",
-    "подзвонять"
-  ]
+  "Compound (буду + inf)": ["буду читати", "будеш працювати", "буде готувати", "будемо чекати", "будуть дивитися"],
+  "Synthetic (-тиму)": ["читатиму", "працюватимеш", "готуватиме", "чекатимемо", "дивитимуться"],
+  "Simple Perfective": ["прочитаю", "напишеш", "зробить", "закінчимо", "подзвонять"]
 }} />
 
 ### Compound Future Sentences
 
-*Put the words in the correct order.*
-
-
-<Unjumble>
-  <UnjumbleQuestion
-    words={`читати / буду / книгу / Я / завтра`}
-    answer={`Я буду читати книгу завтра.`}
-  />
-  <UnjumbleQuestion
-    words={`працювати / Ти / будеш / вдома / ?`}
-    answer={`Ти будеш працювати вдома?`}
-  />
-  <UnjumbleQuestion
-    words={`чекати / Ми / будемо / тебе / на`}
-    answer={`Ми будемо чекати на тебе.`}
-  />
-  <UnjumbleQuestion
-    words={`весь / буде / готувати / Вона / день`}
-    answer={`Вона буде готувати весь день.`}
-  />
-  <UnjumbleQuestion
-    words={`вивчати / будуть / Вони / українську`}
-    answer={`Вони будуть вивчати українську.`}
-  />
-  <UnjumbleQuestion
-    words={`будете / відпочивати / морі / Ви / на / ?`}
-    answer={`Ви будете відпочивати на морі?`}
-  />
-  <UnjumbleQuestion
-    words={`буду / влітку / подорожувати / Я`}
-    answer={`Я буду подорожувати влітку.`}
-  />
-  <UnjumbleQuestion
-    words={`робити / Що / будеш / ввечері / ти / ?`}
-    answer={`Що ти будеш робити ввечері?`}
-  />
-  <UnjumbleQuestion
-    words={`дивитися / Ми / будемо / фільм / разом`}
-    answer={`Ми будемо разом дивитися фільм.`}
-  />
-  <UnjumbleQuestion
-    words={`слухати / буде / Він / музику`}
-    answer={`Він буде слухати музику.`}
-  />
-  <UnjumbleQuestion
-    words={`писати / буду / весь / Я / день / звіт`}
-    answer={`Я буду писати звіт весь день.`}
-  />
-  <UnjumbleQuestion
-    words={`займатися / будеш / Ти / спортом / ?`}
-    answer={`Ти будеш займатися спортом?`}
-  />
-  <UnjumbleQuestion
-    words={`готуватися / буде / Вона / до / іспиту`}
-    answer={`Вона буде готуватися до іспиту.`}
-  />
-  <UnjumbleQuestion
-    words={`працювати / офісі / будуть / Вони / в`}
-    answer={`Вони будуть працювати в офісі.`}
-  />
-</Unjumble>
+<Unjumble items={[
+  { jumbled: `читати / буду / книгу / Я / завтра`, answer: `Я буду читати книгу завтра.` },
+  { jumbled: `працювати / Ти / будеш / вдома / ?`, answer: `Ти будеш працювати вдома?` },
+  { jumbled: `чекати / Ми / будемо / тебе / на`, answer: `Ми будемо чекати на тебе.` },
+  { jumbled: `весь / буде / готувати / Вона / день`, answer: `Вона буде готувати весь день.` },
+  { jumbled: `вивчати / будуть / Вони / українську`, answer: `Вони будуть вивчати українську.` },
+  { jumbled: `будете / відпочивати / морі / Ви / на / ?`, answer: `Ви будете відпочивати на морі?` },
+  { jumbled: `буду / влітку / подорожувати / Я`, answer: `Я буду подорожувати влітку.` },
+  { jumbled: `робити / Що / будеш / ввечері / ти / ?`, answer: `Що ти будеш робити ввечері?` },
+  { jumbled: `дивитися / Ми / будемо / фільм / разом`, answer: `Ми будемо разом дивитися фільм.` },
+  { jumbled: `слухати / буде / Він / музику`, answer: `Він буде слухати музику.` },
+  { jumbled: `писати / буду / весь / Я / день / звіт`, answer: `Я буду писати звіт весь день.` },
+  { jumbled: `займатися / будеш / Ти / спортом / ?`, answer: `Ти будеш займатися спортом?` },
+  { jumbled: `готуватися / буде / Вона / до / іспиту`, answer: `Вона буде готуватися до іспиту.` },
+  { jumbled: `працювати / офісі / будуть / Вони / в`, answer: `Вони будуть працювати в офісі.` }
+]} />
 
 ### Perfective Future Sentences
 
-*Put the words in the correct order.*
-
-
-<Unjumble>
-  <UnjumbleQuestion
-    words={`прочитаю / книгу / Я / цю / завтра`}
-    answer={`Я прочитаю цю книгу завтра.`}
-  />
-  <UnjumbleQuestion
-    words={`напишеш / листа / Ти / ?`}
-    answer={`Ти напишеш листа?`}
-  />
-  <UnjumbleQuestion
-    words={`подзвонить / Вона / увечері`}
-    answer={`Вона подзвонить увечері.`}
-  />
-  <UnjumbleQuestion
-    words={`закінчимо / до / Ми / п'ятниці`}
-    answer={`Ми закінчимо до п'ятниці.`}
-  />
-  <UnjumbleQuestion
-    words={`приїдуть / Вони / третій / о`}
-    answer={`Вони приїдуть о третій.`}
-  />
-  <UnjumbleQuestion
-    words={`зроблю / сьогодні / Я / це`}
-    answer={`Я зроблю це сьогодні.`}
-  />
-  <UnjumbleQuestion
-    words={`проект / Ми / завершимо / місяця / наприкінці`}
-    answer={`Ми завершимо проект наприкінці місяця.`}
-  />
-  <UnjumbleQuestion
-    words={`вирішу / Я / це / питання`}
-    answer={`Я вирішу це питання.`}
-  />
-  <UnjumbleQuestion
-    words={`допоможеш / мені / Ти / ?`}
-    answer={`Ти допоможеш мені?`}
-  />
-  <UnjumbleQuestion
-    words={`приготує / вечерю / Він / смачну`}
-    answer={`Він приготує смачну вечерю.`}
-  />
-  <UnjumbleQuestion
-    words={`пошлю / тобі / документи / Я`}
-    answer={`Я пошлю тобі документи.`}
-  />
-  <UnjumbleQuestion
-    words={`встигнете / вчасно / Ви / ?`}
-    answer={`Ви встигнете вчасно?`}
-  />
-  <UnjumbleQuestion
-    words={`купить / подарунок / Вона / мамі`}
-    answer={`Вона купить мамі подарунок.`}
-  />
-  <UnjumbleQuestion
-    words={`повернуться / вони / Коли / ?`}
-    answer={`Коли вони повернуться?`}
-  />
-</Unjumble>
-
-### Future Tense Errors
-
-*Each sentence has ONE error. Find the incorrect word and correct it.*
-
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`1. Я буду прочитати книгу.`}
-    error={`прочитати`}
-    answer={`читати`}
-    options={[`прочитати`, `читати`, `прочитаю`, `читаю`]}
-    explanation={`"Буду" requires imperfective infinitive: буду читати.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона працюватимуть до вечора.`}
-    error={`працюватимуть`}
-    answer={`працюватиме`}
-    options={[`працюватимуть`, `працюватиме`, `працюватиму`, `працюватимемо`]}
-    explanation={`3rd sg = -тиме: вона працюватиме.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми будемо закінчити проект.`}
-    error={`закінчити`}
-    answer={`закінчувати`}
-    options={[`закінчити`, `закінчувати`, `закінчимо`, `закінчую`]}
-    explanation={`"Будемо" needs imperfective: будемо закінчувати.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він читатимуть новини.`}
-    error={`читатимуть`}
-    answer={`читатиме`}
-    options={[`читатимуть`, `читатиме`, `читатиму`, `читатимете`]}
-    explanation={`"Він" (3rd sg) takes -тиме: читатиме.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я напишутиму листа завтра.`}
-    error={`напишутиму`}
-    answer={`писатиму`}
-    options={[`напишутиму`, `писатиму`, `напишу`, `пишу`]}
-    explanation={`Synthetic future only with imperfective: писатиму.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ти будеш написати звіт?`}
-    error={`написати`}
-    answer={`писати`}
-    options={[`написати`, `писати`, `напишеш`, `пишеш`]}
-    explanation={`"Будеш" requires imperfective: будеш писати.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вони прочитатимуть книгу.`}
-    error={`прочитатимуть`}
-    answer={`читатимуть`}
-    options={[`прочитатимуть`, `читатимуть`, `прочитають`, `читають`]}
-    explanation={`Synthetic -тиму only for imperfective verbs.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми буду чекати на вас.`}
-    error={`буду`}
-    answer={`будемо`}
-    options={[`буду`, `будемо`, `буде`, `будуть`]}
-    explanation={`"Ми" (1st pl) takes будемо.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона буде подзвонити мені.`}
-    error={`подзвонити`}
-    answer={`дзвонити`}
-    options={[`подзвонити`, `дзвонити`, `подзвонить`, `дзвонить`]}
-    explanation={`"Буде" needs imperfective: буде дзвонити.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я зробитиму це завтра.`}
-    error={`зробитиму`}
-    answer={`робитиму`}
-    options={[`зробитиму`, `робитиму`, `зроблю`, `роблю`]}
-    explanation={`Synthetic form only for imperfective: робитиму.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він напевне подзвонить.`}
-    error={`напевне`}
-    answer={`напевно`}
-    options={[`напевне`, `напевно`, `наверно`, `певно`]}
-    explanation={`Correct adverb form: напевно.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ти працюватимуш добре.`}
-    error={`працюватимуш`}
-    answer={`працюватимеш`}
-    options={[`працюватимуш`, `працюватимеш`, `працюватиму`, `працюватиме`]}
-    explanation={`2nd sg = -тимеш: працюватимеш.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона мабуть приїде завтра.`}
-    error={`none`}
-    answer={`✓`}
-    options={[]}
-    explanation={`No error — correct use of мабуть with perfective future.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми готуватиму вечерю.`}
-    error={`готуватиму`}
-    answer={`готуватимемо`}
-    options={[`готуватиму`, `готуватимемо`, `готуватиме`, `готуватимуть`]}
-    explanation={`"Ми" (1st pl) takes -тимемо: готуватимемо.`}
-  />
-</ErrorCorrection>
-
-### Register and Aspect Errors
-
-*Each sentence has ONE error. Find and correct it.*
-
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`1. На офіційному листі: Я буду виконувати всі завдання.`}
-    error={`буду виконувати`}
-    answer={`виконуватиму`}
-    options={[`буду виконувати`, `виконуватиму`, `виконую`, `виконав`]}
-    explanation={`Formal writing prefers synthetic: виконуватиму.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`У новинах: Міністр буде зустрічатися з делегацією.`}
-    error={`буде зустрічатися`}
-    answer={`зустрічатиметься`}
-    options={[`буде зустрічатися`, `зустрічатиметься`, `зустрівся`, `зустрічається`]}
-    explanation={`News broadcasts use synthetic forms.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Обіцянка: Я телефонуватиму тобі обов'язково!`}
-    error={`телефонуватиму`}
-    answer={`подзвоню`}
-    options={[`телефонуватиму`, `подзвоню`, `телефоную`, `дзвонив`]}
-    explanation={`Promises with specific result use perfective: подзвоню.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`У розмові: Що ти робитимеш завтра?`}
-    error={`робитимеш`}
-    answer={`будеш робити`}
-    options={[`робитимеш`, `будеш робити`, `робиш`, `робив`]}
-    explanation={`Casual speech prefers compound: будеш робити.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Офіційний лист: Ми будемо надсилати звіти щотижня.`}
-    error={`будемо надсилати`}
-    answer={`надсилатимемо`}
-    options={[`будемо надсилати`, `надсилатимемо`, `надсилаємо`, `надіслали`]}
-    explanation={`Formal correspondence uses synthetic forms.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Результат: Я буду закінчити роботу до п'ятниці.`}
-    error={`буду закінчити`}
-    answer={`закінчу`}
-    options={[`буду закінчити`, `закінчу`, `закінчував`, `закінчую`]}
-    explanation={`Completed result needs perfective: закінчу.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Процес: Я завершу працювати над проектом.`}
-    error={`завершу працювати`}
-    answer={`буду працювати`}
-    options={[`завершу працювати`, `буду працювати`, `працюватиму`, `працював`]}
-    explanation={`Ongoing process needs imperfective future.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ймовірність: Він обов'язково приходитиме.`}
-    error={`приходитиме`}
-    answer={`прийде`}
-    options={[`приходитиме`, `прийде`, `приходив`, `приходить`]}
-    explanation={`"Обов'язково" with single event uses perfective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Повторювана дія: Вона зустрінеться з нами щотижня.`}
-    error={`зустрінеться`}
-    answer={`зустрічатиметься`}
-    options={[`зустрінеться`, `зустрічатиметься`, `зустрічається`, `зустрілася`]}
-    explanation={`Repeated future action needs imperfective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Формальний текст: Погода буде погіршуватися.`}
-    error={`буде погіршуватися`}
-    answer={`погіршуватиметься`}
-    options={[`буде погіршуватися`, `погіршуватиметься`, `погіршується`, `погіршилася`]}
-    explanation={`Formal weather reports use synthetic forms.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`У листі другу: Я надсилатиму тобі фотографії.`}
-    error={`надсилатиму`}
-    answer={`буду надсилати`}
-    options={[`надсилатиму`, `буду надсилати`, `надсилаю`, `надіслав`]}
-    explanation={`Informal communication prefers compound.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Конкретний результат: Я буду написати тобі листа.`}
-    error={`буду написати`}
-    answer={`напишу`}
-    options={[`буду написати`, `напишу`, `писатиму`, `пишу`]}
-    explanation={`Specific completed action = perfective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Офіційне повідомлення: Ми будемо перевіряти якість.`}
-    error={`будемо перевіряти`}
-    answer={`перевірятимемо`}
-    options={[`будемо перевіряти`, `перевірятимемо`, `перевіряємо`, `перевірили`]}
-    explanation={`Official announcements use synthetic.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Казуальна розмова: Ми зустрічатимемося о сьомій?`}
-    error={`зустрічатимемося`}
-    answer={`будемо зустрічатися`}
-    options={[`зустрічатимемося`, `будемо зустрічатися`, `зустрінемося`, `зустрічаємося`]}
-    explanation={`Casual questions use compound form.`}
-  />
-</ErrorCorrection>
+<Unjumble items={[
+  { jumbled: `прочитаю / книгу / Я / цю / завтра`, answer: `Я прочитаю цю книгу завтра.` },
+  { jumbled: `напишеш / листа / Ти / ?`, answer: `Ти напишеш листа?` },
+  { jumbled: `подзвонить / Вона / увечері`, answer: `Вона подзвонить увечері.` },
+  { jumbled: `закінчимо / до / Ми / п'ятниці`, answer: `Ми закінчимо до п'ятниці.` },
+  { jumbled: `приїдуть / Вони / третій / о`, answer: `Вони приїдуть о третій.` },
+  { jumbled: `зроблю / сьогодні / Я / це`, answer: `Я зроблю це сьогодні.` },
+  { jumbled: `проект / Ми / завершимо / місяця / наприкінці`, answer: `Ми завершимо проект наприкінці місяця.` },
+  { jumbled: `вирішу / Я / це / питання`, answer: `Я вирішу це питання.` },
+  { jumbled: `допоможеш / мені / Ти / ?`, answer: `Ти допоможеш мені?` },
+  { jumbled: `приготує / вечерю / Він / смачну`, answer: `Він приготує смачну вечерю.` },
+  { jumbled: `пошлю / тобі / документи / Я`, answer: `Я пошлю тобі документи.` },
+  { jumbled: `встигнете / вчасно / Ви / ?`, answer: `Ви встигнете вчасно?` },
+  { jumbled: `купить / подарунок / Вона / мамі`, answer: `Вона купить мамі подарунок.` },
+  { jumbled: `повернуться / вони / Коли / ?`, answer: `Коли вони повернуться?` }
+]} />
 
 ### Work Planning Passage
 
-*Fill in the blanks with the correct future forms.*
+<Cloze
+  passage={`Завтра я [___:1] дуже зайнятий. Зранку я [___:2] над важливим проектом. О десятій [___:3] зустріч з клієнтом — я [___:4] йому нашу пропозицію. Після обіду я [___:5] документи для підпису. Увечері ми [___:6] результати дня на нараді. Якщо все [___:7] добре, ми [___:8] контракт цього тижня. Я [___:9], що проект успішний. До п'ятниці я [___:10] всі деталі. Наступного тижня ми [___:11] з партнерами. Вони [___:12] свої ідеї. Ми [___:13] найкращий варіант. [___:14], ми всі будемо задоволені.
 
+1. буду | матиму | стану
+   > [!answer] буду
 
-<Cloze>
-  <ClozePassage
-    text={`Завтра я [___:1] дуже зайнятий. Зранку я [___:2] над важливим проектом. О десятій [___:3] зустріч з клієнтом — я [___:4] йому нашу пропозицію. Після обіду я [___:5] документи для підпису. Увечері ми [___:6] результати дня на нараді. Якщо все [___:7] добре, ми [___:8] контракт цього тижня. Я [___:9], що проект успішний. До п'ятниці я [___:10] всі деталі. Наступного тижня ми [___:11] з партнерами. Вони [___:12] свої ідеї. Ми [___:13] найкращий варіант. [___:14], ми всі будемо задоволені.`}
-    blanks={[
-  {
-    "index": 0,
-    "options": [
-      "буду",
-      "матиму",
-      "стану"
-    ],
-    "answer": "буду"
-  },
-  {
-    "index": 1,
-    "options": [
-      "працюватиму",
-      "попрацюю",
-      "працював"
-    ],
-    "answer": "працюватиму"
-  },
-  {
-    "index": 2,
-    "options": [
-      "буде",
-      "матиме",
-      "відбудеться"
-    ],
-    "answer": "буде"
-  },
-  {
-    "index": 3,
-    "options": [
-      "представлю",
-      "представлятиму",
-      "представляю"
-    ],
-    "answer": "представлю"
-  },
-  {
-    "index": 4,
-    "options": [
-      "готуватиму",
-      "підготую",
-      "готував"
-    ],
-    "answer": "готуватиму"
-  },
-  {
-    "index": 5,
-    "options": [
-      "обговоримо",
-      "обговорюватимемо",
-      "обговорювали"
-    ],
-    "answer": "обговоримо"
-  },
-  {
-    "index": 6,
-    "options": [
-      "піде",
-      "йтиме",
-      "йшло"
-    ],
-    "answer": "піде"
-  },
-  {
-    "index": 7,
-    "options": [
-      "підпишемо",
-      "підписуватимемо",
-      "підписали"
-    ],
-    "answer": "підпишемо"
-  },
-  {
-    "index": 8,
-    "options": [
-      "сподіваюся",
-      "сподіватимуся",
-      "сподівався"
-    ],
-    "answer": "сподіваюся"
-  },
-  {
-    "index": 9,
-    "options": [
-      "узгоджу",
-      "узгоджуватиму",
-      "узгоджував"
-    ],
-    "answer": "узгоджу"
-  },
-  {
-    "index": 10,
-    "options": [
-      "зустрінемося",
-      "зустрічатимемося",
-      "зустрічаємося"
-    ],
-    "answer": "зустрінемося"
-  },
-  {
-    "index": 11,
-    "options": [
-      "презентуватимуть",
-      "презентують",
-      "презентували"
-    ],
-    "answer": "презентуватимуть"
-  },
-  {
-    "index": 12,
-    "options": [
-      "оберемо",
-      "обиратимемо",
-      "обирали"
-    ],
-    "answer": "оберемо"
-  },
-  {
-    "index": 13,
-    "options": [
-      "Сподіваюся",
-      "Сподіватимуся",
-      "Сподівався"
-    ],
-    "answer": "Сподіваюся"
-  }
-]}
-  />
-</Cloze>
+2. працюватиму | попрацюю | працював
+   > [!answer] працюватиму
+
+3. буде | матиме | відбудеться
+   > [!answer] буде
+
+4. представлю | представлятиму | представляю
+   > [!answer] представлю
+
+5. готуватиму | підготую | готував
+   > [!answer] готуватиму
+
+6. обговоримо | обговорюватимемо | обговорювали
+   > [!answer] обговоримо
+
+7. піде | йтиме | йшло
+   > [!answer] піде
+
+8. підпишемо | підписуватимемо | підписали
+   > [!answer] підпишемо
+
+9. сподіваюся | сподіватимуся | сподівався
+   > [!answer] сподіваюся
+
+10. узгоджу | узгоджуватиму | узгоджував
+    > [!answer] узгоджу
+
+11. зустрінемося | зустрічатимемося | зустрічаємося
+    > [!answer] зустрінемося
+
+12. презентуватимуть | презентують | презентували
+    > [!answer] презентуватимуть
+
+13. оберемо | обиратимемо | обирали
+    > [!answer] оберемо
+
+14. Сподіваюся | Сподіватимуся | Сподівався
+    > [!answer] Сподіваюся`}
+  blanks={[]}
+/>
 
 ### Multiple Correct Answers
 
-*Select ALL correct future forms for each context.*
-
-
-<Select>
-  <SelectQuestion
-    question={`1. "I will be working" (ongoing activity, casual):`}
-    options={[`буду працювати`, `попрацюю`, `працюватиму`, `працював`]}
-    correctAnswers={[`буду працювати`]}
-    explanation={`Casual ongoing = compound imperfective.`}
-  />
-  <SelectQuestion
-    question={`"I will finish" (completed result):`}
-    options={[`буду закінчувати`, `закінчу`, `закінчуватиму`, `завершу`]}
-    correctAnswers={[`закінчу`, `завершу`]}
-    explanation={`Result = perfective (закінчу, завершу).`}
-  />
-  <SelectQuestion
-    question={`Formal writing, ongoing process:`}
-    options={[`буду писати`, `писатиму`, `напишу`, `вивчатиму`]}
-    correctAnswers={[`писатиму`, `вивчатиму`]}
-    explanation={`Formal + imperfective = synthetic forms.`}
-  />
-  <SelectQuestion
-    question={`"We will call you" (promise, specific):`}
-    options={[`будемо телефонувати`, `подзвонимо`, `телефонуватимемо`, `зателефонуємо`]}
-    correctAnswers={[`подзвонимо`, `зателефонуємо`]}
-    explanation={`Promise = perfective (подзвонимо, зателефонуємо).`}
-  />
-  <SelectQuestion
-    question={`News broadcast style:`}
-    options={[`буде зустрічатися`, `зустрічатиметься`, `повідомлятиме`, `буде повідомляти`]}
-    correctAnswers={[`зустрічатиметься`, `повідомлятиме`]}
-    explanation={`News = synthetic imperfective.`}
-  />
-  <SelectQuestion
-    question={`Expressing probability with "мабуть":`}
-    options={[`мабуть приїде`, `мабуть прийде`, `мабуть приїхав`, `мабуть прийшов`]}
-    correctAnswers={[`мабуть приїде`, `мабуть прийде`]}
-    explanation={`Future probability with мабуть + pf future.`}
-  />
-  <SelectQuestion
-    question={`"They will be waiting" (casual):`}
-    options={[`будуть чекати`, `почекають`, `чекатимуть`, `чекали`]}
-    correctAnswers={[`будуть чекати`]}
-    explanation={`Casual + ongoing = compound imperfective.`}
-  />
-  <SelectQuestion
-    question={`Repeated future action:`}
-    options={[`буду ходити`, `піду`, `ходитиму`, `ходив`]}
-    correctAnswers={[`буду ходити`, `ходитиму`]}
-    explanation={`Repeated = imperfective (both forms correct).`}
-  />
-  <SelectQuestion
-    question={`Job interview, showing professionalism:`}
-    options={[`буду виконувати`, `виконуватиму`, `дотримуватимуся`, `буду дотримуватися`]}
-    correctAnswers={[`виконуватиму`, `дотримуватимуся`]}
-    explanation={`Professional = synthetic forms.`}
-  />
-  <SelectQuestion
-    question={`Single completed future event:`}
-    options={[`буду робити`, `зроблю`, `робитиму`, `виконаю`]}
-    correctAnswers={[`зроблю`, `виконаю`]}
-    explanation={`Single result = perfective.`}
-  />
-  <SelectQuestion
-    question={`"Perhaps he will come":`}
-    options={[`мабуть, він прийде`, `мабуть, він приходив`, `можливо, він прийде`, `можливо, він приходитиме`]}
-    correctAnswers={[`мабуть, він прийде`, `можливо, він прийде`]}
-    explanation={`Probability + single event = pf future.`}
-  />
-  <SelectQuestion
-    question={`Official document language:`}
-    options={[`буду надавати`, `надаватиму`, `забезпечуватиме`, `буде забезпечувати`]}
-    correctAnswers={[`надаватиму`, `забезпечуватиме`]}
-    explanation={`Official = synthetic.`}
-  />
-  <SelectQuestion
-    question={`Intention expression "I intend to":`}
-    options={[`маю намір зробити`, `планую вивчити`, `збираюся написати`, `хочу писатиму`]}
-    correctAnswers={[`маю намір зробити`, `планую вивчити`, `збираюся написати`]}
-    explanation={`Intention phrases + infinitive.`}
-  />
-  <SelectQuestion
-    question={`Definite promise "I will definitely":`}
-    options={[`обов'язково подзвоню`, `обов'язково зроблю`, `обов'язково буду робити`, `обов'язково робитиму`]}
-    correctAnswers={[`обов'язково подзвоню`, `обов'язково зроблю`]}
-    explanation={`Definite promise = perfective.`}
-  />
-</Select>
+<Select questions={[
+  {
+    question: `\"I will be working\" (ongoing activity, casual):`,
+    options: [
+      { text: `буду працювати`, correct: true },
+      { text: `попрацюю`, correct: false },
+      { text: `працюватиму`, correct: false },
+      { text: `працював`, correct: false }
+    ]
+  },  {
+    question: `\"I will finish\" (completed result):`,
+    options: [
+      { text: `буду закінчувати`, correct: false },
+      { text: `закінчу`, correct: true },
+      { text: `закінчуватиму`, correct: false },
+      { text: `завершу`, correct: true }
+    ]
+  },  {
+    question: `Formal writing, ongoing process:`,
+    options: [
+      { text: `буду писати`, correct: false },
+      { text: `писатиму`, correct: true },
+      { text: `напишу`, correct: false },
+      { text: `вивчатиму`, correct: true }
+    ]
+  },  {
+    question: `\"We will call you\" (promise, specific):`,
+    options: [
+      { text: `будемо телефонувати`, correct: false },
+      { text: `подзвонимо`, correct: true },
+      { text: `телефонуватимемо`, correct: false },
+      { text: `зателефонуємо`, correct: true }
+    ]
+  },  {
+    question: `News broadcast style:`,
+    options: [
+      { text: `буде зустрічатися`, correct: false },
+      { text: `зустрічатиметься`, correct: true },
+      { text: `повідомлятиме`, correct: true },
+      { text: `буде повідомляти`, correct: false }
+    ]
+  },  {
+    question: `Expressing probability with \"мабуть\":`,
+    options: [
+      { text: `мабуть приїде`, correct: true },
+      { text: `мабуть прийде`, correct: true },
+      { text: `мабуть приїхав`, correct: false },
+      { text: `мабуть прийшов`, correct: false }
+    ]
+  },  {
+    question: `\"They will be waiting\" (casual):`,
+    options: [
+      { text: `будуть чекати`, correct: true },
+      { text: `почекають`, correct: false },
+      { text: `чекатимуть`, correct: false },
+      { text: `чекали`, correct: false }
+    ]
+  },  {
+    question: `Repeated future action:`,
+    options: [
+      { text: `буду ходити`, correct: true },
+      { text: `піду`, correct: false },
+      { text: `ходитиму`, correct: true },
+      { text: `ходив`, correct: false }
+    ]
+  },  {
+    question: `Job interview, showing professionalism:`,
+    options: [
+      { text: `буду виконувати`, correct: false },
+      { text: `виконуватиму`, correct: true },
+      { text: `дотримуватимуся`, correct: true },
+      { text: `буду дотримуватися`, correct: false }
+    ]
+  },  {
+    question: `Single completed future event:`,
+    options: [
+      { text: `буду робити`, correct: false },
+      { text: `зроблю`, correct: true },
+      { text: `робитиму`, correct: false },
+      { text: `виконаю`, correct: true }
+    ]
+  },  {
+    question: `\"Perhaps he will come\":`,
+    options: [
+      { text: `мабуть, він прийде`, correct: true },
+      { text: `мабуть, він приходив`, correct: false },
+      { text: `можливо, він прийде`, correct: true },
+      { text: `можливо, він приходитиме`, correct: false }
+    ]
+  },  {
+    question: `Official document language:`,
+    options: [
+      { text: `буду надавати`, correct: false },
+      { text: `надаватиму`, correct: true },
+      { text: `забезпечуватиме`, correct: true },
+      { text: `буде забезпечувати`, correct: false }
+    ]
+  },  {
+    question: `Intention expression \"I intend to\":`,
+    options: [
+      { text: `маю намір зробити`, correct: true },
+      { text: `планую вивчити`, correct: true },
+      { text: `збираюся написати`, correct: true },
+      { text: `хочу писатиму`, correct: false }
+    ]
+  },  {
+    question: `Definite promise \"I will definitely\":`,
+    options: [
+      { text: `обов'язково подзвоню`, correct: true },
+      { text: `обов'язково зроблю`, correct: true },
+      { text: `обов'язково буду робити`, correct: false },
+      { text: `обов'язково робитиму`, correct: false }
+    ]
+  }
+]} />
 
 ### English to Ukrainian
 
-*Choose the correct translation.*
-
-
-<Translate>
-  <TranslateItem
-    source={`1. I will be reading a book tomorrow.`}
-    answer={`Я буду читати книгу завтра.`}
-    options={[`Я буду читати книгу завтра.`, `Я прочитаю книгу завтра.`, `Я читав книгу завтра.`, `Я читаю книгу завтра.`]}
-    explanation={`Ongoing activity = compound imperfective.`}
-  />
-  <TranslateItem
-    source={`She will finish the report by Friday.`}
-    answer={`Вона закінчить звіт до п'ятниці.`}
-    options={[`Вона буде закінчувати звіт до п'ятниці.`, `Вона закінчить звіт до п'ятниці.`, `Вона закінчувала звіт до п'ятниці.`, `Вона закінчуватиме звіт до п'ятниці.`]}
-    explanation={`Completed result = perfective.`}
-  />
-  <TranslateItem
-    source={`We will be meeting every week. (formal)`}
-    answer={`Ми зустрічатимемося щотижня.`}
-    options={[`Ми будемо зустрічатися щотижня.`, `Ми зустрічатимемося щотижня.`, `Ми зустрінемося щотижня.`, `Ми зустрілися щотижня.`]}
-    explanation={`Formal + repeated = synthetic imperfective.`}
-  />
-  <TranslateItem
-    source={`I will call you definitely!`}
-    answer={`Я обов'язково подзвоню тобі!`}
-    options={[`Я буду дзвонити тобі!`, `Я обов'язково подзвоню тобі!`, `Я телефонуватиму тобі!`, `Я дзвонив тобі!`]}
-    explanation={`Promise = perfective.`}
-  />
-  <TranslateItem
-    source={`The President will meet with ministers. (news)`}
-    answer={`Президент зустрічатиметься з міністрами.`}
-    options={[`Президент буде зустрічатися з міністрами.`, `Президент зустрічатиметься з міністрами.`, `Президент зустрівся з міністрами.`, `Президент зустрічається з міністрами.`]}
-    explanation={`News broadcast = synthetic.`}
-  />
-  <TranslateItem
-    source={`What will you do tomorrow? (casual)`}
-    answer={`Що ти будеш робити завтра?`}
-    options={[`Що ти будеш робити завтра?`, `Що ти робитимеш завтра?`, `Що ти зробиш завтра?`, `Що ти робив завтра?`]}
-    explanation={`Casual = compound.`}
-  />
-  <TranslateItem
-    source={`They will arrive at three.`}
-    answer={`Вони приїдуть о третій.`}
-    options={[`Вони будуть приїжджати о третій.`, `Вони приїдуть о третій.`, `Вони приїжджатимуть о третій.`, `Вони приїхали о третій.`]}
-    explanation={`Single arrival = perfective.`}
-  />
-  <TranslateItem
-    source={`I will be studying all day.`}
-    answer={`Я буду вчитися весь день.`}
-    options={[`Я буду вчитися весь день.`, `Я вивчуся весь день.`, `Я вивчив весь день.`, `Я вчуся весь день.`]}
-    explanation={`Duration = imperfective.`}
-  />
-  <TranslateItem
-    source={`Perhaps she will come.`}
-    answer={`Мабуть, вона прийде.`}
-    options={[`Вона обов'язково прийде.`, `Мабуть, вона прийде.`, `Вона приходила.`, `Вона приходитиме.`]}
-    explanation={`Probability = мабуть + pf future.`}
-  />
-  <TranslateItem
-    source={`We will send reports weekly. (formal)`}
-    answer={`Ми надсилатимемо звіти щотижня.`}
-    options={[`Ми будемо надсилати звіти щотижня.`, `Ми надсилатимемо звіти щотижня.`, `Ми надішлемо звіти щотижня.`, `Ми надсилаємо звіти щотижня.`]}
-    explanation={`Formal + repeated = synthetic.`}
-  />
-  <TranslateItem
-    source={`He will help us.`}
-    answer={`Він допоможе нам.`}
-    options={[`Він буде допомагати нам.`, `Він допомагатиме нам.`, `Він допоможе нам.`, `Він допоміг нам.`]}
-    explanation={`Single help = perfective.`}
-  />
-  <TranslateItem
-    source={`I'm going to write a novel.`}
-    answer={`Я збираюся писати роман.`}
-    options={[`Я збираюся писати роман.`, `Я пишу роман.`, `Я написав роман.`, `Я писатиму роман.`]}
-    explanation={`Intention = збираюся + infinitive.`}
-  />
-  <TranslateItem
-    source={`Will you be working from home?`}
-    answer={`Ти будеш працювати вдома?`}
-    options={[`Ти будеш працювати вдома?`, `Ти попрацюєш вдома?`, `Ти працював вдома?`, `Ти працюєш вдома?`]}
-    explanation={`Ongoing activity = compound.`}
-  />
-  <TranslateItem
-    source={`I will decide later.`}
-    answer={`Я вирішу пізніше.`}
-    options={[`Я буду вирішувати пізніше.`, `Я вирішу пізніше.`, `Я вирішував пізніше.`, `Я вирішуватиму пізніше.`]}
-    explanation={`Single decision = perfective.`}
-  />
-</Translate>
-
-### Identify Future Forms
-
-*Click all the PERFECTIVE future forms in this passage.*
-
-
-10 perfective futures: почну, зустрінуся, покажу, погодиться, підпишемо, подзвоню, повідомлю, замовимо, подивимося, пройде.
-
-
-<MarkTheWords>
-  <MarkTheWordsActivity
-    text={`Завтра я почну новий проект. Весь день буду працювати над дизайном. О третій зустрінуся з клієнтом — покажу йому наші ідеї. Якщо він погодиться, ми підпишемо контракт. Потім я подзвоню команді і повідомлю їх про результат. Ввечері будемо святкувати — замовимо піцу і подивимося фільм. Сподіваюся, що все пройде добре!`}
-    correctWords={[`почну`, `зустрінуся`, `покажу`, `погодиться`, `підпишемо`, `подзвоню`, `повідомлю`, `замовимо`, `подивимося`, `пройде`]}
-  />
-</MarkTheWords>
+<Translate questions={[
+  {
+    source: `I will be reading a book tomorrow.`,
+    options: [
+      { text: `Я буду читати книгу завтра.`, correct: true },
+      { text: `Я прочитаю книгу завтра.`, correct: false },
+      { text: `Я читав книгу завтра.`, correct: false },
+      { text: `Я читаю книгу завтра.`, correct: false }
+    ]
+  },  {
+    source: `She will finish the report by Friday.`,
+    options: [
+      { text: `Вона буде закінчувати звіт до п'ятниці.`, correct: false },
+      { text: `Вона закінчить звіт до п'ятниці.`, correct: true },
+      { text: `Вона закінчувала звіт до п'ятниці.`, correct: false },
+      { text: `Вона закінчуватиме звіт до п'ятниці.`, correct: false }
+    ]
+  },  {
+    source: `We will be meeting every week. (formal)`,
+    options: [
+      { text: `Ми будемо зустрічатися щотижня.`, correct: false },
+      { text: `Ми зустрічатимемося щотижня.`, correct: true },
+      { text: `Ми зустрінемося щотижня.`, correct: false },
+      { text: `Ми зустрілися щотижня.`, correct: false }
+    ]
+  },  {
+    source: `I will call you definitely!`,
+    options: [
+      { text: `Я буду дзвонити тобі!`, correct: false },
+      { text: `Я обов'язково подзвоню тобі!`, correct: true },
+      { text: `Я телефонуватиму тобі!`, correct: false },
+      { text: `Я дзвонив тобі!`, correct: false }
+    ]
+  },  {
+    source: `The President will meet with ministers. (news)`,
+    options: [
+      { text: `Президент буде зустрічатися з міністрами.`, correct: false },
+      { text: `Президент зустрічатиметься з міністрами.`, correct: true },
+      { text: `Президент зустрівся з міністрами.`, correct: false },
+      { text: `Президент зустрічається з міністрами.`, correct: false }
+    ]
+  },  {
+    source: `What will you do tomorrow? (casual)`,
+    options: [
+      { text: `Що ти будеш робити завтра?`, correct: true },
+      { text: `Що ти робитимеш завтра?`, correct: false },
+      { text: `Що ти зробиш завтра?`, correct: false },
+      { text: `Що ти робив завтра?`, correct: false }
+    ]
+  },  {
+    source: `They will arrive at three.`,
+    options: [
+      { text: `Вони будуть приїжджати о третій.`, correct: false },
+      { text: `Вони приїдуть о третій.`, correct: true },
+      { text: `Вони приїжджатимуть о третій.`, correct: false },
+      { text: `Вони приїхали о третій.`, correct: false }
+    ]
+  },  {
+    source: `I will be studying all day.`,
+    options: [
+      { text: `Я буду вчитися весь день.`, correct: true },
+      { text: `Я вивчуся весь день.`, correct: false },
+      { text: `Я вивчив весь день.`, correct: false },
+      { text: `Я вчуся весь день.`, correct: false }
+    ]
+  },  {
+    source: `Perhaps she will come.`,
+    options: [
+      { text: `Вона обов'язково прийде.`, correct: false },
+      { text: `Мабуть, вона прийде.`, correct: true },
+      { text: `Вона приходила.`, correct: false },
+      { text: `Вона приходитиме.`, correct: false }
+    ]
+  },  {
+    source: `We will send reports weekly. (formal)`,
+    options: [
+      { text: `Ми будемо надсилати звіти щотижня.`, correct: false },
+      { text: `Ми надсилатимемо звіти щотижня.`, correct: true },
+      { text: `Ми надішлемо звіти щотижня.`, correct: false },
+      { text: `Ми надсилаємо звіти щотижня.`, correct: false }
+    ]
+  },  {
+    source: `He will help us.`,
+    options: [
+      { text: `Він буде допомагати нам.`, correct: false },
+      { text: `Він допомагатиме нам.`, correct: false },
+      { text: `Він допоможе нам.`, correct: true },
+      { text: `Він допоміг нам.`, correct: false }
+    ]
+  },  {
+    source: `I'm going to write a novel.`,
+    options: [
+      { text: `Я збираюся писати роман.`, correct: true },
+      { text: `Я пишу роман.`, correct: false },
+      { text: `Я написав роман.`, correct: false },
+      { text: `Я писатиму роман.`, correct: false }
+    ]
+  },  {
+    source: `Will you be working from home?`,
+    options: [
+      { text: `Ти будеш працювати вдома?`, correct: true },
+      { text: `Ти попрацюєш вдома?`, correct: false },
+      { text: `Ти працював вдома?`, correct: false },
+      { text: `Ти працюєш вдома?`, correct: false }
+    ]
+  },  {
+    source: `I will decide later.`,
+    options: [
+      { text: `Я буду вирішувати пізніше.`, correct: false },
+      { text: `Я вирішу пізніше.`, correct: true },
+      { text: `Я вирішував пізніше.`, correct: false },
+      { text: `Я вирішуватиму пізніше.`, correct: false }
+    ]
+  }
+]} />
 
 ### Project Planning Discussion
 
-*Put the dialogue in the correct order.*
-
-
-<DialogueReorder>
-  <DialogueReorderActivity lines={[
-  {
-    "speaker": "Менеджер",
-    "line": "Що ми робитимемо цього тижня?"
-  },
-  {
-    "speaker": "Анна",
-    "line": "Я закінчу дослідження до середи."
-  },
-  {
-    "speaker": "Менеджер",
-    "line": "А потім?"
-  },
-  {
-    "speaker": "Анна",
-    "line": "Потім починатиму писати звіт."
-  },
-  {
-    "speaker": "Олексій",
-    "line": "А я буду тестувати програму."
-  },
-  {
-    "speaker": "Менеджер",
-    "line": "Коли закінчиш тестування?"
-  },
-  {
-    "speaker": "Олексій",
-    "line": "Протестую основні функції до четверга."
-  },
-  {
-    "speaker": "Менеджер",
-    "line": "Чудово. Встигнемо до п'ятниці?"
-  },
-  {
-    "speaker": "Анна",
-    "line": "Я встигну. Якщо виникнуть проблеми, повідомлю одразу."
-  },
-  {
-    "speaker": "Менеджер",
-    "line": "Добре. Я організую зустріч у п'ятницю."
-  }
+<DialogueReorder lines={[
+  { text: `Менеджер: Що ми робитимемо цього тижня?`, order: 1 },
+  { text: `Анна: Я закінчу дослідження до середи.`, order: 2 },
+  { text: `Менеджер: А потім?`, order: 3 },
+  { text: `Анна: Потім починатиму писати звіт.`, order: 4 },
+  { text: `Олексій: А я буду тестувати програму.`, order: 5 },
+  { text: `Менеджер: Коли закінчиш тестування?`, order: 6 },
+  { text: `Олексій: Протестую основні функції до четверга.`, order: 7 },
+  { text: `Менеджер: Чудово. Встигнемо до п'ятниці?`, order: 8 },
+  { text: `Анна: Я встигну. Якщо виникнуть проблеми, повідомлю одразу.`, order: 9 },
+  { text: `Менеджер: Добре. Я організую зустріч у п'ятницю.`, order: 10 }
 ]} />
-</DialogueReorder>
 
 ### Choose the Correct Form
 
-*Fill in with the appropriate future form based on context.*
-
-
-<FillIn>
-  <FillInQuestion
-    sentence={`1. Офіційний лист: Ми ___ документи завтра. (send)`}
-    answer={`надсилатимемо`}
-    options={[`будемо надсилати`, `надсилатимемо`, `надішлемо`, `надсилаємо`]}
-  />
-  <FillInQuestion
-    sentence={`Обіцянка: Я ___ тобі, коли приїду! (call)`}
-    answer={`подзвоню`}
-    options={[`буду дзвонити`, `дзвонитиму`, `подзвоню`, `дзвоню`]}
-  />
-  <FillInQuestion
-    sentence={`Розмова: Що ти ___ на вихідних? (do)`}
-    answer={`будеш робити`}
-    options={[`будеш робити`, `робитимеш`, `зробиш`, `робив`]}
-  />
-  <FillInQuestion
-    sentence={`Новини: Погода ___ наступного тижня. (get worse)`}
-    answer={`погіршуватиметься`}
-    options={[`буде погіршуватися`, `погіршуватиметься`, `погіршиться`, `погіршується`]}
-  />
-  <FillInQuestion
-    sentence={`Результат: Я ___ проект до п'ятниці. (finish)`}
-    answer={`закінчу`}
-    options={[`буду закінчувати`, `закінчуватиму`, `закінчу`, `закінчую`]}
-  />
-  <FillInQuestion
-    sentence={`Тривалість: Весь день я ___ книгу. (read)`}
-    answer={`буду читати`}
-    options={[`буду читати`, `читатиму`, `прочитаю`, `читаю`]}
-  />
-  <FillInQuestion
-    sentence={`Формальний: Компанія ___ нові продукти. (develop)`}
-    answer={`розроблятиме`}
-    options={[`буде розробляти`, `розроблятиме`, `розробить`, `розробляє`]}
-  />
-  <FillInQuestion
-    sentence={`Казуальний: Ми ___ разом увечері. (have dinner)`}
-    answer={`будемо вечеряти`}
-    options={[`будемо вечеряти`, `вечерятимемо`, `повечеряємо`, `вечеряємо`]}
-  />
-  <FillInQuestion
-    sentence={`Ймовірність: ___, він прийде завтра. (probably)`}
-    answer={`Мабуть`}
-    options={[`Мабуть`, `Обов'язково`, `Точно`, `Ніколи`]}
-  />
-  <FillInQuestion
-    sentence={`Повторювана: Вона ___ нас щотижня. (visit, formal)`}
-    answer={`відвідуватиме`}
-    options={[`буде відвідувати`, `відвідуватиме`, `відвідає`, `відвідує`]}
-  />
-  <FillInQuestion
-    sentence={`Разовий: Завтра я ___ до Львова. (go)`}
-    answer={`поїду`}
-    options={[`буду їздити`, `їздитиму`, `поїду`, `їжджу`]}
-  />
-  <FillInQuestion
-    sentence={`Співбесіда: Я ___ всі завдання вчасно. (complete)`}
-    answer={`виконуватиму`}
-    options={[`буду виконувати`, `виконуватиму`, `виконаю`, `виконую`]}
-  />
-  <FillInQuestion
-    sentence={`Плани: На канікулах ми ___ по Європі. (travel)`}
-    answer={`будемо подорожувати`}
-    options={[`будемо подорожувати`, `подорожуватимемо`, `попутешествуємо`, `подорожуємо`]}
-  />
-  <FillInQuestion
-    sentence={`Обіцянка: Я обов'язково ___ це! (do)`}
-    answer={`зроблю`}
-    options={[`буду робити`, `робитиму`, `зроблю`, `роблю`]}
-  />
-</FillIn>
-
-
+<FillIn items={[
+  {
+    sentence: `Офіційний лист: Ми ___ документи завтра. (send)`,
+    answer: `надсилатимемо`,
+    options: [`будемо надсилати`, `надсилатимемо`, `надішлемо`, `надсилаємо`]
+  },  {
+    sentence: `Обіцянка: Я ___ тобі, коли приїду! (call)`,
+    answer: `подзвоню`,
+    options: [`буду дзвонити`, `дзвонитиму`, `подзвоню`, `дзвоню`]
+  },  {
+    sentence: `Розмова: Що ти ___ на вихідних? (do)`,
+    answer: `будеш робити`,
+    options: [`будеш робити`, `робитимеш`, `зробиш`, `робив`]
+  },  {
+    sentence: `Новини: Погода ___ наступного тижня. (get worse)`,
+    answer: `погіршуватиметься`,
+    options: [`буде погіршуватися`, `погіршуватиметься`, `погіршиться`, `погіршується`]
+  },  {
+    sentence: `Результат: Я ___ проект до п'ятниці. (finish)`,
+    answer: `закінчу`,
+    options: [`буду закінчувати`, `закінчуватиму`, `закінчу`, `закінчую`]
+  },  {
+    sentence: `Тривалість: Весь день я ___ книгу. (read)`,
+    answer: `буду читати`,
+    options: [`буду читати`, `читатиму`, `прочитаю`, `читаю`]
+  },  {
+    sentence: `Формальний: Компанія ___ нові продукти. (develop)`,
+    answer: `розроблятиме`,
+    options: [`буде розробляти`, `розроблятиме`, `розробить`, `розробляє`]
+  },  {
+    sentence: `Казуальний: Ми ___ разом увечері. (have dinner)`,
+    answer: `будемо вечеряти`,
+    options: [`будемо вечеряти`, `вечерятимемо`, `повечеряємо`, `вечеряємо`]
+  },  {
+    sentence: `Ймовірність: ___, він прийде завтра. (probably)`,
+    answer: `Мабуть`,
+    options: [`Мабуть`, `Обов'язково`, `Точно`, `Ніколи`]
+  },  {
+    sentence: `Повторювана: Вона ___ нас щотижня. (visit, formal)`,
+    answer: `відвідуватиме`,
+    options: [`буде відвідувати`, `відвідуватиме`, `відвідає`, `відвідує`]
+  },  {
+    sentence: `Разовий: Завтра я ___ до Львова. (go)`,
+    answer: `поїду`,
+    options: [`буду їздити`, `їздитиму`, `поїду`, `їжджу`]
+  },  {
+    sentence: `Співбесіда: Я ___ всі завдання вчасно. (complete)`,
+    answer: `виконуватиму`,
+    options: [`буду виконувати`, `виконуватиму`, `виконаю`, `виконую`]
+  },  {
+    sentence: `Плани: На канікулах ми ___ по Європі. (travel)`,
+    answer: `будемо подорожувати`,
+    options: [`будемо подорожувати`, `подорожуватимемо`, `попутешествуємо`, `подорожуємо`]
+  },  {
+    sentence: `Обіцянка: Я обов'язково ___ це! (do)`,
+    answer: `зроблю`,
+    options: [`буду робити`, `робитиму`, `зроблю`, `роблю`]
+  }
+]} />

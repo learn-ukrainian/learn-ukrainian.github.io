@@ -36,6 +36,14 @@ Why? Because Ukrainian belongs to the "pro-drop" language family. The verb "to b
 >
 > Russian and Ukrainian both drop the verb "to be" in the present tense, but this feature actually comes from ancient Proto-Slavic. It's not copying—it's inheritance! English used to do this too in Old English, but lost the pattern over time.
 
+> [!resources] 🎧 External Resources
+>
+> **Pronouns:** [Personal Pronouns in Ukrainian](https://www.ukrainianlessons.com/personal-pronouns/) — Full declension table with audio
+>
+> **Podcast:** [ULP 1-03 | How to Introduce Yourself](https://www.ukrainianlessons.com/episode3/) — Real conversations about identity
+>
+> **Basic Phrases:** [14 Basic Ukrainian Phrases](https://www.ukrainianlessons.com/14-basic-ukrainian-phrases/) — Essential phrases for introductions
+
 This module teaches you how to introduce yourself, identify people and objects, and talk about nationality—all without needing any form of "to be." Welcome to the elegant simplicity of Ukrainian identity statements!
 
 ## Presentation

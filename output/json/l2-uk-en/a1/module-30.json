@@ -9,1111 +9,281 @@
     "visibility": "public",
     "language": "uk",
     "targetLevel": "A1",
-    "phase": "A1.3",
+    "phase": "A1.3 - Consolidation",
     "moduleNumber": 30,
     "moduleType": "grammar",
     "pedagogy": "PPP",
     "immersionLevel": 0.3,
-    "title": "Prepositions III - Direction & Origin",
-    "subtitle": "Where To, Where From",
-    "description": "Distinguish location (де?) from direction (куди?)",
+    "title": "Prepositions III",
+    "titleUk": null,
+    "subtitle": "Direction, Location & Origin",
+    "description": "Learner can distinguish location from direction questions",
     "objectives": [
-      "Distinguish location (де?) from direction (куди?)",
-      "Use motion prepositions correctly",
-      "Express origin (звідки?)",
-      "Apply correct case with each preposition"
+      "Learner can distinguish location from direction questions",
+      "Learner can use в/на for location (Locative)",
+      "Learner can use в/на/до for direction (Accusative/Genitive)",
+      "Learner can use з/від for origin"
     ],
+    "objectivesUk": null,
     "grammarFocus": [
-      "Location vs Motion prepositions",
-      "Direction (куди?) with Accusative",
-      "Origin (звідки?) with Genitive"
+      "Location (De?) vs Direction (Kudy?) vs Origin (Zvidky?)",
+      "Prepositions with cases"
     ],
     "tags": [
-      "grammar",
       "prepositions",
-      "motion",
-      "direction"
+      "direction",
+      "location",
+      "movement"
     ],
-    "totalDuration": 50,
-    "transliterationMode": "partial",
+    "totalDuration": "60 min",
+    "transliterationMode": "first-occurrence",
     "sections": [
       {
-        "id": "section-content-0",
-        "name": "Lesson",
+        "id": "section-1",
+        "name": "Prepositions III",
+        "nameEn": null,
         "type": "content",
-        "content": "> **Note:** This module completes your A1 preposition mastery! Learn to distinguish WHERE you are from WHERE you're going!\n\n## Warm-up: Where Are You? Where Are You Going?\n\nThese seem like similar questions, but in Ukrainian they require DIFFERENT grammatical structures!\n\n- **Де ти?** (Where are you?) — LOCATION → Locative case\n- **Куди ти йдеш?** (Where are you going?) — DIRECTION → Accusative case\n- **Звідки ти?** (Where are you from?) — ORIGIN → Genitive case\n\nThis is one of the trickiest parts of Ukrainian prepositions. Many learners confuse location and direction, but understanding this distinction is essential for correct speech.\n\nThe good news: the rules are logical! In/on for location (в/на + Locative), in/on for direction (в/на + Accusative), from for origin (з/від + Genitive).\n\nBy mastering this final preposition module, you'll be able to express where you are, where you're going, and where you come from — essential for any conversation about movement and places!\n\n> 💡 **Thinking Trick:** Location = sitting still (Locative). Direction = moving toward (Accusative). Origin = coming from (Genitive). The CASE tells you the meaning!\n\n## Presentation: Location vs Direction\n\n### The Three Questions\n\n| Question | Meaning | Case |\n|----------|---------|------|\n| **Де?** | Where? (location) | Locative |\n| **Куди?** | Where to? (direction) | Accusative |\n| **Звідки?** | Where from? (origin) | Genitive |\n\n### Location (Де?) — Locative Case\n\nYou already know this from Module 13:\n\n- Я **в парку**. (I am in the park.) — Locative\n- Вона **на роботі**. (She is at work.) — Locative\n- Ми **в Україні**. (We are in Ukraine.) — Locative\n\n### Direction (Куди?) — Accusative Case\n\nFor MOTION (going somewhere), use Accusative:\n\n- Я йду **в парк**. (I'm going to the park.) — Accusative\n- Вона йде **на роботу**. (She's going to work.) — Accusative\n- Ми їдемо **в Україну**. (We're going to Ukraine.) — Accusative\n\n**Comparison:**\n| Location (Де?) | Direction (Куди?) |\n|----------------|-------------------|\n| в парку (in the park) | в парк (to the park) |\n| на роботі (at work) | на роботу (to work) |\n| в Україні (in Ukraine) | в Україну (to Ukraine) |\n| на площі (on the square) | на площу (to the square) |\n\n> 📜 **Pattern Summary:**\n> - **В/На + Locative** = WHERE you are\n> - **В/На + Accusative** = WHERE you're going\n> - Same preposition, different case!\n\n### Origin (Звідки?) — Genitive Case\n\nFor WHERE something/someone comes FROM:\n\n**З (from place):**\n- Я **з України**. (I'm from Ukraine.)\n- Він **з Києва**. (He's from Kyiv.)\n- Вона **з парку**. (She's [coming] from the park.)\n\n**Від (from person):**\n- Лист **від мами**. (A letter from mom.)\n- Я йду **від лікаря**. (I'm coming from the doctor.)\n- Подарунок **від друга**. (A gift from a friend.)\n\n### Other Motion Prepositions\n\n| Preposition | Case | Meaning | Example |\n|-------------|------|---------|---------|\n| до | Genitive | to (a person/place) | Я йду до друга. |\n| через | Accusative | through | Ідемо через парк. |\n| повз | Accusative | past | Проходжу повз магазин. |\n| назад | — | back | Йди назад! |\n| вперед | — | forward | Іди вперед! |\n\n**\"До\" for people and things:**\n- Я йду **до друга**. (I'm going to my friend's.) — person\n- Ми їдемо **до Львова**. (We're going to Lviv.) — place\n- Прийди **до мене**. (Come to me.)\n\n> 💡 **Did You Know?** \"До\" is quite versatile! It means \"to\" (destination), \"until\" (time), and can form compound words like \"до побачення\" (goodbye = until seeing)!\n\n### Summary: The Case System\n\n| Question | Preposition | Case | Example |\n|----------|-------------|------|---------|\n| Де? (where) | в/у, на | Locative | в парку |\n| Куди? (where to) | в/у, на | Accusative | в парк |\n| Куди? (to person) | до | Genitive | до друга |\n| Звідки? (from) | з, від | Genitive | з України |\n\n## Cultural Insight: Movement & Place in Ukraine 🇺🇦\n\n**Common destinations:**\n- Їду **на роботу** (going to work)\n- Їду **на вокзал** (going to the station)\n- Їду **в аеропорт** (going to the airport)\n- Їду **до друзів** (going to friends)\n\n**\"На\" vs \"В\" patterns:**\nSome places always use \"на\" (open or event-related):\n- на вокзал/з вокзалу (station)\n- на площу/з площі (square)\n- на концерт/з концерту (concert)\n- на Україну... wait! It's **В УКРАЇНУ**!\n\n**IMPORTANT:** \"В Україну\" NOT \"На Україну\"!\nUsing \"на Україну\" is considered offensive as it echoes colonial language treating Ukraine as a territory, not a country.\n\n> 📜 **History Bite:** The Russian Empire and Soviet Union used \"на Украину\" (to Ukraine), treating Ukraine as \"the borderland.\" Independent Ukraine mandates \"в Україну\" (into Ukraine — a proper country). This grammatical choice is political and patriotic!\n\n> 📜 **Myth Buster:** Some claim \"на Україну\" is \"traditional.\" FALSE! \"В Україні\" appears in ancient texts. The \"на\" usage was deliberately imposed during Russian colonization to diminish Ukrainian statehood. Always use \"В\"!\n\n## Reading Practice: Моя подорож 📖\n\n**Українською:**\n\nМинулого тижня я подорожував. Спочатку я поїхав з Києва до Львова. Їхав потягом — це шість годин.\n\nУ Львові я ходив по старому місту. Щодня ходив на площу Ринок. Там гарні кав'ярні! Потім ішов до собору, а потім — в парк.\n\nЧерез три дні я поїхав з Львова в Карпати. Там красиві гори! Ходив через ліс до водоспаду. Повертався назад через село.\n\nНарешті я повернувся з Карпат до Києва. Приїхав додому втомлений, але щасливий!\n\n**English Translation:**\n\nLast week I traveled. First I went from Kyiv to Lviv. I traveled by train — that's six hours.\n\nIn Lviv I walked around the old city. Every day I went to Rynok Square. There are nice cafés there! Then I went to the cathedral, and then — to the park.\n\nAfter three days I went from Lviv to the Carpathians. There are beautiful mountains! I walked through the forest to the waterfall. I returned back through the village.\n\nFinally I returned from the Carpathians to Kyiv. I came home tired, but happy!\n\n**Grammar note:** Follow the prepositions: з Києва (from), до Львова (to), на площу (to square), через ліс (through), з Карпат (from), до Києва (to).\n\n## Conversation: Куди йдеш? 🗣️\n\n**Максим:** Привіт! Куди йдеш?\n**Оля:** Привіт! Йду на роботу. А ти?\n**Максим:** Я йду до друга. Він живе тут поруч.\n**Оля:** А потім куди?\n**Максим:** Потім поїдемо в центр. На виставку.\n**Оля:** Цікаво! Звідки їдеш?\n**Максим:** Їду з дому. Живу біля парку.\n**Оля:** Гарний район! Ну, бувай!\n**Максим:** Бувай! До зустрічі!\n\nЗверни увагу: куди (direction), в центр, до друга, на виставку (all Accusative/Genitive for motion), з дому, біля парку (Genitive for from/near)."
+        "content": "## Warm-up\n\n> 💡 **Де? Куди? Звідки? (Where? Where to? Where from?)**\n>\n> These three questions are the key to understanding Ukrainian prepositions!\n> — **Де ти?** (Where are you?) → Я **в парку**. (I'm in the park.)\n> — **Куди ти йдеш?** (Where are you going?) → Я йду **в парк**. (I'm going to the park.)\n> — **Звідки ти?** (Where are you from?) → Я **з України**. (I'm from Ukraine.)\n>\n> Same preposition \"в\" — but different CASE depending on the question!\n\n---"
       },
       {
-        "id": "section-summary-1",
-        "name": "Підсумок",
-        "nameEn": "Summary",
+        "id": "section-2",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| де | /dɛ/ | where | adv | — | location question |\n| куди | /kuˈdɪ/ | where to | adv | — | direction question |\n| звідки | /ˈzwʲidkɪ/ | where from | adv | — | origin question |\n| тут | /tut/ | here | adv | — | location |\n| там | /tɑm/ | there | adv | — | location |\n| сюди | /sʲuˈdɪ/ | to here | adv | — | direction |\n| туди | /tuˈdɪ/ | to there | adv | — | direction |\n| вдома | /wdɔˈmɑ/ | at home | adv | — | location |\n| додому | /dɔˈdɔmu/ | to home | adv | — | direction |\n| з | /z/ | from (place) | prep | — | + Genitive |\n| від | /wʲid/ | from (person) | prep | — | + Genitive |\n| до | /dɔ/ | to (person/place) | prep | — | + Genitive |\n| через | /ˈtʃɛrɛz/ | through, across | prep | — | + Accusative |\n| прямо | /ˈprʲɑmɔ/ | straight | adv | — | direction |\n| назад | /nɑˈzɑd/ | back | adv | — | direction |\n| близько | /ˈblɪzʲkɔ/ | near | adv | — | location |\n| далеко | /dɑˈlɛkɔ/ | far | adv | — | location |\n| ліворуч | /lʲiwɔˈrutʃ/ | on the left | adv | — | direction |\n| праворуч | /prɑwɔˈrutʃ/ | on the right | adv | — | direction |\n| навпроти | /nɑwˈprɔtɪ/ | opposite | adv | — | location |\n\n---\n\n> [!resources] 🎧 External Resources\n>\n> **Location vs Destination:** [В Україні vs В Україну](https://www.ukrainianlessons.com/location-destination-prepositions/) — How to express \"where\" vs \"where to\"\n>\n> **Prepositions Guide:** [Difference between У (В) and На](https://www.ukrainianlessons.com/prepositions-u-na/) — When to use which preposition\n>\n> **Directions:** [Напрямки — Directions in Ukrainian](https://www.ukrainianlessons.com/vocabulary-directions/) — Audio vocabulary for navigation\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Grammar",
+        "nameEn": null,
+        "type": "content",
+        "content": "## The Three Key Questions\n\n> [!observe] Спостереження (Pattern Discovery)\n>\n> Look at these question-answer pairs:\n>\n> | Question | Case Needed | Example |\n> |----------|-------------|---------|\n> | **Де?** (Where?) | Locative | Я **в парку**. |\n> | **Куди?** (Where to?) | Accusative/Genitive | Я йду **в парк** / **до парку**. |\n> | **Звідки?** (Where from?) | Genitive | Я **з парку**. |\n>\n> The QUESTION determines which CASE to use!\n\n---\n\n## Location: Де? (Where?)\n\nFor **location** (where something IS), use **Locative case**:\n\n| Preposition | Example | Translation |\n|-------------|---------|-------------|\n| **в/у** | Я **в парку**. | I am in the park. |\n| **на** | Книга **на столі**. | The book is on the table. |\n\n### Examples\n\n- **Де** ти? — Я **в школі**. (Where are you? — I'm at school.)\n- **Де** твоя мама? — Вона **вдома**. (Where is your mom? — She's at home.)\n- **Де** банк? — Банк **на вулиці Шевченка**. (Where is the bank? — On Shevchenko Street.)\n\n---\n\n## Direction: Куди? (Where to?)\n\nFor **direction** (where something is GOING), use **Accusative** or **Genitive**:\n\n| Preposition | Case | Example | Translation |\n|-------------|------|---------|-------------|\n| **в/у** | Acc | Я йду **в парк**. | I'm going to the park. |\n| **на** | Acc | Я йду **на роботу**. | I'm going to work. |\n| **до** | Gen | Я йду **до лікаря**. | I'm going to the doctor. |\n\n### Examples\n\n- **Куди** ти йдеш? — Я йду **в магазин**. (Where are you going? — I'm going to the store.)\n- **Куди** він їде? — Він їде **на роботу**. (Where is he going? — He's going to work.)\n- **Куди** вона йде? — Вона йде **до друга**. (Where is she going? — She's going to a friend's.)\n\n---\n\n## Origin: Звідки? (Where from?)\n\nFor **origin** (where something is FROM), use **Genitive** with **з** or **від**:\n\n| Preposition | Use | Example | Translation |\n|-------------|-----|---------|-------------|\n| **з** | from places | Я **з України**. | I'm from Ukraine. |\n| **від** | from people | Це подарунок **від мами**. | This is a gift from mom. |\n\n### Examples\n\n- **Звідки** ти? — Я **з Києва**. (Where are you from? — I'm from Kyiv.)\n- **Звідки** він? — Він **з Америки**. (Where is he from? — He's from America.)\n- Лист **від бабусі**. (A letter from grandma.)\n\n---\n\n## Location vs Direction Pairs\n\n| Location (Де?) | Direction (Куди?) |\n|----------------|-------------------|\n| Я **вдома**. (I'm at home.) | Я йду **додому**. (I'm going home.) |\n| Він **тут**. (He's here.) | Іди **сюди**! (Come here!) |\n| Вона **там**. (She's there.) | Він їде **туди**. (He's going there.) |\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Examples in Context",
+        "nameEn": null,
+        "type": "content",
+        "content": "> [!example] Де vs Куди (Location vs Direction)\n>\n> - **Де** ти? — Я **в школі**. (Where are you? — I'm at school.)\n> - **Куди** ти йдеш? — Я йду **в школу**. (Where are you going? — I'm going to school.)\n> - Мама **вдома**. (Mom is at home.)\n> - Я йду **додому**. (I'm going home.)\n> - Книга **на столі**. (The book is on the table.)\n> - Поклади книгу **на стіл**. (Put the book on the table.)\n\n> [!example] Напрямки (Directions)\n>\n> - Ідіть **прямо**. (Go straight.)\n> - Поверніть **ліворуч**. (Turn left.)\n> - Поверніть **праворуч**. (Turn right.)\n> - Аптека **навпроти** банку. (The pharmacy is opposite the bank.)\n> - Школа **близько**. (The school is near.)\n> - Аеропорт **далеко**. (The airport is far.)\n\n> [!example] Звідки? (Where from?)\n>\n> - Я **з України**. (I'm from Ukraine.)\n> - Він **з Львова**. (He's from Lviv.)\n> - Вона **з Одеси**. (She's from Odesa.)\n> - Це подарунок **від татка**. (This is a gift from dad.)\n> - Лист **від друга**. (A letter from a friend.)\n> - Вони **з Польщі**. (They're from Poland.)\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Dialogues",
+        "nameEn": null,
+        "type": "content",
+        "content": "> [!conversation] Де ти? (Where Are You?)\n>\n> — Привіт! Де ти?\n> — Я **в парку**. А ти?\n> — Я **вдома**. Куди ти йдеш?\n> — Я йду **додому**.\n>\n> — Hi! Where are you?\n> — I'm in the park. And you?\n> — I'm at home. Where are you going?\n> — I'm going home.\n\n> [!conversation] Звідки ти? (Where Are You From?)\n>\n> — Звідки ти?\n> — Я **з України**, **з Києва**.\n> — О, класно! А куди ти їдеш?\n> — Я їду **до друга** у Львів.\n>\n> — Where are you from?\n> — I'm from Ukraine, from Kyiv.\n> — Oh, cool! And where are you going?\n> — I'm going to a friend's in Lviv.\n\n> [!conversation] Як пройти? (How Do I Get There?)\n>\n> — Вибачте, як пройти до аптеки?\n> — Ідіть **прямо**, потім **праворуч**. Аптека **навпроти** банку.\n> — Дякую!\n> — Будь ласка!\n>\n> — Excuse me, how do I get to the pharmacy?\n> — Go straight, then right. The pharmacy is opposite the bank.\n> — Thank you!\n> — You're welcome!\n\n> [!conversation] Куди йдемо? (Where Are We Going?)\n>\n> — Куди ми йдемо?\n> — Ми йдемо **в парк**.\n> — Парк далеко?\n> — Ні, парк **близько**. Ідемо **прямо**.\n> — Добре! Я люблю гуляти **в парку**.\n>\n> — Where are we going?\n> — We're going to the park.\n> — Is the park far?\n> — No, the park is close. We go straight.\n> — Good! I love walking in the park.\n\n---\n\n> 💡 **Вдома vs Додому (At Home vs Home)**\n>\n> **Вдома** = at home (location — where you ARE)\n> **Додому** = home (direction — where you're GOING)\n> \"Я вдома\" (I'm at home) vs \"Я йду додому\" (I'm going home)\n\n> 🌍 **Українські міста (Ukrainian Cities)**\n>\n> Звідки ти? Я **з Києва**. Він **з Львова**. Вона **з Одеси**. Ми **з Харкова**. Вони **з Дніпра**. А звідки ви? Ми **з України**!\n>\n> Practice origin: Where are you from? I'm from Kyiv. He's from Lviv. She's from Odesa. We're from Kharkiv. They're from Dnipro. And where are you from? We're from Ukraine!\n\n> ⚡ **Myth vs Fact**\n>\n> **Myth:** \"Cases are just random endings to memorize\"\n> **Fact:** Cases have LOGIC! Location (де?) → Locative. Direction (куди?) → Accusative/Genitive. Origin (звідки?) → Genitive. The question tells you the case!\n\n> 💡 **До vs В/На (To a Person vs To a Place)**\n>\n> **До** = to a person: Я йду **до лікаря**. Я йду **до друга**. Я йду **до бабусі**.\n> **В/На** = to a place: Я йду **в магазин**. Я йду **на роботу**. Я йду **в школу**.\n>\n> Use **до** for PEOPLE, **в/на** for PLACES!\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Вправи (Activities)",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Question Words\n\nMatch the question with its meaning.\n\n- Де? :: Where? (location)\n- Куди? :: Where to? (direction)\n- Звідки? :: Where from? (origin)\n- Тут :: Here\n- Там :: There\n- Сюди :: To here\n- Туди :: To there\n- Вдома :: At home\n- Додому :: Home (direction)\n- Прямо :: Straight\n- Ліворуч :: On the left\n- Праворуч :: On the right\n\n---\n\n## group-sort: Location vs Direction\n\n> Sort words and phrases by type.\n\n### Location (Де?)\n- в парку\n- на столі\n- вдома\n- тут\n- там\n- близько\n\n### Direction (Куди?)\n- в парк\n- на роботу\n- додому\n- сюди\n- туди\n- до лікаря\n\n---\n\n## group-sort: Preposition Usage\n\n> Sort prepositions by their use.\n\n### From Place (з)\n- з України\n- з Києва\n- з магазину\n- з парку\n\n### From Person (від)\n- від мами\n- від друга\n- від лікаря\n- від татка\n\n### To Person (до)\n- до лікаря\n- до друга\n- до бабусі\n- до вчителя\n\n---\n\n## fill-in: Де чи Куди? (Where or Where to?)\n\n> Choose the correct question word.\n\n1. ___ ти зараз?\n   > [!answer] Де\n   > [!options] Де | Куди | Звідки | Як\n\n2. ___ ти йдеш?\n   > [!answer] Куди\n   > [!options] Куди | Де | Звідки | Хто\n\n3. ___ ти приїхав?\n   > [!answer] Звідки\n   > [!options] Звідки | Де | Куди | Коли\n\n4. ___ знаходиться банк?\n   > [!answer] Де\n   > [!options] Де | Куди | Звідки | Як\n\n5. ___ їде автобус?\n   > [!answer] Куди\n   > [!options] Куди | Де | Звідки | Хто\n\n6. ___ ти родом?\n   > [!answer] Звідки\n   > [!options] Звідки | Куди | Де | Як\n\n7. ___ твоя мама?\n   > [!answer] Де\n   > [!options] Де | Куди | Звідки | Хто\n\n8. ___ йде поїзд?\n   > [!answer] Куди\n   > [!options] Куди | Де | Звідки | Як\n\n9. ___ цей подарунок?\n   > [!answer] Звідки\n   > [!options] Звідки | Де | Куди | Який\n\n10. ___ знаходиться аптека?\n    > [!answer] Де\n    > [!options] Де | Куди | Звідки | Яка\n\n11. ___ вони їдуть на канікули?\n    > [!answer] Куди\n    > [!options] Куди | Де | Звідки | Коли\n\n12. ___ він повернувся?\n    > [!answer] Звідки\n    > [!options] Звідки | Де | Куди | Коли\n\n---\n\n## fill-in: Choose the Preposition\n\n> Choose the correct preposition.\n\n1. Я йду ___ магазин.\n   > [!answer] в\n   > [!options] в | з | від | на\n\n2. Я ___ України.\n   > [!answer] з\n   > [!options] з | в | до | на\n\n3. Це лист ___ мами.\n   > [!answer] від\n   > [!options] від | з | в | до\n\n4. Вона йде ___ лікаря.\n   > [!answer] до\n   > [!options] до | з | від | в\n\n5. Книга ___ столі.\n   > [!answer] на\n   > [!options] на | в | до | з\n\n6. Я ___ парку.\n   > [!answer] в\n   > [!options] в | до | з | на\n\n7. Він їде ___ роботу.\n   > [!answer] на\n   > [!options] на | в | з | до\n\n8. Ми приїхали ___ Львова.\n   > [!answer] з\n   > [!options] з | в | до | на\n\n9. Подарунок ___ татка.\n   > [!answer] від\n   > [!options] від | з | до | в\n\n10. Вона йде ___ школи.\n    > [!answer] до\n    > [!options] до | в | з | на\n\n11. Я ___ школі.\n    > [!answer] в\n    > [!options] в | до | з | на\n\n12. Він приїхав ___ Одеси.\n    > [!answer] з\n    > [!options] з | в | до | від\n\n---\n\n## quiz: Location or Direction?\n\nChoose the correct answer.\n\n1. \"Я в парку\" means:\n   - [x] I am in the park (location)\n   - [ ] I'm going to the park (direction)\n   - [ ] I'm from the park (origin)\n   - [ ] I was in the park (past)\n\n2. \"Я йду в парк\" means:\n   - [x] I'm going to the park (direction)\n   - [ ] I am in the park (location)\n   - [ ] I'm from the park (origin)\n   - [ ] I was in the park (past)\n\n3. \"Вдома\" means:\n   - [x] At home (location)\n   - [ ] To home (direction)\n   - [ ] From home (origin)\n   - [ ] About home\n\n4. \"Додому\" means:\n   - [x] Home (direction - going home)\n   - [ ] At home (location)\n   - [ ] From home (origin)\n   - [ ] About home\n\n5. \"Я з України\" means:\n   - [x] I'm from Ukraine\n   - [ ] I'm in Ukraine\n   - [ ] I'm going to Ukraine\n   - [ ] I was in Ukraine\n\n6. \"До лікаря\" means:\n   - [x] To the doctor\n   - [ ] At the doctor's\n   - [ ] From the doctor\n   - [ ] About the doctor\n\n7. \"Тут\" means:\n   - [x] Here (location)\n   - [ ] To here (direction)\n   - [ ] From here (origin)\n   - [ ] About here\n\n8. \"Сюди\" means:\n   - [x] To here (direction)\n   - [ ] Here (location)\n   - [ ] From here (origin)\n   - [ ] About here\n\n---\n\n## quiz: Which Preposition?\n\nChoose the correct preposition.\n\n1. I'm FROM Kyiv:\n   - [x] з Києва\n   - [ ] в Києві\n   - [ ] до Києва\n   - [ ] від Києва\n\n2. A gift FROM mom:\n   - [x] від мами\n   - [ ] з мами\n   - [ ] до мами\n   - [ ] в мами\n\n3. Going TO the doctor:\n   - [x] до лікаря\n   - [ ] в лікаря\n   - [ ] з лікаря\n   - [ ] від лікаря\n\n4. Going TO the store:\n   - [x] в магазин\n   - [ ] до магазин\n   - [ ] з магазину\n   - [ ] від магазину\n\n5. I'm IN the park:\n   - [x] в парку\n   - [ ] в парк\n   - [ ] з парку\n   - [ ] до парку\n\n6. Coming FROM school:\n   - [x] з школи\n   - [ ] в школі\n   - [ ] до школи\n   - [ ] від школи\n\n7. Going TO work:\n   - [x] на роботу\n   - [ ] в роботу\n   - [ ] до роботи\n   - [ ] з роботи\n\n8. Letter FROM dad:\n   - [x] від татка\n   - [ ] з татка\n   - [ ] до татка\n   - [ ] в татка\n\n---\n\n## unjumble: Preposition Sentences\n\nPut the words in the correct order.\n\n1. ти / де / зараз\n   > [!answer] Де ти зараз?\n\n2. йду / я / в / магазин\n   > [!answer] Я йду в магазин.\n\n3. з / я / України\n   > [!answer] Я з України.\n\n4. куди / йдеш / ти\n   > [!answer] Куди ти йдеш?\n\n5. додому / йде / він\n   > [!answer] Він йде додому.\n\n6. лікаря / йду / до / я\n   > [!answer] Я йду до лікаря.\n\n7. від / це / мами / подарунок\n   > [!answer] Це подарунок від мами.\n\n8. вдома / вона / зараз\n   > [!answer] Вона зараз вдома.\n\n9. прямо / потім / ідіть / праворуч\n   > [!answer] Ідіть прямо, потім праворуч.\n\n10. аптека / навпроти / банку\n   > [!answer] Аптека навпроти банку.\n\n11. далеко / аеропорт\n   > [!answer] Аеропорт далеко.\n\n12. ти / звідки / родом\n   > [!answer] Звідки ти родом?\n\n\n---\n\n## true-false: Preposition Rules\n\nIs this true or false?\n\n- [x] \"Де?\" asks about location.\n- [ ] \"Куди?\" asks about location.\n  > Incorrect! it asks about direction\n\n- [x] \"Звідки?\" asks about origin.\n- [x] \"Вдома\" means \"at home.\".\n- [ ] \"Додому\" means \"at home.\".\n  > Incorrect! it means \"to home\"\n\n- [x] \"З\" is used for \"from places.\".\n- [x] \"Від\" is used for \"from people.\".\n- [ ] \"До\" is used for \"from people.\".\n  > Incorrect! it's used for \"to\"\n\n- [x] Location uses Locative case.\n- [ ] Direction uses Locative case.\n  > Incorrect! it uses Accusative/Genitive\n\n- [x] \"Тут\" means \"here.\".\n- [x] \"Сюди\" means \"to here.\".\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Підсумок (Summary)",
+        "nameEn": null,
         "type": "summary",
-        "content": "**Prepositions III Essentials**\n\n1. **Location (Де?):** в/на + Locative\n2. **Direction (Куди?):** в/на + Accusative, до + Genitive\n3. **Origin (Звідки?):** з/від + Genitive\n4. **В Україну!** Never \"на Україну\"\n\n---\n\n> [!tip] 🌟 **Pro Tip:** When in doubt, ask yourself: Am I THERE (Locative) or going THERE (Accusative/Genitive)? The answer determines the case!\n\n\n---"
+        "content": "Ви навчилися говорити про напрямок і місце! (You've learned direction and location!)\n\n**Що ви вивчили (What you learned):**\n\n- **Три питання (Three questions):** Де? Куди? Звідки?\n- **Прислівники місця (Location):** тут, там, вдома, близько, далеко, навпроти\n- **Прислівники напрямку (Direction):** сюди, туди, додому, прямо, назад\n- **Прийменники (Prepositions):** з/із (from place), від (from person), до (to person)\n- **Пари (Pairs):** вдома/додому, тут/сюди, там/туди\n- **Правило (Rule):** Питання визначає відмінок!\n\n---\n\n**Наступний урок:** Частини тіла та здоров'я!"
       }
     ],
-    "rawMarkdown": "---\ntitle: \"Prepositions III - Direction & Origin\"\nsubtitle: \"Where To, Where From\"\nphase: A1.3\ntransliteration: partial\npedagogy: PPP\nduration: 50\ntags: [grammar, prepositions, motion, direction]\nobjectives:\n  - Distinguish location (де?) from direction (куди?)\n  - Use motion prepositions correctly\n  - Express origin (звідки?)\n  - Apply correct case with each preposition\ngrammar:\n  - Location vs Motion prepositions\n  - Direction (куди?) with Accusative\n  - Origin (звідки?) with Genitive\naudio: false\n---\n\n# Prepositions III - Direction & Origin\n\n> **Note:** This module completes your A1 preposition mastery! Learn to distinguish WHERE you are from WHERE you're going!\n\n## Warm-up: Where Are You? Where Are You Going?\n\nThese seem like similar questions, but in Ukrainian they require DIFFERENT grammatical structures!\n\n- **Де ти?** (Where are you?) — LOCATION → Locative case\n- **Куди ти йдеш?** (Where are you going?) — DIRECTION → Accusative case\n- **Звідки ти?** (Where are you from?) — ORIGIN → Genitive case\n\nThis is one of the trickiest parts of Ukrainian prepositions. Many learners confuse location and direction, but understanding this distinction is essential for correct speech.\n\nThe good news: the rules are logical! In/on for location (в/на + Locative), in/on for direction (в/на + Accusative), from for origin (з/від + Genitive).\n\nBy mastering this final preposition module, you'll be able to express where you are, where you're going, and where you come from — essential for any conversation about movement and places!\n\n> 💡 **Thinking Trick:** Location = sitting still (Locative). Direction = moving toward (Accusative). Origin = coming from (Genitive). The CASE tells you the meaning!\n\n## Presentation: Location vs Direction\n\n### The Three Questions\n\n| Question | Meaning | Case |\n|----------|---------|------|\n| **Де?** | Where? (location) | Locative |\n| **Куди?** | Where to? (direction) | Accusative |\n| **Звідки?** | Where from? (origin) | Genitive |\n\n### Location (Де?) — Locative Case\n\nYou already know this from Module 13:\n\n- Я **в парку**. (I am in the park.) — Locative\n- Вона **на роботі**. (She is at work.) — Locative\n- Ми **в Україні**. (We are in Ukraine.) — Locative\n\n### Direction (Куди?) — Accusative Case\n\nFor MOTION (going somewhere), use Accusative:\n\n- Я йду **в парк**. (I'm going to the park.) — Accusative\n- Вона йде **на роботу**. (She's going to work.) — Accusative\n- Ми їдемо **в Україну**. (We're going to Ukraine.) — Accusative\n\n**Comparison:**\n| Location (Де?) | Direction (Куди?) |\n|----------------|-------------------|\n| в парку (in the park) | в парк (to the park) |\n| на роботі (at work) | на роботу (to work) |\n| в Україні (in Ukraine) | в Україну (to Ukraine) |\n| на площі (on the square) | на площу (to the square) |\n\n> 📜 **Pattern Summary:**\n> - **В/На + Locative** = WHERE you are\n> - **В/На + Accusative** = WHERE you're going\n> - Same preposition, different case!\n\n### Origin (Звідки?) — Genitive Case\n\nFor WHERE something/someone comes FROM:\n\n**З (from place):**\n- Я **з України**. (I'm from Ukraine.)\n- Він **з Києва**. (He's from Kyiv.)\n- Вона **з парку**. (She's [coming] from the park.)\n\n**Від (from person):**\n- Лист **від мами**. (A letter from mom.)\n- Я йду **від лікаря**. (I'm coming from the doctor.)\n- Подарунок **від друга**. (A gift from a friend.)\n\n### Other Motion Prepositions\n\n| Preposition | Case | Meaning | Example |\n|-------------|------|---------|---------|\n| до | Genitive | to (a person/place) | Я йду до друга. |\n| через | Accusative | through | Ідемо через парк. |\n| повз | Accusative | past | Проходжу повз магазин. |\n| назад | — | back | Йди назад! |\n| вперед | — | forward | Іди вперед! |\n\n**\"До\" for people and things:**\n- Я йду **до друга**. (I'm going to my friend's.) — person\n- Ми їдемо **до Львова**. (We're going to Lviv.) — place\n- Прийди **до мене**. (Come to me.)\n\n> 💡 **Did You Know?** \"До\" is quite versatile! It means \"to\" (destination), \"until\" (time), and can form compound words like \"до побачення\" (goodbye = until seeing)!\n\n### Summary: The Case System\n\n| Question | Preposition | Case | Example |\n|----------|-------------|------|---------|\n| Де? (where) | в/у, на | Locative | в парку |\n| Куди? (where to) | в/у, на | Accusative | в парк |\n| Куди? (to person) | до | Genitive | до друга |\n| Звідки? (from) | з, від | Genitive | з України |\n\n## Cultural Insight: Movement & Place in Ukraine 🇺🇦\n\n**Common destinations:**\n- Їду **на роботу** (going to work)\n- Їду **на вокзал** (going to the station)\n- Їду **в аеропорт** (going to the airport)\n- Їду **до друзів** (going to friends)\n\n**\"На\" vs \"В\" patterns:**\nSome places always use \"на\" (open or event-related):\n- на вокзал/з вокзалу (station)\n- на площу/з площі (square)\n- на концерт/з концерту (concert)\n- на Україну... wait! It's **В УКРАЇНУ**!\n\n**IMPORTANT:** \"В Україну\" NOT \"На Україну\"!\nUsing \"на Україну\" is considered offensive as it echoes colonial language treating Ukraine as a territory, not a country.\n\n> 📜 **History Bite:** The Russian Empire and Soviet Union used \"на Украину\" (to Ukraine), treating Ukraine as \"the borderland.\" Independent Ukraine mandates \"в Україну\" (into Ukraine — a proper country). This grammatical choice is political and patriotic!\n\n> 📜 **Myth Buster:** Some claim \"на Україну\" is \"traditional.\" FALSE! \"В Україні\" appears in ancient texts. The \"на\" usage was deliberately imposed during Russian colonization to diminish Ukrainian statehood. Always use \"В\"!\n\n## Reading Practice: Моя подорож 📖\n\n**Українською:**\n\nМинулого тижня я подорожував. Спочатку я поїхав з Києва до Львова. Їхав потягом — це шість годин.\n\nУ Львові я ходив по старому місту. Щодня ходив на площу Ринок. Там гарні кав'ярні! Потім ішов до собору, а потім — в парк.\n\nЧерез три дні я поїхав з Львова в Карпати. Там красиві гори! Ходив через ліс до водоспаду. Повертався назад через село.\n\nНарешті я повернувся з Карпат до Києва. Приїхав додому втомлений, але щасливий!\n\n**English Translation:**\n\nLast week I traveled. First I went from Kyiv to Lviv. I traveled by train — that's six hours.\n\nIn Lviv I walked around the old city. Every day I went to Rynok Square. There are nice cafés there! Then I went to the cathedral, and then — to the park.\n\nAfter three days I went from Lviv to the Carpathians. There are beautiful mountains! I walked through the forest to the waterfall. I returned back through the village.\n\nFinally I returned from the Carpathians to Kyiv. I came home tired, but happy!\n\n**Grammar note:** Follow the prepositions: з Києва (from), до Львова (to), на площу (to square), через ліс (through), з Карпат (from), до Києва (to).\n\n## Conversation: Куди йдеш? 🗣️\n\n**Максим:** Привіт! Куди йдеш?\n**Оля:** Привіт! Йду на роботу. А ти?\n**Максим:** Я йду до друга. Він живе тут поруч.\n**Оля:** А потім куди?\n**Максим:** Потім поїдемо в центр. На виставку.\n**Оля:** Цікаво! Звідки їдеш?\n**Максим:** Їду з дому. Живу біля парку.\n**Оля:** Гарний район! Ну, бувай!\n**Максим:** Бувай! До зустрічі!\n\nЗверни увагу: куди (direction), в центр, до друга, на виставку (all Accusative/Genitive for motion), з дому, біля парку (Genitive for from/near).\n\n# Summary\n\n**Prepositions III Essentials**\n\n1. **Location (Де?):** в/на + Locative\n2. **Direction (Куди?):** в/на + Accusative, до + Genitive\n3. **Origin (Звідки?):** з/від + Genitive\n4. **В Україну!** Never \"на Україну\"\n\n---\n\n> [!tip] 🌟 **Pro Tip:** When in doubt, ask yourself: Am I THERE (Locative) or going THERE (Accusative/Genitive)? The answer determines the case!\n\n# Activities\n\n## fill-in: Location or Direction\n> Choose the correct form.\n\n1. Я в ___. (park - location)\n   > [!answer] парку\n   > [!options] парк | парку | парка | парком\n\n2. Я йду в ___. (park - direction)\n   > [!answer] парк\n   > [!options] парк | парку | парка | парком\n\n3. Вона на ___. (work - location)\n   > [!answer] роботі\n   > [!options] роботу | роботі | роботи | роботою\n\n4. Вона йде на ___. (work - direction)\n   > [!answer] роботу\n   > [!options] роботу | роботі | роботи | роботою\n\n5. Ми в ___. (Ukraine - location)\n   > [!answer] Україні\n   > [!options] Україні | Україну | України | Україна\n\n6. Ми їдемо в ___. (Ukraine - direction)\n   > [!answer] Україну\n   > [!options] Україні | Україну | України | Україна\n\n7. Він ___ Києва. (from)\n   > [!answer] з\n   > [!options] в | на | з | до\n\n8. Вона йде ___ друга. (to - person)\n   > [!answer] до\n   > [!options] в | на | з | до\n\n9. Лист ___ мами. (from)\n   > [!answer] від\n   > [!options] в | на | від | до\n\n10. Я проходжу ___ парк. (through)\n    > [!answer] через\n    > [!options] в | на | через | до\n\n11. Куди ти ___? (going)\n    > [!answer] йдеш\n    > [!options] є | йдеш | був | буде\n\n12. Звідки ти ___? (are)\n    > [!answer] (родом)\n    > [!options] йдеш | їдеш | (родом) | живеш\n\n## match-up: Questions & Cases\n> Match questions with their cases.\n\n| Question | Case/Meaning |\n| --- | --- |\n| Де? | Locative (location) |\n| Куди? | Accusative (direction) |\n| Звідки? | Genitive (origin) |\n| До кого? | Genitive (to person) |\n| Від кого? | Genitive (from person) |\n| Через що? | Accusative (through) |\n| Біля чого? | Genitive (near) |\n| В чому? | Locative (in what) |\n| На чому? | Locative (on what) |\n| В що? | Accusative (into what) |\n| На що? | Accusative (onto what) |\n| З чого? | Genitive (from what) |\n\n## quiz: Preposition Rules\n> Choose the correct answer.\n\n1. \"Де ти?\" requires which case?\n   - [x] Locative\n   - [ ] Accusative\n   - [ ] Genitive\n   - [ ] Nominative\n\n2. \"Куди ти йдеш?\" requires:\n   - [x] Accusative\n   - [ ] Locative\n   - [ ] Nominative\n   - [ ] Dative\n\n3. \"Звідки ти?\" requires:\n   - [x] Genitive\n   - [ ] Accusative\n   - [ ] Locative\n   - [ ] Nominative\n\n4. For \"to a person,\" use:\n   - [x] до + Genitive\n   - [ ] в + Accusative\n   - [ ] на + Accusative\n   - [ ] з + Genitive\n\n5. \"В Україні\" vs \"В Україну\":\n   - [x] Україні = location, Україну = direction\n   - [ ] Both are the same\n   - [ ] Україну = location\n   - [ ] Neither is correct\n\n6. Never say:\n   - [x] На Україну (offensive)\n   - [ ] В Україну\n   - [ ] В Україні\n   - [ ] До України\n\n7. \"З\" means:\n   - [x] From (a place)\n   - [ ] To\n   - [ ] In\n   - [ ] On\n\n8. \"Від\" is used for:\n   - [x] From (a person)\n   - [ ] To a place\n   - [ ] In a location\n   - [ ] On a surface\n\n9. \"До\" with places means:\n   - [x] To, toward\n   - [ ] From\n   - [ ] In\n   - [ ] On\n\n10. \"Через\" means:\n    - [x] Through\n    - [ ] From\n    - [ ] To\n    - [ ] Near\n\n11. Same preposition, different case gives:\n    - [x] Different meaning (location vs motion)\n    - [ ] Same meaning\n    - [ ] No difference\n    - [ ] Error\n\n12. To ask where someone is FROM, say:\n    - [x] Звідки ти?\n    - [ ] Де ти?\n    - [ ] Куди ти?\n    - [ ] Коли ти?\n\n## group-sort: Location vs Direction\n> Sort phrases by meaning.\n\n- Location (Де?): в парку\n- Location (Де?): на роботі\n- Location (Де?): в Україні\n- Location (Де?): біля станції\n- Direction (Куди?): в парк\n- Direction (Куди?): на роботу\n- Direction (Куди?): в Україну\n- Direction (Куди?): до друга\n- Origin (Звідки?): з України\n- Origin (Звідки?): від мами\n- Origin (Звідки?): з Києва\n- Origin (Звідки?): з роботи\n\n## true-false: Preposition Facts\n- [x] \"Де\" asks about location.\n- [x] \"Куди\" asks about direction.\n- [ ] Location and direction use the same case.\n- [x] \"До\" takes Genitive for \"to person.\"\n- [x] \"В Україну\" is correct (not \"на\").\n- [ ] \"Від\" is used for places.\n- [x] \"З\" means from (a place).\n- [ ] \"Через\" means near.\n- [x] Locative = being somewhere.\n- [x] Accusative = going somewhere.\n- [ ] \"Звідки\" uses Locative.\n- [x] \"Біля\" takes Genitive.\n\n## anagram: Preposition Vocabulary\n> Unscramble these preposition words.\n\n1. и к у д\n   > [!answer] куди\n\n2. е д\n   > [!answer] де\n\n3. и к і д з в\n   > [!answer] звідки\n\n4. о д\n   > [!answer] до\n\n5. і д в\n   > [!answer] від\n\n6. з\n   > [!answer] з\n\n7. а н\n   > [!answer] на\n\n8. в\n   > [!answer] в\n\n9. е р е з ч\n   > [!answer] через\n\n10. я л і б\n    > [!answer] біля\n\n11. д а з а н\n    > [!answer] назад\n\n12. д е р е п в\n    > [!answer] вперед\n\n## fill-in: Complete the Journey\n> Complete with correct prepositions and forms.\n\n1. Я їду ___ Києва до Львова. (from)\n   > [!answer] з\n   > [!options] з | в | на | до\n\n2. Їду ___ роботу. (to work)\n   > [!answer] на\n   > [!options] в | на | з | до\n\n3. Він йде ___ друга. (to friend)\n   > [!answer] до\n   > [!options] в | на | з | до\n\n4. Ми в ___. (center)\n   > [!answer] центрі\n   > [!options] центр | центру | центрі | центром\n\n5. Ми їдемо в ___. (center)\n   > [!answer] центр\n   > [!options] центр | центру | центрі | центром\n\n6. Вона ___ України. (from)\n   > [!answer] з\n   > [!options] в | на | з | до\n\n7. Лист ___ батька. (from person)\n   > [!answer] від\n   > [!options] з | в | від | до\n\n8. Ідемо ___ ліс. (through)\n   > [!answer] через\n   > [!options] в | на | через | біля\n\n9. Музей ___ парку. (near)\n   > [!answer] біля\n   > [!options] в | на | від | біля\n\n10. ___ ти йдеш? (where to)\n    > [!answer] Куди\n    > [!options] Де | Куди | Звідки | Коли\n\n11. Я на ___ Ринок. (square - direction)\n    > [!answer] площу\n    > [!options] площу | площі | площа | площею\n\n12. Повертаюся ___. (back)\n    > [!answer] назад\n    > [!options] вперед | назад | тут | там\n\n## unjumble: Build Motion Sentences\n> Arrange words into correct sentences.\n\n1. куди / ти / йдеш\n   > [!answer] Куди ти йдеш?\n\n2. в / я / їду / Україну\n   > [!answer] Я їду в Україну.\n\n3. роботу / на / вона / йде\n   > [!answer] Вона йде на роботу.\n\n4. з / він / Києва\n   > [!answer] Він з Києва.\n\n5. до / я / друга / йду\n   > [!answer] Я йду до друга.\n\n6. парку / ліс / через / до\n   > [!answer] Через ліс до парку.\n\n7. звідки / ти\n   > [!answer] Звідки ти?\n\n8. від / лист / мами\n   > [!answer] Лист від мами.\n\n9. Львові / в / я\n   > [!answer] Я в Львові.\n\n10. Львова / до / їдемо / ми\n    > [!answer] Ми їдемо до Львова.\n\n11. парку / біля / живу / я\n    > [!answer] Я живу біля парку.\n\n12. назад / йди\n    > [!answer] Йди назад!\n\n---\n\n# Vocabulary\n\n| Ukrainian | IPA | English | Example |\n| --- | --- | --- | --- |\n| де | /dɛ/ | where (location) | Де ти? |\n| куди | /kuˈdɪ/ | where to (direction) | Куди йдеш? |\n| звідки | /ˈzʋidkɪ/ | where from | Звідки ти? |\n| тут | /tut/ | here | Я тут. |\n| там | /tɑm/ | there | Він там. |\n| вдома | /ʋˈdomɑ/ | at home | Я вдома. |\n| додому | /doˈdomu/ | (to) home | Іду додому. |\n| з | /z/ | from (place) | З України. |\n| від | /ʋid/ | from (person) | Від друга. |\n| до | /do/ | to (person/place) | До Львова. |\n| через | /ˈt͡ʃɛrɛz/ | through | Через парк. |\n| повз | /poʋz/ | past | Повз магазин. |\n| прямо | /ˈprʲɑmo/ | straight | Іди прямо. |\n| назад | /nɑˈzɑd/ | back | Йди назад. |\n| вперед | /ʋpɛˈrɛd/ | forward | Іди вперед. |\n| близько | /ˈblɪzʲko/ | close | Живу близько. |\n| далеко | /dɑˈlɛko/ | far | Це далеко. |\n| біля | /ˈbilʲɑ/ | near | Біля станції. |\n| напроти | /nɑˈprotɪ/ | opposite | Напроти парку. |\n| між | /miʒ/ | between | Між домами. |\n",
-    "createdAt": "2025-12-12T19:55:32.052Z",
-    "modifiedAt": "2025-12-12T19:55:32.052Z",
+    "rawMarkdown": "---\nmodule: a1-30\ntitle: \"Prepositions III\"\nsubtitle: \"Direction, Location & Origin\"\nversion: \"1.0\"\nphase: \"A1.3 - Consolidation\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: \"first-occurrence\"\ntags:\n  - prepositions\n  - direction\n  - location\n  - movement\ngrammar:\n  - Location (De?) vs Direction (Kudy?) vs Origin (Zvidky?)\n  - Prepositions with cases\nobjectives:\n  - \"Learner can distinguish location from direction questions\"\n  - \"Learner can use в/на for location (Locative)\"\n  - \"Learner can use в/на/до for direction (Accusative/Genitive)\"\n  - \"Learner can use з/від for origin\"\nvocabulary_count: 20\n---\n\n# Prepositions III\n\n## Warm-up\n\n> 💡 **Де? Куди? Звідки? (Where? Where to? Where from?)**\n>\n> These three questions are the key to understanding Ukrainian prepositions!\n> — **Де ти?** (Where are you?) → Я **в парку**. (I'm in the park.)\n> — **Куди ти йдеш?** (Where are you going?) → Я йду **в парк**. (I'm going to the park.)\n> — **Звідки ти?** (Where are you from?) → Я **з України**. (I'm from Ukraine.)\n>\n> Same preposition \"в\" — but different CASE depending on the question!\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| де | /dɛ/ | where | adv | — | location question |\n| куди | /kuˈdɪ/ | where to | adv | — | direction question |\n| звідки | /ˈzwʲidkɪ/ | where from | adv | — | origin question |\n| тут | /tut/ | here | adv | — | location |\n| там | /tɑm/ | there | adv | — | location |\n| сюди | /sʲuˈdɪ/ | to here | adv | — | direction |\n| туди | /tuˈdɪ/ | to there | adv | — | direction |\n| вдома | /wdɔˈmɑ/ | at home | adv | — | location |\n| додому | /dɔˈdɔmu/ | to home | adv | — | direction |\n| з | /z/ | from (place) | prep | — | + Genitive |\n| від | /wʲid/ | from (person) | prep | — | + Genitive |\n| до | /dɔ/ | to (person/place) | prep | — | + Genitive |\n| через | /ˈtʃɛrɛz/ | through, across | prep | — | + Accusative |\n| прямо | /ˈprʲɑmɔ/ | straight | adv | — | direction |\n| назад | /nɑˈzɑd/ | back | adv | — | direction |\n| близько | /ˈblɪzʲkɔ/ | near | adv | — | location |\n| далеко | /dɑˈlɛkɔ/ | far | adv | — | location |\n| ліворуч | /lʲiwɔˈrutʃ/ | on the left | adv | — | direction |\n| праворуч | /prɑwɔˈrutʃ/ | on the right | adv | — | direction |\n| навпроти | /nɑwˈprɔtɪ/ | opposite | adv | — | location |\n\n---\n\n> [!resources] 🎧 External Resources\n>\n> **Location vs Destination:** [В Україні vs В Україну](https://www.ukrainianlessons.com/location-destination-prepositions/) — How to express \"where\" vs \"where to\"\n>\n> **Prepositions Guide:** [Difference between У (В) and На](https://www.ukrainianlessons.com/prepositions-u-na/) — When to use which preposition\n>\n> **Directions:** [Напрямки — Directions in Ukrainian](https://www.ukrainianlessons.com/vocabulary-directions/) — Audio vocabulary for navigation\n\n---\n\n# Grammar\n\n## The Three Key Questions\n\n> [!observe] Спостереження (Pattern Discovery)\n>\n> Look at these question-answer pairs:\n>\n> | Question | Case Needed | Example |\n> |----------|-------------|---------|\n> | **Де?** (Where?) | Locative | Я **в парку**. |\n> | **Куди?** (Where to?) | Accusative/Genitive | Я йду **в парк** / **до парку**. |\n> | **Звідки?** (Where from?) | Genitive | Я **з парку**. |\n>\n> The QUESTION determines which CASE to use!\n\n---\n\n## Location: Де? (Where?)\n\nFor **location** (where something IS), use **Locative case**:\n\n| Preposition | Example | Translation |\n|-------------|---------|-------------|\n| **в/у** | Я **в парку**. | I am in the park. |\n| **на** | Книга **на столі**. | The book is on the table. |\n\n### Examples\n\n- **Де** ти? — Я **в школі**. (Where are you? — I'm at school.)\n- **Де** твоя мама? — Вона **вдома**. (Where is your mom? — She's at home.)\n- **Де** банк? — Банк **на вулиці Шевченка**. (Where is the bank? — On Shevchenko Street.)\n\n---\n\n## Direction: Куди? (Where to?)\n\nFor **direction** (where something is GOING), use **Accusative** or **Genitive**:\n\n| Preposition | Case | Example | Translation |\n|-------------|------|---------|-------------|\n| **в/у** | Acc | Я йду **в парк**. | I'm going to the park. |\n| **на** | Acc | Я йду **на роботу**. | I'm going to work. |\n| **до** | Gen | Я йду **до лікаря**. | I'm going to the doctor. |\n\n### Examples\n\n- **Куди** ти йдеш? — Я йду **в магазин**. (Where are you going? — I'm going to the store.)\n- **Куди** він їде? — Він їде **на роботу**. (Where is he going? — He's going to work.)\n- **Куди** вона йде? — Вона йде **до друга**. (Where is she going? — She's going to a friend's.)\n\n---\n\n## Origin: Звідки? (Where from?)\n\nFor **origin** (where something is FROM), use **Genitive** with **з** or **від**:\n\n| Preposition | Use | Example | Translation |\n|-------------|-----|---------|-------------|\n| **з** | from places | Я **з України**. | I'm from Ukraine. |\n| **від** | from people | Це подарунок **від мами**. | This is a gift from mom. |\n\n### Examples\n\n- **Звідки** ти? — Я **з Києва**. (Where are you from? — I'm from Kyiv.)\n- **Звідки** він? — Він **з Америки**. (Where is he from? — He's from America.)\n- Лист **від бабусі**. (A letter from grandma.)\n\n---\n\n## Location vs Direction Pairs\n\n| Location (Де?) | Direction (Куди?) |\n|----------------|-------------------|\n| Я **вдома**. (I'm at home.) | Я йду **додому**. (I'm going home.) |\n| Він **тут**. (He's here.) | Іди **сюди**! (Come here!) |\n| Вона **там**. (She's there.) | Він їде **туди**. (He's going there.) |\n\n---\n\n# Examples in Context\n\n> [!example] Де vs Куди (Location vs Direction)\n>\n> - **Де** ти? — Я **в школі**. (Where are you? — I'm at school.)\n> - **Куди** ти йдеш? — Я йду **в школу**. (Where are you going? — I'm going to school.)\n> - Мама **вдома**. (Mom is at home.)\n> - Я йду **додому**. (I'm going home.)\n> - Книга **на столі**. (The book is on the table.)\n> - Поклади книгу **на стіл**. (Put the book on the table.)\n\n> [!example] Напрямки (Directions)\n>\n> - Ідіть **прямо**. (Go straight.)\n> - Поверніть **ліворуч**. (Turn left.)\n> - Поверніть **праворуч**. (Turn right.)\n> - Аптека **навпроти** банку. (The pharmacy is opposite the bank.)\n> - Школа **близько**. (The school is near.)\n> - Аеропорт **далеко**. (The airport is far.)\n\n> [!example] Звідки? (Where from?)\n>\n> - Я **з України**. (I'm from Ukraine.)\n> - Він **з Львова**. (He's from Lviv.)\n> - Вона **з Одеси**. (She's from Odesa.)\n> - Це подарунок **від татка**. (This is a gift from dad.)\n> - Лист **від друга**. (A letter from a friend.)\n> - Вони **з Польщі**. (They're from Poland.)\n\n---\n\n# Dialogues\n\n> [!conversation] Де ти? (Where Are You?)\n>\n> — Привіт! Де ти?\n> — Я **в парку**. А ти?\n> — Я **вдома**. Куди ти йдеш?\n> — Я йду **додому**.\n>\n> — Hi! Where are you?\n> — I'm in the park. And you?\n> — I'm at home. Where are you going?\n> — I'm going home.\n\n> [!conversation] Звідки ти? (Where Are You From?)\n>\n> — Звідки ти?\n> — Я **з України**, **з Києва**.\n> — О, класно! А куди ти їдеш?\n> — Я їду **до друга** у Львів.\n>\n> — Where are you from?\n> — I'm from Ukraine, from Kyiv.\n> — Oh, cool! And where are you going?\n> — I'm going to a friend's in Lviv.\n\n> [!conversation] Як пройти? (How Do I Get There?)\n>\n> — Вибачте, як пройти до аптеки?\n> — Ідіть **прямо**, потім **праворуч**. Аптека **навпроти** банку.\n> — Дякую!\n> — Будь ласка!\n>\n> — Excuse me, how do I get to the pharmacy?\n> — Go straight, then right. The pharmacy is opposite the bank.\n> — Thank you!\n> — You're welcome!\n\n> [!conversation] Куди йдемо? (Where Are We Going?)\n>\n> — Куди ми йдемо?\n> — Ми йдемо **в парк**.\n> — Парк далеко?\n> — Ні, парк **близько**. Ідемо **прямо**.\n> — Добре! Я люблю гуляти **в парку**.\n>\n> — Where are we going?\n> — We're going to the park.\n> — Is the park far?\n> — No, the park is close. We go straight.\n> — Good! I love walking in the park.\n\n---\n\n> 💡 **Вдома vs Додому (At Home vs Home)**\n>\n> **Вдома** = at home (location — where you ARE)\n> **Додому** = home (direction — where you're GOING)\n> \"Я вдома\" (I'm at home) vs \"Я йду додому\" (I'm going home)\n\n> 🌍 **Українські міста (Ukrainian Cities)**\n>\n> Звідки ти? Я **з Києва**. Він **з Львова**. Вона **з Одеси**. Ми **з Харкова**. Вони **з Дніпра**. А звідки ви? Ми **з України**!\n>\n> Practice origin: Where are you from? I'm from Kyiv. He's from Lviv. She's from Odesa. We're from Kharkiv. They're from Dnipro. And where are you from? We're from Ukraine!\n\n> ⚡ **Myth vs Fact**\n>\n> **Myth:** \"Cases are just random endings to memorize\"\n> **Fact:** Cases have LOGIC! Location (де?) → Locative. Direction (куди?) → Accusative/Genitive. Origin (звідки?) → Genitive. The question tells you the case!\n\n> 💡 **До vs В/На (To a Person vs To a Place)**\n>\n> **До** = to a person: Я йду **до лікаря**. Я йду **до друга**. Я йду **до бабусі**.\n> **В/На** = to a place: Я йду **в магазин**. Я йду **на роботу**. Я йду **в школу**.\n>\n> Use **до** for PEOPLE, **в/на** for PLACES!\n\n---\n\n# Вправи (Activities)\n\n## match-up: Question Words\n\nMatch the question with its meaning.\n\n- Де? :: Where? (location)\n- Куди? :: Where to? (direction)\n- Звідки? :: Where from? (origin)\n- Тут :: Here\n- Там :: There\n- Сюди :: To here\n- Туди :: To there\n- Вдома :: At home\n- Додому :: Home (direction)\n- Прямо :: Straight\n- Ліворуч :: On the left\n- Праворуч :: On the right\n\n---\n\n## group-sort: Location vs Direction\n\n> Sort words and phrases by type.\n\n### Location (Де?)\n- в парку\n- на столі\n- вдома\n- тут\n- там\n- близько\n\n### Direction (Куди?)\n- в парк\n- на роботу\n- додому\n- сюди\n- туди\n- до лікаря\n\n---\n\n## group-sort: Preposition Usage\n\n> Sort prepositions by their use.\n\n### From Place (з)\n- з України\n- з Києва\n- з магазину\n- з парку\n\n### From Person (від)\n- від мами\n- від друга\n- від лікаря\n- від татка\n\n### To Person (до)\n- до лікаря\n- до друга\n- до бабусі\n- до вчителя\n\n---\n\n## fill-in: Де чи Куди? (Where or Where to?)\n\n> Choose the correct question word.\n\n1. ___ ти зараз?\n   > [!answer] Де\n   > [!options] Де | Куди | Звідки | Як\n\n2. ___ ти йдеш?\n   > [!answer] Куди\n   > [!options] Куди | Де | Звідки | Хто\n\n3. ___ ти приїхав?\n   > [!answer] Звідки\n   > [!options] Звідки | Де | Куди | Коли\n\n4. ___ знаходиться банк?\n   > [!answer] Де\n   > [!options] Де | Куди | Звідки | Як\n\n5. ___ їде автобус?\n   > [!answer] Куди\n   > [!options] Куди | Де | Звідки | Хто\n\n6. ___ ти родом?\n   > [!answer] Звідки\n   > [!options] Звідки | Куди | Де | Як\n\n7. ___ твоя мама?\n   > [!answer] Де\n   > [!options] Де | Куди | Звідки | Хто\n\n8. ___ йде поїзд?\n   > [!answer] Куди\n   > [!options] Куди | Де | Звідки | Як\n\n9. ___ цей подарунок?\n   > [!answer] Звідки\n   > [!options] Звідки | Де | Куди | Який\n\n10. ___ знаходиться аптека?\n    > [!answer] Де\n    > [!options] Де | Куди | Звідки | Яка\n\n11. ___ вони їдуть на канікули?\n    > [!answer] Куди\n    > [!options] Куди | Де | Звідки | Коли\n\n12. ___ він повернувся?\n    > [!answer] Звідки\n    > [!options] Звідки | Де | Куди | Коли\n\n---\n\n## fill-in: Choose the Preposition\n\n> Choose the correct preposition.\n\n1. Я йду ___ магазин.\n   > [!answer] в\n   > [!options] в | з | від | на\n\n2. Я ___ України.\n   > [!answer] з\n   > [!options] з | в | до | на\n\n3. Це лист ___ мами.\n   > [!answer] від\n   > [!options] від | з | в | до\n\n4. Вона йде ___ лікаря.\n   > [!answer] до\n   > [!options] до | з | від | в\n\n5. Книга ___ столі.\n   > [!answer] на\n   > [!options] на | в | до | з\n\n6. Я ___ парку.\n   > [!answer] в\n   > [!options] в | до | з | на\n\n7. Він їде ___ роботу.\n   > [!answer] на\n   > [!options] на | в | з | до\n\n8. Ми приїхали ___ Львова.\n   > [!answer] з\n   > [!options] з | в | до | на\n\n9. Подарунок ___ татка.\n   > [!answer] від\n   > [!options] від | з | до | в\n\n10. Вона йде ___ школи.\n    > [!answer] до\n    > [!options] до | в | з | на\n\n11. Я ___ школі.\n    > [!answer] в\n    > [!options] в | до | з | на\n\n12. Він приїхав ___ Одеси.\n    > [!answer] з\n    > [!options] з | в | до | від\n\n---\n\n## quiz: Location or Direction?\n\nChoose the correct answer.\n\n1. \"Я в парку\" means:\n   - [x] I am in the park (location)\n   - [ ] I'm going to the park (direction)\n   - [ ] I'm from the park (origin)\n   - [ ] I was in the park (past)\n\n2. \"Я йду в парк\" means:\n   - [x] I'm going to the park (direction)\n   - [ ] I am in the park (location)\n   - [ ] I'm from the park (origin)\n   - [ ] I was in the park (past)\n\n3. \"Вдома\" means:\n   - [x] At home (location)\n   - [ ] To home (direction)\n   - [ ] From home (origin)\n   - [ ] About home\n\n4. \"Додому\" means:\n   - [x] Home (direction - going home)\n   - [ ] At home (location)\n   - [ ] From home (origin)\n   - [ ] About home\n\n5. \"Я з України\" means:\n   - [x] I'm from Ukraine\n   - [ ] I'm in Ukraine\n   - [ ] I'm going to Ukraine\n   - [ ] I was in Ukraine\n\n6. \"До лікаря\" means:\n   - [x] To the doctor\n   - [ ] At the doctor's\n   - [ ] From the doctor\n   - [ ] About the doctor\n\n7. \"Тут\" means:\n   - [x] Here (location)\n   - [ ] To here (direction)\n   - [ ] From here (origin)\n   - [ ] About here\n\n8. \"Сюди\" means:\n   - [x] To here (direction)\n   - [ ] Here (location)\n   - [ ] From here (origin)\n   - [ ] About here\n\n---\n\n## quiz: Which Preposition?\n\nChoose the correct preposition.\n\n1. I'm FROM Kyiv:\n   - [x] з Києва\n   - [ ] в Києві\n   - [ ] до Києва\n   - [ ] від Києва\n\n2. A gift FROM mom:\n   - [x] від мами\n   - [ ] з мами\n   - [ ] до мами\n   - [ ] в мами\n\n3. Going TO the doctor:\n   - [x] до лікаря\n   - [ ] в лікаря\n   - [ ] з лікаря\n   - [ ] від лікаря\n\n4. Going TO the store:\n   - [x] в магазин\n   - [ ] до магазин\n   - [ ] з магазину\n   - [ ] від магазину\n\n5. I'm IN the park:\n   - [x] в парку\n   - [ ] в парк\n   - [ ] з парку\n   - [ ] до парку\n\n6. Coming FROM school:\n   - [x] з школи\n   - [ ] в школі\n   - [ ] до школи\n   - [ ] від школи\n\n7. Going TO work:\n   - [x] на роботу\n   - [ ] в роботу\n   - [ ] до роботи\n   - [ ] з роботи\n\n8. Letter FROM dad:\n   - [x] від татка\n   - [ ] з татка\n   - [ ] до татка\n   - [ ] в татка\n\n---\n\n## unjumble: Preposition Sentences\n\nPut the words in the correct order.\n\n1. ти / де / зараз\n   > [!answer] Де ти зараз?\n\n2. йду / я / в / магазин\n   > [!answer] Я йду в магазин.\n\n3. з / я / України\n   > [!answer] Я з України.\n\n4. куди / йдеш / ти\n   > [!answer] Куди ти йдеш?\n\n5. додому / йде / він\n   > [!answer] Він йде додому.\n\n6. лікаря / йду / до / я\n   > [!answer] Я йду до лікаря.\n\n7. від / це / мами / подарунок\n   > [!answer] Це подарунок від мами.\n\n8. вдома / вона / зараз\n   > [!answer] Вона зараз вдома.\n\n9. прямо / потім / ідіть / праворуч\n   > [!answer] Ідіть прямо, потім праворуч.\n\n10. аптека / навпроти / банку\n   > [!answer] Аптека навпроти банку.\n\n11. далеко / аеропорт\n   > [!answer] Аеропорт далеко.\n\n12. ти / звідки / родом\n   > [!answer] Звідки ти родом?\n\n\n---\n\n## true-false: Preposition Rules\n\nIs this true or false?\n\n- [x] \"Де?\" asks about location.\n- [ ] \"Куди?\" asks about location.\n  > Incorrect! it asks about direction\n\n- [x] \"Звідки?\" asks about origin.\n- [x] \"Вдома\" means \"at home.\".\n- [ ] \"Додому\" means \"at home.\".\n  > Incorrect! it means \"to home\"\n\n- [x] \"З\" is used for \"from places.\".\n- [x] \"Від\" is used for \"from people.\".\n- [ ] \"До\" is used for \"from people.\".\n  > Incorrect! it's used for \"to\"\n\n- [x] Location uses Locative case.\n- [ ] Direction uses Locative case.\n  > Incorrect! it uses Accusative/Genitive\n\n- [x] \"Тут\" means \"here.\".\n- [x] \"Сюди\" means \"to here.\".\n\n---\n\n# Підсумок (Summary)\n\nВи навчилися говорити про напрямок і місце! (You've learned direction and location!)\n\n**Що ви вивчили (What you learned):**\n\n- **Три питання (Three questions):** Де? Куди? Звідки?\n- **Прислівники місця (Location):** тут, там, вдома, близько, далеко, навпроти\n- **Прислівники напрямку (Direction):** сюди, туди, додому, прямо, назад\n- **Прийменники (Prepositions):** з/із (from place), від (from person), до (to person)\n- **Пари (Pairs):** вдома/додому, тут/сюди, там/туди\n- **Правило (Rule):** Питання визначає відмінок!\n\n---\n\n**Наступний урок:** Частини тіла та здоров'я!\n",
+    "createdAt": "2025-12-14T15:48:09.037215Z",
+    "modifiedAt": "2025-12-14T15:48:09.037215Z",
     "version": 2
   },
-  "activities": [
-    {
-      "id": "act-a1-0-fillblank-0",
-      "type": "fill-blank",
-      "title": "Location or Direction",
-      "description": "Choose the correct form.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Я в ___. (park - location)",
-            "answer": "парку",
-            "options": [
-              "парк",
-              "парку",
-              "парка",
-              "парком"
-            ]
-          },
-          {
-            "prompt": "Я йду в ___. (park - direction)",
-            "answer": "парк",
-            "options": [
-              "парк",
-              "парку",
-              "парка",
-              "парком"
-            ]
-          },
-          {
-            "prompt": "Вона на ___. (work - location)",
-            "answer": "роботі",
-            "options": [
-              "роботу",
-              "роботі",
-              "роботи",
-              "роботою"
-            ]
-          },
-          {
-            "prompt": "Вона йде на ___. (work - direction)",
-            "answer": "роботу",
-            "options": [
-              "роботу",
-              "роботі",
-              "роботи",
-              "роботою"
-            ]
-          },
-          {
-            "prompt": "Ми в ___. (Ukraine - location)",
-            "answer": "Україні",
-            "options": [
-              "Україні",
-              "Україну",
-              "України",
-              "Україна"
-            ]
-          },
-          {
-            "prompt": "Ми їдемо в ___. (Ukraine - direction)",
-            "answer": "Україну",
-            "options": [
-              "Україні",
-              "Україну",
-              "України",
-              "Україна"
-            ]
-          },
-          {
-            "prompt": "Він ___ Києва. (from)",
-            "answer": "з",
-            "options": [
-              "в",
-              "на",
-              "з",
-              "до"
-            ]
-          },
-          {
-            "prompt": "Вона йде ___ друга. (to - person)",
-            "answer": "до",
-            "options": [
-              "в",
-              "на",
-              "з",
-              "до"
-            ]
-          },
-          {
-            "prompt": "Лист ___ мами. (from)",
-            "answer": "від",
-            "options": [
-              "в",
-              "на",
-              "від",
-              "до"
-            ]
-          },
-          {
-            "prompt": "Я проходжу ___ парк. (through)",
-            "answer": "через",
-            "options": [
-              "в",
-              "на",
-              "через",
-              "до"
-            ]
-          },
-          {
-            "prompt": "Куди ти ___? (going)",
-            "answer": "йдеш",
-            "options": [
-              "є",
-              "йдеш",
-              "був",
-              "буде"
-            ]
-          },
-          {
-            "prompt": "Звідки ти ___? (are)",
-            "answer": "(родом)",
-            "options": [
-              "йдеш",
-              "їдеш",
-              "(родом)",
-              "живеш"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.052Z",
-      "modifiedAt": "2025-12-12T19:55:32.052Z"
-    },
-    {
-      "id": "act-a1-0-matchup-0",
-      "type": "match-up",
-      "title": "Questions & Cases",
-      "description": "Match questions with their cases.",
-      "content": {
-        "type": "match-up",
-        "pairs": [
-          {
-            "left": "Де?",
-            "right": "Locative (location)"
-          },
-          {
-            "left": "Куди?",
-            "right": "Accusative (direction)"
-          },
-          {
-            "left": "Звідки?",
-            "right": "Genitive (origin)"
-          },
-          {
-            "left": "До кого?",
-            "right": "Genitive (to person)"
-          },
-          {
-            "left": "Від кого?",
-            "right": "Genitive (from person)"
-          },
-          {
-            "left": "Через що?",
-            "right": "Accusative (through)"
-          },
-          {
-            "left": "Біля чого?",
-            "right": "Genitive (near)"
-          },
-          {
-            "left": "В чому?",
-            "right": "Locative (in what)"
-          },
-          {
-            "left": "На чому?",
-            "right": "Locative (on what)"
-          },
-          {
-            "left": "В що?",
-            "right": "Accusative (into what)"
-          },
-          {
-            "left": "На що?",
-            "right": "Accusative (onto what)"
-          },
-          {
-            "left": "З чого?",
-            "right": "Genitive (from what)"
-          }
-        ],
-        "shuffleRight": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.052Z",
-      "modifiedAt": "2025-12-12T19:55:32.052Z"
-    },
-    {
-      "id": "act-a1-0-quiz-0",
-      "type": "quiz",
-      "title": "Preposition Rules",
-      "description": "Choose the correct answer.",
-      "content": {
-        "type": "quiz",
-        "questions": [
-          {
-            "question": "\"Де ти?\" requires which case?",
-            "options": [
-              "Locative",
-              "Accusative",
-              "Genitive",
-              "Nominative"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Куди ти йдеш?\" requires:",
-            "options": [
-              "Accusative",
-              "Locative",
-              "Nominative",
-              "Dative"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Звідки ти?\" requires:",
-            "options": [
-              "Genitive",
-              "Accusative",
-              "Locative",
-              "Nominative"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "For \"to a person,\" use:",
-            "options": [
-              "до + Genitive",
-              "в + Accusative",
-              "на + Accusative",
-              "з + Genitive"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"В Україні\" vs \"В Україну\":",
-            "options": [
-              "Україні = location, Україну = direction",
-              "Both are the same",
-              "Україну = location",
-              "Neither is correct"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Never say:",
-            "options": [
-              "На Україну (offensive)",
-              "В Україну",
-              "В Україні",
-              "До України"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"З\" means:",
-            "options": [
-              "From (a place)",
-              "To",
-              "In",
-              "On"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Від\" is used for:",
-            "options": [
-              "From (a person)",
-              "To a place",
-              "In a location",
-              "On a surface"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"До\" with places means:",
-            "options": [
-              "To, toward",
-              "From",
-              "In",
-              "On"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Через\" means:",
-            "options": [
-              "Through",
-              "From",
-              "To",
-              "Near"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Same preposition, different case gives:",
-            "options": [
-              "Different meaning (location vs motion)",
-              "Same meaning",
-              "No difference",
-              "Error"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "To ask where someone is FROM, say:",
-            "options": [
-              "Звідки ти?",
-              "Де ти?",
-              "Куди ти?",
-              "Коли ти?"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          }
-        ],
-        "shuffleQuestions": true,
-        "shuffleOptions": true,
-        "showCorrectAnswers": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.052Z",
-      "modifiedAt": "2025-12-12T19:55:32.052Z"
-    },
-    {
-      "id": "act-a1-0-groupsort-0",
-      "type": "group-sort",
-      "title": "Location vs Direction",
-      "description": "Sort phrases by meaning.",
-      "content": {
-        "type": "group-sort",
-        "groups": [],
-        "shuffleItems": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.052Z",
-      "modifiedAt": "2025-12-12T19:55:32.052Z"
-    },
-    {
-      "id": "act-a1-0-truefalse-0",
-      "type": "true-false",
-      "title": "Preposition Facts",
-      "description": "Preposition Facts",
-      "content": {
-        "type": "true-false",
-        "statements": [
-          {
-            "statement": "\"Де\" asks about location.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Куди\" asks about direction.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "Location and direction use the same case.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "\"До\" takes Genitive for \"to person.\"",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"В Україну\" is correct (not \"на\").",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Від\" is used for places.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "\"З\" means from (a place).",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Через\" means near.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "Locative = being somewhere.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "Accusative = going somewhere.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Звідки\" uses Locative.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Біля\" takes Genitive.",
-            "isTrue": true,
-            "explanation": ""
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.052Z",
-      "modifiedAt": "2025-12-12T19:55:32.052Z"
-    },
-    {
-      "id": "act-a1-0-anagram-0",
-      "type": "anagram",
-      "title": "Preposition Vocabulary",
-      "description": "Unscramble these preposition words.",
-      "content": {
-        "type": "anagram",
-        "isAnagram": true,
-        "items": [
-          {
-            "letters": [
-              "и",
-              "к",
-              "у",
-              "д"
-            ],
-            "answer": "куди"
-          },
-          {
-            "letters": [
-              "е",
-              "д"
-            ],
-            "answer": "де"
-          },
-          {
-            "letters": [
-              "и",
-              "к",
-              "і",
-              "д",
-              "з",
-              "в"
-            ],
-            "answer": "звідки"
-          },
-          {
-            "letters": [
-              "о",
-              "д"
-            ],
-            "answer": "до"
-          },
-          {
-            "letters": [
-              "і",
-              "д",
-              "в"
-            ],
-            "answer": "від"
-          },
-          {
-            "letters": [
-              "з"
-            ],
-            "answer": "з"
-          },
-          {
-            "letters": [
-              "а",
-              "н"
-            ],
-            "answer": "на"
-          },
-          {
-            "letters": [
-              "в"
-            ],
-            "answer": "в"
-          },
-          {
-            "letters": [
-              "е",
-              "р",
-              "е",
-              "з",
-              "ч"
-            ],
-            "answer": "через"
-          },
-          {
-            "letters": [
-              "я",
-              "л",
-              "і",
-              "б"
-            ],
-            "answer": "біля"
-          },
-          {
-            "letters": [
-              "д",
-              "а",
-              "з",
-              "а",
-              "н"
-            ],
-            "answer": "назад"
-          },
-          {
-            "letters": [
-              "д",
-              "е",
-              "р",
-              "е",
-              "п",
-              "в"
-            ],
-            "answer": "вперед"
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.052Z",
-      "modifiedAt": "2025-12-12T19:55:32.052Z"
-    },
-    {
-      "id": "act-a1-0-fillblank-1",
-      "type": "fill-blank",
-      "title": "Complete the Journey",
-      "description": "Complete with correct prepositions and forms.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Я їду ___ Києва до Львова. (from)",
-            "answer": "з",
-            "options": [
-              "з",
-              "в",
-              "на",
-              "до"
-            ]
-          },
-          {
-            "prompt": "Їду ___ роботу. (to work)",
-            "answer": "на",
-            "options": [
-              "в",
-              "на",
-              "з",
-              "до"
-            ]
-          },
-          {
-            "prompt": "Він йде ___ друга. (to friend)",
-            "answer": "до",
-            "options": [
-              "в",
-              "на",
-              "з",
-              "до"
-            ]
-          },
-          {
-            "prompt": "Ми в ___. (center)",
-            "answer": "центрі",
-            "options": [
-              "центр",
-              "центру",
-              "центрі",
-              "центром"
-            ]
-          },
-          {
-            "prompt": "Ми їдемо в ___. (center)",
-            "answer": "центр",
-            "options": [
-              "центр",
-              "центру",
-              "центрі",
-              "центром"
-            ]
-          },
-          {
-            "prompt": "Вона ___ України. (from)",
-            "answer": "з",
-            "options": [
-              "в",
-              "на",
-              "з",
-              "до"
-            ]
-          },
-          {
-            "prompt": "Лист ___ батька. (from person)",
-            "answer": "від",
-            "options": [
-              "з",
-              "в",
-              "від",
-              "до"
-            ]
-          },
-          {
-            "prompt": "Ідемо ___ ліс. (through)",
-            "answer": "через",
-            "options": [
-              "в",
-              "на",
-              "через",
-              "біля"
-            ]
-          },
-          {
-            "prompt": "Музей ___ парку. (near)",
-            "answer": "біля",
-            "options": [
-              "в",
-              "на",
-              "від",
-              "біля"
-            ]
-          },
-          {
-            "prompt": "___ ти йдеш? (where to)",
-            "answer": "Куди",
-            "options": [
-              "Де",
-              "Куди",
-              "Звідки",
-              "Коли"
-            ]
-          },
-          {
-            "prompt": "Я на ___ Ринок. (square - direction)",
-            "answer": "площу",
-            "options": [
-              "площу",
-              "площі",
-              "площа",
-              "площею"
-            ]
-          },
-          {
-            "prompt": "Повертаюся ___. (back)",
-            "answer": "назад",
-            "options": [
-              "вперед",
-              "назад",
-              "тут",
-              "там"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.052Z",
-      "modifiedAt": "2025-12-12T19:55:32.052Z"
-    },
-    {
-      "id": "act-a1-0-unjumble-0",
-      "type": "unjumble",
-      "title": "Build Motion Sentences",
-      "description": "Arrange words into correct sentences.",
-      "content": {
-        "type": "unjumble",
-        "isUnjumble": true,
-        "items": [
-          {
-            "words": [
-              "куди",
-              "ти",
-              "йдеш"
-            ],
-            "answer": "Куди ти йдеш?"
-          },
-          {
-            "words": [
-              "в",
-              "я",
-              "їду",
-              "Україну"
-            ],
-            "answer": "Я їду в Україну."
-          },
-          {
-            "words": [
-              "роботу",
-              "на",
-              "вона",
-              "йде"
-            ],
-            "answer": "Вона йде на роботу."
-          },
-          {
-            "words": [
-              "з",
-              "він",
-              "Києва"
-            ],
-            "answer": "Він з Києва."
-          },
-          {
-            "words": [
-              "до",
-              "я",
-              "друга",
-              "йду"
-            ],
-            "answer": "Я йду до друга."
-          },
-          {
-            "words": [
-              "парку",
-              "ліс",
-              "через",
-              "до"
-            ],
-            "answer": "Через ліс до парку."
-          },
-          {
-            "words": [
-              "звідки",
-              "ти"
-            ],
-            "answer": "Звідки ти?"
-          },
-          {
-            "words": [
-              "від",
-              "лист",
-              "мами"
-            ],
-            "answer": "Лист від мами."
-          },
-          {
-            "words": [
-              "Львові",
-              "в",
-              "я"
-            ],
-            "answer": "Я в Львові."
-          },
-          {
-            "words": [
-              "Львова",
-              "до",
-              "їдемо",
-              "ми"
-            ],
-            "answer": "Ми їдемо до Львова."
-          },
-          {
-            "words": [
-              "парку",
-              "біля",
-              "живу",
-              "я"
-            ],
-            "answer": "Я живу біля парку."
-          },
-          {
-            "words": [
-              "назад",
-              "йди"
-            ],
-            "answer": "Йди назад!"
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.052Z",
-      "modifiedAt": "2025-12-12T19:55:32.052Z"
-    }
-  ],
+  "activities": [],
   "vocabulary": {
     "moduleId": "mod-uk-A1-30",
     "level": "A1",
-    "phase": "A1.3",
+    "phase": "A1.3 - Consolidation",
     "wordCount": 20,
     "newWordCount": 20,
     "reviewWordCount": 0,
-    "transliterationMode": "partial",
+    "transliterationMode": "first-occurrence",
     "words": [
       {
-        "id": "v-de-0-0",
+        "id": "vocab-1",
         "uk": "де",
-        "en": "where (location)",
-        "pos": "noun",
         "ipa": "/dɛ/",
-        "note": "Де ти?",
-        "isNew": true,
-        "firstModule": 0
+        "en": "where",
+        "pos": "adv",
+        "gender": null,
+        "note": "location question"
       },
       {
-        "id": "v-kudy-0-1",
+        "id": "vocab-2",
         "uk": "куди",
-        "en": "where to (direction)",
-        "pos": "noun",
         "ipa": "/kuˈdɪ/",
-        "note": "Куди йдеш?",
-        "isNew": true,
-        "firstModule": 0
+        "en": "where to",
+        "pos": "adv",
+        "gender": null,
+        "note": "direction question"
       },
       {
-        "id": "v-zvidky-0-2",
+        "id": "vocab-3",
         "uk": "звідки",
+        "ipa": "/ˈzwʲidkɪ/",
         "en": "where from",
-        "pos": "noun",
-        "ipa": "/ˈzʋidkɪ/",
-        "note": "Звідки ти?",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "origin question"
       },
       {
-        "id": "v-tut-0-3",
+        "id": "vocab-4",
         "uk": "тут",
-        "en": "here",
-        "pos": "noun",
         "ipa": "/tut/",
-        "note": "Я тут.",
-        "isNew": true,
-        "firstModule": 0
+        "en": "here",
+        "pos": "adv",
+        "gender": null,
+        "note": "location"
       },
       {
-        "id": "v-tam-0-4",
+        "id": "vocab-5",
         "uk": "там",
-        "en": "there",
-        "pos": "noun",
         "ipa": "/tɑm/",
-        "note": "Він там.",
-        "isNew": true,
-        "firstModule": 0
+        "en": "there",
+        "pos": "adv",
+        "gender": null,
+        "note": "location"
       },
       {
-        "id": "v-vdoma-0-5",
+        "id": "vocab-6",
+        "uk": "сюди",
+        "ipa": "/sʲuˈdɪ/",
+        "en": "to here",
+        "pos": "adv",
+        "gender": null,
+        "note": "direction"
+      },
+      {
+        "id": "vocab-7",
+        "uk": "туди",
+        "ipa": "/tuˈdɪ/",
+        "en": "to there",
+        "pos": "adv",
+        "gender": null,
+        "note": "direction"
+      },
+      {
+        "id": "vocab-8",
         "uk": "вдома",
+        "ipa": "/wdɔˈmɑ/",
         "en": "at home",
-        "pos": "noun",
-        "ipa": "/ʋˈdomɑ/",
-        "note": "Я вдома.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "location"
       },
       {
-        "id": "v-dodomu-0-6",
+        "id": "vocab-9",
         "uk": "додому",
-        "en": "(to) home",
-        "pos": "noun",
-        "ipa": "/doˈdomu/",
-        "note": "Іду додому.",
-        "isNew": true,
-        "firstModule": 0
+        "ipa": "/dɔˈdɔmu/",
+        "en": "to home",
+        "pos": "adv",
+        "gender": null,
+        "note": "direction"
       },
       {
-        "id": "v-z-0-7",
+        "id": "vocab-10",
         "uk": "з",
-        "en": "from (place)",
-        "pos": "noun",
         "ipa": "/z/",
-        "note": "З України.",
-        "isNew": true,
-        "firstModule": 0
+        "en": "from (place)",
+        "pos": "prep",
+        "gender": null,
+        "note": "+ Genitive"
       },
       {
-        "id": "v-vid-0-8",
+        "id": "vocab-11",
         "uk": "від",
+        "ipa": "/wʲid/",
         "en": "from (person)",
-        "pos": "noun",
-        "ipa": "/ʋid/",
-        "note": "Від друга.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "prep",
+        "gender": null,
+        "note": "+ Genitive"
       },
       {
-        "id": "v-do-0-9",
+        "id": "vocab-12",
         "uk": "до",
+        "ipa": "/dɔ/",
         "en": "to (person/place)",
-        "pos": "noun",
-        "ipa": "/do/",
-        "note": "До Львова.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "prep",
+        "gender": null,
+        "note": "+ Genitive"
       },
       {
-        "id": "v-cherez-0-10",
+        "id": "vocab-13",
         "uk": "через",
-        "en": "through",
-        "pos": "noun",
-        "ipa": "/ˈt͡ʃɛrɛz/",
-        "note": "Через парк.",
-        "isNew": true,
-        "firstModule": 0
+        "ipa": "/ˈtʃɛrɛz/",
+        "en": "through, across",
+        "pos": "prep",
+        "gender": null,
+        "note": "+ Accusative"
       },
       {
-        "id": "v-povz-0-11",
-        "uk": "повз",
-        "en": "past",
-        "pos": "noun",
-        "ipa": "/poʋz/",
-        "note": "Повз магазин.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-pryamo-0-12",
+        "id": "vocab-14",
         "uk": "прямо",
+        "ipa": "/ˈprʲɑmɔ/",
         "en": "straight",
-        "pos": "noun",
-        "ipa": "/ˈprʲɑmo/",
-        "note": "Іди прямо.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "direction"
       },
       {
-        "id": "v-nazad-0-13",
+        "id": "vocab-15",
         "uk": "назад",
-        "en": "back",
-        "pos": "noun",
         "ipa": "/nɑˈzɑd/",
-        "note": "Йди назад.",
-        "isNew": true,
-        "firstModule": 0
+        "en": "back",
+        "pos": "adv",
+        "gender": null,
+        "note": "direction"
       },
       {
-        "id": "v-vpered-0-14",
-        "uk": "вперед",
-        "en": "forward",
-        "pos": "noun",
-        "ipa": "/ʋpɛˈrɛd/",
-        "note": "Іди вперед.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-blyzьko-0-15",
+        "id": "vocab-16",
         "uk": "близько",
-        "en": "close",
-        "pos": "noun",
-        "ipa": "/ˈblɪzʲko/",
-        "note": "Живу близько.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-daleko-0-16",
-        "uk": "далеко",
-        "en": "far",
-        "pos": "noun",
-        "ipa": "/dɑˈlɛko/",
-        "note": "Це далеко.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-bilya-0-17",
-        "uk": "біля",
+        "ipa": "/ˈblɪzʲkɔ/",
         "en": "near",
-        "pos": "noun",
-        "ipa": "/ˈbilʲɑ/",
-        "note": "Біля станції.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "location"
       },
       {
-        "id": "v-naproty-0-18",
-        "uk": "напроти",
+        "id": "vocab-17",
+        "uk": "далеко",
+        "ipa": "/dɑˈlɛkɔ/",
+        "en": "far",
+        "pos": "adv",
+        "gender": null,
+        "note": "location"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "ліворуч",
+        "ipa": "/lʲiwɔˈrutʃ/",
+        "en": "on the left",
+        "pos": "adv",
+        "gender": null,
+        "note": "direction"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "праворуч",
+        "ipa": "/prɑwɔˈrutʃ/",
+        "en": "on the right",
+        "pos": "adv",
+        "gender": null,
+        "note": "direction"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "навпроти",
+        "ipa": "/nɑwˈprɔtɪ/",
         "en": "opposite",
-        "pos": "noun",
-        "ipa": "/nɑˈprotɪ/",
-        "note": "Напроти парку.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-mizh-0-19",
-        "uk": "між",
-        "en": "between",
-        "pos": "noun",
-        "ipa": "/miʒ/",
-        "note": "Між домами.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "location"
       }
-    ]
+    ],
+    "reviewWords": []
   }
 }

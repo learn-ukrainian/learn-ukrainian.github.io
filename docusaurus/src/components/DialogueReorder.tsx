@@ -116,11 +116,31 @@ export function DialogueReorderActivity({ lines }: DialogueReorderActivityProps)
   );
 }
 
-interface DialogueReorderProps {
-  children: React.ReactNode;
+// Generator format with {text, order}
+interface GeneratorDialogueLine {
+  text: string;
+  order: number;
+  speaker?: string;
 }
 
-export default function DialogueReorder({ children }: DialogueReorderProps) {
+interface DialogueReorderProps {
+  lines?: GeneratorDialogueLine[];
+  children?: React.ReactNode;
+}
+
+export default function DialogueReorder({ lines, children }: DialogueReorderProps) {
+  // Transform generator format {text, order} to activity format {speaker, line}
+  const transformedLines = useMemo(() => {
+    if (!lines) return null;
+
+    // Sort by order to get correct sequence, then convert format
+    const sorted = [...lines].sort((a, b) => a.order - b.order);
+    return sorted.map((item, idx) => ({
+      speaker: item.speaker || String.fromCharCode(65 + (idx % 2)), // A, B, A, B...
+      line: item.text
+    }));
+  }, [lines]);
+
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
@@ -129,7 +149,9 @@ export default function DialogueReorder({ children }: DialogueReorderProps) {
         <ActivityHelp activityType="dialogue-reorder" />
       </div>
       <div className={styles.activityContent}>
-        {children}
+        {transformedLines ? (
+          <DialogueReorderActivity lines={transformedLines} />
+        ) : children}
       </div>
     </div>
   );

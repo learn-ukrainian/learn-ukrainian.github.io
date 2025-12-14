@@ -39,6 +39,14 @@ Unlike English "I don't have X," Ukrainian says "By me there-isn't X-genitive" �
 >
 > The word немає (there isn't) literally comes from не (not) + має (has). So "немає часу" = "doesn't-have time-genitive". This is why you need genitive here — the noun is the object of "having" that got negated!
 
+> [!resources] 🎧 External Resources
+>
+> **Grammar Guide:** [10 Uses of Genitive Case](https://www.ukrainianlessons.com/genitive-case/) — All genitive functions explained
+>
+> **Podcast:** [ULP 2-46 | Grocery Store + Genitive](https://www.ukrainianlessons.com/episode46/) — Practice genitive at the grocery store
+>
+> **Podcast:** [ULP 2-49 | Syrnyky Recipe + Genitive](https://www.ukrainianlessons.com/episode49/) — Learn cooking vocabulary with genitive
+
 ## Presentation
 
 ### What is Genitive Case?

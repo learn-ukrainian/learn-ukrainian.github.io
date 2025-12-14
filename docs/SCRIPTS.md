@@ -4,62 +4,69 @@ This document describes all scripts and the recommended workflow for module crea
 
 ---
 
-## Module Review Workflow
+## Module Creation Pipeline
 
-The primary workflow for reviewing and enriching modules:
+The complete module creation and validation pipeline:
 
 ```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│  1. AUDIT       │ ──▶ │  2. REVIEW      │ ──▶ │  3. REGENERATE  │
-│  module-audit   │     │  claude-review  │     │  vocab + output │
-│  --fix          │     │  prompt.md      │     │                 │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│  1. WRITE       │ ──▶ │  2. AUDIT       │ ──▶ │  3. GENERATE    │ ──▶ │  4. VALIDATE    │
+│  Module content │     │  audit_module   │     │  MDX + JSON     │     │  MDX + HTML     │
+└─────────────────┘     └─────────────────┘     └─────────────────┘     └─────────────────┘
 ```
 
-### Step 1: Run Audit
+### Full Pipeline Command
 
 ```bash
-# Audit a range of modules
-npx ts-node scripts/module-audit.ts l2-uk-en 31-60
+# Run complete pipeline: lint → generate MDX → validate MDX → validate HTML
+npm run pipeline l2-uk-en a1 5
 
-# With fix prompts (copy-paste to Claude)
-npx ts-node scripts/module-audit.ts l2-uk-en 31-60 --fix
+# Also generate JSON for Vibe app
+npm run generate:json l2-uk-en a1 5
 ```
 
-### Step 2: Review in Claude
-
-Use the **claude-review-prompt.md** prompts to fix issues:
-
-```
-Review module [X] against the guidelines. Check activities, vocabulary,
-engagement boxes, and narrative richness. Fix any issues.
+**Note:** HTML validation requires Docusaurus dev server running:
+```bash
+cd docusaurus && npm start  # In separate terminal
 ```
 
-Or for specific fixes:
-```
-Module [X] only has [N] activities. Add [missing types] to reach the
-minimum of [required] activities with [items] items each.
-```
-
-See `docs/l2-uk-en/claude-review-prompt.md` for all prompts.
-
-### Step 3: Regenerate
-
-After editing modules:
+### Step 1: Audit Module
 
 ```bash
-# Rebuild vocabulary database
-npm run vocab:rebuild
+# Audit single module (Python)
+python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-my-world-objects.md
 
-# Regenerate output
-npm run generate l2-uk-en [module_number]
+# Audit range (shell loop)
+for i in {1..20}; do
+  python3 scripts/audit_module.py curriculum/l2-uk-en/a1/$i-*.md
+done
+```
+
+### Step 2: Generate Output
+
+```bash
+# Generate MDX (Docusaurus)
+npm run generate l2-uk-en a1 5
+
+# Generate JSON (Vibe app)
+npm run generate:json l2-uk-en a1 5
+```
+
+### Step 3: Validate
+
+```bash
+# Validate MDX (content integrity)
+npm run validate:mdx l2-uk-en a1 5
+
+# Validate HTML (browser rendering) - requires dev server
+npm run validate:html l2-uk-en a1 5
 ```
 
 ### Step 4: Verify
 
 ```bash
-# Re-run audit to confirm fixes
-npx ts-node scripts/module-audit.ts l2-uk-en [module_number]
+# Re-run audit to confirm all passes
+python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
 ```
 
 ---
@@ -76,15 +83,31 @@ npx ts-node scripts/module-audit.ts l2-uk-en [module_number]
 
 ## Scripts Quick Reference
 
+### Core Pipeline (Python)
+
 | Script | Purpose | Command |
 |--------|---------|---------|
-| `generate-mdx.ts` | Generate MDX for Docusaurus | `npm run generate` |
-| `generate_json.py` | Generate JSON for Vibe app | `npm run generate:json` |
-| `module-audit.ts` | Find issues in modules | `npx ts-node scripts/module-audit.ts` |
+| `pipeline.py` | Full validation pipeline | `npm run pipeline l2-uk-en a1 5` |
+| `generate_mdx.py` | Generate MDX for Docusaurus | `npm run generate l2-uk-en a1 5` |
+| `generate_json.py` | Generate JSON for Vibe app | `npm run generate:json l2-uk-en a1 5` |
+| `validate_mdx.py` | Validate MDX content integrity | `npm run validate:mdx l2-uk-en a1 5` |
+| `validate_html.py` | Validate browser rendering | `npm run validate:html l2-uk-en a1 5` |
+| `audit_module.py` | Module quality checker | `python3 scripts/audit_module.py <file>` |
+
+### Vocabulary (TypeScript)
+
+| Script | Purpose | Command |
+|--------|---------|---------|
 | `vocab-init.ts` | Create fresh vocabulary DB | `npm run vocab:init` |
 | `vocab-scan.ts` | Populate DB from modules | `npm run vocab:scan` |
 | `vocab-enrich.ts` | Enrich module vocab sections | `npm run vocab:enrich` |
 | `vocab-audit.ts` | Find unknown/premature words | `npx ts-node scripts/vocab-audit.ts` |
+
+### Legacy (TypeScript)
+
+| Script | Purpose | Command |
+|--------|---------|---------|
+| `module-audit.ts` | Find issues in modules | `npx ts-node scripts/module-audit.ts` |
 | `enrich-activities.ts` | Generate activity scaffolds | `npx ts-node scripts/enrich-activities.ts` |
 | `generate-exercises.ts` | Generate exercise templates | `npx ts-node scripts/generate-exercises.ts` |
 
@@ -92,13 +115,32 @@ npx ts-node scripts/module-audit.ts l2-uk-en [module_number]
 
 ## Core Scripts
 
-### generate-mdx.ts
+### pipeline.py
 
-**Purpose:** Generates MDX files for Docusaurus web lessons.
+**Purpose:** Unified validation pipeline that runs all checks in sequence.
+
+**Pipeline Stages:**
+1. **Lint** - Markdown format compliance
+2. **Generate** - Creates MDX for Docusaurus
+3. **Validate MDX** - Ensures no content loss during conversion
+4. **Validate HTML** - Headless browser check for rendering errors
 
 **Usage:**
 ```bash
-npm run generate                    # Generate all modules
+npm run pipeline l2-uk-en a1        # Validate entire level
+npm run pipeline l2-uk-en a1 5      # Validate single module
+```
+
+**Requires:** Docusaurus dev server running (`cd docusaurus && npm start`)
+
+---
+
+### generate_mdx.py
+
+**Purpose:** Generates MDX files for Docusaurus web lessons (Python 3.12).
+
+**Usage:**
+```bash
 npm run generate l2-uk-en           # Generate all levels
 npm run generate l2-uk-en a1        # Generate specific level
 npm run generate l2-uk-en a1 5      # Generate single module
@@ -108,6 +150,8 @@ npm run generate l2-uk-en a1 5      # Generate single module
 
 **Output:** `docusaurus/docs/{level}/module-XX.mdx`
 
+**Note:** Requires Python 3.12 venv (`.venv/bin/python`)
+
 ---
 
 ### generate_json.py
@@ -116,7 +160,6 @@ npm run generate l2-uk-en a1 5      # Generate single module
 
 **Usage:**
 ```bash
-npm run generate:json               # Generate all modules
 npm run generate:json l2-uk-en      # Generate all levels
 npm run generate:json l2-uk-en a1   # Generate specific level
 npm run generate:json l2-uk-en a1 5 # Generate single module
@@ -130,34 +173,85 @@ npm run generate:json l2-uk-en a1 5 # Generate single module
 
 ---
 
-### module-audit.ts
+### validate_mdx.py
 
-**Purpose:** Comprehensive module quality checker. Validates against MODULE-RICHNESS-GUIDELINES-v2.md requirements.
+**Purpose:** Validates MDX content integrity after generation.
 
 **Checks:**
-- Frontmatter validity (level, title, tags)
+- Activity count matches source markdown
+- Vocabulary table preserved
+- Section headers intact
+- No content loss during conversion
+
+**Usage:**
+```bash
+npm run validate:mdx l2-uk-en a1    # Validate entire level
+npm run validate:mdx l2-uk-en a1 5  # Validate single module
+```
+
+---
+
+### validate_html.py
+
+**Purpose:** Browser rendering validation using Playwright headless browser.
+
+**Checks:**
+- Page loads without errors
+- React components render correctly
+- No JavaScript errors in console
+- Ukrainian text present
+- Interactive elements functional
+
+**Usage:**
+```bash
+npm run validate:html l2-uk-en a1   # Validate entire level
+npm run validate:html l2-uk-en a1 5 # Validate single module
+```
+
+**Requires:**
+- Docusaurus dev server running (`cd docusaurus && npm start`)
+- Playwright installed (`playwright install`)
+
+---
+
+### audit_module.py
+
+**Purpose:** Comprehensive module quality checker (Python). Validates against MODULE-RICHNESS-GUIDELINES-v2.md requirements.
+
+**Checks:**
+- Frontmatter validity (module, title, pedagogy, objectives)
 - Required sections present
 - Activity count and diversity
 - Vocabulary section format
 - Sentence complexity
-- Ukrainian/English ratio (immersion level)
-- Vocabulary duplicates (cascade detection)
+- Grammar constraints by level
+- Linguistic purity (no Surzhyk)
+
+**Usage:**
+```bash
+python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
+```
+
+**Issue Categories:**
+- **FAIL (Must Fix):** Grammar violations, missing sections, activity syntax
+- **WARN (Should Fix):** Richness, variety, word count
+- **INFO (Consider):** Optional improvements
+
+---
+
+### module-audit.ts (Legacy)
+
+**Purpose:** TypeScript module quality checker. Being replaced by `audit_module.py`.
 
 **Usage:**
 ```bash
 npx ts-node scripts/module-audit.ts l2-uk-en           # Audit all modules
 npx ts-node scripts/module-audit.ts l2-uk-en 41-65     # Audit range
-npx ts-node scripts/module-audit.ts l2-uk-en 47        # Audit single module
 npx ts-node scripts/module-audit.ts l2-uk-en 81-90 --fix  # Generate fix prompts
 ```
 
 **Options:**
 - `--fix` - Generate actionable fix prompts for Claude
-
-**Issue Categories:**
-- **Error (Must Fix):** broken-format, broken-activity, vocab-duplicate
-- **Warning (Should Fix):** requirements, missing-content, checkpoint, enrichment, narrative, immersion
-- **Info (Consider):** activity-order, complexity
 
 ---
 
@@ -255,11 +349,20 @@ npx ts-node scripts/generate-exercises.ts 5            # Single module
 ## NPM Scripts Summary
 
 ```bash
-# Generation
-npm run generate              # Generate MDX for Docusaurus
-npm run generate:json         # Generate JSON for Vibe app (Python)
+# Full Pipeline (Python)
+npm run pipeline              # Run full validation pipeline
+npm run pipeline l2-uk-en a1  # Pipeline for specific level
+npm run pipeline l2-uk-en a1 5  # Pipeline for single module
 
-# Vocabulary Database
+# Generation (Python)
+npm run generate              # Generate MDX for Docusaurus
+npm run generate:json         # Generate JSON for Vibe app
+
+# Validation (Python)
+npm run validate:mdx          # Validate MDX content integrity
+npm run validate:html         # Validate browser rendering (needs dev server)
+
+# Vocabulary Database (TypeScript)
 npm run vocab:init            # Create fresh database
 npm run vocab:init:force      # Force recreate database
 npm run vocab:scan            # Populate from modules
@@ -269,51 +372,71 @@ npm run vocab:rebuild         # Full rebuild (init:force + scan)
 
 # Claude Skills
 npm run claude:deploy         # Deploy skills to .claude/
+
+# Development
+cd docusaurus && npm start    # Start Docusaurus dev server (for HTML validation)
 ```
 
 ---
 
 ## Common Workflows
 
+### New Module Creation (Full Pipeline)
+
+```bash
+# 1. Write module content (use /module-create command or manually)
+
+# 2. Audit the module
+python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
+
+# 3. Fix any issues, then run full pipeline
+npm run pipeline l2-uk-en a1 5
+
+# 4. Generate JSON for Vibe app
+npm run generate:json l2-uk-en a1 5
+
+# 5. Verify all passes
+python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
+```
+
 ### Review Module Range
 
 ```bash
-# 1. Audit with fix prompts
-npx ts-node scripts/module-audit.ts l2-uk-en 31-60 --fix
+# 1. Audit multiple modules
+for i in {1..20}; do
+  python3 scripts/audit_module.py curriculum/l2-uk-en/a1/$i-*.md
+done
 
-# 2. Copy fix prompts to Claude, edit modules
+# 2. Fix issues in failing modules
 
-# 3. Rebuild vocab and regenerate
-npm run vocab:rebuild
-npm run generate l2-uk-en
+# 3. Run pipeline for the level
+npm run pipeline l2-uk-en a1
 
-# 4. Verify fixes
-npx ts-node scripts/module-audit.ts l2-uk-en 31-60
+# 4. Generate JSON
+npm run generate:json l2-uk-en a1
 ```
-
-### New Module Creation
-
-1. **Write content** - lesson, grammar, examples
-2. **Add activities** - fill-in, unjumble, quiz, match-up
-3. **Add vocabulary section**
-4. **Scan vocabulary:** `npm run vocab:scan`
-5. **Enrich vocabulary:** `npm run vocab:enrich l2-uk-en [module]`
-6. **Generate output:** `npm run generate l2-uk-en [module]`
-7. **Audit:** `npx ts-node scripts/module-audit.ts l2-uk-en [module]`
 
 ### Fix Vocabulary Duplicates
 
 ```bash
-# 1. Audit identifies duplicates
-npx ts-node scripts/module-audit.ts l2-uk-en 31-60
+# 1. Rebuild vocabulary database (validates cross-module)
+npm run vocab:rebuild
 
 # 2. Remove duplicates from later modules (per audit output)
 
-# 3. Rebuild database
+# 3. Re-run vocab:rebuild to verify
 npm run vocab:rebuild
+```
 
-# 4. Re-audit to verify
-npx ts-node scripts/module-audit.ts l2-uk-en 31-60
+### Validate After Changes
+
+```bash
+# Quick validation (no dev server needed)
+npm run validate:mdx l2-uk-en a1 5
+
+# Full validation (requires dev server)
+cd docusaurus && npm start  # In terminal 1
+npm run pipeline l2-uk-en a1 5  # In terminal 2
 ```
 
 ---
@@ -322,28 +445,42 @@ npx ts-node scripts/module-audit.ts l2-uk-en 31-60
 
 ```
 scripts/
-├── generate-mdx.ts       # MDX generator for Docusaurus
-├── generate_json.py      # Vibe JSON generator (Python)
-├── module-audit.ts       # Module quality checker
+├── # Python Pipeline (Primary)
+├── pipeline.py           # Unified validation pipeline
+├── generate_mdx.py       # MDX generator for Docusaurus
+├── generate_json.py      # Vibe JSON generator
+├── validate_mdx.py       # MDX content validator
+├── validate_html.py      # Browser rendering validator (Playwright)
+├── audit_module.py       # Module quality checker
+│
+├── audit/                # Python audit library
+│   ├── __init__.py
+│   ├── core.py           # Main audit logic
+│   ├── config.py         # Level-specific constraints
+│   ├── cleaners.py       # Text cleaning utilities
+│   └── checks/           # Individual check modules
+│       ├── activities.py
+│       ├── grammar.py
+│       └── pedagogy.py
+│
+├── # TypeScript (Vocabulary + Legacy)
 ├── vocab-*.ts            # Vocabulary scripts
+├── module-audit.ts       # Module quality checker (legacy)
+├── generate-mdx.ts       # MDX generator (legacy, kept for reference)
 └── lib/
     ├── index.ts          # Main exports
     ├── types.ts          # TypeScript types (Level, ModuleType, etc.)
-    ├── vocab-db.ts       # CSV vocabulary (legacy)
     ├── vocab-sqlite.ts   # SQLite vocabulary helpers
     ├── utils/
     │   ├── index.ts      # Utility exports
     │   ├── files.ts      # File operations
     │   └── markdown.ts   # Markdown parsing helpers
-    ├── parsers/
-    │   ├── index.ts      # Parser exports
-    │   ├── frontmatter.ts    # YAML frontmatter parsing
-    │   ├── sections.ts       # Section parsing
-    │   ├── vocabulary.ts     # Vocabulary table parsing
-    │   └── activities/       # Activity type parsers
-    └── renderers/
-        ├── index.ts      # Renderer exports
-        └── json.ts       # Vibe JSON renderer (TypeScript - legacy)
+    └── parsers/
+        ├── index.ts      # Parser exports
+        ├── frontmatter.ts    # YAML frontmatter parsing
+        ├── sections.ts       # Section parsing
+        ├── vocabulary.ts     # Vocabulary table parsing
+        └── activities/       # Activity type parsers
 ```
 
-**Note:** JSON generation has been ported to Python (`generate_json.py`). The TypeScript JSON renderer remains for reference.
+**Note:** Core pipeline has been ported to Python for reliability and maintainability. TypeScript vocabulary scripts remain active. Python requires `.venv/bin/python` (Python 3.12).

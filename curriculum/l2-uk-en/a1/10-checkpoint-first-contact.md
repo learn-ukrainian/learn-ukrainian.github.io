@@ -420,6 +420,34 @@ After 10 modules, you have achieved:
 
 ---
 
+# Self-Assessment Rubric
+
+Rate yourself 1-5 on each can-do statement (1 = cannot do, 5 = can do confidently):
+
+### Reading & Recognition
+- [ ] I can recognize all 33 Cyrillic letters
+- [ ] I can read simple Ukrainian words without transliteration
+- [ ] I can identify noun gender by word ending (-а/-я = f, -о/-е = n, consonant = m)
+
+### Grammar
+- [ ] I can conjugate Class I verbs (читати → читаю, читаєш, читає...)
+- [ ] I can conjugate Class II verbs (говорити → говорю, говориш, говорить...)
+- [ ] I can form questions with хто, що, де, куди, звідки
+- [ ] I can negate sentences with не + verb
+
+### Speaking & Interaction
+- [ ] I can introduce myself (name, nationality, profession)
+- [ ] I can greet people (Привіт! Добрий день!)
+- [ ] I can ask and answer simple questions about myself
+- [ ] I can order basic food and drinks
+
+### Scoring
+- **25-30 points**: Ready for A1.2! Proceed to Module 11.
+- **18-24 points**: Review weak areas, then continue.
+- **Under 18 points**: Revisit Modules 1-9 before continuing.
+
+---
+
 # Vocabulary
 
 **Review Vocabulary (25 key words from Modules 1-9):**
@@ -452,6 +480,16 @@ After 10 modules, you have achieved:
 | правильно | /ˈprɑvɪlʲnɔ/ | correctly | adverb | - | Ти говориш правильно. |
 | голосно | /ɦɔˈlɔsnɔ/ | loudly | adverb | - | Він говорить голосно. |
 | тихо | /ˈtɪxɔ/ | quietly | adverb | - | Вона говорить тихо. |
+
+---
+
+> [!resources] 🎧 External Resources
+>
+> **Alphabet Review:** [Ukrainian Alphabet](https://www.ukrainianlessons.com/ukrainian-alphabet/) — All 33 letters with pronunciation guide
+>
+> **Beginner Episodes:** [Top 10 Podcast Episodes for Beginners](https://www.ukrainianlessons.com/episodes-for-ukrainian-language-beginners/) — Perfect for A1.1 review
+>
+> **Getting Started:** [How to Begin Learning Ukrainian](https://www.ukrainianlessons.com/begin-learning-ukrainian/) — 5 steps with free resources
 
 ---
 

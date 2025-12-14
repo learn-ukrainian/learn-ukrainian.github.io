@@ -8,8 +8,12 @@
   },
   "scripts": {
     "lint": "eslint 'scripts/**/*.ts'",
-    "generate": "ts-node scripts/generate-mdx.ts",
+    "generate": ".venv/bin/python scripts/generate_mdx.py",
+    "generate:ts": "ts-node scripts/generate-mdx.ts",
     "generate:json": ".venv/bin/python scripts/generate_json.py",
+    "pipeline": ".venv/bin/python scripts/pipeline.py",
+    "validate:mdx": ".venv/bin/python scripts/validate_mdx.py",
+    "validate:html": ".venv/bin/python scripts/validate_html.py",
     "vocab:init": "ts-node scripts/vocab-init.ts",
     "vocab:init:force": "ts-node scripts/vocab-init.ts l2-uk-en --force",
     "vocab:scan": "ts-node scripts/vocab-scan.ts",

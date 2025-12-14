@@ -22,12 +22,12 @@ function HomepageHeader() {
           <Link
             className={clsx('button button--lg', styles.primaryButton)}
             to="/docs/a1">
-            Start Learning
+            Start Learning (A1)
           </Link>
           <Link
             className={clsx('button button--lg', styles.secondaryButton)}
-            to="/docs/intro">
-            View Curriculum
+            to="#levels">
+            View All Levels
           </Link>
         </div>
       </div>
@@ -137,7 +137,7 @@ export default function Home(): ReactNode {
           </div>
         </section>
 
-        <section className={styles.levels}>
+        <section id="levels" className={styles.levels}>
           <div className="container">
             <Heading as="h2" className={styles.sectionTitle}>
               Choose Your Level
@@ -147,7 +147,7 @@ export default function Home(): ReactNode {
                 level="A1"
                 name="Beginner"
                 description="Cyrillic alphabet, basic phrases, simple grammar"
-                modules={30}
+                modules={34}
                 color="#2E7D32"
               />
               <LevelCard

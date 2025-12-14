@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 1928/300 (>1300 may be too long)
+- **Words:** ⚠️ 1958/300 (>1300 may be too long)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -14,13 +14,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 13.7% (target 5-15% (M05))
+- **Immersion:** 🇺🇦 18.7% (target 10-25% (M05))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **My World: Objects** | ⚪️ | 0 | Skipped |
-| **Warm-up** | ✅ | 303 | Included in Core |
+| **Warm-up** | ✅ | 333 | Included in Core |
 | **Presentation** | ✅ | 527 | Included in Core |
 | **Practice** | ⚪️ | 415 | Skipped |
 | **Cultural Insight** | ✅ | 458 | Included in Core |

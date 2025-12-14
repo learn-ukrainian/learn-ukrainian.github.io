@@ -5,20 +5,18 @@ title: "Questions & Negation"
 description: "Asking Questions and Saying No"
 ---
 
-import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
-import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
+import Quiz from '@site/src/components/Quiz';
 import MatchUp from '@site/src/components/MatchUp';
-import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
-import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
-import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Select, { SelectQuestion } from '@site/src/components/Select';
-import Translate, { TranslateItem } from '@site/src/components/Translate';
-import Cloze, { ClozePassage } from '@site/src/components/Cloze';
-import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
-import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import DialogueReorder from '@site/src/components/DialogueReorder';
 
 
 # Questions & Negation
@@ -32,6 +30,16 @@ In English, asking "Do you read?" requires changing word order or adding "do/doe
 > 💡 **Did You Know?**
 >
 > Ukrainian is very flexible with questions. You can ask "Чи ти читаєш?" (formal) or just "Ти читаєш?" (casual, with rising intonation). Both work! Context and tone tell you it's a question.
+
+:::info[🎧 External Resources]
+
+**Question Words:** [Питальні слова](https://www.ukrainianlessons.com/question-words/) — All question words with examples
+
+**Negation:** [Double Negation Rules](https://www.ukrainianlessons.com/negation-in-ukrainian/) — Master Ukrainian negative sentences
+
+**Useful Questions:** [Short Ukrainian Questions](https://www.ukrainianlessons.com/useful-ukrainian-questions/) — Practical phrases for travelers
+:::
+
 
 ## Presentation
 
@@ -98,8 +106,8 @@ Notice: Unlike English, you don't need "do/does" - the question word itself sign
 — Як тебе звуть? (Yak tebe zvut?) — What's your name?
 — Мене звуть Марко. (Mene zvut Marko.) — My name is Marko.
 — Звідки ти? (Zvidky ty?) — Where are you from?
-— Я з Києва. А ти? (Ya z Kyyeva. A ty?) — I'm from Kyiv. And you?
-— Я з Америки. (Ya z Ameryky.) — I'm from America.
+— я з Києва. а ти? (Ya z Kyyeva. A ty?) — I'm from Kyiv. And you?
+— я з Америки. (Ya z Ameryky.) — I'm from America.
 
 ### Negation with Не
 
@@ -107,7 +115,7 @@ To make a verb negative, just put **не** (ne) before it. Simple!
 
 | Positive | Negative |
 |----------|----------|
-| Я читаю. (Ya chytayu) | Я **не** читаю. (Ya **ne** chytayu) |
+| я читаю. (Ya chytayu) | я **не** читаю. (Ya **ne** chytayu) |
 | I read. | I don't read. |
 | Вона працює. (Vona pratsyuye) | Вона **не** працює. (Vona **ne** pratsyuye) |
 | She works. | She doesn't work. |
@@ -117,8 +125,8 @@ To make a verb negative, just put **не** (ne) before it. Simple!
 **Key difference from English:** In Ukrainian, you don't need "don't/doesn't/didn't" - just **не + verb**!
 
 **Common negative constructions:**
-- Я не розумію. (Ya ne rozumiyu) = I don't understand.
-- Я не знаю. (Ya ne znayu) = I don't know.
+- я не розумію. (Ya ne rozumiyu) = I don't understand.
+- я не знаю. (Ya ne znayu) = I don't know.
 - Це не правда. (Tse ne pravda) = That's not true.
 
 > 🌍 **Real World**
@@ -128,8 +136,8 @@ To make a verb negative, just put **не** (ne) before it. Simple!
 **Mini-Dialogue 3: Misunderstandings**
 
 — Чи ти говориш англійською? (Chy ty hovorysh anhliyskoyu?)
-— Так, говорю. А ти? (Tak, hovoryu. A ty?)
-— Ні, я не говорю англійською. Я говорю українською. (Ni, ya ne hovoryu anhliyskoyu. Ya hovoryu ukrayinskoyu.)
+— Так, говорю. а ти? (Tak, hovoryu. A ty?)
+— Ні, я не говорю англійською. я говорю українською. (Ni, ya ne hovoryu anhliyskoyu. Ya hovoryu ukrayinskoyu.)
 — Добре! Ми говоримо українською! (Dobre! My hovorymo ukrayinskoyu!)
 
 ### Frequency Adverbs
@@ -138,17 +146,17 @@ When talking about how often you do things, Ukrainian uses these adverbs:
 
 | Adverb | IPA | English | Example |
 |--------|-----|---------|---------|
-| **завжди** (zavzhdy) | /ˈzɑʋʒdɪ/ | always | Я завжди читаю. (I always read.) |
+| **завжди** (zavzhdy) | /ˈzɑʋʒdɪ/ | always | я завжди читаю. (I always read.) |
 | **часто** (chasto) | /ˈt͡ʃɑstɔ/ | often | Вона часто працює. (She often works.) |
 | **іноді** (inodi) | /iˈnɔdi/ | sometimes | Ми іноді говоримо. (We sometimes talk.) |
 | **рідко** (ridko) | /ˈridkɔ/ | rarely | Він рідко пише. (He rarely writes.) |
-| **ніколи** (nikoly) | /nʲiˈkɔlɪ/ | never | Я ніколи не п'ю каву. (I never drink coffee.) |
-| **звичайно** (zvychayno) | /zvɪˈt͡ʃɑjnɔ/ | usually | Я звичайно снідаю вдома. (I usually have breakfast at home.) |
+| **ніколи** (nikoly) | /nʲiˈkɔlɪ/ | never | я ніколи не п'ю каву. (I never drink coffee.) |
+| **звичайно** (zvychayno) | /zvɪˈt͡ʃɑjnɔ/ | usually | я звичайно снідаю вдома. (I usually have breakfast at home.) |
 
 **Important:** **Ніколи** (never) is already negative, but Ukrainian uses **double negation** - you still add **не**!
 
-- Я **ніколи не** п'ю каву. (I never drink coffee.) ✅
-- Я ніколи п'ю каву. ❌ (Wrong - missing не!)
+- я **ніколи не** п'ю каву. (I never drink coffee.) ✅
+- я ніколи п'ю каву. ❌ (Wrong - missing не!)
 
 This is called **double negation** and it's mandatory in Ukrainian (unlike English where "I never don't drink" would be wrong).
 
@@ -180,12 +188,12 @@ Imagine you meet someone new at a café in Lviv. Use what you learned to:
 **Model Answer:**
 
 — Привіт! Як тебе звуть? (Hi! What's your name?)
-— Мене звуть Оля. А тебе? (My name is Olya. And yours?)
+— Мене звуть Оля. а тебе? (My name is Olya. And yours?)
 — Марко. Звідки ти? (Marko. Where are you from?)
-— Я з Львова. А ти? (I'm from Lviv. And you?)
-— Я з Києва. Чи ти читаєш українською? (I'm from Kyiv. Do you read in Ukrainian?)
-— Так! Я завжди читаю українською. А ти? (Yes! I always read in Ukrainian. And you?)
-— Я часто читаю, але іноді не розумію. (I often read, but sometimes I don't understand.)
+— я з Львова. а ти? (I'm from Lviv. And you?)
+— я з Києва. Чи ти читаєш українською? (I'm from Kyiv. Do you read in Ukrainian?)
+— Так! я завжди читаю українською. а ти? (Yes! I always read in Ukrainian. And you?)
+— я часто читаю, але іноді не розумію. (I often read, but sometimes I don't understand.)
 — Нічого! Це нормально. (No problem! That's normal.)
 
 ## Cultural Insight
@@ -208,7 +216,7 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
 
 ---
 
-# Summary
+## 📋 Summary
 
 **Questions with Чи:**
 - Чи + subject + verb? = Yes/no question
@@ -229,7 +237,7 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
 ---
 
 
-# Vocabulary
+## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
@@ -262,91 +270,116 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
 | розуміти | /rɔzuˈmitɪ/ | to understand | verb | - | розумію, розумієш (M06) |
 | Київ | /ˈkɪjiu̯/ | Kyiv (capital) | noun | m | gen: Києва |
 
-
 ---
 
-## 🎮 Activities
+## 🎯 Activities
 
 ### Question Word Meanings
 
-<Quiz>
-  <QuizQuestion
-    question={`1. What does "де" mean?`}
-    options={[`what`, `who`, `where`, `when`]}
-    correctIndex={2}
-    explanation={`де (de) = where (location)`}
-  />
-  <QuizQuestion
-    question={`Which question word means "why"?`}
-    options={[`що`, `як`, `чому`, `коли`]}
-    correctIndex={2}
-    explanation={`чому (chomu) = why`}
-  />
-  <QuizQuestion
-    question={`How do you say "when" in Ukrainian?`}
-    options={[`де`, `коли`, `куди`, `скільки`]}
-    correctIndex={1}
-    explanation={`коли (koly) = when`}
-  />
-  <QuizQuestion
-    question={`What does "хто" mean?`}
-    options={[`what`, `who`, `how`, `where`]}
-    correctIndex={1}
-    explanation={`хто (khto) = who`}
-  />
-  <QuizQuestion
-    question={`Which word asks "where to" (direction)?`}
-    options={[`де`, `звідки`, `куди`, `коли`]}
-    correctIndex={2}
-    explanation={`куди (kudy) = where to (direction)`}
-  />
-  <QuizQuestion
-    question={`How do you say "how much/many"?`}
-    options={[`як`, `що`, `скільки`, `коли`]}
-    correctIndex={2}
-    explanation={`скільки (skilky) = how much/many`}
-  />
-  <QuizQuestion
-    question={`What does "звідки" mean?`}
-    options={[`where`, `where to`, `where from`, `when`]}
-    correctIndex={2}
-    explanation={`звідки (zvidky) = where from`}
-  />
-  <QuizQuestion
-    question={`Which word means "what"?`}
-    options={[`що`, `хто`, `де`, `як`]}
-    correctIndex={0}
-    explanation={`що (shcho) = what`}
-  />
-  <QuizQuestion
-    question={`How do you say "how"?`}
-    options={[`що`, `чому`, `як`, `коли`]}
-    correctIndex={2}
-    explanation={`як (yak) = how`}
-  />
-  <QuizQuestion
-    question={`What is the question word for "who"?`}
-    options={[`що`, `хто`, `де`, `чому`]}
-    correctIndex={1}
-    explanation={`хто (khto) = who`}
-  />
-  <QuizQuestion
-    question={`Which means "where" (location)?`}
-    options={[`де`, `куди`, `звідки`, `коли`]}
-    correctIndex={0}
-    explanation={`де (de) = where (location)`}
-  />
-  <QuizQuestion
-    question={`How do you ask "why" in Ukrainian?`}
-    options={[`що`, `як`, `коли`, `чому`]}
-    correctIndex={3}
-    explanation={`чому (chomu) = why`}
-  />
-</Quiz>
+<Quiz questions={[
+  {
+    question: `What does \"де\" mean?`,
+    options: [
+      { text: `what`, correct: false },
+      { text: `who`, correct: false },
+      { text: `where`, correct: true },
+      { text: `when`, correct: false }
+    ]
+  },  {
+    question: `Which question word means \"why\"?`,
+    options: [
+      { text: `що`, correct: false },
+      { text: `як`, correct: false },
+      { text: `чому`, correct: true },
+      { text: `коли`, correct: false }
+    ]
+  },  {
+    question: `How do you say \"when\" in Ukrainian?`,
+    options: [
+      { text: `де`, correct: false },
+      { text: `коли`, correct: true },
+      { text: `куди`, correct: false },
+      { text: `скільки`, correct: false }
+    ]
+  },  {
+    question: `What does \"хто\" mean?`,
+    options: [
+      { text: `what`, correct: false },
+      { text: `who`, correct: true },
+      { text: `how`, correct: false },
+      { text: `where`, correct: false }
+    ]
+  },  {
+    question: `Which word asks \"where to\" (direction)?`,
+    options: [
+      { text: `де`, correct: false },
+      { text: `звідки`, correct: false },
+      { text: `куди`, correct: true },
+      { text: `коли`, correct: false }
+    ]
+  },  {
+    question: `How do you say \"how much/many\"?`,
+    options: [
+      { text: `як`, correct: false },
+      { text: `що`, correct: false },
+      { text: `скільки`, correct: true },
+      { text: `коли`, correct: false }
+    ]
+  },  {
+    question: `What does \"звідки\" mean?`,
+    options: [
+      { text: `where`, correct: false },
+      { text: `where to`, correct: false },
+      { text: `where from`, correct: true },
+      { text: `when`, correct: false }
+    ]
+  },  {
+    question: `Which word means \"what\"?`,
+    options: [
+      { text: `що`, correct: true },
+      { text: `хто`, correct: false },
+      { text: `де`, correct: false },
+      { text: `як`, correct: false }
+    ]
+  },  {
+    question: `How do you say \"how\"?`,
+    options: [
+      { text: `що`, correct: false },
+      { text: `чому`, correct: false },
+      { text: `як`, correct: true },
+      { text: `коли`, correct: false }
+    ]
+  },  {
+    question: `What is the question word for \"who\"?`,
+    options: [
+      { text: `що`, correct: false },
+      { text: `хто`, correct: true },
+      { text: `де`, correct: false },
+      { text: `чому`, correct: false }
+    ]
+  },  {
+    question: `Which means \"where\" (location)?`,
+    options: [
+      { text: `де`, correct: true },
+      { text: `куди`, correct: false },
+      { text: `звідки`, correct: false },
+      { text: `коли`, correct: false }
+    ]
+  },  {
+    question: `How do you ask \"why\" in Ukrainian?`,
+    options: [
+      { text: `що`, correct: false },
+      { text: `як`, correct: false },
+      { text: `коли`, correct: false },
+      { text: `чому`, correct: true }
+    ]
+  }
+]} />
 
 ### Question Words to Context
 
 <MatchUp pairs={[
+  { left: `Question Word`, right: `Context` },
   { left: `що`, right: `asking about objects or actions` },
   { left: `хто`, right: `asking about people` },
   { left: `де`, right: `asking about location` },
@@ -361,354 +394,217 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
 
 ### Complete Questions
 
-<FillIn>
-  <FillInQuestion
-    sentence={`1. ___ ти читаєш? (What do you read?)`}
-    answer={`Що`}
-    options={[`Що`, `Хто`, `Де`, `Коли`]}
-  />
-  <FillInQuestion
-    sentence={`___ ти? (Where are you?)`}
-    answer={`Де`}
-    options={[`Де`, `Куди`, `Звідки`, `Коли`]}
-  />
-  <FillInQuestion
-    sentence={`___ ти працюєш? (When do you work?)`}
-    answer={`Коли`}
-    options={[`Коли`, `Де`, `Що`, `Як`]}
-  />
-  <FillInQuestion
-    sentence={`___ ти? (How are you?)`}
-    answer={`Як`}
-    options={[`Як`, `Що`, `Хто`, `Де`]}
-  />
-  <FillInQuestion
-    sentence={`___ працює? (Who works?)`}
-    answer={`Хто`}
-    options={[`Хто`, `Що`, `Де`, `Коли`]}
-  />
-  <FillInQuestion
-    sentence={`___ ти йдеш? (Where are you going?)`}
-    answer={`Куди`}
-    options={[`Куди`, `Де`, `Звідки`, `Що`]}
-  />
-  <FillInQuestion
-    sentence={`___ ти вивчаєш українську? (Why do you study Ukrainian?)`}
-    answer={`Чому`}
-    options={[`Чому`, `Що`, `Як`, `Коли`]}
-  />
-  <FillInQuestion
-    sentence={`___ ти? (Where are you from?)`}
-    answer={`Звідки`}
-    options={[`Звідки`, `Де`, `Куди`, `Хто`]}
-  />
-  <FillInQuestion
-    sentence={`___ це коштує? (How much is this?)`}
-    answer={`Скільки`}
-    options={[`Скільки`, `Що`, `Як`, `Коли`]}
-  />
-  <FillInQuestion
-    sentence={`___ ти знаєш? (Do you know?)`}
-    answer={`Чи`}
-    options={[`Чи`, `Що`, `Хто`, `Де`]}
-  />
-  <FillInQuestion
-    sentence={`___ тебе звуть? (What is your name? lit. How do they call you?)`}
-    answer={`Як`}
-    options={[`Як`, `Що`, `Хто`, `Де`]}
-  />
-  <FillInQuestion
-    sentence={`___ ти говориш? (What language do you speak?)`}
-    answer={`Що`}
-    options={[`Що`, `Як`, `Де`, `Коли`]}
-  />
-</FillIn>
+<FillIn items={[
+  {
+    sentence: `___ ти читаєш? (What do you read?)`,
+    answer: `Що`,
+    options: [`Що`, `Хто`, `Де`, `Коли`]
+  },  {
+    sentence: `___ ти? (Where are you?)`,
+    answer: `Де`,
+    options: [`Де`, `Куди`, `Звідки`, `Коли`]
+  },  {
+    sentence: `___ ти працюєш? (When do you work?)`,
+    answer: `Коли`,
+    options: [`Коли`, `Де`, `Що`, `Як`]
+  },  {
+    sentence: `___ ти? (How are you?)`,
+    answer: `Як`,
+    options: [`Як`, `Що`, `Хто`, `Де`]
+  },  {
+    sentence: `___ працює? (Who works?)`,
+    answer: `Хто`,
+    options: [`Хто`, `Що`, `Де`, `Коли`]
+  },  {
+    sentence: `___ ти йдеш? (Where are you going?)`,
+    answer: `Куди`,
+    options: [`Куди`, `Де`, `Звідки`, `Що`]
+  },  {
+    sentence: `___ ти вивчаєш українську? (Why do you study Ukrainian?)`,
+    answer: `Чому`,
+    options: [`Чому`, `Що`, `Як`, `Коли`]
+  },  {
+    sentence: `___ ти? (Where are you from?)`,
+    answer: `Звідки`,
+    options: [`Звідки`, `Де`, `Куди`, `Хто`]
+  },  {
+    sentence: `___ це коштує? (How much is this?)`,
+    answer: `Скільки`,
+    options: [`Скільки`, `Що`, `Як`, `Коли`]
+  },  {
+    sentence: `___ ти знаєш? (Do you know?)`,
+    answer: `Чи`,
+    options: [`Чи`, `Що`, `Хто`, `Де`]
+  },  {
+    sentence: `___ тебе звуть? (What is your name? lit. How do they call you?)`,
+    answer: `Як`,
+    options: [`Як`, `Що`, `Хто`, `Де`]
+  },  {
+    sentence: `___ ти говориш? (What language do you speak?)`,
+    answer: `Що`,
+    options: [`Що`, `Як`, `Де`, `Коли`]
+  }
+]} />
 
 ### Question and Negation Rules
 
-<TrueFalse>
-  <TrueFalseQuestion
-    statement={`"Чи" at the beginning of a sentence signals a yes/no question.`}
-    isTrue={true}
-    explanation={`Correct! Чи + subject + verb = yes/no question`}
-  />
-  <TrueFalseQuestion
-    statement={`Ukrainian question words require "do/does" like English.`}
-    isTrue={false}
-    explanation={`Incorrect! Ukrainian doesn't need auxiliary verbs for questions.`}
-  />
-  <TrueFalseQuestion
-    statement={`"Не" goes directly before the verb to make it negative.`}
-    isTrue={true}
-    explanation={`Correct! Я не читаю = I don't read`}
-  />
-  <TrueFalseQuestion
-    statement={`"Ніколи" (never) doesn't need "не" because it's already negative.`}
-    isTrue={false}
-    explanation={`Incorrect! Ukrainian uses double negation: "Я ніколи не..."`}
-  />
-  <TrueFalseQuestion
-    statement={`You can skip "чи" in casual speech and use rising intonation instead.`}
-    isTrue={true}
-    explanation={`Correct! "Ти читаєш?" ↗ is common in casual conversation.`}
-  />
-  <TrueFalseQuestion
-    statement={`"Де" and "куди" mean exactly the same thing.`}
-    isTrue={false}
-    explanation={`Incorrect! "Де" = where (location), "куди" = where to (direction)`}
-  />
-  <TrueFalseQuestion
-    statement={`"Звідки" asks about origin or source.`}
-    isTrue={true}
-    explanation={`Correct! Звідки ти? = Where are you from?`}
-  />
-  <TrueFalseQuestion
-    statement={`Ukrainian uses double negation with words like "ніколи" (never).`}
-    isTrue={true}
-    explanation={`Correct! "Я ніколи не п'ю каву" = I never drink coffee`}
-  />
-  <TrueFalseQuestion
-    statement={`"Що" can only mean "what", never "that".`}
-    isTrue={false}
-    explanation={`Incorrect! "Що" means both "what" (question) and "that" (conjunction), depending on context.`}
-  />
-  <TrueFalseQuestion
-    statement={`Frequency adverbs like "завжди" (always) can come before or after the verb.`}
-    isTrue={true}
-    explanation={`Correct! Both "Я завжди читаю" and "Я читаю завжди" work.`}
-  />
-  <TrueFalseQuestion
-    statement={`To ask "how are you", Ukrainians always say "Як справи?"`}
-    isTrue={false}
-    explanation={`Incorrect! They can also say "Як ти?" (How are you?) or "Як діла?" (How are things?)`}
-  />
-  <TrueFalseQuestion
-    statement={`"Так" means yes and "ні" means no.`}
-    isTrue={true}
-    explanation={`Correct! Basic yes/no answers.`}
-  />
-</TrueFalse>
+<TrueFalse items={[
+  {
+    statement: `\"Чи\" at the beginning of a sentence signals a yes/no question.`,
+    isTrue: true,
+    explanation: `Correct! Чи + subject + verb = yes/no question`
+  },  {
+    statement: `Ukrainian question words require \"do/does\" like English.`,
+    isTrue: false,
+    explanation: `Incorrect! Ukrainian doesn't need auxiliary verbs for questions.`
+  },  {
+    statement: `\"Не\" goes directly before the verb to make it negative.`,
+    isTrue: true,
+    explanation: `Correct! я не читаю = I don't read`
+  },  {
+    statement: `\"Ніколи\" (never) doesn't need \"не\" because it's already negative.`,
+    isTrue: false,
+    explanation: `Incorrect! Ukrainian uses double negation: \"Я ніколи не...\"`
+  },  {
+    statement: `You can skip \"чи\" in casual speech and use rising intonation instead.`,
+    isTrue: true,
+    explanation: `Correct! \"Ти читаєш?\" ↗ is common in casual conversation.`
+  },  {
+    statement: `\"Де\" and \"куди\" mean exactly the same thing.`,
+    isTrue: false,
+    explanation: `Incorrect! \"Де\" = where (location), \"куди\" = where to (direction)`
+  },  {
+    statement: `\"Звідки\" asks about origin or source.`,
+    isTrue: true,
+    explanation: `Correct! Звідки ти? = Where are you from?`
+  },  {
+    statement: `Ukrainian uses double negation with words like \"ніколи\" (never).`,
+    isTrue: true,
+    explanation: `Correct! \"Я ніколи не п'ю каву\" = I never drink coffee`
+  },  {
+    statement: `\"Що\" can only mean \"what\", never \"that\".`,
+    isTrue: false,
+    explanation: `Incorrect! \"Що\" means both \"what\" (question) and \"that\" (conjunction), depending on context.`
+  },  {
+    statement: `Frequency adverbs like \"завжди\" (always) can come before or after the verb.`,
+    isTrue: true,
+    explanation: `Correct! Both \"Я завжди читаю\" and \"Я читаю завжди\" work.`
+  },  {
+    statement: `To ask \"how are you\", Ukrainians always say \"Як справи?\"`,
+    isTrue: false,
+    explanation: `Incorrect! They can also say \"Як ти?\" (How are you?) or \"Як діла?\" (How are things?)`
+  },  {
+    statement: `\"Так\" means yes and \"ні\" means no.`,
+    isTrue: true,
+    explanation: `Correct! Basic yes/no answers.`
+  }
+]} />
 
 ### Frequency Adverbs
 
 <GroupSort groups={{
-  "### Always/Usually": [
-    "завжди",
-    "звичайно",
-    "часто"
-  ],
-  "Sometimes/Rarely": [
-    "іноді",
-    "рідко",
-    "не завжди"
-  ],
-  "Never (with double negation)": [
-    "ніколи не читаю",
-    "ніколи не пишу"
-  ]
+  "Always/Usually": ["завжди", "звичайно", "часто"],
+  "Sometimes/Rarely": ["іноді", "рідко", "не завжди"],
+  "Never (with double negation)": ["ніколи не читаю", "ніколи не пишу"]
 }} />
 
 ### Add Negation
 
-<FillIn>
-  <FillInQuestion
-    sentence={`1. Я ___ читаю українською. (I don't read in Ukrainian.)`}
-    answer={`не`}
-    options={[`не`, `ні`, `ніколи`, `чи`]}
-  />
-  <FillInQuestion
-    sentence={`Вона ___ працює сьогодні. (She doesn't work today.)`}
-    answer={`не`}
-    options={[`не`, `ні`, `ніколи`, `що`]}
-  />
-  <FillInQuestion
-    sentence={`Ми ___ знаємо. (We don't know.)`}
-    answer={`не`}
-    options={[`не`, `ні`, `чи`, `як`]}
-  />
-  <FillInQuestion
-    sentence={`Ти ___ розумієш? (You don't understand?)`}
-    answer={`не`}
-    options={[`не`, `ні`, `ніколи`, `де`]}
-  />
-  <FillInQuestion
-    sentence={`Я ___ ___ п'ю каву. (I never drink coffee.) [Two blanks!]`}
-    answer={`ніколи не`}
-    options={[`ніколи не`, `не ніколи`, `ні не`, `не ні`]}
-  />
-  <FillInQuestion
-    sentence={`Він ___ говорить англійською. (He doesn't speak English.)`}
-    answer={`не`}
-    options={[`не`, `ні`, `ніколи`, `чи`]}
-  />
-  <FillInQuestion
-    sentence={`Вони ___ пишуть листи. (They don't write letters.)`}
-    answer={`не`}
-    options={[`не`, `ні`, `що`, `як`]}
-  />
-  <FillInQuestion
-    sentence={`Я ___ хочу чаю. (I don't want tea.)`}
-    answer={`не`}
-    options={[`не`, `ні`, `ніколи`, `чи`]}
-  />
-  <FillInQuestion
-    sentence={`Це ___ правда. (That's not true.)`}
-    answer={`не`}
-    options={[`не`, `ні`, `ніколи`, `що`]}
-  />
-  <FillInQuestion
-    sentence={`Чи ти ___ знаєш? (Don't you know?)`}
-    answer={`не`}
-    options={[`не`, `ні`, `ніколи`, `що`]}
-  />
-  <FillInQuestion
-    sentence={`Ми ___ ___ їмо м'ясо. (We never eat meat.)`}
-    answer={`ніколи не`}
-    options={[`ніколи не`, `не ніколи`, `ні не`, `не ні`]}
-  />
-  <FillInQuestion
-    sentence={`Вона ___ слухає музику. (She doesn't listen to music.)`}
-    answer={`не`}
-    options={[`не`, `ні`, `ніколи`, `чи`]}
-  />
-</FillIn>
+<FillIn items={[
+  {
+    sentence: `я ___ читаю українською. (I don't read in Ukrainian.)`,
+    answer: `не`,
+    options: [`не`, `ні`, `ніколи`, `чи`]
+  },  {
+    sentence: `Вона ___ працює сьогодні. (She doesn't work today.)`,
+    answer: `не`,
+    options: [`не`, `ні`, `ніколи`, `що`]
+  },  {
+    sentence: `Ми ___ знаємо. (We don't know.)`,
+    answer: `не`,
+    options: [`не`, `ні`, `чи`, `як`]
+  },  {
+    sentence: `Ти ___ розумієш? (You don't understand?)`,
+    answer: `не`,
+    options: [`не`, `ні`, `ніколи`, `де`]
+  },  {
+    sentence: `я ___ ___ п'ю каву. (I never drink coffee.) [Two blanks!]`,
+    answer: `ніколи не`,
+    options: [`ніколи не`, `не ніколи`, `ні не`, `не ні`]
+  },  {
+    sentence: `Він ___ говорить англійською. (He doesn't speak English.)`,
+    answer: `не`,
+    options: [`не`, `ні`, `ніколи`, `чи`]
+  },  {
+    sentence: `Вони ___ пишуть листи. (They don't write letters.)`,
+    answer: `не`,
+    options: [`не`, `ні`, `що`, `як`]
+  },  {
+    sentence: `я ___ хочу чаю. (I don't want tea.)`,
+    answer: `не`,
+    options: [`не`, `ні`, `ніколи`, `чи`]
+  },  {
+    sentence: `Це ___ правда. (That's not true.)`,
+    answer: `не`,
+    options: [`не`, `ні`, `ніколи`, `що`]
+  },  {
+    sentence: `Чи ти ___ знаєш? (Don't you know?)`,
+    answer: `не`,
+    options: [`не`, `ні`, `ніколи`, `що`]
+  },  {
+    sentence: `Ми ___ ___ їмо м'ясо. (We never eat meat.)`,
+    answer: `ніколи не`,
+    options: [`ніколи не`, `не ніколи`, `ні не`, `не ні`]
+  },  {
+    sentence: `Вона ___ слухає музику. (She doesn't listen to music.)`,
+    answer: `не`,
+    options: [`не`, `ні`, `ніколи`, `чи`]
+  }
+]} />
 
 ### Question Words
 
-<Anagram>
-  <AnagramQuestion
-    scrambled={`Щ О`}
-    answer={`що`}
-  />
-  <AnagramQuestion
-    scrambled={`Х Т О`}
-    answer={`хто`}
-  />
-  <AnagramQuestion
-    scrambled={`Д Е`}
-    answer={`де`}
-  />
-  <AnagramQuestion
-    scrambled={`Я К`}
-    answer={`як`}
-  />
-  <AnagramQuestion
-    scrambled={`Ч И`}
-    answer={`чи`}
-  />
-  <AnagramQuestion
-    scrambled={`Н І`}
-    answer={`ні`}
-  />
-  <AnagramQuestion
-    scrambled={`Т А К`}
-    answer={`так`}
-  />
-  <AnagramQuestion
-    scrambled={`К О Л И`}
-    answer={`коли`}
-  />
-  <AnagramQuestion
-    scrambled={`Ч О М У`}
-    answer={`чому`}
-  />
-  <AnagramQuestion
-    scrambled={`К У Д И`}
-    answer={`куди`}
-  />
-  <AnagramQuestion
-    scrambled={`З В І Д К И`}
-    answer={`звідки`}
-  />
-  <AnagramQuestion
-    scrambled={`С К І Л Ь К И`}
-    answer={`скільки`}
-  />
-</Anagram>
+<Anagram items={[
+  { scrambled: `х т о`, answer: `хто`, hint: `` },
+  { scrambled: `к о л и`, answer: `коли`, hint: `` },
+  { scrambled: `ч о м у`, answer: `чому`, hint: `` },
+  { scrambled: `к у д и`, answer: `куди`, hint: `` },
+  { scrambled: `з в і д к и`, answer: `звідки`, hint: `` },
+  { scrambled: `с к і л ь к и`, answer: `скільки`, hint: `` },
+  { scrambled: `п и т а н н я`, answer: `питання`, hint: `` },
+  { scrambled: `в і д п о в і д ь`, answer: `відповідь`, hint: `` },
+  { scrambled: `з а в ж д и`, answer: `завжди`, hint: `` },
+  { scrambled: `ч а с т о`, answer: `часто`, hint: `` },
+  { scrambled: `і н о д і`, answer: `іноді`, hint: `` },
+  { scrambled: `н і к о л и`, answer: `ніколи`, hint: `` }
+]} />
 
 ### Frequency Words
 
-<Anagram>
-  <AnagramQuestion
-    scrambled={`З А В Ж Д И`}
-    answer={`завжди`}
-  />
-  <AnagramQuestion
-    scrambled={`Ч А С Т О`}
-    answer={`часто`}
-  />
-  <AnagramQuestion
-    scrambled={`І Н О Д І`}
-    answer={`іноді`}
-  />
-  <AnagramQuestion
-    scrambled={`Р І Д К О`}
-    answer={`рідко`}
-  />
-  <AnagramQuestion
-    scrambled={`Н І К О Л И`}
-    answer={`ніколи`}
-  />
-  <AnagramQuestion
-    scrambled={`З В И Ч А Й Н О`}
-    answer={`звичайно`}
-  />
-  <AnagramQuestion
-    scrambled={`Н Е`}
-    answer={`не`}
-  />
-  <AnagramQuestion
-    scrambled={`Ч И`}
-    answer={`чи`}
-  />
-  <AnagramQuestion
-    scrambled={`не / Я / читаю`}
-    answer={`Я не читаю.`}
-  />
-  <AnagramQuestion
-    scrambled={`працює / не / Вона`}
-    answer={`Вона не працює.`}
-  />
-  <AnagramQuestion
-    scrambled={`знаємо / Ми / не`}
-    answer={`Ми не знаємо.`}
-  />
-  <AnagramQuestion
-    scrambled={`ніколи / п'ю / каву / Я / не`}
-    answer={`Я ніколи не п'ю каву.`}
-  />
-  <AnagramQuestion
-    scrambled={`Він / не / говорить / англійською`}
-    answer={`Він не говорить англійською.`}
-  />
-  <AnagramQuestion
-    scrambled={`розумію / Я / не`}
-    answer={`Я не розумію.`}
-  />
-  <AnagramQuestion
-    scrambled={`не / Це / правда`}
-    answer={`Це не правда.`}
-  />
-  <AnagramQuestion
-    scrambled={`не / Ти / пишеш`}
-    answer={`Ти не пишеш.`}
-  />
-  <AnagramQuestion
-    scrambled={`їмо / ніколи / м'ясо / Ми / не`}
-    answer={`Ми ніколи не їмо м'ясо.`}
-  />
-  <AnagramQuestion
-    scrambled={`не / Вони / слухають / музику`}
-    answer={`Вони не слухають музику.`}
-  />
-  <AnagramQuestion
-    scrambled={`працюю / не / Я / сьогодні`}
-    answer={`Я не працюю сьогодні.`}
-  />
-  <AnagramQuestion
-    scrambled={`не / хочу / Я / чаю`}
-    answer={`Я не хочу чаю.`}
-  />
-</Anagram>
+<Anagram items={[
+  { scrambled: `р і д к о`, answer: `рідко`, hint: `` },
+  { scrambled: `з в и ч а й н о`, answer: `звичайно`, hint: `` },
+  { scrambled: `с ь о г о д н і`, answer: `сьогодні`, hint: `` },
+  { scrambled: `з а в т р а`, answer: `завтра`, hint: `` },
+  { scrambled: `в ч о р а`, answer: `вчора`, hint: `` },
+  { scrambled: `щ о р а н к у`, answer: `щоранку`, hint: `` },
+  { scrambled: `щ о д н я`, answer: `щодня`, hint: `` },
+  { scrambled: `п р а в д а`, answer: `правда`, hint: `` }
+]} />
 
+### Negative Sentences
 
+<Unjumble items={[
+  { jumbled: `не / Я / читаю`, answer: `Я не читаю.` },
+  { jumbled: `працює / не / Вона`, answer: `Вона не працює.` },
+  { jumbled: `знаємо / Ми / не`, answer: `Ми не знаємо.` },
+  { jumbled: `ніколи / п'ю / каву / Я / не`, answer: `Я ніколи не п'ю каву.` },
+  { jumbled: `Він / не / говорить / українською`, answer: `Він не говорить українською.` },
+  { jumbled: `розумію / Я / не`, answer: `Я не розумію.` },
+  { jumbled: `не / Це / правда`, answer: `Це не правда.` },
+  { jumbled: `не / Ти / пишеш`, answer: `Ти не пишеш.` },
+  { jumbled: `їмо / ніколи / м'ясо / Ми / не`, answer: `Ми ніколи не їмо м'ясо.` },
+  { jumbled: `не / Вони / слухають / музику`, answer: `Вони не слухають музику.` },
+  { jumbled: `працюю / не / Я / сьогодні`, answer: `Я не працюю сьогодні.` },
+  { jumbled: `не / хочу / Я / чаю`, answer: `Я не хочу чаю.` }
+]} />

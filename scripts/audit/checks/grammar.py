@@ -6,8 +6,42 @@ and case government rules based on CEFR level.
 """
 
 import re
-from ..config import GRAMMAR_CONSTRAINTS, CASE_PATTERNS
+from ..config import (
+    GRAMMAR_CONSTRAINTS, CASE_PATTERNS,
+    PARTICIPLE_EXCLUSIONS, NOMINATIVE_PLURAL_EXCLUSIONS,
+    FIXED_PHRASES_INSTRUMENTAL, FIXED_PHRASES_DATIVE
+)
 from ..cleaners import extract_ukrainian_sentences
+
+
+def is_fixed_phrase(match: str, text: str, phrase_set: set) -> bool:
+    """Check if a match is part of a fixed phrase that's taught at A1."""
+    match_lower = match.lower()
+    text_lower = text.lower()
+
+    # Check if the match appears in any fixed phrase context
+    for phrase in phrase_set:
+        if phrase in text_lower:
+            # Check if match is part of this phrase
+            if match_lower in phrase or any(word in match_lower for word in phrase.split()):
+                return True
+
+    # Special handling for dative pronouns near context words
+    # e.g., "Мені ... років" where ellipsis separates the words
+    if match_lower in ('мені', 'тобі', 'йому', 'їй'):
+        # Check for age expressions (dative + років/рік/роки)
+        if re.search(rf'{match_lower}\s*\.{{0,3}}\s*\w*\s*рок', text_lower):
+            return True
+        # Check for "подобається" (likes) expressions
+        if match_lower + ' подобається' in text_lower or 'подобається ' + match_lower in text_lower:
+            return True
+        # Check for feeling/state expressions
+        feeling_words = ['погано', 'добре', 'холодно', 'тепло', 'болить', 'потрібн', 'треба']
+        for word in feeling_words:
+            if re.search(rf'{match_lower}\s+{word}', text_lower):
+                return True
+
+    return False
 
 
 def check_grammar_violations(text: str, level_code: str, module_num: int) -> list[dict]:
@@ -22,6 +56,12 @@ def check_grammar_violations(text: str, level_code: str, module_num: int) -> lis
             matches = re.findall(pattern, text, re.IGNORECASE)
             if matches:
                 for match in matches[:3]:
+                    # Filter out nominative plural adjectives that happen to match -ові pattern
+                    if match.lower() in NOMINATIVE_PLURAL_EXCLUSIONS:
+                        continue
+                    # Filter out fixed phrases taught at A1 (e.g., "Бажаю тобі щастя")
+                    if is_fixed_phrase(match, text, FIXED_PHRASES_DATIVE):
+                        continue
                     violations.append({
                         'type': 'GRAMMAR',
                         'issue': f"Dative case used at A1: '{match}'",
@@ -33,6 +73,9 @@ def check_grammar_violations(text: str, level_code: str, module_num: int) -> lis
             matches = re.findall(pattern, text, re.IGNORECASE)
             if matches:
                 for match in matches[:3]:
+                    # Filter out fixed phrases taught at A1 (e.g., "З Новим роком!")
+                    if is_fixed_phrase(match, text, FIXED_PHRASES_INSTRUMENTAL):
+                        continue
                     violations.append({
                         'type': 'GRAMMAR',
                         'issue': f"Instrumental case used at A1: '{match}'",
@@ -57,6 +100,9 @@ def check_grammar_violations(text: str, level_code: str, module_num: int) -> lis
             matches = re.findall(pattern, text, re.IGNORECASE)
             if matches:
                 for match in matches[:3]:
+                    # Filter out common adjectives that match participle patterns
+                    if match.lower() in PARTICIPLE_EXCLUSIONS:
+                        continue
                     violations.append({
                         'type': 'GRAMMAR',
                         'issue': f"Participle used before B1: '{match}'",
@@ -126,8 +172,18 @@ def check_gender_agreement(content: str, level_code: str) -> list[dict]:
 
 
 def check_case_government(content: str, level_code: str) -> list[dict]:
-    """Check for preposition + wrong case errors."""
+    """Check for preposition + wrong case errors.
+
+    Note: Skipped at A1 because:
+    1. These patterns are too simplistic (e.g., "на стіл" is valid accusative)
+    2. A1 modules teach these very patterns, creating false positives
+    3. Quiz wrong answers (intentional errors) trigger false positives
+    """
     violations = []
+
+    # Skip at A1 - patterns too simplistic for teaching materials
+    if level_code == 'A1':
+        return violations
 
     case_errors = [
         (r'\b[ву]\s+(стіл|книга|хлопець|дівчина|місто)\b(?!\w*[уіаюєоі])',

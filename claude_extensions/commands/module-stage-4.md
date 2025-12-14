@@ -70,14 +70,24 @@ Count violations by category:
 - Report persistent issues
 - Ask user for guidance
 
-### Step 6: PASS - Generate Output
+### Step 6: PASS - Run Full Pipeline
 
-When audit passes:
+When audit passes, run the full validation pipeline:
 
 ```bash
-npm run generate l2-uk-en {level} {module_num}
+# Full pipeline: lint → generate MDX → validate MDX → validate HTML
+npm run pipeline l2-uk-en {level} {module_num}
+
+# Also generate JSON for Vibe app
 npm run generate:json l2-uk-en {level} {module_num}
 ```
+
+**Note:** HTML validation requires dev server running:
+```bash
+cd docusaurus && npm start  # In separate terminal
+```
+
+If pipeline fails at any step, fix the issue and re-run.
 
 ### Output
 
@@ -86,6 +96,7 @@ npm run generate:json l2-uk-en {level} {module_num}
 MODULE APPROVED
 
 Audit: PASS
+Pipeline: PASS (lint ✓ generate ✓ validate_mdx ✓ validate_html ✓)
 MDX: docusaurus/docs/{level}/module-{num}.mdx
 JSON: output/json/l2-uk-en/{level}/module-{num}.json
 
@@ -93,6 +104,7 @@ Statistics:
 - Word count: XXX
 - Activities: XX
 - Vocabulary: XX words
+- Interactive elements: XX
 ```
 
 **On FAIL (after 3 iterations):**

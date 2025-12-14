@@ -39,6 +39,14 @@ You've already learned how to say "This is X" (nominative) and "I see X" (accusa
 > - **в кімнаті** (in the room) - easy to say
 > - **у Львові** (in Lviv) - **у** makes the consonant cluster smoother
 
+> [!resources] 🎧 External Resources
+>
+> **Podcast:** [ULP 2-66 | Locative Case with Places](https://www.ukrainianlessons.com/episode66/) — Share memories using locative
+>
+> **Podcast:** [ULP 2-67 | Telling Time + Locative](https://www.ukrainianlessons.com/episode67/) — Locative case with ordinal numbers
+>
+> **Prepositions:** [Prepositions with Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Which preposition uses which case
+
 ## Presentation
 
 ### The Locative Case: How It Works

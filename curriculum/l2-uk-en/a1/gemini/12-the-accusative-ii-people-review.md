@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1324/750
+- **Words:** ✅ 1371/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -14,13 +14,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 27.1% (target 25-35% (M12))
+- **Immersion:** 🇺🇦 32.7% (target 25-40% (M12))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **The Accusative II: People** | ⚪️ | 0 | Skipped |
-| **Warm-up** | ✅ | 101 | Included in Core |
+| **Warm-up** | ✅ | 148 | Included in Core |
 | **Presentation** | ✅ | 195 | Included in Core |
 | **Practice** | ⚪️ | 284 | Skipped |
 | **Production** | ➖ | 448 | Excluded Type |

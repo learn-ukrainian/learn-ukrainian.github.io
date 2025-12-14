@@ -145,10 +145,51 @@ export function ClozePassage({ text, blanks }: ClozePassageProps) {
 }
 
 interface ClozeProps {
-  children: React.ReactNode;
+  passage?: string;  // MDX generator sends passage with embedded options
+  blanks?: ClozeBlank[];
+  children?: React.ReactNode;
 }
 
-export default function Cloze({ children }: ClozeProps) {
+// Parse passage format with embedded numbered options:
+// "Text [___:1] more text\n\n1. opt1 | opt2\n   > [!answer] opt1"
+function parsePassageWithEmbeddedOptions(passage: string): { text: string; blanks: ClozeBlank[] } {
+  const blanks: ClozeBlank[] = [];
+
+  // Split into main text and options section
+  const parts = passage.split(/\n\n(?=\d+\.)/);
+  const text = parts[0];
+
+  // Parse numbered options (1. opt1 | opt2\n   > [!answer] correct)
+  const optionPattern = /(\d+)\.\s*([^\n]+)\n\s*>\s*\[!answer\]\s*(\S+)/g;
+  let match;
+
+  const fullText = parts.join('\n\n');
+  while ((match = optionPattern.exec(fullText)) !== null) {
+    const index = parseInt(match[1], 10) - 1; // Convert to 0-based
+    const optionsStr = match[2];
+    const answer = match[3];
+    const options = optionsStr.split('|').map(o => o.trim());
+
+    blanks.push({ index, options, answer });
+  }
+
+  return { text, blanks };
+}
+
+export default function Cloze({ passage, blanks = [], children }: ClozeProps) {
+  // Parse passage if provided with embedded options
+  const parsedData = useMemo(() => {
+    if (passage) {
+      if (blanks.length > 0) {
+        // Use provided blanks directly
+        return { text: passage, blanks };
+      }
+      // Parse embedded options from passage
+      return parsePassageWithEmbeddedOptions(passage);
+    }
+    return null;
+  }, [passage, blanks]);
+
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
@@ -157,7 +198,9 @@ export default function Cloze({ children }: ClozeProps) {
         <ActivityHelp activityType="cloze" />
       </div>
       <div className={styles.activityContent}>
-        {children}
+        {parsedData ? (
+          <ClozePassage text={parsedData.text} blanks={parsedData.blanks} />
+        ) : children}
       </div>
     </div>
   );

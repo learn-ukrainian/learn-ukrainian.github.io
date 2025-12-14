@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1133/750
+- **Words:** ✅ 1180/750
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -14,13 +14,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 29.7% (target 25-35% (M17))
+- **Immersion:** 🇺🇦 31.0% (target 25-40% (M17))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Numbers & Money** | ⚪️ | 0 | Skipped |
-| **Warm-up** | ✅ | 89 | Included in Core |
+| **Warm-up** | ✅ | 136 | Included in Core |
 | **Presentation** | ✅ | 499 | Included in Core |
 | **Practice** | ⚪️ | 240 | Skipped |
 | **Cultural Insight** | ✅ | 231 | Included in Core |

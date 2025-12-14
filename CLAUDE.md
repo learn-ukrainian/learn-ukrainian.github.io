@@ -1,7 +1,9 @@
 # CLAUDE.md - Project Instructions
 
 ## Current Work
-A1 needs improvement before completion. See `docs/l2-uk-en/A1-IMPROVEMENT-PLAN.md`.
+**A1 COMPLETE.** All 34 modules pass audit, MDX validation, and HTML validation.
+
+Ready for A2 enrichment or other tasks.
 
 ---
 
@@ -101,6 +103,7 @@ The user switched to Gemini 2.5 Pro because it follows orders. Capability withou
 2. **WRITE** the module with all required sections
 3. **RUN AUDIT** to check structure, activities, pedagogy
 4. **FIX** any issues until audit passes
+5. **RUN PIPELINE** to validate and generate output
 
 ### After All Modules Complete
 ```bash
@@ -108,11 +111,23 @@ npm run vocab:rebuild    # Build master vocabulary database
 ```
 This validates vocabulary across all modules at once.
 
-### Generate Output
+### Generate & Validate Output
 ```bash
-npm run generate l2-uk-en a1 [moduleNum]    # MDX for Docusaurus
-npm run generate:json l2-uk-en a1 [moduleNum]  # JSON for Vibe app
+# Full pipeline (recommended) - validates at each step
+npm run pipeline l2-uk-en a1 [moduleNum]
+
+# Or separately:
+npm run generate l2-uk-en a1 [moduleNum]      # MDX for Docusaurus
+npm run generate:json l2-uk-en a1 [moduleNum] # JSON for Vibe app
+npm run validate:mdx l2-uk-en a1 [moduleNum]  # Content integrity
+npm run validate:html l2-uk-en a1 [moduleNum] # Browser rendering
 ```
+
+**Pipeline validates:**
+1. **Lint** - MD format compliance
+2. **Generate** - Creates MDX for Docusaurus
+3. **Validate MDX** - Ensures no content loss
+4. **Validate HTML** - Headless browser check (requires dev server)
 </instructions>
 
 ## Activity & Content Requirements
@@ -231,25 +246,36 @@ Level and module number are derived from the file path, not frontmatter.
 ## Commands Reference
 
 ```bash
-# Generate MDX (Docusaurus web lessons)
+# Full Pipeline (recommended) - lint → generate → validate MDX → validate HTML
+npm run pipeline l2-uk-en a1           # All modules in level
+npm run pipeline l2-uk-en a1 5         # Specific module
+
+# Generate MDX (Docusaurus web lessons) - Python
 npm run generate l2-uk-en              # All levels
 npm run generate l2-uk-en a1           # Specific level
 npm run generate l2-uk-en a1 5         # Specific module
 
-# Generate JSON (Vibe app import)
+# Generate JSON (Vibe app import) - Python
 npm run generate:json l2-uk-en         # All levels
 npm run generate:json l2-uk-en a1      # Specific level
 npm run generate:json l2-uk-en a1 5    # Specific module
 
-# Enrich vocabulary
-npm run vocab:enrich l2-uk-en [moduleNum]
+# Validation (standalone)
+npm run validate:mdx l2-uk-en a1       # Check MDX content integrity
+npm run validate:html l2-uk-en a1      # Browser rendering check (needs dev server)
 
 # Run audit
-npx ts-node scripts/module-audit.ts l2-uk-en [moduleNum]
+python3 scripts/audit_module.py {file_path}
+
+# Vocabulary
+npm run vocab:enrich l2-uk-en [moduleNum]
+npm run vocab:rebuild                  # Rebuild vocabulary database
 
 # Deploy Claude skills
 npm run claude:deploy
 ```
+
+**Note:** HTML validation requires Docusaurus dev server: `cd docusaurus && npm start`
 
 ## Vocabulary Section Formats
 
@@ -261,26 +287,22 @@ npm run claude:deploy
 
 ## Level Status
 
-| Level | Modules Built | Improvement | Vocab Finalized | Next Step |
-|-------|---------------|-------------|-----------------|-----------|
-| A1 | 20/34 | ⏳ Needed | ❌ | Improve plan → Build 21-34 → Fix 1-20 → Finalize vocab |
-| A2 | 0/50 | ⏳ Needed | ❌ | Waiting for A1 |
-| B1 | 0/80 | ⏳ Needed | ❌ | Waiting for A1 + A2 |
-| B2 | 0/135 | ⏳ Needed | ❌ | Waiting for A1-B1 |
-| C1 | 0/115 | ⏳ Needed | ❌ | Waiting for A1-B2 |
-| C2 | 0/80 | ⏳ Needed | ❌ | Waiting for A1-C1 |
-
-**Vocabulary is cumulative** - each level depends on all previous levels being finalized first.
+| Level | Modules | Status | Pipeline | Next Step |
+|-------|---------|--------|----------|-----------|
+| A1 | 34/34 | ✅ Complete | ✅ All pass | Ready |
+| A2 | 5/50 | ⏳ In progress | ⏳ | Continue enrichment |
+| B1 | 5/80 | ⏳ In progress | ⏳ | Waiting for A2 |
+| B2 | 0/125 | ❌ Not started | ❌ | Waiting for B1 |
+| C1 | 0/115 | ❌ Not started | ❌ | Waiting for B2 |
+| C2 | 0/80 | ❌ Not started | ❌ | Waiting for C1 |
 
 **Per-level workflow:**
-1. Improve curriculum plan (vocab targets, grammar scope)
-2. Update prompts & audit config
-3. Build all modules
-4. Fix modules based on audit
-5. Finalize vocabulary → rebuild DB
+1. Build all modules (stages 1-3)
+2. Run audit, fix issues until pass
+3. Run pipeline: `npm run pipeline l2-uk-en {level}`
+4. Generate JSON: `npm run generate:json l2-uk-en {level}`
+5. Finalize vocabulary → `npm run vocab:rebuild`
 6. THEN next level can begin
-
-See `docs/l2-uk-en/VOCABULARY-HANDLING-SYSTEM.md` for details.
 
 ## Documentation Links
 

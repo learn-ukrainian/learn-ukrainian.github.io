@@ -3,25 +3,25 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1213/750
+- **Words:** ✅ 1447/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/3
+- **Engagement:** ✅ 8/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 32/20
+- **Vocab:** ✅ 36/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 29.3% (target 25-35% (M14))
+- **Immersion:** 🇺🇦 32.3% (target 25-40% (M14))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Mine and Yours** | ⚪️ | 0 | Skipped |
-| **Warm-up** | ✅ | 105 | Included in Core |
-| **Presentation** | ✅ | 366 | Included in Core |
+| **Warm-up** | ✅ | 146 | Included in Core |
+| **Presentation** | ✅ | 559 | Included in Core |
 | **Practice** | ⚪️ | 225 | Skipped |
 | **Production** | ➖ | 212 | Excluded Type |
 | **Cultural Insight** | ✅ | 206 | Included in Core |

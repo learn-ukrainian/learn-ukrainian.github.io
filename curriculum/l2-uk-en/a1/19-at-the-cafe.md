@@ -33,6 +33,14 @@ vocabulary_count: 24
 
 You've learned cases, possessives, and numbers. Now it's time to combine everything in a real Ukrainian scenario: **at the café**! Ukrainian café culture is vibrant—from traditional cafés serving борщ and вареники to modern coffee shops in Lviv and Kyiv. Let's learn how to order like a local.
 
+> [!resources] 🎧 External Resources
+>
+> **Podcast:** [FMU 1-11 | Order Coffee](https://www.ukrainianlessons.com/fmu11/) — Essential café phrases
+>
+> **Podcast:** [ULP 1-12 | Ordering Food](https://www.ukrainianlessons.com/episode12/) — Restaurant ordering + culture tips
+>
+> **Podcast:** [FMU 1-16 | Order at Restaurant](https://www.ukrainianlessons.com/fmu16/) — Full restaurant dialogue
+
 ## Presentation
 
 ### Key Café Phrases
@@ -237,20 +245,19 @@ Tipping is becoming more common in Ukraine, especially in cities. 10% is standar
 
 ---
 
-# Summary
+# Підсумок (Summary)
 
-You can now:
-- ✅ Ask for a table and menu
-- ✅ Order food and drinks politely
-- ✅ Ask for recommendations
-- ✅ Request the bill (together or separately)
-- ✅ Use functional phrases combining Accusative, Genitive, and Locative cases
+**Тепер ви можете (Now you can):**
+- ✅ Попросити столик і меню (Ask for a table and menu)
+- ✅ Замовити ввічливо (Order politely)
+- ✅ Запитати рекомендації (Ask for recommendations)
+- ✅ Попросити рахунок (Request the bill)
 
-Remember:
-- Use **"візьму"** instead of **"хочу"** when ordering
-- **"Будь ласка"** is your best friend
+**Запам'ятайте (Remember):**
+- Кажіть **"візьму"**, не **"хочу"** (Say "I'll take", not "I want")
+- **"Будь ласка"** — ваш найкращий друг (Please is your best friend)
 - **"Рахунок окремо"** = separate checks
-- Spend time at cafés—it's part of Ukrainian culture!
+- Проводьте час у кафе — це частина української культури!
 
 ---
 

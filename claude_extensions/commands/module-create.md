@@ -43,7 +43,8 @@ Stage 1 → Stage 2 → Stage 3 → Stage 4 (review/fix loop) → OUTPUT
 1. Run audit
 2. Fix violations (or rebuild sections)
 3. Loop until PASS
-4. Generate MDX and JSON output
+4. Run full pipeline: `npm run pipeline l2-uk-en {level} {module_num}`
+5. Generate JSON: `npm run generate:json l2-uk-en {level} {module_num}`
 
 ### Quick Reference (Read First)
 
@@ -86,7 +87,15 @@ On completion:
 - MDX: `docusaurus/docs/{level}/module-{num}.mdx`
 - JSON: `output/json/l2-uk-en/{level}/module-{num}.json`
 
-Status: APPROVED or NEEDS MANUAL REVIEW
+Status: APPROVED (pipeline passes) or NEEDS MANUAL REVIEW
+
+**Pipeline validates:**
+- Lint (MD format)
+- Generate (MD → MDX)
+- Validate MDX (no content loss)
+- Validate HTML (browser rendering)
+
+**Note:** HTML validation requires `cd docusaurus && npm start` running
 
 ## Individual Stage Commands
 

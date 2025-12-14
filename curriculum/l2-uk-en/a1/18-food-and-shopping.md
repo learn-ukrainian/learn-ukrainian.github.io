@@ -37,6 +37,14 @@ Today, you'll learn how to navigate Ukrainian stores and cafés with confidence.
 >
 > Ukrainians love their **ринки** (markets)! Fresh produce, homemade cheeses, and seasonal fruits are sold by vendors who've been selling at the same spot for decades. It's not just shopping—it's a social experience. You greet the vendors, they remember your preferences, and you bargain a little. Try saying "Скільки коштує?" (How much is it?) at Besarabsky Market in Kyiv!
 
+> [!resources] 🎧 External Resources
+>
+> **Shopping Vocabulary:** [FMU 1-18 | Shopping Vocabulary](https://www.ukrainianlessons.com/fmu18/) — Essential store vocabulary
+>
+> **Grocery Store:** [ULP 2-46 | At the Grocery Store](https://www.ukrainianlessons.com/episode46/) — Food shopping + genitive
+>
+> **Food Guide:** [40+ Ukrainian Dishes](https://www.ukrainianlessons.com/ukrainian-food/) — Visual guide to Ukrainian cuisine
+
 ## Presentation
 
 ### Grammar Review: Accusative and Genitive Together
@@ -203,7 +211,7 @@ Let's organize the vocabulary into practical categories you'll encounter when sh
 - ❌ "Скільки є хліб?" → ✅ "Скільки **коштує** хліб?" (використовуйте "коштує" для ціни / use "коштує" for price)
 - ❌ "Одна вода" → ✅ "Склянку **води**" (родовий відмінок для кількості / genitive for quantities)
 - ❌ "Каса там" → ✅ "Каса там?" (не забувайте знак питання! / don't forget the question mark!)
-- ❌ "Хліб дорого" → ✅ "Хліб дорогий" (дорогий = прикметник / expensive = adjective)
+- ❌ "Хліб дорого" → ✅ "Хліб дорогий" (дорогий = adjective, not adverb)
 
 ### Real-World Scenarios
 
@@ -285,15 +293,15 @@ When you order Ukrainian food, you're participating in a living tradition that s
 
 ---
 
-# Summary
+# Підсумок (Summary)
 
-You've learned how to navigate Ukrainian food and shopping contexts using **accusative** (direct objects) and **genitive** (quantities) cases. You can now:
+Ви навчилися робити покупки українською! (You've learned to shop in Ukrainian!)
 
-- Order food and drinks at a café or restaurant
-- Ask prices and buy groceries
-- Request quantities (a glass of..., a kilo of...)
-- Distinguish between food and non-food vocabulary
-- Understand Ukrainian shopping culture (markets, stores, supermarkets)
+**Тепер ви можете (Now you can):**
+- Замовляти їжу та напої (Order food and drinks)
+- Питати про ціни: "Скільки коштує?" (Ask prices)
+- Просити кількість: "Склянку води" (Request quantities)
+- Розуміти культуру покупок (Understand shopping culture)
 
 **Key phrases to remember:**
 - Я хочу... (I want...)

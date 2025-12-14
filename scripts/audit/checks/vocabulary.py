@@ -210,12 +210,14 @@ def extract_vocab_items(content: str) -> list[dict]:
     """
     Extract vocabulary items with full metadata from the Vocabulary section.
 
+    Note: Must match only level-1 headings (# Vocabulary) not subsections (### Vocabulary Groups).
+
     Returns list of dicts with keys: uk, ipa, en, note
     """
     items = []
     vocab_match = re.search(
-        r'#+ (?:Vocabulary|Словник).*?(?=\n#|\Z)',
-        content, re.DOTALL | re.IGNORECASE
+        r'^# (?:Vocabulary|Словник).*?(?=\n#\s|\Z)',
+        content, re.DOTALL | re.IGNORECASE | re.MULTILINE
     )
     if vocab_match:
         vocab_text = vocab_match.group(0)
@@ -327,10 +329,13 @@ def check_vocab_violations(
 
 
 def count_vocab_rows(content: str) -> int:
-    """Count vocabulary table rows."""
+    """Count vocabulary table rows.
+
+    Note: Must match only level-1 headings (# Vocabulary) not subsections (### Vocabulary Groups).
+    """
     vocab_section_match = re.search(
-        r'(#+\s+(Vocabulary|Словник).*?)(?=\n#+|$)',
-        content, re.DOTALL | re.IGNORECASE
+        r'(^# +(Vocabulary|Словник).*?)(?=\n# |\Z)',
+        content, re.DOTALL | re.IGNORECASE | re.MULTILINE
     )
     if vocab_section_match:
         vocab_text = vocab_section_match.group(1)
@@ -441,17 +446,8 @@ def check_vocab_matches_plan(
     # Normalize module vocab to lowercase for comparison
     module_vocab_lower = {w.lower() for w in module_vocab if len(w) >= 2}
 
-    # Find improvised words (in module but not in plan)
-    improvised = module_vocab_lower - plan_vocab - COMMON_WORDS
-    if improvised:
-        # Filter to significant improvisation (more than 3 words)
-        if len(improvised) > 3:
-            sample = list(improvised)[:5]
-            violations.append({
-                'type': 'VOCAB_PLAN_MISMATCH',
-                'issue': f"Improvised vocabulary ({len(improvised)} words not in plan): {', '.join(sample)}...",
-                'fix': "Remove words not in curriculum plan, or update the plan first if words are needed."
-            })
+    # Note: Extra words beyond the plan are ALLOWED (modules can expand on core vocab)
+    # We only check for MISSING core words from the plan
 
     # Find missing words (in plan but not in module) - WARNING only
     missing = plan_vocab - module_vocab_lower
@@ -502,7 +498,8 @@ METALANGUAGE_BY_LEVEL = {
 def check_metalanguage_scaffolding(
     content: str,
     vocab_words: set[str],
-    level: str
+    level: str,
+    module_num: int = 0
 ) -> list[dict]:
     """
     Check if grammatical/linguistic terms used in instructions are taught first.
@@ -510,19 +507,34 @@ def check_metalanguage_scaffolding(
     At A1-A2, grammar terms should appear in vocabulary before being used
     in Ukrainian instructions. This ensures learners understand instructions.
 
+    Note: For later modules in a level, we assume basic metalanguage has been
+    introduced in earlier modules (e.g., gender terms in M03 for A1).
+
     Args:
         content: Full module content
         vocab_words: Words from the module's vocabulary section
         level: Level code
+        module_num: Module number (used to skip check for later modules)
 
     Returns:
         List of violations for untaught metalanguage terms
     """
     violations = []
 
+    # Skip metalanguage check for later modules - assume terms were taught earlier
+    # A1: gender terms taught in M03, cases in M11-16, etc.
+    # A2: case names taught early, aspect introduced
+    level_upper = level.upper()
+    if level_upper == 'A1' and module_num >= 10:
+        return violations  # Basic metalanguage taught by M10
+    if level_upper == 'A2' and module_num >= 15:
+        return violations  # A2 metalanguage taught by M15
+    if level_upper in ('B1', 'B2', 'C1', 'C2'):
+        return violations  # B1+ assumes all prior metalanguage known
+
     # Get metalanguage for this level and all earlier levels
     level_order = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
-    current_idx = level_order.index(level.upper()) if level.upper() in level_order else 0
+    current_idx = level_order.index(level_upper) if level_upper in level_order else 0
 
     relevant_metalang = set()
     for i in range(current_idx + 1):

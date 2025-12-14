@@ -5,20 +5,18 @@ title: "Food & Shopping"
 description: "Practical vocabulary for market and store"
 ---
 
-import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
-import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
+import Quiz from '@site/src/components/Quiz';
 import MatchUp from '@site/src/components/MatchUp';
-import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
-import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
-import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Select, { SelectQuestion } from '@site/src/components/Select';
-import Translate, { TranslateItem } from '@site/src/components/Translate';
-import Cloze, { ClozePassage } from '@site/src/components/Cloze';
-import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
-import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import DialogueReorder from '@site/src/components/DialogueReorder';
 
 
 # Food & Shopping
@@ -32,6 +30,16 @@ Today, you'll learn how to navigate Ukrainian stores and cafés with confidence.
 > 💡 **Did You Know?**
 >
 > Ukrainians love their **ринки** (markets)! Fresh produce, homemade cheeses, and seasonal fruits are sold by vendors who've been selling at the same spot for decades. It's not just shopping—it's a social experience. You greet the vendors, they remember your preferences, and you bargain a little. Try saying "Скільки коштує?" (How much is it?) at Besarabsky Market in Kyiv!
+
+:::info[🎧 External Resources]
+
+**Shopping Vocabulary:** [FMU 1-18 | Shopping Vocabulary](https://www.ukrainianlessons.com/fmu18/) — Essential store vocabulary
+
+**Grocery Store:** [ULP 2-46 | At the Grocery Store](https://www.ukrainianlessons.com/episode46/) — Food shopping + genitive
+
+**Food Guide:** [40+ Ukrainian Dishes](https://www.ukrainianlessons.com/ukrainian-food/) — Visual guide to Ukrainian cuisine
+:::
+
 
 ## Presentation
 
@@ -199,7 +207,7 @@ Let's organize the vocabulary into practical categories you'll encounter when sh
 - ❌ "Скільки є хліб?" → ✅ "Скільки **коштує** хліб?" (використовуйте "коштує" для ціни / use "коштує" for price)
 - ❌ "Одна вода" → ✅ "Склянку **води**" (родовий відмінок для кількості / genitive for quantities)
 - ❌ "Каса там" → ✅ "Каса там?" (не забувайте знак питання! / don't forget the question mark!)
-- ❌ "Хліб дорого" → ✅ "Хліб дорогий" (дорогий = прикметник / expensive = adjective)
+- ❌ "Хліб дорого" → ✅ "Хліб дорогий" (дорогий = adjective, not adverb)
 
 ### Real-World Scenarios
 
@@ -281,15 +289,15 @@ When you order Ukrainian food, you're participating in a living tradition that s
 
 ---
 
-# Summary
+## 📋 Підсумок (Summary)
 
-You've learned how to navigate Ukrainian food and shopping contexts using **accusative** (direct objects) and **genitive** (quantities) cases. You can now:
+Ви навчилися робити покупки українською! (You've learned to shop in Ukrainian!)
 
-- Order food and drinks at a café or restaurant
-- Ask prices and buy groceries
-- Request quantities (a glass of..., a kilo of...)
-- Distinguish between food and non-food vocabulary
-- Understand Ukrainian shopping culture (markets, stores, supermarkets)
+**Тепер ви можете (Now you can):**
+- Замовляти їжу та напої (Order food and drinks)
+- Питати про ціни: "Скільки коштує?" (Ask prices)
+- Просити кількість: "Склянку води" (Request quantities)
+- Розуміти культуру покупок (Understand shopping culture)
 
 **Key phrases to remember:**
 - Я хочу... (I want...)
@@ -307,7 +315,7 @@ Next module (M19: At the Café), you'll practice full café dialogues using all 
 
 ---
 
-# Vocabulary
+## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
@@ -365,14 +373,12 @@ Next module (M19: At the Café), you'll practice full café dialogues using all 
 
 ---
 
-## 🎮 Activities
+## 🎯 Activities
 
 ### Food & Drinks Vocabulary
 
-*Match the Ukrainian words with their English meanings.*
-
-
 <MatchUp pairs={[
+  { left: `Ukrainian`, right: `English` },
   { left: `кава`, right: `coffee` },
   { left: `чай`, right: `tea` },
   { left: `вода`, right: `water` },
@@ -389,310 +395,242 @@ Next module (M19: At the Café), you'll practice full café dialogues using all 
 
 ### Shopping Phrases
 
-*Fill in the blank with the correct word.*
-
-
-<FillIn>
-  <FillInQuestion
-    sentence={`1. Скільки ___ хліб? (How much is bread?)`}
-    answer={`коштує`}
-    options={[`коштує`, `є`, `має`, `бере`]}
-  />
-  <FillInQuestion
-    sentence={`Я ___ каву. (I want coffee.)`}
-    answer={`хочу`}
-    options={[`хочу`, `хоче`, `хочеш`, `хочуть`]}
-  />
-  <FillInQuestion
-    sentence={`Я хочу ___, будь ласка. (I want bread, please.)`}
-    answer={`хліб`}
-    options={[`хліб`, `хліба`, `хлібу`, `хлібом`]}
-  />
-  <FillInQuestion
-    sentence={`Склянку ___, будь ласка. (A glass of water, please.)`}
-    answer={`води`}
-    options={[`води`, `вода`, `воду`, `водою`]}
-  />
-  <FillInQuestion
-    sentence={`Ми ___ овочі. (We buy vegetables.)`}
-    answer={`купуємо`}
-    options={[`купуємо`, `купую`, `купуєш`, `купує`]}
-  />
-  <FillInQuestion
-    sentence={`___, будь ласка. (The bill, please.)`}
-    answer={`Рахунок`}
-    options={[`Рахунок`, `Рахунку`, `Рахунком`, `Рахунки`]}
-  />
-  <FillInQuestion
-    sentence={`У меню є ___? (Is there dessert on the menu?)`}
-    answer={`десерт`}
-    options={[`десерт`, `десерту`, `десерті`, `десертом`]}
-  />
-  <FillInQuestion
-    sentence={`Я шукаю зубну ___. (I'm looking for toothpaste.)`}
-    answer={`пасту`}
-    options={[`пасту`, `паста`, `пасти`, `пастою`]}
-  />
-  <FillInQuestion
-    sentence={`Я хочу ___. (I want a pen.)`}
-    answer={`ручку`}
-    options={[`ручку`, `ручка`, `ручки`, `ручкою`]}
-  />
-  <FillInQuestion
-    sentence={`Магазин ___ о восьмій. (The store opens at 8.)`}
-    answer={`відчинено`}
-    options={[`відчинено`, `зачинено`, `відчиняє`, `зачиняє`]}
-  />
-  <FillInQuestion
-    sentence={`Це дуже ___. (This is very expensive.)`}
-    answer={`дорого`}
-    options={[`дорого`, `дешево`, `коштує`, `ціна`]}
-  />
-  <FillInQuestion
-    sentence={`Я візьму ___ та салат. (I'll take soup and salad.)`}
-    answer={`суп`}
-    options={[`суп`, `супу`, `супом`, `супи`]}
-  />
-</FillIn>
+<FillIn items={[
+  {
+    sentence: `Скільки ___ хліб? (How much is bread?)`,
+    answer: `коштує`,
+    options: [`коштує`, `є`, `має`, `бере`]
+  },  {
+    sentence: `Я ___ каву. (I want coffee.)`,
+    answer: `хочу`,
+    options: [`хочу`, `хоче`, `хочеш`, `хочуть`]
+  },  {
+    sentence: `Я хочу ___, будь ласка. (I want bread, please.)`,
+    answer: `хліб`,
+    options: [`хліб`, `хліба`, `хлібу`, `хлібом`]
+  },  {
+    sentence: `Склянку ___, будь ласка. (A glass of water, please.)`,
+    answer: `води`,
+    options: [`води`, `вода`, `воду`, `водою`]
+  },  {
+    sentence: `Ми ___ овочі. (We buy vegetables.)`,
+    answer: `купуємо`,
+    options: [`купуємо`, `купую`, `купуєш`, `купує`]
+  },  {
+    sentence: `___, будь ласка. (The bill, please.)`,
+    answer: `Рахунок`,
+    options: [`Рахунок`, `Рахунку`, `Рахунком`, `Рахунки`]
+  },  {
+    sentence: `У меню є ___? (Is there dessert on the menu?)`,
+    answer: `десерт`,
+    options: [`десерт`, `десерту`, `десерті`, `десертом`]
+  },  {
+    sentence: `Я шукаю зубну ___. (I'm looking for toothpaste.)`,
+    answer: `пасту`,
+    options: [`пасту`, `паста`, `пасти`, `пастою`]
+  },  {
+    sentence: `Я хочу ___. (I want a pen.)`,
+    answer: `ручку`,
+    options: [`ручку`, `ручка`, `ручки`, `ручкою`]
+  },  {
+    sentence: `Магазин ___ о восьмій. (The store opens at 8.)`,
+    answer: `відчинено`,
+    options: [`відчинено`, `зачинено`, `відчиняє`, `зачиняє`]
+  },  {
+    sentence: `Це дуже ___. (This is very expensive.)`,
+    answer: `дорого`,
+    options: [`дорого`, `дешево`, `коштує`, `ціна`]
+  },  {
+    sentence: `Я візьму ___ та салат. (I'll take soup and salad.)`,
+    answer: `суп`,
+    options: [`суп`, `супу`, `супом`, `супи`]
+  }
+]} />
 
 ### Food vs Non-Food Items
 
-*Sort these items into food and non-food categories.*
-
-
 <GroupSort groups={{
-  "### Food Items": [
-    "кава",
-    "хліб",
-    "м'ясо",
-    "сир",
-    "овочі",
-    "борщ",
-    "риба",
-    "яйце"
-  ],
-  "Non-Food Items": [
-    "мило",
-    "шампунь",
-    "зубна паста",
-    "папір",
-    "ручка",
-    "олівець",
-    "зошит",
-    "пакет"
-  ]
+  "Food Items": ["кава", "хліб", "м'ясо", "сир", "овочі", "борщ", "риба", "яйце"],
+  "Non-Food Items": ["мило", "шампунь", "зубна паста", "папір", "ручка", "олівець", "зошит", "пакет"]
 }} />
 
 ### Shopping Situations
 
-*Choose the correct answer.*
-
-
-<Quiz>
-  <QuizQuestion
-    question={`1. You want to ask the price of cheese. What do you say?`}
-    options={[`Скільки є сир?`, `Скільки коштує сир?`, `Який сир?`, `Чому сир?`]}
-    correctIndex={1}
-    explanation={`"Скільки коштує?" = "How much does it cost?"`}
-  />
-  <QuizQuestion
-    question={`How do you order coffee in accusative case?`}
-    options={[`Я хочу кава.`, `Я хочу каву.`, `Я хочу кави.`, `Я хочу кавою.`]}
-    correctIndex={1}
-    explanation={`Feminine -а becomes -у in accusative: кава → каву`}
-  />
-  <QuizQuestion
-    question={`What does "офіціант" mean?`}
-    options={[`office`, `waiter`, `official`, `restaurant`]}
-    correctIndex={1}
-    explanation={`офіціант = waiter (masculine)`}
-  />
-  <QuizQuestion
-    question={`You want to ask for the bill. What do you say?`}
-    options={[`Меню, будь ласка.`, `Вода, будь ласка.`, `Рахунок, будь ласка.`, `Гроші, будь ласка.`]}
-    correctIndex={2}
-    explanation={`Рахунок = bill/check`}
-  />
-  <QuizQuestion
-    question={`Which word means "cheap"?`}
-    options={[`дорого`, `дешево`, `ціна`, `знижка`]}
-    correctIndex={1}
-    explanation={`дешево = cheap (adverb)`}
-  />
-  <QuizQuestion
-    question={`How do you say "a glass of water" using genitive?`}
-    options={[`Склянка вода`, `Склянку воду`, `Склянку води`, `Склянка води`]}
-    correctIndex={2}
-    explanation={`Genitive for quantities: вода → води`}
-  />
-  <QuizQuestion
-    question={`Where do you pay at a supermarket?`}
-    options={[`магазин`, `пакет`, `каса`, `супермаркет`]}
-    correctIndex={2}
-    explanation={`каса = checkout/cashier`}
-  />
-  <QuizQuestion
-    question={`What does "відчинено" mean?`}
-    options={[`closed`, `open`, `expensive`, `cheap`]}
-    correctIndex={1}
-    explanation={`відчинено = open (adverb)`}
-  />
-  <QuizQuestion
-    question={`Which is NOT a beverage?`}
-    options={[`кава`, `чай`, `сік`, `хліб`]}
-    correctIndex={3}
-    explanation={`хліб = bread (not a drink)`}
-  />
-  <QuizQuestion
-    question={`You're buying groceries. What do you say?`}
-    options={[`Я читаю хліб.`, `Я купую хліб.`, `Я пишу хліб.`, `Я бачу хліб.`]}
-    correctIndex={1}
-    explanation={`купувати = to buy`}
-  />
-  <QuizQuestion
-    question={`Which word means "tasty"?`}
-    options={[`страва`, `смачний`, `меню`, `закуска`]}
-    correctIndex={1}
-    explanation={`смачний = tasty (adjective)`}
-  />
-  <QuizQuestion
-    question={`How do you say "I'll take bread, please"?`}
-    options={[`Я хочу хліб, будь ласка.`, `Я візьму хліб, будь ласка.`, `Я читаю хліб, будь ласка.`, `Скільки коштує хліб?`]}
-    correctIndex={1}
-    explanation={`"Я візьму..." = "I'll take..."`}
-  />
-</Quiz>
+<Quiz questions={[
+  {
+    question: `You want to ask the price of cheese. What do you say?`,
+    options: [
+      { text: `Скільки є сир?`, correct: false },
+      { text: `Скільки коштує сир?`, correct: true },
+      { text: `Який сир?`, correct: false },
+      { text: `Чому сир?`, correct: false }
+    ]
+  },  {
+    question: `How do you order coffee in accusative case?`,
+    options: [
+      { text: `Я хочу кава.`, correct: false },
+      { text: `Я хочу каву.`, correct: true },
+      { text: `Я хочу кави.`, correct: false },
+      { text: `Я хочу кавою.`, correct: false }
+    ]
+  },  {
+    question: `What does \"офіціант\" mean?`,
+    options: [
+      { text: `office`, correct: false },
+      { text: `waiter`, correct: true },
+      { text: `official`, correct: false },
+      { text: `restaurant`, correct: false }
+    ]
+  },  {
+    question: `You want to ask for the bill. What do you say?`,
+    options: [
+      { text: `Меню, будь ласка.`, correct: false },
+      { text: `Вода, будь ласка.`, correct: false },
+      { text: `Рахунок, будь ласка.`, correct: true },
+      { text: `Гроші, будь ласка.`, correct: false }
+    ]
+  },  {
+    question: `Which word means \"cheap\"?`,
+    options: [
+      { text: `дорого`, correct: false },
+      { text: `дешево`, correct: true },
+      { text: `ціна`, correct: false },
+      { text: `знижка`, correct: false }
+    ]
+  },  {
+    question: `How do you say \"a glass of water\" using genitive?`,
+    options: [
+      { text: `Склянка вода`, correct: false },
+      { text: `Склянку воду`, correct: false },
+      { text: `Склянку води`, correct: true },
+      { text: `Склянка води`, correct: false }
+    ]
+  },  {
+    question: `Where do you pay at a supermarket?`,
+    options: [
+      { text: `магазин`, correct: false },
+      { text: `пакет`, correct: false },
+      { text: `каса`, correct: true },
+      { text: `супермаркет`, correct: false }
+    ]
+  },  {
+    question: `What does \"відчинено\" mean?`,
+    options: [
+      { text: `closed`, correct: false },
+      { text: `open`, correct: true },
+      { text: `expensive`, correct: false },
+      { text: `cheap`, correct: false }
+    ]
+  },  {
+    question: `Which is NOT a beverage?`,
+    options: [
+      { text: `кава`, correct: false },
+      { text: `чай`, correct: false },
+      { text: `сік`, correct: false },
+      { text: `хліб`, correct: true }
+    ]
+  },  {
+    question: `You're buying groceries. What do you say?`,
+    options: [
+      { text: `Я читаю хліб.`, correct: false },
+      { text: `Я купую хліб.`, correct: true },
+      { text: `Я пишу хліб.`, correct: false },
+      { text: `Я бачу хліб.`, correct: false }
+    ]
+  },  {
+    question: `Which word means \"tasty\"?`,
+    options: [
+      { text: `страва`, correct: false },
+      { text: `смачний`, correct: true },
+      { text: `меню`, correct: false },
+      { text: `закуска`, correct: false }
+    ]
+  },  {
+    question: `How do you say \"I'll take bread, please\"?`,
+    options: [
+      { text: `Я хочу хліб, будь ласка.`, correct: false },
+      { text: `Я візьму хліб, будь ласка.`, correct: true },
+      { text: `Я читаю хліб, будь ласка.`, correct: false },
+      { text: `Скільки коштує хліб?`, correct: false }
+    ]
+  }
+]} />
 
 ### Shopping Culture
 
-*Decide if each statement is true or false.*
-
-
-<TrueFalse>
-  <TrueFalseQuestion
-    statement={`Ukrainian markets (ринки) are popular for fresh produce.`}
-    isTrue={true}
-    explanation={`Correct! Markets remain a beloved shopping tradition.`}
-  />
-  <TrueFalseQuestion
-    statement={`You should never greet the salesperson in a small Ukrainian store.`}
-    isTrue={false}
-    explanation={`Incorrect! It's polite to greet them when entering and leaving.`}
-  />
-  <TrueFalseQuestion
-    statement={`"Скільки коштує?" means "How much does it cost?"`}
-    isTrue={true}
-    explanation={`Correct! This is the standard phrase for asking prices.`}
-  />
-  <TrueFalseQuestion
-    statement={`Bread (хліб) has no cultural significance in Ukraine.`}
-    isTrue={false}
-    explanation={`Incorrect! Bread is sacred in Ukrainian culture (хліб-сіль tradition).`}
-  />
-  <TrueFalseQuestion
-    statement={`Ukrainian supermarkets often have multiple floors.`}
-    isTrue={true}
-    explanation={`Correct! Larger stores put food downstairs, household goods upstairs.`}
-  />
-  <TrueFalseQuestion
-    statement={`You use accusative case for quantities like "a glass of water."`}
-    isTrue={false}
-    explanation={`Incorrect! You use genitive: "склянку води" (genitive of вода).`}
-  />
-  <TrueFalseQuestion
-    statement={`UNESCO recognizes Ukrainian borsch culture as endangered heritage.`}
-    isTrue={true}
-    explanation={`Correct! This recognition came in 2022.`}
-  />
-  <TrueFalseQuestion
-    statement={`"Дешево" means "expensive."`}
-    isTrue={false}
-    explanation={`Incorrect! Дешево = cheap. Дорого = expensive.`}
-  />
-  <TrueFalseQuestion
-    statement={`"Каса" is where you pay at a supermarket.`}
-    isTrue={true}
-    explanation={`Correct! Каса = checkout/cashier.`}
-  />
-  <TrueFalseQuestion
-    statement={`Ukrainians only use cash, never cards.`}
-    isTrue={false}
-    explanation={`Incorrect! Modern supermarkets accept card payments.`}
-  />
-  <TrueFalseQuestion
-    statement={`"Офіціантка" is the feminine form of "waiter."`}
-    isTrue={true}
-    explanation={`Correct! офіціант (m), офіціантка (f).`}
-  />
-  <TrueFalseQuestion
-    statement={`It's rude to ask "Ще щось?" (Anything else?) in a store.`}
-    isTrue={false}
-    explanation={`Incorrect! This is a standard polite question from salespeople.`}
-  />
-</TrueFalse>
+<TrueFalse items={[
+  {
+    statement: `Ukrainian markets (ринки) are popular for fresh produce.`,
+    isTrue: true,
+    explanation: `Correct! Markets remain a beloved shopping tradition.`
+  },  {
+    statement: `You should never greet the salesperson in a small Ukrainian store.`,
+    isTrue: false,
+    explanation: `Incorrect! It's polite to greet them when entering and leaving.`
+  },  {
+    statement: `\"Скільки коштує?\" means \"How much does it cost?\"`,
+    isTrue: true,
+    explanation: `Correct! This is the standard phrase for asking prices.`
+  },  {
+    statement: `Bread (хліб) has no cultural significance in Ukraine.`,
+    isTrue: false,
+    explanation: `Incorrect! Bread is sacred in Ukrainian culture (хліб-сіль tradition).`
+  },  {
+    statement: `Ukrainian supermarkets often have multiple floors.`,
+    isTrue: true,
+    explanation: `Correct! Larger stores put food downstairs, household goods upstairs.`
+  },  {
+    statement: `You use accusative case for quantities like \"a glass of water.\"`,
+    isTrue: false,
+    explanation: `Incorrect! You use genitive: \"склянку води\" (genitive of вода).`
+  },  {
+    statement: `UNESCO recognizes Ukrainian borsch culture as endangered heritage.`,
+    isTrue: true,
+    explanation: `Correct! This recognition came in 2022.`
+  },  {
+    statement: `\"Дешево\" means \"expensive.\"`,
+    isTrue: false,
+    explanation: `Incorrect! Дешево = cheap. Дорого = expensive.`
+  },  {
+    statement: `\"Каса\" is where you pay at a supermarket.`,
+    isTrue: true,
+    explanation: `Correct! Каса = checkout/cashier.`
+  },  {
+    statement: `Ukrainians only use cash, never cards.`,
+    isTrue: false,
+    explanation: `Incorrect! Modern supermarkets accept card payments.`
+  },  {
+    statement: `\"Офіціантка\" is the feminine form of \"waiter.\"`,
+    isTrue: true,
+    explanation: `Correct! офіціант (m), офіціантка (f).`
+  },  {
+    statement: `It's rude to ask \"Ще щось?\" (Anything else?) in a store.`,
+    isTrue: false,
+    explanation: `Incorrect! This is a standard polite question from salespeople.`
+  }
+]} />
 
 ### Shopping Sentences
 
-*Put the words in the correct order to form sentences.*
-
-
-<Unjumble>
-  <UnjumbleQuestion
-    words={`хочу / Я / каву`}
-    answer={`Я хочу каву.`}
-  />
-  <UnjumbleQuestion
-    words={`коштує / Скільки / хліб`}
-    answer={`Скільки коштує хліб?`}
-  />
-  <UnjumbleQuestion
-    words={`візьму / Я / будь ласка / сир`}
-    answer={`Я візьму сир, будь ласка.`}
-  />
-  <UnjumbleQuestion
-    words={`води / Склянку / будь ласка`}
-    answer={`Склянку води, будь ласка.`}
-  />
-  <UnjumbleQuestion
-    words={`купуємо / Ми / овочі / та / м'ясо`}
-    answer={`Ми купуємо овочі та м'ясо.`}
-  />
-  <UnjumbleQuestion
-    words={`є / меню / У / десерт`}
-    answer={`У меню є десерт?`}
-  />
-  <UnjumbleQuestion
-    words={`Рахунок / будь ласка`}
-    answer={`Рахунок, будь ласка.`}
-  />
-  <UnjumbleQuestion
-    words={`дуже / Борщ / смачний`}
-    answer={`Борщ дуже смачний.`}
-  />
-  <UnjumbleQuestion
-    words={`шукаю / Я / зубну / пасту`}
-    answer={`Я шукаю зубну пасту.`}
-  />
-  <UnjumbleQuestion
-    words={`магазин / де / Вибачте`}
-    answer={`Вибачте, де магазин?`}
-  />
-  <UnjumbleQuestion
-    words={`візьму / Я / суп / та / салат`}
-    answer={`Я візьму суп та салат.`}
-  />
-  <UnjumbleQuestion
-    words={`відчинено / Магазин / о / восьмій`}
-    answer={`Магазин відчинено о восьмій.`}
-  />
-</Unjumble>
+<Unjumble items={[
+  { jumbled: `хочу / Я / каву`, answer: `Я хочу каву.` },
+  { jumbled: `коштує / Скільки / хліб`, answer: `Скільки коштує хліб?` },
+  { jumbled: `візьму / Я / будь ласка / сир`, answer: `Я візьму сир, будь ласка.` },
+  { jumbled: `води / Склянку / будь ласка`, answer: `Склянку води, будь ласка.` },
+  { jumbled: `купуємо / Ми / овочі / та / м'ясо`, answer: `Ми купуємо овочі та м'ясо.` },
+  { jumbled: `є / меню / У / десерт`, answer: `У меню є десерт?` },
+  { jumbled: `Рахунок / будь ласка`, answer: `Рахунок, будь ласка.` },
+  { jumbled: `дуже / Борщ / смачний`, answer: `Борщ дуже смачний.` },
+  { jumbled: `шукаю / Я / зубну / пасту`, answer: `Я шукаю зубну пасту.` },
+  { jumbled: `магазин / де / Вибачте`, answer: `Вибачте, де магазин?` },
+  { jumbled: `візьму / Я / суп / та / салат`, answer: `Я візьму суп та салат.` },
+  { jumbled: `відчинено / Магазин / о / восьмій`, answer: `Магазин відчинено о восьмій.` }
+]} />
 
 ### Non-Food Items
 
-*Match items with their English meanings.*
-
-
 <MatchUp pairs={[
+  { left: `Ukrainian`, right: `English` },
   { left: `мило`, right: `soap` },
   { left: `шампунь`, right: `shampoo` },
   { left: `зубна паста`, right: `toothpaste` },
@@ -709,106 +647,62 @@ Next module (M19: At the Café), you'll practice full café dialogues using all 
 
 ### Café Dialogue
 
-*Complete the café conversation with the correct words.*
-
-
-<FillIn>
-  <FillInQuestion
-    sentence={`1. — Що ти будеш ___? (What will you order?)`}
-    answer={`замовляти`}
-    options={[`замовляти`, `замовити`, `замовляє`, `замовляю`]}
-  />
-  <FillInQuestion
-    sentence={`— Я візьму каву та ___. (I'll take coffee and dessert.)`}
-    answer={`десерт`}
-    options={[`десерт`, `десерту`, `десерті`, `десертом`]}
-  />
-  <FillInQuestion
-    sentence={`— Я хочу чай та ___, будь ласка. (I want tea and salad, please.)`}
-    answer={`салат`}
-    options={[`салат`, `салату`, `салаті`, `салатом`]}
-  />
-  <FillInQuestion
-    sentence={`— ___! Можна меню? (Waiter! Can we have the menu?)`}
-    answer={`Офіціант`}
-    options={[`Офіціант`, `Офіціанта`, `Офіціанту`, `Офіціантом`]}
-  />
-  <FillInQuestion
-    sentence={`— Так, ___ принесу. (Yes, I'll bring it now.)`}
-    answer={`зараз`}
-    options={[`зараз`, `потім`, `вчора`, `завтра`]}
-  />
-  <FillInQuestion
-    sentence={`— Скільки коштує ___? (How much is the soup?)`}
-    answer={`суп`}
-    options={[`суп`, `супу`, `супом`, `супи`]}
-  />
-  <FillInQuestion
-    sentence={`— ___ 45 гривень. (Together 45 hryvnias.)`}
-    answer={`Разом`}
-    options={[`Разом`, `Окремо`, `Скільки`, `Ціна`]}
-  />
-  <FillInQuestion
-    sentence={`— ___, будь ласка. (The bill, please.)`}
-    answer={`Рахунок`}
-    options={[`Рахунок`, `Меню`, `Каву`, `Чай`]}
-  />
-  <FillInQuestion
-    sentence={`— Ось ___. Дякую! (Here's the money. Thank you!)`}
-    answer={`гроші`}
-    options={[`гроші`, `грошей`, `грошам`, `грошима`]}
-  />
-  <FillInQuestion
-    sentence={`— Дякую! ___ побачення! (Thank you! Goodbye!)`}
-    answer={`До`}
-    options={[`До`, `Від`, `На`, `У`]}
-  />
-  <FillInQuestion
-    sentence={`— Це дуже ___. (This is very tasty.)`}
-    answer={`смачно`}
-    options={[`смачно`, `смачний`, `смачна`, `смачне`]}
-  />
-  <FillInQuestion
-    sentence={`— Пляшку ___, будь ласка. (A bottle of wine, please.)`}
-    answer={`вина`}
-    options={[`вина`, `вино`, `виною`, `вину`]}
-  />
-</FillIn>
+<FillIn items={[
+  {
+    sentence: `— Що ти будеш ___? (What will you order?)`,
+    answer: `замовляти`,
+    options: [`замовляти`, `замовити`, `замовляє`, `замовляю`]
+  },  {
+    sentence: `— Я візьму каву та ___. (I'll take coffee and dessert.)`,
+    answer: `десерт`,
+    options: [`десерт`, `десерту`, `десерті`, `десертом`]
+  },  {
+    sentence: `— Я хочу чай та ___, будь ласка. (I want tea and salad, please.)`,
+    answer: `салат`,
+    options: [`салат`, `салату`, `салаті`, `салатом`]
+  },  {
+    sentence: `— ___! Можна меню? (Waiter! Can we have the menu?)`,
+    answer: `Офіціант`,
+    options: [`Офіціант`, `Офіціанта`, `Офіціанту`, `Офіціантом`]
+  },  {
+    sentence: `— Так, ___ принесу. (Yes, I'll bring it now.)`,
+    answer: `зараз`,
+    options: [`зараз`, `потім`, `вчора`, `завтра`]
+  },  {
+    sentence: `— Скільки коштує ___? (How much is the soup?)`,
+    answer: `суп`,
+    options: [`суп`, `супу`, `супом`, `супи`]
+  },  {
+    sentence: `— ___ 45 гривень. (Together 45 hryvnias.)`,
+    answer: `Разом`,
+    options: [`Разом`, `Окремо`, `Скільки`, `Ціна`]
+  },  {
+    sentence: `— ___, будь ласка. (The bill, please.)`,
+    answer: `Рахунок`,
+    options: [`Рахунок`, `Меню`, `Каву`, `Чай`]
+  },  {
+    sentence: `— Ось ___. Дякую! (Here's the money. Thank you!)`,
+    answer: `гроші`,
+    options: [`гроші`, `грошей`, `грошам`, `грошима`]
+  },  {
+    sentence: `— Дякую! ___ побачення! (Thank you! Goodbye!)`,
+    answer: `До`,
+    options: [`До`, `Від`, `На`, `У`]
+  },  {
+    sentence: `— Це дуже ___. (This is very tasty.)`,
+    answer: `смачно`,
+    options: [`смачно`, `смачний`, `смачна`, `смачне`]
+  },  {
+    sentence: `— Пляшку ___, будь ласка. (A bottle of wine, please.)`,
+    answer: `вина`,
+    options: [`вина`, `вино`, `виною`, `вину`]
+  }
+]} />
 
 ### Beverages vs Food vs Items
 
-*Sort these words into three categories.*
-
-
 <GroupSort groups={{
-  "### Beverages (Напої)": [
-    "кава",
-    "чай",
-    "сік",
-    "вода",
-    "вино",
-    "пиво"
-  ],
-  "Food (Їжа)": [
-    "хліб",
-    "сир",
-    "м'ясо",
-    "риба",
-    "овочі",
-    "яйце",
-    "борщ",
-    "салат"
-  ],
-  "Store Items (Товари)": [
-    "мило",
-    "шампунь",
-    "зубна паста",
-    "папір",
-    "ручка",
-    "олівець",
-    "зошит",
-    "пакет"
-  ]
+  "Beverages (Напої)": ["кава", "чай", "сік", "вода", "вино", "пиво"],
+  "Food (Їжа)": ["хліб", "сир", "м'ясо", "риба", "овочі", "яйце", "борщ", "салат"],
+  "Store Items (Товари)": ["мило", "шампунь", "зубна паста", "папір", "ручка", "олівець", "зошит", "пакет"]
 }} />
-
-

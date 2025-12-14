@@ -105,14 +105,43 @@ export function TranslateItem({
   );
 }
 
-interface TranslateProps {
-  children: React.ReactNode;
-  direction?: 'to-uk' | 'to-en';
+// Generator format question
+interface GeneratorTranslateQuestion {
+  source: string;
+  options: Array<{ text: string; correct: boolean }>;
+  explanation?: string;
 }
 
-export default function Translate({ children, direction = 'to-uk' }: TranslateProps) {
+interface TranslateProps {
+  questions?: GeneratorTranslateQuestion[];
+  direction?: 'to-uk' | 'to-en';
+  children?: React.ReactNode;
+}
+
+export default function Translate({ questions, direction = 'to-uk', children }: TranslateProps) {
   const title = direction === 'to-uk' ? 'Translate to Ukrainian' : 'Translate to English';
   const icon = direction === 'to-uk' ? '🇺🇦' : '🇬🇧';
+
+  // Transform generator format to TranslateItem props
+  const transformedItems = useMemo(() => {
+    if (!questions) return null;
+
+    return questions.map(q => {
+      // Find correct answer
+      const correctOption = q.options.find(o => o.correct);
+      const answer = correctOption?.text || '';
+
+      // Get all options as string array
+      const options = q.options.map(o => o.text);
+
+      return {
+        source: q.source,
+        answer,
+        options,
+        explanation: q.explanation
+      };
+    });
+  }, [questions]);
 
   return (
     <div className={styles.activityContainer}>
@@ -122,7 +151,15 @@ export default function Translate({ children, direction = 'to-uk' }: TranslatePr
         <ActivityHelp activityType="translate" />
       </div>
       <div className={styles.activityContent}>
-        {children}
+        {transformedItems ? transformedItems.map((item, idx) => (
+          <TranslateItem
+            key={idx}
+            source={item.source}
+            answer={item.answer}
+            options={item.options}
+            explanation={item.explanation}
+          />
+        )) : children}
       </div>
     </div>
   );

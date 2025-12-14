@@ -9,1239 +9,372 @@
     "visibility": "public",
     "language": "uk",
     "targetLevel": "A1",
-    "phase": "A1.3",
+    "phase": "A1.3 - Consolidation",
     "moduleNumber": 28,
     "moduleType": "grammar",
     "pedagogy": "PPP",
     "immersionLevel": 0.3,
-    "title": "How Do You Do It? - Adverbs",
-    "subtitle": "Adverbs of Manner and Frequency",
-    "description": "Form adverbs from adjectives",
+    "title": "Description: Adverbs",
+    "titleUk": null,
+    "subtitle": "How We Do Things",
+    "description": "Learner can form adverbs from adjectives",
     "objectives": [
-      "Form adverbs from adjectives",
-      "Use adverbs of manner",
-      "Express frequency",
-      "Distinguish adverbs from adjectives"
+      "Learner can form adverbs from adjectives",
+      "Learner can use adverbs to describe how actions are done",
+      "Learner can use frequency adverbs (always, sometimes, never)",
+      "Learner can distinguish adverbs from adjectives"
     ],
+    "objectivesUk": null,
     "grammarFocus": [
-      "Adverb formation (-о/-е endings)",
-      "Adverbs of manner",
-      "Adverbs of frequency"
+      "Adverbs of manner (adjective stem + -о)",
+      "Adverbs of frequency",
+      "Comparison with adjectives"
     ],
     "tags": [
-      "grammar",
       "adverbs",
       "manner",
-      "frequency"
+      "frequency",
+      "description"
     ],
-    "totalDuration": 50,
-    "transliterationMode": "partial",
+    "totalDuration": "60 min",
+    "transliterationMode": "first-occurrence",
     "sections": [
       {
-        "id": "section-content-0",
-        "name": "Lesson",
+        "id": "section-1",
+        "name": "Description: Adverbs",
+        "nameEn": null,
         "type": "content",
-        "content": "> **Note:** Adverbs describe HOW, WHEN, and HOW OFTEN actions happen. Learn to make your Ukrainian more expressive!\n\n## Warm-up: How Do You Do Things?\n\nThink about your actions. Do you read quickly or slowly? Do you speak loudly or quietly? How often do you exercise — always, sometimes, never?\n\nAdverbs answer questions like \"how?\" (як?), \"when?\" (коли?), and \"how often?\" (як часто?). They modify verbs, telling us more about the action.\n\nIn Ukrainian, most adverbs of manner are formed from adjectives by changing the ending to -о or -е. This is wonderfully predictable! If you know the adjective \"швидкий\" (fast), you can easily form the adverb \"швидко\" (quickly).\n\nAdverbs of frequency tell us how often something happens — завжди (always), часто (often), іноді (sometimes), рідко (rarely), ніколи (never). These are essential for describing habits and routines.\n\nBy mastering adverbs, you'll be able to describe actions with much more precision and express your habits and preferences naturally!\n\n> 💡 **Thinking Trick:** Adjective → Adverb: remove -ий/-ій, add -о or -е. Швидкий → швидко. Гарний → гарно. Simple!\n\n## Presentation: Adverb Formation\n\n### From Adjective to Adverb\n\nMost Ukrainian adverbs of manner are formed from adjectives:\n\n**Rule:** Remove adjective ending (-ий/-ій/-а/-е), add -о or -е\n\n| Adjective | Meaning | Adverb | Meaning |\n|-----------|---------|--------|---------|\n| швидкий | fast | швидко | quickly |\n| повільний | slow | повільно | slowly |\n| гарний | good/beautiful | гарно | well/beautifully |\n| поганий | bad | погано | badly |\n| тихий | quiet | тихо | quietly |\n| голосний | loud | голосно | loudly |\n| легкий | easy | легко | easily |\n| важкий | difficult | важко | with difficulty |\n\n**Irregular adverbs:**\n| Adjective | Adverb |\n|-----------|--------|\n| добрий (good) | добре (well) — NOT \"добро\"! |\n| хороший (good) | добре (well) |\n\n> 📜 **Pattern Summary:**\n> - Most adjectives: -ий/-ій → -о (швидкий → швидко)\n> - Some adjectives: → -е (добрий → добре)\n> - Adverbs DON'T change for gender/number!\n\n### Common Manner Adverbs\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| гарно | well, beautifully | Вона гарно співає. |\n| погано | badly | Я погано бачу. |\n| швидко | quickly | Він швидко біжить. |\n| повільно | slowly | Вона повільно йде. |\n| голосно | loudly | Він голосно говорить. |\n| тихо | quietly | Говори тихо! |\n| легко | easily | Це легко зробити. |\n| важко | with difficulty | Мені важко пояснити. |\n| цікаво | interestingly | Він цікаво розповідає. |\n| нудно | boringly | Тут нудно. |\n\n### Adverbs of Frequency\n\n| Ukrainian | English | Frequency |\n|-----------|---------|-----------|\n| завжди | always | 100% |\n| зазвичай | usually | 80-90% |\n| часто | often | 60-70% |\n| іноді | sometimes | 30-50% |\n| рідко | rarely | 10-20% |\n| ніколи | never | 0% |\n\n**Position:** Usually before the verb or at the beginning of the sentence.\n\n**Examples:**\n- Я завжди снідаю. (I always have breakfast.)\n- Вона часто читає. (She often reads.)\n- Ми рідко подорожуємо. (We rarely travel.)\n- Він ніколи не запізнюється. (He never is late.)\n\n> 💡 **Did You Know?** \"Ніколи\" (never) requires a DOUBLE NEGATIVE: \"Він ніколи НЕ запізнюється.\" In Ukrainian, negatives reinforce each other (unlike English where double negatives cancel out)!\n\n### Other Useful Adverbs\n\n**Time:**\n- зараз (now)\n- потім (then, later)\n- рано (early)\n- пізно (late)\n- вже (already)\n- ще (still, yet)\n\n**Degree:**\n- дуже (very)\n- занадто (too much)\n- трохи (a little)\n- зовсім (completely)\n- майже (almost)\n\n## Cultural Insight: How Ukrainians Do Things 🇺🇦\n\nUkrainians have interesting cultural tendencies described by adverbs:\n\n**Work ethic:**\n- \"Працювати важко\" — to work hard (common Ukrainian trait!)\n- \"Робити якісно\" — to do with quality\n\n**Communication style:**\n- \"Говорити прямо\" — to speak directly\n- \"Відповідати чесно\" — to answer honestly\n\n**Hospitality:**\n- \"Приймати щиро\" — to welcome sincerely\n- \"Частувати щедро\" — to treat generously\n\n**Common expressions with adverbs:**\n- \"Як справи?\" — \"Добре, дякую!\" (How are things? — Well, thanks!)\n- \"Швидко каву!\" — Quick coffee! (ordering style)\n\n> 📜 **History Bite:** Under Soviet rule, the phrase \"працювати на совість\" (to work conscientiously) was propaganda. Real workers often did the minimum (\"працювати абияк\" — to work somehow). Today, Ukrainians work harder for themselves and their independent country!\n\n> 📜 **Myth Buster:** Some stereotypes claim Ukrainians do things \"later\" (потім) and are disorganized. In reality, Ukraine has a strong work ethic, and \"зараз\" (now) is heard just as often as \"потім\"!\n\n## Reading Practice: Як я вчуся 📖\n\n**Українською:**\n\nЯ вивчаю українську мову. Як я це роблю?\n\nСпочатку я зазвичай читаю уроки. Читаю повільно і уважно. Потім слухаю аудіо — це допомагає чути правильну вимову.\n\nЯ завжди записую нові слова. Часто повторюю їх увечері. Рідко забуваю те, що добре вивчив!\n\nГраматику я вчу важко, але цікаво. Іноді помиляюся, але це нормально. Головне — не здаватися!\n\nМій вчитель говорить чітко і терпляче пояснює. Він часто жартує, тому уроки не нудні.\n\nЯ сподіваюся скоро говорити вільно!\n\n**English Translation:**\n\nI study the Ukrainian language. How do I do it?\n\nFirst, I usually read the lessons. I read slowly and carefully. Then I listen to audio — this helps hear the correct pronunciation.\n\nI always write down new words. I often repeat them in the evening. I rarely forget what I've learned well!\n\nI study grammar with difficulty, but it's interesting. Sometimes I make mistakes, but that's normal. The main thing is not to give up!\n\nMy teacher speaks clearly and explains patiently. He often jokes, so lessons aren't boring.\n\nI hope to speak freely soon!\n\n## Conversation: Як ти це робиш? 🗣️\n\n**Оля:** Ти добре говориш англійською!\n**Петро:** Дякую! Я багато практикуюсь.\n**Оля:** Як часто?\n**Петро:** Майже щодня. Зазвичай ввечері.\n**Оля:** І як ти вчишся?\n**Петро:** Слухаю подкасти, читаю книжки.\n**Оля:** Швидко читаєш?\n**Петро:** Ні, ще повільно. Але це нормально!\n**Оля:** Правда. Головне — регулярно.\n**Петро:** Так! Ніколи не забувай практикуватися!\n\n**English Translation:**\n**Olya:** You speak English well!\n**Petro:** Thank you! I practice a lot.\n**Olya:** How often?\n**Petro:** Almost every day. Usually in the evening.\n**Olya:** And how do you learn?\n**Petro:** I listen to podcasts, read books.\n**Olya:** Do you read quickly?\n**Petro:** No, still slowly. But that's normal!\n**Olya:** True. The main thing is — regularly.\n**Petro:** Yes! Never forget to practice!\n\nЗверни увагу: добре, часто, майже, зазвичай, швидко, повільно, регулярно, ніколи — всі прислівники!"
+        "content": "## Warm-up\n\n> 💡 **Як він це робить? (How Does He Do It?)**\n>\n> You learned adjectives describe THINGS (гарний дім — a beautiful house). But how do we describe ACTIONS?\n> — Він **гарно** малює. (He draws **beautifully**.)\n> — Вона **швидко** бігає. (She runs **fast**.)\n>\n> These are **adverbs** — they describe HOW someone does something!\n\n> [!resources] 🎧 External Resources\n>\n> **Grammar:** [Adjectives and Adverbs](https://www.ukrainianlessons.com/adjectives-and-adverbs/) — Comparison with illustrations and audio\n>\n> **Chart:** [Adjectives and Adverbs Chart](https://www.ukrainianlessons.com/adjectives-adverbs-chart/) — Full comparison table\n>\n> **Location Adverbs:** [Adverbs of Location](https://www.ukrainianlessons.com/adverbs-location/) — Тут, сюди, звідси patterns\n\n---"
       },
       {
-        "id": "section-summary-1",
-        "name": "Підсумок",
-        "nameEn": "Summary",
+        "id": "section-2",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| гарно | /ˈhɑrnɔ/ | beautifully | adv | — | from гарний |\n| погано | /pɔˈhɑnɔ/ | badly | adv | — | from поганий |\n| добре | /ˈdɔbre/ | well | adv | — | from добрий |\n| швидко | /ˈʃwɪdkɔ/ | fast, quickly | adv | — | from швидкий |\n| повільно | /pɔˈwilʲnɔ/ | slowly | adv | — | from повільний |\n| цікаво | /t͡sʲiˈkawɔ/ | interestingly | adv | — | from цікавий |\n| нудно | /ˈnudnɔ/ | boringly | adv | — | from нудний |\n| важко | /ˈwɑʒkɔ/ | with difficulty | adv | — | from важкий |\n| легко | /ˈlehkɔ/ | easily | adv | — | from легкий |\n| смачно | /ˈsmɑtʃnɔ/ | deliciously | adv | — | from смачний |\n| дорого | /ˈdɔrɔhɔ/ | expensively | adv | — | from дорогий |\n| дешево | /ˈdeʃewɔ/ | cheaply | adv | — | from дешевий |\n| голосно | /hɔˈlɔsnɔ/ | loudly | adv | — | from голосний |\n| тихо | /ˈtɪxɔ/ | quietly | adv | — | from тихий |\n| весело | /ˈweselɔ/ | merrily | adv | — | from веселий |\n| сумно | /ˈsumnɔ/ | sadly | adv | — | from сумний |\n| серйозно | /serˈjɔznɔ/ | seriously | adv | — | from серйозний |\n| жартома | /ʒɑrˈtɔmɑ/ | jokingly | adv | — | irregular |\n| ввічливо | /ˈwːitʃlɪwɔ/ | politely | adv | — | from ввічливий |\n| чесно | /ˈtʃesnɔ/ | honestly | adv | — | from чесний |\n| завжди | /ˈzɑwʒdɪ/ | always | adv | — | frequency |\n| часто | /ˈtʃɑstɔ/ | often | adv | — | frequency |\n| зазвичай | /zɑzwɪˈtʃɑj/ | usually | adv | — | frequency |\n| іноді | /iˈnɔdʲi/ | sometimes | adv | — | frequency |\n| рідко | /ˈrʲidkɔ/ | rarely | adv | — | frequency |\n| ніколи | /nʲiˈkɔlɪ/ | never | adv | — | needs не |\n| трохи | /ˈtrɔxɪ/ | a little | adv | — | degree |\n| дуже | /ˈduʒe/ | very | adv | — | degree |\n| занадто | /zɑˈnɑdtɔ/ | too (much) | adv | — | degree |\n| зовсім | /zɔwˈsʲim/ | completely | adv | — | degree |\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Grammar",
+        "nameEn": null,
+        "type": "content",
+        "content": "## How to Form Adverbs\n\n> [!observe] Спостереження (Pattern Discovery)\n>\n> Look at these pairs:\n> - **гарний** хлопець (handsome boy) → Він **гарно** танцює. (He dances beautifully.)\n> - **швидкий** потяг (fast train) → Він **швидко** їздить. (He rides fast.)\n> - **тихий** голос (quiet voice) → Вона **тихо** говорить. (She speaks quietly.)\n>\n> Adjectives describe NOUNS. Adverbs describe VERBS.\n> Formula: Take the adjective stem + add **-о** (or **-е** for soft stems)\n\n### The Formula\n\n| Adjective (m) | Meaning | Adverb | Meaning |\n|---------------|---------|--------|---------|\n| гарний | beautiful | гарно | beautifully |\n| швидкий | fast | швидко | fast, quickly |\n| повільний | slow | повільно | slowly |\n| тихий | quiet | тихо | quietly |\n| голосний | loud | голосно | loudly |\n\n### Irregular Adverbs\n\nSome adverbs are special:\n\n| Adjective | Expected | Actual Adverb |\n|-----------|----------|---------------|\n| хороший (good) | *хорошо* | **добре** (well) |\n| поганий (bad) | *поганно* | **погано** (badly) |\n\n---\n\n## Frequency Adverbs: How Often?\n\n> [!observe] Шкала частотності (Frequency Scale)\n>\n> From ALWAYS to NEVER:\n>\n> **завжди** (100%) → **часто** (75%) → **зазвичай** (60%) → **іноді** (25%) → **рідко** (10%) → **ніколи** (0%)\n\n### Examples\n\n- Я **завжди** снідаю. (I always eat breakfast.)\n- Він **часто** читає. (He often reads.)\n- Вона **зазвичай** працює вдома. (She usually works at home.)\n- Ми **іноді** гуляємо в парку. (We sometimes walk in the park.)\n- Вони **рідко** дивляться телевізор. (They rarely watch TV.)\n- Я **ніколи не** курю. (I never smoke.)\n\n> 💡 **Ніколи + не!**\n>\n> With \"ніколи\" (never), you MUST use \"не\" before the verb. It's a double negative, but it's grammatically correct!\n> — Я **ніколи не** запізнююсь. (I am never late.)\n\n---\n\n## Degree Adverbs: How Much?\n\n| Adverb | Meaning | Example |\n|--------|---------|---------|\n| дуже | very | Він **дуже** гарно малює. (He draws very beautifully.) |\n| занадто | too (much) | Це **занадто** дорого. (This is too expensive.) |\n| трохи | a little | Вона **трохи** втомилась. (She got a little tired.) |\n| зовсім | completely | Він **зовсім** не розуміє. (He completely doesn't understand.) |\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Examples in Context",
+        "nameEn": null,
+        "type": "content",
+        "content": "> [!example] Опис дій (Describing Actions)\n>\n> - Марко **швидко** бігає. (Marko runs fast.)\n> - Олена **гарно** співає. (Olena sings beautifully.)\n> - Тарас **погано** танцює. (Taras dances badly.)\n> - Бабуся **смачно** готує. (Grandma cooks deliciously.)\n> - Діти **голосно** грають. (The children play loudly.)\n> - Він **тихо** читає. (He reads quietly.)\n\n> [!example] Як справи? (How are things?)\n>\n> — Як справи? (How are things?)\n> — **Добре**, дякую! (Well, thank you!)\n> — **Чудово**! (Wonderfully!)\n> — **Нормально**. (Fine/OK.)\n> — **Погано**... (Badly...)\n>\n> Notice: We use ADVERBS, not adjectives, to answer \"Як справи?\"\n\n> [!example] Частота (Frequency)\n>\n> - Я **завжди** п'ю каву вранці. (I always drink coffee in the morning.)\n> - Ми **часто** їмо піцу. (We often eat pizza.)\n> - Вона **зазвичай** приходить о дев'ятій. (She usually comes at nine.)\n> - Він **іноді** грає у футбол. (He sometimes plays football.)\n> - Вони **рідко** дивляться фільми. (They rarely watch movies.)\n> - Я **ніколи не** п'ю алкоголь. (I never drink alcohol.)\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Dialogues",
+        "nameEn": null,
+        "type": "content",
+        "content": "> [!conversation] Як ти це робиш? (How Do You Do It?)\n>\n> — Як ти вчиш українську?\n> — **Повільно**, але **добре**!\n> — Ти **часто** читаєш?\n> — Так, **завжди** читаю ввечері.\n> — Молодець!\n>\n> — How do you learn Ukrainian?\n> — Slowly, but well!\n> — Do you often read?\n> — Yes, I always read in the evening.\n> — Well done!\n\n> [!conversation] Як справи? (How Are Things?)\n>\n> — Привіт! Як справи?\n> — **Добре**, дякую. А у тебе?\n> — Теж **добре**. Ти **часто** тут буваєш?\n> — Так, **зазвичай** приходжу після роботи.\n>\n> — Hi! How are things?\n> — Well, thank you. And you?\n> — Also well. Do you come here often?\n> — Yes, I usually come after work.\n\n> [!conversation] Як він грає? (How Does He Play?)\n>\n> — Як грає твій брат?\n> — Він грає **дуже добре**!\n> — А твоя сестра?\n> — Вона грає **погано**, але **весело**!\n>\n> — How does your brother play?\n> — He plays very well!\n> — And your sister?\n> — She plays badly, but cheerfully!\n\n---\n\n> 💡 **Прислівники vs. Прикметники (Adverbs vs. Adjectives)**\n>\n> Adjective: Це **швидкий** потяг. (This is a fast train.) — describes the NOUN\n> Adverb: Він їздить **швидко**. (He rides fast.) — describes the VERB\n>\n> Remember: Adjectives describe THINGS, adverbs describe ACTIONS!\n\n> 🌍 **\"Як справи?\" — типова українська відповідь**\n>\n> Ukrainians typically answer \"Як справи?\" with an adverb: Добре! Нормально! Чудово! Погано... This is different from English where we use adjectives: \"I'm fine/good/great.\"\n\n> ⚡ **Myth vs Fact**\n>\n> **Myth:** \"Ukrainian grammar is random and chaotic\"\n> **Fact:** Ukrainian has elegant, predictable patterns! Adjective → Adverb is simply: remove ending, add -о. Гарний → гарно. Швидкий → швидко. Simple and beautiful!\n\n> 🎭 **Прислівники в українських піснях (Adverbs in Ukrainian Songs)**\n>\n> Listen for adverbs in popular Ukrainian songs! \"Пісня козака\" has \"вранці рано\" (early in the morning). Folk songs often use \"тихо\" (quietly), \"високо\" (high up), and \"далеко\" (far away). These words paint vivid pictures of the Ukrainian landscape and soul!\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Adjective → Adverb\n\nMatch the adjective with its adverb form.\n\n- гарний :: гарно\n- швидкий :: швидко\n- повільний :: повільно\n- тихий :: тихо\n- голосний :: голосно\n- веселий :: весело\n- сумний :: сумно\n- легкий :: легко\n- важкий :: важко\n- чесний :: чесно\n- ввічливий :: ввічливо\n- серйозний :: серйозно\n\n---\n\n## group-sort: Frequency Scale\n\n> Sort adverbs by frequency (from most often to least often).\n\n### Always / Often (75-100%)\n- завжди\n- часто\n- дуже часто\n\n### Usually / Sometimes (25-60%)\n- зазвичай\n- іноді\n- час від часу\n\n### Rarely / Never (0-10%)\n- рідко\n- ніколи\n\n---\n\n## group-sort: Type of Adverb\n\n> Sort adverbs by their type.\n\n### Manner (How?)\n- гарно\n- погано\n- швидко\n- повільно\n- голосно\n- тихо\n- весело\n\n### Frequency (How often?)\n- завжди\n- часто\n- іноді\n- рідко\n- ніколи\n\n### Degree (How much?)\n- дуже\n- занадто\n- трохи\n- зовсім\n\n---\n\n## fill-in: Як ти це робиш? (How Do You Do It?)\n\n> Choose the correct adverb.\n\n1. Вона співає дуже ___.\n   > [!answer] гарно\n   > [!options] гарно | гарний | гарна | гарне\n\n2. Він говорить дуже ___.\n   > [!answer] тихо\n   > [!options] тихо | тихий | тиха | тихе\n\n3. Бабуся готує дуже ___.\n   > [!answer] смачно\n   > [!options] смачно | смачний | смачна | смачне\n\n4. Діти грають дуже ___.\n   > [!answer] голосно\n   > [!options] голосно | голосний | голосна | голосне\n\n5. Він біжить дуже ___.\n   > [!answer] швидко\n   > [!options] швидко | швидкий | швидка | швидке\n\n6. Вона читає дуже ___.\n   > [!answer] повільно\n   > [!options] повільно | повільний | повільна | повільне\n\n7. Я розумію це ___.\n   > [!answer] добре\n   > [!options] добре | добрий | добра | добро\n\n8. Він танцює дуже ___.\n   > [!answer] погано\n   > [!options] погано | поганий | погана | погане\n\n9. Вона працює дуже ___.\n   > [!answer] важко\n   > [!options] важко | важкий | важка | важке\n\n10. Він говорить ___.\n    > [!answer] чесно\n    > [!options] чесно | чесний | чесна | чесне\n\n11. Вона відповідає ___.\n    > [!answer] ввічливо\n    > [!options] ввічливо | ввічливий | ввічлива | ввічливе\n\n12. Він жартує ___.\n    > [!answer] весело\n    > [!options] весело | веселий | весела | веселе\n\n---\n\n## fill-in: Як часто? (How Often?)\n\n> Choose the correct frequency adverb.\n\n1. Я ___ снідаю о сьомій.\n   > [!answer] завжди\n   > [!options] завжди | ніколи | рідко | погано\n\n2. Вона ___ читає книжки.\n   > [!answer] часто\n   > [!options] часто | ніколи | швидко | добре\n\n3. Ми ___ їмо в ресторані.\n   > [!answer] іноді\n   > [!options] іноді | завжди | добре | смачно\n\n4. Він ___ запізнюється.\n   > [!answer] рідко\n   > [!options] рідко | завжди | часто | швидко\n\n5. Вона ___ не п'є каву.\n   > [!answer] ніколи\n   > [!options] ніколи | завжди | часто | дуже\n\n6. Ми ___ гуляємо в парку.\n   > [!answer] зазвичай\n   > [!options] зазвичай | ніколи | погано | важко\n\n7. Він ___ обідає о першій.\n   > [!answer] завжди\n   > [!options] завжди | ніколи | рідко | легко\n\n8. Вона ___ працює вдома.\n   > [!answer] часто\n   > [!options] часто | ніколи | рідко | повільно\n\n9. Вони ___ дивляться телевізор.\n   > [!answer] рідко\n   > [!options] рідко | завжди | ніколи | голосно\n\n10. Я ___ приходжу о дев'ятій.\n    > [!answer] зазвичай\n    > [!options] зазвичай | ніколи | рідко | тихо\n\n11. Він ___ не курить.\n    > [!answer] ніколи\n    > [!options] ніколи | завжди | іноді | дуже\n\n12. Ми ___ їмо вдома.\n    > [!answer] зазвичай\n    > [!options] зазвичай | ніколи | рідко | весело\n\n---\n\n## quiz: Adverb or Adjective?\n\nChoose the correct form.\n\n1. Він ___ хлопець. (good)\n   - [x] добрий\n   - [ ] добре\n   - [ ] добро\n   - [ ] добра\n\n2. Він говорить ___. (well)\n   - [x] добре\n   - [ ] добрий\n   - [ ] добра\n   - [ ] добро\n\n3. Це ___ машина. (fast)\n   - [x] швидка\n   - [ ] швидко\n   - [ ] швидкий\n   - [ ] швидке\n\n4. Вона біжить ___. (fast)\n   - [x] швидко\n   - [ ] швидка\n   - [ ] швидкий\n   - [ ] швидке\n\n5. У неї ___ голос. (quiet)\n   - [x] тихий\n   - [ ] тихо\n   - [ ] тиха\n   - [ ] тихе\n\n6. Він говорить ___. (quietly)\n   - [x] тихо\n   - [ ] тихий\n   - [ ] тиха\n   - [ ] тихе\n\n7. Вона ___ людина. (happy, cheerful)\n   - [x] весела\n   - [ ] весело\n   - [ ] веселий\n   - [ ] веселе\n\n8. Діти співають ___. (loudly)\n   - [x] голосно\n   - [ ] голосний\n   - [ ] голосна\n   - [ ] голосне\n\n---\n\n## quiz: Frequency Meaning\n\nWhat does each adverb mean?\n\n1. Завжди\n   - [x] Always\n   - [ ] Sometimes\n   - [ ] Never\n   - [ ] Rarely\n\n2. Часто\n   - [x] Often\n   - [ ] Never\n   - [ ] Rarely\n   - [ ] Always\n\n3. Іноді\n   - [x] Sometimes\n   - [ ] Always\n   - [ ] Never\n   - [ ] Often\n\n4. Рідко\n   - [x] Rarely\n   - [ ] Always\n   - [ ] Often\n   - [ ] Never\n\n5. Ніколи\n   - [x] Never\n   - [ ] Sometimes\n   - [ ] Often\n   - [ ] Always\n\n6. Зазвичай\n   - [x] Usually\n   - [ ] Never\n   - [ ] Rarely\n   - [ ] Sometimes\n\n7. Дуже\n   - [x] Very\n   - [ ] Sometimes\n   - [ ] Never\n   - [ ] Rarely\n\n8. Трохи\n   - [x] A little\n   - [ ] Very much\n   - [ ] Never\n   - [ ] Always\n\n---\n\n## unjumble: Describing Actions\n\nPut the words in the correct order.\n\n1. швидко / бігає / він\n   > [!answer] Він швидко бігає.\n\n2. добре / вона / співає\n   > [!answer] Вона добре співає.\n\n3. читаю / я / повільно\n   > [!answer] Я читаю повільно.\n\n4. часто / ми / гуляємо\n   > [!answer] Ми часто гуляємо.\n\n5. завжди / снідаю / я / вранці\n   > [!answer] Я завжди снідаю вранці.\n\n6. не / він / курить / ніколи\n   > [!answer] Він ніколи не курить.\n\n7. голосно / діти / грають\n   > [!answer] Діти голосно грають.\n\n8. тихо / вона / говорить\n   > [!answer] Вона тихо говорить.\n\n9. добре / справи / як\n   > [!answer] Як справи? Добре.\n\n10. іноді / ми / піцу / їмо\n   > [!answer] Ми іноді їмо піцу.\n\n11. рідко / телевізор / дивлюсь / я\n   > [!answer] Я рідко дивлюсь телевізор.\n\n12. весело / вони / танцюють\n   > [!answer] Вони весело танцюють.\n\n\n---\n\n## true-false: Adverb Rules\n\nIs this true or false?\n\n- [x] Adverbs describe verbs (actions).\n- [ ] Adverbs describe nouns.\n  > Incorrect! that's adjectives\n\n- [x] Most adverbs end in -о.\n- [ ] \"Добрий\" is an adverb.\n  > Incorrect! it's an adjective\n\n- [x] \"Добре\" is an adverb.\n- [ ] \"Ніколи\" doesn't need \"не\" before the verb.\n  > Incorrect! you need two negatives\n\n- [x] \"Завжди\" means \"always\".\n- [x] \"Дуже\" can modify adverbs (дуже добре).\n- [ ] \"Швидкий\" describes how you do something.\n  > Incorrect! it's an adjective\n\n- [x] \"Швидко\" describes how you do something.\n- [ ] \"Як справи?\" — \"Добрий!\".\n  > Incorrect! should be \"Добре!\"\n\n- [x] \"Як справи?\" — \"Добре!\".\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Summary",
+        "nameEn": null,
         "type": "summary",
-        "content": "**Adverb Essentials**\n\n1. **Formation:** Adjective stem + -о/-е (швидкий → швидко)\n2. **Exception:** добрий → добре (not добро)\n3. **Frequency:** завжди > часто > іноді > рідко > ніколи\n4. **Double negative:** ніколи НЕ... (never NOT...)\n\n---\n\n> [!tip] 🌟 **Pro Tip:** Remember the frequency scale: завжди (100%) → часто → іноді → рідко → ніколи (0%). Use these to describe your habits accurately!\n\n\n---"
+        "content": "In this module, you learned:\n\n- **Adverbs of manner (10 words)**: гарно, погано, добре, швидко, повільно, голосно, тихо, весело, сумно, легко, важко\n- **Adverbs of frequency (6 words)**: завжди, часто, зазвичай, іноді, рідко, ніколи\n- **Degree adverbs (4 words)**: дуже, занадто, трохи, зовсім\n- **Other manner adverbs (10 words)**: цікаво, нудно, смачно, дорого, дешево, серйозно, жартома, ввічливо, чесно\n- **Formation pattern**: Adjective stem + -о = Adverb (гарний → гарно)\n- **Irregular**: хороший → добре, поганий → погано\n- **Double negative rule**: ніколи + не (Я ніколи не курю)\n- **Frequency scale**: завжди > часто > зазвичай > іноді > рідко > ніколи\n\n---\n\n**Coming up:** Module 29 will teach you about weather and nature!"
       }
     ],
-    "rawMarkdown": "---\ntitle: \"How Do You Do It? - Adverbs\"\nsubtitle: \"Adverbs of Manner and Frequency\"\nphase: A1.3\ntransliteration: partial\npedagogy: PPP\nduration: 50\ntags: [grammar, adverbs, manner, frequency]\nobjectives:\n  - Form adverbs from adjectives\n  - Use adverbs of manner\n  - Express frequency\n  - Distinguish adverbs from adjectives\ngrammar:\n  - Adverb formation (-о/-е endings)\n  - Adverbs of manner\n  - Adverbs of frequency\naudio: false\n---\n\n# How Do You Do It? - Adverbs\n\n> **Note:** Adverbs describe HOW, WHEN, and HOW OFTEN actions happen. Learn to make your Ukrainian more expressive!\n\n## Warm-up: How Do You Do Things?\n\nThink about your actions. Do you read quickly or slowly? Do you speak loudly or quietly? How often do you exercise — always, sometimes, never?\n\nAdverbs answer questions like \"how?\" (як?), \"when?\" (коли?), and \"how often?\" (як часто?). They modify verbs, telling us more about the action.\n\nIn Ukrainian, most adverbs of manner are formed from adjectives by changing the ending to -о or -е. This is wonderfully predictable! If you know the adjective \"швидкий\" (fast), you can easily form the adverb \"швидко\" (quickly).\n\nAdverbs of frequency tell us how often something happens — завжди (always), часто (often), іноді (sometimes), рідко (rarely), ніколи (never). These are essential for describing habits and routines.\n\nBy mastering adverbs, you'll be able to describe actions with much more precision and express your habits and preferences naturally!\n\n> 💡 **Thinking Trick:** Adjective → Adverb: remove -ий/-ій, add -о or -е. Швидкий → швидко. Гарний → гарно. Simple!\n\n## Presentation: Adverb Formation\n\n### From Adjective to Adverb\n\nMost Ukrainian adverbs of manner are formed from adjectives:\n\n**Rule:** Remove adjective ending (-ий/-ій/-а/-е), add -о or -е\n\n| Adjective | Meaning | Adverb | Meaning |\n|-----------|---------|--------|---------|\n| швидкий | fast | швидко | quickly |\n| повільний | slow | повільно | slowly |\n| гарний | good/beautiful | гарно | well/beautifully |\n| поганий | bad | погано | badly |\n| тихий | quiet | тихо | quietly |\n| голосний | loud | голосно | loudly |\n| легкий | easy | легко | easily |\n| важкий | difficult | важко | with difficulty |\n\n**Irregular adverbs:**\n| Adjective | Adverb |\n|-----------|--------|\n| добрий (good) | добре (well) — NOT \"добро\"! |\n| хороший (good) | добре (well) |\n\n> 📜 **Pattern Summary:**\n> - Most adjectives: -ий/-ій → -о (швидкий → швидко)\n> - Some adjectives: → -е (добрий → добре)\n> - Adverbs DON'T change for gender/number!\n\n### Common Manner Adverbs\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| гарно | well, beautifully | Вона гарно співає. |\n| погано | badly | Я погано бачу. |\n| швидко | quickly | Він швидко біжить. |\n| повільно | slowly | Вона повільно йде. |\n| голосно | loudly | Він голосно говорить. |\n| тихо | quietly | Говори тихо! |\n| легко | easily | Це легко зробити. |\n| важко | with difficulty | Мені важко пояснити. |\n| цікаво | interestingly | Він цікаво розповідає. |\n| нудно | boringly | Тут нудно. |\n\n### Adverbs of Frequency\n\n| Ukrainian | English | Frequency |\n|-----------|---------|-----------|\n| завжди | always | 100% |\n| зазвичай | usually | 80-90% |\n| часто | often | 60-70% |\n| іноді | sometimes | 30-50% |\n| рідко | rarely | 10-20% |\n| ніколи | never | 0% |\n\n**Position:** Usually before the verb or at the beginning of the sentence.\n\n**Examples:**\n- Я завжди снідаю. (I always have breakfast.)\n- Вона часто читає. (She often reads.)\n- Ми рідко подорожуємо. (We rarely travel.)\n- Він ніколи не запізнюється. (He never is late.)\n\n> 💡 **Did You Know?** \"Ніколи\" (never) requires a DOUBLE NEGATIVE: \"Він ніколи НЕ запізнюється.\" In Ukrainian, negatives reinforce each other (unlike English where double negatives cancel out)!\n\n### Other Useful Adverbs\n\n**Time:**\n- зараз (now)\n- потім (then, later)\n- рано (early)\n- пізно (late)\n- вже (already)\n- ще (still, yet)\n\n**Degree:**\n- дуже (very)\n- занадто (too much)\n- трохи (a little)\n- зовсім (completely)\n- майже (almost)\n\n## Cultural Insight: How Ukrainians Do Things 🇺🇦\n\nUkrainians have interesting cultural tendencies described by adverbs:\n\n**Work ethic:**\n- \"Працювати важко\" — to work hard (common Ukrainian trait!)\n- \"Робити якісно\" — to do with quality\n\n**Communication style:**\n- \"Говорити прямо\" — to speak directly\n- \"Відповідати чесно\" — to answer honestly\n\n**Hospitality:**\n- \"Приймати щиро\" — to welcome sincerely\n- \"Частувати щедро\" — to treat generously\n\n**Common expressions with adverbs:**\n- \"Як справи?\" — \"Добре, дякую!\" (How are things? — Well, thanks!)\n- \"Швидко каву!\" — Quick coffee! (ordering style)\n\n> 📜 **History Bite:** Under Soviet rule, the phrase \"працювати на совість\" (to work conscientiously) was propaganda. Real workers often did the minimum (\"працювати абияк\" — to work somehow). Today, Ukrainians work harder for themselves and their independent country!\n\n> 📜 **Myth Buster:** Some stereotypes claim Ukrainians do things \"later\" (потім) and are disorganized. In reality, Ukraine has a strong work ethic, and \"зараз\" (now) is heard just as often as \"потім\"!\n\n## Reading Practice: Як я вчуся 📖\n\n**Українською:**\n\nЯ вивчаю українську мову. Як я це роблю?\n\nСпочатку я зазвичай читаю уроки. Читаю повільно і уважно. Потім слухаю аудіо — це допомагає чути правильну вимову.\n\nЯ завжди записую нові слова. Часто повторюю їх увечері. Рідко забуваю те, що добре вивчив!\n\nГраматику я вчу важко, але цікаво. Іноді помиляюся, але це нормально. Головне — не здаватися!\n\nМій вчитель говорить чітко і терпляче пояснює. Він часто жартує, тому уроки не нудні.\n\nЯ сподіваюся скоро говорити вільно!\n\n**English Translation:**\n\nI study the Ukrainian language. How do I do it?\n\nFirst, I usually read the lessons. I read slowly and carefully. Then I listen to audio — this helps hear the correct pronunciation.\n\nI always write down new words. I often repeat them in the evening. I rarely forget what I've learned well!\n\nI study grammar with difficulty, but it's interesting. Sometimes I make mistakes, but that's normal. The main thing is not to give up!\n\nMy teacher speaks clearly and explains patiently. He often jokes, so lessons aren't boring.\n\nI hope to speak freely soon!\n\n## Conversation: Як ти це робиш? 🗣️\n\n**Оля:** Ти добре говориш англійською!\n**Петро:** Дякую! Я багато практикуюсь.\n**Оля:** Як часто?\n**Петро:** Майже щодня. Зазвичай ввечері.\n**Оля:** І як ти вчишся?\n**Петро:** Слухаю подкасти, читаю книжки.\n**Оля:** Швидко читаєш?\n**Петро:** Ні, ще повільно. Але це нормально!\n**Оля:** Правда. Головне — регулярно.\n**Петро:** Так! Ніколи не забувай практикуватися!\n\n**English Translation:**\n**Olya:** You speak English well!\n**Petro:** Thank you! I practice a lot.\n**Olya:** How often?\n**Petro:** Almost every day. Usually in the evening.\n**Olya:** And how do you learn?\n**Petro:** I listen to podcasts, read books.\n**Olya:** Do you read quickly?\n**Petro:** No, still slowly. But that's normal!\n**Olya:** True. The main thing is — regularly.\n**Petro:** Yes! Never forget to practice!\n\nЗверни увагу: добре, часто, майже, зазвичай, швидко, повільно, регулярно, ніколи — всі прислівники!\n\n# Summary\n\n**Adverb Essentials**\n\n1. **Formation:** Adjective stem + -о/-е (швидкий → швидко)\n2. **Exception:** добрий → добре (not добро)\n3. **Frequency:** завжди > часто > іноді > рідко > ніколи\n4. **Double negative:** ніколи НЕ... (never NOT...)\n\n---\n\n> [!tip] 🌟 **Pro Tip:** Remember the frequency scale: завжди (100%) → часто → іноді → рідко → ніколи (0%). Use these to describe your habits accurately!\n\n# Activities\n\n## fill-in: Form Adverbs\n> Form the adverb from the adjective.\n\n1. швидкий → ___\n   > [!answer] швидко\n   > [!options] швидко | швидка | швидке | швидкий\n\n2. повільний → ___\n   > [!answer] повільно\n   > [!options] повільно | повільна | повільне | повільний\n\n3. гарний → ___\n   > [!answer] гарно\n   > [!options] гарно | гарна | гарне | гарний\n\n4. голосний → ___\n   > [!answer] голосно\n   > [!options] голосно | голосна | голосне | голосний\n\n5. тихий → ___\n   > [!answer] тихо\n   > [!options] тихо | тиха | тихе | тихий\n\n6. добрий → ___\n   > [!answer] добре\n   > [!options] добре | добро | добра | добрий\n\n7. легкий → ___\n   > [!answer] легко\n   > [!options] легко | легка | легке | легкий\n\n8. важкий → ___\n   > [!answer] важко\n   > [!options] важко | важка | важке | важкий\n\n9. цікавий → ___\n   > [!answer] цікаво\n   > [!options] цікаво | цікава | цікаве | цікавий\n\n10. нудний → ___\n    > [!answer] нудно\n    > [!options] нудно | нудна | нудне | нудний\n\n11. поганий → ___\n    > [!answer] погано\n    > [!options] погано | погана | погане | поганий\n\n12. сильний → ___\n    > [!answer] сильно\n    > [!options] сильно | сильна | сильне | сильний\n\n## match-up: Frequency Scale\n> Match adverbs with their frequency level.\n\n| Adverb | Frequency |\n| --- | --- |\n| завжди | 100% (always) |\n| зазвичай | 80-90% (usually) |\n| часто | 60-70% (often) |\n| іноді | 30-50% (sometimes) |\n| рідко | 10-20% (rarely) |\n| ніколи | 0% (never) |\n| майже завжди | almost always |\n| щодня | every day |\n| щотижня | every week |\n| час від часу | from time to time |\n| регулярно | regularly |\n| постійно | constantly |\n\n## quiz: Adverb Rules\n> Choose the correct answer.\n\n1. Adverbs usually describe:\n   - [x] Verbs (how actions happen)\n   - [ ] Nouns\n   - [ ] Only adjectives\n   - [ ] Nothing\n\n2. Most Ukrainian adverbs of manner end in:\n   - [x] -о or -е\n   - [ ] -ий\n   - [ ] -а\n   - [ ] -ти\n\n3. \"Добре\" comes from:\n   - [x] Добрий (good)\n   - [ ] Добро (goodness)\n   - [ ] Дім (home)\n   - [ ] День (day)\n\n4. \"Ніколи\" requires:\n   - [x] Double negative (ніколи не)\n   - [ ] No negative\n   - [ ] Past tense only\n   - [ ] Future tense only\n\n5. Adverbs in Ukrainian:\n   - [x] Don't change for gender\n   - [ ] Change for gender\n   - [ ] Change for number\n   - [ ] Change for case\n\n6. \"Він швидко біжить\" — \"швидко\" is:\n   - [x] An adverb\n   - [ ] An adjective\n   - [ ] A noun\n   - [ ] A verb\n\n7. Frequency adverbs usually come:\n   - [x] Before the verb\n   - [ ] After the noun\n   - [ ] At the end only\n   - [ ] Never in sentences\n\n8. \"Часто\" means:\n   - [x] Often\n   - [ ] Sometimes\n   - [ ] Rarely\n   - [ ] Never\n\n9. \"Гарно\" and \"гарний\" differ because:\n   - [x] Гарно = adverb, гарний = adjective\n   - [ ] No difference\n   - [ ] Гарно = noun\n   - [ ] Гарний = verb\n\n10. \"Дуже\" is an adverb of:\n    - [x] Degree\n    - [ ] Frequency\n    - [ ] Manner\n    - [ ] Time\n\n11. \"Швидкий\" is:\n    - [x] An adjective\n    - [ ] An adverb\n    - [ ] A verb\n    - [ ] A noun\n\n12. \"Зазвичай\" means:\n    - [x] Usually\n    - [ ] Always\n    - [ ] Never\n    - [ ] Sometimes\n\n## group-sort: Adverb Types\n> Sort adverbs by category.\n\n- Manner: швидко\n- Manner: повільно\n- Manner: гарно\n- Manner: голосно\n- Frequency: завжди\n- Frequency: часто\n- Frequency: іноді\n- Frequency: ніколи\n- Time: зараз\n- Time: потім\n- Time: рано\n- Degree: дуже\n\n## true-false: Adverb Facts\n- [x] Most adverbs end in -о or -е.\n- [x] \"Ніколи\" needs a second негative.\n- [ ] Adverbs change for gender.\n- [x] \"Швидко\" comes from \"швидкий.\"\n- [x] \"Часто\" means often.\n- [ ] \"Добрий\" becomes \"добро.\"\n- [x] Adverbs describe verbs.\n- [ ] \"Завжди\" means never.\n- [x] \"Рідко\" means rarely.\n- [x] Frequency adverbs come before verbs.\n- [ ] \"Гарно\" is an adjective.\n- [x] \"Дуже\" means very.\n\n## anagram: Adverb Vocabulary\n> Unscramble these adverbs.\n\n1. о к д и ш в\n   > [!answer] швидко\n\n2. о н ь л і в о п\n   > [!answer] повільно\n\n3. о н р а г\n   > [!answer] гарно\n\n4. е р б о д\n   > [!answer] добре\n\n5. о н с о л о г\n   > [!answer] голосно\n\n6. о х и т\n   > [!answer] тихо\n\n7. и д ж а в з\n   > [!answer] завжди\n\n8. о т с а ч\n   > [!answer] часто\n\n9. і д о н і\n   > [!answer] іноді\n\n10. о к д і р\n    > [!answer] рідко\n\n11. н к і и о л\n    > [!answer] ніколи\n\n12. е ж у д\n    > [!answer] дуже\n\n## fill-in: Describe Actions\n> Complete with the correct adverb.\n\n1. Він говорить ___. (quickly)\n   > [!answer] швидко\n   > [!options] швидко | швидкий | швидка | швидке\n\n2. Вона співає ___. (beautifully)\n   > [!answer] гарно\n   > [!options] гарно | гарний | гарна | гарне\n\n3. Я ___ снідаю. (always)\n   > [!answer] завжди\n   > [!options] завжди | часто | іноді | ніколи\n\n4. Ми ___ ходимо в кіно. (rarely)\n   > [!answer] рідко\n   > [!options] завжди | часто | іноді | рідко\n\n5. Вона ___ не запізнюється. (never)\n   > [!answer] ніколи\n   > [!options] завжди | часто | іноді | ніколи\n\n6. Він читає ___. (slowly)\n   > [!answer] повільно\n   > [!options] швидко | повільно | голосно | тихо\n\n7. Говори ___! (quietly)\n   > [!answer] тихо\n   > [!options] голосно | тихо | швидко | гарно\n\n8. Це ___ зробити. (easily)\n   > [!answer] легко\n   > [!options] легко | важко | швидко | повільно\n\n9. Я ___ хвора. (still)\n   > [!answer] ще\n   > [!options] вже | ще | потім | зараз\n\n10. Ми ___ закінчили. (already)\n    > [!answer] вже\n    > [!options] вже | ще | потім | зараз\n\n11. Він ___ добре говорить. (very)\n    > [!answer] дуже\n    > [!options] дуже | трохи | зовсім | майже\n\n12. Я ___ практикуюсь. (every day)\n    > [!answer] щодня\n    > [!options] щодня | рідко | ніколи | іноді\n\n## unjumble: Build Adverb Sentences\n> Arrange words into correct sentences.\n\n1. швидко / він / біжить\n   > [!answer] Він швидко біжить.\n\n2. співає / вона / гарно\n   > [!answer] Вона гарно співає.\n\n3. завжди / снідаю / я\n   > [!answer] Я завжди снідаю.\n\n4. ніколи / не / вона / запізнюється\n   > [!answer] Вона ніколи не запізнюється.\n\n5. читаєш / як / часто / ти\n   > [!answer] Як часто ти читаєш?\n\n6. голосно / говори / не\n   > [!answer] Не говори голосно!\n\n7. я / повільно / ще / читаю\n   > [!answer] Я ще повільно читаю.\n\n8. зараз / добре / я / себе / почуваю\n   > [!answer] Зараз я почуваю себе добре.\n\n9. вже / ми / закінчили\n   > [!answer] Ми вже закінчили.\n\n10. важко / це / дуже\n    > [!answer] Це дуже важко.\n\n11. рідко / ходимо / ми / кіно / в\n    > [!answer] Ми рідко ходимо в кіно.\n\n12. щодня / практикуюся / я\n    > [!answer] Я щодня практикуюся.\n\n---\n\n# Vocabulary\n\n| Ukrainian | IPA | English | Example |\n| --- | --- | --- | --- |\n| гарно | /ˈɦɑrno/ | well, beautifully | Вона гарно малює. |\n| погано | /ˈpoɦɑno/ | badly | Я погано сплю. |\n| добре | /ˈdobrɛ/ | well | Як справи? — Добре! |\n| швидко | /ˈʃʋɪdko/ | quickly | Він швидко бігає. |\n| повільно | /poˈʋilʲno/ | slowly | Говори повільно! |\n| голосно | /ɦoˈlosno/ | loudly | Не говори голосно! |\n| тихо | /ˈtɪxo/ | quietly | Тут тихо. |\n| легко | /ˈlɛɦko/ | easily | Це легко. |\n| важко | /ˈʋɑʒko/ | with difficulty | Мені важко. |\n| цікаво | /t͡siˈkɑʋo/ | interestingly | Цікаво розповів! |\n| нудно | /ˈnudno/ | boringly | Тут нудно. |\n| весело | /ˈʋɛsɛlo/ | merrily | Нам весело! |\n| сумно | /ˈsumno/ | sadly | Мені сумно. |\n| смачно | /ˈsmɑt͡ʃno/ | deliciously | Було смачно! |\n| дорого | /ˈdoroɦo/ | expensively | Тут дорого. |\n| дешево | /ˈdɛʃɛʋo/ | cheaply | Це дешево. |\n| завжди | /ˈzɑʋʒdɪ/ | always | Завжди раді! |\n| часто | /ˈt͡ʃɑsto/ | often | Часто ходжу. |\n| зазвичай | /zɑzˈʋɪt͡ʃɑj/ | usually | Зазвичай снідаю. |\n| іноді | /iˈnodi/ | sometimes | Іноді забуваю. |\n| рідко | /ˈridko/ | rarely | Рідко бачу. |\n| ніколи | /niˈkolɪ/ | never | Ніколи не пізно! |\n| трохи | /ˈtroxɪ/ | a little | Трохи втомився. |\n| дуже | /ˈduʒɛ/ | very | Дуже дякую! |\n| занадто | /zɑˈnɑdto/ | too (much) | Занадто пізно. |\n| зовсім | /ˈzoʋsim/ | completely | Зовсім забув! |\n| майже | /ˈmɑjʒɛ/ | almost | Майже готово! |\n| вже | /ʋʒɛ/ | already | Вже час! |\n| ще | /ʃt͡ʃɛ/ | still, yet | Ще не готово. |\n| разом | /ˈrɑzom/ | together | Разом краще! |\n",
-    "createdAt": "2025-12-12T19:55:32.051Z",
-    "modifiedAt": "2025-12-12T19:55:32.051Z",
+    "rawMarkdown": "---\nmodule: a1-28\ntitle: \"Description: Adverbs\"\nsubtitle: \"How We Do Things\"\nversion: \"1.0\"\nphase: \"A1.3 - Consolidation\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: \"first-occurrence\"\ntags:\n  - adverbs\n  - manner\n  - frequency\n  - description\ngrammar:\n  - Adverbs of manner (adjective stem + -о)\n  - Adverbs of frequency\n  - Comparison with adjectives\nobjectives:\n  - \"Learner can form adverbs from adjectives\"\n  - \"Learner can use adverbs to describe how actions are done\"\n  - \"Learner can use frequency adverbs (always, sometimes, never)\"\n  - \"Learner can distinguish adverbs from adjectives\"\nvocabulary_count: 30\n---\n\n# Description: Adverbs\n\n## Warm-up\n\n> 💡 **Як він це робить? (How Does He Do It?)**\n>\n> You learned adjectives describe THINGS (гарний дім — a beautiful house). But how do we describe ACTIONS?\n> — Він **гарно** малює. (He draws **beautifully**.)\n> — Вона **швидко** бігає. (She runs **fast**.)\n>\n> These are **adverbs** — they describe HOW someone does something!\n\n> [!resources] 🎧 External Resources\n>\n> **Grammar:** [Adjectives and Adverbs](https://www.ukrainianlessons.com/adjectives-and-adverbs/) — Comparison with illustrations and audio\n>\n> **Chart:** [Adjectives and Adverbs Chart](https://www.ukrainianlessons.com/adjectives-adverbs-chart/) — Full comparison table\n>\n> **Location Adverbs:** [Adverbs of Location](https://www.ukrainianlessons.com/adverbs-location/) — Тут, сюди, звідси patterns\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| гарно | /ˈhɑrnɔ/ | beautifully | adv | — | from гарний |\n| погано | /pɔˈhɑnɔ/ | badly | adv | — | from поганий |\n| добре | /ˈdɔbre/ | well | adv | — | from добрий |\n| швидко | /ˈʃwɪdkɔ/ | fast, quickly | adv | — | from швидкий |\n| повільно | /pɔˈwilʲnɔ/ | slowly | adv | — | from повільний |\n| цікаво | /t͡sʲiˈkawɔ/ | interestingly | adv | — | from цікавий |\n| нудно | /ˈnudnɔ/ | boringly | adv | — | from нудний |\n| важко | /ˈwɑʒkɔ/ | with difficulty | adv | — | from важкий |\n| легко | /ˈlehkɔ/ | easily | adv | — | from легкий |\n| смачно | /ˈsmɑtʃnɔ/ | deliciously | adv | — | from смачний |\n| дорого | /ˈdɔrɔhɔ/ | expensively | adv | — | from дорогий |\n| дешево | /ˈdeʃewɔ/ | cheaply | adv | — | from дешевий |\n| голосно | /hɔˈlɔsnɔ/ | loudly | adv | — | from голосний |\n| тихо | /ˈtɪxɔ/ | quietly | adv | — | from тихий |\n| весело | /ˈweselɔ/ | merrily | adv | — | from веселий |\n| сумно | /ˈsumnɔ/ | sadly | adv | — | from сумний |\n| серйозно | /serˈjɔznɔ/ | seriously | adv | — | from серйозний |\n| жартома | /ʒɑrˈtɔmɑ/ | jokingly | adv | — | irregular |\n| ввічливо | /ˈwːitʃlɪwɔ/ | politely | adv | — | from ввічливий |\n| чесно | /ˈtʃesnɔ/ | honestly | adv | — | from чесний |\n| завжди | /ˈzɑwʒdɪ/ | always | adv | — | frequency |\n| часто | /ˈtʃɑstɔ/ | often | adv | — | frequency |\n| зазвичай | /zɑzwɪˈtʃɑj/ | usually | adv | — | frequency |\n| іноді | /iˈnɔdʲi/ | sometimes | adv | — | frequency |\n| рідко | /ˈrʲidkɔ/ | rarely | adv | — | frequency |\n| ніколи | /nʲiˈkɔlɪ/ | never | adv | — | needs не |\n| трохи | /ˈtrɔxɪ/ | a little | adv | — | degree |\n| дуже | /ˈduʒe/ | very | adv | — | degree |\n| занадто | /zɑˈnɑdtɔ/ | too (much) | adv | — | degree |\n| зовсім | /zɔwˈsʲim/ | completely | adv | — | degree |\n\n---\n\n# Grammar\n\n## How to Form Adverbs\n\n> [!observe] Спостереження (Pattern Discovery)\n>\n> Look at these pairs:\n> - **гарний** хлопець (handsome boy) → Він **гарно** танцює. (He dances beautifully.)\n> - **швидкий** потяг (fast train) → Він **швидко** їздить. (He rides fast.)\n> - **тихий** голос (quiet voice) → Вона **тихо** говорить. (She speaks quietly.)\n>\n> Adjectives describe NOUNS. Adverbs describe VERBS.\n> Formula: Take the adjective stem + add **-о** (or **-е** for soft stems)\n\n### The Formula\n\n| Adjective (m) | Meaning | Adverb | Meaning |\n|---------------|---------|--------|---------|\n| гарний | beautiful | гарно | beautifully |\n| швидкий | fast | швидко | fast, quickly |\n| повільний | slow | повільно | slowly |\n| тихий | quiet | тихо | quietly |\n| голосний | loud | голосно | loudly |\n\n### Irregular Adverbs\n\nSome adverbs are special:\n\n| Adjective | Expected | Actual Adverb |\n|-----------|----------|---------------|\n| хороший (good) | *хорошо* | **добре** (well) |\n| поганий (bad) | *поганно* | **погано** (badly) |\n\n---\n\n## Frequency Adverbs: How Often?\n\n> [!observe] Шкала частотності (Frequency Scale)\n>\n> From ALWAYS to NEVER:\n>\n> **завжди** (100%) → **часто** (75%) → **зазвичай** (60%) → **іноді** (25%) → **рідко** (10%) → **ніколи** (0%)\n\n### Examples\n\n- Я **завжди** снідаю. (I always eat breakfast.)\n- Він **часто** читає. (He often reads.)\n- Вона **зазвичай** працює вдома. (She usually works at home.)\n- Ми **іноді** гуляємо в парку. (We sometimes walk in the park.)\n- Вони **рідко** дивляться телевізор. (They rarely watch TV.)\n- Я **ніколи не** курю. (I never smoke.)\n\n> 💡 **Ніколи + не!**\n>\n> With \"ніколи\" (never), you MUST use \"не\" before the verb. It's a double negative, but it's grammatically correct!\n> — Я **ніколи не** запізнююсь. (I am never late.)\n\n---\n\n## Degree Adverbs: How Much?\n\n| Adverb | Meaning | Example |\n|--------|---------|---------|\n| дуже | very | Він **дуже** гарно малює. (He draws very beautifully.) |\n| занадто | too (much) | Це **занадто** дорого. (This is too expensive.) |\n| трохи | a little | Вона **трохи** втомилась. (She got a little tired.) |\n| зовсім | completely | Він **зовсім** не розуміє. (He completely doesn't understand.) |\n\n---\n\n# Examples in Context\n\n> [!example] Опис дій (Describing Actions)\n>\n> - Марко **швидко** бігає. (Marko runs fast.)\n> - Олена **гарно** співає. (Olena sings beautifully.)\n> - Тарас **погано** танцює. (Taras dances badly.)\n> - Бабуся **смачно** готує. (Grandma cooks deliciously.)\n> - Діти **голосно** грають. (The children play loudly.)\n> - Він **тихо** читає. (He reads quietly.)\n\n> [!example] Як справи? (How are things?)\n>\n> — Як справи? (How are things?)\n> — **Добре**, дякую! (Well, thank you!)\n> — **Чудово**! (Wonderfully!)\n> — **Нормально**. (Fine/OK.)\n> — **Погано**... (Badly...)\n>\n> Notice: We use ADVERBS, not adjectives, to answer \"Як справи?\"\n\n> [!example] Частота (Frequency)\n>\n> - Я **завжди** п'ю каву вранці. (I always drink coffee in the morning.)\n> - Ми **часто** їмо піцу. (We often eat pizza.)\n> - Вона **зазвичай** приходить о дев'ятій. (She usually comes at nine.)\n> - Він **іноді** грає у футбол. (He sometimes plays football.)\n> - Вони **рідко** дивляться фільми. (They rarely watch movies.)\n> - Я **ніколи не** п'ю алкоголь. (I never drink alcohol.)\n\n---\n\n# Dialogues\n\n> [!conversation] Як ти це робиш? (How Do You Do It?)\n>\n> — Як ти вчиш українську?\n> — **Повільно**, але **добре**!\n> — Ти **часто** читаєш?\n> — Так, **завжди** читаю ввечері.\n> — Молодець!\n>\n> — How do you learn Ukrainian?\n> — Slowly, but well!\n> — Do you often read?\n> — Yes, I always read in the evening.\n> — Well done!\n\n> [!conversation] Як справи? (How Are Things?)\n>\n> — Привіт! Як справи?\n> — **Добре**, дякую. А у тебе?\n> — Теж **добре**. Ти **часто** тут буваєш?\n> — Так, **зазвичай** приходжу після роботи.\n>\n> — Hi! How are things?\n> — Well, thank you. And you?\n> — Also well. Do you come here often?\n> — Yes, I usually come after work.\n\n> [!conversation] Як він грає? (How Does He Play?)\n>\n> — Як грає твій брат?\n> — Він грає **дуже добре**!\n> — А твоя сестра?\n> — Вона грає **погано**, але **весело**!\n>\n> — How does your brother play?\n> — He plays very well!\n> — And your sister?\n> — She plays badly, but cheerfully!\n\n---\n\n> 💡 **Прислівники vs. Прикметники (Adverbs vs. Adjectives)**\n>\n> Adjective: Це **швидкий** потяг. (This is a fast train.) — describes the NOUN\n> Adverb: Він їздить **швидко**. (He rides fast.) — describes the VERB\n>\n> Remember: Adjectives describe THINGS, adverbs describe ACTIONS!\n\n> 🌍 **\"Як справи?\" — типова українська відповідь**\n>\n> Ukrainians typically answer \"Як справи?\" with an adverb: Добре! Нормально! Чудово! Погано... This is different from English where we use adjectives: \"I'm fine/good/great.\"\n\n> ⚡ **Myth vs Fact**\n>\n> **Myth:** \"Ukrainian grammar is random and chaotic\"\n> **Fact:** Ukrainian has elegant, predictable patterns! Adjective → Adverb is simply: remove ending, add -о. Гарний → гарно. Швидкий → швидко. Simple and beautiful!\n\n> 🎭 **Прислівники в українських піснях (Adverbs in Ukrainian Songs)**\n>\n> Listen for adverbs in popular Ukrainian songs! \"Пісня козака\" has \"вранці рано\" (early in the morning). Folk songs often use \"тихо\" (quietly), \"високо\" (high up), and \"далеко\" (far away). These words paint vivid pictures of the Ukrainian landscape and soul!\n\n---\n\n# Activities\n\n## match-up: Adjective → Adverb\n\nMatch the adjective with its adverb form.\n\n- гарний :: гарно\n- швидкий :: швидко\n- повільний :: повільно\n- тихий :: тихо\n- голосний :: голосно\n- веселий :: весело\n- сумний :: сумно\n- легкий :: легко\n- важкий :: важко\n- чесний :: чесно\n- ввічливий :: ввічливо\n- серйозний :: серйозно\n\n---\n\n## group-sort: Frequency Scale\n\n> Sort adverbs by frequency (from most often to least often).\n\n### Always / Often (75-100%)\n- завжди\n- часто\n- дуже часто\n\n### Usually / Sometimes (25-60%)\n- зазвичай\n- іноді\n- час від часу\n\n### Rarely / Never (0-10%)\n- рідко\n- ніколи\n\n---\n\n## group-sort: Type of Adverb\n\n> Sort adverbs by their type.\n\n### Manner (How?)\n- гарно\n- погано\n- швидко\n- повільно\n- голосно\n- тихо\n- весело\n\n### Frequency (How often?)\n- завжди\n- часто\n- іноді\n- рідко\n- ніколи\n\n### Degree (How much?)\n- дуже\n- занадто\n- трохи\n- зовсім\n\n---\n\n## fill-in: Як ти це робиш? (How Do You Do It?)\n\n> Choose the correct adverb.\n\n1. Вона співає дуже ___.\n   > [!answer] гарно\n   > [!options] гарно | гарний | гарна | гарне\n\n2. Він говорить дуже ___.\n   > [!answer] тихо\n   > [!options] тихо | тихий | тиха | тихе\n\n3. Бабуся готує дуже ___.\n   > [!answer] смачно\n   > [!options] смачно | смачний | смачна | смачне\n\n4. Діти грають дуже ___.\n   > [!answer] голосно\n   > [!options] голосно | голосний | голосна | голосне\n\n5. Він біжить дуже ___.\n   > [!answer] швидко\n   > [!options] швидко | швидкий | швидка | швидке\n\n6. Вона читає дуже ___.\n   > [!answer] повільно\n   > [!options] повільно | повільний | повільна | повільне\n\n7. Я розумію це ___.\n   > [!answer] добре\n   > [!options] добре | добрий | добра | добро\n\n8. Він танцює дуже ___.\n   > [!answer] погано\n   > [!options] погано | поганий | погана | погане\n\n9. Вона працює дуже ___.\n   > [!answer] важко\n   > [!options] важко | важкий | важка | важке\n\n10. Він говорить ___.\n    > [!answer] чесно\n    > [!options] чесно | чесний | чесна | чесне\n\n11. Вона відповідає ___.\n    > [!answer] ввічливо\n    > [!options] ввічливо | ввічливий | ввічлива | ввічливе\n\n12. Він жартує ___.\n    > [!answer] весело\n    > [!options] весело | веселий | весела | веселе\n\n---\n\n## fill-in: Як часто? (How Often?)\n\n> Choose the correct frequency adverb.\n\n1. Я ___ снідаю о сьомій.\n   > [!answer] завжди\n   > [!options] завжди | ніколи | рідко | погано\n\n2. Вона ___ читає книжки.\n   > [!answer] часто\n   > [!options] часто | ніколи | швидко | добре\n\n3. Ми ___ їмо в ресторані.\n   > [!answer] іноді\n   > [!options] іноді | завжди | добре | смачно\n\n4. Він ___ запізнюється.\n   > [!answer] рідко\n   > [!options] рідко | завжди | часто | швидко\n\n5. Вона ___ не п'є каву.\n   > [!answer] ніколи\n   > [!options] ніколи | завжди | часто | дуже\n\n6. Ми ___ гуляємо в парку.\n   > [!answer] зазвичай\n   > [!options] зазвичай | ніколи | погано | важко\n\n7. Він ___ обідає о першій.\n   > [!answer] завжди\n   > [!options] завжди | ніколи | рідко | легко\n\n8. Вона ___ працює вдома.\n   > [!answer] часто\n   > [!options] часто | ніколи | рідко | повільно\n\n9. Вони ___ дивляться телевізор.\n   > [!answer] рідко\n   > [!options] рідко | завжди | ніколи | голосно\n\n10. Я ___ приходжу о дев'ятій.\n    > [!answer] зазвичай\n    > [!options] зазвичай | ніколи | рідко | тихо\n\n11. Він ___ не курить.\n    > [!answer] ніколи\n    > [!options] ніколи | завжди | іноді | дуже\n\n12. Ми ___ їмо вдома.\n    > [!answer] зазвичай\n    > [!options] зазвичай | ніколи | рідко | весело\n\n---\n\n## quiz: Adverb or Adjective?\n\nChoose the correct form.\n\n1. Він ___ хлопець. (good)\n   - [x] добрий\n   - [ ] добре\n   - [ ] добро\n   - [ ] добра\n\n2. Він говорить ___. (well)\n   - [x] добре\n   - [ ] добрий\n   - [ ] добра\n   - [ ] добро\n\n3. Це ___ машина. (fast)\n   - [x] швидка\n   - [ ] швидко\n   - [ ] швидкий\n   - [ ] швидке\n\n4. Вона біжить ___. (fast)\n   - [x] швидко\n   - [ ] швидка\n   - [ ] швидкий\n   - [ ] швидке\n\n5. У неї ___ голос. (quiet)\n   - [x] тихий\n   - [ ] тихо\n   - [ ] тиха\n   - [ ] тихе\n\n6. Він говорить ___. (quietly)\n   - [x] тихо\n   - [ ] тихий\n   - [ ] тиха\n   - [ ] тихе\n\n7. Вона ___ людина. (happy, cheerful)\n   - [x] весела\n   - [ ] весело\n   - [ ] веселий\n   - [ ] веселе\n\n8. Діти співають ___. (loudly)\n   - [x] голосно\n   - [ ] голосний\n   - [ ] голосна\n   - [ ] голосне\n\n---\n\n## quiz: Frequency Meaning\n\nWhat does each adverb mean?\n\n1. Завжди\n   - [x] Always\n   - [ ] Sometimes\n   - [ ] Never\n   - [ ] Rarely\n\n2. Часто\n   - [x] Often\n   - [ ] Never\n   - [ ] Rarely\n   - [ ] Always\n\n3. Іноді\n   - [x] Sometimes\n   - [ ] Always\n   - [ ] Never\n   - [ ] Often\n\n4. Рідко\n   - [x] Rarely\n   - [ ] Always\n   - [ ] Often\n   - [ ] Never\n\n5. Ніколи\n   - [x] Never\n   - [ ] Sometimes\n   - [ ] Often\n   - [ ] Always\n\n6. Зазвичай\n   - [x] Usually\n   - [ ] Never\n   - [ ] Rarely\n   - [ ] Sometimes\n\n7. Дуже\n   - [x] Very\n   - [ ] Sometimes\n   - [ ] Never\n   - [ ] Rarely\n\n8. Трохи\n   - [x] A little\n   - [ ] Very much\n   - [ ] Never\n   - [ ] Always\n\n---\n\n## unjumble: Describing Actions\n\nPut the words in the correct order.\n\n1. швидко / бігає / він\n   > [!answer] Він швидко бігає.\n\n2. добре / вона / співає\n   > [!answer] Вона добре співає.\n\n3. читаю / я / повільно\n   > [!answer] Я читаю повільно.\n\n4. часто / ми / гуляємо\n   > [!answer] Ми часто гуляємо.\n\n5. завжди / снідаю / я / вранці\n   > [!answer] Я завжди снідаю вранці.\n\n6. не / він / курить / ніколи\n   > [!answer] Він ніколи не курить.\n\n7. голосно / діти / грають\n   > [!answer] Діти голосно грають.\n\n8. тихо / вона / говорить\n   > [!answer] Вона тихо говорить.\n\n9. добре / справи / як\n   > [!answer] Як справи? Добре.\n\n10. іноді / ми / піцу / їмо\n   > [!answer] Ми іноді їмо піцу.\n\n11. рідко / телевізор / дивлюсь / я\n   > [!answer] Я рідко дивлюсь телевізор.\n\n12. весело / вони / танцюють\n   > [!answer] Вони весело танцюють.\n\n\n---\n\n## true-false: Adverb Rules\n\nIs this true or false?\n\n- [x] Adverbs describe verbs (actions).\n- [ ] Adverbs describe nouns.\n  > Incorrect! that's adjectives\n\n- [x] Most adverbs end in -о.\n- [ ] \"Добрий\" is an adverb.\n  > Incorrect! it's an adjective\n\n- [x] \"Добре\" is an adverb.\n- [ ] \"Ніколи\" doesn't need \"не\" before the verb.\n  > Incorrect! you need two negatives\n\n- [x] \"Завжди\" means \"always\".\n- [x] \"Дуже\" can modify adverbs (дуже добре).\n- [ ] \"Швидкий\" describes how you do something.\n  > Incorrect! it's an adjective\n\n- [x] \"Швидко\" describes how you do something.\n- [ ] \"Як справи?\" — \"Добрий!\".\n  > Incorrect! should be \"Добре!\"\n\n- [x] \"Як справи?\" — \"Добре!\".\n\n---\n\n# Summary\n\nIn this module, you learned:\n\n- **Adverbs of manner (10 words)**: гарно, погано, добре, швидко, повільно, голосно, тихо, весело, сумно, легко, важко\n- **Adverbs of frequency (6 words)**: завжди, часто, зазвичай, іноді, рідко, ніколи\n- **Degree adverbs (4 words)**: дуже, занадто, трохи, зовсім\n- **Other manner adverbs (10 words)**: цікаво, нудно, смачно, дорого, дешево, серйозно, жартома, ввічливо, чесно\n- **Formation pattern**: Adjective stem + -о = Adverb (гарний → гарно)\n- **Irregular**: хороший → добре, поганий → погано\n- **Double negative rule**: ніколи + не (Я ніколи не курю)\n- **Frequency scale**: завжди > часто > зазвичай > іноді > рідко > ніколи\n\n---\n\n**Coming up:** Module 29 will teach you about weather and nature!\n",
+    "createdAt": "2025-12-14T15:48:09.034817Z",
+    "modifiedAt": "2025-12-14T15:48:09.034817Z",
     "version": 2
   },
-  "activities": [
-    {
-      "id": "act-a1-0-fillblank-0",
-      "type": "fill-blank",
-      "title": "Form Adverbs",
-      "description": "Form the adverb from the adjective.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "швидкий → ___",
-            "answer": "швидко",
-            "options": [
-              "швидко",
-              "швидка",
-              "швидке",
-              "швидкий"
-            ]
-          },
-          {
-            "prompt": "повільний → ___",
-            "answer": "повільно",
-            "options": [
-              "повільно",
-              "повільна",
-              "повільне",
-              "повільний"
-            ]
-          },
-          {
-            "prompt": "гарний → ___",
-            "answer": "гарно",
-            "options": [
-              "гарно",
-              "гарна",
-              "гарне",
-              "гарний"
-            ]
-          },
-          {
-            "prompt": "голосний → ___",
-            "answer": "голосно",
-            "options": [
-              "голосно",
-              "голосна",
-              "голосне",
-              "голосний"
-            ]
-          },
-          {
-            "prompt": "тихий → ___",
-            "answer": "тихо",
-            "options": [
-              "тихо",
-              "тиха",
-              "тихе",
-              "тихий"
-            ]
-          },
-          {
-            "prompt": "добрий → ___",
-            "answer": "добре",
-            "options": [
-              "добре",
-              "добро",
-              "добра",
-              "добрий"
-            ]
-          },
-          {
-            "prompt": "легкий → ___",
-            "answer": "легко",
-            "options": [
-              "легко",
-              "легка",
-              "легке",
-              "легкий"
-            ]
-          },
-          {
-            "prompt": "важкий → ___",
-            "answer": "важко",
-            "options": [
-              "важко",
-              "важка",
-              "важке",
-              "важкий"
-            ]
-          },
-          {
-            "prompt": "цікавий → ___",
-            "answer": "цікаво",
-            "options": [
-              "цікаво",
-              "цікава",
-              "цікаве",
-              "цікавий"
-            ]
-          },
-          {
-            "prompt": "нудний → ___",
-            "answer": "нудно",
-            "options": [
-              "нудно",
-              "нудна",
-              "нудне",
-              "нудний"
-            ]
-          },
-          {
-            "prompt": "поганий → ___",
-            "answer": "погано",
-            "options": [
-              "погано",
-              "погана",
-              "погане",
-              "поганий"
-            ]
-          },
-          {
-            "prompt": "сильний → ___",
-            "answer": "сильно",
-            "options": [
-              "сильно",
-              "сильна",
-              "сильне",
-              "сильний"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.051Z",
-      "modifiedAt": "2025-12-12T19:55:32.051Z"
-    },
-    {
-      "id": "act-a1-0-matchup-0",
-      "type": "match-up",
-      "title": "Frequency Scale",
-      "description": "Match adverbs with their frequency level.",
-      "content": {
-        "type": "match-up",
-        "pairs": [
-          {
-            "left": "завжди",
-            "right": "100% (always)"
-          },
-          {
-            "left": "зазвичай",
-            "right": "80-90% (usually)"
-          },
-          {
-            "left": "часто",
-            "right": "60-70% (often)"
-          },
-          {
-            "left": "іноді",
-            "right": "30-50% (sometimes)"
-          },
-          {
-            "left": "рідко",
-            "right": "10-20% (rarely)"
-          },
-          {
-            "left": "ніколи",
-            "right": "0% (never)"
-          },
-          {
-            "left": "майже завжди",
-            "right": "almost always"
-          },
-          {
-            "left": "щодня",
-            "right": "every day"
-          },
-          {
-            "left": "щотижня",
-            "right": "every week"
-          },
-          {
-            "left": "час від часу",
-            "right": "from time to time"
-          },
-          {
-            "left": "регулярно",
-            "right": "regularly"
-          },
-          {
-            "left": "постійно",
-            "right": "constantly"
-          }
-        ],
-        "shuffleRight": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.051Z",
-      "modifiedAt": "2025-12-12T19:55:32.051Z"
-    },
-    {
-      "id": "act-a1-0-quiz-0",
-      "type": "quiz",
-      "title": "Adverb Rules",
-      "description": "Choose the correct answer.",
-      "content": {
-        "type": "quiz",
-        "questions": [
-          {
-            "question": "Adverbs usually describe:",
-            "options": [
-              "Verbs (how actions happen)",
-              "Nouns",
-              "Only adjectives",
-              "Nothing"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Most Ukrainian adverbs of manner end in:",
-            "options": [
-              "-о or -е",
-              "-ий",
-              "-а",
-              "-ти"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Добре\" comes from:",
-            "options": [
-              "Добрий (good)",
-              "Добро (goodness)",
-              "Дім (home)",
-              "День (day)"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Ніколи\" requires:",
-            "options": [
-              "Double negative (ніколи не)",
-              "No negative",
-              "Past tense only",
-              "Future tense only"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Adverbs in Ukrainian:",
-            "options": [
-              "Don't change for gender",
-              "Change for gender",
-              "Change for number",
-              "Change for case"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Він швидко біжить\" — \"швидко\" is:",
-            "options": [
-              "An adverb",
-              "An adjective",
-              "A noun",
-              "A verb"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Frequency adverbs usually come:",
-            "options": [
-              "Before the verb",
-              "After the noun",
-              "At the end only",
-              "Never in sentences"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Часто\" means:",
-            "options": [
-              "Often",
-              "Sometimes",
-              "Rarely",
-              "Never"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Гарно\" and \"гарний\" differ because:",
-            "options": [
-              "Гарно = adverb, гарний = adjective",
-              "No difference",
-              "Гарно = noun",
-              "Гарний = verb"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Дуже\" is an adverb of:",
-            "options": [
-              "Degree",
-              "Frequency",
-              "Manner",
-              "Time"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Швидкий\" is:",
-            "options": [
-              "An adjective",
-              "An adverb",
-              "A verb",
-              "A noun"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Зазвичай\" means:",
-            "options": [
-              "Usually",
-              "Always",
-              "Never",
-              "Sometimes"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          }
-        ],
-        "shuffleQuestions": true,
-        "shuffleOptions": true,
-        "showCorrectAnswers": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.051Z",
-      "modifiedAt": "2025-12-12T19:55:32.051Z"
-    },
-    {
-      "id": "act-a1-0-groupsort-0",
-      "type": "group-sort",
-      "title": "Adverb Types",
-      "description": "Sort adverbs by category.",
-      "content": {
-        "type": "group-sort",
-        "groups": [],
-        "shuffleItems": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.051Z",
-      "modifiedAt": "2025-12-12T19:55:32.051Z"
-    },
-    {
-      "id": "act-a1-0-truefalse-0",
-      "type": "true-false",
-      "title": "Adverb Facts",
-      "description": "Adverb Facts",
-      "content": {
-        "type": "true-false",
-        "statements": [
-          {
-            "statement": "Most adverbs end in -о or -е.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Ніколи\" needs a second негative.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "Adverbs change for gender.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Швидко\" comes from \"швидкий.\"",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Часто\" means often.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Добрий\" becomes \"добро.\"",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "Adverbs describe verbs.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Завжди\" means never.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Рідко\" means rarely.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "Frequency adverbs come before verbs.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Гарно\" is an adjective.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Дуже\" means very.",
-            "isTrue": true,
-            "explanation": ""
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.051Z",
-      "modifiedAt": "2025-12-12T19:55:32.051Z"
-    },
-    {
-      "id": "act-a1-0-anagram-0",
-      "type": "anagram",
-      "title": "Adverb Vocabulary",
-      "description": "Unscramble these adverbs.",
-      "content": {
-        "type": "anagram",
-        "isAnagram": true,
-        "items": [
-          {
-            "letters": [
-              "о",
-              "к",
-              "д",
-              "и",
-              "ш",
-              "в"
-            ],
-            "answer": "швидко"
-          },
-          {
-            "letters": [
-              "о",
-              "н",
-              "ь",
-              "л",
-              "і",
-              "в",
-              "о",
-              "п"
-            ],
-            "answer": "повільно"
-          },
-          {
-            "letters": [
-              "о",
-              "н",
-              "р",
-              "а",
-              "г"
-            ],
-            "answer": "гарно"
-          },
-          {
-            "letters": [
-              "е",
-              "р",
-              "б",
-              "о",
-              "д"
-            ],
-            "answer": "добре"
-          },
-          {
-            "letters": [
-              "о",
-              "н",
-              "с",
-              "о",
-              "л",
-              "о",
-              "г"
-            ],
-            "answer": "голосно"
-          },
-          {
-            "letters": [
-              "о",
-              "х",
-              "и",
-              "т"
-            ],
-            "answer": "тихо"
-          },
-          {
-            "letters": [
-              "и",
-              "д",
-              "ж",
-              "а",
-              "в",
-              "з"
-            ],
-            "answer": "завжди"
-          },
-          {
-            "letters": [
-              "о",
-              "т",
-              "с",
-              "а",
-              "ч"
-            ],
-            "answer": "часто"
-          },
-          {
-            "letters": [
-              "і",
-              "д",
-              "о",
-              "н",
-              "і"
-            ],
-            "answer": "іноді"
-          },
-          {
-            "letters": [
-              "о",
-              "к",
-              "д",
-              "і",
-              "р"
-            ],
-            "answer": "рідко"
-          },
-          {
-            "letters": [
-              "н",
-              "к",
-              "і",
-              "и",
-              "о",
-              "л"
-            ],
-            "answer": "ніколи"
-          },
-          {
-            "letters": [
-              "е",
-              "ж",
-              "у",
-              "д"
-            ],
-            "answer": "дуже"
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.051Z",
-      "modifiedAt": "2025-12-12T19:55:32.051Z"
-    },
-    {
-      "id": "act-a1-0-fillblank-1",
-      "type": "fill-blank",
-      "title": "Describe Actions",
-      "description": "Complete with the correct adverb.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Він говорить ___. (quickly)",
-            "answer": "швидко",
-            "options": [
-              "швидко",
-              "швидкий",
-              "швидка",
-              "швидке"
-            ]
-          },
-          {
-            "prompt": "Вона співає ___. (beautifully)",
-            "answer": "гарно",
-            "options": [
-              "гарно",
-              "гарний",
-              "гарна",
-              "гарне"
-            ]
-          },
-          {
-            "prompt": "Я ___ снідаю. (always)",
-            "answer": "завжди",
-            "options": [
-              "завжди",
-              "часто",
-              "іноді",
-              "ніколи"
-            ]
-          },
-          {
-            "prompt": "Ми ___ ходимо в кіно. (rarely)",
-            "answer": "рідко",
-            "options": [
-              "завжди",
-              "часто",
-              "іноді",
-              "рідко"
-            ]
-          },
-          {
-            "prompt": "Вона ___ не запізнюється. (never)",
-            "answer": "ніколи",
-            "options": [
-              "завжди",
-              "часто",
-              "іноді",
-              "ніколи"
-            ]
-          },
-          {
-            "prompt": "Він читає ___. (slowly)",
-            "answer": "повільно",
-            "options": [
-              "швидко",
-              "повільно",
-              "голосно",
-              "тихо"
-            ]
-          },
-          {
-            "prompt": "Говори ___! (quietly)",
-            "answer": "тихо",
-            "options": [
-              "голосно",
-              "тихо",
-              "швидко",
-              "гарно"
-            ]
-          },
-          {
-            "prompt": "Це ___ зробити. (easily)",
-            "answer": "легко",
-            "options": [
-              "легко",
-              "важко",
-              "швидко",
-              "повільно"
-            ]
-          },
-          {
-            "prompt": "Я ___ хвора. (still)",
-            "answer": "ще",
-            "options": [
-              "вже",
-              "ще",
-              "потім",
-              "зараз"
-            ]
-          },
-          {
-            "prompt": "Ми ___ закінчили. (already)",
-            "answer": "вже",
-            "options": [
-              "вже",
-              "ще",
-              "потім",
-              "зараз"
-            ]
-          },
-          {
-            "prompt": "Він ___ добре говорить. (very)",
-            "answer": "дуже",
-            "options": [
-              "дуже",
-              "трохи",
-              "зовсім",
-              "майже"
-            ]
-          },
-          {
-            "prompt": "Я ___ практикуюсь. (every day)",
-            "answer": "щодня",
-            "options": [
-              "щодня",
-              "рідко",
-              "ніколи",
-              "іноді"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.051Z",
-      "modifiedAt": "2025-12-12T19:55:32.051Z"
-    },
-    {
-      "id": "act-a1-0-unjumble-0",
-      "type": "unjumble",
-      "title": "Build Adverb Sentences",
-      "description": "Arrange words into correct sentences.",
-      "content": {
-        "type": "unjumble",
-        "isUnjumble": true,
-        "items": [
-          {
-            "words": [
-              "швидко",
-              "він",
-              "біжить"
-            ],
-            "answer": "Він швидко біжить."
-          },
-          {
-            "words": [
-              "співає",
-              "вона",
-              "гарно"
-            ],
-            "answer": "Вона гарно співає."
-          },
-          {
-            "words": [
-              "завжди",
-              "снідаю",
-              "я"
-            ],
-            "answer": "Я завжди снідаю."
-          },
-          {
-            "words": [
-              "ніколи",
-              "не",
-              "вона",
-              "запізнюється"
-            ],
-            "answer": "Вона ніколи не запізнюється."
-          },
-          {
-            "words": [
-              "читаєш",
-              "як",
-              "часто",
-              "ти"
-            ],
-            "answer": "Як часто ти читаєш?"
-          },
-          {
-            "words": [
-              "голосно",
-              "говори",
-              "не"
-            ],
-            "answer": "Не говори голосно!"
-          },
-          {
-            "words": [
-              "я",
-              "повільно",
-              "ще",
-              "читаю"
-            ],
-            "answer": "Я ще повільно читаю."
-          },
-          {
-            "words": [
-              "зараз",
-              "добре",
-              "я",
-              "себе",
-              "почуваю"
-            ],
-            "answer": "Зараз я почуваю себе добре."
-          },
-          {
-            "words": [
-              "вже",
-              "ми",
-              "закінчили"
-            ],
-            "answer": "Ми вже закінчили."
-          },
-          {
-            "words": [
-              "важко",
-              "це",
-              "дуже"
-            ],
-            "answer": "Це дуже важко."
-          },
-          {
-            "words": [
-              "рідко",
-              "ходимо",
-              "ми",
-              "кіно",
-              "в"
-            ],
-            "answer": "Ми рідко ходимо в кіно."
-          },
-          {
-            "words": [
-              "щодня",
-              "практикуюся",
-              "я"
-            ],
-            "answer": "Я щодня практикуюся."
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.051Z",
-      "modifiedAt": "2025-12-12T19:55:32.051Z"
-    }
-  ],
+  "activities": [],
   "vocabulary": {
     "moduleId": "mod-uk-A1-28",
     "level": "A1",
-    "phase": "A1.3",
+    "phase": "A1.3 - Consolidation",
     "wordCount": 30,
     "newWordCount": 30,
     "reviewWordCount": 0,
-    "transliterationMode": "partial",
+    "transliterationMode": "first-occurrence",
     "words": [
       {
-        "id": "v-harno-0-0",
+        "id": "vocab-1",
         "uk": "гарно",
-        "en": "well, beautifully",
-        "pos": "noun",
-        "ipa": "/ˈɦɑrno/",
-        "note": "Вона гарно малює.",
-        "isNew": true,
-        "firstModule": 0
+        "ipa": "/ˈhɑrnɔ/",
+        "en": "beautifully",
+        "pos": "adv",
+        "gender": null,
+        "note": "from гарний"
       },
       {
-        "id": "v-pohano-0-1",
+        "id": "vocab-2",
         "uk": "погано",
+        "ipa": "/pɔˈhɑnɔ/",
         "en": "badly",
-        "pos": "noun",
-        "ipa": "/ˈpoɦɑno/",
-        "note": "Я погано сплю.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "from поганий"
       },
       {
-        "id": "v-dobre-0-2",
+        "id": "vocab-3",
         "uk": "добре",
+        "ipa": "/ˈdɔbre/",
         "en": "well",
-        "pos": "noun",
-        "ipa": "/ˈdobrɛ/",
-        "note": "Як справи? — Добре!",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "from добрий"
       },
       {
-        "id": "v-shvydko-0-3",
+        "id": "vocab-4",
         "uk": "швидко",
-        "en": "quickly",
-        "pos": "noun",
-        "ipa": "/ˈʃʋɪdko/",
-        "note": "Він швидко бігає.",
-        "isNew": true,
-        "firstModule": 0
+        "ipa": "/ˈʃwɪdkɔ/",
+        "en": "fast, quickly",
+        "pos": "adv",
+        "gender": null,
+        "note": "from швидкий"
       },
       {
-        "id": "v-povilьno-0-4",
+        "id": "vocab-5",
         "uk": "повільно",
+        "ipa": "/pɔˈwilʲnɔ/",
         "en": "slowly",
-        "pos": "noun",
-        "ipa": "/poˈʋilʲno/",
-        "note": "Говори повільно!",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "from повільний"
       },
       {
-        "id": "v-holosno-0-5",
-        "uk": "голосно",
-        "en": "loudly",
-        "pos": "noun",
-        "ipa": "/ɦoˈlosno/",
-        "note": "Не говори голосно!",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-tykho-0-6",
-        "uk": "тихо",
-        "en": "quietly",
-        "pos": "noun",
-        "ipa": "/ˈtɪxo/",
-        "note": "Тут тихо.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-lehko-0-7",
-        "uk": "легко",
-        "en": "easily",
-        "pos": "noun",
-        "ipa": "/ˈlɛɦko/",
-        "note": "Це легко.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-vazhko-0-8",
-        "uk": "важко",
-        "en": "with difficulty",
-        "pos": "noun",
-        "ipa": "/ˈʋɑʒko/",
-        "note": "Мені важко.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-tsikavo-0-9",
+        "id": "vocab-6",
         "uk": "цікаво",
+        "ipa": "/t͡sʲiˈkawɔ/",
         "en": "interestingly",
-        "pos": "noun",
-        "ipa": "/t͡siˈkɑʋo/",
-        "note": "Цікаво розповів!",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "from цікавий"
       },
       {
-        "id": "v-nudno-0-10",
+        "id": "vocab-7",
         "uk": "нудно",
+        "ipa": "/ˈnudnɔ/",
         "en": "boringly",
-        "pos": "noun",
-        "ipa": "/ˈnudno/",
-        "note": "Тут нудно.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "from нудний"
       },
       {
-        "id": "v-veselo-0-11",
-        "uk": "весело",
-        "en": "merrily",
-        "pos": "noun",
-        "ipa": "/ˈʋɛsɛlo/",
-        "note": "Нам весело!",
-        "isNew": true,
-        "firstModule": 0
+        "id": "vocab-8",
+        "uk": "важко",
+        "ipa": "/ˈwɑʒkɔ/",
+        "en": "with difficulty",
+        "pos": "adv",
+        "gender": null,
+        "note": "from важкий"
       },
       {
-        "id": "v-sumno-0-12",
-        "uk": "сумно",
-        "en": "sadly",
-        "pos": "noun",
-        "ipa": "/ˈsumno/",
-        "note": "Мені сумно.",
-        "isNew": true,
-        "firstModule": 0
+        "id": "vocab-9",
+        "uk": "легко",
+        "ipa": "/ˈlehkɔ/",
+        "en": "easily",
+        "pos": "adv",
+        "gender": null,
+        "note": "from легкий"
       },
       {
-        "id": "v-smachno-0-13",
+        "id": "vocab-10",
         "uk": "смачно",
+        "ipa": "/ˈsmɑtʃnɔ/",
         "en": "deliciously",
-        "pos": "noun",
-        "ipa": "/ˈsmɑt͡ʃno/",
-        "note": "Було смачно!",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "from смачний"
       },
       {
-        "id": "v-doroho-0-14",
+        "id": "vocab-11",
         "uk": "дорого",
+        "ipa": "/ˈdɔrɔhɔ/",
         "en": "expensively",
-        "pos": "noun",
-        "ipa": "/ˈdoroɦo/",
-        "note": "Тут дорого.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "from дорогий"
       },
       {
-        "id": "v-deshevo-0-15",
+        "id": "vocab-12",
         "uk": "дешево",
+        "ipa": "/ˈdeʃewɔ/",
         "en": "cheaply",
-        "pos": "noun",
-        "ipa": "/ˈdɛʃɛʋo/",
-        "note": "Це дешево.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "from дешевий"
       },
       {
-        "id": "v-zavzhdy-0-16",
+        "id": "vocab-13",
+        "uk": "голосно",
+        "ipa": "/hɔˈlɔsnɔ/",
+        "en": "loudly",
+        "pos": "adv",
+        "gender": null,
+        "note": "from голосний"
+      },
+      {
+        "id": "vocab-14",
+        "uk": "тихо",
+        "ipa": "/ˈtɪxɔ/",
+        "en": "quietly",
+        "pos": "adv",
+        "gender": null,
+        "note": "from тихий"
+      },
+      {
+        "id": "vocab-15",
+        "uk": "весело",
+        "ipa": "/ˈweselɔ/",
+        "en": "merrily",
+        "pos": "adv",
+        "gender": null,
+        "note": "from веселий"
+      },
+      {
+        "id": "vocab-16",
+        "uk": "сумно",
+        "ipa": "/ˈsumnɔ/",
+        "en": "sadly",
+        "pos": "adv",
+        "gender": null,
+        "note": "from сумний"
+      },
+      {
+        "id": "vocab-17",
+        "uk": "серйозно",
+        "ipa": "/serˈjɔznɔ/",
+        "en": "seriously",
+        "pos": "adv",
+        "gender": null,
+        "note": "from серйозний"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "жартома",
+        "ipa": "/ʒɑrˈtɔmɑ/",
+        "en": "jokingly",
+        "pos": "adv",
+        "gender": null,
+        "note": "irregular"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "ввічливо",
+        "ipa": "/ˈwːitʃlɪwɔ/",
+        "en": "politely",
+        "pos": "adv",
+        "gender": null,
+        "note": "from ввічливий"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "чесно",
+        "ipa": "/ˈtʃesnɔ/",
+        "en": "honestly",
+        "pos": "adv",
+        "gender": null,
+        "note": "from чесний"
+      },
+      {
+        "id": "vocab-21",
         "uk": "завжди",
+        "ipa": "/ˈzɑwʒdɪ/",
         "en": "always",
-        "pos": "noun",
-        "ipa": "/ˈzɑʋʒdɪ/",
-        "note": "Завжди раді!",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "frequency"
       },
       {
-        "id": "v-chasto-0-17",
+        "id": "vocab-22",
         "uk": "часто",
+        "ipa": "/ˈtʃɑstɔ/",
         "en": "often",
-        "pos": "noun",
-        "ipa": "/ˈt͡ʃɑsto/",
-        "note": "Часто ходжу.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "frequency"
       },
       {
-        "id": "v-zazvychay-0-18",
+        "id": "vocab-23",
         "uk": "зазвичай",
+        "ipa": "/zɑzwɪˈtʃɑj/",
         "en": "usually",
-        "pos": "noun",
-        "ipa": "/zɑzˈʋɪt͡ʃɑj/",
-        "note": "Зазвичай снідаю.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "frequency"
       },
       {
-        "id": "v-inodi-0-19",
+        "id": "vocab-24",
         "uk": "іноді",
+        "ipa": "/iˈnɔdʲi/",
         "en": "sometimes",
-        "pos": "noun",
-        "ipa": "/iˈnodi/",
-        "note": "Іноді забуваю.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "frequency"
       },
       {
-        "id": "v-ridko-0-20",
+        "id": "vocab-25",
         "uk": "рідко",
+        "ipa": "/ˈrʲidkɔ/",
         "en": "rarely",
-        "pos": "noun",
-        "ipa": "/ˈridko/",
-        "note": "Рідко бачу.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "frequency"
       },
       {
-        "id": "v-nikoly-0-21",
+        "id": "vocab-26",
         "uk": "ніколи",
+        "ipa": "/nʲiˈkɔlɪ/",
         "en": "never",
-        "pos": "noun",
-        "ipa": "/niˈkolɪ/",
-        "note": "Ніколи не пізно!",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "needs не"
       },
       {
-        "id": "v-trokhy-0-22",
+        "id": "vocab-27",
         "uk": "трохи",
+        "ipa": "/ˈtrɔxɪ/",
         "en": "a little",
-        "pos": "noun",
-        "ipa": "/ˈtroxɪ/",
-        "note": "Трохи втомився.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "degree"
       },
       {
-        "id": "v-duzhe-0-23",
+        "id": "vocab-28",
         "uk": "дуже",
+        "ipa": "/ˈduʒe/",
         "en": "very",
-        "pos": "noun",
-        "ipa": "/ˈduʒɛ/",
-        "note": "Дуже дякую!",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "degree"
       },
       {
-        "id": "v-zanadto-0-24",
+        "id": "vocab-29",
         "uk": "занадто",
+        "ipa": "/zɑˈnɑdtɔ/",
         "en": "too (much)",
-        "pos": "noun",
-        "ipa": "/zɑˈnɑdto/",
-        "note": "Занадто пізно.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "degree"
       },
       {
-        "id": "v-zovsim-0-25",
+        "id": "vocab-30",
         "uk": "зовсім",
+        "ipa": "/zɔwˈsʲim/",
         "en": "completely",
-        "pos": "noun",
-        "ipa": "/ˈzoʋsim/",
-        "note": "Зовсім забув!",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-mayzhe-0-26",
-        "uk": "майже",
-        "en": "almost",
-        "pos": "noun",
-        "ipa": "/ˈmɑjʒɛ/",
-        "note": "Майже готово!",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-vzhe-0-27",
-        "uk": "вже",
-        "en": "already",
-        "pos": "noun",
-        "ipa": "/ʋʒɛ/",
-        "note": "Вже час!",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-shche-0-28",
-        "uk": "ще",
-        "en": "still, yet",
-        "pos": "noun",
-        "ipa": "/ʃt͡ʃɛ/",
-        "note": "Ще не готово.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-razom-0-29",
-        "uk": "разом",
-        "en": "together",
-        "pos": "noun",
-        "ipa": "/ˈrɑzom/",
-        "note": "Разом краще!",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adv",
+        "gender": null,
+        "note": "degree"
       }
-    ]
+    ],
+    "reviewWords": []
   }
 }

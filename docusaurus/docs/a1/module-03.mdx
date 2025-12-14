@@ -5,20 +5,18 @@ title: "The Gender Code"
 description: "Unlocking Ukrainian Gender Patterns"
 ---
 
-import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
-import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
+import Quiz from '@site/src/components/Quiz';
 import MatchUp from '@site/src/components/MatchUp';
-import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
-import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
-import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Select, { SelectQuestion } from '@site/src/components/Select';
-import Translate, { TranslateItem } from '@site/src/components/Translate';
-import Cloze, { ClozePassage } from '@site/src/components/Cloze';
-import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
-import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import DialogueReorder from '@site/src/components/DialogueReorder';
 
 
 # The Gender Code
@@ -33,6 +31,16 @@ Think of it like a secret code: the last letter reveals the gender. And once you
 >
 > Ukrainian noun gender is more predictable than German or French! In Ukrainian, **95% of the time**, you can guess the gender just by looking at the ending. No memorization needed — just pattern recognition.
 
+:::info[🎧 External Resources]
+
+**Grammar Guide:** [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/) — Infographic with rules and exceptions
+
+**Video:** [How to Know Noun Gender](https://www.ukrainianlessons.com/video-noun-gender/) — 8-minute grammar guide
+
+**Plurals:** [Plural of Nouns](https://www.ukrainianlessons.com/grammar-plural-nouns/) — How gender affects plural forms
+:::
+
+
 Let's start with a game. Look at these three words:
 
 - **Стіл** (stil) — table
@@ -41,8 +49,10 @@ Let's start with a game. Look at these three words:
 
 One ends in a consonant. One ends in **-а**. One ends in **-о**. Can you guess which is masculine, feminine, and neuter?
 
-> [!answer]
-> Стіл (consonant) = masculine. Книга (-а) = feminine. Вікно (-о) = neuter.
+:::note[Answer]
+Стіл (consonant) = masculine. Книга (-а) = feminine. Вікно (-о) = neuter.
+:::
+
 
 Congratulations — you've just learned the **Ukrainian Gender Code**!
 
@@ -54,9 +64,9 @@ Ukrainian nouns fall into three gender categories, and each has a signature endi
 
 | Gender | Ending Pattern | Examples |
 |--------|---------------|----------|
-| **Masculine** (чоловічий рід) | Consonant (б, т, л, н, р...) | стіл (table), хліб (bread), дім (house) |
-| **Feminine** (жіночий рід) | **-а** or **-я** | книга (book), кімната (room), земля (earth) |
-| **Neuter** (середній рід) | **-о** or **-е** | вікно (window), місто (city), море (sea) |
+| **Masculine** | Consonant (б, т, л, н, р...) | стіл (table), хліб (bread), дім (house) |
+| **Feminine** | **-а** or **-я** | книга (book), кімната (room), земля (earth) |
+| **Neuter** | **-о** or **-е** | вікно (window), місто (city), море (sea) |
 
 This is your **foundational pattern**. Memorize it once, and you'll recognize thousands of words.
 
@@ -79,7 +89,7 @@ Because in Ukrainian, **gender affects everything**:
 
 **Марко:** Де моя **книга**? (Where is my book?)
 **Таня:** Твоя **книга** на **столі**. (Your book is on the table.)
-**Марко:** А де **вікно**? (And where is the window?)
+**Марко:** а де **вікно**? (And where is the window?)
 **Таня:** **Вікно** там. (The window is there.)
 
 Notice:
@@ -163,19 +173,23 @@ Now it's your turn! Practice identifying gender and families.
 3. Море (sea) — ?
 4. Хліб (bread) — ?
 
-> [!answer]
-> 1. Двері — plural only (no gender)
-> 2. Річка — feminine (-а)
-> 3. Море — neuter (-е)
-> 4. Хліб — masculine (consonant)
+:::note[Answer]
+1. Двері — plural only (no gender)
+2. Річка — feminine (-а)
+3. Море — neuter (-е)
+4. Хліб — masculine (consonant)
+:::
+
 
 **Task 2:** Sort these words into declension families:
 - Стіна, вікно, підлога, стіл, крісло, шафа
 
-> [!answer]
-> Family 1: стіна, підлога, шафа.
->
-> Family 2: стіл, вікно, крісло.
+:::note[Answer]
+Family 1: стіна, підлога, шафа.
+
+Family 2: стіл, вікно, крісло.
+:::
+
 
 Excellent! You've just analyzed 6 nouns like a linguist.
 
@@ -202,7 +216,7 @@ This pattern consistency makes Ukrainian **easier to learn** than languages with
 
 ---
 
-# Summary
+## 📋 Summary
 
 **You've unlocked the Ukrainian Gender Code!**
 
@@ -225,91 +239,167 @@ Gender affects adjectives, pronouns, and case endings. Master gender now, and ev
 ---
 
 
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| він | /vin/ | he | pronoun | m | masculine pronoun |
+| вона | /voˈnɑ/ | she | pronoun | f | feminine pronoun |
+| воно | /voˈnɔ/ | it | pronoun | n | neuter pronoun |
+| чоловічий | /t͡ʃoloˈvit͡ʃɪj/ | masculine | adjective | - | gender term |
+| жіночий | /ʒiˈnɔt͡ʃɪj/ | feminine | adjective | - | gender term |
+| середній | /seˈrednʲij/ | neuter | adjective | - | gender term |
+| стіл | /stil/ | table | noun | m | ends in consonant |
+| книга | /ˈknɪɦɑ/ | book | noun | f | ends in -а |
+| вікно | /vikˈnɔ/ | window | noun | n | ends in -о |
+| двері | /ˈdveri/ | door | noun | f pl | always plural |
+| кімната | /kimˈnɑtɑ/ | room | noun | f | ends in -а |
+| дім | /dim/ | house | noun | m | ends in consonant |
+| місто | /ˈmistɔ/ | city | noun | n | ends in -о |
+| село | /seˈlɔ/ | village | noun | n | ends in -о |
+| річка | /ˈrit͡ʃkɑ/ | river | noun | f | ends in -а |
+| море | /ˈmɔre/ | sea | noun | n | ends in -е |
+| хліб | /xlib/ | bread | noun | m | ends in consonant |
+| вода | /vɔˈdɑ/ | water | noun | f | ends in -а |
+| молоко | /mɔlɔˈkɔ/ | milk | noun | n | ends in -о |
+| яблуко | /ˈjɑblukɔ/ | apple | noun | n | ends in -о |
+| м'ясо | /mʲɑˈsɔ/ | meat | noun | n | soft sign + -о |
+| риба | /ˈrɪbɑ/ | fish | noun | f | ends in -а |
+| овочі | /ˈɔvɔt͡ʃi/ | vegetables | noun | m pl | plural |
+| картопля | /kɑrˈtɔplʲɑ/ | potato | noun | f | ends in -я |
+| помідор | /pɔmiˈdɔr/ | tomato | noun | m | ends in consonant |
+| стілець | /stiˈlet͡sʲ/ | chair | noun | m | ends in -ць |
+| крісло | /ˈkrislɔ/ | armchair | noun | n | ends in -о |
+| шафа | /ˈʃɑfɑ/ | wardrobe | noun | f | ends in -а |
+| диван | /dɪˈvɑn/ | sofa | noun | m | ends in consonant |
+| ліжко | /ˈliʒkɔ/ | bed | noun | n | ends in -о |
+| ім'я | /imˈjɑ/ | name | noun | n | special neuter |
+| батько | /ˈbɑtʲkɔ/ | father | noun | m | exception: ends in -о |
+| дядько | /ˈdʲɑdʲkɔ/ | uncle | noun | m | exception: ends in -о |
+| апельсин | /ɑpelʲˈsɪn/ | orange | noun | m | ends in consonant |
+| магазин | /mɑɦɑˈzɪn/ | shop/store | noun | m | ends in consonant |
+| огірок | /ɔˈɦirɔk/ | cucumber | noun | m | ends in consonant |
+| підлога | /pidˈlɔɦɑ/ | floor | noun | f | ends in -а |
+| стеля | /ˈstelʲɑ/ | ceiling | noun | f | ends in -я |
+| стіна | /stiˈnɑ/ | wall | noun | f | ends in -а |
+| сік | /sik/ | juice | noun | m | ends in consonant |
+| університет | /universɪˈtɛt/ | university | noun | m | ends in consonant |
+| фрукти | /ˈfruktɪ/ | fruit | noun | m pl | plural |
+| цибуля | /t͡sɪˈbulʲɑ/ | onion | noun | f | ends in -я |
+| чай | /t͡ʃɑj/ | tea | noun | m | ends in consonant |
+| школа | /ˈʃkɔlɑ/ | school | noun | f | ends in -а |
+
 
 ---
 
-## 🎮 Activities
+## 🎯 Activities
 
 ### Gender Recognition
 
-<Quiz>
-  <QuizQuestion
-    question={`1. What gender is the noun "книга"?`}
-    options={[`Masculine`, `Feminine`, `Neuter`, `Plural only`]}
-    correctIndex={1}
-    explanation={`Nouns ending in -а are typically feminine.`}
-  />
-  <QuizQuestion
-    question={`What gender is "вікно"?`}
-    options={[`Masculine`, `Neuter`, `Feminine`, `No gender`]}
-    correctIndex={1}
-    explanation={`Nouns ending in -о are neuter.`}
-  />
-  <QuizQuestion
-    question={`What gender is "стіл"?`}
-    options={[`Masculine`, `Feminine`, `Neuter`, `Unknown`]}
-    correctIndex={0}
-    explanation={`Nouns ending in a consonant are typically masculine.`}
-  />
-  <QuizQuestion
-    question={`Which family does "ніч" belong to?`}
-    options={[`Family 1`, `Family 2`, `Family 3`, `Family 4`]}
-    correctIndex={2}
-    explanation={`Feminine nouns ending in consonants are Family 3.`}
-  />
-  <QuizQuestion
-    question={`Which ending is typical for neuter nouns?`}
-    options={[`-а`, `consonant`, `-о or -е`, `-і`]}
-    correctIndex={2}
-    explanation={`Neuter nouns end in -о or -е.`}
-  />
-  <QuizQuestion
-    question={`How many declension families exist in Ukrainian?`}
-    options={[`2`, `3`, `4`, `5`]}
-    correctIndex={2}
-    explanation={`There are 4 declension families.`}
-  />
-  <QuizQuestion
-    question={`What gender is "море"?`}
-    options={[`Masculine`, `Feminine`, `Neuter`, `Plural`]}
-    correctIndex={2}
-    explanation={`"Море" ends in -е, so it's neuter.`}
-  />
-  <QuizQuestion
-    question={`Which noun is masculine?`}
-    options={[`хліб`, `вода`, `вікно`, `кімната`]}
-    correctIndex={0}
-    explanation={`"Хліб" ends in a consonant, so it's masculine.`}
-  />
-  <QuizQuestion
-    question={`Which noun is feminine?`}
-    options={[`стіл`, `школа`, `місто`, `море`]}
-    correctIndex={1}
-    explanation={`"Школа" ends in -а, so it's feminine.`}
-  />
-  <QuizQuestion
-    question={`Can you predict gender from the ending 95% of the time?`}
-    options={[`Yes`, `No`, `Only for feminines`, `Only for neuters`]}
-    correctIndex={0}
-    explanation={`Ukrainian gender is highly predictable from endings!`}
-  />
-  <QuizQuestion
-    question={`What is Family 4 known for?`}
-    options={[`Consonant endings`, `-а/-я feminines`, `Neuter nouns with stem changes`, `Plural forms`]}
-    correctIndex={2}
-    explanation={`Family 4 neuters gain suffixes like -ат-, -ят-, -ен-.`}
-  />
-  <QuizQuestion
-    question={`Which word is neuter?`}
-    options={[`дім`, `кімната`, `яблуко`, `магазин`]}
-    correctIndex={2}
-    explanation={`"Яблуко" ends in -о, so it's neuter.`}
-  />
-</Quiz>
+<Quiz questions={[
+  {
+    question: `What gender is the noun \"книга\"?`,
+    options: [
+      { text: `Masculine`, correct: false },
+      { text: `Feminine`, correct: true },
+      { text: `Neuter`, correct: false },
+      { text: `Plural only`, correct: false }
+    ]
+  },  {
+    question: `What gender is \"вікно\"?`,
+    options: [
+      { text: `Masculine`, correct: false },
+      { text: `Neuter`, correct: true },
+      { text: `Feminine`, correct: false },
+      { text: `No gender`, correct: false }
+    ]
+  },  {
+    question: `What gender is \"стіл\"?`,
+    options: [
+      { text: `Masculine`, correct: true },
+      { text: `Feminine`, correct: false },
+      { text: `Neuter`, correct: false },
+      { text: `Unknown`, correct: false }
+    ]
+  },  {
+    question: `Which family does \"ніч\" belong to?`,
+    options: [
+      { text: `Family 1`, correct: false },
+      { text: `Family 2`, correct: false },
+      { text: `Family 3`, correct: true },
+      { text: `Family 4`, correct: false }
+    ]
+  },  {
+    question: `Which ending is typical for neuter nouns?`,
+    options: [
+      { text: `-а`, correct: false },
+      { text: `consonant`, correct: false },
+      { text: `-о or -е`, correct: true },
+      { text: `-і`, correct: false }
+    ]
+  },  {
+    question: `How many declension families exist in Ukrainian?`,
+    options: [
+      { text: `2`, correct: false },
+      { text: `3`, correct: false },
+      { text: `4`, correct: true },
+      { text: `5`, correct: false }
+    ]
+  },  {
+    question: `What gender is \"море\"?`,
+    options: [
+      { text: `Masculine`, correct: false },
+      { text: `Feminine`, correct: false },
+      { text: `Neuter`, correct: true },
+      { text: `Plural`, correct: false }
+    ]
+  },  {
+    question: `Which noun is masculine?`,
+    options: [
+      { text: `хліб`, correct: true },
+      { text: `вода`, correct: false },
+      { text: `вікно`, correct: false },
+      { text: `кімната`, correct: false }
+    ]
+  },  {
+    question: `Which noun is feminine?`,
+    options: [
+      { text: `стіл`, correct: false },
+      { text: `школа`, correct: true },
+      { text: `місто`, correct: false },
+      { text: `море`, correct: false }
+    ]
+  },  {
+    question: `Can you predict gender from the ending 95% of the time?`,
+    options: [
+      { text: `Yes`, correct: true },
+      { text: `No`, correct: false },
+      { text: `Only for feminines`, correct: false },
+      { text: `Only for neuters`, correct: false }
+    ]
+  },  {
+    question: `What is Family 4 known for?`,
+    options: [
+      { text: `Consonant endings`, correct: false },
+      { text: `-а/-я feminines`, correct: false },
+      { text: `Neuter nouns with stem changes`, correct: true },
+      { text: `Plural forms`, correct: false }
+    ]
+  },  {
+    question: `Which word is neuter?`,
+    options: [
+      { text: `дім`, correct: false },
+      { text: `кімната`, correct: false },
+      { text: `яблуко`, correct: true },
+      { text: `магазин`, correct: false }
+    ]
+  }
+]} />
 
 ### Gender Pairs
 
 <MatchUp pairs={[
+  { left: `Ukrainian`, right: `English` },
   { left: `стіл`, right: `table` },
   { left: `книга`, right: `book` },
   { left: `вікно`, right: `window` },
@@ -327,277 +417,162 @@ Gender affects adjectives, pronouns, and case endings. Master gender now, and ev
 ### Sort by Gender
 
 <GroupSort groups={{
-  "### Masculine": [
-    "стіл",
-    "хліб",
-    "дім",
-    "стілець",
-    "диван",
-    "магазин",
-    "апельсин",
-    "помідор",
-    "огірок"
-  ],
-  "Feminine": [
-    "книга",
-    "кімната",
-    "вода",
-    "картопля",
-    "цибуля",
-    "шафа",
-    "стіна",
-    "підлога",
-    "стеля",
-    "школа",
-    "річка"
-  ],
-  "Neuter": [
-    "вікно",
-    "місто",
-    "село",
-    "море",
-    "молоко",
-    "м'ясо",
-    "яблуко",
-    "крісло",
-    "ліжко"
-  ]
+  "Masculine": ["стіл", "хліб", "дім", "стілець", "диван", "магазин", "апельсин", "помідор", "огірок"],
+  "Feminine": ["книга", "кімната", "вода", "картопля", "цибуля", "шафа", "стіна", "підлога", "стеля", "школа", "річка"],
+  "Neuter": ["вікно", "місто", "село", "море", "молоко", "м'ясо", "яблуко", "крісло", "ліжко"]
 }} />
 
 ### Complete with Gender
 
-<FillIn>
-  <FillInQuestion
-    sentence={`1. ___ є masculine noun.`}
-    answer={`Стіл`}
-    options={[`Стіл`, `Книга`, `Вікно`, `Кімната`]}
-  />
-  <FillInQuestion
-    sentence={`___ ends in -а, so it's feminine.`}
-    answer={`Кімната`}
-    options={[`Кімната`, `Стіл`, `Вікно`, `Море`]}
-  />
-  <FillInQuestion
-    sentence={`___ is a neuter noun ending in -о.`}
-    answer={`Вікно`}
-    options={[`Вікно`, `Стіл`, `Книга`, `Двері`]}
-  />
-  <FillInQuestion
-    sentence={`___ is masculine because it ends in a consonant.`}
-    answer={`Хліб`}
-    options={[`Хліб`, `Вода`, `Молоко`, `Школа`]}
-  />
-  <FillInQuestion
-    sentence={`___ is feminine and ends in -я.`}
-    answer={`Земля`}
-    options={[`Земля`, `Море`, `Дім`, `Стіл`]}
-  />
-  <FillInQuestion
-    sentence={`___ is neuter and means "sea".`}
-    answer={`Море`}
-    options={[`Море`, `Річка`, `Вода`, `Дім`]}
-  />
-  <FillInQuestion
-    sentence={`___ is masculine and means "house".`}
-    answer={`Дім`}
-    options={[`Дім`, `Кімната`, `Вікно`, `Вода`]}
-  />
-  <FillInQuestion
-    sentence={`___ is feminine and means "water".`}
-    answer={`Вода`}
-    options={[`Вода`, `Молоко`, `Сік`, `Чай`]}
-  />
-  <FillInQuestion
-    sentence={`___ is neuter and means "milk".`}
-    answer={`Молоко`}
-    options={[`Молоко`, `Вода`, `Сік`, `Чай`]}
-  />
-  <FillInQuestion
-    sentence={`___ is masculine and means "juice".`}
-    answer={`Сік`}
-    options={[`Сік`, `Вода`, `Молоко`, `Вино`]}
-  />
-  <FillInQuestion
-    sentence={`___ is neuter and means "apple".`}
-    answer={`Яблуко`}
-    options={[`Яблуко`, `Апельсин`, `Картопля`, `Помідор`]}
-  />
-  <FillInQuestion
-    sentence={`___ is feminine and means "potato".`}
-    answer={`Картопля`}
-    options={[`Картопля`, `Апельсин`, `Огірок`, `Яблуко`]}
-  />
-</FillIn>
+<FillIn items={[
+  {
+    sentence: `___ є masculine noun.`,
+    answer: `Стіл`,
+    options: [`Стіл`, `Книга`, `Вікно`, `Кімната`]
+  },  {
+    sentence: `___ ends in -а, so it's feminine.`,
+    answer: `Кімната`,
+    options: [`Кімната`, `Стіл`, `Вікно`, `Море`]
+  },  {
+    sentence: `___ is a neuter noun ending in -о.`,
+    answer: `Вікно`,
+    options: [`Вікно`, `Стіл`, `Книга`, `Двері`]
+  },  {
+    sentence: `___ is masculine because it ends in a consonant.`,
+    answer: `Хліб`,
+    options: [`Хліб`, `Вода`, `Молоко`, `Школа`]
+  },  {
+    sentence: `___ is feminine and ends in -я.`,
+    answer: `Земля`,
+    options: [`Земля`, `Море`, `Дім`, `Стіл`]
+  },  {
+    sentence: `___ is neuter and means \"sea\".`,
+    answer: `Море`,
+    options: [`Море`, `Річка`, `Вода`, `Дім`]
+  },  {
+    sentence: `___ is masculine and means \"house\".`,
+    answer: `Дім`,
+    options: [`Дім`, `Кімната`, `Вікно`, `Вода`]
+  },  {
+    sentence: `___ is feminine and means \"water\".`,
+    answer: `Вода`,
+    options: [`Вода`, `Молоко`, `Сік`, `Чай`]
+  },  {
+    sentence: `___ is neuter and means \"milk\".`,
+    answer: `Молоко`,
+    options: [`Молоко`, `Вода`, `Сік`, `Чай`]
+  },  {
+    sentence: `___ is masculine and means \"juice\".`,
+    answer: `Сік`,
+    options: [`Сік`, `Вода`, `Молоко`, `Вино`]
+  },  {
+    sentence: `___ is neuter and means \"apple\".`,
+    answer: `Яблуко`,
+    options: [`Яблуко`, `Апельсин`, `Картопля`, `Помідор`]
+  },  {
+    sentence: `___ is feminine and means \"potato\".`,
+    answer: `Картопля`,
+    options: [`Картопля`, `Апельсин`, `Огірок`, `Яблуко`]
+  }
+]} />
 
 ### Gender Rules
 
-<TrueFalse>
-  <TrueFalseQuestion
-    statement={`Masculine nouns typically end in a consonant.`}
-    isTrue={true}
-    explanation={`Correct! Examples: стіл, хліб, дім.`}
-  />
-  <TrueFalseQuestion
-    statement={`Feminine nouns typically end in -а or -я.`}
-    isTrue={true}
-    explanation={`Correct! Examples: книга, земля, кімната.`}
-  />
-  <TrueFalseQuestion
-    statement={`Neuter nouns typically end in -о or -е.`}
-    isTrue={true}
-    explanation={`Correct! Examples: вікно, місто, море.`}
-  />
-  <TrueFalseQuestion
-    statement={`All feminine nouns end in -а or -я.`}
-    isTrue={false}
-    explanation={`Incorrect! Family 3 feminines end in consonants: ніч, любов.`}
-  />
-  <TrueFalseQuestion
-    statement={`There are 4 declension families in Ukrainian.`}
-    isTrue={true}
-    explanation={`Correct! Families 1, 2, 3, and 4.`}
-  />
-  <TrueFalseQuestion
-    statement={`Gender is random in Ukrainian.`}
-    isTrue={false}
-    explanation={`Incorrect! Gender is predictable from word endings 95% of the time.`}
-  />
-  <TrueFalseQuestion
-    statement={`Gender affects adjective endings.`}
-    isTrue={true}
-    explanation={`Correct! Adjectives must agree with noun gender.`}
-  />
-  <TrueFalseQuestion
-    statement={`Gender affects case endings.`}
-    isTrue={true}
-    explanation={`Correct! Masculine, feminine, and neuter have different case patterns.`}
-  />
-  <TrueFalseQuestion
-    statement={`"Двері" has a gender.`}
-    isTrue={false}
-    explanation={`Incorrect! "Двері" is plural only and has no singular gender.`}
-  />
-  <TrueFalseQuestion
-    statement={`Family 2 includes both masculine and neuter nouns.`}
-    isTrue={true}
-    explanation={`Correct! Masculine consonant endings + neuter -о/-е.`}
-  />
-  <TrueFalseQuestion
-    statement={`You must memorize gender for every noun.`}
-    isTrue={false}
-    explanation={`Incorrect! You can predict gender from the ending pattern.`}
-  />
-  <TrueFalseQuestion
-    statement={`"Ім'я" is a special neuter noun (Family 4).`}
-    isTrue={true}
-    explanation={`Correct! It changes stem in declension: ім'я → імені.`}
-  />
-</TrueFalse>
+<TrueFalse items={[
+  {
+    statement: `Masculine nouns typically end in a consonant.`,
+    isTrue: true,
+    explanation: `Correct! Examples: стіл, хліб, дім.`
+  },  {
+    statement: `Feminine nouns typically end in -а or -я.`,
+    isTrue: true,
+    explanation: `Correct! Examples: книга, земля, кімната.`
+  },  {
+    statement: `Neuter nouns typically end in -о or -е.`,
+    isTrue: true,
+    explanation: `Correct! Examples: вікно, місто, море.`
+  },  {
+    statement: `All feminine nouns end in -а or -я.`,
+    isTrue: false,
+    explanation: `Incorrect! Family 3 feminines end in consonants: ніч, любов.`
+  },  {
+    statement: `There are 4 declension families in Ukrainian.`,
+    isTrue: true,
+    explanation: `Correct! Families 1, 2, 3, and 4.`
+  },  {
+    statement: `Gender is random in Ukrainian.`,
+    isTrue: false,
+    explanation: `Incorrect! Gender is predictable from word endings 95% of the time.`
+  },  {
+    statement: `Gender affects adjective endings.`,
+    isTrue: true,
+    explanation: `Correct! Adjectives must agree with noun gender.`
+  },  {
+    statement: `Gender affects case endings.`,
+    isTrue: true,
+    explanation: `Correct! Masculine, feminine, and neuter have different case patterns.`
+  },  {
+    statement: `\"Двері\" has a gender.`,
+    isTrue: false,
+    explanation: `Incorrect! \"Двері\" is plural only and has no singular gender.`
+  },  {
+    statement: `Family 2 includes both masculine and neuter nouns.`,
+    isTrue: true,
+    explanation: `Correct! Masculine consonant endings + neuter -о/-е.`
+  },  {
+    statement: `You must memorize gender for every noun.`,
+    isTrue: false,
+    explanation: `Incorrect! You can predict gender from the ending pattern.`
+  },  {
+    statement: `\"Ім'я\" is a special neuter noun (Family 4).`,
+    isTrue: true,
+    explanation: `Correct! It changes stem in declension: ім'я → імені.`
+  }
+]} />
 
 ### Build the Word
 
-<Anagram>
-  <AnagramQuestion
-    scrambled={`С Т І Л`}
-    answer={`стіл`}
-  />
-  <AnagramQuestion
-    scrambled={`К Н И Г А`}
-    answer={`книга`}
-  />
-  <AnagramQuestion
-    scrambled={`В І К Н О`}
-    answer={`вікно`}
-  />
-  <AnagramQuestion
-    scrambled={`Д В Е Р І`}
-    answer={`двері`}
-  />
-  <AnagramQuestion
-    scrambled={`К І М Н А Т А`}
-    answer={`кімната`}
-  />
-  <AnagramQuestion
-    scrambled={`Д І М`}
-    answer={`дім`}
-  />
-  <AnagramQuestion
-    scrambled={`М І С Т О`}
-    answer={`місто`}
-  />
-  <AnagramQuestion
-    scrambled={`С Е Л О`}
-    answer={`село`}
-  />
-  <AnagramQuestion
-    scrambled={`Р І Ч К А`}
-    answer={`річка`}
-  />
-  <AnagramQuestion
-    scrambled={`М О Р Е`}
-    answer={`море`}
-  />
-  <AnagramQuestion
-    scrambled={`Х Л І Б`}
-    answer={`хліб`}
-  />
-  <AnagramQuestion
-    scrambled={`В О Д А`}
-    answer={`вода`}
-  />
-</Anagram>
+<Anagram items={[
+  { scrambled: `с т і л`, answer: `стіл`, hint: `` },
+  { scrambled: `к н и г а`, answer: `книга`, hint: `` },
+  { scrambled: `в і к н о`, answer: `вікно`, hint: `` },
+  { scrambled: `д в е р і`, answer: `двері`, hint: `` },
+  { scrambled: `к і м н а т а`, answer: `кімната`, hint: `` },
+  { scrambled: `д і м`, answer: `дім`, hint: `` },
+  { scrambled: `м і с т о`, answer: `місто`, hint: `` },
+  { scrambled: `с е л о`, answer: `село`, hint: `` },
+  { scrambled: `р і ч к а`, answer: `річка`, hint: `` },
+  { scrambled: `м о р е`, answer: `море`, hint: `` },
+  { scrambled: `х л і б`, answer: `хліб`, hint: `` },
+  { scrambled: `в о д а`, answer: `вода`, hint: `` }
+]} />
 
 ### More Words
 
-<Anagram>
-  <AnagramQuestion
-    scrambled={`М О Л О К О`}
-    answer={`молоко`}
-  />
-  <AnagramQuestion
-    scrambled={`Я Б Л У К О`}
-    answer={`яблуко`}
-  />
-  <AnagramQuestion
-    scrambled={`М ' Я С О`}
-    answer={`м'ясо`}
-  />
-  <AnagramQuestion
-    scrambled={`Р И Б А`}
-    answer={`риба`}
-  />
-  <AnagramQuestion
-    scrambled={`О В О Ч І`}
-    answer={`овочі`}
-  />
-  <AnagramQuestion
-    scrambled={`К А Р Т О П Л Я`}
-    answer={`картопля`}
-  />
-  <AnagramQuestion
-    scrambled={`П О М І Д О Р`}
-    answer={`помідор`}
-  />
-  <AnagramQuestion
-    scrambled={`С Т І Л Е Ц Ь`}
-    answer={`стілець`}
-  />
-  <AnagramQuestion
-    scrambled={`К Р І С Л О`}
-    answer={`крісло`}
-  />
-  <AnagramQuestion
-    scrambled={`Ш А Ф А`}
-    answer={`шафа`}
-  />
-  <AnagramQuestion
-    scrambled={`Д И В А Н`}
-    answer={`диван`}
-  />
-  <AnagramQuestion
-    scrambled={`Л І Ж К О`}
-    answer={`ліжко`}
-  />
-</Anagram>
+<Anagram items={[
+  { scrambled: `м о л о к о`, answer: `молоко`, hint: `` },
+  { scrambled: `я б л у к о`, answer: `яблуко`, hint: `` },
+  { scrambled: `м ' я с о`, answer: `м'ясо`, hint: `` },
+  { scrambled: `р и б а`, answer: `риба`, hint: `` },
+  { scrambled: `о в о ч і`, answer: `овочі`, hint: `` },
+  { scrambled: `к а р т о п л я`, answer: `картопля`, hint: `` },
+  { scrambled: `п о м і д о р`, answer: `помідор`, hint: `` },
+  { scrambled: `с т і л е ц ь`, answer: `стілець`, hint: `` },
+  { scrambled: `к р і с л о`, answer: `крісло`, hint: `` },
+  { scrambled: `ш а ф а`, answer: `шафа`, hint: `` },
+  { scrambled: `д и в а н`, answer: `диван`, hint: `` },
+  { scrambled: `л і ж к о`, answer: `ліжко`, hint: `` }
+]} />
 
+### Build Gender Sentences
 
+<Unjumble items={[
+  { jumbled: `це / Що / ?`, answer: `Що це?` },
+  { jumbled: `книга / Це`, answer: `Це книга.` },
+  { jumbled: `вікно / Це / велике`, answer: `Це велике вікно.` },
+  { jumbled: `стіл / новий / Це`, answer: `Це новий стіл.` },
+  { jumbled: `маленька / Це / кімната`, answer: `Це маленька кімната.` },
+  { jumbled: `місто / красиве / Це`, answer: `Це красиве місто.` },
+  { jumbled: `хліб / смачний / Це`, answer: `Це смачний хліб.` },
+  { jumbled: `вода / холодна / Це`, answer: `Це холодна вода.` }
+]} />

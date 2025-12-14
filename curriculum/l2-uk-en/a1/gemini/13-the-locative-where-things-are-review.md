@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1374/750
+- **Words:** ✅ 1422/750
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -14,13 +14,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 28.7% (target 25-35% (M13))
+- **Immersion:** 🇺🇦 34.4% (target 25-40% (M13))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **The Locative - Where Things Are** | ⚪️ | 0 | Skipped |
-| **Warm-up** | ✅ | 162 | Included in Core |
+| **Warm-up** | ✅ | 210 | Included in Core |
 | **Presentation** | ✅ | 557 | Included in Core |
 | **Practice** | ⚪️ | 282 | Skipped |
 | **Production** | ➖ | 245 | Excluded Type |

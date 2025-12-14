@@ -30,6 +30,14 @@ Mastering this pattern means you can suddenly talk about what you're doing **rig
 >
 > Ukrainian verb conjugations are incredibly logical. Once you learn the Class I pattern (this module), you've unlocked hundreds of verbs! They all follow the same rules, so if you know **читати → читаю**, you automatically know **працювати → працюю** and **гуляти → гуляю**. It's like getting a master key to Ukrainian action.
 
+> [!resources] 🎧 External Resources
+>
+> **Grammar Chart:** [Verb Tenses Overview](https://www.ukrainianlessons.com/ukrainian-tenses/) — Downloadable conjugation chart
+>
+> **Podcast:** [ULP 1-22 | First Verb Conjugation](https://www.ukrainianlessons.com/episode22/) — Learn conjugation in context
+>
+> **Quick Lesson:** [FMU 1-57 | Verb Conjugations](https://www.ukrainianlessons.com/fmu57/) — 5-minute grammar review
+
 ---
 
 ## Warm-up
@@ -616,4 +624,17 @@ You've unlocked **Class I verbs** (-ати/-яти)! You can now:
 | книга | /ˈknɪɦɑ/ | book | noun | f | common object |
 | музика | /ˈmuzɪkɑ/ | music | noun | f | common topic |
 | футбол | /fudˈbɔl/ | football | noun | m | sport |
+| вечеряти | /vet͡ʃeˈrʲɑtɪ/ | to have dinner | verb | - | Class I: вечеряю, вечеряєш |
+| відповідати | /vidpɔviˈdɑtɪ/ | to answer | verb | - | Class I: відповідаю, відповідаєш |
+| відпочивати | /vidpɔt͡ʃɪˈvɑtɪ/ | to rest | verb | - | Class I: відпочиваю, відпочиваєш |
+| закінчувати | /zɑkint͡ʃuˈvɑtɪ/ | to finish | verb | - | Class I: закінчую, закінчуєш |
+| знаходити | /znɑˈxɔdɪtɪ/ | to find | verb | - | Class II: знаходжу, знаходиш |
+| малювати | /mɑlʲuˈvɑtɪ/ | to draw | verb | - | Class I: малюю, малюєш |
+| мріяти | /mriˈjɑtɪ/ | to dream | verb | - | Class I: мрію, мрієш |
+| називати | /nɑzɪˈvɑtɪ/ | to call/name | verb | - | Class I: називаю, називаєш |
+| обідати | /ɔˈbidɑtɪ/ | to have lunch | verb | - | Class I: обідаю, обідаєш |
+| питати | /pɪˈtɑtɪ/ | to ask | verb | - | Class I: питаю, питаєш |
+| починати | /pɔt͡ʃɪˈnɑtɪ/ | to begin | verb | - | Class I: починаю, починаєш |
+| танцювати | /tɑnt͡sʲuˈvɑtɪ/ | to dance | verb | - | Class I: танцюю, танцюєш |
+| шукати | /ʃuˈkɑtɪ/ | to search | verb | - | Class I: шукаю, шукаєш |
 

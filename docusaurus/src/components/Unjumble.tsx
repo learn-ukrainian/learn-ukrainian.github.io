@@ -214,11 +214,19 @@ export function UnjumbleQuestion({ words, answer, hint }: UnjumbleQuestionProps)
   );
 }
 
-interface UnjumbleProps {
-  children: React.ReactNode;
+interface UnjumbleItem {
+  words?: string;
+  jumbled?: string;  // Alternative field name from MDX generator
+  answer: string;
+  hint?: string;
 }
 
-export default function Unjumble({ children }: UnjumbleProps) {
+interface UnjumbleProps {
+  items?: UnjumbleItem[];
+  children?: React.ReactNode;
+}
+
+export default function Unjumble({ items, children }: UnjumbleProps) {
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
@@ -227,7 +235,14 @@ export default function Unjumble({ children }: UnjumbleProps) {
         <ActivityHelp activityType="unjumble" />
       </div>
       <div className={styles.activityContent}>
-        {children}
+        {items ? items.map((item, index) => (
+          <UnjumbleQuestion
+            key={index}
+            words={item.words || item.jumbled || ''}
+            answer={item.answer}
+            hint={item.hint}
+          />
+        )) : children}
       </div>
     </div>
   );

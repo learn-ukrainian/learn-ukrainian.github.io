@@ -28,6 +28,14 @@ Think of it like a secret code: the last letter reveals the gender. And once you
 >
 > Ukrainian noun gender is more predictable than German or French! In Ukrainian, **95% of the time**, you can guess the gender just by looking at the ending. No memorization needed — just pattern recognition.
 
+> [!resources] 🎧 External Resources
+>
+> **Grammar Guide:** [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/) — Infographic with rules and exceptions
+>
+> **Video:** [How to Know Noun Gender](https://www.ukrainianlessons.com/video-noun-gender/) — 8-minute grammar guide
+>
+> **Plurals:** [Plural of Nouns](https://www.ukrainianlessons.com/grammar-plural-nouns/) — How gender affects plural forms
+
 Let's start with a game. Look at these three words:
 
 - **Стіл** (stil) — table
@@ -49,9 +57,9 @@ Ukrainian nouns fall into three gender categories, and each has a signature endi
 
 | Gender | Ending Pattern | Examples |
 |--------|---------------|----------|
-| **Masculine** (чоловічий рід) | Consonant (б, т, л, н, р...) | стіл (table), хліб (bread), дім (house) |
-| **Feminine** (жіночий рід) | **-а** or **-я** | книга (book), кімната (room), земля (earth) |
-| **Neuter** (середній рід) | **-о** or **-е** | вікно (window), місто (city), море (sea) |
+| **Masculine** | Consonant (б, т, л, н, р...) | стіл (table), хліб (bread), дім (house) |
+| **Feminine** | **-а** or **-я** | книга (book), кімната (room), земля (earth) |
+| **Neuter** | **-о** or **-е** | вікно (window), місто (city), море (sea) |
 
 This is your **foundational pattern**. Memorize it once, and you'll recognize thousands of words.
 
@@ -624,4 +632,16 @@ Gender affects adjectives, pronouns, and case endings. Master gender now, and ev
 | ім'я | /imˈjɑ/ | name | noun | n | special neuter |
 | батько | /ˈbɑtʲkɔ/ | father | noun | m | exception: ends in -о |
 | дядько | /ˈdʲɑdʲkɔ/ | uncle | noun | m | exception: ends in -о |
+| апельсин | /ɑpelʲˈsɪn/ | orange | noun | m | ends in consonant |
+| магазин | /mɑɦɑˈzɪn/ | shop/store | noun | m | ends in consonant |
+| огірок | /ɔˈɦirɔk/ | cucumber | noun | m | ends in consonant |
+| підлога | /pidˈlɔɦɑ/ | floor | noun | f | ends in -а |
+| стеля | /ˈstelʲɑ/ | ceiling | noun | f | ends in -я |
+| стіна | /stiˈnɑ/ | wall | noun | f | ends in -а |
+| сік | /sik/ | juice | noun | m | ends in consonant |
+| університет | /universɪˈtɛt/ | university | noun | m | ends in consonant |
+| фрукти | /ˈfruktɪ/ | fruit | noun | m pl | plural |
+| цибуля | /t͡sɪˈbulʲɑ/ | onion | noun | f | ends in -я |
+| чай | /t͡ʃɑj/ | tea | noun | m | ends in consonant |
+| школа | /ˈʃkɔlɑ/ | school | noun | f | ends in -а |
 

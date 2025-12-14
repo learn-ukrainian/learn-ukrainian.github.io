@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1115/750
+- **Words:** ✅ 1165/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -14,18 +14,18 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 25.7% (target 25-35% (M19))
+- **Immersion:** 🇺🇦 28.8% (target 25-40% (M19))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **At the Café** | ⚪️ | 0 | Skipped |
-| **Warm-up** | ✅ | 47 | Included in Core |
+| **Warm-up** | ✅ | 91 | Included in Core |
 | **Presentation** | ✅ | 455 | Included in Core |
 | **Practice** | ⚪️ | 272 | Skipped |
 | **Production** | ➖ | 103 | Excluded Type |
 | **Cultural Insight** | ✅ | 165 | Included in Core |
-| **Summary** | ✅ | 73 | Included in Core |
+| **Підсумок (Summary)** | ✅ | 79 | Included in Core |
 | **Vocabulary** | ➖ | 0 | Excluded Type |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **match-up: Café Vocabulary** | 🎮 | 12 | Activity (12 items, min 8) |

@@ -28,6 +28,14 @@ Compare these two sentences:
 
 Why? Because Ukrainian wants to clearly mark **who** you're seeing, not just **what**. This is the animate-inanimate distinction, and it's your key to sounding natural.
 
+> [!resources] 🎧 External Resources
+>
+> **Grammar Guide:** [Accusative Case](https://www.ukrainianlessons.com/accusativecase/) — Animate vs inanimate distinction explained
+>
+> **Pronouns:** [Personal Pronouns Declension](https://www.ukrainianlessons.com/ukrainian-personal-pronouns/) — See мене, тебе, його in accusative
+>
+> **Podcast:** [ULP 1-33 | Books + Accusative of People](https://www.ukrainianlessons.com/episode33/) — Practice accusative with animate nouns
+
 ## Presentation
 
 ### The Animate Rule: Accusative = Genitive

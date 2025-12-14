@@ -9,1254 +9,372 @@
     "visibility": "public",
     "language": "uk",
     "targetLevel": "A1",
-    "phase": "A1.3",
+    "phase": "A1.3 - Consolidation",
     "moduleNumber": 27,
-    "moduleType": "vocabulary",
+    "moduleType": "grammar",
     "pedagogy": "PPP",
     "immersionLevel": 0.3,
     "title": "Colors & Clothing",
-    "subtitle": "Adjectives in Context",
-    "description": "Name colors in Ukrainian",
+    "titleUk": null,
+    "subtitle": "Describing What You Wear",
+    "description": "Learner can name basic colors in Ukrainian",
     "objectives": [
-      "Name colors in Ukrainian",
-      "Describe clothing items",
-      "Apply adjective agreement with color words",
-      "Describe what people are wearing"
+      "Learner can name basic colors in Ukrainian",
+      "Learner can use color adjectives with correct gender agreement",
+      "Learner can describe clothing items",
+      "Learner can describe what someone is wearing"
     ],
+    "objectivesUk": null,
     "grammarFocus": [
-      "Color adjectives (all genders)",
+      "Color adjectives with agreement",
       "Clothing vocabulary",
-      "Describing appearance"
+      "Describing outfits"
     ],
     "tags": [
-      "vocabulary",
       "colors",
       "clothing",
-      "adjectives"
+      "adjectives",
+      "description"
     ],
-    "totalDuration": 50,
-    "transliterationMode": "partial",
+    "totalDuration": "60 min",
+    "transliterationMode": "first-occurrence",
     "sections": [
       {
-        "id": "section-content-0",
-        "name": "Lesson",
+        "id": "section-1",
+        "name": "Colors & Clothing",
+        "nameEn": null,
         "type": "content",
-        "content": "> **Note:** Colors bring language to life! Learn to describe the colorful world around you and what people wear.\n\n## Warm-up: What Colors Do You See?\n\nLook around! What colors do you see? Your desk, your walls, your clothes — everything has color. Now, how would you describe this in Ukrainian?\n\nColors in Ukrainian are adjectives, meaning they agree with the nouns they describe in gender and number. \"Blue sky\" is \"синє небо\" (neuter), but \"blue sea\" is \"синє море\" (also neuter), and \"blue dress\" is \"синя сукня\" (feminine).\n\nLearning colors alongside clothing vocabulary is natural — we often describe what we and others are wearing. \"What color is your shirt?\" is a common question, and you'll be able to answer it fluently!\n\nUkrainian color vocabulary includes both Slavic words (like \"синій\" for blue) and borrowed terms (like \"рожевий\" from Polish). Each color has its cultural associations too — blue and yellow are particularly meaningful as Ukraine's national colors!\n\nBy mastering this module, you'll be able to describe appearances vividly and participate in everyday conversations about clothes and colors.\n\n> 💡 **Thinking Trick:** Colors are adjectives! They follow the same agreement rules you learned: -ий/-а/-е/-і for hard stem, -ій/-я/-є/-і for soft stem.\n\n## Presentation: Colors\n\n### Basic Colors\n\n| Color | M | F | N | Pl |\n|-------|---|---|---|-----|\n| білий (white) | білий | біла | біле | білі |\n| чорний (black) | чорний | чорна | чорне | чорні |\n| сірий (gray) | сірий | сіра | сіре | сірі |\n| червоний (red) | червоний | червона | червоне | червоні |\n| помаранчевий (orange) | помаранчевий | помаранчева | помаранчеве | помаранчеві |\n| жовтий (yellow) | жовтий | жовта | жовте | жовті |\n| зелений (green) | зелений | зелена | зелене | зелені |\n| синій (blue) | синій | синя | синє | сині |\n| блакитний (light blue) | блакитний | блакитна | блакитне | блакитні |\n| фіолетовий (purple) | фіолетовий | фіолетова | фіолетове | фіолетові |\n| рожевий (pink) | рожевий | рожева | рожеве | рожеві |\n| коричневий (brown) | коричневий | коричнева | коричневе | коричневі |\n\n### Color Modifiers\n\n| Ukrainian | English |\n|-----------|---------|\n| світлий | light |\n| темний | dark |\n| яскравий | bright |\n| блідий | pale |\n\n**Examples:**\n- світло-синій (light blue)\n- темно-зелений (dark green)\n- яскраво-червоний (bright red)\n\n> 📜 **Pattern Summary:**\n> - Colors are adjectives (agree in gender/number)\n> - Most are hard stem (-ий/-а/-е/-і)\n> - \"Синій\" is soft stem (-ій/-я/-є/-і)\n> - Use hyphen for compound colors (світло-синій)\n\n### Clothing Vocabulary\n\n**Upper Body:**\n| Ukrainian | English |\n|-----------|---------|\n| сорочка | shirt |\n| футболка | T-shirt |\n| светр | sweater |\n| куртка | jacket |\n| пальто | coat |\n| піджак | blazer |\n\n**Lower Body:**\n| Ukrainian | English |\n|-----------|---------|\n| штани | pants (pl.) |\n| джинси | jeans (pl.) |\n| шорти | shorts (pl.) |\n| спідниця | skirt |\n| сукня | dress |\n\n**Footwear:**\n| Ukrainian | English |\n|-----------|---------|\n| взуття | footwear |\n| черевики | boots |\n| кросівки | sneakers |\n| туфлі | shoes |\n| сандалі | sandals |\n\n**Accessories:**\n| Ukrainian | English |\n|-----------|---------|\n| капелюх | hat |\n| шарф | scarf |\n| рукавички | gloves |\n| окуляри | glasses |\n| сумка | bag |\n\n> 💡 **Did You Know?** \"Штани\" (pants) and \"джинси\" (jeans) are ALWAYS plural in Ukrainian! You can't say \"один штан\" — it's always \"одні штани.\" Same for shorts, gloves, glasses, and several other items!\n\n## Cultural Insight: Colors of Ukraine 🇺🇦\n\n**National colors: синій + жовтий (blue + yellow)**\n\nThe Ukrainian flag is blue over yellow:\n- **Синій (Blue):** The sky above\n- **Жовтий (Yellow):** The wheat fields below\n\nThese colors appear everywhere in Ukraine — flags, embroidery, decorations. They symbolize freedom and the connection between sky and earth.\n\n**Vyshyvanka (вишиванка) embroidery:**\nTraditional Ukrainian shirts feature colorful geometric embroidery. Common colors:\n- **Червоний (Red):** Love, passion, sacrifice\n- **Чорний (Black):** Earth, fertility\n- **Білий (White):** Purity, light\n\n**Fashion in Ukraine:**\n- Black is very popular (practical, stylish)\n- Bright colors are common in summer\n- Traditional vyshyvanky worn on holidays\n- European fashion influences strong\n\n> 📜 **History Bite:** During Soviet times, the Ukrainian blue-yellow flag was BANNED. Displaying these colors could result in imprisonment! Today, Ukrainians wear these colors proudly as symbols of independence and resistance!\n\n> 📜 **Myth Buster:** Russian propaganda claims these are \"Austrian colors\" given to Ukraine. FALSE! Blue and yellow appear in Ukrainian coats of arms dating back to the 14th century — centuries before Austrian rule!\n\n## Reading Practice: У магазині одягу 📖\n\n**Українською:**\n\nСьогодні я йду в магазин одягу. Мені потрібна нова куртка — стара вже стара!\n\nВ магазині багато гарних речей. Бачу чорну куртку — елегантна, але занадто темна. Червона куртка дуже яскрава — не для мене.\n\nО! Ця синя куртка чудова! Красивий синій колір, як українське небо. Я її приміряю... Ідеально! Куплю!\n\nТакож бачу білу сорочку і сірі штани. Вони пасують до куртки. Ще хочу чорні черевики — зимові, теплі.\n\nПродавець каже: \"Чудовий вибір! Синій колір вам дуже личить!\"\n\nТепер у мене новий одяг: синя куртка, біла сорочка, сірі штани, чорні черевики. Я задоволений!\n\n**English Translation:**\n\nToday I'm going to a clothing store. I need a new jacket — the old one is already old!\n\nIn the store there are many beautiful things. I see a black jacket — elegant, but too dark. The red jacket is very bright — not for me.\n\nOh! This blue jacket is wonderful! Beautiful blue color, like the Ukrainian sky. I'll try it on... Perfect! I'll buy it!\n\nI also see a white shirt and gray pants. They go with the jacket. I also want black boots — winter ones, warm.\n\nThe seller says: \"Excellent choice! The blue color suits you very well!\"\n\nNow I have new clothes: blue jacket, white shirt, gray pants, black boots. I'm satisfied!\n\n## Conversation: Що ти носиш? 🗣️\n\n**Юлія:** Гарна сукня! Який колір?\n**Софія:** Дякую! Це темно-зелений.\n**Юлія:** Дуже личить! А туфлі?\n**Софія:** Чорні туфлі. Пасують до всього!\n**Юлія:** Правда. А ти бачила мою нову куртку?\n**Софія:** Ні! Покажи!\n**Юлія:** Ось. Синя з жовтим — кольори України!\n**Софія:** Красиво! Де купила?\n**Юлія:** В новому магазині на Хрещатику.\n**Софія:** Треба теж сходити!\n\n**English Translation:**\n**Yulia:** Beautiful dress! What color?\n**Sofia:** Thank you! It is dark green.\n**Yulia:** Suits [you] very well! And shoes?\n**Sofia:** Black shoes. They go with everything!\n**Yulia:** True. Have you seen my new jacket?\n**Sofia:** No! Show [me]!\n**Yulia:** Here. Blue with yellow — colors of Ukraine!\n**Sofia:** Beautiful! Where did you buy [it]?\n**Yulia:** In a new store on Khreshchatyk.\n**Sofia:** I need to go too!\n\nЗверни увагу: темно-зелений, чорні, синя, жовтим — всі кольори з правильним родом!"
+        "content": "## Warm-up\n\n> 💡 **Кольори навколо нас! (Colors Around Us)**\n>\n> Colors are adjectives, so they must agree with nouns! Сорочка біла (feminine), светр білий (masculine), пальто біле (neuter). Once you know the pattern from Module 26, colors work the same way!\n\n> [!resources] 🎧 External Resources\n>\n> **Colors:** [Colors in Ukrainian](https://www.ukrainianlessons.com/vocabulary-colors/) — All colors with audio\n>\n> **Video:** [Learn Ukrainian Colors](https://www.ukrainianlessons.com/video-colors/) — Interactive color practice\n>\n> **Clothes:** [Clothes Vocabulary](https://www.ukrainianlessons.com/vocabulary-clothes/) — Clothing items with illustrations\n\n---"
       },
       {
-        "id": "section-summary-1",
-        "name": "Підсумок",
-        "nameEn": "Summary",
+        "id": "section-2",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| білий | /ˈbilɪj/ | white | adj | m | color |\n| чорний | /ˈtʃɔrnɪj/ | black | adj | m | color |\n| сірий | /ˈsirɪj/ | gray | adj | m | color |\n| червоний | /tʃerˈwɔnɪj/ | red | adj | m | color |\n| помаранчевий | /pɔmɑˈrɑntʃewɪj/ | orange | adj | m | color |\n| жовтий | /ˈʒɔwtɪj/ | yellow | adj | m | color |\n| зелений | /zeˈlenɪj/ | green | adj | m | color |\n| синій | /ˈsɪnʲij/ | blue (dark) | adj | m | soft stem |\n| блакитний | /blɑˈkɪtnɪj/ | light blue | adj | m | color |\n| фіолетовий | /fʲioˈletɔwɪj/ | purple | adj | m | color |\n| рожевий | /rɔˈʒewɪj/ | pink | adj | m | color |\n| коричневий | /kɔˈrɪtʃnewɪj/ | brown | adj | m | color |\n| світлий | /ˈswʲitlɪj/ | light | adj | m | modifier |\n| темний | /ˈtemnɪj/ | dark | adj | m | modifier |\n| яскравий | /jɑsˈkrɑwɪj/ | bright | adj | m | modifier |\n| сорочка | /sɔˈrɔtʃkɑ/ | shirt | n | f | clothing |\n| футболка | /futˈbɔlkɑ/ | t-shirt | n | f | clothing |\n| светр | /swetr/ | sweater | n | m | clothing |\n| куртка | /ˈkurtkɑ/ | jacket | n | f | clothing |\n| пальто | /pɑlʲˈtɔ/ | coat | n | n | indeclinable |\n| штани | /ʃtɑˈnɪ/ | pants | n | pl | always plural |\n| джинси | /ˈdʒɪnsɪ/ | jeans | n | pl | always plural |\n| шорти | /ˈʃɔrtɪ/ | shorts | n | pl | always plural |\n| спідниця | /spʲidˈnɪtsʲɑ/ | skirt | n | f | clothing |\n| сукня | /ˈsuknʲɑ/ | dress | n | f | clothing |\n| взуття | /wzutʲˈtʲɑ/ | footwear | n | n | collective |\n| черевики | /tʃereˈwɪkɪ/ | boots | n | pl | always plural |\n| кросівки | /krɔˈsʲiwkɪ/ | sneakers | n | pl | always plural |\n| капелюх | /kɑpeˈlʲux/ | hat | n | m | clothing |\n| шарф | /ʃɑrf/ | scarf | n | m | clothing |\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Grammar",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Color Adjectives Must Agree\n\n> [!observe] Спостереження (Pattern Discovery)\n>\n> Look at how \"білий\" (white) changes:\n> - **білий** светр (white sweater - m)\n> - **біла** сорочка (white shirt - f)\n> - **біле** пальто (white coat - n)\n> - **білі** штани (white pants - pl)\n>\n> The color changes to match the clothing item!\n\n### Color Agreement Table\n\n| Color (m) | Feminine | Neuter | Plural |\n|-----------|----------|--------|--------|\n| білий | біла | біле | білі |\n| чорний | чорна | чорне | чорні |\n| червоний | червона | червоне | червоні |\n| зелений | зелена | зелене | зелені |\n| синій | синя | синє | сині |\n| жовтий | жовта | жовте | жовті |\n\n---\n\n## Describing What You Wear\n\n### Simple Patterns\n\n**Stating what you have:**\n- У мене **білий** светр. (I have a white sweater.)\n- У мене **чорна** куртка. (I have a black jacket.)\n- У мене **синє** пальто. (I have a blue coat.)\n\n**Asking about clothing:**\n- Який у тебе светр? — Білий. (What sweater do you have? — White.)\n- Яка у тебе сорочка? — Синя. (What shirt do you have? — Blue.)\n\n**Describing what someone wears:**\n- Він у **білій** сорочці... *(wait, this uses locative case!)*\n\nActually, for A1, we describe clothing WITHOUT the locative case. Use simple sentences:\n- Його светр **білий**. (His sweater is white.)\n- Її сукня **червона**. (Her dress is red.)\n- На ньому білий светр. (He has a white sweater on.)\n\n---\n\n## Pluralia Tantum (Always Plural)\n\nSome clothing words are ALWAYS plural in Ukrainian:\n\n| Word | Meaning | Why? |\n|------|---------|------|\n| штани | pants | Two legs |\n| джинси | jeans | Two legs |\n| шорти | shorts | Two legs |\n| черевики | boots | Two feet |\n| кросівки | sneakers | Two feet |\n\nThese words take **plural adjectives**:\n- **чорні** штани (black pants)\n- **сині** джинси (blue jeans)\n- **білі** кросівки (white sneakers)\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Examples in Context",
+        "nameEn": null,
+        "type": "content",
+        "content": "> [!example] Опис одягу (Describing Clothes)\n>\n> - У мене **біла** сорочка. (I have a white shirt.)\n> - Мій светр **зелений**. (My sweater is green.)\n> - Її сукня **червона**. (Her dress is red.)\n> - Його куртка **чорна**. (His jacket is black.)\n> - У нас **нові** джинси. (We have new jeans.)\n> - Це **яскрава** футболка. (This is a bright t-shirt.)\n\n> [!example] Кольори світу (Colors of the World)\n>\n> - Небо **блакитне**. (The sky is light blue.)\n> - Трава **зелена**. (The grass is green.)\n> - Сонце **жовте**. (The sun is yellow.)\n> - Сніг **білий**. (Snow is white.)\n> - Ніч **темна**. (Night is dark.)\n> - День **світлий**. (Day is light.)\n> - Земля **коричнева**. (The earth is brown.)\n> - Море **синє**. (The sea is dark blue.)\n\n> [!example] Поєднання кольорів (Color Combinations)\n>\n> - **Чорно-білий** фільм. (A black-and-white film.)\n> - **Темно-синій** светр. (A dark blue sweater.)\n> - **Світло-зелений** колір. (A light green color.)\n> - **Яскраво-жовта** футболка. (A bright yellow t-shirt.)\n> - **Сіро-білі** кросівки. (Gray-white sneakers.)\n> - **Темно-коричнева** куртка. (A dark brown jacket.)\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Dialogues",
+        "nameEn": null,
+        "type": "content",
+        "content": "> [!conversation] Shopping for Clothes\n>\n> — Яка гарна сорочка!\n> — Так, вона **синя**. Подобається?\n> — Так! А є **біла**?\n> — Так, ось **біла** сорочка.\n> — Чудово! Я беру!\n>\n> — What a nice shirt!\n> — Yes, it's blue. Do you like it?\n> — Yes! Is there a white one?\n> — Yes, here's a white shirt.\n> — Wonderful! I'll take it!\n\n> [!conversation] Describing Someone\n>\n> — Який у тебе светр?\n> — **Чорний**.\n> — А штани?\n> — **Сині** джинси.\n> — Красиво!\n>\n> — What sweater do you have?\n> — Black.\n> — And pants?\n> — Blue jeans.\n> — Nice!\n\n> [!conversation] Getting Dressed\n>\n> — Що ти сьогодні одягаєш?\n> — **Білу** футболку і **чорні** штани.\n> — А взуття?\n> — **Білі** кросівки.\n> — Класно!\n>\n> — What are you wearing today?\n> — A white t-shirt and black pants.\n> — And footwear?\n> — White sneakers.\n> — Cool!\n\n---\n\n> 💡 **Два сині! (Two Blues!)**\n>\n> Ukrainian has TWO words for blue! **Синій** means dark blue (like the deep sea: синє море). **Блакитний** means light blue (like the sky: блакитне небо). English uses just \"blue\" for both colors!\n\n> 🌍 **Кольори України (Color Symbolism)**\n>\n> In Ukrainian folk tradition, colors have deep meaning: білий symbolizes purity, червоний represents love and life, and чорний represents the earth. You'll see these three colors frequently in traditional вишиванка (embroidered shirts)!\n\n> 💡 **Always Plural!**\n>\n> Just like English \"pants\" and \"jeans,\" some Ukrainian clothing words are ALWAYS plural: штани, джинси, шорти, черевики, кросівки. Тому: чорні штани, сині джинси, білі кросівки!\n\n> 🎬 **Кіно і кольори (Cinema and Colors)**\n>\n> In the classic Ukrainian film \"Тіні забутих предків\" (Shadows of Forgotten Ancestors, 1965), vivid colors — червоний, білий, чорний — play a crucial role in the visual storytelling. Яскраві кольори!\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Вправи (Activities)",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Колір і одяг\n\nЗ'єднайте колір з предметом одягу.\n\n- біла :: сорочка\n- чорний :: светр\n- сині :: джинси\n- червона :: сукня\n- зелене :: пальто\n- жовта :: футболка\n- білі :: кросівки\n- чорні :: штани\n- синя :: куртка\n- сіра :: спідниця\n- коричневий :: капелюх\n- рожевий :: шарф\n\n---\n\n## group-sort: Clothing by Gender\n\n> Sort clothing words by grammatical gender.\n\n### Masculine\n- светр\n- капелюх\n- шарф\n\n### Feminine\n- сорочка\n- футболка\n- куртка\n- спідниця\n- сукня\n\n### Neuter\n- пальто\n- взуття\n\n### Plural Only\n- штани\n- джинси\n- черевики\n- кросівки\n\n---\n\n## fill-in: Узгодження кольорів (Color Agreement)\n\n> Виберіть правильний колір.\n\n1. У мене ___ сорочка.\n   > [!answer] біла\n   > [!options] біла | білий | біле | білі\n\n2. Його светр ___.\n   > [!answer] чорний\n   > [!options] чорний | чорна | чорне | чорні\n\n3. Це ___ пальто.\n   > [!answer] синє\n   > [!options] синє | синій | синя | сині\n\n4. У неї ___ сукня.\n   > [!answer] червона\n   > [!options] червона | червоний | червоне | червоні\n\n5. Мої джинси ___.\n   > [!answer] сині\n   > [!options] сині | синій | синя | синє\n\n6. Ця футболка ___.\n   > [!answer] жовта\n   > [!options] жовта | жовтий | жовте | жовті\n\n7. Його капелюх ___.\n   > [!answer] коричневий\n   > [!options] коричневий | коричнева | коричневе | коричневі\n\n8. Мої кросівки ___.\n   > [!answer] білі\n   > [!options] білі | білий | біла | біле\n\n---\n\n## fill-in: Опис одягу (Describing Outfits)\n\n> Виберіть правильне слово.\n\n1. У мене нова ___ куртка.\n   > [!answer] чорна\n   > [!options] чорна | чорний | чорне | чорні\n\n2. Я люблю ___ кольори.\n   > [!answer] яскраві\n   > [!options] яскраві | яскравий | яскрава | яскраве\n\n3. Небо сьогодні ___.\n   > [!answer] блакитне\n   > [!options] блакитне | блакитний | блакитна | блакитні\n\n4. Її шарф дуже ___.\n   > [!answer] теплий\n   > [!options] теплий | тепла | тепле | теплі\n\n5. Це ___ спідниця.\n   > [!answer] зелена\n   > [!options] зелена | зелений | зелене | зелені\n\n6. У нас ___ черевики.\n   > [!answer] нові\n   > [!options] нові | новий | нова | нове\n\n7. Мій светр ___.\n   > [!answer] теплий\n   > [!options] теплий | тепла | тепле | теплі\n\n8. Сонце ___.\n   > [!answer] жовте\n   > [!options] жовте | жовтий | жовта | жовті\n\n---\n\n## quiz: Що це? (What Is It?)\n\nВиберіть правильну відповідь.\n\n1. Біла сорочка\n   - [x] White shirt\n   - [ ] Black shirt\n   - [ ] Blue shirt\n   - [ ] Red shirt\n\n2. Чорні штани\n   - [x] Black pants\n   - [ ] White pants\n   - [ ] Blue pants\n   - [ ] Black shirt\n\n3. Синє пальто\n   - [x] Blue coat\n   - [ ] Blue pants\n   - [ ] Red coat\n   - [ ] Green coat\n\n4. Червона сукня\n   - [x] Red dress\n   - [ ] Red skirt\n   - [ ] Red t-shirt\n   - [ ] Yellow dress\n\n5. Зелена футболка\n   - [x] Green t-shirt\n   - [ ] Green dress\n   - [ ] Blue t-shirt\n   - [ ] Yellow t-shirt\n\n6. Сіра куртка\n   - [x] Gray jacket\n   - [ ] Gray shirt\n   - [ ] Black jacket\n   - [ ] Gray pants\n\n7. Жовті кросівки\n   - [x] Yellow sneakers\n   - [ ] Yellow shirt\n   - [ ] White sneakers\n   - [ ] Yellow coat\n\n8. Коричневий капелюх\n   - [x] Brown hat\n   - [ ] Black hat\n   - [ ] Brown coat\n   - [ ] Brown pants\n\n---\n\n## quiz: Який колір? (What Color?)\n\nВиберіть правильну відповідь.\n\n1. Сніг — це якого кольору?\n   - [x] Білий\n   - [ ] Чорний\n   - [ ] Синій\n   - [ ] Зелений\n\n2. Небо вдень — це якого кольору?\n   - [x] Блакитний\n   - [ ] Чорний\n   - [ ] Червоний\n   - [ ] Жовтий\n\n3. Трава — це якого кольору?\n   - [x] Зелена\n   - [ ] Синя\n   - [ ] Біла\n   - [ ] Жовта\n\n4. Сонце — це якого кольору?\n   - [x] Жовте\n   - [ ] Біле\n   - [ ] Синє\n   - [ ] Чорне\n\n5. Море — це якого кольору?\n   - [x] Синє\n   - [ ] Біле\n   - [ ] Зелене\n   - [ ] Жовте\n\n6. Земля — це якого кольору?\n   - [x] Коричнева\n   - [ ] Біла\n   - [ ] Синя\n   - [ ] Жовта\n\n7. Ніч — це якого кольору?\n   - [x] Чорна\n   - [ ] Біла\n   - [ ] Синя\n   - [ ] Жовта\n\n8. Рожа — це якого кольору?\n   - [x] Червона\n   - [ ] Зелена\n   - [ ] Синя\n   - [ ] Біла\n\n---\n\n## unjumble: Опис одягу\n\nРозташуйте слова у правильному порядку.\n\n1. сорочка / біла / у мене\n   > [!answer] У мене біла сорочка.\n\n2. чорний / светр / мій\n   > [!answer] Мій светр чорний.\n\n3. сині / штани / нові\n   > [!answer] Нові сині штани.\n\n4. червона / гарна / сукня\n   > [!answer] Гарна червона сукня.\n\n5. білі / кросівки / це\n   > [!answer] Це білі кросівки.\n\n6. синя / куртка / його\n   > [!answer] Його куртка синя.\n\n\n---\n\n## true-false: Color Rules\n\nIs this true or false?\n\n- [x] \"Біла\" is the feminine form of \"white\".\n- [ ] \"Синій\" is the neuter form.\n  > Incorrect! it's masculine\n\n- [x] \"Штани\" is always plural in Ukrainian.\n- [ ] \"Пальто\" is masculine.\n  > Incorrect! it's neuter\n\n- [x] \"Блакитний\" means light blue.\n- [ ] \"Чорне\" is masculine.\n  > Incorrect! it's neuter\n\n- [x] \"Джинси\" is always plural.\n- [ ] \"Біле\" is feminine.\n  > Incorrect! it's neuter\n\n- [x] Colors are adjectives and must agree with nouns.\n- [ ] \"Сукня\" is neuter.\n  > Incorrect! it's feminine\n\n- [x] \"Світлий\" means \"light\" (as in bright).\n- [ ] \"Темна\" is the masculine form.\n  > Incorrect! it's feminine\n\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Підсумок (Summary)",
+        "nameEn": null,
         "type": "summary",
-        "content": "**Colors & Clothing Essentials**\n\n1. **Colors agree in gender:** білий/біла/біле/білі\n2. **Soft stem color:** синій/синя/синє/сині\n3. **Compound colors:** світло-синій, темно-зелений\n4. **Always plural:** штани, джинси, шорти, рукавички, окуляри\n\n---\n\n> [!tip] 🌟 **Pro Tip:** Remember Ukrainian national colors: СИНІЙ і ЖОВТИЙ (blue and yellow). When you see the Ukrainian flag, practice saying \"синьо-жовтий прапор!\"\n\n\n---"
+        "content": "Ви навчилися називати кольори та одяг! (You've learned colors and clothing!)\n\n**Що ви вивчили (What you learned):**\n\n- **12 кольорів (Colors):** білий, чорний, сірий, червоний, помаранчевий, жовтий, зелений, синій, блакитний, фіолетовий, рожевий, коричневий\n- **Модифікатори (Modifiers):** світлий, темний, яскравий\n- **15 предметів одягу (Clothing):** сорочка, футболка, светр, куртка, пальто, штани, джинси, шорти, спідниця, сукня...\n- **Узгодження (Agreement):** білий/біла/біле/білі\n- **Два відтінки синього (Two blues):** синій (темний) vs блакитний (світлий)\n\n---\n\n**Наступний урок:** Прислівники — як описувати ДІЇ!"
       }
     ],
-    "rawMarkdown": "---\ntitle: \"Colors & Clothing\"\nsubtitle: \"Adjectives in Context\"\nphase: A1.3\ntransliteration: partial\npedagogy: PPP\nduration: 50\ntags: [vocabulary, colors, clothing, adjectives]\nobjectives:\n  - Name colors in Ukrainian\n  - Describe clothing items\n  - Apply adjective agreement with color words\n  - Describe what people are wearing\ngrammar:\n  - Color adjectives (all genders)\n  - Clothing vocabulary\n  - Describing appearance\naudio: false\n---\n\n# Colors & Clothing\n\n> **Note:** Colors bring language to life! Learn to describe the colorful world around you and what people wear.\n\n## Warm-up: What Colors Do You See?\n\nLook around! What colors do you see? Your desk, your walls, your clothes — everything has color. Now, how would you describe this in Ukrainian?\n\nColors in Ukrainian are adjectives, meaning they agree with the nouns they describe in gender and number. \"Blue sky\" is \"синє небо\" (neuter), but \"blue sea\" is \"синє море\" (also neuter), and \"blue dress\" is \"синя сукня\" (feminine).\n\nLearning colors alongside clothing vocabulary is natural — we often describe what we and others are wearing. \"What color is your shirt?\" is a common question, and you'll be able to answer it fluently!\n\nUkrainian color vocabulary includes both Slavic words (like \"синій\" for blue) and borrowed terms (like \"рожевий\" from Polish). Each color has its cultural associations too — blue and yellow are particularly meaningful as Ukraine's national colors!\n\nBy mastering this module, you'll be able to describe appearances vividly and participate in everyday conversations about clothes and colors.\n\n> 💡 **Thinking Trick:** Colors are adjectives! They follow the same agreement rules you learned: -ий/-а/-е/-і for hard stem, -ій/-я/-є/-і for soft stem.\n\n## Presentation: Colors\n\n### Basic Colors\n\n| Color | M | F | N | Pl |\n|-------|---|---|---|-----|\n| білий (white) | білий | біла | біле | білі |\n| чорний (black) | чорний | чорна | чорне | чорні |\n| сірий (gray) | сірий | сіра | сіре | сірі |\n| червоний (red) | червоний | червона | червоне | червоні |\n| помаранчевий (orange) | помаранчевий | помаранчева | помаранчеве | помаранчеві |\n| жовтий (yellow) | жовтий | жовта | жовте | жовті |\n| зелений (green) | зелений | зелена | зелене | зелені |\n| синій (blue) | синій | синя | синє | сині |\n| блакитний (light blue) | блакитний | блакитна | блакитне | блакитні |\n| фіолетовий (purple) | фіолетовий | фіолетова | фіолетове | фіолетові |\n| рожевий (pink) | рожевий | рожева | рожеве | рожеві |\n| коричневий (brown) | коричневий | коричнева | коричневе | коричневі |\n\n### Color Modifiers\n\n| Ukrainian | English |\n|-----------|---------|\n| світлий | light |\n| темний | dark |\n| яскравий | bright |\n| блідий | pale |\n\n**Examples:**\n- світло-синій (light blue)\n- темно-зелений (dark green)\n- яскраво-червоний (bright red)\n\n> 📜 **Pattern Summary:**\n> - Colors are adjectives (agree in gender/number)\n> - Most are hard stem (-ий/-а/-е/-і)\n> - \"Синій\" is soft stem (-ій/-я/-є/-і)\n> - Use hyphen for compound colors (світло-синій)\n\n### Clothing Vocabulary\n\n**Upper Body:**\n| Ukrainian | English |\n|-----------|---------|\n| сорочка | shirt |\n| футболка | T-shirt |\n| светр | sweater |\n| куртка | jacket |\n| пальто | coat |\n| піджак | blazer |\n\n**Lower Body:**\n| Ukrainian | English |\n|-----------|---------|\n| штани | pants (pl.) |\n| джинси | jeans (pl.) |\n| шорти | shorts (pl.) |\n| спідниця | skirt |\n| сукня | dress |\n\n**Footwear:**\n| Ukrainian | English |\n|-----------|---------|\n| взуття | footwear |\n| черевики | boots |\n| кросівки | sneakers |\n| туфлі | shoes |\n| сандалі | sandals |\n\n**Accessories:**\n| Ukrainian | English |\n|-----------|---------|\n| капелюх | hat |\n| шарф | scarf |\n| рукавички | gloves |\n| окуляри | glasses |\n| сумка | bag |\n\n> 💡 **Did You Know?** \"Штани\" (pants) and \"джинси\" (jeans) are ALWAYS plural in Ukrainian! You can't say \"один штан\" — it's always \"одні штани.\" Same for shorts, gloves, glasses, and several other items!\n\n## Cultural Insight: Colors of Ukraine 🇺🇦\n\n**National colors: синій + жовтий (blue + yellow)**\n\nThe Ukrainian flag is blue over yellow:\n- **Синій (Blue):** The sky above\n- **Жовтий (Yellow):** The wheat fields below\n\nThese colors appear everywhere in Ukraine — flags, embroidery, decorations. They symbolize freedom and the connection between sky and earth.\n\n**Vyshyvanka (вишиванка) embroidery:**\nTraditional Ukrainian shirts feature colorful geometric embroidery. Common colors:\n- **Червоний (Red):** Love, passion, sacrifice\n- **Чорний (Black):** Earth, fertility\n- **Білий (White):** Purity, light\n\n**Fashion in Ukraine:**\n- Black is very popular (practical, stylish)\n- Bright colors are common in summer\n- Traditional vyshyvanky worn on holidays\n- European fashion influences strong\n\n> 📜 **History Bite:** During Soviet times, the Ukrainian blue-yellow flag was BANNED. Displaying these colors could result in imprisonment! Today, Ukrainians wear these colors proudly as symbols of independence and resistance!\n\n> 📜 **Myth Buster:** Russian propaganda claims these are \"Austrian colors\" given to Ukraine. FALSE! Blue and yellow appear in Ukrainian coats of arms dating back to the 14th century — centuries before Austrian rule!\n\n## Reading Practice: У магазині одягу 📖\n\n**Українською:**\n\nСьогодні я йду в магазин одягу. Мені потрібна нова куртка — стара вже стара!\n\nВ магазині багато гарних речей. Бачу чорну куртку — елегантна, але занадто темна. Червона куртка дуже яскрава — не для мене.\n\nО! Ця синя куртка чудова! Красивий синій колір, як українське небо. Я її приміряю... Ідеально! Куплю!\n\nТакож бачу білу сорочку і сірі штани. Вони пасують до куртки. Ще хочу чорні черевики — зимові, теплі.\n\nПродавець каже: \"Чудовий вибір! Синій колір вам дуже личить!\"\n\nТепер у мене новий одяг: синя куртка, біла сорочка, сірі штани, чорні черевики. Я задоволений!\n\n**English Translation:**\n\nToday I'm going to a clothing store. I need a new jacket — the old one is already old!\n\nIn the store there are many beautiful things. I see a black jacket — elegant, but too dark. The red jacket is very bright — not for me.\n\nOh! This blue jacket is wonderful! Beautiful blue color, like the Ukrainian sky. I'll try it on... Perfect! I'll buy it!\n\nI also see a white shirt and gray pants. They go with the jacket. I also want black boots — winter ones, warm.\n\nThe seller says: \"Excellent choice! The blue color suits you very well!\"\n\nNow I have new clothes: blue jacket, white shirt, gray pants, black boots. I'm satisfied!\n\n## Conversation: Що ти носиш? 🗣️\n\n**Юлія:** Гарна сукня! Який колір?\n**Софія:** Дякую! Це темно-зелений.\n**Юлія:** Дуже личить! А туфлі?\n**Софія:** Чорні туфлі. Пасують до всього!\n**Юлія:** Правда. А ти бачила мою нову куртку?\n**Софія:** Ні! Покажи!\n**Юлія:** Ось. Синя з жовтим — кольори України!\n**Софія:** Красиво! Де купила?\n**Юлія:** В новому магазині на Хрещатику.\n**Софія:** Треба теж сходити!\n\n**English Translation:**\n**Yulia:** Beautiful dress! What color?\n**Sofia:** Thank you! It is dark green.\n**Yulia:** Suits [you] very well! And shoes?\n**Sofia:** Black shoes. They go with everything!\n**Yulia:** True. Have you seen my new jacket?\n**Sofia:** No! Show [me]!\n**Yulia:** Here. Blue with yellow — colors of Ukraine!\n**Sofia:** Beautiful! Where did you buy [it]?\n**Yulia:** In a new store on Khreshchatyk.\n**Sofia:** I need to go too!\n\nЗверни увагу: темно-зелений, чорні, синя, жовтим — всі кольори з правильним родом!\n\n# Summary\n\n**Colors & Clothing Essentials**\n\n1. **Colors agree in gender:** білий/біла/біле/білі\n2. **Soft stem color:** синій/синя/синє/сині\n3. **Compound colors:** світло-синій, темно-зелений\n4. **Always plural:** штани, джинси, шорти, рукавички, окуляри\n\n---\n\n> [!tip] 🌟 **Pro Tip:** Remember Ukrainian national colors: СИНІЙ і ЖОВТИЙ (blue and yellow). When you see the Ukrainian flag, practice saying \"синьо-жовтий прапор!\"\n\n# Activities\n\n## fill-in: Color Agreement\n> Choose the correct color form.\n\n1. Це ___ небо. (blue - n.)\n   > [!answer] синє\n   > [!options] синій | синя | синє | сині\n\n2. ___ сорочка. (white - f.)\n   > [!answer] Біла\n   > [!options] Білий | Біла | Біле | Білі\n\n3. Це ___ машина. (red - f.)\n   > [!answer] червона\n   > [!options] червоний | червона | червоне | червоні\n\n4. ___ черевики. (black - pl.)\n   > [!answer] Чорні\n   > [!options] Чорний | Чорна | Чорне | Чорні\n\n5. Це ___ сукня. (green - f.)\n   > [!answer] зелена\n   > [!options] зелений | зелена | зелене | зелені\n\n6. ___ капелюх. (gray - m.)\n   > [!answer] Сірий\n   > [!options] Сірий | Сіра | Сіре | Сірі\n\n7. Це ___ море. (blue - n.)\n   > [!answer] синє\n   > [!options] синій | синя | синє | сині\n\n8. ___ квітка. (yellow - f.)\n   > [!answer] Жовта\n   > [!options] Жовтий | Жовта | Жовте | Жовті\n\n9. Це ___ яблуко. (green - n.)\n   > [!answer] зелене\n   > [!options] зелений | зелена | зелене | зелені\n\n10. ___ штани. (gray - pl.)\n    > [!answer] Сірі\n    > [!options] Сірий | Сіра | Сіре | Сірі\n\n11. Це ___ куртка. (blue - f.)\n    > [!answer] синя\n    > [!options] синій | синя | синє | сині\n\n12. ___ светр. (brown - m.)\n    > [!answer] Коричневий\n    > [!options] Коричневий | Коричнева | Коричневе | Коричневі\n\n## match-up: Clothing Items\n> Match Ukrainian with English.\n\n| Ukrainian | English |\n| --- | --- |\n| сорочка | shirt |\n| футболка | T-shirt |\n| светр | sweater |\n| куртка | jacket |\n| пальто | coat |\n| штани | pants |\n| джинси | jeans |\n| сукня | dress |\n| спідниця | skirt |\n| черевики | boots |\n| кросівки | sneakers |\n| шарф | scarf |\n\n## quiz: Color Rules\n> Choose the correct answer.\n\n1. Colors in Ukrainian are:\n   - [x] Adjectives\n   - [ ] Nouns\n   - [ ] Verbs\n   - [ ] Adverbs\n\n2. \"Синій\" is:\n   - [x] Soft stem\n   - [ ] Hard stem\n   - [ ] Irregular\n   - [ ] Not an adjective\n\n3. \"Штани\" is always:\n   - [x] Plural\n   - [ ] Singular\n   - [ ] Neuter\n   - [ ] Masculine\n\n4. Ukrainian flag colors are:\n   - [x] синій і жовтий\n   - [ ] червоний і білий\n   - [ ] зелений і жовтий\n   - [ ] чорний і білий\n\n5. \"Темно-зелений\" means:\n   - [x] Dark green\n   - [ ] Light green\n   - [ ] Bright green\n   - [ ] Yellow-green\n\n6. \"Біла сорочка\" — \"біла\" is:\n   - [x] Feminine\n   - [ ] Masculine\n   - [ ] Neuter\n   - [ ] Plural\n\n7. What color is neuter form \"синє\"?\n   - [x] Blue\n   - [ ] Red\n   - [ ] Green\n   - [ ] Yellow\n\n8. \"Рожевий\" means:\n   - [x] Pink\n   - [ ] Purple\n   - [ ] Red\n   - [ ] Orange\n\n9. \"Блакитний\" is:\n   - [x] Light blue\n   - [ ] Dark blue\n   - [ ] Green\n   - [ ] Purple\n\n10. \"Джинси\" requires:\n    - [x] Plural adjective (сині джинси)\n    - [ ] Singular masculine\n    - [ ] Singular feminine\n    - [ ] Neuter adjective\n\n11. Yellow in Ukrainian is:\n    - [x] Жовтий\n    - [ ] Зелений\n    - [ ] Синій\n    - [ ] Помаранчевий\n\n12. \"Взуття\" means:\n    - [x] Footwear\n    - [ ] Clothing\n    - [ ] Hat\n    - [ ] Bag\n\n## group-sort: Clothing Categories\n> Sort items by body area.\n\n- Upper Body: сорочка\n- Upper Body: футболка\n- Upper Body: светр\n- Upper Body: куртка\n- Lower Body: штани\n- Lower Body: джинси\n- Lower Body: спідниця\n- Lower Body: шорти\n- Footwear: черевики\n- Footwear: кросівки\n- Footwear: туфлі\n- Accessories: капелюх\n\n## true-false: Color Facts\n- [x] Colors are adjectives in Ukrainian.\n- [x] \"Синій\" is a soft stem adjective.\n- [ ] Colors don't agree in gender.\n- [x] \"Штани\" is always plural.\n- [x] Ukrainian flag is blue and yellow.\n- [ ] \"Блакитний\" means dark blue.\n- [x] \"Рожевий\" means pink.\n- [ ] \"Чорний\" is a soft stem color.\n- [x] \"Жовта квітка\" is correct.\n- [x] \"Сірі штани\" uses plural form.\n- [ ] \"Синя\" is masculine.\n- [x] \"Зелене яблуко\" is correct.\n\n## anagram: Color Vocabulary\n> Unscramble these colors.\n\n1. й і н и с\n   > [!answer] синій\n\n2. й и т в о ж\n   > [!answer] жовтий\n\n3. й и н о в р е ч\n   > [!answer] червоний\n\n4. н е л е з й и\n   > [!answer] зелений\n\n5. й и н р о ч\n   > [!answer] чорний\n\n6. й и л і б\n   > [!answer] білий\n\n7. й и р і с\n   > [!answer] сірий\n\n8. й и в е ж о р\n   > [!answer] рожевий\n\n9. й и т н и к а л б\n   > [!answer] блакитний\n\n10. е і и в й ф о л т о\n    > [!answer] фіолетовий\n\n11. й и в е н ч и р о к\n    > [!answer] коричневий\n\n12. а к т р у к\n    > [!answer] куртка\n\n## fill-in: What Are They Wearing?\n> Describe the clothing.\n\n1. Він носить ___ сорочку. (white - f.)\n   > [!answer] білу\n   > [!options] білий | білу | біле | білі\n\n2. Вона в ___ сукні. (red - f.)\n   > [!answer] червоній\n   > [!options] червоний | червону | червоній | червоні\n\n3. У мене ___ штани. (black - pl.)\n   > [!answer] чорні\n   > [!options] чорний | чорна | чорне | чорні\n\n4. Він купив ___ куртку. (blue - f.)\n   > [!answer] синю\n   > [!options] синій | синю | синє | сині\n\n5. Це мої ___ кросівки. (white - pl.)\n   > [!answer] білі\n   > [!options] білий | біла | біле | білі\n\n6. Вона носить ___ капелюх. (gray - m.)\n   > [!answer] сірий\n   > [!options] сірий | сіра | сіре | сірі\n\n7. Я люблю ___ одяг. (bright - m.)\n   > [!answer] яскравий\n   > [!options] яскравий | яскрава | яскраве | яскраві\n\n8. Це ___ шарф. (green - m.)\n   > [!answer] зелений\n   > [!options] зелений | зелена | зелене | зелені\n\n9. Вона в ___ черевиках. (brown - pl.)\n   > [!answer] коричневих\n   > [!options] коричневий | коричневу | коричневих | коричневі\n\n10. Я ношу ___ футболку. (yellow - f.)\n    > [!answer] жовту\n    > [!options] жовтий | жовту | жовте | жовті\n\n11. Це мій ___ светр. (blue - m.)\n    > [!answer] синій\n    > [!options] синій | синя | синє | сині\n\n12. Вони в ___ сукнях. (pink - pl.)\n    > [!answer] рожевих\n    > [!options] рожевий | рожеву | рожевих | рожеві\n\n## unjumble: Build Color Sentences\n> Arrange words into correct sentences.\n\n1. небо / синє / яке\n   > [!answer] Яке синє небо!\n\n2. чорні / у / мене / штани\n   > [!answer] У мене чорні штани.\n\n3. куртка / красива / синя\n   > [!answer] Красива синя куртка.\n\n4. носить / сорочку / він / білу\n   > [!answer] Він носить білу сорочку.\n\n5. сукня / зелена / ця\n   > [!answer] Ця сукня зелена.\n\n6. жовті / квіти / гарні\n   > [!answer] Жовті квіти гарні.\n\n7. червона / машина / яка\n   > [!answer] Яка червона машина!\n\n8. пальто / чорне / моє\n   > [!answer] Моє пальто чорне.\n\n9. колір / улюблений / мій / синій\n   > [!answer] Мій улюблений колір синій.\n\n10. синій / і / білий / Прапор\n    > [!answer] Прапор синій і білий.\n\n11. кросівки / нові / білі\n    > [!answer] Нові білі кросівки.\n\n12. темно-зелений / светр / це\n    > [!answer] Це темно-зелений светр.\n\n---\n\n# Vocabulary\n\n| Ukrainian | IPA | English | Example |\n| --- | --- | --- | --- |\n| білий | /ˈbilɪj/ | white | Біла сорочка. |\n| чорний | /ˈt͡ʃornɪj/ | black | Чорні штани. |\n| сірий | /ˈsirɪj/ | gray | Сіре небо. |\n| червоний | /t͡ʃɛrˈʋonɪj/ | red | Червона троянда. |\n| помаранчевий | /pomɑˈrɑnt͡ʃɛʋɪj/ | orange | Помаранчева куртка. |\n| жовтий | /ˈʒoʋtɪj/ | yellow | Жовте сонце. |\n| зелений | /zɛˈlɛnɪj/ | green | Зелена трава. |\n| синій | /ˈsɪnʲij/ | blue | Синє море. |\n| блакитний | /blɑˈkɪtnɪj/ | light blue | Блакитне небо. |\n| фіолетовий | /fioˈlɛtoʋɪj/ | purple | Фіолетова квітка. |\n| рожевий | /roˈʒɛʋɪj/ | pink | Рожева сукня. |\n| коричневий | /koˈrɪt͡ʃnɛʋɪj/ | brown | Коричневе взуття. |\n| світлий | /ˈsʋitlɪj/ | light | Світло-синій. |\n| темний | /ˈtɛmnɪj/ | dark | Темно-зелений. |\n| сорочка | /soˈrot͡ʃkɑ/ | shirt | Біла сорочка. |\n| футболка | /futˈbolkɑ/ | T-shirt | Червона футболка. |\n| светр | /sʋɛtr/ | sweater | Теплий светр. |\n| куртка | /ˈkurtkɑ/ | jacket | Синя куртка. |\n| пальто | /pɑlʲˈto/ | coat | Чорне пальто. |\n| штани | /ʃtɑˈnɪ/ | pants | Сірі штани. |\n| джинси | /ˈdʒɪnsɪ/ | jeans | Сині джинси. |\n| шорти | /ˈʃortɪ/ | shorts | Білі шорти. |\n| спідниця | /spidˈnɪt͡sʲɑ/ | skirt | Зелена спідниця. |\n| сукня | /ˈsuknʲɑ/ | dress | Червона сукня. |\n| взуття | /ˈʋzutʲːɑ/ | footwear | Чорне взуття. |\n| черевики | /t͡ʃɛrɛˈʋɪkɪ/ | boots | Коричневі черевики. |\n| кросівки | /kroˈsiʋkɪ/ | sneakers | Білі кросівки. |\n| капелюх | /kɑpɛˈlʲux/ | hat | Сірий капелюх. |\n| шарф | /ʃɑrf/ | scarf | Синій шарф. |\n| яскравий | /jɑsˈkrɑʋɪj/ | bright | Яскравий колір. |\n",
-    "createdAt": "2025-12-12T19:55:32.050Z",
-    "modifiedAt": "2025-12-12T19:55:32.050Z",
+    "rawMarkdown": "---\nmodule: a1-27\ntitle: \"Colors & Clothing\"\nsubtitle: \"Describing What You Wear\"\nversion: \"1.0\"\nphase: \"A1.3 - Consolidation\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: \"first-occurrence\"\ntags:\n  - colors\n  - clothing\n  - adjectives\n  - description\ngrammar:\n  - Color adjectives with agreement\n  - Clothing vocabulary\n  - Describing outfits\nobjectives:\n  - \"Learner can name basic colors in Ukrainian\"\n  - \"Learner can use color adjectives with correct gender agreement\"\n  - \"Learner can describe clothing items\"\n  - \"Learner can describe what someone is wearing\"\nvocabulary_count: 30\n---\n\n# Colors & Clothing\n\n## Warm-up\n\n> 💡 **Кольори навколо нас! (Colors Around Us)**\n>\n> Colors are adjectives, so they must agree with nouns! Сорочка біла (feminine), светр білий (masculine), пальто біле (neuter). Once you know the pattern from Module 26, colors work the same way!\n\n> [!resources] 🎧 External Resources\n>\n> **Colors:** [Colors in Ukrainian](https://www.ukrainianlessons.com/vocabulary-colors/) — All colors with audio\n>\n> **Video:** [Learn Ukrainian Colors](https://www.ukrainianlessons.com/video-colors/) — Interactive color practice\n>\n> **Clothes:** [Clothes Vocabulary](https://www.ukrainianlessons.com/vocabulary-clothes/) — Clothing items with illustrations\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| білий | /ˈbilɪj/ | white | adj | m | color |\n| чорний | /ˈtʃɔrnɪj/ | black | adj | m | color |\n| сірий | /ˈsirɪj/ | gray | adj | m | color |\n| червоний | /tʃerˈwɔnɪj/ | red | adj | m | color |\n| помаранчевий | /pɔmɑˈrɑntʃewɪj/ | orange | adj | m | color |\n| жовтий | /ˈʒɔwtɪj/ | yellow | adj | m | color |\n| зелений | /zeˈlenɪj/ | green | adj | m | color |\n| синій | /ˈsɪnʲij/ | blue (dark) | adj | m | soft stem |\n| блакитний | /blɑˈkɪtnɪj/ | light blue | adj | m | color |\n| фіолетовий | /fʲioˈletɔwɪj/ | purple | adj | m | color |\n| рожевий | /rɔˈʒewɪj/ | pink | adj | m | color |\n| коричневий | /kɔˈrɪtʃnewɪj/ | brown | adj | m | color |\n| світлий | /ˈswʲitlɪj/ | light | adj | m | modifier |\n| темний | /ˈtemnɪj/ | dark | adj | m | modifier |\n| яскравий | /jɑsˈkrɑwɪj/ | bright | adj | m | modifier |\n| сорочка | /sɔˈrɔtʃkɑ/ | shirt | n | f | clothing |\n| футболка | /futˈbɔlkɑ/ | t-shirt | n | f | clothing |\n| светр | /swetr/ | sweater | n | m | clothing |\n| куртка | /ˈkurtkɑ/ | jacket | n | f | clothing |\n| пальто | /pɑlʲˈtɔ/ | coat | n | n | indeclinable |\n| штани | /ʃtɑˈnɪ/ | pants | n | pl | always plural |\n| джинси | /ˈdʒɪnsɪ/ | jeans | n | pl | always plural |\n| шорти | /ˈʃɔrtɪ/ | shorts | n | pl | always plural |\n| спідниця | /spʲidˈnɪtsʲɑ/ | skirt | n | f | clothing |\n| сукня | /ˈsuknʲɑ/ | dress | n | f | clothing |\n| взуття | /wzutʲˈtʲɑ/ | footwear | n | n | collective |\n| черевики | /tʃereˈwɪkɪ/ | boots | n | pl | always plural |\n| кросівки | /krɔˈsʲiwkɪ/ | sneakers | n | pl | always plural |\n| капелюх | /kɑpeˈlʲux/ | hat | n | m | clothing |\n| шарф | /ʃɑrf/ | scarf | n | m | clothing |\n\n---\n\n# Grammar\n\n## Color Adjectives Must Agree\n\n> [!observe] Спостереження (Pattern Discovery)\n>\n> Look at how \"білий\" (white) changes:\n> - **білий** светр (white sweater - m)\n> - **біла** сорочка (white shirt - f)\n> - **біле** пальто (white coat - n)\n> - **білі** штани (white pants - pl)\n>\n> The color changes to match the clothing item!\n\n### Color Agreement Table\n\n| Color (m) | Feminine | Neuter | Plural |\n|-----------|----------|--------|--------|\n| білий | біла | біле | білі |\n| чорний | чорна | чорне | чорні |\n| червоний | червона | червоне | червоні |\n| зелений | зелена | зелене | зелені |\n| синій | синя | синє | сині |\n| жовтий | жовта | жовте | жовті |\n\n---\n\n## Describing What You Wear\n\n### Simple Patterns\n\n**Stating what you have:**\n- У мене **білий** светр. (I have a white sweater.)\n- У мене **чорна** куртка. (I have a black jacket.)\n- У мене **синє** пальто. (I have a blue coat.)\n\n**Asking about clothing:**\n- Який у тебе светр? — Білий. (What sweater do you have? — White.)\n- Яка у тебе сорочка? — Синя. (What shirt do you have? — Blue.)\n\n**Describing what someone wears:**\n- Він у **білій** сорочці... *(wait, this uses locative case!)*\n\nActually, for A1, we describe clothing WITHOUT the locative case. Use simple sentences:\n- Його светр **білий**. (His sweater is white.)\n- Її сукня **червона**. (Her dress is red.)\n- На ньому білий светр. (He has a white sweater on.)\n\n---\n\n## Pluralia Tantum (Always Plural)\n\nSome clothing words are ALWAYS plural in Ukrainian:\n\n| Word | Meaning | Why? |\n|------|---------|------|\n| штани | pants | Two legs |\n| джинси | jeans | Two legs |\n| шорти | shorts | Two legs |\n| черевики | boots | Two feet |\n| кросівки | sneakers | Two feet |\n\nThese words take **plural adjectives**:\n- **чорні** штани (black pants)\n- **сині** джинси (blue jeans)\n- **білі** кросівки (white sneakers)\n\n---\n\n# Examples in Context\n\n> [!example] Опис одягу (Describing Clothes)\n>\n> - У мене **біла** сорочка. (I have a white shirt.)\n> - Мій светр **зелений**. (My sweater is green.)\n> - Її сукня **червона**. (Her dress is red.)\n> - Його куртка **чорна**. (His jacket is black.)\n> - У нас **нові** джинси. (We have new jeans.)\n> - Це **яскрава** футболка. (This is a bright t-shirt.)\n\n> [!example] Кольори світу (Colors of the World)\n>\n> - Небо **блакитне**. (The sky is light blue.)\n> - Трава **зелена**. (The grass is green.)\n> - Сонце **жовте**. (The sun is yellow.)\n> - Сніг **білий**. (Snow is white.)\n> - Ніч **темна**. (Night is dark.)\n> - День **світлий**. (Day is light.)\n> - Земля **коричнева**. (The earth is brown.)\n> - Море **синє**. (The sea is dark blue.)\n\n> [!example] Поєднання кольорів (Color Combinations)\n>\n> - **Чорно-білий** фільм. (A black-and-white film.)\n> - **Темно-синій** светр. (A dark blue sweater.)\n> - **Світло-зелений** колір. (A light green color.)\n> - **Яскраво-жовта** футболка. (A bright yellow t-shirt.)\n> - **Сіро-білі** кросівки. (Gray-white sneakers.)\n> - **Темно-коричнева** куртка. (A dark brown jacket.)\n\n---\n\n# Dialogues\n\n> [!conversation] Shopping for Clothes\n>\n> — Яка гарна сорочка!\n> — Так, вона **синя**. Подобається?\n> — Так! А є **біла**?\n> — Так, ось **біла** сорочка.\n> — Чудово! Я беру!\n>\n> — What a nice shirt!\n> — Yes, it's blue. Do you like it?\n> — Yes! Is there a white one?\n> — Yes, here's a white shirt.\n> — Wonderful! I'll take it!\n\n> [!conversation] Describing Someone\n>\n> — Який у тебе светр?\n> — **Чорний**.\n> — А штани?\n> — **Сині** джинси.\n> — Красиво!\n>\n> — What sweater do you have?\n> — Black.\n> — And pants?\n> — Blue jeans.\n> — Nice!\n\n> [!conversation] Getting Dressed\n>\n> — Що ти сьогодні одягаєш?\n> — **Білу** футболку і **чорні** штани.\n> — А взуття?\n> — **Білі** кросівки.\n> — Класно!\n>\n> — What are you wearing today?\n> — A white t-shirt and black pants.\n> — And footwear?\n> — White sneakers.\n> — Cool!\n\n---\n\n> 💡 **Два сині! (Two Blues!)**\n>\n> Ukrainian has TWO words for blue! **Синій** means dark blue (like the deep sea: синє море). **Блакитний** means light blue (like the sky: блакитне небо). English uses just \"blue\" for both colors!\n\n> 🌍 **Кольори України (Color Symbolism)**\n>\n> In Ukrainian folk tradition, colors have deep meaning: білий symbolizes purity, червоний represents love and life, and чорний represents the earth. You'll see these three colors frequently in traditional вишиванка (embroidered shirts)!\n\n> 💡 **Always Plural!**\n>\n> Just like English \"pants\" and \"jeans,\" some Ukrainian clothing words are ALWAYS plural: штани, джинси, шорти, черевики, кросівки. Тому: чорні штани, сині джинси, білі кросівки!\n\n> 🎬 **Кіно і кольори (Cinema and Colors)**\n>\n> In the classic Ukrainian film \"Тіні забутих предків\" (Shadows of Forgotten Ancestors, 1965), vivid colors — червоний, білий, чорний — play a crucial role in the visual storytelling. Яскраві кольори!\n\n---\n\n# Вправи (Activities)\n\n## match-up: Колір і одяг\n\nЗ'єднайте колір з предметом одягу.\n\n- біла :: сорочка\n- чорний :: светр\n- сині :: джинси\n- червона :: сукня\n- зелене :: пальто\n- жовта :: футболка\n- білі :: кросівки\n- чорні :: штани\n- синя :: куртка\n- сіра :: спідниця\n- коричневий :: капелюх\n- рожевий :: шарф\n\n---\n\n## group-sort: Clothing by Gender\n\n> Sort clothing words by grammatical gender.\n\n### Masculine\n- светр\n- капелюх\n- шарф\n\n### Feminine\n- сорочка\n- футболка\n- куртка\n- спідниця\n- сукня\n\n### Neuter\n- пальто\n- взуття\n\n### Plural Only\n- штани\n- джинси\n- черевики\n- кросівки\n\n---\n\n## fill-in: Узгодження кольорів (Color Agreement)\n\n> Виберіть правильний колір.\n\n1. У мене ___ сорочка.\n   > [!answer] біла\n   > [!options] біла | білий | біле | білі\n\n2. Його светр ___.\n   > [!answer] чорний\n   > [!options] чорний | чорна | чорне | чорні\n\n3. Це ___ пальто.\n   > [!answer] синє\n   > [!options] синє | синій | синя | сині\n\n4. У неї ___ сукня.\n   > [!answer] червона\n   > [!options] червона | червоний | червоне | червоні\n\n5. Мої джинси ___.\n   > [!answer] сині\n   > [!options] сині | синій | синя | синє\n\n6. Ця футболка ___.\n   > [!answer] жовта\n   > [!options] жовта | жовтий | жовте | жовті\n\n7. Його капелюх ___.\n   > [!answer] коричневий\n   > [!options] коричневий | коричнева | коричневе | коричневі\n\n8. Мої кросівки ___.\n   > [!answer] білі\n   > [!options] білі | білий | біла | біле\n\n---\n\n## fill-in: Опис одягу (Describing Outfits)\n\n> Виберіть правильне слово.\n\n1. У мене нова ___ куртка.\n   > [!answer] чорна\n   > [!options] чорна | чорний | чорне | чорні\n\n2. Я люблю ___ кольори.\n   > [!answer] яскраві\n   > [!options] яскраві | яскравий | яскрава | яскраве\n\n3. Небо сьогодні ___.\n   > [!answer] блакитне\n   > [!options] блакитне | блакитний | блакитна | блакитні\n\n4. Її шарф дуже ___.\n   > [!answer] теплий\n   > [!options] теплий | тепла | тепле | теплі\n\n5. Це ___ спідниця.\n   > [!answer] зелена\n   > [!options] зелена | зелений | зелене | зелені\n\n6. У нас ___ черевики.\n   > [!answer] нові\n   > [!options] нові | новий | нова | нове\n\n7. Мій светр ___.\n   > [!answer] теплий\n   > [!options] теплий | тепла | тепле | теплі\n\n8. Сонце ___.\n   > [!answer] жовте\n   > [!options] жовте | жовтий | жовта | жовті\n\n---\n\n## quiz: Що це? (What Is It?)\n\nВиберіть правильну відповідь.\n\n1. Біла сорочка\n   - [x] White shirt\n   - [ ] Black shirt\n   - [ ] Blue shirt\n   - [ ] Red shirt\n\n2. Чорні штани\n   - [x] Black pants\n   - [ ] White pants\n   - [ ] Blue pants\n   - [ ] Black shirt\n\n3. Синє пальто\n   - [x] Blue coat\n   - [ ] Blue pants\n   - [ ] Red coat\n   - [ ] Green coat\n\n4. Червона сукня\n   - [x] Red dress\n   - [ ] Red skirt\n   - [ ] Red t-shirt\n   - [ ] Yellow dress\n\n5. Зелена футболка\n   - [x] Green t-shirt\n   - [ ] Green dress\n   - [ ] Blue t-shirt\n   - [ ] Yellow t-shirt\n\n6. Сіра куртка\n   - [x] Gray jacket\n   - [ ] Gray shirt\n   - [ ] Black jacket\n   - [ ] Gray pants\n\n7. Жовті кросівки\n   - [x] Yellow sneakers\n   - [ ] Yellow shirt\n   - [ ] White sneakers\n   - [ ] Yellow coat\n\n8. Коричневий капелюх\n   - [x] Brown hat\n   - [ ] Black hat\n   - [ ] Brown coat\n   - [ ] Brown pants\n\n---\n\n## quiz: Який колір? (What Color?)\n\nВиберіть правильну відповідь.\n\n1. Сніг — це якого кольору?\n   - [x] Білий\n   - [ ] Чорний\n   - [ ] Синій\n   - [ ] Зелений\n\n2. Небо вдень — це якого кольору?\n   - [x] Блакитний\n   - [ ] Чорний\n   - [ ] Червоний\n   - [ ] Жовтий\n\n3. Трава — це якого кольору?\n   - [x] Зелена\n   - [ ] Синя\n   - [ ] Біла\n   - [ ] Жовта\n\n4. Сонце — це якого кольору?\n   - [x] Жовте\n   - [ ] Біле\n   - [ ] Синє\n   - [ ] Чорне\n\n5. Море — це якого кольору?\n   - [x] Синє\n   - [ ] Біле\n   - [ ] Зелене\n   - [ ] Жовте\n\n6. Земля — це якого кольору?\n   - [x] Коричнева\n   - [ ] Біла\n   - [ ] Синя\n   - [ ] Жовта\n\n7. Ніч — це якого кольору?\n   - [x] Чорна\n   - [ ] Біла\n   - [ ] Синя\n   - [ ] Жовта\n\n8. Рожа — це якого кольору?\n   - [x] Червона\n   - [ ] Зелена\n   - [ ] Синя\n   - [ ] Біла\n\n---\n\n## unjumble: Опис одягу\n\nРозташуйте слова у правильному порядку.\n\n1. сорочка / біла / у мене\n   > [!answer] У мене біла сорочка.\n\n2. чорний / светр / мій\n   > [!answer] Мій светр чорний.\n\n3. сині / штани / нові\n   > [!answer] Нові сині штани.\n\n4. червона / гарна / сукня\n   > [!answer] Гарна червона сукня.\n\n5. білі / кросівки / це\n   > [!answer] Це білі кросівки.\n\n6. синя / куртка / його\n   > [!answer] Його куртка синя.\n\n\n---\n\n## true-false: Color Rules\n\nIs this true or false?\n\n- [x] \"Біла\" is the feminine form of \"white\".\n- [ ] \"Синій\" is the neuter form.\n  > Incorrect! it's masculine\n\n- [x] \"Штани\" is always plural in Ukrainian.\n- [ ] \"Пальто\" is masculine.\n  > Incorrect! it's neuter\n\n- [x] \"Блакитний\" means light blue.\n- [ ] \"Чорне\" is masculine.\n  > Incorrect! it's neuter\n\n- [x] \"Джинси\" is always plural.\n- [ ] \"Біле\" is feminine.\n  > Incorrect! it's neuter\n\n- [x] Colors are adjectives and must agree with nouns.\n- [ ] \"Сукня\" is neuter.\n  > Incorrect! it's feminine\n\n- [x] \"Світлий\" means \"light\" (as in bright).\n- [ ] \"Темна\" is the masculine form.\n  > Incorrect! it's feminine\n\n\n---\n\n# Підсумок (Summary)\n\nВи навчилися називати кольори та одяг! (You've learned colors and clothing!)\n\n**Що ви вивчили (What you learned):**\n\n- **12 кольорів (Colors):** білий, чорний, сірий, червоний, помаранчевий, жовтий, зелений, синій, блакитний, фіолетовий, рожевий, коричневий\n- **Модифікатори (Modifiers):** світлий, темний, яскравий\n- **15 предметів одягу (Clothing):** сорочка, футболка, светр, куртка, пальто, штани, джинси, шорти, спідниця, сукня...\n- **Узгодження (Agreement):** білий/біла/біле/білі\n- **Два відтінки синього (Two blues):** синій (темний) vs блакитний (світлий)\n\n---\n\n**Наступний урок:** Прислівники — як описувати ДІЇ!\n",
+    "createdAt": "2025-12-14T15:48:09.033565Z",
+    "modifiedAt": "2025-12-14T15:48:09.033565Z",
     "version": 2
   },
-  "activities": [
-    {
-      "id": "act-a1-0-fillblank-0",
-      "type": "fill-blank",
-      "title": "Color Agreement",
-      "description": "Choose the correct color form.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Це ___ небо. (blue - n.)",
-            "answer": "синє",
-            "options": [
-              "синій",
-              "синя",
-              "синє",
-              "сині"
-            ]
-          },
-          {
-            "prompt": "___ сорочка. (white - f.)",
-            "answer": "Біла",
-            "options": [
-              "Білий",
-              "Біла",
-              "Біле",
-              "Білі"
-            ]
-          },
-          {
-            "prompt": "Це ___ машина. (red - f.)",
-            "answer": "червона",
-            "options": [
-              "червоний",
-              "червона",
-              "червоне",
-              "червоні"
-            ]
-          },
-          {
-            "prompt": "___ черевики. (black - pl.)",
-            "answer": "Чорні",
-            "options": [
-              "Чорний",
-              "Чорна",
-              "Чорне",
-              "Чорні"
-            ]
-          },
-          {
-            "prompt": "Це ___ сукня. (green - f.)",
-            "answer": "зелена",
-            "options": [
-              "зелений",
-              "зелена",
-              "зелене",
-              "зелені"
-            ]
-          },
-          {
-            "prompt": "___ капелюх. (gray - m.)",
-            "answer": "Сірий",
-            "options": [
-              "Сірий",
-              "Сіра",
-              "Сіре",
-              "Сірі"
-            ]
-          },
-          {
-            "prompt": "Це ___ море. (blue - n.)",
-            "answer": "синє",
-            "options": [
-              "синій",
-              "синя",
-              "синє",
-              "сині"
-            ]
-          },
-          {
-            "prompt": "___ квітка. (yellow - f.)",
-            "answer": "Жовта",
-            "options": [
-              "Жовтий",
-              "Жовта",
-              "Жовте",
-              "Жовті"
-            ]
-          },
-          {
-            "prompt": "Це ___ яблуко. (green - n.)",
-            "answer": "зелене",
-            "options": [
-              "зелений",
-              "зелена",
-              "зелене",
-              "зелені"
-            ]
-          },
-          {
-            "prompt": "___ штани. (gray - pl.)",
-            "answer": "Сірі",
-            "options": [
-              "Сірий",
-              "Сіра",
-              "Сіре",
-              "Сірі"
-            ]
-          },
-          {
-            "prompt": "Це ___ куртка. (blue - f.)",
-            "answer": "синя",
-            "options": [
-              "синій",
-              "синя",
-              "синє",
-              "сині"
-            ]
-          },
-          {
-            "prompt": "___ светр. (brown - m.)",
-            "answer": "Коричневий",
-            "options": [
-              "Коричневий",
-              "Коричнева",
-              "Коричневе",
-              "Коричневі"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.050Z",
-      "modifiedAt": "2025-12-12T19:55:32.050Z"
-    },
-    {
-      "id": "act-a1-0-matchup-0",
-      "type": "match-up",
-      "title": "Clothing Items",
-      "description": "Match Ukrainian with English.",
-      "content": {
-        "type": "match-up",
-        "pairs": [
-          {
-            "left": "сорочка",
-            "right": "shirt"
-          },
-          {
-            "left": "футболка",
-            "right": "T-shirt"
-          },
-          {
-            "left": "светр",
-            "right": "sweater"
-          },
-          {
-            "left": "куртка",
-            "right": "jacket"
-          },
-          {
-            "left": "пальто",
-            "right": "coat"
-          },
-          {
-            "left": "штани",
-            "right": "pants"
-          },
-          {
-            "left": "джинси",
-            "right": "jeans"
-          },
-          {
-            "left": "сукня",
-            "right": "dress"
-          },
-          {
-            "left": "спідниця",
-            "right": "skirt"
-          },
-          {
-            "left": "черевики",
-            "right": "boots"
-          },
-          {
-            "left": "кросівки",
-            "right": "sneakers"
-          },
-          {
-            "left": "шарф",
-            "right": "scarf"
-          }
-        ],
-        "shuffleRight": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.050Z",
-      "modifiedAt": "2025-12-12T19:55:32.050Z"
-    },
-    {
-      "id": "act-a1-0-quiz-0",
-      "type": "quiz",
-      "title": "Color Rules",
-      "description": "Choose the correct answer.",
-      "content": {
-        "type": "quiz",
-        "questions": [
-          {
-            "question": "Colors in Ukrainian are:",
-            "options": [
-              "Adjectives",
-              "Nouns",
-              "Verbs",
-              "Adverbs"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Синій\" is:",
-            "options": [
-              "Soft stem",
-              "Hard stem",
-              "Irregular",
-              "Not an adjective"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Штани\" is always:",
-            "options": [
-              "Plural",
-              "Singular",
-              "Neuter",
-              "Masculine"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Ukrainian flag colors are:",
-            "options": [
-              "синій і жовтий",
-              "червоний і білий",
-              "зелений і жовтий",
-              "чорний і білий"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Темно-зелений\" means:",
-            "options": [
-              "Dark green",
-              "Light green",
-              "Bright green",
-              "Yellow-green"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Біла сорочка\" — \"біла\" is:",
-            "options": [
-              "Feminine",
-              "Masculine",
-              "Neuter",
-              "Plural"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "What color is neuter form \"синє\"?",
-            "options": [
-              "Blue",
-              "Red",
-              "Green",
-              "Yellow"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Рожевий\" means:",
-            "options": [
-              "Pink",
-              "Purple",
-              "Red",
-              "Orange"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Блакитний\" is:",
-            "options": [
-              "Light blue",
-              "Dark blue",
-              "Green",
-              "Purple"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Джинси\" requires:",
-            "options": [
-              "Plural adjective (сині джинси)",
-              "Singular masculine",
-              "Singular feminine",
-              "Neuter adjective"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "Yellow in Ukrainian is:",
-            "options": [
-              "Жовтий",
-              "Зелений",
-              "Синій",
-              "Помаранчевий"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          },
-          {
-            "question": "\"Взуття\" means:",
-            "options": [
-              "Footwear",
-              "Clothing",
-              "Hat",
-              "Bag"
-            ],
-            "correctIndex": 0,
-            "explanation": ""
-          }
-        ],
-        "shuffleQuestions": true,
-        "shuffleOptions": true,
-        "showCorrectAnswers": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.050Z",
-      "modifiedAt": "2025-12-12T19:55:32.050Z"
-    },
-    {
-      "id": "act-a1-0-groupsort-0",
-      "type": "group-sort",
-      "title": "Clothing Categories",
-      "description": "Sort items by body area.",
-      "content": {
-        "type": "group-sort",
-        "groups": [],
-        "shuffleItems": true
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.050Z",
-      "modifiedAt": "2025-12-12T19:55:32.050Z"
-    },
-    {
-      "id": "act-a1-0-truefalse-0",
-      "type": "true-false",
-      "title": "Color Facts",
-      "description": "Color Facts",
-      "content": {
-        "type": "true-false",
-        "statements": [
-          {
-            "statement": "Colors are adjectives in Ukrainian.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Синій\" is a soft stem adjective.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "Colors don't agree in gender.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Штани\" is always plural.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "Ukrainian flag is blue and yellow.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Блакитний\" means dark blue.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Рожевий\" means pink.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Чорний\" is a soft stem color.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Жовта квітка\" is correct.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Сірі штани\" uses plural form.",
-            "isTrue": true,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Синя\" is masculine.",
-            "isTrue": false,
-            "explanation": ""
-          },
-          {
-            "statement": "\"Зелене яблуко\" is correct.",
-            "isTrue": true,
-            "explanation": ""
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.050Z",
-      "modifiedAt": "2025-12-12T19:55:32.050Z"
-    },
-    {
-      "id": "act-a1-0-anagram-0",
-      "type": "anagram",
-      "title": "Color Vocabulary",
-      "description": "Unscramble these colors.",
-      "content": {
-        "type": "anagram",
-        "isAnagram": true,
-        "items": [
-          {
-            "letters": [
-              "й",
-              "і",
-              "н",
-              "и",
-              "с"
-            ],
-            "answer": "синій"
-          },
-          {
-            "letters": [
-              "й",
-              "и",
-              "т",
-              "в",
-              "о",
-              "ж"
-            ],
-            "answer": "жовтий"
-          },
-          {
-            "letters": [
-              "й",
-              "и",
-              "н",
-              "о",
-              "в",
-              "р",
-              "е",
-              "ч"
-            ],
-            "answer": "червоний"
-          },
-          {
-            "letters": [
-              "н",
-              "е",
-              "л",
-              "е",
-              "з",
-              "й",
-              "и"
-            ],
-            "answer": "зелений"
-          },
-          {
-            "letters": [
-              "й",
-              "и",
-              "н",
-              "р",
-              "о",
-              "ч"
-            ],
-            "answer": "чорний"
-          },
-          {
-            "letters": [
-              "й",
-              "и",
-              "л",
-              "і",
-              "б"
-            ],
-            "answer": "білий"
-          },
-          {
-            "letters": [
-              "й",
-              "и",
-              "р",
-              "і",
-              "с"
-            ],
-            "answer": "сірий"
-          },
-          {
-            "letters": [
-              "й",
-              "и",
-              "в",
-              "е",
-              "ж",
-              "о",
-              "р"
-            ],
-            "answer": "рожевий"
-          },
-          {
-            "letters": [
-              "й",
-              "и",
-              "т",
-              "н",
-              "и",
-              "к",
-              "а",
-              "л",
-              "б"
-            ],
-            "answer": "блакитний"
-          },
-          {
-            "letters": [
-              "е",
-              "і",
-              "и",
-              "в",
-              "й",
-              "ф",
-              "о",
-              "л",
-              "т",
-              "о"
-            ],
-            "answer": "фіолетовий"
-          },
-          {
-            "letters": [
-              "й",
-              "и",
-              "в",
-              "е",
-              "н",
-              "ч",
-              "и",
-              "р",
-              "о",
-              "к"
-            ],
-            "answer": "коричневий"
-          },
-          {
-            "letters": [
-              "а",
-              "к",
-              "т",
-              "р",
-              "у",
-              "к"
-            ],
-            "answer": "куртка"
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.050Z",
-      "modifiedAt": "2025-12-12T19:55:32.050Z"
-    },
-    {
-      "id": "act-a1-0-fillblank-1",
-      "type": "fill-blank",
-      "title": "What Are They Wearing?",
-      "description": "Describe the clothing.",
-      "content": {
-        "type": "fill-blank",
-        "items": [
-          {
-            "prompt": "Він носить ___ сорочку. (white - f.)",
-            "answer": "білу",
-            "options": [
-              "білий",
-              "білу",
-              "біле",
-              "білі"
-            ]
-          },
-          {
-            "prompt": "Вона в ___ сукні. (red - f.)",
-            "answer": "червоній",
-            "options": [
-              "червоний",
-              "червону",
-              "червоній",
-              "червоні"
-            ]
-          },
-          {
-            "prompt": "У мене ___ штани. (black - pl.)",
-            "answer": "чорні",
-            "options": [
-              "чорний",
-              "чорна",
-              "чорне",
-              "чорні"
-            ]
-          },
-          {
-            "prompt": "Він купив ___ куртку. (blue - f.)",
-            "answer": "синю",
-            "options": [
-              "синій",
-              "синю",
-              "синє",
-              "сині"
-            ]
-          },
-          {
-            "prompt": "Це мої ___ кросівки. (white - pl.)",
-            "answer": "білі",
-            "options": [
-              "білий",
-              "біла",
-              "біле",
-              "білі"
-            ]
-          },
-          {
-            "prompt": "Вона носить ___ капелюх. (gray - m.)",
-            "answer": "сірий",
-            "options": [
-              "сірий",
-              "сіра",
-              "сіре",
-              "сірі"
-            ]
-          },
-          {
-            "prompt": "Я люблю ___ одяг. (bright - m.)",
-            "answer": "яскравий",
-            "options": [
-              "яскравий",
-              "яскрава",
-              "яскраве",
-              "яскраві"
-            ]
-          },
-          {
-            "prompt": "Це ___ шарф. (green - m.)",
-            "answer": "зелений",
-            "options": [
-              "зелений",
-              "зелена",
-              "зелене",
-              "зелені"
-            ]
-          },
-          {
-            "prompt": "Вона в ___ черевиках. (brown - pl.)",
-            "answer": "коричневих",
-            "options": [
-              "коричневий",
-              "коричневу",
-              "коричневих",
-              "коричневі"
-            ]
-          },
-          {
-            "prompt": "Я ношу ___ футболку. (yellow - f.)",
-            "answer": "жовту",
-            "options": [
-              "жовтий",
-              "жовту",
-              "жовте",
-              "жовті"
-            ]
-          },
-          {
-            "prompt": "Це мій ___ светр. (blue - m.)",
-            "answer": "синій",
-            "options": [
-              "синій",
-              "синя",
-              "синє",
-              "сині"
-            ]
-          },
-          {
-            "prompt": "Вони в ___ сукнях. (pink - pl.)",
-            "answer": "рожевих",
-            "options": [
-              "рожевий",
-              "рожеву",
-              "рожевих",
-              "рожеві"
-            ]
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.050Z",
-      "modifiedAt": "2025-12-12T19:55:32.050Z"
-    },
-    {
-      "id": "act-a1-0-unjumble-0",
-      "type": "unjumble",
-      "title": "Build Color Sentences",
-      "description": "Arrange words into correct sentences.",
-      "content": {
-        "type": "unjumble",
-        "isUnjumble": true,
-        "items": [
-          {
-            "words": [
-              "небо",
-              "синє",
-              "яке"
-            ],
-            "answer": "Яке синє небо!"
-          },
-          {
-            "words": [
-              "чорні",
-              "у",
-              "мене",
-              "штани"
-            ],
-            "answer": "У мене чорні штани."
-          },
-          {
-            "words": [
-              "куртка",
-              "красива",
-              "синя"
-            ],
-            "answer": "Красива синя куртка."
-          },
-          {
-            "words": [
-              "носить",
-              "сорочку",
-              "він",
-              "білу"
-            ],
-            "answer": "Він носить білу сорочку."
-          },
-          {
-            "words": [
-              "сукня",
-              "зелена",
-              "ця"
-            ],
-            "answer": "Ця сукня зелена."
-          },
-          {
-            "words": [
-              "жовті",
-              "квіти",
-              "гарні"
-            ],
-            "answer": "Жовті квіти гарні."
-          },
-          {
-            "words": [
-              "червона",
-              "машина",
-              "яка"
-            ],
-            "answer": "Яка червона машина!"
-          },
-          {
-            "words": [
-              "пальто",
-              "чорне",
-              "моє"
-            ],
-            "answer": "Моє пальто чорне."
-          },
-          {
-            "words": [
-              "колір",
-              "улюблений",
-              "мій",
-              "синій"
-            ],
-            "answer": "Мій улюблений колір синій."
-          },
-          {
-            "words": [
-              "синій",
-              "і",
-              "білий",
-              "Прапор"
-            ],
-            "answer": "Прапор синій і білий."
-          },
-          {
-            "words": [
-              "кросівки",
-              "нові",
-              "білі"
-            ],
-            "answer": "Нові білі кросівки."
-          },
-          {
-            "words": [
-              "темно-зелений",
-              "светр",
-              "це"
-            ],
-            "answer": "Це темно-зелений светр."
-          }
-        ]
-      },
-      "subject": "language",
-      "owner": "curricula-opus",
-      "visibility": "public",
-      "language": "uk",
-      "difficultyLevel": "A1",
-      "duration": 5,
-      "tags": [],
-      "createdAt": "2025-12-12T19:55:32.050Z",
-      "modifiedAt": "2025-12-12T19:55:32.050Z"
-    }
-  ],
+  "activities": [],
   "vocabulary": {
     "moduleId": "mod-uk-A1-27",
     "level": "A1",
-    "phase": "A1.3",
+    "phase": "A1.3 - Consolidation",
     "wordCount": 30,
     "newWordCount": 30,
     "reviewWordCount": 0,
-    "transliterationMode": "partial",
+    "transliterationMode": "first-occurrence",
     "words": [
       {
-        "id": "v-bilyy-0-0",
+        "id": "vocab-1",
         "uk": "білий",
-        "en": "white",
-        "pos": "noun",
         "ipa": "/ˈbilɪj/",
-        "note": "Біла сорочка.",
-        "isNew": true,
-        "firstModule": 0
+        "en": "white",
+        "pos": "adj",
+        "gender": "m",
+        "note": "color"
       },
       {
-        "id": "v-chornyy-0-1",
+        "id": "vocab-2",
         "uk": "чорний",
+        "ipa": "/ˈtʃɔrnɪj/",
         "en": "black",
-        "pos": "noun",
-        "ipa": "/ˈt͡ʃornɪj/",
-        "note": "Чорні штани.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adj",
+        "gender": "m",
+        "note": "color"
       },
       {
-        "id": "v-siryy-0-2",
+        "id": "vocab-3",
         "uk": "сірий",
-        "en": "gray",
-        "pos": "noun",
         "ipa": "/ˈsirɪj/",
-        "note": "Сіре небо.",
-        "isNew": true,
-        "firstModule": 0
+        "en": "gray",
+        "pos": "adj",
+        "gender": "m",
+        "note": "color"
       },
       {
-        "id": "v-chervonyy-0-3",
+        "id": "vocab-4",
         "uk": "червоний",
+        "ipa": "/tʃerˈwɔnɪj/",
         "en": "red",
-        "pos": "noun",
-        "ipa": "/t͡ʃɛrˈʋonɪj/",
-        "note": "Червона троянда.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adj",
+        "gender": "m",
+        "note": "color"
       },
       {
-        "id": "v-pomaranchevyy-0-4",
+        "id": "vocab-5",
         "uk": "помаранчевий",
+        "ipa": "/pɔmɑˈrɑntʃewɪj/",
         "en": "orange",
-        "pos": "noun",
-        "ipa": "/pomɑˈrɑnt͡ʃɛʋɪj/",
-        "note": "Помаранчева куртка.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adj",
+        "gender": "m",
+        "note": "color"
       },
       {
-        "id": "v-zhovtyy-0-5",
+        "id": "vocab-6",
         "uk": "жовтий",
+        "ipa": "/ˈʒɔwtɪj/",
         "en": "yellow",
-        "pos": "noun",
-        "ipa": "/ˈʒoʋtɪj/",
-        "note": "Жовте сонце.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adj",
+        "gender": "m",
+        "note": "color"
       },
       {
-        "id": "v-zelenyy-0-6",
+        "id": "vocab-7",
         "uk": "зелений",
+        "ipa": "/zeˈlenɪj/",
         "en": "green",
-        "pos": "noun",
-        "ipa": "/zɛˈlɛnɪj/",
-        "note": "Зелена трава.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adj",
+        "gender": "m",
+        "note": "color"
       },
       {
-        "id": "v-syniy-0-7",
+        "id": "vocab-8",
         "uk": "синій",
-        "en": "blue",
-        "pos": "noun",
         "ipa": "/ˈsɪnʲij/",
-        "note": "Синє море.",
-        "isNew": true,
-        "firstModule": 0
+        "en": "blue (dark)",
+        "pos": "adj",
+        "gender": "m",
+        "note": "soft stem"
       },
       {
-        "id": "v-blakytnyy-0-8",
+        "id": "vocab-9",
         "uk": "блакитний",
-        "en": "light blue",
-        "pos": "noun",
         "ipa": "/blɑˈkɪtnɪj/",
-        "note": "Блакитне небо.",
-        "isNew": true,
-        "firstModule": 0
+        "en": "light blue",
+        "pos": "adj",
+        "gender": "m",
+        "note": "color"
       },
       {
-        "id": "v-fioletovyy-0-9",
+        "id": "vocab-10",
         "uk": "фіолетовий",
+        "ipa": "/fʲioˈletɔwɪj/",
         "en": "purple",
-        "pos": "noun",
-        "ipa": "/fioˈlɛtoʋɪj/",
-        "note": "Фіолетова квітка.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adj",
+        "gender": "m",
+        "note": "color"
       },
       {
-        "id": "v-rozhevyy-0-10",
+        "id": "vocab-11",
         "uk": "рожевий",
+        "ipa": "/rɔˈʒewɪj/",
         "en": "pink",
-        "pos": "noun",
-        "ipa": "/roˈʒɛʋɪj/",
-        "note": "Рожева сукня.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adj",
+        "gender": "m",
+        "note": "color"
       },
       {
-        "id": "v-korychnevyy-0-11",
+        "id": "vocab-12",
         "uk": "коричневий",
+        "ipa": "/kɔˈrɪtʃnewɪj/",
         "en": "brown",
-        "pos": "noun",
-        "ipa": "/koˈrɪt͡ʃnɛʋɪj/",
-        "note": "Коричневе взуття.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adj",
+        "gender": "m",
+        "note": "color"
       },
       {
-        "id": "v-svitlyy-0-12",
+        "id": "vocab-13",
         "uk": "світлий",
+        "ipa": "/ˈswʲitlɪj/",
         "en": "light",
-        "pos": "noun",
-        "ipa": "/ˈsʋitlɪj/",
-        "note": "Світло-синій.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adj",
+        "gender": "m",
+        "note": "modifier"
       },
       {
-        "id": "v-temnyy-0-13",
+        "id": "vocab-14",
         "uk": "темний",
+        "ipa": "/ˈtemnɪj/",
         "en": "dark",
-        "pos": "noun",
-        "ipa": "/ˈtɛmnɪj/",
-        "note": "Темно-зелений.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adj",
+        "gender": "m",
+        "note": "modifier"
       },
       {
-        "id": "v-sorochka-0-14",
-        "uk": "сорочка",
-        "en": "shirt",
-        "pos": "noun",
-        "ipa": "/soˈrot͡ʃkɑ/",
-        "note": "Біла сорочка.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-futbolka-0-15",
-        "uk": "футболка",
-        "en": "T-shirt",
-        "pos": "noun",
-        "ipa": "/futˈbolkɑ/",
-        "note": "Червона футболка.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-svetr-0-16",
-        "uk": "светр",
-        "en": "sweater",
-        "pos": "noun",
-        "ipa": "/sʋɛtr/",
-        "note": "Теплий светр.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-kurtka-0-17",
-        "uk": "куртка",
-        "en": "jacket",
-        "pos": "noun",
-        "ipa": "/ˈkurtkɑ/",
-        "note": "Синя куртка.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-palьto-0-18",
-        "uk": "пальто",
-        "en": "coat",
-        "pos": "noun",
-        "ipa": "/pɑlʲˈto/",
-        "note": "Чорне пальто.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-shtany-0-19",
-        "uk": "штани",
-        "en": "pants",
-        "pos": "noun",
-        "ipa": "/ʃtɑˈnɪ/",
-        "note": "Сірі штани.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-dzhynsy-0-20",
-        "uk": "джинси",
-        "en": "jeans",
-        "pos": "noun",
-        "ipa": "/ˈdʒɪnsɪ/",
-        "note": "Сині джинси.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-shorty-0-21",
-        "uk": "шорти",
-        "en": "shorts",
-        "pos": "noun",
-        "ipa": "/ˈʃortɪ/",
-        "note": "Білі шорти.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-spidnytsya-0-22",
-        "uk": "спідниця",
-        "en": "skirt",
-        "pos": "noun",
-        "ipa": "/spidˈnɪt͡sʲɑ/",
-        "note": "Зелена спідниця.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-suknya-0-23",
-        "uk": "сукня",
-        "en": "dress",
-        "pos": "noun",
-        "ipa": "/ˈsuknʲɑ/",
-        "note": "Червона сукня.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-vzuttya-0-24",
-        "uk": "взуття",
-        "en": "footwear",
-        "pos": "noun",
-        "ipa": "/ˈʋzutʲːɑ/",
-        "note": "Чорне взуття.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-cherevyky-0-25",
-        "uk": "черевики",
-        "en": "boots",
-        "pos": "noun",
-        "ipa": "/t͡ʃɛrɛˈʋɪkɪ/",
-        "note": "Коричневі черевики.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-krosivky-0-26",
-        "uk": "кросівки",
-        "en": "sneakers",
-        "pos": "noun",
-        "ipa": "/kroˈsiʋkɪ/",
-        "note": "Білі кросівки.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-kapelyukh-0-27",
-        "uk": "капелюх",
-        "en": "hat",
-        "pos": "noun",
-        "ipa": "/kɑpɛˈlʲux/",
-        "note": "Сірий капелюх.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-sharf-0-28",
-        "uk": "шарф",
-        "en": "scarf",
-        "pos": "noun",
-        "ipa": "/ʃɑrf/",
-        "note": "Синій шарф.",
-        "isNew": true,
-        "firstModule": 0
-      },
-      {
-        "id": "v-yaskravyy-0-29",
+        "id": "vocab-15",
         "uk": "яскравий",
+        "ipa": "/jɑsˈkrɑwɪj/",
         "en": "bright",
-        "pos": "noun",
-        "ipa": "/jɑsˈkrɑʋɪj/",
-        "note": "Яскравий колір.",
-        "isNew": true,
-        "firstModule": 0
+        "pos": "adj",
+        "gender": "m",
+        "note": "modifier"
+      },
+      {
+        "id": "vocab-16",
+        "uk": "сорочка",
+        "ipa": "/sɔˈrɔtʃkɑ/",
+        "en": "shirt",
+        "pos": "n",
+        "gender": "f",
+        "note": "clothing"
+      },
+      {
+        "id": "vocab-17",
+        "uk": "футболка",
+        "ipa": "/futˈbɔlkɑ/",
+        "en": "t-shirt",
+        "pos": "n",
+        "gender": "f",
+        "note": "clothing"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "светр",
+        "ipa": "/swetr/",
+        "en": "sweater",
+        "pos": "n",
+        "gender": "m",
+        "note": "clothing"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "куртка",
+        "ipa": "/ˈkurtkɑ/",
+        "en": "jacket",
+        "pos": "n",
+        "gender": "f",
+        "note": "clothing"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "пальто",
+        "ipa": "/pɑlʲˈtɔ/",
+        "en": "coat",
+        "pos": "n",
+        "gender": "n",
+        "note": "indeclinable"
+      },
+      {
+        "id": "vocab-21",
+        "uk": "штани",
+        "ipa": "/ʃtɑˈnɪ/",
+        "en": "pants",
+        "pos": "n",
+        "gender": null,
+        "note": "always plural"
+      },
+      {
+        "id": "vocab-22",
+        "uk": "джинси",
+        "ipa": "/ˈdʒɪnsɪ/",
+        "en": "jeans",
+        "pos": "n",
+        "gender": null,
+        "note": "always plural"
+      },
+      {
+        "id": "vocab-23",
+        "uk": "шорти",
+        "ipa": "/ˈʃɔrtɪ/",
+        "en": "shorts",
+        "pos": "n",
+        "gender": null,
+        "note": "always plural"
+      },
+      {
+        "id": "vocab-24",
+        "uk": "спідниця",
+        "ipa": "/spʲidˈnɪtsʲɑ/",
+        "en": "skirt",
+        "pos": "n",
+        "gender": "f",
+        "note": "clothing"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "сукня",
+        "ipa": "/ˈsuknʲɑ/",
+        "en": "dress",
+        "pos": "n",
+        "gender": "f",
+        "note": "clothing"
+      },
+      {
+        "id": "vocab-26",
+        "uk": "взуття",
+        "ipa": "/wzutʲˈtʲɑ/",
+        "en": "footwear",
+        "pos": "n",
+        "gender": "n",
+        "note": "collective"
+      },
+      {
+        "id": "vocab-27",
+        "uk": "черевики",
+        "ipa": "/tʃereˈwɪkɪ/",
+        "en": "boots",
+        "pos": "n",
+        "gender": null,
+        "note": "always plural"
+      },
+      {
+        "id": "vocab-28",
+        "uk": "кросівки",
+        "ipa": "/krɔˈsʲiwkɪ/",
+        "en": "sneakers",
+        "pos": "n",
+        "gender": null,
+        "note": "always plural"
+      },
+      {
+        "id": "vocab-29",
+        "uk": "капелюх",
+        "ipa": "/kɑpeˈlʲux/",
+        "en": "hat",
+        "pos": "n",
+        "gender": "m",
+        "note": "clothing"
+      },
+      {
+        "id": "vocab-30",
+        "uk": "шарф",
+        "ipa": "/ʃɑrf/",
+        "en": "scarf",
+        "pos": "n",
+        "gender": "m",
+        "note": "clothing"
       }
-    ]
+    ],
+    "reviewWords": []
   }
 }

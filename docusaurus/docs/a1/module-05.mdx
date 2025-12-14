@@ -5,20 +5,18 @@ title: "My World: Objects"
 description: "Pointing to Things with Demonstratives"
 ---
 
-import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
-import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
+import Quiz from '@site/src/components/Quiz';
 import MatchUp from '@site/src/components/MatchUp';
-import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
-import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
-import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Select, { SelectQuestion } from '@site/src/components/Select';
-import Translate, { TranslateItem } from '@site/src/components/Translate';
-import Cloze, { ClozePassage } from '@site/src/components/Cloze';
-import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
-import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import DialogueReorder from '@site/src/components/DialogueReorder';
 
 
 # My World: Objects
@@ -36,6 +34,14 @@ By the end of this module, you'll be able to navigate your entire living space i
 This might sound complicated at first, but it actually makes Ukrainian more precise. When a Ukrainian says "ця," you immediately know they're pointing to something feminine and singular. When they say "ці," you know it's plural. The demonstrative carries information that English requires extra words to express.
 
 **The connection to Module 03:** You already learned about noun gender in Module 03: The Gender Code. You know that nouns ending in consonants are usually masculine (стіл, телефон), nouns ending in -а/-я are usually feminine (книга, сумка), and nouns ending in -о/-е are usually neuter (вікно, крісло). Now you're going to use that gender knowledge every time you point to something!
+
+:::info[🎧 External Resources]
+
+**Grammar:** [ЦЕЙ and ТОЙ Declension](https://www.ukrainianlessons.com/pronouns-this-that/) — Full table with examples
+
+**Vocabulary:** [100 Most Common Words](https://www.ukrainianlessons.com/100words/) — PDF flashcards of essential vocabulary
+:::
+
 
 ## Presentation
 
@@ -121,10 +127,10 @@ You're cooking with a Ukrainian friend. They hand you items and you name them:
 — Що це? (Shcho tse?) — What is this?
 — **Це ніж.** (Tse nizh.) — This is a knife.
 
-— А це? (A tse?) — And this?
+— а це? (A tse?) — And this?
 — **Це виделка.** (Tse vydelka.) — This is a fork.
 
-— А ця? (A tsya?) — And this one? (feminine implied)
+— а ця? (A tsya?) — And this one? (feminine implied)
 — **Ця ложка.** (Tsya lozhka.) — This spoon.
 
 Notice how **"Це"** introduces objects (This is a...), but **"ця"** points to something specific (this one, feminine).
@@ -136,7 +142,7 @@ You're describing furniture to someone on the phone:
 — Де твій телефон? (De tviy telefon?) — Where is your phone?
 — **Він на тому столі.** (Vin na tomu stoli.) — It's on that table. (Locative case, from M03!)
 
-— А пульт? (A pul't?) — And the remote?
+— а пульт? (A pul't?) — And the remote?
 — **Цей пульт на дивані.** (Tsey pul't na dyvani.) — This remote is on the couch.
 
 > 🎬 **Pop Culture Moment: The Witcher**
@@ -168,7 +174,7 @@ You're describing furniture to someone on the phone:
 
 — Цей стілець гарний? *(Tsey stilets' harnyy?)* — Is this chair nice?
 — Так! Цей стілець гарний. *(Tak! Tsey stilets' harnyy.)* — Yes! This chair is nice.
-— А те крісло? *(A te krislo?)* — And that armchair?
+— а те крісло? *(A te krislo?)* — And that armchair?
 — Те крісло теж гарне. *(Te krislo tezh harne.)* — That armchair is also nice.
 
 ### Mini-Dialogue 3: Showing Around
@@ -240,7 +246,7 @@ Try building full sentences: "Це моя чашка. Та чашка не мо�
 
 ---
 
-# Summary
+## 📋 Summary
 
 In this module, you learned:
 
@@ -269,7 +275,7 @@ In this module, you learned:
 ---
 
 
-# Vocabulary
+## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
@@ -317,17 +323,14 @@ In this module, you learned:
 | пульт | /pulʲt/ | remote control | noun | m | short for "пульт дистанційного керування" |
 | гарний | /ˈɦarnɪj/ | nice, beautiful | adj | m | feminine: гарна, neuter: гарне |
 
-
 ---
 
-## 🎮 Activities
+## 🎯 Activities
 
 ### Demonstratives and Gender
 
-*Match each demonstrative with the correct gender.*
-
-
 <MatchUp pairs={[
+  { left: `Demonstrative`, right: `Gender` },
   { left: `цей`, right: `masculine singular` },
   { left: `ця`, right: `feminine singular` },
   { left: `це`, right: `neuter singular` },
@@ -344,10 +347,8 @@ In this module, you learned:
 
 ### Objects and Translations
 
-*Match the Ukrainian word with its English meaning.*
-
-
 <MatchUp pairs={[
+  { left: `Ukrainian`, right: `English` },
   { left: `чашка`, right: `cup` },
   { left: `ложка`, right: `spoon` },
   { left: `виделка`, right: `fork` },
@@ -366,387 +367,289 @@ In this module, you learned:
 
 ### Sort by Gender
 
-*Sort these household objects by their grammatical gender.*
-
-
 <GroupSort groups={{
-  "### Masculine": [
-    "ніж",
-    "телефон",
-    "комп'ютер",
-    "ключ",
-    "годинник",
-    "стілець",
-    "диван",
-    "холодильник",
-    "пилосос",
-    "гаманець",
-    "рюкзак"
-  ],
-  "Feminine": [
-    "чашка",
-    "ложка",
-    "виделка",
-    "тарілка",
-    "склянка",
-    "пляшка",
-    "сумка",
-    "лампа",
-    "картина",
-    "шафа",
-    "плита",
-    "мікрохвильовка",
-    "праска",
-    "стіна",
-    "підлога",
-    "стеля"
-  ],
-  "Neuter": [
-    "вікно",
-    "дзеркало",
-    "крісло",
-    "ліжко"
-  ]
+  "Masculine": ["ніж", "телефон", "комп'ютер", "ключ", "годинник", "стілець", "диван", "холодильник", "пилосос", "гаманець", "рюкзак"],
+  "Feminine": ["чашка", "ложка", "виделка", "тарілка", "склянка", "пляшка", "сумка", "лампа", "картина", "шафа", "плита", "мікрохвильовка", "праска", "стіна", "підлога", "стеля"],
+  "Neuter": ["вікно", "дзеркало", "крісло", "ліжко"]
 }} />
 
 ### Choose the Correct Demonstrative
 
-*Select the correct demonstrative form.*
-
-
-<Quiz>
-  <QuizQuestion
-    question={`1. ___ телефон (this phone, masculine)`}
-    options={[`цей`, `ця`, `це`, `ці`]}
-    correctIndex={0}
-    explanation={`Телефон is masculine, so use цей.`}
-  />
-  <QuizQuestion
-    question={`___ чашка (this cup, feminine)`}
-    options={[`цей`, `ця`, `це`, `ці`]}
-    correctIndex={1}
-    explanation={`Чашка is feminine, so use ця.`}
-  />
-  <QuizQuestion
-    question={`___ вікно (this window, neuter)`}
-    options={[`цей`, `ця`, `це`, `ці`]}
-    correctIndex={2}
-    explanation={`Вікно is neuter, so use це.`}
-  />
-  <QuizQuestion
-    question={`___ ключі (these keys, plural)`}
-    options={[`цей`, `ця`, `це`, `ці`]}
-    correctIndex={3}
-    explanation={`Plural objects use ці.`}
-  />
-  <QuizQuestion
-    question={`___ диван (that couch, masculine)`}
-    options={[`той`, `та`, `те`, `ті`]}
-    correctIndex={0}
-    explanation={`Диван is masculine, so use той.`}
-  />
-  <QuizQuestion
-    question={`___ шафа (that wardrobe, feminine)`}
-    options={[`той`, `та`, `те`, `ті`]}
-    correctIndex={1}
-    explanation={`Шафа is feminine, so use та.`}
-  />
-  <QuizQuestion
-    question={`___ крісло (that armchair, neuter)`}
-    options={[`той`, `та`, `те`, `ті`]}
-    correctIndex={2}
-    explanation={`Крісло is neuter, so use те.`}
-  />
-  <QuizQuestion
-    question={`___ двері (those doors, plural)`}
-    options={[`той`, `та`, `те`, `ті`]}
-    correctIndex={3}
-    explanation={`Plural objects use ті.`}
-  />
-  <QuizQuestion
-    question={`___ лампа (this lamp, feminine)`}
-    options={[`цей`, `ця`, `це`, `ці`]}
-    correctIndex={1}
-    explanation={`Лампа is feminine, so use ця.`}
-  />
-  <QuizQuestion
-    question={`___ пилосос (that vacuum cleaner, masculine)`}
-    options={[`той`, `та`, `те`, `ті`]}
-    correctIndex={0}
-    explanation={`Пилосос is masculine, so use той.`}
-  />
-  <QuizQuestion
-    question={`___ дзеркало (this mirror, neuter)`}
-    options={[`цей`, `ця`, `це`, `ці`]}
-    correctIndex={2}
-    explanation={`Дзеркало is neuter, so use це.`}
-  />
-  <QuizQuestion
-    question={`___ картини (those paintings, plural)`}
-    options={[`той`, `та`, `те`, `ті`]}
-    correctIndex={3}
-    explanation={`Plural objects use ті.`}
-  />
-</Quiz>
+<Quiz questions={[
+  {
+    question: `___ телефон (this phone, masculine)`,
+    options: [
+      { text: `цей`, correct: true },
+      { text: `ця`, correct: false },
+      { text: `це`, correct: false },
+      { text: `ці`, correct: false }
+    ]
+  },  {
+    question: `___ чашка (this cup, feminine)`,
+    options: [
+      { text: `цей`, correct: false },
+      { text: `ця`, correct: true },
+      { text: `це`, correct: false },
+      { text: `ці`, correct: false }
+    ]
+  },  {
+    question: `___ вікно (this window, neuter)`,
+    options: [
+      { text: `цей`, correct: false },
+      { text: `ця`, correct: false },
+      { text: `це`, correct: true },
+      { text: `ці`, correct: false }
+    ]
+  },  {
+    question: `___ ключі (these keys, plural)`,
+    options: [
+      { text: `цей`, correct: false },
+      { text: `ця`, correct: false },
+      { text: `це`, correct: false },
+      { text: `ці`, correct: true }
+    ]
+  },  {
+    question: `___ диван (that couch, masculine)`,
+    options: [
+      { text: `той`, correct: true },
+      { text: `та`, correct: false },
+      { text: `те`, correct: false },
+      { text: `ті`, correct: false }
+    ]
+  },  {
+    question: `___ шафа (that wardrobe, feminine)`,
+    options: [
+      { text: `той`, correct: false },
+      { text: `та`, correct: true },
+      { text: `те`, correct: false },
+      { text: `ті`, correct: false }
+    ]
+  },  {
+    question: `___ крісло (that armchair, neuter)`,
+    options: [
+      { text: `той`, correct: false },
+      { text: `та`, correct: false },
+      { text: `те`, correct: true },
+      { text: `ті`, correct: false }
+    ]
+  },  {
+    question: `___ двері (those doors, plural)`,
+    options: [
+      { text: `той`, correct: false },
+      { text: `та`, correct: false },
+      { text: `те`, correct: false },
+      { text: `ті`, correct: true }
+    ]
+  },  {
+    question: `___ лампа (this lamp, feminine)`,
+    options: [
+      { text: `цей`, correct: false },
+      { text: `ця`, correct: true },
+      { text: `це`, correct: false },
+      { text: `ці`, correct: false }
+    ]
+  },  {
+    question: `___ пилосос (that vacuum cleaner, masculine)`,
+    options: [
+      { text: `той`, correct: true },
+      { text: `та`, correct: false },
+      { text: `те`, correct: false },
+      { text: `ті`, correct: false }
+    ]
+  },  {
+    question: `___ дзеркало (this mirror, neuter)`,
+    options: [
+      { text: `цей`, correct: false },
+      { text: `ця`, correct: false },
+      { text: `це`, correct: true },
+      { text: `ці`, correct: false }
+    ]
+  },  {
+    question: `___ картини (those paintings, plural)`,
+    options: [
+      { text: `той`, correct: false },
+      { text: `та`, correct: false },
+      { text: `те`, correct: false },
+      { text: `ті`, correct: true }
+    ]
+  }
+]} />
 
 ### Complete with Demonstratives
 
-*Fill in the blank with the correct demonstrative.*
-
-
-<FillIn>
-  <FillInQuestion
-    sentence={`1. ___ ніж (this knife)`}
-    answer={`Цей`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`___ ложка (this spoon)`}
-    answer={`Ця`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`___ вікно (that window)`}
-    answer={`Те`}
-    options={[`Той`, `Та`, `Те`, `Ті`]}
-  />
-  <FillInQuestion
-    sentence={`___ сумка (this bag)`}
-    answer={`Ця`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`___ телефон (that phone)`}
-    answer={`Той`}
-    options={[`Той`, `Та`, `Те`, `Ті`]}
-  />
-  <FillInQuestion
-    sentence={`___ стілець (this chair)`}
-    answer={`Цей`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`___ крісло (that armchair)`}
-    answer={`Те`}
-    options={[`Той`, `Та`, `Те`, `Ті`]}
-  />
-  <FillInQuestion
-    sentence={`___ ключі (these keys)`}
-    answer={`Ці`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`___ шафа (that wardrobe)`}
-    answer={`Та`}
-    options={[`Той`, `Та`, `Те`, `Ті`]}
-  />
-  <FillInQuestion
-    sentence={`___ лампа (this lamp)`}
-    answer={`Ця`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`___ холодильник (this refrigerator)`}
-    answer={`Цей`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`___ двері (those doors)`}
-    answer={`Ті`}
-    options={[`Той`, `Та`, `Те`, `Ті`]}
-  />
-</FillIn>
+<FillIn items={[
+  {
+    sentence: `___ ніж (this knife)`,
+    answer: `Цей`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `___ ложка (this spoon)`,
+    answer: `Ця`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `___ вікно (that window)`,
+    answer: `Те`,
+    options: [`Той`, `Та`, `Те`, `Ті`]
+  },  {
+    sentence: `___ сумка (this bag)`,
+    answer: `Ця`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `___ телефон (that phone)`,
+    answer: `Той`,
+    options: [`Той`, `Та`, `Те`, `Ті`]
+  },  {
+    sentence: `___ стілець (this chair)`,
+    answer: `Цей`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `___ крісло (that armchair)`,
+    answer: `Те`,
+    options: [`Той`, `Та`, `Те`, `Ті`]
+  },  {
+    sentence: `___ ключі (these keys)`,
+    answer: `Ці`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `___ шафа (that wardrobe)`,
+    answer: `Та`,
+    options: [`Той`, `Та`, `Те`, `Ті`]
+  },  {
+    sentence: `___ лампа (this lamp)`,
+    answer: `Ця`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `___ холодильник (this refrigerator)`,
+    answer: `Цей`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `___ двері (those doors)`,
+    answer: `Ті`,
+    options: [`Той`, `Та`, `Те`, `Ті`]
+  }
+]} />
 
 ### Demonstrative Agreement
 
-*Decide if each statement is true or false.*
-
-
-<TrueFalse>
-  <TrueFalseQuestion
-    statement={`"Цей" is used with masculine singular nouns.`}
-    isTrue={true}
-    explanation={`Correct! Цей стілець (this chair).`}
-  />
-  <TrueFalseQuestion
-    statement={`"Ця" is used with feminine singular nouns.`}
-    isTrue={true}
-    explanation={`Correct! Ця чашка (this cup).`}
-  />
-  <TrueFalseQuestion
-    statement={`"Це" is used with masculine singular nouns.`}
-    isTrue={false}
-    explanation={`Incorrect! Це is for neuter singular nouns (це вікно).`}
-  />
-  <TrueFalseQuestion
-    statement={`"Ці" is used with all plural nouns regardless of gender.`}
-    isTrue={true}
-    explanation={`Correct! Ці ключі, ці чашки, ці вікна.`}
-  />
-  <TrueFalseQuestion
-    statement={`"Той" is used with feminine singular nouns.`}
-    isTrue={false}
-    explanation={`Incorrect! Той is for masculine singular (той стілець). Use "та" for feminine.`}
-  />
-  <TrueFalseQuestion
-    statement={`"Та" is used with feminine singular nouns.`}
-    isTrue={true}
-    explanation={`Correct! Та сумка (that bag).`}
-  />
-  <TrueFalseQuestion
-    statement={`"Те" is used with neuter singular nouns.`}
-    isTrue={true}
-    explanation={`Correct! Те вікно (that window).`}
-  />
-  <TrueFalseQuestion
-    statement={`"Ті" is used with all plural nouns.`}
-    isTrue={true}
-    explanation={`Correct! Ті стільці, ті сумки, ті вікна.`}
-  />
-  <TrueFalseQuestion
-    statement={`"Це" can only mean "this" (neuter).`}
-    isTrue={false}
-    explanation={`Incorrect! "Це" also means "this is" in general (Це книга = This is a book).`}
-  />
-  <TrueFalseQuestion
-    statement={`Demonstratives must agree with the gender of the noun.`}
-    isTrue={true}
-    explanation={`Correct! This is the key rule.`}
-  />
-  <TrueFalseQuestion
-    statement={`Most objects ending in -а or -я are feminine.`}
-    isTrue={true}
-    explanation={`Correct! Чашка, ложка, сумка, лампа.`}
-  />
-  <TrueFalseQuestion
-    statement={`Most objects ending in consonants are masculine.`}
-    isTrue={true}
-    explanation={`Correct! Ніж, стіл, телефон, ключ.`}
-  />
-</TrueFalse>
+<TrueFalse items={[
+  {
+    statement: `\"Цей\" is used with masculine singular nouns.`,
+    isTrue: true,
+    explanation: `Correct! Цей стілець (this chair).`
+  },  {
+    statement: `\"Ця\" is used with feminine singular nouns.`,
+    isTrue: true,
+    explanation: `Correct! Ця чашка (this cup).`
+  },  {
+    statement: `\"Це\" is used with masculine singular nouns.`,
+    isTrue: false,
+    explanation: `Incorrect! Це is for neuter singular nouns (це вікно).`
+  },  {
+    statement: `\"Ці\" is used with all plural nouns regardless of gender.`,
+    isTrue: true,
+    explanation: `Correct! Ці ключі, ці чашки, ці вікна.`
+  },  {
+    statement: `\"Той\" is used with feminine singular nouns.`,
+    isTrue: false,
+    explanation: `Incorrect! Той is for masculine singular (той стілець). Use \"та\" for feminine.`
+  },  {
+    statement: `\"Та\" is used with feminine singular nouns.`,
+    isTrue: true,
+    explanation: `Correct! Та сумка (that bag).`
+  },  {
+    statement: `\"Те\" is used with neuter singular nouns.`,
+    isTrue: true,
+    explanation: `Correct! Те вікно (that window).`
+  },  {
+    statement: `\"Ті\" is used with all plural nouns.`,
+    isTrue: true,
+    explanation: `Correct! Ті стільці, ті сумки, ті вікна.`
+  },  {
+    statement: `\"Це\" can only mean \"this\" (neuter).`,
+    isTrue: false,
+    explanation: `Incorrect! \"Це\" also means \"this is\" in general (Це книга = This is a book).`
+  },  {
+    statement: `Demonstratives must agree with the gender of the noun.`,
+    isTrue: true,
+    explanation: `Correct! This is the key rule.`
+  },  {
+    statement: `Most objects ending in -а or -я are feminine.`,
+    isTrue: true,
+    explanation: `Correct! Чашка, ложка, сумка, лампа.`
+  },  {
+    statement: `Most objects ending in consonants are masculine.`,
+    isTrue: true,
+    explanation: `Correct! Ніж, стіл, телефон, ключ.`
+  }
+]} />
 
 ### Build the Word
 
-*Arrange the letters to form the correct Ukrainian word.*
-
-
-<Anagram>
-  <AnagramQuestion
-    scrambled={`Ч А Ш К А`}
-    answer={`чашка`}
-  />
-  <AnagramQuestion
-    scrambled={`Л О Ж К А`}
-    answer={`ложка`}
-  />
-  <AnagramQuestion
-    scrambled={`Н І Ж`}
-    answer={`ніж`}
-  />
-  <AnagramQuestion
-    scrambled={`С У М К А`}
-    answer={`сумка`}
-  />
-  <AnagramQuestion
-    scrambled={`К Л Ю Ч`}
-    answer={`ключ`}
-  />
-  <AnagramQuestion
-    scrambled={`Л А М П А`}
-    answer={`лампа`}
-  />
-  <AnagramQuestion
-    scrambled={`С Т І Л`}
-    answer={`стіл`}
-  />
-  <AnagramQuestion
-    scrambled={`В І К Н О`}
-    answer={`вікно`}
-  />
-  <AnagramQuestion
-    scrambled={`Д И В А Н`}
-    answer={`диван`}
-  />
-  <AnagramQuestion
-    scrambled={`Ш А Ф А`}
-    answer={`шафа`}
-  />
-  <AnagramQuestion
-    scrambled={`Л І Ж К О`}
-    answer={`ліжко`}
-  />
-  <AnagramQuestion
-    scrambled={`Т Е Л Е Ф О Н`}
-    answer={`телефон`}
-  />
-</Anagram>
+<Anagram items={[
+  { scrambled: `ч а ш к а`, answer: `чашка`, hint: `` },
+  { scrambled: `л о ж к а`, answer: `ложка`, hint: `` },
+  { scrambled: `н і ж`, answer: `ніж`, hint: `` },
+  { scrambled: `с у м к а`, answer: `сумка`, hint: `` },
+  { scrambled: `к л ю ч`, answer: `ключ`, hint: `` },
+  { scrambled: `л а м п а`, answer: `лампа`, hint: `` },
+  { scrambled: `с т і л`, answer: `стіл`, hint: `` },
+  { scrambled: `в і к н о`, answer: `вікно`, hint: `` },
+  { scrambled: `д и в а н`, answer: `диван`, hint: `` },
+  { scrambled: `ш а ф а`, answer: `шафа`, hint: `` },
+  { scrambled: `л і ж к о`, answer: `ліжко`, hint: `` },
+  { scrambled: `т е л е ф о н`, answer: `телефон`, hint: `` }
+]} />
 
 ### Complete the Dialogue
 
-*Fill in the blanks with the correct words to complete the conversation.*
-
-
-<FillIn>
-  <FillInQuestion
-    sentence={`1. — Що ___? — ___ ніж. (What is this? This is a knife.)`}
-    answer={`це | Це`}
-    options={[`це, Це`, `той, Той`, `ця, Ця`, `ці, Ці`]}
-  />
-  <FillInQuestion
-    sentence={`— ___ чашка твоя? — Так, моя. (Is this cup yours? Yes, mine.)`}
-    answer={`Ця`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`— Де мій телефон? — ___ телефон на столі. (Where is my phone? That phone is on the table.)`}
-    answer={`Той`}
-    options={[`Той`, `Та`, `Те`, `Ті`]}
-  />
-  <FillInQuestion
-    sentence={`— ___ ключі? — Так, ці ключі. (These keys? Yes, these keys.)`}
-    answer={`Ці`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`— ___ вікно велике! — Так, дуже велике. (That window is big! Yes, very big.)`}
-    answer={`Те`}
-    options={[`Той`, `Та`, `Те`, `Ті`]}
-  />
-  <FillInQuestion
-    sentence={`— ___ сумка нова? — Ні, стара. (Is this bag new? No, old.)`}
-    answer={`Ця`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`— ___ стілець гарний? — Так, дуже гарний. (Is this chair nice? Yes, very nice.)`}
-    answer={`Цей`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`— Що ___ на стіні? — ___ картина. (What is that on the wall? That is a painting.)`}
-    answer={`те | Та`}
-    options={[`те, Та`, `той, Той`, `та, Та`, `ті, Ті`]}
-  />
-  <FillInQuestion
-    sentence={`— ___ лампа не працює. — Так, зламана. (This lamp doesn't work. Yes, broken.)`}
-    answer={`Ця`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-  <FillInQuestion
-    sentence={`— ___ годинник новий? — Так, новий. (Is that clock new? Yes, new.)`}
-    answer={`Той`}
-    options={[`Той`, `Та`, `Те`, `Ті`]}
-  />
-  <FillInQuestion
-    sentence={`— Де ___ двері? — Там. (Where are those doors? There.)`}
-    answer={`ті`}
-    options={[`той`, `та`, `те`, `ті`]}
-  />
-  <FillInQuestion
-    sentence={`— ___ дзеркало дуже гарне! — Дякую! (This mirror is very nice! Thank you!)`}
-    answer={`Це`}
-    options={[`Цей`, `Ця`, `Це`, `Ці`]}
-  />
-</FillIn>
-
-
+<FillIn items={[
+  {
+    sentence: `— Що ___? — ___ ніж. (What is this? This is a knife.)`,
+    answer: `це | Це`,
+    options: [`це, Це`, `той, Той`, `ця, Ця`, `ці, Ці`]
+  },  {
+    sentence: `— ___ чашка твоя? — Так, моя. (Is this cup yours? Yes, mine.)`,
+    answer: `Ця`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `— Де мій телефон? — ___ телефон на столі. (Where is my phone? That phone is on the table.)`,
+    answer: `Той`,
+    options: [`Той`, `Та`, `Те`, `Ті`]
+  },  {
+    sentence: `— ___ ключі? — Так, ці ключі. (These keys? Yes, these keys.)`,
+    answer: `Ці`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `— ___ вікно велике! — Так, дуже велике. (That window is big! Yes, very big.)`,
+    answer: `Те`,
+    options: [`Той`, `Та`, `Те`, `Ті`]
+  },  {
+    sentence: `— ___ сумка нова? — Ні, стара. (Is this bag new? No, old.)`,
+    answer: `Ця`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `— ___ стілець гарний? — Так, дуже гарний. (Is this chair nice? Yes, very nice.)`,
+    answer: `Цей`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `— Що ___ на стіні? — ___ картина. (What is that on the wall? That is a painting.)`,
+    answer: `те | Та`,
+    options: [`те, Та`, `той, Той`, `та, Та`, `ті, Ті`]
+  },  {
+    sentence: `— ___ лампа не працює. — Так, зламана. (This lamp doesn't work. Yes, broken.)`,
+    answer: `Ця`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  },  {
+    sentence: `— ___ годинник новий? — Так, новий. (Is that clock new? Yes, new.)`,
+    answer: `Той`,
+    options: [`Той`, `Та`, `Те`, `Ті`]
+  },  {
+    sentence: `— Де ___ двері? — Там. (Where are those doors? There.)`,
+    answer: `ті`,
+    options: [`той`, `та`, `те`, `ті`]
+  },  {
+    sentence: `— ___ дзеркало дуже гарне! — Дякую! (This mirror is very nice! Thank you!)`,
+    answer: `Це`,
+    options: [`Цей`, `Ця`, `Це`, `Ці`]
+  }
+]} />

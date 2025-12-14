@@ -62,11 +62,17 @@ export function QuizQuestion({ question, options, correctIndex, explanation }: Q
   );
 }
 
-interface QuizProps {
-  children: React.ReactNode;
+interface QuizQuestionItem {
+  question: string;
+  options: Array<{ text: string; correct: boolean }>;
 }
 
-export default function Quiz({ children }: QuizProps) {
+interface QuizProps {
+  questions?: QuizQuestionItem[];
+  children?: React.ReactNode;
+}
+
+export default function Quiz({ questions, children }: QuizProps) {
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
@@ -75,7 +81,19 @@ export default function Quiz({ children }: QuizProps) {
         <ActivityHelp activityType="quiz" />
       </div>
       <div className={styles.activityContent}>
-        {children}
+        {questions ? questions.map((item, index) => {
+          // Transform options format: {text, correct} -> string[] + correctIndex
+          const optionTexts = item.options.map(o => o.text);
+          const correctIndex = item.options.findIndex(o => o.correct);
+          return (
+            <QuizQuestion
+              key={index}
+              question={item.question}
+              options={optionTexts}
+              correctIndex={correctIndex >= 0 ? correctIndex : 0}
+            />
+          );
+        }) : children}
       </div>
     </div>
   );

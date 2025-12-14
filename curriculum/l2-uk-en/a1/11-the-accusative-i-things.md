@@ -29,6 +29,14 @@ vocabulary_count: 25
 
 You've been using Ukrainian to talk about what things ARE (nominative case). Now it's time to talk about what you DO with things. When you see something, take something, or want something — you need the accusative case. It's one of the most common cases in Ukrainian, and once you master it, you'll sound much more natural!
 
+> [!resources] 🎧 External Resources
+>
+> **Grammar Guide:** [Accusative Case in Ukrainian](https://www.ukrainianlessons.com/accusativecase/) — Complete guide with tables and examples
+>
+> **Cases Overview:** [Introduction to Ukrainian Cases](https://www.ukrainianlessons.com/intro-cases/) — Quick overview of all 7 cases
+>
+> **Podcast:** [FMU 1-15 | Accusative Case](https://www.ukrainianlessons.com/fmu15/) — Learn accusative while ordering pizza!
+
 ## Presentation
 
 ### The Grammar of Action

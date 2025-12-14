@@ -37,6 +37,14 @@ vocabulary_count: 20
 >
 > Ukrainian has TWO types of possessive pronouns: those that change form (мій, твій, наш, ваш, їхній) and those that NEVER change (його, її). English has only the second type! This makes Ukrainian possessives easier for ownership, but trickier for gender agreement.
 
+> [!resources] 🎧 External Resources
+>
+> **Grammar Guide:** [Possessive Pronouns](https://www.ukrainianlessons.com/grammar-possessive-pronouns/) — Illustrations and audio
+>
+> **Declension Table:** [Possessive Pronouns Declension](https://www.ukrainianlessons.com/possessive-pronouns-declension/) — Full table for all cases
+>
+> **ТВІЙ vs СВІЙ:** [Reflexive Possessive Pronoun](https://www.ukrainianlessons.com/reflexive-possessive-pronoun/) — When to use свій
+
 ## Presentation
 
 ### The Two Types
@@ -112,6 +120,46 @@ See the pattern? Мій AGREES. Його DOESN't.
 - Моя книга тут. **Його** книга там.
 - Наше вікно велике. **Його** вікно мале.
 - Мої друзі студенти. **Його** друзі лікарі.
+
+### Свій — The Reflexive Possessive
+
+Ukrainian has a special possessive **свій** that means "one's own" — referring back to the subject:
+
+| | Masculine | Feminine | Neuter | Plural |
+|---|---|---|---|---|
+| **свій** (one's own) | свій | своя | своє | свої |
+
+**The key difference:**
+
+| Sentence | Meaning |
+|----------|---------|
+| Він любить **свою** маму. | He loves **his own** mom. |
+| Він любить **його** маму. | He loves **someone else's** mom. |
+
+> [!observe] Спостереження (Pattern Discovery)
+>
+> Compare:
+> - Марія читає **свою** книгу. (Maria reads **her own** book.)
+> - Марія читає **її** книгу. (Maria reads **her** [another woman's] book.)
+>
+> **свій** = subject owns it. **його/її** = someone else owns it.
+
+**When subject = possessor → use свій:**
+- Я люблю **свою** роботу. (I love my job.)
+- Ти знаєш **свою** адресу? (Do you know your address?)
+- Він бере **свій** телефон. (He takes his [own] phone.)
+
+**When subject ≠ possessor → use його/її/їхній:**
+- Я люблю **його** роботу. (I love his job. — someone else's job)
+- Він бере **її** телефон. (He takes her phone. — not his own)
+
+> 💡 **Pro Tip**
+>
+> In the 1st and 2nd person (я, ти, ми, ви), you can use either:
+> - Я люблю **мою** маму. = Я люблю **свою** маму. (both correct)
+>
+> But in the 3rd person (він, вона, вони), the difference matters!
+> - Він любить **свою** маму. (his own) ≠ Він любить **його** маму. (another man's)
 
 > 🎬 **Pop Culture Moment: The Lord of the Rings**
 >
@@ -705,6 +753,10 @@ You now know:
 | їхня | /jixˈnʲa/ | their (f) | poss pron | f | змінний |
 | їхнє | /jixˈnʲe/ | their (n) | poss pron | n | змінний |
 | їхні | /jixˈnʲi/ | their (pl) | poss pron | pl | змінний |
+| свій | /swij/ | one's own (m) | poss pron | m | reflexive, refers to subject |
+| своя | /swɔˈja/ | one's own (f) | poss pron | f | reflexive |
+| своє | /swɔˈje/ | one's own (n) | poss pron | n | reflexive |
+| свої | /swɔˈji/ | one's own (pl) | poss pron | pl | reflexive |
 | річ | /ritʃ/ | thing | noun | f | - |
 | власний | /ˈwlɑsnɪj/ | own | adj | m | власна (f), власне (n) |
 | чужий | /tʃuˈʒɪj/ | someone else's | adj | m | чужа (f), чуже (n) |

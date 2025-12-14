@@ -38,6 +38,14 @@ Today you'll master the language of navigation — giving directions, describing
 >
 > Lviv's historic center is a UNESCO World Heritage site. The city's narrow вулиці (streets) and hidden провулки (alleys) make it a navigator's dream — and a perfect place to practice your directional Ukrainian! Meanwhile, Kyiv boasts one of the deepest metro systems in the world — some stations are 100+ meters underground, built during Soviet times as dual-purpose bomb shelters.
 
+> [!resources] 🎧 External Resources
+>
+> **Vocabulary:** [Around Town in Ukrainian](https://www.ukrainianlessons.com/vocabulary-town/) — City map with vocabulary
+>
+> **Directions:** [Directions in Ukrainian](https://www.ukrainianlessons.com/vocabulary-directions/) — Navigation vocabulary with audio
+>
+> **Podcast:** [ULP 1-18 | Directions](https://www.ukrainianlessons.com/episode18/) — Ask for and understand directions
+
 ## Presentation
 
 ### The Ukrainian City: Structure and Vocabulary

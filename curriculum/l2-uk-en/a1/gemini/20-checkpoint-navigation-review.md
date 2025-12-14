@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 2272/750 (>1750 may be too long)
+- **Words:** ⚠️ 2501/750 (>1750 may be too long)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -14,18 +14,19 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 31.4% (target 25-35% (M20))
+- **Immersion:** 🇺🇦 32.4% (target 25-40% (M20))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Checkpoint - Navigation** | ➖ | 0 | Excluded Type |
-| **Warm-up** | ✅ | 178 | Included in Core |
+| **Warm-up** | ✅ | 223 | Included in Core |
 | **Presentation** | ✅ | 1136 | Included in Core |
 | **Practice** | ⚪️ | 207 | Skipped |
 | **Production** | ➖ | 205 | Excluded Type |
 | **Cultural Insight** | ✅ | 349 | Included in Core |
 | **Summary** | ✅ | 197 | Included in Core |
+| **Self-Assessment Rubric** | ⚪️ | 184 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **fill-in: Case Mastery - Accusative** | 🎮 | 12 | Activity (12 items, min 8) |
 | **fill-in: Case Mastery - Locative** | 🎮 | 12 | Activity (12 items, min 8) |

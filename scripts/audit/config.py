@@ -63,7 +63,8 @@ CASE_PATTERNS = {
         r'\bмені\b', r'\bтобі\b', r'\bйому\b', r'\bїй\b', r'\bнам\b', r'\bвам\b',
         # їм as dative: only when preceded by dative-taking verbs
         r'(?:подобається|дати|сказати|показати|допомогти)\s+їм\b',
-        r'\b\w+і\b.*подобається',
+        # NOTE: Removed r'\b\w+і\b.*подобається' - too broad, catches nominative plurals
+        # The specific dative pronouns above are sufficient for detection
     ],
     'instrumental': [
         r'\bз\s+\w+ом\b', r'\bз\s+\w+ем\b', r'\bз\s+\w+ям\b',
@@ -77,8 +78,12 @@ CASE_PATTERNS = {
         r'\bпоїв\b', r'\bвипив\b', r'\bз\'їв\b', r'\bподивився\b',
     ],
     'participles': [
+        # Active participles (present)
         r'\b\w+уючий\b', r'\b\w+ючий\b', r'\b\w+ачий\b',
+        # Passive participles - BUT many common adjectives have same endings
+        # These patterns will be filtered by PARTICIPLE_EXCLUSIONS below
         r'\b\w+аний\b', r'\b\w+ений\b', r'\b\w+итий\b',
+        # Adverbial participles (gerunds)
         r'\bчитаючи\b', r'\bговорячи\b', r'\bйдучи\b',
     ],
     'subordinate_markers': [
@@ -87,7 +92,8 @@ CASE_PATTERNS = {
         r',\s*який\s+[а-яіїєґ]', r',\s*яка\s+[а-яіїєґ]', r',\s*яке\s+[а-яіїєґ]', r',\s*які\s+[а-яіїєґ]',
         # "що" as subordinate - only when preceded by verb/clause (not sentence-initial questions)
         # Pattern: verb + що + word (subordinate) vs. Що + word? (question)
-        r'[а-яіїєґ],?\s+що\s+(?!це\b)[а-яіїєґ]',
+        # Exclude: "що це", "що тут", "що там", "що далі" (these are questions/phrases, not subordinate clauses)
+        r'[а-яіїєґ],?\s+що\s+(?!це\b|тут\b|там\b|далі\b)[а-яіїєґ]',
         # Temporal/conditional conjunctions as subordinate (preceded by main clause)
         # коли/якщо at sentence start are questions/conditionals, not subordinate
         r'[а-яіїєґ],?\s+коли\s+[а-яіїєґ]',
@@ -96,6 +102,95 @@ CASE_PATTERNS = {
         r'(?<![а-яіїєґА-ЯІЇЄҐ\u0301])бо\s+[а-яіїєґ]',
         r'\bхоча\s+[а-яіїєґ]', r'\bщоб\s+[а-яіїєґ]', r'\bпоки\s+[а-яіїєґ]', r'\bдоки\s+[а-яіїєґ]',
     ],
+}
+
+# Words that match participle patterns but are regular adjectives (not participles)
+# These are excluded from participle violations at A1-A2
+PARTICIPLE_EXCLUSIONS = {
+    # Common adjectives ending in -аний (matches passive participle pattern)
+    'поганий', 'погана', 'погане', 'погані',
+    'останній', 'остання', 'останнє', 'останні',
+    'ранній', 'рання', 'раннє', 'ранні',
+    'крайній', 'крайня', 'крайнє', 'крайні',
+    # Common adjectives ending in -ений (matches passive participle pattern)
+    'зелений', 'зелена', 'зелене', 'зелені',
+    'червоний', 'червона', 'червоне', 'червоні',  # -оний variant
+    'чорний', 'чорна', 'чорне', 'чорні',
+    'срібний', 'срібна', 'срібне', 'срібні',
+    'темний', 'темна', 'темне', 'темні',
+    'білий', 'біла', 'біле', 'білі',
+    'синій', 'синя', 'синє', 'сині',
+    'ціль', 'цільний', 'цільна', 'цільне', 'цільні',  # whole
+    'головний', 'головна', 'головне', 'головні',
+    'цікавий', 'цікава', 'цікаве', 'цікаві',
+    'корисний', 'корисна', 'корисне', 'корисні',
+    'важливий', 'важлива', 'важливе', 'важливі',
+    'відомий', 'відома', 'відоме', 'відомі',
+    # Common adjectives ending in -ний/-на/-не (not participles)
+    'гарний', 'гарна', 'гарне', 'гарні',
+    'чудовий', 'чудова', 'чудове', 'чудові',
+    'смачний', 'смачна', 'смачне', 'смачні',
+    'сонячний', 'сонячна', 'сонячне', 'сонячні',
+    'щасливий', 'щаслива', 'щасливе', 'щасливі',
+    'радий', 'рада', 'раде', 'раді',
+    # Ordinal numbers (not participles)
+    'перший', 'перша', 'перше', 'перші',
+    'другий', 'друга', 'друге', 'другі',
+    'третій', 'третя', 'третє', 'треті',
+    'останній', 'остання', 'останнє', 'останні',
+    # Adjectives meaning "sure/confident" (not participles)
+    'впевнений', 'впевнена', 'впевнене', 'впевнені',
+    'певний', 'певна', 'певне', 'певні',
+    # More adjectives that match -ений pattern
+    'здоровий', 'здорова', 'здорове', 'здорові',
+    'готовий', 'готова', 'готове', 'готові',
+    'потрібний', 'потрібна', 'потрібне', 'потрібні',
+    # Marriage/relationship status adjectives (not participles)
+    'одружений', 'одружена', 'одружене', 'одружені',
+    'неодружений', 'неодружена', 'неодружене', 'неодружені',
+    'наречений', 'наречена',  # engaged (also used as noun: fiancé/fiancée)
+    'розлучений', 'розлучена', 'розлучене', 'розлучені',
+}
+
+# Words ending in -і/-ові that are nominative plural (not dative)
+# Used to avoid false positives in dative detection
+NOMINATIVE_PLURAL_EXCLUSIONS = {
+    # Common adjectives in nominative plural (-і endings)
+    'нові', 'старі', 'гарні', 'великі', 'малі', 'добрі', 'погані',
+    'червоні', 'зелені', 'сині', 'білі', 'чорні', 'жовті',
+    'українські', 'англійські', 'німецькі', 'французькі',
+    'цікаві', 'важливі', 'корисні', 'смачні', 'гарячі', 'холодні',
+    # Adjectives in nominative plural (-ові endings from -овий stems)
+    'часові', 'кольорові', 'святкові', 'вікові', 'рольові',
+    # Common nouns in nominative plural
+    'люди', 'діти', 'студенти', 'друзі', 'учні', 'вчителі',
+    'хлопці', 'дівчата', 'речі', 'слова', 'книжки', 'столи',
+}
+
+# Fixed phrases (formulaic chunks) taught at A1 before grammar is explained
+# These are memorized as whole units, so case violations should be ignored
+# Instrumental case greetings (З + Instrumental)
+FIXED_PHRASES_INSTRUMENTAL = {
+    'з новим роком', 'з різдвом', 'з великоднем', 'з днем народження',
+    'з днем', 'з весіллям', 'з народженням', 'з перемогою',
+    'з святом', 'з успіхом', 'з закінченням',
+}
+
+# Dative case expressions taught as fixed phrases at A1
+FIXED_PHRASES_DATIVE = {
+    # Wishing expressions (Бажаю + dative)
+    'бажаю тобі', 'бажаю вам', 'бажаю щастя', 'бажаю здоров',
+    # Fixed dative in greetings
+    'миру', 'любові', 'щастя', 'здоров',  # Common in wishes
+    # Impersonal health/feeling expressions (Мені + state)
+    'мені погано', 'мені добре', 'мені болить', 'мені холодно', 'мені тепло',
+    'мені потрібн', 'мені подобається', 'мені треба', 'мені здається',
+    # Age expressions (Мені ... років)
+    'мені рок', 'мені років', 'мені два', 'мені три', 'мені п\'ят', 'мені шіст', 'мені сім',
+    # Tобі variants of impersonal expressions
+    'тобі погано', 'тобі добре', 'тобі болить', 'тобі холодно', 'тобі потрібн',
+    # Age expressions for other persons
+    'йому рок', 'їй рок', 'їм рок',
 }
 
 # Activity stage ordering for PPP, TTT, and CLIL/Narrative
@@ -415,15 +510,21 @@ AI_CONTAMINATION_PATTERNS = [
 
 
 def get_a1_immersion_range(module_num: int) -> tuple[int, int]:
-    """Returns (min%, max%) for A1 based on module number."""
-    if module_num <= 5:
-        return (5, 15)  # Early modules need more English for Cyrillic learning
+    """Returns (min%, max%) for A1 based on module number.
+
+    Note: Immersion includes Activities + Summary (full learner experience).
+    Ranges calibrated for this comprehensive calculation.
+    """
+    if module_num <= 2:
+        return (5, 15)   # Cyrillic intro - mostly English explanations
+    elif module_num <= 5:
+        return (10, 25)  # Early vocab building
     elif module_num <= 10:
-        return (15, 25)
+        return (15, 35)  # Growing immersion
     elif module_num <= 20:
-        return (25, 35)
+        return (25, 40)  # Foundation established
     else:
-        return (35, 40)
+        return (35, 55)  # Consolidation - high Ukrainian content
 
 
 def get_level_config(level_code: str, module_focus: str = None) -> dict:

@@ -117,11 +117,31 @@ export function SelectQuestion({ question, options, correctAnswers, explanation 
   );
 }
 
-interface SelectProps {
-  children: React.ReactNode;
+// Generator format question
+interface GeneratorSelectQuestion {
+  question: string;
+  options: Array<{ text: string; correct: boolean }>;
+  explanation?: string;
 }
 
-export default function Select({ children }: SelectProps) {
+interface SelectProps {
+  questions?: GeneratorSelectQuestion[];
+  children?: React.ReactNode;
+}
+
+export default function Select({ questions, children }: SelectProps) {
+  // Transform generator format to SelectQuestion props
+  const transformedItems = useMemo(() => {
+    if (!questions) return null;
+
+    return questions.map(q => ({
+      question: q.question,
+      options: q.options.map(o => o.text),
+      correctAnswers: q.options.filter(o => o.correct).map(o => o.text),
+      explanation: q.explanation
+    }));
+  }, [questions]);
+
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
@@ -130,7 +150,15 @@ export default function Select({ children }: SelectProps) {
         <ActivityHelp activityType="select" />
       </div>
       <div className={styles.activityContent}>
-        {children}
+        {transformedItems ? transformedItems.map((item, idx) => (
+          <SelectQuestion
+            key={idx}
+            question={item.question}
+            options={item.options}
+            correctAnswers={item.correctAnswers}
+            explanation={item.explanation}
+          />
+        )) : children}
       </div>
     </div>
   );
