@@ -1529,8 +1529,12 @@ Participles agree with noun in gender, number, case:
 
 | Module | Grammar Point | Builds On | Enables |
 |--------|--------------|-----------|---------|
-| 41-44 | Proverbs (4 modules) | B2.1 register | Cultural fluency |
-| 45-48 | Set Expressions (4 modules) | M41-44 | Natural speech |
+| 41 | Aspect Nuances I - Secondary Imperf. | B1 Aspect | Advanced Iteratives |
+| 42 | Aspect Nuances II - Imperative/Infin. | B1 Aspect | Politeness/Urgency |
+| 43 | Correlative Constructions | B1 Syntax | Complex definitions |
+| 44 | Complex Syntax - Ellipsis/Parcelling | B1 Syntax | Stylistic flow |
+| 45-46 | Proverbs (2 merged modules) | M41-44 | Cultural fluency |
+| 47-48 | Set Expressions (2 merged modules) | M41-44 | Natural speech |
 | 49-54 | Idioms (6 modules) | M41-48 | Expressive language |
 | 55-66 | Synonyms (12 modules) | All above | Nuanced vocabulary |
 | 67-68 | Advanced Conjunctions | B1 conjunctions | Complex argumentation |
@@ -1540,192 +1544,227 @@ Participles agree with noun in gender, number, case:
 
 ---
 
-#### Module 41: Proverbs - Work & Life
-**Type:** Phraseology
+#### Module 41: Aspect Nuances I - Secondary Imperfectivization
+**Grammar:** Deriving imperfective verbs from perfective (Standard 4320-4325)
+**Focus:** Iterative actions and process focus derived from results.
 
-**Proverbs:**
-1. Без труда нема плода. (No pain, no gain.)
-2. Хто рано встає, тому Бог дає. (Early bird catches the worm.)
-3. Під лежачий камінь вода не тече. (A rolling stone gathers no moss.)
-4. Очі бояться, а руки роблять. (The eyes fear but the hands do.)
-5. Терпіння і труд все перетруть. (Patience and work will overcome everything.)
-6. Робота не вовк, у ліс не втече. (Work won't run away - can wait.)
-7. Кінець — ділу вінець. (The end crowns the work.)
-8. Хто не працює, той не їсть. (He who doesn't work, doesn't eat.)
+**Key Mechanics:**
+- Suffix shifting: перечитати (P) → перечитувати (I)
+- Root vowel change: допомогти (P) → допомагати (I)
+- Stress shift: розрі́зати (P) → розріза́ти (I)
 
-**Usage Notes:**
-- Proverbs add authority to arguments
-- Use in appropriate register (some are folksy)
-- Know literal and figurative meanings
+**Usage Contexts:**
+- "I used to do this repeatedly" (Iterative)
+- "I was in the middle of re-doing it" (Process)
 
 **Vocabulary (20 words):**
-труд, плід, рано, Бог, камінь, вода, очі, руки, терпіння, робота, вовк, ліс, кінець, діло, вінець, працювати, їсти, мудрість, народна, традиційна
+перечитувати, дописувати, виходжувати, розрізати, допомагати, запізнюватися, вставати, засинати, згадувати, підписувати, відвідувати, заробляти, вигравати, програвати, пояснювати, змінювати, зупиняти, перевіряти, вибирати, починати
 
 **Signature Activity Concepts:**
-1. Match: Proverb → meaning
-2. Context: When to use each proverb
-3. Complete: Finish the proverb
+1. Form: Derive Secondary Imperfective form
+2. Context: Choose nuances (result vs repeated process)
+3. Rewrite: "He did it once" → "He used to do it often"
 
 ---
 
-#### Module 42: Proverbs - Character & Wisdom
-**Type:** Phraseology
+#### Module 42: Aspect Nuances II - Imperative & Infinitive
+**Grammar:** Aspect usage in commands and infinite forms
+**Focus:** Politeness, urgency, prohibition.
 
-**Proverbs:**
-1. Яблуко від яблуні далеко не падає. (Apple doesn't fall far from tree.)
-2. Тихіше їдеш — далі будеш. (Slow and steady wins the race.)
-3. Скупий платить двічі. (The miser pays twice.)
-4. Хто багато говорить, той мало робить. (Much talk, little action.)
-5. Не все те золото, що блищить. (All that glitters is not gold.)
-6. Мовчання — золото. (Silence is golden.)
-7. У чужому оці порошину бачить, а в своєму — колоди не помічає. (Sees speck in other's eye, not log in own.)
-8. Правда очі коле. (Truth hurts.)
+**Imperative Nuances:**
+- **Imperfective (Роби!):** Polite invitation, GENERAL rule, Process focus. (Проходьте! Сідайте!)
+- **Perfective (Зроби!):** Specific onet-time order, Urgency, Warning. (Сядь! Скажи!)
+- **Prohibition:** Almost always Imperfective! (Не роби! Не кажи!) except warnings (Не впади! - Watch out, don't fall!)
+
+**Infinitive Nuances:**
+- Не можна + Imperfective (Forbidden by rule)
+- Не можна + Perfective (Impossible to do)
 
 **Vocabulary (20 words):**
-яблуко, яблуня, тихо, далеко, скупий, двічі, говорити, робити, золото, блищати, мовчання, око, порошина, колода, правда, колоти, характер, мудрість, істина, справедливість
+проходьте, сідайте, беріть, скажіть, зачекайте, не чіпайте, не забувайте, не хвилюйтеся, не спізніться, не впадіть, не розбийте, не запізніться, заборонено, дозволено, варто, треба, необхідно, доречно, неможливо, не можна
 
 **Signature Activity Concepts:**
-1. Explain: Proverb meaning in own words
-2. Compare: Ukrainian vs English equivalents
-3. Use: Create sentences with proverbs
+1. Context: "You are a host" -> Choose Polite Imperfective
+2. Quiz: Warning vs Rule (Perfective vs Imperfective)
+3. Transform: Order vs Invitation
 
 ---
 
-#### Module 43: Proverbs - Nature & Time
-**Type:** Phraseology
+#### Module 43: Correlative Constructions (Співвідносні)
+**Grammar:** Paired demonstrative and relative words (Standard 4500-4501)
+**Structure:** [Demonstrative Word] ... [Relative Word]
 
-**Proverbs:**
-1. Готуй сани влітку, а воза взимку. (Prepare sleigh in summer, cart in winter.)
-2. Що посієш, те й пожнеш. (You reap what you sow.)
-3. Час — гроші. (Time is money.)
-4. Краще пізно, ніж ніколи. (Better late than never.)
-5. Ранок вечора мудріший. (Morning is wiser than evening.)
-6. Вода камінь точить. (Water wears away stone.)
-7. Весна покаже, хто де орав. (Spring will show who plowed where.)
-8. Одна ластівка весни не робить. (One swallow doesn't make spring.)
+**Common Pairs:**
+- той... хто (he... who / the one... who)
+- те... що (that... which)
+- такий... який (such... as)
+- там... де (there... where)
+- тоді... коли (then... when)
+- стільки... скільки (as much... as)
+
+**Examples:**
+- *Той*, *хто* рано встає, тому Бог дає.
+- Роби *так*, *як* знаєш.
+- Я куплю *те*, *що* мені подобається.
 
 **Vocabulary (20 words):**
-сани, літо, віз, зима, сіяти, жати, час, гроші, пізно, ніколи, ранок, вечір, мудрий, вода, камінь, точити, весна, орати, ластівка, природа
+той, хто, те, що, такий, який, стільки, скільки, там, де, туди, куди, звідти, звідки, тоді, коли, доти, поки, тому, чому, настільки, як, так, ніби, неначе
 
 **Signature Activity Concepts:**
-1. Match: Proverb → season/time concept
-2. Illustrate: Draw proverb meaning
-3. Discuss: Planning and preparation proverbs
+1. Combine: Join two sentences using correlatives
+2. Gap-fill: Complete the pair (Той, .... працює)
+3. Translation: "The one who..." constructions
 
 ---
 
-#### Module 44: Proverbs - Wisdom & Caution
-**Type:** Phraseology
+#### Module 44: Complex Syntax - Ellipsis & Parcelling
+**Grammar:** Omitted words and stylistic fragmentation
+**Focus:** Literature and Expressive Speech.
 
-**Proverbs:**
-1. Не кажи гоп, поки не перескочиш. (Don't say "hop" till you've jumped.)
-2. Сім разів відміряй, один раз відріж. (Measure seven times, cut once.)
-3. Обіцянка — цяцянка, а дурневі радість. (Promise is a toy, fool's joy.)
-4. Довіряй, але перевіряй. (Trust but verify.)
-5. Береженого Бог береже. (God protects the careful.)
-6. Краще синиця в руках, ніж журавель у небі. (Bird in hand worth two in bush.)
-7. Не плюй у криницю — прийдеться воду пити. (Don't spit in well, you'll drink from it.)
-8. Хто попередженый, той і озброєний. (Forewarned is forearmed.)
+**Ellipsis (Propushk):** Omission of understood words.
+- Я — додому. (Implied: йду/їду)
+- Ти куди? (Implied: йдеш)
+- А він що? (Implied: сказав/зробив)
 
-**Vocabulary (20 words):**
-гоп, скочити, сім, раз, відміряти, відрізати, обіцянка, цяцянка, дурень, довіряти, перевіряти, берегти, синиця, рука, журавель, небо, плювати, криниця, попереджений, озброєний
+**Parcelling:** Breaking sentences with periods for effect.
+- Він пішов. Назавжди. (He left. Forever.)
+- Ми переможемо. Обов'язково. (We will win. Definitely.)
+
+**Vocabulary (15 words):**
+еліпсис, пропуск, парцеляція, пауза, наголос, інтонація, фрагмент, розрив, емоція, динаміка, лаконічність, підтекст, натяк, недомовленість, стиль
 
 **Signature Activity Concepts:**
-1. Quiz: Complete the proverb
-2. Situation: Which proverb applies?
-3. Write: Essay using 3 proverbs
+1. Recover: Fill in the omitted words
+2. Style: Rewrite standard sentence using Parcelling
+3. Dialogue: Use elliptical questions/answers
 
 ---
 
-#### Module 45: Set Expressions - Body Parts
-**Type:** Phraseology
+#### Module 45: Proverbs I - Work, Wisdom & Character
+**Type:** Phraseology (Merged M41-42)
+**Focus:** Fundamental wisdom about life, work, and people.
 
-**Set Expressions:**
-1. Руки чешуться. (Hands are itching - eager to do something.)
-2. Очі розбігаються. (Eyes are scattering - too much choice.)
-3. Вуха в'януть. (Ears are wilting - hearing unpleasant things.)
-4. Язик не повертається. (Tongue won't turn - can't bring self to say.)
-5. Ніс не дорос. (Nose hasn't grown - too young/inexperienced.)
-6. Волосся стає дибки. (Hair stands on end - terrifying.)
-7. Серце не на місці. (Heart not in place - worried.)
-8. Душа не лежить. (Soul doesn't lie toward - don't feel like.)
+**Key Proverbs (16):**
+1. Без труда нема плода.
+2. Хто рано встає, тому Бог дає.
+3. Під лежачий камінь вода не тече.
+4. Очі бояться, а руки роблять.
+5. Терпіння і труд все перетруть.
+6. Робота не вовк, у ліс не втече.
+7. Хто не працює, той не їсть.
+8. Кінець — ділу вінець.
+9. Яблуко від яблуні далеко не падає.
+10. Тихіше їдеш — далі будеш.
+11. Скупий платить двічі.
+12. Не все те золото, що блищить.
+13. Мовчання — золото.
+14. У чужому оці порошину бачить.
+15. Правда очі коле.
+16. Хто багато говорить, той мало робить.
 
-**Vocabulary (25 words):**
-рука, чесатися, око, розбігатися, вухо, в'янути, язик, повертатися, ніс, дорости, волосся, дибки, серце, місце, душа, лежати, тіло, частина, вираз, значення, переносний, буквальний, образний, фразеологізм, сталий
+**Vocabulary (30 words):** Combined M41+M42 vocab list.
+(труд, плід, робота, терпіння, вовк, яблуко, яблуня, скупий, золото, мовчання, правда, мудрість, характер...)
 
 **Signature Activity Concepts:**
-1. Match: Expression → meaning
-2. Use: Create dialogues using expressions
-3. Illustrate: Literal vs figurative meaning
+1. Situation: Match 5 proverbs to 5 detailed situations
+2. Contrast: Group proverbs by theme (Laziness vs Work)
+3. Complete: The second half of the proverb
 
 ---
 
-#### Module 46: Set Expressions - Animals
-**Type:** Phraseology
+#### Module 46: Proverbs II - Nature, Time & Caution
+**Type:** Phraseology (Merged M43-44)
+**Focus:** Planning, risk, and natural cycles.
 
-**Set Expressions:**
-1. Вовча натура. (Wolf nature - predatory character.)
-2. Кіт наплакав. (Cat cried - very little.)
-3. Собаці під хвіст. (To dog under tail - wasted.)
-4. Купити кота в мішку. (Buy cat in bag - buy without checking.)
-5. Показати де раки зимують. (Show where crayfish winter - threaten.)
-6. Коли рак свисне. (When crayfish whistles - never.)
-7. Вовком дивитися. (Look like wolf - look angry/hostile.)
-8. Біла ворона. (White crow - outcast, different person.)
+**Key Proverbs (16):**
+1. Готуй сани влітку, а воза взимку.
+2. Що посієш, те й пожнеш.
+3. Час — гроші.
+4. Краще пізно, ніж ніколи.
+5. Ранок вечора мудріший.
+6. Вода камінь точить.
+7. Одна ластівка весни не робить.
+8. Весна покаже, хто де орав.
+9. Не кажи гоп, поки не перескочиш.
+10. Сім разів відміряй, один раз відріж.
+11. Обіцянка — цяцянка.
+12. Довіряй, але перевіряй.
+13. Береженого Бог береже.
+14. Краще синиця в руках, ніж журавель у небі.
+15. Не плюй у криницю.
+16. Попереджений — значить озброєний.
 
-**Vocabulary (25 words):**
-вовк, натура, кіт, плакати, собака, хвіст, купити, мішок, показати, рак, зимувати, свистіти, дивитися, ворона, білий, тварина, характер, поведінка, властивість, символ, метафора, асоціація, культура, традиція, народний
+**Vocabulary (30 words):** Combined M43+M44 vocab list.
+(сани, літо, зима, сіяти, час, гроші, ранок, вечір, гоп, сім, раз, синиця, журавель, криниця, берегти...)
 
 **Signature Activity Concepts:**
-1. Explain: Why these animals in expressions?
-2. Match: Animal expression → meaning
-3. Compare: Animal symbolism in cultures
+1. Visuals: Match proverb to illustration
+2. Advice: Give proverb advice for specific problems (e.g., "I'm rushing" -> "Сім разів відміряй")
+3. Quiz: "Don't count your chickens..." equivalent?
 
 ---
 
-#### Module 47: Set Expressions - Objects
-**Type:** Phraseology
+#### Module 47: Set Expressions I - Body & Animals
+**Type:** Phraseology (Merged M45-46)
+**Focus:** Somatic and Zoomorphic idioms.
 
-**Set Expressions:**
-1. Ложка дьогтю в бочці меду. (Spoon of tar in barrel of honey.)
-2. Камінь спотикання. (Stumbling block.)
-3. Кістка в горлі. (Bone in throat - obstacle.)
-4. Яблуко розбрату. (Apple of discord.)
-5. Двері відчинені. (Doors are open - welcome.)
-6. Дах поїхав. (Roof drove off - went crazy.)
-7. Лід скреслив. (Ice has been broken.)
-8. Капля в морі. (Drop in sea - insignificant amount.)
+**Key Expressions (16):**
+1. Руки чешуться. (Eager)
+2. Очі розбігаються. (Too much choice)
+3. Вуха в'януть. (Unpleasant hearing)
+4. Язик не повертається. (Can't say it)
+5. Ніс не дорос. (Too young)
+6. Волосся стає дибки. (Horror)
+7. Серце не на місці. (Worry)
+8. Душа не лежить. (Dislike)
+9. Вовча натура. (Predatory)
+10. Кіт наплакав. (Little)
+11. Собаці під хвіст. (Wasted)
+12. Купити кота в мішку. (Blind buy)
+13. Де раки зимують. (Threat)
+14. Коли рак свисне. (Never)
+15. Вовком дивитися. (Hostile)
+16. Біла ворона. (Outcast)
 
-**Vocabulary (25 words):**
-ложка, дьоготь, бочка, мед, камінь, спотикання, кістка, горло, яблуко, розбрат, двері, відчинений, дах, поїхати, лід, скреслити, крапля, море, предмет, речовина, перешкода, проблема, можливість, незначний, важливий
+**Vocabulary (30 words):** Combined M45+M46 vocab.
+(рука, око, вухо, язик, ніс, серце, душа, вовк, кіт, собака, рак, ворона, хвіст, натура...)
 
 **Signature Activity Concepts:**
-1. Match: Object expression → meaning
-2. Context: When to use each expression
-3. Create: Sentences with object expressions
+1. categorize: Body part vs Animal
+2. Body Map: Label body parts with their idioms
+3. Story: Insert animal idioms into a fable
 
 ---
 
-#### Module 48: Set Expressions - Abstract
-**Type:** Phraseology
+#### Module 48: Set Expressions II - Objects & Abstract
+**Type:** Phraseology (Merged M47-48)
+**Focus:** Metaphors with objects and general concepts.
 
-**Set Expressions:**
-1. Крапля в морі. (Drop in the ocean - insignificant.)
-2. Ні пуху ні пера. (Neither down nor feather - good luck!)
-3. Як з гуски вода. (Like water off goose - doesn't care.)
-4. Ні в тин ні в ворота. (Neither fence nor gate - nonsense.)
-5. Від воріт поворот. (Turn from gate - rejection.)
-6. Час від часу. (Time to time - occasionally.)
-7. Рано чи пізно. (Sooner or later.)
-8. Так чи інакше. (One way or another.)
+**Key Expressions (16):**
+1. Ложка дьогтю. (Spoiler)
+2. Камінь спотикання. (Obstacle)
+3. Кістка в горлі. (Annoyance)
+4. Яблуко розбрату. (Cause of conflict)
+5. Двері відчинені. (Welcome)
+6. Дах поїхав. (Crazy)
+7. Лід скреслив. (Started)
+8. Капля в морі. (Tiny bit)
+9. Ні пуху ні пера. (Good luck)
+10. Як з гуски вода. (Indifferent)
+11. Ні в тин ні в ворота. (Nonsense)
+12. Від воріт поворот. (Rejection)
+13. Час від часу. (Sometimes)
+14. Рано чи пізно. (Eventually)
+15. Так чи інакше. (Anyway)
+16. Грати з вогнем. (Play with fire - risky) *(Added to round up)*
 
-**Vocabulary (20 words):**
-крапля, море, пух, перо, гуска, вода, тин, ворота, поворот, час, рано, пізно, так, інакше, абстрактний, конкретний, вираз, значення, вживання, контекст
+**Vocabulary (30 words):** Combined M47+M48 vocab.
+(ложка, дьоготь, камінь, кістка, яблуко, двері, дах, лід, крапля, море, пух, перо, гуска, тин, ворота...)
 
 **Signature Activity Concepts:**
-1. Quiz: Expression meaning
-2. Use: Appropriate context for expressions
-3. Transform: Paraphrase without using expression
+1. Match: Object → Abstract meaning
+2. Dialogue: Respond to bad news with "Take it easy" expressions
+3. Rewrite: Replace literal phrases with set expressions
 
 ---
 

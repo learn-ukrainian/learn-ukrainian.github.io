@@ -1,0 +1,357 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-47",
+    "moduleId": "mod-uk-A2-47",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2",
+    "moduleNumber": 47,
+    "moduleType": "vocabulary",
+    "pedagogy": "PPP",
+    "immersionLevel": 0.4,
+    "title": "Emotions & Personality",
+    "titleUk": null,
+    "subtitle": "Describing feelings and character traits",
+    "description": "Learner can describe basic emotions in Ukrainian",
+    "objectives": [
+      "Learner can describe basic emotions in Ukrainian",
+      "Learner can describe personality traits using appropriate adjectives",
+      "Learner can express emotional states using бути + instrumental"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "adjective-agreement",
+      "instrumental-with-бути"
+    ],
+    "tags": [
+      "vocabulary",
+      "emotions",
+      "personality",
+      "adjectives"
+    ],
+    "totalDuration": 60,
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Emotions & Personality",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Warm-up\n\nЯк ви себе почуваєте сьогодні? Ви щасливі? Сумні? Втомлені?\n\nКожен день ми відчуваємо різні емоції. Вранці ми можемо бути щасливими, а ввечері — втомленими. Іноді ми радіємо, а іноді — сумуємо. Це нормально! Емоції роблять нас людьми.\n\nEmotions shape our daily lives. In this module, you'll learn to describe how you feel and talk about personality traits in Ukrainian. You will learn to express joy, sadness, fear, and many other emotions. You will also learn to describe people's personalities.\n\n> [!myth-buster] \"Українська — бідна мова\"\n> Російська пропаганда стверджує, що українська — \"сільська мова\" без витонченості. Насправді українська має неймовірно багатий емоційний словник. Слова **сум**, **туга** і **журба** не мають прямих російських відповідників!\n\n## Presentation\n\n### Basic Emotions\n\nUkrainian has beautiful words for expressing how we feel:\n\n| Емоція | Приклад |\n|---------|---------|\n| **радість** | Яка радість бачити тебе! |\n| **сум** | У мене сум у серці. |\n| **гнів** | Він не міг стримати гнів. |\n| **страх** | Страх паралізував її. |\n| **здивування** | Яке здивування! |\n| **щастя** | Щастя в дрібницях. |\n\n**Радість** means joy — that warm feeling when you see a good friend. **Сум** is sadness, often a gentle melancholy. **Гнів** is anger — a burning fire inside. **Страх** is fear — what you feel in the dark. **Здивування** is surprise — when something unexpected happens. **Щастя** is happiness — the deep contentment of a peaceful life.\n\n### Expressing Emotions with Verbs\n\nTo describe experiencing emotions, use these verbs:\n\n- **радіти** — to rejoice: *Діти раділи подарункам.*\n- **сумувати** — to be sad: *Вона сумує за домом.*\n- **хвилюватися** — to worry: *Мама хвилюється за сина.*\n- **боятися** — to be afraid: *Він боїться темряви.*\n- **дивуватися** — to be surprised: *Ми дивувалися його таланту.*\n\n> [!history-bite] The Emotional Warrior\n> Ukrainian Cossacks were famous for expressing emotions openly. Their songs (**думи**) celebrated joy in victory and openly mourned fallen comrades. This emotional honesty is a core Ukrainian cultural value — very different from the \"stoic Russian\" stereotype imposed during Soviet times.\n\n### Emotional States\n\nTo describe temporary states, use **бути** + adjective in instrumental:\n\n| Стан | Приклад |\n|-------|---------|\n| **задоволений** | Я задоволений результатом. |\n| **розчарований** | Він розчарований оцінкою. |\n| **стурбований** | Вона стурбована новинами. |\n| **схвильований** | Діти схвильовані поїздкою. |\n| **здивований** | Я здивований твоїм рішенням. |\n\nThese adjectives describe temporary emotional states. **Задоволений** means satisfied — you feel this after a good meal. **Розчарований** means disappointed — when expectations are not met. **Стурбований** means worried — concern about something. **Схвильований** means excited or agitated. **Здивований** means surprised — caught off guard.\n\n### Dialogue: How Are You Feeling?\n\n— Привіт, Марійко! Як справи?\n— Привіт! Чесно кажучи, я трохи стурбована.\n— Чому? Що сталося?\n— У мене завтра важливий іспит. Я хвилююся.\n— Не хвилюйся! Ти добре підготувалася.\n— Дякую. Я вже спокійніша.\n— От і добре! Все буде гаразд.\n\n> [!tip] Expressing \"I feel\"\n> Use **Я почуваюся** + adverb: *Я почуваюся добре* (I feel well). Don't confuse with **Я відчуваю** which means \"I sense/perceive.\"\n\n## Practice\n\n### Personality Traits\n\nPersonality adjectives describe permanent characteristics. These describe who you are, not how you feel in a moment.\n\n**Позитивні риси:**\n\n| Риса | Приклад |\n|------|----------|\n| **добрий** | Вона дуже добра людина. |\n| **чесний** | Він завжди чесний. |\n| **сміливий** | Сміливі люди змінюють світ. |\n| **терплячий** | Вчитель повинен бути терплячим. |\n| **розумний** | Розумні діти швидко вчаться. |\n| **веселий** | Веселі люди живуть довше. |\n\n**Добрий** describes someone who is kind and good-hearted. **Чесний** is an honest person who always tells the truth. **Сміливий** is brave — someone who faces danger without fear. **Терплячий** is patient, able to wait calmly. **Розумний** means smart or intelligent. **Веселий** describes someone cheerful and happy.\n\n**Негативні риси:**\n\n| Риса | Приклад |\n|------|----------|\n| **злий** | Він злий на всіх. |\n| **лінивий** | Лінивий студент не вчиться. |\n| **боягузливий** | Боягузливі не перемагають. |\n| **нетерплячий** | Нетерплячі люди роблять помилки. |\n| **недобрий** | Недобрі слова ранять. |\n\n**Злий** describes someone mean or angry. **Лінивий** is lazy — they avoid work. **Боягузливий** is the opposite of сміливий — someone who lacks courage. **Нетерплячий** cannot wait patiently. Notice how **не-** creates the opposite: добрий → недобрий, терплячий → нетерплячий.\n\n> [!cultural] Ukrainian Personality Ideals\n> Ukrainian folklore celebrates courage and honesty above all. The word **козак** became synonymous with bravery throughout history. Even today, Ukrainians value **щирість** — being genuine and open-hearted. These values shaped Ukrainian identity through centuries of struggle for independence.\n\n### Describing Personality\n\nUse **бути** + instrumental for characteristics:\n\n- *Вона є доброю людиною.* — She is a kind person.\n- *Він був сміливим воїном.* — He was a brave warrior.\n- *Ми хочемо бути чесними.* — We want to be honest.\n\n### Dialogue: Describing a Friend\n\n— Розкажи мені про свою подругу Олену.\n— Олена — чудова людина! Вона дуже добра і щира.\n— Який у неї характер?\n— Вона весела і оптимістична. Завжди посміхається.\n— А негативні риси?\n— Іноді вона нетерпляча. Але це дрібниця.\n— Звучить як чудова подруга!\n— Так, мені пощастило!\n\n### Opposite Emotions\n\nLearning opposites helps expand vocabulary. Every emotion has its opposite. Understanding these pairs helps you express the full range of human feelings. Here are the most important contrasts:\n\n| Позитив | Негатив |\n|----------|----------|\n| радість | сум |\n| спокій | хвилювання |\n| задоволення | розчарування |\n| сміливість | страх |\n| любов | ненависть |\n\nNotice how **радість** and **сум** are fundamental opposites — the light and shadow of human experience. **Спокій** is inner peace, while **хвилювання** is its restless opposite. **Любов** and **ненависть** represent the strongest extremes of human connection.\n\n> [!tip] Building Vocabulary with Opposites\n> When you learn a new emotion word, always ask yourself: what is the opposite? This doubles your vocabulary instantly!\n\n> [!tip] Remember the Pattern\n> Many negative traits use **не-** prefix: добрий → **не**добрий, терплячий → **не**терплячий.\n\n### Story Time: The Kind Heart\n\nЖила-була дівчинка на ім'я Софійка. Вона мала добре серце. Всі в селі знали, що Софійка завжди допомагає.\n\nОдного дня Софійка бачила сумного хлопчика біля дерева. Він загубив свій м'яч.\n\n— Чому ти сумуєш? — запитала Софійка.\n— Я загубив свій м'яч, — відповів хлопчик. — Це був мій улюблений м'яч!\n\nСофійка була сміливою і терплячою. Вона допомогла шукати. Вони шукали довго — цілу годину! Нарешті вони знайшли м'яч під великим деревом.\n\n— Дякую! Ти дуже добра! — радів хлопчик.\n— Завжди рада допомогти! — усміхнулася Софійка.\n\nДобрі вчинки роблять світ кращим. Коли ми допомагаємо іншим, ми самі стаємо щасливішими.\n\n### Story Time: The Brave Soldier\n\nЦе історія про воїна Олексія. Він був дуже сміливим і чесним. Всі в селі поважали його.\n\nКоли почалася війна, Олексій не боявся. Він сказав родині:\n\n— Не хвилюйтеся. Я повернуся.\n\nМама була стурбована, але вона знала: її син — сміливий. Батько був задоволений сином. Він сказав:\n\n— Я гордий тобою, сину!\n\nОлексій воював хоробро. Він захищав свою Україну. Після війни він повернувся додому. Всі раділи!\n\nСміливість і чесність — це головні українські цінності."
+      },
+      {
+        "id": "section-2",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "You learned to:\n- Name basic emotions: радість, сум, гнів, страх\n- Use emotion verbs: радіти, сумувати, хвилюватися\n- Describe emotional states: задоволений, розчарований\n- Describe personality: добрий, чесний, сміливий\n- Form opposites with не-: терплячий → нетерплячий\n\nRemember that emotions in Ukrainian culture are often expressed openly. Use these new words to share your feelings with friends and family. Practice describing the characters in books or movies using the personality adjectives you learned. Are they сміливі or боягузливі? Чесні or нечесні? This will help you master the vocabulary."
+      },
+      {
+        "id": "section-3",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## quiz: Emotion Recognition\n\n1. What emotion does \"радість\" express?\n   - [ ] anger\n   - [x] joy\n   - [ ] fear\n   > Радість means joy or happiness.\n\n2. Which verb means \"to worry\"?\n   - [ ] радіти\n   - [ ] сумувати\n   - [x] хвилюватися\n   > Хвилюватися means to worry or be anxious.\n\n3. What is the opposite of \"сміливий\"?\n   - [x] боягузливий\n   - [ ] добрий\n   - [ ] веселий\n   > Боягузливий is the opposite of сміливий.\n\n4. Which word describes disappointment?\n   - [ ] задоволений\n   - [x] розчарований\n   - [ ] здивований\n   > Розчарований means disappointed.\n\n5. What does \"щирість\" mean?\n   - [ ] courage\n   - [ ] intelligence\n   - [x] sincerity\n   > Щирість means sincerity or genuine openness.\n\n6. How do you say \"I feel well\"?\n   - [x] Я почуваюся добре\n   - [ ] Я відчуваю добре\n   - [ ] Я буваю добре\n   > Use почуватися for \"to feel\" about your state.\n\n7. What prefix makes adjectives negative?\n   - [ ] за-\n   - [x] не-\n   - [ ] від-\n   > The prefix не- makes adjectives negative: добрий → недобрий.\n\n8. Which is a positive personality trait?\n   - [ ] лінивий\n   - [x] чесний\n   - [ ] нетерплячий\n   > Чесний is a positive trait.\n\n9. What does \"стурбований\" mean?\n   - [x] worried\n   - [ ] happy\n   - [ ] surprised\n   > Стурбований means worried or concerned.\n\n10. Which word means \"brave\"?\n    - [ ] добрий\n    - [ ] терплячий\n    - [x] сміливий\n    > Сміливий means brave or courageous.\n\n11. What is \"гнів\" in English?\n    - [ ] joy\n    - [x] anger\n    - [ ] fear\n    > Гнів means anger.\n\n12. How do you describe a permanent trait?\n    - [ ] бути + nominative\n    - [x] бути + instrumental\n    - [ ] мати + accusative\n    > Use бути + instrumental: Він є добрим.\n\n## fill-in: Complete the Sentences\n\n1. Я дуже ____ бачити тебе!\n   > [!answer] радий\n   > [!options] радий | сумний | злий | веселий\n   > Радий means happy/glad (to see someone).\n\n2. Вона ____ за своїм другом.\n   > [!answer] сумує\n   > [!options] сумує | радіє | боїться | хвилюється\n   > Сумувати за means to miss/long for someone.\n\n3. Діти ____ подарункам.\n   > [!answer] раділи\n   > [!options] раділи | сумували | боялися | хвилювалися\n   > Радіти + dative = to rejoice at something.\n\n4. Він ____ темряви.\n   > [!answer] боїться\n   > [!options] боїться | радіє | сумує | хвилюється\n   > Боятися + genitive = to be afraid of.\n\n5. Мама ____ за дітей.\n   > [!answer] хвилюється\n   > [!options] хвилюється | радіє | сумує | боїться\n   > Хвилюватися за + accusative = to worry about.\n\n6. Вона дуже ____ людина.\n   > [!answer] добра\n   > [!options] добра | добрий | добре | добру\n   > Добра agrees with людина.\n\n7. Він завжди ____ з друзями.\n   > [!answer] чесний\n   > [!options] чесний | чесна | чесне | чесні\n   > Чесний agrees with він.\n\n8. ____ люди змінюють світ.\n   > [!answer] Сміливі\n   > [!options] Сміливі | Сміливий | Смілива | Сміливе\n   > Сміливі agrees with люди.\n\n9. Я ____ результатом іспиту.\n   > [!answer] задоволений\n   > [!options] задоволений | задоволена | задоволене | задоволені\n   > Задоволений + instrumental = satisfied with.\n\n10. Вона ____ новинами з дому.\n    > [!answer] стурбована\n    > [!options] стурбована | стурбований | стурбоване | стурбовані\n    > Стурбована agrees with вона.\n\n11. Ми ____ його таланту.\n    > [!answer] дивувалися\n    > [!options] дивувалися | дивувався | дивувалася | дивувалося\n    > Дивуватися + dative = to be surprised at.\n\n12. Він був ____ воїном.\n    > [!answer] сміливим\n    > [!options] сміливим | сміливий | смілива | сміливе\n    > Instrumental after бути: сміливим.\n\n## match-up: Emotions and Opposites\n\n- радість :: сум\n- спокій :: хвилювання\n- сміливість :: страх\n- задоволення :: розчарування\n- любов :: ненависть\n- добрий :: злий\n- терплячий :: нетерплячий\n- чесний :: нечесний\n- веселий :: сумний\n- щасливий :: нещасливий\n- розумний :: дурний\n- сміливий :: боягузливий\n\n## true-false: Personality and Emotions\n\n1. \"Радість\" means sadness.\n   - [x] false\n   > Радість means joy. Сум means sadness.\n\n2. The verb \"хвилюватися\" means to worry.\n   - [x] true\n   > Хвилюватися means to worry or be anxious.\n\n3. \"Добрий\" is a negative personality trait.\n   - [x] false\n   > Добрий is a positive trait.\n\n4. Ukrainian uses не- prefix to form negative adjectives.\n   - [x] true\n   > Терплячий → нетерплячий, добрий → недобрий.\n\n5. \"Задоволений\" means disappointed.\n   - [x] false\n   > Задоволений means satisfied. Розчарований means disappointed.\n\n6. Cossacks were known for emotional openness.\n   - [x] true\n   > Ukrainian Cossack culture valued open emotional expression.\n\n7. \"Боятися\" requires the accusative case.\n   - [x] false\n   > Боятися requires genitive: боїться темряви.\n\n8. \"Сміливий\" means brave.\n   - [x] true\n   > Сміливий means brave or courageous.\n\n9. To express permanent traits, use бути + nominative.\n   - [x] false\n   > Use бути + instrumental: Він є сміливим.\n\n10. \"Щирість\" is a valued Ukrainian cultural trait.\n    - [x] true\n    > Щирість is highly valued in Ukrainian culture.\n\n11. \"Схвильований\" means calm.\n    - [x] false\n    > Схвильований means excited or agitated.\n\n12. \"Почуватися\" is used to express feelings.\n    - [x] true\n    > Я почуваюся добре = I feel well.\n\n## group-sort: Positive vs Negative Traits\n\n### Groups\n- Positive Traits\n- Negative Traits\n\n### Items\n- добрий: Positive Traits\n- чесний: Positive Traits\n- сміливий: Positive Traits\n- терплячий: Positive Traits\n- веселий: Positive Traits\n- розумний: Positive Traits\n- злий: Negative Traits\n- лінивий: Negative Traits\n- боягузливий: Negative Traits\n- нетерплячий: Negative Traits\n- недобрий: Negative Traits\n- нечесний: Negative Traits\n\n## unjumble: Emotion Sentences\n\n1. Я / дуже / радий / тебе / бачити\n   > [!answer] Я дуже радий тебе бачити\n   > I am very happy to see you.\n\n2. Вона / сумує / за / домом\n   > [!answer] Вона сумує за домом\n   > She misses home.\n\n3. Діти / раділи / подарункам\n   > [!answer] Діти раділи подарункам\n   > The children were happy about the gifts.\n\n4. Мама / хвилюється / за / сина\n   > [!answer] Мама хвилюється за сина\n   > Mom worries about her son.\n\n5. Він / боїться / темряви\n   > [!answer] Він боїться темряви\n   > He is afraid of darkness.\n\n6. Ми / дивувалися / його / таланту\n   > [!answer] Ми дивувалися його таланту\n   > We were surprised at his talent.\n\n7. Вона / є / доброю / людиною\n   > [!answer] Вона є доброю людиною\n   > She is a kind person.\n\n8. Сміливі / люди / змінюють / світ\n   > [!answer] Сміливі люди змінюють світ\n   > Brave people change the world.\n\n9. Я / задоволений / результатом\n   > [!answer] Я задоволений результатом\n   > I am satisfied with the result.\n\n10. Він / був / сміливим / воїном\n    > [!answer] Він був сміливим воїном\n    > He was a brave warrior.\n\n11. Я / почуваюся / добре / сьогодні\n    > [!answer] Я почуваюся добре сьогодні\n    > I feel well today.\n\n12. Добрі / вчинки / роблять / світ / кращим\n    > [!answer] Добрі вчинки роблять світ кращим\n    > Kind deeds make the world better.\n\n## error-correction: Fix the Mistakes\n\n1. Він боїться темрява.\n   > [!error] темрява\n   > [!answer] темряви\n   > [!options] темряви | темрява | темряву | темрявою\n   > [!explanation] Боятися requires genitive case (чого?).\n\n2. Вона сумує за дім.\n   > [!error] дім\n   > [!answer] домом\n   > [!options] домом | дім | дому | доми\n   > [!explanation] Сумувати за requires instrumental case.\n\n3. Я задоволений результат.\n   > [!error] результат\n   > [!answer] результатом\n   > [!options] результатом | результат | результату | результаті\n   > [!explanation] Задоволений requires instrumental case.\n\n4. Вона є добра людина.\n   > [!error] добра\n   > [!answer] доброю\n   > [!options] доброю | добра | добрий | добру\n   > [!explanation] With бути + instrumental: доброю людиною.\n\n5. Він був сміливий воїн.\n   > [!error] сміливий\n   > [!answer] сміливим\n   > [!options] сміливим | сміливий | смілива | сміливу\n   > [!explanation] With бути past tense: сміливим воїном.\n\n6. Діти раділи подарунки.\n   > [!error] подарунки\n   > [!answer] подарункам\n   > [!options] подарункам | подарунки | подарунків | подарунками\n   > [!explanation] Радіти requires dative case.\n\n7. Мама хвилюється за син.\n   > [!error] син\n   > [!answer] сина\n   > [!options] сина | син | синові | сином\n   > [!explanation] Хвилюватися за requires accusative case.\n\n8. Ми дивувалися його талант.\n   > [!error] талант\n   > [!answer] таланту\n   > [!options] таланту | талант | талантом | таланти\n   > [!explanation] Дивуватися requires dative case.\n\n9. Він злий на все.\n   > [!error] все\n   > [!answer] всіх\n   > [!options] всіх | все | всім | всього\n   > [!explanation] Злий на + accusative animate → всіх.\n\n10. Чесний люди живуть краще.\n    > [!error] Чесний\n    > [!answer] Чесні\n    > [!options] Чесні | Чесний | Чесна | Чеснім\n    > [!explanation] Plural люди requires plural adjective: чесні.\n\n11. Вона стурбований новинами.\n    > [!error] стурбований\n    > [!answer] стурбована\n    > [!options] стурбована | стурбований | стурбовані | стурбованим\n    > [!explanation] Feminine вона requires стурбована.\n\n12. Я почуваюся добро.\n    > [!error] добро\n    > [!answer] добре\n    > [!options] добре | добро | добра | добрий\n    > [!explanation] Почуватися + adverb: добре.\n\n## cloze: Story Completion\n\nМарійка мала [___:1] характер. Вона була дуже [___:2] людиною. Всі любили її за [___:3].\n\nОдного дня подруга Марійки [___:4]. Її кіт загубився.\n— Чому ти [___:5]? — запитала Марійка.\n— Я [___:6] своїм котом, — відповіла подруга.\n\n[___:7] Марійка допомогла шукати кота. Вони знайшли його за годину. Подруга дуже [___:8]!\n\n— Ти справді [___:9] і добра, — сказала подруга.\n— Я [___:10] допомогти! — усміхнулася Марійка.\n\n1. чудовий\n> [!answer] чудовий\n> [!options] чудовий | злий | лінивий\n\n2. доброю\n> [!answer] доброю\n> [!options] доброю | злою | сумною\n\n3. щирість\n> [!answer] щирість\n> [!options] щирість | гнів | страх\n\n4. сумувала\n> [!answer] сумувала\n> [!options] сумувала | раділа | сміялася\n\n5. хвилюєшся\n> [!answer] хвилюєшся\n> [!options] хвилюєшся | радієш | смієшся\n\n6. стурбована\n> [!answer] стурбована\n> [!options] стурбована | щаслива | весела\n\n7. Смілива\n> [!answer] Смілива\n> [!options] Смілива | Боягузлива | Лінива\n\n8. раділа\n> [!answer] раділа\n> [!options] раділа | сумувала | плакала\n\n9. терпляча\n> [!answer] терпляча\n> [!options] терпляча | нетерпляча | зла\n\n10. щаслива\n> [!answer] щаслива\n> [!options] щаслива | сумна | зла\n\n## dialogue-reorder: At the Party\n\n> [!dialogue-speakers] Андрій, Оксана\n\n- Привіт, Оксано! Як настрій?\n- Привіт! Я дуже щаслива сьогодні!\n- Чому? Що сталося?\n- Я здала всі іспити!\n- Це чудово! Я радий за тебе.\n- Дякую! А як твої справи?\n- Трохи хвилююся за завтрашній день.\n- Не хвилюйся! Все буде добре.\n- Ти права. Дякую за підтримку!\n- Завжди рада допомогти другу!\n- Ти справді добра людина.\n- А ти — чудовий друг!\n\n## mark-the-words: Find the Emotions\n\n> [!instruction] Mark all emotion words in the text.\n\nМарійка прокинулася з [радістю]. Сьогодні особливий день! Але потім вона відчула [страх] — екзамен о десятій. [Хвилювання] наростало. Вона згадала слова мами: \"Будь [сміливою]!\" Це додало їй сили. На екзамені все пішло добре. [Задоволення] і [щастя] заповнили її серце. Вона відчула [гордість] за себе.\n\nПізніше Марійка зустріла подругу. Подруга була [сумною] — вона провалила іспит. Марійка відчула [співчуття]. Вона обійняла подругу і сказала: \"Не [хвилюйся]! Наступного разу буде краще.\" Подруга [посміхнулася] і відчула [надію]. Дружити — це підтримувати!\n\n## select: Choose the Correct Form\n\n1. Він боїться ____.\n   - [x] темряви\n   - [ ] темрява\n   > Боятися + genitive.\n\n2. Вона сумує ____.\n   - [x] за домом\n   - [ ] за дім\n   > Сумувати за + instrumental.\n\n3. Діти раділи ____.\n   - [x] подарункам\n   - [ ] подарунки\n   > Радіти + dative.\n\n4. Вона є ____ людиною.\n   - [x] доброю\n   - [ ] добра\n   > With бути + instrumental: доброю людиною.\n\n5. Ми дивувалися ____.\n   - [x] успіхам\n   - [ ] успіхи\n   > Дивуватися + dative.\n\n6. Я задоволений ____.\n   - [x] роботою\n   - [ ] робота\n   > Задоволений + instrumental.\n\n7. Він був ____ воїном.\n   - [x] сміливим\n   - [ ] сміливий\n   > Instrumental after бути (минулий час).\n\n8. Мама хвилюється ____.\n   - [x] за дітей\n   - [ ] за діти\n   > Хвилюватися за + accusative.\n\n9. Ти виглядаєш ____.\n   - [x] щасливим\n   - [ ] щасливий\n   > Instrumental for temporary state/appearance.\n\n10. Я почуваюся ____.\n    - [x] добре\n    - [ ] добрий\n    > Adverb with почуватися.\n\n11. Це був ____ вчинок.\n    - [x] сміливий\n    - [ ] сміливим\n    > Nominative for simple definition 'It was a brave deed'.\n\n12. Вона стала ____.\n    - [x] спокійною\n    - [ ] спокійна\n    > Стати + instrumental."
+      },
+      {
+        "id": "section-4",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| радість | /ˈrɑdʲisʲtʲ/ | joy | noun | f | |\n| сум | /sum/ | sadness | noun | m | |\n| гнів | /ɦnʲiw/ | anger | noun | m | |\n| страх | /strɑx/ | fear | noun | m | |\n| здивування | /zdɪwuˈwɑnʲːɑ/ | surprise | noun | n | |\n| щастя | /ˈʃtʃɑsʲtʲɑ/ | happiness | noun | n | |\n| радіти | /rɑˈdʲitɪ/ | to rejoice | verb | - | + dat |\n| сумувати | /sumuˈwɑtɪ/ | to be sad | verb | - | + за + instr |\n| хвилюватися | /xwɪlʲuˈwɑtɪsʲɑ/ | to worry | verb | - | + за + acc |\n| боятися | /boˈjɑtɪsʲɑ/ | to be afraid | verb | - | + gen |\n| дивуватися | /dɪwuˈwɑtɪsʲɑ/ | to be surprised | verb | - | + dat |\n| задоволений | /zɑdoˈwɔlenɪj/ | satisfied | adj | m | + instr |\n| розчарований | /rozʧɑˈrowɑnɪj/ | disappointed | adj | m | |\n| стурбований | /sturˈbowɑnɪj/ | worried | adj | m | |\n| схвильований | /sxwɪlʲˈjowɑnɪj/ | excited | adj | m | |\n| здивований | /zdɪˈwowɑnɪj/ | surprised | adj | m | |\n| добрий | /ˈdɔbrɪj/ | kind | adj | m | |\n| чесний | /ˈtʃɛsnɪj/ | honest | adj | m | |\n| сміливий | /smʲiˈlɪwɪj/ | brave | adj | m | |\n| терплячий | /terˈplʲɑtʃɪj/ | patient | adj | m | |\n| розумний | /roˈzumnɪj/ | smart | adj | m | |\n| веселий | /weˈsɛlɪj/ | cheerful | adj | m | |\n| злий | /zlɪj/ | mean, angry | adj | m | |\n| лінивий | /lʲiˈnɪwɪj/ | lazy | adj | m | |\n| боягузливий | /bojɑɦuzˈlɪwɪj/ | cowardly | adj | m | |\n| нетерплячий | /neterˈplʲɑtʃɪj/ | impatient | adj | m | |\n| щирість | /ˈʃtʃɪrisʲtʲ/ | sincerity | noun | f | |\n| характер | /xɑˈrɑkter/ | character | noun | m | |\n| почуватися | /potʃuˈwɑtɪsʲɑ/ | to feel (state) | verb | - | + adv |\n| настрій | /nɑˈstrʲij/ | mood | noun | m | |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-47\ntitle: \"Emotions & Personality\"\nsubtitle: \"Describing feelings and character traits\"\nversion: \"1.0\"\nphase: \"A2\"\npedagogy: \"PPP\"\nduration: 60\ntransliteration: none\ntags: [\"vocabulary\", \"emotions\", \"personality\", \"adjectives\"]\ngrammar: [\"adjective-agreement\", \"instrumental-with-бути\"]\nobjectives:\n  - \"Learner can describe basic emotions in Ukrainian\"\n  - \"Learner can describe personality traits using appropriate adjectives\"\n  - \"Learner can express emotional states using бути + instrumental\"\nvocabulary_count: 30\n---\n\n# Emotions & Personality\n\n## Warm-up\n\nЯк ви себе почуваєте сьогодні? Ви щасливі? Сумні? Втомлені?\n\nКожен день ми відчуваємо різні емоції. Вранці ми можемо бути щасливими, а ввечері — втомленими. Іноді ми радіємо, а іноді — сумуємо. Це нормально! Емоції роблять нас людьми.\n\nEmotions shape our daily lives. In this module, you'll learn to describe how you feel and talk about personality traits in Ukrainian. You will learn to express joy, sadness, fear, and many other emotions. You will also learn to describe people's personalities.\n\n> [!myth-buster] \"Українська — бідна мова\"\n> Російська пропаганда стверджує, що українська — \"сільська мова\" без витонченості. Насправді українська має неймовірно багатий емоційний словник. Слова **сум**, **туга** і **журба** не мають прямих російських відповідників!\n\n## Presentation\n\n### Basic Emotions\n\nUkrainian has beautiful words for expressing how we feel:\n\n| Емоція | Приклад |\n|---------|---------|\n| **радість** | Яка радість бачити тебе! |\n| **сум** | У мене сум у серці. |\n| **гнів** | Він не міг стримати гнів. |\n| **страх** | Страх паралізував її. |\n| **здивування** | Яке здивування! |\n| **щастя** | Щастя в дрібницях. |\n\n**Радість** means joy — that warm feeling when you see a good friend. **Сум** is sadness, often a gentle melancholy. **Гнів** is anger — a burning fire inside. **Страх** is fear — what you feel in the dark. **Здивування** is surprise — when something unexpected happens. **Щастя** is happiness — the deep contentment of a peaceful life.\n\n### Expressing Emotions with Verbs\n\nTo describe experiencing emotions, use these verbs:\n\n- **радіти** — to rejoice: *Діти раділи подарункам.*\n- **сумувати** — to be sad: *Вона сумує за домом.*\n- **хвилюватися** — to worry: *Мама хвилюється за сина.*\n- **боятися** — to be afraid: *Він боїться темряви.*\n- **дивуватися** — to be surprised: *Ми дивувалися його таланту.*\n\n> [!history-bite] The Emotional Warrior\n> Ukrainian Cossacks were famous for expressing emotions openly. Their songs (**думи**) celebrated joy in victory and openly mourned fallen comrades. This emotional honesty is a core Ukrainian cultural value — very different from the \"stoic Russian\" stereotype imposed during Soviet times.\n\n### Emotional States\n\nTo describe temporary states, use **бути** + adjective in instrumental:\n\n| Стан | Приклад |\n|-------|---------|\n| **задоволений** | Я задоволений результатом. |\n| **розчарований** | Він розчарований оцінкою. |\n| **стурбований** | Вона стурбована новинами. |\n| **схвильований** | Діти схвильовані поїздкою. |\n| **здивований** | Я здивований твоїм рішенням. |\n\nThese adjectives describe temporary emotional states. **Задоволений** means satisfied — you feel this after a good meal. **Розчарований** means disappointed — when expectations are not met. **Стурбований** means worried — concern about something. **Схвильований** means excited or agitated. **Здивований** means surprised — caught off guard.\n\n### Dialogue: How Are You Feeling?\n\n— Привіт, Марійко! Як справи?\n— Привіт! Чесно кажучи, я трохи стурбована.\n— Чому? Що сталося?\n— У мене завтра важливий іспит. Я хвилююся.\n— Не хвилюйся! Ти добре підготувалася.\n— Дякую. Я вже спокійніша.\n— От і добре! Все буде гаразд.\n\n> [!tip] Expressing \"I feel\"\n> Use **Я почуваюся** + adverb: *Я почуваюся добре* (I feel well). Don't confuse with **Я відчуваю** which means \"I sense/perceive.\"\n\n## Practice\n\n### Personality Traits\n\nPersonality adjectives describe permanent characteristics. These describe who you are, not how you feel in a moment.\n\n**Позитивні риси:**\n\n| Риса | Приклад |\n|------|----------|\n| **добрий** | Вона дуже добра людина. |\n| **чесний** | Він завжди чесний. |\n| **сміливий** | Сміливі люди змінюють світ. |\n| **терплячий** | Вчитель повинен бути терплячим. |\n| **розумний** | Розумні діти швидко вчаться. |\n| **веселий** | Веселі люди живуть довше. |\n\n**Добрий** describes someone who is kind and good-hearted. **Чесний** is an honest person who always tells the truth. **Сміливий** is brave — someone who faces danger without fear. **Терплячий** is patient, able to wait calmly. **Розумний** means smart or intelligent. **Веселий** describes someone cheerful and happy.\n\n**Негативні риси:**\n\n| Риса | Приклад |\n|------|----------|\n| **злий** | Він злий на всіх. |\n| **лінивий** | Лінивий студент не вчиться. |\n| **боягузливий** | Боягузливі не перемагають. |\n| **нетерплячий** | Нетерплячі люди роблять помилки. |\n| **недобрий** | Недобрі слова ранять. |\n\n**Злий** describes someone mean or angry. **Лінивий** is lazy — they avoid work. **Боягузливий** is the opposite of сміливий — someone who lacks courage. **Нетерплячий** cannot wait patiently. Notice how **не-** creates the opposite: добрий → недобрий, терплячий → нетерплячий.\n\n> [!cultural] Ukrainian Personality Ideals\n> Ukrainian folklore celebrates courage and honesty above all. The word **козак** became synonymous with bravery throughout history. Even today, Ukrainians value **щирість** — being genuine and open-hearted. These values shaped Ukrainian identity through centuries of struggle for independence.\n\n### Describing Personality\n\nUse **бути** + instrumental for characteristics:\n\n- *Вона є доброю людиною.* — She is a kind person.\n- *Він був сміливим воїном.* — He was a brave warrior.\n- *Ми хочемо бути чесними.* — We want to be honest.\n\n### Dialogue: Describing a Friend\n\n— Розкажи мені про свою подругу Олену.\n— Олена — чудова людина! Вона дуже добра і щира.\n— Який у неї характер?\n— Вона весела і оптимістична. Завжди посміхається.\n— А негативні риси?\n— Іноді вона нетерпляча. Але це дрібниця.\n— Звучить як чудова подруга!\n— Так, мені пощастило!\n\n### Opposite Emotions\n\nLearning opposites helps expand vocabulary. Every emotion has its opposite. Understanding these pairs helps you express the full range of human feelings. Here are the most important contrasts:\n\n| Позитив | Негатив |\n|----------|----------|\n| радість | сум |\n| спокій | хвилювання |\n| задоволення | розчарування |\n| сміливість | страх |\n| любов | ненависть |\n\nNotice how **радість** and **сум** are fundamental opposites — the light and shadow of human experience. **Спокій** is inner peace, while **хвилювання** is its restless opposite. **Любов** and **ненависть** represent the strongest extremes of human connection.\n\n> [!tip] Building Vocabulary with Opposites\n> When you learn a new emotion word, always ask yourself: what is the opposite? This doubles your vocabulary instantly!\n\n> [!tip] Remember the Pattern\n> Many negative traits use **не-** prefix: добрий → **не**добрий, терплячий → **не**терплячий.\n\n### Story Time: The Kind Heart\n\nЖила-була дівчинка на ім'я Софійка. Вона мала добре серце. Всі в селі знали, що Софійка завжди допомагає.\n\nОдного дня Софійка бачила сумного хлопчика біля дерева. Він загубив свій м'яч.\n\n— Чому ти сумуєш? — запитала Софійка.\n— Я загубив свій м'яч, — відповів хлопчик. — Це був мій улюблений м'яч!\n\nСофійка була сміливою і терплячою. Вона допомогла шукати. Вони шукали довго — цілу годину! Нарешті вони знайшли м'яч під великим деревом.\n\n— Дякую! Ти дуже добра! — радів хлопчик.\n— Завжди рада допомогти! — усміхнулася Софійка.\n\nДобрі вчинки роблять світ кращим. Коли ми допомагаємо іншим, ми самі стаємо щасливішими.\n\n### Story Time: The Brave Soldier\n\nЦе історія про воїна Олексія. Він був дуже сміливим і чесним. Всі в селі поважали його.\n\nКоли почалася війна, Олексій не боявся. Він сказав родині:\n\n— Не хвилюйтеся. Я повернуся.\n\nМама була стурбована, але вона знала: її син — сміливий. Батько був задоволений сином. Він сказав:\n\n— Я гордий тобою, сину!\n\nОлексій воював хоробро. Він захищав свою Україну. Після війни він повернувся додому. Всі раділи!\n\nСміливість і чесність — це головні українські цінності.\n\n# Summary\n\nYou learned to:\n- Name basic emotions: радість, сум, гнів, страх\n- Use emotion verbs: радіти, сумувати, хвилюватися\n- Describe emotional states: задоволений, розчарований\n- Describe personality: добрий, чесний, сміливий\n- Form opposites with не-: терплячий → нетерплячий\n\nRemember that emotions in Ukrainian culture are often expressed openly. Use these new words to share your feelings with friends and family. Practice describing the characters in books or movies using the personality adjectives you learned. Are they сміливі or боягузливі? Чесні or нечесні? This will help you master the vocabulary.\n\n# Activities\n\n## quiz: Emotion Recognition\n\n1. What emotion does \"радість\" express?\n   - [ ] anger\n   - [x] joy\n   - [ ] fear\n   > Радість means joy or happiness.\n\n2. Which verb means \"to worry\"?\n   - [ ] радіти\n   - [ ] сумувати\n   - [x] хвилюватися\n   > Хвилюватися means to worry or be anxious.\n\n3. What is the opposite of \"сміливий\"?\n   - [x] боягузливий\n   - [ ] добрий\n   - [ ] веселий\n   > Боягузливий is the opposite of сміливий.\n\n4. Which word describes disappointment?\n   - [ ] задоволений\n   - [x] розчарований\n   - [ ] здивований\n   > Розчарований means disappointed.\n\n5. What does \"щирість\" mean?\n   - [ ] courage\n   - [ ] intelligence\n   - [x] sincerity\n   > Щирість means sincerity or genuine openness.\n\n6. How do you say \"I feel well\"?\n   - [x] Я почуваюся добре\n   - [ ] Я відчуваю добре\n   - [ ] Я буваю добре\n   > Use почуватися for \"to feel\" about your state.\n\n7. What prefix makes adjectives negative?\n   - [ ] за-\n   - [x] не-\n   - [ ] від-\n   > The prefix не- makes adjectives negative: добрий → недобрий.\n\n8. Which is a positive personality trait?\n   - [ ] лінивий\n   - [x] чесний\n   - [ ] нетерплячий\n   > Чесний is a positive trait.\n\n9. What does \"стурбований\" mean?\n   - [x] worried\n   - [ ] happy\n   - [ ] surprised\n   > Стурбований means worried or concerned.\n\n10. Which word means \"brave\"?\n    - [ ] добрий\n    - [ ] терплячий\n    - [x] сміливий\n    > Сміливий means brave or courageous.\n\n11. What is \"гнів\" in English?\n    - [ ] joy\n    - [x] anger\n    - [ ] fear\n    > Гнів means anger.\n\n12. How do you describe a permanent trait?\n    - [ ] бути + nominative\n    - [x] бути + instrumental\n    - [ ] мати + accusative\n    > Use бути + instrumental: Він є добрим.\n\n## fill-in: Complete the Sentences\n\n1. Я дуже ____ бачити тебе!\n   > [!answer] радий\n   > [!options] радий | сумний | злий | веселий\n   > Радий means happy/glad (to see someone).\n\n2. Вона ____ за своїм другом.\n   > [!answer] сумує\n   > [!options] сумує | радіє | боїться | хвилюється\n   > Сумувати за means to miss/long for someone.\n\n3. Діти ____ подарункам.\n   > [!answer] раділи\n   > [!options] раділи | сумували | боялися | хвилювалися\n   > Радіти + dative = to rejoice at something.\n\n4. Він ____ темряви.\n   > [!answer] боїться\n   > [!options] боїться | радіє | сумує | хвилюється\n   > Боятися + genitive = to be afraid of.\n\n5. Мама ____ за дітей.\n   > [!answer] хвилюється\n   > [!options] хвилюється | радіє | сумує | боїться\n   > Хвилюватися за + accusative = to worry about.\n\n6. Вона дуже ____ людина.\n   > [!answer] добра\n   > [!options] добра | добрий | добре | добру\n   > Добра agrees with людина.\n\n7. Він завжди ____ з друзями.\n   > [!answer] чесний\n   > [!options] чесний | чесна | чесне | чесні\n   > Чесний agrees with він.\n\n8. ____ люди змінюють світ.\n   > [!answer] Сміливі\n   > [!options] Сміливі | Сміливий | Смілива | Сміливе\n   > Сміливі agrees with люди.\n\n9. Я ____ результатом іспиту.\n   > [!answer] задоволений\n   > [!options] задоволений | задоволена | задоволене | задоволені\n   > Задоволений + instrumental = satisfied with.\n\n10. Вона ____ новинами з дому.\n    > [!answer] стурбована\n    > [!options] стурбована | стурбований | стурбоване | стурбовані\n    > Стурбована agrees with вона.\n\n11. Ми ____ його таланту.\n    > [!answer] дивувалися\n    > [!options] дивувалися | дивувався | дивувалася | дивувалося\n    > Дивуватися + dative = to be surprised at.\n\n12. Він був ____ воїном.\n    > [!answer] сміливим\n    > [!options] сміливим | сміливий | смілива | сміливе\n    > Instrumental after бути: сміливим.\n\n## match-up: Emotions and Opposites\n\n- радість :: сум\n- спокій :: хвилювання\n- сміливість :: страх\n- задоволення :: розчарування\n- любов :: ненависть\n- добрий :: злий\n- терплячий :: нетерплячий\n- чесний :: нечесний\n- веселий :: сумний\n- щасливий :: нещасливий\n- розумний :: дурний\n- сміливий :: боягузливий\n\n## true-false: Personality and Emotions\n\n1. \"Радість\" means sadness.\n   - [x] false\n   > Радість means joy. Сум means sadness.\n\n2. The verb \"хвилюватися\" means to worry.\n   - [x] true\n   > Хвилюватися means to worry or be anxious.\n\n3. \"Добрий\" is a negative personality trait.\n   - [x] false\n   > Добрий is a positive trait.\n\n4. Ukrainian uses не- prefix to form negative adjectives.\n   - [x] true\n   > Терплячий → нетерплячий, добрий → недобрий.\n\n5. \"Задоволений\" means disappointed.\n   - [x] false\n   > Задоволений means satisfied. Розчарований means disappointed.\n\n6. Cossacks were known for emotional openness.\n   - [x] true\n   > Ukrainian Cossack culture valued open emotional expression.\n\n7. \"Боятися\" requires the accusative case.\n   - [x] false\n   > Боятися requires genitive: боїться темряви.\n\n8. \"Сміливий\" means brave.\n   - [x] true\n   > Сміливий means brave or courageous.\n\n9. To express permanent traits, use бути + nominative.\n   - [x] false\n   > Use бути + instrumental: Він є сміливим.\n\n10. \"Щирість\" is a valued Ukrainian cultural trait.\n    - [x] true\n    > Щирість is highly valued in Ukrainian culture.\n\n11. \"Схвильований\" means calm.\n    - [x] false\n    > Схвильований means excited or agitated.\n\n12. \"Почуватися\" is used to express feelings.\n    - [x] true\n    > Я почуваюся добре = I feel well.\n\n## group-sort: Positive vs Negative Traits\n\n### Groups\n- Positive Traits\n- Negative Traits\n\n### Items\n- добрий: Positive Traits\n- чесний: Positive Traits\n- сміливий: Positive Traits\n- терплячий: Positive Traits\n- веселий: Positive Traits\n- розумний: Positive Traits\n- злий: Negative Traits\n- лінивий: Negative Traits\n- боягузливий: Negative Traits\n- нетерплячий: Negative Traits\n- недобрий: Negative Traits\n- нечесний: Negative Traits\n\n## unjumble: Emotion Sentences\n\n1. Я / дуже / радий / тебе / бачити\n   > [!answer] Я дуже радий тебе бачити\n   > I am very happy to see you.\n\n2. Вона / сумує / за / домом\n   > [!answer] Вона сумує за домом\n   > She misses home.\n\n3. Діти / раділи / подарункам\n   > [!answer] Діти раділи подарункам\n   > The children were happy about the gifts.\n\n4. Мама / хвилюється / за / сина\n   > [!answer] Мама хвилюється за сина\n   > Mom worries about her son.\n\n5. Він / боїться / темряви\n   > [!answer] Він боїться темряви\n   > He is afraid of darkness.\n\n6. Ми / дивувалися / його / таланту\n   > [!answer] Ми дивувалися його таланту\n   > We were surprised at his talent.\n\n7. Вона / є / доброю / людиною\n   > [!answer] Вона є доброю людиною\n   > She is a kind person.\n\n8. Сміливі / люди / змінюють / світ\n   > [!answer] Сміливі люди змінюють світ\n   > Brave people change the world.\n\n9. Я / задоволений / результатом\n   > [!answer] Я задоволений результатом\n   > I am satisfied with the result.\n\n10. Він / був / сміливим / воїном\n    > [!answer] Він був сміливим воїном\n    > He was a brave warrior.\n\n11. Я / почуваюся / добре / сьогодні\n    > [!answer] Я почуваюся добре сьогодні\n    > I feel well today.\n\n12. Добрі / вчинки / роблять / світ / кращим\n    > [!answer] Добрі вчинки роблять світ кращим\n    > Kind deeds make the world better.\n\n## error-correction: Fix the Mistakes\n\n1. Він боїться темрява.\n   > [!error] темрява\n   > [!answer] темряви\n   > [!options] темряви | темрява | темряву | темрявою\n   > [!explanation] Боятися requires genitive case (чого?).\n\n2. Вона сумує за дім.\n   > [!error] дім\n   > [!answer] домом\n   > [!options] домом | дім | дому | доми\n   > [!explanation] Сумувати за requires instrumental case.\n\n3. Я задоволений результат.\n   > [!error] результат\n   > [!answer] результатом\n   > [!options] результатом | результат | результату | результаті\n   > [!explanation] Задоволений requires instrumental case.\n\n4. Вона є добра людина.\n   > [!error] добра\n   > [!answer] доброю\n   > [!options] доброю | добра | добрий | добру\n   > [!explanation] With бути + instrumental: доброю людиною.\n\n5. Він був сміливий воїн.\n   > [!error] сміливий\n   > [!answer] сміливим\n   > [!options] сміливим | сміливий | смілива | сміливу\n   > [!explanation] With бути past tense: сміливим воїном.\n\n6. Діти раділи подарунки.\n   > [!error] подарунки\n   > [!answer] подарункам\n   > [!options] подарункам | подарунки | подарунків | подарунками\n   > [!explanation] Радіти requires dative case.\n\n7. Мама хвилюється за син.\n   > [!error] син\n   > [!answer] сина\n   > [!options] сина | син | синові | сином\n   > [!explanation] Хвилюватися за requires accusative case.\n\n8. Ми дивувалися його талант.\n   > [!error] талант\n   > [!answer] таланту\n   > [!options] таланту | талант | талантом | таланти\n   > [!explanation] Дивуватися requires dative case.\n\n9. Він злий на все.\n   > [!error] все\n   > [!answer] всіх\n   > [!options] всіх | все | всім | всього\n   > [!explanation] Злий на + accusative animate → всіх.\n\n10. Чесний люди живуть краще.\n    > [!error] Чесний\n    > [!answer] Чесні\n    > [!options] Чесні | Чесний | Чесна | Чеснім\n    > [!explanation] Plural люди requires plural adjective: чесні.\n\n11. Вона стурбований новинами.\n    > [!error] стурбований\n    > [!answer] стурбована\n    > [!options] стурбована | стурбований | стурбовані | стурбованим\n    > [!explanation] Feminine вона requires стурбована.\n\n12. Я почуваюся добро.\n    > [!error] добро\n    > [!answer] добре\n    > [!options] добре | добро | добра | добрий\n    > [!explanation] Почуватися + adverb: добре.\n\n## cloze: Story Completion\n\nМарійка мала [___:1] характер. Вона була дуже [___:2] людиною. Всі любили її за [___:3].\n\nОдного дня подруга Марійки [___:4]. Її кіт загубився.\n— Чому ти [___:5]? — запитала Марійка.\n— Я [___:6] своїм котом, — відповіла подруга.\n\n[___:7] Марійка допомогла шукати кота. Вони знайшли його за годину. Подруга дуже [___:8]!\n\n— Ти справді [___:9] і добра, — сказала подруга.\n— Я [___:10] допомогти! — усміхнулася Марійка.\n\n1. чудовий\n> [!answer] чудовий\n> [!options] чудовий | злий | лінивий\n\n2. доброю\n> [!answer] доброю\n> [!options] доброю | злою | сумною\n\n3. щирість\n> [!answer] щирість\n> [!options] щирість | гнів | страх\n\n4. сумувала\n> [!answer] сумувала\n> [!options] сумувала | раділа | сміялася\n\n5. хвилюєшся\n> [!answer] хвилюєшся\n> [!options] хвилюєшся | радієш | смієшся\n\n6. стурбована\n> [!answer] стурбована\n> [!options] стурбована | щаслива | весела\n\n7. Смілива\n> [!answer] Смілива\n> [!options] Смілива | Боягузлива | Лінива\n\n8. раділа\n> [!answer] раділа\n> [!options] раділа | сумувала | плакала\n\n9. терпляча\n> [!answer] терпляча\n> [!options] терпляча | нетерпляча | зла\n\n10. щаслива\n> [!answer] щаслива\n> [!options] щаслива | сумна | зла\n\n## dialogue-reorder: At the Party\n\n> [!dialogue-speakers] Андрій, Оксана\n\n- Привіт, Оксано! Як настрій?\n- Привіт! Я дуже щаслива сьогодні!\n- Чому? Що сталося?\n- Я здала всі іспити!\n- Це чудово! Я радий за тебе.\n- Дякую! А як твої справи?\n- Трохи хвилююся за завтрашній день.\n- Не хвилюйся! Все буде добре.\n- Ти права. Дякую за підтримку!\n- Завжди рада допомогти другу!\n- Ти справді добра людина.\n- А ти — чудовий друг!\n\n## mark-the-words: Find the Emotions\n\n> [!instruction] Mark all emotion words in the text.\n\nМарійка прокинулася з [радістю]. Сьогодні особливий день! Але потім вона відчула [страх] — екзамен о десятій. [Хвилювання] наростало. Вона згадала слова мами: \"Будь [сміливою]!\" Це додало їй сили. На екзамені все пішло добре. [Задоволення] і [щастя] заповнили її серце. Вона відчула [гордість] за себе.\n\nПізніше Марійка зустріла подругу. Подруга була [сумною] — вона провалила іспит. Марійка відчула [співчуття]. Вона обійняла подругу і сказала: \"Не [хвилюйся]! Наступного разу буде краще.\" Подруга [посміхнулася] і відчула [надію]. Дружити — це підтримувати!\n\n## select: Choose the Correct Form\n\n1. Він боїться ____.\n   - [x] темряви\n   - [ ] темрява\n   > Боятися + genitive.\n\n2. Вона сумує ____.\n   - [x] за домом\n   - [ ] за дім\n   > Сумувати за + instrumental.\n\n3. Діти раділи ____.\n   - [x] подарункам\n   - [ ] подарунки\n   > Радіти + dative.\n\n4. Вона є ____ людиною.\n   - [x] доброю\n   - [ ] добра\n   > With бути + instrumental: доброю людиною.\n\n5. Ми дивувалися ____.\n   - [x] успіхам\n   - [ ] успіхи\n   > Дивуватися + dative.\n\n6. Я задоволений ____.\n   - [x] роботою\n   - [ ] робота\n   > Задоволений + instrumental.\n\n7. Він був ____ воїном.\n   - [x] сміливим\n   - [ ] сміливий\n   > Instrumental after бути (минулий час).\n\n8. Мама хвилюється ____.\n   - [x] за дітей\n   - [ ] за діти\n   > Хвилюватися за + accusative.\n\n9. Ти виглядаєш ____.\n   - [x] щасливим\n   - [ ] щасливий\n   > Instrumental for temporary state/appearance.\n\n10. Я почуваюся ____.\n    - [x] добре\n    - [ ] добрий\n    > Adverb with почуватися.\n\n11. Це був ____ вчинок.\n    - [x] сміливий\n    - [ ] сміливим\n    > Nominative for simple definition 'It was a brave deed'.\n\n12. Вона стала ____.\n    - [x] спокійною\n    - [ ] спокійна\n    > Стати + instrumental.\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| радість | /ˈrɑdʲisʲtʲ/ | joy | noun | f | |\n| сум | /sum/ | sadness | noun | m | |\n| гнів | /ɦnʲiw/ | anger | noun | m | |\n| страх | /strɑx/ | fear | noun | m | |\n| здивування | /zdɪwuˈwɑnʲːɑ/ | surprise | noun | n | |\n| щастя | /ˈʃtʃɑsʲtʲɑ/ | happiness | noun | n | |\n| радіти | /rɑˈdʲitɪ/ | to rejoice | verb | - | + dat |\n| сумувати | /sumuˈwɑtɪ/ | to be sad | verb | - | + за + instr |\n| хвилюватися | /xwɪlʲuˈwɑtɪsʲɑ/ | to worry | verb | - | + за + acc |\n| боятися | /boˈjɑtɪsʲɑ/ | to be afraid | verb | - | + gen |\n| дивуватися | /dɪwuˈwɑtɪsʲɑ/ | to be surprised | verb | - | + dat |\n| задоволений | /zɑdoˈwɔlenɪj/ | satisfied | adj | m | + instr |\n| розчарований | /rozʧɑˈrowɑnɪj/ | disappointed | adj | m | |\n| стурбований | /sturˈbowɑnɪj/ | worried | adj | m | |\n| схвильований | /sxwɪlʲˈjowɑnɪj/ | excited | adj | m | |\n| здивований | /zdɪˈwowɑnɪj/ | surprised | adj | m | |\n| добрий | /ˈdɔbrɪj/ | kind | adj | m | |\n| чесний | /ˈtʃɛsnɪj/ | honest | adj | m | |\n| сміливий | /smʲiˈlɪwɪj/ | brave | adj | m | |\n| терплячий | /terˈplʲɑtʃɪj/ | patient | adj | m | |\n| розумний | /roˈzumnɪj/ | smart | adj | m | |\n| веселий | /weˈsɛlɪj/ | cheerful | adj | m | |\n| злий | /zlɪj/ | mean, angry | adj | m | |\n| лінивий | /lʲiˈnɪwɪj/ | lazy | adj | m | |\n| боягузливий | /bojɑɦuzˈlɪwɪj/ | cowardly | adj | m | |\n| нетерплячий | /neterˈplʲɑtʃɪj/ | impatient | adj | m | |\n| щирість | /ˈʃtʃɪrisʲtʲ/ | sincerity | noun | f | |\n| характер | /xɑˈrɑkter/ | character | noun | m | |\n| почуватися | /potʃuˈwɑtɪsʲɑ/ | to feel (state) | verb | - | + adv |\n| настрій | /nɑˈstrʲij/ | mood | noun | m | |\n",
+    "createdAt": "2025-12-15T20:02:03.072909Z",
+    "modifiedAt": "2025-12-15T20:02:03.072909Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-47",
+    "level": "A2",
+    "phase": "A2",
+    "wordCount": 30,
+    "newWordCount": 30,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "радість",
+        "ipa": "/ˈrɑdʲisʲtʲ/",
+        "en": "joy",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-2",
+        "uk": "сум",
+        "ipa": "/sum/",
+        "en": "sadness",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-3",
+        "uk": "гнів",
+        "ipa": "/ɦnʲiw/",
+        "en": "anger",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-4",
+        "uk": "страх",
+        "ipa": "/strɑx/",
+        "en": "fear",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-5",
+        "uk": "здивування",
+        "ipa": "/zdɪwuˈwɑnʲːɑ/",
+        "en": "surprise",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-6",
+        "uk": "щастя",
+        "ipa": "/ˈʃtʃɑsʲtʲɑ/",
+        "en": "happiness",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-7",
+        "uk": "радіти",
+        "ipa": "/rɑˈdʲitɪ/",
+        "en": "to rejoice",
+        "pos": "verb",
+        "gender": null,
+        "note": "+ dat"
+      },
+      {
+        "id": "vocab-8",
+        "uk": "сумувати",
+        "ipa": "/sumuˈwɑtɪ/",
+        "en": "to be sad",
+        "pos": "verb",
+        "gender": null,
+        "note": "+ за + instr"
+      },
+      {
+        "id": "vocab-9",
+        "uk": "хвилюватися",
+        "ipa": "/xwɪlʲuˈwɑtɪsʲɑ/",
+        "en": "to worry",
+        "pos": "verb",
+        "gender": null,
+        "note": "+ за + acc"
+      },
+      {
+        "id": "vocab-10",
+        "uk": "боятися",
+        "ipa": "/boˈjɑtɪsʲɑ/",
+        "en": "to be afraid",
+        "pos": "verb",
+        "gender": null,
+        "note": "+ gen"
+      },
+      {
+        "id": "vocab-11",
+        "uk": "дивуватися",
+        "ipa": "/dɪwuˈwɑtɪsʲɑ/",
+        "en": "to be surprised",
+        "pos": "verb",
+        "gender": null,
+        "note": "+ dat"
+      },
+      {
+        "id": "vocab-12",
+        "uk": "задоволений",
+        "ipa": "/zɑdoˈwɔlenɪj/",
+        "en": "satisfied",
+        "pos": "adj",
+        "gender": "m",
+        "note": "+ instr"
+      },
+      {
+        "id": "vocab-13",
+        "uk": "розчарований",
+        "ipa": "/rozʧɑˈrowɑnɪj/",
+        "en": "disappointed",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-14",
+        "uk": "стурбований",
+        "ipa": "/sturˈbowɑnɪj/",
+        "en": "worried",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-15",
+        "uk": "схвильований",
+        "ipa": "/sxwɪlʲˈjowɑnɪj/",
+        "en": "excited",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-16",
+        "uk": "здивований",
+        "ipa": "/zdɪˈwowɑnɪj/",
+        "en": "surprised",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-17",
+        "uk": "добрий",
+        "ipa": "/ˈdɔbrɪj/",
+        "en": "kind",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-18",
+        "uk": "чесний",
+        "ipa": "/ˈtʃɛsnɪj/",
+        "en": "honest",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-19",
+        "uk": "сміливий",
+        "ipa": "/smʲiˈlɪwɪj/",
+        "en": "brave",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-20",
+        "uk": "терплячий",
+        "ipa": "/terˈplʲɑtʃɪj/",
+        "en": "patient",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-21",
+        "uk": "розумний",
+        "ipa": "/roˈzumnɪj/",
+        "en": "smart",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-22",
+        "uk": "веселий",
+        "ipa": "/weˈsɛlɪj/",
+        "en": "cheerful",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-23",
+        "uk": "злий",
+        "ipa": "/zlɪj/",
+        "en": "mean, angry",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-24",
+        "uk": "лінивий",
+        "ipa": "/lʲiˈnɪwɪj/",
+        "en": "lazy",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-25",
+        "uk": "боягузливий",
+        "ipa": "/bojɑɦuzˈlɪwɪj/",
+        "en": "cowardly",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-26",
+        "uk": "нетерплячий",
+        "ipa": "/neterˈplʲɑtʃɪj/",
+        "en": "impatient",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-27",
+        "uk": "щирість",
+        "ipa": "/ˈʃtʃɪrisʲtʲ/",
+        "en": "sincerity",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-28",
+        "uk": "характер",
+        "ipa": "/xɑˈrɑkter/",
+        "en": "character",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-29",
+        "uk": "почуватися",
+        "ipa": "/potʃuˈwɑtɪsʲɑ/",
+        "en": "to feel (state)",
+        "pos": "verb",
+        "gender": null,
+        "note": "+ adv"
+      },
+      {
+        "id": "vocab-30",
+        "uk": "настрій",
+        "ipa": "/nɑˈstrʲij/",
+        "en": "mood",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      }
+    ],
+    "reviewWords": []
+  }
+}

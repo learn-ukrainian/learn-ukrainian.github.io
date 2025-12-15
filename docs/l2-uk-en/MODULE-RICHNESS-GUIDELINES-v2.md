@@ -198,6 +198,64 @@
 
 **C1-C2 Rationale:** At advanced levels, learners need more production practice (cloze ×3, translate ×2) and less basic recognition (mark-the-words removed). Error-correction remains high (×3) for metalinguistic awareness.
 
+### Production Activity Requirements (B1+)
+
+Each B1+ grammar module MUST include at least **2 production activities** to balance recognition-heavy drills.
+
+#### Required Production Types (choose 2+):
+
+**1. Guided Translation (`translate`)**
+```markdown
+## translate: Переклад з підказками
+> Translate to Ukrainian using the target grammar.
+
+1. I was reading all evening. (use: весь вечір)
+   > [!answer] Я читав книгу весь вечір.
+   > [!hint] Process = imperfective
+```
+
+**2. Sentence Transformation (`transform`)**
+```markdown
+## transform: Зміна виду
+> Change the aspect and observe the meaning change.
+
+1. Я читав книгу. (make result-focused)
+   > [!answer] Я прочитав книгу.
+   > [!explanation] Adding result focus requires perfective.
+```
+
+**3. Micro-Writing (`micro-write`)**
+```markdown
+## micro-write: Короткий текст
+> Write 4-6 sentences about [topic] using both aspects.
+
+**Prompt:** Describe your yesterday morning. Use at least 2 imperfective verbs (process) and 2 perfective verbs (completed actions).
+
+**Model answer:**
+Вчора вранці я прокинувся о сьомій (pf). Я снідав і дивився новини (impf, impf). Потім я поїхав на роботу (pf). Дорогою я слухав музику (impf).
+```
+
+**4. Dialogue Completion (`dialogue-complete`)**
+```markdown
+## dialogue-complete: Завершіть діалог
+> Complete the dialogue using appropriate forms.
+
+А: Що ти ___ (робити) вчора ввечері?
+Б: Я ___ (читати) книгу. А потім ___ (подивитися) фільм.
+А: І як, ___ (сподобатися)?
+```
+
+#### Activity Balance Check (B1-grammar)
+
+| Category | Target | Activity Types |
+|----------|--------|----------------|
+| Recognition | 4-5 | quiz, match-up, true-false, mark-the-words |
+| Controlled Production | 4-5 | fill-in, cloze, error-correction |
+| **Free Production** | **2-4** | **translate, transform, micro-write, dialogue-complete** |
+| Integrated | 2-3 | unjumble, dialogue-reorder |
+
+**Audit check:** B1-grammar modules failing production balance will show warning in audit output.
+
 ### Activity Types Reference (13 Types)
 
 | Activity | Level | Description |
@@ -229,6 +287,37 @@ For A2+ modules, sequence activities by pedagogical stage:
 4. **✍️ Free Production** — translate, dialogue-reorder
 
 Add `[stage: xxx]` to activity headers for visual indicators.
+
+### Spiral Review Pattern (B1+ Required)
+
+Each module should include review items from previous module(s) to reinforce retention.
+
+| Module Position | Review Requirements |
+|-----------------|---------------------|
+| M02-M04 | 3 items from M(n-1) |
+| M05+ | 2 items from M(n-1), 1 item from M(n-3) |
+| Checkpoints | 5+ items covering entire phase |
+
+**Template:**
+
+```markdown
+## quiz: Повторення (М[XX-1])
+> Quick review from the previous module.
+
+1. [Question testing M[XX-1] content]
+   - [x] correct
+   - [ ] distractor
+   - [ ] distractor
+   > [Explanation referencing previous module]
+
+2. [Question testing M[XX-1] content]
+   ...
+
+3. [Question testing M[XX-3] content, if M05+]
+   ...
+```
+
+**Placement:** Put spiral review quiz as the **first activity** in the Activities section. This warms up learners with familiar content before new challenges.
 
 ### Sentence Complexity by Level
 
@@ -765,6 +854,33 @@ Instead of: **Rule → Table → Exercises**
 
 Use: **Context → Pattern Discovery → Practice → Real Application**
 
+### Metacognition Elements (B1+ Required)
+
+**A. "Why This Matters" box (after title, before Diagnostic):**
+
+```markdown
+> 🎯 **Чому це важливо**
+>
+> [2-3 sentences explaining real-world impact of this grammar point]
+>
+> Native speakers instantly notice wrong aspect choices. Mastering this distinction
+> is what separates "textbook Ukrainian" from natural speech.
+```
+
+**B. "Self-Check" box (after Summary, before Словник):**
+
+```markdown
+> ✅ **Перевірте себе**
+>
+> Before moving on, can you:
+> - [ ] [Key skill 1 from this module]?
+> - [ ] [Key skill 2 from this module]?
+> - [ ] [Key skill 3 from this module]?
+>
+> If you checked all boxes, proceed to the next module.
+> If not, review the Analysis section and try the Practice activities again.
+```
+
 ### Required Sections (A2+)
 
 1. **Contextual Introduction (100+ words)**
@@ -802,6 +918,8 @@ Use: **Context → Pattern Discovery → Practice → Real Application**
 Instead of: **Table → Table → Table → Activities**
 
 Use: **Story → Vocabulary-in-Context → Analysis → Retelling**
+
+**Metacognition:** Vocabulary modules also include "Why This Matters" and "Self-Check" boxes (see Grammar-Focused section above for templates).
 
 ### Required Sections
 

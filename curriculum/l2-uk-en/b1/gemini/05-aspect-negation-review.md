@@ -1,30 +1,30 @@
 # Audit Report: 05-aspect-negation.md
 **Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1250
-**Overall Status:** ❌ FAIL
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 2123/1250
+- **Words:** ⚠️ 2375/1250 (>2250 may be too long)
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 48.7% LOW (target 50-55% (grammar))
+- **Immersion:** 🇺🇦 50.1% (target 50-60% (B1.1 Aspect))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Intro/Narrative** | ✅ | 128 | Included in Core |
 | **Diagnostic** | ✅ | 235 | Included in Core |
 | **Analysis** | ⚪️ | 497 | Skipped |
 | **Deep Dive** | ✅ | 847 | Included in Core |
 | **Practice** | ⚪️ | 413 | Skipped |
-| **Summary** | ✅ | 131 | Included in Core |
+| **Summary** | ✅ | 255 | Included in Core |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **quiz: Aspect in Negation** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Negation Vocabulary** | 🎮 | 14 | Activity (14 items, min 8) |

@@ -1,0 +1,368 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-54",
+    "moduleId": "mod-uk-A2-54",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2",
+    "moduleNumber": 54,
+    "moduleType": "vocabulary",
+    "pedagogy": "Narrative",
+    "immersionLevel": 0.4,
+    "title": "Health & Body",
+    "titleUk": null,
+    "subtitle": "Feeling Good",
+    "description": {
+      "Name body parts": "голова, рука, серце"
+    },
+    "objectives": [
+      {
+        "Name body parts": "голова, рука, серце"
+      },
+      {
+        "Describe symptoms": "болить, температура"
+      },
+      {
+        "Visit a doctor/pharmacy": "ліки, рецепт"
+      },
+      {
+        "Give health advice": "пийте воду, не хворійте"
+      }
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "dative-subjects",
+      "imperative-health"
+    ],
+    "tags": [
+      "vocabulary",
+      "health",
+      "body",
+      "doctor"
+    ],
+    "totalDuration": 60,
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Health & Body",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Warm-up\n\nЯк ви почуваєтеся тсьогодні? Що ви робите, коли у вас болить голова? Ви часто ходите до лікаря?\n\nЗдоров'я — це найважливіше. Українці часто кажуть: \"Головне — це здоров'я\" (*Health is the main thing*). Сьогодні ми вивчимо, як говорити про своє тіло і самопочуття.\n\nIn this module, you'll learn to describe symptoms, visit a pharmacy, and understand the doctor's orders.\n\n> [!important] **Myth Buster** \"Free Healthcare?\"\n> Constitutionally, healthcare in Ukraine is free. In reality, it's a mix. State clinics (*поліклініки*) are free but crowded. Private clinics (*приватні клініки*) offer modern service but cost money. Also, Ukrainians can sign a declaration with a family doctor using the electronic system **eHealth** (Helsi.me), which has modernized the system significantly.\n\n## Presentation\n\n### Body Parts (Частини тіла)\n\nFrom head to toe:\n\n| Слово | Переклад | Приклад |\n|-------|----------|---------|\n| **голова** | head | Болить голова. |\n| **рука** | arm/hand | Права рука. |\n| **нога** | leg/foot | Ліва нога. |\n| **спина** | back | Рівна спина. |\n| **живіт** | stomach/belly | Болить живіт. |\n| **серце** | heart | Добре серце. |\n| **очі** (pl) | eyes | Блакитні очі. |\n| **зуб** | tooth | Болить зуб. |\n\n### Symptoms & Illness\n\n- **хворіти** — to be sick: *Я хворію.*\n- **біль** (m) — pain: *Сильний біль.*\n- **температура** — fever/temperature: *У нього висока температура.*\n- **нежить** (m) — runny nose: *У мене нежить.*\n- **кашель** (m) — cough: *Сухий кашель.*\n- **грип** — flu: *Це просто грип.*\n- **застуда** — cold: *Це звичайна застуда.*\n\n### Treatment (Лікування)\n\n- **лікар** — doctor: *Викликати лікаря.*\n- **ліки** (pl) — medicine: *Пити ліки.*\n- **таблетка** — pill/tablet: *Таблетка від голови.*\n- **аптека** — pharmacy: *Купити в аптеці.*\n- **швидка допомога** — ambulance: *Дзвонити в швидку (103).*\n- **рецепт** — prescription (or recipe): *Лікар дав рецепт.*\n- **одужувати** — to recover/get well: *Швидше одужуйте!*\n\n> [!note] Grammar Point: Dative Constructions\n> To say \"something hurts me\", we use:\n> - **У мене болить** + Nominative body part.\n>   * *У мене болить голова.* (My head hurts).\n>   * *У мене болять ноги.* (My legs hurt - Plural verb).\n> Alternatively (less common for pain, more for state):\n> - **Мені** погано. (I feel bad - Dative).\n> - **Мені** холодно. (I feel cold).\n\n> [!cultural] **Cultural Insight** Mineral Waters\n> Ukraine is famous for healing mineral waters (*мінеральні води*). Resorts like **Truskavets**, **Morshyn**, and **Myrhorod** attract thousands of people. They drink water like \"Naftusya\" to treat liver or kidney problems. It smells like oil but it works!\n\n## Practice\n\n### Story Time: A Bad Morning\n\nАндрій прокинувся вранці і зрозумів: йому погано.\nУ нього боліла **голова** і горло.\nВін поміряв **температуру**. Градусник показав 38.5.\n— О ні, це **хвороба**, — подумав Андрій.\nВін подзвонив на роботу.\n— Алло, шеф? Я не прийду. Я **захворів**.\n— Одужуй, Андрію, — сказав шеф.\n\nАндрій ліг у ліжко. Він пив багато чаю з лимоном і медом.\nУ нього був **нежить** і сильний **кашель**.\nЙого кіт Мурчик ліг йому на **ноги**, щоб гріти їх.\nКоти — найкращі лікарі.\n\n### Story Time: At the Pharmacy\n\nУ Олени заболів **зуб**. Це був жахливий **біль**.\nВона не могла їсти і спати.\nВона пішла в **аптеку**.\nФармацевт була дуже приємна жінка.\n— Добрий день. Що у вас трапилося?\n— У мене дуже болить зуб, — сказала Олена. — Дайте щось від болю.\n— Візьміть ці **таблетки**. Пийте одну таблетку двічі на день. Але вам треба до стоматолога.\n— Я знаю, — зітхнула Олена. — Я піду завтра.\n— Ось ваша решта. Одужуйте!\n\n### Story Time: The Doctor's Visit\n\nІван прийшов до сімейного **лікаря**.\n— Добрий день, лікарю.\n— Добрий день. На що скаржитеся?\n— У мене болить **спина** і **серце**. Я швидко втомлююся.\nЛікар послухав серце і поміряв тиск.\n— Ви багато працюєте? — спитав лікар.\n— Так, я працюю 12 годин на день за комп'ютером.\n— Вам треба відпочивати. Більше гуляйте, менше пийте кави. Ось **рецепт** на вітаміни.\n— Дякую, лікарю.\n— Бережіть себе!\n\n### Why We Say \"Будьмо!\"\n\nWhen Ukrainians toast at a party, they say \"**Будьмо!**\".\nIt looks short, but it comes from \"Будьмо здорові!\" (Let us be healthy!).\nHealth is the central theme of Ukrainian well-being.\nEven when someone sneezes (*чхає*), we immediately say \"**Будь здоров!**\" (Be healthy!).\nSo, taking care of yourself is not just medical, it is cultural.\n\n### Story Time: Eye Test\n\nМарія погано бачить. Вона пішла до окуліста.\n— Сядьте тут, — каже лікар. — Закрийте ліве **око**. Що ви бачите?\n— Я бачу літери Ш, Б, М, Н...\n— Добре. Тепер закрийте праве око.\n— Ой, тут я нічого не бачу. Все розмито.\n— Це погано, — каже лікар. — У вас впав зір.\n— Вам потрібні окуляри, — каже лікар.\nМарія вибрала красиву оправу. Тепер вона виглядає дуже стильно.\n\n### 5 Rules of Healthy Life\n\nУкраїнські лікарі радять:\n1. **Пийте воду**. Мінімум 2 літри на день. Це корисно для шкіри і **шлунка**.\n2. **Гуляйте пішки**. 10 000 кроків щодня. Це найкращий спорт.\n3. **Їжте овочі**. Борщ — це вітамінна бомба!\n4. **Спіть 8 годин**. Сон лікує стрес.\n5. **Усміхайтеся**. Позитивні емоції зміцнюють імунітет.\n\n### Story Time: At the Dentist\n\nУ Максима випала пломба. Він записався до **стоматолога**.\nКлініка була сучасна і чиста.\n— Сідайте у крісло, — сказав лікар. — Відкрийте рот.\nМаксим боявся. У дитинстві він не любив стоматологів.\nАле лікар зробив анестезію. Максим нічого не відчував.\nЛікар працював швидко.\n— Готово! — сказав він через 20 хвилин. — Не їжте дві години.\nМаксим подивився у дзеркало. Його зуб був як новий.\n— Дякую! — сказав він. — Тепер я можу усміхатися.\n\n### Traditional Medicine\n\nUkrainians trust modern doctors, but they also love **народна медицина** (folk medicine).\nIf you have a cold (**застуда**), grandmothers will say:\n1. Drink tea with raspberry jam (**малина**). It lowers temperature.\n2. Eat garlic (**часник**) to kill viruses.\n3. Drink warm milk with honey and butter for a cough.\n4. Put mustard plasters (*гірчичники*) on your back.\nScience says some of this works, some doesn't. But tea with raspberry is definitely delicious!\n\n### Medical Insurance in Ukraine\n\nMost big companies provide medical insurance (*медична страховка*) for employees.\nIt covers private clinics and medicines.\nIf you work in IT or international business, you probably have it.\nWithout insurance, a visit to a private doctor costs 500-1000 UAH ($12-$25).\nState medicine is free, but you often pay \"charitable contributions\" (*благодійні внески*) for better service.\n\n> [!cultural] **Cultural Insight** Sanatoriums\n> A unique Soviet legacy is the **Sanatorium**. It is a mix of a hospital and a hotel. People go there for 2-3 weeks to drink mineral water, take mud baths (*грязі*), and relax. It is not just for sick people; it is for prevention (*профілактика*)."
+      },
+      {
+        "id": "section-2",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "You learned to:\n- Be anatomy savvy: **голова**, **рука**, **спина**, **серце**\n- Describe pain: **болить**, **температура**, **нежить**, **кашель**\n- Navigate medical help: **лікар**, **аптека**, **ліки**, **таблетка**\n- Wish health: **Одужуйте!** (Get well soon), **Будьте здорові!**\n\nTake care and stay healthy!"
+      },
+      {
+        "id": "section-3",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## quiz: Health Quiz\n\n1. What do you do if you have a fever?\n   - [x] call a doctor / stay home\n   - [ ] go to a disco\n   - [ ] eat ice cream\n   > Stay home.\n\n2. \"Швидка допомога\" number is...\n   - [x] 103\n   - [ ] 911\n   - [ ] 101\n   > 103 usually.\n\n3. \"У мене болить...\" requires...\n   - [x] Nominative (subject of pain)\n   - [ ] Accusative\n   - [ ] Instrumental\n   > \"Hurt(s)\" is the verb, body part is subject.\n\n4. Naftusya is...\n   - [x] mineral water\n   - [ ] wine\n   - [ ] soup\n   > Healing water.\n\n5. \"Аптека\" sells...\n   - [x] ліки\n   - [ ] хліб\n   - [ ] одяг\n   > Medicine.\n\n6. \"Одужуйте\" means...\n   - [x] Get well soon\n   - [ ] Good bye\n   - [ ] Good appetite\n   > Get well.\n\n7. \"Стоматолог\" treats...\n   - [x] teeth\n   - [ ] legs\n   - [ ] heart\n   > Dentist.\n\n8. \"Серце\" is...\n   - [x] heart\n   - [ ] stomach\n   - [ ] liver\n   > Heart.\n\n9. \"Нежить\" is...\n   - [x] runny nose\n   - [ ] headache\n   - [ ] broken leg\n   > Runny nose.\n\n10. A pill is...\n    - [x] таблетка\n    - [ ] тарілка\n    - [ ] табуретка\n    > Таблетка.\n\n11. \"Будьмо!\" relates to...\n    - [x] health\n    - [ ] money\n    - [ ] weather\n    > \"Let us be healthy\".\n\n12. Helsi.me is for...\n    - [x] booking doctors\n    - [ ] buying food\n    - [ ] watching movies\n    > eHealth system.\n\n## match-up: Body & Health\n\n- голова :: head\n- рука :: hand/arm\n- нога :: leg/foot\n- спина :: back\n- живіт :: stomach\n- серце :: heart\n- зуб :: tooth\n- лікар :: doctor\n- ліки :: medicine\n- аптека :: pharmacy\n- температура :: fever\n- біль :: pain\n\n## fill-in: My Symptoms\n\n1. У мене болить ____. (head)\n   > [!answer] голова\n   > [!options] голова | голову | головою | голові\n   > Nominative subject.\n\n2. У нього висока ____. (temperature)\n   > [!answer] температура\n   > [!options] температура | температуру | температурою | температури\n   > Nominative.\n\n3. Мені треба купити ____. (medicine)\n   > [!answer] ліки\n   > [!options] ліки | лікаря | ліків | ліками\n   > Accusative (plural).\n\n4. У неї болить ____. (tooth)\n   > [!answer] зуб\n   > [!options] зуб | зуби | зуба | зубом\n   > Nominative subject.\n\n5. Викличіть ____! (doctor - Acc)\n   > [!answer] лікаря\n   > [!options] лікаря | лікар | лікарем | лікарю\n   > Call whom? Accusative (animate).\n\n6. Я п'ю ____. (pills)\n   > [!answer] таблетки\n   > [!options] таблетки | таблетка | таблеток | таблетками\n   > Accusative plural.\n\n7. У мене сильний ____. (cough)\n   > [!answer] кашель\n   > [!options] кашель | кашлю | кашлем | нежить\n   > Nominative subject.\n\n8. Болять ____. (eyes)\n   > [!answer] очі\n   > [!options] очі | око | очам | очима\n   > Plural subject.\n\n9. Це ____ від грипу. (medicine/cure)\n   > [!answer] ліки\n   > [!options] ліки | таблетка | мазь | сироп\n   > General term.\n\n10. Де тут ____? (pharmacy)\n    > [!answer] аптека\n    > [!options] аптека | аптеку | аптеки | аптекою\n    > Subject.\n\n11. Лікар дав ____. (prescription)\n    > [!answer] рецепт\n    > [!options] рецепт | рецепту | рецептом | рецепти\n    > Accusative inanimate.\n\n12. У мене болить ____. (back)\n    > [!answer] спина\n    > [!options] спина | спину | спиною | спині\n    > Subject.\n\n## true-false: Medical Beliefs\n\n1. Tea with lemon and honey is popular for colds.\n   - [x] true\n   > Traditional remedy.\n\n2. You buy bread in \"аптека\".\n   - [x] false\n   > Pharmacy sells medicine.\n\n3. \"Швидка\" means fast.\n   - [x] true\n   > Ambulance (Fast Help).\n\n4. Truskavets is a ski resort.\n   - [x] false\n   > Mineral water resort. Bukovel is for skiing.\n\n5. \"Мені погано\" means \"I feel bad\".\n   - [x] true\n   > Yes.\n\n6. If your head hurts, you say \"Я болю голову\".\n   - [x] false\n   > \"У мене болить голова\".\n\n7. \"Одужуйте\" is an insult.\n   - [x] false\n   > It's a kind wish (Get well).\n\n8. 36.6 is a normal temperature.\n   - [x] true\n   > Celsius standard.\n\n9. \"Грип\" is dangerous.\n   - [x] true\n   > Flu.\n\n10. Cats can cure diseases.\n    - [x] false\n    > Myth, but they comfort you!\n\n11. You need a recipe to cook soup, and a \"рецепт\" to buy strong pills.\n    - [x] true\n    > Word is same (recipe/prescription).\n\n12. \"Серце\" is on the right side.\n    - [x] false\n    > Left usually.\n\n## group-sort: Body vs Illness\n\n### Groups\n- Body Parts\n- Symptoms\n- Medicine/Help\n\n### Items\n- голова: Body Parts\n- рука: Body Parts\n- нога: Body Parts\n- спина: Body Parts\n- серце: Body Parts\n- температура: Symptoms\n- кашель: Symptoms\n- біль: Symptoms\n- нежить: Symptoms\n- таблетка: Medicine/Help\n- лікар: Medicine/Help\n- аптека: Medicine/Help\n- рецепт: Medicine/Help\n\n## unjumble: Health Sentences\n\n1. У / мене / дуже / болить / голова\n   > [!answer] У мене дуже болить голова\n   > I have a very bad headache.\n\n2. Будь / ласка / викличіть / лікаря\n   > [!answer] Будь ласка викличіть лікаря\n   > Please call a doctor.\n\n3. Я / хочу / купити / ліки\n   > [!answer] Я хочу купити ліки\n   > I want to buy medicine.\n\n4. У / вас / є / температура\n   > [!answer] У вас є температура\n   > Do you have a fever?\n\n5. Пийте / багато / теплої / води\n   > [!answer] Пийте багато теплої води\n   > Drink a lot of warm water.\n\n6. Де / найближча / цілодобова / аптека\n   > [!answer] Де найближча цілодобова аптека\n   > Where is the nearest 24/7 pharmacy?\n\n7. Мені / треба / піти / до / стоматолога\n   > [!answer] Мені треба піти до стоматолога\n   > I need to go to the dentist.\n\n8. Як / ви / себе / почуваєте\n   > [!answer] Як ви себе почуваєте\n   > How do you feel?\n\n9. Спорт / корисний / для / здоров'я\n   > [!answer] Спорт корисний для здоров'я\n   > Sport is useful for health.\n\n10. Бажаю / вам / міцного / здоров'я\n    > [!answer] Бажаю вам міцного здоров'я\n    > I wish you strong health.\n\n11. Ця / таблетка / від / голови\n    > [!answer] Ця таблетка від голови\n    > This pill is for the head(ache).\n\n12. Ви / вже / одужали\n    > [!answer] Ви вже одужали\n    > Have you recovered already?\n\n## error-correction: Grammar Clinic\n\n1. Я болю голову.\n   > [!error] Я болю голову\n   > [!answer] У мене болить голова\n   > [!options] У мене болить голова | Я маю біль голови | Голова болить мене\n   > [!explanation] Standard phrase: У мене болить + Nom.\n\n2. У мене болить зуби.\n   > [!error] болить\n   > [!answer] болять\n   > [!options] болять | болить | болів | боліли\n   > [!explanation] Plural subject (зуби): болять.\n\n3. Я треба ліки.\n   > [!error] Я\n   > [!answer] Мені\n   > [!options] Мені | Я | Мене | Мною\n   > [!explanation] Dative subject for need: Мені треба.\n\n4. Він має температура.\n   > [!error] температура\n   > [!answer] температуру\n   > [!options] температуру | температура | температури | температурою\n   > [!explanation] Accusative object: має (що?) температуру. OR better: У нього температура. But focusing on case error here.\n\n5. Це таблетка для голову.\n   > [!error] для\n   > [!answer] від\n   > [!options] від | для | з | про\n   > [!explanation] Pills \"from\" pain: від голови. \"Для\" means \"for benefit of\". A pill *for benefit of* a headache sounds wrong.\n\n6. Лікар дав рецепта.\n   > [!error] рецепта\n   > [!answer] рецепт\n   > [!options] рецепт | рецепта | рецепту | рецептом\n   > [!explanation] Accusative inanimate: рецепт.\n\n7. Мені болить нога.\n   > [!error] Мені\n   > [!answer] У мене\n   > [!options] У мене | Мені | Я | Мене\n   > [!explanation] \"Мені болить\" is dialect/colloquial. Standard: \"У мене болить\".\n\n8. Я пішов в аптека.\n   > [!error] аптека\n   > [!answer] аптеку\n   > [!options] аптеку | аптека | аптеці | аптекою\n   > [!explanation] Direction (Accusative): в аптеку.\n\n9. У мене немає кашель.\n   > [!error] кашель\n   > [!answer] кашлю\n   > [!options] кашлю | кашель | кашля | кашлем\n   > [!explanation] Genitive negation: немає кашлю.\n\n10. Мої очі блакитні.\n    > [!error] блакитні\n    > [!answer] блакитні\n    > [!options] блакитні | блакитна | блакитний | блакитне\n    > Correct.\n    > Let's make error.\n    > *Мої очі блакитний.* -> блакитні.\n\n    Rephrase 10:\n    Мої очі блакитний.\n    > [!error] блакитний\n    > [!answer] блакитні\n    > [!options] блакитні | блакитний | блакитна | блакитне\n    > [!explanation] Plural adjective.\n\n11. Вона зламала руку.\n    > [!error] руку\n    > [!answer] руку\n    > [!options] руку | рука | руки | рукою\n    > Correct.\n    > Let's make error.\n    > *Вона зламала рука.* -> руку.\n\n    Rephrase 11:\n    Вона зламала рука.\n    > [!error] рука\n    > [!answer] руку\n    > [!options] руку | рука | руки | рукою\n    > [!explanation] Accusative: руку.\n\n12. Будьте здоровий! (to plural/polite)\n    > [!error] здоровий\n    > [!answer] здорові\n    > [!options] здорові | здоровий | здорова | здорове\n    > [!explanation] Plural/Formal: Будьте здорові.\n\n## cloze: Call the Doctor\n\n— Алло, це [___:1]?\n— Так, оператор слухає. Що сталося?\n— Моєму чоловіку [___:2].\n— Які симптоми?\n— У нього сильний [___:3] в грудях і важко дихати.\n— Яка у нього [___:4]?\n— Нормальна.\n— Скажіть адресу.\n— Вулиця Садова, 5.\n— Чекайте, [___:5] виїхала.\n— Дякую, ми чекаємо [___:6].\n\n1. швидка\n> [!answer] швидка\n> [!options] швидка | піца | таксі\n\n2. погано\n> [!answer] погано\n> [!options] погано | добре | весело\n\n3. біль\n> [!answer] біль\n> [!options] біль | сміх | сон\n\n4. температура\n> [!answer] температура\n> [!options] температура | машина | зарплата\n\n5. бригада\n> [!answer] бригада\n> [!options] бригада | погода | вода\n> Ambulance team/brigade.\n\n6. лікаря\n> [!answer] лікаря\n> [!options] лікаря | поштаря | кухаря\n\n## dialogue-reorder: Sick Leave\n\n- Добрий ранок. Я хочу повідомити, що я захворів.\n- Добрий ранок. Що трапилося?\n- У мене висока температура і горло болить.\n- Це схоже на грип. Ти викликав лікаря?\n- Так, лікар буде після обіду.\n- Добре, залишайся вдома і лікуйся.\n- Дякую. Коли мені повернутися на роботу?\n- Коли будеш здоровий. Не поспішай.\n- Добре. Я надішлю лікарняний (sick note).\n- Одужуй! Чекаємо тебе.\n\n## mark-the-words: Body Parts\n\n> [!instruction] Mark body parts.\n\nУ людини є одна [голова], дві [руки] і дві [ноги]. На обличчі є [очі], ніс і рот. У роті є [зуби]. У грудях б'ється [серце]. Коли ми їмо, працює [шлунок]. Якщо ми носимо важке, болить [спина].\n\n## select: Medical Choice\n\n1. Headache.\n   - [x] Головний біль.\n   - [ ] Головний убір.\n   > Headache vs Headgear.\n\n2. Pharmacy.\n   - [x] Аптека.\n   - [ ] Оптика.\n   > Pharmacy.\n\n3. Doctor.\n   - [x] Лікар.\n   - [ ] Лікеро.\n   > Doctor.\n\n4. To recover.\n   - [x] Одужувати.\n   - [ ] Вмирати.\n   > Recover vs Die.\n\n5. Cold (illness).\n   - [x] Застуда.\n   - [ ] Посуда.\n   > Cold vs Dishes.\n\n6. Pill.\n   - [x] Таблетка.\n   - [ ] Серветка.\n   > Pill vs Napkin.\n\n7. Eye.\n   - [x] Око.\n   - [ ] Вікно.\n   > Eye vs Window.\n\n8. Heart.\n   - [x] Серце.\n   - [ ] Сонце.\n   > Heart vs Sun.\n\n9. Pain.\n   - [x] Біль.\n   - [ ] Біл.\n   > Pain.\n\n10. Fever/Temp.\n    - [x] Температура.\n    - [ ] Література.\n    > Temperature vs Literature.\n\n11. Ambulance.\n    - [x] Швидка.\n    - [ ] Повільна.\n    > Fast vs Slow.\n\n12. To cough.\n    - [x] Кашляти.\n    - [ ] Коштувати.\n    > Cough vs Cost."
+      },
+      {
+        "id": "section-4",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| здоров'я | /zdɔˈrɔʋjja/ | health | noun | n | |\n| голова | /ɦɔlɔˈʋa/ | head | noun | f | |\n| рука | /ruˈka/ | hand/arm | noun | f | |\n| нога | /nɔˈɦa/ | leg/foot | noun | f | |\n| спина | /spɪˈna/ | back | noun | f | |\n| живіт | /ʒɪˈʋit/ | stomach | noun | m | |\n| серце | /ˈsɛrtse/ | heart | noun | n | |\n| око | /ˈɔkɔ/ | eye | noun | n | Pl: очі. |\n| зуб | /zub/ | tooth | noun | m | |\n| лікар | /ˈlikar/ | doctor | noun | m | |\n| ліки | /ˈlikɪ/ | medicine | noun | pl | |\n| таблетка | /tabˈlɛtka/ | pill | noun | f | |\n| аптека | /apˈtɛka/ | pharmacy | noun | f | |\n| рецепт | /reˈtsɛpt/ | prescription | noun | m | |\n| хворіти | /xʋɔˈritɪ/ | to be sick | verb | - | |\n| одужувати | /ɔˈduʒuʋatɪ/ | to recover | verb | - | |\n| біль | /bilʲ/ | pain | noun | m | |\n| температура | /temperaˈtura/ | temperature | noun | f | |\n| нежить | /ˈnɛʒɪtʲ/ | runny nose | noun | m | |\n| кашель | /ˈkaʃelʲ/ | cough | noun | m | |\n| застуда | /zaˈstuda/ | cold | noun | f | |\n| грип | /ɦrɪp/ | flu | noun | m | |\n| клініка | /ˈklinika/ | clinic | noun | f | |\n| швидка | /ʃʋɪdˈka/ | ambulance | noun | f | |\n| горло | /ˈɦɔrlɔ/ | throat | noun | n | |\n| тиск | /tɪsk/ | pressure | noun | m | |\n| кров | /krɔʋ/ | blood | noun | f | |\n| тіло | /ˈtilɔ/ | body | noun | n | |\n| допомога | /dɔpɔˈmɔɦa/ | help | noun | f | |\n| почуватися | /pɔtʃuˈʋatɪsʲa/ | to feel | verb | - | |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-54\ntitle: Health & Body\nsubtitle: \"Feeling Good\"\nversion: \"1.0\"\nphase: \"A2\"\npedagogy: \"Narrative\"\nduration: 60\ntransliteration: none\ntags: [\"vocabulary\", \"health\", \"body\", \"doctor\"]\ngrammar: [\"dative-subjects\", \"imperative-health\"]\nobjectives:\n  - Name body parts: голова, рука, серце\n  - Describe symptoms: болить, температура\n  - Visit a doctor/pharmacy: ліки, рецепт\n  - Give health advice: пийте воду, не хворійте\nvocab_count: 30\n---\n\n# Health & Body\n\n## Warm-up\n\nЯк ви почуваєтеся тсьогодні? Що ви робите, коли у вас болить голова? Ви часто ходите до лікаря?\n\nЗдоров'я — це найважливіше. Українці часто кажуть: \"Головне — це здоров'я\" (*Health is the main thing*). Сьогодні ми вивчимо, як говорити про своє тіло і самопочуття.\n\nIn this module, you'll learn to describe symptoms, visit a pharmacy, and understand the doctor's orders.\n\n> [!important] **Myth Buster** \"Free Healthcare?\"\n> Constitutionally, healthcare in Ukraine is free. In reality, it's a mix. State clinics (*поліклініки*) are free but crowded. Private clinics (*приватні клініки*) offer modern service but cost money. Also, Ukrainians can sign a declaration with a family doctor using the electronic system **eHealth** (Helsi.me), which has modernized the system significantly.\n\n## Presentation\n\n### Body Parts (Частини тіла)\n\nFrom head to toe:\n\n| Слово | Переклад | Приклад |\n|-------|----------|---------|\n| **голова** | head | Болить голова. |\n| **рука** | arm/hand | Права рука. |\n| **нога** | leg/foot | Ліва нога. |\n| **спина** | back | Рівна спина. |\n| **живіт** | stomach/belly | Болить живіт. |\n| **серце** | heart | Добре серце. |\n| **очі** (pl) | eyes | Блакитні очі. |\n| **зуб** | tooth | Болить зуб. |\n\n### Symptoms & Illness\n\n- **хворіти** — to be sick: *Я хворію.*\n- **біль** (m) — pain: *Сильний біль.*\n- **температура** — fever/temperature: *У нього висока температура.*\n- **нежить** (m) — runny nose: *У мене нежить.*\n- **кашель** (m) — cough: *Сухий кашель.*\n- **грип** — flu: *Це просто грип.*\n- **застуда** — cold: *Це звичайна застуда.*\n\n### Treatment (Лікування)\n\n- **лікар** — doctor: *Викликати лікаря.*\n- **ліки** (pl) — medicine: *Пити ліки.*\n- **таблетка** — pill/tablet: *Таблетка від голови.*\n- **аптека** — pharmacy: *Купити в аптеці.*\n- **швидка допомога** — ambulance: *Дзвонити в швидку (103).*\n- **рецепт** — prescription (or recipe): *Лікар дав рецепт.*\n- **одужувати** — to recover/get well: *Швидше одужуйте!*\n\n> [!note] Grammar Point: Dative Constructions\n> To say \"something hurts me\", we use:\n> - **У мене болить** + Nominative body part.\n>   * *У мене болить голова.* (My head hurts).\n>   * *У мене болять ноги.* (My legs hurt - Plural verb).\n> Alternatively (less common for pain, more for state):\n> - **Мені** погано. (I feel bad - Dative).\n> - **Мені** холодно. (I feel cold).\n\n> [!cultural] **Cultural Insight** Mineral Waters\n> Ukraine is famous for healing mineral waters (*мінеральні води*). Resorts like **Truskavets**, **Morshyn**, and **Myrhorod** attract thousands of people. They drink water like \"Naftusya\" to treat liver or kidney problems. It smells like oil but it works!\n\n## Practice\n\n### Story Time: A Bad Morning\n\nАндрій прокинувся вранці і зрозумів: йому погано.\nУ нього боліла **голова** і горло.\nВін поміряв **температуру**. Градусник показав 38.5.\n— О ні, це **хвороба**, — подумав Андрій.\nВін подзвонив на роботу.\n— Алло, шеф? Я не прийду. Я **захворів**.\n— Одужуй, Андрію, — сказав шеф.\n\nАндрій ліг у ліжко. Він пив багато чаю з лимоном і медом.\nУ нього був **нежить** і сильний **кашель**.\nЙого кіт Мурчик ліг йому на **ноги**, щоб гріти їх.\nКоти — найкращі лікарі.\n\n### Story Time: At the Pharmacy\n\nУ Олени заболів **зуб**. Це був жахливий **біль**.\nВона не могла їсти і спати.\nВона пішла в **аптеку**.\nФармацевт була дуже приємна жінка.\n— Добрий день. Що у вас трапилося?\n— У мене дуже болить зуб, — сказала Олена. — Дайте щось від болю.\n— Візьміть ці **таблетки**. Пийте одну таблетку двічі на день. Але вам треба до стоматолога.\n— Я знаю, — зітхнула Олена. — Я піду завтра.\n— Ось ваша решта. Одужуйте!\n\n### Story Time: The Doctor's Visit\n\nІван прийшов до сімейного **лікаря**.\n— Добрий день, лікарю.\n— Добрий день. На що скаржитеся?\n— У мене болить **спина** і **серце**. Я швидко втомлююся.\nЛікар послухав серце і поміряв тиск.\n— Ви багато працюєте? — спитав лікар.\n— Так, я працюю 12 годин на день за комп'ютером.\n— Вам треба відпочивати. Більше гуляйте, менше пийте кави. Ось **рецепт** на вітаміни.\n— Дякую, лікарю.\n— Бережіть себе!\n\n### Why We Say \"Будьмо!\"\n\nWhen Ukrainians toast at a party, they say \"**Будьмо!**\".\nIt looks short, but it comes from \"Будьмо здорові!\" (Let us be healthy!).\nHealth is the central theme of Ukrainian well-being.\nEven when someone sneezes (*чхає*), we immediately say \"**Будь здоров!**\" (Be healthy!).\nSo, taking care of yourself is not just medical, it is cultural.\n\n### Story Time: Eye Test\n\nМарія погано бачить. Вона пішла до окуліста.\n— Сядьте тут, — каже лікар. — Закрийте ліве **око**. Що ви бачите?\n— Я бачу літери Ш, Б, М, Н...\n— Добре. Тепер закрийте праве око.\n— Ой, тут я нічого не бачу. Все розмито.\n— Це погано, — каже лікар. — У вас впав зір.\n— Вам потрібні окуляри, — каже лікар.\nМарія вибрала красиву оправу. Тепер вона виглядає дуже стильно.\n\n### 5 Rules of Healthy Life\n\nУкраїнські лікарі радять:\n1. **Пийте воду**. Мінімум 2 літри на день. Це корисно для шкіри і **шлунка**.\n2. **Гуляйте пішки**. 10 000 кроків щодня. Це найкращий спорт.\n3. **Їжте овочі**. Борщ — це вітамінна бомба!\n4. **Спіть 8 годин**. Сон лікує стрес.\n5. **Усміхайтеся**. Позитивні емоції зміцнюють імунітет.\n\n### Story Time: At the Dentist\n\nУ Максима випала пломба. Він записався до **стоматолога**.\nКлініка була сучасна і чиста.\n— Сідайте у крісло, — сказав лікар. — Відкрийте рот.\nМаксим боявся. У дитинстві він не любив стоматологів.\nАле лікар зробив анестезію. Максим нічого не відчував.\nЛікар працював швидко.\n— Готово! — сказав він через 20 хвилин. — Не їжте дві години.\nМаксим подивився у дзеркало. Його зуб був як новий.\n— Дякую! — сказав він. — Тепер я можу усміхатися.\n\n### Traditional Medicine\n\nUkrainians trust modern doctors, but they also love **народна медицина** (folk medicine).\nIf you have a cold (**застуда**), grandmothers will say:\n1. Drink tea with raspberry jam (**малина**). It lowers temperature.\n2. Eat garlic (**часник**) to kill viruses.\n3. Drink warm milk with honey and butter for a cough.\n4. Put mustard plasters (*гірчичники*) on your back.\nScience says some of this works, some doesn't. But tea with raspberry is definitely delicious!\n\n### Medical Insurance in Ukraine\n\nMost big companies provide medical insurance (*медична страховка*) for employees.\nIt covers private clinics and medicines.\nIf you work in IT or international business, you probably have it.\nWithout insurance, a visit to a private doctor costs 500-1000 UAH ($12-$25).\nState medicine is free, but you often pay \"charitable contributions\" (*благодійні внески*) for better service.\n\n> [!cultural] **Cultural Insight** Sanatoriums\n> A unique Soviet legacy is the **Sanatorium**. It is a mix of a hospital and a hotel. People go there for 2-3 weeks to drink mineral water, take mud baths (*грязі*), and relax. It is not just for sick people; it is for prevention (*профілактика*).\n\n# Summary\n\nYou learned to:\n- Be anatomy savvy: **голова**, **рука**, **спина**, **серце**\n- Describe pain: **болить**, **температура**, **нежить**, **кашель**\n- Navigate medical help: **лікар**, **аптека**, **ліки**, **таблетка**\n- Wish health: **Одужуйте!** (Get well soon), **Будьте здорові!**\n\nTake care and stay healthy!\n\n# Activities\n\n## quiz: Health Quiz\n\n1. What do you do if you have a fever?\n   - [x] call a doctor / stay home\n   - [ ] go to a disco\n   - [ ] eat ice cream\n   > Stay home.\n\n2. \"Швидка допомога\" number is...\n   - [x] 103\n   - [ ] 911\n   - [ ] 101\n   > 103 usually.\n\n3. \"У мене болить...\" requires...\n   - [x] Nominative (subject of pain)\n   - [ ] Accusative\n   - [ ] Instrumental\n   > \"Hurt(s)\" is the verb, body part is subject.\n\n4. Naftusya is...\n   - [x] mineral water\n   - [ ] wine\n   - [ ] soup\n   > Healing water.\n\n5. \"Аптека\" sells...\n   - [x] ліки\n   - [ ] хліб\n   - [ ] одяг\n   > Medicine.\n\n6. \"Одужуйте\" means...\n   - [x] Get well soon\n   - [ ] Good bye\n   - [ ] Good appetite\n   > Get well.\n\n7. \"Стоматолог\" treats...\n   - [x] teeth\n   - [ ] legs\n   - [ ] heart\n   > Dentist.\n\n8. \"Серце\" is...\n   - [x] heart\n   - [ ] stomach\n   - [ ] liver\n   > Heart.\n\n9. \"Нежить\" is...\n   - [x] runny nose\n   - [ ] headache\n   - [ ] broken leg\n   > Runny nose.\n\n10. A pill is...\n    - [x] таблетка\n    - [ ] тарілка\n    - [ ] табуретка\n    > Таблетка.\n\n11. \"Будьмо!\" relates to...\n    - [x] health\n    - [ ] money\n    - [ ] weather\n    > \"Let us be healthy\".\n\n12. Helsi.me is for...\n    - [x] booking doctors\n    - [ ] buying food\n    - [ ] watching movies\n    > eHealth system.\n\n## match-up: Body & Health\n\n- голова :: head\n- рука :: hand/arm\n- нога :: leg/foot\n- спина :: back\n- живіт :: stomach\n- серце :: heart\n- зуб :: tooth\n- лікар :: doctor\n- ліки :: medicine\n- аптека :: pharmacy\n- температура :: fever\n- біль :: pain\n\n## fill-in: My Symptoms\n\n1. У мене болить ____. (head)\n   > [!answer] голова\n   > [!options] голова | голову | головою | голові\n   > Nominative subject.\n\n2. У нього висока ____. (temperature)\n   > [!answer] температура\n   > [!options] температура | температуру | температурою | температури\n   > Nominative.\n\n3. Мені треба купити ____. (medicine)\n   > [!answer] ліки\n   > [!options] ліки | лікаря | ліків | ліками\n   > Accusative (plural).\n\n4. У неї болить ____. (tooth)\n   > [!answer] зуб\n   > [!options] зуб | зуби | зуба | зубом\n   > Nominative subject.\n\n5. Викличіть ____! (doctor - Acc)\n   > [!answer] лікаря\n   > [!options] лікаря | лікар | лікарем | лікарю\n   > Call whom? Accusative (animate).\n\n6. Я п'ю ____. (pills)\n   > [!answer] таблетки\n   > [!options] таблетки | таблетка | таблеток | таблетками\n   > Accusative plural.\n\n7. У мене сильний ____. (cough)\n   > [!answer] кашель\n   > [!options] кашель | кашлю | кашлем | нежить\n   > Nominative subject.\n\n8. Болять ____. (eyes)\n   > [!answer] очі\n   > [!options] очі | око | очам | очима\n   > Plural subject.\n\n9. Це ____ від грипу. (medicine/cure)\n   > [!answer] ліки\n   > [!options] ліки | таблетка | мазь | сироп\n   > General term.\n\n10. Де тут ____? (pharmacy)\n    > [!answer] аптека\n    > [!options] аптека | аптеку | аптеки | аптекою\n    > Subject.\n\n11. Лікар дав ____. (prescription)\n    > [!answer] рецепт\n    > [!options] рецепт | рецепту | рецептом | рецепти\n    > Accusative inanimate.\n\n12. У мене болить ____. (back)\n    > [!answer] спина\n    > [!options] спина | спину | спиною | спині\n    > Subject.\n\n## true-false: Medical Beliefs\n\n1. Tea with lemon and honey is popular for colds.\n   - [x] true\n   > Traditional remedy.\n\n2. You buy bread in \"аптека\".\n   - [x] false\n   > Pharmacy sells medicine.\n\n3. \"Швидка\" means fast.\n   - [x] true\n   > Ambulance (Fast Help).\n\n4. Truskavets is a ski resort.\n   - [x] false\n   > Mineral water resort. Bukovel is for skiing.\n\n5. \"Мені погано\" means \"I feel bad\".\n   - [x] true\n   > Yes.\n\n6. If your head hurts, you say \"Я болю голову\".\n   - [x] false\n   > \"У мене болить голова\".\n\n7. \"Одужуйте\" is an insult.\n   - [x] false\n   > It's a kind wish (Get well).\n\n8. 36.6 is a normal temperature.\n   - [x] true\n   > Celsius standard.\n\n9. \"Грип\" is dangerous.\n   - [x] true\n   > Flu.\n\n10. Cats can cure diseases.\n    - [x] false\n    > Myth, but they comfort you!\n\n11. You need a recipe to cook soup, and a \"рецепт\" to buy strong pills.\n    - [x] true\n    > Word is same (recipe/prescription).\n\n12. \"Серце\" is on the right side.\n    - [x] false\n    > Left usually.\n\n## group-sort: Body vs Illness\n\n### Groups\n- Body Parts\n- Symptoms\n- Medicine/Help\n\n### Items\n- голова: Body Parts\n- рука: Body Parts\n- нога: Body Parts\n- спина: Body Parts\n- серце: Body Parts\n- температура: Symptoms\n- кашель: Symptoms\n- біль: Symptoms\n- нежить: Symptoms\n- таблетка: Medicine/Help\n- лікар: Medicine/Help\n- аптека: Medicine/Help\n- рецепт: Medicine/Help\n\n## unjumble: Health Sentences\n\n1. У / мене / дуже / болить / голова\n   > [!answer] У мене дуже болить голова\n   > I have a very bad headache.\n\n2. Будь / ласка / викличіть / лікаря\n   > [!answer] Будь ласка викличіть лікаря\n   > Please call a doctor.\n\n3. Я / хочу / купити / ліки\n   > [!answer] Я хочу купити ліки\n   > I want to buy medicine.\n\n4. У / вас / є / температура\n   > [!answer] У вас є температура\n   > Do you have a fever?\n\n5. Пийте / багато / теплої / води\n   > [!answer] Пийте багато теплої води\n   > Drink a lot of warm water.\n\n6. Де / найближча / цілодобова / аптека\n   > [!answer] Де найближча цілодобова аптека\n   > Where is the nearest 24/7 pharmacy?\n\n7. Мені / треба / піти / до / стоматолога\n   > [!answer] Мені треба піти до стоматолога\n   > I need to go to the dentist.\n\n8. Як / ви / себе / почуваєте\n   > [!answer] Як ви себе почуваєте\n   > How do you feel?\n\n9. Спорт / корисний / для / здоров'я\n   > [!answer] Спорт корисний для здоров'я\n   > Sport is useful for health.\n\n10. Бажаю / вам / міцного / здоров'я\n    > [!answer] Бажаю вам міцного здоров'я\n    > I wish you strong health.\n\n11. Ця / таблетка / від / голови\n    > [!answer] Ця таблетка від голови\n    > This pill is for the head(ache).\n\n12. Ви / вже / одужали\n    > [!answer] Ви вже одужали\n    > Have you recovered already?\n\n## error-correction: Grammar Clinic\n\n1. Я болю голову.\n   > [!error] Я болю голову\n   > [!answer] У мене болить голова\n   > [!options] У мене болить голова | Я маю біль голови | Голова болить мене\n   > [!explanation] Standard phrase: У мене болить + Nom.\n\n2. У мене болить зуби.\n   > [!error] болить\n   > [!answer] болять\n   > [!options] болять | болить | болів | боліли\n   > [!explanation] Plural subject (зуби): болять.\n\n3. Я треба ліки.\n   > [!error] Я\n   > [!answer] Мені\n   > [!options] Мені | Я | Мене | Мною\n   > [!explanation] Dative subject for need: Мені треба.\n\n4. Він має температура.\n   > [!error] температура\n   > [!answer] температуру\n   > [!options] температуру | температура | температури | температурою\n   > [!explanation] Accusative object: має (що?) температуру. OR better: У нього температура. But focusing on case error here.\n\n5. Це таблетка для голову.\n   > [!error] для\n   > [!answer] від\n   > [!options] від | для | з | про\n   > [!explanation] Pills \"from\" pain: від голови. \"Для\" means \"for benefit of\". A pill *for benefit of* a headache sounds wrong.\n\n6. Лікар дав рецепта.\n   > [!error] рецепта\n   > [!answer] рецепт\n   > [!options] рецепт | рецепта | рецепту | рецептом\n   > [!explanation] Accusative inanimate: рецепт.\n\n7. Мені болить нога.\n   > [!error] Мені\n   > [!answer] У мене\n   > [!options] У мене | Мені | Я | Мене\n   > [!explanation] \"Мені болить\" is dialect/colloquial. Standard: \"У мене болить\".\n\n8. Я пішов в аптека.\n   > [!error] аптека\n   > [!answer] аптеку\n   > [!options] аптеку | аптека | аптеці | аптекою\n   > [!explanation] Direction (Accusative): в аптеку.\n\n9. У мене немає кашель.\n   > [!error] кашель\n   > [!answer] кашлю\n   > [!options] кашлю | кашель | кашля | кашлем\n   > [!explanation] Genitive negation: немає кашлю.\n\n10. Мої очі блакитні.\n    > [!error] блакитні\n    > [!answer] блакитні\n    > [!options] блакитні | блакитна | блакитний | блакитне\n    > Correct.\n    > Let's make error.\n    > *Мої очі блакитний.* -> блакитні.\n\n    Rephrase 10:\n    Мої очі блакитний.\n    > [!error] блакитний\n    > [!answer] блакитні\n    > [!options] блакитні | блакитний | блакитна | блакитне\n    > [!explanation] Plural adjective.\n\n11. Вона зламала руку.\n    > [!error] руку\n    > [!answer] руку\n    > [!options] руку | рука | руки | рукою\n    > Correct.\n    > Let's make error.\n    > *Вона зламала рука.* -> руку.\n\n    Rephrase 11:\n    Вона зламала рука.\n    > [!error] рука\n    > [!answer] руку\n    > [!options] руку | рука | руки | рукою\n    > [!explanation] Accusative: руку.\n\n12. Будьте здоровий! (to plural/polite)\n    > [!error] здоровий\n    > [!answer] здорові\n    > [!options] здорові | здоровий | здорова | здорове\n    > [!explanation] Plural/Formal: Будьте здорові.\n\n## cloze: Call the Doctor\n\n— Алло, це [___:1]?\n— Так, оператор слухає. Що сталося?\n— Моєму чоловіку [___:2].\n— Які симптоми?\n— У нього сильний [___:3] в грудях і важко дихати.\n— Яка у нього [___:4]?\n— Нормальна.\n— Скажіть адресу.\n— Вулиця Садова, 5.\n— Чекайте, [___:5] виїхала.\n— Дякую, ми чекаємо [___:6].\n\n1. швидка\n> [!answer] швидка\n> [!options] швидка | піца | таксі\n\n2. погано\n> [!answer] погано\n> [!options] погано | добре | весело\n\n3. біль\n> [!answer] біль\n> [!options] біль | сміх | сон\n\n4. температура\n> [!answer] температура\n> [!options] температура | машина | зарплата\n\n5. бригада\n> [!answer] бригада\n> [!options] бригада | погода | вода\n> Ambulance team/brigade.\n\n6. лікаря\n> [!answer] лікаря\n> [!options] лікаря | поштаря | кухаря\n\n## dialogue-reorder: Sick Leave\n\n- Добрий ранок. Я хочу повідомити, що я захворів.\n- Добрий ранок. Що трапилося?\n- У мене висока температура і горло болить.\n- Це схоже на грип. Ти викликав лікаря?\n- Так, лікар буде після обіду.\n- Добре, залишайся вдома і лікуйся.\n- Дякую. Коли мені повернутися на роботу?\n- Коли будеш здоровий. Не поспішай.\n- Добре. Я надішлю лікарняний (sick note).\n- Одужуй! Чекаємо тебе.\n\n## mark-the-words: Body Parts\n\n> [!instruction] Mark body parts.\n\nУ людини є одна [голова], дві [руки] і дві [ноги]. На обличчі є [очі], ніс і рот. У роті є [зуби]. У грудях б'ється [серце]. Коли ми їмо, працює [шлунок]. Якщо ми носимо важке, болить [спина].\n\n## select: Medical Choice\n\n1. Headache.\n   - [x] Головний біль.\n   - [ ] Головний убір.\n   > Headache vs Headgear.\n\n2. Pharmacy.\n   - [x] Аптека.\n   - [ ] Оптика.\n   > Pharmacy.\n\n3. Doctor.\n   - [x] Лікар.\n   - [ ] Лікеро.\n   > Doctor.\n\n4. To recover.\n   - [x] Одужувати.\n   - [ ] Вмирати.\n   > Recover vs Die.\n\n5. Cold (illness).\n   - [x] Застуда.\n   - [ ] Посуда.\n   > Cold vs Dishes.\n\n6. Pill.\n   - [x] Таблетка.\n   - [ ] Серветка.\n   > Pill vs Napkin.\n\n7. Eye.\n   - [x] Око.\n   - [ ] Вікно.\n   > Eye vs Window.\n\n8. Heart.\n   - [x] Серце.\n   - [ ] Сонце.\n   > Heart vs Sun.\n\n9. Pain.\n   - [x] Біль.\n   - [ ] Біл.\n   > Pain.\n\n10. Fever/Temp.\n    - [x] Температура.\n    - [ ] Література.\n    > Temperature vs Literature.\n\n11. Ambulance.\n    - [x] Швидка.\n    - [ ] Повільна.\n    > Fast vs Slow.\n\n12. To cough.\n    - [x] Кашляти.\n    - [ ] Коштувати.\n    > Cough vs Cost.\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| здоров'я | /zdɔˈrɔʋjja/ | health | noun | n | |\n| голова | /ɦɔlɔˈʋa/ | head | noun | f | |\n| рука | /ruˈka/ | hand/arm | noun | f | |\n| нога | /nɔˈɦa/ | leg/foot | noun | f | |\n| спина | /spɪˈna/ | back | noun | f | |\n| живіт | /ʒɪˈʋit/ | stomach | noun | m | |\n| серце | /ˈsɛrtse/ | heart | noun | n | |\n| око | /ˈɔkɔ/ | eye | noun | n | Pl: очі. |\n| зуб | /zub/ | tooth | noun | m | |\n| лікар | /ˈlikar/ | doctor | noun | m | |\n| ліки | /ˈlikɪ/ | medicine | noun | pl | |\n| таблетка | /tabˈlɛtka/ | pill | noun | f | |\n| аптека | /apˈtɛka/ | pharmacy | noun | f | |\n| рецепт | /reˈtsɛpt/ | prescription | noun | m | |\n| хворіти | /xʋɔˈritɪ/ | to be sick | verb | - | |\n| одужувати | /ɔˈduʒuʋatɪ/ | to recover | verb | - | |\n| біль | /bilʲ/ | pain | noun | m | |\n| температура | /temperaˈtura/ | temperature | noun | f | |\n| нежить | /ˈnɛʒɪtʲ/ | runny nose | noun | m | |\n| кашель | /ˈkaʃelʲ/ | cough | noun | m | |\n| застуда | /zaˈstuda/ | cold | noun | f | |\n| грип | /ɦrɪp/ | flu | noun | m | |\n| клініка | /ˈklinika/ | clinic | noun | f | |\n| швидка | /ʃʋɪdˈka/ | ambulance | noun | f | |\n| горло | /ˈɦɔrlɔ/ | throat | noun | n | |\n| тиск | /tɪsk/ | pressure | noun | m | |\n| кров | /krɔʋ/ | blood | noun | f | |\n| тіло | /ˈtilɔ/ | body | noun | n | |\n| допомога | /dɔpɔˈmɔɦa/ | help | noun | f | |\n| почуватися | /pɔtʃuˈʋatɪsʲa/ | to feel | verb | - | |\n",
+    "createdAt": "2025-12-15T20:02:03.091972Z",
+    "modifiedAt": "2025-12-15T20:02:03.091972Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-54",
+    "level": "A2",
+    "phase": "A2",
+    "wordCount": 30,
+    "newWordCount": 30,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "здоров'я",
+        "ipa": "/zdɔˈrɔʋjja/",
+        "en": "health",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-2",
+        "uk": "голова",
+        "ipa": "/ɦɔlɔˈʋa/",
+        "en": "head",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-3",
+        "uk": "рука",
+        "ipa": "/ruˈka/",
+        "en": "hand/arm",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-4",
+        "uk": "нога",
+        "ipa": "/nɔˈɦa/",
+        "en": "leg/foot",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-5",
+        "uk": "спина",
+        "ipa": "/spɪˈna/",
+        "en": "back",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-6",
+        "uk": "живіт",
+        "ipa": "/ʒɪˈʋit/",
+        "en": "stomach",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-7",
+        "uk": "серце",
+        "ipa": "/ˈsɛrtse/",
+        "en": "heart",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-8",
+        "uk": "око",
+        "ipa": "/ˈɔkɔ/",
+        "en": "eye",
+        "pos": "noun",
+        "gender": "n",
+        "note": "Pl: очі."
+      },
+      {
+        "id": "vocab-9",
+        "uk": "зуб",
+        "ipa": "/zub/",
+        "en": "tooth",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-10",
+        "uk": "лікар",
+        "ipa": "/ˈlikar/",
+        "en": "doctor",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-11",
+        "uk": "ліки",
+        "ipa": "/ˈlikɪ/",
+        "en": "medicine",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-12",
+        "uk": "таблетка",
+        "ipa": "/tabˈlɛtka/",
+        "en": "pill",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-13",
+        "uk": "аптека",
+        "ipa": "/apˈtɛka/",
+        "en": "pharmacy",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-14",
+        "uk": "рецепт",
+        "ipa": "/reˈtsɛpt/",
+        "en": "prescription",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-15",
+        "uk": "хворіти",
+        "ipa": "/xʋɔˈritɪ/",
+        "en": "to be sick",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-16",
+        "uk": "одужувати",
+        "ipa": "/ɔˈduʒuʋatɪ/",
+        "en": "to recover",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-17",
+        "uk": "біль",
+        "ipa": "/bilʲ/",
+        "en": "pain",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-18",
+        "uk": "температура",
+        "ipa": "/temperaˈtura/",
+        "en": "temperature",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-19",
+        "uk": "нежить",
+        "ipa": "/ˈnɛʒɪtʲ/",
+        "en": "runny nose",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-20",
+        "uk": "кашель",
+        "ipa": "/ˈkaʃelʲ/",
+        "en": "cough",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-21",
+        "uk": "застуда",
+        "ipa": "/zaˈstuda/",
+        "en": "cold",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-22",
+        "uk": "грип",
+        "ipa": "/ɦrɪp/",
+        "en": "flu",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-23",
+        "uk": "клініка",
+        "ipa": "/ˈklinika/",
+        "en": "clinic",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-24",
+        "uk": "швидка",
+        "ipa": "/ʃʋɪdˈka/",
+        "en": "ambulance",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-25",
+        "uk": "горло",
+        "ipa": "/ˈɦɔrlɔ/",
+        "en": "throat",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-26",
+        "uk": "тиск",
+        "ipa": "/tɪsk/",
+        "en": "pressure",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-27",
+        "uk": "кров",
+        "ipa": "/krɔʋ/",
+        "en": "blood",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-28",
+        "uk": "тіло",
+        "ipa": "/ˈtilɔ/",
+        "en": "body",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-29",
+        "uk": "допомога",
+        "ipa": "/dɔpɔˈmɔɦa/",
+        "en": "help",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-30",
+        "uk": "почуватися",
+        "ipa": "/pɔtʃuˈʋatɪsʲa/",
+        "en": "to feel",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      }
+    ],
+    "reviewWords": []
+  }
+}

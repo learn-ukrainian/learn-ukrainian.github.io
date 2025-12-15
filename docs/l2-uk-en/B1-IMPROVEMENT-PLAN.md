@@ -304,11 +304,19 @@ Learners scoring 60-69 receive "B1 Developing" designation with specific remedia
 
 ### 5. Add Production Activities to Module Template
 
+**Priority:** P1 (High)
+**Status:** ✅ DONE
+
 **Problem:** Current modules are recognition-heavy (choose, identify, match). Limited production practice.
+
+**Resolution:** Added "Production Activity Requirements (B1+)" section to MODULE-RICHNESS-GUIDELINES-v2.md with:
+- 4 production activity types (translate, transform, micro-write, dialogue-complete)
+- Activity balance check table
+- Templates for each type
 
 **File:** `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
 
-**Action:** Add to Activity Requirements section:
+**Original action (reference):**
 
 ```markdown
 ### Production Activity Requirements (B1+)
@@ -372,7 +380,14 @@ For B1-grammar modules, verify:
 
 ### 6. Restructure M07-08 (Aspect Pairs)
 
+**Priority:** P2 (Medium)
+**Status:** ✅ DONE
+
 **Problem:** 10 consecutive aspect modules risks learner fatigue. M07-08 are pure vocabulary drilling.
+
+**Resolution:** Updated B1-CURRICULUM-PLAN.md:
+- M07 merged to "Aspect Pairs — Essential 40" (40 best pairs from both original modules)
+- M08 replaced with "Робочий тиждень — Aspect in Action" (thematic application module)
 
 **Current:**
 ```
@@ -433,9 +448,17 @@ M10: Checkpoint (unchanged)
 
 ### 7. Add Metacognition Elements
 
+**Priority:** P2 (Medium)
+**Status:** ✅ DONE
+
 **Problem:** Learners don't know why they're learning aspect or how to self-assess.
 
-**Action:** Add two standard elements to every B1 module template:
+**Resolution:** Added "Metacognition Elements (B1+ Required)" section to MODULE-RICHNESS-GUIDELINES-v2.md with:
+- "Why This Matters" (🎯 Чому це важливо) box template
+- "Self-Check" (✅ Перевірте себе) box template
+- Reference in vocabulary module structure
+
+**Original action (reference):**
 
 **A. "Why This Matters" box (after title, before Diagnostic):**
 
@@ -468,9 +491,17 @@ M10: Checkpoint (unchanged)
 
 ### 8. Add Spiral Review Pattern
 
+**Priority:** P2 (Medium)
+**Status:** ✅ DONE
+
 **Problem:** Linear progression with no systematic revisiting of previous material.
 
-**Action:** Add 2-3 review items from previous module(s) to each module's Activities section.
+**Resolution:** Added "Spiral Review Pattern (B1+ Required)" section to MODULE-RICHNESS-GUIDELINES-v2.md with:
+- Review requirements table (M02-M04: 3 items, M05+: 2+1 items, Checkpoints: 5+ items)
+- Quiz template for review activities
+- Placement guidance (first activity in Activities section)
+
+**Original action (reference):**
 
 **Template:**
 
@@ -630,25 +661,25 @@ This signals to learners (and future content creators) that audio is part of the
 
 ## Implementation Checklist
 
-### Phase 1: Before M06 (Critical)
+### Phase 1: Before M06 (Critical) ✅ COMPLETE
 
 **GitHub Issue:** [#115](https://github.com/krisztiankoos/curricula-opus/issues/115) (Build modules 01-80)
 
-- [ ] Fix vocabulary target in B1-CURRICULUM-PLAN.md header
-- [ ] Add B1-skills module type to MODULE-RICHNESS-GUIDELINES-v2.md
-- [ ] Update audit config to recognize new module types
+- [x] Fix vocabulary target in B1-CURRICULUM-PLAN.md header
+- [x] Add B1-skills module type to MODULE-RICHNESS-GUIDELINES-v2.md
+- [x] Update audit config to recognize new module types
 
-### Phase 2: Before M10 (High Priority)
-- [ ] Add assessment rubrics section to B1-CURRICULUM-PLAN.md
-- [ ] Update checkpoint template (apply to M10 first)
-- [ ] Add production activity requirements to guidelines
-- [ ] Add production activities to M01-05 (retrofit)
+### Phase 2: Before M10 (High Priority) ✅ COMPLETE
+- [x] Add assessment rubrics section to B1-CURRICULUM-PLAN.md
+- [x] Update checkpoint template (apply to M10 first)
+- [x] Add production activity requirements to guidelines
+- [ ] Add production activities to M01-05 (retrofit) ← pending module work
 
-### Phase 3: Before M20 (Medium Priority)
-- [ ] Restructure M07-08 (merge + add thematic module)
-- [ ] Add metacognition boxes to module template
-- [ ] Add spiral review pattern to activity requirements
-- [ ] Retrofit metacognition to M01-10
+### Phase 3: Before M20 (Medium Priority) ✅ COMPLETE (templates)
+- [x] Restructure M07-08 (merge + add thematic module)
+- [x] Add metacognition boxes to module template
+- [x] Add spiral review pattern to activity requirements
+- [ ] Retrofit metacognition to M01-10 ← pending module work
 
 ### Phase 4: Ongoing
 - [ ] Gather external resources (YouTube, podcast, ukrainianlessons.com)

@@ -1,0 +1,412 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-40",
+    "moduleId": "mod-uk-A2-40",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.4",
+    "moduleNumber": 40,
+    "moduleType": "vocabulary",
+    "pedagogy": "Inquiry",
+    "immersionLevel": 0.4,
+    "title": "Root Families I",
+    "titleUk": null,
+    "subtitle": "Language Legos",
+    "description": "Learner can recognize common roots (хід, пис)",
+    "objectives": [
+      "Learner can recognize common roots (хід, пис)",
+      "Learner can deduce meaning of new words (Вхід vs Вихід)",
+      "Learner uses root logic to expand vocabulary rapidly"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "root families (хід, пис, чит, бач)",
+      "guessing meaning from context"
+    ],
+    "tags": [
+      "vocabulary",
+      "roots",
+      "word-formation"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "Ukrainian words are like Lego structures.\nThey are built from small, reusable blocks.\nThe most specific block is the **Root**.\n\nIf you know the **Root**, you can often guess the meaning of a word you have never seen before.\nToday, we unlock four \"Super Roots\":\n1.  **ХІД** (Movement/Go)\n2.  **ПИС** (Writing/Marking)\n3.  **ЧИТ** (Reading)\n4.  **БАЧ** (Vision)\n\n> [!tip] The Logic\n> - **В** + **Хід** = In + Go = Entrance\n> - **Ви** + **Хід** = Out + Go = Exit\n> - **Пере** + **Хід** = Across + Go = Crossing\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "Family 1: The Walkers (-ХІД-)",
+        "nameEn": null,
+        "type": "content",
+        "content": "The root **ХІД** implies movement, walking, or a path.\nVerb: **Ходити** (To walk).\n\n| Word | Structure | Literal Meaning | Real Meaning |\n| :--- | :--- | :--- | :--- |\n| **Вхід** | В-хід | In-move | Entrance |\n| **Вихід** | Ви-хід | Out-move | Exit |\n| **Перехід** | Пере-хід | Across-move | Crossing / Transition |\n| **Прихід** | При-хід | Arrival-move | Arrival |\n| **Відхід** | Від-хід | Away-move | Departure |\n| **Похід** | По-хід | On-move | Hike / Campaign |\n| **Пішохід** | Піш-о-хід | Foot-o-walker | Pedestrian |\n\n*Де тут вхід?* (Where is the entrance?)\n*Це підземний перехід.* (This is an underground crossing).\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Family 2: The Writers (-ПИС-)",
+        "nameEn": null,
+        "type": "content",
+        "content": "The root **ПИС** relates to writing, recording, or marks.\nVerb: **Писати** (To write).\n\n| Word | Structure | Literal Meaning | Real Meaning |\n| :--- | :--- | :--- | :--- |\n| **Письмо** | Пись-мо | Write-thing | Writing / Letter |\n| **Письменник** | Пись-мен-ник | Write-man | Writer |\n| **Підпис** | Під-пис | Under-write | Signature |\n| **Запис** | За-пис | Behind/For-write | Record / Note |\n| **Опис** | О-пис | Around-write | Description |\n| **Напис** | На-пис | On-write | Inscription / Sign |\n\n*Ваш підпис, будь ласка.* (Your signature, please).\n*Я зроблю запис у журналі.* (I will make a record in the journal).\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Family 3: Input (-ЧИТ- / -БАЧ-)",
+        "nameEn": null,
+        "type": "content",
+        "content": "We perceive the world through reading and seeing.\n\n## The Readers (-ЧИТ-)\nVerb: **Читати** (To read).\n\n- **Читач**: Reader (Person).\n- **Читання**: Reading (Process).\n- **Прочитати**: To read through (Perfective - Finish reading).\n- **Перечитати**: To re-read (Read again).\n- **Дочитати**: To read to the end (Finish).\n\n*Читання — це корисна звичка.* (Reading is a useful habit).\n\n## The Seers (-БАЧ- / -ГЛЯД-)\nVerb: **Бачити** (To see). Root often swaps with **ГЛЯД** (Look).\n\n- **Бачення**: Vision (Concept).\n- **Побачення**: Date / Meeting (Seeing each other).\n- **Передбачення**: Prediction (Fore-sight).\n- **Погляд**: Glance / View / Opinion.\n- **Вигляд**: Look / Appearance (How something looks out).\n- **Огляд**: Review / Overview (Looking around).\n\n*У тебе гарний вигляд!* (You have a good look = You look great).\n*До побачення!* (Until seeing = Goodbye).\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Deep Dive: Guessing Game",
+        "nameEn": null,
+        "type": "content",
+        "content": "If you see **Захід** (West/Sunset), look at the root.\n**За** (Behind) + **Хід** (Go).\nThe sun \"goes behind\". Sunset. West.\n\nIf you see **Розпис** (Mural/Painting), look at the root.\n**Роз** (Out/Spread) + **Пис** (Write/Paint).\nSpreading paint. Painting walls.\n\n> [!note] English Theory\n> This module relies heavily on pattern recognition.\n> Do not memorize every word individually.\n> Memorize the **blocks**.\n> If you know \"Ex-\" means \"Out\" and \"Port\" means \"Carry\", you know \"Export\".\n> Same in Ukrainian: \"Ви-\" (Out) + \"Хід\" (Go) = Exit.\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Deep Dive: The Power of 'Pere-'",
+        "nameEn": null,
+        "type": "content",
+        "content": "One of the most useful prefixes in Ukrainian is **Пере-**.\nIt corresponds to the Latin **Trans-** (Across) or **Re-** (Again).\n\n1.  **Motion (Across):**\n    - **Хід** (Move) -> **Перехід** (Crossing/Transition).\n    - **Їхати** (Drive) -> **Переїхати** (Move house/Cross over).\n\n2.  **Repetition (Re-):**\n    - **Писати** (Write) -> **Переписати** (Rewrite).\n    - **Читати** (Read) -> **Перечитати** (Reread).\n    - **Робити** (Do) -> **Переробити** (Redo).\n\n3.  **Excess (Over-):**\n    - **Платити** (Pay) -> **Переплатити** (Overpay).\n\n*Я мушу переписати цей тест.* (I must rewrite the test).\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Story Time: The City Walk",
+        "nameEn": null,
+        "type": "content",
+        "content": "Я люблю гуляти містом.\nЯ — звичайний **пішохід**.\nСьогодні я маю **побачення** в центрі.\nЯ шукаю **вхід** у метро.\nОсь він, біля великого магазину.\nНа дверях є **напис**: \"Відчинено\".\nЯ роблю **перехід** на іншу лінію.\nУ метро багато людей. У кожного свій **погляд** на життя.\nЯ вийшов на станції \"Театральна\".\nДе **вихід**? Ага, бачу знак.\nНа вулиці я бачу книжковий магазин.\nТам сидить відомий **письменник**.\nВін дає **автограф** (підпис) читачам.\nЦе цікаве **видовище** (spectacle - from вид/see).\nАле я поспішаю. Мій друг чекає.\nСподіваюсь, це буде гарний **вечір**.\n\n> [!cultural] Cultural Insight: Signs\n> Common signs in Ukraine rely on these roots:\n> - **Вхід** (Entrance) - Usually Green.\n> - **Вихід** (Exit) - Also Green (Safety).\n> - **Перехід** (Crossing) - Blue sign with a walking person.\n> - **Немає виходу** (No exit).\n\n---"
+      },
+      {
+        "id": "section-8",
+        "name": "Story Time Part 2: The Writer's House",
+        "nameEn": null,
+        "type": "content",
+        "content": "Письменник Андрій живе у старому будинку.\nУ нього окремий **вхід**.\nНа столі лежить його **рукопис** (Hand-script/Manuscript).\nЦе **опис** життя в Карпатах.\nАндрій робить **запис** у блокноті.\nВін любить **схід** сонця (Sunrise - East).\nВін любить **захід** сонця (Sunset - West).\nЙого **погляд** дуже глибокий.\nВін має своє **бачення** світу.\nКоли він закінчує роботу, він ставить **підпис**.\nЙого книги — це його **внесок** (Contribution - In-carry) у культуру.\n\n> [!cultural] Cultural Insight: The Post Office\n> At \"Укрпошта\" (Ukrposhta), you use many PYS/KHiD words:\n> - **Написати** листа (To write a letter).\n> - **Підписати** конверт (To sign an envelope).\n> - **Відправлення** (Departure/Shipment).\n> - **Надходження** (Arrival/Receipt).\n> - **Замовний** лист (Registered letter - from 'Mova'/Speech/Order).\n\n---"
+      },
+      {
+        "id": "section-9",
+        "name": "Language in Action",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Dialogue: The Security Guard\n\n**Visitor:** Вибачте, де тут **вихід**?\n**Guard:** **Вихід** там, де і **вхід**.\n**Visitor:** Але двері зачинені.\n**Guard:** Треба натиснути кнопку.\n**Visitor:** Дякую. А де **перехід** на інший бік вулиці?\n**Guard:** **Підземний перехід** ліворуч.\n**Visitor:** Дякую за допомогу.\n\n## Dialogue: The Contract\n\n**Manager:** Ви прочитали документ?\n**Client:** Так, я зробив повний **огляд**.\n**Manager:** У вас є питання?\n**Client:** Так, один момент. Цей **опис** товару неточний.\n**Manager:** Давайте виправимо.\n**Client:** Тепер все добре. Де поставити **підпис**?\n**Manager:** Ось тут, унизу сторінки.\n\n## Dialogue: Asking Directions\n\n**Tourist:** Перепрошую, ви місцевий?\n**Local:** Так, я тут живу.\n**Tourist:** Де тут **східний** (Eastern) вхід у парк?\n**Local:** О, це далеко. Вам треба знайти **підземний перехід**.\n**Tourist:** А потім?\n**Local:** Потім йдіть прямо, поки не побачите великий **напис** \"Парк\".\n**Tourist:** А там є **вихід** до річки?\n**Local:** Так, там є **вихід**. Це дуже гарне місце для **походу**.\n**Tourist:** Дякую!\n\n## Dialogue: The Movie Review\n\n**Oksana:** Ти вже бачив новий фільм?\n**Petro:** Так, я ходив у кіно вчора.\n**Oksana:** І як тобі? Яке твоє **бачення**?\n**Petro:** Чесно? Мені не сподобалося.\n**Oksana:** Чому? Поганий сюжет?\n**Petro:** Сюжет цікавий. Але **гра** акторів слабка.\n**Oksana:** А я читала **огляд** в інтернеті. Там пишуть, що це шедевр.\n**Petro:** У кожного свій **погляд**.\n**Oksana:** А як **візуальна** частина? Гарний **вигляд**?\n**Petro:** Так, ефекти супер. Але сценарій треба **переписати**.\n**Oksana:** Зрозуміло. Я краще піду на **побачення** в парк.\n\n---\n\n> [!tip] Pro Tip: Handwriting\n> In Ukrainian schools, children learn **propylys** (cursive).\n> The word **пропис** comes from **ПИС** (write).\n> Ukrainian handwriting is quite different from print.\n> For example, the handwritten *т* often looks like an English *m*.\n> Mastering the *pidpys* (signature) is a true art form in Ukraine!"
+      },
+      {
+        "id": "section-10",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "We have unlocked the power of \"Lego Language\".\nInstead of memorizing thousands of random words, you now see the connections.\n\n1.  **ХІД** = Go/Move. (Вхід, Вихід, Перехід).\n2.  **ПИС** = Write. (Письмо, Підпис, Опис).\n3.  **ЧИТ** = Read. (Читач, Читання).\n4.  **БАЧ/ГЛЯД** = See/Look. (Побачення, Вигляд, Огляд).\n\nWhen you see a new word like **Випис** (Extract/Discharge), don't panic.\n**Ви** (Out) + **Пис** (Write). It's a written document you take out (e.g., from a hospital).\nLogic wins!\n\n---"
+      },
+      {
+        "id": "section-11",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## group-sort: Root Sorter\n\n> Group the words by their root family.\n\n### ХІД - Motion\n- Вхід\n- Вихід\n- Перехід\n- Похід\n- Пішохід\n- Прихід\n\n### ПИС - Writing\n- Письменник\n- Підпис\n- Запис\n- Опис\n- Напис\n- Письмо\n\n### БАЧ/ГЛЯД - Vision\n- Побачення\n- Передбачення\n- Вигляд\n- Погляд\n- Огляд\n- Бачення\n\n## match-up: Definitions\n\n> Match the word to its meaning.\n\n- Вхід :: Entrance\n- Вихід :: Exit\n- Підпис :: Signature\n- Письменник :: Writer\n- Побачення :: Date / Meeting\n- Читач :: Reader\n- Опис :: Description\n- Пішохід :: Pedestrian\n\n## fill-in: Where to Go?\n\n> Choose the correct movement word.\n\n1. Де [___] у метро? [Hint: Entrance]\n   > [!answer] вхід\n   > [!options] вхід | вихід | похід\n\n2. Це небезпечний [___]. [Hint: Crossing]\n   > [!answer] перехід\n   > [!options] перехід | захід | прихід\n\n3. Я не можу знайти [___]. [Hint: Exit]\n   > [!answer] вихід\n   > [!options] вихід | вхід | схід\n\n4. Це зона для [___]. [Hint: Pedestrians (Gen pl)]\n   > [!answer] пішоходів\n   > [!options] пішоходів | переходів | виходів\n\n5. Ми плануємо [___] в гори. [Hint: Hike]\n   > [!answer] похід\n   > [!options] похід | вихід | захід\n\n6. [___] потяга о 10:00. [Hint: Arrival]\n   > [!answer] Прихід\n   > [!options] Прихід | Відхід | Вихід\n\n7. Поїзд робить [___] зі станції. [Hint: Departure]\n   > [!answer] відхід\n   > [!options] відхід | вхід | прихід\n\n8. Сонце сідає. Це [___]. [Hint: Sunset/West]\n   > [!answer] захід\n   > [!options] захід | схід | вихід\n\n## unjumble: Document Logic\n\n1. потрібен / Мені / підпис / ваш\n   > [!answer] Мені потрібен ваш підпис.\n2. зробив / Я / опис / товару\n   > [!answer] Я зробив опис товару.\n3. читає / Письменник / книгу / свою\n   > [!answer] Письменник читає свою книгу.\n4. гарний / У / вигляд / нього\n   > [!answer] У нього гарний вигляд.\n5. тут / Де / перехід\n   > [!answer] Де тут перехід?\n6. читання / Це / урок\n   > [!answer] Це урок читання.\n\n## quiz: Root Logic\n\n1. If \"Вхід\" is Entrance, what is \"Вихід\"?\n   - [x] Exit\n   - [ ] Crossing\n   - [ ] Signature\n\n2. What does \"Підпис\" literally mean?\n   - [x] Under-write\n   - [ ] Over-write\n   - [ ] Re-write\n\n3. \"Передбачення\" (Prediction) contains which root?\n   - [x] БАЧ\n   - [ ] ХІД\n   - [ ] ПИС\n\n4. A \"Пішохід\" goes on:\n   - [x] Foot (Пішки)\n   - [ ] Car (Машина)\n   - [ ] Horse (Кінь)\n\n5. \"До побачення\" includes the root meaning:\n   - [x] Seeing\n   - [ ] Writing\n   - [ ] Walking\n\n6. \"Погляд\" usually relates to:\n   - [x] Opinion / Glance\n   - [ ] Walking style\n   - [ ] Handwriting\n\n7. Which word describes a person?\n   - [x] Письменник\n   - [ ] Письмо\n   - [ ] Напис\n\n8. \"Читання\" is the process of:\n   - [x] Reading\n   - [ ] Writing\n   - [ ] Walking\n\n## fill-in: Medical Form\n\n> Complete the phrases using root logic. Hint provided.\n\n1. Ваш [___] на документі. [Hint: Signature]\n   > [!answer] підпис\n   > [!options] підпис | напис | запис\n\n2. Лікар робить [___] пацієнта. [Hint: Inspection/Review]\n   > [!answer] огляд\n   > [!options] огляд | вигляд | погляд\n\n3. Це [___] симптомів. [Hint: Description]\n   > [!answer] опис\n   > [!options] опис | напис | вхід\n\n4. У вас хворий [___]. [Hint: Look/Appearance]\n   > [!answer] вигляд\n   > [!options] вигляд | огляд | перехід\n\n5. Зробіть [___] у карті. [Hint: Record/Entry]\n   > [!answer] запис\n   > [!options] запис | напис | підпис\n\n6. Читати [___] на дверях. [Hint: Inscription/Sign]\n   > [!answer] напис\n   > [!options] напис | опис | вихід\n\n7. Це точне [___]. [Hint: Prediction]\n   > [!answer] передбачення\n   > [!options] передбачення | бачення | читання\n\n8. Ваше [___] майбутнього. [Hint: Vision]\n   > [!answer] бачення\n   > [!options] бачення | читання | письмо\n\n## cloze: The Date\n\n> Fill in the missing words. Roots: БАЧ, ХІД.\n\nЯ йду на [___:1] [Hint: date].\nЯ чекаю біля [___:2] [Hint: entrance].\nУ мене гарний [___:3] [Hint: look/appearance].\nМоя дівчина — це [___:4] [Hint: prediction] мого серця (poetic).\nМи зробимо [___:5] [Hint: walk/hike] парком.\nТам є гарний [___:6] [Hint: view/glance].\nПотім ми знайдемо [___:7] [Hint: exit].\nЯ скажу: \"До [___:8] [Hint: see you]!\"\n\n1. побачення\n> [!answer] побачення\n\n2. входу\n> [!answer] входу\n\n3. вигляд\n> [!answer] вигляд\n\n4. передбачення\n> [!answer] передбачення\n\n5. похід\n> [!answer] похід\n\n6. вигляд\n> [!answer] вигляд\n\n7. вихід\n> [!answer] вихід\n\n8. побачення\n> [!answer] побачення\n\n## error-correction: Wrong Root\n\n1. Де тут **випис**? (Intended: Exit)\n   > [!error] випис\n   > [!answer] вихід\n   > [!explanation] Exit refers to movement (ХІД), not writing (ПИС).\n   > [!options] вихід | випис\n\n2. Ваш **підхід** на документі. (Intended: Signature)\n   > [!error] підхід\n   > [!answer] підпис\n   > [!explanation] Signature is Under-write (ПИС), not Under-move (ХІД - approach).\n   > [!options] підпис | підхід\n\n3. Це цікаве **читання**. (Intended: Date/Meeting)\n   > [!error] читання\n   > [!answer] побачення\n   > [!explanation] A date is Seeing (БАЧ), not Reading (ЧИТ).\n   > [!options] побачення | читання\n\n4. Він **пішопис**. (Intended: Pedestrian)\n   > [!error] пішопис\n   > [!answer] пішохід\n   > [!explanation] Pedestrian walks (ХІД).\n   > [!options] пішохід | пішопис\n\n5. Гарний **вхід**. (Intended: Look/Appearance)\n   > [!error] вхід\n   > [!answer] вигляд\n   > [!explanation] Look is 'View-out' (Вигляд), not 'Go-in' (Вхід).\n   > [!options] вигляд | вхід\n\n6. Зробити **захід** у зошит. (Intended: Note/Record)\n   > [!error] захід\n   > [!answer] запис\n   > [!explanation] A note is 'For-write' (Запис). 'Захід' is West/Sunset.\n   > [!options] запис | захід\n\n## match-up: Verb to Noun\n\n> Match the verb to the noun.\n\n- Писати :: Письменник\n- Ходити :: Пішохід\n- Читати :: Читач\n- Бачити :: Побачення\n- Передбачати :: Передбачення\n- Входити :: Вхід\n- Виходити :: Вихід\n- Записувати :: Запис\n\n## fill-in: Prefixes\n\n> Add the correct prefix.\n\n1. [___]хід. [Hint: Entrance (In)]\n   > [!answer] В\n   > [!options] В | Ви | Пере\n\n2. [___]хід. [Hint: Exit (Out)]\n   > [!answer] Ви\n   > [!options] Ви | В | При\n\n3. [___]пис. [Hint: Signature (Under)]\n   > [!answer] Під\n   > [!options] Під | На | За\n\n4. [___]пис. [Hint: Description (About/Round)]\n   > [!answer] О\n   > [!options] О | В | Ви\n\n5. [___]хід. [Hint: Crossing (Across)]\n   > [!answer] Пере\n   > [!options] Пере | За | При\n\n6. [___]хід. [Hint: Sunset/West (Behind)]\n   > [!answer] За\n   > [!options] За | С | Ви\n\n7. [___]бачення. [Hint: Prediction (Fore)]\n   > [!answer] Перед\n   > [!options] Перед | За | По\n\n8. [___]бачення. [Hint: Date (Po)]\n   > [!answer] По\n   > [!options] По | За | На\n\n---"
+      },
+      {
+        "id": "section-12",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Root |\n|------|-----|---------|-----|--------|------|\n| ходити | /xɔˈdɪtɪ/ | to walk | verb | - | хід |\n| хід | /xid/ | motion/move | noun | masc | хід |\n| вхід | /wxid/ | entrance | noun | masc | хід |\n| вихід | /ʋˈɪxid/ | exit | noun | masc | хід |\n| похід | /pɔˈxid/ | hike/campaign | noun | masc | хід |\n| прихід | /prɪˈxid/ | arrival | noun | masc | хід |\n| відхід | /ʋidˈxid/ | departure | noun | masc | хід |\n| перехід | /pɛrɛˈxid/ | crossing | noun | masc | хід |\n| пішохід | /piʃɔˈxid/ | pedestrian | noun | masc | хід |\n| писати | /pɪˈsɑtɪ/ | to write | verb | - | пис |\n| письмо | /pɪsʲˈmɔ/ | writing | noun | neut | пис |\n| письменник | /pɪsʲˈmɛnːɪk/ | writer | noun | masc | пис |\n| підпис | /pidˈpɪs/ | signature | noun | masc | пис |\n| запис | /zˈɑpɪs/ | record/note | noun | masc | пис |\n| опис | /ɔˈpɪs/ | description | noun | masc | пис |\n| напис | /nˈɑpɪs/ | inscription | noun | masc | пис |\n| надпис | /nˈɑdpɪs/ | label/inscription | noun | masc | пис |\n| читати | /t͡ʃɪˈtɑtɪ/ | to read | verb | - | чит |\n| читач | /t͡ʃɪˈtɑt͡ʃ/ | reader | noun | masc | чит |\n| читання | /t͡ʃɪˈtɑnʲːɑ/ | reading | noun | neut | чит |\n| прочитати | /prɔt͡ʃɪˈtɑtɪ/ | to read (perf) | verb | - | чит |\n| дочитати | /dɔt͡ʃɪˈtɑtɪ/ | to finish reading | verb | - | чит |\n| перечитати | /pɛrɛt͡ʃɪˈtɑtɪ/ | to re-read | verb | - | чит |\n| бачити | /bˈɑt͡ʃɪtɪ/ | to see | verb | - | бач |\n| бачення | /bˈɑt͡ʃɛnʲːɑ/ | vision | noun | neut | бач |\n| побачення | /pɔbˈɑt͡ʃɛnʲːɑ/ | date/meeting | noun | neut | бач |\n| передбачення | /pɛrɛdbˈɑt͡ʃɛnʲːɑ/ | prediction | noun | neut | бач |\n| огляд | /ɔˈɦlʲɑd/ | review | noun | masc | гляд |\n| погляд | /pˈɔɦlʲɑd/ | glance/view | noun | masc | гляд |\n| вигляд | /ʋˈɪɦlʲɑd/ | look/appearance | noun | masc | гляд |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-35\ntitle: Root Families I\nsubtitle: \"Language Legos\"\nversion: \"1.0\"\nphase: \"A2.4\"\npedagogy: \"Inquiry\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - vocabulary\n  - roots\n  - word-formation\ngrammar:\n  - root families (хід, пис, чит, бач)\n  - guessing meaning from context\nobjectives:\n  - \"Learner can recognize common roots (хід, пис)\"\n  - \"Learner can deduce meaning of new words (Вхід vs Вихід)\"\n  - \"Learner uses root logic to expand vocabulary rapidly\"\nvocabulary_count: 30\n---\n\n# Warm-up\n\nUkrainian words are like Lego structures.\nThey are built from small, reusable blocks.\nThe most specific block is the **Root**.\n\nIf you know the **Root**, you can often guess the meaning of a word you have never seen before.\nToday, we unlock four \"Super Roots\":\n1.  **ХІД** (Movement/Go)\n2.  **ПИС** (Writing/Marking)\n3.  **ЧИТ** (Reading)\n4.  **БАЧ** (Vision)\n\n> [!tip] The Logic\n> - **В** + **Хід** = In + Go = Entrance\n> - **Ви** + **Хід** = Out + Go = Exit\n> - **Пере** + **Хід** = Across + Go = Crossing\n\n---\n\n# Family 1: The Walkers (-ХІД-)\n\nThe root **ХІД** implies movement, walking, or a path.\nVerb: **Ходити** (To walk).\n\n| Word | Structure | Literal Meaning | Real Meaning |\n| :--- | :--- | :--- | :--- |\n| **Вхід** | В-хід | In-move | Entrance |\n| **Вихід** | Ви-хід | Out-move | Exit |\n| **Перехід** | Пере-хід | Across-move | Crossing / Transition |\n| **Прихід** | При-хід | Arrival-move | Arrival |\n| **Відхід** | Від-хід | Away-move | Departure |\n| **Похід** | По-хід | On-move | Hike / Campaign |\n| **Пішохід** | Піш-о-хід | Foot-o-walker | Pedestrian |\n\n*Де тут вхід?* (Where is the entrance?)\n*Це підземний перехід.* (This is an underground crossing).\n\n---\n\n# Family 2: The Writers (-ПИС-)\n\nThe root **ПИС** relates to writing, recording, or marks.\nVerb: **Писати** (To write).\n\n| Word | Structure | Literal Meaning | Real Meaning |\n| :--- | :--- | :--- | :--- |\n| **Письмо** | Пись-мо | Write-thing | Writing / Letter |\n| **Письменник** | Пись-мен-ник | Write-man | Writer |\n| **Підпис** | Під-пис | Under-write | Signature |\n| **Запис** | За-пис | Behind/For-write | Record / Note |\n| **Опис** | О-пис | Around-write | Description |\n| **Напис** | На-пис | On-write | Inscription / Sign |\n\n*Ваш підпис, будь ласка.* (Your signature, please).\n*Я зроблю запис у журналі.* (I will make a record in the journal).\n\n---\n\n# Family 3: Input (-ЧИТ- / -БАЧ-)\n\nWe perceive the world through reading and seeing.\n\n## The Readers (-ЧИТ-)\nVerb: **Читати** (To read).\n\n- **Читач**: Reader (Person).\n- **Читання**: Reading (Process).\n- **Прочитати**: To read through (Perfective - Finish reading).\n- **Перечитати**: To re-read (Read again).\n- **Дочитати**: To read to the end (Finish).\n\n*Читання — це корисна звичка.* (Reading is a useful habit).\n\n## The Seers (-БАЧ- / -ГЛЯД-)\nVerb: **Бачити** (To see). Root often swaps with **ГЛЯД** (Look).\n\n- **Бачення**: Vision (Concept).\n- **Побачення**: Date / Meeting (Seeing each other).\n- **Передбачення**: Prediction (Fore-sight).\n- **Погляд**: Glance / View / Opinion.\n- **Вигляд**: Look / Appearance (How something looks out).\n- **Огляд**: Review / Overview (Looking around).\n\n*У тебе гарний вигляд!* (You have a good look = You look great).\n*До побачення!* (Until seeing = Goodbye).\n\n---\n\n# Deep Dive: Guessing Game\n\nIf you see **Захід** (West/Sunset), look at the root.\n**За** (Behind) + **Хід** (Go).\nThe sun \"goes behind\". Sunset. West.\n\nIf you see **Розпис** (Mural/Painting), look at the root.\n**Роз** (Out/Spread) + **Пис** (Write/Paint).\nSpreading paint. Painting walls.\n\n> [!note] English Theory\n> This module relies heavily on pattern recognition.\n> Do not memorize every word individually.\n> Memorize the **blocks**.\n> If you know \"Ex-\" means \"Out\" and \"Port\" means \"Carry\", you know \"Export\".\n> Same in Ukrainian: \"Ви-\" (Out) + \"Хід\" (Go) = Exit.\n\n---\n\n# Deep Dive: The Power of 'Pere-'\n\nOne of the most useful prefixes in Ukrainian is **Пере-**.\nIt corresponds to the Latin **Trans-** (Across) or **Re-** (Again).\n\n1.  **Motion (Across):**\n    - **Хід** (Move) -> **Перехід** (Crossing/Transition).\n    - **Їхати** (Drive) -> **Переїхати** (Move house/Cross over).\n\n2.  **Repetition (Re-):**\n    - **Писати** (Write) -> **Переписати** (Rewrite).\n    - **Читати** (Read) -> **Перечитати** (Reread).\n    - **Робити** (Do) -> **Переробити** (Redo).\n\n3.  **Excess (Over-):**\n    - **Платити** (Pay) -> **Переплатити** (Overpay).\n\n*Я мушу переписати цей тест.* (I must rewrite the test).\n\n---\n\n# Story Time: The City Walk\n\nЯ люблю гуляти містом.\nЯ — звичайний **пішохід**.\nСьогодні я маю **побачення** в центрі.\nЯ шукаю **вхід** у метро.\nОсь він, біля великого магазину.\nНа дверях є **напис**: \"Відчинено\".\nЯ роблю **перехід** на іншу лінію.\nУ метро багато людей. У кожного свій **погляд** на життя.\nЯ вийшов на станції \"Театральна\".\nДе **вихід**? Ага, бачу знак.\nНа вулиці я бачу книжковий магазин.\nТам сидить відомий **письменник**.\nВін дає **автограф** (підпис) читачам.\nЦе цікаве **видовище** (spectacle - from вид/see).\nАле я поспішаю. Мій друг чекає.\nСподіваюсь, це буде гарний **вечір**.\n\n> [!cultural] Cultural Insight: Signs\n> Common signs in Ukraine rely on these roots:\n> - **Вхід** (Entrance) - Usually Green.\n> - **Вихід** (Exit) - Also Green (Safety).\n> - **Перехід** (Crossing) - Blue sign with a walking person.\n> - **Немає виходу** (No exit).\n\n---\n\n# Story Time Part 2: The Writer's House\n\nПисьменник Андрій живе у старому будинку.\nУ нього окремий **вхід**.\nНа столі лежить його **рукопис** (Hand-script/Manuscript).\nЦе **опис** життя в Карпатах.\nАндрій робить **запис** у блокноті.\nВін любить **схід** сонця (Sunrise - East).\nВін любить **захід** сонця (Sunset - West).\nЙого **погляд** дуже глибокий.\nВін має своє **бачення** світу.\nКоли він закінчує роботу, він ставить **підпис**.\nЙого книги — це його **внесок** (Contribution - In-carry) у культуру.\n\n> [!cultural] Cultural Insight: The Post Office\n> At \"Укрпошта\" (Ukrposhta), you use many PYS/KHiD words:\n> - **Написати** листа (To write a letter).\n> - **Підписати** конверт (To sign an envelope).\n> - **Відправлення** (Departure/Shipment).\n> - **Надходження** (Arrival/Receipt).\n> - **Замовний** лист (Registered letter - from 'Mova'/Speech/Order).\n\n---\n\n# Language in Action\n\n## Dialogue: The Security Guard\n\n**Visitor:** Вибачте, де тут **вихід**?\n**Guard:** **Вихід** там, де і **вхід**.\n**Visitor:** Але двері зачинені.\n**Guard:** Треба натиснути кнопку.\n**Visitor:** Дякую. А де **перехід** на інший бік вулиці?\n**Guard:** **Підземний перехід** ліворуч.\n**Visitor:** Дякую за допомогу.\n\n## Dialogue: The Contract\n\n**Manager:** Ви прочитали документ?\n**Client:** Так, я зробив повний **огляд**.\n**Manager:** У вас є питання?\n**Client:** Так, один момент. Цей **опис** товару неточний.\n**Manager:** Давайте виправимо.\n**Client:** Тепер все добре. Де поставити **підпис**?\n**Manager:** Ось тут, унизу сторінки.\n\n## Dialogue: Asking Directions\n\n**Tourist:** Перепрошую, ви місцевий?\n**Local:** Так, я тут живу.\n**Tourist:** Де тут **східний** (Eastern) вхід у парк?\n**Local:** О, це далеко. Вам треба знайти **підземний перехід**.\n**Tourist:** А потім?\n**Local:** Потім йдіть прямо, поки не побачите великий **напис** \"Парк\".\n**Tourist:** А там є **вихід** до річки?\n**Local:** Так, там є **вихід**. Це дуже гарне місце для **походу**.\n**Tourist:** Дякую!\n\n## Dialogue: The Movie Review\n\n**Oksana:** Ти вже бачив новий фільм?\n**Petro:** Так, я ходив у кіно вчора.\n**Oksana:** І як тобі? Яке твоє **бачення**?\n**Petro:** Чесно? Мені не сподобалося.\n**Oksana:** Чому? Поганий сюжет?\n**Petro:** Сюжет цікавий. Але **гра** акторів слабка.\n**Oksana:** А я читала **огляд** в інтернеті. Там пишуть, що це шедевр.\n**Petro:** У кожного свій **погляд**.\n**Oksana:** А як **візуальна** частина? Гарний **вигляд**?\n**Petro:** Так, ефекти супер. Але сценарій треба **переписати**.\n**Oksana:** Зрозуміло. Я краще піду на **побачення** в парк.\n\n---\n\n> [!tip] Pro Tip: Handwriting\n> In Ukrainian schools, children learn **propylys** (cursive).\n> The word **пропис** comes from **ПИС** (write).\n> Ukrainian handwriting is quite different from print.\n> For example, the handwritten *т* often looks like an English *m*.\n> Mastering the *pidpys* (signature) is a true art form in Ukraine!\n\n# Summary\n\nWe have unlocked the power of \"Lego Language\".\nInstead of memorizing thousands of random words, you now see the connections.\n\n1.  **ХІД** = Go/Move. (Вхід, Вихід, Перехід).\n2.  **ПИС** = Write. (Письмо, Підпис, Опис).\n3.  **ЧИТ** = Read. (Читач, Читання).\n4.  **БАЧ/ГЛЯД** = See/Look. (Побачення, Вигляд, Огляд).\n\nWhen you see a new word like **Випис** (Extract/Discharge), don't panic.\n**Ви** (Out) + **Пис** (Write). It's a written document you take out (e.g., from a hospital).\nLogic wins!\n\n---\n\n# Activities\n\n## group-sort: Root Sorter\n\n> Group the words by their root family.\n\n### ХІД - Motion\n- Вхід\n- Вихід\n- Перехід\n- Похід\n- Пішохід\n- Прихід\n\n### ПИС - Writing\n- Письменник\n- Підпис\n- Запис\n- Опис\n- Напис\n- Письмо\n\n### БАЧ/ГЛЯД - Vision\n- Побачення\n- Передбачення\n- Вигляд\n- Погляд\n- Огляд\n- Бачення\n\n## match-up: Definitions\n\n> Match the word to its meaning.\n\n- Вхід :: Entrance\n- Вихід :: Exit\n- Підпис :: Signature\n- Письменник :: Writer\n- Побачення :: Date / Meeting\n- Читач :: Reader\n- Опис :: Description\n- Пішохід :: Pedestrian\n\n## fill-in: Where to Go?\n\n> Choose the correct movement word.\n\n1. Де [___] у метро? [Hint: Entrance]\n   > [!answer] вхід\n   > [!options] вхід | вихід | похід\n\n2. Це небезпечний [___]. [Hint: Crossing]\n   > [!answer] перехід\n   > [!options] перехід | захід | прихід\n\n3. Я не можу знайти [___]. [Hint: Exit]\n   > [!answer] вихід\n   > [!options] вихід | вхід | схід\n\n4. Це зона для [___]. [Hint: Pedestrians (Gen pl)]\n   > [!answer] пішоходів\n   > [!options] пішоходів | переходів | виходів\n\n5. Ми плануємо [___] в гори. [Hint: Hike]\n   > [!answer] похід\n   > [!options] похід | вихід | захід\n\n6. [___] потяга о 10:00. [Hint: Arrival]\n   > [!answer] Прихід\n   > [!options] Прихід | Відхід | Вихід\n\n7. Поїзд робить [___] зі станції. [Hint: Departure]\n   > [!answer] відхід\n   > [!options] відхід | вхід | прихід\n\n8. Сонце сідає. Це [___]. [Hint: Sunset/West]\n   > [!answer] захід\n   > [!options] захід | схід | вихід\n\n## unjumble: Document Logic\n\n1. потрібен / Мені / підпис / ваш\n   > [!answer] Мені потрібен ваш підпис.\n2. зробив / Я / опис / товару\n   > [!answer] Я зробив опис товару.\n3. читає / Письменник / книгу / свою\n   > [!answer] Письменник читає свою книгу.\n4. гарний / У / вигляд / нього\n   > [!answer] У нього гарний вигляд.\n5. тут / Де / перехід\n   > [!answer] Де тут перехід?\n6. читання / Це / урок\n   > [!answer] Це урок читання.\n\n## quiz: Root Logic\n\n1. If \"Вхід\" is Entrance, what is \"Вихід\"?\n   - [x] Exit\n   - [ ] Crossing\n   - [ ] Signature\n\n2. What does \"Підпис\" literally mean?\n   - [x] Under-write\n   - [ ] Over-write\n   - [ ] Re-write\n\n3. \"Передбачення\" (Prediction) contains which root?\n   - [x] БАЧ\n   - [ ] ХІД\n   - [ ] ПИС\n\n4. A \"Пішохід\" goes on:\n   - [x] Foot (Пішки)\n   - [ ] Car (Машина)\n   - [ ] Horse (Кінь)\n\n5. \"До побачення\" includes the root meaning:\n   - [x] Seeing\n   - [ ] Writing\n   - [ ] Walking\n\n6. \"Погляд\" usually relates to:\n   - [x] Opinion / Glance\n   - [ ] Walking style\n   - [ ] Handwriting\n\n7. Which word describes a person?\n   - [x] Письменник\n   - [ ] Письмо\n   - [ ] Напис\n\n8. \"Читання\" is the process of:\n   - [x] Reading\n   - [ ] Writing\n   - [ ] Walking\n\n## fill-in: Medical Form\n\n> Complete the phrases using root logic. Hint provided.\n\n1. Ваш [___] на документі. [Hint: Signature]\n   > [!answer] підпис\n   > [!options] підпис | напис | запис\n\n2. Лікар робить [___] пацієнта. [Hint: Inspection/Review]\n   > [!answer] огляд\n   > [!options] огляд | вигляд | погляд\n\n3. Це [___] симптомів. [Hint: Description]\n   > [!answer] опис\n   > [!options] опис | напис | вхід\n\n4. У вас хворий [___]. [Hint: Look/Appearance]\n   > [!answer] вигляд\n   > [!options] вигляд | огляд | перехід\n\n5. Зробіть [___] у карті. [Hint: Record/Entry]\n   > [!answer] запис\n   > [!options] запис | напис | підпис\n\n6. Читати [___] на дверях. [Hint: Inscription/Sign]\n   > [!answer] напис\n   > [!options] напис | опис | вихід\n\n7. Це точне [___]. [Hint: Prediction]\n   > [!answer] передбачення\n   > [!options] передбачення | бачення | читання\n\n8. Ваше [___] майбутнього. [Hint: Vision]\n   > [!answer] бачення\n   > [!options] бачення | читання | письмо\n\n## cloze: The Date\n\n> Fill in the missing words. Roots: БАЧ, ХІД.\n\nЯ йду на [___:1] [Hint: date].\nЯ чекаю біля [___:2] [Hint: entrance].\nУ мене гарний [___:3] [Hint: look/appearance].\nМоя дівчина — це [___:4] [Hint: prediction] мого серця (poetic).\nМи зробимо [___:5] [Hint: walk/hike] парком.\nТам є гарний [___:6] [Hint: view/glance].\nПотім ми знайдемо [___:7] [Hint: exit].\nЯ скажу: \"До [___:8] [Hint: see you]!\"\n\n1. побачення\n> [!answer] побачення\n\n2. входу\n> [!answer] входу\n\n3. вигляд\n> [!answer] вигляд\n\n4. передбачення\n> [!answer] передбачення\n\n5. похід\n> [!answer] похід\n\n6. вигляд\n> [!answer] вигляд\n\n7. вихід\n> [!answer] вихід\n\n8. побачення\n> [!answer] побачення\n\n## error-correction: Wrong Root\n\n1. Де тут **випис**? (Intended: Exit)\n   > [!error] випис\n   > [!answer] вихід\n   > [!explanation] Exit refers to movement (ХІД), not writing (ПИС).\n   > [!options] вихід | випис\n\n2. Ваш **підхід** на документі. (Intended: Signature)\n   > [!error] підхід\n   > [!answer] підпис\n   > [!explanation] Signature is Under-write (ПИС), not Under-move (ХІД - approach).\n   > [!options] підпис | підхід\n\n3. Це цікаве **читання**. (Intended: Date/Meeting)\n   > [!error] читання\n   > [!answer] побачення\n   > [!explanation] A date is Seeing (БАЧ), not Reading (ЧИТ).\n   > [!options] побачення | читання\n\n4. Він **пішопис**. (Intended: Pedestrian)\n   > [!error] пішопис\n   > [!answer] пішохід\n   > [!explanation] Pedestrian walks (ХІД).\n   > [!options] пішохід | пішопис\n\n5. Гарний **вхід**. (Intended: Look/Appearance)\n   > [!error] вхід\n   > [!answer] вигляд\n   > [!explanation] Look is 'View-out' (Вигляд), not 'Go-in' (Вхід).\n   > [!options] вигляд | вхід\n\n6. Зробити **захід** у зошит. (Intended: Note/Record)\n   > [!error] захід\n   > [!answer] запис\n   > [!explanation] A note is 'For-write' (Запис). 'Захід' is West/Sunset.\n   > [!options] запис | захід\n\n## match-up: Verb to Noun\n\n> Match the verb to the noun.\n\n- Писати :: Письменник\n- Ходити :: Пішохід\n- Читати :: Читач\n- Бачити :: Побачення\n- Передбачати :: Передбачення\n- Входити :: Вхід\n- Виходити :: Вихід\n- Записувати :: Запис\n\n## fill-in: Prefixes\n\n> Add the correct prefix.\n\n1. [___]хід. [Hint: Entrance (In)]\n   > [!answer] В\n   > [!options] В | Ви | Пере\n\n2. [___]хід. [Hint: Exit (Out)]\n   > [!answer] Ви\n   > [!options] Ви | В | При\n\n3. [___]пис. [Hint: Signature (Under)]\n   > [!answer] Під\n   > [!options] Під | На | За\n\n4. [___]пис. [Hint: Description (About/Round)]\n   > [!answer] О\n   > [!options] О | В | Ви\n\n5. [___]хід. [Hint: Crossing (Across)]\n   > [!answer] Пере\n   > [!options] Пере | За | При\n\n6. [___]хід. [Hint: Sunset/West (Behind)]\n   > [!answer] За\n   > [!options] За | С | Ви\n\n7. [___]бачення. [Hint: Prediction (Fore)]\n   > [!answer] Перед\n   > [!options] Перед | За | По\n\n8. [___]бачення. [Hint: Date (Po)]\n   > [!answer] По\n   > [!options] По | За | На\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Root |\n|------|-----|---------|-----|--------|------|\n| ходити | /xɔˈdɪtɪ/ | to walk | verb | - | хід |\n| хід | /xid/ | motion/move | noun | masc | хід |\n| вхід | /wxid/ | entrance | noun | masc | хід |\n| вихід | /ʋˈɪxid/ | exit | noun | masc | хід |\n| похід | /pɔˈxid/ | hike/campaign | noun | masc | хід |\n| прихід | /prɪˈxid/ | arrival | noun | masc | хід |\n| відхід | /ʋidˈxid/ | departure | noun | masc | хід |\n| перехід | /pɛrɛˈxid/ | crossing | noun | masc | хід |\n| пішохід | /piʃɔˈxid/ | pedestrian | noun | masc | хід |\n| писати | /pɪˈsɑtɪ/ | to write | verb | - | пис |\n| письмо | /pɪsʲˈmɔ/ | writing | noun | neut | пис |\n| письменник | /pɪsʲˈmɛnːɪk/ | writer | noun | masc | пис |\n| підпис | /pidˈpɪs/ | signature | noun | masc | пис |\n| запис | /zˈɑpɪs/ | record/note | noun | masc | пис |\n| опис | /ɔˈpɪs/ | description | noun | masc | пис |\n| напис | /nˈɑpɪs/ | inscription | noun | masc | пис |\n| надпис | /nˈɑdpɪs/ | label/inscription | noun | masc | пис |\n| читати | /t͡ʃɪˈtɑtɪ/ | to read | verb | - | чит |\n| читач | /t͡ʃɪˈtɑt͡ʃ/ | reader | noun | masc | чит |\n| читання | /t͡ʃɪˈtɑnʲːɑ/ | reading | noun | neut | чит |\n| прочитати | /prɔt͡ʃɪˈtɑtɪ/ | to read (perf) | verb | - | чит |\n| дочитати | /dɔt͡ʃɪˈtɑtɪ/ | to finish reading | verb | - | чит |\n| перечитати | /pɛrɛt͡ʃɪˈtɑtɪ/ | to re-read | verb | - | чит |\n| бачити | /bˈɑt͡ʃɪtɪ/ | to see | verb | - | бач |\n| бачення | /bˈɑt͡ʃɛnʲːɑ/ | vision | noun | neut | бач |\n| побачення | /pɔbˈɑt͡ʃɛnʲːɑ/ | date/meeting | noun | neut | бач |\n| передбачення | /pɛrɛdbˈɑt͡ʃɛnʲːɑ/ | prediction | noun | neut | бач |\n| огляд | /ɔˈɦlʲɑd/ | review | noun | masc | гляд |\n| погляд | /pˈɔɦlʲɑd/ | glance/view | noun | masc | гляд |\n| вигляд | /ʋˈɪɦlʲɑd/ | look/appearance | noun | masc | гляд |\n",
+    "createdAt": "2025-12-15T20:02:03.056029Z",
+    "modifiedAt": "2025-12-15T20:02:03.056029Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-40",
+    "level": "A2",
+    "phase": "A2.4",
+    "wordCount": 30,
+    "newWordCount": 30,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "ходити",
+        "ipa": "/xɔˈdɪtɪ/",
+        "en": "to walk",
+        "pos": "verb",
+        "gender": null,
+        "note": "хід"
+      },
+      {
+        "id": "vocab-2",
+        "uk": "хід",
+        "ipa": "/xid/",
+        "en": "motion/move",
+        "pos": "noun",
+        "gender": null,
+        "note": "хід"
+      },
+      {
+        "id": "vocab-3",
+        "uk": "вхід",
+        "ipa": "/wxid/",
+        "en": "entrance",
+        "pos": "noun",
+        "gender": null,
+        "note": "хід"
+      },
+      {
+        "id": "vocab-4",
+        "uk": "вихід",
+        "ipa": "/ʋˈɪxid/",
+        "en": "exit",
+        "pos": "noun",
+        "gender": null,
+        "note": "хід"
+      },
+      {
+        "id": "vocab-5",
+        "uk": "похід",
+        "ipa": "/pɔˈxid/",
+        "en": "hike/campaign",
+        "pos": "noun",
+        "gender": null,
+        "note": "хід"
+      },
+      {
+        "id": "vocab-6",
+        "uk": "прихід",
+        "ipa": "/prɪˈxid/",
+        "en": "arrival",
+        "pos": "noun",
+        "gender": null,
+        "note": "хід"
+      },
+      {
+        "id": "vocab-7",
+        "uk": "відхід",
+        "ipa": "/ʋidˈxid/",
+        "en": "departure",
+        "pos": "noun",
+        "gender": null,
+        "note": "хід"
+      },
+      {
+        "id": "vocab-8",
+        "uk": "перехід",
+        "ipa": "/pɛrɛˈxid/",
+        "en": "crossing",
+        "pos": "noun",
+        "gender": null,
+        "note": "хід"
+      },
+      {
+        "id": "vocab-9",
+        "uk": "пішохід",
+        "ipa": "/piʃɔˈxid/",
+        "en": "pedestrian",
+        "pos": "noun",
+        "gender": null,
+        "note": "хід"
+      },
+      {
+        "id": "vocab-10",
+        "uk": "писати",
+        "ipa": "/pɪˈsɑtɪ/",
+        "en": "to write",
+        "pos": "verb",
+        "gender": null,
+        "note": "пис"
+      },
+      {
+        "id": "vocab-11",
+        "uk": "письмо",
+        "ipa": "/pɪsʲˈmɔ/",
+        "en": "writing",
+        "pos": "noun",
+        "gender": null,
+        "note": "пис"
+      },
+      {
+        "id": "vocab-12",
+        "uk": "письменник",
+        "ipa": "/pɪsʲˈmɛnːɪk/",
+        "en": "writer",
+        "pos": "noun",
+        "gender": null,
+        "note": "пис"
+      },
+      {
+        "id": "vocab-13",
+        "uk": "підпис",
+        "ipa": "/pidˈpɪs/",
+        "en": "signature",
+        "pos": "noun",
+        "gender": null,
+        "note": "пис"
+      },
+      {
+        "id": "vocab-14",
+        "uk": "запис",
+        "ipa": "/zˈɑpɪs/",
+        "en": "record/note",
+        "pos": "noun",
+        "gender": null,
+        "note": "пис"
+      },
+      {
+        "id": "vocab-15",
+        "uk": "опис",
+        "ipa": "/ɔˈpɪs/",
+        "en": "description",
+        "pos": "noun",
+        "gender": null,
+        "note": "пис"
+      },
+      {
+        "id": "vocab-16",
+        "uk": "напис",
+        "ipa": "/nˈɑpɪs/",
+        "en": "inscription",
+        "pos": "noun",
+        "gender": null,
+        "note": "пис"
+      },
+      {
+        "id": "vocab-17",
+        "uk": "надпис",
+        "ipa": "/nˈɑdpɪs/",
+        "en": "label/inscription",
+        "pos": "noun",
+        "gender": null,
+        "note": "пис"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "читати",
+        "ipa": "/t͡ʃɪˈtɑtɪ/",
+        "en": "to read",
+        "pos": "verb",
+        "gender": null,
+        "note": "чит"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "читач",
+        "ipa": "/t͡ʃɪˈtɑt͡ʃ/",
+        "en": "reader",
+        "pos": "noun",
+        "gender": null,
+        "note": "чит"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "читання",
+        "ipa": "/t͡ʃɪˈtɑnʲːɑ/",
+        "en": "reading",
+        "pos": "noun",
+        "gender": null,
+        "note": "чит"
+      },
+      {
+        "id": "vocab-21",
+        "uk": "прочитати",
+        "ipa": "/prɔt͡ʃɪˈtɑtɪ/",
+        "en": "to read (perf)",
+        "pos": "verb",
+        "gender": null,
+        "note": "чит"
+      },
+      {
+        "id": "vocab-22",
+        "uk": "дочитати",
+        "ipa": "/dɔt͡ʃɪˈtɑtɪ/",
+        "en": "to finish reading",
+        "pos": "verb",
+        "gender": null,
+        "note": "чит"
+      },
+      {
+        "id": "vocab-23",
+        "uk": "перечитати",
+        "ipa": "/pɛrɛt͡ʃɪˈtɑtɪ/",
+        "en": "to re-read",
+        "pos": "verb",
+        "gender": null,
+        "note": "чит"
+      },
+      {
+        "id": "vocab-24",
+        "uk": "бачити",
+        "ipa": "/bˈɑt͡ʃɪtɪ/",
+        "en": "to see",
+        "pos": "verb",
+        "gender": null,
+        "note": "бач"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "бачення",
+        "ipa": "/bˈɑt͡ʃɛnʲːɑ/",
+        "en": "vision",
+        "pos": "noun",
+        "gender": null,
+        "note": "бач"
+      },
+      {
+        "id": "vocab-26",
+        "uk": "побачення",
+        "ipa": "/pɔbˈɑt͡ʃɛnʲːɑ/",
+        "en": "date/meeting",
+        "pos": "noun",
+        "gender": null,
+        "note": "бач"
+      },
+      {
+        "id": "vocab-27",
+        "uk": "передбачення",
+        "ipa": "/pɛrɛdbˈɑt͡ʃɛnʲːɑ/",
+        "en": "prediction",
+        "pos": "noun",
+        "gender": null,
+        "note": "бач"
+      },
+      {
+        "id": "vocab-28",
+        "uk": "огляд",
+        "ipa": "/ɔˈɦlʲɑd/",
+        "en": "review",
+        "pos": "noun",
+        "gender": null,
+        "note": "гляд"
+      },
+      {
+        "id": "vocab-29",
+        "uk": "погляд",
+        "ipa": "/pˈɔɦlʲɑd/",
+        "en": "glance/view",
+        "pos": "noun",
+        "gender": null,
+        "note": "гляд"
+      },
+      {
+        "id": "vocab-30",
+        "uk": "вигляд",
+        "ipa": "/ʋˈɪɦlʲɑd/",
+        "en": "look/appearance",
+        "pos": "noun",
+        "gender": null,
+        "note": "гляд"
+      }
+    ],
+    "reviewWords": []
+  }
+}

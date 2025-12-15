@@ -3,28 +3,28 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1688/1250
+- **Words:** ✅ 1993/1250
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
+- **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 51.2% (target 50-55% (grammar))
+- **Immersion:** 🇺🇦 50.3% (target 50-60% (B1.1 Aspect))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Intro/Narrative** | ✅ | 89 | Included in Core |
 | **Diagnostic** | ✅ | 164 | Included in Core |
 | **Analysis** | ⚪️ | 484 | Skipped |
-| **Deep Dive** | ✅ | 667 | Included in Core |
+| **Deep Dive** | ✅ | 752 | Included in Core |
 | **Practice** | ⚪️ | 268 | Skipped |
-| **Summary** | ✅ | 105 | Included in Core |
+| **Summary** | ✅ | 236 | Included in Core |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **quiz: Three Future Forms** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Future Time Markers** | 🎮 | 14 | Activity (14 items, min 8) |

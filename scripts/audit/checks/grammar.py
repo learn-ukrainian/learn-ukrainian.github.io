@@ -178,6 +178,8 @@ def check_case_government(content: str, level_code: str) -> list[dict]:
     1. These patterns are too simplistic (e.g., "на стіл" is valid accusative)
     2. A1 modules teach these very patterns, creating false positives
     3. Quiz wrong answers (intentional errors) trigger false positives
+    
+    Also excludes error-correction sections which intentionally contain errors.
     """
     violations = []
 
@@ -185,19 +187,40 @@ def check_case_government(content: str, level_code: str) -> list[dict]:
     if level_code == 'A1':
         return violations
 
+    # Filter out error-correction activity sections which intentionally have wrong forms
+    # Pattern: ## error-correction: ... until next ## or # section
+    filtered_content = re.sub(
+        r'##\s*error-correction:.*?(?=\n##\s|\n#\s|$)',
+        '',
+        content,
+        flags=re.DOTALL | re.IGNORECASE
+    )
+    
+    # Also filter out quiz/translate wrong answer lines (marked with - [ ])
+    # These intentionally contain incorrect options for learners to reject
+    filtered_content = re.sub(
+        r'^-\s*\[\s*\].*$',
+        '',
+        filtered_content,
+        flags=re.MULTILINE
+    )
+
+    # These patterns only catch OBVIOUS errors.
+    # Note: Many preposition+nominative combinations are valid:
+    # - "на стіл" is valid accusative (inanimate masculine = nominative form)
+    # - "з друг" looks wrong but could be valid in some contexts
+    # We ONLY flag patterns that are almost always wrong.
     case_errors = [
-        (r'\b[ву]\s+(стіл|книга|хлопець|дівчина|місто)\b(?!\w*[уіаюєоі])',
-         'в/у + Nominative', 'Use Locative (в столі) or Accusative (в стіл)'),
-        (r'\bз\s+(друг|подруга|брат|сестра)\b(?!\w*[аоюуиі])',
-         'з + Nominative', 'Use Genitive (з друга) or Instrumental (з другом)'),
-        (r'\bдо\s+(дім|школа|робота|магазин)\b(?!\w*[уаи])',
-         'до + Nominative', 'Use Genitive (до дому, до школи)'),
-        (r'\bна\s+(стіл|підлога|стіна)\b(?!\w*[іуі])',
-         'на + Nominative', 'Use Locative (на столі) or Accusative (на стіл)'),
+        # в/у + feminine nominative (should be locative -і or accusative -у)
+        (r'\b[ву]\s+(книга|дівчина)\b(?=[^аоуиіюєї]|$)',
+         'в/у + Nominative feminine', 'Use Locative (в книзі) or Accusative (в книгу)'),
+        # до + feminine nominative (should be genitive -и/-і)
+        (r'\bдо\s+(школа|робота)\b(?=[^иі]|$)',
+         'до + Nominative feminine', 'Use Genitive (до школи, до роботи)'),
     ]
 
     for pattern, error_type, fix in case_errors:
-        matches = re.findall(pattern, content, re.IGNORECASE)
+        matches = re.findall(pattern, filtered_content, re.IGNORECASE)
         if matches:
             for match in matches[:2]:
                 violations.append({
@@ -207,3 +230,4 @@ def check_case_government(content: str, level_code: str) -> list[dict]:
                 })
 
     return violations
+

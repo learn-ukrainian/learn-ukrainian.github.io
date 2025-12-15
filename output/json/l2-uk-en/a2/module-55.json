@@ -1,0 +1,312 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-55",
+    "moduleId": "mod-uk-A2-55",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2",
+    "moduleNumber": 55,
+    "moduleType": "checkpoint",
+    "pedagogy": "Narrative",
+    "immersionLevel": 0.4,
+    "title": "Checkpoint - Vocabulary Expansion",
+    "titleUk": null,
+    "subtitle": "Reviewing what we learned",
+    "description": "Review vocabulary from Modules 44-54",
+    "objectives": [
+      "Review vocabulary from Modules 44-54",
+      "Discuss daily life topics fluently",
+      "Integrate knowledge of health, shopping, and work",
+      "Test recall of key verbs and nouns"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "review-all"
+    ],
+    "tags": [
+      "review",
+      "vocabulary",
+      "checkpoint",
+      "assessment"
+    ],
+    "totalDuration": 60,
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Checkpoint - Vocabulary Expansion",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "## Warm-up\n\nВітаю! This is a **Checkpoint Module**. We have covered a lot of topics: from nature to technology, from health to hobbies.\nDo you remember how to say \"I have a headache\"? Do you remember the word for \"mountains\"?\nToday we will review everything and check your progress.\nGet ready for a challenge!\n\n## Presentation\n\n### Review Word List (Слова для повторення)\n\nLet's recall these key words from previous modules:\n\n| Слово | Переклад | Модуль |\n|-------|----------|--------|\n| **гора** | mountain | Nature |\n| **квартира** | apartment | Home |\n| **прокидатися** | to wake up | Routines |\n| **настрій** | mood | Emotions |\n| **робота** | work/job | Professions |\n| **інтернет** | internet | Technology |\n| **подорож** | trip/journey | Hobbies |\n| **університет** | university | Education |\n| **гроші** | money | Shopping |\n| **здоров'я** | health | Health |\n\n### Key Concepts Review\n\n1. **Cases**: Remember that **Instrumental** is used for \"working as\" (*працювати лікарем*) and \"practicing\" (*займатися спортом*).\n2. **Reflexive Verbs**: Words like *прокидатися*, *одягатися*, *treнуватися* describe actions you do to yourself.\n3. **Impersonal**: *Мені холодно*, *Мені сумно*, *Мені треба*.\n4. **Possession**: *У мене є...* vs *У мене болить...*\n\n## Practice\n\n### Story Time: A Busy Weekend\n\nЦе історія про Олега. Він живе у Києві.\nУ суботу Олег **прокинувся** о 8:00. Його **настрій** був чудовий.\nВін зробив зарядку, бо **здоров'я** — це важливо.\nПотім він сів за комп'ютер. Він працює в IT, тому **інтернет** — це його життя.\nАле сьогодні вихідний.\n— Треба купити продукти, — подумав Олег.\nВін взяв **гроші** і пішов у супермаркет. Там він зустрів друга.\n— Привіт! Як твоя **робота**? — запитав друг.\n— Все добре. А ти як?\n— Я закінчив **університет** і тепер шукаю роботу.\n\nВвечері вони пішли в кіно.\nА в неділю Олег поїхав у **подорож**. Він любить **гори**.\nВін поїхав у Карпати. Там він орендував маленьку **квартиру** з видом на ліс.\nПовітря було чисте і свіже. Олег був щасливий.\n\n### Dialogue: At the Doctor (Review)\n\nLet's see if you can fill in the gaps mentally.\n\n— Добрий день, лікарю.\n— Добрий день. Що у вас болить?\n— У мене болить **голова** і **горло**.\n— Яка у вас **температура**?\n— 37.5.\n— Це **застуда**. Вам треба пити чай і лежати.\n— Дякую. Де тут **аптека**?\n— На першому поверсі. Одужуйте!\n\n### Dialogue: Shopping (Review)\n\n— Скільки коштує ця футболка?\n— 500 гривень.\n— Можна заплатити **карткою**?\n— Так, звичайно.\n— У вас є **знижка**?\n— Ні, вибачте.\n— Добре, я беру. Дайте **чек**, будь ласка.\n\n> [!important] **Review Tip** \"Cases\"\n> Do not forget:\n> - Direction (Where to?): Accusative (*Я йду в банк*).\n> - Location (Where at?): Locative (*Я в банку*).\n> - Tool/Action (With what?): Instrumental (*Я пишу ручкою*).\n> - Possession (Who has?): Genitive (*У мене є...*).\n\n### Story Time: A Trip to Lviv\n\nАндрій і Олена вирішили поїхати у Львів.\nЦе старе і красиве місто.\nВони купили **квитки** на поїзд в **інтернеті**.\nПоїзд був зручний. Вони пили чай і дивилися у вікно.\n\nУ Львові вони зняли **квартиру** в центрі.\nВранці вони пішли снідати. Львів відомий своєю кавою.\n— Мені капучино і круасан, — замовила Олена.\n— А мені еспресо, — сказав Андрій.\nПотім вони гуляли містом. Вони бачили старі церкви і площу Ринок.\nОлена купила сувеніри, а Андрій купив шоколад.\n— Який у тебе **настрій**? — запитав Андрій.\n— Чудовий! Я люблю **подорожувати**, — відповіла Олена.\n\n> [!cultural] **Cultural Review** \"The Soul of Ukraine\"\n> Throughout A2, we learned about Ukrainian hospitality (*гостинність*), love for nature (*природа*), and food (*їжа*). Remember: guests are always fed, bread (*хліб*) is sacred, and holidays are celebrated with family. Understanding these values helps you understand likely grammar structures too (e.g., frequent Dative for feelings, Instrumental for sharing meals).\n\n### Story Time: Health Challenge\n\nІгор вирішив змінити своє життя.\nРаніше він тільки працював і спав.\nВін їв піцу і пив колу.\nУ нього часто боліла **голова** і **шлунок**.\nВін пішов до **лікаря**.\n— Вам треба **займатися спортом** і їсти овочі, — сказав лікар.\n\nІгор почав бігати. Спочатку було важко.\nВін пробіг 1 кілометр і втомився.\nАле він не здався.\nЧерез місяць він вже бігав 5 кілометрів.\nВін схуд і став сильним.\nТепер він **щасливий** і здоровий.\n\n> [!tip] **Study Tip** \"Immersion\"\n> To move to B1, you need to hear the language. Listen to Ukrainian music (Okean Elzy, Boombox), watch YouTube bloggers, or switch your phone language to Ukrainian. Don't be afraid to make mistakes!\n\n### Story Time: The Career Change\n\nМарія працювала **вчителем** у школі 10 років.\nВона любила дітей, але **зарплата** (salary) була маленька.\nВона вирішила стати програмістом.\nМарія почала вчити код ввечері після роботи.\nВона мало спала і багато вчилася.\nЧерез рік вона знайшла нову **роботу** в IT-компанії.\nТепер вона працює вдома, має гарну зарплату і п'є смузі.\nАле іноді вона сумує за школою.\n\n### Story Time: A Dinner Party\n\nУвечері Андрій запросив друзів на вечерю.\nВін вирішив приготувати щось особливе.\nВін купив свіжу рибу, овочі та вино.\nГості прийшли о сьомій.\n— Привіт! Як смачно пахне! — сказала Олена.\n— Дякую. Проходьте у **вітальню**, — сказав Андрій.\nВони сіли за стіл.\n— Давайте вип'ємо за **успіх**! — запропонував Ігор.\n— І за дружбу! — додав Андрій.\nВони їли, пили і довго розмовляли.\nВони згадували старі добрі часи.\nЦе був ідеальний вечір.\nКоли гості пішли, Андрій був втомлений, але задоволений.\nВін помив посуд і ліг спати.\n\n### Story Time: Shopping Spree\n\nУ суботу Марія пішла в торговий центр.\nБули великі **знижки** (discounts).\nМарія хотіла купити тільки одну сукню.\nАле вона купила:\n- Червону сукню для вечірки.\n- Нові джинси, тому що старі були малі.\n- Теплий светр для зими.\n- Кросівки для бігу (вона вирішила бігати!).\n- Подарунок для мами (шарф).\nКоли вона прийшла додому, вона подивилася на чек.\n— Ого! — сказала вона. — Я витратила всі **гроші**.\nАле вона була задоволена. Шопінг — це гарна терапія.\n\n### Story Time: My Dream Job\n\nМаксим мріє про ідеальну роботу.\nВін не хоче сидіти в офісі з 9 до 18.\nВін хоче подорожувати світом і фотографувати.\nВін хоче жити в готелях і їсти в ресторанах.\nВін хоче писати статті про свої пригоди.\n— Це не робота, це казка, — каже його тато.\nАле Максим вірить, що це можливо.\nВін вчить англійську і купує хорошу камеру.\nВін знає, що все буде добре.\nМрії повинні здійснюватися!\n\n> [!note] **Grammar Check** \"Aspect\"\n> Remember the difference?\n> - **Я читав книгу** (Imperfective) = Process (I was reading).\n> - **Я прочитав книгу** (Perfective) = Result (I have finished reading).\n> In stories, use Imperfective for background (*Сонце світило...*) and Perfective for main actions (*Він вістав, помився, пішов...*)."
+      },
+      {
+        "id": "section-2",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "Congratulations! You have completed the Vocabulary Expansion phase.\nYou can now talk about:\n- Your home and daily routine\n- Your feelings and health\n- Buying things and services\n- Sports and hobbies\n- Nature and travel\n\nYou are real expert now. Keep going!"
+      },
+      {
+        "id": "section-3",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## quiz: Big Review Quiz\n\n1. How do you say \"I wake up\"?\n   - [x] Я прокидаюся\n   - [ ] Я сплю\n   - [ ] Я снідаю\n   > Reflexive verb.\n\n2. \"У мене болить зуб\". What happened?\n   - [x] Toothache\n   - [ ] Headache\n   - [ ] Leg pain\n   > Tooth.\n\n3. Where do you buy medicine?\n   - [x] Аптека\n   - [ ] Бібліотека\n   - [ ] Дискотека\n   > Pharmacy.\n\n4. \"Я працюю...\" (Choose correct form related to \"doctor\")\n   - [x] лікарем\n   - [ ] лікар\n   - [ ] лікаря\n   > Instrumental.\n\n5. \"Гори\" is...\n   - [x] Mountains\n   - [ ] Rivers\n   - [ ] Cities\n   > Mountains.\n\n6. Which word relates to emotions?\n   - [x] Настрій\n   - [ ] Стіл\n   - [ ] Автобус\n   > Mood.\n\n7. \"Гроші\" means...\n   - [x] Money\n   - [ ] Time\n   - [ ] Friends\n   > Money.\n\n8. \"Займатися спортом\". Case?\n   - [x] Instrumental\n   - [ ] Nominative\n   - [ ] Accusative\n   > SportOM.\n\n9. \"Університет\" is for...\n   - [x] Education\n   - [ ] Shopping\n   - [ ] Sleeping\n   > Study.\n\n10. A \"ноутбук\" is...\n    - [x] Laptop\n    - [ ] Book\n    - [ ] Table\n    > Tech.\n\n11. \"Здоров'я\" means...\n    - [x] Health\n    - [ ] Wealth\n    - [ ] Stealth\n    > Health.\n\n12. \"Квартира\" is...\n    - [x] Apartment\n    - [ ] Car\n    - [ ] Office\n    > Flat/Apartment.\n\n## match-up: Theme Match\n\n- Medicine :: Health\n- Football :: Sport\n- Laptop :: Technology\n- Rain :: Weather\n- Sofa :: Furniture\n- Salary :: Work\n- Student :: Education\n- Receipt :: Shopping\n- Train :: Travel\n- Happy :: Emotions\n- Breakfast :: Routine\n- Tree :: Nature\n\n## group-sort: Nouns vs Verbs\n\n### Groups\n- Nouns\n- Verbs\n- Adjectives\n\n### Items\n- гора: Nouns\n- робота: Nouns\n- інтернет: Nouns\n- гроші: Nouns\n- прокидатися: Verbs\n- купувати: Verbs\n- хворіти: Verbs\n- працювати: Verbs\n- щасливий: Adjectives\n- цікавий: Adjectives\n- смачний: Adjectives\n- хворий: Adjectives\n\n## fill-in: Missing Words Review\n\n1. Я живу у ____. (apartment)\n   > [!answer] квартирі\n   > [!options] квартирі | квартира | квартиру | квартирою\n   > Locative.\n\n2. У мене гарний ____. (mood)\n   > [!answer] настрій\n   > [!options] настрій | настрою | настроєм | настрії\n   > Nominative.\n\n3. Мені треба ____. (money)\n   > [!answer] гроші\n   > [!options] гроші | грошей | грошам | грошима\n   > Accusative.\n\n4. Ми їдемо в ____. (mountains)\n   > [!answer] гори\n   > [!options] гори | горах | горами | гір\n   > Accusative direction.\n\n5. Він працює в ____. (internet)\n   > [!answer] інтернеті\n   > [!options] інтернеті | інтернет | інтернету | інтернетом\n   > Locative (in the internet sphere).\n\n6. Студент йде в ____. (university)\n   > [!answer] університет\n   > [!options] університет | університету | університетом | університеті\n   > Accusative direction.\n\n7. Спорт корисний для ____. (health)\n   > [!answer] здоров'я\n   > [!options] здоров'я | здоров'ю | здоров'ям | здоров'ї\n   > Genitive (for what?).\n\n8. Ця ____ дуже важка. (work)\n   > [!answer] робота\n   > [!options] робота | роботу | роботи | роботою\n   > Nominative subject.\n\n9. Я хочу ____ рано. (wake up)\n   > [!answer] прокидатися\n   > [!options] прокидатися | прокидаюся | прокидався | прокидайся\n   > Infinitive.\n\n10. Це була чудова ____. (trip)\n    > [!answer] подорож\n    > [!options] подорож | подорожі | подорожжю | подорожах\n    > Nominative.\n\n11. У мене болить ____. (head)\n    > [!answer] голова\n    > [!options] голова | голову | голові | головою\n    > Nominative subject.\n\n12. Ми купуємо ____. (sofa)\n    > [!answer] диван\n    > [!options] диван | дивана | дивану | диваном\n    > Accusative inanimate.\n\n## true-false: General Knowledge\n\n1. Kyiv is in the mountains.\n   - [x] false\n   > No, hills but not mountains. Carpathians are far.\n\n2. A \"лікар\" fixes cars.\n   - [x] false\n   > Doctor fixes people.\n\n3. \"Інтернет\" helps you work remotely.\n   - [x] true\n   > Yes.\n\n4. You sleep in a \"університет\".\n   - [x] false\n   > You study there. (Usually).\n\n5. \"Гроші\" are important for shopping.\n   - [x] true\n   > Yes.\n\n6. If you have \"температура\", you are healthy.\n   - [x] false\n   > You are sick.\n\n7. \"Квартира\" is bigger than a house.\n   - [x] false\n   > Usually smaller.\n\n8. \"Настрій\" can be good or bad.\n   - [x] true\n   > Mood.\n\n9. \"Сніданок\" is in the evening.\n   - [x] false\n   > Breakfast.\n\n10. \"Купувати\" means to sell.\n    - [x] false\n    > To buy.\n\n11. \"Зима\" is hot.\n    - [x] false\n    > Winter is cold.\n\n12. \"Футбол\" is a sport.\n    - [x] true\n    > Yes.\n\n## unjumble: Review Sentences\n\n1. Я / люблю / свою / цікаву / роботу\n   > [!answer] Я люблю свою цікаву роботу\n   > I love my interesting job.\n\n2. Ми / їдемо / відпочивати / в / гори\n   > [!answer] Ми їдемо відпочивати в гори\n   > We are going to relax in the mountains.\n\n3. У / мене / немає / грошей\n   > [!answer] У мене немає грошей\n   > I have no money.\n\n4. Сьогодні / дуже / гарна / погода\n   > [!answer] Сьогодні дуже гарна погода\n   > Today is very nice weather.\n\n5. Мені / треба / купити / ліки\n   > [!answer] Мені треба купити ліки\n   > I need to buy medicine.\n\n6. Студенти / навчаються / в / університеті\n   > [!answer] Студенти навчаються в університеті\n   > Students study at the university.\n\n7. Мій / брат — / відомий / футболіст\n   > [!answer] Мій брат — відомий футболіст\n   > My brother is a famous footballer.\n\n8. Я / прокидаюся / о / сьомій / годині\n   > [!answer] Я прокидаюся о сьомій годині\n   > I wake up at 7 o'clock.\n\n9. Ця / квартира / дуже / світла\n   > [!answer] Ця квартира дуже світла\n   > This apartment is very bright.\n\n10. Бажаю / вам / гарного / настрою\n    > [!answer] Бажаю вам гарного настрою\n    > I wish you a good mood.\n\n11. Спорт / — / це / здоров'я\n    > [!answer] Спорт — це здоров'я\n    > Sport is health.\n\n12. Інтернет / працює / дуже / повільно\n    > [!answer] Інтернет працює дуже повільно\n    > Internet works very slowly.\n\n## mark-the-words: Category Hunt\n\n> [!instruction] Mark all nature words.\n\nЯ люблю природу. Влітку ми їдемо на [море] або в [ліс]. Там співають [пташки] і світить [сонце]. Взимку ми їдемо в [гори], де лежить [сніг]. Моє улюблене [дерево] — дуб. [Квіти] теж красиві. Але я не люблю [дощ] і [вітер].\n\n## select: Word Association\n\n1. Doctor -> ...\n   - [x] Лікарня\n   - [ ] Ресторан\n   > Hospital.\n\n2. Teacher -> ...\n   - [x] Школа\n   - [ ] Аптека\n   > School.\n\n3. Money -> ...\n   - [x] Банк\n   - [ ] Парк\n   > Bank.\n\n4. Tree -> ...\n   - [x] Ліс\n   - [ ] Море\n   > Forest.\n\n5. Pill -> ...\n   - [x] Аптека\n   - [ ] Стадіон\n   > Pharmacy.\n\n6. Goal -> ...\n   - [x] Футбол\n   - [ ] Теніс\n   > Football.\n\n7. Sofa -> ...\n   - [x] Вітальня\n   - [ ] Ванна\n   > Living room.\n\n8. Ticket -> ...\n   - [x] Поїзд\n   - [ ] Ліжко\n   > Train.\n\n9. Rain -> ...\n   - [x] Парасолька\n   - [ ] Окуляри\n   > Umbrella.\n\n10. Morning -> ...\n    - [x] Кава\n    - [ ] Пиво\n    > Coffee.\n\n11. Snow -> ...\n    - [x] Лижі\n    - [ ] Велосипед\n    > Skis.\n\n12. Laptop -> ...\n    - [x] Програміст\n    - [ ] Балерина\n    > Programmer.\n\n## dialogue-reorder: Meeting a Friend\n\n- Привіт! Скільки літ, скільки зим!\n- Привіт! Радий тебе бачити.\n- Як твої справи? Де ти зараз працюєш?\n- Я працюю менеджером у банку. А ти?\n- А я став лікарем.\n- Ого, це серйозна робота.\n- Так, важка, але цікава.\n- Ти все ще займаєшся футболом?\n- Тільки у вихідні. А ти подорожуєш?\n- Так, я щойно повернувся з Карпат.\n- Чудово! Треба піти на каву і поговорити.\n- Згоден. Давай у суботу?\n\n## cloze: My Life\n\nМене звати Анна. Я живу у великому [___:1].\nМоя [___:2] — на п'ятому поверсі.\nВранці я люблю пити [___:3] і читати новини в [___:4].\nПотім я їду на [___:5]. Я працюю в офісі.\nУ мене багато роботи, тому ввечері я [___:6].\nУ вихідні я люблю гуляти в [___:7].\nЯ хочу поїхати у [___:8] на море.\nЖиття — це [___:9] річ!\n\n1. місті\n> [!answer] місті\n> [!options] місті | селі | лісі\n\n2. квартира\n> [!answer] квартира\n> [!options] квартира | машина | собака\n\n3. каву\n> [!answer] каву\n> [!options] каву | суп | піцу\n\n4. інтернеті\n> [!answer] інтернеті\n> [!options] інтернеті | холодильнику | шафі\n\n5. роботу\n> [!answer] роботу\n> [!options] роботу | дискотеку | вокзал\n\n6. втомлена\n> [!answer] втомлена\n> [!options] втомлена | зелена | дерев'яна\n\n7. парку\n> [!answer] парку\n> [!options] парку | банку | аптеці\n\n8. відпустку\n> [!answer] відпустку\n> [!options] відпустку | лікарню | школу\n> Vacation.\n\n9. чудова\n> [!answer] чудова\n> [!options] чудова | погана | кисла"
+      },
+      {
+        "id": "section-4",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| гора | /ɦɔˈra/ | mountain | noun | f | |\n| квартира | /kʋarˈtɪra/ | apartment | noun | f | |\n| прокидатися | /prokɪˈdatɪsʲa/ | to wake up | verb | - | |\n| настрій | /ˈnastrji/ | mood | noun | m | |\n| робота | /rɔˈbɔta/ | work | noun | f | |\n| інтернет | /interˈnɛt/ | internet | noun | m | |\n| подорож | /ˈpɔdɔrɔʒ/ | trip | noun | f | |\n| університет | /uniʋersiˈtɛt/ | university | noun | m | |\n| гроші | /ˈɦrɔʃi/ | money | noun | pl | |\n| здоров'я | /zdɔˈrɔʋjja/ | health | noun | n | |\n| море | /ˈmɔre/ | sea | noun | n | |\n| ліс | /lis/ | forest | noun | m | |\n| поїзд | /ˈpɔjizd/ | train | noun | m | |\n| автобус | /aʋˈtɔbus/ | bus | noun | m | |\n| таксі | /takˈsi/ | taxi | noun | n | |\n| квиток | /kʋɪˈtɔk/ | ticket | noun | m | |\n| паспорт | /ˈpaspɔrt/ | passport | noun | m | |\n| віза | /ˈviza/ | visa | noun | f | |\n| готель | /ɦɔˈtɛlʲ/ | hotel | noun | m | |\n| музей | /muˈzɛj/ | museum | noun | m | |\n| парк | /park/ | park | noun | m | |\n| вулиця | /ˈvulɪtsʲa/ | street | noun | f | |\n| площа | /ˈplɔʃtʃa/ | square | noun | f | |\n| вітальня | /ʋiˈtalʲnʲa/ | living room | noun | f | |\n| успіх | /ˈuspix/ | success | noun | m | |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-55\ntitle: Checkpoint - Vocabulary Expansion\nsubtitle: \"Reviewing what we learned\"\nversion: \"1.0\"\nphase: \"A2\"\npedagogy: \"Narrative\"\nduration: 60\ntransliteration: none\ntags: [\"review\", \"vocabulary\", \"checkpoint\", \"assessment\"]\ngrammar: [\"review-all\"]\nobjectives:\n  - Review vocabulary from Modules 44-54\n  - Discuss daily life topics fluently\n  - Integrate knowledge of health, shopping, and work\n  - Test recall of key verbs and nouns\nvocab_count: 10\n---\n\n# Checkpoint - Vocabulary Expansion\n\n## Warm-up\n\nВітаю! This is a **Checkpoint Module**. We have covered a lot of topics: from nature to technology, from health to hobbies.\nDo you remember how to say \"I have a headache\"? Do you remember the word for \"mountains\"?\nToday we will review everything and check your progress.\nGet ready for a challenge!\n\n## Presentation\n\n### Review Word List (Слова для повторення)\n\nLet's recall these key words from previous modules:\n\n| Слово | Переклад | Модуль |\n|-------|----------|--------|\n| **гора** | mountain | Nature |\n| **квартира** | apartment | Home |\n| **прокидатися** | to wake up | Routines |\n| **настрій** | mood | Emotions |\n| **робота** | work/job | Professions |\n| **інтернет** | internet | Technology |\n| **подорож** | trip/journey | Hobbies |\n| **університет** | university | Education |\n| **гроші** | money | Shopping |\n| **здоров'я** | health | Health |\n\n### Key Concepts Review\n\n1. **Cases**: Remember that **Instrumental** is used for \"working as\" (*працювати лікарем*) and \"practicing\" (*займатися спортом*).\n2. **Reflexive Verbs**: Words like *прокидатися*, *одягатися*, *treнуватися* describe actions you do to yourself.\n3. **Impersonal**: *Мені холодно*, *Мені сумно*, *Мені треба*.\n4. **Possession**: *У мене є...* vs *У мене болить...*\n\n## Practice\n\n### Story Time: A Busy Weekend\n\nЦе історія про Олега. Він живе у Києві.\nУ суботу Олег **прокинувся** о 8:00. Його **настрій** був чудовий.\nВін зробив зарядку, бо **здоров'я** — це важливо.\nПотім він сів за комп'ютер. Він працює в IT, тому **інтернет** — це його життя.\nАле сьогодні вихідний.\n— Треба купити продукти, — подумав Олег.\nВін взяв **гроші** і пішов у супермаркет. Там він зустрів друга.\n— Привіт! Як твоя **робота**? — запитав друг.\n— Все добре. А ти як?\n— Я закінчив **університет** і тепер шукаю роботу.\n\nВвечері вони пішли в кіно.\nА в неділю Олег поїхав у **подорож**. Він любить **гори**.\nВін поїхав у Карпати. Там він орендував маленьку **квартиру** з видом на ліс.\nПовітря було чисте і свіже. Олег був щасливий.\n\n### Dialogue: At the Doctor (Review)\n\nLet's see if you can fill in the gaps mentally.\n\n— Добрий день, лікарю.\n— Добрий день. Що у вас болить?\n— У мене болить **голова** і **горло**.\n— Яка у вас **температура**?\n— 37.5.\n— Це **застуда**. Вам треба пити чай і лежати.\n— Дякую. Де тут **аптека**?\n— На першому поверсі. Одужуйте!\n\n### Dialogue: Shopping (Review)\n\n— Скільки коштує ця футболка?\n— 500 гривень.\n— Можна заплатити **карткою**?\n— Так, звичайно.\n— У вас є **знижка**?\n— Ні, вибачте.\n— Добре, я беру. Дайте **чек**, будь ласка.\n\n> [!important] **Review Tip** \"Cases\"\n> Do not forget:\n> - Direction (Where to?): Accusative (*Я йду в банк*).\n> - Location (Where at?): Locative (*Я в банку*).\n> - Tool/Action (With what?): Instrumental (*Я пишу ручкою*).\n> - Possession (Who has?): Genitive (*У мене є...*).\n\n### Story Time: A Trip to Lviv\n\nАндрій і Олена вирішили поїхати у Львів.\nЦе старе і красиве місто.\nВони купили **квитки** на поїзд в **інтернеті**.\nПоїзд був зручний. Вони пили чай і дивилися у вікно.\n\nУ Львові вони зняли **квартиру** в центрі.\nВранці вони пішли снідати. Львів відомий своєю кавою.\n— Мені капучино і круасан, — замовила Олена.\n— А мені еспресо, — сказав Андрій.\nПотім вони гуляли містом. Вони бачили старі церкви і площу Ринок.\nОлена купила сувеніри, а Андрій купив шоколад.\n— Який у тебе **настрій**? — запитав Андрій.\n— Чудовий! Я люблю **подорожувати**, — відповіла Олена.\n\n> [!cultural] **Cultural Review** \"The Soul of Ukraine\"\n> Throughout A2, we learned about Ukrainian hospitality (*гостинність*), love for nature (*природа*), and food (*їжа*). Remember: guests are always fed, bread (*хліб*) is sacred, and holidays are celebrated with family. Understanding these values helps you understand likely grammar structures too (e.g., frequent Dative for feelings, Instrumental for sharing meals).\n\n### Story Time: Health Challenge\n\nІгор вирішив змінити своє життя.\nРаніше він тільки працював і спав.\nВін їв піцу і пив колу.\nУ нього часто боліла **голова** і **шлунок**.\nВін пішов до **лікаря**.\n— Вам треба **займатися спортом** і їсти овочі, — сказав лікар.\n\nІгор почав бігати. Спочатку було важко.\nВін пробіг 1 кілометр і втомився.\nАле він не здався.\nЧерез місяць він вже бігав 5 кілометрів.\nВін схуд і став сильним.\nТепер він **щасливий** і здоровий.\n\n> [!tip] **Study Tip** \"Immersion\"\n> To move to B1, you need to hear the language. Listen to Ukrainian music (Okean Elzy, Boombox), watch YouTube bloggers, or switch your phone language to Ukrainian. Don't be afraid to make mistakes!\n\n### Story Time: The Career Change\n\nМарія працювала **вчителем** у школі 10 років.\nВона любила дітей, але **зарплата** (salary) була маленька.\nВона вирішила стати програмістом.\nМарія почала вчити код ввечері після роботи.\nВона мало спала і багато вчилася.\nЧерез рік вона знайшла нову **роботу** в IT-компанії.\nТепер вона працює вдома, має гарну зарплату і п'є смузі.\nАле іноді вона сумує за школою.\n\n### Story Time: A Dinner Party\n\nУвечері Андрій запросив друзів на вечерю.\nВін вирішив приготувати щось особливе.\nВін купив свіжу рибу, овочі та вино.\nГості прийшли о сьомій.\n— Привіт! Як смачно пахне! — сказала Олена.\n— Дякую. Проходьте у **вітальню**, — сказав Андрій.\nВони сіли за стіл.\n— Давайте вип'ємо за **успіх**! — запропонував Ігор.\n— І за дружбу! — додав Андрій.\nВони їли, пили і довго розмовляли.\nВони згадували старі добрі часи.\nЦе був ідеальний вечір.\nКоли гості пішли, Андрій був втомлений, але задоволений.\nВін помив посуд і ліг спати.\n\n### Story Time: Shopping Spree\n\nУ суботу Марія пішла в торговий центр.\nБули великі **знижки** (discounts).\nМарія хотіла купити тільки одну сукню.\nАле вона купила:\n- Червону сукню для вечірки.\n- Нові джинси, тому що старі були малі.\n- Теплий светр для зими.\n- Кросівки для бігу (вона вирішила бігати!).\n- Подарунок для мами (шарф).\nКоли вона прийшла додому, вона подивилася на чек.\n— Ого! — сказала вона. — Я витратила всі **гроші**.\nАле вона була задоволена. Шопінг — це гарна терапія.\n\n### Story Time: My Dream Job\n\nМаксим мріє про ідеальну роботу.\nВін не хоче сидіти в офісі з 9 до 18.\nВін хоче подорожувати світом і фотографувати.\nВін хоче жити в готелях і їсти в ресторанах.\nВін хоче писати статті про свої пригоди.\n— Це не робота, це казка, — каже його тато.\nАле Максим вірить, що це можливо.\nВін вчить англійську і купує хорошу камеру.\nВін знає, що все буде добре.\nМрії повинні здійснюватися!\n\n> [!note] **Grammar Check** \"Aspect\"\n> Remember the difference?\n> - **Я читав книгу** (Imperfective) = Process (I was reading).\n> - **Я прочитав книгу** (Perfective) = Result (I have finished reading).\n> In stories, use Imperfective for background (*Сонце світило...*) and Perfective for main actions (*Він вістав, помився, пішов...*).\n\n# Summary\n\nCongratulations! You have completed the Vocabulary Expansion phase.\nYou can now talk about:\n- Your home and daily routine\n- Your feelings and health\n- Buying things and services\n- Sports and hobbies\n- Nature and travel\n\nYou are real expert now. Keep going!\n\n# Activities\n\n## quiz: Big Review Quiz\n\n1. How do you say \"I wake up\"?\n   - [x] Я прокидаюся\n   - [ ] Я сплю\n   - [ ] Я снідаю\n   > Reflexive verb.\n\n2. \"У мене болить зуб\". What happened?\n   - [x] Toothache\n   - [ ] Headache\n   - [ ] Leg pain\n   > Tooth.\n\n3. Where do you buy medicine?\n   - [x] Аптека\n   - [ ] Бібліотека\n   - [ ] Дискотека\n   > Pharmacy.\n\n4. \"Я працюю...\" (Choose correct form related to \"doctor\")\n   - [x] лікарем\n   - [ ] лікар\n   - [ ] лікаря\n   > Instrumental.\n\n5. \"Гори\" is...\n   - [x] Mountains\n   - [ ] Rivers\n   - [ ] Cities\n   > Mountains.\n\n6. Which word relates to emotions?\n   - [x] Настрій\n   - [ ] Стіл\n   - [ ] Автобус\n   > Mood.\n\n7. \"Гроші\" means...\n   - [x] Money\n   - [ ] Time\n   - [ ] Friends\n   > Money.\n\n8. \"Займатися спортом\". Case?\n   - [x] Instrumental\n   - [ ] Nominative\n   - [ ] Accusative\n   > SportOM.\n\n9. \"Університет\" is for...\n   - [x] Education\n   - [ ] Shopping\n   - [ ] Sleeping\n   > Study.\n\n10. A \"ноутбук\" is...\n    - [x] Laptop\n    - [ ] Book\n    - [ ] Table\n    > Tech.\n\n11. \"Здоров'я\" means...\n    - [x] Health\n    - [ ] Wealth\n    - [ ] Stealth\n    > Health.\n\n12. \"Квартира\" is...\n    - [x] Apartment\n    - [ ] Car\n    - [ ] Office\n    > Flat/Apartment.\n\n## match-up: Theme Match\n\n- Medicine :: Health\n- Football :: Sport\n- Laptop :: Technology\n- Rain :: Weather\n- Sofa :: Furniture\n- Salary :: Work\n- Student :: Education\n- Receipt :: Shopping\n- Train :: Travel\n- Happy :: Emotions\n- Breakfast :: Routine\n- Tree :: Nature\n\n## group-sort: Nouns vs Verbs\n\n### Groups\n- Nouns\n- Verbs\n- Adjectives\n\n### Items\n- гора: Nouns\n- робота: Nouns\n- інтернет: Nouns\n- гроші: Nouns\n- прокидатися: Verbs\n- купувати: Verbs\n- хворіти: Verbs\n- працювати: Verbs\n- щасливий: Adjectives\n- цікавий: Adjectives\n- смачний: Adjectives\n- хворий: Adjectives\n\n## fill-in: Missing Words Review\n\n1. Я живу у ____. (apartment)\n   > [!answer] квартирі\n   > [!options] квартирі | квартира | квартиру | квартирою\n   > Locative.\n\n2. У мене гарний ____. (mood)\n   > [!answer] настрій\n   > [!options] настрій | настрою | настроєм | настрії\n   > Nominative.\n\n3. Мені треба ____. (money)\n   > [!answer] гроші\n   > [!options] гроші | грошей | грошам | грошима\n   > Accusative.\n\n4. Ми їдемо в ____. (mountains)\n   > [!answer] гори\n   > [!options] гори | горах | горами | гір\n   > Accusative direction.\n\n5. Він працює в ____. (internet)\n   > [!answer] інтернеті\n   > [!options] інтернеті | інтернет | інтернету | інтернетом\n   > Locative (in the internet sphere).\n\n6. Студент йде в ____. (university)\n   > [!answer] університет\n   > [!options] університет | університету | університетом | університеті\n   > Accusative direction.\n\n7. Спорт корисний для ____. (health)\n   > [!answer] здоров'я\n   > [!options] здоров'я | здоров'ю | здоров'ям | здоров'ї\n   > Genitive (for what?).\n\n8. Ця ____ дуже важка. (work)\n   > [!answer] робота\n   > [!options] робота | роботу | роботи | роботою\n   > Nominative subject.\n\n9. Я хочу ____ рано. (wake up)\n   > [!answer] прокидатися\n   > [!options] прокидатися | прокидаюся | прокидався | прокидайся\n   > Infinitive.\n\n10. Це була чудова ____. (trip)\n    > [!answer] подорож\n    > [!options] подорож | подорожі | подорожжю | подорожах\n    > Nominative.\n\n11. У мене болить ____. (head)\n    > [!answer] голова\n    > [!options] голова | голову | голові | головою\n    > Nominative subject.\n\n12. Ми купуємо ____. (sofa)\n    > [!answer] диван\n    > [!options] диван | дивана | дивану | диваном\n    > Accusative inanimate.\n\n## true-false: General Knowledge\n\n1. Kyiv is in the mountains.\n   - [x] false\n   > No, hills but not mountains. Carpathians are far.\n\n2. A \"лікар\" fixes cars.\n   - [x] false\n   > Doctor fixes people.\n\n3. \"Інтернет\" helps you work remotely.\n   - [x] true\n   > Yes.\n\n4. You sleep in a \"університет\".\n   - [x] false\n   > You study there. (Usually).\n\n5. \"Гроші\" are important for shopping.\n   - [x] true\n   > Yes.\n\n6. If you have \"температура\", you are healthy.\n   - [x] false\n   > You are sick.\n\n7. \"Квартира\" is bigger than a house.\n   - [x] false\n   > Usually smaller.\n\n8. \"Настрій\" can be good or bad.\n   - [x] true\n   > Mood.\n\n9. \"Сніданок\" is in the evening.\n   - [x] false\n   > Breakfast.\n\n10. \"Купувати\" means to sell.\n    - [x] false\n    > To buy.\n\n11. \"Зима\" is hot.\n    - [x] false\n    > Winter is cold.\n\n12. \"Футбол\" is a sport.\n    - [x] true\n    > Yes.\n\n## unjumble: Review Sentences\n\n1. Я / люблю / свою / цікаву / роботу\n   > [!answer] Я люблю свою цікаву роботу\n   > I love my interesting job.\n\n2. Ми / їдемо / відпочивати / в / гори\n   > [!answer] Ми їдемо відпочивати в гори\n   > We are going to relax in the mountains.\n\n3. У / мене / немає / грошей\n   > [!answer] У мене немає грошей\n   > I have no money.\n\n4. Сьогодні / дуже / гарна / погода\n   > [!answer] Сьогодні дуже гарна погода\n   > Today is very nice weather.\n\n5. Мені / треба / купити / ліки\n   > [!answer] Мені треба купити ліки\n   > I need to buy medicine.\n\n6. Студенти / навчаються / в / університеті\n   > [!answer] Студенти навчаються в університеті\n   > Students study at the university.\n\n7. Мій / брат — / відомий / футболіст\n   > [!answer] Мій брат — відомий футболіст\n   > My brother is a famous footballer.\n\n8. Я / прокидаюся / о / сьомій / годині\n   > [!answer] Я прокидаюся о сьомій годині\n   > I wake up at 7 o'clock.\n\n9. Ця / квартира / дуже / світла\n   > [!answer] Ця квартира дуже світла\n   > This apartment is very bright.\n\n10. Бажаю / вам / гарного / настрою\n    > [!answer] Бажаю вам гарного настрою\n    > I wish you a good mood.\n\n11. Спорт / — / це / здоров'я\n    > [!answer] Спорт — це здоров'я\n    > Sport is health.\n\n12. Інтернет / працює / дуже / повільно\n    > [!answer] Інтернет працює дуже повільно\n    > Internet works very slowly.\n\n## mark-the-words: Category Hunt\n\n> [!instruction] Mark all nature words.\n\nЯ люблю природу. Влітку ми їдемо на [море] або в [ліс]. Там співають [пташки] і світить [сонце]. Взимку ми їдемо в [гори], де лежить [сніг]. Моє улюблене [дерево] — дуб. [Квіти] теж красиві. Але я не люблю [дощ] і [вітер].\n\n## select: Word Association\n\n1. Doctor -> ...\n   - [x] Лікарня\n   - [ ] Ресторан\n   > Hospital.\n\n2. Teacher -> ...\n   - [x] Школа\n   - [ ] Аптека\n   > School.\n\n3. Money -> ...\n   - [x] Банк\n   - [ ] Парк\n   > Bank.\n\n4. Tree -> ...\n   - [x] Ліс\n   - [ ] Море\n   > Forest.\n\n5. Pill -> ...\n   - [x] Аптека\n   - [ ] Стадіон\n   > Pharmacy.\n\n6. Goal -> ...\n   - [x] Футбол\n   - [ ] Теніс\n   > Football.\n\n7. Sofa -> ...\n   - [x] Вітальня\n   - [ ] Ванна\n   > Living room.\n\n8. Ticket -> ...\n   - [x] Поїзд\n   - [ ] Ліжко\n   > Train.\n\n9. Rain -> ...\n   - [x] Парасолька\n   - [ ] Окуляри\n   > Umbrella.\n\n10. Morning -> ...\n    - [x] Кава\n    - [ ] Пиво\n    > Coffee.\n\n11. Snow -> ...\n    - [x] Лижі\n    - [ ] Велосипед\n    > Skis.\n\n12. Laptop -> ...\n    - [x] Програміст\n    - [ ] Балерина\n    > Programmer.\n\n## dialogue-reorder: Meeting a Friend\n\n- Привіт! Скільки літ, скільки зим!\n- Привіт! Радий тебе бачити.\n- Як твої справи? Де ти зараз працюєш?\n- Я працюю менеджером у банку. А ти?\n- А я став лікарем.\n- Ого, це серйозна робота.\n- Так, важка, але цікава.\n- Ти все ще займаєшся футболом?\n- Тільки у вихідні. А ти подорожуєш?\n- Так, я щойно повернувся з Карпат.\n- Чудово! Треба піти на каву і поговорити.\n- Згоден. Давай у суботу?\n\n## cloze: My Life\n\nМене звати Анна. Я живу у великому [___:1].\nМоя [___:2] — на п'ятому поверсі.\nВранці я люблю пити [___:3] і читати новини в [___:4].\nПотім я їду на [___:5]. Я працюю в офісі.\nУ мене багато роботи, тому ввечері я [___:6].\nУ вихідні я люблю гуляти в [___:7].\nЯ хочу поїхати у [___:8] на море.\nЖиття — це [___:9] річ!\n\n1. місті\n> [!answer] місті\n> [!options] місті | селі | лісі\n\n2. квартира\n> [!answer] квартира\n> [!options] квартира | машина | собака\n\n3. каву\n> [!answer] каву\n> [!options] каву | суп | піцу\n\n4. інтернеті\n> [!answer] інтернеті\n> [!options] інтернеті | холодильнику | шафі\n\n5. роботу\n> [!answer] роботу\n> [!options] роботу | дискотеку | вокзал\n\n6. втомлена\n> [!answer] втомлена\n> [!options] втомлена | зелена | дерев'яна\n\n7. парку\n> [!answer] парку\n> [!options] парку | банку | аптеці\n\n8. відпустку\n> [!answer] відпустку\n> [!options] відпустку | лікарню | школу\n> Vacation.\n\n9. чудова\n> [!answer] чудова\n> [!options] чудова | погана | кисла\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| гора | /ɦɔˈra/ | mountain | noun | f | |\n| квартира | /kʋarˈtɪra/ | apartment | noun | f | |\n| прокидатися | /prokɪˈdatɪsʲa/ | to wake up | verb | - | |\n| настрій | /ˈnastrji/ | mood | noun | m | |\n| робота | /rɔˈbɔta/ | work | noun | f | |\n| інтернет | /interˈnɛt/ | internet | noun | m | |\n| подорож | /ˈpɔdɔrɔʒ/ | trip | noun | f | |\n| університет | /uniʋersiˈtɛt/ | university | noun | m | |\n| гроші | /ˈɦrɔʃi/ | money | noun | pl | |\n| здоров'я | /zdɔˈrɔʋjja/ | health | noun | n | |\n| море | /ˈmɔre/ | sea | noun | n | |\n| ліс | /lis/ | forest | noun | m | |\n| поїзд | /ˈpɔjizd/ | train | noun | m | |\n| автобус | /aʋˈtɔbus/ | bus | noun | m | |\n| таксі | /takˈsi/ | taxi | noun | n | |\n| квиток | /kʋɪˈtɔk/ | ticket | noun | m | |\n| паспорт | /ˈpaspɔrt/ | passport | noun | m | |\n| віза | /ˈviza/ | visa | noun | f | |\n| готель | /ɦɔˈtɛlʲ/ | hotel | noun | m | |\n| музей | /muˈzɛj/ | museum | noun | m | |\n| парк | /park/ | park | noun | m | |\n| вулиця | /ˈvulɪtsʲa/ | street | noun | f | |\n| площа | /ˈplɔʃtʃa/ | square | noun | f | |\n| вітальня | /ʋiˈtalʲnʲa/ | living room | noun | f | |\n| успіх | /ˈuspix/ | success | noun | m | |\n",
+    "createdAt": "2025-12-15T20:02:03.094019Z",
+    "modifiedAt": "2025-12-15T20:02:03.094019Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-55",
+    "level": "A2",
+    "phase": "A2",
+    "wordCount": 25,
+    "newWordCount": 25,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "гора",
+        "ipa": "/ɦɔˈra/",
+        "en": "mountain",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-2",
+        "uk": "квартира",
+        "ipa": "/kʋarˈtɪra/",
+        "en": "apartment",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-3",
+        "uk": "прокидатися",
+        "ipa": "/prokɪˈdatɪsʲa/",
+        "en": "to wake up",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-4",
+        "uk": "настрій",
+        "ipa": "/ˈnastrji/",
+        "en": "mood",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-5",
+        "uk": "робота",
+        "ipa": "/rɔˈbɔta/",
+        "en": "work",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-6",
+        "uk": "інтернет",
+        "ipa": "/interˈnɛt/",
+        "en": "internet",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-7",
+        "uk": "подорож",
+        "ipa": "/ˈpɔdɔrɔʒ/",
+        "en": "trip",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-8",
+        "uk": "університет",
+        "ipa": "/uniʋersiˈtɛt/",
+        "en": "university",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-9",
+        "uk": "гроші",
+        "ipa": "/ˈɦrɔʃi/",
+        "en": "money",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-10",
+        "uk": "здоров'я",
+        "ipa": "/zdɔˈrɔʋjja/",
+        "en": "health",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-11",
+        "uk": "море",
+        "ipa": "/ˈmɔre/",
+        "en": "sea",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-12",
+        "uk": "ліс",
+        "ipa": "/lis/",
+        "en": "forest",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-13",
+        "uk": "поїзд",
+        "ipa": "/ˈpɔjizd/",
+        "en": "train",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-14",
+        "uk": "автобус",
+        "ipa": "/aʋˈtɔbus/",
+        "en": "bus",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-15",
+        "uk": "таксі",
+        "ipa": "/takˈsi/",
+        "en": "taxi",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-16",
+        "uk": "квиток",
+        "ipa": "/kʋɪˈtɔk/",
+        "en": "ticket",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-17",
+        "uk": "паспорт",
+        "ipa": "/ˈpaspɔrt/",
+        "en": "passport",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-18",
+        "uk": "віза",
+        "ipa": "/ˈviza/",
+        "en": "visa",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-19",
+        "uk": "готель",
+        "ipa": "/ɦɔˈtɛlʲ/",
+        "en": "hotel",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-20",
+        "uk": "музей",
+        "ipa": "/muˈzɛj/",
+        "en": "museum",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-21",
+        "uk": "парк",
+        "ipa": "/park/",
+        "en": "park",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-22",
+        "uk": "вулиця",
+        "ipa": "/ˈvulɪtsʲa/",
+        "en": "street",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-23",
+        "uk": "площа",
+        "ipa": "/ˈplɔʃtʃa/",
+        "en": "square",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-24",
+        "uk": "вітальня",
+        "ipa": "/ʋiˈtalʲnʲa/",
+        "en": "living room",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-25",
+        "uk": "успіх",
+        "ipa": "/ˈuspix/",
+        "en": "success",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      }
+    ],
+    "reviewWords": []
+  }
+}

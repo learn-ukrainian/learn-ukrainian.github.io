@@ -143,6 +143,13 @@ The B1 level (Середній рівень першого ступеня) per t
 - Читаючи книгу, він заснув. (While reading the book, he fell asleep.)
 - Прочитавши статтю, вона подзвонила. (Having read the article, she called.)
 
+**Active participles (Активні дієприкметники):**
+
+| Type | Formation | Example | Stylistic Note |
+|------|-----------|---------|----------------|
+| Present | stem + -учий/-ючий | читаючий, працюючий | **Avoid in spoken.** Use relative clause: той, хто читає. |
+| Past | past stem + -лий | посивілий, зів'ялий | Accepted in all styles. |
+
 **Passive participles (Пасивні дієприкметники):**
 
 | Form | Formation | Example |
@@ -155,8 +162,12 @@ The B1 level (Середній рівень першого ступеня) per t
 - Книгу написано в 2020 році. (The book was written in 2020.)
 - Лист буде надісланий завтра. (The letter will be sent tomorrow.)
 
-**❌ NOT at B1:**
-- Active participles (працюючий) - use relative clauses instead: той, хто працює
+**Relative Clause Preference:**
+Ukrainian stylistics prefer relative clauses over active present participles:
+- ✅ Студент, **який читає** книгу (The student who is reading) - Natural
+- ⚠️ __Читаючий__ книгу студент (The reading student) - Artificial/Bookish
+
+**(Note for B1: Teach active participles for recognition in formal texts, but demand relative clauses for production.)**
 
 #### Complex Sentences (Складні речення)
 
@@ -226,7 +237,7 @@ Before writing/reviewing any B1 module, verify:
 |-------|------------|
 | Aspect | Full context awareness, avoid binary rules |
 | Motion | All 14 pairs and prefixes, including figurative |
-| Participles | Adverbial and passive only, no active |
+| Participles | Adverbial and passive mastery; Active for recognition only |
 | Complex sentences | All clause types per curriculum |
 | Conditional | Both real (якщо) and unreal (якби) |
 | Future | All three forms (compound, synthetic, simple) |
@@ -420,10 +431,13 @@ By module 80, learners can:
 
 ---
 
-#### Module 07: Aspect Pairs Expansion I
-**Grammar:** 30 new aspect pairs - common verbs
+#### Module 07: Aspect Pairs — Essential 40
+**Grammar:** 40 essential aspect pairs (merged from original M07-08)
+**Type:** B1-grammar
 
-**Aspect Pairs (30):**
+**Rationale:** Merged to reduce vocabulary drilling fatigue. 40 most useful pairs selected; remaining pairs encountered organically in later modules.
+
+**Aspect Pairs (40):**
 | Imperfective | Perfective | Meaning |
 |--------------|------------|---------|
 | робити | зробити | do, make |
@@ -441,23 +455,6 @@ By module 80, learners can:
 | показувати | показати | show |
 | питати | запитати | ask |
 | відповідати | відповісти | answer |
-
-**Vocabulary (30 words):**
-(The 30 aspect pairs above = 30 items, counting pairs as single vocabulary entries)
-
-**Signature Activity Concepts:**
-1. Flash cards: Aspect pair drilling
-2. Gap-fill: Context → correct aspect
-3. Quiz: Match imperfective to perfective
-
----
-
-#### Module 08: Aspect Pairs Expansion II
-**Grammar:** 30 more aspect pairs - intermediate verbs
-
-**Aspect Pairs (30):**
-| Imperfective | Perfective | Meaning |
-|--------------|------------|---------|
 | вибирати | вибрати | choose |
 | збирати | зібрати | collect, gather |
 | вирішувати | вирішити | decide |
@@ -473,14 +470,57 @@ By module 80, learners can:
 | зустрічати | зустріти | meet |
 | повертати | повернути | return, turn |
 | отримувати | отримати | receive |
+| надсилати | надіслати | send |
+| допомагати | допомогти | help |
+| шукати | знайти | look for / find |
+| втрачати | втратити | lose |
+| просити | попросити | ask, request |
+| дозволяти | дозволити | allow |
+| забороняти | заборонити | forbid |
+| пропонувати | запропонувати | offer, suggest |
+| вмикати | увімкнути | turn on |
+| вимикати | вимкнути | turn off |
 
-**Vocabulary (30 words):**
-(The 30 aspect pairs above)
+**Vocabulary (40 words):** Aspect pairs above (counted as pair entries)
 
 **Signature Activity Concepts:**
-1. Sentence building: Use pairs in past/future
-2. Gap-fill: Select correct aspect
-3. Quiz: Aspect identification
+1. Flash card drilling: Aspect pair recognition
+2. Gap-fill: Context determines aspect
+3. Match-up: Imperfective ↔ Perfective
+4. Unjumble: Sentences using both aspects
+
+---
+
+#### Module 08: Робочий тиждень — Aspect in Action
+**Grammar:** All aspect contexts applied to work/daily routine theme
+**Type:** B1-grammar (thematic application)
+
+**Rationale:** Replaces pure vocabulary drilling with thematic application. Learners apply all aspect patterns in realistic work scenarios, reducing grammar fatigue.
+
+**Scenario:** Follow a Ukrainian professional through their work week, using all aspect patterns naturally.
+
+**Key Applications:**
+- Describing daily routine (imperfective)
+- Reporting completed tasks (perfective)
+- Making plans (future aspect)
+- Giving instructions to colleagues (imperative aspect)
+- Explaining what you haven't done yet (negation)
+
+**Vocabulary (20 words):**
+робочий день, завдання, зустріч, дедлайн, проєкт, команда, колега, начальник, звіт, презентація, перерва, обід, нарада, домовленість, відрядження, відпустка, понеділок, п'ятниця, вихідні, тиждень
+
+**Narrative Structure:**
+- **Понеділок:** Planning the week (future aspect: "цього тижня я зроблю...")
+- **Вівторок-четвер:** Doing and completing tasks (past aspect: "вчора я працював/зробив...")
+- **П'ятниця:** Reporting what's done/not done (negation: "ще не завершив, але вже перевірив...")
+- **Weekend:** Reflecting on habits (repeated actions: "зазвичай я відпочиваю...")
+
+**Signature Activity Concepts:**
+1. Reading: "Тиждень Олени" — extended narrative (300+ words)
+2. Role-play: Report to boss (що зробив/що ще не зробив)
+3. Micro-writing: Describe your typical work week
+4. Dialogue completion: Planning meeting with colleague
+5. Error correction: Fix aspect mistakes in work emails
 
 ---
 
@@ -1220,13 +1260,13 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 |--------|--------------|-----------|---------|
 | 36 | Adverbial Participles: Imperfective | M01-10 aspect | Simultaneous action |
 | 37 | Adverbial Participles: Perfective | M36 | Prior completed action |
-| 38 | Adverbial Participles: Practice | M36-37 | Consolidation |
+| 38 | Active Participles & Phrases | M36-37 | Formal/Academic recognition |
 | 39 | Past Passive Participles I | M36-38 | -ний/-тий forms |
 | 40 | Past Passive Participles II | M39 | -но/-то forms |
 | 41 | Passive Constructions | M39-40 | Complete passive system |
-| 42 | Diminutives: Nouns | A2 word formation | Noun diminutives |
-| 43 | Diminutives: Usage & Nuance | M42 | Emotional expression |
-| 44 | Numerals: Collectives & Fractions | A2 numbers | Advanced numerals |
+| 42 | Diminutives: Master Class | A2 word formation | Emotional expression |
+| 43 | Numerals: Collectives & Fractions | A2 numbers | Advanced numerals |
+| 44 | Integrated Grammar Lab | M36-43 | Synthesis & Practice |
 | 45 | Checkpoint: Advanced Grammar | M36-44 | Review |
 
 ### Module Content Specifications B1.4
@@ -1277,21 +1317,27 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 38: Adverbial Participles - Practice
-**Grammar:** Combined participle usage
+#### Module 38: Active Participles & Phrases
+**Grammar:** Active Participles (читаючий, посивілий)
+**Focus:** Recognition & Stylistics (Passive Competence)
 
-**Practice combining:**
-- Sequential actions with perfective
-- Simultaneous actions with imperfective
-- Mixed sequences
+**Key Concepts:**
+- **Active Present:** читаючий, існуючий, працюючий (stem + -учий/-ачий) -> **Formal/Technical ONLY**.
+- **Active Past:** посивілий, зів'ялий, загорілий (stem + -лий) -> **General use**.
+- **Stylistic Rule:** Avoid active present participles in speech. Use "той, хто..." instead.
 
-**Vocabulary (15 words):**
-при цьому, водночас, тим часом, паралельно, раніше, попередньо, до цього, після цього, згодом, пізніше, одразу, миттєво, негайно, раптом, несподівано
+**Key Patterns:**
+- Студент, який читає... (Preferred natural)
+- Читаючий студент... (Artificial/Bureaucratic)
+- Посивілий чоловік... (Greying man - Natural)
+
+**Vocabulary (20 words):**
+існуючий, діючий, працюючий, слідуючий (avoid!), наступний (correct!), посивілий, зів'ялий, загорілий, змоклий, замерзлий, пожовклий, опалий, прибулий, відсталий, дорослий, бувший (avoid!), колишній (correct!), оточуючий (avoid!), навколишній (correct!), бажаючий
 
 **Signature Activity Concepts:**
-1. Extended writing: Use both participle types
-2. Transform: Convert relative clauses to participles
-3. Quiz: Participle type and form
+1. Stylistic Transform: "Bureaucratic" text → Natural Ukrainian (Participle → Clause)
+2. Recognition: Identify participles in text
+3. Choose: Correct word (оточуючий vs навколишній)
 
 ---
 
@@ -1365,68 +1411,66 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 42: Diminutives - Nouns
-**Grammar:** Diminutive suffix system
+#### Module 42: Diminutives: Master Class
+**Grammar:** Forms, Usage, and Nuance (Merged)
 
-**Common Suffixes:**
-| Suffix | Example | Meaning |
-|--------|---------|---------|
-| -ик | хлопчик | little boy |
-| -ок/-ок | кошик/котик | basket/kitty |
-| -очок/-ечок | листочок | little leaf |
-| -еньк- | матінка | dear mother |
-| -оньк- | донька | dear daughter |
-| -ечк-/-ичк- | річечка | little river |
+**Forms:** -ик, -ок, -очок, -еньк-, -оньк-, -ечк-
+**Usage Contexts:** Affection, Size, Politeness, Sarcasm, Child-direct speech.
 
-**Vocabulary (25 words):**
-хлопчик, дівчинка, котик, песик, столик, стілець, будиночок, місточок, листочок, квіточка, зірочка, сонечко, матінка, татусь, бабуся, дідусь, донечка, синочок, братик, сестричка, друзяк, ніжка, ручка, вушко, оченько
+**Key Patterns:**
+- Хлопчик, котик, столик (Simple diminutives)
+- Матінка, серденько, сонечко (Deep affection)
+- Хлібчика, будь ласка (Politeness/Softening)
+- Проблемка! (Dismissive/Ironic)
+
+**Vocabulary (30 words):**
+хлопчик, дівчинка, котик, песик, столик, стілець, будиночок, матінка, татусь, бабуся, дідусь, донечка, синочок, братик, сестричка, серденько, сонечко, зірочка, квіточка, водичка, хлібчик, кавка, чайок, трошки, трішки, тихесенько, гарнесенький, малесенький, рідненький, близенько
 
 **Signature Activity Concepts:**
-1. Form: Base noun → diminutive
-2. Match-up: Diminutive → base form
-3. Gap-fill: Use diminutives in context
+1. Form: Create diminutives from base nouns/adjectives
+2. Context Analysis: Why diminutive here? (Rude? Polite? Cute?)
+3. Register Shift: Rewrite formal request to "grandmother style"
+4. Match-up: Diminutive → Base word
 
 ---
 
-#### Module 43: Diminutives - Usage & Nuance
-**Grammar:** Emotional and stylistic diminutive use
-
-**Usage Contexts:**
-- Affection: Мій котику! (My dear kitty!)
-- Small size: Це маленький будиночок. (It's a little house.)
-- Politeness: Хлібчика, будь ласка. (Some bread, please.)
-- Dismissive: Проблемка! (A little problem - sarcastic)
-- Child speech: Йди до мамуні. (Go to mommy.)
-
-**Vocabulary (20 words):**
-милий, ніжний, ласкавий, любий, рідний, дорогий, крихітний, маленький, мініатюрний, невеличкий, трошки, трішки, зовсім, ледь-ледь, чуть-чуть, ніби, немов, наче, буквально, практично
-
-**Signature Activity Concepts:**
-1. Context analysis: Why diminutive here?
-2. Register practice: Formal → informal with diminutives
-3. Writing: Affectionate letter with diminutives
-
----
-
-#### Module 44: Numerals - Collectives & Fractions
-**Grammar:** Collective numerals and fractions
+#### Module 43: Numerals: Collectives & Fractions
+**Grammar:** Collective numerals and fractions (Shifted from M44)
 
 **Collective Numerals:**
-- двоє, троє, четверо, п'ятеро... (two, three, four, five... - collective)
-- Use with: people, pluralia tantum, paired objects
-- Двоє дітей, троє ножиць, четверо очей
+- двоє, троє, четверо... (two, three, four...)
+- Use with: people (groups), pluralia tantum (ножиці), young animals, paired objects.
 
 **Fractions:**
-- половина, третина, чверть (half, third, quarter)
-- одна друга, дві третіх (one half, two thirds)
+- половина (1/2), третина (1/3), чверть (1/4), півтора (1.5)
 
-**Vocabulary (25 words):**
+**Vocabulary (25 words):** (Same as original M44)
 двоє, троє, четверо, п'ятеро, шестеро, семеро, восьмеро, дев'ятеро, десятеро, обидва, обидві, обоє, половина, третина, чверть, одна п'ята, дві третіх, три четвертих, відсоток, процент, частка, частина, долька, дріб, пропорція
 
 **Signature Activity Concepts:**
 1. Choose: Cardinal vs collective numeral
-2. Express: Fractions in Ukrainian
-3. Math problems: Fractions and percentages
+2. Math problems: Fractions and percentages
+3. Recipe: Half a cup, quarter kilo...
+
+---
+
+#### Module 44: Integrated Grammar Lab
+**Grammar:** Synthesis of B1.4 concepts
+**Focus:** Participles + Passive + Numbers + Diminutives together.
+
+**Rationale:** Before the checkpoint, force learners to mix these advanced concepts in complex, realistic scenarios.
+
+**Scenarios:**
+- A formal report (Passive, Participles, Numbers)
+- A family conversation (Diminutives, Active Participles treated as errors/corrected)
+
+**Vocabulary (15 mixed words):**
+звіт, статистика, дані, огляд, аналіз, зауваження, доповнення, уточнення, коригування, підсумок, загалом, в цілому, зокрема, власне кажучи, чесно кажучи
+
+**Signature Activity Concepts:**
+1. **Style Editor:** Correct a text mixing "bureaucratese" participles with "baby talk" diminutives into neutral standard Ukrainian.
+2. **Report Writing:** Describe a graph using passive voice and fractions ("Третина роботи зроблена").
+3. **Complex Narrative:** Story using adverbial participles types.
 
 ---
 
@@ -1442,10 +1486,11 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Assessment Areas:**
 1. Adverbial participles (imperfective and perfective) - 5 items
-2. Passive participles (full and short forms) - 5 items
-3. Passive constructions - 5 items
-4. Diminutives - 5 items
-5. Collective numerals and fractions - 5 items
+2. **Active participles (Stylistic recognition)** - 3 items
+3. Passive participles (full and short forms) - 5 items
+4. Passive constructions - 4 items
+5. Diminutives (Match nuance) - 4 items
+6. Collective numerals and fractions - 4 items
 
 **Self-Assessment Rubric:**
 
@@ -1453,6 +1498,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 |-------|-------------|----------------|--------------|
 | Adverbial participles | Can't form | Form but with errors | Use naturally |
 | Passive participles | Confuse forms | Know -ний vs -но | Both forms fluent |
+| Active participles | Treat as errors | Recognize in text | Know stylistic limit |
 | Diminutives | Don't use | Recognize common ones | Form and use actively |
 | Numerals | Only basic | Know collectives | Use all forms |
 

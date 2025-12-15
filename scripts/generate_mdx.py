@@ -111,6 +111,16 @@ def escape_jsx(text: str) -> str:
     text = text.replace('${', '\\${')
     return text
 
+def fix_html_for_jsx(text: str) -> str:
+    """Convert HTML tags to JSX-compatible self-closing format."""
+    # Convert <br> to <br />
+    text = re.sub(r'<br\s*/?>', '<br />', text)
+    # Convert <hr> to <hr />
+    text = re.sub(r'<hr\s*/?>', '<hr />', text)
+    # Convert <img ...> to <img ... />
+    text = re.sub(r'<img([^>]*?)(?<!/)>', r'<img\1 />', text)
+    return text
+
 def parse_frontmatter(content: str) -> tuple[dict, str]:
     """Extract YAML frontmatter and body from markdown."""
     lines = content.split('\n')
@@ -403,25 +413,66 @@ def parse_error_correction(content: str) -> list[ErrorCorrectionItem]:
     return items
 
 def parse_cloze(content: str) -> ClozeData:
-    """Parse cloze activity with passage and blanks."""
+    """Parse cloze activity with passage and blanks.
+
+    Format:
+    - Passage with [___:N] markers for blanks
+    - Numbered answer sections:
+      N. default_answer
+      > [!answer] correct_answer
+      > [!options] opt1 | opt2 | opt3
+    """
     lines = content.split('\n')
     passage_lines = []
-    blanks = []
-    in_passage = True
+    blanks = {}  # Use dict to maintain blank number order
+    current_blank_num = None
+    current_answer = None
+    current_options = []
 
+    # First pass: separate passage from answer blocks
+    in_answers = False
     for line in lines:
         stripped = line.strip()
-        if stripped.startswith('> [!blank]'):
-            in_passage = False
-            blank_data = stripped.replace('> [!blank]', '').strip()
-            # Parse: answer | opt1 | opt2 | opt3
-            parts = [p.strip() for p in blank_data.split('|')]
-            if parts:
-                blanks.append({"answer": parts[0], "options": parts})
-        elif in_passage:
+
+        # Check for numbered answer line (e.g., "1. від")
+        num_match = re.match(r'^(\d+)\.\s*(.*)$', stripped)
+        if num_match:
+            # Save previous blank if exists
+            if current_blank_num is not None and current_answer:
+                blanks[current_blank_num] = {"answer": current_answer, "options": current_options if current_options else [current_answer]}
+
+            current_blank_num = int(num_match.group(1))
+            default_val = num_match.group(2).strip()
+            current_answer = default_val  # Default answer from the line itself
+            current_options = []
+            in_answers = True
+            continue
+
+        # Parse answer callout
+        if stripped.startswith('> [!answer]'):
+            current_answer = stripped.replace('> [!answer]', '').strip()
+            continue
+
+        # Parse options callout
+        if stripped.startswith('> [!options]'):
+            opts = stripped.replace('> [!options]', '').strip()
+            current_options = [o.strip() for o in opts.split('|')]
+            continue
+
+        # If we haven't started answers yet, it's passage
+        if not in_answers:
             passage_lines.append(line)
 
-    return ClozeData(passage='\n'.join(passage_lines).strip(), blanks=blanks)
+    # Save last blank
+    if current_blank_num is not None and current_answer:
+        blanks[current_blank_num] = {"answer": current_answer, "options": current_options if current_options else [current_answer]}
+
+    # Convert to ordered list
+    blanks_list = []
+    for i in sorted(blanks.keys()):
+        blanks_list.append(blanks[i])
+
+    return ClozeData(passage='\n'.join(passage_lines).strip(), blanks=blanks_list)
 
 def parse_select(content: str) -> list[SelectQuestion]:
     """Parse select (multi-choice) activity."""
@@ -814,6 +865,9 @@ def process_activities(body: str) -> str:
         elif activity_type == 'dialogue-reorder':
             lines = parse_dialogue_reorder(content)
             jsx = dialogue_reorder_to_jsx(lines, title)
+        elif activity_type == 'mark-the-words':
+            # Simple pass-through for now as generic markdown
+            jsx = f"### {title}\n\n{instruction}\n\n{content}"
 
         if jsx:
             activities_jsx_parts.append(jsx)
@@ -939,6 +993,9 @@ description: "{escape_jsx(fm.get('subtitle', ''))}"
 
     # Convert callouts
     processed = convert_callouts(processed)
+
+    # Fix HTML for JSX compatibility (self-closing tags)
+    processed = fix_html_for_jsx(processed)
 
     # Process dialogues
     processed = process_dialogues(processed)

@@ -1,0 +1,346 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-41",
+    "moduleId": "mod-uk-A2-41",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.4",
+    "moduleNumber": 41,
+    "moduleType": "grammar",
+    "pedagogy": "PPP",
+    "immersionLevel": 0.4,
+    "title": "Root Families II",
+    "titleUk": null,
+    "subtitle": "Motion and Perception Roots",
+    "description": "Learner knows perception root families",
+    "objectives": [
+      "Learner knows perception root families",
+      "Learner knows speaking root families",
+      "Learner can recognize word connections"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "perception roots",
+      "speaking roots"
+    ],
+    "tags": [
+      "grammar",
+      "word-formation",
+      "roots"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "Welcome to more root families! This module covers **seeing** (бач-), **hearing** (слух-/чут-), and **speaking** (говор-/мов-) roots.\n\nUnderstanding these roots unlocks dozens of related words. When you see the root, you instantly know the word's meaning. This is the power of morphological awareness in Ukrainian!\n\nRoot families are the building blocks of Ukrainian vocabulary. A single root generates many words through prefixes and suffixes. For example, from the root \"бач-\" we get \"бачити\", \"бачення\", \"побачення\", and \"передбачення\". Learning one root means learning four or more words automatically!\n\nThis approach to vocabulary learning is called morphological analysis. Instead of memorizing individual words in isolation, you learn the patterns that connect them. A root like \"бач-\" becomes a key that unlocks an entire family of related words.\n\nIn this module, we focus on three important root families: perception roots for seeing, roots for hearing and feeling, and roots for speaking and language. These are fundamental concepts that appear in everyday conversation.\n\nEnglish has similar patterns: \"see\" gives us \"sight\", \"seer\", \"foresee\", \"oversee\". Ukrainian's system is even more productive because of its rich prefixation and suffixation system.\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "Presentation",
+        "nameEn": null,
+        "type": "content",
+        "content": "## бач- Family (see)\n\nThe root **бач-** relates to seeing and visual perception.\n\n| Word | Meaning | Usage |\n|------|---------|-------|\n| бачити | to see | Я бачу тебе! (I see you!) |\n| бачення | vision | художнє бачення (artistic vision) |\n| побачення | meeting/date | романтичне побачення |\n| передбачення | prediction | точне передбачення |\n\n> [!tip] Словотвір: Приклад Кореня бач-\n> Корінь бач- дає дієслово \"бачити\".\n> Від дієслова утворюємо \"бачення\" (суфікс -ення).\n> Префікс \"по-\" додає значення \"раз\" → побачення.\n> Префікс \"перед-\" додає значення \"заздалегідь\" → передбачення.\n\nThis pattern is highly productive. Once you know the root, you can predict word meanings even for words you have never seen before. This is why learning roots is more efficient than memorizing individual words. Each root family typically contains between four and ten related words, so mastering twenty roots gives you access to nearly one hundred words.\n\nThe perception roots in this module are particularly useful because they appear in many common expressions. For example, \"Побачимо!\" means \"We will see!\" and uses the бач- root. Similarly, \"Я чую\" means \"I hear\" and uses the чут- root.\n\n## слух-/чут- Family (hear)\n\nUkrainian has two related roots for hearing: **слух-** (active listening) and **чут-** (passive hearing/feeling).\n\n| Word | Meaning | Usage |\n|------|---------|-------|\n| слухати | to listen | Слухай уважно! (Listen carefully!) |\n| слух | hearing | Він має гарний слух. (He has good hearing.) |\n| слухач | listener | радіослухачі (radio listeners) |\n| послух | obedience | беззаперечний послух |\n\n| Word | Meaning | Usage |\n|------|---------|-------|\n| чути | to hear | Я чую музику. (I hear music.) |\n| почуття | feeling | глибокі почуття (deep feelings) |\n| відчуття | sensation | дивне відчуття (strange sensation) |\n\n> [!cultural] Слухати vs Чути: Важлива Різниця\n> Українська мова розрізняє активне слухання і пасивне чуття.\n> \"Я слухаю музику\" = active listening.\n> \"Я чую музику\" = passive hearing.\n> Це важливо для правильного використання!\n\n## говор-/мов- Family (speak)\n\nThe **говор-/мов-** roots relate to speech and language.\n\n| Word | Meaning | Usage |\n|------|---------|-------|\n| говорити | to speak | Вона гарно говорить. |\n| розмова | conversation | цікава розмова |\n| мова | language | українська мова |\n| мовлення | speech | чітке мовлення |\n| мовчати | to be silent | Мовчи! Слухай! |\n| мовчання | silence | золоте мовчання |\n\n> [!tip] Логіка Кореня мов-\n> - **мов-**: мова, мовлення (говоріння).\n> - **мовч-**: мовчати, мовчання (НЕ говорити).\n> Цікаво: \"мовч-\" = \"мов-\" + \"-ч-\" означає відсутність мови!\n> \"Мовчазний\" = той, хто мало говорить.\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Story Time: Розмова між друзями",
+        "nameEn": null,
+        "type": "content",
+        "content": "Оксана і Тарас сидять у кафе. Тарас розповідає про свій день.\n\n— Сьогодні я **бачив** дивну річ, — каже Тарас.\n— Що саме? — питає Оксана. — **Розкажи**!\n— Я йшов вулицею і **почув** дивний звук. Я **слухав** уважно. Це була пташка. Але вона **мовчала** коли я **дивився** на неї.\n— Цікаво! А яке у тебе **відчуття**?\n— Я мав **почуття** спокою. Це був чудовий момент.\n— Я люблю такі історії, — каже Оксана. — Ти маєш гарне **бачення** світу.\n\nВони продовжили **розмову** про природу та **мовчання** в лісі.\n\n— Ти часто ходиш у ліс? — питає Оксана.\n— Так, я люблю **слухати** звуки природи. Там можна **чути** пташок, вітер, воду. Це допомагає думати.\n— Я розумію. Ми забуваємо **слухати** тишу в місті.\n— Саме так! **Мовчання** — це теж **мова**, тільки без слів.\n\nОксана посміхнулась. Вона зрозуміла **бачення** свого друга.\n\n> [!cultural] Українське Слово\n> Слово \"мова\" є дуже важливим для українців.\n> Українська мова — це не просто спосіб спілкування.\n> Це символ національної ідентичності та культури.\n> Тому словотвір від \"мов-\" такий багатий.\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Story Time Part 2: На лекції",
+        "nameEn": null,
+        "type": "content",
+        "content": "Марія — студентка. Сьогодні в неї лекція з лінгвістики.\n\nПрофесор **говорить** про історію української мови. **Слухачі** уважно **слухають**. Марія записує важливу інформацію.\n\n— Українська **мова** має давню історію, — каже професор. — **Мовлення** наших предків відрізнялося від сучасної мови.\n\nОдин студент **мовчить** увесь час. Він тільки **слухає** і **дивиться** на професора. Після лекції Марія питає його:\n\n— Чому ти **мовчав** весь час?\n— Я мав глибокі **почуття** про цю тему. Мені потрібен час для **роздумів**.\n— Я розумію, — каже Марія. — Іноді **мовчання** — це найкращий спосіб вчитися.\n\nВони домовилися про **побачення** в бібліотеці наступного тижня для обговорення цієї важливої теми.\n\n— До **побачення**! — сказала Марія.\n— До **побачення**! **Слухай** лекцію уважно! — відповів студент.\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Deep Dive: Related Roots",
+        "nameEn": null,
+        "type": "content",
+        "content": "## глял-/дивл- (glance/look)\n\nRelated to бач- but emphasizing the action of looking:\n\n| Word | Meaning |\n|------|---------|\n| погляд | look, view |\n| огляд | review |\n| вигляд | appearance |\n| дивитися | to look, to watch |\n\n## думл- (think)\n\nRelated to internal perception:\n\n| Word | Meaning |\n|------|---------|\n| думати | to think |\n| думка | thought |\n| роздуми | reflections |\n\n> [!tip] Зв'язок Коренів\n> **бач-** (бачити) — сприйняття очима\n> **слух-** (слухати) — сприйняття вухами\n> **чут-** (почуття) — сприйняття емоційне\n> **думл-** (думати) — внутрішнє сприйняття\n> Всі ці корені описують різні типи сприйняття!\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Common Mistakes",
+        "nameEn": null,
+        "type": "content",
+        "content": "Understanding the difference between related words is crucial for natural Ukrainian speech. Here are the most common mistakes learners make with perception roots.\n\n## Mistake 1: слухати vs чути\n\nThese two verbs both relate to hearing but have different meanings. Use чути for passive hearing (sounds reaching your ears) and слухати for active listening (paying attention).\n\n❌ Я слухаю шум машин. (passive)\n✅ Я чую шум машин. (I hear car noise.)\n\n❌ Чуй уважно! (should be active)\n✅ Слухай уважно! (Listen carefully!)\n\nThe same distinction exists in other languages. In German: hören vs zuhören. In Spanish: oír vs escuchar. Ukrainian makes this distinction consistently across all forms and tenses.\n\n## Mistake 2: мова vs мовлення\n\nBoth words relate to speech and come from the мов- root, but they describe different things. Мова means the language system itself. Мовлення means the act of speaking.\n\n❌ Він вчить українське мовлення.\n✅ Він вчить українську мову. (the language system)\n\n✅ У неї гарне мовлення. (She has good speech.)\n\n**Мова** = language (system, grammar, vocabulary)\n**Мовлення** = speech (the act, delivery, pronunciation)\n\n## Mistake 3: бачення vs побачення\n\nThese words look similar but mean different things. Бачення is vision or perspective. Побачення is a meeting or date.\n\n❌ Ми мали бачення о третій.\n✅ Ми мали побачення о третій. (We had a meeting at three.)\n\n✅ Його художнє бачення цікаве. (His artistic vision is interesting.)\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "**Корінь бач-:**\n- бачити\n- бачення\n- побачення\n- передбачення\n\n**Корінь слух-/чут-:**\n- слухати\n- слух\n- слухач\n- чути\n- почуття\n- відчуття\n\n**Корінь говор-/мов-:**\n- говорити\n- розмова\n- мова\n- мовлення\n- мовчати\n- мовчання\n\nЦі корені допомагають розуміти нові слова автоматично!\n\n---"
+      },
+      {
+        "id": "section-8",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Perception Roots\n\n> Match the word to its meaning.\n\n- бачити :: to see\n- бачення :: vision\n- побачення :: meeting/date\n- слухати :: to listen\n- слух :: hearing\n- слухач :: listener\n- чути :: to hear\n- почуття :: feeling\n\n## match-up: Speech Roots\n\n> Match the word to its meaning.\n\n- говорити :: to speak\n- розмова :: conversation\n- мова :: language\n- мовлення :: speech\n- мовчати :: to be silent\n- мовчання :: silence\n- думати :: to think\n- думка :: thought\n\n## fill-in: Root Families\n\n> Complete the sentences.\n\n1. Я хочу [___] тебе. (see)\n   > [!answer] бачити\n   > [!options] бачити | слухати | говорити | чути\n\n2. [___] уважно! (Listen)\n   > [!answer] Слухай\n   > [!options] Слухай | Бач | Говори | Пиши\n\n3. Українська [___] красива. (language)\n   > [!answer] мова\n   > [!options] мова | розмова | мовлення | слово\n\n4. Я [___] музику здалеку. (hear)\n   > [!answer] чую\n   > [!options] чую | слухаю | бачу | говорю\n\n5. Ми мали гарну [___]. (conversation)\n   > [!answer] розмову\n   > [!options] розмову | мову | слово | бачення\n\n6. Вони мали романтичне [___]. (date)\n   > [!answer] побачення\n   > [!options] побачення | бачення | розмова | слухання\n\n7. [___] були уважними. (listeners)\n   > [!answer] Слухачі\n   > [!options] Слухачі | Мовці | Читачі | Глядачі\n\n8. Будь ласка, [___]! (be silent)\n   > [!answer] мовчи\n   > [!options] мовчи | говори | слухай | дивись\n\n## quiz: Perception Roots\n\n1. \"Бач-\" relates to:\n   - [x] Seeing\n   - [ ] Hearing\n   - [ ] Speaking\n\n2. \"Слух-\" relates to:\n   - [x] Hearing\n   - [ ] Seeing\n   - [ ] Thinking\n\n3. \"Говор-/мов-\" relates to:\n   - [x] Speaking\n   - [ ] Seeing\n   - [ ] Hearing\n\n4. \"Побачення\" means:\n   - [x] Meeting/date\n   - [ ] Vision\n   - [ ] Prediction\n\n5. \"Слухач\" means:\n   - [x] Listener\n   - [ ] Speaker\n   - [ ] Viewer\n\n6. \"Мова\" vs \"мовлення\":\n   - [x] Мова = language system\n   - [ ] Мова = act of speaking\n   - [ ] They are the same\n\n7. \"Мовчати\" means:\n   - [x] To be silent\n   - [ ] To speak\n   - [ ] To listen\n\n8. \"Почуття\" vs \"відчуття\":\n   - [x] Почуття = emotional feeling\n   - [ ] Почуття = physical sensation\n   - [ ] They are the same\n\n## cloze: Story Comprehension\n\n> Complete based on the stories.\n\nТарас [___:1] дивну річ. (saw)\nВін [___:2] дивний звук. (heard)\nПташка [___:3] коли він дивився. (was silent)\nПрофесор [___:4] про мову. (speaks)\nСтуденти уважно [___:5]. (listen)\nМарія і студент домовились про [___:6]. (meeting)\n\n1. бачив\n> [!answer] бачив\n> [!options] бачив | чув | слухав\n\n2. почув\n> [!answer] почув\n> [!options] почув | бачив | слухав\n\n3. мовчала\n> [!answer] мовчала\n> [!options] мовчала | говорила | слухала\n\n4. говорить\n> [!answer] говорить\n> [!options] говорить | слухає | мовчить\n\n5. слухають\n> [!answer] слухають\n> [!options] слухають | говорять | мовчать\n\n6. побачення\n> [!answer] побачення\n> [!options] побачення | розмову | мовчання\n\n## unjumble: Perception Sentences\n\n1. бачу / Я / тебе\n   > [!answer] Я бачу тебе.\n2. музику / чую / Я\n   > [!answer] Я чую музику.\n3. уважно / Слухай\n   > [!answer] Слухай уважно.\n4. гарне / мовлення / Це\n   > [!answer] Це гарне мовлення.\n5. цікава / розмова / була / Це\n   > [!answer] Це була цікава розмова.\n6. мовчить / Він / весь / час\n   > [!answer] Він мовчить весь час.\n7. почуття / глибокі / Це\n   > [!answer] Це глибокі почуття.\n8. слухачі / уважні / Вони\n   > [!answer] Вони уважні слухачі.\n\n## error-correction: Root Usage\n\n1. Я **слухаю** шум машин на вулиці. (passive hearing)\n   > [!error] слухаю\n   > [!answer] чую\n   > [!explanation] Passive hearing = чути, active listening = слухати.\n   > [!options] чую | слухаю\n\n2. Він вчить українське **мовлення**. (the language system)\n   > [!error] мовлення\n   > [!answer] мову\n   > [!explanation] Language system = мова, speech act = мовлення.\n   > [!options] мову | мовлення\n\n3. Вона має дивне **почуття** у пальцях. (physical)\n   > [!error] почуття\n   > [!answer] відчуття\n   > [!explanation] Physical sensation = відчуття, emotion = почуття.\n   > [!options] відчуття | почуття\n\n4. **Чуй** уважно, що я кажу! (active listening)\n   > [!error] Чуй\n   > [!answer] Слухай\n   > [!explanation] Command to listen actively = слухай.\n   > [!options] Слухай | Чуй\n\n5. Це моє художнє **побачення** світу. (vision/perspective)\n   > [!error] побачення\n   > [!answer] бачення\n   > [!explanation] Vision/perspective = бачення, meeting = побачення.\n   > [!options] бачення | побачення\n\n6. Вони мають **бачення** о третій годині. (meeting)\n   > [!error] бачення\n   > [!answer] побачення\n   > [!explanation] Meeting/date = побачення, vision = бачення.\n   > [!options] побачення | бачення\n\n## group-sort: Root Families\n\n> Sort words by root family.\n\n### бач- (see)\n- бачити\n- бачення\n- побачення\n- передбачення\n\n### слух-/чут- (hear/feel)\n- слухати\n- слух\n- слухач\n- чути\n- почуття\n- відчуття\n\n### говор-/мов- (speak)\n- говорити\n- розмова\n- мова\n- мовлення\n- мовчати\n- мовчання\n\n## true-false: Root Rules\n\n> Mark true or false.\n\n- [x] \"Бач-\" = seeing/vision.\n- [x] \"Слух-\" = active listening.\n- [ ] \"Чут-\" = active listening.\n- [x] \"Чут-\" = passive hearing.\n- [x] \"Мов-\" = speaking/language.\n- [ ] \"Мов-\" = seeing.\n- [x] \"Побачення\" = meeting/date.\n- [ ] \"Побачення\" = vision.\n- [x] \"Мовчати\" = to be silent.\n- [ ] \"Мовчати\" = to speak.\n- [x] \"Слухач\" = listener.\n- [ ] \"Слухач\" = speaker.\n\n## translate: English to Ukrainian\n\n1. To see\n   - [x] бачити\n   - [ ] слухати\n   - [ ] чути\n\n2. Vision (artistic)\n   - [x] бачення\n   - [ ] побачення\n   - [ ] слух\n\n3. Meeting/date\n   - [x] побачення\n   - [ ] бачення\n   - [ ] розмова\n\n4. To listen\n   - [x] слухати\n   - [ ] чути\n   - [ ] бачити\n\n5. Listener\n   - [x] слухач\n   - [ ] мовець\n   - [ ] читач\n\n6. To hear\n   - [x] чути\n   - [ ] слухати\n   - [ ] бачити\n\n7. Feeling (emotional)\n   - [x] почуття\n   - [ ] відчуття\n   - [ ] слух\n\n8. Language\n   - [x] мова\n   - [ ] мовлення\n   - [ ] розмова\n\n---"
+      },
+      {
+        "id": "section-9",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| бачити | /ˈbɑt͡ʃɪtɪ/ | to see | verb | — | perception |\n| бачення | /ˈbɑt͡ʃɛnʲɑ/ | vision | noun | n | abstract |\n| побачення | /pɔˈbɑt͡ʃɛnʲɑ/ | meeting/date | noun | n | event |\n| передбачення | /pɛrɛdˈbɑt͡ʃɛnʲɑ/ | prediction | noun | n | abstract |\n| огляд | /ˈɔɦlʲɑd/ | review | noun | m | abstract |\n| погляд | /ˈpɔɦlʲɑd/ | look/view | noun | m | abstract |\n| вигляд | /ˈʋɪɦlʲɑd/ | appearance | noun | m | abstract |\n| слухати | /ˈsluxɑtɪ/ | to listen | verb | — | perception |\n| слух | /slux/ | hearing | noun | m | sense |\n| послух | /ˈpɔslux/ | obedience | noun | m | abstract |\n| слухач | /sluˈxɑt͡ʃ/ | listener | noun | m | person |\n| чути | /ˈt͡ʃutɪ/ | to hear | verb | — | perception |\n| почуття | /pɔˈt͡ʃutʲɑ/ | feeling | noun | n | emotion |\n| відчуття | /ʋidˈt͡ʃutʲɑ/ | sensation | noun | n | perception |\n| говорити | /ɦɔʋɔˈrɪtɪ/ | to speak | verb | — | speech |\n| розмова | /rɔzˈmɔʋɑ/ | conversation | noun | f | event |\n| мова | /ˈmɔʋɑ/ | language | noun | f | abstract |\n| мовлення | /ˈmɔʋlɛnʲɑ/ | speech | noun | n | activity |\n| мовець | /mɔˈʋɛt͡sʲ/ | speaker | noun | m | person |\n| мовчати | /mɔʋˈt͡ʃɑtɪ/ | to be silent | verb | — | speech |\n| мовчання | /mɔʋˈt͡ʃɑnʲɑ/ | silence | noun | n | state |\n| мовчазний | /mɔʋˈt͡ʃɑznɪj/ | silent (person) | adj | m | quality |\n| думати | /ˈdumɑtɪ/ | to think | verb | — | mental |\n| думка | /ˈdumkɑ/ | thought | noun | f | abstract |\n| роздуми | /rɔzˈdumɪ/ | reflections | noun | pl | abstract |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-41\ntitle: \"Root Families II\"\nsubtitle: \"Motion and Perception Roots\"\nversion: \"2.0\"\nphase: \"A2.4\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - grammar\n  - word-formation\n  - roots\ngrammar:\n  - perception roots\n  - speaking roots\nobjectives:\n  - \"Learner knows perception root families\"\n  - \"Learner knows speaking root families\"\n  - \"Learner can recognize word connections\"\nvocabulary_count: 25\n---\n\n# Warm-up\n\nWelcome to more root families! This module covers **seeing** (бач-), **hearing** (слух-/чут-), and **speaking** (говор-/мов-) roots.\n\nUnderstanding these roots unlocks dozens of related words. When you see the root, you instantly know the word's meaning. This is the power of morphological awareness in Ukrainian!\n\nRoot families are the building blocks of Ukrainian vocabulary. A single root generates many words through prefixes and suffixes. For example, from the root \"бач-\" we get \"бачити\", \"бачення\", \"побачення\", and \"передбачення\". Learning one root means learning four or more words automatically!\n\nThis approach to vocabulary learning is called morphological analysis. Instead of memorizing individual words in isolation, you learn the patterns that connect them. A root like \"бач-\" becomes a key that unlocks an entire family of related words.\n\nIn this module, we focus on three important root families: perception roots for seeing, roots for hearing and feeling, and roots for speaking and language. These are fundamental concepts that appear in everyday conversation.\n\nEnglish has similar patterns: \"see\" gives us \"sight\", \"seer\", \"foresee\", \"oversee\". Ukrainian's system is even more productive because of its rich prefixation and suffixation system.\n\n---\n\n# Presentation\n\n## бач- Family (see)\n\nThe root **бач-** relates to seeing and visual perception.\n\n| Word | Meaning | Usage |\n|------|---------|-------|\n| бачити | to see | Я бачу тебе! (I see you!) |\n| бачення | vision | художнє бачення (artistic vision) |\n| побачення | meeting/date | романтичне побачення |\n| передбачення | prediction | точне передбачення |\n\n> [!tip] Словотвір: Приклад Кореня бач-\n> Корінь бач- дає дієслово \"бачити\".\n> Від дієслова утворюємо \"бачення\" (суфікс -ення).\n> Префікс \"по-\" додає значення \"раз\" → побачення.\n> Префікс \"перед-\" додає значення \"заздалегідь\" → передбачення.\n\nThis pattern is highly productive. Once you know the root, you can predict word meanings even for words you have never seen before. This is why learning roots is more efficient than memorizing individual words. Each root family typically contains between four and ten related words, so mastering twenty roots gives you access to nearly one hundred words.\n\nThe perception roots in this module are particularly useful because they appear in many common expressions. For example, \"Побачимо!\" means \"We will see!\" and uses the бач- root. Similarly, \"Я чую\" means \"I hear\" and uses the чут- root.\n\n## слух-/чут- Family (hear)\n\nUkrainian has two related roots for hearing: **слух-** (active listening) and **чут-** (passive hearing/feeling).\n\n| Word | Meaning | Usage |\n|------|---------|-------|\n| слухати | to listen | Слухай уважно! (Listen carefully!) |\n| слух | hearing | Він має гарний слух. (He has good hearing.) |\n| слухач | listener | радіослухачі (radio listeners) |\n| послух | obedience | беззаперечний послух |\n\n| Word | Meaning | Usage |\n|------|---------|-------|\n| чути | to hear | Я чую музику. (I hear music.) |\n| почуття | feeling | глибокі почуття (deep feelings) |\n| відчуття | sensation | дивне відчуття (strange sensation) |\n\n> [!cultural] Слухати vs Чути: Важлива Різниця\n> Українська мова розрізняє активне слухання і пасивне чуття.\n> \"Я слухаю музику\" = active listening.\n> \"Я чую музику\" = passive hearing.\n> Це важливо для правильного використання!\n\n## говор-/мов- Family (speak)\n\nThe **говор-/мов-** roots relate to speech and language.\n\n| Word | Meaning | Usage |\n|------|---------|-------|\n| говорити | to speak | Вона гарно говорить. |\n| розмова | conversation | цікава розмова |\n| мова | language | українська мова |\n| мовлення | speech | чітке мовлення |\n| мовчати | to be silent | Мовчи! Слухай! |\n| мовчання | silence | золоте мовчання |\n\n> [!tip] Логіка Кореня мов-\n> - **мов-**: мова, мовлення (говоріння).\n> - **мовч-**: мовчати, мовчання (НЕ говорити).\n> Цікаво: \"мовч-\" = \"мов-\" + \"-ч-\" означає відсутність мови!\n> \"Мовчазний\" = той, хто мало говорить.\n\n---\n\n# Story Time: Розмова між друзями\n\nОксана і Тарас сидять у кафе. Тарас розповідає про свій день.\n\n— Сьогодні я **бачив** дивну річ, — каже Тарас.\n— Що саме? — питає Оксана. — **Розкажи**!\n— Я йшов вулицею і **почув** дивний звук. Я **слухав** уважно. Це була пташка. Але вона **мовчала** коли я **дивився** на неї.\n— Цікаво! А яке у тебе **відчуття**?\n— Я мав **почуття** спокою. Це був чудовий момент.\n— Я люблю такі історії, — каже Оксана. — Ти маєш гарне **бачення** світу.\n\nВони продовжили **розмову** про природу та **мовчання** в лісі.\n\n— Ти часто ходиш у ліс? — питає Оксана.\n— Так, я люблю **слухати** звуки природи. Там можна **чути** пташок, вітер, воду. Це допомагає думати.\n— Я розумію. Ми забуваємо **слухати** тишу в місті.\n— Саме так! **Мовчання** — це теж **мова**, тільки без слів.\n\nОксана посміхнулась. Вона зрозуміла **бачення** свого друга.\n\n> [!cultural] Українське Слово\n> Слово \"мова\" є дуже важливим для українців.\n> Українська мова — це не просто спосіб спілкування.\n> Це символ національної ідентичності та культури.\n> Тому словотвір від \"мов-\" такий багатий.\n\n---\n\n# Story Time Part 2: На лекції\n\nМарія — студентка. Сьогодні в неї лекція з лінгвістики.\n\nПрофесор **говорить** про історію української мови. **Слухачі** уважно **слухають**. Марія записує важливу інформацію.\n\n— Українська **мова** має давню історію, — каже професор. — **Мовлення** наших предків відрізнялося від сучасної мови.\n\nОдин студент **мовчить** увесь час. Він тільки **слухає** і **дивиться** на професора. Після лекції Марія питає його:\n\n— Чому ти **мовчав** весь час?\n— Я мав глибокі **почуття** про цю тему. Мені потрібен час для **роздумів**.\n— Я розумію, — каже Марія. — Іноді **мовчання** — це найкращий спосіб вчитися.\n\nВони домовилися про **побачення** в бібліотеці наступного тижня для обговорення цієї важливої теми.\n\n— До **побачення**! — сказала Марія.\n— До **побачення**! **Слухай** лекцію уважно! — відповів студент.\n\n---\n\n# Deep Dive: Related Roots\n\n## глял-/дивл- (glance/look)\n\nRelated to бач- but emphasizing the action of looking:\n\n| Word | Meaning |\n|------|---------|\n| погляд | look, view |\n| огляд | review |\n| вигляд | appearance |\n| дивитися | to look, to watch |\n\n## думл- (think)\n\nRelated to internal perception:\n\n| Word | Meaning |\n|------|---------|\n| думати | to think |\n| думка | thought |\n| роздуми | reflections |\n\n> [!tip] Зв'язок Коренів\n> **бач-** (бачити) — сприйняття очима\n> **слух-** (слухати) — сприйняття вухами\n> **чут-** (почуття) — сприйняття емоційне\n> **думл-** (думати) — внутрішнє сприйняття\n> Всі ці корені описують різні типи сприйняття!\n\n---\n\n# Common Mistakes\n\nUnderstanding the difference between related words is crucial for natural Ukrainian speech. Here are the most common mistakes learners make with perception roots.\n\n## Mistake 1: слухати vs чути\n\nThese two verbs both relate to hearing but have different meanings. Use чути for passive hearing (sounds reaching your ears) and слухати for active listening (paying attention).\n\n❌ Я слухаю шум машин. (passive)\n✅ Я чую шум машин. (I hear car noise.)\n\n❌ Чуй уважно! (should be active)\n✅ Слухай уважно! (Listen carefully!)\n\nThe same distinction exists in other languages. In German: hören vs zuhören. In Spanish: oír vs escuchar. Ukrainian makes this distinction consistently across all forms and tenses.\n\n## Mistake 2: мова vs мовлення\n\nBoth words relate to speech and come from the мов- root, but they describe different things. Мова means the language system itself. Мовлення means the act of speaking.\n\n❌ Він вчить українське мовлення.\n✅ Він вчить українську мову. (the language system)\n\n✅ У неї гарне мовлення. (She has good speech.)\n\n**Мова** = language (system, grammar, vocabulary)\n**Мовлення** = speech (the act, delivery, pronunciation)\n\n## Mistake 3: бачення vs побачення\n\nThese words look similar but mean different things. Бачення is vision or perspective. Побачення is a meeting or date.\n\n❌ Ми мали бачення о третій.\n✅ Ми мали побачення о третій. (We had a meeting at three.)\n\n✅ Його художнє бачення цікаве. (His artistic vision is interesting.)\n\n---\n\n# Summary\n\n**Корінь бач-:**\n- бачити\n- бачення\n- побачення\n- передбачення\n\n**Корінь слух-/чут-:**\n- слухати\n- слух\n- слухач\n- чути\n- почуття\n- відчуття\n\n**Корінь говор-/мов-:**\n- говорити\n- розмова\n- мова\n- мовлення\n- мовчати\n- мовчання\n\nЦі корені допомагають розуміти нові слова автоматично!\n\n---\n\n# Activities\n\n## match-up: Perception Roots\n\n> Match the word to its meaning.\n\n- бачити :: to see\n- бачення :: vision\n- побачення :: meeting/date\n- слухати :: to listen\n- слух :: hearing\n- слухач :: listener\n- чути :: to hear\n- почуття :: feeling\n\n## match-up: Speech Roots\n\n> Match the word to its meaning.\n\n- говорити :: to speak\n- розмова :: conversation\n- мова :: language\n- мовлення :: speech\n- мовчати :: to be silent\n- мовчання :: silence\n- думати :: to think\n- думка :: thought\n\n## fill-in: Root Families\n\n> Complete the sentences.\n\n1. Я хочу [___] тебе. (see)\n   > [!answer] бачити\n   > [!options] бачити | слухати | говорити | чути\n\n2. [___] уважно! (Listen)\n   > [!answer] Слухай\n   > [!options] Слухай | Бач | Говори | Пиши\n\n3. Українська [___] красива. (language)\n   > [!answer] мова\n   > [!options] мова | розмова | мовлення | слово\n\n4. Я [___] музику здалеку. (hear)\n   > [!answer] чую\n   > [!options] чую | слухаю | бачу | говорю\n\n5. Ми мали гарну [___]. (conversation)\n   > [!answer] розмову\n   > [!options] розмову | мову | слово | бачення\n\n6. Вони мали романтичне [___]. (date)\n   > [!answer] побачення\n   > [!options] побачення | бачення | розмова | слухання\n\n7. [___] були уважними. (listeners)\n   > [!answer] Слухачі\n   > [!options] Слухачі | Мовці | Читачі | Глядачі\n\n8. Будь ласка, [___]! (be silent)\n   > [!answer] мовчи\n   > [!options] мовчи | говори | слухай | дивись\n\n## quiz: Perception Roots\n\n1. \"Бач-\" relates to:\n   - [x] Seeing\n   - [ ] Hearing\n   - [ ] Speaking\n\n2. \"Слух-\" relates to:\n   - [x] Hearing\n   - [ ] Seeing\n   - [ ] Thinking\n\n3. \"Говор-/мов-\" relates to:\n   - [x] Speaking\n   - [ ] Seeing\n   - [ ] Hearing\n\n4. \"Побачення\" means:\n   - [x] Meeting/date\n   - [ ] Vision\n   - [ ] Prediction\n\n5. \"Слухач\" means:\n   - [x] Listener\n   - [ ] Speaker\n   - [ ] Viewer\n\n6. \"Мова\" vs \"мовлення\":\n   - [x] Мова = language system\n   - [ ] Мова = act of speaking\n   - [ ] They are the same\n\n7. \"Мовчати\" means:\n   - [x] To be silent\n   - [ ] To speak\n   - [ ] To listen\n\n8. \"Почуття\" vs \"відчуття\":\n   - [x] Почуття = emotional feeling\n   - [ ] Почуття = physical sensation\n   - [ ] They are the same\n\n## cloze: Story Comprehension\n\n> Complete based on the stories.\n\nТарас [___:1] дивну річ. (saw)\nВін [___:2] дивний звук. (heard)\nПташка [___:3] коли він дивився. (was silent)\nПрофесор [___:4] про мову. (speaks)\nСтуденти уважно [___:5]. (listen)\nМарія і студент домовились про [___:6]. (meeting)\n\n1. бачив\n> [!answer] бачив\n> [!options] бачив | чув | слухав\n\n2. почув\n> [!answer] почув\n> [!options] почув | бачив | слухав\n\n3. мовчала\n> [!answer] мовчала\n> [!options] мовчала | говорила | слухала\n\n4. говорить\n> [!answer] говорить\n> [!options] говорить | слухає | мовчить\n\n5. слухають\n> [!answer] слухають\n> [!options] слухають | говорять | мовчать\n\n6. побачення\n> [!answer] побачення\n> [!options] побачення | розмову | мовчання\n\n## unjumble: Perception Sentences\n\n1. бачу / Я / тебе\n   > [!answer] Я бачу тебе.\n2. музику / чую / Я\n   > [!answer] Я чую музику.\n3. уважно / Слухай\n   > [!answer] Слухай уважно.\n4. гарне / мовлення / Це\n   > [!answer] Це гарне мовлення.\n5. цікава / розмова / була / Це\n   > [!answer] Це була цікава розмова.\n6. мовчить / Він / весь / час\n   > [!answer] Він мовчить весь час.\n7. почуття / глибокі / Це\n   > [!answer] Це глибокі почуття.\n8. слухачі / уважні / Вони\n   > [!answer] Вони уважні слухачі.\n\n## error-correction: Root Usage\n\n1. Я **слухаю** шум машин на вулиці. (passive hearing)\n   > [!error] слухаю\n   > [!answer] чую\n   > [!explanation] Passive hearing = чути, active listening = слухати.\n   > [!options] чую | слухаю\n\n2. Він вчить українське **мовлення**. (the language system)\n   > [!error] мовлення\n   > [!answer] мову\n   > [!explanation] Language system = мова, speech act = мовлення.\n   > [!options] мову | мовлення\n\n3. Вона має дивне **почуття** у пальцях. (physical)\n   > [!error] почуття\n   > [!answer] відчуття\n   > [!explanation] Physical sensation = відчуття, emotion = почуття.\n   > [!options] відчуття | почуття\n\n4. **Чуй** уважно, що я кажу! (active listening)\n   > [!error] Чуй\n   > [!answer] Слухай\n   > [!explanation] Command to listen actively = слухай.\n   > [!options] Слухай | Чуй\n\n5. Це моє художнє **побачення** світу. (vision/perspective)\n   > [!error] побачення\n   > [!answer] бачення\n   > [!explanation] Vision/perspective = бачення, meeting = побачення.\n   > [!options] бачення | побачення\n\n6. Вони мають **бачення** о третій годині. (meeting)\n   > [!error] бачення\n   > [!answer] побачення\n   > [!explanation] Meeting/date = побачення, vision = бачення.\n   > [!options] побачення | бачення\n\n## group-sort: Root Families\n\n> Sort words by root family.\n\n### бач- (see)\n- бачити\n- бачення\n- побачення\n- передбачення\n\n### слух-/чут- (hear/feel)\n- слухати\n- слух\n- слухач\n- чути\n- почуття\n- відчуття\n\n### говор-/мов- (speak)\n- говорити\n- розмова\n- мова\n- мовлення\n- мовчати\n- мовчання\n\n## true-false: Root Rules\n\n> Mark true or false.\n\n- [x] \"Бач-\" = seeing/vision.\n- [x] \"Слух-\" = active listening.\n- [ ] \"Чут-\" = active listening.\n- [x] \"Чут-\" = passive hearing.\n- [x] \"Мов-\" = speaking/language.\n- [ ] \"Мов-\" = seeing.\n- [x] \"Побачення\" = meeting/date.\n- [ ] \"Побачення\" = vision.\n- [x] \"Мовчати\" = to be silent.\n- [ ] \"Мовчати\" = to speak.\n- [x] \"Слухач\" = listener.\n- [ ] \"Слухач\" = speaker.\n\n## translate: English to Ukrainian\n\n1. To see\n   - [x] бачити\n   - [ ] слухати\n   - [ ] чути\n\n2. Vision (artistic)\n   - [x] бачення\n   - [ ] побачення\n   - [ ] слух\n\n3. Meeting/date\n   - [x] побачення\n   - [ ] бачення\n   - [ ] розмова\n\n4. To listen\n   - [x] слухати\n   - [ ] чути\n   - [ ] бачити\n\n5. Listener\n   - [x] слухач\n   - [ ] мовець\n   - [ ] читач\n\n6. To hear\n   - [x] чути\n   - [ ] слухати\n   - [ ] бачити\n\n7. Feeling (emotional)\n   - [x] почуття\n   - [ ] відчуття\n   - [ ] слух\n\n8. Language\n   - [x] мова\n   - [ ] мовлення\n   - [ ] розмова\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| бачити | /ˈbɑt͡ʃɪtɪ/ | to see | verb | — | perception |\n| бачення | /ˈbɑt͡ʃɛnʲɑ/ | vision | noun | n | abstract |\n| побачення | /pɔˈbɑt͡ʃɛnʲɑ/ | meeting/date | noun | n | event |\n| передбачення | /pɛrɛdˈbɑt͡ʃɛnʲɑ/ | prediction | noun | n | abstract |\n| огляд | /ˈɔɦlʲɑd/ | review | noun | m | abstract |\n| погляд | /ˈpɔɦlʲɑd/ | look/view | noun | m | abstract |\n| вигляд | /ˈʋɪɦlʲɑd/ | appearance | noun | m | abstract |\n| слухати | /ˈsluxɑtɪ/ | to listen | verb | — | perception |\n| слух | /slux/ | hearing | noun | m | sense |\n| послух | /ˈpɔslux/ | obedience | noun | m | abstract |\n| слухач | /sluˈxɑt͡ʃ/ | listener | noun | m | person |\n| чути | /ˈt͡ʃutɪ/ | to hear | verb | — | perception |\n| почуття | /pɔˈt͡ʃutʲɑ/ | feeling | noun | n | emotion |\n| відчуття | /ʋidˈt͡ʃutʲɑ/ | sensation | noun | n | perception |\n| говорити | /ɦɔʋɔˈrɪtɪ/ | to speak | verb | — | speech |\n| розмова | /rɔzˈmɔʋɑ/ | conversation | noun | f | event |\n| мова | /ˈmɔʋɑ/ | language | noun | f | abstract |\n| мовлення | /ˈmɔʋlɛnʲɑ/ | speech | noun | n | activity |\n| мовець | /mɔˈʋɛt͡sʲ/ | speaker | noun | m | person |\n| мовчати | /mɔʋˈt͡ʃɑtɪ/ | to be silent | verb | — | speech |\n| мовчання | /mɔʋˈt͡ʃɑnʲɑ/ | silence | noun | n | state |\n| мовчазний | /mɔʋˈt͡ʃɑznɪj/ | silent (person) | adj | m | quality |\n| думати | /ˈdumɑtɪ/ | to think | verb | — | mental |\n| думка | /ˈdumkɑ/ | thought | noun | f | abstract |\n| роздуми | /rɔzˈdumɪ/ | reflections | noun | pl | abstract |\n",
+    "createdAt": "2025-12-15T20:02:03.058355Z",
+    "modifiedAt": "2025-12-15T20:02:03.058355Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-41",
+    "level": "A2",
+    "phase": "A2.4",
+    "wordCount": 25,
+    "newWordCount": 25,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "бачити",
+        "ipa": "/ˈbɑt͡ʃɪtɪ/",
+        "en": "to see",
+        "pos": "verb",
+        "gender": null,
+        "note": "perception"
+      },
+      {
+        "id": "vocab-2",
+        "uk": "бачення",
+        "ipa": "/ˈbɑt͡ʃɛnʲɑ/",
+        "en": "vision",
+        "pos": "noun",
+        "gender": "n",
+        "note": "abstract"
+      },
+      {
+        "id": "vocab-3",
+        "uk": "побачення",
+        "ipa": "/pɔˈbɑt͡ʃɛnʲɑ/",
+        "en": "meeting/date",
+        "pos": "noun",
+        "gender": "n",
+        "note": "event"
+      },
+      {
+        "id": "vocab-4",
+        "uk": "передбачення",
+        "ipa": "/pɛrɛdˈbɑt͡ʃɛnʲɑ/",
+        "en": "prediction",
+        "pos": "noun",
+        "gender": "n",
+        "note": "abstract"
+      },
+      {
+        "id": "vocab-5",
+        "uk": "огляд",
+        "ipa": "/ˈɔɦlʲɑd/",
+        "en": "review",
+        "pos": "noun",
+        "gender": "m",
+        "note": "abstract"
+      },
+      {
+        "id": "vocab-6",
+        "uk": "погляд",
+        "ipa": "/ˈpɔɦlʲɑd/",
+        "en": "look/view",
+        "pos": "noun",
+        "gender": "m",
+        "note": "abstract"
+      },
+      {
+        "id": "vocab-7",
+        "uk": "вигляд",
+        "ipa": "/ˈʋɪɦlʲɑd/",
+        "en": "appearance",
+        "pos": "noun",
+        "gender": "m",
+        "note": "abstract"
+      },
+      {
+        "id": "vocab-8",
+        "uk": "слухати",
+        "ipa": "/ˈsluxɑtɪ/",
+        "en": "to listen",
+        "pos": "verb",
+        "gender": null,
+        "note": "perception"
+      },
+      {
+        "id": "vocab-9",
+        "uk": "слух",
+        "ipa": "/slux/",
+        "en": "hearing",
+        "pos": "noun",
+        "gender": "m",
+        "note": "sense"
+      },
+      {
+        "id": "vocab-10",
+        "uk": "послух",
+        "ipa": "/ˈpɔslux/",
+        "en": "obedience",
+        "pos": "noun",
+        "gender": "m",
+        "note": "abstract"
+      },
+      {
+        "id": "vocab-11",
+        "uk": "слухач",
+        "ipa": "/sluˈxɑt͡ʃ/",
+        "en": "listener",
+        "pos": "noun",
+        "gender": "m",
+        "note": "person"
+      },
+      {
+        "id": "vocab-12",
+        "uk": "чути",
+        "ipa": "/ˈt͡ʃutɪ/",
+        "en": "to hear",
+        "pos": "verb",
+        "gender": null,
+        "note": "perception"
+      },
+      {
+        "id": "vocab-13",
+        "uk": "почуття",
+        "ipa": "/pɔˈt͡ʃutʲɑ/",
+        "en": "feeling",
+        "pos": "noun",
+        "gender": "n",
+        "note": "emotion"
+      },
+      {
+        "id": "vocab-14",
+        "uk": "відчуття",
+        "ipa": "/ʋidˈt͡ʃutʲɑ/",
+        "en": "sensation",
+        "pos": "noun",
+        "gender": "n",
+        "note": "perception"
+      },
+      {
+        "id": "vocab-15",
+        "uk": "говорити",
+        "ipa": "/ɦɔʋɔˈrɪtɪ/",
+        "en": "to speak",
+        "pos": "verb",
+        "gender": null,
+        "note": "speech"
+      },
+      {
+        "id": "vocab-16",
+        "uk": "розмова",
+        "ipa": "/rɔzˈmɔʋɑ/",
+        "en": "conversation",
+        "pos": "noun",
+        "gender": "f",
+        "note": "event"
+      },
+      {
+        "id": "vocab-17",
+        "uk": "мова",
+        "ipa": "/ˈmɔʋɑ/",
+        "en": "language",
+        "pos": "noun",
+        "gender": "f",
+        "note": "abstract"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "мовлення",
+        "ipa": "/ˈmɔʋlɛnʲɑ/",
+        "en": "speech",
+        "pos": "noun",
+        "gender": "n",
+        "note": "activity"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "мовець",
+        "ipa": "/mɔˈʋɛt͡sʲ/",
+        "en": "speaker",
+        "pos": "noun",
+        "gender": "m",
+        "note": "person"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "мовчати",
+        "ipa": "/mɔʋˈt͡ʃɑtɪ/",
+        "en": "to be silent",
+        "pos": "verb",
+        "gender": null,
+        "note": "speech"
+      },
+      {
+        "id": "vocab-21",
+        "uk": "мовчання",
+        "ipa": "/mɔʋˈt͡ʃɑnʲɑ/",
+        "en": "silence",
+        "pos": "noun",
+        "gender": "n",
+        "note": "state"
+      },
+      {
+        "id": "vocab-22",
+        "uk": "мовчазний",
+        "ipa": "/mɔʋˈt͡ʃɑznɪj/",
+        "en": "silent (person)",
+        "pos": "adj",
+        "gender": "m",
+        "note": "quality"
+      },
+      {
+        "id": "vocab-23",
+        "uk": "думати",
+        "ipa": "/ˈdumɑtɪ/",
+        "en": "to think",
+        "pos": "verb",
+        "gender": null,
+        "note": "mental"
+      },
+      {
+        "id": "vocab-24",
+        "uk": "думка",
+        "ipa": "/ˈdumkɑ/",
+        "en": "thought",
+        "pos": "noun",
+        "gender": "f",
+        "note": "abstract"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "роздуми",
+        "ipa": "/rɔzˈdumɪ/",
+        "en": "reflections",
+        "pos": "noun",
+        "gender": null,
+        "note": "abstract"
+      }
+    ],
+    "reviewWords": []
+  }
+}

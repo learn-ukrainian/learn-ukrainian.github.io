@@ -25,6 +25,18 @@ vocabulary_count: 20
 ---
 # Вид у майбутньому часі — Три способи
 
+> 🎯 **Чому це важливо**
+>
+> Коли ви плануєте, обіцяєте або передбачаєте — ви говорите про майбутнє. Українська має три способи це робити, і кожен несе своє значення. Вибір правильної форми показує носіям, чи ви обіцяєте результат ("Напишу!"), чи просто описуєте майбутню діяльність ("Буду писати").
+
+> [!resources] 🎧 External Resources
+>
+> **Future Tense Guide:** [Future Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-future-tense/) — Compound vs simple future
+>
+> **Verb Prefixes:** [Ukrainian Verb Prefixes](https://www.ukrainianlessons.com/ukrainian-verb-prefixes/) — How prefixes create perfective verbs
+>
+> **All Tenses:** [Verb Tenses Overview](https://www.ukrainianlessons.com/ukrainian-tenses/) — Downloadable reference chart
+
 ## Diagnostic
 
 Ось три способи сказати "I will read" українською:
@@ -189,6 +201,12 @@ Perfective verbs don't need any auxiliary — their conjugated forms already exp
 **"I will finish the work tomorrow"**
 - All registers: Я завтра **закінчу** роботу.
 - (Perfective — result-focused, only one form exists)
+
+> 🔗 **Language Link: English vs Ukrainian Future**
+>
+> English has one future construction: **will + verb**. "I will read" and "I will read it completely" use the same grammatical structure — you add words like "completely" for completion.
+>
+> Ukrainian grammaticalizes this distinction. The very form of the verb changes based on whether you're describing an activity (imperfective: буду читати/читатиму) or a completed result (perfective: прочитаю). There's no way to be ambiguous — every future statement commits to either process or result.
 
 ### Тонкі відмінності — буду vs -тиму
 
@@ -404,6 +422,21 @@ Choose the most appropriate form based on context:
 3. Якщо результат: використайте просту форму
 
 **Ключова ідея:** Вибір залежить від (1) того, що ви описуєте — процес чи результат, і (2) від стилю — розмовного чи формального.
+
+> 💡 **Порада для розмови**
+>
+> У щоденній розмові українці часто використовують складну форму (буду + інфінітив) для планів і намірів, а просту форму (доконаний вид) для конкретних обіцянок. Наприклад: "Я буду працювати над цим завтра" (загальний план) проти "Я закінчу це завтра" (конкретна обіцянка результату).
+
+> ✅ **Перевірте себе**
+>
+> Before moving on, can you:
+> - [ ] Form compound future (буду + infinitive) for imperfective verbs?
+> - [ ] Form synthetic future (-тиму/-меш) for imperfective verbs?
+> - [ ] Use simple perfective future for completed results?
+> - [ ] Choose between forms based on register (informal vs formal)?
+>
+> If you checked all boxes, proceed to the next module.
+> If not, review the Analysis section and try the Practice activities again.
 
 ---
 

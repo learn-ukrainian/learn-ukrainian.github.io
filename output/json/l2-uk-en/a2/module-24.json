@@ -1,0 +1,328 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-24",
+    "moduleId": "mod-uk-A2-24",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.2",
+    "moduleNumber": 24,
+    "moduleType": "checkpoint",
+    "pedagogy": "Review",
+    "immersionLevel": 0.4,
+    "title": "Checkpoint - Aspect & Comparison",
+    "titleUk": null,
+    "subtitle": "Review of Modules 11-19",
+    "description": "Learner demonstrates mastery of verbal aspect",
+    "objectives": [
+      "Learner demonstrates mastery of verbal aspect",
+      "Learner can form comparatives and superlatives",
+      "Learner can use conditional mood",
+      "Learner can apply skills in shopping contexts"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "aspect review",
+      "comparative and superlative",
+      "conditional mood",
+      "shopping vocabulary"
+    ],
+    "tags": [
+      "review",
+      "checkpoint",
+      "assessment"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "Congratulations on completing Phase A2.2! This checkpoint reviews everything from Modules 11-19, covering verbal aspect, comparison (comparative and superlative adjectives), conditional mood, and shopping vocabulary.\n\n**What this checkpoint covers:**\n- Verbal aspect (M11-M14)\n- Comparative adjectives (M15)\n- Superlative adjectives (M16)\n- Preference expressions (M17)\n- Conditional mood (M18)\n- Shopping comparisons (M19)\n\n**How to use:** Work through all activities. If you score below 80% on any section, review that module before proceeding.\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "Presentation",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Comprehensive Grammar Guide\n\n### 1. Verbal Aspect: The Time Machine\n\nMastering aspect is mastering Ukrainian time. Remember this golden rule: **Process vs. Result**.\n\n| Tense | Imperfective (ND) | Perfective (D) |\n|-------|-------------------|----------------|\n| **Past** | **Process/Repetition** <br> Я читав книгу. (I was reading) <br> Я читав щодня. (I read every day) | **Result/One-time** <br> Я прочитав книгу. (I finished reading) <br> Я прочитав цей лист. (I read this letter) |\n| **Present**| **Action now / General fact** <br> Я читаю. (I am reading) <br> Я читаю книги. (I read books) | **No Present Tense!** <br> Perfective verbs strictly describe future completion or past result. |\n| **Future** | **Process will happen** <br> Я буду читати. (I will be reading) <br> Я читатиму. (I will be reading) | **Result will occur** <br> Я прочитаю. (I will finish reading) |\n\n> 🧠 **Memory Hack: Prefixes**\n>\n> Many perfective verbs are just imperfective verbs + a prefix:\n> - робити → **з**робити\n> - писати → **на**писати\n> - читати → **про**читати\n> - їсти → **з'**їсти\n>\n> But watch out for suffix changes (купувати → купити) and different roots (брати → взяти)!\n\n### 2. The Ladder of Comparison\n\nWhen you want to say something is \"more\" or \"the most\":\n\n| Degree | Formation | Example | English |\n|--------|-----------|---------|---------|\n| **Base** | Adjective | Цей телефон **шороший**. | This phone is good. |\n| **Comparative** | Stem + **-ший/-іший** | Цей телефон **кращий**. | This phone is better. |\n| **Superlative** | **Най-** + Comparative | Цей телефон **найкращий**. | This phone is the best. |\n\n**Irregular forms to memorize:**\n- великий → більший\n- малий → менший\n- гарний → кращий\n- поганий → гірший\n\n### 3. The Power of \"Would\" (Conditional)\n\nThe conditional mood creates a safe space for dreams, polite requests, and hypothetical scenarios.\nFormula: **Past Tense Verb + б/би**\n\n| Context | Example | Meaning |\n|---------|---------|---------|\n| **Politeness** | Я **б хотів** кави. | I would like coffee. |\n| **Request** | Чи **могли б** ви допомогти? | Could you help? |\n| **Dream** | Якби я **був** пілотом... | If I were a pilot... |\n| **Regret** | Якби я **знав**... | If I had known... |\n\n> 🛑 **Common Mistake: \"If I will...\"**\n>\n> In English, you say \"If I do this...\". In Ukrainian, for REAL conditions, use **Якщо + Future**:\n> - Incorrect: *Якщо я роблю це...* (Present)\n> - Correct: **Якщо я зроблю це...** (Future) — \"If I (will) do this...\"\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Integrated Review Story",
+        "nameEn": null,
+        "type": "content",
+        "content": "## A Dream About Kyiv\n\nRead this story. It combines aspect, comparison, and conditional mood.\n\nМинулого літа я **їздив** (imperf.) до Києва. Це була моя **найкраща** (superl.) подорож!\nЯ довго **планував** (imperf.) цю поїздку. Я **хотів** (imperf.) побачити все.\nКоли я **приїхав** (perf.), я **побачив** (perf.) Софійський собор. Він **більший** (comp.), ніж я думав!\n\nЯ **гуляв** (imperf.) містом три години. Потім я **зайшов** (perf.) у кафе.\nОфіціант запитав: \"Що ви **будете** пити?\".\nЯ відповів: \"Я **б хотів** (cond.) кави, але **дешевшої** (comp.), ніж у ресторані\".\nВін **порадив** (perf.) мені спробувати узвар. Це було **чудове** рішення.\n\nПотім я **пішов** (perf.) на Андріївський узвіз. Там продавали сувеніри.\n— Скільки **коштує** ця картина? — запитав я.\n— Дві тисячі гривень, — сказав продавець.\n— Це **занадто** дорого! Чи можна **дешевше**?\n— Для вас — тисяча п'ятсот.\n— **Беру**! (perf. future implied decision)\n\nВвечері я **писав** (imperf.) у щоденнику:\n\"Якби я **жив** (cond.) у Києві, я **б гуляв** (cond.) тут щодня. Це місто **гарніше** (comp.) за будь-яке інше\".\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "## Frequently Asked Questions\n\n**Q: Why don't all verbs have aspect pairs that look alike?**\nA: Most do (читати/прочитати), but some are historical irregulars (брати/взяти). Think of them like English irregular verbs (\"go/went\"). You just have to memorize them!\n\n**Q: Can I really never use Perfective in Present Tense?**\nA: Never! If you conjugate a perfective verb with present tense endings, it automatically becomes **Future Perfective** (\"I will have done\").\n- *Я прочитаю* looks like present form, but means \"I will read (finish)\".\n- Use *Я буду читати* for \"I will be reading\".\n\n**Q: How do I know which case to use after comparison?**\nA: You have two choices:\n1.  **Ніж** + Nominative (Dictionary form). This is the easiest! \"Він вищий, ніж я.\"\n2.  **За** + Accusative. \"Він вищий за мене.\"\n\n> 🧠 **Aspect Hack: The \"Try to Stop\" Test**\n>\n> If you are doing an action and someone shouts \"Stop!\", and you can say you have *done* some of it but not all, it's Imperfective (Process).\n> If the action is instantaneous (entering a room, finding a key), it's often Perfective (Event).\n\n## The Road to B1: What's Next?\n\nCongratulations on reaching the end of A2! You have built a solid foundation.\nHere is what awaits you in the next level (B1):\n- **Motion Verbs:** Going by foot vs. by vehicle, round trip vs. one way.\n- **Participles:** \"Reading man\" vs. \"Read book\".\n- **Advanced Cases:** Instrumental for passive voice, Locative for abstract locations.\n- **Deep Culture:** History, literature, and folklore.\n\n> 📚 **Book Recommendation**\n>\n> Try reading \"Eneida\" (adapted for learners) or simple folk tales. Look for \"graded readers\" used for Ukrainian schools (grades 1-2).\n\n> 🎬 **Movie Recommendation**\n>\n> Watch \"My Thoughts Are Silent\" (Мої думки тихі). It's a modern comedy about a son and mother travelling together. It has great dialogue, lots of travel vocabulary, and everyday situations.\n\n## How to solidify your knowledge\n\n1.  **Immerse in Audio:** Listen to Ukrainian podcasts. Try to hear the difference between \"робив\" and \"зробив\". It's a subtle click in the rhythm.\n2.  **Compare Everything:** Look around your room. \"Стіл більший, ніж стілець.\" \"Моя кімната найтепліша.\" Make 5 comparisons daily.\n3.  **Dream in Ukrainian:** Before sleeping, think: \"Якби я мав мільйон доларів, я б...\" This practices the conditional mood perfectly.\n4.  **Be Polite:** Practice ordering. Instead of \"Дайте каву\" (Give coffee), say \"Я б хотів каву\" (I would like coffee).\n5.  **Review your Vocabulary:** You have learned over 500 words in A2! Go back to your flashcards.\n\n> 🛑 **Common Mistake: \"I am writing\"**\n>\n> Student: \"Я написаю листа.\" (Trying to use Perfective in Present)\n> Teacher: No! **Написати** is perfective. It has no present tense.\n> Correct: \"Я **пишу** листа.\" (Imperfective Present) OR \"Я **напишу** листа.\" (Perfective Future - I will write).\n\n## Check Your Progress\n\nBefore you move to B1, check if you can do these things. Be honest!\n\n- [ ] I can tell a story about the past using both \"process\" (road) and \"result\" (arrival) verbs.\n- [ ] I can compare two objects using \"ніж\" or \"за\".\n- [ ] I can say what I *would* do if I were rich/happy/president (\"Якби я був...\").\n- [ ] I can politely order food using \"Я б хотів...\".\n- [ ] I understand that \"Я прочитаю\" means \"I will finish reading\", not \"I read\".\n- [ ] I try to listen to Ukrainian audio even if I don't understand 100%.\n\nIf you checked at least 4 boxes, you are ready!\n\n## Final Words of Wisdom\n\nLearning a language is a marathon, not a sprint.\n- **A1** was about survival.\n- **A2** was about describing your world and past.\n- **B1** will be about expressing opinions and navigating complex society.\n\nDon't worry about making mistakes. Every \"помилка\" is a step towards \"успіх\".\n\n**Final Challenge:**\nGo to the activities section and try to get 100%! If you make a mistake, read the explanation perfectly. This is your foundation for level B1!\n\nУспіхів! 🎯"
+      },
+      {
+        "id": "section-5",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Aspect Pairs Review\n\n- читати :: прочитати\n- писати :: написати\n- робити :: зробити\n- говорити :: сказати\n- бачити :: побачити\n- брати :: взяти\n- давати :: дати\n- вставати :: встати\n- купувати :: купити\n- відпочивати :: відпочити\n- починати :: почати\n- закінчувати :: закінчити\n\n## fill-in: Comprehensive Review\n\n> Complete each sentence.\n\n1. Я ___ книгу вчора. (finished reading)\n   > [!answer] прочитав\n   > [!options] читав | прочитав | читаю | прочитаю\n\n2. Вона ___ за мене. (older)\n   > [!answer] старіша\n   > [!options] стара | старіша | старша | найстаріша\n\n3. Це ___ книга. (best)\n   > [!answer] найкраща\n   > [!options] краща | найкраща | добра | найдобріша\n\n4. ___ я мав гроші... (If — unreal)\n   > [!answer] Якби\n   > [!options] Якщо | Якби | Коли | Тому\n\n5. Я ___ хотів поїхати. (would)\n   > [!answer] б\n   > [!options] б | буду | був | бути\n\n6. Що ви ___? (recommend)\n   > [!answer] порекомендуєте\n   > [!options] рекомендую | порекомендуєте | рекомендував | порекомендував\n\n7. Він ___ три години. (was writing — duration)\n   > [!answer] писав\n   > [!options] писав | написав | пише | напише\n\n8. Я ___ цей телефон. (will take)\n   > [!answer] візьму\n   > [!options] беру | візьму | брав | взяв\n\n9. Мені ___ подобається чай. (more)\n   > [!answer] більше\n   > [!options] більше | більший | великий | багато\n\n10. ___ читати, ніж дивитися. (better)\n    > [!answer] Краще\n    > [!options] Краще | Кращий | Добре | Добрий\n\n11. Чи є ___? (discount)\n    > [!answer] знижка\n    > [!options] знижка | ціна | якість | покупка\n\n12. Він ___ \"так.\" (said — completed)\n    > [!answer] сказав\n    > [!options] говорив | сказав | говорить | скаже\n\n## quiz: Phase A2.2 Review\n\n1. \"Прочитав\" is:\n\n- [x] Perfective past\n- [ ] Imperfective past\n- [ ] Present tense\n\n---\n\n2. \"Буду читати\" is:\n\n- [x] Imperfective future\n- [ ] Perfective future\n- [ ] Past tense\n\n---\n\n3. The comparative of \"добрий\" is:\n\n- [x] кращий\n- [ ] добріший\n- [ ] найдобріший\n\n---\n\n4. The superlative of \"великий\" is:\n\n- [x] найбільший\n- [ ] більший\n- [ ] великіший\n\n---\n\n5. \"Якби\" is used for:\n\n- [x] Unreal conditions\n- [ ] Real conditions\n- [ ] Questions\n\n---\n\n6. The conditional particle is:\n\n- [x] б/би\n- [ ] не\n- [ ] ще\n\n---\n\n7. \"Мені більше подобається\" means:\n\n- [x] I like more\n- [ ] I don't like\n- [ ] I prefer (formal)\n\n---\n\n8. \"Знижка\" means:\n\n- [x] discount\n- [ ] price\n- [ ] quality\n\n---\n\n9. Which aspect for \"I was reading for 3 hours\"?\n\n- [x] Imperfective (читав)\n- [ ] Perfective (прочитав)\n\n---\n\n10. Which aspect for \"I finished the book\"?\n\n- [x] Perfective (прочитав)\n- [ ] Imperfective (читав)\n\n---\n\n11. \"Найкращий\" means:\n\n- [x] best\n- [ ] better\n- [ ] good\n\n---\n\n12. \"Я б хотів\" means:\n\n- [x] I would like\n- [ ] I want\n- [ ] I wanted\n\n## true-false: Mixed Review\n\n> Test your understanding.\n\n- [x] Perfective verbs focus on completed actions.\n  > Correct!\n\n- [x] Superlatives are formed with най-.\n  > Yes!\n\n- [ ] \"Якщо\" is for unreal conditions.\n  > \"Якщо\" is for REAL conditions. \"Якби\" is unreal.\n\n- [x] \"Кращий\" means \"better.\"\n  > Correct!\n\n- [x] \"Буду + infinitive\" is imperfective future.\n  > Yes!\n\n- [ ] \"Говорити\" is perfective.\n  > \"Говорити\" is imperfective. \"Сказати\" is perfective.\n\n- [x] \"Б\" makes speech more polite.\n  > Correct!\n\n- [x] \"Порекомендуєте\" is a polite request form.\n  > Yes!\n\n- [ ] \"Найдешевший\" means \"expensive.\"\n  > \"Найдешевший\" means \"cheapest.\"\n\n- [x] Aspect affects meaning in past and future.\n  > Correct!\n\n- [x] \"За\" in comparison takes Accusative.\n  > Yes!\n\n- [ ] All aspect pairs use the same root.\n  > Some pairs like говорити/сказати use different roots.\n\n## group-sort: Aspect Sorting\n\n> Sort by aspect.\n\n### Imperfective\n- читати\n- писати\n- робити\n- говорити\n- бачити\n- давати\n\n### Perfective\n- прочитати\n- написати\n- зробити\n- сказати\n- побачити\n- дати\n\n## unjumble: Mixed Sentences\n\n> Put the words in the correct order.\n\n1. він / прочитав / книгу / вчора\n   > [!answer] Він прочитав книгу вчора.\n\n2. вона / старіша / за / мене\n   > [!answer] Вона старіша за мене.\n\n3. це / найкраща / книга\n   > [!answer] Це найкраща книга.\n\n4. якби / я / мав / гроші\n   > [!answer] Якби я мав гроші...\n\n5. я / б / хотів / поїхати\n   > [!answer] Я б хотів поїхати.\n\n6. мені / більше / подобається / кава\n   > [!answer] Мені більше подобається кава.\n\n7. що / ви / порекомендуєте\n   > [!answer] Що ви порекомендуєте?\n\n8. чи / можна / дешевше\n   > [!answer] Чи можна дешевше?\n\n9. якщо / буде / сонячно / підемо\n   > [!answer] Якщо буде сонячно, підемо.\n\n10. краще / читати / ніж / дивитися\n    > [!answer] Краще читати, ніж дивитися.\n\n11. я / візьму / цей / телефон\n    > [!answer] Я візьму цей телефон.\n\n12. він / писав / три / години\n    > [!answer] Він писав три години.\n\n## error-correction: Fix the Grammar\n\n> Choose the correct form.\n\n1. Я ___ книгу три години. (was reading — duration)\n   > [!error] duration\n   > [!answer] читав\n   > [!explanation] Duration = imperfective.\n   > [!options] читав | прочитав\n\n2. Це ___ книга. (best)\n   > [!error] best\n   > [!answer] найкраща\n   > [!explanation] Superlative: най- + кращий.\n   > [!options] краща | найкраща\n\n3. ___ я знав... (If — unreal)\n   > [!error] unreal\n   > [!answer] Якби\n   > [!explanation] Unreal condition = якби.\n   > [!options] Якщо | Якби\n\n4. Вона ___ за мене. (older)\n   > [!error] older\n   > [!answer] старіша\n   > [!explanation] Comparative of стара: старіша.\n   > [!options] стара | старіша\n\n5. Чи можна ___? (cheaper)\n   > [!error] cheaper\n   > [!answer] дешевше\n   > [!explanation] Comparative adverb.\n   > [!options] дешевший | дешевше\n\n6. Він ___ правду. (said — completed)\n   > [!error] completed\n   > [!answer] сказав\n   > [!explanation] Completed = perfective.\n   > [!options] говорив | сказав\n\n## cloze: Integrated Review\n\n> Complete with correct forms.\n\nУчора я [___:1] цілий день. Спочатку я [___:2] статтю. Потім я [___:3] в магазин — хотів купити [___:4] телефон. Продавець запитав: \"Що ви [___:5]?\" Я сказав, що шукаю [___:6] варіант.\n\n1. читати: читав / прочитав\n> [!answer] читав\n\n2. писати: писав / написав\n> [!answer] написав\n\n3. йти/піти: ходив / пішов\n> [!answer] пішов\n\n4. новий: новий / новіший\n> [!answer] новий\n\n5. рекомендувати: рекомендуєте / порекомендуєте\n> [!answer] порекомендуєте\n\n6. дешевий: дешевший / найдешевший\n> [!answer] дешевший\n\n---\n\n[___:1] я виграв у лотерею, я [___:2] купив найбільший будинок. Мені [___:3] подобаються великі будинки. Це [___:4] б чудово! [___:5] читати мрії, ніж не мріяти.\n\n1. Якщо / Якби\n> [!answer] Якби\n\n2. б / буду\n> [!answer] б\n\n3. більше / великий\n> [!answer] більше\n\n4. було / буде\n> [!answer] було\n\n5. Краще / Кращий\n> [!answer] Краще\n\n## dialogue-reorder: Shopping with Comparison\n\n- Я шукаю телефон. Що порекомендуєте?\n- Цей найкращий. Але він дорожчий.\n- А є щось дешевше?\n- Так, цей. Він менший, але дешевший.\n- Якби я мав більше грошей, взяв би кращий.\n- Розумію. Який візьмете?\n\n> [!answer]\n> 1. Я шукаю телефон. Що порекомендуєте?\n> 2. Цей найкращий. Але він дорожчий.\n> 3. А є щось дешевше?\n> 4. Так, цей. Він менший, але дешевший.\n> 5. Якби я мав більше грошей, взяв би кращий.\n> 6. Розумію. Який візьмете?\n\n---\n\n- Вона вже прочитала книгу?\n- Ні, ще читає. Читала цілий день.\n- А тобі подобається ця книга?\n- Так, вона найцікавіша!\n- Краще читати, ніж дивитися фільми.\n- Згодна!\n\n> [!answer]\n> 1. Вона вже прочитала книгу?\n> 2. Ні, ще читає. Читала цілий день.\n> 3. А тобі подобається ця книга?\n> 4. Так, вона найцікавіша!\n> 5. Краще читати, ніж дивитися фільми.\n> 6. Згодна!\n\n## mark-the-words: Find Key Grammar\n\nClick on PERFECTIVE verbs and SUPERLATIVES.\n\nВін [прочитав](correct) [найкращу](correct) книгу. Потім [написав](correct) рецензію. Це [найцікавіша](correct) історія!\n\n---\n\nЯ [купив](correct) [найдешевший](correct) телефон. Він [сказав](correct), що це хороший вибір.\n\n---\n\nВона [зробила](correct) домашнє завдання. Це [найважливіша](correct) справа!\n\n## translate: English to Ukrainian\n\nI finished reading the book.\n\n- [x] Я прочитав книгу.\n- [ ] Я читав книгу.\n\n---\n\nHe is older than me.\n\n- [x] Він старіший за мене.\n- [ ] Він старий за мене.\n\n---\n\nThis is the best movie.\n\n- [x] Це найкращий фільм.\n- [ ] Це кращий фільм.\n\n---\n\nIf I had money... (unreal)\n\n- [x] Якби я мав гроші...\n- [ ] Якщо я маю гроші...\n\n---\n\nI would like to visit Ukraine.\n\n- [x] Я б хотів відвідати Україну.\n- [ ] Я хочу відвідати Україну.\n\n---\n\nWhat do you recommend?\n\n- [x] Що ви порекомендуєте?\n- [ ] Що ви хочете?\n\n---\n\nCan it be cheaper?\n\n- [x] Чи можна дешевше?\n- [ ] Скільки коштує?\n\n---\n\nI like coffee more than tea.\n\n- [x] Мені більше подобається кава, ніж чай.\n- [ ] Я люблю каву більш чай.\n\n---\n\nIt's better to read.\n\n- [x] Краще читати.\n- [ ] Добре читати.\n\n---\n\nShe was writing for 3 hours.\n\n- [x] Вона писала три години.\n- [ ] Вона написала три години.\n\n---\n\nI'll take this one.\n\n- [x] Я візьму цей.\n- [ ] Я хочу цей.\n\n---\n\nThat would be wonderful!\n\n- [x] Це було б чудово!\n- [ ] Це буде чудово!\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| аспект | /ɑˈspɛkt/ | aspect | noun | m | grammar term |\n| доконаний | /dɔˈkɔnɑnɪj/ | perfective | adj | m | grammar term |\n| недоконаний | /nɛdɔˈkɔnɑnɪj/ | imperfective | adj | m | grammar term |\n| порівняння | /pɔriʋˈnʲɑnʲɑ/ | comparison | noun | n | grammar term |\n| найвищий ступінь | /nɑjˈʋɪʃt͡ʃɪj ˈstupinʲ/ | superlative degree | phrase | — | grammar term |\n| вищий ступінь | /ˈʋɪʃt͡ʃɪj ˈstupinʲ/ | comparative degree | phrase | — | grammar term |\n| умовний спосіб | /uˈmɔʋnɪj ˈspɔsib/ | conditional mood | phrase | — | grammar term |\n| якби | /jɑkˈbɪ/ | if (unreal) | conj | — | conditional |\n| якщо | /jɑkˈʃt͡ʃɔ/ | if (real) | conj | — | conditional |\n| краще | /ˈkrɑʃt͡ʃɛ/ | better | adv | — | comparison |\n| найкращий | /nɑjˈkrɑʃt͡ʃɪj/ | best | adj | m | superlative |\n| знижка | /ˈznɪʒkɑ/ | discount | noun | f | shopping |\n| вибирати | /ʋɪbɪˈrɑtɪ/ | to choose | verb | — | shopping |\n| порівнювати | /pɔriʋˈnʲuʋɑtɪ/ | to compare | verb | — | shopping |\n| правило | /ˈprɑʋɪlɔ/ | rule | noun | n | grammar |\n| помилка | /pɔˈmɪlkɑ/ | mistake | noun | f | grammar |\n| приклад | /ˈprɪklɑd/ | example | noun | m | grammar |\n| виняток | /ˈʋɪnʲɑtɔk/ | exception | noun | m | grammar |\n| минулий | /mɪˈnulɪj/ | past | adj | m | grammar |\n| теперішній | /tɛˈpɛriʃnʲij/ | present | adj | m | grammar |\n| майбутній | /mɑjˈbutnʲij/ | future | adj | m | grammar |\n| дієслово | /dijɛˈslɔʋɔ/ | verb | noun | n | grammar |\n| іменник | /iˈmɛnnɪk/ | noun | noun | m | grammar |\n| прикметник | /prɪkˈmɛtnɪk/ | adjective | noun | m | grammar |\n| успіх | /uˈspix/ | success | noun | m | general |\n\n---"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-20\ntitle: \"Checkpoint - Aspect & Comparison\"\nsubtitle: \"Review of Modules 11-19\"\nversion: \"1.0\"\nphase: \"A2.2\"\npedagogy: \"Review\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - review\n  - checkpoint\n  - assessment\ngrammar:\n  - aspect review\n  - comparative and superlative\n  - conditional mood\n  - shopping vocabulary\nobjectives:\n  - \"Learner demonstrates mastery of verbal aspect\"\n  - \"Learner can form comparatives and superlatives\"\n  - \"Learner can use conditional mood\"\n  - \"Learner can apply skills in shopping contexts\"\nvocabulary_count: 25\n---\n# Warm-up\n\nCongratulations on completing Phase A2.2! This checkpoint reviews everything from Modules 11-19, covering verbal aspect, comparison (comparative and superlative adjectives), conditional mood, and shopping vocabulary.\n\n**What this checkpoint covers:**\n- Verbal aspect (M11-M14)\n- Comparative adjectives (M15)\n- Superlative adjectives (M16)\n- Preference expressions (M17)\n- Conditional mood (M18)\n- Shopping comparisons (M19)\n\n**How to use:** Work through all activities. If you score below 80% on any section, review that module before proceeding.\n\n---\n\n# Presentation\n\n## Comprehensive Grammar Guide\n\n### 1. Verbal Aspect: The Time Machine\n\nMastering aspect is mastering Ukrainian time. Remember this golden rule: **Process vs. Result**.\n\n| Tense | Imperfective (ND) | Perfective (D) |\n|-------|-------------------|----------------|\n| **Past** | **Process/Repetition** <br> Я читав книгу. (I was reading) <br> Я читав щодня. (I read every day) | **Result/One-time** <br> Я прочитав книгу. (I finished reading) <br> Я прочитав цей лист. (I read this letter) |\n| **Present**| **Action now / General fact** <br> Я читаю. (I am reading) <br> Я читаю книги. (I read books) | **No Present Tense!** <br> Perfective verbs strictly describe future completion or past result. |\n| **Future** | **Process will happen** <br> Я буду читати. (I will be reading) <br> Я читатиму. (I will be reading) | **Result will occur** <br> Я прочитаю. (I will finish reading) |\n\n> 🧠 **Memory Hack: Prefixes**\n>\n> Many perfective verbs are just imperfective verbs + a prefix:\n> - робити → **з**робити\n> - писати → **на**писати\n> - читати → **про**читати\n> - їсти → **з'**їсти\n>\n> But watch out for suffix changes (купувати → купити) and different roots (брати → взяти)!\n\n### 2. The Ladder of Comparison\n\nWhen you want to say something is \"more\" or \"the most\":\n\n| Degree | Formation | Example | English |\n|--------|-----------|---------|---------|\n| **Base** | Adjective | Цей телефон **шороший**. | This phone is good. |\n| **Comparative** | Stem + **-ший/-іший** | Цей телефон **кращий**. | This phone is better. |\n| **Superlative** | **Най-** + Comparative | Цей телефон **найкращий**. | This phone is the best. |\n\n**Irregular forms to memorize:**\n- великий → більший\n- малий → менший\n- гарний → кращий\n- поганий → гірший\n\n### 3. The Power of \"Would\" (Conditional)\n\nThe conditional mood creates a safe space for dreams, polite requests, and hypothetical scenarios.\nFormula: **Past Tense Verb + б/би**\n\n| Context | Example | Meaning |\n|---------|---------|---------|\n| **Politeness** | Я **б хотів** кави. | I would like coffee. |\n| **Request** | Чи **могли б** ви допомогти? | Could you help? |\n| **Dream** | Якби я **був** пілотом... | If I were a pilot... |\n| **Regret** | Якби я **знав**... | If I had known... |\n\n> 🛑 **Common Mistake: \"If I will...\"**\n>\n> In English, you say \"If I do this...\". In Ukrainian, for REAL conditions, use **Якщо + Future**:\n> - Incorrect: *Якщо я роблю це...* (Present)\n> - Correct: **Якщо я зроблю це...** (Future) — \"If I (will) do this...\"\n\n---\n\n# Integrated Review Story\n\n## A Dream About Kyiv\n\nRead this story. It combines aspect, comparison, and conditional mood.\n\nМинулого літа я **їздив** (imperf.) до Києва. Це була моя **найкраща** (superl.) подорож!\nЯ довго **планував** (imperf.) цю поїздку. Я **хотів** (imperf.) побачити все.\nКоли я **приїхав** (perf.), я **побачив** (perf.) Софійський собор. Він **більший** (comp.), ніж я думав!\n\nЯ **гуляв** (imperf.) містом три години. Потім я **зайшов** (perf.) у кафе.\nОфіціант запитав: \"Що ви **будете** пити?\".\nЯ відповів: \"Я **б хотів** (cond.) кави, але **дешевшої** (comp.), ніж у ресторані\".\nВін **порадив** (perf.) мені спробувати узвар. Це було **чудове** рішення.\n\nПотім я **пішов** (perf.) на Андріївський узвіз. Там продавали сувеніри.\n— Скільки **коштує** ця картина? — запитав я.\n— Дві тисячі гривень, — сказав продавець.\n— Це **занадто** дорого! Чи можна **дешевше**?\n— Для вас — тисяча п'ятсот.\n— **Беру**! (perf. future implied decision)\n\nВвечері я **писав** (imperf.) у щоденнику:\n\"Якби я **жив** (cond.) у Києві, я **б гуляв** (cond.) тут щодня. Це місто **гарніше** (comp.) за будь-яке інше\".\n\n---\n\n# Summary\n\n## Frequently Asked Questions\n\n**Q: Why don't all verbs have aspect pairs that look alike?**\nA: Most do (читати/прочитати), but some are historical irregulars (брати/взяти). Think of them like English irregular verbs (\"go/went\"). You just have to memorize them!\n\n**Q: Can I really never use Perfective in Present Tense?**\nA: Never! If you conjugate a perfective verb with present tense endings, it automatically becomes **Future Perfective** (\"I will have done\").\n- *Я прочитаю* looks like present form, but means \"I will read (finish)\".\n- Use *Я буду читати* for \"I will be reading\".\n\n**Q: How do I know which case to use after comparison?**\nA: You have two choices:\n1.  **Ніж** + Nominative (Dictionary form). This is the easiest! \"Він вищий, ніж я.\"\n2.  **За** + Accusative. \"Він вищий за мене.\"\n\n> 🧠 **Aspect Hack: The \"Try to Stop\" Test**\n>\n> If you are doing an action and someone shouts \"Stop!\", and you can say you have *done* some of it but not all, it's Imperfective (Process).\n> If the action is instantaneous (entering a room, finding a key), it's often Perfective (Event).\n\n## The Road to B1: What's Next?\n\nCongratulations on reaching the end of A2! You have built a solid foundation.\nHere is what awaits you in the next level (B1):\n- **Motion Verbs:** Going by foot vs. by vehicle, round trip vs. one way.\n- **Participles:** \"Reading man\" vs. \"Read book\".\n- **Advanced Cases:** Instrumental for passive voice, Locative for abstract locations.\n- **Deep Culture:** History, literature, and folklore.\n\n> 📚 **Book Recommendation**\n>\n> Try reading \"Eneida\" (adapted for learners) or simple folk tales. Look for \"graded readers\" used for Ukrainian schools (grades 1-2).\n\n> 🎬 **Movie Recommendation**\n>\n> Watch \"My Thoughts Are Silent\" (Мої думки тихі). It's a modern comedy about a son and mother travelling together. It has great dialogue, lots of travel vocabulary, and everyday situations.\n\n## How to solidify your knowledge\n\n1.  **Immerse in Audio:** Listen to Ukrainian podcasts. Try to hear the difference between \"робив\" and \"зробив\". It's a subtle click in the rhythm.\n2.  **Compare Everything:** Look around your room. \"Стіл більший, ніж стілець.\" \"Моя кімната найтепліша.\" Make 5 comparisons daily.\n3.  **Dream in Ukrainian:** Before sleeping, think: \"Якби я мав мільйон доларів, я б...\" This practices the conditional mood perfectly.\n4.  **Be Polite:** Practice ordering. Instead of \"Дайте каву\" (Give coffee), say \"Я б хотів каву\" (I would like coffee).\n5.  **Review your Vocabulary:** You have learned over 500 words in A2! Go back to your flashcards.\n\n> 🛑 **Common Mistake: \"I am writing\"**\n>\n> Student: \"Я написаю листа.\" (Trying to use Perfective in Present)\n> Teacher: No! **Написати** is perfective. It has no present tense.\n> Correct: \"Я **пишу** листа.\" (Imperfective Present) OR \"Я **напишу** листа.\" (Perfective Future - I will write).\n\n## Check Your Progress\n\nBefore you move to B1, check if you can do these things. Be honest!\n\n- [ ] I can tell a story about the past using both \"process\" (road) and \"result\" (arrival) verbs.\n- [ ] I can compare two objects using \"ніж\" or \"за\".\n- [ ] I can say what I *would* do if I were rich/happy/president (\"Якби я був...\").\n- [ ] I can politely order food using \"Я б хотів...\".\n- [ ] I understand that \"Я прочитаю\" means \"I will finish reading\", not \"I read\".\n- [ ] I try to listen to Ukrainian audio even if I don't understand 100%.\n\nIf you checked at least 4 boxes, you are ready!\n\n## Final Words of Wisdom\n\nLearning a language is a marathon, not a sprint.\n- **A1** was about survival.\n- **A2** was about describing your world and past.\n- **B1** will be about expressing opinions and navigating complex society.\n\nDon't worry about making mistakes. Every \"помилка\" is a step towards \"успіх\".\n\n**Final Challenge:**\nGo to the activities section and try to get 100%! If you make a mistake, read the explanation perfectly. This is your foundation for level B1!\n\nУспіхів! 🎯\n\n# Activities\n\n## match-up: Aspect Pairs Review\n\n- читати :: прочитати\n- писати :: написати\n- робити :: зробити\n- говорити :: сказати\n- бачити :: побачити\n- брати :: взяти\n- давати :: дати\n- вставати :: встати\n- купувати :: купити\n- відпочивати :: відпочити\n- починати :: почати\n- закінчувати :: закінчити\n\n## fill-in: Comprehensive Review\n\n> Complete each sentence.\n\n1. Я ___ книгу вчора. (finished reading)\n   > [!answer] прочитав\n   > [!options] читав | прочитав | читаю | прочитаю\n\n2. Вона ___ за мене. (older)\n   > [!answer] старіша\n   > [!options] стара | старіша | старша | найстаріша\n\n3. Це ___ книга. (best)\n   > [!answer] найкраща\n   > [!options] краща | найкраща | добра | найдобріша\n\n4. ___ я мав гроші... (If — unreal)\n   > [!answer] Якби\n   > [!options] Якщо | Якби | Коли | Тому\n\n5. Я ___ хотів поїхати. (would)\n   > [!answer] б\n   > [!options] б | буду | був | бути\n\n6. Що ви ___? (recommend)\n   > [!answer] порекомендуєте\n   > [!options] рекомендую | порекомендуєте | рекомендував | порекомендував\n\n7. Він ___ три години. (was writing — duration)\n   > [!answer] писав\n   > [!options] писав | написав | пише | напише\n\n8. Я ___ цей телефон. (will take)\n   > [!answer] візьму\n   > [!options] беру | візьму | брав | взяв\n\n9. Мені ___ подобається чай. (more)\n   > [!answer] більше\n   > [!options] більше | більший | великий | багато\n\n10. ___ читати, ніж дивитися. (better)\n    > [!answer] Краще\n    > [!options] Краще | Кращий | Добре | Добрий\n\n11. Чи є ___? (discount)\n    > [!answer] знижка\n    > [!options] знижка | ціна | якість | покупка\n\n12. Він ___ \"так.\" (said — completed)\n    > [!answer] сказав\n    > [!options] говорив | сказав | говорить | скаже\n\n## quiz: Phase A2.2 Review\n\n1. \"Прочитав\" is:\n\n- [x] Perfective past\n- [ ] Imperfective past\n- [ ] Present tense\n\n---\n\n2. \"Буду читати\" is:\n\n- [x] Imperfective future\n- [ ] Perfective future\n- [ ] Past tense\n\n---\n\n3. The comparative of \"добрий\" is:\n\n- [x] кращий\n- [ ] добріший\n- [ ] найдобріший\n\n---\n\n4. The superlative of \"великий\" is:\n\n- [x] найбільший\n- [ ] більший\n- [ ] великіший\n\n---\n\n5. \"Якби\" is used for:\n\n- [x] Unreal conditions\n- [ ] Real conditions\n- [ ] Questions\n\n---\n\n6. The conditional particle is:\n\n- [x] б/би\n- [ ] не\n- [ ] ще\n\n---\n\n7. \"Мені більше подобається\" means:\n\n- [x] I like more\n- [ ] I don't like\n- [ ] I prefer (formal)\n\n---\n\n8. \"Знижка\" means:\n\n- [x] discount\n- [ ] price\n- [ ] quality\n\n---\n\n9. Which aspect for \"I was reading for 3 hours\"?\n\n- [x] Imperfective (читав)\n- [ ] Perfective (прочитав)\n\n---\n\n10. Which aspect for \"I finished the book\"?\n\n- [x] Perfective (прочитав)\n- [ ] Imperfective (читав)\n\n---\n\n11. \"Найкращий\" means:\n\n- [x] best\n- [ ] better\n- [ ] good\n\n---\n\n12. \"Я б хотів\" means:\n\n- [x] I would like\n- [ ] I want\n- [ ] I wanted\n\n## true-false: Mixed Review\n\n> Test your understanding.\n\n- [x] Perfective verbs focus on completed actions.\n  > Correct!\n\n- [x] Superlatives are formed with най-.\n  > Yes!\n\n- [ ] \"Якщо\" is for unreal conditions.\n  > \"Якщо\" is for REAL conditions. \"Якби\" is unreal.\n\n- [x] \"Кращий\" means \"better.\"\n  > Correct!\n\n- [x] \"Буду + infinitive\" is imperfective future.\n  > Yes!\n\n- [ ] \"Говорити\" is perfective.\n  > \"Говорити\" is imperfective. \"Сказати\" is perfective.\n\n- [x] \"Б\" makes speech more polite.\n  > Correct!\n\n- [x] \"Порекомендуєте\" is a polite request form.\n  > Yes!\n\n- [ ] \"Найдешевший\" means \"expensive.\"\n  > \"Найдешевший\" means \"cheapest.\"\n\n- [x] Aspect affects meaning in past and future.\n  > Correct!\n\n- [x] \"За\" in comparison takes Accusative.\n  > Yes!\n\n- [ ] All aspect pairs use the same root.\n  > Some pairs like говорити/сказати use different roots.\n\n## group-sort: Aspect Sorting\n\n> Sort by aspect.\n\n### Imperfective\n- читати\n- писати\n- робити\n- говорити\n- бачити\n- давати\n\n### Perfective\n- прочитати\n- написати\n- зробити\n- сказати\n- побачити\n- дати\n\n## unjumble: Mixed Sentences\n\n> Put the words in the correct order.\n\n1. він / прочитав / книгу / вчора\n   > [!answer] Він прочитав книгу вчора.\n\n2. вона / старіша / за / мене\n   > [!answer] Вона старіша за мене.\n\n3. це / найкраща / книга\n   > [!answer] Це найкраща книга.\n\n4. якби / я / мав / гроші\n   > [!answer] Якби я мав гроші...\n\n5. я / б / хотів / поїхати\n   > [!answer] Я б хотів поїхати.\n\n6. мені / більше / подобається / кава\n   > [!answer] Мені більше подобається кава.\n\n7. що / ви / порекомендуєте\n   > [!answer] Що ви порекомендуєте?\n\n8. чи / можна / дешевше\n   > [!answer] Чи можна дешевше?\n\n9. якщо / буде / сонячно / підемо\n   > [!answer] Якщо буде сонячно, підемо.\n\n10. краще / читати / ніж / дивитися\n    > [!answer] Краще читати, ніж дивитися.\n\n11. я / візьму / цей / телефон\n    > [!answer] Я візьму цей телефон.\n\n12. він / писав / три / години\n    > [!answer] Він писав три години.\n\n## error-correction: Fix the Grammar\n\n> Choose the correct form.\n\n1. Я ___ книгу три години. (was reading — duration)\n   > [!error] duration\n   > [!answer] читав\n   > [!explanation] Duration = imperfective.\n   > [!options] читав | прочитав\n\n2. Це ___ книга. (best)\n   > [!error] best\n   > [!answer] найкраща\n   > [!explanation] Superlative: най- + кращий.\n   > [!options] краща | найкраща\n\n3. ___ я знав... (If — unreal)\n   > [!error] unreal\n   > [!answer] Якби\n   > [!explanation] Unreal condition = якби.\n   > [!options] Якщо | Якби\n\n4. Вона ___ за мене. (older)\n   > [!error] older\n   > [!answer] старіша\n   > [!explanation] Comparative of стара: старіша.\n   > [!options] стара | старіша\n\n5. Чи можна ___? (cheaper)\n   > [!error] cheaper\n   > [!answer] дешевше\n   > [!explanation] Comparative adverb.\n   > [!options] дешевший | дешевше\n\n6. Він ___ правду. (said — completed)\n   > [!error] completed\n   > [!answer] сказав\n   > [!explanation] Completed = perfective.\n   > [!options] говорив | сказав\n\n## cloze: Integrated Review\n\n> Complete with correct forms.\n\nУчора я [___:1] цілий день. Спочатку я [___:2] статтю. Потім я [___:3] в магазин — хотів купити [___:4] телефон. Продавець запитав: \"Що ви [___:5]?\" Я сказав, що шукаю [___:6] варіант.\n\n1. читати: читав / прочитав\n> [!answer] читав\n\n2. писати: писав / написав\n> [!answer] написав\n\n3. йти/піти: ходив / пішов\n> [!answer] пішов\n\n4. новий: новий / новіший\n> [!answer] новий\n\n5. рекомендувати: рекомендуєте / порекомендуєте\n> [!answer] порекомендуєте\n\n6. дешевий: дешевший / найдешевший\n> [!answer] дешевший\n\n---\n\n[___:1] я виграв у лотерею, я [___:2] купив найбільший будинок. Мені [___:3] подобаються великі будинки. Це [___:4] б чудово! [___:5] читати мрії, ніж не мріяти.\n\n1. Якщо / Якби\n> [!answer] Якби\n\n2. б / буду\n> [!answer] б\n\n3. більше / великий\n> [!answer] більше\n\n4. було / буде\n> [!answer] було\n\n5. Краще / Кращий\n> [!answer] Краще\n\n## dialogue-reorder: Shopping with Comparison\n\n- Я шукаю телефон. Що порекомендуєте?\n- Цей найкращий. Але він дорожчий.\n- А є щось дешевше?\n- Так, цей. Він менший, але дешевший.\n- Якби я мав більше грошей, взяв би кращий.\n- Розумію. Який візьмете?\n\n> [!answer]\n> 1. Я шукаю телефон. Що порекомендуєте?\n> 2. Цей найкращий. Але він дорожчий.\n> 3. А є щось дешевше?\n> 4. Так, цей. Він менший, але дешевший.\n> 5. Якби я мав більше грошей, взяв би кращий.\n> 6. Розумію. Який візьмете?\n\n---\n\n- Вона вже прочитала книгу?\n- Ні, ще читає. Читала цілий день.\n- А тобі подобається ця книга?\n- Так, вона найцікавіша!\n- Краще читати, ніж дивитися фільми.\n- Згодна!\n\n> [!answer]\n> 1. Вона вже прочитала книгу?\n> 2. Ні, ще читає. Читала цілий день.\n> 3. А тобі подобається ця книга?\n> 4. Так, вона найцікавіша!\n> 5. Краще читати, ніж дивитися фільми.\n> 6. Згодна!\n\n## mark-the-words: Find Key Grammar\n\nClick on PERFECTIVE verbs and SUPERLATIVES.\n\nВін [прочитав](correct) [найкращу](correct) книгу. Потім [написав](correct) рецензію. Це [найцікавіша](correct) історія!\n\n---\n\nЯ [купив](correct) [найдешевший](correct) телефон. Він [сказав](correct), що це хороший вибір.\n\n---\n\nВона [зробила](correct) домашнє завдання. Це [найважливіша](correct) справа!\n\n## translate: English to Ukrainian\n\nI finished reading the book.\n\n- [x] Я прочитав книгу.\n- [ ] Я читав книгу.\n\n---\n\nHe is older than me.\n\n- [x] Він старіший за мене.\n- [ ] Він старий за мене.\n\n---\n\nThis is the best movie.\n\n- [x] Це найкращий фільм.\n- [ ] Це кращий фільм.\n\n---\n\nIf I had money... (unreal)\n\n- [x] Якби я мав гроші...\n- [ ] Якщо я маю гроші...\n\n---\n\nI would like to visit Ukraine.\n\n- [x] Я б хотів відвідати Україну.\n- [ ] Я хочу відвідати Україну.\n\n---\n\nWhat do you recommend?\n\n- [x] Що ви порекомендуєте?\n- [ ] Що ви хочете?\n\n---\n\nCan it be cheaper?\n\n- [x] Чи можна дешевше?\n- [ ] Скільки коштує?\n\n---\n\nI like coffee more than tea.\n\n- [x] Мені більше подобається кава, ніж чай.\n- [ ] Я люблю каву більш чай.\n\n---\n\nIt's better to read.\n\n- [x] Краще читати.\n- [ ] Добре читати.\n\n---\n\nShe was writing for 3 hours.\n\n- [x] Вона писала три години.\n- [ ] Вона написала три години.\n\n---\n\nI'll take this one.\n\n- [x] Я візьму цей.\n- [ ] Я хочу цей.\n\n---\n\nThat would be wonderful!\n\n- [x] Це було б чудово!\n- [ ] Це буде чудово!\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| аспект | /ɑˈspɛkt/ | aspect | noun | m | grammar term |\n| доконаний | /dɔˈkɔnɑnɪj/ | perfective | adj | m | grammar term |\n| недоконаний | /nɛdɔˈkɔnɑnɪj/ | imperfective | adj | m | grammar term |\n| порівняння | /pɔriʋˈnʲɑnʲɑ/ | comparison | noun | n | grammar term |\n| найвищий ступінь | /nɑjˈʋɪʃt͡ʃɪj ˈstupinʲ/ | superlative degree | phrase | — | grammar term |\n| вищий ступінь | /ˈʋɪʃt͡ʃɪj ˈstupinʲ/ | comparative degree | phrase | — | grammar term |\n| умовний спосіб | /uˈmɔʋnɪj ˈspɔsib/ | conditional mood | phrase | — | grammar term |\n| якби | /jɑkˈbɪ/ | if (unreal) | conj | — | conditional |\n| якщо | /jɑkˈʃt͡ʃɔ/ | if (real) | conj | — | conditional |\n| краще | /ˈkrɑʃt͡ʃɛ/ | better | adv | — | comparison |\n| найкращий | /nɑjˈkrɑʃt͡ʃɪj/ | best | adj | m | superlative |\n| знижка | /ˈznɪʒkɑ/ | discount | noun | f | shopping |\n| вибирати | /ʋɪbɪˈrɑtɪ/ | to choose | verb | — | shopping |\n| порівнювати | /pɔriʋˈnʲuʋɑtɪ/ | to compare | verb | — | shopping |\n| правило | /ˈprɑʋɪlɔ/ | rule | noun | n | grammar |\n| помилка | /pɔˈmɪlkɑ/ | mistake | noun | f | grammar |\n| приклад | /ˈprɪklɑd/ | example | noun | m | grammar |\n| виняток | /ˈʋɪnʲɑtɔk/ | exception | noun | m | grammar |\n| минулий | /mɪˈnulɪj/ | past | adj | m | grammar |\n| теперішній | /tɛˈpɛriʃnʲij/ | present | adj | m | grammar |\n| майбутній | /mɑjˈbutnʲij/ | future | adj | m | grammar |\n| дієслово | /dijɛˈslɔʋɔ/ | verb | noun | n | grammar |\n| іменник | /iˈmɛnnɪk/ | noun | noun | m | grammar |\n| прикметник | /prɪkˈmɛtnɪk/ | adjective | noun | m | grammar |\n| успіх | /uˈspix/ | success | noun | m | general |\n\n---\n",
+    "createdAt": "2025-12-15T20:02:03.003622Z",
+    "modifiedAt": "2025-12-15T20:02:03.003622Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-24",
+    "level": "A2",
+    "phase": "A2.2",
+    "wordCount": 25,
+    "newWordCount": 25,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "аспект",
+        "ipa": "/ɑˈspɛkt/",
+        "en": "aspect",
+        "pos": "noun",
+        "gender": "m",
+        "note": "grammar term"
+      },
+      {
+        "id": "vocab-2",
+        "uk": "доконаний",
+        "ipa": "/dɔˈkɔnɑnɪj/",
+        "en": "perfective",
+        "pos": "adj",
+        "gender": "m",
+        "note": "grammar term"
+      },
+      {
+        "id": "vocab-3",
+        "uk": "недоконаний",
+        "ipa": "/nɛdɔˈkɔnɑnɪj/",
+        "en": "imperfective",
+        "pos": "adj",
+        "gender": "m",
+        "note": "grammar term"
+      },
+      {
+        "id": "vocab-4",
+        "uk": "порівняння",
+        "ipa": "/pɔriʋˈnʲɑnʲɑ/",
+        "en": "comparison",
+        "pos": "noun",
+        "gender": "n",
+        "note": "grammar term"
+      },
+      {
+        "id": "vocab-5",
+        "uk": "найвищий ступінь",
+        "ipa": "/nɑjˈʋɪʃt͡ʃɪj ˈstupinʲ/",
+        "en": "superlative degree",
+        "pos": "phrase",
+        "gender": null,
+        "note": "grammar term"
+      },
+      {
+        "id": "vocab-6",
+        "uk": "вищий ступінь",
+        "ipa": "/ˈʋɪʃt͡ʃɪj ˈstupinʲ/",
+        "en": "comparative degree",
+        "pos": "phrase",
+        "gender": null,
+        "note": "grammar term"
+      },
+      {
+        "id": "vocab-7",
+        "uk": "умовний спосіб",
+        "ipa": "/uˈmɔʋnɪj ˈspɔsib/",
+        "en": "conditional mood",
+        "pos": "phrase",
+        "gender": null,
+        "note": "grammar term"
+      },
+      {
+        "id": "vocab-8",
+        "uk": "якби",
+        "ipa": "/jɑkˈbɪ/",
+        "en": "if (unreal)",
+        "pos": "conj",
+        "gender": null,
+        "note": "conditional"
+      },
+      {
+        "id": "vocab-9",
+        "uk": "якщо",
+        "ipa": "/jɑkˈʃt͡ʃɔ/",
+        "en": "if (real)",
+        "pos": "conj",
+        "gender": null,
+        "note": "conditional"
+      },
+      {
+        "id": "vocab-10",
+        "uk": "краще",
+        "ipa": "/ˈkrɑʃt͡ʃɛ/",
+        "en": "better",
+        "pos": "adv",
+        "gender": null,
+        "note": "comparison"
+      },
+      {
+        "id": "vocab-11",
+        "uk": "найкращий",
+        "ipa": "/nɑjˈkrɑʃt͡ʃɪj/",
+        "en": "best",
+        "pos": "adj",
+        "gender": "m",
+        "note": "superlative"
+      },
+      {
+        "id": "vocab-12",
+        "uk": "знижка",
+        "ipa": "/ˈznɪʒkɑ/",
+        "en": "discount",
+        "pos": "noun",
+        "gender": "f",
+        "note": "shopping"
+      },
+      {
+        "id": "vocab-13",
+        "uk": "вибирати",
+        "ipa": "/ʋɪbɪˈrɑtɪ/",
+        "en": "to choose",
+        "pos": "verb",
+        "gender": null,
+        "note": "shopping"
+      },
+      {
+        "id": "vocab-14",
+        "uk": "порівнювати",
+        "ipa": "/pɔriʋˈnʲuʋɑtɪ/",
+        "en": "to compare",
+        "pos": "verb",
+        "gender": null,
+        "note": "shopping"
+      },
+      {
+        "id": "vocab-15",
+        "uk": "правило",
+        "ipa": "/ˈprɑʋɪlɔ/",
+        "en": "rule",
+        "pos": "noun",
+        "gender": "n",
+        "note": "grammar"
+      },
+      {
+        "id": "vocab-16",
+        "uk": "помилка",
+        "ipa": "/pɔˈmɪlkɑ/",
+        "en": "mistake",
+        "pos": "noun",
+        "gender": "f",
+        "note": "grammar"
+      },
+      {
+        "id": "vocab-17",
+        "uk": "приклад",
+        "ipa": "/ˈprɪklɑd/",
+        "en": "example",
+        "pos": "noun",
+        "gender": "m",
+        "note": "grammar"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "виняток",
+        "ipa": "/ˈʋɪnʲɑtɔk/",
+        "en": "exception",
+        "pos": "noun",
+        "gender": "m",
+        "note": "grammar"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "минулий",
+        "ipa": "/mɪˈnulɪj/",
+        "en": "past",
+        "pos": "adj",
+        "gender": "m",
+        "note": "grammar"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "теперішній",
+        "ipa": "/tɛˈpɛriʃnʲij/",
+        "en": "present",
+        "pos": "adj",
+        "gender": "m",
+        "note": "grammar"
+      },
+      {
+        "id": "vocab-21",
+        "uk": "майбутній",
+        "ipa": "/mɑjˈbutnʲij/",
+        "en": "future",
+        "pos": "adj",
+        "gender": "m",
+        "note": "grammar"
+      },
+      {
+        "id": "vocab-22",
+        "uk": "дієслово",
+        "ipa": "/dijɛˈslɔʋɔ/",
+        "en": "verb",
+        "pos": "noun",
+        "gender": "n",
+        "note": "grammar"
+      },
+      {
+        "id": "vocab-23",
+        "uk": "іменник",
+        "ipa": "/iˈmɛnnɪk/",
+        "en": "noun",
+        "pos": "noun",
+        "gender": "m",
+        "note": "grammar"
+      },
+      {
+        "id": "vocab-24",
+        "uk": "прикметник",
+        "ipa": "/prɪkˈmɛtnɪk/",
+        "en": "adjective",
+        "pos": "noun",
+        "gender": "m",
+        "note": "grammar"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "успіх",
+        "ipa": "/uˈspix/",
+        "en": "success",
+        "pos": "noun",
+        "gender": "m",
+        "note": "general"
+      }
+    ],
+    "reviewWords": []
+  }
+}

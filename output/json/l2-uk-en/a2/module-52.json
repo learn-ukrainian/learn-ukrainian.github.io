@@ -1,0 +1,368 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-52",
+    "moduleId": "mod-uk-A2-52",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2",
+    "moduleNumber": 52,
+    "moduleType": "vocabulary",
+    "pedagogy": "Narrative",
+    "immersionLevel": 0.4,
+    "title": "Shopping & Services",
+    "titleUk": null,
+    "subtitle": "Buying and Selling in Ukrainian",
+    "description": {
+      "Buy items in a shop": "купувати, платити"
+    },
+    "objectives": [
+      {
+        "Buy items in a shop": "купувати, платити"
+      },
+      {
+        "Use services": "банк, пошта, перукарня"
+      },
+      {
+        "Talk about money": "готівка, картка, ціна"
+      },
+      {
+        "Ask for price": "скільки коштує?"
+      }
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "accusative-inanimate",
+      "genitive-quantities"
+    ],
+    "tags": [
+      "vocabulary",
+      "shopping",
+      "money",
+      "services"
+    ],
+    "totalDuration": 60,
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Shopping & Services",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Warm-up\n\nВи любите ходити по магазинах? Де ви купуєте продукти: у супермаркеті чи на ринку? Як ви платите: карткою чи готівкою?\n\nВ Україні шопінг — це і сучасні торгові центри, і традиційні базари. А сервіс, як банк чи пошта, став дуже цифровим і зручним. Давайте навчимося робити покупки українською!\n\nShopping is a daily necessity. In this module, you'll learn how to navigate shops, use services like banks and post offices, and handle money.\n\n> [!important] **Myth Buster** \"Cash Only?\"\n> Think you need a suitcase of cash in Eastern Europe? Wrong! Ukraine is a leader in cashless payments. You can pay with Apple Pay or Google Pay almost everywhere — in the subway, at a tiny coffee kiosk, and often even at the market. **Готівка** (cash) is becoming rare!\n\n## Presentation\n\n### Shops (Магазини)\n\nWhere do we buy things?\n\n| Слово | Переклад | Приклад |\n|-------|----------|---------|\n| **магазин** | shop/store | Продуктовий магазин. |\n| **супермаркет** | supermarket | Великий супермаркет. |\n| **ринок** | market/bazaar | Свіжі овочі на ринку. |\n| **торговий центр** | shopping mall | Ми йдемо в торговий центр. |\n| **аптека** | pharmacy | Купити ліки в аптеці. |\n| **каса** | checkout/cashier | Платити на касі. |\n| **черга** | queue/line | Довга черга. |\n| **ціна** | price | Висока ціна. |\n\n### Services (Послуги)\n\n- **банк** — bank: *Я йду в банк.*\n- **пошта** — post office: *Надіслати лист на пошті.*\n- **перукарня** — hairdresser's: *Мені треба в перукарню.*\n- **хімчистка** — dry cleaner's: *Здати пальто в хімчистку.*\n- **ресторан** — restaurant: *Вечеря в ресторані.*\n- **готель** — hotel: *Забронювати готель.*\n\n### Actions & Money\n\n- **купувати** — to buy: *Я купую хліб.*\n- **платити** — to pay: *Я плачу карткою.*\n- **замовляти** — to order: *Ми замовляємо піцу.*\n- **міряти** — to try on: *Міряти сукню.*\n- **коштувати** — to cost: *Скільки це коштує?*\n- **готівка** — cash: *У мене тільки готівка.*\n- **картка** — card: *Оплата карткою.*\n- **решта** — change (money back): *Ваша решта.*\n- **знижка** — discount: *Сьогодні знижка 50%!*\n- **чек** — receipt/check: *Візьміть чек.*\n\n> [!note] Grammar Point: Asking Price\n> To ask \"How much is it?\", we say:\n> - **Скільки це коштує?** (How much does this cost?)\n> - **Яка ціна?** (What is the price?)\n> The verb **коштувати** agrees with the item:\n> - *Скільки коштує хліб?* (Singular)\n> - *Скільки коштують банани?* (Plural)\n\n> [!cultural] **Cultural Insight** The Market (Ринок/Базар)\n> The **ринок** is the heart of Ukrainian food culture. Here you buy the freshest vegetables, fruits, meat, and cheese (especially **творог**). It's normal to taste (\"попробовать\") products before buying. And yes, you can bargain (\"торгуватися\"), but politely!\n\n## Practice\n\n### Story Time: At the Market\n\nСьогодні субота. Бабуся Марія йде на **ринок**. Вона не любить **супермаркети**.\n— На ринку все свіже, — каже вона.\n\nВона підходить до продавця овочів.\n— Добрий день! Скільки **коштують** помідори?\n— 50 гривень за кілограм, — відповідає продавець. — Дуже солодкі, спробуйте!\nМарія куштує.\n— Смачні. Але чому так дорого? Давайте за 45?\n— Добре, для вас — 45.\n\nМарія бере два кілограми. Вона дає **готівку**.\n— Ось ваші 100 гривень.\n— Дякую, ось ваша **решта** — 10 гривень, — каже продавець.\nБабуся задоволена. Вона любить **купувати** на ринку.\n\n### Story Time: Shopping Mall\n\nАндрій і Олена йдуть у **торговий центр**. Це велика сучасна будівля.\nТут є одяг, техніка, кіно і кафе.\n\nОлена хоче купити нову сукню. Вони заходять у брендовий **магазин**.\n— Дивись, яка гарна сукня! — каже Олена. — І тут є **знижка**!\nВона йде **міряти** сукню. Вона їй пасує.\n\n— Ми беремо цю сукню, — каже Андрій на **касі**. — Можна заплатити **карткою**?\n— Так, звичайно прикладіть картку, — каже касир. — Ось ваш **чек**.\n\nПісля шопінгу вони йдуть у кафе. Андрій **замовляє** каву і тістечка.\nВони витратили багато грошей, але вони щасливі.\n\n### Story Time: Nova Poshta Revolution\n\nІван живе в Києві. Його мама живе в Одесі.\nМама приготувала варення і хоче передати його сину.\nРаніше це було довго. Але тепер є \"Нова Пошта\".\n\nМама йде на **пошту**. Це світле і чисте відділення. Немає **черги**.\n— Я хочу відправити посилку в Київ, — каже вона.\nОператор швидко оформлює замовлення.\n— Це буде **коштувати** 80 гривень. Оплата тут чи одержувач?\n— Одержувач, — каже мама.\n\nНа наступний день Іван отримує смс: \"Ваша посилка прибула\".\nВін заходить у відділення біля свого дому. Він сканує додаток у смартфоні, платить через Apple Pay і забирає варення.\nВсе зайняло 2 хвилини. Це магія українського сервісу.\n\n### Ukrainian Banking\n\nUkraine has a very advanced banking system.\nTraditional banks usually focus on physical branches. But modern neo-banks live in your phone.\nThe most famous is **Monobank** (symbolized by a cat). It has no branches. You open an account via app in 10 minutes.\nYou can send money to friends instantly using their phone number or card number. Everyone splits restaurant bills (\"скинутися на карту\") using apps.\nNobody writes paper checks. It's all digital.\n\nAlso, currency exchange (**обмін валют**) is strictly regulated but accessible. You can buy Dollars or Euros in the app or at bank branches.\n\n### Story Time: At the Hairdresser\n\nОльга хоче нову зачіску. Вона йде в **перукарню** \"Красуня\".\n— Добрий день, я записана на 14:00, — каже вона.\n— Добрий день, сідайте, будь ласка, — каже перукар Наталя. — Що будемо робити?\n— Я хочу стрижку і фарбування, — каже Ольга. — Скільки це буде **коштувати**?\n— Стрижка — 500 гривень, фарбування — 1500.\n— Добре.\n\nВони розмовляють про моду і життя.\nЧерез дві години Ольга дивиться у дзеркало.\n— Чудово! Мені дуже подобається.\nВона платить адміністратору на **касі** і залишає чайові.\n\n### Online Shopping in Ukraine\n\nUkrainians love online shopping (\"Інтернет-шопінг\").\n- **Rozetka**: The \"Amazon of Ukraine\". You can buy everything from electronics to pasta.\n- **Prom.ua**: A marketplace for small sellers.\n- **Zakaz.ua**: Grocery delivery from big supermarkets like Auchan or Metro.\n- **OLX**: For buying used items (second-hand).\n\nMost people order delivery to a \"Nova Poshta\" branch, not to their home address, because it's cheaper and more convenient. You come, check the item, and then pay (**оплата при отриманні**).\n\n### Story Time: Taxi\n\nАндрій викликав таксі через додаток Uklon.\n— Добрий день. Ви де? — дзвонить водій.\n— Я біля банку \"ПриватБанк\", — каже Андрій.\n— Буду через 5 хвилин. Яка у вас машина?\n— Сіра Тойота. Номер 4567.\n— Добре, чекаю на вулиці.\nАндрій сідає в машину.\n— На вокзал, будь ласка. Я поспішаю.\n— Не хвилюйтеся, встигнемо.\n\n### Food Delivery\n\nIf you are hungry, you don't need to cook.\nIn big cities like Kyiv or Lviv, you will see many couriers with yellow or green backpacks.\nApps like **Glovo** or **Bolt Food** work 24/7. You can order sushi, burgers, or even borscht from your favorite restaurant. Just open the app, choose the food, and wait 30 minutes. It is fast and tasty.\n\n> [!tip] **Tip** \"Sales\"\n> Black Friday is popular in Ukraine, but big **розпродаж** (sales) also happen in January and July. Look for signs saying **\"Знижки до -70%\"**. It's the best time to buy clothes!"
+      },
+      {
+        "id": "section-2",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "You learned to:\n- Use shop types: **магазин**, **ринок**, **супермаркет**, **аптека**\n- Use services: **банк**, **пошта**, **перукарня**\n- Money words: **готівка**, **картка**, **решта**, **знижка**\n- Shopping actions: **купувати**, **платити**, **міряти**\n\nShopping in Ukraine is easy and modern. Don't be afraid to ask the price!"
+      },
+      {
+        "id": "section-3",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## quiz: Shopping Facts\n\n1. Where do you usually bargain?\n   - [x] на ринку\n   - [ ] у супермаркеті\n   - [ ] в аптеці\n   > Bargaining (торгуватися) is for the market.\n\n2. \"Готівка\" means...\n   - [x] cash\n   - [ ] card\n   - [ ] discount\n   > Cash.\n\n3. \"Нова Пошта\" is famous for...\n   - [x] speed and modern service\n   - [ ] losing letters\n   - [ ] selling food\n   > Fast private post.\n\n4. To ask for the price, you say...\n   - [x] Скільки коштує?\n   - [ ] Як тебе звати?\n   - [ ] Де магазин?\n   > How much does it cost?\n\n5. \"Знижка\" is...\n   - [x] discount\n   - [ ] receipt\n   - [ ] bag\n   > Discount.\n\n6. Where do you buy medicine?\n   - [x] в аптеці\n   - [ ] у банку\n   - [ ] на пошті\n   > Pharmacy (аптека).\n\n7. What do you get after paying?\n   - [x] чек\n   - [ ] чергу\n   - [ ] ціну\n   > Receipt (чек).\n\n8. \"Черга\" is...\n   - [x] queue/line\n   - [ ] cashier\n   - [ ] money\n   > Queue.\n\n9. Monobank is a...\n   - [x] neo-bank inside a phone\n   - [ ] state post office\n   - [ ] market\n   > Digital bank.\n\n10. \"Решта\" is...\n    - [x] change (money returned)\n    - [ ] price\n    - [ ] card\n    > Change.\n\n11. \"Міряти\" means to...\n    - [x] try on (clothes)\n    - [ ] buy\n    - [ ] eat\n    > To try on.\n\n12. Can you pay with Apple Pay in Ukraine?\n    - [x] Yes, almost everywhere\n    - [ ] No, cash only\n    - [ ] Only in banks\n    > Widespread acceptance.\n\n## match-up: Shop Vocabulary\n\n- магазин :: shop\n- ринок :: market\n- аптека :: pharmacy\n- банк :: bank\n- пошта :: post office\n- готівка :: cash\n- картка :: card\n- ціна :: price\n- знижка :: discount\n- черга :: queue\n- каса :: checkout\n- перукарня :: hairdresser's\n\n## fill-in: Shopping Sentences\n\n1. Я хочу ____ хліб.\n   > [!answer] купити\n   > [!options] купити | продати | міряти | спати\n   > To buy bread.\n\n2. Скільки це ____?\n   > [!answer] коштує\n   > [!options] коштує | коштують | платить | купує\n   > Singular item cost.\n\n3. У мене немає ____. (cash)\n   > [!answer] готівки\n   > [!options] готівки | готівка | картка | банку\n   > Genitive negation: немає готівки.\n\n4. Я плачу ____. (by card)\n   > [!answer] карткою\n   > [!options] карткою | карта | карту | картки\n   > Instrumental: карткою.\n\n5. Це велика ____. (queue)\n   > [!answer] черга\n   > [!options] черга | каса | ціна | знижка\n   > Big queue.\n\n6. Дайте, будь ласка, ____. (receipt)\n   > [!answer] чек\n   > [!options] чек | чергу | гривню | решту\n   > Give receipt (Acc = Nom).\n\n7. Ось ваша ____. (change)\n   > [!answer] решта\n   > [!options] решта | каса | ціна | пошта\n   > Here is your change.\n\n8. Ми йдемо на ____. (market)\n   > [!answer] ринок\n   > [!options] ринок | банк | аптеку | магазин\n   > To the market (Acc).\n\n9. Я хочу ____ ці джинси. (try on)\n   > [!answer] поміряти\n   > [!options] поміряти | купити | з'їсти | випити\n   > To try on (jeans).\n\n10. Сьогодні у магазині ____. (discount)\n    > [!answer] знижка\n    > [!options] знижка | черга | ціна | каса\n    > Discount.\n\n11. Можна ____ піцу? (order)\n    > [!answer] замовити\n    > [!options] замовити | купити | міряти | платити\n    > To order (food/delivery).\n\n12. Банк закритий, він не ____.\n    > [!answer] працює\n    > [!options] працює | коштує | купує | спить\n    > Does not work.\n\n## true-false: Ukrainian Services\n\n1. \"Ринок\" usually has fresher food than supermarkets.\n   - [x] true\n   > Generally true perception.\n\n2. You cannot pay by card in Ukraine.\n   - [x] false\n   > Very false.\n\n3. \"Аптека\" sells clothes.\n   - [x] false\n   > Medicine.\n\n4. \"Нова Пошта\" is a slow service.\n   - [x] false\n   > Known for speed.\n\n5. You can bargain in a supermarket.\n   - [x] false\n   > Fixed prices. Bargain at the market.\n\n6. Monobank has many physical buildings.\n   - [x] false\n   > It's an app-only bank.\n\n7. \"Решта\" is the money you pay.\n   - [x] false\n   > Money you get back.\n\n8. \"Хімчистка\" cleans clothes.\n   - [x] true\n   > Dry cleaner.\n\n9. \"Готівка\" is paper money/coins.\n   - [x] true\n   > Cash.\n\n10. Waiters bring a \"чек\".\n    - [x] true\n    > Bill/receipt is чек (or рахунок).\n\n11. \"Черга\" is good.\n    - [x] false\n    > Nobody likes a queue.\n\n12. You can order delivery (\"замовити\").\n    - [x] true\n    > Delivery is popular (Glovo, Bolt Food).\n\n## group-sort: Places vs Things\n\n### Groups\n- Places\n- Money/Things\n- Actions\n\n### Items\n- магазин: Places\n- банк: Places\n- ринок: Places\n- аптека: Places\n- пошта: Places\n- готівка: Money/Things\n- картка: Money/Things\n- чек: Money/Things\n- знижка: Money/Things\n- купувати: Actions\n- платити: Actions\n- міряти: Actions\n\n## unjumble: Shopping Dialogue\n\n1. Скільки / коштує / цей / хліб\n   > [!answer] Скільки коштує цей хліб\n   > How much is this bread?\n\n2. Я / хочу / заплатити / карткою\n   > [!answer] Я хочу заплатити карткою\n   > I want to pay by card.\n\n3. Де / тут / найближчий / банк\n   > [!answer] Де тут найближчий банк\n   > Where is the nearest bank here?\n\n4. У / нас / сьогодні / знижка\n   > [!answer] У нас сьогодні знижка\n   > We have a discount today.\n\n5. Я / йду / в / супермаркет\n   > [!answer] Я йду в супермаркет\n   > I am going to the supermarket.\n\n6. Дайте / мені / чек / будь ласка\n   > [!answer] Дайте мені чек будь ласка\n   > Give me the receipt please.\n\n7. Ця / сукня / дуже / дорога\n   > [!answer] Ця сукня дуже дорога\n   > This dress is very expensive.\n\n8. Ми / замовляємо / їжу / додому\n   > [!answer] Ми замовляємо їжу додому\n   > We order food to home.\n\n9. На / пошті / велика / черга\n   > [!answer] На пошті велика черга\n   > There is a big queue at the post office.\n\n10. Ваша / решта — / двадцять / гривень\n    > [!answer] Ваша решта — двадцять гривень\n    > Your change is 20 hryvnias.\n\n11. Я / люблю / купувати / на / ринку\n    > [!answer] Я люблю купувати на ринку\n    > I like buying at the market.\n\n12. Мені / треба / поміряти / взуття\n    > [!answer] Мені треба поміряти взуття\n    > I need to try on shoes.\n\n## error-correction: Shop Grammar\n\n1. Я йду в магазин.\n   > [!error] магазин\n   > [!answer] магазин\n   > [!options] магазин | магазину | магазина | магазином\n   > Correct. Let's make error.\n   > *Я йду в магазину.*\n   > Error: магазину -> магазин (Acc direction).\n\n   Rephrase 1:\n   Я йду в магазину.\n   > [!error] магазину\n   > [!answer] магазин\n   > [!options] магазин | магазину | магазина | магазином\n   > [!explanation] Direction (Accusative): в магазин.\n\n2. Скільки коштує банани?\n   > [!error] коштує\n   > [!answer] коштують\n   > [!options] коштують | коштує | коштувати | коштував\n   > [!explanation] Plural subject (bananas): коштують.\n\n3. Я плачу картка.\n   > [!error] картка\n   > [!answer] карткою\n   > [!options] карткою | картка | карти | карту\n   > [!explanation] Instrumental (with what?): карткою.\n\n4. Дайте чеку.\n   > [!error] чеку\n   > [!answer] чек\n   > [!options] чек | чеку | чека | чеком\n   > [!explanation] Accusative request: чек.\n\n5. У мене немає готівка.\n   > [!error] готівка\n   > [!answer] готівки\n   > [!options] готівки | готівка | готівку | готівкою\n   > [!explanation] Genitive negation: немає готівки.\n\n6. Ми були на ринок.\n   > [!error] ринок\n   > [!answer] ринку\n   > [!options] ринку | ринок | ринка | ринком\n   > [!explanation] Location (Locative): на ринку.\n\n7. Я купую хліба.\n   > [!error] хліба\n   > [!answer] хліб\n   > [!options] хліб | хліба | хлібу | хлібом\n   > [!explanation] Accusative: купую хліб. (Partitive Genitive 'хліба' exists but Accusative is standard for 'a loaf').\n\n8. Це дорога магазин.\n   > [!error] дорога\n   > [!answer] дорогий\n   > [!options] дорогий | дорога | дороге | дорогі\n   > [!explanation] Masculine noun: дорогий магазин.\n\n9. Тут велика знижку.\n   > [!error] знижку\n   > [!answer] знижка\n   > [!options] знижка | знижку | знижки | знижкою\n   > [!explanation] Nominative (\"There is\"): знижка.\n\n10. Він працює в аптека.\n    > [!error] аптека\n    > [!answer] аптеці\n    > [!options] аптеці | аптека | аптеку | аптекою\n    > [!explanation] Locative: в аптеці.\n\n11. Я хочу поміряти плаття.\n    > [!error] плаття\n    > [!answer] сукню\n    > [!options] сукню | плаття | одяг | штани\n    > [!explanation] 'Плаття' is okay but 'сукня' is better Ukrainian. Or fix case? 'Плаття' is neuter indeclinable-like in slang but declinable in lit. Let's fix semantics or grammar?\n    > 'Плаття' (neuter) -> поміряти (що?) плаття (Acc = Nom). Correct.\n    > Let's choose clear error.\n    > *Я хочу поміряти сукня.* -> сукню.\n\n    Rephrase 11:\n    Я хочу поміряти сукня.\n    > [!error] сукня\n    > [!answer] сукню\n    > [!options] сукню | сукня | сукні | сукнею\n    > [!explanation] Accusative feminine: сукню.\n\n12. Де тут банків?\n    > [!error] банків\n    > [!answer] банк\n    > [!options] банк | банків | банку | банком\n    > [!explanation] Nominative subject: банк.\n\n## cloze: At the Supermarket\n\nЯ беру [___:1] і йду в зал.\nМені треба [___:2] молоко і хліб.\nЯ дивлюся на [___:3]. Молоко коштує 40 гривень.\nЯ йду на [___:4]. Там велика [___:5].\nКасир питає: \"Пакет потрібен?\". Я кажу: \"Ні, дякую\".\nЯ плачу [___:6], тому що не люблю [___:7].\nКасир дає мені [___:8]. Шопінг закінчено.\n\n1. кошик\n> [!answer] кошик\n> [!options] кошик | пакет | стіл\n\n2. купити\n> [!answer] купити\n> [!options] купити | продати | знайти\n\n3. ціну\n> [!answer] ціну\n> [!options] ціну | вагу | колір\n\n4. касу\n> [!answer] касу\n> [!options] касу | вікно | двері\n\n5. черга\n> [!answer] черга\n> [!options] черга | знижка | каса\n\n6. карткою\n> [!answer] карткою\n> [!options] карткою | готівкою | чеком\n\n7. готівку\n> [!answer] готівку\n> [!options] готівку | картку | знижку\n\n8. чек\n> [!answer] чек\n> [!options] чек | гроші | товар\n\n## dialogue-reorder: Buying Shoes\n\n- Добрий день. Я можу вам допомогти?\n- Добрий день. Я шукаю кросівки.\n- Який у вас розмір?\n- 42-й розмір.\n- Ось гарна модель. Хочете поміряти?\n- Так, дякую. Де дзеркало?\n- Дзеркало там, зліва.\n- Вони зручні. Скільки вони коштують?\n- 2000 гривень.\n- Добре, я беру їх.\n- Оплата карткою чи готівкою?\n- Карткою, будь ласка.\n\n## mark-the-words: Find Services\n\n> [!instruction] Mark all shops and services.\n\nЯ живу в центрі. Біля мого дому є [супермаркет] і маленька [аптека]. Коли мені треба гроші, я йду в [банк]. У неділю я йду на [ринок] за овочами. Моя мама працює на [пошті]. Тато стрижеться в [перукарні]. Ми любимо ходити в [кіно] і [ресторан]. [Лікарня] теж недалеко.\n\n## select: Shopping Choices\n\n1. To pay money.\n   - [x] Платити.\n   - [ ] Плакати.\n   > Pay vs Cry.\n\n2. To buy.\n   - [x] Купувати.\n   - [ ] Купати.\n   > Buy vs Bathe.\n\n3. To order.\n   - [x] Замовляти.\n   - [ ] Мовчати.\n   > Order vs Be silent.\n\n4. Receipt.\n   - [x] Чек.\n   - [ ] Чех.\n   > Receipt vs Czech person.\n\n5. Cash.\n   - [x] Готівка.\n   - [ ] Готування.\n   > Cash vs Cooking.\n\n6. Price.\n   - [x] Ціна.\n   - [ ] Стіна.\n   > Price vs Wall.\n\n7. Discount.\n   - [x] Знижка.\n   - [ ] Книжка.\n   > Discount vs Book.\n\n8. Market.\n   - [x] Ринок.\n   - [ ] Ранок.\n   > Market vs Morning.\n\n9. Shop.\n   - [x] Магазин.\n   - [ ] Журнал\n\n   > Shop. False friend \"Journal\".\n\n10. Pharmacy.\n    - [x] Аптека.\n    - [ ] Бібліотека.\n    > Pharmacy.\n\n11. Post Office.\n    - [x] Пошта.\n    - [ ] Площа.\n    > Post vs Square.\n\n12. To try on.\n    - [x] Міряти.\n    - [ ] Мирити.\n    > Try on vs Reconcile."
+      },
+      {
+        "id": "section-4",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| магазин | /mahaˈzɪn/ | shop/store | noun | m | |\n| супермаркет | /superˈmarket/ | supermarket | noun | m | |\n| ринок | /ˈrɪnok/ | market | noun | m | |\n| аптека | /apˈtɛka/ | pharmacy | noun | f | |\n| банк | /bank/ | bank | noun | m | |\n| пошта | /ˈpɔʃta/ | post office | noun | f | |\n| перукарня | /peruˈkarnʲa/ | hairdresser's | noun | f | |\n| хімчистка | /ximˈtʃɪstka/ | dry cleaner's | noun | f | |\n| готівка | /hoˈtiʋka/ | cash | noun | f | |\n| картка | /ˈkartka/ | card | noun | f | |\n| чек | /tʃɛk/ | receipt | noun | m | |\n| ціна | /tsiˈna/ | price | noun | f | |\n| знижка | /ˈznɪʒka/ | discount | noun | f | |\n| черга | /ˈtʃɛrha/ | queue | noun | f | |\n| каса | /ˈkasa/ | checkout | noun | f | |\n| решта | /ˈrɛʃta/ | change | noun | f | |\n| купувати | /kupuˈvatɪ/ | to buy | verb | - | |\n| платити | /plaˈtɪtɪ/ | to pay | verb | - | |\n| замовляти | /zamoʋˈlʲatɪ/ | to order | verb | - | |\n| міряти | /ˈmirʲatɪ/ | to try on | verb | - | |\n| коштувати | /kɔʃtuˈvatɪ/ | to cost | verb | - | |\n| торговий центр | /torˈhɔʋɪj ˈtsɛntr/ | shopping mall | phrase | m | |\n| відділення | /vidˈdilennʲa/ | branch/office | noun | n | |\n| рахунок | /raˈxunok/ | account/bill | noun | m | |\n| одяг | /ˈɔdʲaɦ/ | clothes | noun | m | |\n| взуття | /vzutˈtʲa/ | footwear | noun | n | |\n| продукти | /proˈduktɪ/ | groceries | noun | pl | |\n| овочі | /ˈɔvotʃi/ | vegetables | noun | pl | |\n| фрукти | /ˈfruktɪ/ | fruits | noun | pl | |\n| сервіс | /ˈsɛrvis/ | service | noun | m | |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-52\ntitle: Shopping & Services\nsubtitle: \"Buying and Selling in Ukrainian\"\nversion: \"1.0\"\nphase: \"A2\"\npedagogy: \"Narrative\"\nduration: 60\ntransliteration: none\ntags: [\"vocabulary\", \"shopping\", \"money\", \"services\"]\ngrammar: [\"accusative-inanimate\", \"genitive-quantities\"]\nobjectives:\n  - Buy items in a shop: купувати, платити\n  - Use services: банк, пошта, перукарня\n  - Talk about money: готівка, картка, ціна\n  - Ask for price: скільки коштує?\nvocab_count: 30\n---\n\n# Shopping & Services\n\n## Warm-up\n\nВи любите ходити по магазинах? Де ви купуєте продукти: у супермаркеті чи на ринку? Як ви платите: карткою чи готівкою?\n\nВ Україні шопінг — це і сучасні торгові центри, і традиційні базари. А сервіс, як банк чи пошта, став дуже цифровим і зручним. Давайте навчимося робити покупки українською!\n\nShopping is a daily necessity. In this module, you'll learn how to navigate shops, use services like banks and post offices, and handle money.\n\n> [!important] **Myth Buster** \"Cash Only?\"\n> Think you need a suitcase of cash in Eastern Europe? Wrong! Ukraine is a leader in cashless payments. You can pay with Apple Pay or Google Pay almost everywhere — in the subway, at a tiny coffee kiosk, and often even at the market. **Готівка** (cash) is becoming rare!\n\n## Presentation\n\n### Shops (Магазини)\n\nWhere do we buy things?\n\n| Слово | Переклад | Приклад |\n|-------|----------|---------|\n| **магазин** | shop/store | Продуктовий магазин. |\n| **супермаркет** | supermarket | Великий супермаркет. |\n| **ринок** | market/bazaar | Свіжі овочі на ринку. |\n| **торговий центр** | shopping mall | Ми йдемо в торговий центр. |\n| **аптека** | pharmacy | Купити ліки в аптеці. |\n| **каса** | checkout/cashier | Платити на касі. |\n| **черга** | queue/line | Довга черга. |\n| **ціна** | price | Висока ціна. |\n\n### Services (Послуги)\n\n- **банк** — bank: *Я йду в банк.*\n- **пошта** — post office: *Надіслати лист на пошті.*\n- **перукарня** — hairdresser's: *Мені треба в перукарню.*\n- **хімчистка** — dry cleaner's: *Здати пальто в хімчистку.*\n- **ресторан** — restaurant: *Вечеря в ресторані.*\n- **готель** — hotel: *Забронювати готель.*\n\n### Actions & Money\n\n- **купувати** — to buy: *Я купую хліб.*\n- **платити** — to pay: *Я плачу карткою.*\n- **замовляти** — to order: *Ми замовляємо піцу.*\n- **міряти** — to try on: *Міряти сукню.*\n- **коштувати** — to cost: *Скільки це коштує?*\n- **готівка** — cash: *У мене тільки готівка.*\n- **картка** — card: *Оплата карткою.*\n- **решта** — change (money back): *Ваша решта.*\n- **знижка** — discount: *Сьогодні знижка 50%!*\n- **чек** — receipt/check: *Візьміть чек.*\n\n> [!note] Grammar Point: Asking Price\n> To ask \"How much is it?\", we say:\n> - **Скільки це коштує?** (How much does this cost?)\n> - **Яка ціна?** (What is the price?)\n> The verb **коштувати** agrees with the item:\n> - *Скільки коштує хліб?* (Singular)\n> - *Скільки коштують банани?* (Plural)\n\n> [!cultural] **Cultural Insight** The Market (Ринок/Базар)\n> The **ринок** is the heart of Ukrainian food culture. Here you buy the freshest vegetables, fruits, meat, and cheese (especially **творог**). It's normal to taste (\"попробовать\") products before buying. And yes, you can bargain (\"торгуватися\"), but politely!\n\n## Practice\n\n### Story Time: At the Market\n\nСьогодні субота. Бабуся Марія йде на **ринок**. Вона не любить **супермаркети**.\n— На ринку все свіже, — каже вона.\n\nВона підходить до продавця овочів.\n— Добрий день! Скільки **коштують** помідори?\n— 50 гривень за кілограм, — відповідає продавець. — Дуже солодкі, спробуйте!\nМарія куштує.\n— Смачні. Але чому так дорого? Давайте за 45?\n— Добре, для вас — 45.\n\nМарія бере два кілограми. Вона дає **готівку**.\n— Ось ваші 100 гривень.\n— Дякую, ось ваша **решта** — 10 гривень, — каже продавець.\nБабуся задоволена. Вона любить **купувати** на ринку.\n\n### Story Time: Shopping Mall\n\nАндрій і Олена йдуть у **торговий центр**. Це велика сучасна будівля.\nТут є одяг, техніка, кіно і кафе.\n\nОлена хоче купити нову сукню. Вони заходять у брендовий **магазин**.\n— Дивись, яка гарна сукня! — каже Олена. — І тут є **знижка**!\nВона йде **міряти** сукню. Вона їй пасує.\n\n— Ми беремо цю сукню, — каже Андрій на **касі**. — Можна заплатити **карткою**?\n— Так, звичайно прикладіть картку, — каже касир. — Ось ваш **чек**.\n\nПісля шопінгу вони йдуть у кафе. Андрій **замовляє** каву і тістечка.\nВони витратили багато грошей, але вони щасливі.\n\n### Story Time: Nova Poshta Revolution\n\nІван живе в Києві. Його мама живе в Одесі.\nМама приготувала варення і хоче передати його сину.\nРаніше це було довго. Але тепер є \"Нова Пошта\".\n\nМама йде на **пошту**. Це світле і чисте відділення. Немає **черги**.\n— Я хочу відправити посилку в Київ, — каже вона.\nОператор швидко оформлює замовлення.\n— Це буде **коштувати** 80 гривень. Оплата тут чи одержувач?\n— Одержувач, — каже мама.\n\nНа наступний день Іван отримує смс: \"Ваша посилка прибула\".\nВін заходить у відділення біля свого дому. Він сканує додаток у смартфоні, платить через Apple Pay і забирає варення.\nВсе зайняло 2 хвилини. Це магія українського сервісу.\n\n### Ukrainian Banking\n\nUkraine has a very advanced banking system.\nTraditional banks usually focus on physical branches. But modern neo-banks live in your phone.\nThe most famous is **Monobank** (symbolized by a cat). It has no branches. You open an account via app in 10 minutes.\nYou can send money to friends instantly using their phone number or card number. Everyone splits restaurant bills (\"скинутися на карту\") using apps.\nNobody writes paper checks. It's all digital.\n\nAlso, currency exchange (**обмін валют**) is strictly regulated but accessible. You can buy Dollars or Euros in the app or at bank branches.\n\n### Story Time: At the Hairdresser\n\nОльга хоче нову зачіску. Вона йде в **перукарню** \"Красуня\".\n— Добрий день, я записана на 14:00, — каже вона.\n— Добрий день, сідайте, будь ласка, — каже перукар Наталя. — Що будемо робити?\n— Я хочу стрижку і фарбування, — каже Ольга. — Скільки це буде **коштувати**?\n— Стрижка — 500 гривень, фарбування — 1500.\n— Добре.\n\nВони розмовляють про моду і життя.\nЧерез дві години Ольга дивиться у дзеркало.\n— Чудово! Мені дуже подобається.\nВона платить адміністратору на **касі** і залишає чайові.\n\n### Online Shopping in Ukraine\n\nUkrainians love online shopping (\"Інтернет-шопінг\").\n- **Rozetka**: The \"Amazon of Ukraine\". You can buy everything from electronics to pasta.\n- **Prom.ua**: A marketplace for small sellers.\n- **Zakaz.ua**: Grocery delivery from big supermarkets like Auchan or Metro.\n- **OLX**: For buying used items (second-hand).\n\nMost people order delivery to a \"Nova Poshta\" branch, not to their home address, because it's cheaper and more convenient. You come, check the item, and then pay (**оплата при отриманні**).\n\n### Story Time: Taxi\n\nАндрій викликав таксі через додаток Uklon.\n— Добрий день. Ви де? — дзвонить водій.\n— Я біля банку \"ПриватБанк\", — каже Андрій.\n— Буду через 5 хвилин. Яка у вас машина?\n— Сіра Тойота. Номер 4567.\n— Добре, чекаю на вулиці.\nАндрій сідає в машину.\n— На вокзал, будь ласка. Я поспішаю.\n— Не хвилюйтеся, встигнемо.\n\n### Food Delivery\n\nIf you are hungry, you don't need to cook.\nIn big cities like Kyiv or Lviv, you will see many couriers with yellow or green backpacks.\nApps like **Glovo** or **Bolt Food** work 24/7. You can order sushi, burgers, or even borscht from your favorite restaurant. Just open the app, choose the food, and wait 30 minutes. It is fast and tasty.\n\n> [!tip] **Tip** \"Sales\"\n> Black Friday is popular in Ukraine, but big **розпродаж** (sales) also happen in January and July. Look for signs saying **\"Знижки до -70%\"**. It's the best time to buy clothes!\n\n# Summary\n\nYou learned to:\n- Use shop types: **магазин**, **ринок**, **супермаркет**, **аптека**\n- Use services: **банк**, **пошта**, **перукарня**\n- Money words: **готівка**, **картка**, **решта**, **знижка**\n- Shopping actions: **купувати**, **платити**, **міряти**\n\nShopping in Ukraine is easy and modern. Don't be afraid to ask the price!\n\n# Activities\n\n## quiz: Shopping Facts\n\n1. Where do you usually bargain?\n   - [x] на ринку\n   - [ ] у супермаркеті\n   - [ ] в аптеці\n   > Bargaining (торгуватися) is for the market.\n\n2. \"Готівка\" means...\n   - [x] cash\n   - [ ] card\n   - [ ] discount\n   > Cash.\n\n3. \"Нова Пошта\" is famous for...\n   - [x] speed and modern service\n   - [ ] losing letters\n   - [ ] selling food\n   > Fast private post.\n\n4. To ask for the price, you say...\n   - [x] Скільки коштує?\n   - [ ] Як тебе звати?\n   - [ ] Де магазин?\n   > How much does it cost?\n\n5. \"Знижка\" is...\n   - [x] discount\n   - [ ] receipt\n   - [ ] bag\n   > Discount.\n\n6. Where do you buy medicine?\n   - [x] в аптеці\n   - [ ] у банку\n   - [ ] на пошті\n   > Pharmacy (аптека).\n\n7. What do you get after paying?\n   - [x] чек\n   - [ ] чергу\n   - [ ] ціну\n   > Receipt (чек).\n\n8. \"Черга\" is...\n   - [x] queue/line\n   - [ ] cashier\n   - [ ] money\n   > Queue.\n\n9. Monobank is a...\n   - [x] neo-bank inside a phone\n   - [ ] state post office\n   - [ ] market\n   > Digital bank.\n\n10. \"Решта\" is...\n    - [x] change (money returned)\n    - [ ] price\n    - [ ] card\n    > Change.\n\n11. \"Міряти\" means to...\n    - [x] try on (clothes)\n    - [ ] buy\n    - [ ] eat\n    > To try on.\n\n12. Can you pay with Apple Pay in Ukraine?\n    - [x] Yes, almost everywhere\n    - [ ] No, cash only\n    - [ ] Only in banks\n    > Widespread acceptance.\n\n## match-up: Shop Vocabulary\n\n- магазин :: shop\n- ринок :: market\n- аптека :: pharmacy\n- банк :: bank\n- пошта :: post office\n- готівка :: cash\n- картка :: card\n- ціна :: price\n- знижка :: discount\n- черга :: queue\n- каса :: checkout\n- перукарня :: hairdresser's\n\n## fill-in: Shopping Sentences\n\n1. Я хочу ____ хліб.\n   > [!answer] купити\n   > [!options] купити | продати | міряти | спати\n   > To buy bread.\n\n2. Скільки це ____?\n   > [!answer] коштує\n   > [!options] коштує | коштують | платить | купує\n   > Singular item cost.\n\n3. У мене немає ____. (cash)\n   > [!answer] готівки\n   > [!options] готівки | готівка | картка | банку\n   > Genitive negation: немає готівки.\n\n4. Я плачу ____. (by card)\n   > [!answer] карткою\n   > [!options] карткою | карта | карту | картки\n   > Instrumental: карткою.\n\n5. Це велика ____. (queue)\n   > [!answer] черга\n   > [!options] черга | каса | ціна | знижка\n   > Big queue.\n\n6. Дайте, будь ласка, ____. (receipt)\n   > [!answer] чек\n   > [!options] чек | чергу | гривню | решту\n   > Give receipt (Acc = Nom).\n\n7. Ось ваша ____. (change)\n   > [!answer] решта\n   > [!options] решта | каса | ціна | пошта\n   > Here is your change.\n\n8. Ми йдемо на ____. (market)\n   > [!answer] ринок\n   > [!options] ринок | банк | аптеку | магазин\n   > To the market (Acc).\n\n9. Я хочу ____ ці джинси. (try on)\n   > [!answer] поміряти\n   > [!options] поміряти | купити | з'їсти | випити\n   > To try on (jeans).\n\n10. Сьогодні у магазині ____. (discount)\n    > [!answer] знижка\n    > [!options] знижка | черга | ціна | каса\n    > Discount.\n\n11. Можна ____ піцу? (order)\n    > [!answer] замовити\n    > [!options] замовити | купити | міряти | платити\n    > To order (food/delivery).\n\n12. Банк закритий, він не ____.\n    > [!answer] працює\n    > [!options] працює | коштує | купує | спить\n    > Does not work.\n\n## true-false: Ukrainian Services\n\n1. \"Ринок\" usually has fresher food than supermarkets.\n   - [x] true\n   > Generally true perception.\n\n2. You cannot pay by card in Ukraine.\n   - [x] false\n   > Very false.\n\n3. \"Аптека\" sells clothes.\n   - [x] false\n   > Medicine.\n\n4. \"Нова Пошта\" is a slow service.\n   - [x] false\n   > Known for speed.\n\n5. You can bargain in a supermarket.\n   - [x] false\n   > Fixed prices. Bargain at the market.\n\n6. Monobank has many physical buildings.\n   - [x] false\n   > It's an app-only bank.\n\n7. \"Решта\" is the money you pay.\n   - [x] false\n   > Money you get back.\n\n8. \"Хімчистка\" cleans clothes.\n   - [x] true\n   > Dry cleaner.\n\n9. \"Готівка\" is paper money/coins.\n   - [x] true\n   > Cash.\n\n10. Waiters bring a \"чек\".\n    - [x] true\n    > Bill/receipt is чек (or рахунок).\n\n11. \"Черга\" is good.\n    - [x] false\n    > Nobody likes a queue.\n\n12. You can order delivery (\"замовити\").\n    - [x] true\n    > Delivery is popular (Glovo, Bolt Food).\n\n## group-sort: Places vs Things\n\n### Groups\n- Places\n- Money/Things\n- Actions\n\n### Items\n- магазин: Places\n- банк: Places\n- ринок: Places\n- аптека: Places\n- пошта: Places\n- готівка: Money/Things\n- картка: Money/Things\n- чек: Money/Things\n- знижка: Money/Things\n- купувати: Actions\n- платити: Actions\n- міряти: Actions\n\n## unjumble: Shopping Dialogue\n\n1. Скільки / коштує / цей / хліб\n   > [!answer] Скільки коштує цей хліб\n   > How much is this bread?\n\n2. Я / хочу / заплатити / карткою\n   > [!answer] Я хочу заплатити карткою\n   > I want to pay by card.\n\n3. Де / тут / найближчий / банк\n   > [!answer] Де тут найближчий банк\n   > Where is the nearest bank here?\n\n4. У / нас / сьогодні / знижка\n   > [!answer] У нас сьогодні знижка\n   > We have a discount today.\n\n5. Я / йду / в / супермаркет\n   > [!answer] Я йду в супермаркет\n   > I am going to the supermarket.\n\n6. Дайте / мені / чек / будь ласка\n   > [!answer] Дайте мені чек будь ласка\n   > Give me the receipt please.\n\n7. Ця / сукня / дуже / дорога\n   > [!answer] Ця сукня дуже дорога\n   > This dress is very expensive.\n\n8. Ми / замовляємо / їжу / додому\n   > [!answer] Ми замовляємо їжу додому\n   > We order food to home.\n\n9. На / пошті / велика / черга\n   > [!answer] На пошті велика черга\n   > There is a big queue at the post office.\n\n10. Ваша / решта — / двадцять / гривень\n    > [!answer] Ваша решта — двадцять гривень\n    > Your change is 20 hryvnias.\n\n11. Я / люблю / купувати / на / ринку\n    > [!answer] Я люблю купувати на ринку\n    > I like buying at the market.\n\n12. Мені / треба / поміряти / взуття\n    > [!answer] Мені треба поміряти взуття\n    > I need to try on shoes.\n\n## error-correction: Shop Grammar\n\n1. Я йду в магазин.\n   > [!error] магазин\n   > [!answer] магазин\n   > [!options] магазин | магазину | магазина | магазином\n   > Correct. Let's make error.\n   > *Я йду в магазину.*\n   > Error: магазину -> магазин (Acc direction).\n\n   Rephrase 1:\n   Я йду в магазину.\n   > [!error] магазину\n   > [!answer] магазин\n   > [!options] магазин | магазину | магазина | магазином\n   > [!explanation] Direction (Accusative): в магазин.\n\n2. Скільки коштує банани?\n   > [!error] коштує\n   > [!answer] коштують\n   > [!options] коштують | коштує | коштувати | коштував\n   > [!explanation] Plural subject (bananas): коштують.\n\n3. Я плачу картка.\n   > [!error] картка\n   > [!answer] карткою\n   > [!options] карткою | картка | карти | карту\n   > [!explanation] Instrumental (with what?): карткою.\n\n4. Дайте чеку.\n   > [!error] чеку\n   > [!answer] чек\n   > [!options] чек | чеку | чека | чеком\n   > [!explanation] Accusative request: чек.\n\n5. У мене немає готівка.\n   > [!error] готівка\n   > [!answer] готівки\n   > [!options] готівки | готівка | готівку | готівкою\n   > [!explanation] Genitive negation: немає готівки.\n\n6. Ми були на ринок.\n   > [!error] ринок\n   > [!answer] ринку\n   > [!options] ринку | ринок | ринка | ринком\n   > [!explanation] Location (Locative): на ринку.\n\n7. Я купую хліба.\n   > [!error] хліба\n   > [!answer] хліб\n   > [!options] хліб | хліба | хлібу | хлібом\n   > [!explanation] Accusative: купую хліб. (Partitive Genitive 'хліба' exists but Accusative is standard for 'a loaf').\n\n8. Це дорога магазин.\n   > [!error] дорога\n   > [!answer] дорогий\n   > [!options] дорогий | дорога | дороге | дорогі\n   > [!explanation] Masculine noun: дорогий магазин.\n\n9. Тут велика знижку.\n   > [!error] знижку\n   > [!answer] знижка\n   > [!options] знижка | знижку | знижки | знижкою\n   > [!explanation] Nominative (\"There is\"): знижка.\n\n10. Він працює в аптека.\n    > [!error] аптека\n    > [!answer] аптеці\n    > [!options] аптеці | аптека | аптеку | аптекою\n    > [!explanation] Locative: в аптеці.\n\n11. Я хочу поміряти плаття.\n    > [!error] плаття\n    > [!answer] сукню\n    > [!options] сукню | плаття | одяг | штани\n    > [!explanation] 'Плаття' is okay but 'сукня' is better Ukrainian. Or fix case? 'Плаття' is neuter indeclinable-like in slang but declinable in lit. Let's fix semantics or grammar?\n    > 'Плаття' (neuter) -> поміряти (що?) плаття (Acc = Nom). Correct.\n    > Let's choose clear error.\n    > *Я хочу поміряти сукня.* -> сукню.\n\n    Rephrase 11:\n    Я хочу поміряти сукня.\n    > [!error] сукня\n    > [!answer] сукню\n    > [!options] сукню | сукня | сукні | сукнею\n    > [!explanation] Accusative feminine: сукню.\n\n12. Де тут банків?\n    > [!error] банків\n    > [!answer] банк\n    > [!options] банк | банків | банку | банком\n    > [!explanation] Nominative subject: банк.\n\n## cloze: At the Supermarket\n\nЯ беру [___:1] і йду в зал.\nМені треба [___:2] молоко і хліб.\nЯ дивлюся на [___:3]. Молоко коштує 40 гривень.\nЯ йду на [___:4]. Там велика [___:5].\nКасир питає: \"Пакет потрібен?\". Я кажу: \"Ні, дякую\".\nЯ плачу [___:6], тому що не люблю [___:7].\nКасир дає мені [___:8]. Шопінг закінчено.\n\n1. кошик\n> [!answer] кошик\n> [!options] кошик | пакет | стіл\n\n2. купити\n> [!answer] купити\n> [!options] купити | продати | знайти\n\n3. ціну\n> [!answer] ціну\n> [!options] ціну | вагу | колір\n\n4. касу\n> [!answer] касу\n> [!options] касу | вікно | двері\n\n5. черга\n> [!answer] черга\n> [!options] черга | знижка | каса\n\n6. карткою\n> [!answer] карткою\n> [!options] карткою | готівкою | чеком\n\n7. готівку\n> [!answer] готівку\n> [!options] готівку | картку | знижку\n\n8. чек\n> [!answer] чек\n> [!options] чек | гроші | товар\n\n## dialogue-reorder: Buying Shoes\n\n- Добрий день. Я можу вам допомогти?\n- Добрий день. Я шукаю кросівки.\n- Який у вас розмір?\n- 42-й розмір.\n- Ось гарна модель. Хочете поміряти?\n- Так, дякую. Де дзеркало?\n- Дзеркало там, зліва.\n- Вони зручні. Скільки вони коштують?\n- 2000 гривень.\n- Добре, я беру їх.\n- Оплата карткою чи готівкою?\n- Карткою, будь ласка.\n\n## mark-the-words: Find Services\n\n> [!instruction] Mark all shops and services.\n\nЯ живу в центрі. Біля мого дому є [супермаркет] і маленька [аптека]. Коли мені треба гроші, я йду в [банк]. У неділю я йду на [ринок] за овочами. Моя мама працює на [пошті]. Тато стрижеться в [перукарні]. Ми любимо ходити в [кіно] і [ресторан]. [Лікарня] теж недалеко.\n\n## select: Shopping Choices\n\n1. To pay money.\n   - [x] Платити.\n   - [ ] Плакати.\n   > Pay vs Cry.\n\n2. To buy.\n   - [x] Купувати.\n   - [ ] Купати.\n   > Buy vs Bathe.\n\n3. To order.\n   - [x] Замовляти.\n   - [ ] Мовчати.\n   > Order vs Be silent.\n\n4. Receipt.\n   - [x] Чек.\n   - [ ] Чех.\n   > Receipt vs Czech person.\n\n5. Cash.\n   - [x] Готівка.\n   - [ ] Готування.\n   > Cash vs Cooking.\n\n6. Price.\n   - [x] Ціна.\n   - [ ] Стіна.\n   > Price vs Wall.\n\n7. Discount.\n   - [x] Знижка.\n   - [ ] Книжка.\n   > Discount vs Book.\n\n8. Market.\n   - [x] Ринок.\n   - [ ] Ранок.\n   > Market vs Morning.\n\n9. Shop.\n   - [x] Магазин.\n   - [ ] Журнал\n\n   > Shop. False friend \"Journal\".\n\n10. Pharmacy.\n    - [x] Аптека.\n    - [ ] Бібліотека.\n    > Pharmacy.\n\n11. Post Office.\n    - [x] Пошта.\n    - [ ] Площа.\n    > Post vs Square.\n\n12. To try on.\n    - [x] Міряти.\n    - [ ] Мирити.\n    > Try on vs Reconcile.\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| магазин | /mahaˈzɪn/ | shop/store | noun | m | |\n| супермаркет | /superˈmarket/ | supermarket | noun | m | |\n| ринок | /ˈrɪnok/ | market | noun | m | |\n| аптека | /apˈtɛka/ | pharmacy | noun | f | |\n| банк | /bank/ | bank | noun | m | |\n| пошта | /ˈpɔʃta/ | post office | noun | f | |\n| перукарня | /peruˈkarnʲa/ | hairdresser's | noun | f | |\n| хімчистка | /ximˈtʃɪstka/ | dry cleaner's | noun | f | |\n| готівка | /hoˈtiʋka/ | cash | noun | f | |\n| картка | /ˈkartka/ | card | noun | f | |\n| чек | /tʃɛk/ | receipt | noun | m | |\n| ціна | /tsiˈna/ | price | noun | f | |\n| знижка | /ˈznɪʒka/ | discount | noun | f | |\n| черга | /ˈtʃɛrha/ | queue | noun | f | |\n| каса | /ˈkasa/ | checkout | noun | f | |\n| решта | /ˈrɛʃta/ | change | noun | f | |\n| купувати | /kupuˈvatɪ/ | to buy | verb | - | |\n| платити | /plaˈtɪtɪ/ | to pay | verb | - | |\n| замовляти | /zamoʋˈlʲatɪ/ | to order | verb | - | |\n| міряти | /ˈmirʲatɪ/ | to try on | verb | - | |\n| коштувати | /kɔʃtuˈvatɪ/ | to cost | verb | - | |\n| торговий центр | /torˈhɔʋɪj ˈtsɛntr/ | shopping mall | phrase | m | |\n| відділення | /vidˈdilennʲa/ | branch/office | noun | n | |\n| рахунок | /raˈxunok/ | account/bill | noun | m | |\n| одяг | /ˈɔdʲaɦ/ | clothes | noun | m | |\n| взуття | /vzutˈtʲa/ | footwear | noun | n | |\n| продукти | /proˈduktɪ/ | groceries | noun | pl | |\n| овочі | /ˈɔvotʃi/ | vegetables | noun | pl | |\n| фрукти | /ˈfruktɪ/ | fruits | noun | pl | |\n| сервіс | /ˈsɛrvis/ | service | noun | m | |\n",
+    "createdAt": "2025-12-15T20:02:03.088045Z",
+    "modifiedAt": "2025-12-15T20:02:03.088045Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-52",
+    "level": "A2",
+    "phase": "A2",
+    "wordCount": 30,
+    "newWordCount": 30,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "магазин",
+        "ipa": "/mahaˈzɪn/",
+        "en": "shop/store",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-2",
+        "uk": "супермаркет",
+        "ipa": "/superˈmarket/",
+        "en": "supermarket",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-3",
+        "uk": "ринок",
+        "ipa": "/ˈrɪnok/",
+        "en": "market",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-4",
+        "uk": "аптека",
+        "ipa": "/apˈtɛka/",
+        "en": "pharmacy",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-5",
+        "uk": "банк",
+        "ipa": "/bank/",
+        "en": "bank",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-6",
+        "uk": "пошта",
+        "ipa": "/ˈpɔʃta/",
+        "en": "post office",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-7",
+        "uk": "перукарня",
+        "ipa": "/peruˈkarnʲa/",
+        "en": "hairdresser's",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-8",
+        "uk": "хімчистка",
+        "ipa": "/ximˈtʃɪstka/",
+        "en": "dry cleaner's",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-9",
+        "uk": "готівка",
+        "ipa": "/hoˈtiʋka/",
+        "en": "cash",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-10",
+        "uk": "картка",
+        "ipa": "/ˈkartka/",
+        "en": "card",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-11",
+        "uk": "чек",
+        "ipa": "/tʃɛk/",
+        "en": "receipt",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-12",
+        "uk": "ціна",
+        "ipa": "/tsiˈna/",
+        "en": "price",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-13",
+        "uk": "знижка",
+        "ipa": "/ˈznɪʒka/",
+        "en": "discount",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-14",
+        "uk": "черга",
+        "ipa": "/ˈtʃɛrha/",
+        "en": "queue",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-15",
+        "uk": "каса",
+        "ipa": "/ˈkasa/",
+        "en": "checkout",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-16",
+        "uk": "решта",
+        "ipa": "/ˈrɛʃta/",
+        "en": "change",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-17",
+        "uk": "купувати",
+        "ipa": "/kupuˈvatɪ/",
+        "en": "to buy",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-18",
+        "uk": "платити",
+        "ipa": "/plaˈtɪtɪ/",
+        "en": "to pay",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-19",
+        "uk": "замовляти",
+        "ipa": "/zamoʋˈlʲatɪ/",
+        "en": "to order",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-20",
+        "uk": "міряти",
+        "ipa": "/ˈmirʲatɪ/",
+        "en": "to try on",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-21",
+        "uk": "коштувати",
+        "ipa": "/kɔʃtuˈvatɪ/",
+        "en": "to cost",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-22",
+        "uk": "торговий центр",
+        "ipa": "/torˈhɔʋɪj ˈtsɛntr/",
+        "en": "shopping mall",
+        "pos": "phrase",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-23",
+        "uk": "відділення",
+        "ipa": "/vidˈdilennʲa/",
+        "en": "branch/office",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-24",
+        "uk": "рахунок",
+        "ipa": "/raˈxunok/",
+        "en": "account/bill",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-25",
+        "uk": "одяг",
+        "ipa": "/ˈɔdʲaɦ/",
+        "en": "clothes",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-26",
+        "uk": "взуття",
+        "ipa": "/vzutˈtʲa/",
+        "en": "footwear",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-27",
+        "uk": "продукти",
+        "ipa": "/proˈduktɪ/",
+        "en": "groceries",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-28",
+        "uk": "овочі",
+        "ipa": "/ˈɔvotʃi/",
+        "en": "vegetables",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-29",
+        "uk": "фрукти",
+        "ipa": "/ˈfruktɪ/",
+        "en": "fruits",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-30",
+        "uk": "сервіс",
+        "ipa": "/ˈsɛrvis/",
+        "en": "service",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      }
+    ],
+    "reviewWords": []
+  }
+}

@@ -1,7 +1,8 @@
 # B2 Improvement Plan
 
-**Status:** Draft
+**Status:** In Progress
 **Created:** 2024-12-14
+**Updated:** 2024-12-14
 **Based on:** Claude + Gemini pedagogical assessments
 
 ---
@@ -10,12 +11,70 @@
 
 | Metric | Value |
 |--------|-------|
-| Planned Modules | 125-135 (discrepancy) |
+| Planned Modules | 135 (resolved) |
 | Implemented | 0 (0%) |
 | Missing | ALL |
 | Grade | B+ (A plan, F implementation) |
 
 **Note:** B2 is the largest implementation task in the entire curriculum with zero existing content.
+
+---
+
+## GitHub Issues Summary
+
+### Preparation Issues (Complete Before Module Creation)
+
+| Issue | Title | Priority | Status |
+|-------|-------|----------|--------|
+| #117 | State Standard 2024 compliance gaps | P0 | Open |
+| #118 | Improve curriculum plan | P0 | Partially resolved |
+| #131 | Add intermediate checkpoints | P1 | Open |
+| #132 | Define graduated immersion | P1 | Open |
+| #133 | Adjust activity density by module type | P1 | Open |
+| #134 | Expand capstone scope | P1 | Open |
+| #135 | Add folk culture preview modules | P2 | Open |
+| #136 | Create media content assignment | P1 | **Completed** |
+
+### Build Issues (Phase-Specific)
+
+| Issue | Phase | Modules | Status |
+|-------|-------|---------|--------|
+| #137 | B2.1 Grammar & Register | M01-30 | Blocked |
+| #138 | B2.1b Grammar Completion | M31-40 | Blocked |
+| #139 | B2.2 Phraseology & Synonymy | M41-70 | Blocked |
+| #140 | B2.3 Ukrainian History | M71-95 | Blocked |
+| #141 | B2.4 Biographies | M96-120 | Blocked |
+| #142 | B2.5 Advanced Skills & Capstone | M121-135 | Blocked |
+
+### Finalization Issues
+
+| Issue | Title | Priority | Status |
+|-------|-------|----------|--------|
+| #120 | Finalize vocabulary and rebuild database | P1 | Blocked by #137-142 |
+
+### Closed Issues
+
+| Issue | Title | Reason |
+|-------|-------|--------|
+| #119 | Build modules 01-125 | Superseded by #137-142 |
+
+---
+
+## Dependency Chain
+
+```
+#116 (B1 vocabulary)
+    ↓
+#117 (State Standard) + #118 (Curriculum plan)
+    ↓
+#131-136 (Preparation issues)
+    ↓
+#137 (B2.1) → #138 (B2.1b) → #139 (B2.2) → #140 (B2.3) → #141 (B2.4) → #142 (B2.5)
+    ↓
+#120 (Vocabulary finalization)
+    ↓
+C1 can begin
+```
 
 ---
 

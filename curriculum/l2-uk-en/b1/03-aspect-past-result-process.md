@@ -24,6 +24,18 @@ vocabulary_count: 20
 ---
 # Вид у минулому часі — Результат чи процес
 
+> 🎯 **Чому це важливо**
+>
+> На роботі, в університеті, в щоденному житті — коли хтось питає "Ти зробив?", вони хочуть знати результат. Якщо ви відповісте "Я робив", це означає "я працював, але не закінчив". Ця різниця може вирішити, чи отримаєте ви роботу, здасте іспит, чи просто будете зрозумілі.
+
+> [!resources] 🎧 External Resources
+>
+> **Past Tense Foundation:** [Past Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-past-tense/) — Review past tense forms
+>
+> **Verb Prefixes:** [Ukrainian Verb Prefixes](https://www.ukrainianlessons.com/ukrainian-verb-prefixes/) — How prefixes change meaning
+>
+> **Verb Overview:** [All Verb Tenses](https://www.ukrainianlessons.com/ukrainian-tenses/) — Downloadable reference chart
+
 ## Diagnostic
 
 Уявіть таку ситуацію в офісі в Києві:
@@ -48,6 +60,20 @@ vocabulary_count: 20
 
 This module focuses on the core distinction between **process** (what was happening) and **result** (what got done). Understanding this will dramatically improve your ability to communicate clearly in Ukrainian.
 
+## The Process vs Result Distinction: Why English Speakers Struggle
+
+English has the simple past ("I wrote") and past progressive ("I was writing"), but these don't map directly to Ukrainian aspect:
+
+| English | What it conveys | Ukrainian | Aspect |
+|---------|-----------------|-----------|--------|
+| I was writing the report | Activity in progress | Я **писав** звіт | imperfective |
+| I wrote the report | Completed OR just happened | Я **написав** звіт | perfective |
+| I wrote reports all day | Duration of activity | Я **писав** звіти весь день | imperfective! |
+
+Notice the third row: "I wrote" uses simple past in English, but because it emphasizes **duration** ("all day"), Ukrainian uses **imperfective**. This is where English speakers make mistakes — they see "wrote" and reach for perfective, ignoring the duration context.
+
+**The key insight:** In Ukrainian, the question isn't "did the action happen?" but rather "are we focusing on the **activity itself** or on its **completed result**?"
+
 **Тестуйте себе:**
 
 1. Your friend asks how you spent the evening. You want to say you were engaged in reading:
@@ -67,6 +93,12 @@ This module focuses on the core distinction between **process** (what was happen
 ### Недоконаний вид — фокус на процесі
 
 When you use imperfective, you're describing the **activity itself** — its duration, how it was unfolding, or simply that it was happening. The completion or result is not in focus.
+
+> 🔗 **Language Link: Duration in English vs Ukrainian**
+>
+> English expresses duration with prepositions: "for an hour," "all day," "throughout the week." Ukrainian uses the **accusative case without a preposition** for time duration: годину (hour-ACC), весь день (all day-ACC), цілий тиждень (whole week-ACC).
+>
+> When you see these accusative time expressions, they almost always signal imperfective aspect because they emphasize **how long** the activity lasted, not whether it finished.
 
 **Маркери тривалості (Duration markers):**
 
@@ -99,6 +131,8 @@ When you use imperfective, you're describing the **activity itself** — its dur
 ### Доконаний вид — фокус на результаті
 
 When you use perfective, you're emphasizing that the action **reached its endpoint**. Something got done, achieved, completed. The result exists now.
+
+Think of perfective as answering the question: "Is there something to show for it?" If yes — use perfective. The boss asking "Where's the report?" wants to know if a physical report exists, not how many hours you spent on it.
 
 **Маркери завершення (Completion markers):**
 
@@ -135,6 +169,15 @@ When you use perfective, you're emphasizing that the action **reached its endpoi
 > The imperfective describes the action; the perfective describes the product.
 
 ### Ключова різниця — "за + час" vs "час" у знахідному
+
+This is one of the most useful distinctions for English speakers to master. The preposition "за" completely changes the meaning:
+
+| Construction | Aspect | English | Example |
+|--------------|--------|---------|---------|
+| **час** (accusative) | Imperfective | for X time | Я читав годину (I was reading for an hour) |
+| **за + час** | Perfective | in X time | Я прочитав за годину (I read it in an hour) |
+
+"For an hour" describes duration — how long the activity lasted. "In an hour" describes completion time — how long until the result was achieved.
 
 A crucial pattern that distinguishes result from process:
 
@@ -196,6 +239,8 @@ Both actions happen at the same time.
 
 ### Діалог: Ранок у Львові
 
+This dialogue between a mother and son demonstrates how aspect shifts naturally in everyday conversation. Notice how the mother's questions use different aspects depending on whether she's asking about activity (робив) or result (вивчив, поснідав).
+
 **Мама:** Що ти **робив** учора ввечері?
 
 **Син:** Я **вчив** фізику весь вечір.
@@ -217,6 +262,8 @@ Both actions happen at the same time.
 ---
 
 ### Діалог: Проект в IT-компанії в Харкові
+
+In a professional setting, the process/result distinction becomes critical. This IT team meeting shows how Ukrainians report progress: imperfective for ongoing work ("I was writing code"), perfective for deliverables ("I finished the main page"). Pay attention to how "Скільки часу робила?" asks about duration (imperfective), while deliverables use perfective.
 
 **Менеджер:** Команда, де ми з проектом?
 
@@ -244,6 +291,8 @@ Both actions happen at the same time.
 
 ### Діалог: Лікар і пацієнт у Дніпрі
 
+Medical consultations require precise aspect usage. When the doctor asks "Ви приймали ліки?" (imperfective), they're asking about general medication habits. When they ask "Скільки таблеток прийняли?" (perfective), they want a specific count of completed doses. This distinction helps doctors understand both treatment patterns and specific quantities.
+
 **Лікар:** Що вас турбує?
 
 **Пацієнт:** Голова **боліла** весь тиждень. Учора **заболіла** особливо сильно.
@@ -265,6 +314,8 @@ Both actions happen at the same time.
 ---
 
 ### Діалог: Ремонт квартири в Одесі
+
+Home renovation discussions perfectly illustrate the process/result contrast. "Працювали весь день" (imperfective) describes the workers' activity. "Пофарбували стіни" (perfective) reports a completed task. Notice how the wife uses both aspects to give a comprehensive progress report: what's been done (perfective) and what's still in progress (imperfective).
 
 **Чоловік:** Ну що, як ремонт?
 
@@ -292,6 +343,10 @@ Both actions happen at the same time.
 
 ### Особливі випадки — verbs that change meaning
 
+Beyond the process/result distinction, some verb pairs have meanings that shift more dramatically between aspects. These are important to memorize because the translation changes significantly:
+
+**Understanding these shifts:** In most cases, imperfective describes a state or ongoing condition, while perfective describes the moment of change into or out of that state. Think of it as "being in the state" vs "entering/exiting the state."
+
 Some verbs have slightly different meanings in each aspect:
 
 | Imperfective | Perfective | Нюанс |
@@ -313,9 +368,15 @@ Some verbs have slightly different meanings in each aspect:
 - Вона **хворіла** тиждень. (She was sick for a week.)
 - Вона **захворіла** вчора. (She got sick yesterday.)
 
-> 📜 **History Bite**
+> 📜 **History Bite: Aktionsart and Aspect**
 >
 > In historical linguistics, the distinction between "process verbs" (states, activities) and "achievement verbs" (changes, accomplishments) is called "Aktionsart" or "lexical aspect." Ukrainian verbal aspect interacts with this: imperfective naturally fits activities and states, while perfective fits achievements and accomplishments.
+>
+> This explains why some verbs have more dramatic meaning shifts: verbs describing states (like "know," "love," "be sick") naturally use imperfective for the state itself, while perfective marks the transition into or out of that state. "Знати" means to know something (state), while "дізнатися" means to find out or learn something (the moment of transition from not-knowing to knowing).
+
+> 🔗 **Language Link: English State Verbs**
+>
+> English has "stative verbs" that resist the progressive form: you say "I know" not "I am knowing." Ukrainian handles this differently — the imperfective **знати** describes the ongoing state of knowing, while the perfective **дізнатися** describes the moment you learned something. Both are grammatically normal; aspect doesn't restrict verb forms the way English progressive does.
 
 ## Practice
 
@@ -365,6 +426,24 @@ Change each sentence from process-focused to result-focused (or vice versa):
 
 # Summary
 
+## What You've Learned: A Framework for Process vs Result
+
+The process/result distinction is perhaps the most practical aspect of Ukrainian verbal aspect for everyday communication. Here's a decision framework:
+
+**Ask yourself: What matters more in this context?**
+
+| If you want to emphasize... | Use... | Typical markers |
+|----------------------------|--------|-----------------|
+| How long something took | Imperfective | весь день, годину, довго |
+| That something is done | Perfective | вже, нарешті, за + time |
+| Background activity | Imperfective | поки, коли (with simultaneous action) |
+| Key event/change | Perfective | раптом, тоді, і тоді |
+
+**Common English-speaker mistakes to avoid:**
+1. Using perfective with duration markers ("I wrote for three hours" ≠ "Я написав три години")
+2. Using imperfective when reporting completed deliverables ("The report is done" = perfective)
+3. Confusing "for an hour" (годину, impf) with "in an hour" (за годину, pf)
+
 У цьому модулі ви вивчили:
 
 **Недоконаний вид (Процес):**
@@ -382,6 +461,17 @@ Change each sentence from process-focused to result-focused (or vice versa):
 **Ключова ідея:** Коли вас цікавить **як довго** тривала дія — недоконаний. Коли вас цікавить **чи готово** — доконаний.
 
 **Порада для розповідей:** Imperfective = широкий план, фон. Perfective = крупний план, події.
+
+> ✅ **Перевірте себе**
+>
+> Before moving on, can you:
+> - [ ] Distinguish "Що ти робив?" (process) from "Що ти зробив?" (result)?
+> - [ ] Use imperfective with duration markers (весь день, годину, довго)?
+> - [ ] Use perfective with completion markers (вже, нарешті, за годину)?
+> - [ ] Apply aspect correctly in narratives (background vs key events)?
+>
+> If you checked all boxes, proceed to the next module.
+> If not, review the Analysis section and try the Practice activities again.
 
 ---
 

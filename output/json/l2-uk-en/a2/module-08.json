@@ -1,0 +1,412 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-08",
+    "moduleId": "mod-uk-A2-08",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.1",
+    "moduleNumber": 8,
+    "moduleType": "grammar",
+    "pedagogy": "PPP",
+    "immersionLevel": 0.4,
+    "title": "Logical Prepositions",
+    "titleUk": null,
+    "subtitle": "Beyond Space: Relationships & Reasons",
+    "description": "Learner can express abstract relationships (benefit, absence, cause)",
+    "objectives": [
+      "Learner can express abstract relationships (benefit, absence, cause)",
+      "Learner can distinguish для vs на, через vs тому що",
+      "Learner can use prepositions for time expressions"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "logical prepositions (для, без, через, про, від, з, о, після, крім)",
+      "case requirements for each preposition"
+    ],
+    "tags": [
+      "prepositions",
+      "grammar",
+      "abstract"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "In Module 07, you learned **where** things are.\nNow, let's learn **why** and **for whom**.\n\nSpatial prepositions answer: *Де? Куди?* (Where? Where to?)\nLogical prepositions answer: *Для кого? Чому? Про що?* (For whom? Why? About what?)\n\nToday we unlock:\n- **Для** (For - Benefit)\n- **Без** (Without - Absence)\n- **Через** (Because of / Through)\n- **Про** (About)\n- **Від** (From - Source)\n- **З** (With - Accompaniment)\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "Part 1: Benefit & Absence",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Understanding Logical Prepositions\n\nLogical prepositions express abstract relationships between words. Unlike spatial prepositions (in, on, under), these prepositions answer questions about purpose, cause, source, and topic. Learning them is essential for expressing \"why\" and \"for whom\" in Ukrainian.\n\nThe most important thing to remember is that each preposition requires a specific grammatical case. This module will teach you which case goes with each preposition.\n\n## Для + Genitive (For)\nUse **для** to show purpose or benefit.\n- *Для кого?* (For whom?)\n- *Для чого?* (For what purpose?)\n\n| Pattern | Example | Meaning |\n| :--- | :--- | :--- |\n| для + **Gen** | Подарунок для **мами**. | A gift for mom. |\n| для + **Gen** | Це важливо для **здоров'я**. | This is important for health. |\n| для + **Gen** | Вода для **квітів**. | Water for the flowers. |\n\n> [!tip] Для vs На: A Common Mistake\n> Both \"для\" and \"на\" can translate to English \"for\", but they have different meanings:\n> **Для** = benefit/purpose: *Гроші для тебе.* (Money for you - a gift.)\n> **На** = exchange/allocation: *Гроші на каву.* (Money for coffee - payment.)\n> \n> Quick test: \"For whom?\" → Для. \"For what item/purchase?\" → На.\n> This distinction does not exist in English, so pay extra attention!\n\n## Без + Genitive (Without)\nUse **без** to indicate absence. This is straightforward - it simply means \"without\" and always takes the Genitive case.\n- *Без кого?* (Without whom?)\n- *Без чого?* (Without what?)\n\n| Pattern | Example | Meaning |\n| :--- | :--- | :--- |\n| без + **Gen** | Кава без **цукру**. | Coffee without sugar. |\n| без + **Gen** | Я не можу без **тебе**. | I can't (live) without you. |\n| без + **Gen** | Мова без **акценту**. | Speech without an accent. |\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Part 2: Cause & Topic",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Через + Accusative (Because of / Through)\nUse **через** to show cause or path.\n\n**Cause:**\n- *Через що?* (Because of what?)\n- Через **дощ** ми залишилися вдома. (Because of rain, we stayed home.)\n\n**Path:**\n- Ми йшли **через парк**. (We walked through the park.)\n\n| Pattern | Example | Meaning |\n| :--- | :--- | :--- |\n| через + **Acc** (cause) | Через **хворобу** він не прийшов. | He didn't come because of illness. |\n| через + **Acc** (path) | Вона подивилася через **вікно**. | She looked through the window. |\n\n> [!tip] Через vs Тому що\n> **Через + Noun** = Because of (thing/event): *Через дощ.*\n> **Тому що + Clause** = Because (full sentence): *Тому що йде дощ.*\n> \n> Both mean \"because,\" but **через** takes a noun, **тому що** takes a clause.\n\n## Про + Accusative (About)\nUse **про** to indicate topic.\n- *Про що?* (About what?)\n- *Про кого?* (About whom?)\n\n| Pattern | Example | Meaning |\n| :--- | :--- | :--- |\n| про + **Acc** | Фільм про **кохання**. | A film about love. |\n| про + **Acc** | Ми говорили про **тебе**. | We talked about you. |\n| про + **Acc** | Книга про **історію** України. | A book about the history of Ukraine. |\n\n## Learning Note: Why Cases Matter\n\nYou might wonder why Ukrainian prepositions require specific cases. The case system is a powerful feature of Slavic languages that makes sentences more flexible and precise.\n\nIn English, word order is rigid: \"I gave the book to mom.\" In Ukrainian, you can say the same thing in multiple orders, and the case endings tell you who did what to whom.\n\nWhen you see a preposition like **для** (for), think: \"This preposition always wants the Genitive case.\" The genitive ending tells you the relationship even if the words are in a different order.\n\nThink of it like color-coding in a spreadsheet - each case has its \"color\" that marks its role in the sentence. Once you internalize these patterns, you'll read Ukrainian much more naturally.\n\n**Quick Case Review:**\n- **Genitive** answers \"of whom? of what?\" - used for possession, absence, and many prepositions\n- **Accusative** answers \"whom? what?\" - used for direct objects and some prepositions\n- **Instrumental** answers \"by whom? with what?\" - used for tools, accompaniment\n- **Locative** answers \"where? on what?\" - used for location\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Part 3: Source & Accompaniment",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Від + Genitive (From - Source)\nUse **від** to show origin or sender.\n- *Від кого?* (From whom?)\n\n| Pattern | Example | Meaning |\n| :--- | :--- | :--- |\n| від + **Gen** | Лист від **мами**. | A letter from mom. |\n| від + **Gen** | Подарунок від **друга**. | A gift from a friend. |\n| від + **Gen** | Ліки від **головного болю**. | Medicine for (lit. from) headache. |\n\n> [!tip] Від vs З\n> **Від** = from a person/source: *Лист від Марії.* (Letter from Maria.)\n> **З** = from a place: *Він з Києва.* (He's from Kyiv.)\n\n## З + Instrumental (With)\nUse **з** to show accompaniment.\n- *З ким?* (With whom?)\n- *З чим?* (With what?)\n\n| Pattern | Example | Meaning |\n| :--- | :--- | :--- |\n| з + **Instr** | Кава з **молоком**. | Coffee with milk. |\n| з + **Instr** | Я йду з **другом**. | I'm going with a friend. |\n| з + **Instr** | Хліб з **маслом**. | Bread with butter. |\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Part 4: Time & Exception",
+        "nameEn": null,
+        "type": "content",
+        "content": "## О/Об + Locative (At - Time)\nUse **о** (or **об** before vowels) for clock time.\n\n| Pattern | Example | Meaning |\n| :--- | :--- | :--- |\n| о + **Loc** | О **третій** годині. | At three o'clock. |\n| о + **Loc** | О **п'ятій** ранку. | At five in the morning. |\n| об + **Loc** | Об **одинадцятій**. | At eleven. |\n\n## Після + Genitive (After)\nUse **після** to indicate sequence in time.\n\n| Pattern | Example | Meaning |\n| :--- | :--- | :--- |\n| після + **Gen** | Після **уроку**. | After the lesson. |\n| після + **Gen** | Після **роботи**. | After work. |\n| після + **Gen** | Після **обіду**. | After lunch. |\n\n## Крім + Genitive (Except / Besides)\nUse **крім** to indicate exception.\n\n| Pattern | Example | Meaning |\n| :--- | :--- | :--- |\n| крім + **Gen** | Всі прийшли, крім **Олега**. | Everyone came except Oleh. |\n| крім + **Gen** | Я все зробив, крім **цього**. | I did everything except this. |\n\n## Замість + Genitive (Instead of)\nUse **замість** for substitution.\n\n| Pattern | Example | Meaning |\n| :--- | :--- | :--- |\n| замість + **Gen** | Чай замість **кави**. | Tea instead of coffee. |\n| замість + **Gen** | Він прийшов замість **мене**. | He came instead of me. |\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Deep Dive: Case Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "All logical prepositions require a specific case:\n\n| Preposition | Case | Question | Example |\n| :--- | :--- | :--- | :--- |\n| **для** | Genitive | Для кого? | для мами |\n| **без** | Genitive | Без чого? | без цукру |\n| **від** | Genitive | Від кого? | від друга |\n| **після** | Genitive | Після чого? | після роботи |\n| **крім** | Genitive | Крім кого? | крім мене |\n| **замість** | Genitive | Замість чого? | замість чаю |\n| **через** | Accusative | Через що? | через дощ |\n| **про** | Accusative | Про що? | про книгу |\n| **о/об** | Locative | О котрій? | о третій |\n| **з** | Instrumental | З ким? | з другом |\n\n> [!tip] Memory Trick\n> Most abstract prepositions take **Genitive** (від, для, без, після, крім, замість).\n> **Про** and **Через** take **Accusative** (think: direct object).\n> **З** takes **Instrumental** (with = tool/companion).\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Story Time: The Letter",
+        "nameEn": null,
+        "type": "content",
+        "content": "Марія отримала **лист від мами**.\nУ листі було написано **про сім'ю**.\nМама писала **про** здоров'я батька, **про** погоду в селі.\nВона надіслала посилку **для Марії**.\nУ посилці було варення **з вишень** і мед **без цукру**.\n\nМарія прочитала лист **о восьмій ранку**.\n**Після сніданку** вона вирішила зателефонувати мамі.\nВона сказала: \"Дякую **за** посилку! Я не можу **без вас**!\"\n\n**Через роботу** Марія не може часто їздити додому.\nАле вона думає **про** родину щодня.\nВсі в офісі люблять її, **крім** одного колеги.\nАле це неважливо.\n\n**Замість** сумувати, Марія планує відпустку.\nВона поїде додому **з подругою**.\nЦе буде чудова подорож!\n\n---"
+      },
+      {
+        "id": "section-8",
+        "name": "Story Time Part 2: The Café",
+        "nameEn": null,
+        "type": "content",
+        "content": "Оля зайшла в кафе **після роботи**.\nВона замовила каву **з молоком** і торт **без глютену**.\nОфіціант запитав: \"**Для** вас щось ще?\"\n\"Ні, дякую. Це все,\" — відповіла Оля.\n\nВона сіла біля вікна і дивилася **через скло** на вулицю.\n**Через** погану погоду мало людей гуляло надворі.\nОля думала **про** свій день.\n\nРаптом вона побачила подругу **з чоловіком**.\nВони зайшли в кафе.\n\"Оля! Ми тут **замість** кіно — там занадто дорого!\"\n\"Сідайте **зі мною**!\" — запросила Оля.\n\nВони сиділи і розмовляли **про** життя.\nВсі були щасливі, **крім** офіціанта — він втомився.\nАле **після восьмої** кафе закрилося, і всі пішли додому.\n\n> [!cultural] Cultural Insight: Gift Giving\n> In Ukrainian culture, gifts are always **для** someone.\n> When you give flowers, chocolates, or anything, you say:\n> *Це для тебе.* (This is for you.)\n> Never give an even number of flowers — that's for funerals!\n\n---"
+      },
+      {
+        "id": "section-9",
+        "name": "Language in Action",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Dialogue: At the Pharmacy\n\n**Pharmacist:** Добрий день! Чим можу допомогти?\n**Customer:** Мені потрібні ліки **від головного болю**.\n**Pharmacist:** У нас є таблетки. **Для** дітей чи **для** дорослих?\n**Customer:** **Для** дорослих. І щось **від** кашлю.\n**Pharmacist:** Сироп **без** цукру підійде?\n**Customer:** Так, дякую. Скільки коштує?\n**Pharmacist:** Сто гривень **за** все.\n\n## Dialogue: Planning a Trip\n\n**Ira:** Ти вже думала **про** відпустку?\n**Oleh:** Так! Я хочу поїхати **з тобою** в гори.\n**Ira:** О, я не можу **без** інтернету!\n**Oleh:** **Через** це ми не поїдемо?!\n**Ira:** Жартую! **Після** роботи в п'ятницю виїжджаємо?\n**Oleh:** Домовились! Я візьму все, **крім** палатки — вона у тебе.\n**Ira:** Добре. Чай **замість** кави?\n**Oleh:** Чай **з лимоном**, будь ласка!\n\n## Dialogue: About a Book\n\n**Anna:** Ти читала книгу **про** Голодомор?\n**Maria:** Так. Це важливо **для** кожного українця.\n**Anna:** Правда. Я дізналася багато **про** ті часи.\n**Maria:** **Через** цю книгу я краще розумію історію.\n**Anna:** Рекомендую її всім, **крім** дітей — занадто важко.\n**Maria:** Згодна. **Після** неї хочеться щось легше почитати.\n\n> [!cultural] Cultural Insight: Politeness\n> When offering something in Ukrainian, use **для**:\n> *Це для вас.* (This is for you - formal.)\n> *Це для тебе.* (This is for you - informal.)\n> Always use the correct register based on your relationship!\n\n---"
+      },
+      {
+        "id": "section-10",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "Today you learned 10 logical prepositions:\n\n| Preposition | Meaning | Case |\n| :--- | :--- | :--- |\n| **для** | for (benefit) | Genitive |\n| **без** | without | Genitive |\n| **від** | from (source) | Genitive |\n| **після** | after | Genitive |\n| **крім** | except | Genitive |\n| **замість** | instead of | Genitive |\n| **через** | because of / through | Accusative |\n| **про** | about | Accusative |\n| **о/об** | at (time) | Locative |\n| **з** | with | Instrumental |\n\nKey distinctions:\n- **Для** (benefit) vs **На** (payment).\n- **Через + Noun** vs **Тому що + Clause**.\n- **Від** (from person) vs **З** (from place).\n\n---"
+      },
+      {
+        "id": "section-11",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Preposition Meaning\n\n> Match the preposition to its meaning.\n\n- для :: for (benefit)\n- без :: without\n- через :: because of\n- про :: about\n- від :: from (source)\n- з :: with\n- після :: after\n- крім :: except\n\n## group-sort: Case Requirements\n\n> Group prepositions by their required case.\n\n### Genitive (Кого? Чого?)\n- для\n- без\n- від\n- після\n- крім\n- замість\n\n### Accusative (Кого? Що?)\n- через\n- про\n\n### Instrumental (Ким? Чим?)\n- з\n\n### Locative (На чому?)\n- о/об\n\n## fill-in: Complete the Sentence\n\n> Add the correct preposition.\n\n1. Кава [___] цукру, будь ласка. [Hint: without]\n   > [!answer] без\n   > [!options] без | для | з\n\n2. Це подарунок [___] тебе. [Hint: for you]\n   > [!answer] для\n   > [!options] для | від | про\n\n3. Ми говорили [___] тебе. [Hint: about you]\n   > [!answer] про\n   > [!options] про | через | для\n\n4. [___] дощ я залишився вдома. [Hint: because of]\n   > [!answer] Через\n   > [!options] Через | Від | Про\n\n5. Лист [___] мами. [Hint: from mom]\n   > [!answer] від\n   > [!options] від | для | про\n\n6. Кава [___] молоком. [Hint: with milk]\n   > [!answer] з\n   > [!options] з | без | для\n\n7. Зустрінемось [___] третій. [Hint: at 3 o'clock]\n   > [!answer] о\n   > [!options] о | після | для\n\n8. Всі прийшли, [___] Олега. [Hint: except]\n   > [!answer] крім\n   > [!options] крім | для | про\n\n## quiz: Logical Prepositions\n\n1. \"Для\" requires which case?\n   - [x] Genitive\n   - [ ] Accusative\n   - [ ] Instrumental\n\n2. \"Через дощ\" means:\n   - [x] Because of rain\n   - [ ] Through the rain\n   - [ ] About rain\n\n3. \"Від мами\" means:\n   - [x] From mom\n   - [ ] For mom\n   - [ ] With mom\n\n4. Which preposition means \"about\"?\n   - [x] про\n   - [ ] для\n   - [ ] від\n\n5. \"Без цукру\" means:\n   - [x] Without sugar\n   - [ ] With sugar\n   - [ ] For sugar\n\n6. \"О третій\" refers to:\n   - [x] Time (at 3 o'clock)\n   - [ ] Place (at the third)\n   - [ ] Person (about the third)\n\n7. \"Замість чаю\" means:\n   - [x] Instead of tea\n   - [ ] About tea\n   - [ ] Without tea\n\n8. Which preposition takes Instrumental?\n   - [x] з\n   - [ ] для\n   - [ ] про\n\n## cloze: Story Gaps\n\n> Complete the story.\n\nМарія отримала лист [___:1] мами.\nУ листі було написано [___:2] сім'ю.\nВона надіслала посилку [___:3] Марії.\nУ посилці було варення [___:4] вишень.\nМарія прочитала лист [___:5] восьмій ранку.\n[___:6] сніданку вона зателефонувала.\n[___:7] роботу вона не їздить часто додому.\nВсі її люблять, [___:8] одного колеги.\n\n1. від\n> [!answer] від\n> [!options] від | для | про\n\n2. про\n> [!answer] про\n> [!options] про | для | від\n\n3. для\n> [!answer] для\n> [!options] для | від | з\n\n4. з\n> [!answer] з\n> [!options] з | без | для\n\n5. о\n> [!answer] о\n> [!options] о | після | для\n\n6. Після\n> [!answer] Після\n> [!options] Після | Через | Для\n\n7. Через\n> [!answer] Через\n> [!options] Через | Для | Про\n\n8. крім\n> [!answer] крім\n> [!options] крім | для | з\n\n## unjumble: Logical Sentences\n\n1. цукру / Кава / без\n   > [!answer] Кава без цукру.\n2. тебе / Це / для\n   > [!answer] Це для тебе.\n3. мами / Лист / від\n   > [!answer] Лист від мами.\n4. дощ / залишився / Через / я / вдома\n   > [!answer] Через дощ я залишився вдома.\n5. про / говорили / Ми / тебе\n   > [!answer] Ми говорили про тебе.\n6. молоком / Кава / з\n   > [!answer] Кава з молоком.\n7. третій / о / Зустрінемось\n   > [!answer] Зустрінемось о третій.\n8. кави / Чай / замість\n   > [!answer] Чай замість кави.\n\n## error-correction: Wrong Preposition\n\n1. Подарунок **від** мами. (Intended: for mom)\n   > [!error] від\n   > [!answer] для\n   > [!explanation] \"For mom\" = benefit → для. \"From mom\" = від.\n   > [!options] для | від\n\n2. Кава **з** цукру. (Intended: without sugar)\n   > [!error] з\n   > [!answer] без\n   > [!explanation] \"Without\" = без. \"With\" = з.\n   > [!options] без | з\n\n3. Ми говорили **для** тебе. (Intended: about you)\n   > [!error] для\n   > [!answer] про\n   > [!explanation] \"About\" = про. \"For\" = для.\n   > [!options] про | для\n\n4. **Від** хвороби він не прийшов. (Intended: because of)\n   > [!error] Від\n   > [!answer] Через\n   > [!explanation] \"Because of\" = через. \"From\" (source) = від.\n   > [!options] Через | Від\n\n5. Я не можу **для** тебе. (Intended: without you)\n   > [!error] для\n   > [!answer] без\n   > [!explanation] \"Without\" = без. \"For\" = для.\n   > [!options] без | для\n\n6. **Після** кого? (Intended: for whom)\n   > [!error] Після\n   > [!answer] Для\n   > [!explanation] \"For whom?\" = Для кого? \"After\" = Після.\n   > [!options] Для | Після\n\n## match-up: Contrast Pairs\n\n> Match the correct usage.\n\n- Гроші для тебе :: Gift (benefit)\n- Гроші на каву :: Payment\n- Через дощ :: Cause (noun)\n- Тому що йде дощ :: Cause (clause)\n- Від мами :: From person\n- З Києва :: From place\n- Каву з молоком :: With (added)\n- Каву без цукру :: Without (removed)\n\n## cloze: Pharmacy Dialogue\n\n> Complete the dialogue.\n\nМені потрібні ліки [___:1] головного болю.\n[___:2] дітей чи [___:3] дорослих?\n[___:4] дорослих. І щось [___:5] кашлю.\nСироп [___:6] цукру підійде?\n\n1. від\n> [!answer] від\n> [!options] від | для | про\n\n2. Для\n> [!answer] Для\n> [!options] Для | Від | Без\n\n3. для\n> [!answer] для\n> [!options] для | від | з\n\n4. Для\n> [!answer] Для\n> [!options] Для | Від | Без\n\n5. від\n> [!answer] від\n> [!options] від | для | про\n\n6. без\n> [!answer] без\n> [!options] без | з | для\n\n## match-up: Case Endings\n\n> Match the preposition phrase to correct ending.\n\n- для мам__ :: для мами\n- без цукр__ :: без цукру\n- про книг__ :: про книгу\n- через дощ__ :: через дощ\n- з молок__ :: з молоком\n- від друг__ :: від друга\n- після робот__ :: після роботи\n- о трет__ :: о третій\n\n---"
+      },
+      {
+        "id": "section-12",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Case |\n|------|-----|---------|-----|------|\n| для | /dlʲɑ/ | for | prep | Gen |\n| без | /bɛz/ | without | prep | Gen |\n| від | /ʋid/ | from | prep | Gen |\n| після | /pˈislʲɑ/ | after | prep | Gen |\n| крім | /krim/ | except | prep | Gen |\n| замість | /zˈɑmistʲ/ | instead of | prep | Gen |\n| через | /t͡ʃˈɛrɛz/ | because of / through | prep | Acc |\n| про | /prɔ/ | about | prep | Acc |\n| о | /ɔ/ | at (time) | prep | Loc |\n| об | /ɔb/ | at (before vowel) | prep | Loc |\n| з | /z/ | with | prep | Instr |\n| із | /iz/ | with (variant) | prep | Instr |\n| зі | /zi/ | with (before cluster) | prep | Instr |\n| подарунок | /pɔdˈɑrunɔk/ | gift | noun | - |\n| лист | /lɪst/ | letter | noun | - |\n| ліки | /lˈikɪ/ | medicine | noun | - |\n| здоров'я | /zdɔrˈɔʋjɑ/ | health | noun | - |\n| хвороба | /xʋɔrˈɔbɑ/ | illness | noun | - |\n| цукор | /t͡sˈukɔr/ | sugar | noun | - |\n| молоко | /mɔlɔkˈɔ/ | milk | noun | - |\n| відпустка | /ʋidpˈustkɑ/ | vacation | noun | - |\n| робота | /rɔbˈɔtɑ/ | work | noun | - |\n| обід | /ɔbˈid/ | lunch | noun | - |\n| сніданок | /snˈidɑnɔk/ | breakfast | noun | - |\n| вечеря | /ʋɛt͡ʃˈɛrʲɑ/ | dinner | noun | - |\n| посилка | /pɔsˈɪlkɑ/ | package | noun | - |\n| причина | /prɪt͡ʃˈɪnɑ/ | reason | noun | - |\n| мета | /mˈɛtɑ/ | goal | noun | - |\n| користь | /kˈɔrɪstʲ/ | benefit | noun | - |\n| відсутність | /ʋidsˈutnʲistʲ/ | absence | noun | - |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-08\ntitle: Logical Prepositions\nsubtitle: \"Beyond Space: Relationships & Reasons\"\nversion: \"1.0\"\nphase: \"A2.1\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - prepositions\n  - grammar\n  - abstract\ngrammar:\n  - logical prepositions (для, без, через, про, від, з, о, після, крім)\n  - case requirements for each preposition\nobjectives:\n  - \"Learner can express abstract relationships (benefit, absence, cause)\"\n  - \"Learner can distinguish для vs на, через vs тому що\"\n  - \"Learner can use prepositions for time expressions\"\nvocabulary_count: 30\n---\n\n# Warm-up\n\nIn Module 07, you learned **where** things are.\nNow, let's learn **why** and **for whom**.\n\nSpatial prepositions answer: *Де? Куди?* (Where? Where to?)\nLogical prepositions answer: *Для кого? Чому? Про що?* (For whom? Why? About what?)\n\nToday we unlock:\n- **Для** (For - Benefit)\n- **Без** (Without - Absence)\n- **Через** (Because of / Through)\n- **Про** (About)\n- **Від** (From - Source)\n- **З** (With - Accompaniment)\n\n---\n\n# Part 1: Benefit & Absence\n\n## Understanding Logical Prepositions\n\nLogical prepositions express abstract relationships between words. Unlike spatial prepositions (in, on, under), these prepositions answer questions about purpose, cause, source, and topic. Learning them is essential for expressing \"why\" and \"for whom\" in Ukrainian.\n\nThe most important thing to remember is that each preposition requires a specific grammatical case. This module will teach you which case goes with each preposition.\n\n## Для + Genitive (For)\nUse **для** to show purpose or benefit.\n- *Для кого?* (For whom?)\n- *Для чого?* (For what purpose?)\n\n| Pattern | Example | Meaning |\n| :--- | :--- | :--- |\n| для + **Gen** | Подарунок для **мами**. | A gift for mom. |\n| для + **Gen** | Це важливо для **здоров'я**. | This is important for health. |\n| для + **Gen** | Вода для **квітів**. | Water for the flowers. |\n\n> [!tip] Для vs На: A Common Mistake\n> Both \"для\" and \"на\" can translate to English \"for\", but they have different meanings:\n> **Для** = benefit/purpose: *Гроші для тебе.* (Money for you - a gift.)\n> **На** = exchange/allocation: *Гроші на каву.* (Money for coffee - payment.)\n> \n> Quick test: \"For whom?\" → Для. \"For what item/purchase?\" → На.\n> This distinction does not exist in English, so pay extra attention!\n\n## Без + Genitive (Without)\nUse **без** to indicate absence. This is straightforward - it simply means \"without\" and always takes the Genitive case.\n- *Без кого?* (Without whom?)\n- *Без чого?* (Without what?)\n\n| Pattern | Example | Meaning |\n| :--- | :--- | :--- |\n| без + **Gen** | Кава без **цукру**. | Coffee without sugar. |\n| без + **Gen** | Я не можу без **тебе**. | I can't (live) without you. |\n| без + **Gen** | Мова без **акценту**. | Speech without an accent. |\n\n---\n\n# Part 2: Cause & Topic\n\n## Через + Accusative (Because of / Through)\nUse **через** to show cause or path.\n\n**Cause:**\n- *Через що?* (Because of what?)\n- Через **дощ** ми залишилися вдома. (Because of rain, we stayed home.)\n\n**Path:**\n- Ми йшли **через парк**. (We walked through the park.)\n\n| Pattern | Example | Meaning |\n| :--- | :--- | :--- |\n| через + **Acc** (cause) | Через **хворобу** він не прийшов. | He didn't come because of illness. |\n| через + **Acc** (path) | Вона подивилася через **вікно**. | She looked through the window. |\n\n> [!tip] Через vs Тому що\n> **Через + Noun** = Because of (thing/event): *Через дощ.*\n> **Тому що + Clause** = Because (full sentence): *Тому що йде дощ.*\n> \n> Both mean \"because,\" but **через** takes a noun, **тому що** takes a clause.\n\n## Про + Accusative (About)\nUse **про** to indicate topic.\n- *Про що?* (About what?)\n- *Про кого?* (About whom?)\n\n| Pattern | Example | Meaning |\n| :--- | :--- | :--- |\n| про + **Acc** | Фільм про **кохання**. | A film about love. |\n| про + **Acc** | Ми говорили про **тебе**. | We talked about you. |\n| про + **Acc** | Книга про **історію** України. | A book about the history of Ukraine. |\n\n## Learning Note: Why Cases Matter\n\nYou might wonder why Ukrainian prepositions require specific cases. The case system is a powerful feature of Slavic languages that makes sentences more flexible and precise.\n\nIn English, word order is rigid: \"I gave the book to mom.\" In Ukrainian, you can say the same thing in multiple orders, and the case endings tell you who did what to whom.\n\nWhen you see a preposition like **для** (for), think: \"This preposition always wants the Genitive case.\" The genitive ending tells you the relationship even if the words are in a different order.\n\nThink of it like color-coding in a spreadsheet - each case has its \"color\" that marks its role in the sentence. Once you internalize these patterns, you'll read Ukrainian much more naturally.\n\n**Quick Case Review:**\n- **Genitive** answers \"of whom? of what?\" - used for possession, absence, and many prepositions\n- **Accusative** answers \"whom? what?\" - used for direct objects and some prepositions\n- **Instrumental** answers \"by whom? with what?\" - used for tools, accompaniment\n- **Locative** answers \"where? on what?\" - used for location\n\n---\n\n# Part 3: Source & Accompaniment\n\n## Від + Genitive (From - Source)\nUse **від** to show origin or sender.\n- *Від кого?* (From whom?)\n\n| Pattern | Example | Meaning |\n| :--- | :--- | :--- |\n| від + **Gen** | Лист від **мами**. | A letter from mom. |\n| від + **Gen** | Подарунок від **друга**. | A gift from a friend. |\n| від + **Gen** | Ліки від **головного болю**. | Medicine for (lit. from) headache. |\n\n> [!tip] Від vs З\n> **Від** = from a person/source: *Лист від Марії.* (Letter from Maria.)\n> **З** = from a place: *Він з Києва.* (He's from Kyiv.)\n\n## З + Instrumental (With)\nUse **з** to show accompaniment.\n- *З ким?* (With whom?)\n- *З чим?* (With what?)\n\n| Pattern | Example | Meaning |\n| :--- | :--- | :--- |\n| з + **Instr** | Кава з **молоком**. | Coffee with milk. |\n| з + **Instr** | Я йду з **другом**. | I'm going with a friend. |\n| з + **Instr** | Хліб з **маслом**. | Bread with butter. |\n\n---\n\n# Part 4: Time & Exception\n\n## О/Об + Locative (At - Time)\nUse **о** (or **об** before vowels) for clock time.\n\n| Pattern | Example | Meaning |\n| :--- | :--- | :--- |\n| о + **Loc** | О **третій** годині. | At three o'clock. |\n| о + **Loc** | О **п'ятій** ранку. | At five in the morning. |\n| об + **Loc** | Об **одинадцятій**. | At eleven. |\n\n## Після + Genitive (After)\nUse **після** to indicate sequence in time.\n\n| Pattern | Example | Meaning |\n| :--- | :--- | :--- |\n| після + **Gen** | Після **уроку**. | After the lesson. |\n| після + **Gen** | Після **роботи**. | After work. |\n| після + **Gen** | Після **обіду**. | After lunch. |\n\n## Крім + Genitive (Except / Besides)\nUse **крім** to indicate exception.\n\n| Pattern | Example | Meaning |\n| :--- | :--- | :--- |\n| крім + **Gen** | Всі прийшли, крім **Олега**. | Everyone came except Oleh. |\n| крім + **Gen** | Я все зробив, крім **цього**. | I did everything except this. |\n\n## Замість + Genitive (Instead of)\nUse **замість** for substitution.\n\n| Pattern | Example | Meaning |\n| :--- | :--- | :--- |\n| замість + **Gen** | Чай замість **кави**. | Tea instead of coffee. |\n| замість + **Gen** | Він прийшов замість **мене**. | He came instead of me. |\n\n---\n\n# Deep Dive: Case Summary\n\nAll logical prepositions require a specific case:\n\n| Preposition | Case | Question | Example |\n| :--- | :--- | :--- | :--- |\n| **для** | Genitive | Для кого? | для мами |\n| **без** | Genitive | Без чого? | без цукру |\n| **від** | Genitive | Від кого? | від друга |\n| **після** | Genitive | Після чого? | після роботи |\n| **крім** | Genitive | Крім кого? | крім мене |\n| **замість** | Genitive | Замість чого? | замість чаю |\n| **через** | Accusative | Через що? | через дощ |\n| **про** | Accusative | Про що? | про книгу |\n| **о/об** | Locative | О котрій? | о третій |\n| **з** | Instrumental | З ким? | з другом |\n\n> [!tip] Memory Trick\n> Most abstract prepositions take **Genitive** (від, для, без, після, крім, замість).\n> **Про** and **Через** take **Accusative** (think: direct object).\n> **З** takes **Instrumental** (with = tool/companion).\n\n---\n\n# Story Time: The Letter\n\nМарія отримала **лист від мами**.\nУ листі було написано **про сім'ю**.\nМама писала **про** здоров'я батька, **про** погоду в селі.\nВона надіслала посилку **для Марії**.\nУ посилці було варення **з вишень** і мед **без цукру**.\n\nМарія прочитала лист **о восьмій ранку**.\n**Після сніданку** вона вирішила зателефонувати мамі.\nВона сказала: \"Дякую **за** посилку! Я не можу **без вас**!\"\n\n**Через роботу** Марія не може часто їздити додому.\nАле вона думає **про** родину щодня.\nВсі в офісі люблять її, **крім** одного колеги.\nАле це неважливо.\n\n**Замість** сумувати, Марія планує відпустку.\nВона поїде додому **з подругою**.\nЦе буде чудова подорож!\n\n---\n\n# Story Time Part 2: The Café\n\nОля зайшла в кафе **після роботи**.\nВона замовила каву **з молоком** і торт **без глютену**.\nОфіціант запитав: \"**Для** вас щось ще?\"\n\"Ні, дякую. Це все,\" — відповіла Оля.\n\nВона сіла біля вікна і дивилася **через скло** на вулицю.\n**Через** погану погоду мало людей гуляло надворі.\nОля думала **про** свій день.\n\nРаптом вона побачила подругу **з чоловіком**.\nВони зайшли в кафе.\n\"Оля! Ми тут **замість** кіно — там занадто дорого!\"\n\"Сідайте **зі мною**!\" — запросила Оля.\n\nВони сиділи і розмовляли **про** життя.\nВсі були щасливі, **крім** офіціанта — він втомився.\nАле **після восьмої** кафе закрилося, і всі пішли додому.\n\n> [!cultural] Cultural Insight: Gift Giving\n> In Ukrainian culture, gifts are always **для** someone.\n> When you give flowers, chocolates, or anything, you say:\n> *Це для тебе.* (This is for you.)\n> Never give an even number of flowers — that's for funerals!\n\n---\n\n# Language in Action\n\n## Dialogue: At the Pharmacy\n\n**Pharmacist:** Добрий день! Чим можу допомогти?\n**Customer:** Мені потрібні ліки **від головного болю**.\n**Pharmacist:** У нас є таблетки. **Для** дітей чи **для** дорослих?\n**Customer:** **Для** дорослих. І щось **від** кашлю.\n**Pharmacist:** Сироп **без** цукру підійде?\n**Customer:** Так, дякую. Скільки коштує?\n**Pharmacist:** Сто гривень **за** все.\n\n## Dialogue: Planning a Trip\n\n**Ira:** Ти вже думала **про** відпустку?\n**Oleh:** Так! Я хочу поїхати **з тобою** в гори.\n**Ira:** О, я не можу **без** інтернету!\n**Oleh:** **Через** це ми не поїдемо?!\n**Ira:** Жартую! **Після** роботи в п'ятницю виїжджаємо?\n**Oleh:** Домовились! Я візьму все, **крім** палатки — вона у тебе.\n**Ira:** Добре. Чай **замість** кави?\n**Oleh:** Чай **з лимоном**, будь ласка!\n\n## Dialogue: About a Book\n\n**Anna:** Ти читала книгу **про** Голодомор?\n**Maria:** Так. Це важливо **для** кожного українця.\n**Anna:** Правда. Я дізналася багато **про** ті часи.\n**Maria:** **Через** цю книгу я краще розумію історію.\n**Anna:** Рекомендую її всім, **крім** дітей — занадто важко.\n**Maria:** Згодна. **Після** неї хочеться щось легше почитати.\n\n> [!cultural] Cultural Insight: Politeness\n> When offering something in Ukrainian, use **для**:\n> *Це для вас.* (This is for you - formal.)\n> *Це для тебе.* (This is for you - informal.)\n> Always use the correct register based on your relationship!\n\n---\n\n# Summary\n\nToday you learned 10 logical prepositions:\n\n| Preposition | Meaning | Case |\n| :--- | :--- | :--- |\n| **для** | for (benefit) | Genitive |\n| **без** | without | Genitive |\n| **від** | from (source) | Genitive |\n| **після** | after | Genitive |\n| **крім** | except | Genitive |\n| **замість** | instead of | Genitive |\n| **через** | because of / through | Accusative |\n| **про** | about | Accusative |\n| **о/об** | at (time) | Locative |\n| **з** | with | Instrumental |\n\nKey distinctions:\n- **Для** (benefit) vs **На** (payment).\n- **Через + Noun** vs **Тому що + Clause**.\n- **Від** (from person) vs **З** (from place).\n\n---\n\n# Activities\n\n## match-up: Preposition Meaning\n\n> Match the preposition to its meaning.\n\n- для :: for (benefit)\n- без :: without\n- через :: because of\n- про :: about\n- від :: from (source)\n- з :: with\n- після :: after\n- крім :: except\n\n## group-sort: Case Requirements\n\n> Group prepositions by their required case.\n\n### Genitive (Кого? Чого?)\n- для\n- без\n- від\n- після\n- крім\n- замість\n\n### Accusative (Кого? Що?)\n- через\n- про\n\n### Instrumental (Ким? Чим?)\n- з\n\n### Locative (На чому?)\n- о/об\n\n## fill-in: Complete the Sentence\n\n> Add the correct preposition.\n\n1. Кава [___] цукру, будь ласка. [Hint: without]\n   > [!answer] без\n   > [!options] без | для | з\n\n2. Це подарунок [___] тебе. [Hint: for you]\n   > [!answer] для\n   > [!options] для | від | про\n\n3. Ми говорили [___] тебе. [Hint: about you]\n   > [!answer] про\n   > [!options] про | через | для\n\n4. [___] дощ я залишився вдома. [Hint: because of]\n   > [!answer] Через\n   > [!options] Через | Від | Про\n\n5. Лист [___] мами. [Hint: from mom]\n   > [!answer] від\n   > [!options] від | для | про\n\n6. Кава [___] молоком. [Hint: with milk]\n   > [!answer] з\n   > [!options] з | без | для\n\n7. Зустрінемось [___] третій. [Hint: at 3 o'clock]\n   > [!answer] о\n   > [!options] о | після | для\n\n8. Всі прийшли, [___] Олега. [Hint: except]\n   > [!answer] крім\n   > [!options] крім | для | про\n\n## quiz: Logical Prepositions\n\n1. \"Для\" requires which case?\n   - [x] Genitive\n   - [ ] Accusative\n   - [ ] Instrumental\n\n2. \"Через дощ\" means:\n   - [x] Because of rain\n   - [ ] Through the rain\n   - [ ] About rain\n\n3. \"Від мами\" means:\n   - [x] From mom\n   - [ ] For mom\n   - [ ] With mom\n\n4. Which preposition means \"about\"?\n   - [x] про\n   - [ ] для\n   - [ ] від\n\n5. \"Без цукру\" means:\n   - [x] Without sugar\n   - [ ] With sugar\n   - [ ] For sugar\n\n6. \"О третій\" refers to:\n   - [x] Time (at 3 o'clock)\n   - [ ] Place (at the third)\n   - [ ] Person (about the third)\n\n7. \"Замість чаю\" means:\n   - [x] Instead of tea\n   - [ ] About tea\n   - [ ] Without tea\n\n8. Which preposition takes Instrumental?\n   - [x] з\n   - [ ] для\n   - [ ] про\n\n## cloze: Story Gaps\n\n> Complete the story.\n\nМарія отримала лист [___:1] мами.\nУ листі було написано [___:2] сім'ю.\nВона надіслала посилку [___:3] Марії.\nУ посилці було варення [___:4] вишень.\nМарія прочитала лист [___:5] восьмій ранку.\n[___:6] сніданку вона зателефонувала.\n[___:7] роботу вона не їздить часто додому.\nВсі її люблять, [___:8] одного колеги.\n\n1. від\n> [!answer] від\n> [!options] від | для | про\n\n2. про\n> [!answer] про\n> [!options] про | для | від\n\n3. для\n> [!answer] для\n> [!options] для | від | з\n\n4. з\n> [!answer] з\n> [!options] з | без | для\n\n5. о\n> [!answer] о\n> [!options] о | після | для\n\n6. Після\n> [!answer] Після\n> [!options] Після | Через | Для\n\n7. Через\n> [!answer] Через\n> [!options] Через | Для | Про\n\n8. крім\n> [!answer] крім\n> [!options] крім | для | з\n\n## unjumble: Logical Sentences\n\n1. цукру / Кава / без\n   > [!answer] Кава без цукру.\n2. тебе / Це / для\n   > [!answer] Це для тебе.\n3. мами / Лист / від\n   > [!answer] Лист від мами.\n4. дощ / залишився / Через / я / вдома\n   > [!answer] Через дощ я залишився вдома.\n5. про / говорили / Ми / тебе\n   > [!answer] Ми говорили про тебе.\n6. молоком / Кава / з\n   > [!answer] Кава з молоком.\n7. третій / о / Зустрінемось\n   > [!answer] Зустрінемось о третій.\n8. кави / Чай / замість\n   > [!answer] Чай замість кави.\n\n## error-correction: Wrong Preposition\n\n1. Подарунок **від** мами. (Intended: for mom)\n   > [!error] від\n   > [!answer] для\n   > [!explanation] \"For mom\" = benefit → для. \"From mom\" = від.\n   > [!options] для | від\n\n2. Кава **з** цукру. (Intended: without sugar)\n   > [!error] з\n   > [!answer] без\n   > [!explanation] \"Without\" = без. \"With\" = з.\n   > [!options] без | з\n\n3. Ми говорили **для** тебе. (Intended: about you)\n   > [!error] для\n   > [!answer] про\n   > [!explanation] \"About\" = про. \"For\" = для.\n   > [!options] про | для\n\n4. **Від** хвороби він не прийшов. (Intended: because of)\n   > [!error] Від\n   > [!answer] Через\n   > [!explanation] \"Because of\" = через. \"From\" (source) = від.\n   > [!options] Через | Від\n\n5. Я не можу **для** тебе. (Intended: without you)\n   > [!error] для\n   > [!answer] без\n   > [!explanation] \"Without\" = без. \"For\" = для.\n   > [!options] без | для\n\n6. **Після** кого? (Intended: for whom)\n   > [!error] Після\n   > [!answer] Для\n   > [!explanation] \"For whom?\" = Для кого? \"After\" = Після.\n   > [!options] Для | Після\n\n## match-up: Contrast Pairs\n\n> Match the correct usage.\n\n- Гроші для тебе :: Gift (benefit)\n- Гроші на каву :: Payment\n- Через дощ :: Cause (noun)\n- Тому що йде дощ :: Cause (clause)\n- Від мами :: From person\n- З Києва :: From place\n- Каву з молоком :: With (added)\n- Каву без цукру :: Without (removed)\n\n## cloze: Pharmacy Dialogue\n\n> Complete the dialogue.\n\nМені потрібні ліки [___:1] головного болю.\n[___:2] дітей чи [___:3] дорослих?\n[___:4] дорослих. І щось [___:5] кашлю.\nСироп [___:6] цукру підійде?\n\n1. від\n> [!answer] від\n> [!options] від | для | про\n\n2. Для\n> [!answer] Для\n> [!options] Для | Від | Без\n\n3. для\n> [!answer] для\n> [!options] для | від | з\n\n4. Для\n> [!answer] Для\n> [!options] Для | Від | Без\n\n5. від\n> [!answer] від\n> [!options] від | для | про\n\n6. без\n> [!answer] без\n> [!options] без | з | для\n\n## match-up: Case Endings\n\n> Match the preposition phrase to correct ending.\n\n- для мам__ :: для мами\n- без цукр__ :: без цукру\n- про книг__ :: про книгу\n- через дощ__ :: через дощ\n- з молок__ :: з молоком\n- від друг__ :: від друга\n- після робот__ :: після роботи\n- о трет__ :: о третій\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Case |\n|------|-----|---------|-----|------|\n| для | /dlʲɑ/ | for | prep | Gen |\n| без | /bɛz/ | without | prep | Gen |\n| від | /ʋid/ | from | prep | Gen |\n| після | /pˈislʲɑ/ | after | prep | Gen |\n| крім | /krim/ | except | prep | Gen |\n| замість | /zˈɑmistʲ/ | instead of | prep | Gen |\n| через | /t͡ʃˈɛrɛz/ | because of / through | prep | Acc |\n| про | /prɔ/ | about | prep | Acc |\n| о | /ɔ/ | at (time) | prep | Loc |\n| об | /ɔb/ | at (before vowel) | prep | Loc |\n| з | /z/ | with | prep | Instr |\n| із | /iz/ | with (variant) | prep | Instr |\n| зі | /zi/ | with (before cluster) | prep | Instr |\n| подарунок | /pɔdˈɑrunɔk/ | gift | noun | - |\n| лист | /lɪst/ | letter | noun | - |\n| ліки | /lˈikɪ/ | medicine | noun | - |\n| здоров'я | /zdɔrˈɔʋjɑ/ | health | noun | - |\n| хвороба | /xʋɔrˈɔbɑ/ | illness | noun | - |\n| цукор | /t͡sˈukɔr/ | sugar | noun | - |\n| молоко | /mɔlɔkˈɔ/ | milk | noun | - |\n| відпустка | /ʋidpˈustkɑ/ | vacation | noun | - |\n| робота | /rɔbˈɔtɑ/ | work | noun | - |\n| обід | /ɔbˈid/ | lunch | noun | - |\n| сніданок | /snˈidɑnɔk/ | breakfast | noun | - |\n| вечеря | /ʋɛt͡ʃˈɛrʲɑ/ | dinner | noun | - |\n| посилка | /pɔsˈɪlkɑ/ | package | noun | - |\n| причина | /prɪt͡ʃˈɪnɑ/ | reason | noun | - |\n| мета | /mˈɛtɑ/ | goal | noun | - |\n| користь | /kˈɔrɪstʲ/ | benefit | noun | - |\n| відсутність | /ʋidsˈutnʲistʲ/ | absence | noun | - |\n",
+    "createdAt": "2025-12-15T20:02:02.960292Z",
+    "modifiedAt": "2025-12-15T20:02:02.960292Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-08",
+    "level": "A2",
+    "phase": "A2.1",
+    "wordCount": 30,
+    "newWordCount": 30,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "для",
+        "ipa": "/dlʲɑ/",
+        "en": "for",
+        "pos": "prep",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-2",
+        "uk": "без",
+        "ipa": "/bɛz/",
+        "en": "without",
+        "pos": "prep",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-3",
+        "uk": "від",
+        "ipa": "/ʋid/",
+        "en": "from",
+        "pos": "prep",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-4",
+        "uk": "після",
+        "ipa": "/pˈislʲɑ/",
+        "en": "after",
+        "pos": "prep",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-5",
+        "uk": "крім",
+        "ipa": "/krim/",
+        "en": "except",
+        "pos": "prep",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-6",
+        "uk": "замість",
+        "ipa": "/zˈɑmistʲ/",
+        "en": "instead of",
+        "pos": "prep",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-7",
+        "uk": "через",
+        "ipa": "/t͡ʃˈɛrɛz/",
+        "en": "because of / through",
+        "pos": "prep",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-8",
+        "uk": "про",
+        "ipa": "/prɔ/",
+        "en": "about",
+        "pos": "prep",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-9",
+        "uk": "о",
+        "ipa": "/ɔ/",
+        "en": "at (time)",
+        "pos": "prep",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-10",
+        "uk": "об",
+        "ipa": "/ɔb/",
+        "en": "at (before vowel)",
+        "pos": "prep",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-11",
+        "uk": "з",
+        "ipa": "/z/",
+        "en": "with",
+        "pos": "prep",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-12",
+        "uk": "із",
+        "ipa": "/iz/",
+        "en": "with (variant)",
+        "pos": "prep",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-13",
+        "uk": "зі",
+        "ipa": "/zi/",
+        "en": "with (before cluster)",
+        "pos": "prep",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-14",
+        "uk": "подарунок",
+        "ipa": "/pɔdˈɑrunɔk/",
+        "en": "gift",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-15",
+        "uk": "лист",
+        "ipa": "/lɪst/",
+        "en": "letter",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-16",
+        "uk": "ліки",
+        "ipa": "/lˈikɪ/",
+        "en": "medicine",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-17",
+        "uk": "здоров'я",
+        "ipa": "/zdɔrˈɔʋjɑ/",
+        "en": "health",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-18",
+        "uk": "хвороба",
+        "ipa": "/xʋɔrˈɔbɑ/",
+        "en": "illness",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-19",
+        "uk": "цукор",
+        "ipa": "/t͡sˈukɔr/",
+        "en": "sugar",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-20",
+        "uk": "молоко",
+        "ipa": "/mɔlɔkˈɔ/",
+        "en": "milk",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-21",
+        "uk": "відпустка",
+        "ipa": "/ʋidpˈustkɑ/",
+        "en": "vacation",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-22",
+        "uk": "робота",
+        "ipa": "/rɔbˈɔtɑ/",
+        "en": "work",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-23",
+        "uk": "обід",
+        "ipa": "/ɔbˈid/",
+        "en": "lunch",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-24",
+        "uk": "сніданок",
+        "ipa": "/snˈidɑnɔk/",
+        "en": "breakfast",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-25",
+        "uk": "вечеря",
+        "ipa": "/ʋɛt͡ʃˈɛrʲɑ/",
+        "en": "dinner",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-26",
+        "uk": "посилка",
+        "ipa": "/pɔsˈɪlkɑ/",
+        "en": "package",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-27",
+        "uk": "причина",
+        "ipa": "/prɪt͡ʃˈɪnɑ/",
+        "en": "reason",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-28",
+        "uk": "мета",
+        "ipa": "/mˈɛtɑ/",
+        "en": "goal",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-29",
+        "uk": "користь",
+        "ipa": "/kˈɔrɪstʲ/",
+        "en": "benefit",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-30",
+        "uk": "відсутність",
+        "ipa": "/ʋidsˈutnʲistʲ/",
+        "en": "absence",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      }
+    ],
+    "reviewWords": []
+  }
+}

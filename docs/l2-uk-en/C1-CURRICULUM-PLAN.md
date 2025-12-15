@@ -1379,9 +1379,10 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 - Паралелізм: Repeated structures
 - Анафора: Repeated beginnings
 - Епіфора: Repeated endings
+- Період (Syntactic Period): Complex circular sentence structure
 
 **Vocabulary (25 words):**
-інверсія, порядок слів, паралелізм, анафора, епіфора, рефрен, повтор, риторична фігура, художній засіб, виразність, експресія, ритм, мелодика, інтонація, пауза, акцент, наголос, емфаза, градація, антитеза, оксиморон, хіазм, еліпсис, асиндетон, полісиндетон
+інверсія, порядок слів, паралелізм, анафора, епіфора, період, рефрен, повтор, риторична фігура, художній засіб, виразність, експресія, ритм, мелодика, інтонація, пауза, акцент, наголос, емфаза, градація, антитеза, оксиморон, хіазм, еліпсис, асиндетон, полісиндетон
 
 **Signature Activity Concepts:**
 1. Identify: Literary devices in poems
@@ -2927,6 +2928,18 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 - 7 functional styles mastery
 - Literary creativity
 - Professional specialization tracks
+
+---
+
+## Media Content Assignments
+
+See separate document: **[C1-MEDIA-ASSIGNMENT.md](./C1-MEDIA-ASSIGNMENT.md)**
+
+This document contains:
+- Phase-by-phase media requirements for all 115 modules
+- Video/Audio source tables with permission tracking
+- Self-created content needs
+- Quality standards for C1 immersion (95% Ukrainian)
 
 ---
 

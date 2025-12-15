@@ -1,0 +1,366 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-49",
+    "moduleId": "mod-uk-A2-49",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2",
+    "moduleNumber": 49,
+    "moduleType": "vocabulary",
+    "pedagogy": "Narrative",
+    "immersionLevel": 0.4,
+    "title": "Technology & Media",
+    "titleUk": null,
+    "subtitle": "Digital Life in Ukrainian",
+    "description": {
+      "Name common devices": "комп'ютер, смартфон, планшет"
+    },
+    "objectives": [
+      {
+        "Name common devices": "комп'ютер, смартфон, планшет"
+      },
+      {
+        "Discuss internet activities": "шукати, завантажувати"
+      },
+      {
+        "Talk about media": "новини, блог, соціальні мережі"
+      },
+      "Describe digital habits"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "accusative-inanimate",
+      "locative-places"
+    ],
+    "tags": [
+      "vocabulary",
+      "technology",
+      "internet",
+      "media"
+    ],
+    "totalDuration": 60,
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Technology & Media",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Warm-up\n\nЯкий ваш кращий гаджет? Ви часто сидите в інтернеті? Де ви читаєте новини?\n\nСьогодні технології всюди. Ми працюємо онлайн, спілкуємося в чатах і читаємо новини на смартфоні. Україна — це сучасна цифрова країна. Давайте вивчимо слова, щоб говорити про наше цифрове життя!\n\nTechnology connects us. In this module, you'll learn to talk about your devices, internet habits, and how you consume media in Ukrainian. From \"downloading\" files to \"liking\" posts, you will master the digital vocabulary.\n\n> [!important] **Myth Buster** \"Paper Bureaucracy\"\n> Forget the stereotype of endless paperwork! Ukraine is a world leader in digital governance. The app **Дія** (Action) allows citizens to carry digital passports, pay taxes, and access services on their smartphones. Ukraine was the first country to equate digital passports to physical ones!\n\n## Presentation\n\n### Devices (Гаджети)\n\nWe use different devices every day:\n\n| Пристрій | Приклад |\n|----------|---------|\n| **комп'ютер** | Мій комп'ютер старий, але швидкий. |\n| **ноутбук** | Я беру ноутбук в кафе. |\n| **смартфон** | Він не може жити без смартфона. |\n| **планшет** | Діти грають на планшеті. |\n| **екран** | Екран дуже яскравий. |\n| **клавіатура** | Це зручна клавіатура. |\n| **мишка** | Де моя мишка? |\n| **навушники** | Я слухаю музику через навушники. |\n\n**Комп'ютер** and **ноутбук** are masculine. **Смартфон** and **планшет** are also masculine. Notice **навушники** (headphones) is always plural.\n\n### The Internet (Інтернет)\n\nGoing online is essential:\n\n- **інтернет** — internet: *У нас є швидкий інтернет.*\n- **вебсайт** — website: *Це корисний вебсайт.*\n- **посилання** — link: *Надішли мені посилання.*\n- **пароль** — password: *Це надійний пароль.*\n- **логін** — login: *Я забув свій логін.*\n- **мережа** — network: *Соціальна мережа.*\n- **зв'язок** — connection: *Тут поганий зв'язок.*\n- **онлайн / офлайн** — online / offline: *Він зараз онлайн.*\n\n> [!cultural] **History Bite** The Cybernetic Pioneer\n> Did you know the first computer in continental Europe was built in Kyiv? In 1951, **MESM** was created by Serhiy Lebedev. Later, Victor Glushkov founded the Institute of Cybernetics in Kyiv, pioneering early concepts of the internet and digital economy (\"OGAS\"). Kyiv has deep cybernetic roots!\n\n### Media & Content\n\nWhat do we consume?\n\n- **новини** (pl) — news: *Я читаю новини вранці.*\n- **стаття** — article: *Цікава стаття про історію.*\n- **блог** — blog: *Вона пише блог про моду.*\n- **блогер** — blogger: *Відомий український блогер.*\n- **подкаст** — podcast: *Я слухаю подкаст в машині.*\n- **відео** — video: *Смішне відео.*\n- **коментар** — comment: *Залиште коментар.*\n- **лайк** — like: *Поставте лайк!*\n\n### Actions\n\nVerbs for the digital age:\n\n- **шукати** — to search: *Я шукаю інформацію.*\n- **завантажувати** — to download/upload: *Він завантажує фільм.*\n- **публікувати** — to publish/post: *Вона публікує фото.*\n- **надсилати** — to send: *Я надсилаю повідомлення.*\n- **коментувати** — to comment: *Ми коментуємо новини.*\n\n> [!cultural] **Cultural Insight** Telegram Nation\n> While Facebook and Instagram are popular, **Telegram** is critical in Ukraine. It's not just a messenger; it's the primary source of news, air raid alerts, and community organization. Everyone has \"TG\" channels they follow religiously.\n\n## Practice\n\n### Story Time: The Remote Worker\n\nАндрій — програміст. Він працює вдома. Його робоче місце дуже зручне. На столі стоїть потужний **комп'ютер** і два великі **екрани**.\n\nВранці Андрій вмикає **ноутбук**. Він перевіряє **пошту** і читає **новини**. Потім він заходить у робочий чат.\n— Привіт всім! Я **онлайн**, — пише він.\n\n### Digital Safety\n\nBeing online requires safety (**безпека**).\n\n- **пароль** (password) must be strong. \"123456\" is a bad password.\n- **приватність** (privacy) is important. Don't share your address.\n- **шахрай** (scammer) wants your money.\n\n> [!tip] **Tip** \"Like\" in Ukrainian\n> While **лайк** is common, the proper Ukrainian word is **вподобайка** (from *вподобати* - to like). You might see both!\n\n### Story Time: The Food Blogger\n\nОксана любить готувати. Вона вирішила створити **блог** про їжу. Вона купила нову камеру і мікрофон.\n\nВона готує борщ і знімає **відео**.\n— Всім привіт! Сьогодні ми варимо борщ! — каже вона у мікрофон.\n\nПотім вона монтує відео на ноутбуці. Це довгий процес. Треба вибрати музику і написати текст. Вона **публікує** відео на Ютуб.\n\nЗранку вона перевіряє **коментарі**.\n— Дякую за рецепт! Дуже смачно! — пишуть люди.\nОксана щаслива. Вона відповідає на коментарі і ставить **лайки**.\n\nАле є і погані коментарі.\n— Це не справжній борщ! — пише \"Експерт123\".\nОксана не сумує. Вона знає, що хейтери (**haters**) завжди будуть. Вона блокує його і йде готувати вареники.\n\n### Story Time: Lost Connection\n\nІван поїхав у Карпати. Він хотів відпочити від технологій. Він взяв тільки старий телефон (\"цегла\").\n\nПерший день був чудовий. Гори, ліс, повітря. Але ввечері він захотів подивитися погоду.\n— Де мій смартфон? — подумав він. — А, я його не взяв.\n\nВін спробував знайти **зв'язок** на старому телефоні. Нічого.\n— Ну і добре, — сказав Іван.\n\nАле на третій день він захотів показати фото друзям.\n— Дивіться, яка гора! Ой, у мене немає камери.\n\nІван зрозумів, що технології — це не тільки інтернет, але й можливість ділитися моментами. Коли він повернувся додому, він обійняв свій комп'ютер.\n— Привіт, мій електронний друже. Я сумував.\n\nВін відкрив **ноутбук**, зайшов у **мережу** і написав великий пост про свою подорож. Всі його друзі поставили лайки.\n\n### Story Time: The Remote Worker (Expanded)\n\nАндрій — програміст. Він працює вдома. Його робоче місце дуже зручне. На столі стоїть потужний **комп'ютер** і два великі **екрани**.\n\nВранці Андрій вмикає **ноутбук**. Він перевіряє **пошту** і читає **новини**. Потім він заходить у робочий чат.\n— Привіт всім! Я **онлайн**, — пише він.\n\nАндрій пише код, **завантажує** файли на сервер і **публікує** оновлення. Якщо він має питання, він **шукає** відповідь в інтернеті. Його робота вимагає уваги. Один неправильний символ — і програма не працює!\n\nВ обід він дзвонить мамі по відеозв'язку (**video call**).\n— Привіт, мамо! Як справи?\n— Привіт, синку. Я не можу знайти свій серіал.\n— Зараз я тобі скину **посилання**, — каже Андрій.\n\nВвечері він вимикає комп'ютер. Його очі втомилися від екрана. Він бере **навушники** і йде бігати. Музика допомагає йому відпочити. Без технологій він не може працювати, але без спорту він не може жити.\n\n### Story Time: Grandma Online\n\nБабуся Галина купила **планшет**. Вона хоче бути сучасною. Її онук, Максим, допомагає їй.\n\n— Бабусю, це твій **логін**, а це **пароль**, — пояснює Максим. — Не забудь їх!\n— Добре, а як знайти рецепт борщу? — питає Галина.\n— Треба відкрити **вебсайт** або Гугл і написати \"борщ\".\n\nГалина швидко вчиться. Тепер вона має профіль у Фейсбуці. Вона **публікує** фото своїх пирогів. Сусіди пишуть їй гарні **коментарі**. Вона навіть слухає **подкаст** про садівництво!\nІнтернет — це цікаво, навіть якщо тобі 70 років."
+      },
+      {
+        "id": "section-2",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "You learned to:\n- Name tech: **комп'ютер**, **смартфон**, **планшет**, **ноутбук**\n- Talk about internet: **вебсайт**, **посилання**, **пароль**\n- Consume media: **новини**, **блог**, **стаття**\n- Use verbs: **шукати**, **завантажувати**, **публікувати**\n\nDigital literacy is key in modern Ukrainian society. Use these words to stay connected!"
+      },
+      {
+        "id": "section-3",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## quiz: Tech Quiz\n\n1. What do you use to type?\n   - [x] клавіатура\n   - [ ] мишка\n   - [ ] екран\n   > Keyboard = клавіатура.\n\n2. Where do you read articles?\n   - [x] на вебсайті\n   - [ ] в навушниках\n   - [ ] на мишці\n   > On a website = на вебсайті.\n\n3. What fits in your pocket?\n   - [x] смартфон\n   - [ ] комп'ютер\n   - [ ] телевізор\n   > Smartphone fits in a pocket.\n\n4. What do you need to log in?\n   - [x] пароль\n   - [ ] лайк\n   - [ ] коментар\n   > Password = пароль.\n\n5. Who writes a blog?\n   - [x] блогер\n   - [ ] лікар\n   - [ ] водій\n   > Blogger writes a blog.\n\n6. What is \"to download\"?\n   - [x] завантажувати\n   - [ ] шукати\n   - [ ] надсилати\n   > Завантажувати = download (or upload contextually).\n\n7. Where do you listen to music privately?\n   - [x] у навушниках\n   - [ ] на екрані\n   - [ ] в новинах\n   > In headphones = у навушниках.\n\n8. What is a \"link\"?\n   - [x] посилання\n   - [ ] повідомлення\n   - [ ] стаття\n   > Link = посилання.\n\n9. What do you do with a query in Google?\n   - [x] шукати\n   - [ ] публікувати\n   - [ ] купувати\n   > To search = шукати.\n\n10. Is Ukraine digitally advanced?\n    - [x] Yes, very (Дія app)\n    - [ ] No, paper only\n    - [ ] Only in Kyiv\n    > Ukraine is a leader in digital governance (Diia).\n\n11. What is \"network\"?\n    - [x] мережа\n    - [ ] павутина\n    - [ ] новина\n    > Network = мережа (social network = соціальна мережа).\n\n12. What action shows approval online?\n    - [x] лайк\n    - [ ] блок\n    - [ ] спам\n    > Like = лайк.\n\n## match-up: Digital Terms\n\n- комп'ютер :: computer\n- мишка :: mouse\n- екран :: screen\n- пароль :: password\n- новини :: news (pl)\n- стаття :: article\n- посилання :: link\n- мережа :: network\n- зв'язок :: connection (signal)\n- навушники :: headphones\n- повідомлення :: message\n- блогер :: blogger\n\n## fill-in: Tech Sentences\n\n1. Я забув свій ____.\n   > [!answer] пароль\n   > [!options] пароль | екран | стіл | кіт\n   > I forgot my password.\n\n2. Надішли мені ____ на це відео.\n   > [!answer] посилання\n   > [!options] посилання | мишку | клавіатуру | каву\n   > Send me a link.\n\n3. Він купив новий ____.\n   > [!answer] ноутбук\n   > [!options] ноутбук | ноутбука | ноутбуком | ноутбуки\n   > Accusative inanimate: ноутбук.\n\n4. Вона пише цікавий ____.\n   > [!answer] блог\n   > [!options] блог | блога | блогом | блогу\n   > Accusative inanimate: блог.\n\n5. Ми читаємо ____ в інтернеті.\n   > [!answer] новини\n   > [!options] новини | новина | новиною | новин\n   > Accusative plural: новини.\n\n6. У мене розбився ____ телефона.\n   > [!answer] екран\n   > [!options] екран | клавіатура | мишка | звук\n   > Screen = екран.\n\n7. Я ____ файл з інтернету.\n   > [!answer] завантажую\n   > [!options] завантажую | шукаю | пишу | сплю\n   > I am downloading (завантажую).\n\n8. Це мій улюблений ____.\n   > [!answer] сайт\n   > [!options] сайт | сайту | сайтом | сайти\n   > Website/site matches 'улюблений' (masc).\n\n9. Ти читав цю ____?\n   > [!answer] статтю\n   > [!options] статтю | стаття | статті | статтею\n   > Accusative feminine: статтю.\n\n10. Тут поганий ____.\n    > [!answer] зв'язок\n    > [!options] зв'язок | телефон | комп'ютер | стіл\n    > Bad connection (зв'язок).\n\n11. Він завжди ____.\n    > [!answer] онлайн\n    > [!options] онлайн | офлайн | вдома | спить\n    > Always online.\n\n12. Постав мені ____!\n    > [!answer] лайк\n    > [!options] лайк | коментар | бан | дізлайк\n    > Give me a like!\n\n## true-false: Tech Facts\n\n1. \"Мишка\" is an animal and a computer device.\n   - [x] true\n   > Yes, mouse (animal) and mouse (device) are both мишка.\n\n2. \"Новини\" is a singular noun.\n   - [x] false\n   > Новини is plural (news). One piece of news = новина.\n\n3. \"Завантажувати\" means to delete.\n   - [x] false\n   > It means to download/upload. Delete is видаляти.\n\n4. Ukrainians use Telegram for news frequently.\n   - [x] true\n   > Telegram is a major news source.\n\n5. \"Скріншот\" is used in Ukrainian.\n   - [x] true\n   > Yes, it's a loan word. Also знімок екрана.\n\n6. Diia (Дія) is a paper document.\n   - [x] false\n   > Diia is a digital app for government services.\n\n7. \"Навушники\" is always plural.\n   - [x] true\n   > Like \"headphones\" or \"pants\", it's plural only (pluralia tantum).\n\n8. \"Пароль\" usually needs to be secret.\n   - [x] true\n   > Passwords should be secret.\n\n9. First computer in continental Europe was built in Paris.\n   - [x] false\n   > It was built in Kyiv (MESM).\n\n10. \"Публікувати\" means to read.\n    - [x] false\n    > To publish/post. To read is читати.\n\n11. A \"блогер\" writes blogs or makes vlogs.\n    - [x] true\n    > Yes, blogger/vlogger.\n\n12. Wifi is \"вайфай\" in Ukrainian.\n    - [x] true\n    > Phonetic borrowing: вайфай.\n\n## group-sort: Hardware vs Software\n\n### Groups\n- Hardware (Gadjety)\n- Software/Internet\n- Actions\n\n### Items\n- комп'ютер: Hardware (Gadjety)\n- мишка: Hardware (Gadjety)\n- клавіатура: Hardware (Gadjety)\n- екран: Hardware (Gadjety)\n- вебсайт: Software/Internet\n- блог: Software/Internet\n- пароль: Software/Internet\n- посилання: Software/Internet\n- завантажувати: Actions\n- шукати: Actions\n- публікувати: Actions\n- коментувати: Actions\n\n## unjumble: Digital Sentences\n\n1. Я / купив / новий / планшет\n   > [!answer] Я купив новий планшет\n   > I bought a new tablet.\n\n2. Надішли / мені / посилання / в / Телеграм\n   > [!answer] Надішли мені посилання в Телеграм\n   > Send me the link in Telegram.\n\n3. Вона / читає / новини / онлайн\n   > [!answer] Вона читає новини онлайн\n   > She reads news online.\n\n4. Мій / комп'ютер / дуже / старий\n   > [!answer] Мій комп'ютер дуже старий\n   > My computer is very old.\n\n5. Я / не / пам'ятаю / пароль\n   > [!answer] Я не пам'ятаю пароль\n   > I don't remember the password.\n\n6. Ми / дивимося / смішне / відео\n   > [!answer] Ми дивимося смішне відео\n   > We are watching a funny video.\n\n7. Він / пише / коментар / під / фото\n   > [!answer] Він пише коментар під фото\n   > He writes a comment under the photo.\n\n8. Бабуся / має / смартфон\n   > [!answer] Бабуся має смартфон\n   > Grandma has a smartphone.\n\n9. Тут / є / хороший / інтернет\n   > [!answer] Тут є хороший інтернет\n   > Is there good internet here? (Statement: Here is good internet).\n\n10. Я / шукаю / інформацію / про / Київ\n    > [!answer] Я шукаю інформацію про Київ\n    > I am searching for information about Kyiv.\n\n11. Блогер / знімає / нове / відео\n    > [!answer] Блогер знімає нове відео\n    > The blogger is filming a new video.\n\n12. Ввімкни / будь ласка / свій / екран\n    > [!answer] Ввімкни будь ласка свій екран\n    > Turn on your screen please.\n\n## error-correction: Fix the Tech\n\n1. Я читаю новина.\n   > [!error] новина\n   > [!answer] новини\n   > [!options] новини | новину | новина | новиною\n   > [!explanation] Usually we read \"news\" in plural: новини.\n\n2. Він купив комп'ютера.\n   > [!error] комп'ютера\n   > [!answer] комп'ютер\n   > [!options] комп'ютер | комп'ютера | комп'ютеру | комп'ютером\n   > [!explanation] Inanimate masculine accusative = nominative: комп'ютер.\n\n3. Вона пише блогу.\n   > [!error] блогу\n   > [!answer] блог\n   > [!options] блог | блогу | блога | блогом\n   > [!explanation] Inanimate masculine accusative = nominative: блог.\n\n4. Я шукаю інформація.\n   > [!error] інформація\n   > [!answer] інформацію\n   > [!options] інформацію | інформація | інформації | інформацією\n   > [!explanation] Accusative feminine (-я -> -ю): інформацію.\n\n5. Ми дивимося фільма.\n   > [!error] фільма\n   > [!answer] фільм\n   > [!options] фільм | фільма | фільму | фільми\n   > [!explanation] Inanimate masculine accusative = nominative: фільм.\n\n6. Надішли посилання в чаті.\n   > [!error] чаті\n   > [!answer] чат\n   > [!options] чат | чаті | чату | чатом\n   > [!explanation] Direction (into where?) requires Accusative: в чат. (Locative 'в чаті' means location).\n\n7. Я забула свій логіну.\n   > [!error] логіну\n   > [!answer] логін\n   > [!options] логін | логіну | логіна | логіном\n   > [!explanation] Inanimate masculine accusative = nominative: логін.\n\n8. Він сидить на інтернеті.\n   > [!error] на\n   > [!answer] в\n   > [!options] в | на | у | при\n   > [!explanation] We say \"in the internet\": в інтернеті.\n\n9. У мене немає смартфон.\n   > [!error] смартфон\n   > [!answer] смартфона\n   > [!options] смартфона | смартфон | смартфону | смартфоном\n   > [!explanation] Genitive of negation: немає смартфона (animate-like ending often used for gadgets, or standard genitive -а).\n\n10. Вона лайкає фото.\n    > [!error] лайкає\n    > [!answer] лайкає\n    > [!options] лайкає | лайкує | лайк | лайки\n    > [!explanation] Wait, 'лайкає' is colloquial but correct here. Maybe case? 'лайкає фото' (acc pl). It's fine.\n\n\n    New Item 10:\n    Я пишу коментар палець.\n    > [!error] палець\n    > [!answer] пальцем\n    > [!options] пальцем | палець | пальця | пальцю\n    > [!explanation] Instrumental (with what?): пальцем.\n\n11. Екран телефон розбитий.\n    > [!error] телефон\n    > [!answer] телефона\n    > [!options] телефона | телефон | телефону | телефоном\n    > [!explanation] Genitive possession: screen of phone -> екран телефона.\n\n12. Я слухаю музика.\n    > [!error] музика\n    > [!answer] музику\n    > [!options] музику | музика | музики | музикою\n    > [!explanation] Accusative feminine: музику.\n\n## cloze: Digital Morning\n\nМій ранок починається зі [___:1]. Я вимикаю будильник на [___:2].\nПотім я перевіряю [___:3] і читаю [___:4].\nЯ п'ю каву і гортаю [___:5] в Інстаграмі.\nМені подобається одна [___:6] про подорожі. Я ставлю [___:7].\nПотім я вмикаю [___:8] і починаю працювати [___:9].\nСьогодні треба написати [___:10] для сайту.\n\n1. смартфона\n> [!answer] смартфона\n> [!options] смартфона | книги | вікна\n\n2. екрані\n> [!answer] екрані\n> [!options] екрані | столі | вулиці\n\n3. пошту\n> [!answer] пошту\n> [!options] пошту | вікно | двері\n\n4. новини\n> [!answer] новини\n> [!options] новини | музику | ігри\n\n5. стрічку\n> [!answer] стрічку\n> [!options] стрічку | книгу | зошит\n> (Feed = стрічка)\n\n6. стаття\n> [!answer] стаття\n> [!options] стаття | пісня | гра\n\n7. лайк\n> [!answer] лайк\n> [!options] лайк | бан | смайл\n\n8. ноутбук\n> [!answer] ноутбук\n> [!options] ноутбук | телевізор | праску\n\n9. онлайн\n> [!answer] онлайн\n> [!options] онлайн | офлайн | спати\n\n10. код\n> [!answer] код\n> [!options] код | пісню | обід\n\n## dialogue-reorder: IT Support\n\n- Алло, підтримка? У мене не працює інтернет.\n- Доброго дня. Який у вас логін?\n- Мій логін — user123.\n- Бачу ваш акаунт. Модем увімкнений?\n- Так, всі лампочки горять.\n- Спробуйте вимкнути його на 10 секунд.\n- Хвилиночку... Вимкнув... Увімкнув.\n- Тепер працює?\n- О, так! Дякую. Ви мене врятували.\n- Будь ласка. Маєте ще питання?\n- Ні, це все. Гарного дня!\n- До побачення!\n\n## mark-the-words: Find the Gadgets\n\n> [!instruction] Mark all devices and tech words.\n\nЯ люблю свій [смартфон]. Це мій головний [гаджет]. Вдома у мене є [ноутбук] і [планшет]. Я люблю грати в ігри на [планшеті]. Для роботи мені потрібен [комп'ютер]. У нього великий [екран] і зручна [клавіатура]. Я також маю бездротові [навушники]. Техніка допомагає мені бути [онлайн].\n\n## select: Choose Best Word\n\n1. I need to enter my...\n   - [x] пароль\n   - [ ] паспорт\n   > Password.\n\n2. Click on the...\n   - [x] посилання\n   - [ ] пошту\n   > Link.\n\n3. Read the...\n   - [x] статтю\n   - [ ] стілець\n   > Article.\n\n4. Connect to the...\n   - [x] мережі\n   - [ ] вулиці\n   > Network.\n\n5. Send a...\n   - [x] повідомлення\n   - [ ] книгу\n   > Message.\n\n6. Watch a...\n   - [x] відео\n   - [ ] радіо\n   > Video.\n\n7. Write a...\n   - [x] коментар\n   - [ ] роман\n   > Comment.\n\n8. Buy a...\n   - [x] ноутбук\n   - [ ] вікно\n   > Laptop.\n\n9. Search in...\n   - [x] Гуглі\n   - [ ] кишені\n   > Google.\n\n10. Charge the...\n    - [x] смартфон\n    - [ ] стіл\n    > Smartphone.\n\n11. Listen to a...\n    - [x] подкаст\n    - [ ] газету\n    > Podcast.\n\n12. Work...\n    - [x] онлайн\n    - [ ] у лісі\n    > Online."
+      },
+      {
+        "id": "section-4",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| комп'ютер | /komˈpju.ter/ | computer | noun | m | |\n| смартфон | /smartˈfɔn/ | smartphone | noun | m | |\n| планшет | /planˈʃɛt/ | tablet | noun | m | |\n| ноутбук | /noutˈbuk/ | laptop | noun | m | |\n| гаджет | /ˈɡadʒet/ | gadget | noun | m | |\n| екран | /eˈkran/ | screen | noun | m | |\n| клавіатура | /klavijaˈtura/ | keyboard | noun | f | |\n| мишка | /ˈmɪʃka/ | mouse | noun | f | |\n| навушники | /naˈvuʃnɪkɪ/ | headphones | noun | pl | |\n| інтернет | /interˈnɛt/ | internet | noun | m | |\n| вебсайт | /vɛbˈsajt/ | website | noun | m | |\n| посилання | /posɪˈlanʲːa/ | link | noun | n | |\n| пароль | /paˈrɔlʲ/ | password | noun | m | |\n| логін | /loˈɡin/ | login | noun | m | |\n| мережа | /meˈrɛʒa/ | network | noun | f | |\n| зв'язок | /zʋjɐˈzɔk/ | connection | noun | m | |\n| новини | /noˈvɪnɪ/ | news | noun | pl | |\n| стаття | /statˈtʲa/ | article | noun | f | |\n| блог | /blɔh/ | blog | noun | m | |\n| блогер | /ˈblɔher/ | blogger | noun | m | |\n| подкаст | /podˈkast/ | podcast | noun | m | |\n| відео | /ˈvi.de.o/ | video | noun | n | indecl. |\n| коментар | /komenˈtar/ | comment | noun | m | |\n| лайк | /lajk/ | like | noun | m | slang |\n| повідомлення | /poviˈdɔmlenʲːa/ | message | noun | n | |\n| шукати | /ʃuˈkatɪ/ | to search | verb | - | |\n| завантажувати | /zavanˈtaʒuvatɪ/ | to download | verb | - | |\n| публікувати | /publikuˈvatɪ/ | to publish | verb | - | |\n| надсилати | /nadsɪˈlatɪ/ | to send | verb | - | |\n| коментувати | /komentuˈvatɪ/ | to comment | verb | - | |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-49\ntitle: Technology & Media\nsubtitle: \"Digital Life in Ukrainian\"\nversion: \"1.0\"\nphase: \"A2\"\npedagogy: \"Narrative\"\nduration: 60\ntransliteration: none\ntags: [\"vocabulary\", \"technology\", \"internet\", \"media\"]\ngrammar: [\"accusative-inanimate\", \"locative-places\"]\nobjectives:\n  - Name common devices: комп'ютер, смартфон, планшет\n  - Discuss internet activities: шукати, завантажувати\n  - Talk about media: новини, блог, соціальні мережі\n  - Describe digital habits\nvocab_count: 30\n---\n\n# Technology & Media\n\n## Warm-up\n\nЯкий ваш кращий гаджет? Ви часто сидите в інтернеті? Де ви читаєте новини?\n\nСьогодні технології всюди. Ми працюємо онлайн, спілкуємося в чатах і читаємо новини на смартфоні. Україна — це сучасна цифрова країна. Давайте вивчимо слова, щоб говорити про наше цифрове життя!\n\nTechnology connects us. In this module, you'll learn to talk about your devices, internet habits, and how you consume media in Ukrainian. From \"downloading\" files to \"liking\" posts, you will master the digital vocabulary.\n\n> [!important] **Myth Buster** \"Paper Bureaucracy\"\n> Forget the stereotype of endless paperwork! Ukraine is a world leader in digital governance. The app **Дія** (Action) allows citizens to carry digital passports, pay taxes, and access services on their smartphones. Ukraine was the first country to equate digital passports to physical ones!\n\n## Presentation\n\n### Devices (Гаджети)\n\nWe use different devices every day:\n\n| Пристрій | Приклад |\n|----------|---------|\n| **комп'ютер** | Мій комп'ютер старий, але швидкий. |\n| **ноутбук** | Я беру ноутбук в кафе. |\n| **смартфон** | Він не може жити без смартфона. |\n| **планшет** | Діти грають на планшеті. |\n| **екран** | Екран дуже яскравий. |\n| **клавіатура** | Це зручна клавіатура. |\n| **мишка** | Де моя мишка? |\n| **навушники** | Я слухаю музику через навушники. |\n\n**Комп'ютер** and **ноутбук** are masculine. **Смартфон** and **планшет** are also masculine. Notice **навушники** (headphones) is always plural.\n\n### The Internet (Інтернет)\n\nGoing online is essential:\n\n- **інтернет** — internet: *У нас є швидкий інтернет.*\n- **вебсайт** — website: *Це корисний вебсайт.*\n- **посилання** — link: *Надішли мені посилання.*\n- **пароль** — password: *Це надійний пароль.*\n- **логін** — login: *Я забув свій логін.*\n- **мережа** — network: *Соціальна мережа.*\n- **зв'язок** — connection: *Тут поганий зв'язок.*\n- **онлайн / офлайн** — online / offline: *Він зараз онлайн.*\n\n> [!cultural] **History Bite** The Cybernetic Pioneer\n> Did you know the first computer in continental Europe was built in Kyiv? In 1951, **MESM** was created by Serhiy Lebedev. Later, Victor Glushkov founded the Institute of Cybernetics in Kyiv, pioneering early concepts of the internet and digital economy (\"OGAS\"). Kyiv has deep cybernetic roots!\n\n### Media & Content\n\nWhat do we consume?\n\n- **новини** (pl) — news: *Я читаю новини вранці.*\n- **стаття** — article: *Цікава стаття про історію.*\n- **блог** — blog: *Вона пише блог про моду.*\n- **блогер** — blogger: *Відомий український блогер.*\n- **подкаст** — podcast: *Я слухаю подкаст в машині.*\n- **відео** — video: *Смішне відео.*\n- **коментар** — comment: *Залиште коментар.*\n- **лайк** — like: *Поставте лайк!*\n\n### Actions\n\nVerbs for the digital age:\n\n- **шукати** — to search: *Я шукаю інформацію.*\n- **завантажувати** — to download/upload: *Він завантажує фільм.*\n- **публікувати** — to publish/post: *Вона публікує фото.*\n- **надсилати** — to send: *Я надсилаю повідомлення.*\n- **коментувати** — to comment: *Ми коментуємо новини.*\n\n> [!cultural] **Cultural Insight** Telegram Nation\n> While Facebook and Instagram are popular, **Telegram** is critical in Ukraine. It's not just a messenger; it's the primary source of news, air raid alerts, and community organization. Everyone has \"TG\" channels they follow religiously.\n\n## Practice\n\n### Story Time: The Remote Worker\n\nАндрій — програміст. Він працює вдома. Його робоче місце дуже зручне. На столі стоїть потужний **комп'ютер** і два великі **екрани**.\n\nВранці Андрій вмикає **ноутбук**. Він перевіряє **пошту** і читає **новини**. Потім він заходить у робочий чат.\n— Привіт всім! Я **онлайн**, — пише він.\n\n### Digital Safety\n\nBeing online requires safety (**безпека**).\n\n- **пароль** (password) must be strong. \"123456\" is a bad password.\n- **приватність** (privacy) is important. Don't share your address.\n- **шахрай** (scammer) wants your money.\n\n> [!tip] **Tip** \"Like\" in Ukrainian\n> While **лайк** is common, the proper Ukrainian word is **вподобайка** (from *вподобати* - to like). You might see both!\n\n### Story Time: The Food Blogger\n\nОксана любить готувати. Вона вирішила створити **блог** про їжу. Вона купила нову камеру і мікрофон.\n\nВона готує борщ і знімає **відео**.\n— Всім привіт! Сьогодні ми варимо борщ! — каже вона у мікрофон.\n\nПотім вона монтує відео на ноутбуці. Це довгий процес. Треба вибрати музику і написати текст. Вона **публікує** відео на Ютуб.\n\nЗранку вона перевіряє **коментарі**.\n— Дякую за рецепт! Дуже смачно! — пишуть люди.\nОксана щаслива. Вона відповідає на коментарі і ставить **лайки**.\n\nАле є і погані коментарі.\n— Це не справжній борщ! — пише \"Експерт123\".\nОксана не сумує. Вона знає, що хейтери (**haters**) завжди будуть. Вона блокує його і йде готувати вареники.\n\n### Story Time: Lost Connection\n\nІван поїхав у Карпати. Він хотів відпочити від технологій. Він взяв тільки старий телефон (\"цегла\").\n\nПерший день був чудовий. Гори, ліс, повітря. Але ввечері він захотів подивитися погоду.\n— Де мій смартфон? — подумав він. — А, я його не взяв.\n\nВін спробував знайти **зв'язок** на старому телефоні. Нічого.\n— Ну і добре, — сказав Іван.\n\nАле на третій день він захотів показати фото друзям.\n— Дивіться, яка гора! Ой, у мене немає камери.\n\nІван зрозумів, що технології — це не тільки інтернет, але й можливість ділитися моментами. Коли він повернувся додому, він обійняв свій комп'ютер.\n— Привіт, мій електронний друже. Я сумував.\n\nВін відкрив **ноутбук**, зайшов у **мережу** і написав великий пост про свою подорож. Всі його друзі поставили лайки.\n\n### Story Time: The Remote Worker (Expanded)\n\nАндрій — програміст. Він працює вдома. Його робоче місце дуже зручне. На столі стоїть потужний **комп'ютер** і два великі **екрани**.\n\nВранці Андрій вмикає **ноутбук**. Він перевіряє **пошту** і читає **новини**. Потім він заходить у робочий чат.\n— Привіт всім! Я **онлайн**, — пише він.\n\nАндрій пише код, **завантажує** файли на сервер і **публікує** оновлення. Якщо він має питання, він **шукає** відповідь в інтернеті. Його робота вимагає уваги. Один неправильний символ — і програма не працює!\n\nВ обід він дзвонить мамі по відеозв'язку (**video call**).\n— Привіт, мамо! Як справи?\n— Привіт, синку. Я не можу знайти свій серіал.\n— Зараз я тобі скину **посилання**, — каже Андрій.\n\nВвечері він вимикає комп'ютер. Його очі втомилися від екрана. Він бере **навушники** і йде бігати. Музика допомагає йому відпочити. Без технологій він не може працювати, але без спорту він не може жити.\n\n### Story Time: Grandma Online\n\nБабуся Галина купила **планшет**. Вона хоче бути сучасною. Її онук, Максим, допомагає їй.\n\n— Бабусю, це твій **логін**, а це **пароль**, — пояснює Максим. — Не забудь їх!\n— Добре, а як знайти рецепт борщу? — питає Галина.\n— Треба відкрити **вебсайт** або Гугл і написати \"борщ\".\n\nГалина швидко вчиться. Тепер вона має профіль у Фейсбуці. Вона **публікує** фото своїх пирогів. Сусіди пишуть їй гарні **коментарі**. Вона навіть слухає **подкаст** про садівництво!\nІнтернет — це цікаво, навіть якщо тобі 70 років.\n\n# Summary\n\nYou learned to:\n- Name tech: **комп'ютер**, **смартфон**, **планшет**, **ноутбук**\n- Talk about internet: **вебсайт**, **посилання**, **пароль**\n- Consume media: **новини**, **блог**, **стаття**\n- Use verbs: **шукати**, **завантажувати**, **публікувати**\n\nDigital literacy is key in modern Ukrainian society. Use these words to stay connected!\n\n# Activities\n\n## quiz: Tech Quiz\n\n1. What do you use to type?\n   - [x] клавіатура\n   - [ ] мишка\n   - [ ] екран\n   > Keyboard = клавіатура.\n\n2. Where do you read articles?\n   - [x] на вебсайті\n   - [ ] в навушниках\n   - [ ] на мишці\n   > On a website = на вебсайті.\n\n3. What fits in your pocket?\n   - [x] смартфон\n   - [ ] комп'ютер\n   - [ ] телевізор\n   > Smartphone fits in a pocket.\n\n4. What do you need to log in?\n   - [x] пароль\n   - [ ] лайк\n   - [ ] коментар\n   > Password = пароль.\n\n5. Who writes a blog?\n   - [x] блогер\n   - [ ] лікар\n   - [ ] водій\n   > Blogger writes a blog.\n\n6. What is \"to download\"?\n   - [x] завантажувати\n   - [ ] шукати\n   - [ ] надсилати\n   > Завантажувати = download (or upload contextually).\n\n7. Where do you listen to music privately?\n   - [x] у навушниках\n   - [ ] на екрані\n   - [ ] в новинах\n   > In headphones = у навушниках.\n\n8. What is a \"link\"?\n   - [x] посилання\n   - [ ] повідомлення\n   - [ ] стаття\n   > Link = посилання.\n\n9. What do you do with a query in Google?\n   - [x] шукати\n   - [ ] публікувати\n   - [ ] купувати\n   > To search = шукати.\n\n10. Is Ukraine digitally advanced?\n    - [x] Yes, very (Дія app)\n    - [ ] No, paper only\n    - [ ] Only in Kyiv\n    > Ukraine is a leader in digital governance (Diia).\n\n11. What is \"network\"?\n    - [x] мережа\n    - [ ] павутина\n    - [ ] новина\n    > Network = мережа (social network = соціальна мережа).\n\n12. What action shows approval online?\n    - [x] лайк\n    - [ ] блок\n    - [ ] спам\n    > Like = лайк.\n\n## match-up: Digital Terms\n\n- комп'ютер :: computer\n- мишка :: mouse\n- екран :: screen\n- пароль :: password\n- новини :: news (pl)\n- стаття :: article\n- посилання :: link\n- мережа :: network\n- зв'язок :: connection (signal)\n- навушники :: headphones\n- повідомлення :: message\n- блогер :: blogger\n\n## fill-in: Tech Sentences\n\n1. Я забув свій ____.\n   > [!answer] пароль\n   > [!options] пароль | екран | стіл | кіт\n   > I forgot my password.\n\n2. Надішли мені ____ на це відео.\n   > [!answer] посилання\n   > [!options] посилання | мишку | клавіатуру | каву\n   > Send me a link.\n\n3. Він купив новий ____.\n   > [!answer] ноутбук\n   > [!options] ноутбук | ноутбука | ноутбуком | ноутбуки\n   > Accusative inanimate: ноутбук.\n\n4. Вона пише цікавий ____.\n   > [!answer] блог\n   > [!options] блог | блога | блогом | блогу\n   > Accusative inanimate: блог.\n\n5. Ми читаємо ____ в інтернеті.\n   > [!answer] новини\n   > [!options] новини | новина | новиною | новин\n   > Accusative plural: новини.\n\n6. У мене розбився ____ телефона.\n   > [!answer] екран\n   > [!options] екран | клавіатура | мишка | звук\n   > Screen = екран.\n\n7. Я ____ файл з інтернету.\n   > [!answer] завантажую\n   > [!options] завантажую | шукаю | пишу | сплю\n   > I am downloading (завантажую).\n\n8. Це мій улюблений ____.\n   > [!answer] сайт\n   > [!options] сайт | сайту | сайтом | сайти\n   > Website/site matches 'улюблений' (masc).\n\n9. Ти читав цю ____?\n   > [!answer] статтю\n   > [!options] статтю | стаття | статті | статтею\n   > Accusative feminine: статтю.\n\n10. Тут поганий ____.\n    > [!answer] зв'язок\n    > [!options] зв'язок | телефон | комп'ютер | стіл\n    > Bad connection (зв'язок).\n\n11. Він завжди ____.\n    > [!answer] онлайн\n    > [!options] онлайн | офлайн | вдома | спить\n    > Always online.\n\n12. Постав мені ____!\n    > [!answer] лайк\n    > [!options] лайк | коментар | бан | дізлайк\n    > Give me a like!\n\n## true-false: Tech Facts\n\n1. \"Мишка\" is an animal and a computer device.\n   - [x] true\n   > Yes, mouse (animal) and mouse (device) are both мишка.\n\n2. \"Новини\" is a singular noun.\n   - [x] false\n   > Новини is plural (news). One piece of news = новина.\n\n3. \"Завантажувати\" means to delete.\n   - [x] false\n   > It means to download/upload. Delete is видаляти.\n\n4. Ukrainians use Telegram for news frequently.\n   - [x] true\n   > Telegram is a major news source.\n\n5. \"Скріншот\" is used in Ukrainian.\n   - [x] true\n   > Yes, it's a loan word. Also знімок екрана.\n\n6. Diia (Дія) is a paper document.\n   - [x] false\n   > Diia is a digital app for government services.\n\n7. \"Навушники\" is always plural.\n   - [x] true\n   > Like \"headphones\" or \"pants\", it's plural only (pluralia tantum).\n\n8. \"Пароль\" usually needs to be secret.\n   - [x] true\n   > Passwords should be secret.\n\n9. First computer in continental Europe was built in Paris.\n   - [x] false\n   > It was built in Kyiv (MESM).\n\n10. \"Публікувати\" means to read.\n    - [x] false\n    > To publish/post. To read is читати.\n\n11. A \"блогер\" writes blogs or makes vlogs.\n    - [x] true\n    > Yes, blogger/vlogger.\n\n12. Wifi is \"вайфай\" in Ukrainian.\n    - [x] true\n    > Phonetic borrowing: вайфай.\n\n## group-sort: Hardware vs Software\n\n### Groups\n- Hardware (Gadjety)\n- Software/Internet\n- Actions\n\n### Items\n- комп'ютер: Hardware (Gadjety)\n- мишка: Hardware (Gadjety)\n- клавіатура: Hardware (Gadjety)\n- екран: Hardware (Gadjety)\n- вебсайт: Software/Internet\n- блог: Software/Internet\n- пароль: Software/Internet\n- посилання: Software/Internet\n- завантажувати: Actions\n- шукати: Actions\n- публікувати: Actions\n- коментувати: Actions\n\n## unjumble: Digital Sentences\n\n1. Я / купив / новий / планшет\n   > [!answer] Я купив новий планшет\n   > I bought a new tablet.\n\n2. Надішли / мені / посилання / в / Телеграм\n   > [!answer] Надішли мені посилання в Телеграм\n   > Send me the link in Telegram.\n\n3. Вона / читає / новини / онлайн\n   > [!answer] Вона читає новини онлайн\n   > She reads news online.\n\n4. Мій / комп'ютер / дуже / старий\n   > [!answer] Мій комп'ютер дуже старий\n   > My computer is very old.\n\n5. Я / не / пам'ятаю / пароль\n   > [!answer] Я не пам'ятаю пароль\n   > I don't remember the password.\n\n6. Ми / дивимося / смішне / відео\n   > [!answer] Ми дивимося смішне відео\n   > We are watching a funny video.\n\n7. Він / пише / коментар / під / фото\n   > [!answer] Він пише коментар під фото\n   > He writes a comment under the photo.\n\n8. Бабуся / має / смартфон\n   > [!answer] Бабуся має смартфон\n   > Grandma has a smartphone.\n\n9. Тут / є / хороший / інтернет\n   > [!answer] Тут є хороший інтернет\n   > Is there good internet here? (Statement: Here is good internet).\n\n10. Я / шукаю / інформацію / про / Київ\n    > [!answer] Я шукаю інформацію про Київ\n    > I am searching for information about Kyiv.\n\n11. Блогер / знімає / нове / відео\n    > [!answer] Блогер знімає нове відео\n    > The blogger is filming a new video.\n\n12. Ввімкни / будь ласка / свій / екран\n    > [!answer] Ввімкни будь ласка свій екран\n    > Turn on your screen please.\n\n## error-correction: Fix the Tech\n\n1. Я читаю новина.\n   > [!error] новина\n   > [!answer] новини\n   > [!options] новини | новину | новина | новиною\n   > [!explanation] Usually we read \"news\" in plural: новини.\n\n2. Він купив комп'ютера.\n   > [!error] комп'ютера\n   > [!answer] комп'ютер\n   > [!options] комп'ютер | комп'ютера | комп'ютеру | комп'ютером\n   > [!explanation] Inanimate masculine accusative = nominative: комп'ютер.\n\n3. Вона пише блогу.\n   > [!error] блогу\n   > [!answer] блог\n   > [!options] блог | блогу | блога | блогом\n   > [!explanation] Inanimate masculine accusative = nominative: блог.\n\n4. Я шукаю інформація.\n   > [!error] інформація\n   > [!answer] інформацію\n   > [!options] інформацію | інформація | інформації | інформацією\n   > [!explanation] Accusative feminine (-я -> -ю): інформацію.\n\n5. Ми дивимося фільма.\n   > [!error] фільма\n   > [!answer] фільм\n   > [!options] фільм | фільма | фільму | фільми\n   > [!explanation] Inanimate masculine accusative = nominative: фільм.\n\n6. Надішли посилання в чаті.\n   > [!error] чаті\n   > [!answer] чат\n   > [!options] чат | чаті | чату | чатом\n   > [!explanation] Direction (into where?) requires Accusative: в чат. (Locative 'в чаті' means location).\n\n7. Я забула свій логіну.\n   > [!error] логіну\n   > [!answer] логін\n   > [!options] логін | логіну | логіна | логіном\n   > [!explanation] Inanimate masculine accusative = nominative: логін.\n\n8. Він сидить на інтернеті.\n   > [!error] на\n   > [!answer] в\n   > [!options] в | на | у | при\n   > [!explanation] We say \"in the internet\": в інтернеті.\n\n9. У мене немає смартфон.\n   > [!error] смартфон\n   > [!answer] смартфона\n   > [!options] смартфона | смартфон | смартфону | смартфоном\n   > [!explanation] Genitive of negation: немає смартфона (animate-like ending often used for gadgets, or standard genitive -а).\n\n10. Вона лайкає фото.\n    > [!error] лайкає\n    > [!answer] лайкає\n    > [!options] лайкає | лайкує | лайк | лайки\n    > [!explanation] Wait, 'лайкає' is colloquial but correct here. Maybe case? 'лайкає фото' (acc pl). It's fine.\n\n\n    New Item 10:\n    Я пишу коментар палець.\n    > [!error] палець\n    > [!answer] пальцем\n    > [!options] пальцем | палець | пальця | пальцю\n    > [!explanation] Instrumental (with what?): пальцем.\n\n11. Екран телефон розбитий.\n    > [!error] телефон\n    > [!answer] телефона\n    > [!options] телефона | телефон | телефону | телефоном\n    > [!explanation] Genitive possession: screen of phone -> екран телефона.\n\n12. Я слухаю музика.\n    > [!error] музика\n    > [!answer] музику\n    > [!options] музику | музика | музики | музикою\n    > [!explanation] Accusative feminine: музику.\n\n## cloze: Digital Morning\n\nМій ранок починається зі [___:1]. Я вимикаю будильник на [___:2].\nПотім я перевіряю [___:3] і читаю [___:4].\nЯ п'ю каву і гортаю [___:5] в Інстаграмі.\nМені подобається одна [___:6] про подорожі. Я ставлю [___:7].\nПотім я вмикаю [___:8] і починаю працювати [___:9].\nСьогодні треба написати [___:10] для сайту.\n\n1. смартфона\n> [!answer] смартфона\n> [!options] смартфона | книги | вікна\n\n2. екрані\n> [!answer] екрані\n> [!options] екрані | столі | вулиці\n\n3. пошту\n> [!answer] пошту\n> [!options] пошту | вікно | двері\n\n4. новини\n> [!answer] новини\n> [!options] новини | музику | ігри\n\n5. стрічку\n> [!answer] стрічку\n> [!options] стрічку | книгу | зошит\n> (Feed = стрічка)\n\n6. стаття\n> [!answer] стаття\n> [!options] стаття | пісня | гра\n\n7. лайк\n> [!answer] лайк\n> [!options] лайк | бан | смайл\n\n8. ноутбук\n> [!answer] ноутбук\n> [!options] ноутбук | телевізор | праску\n\n9. онлайн\n> [!answer] онлайн\n> [!options] онлайн | офлайн | спати\n\n10. код\n> [!answer] код\n> [!options] код | пісню | обід\n\n## dialogue-reorder: IT Support\n\n- Алло, підтримка? У мене не працює інтернет.\n- Доброго дня. Який у вас логін?\n- Мій логін — user123.\n- Бачу ваш акаунт. Модем увімкнений?\n- Так, всі лампочки горять.\n- Спробуйте вимкнути його на 10 секунд.\n- Хвилиночку... Вимкнув... Увімкнув.\n- Тепер працює?\n- О, так! Дякую. Ви мене врятували.\n- Будь ласка. Маєте ще питання?\n- Ні, це все. Гарного дня!\n- До побачення!\n\n## mark-the-words: Find the Gadgets\n\n> [!instruction] Mark all devices and tech words.\n\nЯ люблю свій [смартфон]. Це мій головний [гаджет]. Вдома у мене є [ноутбук] і [планшет]. Я люблю грати в ігри на [планшеті]. Для роботи мені потрібен [комп'ютер]. У нього великий [екран] і зручна [клавіатура]. Я також маю бездротові [навушники]. Техніка допомагає мені бути [онлайн].\n\n## select: Choose Best Word\n\n1. I need to enter my...\n   - [x] пароль\n   - [ ] паспорт\n   > Password.\n\n2. Click on the...\n   - [x] посилання\n   - [ ] пошту\n   > Link.\n\n3. Read the...\n   - [x] статтю\n   - [ ] стілець\n   > Article.\n\n4. Connect to the...\n   - [x] мережі\n   - [ ] вулиці\n   > Network.\n\n5. Send a...\n   - [x] повідомлення\n   - [ ] книгу\n   > Message.\n\n6. Watch a...\n   - [x] відео\n   - [ ] радіо\n   > Video.\n\n7. Write a...\n   - [x] коментар\n   - [ ] роман\n   > Comment.\n\n8. Buy a...\n   - [x] ноутбук\n   - [ ] вікно\n   > Laptop.\n\n9. Search in...\n   - [x] Гуглі\n   - [ ] кишені\n   > Google.\n\n10. Charge the...\n    - [x] смартфон\n    - [ ] стіл\n    > Smartphone.\n\n11. Listen to a...\n    - [x] подкаст\n    - [ ] газету\n    > Podcast.\n\n12. Work...\n    - [x] онлайн\n    - [ ] у лісі\n    > Online.\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| комп'ютер | /komˈpju.ter/ | computer | noun | m | |\n| смартфон | /smartˈfɔn/ | smartphone | noun | m | |\n| планшет | /planˈʃɛt/ | tablet | noun | m | |\n| ноутбук | /noutˈbuk/ | laptop | noun | m | |\n| гаджет | /ˈɡadʒet/ | gadget | noun | m | |\n| екран | /eˈkran/ | screen | noun | m | |\n| клавіатура | /klavijaˈtura/ | keyboard | noun | f | |\n| мишка | /ˈmɪʃka/ | mouse | noun | f | |\n| навушники | /naˈvuʃnɪkɪ/ | headphones | noun | pl | |\n| інтернет | /interˈnɛt/ | internet | noun | m | |\n| вебсайт | /vɛbˈsajt/ | website | noun | m | |\n| посилання | /posɪˈlanʲːa/ | link | noun | n | |\n| пароль | /paˈrɔlʲ/ | password | noun | m | |\n| логін | /loˈɡin/ | login | noun | m | |\n| мережа | /meˈrɛʒa/ | network | noun | f | |\n| зв'язок | /zʋjɐˈzɔk/ | connection | noun | m | |\n| новини | /noˈvɪnɪ/ | news | noun | pl | |\n| стаття | /statˈtʲa/ | article | noun | f | |\n| блог | /blɔh/ | blog | noun | m | |\n| блогер | /ˈblɔher/ | blogger | noun | m | |\n| подкаст | /podˈkast/ | podcast | noun | m | |\n| відео | /ˈvi.de.o/ | video | noun | n | indecl. |\n| коментар | /komenˈtar/ | comment | noun | m | |\n| лайк | /lajk/ | like | noun | m | slang |\n| повідомлення | /poviˈdɔmlenʲːa/ | message | noun | n | |\n| шукати | /ʃuˈkatɪ/ | to search | verb | - | |\n| завантажувати | /zavanˈtaʒuvatɪ/ | to download | verb | - | |\n| публікувати | /publikuˈvatɪ/ | to publish | verb | - | |\n| надсилати | /nadsɪˈlatɪ/ | to send | verb | - | |\n| коментувати | /komentuˈvatɪ/ | to comment | verb | - | |\n",
+    "createdAt": "2025-12-15T20:02:03.078009Z",
+    "modifiedAt": "2025-12-15T20:02:03.078009Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-49",
+    "level": "A2",
+    "phase": "A2",
+    "wordCount": 30,
+    "newWordCount": 30,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "комп'ютер",
+        "ipa": "/komˈpju.ter/",
+        "en": "computer",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-2",
+        "uk": "смартфон",
+        "ipa": "/smartˈfɔn/",
+        "en": "smartphone",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-3",
+        "uk": "планшет",
+        "ipa": "/planˈʃɛt/",
+        "en": "tablet",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-4",
+        "uk": "ноутбук",
+        "ipa": "/noutˈbuk/",
+        "en": "laptop",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-5",
+        "uk": "гаджет",
+        "ipa": "/ˈɡadʒet/",
+        "en": "gadget",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-6",
+        "uk": "екран",
+        "ipa": "/eˈkran/",
+        "en": "screen",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-7",
+        "uk": "клавіатура",
+        "ipa": "/klavijaˈtura/",
+        "en": "keyboard",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-8",
+        "uk": "мишка",
+        "ipa": "/ˈmɪʃka/",
+        "en": "mouse",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-9",
+        "uk": "навушники",
+        "ipa": "/naˈvuʃnɪkɪ/",
+        "en": "headphones",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-10",
+        "uk": "інтернет",
+        "ipa": "/interˈnɛt/",
+        "en": "internet",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-11",
+        "uk": "вебсайт",
+        "ipa": "/vɛbˈsajt/",
+        "en": "website",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-12",
+        "uk": "посилання",
+        "ipa": "/posɪˈlanʲːa/",
+        "en": "link",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-13",
+        "uk": "пароль",
+        "ipa": "/paˈrɔlʲ/",
+        "en": "password",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-14",
+        "uk": "логін",
+        "ipa": "/loˈɡin/",
+        "en": "login",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-15",
+        "uk": "мережа",
+        "ipa": "/meˈrɛʒa/",
+        "en": "network",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-16",
+        "uk": "зв'язок",
+        "ipa": "/zʋjɐˈzɔk/",
+        "en": "connection",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-17",
+        "uk": "новини",
+        "ipa": "/noˈvɪnɪ/",
+        "en": "news",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-18",
+        "uk": "стаття",
+        "ipa": "/statˈtʲa/",
+        "en": "article",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-19",
+        "uk": "блог",
+        "ipa": "/blɔh/",
+        "en": "blog",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-20",
+        "uk": "блогер",
+        "ipa": "/ˈblɔher/",
+        "en": "blogger",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-21",
+        "uk": "подкаст",
+        "ipa": "/podˈkast/",
+        "en": "podcast",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-22",
+        "uk": "відео",
+        "ipa": "/ˈvi.de.o/",
+        "en": "video",
+        "pos": "noun",
+        "gender": "n",
+        "note": "indecl."
+      },
+      {
+        "id": "vocab-23",
+        "uk": "коментар",
+        "ipa": "/komenˈtar/",
+        "en": "comment",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-24",
+        "uk": "лайк",
+        "ipa": "/lajk/",
+        "en": "like",
+        "pos": "noun",
+        "gender": "m",
+        "note": "slang"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "повідомлення",
+        "ipa": "/poviˈdɔmlenʲːa/",
+        "en": "message",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-26",
+        "uk": "шукати",
+        "ipa": "/ʃuˈkatɪ/",
+        "en": "to search",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-27",
+        "uk": "завантажувати",
+        "ipa": "/zavanˈtaʒuvatɪ/",
+        "en": "to download",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-28",
+        "uk": "публікувати",
+        "ipa": "/publikuˈvatɪ/",
+        "en": "to publish",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-29",
+        "uk": "надсилати",
+        "ipa": "/nadsɪˈlatɪ/",
+        "en": "to send",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-30",
+        "uk": "коментувати",
+        "ipa": "/komentuˈvatɪ/",
+        "en": "to comment",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      }
+    ],
+    "reviewWords": []
+  }
+}

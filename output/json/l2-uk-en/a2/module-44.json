@@ -1,0 +1,430 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-44",
+    "moduleId": "mod-uk-A2-44",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.5",
+    "moduleNumber": 44,
+    "moduleType": "vocabulary",
+    "pedagogy": "PPP",
+    "immersionLevel": 0.4,
+    "title": "Food & Cooking",
+    "titleUk": null,
+    "subtitle": "Kitchen Vocabulary and Cooking Expressions",
+    "description": "Learner knows food and cooking vocabulary",
+    "objectives": [
+      "Learner knows food and cooking vocabulary",
+      "Learner can describe meals and cooking processes",
+      "Learner can follow simple recipes in Ukrainian"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "thematic vocabulary",
+      "imperative for recipes"
+    ],
+    "tags": [
+      "vocabulary",
+      "food",
+      "cooking",
+      "kitchen"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "Welcome to the kitchen! Food and cooking are central to Ukrainian culture. In this module, you will learn essential vocabulary for cooking, kitchen equipment, and describing food. After this lesson, you will be able to navigate a Ukrainian kitchen and follow basic recipes.\n\nUkrainian cuisine is famous for dishes like борщ, вареники, and голубці. Cooking these dishes requires knowing the right vocabulary for ingredients, utensils, and cooking methods. Let us start with the basics and work our way up to authentic Ukrainian recipes!\n\nFood vocabulary is particularly important for language learners because eating is a daily activity that provides constant opportunities for practice. Whether you are shopping for groceries, ordering at a restaurant, or cooking at home with Ukrainian friends, these words will come up frequently.\n\nThe cooking verbs in this module are especially useful because they use the imperative mood, which you will encounter in recipes and when receiving cooking instructions from native speakers.\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "Presentation",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Kitchen Equipment\n\nEvery kitchen needs the right tools. Here's the essential vocabulary for kitchen equipment:\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| каструля | pot | Поклади картоплю в каструлю. |\n| сковорода | frying pan | Смаж м'ясо на сковороді. |\n| духовка | oven | Постав пиріг у духовку. |\n| мікрохвильовка | microwave | Розігрій воду в мікрохвильовці. |\n| холодильник | refrigerator | Поклади молоко в холодильник. |\n| плита | stove | Увімкни плиту. |\n| чайник | kettle | Закип'яти воду в чайнику. |\n\n> [!tip] Grammar Point: Locative Case\n> Notice the locative case forms!\n> **в каструлі**, **на сковороді**, **у духовці**, **в холодильнику**\n> These forms are needed when describing where food is located.\n> The locative case (called місцевий відмінок in Ukrainian) is used after the prepositions \"в/у\" and \"на\" when describing location. Masculine nouns typically take \"-у\" or \"-і\" endings, while feminine nouns take \"-і\" endings. For example, \"холодильник\" becomes \"в холодильнику\".\n\n## Cooking Methods\n\nUkrainian has specific verbs for different cooking methods. Each method requires a different verb, and using the correct verb shows your understanding of Ukrainian culinary vocabulary. In English, we might simply say \"cook\" for many situations, but Ukrainian differentiates more precisely:\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| варити | to boil | Вари картоплю 20 хвилин. |\n| смажити | to fry | Смаж цибулю до золотистого кольору. |\n| пекти | to bake | Печи хліб у духовці. |\n| тушкувати | to stew | Тушкуй овочі на повільному вогні. |\n| нарізати | to chop | Наріж морквину кубиками. |\n| запікати | to roast | Запікай курку з часником. |\n| готувати | to cook (general) | Сьогодні я готую вечерю. |\n\n> [!cultural] Традиції Української Кухні\n> Українці часто готують страви на повільному вогні.\n> Тушкування — це популярна техніка.\n> Борщ тушкують годинами для насиченого смаку!\n> This slow cooking tradition comes from peasant cooking, where dishes would simmer while families worked in the fields.\n\n## Meals of the Day\n\nUkrainians typically eat three main meals:\n\n| Ukrainian | English | Time | Note |\n|-----------|---------|------|------|\n| сніданок | breakfast | 7-9 ранку | Легкий: каша, чай, бутерброд |\n| обід | lunch | 12-14 | Головна їжа дня: борщ, друге |\n| вечеря | dinner | 18-20 | Легша за обід |\n| перекус | snack | будь-коли | Фрукти, печива, чай |\n\n> [!tip] Lunch vs Dinner\n> In Ukraine, the main meal of the day is обід, not вечеря.\n> A typical обід includes перше, друге, and компот.\n> Вечеря is usually lighter: salad, sandwiches, or lunch leftovers.\n> This is different from many Western countries where dinner is the main meal. Ukrainian eating patterns reflect agricultural traditions where workers needed hearty midday meals for energy during the workday.\n\n## Tastes and Descriptions\n\nDescribing food requires knowing taste adjectives. These adjectives are essential for expressing your opinion about dishes and for following recipes that describe the desired outcome:\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| солодкий | sweet | Торт дуже солодкий. |\n| солоний | salty | Суп занадто солоний! |\n| кислий | sour | Лимон кислий. |\n| гіркий | bitter | Кава гірка без цукру. |\n| гострий | spicy | Ця страва гостра! |\n| свіжий | fresh | Хліб свіжий. |\n| смачний | delicious | Борщ дуже смачний! |\n\n---\n\nГотові вчитися готувати? Давайте розпочнемо!"
+      },
+      {
+        "id": "section-3",
+        "name": "Story Time: У Бабусі на Кухні",
+        "nameEn": null,
+        "type": "content",
+        "content": "Марія приїхала до бабусі на вихідні. Вона дуже любить бабусину кухню.\n\nБабуся готує традиційний український обід. На кухні смачно пахне цибулею та часником.\n\n— Сьогодні я **готую** борщ, — каже бабуся. — Допоможи мені!\n— Звичайно! — відповідає Марія. — Що мені робити?\n— Спочатку **наріж** буряк і морквину. А я поки **смажу** цибулю.\n\nМарія **нарізає** овочі на дошці. Бабуся **смажить** цибулю на сковороді до золотистого кольору.\n\n— Тепер **поклади** все в **каструлю**, — каже бабуся. — Ми будемо **тушкувати** борщ дві години.\n— Так довго? — питає Марія.\n— Так! Справжній борщ **варять** повільно. Так він стає **смачний**.\n\nПоки борщ **вариться**, бабуся **пече** пампушки в **духовці**. Вона також **готує** салат із свіжих овочів.\n\n— Пампушки готові! — каже бабуся. — Вони ще **гарячі** і **свіжі**.\n— Смачно! — каже Марія. — Мама сказала, що твій борщ **найсмачніший** у світі!\n— Дякую, внучко! Тепер ти тож умієш готувати борщ.\n\n> [!cultural] Борщ — Національна Страва\n> Борщ — це символ української кухні.\n> Кожна родина має свій особливий рецепт.\n> ЮНЕСКО визнала український борщ нематеріальною спадщиною!\n> Це велика честь для України та української культури.\n\nМарія дуже задоволена. Тепер вона знає рецепт бабусиного борщу!\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Story Time Part 2: Рецепт Вареників",
+        "nameEn": null,
+        "type": "content",
+        "content": "Оксана вчиться готувати вареники. Це традиційна українська страва. Її мама — чудова кухарка. Вона дає дочці інструкції.\n\n**Мама:** Спочатку **приготуй** тісто. **Змішай** борошно, воду і сіль.\n**Оксана:** Скільки борошна потрібно?\n**Мама:** Дві склянки. Потім **виміси** тісто руками.\n\nОксана **замішує** тісто. Воно стає гладким і еластичним.\n\n**Мама:** Тепер **розкачай** тісто і **виріж** кружечки.\n**Оксана:** А начинка?\n**Мама:** Я вже **приготувала** начинку з картоплі та цибулі. **Поклади** начинку на кружечки і **зліпи** краї.\n\nОксана **ліпить** вареники. Це непросто, але цікаво!\n\n**Мама:** Тепер **закип'яти** воду і **вари** вареники, поки вони спливуть.\n\nВареники **спливають** через п'ять хвилин. Оксана **виймає** їх ложкою.\n\n**Мама:** **Подавай** зі сметаною! **Смачного**!\n**Оксана:** Дякую, мамо! Вони **смачні**!\n\nВся родина сідає за стіл. Тато пробує вареники і каже:\n\n— Дуже **смачно**! Оксано, ти добре **приготувала** вареники!\n— Дякую, тату! Мама допомогла, — відповідає Оксана.\n— Вареники зі **сметаною** — це найкраща вечеря, — каже бабуся.\n\nУсі їдять із задоволенням. Після вечері всі допомагають **прибирати** кухню.\n\n— Завтра я **готуватиму** голубці, — каже мама.\n— Чудово! Я допоможу! — радіє Оксана.\n\nТепер Оксана знає, як **готувати** справжні українські вареники. Вона дуже задоволена. Це сімейна традиція, яку вона передасть своїм дітям. Вареники — це справжня українська страва з любов'ю!\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Common Expressions",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Recipe Imperatives\n\nWhen following recipes in Ukrainian, you will encounter imperative forms. The imperative is used to give commands and instructions. Ukrainian has two imperative forms: one for informal situations and one for formal situations or when addressing multiple people.\n\nThe informal imperative typically ends in a consonant or soft sign. The formal imperative adds the suffix \"-те\" to the informal form. Here are the most common cooking imperatives:\n\n| Infinitive | Imperative (singular) | Imperative (plural/formal) |\n|-----------|-----------------|-----------------|\n| варити | вари! | варіть! |\n| смажити | смаж! | смажте! |\n| нарізати | наріж! | нарізьте! |\n| змішати | змішай! | змішайте! |\n| покласти | поклади! | покладіть! |\n\n## Useful Phrases\n\nWhen eating with Ukrainian friends or family, these phrases will help you participate in the culinary culture:\n\n- **Смачного!** = Enjoy your meal! This is said before eating. It is the equivalent of the French \"bon appétit\" and is considered polite to say before starting a meal.\n- **Дякую, дуже смачно!** = Thank you, very delicious! Say this to compliment the cook.\n- **Можна рецепт?** = Can I have the recipe? Ukrainians love sharing recipes, so do not be shy to ask.\n- **Як це готувати?** = How do you cook this? Use this when you want to learn a new dish.\n- **Це гаряче/холодне** = This is hot/cold. Useful for describing food temperature.\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "**Обладнання:**\n- каструля\n- сковорода\n- духовка\n- холодильник\n- плита\n- чайник\n\n**Методи:**\n- варити\n- смажити\n- пекти\n- тушкувати\n- нарізати\n- запікати\n\n**Прийоми їжі:**\n- сніданок\n- обід\n- вечеря\n- перекус\n\n**Смаки:**\n- солодкий\n- солоний\n- кислий\n- гіркий\n- гострий\n- смачний\n\nТепер ви можете готувати разом з українцями! Успіхів на кухні! Смачного!\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Kitchen Words\n\n> Match the Ukrainian to English.\n\n- каструля :: pot\n- сковорода :: frying pan\n- духовка :: oven\n- мікрохвильовка :: microwave\n- холодильник :: refrigerator\n- плита :: stove\n- варити :: to boil\n- смажити :: to fry\n- пекти :: to bake\n- тушкувати :: to stew\n- нарізати :: to chop\n- чайник :: kettle\n\n## fill-in: Cooking Methods\n\n> Choose the correct verb.\n\n1. Я [___] картоплю 20 хвилин. (boil)\n   > [!answer] варю\n   > [!options] варю | смажу | печу | тушкую\n\n2. Вона [___] м'ясо на сковороді. (fries)\n   > [!answer] смажить\n   > [!options] варить | смажить | пече | тушкує\n\n3. Він [___] хліб у духовці. (bakes)\n   > [!answer] пече\n   > [!options] варить | смажить | пече | тушкує\n\n4. Я [___] цибулю на дошці. (chop)\n   > [!answer] нарізаю\n   > [!options] варю | смажу | нарізаю | тушкую\n\n5. Суп у [___]. (pot)\n   > [!answer] каструлі\n   > [!options] каструлі | сковороді | духовці | чайнику\n\n6. Смаж м'ясо на [___]. (pan)\n   > [!answer] сковороді\n   > [!options] каструлі | сковороді | духовці | чайнику\n\n7. Пиріг у [___]. (oven)\n   > [!answer] духовці\n   > [!options] каструлі | сковороді | духовці | холодильнику\n\n8. Молоко в [___]. (fridge)\n   > [!answer] холодильнику\n   > [!options] каструлі | духовці | холодильнику | плиті\n\n## quiz: Food & Cooking\n\n1. \"Каструля\" is:\n   - [x] Pot\n   - [ ] Pan\n   - [ ] Oven\n\n2. \"Сковорода\" is:\n   - [x] Frying pan\n   - [ ] Pot\n   - [ ] Plate\n\n3. \"Варити\" means:\n   - [x] To boil\n   - [ ] To fry\n   - [ ] To bake\n\n4. \"Сніданок\" is:\n   - [x] Breakfast\n   - [ ] Dinner\n   - [ ] Lunch\n\n5. \"Вечеря\" is:\n   - [x] Dinner\n   - [ ] Breakfast\n   - [ ] Snack\n\n6. \"Солодкий\" means:\n   - [x] Sweet\n   - [ ] Salty\n   - [ ] Sour\n\n7. \"Гострий\" means:\n   - [x] Spicy\n   - [ ] Sweet\n   - [ ] Bitter\n\n8. \"Смачний\" means:\n   - [x] Delicious\n   - [ ] Salty\n   - [ ] Fresh\n\n## cloze: Recipe Story\n\n> Complete the recipe instructions.\n\nБабуся [___:1] борщ. (cooks)\nСпочатку [___:2] овочі. (chop)\nПотім [___:3] цибулю. (fry)\n[___:4] все в каструлю. (put)\n[___:5] борщ дві години. (stew)\n[___:6] пампушки в духовці. (bake)\n\n1. готує\n> [!answer] готує\n> [!options] готує | нарізає | смажить\n\n2. наріж\n> [!answer] наріж\n> [!options] наріж | вари | смаж\n\n3. смаж\n> [!answer] смаж\n> [!options] смаж | вари | наріж\n\n4. Поклади\n> [!answer] Поклади\n> [!options] Поклади | Наріж | Смаж\n\n5. Тушкуй\n> [!answer] Тушкуй\n> [!options] Тушкуй | Вари | Смаж\n\n6. Печи\n> [!answer] Печи\n> [!options] Печи | Вари | Смаж\n\n## unjumble: Cooking Sentences\n\n1. каструлю / картоплю / в / Поклади\n   > [!answer] Поклади картоплю в каструлю.\n2. сковороді / м'ясо / на / Смаж\n   > [!answer] Смаж м'ясо на сковороді.\n3. смачний / Борщ / дуже\n   > [!answer] Борщ дуже смачний.\n4. у / хліб / Пиріг / духовці\n   > [!answer] Пиріг у духовці.\n5. солоний / занадто / Суп\n   > [!answer] Суп занадто солоний.\n6. воду / Закип'яти / в / чайнику\n   > [!answer] Закип'яти воду в чайнику.\n7. свіжий / Хліб / та / смачний\n   > [!answer] Хліб свіжий та смачний.\n8. вечерю / готую / Я / сьогодні\n   > [!answer] Я сьогодні готую вечерю.\n\n## error-correction: Kitchen Mistakes\n\n1. Смаж м'ясо в **каструлі**.\n   > [!error] каструлі\n   > [!answer] сковороді\n   > [!explanation] We fry (смажити) in a pan (сковорода), not a pot.\n   > [!options] сковороді | каструлі\n\n2. **Вари** хліб у духовці.\n   > [!error] Вари\n   > [!answer] Печи\n   > [!explanation] We bake (пекти) bread in the oven, not boil.\n   > [!options] Печи | Вари\n\n3. Суп дуже **солодкий**.\n   > [!error] солодкий\n   > [!answer] солоний\n   > [!explanation] Soup is typically described as salty (солоний), not sweet.\n   > [!options] солоний | солодкий\n\n4. **Обід** — це ранкова їжа.\n   > [!error] Обід\n   > [!answer] Сніданок\n   > [!explanation] Morning meal = сніданок. Обід = lunch.\n   > [!options] Сніданок | Обід\n\n5. Поклади молоко в **духовку**.\n   > [!error] духовку\n   > [!answer] холодильник\n   > [!explanation] Milk goes in the refrigerator, not the oven!\n   > [!options] холодильник | духовку\n\n6. **Тушкуй** воду в чайнику.\n   > [!error] Тушкуй\n   > [!answer] Закип'яти\n   > [!explanation] We boil (кип'ятити) water, not stew it.\n   > [!options] Закип'яти | Тушкуй\n\n## match-up: Meals & Times\n\n> Match the meal to its typical time.\n\n- сніданок :: 7-9 ранку\n- обід :: 12-14\n- вечеря :: 18-20\n- перекус :: будь-коли\n- борщ :: на обід\n- каша :: на сніданок\n- бутерброди :: на вечерю\n- компот :: після їжі\n\n## group-sort: Kitchen Categories\n\n> Sort the words by category.\n\n### Equipment\n- каструля\n- сковорода\n- духовка\n- холодильник\n- плита\n- чайник\n\n### Cooking Methods\n- варити\n- смажити\n- пекти\n- тушкувати\n- нарізати\n- запікати\n\n### Tastes\n- солодкий\n- солоний\n- кислий\n- гострий\n\n## true-false: Kitchen Facts\n\n> Mark true or false.\n\n- [x] \"Каструля\" = pot.\n- [x] \"Сковорода\" = frying pan.\n- [ ] \"Варити\" = to bake.\n- [x] \"Варити\" = to boil.\n- [x] \"Сніданок\" = breakfast.\n- [ ] \"Вечеря\" = lunch.\n- [x] \"Вечеря\" = dinner.\n- [x] \"Солодкий\" = sweet.\n- [ ] \"Солоний\" = sweet.\n- [x] \"Гострий\" = spicy.\n- [x] \"Духовка\" = oven.\n- [ ] \"Обід\" = dinner.\n\n## translate: Food Words\n\n1. Pot\n   - [x] каструля\n   - [ ] сковорода\n   - [ ] тарілка\n\n2. To fry\n   - [x] смажити\n   - [ ] варити\n   - [ ] пекти\n\n3. Breakfast\n   - [x] сніданок\n   - [ ] обід\n   - [ ] вечеря\n\n4. Delicious\n   - [x] смачний\n   - [ ] солоний\n   - [ ] гострий\n\n5. Refrigerator\n   - [x] холодильник\n   - [ ] духовка\n   - [ ] плита\n\n6. Spicy\n   - [x] гострий\n   - [ ] солодкий\n   - [ ] кислий\n\n7. To chop\n   - [x] нарізати\n   - [ ] смажити\n   - [ ] варити\n\n8. Oven\n   - [x] духовка\n   - [ ] плита\n   - [ ] холодильник\n\n---"
+      },
+      {
+        "id": "section-8",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| каструля | /kɑsˈtrulʲɑ/ | pot | noun | f | kitchen |\n| сковорода | /skɔʋɔˈrɔdɑ/ | frying pan | noun | f | kitchen |\n| духовка | /duˈxɔʋkɑ/ | oven | noun | f | appliance |\n| мікрохвильовка | /mikrɔxʋɪˈlʲɔʋkɑ/ | microwave | noun | f | appliance |\n| холодильник | /xɔlɔˈdɪlʲnɪk/ | refrigerator | noun | m | appliance |\n| плита | /ˈplɪtɑ/ | stove | noun | f | appliance |\n| чайник | /ˈt͡ʃɑjnɪk/ | kettle | noun | m | kitchen |\n| ніж | /niʒ/ | knife | noun | m | utensil |\n| тарілка | /tɑˈrilkɑ/ | plate | noun | f | tableware |\n| виделка | /ˈʋɪdɛlkɑ/ | fork | noun | f | utensil |\n| ложка | /ˈlɔʒkɑ/ | spoon | noun | f | utensil |\n| варити | /ˈʋɑrɪtɪ/ | to boil | verb | — | cooking |\n| смажити | /ˈsmɑʒɪtɪ/ | to fry | verb | — | cooking |\n| пекти | /ˈpɛktɪ/ | to bake | verb | — | cooking |\n| тушкувати | /tuʃkuˈʋɑtɪ/ | to stew | verb | — | cooking |\n| нарізати | /nɑˈrizɑtɪ/ | to chop | verb | — | cooking |\n| запікати | /zɑpiˈkɑtɪ/ | to roast | verb | — | cooking |\n| готувати | /ɦɔtuˈʋɑtɪ/ | to cook | verb | — | cooking |\n| сніданок | /ˈsnidɑnɔk/ | breakfast | noun | m | meal |\n| обід | /ɔˈbid/ | lunch | noun | m | meal |\n| вечеря | /ˈʋɛt͡ʃɛrʲɑ/ | dinner | noun | f | meal |\n| перекус | /pɛrɛˈkus/ | snack | noun | m | meal |\n| солодкий | /sɔˈlɔdkɪj/ | sweet | adj | m | taste |\n| солоний | /sɔˈlɔnɪj/ | salty | adj | m | taste |\n| кислий | /ˈkɪslɪj/ | sour | adj | m | taste |\n| гіркий | /ˈɦirkɪj/ | bitter | adj | m | taste |\n| гострий | /ˈɦɔstrɪj/ | spicy | adj | m | taste |\n| свіжий | /sʋiˈʒɪj/ | fresh | adj | m | quality |\n| смачний | /ˈsmɑt͡ʃnɪj/ | delicious | adj | m | quality |\n| страва | /ˈstrɑʋɑ/ | dish | noun | f | food |\n| рецепт | /rɛˈt͡sɛpt/ | recipe | noun | m | cooking |\n| інгредієнт | /inɦrɛdiˈjɛnt/ | ingredient | noun | m | cooking |\n| порція | /ˈpɔrt͡sijɑ/ | portion | noun | f | serving |\n| скатертина | /skɑˈtɛrtɪnɑ/ | tablecloth | noun | f | tableware |\n| серветка | /sɛrˈʋɛtkɑ/ | napkin | noun | f | tableware |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-44\ntitle: \"Food & Cooking\"\nsubtitle: \"Kitchen Vocabulary and Cooking Expressions\"\nversion: \"2.0\"\nphase: \"A2.5\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - vocabulary\n  - food\n  - cooking\n  - kitchen\ngrammar:\n  - thematic vocabulary\n  - imperative for recipes\nobjectives:\n  - \"Learner knows food and cooking vocabulary\"\n  - \"Learner can describe meals and cooking processes\"\n  - \"Learner can follow simple recipes in Ukrainian\"\nvocabulary_count: 35\n---\n\n# Warm-up\n\nWelcome to the kitchen! Food and cooking are central to Ukrainian culture. In this module, you will learn essential vocabulary for cooking, kitchen equipment, and describing food. After this lesson, you will be able to navigate a Ukrainian kitchen and follow basic recipes.\n\nUkrainian cuisine is famous for dishes like борщ, вареники, and голубці. Cooking these dishes requires knowing the right vocabulary for ingredients, utensils, and cooking methods. Let us start with the basics and work our way up to authentic Ukrainian recipes!\n\nFood vocabulary is particularly important for language learners because eating is a daily activity that provides constant opportunities for practice. Whether you are shopping for groceries, ordering at a restaurant, or cooking at home with Ukrainian friends, these words will come up frequently.\n\nThe cooking verbs in this module are especially useful because they use the imperative mood, which you will encounter in recipes and when receiving cooking instructions from native speakers.\n\n---\n\n# Presentation\n\n## Kitchen Equipment\n\nEvery kitchen needs the right tools. Here's the essential vocabulary for kitchen equipment:\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| каструля | pot | Поклади картоплю в каструлю. |\n| сковорода | frying pan | Смаж м'ясо на сковороді. |\n| духовка | oven | Постав пиріг у духовку. |\n| мікрохвильовка | microwave | Розігрій воду в мікрохвильовці. |\n| холодильник | refrigerator | Поклади молоко в холодильник. |\n| плита | stove | Увімкни плиту. |\n| чайник | kettle | Закип'яти воду в чайнику. |\n\n> [!tip] Grammar Point: Locative Case\n> Notice the locative case forms!\n> **в каструлі**, **на сковороді**, **у духовці**, **в холодильнику**\n> These forms are needed when describing where food is located.\n> The locative case (called місцевий відмінок in Ukrainian) is used after the prepositions \"в/у\" and \"на\" when describing location. Masculine nouns typically take \"-у\" or \"-і\" endings, while feminine nouns take \"-і\" endings. For example, \"холодильник\" becomes \"в холодильнику\".\n\n## Cooking Methods\n\nUkrainian has specific verbs for different cooking methods. Each method requires a different verb, and using the correct verb shows your understanding of Ukrainian culinary vocabulary. In English, we might simply say \"cook\" for many situations, but Ukrainian differentiates more precisely:\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| варити | to boil | Вари картоплю 20 хвилин. |\n| смажити | to fry | Смаж цибулю до золотистого кольору. |\n| пекти | to bake | Печи хліб у духовці. |\n| тушкувати | to stew | Тушкуй овочі на повільному вогні. |\n| нарізати | to chop | Наріж морквину кубиками. |\n| запікати | to roast | Запікай курку з часником. |\n| готувати | to cook (general) | Сьогодні я готую вечерю. |\n\n> [!cultural] Традиції Української Кухні\n> Українці часто готують страви на повільному вогні.\n> Тушкування — це популярна техніка.\n> Борщ тушкують годинами для насиченого смаку!\n> This slow cooking tradition comes from peasant cooking, where dishes would simmer while families worked in the fields.\n\n## Meals of the Day\n\nUkrainians typically eat three main meals:\n\n| Ukrainian | English | Time | Note |\n|-----------|---------|------|------|\n| сніданок | breakfast | 7-9 ранку | Легкий: каша, чай, бутерброд |\n| обід | lunch | 12-14 | Головна їжа дня: борщ, друге |\n| вечеря | dinner | 18-20 | Легша за обід |\n| перекус | snack | будь-коли | Фрукти, печива, чай |\n\n> [!tip] Lunch vs Dinner\n> In Ukraine, the main meal of the day is обід, not вечеря.\n> A typical обід includes перше, друге, and компот.\n> Вечеря is usually lighter: salad, sandwiches, or lunch leftovers.\n> This is different from many Western countries where dinner is the main meal. Ukrainian eating patterns reflect agricultural traditions where workers needed hearty midday meals for energy during the workday.\n\n## Tastes and Descriptions\n\nDescribing food requires knowing taste adjectives. These adjectives are essential for expressing your opinion about dishes and for following recipes that describe the desired outcome:\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| солодкий | sweet | Торт дуже солодкий. |\n| солоний | salty | Суп занадто солоний! |\n| кислий | sour | Лимон кислий. |\n| гіркий | bitter | Кава гірка без цукру. |\n| гострий | spicy | Ця страва гостра! |\n| свіжий | fresh | Хліб свіжий. |\n| смачний | delicious | Борщ дуже смачний! |\n\n---\n\nГотові вчитися готувати? Давайте розпочнемо!\n\n# Story Time: У Бабусі на Кухні\n\nМарія приїхала до бабусі на вихідні. Вона дуже любить бабусину кухню.\n\nБабуся готує традиційний український обід. На кухні смачно пахне цибулею та часником.\n\n— Сьогодні я **готую** борщ, — каже бабуся. — Допоможи мені!\n— Звичайно! — відповідає Марія. — Що мені робити?\n— Спочатку **наріж** буряк і морквину. А я поки **смажу** цибулю.\n\nМарія **нарізає** овочі на дошці. Бабуся **смажить** цибулю на сковороді до золотистого кольору.\n\n— Тепер **поклади** все в **каструлю**, — каже бабуся. — Ми будемо **тушкувати** борщ дві години.\n— Так довго? — питає Марія.\n— Так! Справжній борщ **варять** повільно. Так він стає **смачний**.\n\nПоки борщ **вариться**, бабуся **пече** пампушки в **духовці**. Вона також **готує** салат із свіжих овочів.\n\n— Пампушки готові! — каже бабуся. — Вони ще **гарячі** і **свіжі**.\n— Смачно! — каже Марія. — Мама сказала, що твій борщ **найсмачніший** у світі!\n— Дякую, внучко! Тепер ти тож умієш готувати борщ.\n\n> [!cultural] Борщ — Національна Страва\n> Борщ — це символ української кухні.\n> Кожна родина має свій особливий рецепт.\n> ЮНЕСКО визнала український борщ нематеріальною спадщиною!\n> Це велика честь для України та української культури.\n\nМарія дуже задоволена. Тепер вона знає рецепт бабусиного борщу!\n\n---\n\n# Story Time Part 2: Рецепт Вареників\n\nОксана вчиться готувати вареники. Це традиційна українська страва. Її мама — чудова кухарка. Вона дає дочці інструкції.\n\n**Мама:** Спочатку **приготуй** тісто. **Змішай** борошно, воду і сіль.\n**Оксана:** Скільки борошна потрібно?\n**Мама:** Дві склянки. Потім **виміси** тісто руками.\n\nОксана **замішує** тісто. Воно стає гладким і еластичним.\n\n**Мама:** Тепер **розкачай** тісто і **виріж** кружечки.\n**Оксана:** А начинка?\n**Мама:** Я вже **приготувала** начинку з картоплі та цибулі. **Поклади** начинку на кружечки і **зліпи** краї.\n\nОксана **ліпить** вареники. Це непросто, але цікаво!\n\n**Мама:** Тепер **закип'яти** воду і **вари** вареники, поки вони спливуть.\n\nВареники **спливають** через п'ять хвилин. Оксана **виймає** їх ложкою.\n\n**Мама:** **Подавай** зі сметаною! **Смачного**!\n**Оксана:** Дякую, мамо! Вони **смачні**!\n\nВся родина сідає за стіл. Тато пробує вареники і каже:\n\n— Дуже **смачно**! Оксано, ти добре **приготувала** вареники!\n— Дякую, тату! Мама допомогла, — відповідає Оксана.\n— Вареники зі **сметаною** — це найкраща вечеря, — каже бабуся.\n\nУсі їдять із задоволенням. Після вечері всі допомагають **прибирати** кухню.\n\n— Завтра я **готуватиму** голубці, — каже мама.\n— Чудово! Я допоможу! — радіє Оксана.\n\nТепер Оксана знає, як **готувати** справжні українські вареники. Вона дуже задоволена. Це сімейна традиція, яку вона передасть своїм дітям. Вареники — це справжня українська страва з любов'ю!\n\n---\n\n# Common Expressions\n\n## Recipe Imperatives\n\nWhen following recipes in Ukrainian, you will encounter imperative forms. The imperative is used to give commands and instructions. Ukrainian has two imperative forms: one for informal situations and one for formal situations or when addressing multiple people.\n\nThe informal imperative typically ends in a consonant or soft sign. The formal imperative adds the suffix \"-те\" to the informal form. Here are the most common cooking imperatives:\n\n| Infinitive | Imperative (singular) | Imperative (plural/formal) |\n|-----------|-----------------|-----------------|\n| варити | вари! | варіть! |\n| смажити | смаж! | смажте! |\n| нарізати | наріж! | нарізьте! |\n| змішати | змішай! | змішайте! |\n| покласти | поклади! | покладіть! |\n\n## Useful Phrases\n\nWhen eating with Ukrainian friends or family, these phrases will help you participate in the culinary culture:\n\n- **Смачного!** = Enjoy your meal! This is said before eating. It is the equivalent of the French \"bon appétit\" and is considered polite to say before starting a meal.\n- **Дякую, дуже смачно!** = Thank you, very delicious! Say this to compliment the cook.\n- **Можна рецепт?** = Can I have the recipe? Ukrainians love sharing recipes, so do not be shy to ask.\n- **Як це готувати?** = How do you cook this? Use this when you want to learn a new dish.\n- **Це гаряче/холодне** = This is hot/cold. Useful for describing food temperature.\n\n---\n\n# Summary\n\n**Обладнання:**\n- каструля\n- сковорода\n- духовка\n- холодильник\n- плита\n- чайник\n\n**Методи:**\n- варити\n- смажити\n- пекти\n- тушкувати\n- нарізати\n- запікати\n\n**Прийоми їжі:**\n- сніданок\n- обід\n- вечеря\n- перекус\n\n**Смаки:**\n- солодкий\n- солоний\n- кислий\n- гіркий\n- гострий\n- смачний\n\nТепер ви можете готувати разом з українцями! Успіхів на кухні! Смачного!\n\n---\n\n# Activities\n\n## match-up: Kitchen Words\n\n> Match the Ukrainian to English.\n\n- каструля :: pot\n- сковорода :: frying pan\n- духовка :: oven\n- мікрохвильовка :: microwave\n- холодильник :: refrigerator\n- плита :: stove\n- варити :: to boil\n- смажити :: to fry\n- пекти :: to bake\n- тушкувати :: to stew\n- нарізати :: to chop\n- чайник :: kettle\n\n## fill-in: Cooking Methods\n\n> Choose the correct verb.\n\n1. Я [___] картоплю 20 хвилин. (boil)\n   > [!answer] варю\n   > [!options] варю | смажу | печу | тушкую\n\n2. Вона [___] м'ясо на сковороді. (fries)\n   > [!answer] смажить\n   > [!options] варить | смажить | пече | тушкує\n\n3. Він [___] хліб у духовці. (bakes)\n   > [!answer] пече\n   > [!options] варить | смажить | пече | тушкує\n\n4. Я [___] цибулю на дошці. (chop)\n   > [!answer] нарізаю\n   > [!options] варю | смажу | нарізаю | тушкую\n\n5. Суп у [___]. (pot)\n   > [!answer] каструлі\n   > [!options] каструлі | сковороді | духовці | чайнику\n\n6. Смаж м'ясо на [___]. (pan)\n   > [!answer] сковороді\n   > [!options] каструлі | сковороді | духовці | чайнику\n\n7. Пиріг у [___]. (oven)\n   > [!answer] духовці\n   > [!options] каструлі | сковороді | духовці | холодильнику\n\n8. Молоко в [___]. (fridge)\n   > [!answer] холодильнику\n   > [!options] каструлі | духовці | холодильнику | плиті\n\n## quiz: Food & Cooking\n\n1. \"Каструля\" is:\n   - [x] Pot\n   - [ ] Pan\n   - [ ] Oven\n\n2. \"Сковорода\" is:\n   - [x] Frying pan\n   - [ ] Pot\n   - [ ] Plate\n\n3. \"Варити\" means:\n   - [x] To boil\n   - [ ] To fry\n   - [ ] To bake\n\n4. \"Сніданок\" is:\n   - [x] Breakfast\n   - [ ] Dinner\n   - [ ] Lunch\n\n5. \"Вечеря\" is:\n   - [x] Dinner\n   - [ ] Breakfast\n   - [ ] Snack\n\n6. \"Солодкий\" means:\n   - [x] Sweet\n   - [ ] Salty\n   - [ ] Sour\n\n7. \"Гострий\" means:\n   - [x] Spicy\n   - [ ] Sweet\n   - [ ] Bitter\n\n8. \"Смачний\" means:\n   - [x] Delicious\n   - [ ] Salty\n   - [ ] Fresh\n\n## cloze: Recipe Story\n\n> Complete the recipe instructions.\n\nБабуся [___:1] борщ. (cooks)\nСпочатку [___:2] овочі. (chop)\nПотім [___:3] цибулю. (fry)\n[___:4] все в каструлю. (put)\n[___:5] борщ дві години. (stew)\n[___:6] пампушки в духовці. (bake)\n\n1. готує\n> [!answer] готує\n> [!options] готує | нарізає | смажить\n\n2. наріж\n> [!answer] наріж\n> [!options] наріж | вари | смаж\n\n3. смаж\n> [!answer] смаж\n> [!options] смаж | вари | наріж\n\n4. Поклади\n> [!answer] Поклади\n> [!options] Поклади | Наріж | Смаж\n\n5. Тушкуй\n> [!answer] Тушкуй\n> [!options] Тушкуй | Вари | Смаж\n\n6. Печи\n> [!answer] Печи\n> [!options] Печи | Вари | Смаж\n\n## unjumble: Cooking Sentences\n\n1. каструлю / картоплю / в / Поклади\n   > [!answer] Поклади картоплю в каструлю.\n2. сковороді / м'ясо / на / Смаж\n   > [!answer] Смаж м'ясо на сковороді.\n3. смачний / Борщ / дуже\n   > [!answer] Борщ дуже смачний.\n4. у / хліб / Пиріг / духовці\n   > [!answer] Пиріг у духовці.\n5. солоний / занадто / Суп\n   > [!answer] Суп занадто солоний.\n6. воду / Закип'яти / в / чайнику\n   > [!answer] Закип'яти воду в чайнику.\n7. свіжий / Хліб / та / смачний\n   > [!answer] Хліб свіжий та смачний.\n8. вечерю / готую / Я / сьогодні\n   > [!answer] Я сьогодні готую вечерю.\n\n## error-correction: Kitchen Mistakes\n\n1. Смаж м'ясо в **каструлі**.\n   > [!error] каструлі\n   > [!answer] сковороді\n   > [!explanation] We fry (смажити) in a pan (сковорода), not a pot.\n   > [!options] сковороді | каструлі\n\n2. **Вари** хліб у духовці.\n   > [!error] Вари\n   > [!answer] Печи\n   > [!explanation] We bake (пекти) bread in the oven, not boil.\n   > [!options] Печи | Вари\n\n3. Суп дуже **солодкий**.\n   > [!error] солодкий\n   > [!answer] солоний\n   > [!explanation] Soup is typically described as salty (солоний), not sweet.\n   > [!options] солоний | солодкий\n\n4. **Обід** — це ранкова їжа.\n   > [!error] Обід\n   > [!answer] Сніданок\n   > [!explanation] Morning meal = сніданок. Обід = lunch.\n   > [!options] Сніданок | Обід\n\n5. Поклади молоко в **духовку**.\n   > [!error] духовку\n   > [!answer] холодильник\n   > [!explanation] Milk goes in the refrigerator, not the oven!\n   > [!options] холодильник | духовку\n\n6. **Тушкуй** воду в чайнику.\n   > [!error] Тушкуй\n   > [!answer] Закип'яти\n   > [!explanation] We boil (кип'ятити) water, not stew it.\n   > [!options] Закип'яти | Тушкуй\n\n## match-up: Meals & Times\n\n> Match the meal to its typical time.\n\n- сніданок :: 7-9 ранку\n- обід :: 12-14\n- вечеря :: 18-20\n- перекус :: будь-коли\n- борщ :: на обід\n- каша :: на сніданок\n- бутерброди :: на вечерю\n- компот :: після їжі\n\n## group-sort: Kitchen Categories\n\n> Sort the words by category.\n\n### Equipment\n- каструля\n- сковорода\n- духовка\n- холодильник\n- плита\n- чайник\n\n### Cooking Methods\n- варити\n- смажити\n- пекти\n- тушкувати\n- нарізати\n- запікати\n\n### Tastes\n- солодкий\n- солоний\n- кислий\n- гострий\n\n## true-false: Kitchen Facts\n\n> Mark true or false.\n\n- [x] \"Каструля\" = pot.\n- [x] \"Сковорода\" = frying pan.\n- [ ] \"Варити\" = to bake.\n- [x] \"Варити\" = to boil.\n- [x] \"Сніданок\" = breakfast.\n- [ ] \"Вечеря\" = lunch.\n- [x] \"Вечеря\" = dinner.\n- [x] \"Солодкий\" = sweet.\n- [ ] \"Солоний\" = sweet.\n- [x] \"Гострий\" = spicy.\n- [x] \"Духовка\" = oven.\n- [ ] \"Обід\" = dinner.\n\n## translate: Food Words\n\n1. Pot\n   - [x] каструля\n   - [ ] сковорода\n   - [ ] тарілка\n\n2. To fry\n   - [x] смажити\n   - [ ] варити\n   - [ ] пекти\n\n3. Breakfast\n   - [x] сніданок\n   - [ ] обід\n   - [ ] вечеря\n\n4. Delicious\n   - [x] смачний\n   - [ ] солоний\n   - [ ] гострий\n\n5. Refrigerator\n   - [x] холодильник\n   - [ ] духовка\n   - [ ] плита\n\n6. Spicy\n   - [x] гострий\n   - [ ] солодкий\n   - [ ] кислий\n\n7. To chop\n   - [x] нарізати\n   - [ ] смажити\n   - [ ] варити\n\n8. Oven\n   - [x] духовка\n   - [ ] плита\n   - [ ] холодильник\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| каструля | /kɑsˈtrulʲɑ/ | pot | noun | f | kitchen |\n| сковорода | /skɔʋɔˈrɔdɑ/ | frying pan | noun | f | kitchen |\n| духовка | /duˈxɔʋkɑ/ | oven | noun | f | appliance |\n| мікрохвильовка | /mikrɔxʋɪˈlʲɔʋkɑ/ | microwave | noun | f | appliance |\n| холодильник | /xɔlɔˈdɪlʲnɪk/ | refrigerator | noun | m | appliance |\n| плита | /ˈplɪtɑ/ | stove | noun | f | appliance |\n| чайник | /ˈt͡ʃɑjnɪk/ | kettle | noun | m | kitchen |\n| ніж | /niʒ/ | knife | noun | m | utensil |\n| тарілка | /tɑˈrilkɑ/ | plate | noun | f | tableware |\n| виделка | /ˈʋɪdɛlkɑ/ | fork | noun | f | utensil |\n| ложка | /ˈlɔʒkɑ/ | spoon | noun | f | utensil |\n| варити | /ˈʋɑrɪtɪ/ | to boil | verb | — | cooking |\n| смажити | /ˈsmɑʒɪtɪ/ | to fry | verb | — | cooking |\n| пекти | /ˈpɛktɪ/ | to bake | verb | — | cooking |\n| тушкувати | /tuʃkuˈʋɑtɪ/ | to stew | verb | — | cooking |\n| нарізати | /nɑˈrizɑtɪ/ | to chop | verb | — | cooking |\n| запікати | /zɑpiˈkɑtɪ/ | to roast | verb | — | cooking |\n| готувати | /ɦɔtuˈʋɑtɪ/ | to cook | verb | — | cooking |\n| сніданок | /ˈsnidɑnɔk/ | breakfast | noun | m | meal |\n| обід | /ɔˈbid/ | lunch | noun | m | meal |\n| вечеря | /ˈʋɛt͡ʃɛrʲɑ/ | dinner | noun | f | meal |\n| перекус | /pɛrɛˈkus/ | snack | noun | m | meal |\n| солодкий | /sɔˈlɔdkɪj/ | sweet | adj | m | taste |\n| солоний | /sɔˈlɔnɪj/ | salty | adj | m | taste |\n| кислий | /ˈkɪslɪj/ | sour | adj | m | taste |\n| гіркий | /ˈɦirkɪj/ | bitter | adj | m | taste |\n| гострий | /ˈɦɔstrɪj/ | spicy | adj | m | taste |\n| свіжий | /sʋiˈʒɪj/ | fresh | adj | m | quality |\n| смачний | /ˈsmɑt͡ʃnɪj/ | delicious | adj | m | quality |\n| страва | /ˈstrɑʋɑ/ | dish | noun | f | food |\n| рецепт | /rɛˈt͡sɛpt/ | recipe | noun | m | cooking |\n| інгредієнт | /inɦrɛdiˈjɛnt/ | ingredient | noun | m | cooking |\n| порція | /ˈpɔrt͡sijɑ/ | portion | noun | f | serving |\n| скатертина | /skɑˈtɛrtɪnɑ/ | tablecloth | noun | f | tableware |\n| серветка | /sɛrˈʋɛtkɑ/ | napkin | noun | f | tableware |\n",
+    "createdAt": "2025-12-15T20:02:03.065987Z",
+    "modifiedAt": "2025-12-15T20:02:03.065987Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-44",
+    "level": "A2",
+    "phase": "A2.5",
+    "wordCount": 35,
+    "newWordCount": 35,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "каструля",
+        "ipa": "/kɑsˈtrulʲɑ/",
+        "en": "pot",
+        "pos": "noun",
+        "gender": "f",
+        "note": "kitchen"
+      },
+      {
+        "id": "vocab-2",
+        "uk": "сковорода",
+        "ipa": "/skɔʋɔˈrɔdɑ/",
+        "en": "frying pan",
+        "pos": "noun",
+        "gender": "f",
+        "note": "kitchen"
+      },
+      {
+        "id": "vocab-3",
+        "uk": "духовка",
+        "ipa": "/duˈxɔʋkɑ/",
+        "en": "oven",
+        "pos": "noun",
+        "gender": "f",
+        "note": "appliance"
+      },
+      {
+        "id": "vocab-4",
+        "uk": "мікрохвильовка",
+        "ipa": "/mikrɔxʋɪˈlʲɔʋkɑ/",
+        "en": "microwave",
+        "pos": "noun",
+        "gender": "f",
+        "note": "appliance"
+      },
+      {
+        "id": "vocab-5",
+        "uk": "холодильник",
+        "ipa": "/xɔlɔˈdɪlʲnɪk/",
+        "en": "refrigerator",
+        "pos": "noun",
+        "gender": "m",
+        "note": "appliance"
+      },
+      {
+        "id": "vocab-6",
+        "uk": "плита",
+        "ipa": "/ˈplɪtɑ/",
+        "en": "stove",
+        "pos": "noun",
+        "gender": "f",
+        "note": "appliance"
+      },
+      {
+        "id": "vocab-7",
+        "uk": "чайник",
+        "ipa": "/ˈt͡ʃɑjnɪk/",
+        "en": "kettle",
+        "pos": "noun",
+        "gender": "m",
+        "note": "kitchen"
+      },
+      {
+        "id": "vocab-8",
+        "uk": "ніж",
+        "ipa": "/niʒ/",
+        "en": "knife",
+        "pos": "noun",
+        "gender": "m",
+        "note": "utensil"
+      },
+      {
+        "id": "vocab-9",
+        "uk": "тарілка",
+        "ipa": "/tɑˈrilkɑ/",
+        "en": "plate",
+        "pos": "noun",
+        "gender": "f",
+        "note": "tableware"
+      },
+      {
+        "id": "vocab-10",
+        "uk": "виделка",
+        "ipa": "/ˈʋɪdɛlkɑ/",
+        "en": "fork",
+        "pos": "noun",
+        "gender": "f",
+        "note": "utensil"
+      },
+      {
+        "id": "vocab-11",
+        "uk": "ложка",
+        "ipa": "/ˈlɔʒkɑ/",
+        "en": "spoon",
+        "pos": "noun",
+        "gender": "f",
+        "note": "utensil"
+      },
+      {
+        "id": "vocab-12",
+        "uk": "варити",
+        "ipa": "/ˈʋɑrɪtɪ/",
+        "en": "to boil",
+        "pos": "verb",
+        "gender": null,
+        "note": "cooking"
+      },
+      {
+        "id": "vocab-13",
+        "uk": "смажити",
+        "ipa": "/ˈsmɑʒɪtɪ/",
+        "en": "to fry",
+        "pos": "verb",
+        "gender": null,
+        "note": "cooking"
+      },
+      {
+        "id": "vocab-14",
+        "uk": "пекти",
+        "ipa": "/ˈpɛktɪ/",
+        "en": "to bake",
+        "pos": "verb",
+        "gender": null,
+        "note": "cooking"
+      },
+      {
+        "id": "vocab-15",
+        "uk": "тушкувати",
+        "ipa": "/tuʃkuˈʋɑtɪ/",
+        "en": "to stew",
+        "pos": "verb",
+        "gender": null,
+        "note": "cooking"
+      },
+      {
+        "id": "vocab-16",
+        "uk": "нарізати",
+        "ipa": "/nɑˈrizɑtɪ/",
+        "en": "to chop",
+        "pos": "verb",
+        "gender": null,
+        "note": "cooking"
+      },
+      {
+        "id": "vocab-17",
+        "uk": "запікати",
+        "ipa": "/zɑpiˈkɑtɪ/",
+        "en": "to roast",
+        "pos": "verb",
+        "gender": null,
+        "note": "cooking"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "готувати",
+        "ipa": "/ɦɔtuˈʋɑtɪ/",
+        "en": "to cook",
+        "pos": "verb",
+        "gender": null,
+        "note": "cooking"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "сніданок",
+        "ipa": "/ˈsnidɑnɔk/",
+        "en": "breakfast",
+        "pos": "noun",
+        "gender": "m",
+        "note": "meal"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "обід",
+        "ipa": "/ɔˈbid/",
+        "en": "lunch",
+        "pos": "noun",
+        "gender": "m",
+        "note": "meal"
+      },
+      {
+        "id": "vocab-21",
+        "uk": "вечеря",
+        "ipa": "/ˈʋɛt͡ʃɛrʲɑ/",
+        "en": "dinner",
+        "pos": "noun",
+        "gender": "f",
+        "note": "meal"
+      },
+      {
+        "id": "vocab-22",
+        "uk": "перекус",
+        "ipa": "/pɛrɛˈkus/",
+        "en": "snack",
+        "pos": "noun",
+        "gender": "m",
+        "note": "meal"
+      },
+      {
+        "id": "vocab-23",
+        "uk": "солодкий",
+        "ipa": "/sɔˈlɔdkɪj/",
+        "en": "sweet",
+        "pos": "adj",
+        "gender": "m",
+        "note": "taste"
+      },
+      {
+        "id": "vocab-24",
+        "uk": "солоний",
+        "ipa": "/sɔˈlɔnɪj/",
+        "en": "salty",
+        "pos": "adj",
+        "gender": "m",
+        "note": "taste"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "кислий",
+        "ipa": "/ˈkɪslɪj/",
+        "en": "sour",
+        "pos": "adj",
+        "gender": "m",
+        "note": "taste"
+      },
+      {
+        "id": "vocab-26",
+        "uk": "гіркий",
+        "ipa": "/ˈɦirkɪj/",
+        "en": "bitter",
+        "pos": "adj",
+        "gender": "m",
+        "note": "taste"
+      },
+      {
+        "id": "vocab-27",
+        "uk": "гострий",
+        "ipa": "/ˈɦɔstrɪj/",
+        "en": "spicy",
+        "pos": "adj",
+        "gender": "m",
+        "note": "taste"
+      },
+      {
+        "id": "vocab-28",
+        "uk": "свіжий",
+        "ipa": "/sʋiˈʒɪj/",
+        "en": "fresh",
+        "pos": "adj",
+        "gender": "m",
+        "note": "quality"
+      },
+      {
+        "id": "vocab-29",
+        "uk": "смачний",
+        "ipa": "/ˈsmɑt͡ʃnɪj/",
+        "en": "delicious",
+        "pos": "adj",
+        "gender": "m",
+        "note": "quality"
+      },
+      {
+        "id": "vocab-30",
+        "uk": "страва",
+        "ipa": "/ˈstrɑʋɑ/",
+        "en": "dish",
+        "pos": "noun",
+        "gender": "f",
+        "note": "food"
+      },
+      {
+        "id": "vocab-31",
+        "uk": "рецепт",
+        "ipa": "/rɛˈt͡sɛpt/",
+        "en": "recipe",
+        "pos": "noun",
+        "gender": "m",
+        "note": "cooking"
+      },
+      {
+        "id": "vocab-32",
+        "uk": "інгредієнт",
+        "ipa": "/inɦrɛdiˈjɛnt/",
+        "en": "ingredient",
+        "pos": "noun",
+        "gender": "m",
+        "note": "cooking"
+      },
+      {
+        "id": "vocab-33",
+        "uk": "порція",
+        "ipa": "/ˈpɔrt͡sijɑ/",
+        "en": "portion",
+        "pos": "noun",
+        "gender": "f",
+        "note": "serving"
+      },
+      {
+        "id": "vocab-34",
+        "uk": "скатертина",
+        "ipa": "/skɑˈtɛrtɪnɑ/",
+        "en": "tablecloth",
+        "pos": "noun",
+        "gender": "f",
+        "note": "tableware"
+      },
+      {
+        "id": "vocab-35",
+        "uk": "серветка",
+        "ipa": "/sɛrˈʋɛtkɑ/",
+        "en": "napkin",
+        "pos": "noun",
+        "gender": "f",
+        "note": "tableware"
+      }
+    ],
+    "reviewWords": []
+  }
+}

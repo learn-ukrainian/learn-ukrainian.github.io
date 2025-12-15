@@ -1,35 +1,32 @@
 # Audit Report: 03-aspect-past-result-process.md
 **Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1250
-**Overall Status:** ❌ FAIL
-
-## Recommendation
-**📝 UPDATE** (severity 15/100)
-
-- Immersion 16% off target
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1786/1250
+- **Words:** ⚠️ 2655/1250 (>2250 may be too long)
 - **Activities:** ✅ 15/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
+- **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 70.5% HIGH (target 50-55% (grammar))
+- **Immersion:** 🇺🇦 59.7% (target 50-60% (B1.1 Aspect))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Diagnostic** | ✅ | 210 | Included in Core |
-| **Analysis** | ⚪️ | 528 | Skipped |
-| **Deep Dive** | ✅ | 692 | Included in Core |
+| **Intro/Narrative** | ✅ | 92 | Included in Core |
+| **Diagnostic** | ✅ | 123 | Included in Core |
+| **The Process vs Result Distinction: Why English Speakers Struggle** | ⚪️ | 174 | Skipped |
+| **Analysis** | ⚪️ | 686 | Skipped |
+| **Deep Dive** | ✅ | 1059 | Included in Core |
 | **Practice** | ⚪️ | 252 | Skipped |
-| **Summary** | ✅ | 104 | Included in Core |
+| **Summary** | ✅ | 0 | Included in Core |
+| **What You've Learned: A Framework for Process vs Result** | ⚪️ | 269 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **quiz: Процес чи результат** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Маркери та види** | 🎮 | 14 | Activity (14 items, min 8) |

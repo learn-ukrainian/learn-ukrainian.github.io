@@ -1,0 +1,473 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-35",
+    "moduleId": "mod-uk-A2-35",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.4",
+    "moduleNumber": 35,
+    "moduleType": "grammar",
+    "pedagogy": "Inquiry",
+    "immersionLevel": 0.4,
+    "title": "Motion Verb Prefixes",
+    "titleUk": null,
+    "subtitle": "The GPS of Ukrainian",
+    "description": "Learner can express specific directions of movement",
+    "objectives": [
+      "Learner can express specific directions of movement",
+      "Learner can understand arrival, departure, and entry concepts",
+      "Learner can give detailed route descriptions"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "motion verb prefixes (при-, ви-, в-, за-, пере-, від-, під-, об-)",
+      "formation of perfective motion verbs",
+      "destination cases (в/на + Acc)"
+    ],
+    "tags": [
+      "grammar",
+      "verbs",
+      "prefixes",
+      "motion"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "Prepare your imaginary travel bag. We are going on a journey!\nIn Module 01, you learned **йти** (to go).\nBut \"going\" is boring. Do you want to **arrived**, **exit**, **enter**, **cross**, or **pass by**?\nIn Ukrainian, you don't need new words for this. You just need a **prefix**!\nA prefix is like a GPS instruction added to the front of the verb.\n\n> [!question] Think about it\n> In English, you say \"go **out**\", \"come **in**\", \"walk **away**\".\n> In Ukrainian, these prepositions become prefixes attached to the verb:\n> - Go **out** -> **Ви**йти\n> - Come **in** -> **У**війти\n> - Walk **away** -> **Від**ійти\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "The Prefix Map",
+        "nameEn": null,
+        "type": "content",
+        "content": "Imagine a house. We will use the verb **йти** (to walk) as our base.\n\n| Prefix | Meaning | Logic | Example |\n| :--- | :--- | :--- | :--- |\n| **В- / У-** | **In** | Entering a space | **У**війти в кімнату (Enter the room) |\n| **Ви-** | **Out** | Exiting a space | **Ви**йти з дому (Exit the house) |\n| **При-** | **Arrival** | Reaching a goal | **При**йти на роботу (Arrive at work) |\n| **Пі-** | **Departure** | Leaving for good | **Пі**ти додому (Leave for home) |\n| **Під-** | **Approach** | Getting close | **Під**ійти до вікна (Approach the window) |\n| **Від-** | **Away** | Stepping back | **Від**ійти від дверей (Step away from the door) |\n| **Пере-** | **Cross** | Crossing a line | **Пере**йти вулицю (Cross the street) |\n| **За-** | **Drop by** | Brief visit / Behind | **За**йти в магазин (Pop into the store) |\n| **Про-** | **Through** | Passing by/through | **Про**йти парк (Pass through the park) |\n| **Об-** | **Around** | Circumnavigating | **Об**ійти дім (Walk around the house) |\n\n> [!important] Grammar Note\n> When you add a prefix to **йти** (imperfective), it usually becomes **perfective** (a completed single action).\n> - Я **йду** (I am walking - process).\n> - Я **прийшов** (I arrived - result).\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Story Time: The Lost Tourist",
+        "nameEn": null,
+        "type": "content",
+        "content": "Це історія про туриста, який гуляв Києвом.\nЙого звали Джон, і він дуже любив пригоди.\nСпочатку він **вийшов** з готелю \"Україна\".\nВін хотів **прийти** на Майдан Незалежності, щоб зробити фото.\nВін **перейшов** дорогу, але зрозумів, що забув карту в номері.\nВін подумав: \"Нічого, у мене є телефон\".\nАле телефон не працював!\nТому він **зайшов** у маленьке кафе, щоб запитати дорогу і випити кави.\nБариста був дуже привітний. Він сказав:\n\"**Вийдіть** з кафе, **пройдіть** прямо дві вулиці, потім **обійдіть** великий білий будинок.\"\nТурист подякував, допив каву і **пішов** далі.\nВін **дійшов** до метро \"Хрещатик\", але не **увійшов** всередину, тому що погода була чудова.\nВін побачив гарний парк і **підійшов** до фонтану, де грала музика.\nТам він несподівано зустрів свого старого друга Марка!\nМарк сказав: \"Який сюрприз! Давай гуляти разом!\"\nВони разом **пішли** гуляти старим містом.\nВони **обходили** всі історичні місця.\nВвечері турист **прийшов** у готель. Він **втомився**, але був щасливий.\n\n> [!cultural] History Bite: The Chumak Way\n> Before trucks and trains, Ukrainians had **Chumaks** (Чумаки).\n> They were traders who drove wagons drawn by oxen to Crimea to buy salt.\n> Their journey (**шлях**) was dangerous and long.\n> They **виїжджали** (left) in spring and **приїжджали** (arrived back) in autumn.\n> The Milky Way galaxy in Ukrainian is called **Чумацький Шлях** (The Chumak Way), because they used stars to navigate.\n> This connection between movement and the cosmos is deep in Ukrainian culture.\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Deep Dive: The Logic of \"Pro-\" (Distance)",
+        "nameEn": null,
+        "type": "content",
+        "content": "We learned many prefixes, but let's look at **Про-**.\nIt implies covering a distance or passing through.\n\n- **Пройти** 5 кілометрів (To walk 5 km).\n- **Проїхати** зупинку (To miss/drive past a stop).\n- **Пройти** контроль (To pass through security).\n\nImagine an arrow going *through* a tube. That is **Про-**.\n\n> [!note] Sitting \"On the Horse\"\n> Before a long journey, Ukrainians have a tradition.\n> Before you **вийти** (exit) the house, everyone must sit down for a minute.\n> It is called \"**посидіти на доріжку**\" (sit for the road).\n> Historically, it was a moment to pray or remember forgotten items.\n> Even today, if you rush out, a Ukrainian might stop you: \"Sit down! We need luck.\"\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Deep Dive: Where are you going? (B/HA + Accusative)",
+        "nameEn": null,
+        "type": "content",
+        "content": "Motion verbs change the case of the destination!\nYou are not \"at\" a place (Locative). You are going \"into\" a place (Accusative).\n\n- **Location (Locative):** Я (де?) в парку / на роботі.\n- **Direction (Accusative):** Я йду (куди?) **в парк** / **на роботу**.\n\n| Verb | Preposition | Case | Example |\n| :--- | :--- | :--- | :--- |\n| **Прийти** | **В / У** | Accusative | Я прийшов **у магазин**. |\n| **Вийти** | **З** | Genitive | Я вийшов **з магазину**. |\n| **Піти** | **На** | Accusative | Я пішов **на концерт**. |\n| **Поїхати** | **До** | Genitive | Я поїхав **до бабусі**. |\n\n> [!tip] Which Preposition?\n> - Use **В/З** for enclosed spaces (buildings, cities, countries).\n> - Use **На/З** for open spaces, events, or islands (concert, work, street).\n> - Use **До/Від** for people (I go **to** Mom). You cannot go \"inside\" Mom!\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Deep Dive: Figurative Motion",
+        "nameEn": null,
+        "type": "content",
+        "content": "Ukrainian loves to use motion verbs for abstract ideas.\n\n1.  **Вийти заміж** (To exit behind husband) = To marry (for women).\n    *   *Марія **вийшла** заміж.*\n2.  **Зійти з розуму** (To descend from mind) = To go crazy.\n    *   *Ти що, **зійшов** з розуму?*\n3.  **Прийти в голову** (To arrive into head) = To occur to someone.\n    *   *Мені **прийшла** в голову ідея.*\n4.  **Вийти** (To work out / succeed).\n    *   *У мене все **вийшло**!* (I succeeded / It worked out).\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Deep Dive: Go vs. Drive (Йти vs. Їхати)",
+        "nameEn": null,
+        "type": "content",
+        "content": "---"
+      },
+      {
+        "id": "section-8",
+        "name": "Deep Dive: Go vs. Drive (Йти vs. Їхати)",
+        "nameEn": null,
+        "type": "content",
+        "content": "The prefixes work exactly the same for vehicles!\nJust change the base.\n\n- **Йти** (Foot) -> **Прийти** (Arrive on foot)\n- **Їхати** (Vehicle) -> **Приїхати** (Arrive by car/bus/train)\n\n| English | On Foot | By Vehicle |\n| :--- | :--- | :--- |\n| **Arrive** | Прийти | Приїхати |\n| **Leave/Exit** | Вийти | Виїхати |\n| **Enter** | Увійти | В'їхати |\n| **Cross** | Перейти | Переїхати |\n\n**Example:**\n- Я **прийшов** додому. (I walked/arrived home).\n- Я **приїхав** додому. (I drove/arrived home).\n\n> [!tip] Pronunciation Tip: The Apostrophe\n> Note **В'їхати** (To drive in).\n> The apostrophe means a hard stop. Pronounce it like \"V... Yikhaty\".\n\n---"
+      },
+      {
+        "id": "section-9",
+        "name": "Language in Action",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Dialogue: The Taxi Ride\n\n**Driver:** Добрий день. Куди їдемо?\n**Passenger:** Добрий день. На вокзал, будь ласка.\n**Driver:** Добре. Ми **виїжджаємо** з парковки?\n**Passenger:** Так. Нам треба **переїхати** міст?\n**Driver:** Ні, міст не працює. Ми **об'їдемо** через центр.\n**Passenger:** Це довго? Я можу запізнитися.\n**Driver:** Не хвилюйтеся. Ми **доїдемо** за 20 хвилин.\n**Passenger:** О, я забув телефон! Можемо **заїхати** додому?\n**Driver:** Ні, тоді ми точно не встигнемо.\n**Passenger:** Добре, їдемо прямо.\n*(20 minutes later)*\n**Driver:** Ми **приїхали**. Це вхід на вокзал.\n**Passenger:** Дякую! Я **піду** швидко.\n\n---"
+      },
+      {
+        "id": "section-10",
+        "name": "Deep Dive: Prefix Mathematics",
+        "nameEn": null,
+        "type": "content",
+        "content": "Here is a secret: Ukrainians are efficient.\nInstead of inventing completely new words for \"enter\", \"exit\", \"arrive\", \"depart\", they just recycle the same base verbs.\nIf you know **йти** and **їхати**, and you learn 10 prefixes, you instantly know **20+ new words**!\n\n- **Йти** (1) x 10 Prefixes = 10 words\n- **Їхати** (1) x 10 Prefixes = 10 words\n- Plus the base forms = 22 total words.\n\nThis is why Slavic languages are awesome. You don't memorize dictionary pages; you memorize logic blocks.\nMastering prefixes is the biggest \"hack\" in the Ukrainian language.\n\n---"
+      },
+      {
+        "id": "section-11",
+        "name": "Anti-Propaganda Showcase",
+        "nameEn": null,
+        "type": "content",
+        "content": "> [!myth] Myth: \"Ukrainian is just a rural dialect.\"\n> **Fact:** Ukrainian has a highly engineered system of motion verbs that precise distinguishing between \"walking around\", \"walking through\", and \"dropping by\".\n> Imperial Russia banned Ukrainian in cities (Valuev Circular 1863) to force it into villages, creating this myth.\n> Yet, the language survived with its complex urban grammar intact. When you ask \"**Як пройти до метро?**\" (How to get to the metro?), you are using high-level prefix grammar that proves the language belongs in the metropolis.\n\n---"
+      },
+      {
+        "id": "section-12",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "1.  **Prefixes are GPS:** They tell you direction.\n2.  **При-** (Arrival) vs **Пі-** (Departure).\n3.  **В-** (In) vs **Ви-** (Out).\n4.  **Під-** (Approach) vs **Від-** (Retreat).\n5.  **Motion Rules:** Use **Йти** suffixes for feet, **Їхати** suffixes for wheels.\n\n---"
+      },
+      {
+        "id": "section-13",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Prefix Power\n\n> Match the prefix to its GPS meaning.\n\n- При- :: Arrival (Destination reached)\n- Ви- :: Exit (Out of somewhere)\n- Під- :: Approach (Getting closer)\n- Пере- :: Cross (Over a line)\n- За- :: Drop by (Brief visit / Behind)\n- В- :: Enter (Into somewhere)\n- Від- :: Away (Distance increases)\n- Об- :: Around (Circle)\n- Про- :: Through (Passing distance)\n- До- :: Reach (Final limit)\n\n## fill-in: The Tourist Map\n\n> Complete the sentences with the correct verb form.\n\n1. Я хочу ___ в магазин купити води. (Drop by - foot)\n   > [!answer] зайти\n   > [!options] зайти | вийти | підійти\n\n2. Турист ___ з готелю вранці. (Exited - foot - past)\n   > [!answer] вийшов\n   > [!options] вийшов | прийшов | зайшов\n\n3. Ми ___ в Київ поїздом. (Arrived - vehicle - past)\n   > [!answer] приїхали\n   > [!options] приїхали | прийшли | пішли\n\n4. Вам треба ___ вулицю на світлофорі. (Cross - foot)\n   > [!answer] перейти\n   > [!options] перейти | вийти | увійти\n\n5. Автобус ___ до зупинки. (Approached - vehicle - past)\n   > [!answer] під'їхав\n   > [!options] під'їхав | від'їхав | заїхав\n\n6. Я ___ ключі додому? (Bring - foot - future simple)\n   > [!answer] принесу\n   > [!options] принесу | винесу | занесу\n\n7. Він ___ від мене, тому що образився. (Walked away - past)\n   > [!answer] відійшов\n   > [!options] відійшов | підійшов | увійшов\n\n8. Ми ___ весь світ. (Travel/Go around - vehicle)\n   > [!answer] об'їхали\n   > [!options] об'їхали | в'їхали | приїхали\n\n## group-sort: Foot vs. Wheel\n\n> Is this action usually done on foot or by vehicle?\n\n### On Foot (Йти bases)\n- Прийти\n- Вийти\n- Підійти\n- Зайти до кімнати\n- Перейти дорогу\n- Ввійти\n\n### By Vehicle (Їхати bases)\n- Приїхати\n- Виїхати\n- Під'їхати\n- Заїхати на заправку\n- Переїхати міст\n- В'їхати\n\n## quiz: Logic Check\n\n> Choose the most logical action.\n\n1. You are inside a room. You want to leave. You...\n   - [x] Виходите\n   - [ ] Входите\n   - [ ] Підходите\n\n2. You see a friend across the street. To meet him, you must...\n   - [x] Перейти вулицю\n   - [ ] Обійти вулицю\n   - [ ] Зайти вулицю\n\n3. The train is at the platform. It is ready to start the journey. It...\n   - [x] Відправляється / Від'їжджає\n   - [ ] Приїжджає\n   - [ ] Під'їжджає\n\n4. You want to give flowers to Mom. You...\n   - [x] Приносите квіти\n   - [ ] Виносите квіти\n   - [ ] Переносите квіти\n\n5. \"Зайти\" implies the visit is...\n   - [x] Short/Brief\n   - [ ] Permanent\n   - [ ] Dangerous\n\n6. \"Чумаки\" traveled to get...\n   - [x] Salt\n   - [ ] Gold\n   - [ ] Coffee\n\n7. If you \"Проїхали\" your stop, you went...\n   - [x] Too far (Past it)\n   - [ ] Not far enough\n   - [ ] Exactly there\n\n8. \"Обйти\" helps you avoid...\n   - [x] An obstacle\n   - [ ] A door\n   - [ ] A friend\n\n## true-false: Prefix Mystery\n\n1. \"Вийти\" means to enter.\n   - [ ] True\n   - [x] False (Exit)\n\n2. \"Приїхати\" means to arrive by transport.\n   - [x] True\n   - [ ] False\n\n3. \"Перейти\" involves crossing something (like a street).\n   - [x] True\n   - [ ] False\n\n4. \"Підійти\" implies increasing distance.\n   - [ ] True\n   - [x] False (Getting closer)\n\n5. \"В'їхати\" is pronounced with a pause inside.\n   - [x] True\n   - [ ] False\n\n6. \"Обйти\" means to go straight through.\n   - [ ] True\n   - [x] False (Go around)\n\n7. \"Відійти\" means to move away from an object.\n   - [x] True\n   - [ ] False\n\n8. \"Зайти\" means to leave forever.\n   - [ ] True\n   - [x] False (Drop by)\n\n## unjumble: Build the Sentence\n\n1. магазин / в / зайшов / він\n   > [!answer] Він зайшов в магазин.\n2. з / вийшла / вона / дому\n   > [!answer] Вона вийшла з дому.\n3. до / підійти / вікна\n   > [!answer] Підійти до вікна.\n4. ми / міст / переїхали\n   > [!answer] Ми переїхали міст.\n5. додому / я / прийшов\n   > [!answer] Я прийшов додому.\n6. автобус / від / від'їхав / зупинки\n   > [!answer] Автобус від'їхав від зупинки.\n\n## mark-the-words: Find the Motion\n\nТурист [вийшов](motion) з готелю. Він [побачив](perception) карту. Він [перейшов](motion) площу. Потім він [зайшов](motion) у музей. Там він [слухав](perception) гіда. Ввечері він [повернувся](motion) назад. Він [їв](action) вечерю і [спав](state).\n\n## cloze: The Journey Home\n\n> Fill in the missing prefixes.\n\nЯ живу в Києві, але мої батьки у Львові.\nУ п'ятницю я [___:1]їжджаю з Києва.\nЯ [___:2]їжджаю на вокзал на таксі.\nЯ [___:3]ходжу у вагон поїзда.\nПоїзд [___:4]їжджає рівно о 18:00.\nВранці я [___:5]їжджаю у Львів.\nТато [___:6]стрічає мене на пероні.\nМи [___:7]їжджаємо додому машиною.\nМама рада, що я [___:8]їхав.\n\n1. ви\n> [!answer] ви\n\n2. при\n> [!answer] при\n\n3. за\n> [!answer] за\n\n4. від\n> [!answer] від\n\n5. при\n> [!answer] при\n\n6. зу\n> [!answer] зу\n\n7. їд\n> [!answer] їд\n\n8. при\n> [!answer] при\n\n## dialogue-reorder: Asking Directions\n\n- Перепрошую, як пройти до опери?\n- Добрий день. Це недалеко.\n- Мені треба переходити вулицю?\n- Ні, не треба. Просто вийдіть з метро і йдіть прямо.\n- А потім?\n- Потім обійдіть пам'ятник Тарасу Шевченку.\n- І я побачу оперу?\n- Так, ви відразу її побачите.\n\n> [!answer]\n> 1. Перепрошую, як пройти до опери?\n> 2. Добрий день. Це недалеко.\n> 3. Мені треба переходити вулицю?\n> 4. Ні, не треба. Просто вийдіть з метро і йдіть прямо.\n> 5. А потім?\n> 6. Потім обійдіть пам'ятник Тарасу Шевченку.\n> 7. І я побачу оперу?\n> 8. Так, ви відразу її побачите.\n\n## error-correction: Fix the Trips\n\n1. Я **вийшов** в кімнату. (Logic: Exit into?)\n   > [!error] вийшов\n   > [!answer] увійшов / зайшов\n   > [!explanation] Entering a room uses \"увійти\" or \"зайти\". \"Вийти\" means to exit.\n   > [!options] увійшов | вийшов\n\n2. Машина **прийшла** в гараж. (Verb type)\n   > [!error] прийшла\n   > [!answer] приїхала / заїхала\n   > [!explanation] Cars rely on wheels (їхати), not feet (йти).\n   > [!options] заїхала | прийшла\n\n3. Він **перейшов** від мене. (Prefix meaning)\n   > [!error] перейшов\n   > [!answer] відійшов\n   > [!explanation] Moving away is \"від-\". \"Пере-\" is crossing.\n   > [!options] відійшов | перейшов\n\n4. Ми **приїхали** з дому на роботу. (Leaving context)\n   > [!error] приїхали\n   > [!answer] виїхали\n   > [!explanation] Leaving a place is \"ви-\". Arriving is \"при-\".\n   > [!options] виїхали | приїхали\n\n5. Я **обійшов** вулицю. (Context: crossing)\n   > [!error] обійшов\n   > [!answer] перейшов\n   > [!explanation] You cross a street, you don't usually walk around it (unless it's closed).\n   > [!options] перейшов | обійшов\n\n6. Поїзд **під'їхав** з Києва. (Arrival from city)\n   > [!error] під'їхав\n   > [!answer] приїхав\n   > [!explanation] \"Приїхав\" is arrival from a distance. \"Під'їхав\" is approaching a specific spot near you.\n   > [!options] приїхав | під'їхав\n\n---"
+      },
+      {
+        "id": "section-14",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| прийти | /prɪjˈtɪ/ | to arrive (foot) | verb | — | pf |\n| вийти | /ˈʋɪjtɪ/ | to exit (foot) | verb | — | pf |\n| увійти | /uʋiˈjtɪ/ | to enter (foot) | verb | — | pf |\n| зайти | /zɑjˈtɪ/ | to drop by (foot) | verb | — | pf |\n| перейти | /pɛrɛjˈtɪ/ | to cross (foot) | verb | — | pf |\n| відійти | /ʋidijˈtɪ/ | to move away (foot) | verb | — | pf |\n| підійти | /pidijˈtɪ/ | to approach (foot) | verb | — | pf |\n| обійти | /ɔbijˈtɪ/ | to go around (foot) | verb | — | pf |\n| пройти | /prɔjˈtɪ/ | to pass/cover distance | verb | — | pf |\n| розійтися | /rɔzijˈtɪsʲɑ/ | to disperse/part ways | verb | — | pf |\n| зійти | /zijˈtɪ/ | to descend/get off | verb | — | pf |\n| дійти | /dijˈtɪ/ | to reach/get to | verb | — | pf |\n| приїхати | /prɪˈjixɑtɪ/ | to arrive (vehicle) | verb | — | pf |\n| виїхати | /ˈʋɪjixɑtɪ/ | to exit (vehicle) | verb | — | pf |\n| в'їхати | /ˈʋjixɑtɪ/ | to enter (vehicle) | verb | — | pf |\n| заїхати | /zɑˈjixɑtɪ/ | to drive in/by | verb | — | pf |\n| переїхати | /pɛrɛˈjixɑtɪ/ | to cross/move house | verb | — | pf |\n| від'їхати | /ʋidˈjixɑtɪ/ | to drive away | verb | — | pf |\n| під'їхати | /pidˈjixɑtɪ/ | to drive up to | verb | — | pf |\n| об'їхати | /ɔbˈjixɑtɪ/ | to drive around | verb | — | pf |\n| проїхати | /prɔˈjixɑtɪ/ | to drive past | verb | — | pf |\n| роз'їхатися | /rɔzˈjixɑtɪsʲɑ/ | to disperse (vehicles) | verb | — | pf |\n| доїхати | /dɔˈjixɑtɪ/ | to reach (vehicle) | verb | — | pf |\n| принести | /prɪnɛsˈtɪ/ | to bring (carrying) | verb | — | pf |\n| винести | /ˈʋɪnɛstɪ/ | to carry out | verb | — | pf |\n| внести | /ʋnɛsˈtɪ/ | to carry in | verb | — | pf |\n| занести | /zɑnɛsˈtɪ/ | to bring in/drop off | verb | — | pf |\n| перенести | /pɛrɛnɛsˈtɪ/ | to move/carry across | verb | — | pf |\n| відвести | /ʋidʋɛsˈtɪ/ | to lead away (person) | verb | — | pf |\n| привести | /prɪʋɛsˈtɪ/ | to lead/bring (person) | verb | — | pf |\n| вивести | /ˈʋɪʋɛstɪ/ | to lead out | verb | — | pf |\n| відвезти | /ʋidʋɛzˈtɪ/ | to transport away | verb | — | pf |\n| привезти | /prɪʋɛzˈtɪ/ | to transport here | verb | — | pf |\n| йти | /jtɪ/ | to go (foot) | verb | — | impf |\n| їхати | /ˈjixɑtɪ/ | to go (vehicle) | verb | — | impf |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-31\ntitle: Motion Verb Prefixes\nsubtitle: \"The GPS of Ukrainian\"\nversion: \"1.0\"\nphase: \"A2.4\"\npedagogy: \"Inquiry\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - grammar\n  - verbs\n  - prefixes\n  - motion\ngrammar:\n  - motion verb prefixes (при-, ви-, в-, за-, пере-, від-, під-, об-)\n  - formation of perfective motion verbs\n  - destination cases (в/на + Acc)\nobjectives:\n  - \"Learner can express specific directions of movement\"\n  - \"Learner can understand arrival, departure, and entry concepts\"\n  - \"Learner can give detailed route descriptions\"\nvocabulary_count: 35\n---\n\n# Warm-up\n\nPrepare your imaginary travel bag. We are going on a journey!\nIn Module 01, you learned **йти** (to go).\nBut \"going\" is boring. Do you want to **arrived**, **exit**, **enter**, **cross**, or **pass by**?\nIn Ukrainian, you don't need new words for this. You just need a **prefix**!\nA prefix is like a GPS instruction added to the front of the verb.\n\n> [!question] Think about it\n> In English, you say \"go **out**\", \"come **in**\", \"walk **away**\".\n> In Ukrainian, these prepositions become prefixes attached to the verb:\n> - Go **out** -> **Ви**йти\n> - Come **in** -> **У**війти\n> - Walk **away** -> **Від**ійти\n\n---\n\n# The Prefix Map\n\nImagine a house. We will use the verb **йти** (to walk) as our base.\n\n| Prefix | Meaning | Logic | Example |\n| :--- | :--- | :--- | :--- |\n| **В- / У-** | **In** | Entering a space | **У**війти в кімнату (Enter the room) |\n| **Ви-** | **Out** | Exiting a space | **Ви**йти з дому (Exit the house) |\n| **При-** | **Arrival** | Reaching a goal | **При**йти на роботу (Arrive at work) |\n| **Пі-** | **Departure** | Leaving for good | **Пі**ти додому (Leave for home) |\n| **Під-** | **Approach** | Getting close | **Під**ійти до вікна (Approach the window) |\n| **Від-** | **Away** | Stepping back | **Від**ійти від дверей (Step away from the door) |\n| **Пере-** | **Cross** | Crossing a line | **Пере**йти вулицю (Cross the street) |\n| **За-** | **Drop by** | Brief visit / Behind | **За**йти в магазин (Pop into the store) |\n| **Про-** | **Through** | Passing by/through | **Про**йти парк (Pass through the park) |\n| **Об-** | **Around** | Circumnavigating | **Об**ійти дім (Walk around the house) |\n\n> [!important] Grammar Note\n> When you add a prefix to **йти** (imperfective), it usually becomes **perfective** (a completed single action).\n> - Я **йду** (I am walking - process).\n> - Я **прийшов** (I arrived - result).\n\n---\n\n# Story Time: The Lost Tourist\n\nЦе історія про туриста, який гуляв Києвом.\nЙого звали Джон, і він дуже любив пригоди.\nСпочатку він **вийшов** з готелю \"Україна\".\nВін хотів **прийти** на Майдан Незалежності, щоб зробити фото.\nВін **перейшов** дорогу, але зрозумів, що забув карту в номері.\nВін подумав: \"Нічого, у мене є телефон\".\nАле телефон не працював!\nТому він **зайшов** у маленьке кафе, щоб запитати дорогу і випити кави.\nБариста був дуже привітний. Він сказав:\n\"**Вийдіть** з кафе, **пройдіть** прямо дві вулиці, потім **обійдіть** великий білий будинок.\"\nТурист подякував, допив каву і **пішов** далі.\nВін **дійшов** до метро \"Хрещатик\", але не **увійшов** всередину, тому що погода була чудова.\nВін побачив гарний парк і **підійшов** до фонтану, де грала музика.\nТам він несподівано зустрів свого старого друга Марка!\nМарк сказав: \"Який сюрприз! Давай гуляти разом!\"\nВони разом **пішли** гуляти старим містом.\nВони **обходили** всі історичні місця.\nВвечері турист **прийшов** у готель. Він **втомився**, але був щасливий.\n\n> [!cultural] History Bite: The Chumak Way\n> Before trucks and trains, Ukrainians had **Chumaks** (Чумаки).\n> They were traders who drove wagons drawn by oxen to Crimea to buy salt.\n> Their journey (**шлях**) was dangerous and long.\n> They **виїжджали** (left) in spring and **приїжджали** (arrived back) in autumn.\n> The Milky Way galaxy in Ukrainian is called **Чумацький Шлях** (The Chumak Way), because they used stars to navigate.\n> This connection between movement and the cosmos is deep in Ukrainian culture.\n\n---\n\n# Deep Dive: The Logic of \"Pro-\" (Distance)\n\nWe learned many prefixes, but let's look at **Про-**.\nIt implies covering a distance or passing through.\n\n- **Пройти** 5 кілометрів (To walk 5 km).\n- **Проїхати** зупинку (To miss/drive past a stop).\n- **Пройти** контроль (To pass through security).\n\nImagine an arrow going *through* a tube. That is **Про-**.\n\n> [!note] Sitting \"On the Horse\"\n> Before a long journey, Ukrainians have a tradition.\n> Before you **вийти** (exit) the house, everyone must sit down for a minute.\n> It is called \"**посидіти на доріжку**\" (sit for the road).\n> Historically, it was a moment to pray or remember forgotten items.\n> Even today, if you rush out, a Ukrainian might stop you: \"Sit down! We need luck.\"\n\n---\n\n# Deep Dive: Where are you going? (B/HA + Accusative)\n\nMotion verbs change the case of the destination!\nYou are not \"at\" a place (Locative). You are going \"into\" a place (Accusative).\n\n- **Location (Locative):** Я (де?) в парку / на роботі.\n- **Direction (Accusative):** Я йду (куди?) **в парк** / **на роботу**.\n\n| Verb | Preposition | Case | Example |\n| :--- | :--- | :--- | :--- |\n| **Прийти** | **В / У** | Accusative | Я прийшов **у магазин**. |\n| **Вийти** | **З** | Genitive | Я вийшов **з магазину**. |\n| **Піти** | **На** | Accusative | Я пішов **на концерт**. |\n| **Поїхати** | **До** | Genitive | Я поїхав **до бабусі**. |\n\n> [!tip] Which Preposition?\n> - Use **В/З** for enclosed spaces (buildings, cities, countries).\n> - Use **На/З** for open spaces, events, or islands (concert, work, street).\n> - Use **До/Від** for people (I go **to** Mom). You cannot go \"inside\" Mom!\n\n---\n\n# Deep Dive: Figurative Motion\n\nUkrainian loves to use motion verbs for abstract ideas.\n\n1.  **Вийти заміж** (To exit behind husband) = To marry (for women).\n    *   *Марія **вийшла** заміж.*\n2.  **Зійти з розуму** (To descend from mind) = To go crazy.\n    *   *Ти що, **зійшов** з розуму?*\n3.  **Прийти в голову** (To arrive into head) = To occur to someone.\n    *   *Мені **прийшла** в голову ідея.*\n4.  **Вийти** (To work out / succeed).\n    *   *У мене все **вийшло**!* (I succeeded / It worked out).\n\n---\n\n# Deep Dive: Go vs. Drive (Йти vs. Їхати)\n\n---\n\n# Deep Dive: Go vs. Drive (Йти vs. Їхати)\n\nThe prefixes work exactly the same for vehicles!\nJust change the base.\n\n- **Йти** (Foot) -> **Прийти** (Arrive on foot)\n- **Їхати** (Vehicle) -> **Приїхати** (Arrive by car/bus/train)\n\n| English | On Foot | By Vehicle |\n| :--- | :--- | :--- |\n| **Arrive** | Прийти | Приїхати |\n| **Leave/Exit** | Вийти | Виїхати |\n| **Enter** | Увійти | В'їхати |\n| **Cross** | Перейти | Переїхати |\n\n**Example:**\n- Я **прийшов** додому. (I walked/arrived home).\n- Я **приїхав** додому. (I drove/arrived home).\n\n> [!tip] Pronunciation Tip: The Apostrophe\n> Note **В'їхати** (To drive in).\n> The apostrophe means a hard stop. Pronounce it like \"V... Yikhaty\".\n\n---\n\n# Language in Action\n\n## Dialogue: The Taxi Ride\n\n**Driver:** Добрий день. Куди їдемо?\n**Passenger:** Добрий день. На вокзал, будь ласка.\n**Driver:** Добре. Ми **виїжджаємо** з парковки?\n**Passenger:** Так. Нам треба **переїхати** міст?\n**Driver:** Ні, міст не працює. Ми **об'їдемо** через центр.\n**Passenger:** Це довго? Я можу запізнитися.\n**Driver:** Не хвилюйтеся. Ми **доїдемо** за 20 хвилин.\n**Passenger:** О, я забув телефон! Можемо **заїхати** додому?\n**Driver:** Ні, тоді ми точно не встигнемо.\n**Passenger:** Добре, їдемо прямо.\n*(20 minutes later)*\n**Driver:** Ми **приїхали**. Це вхід на вокзал.\n**Passenger:** Дякую! Я **піду** швидко.\n\n---\n\n# Deep Dive: Prefix Mathematics\n\nHere is a secret: Ukrainians are efficient.\nInstead of inventing completely new words for \"enter\", \"exit\", \"arrive\", \"depart\", they just recycle the same base verbs.\nIf you know **йти** and **їхати**, and you learn 10 prefixes, you instantly know **20+ new words**!\n\n- **Йти** (1) x 10 Prefixes = 10 words\n- **Їхати** (1) x 10 Prefixes = 10 words\n- Plus the base forms = 22 total words.\n\nThis is why Slavic languages are awesome. You don't memorize dictionary pages; you memorize logic blocks.\nMastering prefixes is the biggest \"hack\" in the Ukrainian language.\n\n---\n\n# Anti-Propaganda Showcase\n\n> [!myth] Myth: \"Ukrainian is just a rural dialect.\"\n> **Fact:** Ukrainian has a highly engineered system of motion verbs that precise distinguishing between \"walking around\", \"walking through\", and \"dropping by\".\n> Imperial Russia banned Ukrainian in cities (Valuev Circular 1863) to force it into villages, creating this myth.\n> Yet, the language survived with its complex urban grammar intact. When you ask \"**Як пройти до метро?**\" (How to get to the metro?), you are using high-level prefix grammar that proves the language belongs in the metropolis.\n\n---\n\n# Summary\n\n1.  **Prefixes are GPS:** They tell you direction.\n2.  **При-** (Arrival) vs **Пі-** (Departure).\n3.  **В-** (In) vs **Ви-** (Out).\n4.  **Під-** (Approach) vs **Від-** (Retreat).\n5.  **Motion Rules:** Use **Йти** suffixes for feet, **Їхати** suffixes for wheels.\n\n---\n\n# Activities\n\n## match-up: Prefix Power\n\n> Match the prefix to its GPS meaning.\n\n- При- :: Arrival (Destination reached)\n- Ви- :: Exit (Out of somewhere)\n- Під- :: Approach (Getting closer)\n- Пере- :: Cross (Over a line)\n- За- :: Drop by (Brief visit / Behind)\n- В- :: Enter (Into somewhere)\n- Від- :: Away (Distance increases)\n- Об- :: Around (Circle)\n- Про- :: Through (Passing distance)\n- До- :: Reach (Final limit)\n\n## fill-in: The Tourist Map\n\n> Complete the sentences with the correct verb form.\n\n1. Я хочу ___ в магазин купити води. (Drop by - foot)\n   > [!answer] зайти\n   > [!options] зайти | вийти | підійти\n\n2. Турист ___ з готелю вранці. (Exited - foot - past)\n   > [!answer] вийшов\n   > [!options] вийшов | прийшов | зайшов\n\n3. Ми ___ в Київ поїздом. (Arrived - vehicle - past)\n   > [!answer] приїхали\n   > [!options] приїхали | прийшли | пішли\n\n4. Вам треба ___ вулицю на світлофорі. (Cross - foot)\n   > [!answer] перейти\n   > [!options] перейти | вийти | увійти\n\n5. Автобус ___ до зупинки. (Approached - vehicle - past)\n   > [!answer] під'їхав\n   > [!options] під'їхав | від'їхав | заїхав\n\n6. Я ___ ключі додому? (Bring - foot - future simple)\n   > [!answer] принесу\n   > [!options] принесу | винесу | занесу\n\n7. Він ___ від мене, тому що образився. (Walked away - past)\n   > [!answer] відійшов\n   > [!options] відійшов | підійшов | увійшов\n\n8. Ми ___ весь світ. (Travel/Go around - vehicle)\n   > [!answer] об'їхали\n   > [!options] об'їхали | в'їхали | приїхали\n\n## group-sort: Foot vs. Wheel\n\n> Is this action usually done on foot or by vehicle?\n\n### On Foot (Йти bases)\n- Прийти\n- Вийти\n- Підійти\n- Зайти до кімнати\n- Перейти дорогу\n- Ввійти\n\n### By Vehicle (Їхати bases)\n- Приїхати\n- Виїхати\n- Під'їхати\n- Заїхати на заправку\n- Переїхати міст\n- В'їхати\n\n## quiz: Logic Check\n\n> Choose the most logical action.\n\n1. You are inside a room. You want to leave. You...\n   - [x] Виходите\n   - [ ] Входите\n   - [ ] Підходите\n\n2. You see a friend across the street. To meet him, you must...\n   - [x] Перейти вулицю\n   - [ ] Обійти вулицю\n   - [ ] Зайти вулицю\n\n3. The train is at the platform. It is ready to start the journey. It...\n   - [x] Відправляється / Від'їжджає\n   - [ ] Приїжджає\n   - [ ] Під'їжджає\n\n4. You want to give flowers to Mom. You...\n   - [x] Приносите квіти\n   - [ ] Виносите квіти\n   - [ ] Переносите квіти\n\n5. \"Зайти\" implies the visit is...\n   - [x] Short/Brief\n   - [ ] Permanent\n   - [ ] Dangerous\n\n6. \"Чумаки\" traveled to get...\n   - [x] Salt\n   - [ ] Gold\n   - [ ] Coffee\n\n7. If you \"Проїхали\" your stop, you went...\n   - [x] Too far (Past it)\n   - [ ] Not far enough\n   - [ ] Exactly there\n\n8. \"Обйти\" helps you avoid...\n   - [x] An obstacle\n   - [ ] A door\n   - [ ] A friend\n\n## true-false: Prefix Mystery\n\n1. \"Вийти\" means to enter.\n   - [ ] True\n   - [x] False (Exit)\n\n2. \"Приїхати\" means to arrive by transport.\n   - [x] True\n   - [ ] False\n\n3. \"Перейти\" involves crossing something (like a street).\n   - [x] True\n   - [ ] False\n\n4. \"Підійти\" implies increasing distance.\n   - [ ] True\n   - [x] False (Getting closer)\n\n5. \"В'їхати\" is pronounced with a pause inside.\n   - [x] True\n   - [ ] False\n\n6. \"Обйти\" means to go straight through.\n   - [ ] True\n   - [x] False (Go around)\n\n7. \"Відійти\" means to move away from an object.\n   - [x] True\n   - [ ] False\n\n8. \"Зайти\" means to leave forever.\n   - [ ] True\n   - [x] False (Drop by)\n\n## unjumble: Build the Sentence\n\n1. магазин / в / зайшов / він\n   > [!answer] Він зайшов в магазин.\n2. з / вийшла / вона / дому\n   > [!answer] Вона вийшла з дому.\n3. до / підійти / вікна\n   > [!answer] Підійти до вікна.\n4. ми / міст / переїхали\n   > [!answer] Ми переїхали міст.\n5. додому / я / прийшов\n   > [!answer] Я прийшов додому.\n6. автобус / від / від'їхав / зупинки\n   > [!answer] Автобус від'їхав від зупинки.\n\n## mark-the-words: Find the Motion\n\nТурист [вийшов](motion) з готелю. Він [побачив](perception) карту. Він [перейшов](motion) площу. Потім він [зайшов](motion) у музей. Там він [слухав](perception) гіда. Ввечері він [повернувся](motion) назад. Він [їв](action) вечерю і [спав](state).\n\n## cloze: The Journey Home\n\n> Fill in the missing prefixes.\n\nЯ живу в Києві, але мої батьки у Львові.\nУ п'ятницю я [___:1]їжджаю з Києва.\nЯ [___:2]їжджаю на вокзал на таксі.\nЯ [___:3]ходжу у вагон поїзда.\nПоїзд [___:4]їжджає рівно о 18:00.\nВранці я [___:5]їжджаю у Львів.\nТато [___:6]стрічає мене на пероні.\nМи [___:7]їжджаємо додому машиною.\nМама рада, що я [___:8]їхав.\n\n1. ви\n> [!answer] ви\n\n2. при\n> [!answer] при\n\n3. за\n> [!answer] за\n\n4. від\n> [!answer] від\n\n5. при\n> [!answer] при\n\n6. зу\n> [!answer] зу\n\n7. їд\n> [!answer] їд\n\n8. при\n> [!answer] при\n\n## dialogue-reorder: Asking Directions\n\n- Перепрошую, як пройти до опери?\n- Добрий день. Це недалеко.\n- Мені треба переходити вулицю?\n- Ні, не треба. Просто вийдіть з метро і йдіть прямо.\n- А потім?\n- Потім обійдіть пам'ятник Тарасу Шевченку.\n- І я побачу оперу?\n- Так, ви відразу її побачите.\n\n> [!answer]\n> 1. Перепрошую, як пройти до опери?\n> 2. Добрий день. Це недалеко.\n> 3. Мені треба переходити вулицю?\n> 4. Ні, не треба. Просто вийдіть з метро і йдіть прямо.\n> 5. А потім?\n> 6. Потім обійдіть пам'ятник Тарасу Шевченку.\n> 7. І я побачу оперу?\n> 8. Так, ви відразу її побачите.\n\n## error-correction: Fix the Trips\n\n1. Я **вийшов** в кімнату. (Logic: Exit into?)\n   > [!error] вийшов\n   > [!answer] увійшов / зайшов\n   > [!explanation] Entering a room uses \"увійти\" or \"зайти\". \"Вийти\" means to exit.\n   > [!options] увійшов | вийшов\n\n2. Машина **прийшла** в гараж. (Verb type)\n   > [!error] прийшла\n   > [!answer] приїхала / заїхала\n   > [!explanation] Cars rely on wheels (їхати), not feet (йти).\n   > [!options] заїхала | прийшла\n\n3. Він **перейшов** від мене. (Prefix meaning)\n   > [!error] перейшов\n   > [!answer] відійшов\n   > [!explanation] Moving away is \"від-\". \"Пере-\" is crossing.\n   > [!options] відійшов | перейшов\n\n4. Ми **приїхали** з дому на роботу. (Leaving context)\n   > [!error] приїхали\n   > [!answer] виїхали\n   > [!explanation] Leaving a place is \"ви-\". Arriving is \"при-\".\n   > [!options] виїхали | приїхали\n\n5. Я **обійшов** вулицю. (Context: crossing)\n   > [!error] обійшов\n   > [!answer] перейшов\n   > [!explanation] You cross a street, you don't usually walk around it (unless it's closed).\n   > [!options] перейшов | обійшов\n\n6. Поїзд **під'їхав** з Києва. (Arrival from city)\n   > [!error] під'їхав\n   > [!answer] приїхав\n   > [!explanation] \"Приїхав\" is arrival from a distance. \"Під'їхав\" is approaching a specific spot near you.\n   > [!options] приїхав | під'їхав\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| прийти | /prɪjˈtɪ/ | to arrive (foot) | verb | — | pf |\n| вийти | /ˈʋɪjtɪ/ | to exit (foot) | verb | — | pf |\n| увійти | /uʋiˈjtɪ/ | to enter (foot) | verb | — | pf |\n| зайти | /zɑjˈtɪ/ | to drop by (foot) | verb | — | pf |\n| перейти | /pɛrɛjˈtɪ/ | to cross (foot) | verb | — | pf |\n| відійти | /ʋidijˈtɪ/ | to move away (foot) | verb | — | pf |\n| підійти | /pidijˈtɪ/ | to approach (foot) | verb | — | pf |\n| обійти | /ɔbijˈtɪ/ | to go around (foot) | verb | — | pf |\n| пройти | /prɔjˈtɪ/ | to pass/cover distance | verb | — | pf |\n| розійтися | /rɔzijˈtɪsʲɑ/ | to disperse/part ways | verb | — | pf |\n| зійти | /zijˈtɪ/ | to descend/get off | verb | — | pf |\n| дійти | /dijˈtɪ/ | to reach/get to | verb | — | pf |\n| приїхати | /prɪˈjixɑtɪ/ | to arrive (vehicle) | verb | — | pf |\n| виїхати | /ˈʋɪjixɑtɪ/ | to exit (vehicle) | verb | — | pf |\n| в'їхати | /ˈʋjixɑtɪ/ | to enter (vehicle) | verb | — | pf |\n| заїхати | /zɑˈjixɑtɪ/ | to drive in/by | verb | — | pf |\n| переїхати | /pɛrɛˈjixɑtɪ/ | to cross/move house | verb | — | pf |\n| від'їхати | /ʋidˈjixɑtɪ/ | to drive away | verb | — | pf |\n| під'їхати | /pidˈjixɑtɪ/ | to drive up to | verb | — | pf |\n| об'їхати | /ɔbˈjixɑtɪ/ | to drive around | verb | — | pf |\n| проїхати | /prɔˈjixɑtɪ/ | to drive past | verb | — | pf |\n| роз'їхатися | /rɔzˈjixɑtɪsʲɑ/ | to disperse (vehicles) | verb | — | pf |\n| доїхати | /dɔˈjixɑtɪ/ | to reach (vehicle) | verb | — | pf |\n| принести | /prɪnɛsˈtɪ/ | to bring (carrying) | verb | — | pf |\n| винести | /ˈʋɪnɛstɪ/ | to carry out | verb | — | pf |\n| внести | /ʋnɛsˈtɪ/ | to carry in | verb | — | pf |\n| занести | /zɑnɛsˈtɪ/ | to bring in/drop off | verb | — | pf |\n| перенести | /pɛrɛnɛsˈtɪ/ | to move/carry across | verb | — | pf |\n| відвести | /ʋidʋɛsˈtɪ/ | to lead away (person) | verb | — | pf |\n| привести | /prɪʋɛsˈtɪ/ | to lead/bring (person) | verb | — | pf |\n| вивести | /ˈʋɪʋɛstɪ/ | to lead out | verb | — | pf |\n| відвезти | /ʋidʋɛzˈtɪ/ | to transport away | verb | — | pf |\n| привезти | /prɪʋɛzˈtɪ/ | to transport here | verb | — | pf |\n| йти | /jtɪ/ | to go (foot) | verb | — | impf |\n| їхати | /ˈjixɑtɪ/ | to go (vehicle) | verb | — | impf |\n",
+    "createdAt": "2025-12-15T20:02:03.043401Z",
+    "modifiedAt": "2025-12-15T20:02:03.043401Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-35",
+    "level": "A2",
+    "phase": "A2.4",
+    "wordCount": 35,
+    "newWordCount": 35,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "прийти",
+        "ipa": "/prɪjˈtɪ/",
+        "en": "to arrive (foot)",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-2",
+        "uk": "вийти",
+        "ipa": "/ˈʋɪjtɪ/",
+        "en": "to exit (foot)",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-3",
+        "uk": "увійти",
+        "ipa": "/uʋiˈjtɪ/",
+        "en": "to enter (foot)",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-4",
+        "uk": "зайти",
+        "ipa": "/zɑjˈtɪ/",
+        "en": "to drop by (foot)",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-5",
+        "uk": "перейти",
+        "ipa": "/pɛrɛjˈtɪ/",
+        "en": "to cross (foot)",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-6",
+        "uk": "відійти",
+        "ipa": "/ʋidijˈtɪ/",
+        "en": "to move away (foot)",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-7",
+        "uk": "підійти",
+        "ipa": "/pidijˈtɪ/",
+        "en": "to approach (foot)",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-8",
+        "uk": "обійти",
+        "ipa": "/ɔbijˈtɪ/",
+        "en": "to go around (foot)",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-9",
+        "uk": "пройти",
+        "ipa": "/prɔjˈtɪ/",
+        "en": "to pass/cover distance",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-10",
+        "uk": "розійтися",
+        "ipa": "/rɔzijˈtɪsʲɑ/",
+        "en": "to disperse/part ways",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-11",
+        "uk": "зійти",
+        "ipa": "/zijˈtɪ/",
+        "en": "to descend/get off",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-12",
+        "uk": "дійти",
+        "ipa": "/dijˈtɪ/",
+        "en": "to reach/get to",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-13",
+        "uk": "приїхати",
+        "ipa": "/prɪˈjixɑtɪ/",
+        "en": "to arrive (vehicle)",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-14",
+        "uk": "виїхати",
+        "ipa": "/ˈʋɪjixɑtɪ/",
+        "en": "to exit (vehicle)",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-15",
+        "uk": "в'їхати",
+        "ipa": "/ˈʋjixɑtɪ/",
+        "en": "to enter (vehicle)",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-16",
+        "uk": "заїхати",
+        "ipa": "/zɑˈjixɑtɪ/",
+        "en": "to drive in/by",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-17",
+        "uk": "переїхати",
+        "ipa": "/pɛrɛˈjixɑtɪ/",
+        "en": "to cross/move house",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "від'їхати",
+        "ipa": "/ʋidˈjixɑtɪ/",
+        "en": "to drive away",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "під'їхати",
+        "ipa": "/pidˈjixɑtɪ/",
+        "en": "to drive up to",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "об'їхати",
+        "ipa": "/ɔbˈjixɑtɪ/",
+        "en": "to drive around",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-21",
+        "uk": "проїхати",
+        "ipa": "/prɔˈjixɑtɪ/",
+        "en": "to drive past",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-22",
+        "uk": "роз'їхатися",
+        "ipa": "/rɔzˈjixɑtɪsʲɑ/",
+        "en": "to disperse (vehicles)",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-23",
+        "uk": "доїхати",
+        "ipa": "/dɔˈjixɑtɪ/",
+        "en": "to reach (vehicle)",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-24",
+        "uk": "принести",
+        "ipa": "/prɪnɛsˈtɪ/",
+        "en": "to bring (carrying)",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "винести",
+        "ipa": "/ˈʋɪnɛstɪ/",
+        "en": "to carry out",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-26",
+        "uk": "внести",
+        "ipa": "/ʋnɛsˈtɪ/",
+        "en": "to carry in",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-27",
+        "uk": "занести",
+        "ipa": "/zɑnɛsˈtɪ/",
+        "en": "to bring in/drop off",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-28",
+        "uk": "перенести",
+        "ipa": "/pɛrɛnɛsˈtɪ/",
+        "en": "to move/carry across",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-29",
+        "uk": "відвести",
+        "ipa": "/ʋidʋɛsˈtɪ/",
+        "en": "to lead away (person)",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-30",
+        "uk": "привести",
+        "ipa": "/prɪʋɛsˈtɪ/",
+        "en": "to lead/bring (person)",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-31",
+        "uk": "вивести",
+        "ipa": "/ˈʋɪʋɛstɪ/",
+        "en": "to lead out",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-32",
+        "uk": "відвезти",
+        "ipa": "/ʋidʋɛzˈtɪ/",
+        "en": "to transport away",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-33",
+        "uk": "привезти",
+        "ipa": "/prɪʋɛzˈtɪ/",
+        "en": "to transport here",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-34",
+        "uk": "йти",
+        "ipa": "/jtɪ/",
+        "en": "to go (foot)",
+        "pos": "verb",
+        "gender": null,
+        "note": "impf"
+      },
+      {
+        "id": "vocab-35",
+        "uk": "їхати",
+        "ipa": "/ˈjixɑtɪ/",
+        "en": "to go (vehicle)",
+        "pos": "verb",
+        "gender": null,
+        "note": "impf"
+      }
+    ],
+    "reviewWords": []
+  }
+}

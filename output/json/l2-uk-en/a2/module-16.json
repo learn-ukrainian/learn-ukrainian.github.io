@@ -1,0 +1,646 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-16",
+    "moduleId": "mod-uk-A2-16",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.2",
+    "moduleNumber": 16,
+    "moduleType": "grammar",
+    "pedagogy": "PPP",
+    "immersionLevel": 0.4,
+    "title": "Aspect Mastery",
+    "titleUk": null,
+    "subtitle": "Drilling the 30 Most Common Pairs",
+    "description": "Learner can recall 30+ aspect pairs automatically",
+    "objectives": [
+      "Learner can recall 30+ aspect pairs automatically",
+      "Learner can select correct aspect based on context",
+      "Learner can transform between aspects fluently"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "perfective/imperfective pairs",
+      "aspect selection in context"
+    ],
+    "tags": [
+      "aspect",
+      "verbs",
+      "drilling"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "In Modules 12-15, you learned the theory of aspect. Now it's time to **drill** until the pairs become automatic!\n\nThis module is pure practice. By the end, you should recall aspect pairs without thinking. This is essential for fluency.\n\n**Goal:** When you hear \"читати\" you should instantly think \"прочитати\".\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "The Core 30 Pairs",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Tier 1: Essential Everyday Pairs\n\nThese are the most common verbs. You'll use them every single day. Master these first!\n\n| # | Imperfective | Perfective | English |\n|---|---|---|---|\n| 1 | читати | прочитати | to read |\n| 2 | писати | написати | to write |\n| 3 | робити | зробити | to do/make |\n| 4 | говорити | сказати | to say/tell |\n| 5 | бачити | побачити | to see |\n| 6 | чути | почути | to hear |\n| 7 | брати | взяти | to take |\n| 8 | давати | дати | to give |\n| 9 | їсти | з'їсти | to eat |\n| 10 | пити | випити | to drink |\n\n> [!tip] Pattern Recognition\n> Notice: Many perfective verbs are formed by adding a prefix:\n> - **про-** (читати → прочитати)\n> - **на-** (писати → написати)\n> - **з-/зро-** (робити → зробити)\n> - **по-** (бачити → побачити)\n\n## Tier 2: Learning & Communication\n\nThese verbs are essential for language learning and social interaction.\n\n| # | Imperfective | Perfective | English |\n|---|---|---|---|\n| 11 | вчити | вивчити | to learn/teach |\n| 12 | вчитися | навчитися | to learn (oneself) |\n| 13 | розуміти | зрозуміти | to understand |\n| 14 | знати | дізнатися | to know / find out |\n| 15 | питати | запитати | to ask |\n| 16 | відповідати | відповісти | to answer |\n| 17 | пояснювати | пояснити | to explain |\n| 18 | повторювати | повторити | to repeat |\n| 19 | пам'ятати | запам'ятати | to remember |\n| 20 | забувати | забути | to forget |\n\n> [!tip] Suppletive Pairs\n> Some pairs have completely different roots:\n> - говорити / **сказати** (different roots!)\n> - брати / **взяти** (different roots!)\n> - шукати / **знайти** (different roots!)\n> These must be memorized individually.\n\n## Tier 3: Action & Movement\n\nThese verbs describe physical actions and changes.\n\n| # | Imperfective | Perfective | English |\n|---|---|---|---|\n| 21 | купувати | купити | to buy |\n| 22 | продавати | продати | to sell |\n| 23 | відкривати | відкрити | to open |\n| 24 | закривати | закрити | to close |\n| 25 | починати | почати | to begin |\n| 26 | закінчувати | закінчити | to finish |\n| 27 | готувати | приготувати | to cook/prepare |\n| 28 | мити | помити | to wash |\n| 29 | прибирати | прибрати | to clean up |\n| 30 | знаходити | знайти | to find |\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "How to Choose: The Decision Tree",
+        "nameEn": null,
+        "type": "content",
+        "content": "Choosing between aspects can be challenging for English speakers because English does not have the same system. In English, we use different verb tenses and context to convey similar information. In Ukrainian, the choice between perfective and imperfective is grammatically required and changes the form of the verb itself.\n\nHere is a simple decision process to help you choose:\n\n**Step 1: Is the action completed with a clear result?**\n- YES → Perfective\n- NO → Go to Step 2\n\n**Step 2: Is the action ongoing, repeated, or habitual?**\n- YES → Imperfective\n- NO → Go to Step 3\n\n**Step 3: Are you describing the process itself?**\n- YES → Imperfective\n- NO → Default to Perfective\n\n**Examples:**\n- \"I read the book (finished it)\" → Я **прочитав** книгу. (Perfective - result)\n- \"I was reading when you called\" → Я **читав**, коли ти подзвонив. (Imperfective - process)\n- \"I read every day\" → Я **читаю** щодня. (Imperfective - habitual)\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Drill Patterns",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Pattern A: Past Tense Drill\n\nUse **perfective** for completed actions:\n- Я **прочитав** книгу. (I read/finished the book.)\n- Вона **написала** листа. (She wrote the letter.)\n- Ми **зробили** домашнє завдання. (We did the homework.)\n\nUse **imperfective** for process/duration:\n- Я **читав** три години. (I was reading for 3 hours.)\n- Вона **писала** весь день. (She was writing all day.)\n- Ми **робили** це вчора. (We were doing this yesterday.)\n\n## Pattern B: Future Tense Drill\n\n**Perfective future** (single conjugated verb):\n- Я **прочитаю** цю книгу. (I will read this book - and finish it.)\n- Вона **напише** листа. (She will write the letter.)\n- Ми **зробимо** це завтра. (We will do this tomorrow.)\n\n**Imperfective future** (буду + infinitive):\n- Я **буду читати** увечері. (I will be reading in the evening.)\n- Вона **буде писати** листи. (She will be writing letters.)\n- Ми **будемо робити** це щодня. (We will be doing this every day.)\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Rapid Fire Drills",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Drill 1: Instant Recall\n\nWhen you see the imperfective, say the perfective instantly!\n\nчитати → **прочитати**\nписати → **написати**\nробити → **зробити**\nбачити → **побачити**\nчути → **почути**\n\n## Drill 2: Reverse Recall\n\nNow the opposite - perfective to imperfective:\n\nпрочитати → **читати**\nнаписати → **писати**\nзробити → **робити**\nвзяти → **брати**\nдати → **давати**\n\n## Drill 3: Context Switch\n\n\"Did you finish?\" → Perfective\n\"Were you doing?\" → Imperfective\n\n- Ти вже **прочитав**? (Did you finish reading?)\n- Ти ще **читаєш**? (Are you still reading?)\n- Вона вже **зробила**? (Did she finish doing?)\n- Вона ще **робить**? (Is she still doing?)\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Story Time: The Exam",
+        "nameEn": null,
+        "type": "content",
+        "content": "Сьогодні в Оксани іспит. Вона **готувалася** весь тиждень. Вона **прочитала** всі конспекти. Вона **вивчила** всі правила. Вона **повторила** все двічі.\n\nВранці вона **встала** рано. Вона **поснідала** швидко. Вона **випила** каву і **пішла** в університет.\n\nНа іспиті вона **написала** все правильно. Викладач **прочитав** її роботу і **сказав**: \"Відмінно!\"\n\nОксана **зрозуміла**, що вся її робота **окупилася**. Вона **відчула** радість. Увечері вона **розповіла** мамі про успіх. Мама **привітала** її і **сказала**: \"Я горджуся тобою!\"\n\n> [!tip] Notice the Pattern\n> The story uses mostly perfective verbs because it describes a sequence of completed actions.\n> Each action is finished before the next one begins.\n> This is very common in narrative storytelling.\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Story Time Part 2: The Routine",
+        "nameEn": null,
+        "type": "content",
+        "content": "Кожного дня Андрій **встає** о сьомій. Він **снідає**, **п'є** каву і **їде** на роботу.\n\nНа роботі він **пише** звіти, **відповідає** на листи і **говорить** з клієнтами. Він **працює** до шостої.\n\nУвечері він **повертається** додому. Він **готує** вечерю, **дивиться** телевізор і **читає** книги.\n\nЦе його звичайний день. Він **робить** це щодня.\n\n> [!tip] Notice the Pattern\n> The story uses imperfective verbs because it describes habitual, repeated actions.\n> These are things Andriy does routinely, not one-time completed events.\n> This is very common when describing daily routines or habits.\n\n---"
+      },
+      {
+        "id": "section-8",
+        "name": "Common Mistakes",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Mistake 1: Using Imperfective for Results\n\n❌ Я читав цю книгу. (Ambiguous - did you finish?)\n✅ Я прочитав цю книгу. (Clear - I finished it.)\n\n## Mistake 2: Using Perfective for Ongoing Actions\n\n❌ Я зробив домашнє завдання, коли ти подзвонив.\n✅ Я робив домашнє завдання, коли ти подзвонив.\n(I was doing homework when you called - process interrupted.)\n\n## Mistake 3: Using Perfective for Habits\n\n❌ Я прочитаю книги щодня.\n✅ Я читаю книги щодня.\n(I read books every day - habitual action.)\n\n---"
+      },
+      {
+        "id": "section-9",
+        "name": "Language Learning Tip",
+        "nameEn": null,
+        "type": "content",
+        "content": "The best way to master aspect pairs is through massive input and repeated practice. Here are some strategies:\n\n1. **Flashcard drilling** - Create cards with imperfective on one side, perfective on the other. Drill both directions until automatic.\n\n2. **Sentence shadowing** - Listen to Ukrainian content and repeat sentences, paying attention to which aspect is used and why.\n\n3. **Writing practice** - When writing in Ukrainian, consciously choose aspects and check your choices against the decision tree.\n\n4. **Native speaker observation** - When listening to Ukrainian, notice which aspect native speakers use in different contexts.\n\nRemember: Making mistakes is part of learning. Native speakers will understand you even if you use the wrong aspect. The goal is gradual improvement through practice.\n\n---"
+      },
+      {
+        "id": "section-10",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "Today you drilled the 30 most common aspect pairs.\n\n**Key Takeaways:**\n- Perfective = completed, single events, results\n- Imperfective = ongoing, habitual, process-focused\n- Many pairs are formed with prefixes (про-, на-, з-, по-)\n- Some pairs are suppletive (different roots - memorize these!)\n- Context determines which aspect to use\n\n**Your Challenge:** Practice these pairs until they become automatic. Aim for instant recall without thinking!\n\n---"
+      },
+      {
+        "id": "section-11",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Tier 1 Pairs\n\n> Match imperfective to perfective.\n\n- читати :: прочитати\n- писати :: написати\n- робити :: зробити\n- говорити :: сказати\n- бачити :: побачити\n- чути :: почути\n- брати :: взяти\n- давати :: дати\n\n## match-up: Tier 2 Pairs\n\n> Match imperfective to perfective.\n\n- вчити :: вивчити\n- вчитися :: навчитися\n- розуміти :: зрозуміти\n- питати :: запитати\n- відповідати :: відповісти\n- пояснювати :: пояснити\n- пам'ятати :: запам'ятати\n- забувати :: забути\n\n## match-up: Tier 3 Pairs\n\n> Match imperfective to perfective.\n\n- купувати :: купити\n- продавати :: продати\n- відкривати :: відкрити\n- закривати :: закрити\n- починати :: почати\n- закінчувати :: закінчити\n- готувати :: приготувати\n- знаходити :: знайти\n\n## fill-in: Transform to Perfective\n\n> Give the perfective form.\n\n1. читати → [___] [Hint: про-]\n   > [!answer] прочитати\n   > [!options] прочитати | читати | почитати\n\n2. писати → [___] [Hint: на-]\n   > [!answer] написати\n   > [!options] написати | писати | пописати\n\n3. робити → [___] [Hint: з-]\n   > [!answer] зробити\n   > [!options] зробити | робити | поробити\n\n4. бачити → [___] [Hint: по-]\n   > [!answer] побачити\n   > [!options] побачити | бачити | пробачити\n\n5. чути → [___] [Hint: по-]\n   > [!answer] почути\n   > [!options] почути | чути | прочути\n\n6. вчити → [___] [Hint: ви-]\n   > [!answer] вивчити\n   > [!options] вивчити | вчити | повчити\n\n7. розуміти → [___] [Hint: з-]\n   > [!answer] зрозуміти\n   > [!options] зрозуміти | розуміти | прозуміти\n\n8. готувати → [___] [Hint: при-]\n   > [!answer] приготувати\n   > [!options] приготувати | готувати | заготувати\n\n## fill-in: Transform to Imperfective\n\n> Give the imperfective form.\n\n1. взяти → [___]\n   > [!answer] брати\n   > [!options] брати | взяти | взятися\n\n2. сказати → [___]\n   > [!answer] говорити\n   > [!options] говорити | сказати | казати\n\n3. дати → [___]\n   > [!answer] давати\n   > [!options] давати | дати | дадати\n\n4. знайти → [___]\n   > [!answer] знаходити\n   > [!options] знаходити | знайти | шукати\n\n5. почати → [___]\n   > [!answer] починати\n   > [!options] починати | почати | почитати\n\n6. закінчити → [___]\n   > [!answer] закінчувати\n   > [!options] закінчувати | закінчити | кінчати\n\n7. відповісти → [___]\n   > [!answer] відповідати\n   > [!options] відповідати | відповісти | повідати\n\n8. запам'ятати → [___]\n   > [!answer] пам'ятати\n   > [!options] пам'ятати | запам'ятати | пам'ятка\n\n## quiz: Aspect Selection\n\n1. \"I finished reading the book\" uses:\n   - [x] Perfective\n   - [ ] Imperfective\n\n2. \"I was reading when you called\" uses:\n   - [ ] Perfective\n   - [x] Imperfective\n\n3. \"I read every day\" uses:\n   - [ ] Perfective\n   - [x] Imperfective\n\n4. \"She wrote the letter (completed)\" uses:\n   - [x] Perfective\n   - [ ] Imperfective\n\n5. \"We will do this tomorrow (once)\" uses:\n   - [x] Perfective\n   - [ ] Imperfective\n\n6. \"I will be reading in the evening\" uses:\n   - [ ] Perfective\n   - [x] Imperfective\n\n7. \"Did you finish?\" expects:\n   - [x] Perfective\n   - [ ] Imperfective\n\n8. \"He studies every day\" uses:\n   - [ ] Perfective\n   - [x] Imperfective\n\n## cloze: Context Selection\n\n> Choose the correct aspect based on the context hint.\n\nЯ вже [___:1] книгу. (finished)\nВона [___:2] листи щодня. (writes habitually)\nМи [___:3] домашнє завдання вчора. (completed)\nВін [___:4] каву кожного ранку. (drinks habitually)\nВона [___:5] їжу зараз. (is cooking now)\nТи вже [___:6] відповідь? (Did you find?)\n\n1. прочитав\n> [!answer] прочитав\n> [!options] прочитав | читав\n\n2. пише\n> [!answer] пише\n> [!options] пише | написала\n\n3. зробили\n> [!answer] зробили\n> [!options] зробили | робили\n\n4. п'є\n> [!answer] п'є\n> [!options] п'є | випив\n\n5. готує\n> [!answer] готує\n> [!options] готує | приготувала\n\n6. знайшов\n> [!answer] знайшов\n> [!options] знайшов | знаходив\n\n## unjumble: Aspect Sentences\n\n1. книгу / прочитав / Я / цю\n   > [!answer] Я прочитав цю книгу.\n2. листа / Вона / написала\n   > [!answer] Вона написала листа.\n3. зробили / Ми / завдання\n   > [!answer] Ми зробили завдання.\n4. побачив / Він / її\n   > [!answer] Він побачив її.\n5. почула / шум / Вона\n   > [!answer] Вона почула шум.\n6. каву / випив / Я\n   > [!answer] Я випив каву.\n7. все / зрозумів / Він\n   > [!answer] Він зрозумів все.\n8. двері / відкрила / Вона\n   > [!answer] Вона відкрила двері.\n\n## error-correction: Wrong Aspect\n\n1. Я **читав** книгу вчора і закінчив.\n   > [!error] читав\n   > [!answer] прочитав\n   > [!explanation] \"Finished\" = completed action → perfective.\n   > [!options] прочитав | читав\n\n2. Вона **написала** листи кожного дня.\n   > [!error] написала\n   > [!answer] пише\n   > [!explanation] \"Every day\" = habitual → imperfective.\n   > [!options] пише | написала\n\n3. Ми **зробили** це, коли ви прийшли.\n   > [!error] зробили\n   > [!answer] робили\n   > [!explanation] Action was in progress when interrupted → imperfective.\n   > [!options] робили | зробили\n\n4. Він **вивчив** українську мову щодня.\n   > [!error] вивчив\n   > [!answer] вчить\n   > [!explanation] \"Every day\" = habitual → imperfective.\n   > [!options] вчить | вивчив\n\n5. Я **пишу** листа і відправив.\n   > [!error] пишу\n   > [!answer] написав\n   > [!explanation] \"Sent\" implies completion → both verbs should be perfective.\n   > [!options] написав | пишу\n\n6. Вона **п'є** каву і вийшла.\n   > [!error] п'є\n   > [!answer] випила\n   > [!explanation] Sequence of completed actions → both verbs should be perfective.\n   > [!options] випила | п'є\n\n## group-sort: Formation Pattern\n\n> Group verbs by how perfective is formed.\n\n### Prefix (про-, на-, з-, по-)\n- читати → прочитати\n- писати → написати\n- робити → зробити\n- бачити → побачити\n\n### Suppletive (different roots)\n- говорити → сказати\n- брати → взяти\n- шукати → знайти\n- класти → покласти\n\n---"
+      },
+      {
+        "id": "section-12",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Aspect |\n|------|-----|---------|-----|--------|\n| читати | /t͡ʃɪtˈɑtɪ/ | to read | verb | impf |\n| прочитати | /prɔt͡ʃɪtˈɑtɪ/ | to read (finish) | verb | pf |\n| писати | /pɪsˈɑtɪ/ | to write | verb | impf |\n| написати | /nɑpɪsˈɑtɪ/ | to write (finish) | verb | pf |\n| робити | /rɔbˈɪtɪ/ | to do/make | verb | impf |\n| зробити | /zrɔbˈɪtɪ/ | to do/make (finish) | verb | pf |\n| говорити | /ɦɔʋɔrˈɪtɪ/ | to speak/say | verb | impf |\n| сказати | /skɑzˈɑtɪ/ | to say (once) | verb | pf |\n| бачити | /bˈɑt͡ʃɪtɪ/ | to see | verb | impf |\n| побачити | /pɔbˈɑt͡ʃɪtɪ/ | to see (catch sight) | verb | pf |\n| брати | /brˈɑtɪ/ | to take | verb | impf |\n| взяти | /ʋzʲˈɑtɪ/ | to take (once) | verb | pf |\n| давати | /dɑʋˈɑtɪ/ | to give | verb | impf |\n| дати | /dˈɑtɪ/ | to give (once) | verb | pf |\n| вчити | /ʋt͡ʃˈɪtɪ/ | to learn/teach | verb | impf |\n| вивчити | /ʋˈɪʋt͡ʃɪtɪ/ | to learn (master) | verb | pf |\n| розуміти | /rɔzumˈitɪ/ | to understand | verb | impf |\n| зрозуміти | /zrɔzumˈitɪ/ | to understand (grasp) | verb | pf |\n| пам'ятати | /pɑmjɑtˈɑtɪ/ | to remember | verb | impf |\n| запам'ятати | /zɑpɑmjɑtˈɑtɪ/ | to memorize | verb | pf |\n| забувати | /zɑbuʋˈɑtɪ/ | to forget | verb | impf |\n| забути | /zɑbˈutɪ/ | to forget (once) | verb | pf |\n| купувати | /kupuʋˈɑtɪ/ | to buy | verb | impf |\n| купити | /kupˈɪtɪ/ | to buy (once) | verb | pf |\n| відкривати | /ʋidkrɪʋˈɑtɪ/ | to open | verb | impf |\n| відкрити | /ʋidkrˈɪtɪ/ | to open (once) | verb | pf |\n| починати | /pɔt͡ʃɪnˈɑtɪ/ | to begin | verb | impf |\n| почати | /pɔt͡ʃˈɑtɪ/ | to begin (once) | verb | pf |\n| закінчувати | /zɑkint͡ʃuʋˈɑtɪ/ | to finish | verb | impf |\n| закінчити | /zɑkˈint͡ʃɪtɪ/ | to finish (once) | verb | pf |\n| готувати | /ɦɔtuʋˈɑtɪ/ | to cook/prepare | verb | impf |\n| приготувати | /prɪɦɔtuʋˈɑtɪ/ | to cook (finish) | verb | pf |\n| мити | /mˈɪtɪ/ | to wash | verb | impf |\n| помити | /pɔmˈɪtɪ/ | to wash (finish) | verb | pf |\n| прибирати | /prɪbɪrˈɑtɪ/ | to clean | verb | impf |\n| прибрати | /prɪbrˈɑtɪ/ | to clean (finish) | verb | pf |\n| ремонтувати | /rɛmɔntuʋˈɑtɪ/ | to repair | verb | impf |\n| відремонтувати | /ʋidrɛmɔntuʋˈɑtɪ/ | to repair (finish) | verb | pf |\n| будувати | /buduʋˈɑtɪ/ | to build | verb | impf |\n| побудувати | /pɔbuduʋˈɑtɪ/ | to build (finish) | verb | pf |\n| малювати | /mɑlʲuʋˈɑtɪ/ | to draw/paint | verb | impf |\n| намалювати | /nɑmɑlʲuʋˈɑtɪ/ | to draw (finish) | verb | pf |\n| дзвонити | /dzvɔnˈɪtɪ/ | to call (phone) | verb | impf |\n| подзвонити | /pɔdzvɔnˈɪtɪ/ | to call (once) | verb | pf |\n| питати | /pɪtˈɑtɪ/ | to ask | verb | impf |\n| запитати | /zɑpɪtˈɑtɪ/ | to ask (once) | verb | pf |\n| відповідати | /ʋidpɔʋidˈɑtɪ/ | to answer | verb | impf |\n| відповісти | /ʋidpɔʋˈistɪ/ | to answer (once) | verb | pf |\n| платити | /plɑtˈɪtɪ/ | to pay | verb | impf |\n| заплатити | /zɑplɑtˈɪtɪ/ | to pay (once) | verb | pf |\n| продавати | /prɔdɑʋˈɑtɪ/ | to sell | verb | impf |\n| продати | /prɔdˈɑtɪ/ | to sell (once) | verb | pf |\n| знаходити | /znɑxˈɔdɪtɪ/ | to find | verb | impf |\n| знайти | /znɑjtˈɪ/ | to find (once) | verb | pf |\n| губити | /ɦubˈɪtɪ/ | to lose | verb | impf |\n| загубити | /zɑɦubˈɪtɪ/ | to lose (once) | verb | pf |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-16\ntitle: Aspect Mastery\nsubtitle: \"Drilling the 30 Most Common Pairs\"\nversion: \"1.0\"\nphase: \"A2.2\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - aspect\n  - verbs\n  - drilling\ngrammar:\n  - perfective/imperfective pairs\n  - aspect selection in context\nobjectives:\n  - \"Learner can recall 30+ aspect pairs automatically\"\n  - \"Learner can select correct aspect based on context\"\n  - \"Learner can transform between aspects fluently\"\nvocabulary_count: 30\n---\n\n# Warm-up\n\nIn Modules 12-15, you learned the theory of aspect. Now it's time to **drill** until the pairs become automatic!\n\nThis module is pure practice. By the end, you should recall aspect pairs without thinking. This is essential for fluency.\n\n**Goal:** When you hear \"читати\" you should instantly think \"прочитати\".\n\n---\n\n# The Core 30 Pairs\n\n## Tier 1: Essential Everyday Pairs\n\nThese are the most common verbs. You'll use them every single day. Master these first!\n\n| # | Imperfective | Perfective | English |\n|---|---|---|---|\n| 1 | читати | прочитати | to read |\n| 2 | писати | написати | to write |\n| 3 | робити | зробити | to do/make |\n| 4 | говорити | сказати | to say/tell |\n| 5 | бачити | побачити | to see |\n| 6 | чути | почути | to hear |\n| 7 | брати | взяти | to take |\n| 8 | давати | дати | to give |\n| 9 | їсти | з'їсти | to eat |\n| 10 | пити | випити | to drink |\n\n> [!tip] Pattern Recognition\n> Notice: Many perfective verbs are formed by adding a prefix:\n> - **про-** (читати → прочитати)\n> - **на-** (писати → написати)\n> - **з-/зро-** (робити → зробити)\n> - **по-** (бачити → побачити)\n\n## Tier 2: Learning & Communication\n\nThese verbs are essential for language learning and social interaction.\n\n| # | Imperfective | Perfective | English |\n|---|---|---|---|\n| 11 | вчити | вивчити | to learn/teach |\n| 12 | вчитися | навчитися | to learn (oneself) |\n| 13 | розуміти | зрозуміти | to understand |\n| 14 | знати | дізнатися | to know / find out |\n| 15 | питати | запитати | to ask |\n| 16 | відповідати | відповісти | to answer |\n| 17 | пояснювати | пояснити | to explain |\n| 18 | повторювати | повторити | to repeat |\n| 19 | пам'ятати | запам'ятати | to remember |\n| 20 | забувати | забути | to forget |\n\n> [!tip] Suppletive Pairs\n> Some pairs have completely different roots:\n> - говорити / **сказати** (different roots!)\n> - брати / **взяти** (different roots!)\n> - шукати / **знайти** (different roots!)\n> These must be memorized individually.\n\n## Tier 3: Action & Movement\n\nThese verbs describe physical actions and changes.\n\n| # | Imperfective | Perfective | English |\n|---|---|---|---|\n| 21 | купувати | купити | to buy |\n| 22 | продавати | продати | to sell |\n| 23 | відкривати | відкрити | to open |\n| 24 | закривати | закрити | to close |\n| 25 | починати | почати | to begin |\n| 26 | закінчувати | закінчити | to finish |\n| 27 | готувати | приготувати | to cook/prepare |\n| 28 | мити | помити | to wash |\n| 29 | прибирати | прибрати | to clean up |\n| 30 | знаходити | знайти | to find |\n\n---\n\n# How to Choose: The Decision Tree\n\nChoosing between aspects can be challenging for English speakers because English does not have the same system. In English, we use different verb tenses and context to convey similar information. In Ukrainian, the choice between perfective and imperfective is grammatically required and changes the form of the verb itself.\n\nHere is a simple decision process to help you choose:\n\n**Step 1: Is the action completed with a clear result?**\n- YES → Perfective\n- NO → Go to Step 2\n\n**Step 2: Is the action ongoing, repeated, or habitual?**\n- YES → Imperfective\n- NO → Go to Step 3\n\n**Step 3: Are you describing the process itself?**\n- YES → Imperfective\n- NO → Default to Perfective\n\n**Examples:**\n- \"I read the book (finished it)\" → Я **прочитав** книгу. (Perfective - result)\n- \"I was reading when you called\" → Я **читав**, коли ти подзвонив. (Imperfective - process)\n- \"I read every day\" → Я **читаю** щодня. (Imperfective - habitual)\n\n---\n\n# Drill Patterns\n\n## Pattern A: Past Tense Drill\n\nUse **perfective** for completed actions:\n- Я **прочитав** книгу. (I read/finished the book.)\n- Вона **написала** листа. (She wrote the letter.)\n- Ми **зробили** домашнє завдання. (We did the homework.)\n\nUse **imperfective** for process/duration:\n- Я **читав** три години. (I was reading for 3 hours.)\n- Вона **писала** весь день. (She was writing all day.)\n- Ми **робили** це вчора. (We were doing this yesterday.)\n\n## Pattern B: Future Tense Drill\n\n**Perfective future** (single conjugated verb):\n- Я **прочитаю** цю книгу. (I will read this book - and finish it.)\n- Вона **напише** листа. (She will write the letter.)\n- Ми **зробимо** це завтра. (We will do this tomorrow.)\n\n**Imperfective future** (буду + infinitive):\n- Я **буду читати** увечері. (I will be reading in the evening.)\n- Вона **буде писати** листи. (She will be writing letters.)\n- Ми **будемо робити** це щодня. (We will be doing this every day.)\n\n---\n\n# Rapid Fire Drills\n\n## Drill 1: Instant Recall\n\nWhen you see the imperfective, say the perfective instantly!\n\nчитати → **прочитати**\nписати → **написати**\nробити → **зробити**\nбачити → **побачити**\nчути → **почути**\n\n## Drill 2: Reverse Recall\n\nNow the opposite - perfective to imperfective:\n\nпрочитати → **читати**\nнаписати → **писати**\nзробити → **робити**\nвзяти → **брати**\nдати → **давати**\n\n## Drill 3: Context Switch\n\n\"Did you finish?\" → Perfective\n\"Were you doing?\" → Imperfective\n\n- Ти вже **прочитав**? (Did you finish reading?)\n- Ти ще **читаєш**? (Are you still reading?)\n- Вона вже **зробила**? (Did she finish doing?)\n- Вона ще **робить**? (Is she still doing?)\n\n---\n\n# Story Time: The Exam\n\nСьогодні в Оксани іспит. Вона **готувалася** весь тиждень. Вона **прочитала** всі конспекти. Вона **вивчила** всі правила. Вона **повторила** все двічі.\n\nВранці вона **встала** рано. Вона **поснідала** швидко. Вона **випила** каву і **пішла** в університет.\n\nНа іспиті вона **написала** все правильно. Викладач **прочитав** її роботу і **сказав**: \"Відмінно!\"\n\nОксана **зрозуміла**, що вся її робота **окупилася**. Вона **відчула** радість. Увечері вона **розповіла** мамі про успіх. Мама **привітала** її і **сказала**: \"Я горджуся тобою!\"\n\n> [!tip] Notice the Pattern\n> The story uses mostly perfective verbs because it describes a sequence of completed actions.\n> Each action is finished before the next one begins.\n> This is very common in narrative storytelling.\n\n---\n\n# Story Time Part 2: The Routine\n\nКожного дня Андрій **встає** о сьомій. Він **снідає**, **п'є** каву і **їде** на роботу.\n\nНа роботі він **пише** звіти, **відповідає** на листи і **говорить** з клієнтами. Він **працює** до шостої.\n\nУвечері він **повертається** додому. Він **готує** вечерю, **дивиться** телевізор і **читає** книги.\n\nЦе його звичайний день. Він **робить** це щодня.\n\n> [!tip] Notice the Pattern\n> The story uses imperfective verbs because it describes habitual, repeated actions.\n> These are things Andriy does routinely, not one-time completed events.\n> This is very common when describing daily routines or habits.\n\n---\n\n# Common Mistakes\n\n## Mistake 1: Using Imperfective for Results\n\n❌ Я читав цю книгу. (Ambiguous - did you finish?)\n✅ Я прочитав цю книгу. (Clear - I finished it.)\n\n## Mistake 2: Using Perfective for Ongoing Actions\n\n❌ Я зробив домашнє завдання, коли ти подзвонив.\n✅ Я робив домашнє завдання, коли ти подзвонив.\n(I was doing homework when you called - process interrupted.)\n\n## Mistake 3: Using Perfective for Habits\n\n❌ Я прочитаю книги щодня.\n✅ Я читаю книги щодня.\n(I read books every day - habitual action.)\n\n---\n\n# Language Learning Tip\n\nThe best way to master aspect pairs is through massive input and repeated practice. Here are some strategies:\n\n1. **Flashcard drilling** - Create cards with imperfective on one side, perfective on the other. Drill both directions until automatic.\n\n2. **Sentence shadowing** - Listen to Ukrainian content and repeat sentences, paying attention to which aspect is used and why.\n\n3. **Writing practice** - When writing in Ukrainian, consciously choose aspects and check your choices against the decision tree.\n\n4. **Native speaker observation** - When listening to Ukrainian, notice which aspect native speakers use in different contexts.\n\nRemember: Making mistakes is part of learning. Native speakers will understand you even if you use the wrong aspect. The goal is gradual improvement through practice.\n\n---\n\n# Summary\n\nToday you drilled the 30 most common aspect pairs.\n\n**Key Takeaways:**\n- Perfective = completed, single events, results\n- Imperfective = ongoing, habitual, process-focused\n- Many pairs are formed with prefixes (про-, на-, з-, по-)\n- Some pairs are suppletive (different roots - memorize these!)\n- Context determines which aspect to use\n\n**Your Challenge:** Practice these pairs until they become automatic. Aim for instant recall without thinking!\n\n---\n\n# Activities\n\n## match-up: Tier 1 Pairs\n\n> Match imperfective to perfective.\n\n- читати :: прочитати\n- писати :: написати\n- робити :: зробити\n- говорити :: сказати\n- бачити :: побачити\n- чути :: почути\n- брати :: взяти\n- давати :: дати\n\n## match-up: Tier 2 Pairs\n\n> Match imperfective to perfective.\n\n- вчити :: вивчити\n- вчитися :: навчитися\n- розуміти :: зрозуміти\n- питати :: запитати\n- відповідати :: відповісти\n- пояснювати :: пояснити\n- пам'ятати :: запам'ятати\n- забувати :: забути\n\n## match-up: Tier 3 Pairs\n\n> Match imperfective to perfective.\n\n- купувати :: купити\n- продавати :: продати\n- відкривати :: відкрити\n- закривати :: закрити\n- починати :: почати\n- закінчувати :: закінчити\n- готувати :: приготувати\n- знаходити :: знайти\n\n## fill-in: Transform to Perfective\n\n> Give the perfective form.\n\n1. читати → [___] [Hint: про-]\n   > [!answer] прочитати\n   > [!options] прочитати | читати | почитати\n\n2. писати → [___] [Hint: на-]\n   > [!answer] написати\n   > [!options] написати | писати | пописати\n\n3. робити → [___] [Hint: з-]\n   > [!answer] зробити\n   > [!options] зробити | робити | поробити\n\n4. бачити → [___] [Hint: по-]\n   > [!answer] побачити\n   > [!options] побачити | бачити | пробачити\n\n5. чути → [___] [Hint: по-]\n   > [!answer] почути\n   > [!options] почути | чути | прочути\n\n6. вчити → [___] [Hint: ви-]\n   > [!answer] вивчити\n   > [!options] вивчити | вчити | повчити\n\n7. розуміти → [___] [Hint: з-]\n   > [!answer] зрозуміти\n   > [!options] зрозуміти | розуміти | прозуміти\n\n8. готувати → [___] [Hint: при-]\n   > [!answer] приготувати\n   > [!options] приготувати | готувати | заготувати\n\n## fill-in: Transform to Imperfective\n\n> Give the imperfective form.\n\n1. взяти → [___]\n   > [!answer] брати\n   > [!options] брати | взяти | взятися\n\n2. сказати → [___]\n   > [!answer] говорити\n   > [!options] говорити | сказати | казати\n\n3. дати → [___]\n   > [!answer] давати\n   > [!options] давати | дати | дадати\n\n4. знайти → [___]\n   > [!answer] знаходити\n   > [!options] знаходити | знайти | шукати\n\n5. почати → [___]\n   > [!answer] починати\n   > [!options] починати | почати | почитати\n\n6. закінчити → [___]\n   > [!answer] закінчувати\n   > [!options] закінчувати | закінчити | кінчати\n\n7. відповісти → [___]\n   > [!answer] відповідати\n   > [!options] відповідати | відповісти | повідати\n\n8. запам'ятати → [___]\n   > [!answer] пам'ятати\n   > [!options] пам'ятати | запам'ятати | пам'ятка\n\n## quiz: Aspect Selection\n\n1. \"I finished reading the book\" uses:\n   - [x] Perfective\n   - [ ] Imperfective\n\n2. \"I was reading when you called\" uses:\n   - [ ] Perfective\n   - [x] Imperfective\n\n3. \"I read every day\" uses:\n   - [ ] Perfective\n   - [x] Imperfective\n\n4. \"She wrote the letter (completed)\" uses:\n   - [x] Perfective\n   - [ ] Imperfective\n\n5. \"We will do this tomorrow (once)\" uses:\n   - [x] Perfective\n   - [ ] Imperfective\n\n6. \"I will be reading in the evening\" uses:\n   - [ ] Perfective\n   - [x] Imperfective\n\n7. \"Did you finish?\" expects:\n   - [x] Perfective\n   - [ ] Imperfective\n\n8. \"He studies every day\" uses:\n   - [ ] Perfective\n   - [x] Imperfective\n\n## cloze: Context Selection\n\n> Choose the correct aspect based on the context hint.\n\nЯ вже [___:1] книгу. (finished)\nВона [___:2] листи щодня. (writes habitually)\nМи [___:3] домашнє завдання вчора. (completed)\nВін [___:4] каву кожного ранку. (drinks habitually)\nВона [___:5] їжу зараз. (is cooking now)\nТи вже [___:6] відповідь? (Did you find?)\n\n1. прочитав\n> [!answer] прочитав\n> [!options] прочитав | читав\n\n2. пише\n> [!answer] пише\n> [!options] пише | написала\n\n3. зробили\n> [!answer] зробили\n> [!options] зробили | робили\n\n4. п'є\n> [!answer] п'є\n> [!options] п'є | випив\n\n5. готує\n> [!answer] готує\n> [!options] готує | приготувала\n\n6. знайшов\n> [!answer] знайшов\n> [!options] знайшов | знаходив\n\n## unjumble: Aspect Sentences\n\n1. книгу / прочитав / Я / цю\n   > [!answer] Я прочитав цю книгу.\n2. листа / Вона / написала\n   > [!answer] Вона написала листа.\n3. зробили / Ми / завдання\n   > [!answer] Ми зробили завдання.\n4. побачив / Він / її\n   > [!answer] Він побачив її.\n5. почула / шум / Вона\n   > [!answer] Вона почула шум.\n6. каву / випив / Я\n   > [!answer] Я випив каву.\n7. все / зрозумів / Він\n   > [!answer] Він зрозумів все.\n8. двері / відкрила / Вона\n   > [!answer] Вона відкрила двері.\n\n## error-correction: Wrong Aspect\n\n1. Я **читав** книгу вчора і закінчив.\n   > [!error] читав\n   > [!answer] прочитав\n   > [!explanation] \"Finished\" = completed action → perfective.\n   > [!options] прочитав | читав\n\n2. Вона **написала** листи кожного дня.\n   > [!error] написала\n   > [!answer] пише\n   > [!explanation] \"Every day\" = habitual → imperfective.\n   > [!options] пише | написала\n\n3. Ми **зробили** це, коли ви прийшли.\n   > [!error] зробили\n   > [!answer] робили\n   > [!explanation] Action was in progress when interrupted → imperfective.\n   > [!options] робили | зробили\n\n4. Він **вивчив** українську мову щодня.\n   > [!error] вивчив\n   > [!answer] вчить\n   > [!explanation] \"Every day\" = habitual → imperfective.\n   > [!options] вчить | вивчив\n\n5. Я **пишу** листа і відправив.\n   > [!error] пишу\n   > [!answer] написав\n   > [!explanation] \"Sent\" implies completion → both verbs should be perfective.\n   > [!options] написав | пишу\n\n6. Вона **п'є** каву і вийшла.\n   > [!error] п'є\n   > [!answer] випила\n   > [!explanation] Sequence of completed actions → both verbs should be perfective.\n   > [!options] випила | п'є\n\n## group-sort: Formation Pattern\n\n> Group verbs by how perfective is formed.\n\n### Prefix (про-, на-, з-, по-)\n- читати → прочитати\n- писати → написати\n- робити → зробити\n- бачити → побачити\n\n### Suppletive (different roots)\n- говорити → сказати\n- брати → взяти\n- шукати → знайти\n- класти → покласти\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Aspect |\n|------|-----|---------|-----|--------|\n| читати | /t͡ʃɪtˈɑtɪ/ | to read | verb | impf |\n| прочитати | /prɔt͡ʃɪtˈɑtɪ/ | to read (finish) | verb | pf |\n| писати | /pɪsˈɑtɪ/ | to write | verb | impf |\n| написати | /nɑpɪsˈɑtɪ/ | to write (finish) | verb | pf |\n| робити | /rɔbˈɪtɪ/ | to do/make | verb | impf |\n| зробити | /zrɔbˈɪtɪ/ | to do/make (finish) | verb | pf |\n| говорити | /ɦɔʋɔrˈɪtɪ/ | to speak/say | verb | impf |\n| сказати | /skɑzˈɑtɪ/ | to say (once) | verb | pf |\n| бачити | /bˈɑt͡ʃɪtɪ/ | to see | verb | impf |\n| побачити | /pɔbˈɑt͡ʃɪtɪ/ | to see (catch sight) | verb | pf |\n| брати | /brˈɑtɪ/ | to take | verb | impf |\n| взяти | /ʋzʲˈɑtɪ/ | to take (once) | verb | pf |\n| давати | /dɑʋˈɑtɪ/ | to give | verb | impf |\n| дати | /dˈɑtɪ/ | to give (once) | verb | pf |\n| вчити | /ʋt͡ʃˈɪtɪ/ | to learn/teach | verb | impf |\n| вивчити | /ʋˈɪʋt͡ʃɪtɪ/ | to learn (master) | verb | pf |\n| розуміти | /rɔzumˈitɪ/ | to understand | verb | impf |\n| зрозуміти | /zrɔzumˈitɪ/ | to understand (grasp) | verb | pf |\n| пам'ятати | /pɑmjɑtˈɑtɪ/ | to remember | verb | impf |\n| запам'ятати | /zɑpɑmjɑtˈɑtɪ/ | to memorize | verb | pf |\n| забувати | /zɑbuʋˈɑtɪ/ | to forget | verb | impf |\n| забути | /zɑbˈutɪ/ | to forget (once) | verb | pf |\n| купувати | /kupuʋˈɑtɪ/ | to buy | verb | impf |\n| купити | /kupˈɪtɪ/ | to buy (once) | verb | pf |\n| відкривати | /ʋidkrɪʋˈɑtɪ/ | to open | verb | impf |\n| відкрити | /ʋidkrˈɪtɪ/ | to open (once) | verb | pf |\n| починати | /pɔt͡ʃɪnˈɑtɪ/ | to begin | verb | impf |\n| почати | /pɔt͡ʃˈɑtɪ/ | to begin (once) | verb | pf |\n| закінчувати | /zɑkint͡ʃuʋˈɑtɪ/ | to finish | verb | impf |\n| закінчити | /zɑkˈint͡ʃɪtɪ/ | to finish (once) | verb | pf |\n| готувати | /ɦɔtuʋˈɑtɪ/ | to cook/prepare | verb | impf |\n| приготувати | /prɪɦɔtuʋˈɑtɪ/ | to cook (finish) | verb | pf |\n| мити | /mˈɪtɪ/ | to wash | verb | impf |\n| помити | /pɔmˈɪtɪ/ | to wash (finish) | verb | pf |\n| прибирати | /prɪbɪrˈɑtɪ/ | to clean | verb | impf |\n| прибрати | /prɪbrˈɑtɪ/ | to clean (finish) | verb | pf |\n| ремонтувати | /rɛmɔntuʋˈɑtɪ/ | to repair | verb | impf |\n| відремонтувати | /ʋidrɛmɔntuʋˈɑtɪ/ | to repair (finish) | verb | pf |\n| будувати | /buduʋˈɑtɪ/ | to build | verb | impf |\n| побудувати | /pɔbuduʋˈɑtɪ/ | to build (finish) | verb | pf |\n| малювати | /mɑlʲuʋˈɑtɪ/ | to draw/paint | verb | impf |\n| намалювати | /nɑmɑlʲuʋˈɑtɪ/ | to draw (finish) | verb | pf |\n| дзвонити | /dzvɔnˈɪtɪ/ | to call (phone) | verb | impf |\n| подзвонити | /pɔdzvɔnˈɪtɪ/ | to call (once) | verb | pf |\n| питати | /pɪtˈɑtɪ/ | to ask | verb | impf |\n| запитати | /zɑpɪtˈɑtɪ/ | to ask (once) | verb | pf |\n| відповідати | /ʋidpɔʋidˈɑtɪ/ | to answer | verb | impf |\n| відповісти | /ʋidpɔʋˈistɪ/ | to answer (once) | verb | pf |\n| платити | /plɑtˈɪtɪ/ | to pay | verb | impf |\n| заплатити | /zɑplɑtˈɪtɪ/ | to pay (once) | verb | pf |\n| продавати | /prɔdɑʋˈɑtɪ/ | to sell | verb | impf |\n| продати | /prɔdˈɑtɪ/ | to sell (once) | verb | pf |\n| знаходити | /znɑxˈɔdɪtɪ/ | to find | verb | impf |\n| знайти | /znɑjtˈɪ/ | to find (once) | verb | pf |\n| губити | /ɦubˈɪtɪ/ | to lose | verb | impf |\n| загубити | /zɑɦubˈɪtɪ/ | to lose (once) | verb | pf |\n",
+    "createdAt": "2025-12-15T20:02:02.981446Z",
+    "modifiedAt": "2025-12-15T20:02:02.981446Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-16",
+    "level": "A2",
+    "phase": "A2.2",
+    "wordCount": 56,
+    "newWordCount": 56,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "читати",
+        "ipa": "/t͡ʃɪtˈɑtɪ/",
+        "en": "to read",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-2",
+        "uk": "прочитати",
+        "ipa": "/prɔt͡ʃɪtˈɑtɪ/",
+        "en": "to read (finish)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-3",
+        "uk": "писати",
+        "ipa": "/pɪsˈɑtɪ/",
+        "en": "to write",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-4",
+        "uk": "написати",
+        "ipa": "/nɑpɪsˈɑtɪ/",
+        "en": "to write (finish)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-5",
+        "uk": "робити",
+        "ipa": "/rɔbˈɪtɪ/",
+        "en": "to do/make",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-6",
+        "uk": "зробити",
+        "ipa": "/zrɔbˈɪtɪ/",
+        "en": "to do/make (finish)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-7",
+        "uk": "говорити",
+        "ipa": "/ɦɔʋɔrˈɪtɪ/",
+        "en": "to speak/say",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-8",
+        "uk": "сказати",
+        "ipa": "/skɑzˈɑtɪ/",
+        "en": "to say (once)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-9",
+        "uk": "бачити",
+        "ipa": "/bˈɑt͡ʃɪtɪ/",
+        "en": "to see",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-10",
+        "uk": "побачити",
+        "ipa": "/pɔbˈɑt͡ʃɪtɪ/",
+        "en": "to see (catch sight)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-11",
+        "uk": "брати",
+        "ipa": "/brˈɑtɪ/",
+        "en": "to take",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-12",
+        "uk": "взяти",
+        "ipa": "/ʋzʲˈɑtɪ/",
+        "en": "to take (once)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-13",
+        "uk": "давати",
+        "ipa": "/dɑʋˈɑtɪ/",
+        "en": "to give",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-14",
+        "uk": "дати",
+        "ipa": "/dˈɑtɪ/",
+        "en": "to give (once)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-15",
+        "uk": "вчити",
+        "ipa": "/ʋt͡ʃˈɪtɪ/",
+        "en": "to learn/teach",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-16",
+        "uk": "вивчити",
+        "ipa": "/ʋˈɪʋt͡ʃɪtɪ/",
+        "en": "to learn (master)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-17",
+        "uk": "розуміти",
+        "ipa": "/rɔzumˈitɪ/",
+        "en": "to understand",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-18",
+        "uk": "зрозуміти",
+        "ipa": "/zrɔzumˈitɪ/",
+        "en": "to understand (grasp)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-19",
+        "uk": "пам'ятати",
+        "ipa": "/pɑmjɑtˈɑtɪ/",
+        "en": "to remember",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-20",
+        "uk": "запам'ятати",
+        "ipa": "/zɑpɑmjɑtˈɑtɪ/",
+        "en": "to memorize",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-21",
+        "uk": "забувати",
+        "ipa": "/zɑbuʋˈɑtɪ/",
+        "en": "to forget",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-22",
+        "uk": "забути",
+        "ipa": "/zɑbˈutɪ/",
+        "en": "to forget (once)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-23",
+        "uk": "купувати",
+        "ipa": "/kupuʋˈɑtɪ/",
+        "en": "to buy",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-24",
+        "uk": "купити",
+        "ipa": "/kupˈɪtɪ/",
+        "en": "to buy (once)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-25",
+        "uk": "відкривати",
+        "ipa": "/ʋidkrɪʋˈɑtɪ/",
+        "en": "to open",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-26",
+        "uk": "відкрити",
+        "ipa": "/ʋidkrˈɪtɪ/",
+        "en": "to open (once)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-27",
+        "uk": "починати",
+        "ipa": "/pɔt͡ʃɪnˈɑtɪ/",
+        "en": "to begin",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-28",
+        "uk": "почати",
+        "ipa": "/pɔt͡ʃˈɑtɪ/",
+        "en": "to begin (once)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-29",
+        "uk": "закінчувати",
+        "ipa": "/zɑkint͡ʃuʋˈɑtɪ/",
+        "en": "to finish",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-30",
+        "uk": "закінчити",
+        "ipa": "/zɑkˈint͡ʃɪtɪ/",
+        "en": "to finish (once)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-31",
+        "uk": "готувати",
+        "ipa": "/ɦɔtuʋˈɑtɪ/",
+        "en": "to cook/prepare",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-32",
+        "uk": "приготувати",
+        "ipa": "/prɪɦɔtuʋˈɑtɪ/",
+        "en": "to cook (finish)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-33",
+        "uk": "мити",
+        "ipa": "/mˈɪtɪ/",
+        "en": "to wash",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-34",
+        "uk": "помити",
+        "ipa": "/pɔmˈɪtɪ/",
+        "en": "to wash (finish)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-35",
+        "uk": "прибирати",
+        "ipa": "/prɪbɪrˈɑtɪ/",
+        "en": "to clean",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-36",
+        "uk": "прибрати",
+        "ipa": "/prɪbrˈɑtɪ/",
+        "en": "to clean (finish)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-37",
+        "uk": "ремонтувати",
+        "ipa": "/rɛmɔntuʋˈɑtɪ/",
+        "en": "to repair",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-38",
+        "uk": "відремонтувати",
+        "ipa": "/ʋidrɛmɔntuʋˈɑtɪ/",
+        "en": "to repair (finish)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-39",
+        "uk": "будувати",
+        "ipa": "/buduʋˈɑtɪ/",
+        "en": "to build",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-40",
+        "uk": "побудувати",
+        "ipa": "/pɔbuduʋˈɑtɪ/",
+        "en": "to build (finish)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-41",
+        "uk": "малювати",
+        "ipa": "/mɑlʲuʋˈɑtɪ/",
+        "en": "to draw/paint",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-42",
+        "uk": "намалювати",
+        "ipa": "/nɑmɑlʲuʋˈɑtɪ/",
+        "en": "to draw (finish)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-43",
+        "uk": "дзвонити",
+        "ipa": "/dzvɔnˈɪtɪ/",
+        "en": "to call (phone)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-44",
+        "uk": "подзвонити",
+        "ipa": "/pɔdzvɔnˈɪtɪ/",
+        "en": "to call (once)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-45",
+        "uk": "питати",
+        "ipa": "/pɪtˈɑtɪ/",
+        "en": "to ask",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-46",
+        "uk": "запитати",
+        "ipa": "/zɑpɪtˈɑtɪ/",
+        "en": "to ask (once)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-47",
+        "uk": "відповідати",
+        "ipa": "/ʋidpɔʋidˈɑtɪ/",
+        "en": "to answer",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-48",
+        "uk": "відповісти",
+        "ipa": "/ʋidpɔʋˈistɪ/",
+        "en": "to answer (once)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-49",
+        "uk": "платити",
+        "ipa": "/plɑtˈɪtɪ/",
+        "en": "to pay",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-50",
+        "uk": "заплатити",
+        "ipa": "/zɑplɑtˈɪtɪ/",
+        "en": "to pay (once)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-51",
+        "uk": "продавати",
+        "ipa": "/prɔdɑʋˈɑtɪ/",
+        "en": "to sell",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-52",
+        "uk": "продати",
+        "ipa": "/prɔdˈɑtɪ/",
+        "en": "to sell (once)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-53",
+        "uk": "знаходити",
+        "ipa": "/znɑxˈɔdɪtɪ/",
+        "en": "to find",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-54",
+        "uk": "знайти",
+        "ipa": "/znɑjtˈɪ/",
+        "en": "to find (once)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-55",
+        "uk": "губити",
+        "ipa": "/ɦubˈɪtɪ/",
+        "en": "to lose",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-56",
+        "uk": "загубити",
+        "ipa": "/zɑɦubˈɪtɪ/",
+        "en": "to lose (once)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      }
+    ],
+    "reviewWords": []
+  }
+}

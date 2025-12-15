@@ -1,0 +1,427 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-21",
+    "moduleId": "mod-uk-A2-21",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.3",
+    "moduleNumber": 21,
+    "moduleType": "grammar",
+    "pedagogy": "PPP",
+    "immersionLevel": 0.4,
+    "title": "Numerals & Nouns",
+    "titleUk": null,
+    "subtitle": "One, Two, Many: The Agreement Puzzle",
+    "description": "Learner can use nouns correctly after 1, 2-4, and 5+",
+    "objectives": [
+      "Learner can use nouns correctly after 1, 2-4, and 5+",
+      "Learner can count objects using correct forms",
+      "Learner can use numerals in shopping contexts"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "numeral-noun agreement (1, 2-4, 5+)",
+      "case requirements for numerals"
+    ],
+    "tags": [
+      "numerals",
+      "nouns",
+      "agreement",
+      "grammar"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "You already know numbers in Ukrainian. But did you know that the form of the noun changes based on the number?\n\nIn English, we say \"one book, two books, five books.\" The number changes, but \"book\" only adds \"-s\" for plural.\n\nUkrainian is more complex. The noun takes different forms depending on whether the number is 1, 2-4, or 5+. This system reflects an ancient grammatical structure that exists in most Slavic languages.\n\nToday you will master this essential pattern for counting objects correctly.\n\nThis topic is fundamental for everyday communication in Ukrainian. You'll use these patterns when shopping, telling your age, and discussing quantities. Without mastering numeral-noun agreement, even simple sentences about numbers will sound incorrect to native speakers.\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "The Three Zones",
+        "nameEn": null,
+        "type": "content",
+        "content": "Ukrainian divides numbers into three zones with different noun agreement rules:\n\n| Zone | Numbers | Noun Form | Example |\n|------|---------|-----------|---------|\n| **Zone 1** | 1 | Nominative Singular | одна книга |\n| **Zone 2** | 2, 3, 4 | Genitive Singular | дві книги |\n| **Zone 3** | 5-20, 25-30... | Genitive Plural | п'ять книг |\n\n> [!tip] The Pattern\n> - **1** = singular (as expected)\n> - **2-4** = \"special plural\" (Genitive Singular - looks like possessive)\n> - **5+** = \"true plural\" (Genitive Plural)\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Zone 1: One (Один, Одна, Одне)",
+        "nameEn": null,
+        "type": "content",
+        "content": "The number \"one\" agrees with the noun in gender:\n\n| Gender | Numeral | Noun Form | Example |\n|--------|---------|-----------|---------|\n| Masculine | один | Nom Sg | один студент |\n| Feminine | одна | Nom Sg | одна студентка |\n| Neuter | одне | Nom Sg | одне вікно |\n\nNothing special here - the noun stays in nominative singular as in English. This is the simplest case and the one English speakers find most intuitive. Simply match the gender of \"one\" with your noun and you're set.\n\nWhen you count \"one\" of something, you need to know the noun's gender to select the right form of \"one.\" This is similar to English \"a\" vs \"an\" but based on gender rather than sound.\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Zone 2: Two Through Four (2-4)",
+        "nameEn": null,
+        "type": "content",
+        "content": "This is where Ukrainian differs from English. After 2, 3, and 4, the noun takes **Genitive Singular** form.\n\n## Why Genitive Singular?\n\nHistorically, this comes from the dual number - a grammatical form for exactly two things. Though the dual has mostly disappeared, its traces remain in the special agreement for 2-4.\n\n## Gender Agreement for \"Two\"\n\nThe number \"two\" has gender forms:\n- **два** (masculine/neuter): два студенти, два вікна\n- **дві** (feminine): дві студентки\n\n## Examples\n\n| Number | Masculine | Feminine | Neuter |\n|--------|-----------|----------|--------|\n| 2 | два студенти | дві студентки | два вікна |\n| 3 | три студенти | три студентки | три вікна |\n| 4 | чотири студенти | чотири студентки | чотири вікна |\n\n> [!tip] Memory Trick\n> After 2, 3, 4 - the noun looks like you're asking \"of what?\"\n> \"Дві студентки\" = \"Two of student (singular)\" - the genitive singular form.\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Zone 3: Five and Above (5+)",
+        "nameEn": null,
+        "type": "content",
+        "content": "After 5 and higher, the noun takes **Genitive Plural** form.\n\n| Number | Examples |\n|--------|----------|\n| 5 | п'ять студентів |\n| 6 | шість студентів |\n| 7 | сім студентів |\n| 10 | десять студентів |\n| 20 | двадцять студентів |\n\n## The Special Numbers\n\nNumbers 21, 31, 41, etc. (ending in 1) follow Zone 1:\n- двадцять **один** студент (21 students)\n\nNumbers 22-24, 32-34, etc. (ending in 2-4) follow Zone 2:\n- двадцять **два** студенти (22 students)\n- двадцять **три** студенти (23 students)\n\nNumbers 25-30, 35-40, etc. (ending in 5-0) follow Zone 3:\n- двадцять **п'ять** студентів (25 students)\n\n> [!tip] The Last Digit Rule\n> For compound numbers, look at the last digit to determine the zone.\n> 21 → ends in 1 → Zone 1 → одна книга → двадцять одна книга\n> 23 → ends in 3 → Zone 2 → три книги → двадцять три книги\n> 27 → ends in 7 → Zone 3 → сім книг → двадцять сім книг\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Quick Reference Table",
+        "nameEn": null,
+        "type": "content",
+        "content": "Here is the complete pattern for the noun \"книга\" (book, f):\n\n| Number | Form | Example |\n|--------|------|---------|\n| 1 | одна книга | Я маю одну книгу. |\n| 2 | дві книги | Я маю дві книги. |\n| 3 | три книги | Я маю три книги. |\n| 4 | чотири книги | Я маю чотири книги. |\n| 5 | п'ять книг | Я маю п'ять книг. |\n| 10 | десять книг | Я маю десять книг. |\n| 11 | одинадцять книг | Я маю одинадцять книг. |\n| 21 | двадцять одна книга | Я маю двадцять одну книгу. |\n| 22 | двадцять дві книги | Я маю двадцять дві книги. |\n| 25 | двадцять п'ять книг | Я маю двадцять п'ять книг. |\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Story Time: At the Market",
+        "nameEn": null,
+        "type": "content",
+        "content": "Оля пішла на ринок. Вона хотіла купити овочі та фрукти.\n\n— Дайте, будь ласка, **один** кілограм яблук, — сказала Оля.\n— Ось, будь ласка. Щось ще?\n— Так. **Два** кілограми картоплі і **три** кілограми моркви.\n— Добре. А ще?\n— **П'ять** помідорів і **чотири** огірки.\n— Якісь ще овочі?\n— Ні, дякую. Тепер фрукти. **Одна** диня і **дві** груші.\n— Чудово! Всього **сто двадцять три** гривні.\n\nОля заплатила і пішла додому. У неї було багато смачних продуктів!\n\nВона сказала продавцеві: \"Дякую за все! До побачення!\"\nПродавець відповів: \"Будь ласка! Приходьте ще!\"\n\n> [!cultural] Cultural Note: Markets in Ukraine\n> Traditional markets (ринки) are still popular in Ukraine.\n> Vendors appreciate when you use correct numeral forms.\n> It shows respect for the language and makes shopping smoother.\n\n---"
+      },
+      {
+        "id": "section-8",
+        "name": "Story Time Part 2: The Bookstore",
+        "nameEn": null,
+        "type": "content",
+        "content": "Петро зайшов у книгарню. Він хотів купити подарунки для родини.\n\nДля мами він вибрав **одну** книгу з рецептами.\nДля батька — **дві** книги про історію України.\nДля сестри — **три** романи її улюбленого автора.\nДля брата — **чотири** комікси.\nА для себе — **п'ять** детективів.\n\n— Скільки це коштує? — запитав Петро.\n— **Один** детектив коштує **сто** гривень. **П'ять** детективів — **п'ятсот** гривень.\n— Добре. Я візьму все.\n\nПродавець порахував:\n— Одна книга, дві книги, три книги, чотири комікси, п'ять детективів...\n— Всього **п'ятнадцять** книг і **дев'ятсот** гривень.\n\nПетро заплатив і вийшов щасливий.\n\n> [!tip] Зверніть увагу!\n> - одна книга (жіночий рід, Zone 1)\n> - дві книги (жіночий рід, Zone 2)\n> - три романи (чоловічий рід, Zone 2)\n> - п'ять детективів (чоловічий рід, Zone 3)\n> Кожна форма відповідає правилу зони!\n\n---"
+      },
+      {
+        "id": "section-9",
+        "name": "Story Time Part 3: Сімейний обід",
+        "nameEn": null,
+        "type": "content",
+        "content": "Бабуся приготувала великий обід для родини.\n\nНа столі було:\n- **один** великий салат\n- **дві** миски борщу\n- **три** порції вареників\n- **чотири** котлети\n- **п'ять** склянок компоту\n\nРодина сіла за стіл. Бабуся сказала:\n\"Смачного!\"\n\nПісля обіду всі їли:\n- **дванадцять** вареників\n- **двадцять один** піріжок\n- **двадцять три** цукерки\n\nВсі були щасливі і ситі!\n\n> [!cultural] Сімейні Традиції\n> В Україні сімейні обіди — це важлива традиція.\n> Бабуся завжди готує багато їжі для всієї родини.\n> Гостинність — це цінність української культури.\n\n---"
+      },
+      {
+        "id": "section-10",
+        "name": "Common Mistakes",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Mistake 1: Using Plural After 2-4\n\n❌ два студенти (wrong - using nominative plural)\n✅ два студенти (correct - this IS genitive singular!)\n\nNote: For masculine nouns, genitive singular often looks like nominative plural, but they are different grammatical forms.\n\n## Mistake 2: Forgetting Gender Agreement for \"Two\"\n\n❌ два книги\n✅ дві книги (feminine → дві)\n\n## Mistake 3: Wrong Form After 5+\n\n❌ п'ять книги\n✅ п'ять книг (genitive plural)\n\n## Mistake 4: Ignoring the Last Digit Rule\n\n❌ двадцять один студенти\n✅ двадцять один студент (ends in 1 → Zone 1)\n\n---"
+      },
+      {
+        "id": "section-11",
+        "name": "Language Learning Tip",
+        "nameEn": null,
+        "type": "content",
+        "content": "When counting, always ask: \"What zone is this number in?\"\n\n1. **Last digit is 1** → Zone 1 → Nominative Singular\n2. **Last digit is 2, 3, or 4** → Zone 2 → Genitive Singular\n3. **Last digit is 0, 5, 6, 7, 8, 9** OR **11-19** → Zone 3 → Genitive Plural\n\nThe numbers 11-19 are exceptions - they all use Zone 3 even though 11-14 contain 1-4. This is because they were historically separate words that didn't follow the normal pattern.\n\nPractice by counting objects around you. The more you practice, the more automatic this becomes.\n\n---"
+      },
+      {
+        "id": "section-12",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "Today you learned numeral-noun agreement:\n\n| Zone | Numbers | Noun Form |\n|------|---------|-----------|\n| 1 | 1, 21, 31... | Nominative Singular |\n| 2 | 2-4, 22-24, 32-34... | Genitive Singular |\n| 3 | 5-20, 25-30... | Genitive Plural |\n\n**Key Rules:**\n- \"Two\" has gender: два for masculine/neuter, дві for feminine\n- Look at the last digit for compound numbers\n- 11-19 always use Zone 3\n\n---"
+      },
+      {
+        "id": "section-13",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Zone Identification\n\n> Match the number to its zone.\n\n- 1 :: Zone 1\n- 3 :: Zone 2\n- 7 :: Zone 3\n- 12 :: Zone 3\n- 21 :: Zone 1\n- 24 :: Zone 2\n- 30 :: Zone 3\n- 33 :: Zone 2\n\n## fill-in: Complete the Phrase\n\n> Add the correct noun form.\n\n1. один [___] [Hint: student, m]\n   > [!answer] студент\n   > [!options] студент | студенти | студентів\n\n2. два [___] [Hint: student, m]\n   > [!answer] студенти\n   > [!options] студенти | студент | студентів\n\n3. п'ять [___] [Hint: student, m]\n   > [!answer] студентів\n   > [!options] студентів | студенти | студент\n\n4. одна [___] [Hint: book, f]\n   > [!answer] книга\n   > [!options] книга | книги | книг\n\n5. три [___] [Hint: book, f]\n   > [!answer] книги\n   > [!options] книги | книга | книг\n\n6. десять [___] [Hint: book, f]\n   > [!answer] книг\n   > [!options] книг | книги | книга\n\n7. дві [___] [Hint: window, n]\n   > [!answer] вікна\n   > [!options] вікна | вікно | вікон\n\n8. шість [___] [Hint: window, n]\n   > [!answer] вікон\n   > [!options] вікон | вікна | вікно\n\n## quiz: Agreement Rules\n\n1. After \"один\" the noun is in:\n   - [x] Nominative Singular\n   - [ ] Genitive Singular\n   - [ ] Genitive Plural\n\n2. After \"три\" the noun is in:\n   - [ ] Nominative Singular\n   - [x] Genitive Singular\n   - [ ] Genitive Plural\n\n3. After \"сім\" the noun is in:\n   - [ ] Nominative Singular\n   - [ ] Genitive Singular\n   - [x] Genitive Plural\n\n4. \"Дві\" is used with:\n   - [x] Feminine nouns\n   - [ ] Masculine nouns\n   - [ ] All nouns\n\n5. \"Двадцять один студент\" uses:\n   - [x] Zone 1 (ends in 1)\n   - [ ] Zone 2\n   - [ ] Zone 3\n\n6. \"П'ятнадцять книг\" uses:\n   - [ ] Zone 1\n   - [ ] Zone 2\n   - [x] Zone 3 (11-19 always Zone 3)\n\n7. \"Чотири книги\" is:\n   - [ ] Nominative Plural\n   - [x] Genitive Singular\n   - [ ] Genitive Plural\n\n8. \"Два\" is used with:\n   - [x] Masculine and Neuter nouns\n   - [ ] Feminine nouns only\n   - [ ] All nouns\n\n## cloze: Shopping\n\n> Complete the market dialogue.\n\nДайте один [___:1] яблук. (kilogram)\nДва [___:2] картоплі. (kilogram)\nП'ять [___:3]. (tomatoes)\nЧотири [___:4]. (cucumbers)\nОдна [___:5]. (melon)\nДві [___:6]. (pears)\n\n1. кілограм\n> [!answer] кілограм\n> [!options] кілограм | кілограми | кілограмів\n\n2. кілограми\n> [!answer] кілограми\n> [!options] кілограми | кілограм | кілограмів\n\n3. помідорів\n> [!answer] помідорів\n> [!options] помідорів | помідори | помідор\n\n4. огірки\n> [!answer] огірки\n> [!options] огірки | огірок | огірків\n\n5. диня\n> [!answer] диня\n> [!options] диня | дині | динь\n\n6. груші\n> [!answer] груші\n> [!options] груші | груша | груш\n\n## unjumble: Counting Sentences\n\n1. книга / одна / маю / Я\n   > [!answer] Я маю одну книгу.\n2. студенти / два / є / У / класі\n   > [!answer] У класі є два студенти.\n3. книг / п'ять / прочитав / Він\n   > [!answer] Він прочитав п'ять книг.\n4. вікна / три / кімнаті / У\n   > [!answer] У кімнаті три вікна.\n5. гривень / сто / коштує / Це\n   > [!answer] Це коштує сто гривень.\n6. яблук / купила / чотири / Вона\n   > [!answer] Вона купила чотири яблука.\n7. років / двадцять / мені / один\n   > [!answer] Мені двадцять один рік.\n8. студентів / є / двадцять / групі / У\n   > [!answer] У групі є двадцять студентів.\n\n## error-correction: Wrong Agreement\n\n1. Я маю **п'ять книги**.\n   > [!error] книги\n   > [!answer] книг\n   > [!explanation] After 5+ → Genitive Plural (книг).\n   > [!options] книг | книги\n\n2. У класі **два студент**.\n   > [!error] студент\n   > [!answer] студенти\n   > [!explanation] After 2-4 → Genitive Singular (студенти).\n   > [!options] студенти | студент\n\n3. Вона купила **дві яблука**.\n   > [!error] дві\n   > [!answer] два\n   > [!explanation] \"Яблуко\" is neuter → два (not дві).\n   > [!options] два | дві\n\n4. Мені **двадцять один років**.\n   > [!error] років\n   > [!answer] рік\n   > [!explanation] Ends in 1 → Zone 1 → Nominative Singular (рік).\n   > [!options] рік | років\n\n5. У мене **три книга**.\n   > [!error] книга\n   > [!answer] книги\n   > [!explanation] After 2-4 → Genitive Singular (книги).\n   > [!options] книги | книга\n\n6. Тут є **одинадцять студенти**.\n   > [!error] студенти\n   > [!answer] студентів\n   > [!explanation] 11-19 always Zone 3 → Genitive Plural.\n   > [!options] студентів | студенти\n\n## group-sort: Zone Classification\n\n> Sort numbers by zone.\n\n### Zone 1 (Nominative Singular)\n- 1\n- 21\n- 31\n- 101\n\n### Zone 2 (Genitive Singular)\n- 2\n- 3\n- 4\n- 22\n- 34\n\n### Zone 3 (Genitive Plural)\n- 5\n- 11\n- 15\n- 20\n- 100\n\n## match-up: Noun Forms\n\n> Match the numeral phrase to correct noun form.\n\n- один студент :: Nominative Singular\n- два студенти :: Genitive Singular\n- п'ять студентів :: Genitive Plural\n- одна книга :: Nominative Singular\n- три книги :: Genitive Singular\n- десять книг :: Genitive Plural\n- двадцять один рік :: Nominative Singular\n- двадцять два роки :: Genitive Singular\n\n## cloze: The Bookstore\n\n> Complete the story.\n\nДля мами він вибрав одну [___:1]. (book)\nДля батька — дві [___:2]. (books)\nДля сестри — три [___:3]. (novels)\nДля брата — чотири [___:4]. (comics)\nА для себе — п'ять [___:5]. (detective novels)\nВсього п'ятнадцять [___:6]. (books)\nЦе коштувало дев'ятсот [___:7]. (hryvnias)\nВін заплатив і вийшов [___:8]. (happy)\n\n1. книгу\n> [!answer] книгу\n> [!options] книгу | книги | книг\n\n2. книги\n> [!answer] книги\n> [!options] книги | книгу | книг\n\n3. романи\n> [!answer] романи\n> [!options] романи | роман | романів\n\n4. комікси\n> [!answer] комікси\n> [!options] комікси | комікс | коміксів\n\n5. детективів\n> [!answer] детективів\n> [!options] детективів | детективи | детектив\n\n6. книг\n> [!answer] книг\n> [!options] книг | книги | книгу\n\n7. гривень\n> [!answer] гривень\n> [!options] гривень | гривні | гривня\n\n8. щасливий\n> [!answer] щасливий\n> [!options] щасливий | сумний | злий\n\n## cloze: Age Expressions\n\n> How old are they?\n\nМені [___:1] рік. (21)\nЙому [___:2] роки. (23)\nЇй [___:3] років. (25)\nМамі [___:4] рік. (51)\nБатькові [___:5] роки. (54)\nБратові [___:6] років. (28)\n\n1. двадцять один\n> [!answer] двадцять один\n> [!options] двадцять один | двадцять одного\n\n2. двадцять три\n> [!answer] двадцять три\n> [!options] двадцять три | двадцять третього\n\n3. двадцять п'ять\n> [!answer] двадцять п'ять\n> [!options] двадцять п'ять | двадцять п'ятого\n\n4. п'ятдесят один\n> [!answer] п'ятдесят один\n> [!options] п'ятдесят один | п'ятдесят одного\n\n5. п'ятдесят чотири\n> [!answer] п'ятдесят чотири\n> [!options] п'ятдесят чотири | п'ятдесят четвертого\n\n6. двадцять вісім\n> [!answer] двадцять вісім\n> [!options] двадцять вісім | двадцять восьмого\n\n---"
+      },
+      {
+        "id": "section-14",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Forms |\n|------|-----|---------|-----|-------|\n| один | /ɔdˈɪn/ | one (masc) | num | одного, одному |\n| одна | /ɔdnˈɑ/ | one (fem) | num | однієї, одній, одну |\n| одне | /ɔdnˈɛ/ | one (neut) | num | одного, одному |\n| два | /dʋɑ/ | two (masc/neut) | num | двох, двом |\n| дві | /dʋi/ | two (fem) | num | двох, двом |\n| три | /trɪ/ | three | num | трьох, трьом |\n| чотири | /t͡ʃɔtˈɪrɪ/ | four | num | чотирьох, чотирьом |\n| п'ять | /pjɑtʲ/ | five | num | п'яти, п'ятьох |\n| шість | /ʃistʲ/ | six | num | шести, шістьох |\n| сім | /sim/ | seven | num | семи, сімох |\n| десять | /dˈɛsʲɑtʲ/ | ten | num | десяти, десятьох |\n| двадцять | /dʋˈɑt͡sʲɑtʲ/ | twenty | num | двадцяти, двадцятьох |\n| сто | /stɔ/ | hundred | num | ста |\n| кілограм | /kilɔɦrˈɑm/ | kilogram | noun | кілограми, кілограмів |\n| гривня | /ɦrˈɪʋnʲɑ/ | hryvnia | noun | гривні, гривень |\n| рік | /rik/ | year | noun | роки, років |\n| книга | /knˈɪɦɑ/ | book | noun | книги, книг |\n| студент | /studˈɛnt/ | student (m) | noun | студенти, студентів |\n| вікно | /ʋiknˈɔ/ | window | noun | вікна, вікон |\n| помідор | /pɔmidˈɔr/ | tomato | noun | помідори, помідорів |\n| огірок | /ɔɦirˈɔk/ | cucumber | noun | огірки, огірків |\n| яблуко | /jˈɑblukɔ/ | apple | noun | яблука, яблук |\n| груша | /ɦrˈuʃɑ/ | pear | noun | груші, груш |\n| диня | /dˈɪnʲɑ/ | melon | noun | дині, динь |\n| роман | /rɔmˈɑn/ | novel | noun | романи, романів |\n| детектив | /dɛtɛktˈɪʋ/ | detective novel | noun | детективи, детективів |\n| комікс | /kˈɔmiks/ | comic | noun | комікси, коміксів |\n| ринок | /rˈɪnɔk/ | market | noun | ринки, ринків |\n| книгарня | /knɪɦˈɑrnʲɑ/ | bookstore | noun | книгарні, книгарень |\n| продавець | /prɔdɑʋˈɛt͡sʲ/ | seller | noun | продавці, продавців |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-21\ntitle: Numerals & Nouns\nsubtitle: \"One, Two, Many: The Agreement Puzzle\"\nversion: \"1.0\"\nphase: \"A2.3\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - numerals\n  - nouns\n  - agreement\n  - grammar\ngrammar:\n  - numeral-noun agreement (1, 2-4, 5+)\n  - case requirements for numerals\nobjectives:\n  - \"Learner can use nouns correctly after 1, 2-4, and 5+\"\n  - \"Learner can count objects using correct forms\"\n  - \"Learner can use numerals in shopping contexts\"\nvocabulary_count: 30\n---\n\n# Warm-up\n\nYou already know numbers in Ukrainian. But did you know that the form of the noun changes based on the number?\n\nIn English, we say \"one book, two books, five books.\" The number changes, but \"book\" only adds \"-s\" for plural.\n\nUkrainian is more complex. The noun takes different forms depending on whether the number is 1, 2-4, or 5+. This system reflects an ancient grammatical structure that exists in most Slavic languages.\n\nToday you will master this essential pattern for counting objects correctly.\n\nThis topic is fundamental for everyday communication in Ukrainian. You'll use these patterns when shopping, telling your age, and discussing quantities. Without mastering numeral-noun agreement, even simple sentences about numbers will sound incorrect to native speakers.\n\n---\n\n# The Three Zones\n\nUkrainian divides numbers into three zones with different noun agreement rules:\n\n| Zone | Numbers | Noun Form | Example |\n|------|---------|-----------|---------|\n| **Zone 1** | 1 | Nominative Singular | одна книга |\n| **Zone 2** | 2, 3, 4 | Genitive Singular | дві книги |\n| **Zone 3** | 5-20, 25-30... | Genitive Plural | п'ять книг |\n\n> [!tip] The Pattern\n> - **1** = singular (as expected)\n> - **2-4** = \"special plural\" (Genitive Singular - looks like possessive)\n> - **5+** = \"true plural\" (Genitive Plural)\n\n---\n\n# Zone 1: One (Один, Одна, Одне)\n\nThe number \"one\" agrees with the noun in gender:\n\n| Gender | Numeral | Noun Form | Example |\n|--------|---------|-----------|---------|\n| Masculine | один | Nom Sg | один студент |\n| Feminine | одна | Nom Sg | одна студентка |\n| Neuter | одне | Nom Sg | одне вікно |\n\nNothing special here - the noun stays in nominative singular as in English. This is the simplest case and the one English speakers find most intuitive. Simply match the gender of \"one\" with your noun and you're set.\n\nWhen you count \"one\" of something, you need to know the noun's gender to select the right form of \"one.\" This is similar to English \"a\" vs \"an\" but based on gender rather than sound.\n\n---\n\n# Zone 2: Two Through Four (2-4)\n\nThis is where Ukrainian differs from English. After 2, 3, and 4, the noun takes **Genitive Singular** form.\n\n## Why Genitive Singular?\n\nHistorically, this comes from the dual number - a grammatical form for exactly two things. Though the dual has mostly disappeared, its traces remain in the special agreement for 2-4.\n\n## Gender Agreement for \"Two\"\n\nThe number \"two\" has gender forms:\n- **два** (masculine/neuter): два студенти, два вікна\n- **дві** (feminine): дві студентки\n\n## Examples\n\n| Number | Masculine | Feminine | Neuter |\n|--------|-----------|----------|--------|\n| 2 | два студенти | дві студентки | два вікна |\n| 3 | три студенти | три студентки | три вікна |\n| 4 | чотири студенти | чотири студентки | чотири вікна |\n\n> [!tip] Memory Trick\n> After 2, 3, 4 - the noun looks like you're asking \"of what?\"\n> \"Дві студентки\" = \"Two of student (singular)\" - the genitive singular form.\n\n---\n\n# Zone 3: Five and Above (5+)\n\nAfter 5 and higher, the noun takes **Genitive Plural** form.\n\n| Number | Examples |\n|--------|----------|\n| 5 | п'ять студентів |\n| 6 | шість студентів |\n| 7 | сім студентів |\n| 10 | десять студентів |\n| 20 | двадцять студентів |\n\n## The Special Numbers\n\nNumbers 21, 31, 41, etc. (ending in 1) follow Zone 1:\n- двадцять **один** студент (21 students)\n\nNumbers 22-24, 32-34, etc. (ending in 2-4) follow Zone 2:\n- двадцять **два** студенти (22 students)\n- двадцять **три** студенти (23 students)\n\nNumbers 25-30, 35-40, etc. (ending in 5-0) follow Zone 3:\n- двадцять **п'ять** студентів (25 students)\n\n> [!tip] The Last Digit Rule\n> For compound numbers, look at the last digit to determine the zone.\n> 21 → ends in 1 → Zone 1 → одна книга → двадцять одна книга\n> 23 → ends in 3 → Zone 2 → три книги → двадцять три книги\n> 27 → ends in 7 → Zone 3 → сім книг → двадцять сім книг\n\n---\n\n# Quick Reference Table\n\nHere is the complete pattern for the noun \"книга\" (book, f):\n\n| Number | Form | Example |\n|--------|------|---------|\n| 1 | одна книга | Я маю одну книгу. |\n| 2 | дві книги | Я маю дві книги. |\n| 3 | три книги | Я маю три книги. |\n| 4 | чотири книги | Я маю чотири книги. |\n| 5 | п'ять книг | Я маю п'ять книг. |\n| 10 | десять книг | Я маю десять книг. |\n| 11 | одинадцять книг | Я маю одинадцять книг. |\n| 21 | двадцять одна книга | Я маю двадцять одну книгу. |\n| 22 | двадцять дві книги | Я маю двадцять дві книги. |\n| 25 | двадцять п'ять книг | Я маю двадцять п'ять книг. |\n\n---\n\n# Story Time: At the Market\n\nОля пішла на ринок. Вона хотіла купити овочі та фрукти.\n\n— Дайте, будь ласка, **один** кілограм яблук, — сказала Оля.\n— Ось, будь ласка. Щось ще?\n— Так. **Два** кілограми картоплі і **три** кілограми моркви.\n— Добре. А ще?\n— **П'ять** помідорів і **чотири** огірки.\n— Якісь ще овочі?\n— Ні, дякую. Тепер фрукти. **Одна** диня і **дві** груші.\n— Чудово! Всього **сто двадцять три** гривні.\n\nОля заплатила і пішла додому. У неї було багато смачних продуктів!\n\nВона сказала продавцеві: \"Дякую за все! До побачення!\"\nПродавець відповів: \"Будь ласка! Приходьте ще!\"\n\n> [!cultural] Cultural Note: Markets in Ukraine\n> Traditional markets (ринки) are still popular in Ukraine.\n> Vendors appreciate when you use correct numeral forms.\n> It shows respect for the language and makes shopping smoother.\n\n---\n\n# Story Time Part 2: The Bookstore\n\nПетро зайшов у книгарню. Він хотів купити подарунки для родини.\n\nДля мами він вибрав **одну** книгу з рецептами.\nДля батька — **дві** книги про історію України.\nДля сестри — **три** романи її улюбленого автора.\nДля брата — **чотири** комікси.\nА для себе — **п'ять** детективів.\n\n— Скільки це коштує? — запитав Петро.\n— **Один** детектив коштує **сто** гривень. **П'ять** детективів — **п'ятсот** гривень.\n— Добре. Я візьму все.\n\nПродавець порахував:\n— Одна книга, дві книги, три книги, чотири комікси, п'ять детективів...\n— Всього **п'ятнадцять** книг і **дев'ятсот** гривень.\n\nПетро заплатив і вийшов щасливий.\n\n> [!tip] Зверніть увагу!\n> - одна книга (жіночий рід, Zone 1)\n> - дві книги (жіночий рід, Zone 2)\n> - три романи (чоловічий рід, Zone 2)\n> - п'ять детективів (чоловічий рід, Zone 3)\n> Кожна форма відповідає правилу зони!\n\n---\n\n# Story Time Part 3: Сімейний обід\n\nБабуся приготувала великий обід для родини.\n\nНа столі було:\n- **один** великий салат\n- **дві** миски борщу\n- **три** порції вареників\n- **чотири** котлети\n- **п'ять** склянок компоту\n\nРодина сіла за стіл. Бабуся сказала:\n\"Смачного!\"\n\nПісля обіду всі їли:\n- **дванадцять** вареників\n- **двадцять один** піріжок\n- **двадцять три** цукерки\n\nВсі були щасливі і ситі!\n\n> [!cultural] Сімейні Традиції\n> В Україні сімейні обіди — це важлива традиція.\n> Бабуся завжди готує багато їжі для всієї родини.\n> Гостинність — це цінність української культури.\n\n---\n\n# Common Mistakes\n\n## Mistake 1: Using Plural After 2-4\n\n❌ два студенти (wrong - using nominative plural)\n✅ два студенти (correct - this IS genitive singular!)\n\nNote: For masculine nouns, genitive singular often looks like nominative plural, but they are different grammatical forms.\n\n## Mistake 2: Forgetting Gender Agreement for \"Two\"\n\n❌ два книги\n✅ дві книги (feminine → дві)\n\n## Mistake 3: Wrong Form After 5+\n\n❌ п'ять книги\n✅ п'ять книг (genitive plural)\n\n## Mistake 4: Ignoring the Last Digit Rule\n\n❌ двадцять один студенти\n✅ двадцять один студент (ends in 1 → Zone 1)\n\n---\n\n# Language Learning Tip\n\nWhen counting, always ask: \"What zone is this number in?\"\n\n1. **Last digit is 1** → Zone 1 → Nominative Singular\n2. **Last digit is 2, 3, or 4** → Zone 2 → Genitive Singular\n3. **Last digit is 0, 5, 6, 7, 8, 9** OR **11-19** → Zone 3 → Genitive Plural\n\nThe numbers 11-19 are exceptions - they all use Zone 3 even though 11-14 contain 1-4. This is because they were historically separate words that didn't follow the normal pattern.\n\nPractice by counting objects around you. The more you practice, the more automatic this becomes.\n\n---\n\n# Summary\n\nToday you learned numeral-noun agreement:\n\n| Zone | Numbers | Noun Form |\n|------|---------|-----------|\n| 1 | 1, 21, 31... | Nominative Singular |\n| 2 | 2-4, 22-24, 32-34... | Genitive Singular |\n| 3 | 5-20, 25-30... | Genitive Plural |\n\n**Key Rules:**\n- \"Two\" has gender: два for masculine/neuter, дві for feminine\n- Look at the last digit for compound numbers\n- 11-19 always use Zone 3\n\n---\n\n# Activities\n\n## match-up: Zone Identification\n\n> Match the number to its zone.\n\n- 1 :: Zone 1\n- 3 :: Zone 2\n- 7 :: Zone 3\n- 12 :: Zone 3\n- 21 :: Zone 1\n- 24 :: Zone 2\n- 30 :: Zone 3\n- 33 :: Zone 2\n\n## fill-in: Complete the Phrase\n\n> Add the correct noun form.\n\n1. один [___] [Hint: student, m]\n   > [!answer] студент\n   > [!options] студент | студенти | студентів\n\n2. два [___] [Hint: student, m]\n   > [!answer] студенти\n   > [!options] студенти | студент | студентів\n\n3. п'ять [___] [Hint: student, m]\n   > [!answer] студентів\n   > [!options] студентів | студенти | студент\n\n4. одна [___] [Hint: book, f]\n   > [!answer] книга\n   > [!options] книга | книги | книг\n\n5. три [___] [Hint: book, f]\n   > [!answer] книги\n   > [!options] книги | книга | книг\n\n6. десять [___] [Hint: book, f]\n   > [!answer] книг\n   > [!options] книг | книги | книга\n\n7. дві [___] [Hint: window, n]\n   > [!answer] вікна\n   > [!options] вікна | вікно | вікон\n\n8. шість [___] [Hint: window, n]\n   > [!answer] вікон\n   > [!options] вікон | вікна | вікно\n\n## quiz: Agreement Rules\n\n1. After \"один\" the noun is in:\n   - [x] Nominative Singular\n   - [ ] Genitive Singular\n   - [ ] Genitive Plural\n\n2. After \"три\" the noun is in:\n   - [ ] Nominative Singular\n   - [x] Genitive Singular\n   - [ ] Genitive Plural\n\n3. After \"сім\" the noun is in:\n   - [ ] Nominative Singular\n   - [ ] Genitive Singular\n   - [x] Genitive Plural\n\n4. \"Дві\" is used with:\n   - [x] Feminine nouns\n   - [ ] Masculine nouns\n   - [ ] All nouns\n\n5. \"Двадцять один студент\" uses:\n   - [x] Zone 1 (ends in 1)\n   - [ ] Zone 2\n   - [ ] Zone 3\n\n6. \"П'ятнадцять книг\" uses:\n   - [ ] Zone 1\n   - [ ] Zone 2\n   - [x] Zone 3 (11-19 always Zone 3)\n\n7. \"Чотири книги\" is:\n   - [ ] Nominative Plural\n   - [x] Genitive Singular\n   - [ ] Genitive Plural\n\n8. \"Два\" is used with:\n   - [x] Masculine and Neuter nouns\n   - [ ] Feminine nouns only\n   - [ ] All nouns\n\n## cloze: Shopping\n\n> Complete the market dialogue.\n\nДайте один [___:1] яблук. (kilogram)\nДва [___:2] картоплі. (kilogram)\nП'ять [___:3]. (tomatoes)\nЧотири [___:4]. (cucumbers)\nОдна [___:5]. (melon)\nДві [___:6]. (pears)\n\n1. кілограм\n> [!answer] кілограм\n> [!options] кілограм | кілограми | кілограмів\n\n2. кілограми\n> [!answer] кілограми\n> [!options] кілограми | кілограм | кілограмів\n\n3. помідорів\n> [!answer] помідорів\n> [!options] помідорів | помідори | помідор\n\n4. огірки\n> [!answer] огірки\n> [!options] огірки | огірок | огірків\n\n5. диня\n> [!answer] диня\n> [!options] диня | дині | динь\n\n6. груші\n> [!answer] груші\n> [!options] груші | груша | груш\n\n## unjumble: Counting Sentences\n\n1. книга / одна / маю / Я\n   > [!answer] Я маю одну книгу.\n2. студенти / два / є / У / класі\n   > [!answer] У класі є два студенти.\n3. книг / п'ять / прочитав / Він\n   > [!answer] Він прочитав п'ять книг.\n4. вікна / три / кімнаті / У\n   > [!answer] У кімнаті три вікна.\n5. гривень / сто / коштує / Це\n   > [!answer] Це коштує сто гривень.\n6. яблук / купила / чотири / Вона\n   > [!answer] Вона купила чотири яблука.\n7. років / двадцять / мені / один\n   > [!answer] Мені двадцять один рік.\n8. студентів / є / двадцять / групі / У\n   > [!answer] У групі є двадцять студентів.\n\n## error-correction: Wrong Agreement\n\n1. Я маю **п'ять книги**.\n   > [!error] книги\n   > [!answer] книг\n   > [!explanation] After 5+ → Genitive Plural (книг).\n   > [!options] книг | книги\n\n2. У класі **два студент**.\n   > [!error] студент\n   > [!answer] студенти\n   > [!explanation] After 2-4 → Genitive Singular (студенти).\n   > [!options] студенти | студент\n\n3. Вона купила **дві яблука**.\n   > [!error] дві\n   > [!answer] два\n   > [!explanation] \"Яблуко\" is neuter → два (not дві).\n   > [!options] два | дві\n\n4. Мені **двадцять один років**.\n   > [!error] років\n   > [!answer] рік\n   > [!explanation] Ends in 1 → Zone 1 → Nominative Singular (рік).\n   > [!options] рік | років\n\n5. У мене **три книга**.\n   > [!error] книга\n   > [!answer] книги\n   > [!explanation] After 2-4 → Genitive Singular (книги).\n   > [!options] книги | книга\n\n6. Тут є **одинадцять студенти**.\n   > [!error] студенти\n   > [!answer] студентів\n   > [!explanation] 11-19 always Zone 3 → Genitive Plural.\n   > [!options] студентів | студенти\n\n## group-sort: Zone Classification\n\n> Sort numbers by zone.\n\n### Zone 1 (Nominative Singular)\n- 1\n- 21\n- 31\n- 101\n\n### Zone 2 (Genitive Singular)\n- 2\n- 3\n- 4\n- 22\n- 34\n\n### Zone 3 (Genitive Plural)\n- 5\n- 11\n- 15\n- 20\n- 100\n\n## match-up: Noun Forms\n\n> Match the numeral phrase to correct noun form.\n\n- один студент :: Nominative Singular\n- два студенти :: Genitive Singular\n- п'ять студентів :: Genitive Plural\n- одна книга :: Nominative Singular\n- три книги :: Genitive Singular\n- десять книг :: Genitive Plural\n- двадцять один рік :: Nominative Singular\n- двадцять два роки :: Genitive Singular\n\n## cloze: The Bookstore\n\n> Complete the story.\n\nДля мами він вибрав одну [___:1]. (book)\nДля батька — дві [___:2]. (books)\nДля сестри — три [___:3]. (novels)\nДля брата — чотири [___:4]. (comics)\nА для себе — п'ять [___:5]. (detective novels)\nВсього п'ятнадцять [___:6]. (books)\nЦе коштувало дев'ятсот [___:7]. (hryvnias)\nВін заплатив і вийшов [___:8]. (happy)\n\n1. книгу\n> [!answer] книгу\n> [!options] книгу | книги | книг\n\n2. книги\n> [!answer] книги\n> [!options] книги | книгу | книг\n\n3. романи\n> [!answer] романи\n> [!options] романи | роман | романів\n\n4. комікси\n> [!answer] комікси\n> [!options] комікси | комікс | коміксів\n\n5. детективів\n> [!answer] детективів\n> [!options] детективів | детективи | детектив\n\n6. книг\n> [!answer] книг\n> [!options] книг | книги | книгу\n\n7. гривень\n> [!answer] гривень\n> [!options] гривень | гривні | гривня\n\n8. щасливий\n> [!answer] щасливий\n> [!options] щасливий | сумний | злий\n\n## cloze: Age Expressions\n\n> How old are they?\n\nМені [___:1] рік. (21)\nЙому [___:2] роки. (23)\nЇй [___:3] років. (25)\nМамі [___:4] рік. (51)\nБатькові [___:5] роки. (54)\nБратові [___:6] років. (28)\n\n1. двадцять один\n> [!answer] двадцять один\n> [!options] двадцять один | двадцять одного\n\n2. двадцять три\n> [!answer] двадцять три\n> [!options] двадцять три | двадцять третього\n\n3. двадцять п'ять\n> [!answer] двадцять п'ять\n> [!options] двадцять п'ять | двадцять п'ятого\n\n4. п'ятдесят один\n> [!answer] п'ятдесят один\n> [!options] п'ятдесят один | п'ятдесят одного\n\n5. п'ятдесят чотири\n> [!answer] п'ятдесят чотири\n> [!options] п'ятдесят чотири | п'ятдесят четвертого\n\n6. двадцять вісім\n> [!answer] двадцять вісім\n> [!options] двадцять вісім | двадцять восьмого\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Forms |\n|------|-----|---------|-----|-------|\n| один | /ɔdˈɪn/ | one (masc) | num | одного, одному |\n| одна | /ɔdnˈɑ/ | one (fem) | num | однієї, одній, одну |\n| одне | /ɔdnˈɛ/ | one (neut) | num | одного, одному |\n| два | /dʋɑ/ | two (masc/neut) | num | двох, двом |\n| дві | /dʋi/ | two (fem) | num | двох, двом |\n| три | /trɪ/ | three | num | трьох, трьом |\n| чотири | /t͡ʃɔtˈɪrɪ/ | four | num | чотирьох, чотирьом |\n| п'ять | /pjɑtʲ/ | five | num | п'яти, п'ятьох |\n| шість | /ʃistʲ/ | six | num | шести, шістьох |\n| сім | /sim/ | seven | num | семи, сімох |\n| десять | /dˈɛsʲɑtʲ/ | ten | num | десяти, десятьох |\n| двадцять | /dʋˈɑt͡sʲɑtʲ/ | twenty | num | двадцяти, двадцятьох |\n| сто | /stɔ/ | hundred | num | ста |\n| кілограм | /kilɔɦrˈɑm/ | kilogram | noun | кілограми, кілограмів |\n| гривня | /ɦrˈɪʋnʲɑ/ | hryvnia | noun | гривні, гривень |\n| рік | /rik/ | year | noun | роки, років |\n| книга | /knˈɪɦɑ/ | book | noun | книги, книг |\n| студент | /studˈɛnt/ | student (m) | noun | студенти, студентів |\n| вікно | /ʋiknˈɔ/ | window | noun | вікна, вікон |\n| помідор | /pɔmidˈɔr/ | tomato | noun | помідори, помідорів |\n| огірок | /ɔɦirˈɔk/ | cucumber | noun | огірки, огірків |\n| яблуко | /jˈɑblukɔ/ | apple | noun | яблука, яблук |\n| груша | /ɦrˈuʃɑ/ | pear | noun | груші, груш |\n| диня | /dˈɪnʲɑ/ | melon | noun | дині, динь |\n| роман | /rɔmˈɑn/ | novel | noun | романи, романів |\n| детектив | /dɛtɛktˈɪʋ/ | detective novel | noun | детективи, детективів |\n| комікс | /kˈɔmiks/ | comic | noun | комікси, коміксів |\n| ринок | /rˈɪnɔk/ | market | noun | ринки, ринків |\n| книгарня | /knɪɦˈɑrnʲɑ/ | bookstore | noun | книгарні, книгарень |\n| продавець | /prɔdɑʋˈɛt͡sʲ/ | seller | noun | продавці, продавців |\n",
+    "createdAt": "2025-12-15T20:02:02.993914Z",
+    "modifiedAt": "2025-12-15T20:02:02.993914Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-21",
+    "level": "A2",
+    "phase": "A2.3",
+    "wordCount": 30,
+    "newWordCount": 30,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "один",
+        "ipa": "/ɔdˈɪn/",
+        "en": "one (masc)",
+        "pos": "num",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-2",
+        "uk": "одна",
+        "ipa": "/ɔdnˈɑ/",
+        "en": "one (fem)",
+        "pos": "num",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-3",
+        "uk": "одне",
+        "ipa": "/ɔdnˈɛ/",
+        "en": "one (neut)",
+        "pos": "num",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-4",
+        "uk": "два",
+        "ipa": "/dʋɑ/",
+        "en": "two (masc/neut)",
+        "pos": "num",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-5",
+        "uk": "дві",
+        "ipa": "/dʋi/",
+        "en": "two (fem)",
+        "pos": "num",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-6",
+        "uk": "три",
+        "ipa": "/trɪ/",
+        "en": "three",
+        "pos": "num",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-7",
+        "uk": "чотири",
+        "ipa": "/t͡ʃɔtˈɪrɪ/",
+        "en": "four",
+        "pos": "num",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-8",
+        "uk": "п'ять",
+        "ipa": "/pjɑtʲ/",
+        "en": "five",
+        "pos": "num",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-9",
+        "uk": "шість",
+        "ipa": "/ʃistʲ/",
+        "en": "six",
+        "pos": "num",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-10",
+        "uk": "сім",
+        "ipa": "/sim/",
+        "en": "seven",
+        "pos": "num",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-11",
+        "uk": "десять",
+        "ipa": "/dˈɛsʲɑtʲ/",
+        "en": "ten",
+        "pos": "num",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-12",
+        "uk": "двадцять",
+        "ipa": "/dʋˈɑt͡sʲɑtʲ/",
+        "en": "twenty",
+        "pos": "num",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-13",
+        "uk": "сто",
+        "ipa": "/stɔ/",
+        "en": "hundred",
+        "pos": "num",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-14",
+        "uk": "кілограм",
+        "ipa": "/kilɔɦrˈɑm/",
+        "en": "kilogram",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-15",
+        "uk": "гривня",
+        "ipa": "/ɦrˈɪʋnʲɑ/",
+        "en": "hryvnia",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-16",
+        "uk": "рік",
+        "ipa": "/rik/",
+        "en": "year",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-17",
+        "uk": "книга",
+        "ipa": "/knˈɪɦɑ/",
+        "en": "book",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-18",
+        "uk": "студент",
+        "ipa": "/studˈɛnt/",
+        "en": "student (m)",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-19",
+        "uk": "вікно",
+        "ipa": "/ʋiknˈɔ/",
+        "en": "window",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-20",
+        "uk": "помідор",
+        "ipa": "/pɔmidˈɔr/",
+        "en": "tomato",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-21",
+        "uk": "огірок",
+        "ipa": "/ɔɦirˈɔk/",
+        "en": "cucumber",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-22",
+        "uk": "яблуко",
+        "ipa": "/jˈɑblukɔ/",
+        "en": "apple",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-23",
+        "uk": "груша",
+        "ipa": "/ɦrˈuʃɑ/",
+        "en": "pear",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-24",
+        "uk": "диня",
+        "ipa": "/dˈɪnʲɑ/",
+        "en": "melon",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-25",
+        "uk": "роман",
+        "ipa": "/rɔmˈɑn/",
+        "en": "novel",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-26",
+        "uk": "детектив",
+        "ipa": "/dɛtɛktˈɪʋ/",
+        "en": "detective novel",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-27",
+        "uk": "комікс",
+        "ipa": "/kˈɔmiks/",
+        "en": "comic",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-28",
+        "uk": "ринок",
+        "ipa": "/rˈɪnɔk/",
+        "en": "market",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-29",
+        "uk": "книгарня",
+        "ipa": "/knɪɦˈɑrnʲɑ/",
+        "en": "bookstore",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-30",
+        "uk": "продавець",
+        "ipa": "/prɔdɑʋˈɛt͡sʲ/",
+        "en": "seller",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      }
+    ],
+    "reviewWords": []
+  }
+}

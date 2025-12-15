@@ -1,0 +1,414 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-34",
+    "moduleId": "mod-uk-A2-34",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.3",
+    "moduleNumber": 34,
+    "moduleType": "checkpoint",
+    "pedagogy": "Expressive",
+    "immersionLevel": 0.4,
+    "title": "Checkpoint 3",
+    "titleUk": null,
+    "subtitle": "Complex Ideas Review",
+    "description": "Learner can tell a complex story",
+    "objectives": [
+      "Learner can tell a complex story",
+      "Learner can link ideas logically",
+      "Learner can manage a medical visit"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "review of connectors (тому що, хоча, щоб, який)",
+      "review of reported speech",
+      "review of medical vocab"
+    ],
+    "tags": [
+      "review",
+      "logic",
+      "storytelling",
+      "functional"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "Congratulations! You have finished Phase A2.3.\nYou moved from simple sentences to complex stories.\nNow you can explain **WHY**, **WHEN**, and **HOW** things happen.\nYou can express opinions, feelings, and even talk to a doctor.\n\n**Today we review:**\n1.  **The Logic:** Connecting ideas (Because, Although, So that).\n2.  **The Story:** Sequencing events (First, Then, Finally).\n3.  **The People:** Opinions, Gossip (Reported Speech), and Feelings.\n4.  **The Real World:** Medical Emergencies.\n\n> [!note] Success Criteria\n> By the end of this module, you should be able to say:\n> \"Although I was sick, I went to work because I wanted to finish the project which is important.\"\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "Review: The Connector Map",
+        "nameEn": null,
+        "type": "content",
+        "content": "Connectors are the glue of language. Without them, your speech sounds like a robot: \"I eat. I sleep. I work.\"\nWith connectors, you sound human: \"I eat because I'm hungry, although I should diet.\"\nMastering these words is the fastest way to jump from A2 to B1 fluency.\n\n| Clarity (Logic) | Contrast (Conflict) | Purpose (Goal) | Description (Detail) |\n| :--- | :--- | :--- | :--- |\n| **Тому що** (Because) | **Хоча** (Although) | **Щоб** (In order to) | **Який** (Which/Who) |\n| **Через те, що** (Due to) | **Але** (But) | **Для того щоб** | **Де** (Where - relative) |\n| **Тому** (That's why) | **Однак** (However) | | **Коли** (When - relative) |\n\n*   *Я вчуся, **тому що** хочу знати.* (Cause)\n*   *Я вчуся, **хоча** я втомився.* (Concession)\n*   *Я вчуся, **щоб** знайти роботу.* (Purpose)\n*   *Це книга, **яку** я вчу.* (Relative)\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Review: Storytelling & Time",
+        "nameEn": null,
+        "type": "content",
+        "content": "To tell a good story, you need to order events.\n\n1.  **Start:** *Спочатку...* (At first/Initially).\n2.  **Middle:** *Потім...* (Then/After that).\n3.  **Simultaneous:** *Поки...* (While).\n4.  **Sequence:** *Після того як...* (After...).\n5.  **End:** *Нарешті...* (Finally).\n\n**Example:**\n*Спочатку* я встав. *Потім* я поснідав. *Поки* я їв, я читав. *Після того як* я поїв, я пішов. *Нарешті* я прийшов.\n\n> [!example] English Translation\n> First, I got up. Then, I had breakfast. While I was eating, I read. After I ate, I left. Finally, I arrived.\n> Notice how \"Поки\" usually goes with imperfective verbs (doing), and \"Після того як\" often triggers main actions.\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Review: Reported Speech & Opinions",
+        "nameEn": null,
+        "type": "content",
+        "content": "- **Direct:** Я думаю: \"Це добре\".\n- **Indirect:** Я думаю, **що** це добре.\n- **Opinion:** На мою думку... / Мені здається...\n- **Report:** Він сказав, **що** він прийде. (He said THAT he will come).\n\n### The Golden Rule: No Backshift\nIn English, if the main verb is past (\"He said\"), we often shift the reported verb to past (\"he was busy\").\nIn Ukrainian, **logic wins over grammar**.\nIf he said \"I am busy\" (present), you report it as \"He said that he IS busy\" (present).\n\n| Original Phrase | English Report | Ukrainian Report | Note |\n| :--- | :--- | :--- | :--- |\n| \"I am happy\" | He said he **was** happy | Він сказав, що він **щасливий** | Keep Present |\n| \"I will come\" | He said he **would** come | Він сказав, що він **прийде** | Keep Future |\n| \"I did it\" | He said he **had done** it | Він сказав, що він **зробив** це | Keep Past |\n\n> [!tip] Warning\n> Never change the tense in reported speech in Ukrainian!\n> He said he **is** busy -> Він сказав, що він **зайнятий** (present).\n> This makes Ukrainian reported speech much simpler than English! No complex sequence of tenses to memorize. Just repeat what you heard, but change \"I\" to \"He\".\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Story Time: The Great Adventure",
+        "nameEn": null,
+        "type": "content",
+        "content": "Це історія про хлопця, **ім'я якого** було Марко.\n**Спочатку** Марко жив у маленькому селі, **де** було тихо.\nВін мріяв про велике місто, **тому що** хотів знайти пригоди.\n**Хоча** його батьки казали, **що** це небезпечно, він вирішив поїхати.\nВін зібрав речі, **які** були йому потрібні.\n**Перед тим як** вийти, він подивився на свій дім.\nВін подумав: \"Я повернуся, **коли** стану багатим\".\n**Потім** він сів у поїзд.\n**Поки** він їхав, він дивився у вікно.\nВін бачив поля, ліси і річки.\n**Нарешті** він приїхав у Київ.\nМісто було величезне!\nВін не знав, **куди** йти.\nАле він зустрів дівчину, **яка** допомогла йому.\nВона сказала, **що** знає дешевий готель.\nМарко був радий.\nВін зрозумів, **що** світ добрий, **хоча** буває складним.\nТепер Марко працює в Києві, **але** він часто згадує своє село.\nВін дзвонить батькам, **щоб** сказати, **що** він щасливий.\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Deep Dive: Reviewing \"Tricky\" Words",
+        "nameEn": null,
+        "type": "content",
+        "content": "Let's review some words that often confuse learners in Phase A2.3.\n\n### 1. Тому що vs Тому\n- **Тому що** = Because (Cause). *Я їм, тому що голодний.*\n- **Тому** = That's why / So (Result). *Я голодний, тому я їм.*\n\n### 2. Що vs Який\n- **Що** = That/What (Conjunction/Question). *Я знаю, що ти тут.*\n- **Який** = Which/What kind (Relative/Question Adj). *Хлопець, який тут.*\n- **Trick:** If you can replace \"that\" with \"which\", use **Який**. If not, use **Що**.\n\n### 3. Поки vs Поки не\n- **Поки** = While.\n- **Поки не** = Until.\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Language in Action",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Dialogue: The Sick Employee\n\n**Boss:** Алло, Андрію? Де ти?\n**Andriy:** Доброго ранку. Я дзвоню, **щоб** сказати, **що** я захворів.\n**Boss:** Що сталося?\n**Andriy:** У мене висока температура і болить горло.\n**Boss:** Це погано. Ти викликав лікаря?\n**Andriy:** Так. Лікар сказав, **що** це грип.\n**Boss:** Зрозуміло. Тобі треба лікуватися.\n**Andriy:** Я знаю. **Хоча** у нас сьогодні важлива зустріч, я не можу прийти.\n**Boss:** Не хвилюйся. **Головне**, **щоб** ти одужав.\n**Andriy:** Дякую. Я буду на зв'язку, **як тільки** мені стане краще.\n**Boss:** Відпочивай.\n\n## Dialogue: The Interview\n\n**Interviewer:** Доброго дня. Розкажіть, чому ви хочете тут працювати?\n**Candidate:** Доброго дня. Я хочу працювати тут, **тому що** ваша компанія найкраща.\n**Interviewer:** Дякую. А що ви робили раніше?\n**Candidate:** **Спочатку** я вчився в університеті. **Потім** я працював у школі.\n**Interviewer:** Чому ви пішли зі школи?\n**Candidate:** Я пішов, **тому що** хотів змінити кар'єру.\n**Interviewer:** Що ви вмієте робити?\n**Candidate:** Я вмію писати коди, **які** працюють швидко.\n**Interviewer:** Чудово. А як ви працюєте в команді?\n**Candidate:** Я думаю, **що** я гарний командний гравець. **Хоча** я люблю працювати самостійно, я поважаю колег.\n**Interviewer:** Ми шукаємо людину, **яка** готова вчитися.\n**Candidate:** Це я! Я вчуся щодня, **щоб** бути кращим.\n**Interviewer:** Гаразд. Ми вам подзвонимо, **після того як** поговоримо з директором.\n\n## Monologue: The Review of My Year\n\nЦей рік був цікавим.\n**Спочатку** я не знав, що робити.\nЯ думав, **що** моє життя нудне.\n**Але** потім я вирішив вчити українську мову.\n**Хоча** це було важко, я не здавався.\nЯ купив підручник, **який** мені порадив друг.\nЯ вчився щодня, **щоб** розуміти людей.\n**Коли** я поїхав у Київ, я говорив тільки українською.\nЯ пам'ятаю день, **коли** я вперше замовив каву сам.\nЦе було чудово!\n**Тепер** я щасливий.\n**На мою думку**, вивчення мови — це найкраще хобі.\n\n## Monologue: The Future Plan\n\n**Якщо** я закінчу цей курс, я поїду в Україну.\nЯ хочу побачити Карпати, **про які** я так багато читав.\nЯ буду гуляти горами, **поки** не втомлюся.\nЯ куплю сувеніри, **щоб** подарувати друзям.\nЯ знаю, **що** це буде найкраща подорож.\n**Хоча** я боюся літати, я все одно полечу.\n**Перед тим як** поїхати, я вивчу ще 100 слів.\nА **після того як** я повернуся, я напишу книгу.\nЦе мій план.\nІ я вірю, **що** він здійсниться.\n\n> [!tip] Review Tip\n> Read this monologue aloud.\n> Circle every connector.\n> Translate it to English logic: \"Logic: Condition -> Result. Purpose -> Action.\"\n> Ukrainian logic is very strict!\n\n---"
+      },
+      {
+        "id": "section-8",
+        "name": "Cultural Insight",
+        "nameEn": null,
+        "type": "content",
+        "content": "> [!cultural] Fate and Future\n> When talking about plans connectors like **коли** (when) and **якщо** (if), Ukrainians often add a touch of fatalism.\n> - \"Коли я поїду у відпустку... **якщо Бог дасть** (God willing).\"\n> - \"Я зроблю це, **якщо все буде добре**.\"\n> It's not religious per se, it's cultural modesty regarding the future. Don't be too sure!\n\n---"
+      },
+      {
+        "id": "section-9",
+        "name": "Study Tip: How to Review",
+        "nameEn": null,
+        "type": "content",
+        "content": "You have covered a lot of ground in Phase A2.3.\nTo make sure you don't forget it, try these steps:\n\n1.  **Keep a Connector Diary**: Write one sentence every day using *тому що*, *хоча*, or *щоб*.\n2.  **Tell Stories backwards**: Try to tell a story starting from the end (\"Нарешті...\") and working back to the beginning (\"Спочатку...\"). It forces you to think about logic.\n3.  **Talk to yourself**: Use \"Reported Speech\" to report your own thoughts. \"I thought that I was hungry.\" (*Я думав, що я голодний*).\n\n---"
+      },
+      {
+        "id": "section-10",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "You have mastered **Logic**.\n- You can explain Cause (**Тому що**).\n- You can express Contrast (**Хоча**).\n- You can define Purpose (**Щоб**).\n- You can describe Nouns (**Який**).\n- You can sequence Time (**Коли, Поки**).\n- You can report Speech (**Що**).\n\n---"
+      },
+      {
+        "id": "section-11",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Logical Pairs\n\n> Match the start to the logical finish.\n\n- Я не пішов, :: тому що захворів.\n- Я пішов, :: хоча захворів.\n- Я дзвоню, :: щоб запитати.\n- Це лікар, :: який лікує мене.\n- Він сказав, :: що прийде.\n- Як тільки прийду, :: подзвоню.\n- Перед тим як їсти, :: мий руки.\n- Мені здається, :: що це правда.\n- Я радий, :: що ти тут.\n- Я думаю, :: що все буде добре.\n\n## fill-in: The Ultimate Connector Test\n\n> Choose description.\n\n1. Я хочу, ___ ти прийшов. (Subjunctive/Purpose)\n   > [!answer] щоб\n   > [!options] щоб | що | як\n\n2. Я знаю, ___ ти прийшов. (Fact)\n   > [!answer] що\n   > [!options] що | щоб | як\n\n3. Це парк, ___ ми гуляли. (Place)\n   > [!answer] де\n   > [!options] де | який | куди\n\n4. Це парк, ___ ми любимо. (Object)\n   > [!answer] який\n   > [!options] який | де | що\n\n5. Ми пішли, ___ пішов дощ. (Cause)\n   > [!answer] тому що\n   > [!options] тому що | хоча | щоб\n\n6. Ми пішли, ___ йшов дощ. (Contrast)\n   > [!answer] хоча\n   > [!options] хоча | тому що | як\n\n7. ___ я їв, я мовчав. (Duration)\n   > [!answer] Поки\n   > [!options] Поки | Коли | Як тільки\n\n8. ___ я з'їв, я пішов. (Sequence)\n   > [!answer] Після того як\n   > [!options] Після того як | Поки | Хоча\n\n## quiz: Grammar Master\n\n1. \"Він сказав, що він хворий.\" - In English, \"said\" is past, \"is\" becomes...\n   - [x] was (Backshift)\n   - [ ] is (No change)\n\n2. \"Він сказав, що він хворий.\" - In Ukrainian, does the tense change?\n   - [x] No, keep original tense.\n   - [ ] Yes, backshift.\n\n3. Which word means \"Although\"?\n   - [x] Хоча\n   - [ ] Тому що\n   - [ ] Щоб\n\n4. Which word introduces a Purpose (\"in order to\")?\n   - [x] Щоб\n   - [ ] Що\n\n5. \"Книга, яку я читаю\" - Why \"яку\"?\n   - [x] Accusative (Object of read)\n   - [ ] Nominative (Subject)\n\n6. \"У мене болить...\" requires the body part to be in which case?\n   - [x] Nominative\n   - [ ] Accusative\n   - [ ] Genitive\n\n7. \"Мені здається\" is used for:\n   - [x] Opinions\n   - [ ] Facts\n   - [ ] Commands\n\n8. \"Спочатку\" means:\n   - [x] At first\n   - [ ] Finally\n\n## unjumble: The Complex Sentence\n\n1. я / що / думаю / ти / правий\n   > [!answer] Я думаю, що ти правий.\n\n2. пішов / хоча / він / був / дощ\n   > [!answer] Він пішов, хоча був дощ.\n\n3. ми / вчимося / знати / щоб / більше\n   > [!answer] Ми вчимося, щоб знати більше.\n\n4. це / місто / в / я / живу / якому\n   > [!answer] Це місто, в якому я живу.\n\n5. того / після / як / встав / снідав / я\n   > [!answer] Після того як встав, я снідав.\n\n6. сказав / лікар / що / здоровий / я\n   > [!answer] Лікар сказав, що я здоровий.\n\n## group-sort: Categories of Logic\n\n### Time (Коли)\n- Поки\n- Після того як\n- Перед тим як\n- Як тільки\n- Спочатку\n- Нарешті\n\n### Logic (Чому)\n- Тому що\n- Через те, що\n- Тому\n- Хоча\n- Однак\n- Щоб\n\n## true-false: Concepts Review\n\n1. \"Щоб\" implies a goal.\n   - [x] True\n   - [ ] False\n\n2. \"Що\" links facts or reports.\n   - [x] True\n   - [ ] False\n\n3. \"Який\" changes by gender and case.\n   - [x] True\n   - [ ] False\n\n4. \"Боліти\" takes Accusative subject.\n   - [ ] True\n   - [x] False\n\n5. \"Поки\" is for sequential actions.\n   - [ ] True\n   - [x] False (Simultaneous)\n\n6. We start stories with \"Нарешті\".\n   - [ ] True\n   - [x] False\n\n7. \"На мою думку\" means \"In my opinion\".\n   - [x] True\n   - [ ] False\n\n8. Reported speech in Ukrainian is easier than English.\n   - [x] True\n   - [ ] False (No backshift!)\n\n## cloze: The Final Story\n\n> Complete the text.\n\n[___:1] я приїхав у Львів, я був вражений.\nЯ побачив місто, [___:2] виглядало як казка.\nЯ хотів пити каву, [___:3] Львів славиться кавою.\n[___:4] я не знав, де найкраща кав'ярня.\nЯ запитав перехожого: \"Скажіть, будь ласка, [___:5] тут можна випити каву?\"\nВін сказав, [___:6] є гарне місце за рогом.\nЯ пішов туди, [___:7] насолодитися атмосферою.\n\n1. Коли / Що\n> [!answer] Коли\n\n2. яке / який\n> [!answer] яке\n\n3. тому що / хоча\n> [!answer] тому що\n\n4. Але / Щоб\n> [!answer] Але\n\n5. де / що\n> [!answer] де\n\n6. що / щоб\n> [!answer] що\n\n7. щоб / що\n> [!answer] щоб\n\n## dialogue-reorder: The Incident\n\n- Чому ти запізнився?\n- Вибачте. Спочатку я проспав.\n- А потім?\n- Потім я не міг знайти ключі, які лежали під ліжком.\n- І це все?\n- Ні. Коли я вийшов, почався дощ.\n- Але ти тут. Це головне.\n- Так, хоча я дуже мокрий.\n\n> [!answer]\n> 1. Чому ти запізнився?\n> 2. Вибачте. Спочатку я проспав.\n> 3. А потім?\n> 4. Потім я не міг знайти ключі, які лежали під ліжком.\n> 5. І це все?\n> 6. Ні. Коли я вийшов, почався дощ.\n> 7. Але ти тут. Це головне.\n> 8. Так, хоча я дуже мокрий.\n\n## mark-the-words: Connector Spotting\n\nЯ не знаю, [де](correct) він живе. Він сказав, [що](correct) прийде, [хоча](correct) він не обіцяв. Я роблю це, [тому що](correct) люблю. Це дім, [у якому](correct) я ріс. [Коли](correct) я сплю, я бачу сни.\n\n---\n\n[Стіл](incorrect) стоїть. [Книга](incorrect) лежить. [Сонце](incorrect) світить.\n\n## error-correction: Fix the Mistakes\n\n1. Я вчуся, **що** хочу знати. (Logic)\n   > [!error] що\n   > [!answer] тому що\n   > [!explanation] Cause requires \"тому що\".\n   > [!options] тому що | що\n\n2. Я хочу, **що** ти прийшов. (Subjunctive)\n   > [!error] що\n   > [!answer] щоб\n   > [!explanation] Desire/Subjunctive requires \"щоб\".\n   > [!options] щоб | що\n\n3. Це місто, **який** я люблю. (Gender)\n   > [!error] який\n   > [!answer] яке\n   > [!explanation] City (містo) is Neuter -> яке.\n   > [!options] яке | який\n\n4. Він сказав, що він **був** зайнятий зараз. (Backshift error)\n   > [!error] був\n   > [!answer] зайнятий\n   > [!explanation] Keep original tense (present). He said he IS busy.\n   > [!options] зайнятий | був\n\n5. **Поки** я прийшов, вона пішла. (Time aspect)\n   > [!error] Поки\n   > [!answer] Коли\n   > [!explanation] Point in time -> Коли.\n   > [!options] Коли | Поки\n\n6. Я пішов гуляти, **тому що** я хотів спати. (Illogical)\n   > [!error] тому що\n   > [!answer] хоча\n   > [!explanation] Contrast logic.\n   > [!options] хоча | тому що\n\n## translate: English to Ukrainian\n\n1. I know that you are smart.\n   - [x] Я знаю, що ти розумний.\n   - [ ] Я знаю, щоб ти розумний.\n\n2. The car which I bought.\n   - [x] Машина, яку я купив.\n   - [ ] Машина, яка я купив.\n\n3. Because I can.\n   - [x] Тому що я можу.\n   - [ ] Хоча я можу.\n\n4. Although it is raining.\n   - [x] Хоча йде дощ.\n   - [ ] Тому що йде дощ.\n\n5. First... Then...\n   - [x] Спочатку... Потім...\n   - [ ] Перший... Тоді...\n\n6. He said that he loved her.\n   - [x] Він сказав, що кохає її.\n   - [ ] Він сказав, що кохав її.\n\n---"
+      },
+      {
+        "id": "section-12",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| тому що | /tɔˈmu ʃt͡ʃɔ/ | because | conj | — | cause |\n| хоча | /xɔˈt͡ʃɑ/ | although | conj | — | contrast |\n| щоб | /ʃt͡ʃɔb/ | so that / in order to | conj | — | purpose |\n| який | /jɑˈkɪj/ | which / what kind | pron | m | relative |\n| що | /ʃt͡ʃɔ/ | that / what | conj | — | relative |\n| але | /ɑˈlɛ/ | but | conj | — | contrast |\n| спочатку | /spɔˈt͡ʃɑtku/ | at first | adv | — | sequence |\n| потім | /ˈpɔtim/ | then / after that | adv | — | sequence |\n| нарешті | /nɑˈrɛʃtʲi/ | finally | adv | — | sequence |\n| думка | /ˈdumkɑ/ | thought / opinion | noun | f | mental |\n| здається | /zdɑˈjɛtʲsʲɑ/ | it seems | verb | — | opinion |\n| на мою думку | /nɑ mɔˈju ˈdumku/ | in my opinion | phrase | — | opinion |\n| головне | /ɦɔlɔʋˈnɛ/ | the main thing | noun | n | focus |\n| історія | /isˈtɔrʲijɑ/ | story / history | noun | f | narrative |\n| життя | /ʒɪtˈtʲɑ/ | life | noun | n | concept |\n| рік | /rik/ | year | noun | m | time |\n| минулий | /mɪˈnulɪj/ | past / last | adj | m | time |\n| майбутній | /mɑjˈbutnʲij/ | future | adj | m | time |\n| говорити | /ɦɔʋɔˈrɪtɪ/ | to speak | verb | — | comms |\n| сказати | /skɑˈzɑtɪ/ | to say | verb | — | comms |\n| розповідати | /rɔzpɔʋiˈdɑtɪ/ | to tell (story) | verb | — | narrative |\n| питати | /pɪˈtɑtɪ/ | to ask | verb | — | comms |\n| відповідати | /ʋidpɔʋiˈdɑtɪ/ | to answer | verb | — | comms |\n| розуміти | /rɔzuˈmitɪ/ | to understand | verb | — | mental |\n| пам'ятати | /pɑmjaˈtɑtɪ/ | to remember | verb | — | mental |\n| забувати | /zɑbuˈʋɑtɪ/ | to forget | verb | — | mental |\n| вірити | /ˈvirɪtɪ/ | to believe | verb | — | mental |\n| надіятися | /nɑˈdijɑtɪsʲɑ/ | to hope | verb | — | mental |\n| мріяти | /ˈmrijɑtɪ/ | to dream | verb | — | mental |\n| план | /plɑn/ | plan | noun | m | concept |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-30\ntitle: Checkpoint 3\nsubtitle: \"Complex Ideas Review\"\nversion: \"1.0\"\nphase: \"A2.3\"\npedagogy: \"Expressive\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - review\n  - logic\n  - storytelling\n  - functional\ngrammar:\n  - review of connectors (тому що, хоча, щоб, який)\n  - review of reported speech\n  - review of medical vocab\nobjectives:\n  - \"Learner can tell a complex story\"\n  - \"Learner can link ideas logically\"\n  - \"Learner can manage a medical visit\"\nvocabulary_count: 30\n---\n\n# Warm-up\n\nCongratulations! You have finished Phase A2.3.\nYou moved from simple sentences to complex stories.\nNow you can explain **WHY**, **WHEN**, and **HOW** things happen.\nYou can express opinions, feelings, and even talk to a doctor.\n\n**Today we review:**\n1.  **The Logic:** Connecting ideas (Because, Although, So that).\n2.  **The Story:** Sequencing events (First, Then, Finally).\n3.  **The People:** Opinions, Gossip (Reported Speech), and Feelings.\n4.  **The Real World:** Medical Emergencies.\n\n> [!note] Success Criteria\n> By the end of this module, you should be able to say:\n> \"Although I was sick, I went to work because I wanted to finish the project which is important.\"\n\n---\n\n# Review: The Connector Map\n\nConnectors are the glue of language. Without them, your speech sounds like a robot: \"I eat. I sleep. I work.\"\nWith connectors, you sound human: \"I eat because I'm hungry, although I should diet.\"\nMastering these words is the fastest way to jump from A2 to B1 fluency.\n\n| Clarity (Logic) | Contrast (Conflict) | Purpose (Goal) | Description (Detail) |\n| :--- | :--- | :--- | :--- |\n| **Тому що** (Because) | **Хоча** (Although) | **Щоб** (In order to) | **Який** (Which/Who) |\n| **Через те, що** (Due to) | **Але** (But) | **Для того щоб** | **Де** (Where - relative) |\n| **Тому** (That's why) | **Однак** (However) | | **Коли** (When - relative) |\n\n*   *Я вчуся, **тому що** хочу знати.* (Cause)\n*   *Я вчуся, **хоча** я втомився.* (Concession)\n*   *Я вчуся, **щоб** знайти роботу.* (Purpose)\n*   *Це книга, **яку** я вчу.* (Relative)\n\n---\n\n# Review: Storytelling & Time\n\nTo tell a good story, you need to order events.\n\n1.  **Start:** *Спочатку...* (At first/Initially).\n2.  **Middle:** *Потім...* (Then/After that).\n3.  **Simultaneous:** *Поки...* (While).\n4.  **Sequence:** *Після того як...* (After...).\n5.  **End:** *Нарешті...* (Finally).\n\n**Example:**\n*Спочатку* я встав. *Потім* я поснідав. *Поки* я їв, я читав. *Після того як* я поїв, я пішов. *Нарешті* я прийшов.\n\n> [!example] English Translation\n> First, I got up. Then, I had breakfast. While I was eating, I read. After I ate, I left. Finally, I arrived.\n> Notice how \"Поки\" usually goes with imperfective verbs (doing), and \"Після того як\" often triggers main actions.\n\n---\n\n# Review: Reported Speech & Opinions\n\n- **Direct:** Я думаю: \"Це добре\".\n- **Indirect:** Я думаю, **що** це добре.\n- **Opinion:** На мою думку... / Мені здається...\n- **Report:** Він сказав, **що** він прийде. (He said THAT he will come).\n\n### The Golden Rule: No Backshift\nIn English, if the main verb is past (\"He said\"), we often shift the reported verb to past (\"he was busy\").\nIn Ukrainian, **logic wins over grammar**.\nIf he said \"I am busy\" (present), you report it as \"He said that he IS busy\" (present).\n\n| Original Phrase | English Report | Ukrainian Report | Note |\n| :--- | :--- | :--- | :--- |\n| \"I am happy\" | He said he **was** happy | Він сказав, що він **щасливий** | Keep Present |\n| \"I will come\" | He said he **would** come | Він сказав, що він **прийде** | Keep Future |\n| \"I did it\" | He said he **had done** it | Він сказав, що він **зробив** це | Keep Past |\n\n> [!tip] Warning\n> Never change the tense in reported speech in Ukrainian!\n> He said he **is** busy -> Він сказав, що він **зайнятий** (present).\n> This makes Ukrainian reported speech much simpler than English! No complex sequence of tenses to memorize. Just repeat what you heard, but change \"I\" to \"He\".\n\n---\n\n# Story Time: The Great Adventure\n\nЦе історія про хлопця, **ім'я якого** було Марко.\n**Спочатку** Марко жив у маленькому селі, **де** було тихо.\nВін мріяв про велике місто, **тому що** хотів знайти пригоди.\n**Хоча** його батьки казали, **що** це небезпечно, він вирішив поїхати.\nВін зібрав речі, **які** були йому потрібні.\n**Перед тим як** вийти, він подивився на свій дім.\nВін подумав: \"Я повернуся, **коли** стану багатим\".\n**Потім** він сів у поїзд.\n**Поки** він їхав, він дивився у вікно.\nВін бачив поля, ліси і річки.\n**Нарешті** він приїхав у Київ.\nМісто було величезне!\nВін не знав, **куди** йти.\nАле він зустрів дівчину, **яка** допомогла йому.\nВона сказала, **що** знає дешевий готель.\nМарко був радий.\nВін зрозумів, **що** світ добрий, **хоча** буває складним.\nТепер Марко працює в Києві, **але** він часто згадує своє село.\nВін дзвонить батькам, **щоб** сказати, **що** він щасливий.\n\n---\n\n# Deep Dive: Reviewing \"Tricky\" Words\n\nLet's review some words that often confuse learners in Phase A2.3.\n\n### 1. Тому що vs Тому\n- **Тому що** = Because (Cause). *Я їм, тому що голодний.*\n- **Тому** = That's why / So (Result). *Я голодний, тому я їм.*\n\n### 2. Що vs Який\n- **Що** = That/What (Conjunction/Question). *Я знаю, що ти тут.*\n- **Який** = Which/What kind (Relative/Question Adj). *Хлопець, який тут.*\n- **Trick:** If you can replace \"that\" with \"which\", use **Який**. If not, use **Що**.\n\n### 3. Поки vs Поки не\n- **Поки** = While.\n- **Поки не** = Until.\n\n---\n\n# Language in Action\n\n## Dialogue: The Sick Employee\n\n**Boss:** Алло, Андрію? Де ти?\n**Andriy:** Доброго ранку. Я дзвоню, **щоб** сказати, **що** я захворів.\n**Boss:** Що сталося?\n**Andriy:** У мене висока температура і болить горло.\n**Boss:** Це погано. Ти викликав лікаря?\n**Andriy:** Так. Лікар сказав, **що** це грип.\n**Boss:** Зрозуміло. Тобі треба лікуватися.\n**Andriy:** Я знаю. **Хоча** у нас сьогодні важлива зустріч, я не можу прийти.\n**Boss:** Не хвилюйся. **Головне**, **щоб** ти одужав.\n**Andriy:** Дякую. Я буду на зв'язку, **як тільки** мені стане краще.\n**Boss:** Відпочивай.\n\n## Dialogue: The Interview\n\n**Interviewer:** Доброго дня. Розкажіть, чому ви хочете тут працювати?\n**Candidate:** Доброго дня. Я хочу працювати тут, **тому що** ваша компанія найкраща.\n**Interviewer:** Дякую. А що ви робили раніше?\n**Candidate:** **Спочатку** я вчився в університеті. **Потім** я працював у школі.\n**Interviewer:** Чому ви пішли зі школи?\n**Candidate:** Я пішов, **тому що** хотів змінити кар'єру.\n**Interviewer:** Що ви вмієте робити?\n**Candidate:** Я вмію писати коди, **які** працюють швидко.\n**Interviewer:** Чудово. А як ви працюєте в команді?\n**Candidate:** Я думаю, **що** я гарний командний гравець. **Хоча** я люблю працювати самостійно, я поважаю колег.\n**Interviewer:** Ми шукаємо людину, **яка** готова вчитися.\n**Candidate:** Це я! Я вчуся щодня, **щоб** бути кращим.\n**Interviewer:** Гаразд. Ми вам подзвонимо, **після того як** поговоримо з директором.\n\n## Monologue: The Review of My Year\n\nЦей рік був цікавим.\n**Спочатку** я не знав, що робити.\nЯ думав, **що** моє життя нудне.\n**Але** потім я вирішив вчити українську мову.\n**Хоча** це було важко, я не здавався.\nЯ купив підручник, **який** мені порадив друг.\nЯ вчився щодня, **щоб** розуміти людей.\n**Коли** я поїхав у Київ, я говорив тільки українською.\nЯ пам'ятаю день, **коли** я вперше замовив каву сам.\nЦе було чудово!\n**Тепер** я щасливий.\n**На мою думку**, вивчення мови — це найкраще хобі.\n\n## Monologue: The Future Plan\n\n**Якщо** я закінчу цей курс, я поїду в Україну.\nЯ хочу побачити Карпати, **про які** я так багато читав.\nЯ буду гуляти горами, **поки** не втомлюся.\nЯ куплю сувеніри, **щоб** подарувати друзям.\nЯ знаю, **що** це буде найкраща подорож.\n**Хоча** я боюся літати, я все одно полечу.\n**Перед тим як** поїхати, я вивчу ще 100 слів.\nА **після того як** я повернуся, я напишу книгу.\nЦе мій план.\nІ я вірю, **що** він здійсниться.\n\n> [!tip] Review Tip\n> Read this monologue aloud.\n> Circle every connector.\n> Translate it to English logic: \"Logic: Condition -> Result. Purpose -> Action.\"\n> Ukrainian logic is very strict!\n\n---\n\n# Cultural Insight\n\n> [!cultural] Fate and Future\n> When talking about plans connectors like **коли** (when) and **якщо** (if), Ukrainians often add a touch of fatalism.\n> - \"Коли я поїду у відпустку... **якщо Бог дасть** (God willing).\"\n> - \"Я зроблю це, **якщо все буде добре**.\"\n> It's not religious per se, it's cultural modesty regarding the future. Don't be too sure!\n\n---\n\n# Study Tip: How to Review\n\nYou have covered a lot of ground in Phase A2.3.\nTo make sure you don't forget it, try these steps:\n\n1.  **Keep a Connector Diary**: Write one sentence every day using *тому що*, *хоча*, or *щоб*.\n2.  **Tell Stories backwards**: Try to tell a story starting from the end (\"Нарешті...\") and working back to the beginning (\"Спочатку...\"). It forces you to think about logic.\n3.  **Talk to yourself**: Use \"Reported Speech\" to report your own thoughts. \"I thought that I was hungry.\" (*Я думав, що я голодний*).\n\n---\n\n# Summary\n\nYou have mastered **Logic**.\n- You can explain Cause (**Тому що**).\n- You can express Contrast (**Хоча**).\n- You can define Purpose (**Щоб**).\n- You can describe Nouns (**Який**).\n- You can sequence Time (**Коли, Поки**).\n- You can report Speech (**Що**).\n\n---\n\n# Activities\n\n## match-up: Logical Pairs\n\n> Match the start to the logical finish.\n\n- Я не пішов, :: тому що захворів.\n- Я пішов, :: хоча захворів.\n- Я дзвоню, :: щоб запитати.\n- Це лікар, :: який лікує мене.\n- Він сказав, :: що прийде.\n- Як тільки прийду, :: подзвоню.\n- Перед тим як їсти, :: мий руки.\n- Мені здається, :: що це правда.\n- Я радий, :: що ти тут.\n- Я думаю, :: що все буде добре.\n\n## fill-in: The Ultimate Connector Test\n\n> Choose description.\n\n1. Я хочу, ___ ти прийшов. (Subjunctive/Purpose)\n   > [!answer] щоб\n   > [!options] щоб | що | як\n\n2. Я знаю, ___ ти прийшов. (Fact)\n   > [!answer] що\n   > [!options] що | щоб | як\n\n3. Це парк, ___ ми гуляли. (Place)\n   > [!answer] де\n   > [!options] де | який | куди\n\n4. Це парк, ___ ми любимо. (Object)\n   > [!answer] який\n   > [!options] який | де | що\n\n5. Ми пішли, ___ пішов дощ. (Cause)\n   > [!answer] тому що\n   > [!options] тому що | хоча | щоб\n\n6. Ми пішли, ___ йшов дощ. (Contrast)\n   > [!answer] хоча\n   > [!options] хоча | тому що | як\n\n7. ___ я їв, я мовчав. (Duration)\n   > [!answer] Поки\n   > [!options] Поки | Коли | Як тільки\n\n8. ___ я з'їв, я пішов. (Sequence)\n   > [!answer] Після того як\n   > [!options] Після того як | Поки | Хоча\n\n## quiz: Grammar Master\n\n1. \"Він сказав, що він хворий.\" - In English, \"said\" is past, \"is\" becomes...\n   - [x] was (Backshift)\n   - [ ] is (No change)\n\n2. \"Він сказав, що він хворий.\" - In Ukrainian, does the tense change?\n   - [x] No, keep original tense.\n   - [ ] Yes, backshift.\n\n3. Which word means \"Although\"?\n   - [x] Хоча\n   - [ ] Тому що\n   - [ ] Щоб\n\n4. Which word introduces a Purpose (\"in order to\")?\n   - [x] Щоб\n   - [ ] Що\n\n5. \"Книга, яку я читаю\" - Why \"яку\"?\n   - [x] Accusative (Object of read)\n   - [ ] Nominative (Subject)\n\n6. \"У мене болить...\" requires the body part to be in which case?\n   - [x] Nominative\n   - [ ] Accusative\n   - [ ] Genitive\n\n7. \"Мені здається\" is used for:\n   - [x] Opinions\n   - [ ] Facts\n   - [ ] Commands\n\n8. \"Спочатку\" means:\n   - [x] At first\n   - [ ] Finally\n\n## unjumble: The Complex Sentence\n\n1. я / що / думаю / ти / правий\n   > [!answer] Я думаю, що ти правий.\n\n2. пішов / хоча / він / був / дощ\n   > [!answer] Він пішов, хоча був дощ.\n\n3. ми / вчимося / знати / щоб / більше\n   > [!answer] Ми вчимося, щоб знати більше.\n\n4. це / місто / в / я / живу / якому\n   > [!answer] Це місто, в якому я живу.\n\n5. того / після / як / встав / снідав / я\n   > [!answer] Після того як встав, я снідав.\n\n6. сказав / лікар / що / здоровий / я\n   > [!answer] Лікар сказав, що я здоровий.\n\n## group-sort: Categories of Logic\n\n### Time (Коли)\n- Поки\n- Після того як\n- Перед тим як\n- Як тільки\n- Спочатку\n- Нарешті\n\n### Logic (Чому)\n- Тому що\n- Через те, що\n- Тому\n- Хоча\n- Однак\n- Щоб\n\n## true-false: Concepts Review\n\n1. \"Щоб\" implies a goal.\n   - [x] True\n   - [ ] False\n\n2. \"Що\" links facts or reports.\n   - [x] True\n   - [ ] False\n\n3. \"Який\" changes by gender and case.\n   - [x] True\n   - [ ] False\n\n4. \"Боліти\" takes Accusative subject.\n   - [ ] True\n   - [x] False\n\n5. \"Поки\" is for sequential actions.\n   - [ ] True\n   - [x] False (Simultaneous)\n\n6. We start stories with \"Нарешті\".\n   - [ ] True\n   - [x] False\n\n7. \"На мою думку\" means \"In my opinion\".\n   - [x] True\n   - [ ] False\n\n8. Reported speech in Ukrainian is easier than English.\n   - [x] True\n   - [ ] False (No backshift!)\n\n## cloze: The Final Story\n\n> Complete the text.\n\n[___:1] я приїхав у Львів, я був вражений.\nЯ побачив місто, [___:2] виглядало як казка.\nЯ хотів пити каву, [___:3] Львів славиться кавою.\n[___:4] я не знав, де найкраща кав'ярня.\nЯ запитав перехожого: \"Скажіть, будь ласка, [___:5] тут можна випити каву?\"\nВін сказав, [___:6] є гарне місце за рогом.\nЯ пішов туди, [___:7] насолодитися атмосферою.\n\n1. Коли / Що\n> [!answer] Коли\n\n2. яке / який\n> [!answer] яке\n\n3. тому що / хоча\n> [!answer] тому що\n\n4. Але / Щоб\n> [!answer] Але\n\n5. де / що\n> [!answer] де\n\n6. що / щоб\n> [!answer] що\n\n7. щоб / що\n> [!answer] щоб\n\n## dialogue-reorder: The Incident\n\n- Чому ти запізнився?\n- Вибачте. Спочатку я проспав.\n- А потім?\n- Потім я не міг знайти ключі, які лежали під ліжком.\n- І це все?\n- Ні. Коли я вийшов, почався дощ.\n- Але ти тут. Це головне.\n- Так, хоча я дуже мокрий.\n\n> [!answer]\n> 1. Чому ти запізнився?\n> 2. Вибачте. Спочатку я проспав.\n> 3. А потім?\n> 4. Потім я не міг знайти ключі, які лежали під ліжком.\n> 5. І це все?\n> 6. Ні. Коли я вийшов, почався дощ.\n> 7. Але ти тут. Це головне.\n> 8. Так, хоча я дуже мокрий.\n\n## mark-the-words: Connector Spotting\n\nЯ не знаю, [де](correct) він живе. Він сказав, [що](correct) прийде, [хоча](correct) він не обіцяв. Я роблю це, [тому що](correct) люблю. Це дім, [у якому](correct) я ріс. [Коли](correct) я сплю, я бачу сни.\n\n---\n\n[Стіл](incorrect) стоїть. [Книга](incorrect) лежить. [Сонце](incorrect) світить.\n\n## error-correction: Fix the Mistakes\n\n1. Я вчуся, **що** хочу знати. (Logic)\n   > [!error] що\n   > [!answer] тому що\n   > [!explanation] Cause requires \"тому що\".\n   > [!options] тому що | що\n\n2. Я хочу, **що** ти прийшов. (Subjunctive)\n   > [!error] що\n   > [!answer] щоб\n   > [!explanation] Desire/Subjunctive requires \"щоб\".\n   > [!options] щоб | що\n\n3. Це місто, **який** я люблю. (Gender)\n   > [!error] який\n   > [!answer] яке\n   > [!explanation] City (містo) is Neuter -> яке.\n   > [!options] яке | який\n\n4. Він сказав, що він **був** зайнятий зараз. (Backshift error)\n   > [!error] був\n   > [!answer] зайнятий\n   > [!explanation] Keep original tense (present). He said he IS busy.\n   > [!options] зайнятий | був\n\n5. **Поки** я прийшов, вона пішла. (Time aspect)\n   > [!error] Поки\n   > [!answer] Коли\n   > [!explanation] Point in time -> Коли.\n   > [!options] Коли | Поки\n\n6. Я пішов гуляти, **тому що** я хотів спати. (Illogical)\n   > [!error] тому що\n   > [!answer] хоча\n   > [!explanation] Contrast logic.\n   > [!options] хоча | тому що\n\n## translate: English to Ukrainian\n\n1. I know that you are smart.\n   - [x] Я знаю, що ти розумний.\n   - [ ] Я знаю, щоб ти розумний.\n\n2. The car which I bought.\n   - [x] Машина, яку я купив.\n   - [ ] Машина, яка я купив.\n\n3. Because I can.\n   - [x] Тому що я можу.\n   - [ ] Хоча я можу.\n\n4. Although it is raining.\n   - [x] Хоча йде дощ.\n   - [ ] Тому що йде дощ.\n\n5. First... Then...\n   - [x] Спочатку... Потім...\n   - [ ] Перший... Тоді...\n\n6. He said that he loved her.\n   - [x] Він сказав, що кохає її.\n   - [ ] Він сказав, що кохав її.\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| тому що | /tɔˈmu ʃt͡ʃɔ/ | because | conj | — | cause |\n| хоча | /xɔˈt͡ʃɑ/ | although | conj | — | contrast |\n| щоб | /ʃt͡ʃɔb/ | so that / in order to | conj | — | purpose |\n| який | /jɑˈkɪj/ | which / what kind | pron | m | relative |\n| що | /ʃt͡ʃɔ/ | that / what | conj | — | relative |\n| але | /ɑˈlɛ/ | but | conj | — | contrast |\n| спочатку | /spɔˈt͡ʃɑtku/ | at first | adv | — | sequence |\n| потім | /ˈpɔtim/ | then / after that | adv | — | sequence |\n| нарешті | /nɑˈrɛʃtʲi/ | finally | adv | — | sequence |\n| думка | /ˈdumkɑ/ | thought / opinion | noun | f | mental |\n| здається | /zdɑˈjɛtʲsʲɑ/ | it seems | verb | — | opinion |\n| на мою думку | /nɑ mɔˈju ˈdumku/ | in my opinion | phrase | — | opinion |\n| головне | /ɦɔlɔʋˈnɛ/ | the main thing | noun | n | focus |\n| історія | /isˈtɔrʲijɑ/ | story / history | noun | f | narrative |\n| життя | /ʒɪtˈtʲɑ/ | life | noun | n | concept |\n| рік | /rik/ | year | noun | m | time |\n| минулий | /mɪˈnulɪj/ | past / last | adj | m | time |\n| майбутній | /mɑjˈbutnʲij/ | future | adj | m | time |\n| говорити | /ɦɔʋɔˈrɪtɪ/ | to speak | verb | — | comms |\n| сказати | /skɑˈzɑtɪ/ | to say | verb | — | comms |\n| розповідати | /rɔzpɔʋiˈdɑtɪ/ | to tell (story) | verb | — | narrative |\n| питати | /pɪˈtɑtɪ/ | to ask | verb | — | comms |\n| відповідати | /ʋidpɔʋiˈdɑtɪ/ | to answer | verb | — | comms |\n| розуміти | /rɔzuˈmitɪ/ | to understand | verb | — | mental |\n| пам'ятати | /pɑmjaˈtɑtɪ/ | to remember | verb | — | mental |\n| забувати | /zɑbuˈʋɑtɪ/ | to forget | verb | — | mental |\n| вірити | /ˈvirɪtɪ/ | to believe | verb | — | mental |\n| надіятися | /nɑˈdijɑtɪsʲɑ/ | to hope | verb | — | mental |\n| мріяти | /ˈmrijɑtɪ/ | to dream | verb | — | mental |\n| план | /plɑn/ | plan | noun | m | concept |\n",
+    "createdAt": "2025-12-15T20:02:03.039215Z",
+    "modifiedAt": "2025-12-15T20:02:03.039215Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-34",
+    "level": "A2",
+    "phase": "A2.3",
+    "wordCount": 30,
+    "newWordCount": 30,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "тому що",
+        "ipa": "/tɔˈmu ʃt͡ʃɔ/",
+        "en": "because",
+        "pos": "conj",
+        "gender": null,
+        "note": "cause"
+      },
+      {
+        "id": "vocab-2",
+        "uk": "хоча",
+        "ipa": "/xɔˈt͡ʃɑ/",
+        "en": "although",
+        "pos": "conj",
+        "gender": null,
+        "note": "contrast"
+      },
+      {
+        "id": "vocab-3",
+        "uk": "щоб",
+        "ipa": "/ʃt͡ʃɔb/",
+        "en": "so that / in order to",
+        "pos": "conj",
+        "gender": null,
+        "note": "purpose"
+      },
+      {
+        "id": "vocab-4",
+        "uk": "який",
+        "ipa": "/jɑˈkɪj/",
+        "en": "which / what kind",
+        "pos": "pron",
+        "gender": "m",
+        "note": "relative"
+      },
+      {
+        "id": "vocab-5",
+        "uk": "що",
+        "ipa": "/ʃt͡ʃɔ/",
+        "en": "that / what",
+        "pos": "conj",
+        "gender": null,
+        "note": "relative"
+      },
+      {
+        "id": "vocab-6",
+        "uk": "але",
+        "ipa": "/ɑˈlɛ/",
+        "en": "but",
+        "pos": "conj",
+        "gender": null,
+        "note": "contrast"
+      },
+      {
+        "id": "vocab-7",
+        "uk": "спочатку",
+        "ipa": "/spɔˈt͡ʃɑtku/",
+        "en": "at first",
+        "pos": "adv",
+        "gender": null,
+        "note": "sequence"
+      },
+      {
+        "id": "vocab-8",
+        "uk": "потім",
+        "ipa": "/ˈpɔtim/",
+        "en": "then / after that",
+        "pos": "adv",
+        "gender": null,
+        "note": "sequence"
+      },
+      {
+        "id": "vocab-9",
+        "uk": "нарешті",
+        "ipa": "/nɑˈrɛʃtʲi/",
+        "en": "finally",
+        "pos": "adv",
+        "gender": null,
+        "note": "sequence"
+      },
+      {
+        "id": "vocab-10",
+        "uk": "думка",
+        "ipa": "/ˈdumkɑ/",
+        "en": "thought / opinion",
+        "pos": "noun",
+        "gender": "f",
+        "note": "mental"
+      },
+      {
+        "id": "vocab-11",
+        "uk": "здається",
+        "ipa": "/zdɑˈjɛtʲsʲɑ/",
+        "en": "it seems",
+        "pos": "verb",
+        "gender": null,
+        "note": "opinion"
+      },
+      {
+        "id": "vocab-12",
+        "uk": "на мою думку",
+        "ipa": "/nɑ mɔˈju ˈdumku/",
+        "en": "in my opinion",
+        "pos": "phrase",
+        "gender": null,
+        "note": "opinion"
+      },
+      {
+        "id": "vocab-13",
+        "uk": "головне",
+        "ipa": "/ɦɔlɔʋˈnɛ/",
+        "en": "the main thing",
+        "pos": "noun",
+        "gender": "n",
+        "note": "focus"
+      },
+      {
+        "id": "vocab-14",
+        "uk": "історія",
+        "ipa": "/isˈtɔrʲijɑ/",
+        "en": "story / history",
+        "pos": "noun",
+        "gender": "f",
+        "note": "narrative"
+      },
+      {
+        "id": "vocab-15",
+        "uk": "життя",
+        "ipa": "/ʒɪtˈtʲɑ/",
+        "en": "life",
+        "pos": "noun",
+        "gender": "n",
+        "note": "concept"
+      },
+      {
+        "id": "vocab-16",
+        "uk": "рік",
+        "ipa": "/rik/",
+        "en": "year",
+        "pos": "noun",
+        "gender": "m",
+        "note": "time"
+      },
+      {
+        "id": "vocab-17",
+        "uk": "минулий",
+        "ipa": "/mɪˈnulɪj/",
+        "en": "past / last",
+        "pos": "adj",
+        "gender": "m",
+        "note": "time"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "майбутній",
+        "ipa": "/mɑjˈbutnʲij/",
+        "en": "future",
+        "pos": "adj",
+        "gender": "m",
+        "note": "time"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "говорити",
+        "ipa": "/ɦɔʋɔˈrɪtɪ/",
+        "en": "to speak",
+        "pos": "verb",
+        "gender": null,
+        "note": "comms"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "сказати",
+        "ipa": "/skɑˈzɑtɪ/",
+        "en": "to say",
+        "pos": "verb",
+        "gender": null,
+        "note": "comms"
+      },
+      {
+        "id": "vocab-21",
+        "uk": "розповідати",
+        "ipa": "/rɔzpɔʋiˈdɑtɪ/",
+        "en": "to tell (story)",
+        "pos": "verb",
+        "gender": null,
+        "note": "narrative"
+      },
+      {
+        "id": "vocab-22",
+        "uk": "питати",
+        "ipa": "/pɪˈtɑtɪ/",
+        "en": "to ask",
+        "pos": "verb",
+        "gender": null,
+        "note": "comms"
+      },
+      {
+        "id": "vocab-23",
+        "uk": "відповідати",
+        "ipa": "/ʋidpɔʋiˈdɑtɪ/",
+        "en": "to answer",
+        "pos": "verb",
+        "gender": null,
+        "note": "comms"
+      },
+      {
+        "id": "vocab-24",
+        "uk": "розуміти",
+        "ipa": "/rɔzuˈmitɪ/",
+        "en": "to understand",
+        "pos": "verb",
+        "gender": null,
+        "note": "mental"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "пам'ятати",
+        "ipa": "/pɑmjaˈtɑtɪ/",
+        "en": "to remember",
+        "pos": "verb",
+        "gender": null,
+        "note": "mental"
+      },
+      {
+        "id": "vocab-26",
+        "uk": "забувати",
+        "ipa": "/zɑbuˈʋɑtɪ/",
+        "en": "to forget",
+        "pos": "verb",
+        "gender": null,
+        "note": "mental"
+      },
+      {
+        "id": "vocab-27",
+        "uk": "вірити",
+        "ipa": "/ˈvirɪtɪ/",
+        "en": "to believe",
+        "pos": "verb",
+        "gender": null,
+        "note": "mental"
+      },
+      {
+        "id": "vocab-28",
+        "uk": "надіятися",
+        "ipa": "/nɑˈdijɑtɪsʲɑ/",
+        "en": "to hope",
+        "pos": "verb",
+        "gender": null,
+        "note": "mental"
+      },
+      {
+        "id": "vocab-29",
+        "uk": "мріяти",
+        "ipa": "/ˈmrijɑtɪ/",
+        "en": "to dream",
+        "pos": "verb",
+        "gender": null,
+        "note": "mental"
+      },
+      {
+        "id": "vocab-30",
+        "uk": "план",
+        "ipa": "/plɑn/",
+        "en": "plan",
+        "pos": "noun",
+        "gender": "m",
+        "note": "concept"
+      }
+    ],
+    "reviewWords": []
+  }
+}

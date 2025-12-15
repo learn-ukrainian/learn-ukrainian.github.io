@@ -1,0 +1,434 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-37",
+    "moduleId": "mod-uk-A2-37",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.4",
+    "moduleNumber": 37,
+    "moduleType": "grammar",
+    "pedagogy": "Inquiry",
+    "immersionLevel": 0.4,
+    "title": "Action Verb Prefixes",
+    "titleUk": null,
+    "subtitle": "The Magic of Transformation",
+    "description": "Learner can understand how prefixes alter verb meaning",
+    "objectives": [
+      "Learner can understand how prefixes alter verb meaning",
+      "Learner can express completion, beginning, or redo actions",
+      "Learner can identify root verbs in complex forms"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "action verb prefixes (на-, по-, роз-, від-, за-, пере-, до-)",
+      "changing meaning vs. changing aspect"
+    ],
+    "tags": [
+      "grammar",
+      "verbs",
+      "prefixes",
+      "word-formation"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "In Module 31, we used prefixes to move (GPS).\nNow, we use prefixes to **transform** actions.\nImagine the verb **писати** (to write). It's just a neutral process.\nBut what if you want to say:\n- \"I wrote it **down**\" (recorded it)?\n- \"I wrote it **again**\" (redid it)?\n- \"I wrote **a little bit**\"?\n- \"I **signed** it\"?\n\nIn English, you use phrasal verbs or extra words.\nIn Ukrainian, you just click a LEGO piece (prefix) onto the verb!\n**Писати** -> **За**писати, **Пере**писати, **По**писати, **Під**писати.\n\n> [!question] Think about it\n> A prefix changes the \"angle\" of the action.\n> - **Пере-** usually means \"re-\" (redo) or \"across\".\n> - **До-** usually means \"finish\" (to the end).\n> - **За-** usually means \"close\" or \"fix/record\".\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "The Meaning Map",
+        "nameEn": null,
+        "type": "content",
+        "content": "Let's look at the most powerful \"Transformers\".\n\n| Prefix | Meaning | Logic | Example |\n| :--- | :--- | :--- | :--- |\n| **На-** | **On / Accumulation** | Putting something ON | **На**писати: Write (result), **На**клеїти: Stick on |\n| **Пере-** | **Re- / Across** | Doing again or changing | **Пере**писати: Rewrite, **Пере**робити: Redo |\n| **До-** | **Finish / To the end** | Reaching the limit | **До**писати: Finish writing, **До**читати: Finish reading |\n| **За-** | **Close / Fix** | Closing or recording | **За**крити: Close, **За**писати: Record |\n| **Від-** | **Open / Away** | Opening or separating | **Від**крити: Open, **Від**різати: Cut off |\n| **По-** | **A little / Process** | Brief or limited action | **По**читати: Read a bit, **По**говорити: Chat |\n| **Під-** | **Under / Sub-** | Adding from below | **Під**писати: Sign, **Під**тримати: Support |\n| **Роз-** | **Open / Disperse** | Spreading out | **Роз**крити: Uncover, **Роз**дати: Distribute |\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Story Time: The Writer's Deadline",
+        "nameEn": null,
+        "type": "content",
+        "content": "Це історія про письменника, який намагався написати геніальну книгу.\nСпочатку він **написав** план на серветці в кафе.\nВін **відкрив** свій старий ноутбук і почав працювати.\nВін писав цілий день, але йому нічого не подобалося.\nВін видалив текст і почав знову. Він вирішив усе **переписати**.\nВін **переробив** перший розділ п'ять разів!\nПотім він втомився і вирішив трохи **почитати** новини в інтернеті.\nАле раптом редактор подзвонив і закричав: \"Ти маєш **дописати** розділ сьогодні!\"\nПисьменник злякався. Він зрозумів, що часу мало.\nВін **закрив** новини, **вимкнув** телефон і знову почав писати.\nВін писав швидко і натхненно.\nВвечері він нарешті **закінчив** останню сторінку.\nВін роздрукував текст, **підписав** його своїм іменем і поклав у папку.\nВін **здав** роботу редактору вранці.\nРедактор прочитав і сказав: \"Це шедевр!\".\nВранці письменник **прокинувся** відомим.\n\n> [!cultural] Cultural Insight: Hospitality\n> Prefixes are everywhere in Ukrainian culture, especially hospitality.\n> When guests arrive, you **відкрити** (open) the door and the wine.\n> You **накрити** (cover/set) the table (\"накрити на стіл\").\n> You **поговорити** (have a chat).\n> And when they leave, you **провести** (lead through/escort) them to the door.\n> It's a sequence of prefixed actions!\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Deep Dive: Open and Close (Відкрити / Закрити)",
+        "nameEn": null,
+        "type": "content",
+        "content": "These are the most useful practical verbs.\nUnlike English (\"turn on/off\" vs \"open/close\"), Ukrainian logic is consistent.\n\n- **Open:** **Від**крити (Move *away* the cover).\n- **Close:** **За**крити (Move *behind* the cover).\n- **Turn on:** **В**микати (Move *in*).\n- **Turn off:** **Ви**микати (Move *out*).\n\n| Object | Action | Verb |\n| :--- | :--- | :--- |\n| Door/Window | Open | **Відкрити** / **Відчинити** |\n| Door/Window | Close | **Закрити** / **Зачинити** |\n| Book | Open | **Розкрити** (Spread open) |\n| Book | Close | **Закрити** / **Згорнути** |\n| Eyes | Open | **Розплющити** (Specific!) |\n| Eyes | Close | **Заплющити** |\n\n> [!note] Open vs Unlock\n> **Відкрити** usually means to open access (a store, a bottle, a new land).\n> **Відчинити** is specifically for physical barriers like doors and windows.\n> However, in modern Ukrainian, **відкрити двері** is also common, though purists prefer **відчинити**.\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Deep Dive: To Give (The \"Give\" Family)",
+        "nameEn": null,
+        "type": "content",
+        "content": "The verb **Дати** (to give) is a prefix magnet.\n\n1.  **Дати** = To give (simple).\n2.  **Віддати** = To give back / return.\n    *   *Я **віддав** борг.* (I returned the debt).\n3.  **Передати** = To pass (transmit).\n    *   *Будь ласка, **передайте** сіль.* (Please pass the salt).\n4.  **Здати** = To hand in / To betray / To rent out.\n    *   *Студент **здав** іспит.* (Handed in/Passed exam).\n    *   *Він **здав** квартиру.* (He rented out the apartment).\n5.  **Подати** = To serve / hand politely.\n    *   *Офіціант **подав** меню.* (served the menu).\n6.  **Видати** = To issue / publish / betray.\n    *   *Банк **видав** картку.* (Issued).\n    *   *Він **видав** секрет.* (Betrayed/Leaked).\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Deep Dive: Connect and Disconnect",
+        "nameEn": null,
+        "type": "content",
+        "content": "In the age of technology, these are crucial.\nBase: **Єднати** (to unite).\n\n- **При**єднати = To attach/connect TO something. (Connect printer).\n- **Від**'єднати = To detach/disconnect FROM something. (Unplug).\n- **З**'єднати = To connect TWO things together. (Join wires).\n- **Роз**'єднати = To separate two things. (Cut connection).\n\n*Ми **під'єднали** інтернет!* (We connected the internet!).\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Language in Action",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Dialogue: Office Chaos\n\n**Manager:** Андрій, ти вже **написав** звіт?\n**Andriy:** Так, я написав його вчора.\n**Manager:** Де він? Я не можу його знайти.\n**Andriy:** Я **відправив** його тобі на пошту.\n**Manager:** Я не отримав. Ти точно **натиснув** \"Відправити\"?\n**Andriy:** Ой, здається, я **забув** натиснути кнопку.\n**Manager:** Андрій! Ти маєш **надіслати** його зараз же! Клієнт чекає!\n**Andriy:** Добре, я зараз **відкрию** пошту і **перешлю**.\n**Manager:** І будь ласка, **перевір** цифри. Минулого разу ти помилився.\n**Andriy:** Я все **переписав** і **перевірив**. Не хвилюйся.\n**Manager:** Сподіваюся. Якщо ми втратимо клієнта, я тебе **звільню** (fire)!\n**Andriy:** Все, **відправлено**!\n**Manager:** Добре. Тепер **роздрукуй** копію для мене.\n\n## Monologue: The Renovator\n\nЯ вирішив зробити ремонт.\nСпочатку я **виніс** старі меблі.\nПотім я **зняв** старі шпалери.\nЯ **пофарбував** стіни в білий колір.\nАле фарба закінчилася!\nМені довелося **піти** в магазин, щоб **докупити** ще.\nКоли я повернувся, кіт **перевернув** банку з фарбою.\nЯ мусив усе **перемити** і **переробити**.\nПотім я **прибив** нову полицю, але вона впала.\nЯ **наробив** стільки шуму, що прийшли сусіди.\nРемонт — це жах!\n\n> [!tip] Learning Tip\n> When you learn a new verb, ask: \"Can I add **пере-** (redo) or **до-** (finish)?\"\n> Usually, the answer is Yes!\n> - Їсти -> **До**їсти (Finish eating).\n> - Мити -> **Пере**мити (Wash again).\n> It makes your vocabulary flexible.\n\n---"
+      },
+      {
+        "id": "section-8",
+        "name": "Reflection Point",
+        "nameEn": null,
+        "type": "content",
+        "content": "Before we finish, answer these questions for yourself:\n1.  How do you say \"Redo\" in Ukrainian? (Hint: **Пере-**)\n2.  How do you say \"Finish\"? (Hint: **До-**)\n3.  How do you say \"Close\"? (Hint: **За-**)\n4.  Can you feel the difference between **писати** (process) and **написати** (result)?\n\nIf yes, you are ready for suffixes!\n\n---\n\n---"
+      },
+      {
+        "id": "section-9",
+        "name": "Deep Dive: The Logic of \"Na-\" (Accumulation)",
+        "nameEn": null,
+        "type": "content",
+        "content": "The prefix **На-** often means \"to put on\" or \"to accumulate/create a lot of\".\n- **Писати** (write) -> **Написати** (create a written text).\n- **Малювати** (paint) -> **Намалювати** (create a painting).\n- **Робити** (do) -> **Наробити** (make a massive amount/mess).\n    *   *Ми **наробили** помилок.* (We made a ton of mistakes).\n- **Їсти** (eat) -> **Наїстися** (To eat one's fill / accumulate food inside).\n\n---"
+      },
+      {
+        "id": "section-10",
+        "name": "Deep Dive: The \"Za-\" Trap",
+        "nameEn": null,
+        "type": "content",
+        "content": "The prefix **За-** is the trickiest one. It has three opposite meanings!\n\n1.  **Close / Behind:**\n    *   **Закрити** (Close).\n    *   **Заховати** (Hide behind).\n2.  **Start (Suddenly):**\n    *   **Заспівати** (Start singing).\n    *   **Заплакати** (Burst into tears).\n    *   **Захворіти** (Get/Fall sick).\n3.  **Too Much (Excess):**\n    *   **Запрацюватися** (Work too much / lose track of time).\n    *   **Загулятися** (Party/Walk too long).\n    *   **Засидітися** (Sit too long / stay up late).\n\n> [!warning] Context Matters\n> - *Він **заговорив**.* = He started speaking.\n> - *Він мене **заговорив**.* = He tired me with too much talking.\n> The context tells you if it's \"Start\" or \"Too Much\".\n\n---"
+      },
+      {
+        "id": "section-11",
+        "name": "Anti-Propaganda Showcase",
+        "nameEn": null,
+        "type": "content",
+        "content": "> [!myth] Myth: \"Ukrainian vocabulary is small.\"\n> **Fact:** This myth comes from Soviet dictionaries that artificially limited defining Ukrainian words to match Russian ones.\n> In reality, Ukrainian prefixation allows for nuances that English needs sentences to explain.\n> Example: **Заговорити** (to start speaking / to charm someone / to tire someone with talk).\n> **Наговорити** (to say a lot of things / to slander).\n> **Відговорити** (to dissuade).\n> **Підговорити** (to instigate).\n> One root \"говорити\" creates dozens of distinct concepts. This is linguistic wealth, not poverty.\n\n---"
+      },
+      {
+        "id": "section-12",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "1.  **Prefixes transform meaning.** They act like modifiers (Re-, Sub-, Out-).\n2.  **Пере-** = Redo / Across.\n3.  **До-** = Finish.\n4.  **За-** = Close / Record / Start / Excess.\n5.  **Від-** = Open / Away.\n6.  **По-** = A bit / Start.\n7.  **На-** = Accumulate / Create.\n\n---"
+      },
+      {
+        "id": "section-13",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: The Transformers\n\n> Match the prefix to the transformation.\n\n- Пере- :: Redo (Do again)\n- До- :: Finish (To the end)\n- За- :: Close / Excess\n- Від- :: Open / Away\n- Під- :: Under / Sub-\n- По- :: A little bit\n- Роз- :: Disperse / Open wide\n- На- :: Create / On\n\n## fill-in: The Editor\n\n> Change the verb to mean \"Redo\" using the prefix **Пере-**.\n\n1. Я хочу ___ цей текст. [Hint: Rewrite \"писати\"]\n   > [!answer] переписати\n   > [!options] переписати | дописати | записати\n\n2. Ми повинні ___ цю роботу. [Hint: Redo \"робити\"]\n   > [!answer] переробити\n   > [!options] переробити | доробити | зробити\n\n3. Треба ___ книгу ще раз. [Hint: Reread \"читати\"]\n   > [!answer] перечитати\n   > [!options] перечитати | дочитати | почитати\n\n4. Стіна погана, треба ___. [Hint: Repaint \"фарбувати\"]\n   > [!answer] перефарбувати\n   > [!options] перефарбувати | пофарбувати | зафарбувати\n\n5. Посуд брудний, треба ___. [Hint: Wash again \"мити\"]\n   > [!answer] перемити\n   > [!options] перемити | помити | вимити\n\n6. Я хочу ___ цей фільм. [Hint: Watch again \"дивитися\"]\n   > [!answer] передивитися\n   > [!options] передивитися | подивитися | задивитися\n\n7. Він вирішив ___ екзамен. [Hint: Retake \"здавати\"]\n   > [!answer] перездати\n   > [!options] перездати | здати | видати\n\n8. Ми ___ плани. [Hint: Changed/Remade \"будувати\"]\n   > [!answer] перебудували\n   > [!options] перебудували | збудували | добудували\n\n## fill-in: The Perfectionist\n\n> Complete the sentence with the correct prefixed verb.\n\n1. Цей текст поганий. Треба його ___. [Hint: Rewrite]\n   > [!answer] переписати\n   > [!options] переписати | дописати | записати\n\n2. Я не ___ книгу, вона нудна. [Hint: Finish reading]\n   > [!answer] дочитав\n   > [!options] дочитав | перечитав | почитав\n\n3. Будь ласка, ___ двері. Холодно. [Hint: Close]\n   > [!answer] закрий\n   > [!options] закрий | відкрий | розкрий\n\n4. Я хочу ___ твій номер телефону. [Hint: Write down]\n   > [!answer] записати\n   > [!options] записати | підписати | написати\n\n5. Де тут можна ___ документи? [Hint: Sign]\n   > [!answer] підписати\n   > [!options] підписати | описати | виписати\n\n6. Мама попросила ___ посуд. [Hint: Wash again]\n   > [!answer] перемити\n   > [!options] перемити | домити | замити\n\n7. Треба ___ роботу до вечора. [Hint: Finish doing]\n   > [!answer] доробити\n   > [!options] доробити | переробити | зробити\n\n8. Він ___ двері ключем. [Hint: Opened]\n   > [!answer] відкрив\n   > [!options] відкрив | закрив | розкрив\n\n---"
+      },
+      {
+        "id": "section-14",
+        "name": "Deep Dive: Feel the Prefix",
+        "nameEn": null,
+        "type": "content",
+        "content": "Comparing suffixes (like in English *beauty-ful*) which are abstract, Ukrainian prefixes are **physical**.\nYou can use your hands to memorize them!\n\n- **На-**: Put your hand ON the table. (Accumulation).\n- **Під-**: Put your hand UNDER the table.\n- **В-**: Point INTO a box.\n- **Ви-**: Point OUT of a box.\n- **Пере-**: Move your hand ACROSS/OVER the table.\n- **Від-**: Push your hand AWAY.\n\nWhen you speak, use these gestures. It helps your brain \"feel\" the grammar.\n\n---\n\n## group-sort: Open vs Close\n\n> Is this opening or closing?\n\n### Opening (Від-/Роз-)\n- Відкрити вікно\n- Розгорнути книгу\n- Відчинити двері\n- Розплющити очі\n- Відкоркувати вино\n- Відімкнути замок\n\n### Closing (За-)\n- Закрити вікно\n- Згорнути книгу\n- Зачинити двері\n- Заплющити очі\n- Закоркувати вино\n- Замкнути замок\n\n## quiz: Meaning Check\n\n> Choose the correct meaning.\n\n1. \"Доробити\" means to:\n   - [x] Finish doing\n   - [ ] Redo\n   - [ ] Do a little\n\n2. \"Почитати\" means to:\n   - [x] Read a little bit\n   - [ ] Finish reading\n   - [ ] Reread\n\n3. \"Підписати\" implies putting your name:\n   - [x] Under the text\n   - [ ] Over the text\n   - [ ] Inside the text\n\n4. \"Переробити\" implies the first attempt was:\n   - [x] Bad or wrong\n   - [ ] Perfect\n   - [ ] Non-existent\n\n5. \"Наробити\" usually implies:\n   - [x] A large quantity\n   - [ ] A small quantity\n   - [ ] A specific quality\n\n6. \"Відкрити\" relates to which preposition logic?\n   - [x] Від: Away\n   - [ ] До: To\n   - [ ] В: In\n\n7. \"Здати\" (to betray) literally means:\n   - [x] To give up/away\n   - [ ] To give in\n   - [ ] To give under\n\n8. \"Наїстися\" means:\n   - [x] To eat until full\n   - [ ] To eat a little\n   - [ ] To start eating\n\n## true-false: Propaganda Check\n\n1. Ukrainian vocabulary is limited.\n   - [ ] True\n   - [x] False (Prefixes expand it)\n\n2. \"Заговорити\" can mean \"to charm\".\n   - [x] True\n   - [ ] False\n\n3. \"Наговорити\" means to stop talking.\n   - [ ] True\n   - [x] False (To say a lot)\n\n4. One root can produce dozens of words.\n   - [x] True\n   - [ ] False\n\n5. \"Видати\" means to keep a secret.\n   - [ ] True\n   - [x] False (To publish/reveal)\n\n6. \"Віддати\" means to take something.\n   - [ ] True\n   - [x] False (To give back)\n\n7. \"Донести\" means to carry to the end.\n   - [x] True\n   - [ ] False\n\n8. \"Перенести\" means to move something to a new place.\n   - [x] True\n   - [ ] False\n\n## cloze: The Test\n\n> Fill in the missing prefixes.\n\nСтудент складав іспит.\nВін [___:1]йшов в аудиторію.\nВін [___:2]тягнув білет.\nВін [___:3]чав писати відповідь.\nАле він зробив помилку і мусив [___:4]писати речення.\nЧас закінчувався, він ледве встиг [___:5]писати.\nВін [___:6]дав роботу професору.\nПрофесор [___:7]вірив і сказав: \"Молодець!\".\nСтудент [___:8]дихнув з полегшенням.\n\n1. увій / зай\n> [!answer] увій\n\n2. ви\n> [!answer] ви\n\n3. по\n> [!answer] по\n\n4. пере\n> [!answer] пере\n\n5. до\n> [!answer] до\n\n6. з\n> [!answer] з\n\n7. пере\n> [!answer] пере\n\n8. зіт\n> [!answer] зіт\n\n## error-correction: Fix the Verb\n\n1. Я хочу **переписати** це яблуко. (Context: eat finishes it)\n   > [!error] переписати\n   > [!answer] доїсти\n   > [!explanation] You finish eating (доїсти), not rewrite (переписати) an apple.\n   > [!options] доїсти | переписати\n\n2. Треба **відкрити** вікно, бо холодно. (Logic)\n   > [!error] відкрити\n   > [!answer] закрити\n   > [!explanation] If cold, close (закрити).\n   > [!options] закрити | відкрити\n\n3. Я **дописав** книгу три рази. (Redo context)\n   > [!error] дописав\n   > [!answer] перечитав\n   > [!explanation] Reading 3 times is re-reading (пере-).\n   > [!options] перечитав | дописав\n\n4. Він **підписав** двері ключем. (Open context)\n   > [!error] підписав\n   > [!answer] відкрив\n   > [!explanation] You open (відкрити) a door with a key. Signed (підписав) makes no sense.\n   > [!options] відкрив | підписав\n\n5. Ми **розробили** ремонт. (Context: Massive redo/work)\n   > [!error] розробили\n   > [!answer] зробили / переробили\n   > [!explanation] Use \"зробили\" (simple did) or \"переробили\" (redid). \"Розробили\" implies \"developed/designed\" which is weird for \"repair\".\n   > [!options] зробили | розробили\n\n6. Я **написав** трохи, 5 хвилин. (Brief process)\n   > [!error] написав\n   > [!answer] пописав\n   > [!explanation] Brief process uses По-. \"Написав\" implies a result (finished thing).\n   > [!options] пописав | написав\n\n## match-up: Give and Take\n\n> Match the \"Give\" verb to its meaning.\n\n- Віддати :: Give back (Return)\n- Передати :: Pass (Salt/Message)\n- Здати :: Turn in / Rent out\n- Видати :: Publish / Reveal\n- Подати :: Serve (Food/Hand)\n- Роздати :: Distribute (To many)\n- Надати :: Provide (Official)\n- Продати :: Sell (Give for money)\n\n## unjumble: The Office\n\n1. документ / він / підписав\n   > [!answer] Він підписав документ.\n2. звіт / ми / переробили\n   > [!answer] Ми переробили звіт.\n3. двері / секретар / відкрив\n   > [!answer] Секретар відкрив двері.\n4. картку / банк / видав\n   > [!answer] Банк видав картку.\n5. книгу / я / дочитав\n   > [!answer] Я дочитав книгу.\n6. інтернет / ми / під'єднали\n   > [!answer] Ми під'єднали інтернет.\n\n\n---"
+      },
+      {
+        "id": "section-15",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| написати | /nɑpɪˈsɑtɪ/ | to write (finish) | verb | — | pf |\n| переписати | /pɛrɛpɪˈsɑtɪ/ | to rewrite | verb | — | pf |\n| дописати | /dɔpɪˈsɑtɪ/ | to finish writing | verb | — | pf |\n| підписати | /pidpɪˈsɑtɪ/ | to sign | verb | — | pf |\n| записати | /zɑpɪˈsɑtɪ/ | to record/write down | verb | — | pf |\n| описати | /ɔpɪˈsɑtɪ/ | to describe | verb | — | pf |\n| виписати | /ʋɪpɪˈsɑtɪ/ | to check out/extract | verb | — | pf |\n| зробити | /zrɔˈbɪtɪ/ | to do/make | verb | — | pf |\n| переробити | /pɛrɛrɔˈbɪtɪ/ | to redo | verb | — | pf |\n| доробити | /dɔrɔˈbɪtɪ/ | to finish doing | verb | — | pf |\n| відкрити | /ʋidˈkrɪtɪ/ | to open | verb | — | pf |\n| закрити | /zɑˈkrɪtɪ/ | to close | verb | — | pf |\n| відчинити | /ʋidt͡ʃɪˈnɪtɪ/ | to open (door/window) | verb | — | pf |\n| зачинити | /zɑt͡ʃɪˈnɪtɪ/ | to close (door/window) | verb | — | pf |\n| роздати | /rɔzˈdɑtɪ/ | to distribute | verb | — | pf |\n| роздавати | /rɔzdɑˈʋɑtɪ/ | to distribute (process) | verb | — | impf |\n| подати | /pɔˈdɑtɪ/ | to serve/give | verb | — | pf |\n| віддати | /ʋidˈdɑtɪ/ | to give back | verb | — | pf |\n| передати | /pɛrɛˈdɑtɪ/ | to pass/transmit | verb | — | pf |\n| здати | /zdɑˈtɪ/ | to turn in/rent out | verb | — | pf |\n| видати | /ˈʋɪdɑtɪ/ | to issue/publish | verb | — | pf |\n| надати | /nɑˈdɑtɪ/ | to provide | verb | — | pf |\n| приєднати | /prɪjɛdˈnɑtɪ/ | to attach/join | verb | — | pf |\n| роз'єднати | /rɔzjedˈnɑtɪ/ | to disconnect | verb | — | pf |\n| з'єднати | /zjedˈnɑtɪ/ | to connect | verb | — | pf |\n| від'єднати | /ʋidjedˈnɑtɪ/ | to detach | verb | — | pf |\n| під'єднати | /pidjedˈnɑtɪ/ | to connect up | verb | — | pf |\n| перенести | /pɛrɛnɛsˈtɪ/ | to move/reschedule | verb | — | pf |\n| донести | /dɔnɛsˈtɪ/ | to carry to finish | verb | — | pf |\n| почекати | /pɔt͡ʃɛˈkɑtɪ/ | to wait a bit | verb | — | pf |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-32\ntitle: Action Verb Prefixes\nsubtitle: \"The Magic of Transformation\"\nversion: \"1.0\"\nphase: \"A2.4\"\npedagogy: \"Inquiry\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - grammar\n  - verbs\n  - prefixes\n  - word-formation\ngrammar:\n  - action verb prefixes (на-, по-, роз-, від-, за-, пере-, до-)\n  - changing meaning vs. changing aspect\nobjectives:\n  - \"Learner can understand how prefixes alter verb meaning\"\n  - \"Learner can express completion, beginning, or redo actions\"\n  - \"Learner can identify root verbs in complex forms\"\nvocabulary_count: 30\n---\n\n# Warm-up\n\nIn Module 31, we used prefixes to move (GPS).\nNow, we use prefixes to **transform** actions.\nImagine the verb **писати** (to write). It's just a neutral process.\nBut what if you want to say:\n- \"I wrote it **down**\" (recorded it)?\n- \"I wrote it **again**\" (redid it)?\n- \"I wrote **a little bit**\"?\n- \"I **signed** it\"?\n\nIn English, you use phrasal verbs or extra words.\nIn Ukrainian, you just click a LEGO piece (prefix) onto the verb!\n**Писати** -> **За**писати, **Пере**писати, **По**писати, **Під**писати.\n\n> [!question] Think about it\n> A prefix changes the \"angle\" of the action.\n> - **Пере-** usually means \"re-\" (redo) or \"across\".\n> - **До-** usually means \"finish\" (to the end).\n> - **За-** usually means \"close\" or \"fix/record\".\n\n---\n\n# The Meaning Map\n\nLet's look at the most powerful \"Transformers\".\n\n| Prefix | Meaning | Logic | Example |\n| :--- | :--- | :--- | :--- |\n| **На-** | **On / Accumulation** | Putting something ON | **На**писати: Write (result), **На**клеїти: Stick on |\n| **Пере-** | **Re- / Across** | Doing again or changing | **Пере**писати: Rewrite, **Пере**робити: Redo |\n| **До-** | **Finish / To the end** | Reaching the limit | **До**писати: Finish writing, **До**читати: Finish reading |\n| **За-** | **Close / Fix** | Closing or recording | **За**крити: Close, **За**писати: Record |\n| **Від-** | **Open / Away** | Opening or separating | **Від**крити: Open, **Від**різати: Cut off |\n| **По-** | **A little / Process** | Brief or limited action | **По**читати: Read a bit, **По**говорити: Chat |\n| **Під-** | **Under / Sub-** | Adding from below | **Під**писати: Sign, **Під**тримати: Support |\n| **Роз-** | **Open / Disperse** | Spreading out | **Роз**крити: Uncover, **Роз**дати: Distribute |\n\n---\n\n# Story Time: The Writer's Deadline\n\nЦе історія про письменника, який намагався написати геніальну книгу.\nСпочатку він **написав** план на серветці в кафе.\nВін **відкрив** свій старий ноутбук і почав працювати.\nВін писав цілий день, але йому нічого не подобалося.\nВін видалив текст і почав знову. Він вирішив усе **переписати**.\nВін **переробив** перший розділ п'ять разів!\nПотім він втомився і вирішив трохи **почитати** новини в інтернеті.\nАле раптом редактор подзвонив і закричав: \"Ти маєш **дописати** розділ сьогодні!\"\nПисьменник злякався. Він зрозумів, що часу мало.\nВін **закрив** новини, **вимкнув** телефон і знову почав писати.\nВін писав швидко і натхненно.\nВвечері він нарешті **закінчив** останню сторінку.\nВін роздрукував текст, **підписав** його своїм іменем і поклав у папку.\nВін **здав** роботу редактору вранці.\nРедактор прочитав і сказав: \"Це шедевр!\".\nВранці письменник **прокинувся** відомим.\n\n> [!cultural] Cultural Insight: Hospitality\n> Prefixes are everywhere in Ukrainian culture, especially hospitality.\n> When guests arrive, you **відкрити** (open) the door and the wine.\n> You **накрити** (cover/set) the table (\"накрити на стіл\").\n> You **поговорити** (have a chat).\n> And when they leave, you **провести** (lead through/escort) them to the door.\n> It's a sequence of prefixed actions!\n\n---\n\n# Deep Dive: Open and Close (Відкрити / Закрити)\n\nThese are the most useful practical verbs.\nUnlike English (\"turn on/off\" vs \"open/close\"), Ukrainian logic is consistent.\n\n- **Open:** **Від**крити (Move *away* the cover).\n- **Close:** **За**крити (Move *behind* the cover).\n- **Turn on:** **В**микати (Move *in*).\n- **Turn off:** **Ви**микати (Move *out*).\n\n| Object | Action | Verb |\n| :--- | :--- | :--- |\n| Door/Window | Open | **Відкрити** / **Відчинити** |\n| Door/Window | Close | **Закрити** / **Зачинити** |\n| Book | Open | **Розкрити** (Spread open) |\n| Book | Close | **Закрити** / **Згорнути** |\n| Eyes | Open | **Розплющити** (Specific!) |\n| Eyes | Close | **Заплющити** |\n\n> [!note] Open vs Unlock\n> **Відкрити** usually means to open access (a store, a bottle, a new land).\n> **Відчинити** is specifically for physical barriers like doors and windows.\n> However, in modern Ukrainian, **відкрити двері** is also common, though purists prefer **відчинити**.\n\n---\n\n# Deep Dive: To Give (The \"Give\" Family)\n\nThe verb **Дати** (to give) is a prefix magnet.\n\n1.  **Дати** = To give (simple).\n2.  **Віддати** = To give back / return.\n    *   *Я **віддав** борг.* (I returned the debt).\n3.  **Передати** = To pass (transmit).\n    *   *Будь ласка, **передайте** сіль.* (Please pass the salt).\n4.  **Здати** = To hand in / To betray / To rent out.\n    *   *Студент **здав** іспит.* (Handed in/Passed exam).\n    *   *Він **здав** квартиру.* (He rented out the apartment).\n5.  **Подати** = To serve / hand politely.\n    *   *Офіціант **подав** меню.* (served the menu).\n6.  **Видати** = To issue / publish / betray.\n    *   *Банк **видав** картку.* (Issued).\n    *   *Він **видав** секрет.* (Betrayed/Leaked).\n\n---\n\n# Deep Dive: Connect and Disconnect\n\nIn the age of technology, these are crucial.\nBase: **Єднати** (to unite).\n\n- **При**єднати = To attach/connect TO something. (Connect printer).\n- **Від**'єднати = To detach/disconnect FROM something. (Unplug).\n- **З**'єднати = To connect TWO things together. (Join wires).\n- **Роз**'єднати = To separate two things. (Cut connection).\n\n*Ми **під'єднали** інтернет!* (We connected the internet!).\n\n---\n\n# Language in Action\n\n## Dialogue: Office Chaos\n\n**Manager:** Андрій, ти вже **написав** звіт?\n**Andriy:** Так, я написав його вчора.\n**Manager:** Де він? Я не можу його знайти.\n**Andriy:** Я **відправив** його тобі на пошту.\n**Manager:** Я не отримав. Ти точно **натиснув** \"Відправити\"?\n**Andriy:** Ой, здається, я **забув** натиснути кнопку.\n**Manager:** Андрій! Ти маєш **надіслати** його зараз же! Клієнт чекає!\n**Andriy:** Добре, я зараз **відкрию** пошту і **перешлю**.\n**Manager:** І будь ласка, **перевір** цифри. Минулого разу ти помилився.\n**Andriy:** Я все **переписав** і **перевірив**. Не хвилюйся.\n**Manager:** Сподіваюся. Якщо ми втратимо клієнта, я тебе **звільню** (fire)!\n**Andriy:** Все, **відправлено**!\n**Manager:** Добре. Тепер **роздрукуй** копію для мене.\n\n## Monologue: The Renovator\n\nЯ вирішив зробити ремонт.\nСпочатку я **виніс** старі меблі.\nПотім я **зняв** старі шпалери.\nЯ **пофарбував** стіни в білий колір.\nАле фарба закінчилася!\nМені довелося **піти** в магазин, щоб **докупити** ще.\nКоли я повернувся, кіт **перевернув** банку з фарбою.\nЯ мусив усе **перемити** і **переробити**.\nПотім я **прибив** нову полицю, але вона впала.\nЯ **наробив** стільки шуму, що прийшли сусіди.\nРемонт — це жах!\n\n> [!tip] Learning Tip\n> When you learn a new verb, ask: \"Can I add **пере-** (redo) or **до-** (finish)?\"\n> Usually, the answer is Yes!\n> - Їсти -> **До**їсти (Finish eating).\n> - Мити -> **Пере**мити (Wash again).\n> It makes your vocabulary flexible.\n\n---\n\n# Reflection Point\n\nBefore we finish, answer these questions for yourself:\n1.  How do you say \"Redo\" in Ukrainian? (Hint: **Пере-**)\n2.  How do you say \"Finish\"? (Hint: **До-**)\n3.  How do you say \"Close\"? (Hint: **За-**)\n4.  Can you feel the difference between **писати** (process) and **написати** (result)?\n\nIf yes, you are ready for suffixes!\n\n---\n\n---\n\n# Deep Dive: The Logic of \"Na-\" (Accumulation)\n\nThe prefix **На-** often means \"to put on\" or \"to accumulate/create a lot of\".\n- **Писати** (write) -> **Написати** (create a written text).\n- **Малювати** (paint) -> **Намалювати** (create a painting).\n- **Робити** (do) -> **Наробити** (make a massive amount/mess).\n    *   *Ми **наробили** помилок.* (We made a ton of mistakes).\n- **Їсти** (eat) -> **Наїстися** (To eat one's fill / accumulate food inside).\n\n---\n\n# Deep Dive: The \"Za-\" Trap\n\nThe prefix **За-** is the trickiest one. It has three opposite meanings!\n\n1.  **Close / Behind:**\n    *   **Закрити** (Close).\n    *   **Заховати** (Hide behind).\n2.  **Start (Suddenly):**\n    *   **Заспівати** (Start singing).\n    *   **Заплакати** (Burst into tears).\n    *   **Захворіти** (Get/Fall sick).\n3.  **Too Much (Excess):**\n    *   **Запрацюватися** (Work too much / lose track of time).\n    *   **Загулятися** (Party/Walk too long).\n    *   **Засидітися** (Sit too long / stay up late).\n\n> [!warning] Context Matters\n> - *Він **заговорив**.* = He started speaking.\n> - *Він мене **заговорив**.* = He tired me with too much talking.\n> The context tells you if it's \"Start\" or \"Too Much\".\n\n---\n\n# Anti-Propaganda Showcase\n\n> [!myth] Myth: \"Ukrainian vocabulary is small.\"\n> **Fact:** This myth comes from Soviet dictionaries that artificially limited defining Ukrainian words to match Russian ones.\n> In reality, Ukrainian prefixation allows for nuances that English needs sentences to explain.\n> Example: **Заговорити** (to start speaking / to charm someone / to tire someone with talk).\n> **Наговорити** (to say a lot of things / to slander).\n> **Відговорити** (to dissuade).\n> **Підговорити** (to instigate).\n> One root \"говорити\" creates dozens of distinct concepts. This is linguistic wealth, not poverty.\n\n---\n\n# Summary\n\n1.  **Prefixes transform meaning.** They act like modifiers (Re-, Sub-, Out-).\n2.  **Пере-** = Redo / Across.\n3.  **До-** = Finish.\n4.  **За-** = Close / Record / Start / Excess.\n5.  **Від-** = Open / Away.\n6.  **По-** = A bit / Start.\n7.  **На-** = Accumulate / Create.\n\n---\n\n# Activities\n\n## match-up: The Transformers\n\n> Match the prefix to the transformation.\n\n- Пере- :: Redo (Do again)\n- До- :: Finish (To the end)\n- За- :: Close / Excess\n- Від- :: Open / Away\n- Під- :: Under / Sub-\n- По- :: A little bit\n- Роз- :: Disperse / Open wide\n- На- :: Create / On\n\n## fill-in: The Editor\n\n> Change the verb to mean \"Redo\" using the prefix **Пере-**.\n\n1. Я хочу ___ цей текст. [Hint: Rewrite \"писати\"]\n   > [!answer] переписати\n   > [!options] переписати | дописати | записати\n\n2. Ми повинні ___ цю роботу. [Hint: Redo \"робити\"]\n   > [!answer] переробити\n   > [!options] переробити | доробити | зробити\n\n3. Треба ___ книгу ще раз. [Hint: Reread \"читати\"]\n   > [!answer] перечитати\n   > [!options] перечитати | дочитати | почитати\n\n4. Стіна погана, треба ___. [Hint: Repaint \"фарбувати\"]\n   > [!answer] перефарбувати\n   > [!options] перефарбувати | пофарбувати | зафарбувати\n\n5. Посуд брудний, треба ___. [Hint: Wash again \"мити\"]\n   > [!answer] перемити\n   > [!options] перемити | помити | вимити\n\n6. Я хочу ___ цей фільм. [Hint: Watch again \"дивитися\"]\n   > [!answer] передивитися\n   > [!options] передивитися | подивитися | задивитися\n\n7. Він вирішив ___ екзамен. [Hint: Retake \"здавати\"]\n   > [!answer] перездати\n   > [!options] перездати | здати | видати\n\n8. Ми ___ плани. [Hint: Changed/Remade \"будувати\"]\n   > [!answer] перебудували\n   > [!options] перебудували | збудували | добудували\n\n## fill-in: The Perfectionist\n\n> Complete the sentence with the correct prefixed verb.\n\n1. Цей текст поганий. Треба його ___. [Hint: Rewrite]\n   > [!answer] переписати\n   > [!options] переписати | дописати | записати\n\n2. Я не ___ книгу, вона нудна. [Hint: Finish reading]\n   > [!answer] дочитав\n   > [!options] дочитав | перечитав | почитав\n\n3. Будь ласка, ___ двері. Холодно. [Hint: Close]\n   > [!answer] закрий\n   > [!options] закрий | відкрий | розкрий\n\n4. Я хочу ___ твій номер телефону. [Hint: Write down]\n   > [!answer] записати\n   > [!options] записати | підписати | написати\n\n5. Де тут можна ___ документи? [Hint: Sign]\n   > [!answer] підписати\n   > [!options] підписати | описати | виписати\n\n6. Мама попросила ___ посуд. [Hint: Wash again]\n   > [!answer] перемити\n   > [!options] перемити | домити | замити\n\n7. Треба ___ роботу до вечора. [Hint: Finish doing]\n   > [!answer] доробити\n   > [!options] доробити | переробити | зробити\n\n8. Він ___ двері ключем. [Hint: Opened]\n   > [!answer] відкрив\n   > [!options] відкрив | закрив | розкрив\n\n---\n\n# Deep Dive: Feel the Prefix\n\nComparing suffixes (like in English *beauty-ful*) which are abstract, Ukrainian prefixes are **physical**.\nYou can use your hands to memorize them!\n\n- **На-**: Put your hand ON the table. (Accumulation).\n- **Під-**: Put your hand UNDER the table.\n- **В-**: Point INTO a box.\n- **Ви-**: Point OUT of a box.\n- **Пере-**: Move your hand ACROSS/OVER the table.\n- **Від-**: Push your hand AWAY.\n\nWhen you speak, use these gestures. It helps your brain \"feel\" the grammar.\n\n---\n\n## group-sort: Open vs Close\n\n> Is this opening or closing?\n\n### Opening (Від-/Роз-)\n- Відкрити вікно\n- Розгорнути книгу\n- Відчинити двері\n- Розплющити очі\n- Відкоркувати вино\n- Відімкнути замок\n\n### Closing (За-)\n- Закрити вікно\n- Згорнути книгу\n- Зачинити двері\n- Заплющити очі\n- Закоркувати вино\n- Замкнути замок\n\n## quiz: Meaning Check\n\n> Choose the correct meaning.\n\n1. \"Доробити\" means to:\n   - [x] Finish doing\n   - [ ] Redo\n   - [ ] Do a little\n\n2. \"Почитати\" means to:\n   - [x] Read a little bit\n   - [ ] Finish reading\n   - [ ] Reread\n\n3. \"Підписати\" implies putting your name:\n   - [x] Under the text\n   - [ ] Over the text\n   - [ ] Inside the text\n\n4. \"Переробити\" implies the first attempt was:\n   - [x] Bad or wrong\n   - [ ] Perfect\n   - [ ] Non-existent\n\n5. \"Наробити\" usually implies:\n   - [x] A large quantity\n   - [ ] A small quantity\n   - [ ] A specific quality\n\n6. \"Відкрити\" relates to which preposition logic?\n   - [x] Від: Away\n   - [ ] До: To\n   - [ ] В: In\n\n7. \"Здати\" (to betray) literally means:\n   - [x] To give up/away\n   - [ ] To give in\n   - [ ] To give under\n\n8. \"Наїстися\" means:\n   - [x] To eat until full\n   - [ ] To eat a little\n   - [ ] To start eating\n\n## true-false: Propaganda Check\n\n1. Ukrainian vocabulary is limited.\n   - [ ] True\n   - [x] False (Prefixes expand it)\n\n2. \"Заговорити\" can mean \"to charm\".\n   - [x] True\n   - [ ] False\n\n3. \"Наговорити\" means to stop talking.\n   - [ ] True\n   - [x] False (To say a lot)\n\n4. One root can produce dozens of words.\n   - [x] True\n   - [ ] False\n\n5. \"Видати\" means to keep a secret.\n   - [ ] True\n   - [x] False (To publish/reveal)\n\n6. \"Віддати\" means to take something.\n   - [ ] True\n   - [x] False (To give back)\n\n7. \"Донести\" means to carry to the end.\n   - [x] True\n   - [ ] False\n\n8. \"Перенести\" means to move something to a new place.\n   - [x] True\n   - [ ] False\n\n## cloze: The Test\n\n> Fill in the missing prefixes.\n\nСтудент складав іспит.\nВін [___:1]йшов в аудиторію.\nВін [___:2]тягнув білет.\nВін [___:3]чав писати відповідь.\nАле він зробив помилку і мусив [___:4]писати речення.\nЧас закінчувався, він ледве встиг [___:5]писати.\nВін [___:6]дав роботу професору.\nПрофесор [___:7]вірив і сказав: \"Молодець!\".\nСтудент [___:8]дихнув з полегшенням.\n\n1. увій / зай\n> [!answer] увій\n\n2. ви\n> [!answer] ви\n\n3. по\n> [!answer] по\n\n4. пере\n> [!answer] пере\n\n5. до\n> [!answer] до\n\n6. з\n> [!answer] з\n\n7. пере\n> [!answer] пере\n\n8. зіт\n> [!answer] зіт\n\n## error-correction: Fix the Verb\n\n1. Я хочу **переписати** це яблуко. (Context: eat finishes it)\n   > [!error] переписати\n   > [!answer] доїсти\n   > [!explanation] You finish eating (доїсти), not rewrite (переписати) an apple.\n   > [!options] доїсти | переписати\n\n2. Треба **відкрити** вікно, бо холодно. (Logic)\n   > [!error] відкрити\n   > [!answer] закрити\n   > [!explanation] If cold, close (закрити).\n   > [!options] закрити | відкрити\n\n3. Я **дописав** книгу три рази. (Redo context)\n   > [!error] дописав\n   > [!answer] перечитав\n   > [!explanation] Reading 3 times is re-reading (пере-).\n   > [!options] перечитав | дописав\n\n4. Він **підписав** двері ключем. (Open context)\n   > [!error] підписав\n   > [!answer] відкрив\n   > [!explanation] You open (відкрити) a door with a key. Signed (підписав) makes no sense.\n   > [!options] відкрив | підписав\n\n5. Ми **розробили** ремонт. (Context: Massive redo/work)\n   > [!error] розробили\n   > [!answer] зробили / переробили\n   > [!explanation] Use \"зробили\" (simple did) or \"переробили\" (redid). \"Розробили\" implies \"developed/designed\" which is weird for \"repair\".\n   > [!options] зробили | розробили\n\n6. Я **написав** трохи, 5 хвилин. (Brief process)\n   > [!error] написав\n   > [!answer] пописав\n   > [!explanation] Brief process uses По-. \"Написав\" implies a result (finished thing).\n   > [!options] пописав | написав\n\n## match-up: Give and Take\n\n> Match the \"Give\" verb to its meaning.\n\n- Віддати :: Give back (Return)\n- Передати :: Pass (Salt/Message)\n- Здати :: Turn in / Rent out\n- Видати :: Publish / Reveal\n- Подати :: Serve (Food/Hand)\n- Роздати :: Distribute (To many)\n- Надати :: Provide (Official)\n- Продати :: Sell (Give for money)\n\n## unjumble: The Office\n\n1. документ / він / підписав\n   > [!answer] Він підписав документ.\n2. звіт / ми / переробили\n   > [!answer] Ми переробили звіт.\n3. двері / секретар / відкрив\n   > [!answer] Секретар відкрив двері.\n4. картку / банк / видав\n   > [!answer] Банк видав картку.\n5. книгу / я / дочитав\n   > [!answer] Я дочитав книгу.\n6. інтернет / ми / під'єднали\n   > [!answer] Ми під'єднали інтернет.\n\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| написати | /nɑpɪˈsɑtɪ/ | to write (finish) | verb | — | pf |\n| переписати | /pɛrɛpɪˈsɑtɪ/ | to rewrite | verb | — | pf |\n| дописати | /dɔpɪˈsɑtɪ/ | to finish writing | verb | — | pf |\n| підписати | /pidpɪˈsɑtɪ/ | to sign | verb | — | pf |\n| записати | /zɑpɪˈsɑtɪ/ | to record/write down | verb | — | pf |\n| описати | /ɔpɪˈsɑtɪ/ | to describe | verb | — | pf |\n| виписати | /ʋɪpɪˈsɑtɪ/ | to check out/extract | verb | — | pf |\n| зробити | /zrɔˈbɪtɪ/ | to do/make | verb | — | pf |\n| переробити | /pɛrɛrɔˈbɪtɪ/ | to redo | verb | — | pf |\n| доробити | /dɔrɔˈbɪtɪ/ | to finish doing | verb | — | pf |\n| відкрити | /ʋidˈkrɪtɪ/ | to open | verb | — | pf |\n| закрити | /zɑˈkrɪtɪ/ | to close | verb | — | pf |\n| відчинити | /ʋidt͡ʃɪˈnɪtɪ/ | to open (door/window) | verb | — | pf |\n| зачинити | /zɑt͡ʃɪˈnɪtɪ/ | to close (door/window) | verb | — | pf |\n| роздати | /rɔzˈdɑtɪ/ | to distribute | verb | — | pf |\n| роздавати | /rɔzdɑˈʋɑtɪ/ | to distribute (process) | verb | — | impf |\n| подати | /pɔˈdɑtɪ/ | to serve/give | verb | — | pf |\n| віддати | /ʋidˈdɑtɪ/ | to give back | verb | — | pf |\n| передати | /pɛrɛˈdɑtɪ/ | to pass/transmit | verb | — | pf |\n| здати | /zdɑˈtɪ/ | to turn in/rent out | verb | — | pf |\n| видати | /ˈʋɪdɑtɪ/ | to issue/publish | verb | — | pf |\n| надати | /nɑˈdɑtɪ/ | to provide | verb | — | pf |\n| приєднати | /prɪjɛdˈnɑtɪ/ | to attach/join | verb | — | pf |\n| роз'єднати | /rɔzjedˈnɑtɪ/ | to disconnect | verb | — | pf |\n| з'єднати | /zjedˈnɑtɪ/ | to connect | verb | — | pf |\n| від'єднати | /ʋidjedˈnɑtɪ/ | to detach | verb | — | pf |\n| під'єднати | /pidjedˈnɑtɪ/ | to connect up | verb | — | pf |\n| перенести | /pɛrɛnɛsˈtɪ/ | to move/reschedule | verb | — | pf |\n| донести | /dɔnɛsˈtɪ/ | to carry to finish | verb | — | pf |\n| почекати | /pɔt͡ʃɛˈkɑtɪ/ | to wait a bit | verb | — | pf |\n",
+    "createdAt": "2025-12-15T20:02:03.048911Z",
+    "modifiedAt": "2025-12-15T20:02:03.048911Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-37",
+    "level": "A2",
+    "phase": "A2.4",
+    "wordCount": 30,
+    "newWordCount": 30,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "написати",
+        "ipa": "/nɑpɪˈsɑtɪ/",
+        "en": "to write (finish)",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-2",
+        "uk": "переписати",
+        "ipa": "/pɛrɛpɪˈsɑtɪ/",
+        "en": "to rewrite",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-3",
+        "uk": "дописати",
+        "ipa": "/dɔpɪˈsɑtɪ/",
+        "en": "to finish writing",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-4",
+        "uk": "підписати",
+        "ipa": "/pidpɪˈsɑtɪ/",
+        "en": "to sign",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-5",
+        "uk": "записати",
+        "ipa": "/zɑpɪˈsɑtɪ/",
+        "en": "to record/write down",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-6",
+        "uk": "описати",
+        "ipa": "/ɔpɪˈsɑtɪ/",
+        "en": "to describe",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-7",
+        "uk": "виписати",
+        "ipa": "/ʋɪpɪˈsɑtɪ/",
+        "en": "to check out/extract",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-8",
+        "uk": "зробити",
+        "ipa": "/zrɔˈbɪtɪ/",
+        "en": "to do/make",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-9",
+        "uk": "переробити",
+        "ipa": "/pɛrɛrɔˈbɪtɪ/",
+        "en": "to redo",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-10",
+        "uk": "доробити",
+        "ipa": "/dɔrɔˈbɪtɪ/",
+        "en": "to finish doing",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-11",
+        "uk": "відкрити",
+        "ipa": "/ʋidˈkrɪtɪ/",
+        "en": "to open",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-12",
+        "uk": "закрити",
+        "ipa": "/zɑˈkrɪtɪ/",
+        "en": "to close",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-13",
+        "uk": "відчинити",
+        "ipa": "/ʋidt͡ʃɪˈnɪtɪ/",
+        "en": "to open (door/window)",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-14",
+        "uk": "зачинити",
+        "ipa": "/zɑt͡ʃɪˈnɪtɪ/",
+        "en": "to close (door/window)",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-15",
+        "uk": "роздати",
+        "ipa": "/rɔzˈdɑtɪ/",
+        "en": "to distribute",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-16",
+        "uk": "роздавати",
+        "ipa": "/rɔzdɑˈʋɑtɪ/",
+        "en": "to distribute (process)",
+        "pos": "verb",
+        "gender": null,
+        "note": "impf"
+      },
+      {
+        "id": "vocab-17",
+        "uk": "подати",
+        "ipa": "/pɔˈdɑtɪ/",
+        "en": "to serve/give",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "віддати",
+        "ipa": "/ʋidˈdɑtɪ/",
+        "en": "to give back",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "передати",
+        "ipa": "/pɛrɛˈdɑtɪ/",
+        "en": "to pass/transmit",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "здати",
+        "ipa": "/zdɑˈtɪ/",
+        "en": "to turn in/rent out",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-21",
+        "uk": "видати",
+        "ipa": "/ˈʋɪdɑtɪ/",
+        "en": "to issue/publish",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-22",
+        "uk": "надати",
+        "ipa": "/nɑˈdɑtɪ/",
+        "en": "to provide",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-23",
+        "uk": "приєднати",
+        "ipa": "/prɪjɛdˈnɑtɪ/",
+        "en": "to attach/join",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-24",
+        "uk": "роз'єднати",
+        "ipa": "/rɔzjedˈnɑtɪ/",
+        "en": "to disconnect",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "з'єднати",
+        "ipa": "/zjedˈnɑtɪ/",
+        "en": "to connect",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-26",
+        "uk": "від'єднати",
+        "ipa": "/ʋidjedˈnɑtɪ/",
+        "en": "to detach",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-27",
+        "uk": "під'єднати",
+        "ipa": "/pidjedˈnɑtɪ/",
+        "en": "to connect up",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-28",
+        "uk": "перенести",
+        "ipa": "/pɛrɛnɛsˈtɪ/",
+        "en": "to move/reschedule",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-29",
+        "uk": "донести",
+        "ipa": "/dɔnɛsˈtɪ/",
+        "en": "to carry to finish",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      },
+      {
+        "id": "vocab-30",
+        "uk": "почекати",
+        "ipa": "/pɔt͡ʃɛˈkɑtɪ/",
+        "en": "to wait a bit",
+        "pos": "verb",
+        "gender": null,
+        "note": "pf"
+      }
+    ],
+    "reviewWords": []
+  }
+}

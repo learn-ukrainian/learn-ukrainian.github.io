@@ -1,0 +1,342 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-23",
+    "moduleId": "mod-uk-A2-23",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.2",
+    "moduleNumber": 23,
+    "moduleType": "functional",
+    "pedagogy": "PPP",
+    "immersionLevel": 0.4,
+    "title": "Smart Shopping",
+    "titleUk": null,
+    "subtitle": "Comparing Products and Making Decisions",
+    "description": "Learner can compare products",
+    "objectives": [
+      "Learner can compare products",
+      "Learner can negotiate politely",
+      "Learner can express requirements",
+      "Learner can make purchase decisions"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "comparison in practice",
+      "negotiation phrases",
+      "shopping vocabulary"
+    ],
+    "tags": [
+      "vocabulary",
+      "functional",
+      "shopping",
+      "comparison"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "Time to put your comparison skills to practical use! This module takes you shopping in Ukrainian. You'll learn to compare products, ask for recommendations, and negotiate — all essential skills for real-world situations.\n\n**What you'll learn:**\n- Shopping comparison vocabulary\n- How to ask for advice and recommendations\n- Negotiation phrases\n- Making purchase decisions\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "Presentation",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Comparing Products\n\nWhen shopping, you'll constantly compare items. Here are key phrases:\n\n### Basic Comparisons\n\n- Цей **кращий**, але **дорожчий**. (This one is better, but more expensive.)\n- Той **дешевший** за цей. (That one is cheaper than this one.)\n- Який **найдешевший**? (Which is the cheapest?)\n- Мені **більше подобається** червоний. (I like the red one more.)\n\n### Asking About Options\n\n- Що ви **порекомендуєте**? (What do you recommend?)\n- Є щось **краще**? (Is there something better?)\n- Є щось **дешевше**? (Is there something cheaper?)\n- Яка **різниця** між ними? (What's the difference between them?)\n\n> 💡 **Shopping Tip**\n>\n> Ukrainians appreciate when you ask for advice! \"Що ви порекомендуєте?\" is a great way to start a conversation with a shop assistant.\n\n## Negotiation Phrases\n\nIn some contexts (markets, small shops), negotiation is possible:\n\n### Asking for Discounts\n\n- Чи можна **дешевше**? (Can it be cheaper?)\n- Чи є **знижка**? (Is there a discount?)\n- Якщо візьму два, буде **дешевше**? (If I take two, will it be cheaper?)\n\n### Expressing Hesitation\n\n- Це **занадто** дорого. (This is too expensive.)\n- Я **подумаю**. (I'll think about it.)\n- Можливо, **повернуся**. (Maybe I'll come back.)\n\n> 📜 **Cultural Note**\n>\n> Negotiation is common at markets (ринок, базар) but unusual in regular stores and supermarkets. Always be polite when asking for discounts!\n\n## Making Decisions\n\n### Positive Decision\n\n- Я **візьму** цей. (I'll take this one.)\n- **Беру**! (I'll take it!)\n- Це мені **підходить**. (This suits me.)\n\n### Negative Decision\n\n- Дякую, **не потрібно**. (Thank you, not needed.)\n- Я **ще подумаю**. (I'll still think about it.)\n- Мені не **підходить**. (It doesn't suit me.)\n\n> [!tip] Polite Refusal\n> \"Дякую, я подумаю\" (Thank you, I'll think about it) is a polite way to decline without directly saying \"no.\"\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Cultural Insight",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Shopping in Ukraine\n\nUkrainian shopping culture varies by location:\n\n**Supermarkets (супермаркет):**\n- Fixed prices, no negotiation\n- Self-service\n- Common in cities\n\n**Markets (ринок, базар):**\n- Fresh produce, clothes, goods\n- Negotiation possible\n- Cash preferred\n\n**Small shops (магазин, крамниця):**\n- Personal service\n- May have loyalty discounts\n- Good for local products\n\n## Shopping Strategies\n\n### 1. The Art of Polite Negotiation\n\nNegotiation (**торг**) is an art form in Ukrainian markets. It's not just about saving money; it's social interaction.\n- **Start soft:** \"Чи це остаточна ціна?\" (Is this the final price?)\n- **Point out flaws (gently):** \"Але тут маленька пляма...\" (But there is a small spot here...)\n- **Walk away (theatre):** \"Добре, я ще пройдуся...\" (Okay, I'll walk around a bit more...)\n\n### 2. Genitive Plural: Weighing Your Options\n\nWhen buying food, you often count or weigh things. This triggers the **Genitive Case** (often Plural).\n- **1 кілограм** (Nominative)\n- **2, 3, 4 кілограми** (Nominative Plural)\n- **5+ кілограмів** (Genitive Plural)\n\n> [!note] Grammar Check\n> Technically, \"кілограм\" has a zero ending in Genitive Plural in some dialects (5 кілограм), but standard literary Ukrainian prefers **кілограмів**.\n> - 200 **грамів** (grams)\n> - 5 **літрів** (liters)\n> - 10 **гривень** (hryvnias)\n\n### 3. Payment Vocabulary\n\n- **Готівка** (Cash) — King of the market.\n- **Карта** (Card) — Standard in shops.\n- **Решта** (Change) — \"У вас є решта з 500?\" (Do you have change from 500?)\n- **Чек** (Receipt) — \"Ваш чек, будь ласка.\" (Your receipt, please.)\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Cultural Insight",
+        "nameEn": null,
+        "type": "content",
+        "content": "## The Soul of the \"Bazar\"\n\nThe Ukrainian **базар** (market) is more than a store; it's a community hub.\n- **Postiynyy Kliyent (Regular Customer):** The goal is to become a \"постійний клієнт\". Once a seller knows you, they will pick the best tomatoes for you, hide the freshest meat under the counter for you, and give you discounts without asking.\n- **Taste it!** Sellers will often offer: \"Спробуйте!\" (Taste it!). Refusing can sometimes be seen as rude if you are genuinely interested.\n- **Morning Glory:** The best produce is sold by 8-9 AM. If you arrive at noon, you get leftovers.\n\n> 🧠 **Myth: \"No Price Tags means Tourist Trap\"**\n>\n> In many Western countries, no price tag is a red flag. In a Ukrainian bazar, it just means the price fluctuates based on supply, time of day, and your negotiation skills! Always ask \"По чому?\" (How much? - colloquial) or \"Скільки коштує?\".\n\n> 🎭 **Roleplay Idea**\n>\n> Imagine you have 500 hryvnias. You need to buy vegetables for Borscht (potatoes, beets, carrots, cabbage, onion) and meat. Write down a shopping list and \"negotiate\" with a partner to see if you can fit it all in your budget!\n\n## Shopping for Clothes vs. Food\n\n| Feature | Clothes Shop | Food Market |\n|---------|--------------|-------------|\n| **Service** | \"Can I help you?\" leads to fitting room. | \"Taste this!\" leads to buying. |\n| **Space** | Personal space respected. | Crowded, pushy, lively. |\n| **Payment** | Card/Phone (NFC). | Cash (mostly), card-to-card transfer. |\n\n> [!tip] \"Paket\"\n> \"Пакет потрібен?\" (Do you need a bag?) is the most common phrase you will hear at any checkout. Ukrainians often carry their own reusable eco-bags.\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Practice",
+        "nameEn": null,
+        "type": "practice",
+        "content": "## Practice Dialogues\n\n**Comparing phones:**\n- Цей телефон кращий, але дорожчий.\n- Є щось дешевше?\n- Так, ось цей. Він дешевший, але екран менший.\n- Яка різниця в ціні?\n- Два тисячі гривень.\n\n**At the market:**\n- Скільки коштують яблука?\n- Тридцять гривень за кілограм.\n- Занадто дорого. Чи можна дешевше?\n- Добре, двадцять п'ять.\n- Беру два кілограми!\n\n**Dialogue: Buying Shoes**\n- **Клієнт:** Добрий день! Я шукаю зручні туфлі.\n- **Продавець:** Який у вас розмір?\n- **Клієнт:** Тридцять восьмий.\n- **Продавець:** Ось ці дуже хороші. Це натуральна шкіра.\n- **Клієнт:** Вони гарні, але трохи дорогі. Чи є знижка?\n- **Продавець:** Так, на цю модель мінус 10%.\n- **Клієнт:** Чудово! Можна поміряти?\n- **Продавець:** Звичайно, приміряйте. Дзеркало там.\n- **Клієнт:** Вони мені підходять. Беру!\n\n> [!tip] Sizes\n> Ukraine uses European shoe sizes (36, 37, 38...). Clothing sizes are also different from US/UK (S/M/L are common, but numbers like 44, 46, 48 are standard).\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "## What You Learned\n\nThis module covered practical shopping vocabulary and comparison.\n\n**Comparing Products:**\n- Цей кращий / дешевший / більший\n- Який найкращий / найдешевший?\n\n**Asking for Help:**\n- Що ви порекомендуєте?\n- Є щось краще / дешевше?\n\n**Negotiation:**\n- Чи можна дешевше?\n- Чи є знижка?\n\n**Decisions:**\n- Я візьму цей / Беру!\n- Дякую, я подумаю.\n\nТепер ви готові до покупок! Ви можете впевнено йти на ринок або в магазин. Порівнюйте ціни, спілкуйтеся з продавцями та знаходьте найкращі товари. Вдалих покупок! 🛒"
+      },
+      {
+        "id": "section-7",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Shopping Vocabulary\n\n- знижка :: discount\n- акція :: sale/promotion\n- розпродаж :: clearance sale\n- якість :: quality\n- ціна :: price\n- вартість :: cost/value\n- вигідний :: profitable/good deal\n- порівнювати :: to compare\n- вибирати :: to choose\n- рекомендувати :: to recommend\n- радити :: to advise\n- пропонувати :: to offer\n\n## fill-in: Shopping Phrases\n\n> Complete each sentence.\n\n1. Що ви ___? (recommend)\n   > [!answer] порекомендуєте\n   > [!options] порекомендуєте | рекомендуєте | рекомендуєш | рекомендує\n\n2. Чи є ___? (discount)\n   > [!answer] знижка\n   > [!options] знижка | ціна | якість | розпродаж\n\n3. Цей ___ за той. (cheaper)\n   > [!answer] дешевший\n   > [!options] дешевий | дешевший | найдешевший | дешево\n\n4. Чи можна ___? (cheaper)\n   > [!answer] дешевше\n   > [!options] дешевший | дешевше | дешевий | дешево\n\n5. Є щось ___? (better)\n   > [!answer] краще\n   > [!options] добре | кращий | краще | найкраще\n\n6. Я ___ цей. (will take)\n   > [!answer] візьму\n   > [!options] візьму | беру | брав | взяв\n\n7. Це мені ___. (suits)\n   > [!answer] підходить\n   > [!options] підходить | підходить | підійде | підійшло\n\n8. Яка ___ між ними? (difference)\n   > [!answer] різниця\n   > [!options] різниця | рівність | ціна | знижка\n\n9. Це занадто ___! (expensive)\n   > [!answer] дорого\n   > [!options] дорого | дорогий | дорожчий | дорожче\n\n10. Я ___. (I'll think)\n    > [!answer] подумаю\n    > [!options] думаю | подумаю | думав | подумав\n\n11. ___ найдешевший? (Which)\n    > [!answer] Який\n    > [!options] Який | Яка | Яке | Які\n\n12. Мені ___ подобається синій. (more)\n    > [!answer] більше\n    > [!options] більше | більший | багато | великий\n\n## quiz: Smart Shopping\n\n1. \"Що ви порекомендуєте?\" means:\n\n- [x] What do you recommend?\n- [ ] What do you want?\n- [ ] What is this?\n\n---\n\n2. \"Чи можна дешевше?\" means:\n\n- [x] Can it be cheaper?\n- [ ] How much?\n- [ ] What's this?\n\n---\n\n3. \"Знижка\" means:\n\n- [x] discount\n- [ ] price\n- [ ] quality\n\n---\n\n4. \"Я візьму цей\" means:\n\n- [x] I'll take this one\n- [ ] I want this one\n- [ ] Show me this one\n\n---\n\n5. Where is negotiation common?\n\n- [x] Markets (ринок)\n- [ ] Supermarkets\n- [ ] Malls\n\n---\n\n6. \"Занадто дорого\" means:\n\n- [x] Too expensive\n- [ ] Very cheap\n- [ ] Good price\n\n---\n\n7. \"Акція\" means:\n\n- [x] sale/promotion\n- [ ] action\n- [ ] quality\n\n---\n\n8. \"Беру!\" means:\n\n- [x] I'll take it!\n- [ ] I'm leaving!\n- [ ] I don't want it!\n\n---\n\n9. Polite way to decline:\n\n- [x] Дякую, я подумаю.\n- [ ] Ні!\n- [ ] Не хочу!\n\n---\n\n10. \"Розпродаж\" means:\n\n- [x] clearance sale\n- [ ] new collection\n- [ ] warranty\n\n---\n\n11. \"Це мені підходить\" means:\n\n- [x] This suits me\n- [ ] This is expensive\n- [ ] I don't like this\n\n---\n\n12. \"Вигідний\" means:\n\n- [x] profitable/good deal\n- [ ] expensive\n- [ ] broken\n\n## true-false: Shopping Rules\n\n> Decide if each statement is true or false.\n\n- [x] \"Порекомендуєте\" is a polite way to ask for advice.\n  > Correct!\n\n- [x] Negotiation is common at markets.\n  > Yes!\n\n- [ ] \"Знижка\" means \"quality.\"\n  > \"Знижка\" means \"discount.\"\n\n- [x] \"Я подумаю\" is a polite way to decline.\n  > Correct!\n\n- [x] \"Візьму\" means \"I'll take.\"\n  > Yes!\n\n- [ ] Negotiation is expected in supermarkets.\n  > Supermarkets have fixed prices.\n\n- [x] \"Занадто дорого\" = too expensive.\n  > Correct!\n\n- [x] \"Краще\" and \"дешевше\" are comparative adverbs.\n  > Yes!\n\n- [ ] \"Акція\" means \"action.\"\n  > In shopping context, \"акція\" means \"sale/promotion.\"\n\n- [x] Asking \"Чи є знижка?\" is acceptable.\n  > Correct!\n\n- [x] \"Ринок\" means \"market.\"\n  > Yes!\n\n- [ ] \"Вартість\" means \"discount.\"\n  > \"Вартість\" means \"cost/value.\"\n\n## group-sort: Positive vs Negative Response\n\n> Sort these shopping responses.\n\n### Positive Decision\n- Я візьму цей.\n- Беру!\n- Це мені підходить.\n- Вигідна ціна!\n\n### Negative Decision\n- Занадто дорого.\n- Я подумаю.\n- Мені не підходить.\n- Дякую, не потрібно.\n\n## unjumble: Shopping Sentences\n\n> Put the words in the correct order.\n\n1. що / ви / порекомендуєте\n   > [!answer] Що ви порекомендуєте?\n\n2. чи / можна / дешевше\n   > [!answer] Чи можна дешевше?\n\n3. є / щось / краще\n   > [!answer] Є щось краще?\n\n4. я / візьму / цей\n   > [!answer] Я візьму цей.\n\n5. це / занадто / дорого\n   > [!answer] Це занадто дорого.\n\n6. чи / є / знижка\n   > [!answer] Чи є знижка?\n\n7. який / найдешевший\n   > [!answer] Який найдешевший?\n\n8. цей / кращий / але / дорожчий\n   > [!answer] Цей кращий, але дорожчий.\n\n9. яка / різниця / між / ними\n   > [!answer] Яка різниця між ними?\n\n10. мені / більше / подобається / червоний\n    > [!answer] Мені більше подобається червоний.\n\n11. дякую / я / подумаю\n    > [!answer] Дякую, я подумаю.\n\n12. це / мені / підходить\n    > [!answer] Це мені підходить.\n\n## error-correction: Shopping Phrases\n\n> Choose the correct form.\n\n1. Що ви ___? (recommend)\n   > [!error] recommend\n   > [!answer] порекомендуєте\n   > [!explanation] Formal \"you\" form: порекомендуєте.\n   > [!options] рекомендуєш | порекомендуєте | рекомендую | рекомендуємо\n\n2. Чи можна ___? (cheaper — adverb)\n   > [!error] cheaper — adverb\n   > [!answer] дешевше\n   > [!explanation] Comparative adverb: дешевше.\n   > [!options] дешевий | дешевший | дешевше | дешево\n\n3. Я ___ цей. (will take)\n   > [!error] will take\n   > [!answer] візьму\n   > [!explanation] Perfective future: візьму.\n   > [!options] беру | візьму | брав | взяв\n\n4. Є щось ___? (better — neuter)\n   > [!error] better — neuter\n   > [!answer] краще\n   > [!explanation] Comparative adverb: краще.\n   > [!options] кращий | краща | краще | найкраще\n\n5. Це занадто ___! (expensive — adverb)\n   > [!error] expensive — adverb\n   > [!answer] дорого\n   > [!explanation] Adverb: дорого.\n   > [!options] дорогий | дорого | дорожчий | дорожче\n\n6. Мені ___ подобається. (more)\n   > [!error] more\n   > [!answer] більше\n   > [!explanation] Comparison: більше подобається.\n   > [!options] більший | більше | великий | багато\n\n## cloze: Shopping Dialogue\n\n> Complete the dialogue.\n\n— Добрий день! Чим можу [___:1]?\n— Я [___:2] телефон. Що ви [___:3]?\n— Ось хороший варіант. Він [___:4], але [___:5].\n— [___:6] щось дешевше?\n\n1. допомогти / допомагати / допоможу\n> [!answer] допомогти\n\n2. шукаю / шукав / знайшов\n> [!answer] шукаю\n\n3. порекомендуєте / рекомендую / рекомендуєш\n> [!answer] порекомендуєте\n\n4. кращий / краще / найкращий\n> [!answer] кращий\n\n5. дорожчий / дорого / дорогий\n> [!answer] дорожчий\n\n6. Є / Буде / Був\n> [!answer] Є\n\n---\n\n— Скільки [___:1] яблука?\n— Тридцять гривень за [___:2].\n— Чи можна [___:3]?\n— Добре, двадцять п'ять.\n— [___:4] два кілограми!\n— Дякую за [___:5]!\n\n1. коштує / коштують / коштувати\n> [!answer] коштують\n\n2. кілограм / кілограми / кілограмів\n> [!answer] кілограм\n\n3. дешево / дешевше / дешевий\n> [!answer] дешевше\n\n4. Візьму / Беру / Беремо\n> [!answer] Беру\n\n5. покупка / покупку / покупці\n> [!answer] покупку\n\n## dialogue-reorder: Phone Shopping\n\n- Я шукаю телефон. Що порекомендуєте?\n- Ось цей. Найкращий у цій ціновій категорії.\n- А є щось дешевше?\n- Так, ось цей. Він дешевший, але екран менший.\n- Яка різниця в ціні?\n- Дві тисячі гривень.\n\n> [!answer]\n> 1. Я шукаю телефон. Що порекомендуєте?\n> 2. Ось цей. Найкращий у цій ціновій категорії.\n> 3. А є щось дешевше?\n> 4. Так, ось цей. Він дешевший, але пам'яті менше.\n> 5. Яка різниця в ціні?\n> 6. Дві тисячі гривень.\n\n---\n\n- Скільки коштує ця куртка?\n- Дві тисячі гривень.\n- Занадто дорого! Чи є знижка?\n- Так, сьогодні акція — мінус двадцять відсотків.\n- Тоді візьму!\n- Чудово! Ось ваша покупка.\n\n> [!answer]\n> 1. Скільки коштує ця куртка?\n> 2. Дві тисячі гривень.\n> 3. Занадто дорого! Чи є знижка?\n> 4. Так, сьогодні акція — мінус двадцять відсотків.\n> 5. Тоді візьму!\n> 6. Чудово! Ось ваша покупка.\n\n## mark-the-words: Find Comparison Words\n\nClick on COMPARISON words.\n\nЦей телефон [кращий](correct), але [дорожчий](correct). Є щось [дешевше](correct)?\n\n---\n\n[Мені більше подобається](correct) синій. Який [найдешевший](correct)? Яка [різниця](correct)?\n\n---\n\nЦей [вигідніший](correct). Якість [краща](correct). [Порівняйте](correct) ціни!\n\n## translate: English to Ukrainian\n\nWhat do you recommend?\n\n- [x] Що ви порекомендуєте?\n- [ ] Що ви хочете?\n- [ ] Що це?\n\n---\n\nCan it be cheaper?\n\n- [x] Чи можна дешевше?\n- [ ] Скільки коштує?\n- [ ] Дешевий?\n\n---\n\nIs there a discount?\n\n- [x] Чи є знижка?\n- [ ] Чи є ціна?\n- [ ] Скільки?\n\n---\n\nI'll take this one.\n\n- [x] Я візьму цей.\n- [ ] Я хочу цей.\n- [ ] Покажіть цей.\n\n---\n\nThis is too expensive.\n\n- [x] Це занадто дорого.\n- [ ] Це дуже дорого.\n- [ ] Це дорогий.\n\n---\n\nIs there something better?\n\n- [x] Є щось краще?\n- [ ] Є щось дешевше?\n- [ ] Що це?\n\n---\n\nI like the red one more.\n\n- [x] Мені більше подобається червоний.\n- [ ] Я люблю червоний.\n- [ ] Червоний кращий.\n\n---\n\nWhich is the cheapest?\n\n- [x] Який найдешевший?\n- [ ] Який дешевший?\n- [ ] Який дешевий?\n\n---\n\nThank you, I'll think about it.\n\n- [x] Дякую, я подумаю.\n- [ ] Дякую, ні.\n- [ ] Дякую, все.\n\n---\n\nThis suits me.\n\n- [x] Це мені підходить.\n- [ ] Це мені подобається.\n- [ ] Це добре.\n\n---\n\nWhat's the difference between them?\n\n- [x] Яка різниця між ними?\n- [ ] Що це?\n- [ ] Скільки?\n\n---\n\nThere's a sale today!\n\n- [x] Сьогодні акція!\n- [ ] Сьогодні дорого!\n- [ ] Сьогодні знижка!\n\n---"
+      },
+      {
+        "id": "section-8",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| порівнювати | /pɔriʋˈnʲuʋɑtɪ/ | to compare | verb | — | imperfective |\n| вибирати | /ʋɪbɪˈrɑtɪ/ | to choose | verb | — | imperfective |\n| шукати | /ʃuˈkɑtɪ/ | to search | verb | — | imperfective |\n| знаходити | /znɑˈxɔdɪtɪ/ | to find | verb | — | imperfective |\n| рекомендувати | /rɛkɔmɛnduˈʋɑtɪ/ | to recommend | verb | — | imperfective |\n| радити | /ˈrɑdɪtɪ/ | to advise | verb | — | imperfective |\n| пропонувати | /prɔpɔnuˈʋɑtɪ/ | to offer | verb | — | imperfective |\n| знижка | /ˈznɪʒkɑ/ | discount | noun | f | shopping term |\n| акція | /ˈɑkt͡sijɑ/ | sale, promotion | noun | f | shopping term |\n| розпродаж | /rɔzˈprɔdɑʒ/ | clearance sale | noun | m | shopping term |\n| якість | /ˈjɑkistʲ/ | quality | noun | f | shopping term |\n| ціна | /t͡siˈnɑ/ | price | noun | f | shopping term |\n| вартість | /ˈʋɑrtistʲ/ | cost, value | noun | f | shopping term |\n| вигідний | /ˈʋɪɦidnɪj/ | profitable, good deal | adj | m | shopping term |\n| доступний | /dɔˈstupnɪj/ | affordable | adj | m | shopping term |\n| різниця | /ˈriznɪt͡sʲɑ/ | difference | noun | f | comparison |\n| підходити | /pidˈxɔdɪtɪ/ | to suit | verb | — | + Dative |\n| покупка | /pɔˈkupkɑ/ | purchase | noun | f | shopping term |\n| ринок | /ˈrɪnɔk/ | market | noun | m | trading place |\n| касир | /kɑˈsɪr/ | cashier | noun | m | profession |\n| черга | /ˈt͡ʃɛrɦɑ/ | queue, line | noun | f | shopping |\n| готівка | /ɦɔˈtiʋkɑ/ | cash | noun | f | payment |\n| карта | /ˈkɑrtɑ/ | card | noun | f | payment |\n| решта | /ˈrɛʃtɑ/ | change | noun | f | payment |\n| магазин | /mɑɦɑˈzɪn/ | store | noun | m | shop |\n\n---"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-19\ntitle: \"Smart Shopping\"\nsubtitle: \"Comparing Products and Making Decisions\"\nversion: \"1.0\"\nphase: \"A2.2\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - vocabulary\n  - functional\n  - shopping\n  - comparison\ngrammar:\n  - comparison in practice\n  - negotiation phrases\n  - shopping vocabulary\nobjectives:\n  - \"Learner can compare products\"\n  - \"Learner can negotiate politely\"\n  - \"Learner can express requirements\"\n  - \"Learner can make purchase decisions\"\nvocabulary_count: 25\n---\n# Warm-up\n\nTime to put your comparison skills to practical use! This module takes you shopping in Ukrainian. You'll learn to compare products, ask for recommendations, and negotiate — all essential skills for real-world situations.\n\n**What you'll learn:**\n- Shopping comparison vocabulary\n- How to ask for advice and recommendations\n- Negotiation phrases\n- Making purchase decisions\n\n---\n\n# Presentation\n\n## Comparing Products\n\nWhen shopping, you'll constantly compare items. Here are key phrases:\n\n### Basic Comparisons\n\n- Цей **кращий**, але **дорожчий**. (This one is better, but more expensive.)\n- Той **дешевший** за цей. (That one is cheaper than this one.)\n- Який **найдешевший**? (Which is the cheapest?)\n- Мені **більше подобається** червоний. (I like the red one more.)\n\n### Asking About Options\n\n- Що ви **порекомендуєте**? (What do you recommend?)\n- Є щось **краще**? (Is there something better?)\n- Є щось **дешевше**? (Is there something cheaper?)\n- Яка **різниця** між ними? (What's the difference between them?)\n\n> 💡 **Shopping Tip**\n>\n> Ukrainians appreciate when you ask for advice! \"Що ви порекомендуєте?\" is a great way to start a conversation with a shop assistant.\n\n## Negotiation Phrases\n\nIn some contexts (markets, small shops), negotiation is possible:\n\n### Asking for Discounts\n\n- Чи можна **дешевше**? (Can it be cheaper?)\n- Чи є **знижка**? (Is there a discount?)\n- Якщо візьму два, буде **дешевше**? (If I take two, will it be cheaper?)\n\n### Expressing Hesitation\n\n- Це **занадто** дорого. (This is too expensive.)\n- Я **подумаю**. (I'll think about it.)\n- Можливо, **повернуся**. (Maybe I'll come back.)\n\n> 📜 **Cultural Note**\n>\n> Negotiation is common at markets (ринок, базар) but unusual in regular stores and supermarkets. Always be polite when asking for discounts!\n\n## Making Decisions\n\n### Positive Decision\n\n- Я **візьму** цей. (I'll take this one.)\n- **Беру**! (I'll take it!)\n- Це мені **підходить**. (This suits me.)\n\n### Negative Decision\n\n- Дякую, **не потрібно**. (Thank you, not needed.)\n- Я **ще подумаю**. (I'll still think about it.)\n- Мені не **підходить**. (It doesn't suit me.)\n\n> [!tip] Polite Refusal\n> \"Дякую, я подумаю\" (Thank you, I'll think about it) is a polite way to decline without directly saying \"no.\"\n\n---\n\n# Cultural Insight\n\n## Shopping in Ukraine\n\nUkrainian shopping culture varies by location:\n\n**Supermarkets (супермаркет):**\n- Fixed prices, no negotiation\n- Self-service\n- Common in cities\n\n**Markets (ринок, базар):**\n- Fresh produce, clothes, goods\n- Negotiation possible\n- Cash preferred\n\n**Small shops (магазин, крамниця):**\n- Personal service\n- May have loyalty discounts\n- Good for local products\n\n## Shopping Strategies\n\n### 1. The Art of Polite Negotiation\n\nNegotiation (**торг**) is an art form in Ukrainian markets. It's not just about saving money; it's social interaction.\n- **Start soft:** \"Чи це остаточна ціна?\" (Is this the final price?)\n- **Point out flaws (gently):** \"Але тут маленька пляма...\" (But there is a small spot here...)\n- **Walk away (theatre):** \"Добре, я ще пройдуся...\" (Okay, I'll walk around a bit more...)\n\n### 2. Genitive Plural: Weighing Your Options\n\nWhen buying food, you often count or weigh things. This triggers the **Genitive Case** (often Plural).\n- **1 кілограм** (Nominative)\n- **2, 3, 4 кілограми** (Nominative Plural)\n- **5+ кілограмів** (Genitive Plural)\n\n> [!note] Grammar Check\n> Technically, \"кілограм\" has a zero ending in Genitive Plural in some dialects (5 кілограм), but standard literary Ukrainian prefers **кілограмів**.\n> - 200 **грамів** (grams)\n> - 5 **літрів** (liters)\n> - 10 **гривень** (hryvnias)\n\n### 3. Payment Vocabulary\n\n- **Готівка** (Cash) — King of the market.\n- **Карта** (Card) — Standard in shops.\n- **Решта** (Change) — \"У вас є решта з 500?\" (Do you have change from 500?)\n- **Чек** (Receipt) — \"Ваш чек, будь ласка.\" (Your receipt, please.)\n\n---\n\n# Cultural Insight\n\n## The Soul of the \"Bazar\"\n\nThe Ukrainian **базар** (market) is more than a store; it's a community hub.\n- **Postiynyy Kliyent (Regular Customer):** The goal is to become a \"постійний клієнт\". Once a seller knows you, they will pick the best tomatoes for you, hide the freshest meat under the counter for you, and give you discounts without asking.\n- **Taste it!** Sellers will often offer: \"Спробуйте!\" (Taste it!). Refusing can sometimes be seen as rude if you are genuinely interested.\n- **Morning Glory:** The best produce is sold by 8-9 AM. If you arrive at noon, you get leftovers.\n\n> 🧠 **Myth: \"No Price Tags means Tourist Trap\"**\n>\n> In many Western countries, no price tag is a red flag. In a Ukrainian bazar, it just means the price fluctuates based on supply, time of day, and your negotiation skills! Always ask \"По чому?\" (How much? - colloquial) or \"Скільки коштує?\".\n\n> 🎭 **Roleplay Idea**\n>\n> Imagine you have 500 hryvnias. You need to buy vegetables for Borscht (potatoes, beets, carrots, cabbage, onion) and meat. Write down a shopping list and \"negotiate\" with a partner to see if you can fit it all in your budget!\n\n## Shopping for Clothes vs. Food\n\n| Feature | Clothes Shop | Food Market |\n|---------|--------------|-------------|\n| **Service** | \"Can I help you?\" leads to fitting room. | \"Taste this!\" leads to buying. |\n| **Space** | Personal space respected. | Crowded, pushy, lively. |\n| **Payment** | Card/Phone (NFC). | Cash (mostly), card-to-card transfer. |\n\n> [!tip] \"Paket\"\n> \"Пакет потрібен?\" (Do you need a bag?) is the most common phrase you will hear at any checkout. Ukrainians often carry their own reusable eco-bags.\n\n---\n\n# Practice\n\n## Practice Dialogues\n\n**Comparing phones:**\n- Цей телефон кращий, але дорожчий.\n- Є щось дешевше?\n- Так, ось цей. Він дешевший, але екран менший.\n- Яка різниця в ціні?\n- Два тисячі гривень.\n\n**At the market:**\n- Скільки коштують яблука?\n- Тридцять гривень за кілограм.\n- Занадто дорого. Чи можна дешевше?\n- Добре, двадцять п'ять.\n- Беру два кілограми!\n\n**Dialogue: Buying Shoes**\n- **Клієнт:** Добрий день! Я шукаю зручні туфлі.\n- **Продавець:** Який у вас розмір?\n- **Клієнт:** Тридцять восьмий.\n- **Продавець:** Ось ці дуже хороші. Це натуральна шкіра.\n- **Клієнт:** Вони гарні, але трохи дорогі. Чи є знижка?\n- **Продавець:** Так, на цю модель мінус 10%.\n- **Клієнт:** Чудово! Можна поміряти?\n- **Продавець:** Звичайно, приміряйте. Дзеркало там.\n- **Клієнт:** Вони мені підходять. Беру!\n\n> [!tip] Sizes\n> Ukraine uses European shoe sizes (36, 37, 38...). Clothing sizes are also different from US/UK (S/M/L are common, but numbers like 44, 46, 48 are standard).\n\n---\n\n# Summary\n\n## What You Learned\n\nThis module covered practical shopping vocabulary and comparison.\n\n**Comparing Products:**\n- Цей кращий / дешевший / більший\n- Який найкращий / найдешевший?\n\n**Asking for Help:**\n- Що ви порекомендуєте?\n- Є щось краще / дешевше?\n\n**Negotiation:**\n- Чи можна дешевше?\n- Чи є знижка?\n\n**Decisions:**\n- Я візьму цей / Беру!\n- Дякую, я подумаю.\n\nТепер ви готові до покупок! Ви можете впевнено йти на ринок або в магазин. Порівнюйте ціни, спілкуйтеся з продавцями та знаходьте найкращі товари. Вдалих покупок! 🛒\n\n# Activities\n\n## match-up: Shopping Vocabulary\n\n- знижка :: discount\n- акція :: sale/promotion\n- розпродаж :: clearance sale\n- якість :: quality\n- ціна :: price\n- вартість :: cost/value\n- вигідний :: profitable/good deal\n- порівнювати :: to compare\n- вибирати :: to choose\n- рекомендувати :: to recommend\n- радити :: to advise\n- пропонувати :: to offer\n\n## fill-in: Shopping Phrases\n\n> Complete each sentence.\n\n1. Що ви ___? (recommend)\n   > [!answer] порекомендуєте\n   > [!options] порекомендуєте | рекомендуєте | рекомендуєш | рекомендує\n\n2. Чи є ___? (discount)\n   > [!answer] знижка\n   > [!options] знижка | ціна | якість | розпродаж\n\n3. Цей ___ за той. (cheaper)\n   > [!answer] дешевший\n   > [!options] дешевий | дешевший | найдешевший | дешево\n\n4. Чи можна ___? (cheaper)\n   > [!answer] дешевше\n   > [!options] дешевший | дешевше | дешевий | дешево\n\n5. Є щось ___? (better)\n   > [!answer] краще\n   > [!options] добре | кращий | краще | найкраще\n\n6. Я ___ цей. (will take)\n   > [!answer] візьму\n   > [!options] візьму | беру | брав | взяв\n\n7. Це мені ___. (suits)\n   > [!answer] підходить\n   > [!options] підходить | підходить | підійде | підійшло\n\n8. Яка ___ між ними? (difference)\n   > [!answer] різниця\n   > [!options] різниця | рівність | ціна | знижка\n\n9. Це занадто ___! (expensive)\n   > [!answer] дорого\n   > [!options] дорого | дорогий | дорожчий | дорожче\n\n10. Я ___. (I'll think)\n    > [!answer] подумаю\n    > [!options] думаю | подумаю | думав | подумав\n\n11. ___ найдешевший? (Which)\n    > [!answer] Який\n    > [!options] Який | Яка | Яке | Які\n\n12. Мені ___ подобається синій. (more)\n    > [!answer] більше\n    > [!options] більше | більший | багато | великий\n\n## quiz: Smart Shopping\n\n1. \"Що ви порекомендуєте?\" means:\n\n- [x] What do you recommend?\n- [ ] What do you want?\n- [ ] What is this?\n\n---\n\n2. \"Чи можна дешевше?\" means:\n\n- [x] Can it be cheaper?\n- [ ] How much?\n- [ ] What's this?\n\n---\n\n3. \"Знижка\" means:\n\n- [x] discount\n- [ ] price\n- [ ] quality\n\n---\n\n4. \"Я візьму цей\" means:\n\n- [x] I'll take this one\n- [ ] I want this one\n- [ ] Show me this one\n\n---\n\n5. Where is negotiation common?\n\n- [x] Markets (ринок)\n- [ ] Supermarkets\n- [ ] Malls\n\n---\n\n6. \"Занадто дорого\" means:\n\n- [x] Too expensive\n- [ ] Very cheap\n- [ ] Good price\n\n---\n\n7. \"Акція\" means:\n\n- [x] sale/promotion\n- [ ] action\n- [ ] quality\n\n---\n\n8. \"Беру!\" means:\n\n- [x] I'll take it!\n- [ ] I'm leaving!\n- [ ] I don't want it!\n\n---\n\n9. Polite way to decline:\n\n- [x] Дякую, я подумаю.\n- [ ] Ні!\n- [ ] Не хочу!\n\n---\n\n10. \"Розпродаж\" means:\n\n- [x] clearance sale\n- [ ] new collection\n- [ ] warranty\n\n---\n\n11. \"Це мені підходить\" means:\n\n- [x] This suits me\n- [ ] This is expensive\n- [ ] I don't like this\n\n---\n\n12. \"Вигідний\" means:\n\n- [x] profitable/good deal\n- [ ] expensive\n- [ ] broken\n\n## true-false: Shopping Rules\n\n> Decide if each statement is true or false.\n\n- [x] \"Порекомендуєте\" is a polite way to ask for advice.\n  > Correct!\n\n- [x] Negotiation is common at markets.\n  > Yes!\n\n- [ ] \"Знижка\" means \"quality.\"\n  > \"Знижка\" means \"discount.\"\n\n- [x] \"Я подумаю\" is a polite way to decline.\n  > Correct!\n\n- [x] \"Візьму\" means \"I'll take.\"\n  > Yes!\n\n- [ ] Negotiation is expected in supermarkets.\n  > Supermarkets have fixed prices.\n\n- [x] \"Занадто дорого\" = too expensive.\n  > Correct!\n\n- [x] \"Краще\" and \"дешевше\" are comparative adverbs.\n  > Yes!\n\n- [ ] \"Акція\" means \"action.\"\n  > In shopping context, \"акція\" means \"sale/promotion.\"\n\n- [x] Asking \"Чи є знижка?\" is acceptable.\n  > Correct!\n\n- [x] \"Ринок\" means \"market.\"\n  > Yes!\n\n- [ ] \"Вартість\" means \"discount.\"\n  > \"Вартість\" means \"cost/value.\"\n\n## group-sort: Positive vs Negative Response\n\n> Sort these shopping responses.\n\n### Positive Decision\n- Я візьму цей.\n- Беру!\n- Це мені підходить.\n- Вигідна ціна!\n\n### Negative Decision\n- Занадто дорого.\n- Я подумаю.\n- Мені не підходить.\n- Дякую, не потрібно.\n\n## unjumble: Shopping Sentences\n\n> Put the words in the correct order.\n\n1. що / ви / порекомендуєте\n   > [!answer] Що ви порекомендуєте?\n\n2. чи / можна / дешевше\n   > [!answer] Чи можна дешевше?\n\n3. є / щось / краще\n   > [!answer] Є щось краще?\n\n4. я / візьму / цей\n   > [!answer] Я візьму цей.\n\n5. це / занадто / дорого\n   > [!answer] Це занадто дорого.\n\n6. чи / є / знижка\n   > [!answer] Чи є знижка?\n\n7. який / найдешевший\n   > [!answer] Який найдешевший?\n\n8. цей / кращий / але / дорожчий\n   > [!answer] Цей кращий, але дорожчий.\n\n9. яка / різниця / між / ними\n   > [!answer] Яка різниця між ними?\n\n10. мені / більше / подобається / червоний\n    > [!answer] Мені більше подобається червоний.\n\n11. дякую / я / подумаю\n    > [!answer] Дякую, я подумаю.\n\n12. це / мені / підходить\n    > [!answer] Це мені підходить.\n\n## error-correction: Shopping Phrases\n\n> Choose the correct form.\n\n1. Що ви ___? (recommend)\n   > [!error] recommend\n   > [!answer] порекомендуєте\n   > [!explanation] Formal \"you\" form: порекомендуєте.\n   > [!options] рекомендуєш | порекомендуєте | рекомендую | рекомендуємо\n\n2. Чи можна ___? (cheaper — adverb)\n   > [!error] cheaper — adverb\n   > [!answer] дешевше\n   > [!explanation] Comparative adverb: дешевше.\n   > [!options] дешевий | дешевший | дешевше | дешево\n\n3. Я ___ цей. (will take)\n   > [!error] will take\n   > [!answer] візьму\n   > [!explanation] Perfective future: візьму.\n   > [!options] беру | візьму | брав | взяв\n\n4. Є щось ___? (better — neuter)\n   > [!error] better — neuter\n   > [!answer] краще\n   > [!explanation] Comparative adverb: краще.\n   > [!options] кращий | краща | краще | найкраще\n\n5. Це занадто ___! (expensive — adverb)\n   > [!error] expensive — adverb\n   > [!answer] дорого\n   > [!explanation] Adverb: дорого.\n   > [!options] дорогий | дорого | дорожчий | дорожче\n\n6. Мені ___ подобається. (more)\n   > [!error] more\n   > [!answer] більше\n   > [!explanation] Comparison: більше подобається.\n   > [!options] більший | більше | великий | багато\n\n## cloze: Shopping Dialogue\n\n> Complete the dialogue.\n\n— Добрий день! Чим можу [___:1]?\n— Я [___:2] телефон. Що ви [___:3]?\n— Ось хороший варіант. Він [___:4], але [___:5].\n— [___:6] щось дешевше?\n\n1. допомогти / допомагати / допоможу\n> [!answer] допомогти\n\n2. шукаю / шукав / знайшов\n> [!answer] шукаю\n\n3. порекомендуєте / рекомендую / рекомендуєш\n> [!answer] порекомендуєте\n\n4. кращий / краще / найкращий\n> [!answer] кращий\n\n5. дорожчий / дорого / дорогий\n> [!answer] дорожчий\n\n6. Є / Буде / Був\n> [!answer] Є\n\n---\n\n— Скільки [___:1] яблука?\n— Тридцять гривень за [___:2].\n— Чи можна [___:3]?\n— Добре, двадцять п'ять.\n— [___:4] два кілограми!\n— Дякую за [___:5]!\n\n1. коштує / коштують / коштувати\n> [!answer] коштують\n\n2. кілограм / кілограми / кілограмів\n> [!answer] кілограм\n\n3. дешево / дешевше / дешевий\n> [!answer] дешевше\n\n4. Візьму / Беру / Беремо\n> [!answer] Беру\n\n5. покупка / покупку / покупці\n> [!answer] покупку\n\n## dialogue-reorder: Phone Shopping\n\n- Я шукаю телефон. Що порекомендуєте?\n- Ось цей. Найкращий у цій ціновій категорії.\n- А є щось дешевше?\n- Так, ось цей. Він дешевший, але екран менший.\n- Яка різниця в ціні?\n- Дві тисячі гривень.\n\n> [!answer]\n> 1. Я шукаю телефон. Що порекомендуєте?\n> 2. Ось цей. Найкращий у цій ціновій категорії.\n> 3. А є щось дешевше?\n> 4. Так, ось цей. Він дешевший, але пам'яті менше.\n> 5. Яка різниця в ціні?\n> 6. Дві тисячі гривень.\n\n---\n\n- Скільки коштує ця куртка?\n- Дві тисячі гривень.\n- Занадто дорого! Чи є знижка?\n- Так, сьогодні акція — мінус двадцять відсотків.\n- Тоді візьму!\n- Чудово! Ось ваша покупка.\n\n> [!answer]\n> 1. Скільки коштує ця куртка?\n> 2. Дві тисячі гривень.\n> 3. Занадто дорого! Чи є знижка?\n> 4. Так, сьогодні акція — мінус двадцять відсотків.\n> 5. Тоді візьму!\n> 6. Чудово! Ось ваша покупка.\n\n## mark-the-words: Find Comparison Words\n\nClick on COMPARISON words.\n\nЦей телефон [кращий](correct), але [дорожчий](correct). Є щось [дешевше](correct)?\n\n---\n\n[Мені більше подобається](correct) синій. Який [найдешевший](correct)? Яка [різниця](correct)?\n\n---\n\nЦей [вигідніший](correct). Якість [краща](correct). [Порівняйте](correct) ціни!\n\n## translate: English to Ukrainian\n\nWhat do you recommend?\n\n- [x] Що ви порекомендуєте?\n- [ ] Що ви хочете?\n- [ ] Що це?\n\n---\n\nCan it be cheaper?\n\n- [x] Чи можна дешевше?\n- [ ] Скільки коштує?\n- [ ] Дешевий?\n\n---\n\nIs there a discount?\n\n- [x] Чи є знижка?\n- [ ] Чи є ціна?\n- [ ] Скільки?\n\n---\n\nI'll take this one.\n\n- [x] Я візьму цей.\n- [ ] Я хочу цей.\n- [ ] Покажіть цей.\n\n---\n\nThis is too expensive.\n\n- [x] Це занадто дорого.\n- [ ] Це дуже дорого.\n- [ ] Це дорогий.\n\n---\n\nIs there something better?\n\n- [x] Є щось краще?\n- [ ] Є щось дешевше?\n- [ ] Що це?\n\n---\n\nI like the red one more.\n\n- [x] Мені більше подобається червоний.\n- [ ] Я люблю червоний.\n- [ ] Червоний кращий.\n\n---\n\nWhich is the cheapest?\n\n- [x] Який найдешевший?\n- [ ] Який дешевший?\n- [ ] Який дешевий?\n\n---\n\nThank you, I'll think about it.\n\n- [x] Дякую, я подумаю.\n- [ ] Дякую, ні.\n- [ ] Дякую, все.\n\n---\n\nThis suits me.\n\n- [x] Це мені підходить.\n- [ ] Це мені подобається.\n- [ ] Це добре.\n\n---\n\nWhat's the difference between them?\n\n- [x] Яка різниця між ними?\n- [ ] Що це?\n- [ ] Скільки?\n\n---\n\nThere's a sale today!\n\n- [x] Сьогодні акція!\n- [ ] Сьогодні дорого!\n- [ ] Сьогодні знижка!\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| порівнювати | /pɔriʋˈnʲuʋɑtɪ/ | to compare | verb | — | imperfective |\n| вибирати | /ʋɪbɪˈrɑtɪ/ | to choose | verb | — | imperfective |\n| шукати | /ʃuˈkɑtɪ/ | to search | verb | — | imperfective |\n| знаходити | /znɑˈxɔdɪtɪ/ | to find | verb | — | imperfective |\n| рекомендувати | /rɛkɔmɛnduˈʋɑtɪ/ | to recommend | verb | — | imperfective |\n| радити | /ˈrɑdɪtɪ/ | to advise | verb | — | imperfective |\n| пропонувати | /prɔpɔnuˈʋɑtɪ/ | to offer | verb | — | imperfective |\n| знижка | /ˈznɪʒkɑ/ | discount | noun | f | shopping term |\n| акція | /ˈɑkt͡sijɑ/ | sale, promotion | noun | f | shopping term |\n| розпродаж | /rɔzˈprɔdɑʒ/ | clearance sale | noun | m | shopping term |\n| якість | /ˈjɑkistʲ/ | quality | noun | f | shopping term |\n| ціна | /t͡siˈnɑ/ | price | noun | f | shopping term |\n| вартість | /ˈʋɑrtistʲ/ | cost, value | noun | f | shopping term |\n| вигідний | /ˈʋɪɦidnɪj/ | profitable, good deal | adj | m | shopping term |\n| доступний | /dɔˈstupnɪj/ | affordable | adj | m | shopping term |\n| різниця | /ˈriznɪt͡sʲɑ/ | difference | noun | f | comparison |\n| підходити | /pidˈxɔdɪtɪ/ | to suit | verb | — | + Dative |\n| покупка | /pɔˈkupkɑ/ | purchase | noun | f | shopping term |\n| ринок | /ˈrɪnɔk/ | market | noun | m | trading place |\n| касир | /kɑˈsɪr/ | cashier | noun | m | profession |\n| черга | /ˈt͡ʃɛrɦɑ/ | queue, line | noun | f | shopping |\n| готівка | /ɦɔˈtiʋkɑ/ | cash | noun | f | payment |\n| карта | /ˈkɑrtɑ/ | card | noun | f | payment |\n| решта | /ˈrɛʃtɑ/ | change | noun | f | payment |\n| магазин | /mɑɦɑˈzɪn/ | store | noun | m | shop |\n\n---\n",
+    "createdAt": "2025-12-15T20:02:02.999353Z",
+    "modifiedAt": "2025-12-15T20:02:02.999353Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-23",
+    "level": "A2",
+    "phase": "A2.2",
+    "wordCount": 25,
+    "newWordCount": 25,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "порівнювати",
+        "ipa": "/pɔriʋˈnʲuʋɑtɪ/",
+        "en": "to compare",
+        "pos": "verb",
+        "gender": null,
+        "note": "imperfective"
+      },
+      {
+        "id": "vocab-2",
+        "uk": "вибирати",
+        "ipa": "/ʋɪbɪˈrɑtɪ/",
+        "en": "to choose",
+        "pos": "verb",
+        "gender": null,
+        "note": "imperfective"
+      },
+      {
+        "id": "vocab-3",
+        "uk": "шукати",
+        "ipa": "/ʃuˈkɑtɪ/",
+        "en": "to search",
+        "pos": "verb",
+        "gender": null,
+        "note": "imperfective"
+      },
+      {
+        "id": "vocab-4",
+        "uk": "знаходити",
+        "ipa": "/znɑˈxɔdɪtɪ/",
+        "en": "to find",
+        "pos": "verb",
+        "gender": null,
+        "note": "imperfective"
+      },
+      {
+        "id": "vocab-5",
+        "uk": "рекомендувати",
+        "ipa": "/rɛkɔmɛnduˈʋɑtɪ/",
+        "en": "to recommend",
+        "pos": "verb",
+        "gender": null,
+        "note": "imperfective"
+      },
+      {
+        "id": "vocab-6",
+        "uk": "радити",
+        "ipa": "/ˈrɑdɪtɪ/",
+        "en": "to advise",
+        "pos": "verb",
+        "gender": null,
+        "note": "imperfective"
+      },
+      {
+        "id": "vocab-7",
+        "uk": "пропонувати",
+        "ipa": "/prɔpɔnuˈʋɑtɪ/",
+        "en": "to offer",
+        "pos": "verb",
+        "gender": null,
+        "note": "imperfective"
+      },
+      {
+        "id": "vocab-8",
+        "uk": "знижка",
+        "ipa": "/ˈznɪʒkɑ/",
+        "en": "discount",
+        "pos": "noun",
+        "gender": "f",
+        "note": "shopping term"
+      },
+      {
+        "id": "vocab-9",
+        "uk": "акція",
+        "ipa": "/ˈɑkt͡sijɑ/",
+        "en": "sale, promotion",
+        "pos": "noun",
+        "gender": "f",
+        "note": "shopping term"
+      },
+      {
+        "id": "vocab-10",
+        "uk": "розпродаж",
+        "ipa": "/rɔzˈprɔdɑʒ/",
+        "en": "clearance sale",
+        "pos": "noun",
+        "gender": "m",
+        "note": "shopping term"
+      },
+      {
+        "id": "vocab-11",
+        "uk": "якість",
+        "ipa": "/ˈjɑkistʲ/",
+        "en": "quality",
+        "pos": "noun",
+        "gender": "f",
+        "note": "shopping term"
+      },
+      {
+        "id": "vocab-12",
+        "uk": "ціна",
+        "ipa": "/t͡siˈnɑ/",
+        "en": "price",
+        "pos": "noun",
+        "gender": "f",
+        "note": "shopping term"
+      },
+      {
+        "id": "vocab-13",
+        "uk": "вартість",
+        "ipa": "/ˈʋɑrtistʲ/",
+        "en": "cost, value",
+        "pos": "noun",
+        "gender": "f",
+        "note": "shopping term"
+      },
+      {
+        "id": "vocab-14",
+        "uk": "вигідний",
+        "ipa": "/ˈʋɪɦidnɪj/",
+        "en": "profitable, good deal",
+        "pos": "adj",
+        "gender": "m",
+        "note": "shopping term"
+      },
+      {
+        "id": "vocab-15",
+        "uk": "доступний",
+        "ipa": "/dɔˈstupnɪj/",
+        "en": "affordable",
+        "pos": "adj",
+        "gender": "m",
+        "note": "shopping term"
+      },
+      {
+        "id": "vocab-16",
+        "uk": "різниця",
+        "ipa": "/ˈriznɪt͡sʲɑ/",
+        "en": "difference",
+        "pos": "noun",
+        "gender": "f",
+        "note": "comparison"
+      },
+      {
+        "id": "vocab-17",
+        "uk": "підходити",
+        "ipa": "/pidˈxɔdɪtɪ/",
+        "en": "to suit",
+        "pos": "verb",
+        "gender": null,
+        "note": "+ Dative"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "покупка",
+        "ipa": "/pɔˈkupkɑ/",
+        "en": "purchase",
+        "pos": "noun",
+        "gender": "f",
+        "note": "shopping term"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "ринок",
+        "ipa": "/ˈrɪnɔk/",
+        "en": "market",
+        "pos": "noun",
+        "gender": "m",
+        "note": "trading place"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "касир",
+        "ipa": "/kɑˈsɪr/",
+        "en": "cashier",
+        "pos": "noun",
+        "gender": "m",
+        "note": "profession"
+      },
+      {
+        "id": "vocab-21",
+        "uk": "черга",
+        "ipa": "/ˈt͡ʃɛrɦɑ/",
+        "en": "queue, line",
+        "pos": "noun",
+        "gender": "f",
+        "note": "shopping"
+      },
+      {
+        "id": "vocab-22",
+        "uk": "готівка",
+        "ipa": "/ɦɔˈtiʋkɑ/",
+        "en": "cash",
+        "pos": "noun",
+        "gender": "f",
+        "note": "payment"
+      },
+      {
+        "id": "vocab-23",
+        "uk": "карта",
+        "ipa": "/ˈkɑrtɑ/",
+        "en": "card",
+        "pos": "noun",
+        "gender": "f",
+        "note": "payment"
+      },
+      {
+        "id": "vocab-24",
+        "uk": "решта",
+        "ipa": "/ˈrɛʃtɑ/",
+        "en": "change",
+        "pos": "noun",
+        "gender": "f",
+        "note": "payment"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "магазин",
+        "ipa": "/mɑɦɑˈzɪn/",
+        "en": "store",
+        "pos": "noun",
+        "gender": "m",
+        "note": "shop"
+      }
+    ],
+    "reviewWords": []
+  }
+}

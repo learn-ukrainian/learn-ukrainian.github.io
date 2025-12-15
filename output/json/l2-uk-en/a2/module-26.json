@@ -1,0 +1,333 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-26",
+    "moduleId": "mod-uk-A2-26",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.3",
+    "moduleNumber": 26,
+    "moduleType": "grammar",
+    "pedagogy": "Complex Sentences",
+    "immersionLevel": 0.4,
+    "title": "Because and Although",
+    "titleUk": null,
+    "subtitle": "Explaining Why and Why Not",
+    "description": "Learner can explain reasons (Because...)",
+    "objectives": [
+      "Learner can explain reasons (Because...)",
+      "Learner can express contrast (Although...)",
+      "Learner can link complex ideas"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "causal clauses",
+      "concessive clauses",
+      "sentence structure"
+    ],
+    "tags": [
+      "connectors",
+      "reasoning",
+      "debating"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "Why are you learning Ukrainian? *Because* it's beautiful? *Although* it's hard?\nIn this module, you will learn to be a philosopher. You won't just say *what* happened; you will explain *why* it happened, and what happened *despite* obstacles.\n\n**We will cover:**\n- **Reasons:** Тому що, Бо, Оскільки\n- **Contrasts:** Хоча, Проте, Але\n- **Nuance:** \"Thanks to...\" vs \"Because of...\"\n\n> [!note] Think about it\n> A child says \"I want candy.\" An adult says \"I want candy *because* I had a hard day, *although* I know it's bad for my teeth.\" Connectors are the sign of a mature speaker.\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "Presentation",
+        "nameEn": null,
+        "type": "content",
+        "content": "## 1. The \"Why\": Causal Connectors\n\nTo explain a cause, we have three main friends.\n\n### A. The Standard: Тому що\nThis is the most neutral and common way to say \"because\".\n- **Structure:** [Result] + **,** (comma) + **тому що** + [Reason].\n- *Я не пішов на роботу, тому що захворів.* (I didn't go to work because I got sick.)\n\n### B. The Colloquial: Бо\nShort, snappy, and very Ukrainian. Use it in speech.\n- *Я йду спати, бо втомився.* (I'm going to sleep 'cause I'm tired.)\n- *Чому? — Бо так!* (Why? — Just because! / Cause I said so!)\n\n### C. The Formal/Logical: Оскільки\nOften starts a sentence. Sets up a logical premise.\n- *Оскільки у нас немає часу, ми почнемо відразу.* (Since we have no time, we will start immediately.)\n\n## 2. The \"Despite\": Concessive Connectors\n\nTo show contrast or overcoming an obstacle.\n\n### A. The Classic: Хоча\n- *Хоча він старий, він сильний.* (Although he is old, he is strong.)\n- *Я купив це, хоча це дорого.* (I bought this, although it is expensive.)\n\n### B. The Strong Contrast: Проте / Однак\nThese are formal and strong. **\"Але\"** implies a simple contrast, while **\"Проте\"** adds significantly more weight and formality to the statement.\n- *Це непросте завдання. Проте ми впораємося.* (This is not a simple task. However, we will handle it.)\n\n### C. The Optimist: Зате\nUsed when a negative is balanced by a positive.\n- *Квартира маленька, зате дешева.* (The apartment is small, but (on the plus side) it's cheap.)\n\n## 3. Nuances of \"Because\"\n\nNot all reasons are the same.\n\n- **Через те що** (Due to the fact that): Slightly formal, emphatic.\n- **Завдяки тому що** (Thanks to the fact that): Only for POSITIVE causes.\n  - *Ми виграли завдяки тому, що тренувалися.* (We won thanks to the fact we trained.)\n- **Через** + Noun (Because of):\n  - *Ми запізнилися через дощ.* (We were late because of the rain.)\n\n## 4. The Geometry of Logic\n\nThink of these connectors as shapes:\n- **Arrow (→)**: *Тому що, Бо, Оскільки*. (Reason leads to Result).\n- **Wall (|)**: *Але, Проте*. (Result hits a Barrier).\n- **Bridge (∩)**: *Хоча, Незважаючи на*. (Overcoming the Barrier).\n\n### Deep Dive: \"Через\" vs \"Завдяки\"\nThis distinction is critical.\n- **Через** (Through/Because of) is usually neutral or negative. *\"Ми програли через дощ.\"* (We lost because of rain).\n- **Завдяки** (Thanks to) is ALWAYS positive. *\"Ми виграли завдяки дощу.\"* (We won thanks to rain - maybe the opponent slipped!).\n  - *Mistake:* \"Я захворів завдяки вірусу.\" (I got sick thanks to the virus). \n  - *Correct:* \"Я захворів через вірус.\"\n\n> [!note] Myth: \"Sentence Length\"\n> **Myth:** Short sentences are better.\n> **Reality:** In Ukrainian, long, flowing sentences attached by connectors show education and elegance. Don't be afraid to link 3 or 4 clauses together! This is the sign of a truly fluent speaker who can express complex thoughts.\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Cultural Insight",
+        "nameEn": null,
+        "type": "content",
+        "content": "## The \"Bo\" Philosophy\n\nThe word **\"Бо\"** is magical. It is one of the shortest words, yet it carries the weight of an entire argument.\nIn Ukrainian villages or casual conversation, you will hear sentences ending simply with **\"Бо\"**.\n- *\"Ти не підеш туди.\"* (You won't go there.)\n- *\"Чому?\"* (Why?)\n- *\"Бо.\"* (Because.)\n\nIt implies that the reason is obvious, or that the speaker doesn't want to explain. It is the ultimate \"parental\" argument.\n\n## Fatalism vs Optimism\n\nUkrainians often use concessive connectors to express a resilient worldview.\n* **\"Гірше буває.\"** (It happens worse.)\n* **\"Все буде добре.\"** (Everything will be fine.)\n\nWhen something bad happens, a Ukrainian might say: *\"Ми втратили гроші, **але** ми живі.\"* (We lost money, but we are alive). This structure (Negative + **Але** + Positive) is a cultural coping mechanism.\n\n> [!tip] Intonation Warning\n> When you use **\"Але\"** or **\"Проте\"**, raise the pitch of your voice slightly to signal that a contrast is coming. It catches the listener's attention!\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Language in Action",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Dialogue: The Great Debate\n\nAndriy and Olena are arguing about buying a car.\n\n**Andriy:** Нам треба купити машину, **тому що** я втомився від автобусів.\n**Olena:** **Але** це дуже дорого!\n**Andriy:** **Хоча** це дорого, **зате** ми будемо вільні. Ми зможемо поїхати в Карпати!\n**Olena:** **Оскільки** ми не маємо гаража, машина буде стояти на вулиці.\n**Andriy:** Ну і що? **Проте** вона буде наша.\n**Olena:** Я думаю, краще зробити ремонт у квартирі.\n**Andriy:** Ремонт можна зробити пізніше, **бо** ціни на матеріали ростуть.\n**Olena:** А ціни на бензин не ростуть?\n**Andriy:** Ростуть, **однак** комфорт важливіший.\n**Olena:** Ти мене не переконаєш. **Все-таки** краще почекати.\n**Andriy:** Добре, **нехай** буде по-твоєму. **Але** я все одно хочу машину!\n\n### Debate Strategy\nNotice how they parry each other's points:\n1.  **Point:** I'm tired. (Reason)\n2.  **Counter:** Expensive. (Contrast)\n3.  **Rebuttal:** Expensive BUT freedom. (Concession + Positive)\n4.  **Logical Block:** No garage. (Premise)\n\n> [!history] Rhetoric\n> Ukrainians love a good debate (**суперечка**). Historically, Cossack councils (**Ради**) were places of fierce argument. The ability to speak well (\"красномовство\") is highly valued.\n\n---\n\n## The Debate\n\nRead this conversation between optimists and pessimists.\n\n**Оптиміст:** Я люблю зиму, **тому що** можна кататися на лижах.\n**Песиміст:** **Але** холодно!\n**Оптиміст:** **Хоча** холодно, **зате** красиво. Сніг блищить!\n**Песиміст:** Сніг мокрий. **Оскільки** я не маю теплих черевиків, я захворію.\n**Оптиміст:** Ти захворієш не **через** сніг, а **через те, що** ти завжди занадто сильно скаржишся!\n**Песиміст:** Я не скаржуся, я реаліст. **Все-таки** зима — це важкий час.\n**Оптиміст:** **Проте** скоро Новий рік!\n**Песиміст:** **Ну і що?** (So what?)\n\n### Analysis\n1.  **Хоча..., зате...**: The classic balance. \"Although cold, (at least) beautiful.\"\n2.  **Оскільки**: Establishing a logical reason (\"Since I don't have boots...\").\n3.  **Все-таки**: \"Still / Nevertheless\" — holding onto an opinion.\n\n> [!tip] Comma Rule\n> In Ukrainian, you almost ALWAYS put a comma before \"тому що\", \"бо\", \"але\", \"хоча\", \"що\", \"який\".\n> - English: I stayed because it rained.\n> - Ukrainian: Я залишився**,** тому що йшов дощ. (The comma is mandatory!)\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "You have unlocked the power of complex thought!\n\n| Logic | Connector | Context |\n|-------|-----------|---------|\n| **Reason** | **Тому що** | Standard \"Because\" |\n| **Reason** | **Бо** | Short/Spoken \"Cause\" |\n| **Logic** | **Оскільки** | Formal \"Since\" |\n| **Contrast** | **Хоча** | \"Although\" |\n| **Contrast** | **Проте** | Strong \"However\" |\n| **Balance** | **Зате** | \"But at least...\" |\n\nDon't forget the comma!\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Logic Pairs\n\n> Match the sentence halves logically.\n\n- Я не пішов гуляти :: тому що йшов дощ.\n- Хоча він багатий, :: він нещасливий.\n- Вона вивчила мову, :: бо багато вчилася.\n- Кімната мала, :: зате затишна.\n- Оскільки ми спізнюємося, :: візьмемо таксі.\n- Ми не поїхали :: через погоду.\n- Я запізнився, :: бо проспав.\n- Вона сміється, :: незважаючи на сльози.\n\n## fill-in: Choose the Connector\n\n> Fill in the blanks.\n\n1. Я люблю літо, ___ тепло. (because - standard)\n   > [!answer] тому що\n   > [!options] тому що | хоча | проте | зате\n\n2. ___ я не голодний, я з'їм яблуко. (Although)\n   > [!answer] Хоча\n   > [!options] Хоча | Бо | Тому що | Через\n\n3. Він не знає адреси, ___ він знайде будинок. (however)\n   > [!answer] проте\n   > [!options] проте | бо | оскільки | тому що\n\n4. Робота важка, ___ цікава. (but at least)\n   > [!answer] зате\n   > [!options] зате | тому що | бо | через\n\n5. ___ ти тут, допоможи мені. (Since)\n   > [!answer] Оскільки\n   > [!options] Оскільки | Хоча | Але | Проте\n\n6. Чому ти сумуєш? — ___! (Colloquial \"Just because\")\n   > [!answer] Бо\n   > [!options] Бо | Проте | Хоча | Зате\n\n7. Ми перемогли ___ тренеру. (thanks to - positive)\n   > [!answer] завдяки\n   > [!options] завдяки | через | бо | тому що\n\n8. Я не спав ___ шум. (because of - noun)\n   > [!answer] через\n   > [!options] через | бо | тому що | зате\n\n9. Він все робить, ___ втомлений. (despite the fact that)\n   > [!answer] незважаючи на те що\n   > [!options] незважаючи на те що | тому що | бо | оскільки\n\n10. ___ це правда, я не вірю. (Even if)\n    > [!answer] Хоч і\n    > [!options] Хоч і | Тому що | Бо | Зате\n\n11. Це було давно, ___ я пам'ятаю. (nevertheless/still)\n    > [!answer] все ж таки\n    > [!options] все ж таки | тому що | бо | оскільки\n\n12. ___ він прийде! (Let/May)\n    > [!answer] Нехай\n    > [!options] Нехай | Хоча | Але | Проте\n\n## quiz: Understand the Logic\n\n1. \"Хоча\" means:\n   - [x] Although\n   - [ ] Because\n   - [ ] Therefore\n\n2. \"Бо\" is a short form of:\n   - [x] Тому що\n   - [ ] Але\n   - [ ] Або\n\n3. Which word introduces a POSITIVE cause?\n   - [x] Завдяки\n   - [ ] Через\n   - [ ] Проте\n\n4. \"Зате\" is best used when:\n   - [x] Finding a positive side to a negative situation\n   - [ ] Explaining a strict logical reason\n   - [ ] Changing the subject\n\n5. Which sentence needs a comma?\n   - [x] Я йду тому що хочу. (Needs comma before тому що)\n   - [ ] Я йду.\n\n6. \"Оскільки\" usually comes:\n   - [x] At the beginning of a sentence\n   - [ ] At the very end\n   - [ ] After the verb\n\n7. \"Все-таки\" means:\n   - [x] Still / After all / Nevertheless\n   - [ ] Because\n   - [ ] Or\n\n8. \"Проте\" is stronger than:\n   - [x] Але\n   - [ ] І\n   - [ ] Чи\n\n9. \"Через те що\" means:\n   - [x] Due to the fact that\n   - [ ] In spite of\n   - [ ] If only\n\n10. \"Якби не\" starts:\n    - [x] A hypothetical condition\n    - [ ] A strict fact\n    - [ ] A question\n\n11. \"Дарма що\" is a synonym for:\n    - [x] Хоча\n    - [ ] Тому що\n    - [ ] Коли\n\n12. \"Нехай\" expresses:\n    - [x] Permission/Wish\n    - [ ] Denial\n    - [ ] Reason\n\n## unjumble: Build the Argument\n\n1. я / тому що / вдома / хворий / сиджу\n   > [!answer] Я сиджу вдома, тому що хворий.\n\n2. хоча / пішов / дощ / ми / гуляти\n   > [!answer] Хоча йшов дощ, ми пішли гуляти.\n\n3. він / розумний / лінивий / але\n   > [!answer] Він розумний, але лінивий.\n\n4. дорога / зате / довга / красива\n   > [!answer] Дорога довга, зате красива.\n\n5. оскільки / ми / тут / почнемо\n   > [!answer] Оскільки ми тут, почнемо.\n\n6. все-таки / я / правий / думаю / що\n   > [!answer] Я все-таки думаю, що правий.\n\n## group-sort: Cause vs Contrast\n\n### Causes (Why?)\n- Тому що\n- Бо\n- Оскільки\n- Через те що\n- Завдяки тому що\n\n### Contrasts (But/Although)\n- Хоча\n- Але\n- Проте\n- Зате\n- Однак\n- Незважаючи на те що\n\n## true-false: Grammar Rules\n\n1. You must use a comma before \"тому що\".\n   - [x] True\n   > Always!\n\n2. \"Бо\" is very formal and academic.\n   - [ ] True\n   - [x] False\n   > It is conversational.\n\n3. \"Завдяки\" is used for bad things (like \"Thanks to the rain, I got wet\").\n   - [ ] True\n   - [x] False\n   > No, \"Завдяки\" implies gratitude. Use \"Через\" for neutral/negative causes.\n\n4. \"Оскільки\" sets up a logical premise.\n   - [x] True\n   > Since X is true, then Y.\n\n5. \"Хоча\" introduces a reason.\n   - [ ] True\n   - [x] False\n   > It introduces a concession (Although).\n\n6. \"Проте\" means \"And then\".\n   - [ ] True\n   - [x] False\n   > It means \"However\".\n\n7. \"Все ж таки\" emphasizes persistence of an opinion or fact.\n   - [x] True\n   > \"Still / Nevertheless\".\n\n8. You can end a sentence with \"Бо\" in casual speech.\n   - [x] True\n   > \"Чому? Бо.\"\n\n9. \"Якби не\" is used for real situations.\n   - [ ] True\n   - [x] False\n   > It's hypothetical (\"If it weren't for...\").\n\n10. \"Але\" and \"Проте\" are synonyms, but \"Проте\" is stronger.\n    - [x] True\n    > Yes.\n\n## cloze: The Job Interview\n\n> Complete the text.\n\nЯ хочу отримати цю роботу, [___:1] мені потрібні гроші.\n[___:2] я не маю досвіду, я швидко вчуся.\nМенеджер сказав, що я молодий, [___:3] енергійний.\n[___:4] я хвилювався, я пройшов співбесіду добре.\nЯ отримав роботу [___:5] тому, що мій друг там працює.\nТепер я працюю багато, [___:6] я щасливий.\n\n1. тому що / хоча\n> [!answer] тому що\n\n2. Хоча / Тому що\n> [!answer] Хоча\n\n3. зате / бо\n> [!answer] зате\n\n4. Незважаючи на те що / Оскільки\n> [!answer] Незважаючи на те що\n\n5. завдяки / через\n> [!answer] завдяки\n\n6. проте / оскільки\n> [!answer] проте\n\n## dialogue-reorder: Making Excuses\n\n- Чому ти не прийшов на вечірку?\n- Тому що я був дуже зайнятий.\n- Але ти обіцяв!\n- Знаю, проте виникли проблеми на роботі.\n- Хоча б подзвонив!\n- Вибач. Я забув, бо телефон сів.\n- Ну добре. Але наступного разу приходь.\n- Обов'язково!\n\n> [!answer]\n> 1. Чому ти не прийшов на вечірку?\n> 2. Тому що я був дуже зайнятий.\n> 3. Але ти обіцяв!\n> 4. Знаю, проте виникли проблеми на роботі.\n> 5. Хоча б подзвонив!\n> 6. Вибач. Я забув, бо телефон сів.\n> 7. Ну добре. Але наступного разу приходь.\n> 8. Обов'язково!\n\n## mark-the-words: Find the Logic\n\n[Хоча](correct) на вулиці дощ, ми йдемо гуляти. Ми взяли парасольки, [тому що](correct) не хочемо змокнути. [Оскільки](correct) парк близько, ми підемо пішки. Це важко, [проте](correct) корисно. [Все-таки](correct) свіже повітря потрібне.\n\n---\n\n[Завдяки](correct) тренуванням я став сильнішим. [Але](correct) я все ще втомлююся, [через те що](correct) мало сплю.\n\n## error-correction: Fix the Connector\n\n1. Я тут, **але** я хочу допомогти. (Logic error: I am here BECAUSE I want to help)\n   > [!error] але\n   > [!answer] тому що\n   > [!explanation] This is a reason, not a contrast.\n   > [!options] тому що | але\n\n2. **Хоча** йде дощ, я не взяв парасольку. (Correct logic: Even though it rains, I didn't take umbrella - wait, no. \"Oskilky\" - Since it rains, I TOOK. \"Khocha\" - Although it rains, I DIDN'T. Actually this sentence makes sense grammatically but let's assume the user meant \"Therefore\". Let's try a clearer error).\n   \n   *Let's try:*\n   Він багатий, **тому що** нещасливий. (Logic: He is rich, BUT unhappy).\n   > [!error] тому що\n   > [!answer] але\n   > [!explanation] Wealth usually doesn't cause unhappiness directly here; it's a contrast. \"Rich BUT unhappy\".\n   > [!options] але | тому що\n\n3. Ми виграли **через** нашому тренеру. (Positive result requires Thanks To)\n   > [!error] через\n   > [!answer] завдяки\n   > [!explanation] \"Завдяки\" is for positive outcomes (Thanks to). \"Через\" is neutral/negative. Plus case agreement (Dat vs Acc/Gen), but focus on meaning.\n   > [!options] завдяки | через\n\n4. **Бо** ти не хочеш, не роби. (Start of sentence/Logical premise)\n   > [!error] Бо\n   > [!answer] Оскільки\n   > [!explanation] \"Бо\" rarely starts a formal logical sentence. \"Оскільки\" (Since) is better.\n   > [!options] Оскільки | Бо\n\n5. Квартира мала, **тому що** дешева. (Constraint/Positive balance)\n   > [!error] тому що\n   > [!answer] зате\n   > [!explanation] Small is bad, cheap is good. This is a balance: \"Small, BUT cheap\".\n   > [!options] зате | тому що\n\n6. Я запізнився **завдяки** заторам (traffic jams).\n   > [!error] завдяки\n   > [!answer] через\n   > [!explanation] Traffic jams are bad. Use \"через\".\n   > [!options] через | завдяки\n\n## translate: English to Ukrainian\n\n1. I am happy because I am here.\n   - [x] Я щасливий, тому що я тут.\n   - [ ] Я щасливий, хоча я тут.\n\n2. Although it is late, I am working.\n   - [x] Хоча пізно, я працюю.\n   - [ ] Оскільки пізно, я працюю.\n\n3. He is strong, but slow.\n   - [x] Він сильний, але повільний.\n   - [ ] Він сильний, тому що повільний.\n\n4. Since we are friends, I will help.\n   - [x] Оскільки ми друзі, я допоможу.\n   - [ ] Хоча ми друзі, я допоможу.\n\n5. I did it just because.\n   - [x] Я зробив це просто так / бо так захотів.\n   - [ ] Я зробив це проте.\n\n6. Thanks to you, we won.\n   - [x] Завдяки тобі ми виграли.\n   - [ ] Через тебе ми виграли.\n\n7. However, I don't agree.\n   - [x] Проте я не згоден.\n   - [ ] Тому що я не згоден.\n\n8. It is expensive, but (at least) tasty.\n   - [x] Це дорого, зате смачно.\n   - [ ] Це дорого, бо смачно.\n\n9. Still, I love her.\n   - [x] Все-таки я її люблю.\n   - [ ] Оскільки я її люблю.\n\n10. Let him speak.\n    - [x] Нехай він говорить.\n    - [ ] Хоча він говорить.\n\n11. If it weren't for the rain...\n    - [x] Якби не дощ...\n    - [ ] Оскільки дощ...\n\n12. In spite of the fact that he is tired...\n    - [x] Незважаючи на те що він втомлений...\n    - [ ] Тому що він втомлений...\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| тому що | /tɔˈmu ʃt͡ʃɔ/ | because | conj | — | standard |\n| бо | /bɔ/ | because / 'cause | conj | — | colloquial |\n| оскільки | /ɔsˈkilʲkɪ/ | since / inasmuch as | conj | — | logical |\n| через те що | /ˈt͡ʃɛrɛz tɛ ʃt͡ʃɔ/ | due to / because | phrase | — | formal |\n| завдяки тому що | /zɑʋdʲɑˈkɪ tɔˈmu ʃt͡ʃɔ/ | thanks to the fact that | phrase | — | positive |\n| хоча | /xɔˈt͡ʃɑ/ | although | conj | — | contrast |\n| незважаючи на те що | /nɛzʋɑˈʒɑjut͡ʃɪ nɑ tɛ ʃt͡ʃɔ/ | despite the fact that | phrase | — | strong contrast |\n| проте | /prɔˈtɛ/ | however | conj | — | formal contrast |\n| однак | /ɔdˈnɑk/ | however / yet | conj | — | formal contrast |\n| але | /ɑˈlɛ/ | but | conj | — | simple contrast |\n| зате | /zɑˈtɛ/ | but (on the plus side) | conj | — | balance |\n| все-таки | /ˈʋsɛ tɑkɪ/ | still / nevertheless | particle | — | persistence |\n| все ж таки | /ˈʋsɛ ʒ tɑkɪ/ | still / nevertheless | particle | — | persistence |\n| попри те що | /ˈpɔprɪ tɛ ʃt͡ʃɔ/ | in spite of the fact that | phrase | — | formal |\n| хоч і | /xɔt͡ʃ i/ | even though | conj | — | emphasis |\n| хай | /xɑj/ | let / may | particle | — | wish/command |\n| нехай | /nɛˈxɑj/ | let / may | particle | — | wish/command |\n| хоч би | /xɔt͡ʃ bɪ/ | if only / at least | particle | — | wish |\n| дарма що | /dɑrˈmɑ ʃt͡ʃɔ/ | even though (rare) | conj | — | literary |\n| якби не | /jɑkˈbɪ nɛ/ | if it weren't for | phrase | — | conditional |\n| причина | /prɪˈt͡ʃɪnɑ/ | reason / cause | noun | f | logic |\n| наслідок | /ˈnɑsʲlidɔk/ | consequence | noun | m | logic |\n| вибір | /ˈʋɪbir/ | choice | noun | m | logic |\n| думка | /ˈdumkɑ/ | thought / opinion | noun | f | logic |\n| сперечатися | /spɛrɛˈt͡ʃɑtɪsʲɑ/ | to argue / debate | verb | — | action |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-22\ntitle: Because and Although\nsubtitle: \"Explaining Why and Why Not\"\nversion: \"1.0\"\nphase: \"A2.3\"\npedagogy: \"Complex Sentences\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - connectors\n  - reasoning\n  - debating\ngrammar:\n  - causal clauses\n  - concessive clauses\n  - sentence structure\nobjectives:\n  - \"Learner can explain reasons (Because...)\"\n  - \"Learner can express contrast (Although...)\"\n  - \"Learner can link complex ideas\"\nvocabulary_count: 25\n---\n\n# Warm-up\n\nWhy are you learning Ukrainian? *Because* it's beautiful? *Although* it's hard?\nIn this module, you will learn to be a philosopher. You won't just say *what* happened; you will explain *why* it happened, and what happened *despite* obstacles.\n\n**We will cover:**\n- **Reasons:** Тому що, Бо, Оскільки\n- **Contrasts:** Хоча, Проте, Але\n- **Nuance:** \"Thanks to...\" vs \"Because of...\"\n\n> [!note] Think about it\n> A child says \"I want candy.\" An adult says \"I want candy *because* I had a hard day, *although* I know it's bad for my teeth.\" Connectors are the sign of a mature speaker.\n\n---\n\n# Presentation\n\n## 1. The \"Why\": Causal Connectors\n\nTo explain a cause, we have three main friends.\n\n### A. The Standard: Тому що\nThis is the most neutral and common way to say \"because\".\n- **Structure:** [Result] + **,** (comma) + **тому що** + [Reason].\n- *Я не пішов на роботу, тому що захворів.* (I didn't go to work because I got sick.)\n\n### B. The Colloquial: Бо\nShort, snappy, and very Ukrainian. Use it in speech.\n- *Я йду спати, бо втомився.* (I'm going to sleep 'cause I'm tired.)\n- *Чому? — Бо так!* (Why? — Just because! / Cause I said so!)\n\n### C. The Formal/Logical: Оскільки\nOften starts a sentence. Sets up a logical premise.\n- *Оскільки у нас немає часу, ми почнемо відразу.* (Since we have no time, we will start immediately.)\n\n## 2. The \"Despite\": Concessive Connectors\n\nTo show contrast or overcoming an obstacle.\n\n### A. The Classic: Хоча\n- *Хоча він старий, він сильний.* (Although he is old, he is strong.)\n- *Я купив це, хоча це дорого.* (I bought this, although it is expensive.)\n\n### B. The Strong Contrast: Проте / Однак\nThese are formal and strong. **\"Але\"** implies a simple contrast, while **\"Проте\"** adds significantly more weight and formality to the statement.\n- *Це непросте завдання. Проте ми впораємося.* (This is not a simple task. However, we will handle it.)\n\n### C. The Optimist: Зате\nUsed when a negative is balanced by a positive.\n- *Квартира маленька, зате дешева.* (The apartment is small, but (on the plus side) it's cheap.)\n\n## 3. Nuances of \"Because\"\n\nNot all reasons are the same.\n\n- **Через те що** (Due to the fact that): Slightly formal, emphatic.\n- **Завдяки тому що** (Thanks to the fact that): Only for POSITIVE causes.\n  - *Ми виграли завдяки тому, що тренувалися.* (We won thanks to the fact we trained.)\n- **Через** + Noun (Because of):\n  - *Ми запізнилися через дощ.* (We were late because of the rain.)\n\n## 4. The Geometry of Logic\n\nThink of these connectors as shapes:\n- **Arrow (→)**: *Тому що, Бо, Оскільки*. (Reason leads to Result).\n- **Wall (|)**: *Але, Проте*. (Result hits a Barrier).\n- **Bridge (∩)**: *Хоча, Незважаючи на*. (Overcoming the Barrier).\n\n### Deep Dive: \"Через\" vs \"Завдяки\"\nThis distinction is critical.\n- **Через** (Through/Because of) is usually neutral or negative. *\"Ми програли через дощ.\"* (We lost because of rain).\n- **Завдяки** (Thanks to) is ALWAYS positive. *\"Ми виграли завдяки дощу.\"* (We won thanks to rain - maybe the opponent slipped!).\n  - *Mistake:* \"Я захворів завдяки вірусу.\" (I got sick thanks to the virus). \n  - *Correct:* \"Я захворів через вірус.\"\n\n> [!note] Myth: \"Sentence Length\"\n> **Myth:** Short sentences are better.\n> **Reality:** In Ukrainian, long, flowing sentences attached by connectors show education and elegance. Don't be afraid to link 3 or 4 clauses together! This is the sign of a truly fluent speaker who can express complex thoughts.\n\n---\n\n# Cultural Insight\n\n## The \"Bo\" Philosophy\n\nThe word **\"Бо\"** is magical. It is one of the shortest words, yet it carries the weight of an entire argument.\nIn Ukrainian villages or casual conversation, you will hear sentences ending simply with **\"Бо\"**.\n- *\"Ти не підеш туди.\"* (You won't go there.)\n- *\"Чому?\"* (Why?)\n- *\"Бо.\"* (Because.)\n\nIt implies that the reason is obvious, or that the speaker doesn't want to explain. It is the ultimate \"parental\" argument.\n\n## Fatalism vs Optimism\n\nUkrainians often use concessive connectors to express a resilient worldview.\n* **\"Гірше буває.\"** (It happens worse.)\n* **\"Все буде добре.\"** (Everything will be fine.)\n\nWhen something bad happens, a Ukrainian might say: *\"Ми втратили гроші, **але** ми живі.\"* (We lost money, but we are alive). This structure (Negative + **Але** + Positive) is a cultural coping mechanism.\n\n> [!tip] Intonation Warning\n> When you use **\"Але\"** or **\"Проте\"**, raise the pitch of your voice slightly to signal that a contrast is coming. It catches the listener's attention!\n\n---\n\n# Language in Action\n\n## Dialogue: The Great Debate\n\nAndriy and Olena are arguing about buying a car.\n\n**Andriy:** Нам треба купити машину, **тому що** я втомився від автобусів.\n**Olena:** **Але** це дуже дорого!\n**Andriy:** **Хоча** це дорого, **зате** ми будемо вільні. Ми зможемо поїхати в Карпати!\n**Olena:** **Оскільки** ми не маємо гаража, машина буде стояти на вулиці.\n**Andriy:** Ну і що? **Проте** вона буде наша.\n**Olena:** Я думаю, краще зробити ремонт у квартирі.\n**Andriy:** Ремонт можна зробити пізніше, **бо** ціни на матеріали ростуть.\n**Olena:** А ціни на бензин не ростуть?\n**Andriy:** Ростуть, **однак** комфорт важливіший.\n**Olena:** Ти мене не переконаєш. **Все-таки** краще почекати.\n**Andriy:** Добре, **нехай** буде по-твоєму. **Але** я все одно хочу машину!\n\n### Debate Strategy\nNotice how they parry each other's points:\n1.  **Point:** I'm tired. (Reason)\n2.  **Counter:** Expensive. (Contrast)\n3.  **Rebuttal:** Expensive BUT freedom. (Concession + Positive)\n4.  **Logical Block:** No garage. (Premise)\n\n> [!history] Rhetoric\n> Ukrainians love a good debate (**суперечка**). Historically, Cossack councils (**Ради**) were places of fierce argument. The ability to speak well (\"красномовство\") is highly valued.\n\n---\n\n## The Debate\n\nRead this conversation between optimists and pessimists.\n\n**Оптиміст:** Я люблю зиму, **тому що** можна кататися на лижах.\n**Песиміст:** **Але** холодно!\n**Оптиміст:** **Хоча** холодно, **зате** красиво. Сніг блищить!\n**Песиміст:** Сніг мокрий. **Оскільки** я не маю теплих черевиків, я захворію.\n**Оптиміст:** Ти захворієш не **через** сніг, а **через те, що** ти завжди занадто сильно скаржишся!\n**Песиміст:** Я не скаржуся, я реаліст. **Все-таки** зима — це важкий час.\n**Оптиміст:** **Проте** скоро Новий рік!\n**Песиміст:** **Ну і що?** (So what?)\n\n### Analysis\n1.  **Хоча..., зате...**: The classic balance. \"Although cold, (at least) beautiful.\"\n2.  **Оскільки**: Establishing a logical reason (\"Since I don't have boots...\").\n3.  **Все-таки**: \"Still / Nevertheless\" — holding onto an opinion.\n\n> [!tip] Comma Rule\n> In Ukrainian, you almost ALWAYS put a comma before \"тому що\", \"бо\", \"але\", \"хоча\", \"що\", \"який\".\n> - English: I stayed because it rained.\n> - Ukrainian: Я залишився**,** тому що йшов дощ. (The comma is mandatory!)\n\n---\n\n# Summary\n\nYou have unlocked the power of complex thought!\n\n| Logic | Connector | Context |\n|-------|-----------|---------|\n| **Reason** | **Тому що** | Standard \"Because\" |\n| **Reason** | **Бо** | Short/Spoken \"Cause\" |\n| **Logic** | **Оскільки** | Formal \"Since\" |\n| **Contrast** | **Хоча** | \"Although\" |\n| **Contrast** | **Проте** | Strong \"However\" |\n| **Balance** | **Зате** | \"But at least...\" |\n\nDon't forget the comma!\n\n---\n\n# Activities\n\n## match-up: Logic Pairs\n\n> Match the sentence halves logically.\n\n- Я не пішов гуляти :: тому що йшов дощ.\n- Хоча він багатий, :: він нещасливий.\n- Вона вивчила мову, :: бо багато вчилася.\n- Кімната мала, :: зате затишна.\n- Оскільки ми спізнюємося, :: візьмемо таксі.\n- Ми не поїхали :: через погоду.\n- Я запізнився, :: бо проспав.\n- Вона сміється, :: незважаючи на сльози.\n\n## fill-in: Choose the Connector\n\n> Fill in the blanks.\n\n1. Я люблю літо, ___ тепло. (because - standard)\n   > [!answer] тому що\n   > [!options] тому що | хоча | проте | зате\n\n2. ___ я не голодний, я з'їм яблуко. (Although)\n   > [!answer] Хоча\n   > [!options] Хоча | Бо | Тому що | Через\n\n3. Він не знає адреси, ___ він знайде будинок. (however)\n   > [!answer] проте\n   > [!options] проте | бо | оскільки | тому що\n\n4. Робота важка, ___ цікава. (but at least)\n   > [!answer] зате\n   > [!options] зате | тому що | бо | через\n\n5. ___ ти тут, допоможи мені. (Since)\n   > [!answer] Оскільки\n   > [!options] Оскільки | Хоча | Але | Проте\n\n6. Чому ти сумуєш? — ___! (Colloquial \"Just because\")\n   > [!answer] Бо\n   > [!options] Бо | Проте | Хоча | Зате\n\n7. Ми перемогли ___ тренеру. (thanks to - positive)\n   > [!answer] завдяки\n   > [!options] завдяки | через | бо | тому що\n\n8. Я не спав ___ шум. (because of - noun)\n   > [!answer] через\n   > [!options] через | бо | тому що | зате\n\n9. Він все робить, ___ втомлений. (despite the fact that)\n   > [!answer] незважаючи на те що\n   > [!options] незважаючи на те що | тому що | бо | оскільки\n\n10. ___ це правда, я не вірю. (Even if)\n    > [!answer] Хоч і\n    > [!options] Хоч і | Тому що | Бо | Зате\n\n11. Це було давно, ___ я пам'ятаю. (nevertheless/still)\n    > [!answer] все ж таки\n    > [!options] все ж таки | тому що | бо | оскільки\n\n12. ___ він прийде! (Let/May)\n    > [!answer] Нехай\n    > [!options] Нехай | Хоча | Але | Проте\n\n## quiz: Understand the Logic\n\n1. \"Хоча\" means:\n   - [x] Although\n   - [ ] Because\n   - [ ] Therefore\n\n2. \"Бо\" is a short form of:\n   - [x] Тому що\n   - [ ] Але\n   - [ ] Або\n\n3. Which word introduces a POSITIVE cause?\n   - [x] Завдяки\n   - [ ] Через\n   - [ ] Проте\n\n4. \"Зате\" is best used when:\n   - [x] Finding a positive side to a negative situation\n   - [ ] Explaining a strict logical reason\n   - [ ] Changing the subject\n\n5. Which sentence needs a comma?\n   - [x] Я йду тому що хочу. (Needs comma before тому що)\n   - [ ] Я йду.\n\n6. \"Оскільки\" usually comes:\n   - [x] At the beginning of a sentence\n   - [ ] At the very end\n   - [ ] After the verb\n\n7. \"Все-таки\" means:\n   - [x] Still / After all / Nevertheless\n   - [ ] Because\n   - [ ] Or\n\n8. \"Проте\" is stronger than:\n   - [x] Але\n   - [ ] І\n   - [ ] Чи\n\n9. \"Через те що\" means:\n   - [x] Due to the fact that\n   - [ ] In spite of\n   - [ ] If only\n\n10. \"Якби не\" starts:\n    - [x] A hypothetical condition\n    - [ ] A strict fact\n    - [ ] A question\n\n11. \"Дарма що\" is a synonym for:\n    - [x] Хоча\n    - [ ] Тому що\n    - [ ] Коли\n\n12. \"Нехай\" expresses:\n    - [x] Permission/Wish\n    - [ ] Denial\n    - [ ] Reason\n\n## unjumble: Build the Argument\n\n1. я / тому що / вдома / хворий / сиджу\n   > [!answer] Я сиджу вдома, тому що хворий.\n\n2. хоча / пішов / дощ / ми / гуляти\n   > [!answer] Хоча йшов дощ, ми пішли гуляти.\n\n3. він / розумний / лінивий / але\n   > [!answer] Він розумний, але лінивий.\n\n4. дорога / зате / довга / красива\n   > [!answer] Дорога довга, зате красива.\n\n5. оскільки / ми / тут / почнемо\n   > [!answer] Оскільки ми тут, почнемо.\n\n6. все-таки / я / правий / думаю / що\n   > [!answer] Я все-таки думаю, що правий.\n\n## group-sort: Cause vs Contrast\n\n### Causes (Why?)\n- Тому що\n- Бо\n- Оскільки\n- Через те що\n- Завдяки тому що\n\n### Contrasts (But/Although)\n- Хоча\n- Але\n- Проте\n- Зате\n- Однак\n- Незважаючи на те що\n\n## true-false: Grammar Rules\n\n1. You must use a comma before \"тому що\".\n   - [x] True\n   > Always!\n\n2. \"Бо\" is very formal and academic.\n   - [ ] True\n   - [x] False\n   > It is conversational.\n\n3. \"Завдяки\" is used for bad things (like \"Thanks to the rain, I got wet\").\n   - [ ] True\n   - [x] False\n   > No, \"Завдяки\" implies gratitude. Use \"Через\" for neutral/negative causes.\n\n4. \"Оскільки\" sets up a logical premise.\n   - [x] True\n   > Since X is true, then Y.\n\n5. \"Хоча\" introduces a reason.\n   - [ ] True\n   - [x] False\n   > It introduces a concession (Although).\n\n6. \"Проте\" means \"And then\".\n   - [ ] True\n   - [x] False\n   > It means \"However\".\n\n7. \"Все ж таки\" emphasizes persistence of an opinion or fact.\n   - [x] True\n   > \"Still / Nevertheless\".\n\n8. You can end a sentence with \"Бо\" in casual speech.\n   - [x] True\n   > \"Чому? Бо.\"\n\n9. \"Якби не\" is used for real situations.\n   - [ ] True\n   - [x] False\n   > It's hypothetical (\"If it weren't for...\").\n\n10. \"Але\" and \"Проте\" are synonyms, but \"Проте\" is stronger.\n    - [x] True\n    > Yes.\n\n## cloze: The Job Interview\n\n> Complete the text.\n\nЯ хочу отримати цю роботу, [___:1] мені потрібні гроші.\n[___:2] я не маю досвіду, я швидко вчуся.\nМенеджер сказав, що я молодий, [___:3] енергійний.\n[___:4] я хвилювався, я пройшов співбесіду добре.\nЯ отримав роботу [___:5] тому, що мій друг там працює.\nТепер я працюю багато, [___:6] я щасливий.\n\n1. тому що / хоча\n> [!answer] тому що\n\n2. Хоча / Тому що\n> [!answer] Хоча\n\n3. зате / бо\n> [!answer] зате\n\n4. Незважаючи на те що / Оскільки\n> [!answer] Незважаючи на те що\n\n5. завдяки / через\n> [!answer] завдяки\n\n6. проте / оскільки\n> [!answer] проте\n\n## dialogue-reorder: Making Excuses\n\n- Чому ти не прийшов на вечірку?\n- Тому що я був дуже зайнятий.\n- Але ти обіцяв!\n- Знаю, проте виникли проблеми на роботі.\n- Хоча б подзвонив!\n- Вибач. Я забув, бо телефон сів.\n- Ну добре. Але наступного разу приходь.\n- Обов'язково!\n\n> [!answer]\n> 1. Чому ти не прийшов на вечірку?\n> 2. Тому що я був дуже зайнятий.\n> 3. Але ти обіцяв!\n> 4. Знаю, проте виникли проблеми на роботі.\n> 5. Хоча б подзвонив!\n> 6. Вибач. Я забув, бо телефон сів.\n> 7. Ну добре. Але наступного разу приходь.\n> 8. Обов'язково!\n\n## mark-the-words: Find the Logic\n\n[Хоча](correct) на вулиці дощ, ми йдемо гуляти. Ми взяли парасольки, [тому що](correct) не хочемо змокнути. [Оскільки](correct) парк близько, ми підемо пішки. Це важко, [проте](correct) корисно. [Все-таки](correct) свіже повітря потрібне.\n\n---\n\n[Завдяки](correct) тренуванням я став сильнішим. [Але](correct) я все ще втомлююся, [через те що](correct) мало сплю.\n\n## error-correction: Fix the Connector\n\n1. Я тут, **але** я хочу допомогти. (Logic error: I am here BECAUSE I want to help)\n   > [!error] але\n   > [!answer] тому що\n   > [!explanation] This is a reason, not a contrast.\n   > [!options] тому що | але\n\n2. **Хоча** йде дощ, я не взяв парасольку. (Correct logic: Even though it rains, I didn't take umbrella - wait, no. \"Oskilky\" - Since it rains, I TOOK. \"Khocha\" - Although it rains, I DIDN'T. Actually this sentence makes sense grammatically but let's assume the user meant \"Therefore\". Let's try a clearer error).\n   \n   *Let's try:*\n   Він багатий, **тому що** нещасливий. (Logic: He is rich, BUT unhappy).\n   > [!error] тому що\n   > [!answer] але\n   > [!explanation] Wealth usually doesn't cause unhappiness directly here; it's a contrast. \"Rich BUT unhappy\".\n   > [!options] але | тому що\n\n3. Ми виграли **через** нашому тренеру. (Positive result requires Thanks To)\n   > [!error] через\n   > [!answer] завдяки\n   > [!explanation] \"Завдяки\" is for positive outcomes (Thanks to). \"Через\" is neutral/negative. Plus case agreement (Dat vs Acc/Gen), but focus on meaning.\n   > [!options] завдяки | через\n\n4. **Бо** ти не хочеш, не роби. (Start of sentence/Logical premise)\n   > [!error] Бо\n   > [!answer] Оскільки\n   > [!explanation] \"Бо\" rarely starts a formal logical sentence. \"Оскільки\" (Since) is better.\n   > [!options] Оскільки | Бо\n\n5. Квартира мала, **тому що** дешева. (Constraint/Positive balance)\n   > [!error] тому що\n   > [!answer] зате\n   > [!explanation] Small is bad, cheap is good. This is a balance: \"Small, BUT cheap\".\n   > [!options] зате | тому що\n\n6. Я запізнився **завдяки** заторам (traffic jams).\n   > [!error] завдяки\n   > [!answer] через\n   > [!explanation] Traffic jams are bad. Use \"через\".\n   > [!options] через | завдяки\n\n## translate: English to Ukrainian\n\n1. I am happy because I am here.\n   - [x] Я щасливий, тому що я тут.\n   - [ ] Я щасливий, хоча я тут.\n\n2. Although it is late, I am working.\n   - [x] Хоча пізно, я працюю.\n   - [ ] Оскільки пізно, я працюю.\n\n3. He is strong, but slow.\n   - [x] Він сильний, але повільний.\n   - [ ] Він сильний, тому що повільний.\n\n4. Since we are friends, I will help.\n   - [x] Оскільки ми друзі, я допоможу.\n   - [ ] Хоча ми друзі, я допоможу.\n\n5. I did it just because.\n   - [x] Я зробив це просто так / бо так захотів.\n   - [ ] Я зробив це проте.\n\n6. Thanks to you, we won.\n   - [x] Завдяки тобі ми виграли.\n   - [ ] Через тебе ми виграли.\n\n7. However, I don't agree.\n   - [x] Проте я не згоден.\n   - [ ] Тому що я не згоден.\n\n8. It is expensive, but (at least) tasty.\n   - [x] Це дорого, зате смачно.\n   - [ ] Це дорого, бо смачно.\n\n9. Still, I love her.\n   - [x] Все-таки я її люблю.\n   - [ ] Оскільки я її люблю.\n\n10. Let him speak.\n    - [x] Нехай він говорить.\n    - [ ] Хоча він говорить.\n\n11. If it weren't for the rain...\n    - [x] Якби не дощ...\n    - [ ] Оскільки дощ...\n\n12. In spite of the fact that he is tired...\n    - [x] Незважаючи на те що він втомлений...\n    - [ ] Тому що він втомлений...\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| тому що | /tɔˈmu ʃt͡ʃɔ/ | because | conj | — | standard |\n| бо | /bɔ/ | because / 'cause | conj | — | colloquial |\n| оскільки | /ɔsˈkilʲkɪ/ | since / inasmuch as | conj | — | logical |\n| через те що | /ˈt͡ʃɛrɛz tɛ ʃt͡ʃɔ/ | due to / because | phrase | — | formal |\n| завдяки тому що | /zɑʋdʲɑˈkɪ tɔˈmu ʃt͡ʃɔ/ | thanks to the fact that | phrase | — | positive |\n| хоча | /xɔˈt͡ʃɑ/ | although | conj | — | contrast |\n| незважаючи на те що | /nɛzʋɑˈʒɑjut͡ʃɪ nɑ tɛ ʃt͡ʃɔ/ | despite the fact that | phrase | — | strong contrast |\n| проте | /prɔˈtɛ/ | however | conj | — | formal contrast |\n| однак | /ɔdˈnɑk/ | however / yet | conj | — | formal contrast |\n| але | /ɑˈlɛ/ | but | conj | — | simple contrast |\n| зате | /zɑˈtɛ/ | but (on the plus side) | conj | — | balance |\n| все-таки | /ˈʋsɛ tɑkɪ/ | still / nevertheless | particle | — | persistence |\n| все ж таки | /ˈʋsɛ ʒ tɑkɪ/ | still / nevertheless | particle | — | persistence |\n| попри те що | /ˈpɔprɪ tɛ ʃt͡ʃɔ/ | in spite of the fact that | phrase | — | formal |\n| хоч і | /xɔt͡ʃ i/ | even though | conj | — | emphasis |\n| хай | /xɑj/ | let / may | particle | — | wish/command |\n| нехай | /nɛˈxɑj/ | let / may | particle | — | wish/command |\n| хоч би | /xɔt͡ʃ bɪ/ | if only / at least | particle | — | wish |\n| дарма що | /dɑrˈmɑ ʃt͡ʃɔ/ | even though (rare) | conj | — | literary |\n| якби не | /jɑkˈbɪ nɛ/ | if it weren't for | phrase | — | conditional |\n| причина | /prɪˈt͡ʃɪnɑ/ | reason / cause | noun | f | logic |\n| наслідок | /ˈnɑsʲlidɔk/ | consequence | noun | m | logic |\n| вибір | /ˈʋɪbir/ | choice | noun | m | logic |\n| думка | /ˈdumkɑ/ | thought / opinion | noun | f | logic |\n| сперечатися | /spɛrɛˈt͡ʃɑtɪsʲɑ/ | to argue / debate | verb | — | action |\n",
+    "createdAt": "2025-12-15T20:02:03.010365Z",
+    "modifiedAt": "2025-12-15T20:02:03.010365Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-26",
+    "level": "A2",
+    "phase": "A2.3",
+    "wordCount": 25,
+    "newWordCount": 25,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "тому що",
+        "ipa": "/tɔˈmu ʃt͡ʃɔ/",
+        "en": "because",
+        "pos": "conj",
+        "gender": null,
+        "note": "standard"
+      },
+      {
+        "id": "vocab-2",
+        "uk": "бо",
+        "ipa": "/bɔ/",
+        "en": "because / 'cause",
+        "pos": "conj",
+        "gender": null,
+        "note": "colloquial"
+      },
+      {
+        "id": "vocab-3",
+        "uk": "оскільки",
+        "ipa": "/ɔsˈkilʲkɪ/",
+        "en": "since / inasmuch as",
+        "pos": "conj",
+        "gender": null,
+        "note": "logical"
+      },
+      {
+        "id": "vocab-4",
+        "uk": "через те що",
+        "ipa": "/ˈt͡ʃɛrɛz tɛ ʃt͡ʃɔ/",
+        "en": "due to / because",
+        "pos": "phrase",
+        "gender": null,
+        "note": "formal"
+      },
+      {
+        "id": "vocab-5",
+        "uk": "завдяки тому що",
+        "ipa": "/zɑʋdʲɑˈkɪ tɔˈmu ʃt͡ʃɔ/",
+        "en": "thanks to the fact that",
+        "pos": "phrase",
+        "gender": null,
+        "note": "positive"
+      },
+      {
+        "id": "vocab-6",
+        "uk": "хоча",
+        "ipa": "/xɔˈt͡ʃɑ/",
+        "en": "although",
+        "pos": "conj",
+        "gender": null,
+        "note": "contrast"
+      },
+      {
+        "id": "vocab-7",
+        "uk": "незважаючи на те що",
+        "ipa": "/nɛzʋɑˈʒɑjut͡ʃɪ nɑ tɛ ʃt͡ʃɔ/",
+        "en": "despite the fact that",
+        "pos": "phrase",
+        "gender": null,
+        "note": "strong contrast"
+      },
+      {
+        "id": "vocab-8",
+        "uk": "проте",
+        "ipa": "/prɔˈtɛ/",
+        "en": "however",
+        "pos": "conj",
+        "gender": null,
+        "note": "formal contrast"
+      },
+      {
+        "id": "vocab-9",
+        "uk": "однак",
+        "ipa": "/ɔdˈnɑk/",
+        "en": "however / yet",
+        "pos": "conj",
+        "gender": null,
+        "note": "formal contrast"
+      },
+      {
+        "id": "vocab-10",
+        "uk": "але",
+        "ipa": "/ɑˈlɛ/",
+        "en": "but",
+        "pos": "conj",
+        "gender": null,
+        "note": "simple contrast"
+      },
+      {
+        "id": "vocab-11",
+        "uk": "зате",
+        "ipa": "/zɑˈtɛ/",
+        "en": "but (on the plus side)",
+        "pos": "conj",
+        "gender": null,
+        "note": "balance"
+      },
+      {
+        "id": "vocab-12",
+        "uk": "все-таки",
+        "ipa": "/ˈʋsɛ tɑkɪ/",
+        "en": "still / nevertheless",
+        "pos": "particle",
+        "gender": null,
+        "note": "persistence"
+      },
+      {
+        "id": "vocab-13",
+        "uk": "все ж таки",
+        "ipa": "/ˈʋsɛ ʒ tɑkɪ/",
+        "en": "still / nevertheless",
+        "pos": "particle",
+        "gender": null,
+        "note": "persistence"
+      },
+      {
+        "id": "vocab-14",
+        "uk": "попри те що",
+        "ipa": "/ˈpɔprɪ tɛ ʃt͡ʃɔ/",
+        "en": "in spite of the fact that",
+        "pos": "phrase",
+        "gender": null,
+        "note": "formal"
+      },
+      {
+        "id": "vocab-15",
+        "uk": "хоч і",
+        "ipa": "/xɔt͡ʃ i/",
+        "en": "even though",
+        "pos": "conj",
+        "gender": null,
+        "note": "emphasis"
+      },
+      {
+        "id": "vocab-16",
+        "uk": "хай",
+        "ipa": "/xɑj/",
+        "en": "let / may",
+        "pos": "particle",
+        "gender": null,
+        "note": "wish/command"
+      },
+      {
+        "id": "vocab-17",
+        "uk": "нехай",
+        "ipa": "/nɛˈxɑj/",
+        "en": "let / may",
+        "pos": "particle",
+        "gender": null,
+        "note": "wish/command"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "хоч би",
+        "ipa": "/xɔt͡ʃ bɪ/",
+        "en": "if only / at least",
+        "pos": "particle",
+        "gender": null,
+        "note": "wish"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "дарма що",
+        "ipa": "/dɑrˈmɑ ʃt͡ʃɔ/",
+        "en": "even though (rare)",
+        "pos": "conj",
+        "gender": null,
+        "note": "literary"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "якби не",
+        "ipa": "/jɑkˈbɪ nɛ/",
+        "en": "if it weren't for",
+        "pos": "phrase",
+        "gender": null,
+        "note": "conditional"
+      },
+      {
+        "id": "vocab-21",
+        "uk": "причина",
+        "ipa": "/prɪˈt͡ʃɪnɑ/",
+        "en": "reason / cause",
+        "pos": "noun",
+        "gender": "f",
+        "note": "logic"
+      },
+      {
+        "id": "vocab-22",
+        "uk": "наслідок",
+        "ipa": "/ˈnɑsʲlidɔk/",
+        "en": "consequence",
+        "pos": "noun",
+        "gender": "m",
+        "note": "logic"
+      },
+      {
+        "id": "vocab-23",
+        "uk": "вибір",
+        "ipa": "/ˈʋɪbir/",
+        "en": "choice",
+        "pos": "noun",
+        "gender": "m",
+        "note": "logic"
+      },
+      {
+        "id": "vocab-24",
+        "uk": "думка",
+        "ipa": "/ˈdumkɑ/",
+        "en": "thought / opinion",
+        "pos": "noun",
+        "gender": "f",
+        "note": "logic"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "сперечатися",
+        "ipa": "/spɛrɛˈt͡ʃɑtɪsʲɑ/",
+        "en": "to argue / debate",
+        "pos": "verb",
+        "gender": null,
+        "note": "action"
+      }
+    ],
+    "reviewWords": []
+  }
+}

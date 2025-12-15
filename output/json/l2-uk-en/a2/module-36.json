@@ -1,0 +1,420 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-36",
+    "moduleId": "mod-uk-A2-36",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.4",
+    "moduleNumber": 36,
+    "moduleType": "grammar",
+    "pedagogy": "PPP",
+    "immersionLevel": 0.4,
+    "title": "Advanced Motion Prefixes",
+    "titleUk": null,
+    "subtitle": "Complex Paths: Crossing, Stopping, Going Around",
+    "description": "Learner can describe complex motion paths",
+    "objectives": [
+      "Learner can describe complex motion paths",
+      "Learner can use prefixes to express crossing, passing, stopping by",
+      "Learner can give and follow directional instructions"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "advanced motion prefixes (пере-, за-, про-, під-, об-, до-)",
+      "path semantics in motion verbs"
+    ],
+    "tags": [
+      "motion verbs",
+      "prefixes",
+      "spatial",
+      "advanced"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "In A1, you learned basic motion verbs (йти, їхати). In earlier A2 modules, you learned simple prefixes.\n\nNow we go deeper into **advanced motion prefixes** that describe complex paths:\n- **пере-** = across, over, re-\n- **за-** = behind, stopping by, beginning\n- **про-** = through, past\n- **під-** = approach from below\n- **об-** = around\n- **до-** = reaching the destination\n\nThese prefixes transform simple motion into precise navigation. After this module, you'll give directions like a local!\n\nMotion prefixes are essential for everyday communication. When you give directions, describe your commute, or tell travel stories, you need these prefixes to be accurate. English uses prepositions for this purpose, but Ukrainian embeds the path information directly into the verb. This is both elegant and efficient.\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "Prefix Group 1: Crossing & Through",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Пере- (Across, Over, Re-)\n\nThe prefix **пере-** indicates crossing from one side to another.\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| перейти | to cross on foot | Перейди вулицю! |\n| переїхати | to cross by vehicle | Ми переїхали міст. |\n| переплисти | to swim across | Він переплив річку. |\n\n**Related Meanings:**\n- пере- can also mean \"re-\" (doing again): переробити = to redo\n- пере- can mean \"excessively\": переїсти = to overeat\n\n> [!tip] Візуалізуйте!\n> Уявіть, що пере- означає лінію, яку ви перетинаєте.\n> Ви починаєте з одного боку і закінчуєте з іншого.\n> Вулиця, річка, міст — всі мають \"інший бік\" для пере-.\n\n## Про- (Through, Past)\n\nThe prefix **про-** indicates passing through or going past something.\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| пройти | to walk through/past | Ми пройшли через парк. |\n| проїхати | to drive through/past | Автобус проїхав зупинку. |\n| пролетіти | to fly through/past | Літак пролетів над нами. |\n\n**Key Distinction:**\n- пере- = cross to the other side\n- про- = pass through/by without stopping\n\n> [!tip] Пере- vs Про-\n> **Перейти вулицю** = Cross the street (reach the other side).\n> **Пройти вулицю** = Walk through/along the street (from end to end).\n> The difference is the perspective: crossing vs traversing.\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Prefix Group 2: Stopping & Arriving",
+        "nameEn": null,
+        "type": "content",
+        "content": "## За- (Behind, Stopping By, Beginning)\n\nThe prefix **за-** has multiple meanings related to motion:\n\n**Meaning 1: Behind**\n| Verb | Meaning | Example |\n|------|---------|---------|\n| зайти | to go behind | Сонце зайшло за хмару. |\n| заїхати | to drive behind | Таксі заїхало за будинок. |\n\n**Meaning 2: Stopping By**\n| Verb | Meaning | Example |\n|------|---------|---------|\n| зайти | to stop by, drop in | Зайди до мене ввечері! |\n| заїхати | to stop by (driving) | Заїдь за хлібом. |\n\n**Meaning 3: Beginning Motion**\n| Verb | Meaning | Example |\n|------|---------|---------|\n| заплакати | to start crying | Дитина заплакала. |\n| заспівати | to start singing | Вона заспівала пісню. |\n\n> [!cultural] Важлива Традиція\n> Українці часто кажуть: \"Заходь до нас!\"\n> Це означає: \"Приходь у гості!\"\n> Гостинність дуже важлива в українській культурі.\n\n## До- (Reaching Destination)\n\nThe prefix **до-** indicates reaching a destination or completing motion.\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| дійти | to walk to (reach) | Ми дійшли до парку. |\n| доїхати | to drive to (reach) | Вони доїхали до міста. |\n| добігти | to run to (reach) | Він добіг до фінішу. |\n\n**Important:** До- emphasizes reaching the endpoint, not the journey.\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Prefix Group 3: Around & Under",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Об- / Обі- (Around)\n\nThe prefix **об-** indicates going around something.\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| обійти | to walk around | Обійди озеро справа. |\n| об'їхати | to drive around | Треба об'їхати пробку. |\n\n**Also used for:**\n- обійняти = to embrace (arms \"around\")\n- обдумати = to think over (thoughts \"around\" the topic)\n\n> [!tip] Візуалізуйте Об-\n> Уявіть коло навколо об'єкта.\n> Ви рухаєтесь по колу, не перетинаючи центр.\n> Це відрізняється від \"пере-\" (через) і \"про-\" (насквозь).\n\n## Під- (Under, Approaching)\n\nThe prefix **під-** indicates approaching from below or getting closer.\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| підійти | to approach (on foot) | Підійди ближче! |\n| під'їхати | to approach (driving) | Таксі під'їхало до вокзалу. |\n| підлетіти | to fly up to | Птах підлетів до вікна. |\n\n**Related Meanings:**\n- під- also means support: підтримати = to support\n- під- means raising slightly: підняти = to lift up\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Story Time: Екскурсія Містом",
+        "nameEn": null,
+        "type": "content",
+        "content": "Туристи пішли на екскурсію містом. Гід розповідав:\n\n— Спочатку ми **перейдемо** вулицю і **підійдемо** до головної площі. Там **зайдемо** в музей на годину.\n\nПісля музею гід сказав:\n— Тепер ми **пройдемо** через парк. Не **обходьте** пам'ятник — фотографуйте його!\n\nТуристи **дійшли** до старого замку. Гід пояснив:\n— Ми можемо **обійти** замок навколо. Або **проїхати** через арку на автобусі.\n\nОдин турист запитав:\n— А можна **заїхати** в кафе?\n— Так, ми **заїдемо** за кавою після замку.\n\nУвечері всі **дійшли** до готелю втомлені, але задоволені!\n\n> [!cultural] Українські Екскурсії\n> В Україні є багато чудових міст для екскурсій.\n> Львів, Київ, Одеса — кожне місто має свою історію.\n> Українці пишаються своєю культурою та архітектурою.\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Story Time Part 2: Дорога на Роботу",
+        "nameEn": null,
+        "type": "content",
+        "content": "Олег їде на роботу щодня. Його маршрут складний.\n\nСпочатку він **виходить** з дому і **підходить** до зупинки. Автобус **під'їжджає** до зупинки о восьмій.\n\nОлег **заходить** в автобус. Автобус **проїжджає** три зупинки. Потім Олег **виходить** і **переходить** вулицю.\n\nВін **проходить** повз магазин. Іноді він **заходить** за кавою. Потім він **доходить** до офісу.\n\nУ обід він **обходить** квартал для прогулянки. Він **проходить** повз парк і **заходить** в кафе.\n\nУвечері він **їде** додому тим самим маршрутом. Іноді він **заїжджає** в супермаркет по дорозі.\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Story Time Part 3: Подорож до Карпат",
+        "nameEn": null,
+        "type": "content",
+        "content": "Родина вирішила поїхати до Карпат на вихідні. Вони **виїхали** з Києва рано вранці.\n\nПо дорозі вони **проїхали** багато маленьких сіл. Вони **заїхали** в одне село за молоком і сиром. Місцеві люди були дуже привітні.\n\nКоли вони **доїхали** до гір, краєвид був чудовий! Вони **зайшли** в готель і відпочили.\n\nНаступного дня вони пішли в похід. Вони **перейшли** маленьку річку по камінцях. Вони **підійшли** до водоспаду і сфотографувались. Потім вони **обійшли** озеро і **дійшли** до вершини гори.\n\nНа вершині було холодно, але краєвид був неймовірний! Вони могли бачити весь регіон. Вони **пройшли** по стежці назад до готелю.\n\nУвечері вони сиділи біля вогнища і розповідали історії. Це був чудовий відпочинок!\n\n> [!cultural] Карпати — Серце України\n> Карпатські гори — це популярне місце для відпочинку.\n> Тут можна ходити в походи, кататися на лижах, і насолоджуватися природою.\n> Гуцули — це етнічна група, яка живе в Карпатах і має унікальну культуру.\n\n---"
+      },
+      {
+        "id": "section-8",
+        "name": "Deep Dive: Prefix Combinations",
+        "nameEn": null,
+        "type": "content",
+        "content": "Advanced speakers combine prefixes for even more precise meanings. Here are some examples you may encounter:\n\n**Ви + за = вийти + зайти (Exit and enter):**\n- Він вийшов і зайшов знову. (He exited and entered again.)\n\n**Про + пере = проїхати + переїхати (Pass through and cross):**\n- Ми проїхали місто і переїхали міст. (We drove through the city and crossed the bridge.)\n\n**Під + до = підійти + дійти (Approach and reach):**\n- Він підійшов до дверей і дійшов до кабінету. (He approached the door and reached the office.)\n\nUnderstanding these combinations will help you describe complex journeys with precision. This is an advanced skill that develops with time and practice.\n\n---"
+      },
+      {
+        "id": "section-9",
+        "name": "Common Mistakes",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Mistake 1: Confusing Пере- and Про-\n\n❌ Я проїхав вулицю. (Means you drove along it, not crossed it.)\n✅ Я переїхав вулицю. (You crossed to the other side.)\n\n## Mistake 2: Using За- Incorrectly\n\n❌ Я зайшов в магазин. (Incorrect preposition.)\n✅ Я зайшов до магазину. (Correct: зайти + до + Genitive.)\n\n## Mistake 3: Forgetting the Apostrophe with Об-\n\n❌ Обьїхати\n✅ Об'їхати (The apostrophe is required before я/ю/є/ї.)\n\n---"
+      },
+      {
+        "id": "section-10",
+        "name": "Language Learning Tip",
+        "nameEn": null,
+        "type": "content",
+        "content": "Motion prefix mastery comes from visualization. For each prefix, create a mental image of the path:\n\n- **пере-** = imagine a bridge crossing a river\n- **про-** = imagine walking through a tunnel\n- **за-** = imagine going behind a building\n- **об-** = imagine walking around a lake\n- **до-** = imagine reaching a flag at the finish line\n- **під-** = imagine approaching a platform from below\n\nWhen you hear a motion verb, visualize the path first. This will help you understand and produce the correct prefix naturally.\n\n---"
+      },
+      {
+        "id": "section-11",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "Today you learned advanced motion prefixes:\n\n| Prefix | Core Meaning | Example |\n|--------|--------------|---------|\n| **пере-** | across, over | перейти вулицю |\n| **про-** | through, past | пройти парк |\n| **за-** | behind, stopping by | зайти в магазин |\n| **до-** | reaching destination | дійти до парку |\n| **об-** | around | обійти озеро |\n| **під-** | approaching | підійти ближче |\n\nThese prefixes combine with motion verbs to create precise navigation instructions.\n\n---"
+      },
+      {
+        "id": "section-12",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Prefix Meanings\n\n> Match the prefix to its core meaning.\n\n- пере- :: across, over\n- про- :: through, past\n- за- :: behind, stopping by\n- до- :: reaching destination\n- об- :: around\n- під- :: approaching\n- ви- :: out\n- в-/у- :: into\n\n## fill-in: Choose the Prefix\n\n> Select the correct prefix.\n\n1. [___]йти вулицю (to cross the street)\n   > [!answer] Пере\n   > [!options] Пере | Про | За\n\n2. [___]їхати через місто (to drive through the city)\n   > [!answer] Про\n   > [!options] Про | Пере | За\n\n3. [___]йти в кафе (to stop by the cafe)\n   > [!answer] За\n   > [!options] За | Про | До\n\n4. [___]йти до парку (to reach the park)\n   > [!answer] До\n   > [!options] До | За | Про\n\n5. [___]йти озеро (to walk around the lake)\n   > [!answer] Об\n   > [!options] Об | Про | Пере\n\n6. [___]йти ближче (to approach)\n   > [!answer] Під\n   > [!options] Під | До | Про\n\n7. [___]їхати зупинку (to miss the stop)\n   > [!answer] Про\n   > [!options] Про | Пере | За\n\n8. [___]їхати за хлібом (to stop by for bread)\n   > [!answer] За\n   > [!options] За | До | Про\n\n## quiz: Prefix Concepts\n\n1. \"Перейти вулицю\" means:\n   - [x] To cross the street\n   - [ ] To walk along the street\n   - [ ] To approach the street\n\n2. \"Зайти до друга\" means:\n   - [x] To stop by a friend's place\n   - [ ] To leave a friend's place\n   - [ ] To walk past a friend\n\n3. \"Пройти парк\" means:\n   - [x] To walk through/along the park\n   - [ ] To cross the park to the other side\n   - [ ] To go around the park\n\n4. \"Доїхати до Києва\" means:\n   - [x] To reach Kyiv\n   - [ ] To leave Kyiv\n   - [ ] To drive through Kyiv\n\n5. \"Обійти озеро\" means:\n   - [x] To walk around the lake\n   - [ ] To cross the lake\n   - [ ] To reach the lake\n\n6. \"Підійти ближче\" means:\n   - [x] To come closer\n   - [ ] To go away\n   - [ ] To walk around\n\n7. \"Проїхати зупинку\" means:\n   - [x] To miss/pass the stop\n   - [ ] To reach the stop\n   - [ ] To cross the stop\n\n8. \"Заходь!\" commonly means:\n   - [x] Come in! (invitation)\n   - [ ] Go away!\n   - [ ] Wait here!\n\n## cloze: Tour Guide Instructions\n\n> Complete the guide's directions.\n\nСпочатку ми [___:1] вулицю. (cross)\nПотім [___:2] до площі. (reach, approach)\nМи [___:3] в музей. (stop by)\nПісля музею [___:4] парк. (walk through)\nНе [___:5] пам'ятник! (go around)\nМи [___:6] до замку. (reach)\n\n1. перейдемо\n> [!answer] перейдемо\n> [!options] перейдемо | пройдемо | обійдемо\n\n2. підійдемо\n> [!answer] підійдемо\n> [!options] підійдемо | зайдемо | проїдемо\n\n3. зайдемо\n> [!answer] зайдемо\n> [!options] зайдемо | дійдемо | обійдемо\n\n4. пройдемо\n> [!answer] пройдемо\n> [!options] пройдемо | перейдемо | обійдемо\n\n5. обходьте\n> [!answer] обходьте\n> [!options] обходьте | переходьте | заходьте\n\n6. дійдемо\n> [!answer] дійдемо\n> [!options] дійдемо | зайдемо | пройдемо\n\n## unjumble: Motion Sentences\n\n1. вулицю / Перейди / !\n   > [!answer] Перейди вулицю!\n2. до / парку / дійшли / Ми\n   > [!answer] Ми дійшли до парку.\n3. зупинку / Автобус / проїхав\n   > [!answer] Автобус проїхав зупинку.\n4. озеро / Обійди / справа\n   > [!answer] Обійди озеро справа.\n5. до / мене / Зайди / ввечері\n   > [!answer] Зайди до мене ввечері!\n6. ближче / Підійди / !\n   > [!answer] Підійди ближче!\n7. парк / через / Ми / пройшли\n   > [!answer] Ми пройшли через парк.\n8. хлібом / за / Заїдь\n   > [!answer] Заїдь за хлібом.\n\n## error-correction: Wrong Prefix\n\n1. Я **проїхав** вулицю на інший бік.\n   > [!error] проїхав\n   > [!answer] переїхав\n   > [!explanation] \"To the other side\" = crossing → пере-.\n   > [!options] переїхав | проїхав\n\n2. Ми **перейшли** через парк від початку до кінця.\n   > [!error] перейшли\n   > [!answer] пройшли\n   > [!explanation] \"Through from start to end\" = through → про-.\n   > [!options] пройшли | перейшли\n\n3. Автобус **дійшов** зупинку і не зупинився.\n   > [!error] дійшов\n   > [!answer] проїхав\n   > [!explanation] \"Passed without stopping\" = past → про-.\n   > [!options] проїхав | дійшов\n\n4. **Пройди** ближче до мене.\n   > [!error] Пройди\n   > [!answer] Підійди\n   > [!explanation] \"Come closer\" = approach → під-.\n   > [!options] Підійди | Пройди\n\n5. Ми **заходили** озеро пішки.\n   > [!error] заходили\n   > [!answer] обходили\n   > [!explanation] \"Around the lake\" = around → об-.\n   > [!options] обходили | заходили\n\n6. Він **об'їхав** вулицю до іншого боку.\n   > [!error] об'їхав\n   > [!answer] переїхав\n   > [!explanation] \"To the other side\" = across → пере-.\n   > [!options] переїхав | об'їхав\n\n## group-sort: Prefix Categories\n\n> Sort verbs by prefix meaning.\n\n### Crossing/Over (пере-)\n- перейти\n- переїхати\n- переплисти\n- перебігти\n\n### Through/Past (про-)\n- пройти\n- проїхати\n- пролетіти\n- пробігти\n\n### Stopping By (за-)\n- зайти\n- заїхати\n- забігти\n- заскочити\n\n## match-up: Directions\n\n> Match the instruction to the action.\n\n- Перейди вулицю :: Cross the street\n- Пройди через парк :: Walk through the park\n- Зайди до друга :: Stop by your friend's\n- Дійди до кінця :: Reach the end\n- Обійди будинок :: Go around the building\n- Підійди ближче :: Come closer\n- Проїдь зупинку :: Pass the stop\n- Заїдь за молоком :: Stop by for milk\n\n## fill-in: Daily Commute\n\n> Complete Oleh's route.\n\n1. Олег [___] з дому о сьомій. (exits)\n   > [!answer] виходить\n   > [!options] виходить | заходить | проходить\n\n2. Він [___] до зупинки. (approaches)\n   > [!answer] підходить\n   > [!options] підходить | проходить | заходить\n\n3. Автобус [___] три зупинки. (passes)\n   > [!answer] проїжджає\n   > [!options] проїжджає | переїжджає | об'їжджає\n\n4. Олег [___] вулицю. (crosses)\n   > [!answer] переходить\n   > [!options] переходить | проходить | обходить\n\n5. Він [___] до офісу. (reaches)\n   > [!answer] доходить\n   > [!options] доходить | заходить | проходить\n\n6. У обід він [___] квартал. (walks around)\n   > [!answer] обходить\n   > [!options] обходить | проходить | переходить\n\n7. Він [___] в кафе. (stops by)\n   > [!answer] заходить\n   > [!options] заходить | доходить | проходить\n\n8. Увечері він [___] в супермаркет. (stops by, driving)\n   > [!answer] заїжджає\n   > [!options] заїжджає | проїжджає | об'їжджає\n\n## cloze: Carpathians Trip\n\n> Complete the story about the Carpathians trip.\n\nРодина [___:1] з Києва вранці. (departed)\nПо дорозі вони [___:2] багато сіл. (drove through)\nВони [___:3] в село за сиром. (stopped by)\nКоли вони [___:4] до гір, краєвид був чудовий! (reached)\nВони [___:5] річку по камінцях. (crossed)\nПотім вони [___:6] озеро. (walked around)\n\n1. виїхала\n> [!answer] виїхала\n> [!options] виїхала | заїхала | доїхала\n\n2. проїхали\n> [!answer] проїхали\n> [!options] проїхали | переїхали | об'їхали\n\n3. заїхали\n> [!answer] заїхали\n> [!options] заїхали | доїхали | проїхали\n\n4. доїхали\n> [!answer] доїхали\n> [!options] доїхали | заїхали | проїхали\n\n5. перейшли\n> [!answer] перейшли\n> [!options] перейшли | пройшли | обійшли\n\n6. обійшли\n> [!answer] обійшли\n> [!options] обійшли | пройшли | перейшли\n\n---"
+      },
+      {
+        "id": "section-13",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Note |\n|------|-----|---------|-----|------|\n| перейти | /pɛrɛjtˈɪ/ | to cross on foot | verb | пере- + йти |\n| переїхати | /pɛrɛjˈixɑtɪ/ | to cross by vehicle | verb | пере- + їхати |\n| пройти | /prɔjtˈɪ/ | to walk through | verb | про- + йти |\n| проїхати | /prɔjˈixɑtɪ/ | to drive through | verb | про- + їхати |\n| зайти | /zɑjtˈɪ/ | to stop by, drop in | verb | за- + йти |\n| заїхати | /zɑjˈixɑtɪ/ | to stop by (driving) | verb | за- + їхати |\n| дійти | /dijtˈɪ/ | to reach on foot | verb | до- + йти |\n| доїхати | /dɔjˈixɑtɪ/ | to reach by vehicle | verb | до- + їхати |\n| обійти | /ɔbijtˈɪ/ | to walk around | verb | об- + йти |\n| об'їхати | /ɔbjˈixɑtɪ/ | to drive around | verb | об- + їхати |\n| підійти | /pidijtˈɪ/ | to approach | verb | під- + йти |\n| під'їхати | /pidjˈixɑtɪ/ | to drive up to | verb | під- + їхати |\n| переплисти | /pɛrɛplˈɪstɪ/ | to swim across | verb | пере- + плисти |\n| пролетіти | /prɔlɛtˈitɪ/ | to fly past | verb | про- + летіти |\n| вулиця | /ʋˈulɪt͡sʲɑ/ | street | noun | - |\n| парк | /pɑrk/ | park | noun | - |\n| зупинка | /zupˈɪnkɑ/ | stop (bus/tram) | noun | - |\n| площа | /plˈɔʃt͡ʃɑ/ | square (plaza) | noun | - |\n| міст | /mist/ | bridge | noun | - |\n| річка | /rˈit͡ʃkɑ/ | river | noun | - |\n| озеро | /ˈɔzɛrɔ/ | lake | noun | - |\n| замок | /zˈɑmɔk/ | castle | noun | - |\n| музей | /muzˈɛj/ | museum | noun | - |\n| квартал | /kʋɑrtˈɑl/ | city block | noun | - |\n| маршрут | /mɑrʃrˈut/ | route | noun | - |\n| гід | /ɦid/ | guide | noun | - |\n| екскурсія | /ɛkskˈursijɑ/ | tour, excursion | noun | - |\n| пам'ятник | /pɑmjˈɑtnɪk/ | monument | noun | - |\n| турист | /turˈɪst/ | tourist | noun | - |\n| напрямок | /nɑprʲɑmˈɔk/ | direction | noun | - |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-36\ntitle: Advanced Motion Prefixes\nsubtitle: \"Complex Paths: Crossing, Stopping, Going Around\"\nversion: \"1.0\"\nphase: \"A2.4\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - motion verbs\n  - prefixes\n  - spatial\n  - advanced\ngrammar:\n  - advanced motion prefixes (пере-, за-, про-, під-, об-, до-)\n  - path semantics in motion verbs\nobjectives:\n  - \"Learner can describe complex motion paths\"\n  - \"Learner can use prefixes to express crossing, passing, stopping by\"\n  - \"Learner can give and follow directional instructions\"\nvocabulary_count: 30\n---\n\n# Warm-up\n\nIn A1, you learned basic motion verbs (йти, їхати). In earlier A2 modules, you learned simple prefixes.\n\nNow we go deeper into **advanced motion prefixes** that describe complex paths:\n- **пере-** = across, over, re-\n- **за-** = behind, stopping by, beginning\n- **про-** = through, past\n- **під-** = approach from below\n- **об-** = around\n- **до-** = reaching the destination\n\nThese prefixes transform simple motion into precise navigation. After this module, you'll give directions like a local!\n\nMotion prefixes are essential for everyday communication. When you give directions, describe your commute, or tell travel stories, you need these prefixes to be accurate. English uses prepositions for this purpose, but Ukrainian embeds the path information directly into the verb. This is both elegant and efficient.\n\n---\n\n# Prefix Group 1: Crossing & Through\n\n## Пере- (Across, Over, Re-)\n\nThe prefix **пере-** indicates crossing from one side to another.\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| перейти | to cross on foot | Перейди вулицю! |\n| переїхати | to cross by vehicle | Ми переїхали міст. |\n| переплисти | to swim across | Він переплив річку. |\n\n**Related Meanings:**\n- пере- can also mean \"re-\" (doing again): переробити = to redo\n- пере- can mean \"excessively\": переїсти = to overeat\n\n> [!tip] Візуалізуйте!\n> Уявіть, що пере- означає лінію, яку ви перетинаєте.\n> Ви починаєте з одного боку і закінчуєте з іншого.\n> Вулиця, річка, міст — всі мають \"інший бік\" для пере-.\n\n## Про- (Through, Past)\n\nThe prefix **про-** indicates passing through or going past something.\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| пройти | to walk through/past | Ми пройшли через парк. |\n| проїхати | to drive through/past | Автобус проїхав зупинку. |\n| пролетіти | to fly through/past | Літак пролетів над нами. |\n\n**Key Distinction:**\n- пере- = cross to the other side\n- про- = pass through/by without stopping\n\n> [!tip] Пере- vs Про-\n> **Перейти вулицю** = Cross the street (reach the other side).\n> **Пройти вулицю** = Walk through/along the street (from end to end).\n> The difference is the perspective: crossing vs traversing.\n\n---\n\n# Prefix Group 2: Stopping & Arriving\n\n## За- (Behind, Stopping By, Beginning)\n\nThe prefix **за-** has multiple meanings related to motion:\n\n**Meaning 1: Behind**\n| Verb | Meaning | Example |\n|------|---------|---------|\n| зайти | to go behind | Сонце зайшло за хмару. |\n| заїхати | to drive behind | Таксі заїхало за будинок. |\n\n**Meaning 2: Stopping By**\n| Verb | Meaning | Example |\n|------|---------|---------|\n| зайти | to stop by, drop in | Зайди до мене ввечері! |\n| заїхати | to stop by (driving) | Заїдь за хлібом. |\n\n**Meaning 3: Beginning Motion**\n| Verb | Meaning | Example |\n|------|---------|---------|\n| заплакати | to start crying | Дитина заплакала. |\n| заспівати | to start singing | Вона заспівала пісню. |\n\n> [!cultural] Важлива Традиція\n> Українці часто кажуть: \"Заходь до нас!\"\n> Це означає: \"Приходь у гості!\"\n> Гостинність дуже важлива в українській культурі.\n\n## До- (Reaching Destination)\n\nThe prefix **до-** indicates reaching a destination or completing motion.\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| дійти | to walk to (reach) | Ми дійшли до парку. |\n| доїхати | to drive to (reach) | Вони доїхали до міста. |\n| добігти | to run to (reach) | Він добіг до фінішу. |\n\n**Important:** До- emphasizes reaching the endpoint, not the journey.\n\n---\n\n# Prefix Group 3: Around & Under\n\n## Об- / Обі- (Around)\n\nThe prefix **об-** indicates going around something.\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| обійти | to walk around | Обійди озеро справа. |\n| об'їхати | to drive around | Треба об'їхати пробку. |\n\n**Also used for:**\n- обійняти = to embrace (arms \"around\")\n- обдумати = to think over (thoughts \"around\" the topic)\n\n> [!tip] Візуалізуйте Об-\n> Уявіть коло навколо об'єкта.\n> Ви рухаєтесь по колу, не перетинаючи центр.\n> Це відрізняється від \"пере-\" (через) і \"про-\" (насквозь).\n\n## Під- (Under, Approaching)\n\nThe prefix **під-** indicates approaching from below or getting closer.\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| підійти | to approach (on foot) | Підійди ближче! |\n| під'їхати | to approach (driving) | Таксі під'їхало до вокзалу. |\n| підлетіти | to fly up to | Птах підлетів до вікна. |\n\n**Related Meanings:**\n- під- also means support: підтримати = to support\n- під- means raising slightly: підняти = to lift up\n\n---\n\n# Story Time: Екскурсія Містом\n\nТуристи пішли на екскурсію містом. Гід розповідав:\n\n— Спочатку ми **перейдемо** вулицю і **підійдемо** до головної площі. Там **зайдемо** в музей на годину.\n\nПісля музею гід сказав:\n— Тепер ми **пройдемо** через парк. Не **обходьте** пам'ятник — фотографуйте його!\n\nТуристи **дійшли** до старого замку. Гід пояснив:\n— Ми можемо **обійти** замок навколо. Або **проїхати** через арку на автобусі.\n\nОдин турист запитав:\n— А можна **заїхати** в кафе?\n— Так, ми **заїдемо** за кавою після замку.\n\nУвечері всі **дійшли** до готелю втомлені, але задоволені!\n\n> [!cultural] Українські Екскурсії\n> В Україні є багато чудових міст для екскурсій.\n> Львів, Київ, Одеса — кожне місто має свою історію.\n> Українці пишаються своєю культурою та архітектурою.\n\n---\n\n# Story Time Part 2: Дорога на Роботу\n\nОлег їде на роботу щодня. Його маршрут складний.\n\nСпочатку він **виходить** з дому і **підходить** до зупинки. Автобус **під'їжджає** до зупинки о восьмій.\n\nОлег **заходить** в автобус. Автобус **проїжджає** три зупинки. Потім Олег **виходить** і **переходить** вулицю.\n\nВін **проходить** повз магазин. Іноді він **заходить** за кавою. Потім він **доходить** до офісу.\n\nУ обід він **обходить** квартал для прогулянки. Він **проходить** повз парк і **заходить** в кафе.\n\nУвечері він **їде** додому тим самим маршрутом. Іноді він **заїжджає** в супермаркет по дорозі.\n\n---\n\n# Story Time Part 3: Подорож до Карпат\n\nРодина вирішила поїхати до Карпат на вихідні. Вони **виїхали** з Києва рано вранці.\n\nПо дорозі вони **проїхали** багато маленьких сіл. Вони **заїхали** в одне село за молоком і сиром. Місцеві люди були дуже привітні.\n\nКоли вони **доїхали** до гір, краєвид був чудовий! Вони **зайшли** в готель і відпочили.\n\nНаступного дня вони пішли в похід. Вони **перейшли** маленьку річку по камінцях. Вони **підійшли** до водоспаду і сфотографувались. Потім вони **обійшли** озеро і **дійшли** до вершини гори.\n\nНа вершині було холодно, але краєвид був неймовірний! Вони могли бачити весь регіон. Вони **пройшли** по стежці назад до готелю.\n\nУвечері вони сиділи біля вогнища і розповідали історії. Це був чудовий відпочинок!\n\n> [!cultural] Карпати — Серце України\n> Карпатські гори — це популярне місце для відпочинку.\n> Тут можна ходити в походи, кататися на лижах, і насолоджуватися природою.\n> Гуцули — це етнічна група, яка живе в Карпатах і має унікальну культуру.\n\n---\n\n# Deep Dive: Prefix Combinations\n\nAdvanced speakers combine prefixes for even more precise meanings. Here are some examples you may encounter:\n\n**Ви + за = вийти + зайти (Exit and enter):**\n- Він вийшов і зайшов знову. (He exited and entered again.)\n\n**Про + пере = проїхати + переїхати (Pass through and cross):**\n- Ми проїхали місто і переїхали міст. (We drove through the city and crossed the bridge.)\n\n**Під + до = підійти + дійти (Approach and reach):**\n- Він підійшов до дверей і дійшов до кабінету. (He approached the door and reached the office.)\n\nUnderstanding these combinations will help you describe complex journeys with precision. This is an advanced skill that develops with time and practice.\n\n---\n\n# Common Mistakes\n\n## Mistake 1: Confusing Пере- and Про-\n\n❌ Я проїхав вулицю. (Means you drove along it, not crossed it.)\n✅ Я переїхав вулицю. (You crossed to the other side.)\n\n## Mistake 2: Using За- Incorrectly\n\n❌ Я зайшов в магазин. (Incorrect preposition.)\n✅ Я зайшов до магазину. (Correct: зайти + до + Genitive.)\n\n## Mistake 3: Forgetting the Apostrophe with Об-\n\n❌ Обьїхати\n✅ Об'їхати (The apostrophe is required before я/ю/є/ї.)\n\n---\n\n# Language Learning Tip\n\nMotion prefix mastery comes from visualization. For each prefix, create a mental image of the path:\n\n- **пере-** = imagine a bridge crossing a river\n- **про-** = imagine walking through a tunnel\n- **за-** = imagine going behind a building\n- **об-** = imagine walking around a lake\n- **до-** = imagine reaching a flag at the finish line\n- **під-** = imagine approaching a platform from below\n\nWhen you hear a motion verb, visualize the path first. This will help you understand and produce the correct prefix naturally.\n\n---\n\n# Summary\n\nToday you learned advanced motion prefixes:\n\n| Prefix | Core Meaning | Example |\n|--------|--------------|---------|\n| **пере-** | across, over | перейти вулицю |\n| **про-** | through, past | пройти парк |\n| **за-** | behind, stopping by | зайти в магазин |\n| **до-** | reaching destination | дійти до парку |\n| **об-** | around | обійти озеро |\n| **під-** | approaching | підійти ближче |\n\nThese prefixes combine with motion verbs to create precise navigation instructions.\n\n---\n\n# Activities\n\n## match-up: Prefix Meanings\n\n> Match the prefix to its core meaning.\n\n- пере- :: across, over\n- про- :: through, past\n- за- :: behind, stopping by\n- до- :: reaching destination\n- об- :: around\n- під- :: approaching\n- ви- :: out\n- в-/у- :: into\n\n## fill-in: Choose the Prefix\n\n> Select the correct prefix.\n\n1. [___]йти вулицю (to cross the street)\n   > [!answer] Пере\n   > [!options] Пере | Про | За\n\n2. [___]їхати через місто (to drive through the city)\n   > [!answer] Про\n   > [!options] Про | Пере | За\n\n3. [___]йти в кафе (to stop by the cafe)\n   > [!answer] За\n   > [!options] За | Про | До\n\n4. [___]йти до парку (to reach the park)\n   > [!answer] До\n   > [!options] До | За | Про\n\n5. [___]йти озеро (to walk around the lake)\n   > [!answer] Об\n   > [!options] Об | Про | Пере\n\n6. [___]йти ближче (to approach)\n   > [!answer] Під\n   > [!options] Під | До | Про\n\n7. [___]їхати зупинку (to miss the stop)\n   > [!answer] Про\n   > [!options] Про | Пере | За\n\n8. [___]їхати за хлібом (to stop by for bread)\n   > [!answer] За\n   > [!options] За | До | Про\n\n## quiz: Prefix Concepts\n\n1. \"Перейти вулицю\" means:\n   - [x] To cross the street\n   - [ ] To walk along the street\n   - [ ] To approach the street\n\n2. \"Зайти до друга\" means:\n   - [x] To stop by a friend's place\n   - [ ] To leave a friend's place\n   - [ ] To walk past a friend\n\n3. \"Пройти парк\" means:\n   - [x] To walk through/along the park\n   - [ ] To cross the park to the other side\n   - [ ] To go around the park\n\n4. \"Доїхати до Києва\" means:\n   - [x] To reach Kyiv\n   - [ ] To leave Kyiv\n   - [ ] To drive through Kyiv\n\n5. \"Обійти озеро\" means:\n   - [x] To walk around the lake\n   - [ ] To cross the lake\n   - [ ] To reach the lake\n\n6. \"Підійти ближче\" means:\n   - [x] To come closer\n   - [ ] To go away\n   - [ ] To walk around\n\n7. \"Проїхати зупинку\" means:\n   - [x] To miss/pass the stop\n   - [ ] To reach the stop\n   - [ ] To cross the stop\n\n8. \"Заходь!\" commonly means:\n   - [x] Come in! (invitation)\n   - [ ] Go away!\n   - [ ] Wait here!\n\n## cloze: Tour Guide Instructions\n\n> Complete the guide's directions.\n\nСпочатку ми [___:1] вулицю. (cross)\nПотім [___:2] до площі. (reach, approach)\nМи [___:3] в музей. (stop by)\nПісля музею [___:4] парк. (walk through)\nНе [___:5] пам'ятник! (go around)\nМи [___:6] до замку. (reach)\n\n1. перейдемо\n> [!answer] перейдемо\n> [!options] перейдемо | пройдемо | обійдемо\n\n2. підійдемо\n> [!answer] підійдемо\n> [!options] підійдемо | зайдемо | проїдемо\n\n3. зайдемо\n> [!answer] зайдемо\n> [!options] зайдемо | дійдемо | обійдемо\n\n4. пройдемо\n> [!answer] пройдемо\n> [!options] пройдемо | перейдемо | обійдемо\n\n5. обходьте\n> [!answer] обходьте\n> [!options] обходьте | переходьте | заходьте\n\n6. дійдемо\n> [!answer] дійдемо\n> [!options] дійдемо | зайдемо | пройдемо\n\n## unjumble: Motion Sentences\n\n1. вулицю / Перейди / !\n   > [!answer] Перейди вулицю!\n2. до / парку / дійшли / Ми\n   > [!answer] Ми дійшли до парку.\n3. зупинку / Автобус / проїхав\n   > [!answer] Автобус проїхав зупинку.\n4. озеро / Обійди / справа\n   > [!answer] Обійди озеро справа.\n5. до / мене / Зайди / ввечері\n   > [!answer] Зайди до мене ввечері!\n6. ближче / Підійди / !\n   > [!answer] Підійди ближче!\n7. парк / через / Ми / пройшли\n   > [!answer] Ми пройшли через парк.\n8. хлібом / за / Заїдь\n   > [!answer] Заїдь за хлібом.\n\n## error-correction: Wrong Prefix\n\n1. Я **проїхав** вулицю на інший бік.\n   > [!error] проїхав\n   > [!answer] переїхав\n   > [!explanation] \"To the other side\" = crossing → пере-.\n   > [!options] переїхав | проїхав\n\n2. Ми **перейшли** через парк від початку до кінця.\n   > [!error] перейшли\n   > [!answer] пройшли\n   > [!explanation] \"Through from start to end\" = through → про-.\n   > [!options] пройшли | перейшли\n\n3. Автобус **дійшов** зупинку і не зупинився.\n   > [!error] дійшов\n   > [!answer] проїхав\n   > [!explanation] \"Passed without stopping\" = past → про-.\n   > [!options] проїхав | дійшов\n\n4. **Пройди** ближче до мене.\n   > [!error] Пройди\n   > [!answer] Підійди\n   > [!explanation] \"Come closer\" = approach → під-.\n   > [!options] Підійди | Пройди\n\n5. Ми **заходили** озеро пішки.\n   > [!error] заходили\n   > [!answer] обходили\n   > [!explanation] \"Around the lake\" = around → об-.\n   > [!options] обходили | заходили\n\n6. Він **об'їхав** вулицю до іншого боку.\n   > [!error] об'їхав\n   > [!answer] переїхав\n   > [!explanation] \"To the other side\" = across → пере-.\n   > [!options] переїхав | об'їхав\n\n## group-sort: Prefix Categories\n\n> Sort verbs by prefix meaning.\n\n### Crossing/Over (пере-)\n- перейти\n- переїхати\n- переплисти\n- перебігти\n\n### Through/Past (про-)\n- пройти\n- проїхати\n- пролетіти\n- пробігти\n\n### Stopping By (за-)\n- зайти\n- заїхати\n- забігти\n- заскочити\n\n## match-up: Directions\n\n> Match the instruction to the action.\n\n- Перейди вулицю :: Cross the street\n- Пройди через парк :: Walk through the park\n- Зайди до друга :: Stop by your friend's\n- Дійди до кінця :: Reach the end\n- Обійди будинок :: Go around the building\n- Підійди ближче :: Come closer\n- Проїдь зупинку :: Pass the stop\n- Заїдь за молоком :: Stop by for milk\n\n## fill-in: Daily Commute\n\n> Complete Oleh's route.\n\n1. Олег [___] з дому о сьомій. (exits)\n   > [!answer] виходить\n   > [!options] виходить | заходить | проходить\n\n2. Він [___] до зупинки. (approaches)\n   > [!answer] підходить\n   > [!options] підходить | проходить | заходить\n\n3. Автобус [___] три зупинки. (passes)\n   > [!answer] проїжджає\n   > [!options] проїжджає | переїжджає | об'їжджає\n\n4. Олег [___] вулицю. (crosses)\n   > [!answer] переходить\n   > [!options] переходить | проходить | обходить\n\n5. Він [___] до офісу. (reaches)\n   > [!answer] доходить\n   > [!options] доходить | заходить | проходить\n\n6. У обід він [___] квартал. (walks around)\n   > [!answer] обходить\n   > [!options] обходить | проходить | переходить\n\n7. Він [___] в кафе. (stops by)\n   > [!answer] заходить\n   > [!options] заходить | доходить | проходить\n\n8. Увечері він [___] в супермаркет. (stops by, driving)\n   > [!answer] заїжджає\n   > [!options] заїжджає | проїжджає | об'їжджає\n\n## cloze: Carpathians Trip\n\n> Complete the story about the Carpathians trip.\n\nРодина [___:1] з Києва вранці. (departed)\nПо дорозі вони [___:2] багато сіл. (drove through)\nВони [___:3] в село за сиром. (stopped by)\nКоли вони [___:4] до гір, краєвид був чудовий! (reached)\nВони [___:5] річку по камінцях. (crossed)\nПотім вони [___:6] озеро. (walked around)\n\n1. виїхала\n> [!answer] виїхала\n> [!options] виїхала | заїхала | доїхала\n\n2. проїхали\n> [!answer] проїхали\n> [!options] проїхали | переїхали | об'їхали\n\n3. заїхали\n> [!answer] заїхали\n> [!options] заїхали | доїхали | проїхали\n\n4. доїхали\n> [!answer] доїхали\n> [!options] доїхали | заїхали | проїхали\n\n5. перейшли\n> [!answer] перейшли\n> [!options] перейшли | пройшли | обійшли\n\n6. обійшли\n> [!answer] обійшли\n> [!options] обійшли | пройшли | перейшли\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Note |\n|------|-----|---------|-----|------|\n| перейти | /pɛrɛjtˈɪ/ | to cross on foot | verb | пере- + йти |\n| переїхати | /pɛrɛjˈixɑtɪ/ | to cross by vehicle | verb | пере- + їхати |\n| пройти | /prɔjtˈɪ/ | to walk through | verb | про- + йти |\n| проїхати | /prɔjˈixɑtɪ/ | to drive through | verb | про- + їхати |\n| зайти | /zɑjtˈɪ/ | to stop by, drop in | verb | за- + йти |\n| заїхати | /zɑjˈixɑtɪ/ | to stop by (driving) | verb | за- + їхати |\n| дійти | /dijtˈɪ/ | to reach on foot | verb | до- + йти |\n| доїхати | /dɔjˈixɑtɪ/ | to reach by vehicle | verb | до- + їхати |\n| обійти | /ɔbijtˈɪ/ | to walk around | verb | об- + йти |\n| об'їхати | /ɔbjˈixɑtɪ/ | to drive around | verb | об- + їхати |\n| підійти | /pidijtˈɪ/ | to approach | verb | під- + йти |\n| під'їхати | /pidjˈixɑtɪ/ | to drive up to | verb | під- + їхати |\n| переплисти | /pɛrɛplˈɪstɪ/ | to swim across | verb | пере- + плисти |\n| пролетіти | /prɔlɛtˈitɪ/ | to fly past | verb | про- + летіти |\n| вулиця | /ʋˈulɪt͡sʲɑ/ | street | noun | - |\n| парк | /pɑrk/ | park | noun | - |\n| зупинка | /zupˈɪnkɑ/ | stop (bus/tram) | noun | - |\n| площа | /plˈɔʃt͡ʃɑ/ | square (plaza) | noun | - |\n| міст | /mist/ | bridge | noun | - |\n| річка | /rˈit͡ʃkɑ/ | river | noun | - |\n| озеро | /ˈɔzɛrɔ/ | lake | noun | - |\n| замок | /zˈɑmɔk/ | castle | noun | - |\n| музей | /muzˈɛj/ | museum | noun | - |\n| квартал | /kʋɑrtˈɑl/ | city block | noun | - |\n| маршрут | /mɑrʃrˈut/ | route | noun | - |\n| гід | /ɦid/ | guide | noun | - |\n| екскурсія | /ɛkskˈursijɑ/ | tour, excursion | noun | - |\n| пам'ятник | /pɑmjˈɑtnɪk/ | monument | noun | - |\n| турист | /turˈɪst/ | tourist | noun | - |\n| напрямок | /nɑprʲɑmˈɔk/ | direction | noun | - |\n",
+    "createdAt": "2025-12-15T20:02:03.047190Z",
+    "modifiedAt": "2025-12-15T20:02:03.047190Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-36",
+    "level": "A2",
+    "phase": "A2.4",
+    "wordCount": 30,
+    "newWordCount": 30,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "перейти",
+        "ipa": "/pɛrɛjtˈɪ/",
+        "en": "to cross on foot",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-2",
+        "uk": "переїхати",
+        "ipa": "/pɛrɛjˈixɑtɪ/",
+        "en": "to cross by vehicle",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-3",
+        "uk": "пройти",
+        "ipa": "/prɔjtˈɪ/",
+        "en": "to walk through",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-4",
+        "uk": "проїхати",
+        "ipa": "/prɔjˈixɑtɪ/",
+        "en": "to drive through",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-5",
+        "uk": "зайти",
+        "ipa": "/zɑjtˈɪ/",
+        "en": "to stop by, drop in",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-6",
+        "uk": "заїхати",
+        "ipa": "/zɑjˈixɑtɪ/",
+        "en": "to stop by (driving)",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-7",
+        "uk": "дійти",
+        "ipa": "/dijtˈɪ/",
+        "en": "to reach on foot",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-8",
+        "uk": "доїхати",
+        "ipa": "/dɔjˈixɑtɪ/",
+        "en": "to reach by vehicle",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-9",
+        "uk": "обійти",
+        "ipa": "/ɔbijtˈɪ/",
+        "en": "to walk around",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-10",
+        "uk": "об'їхати",
+        "ipa": "/ɔbjˈixɑtɪ/",
+        "en": "to drive around",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-11",
+        "uk": "підійти",
+        "ipa": "/pidijtˈɪ/",
+        "en": "to approach",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-12",
+        "uk": "під'їхати",
+        "ipa": "/pidjˈixɑtɪ/",
+        "en": "to drive up to",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-13",
+        "uk": "переплисти",
+        "ipa": "/pɛrɛplˈɪstɪ/",
+        "en": "to swim across",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-14",
+        "uk": "пролетіти",
+        "ipa": "/prɔlɛtˈitɪ/",
+        "en": "to fly past",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-15",
+        "uk": "вулиця",
+        "ipa": "/ʋˈulɪt͡sʲɑ/",
+        "en": "street",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-16",
+        "uk": "парк",
+        "ipa": "/pɑrk/",
+        "en": "park",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-17",
+        "uk": "зупинка",
+        "ipa": "/zupˈɪnkɑ/",
+        "en": "stop (bus/tram)",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-18",
+        "uk": "площа",
+        "ipa": "/plˈɔʃt͡ʃɑ/",
+        "en": "square (plaza)",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-19",
+        "uk": "міст",
+        "ipa": "/mist/",
+        "en": "bridge",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-20",
+        "uk": "річка",
+        "ipa": "/rˈit͡ʃkɑ/",
+        "en": "river",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-21",
+        "uk": "озеро",
+        "ipa": "/ˈɔzɛrɔ/",
+        "en": "lake",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-22",
+        "uk": "замок",
+        "ipa": "/zˈɑmɔk/",
+        "en": "castle",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-23",
+        "uk": "музей",
+        "ipa": "/muzˈɛj/",
+        "en": "museum",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-24",
+        "uk": "квартал",
+        "ipa": "/kʋɑrtˈɑl/",
+        "en": "city block",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-25",
+        "uk": "маршрут",
+        "ipa": "/mɑrʃrˈut/",
+        "en": "route",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-26",
+        "uk": "гід",
+        "ipa": "/ɦid/",
+        "en": "guide",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-27",
+        "uk": "екскурсія",
+        "ipa": "/ɛkskˈursijɑ/",
+        "en": "tour, excursion",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-28",
+        "uk": "пам'ятник",
+        "ipa": "/pɑmjˈɑtnɪk/",
+        "en": "monument",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-29",
+        "uk": "турист",
+        "ipa": "/turˈɪst/",
+        "en": "tourist",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-30",
+        "uk": "напрямок",
+        "ipa": "/nɑprʲɑmˈɔk/",
+        "en": "direction",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      }
+    ],
+    "reviewWords": []
+  }
+}

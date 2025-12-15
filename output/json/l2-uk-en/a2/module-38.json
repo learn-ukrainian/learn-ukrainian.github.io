@@ -1,0 +1,420 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-38",
+    "moduleId": "mod-uk-A2-38",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.4",
+    "moduleNumber": 38,
+    "moduleType": "grammar",
+    "pedagogy": "Inquiry",
+    "immersionLevel": 0.4,
+    "title": "Noun Suffixes",
+    "titleUk": null,
+    "subtitle": "The Word Factory",
+    "description": "Learner can turn verbs into nouns (Reading -> Reader / Reading)",
+    "objectives": [
+      "Learner can turn verbs into nouns (Reading -> Reader / Reading)",
+      "Learner can turn adjectives into nouns (Happy -> Happiness)",
+      "Learner can use diminutives for politeness and affection"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "noun suffixes (-ння, -ття, -ість, -ач, -ець, -ник)",
+      "diminutives (-ок, -ик, -ка)"
+    ],
+    "tags": [
+      "grammar",
+      "nouns",
+      "suffixes",
+      "word-formation"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "Welcome to the **Word Factory**!\nIn the last module, we put prefixes on the *front* of words to change direction.\nNow, we put suffixes on the *end* of words to change their **class**.\n\nImagine a machine:\n1.  Input: **Чита-ти** [Verb: To read] -> [Machine] -> Output: **Чита-ч** [Noun: Reader].\n2.  Input: **Чита-ти** -> [Machine] -> Output: **Чита-ння** [Noun: Reading].\n3.  Input: **Добр-ий** [Adj: Good/Kind] -> [Machine] -> Output: **Добр-ота** [Noun: Kindness].\n\nThis is how you multiply your vocabulary instantly.\n\n> [!question] Think about it\n> English does this too:\n> - Teach -> Teach**er** (-er = Person)\n> - Teach -> Teach**ing** (-ing = Process)\n> - Kind -> Kind**ness** (-ness = Abstract Quality)\n> Ukrainian has the exact same logic!\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "The Suffix System",
+        "nameEn": null,
+        "type": "content",
+        "content": "Let's look at the three main machines in our factory.\n\n## Machine 1: The Person Maker (-ач / -ець / -ник)\n\nTurns an **Action** into a **Doer**.\n\n| Input (Verb) | Suffix | Output (Person) | Note |\n| :--- | :--- | :--- | :--- |\n| **Чита**ти: Read | -ач | **Читач**: Reader | Also: Глядач: Viewer |\n| **Продава**ти: Sell | -ець | **Продавець**: Seller | Also: Співець: Singer |\n| **Писа**ти: Write | -ник | **Письменник**: Writer | Double 'н'! |\n| **Вчи**ти: Teach | -тель | **Вчитель**: Teacher | |\n\n## Machine 2: The Process Maker (-ння / -ття)\n\nTurns an **Action** into a **Thing/Process** (Gerund).\n*Usually requires double consonants.*\n\n| Input (Verb) | Suffix | Output (Process) | English |\n| :--- | :--- | :--- | :--- |\n| **Чита**ти | -ння | **Читання** | Reading |\n| **Писа**ти | -ння | **Писання** | Writing (Scripture) |\n| **Навча**ти | -ння | **Навчання** | Learning/Studies |\n| **Жи**ти | -ття | **Життя** | Life |\n| **Пита**ти | -ння | **Питання** | Question |\n| **Завдава**ти | -ння | **Завдання** | Task/Assignment |\n\n> [!tip] Spelling Rule: Double N\n> Notice that **Читання**, **Питання**, **Життя** all have double consonants (**нн**, **тт**).\n> This is typical for verbal nouns ending in -я.\n> Just remember: Double N = Process!\n\n## Machine 3: The Concept Maker (-ість)\n\nTurns a **Quality** (Adjective) into a **Concept**.\n*Equivalent to English -ness or -ity.*\n\n| Input (Adjective) | Suffix | Output (Abstract) | English |\n| :--- | :--- | :--- | :--- |\n| **Можлив**ий | -ість | **Можливість** | Possibility |\n| **Важлив**ий | -ість | **Важливість** | Importance |\n| **Рад**ий | -ість | **Радість** | Joy/Gladness |\n| **Молод**ий | -ість | **Молодість** | Youth |\n| **Стар**ий | -ість | **Старість** | Old age |\n| **Відповідальн**ий | -ість | **Відповідальність** | Responsibility |\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Cultural Insight: Last Names",
+        "nameEn": null,
+        "type": "content",
+        "content": "Many Ukrainian surnames tell you what an ancestor did for a living!\nThey use the exact suffixes we just learned.\n\n- **-ник**:\n    - **Мельник** (Miller) -> Melnyk\n    - **Олійник** (Oil manufacturer) -> Oliynyk\n- **-ець**:\n    - **Кравець** (Tailor) -> Kravets\n    - **Швець** (Shoemaker) -> Shvets\n- **-ач**:\n    - **Ткач** (Weaver) -> Tkach\n- **-ар**:\n    - **Коваль** (Blacksmith) -> Koval\n    - **Лікар** (Doctor) -> Likar\n\n> [!cultural] Cultural Note: Identity\n> If you meet a Ukrainian with the last name **Кравчук**, you know their ancestor was a Tailor (Кравець).\n> If **Коваленко**, they were a Blacksmith (Коваль).\n> Surnames preserve history.\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Deep Dive: The Logic of -ISTYH",
+        "nameEn": null,
+        "type": "content",
+        "content": "The suffix **-ість** is the equivalent of English **-ness** or **-ity**.\nIt creates abstract nouns from adjectives.\nIt is almost always **Feminine** and ends in a soft sign (**ь**).\n\n- **Reality:** Реальн-ий -> Реальн-ість.\n- **Popularity:** Популярн-ий -> Популярн-ість.\n- **Activity:** Активн-ий -> Активн-ість.\n- **Quality:** Якісн-ий -> Як-ість.\n\n> [!tip] Soft Sign Magic\n> Don't forget the soft sign at the end!\n> It's not *радіст*, it's **радість**.\n> It sounds soft and gentle.\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Deep Dive: Feminitives (The Rise of -KA)",
+        "nameEn": null,
+        "type": "content",
+        "content": "Ukrainian is a gendered language. In the past, many professions were used only in the masculine form (Лікар, Директор), even for women.\nBut in modern Ukrainian, we prefer **Feminitives**!\nThe magic machine for this is the suffix **-ка**.\n\n| Profession (Masc) | Feminitive (Fem) |\n| :--- | :--- |\n| **Вчитель** (Teacher) | **Вчителька** |\n| **Лікар** (Doctor) | **Лікарка** |\n| **Автор** (Author) | **Авторка** |\n| **Директор** (Director) | **Директорка** |\n| **Журналіст** (Journalist) | **Журналістка** |\n| **Письменник** (Writer) | **Письменниця** (Note: -ця) |\n\n> [!note] Why it matters\n> Using feminitives is respectful and precise.\n> Saying \"Вона — хороший лікар\" is grammatically okay, but \"Вона — хороша лікарка\" highlights her identity.\n> It validates women's visibility in professional roles.\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Deep Dive: The Crafter Suffix (-ар)",
+        "nameEn": null,
+        "type": "content",
+        "content": "Another common suffix for professions is **-ар** (or -яр).\nIt usually indicates a skilled craftsman or worker.\n\n- **Лік-и** (Medicine) -> **Лік-ар** (Doctor).\n- **Кух-ня** (Kitchen) -> **Кух-ар** (Cook).\n- **Перук-а** (Wig) -> **Перук-ар** (Hairdresser).\n- **Кобз-а** (Instrument) -> **Кобз-ар** (Bard).\n\n> [!note] Stress Shift\n> Often the stress falls on the suffix: Перук**ар**, Кобз**ар**.\n> But: Л**і**кар, К**у**хар.\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Story Time: The Little House",
+        "nameEn": null,
+        "type": "content",
+        "content": "Ми у \"Світі Зменшення\" (World of Diminutives). Тут усе маленьке і миле.\n\nУ лісі стоїть маленький **будиночок**.\nУ ньому живе маленький **котик**.\nКотика звати Мурчик.\nКожного ранку в віконце світить лагідне **сонечко**.\nМурчик п'є молочко і читає маленьку **книжечку**.\nОдного разу до нього прийшла маленька **дівчинка**.\nВона принесла йому **квіточку**.\n\"Яка **радість**!\" — сказав котик.\nВін взяв свою улюблену **ручечку** і записав цей момент у щоденник.\nЦе було просте, але щасливе **життя**.\n\n> [!cultural] Cultural Insight: Diminutives\n> Ukrainians LOVE diminutives. We use them not just for small things, but to show **affection** and **politeness**.\n> - Asking for tea: \"Можна мені **чайок**?\" (Can I have a generic-little-tea?)\n> - Calling a friend: \"Привіт, **сонечко**!\" (Hello, little sun!)\n> - Even slightly annoyed: \"Що це за **питаннячко**?\" (What kind of little question is that?)\n> It makes the language sound softer and warmer.\n\n---"
+      },
+      {
+        "id": "section-8",
+        "name": "Deep Dive: Diminutives Logic",
+        "nameEn": null,
+        "type": "content",
+        "content": "To make things small or cute, we use suffixes:\n- Masc: **-ок**, **-ик** (Кіт -> Кот**ик**, Дім -> Будин**ок** -> Будин**очок**)\n- Fem: **-ка**, **-чка** (Книга -> Книж**ка** -> Книж**ечка**, Рука -> Руч**ка**)\n- Neut: **-ко**, **-чко** (Сонце -> Соне**чко**, Вікно -> Вікон**це**)\n\n> [!tip] Magic of K/CH\n> Notice how **К** often changes to **Ч** or **Ц**?\n> - Ру**к**а -> Ру**ч**ка.\n> - Сон**ц**е -> Соне**ч**ко.\n> This is sound mutation (palatalization). It makes words easier to pronounce softly.\n\n---"
+      },
+      {
+        "id": "section-9",
+        "name": "Story Time Part 2: The Factory Tour",
+        "nameEn": null,
+        "type": "content",
+        "content": "Ласкаво просимо на \"Фабрику Слів\".\nСьогодні ми побачимо, як працюють машини.\nНа вході стоїть **охоронець** (guard). Він перевіряє перепустки.\nУ цеху працює **керівник** (manager). Він дає **завдання**.\nРобітники виконують **складання** (assembling) деталей.\nЦе важке **завдання**, але вони мають **терпіння** (patience).\n**Якість** (quality) — це їхній пріоритет.\nУ кутку сидить **обліковець** (accountant). Він рахує цифри.\nНа стіні висить **оголошення** (announcement): \"Вітаємо з Днем Народження!\".\nТут панує **дружність** (friendliness) і **повага** (respect).\n**Керівництво** (management) дбає про людей.\nЦе хороше **підприємство** (enterprise).\n\n---"
+      },
+      {
+        "id": "section-10",
+        "name": "Language in Action",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Dialogue: The Interview\n\n**Interviewer:** Добрий день. Дякую за ваш інтерес до нашої компанії.\n**Candidate:** Добрий день. Це велика **можливість** для мене.\n**Interviewer:** У вас є досвід?\n**Candidate:** Так, я працював як **продавець** і як **водій**.\n**Interviewer:** Чудово. Але ця робота — це велика **відповідальність**.\n**Candidate:** Я розумію **важливість** цієї ролі. Я люблю **навчання** і нові **завдання**.\n**Interviewer:** Добре. Ось ваше перше **завдання**: напишіть план.\n**Candidate:** У мене немає ручки.\n**Interviewer:** Візьміть мою **ручечку**.\n**Candidate:** Дякую! Яка мила **ручечка**.\n**Interviewer:** (Сміється) Ви прийняті! Нам потрібен такий позитивний **працівник**.\n\n## Monologue: The Philosopher\n\nЩо таке **щастя**? Це складне **питання**.\nУ **молодість** ми шукаємо пригод.\nУ **старість** ми шукаємо спокій.\nДля когось щастя — це **кохання**.\nДля когось — це **творчість** (creativity).\nЯ думаю, що щастя — це **розуміння**.\nКоли є **розуміння** між людьми, є і **радість**.\nЦе моя **мудрість** (wisdom).\n\n## Dialogue: The Construction Site\n\n**Foreman:** Де **будівельник**?\n**Worker:** Він пішов на обід.\n**Foreman:** У нас термінове **завдання**! Де **водій** крана?\n**Worker:** **Водій** захворів.\n**Foreman:** Яка безвідповідальність! **Керівництво** буде зле.\n**Worker:** Зате **електрик** тут. Він робить **підключення**.\n**Foreman:** Добре. **Безпека** (safety) — це головне. Перевірте все.\n**Worker:** Так, ми знаємо. **Відповідальність** понад усе.\n\n---"
+      },
+      {
+        "id": "section-11",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "1.  **Suffixes change the part of speech.**\n2.  **-ач / -ець / -ник** = Person (Doer).\n3.  **-ння / -ття** = Process (Verbal Noun).\n4.  **-ість** = Abstract Concept (Quality).\n5.  **-ок / -ик / -ка** = Diminutive (Small/Cute).\n\n---"
+      },
+      {
+        "id": "section-12",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: The Factory\n\n> Match the Suffix to its Meaning.\n\n- -ість :: Abstract Concept\n- -ння :: Process (Verbal Noun)\n- -ач :: Person (Doer)\n- -ець :: Person (Doer)\n- -ник :: Person (Doer)\n- -тель :: Person (Doer)\n- -ок :: Diminutive (Small Masc)\n- -ик :: Diminutive (Small Masc)\n- -ка :: Diminutive (Small Fem)\n- -чка :: Diminutive (Small Fem)\n- -ко :: Diminutive (Small Neut)\n- -чко :: Diminutive (Small Neut)\n\n## group-sort: Suffix Sorter\n\n> Which category does this suffix belong to?\n\n### Person - Doer\n- Читач\n- Письменник\n- Вчитель\n- Продавець\n- Співець\n- Водій\n\n### Process - Verbal Noun\n- Читання\n- Писання\n- Життя\n- Навчання\n- Питання\n- Завдання\n\n### Abstract - Concept\n- Радість\n- Молодість\n- Старість\n- Важливість\n- Можливість\n- Відповідальність\n\n## fill-in: Verb to Noun\n\n> Turn the verb into a Noun. Use the hint.\n\n1. Читати -> ___ [Hint: Reading]\n   > [!answer] читання\n   > [!options] читання | читач | читка\n\n2. Жити -> ___ [Hint: Life]\n   > [!answer] життя\n   > [!options] життя | житель | житло\n\n3. Питати -> ___ [Hint: Question]\n   > [!answer] питання\n   > [!options] питання | питач | питка\n\n4. Завдавати -> ___ [Hint: Task]\n   > [!answer] завдання\n   > [!options] завдання | завдач | завод\n\n5. Писати -> ___ [Hint: Writing]\n   > [!answer] писання\n   > [!options] писання | письменник | писка\n\n6. Навчати -> ___ [Hint: Learning]\n   > [!answer] навчання\n   > [!options] навчання | навчач | вчення\n\n7. Знати -> ___ [Hint: Knowledge]\n   > [!answer] знання\n   > [!options] знання | знач | знак\n\n8. Бажати -> ___ [Hint: Wish]\n   > [!answer] бажання\n   > [!options] бажання | бажач | бажок\n\n9. Кохати -> ___ [Hint: Love]\n   > [!answer] кохання\n   > [!options] кохання | кохач | коханець\n\n10. Розуміти -> ___ [Hint: Understanding]\n    > [!answer] розуміння\n    > [!options] розуміння | розумач | розум\n\n11. Володіти -> ___ [Hint: Possession]\n    > [!answer] володіння\n    > [!options] володіння | володар | влада\n\n12. Створити -> ___ [Hint: Creation]\n    > [!answer] створення\n    > [!options] створення | творець | твір\n\n## fill-in: Person Maker\n\n> Who does the action?\n\n1. Хто читає? Це ___. [Hint: Reader]\n   > [!answer] читач\n   > [!options] читач | читання | читець\n\n2. Хто пише книги? Це ___. [Hint: Writer]\n   > [!answer] письменник\n   > [!options] письменник | писач | писання\n\n3. Хто продає товари? Це ___. [Hint: Seller]\n   > [!answer] продавець\n   > [!options] продавець | продаж | продажник\n\n4. Хто дивиться виставу? Це ___. [Hint: Viewer]\n   > [!answer] глядач\n   > [!options] глядач | глядіння | глядець\n\n5. Хто вчить дітей? Це ___. [Hint: Teacher]\n   > [!answer] вчитель\n   > [!options] вчитель | учень | вчення\n\n6. Хто водить машину? Це ___. [Hint: Driver]\n   > [!answer] водій\n   > [!options] водій | водач | водник\n\n7. Хто співає? Це ___. [Hint: Singer]\n   > [!answer] співець\n   > [!options] співець | спів | співка\n\n8. Хто бореться? Це ___. [Hint: Fighter]\n   > [!answer] борець\n   > [!options] борець | борня | боритель\n\n9. Хто будує? Це ___. [Hint: Builder]\n   > [!answer] будівельник\n   > [!options] будівельник | будач | будова\n\n10. Хто перекладає? Це ___. [Hint: Translator]\n    > [!answer] перекладач\n    > [!options] перекладач | переклад | кладач\n\n11. Хто слухає? Це ___. [Hint: Listener]\n    > [!answer] слухач\n    > [!options] слухач | слух | слуга\n\n12. Хто грає? Це ___. [Hint: Player]\n    > [!answer] гравець\n    > [!options] гравець | грач | гральник\n\n## fill-in: Abstract Concepts\n\n> Turn adjective into Abstract Noun (-ість).\n\n1. Радий -> ___ [Hint: Joy]\n   > [!answer] радість\n   > [!options] радість | радист | радання\n\n2. Молодий -> ___ [Hint: Youth]\n   > [!answer] молодість\n   > [!options] молодість | молодець | молодь\n\n3. Старий -> ___ [Hint: Old age]\n   > [!answer] старість\n   > [!options] старість | старець | старина\n\n4. Важливий -> ___ [Hint: Importance]\n   > [!answer] важливість\n   > [!options] важливість | вага | важкість\n\n5. Можливий -> ___ [Hint: Possibility]\n   > [!answer] можливість\n   > [!options] можливість | можна | може\n\n6. Відповідальний -> ___ [Hint: Responsibility]\n   > [!answer] відповідальність\n   > [!options] відповідальність | відповідь | відповідач\n\n7. Чесний -> ___ [Hint: Honesty]\n   > [!answer] чесність\n   > [!options] чесність | честь | чесун\n\n8. Мужній -> ___ [Hint: Courage]\n   > [!answer] мужність\n   > [!options] мужність | муж | мужчина\n\n9. Щирий -> ___ [Hint: Sincerity]\n   > [!answer] щирість\n   > [!options] щирість | щир | щиро\n\n10. Сміливий -> ___ [Hint: Bravery]\n    > [!answer] сміливість\n    > [!options] сміливість | сміло | смільчак\n\n11. Швидкий -> ___ [Hint: Speed]\n    > [!answer] швидкість\n    > [!options] швидкість | швидко | швид\n\n12. Якість -> Який -> ___ [Hint: Quality]\n    > [!answer] якість\n    > [!options] якість | як | якийсь\n\n## match-up: Cute Things\n\n> Match the normal word to its diminutive.\n\n- Кіт :: Котик\n- Дім :: Будиночок\n- Сонце :: Сонечко\n- Книга :: Книжечка\n- Рука :: Ручечка\n- Квітка :: Квіточка\n- Брат :: Братик\n- Син :: Синок\n- Вікно :: Віконце\n- Мама :: Матуся\n- Тато :: Татусь\n- Вода :: Водичка\n\n## unjumble: Soft Talk\n\n1. сонечко / світить / яскраве\n   > [!answer] Світить яскраве сонечко.\n2. читає / дівчинка / книжечку\n   > [!answer] Дівчинка читає книжечку.\n3. котик / молоко / п'є\n   > [!answer] Котик п'є молоко.\n4. ручечка / моя / де\n   > [!answer] Де моя ручечка?\n5. маленький / має / будиночок / він\n   > [!answer] Він має маленький будиночок.\n6. красива / це / квіточка\n   > [!answer] Це красива квіточка.\n7. у / братик / мене / є\n   > [!answer] У мене є братик.\n8. водичку / п'є / пташка\n   > [!answer] Пташка п'є водичку.\n9. матуся / моя / добра\n   > [!answer] Моя матуся добра.\n10. тут / синок / мій\n    > [!answer] Тут мій синок.\n11. віконце / відкрий / маленьке\n    > [!answer] Відкрий маленьке віконце.\n12. сестричка / грається / мала\n    > [!answer] Мала сестричка грається.\n\n## quiz: Logic Check\n\n1. Which suffix makes a verb into a **Process**?\n   - [x] -ння\n   - [ ] -ач\n   - [ ] -ість\n\n2. Which suffix makes an adjective into a **Concept**?\n   - [x] -ість\n   - [ ] -ець\n   - [ ] -ик\n\n3. \"Письменник\" means:\n   - [x] Writer (Person)\n   - [ ] Writing (Process)\n   - [ ] Little letter (Diminutive)\n\n4. \"Радість\" comes from which adjective?\n   - [x] Радий: Glad\n   - [ ] Радіо: Radio\n   - [ ] Рада: Council\n\n5. Which suffix creates a **Male Doer**?\n   - [x] -ач / -ець\n   - [ ] -ість\n   - [ ] -ння\n\n6. What is the diminutive of \"Сонце\"?\n   - [x] Сонечко\n   - [ ] Сончик\n   - [ ] Сонка\n\n7. \"Вчитель\" ends with which suffix?\n   - [x] -тель\n   - [ ] -ель\n   - [ ] -ль\n\n8. \"Життя\" means:\n   - [x] Life\n   - [ ] Living person\n   - [ ] Grain (Жито)\n\n## cloze: The Story Nouns\n\n> Fill in the missing nouns.\n\nУ мене є [___:1] [Hint: question].\nЯке твоє [___:2] [Hint: life]?\nМоя [___:3] [Hint: youth] була цікава.\nЯ любив [___:4] [Hint: reading].\nЯ хотів бути [___:5] [Hint: writer].\nАле [___:6] [Hint: old age] прийшла швидко.\nТепер я просто [___:7] [Hint: viewer] в театрі.\nАле це велика [___:8] [Hint: joy].\nЦе моя [___:9] [Hint: responsibility].\nЦе складне [___:10] [Hint: task].\nДе мій [___:11] [Hint: kitty]?\nОсь твоя [___:12] [Hint: book-diminutive].\n\n1. питання\n> [!answer] питання\n\n2. життя\n> [!answer] життя\n\n3. молодість\n> [!answer] молодість\n\n4. читання\n> [!answer] читання\n\n5. письменником\n> [!answer] письменником\n\n6. старість\n> [!answer] старість\n\n7. глядач\n> [!answer] глядач\n\n8. радість\n> [!answer] радість\n\n9. відповідальність\n> [!answer] відповідальність\n\n10. завдання\n> [!answer] завдання\n\n11. котик\n> [!answer] котик\n\n12. книжечка\n> [!answer] книжечка\n\n## error-correction: Wrong Suffix\n\n1. Я люблю **читач** книг. (Process needed)\n   > [!error] читач\n   > [!answer] читання\n   > [!explanation] \"I love reading\" is a process, not \"reader\" (person).\n   > [!options] читання | читач\n\n2. Це велика **важливий**. (Noun needed)\n   > [!error] важливий\n   > [!answer] важливість\n   > [!explanation] \"This is a great importance\", not \"important\".\n   > [!options] важливість | важливий\n\n3. Мій брат — **писання**. (Person needed)\n   > [!error] писання\n   > [!answer] письменник\n   > [!explanation] \"My brother is a writer\", not \"writing\".\n   > [!options] письменник | писання\n\n4. Де малий **кіт**? (Diminutive context)\n   > [!error] кіт\n   > [!answer] котик\n   > [!explanation] Little cat implies \"котик\".\n   > [!options] котик | кіт\n\n5. Це моя **відповідальний**. (Noun needed)\n   > [!error] відповідальний\n   > [!answer] відповідальність\n   > [!explanation] \"This is my responsibility\", not \"responsible\".\n   > [!options] відповідальність | відповідальний\n\n6. Він хороший **вчення**. (Person needed)\n   > [!error] вчення\n   > [!answer] вчитель\n   > [!explanation] \"He is a good teacher\", not \"teaching\".\n   > [!options] вчитель | вчення\n\n---"
+      },
+      {
+        "id": "section-13",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| читання | /t͡ʃɪˈtɑnʲːɑ/ | reading | noun | neut | -ння |\n| писання | /pɪˈsɑnʲːɑ/ | writing | noun | neut | -ння |\n| навчання | /nɑfˈt͡ʃɑnʲːɑ/ | learning/studies | noun | neut | -ння |\n| життя | /ʒɪtˈtʲɑ/ | life | noun | neut | -ття |\n| питання | /pɪˈtɑnʲːɑ/ | question | noun | neut | -ння |\n| завдання | /zɑʋˈdɑnʲːɑ/ | task/assignment | noun | neut | -ння |\n| важливість | /ʋɑʒˈlɪʋisʲtʲ/ | importance | noun | fem | -ість |\n| можливість | /mɔʒˈlɪʋisʲtʲ/ | possibility | noun | fem | -ість |\n| відповідальність | /ʋidpɔʋiˈdɑlʲnisʲtʲ/ | responsibility | noun | fem | -ість |\n| радість | /rˈɑdisʲtʲ/ | joy | noun | fem | -ість |\n| молодість | /mɔˈlɔdisʲtʲ/ | youth | noun | fem | -ість |\n| старість | /stˈɑrisʲtʲ/ | old age | noun | fem | -ість |\n| читач | /t͡ʃɪˈtɑt͡ʃ/ | reader | noun | masc | -ач |\n| письменник | /pɪsʲˈmɛnːɪk/ | writer | noun | masc | -ник |\n| вчитель | /ʋˈt͡ʃɪtɛlʲ/ | teacher | noun | masc | -тель |\n| водій | /ʋɔˈdij/ | driver | noun | masc | -ій |\n| продавець | /prɔdɑˈʋɛt͡sʲ/ | seller | noun | masc | -ець |\n| співець | /spiˈʋɛt͡sʲ/ | singer (poetic) | noun | masc | -ець |\n| борець | /bɔˈrɛt͡sʲ/ | fighter/wrestler | noun | masc | -ець |\n| глядач | /ɦlʲɑˈdɑt͡ʃ/ | viewer/spectator | noun | masc | -ач |\n| домик | /ˈdɔmɪk/ | little house | noun | masc | -ик |\n| котик | /ˈkɔtɪk/ | kitty | noun | masc | -ик |\n| синок | /sɪˈnɔk/ | sonny | noun | masc | -ок |\n| братик | /ˈbrɑtɪk/ | little brother | noun | masc | -ик |\n| сестричка | /sɛsˈtrɪt͡ʃkɑ/ | little sister | noun | fem | -чка |\n| книжечка | /ˈknɪʒɛt͡ʃkɑ/ | little book | noun | fem | -ечка |\n| ручечка | /ˈrut͡ʃɛt͡ʃkɑ/ | little pen/hand | noun | fem | -ечка |\n| квіточка | /ˈkʋitɔt͡ʃkɑ/ | little flower | noun | fem | -очка |\n| сонечко | /ˈsɔnɛt͡ʃkɔ/ | little sun | noun | neut | -чко |\n| дівчинка | /ˈdiʋt͡ʃɪnkɑ/ | little girl | noun | fem | -ка |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-33\ntitle: Noun Suffixes\nsubtitle: \"The Word Factory\"\nversion: \"1.0\"\nphase: \"A2.4\"\npedagogy: \"Inquiry\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - grammar\n  - nouns\n  - suffixes\n  - word-formation\ngrammar:\n  - noun suffixes (-ння, -ття, -ість, -ач, -ець, -ник)\n  - diminutives (-ок, -ик, -ка)\nobjectives:\n  - \"Learner can turn verbs into nouns (Reading -> Reader / Reading)\"\n  - \"Learner can turn adjectives into nouns (Happy -> Happiness)\"\n  - \"Learner can use diminutives for politeness and affection\"\nvocabulary_count: 35\n---\n\n# Warm-up\n\nWelcome to the **Word Factory**!\nIn the last module, we put prefixes on the *front* of words to change direction.\nNow, we put suffixes on the *end* of words to change their **class**.\n\nImagine a machine:\n1.  Input: **Чита-ти** [Verb: To read] -> [Machine] -> Output: **Чита-ч** [Noun: Reader].\n2.  Input: **Чита-ти** -> [Machine] -> Output: **Чита-ння** [Noun: Reading].\n3.  Input: **Добр-ий** [Adj: Good/Kind] -> [Machine] -> Output: **Добр-ота** [Noun: Kindness].\n\nThis is how you multiply your vocabulary instantly.\n\n> [!question] Think about it\n> English does this too:\n> - Teach -> Teach**er** (-er = Person)\n> - Teach -> Teach**ing** (-ing = Process)\n> - Kind -> Kind**ness** (-ness = Abstract Quality)\n> Ukrainian has the exact same logic!\n\n---\n\n# The Suffix System\n\nLet's look at the three main machines in our factory.\n\n## Machine 1: The Person Maker (-ач / -ець / -ник)\n\nTurns an **Action** into a **Doer**.\n\n| Input (Verb) | Suffix | Output (Person) | Note |\n| :--- | :--- | :--- | :--- |\n| **Чита**ти: Read | -ач | **Читач**: Reader | Also: Глядач: Viewer |\n| **Продава**ти: Sell | -ець | **Продавець**: Seller | Also: Співець: Singer |\n| **Писа**ти: Write | -ник | **Письменник**: Writer | Double 'н'! |\n| **Вчи**ти: Teach | -тель | **Вчитель**: Teacher | |\n\n## Machine 2: The Process Maker (-ння / -ття)\n\nTurns an **Action** into a **Thing/Process** (Gerund).\n*Usually requires double consonants.*\n\n| Input (Verb) | Suffix | Output (Process) | English |\n| :--- | :--- | :--- | :--- |\n| **Чита**ти | -ння | **Читання** | Reading |\n| **Писа**ти | -ння | **Писання** | Writing (Scripture) |\n| **Навча**ти | -ння | **Навчання** | Learning/Studies |\n| **Жи**ти | -ття | **Життя** | Life |\n| **Пита**ти | -ння | **Питання** | Question |\n| **Завдава**ти | -ння | **Завдання** | Task/Assignment |\n\n> [!tip] Spelling Rule: Double N\n> Notice that **Читання**, **Питання**, **Життя** all have double consonants (**нн**, **тт**).\n> This is typical for verbal nouns ending in -я.\n> Just remember: Double N = Process!\n\n## Machine 3: The Concept Maker (-ість)\n\nTurns a **Quality** (Adjective) into a **Concept**.\n*Equivalent to English -ness or -ity.*\n\n| Input (Adjective) | Suffix | Output (Abstract) | English |\n| :--- | :--- | :--- | :--- |\n| **Можлив**ий | -ість | **Можливість** | Possibility |\n| **Важлив**ий | -ість | **Важливість** | Importance |\n| **Рад**ий | -ість | **Радість** | Joy/Gladness |\n| **Молод**ий | -ість | **Молодість** | Youth |\n| **Стар**ий | -ість | **Старість** | Old age |\n| **Відповідальн**ий | -ість | **Відповідальність** | Responsibility |\n\n---\n\n# Cultural Insight: Last Names\n\nMany Ukrainian surnames tell you what an ancestor did for a living!\nThey use the exact suffixes we just learned.\n\n- **-ник**:\n    - **Мельник** (Miller) -> Melnyk\n    - **Олійник** (Oil manufacturer) -> Oliynyk\n- **-ець**:\n    - **Кравець** (Tailor) -> Kravets\n    - **Швець** (Shoemaker) -> Shvets\n- **-ач**:\n    - **Ткач** (Weaver) -> Tkach\n- **-ар**:\n    - **Коваль** (Blacksmith) -> Koval\n    - **Лікар** (Doctor) -> Likar\n\n> [!cultural] Cultural Note: Identity\n> If you meet a Ukrainian with the last name **Кравчук**, you know their ancestor was a Tailor (Кравець).\n> If **Коваленко**, they were a Blacksmith (Коваль).\n> Surnames preserve history.\n\n---\n\n# Deep Dive: The Logic of -ISTYH\n\nThe suffix **-ість** is the equivalent of English **-ness** or **-ity**.\nIt creates abstract nouns from adjectives.\nIt is almost always **Feminine** and ends in a soft sign (**ь**).\n\n- **Reality:** Реальн-ий -> Реальн-ість.\n- **Popularity:** Популярн-ий -> Популярн-ість.\n- **Activity:** Активн-ий -> Активн-ість.\n- **Quality:** Якісн-ий -> Як-ість.\n\n> [!tip] Soft Sign Magic\n> Don't forget the soft sign at the end!\n> It's not *радіст*, it's **радість**.\n> It sounds soft and gentle.\n\n---\n\n# Deep Dive: Feminitives (The Rise of -KA)\n\nUkrainian is a gendered language. In the past, many professions were used only in the masculine form (Лікар, Директор), even for women.\nBut in modern Ukrainian, we prefer **Feminitives**!\nThe magic machine for this is the suffix **-ка**.\n\n| Profession (Masc) | Feminitive (Fem) |\n| :--- | :--- |\n| **Вчитель** (Teacher) | **Вчителька** |\n| **Лікар** (Doctor) | **Лікарка** |\n| **Автор** (Author) | **Авторка** |\n| **Директор** (Director) | **Директорка** |\n| **Журналіст** (Journalist) | **Журналістка** |\n| **Письменник** (Writer) | **Письменниця** (Note: -ця) |\n\n> [!note] Why it matters\n> Using feminitives is respectful and precise.\n> Saying \"Вона — хороший лікар\" is grammatically okay, but \"Вона — хороша лікарка\" highlights her identity.\n> It validates women's visibility in professional roles.\n\n---\n\n# Deep Dive: The Crafter Suffix (-ар)\n\nAnother common suffix for professions is **-ар** (or -яр).\nIt usually indicates a skilled craftsman or worker.\n\n- **Лік-и** (Medicine) -> **Лік-ар** (Doctor).\n- **Кух-ня** (Kitchen) -> **Кух-ар** (Cook).\n- **Перук-а** (Wig) -> **Перук-ар** (Hairdresser).\n- **Кобз-а** (Instrument) -> **Кобз-ар** (Bard).\n\n> [!note] Stress Shift\n> Often the stress falls on the suffix: Перук**ар**, Кобз**ар**.\n> But: Л**і**кар, К**у**хар.\n\n---\n\n# Story Time: The Little House\n\nМи у \"Світі Зменшення\" (World of Diminutives). Тут усе маленьке і миле.\n\nУ лісі стоїть маленький **будиночок**.\nУ ньому живе маленький **котик**.\nКотика звати Мурчик.\nКожного ранку в віконце світить лагідне **сонечко**.\nМурчик п'є молочко і читає маленьку **книжечку**.\nОдного разу до нього прийшла маленька **дівчинка**.\nВона принесла йому **квіточку**.\n\"Яка **радість**!\" — сказав котик.\nВін взяв свою улюблену **ручечку** і записав цей момент у щоденник.\nЦе було просте, але щасливе **життя**.\n\n> [!cultural] Cultural Insight: Diminutives\n> Ukrainians LOVE diminutives. We use them not just for small things, but to show **affection** and **politeness**.\n> - Asking for tea: \"Можна мені **чайок**?\" (Can I have a generic-little-tea?)\n> - Calling a friend: \"Привіт, **сонечко**!\" (Hello, little sun!)\n> - Even slightly annoyed: \"Що це за **питаннячко**?\" (What kind of little question is that?)\n> It makes the language sound softer and warmer.\n\n---\n\n# Deep Dive: Diminutives Logic\n\nTo make things small or cute, we use suffixes:\n- Masc: **-ок**, **-ик** (Кіт -> Кот**ик**, Дім -> Будин**ок** -> Будин**очок**)\n- Fem: **-ка**, **-чка** (Книга -> Книж**ка** -> Книж**ечка**, Рука -> Руч**ка**)\n- Neut: **-ко**, **-чко** (Сонце -> Соне**чко**, Вікно -> Вікон**це**)\n\n> [!tip] Magic of K/CH\n> Notice how **К** often changes to **Ч** or **Ц**?\n> - Ру**к**а -> Ру**ч**ка.\n> - Сон**ц**е -> Соне**ч**ко.\n> This is sound mutation (palatalization). It makes words easier to pronounce softly.\n\n---\n\n# Story Time Part 2: The Factory Tour\n\nЛаскаво просимо на \"Фабрику Слів\".\nСьогодні ми побачимо, як працюють машини.\nНа вході стоїть **охоронець** (guard). Він перевіряє перепустки.\nУ цеху працює **керівник** (manager). Він дає **завдання**.\nРобітники виконують **складання** (assembling) деталей.\nЦе важке **завдання**, але вони мають **терпіння** (patience).\n**Якість** (quality) — це їхній пріоритет.\nУ кутку сидить **обліковець** (accountant). Він рахує цифри.\nНа стіні висить **оголошення** (announcement): \"Вітаємо з Днем Народження!\".\nТут панує **дружність** (friendliness) і **повага** (respect).\n**Керівництво** (management) дбає про людей.\nЦе хороше **підприємство** (enterprise).\n\n---\n\n# Language in Action\n\n## Dialogue: The Interview\n\n**Interviewer:** Добрий день. Дякую за ваш інтерес до нашої компанії.\n**Candidate:** Добрий день. Це велика **можливість** для мене.\n**Interviewer:** У вас є досвід?\n**Candidate:** Так, я працював як **продавець** і як **водій**.\n**Interviewer:** Чудово. Але ця робота — це велика **відповідальність**.\n**Candidate:** Я розумію **важливість** цієї ролі. Я люблю **навчання** і нові **завдання**.\n**Interviewer:** Добре. Ось ваше перше **завдання**: напишіть план.\n**Candidate:** У мене немає ручки.\n**Interviewer:** Візьміть мою **ручечку**.\n**Candidate:** Дякую! Яка мила **ручечка**.\n**Interviewer:** (Сміється) Ви прийняті! Нам потрібен такий позитивний **працівник**.\n\n## Monologue: The Philosopher\n\nЩо таке **щастя**? Це складне **питання**.\nУ **молодість** ми шукаємо пригод.\nУ **старість** ми шукаємо спокій.\nДля когось щастя — це **кохання**.\nДля когось — це **творчість** (creativity).\nЯ думаю, що щастя — це **розуміння**.\nКоли є **розуміння** між людьми, є і **радість**.\nЦе моя **мудрість** (wisdom).\n\n## Dialogue: The Construction Site\n\n**Foreman:** Де **будівельник**?\n**Worker:** Він пішов на обід.\n**Foreman:** У нас термінове **завдання**! Де **водій** крана?\n**Worker:** **Водій** захворів.\n**Foreman:** Яка безвідповідальність! **Керівництво** буде зле.\n**Worker:** Зате **електрик** тут. Він робить **підключення**.\n**Foreman:** Добре. **Безпека** (safety) — це головне. Перевірте все.\n**Worker:** Так, ми знаємо. **Відповідальність** понад усе.\n\n---\n\n# Summary\n\n1.  **Suffixes change the part of speech.**\n2.  **-ач / -ець / -ник** = Person (Doer).\n3.  **-ння / -ття** = Process (Verbal Noun).\n4.  **-ість** = Abstract Concept (Quality).\n5.  **-ок / -ик / -ка** = Diminutive (Small/Cute).\n\n---\n\n# Activities\n\n## match-up: The Factory\n\n> Match the Suffix to its Meaning.\n\n- -ість :: Abstract Concept\n- -ння :: Process (Verbal Noun)\n- -ач :: Person (Doer)\n- -ець :: Person (Doer)\n- -ник :: Person (Doer)\n- -тель :: Person (Doer)\n- -ок :: Diminutive (Small Masc)\n- -ик :: Diminutive (Small Masc)\n- -ка :: Diminutive (Small Fem)\n- -чка :: Diminutive (Small Fem)\n- -ко :: Diminutive (Small Neut)\n- -чко :: Diminutive (Small Neut)\n\n## group-sort: Suffix Sorter\n\n> Which category does this suffix belong to?\n\n### Person - Doer\n- Читач\n- Письменник\n- Вчитель\n- Продавець\n- Співець\n- Водій\n\n### Process - Verbal Noun\n- Читання\n- Писання\n- Життя\n- Навчання\n- Питання\n- Завдання\n\n### Abstract - Concept\n- Радість\n- Молодість\n- Старість\n- Важливість\n- Можливість\n- Відповідальність\n\n## fill-in: Verb to Noun\n\n> Turn the verb into a Noun. Use the hint.\n\n1. Читати -> ___ [Hint: Reading]\n   > [!answer] читання\n   > [!options] читання | читач | читка\n\n2. Жити -> ___ [Hint: Life]\n   > [!answer] життя\n   > [!options] життя | житель | житло\n\n3. Питати -> ___ [Hint: Question]\n   > [!answer] питання\n   > [!options] питання | питач | питка\n\n4. Завдавати -> ___ [Hint: Task]\n   > [!answer] завдання\n   > [!options] завдання | завдач | завод\n\n5. Писати -> ___ [Hint: Writing]\n   > [!answer] писання\n   > [!options] писання | письменник | писка\n\n6. Навчати -> ___ [Hint: Learning]\n   > [!answer] навчання\n   > [!options] навчання | навчач | вчення\n\n7. Знати -> ___ [Hint: Knowledge]\n   > [!answer] знання\n   > [!options] знання | знач | знак\n\n8. Бажати -> ___ [Hint: Wish]\n   > [!answer] бажання\n   > [!options] бажання | бажач | бажок\n\n9. Кохати -> ___ [Hint: Love]\n   > [!answer] кохання\n   > [!options] кохання | кохач | коханець\n\n10. Розуміти -> ___ [Hint: Understanding]\n    > [!answer] розуміння\n    > [!options] розуміння | розумач | розум\n\n11. Володіти -> ___ [Hint: Possession]\n    > [!answer] володіння\n    > [!options] володіння | володар | влада\n\n12. Створити -> ___ [Hint: Creation]\n    > [!answer] створення\n    > [!options] створення | творець | твір\n\n## fill-in: Person Maker\n\n> Who does the action?\n\n1. Хто читає? Це ___. [Hint: Reader]\n   > [!answer] читач\n   > [!options] читач | читання | читець\n\n2. Хто пише книги? Це ___. [Hint: Writer]\n   > [!answer] письменник\n   > [!options] письменник | писач | писання\n\n3. Хто продає товари? Це ___. [Hint: Seller]\n   > [!answer] продавець\n   > [!options] продавець | продаж | продажник\n\n4. Хто дивиться виставу? Це ___. [Hint: Viewer]\n   > [!answer] глядач\n   > [!options] глядач | глядіння | глядець\n\n5. Хто вчить дітей? Це ___. [Hint: Teacher]\n   > [!answer] вчитель\n   > [!options] вчитель | учень | вчення\n\n6. Хто водить машину? Це ___. [Hint: Driver]\n   > [!answer] водій\n   > [!options] водій | водач | водник\n\n7. Хто співає? Це ___. [Hint: Singer]\n   > [!answer] співець\n   > [!options] співець | спів | співка\n\n8. Хто бореться? Це ___. [Hint: Fighter]\n   > [!answer] борець\n   > [!options] борець | борня | боритель\n\n9. Хто будує? Це ___. [Hint: Builder]\n   > [!answer] будівельник\n   > [!options] будівельник | будач | будова\n\n10. Хто перекладає? Це ___. [Hint: Translator]\n    > [!answer] перекладач\n    > [!options] перекладач | переклад | кладач\n\n11. Хто слухає? Це ___. [Hint: Listener]\n    > [!answer] слухач\n    > [!options] слухач | слух | слуга\n\n12. Хто грає? Це ___. [Hint: Player]\n    > [!answer] гравець\n    > [!options] гравець | грач | гральник\n\n## fill-in: Abstract Concepts\n\n> Turn adjective into Abstract Noun (-ість).\n\n1. Радий -> ___ [Hint: Joy]\n   > [!answer] радість\n   > [!options] радість | радист | радання\n\n2. Молодий -> ___ [Hint: Youth]\n   > [!answer] молодість\n   > [!options] молодість | молодець | молодь\n\n3. Старий -> ___ [Hint: Old age]\n   > [!answer] старість\n   > [!options] старість | старець | старина\n\n4. Важливий -> ___ [Hint: Importance]\n   > [!answer] важливість\n   > [!options] важливість | вага | важкість\n\n5. Можливий -> ___ [Hint: Possibility]\n   > [!answer] можливість\n   > [!options] можливість | можна | може\n\n6. Відповідальний -> ___ [Hint: Responsibility]\n   > [!answer] відповідальність\n   > [!options] відповідальність | відповідь | відповідач\n\n7. Чесний -> ___ [Hint: Honesty]\n   > [!answer] чесність\n   > [!options] чесність | честь | чесун\n\n8. Мужній -> ___ [Hint: Courage]\n   > [!answer] мужність\n   > [!options] мужність | муж | мужчина\n\n9. Щирий -> ___ [Hint: Sincerity]\n   > [!answer] щирість\n   > [!options] щирість | щир | щиро\n\n10. Сміливий -> ___ [Hint: Bravery]\n    > [!answer] сміливість\n    > [!options] сміливість | сміло | смільчак\n\n11. Швидкий -> ___ [Hint: Speed]\n    > [!answer] швидкість\n    > [!options] швидкість | швидко | швид\n\n12. Якість -> Який -> ___ [Hint: Quality]\n    > [!answer] якість\n    > [!options] якість | як | якийсь\n\n## match-up: Cute Things\n\n> Match the normal word to its diminutive.\n\n- Кіт :: Котик\n- Дім :: Будиночок\n- Сонце :: Сонечко\n- Книга :: Книжечка\n- Рука :: Ручечка\n- Квітка :: Квіточка\n- Брат :: Братик\n- Син :: Синок\n- Вікно :: Віконце\n- Мама :: Матуся\n- Тато :: Татусь\n- Вода :: Водичка\n\n## unjumble: Soft Talk\n\n1. сонечко / світить / яскраве\n   > [!answer] Світить яскраве сонечко.\n2. читає / дівчинка / книжечку\n   > [!answer] Дівчинка читає книжечку.\n3. котик / молоко / п'є\n   > [!answer] Котик п'є молоко.\n4. ручечка / моя / де\n   > [!answer] Де моя ручечка?\n5. маленький / має / будиночок / він\n   > [!answer] Він має маленький будиночок.\n6. красива / це / квіточка\n   > [!answer] Це красива квіточка.\n7. у / братик / мене / є\n   > [!answer] У мене є братик.\n8. водичку / п'є / пташка\n   > [!answer] Пташка п'є водичку.\n9. матуся / моя / добра\n   > [!answer] Моя матуся добра.\n10. тут / синок / мій\n    > [!answer] Тут мій синок.\n11. віконце / відкрий / маленьке\n    > [!answer] Відкрий маленьке віконце.\n12. сестричка / грається / мала\n    > [!answer] Мала сестричка грається.\n\n## quiz: Logic Check\n\n1. Which suffix makes a verb into a **Process**?\n   - [x] -ння\n   - [ ] -ач\n   - [ ] -ість\n\n2. Which suffix makes an adjective into a **Concept**?\n   - [x] -ість\n   - [ ] -ець\n   - [ ] -ик\n\n3. \"Письменник\" means:\n   - [x] Writer (Person)\n   - [ ] Writing (Process)\n   - [ ] Little letter (Diminutive)\n\n4. \"Радість\" comes from which adjective?\n   - [x] Радий: Glad\n   - [ ] Радіо: Radio\n   - [ ] Рада: Council\n\n5. Which suffix creates a **Male Doer**?\n   - [x] -ач / -ець\n   - [ ] -ість\n   - [ ] -ння\n\n6. What is the diminutive of \"Сонце\"?\n   - [x] Сонечко\n   - [ ] Сончик\n   - [ ] Сонка\n\n7. \"Вчитель\" ends with which suffix?\n   - [x] -тель\n   - [ ] -ель\n   - [ ] -ль\n\n8. \"Життя\" means:\n   - [x] Life\n   - [ ] Living person\n   - [ ] Grain (Жито)\n\n## cloze: The Story Nouns\n\n> Fill in the missing nouns.\n\nУ мене є [___:1] [Hint: question].\nЯке твоє [___:2] [Hint: life]?\nМоя [___:3] [Hint: youth] була цікава.\nЯ любив [___:4] [Hint: reading].\nЯ хотів бути [___:5] [Hint: writer].\nАле [___:6] [Hint: old age] прийшла швидко.\nТепер я просто [___:7] [Hint: viewer] в театрі.\nАле це велика [___:8] [Hint: joy].\nЦе моя [___:9] [Hint: responsibility].\nЦе складне [___:10] [Hint: task].\nДе мій [___:11] [Hint: kitty]?\nОсь твоя [___:12] [Hint: book-diminutive].\n\n1. питання\n> [!answer] питання\n\n2. життя\n> [!answer] життя\n\n3. молодість\n> [!answer] молодість\n\n4. читання\n> [!answer] читання\n\n5. письменником\n> [!answer] письменником\n\n6. старість\n> [!answer] старість\n\n7. глядач\n> [!answer] глядач\n\n8. радість\n> [!answer] радість\n\n9. відповідальність\n> [!answer] відповідальність\n\n10. завдання\n> [!answer] завдання\n\n11. котик\n> [!answer] котик\n\n12. книжечка\n> [!answer] книжечка\n\n## error-correction: Wrong Suffix\n\n1. Я люблю **читач** книг. (Process needed)\n   > [!error] читач\n   > [!answer] читання\n   > [!explanation] \"I love reading\" is a process, not \"reader\" (person).\n   > [!options] читання | читач\n\n2. Це велика **важливий**. (Noun needed)\n   > [!error] важливий\n   > [!answer] важливість\n   > [!explanation] \"This is a great importance\", not \"important\".\n   > [!options] важливість | важливий\n\n3. Мій брат — **писання**. (Person needed)\n   > [!error] писання\n   > [!answer] письменник\n   > [!explanation] \"My brother is a writer\", not \"writing\".\n   > [!options] письменник | писання\n\n4. Де малий **кіт**? (Diminutive context)\n   > [!error] кіт\n   > [!answer] котик\n   > [!explanation] Little cat implies \"котик\".\n   > [!options] котик | кіт\n\n5. Це моя **відповідальний**. (Noun needed)\n   > [!error] відповідальний\n   > [!answer] відповідальність\n   > [!explanation] \"This is my responsibility\", not \"responsible\".\n   > [!options] відповідальність | відповідальний\n\n6. Він хороший **вчення**. (Person needed)\n   > [!error] вчення\n   > [!answer] вчитель\n   > [!explanation] \"He is a good teacher\", not \"teaching\".\n   > [!options] вчитель | вчення\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| читання | /t͡ʃɪˈtɑnʲːɑ/ | reading | noun | neut | -ння |\n| писання | /pɪˈsɑnʲːɑ/ | writing | noun | neut | -ння |\n| навчання | /nɑfˈt͡ʃɑnʲːɑ/ | learning/studies | noun | neut | -ння |\n| життя | /ʒɪtˈtʲɑ/ | life | noun | neut | -ття |\n| питання | /pɪˈtɑnʲːɑ/ | question | noun | neut | -ння |\n| завдання | /zɑʋˈdɑnʲːɑ/ | task/assignment | noun | neut | -ння |\n| важливість | /ʋɑʒˈlɪʋisʲtʲ/ | importance | noun | fem | -ість |\n| можливість | /mɔʒˈlɪʋisʲtʲ/ | possibility | noun | fem | -ість |\n| відповідальність | /ʋidpɔʋiˈdɑlʲnisʲtʲ/ | responsibility | noun | fem | -ість |\n| радість | /rˈɑdisʲtʲ/ | joy | noun | fem | -ість |\n| молодість | /mɔˈlɔdisʲtʲ/ | youth | noun | fem | -ість |\n| старість | /stˈɑrisʲtʲ/ | old age | noun | fem | -ість |\n| читач | /t͡ʃɪˈtɑt͡ʃ/ | reader | noun | masc | -ач |\n| письменник | /pɪsʲˈmɛnːɪk/ | writer | noun | masc | -ник |\n| вчитель | /ʋˈt͡ʃɪtɛlʲ/ | teacher | noun | masc | -тель |\n| водій | /ʋɔˈdij/ | driver | noun | masc | -ій |\n| продавець | /prɔdɑˈʋɛt͡sʲ/ | seller | noun | masc | -ець |\n| співець | /spiˈʋɛt͡sʲ/ | singer (poetic) | noun | masc | -ець |\n| борець | /bɔˈrɛt͡sʲ/ | fighter/wrestler | noun | masc | -ець |\n| глядач | /ɦlʲɑˈdɑt͡ʃ/ | viewer/spectator | noun | masc | -ач |\n| домик | /ˈdɔmɪk/ | little house | noun | masc | -ик |\n| котик | /ˈkɔtɪk/ | kitty | noun | masc | -ик |\n| синок | /sɪˈnɔk/ | sonny | noun | masc | -ок |\n| братик | /ˈbrɑtɪk/ | little brother | noun | masc | -ик |\n| сестричка | /sɛsˈtrɪt͡ʃkɑ/ | little sister | noun | fem | -чка |\n| книжечка | /ˈknɪʒɛt͡ʃkɑ/ | little book | noun | fem | -ечка |\n| ручечка | /ˈrut͡ʃɛt͡ʃkɑ/ | little pen/hand | noun | fem | -ечка |\n| квіточка | /ˈkʋitɔt͡ʃkɑ/ | little flower | noun | fem | -очка |\n| сонечко | /ˈsɔnɛt͡ʃkɔ/ | little sun | noun | neut | -чко |\n| дівчинка | /ˈdiʋt͡ʃɪnkɑ/ | little girl | noun | fem | -ка |\n",
+    "createdAt": "2025-12-15T20:02:03.050849Z",
+    "modifiedAt": "2025-12-15T20:02:03.050849Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-38",
+    "level": "A2",
+    "phase": "A2.4",
+    "wordCount": 30,
+    "newWordCount": 30,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "читання",
+        "ipa": "/t͡ʃɪˈtɑnʲːɑ/",
+        "en": "reading",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ння"
+      },
+      {
+        "id": "vocab-2",
+        "uk": "писання",
+        "ipa": "/pɪˈsɑnʲːɑ/",
+        "en": "writing",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ння"
+      },
+      {
+        "id": "vocab-3",
+        "uk": "навчання",
+        "ipa": "/nɑfˈt͡ʃɑnʲːɑ/",
+        "en": "learning/studies",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ння"
+      },
+      {
+        "id": "vocab-4",
+        "uk": "життя",
+        "ipa": "/ʒɪtˈtʲɑ/",
+        "en": "life",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ття"
+      },
+      {
+        "id": "vocab-5",
+        "uk": "питання",
+        "ipa": "/pɪˈtɑnʲːɑ/",
+        "en": "question",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ння"
+      },
+      {
+        "id": "vocab-6",
+        "uk": "завдання",
+        "ipa": "/zɑʋˈdɑnʲːɑ/",
+        "en": "task/assignment",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ння"
+      },
+      {
+        "id": "vocab-7",
+        "uk": "важливість",
+        "ipa": "/ʋɑʒˈlɪʋisʲtʲ/",
+        "en": "importance",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ість"
+      },
+      {
+        "id": "vocab-8",
+        "uk": "можливість",
+        "ipa": "/mɔʒˈlɪʋisʲtʲ/",
+        "en": "possibility",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ість"
+      },
+      {
+        "id": "vocab-9",
+        "uk": "відповідальність",
+        "ipa": "/ʋidpɔʋiˈdɑlʲnisʲtʲ/",
+        "en": "responsibility",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ість"
+      },
+      {
+        "id": "vocab-10",
+        "uk": "радість",
+        "ipa": "/rˈɑdisʲtʲ/",
+        "en": "joy",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ість"
+      },
+      {
+        "id": "vocab-11",
+        "uk": "молодість",
+        "ipa": "/mɔˈlɔdisʲtʲ/",
+        "en": "youth",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ість"
+      },
+      {
+        "id": "vocab-12",
+        "uk": "старість",
+        "ipa": "/stˈɑrisʲtʲ/",
+        "en": "old age",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ість"
+      },
+      {
+        "id": "vocab-13",
+        "uk": "читач",
+        "ipa": "/t͡ʃɪˈtɑt͡ʃ/",
+        "en": "reader",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ач"
+      },
+      {
+        "id": "vocab-14",
+        "uk": "письменник",
+        "ipa": "/pɪsʲˈmɛnːɪk/",
+        "en": "writer",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ник"
+      },
+      {
+        "id": "vocab-15",
+        "uk": "вчитель",
+        "ipa": "/ʋˈt͡ʃɪtɛlʲ/",
+        "en": "teacher",
+        "pos": "noun",
+        "gender": null,
+        "note": "-тель"
+      },
+      {
+        "id": "vocab-16",
+        "uk": "водій",
+        "ipa": "/ʋɔˈdij/",
+        "en": "driver",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ій"
+      },
+      {
+        "id": "vocab-17",
+        "uk": "продавець",
+        "ipa": "/prɔdɑˈʋɛt͡sʲ/",
+        "en": "seller",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ець"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "співець",
+        "ipa": "/spiˈʋɛt͡sʲ/",
+        "en": "singer (poetic)",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ець"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "борець",
+        "ipa": "/bɔˈrɛt͡sʲ/",
+        "en": "fighter/wrestler",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ець"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "глядач",
+        "ipa": "/ɦlʲɑˈdɑt͡ʃ/",
+        "en": "viewer/spectator",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ач"
+      },
+      {
+        "id": "vocab-21",
+        "uk": "домик",
+        "ipa": "/ˈdɔmɪk/",
+        "en": "little house",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ик"
+      },
+      {
+        "id": "vocab-22",
+        "uk": "котик",
+        "ipa": "/ˈkɔtɪk/",
+        "en": "kitty",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ик"
+      },
+      {
+        "id": "vocab-23",
+        "uk": "синок",
+        "ipa": "/sɪˈnɔk/",
+        "en": "sonny",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ок"
+      },
+      {
+        "id": "vocab-24",
+        "uk": "братик",
+        "ipa": "/ˈbrɑtɪk/",
+        "en": "little brother",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ик"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "сестричка",
+        "ipa": "/sɛsˈtrɪt͡ʃkɑ/",
+        "en": "little sister",
+        "pos": "noun",
+        "gender": null,
+        "note": "-чка"
+      },
+      {
+        "id": "vocab-26",
+        "uk": "книжечка",
+        "ipa": "/ˈknɪʒɛt͡ʃkɑ/",
+        "en": "little book",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ечка"
+      },
+      {
+        "id": "vocab-27",
+        "uk": "ручечка",
+        "ipa": "/ˈrut͡ʃɛt͡ʃkɑ/",
+        "en": "little pen/hand",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ечка"
+      },
+      {
+        "id": "vocab-28",
+        "uk": "квіточка",
+        "ipa": "/ˈkʋitɔt͡ʃkɑ/",
+        "en": "little flower",
+        "pos": "noun",
+        "gender": null,
+        "note": "-очка"
+      },
+      {
+        "id": "vocab-29",
+        "uk": "сонечко",
+        "ipa": "/ˈsɔnɛt͡ʃkɔ/",
+        "en": "little sun",
+        "pos": "noun",
+        "gender": null,
+        "note": "-чко"
+      },
+      {
+        "id": "vocab-30",
+        "uk": "дівчинка",
+        "ipa": "/ˈdiʋt͡ʃɪnkɑ/",
+        "en": "little girl",
+        "pos": "noun",
+        "gender": null,
+        "note": "-ка"
+      }
+    ],
+    "reviewWords": []
+  }
+}

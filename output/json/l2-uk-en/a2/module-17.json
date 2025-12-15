@@ -1,0 +1,381 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-17",
+    "moduleId": "mod-uk-A2-17",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.2",
+    "moduleNumber": 17,
+    "moduleType": "grammar",
+    "pedagogy": "PPP",
+    "immersionLevel": 0.4,
+    "title": "Possessive: Свій vs Його",
+    "titleUk": null,
+    "subtitle": "My Own vs His/Her/Their",
+    "description": "Learner can distinguish свій from його/її/їхній",
+    "objectives": [
+      "Learner can distinguish свій from його/її/їхній",
+      "Learner can use свій when possessor is the subject",
+      "Learner can decline свій correctly"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "reflexive possessive свій",
+      "contrast with його/її/їхній"
+    ],
+    "tags": [
+      "possessives",
+      "pronouns",
+      "grammar"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "In A1, you learned possessive pronouns: мій, твій, його, її, наш, ваш, їхній.\n\nNow you'll learn a special pronoun that causes confusion for English speakers: **свій**.\n\nEnglish has no equivalent to свій. This single word means \"one's own\" and refers back to the subject of the sentence. Understanding this concept is essential for natural Ukrainian. Once you master it, your sentences will sound much more authentic to native speakers.\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "The Problem: Ambiguity",
+        "nameEn": null,
+        "type": "content",
+        "content": "Look at this English sentence:\n- \"He loves his mother.\"\n\nIn English, this is ambiguous. Does \"his\" refer to:\n- His OWN mother? (He loves his own mother.)\n- Someone ELSE's mother? (He loves [another man's] mother.)\n\nContext usually clarifies, but the sentence itself is ambiguous.\n\nUkrainian solves this problem elegantly with **свій**.\n\n> [!tip] Why This Matters\n> Without свій, Ukrainian would have the same ambiguity as English.\n> This pronoun is one of the elegant features of Slavic languages.\n> Master it and your Ukrainian will sound much more natural!\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "The Rule: Свій = Subject's Own",
+        "nameEn": null,
+        "type": "content",
+        "content": "## When to Use Свій\n\nUse **свій** when the possessor IS the subject of the sentence.\n\n| Subject | Possessor | Pronoun | Example |\n|---------|-----------|---------|---------|\n| Я | Я | свій | Я люблю **свою** маму. (I love my own mom.) |\n| Ти | Ти | свій | Ти любиш **свою** маму. (You love your own mom.) |\n| Він | Він | свій | Він любить **свою** маму. (He loves his own mom.) |\n| Вона | Вона | свій | Вона любить **свою** маму. (She loves her own mom.) |\n| Ми | Ми | свій | Ми любимо **свою** маму. (We love our mom.) |\n\n## When to Use Його/Її/Їхній\n\nUse **його/її/їхній** when the possessor is NOT the subject.\n\n| Subject | Possessor | Pronoun | Example |\n|---------|-----------|---------|---------|\n| Я | Він | його | Я люблю **його** маму. (I love his mom.) |\n| Вона | Він | його | Вона любить **його** маму. (She loves his mom.) |\n| Він | Вона | її | Він любить **її** маму. (He loves her mom.) |\n| Ми | Вони | їхній | Ми любимо **їхню** маму. (We love their mom.) |\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "The Contrast in Action",
+        "nameEn": null,
+        "type": "content",
+        "content": "Here is the key difference illustrated clearly:\n\n**Він любить свою маму.**\n→ He loves **his own** mother. (Subject = Він, Possessor = Він)\n\n**Він любить його маму.**\n→ He loves **[someone else's]** mother. (Subject = Він, Possessor = another male)\n\nThis distinction is critical in Ukrainian and must be observed in all sentences.\n\n> [!cultural] Cultural Note: Possession in Slavic Languages\n> All Slavic languages (Russian, Polish, Czech, etc.) have a reflexive possessive like свій.\n> If you ever learn another Slavic language, this concept will transfer directly.\n> It shows how Slavic languages value precision in expressing relationships.\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Declension of Свій",
+        "nameEn": null,
+        "type": "content",
+        "content": "Свій declines exactly like мій/твій. Here are the forms:\n\n## Masculine\n\n| Case | Form | Example |\n|------|------|---------|\n| Nom | свій | свій дім |\n| Gen | свого | без свого дому |\n| Dat | своєму | своєму братові |\n| Acc | свій/свого | свій дім / свого брата |\n| Instr | своїм | зі своїм братом |\n| Loc | своєму / своїм | у своєму домі |\n\n## Feminine\n\n| Case | Form | Example |\n|------|------|---------|\n| Nom | своя | своя мама |\n| Gen | своєї | без своєї мами |\n| Dat | своїй | своїй сестрі |\n| Acc | свою | свою маму |\n| Instr | своєю | зі своєю сестрою |\n| Loc | своїй | у своїй кімнаті |\n\n## Neuter\n\n| Case | Form | Example |\n|------|------|---------|\n| Nom | своє | своє життя |\n| Gen | свого | без свого життя |\n| Dat | своєму | своєму серцю |\n| Acc | своє | своє життя |\n| Instr | своїм | зі своїм серцем |\n| Loc | своєму | у своєму житті |\n\n## Plural\n\n| Case | Form | Example |\n|------|------|---------|\n| Nom | свої | свої книги |\n| Gen | своїх | без своїх книг |\n| Dat | своїм | своїм батькам |\n| Acc | свої/своїх | свої книги / своїх батьків |\n| Instr | своїми | зі своїми друзями |\n| Loc | своїх | у своїх книгах |\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Common Patterns",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Pattern 1: Subject = 1st/2nd Person\n\nWhen the subject is \"я\" or \"ти\", свій is optional but preferred.\n\nBoth are correct:\n- Я читаю **свою** книгу. (preferred)\n- Я читаю **мою** книгу. (also correct)\n\n## Pattern 2: Subject = 3rd Person\n\nWhen the subject is \"він/вона/вони\", свій is REQUIRED to mean \"one's own.\"\n\nOnly correct way to say \"He reads his own book\":\n- Він читає **свою** книгу. ✓\n\nThis is WRONG for \"his own\":\n- Він читає **його** книгу. ✗ (means another person's book)\n\n## Pattern 3: Different Subjects\n\nWhen possessor differs from subject, use його/її/їхній.\n\n- Марія читає **його** книгу. (Maria reads his [not her own] book.)\n- Петро бачив **її** маму. (Petro saw her [not his own] mom.)\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Story Time: The Family Dinner",
+        "nameEn": null,
+        "type": "content",
+        "content": "Сьогодні у Марії сімейний обід. Вона готує вечерю у **своїй** кухні. Її мама приїхала з **своїм** чоловіком — **її** батьком.\n\nМарія показала мамі **свою** нову квартиру. Мама сказала: \"Мені подобається! А де **твоя** кімната?\"\n\nМарія відповіла: \"Я сплю у **своїй** спальні. А гості можуть спати у **своїй** кімнаті для гостей.\"\n\nПід час обіду всі розмовляли про **своє** життя. Батько говорив про **свою** роботу. Мама розповідала про **своїх** подруг. Марія слухала і думала про **своє** майбутнє.\n\nПісля обіду мама взяла **свою** сумку і поцілувала Марію. \"Дякую за **твою** гостинність!\" — сказала вона.\n\n> [!tip] Notice the Pattern\n> - \"своїй кухні\" - Maria is the subject, so \"свій\" refers to HER OWN kitchen.\n> - \"її батьком\" - Maria is the subject, but the father belongs to Maria AND her mother, so \"її\" is used.\n> - \"твою гостинність\" - The mother is speaking TO Maria, so \"твою\" (your) is used, not \"свою\".\n\n---"
+      },
+      {
+        "id": "section-8",
+        "name": "Story Time Part 2: The Job Interview",
+        "nameEn": null,
+        "type": "content",
+        "content": "Петро пішов на співбесіду. Він надів **свій** найкращий костюм. Він взяв **свою** папку з документами. Він поцілував **свою** дружину і пішов.\n\nНа співбесіді менеджер запитав про **його** досвід. Петро розповів про **свою** попередню роботу. Він показав **свої** рекомендації.\n\nМенеджер подивився на **свого** колегу. **Його** колега кивнув. Вони вирішили взяти Петра на роботу!\n\nПетро повернувся додому і обійняв **свою** дружину. Він сказав: \"Я отримав **свою** нову роботу!\"\n\n**Його** дружина була дуже рада. Вона приготувала **свою** найкращу страву на вечерю. Вони святкували **свій** успіх разом.\n\n> [!tip] Key Observations\n> When Петро does something to HIS OWN things: свій.\n> When the text talks about someone else's things: його/її.\n> This pattern is consistent throughout Ukrainian narratives.\n\n---"
+      },
+      {
+        "id": "section-9",
+        "name": "Deep Dive: Edge Cases",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Case 1: Infinitive Constructions\n\nWhen the subject controls an infinitive, свій refers to that subject:\n- Він попросив мене взяти **свою** книгу. (He asked me to take **his own** book.)\n- Вона хоче, щоб я прочитав **свою** статтю. (She wants me to read **her own** article.)\n\n## Case 2: Impersonal Constructions\n\nWith impersonal constructions, свій refers to the logical subject:\n- Треба любити **свою** країну. (One must love one's country.)\n- Добре мати **своє** власне житло. (It's good to have one's own housing.)\n\n## Case 3: Embedded Clauses\n\nIn subordinate clauses, свій typically refers to the subject of that clause:\n- Марія знає, що Петро любить **свою** роботу. (Maria knows that Petro loves **his own** work.)\n\nThese advanced patterns become natural with practice. Focus first on the basic rule before tackling these edge cases."
+      },
+      {
+        "id": "section-10",
+        "name": "Common Mistakes",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Mistake 1: Using Його for Own Possession\n\n❌ Він любить його маму. (Means someone else's mom!)\n✅ Він любить свою маму. (His own mom.)\n\n## Mistake 2: Using Свій When Subject Differs\n\n❌ Я бачив свою маму Петра.\n✅ Я бачив його маму. (I saw his mom - Petro's mom.)\n\n## Mistake 3: Forgetting to Decline Свій\n\n❌ Вона говорить з свій брат.\n✅ Вона говорить зі своїм братом. (Instrumental required after \"з\".)\n\n---"
+      },
+      {
+        "id": "section-11",
+        "name": "Language Learning Tip",
+        "nameEn": null,
+        "type": "content",
+        "content": "A helpful way to remember the rule is to ask yourself: \"Is the possessor doing the action?\"\n\n- If YES → use свій\n- If NO → use його/її/їхній\n\nAnother tip: In English, try replacing the possessive with \"one's own.\" If it makes sense, use свій in Ukrainian.\n\n- \"He loves his own mother\" → use свій\n- \"He loves one's own mother\" → makes sense → свій is correct\n\nThis mental check will help you until the pattern becomes automatic through practice.\n\n> [!cultural] Language Elegance\n> The свій system shows Ukrainian's grammatical elegance.\n> Where English needs extra words (\"his own\"), Ukrainian uses one form.\n> This efficiency is part of what makes Ukrainian beautiful to speak.\n\n---"
+      },
+      {
+        "id": "section-12",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "Today you learned the reflexive possessive pronoun **свій**.\n\n**Key Rules:**\n- Use **свій** when the possessor IS the subject.\n- Use **його/її/їхній** when the possessor is NOT the subject.\n- Свій declines like мій/твій.\n- This distinction is mandatory in Ukrainian for 3rd person.\n\n**Contrast:**\n- Він любить **свою** маму. (his own)\n- Він любить **його** маму. (someone else's)\n\n---"
+      },
+      {
+        "id": "section-13",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Свій vs Його\n\n> Match the pronoun to the situation.\n\n- Subject owns it :: свій\n- Someone else owns it :: його/її/їхній\n- He loves his own car :: свою\n- He loves her car :: її\n- She washed her own hands :: свої\n- She washed his hands :: його\n- We love our own country :: свою\n- They love her country :: її\n\n## fill-in: Choose Свій or Його\n\n> Choose the correct possessive.\n\n1. Він читає [___] книгу. (his own book)\n   > [!answer] свою\n   > [!options] свою | його\n\n2. Вона любить [___] маму. (her own mom)\n   > [!answer] свою\n   > [!options] свою | її\n\n3. Я бачив [___] друга. (his friend, not mine)\n   > [!answer] його\n   > [!options] його | свого\n\n4. Вони живуть у [___] домі. (their own house)\n   > [!answer] своєму\n   > [!options] своєму | їхньому\n\n5. Марія взяла [___] сумку. (her own bag)\n   > [!answer] свою\n   > [!options] свою | її\n\n6. Він допоміг [___] сестрі. (his own sister)\n   > [!answer] своїй\n   > [!options] своїй | її\n\n7. Я люблю [___] батьків. (her parents, not mine)\n   > [!answer] її\n   > [!options] її | своїх\n\n8. Вона говорить про [___] роботу. (her own work)\n   > [!answer] свою\n   > [!options] свою | її\n\n## quiz: Concept Check\n\n1. \"Свій\" refers back to:\n   - [x] The subject of the sentence\n   - [ ] Any person mentioned\n   - [ ] Only third person\n\n2. \"Він любить його маму\" means:\n   - [x] He loves someone else's mom\n   - [ ] He loves his own mom\n   - [ ] He loves my mom\n\n3. When can you use мій instead of свій?\n   - [x] When the subject is \"я\"\n   - [ ] Always\n   - [ ] Never\n\n4. \"Вона миє свої руки\" means:\n   - [x] She washes her own hands\n   - [ ] She washes his hands\n   - [ ] She washes your hands\n\n5. Which declines: свій or його?\n   - [x] Only свій\n   - [ ] Only його\n   - [ ] Both\n\n6. \"Свого\" is which case?\n   - [x] Genitive\n   - [ ] Dative\n   - [ ] Instrumental\n\n7. \"Ми любимо свою країну\" means:\n   - [x] We love our country\n   - [ ] We love their country\n   - [ ] We love his country\n\n8. The subject is \"Марія\". Which is correct for \"her book\"?\n   - [x] свою книгу\n   - [ ] її книгу\n   - [ ] мою книгу\n\n## cloze: Family Story\n\n> Complete with свій/її/його.\n\nМарія готує у [___:1] кухні. (her own)\nЇї мама приїхала з [___:2] чоловіком. (her own husband)\nМарія показала [___:3] квартиру. (her own)\nБатько говорив про [___:4] роботу. (his own)\nМама взяла [___:5] сумку. (her own)\nМарія слухала [___:6] батьків. (her own)\n\n1. своїй\n> [!answer] своїй\n> [!options] своїй | її\n\n2. своїм\n> [!answer] своїм\n> [!options] своїм | його\n\n3. свою\n> [!answer] свою\n> [!options] свою | її\n\n4. свою\n> [!answer] свою\n> [!options] свою | його\n\n5. свою\n> [!answer] свою\n> [!options] свою | її\n\n6. своїх\n> [!answer] своїх\n> [!options] своїх | її\n\n## unjumble: Possessive Sentences\n\n1. свою / Він / книгу / читає\n   > [!answer] Він читає свою книгу.\n2. маму / свою / Вона / любить\n   > [!answer] Вона любить свою маму.\n3. у / живуть / своєму / Вони / домі\n   > [!answer] Вони живуть у своєму домі.\n4. сумку / взяла / свою / Марія\n   > [!answer] Марія взяла свою сумку.\n5. зі / говорить / своїм / Він / братом\n   > [!answer] Він говорить зі своїм братом.\n6. про / думаю / своє / Я / майбутнє\n   > [!answer] Я думаю про своє майбутнє.\n7. своїй / у / спить / Вона / кімнаті\n   > [!answer] Вона спить у своїй кімнаті.\n8. своїх / Ми / любимо / батьків\n   > [!answer] Ми любимо своїх батьків.\n\n## error-correction: Wrong Possessive\n\n1. Він любить **його** маму. (Intended: his own mom)\n   > [!error] його\n   > [!answer] свою\n   > [!explanation] \"His own\" = subject owns it → свою.\n   > [!options] свою | його\n\n2. Вона взяла **свою** сумку Марії. (Intended: Maria's bag)\n   > [!error] свою\n   > [!answer] її\n   > [!explanation] Maria is not the subject → її.\n   > [!options] її | свою\n\n3. Я живу у **свій** дім. (Intended: my house)\n   > [!error] свій\n   > [!answer] своєму\n   > [!explanation] Locative case after \"у\" → своєму.\n   > [!options] своєму | свій\n\n4. Вони говорять про **їхню** роботу. (Intended: their own work)\n   > [!error] їхню\n   > [!answer] свою\n   > [!explanation] Subject = Вони, their own → свою.\n   > [!options] свою | їхню\n\n5. Марія любить **своєї** мами. (Intended: her own mom)\n   > [!error] своєї\n   > [!answer] свою\n   > [!explanation] \"Любить\" takes Accusative → свою.\n   > [!options] свою | своєї\n\n6. Петро бачив **свою** сестру Оксани. (Intended: Oksana's sister)\n   > [!error] свою\n   > [!answer] її\n   > [!explanation] Oksana is not the subject → її.\n   > [!options] її | свою\n\n## group-sort: Declension Forms\n\n> Group the forms by gender.\n\n### Masculine (свій, свого, своєму)\n- свій дім\n- свого брата\n- своєму батькові\n- своїм братом\n\n### Feminine (своя, своєї, своїй, свою)\n- своя сестра\n- своєї мами\n- своїй подрузі\n- свою книгу\n\n## match-up: Case Selection\n\n> Match the context to the correct form.\n\n- у + своя (кімната) :: своїй кімнаті\n- без + свій (брат) :: свого брата\n- про + своя (робота) :: свою роботу\n- з + свій (друг) :: своїм другом\n- для + своя (мама) :: своєї мами\n- на + своє (місце) :: своєму місці\n- під + свій (стіл) :: своїм столом\n- біля + свій (дім) :: свого дому\n\n## fill-in: Interview Story\n\n> Complete the story gaps.\n\n1. Петро надів [___] костюм. (his own)\n   > [!answer] свій\n   > [!options] свій | його\n\n2. Він взяв [___] папку. (his own)\n   > [!answer] свою\n   > [!options] свою | її\n\n3. Менеджер запитав про [___] досвід. (Petro's)\n   > [!answer] його\n   > [!options] його | свій\n\n4. Петро розповів про [___] роботу. (his own)\n   > [!answer] свою\n   > [!options] свою | його\n\n5. Він показав [___] рекомендації. (his own)\n   > [!answer] свої\n   > [!options] свої | його\n\n6. Менеджер подивився на [___] колегу. (his own)\n   > [!answer] свого\n   > [!options] свого | його\n\n7. Петро обійняв [___] дружину. (his own)\n   > [!answer] свою\n   > [!options] свою | її\n\n8. Вони святкували [___] успіх. (their own)\n   > [!answer] свій\n   > [!options] свій | їхній\n\n## cloze: Edge Cases\n\n> Complete using sviy/yoho.\n\nВін попросив мене взяти [___:1] книгу. (his own)\nТреба любити [___:2] країну. (one's)\nМарія знає, що Петро любить [___:3] роботу. (his own)\nДобре мати [___:4] житло. (one's own)\nВона хоче, щоб я прочитав [___:5] статтю. (her own)\nВін допоміг [___:6] братові. (his own)\n\n1. свою\n> [!answer] свою\n> [!options] свою | його\n\n2. свою\n> [!answer] свою\n> [!options] свою | її\n\n3. свою\n> [!answer] свою\n> [!options] свою | його\n\n4. своє\n> [!answer] своє\n> [!options] своє | їхнє\n\n5. свою\n> [!answer] свою\n> [!options] свою | її\n\n6. своєму\n> [!answer] своєму\n> [!options] своєму | його\n\n---"
+      },
+      {
+        "id": "section-14",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Forms |\n|------|-----|---------|-----|-------|\n| свій | /sʋij/ | one's own (m) | pron | свого, своєму, своїм |\n| своя | /sʋɔjˈɑ/ | one's own (f) | pron | своєї, своїй, свою |\n| своє | /sʋɔjˈɛ/ | one's own (n) | pron | свого, своєму |\n| свої | /sʋɔjˈi/ | one's own (pl) | pron | своїх, своїм, своїми |\n| його | /jɔɦˈɔ/ | his | pron | - |\n| її | /jijˈi/ | her | pron | - |\n| їхній | /jixnʲij/ | their | pron | їхнього, їхньому |\n| власний | /ʋlˈɑsnɪj/ | own (adj) | adj | - |\n| належати | /nɑlɛʒˈɑtɪ/ | to belong | verb | - |\n| мій | /mij/ | my | pron | мого, моєму |\n| твій | /tʋij/ | your (sg) | pron | твого, твоєму |\n| наш | /nɑʃ/ | our | pron | нашого, нашому |\n| ваш | /ʋɑʃ/ | your (pl/formal) | pron | вашого, вашому |\n| кімната | /kimnˈɑtɑ/ | room | noun | - |\n| квартира | /kʋɑrtˈɪrɑ/ | apartment | noun | - |\n| будинок | /budˈɪnɔk/ | building/house | noun | - |\n| сумка | /sˈumkɑ/ | bag | noun | - |\n| робота | /rɔbˈɔtɑ/ | work | noun | - |\n| життя | /ʒɪtʲˈɑ/ | life | noun | - |\n| майбутнє | /mɑjbˈutnʲɛ/ | future | noun | - |\n| батьки | /bɑtʲkˈɪ/ | parents | noun | батьків, батькам |\n| брат | /brɑt/ | brother | noun | брата, братові |\n| сестра | /sɛstrˈɑ/ | sister | noun | сестри, сестрі |\n| подруга | /pɔdrˈuɦɑ/ | female friend | noun | - |\n| гостинність | /ɦɔstˈɪnnʲistʲ/ | hospitality | noun | - |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-17\ntitle: \"Possessive: Свій vs Його\"\nsubtitle: \"My Own vs His/Her/Their\"\nversion: \"1.0\"\nphase: \"A2.2\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - possessives\n  - pronouns\n  - grammar\ngrammar:\n  - reflexive possessive свій\n  - contrast with його/її/їхній\nobjectives:\n  - \"Learner can distinguish свій from його/її/їхній\"\n  - \"Learner can use свій when possessor is the subject\"\n  - \"Learner can decline свій correctly\"\nvocabulary_count: 25\n---\n\n# Warm-up\n\nIn A1, you learned possessive pronouns: мій, твій, його, її, наш, ваш, їхній.\n\nNow you'll learn a special pronoun that causes confusion for English speakers: **свій**.\n\nEnglish has no equivalent to свій. This single word means \"one's own\" and refers back to the subject of the sentence. Understanding this concept is essential for natural Ukrainian. Once you master it, your sentences will sound much more authentic to native speakers.\n\n---\n\n# The Problem: Ambiguity\n\nLook at this English sentence:\n- \"He loves his mother.\"\n\nIn English, this is ambiguous. Does \"his\" refer to:\n- His OWN mother? (He loves his own mother.)\n- Someone ELSE's mother? (He loves [another man's] mother.)\n\nContext usually clarifies, but the sentence itself is ambiguous.\n\nUkrainian solves this problem elegantly with **свій**.\n\n> [!tip] Why This Matters\n> Without свій, Ukrainian would have the same ambiguity as English.\n> This pronoun is one of the elegant features of Slavic languages.\n> Master it and your Ukrainian will sound much more natural!\n\n---\n\n# The Rule: Свій = Subject's Own\n\n## When to Use Свій\n\nUse **свій** when the possessor IS the subject of the sentence.\n\n| Subject | Possessor | Pronoun | Example |\n|---------|-----------|---------|---------|\n| Я | Я | свій | Я люблю **свою** маму. (I love my own mom.) |\n| Ти | Ти | свій | Ти любиш **свою** маму. (You love your own mom.) |\n| Він | Він | свій | Він любить **свою** маму. (He loves his own mom.) |\n| Вона | Вона | свій | Вона любить **свою** маму. (She loves her own mom.) |\n| Ми | Ми | свій | Ми любимо **свою** маму. (We love our mom.) |\n\n## When to Use Його/Її/Їхній\n\nUse **його/її/їхній** when the possessor is NOT the subject.\n\n| Subject | Possessor | Pronoun | Example |\n|---------|-----------|---------|---------|\n| Я | Він | його | Я люблю **його** маму. (I love his mom.) |\n| Вона | Він | його | Вона любить **його** маму. (She loves his mom.) |\n| Він | Вона | її | Він любить **її** маму. (He loves her mom.) |\n| Ми | Вони | їхній | Ми любимо **їхню** маму. (We love their mom.) |\n\n---\n\n# The Contrast in Action\n\nHere is the key difference illustrated clearly:\n\n**Він любить свою маму.**\n→ He loves **his own** mother. (Subject = Він, Possessor = Він)\n\n**Він любить його маму.**\n→ He loves **[someone else's]** mother. (Subject = Він, Possessor = another male)\n\nThis distinction is critical in Ukrainian and must be observed in all sentences.\n\n> [!cultural] Cultural Note: Possession in Slavic Languages\n> All Slavic languages (Russian, Polish, Czech, etc.) have a reflexive possessive like свій.\n> If you ever learn another Slavic language, this concept will transfer directly.\n> It shows how Slavic languages value precision in expressing relationships.\n\n---\n\n# Declension of Свій\n\nСвій declines exactly like мій/твій. Here are the forms:\n\n## Masculine\n\n| Case | Form | Example |\n|------|------|---------|\n| Nom | свій | свій дім |\n| Gen | свого | без свого дому |\n| Dat | своєму | своєму братові |\n| Acc | свій/свого | свій дім / свого брата |\n| Instr | своїм | зі своїм братом |\n| Loc | своєму / своїм | у своєму домі |\n\n## Feminine\n\n| Case | Form | Example |\n|------|------|---------|\n| Nom | своя | своя мама |\n| Gen | своєї | без своєї мами |\n| Dat | своїй | своїй сестрі |\n| Acc | свою | свою маму |\n| Instr | своєю | зі своєю сестрою |\n| Loc | своїй | у своїй кімнаті |\n\n## Neuter\n\n| Case | Form | Example |\n|------|------|---------|\n| Nom | своє | своє життя |\n| Gen | свого | без свого життя |\n| Dat | своєму | своєму серцю |\n| Acc | своє | своє життя |\n| Instr | своїм | зі своїм серцем |\n| Loc | своєму | у своєму житті |\n\n## Plural\n\n| Case | Form | Example |\n|------|------|---------|\n| Nom | свої | свої книги |\n| Gen | своїх | без своїх книг |\n| Dat | своїм | своїм батькам |\n| Acc | свої/своїх | свої книги / своїх батьків |\n| Instr | своїми | зі своїми друзями |\n| Loc | своїх | у своїх книгах |\n\n---\n\n# Common Patterns\n\n## Pattern 1: Subject = 1st/2nd Person\n\nWhen the subject is \"я\" or \"ти\", свій is optional but preferred.\n\nBoth are correct:\n- Я читаю **свою** книгу. (preferred)\n- Я читаю **мою** книгу. (also correct)\n\n## Pattern 2: Subject = 3rd Person\n\nWhen the subject is \"він/вона/вони\", свій is REQUIRED to mean \"one's own.\"\n\nOnly correct way to say \"He reads his own book\":\n- Він читає **свою** книгу. ✓\n\nThis is WRONG for \"his own\":\n- Він читає **його** книгу. ✗ (means another person's book)\n\n## Pattern 3: Different Subjects\n\nWhen possessor differs from subject, use його/її/їхній.\n\n- Марія читає **його** книгу. (Maria reads his [not her own] book.)\n- Петро бачив **її** маму. (Petro saw her [not his own] mom.)\n\n---\n\n# Story Time: The Family Dinner\n\nСьогодні у Марії сімейний обід. Вона готує вечерю у **своїй** кухні. Її мама приїхала з **своїм** чоловіком — **її** батьком.\n\nМарія показала мамі **свою** нову квартиру. Мама сказала: \"Мені подобається! А де **твоя** кімната?\"\n\nМарія відповіла: \"Я сплю у **своїй** спальні. А гості можуть спати у **своїй** кімнаті для гостей.\"\n\nПід час обіду всі розмовляли про **своє** життя. Батько говорив про **свою** роботу. Мама розповідала про **своїх** подруг. Марія слухала і думала про **своє** майбутнє.\n\nПісля обіду мама взяла **свою** сумку і поцілувала Марію. \"Дякую за **твою** гостинність!\" — сказала вона.\n\n> [!tip] Notice the Pattern\n> - \"своїй кухні\" - Maria is the subject, so \"свій\" refers to HER OWN kitchen.\n> - \"її батьком\" - Maria is the subject, but the father belongs to Maria AND her mother, so \"її\" is used.\n> - \"твою гостинність\" - The mother is speaking TO Maria, so \"твою\" (your) is used, not \"свою\".\n\n---\n\n# Story Time Part 2: The Job Interview\n\nПетро пішов на співбесіду. Він надів **свій** найкращий костюм. Він взяв **свою** папку з документами. Він поцілував **свою** дружину і пішов.\n\nНа співбесіді менеджер запитав про **його** досвід. Петро розповів про **свою** попередню роботу. Він показав **свої** рекомендації.\n\nМенеджер подивився на **свого** колегу. **Його** колега кивнув. Вони вирішили взяти Петра на роботу!\n\nПетро повернувся додому і обійняв **свою** дружину. Він сказав: \"Я отримав **свою** нову роботу!\"\n\n**Його** дружина була дуже рада. Вона приготувала **свою** найкращу страву на вечерю. Вони святкували **свій** успіх разом.\n\n> [!tip] Key Observations\n> When Петро does something to HIS OWN things: свій.\n> When the text talks about someone else's things: його/її.\n> This pattern is consistent throughout Ukrainian narratives.\n\n---\n\n# Deep Dive: Edge Cases\n\n## Case 1: Infinitive Constructions\n\nWhen the subject controls an infinitive, свій refers to that subject:\n- Він попросив мене взяти **свою** книгу. (He asked me to take **his own** book.)\n- Вона хоче, щоб я прочитав **свою** статтю. (She wants me to read **her own** article.)\n\n## Case 2: Impersonal Constructions\n\nWith impersonal constructions, свій refers to the logical subject:\n- Треба любити **свою** країну. (One must love one's country.)\n- Добре мати **своє** власне житло. (It's good to have one's own housing.)\n\n## Case 3: Embedded Clauses\n\nIn subordinate clauses, свій typically refers to the subject of that clause:\n- Марія знає, що Петро любить **свою** роботу. (Maria knows that Petro loves **his own** work.)\n\nThese advanced patterns become natural with practice. Focus first on the basic rule before tackling these edge cases.\n\n# Common Mistakes\n\n## Mistake 1: Using Його for Own Possession\n\n❌ Він любить його маму. (Means someone else's mom!)\n✅ Він любить свою маму. (His own mom.)\n\n## Mistake 2: Using Свій When Subject Differs\n\n❌ Я бачив свою маму Петра.\n✅ Я бачив його маму. (I saw his mom - Petro's mom.)\n\n## Mistake 3: Forgetting to Decline Свій\n\n❌ Вона говорить з свій брат.\n✅ Вона говорить зі своїм братом. (Instrumental required after \"з\".)\n\n---\n\n# Language Learning Tip\n\nA helpful way to remember the rule is to ask yourself: \"Is the possessor doing the action?\"\n\n- If YES → use свій\n- If NO → use його/її/їхній\n\nAnother tip: In English, try replacing the possessive with \"one's own.\" If it makes sense, use свій in Ukrainian.\n\n- \"He loves his own mother\" → use свій\n- \"He loves one's own mother\" → makes sense → свій is correct\n\nThis mental check will help you until the pattern becomes automatic through practice.\n\n> [!cultural] Language Elegance\n> The свій system shows Ukrainian's grammatical elegance.\n> Where English needs extra words (\"his own\"), Ukrainian uses one form.\n> This efficiency is part of what makes Ukrainian beautiful to speak.\n\n---\n\n# Summary\n\nToday you learned the reflexive possessive pronoun **свій**.\n\n**Key Rules:**\n- Use **свій** when the possessor IS the subject.\n- Use **його/її/їхній** when the possessor is NOT the subject.\n- Свій declines like мій/твій.\n- This distinction is mandatory in Ukrainian for 3rd person.\n\n**Contrast:**\n- Він любить **свою** маму. (his own)\n- Він любить **його** маму. (someone else's)\n\n---\n\n# Activities\n\n## match-up: Свій vs Його\n\n> Match the pronoun to the situation.\n\n- Subject owns it :: свій\n- Someone else owns it :: його/її/їхній\n- He loves his own car :: свою\n- He loves her car :: її\n- She washed her own hands :: свої\n- She washed his hands :: його\n- We love our own country :: свою\n- They love her country :: її\n\n## fill-in: Choose Свій or Його\n\n> Choose the correct possessive.\n\n1. Він читає [___] книгу. (his own book)\n   > [!answer] свою\n   > [!options] свою | його\n\n2. Вона любить [___] маму. (her own mom)\n   > [!answer] свою\n   > [!options] свою | її\n\n3. Я бачив [___] друга. (his friend, not mine)\n   > [!answer] його\n   > [!options] його | свого\n\n4. Вони живуть у [___] домі. (their own house)\n   > [!answer] своєму\n   > [!options] своєму | їхньому\n\n5. Марія взяла [___] сумку. (her own bag)\n   > [!answer] свою\n   > [!options] свою | її\n\n6. Він допоміг [___] сестрі. (his own sister)\n   > [!answer] своїй\n   > [!options] своїй | її\n\n7. Я люблю [___] батьків. (her parents, not mine)\n   > [!answer] її\n   > [!options] її | своїх\n\n8. Вона говорить про [___] роботу. (her own work)\n   > [!answer] свою\n   > [!options] свою | її\n\n## quiz: Concept Check\n\n1. \"Свій\" refers back to:\n   - [x] The subject of the sentence\n   - [ ] Any person mentioned\n   - [ ] Only third person\n\n2. \"Він любить його маму\" means:\n   - [x] He loves someone else's mom\n   - [ ] He loves his own mom\n   - [ ] He loves my mom\n\n3. When can you use мій instead of свій?\n   - [x] When the subject is \"я\"\n   - [ ] Always\n   - [ ] Never\n\n4. \"Вона миє свої руки\" means:\n   - [x] She washes her own hands\n   - [ ] She washes his hands\n   - [ ] She washes your hands\n\n5. Which declines: свій or його?\n   - [x] Only свій\n   - [ ] Only його\n   - [ ] Both\n\n6. \"Свого\" is which case?\n   - [x] Genitive\n   - [ ] Dative\n   - [ ] Instrumental\n\n7. \"Ми любимо свою країну\" means:\n   - [x] We love our country\n   - [ ] We love their country\n   - [ ] We love his country\n\n8. The subject is \"Марія\". Which is correct for \"her book\"?\n   - [x] свою книгу\n   - [ ] її книгу\n   - [ ] мою книгу\n\n## cloze: Family Story\n\n> Complete with свій/її/його.\n\nМарія готує у [___:1] кухні. (her own)\nЇї мама приїхала з [___:2] чоловіком. (her own husband)\nМарія показала [___:3] квартиру. (her own)\nБатько говорив про [___:4] роботу. (his own)\nМама взяла [___:5] сумку. (her own)\nМарія слухала [___:6] батьків. (her own)\n\n1. своїй\n> [!answer] своїй\n> [!options] своїй | її\n\n2. своїм\n> [!answer] своїм\n> [!options] своїм | його\n\n3. свою\n> [!answer] свою\n> [!options] свою | її\n\n4. свою\n> [!answer] свою\n> [!options] свою | його\n\n5. свою\n> [!answer] свою\n> [!options] свою | її\n\n6. своїх\n> [!answer] своїх\n> [!options] своїх | її\n\n## unjumble: Possessive Sentences\n\n1. свою / Він / книгу / читає\n   > [!answer] Він читає свою книгу.\n2. маму / свою / Вона / любить\n   > [!answer] Вона любить свою маму.\n3. у / живуть / своєму / Вони / домі\n   > [!answer] Вони живуть у своєму домі.\n4. сумку / взяла / свою / Марія\n   > [!answer] Марія взяла свою сумку.\n5. зі / говорить / своїм / Він / братом\n   > [!answer] Він говорить зі своїм братом.\n6. про / думаю / своє / Я / майбутнє\n   > [!answer] Я думаю про своє майбутнє.\n7. своїй / у / спить / Вона / кімнаті\n   > [!answer] Вона спить у своїй кімнаті.\n8. своїх / Ми / любимо / батьків\n   > [!answer] Ми любимо своїх батьків.\n\n## error-correction: Wrong Possessive\n\n1. Він любить **його** маму. (Intended: his own mom)\n   > [!error] його\n   > [!answer] свою\n   > [!explanation] \"His own\" = subject owns it → свою.\n   > [!options] свою | його\n\n2. Вона взяла **свою** сумку Марії. (Intended: Maria's bag)\n   > [!error] свою\n   > [!answer] її\n   > [!explanation] Maria is not the subject → її.\n   > [!options] її | свою\n\n3. Я живу у **свій** дім. (Intended: my house)\n   > [!error] свій\n   > [!answer] своєму\n   > [!explanation] Locative case after \"у\" → своєму.\n   > [!options] своєму | свій\n\n4. Вони говорять про **їхню** роботу. (Intended: their own work)\n   > [!error] їхню\n   > [!answer] свою\n   > [!explanation] Subject = Вони, their own → свою.\n   > [!options] свою | їхню\n\n5. Марія любить **своєї** мами. (Intended: her own mom)\n   > [!error] своєї\n   > [!answer] свою\n   > [!explanation] \"Любить\" takes Accusative → свою.\n   > [!options] свою | своєї\n\n6. Петро бачив **свою** сестру Оксани. (Intended: Oksana's sister)\n   > [!error] свою\n   > [!answer] її\n   > [!explanation] Oksana is not the subject → її.\n   > [!options] її | свою\n\n## group-sort: Declension Forms\n\n> Group the forms by gender.\n\n### Masculine (свій, свого, своєму)\n- свій дім\n- свого брата\n- своєму батькові\n- своїм братом\n\n### Feminine (своя, своєї, своїй, свою)\n- своя сестра\n- своєї мами\n- своїй подрузі\n- свою книгу\n\n## match-up: Case Selection\n\n> Match the context to the correct form.\n\n- у + своя (кімната) :: своїй кімнаті\n- без + свій (брат) :: свого брата\n- про + своя (робота) :: свою роботу\n- з + свій (друг) :: своїм другом\n- для + своя (мама) :: своєї мами\n- на + своє (місце) :: своєму місці\n- під + свій (стіл) :: своїм столом\n- біля + свій (дім) :: свого дому\n\n## fill-in: Interview Story\n\n> Complete the story gaps.\n\n1. Петро надів [___] костюм. (his own)\n   > [!answer] свій\n   > [!options] свій | його\n\n2. Він взяв [___] папку. (his own)\n   > [!answer] свою\n   > [!options] свою | її\n\n3. Менеджер запитав про [___] досвід. (Petro's)\n   > [!answer] його\n   > [!options] його | свій\n\n4. Петро розповів про [___] роботу. (his own)\n   > [!answer] свою\n   > [!options] свою | його\n\n5. Він показав [___] рекомендації. (his own)\n   > [!answer] свої\n   > [!options] свої | його\n\n6. Менеджер подивився на [___] колегу. (his own)\n   > [!answer] свого\n   > [!options] свого | його\n\n7. Петро обійняв [___] дружину. (his own)\n   > [!answer] свою\n   > [!options] свою | її\n\n8. Вони святкували [___] успіх. (their own)\n   > [!answer] свій\n   > [!options] свій | їхній\n\n## cloze: Edge Cases\n\n> Complete using sviy/yoho.\n\nВін попросив мене взяти [___:1] книгу. (his own)\nТреба любити [___:2] країну. (one's)\nМарія знає, що Петро любить [___:3] роботу. (his own)\nДобре мати [___:4] житло. (one's own)\nВона хоче, щоб я прочитав [___:5] статтю. (her own)\nВін допоміг [___:6] братові. (his own)\n\n1. свою\n> [!answer] свою\n> [!options] свою | його\n\n2. свою\n> [!answer] свою\n> [!options] свою | її\n\n3. свою\n> [!answer] свою\n> [!options] свою | його\n\n4. своє\n> [!answer] своє\n> [!options] своє | їхнє\n\n5. свою\n> [!answer] свою\n> [!options] свою | її\n\n6. своєму\n> [!answer] своєму\n> [!options] своєму | його\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Forms |\n|------|-----|---------|-----|-------|\n| свій | /sʋij/ | one's own (m) | pron | свого, своєму, своїм |\n| своя | /sʋɔjˈɑ/ | one's own (f) | pron | своєї, своїй, свою |\n| своє | /sʋɔjˈɛ/ | one's own (n) | pron | свого, своєму |\n| свої | /sʋɔjˈi/ | one's own (pl) | pron | своїх, своїм, своїми |\n| його | /jɔɦˈɔ/ | his | pron | - |\n| її | /jijˈi/ | her | pron | - |\n| їхній | /jixnʲij/ | their | pron | їхнього, їхньому |\n| власний | /ʋlˈɑsnɪj/ | own (adj) | adj | - |\n| належати | /nɑlɛʒˈɑtɪ/ | to belong | verb | - |\n| мій | /mij/ | my | pron | мого, моєму |\n| твій | /tʋij/ | your (sg) | pron | твого, твоєму |\n| наш | /nɑʃ/ | our | pron | нашого, нашому |\n| ваш | /ʋɑʃ/ | your (pl/formal) | pron | вашого, вашому |\n| кімната | /kimnˈɑtɑ/ | room | noun | - |\n| квартира | /kʋɑrtˈɪrɑ/ | apartment | noun | - |\n| будинок | /budˈɪnɔk/ | building/house | noun | - |\n| сумка | /sˈumkɑ/ | bag | noun | - |\n| робота | /rɔbˈɔtɑ/ | work | noun | - |\n| життя | /ʒɪtʲˈɑ/ | life | noun | - |\n| майбутнє | /mɑjbˈutnʲɛ/ | future | noun | - |\n| батьки | /bɑtʲkˈɪ/ | parents | noun | батьків, батькам |\n| брат | /brɑt/ | brother | noun | брата, братові |\n| сестра | /sɛstrˈɑ/ | sister | noun | сестри, сестрі |\n| подруга | /pɔdrˈuɦɑ/ | female friend | noun | - |\n| гостинність | /ɦɔstˈɪnnʲistʲ/ | hospitality | noun | - |\n",
+    "createdAt": "2025-12-15T20:02:02.985150Z",
+    "modifiedAt": "2025-12-15T20:02:02.985150Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-17",
+    "level": "A2",
+    "phase": "A2.2",
+    "wordCount": 25,
+    "newWordCount": 25,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "свій",
+        "ipa": "/sʋij/",
+        "en": "one's own (m)",
+        "pos": "pron",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-2",
+        "uk": "своя",
+        "ipa": "/sʋɔjˈɑ/",
+        "en": "one's own (f)",
+        "pos": "pron",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-3",
+        "uk": "своє",
+        "ipa": "/sʋɔjˈɛ/",
+        "en": "one's own (n)",
+        "pos": "pron",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-4",
+        "uk": "свої",
+        "ipa": "/sʋɔjˈi/",
+        "en": "one's own (pl)",
+        "pos": "pron",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-5",
+        "uk": "його",
+        "ipa": "/jɔɦˈɔ/",
+        "en": "his",
+        "pos": "pron",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-6",
+        "uk": "її",
+        "ipa": "/jijˈi/",
+        "en": "her",
+        "pos": "pron",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-7",
+        "uk": "їхній",
+        "ipa": "/jixnʲij/",
+        "en": "their",
+        "pos": "pron",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-8",
+        "uk": "власний",
+        "ipa": "/ʋlˈɑsnɪj/",
+        "en": "own (adj)",
+        "pos": "adj",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-9",
+        "uk": "належати",
+        "ipa": "/nɑlɛʒˈɑtɪ/",
+        "en": "to belong",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-10",
+        "uk": "мій",
+        "ipa": "/mij/",
+        "en": "my",
+        "pos": "pron",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-11",
+        "uk": "твій",
+        "ipa": "/tʋij/",
+        "en": "your (sg)",
+        "pos": "pron",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-12",
+        "uk": "наш",
+        "ipa": "/nɑʃ/",
+        "en": "our",
+        "pos": "pron",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-13",
+        "uk": "ваш",
+        "ipa": "/ʋɑʃ/",
+        "en": "your (pl/formal)",
+        "pos": "pron",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-14",
+        "uk": "кімната",
+        "ipa": "/kimnˈɑtɑ/",
+        "en": "room",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-15",
+        "uk": "квартира",
+        "ipa": "/kʋɑrtˈɪrɑ/",
+        "en": "apartment",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-16",
+        "uk": "будинок",
+        "ipa": "/budˈɪnɔk/",
+        "en": "building/house",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-17",
+        "uk": "сумка",
+        "ipa": "/sˈumkɑ/",
+        "en": "bag",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-18",
+        "uk": "робота",
+        "ipa": "/rɔbˈɔtɑ/",
+        "en": "work",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-19",
+        "uk": "життя",
+        "ipa": "/ʒɪtʲˈɑ/",
+        "en": "life",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-20",
+        "uk": "майбутнє",
+        "ipa": "/mɑjbˈutnʲɛ/",
+        "en": "future",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-21",
+        "uk": "батьки",
+        "ipa": "/bɑtʲkˈɪ/",
+        "en": "parents",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-22",
+        "uk": "брат",
+        "ipa": "/brɑt/",
+        "en": "brother",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-23",
+        "uk": "сестра",
+        "ipa": "/sɛstrˈɑ/",
+        "en": "sister",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-24",
+        "uk": "подруга",
+        "ipa": "/pɔdrˈuɦɑ/",
+        "en": "female friend",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-25",
+        "uk": "гостинність",
+        "ipa": "/ɦɔstˈɪnnʲistʲ/",
+        "en": "hospitality",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      }
+    ],
+    "reviewWords": []
+  }
+}

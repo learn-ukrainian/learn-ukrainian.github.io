@@ -1,0 +1,363 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-48",
+    "moduleId": "mod-uk-A2-48",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2",
+    "moduleNumber": 48,
+    "moduleType": "vocabulary",
+    "pedagogy": "Narrative",
+    "immersionLevel": 0.4,
+    "title": "Work & Professions",
+    "titleUk": null,
+    "subtitle": "Building a Career in Ukrainian",
+    "description": {
+      "Name common professions": "лікар, вчитель, інженер"
+    },
+    "objectives": [
+      {
+        "Name common professions": "лікар, вчитель, інженер"
+      },
+      {
+        "Describe workplaces": "офіс, школа, лікарня"
+      },
+      "Discuss career and salary",
+      "Use verbs for work activities"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "noun-gender-professions"
+    ],
+    "tags": [
+      "vocabulary",
+      "work",
+      "professions",
+      "business"
+    ],
+    "totalDuration": 60,
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Work & Professions",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Warm-up\n\nДе ви працюєте? Яка ваша професія? Ви любите свою роботу?\n\nРобота займає велику частину нашого життя. Ми працюємо, щоб заробляти гроші, але також щоб реалізувати свої таланти. В Україні люди дуже працьовиті. Кожен хоче мати хорошу кар'єру і високу зарплату. Сьогодні ми поговоримо про професії, офісне життя і бізнес.\n\nWork is universally important. In this module, you'll learn to talk about what you do, where you work, and your professional goals in Ukrainian. You will master vocabulary for modern professions, traditional jobs, and workplace interactions.\n\n> [!important] **Myth Buster** \"Job Stability\"\n> Russian propaganda often portrays Ukraine as economically unstable. In reality, Ukraine has a booming IT sector and diverse industries. Many Ukrainians build successful international careers.\n\n## Presentation\n\n### Common Professions\n\nLet's start with the most common jobs. In Ukrainian, profession names often have gender forms, but masculine is used for general reference.\n\n| Професія | Приклад |\n|----------|---------|\n| **лікар** | Лікар лікує людей. |\n| **вчитель** | Вчитель навчає дітей. |\n| **інженер** | Інженер будує мости. |\n| **програміст** | Програміст пише код. |\n| **юрист** | Юрист знає закони. |\n| **менеджер** | Менеджер керує командою. |\n| **водій** | Водій керує автобусом. |\n| **продавець** | Продавець продає товари. |\n\n**Лікар** (doctor) is a respected profession. **Вчитель** (teacher) shapes the future. **Інженер** (engineer) creates technology. **Програміст** (programmer) is a very popular job in Kyiv and Lviv. **Юрист** (lawyer) helps with legal issues. **Водій** (driver) is essential for transport.\n\n### The Workplace\n\nWhere do people work?\n\n- **офіс** — office: *Я працюю в офісі.*\n- **школа** — school: *Вона працює в школі.*\n- **лікарня** — hospital: *Він працює в лікарні.*\n- **фабрика** — factory: *Вони працюють на фабриці.*\n- **магазин** — shop/store: *Я йду в магазин.*\n- **компанія** — company: *Це велика компанія.*\n\nNotice the prepositions: **в** офісі, **в** школі, **в** лікарні, але **на** фабриці (open space/process).\n\n> [!cultural] **History Bite** The Antonov Giants\n> Ukraine is the home of the world's largest aircraft, the **An-225 Mriya** (\"Dream\"). It was designed and built by the Antonov Design Bureau in Kyiv. This engineering marvel symbolizes Ukrainian technical prowess and ambition.\n\n### Work Verbs\n\nTo describe what you do, use these verbs:\n\n- **працювати** — to work: *Я працюю багато.*\n- **заробляти** — to earn: *Він заробляє добре.*\n- **керувати** — to manage/drive: *Директор керує компанією.*\n- **звільнити** — to fire: *Його звільнили.*\n- **найняти** — to hire: *Компанія найняла нових людей.*\n\n### Career & Business\n\n- **кар'єра** — career: *Вона будує кар'єру.*\n- **зарплата** — salary: *У мене висока зарплата.*\n- **відпустка** — vacation/leave: *Я хочу у відпустку.*\n- **колега** — colleague: *Мій колега допоміг мені.*\n- **клієнт** — client: *Клієнт завжди правий.*\n- **начальник** — boss: *Мій начальник суворий.*\n\n> [!cultural] **Cultural Insight** Salary Talk\n> In Ukraine, it is not taboo to discuss **зарплата** (salary) with close friends, but avoided in polite formal conversation. However, complaining about low salary is a national sport!\n\n### Business Etiquette\n\nWhen working in Ukraine, formality is often valued. In a corporate setting, use **Ви** (formal You) with colleagues until invited to use **ти** (informal You). Handshakes are firm. Direct eye contact shows confidence and honesty (**чесність**).\n\nPunctuality is expected, though social meetings might have a \"flexible\" start time. Gifts (like chocolates or alcohol) are common for business partners, but strictly optional. Understanding these nuances will help you build strong professional relationships.\n\n### Dialogue: At the Interview\n\n— Доброго дня. Розкажіть про себе.\n— Доброго дня. Мене звати Андрій. Я — програміст.\n— Де ви працювали раніше?\n— Я працював у великій ІТ-компанії.\n— Чому ви хочете працювати у нас?\n— Ваша компанія дуже успішна. Мені подобаються ваші проєкти.\n— Чудово. Яка зарплата вас цікавить?\n— Я хочу заробляти гідно.\n— Ми пропонуємо хороші умови і відпустку.\n— Дякую. Коли я можу почати?\n\n## Practice\n\n### Describing Your Job\n\nUse **працювати** + **ким** (instrumental):\n- *Я працюю лікарем.* (I work as a doctor.)\n- *Вона працює вчителем.* (She works as a teacher.)\n\nOr simply **бути** + **ким** (instrumental):\n- *Він є директором.* (He is a director.)\n\nWait, normally we say: *Я — лікар* (Nominative) for simple ID. But describing function/status often involves Instrumental.\n\n> [!note] Nominative vs Instrumental\n> *Я — лікар* (Nominative) names who you are.\n> *Я працюю лікарем* (Instrumental) describes your function.\n> Both are common, but Instrumental is safer with verbs.\n\n### Story Time: The Successful Start-up\n\nОлег був талановитим інженером. Він працював на заводі, але мріяв про власний бізнес. Його друг, Максим, був програмістом. Він працював в офісі і отримував високу зарплату.\n\nОдного дня Олег сказав:\n— Максиме, давай відкриємо свою компанію!\n— Але це ризик, — відповів Максим. — Нам потрібен хороший менеджер.\n\nВони знайшли Ірину. Вона була чудовим менеджером. Разом вони створили стартап. Вони працювали вдень і вночі.\n\nСпочатку було важко. Клієнтів було мало. Зарплата була низька. Але вони вірили в успіх. Ірина знайшла першого великого клієнта. Це був закордонний магазин.\n\n— Ми це зробили! — раділи колеги.\n\nТепер їхня компанія відома. Вони наймають нових працівників. У них гарний офіс і довга відпустка. Успішна кар'єра — це результат важкої праці!\n\n### Story Time: A Day at the Hospital\n\nОлена працює лікарем у міській лікарні. Її робота дуже важлива і відповідальна. Щоранку вона приходить у свій кабінет.\n\n— Доброго ранку, колего! — вітає її медсестра.\n— Доброго ранку! Скільки у нас пацієнтів сьогодні?\n— Дуже багато. Всі хочуть бути здоровими.\n\nОлена оглядає хворих. Вона уважна і добра. Пацієнти люблять її.\n\n— Дякую, лікарю! — каже старенька жінка. — Ви мені дуже допомогли.\n\nОлена любить свою професію. Зарплата не дуже висока, але моральне задоволення — величезне. Допомагати людям — це найкраща робота у світі.\n\nВвечері Олена йде додому втомлена, але щаслива. Завтра буде новий день і нові виклики.\n\n### Story Time: The Dream Job\n\nАндрій завжди хотів бути пілотом. У дитинстві він дивився на небо і мріяв.\n\n— Я буду літати! — казав він мамі.\n— Це хороша мрія, — відповідала вона. — Але треба багато вчитися.\n\nАндрій вчився старанно. Він знав математику і фізику. Після школи він пішов в університет. Це було важко. Інші студенти гуляли, а Андрій читав книги.\n\nРоки минали. Андрій став дорослим. Він знайшов роботу в авіакомпанії. Спочатку він був помічником. Він працював в офісі в аеропорту. Зарплата була мала, але він був близько до літаків.\n\nОдного разу головний пілот захворів.\n\n— Хто може допомогти? — запитав директор.\n— Я знаю систему! — сказав Андрій.\n\nВін не полетів (він ще не був пілотом), але він допоміг команді на землі. Директор побачив його талант.\n\n— Ти розумний хлопець, — сказав начальник. — Ми оплатимо твоє навчання на пілота.\n\nАндрій був щасливий! Його кар'єра почалася. Тепер він літає в різні країни. Він бачить світ. Він любить свою роботу. Коли він у небі, він відчуває свободу.\n\nЙого колеги поважають його. Він — професіонал. Іноді він згадує той день в офісі. Шлях до мрії був довгим, але результат того вартий.\n\n> [!tip] Talking about Future Plans\n> Use **хотіти бути** + instrumental: *Я хочу бути лікарем*. This expresses your professional goal."
+      },
+      {
+        "id": "section-2",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "You learned to:\n- Name professions: **лікар**, **вчитель**, **інженер**, **програміст**\n- Describe workplaces: **офіс**, **школа**, **лікарня**, **фабрика**\n- Use work verbs: **працювати**, **заробляти**, **керувати**\n- Discuss career: **зарплата**, **відпустка**, **колега**\n\nWork is not just about money; it's about passion and contribution. Whether you are a lawyer or a driver, your work matters. Keep learning Ukrainian to expand your professional horizons!"
+      },
+      {
+        "id": "section-3",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## quiz: Profession Quiz\n\n1. Who treats people?\n   - [x] лікар\n   - [ ] вчитель\n   - [ ] інженер\n   > Лікар treats people.\n\n2. Where does a teacher work?\n   - [x] в школі\n   - [ ] в лікарні\n   - [ ] на фабриці\n   > Teacher works in a school (школа).\n\n3. Who writes code?\n   - [x] програміст\n   - [ ] водій\n   - [ ] юрист\n   > Programmer writes code.\n\n4. What is \"salary\" in Ukrainian?\n   - [x] зарплата\n   - [ ] робота\n   - [ ] відпустка\n   > Salary is зарплата.\n\n5. Who manages a team?\n   - [x] менеджер\n   - [ ] колега\n   - [ ] клієнт\n   > Manager manages (керує).\n\n6. What implies \"to earn\"?\n   - [x] заробляти\n   - [ ] працювати\n   - [ ] керувати\n   > Заробляти means to earn.\n\n7. Where does a factory worker work?\n   - [x] на фабриці\n   - [ ] в офісі\n   - [ ] в магазині\n   > At the factory = на фабриці.\n\n8. What is the opposite of \"to hire\"?\n   - [x] звільнити\n   - [ ] платити\n   - [ ] працювати\n   > To fire = звільнити.\n\n9. Who sells goods?\n   - [x] продавець\n   - [ ] водій\n   - [ ] лікар\n   > Seller = продавець.\n\n10. What do you build?\n    - [x] кар'єру\n    - [ ] зарплату\n    - [ ] відпустку\n    > You build a career (кар'єру).\n\n11. Who creates technology?\n    - [x] інженер\n    - [ ] юрист\n    - [ ] лікар\n    > Engineer = інженер.\n\n12. Where involves \"open space\" preposition?\n    - [x] на фабриці\n    - [ ] в офісі\n    - [ ] в школі\n    > На фабриці involves 'на' (on/at).\n\n## match-up: Profession Match-up\n\n- лікар :: лікарня\n- вчитель :: школа\n- інженер :: завод\n- програміст :: офіс\n- водій :: автобус\n- продавець :: магазин\n- директор :: компанія\n- юрист :: суд\n- менеджер :: команда\n- клієнт :: послуга\n- начальник :: підлеглий\n- колега :: співробітник\n\n## fill-in: Fill in the Blanks\n\n1. Я працюю в ____.\n   > [!answer] офісі\n   > [!options] офісі | офіс | офісом | офісу\n   > Locative: в офісі.\n\n2. Вона хоче ____ багато грошей.\n   > [!answer] заробляти\n   > [!options] заробляти | працювати | відпочивати | грати\n   > To earn = заробляти.\n\n3. Мій батько — ____.\n   > [!answer] інженер\n   > [!options] інженер | інженера | інженером | інженеру\n   > Nominative identification: інженер.\n\n4. Вчитель працює в ____.\n   > [!answer] школі\n   > [!options] школі | школа | школі | школою\n   > Locative: в школі.\n\n5. Директор ____ компанією.\n   > [!answer] керує\n   > [!options] керує | працює | робить | йде\n   > Manages = керує.\n\n6. У мене завтра ____.\n   > [!answer] відпустка\n   > [!options] відпустка | робота | зарплата | офіс\n   > Vacation = відпустка.\n\n7. Ми шукаємо нового ____.\n   > [!answer] співробітника\n   > [!options] співробітника | співробітник | співробітником | співробітнику\n   > Accusative animate: співробітника.\n\n8. Лікар оглядає ____.\n   > [!answer] пацієнта\n   > [!options] пацієнта | пацієнт | пацієнтом | пацієнту\n   > Accusative animate: пацієнта.\n\n9. Програміст пише ____.\n   > [!answer] код\n   > [!options] код | коду | кодом | коди\n   > Accusative inanimate: код.\n\n10. Він отримав високу ____.\n    > [!answer] зарплату\n    > [!options] зарплату | зарплата | зарплати | зарплатою\n    > Accusative: зарплату.\n\n11. Це мій ____ Андрій.\n    > [!answer] колега\n    > [!options] колега | колегу | колегою | колеги\n    > Nominative: колега.\n\n12. Я поважаю свого ____.\n    > [!answer] начальника\n    > [!options] начальника | начальник | начальником | начальнику\n    > Accusative animate: начальника.\n\n## true-false: True or False\n\n1. Лікар працює в школі.\n   - [x] false\n   > Doctor works in a hospital.\n\n2. Інженер будує мости і машини.\n   - [x] true\n   > Engineers build structures.\n\n3. Продавець лікує людей.\n   - [x] false\n   > Seller sells goods.\n\n4. Директор керує компанією.\n   - [x] true\n   > Director manages the company.\n\n5. Відпустка — це час для роботи.\n   - [x] false\n   > Vacation is time for rest.\n\n6. Вчитель навчає дітей.\n   - [x] true\n   > Teacher teaches children.\n\n7. Зарплата — це гроші за роботу.\n   - [x] true\n   > Salary is money for work.\n\n8. Юрист водить автобус.\n   - [x] false\n   > Lawyer deals with laws.\n\n9. Клієнт купує товари або послуги.\n   - [x] true\n   > Client buys goods/services.\n\n10. Офіс — це місце для сну.\n    - [x] false\n    > Office is for work.\n\n11. Успішна кар'єра вимагає праці.\n    - [x] true\n    > Career requires work.\n\n12. Програмісти часто працюють з комп'ютером.\n    - [x] true\n    > Programmers work with computers.\n\n## group-sort: Category Sort\n\n### Groups\n- People\n- Places\n- Actions\n\n### Items\n- лікар: People\n- вчитель: People\n- інженер: People\n- менеджер: People\n- офіс: Places\n- школа: Places\n- лікарня: Places\n- фабрика: Places\n- працювати: Actions\n- заробляти: Actions\n- керувати: Actions\n- звільнити: Actions\n\n## unjumble: Unjumble Sentences\n\n1. Я / працюю / в / офісі\n   > [!answer] Я працюю в офісі\n   > I work in an office.\n\n2. Він / хоче / бути / лікарем\n   > [!answer] Він хоче бути лікарем\n   > He wants to be a doctor.\n\n3. Ми / маємо / хорошу / зарплату\n   > [!answer] Ми маємо хорошу зарплату\n   > We have a good salary.\n\n4. Директор / керує / великою / компанією\n   > [!answer] Директор керує великою компанією\n   > The director manages a large company.\n\n5. Вчитель / любить / свою / роботу\n   > [!answer] Вчитель любить свою роботу\n   > The teacher loves his work.\n\n6. Інженер / будує / новий / міст\n   > [!answer] Інженер будує новий міст\n   > The engineer builds a new bridge.\n\n7. Мій / колега / мені / допоміг\n   > [!answer] Мій колега мені допоміг\n   > My colleague helped me.\n\n8. Вона / пішла / у / відпустку\n   > [!answer] Вона пішла у відпустку\n   > She went on vacation.\n\n9. Клієнт / завжди / має / рацію\n   > [!answer] Клієнт завжди має рацію\n   > The client is always right.\n\n10. Програміст / пише / складний / код\n    > [!answer] Програміст пише складний код\n    > The programmer writes complex code.\n\n11. Юрист / знає / всі / закони\n    > [!answer] Юрист знає всі закони\n    > The lawyer knows all laws.\n\n12. Студент / мріє / про / кар'єру\n    > [!answer] Студент мріє про кар'єру\n    > The student dreams of a career.\n\n## error-correction: Fix the Mistakes\n\n1. Я працюю в офіс.\n   > [!error] офіс\n   > [!answer] офісі\n   > [!options] офісі | офіс | офісу | офісом\n   > [!explanation] Locative case: в офісі.\n\n2. Вона є лікар.\n   > [!error] лікар\n   > [!answer] лікарем\n   > [!options] лікарем | лікар | лікаря | лікарю\n   > [!explanation] Instrumental after бути: лікарем.\n\n3. Він керує компанія.\n   > [!error] компанія\n   > [!answer] компанією\n   > [!options] компанією | компанія | компанію | компанії\n   > [!explanation] Керувати requires Instrumental.\n\n4. Ми працюємо на школа.\n   > [!error] школа\n   > [!answer] школі\n   > [!options] школі | школа | школі | школою\n   > [!explanation] Locative: в школі (use 'в' for enclosed buildings).\n\n5. Я хочу зарплата.\n   > [!error] зарплата\n   > [!answer] зарплату\n   > [!options] зарплату | зарплата | зарплати | зарплатою\n   > [!explanation] Accusative: хочу зарплату.\n\n6. Вчитель навчає діти.\n   > [!error] діти\n   > [!answer] дітей\n   > [!options] дітей | діти | дітям | дітьми\n   > [!explanation] Accusative animate: дітей.\n\n7. Це мій колега Ірина.\n   > [!error] мій\n   > [!answer] моя\n   > [!options] моя | мій | моє | мої\n   > [!explanation] Feminine agreement for Irina: моя.\n\n8. Водій керує автобус.\n   > [!error] автобус\n   > [!answer] автобусом\n   > [!options] автобусом | автобус | автобуса | автобусу\n   > [!explanation] Керувати requires Instrumental.\n\n9. Він звільнити з роботи.\n   > [!error] звільнити\n   > [!answer] звільнився\n   > [!options] звільнився | звільнити | звільнив | звільняє\n   > [!explanation] Past reflexive: він звільнився (he quit).\n\n10. Менеджер говорить з клієнт.\n    > [!error] клієнт\n    > [!answer] клієнтом\n    > [!options] клієнтом | клієнт | клієнта | клієнту\n    > [!explanation] 'З' requires Instrumental.\n\n11. Я йду у відпустка.\n    > [!error] відпустка\n    > [!answer] відпустку\n    > [!options] відпустку | відпустка | відпустці | відпусткою\n    > [!explanation] Accusative direction: у відпустку.\n\n12. Чесний люди живуть краще.\n    > [!error] Чесний\n    > [!answer] Чесні\n    > [!options] Чесні | Чесний | Чесна | Чеснім\n    > [!explanation] Plural agreement: чесні люди.\n\n## cloze: Career Ladder\n\nМаксим почав свою [___:1] в маленькій фірмі. Він працював [___:2]. Його [___:3] був дуже розумним.\nМаксим хотів [___:4] багато грошей. Він працював старанно.\nЧерез рік його [___:5] новим менеджером. Тепер у нього є своя [___:6].\nВін [___:7] великими проєктами. Його [___:8] зросла.\nМаксим любить свій [___:9] і своїх колег. Влітку він поїде у [___:10].\n\n1. кар'єру\n> [!answer] кар'єру\n> [!options] кар'єру | роботу | школу\n\n2. програмістом\n> [!answer] програмістом\n> [!options] програмістом | лікарем | водієм\n\n3. начальник\n> [!answer] начальник\n> [!options] начальник | клієнт | син\n\n4. заробляти\n> [!answer] заробляти\n> [!options] заробляти | витрачати | грати\n\n5. найняли\n> [!answer] найняли\n> [!options] найняли | звільнили | забули\n\n6. команда\n> [!answer] команда\n> [!options] команда | фабрика | школа\n\n7. керує\n> [!answer] керує\n> [!options] керує | працює | хоче\n\n8. зарплата\n> [!answer] зарплата\n> [!options] зарплата | відпустка | робота\n\n9. офіс\n> [!answer] офіс\n> [!options] офіс | дім | парк\n\n10. відпустку\n> [!answer] відпустку\n> [!options] відпустку | роботу | лікарню\n\n## dialogue-reorder: Interview Dialogue\n\n- Доброго дня. Ви прийшли на співбесіду?\n- Так, доброго дня. Я шукаю роботу.\n- Яка ваша професія?\n- Я — інженер. Маю досвід 5 років.\n- Чудово. Де ви працювали раніше?\n- На заводі \"Антонов\" у Києві.\n- Це престижне місце! Чому ви пішли?\n- Я шукаю нові виклики і вищу зарплату.\n- Ми можемо запропонувати вам хороші умови.\n- Дякую. Які мої обов'язки?\n- Керувати відділом проєктування.\n- Звучить цікаво. Я згоден!\n\n\n## mark-the-words: Profession Search\n\n> [!instruction] Mark all professions and workplace words.\n\nМій брат — [програміст]. Він працює в [офісі]. Його дружина — [лікар]. Вона працює в [лікарні]. Мій батько був [водієм]. Він любив свій [автобус]. Моя мама — [вчитель]. [Школа] — це її другий дім. Я хочу бути [юристом]. Я буду працювати в [суді]. Всі професії важливі!\n\n## select: Choose the Correct Word\n\n1. Я працюю ____.\n   - [x] лікарем\n   - [ ] лікар\n   > Instrumental case for profession function.\n\n2. Вона йде на ____.\n   - [x] роботу\n   - [ ] робота\n   > Accusative with motion preposition 'на'.\n\n3. Ми ____ проєктом.\n   - [x] керуємо\n   - [ ] керувати\n   > Conjugated verb 'we manage'.\n\n4. Директор ____ його.\n   - [x] звільнив\n   - [ ] звільнити\n   > Past tense 'fired'.\n\n5. У мене висока ____.\n   - [x] зарплата\n   - [ ] зарплату\n   > Nominative subject 'salary is high'.\n\n6. Це мій ____.\n   - [x] офіс\n   - [ ] офісу\n   > Nominative identification.\n\n7. Я хочу ____.\n   - [x] відпустку\n   - [ ] відпустка\n   > Accusative object 'want (what?) vacation'.\n\n8. Інженер ____ міст.\n   - [x] будує\n   - [ ] будувати\n   > Conjugated verb 'builds'.\n\n9. Вчитель ____ дітей.\n   - [x] навчає\n   - [ ] навчати\n   > Conjugated verb 'teaches'.\n\n10. Клієнт ____ товар.\n    - [x] купує\n    - [ ] купувати\n    > Conjugated verb 'buys'.\n\n11. Юрист знає ____.\n    - [x] закон\n    - [ ] законом\n    > Accusative object 'law'.\n\n12. Ми ____ в компанії.\n    - [x] працюємо\n    - [ ] працювати\n    > Conjugated verb 'we work'."
+      },
+      {
+        "id": "section-4",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| лікар | /ˈlʲikɑr/ | doctor | noun | m | |\n| вчитель | /ˈwtʃɪtelʲ/ | teacher | noun | m | |\n| інженер | /inʒeˈnɛr/ | engineer | noun | m | |\n| програміст | /proɦrɑˈmʲist/ | programmer | noun | m | |\n| юрист | /juˈrɪst/ | lawyer | noun | m | |\n| менеджер | /ˈmɛnedʒer/ | manager | noun | m | |\n| директор | /dɪˈrɛktor/ | director | noun | m | |\n| продавець | /prodɑˈwɛt͡sʲ/ | seller | noun | m | |\n| водій | /woˈdʲij/ | driver | noun | m | |\n| офіс | /ˈɔfis/ | office | noun | m | |\n| фабрика | /ˈfɑbrɪkɑ/ | factory | noun | f | |\n| школа | /ˈʃkɔlɑ/ | school | noun | f | |\n| лікарня | /lʲiˈkɑrnʲɑ/ | hospital | noun | f | |\n| магазин | /mɑɦɑˈzɪn/ | shop | noun | m | |\n| компанія | /komˈpɑnʲijɑ/ | company | noun | f | |\n| працювати | /prɑt͡sʲuˈwɑtɪ/ | to work | verb | - | |\n| заробляти | /zɑrobˈlʲɑtɪ/ | to earn | verb | - | |\n| керувати | /keruˈwɑtɪ/ | to manage | verb | - | + instr |\n| звільнити | /zwilʲˈnɪtɪ/ | to fire | verb | - | |\n| найняти | /nɑjˈnʲɑtɪ/ | to hire | verb | - | |\n| кар'єра | /kɑrˈjɛrɑ/ | career | noun | f | |\n| зарплата | /zɑrˈplɑtɑ/ | salary | noun | f | |\n| відпустка | /widˈpustkɑ/ | vacation | noun | f | |\n| робота | /roˈbɔtɑ/ | work/job | noun | f | |\n| професія | /proˈfɛsʲijɑ/ | profession | noun | f | |\n| колега | /koˈlɛɦɑ/ | colleague | noun | m/f | |\n| клієнт | /klʲiˈjɛnt/ | client | noun | m | |\n| начальник | /nɑˈtʃɑlʲnɪk/ | boss | noun | m | |\n| успішний | /uˈspʲiʃnɪj/ | successful | adj | m | |\n| зайнятий | /ˈzɑjnʲɑtɪj/ | busy/occupied | adj | m | |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-48\ntitle: Work & Professions\nsubtitle: \"Building a Career in Ukrainian\"\nversion: \"1.0\"\nphase: \"A2\"\npedagogy: \"Narrative\"\nduration: 60\ntransliteration: none\ntags: [\"vocabulary\", \"work\", \"professions\", \"business\"]\ngrammar: [\"noun-gender-professions\"]\nobjectives:\n  - Name common professions: лікар, вчитель, інженер\n  - Describe workplaces: офіс, школа, лікарня\n  - Discuss career and salary\n  - Use verbs for work activities\nvocab_count: 30\n---\n\n# Work & Professions\n\n## Warm-up\n\nДе ви працюєте? Яка ваша професія? Ви любите свою роботу?\n\nРобота займає велику частину нашого життя. Ми працюємо, щоб заробляти гроші, але також щоб реалізувати свої таланти. В Україні люди дуже працьовиті. Кожен хоче мати хорошу кар'єру і високу зарплату. Сьогодні ми поговоримо про професії, офісне життя і бізнес.\n\nWork is universally important. In this module, you'll learn to talk about what you do, where you work, and your professional goals in Ukrainian. You will master vocabulary for modern professions, traditional jobs, and workplace interactions.\n\n> [!important] **Myth Buster** \"Job Stability\"\n> Russian propaganda often portrays Ukraine as economically unstable. In reality, Ukraine has a booming IT sector and diverse industries. Many Ukrainians build successful international careers.\n\n## Presentation\n\n### Common Professions\n\nLet's start with the most common jobs. In Ukrainian, profession names often have gender forms, but masculine is used for general reference.\n\n| Професія | Приклад |\n|----------|---------|\n| **лікар** | Лікар лікує людей. |\n| **вчитель** | Вчитель навчає дітей. |\n| **інженер** | Інженер будує мости. |\n| **програміст** | Програміст пише код. |\n| **юрист** | Юрист знає закони. |\n| **менеджер** | Менеджер керує командою. |\n| **водій** | Водій керує автобусом. |\n| **продавець** | Продавець продає товари. |\n\n**Лікар** (doctor) is a respected profession. **Вчитель** (teacher) shapes the future. **Інженер** (engineer) creates technology. **Програміст** (programmer) is a very popular job in Kyiv and Lviv. **Юрист** (lawyer) helps with legal issues. **Водій** (driver) is essential for transport.\n\n### The Workplace\n\nWhere do people work?\n\n- **офіс** — office: *Я працюю в офісі.*\n- **школа** — school: *Вона працює в школі.*\n- **лікарня** — hospital: *Він працює в лікарні.*\n- **фабрика** — factory: *Вони працюють на фабриці.*\n- **магазин** — shop/store: *Я йду в магазин.*\n- **компанія** — company: *Це велика компанія.*\n\nNotice the prepositions: **в** офісі, **в** школі, **в** лікарні, але **на** фабриці (open space/process).\n\n> [!cultural] **History Bite** The Antonov Giants\n> Ukraine is the home of the world's largest aircraft, the **An-225 Mriya** (\"Dream\"). It was designed and built by the Antonov Design Bureau in Kyiv. This engineering marvel symbolizes Ukrainian technical prowess and ambition.\n\n### Work Verbs\n\nTo describe what you do, use these verbs:\n\n- **працювати** — to work: *Я працюю багато.*\n- **заробляти** — to earn: *Він заробляє добре.*\n- **керувати** — to manage/drive: *Директор керує компанією.*\n- **звільнити** — to fire: *Його звільнили.*\n- **найняти** — to hire: *Компанія найняла нових людей.*\n\n### Career & Business\n\n- **кар'єра** — career: *Вона будує кар'єру.*\n- **зарплата** — salary: *У мене висока зарплата.*\n- **відпустка** — vacation/leave: *Я хочу у відпустку.*\n- **колега** — colleague: *Мій колега допоміг мені.*\n- **клієнт** — client: *Клієнт завжди правий.*\n- **начальник** — boss: *Мій начальник суворий.*\n\n> [!cultural] **Cultural Insight** Salary Talk\n> In Ukraine, it is not taboo to discuss **зарплата** (salary) with close friends, but avoided in polite formal conversation. However, complaining about low salary is a national sport!\n\n### Business Etiquette\n\nWhen working in Ukraine, formality is often valued. In a corporate setting, use **Ви** (formal You) with colleagues until invited to use **ти** (informal You). Handshakes are firm. Direct eye contact shows confidence and honesty (**чесність**).\n\nPunctuality is expected, though social meetings might have a \"flexible\" start time. Gifts (like chocolates or alcohol) are common for business partners, but strictly optional. Understanding these nuances will help you build strong professional relationships.\n\n### Dialogue: At the Interview\n\n— Доброго дня. Розкажіть про себе.\n— Доброго дня. Мене звати Андрій. Я — програміст.\n— Де ви працювали раніше?\n— Я працював у великій ІТ-компанії.\n— Чому ви хочете працювати у нас?\n— Ваша компанія дуже успішна. Мені подобаються ваші проєкти.\n— Чудово. Яка зарплата вас цікавить?\n— Я хочу заробляти гідно.\n— Ми пропонуємо хороші умови і відпустку.\n— Дякую. Коли я можу почати?\n\n## Practice\n\n### Describing Your Job\n\nUse **працювати** + **ким** (instrumental):\n- *Я працюю лікарем.* (I work as a doctor.)\n- *Вона працює вчителем.* (She works as a teacher.)\n\nOr simply **бути** + **ким** (instrumental):\n- *Він є директором.* (He is a director.)\n\nWait, normally we say: *Я — лікар* (Nominative) for simple ID. But describing function/status often involves Instrumental.\n\n> [!note] Nominative vs Instrumental\n> *Я — лікар* (Nominative) names who you are.\n> *Я працюю лікарем* (Instrumental) describes your function.\n> Both are common, but Instrumental is safer with verbs.\n\n### Story Time: The Successful Start-up\n\nОлег був талановитим інженером. Він працював на заводі, але мріяв про власний бізнес. Його друг, Максим, був програмістом. Він працював в офісі і отримував високу зарплату.\n\nОдного дня Олег сказав:\n— Максиме, давай відкриємо свою компанію!\n— Але це ризик, — відповів Максим. — Нам потрібен хороший менеджер.\n\nВони знайшли Ірину. Вона була чудовим менеджером. Разом вони створили стартап. Вони працювали вдень і вночі.\n\nСпочатку було важко. Клієнтів було мало. Зарплата була низька. Але вони вірили в успіх. Ірина знайшла першого великого клієнта. Це був закордонний магазин.\n\n— Ми це зробили! — раділи колеги.\n\nТепер їхня компанія відома. Вони наймають нових працівників. У них гарний офіс і довга відпустка. Успішна кар'єра — це результат важкої праці!\n\n### Story Time: A Day at the Hospital\n\nОлена працює лікарем у міській лікарні. Її робота дуже важлива і відповідальна. Щоранку вона приходить у свій кабінет.\n\n— Доброго ранку, колего! — вітає її медсестра.\n— Доброго ранку! Скільки у нас пацієнтів сьогодні?\n— Дуже багато. Всі хочуть бути здоровими.\n\nОлена оглядає хворих. Вона уважна і добра. Пацієнти люблять її.\n\n— Дякую, лікарю! — каже старенька жінка. — Ви мені дуже допомогли.\n\nОлена любить свою професію. Зарплата не дуже висока, але моральне задоволення — величезне. Допомагати людям — це найкраща робота у світі.\n\nВвечері Олена йде додому втомлена, але щаслива. Завтра буде новий день і нові виклики.\n\n### Story Time: The Dream Job\n\nАндрій завжди хотів бути пілотом. У дитинстві він дивився на небо і мріяв.\n\n— Я буду літати! — казав він мамі.\n— Це хороша мрія, — відповідала вона. — Але треба багато вчитися.\n\nАндрій вчився старанно. Він знав математику і фізику. Після школи він пішов в університет. Це було важко. Інші студенти гуляли, а Андрій читав книги.\n\nРоки минали. Андрій став дорослим. Він знайшов роботу в авіакомпанії. Спочатку він був помічником. Він працював в офісі в аеропорту. Зарплата була мала, але він був близько до літаків.\n\nОдного разу головний пілот захворів.\n\n— Хто може допомогти? — запитав директор.\n— Я знаю систему! — сказав Андрій.\n\nВін не полетів (він ще не був пілотом), але він допоміг команді на землі. Директор побачив його талант.\n\n— Ти розумний хлопець, — сказав начальник. — Ми оплатимо твоє навчання на пілота.\n\nАндрій був щасливий! Його кар'єра почалася. Тепер він літає в різні країни. Він бачить світ. Він любить свою роботу. Коли він у небі, він відчуває свободу.\n\nЙого колеги поважають його. Він — професіонал. Іноді він згадує той день в офісі. Шлях до мрії був довгим, але результат того вартий.\n\n> [!tip] Talking about Future Plans\n> Use **хотіти бути** + instrumental: *Я хочу бути лікарем*. This expresses your professional goal.\n\n# Summary\n\nYou learned to:\n- Name professions: **лікар**, **вчитель**, **інженер**, **програміст**\n- Describe workplaces: **офіс**, **школа**, **лікарня**, **фабрика**\n- Use work verbs: **працювати**, **заробляти**, **керувати**\n- Discuss career: **зарплата**, **відпустка**, **колега**\n\nWork is not just about money; it's about passion and contribution. Whether you are a lawyer or a driver, your work matters. Keep learning Ukrainian to expand your professional horizons!\n\n# Activities\n\n## quiz: Profession Quiz\n\n1. Who treats people?\n   - [x] лікар\n   - [ ] вчитель\n   - [ ] інженер\n   > Лікар treats people.\n\n2. Where does a teacher work?\n   - [x] в школі\n   - [ ] в лікарні\n   - [ ] на фабриці\n   > Teacher works in a school (школа).\n\n3. Who writes code?\n   - [x] програміст\n   - [ ] водій\n   - [ ] юрист\n   > Programmer writes code.\n\n4. What is \"salary\" in Ukrainian?\n   - [x] зарплата\n   - [ ] робота\n   - [ ] відпустка\n   > Salary is зарплата.\n\n5. Who manages a team?\n   - [x] менеджер\n   - [ ] колега\n   - [ ] клієнт\n   > Manager manages (керує).\n\n6. What implies \"to earn\"?\n   - [x] заробляти\n   - [ ] працювати\n   - [ ] керувати\n   > Заробляти means to earn.\n\n7. Where does a factory worker work?\n   - [x] на фабриці\n   - [ ] в офісі\n   - [ ] в магазині\n   > At the factory = на фабриці.\n\n8. What is the opposite of \"to hire\"?\n   - [x] звільнити\n   - [ ] платити\n   - [ ] працювати\n   > To fire = звільнити.\n\n9. Who sells goods?\n   - [x] продавець\n   - [ ] водій\n   - [ ] лікар\n   > Seller = продавець.\n\n10. What do you build?\n    - [x] кар'єру\n    - [ ] зарплату\n    - [ ] відпустку\n    > You build a career (кар'єру).\n\n11. Who creates technology?\n    - [x] інженер\n    - [ ] юрист\n    - [ ] лікар\n    > Engineer = інженер.\n\n12. Where involves \"open space\" preposition?\n    - [x] на фабриці\n    - [ ] в офісі\n    - [ ] в школі\n    > На фабриці involves 'на' (on/at).\n\n## match-up: Profession Match-up\n\n- лікар :: лікарня\n- вчитель :: школа\n- інженер :: завод\n- програміст :: офіс\n- водій :: автобус\n- продавець :: магазин\n- директор :: компанія\n- юрист :: суд\n- менеджер :: команда\n- клієнт :: послуга\n- начальник :: підлеглий\n- колега :: співробітник\n\n## fill-in: Fill in the Blanks\n\n1. Я працюю в ____.\n   > [!answer] офісі\n   > [!options] офісі | офіс | офісом | офісу\n   > Locative: в офісі.\n\n2. Вона хоче ____ багато грошей.\n   > [!answer] заробляти\n   > [!options] заробляти | працювати | відпочивати | грати\n   > To earn = заробляти.\n\n3. Мій батько — ____.\n   > [!answer] інженер\n   > [!options] інженер | інженера | інженером | інженеру\n   > Nominative identification: інженер.\n\n4. Вчитель працює в ____.\n   > [!answer] школі\n   > [!options] школі | школа | школі | школою\n   > Locative: в школі.\n\n5. Директор ____ компанією.\n   > [!answer] керує\n   > [!options] керує | працює | робить | йде\n   > Manages = керує.\n\n6. У мене завтра ____.\n   > [!answer] відпустка\n   > [!options] відпустка | робота | зарплата | офіс\n   > Vacation = відпустка.\n\n7. Ми шукаємо нового ____.\n   > [!answer] співробітника\n   > [!options] співробітника | співробітник | співробітником | співробітнику\n   > Accusative animate: співробітника.\n\n8. Лікар оглядає ____.\n   > [!answer] пацієнта\n   > [!options] пацієнта | пацієнт | пацієнтом | пацієнту\n   > Accusative animate: пацієнта.\n\n9. Програміст пише ____.\n   > [!answer] код\n   > [!options] код | коду | кодом | коди\n   > Accusative inanimate: код.\n\n10. Він отримав високу ____.\n    > [!answer] зарплату\n    > [!options] зарплату | зарплата | зарплати | зарплатою\n    > Accusative: зарплату.\n\n11. Це мій ____ Андрій.\n    > [!answer] колега\n    > [!options] колега | колегу | колегою | колеги\n    > Nominative: колега.\n\n12. Я поважаю свого ____.\n    > [!answer] начальника\n    > [!options] начальника | начальник | начальником | начальнику\n    > Accusative animate: начальника.\n\n## true-false: True or False\n\n1. Лікар працює в школі.\n   - [x] false\n   > Doctor works in a hospital.\n\n2. Інженер будує мости і машини.\n   - [x] true\n   > Engineers build structures.\n\n3. Продавець лікує людей.\n   - [x] false\n   > Seller sells goods.\n\n4. Директор керує компанією.\n   - [x] true\n   > Director manages the company.\n\n5. Відпустка — це час для роботи.\n   - [x] false\n   > Vacation is time for rest.\n\n6. Вчитель навчає дітей.\n   - [x] true\n   > Teacher teaches children.\n\n7. Зарплата — це гроші за роботу.\n   - [x] true\n   > Salary is money for work.\n\n8. Юрист водить автобус.\n   - [x] false\n   > Lawyer deals with laws.\n\n9. Клієнт купує товари або послуги.\n   - [x] true\n   > Client buys goods/services.\n\n10. Офіс — це місце для сну.\n    - [x] false\n    > Office is for work.\n\n11. Успішна кар'єра вимагає праці.\n    - [x] true\n    > Career requires work.\n\n12. Програмісти часто працюють з комп'ютером.\n    - [x] true\n    > Programmers work with computers.\n\n## group-sort: Category Sort\n\n### Groups\n- People\n- Places\n- Actions\n\n### Items\n- лікар: People\n- вчитель: People\n- інженер: People\n- менеджер: People\n- офіс: Places\n- школа: Places\n- лікарня: Places\n- фабрика: Places\n- працювати: Actions\n- заробляти: Actions\n- керувати: Actions\n- звільнити: Actions\n\n## unjumble: Unjumble Sentences\n\n1. Я / працюю / в / офісі\n   > [!answer] Я працюю в офісі\n   > I work in an office.\n\n2. Він / хоче / бути / лікарем\n   > [!answer] Він хоче бути лікарем\n   > He wants to be a doctor.\n\n3. Ми / маємо / хорошу / зарплату\n   > [!answer] Ми маємо хорошу зарплату\n   > We have a good salary.\n\n4. Директор / керує / великою / компанією\n   > [!answer] Директор керує великою компанією\n   > The director manages a large company.\n\n5. Вчитель / любить / свою / роботу\n   > [!answer] Вчитель любить свою роботу\n   > The teacher loves his work.\n\n6. Інженер / будує / новий / міст\n   > [!answer] Інженер будує новий міст\n   > The engineer builds a new bridge.\n\n7. Мій / колега / мені / допоміг\n   > [!answer] Мій колега мені допоміг\n   > My colleague helped me.\n\n8. Вона / пішла / у / відпустку\n   > [!answer] Вона пішла у відпустку\n   > She went on vacation.\n\n9. Клієнт / завжди / має / рацію\n   > [!answer] Клієнт завжди має рацію\n   > The client is always right.\n\n10. Програміст / пише / складний / код\n    > [!answer] Програміст пише складний код\n    > The programmer writes complex code.\n\n11. Юрист / знає / всі / закони\n    > [!answer] Юрист знає всі закони\n    > The lawyer knows all laws.\n\n12. Студент / мріє / про / кар'єру\n    > [!answer] Студент мріє про кар'єру\n    > The student dreams of a career.\n\n## error-correction: Fix the Mistakes\n\n1. Я працюю в офіс.\n   > [!error] офіс\n   > [!answer] офісі\n   > [!options] офісі | офіс | офісу | офісом\n   > [!explanation] Locative case: в офісі.\n\n2. Вона є лікар.\n   > [!error] лікар\n   > [!answer] лікарем\n   > [!options] лікарем | лікар | лікаря | лікарю\n   > [!explanation] Instrumental after бути: лікарем.\n\n3. Він керує компанія.\n   > [!error] компанія\n   > [!answer] компанією\n   > [!options] компанією | компанія | компанію | компанії\n   > [!explanation] Керувати requires Instrumental.\n\n4. Ми працюємо на школа.\n   > [!error] школа\n   > [!answer] школі\n   > [!options] школі | школа | школі | школою\n   > [!explanation] Locative: в школі (use 'в' for enclosed buildings).\n\n5. Я хочу зарплата.\n   > [!error] зарплата\n   > [!answer] зарплату\n   > [!options] зарплату | зарплата | зарплати | зарплатою\n   > [!explanation] Accusative: хочу зарплату.\n\n6. Вчитель навчає діти.\n   > [!error] діти\n   > [!answer] дітей\n   > [!options] дітей | діти | дітям | дітьми\n   > [!explanation] Accusative animate: дітей.\n\n7. Це мій колега Ірина.\n   > [!error] мій\n   > [!answer] моя\n   > [!options] моя | мій | моє | мої\n   > [!explanation] Feminine agreement for Irina: моя.\n\n8. Водій керує автобус.\n   > [!error] автобус\n   > [!answer] автобусом\n   > [!options] автобусом | автобус | автобуса | автобусу\n   > [!explanation] Керувати requires Instrumental.\n\n9. Він звільнити з роботи.\n   > [!error] звільнити\n   > [!answer] звільнився\n   > [!options] звільнився | звільнити | звільнив | звільняє\n   > [!explanation] Past reflexive: він звільнився (he quit).\n\n10. Менеджер говорить з клієнт.\n    > [!error] клієнт\n    > [!answer] клієнтом\n    > [!options] клієнтом | клієнт | клієнта | клієнту\n    > [!explanation] 'З' requires Instrumental.\n\n11. Я йду у відпустка.\n    > [!error] відпустка\n    > [!answer] відпустку\n    > [!options] відпустку | відпустка | відпустці | відпусткою\n    > [!explanation] Accusative direction: у відпустку.\n\n12. Чесний люди живуть краще.\n    > [!error] Чесний\n    > [!answer] Чесні\n    > [!options] Чесні | Чесний | Чесна | Чеснім\n    > [!explanation] Plural agreement: чесні люди.\n\n## cloze: Career Ladder\n\nМаксим почав свою [___:1] в маленькій фірмі. Він працював [___:2]. Його [___:3] був дуже розумним.\nМаксим хотів [___:4] багато грошей. Він працював старанно.\nЧерез рік його [___:5] новим менеджером. Тепер у нього є своя [___:6].\nВін [___:7] великими проєктами. Його [___:8] зросла.\nМаксим любить свій [___:9] і своїх колег. Влітку він поїде у [___:10].\n\n1. кар'єру\n> [!answer] кар'єру\n> [!options] кар'єру | роботу | школу\n\n2. програмістом\n> [!answer] програмістом\n> [!options] програмістом | лікарем | водієм\n\n3. начальник\n> [!answer] начальник\n> [!options] начальник | клієнт | син\n\n4. заробляти\n> [!answer] заробляти\n> [!options] заробляти | витрачати | грати\n\n5. найняли\n> [!answer] найняли\n> [!options] найняли | звільнили | забули\n\n6. команда\n> [!answer] команда\n> [!options] команда | фабрика | школа\n\n7. керує\n> [!answer] керує\n> [!options] керує | працює | хоче\n\n8. зарплата\n> [!answer] зарплата\n> [!options] зарплата | відпустка | робота\n\n9. офіс\n> [!answer] офіс\n> [!options] офіс | дім | парк\n\n10. відпустку\n> [!answer] відпустку\n> [!options] відпустку | роботу | лікарню\n\n## dialogue-reorder: Interview Dialogue\n\n- Доброго дня. Ви прийшли на співбесіду?\n- Так, доброго дня. Я шукаю роботу.\n- Яка ваша професія?\n- Я — інженер. Маю досвід 5 років.\n- Чудово. Де ви працювали раніше?\n- На заводі \"Антонов\" у Києві.\n- Це престижне місце! Чому ви пішли?\n- Я шукаю нові виклики і вищу зарплату.\n- Ми можемо запропонувати вам хороші умови.\n- Дякую. Які мої обов'язки?\n- Керувати відділом проєктування.\n- Звучить цікаво. Я згоден!\n\n\n## mark-the-words: Profession Search\n\n> [!instruction] Mark all professions and workplace words.\n\nМій брат — [програміст]. Він працює в [офісі]. Його дружина — [лікар]. Вона працює в [лікарні]. Мій батько був [водієм]. Він любив свій [автобус]. Моя мама — [вчитель]. [Школа] — це її другий дім. Я хочу бути [юристом]. Я буду працювати в [суді]. Всі професії важливі!\n\n## select: Choose the Correct Word\n\n1. Я працюю ____.\n   - [x] лікарем\n   - [ ] лікар\n   > Instrumental case for profession function.\n\n2. Вона йде на ____.\n   - [x] роботу\n   - [ ] робота\n   > Accusative with motion preposition 'на'.\n\n3. Ми ____ проєктом.\n   - [x] керуємо\n   - [ ] керувати\n   > Conjugated verb 'we manage'.\n\n4. Директор ____ його.\n   - [x] звільнив\n   - [ ] звільнити\n   > Past tense 'fired'.\n\n5. У мене висока ____.\n   - [x] зарплата\n   - [ ] зарплату\n   > Nominative subject 'salary is high'.\n\n6. Це мій ____.\n   - [x] офіс\n   - [ ] офісу\n   > Nominative identification.\n\n7. Я хочу ____.\n   - [x] відпустку\n   - [ ] відпустка\n   > Accusative object 'want (what?) vacation'.\n\n8. Інженер ____ міст.\n   - [x] будує\n   - [ ] будувати\n   > Conjugated verb 'builds'.\n\n9. Вчитель ____ дітей.\n   - [x] навчає\n   - [ ] навчати\n   > Conjugated verb 'teaches'.\n\n10. Клієнт ____ товар.\n    - [x] купує\n    - [ ] купувати\n    > Conjugated verb 'buys'.\n\n11. Юрист знає ____.\n    - [x] закон\n    - [ ] законом\n    > Accusative object 'law'.\n\n12. Ми ____ в компанії.\n    - [x] працюємо\n    - [ ] працювати\n    > Conjugated verb 'we work'.\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| лікар | /ˈlʲikɑr/ | doctor | noun | m | |\n| вчитель | /ˈwtʃɪtelʲ/ | teacher | noun | m | |\n| інженер | /inʒeˈnɛr/ | engineer | noun | m | |\n| програміст | /proɦrɑˈmʲist/ | programmer | noun | m | |\n| юрист | /juˈrɪst/ | lawyer | noun | m | |\n| менеджер | /ˈmɛnedʒer/ | manager | noun | m | |\n| директор | /dɪˈrɛktor/ | director | noun | m | |\n| продавець | /prodɑˈwɛt͡sʲ/ | seller | noun | m | |\n| водій | /woˈdʲij/ | driver | noun | m | |\n| офіс | /ˈɔfis/ | office | noun | m | |\n| фабрика | /ˈfɑbrɪkɑ/ | factory | noun | f | |\n| школа | /ˈʃkɔlɑ/ | school | noun | f | |\n| лікарня | /lʲiˈkɑrnʲɑ/ | hospital | noun | f | |\n| магазин | /mɑɦɑˈzɪn/ | shop | noun | m | |\n| компанія | /komˈpɑnʲijɑ/ | company | noun | f | |\n| працювати | /prɑt͡sʲuˈwɑtɪ/ | to work | verb | - | |\n| заробляти | /zɑrobˈlʲɑtɪ/ | to earn | verb | - | |\n| керувати | /keruˈwɑtɪ/ | to manage | verb | - | + instr |\n| звільнити | /zwilʲˈnɪtɪ/ | to fire | verb | - | |\n| найняти | /nɑjˈnʲɑtɪ/ | to hire | verb | - | |\n| кар'єра | /kɑrˈjɛrɑ/ | career | noun | f | |\n| зарплата | /zɑrˈplɑtɑ/ | salary | noun | f | |\n| відпустка | /widˈpustkɑ/ | vacation | noun | f | |\n| робота | /roˈbɔtɑ/ | work/job | noun | f | |\n| професія | /proˈfɛsʲijɑ/ | profession | noun | f | |\n| колега | /koˈlɛɦɑ/ | colleague | noun | m/f | |\n| клієнт | /klʲiˈjɛnt/ | client | noun | m | |\n| начальник | /nɑˈtʃɑlʲnɪk/ | boss | noun | m | |\n| успішний | /uˈspʲiʃnɪj/ | successful | adj | m | |\n| зайнятий | /ˈzɑjnʲɑtɪj/ | busy/occupied | adj | m | |\n",
+    "createdAt": "2025-12-15T20:02:03.074976Z",
+    "modifiedAt": "2025-12-15T20:02:03.074976Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-48",
+    "level": "A2",
+    "phase": "A2",
+    "wordCount": 30,
+    "newWordCount": 30,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "лікар",
+        "ipa": "/ˈlʲikɑr/",
+        "en": "doctor",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-2",
+        "uk": "вчитель",
+        "ipa": "/ˈwtʃɪtelʲ/",
+        "en": "teacher",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-3",
+        "uk": "інженер",
+        "ipa": "/inʒeˈnɛr/",
+        "en": "engineer",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-4",
+        "uk": "програміст",
+        "ipa": "/proɦrɑˈmʲist/",
+        "en": "programmer",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-5",
+        "uk": "юрист",
+        "ipa": "/juˈrɪst/",
+        "en": "lawyer",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-6",
+        "uk": "менеджер",
+        "ipa": "/ˈmɛnedʒer/",
+        "en": "manager",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-7",
+        "uk": "директор",
+        "ipa": "/dɪˈrɛktor/",
+        "en": "director",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-8",
+        "uk": "продавець",
+        "ipa": "/prodɑˈwɛt͡sʲ/",
+        "en": "seller",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-9",
+        "uk": "водій",
+        "ipa": "/woˈdʲij/",
+        "en": "driver",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-10",
+        "uk": "офіс",
+        "ipa": "/ˈɔfis/",
+        "en": "office",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-11",
+        "uk": "фабрика",
+        "ipa": "/ˈfɑbrɪkɑ/",
+        "en": "factory",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-12",
+        "uk": "школа",
+        "ipa": "/ˈʃkɔlɑ/",
+        "en": "school",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-13",
+        "uk": "лікарня",
+        "ipa": "/lʲiˈkɑrnʲɑ/",
+        "en": "hospital",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-14",
+        "uk": "магазин",
+        "ipa": "/mɑɦɑˈzɪn/",
+        "en": "shop",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-15",
+        "uk": "компанія",
+        "ipa": "/komˈpɑnʲijɑ/",
+        "en": "company",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-16",
+        "uk": "працювати",
+        "ipa": "/prɑt͡sʲuˈwɑtɪ/",
+        "en": "to work",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-17",
+        "uk": "заробляти",
+        "ipa": "/zɑrobˈlʲɑtɪ/",
+        "en": "to earn",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-18",
+        "uk": "керувати",
+        "ipa": "/keruˈwɑtɪ/",
+        "en": "to manage",
+        "pos": "verb",
+        "gender": null,
+        "note": "+ instr"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "звільнити",
+        "ipa": "/zwilʲˈnɪtɪ/",
+        "en": "to fire",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-20",
+        "uk": "найняти",
+        "ipa": "/nɑjˈnʲɑtɪ/",
+        "en": "to hire",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-21",
+        "uk": "кар'єра",
+        "ipa": "/kɑrˈjɛrɑ/",
+        "en": "career",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-22",
+        "uk": "зарплата",
+        "ipa": "/zɑrˈplɑtɑ/",
+        "en": "salary",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-23",
+        "uk": "відпустка",
+        "ipa": "/widˈpustkɑ/",
+        "en": "vacation",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-24",
+        "uk": "робота",
+        "ipa": "/roˈbɔtɑ/",
+        "en": "work/job",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-25",
+        "uk": "професія",
+        "ipa": "/proˈfɛsʲijɑ/",
+        "en": "profession",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-26",
+        "uk": "колега",
+        "ipa": "/koˈlɛɦɑ/",
+        "en": "colleague",
+        "pos": "noun",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-27",
+        "uk": "клієнт",
+        "ipa": "/klʲiˈjɛnt/",
+        "en": "client",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-28",
+        "uk": "начальник",
+        "ipa": "/nɑˈtʃɑlʲnɪk/",
+        "en": "boss",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-29",
+        "uk": "успішний",
+        "ipa": "/uˈspʲiʃnɪj/",
+        "en": "successful",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-30",
+        "uk": "зайнятий",
+        "ipa": "/ˈzɑjnʲɑtɪj/",
+        "en": "busy/occupied",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      }
+    ],
+    "reviewWords": []
+  }
+}

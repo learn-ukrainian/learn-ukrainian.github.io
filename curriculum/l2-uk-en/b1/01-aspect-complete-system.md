@@ -23,6 +23,20 @@ vocabulary_count: 20
 ---
 # Вид дієслова — Повна система
 
+> 🎯 **Чому це важливо**
+>
+> Вид дієслова — це найважливіша граматична категорія в українській мові. Носії мови одразу помічають неправильний вибір виду. Оволодіння цією системою — це те, що відрізняє "підручникову українську" від природного мовлення. Ваша здатність спілкуватися як носій починається тут.
+
+> [!resources] 🎧 External Resources
+>
+> **Verb System:** [Ukrainian Verb Prefixes](https://www.ukrainianlessons.com/ukrainian-verb-prefixes/) — How prefixes change meaning and create aspect pairs
+>
+> **Past Tense Review:** [Past Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-past-tense/) — Foundation for aspect in past
+>
+> **Future Tense Review:** [Future Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-future-tense/) — Foundation for aspect in future
+>
+> **Verb Overview:** [All Verb Tenses](https://www.ukrainianlessons.com/ukrainian-tenses/) — Downloadable reference chart
+
 ## Diagnostic
 
 Уявіть: ви в кав'ярні у Львові. Офіціант питає вашого друга:
@@ -78,6 +92,29 @@ Ukrainian verbs exist in pairs. Almost every action can be expressed two ways �
 >
 > Think of it like photography: **недоконаний is a video** (ongoing, showing duration), while **доконаний is a photograph** (capturing a completed moment with its result).
 
+**How English Handles Aspect Differently**
+
+English doesn't have grammatical aspect in the Ukrainian sense, but it has related concepts. Consider how English distinguishes these situations:
+
+| English | Ukrainian | Aspect | What's happening |
+|---------|-----------|--------|------------------|
+| I **was reading** — progressive | Я **читав** | Imperfective | Ongoing action |
+| I **have read** — perfect | Я **прочитав** | Perfective | Completed with result |
+| I **read** every day | Я **читав** щодня | Imperfective | Habitual action |
+| I **read** the book | Я **прочитав** книгу | Perfective | Single completed event |
+
+Notice how English uses the same verb form "read" for the last two examples, relying on context (every day vs. the book) to distinguish habitual from single completed actions. Ukrainian encodes this distinction in the verb itself — you physically cannot use прочитав for habitual actions.
+
+**The Fundamental Shift in Thinking**
+
+When English speakers learn Ukrainian aspect, the biggest shift is moving from temporal thinking (when did it happen?) to perspective thinking (how do I view this action?).
+
+Consider "I read the book yesterday":
+- If you want to say you spent time reading: Я **читав** книгу вчора. (Process — you engaged in reading)
+- If you want to say you finished it: Я **прочитав** книгу вчора. (Result — the book is now read)
+
+Both happened yesterday. The tense is the same. But the aspect — how you conceptualize the action — determines which verb you choose.
+
 ### Недоконаний вид — Процес, тривалість, повторюваність
 
 The imperfective aspect views an action from the inside. You're interested in the **process**, the **duration**, or the **repetition** — not the endpoint.
@@ -132,9 +169,19 @@ The perfective aspect views an action from the outside as a completed whole. You
 
 > 🎬 **Pop Culture Moment: The Witcher**
 >
-> In the Ukrainian dub of "The Witcher," Geralt says: "Я **вбив** сотні чудовиськ" (I've killed hundreds of monsters). He uses the perfective **вбив** because each kill was a completed action with a result. But when Yennefer says "Я все життя **боролася** за виживання" (I've been fighting for survival all my life), she uses imperfective **боролася** — it was an ongoing struggle, not a single completed event.
+> In the Ukrainian dub of "The Witcher," Geralt says: "Я **вбив** сотні чудовиськ" (I've killed hundreds of monsters). He uses the perfective **вбив** because each kill was a completed action with a result. But when Yennefer says "Я все життя **боролася** за виживання" (I've been fighting for survival all my life), she uses imperfective **боролася** — it was an ongoing struggle, not a single completed event. This example perfectly illustrates how even quantities (hundreds of monsters) don't determine aspect — it's whether you view the action as completed events or ongoing experience.
 
 ### Одна пара — два значення
+
+Understanding aspect pairs is crucial because the same real-world event can be described with either aspect depending on what you want to communicate. This is fundamentally different from English, where you'd use the same verb form regardless of your communicative intent.
+
+**Why This Matters for Communication**
+
+When you say "I read a book" in English, your listener doesn't know if you finished it or just spent time reading. You'd need to add words: "I finished reading" or "I was reading." Ukrainian encodes this distinction in the verb itself, making it impossible to be vague. Every time you speak, you commit to either the process view or the result view.
+
+This creates both challenges and opportunities for English speakers learning Ukrainian:
+- **Challenge**: You must decide your communicative intent before speaking, which requires conscious thought.
+- **Opportunity**: You can convey nuance that English simply cannot express as elegantly or concisely.
 
 Let's see how the same situation can be expressed differently depending on what you want to emphasize:
 
@@ -159,7 +206,32 @@ Let's see how the same situation can be expressed differently depending on what 
 
 Some contexts make the choice tricky. Let's examine them.
 
+**Common English Speaker Mistakes**
+
+Before we look at specific cases, here are the most common errors English speakers make with aspect, and why they happen:
+
+1. **Using perfective for ongoing actions**: English "I worked all day" is a completed statement, so learners reach for perfective. But Ukrainian sees "all day" as duration → imperfective: Я працював весь день.
+
+2. **Using imperfective for "have you ever" questions**: English "Have you read this book?" uses perfect tense (completed), but Ukrainian uses imperfective because you're asking about general experience, not a specific completed event: Ти читав цю книгу?
+
+3. **Using perfective for habitual past**: English "I called him every day" is completed in the sense that it happened in the past, but Ukrainian sees "every day" as repetition, which requires imperfective aspect: Я дзвонив йому щодня.
+
+4. **Mixing aspects in sequences**: English narrates events without changing verb forms: "He came, sat down, and worked." Ukrainian requires perfective for the completed sequence actions (came, sat) but imperfective for the ongoing activity (worked): Він прийшов, сів і працював.
+
+The key insight: **English past tense is about time. Ukrainian aspect is about perspective.** Don't let English past tense trick you into always choosing perfective.
+
 #### 1. Запитання про досвід
+
+**The "Have You Ever" Paradox**
+
+This is one of the most confusing cases for English speakers. In English, "Have you read this book?" uses the perfect tense, which typically signals completion. So learners naturally reach for perfective. But this is wrong!
+
+The key insight: when you ask "Have you ever...?" in English, you're not asking about a specific completed event. You're asking about general experience — whether someone has that kind of experience in their background. This is conceptually similar to asking "Is reading this book part of your history?" rather than "Did you complete the reading of this book on a specific occasion?"
+
+Ukrainian handles this with imperfective because:
+- You're not asking about a specific completed instance
+- You're asking about general experience with the activity
+- Any answer about completion would require follow-up questions
 
 When asking about experience, Ukrainian typically uses imperfective:
 
@@ -183,6 +255,16 @@ But for specific, bounded questions:
 
 #### 2. Заперечення
 
+**How Negation Changes the Aspectual Meaning**
+
+Negation in Ukrainian isn't just about making a statement negative — the aspect you choose with negation communicates important nuances about your expectations and knowledge. English handles this through context and additional words; Ukrainian builds it into the verb choice.
+
+Consider the English phrase "I haven't read this book." This is ambiguous:
+- Does it mean "I've never read this book" (no experience)?
+- Or "I haven't read it yet" (but I plan to/should)?
+
+Ukrainian forces you to choose. Your aspect selection reveals your underlying assumption about whether the reading will or should happen.
+
 Negation interacts with aspect in interesting ways:
 
 **General denial (imperfective):**
@@ -195,23 +277,40 @@ Negation interacts with aspect in interesting ways:
 
 #### 3. Імперативи
 
-Commands use aspect differently based on tone and context:
+Commands use aspect differently based on tone and context. This is one area where Ukrainian aspect creates social meaning that English doesn't grammatically encode.
+
+**Understanding Imperative Aspect**
+
+In English, "Come in!" and "Sit down!" are neutral commands. The tone depends on your voice, not the grammar. Ukrainian builds politeness and urgency directly into the verb form.
+
+**The Rule of Thumb**: Imperfective imperatives are invitations; perfective imperatives are instructions. Using the wrong one can sound rude or oddly formal.
 
 **Polite invitations (imperfective):**
-- **Заходьте**, будь ласка! (Come in, please!)
-- **Сідайте**! (Have a seat!)
-- **Читай** далі! (Keep reading!)
+- **Заходьте**, будь ласка! (Come in, please!) — welcoming, open-ended
+- **Сідайте**! (Have a seat!) — hospitable, no rush
+- **Читай** далі! (Keep reading!) — encouraging continuation
 
 **Specific instructions (perfective):**
-- **Прочитай** цю статтю до завтра! (Read this article by tomorrow!)
-- **Напиши** мені, коли приїдеш! (Write to me when you arrive!)
-- **Зроби** це негайно! (Do this immediately!)
+- **Прочитай** цю статтю до завтра! (Read this article by tomorrow!) — deadline-focused task
+- **Напиши** мені, коли приїдеш! (Write to me when you arrive!) — single expected action
+- **Зроби** це негайно! (Do this immediately!) — urgent, result-expected
+
+**Why This Matters**: Imagine inviting someone to sit. "Сядьте!" (perfective) sounds like a command from a police officer — sit down NOW and stay there. "Сідайте!" (imperfective) sounds like a gracious host — please, make yourself comfortable, take your time.
 
 > 🎯 **Fun Fact: Medical Ukrainian**
 >
 > Ukrainian doctors traditionally use imperfective imperatives to sound gentler: «**Дихайте** глибоко» (Breathe deeply), «**Показуйте** язик» (Show your tongue). Perfective commands would sound too abrupt in a medical context — imagine a doctor barking «**Покажіть**!» instead of the softer «**Показуйте**».
 
 ### Діалог: У книгарні в Києві
+
+This dialogue demonstrates aspect in a natural conversation about books. Notice how the speakers switch between aspects based on whether they're discussing ongoing activities, completed readings, or general experiences.
+
+**Key aspect switches to watch for:**
+- "шукаю" (imperfective) — ongoing search right now
+- "читала" (imperfective) — asking about experience (have you read anything?)
+- "прочитала" (perfective) — completed reading with result
+- "читала" (imperfective) — how long did you spend reading? (duration)
+- "прочитала" (perfective) — finished it in a week (result)
 
 **Оксана:** Привіт! Що ти **шукаєш**?
 
@@ -235,6 +334,13 @@ Commands use aspect differently based on tone and context:
 
 ### Діалог: На роботі в Харкові
 
+This workplace dialogue shows how aspect communicates progress and completion in professional contexts. Pay attention to how the boss uses perfective for result-focused questions while the employee uses both aspects to explain the status of their work.
+
+**Key patterns:**
+- Boss asking about completion: perfective (написав, перевірив)
+- Employee describing ongoing work: imperfective (писав, перевіряв, виправляю)
+- Employee promising future completion: perfective (закінчу, надішлю)
+
 **Керівник:** Олексію, ти вже **написав** звіт?
 
 **Олексій:** Я його **писав** усю ніч, але ще не **закінчив**.
@@ -254,6 +360,8 @@ Commands use aspect differently based on tone and context:
 ---
 
 ### Діалог: Розмова друзів у Одесі
+
+This friendly conversation illustrates aspect in casual contexts. Notice how asking about past activities often uses imperfective (дзвонила — she was calling all day, not a single completed call), while reporting what you did uses both aspects depending on whether you're describing the activity itself or its completion.
 
 **Марина:** Де ти **була** вчора? Я тобі весь день **дзвонила**.
 
@@ -275,6 +383,8 @@ Commands use aspect differently based on tone and context:
 
 ### Діалог: У кафе в Карпатах
 
+This dialogue showcases aspect in a tourism context. The tourist asks about the present situation using imperfective, while the local describes past experiences using imperfective for habitual actions and general facts.
+
 **Турист:** Вибачте, я **шукаю** готель "Карпатські зорі". Ви не **знаєте**, де він?
 
 **Місцевий:** Так, **знаю**. Я там **працював** років п'ять тому.
@@ -291,11 +401,34 @@ Commands use aspect differently based on tone and context:
 
 **Місцевий:** Усе життя тут **живу**. **Народився** тут і **виріс**.
 
-> 📜 **Історична довідка**
+> 📜 **Historical Background**
 >
-> Українська система виду розвивалася протягом століть. Old Ukrainian texts from the Kyivan Rus' period already show clear aspectual distinctions. Деякі вчені вважають, що слов'янська система виду — одна з найдавніших граматичних особливостей, predating even the separation of individual Slavic languages.
+> The Ukrainian aspect system has developed over centuries. Old Ukrainian texts from the Kyivan Rus' period already show clear aspectual distinctions. Some scholars believe that the Slavic aspect system is one of the oldest grammatical features, predating even the separation of individual Slavic languages. This deep historical foundation explains why aspect is so fundamental to how Slavic languages work — it's not an add-on feature but a core organizational principle of the verb system that has been refined over a millennium.
 
 ## Practice
+
+### How to Approach Aspect Exercises
+
+When practicing aspect, many learners try to memorize which verb goes with which situation. This doesn't work — there are too many verbs and situations. Instead, develop a mental checklist:
+
+**Step 1: Identify the temporal context**
+- Is there a duration marker (годину, весь день, довго)? → Usually imperfective
+- Is there a result marker (вже, нарешті, до кінця)? → Usually perfective
+- Is there a repetition marker (щодня, завжди, часто)? → Imperfective
+
+**Step 2: Consider the communicative goal**
+- Are you describing how time was spent? → Imperfective
+- Are you stating what was accomplished? → Perfective
+- Are you narrating sequential events? → Perfective
+- Are you providing background information? → Imperfective
+
+**Step 3: Check for special contexts**
+- General experience questions ("Have you ever...?") → Imperfective
+- "Not yet" statements → Perfective with "ще"
+- Polite imperatives → Imperfective
+- Direct commands → Perfective
+
+With practice, this checklist becomes automatic — but at first, consciously work through it for each sentence.
 
 ### Модель: Визначення виду
 
@@ -323,7 +456,15 @@ Complete with the correct aspect form based on context:
 
 ### Reading Practice: Історія одного дня
 
-Прочитайте текст і зверніть увагу на використання виду.
+Before reading the passage below, let's understand what to look for. This passage demonstrates how native speakers mix aspects naturally. Pay attention to:
+
+**Sequence actions** (perfective): When events happen one after another in sequence, Ukrainian uses perfective verbs because each action is completed before the next begins.
+
+**Background/ongoing actions** (imperfective): When describing what was happening at the same time as other events, or what someone was doing over a period of time, Ukrainian uses imperfective.
+
+**Result-focused statements** (perfective with "вже")**: When emphasizing that something is already done, Ukrainian uses perfective to show the completed result.
+
+Now read the passage:
 
 Марія **прокинулася** рано вранці. Вона **встала**, **вмилася** і **пішла** на кухню. Там вона **готувала** сніданок, поки її чоловік ще **спав**. Коли Тарас **прокинувся**, сніданок вже **був готовий**.
 
@@ -332,6 +473,16 @@ Complete with the correct aspect form based on context:
 
 Вони **поснідали** разом. Тарас **їв** повільно, бо весь час **читав** новини на телефоні. Марія **прибрала** зі столу і **помила** посуд. Потім вони обоє **пішли** на роботу.
 
+**Analysis of the passage:**
+
+Notice the pattern: The morning sequence uses all perfective verbs (прокинулася, встала, вмилася, пішла) because these are sequential completed actions — she woke up, then got up, then washed, then went to the kitchen. Each step finished before the next began.
+
+But when the narrator zooms into what was happening in the kitchen, we switch to imperfective (готувала, спав) because these were ongoing background actions. Maria was cooking (a process) while her husband was sleeping (ongoing state).
+
+The dialogue uses "вже" with perfective (вже встала, вже приготувала, вже випила) to emphasize completed results — she's already awake, breakfast is already made, coffee is already drunk.
+
+Then Taras "їв повільно" and "читав" — both imperfective because these describe how he was spending his time during breakfast (ongoing activity), not completed events. Finally, the cleanup and departure return to perfective (прибрала, помила, пішли) — completed sequence actions again.
+
 > 🎭 **Фольклорний куточок**
 >
 > В українських народних казках вид часто сигналізує про магічний момент перетворення. When Kotyhoroshko (Котигорошко) fights the dragon, the narrator switches from imperfective (the ongoing battle) to perfective (the decisive blow): «Вони **билися** три дні і три ночі. Нарешті Котигорошко **вдарив** Змія мечем — і **переміг**!» The aspectual shift marks the turning point of the story.
@@ -339,6 +490,47 @@ Complete with the correct aspect form based on context:
 ---
 
 # Summary
+
+**What You've Learned: A Mental Model for Aspect**
+
+Before we summarize in Ukrainian, let's crystallize the English speaker's approach to Ukrainian aspect:
+
+**The Core Question**: Whenever you want to say something in the past (or future), ask yourself: "Am I interested in the activity/process itself, or in the result/completion?"
+
+- **Process/Activity** → Imperfective (недоконаний)
+- **Result/Completion** → Perfective (доконаний)
+
+**Quick Decision Guide**:
+
+| Situation | Aspect | Why |
+|-----------|--------|-----|
+| How someone spent time | Imperfective | Focus on the activity |
+| What was accomplished | Perfective | Focus on the result |
+| Repeated/habitual action | Imperfective | No single completion point |
+| Sequence of events | Perfective | Each event finished |
+| Background action | Imperfective | Ongoing while other things happened |
+| Single bounded event | Perfective | One complete occurrence |
+
+**The Biggest Mistake to Avoid**:
+
+English speakers often think: "This happened in the past, so it's completed, so I should use perfective." This is wrong!
+
+"I worked all day" happened and is over — but the focus is on how you spent your time (process), so Ukrainian uses imperfective: Я працював весь день.
+
+"I finished the work" happened and is over — and the focus is on the completion (result), so Ukrainian uses perfective: Я закінчив роботу.
+
+Both are past tense. Both are "completed" in the English sense. But only one has a result that matters to the speaker.
+
+**Your Native Language Advantage**:
+
+Here's what many learners don't realize: English already has some aspectual thinking built in. Consider:
+
+- "I was reading" (progressive) vs "I read" (simple) — you already distinguish ongoing from general.
+- "I have finished" (perfect) vs "I finished" (simple) — you already distinguish result-relevant from past narrative.
+
+Ukrainian just makes these distinctions obligatory and consistent across all contexts. You're not learning something completely foreign — you're systematizing intuitions you already have.
+
+---
 
 У цьому модулі ви вивчили:
 
@@ -355,6 +547,21 @@ Complete with the correct aspect form based on context:
 - В імперативі звучить як конкретна інструкція
 
 **Ключова ідея:** Вибір виду залежить не від того, ЩО сталося, а від того, ЯК мовець хоче представити дію — як процес чи як завершений результат.
+
+> 💡 **Порада для практики**
+>
+> Коли говорите українською, завжди запитуйте себе: "Що важливіше в цьому контексті — сам процес чи результат?" Якщо ви описуєте, як провели час — недоконаний. Якщо ви повідомляєте про досягнення — доконаний. Ця проста перевірка допоможе вам обрати правильний вид у більшості ситуацій.
+
+> ✅ **Перевірте себе**
+>
+> Before moving on, can you:
+> - [ ] Explain the difference between недоконаний and доконаний aspect?
+> - [ ] Choose correct aspect for duration/repetition (imperfective) vs result/single event (perfective)?
+> - [ ] Use negation patterns correctly ("не читав" vs "ще не прочитав")?
+> - [ ] Recognize aspect choice in imperatives (polite vs direct)?
+>
+> If you checked all boxes, proceed to the next module.
+> If not, review the Analysis section and try the Practice activities again.
 
 ---
 

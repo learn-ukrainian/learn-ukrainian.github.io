@@ -1,0 +1,479 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-32",
+    "moduleId": "mod-uk-A2-32",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.3",
+    "moduleNumber": 32,
+    "moduleType": "grammar",
+    "pedagogy": "Expressive",
+    "immersionLevel": 0.4,
+    "title": "When & While",
+    "titleUk": null,
+    "subtitle": "Time Clauses",
+    "description": "Learner can express sequence (before/after)",
+    "objectives": [
+      "Learner can express sequence (before/after)",
+      "Learner can express duration (while)",
+      "Learner understands 'як тільки'"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "time clauses (коли, поки)",
+      "sequence of events (після того як)",
+      "simultaneous events"
+    ],
+    "tags": [
+      "connectors",
+      "time",
+      "grammar",
+      "logic"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "Life is a sequence of events.\n- **When** I woke up, I drank coffee.\n- **While** I was drinking coffee, I checked the news.\n- **After** I finished coffee, I went to work.\n\nIn Ukrainian, these structures control the flow of your story.\n\n**We will cover:**\n- **The Trigger:** *Коли* (When).\n- **The Process:** *Поки* (While).\n- **The Sequence:** *Після того як* (After) vs *Перед тим як* (Before).\n\n> [!note] Pronunciation\n> **Поки** /ˈpɔkɪ/ means \"while\" or \"until\". It connects simultaneous actions.\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "Presentation",
+        "nameEn": null,
+        "type": "content",
+        "content": "## 1. Simultaneous Actions: Поки\n\nWhen two things happen at the same time.\nUsually requires **Imperfective Aspect** (process).\n\n- **Поки** я читав, вона спала. (While I was reading, she was sleeping).\n- Ми говорили, **поки** йшли додому. (We talked while walking home).\n- Не дзвони мені, **поки** я працюю! (Don't call me while I'm working!).\n\n> [!tip] Comma Rule\n> Just like with \"щоб\" and \"який\", always put a comma before the connector if it's in the middle!\n\n## 2. Sequential Actions: Коли & Після того як\n\n### A. Simple \"When\" (Коли)\nUsually implies one thing happens after another (Perfective).\n\n- **Коли** я прийшов, ми почали їсти. (When I arrived [point], we started eating).\n- Я подзвоню, **коли** закінчу. (I will call when I finish).\n\n### B. Explicit \"After\" (Після того як)\nUsed when you want to emphasize the sequence.\n\n- **Після того як** я з'їв обід, я пішов гуляти. (After I ate lunch, I went for a walk).\n- Він заснув **після того як** прочитав книгу.\n\n## 3. Immediate Action: Як тільки (As soon as)\n\nUse this for instant reaction.\n\n- **Як тільки** я побачив його, я все зрозумів. (As soon as I saw him...).\n- Ми поїдемо, **як тільки** ти будеш готовий. (We will go as soon as you are ready).\n- **Щойно** я зайшов, телефон задзвонив. (Just as I entered...).\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Deep Dive: Before vs After",
+        "nameEn": null,
+        "type": "content",
+        "content": "\"Before\" is tricky in Ukrainian because it forces you to think about \"Before WHAT?\".\n\n- **Перед тим як** (Before [doing something]).\n- *Перед тим як вийти, вимкни світло.* (Before going out, turn off the light).\n- **Перш ніж** (Before / Prior to). Synonym, slightly more literary.\n- *Перш ніж сказати, подумай.* (Before speaking, think).\n\n**Logic Check:**\n- English: \"Call me before getting home.\"\n- Ukrainian: \"Call me before that, how [you] arrive home.\" -> *Подзвони мені **перед тим як** прийдеш додому.*\n\nIt requires a full verb phrase!\n\n> [!cultural] Myth: \"Punctuality\"\n> In Ukraine, usually \"коли я прийду\" (when I come) is flexible. But trains are very punctual.\n> If the train says 18:02, it leaves at 18:02. **Як тільки** (as soon as) the clock strikes, it moves. Don't be late!\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Deep Dive: Complex Time Connectors",
+        "nameEn": null,
+        "type": "content",
+        "content": "Sometimes simple \"when\" is not enough. You need precision.\n\n### 1. The Loop: Кожного разу, коли...\n\"Every time when...\"\n- *Кожного разу, коли я бачу її, я радію.* (Every time I see her, I rejoice).\n- *Раз у раз, коли ми зустрічаємося...* (Time and again, when we meet...).\n\n### 2. The Parallel: Тим часом як...\n\"Meanwhile, as...\" or \"Whereas...\"\n- *Я працював, тим часом як він спав.* (I worked, meanwhile he slept).\n- *В той час як усі святкували, я вчився.* (At that time as everyone celebrated, I studied).\n\n### 3. The Date: Того дня, коли...\n\"On that day when...\"\n- *Того дня, коли народився син, йшов дощ.* (On the day the son was born, it rained).\n\n> [!tip] Logic Check\n> Unlike English \"While X, Y\", Ukrainian prefers \"X, тим часом як Y\" if you want to contrast the two actions heavily. But for simple background action, use **поки**.\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Story Time: The Late Traveller",
+        "nameEn": null,
+        "type": "content",
+        "content": "Це історія про Максима, який завжди запізнювався.\n**Того дня, коли** він мав їхати у відпустку, він встав рано.\n**Перш ніж** почати збирати речі, він вирішив випити каву.\n**Поки** він пив каву, він читав новини.\nВін читав так довго, що забув про час.\n**Як тільки** він подивився на годинник, він зрозумів, що має мало часу.\n**Перед тим як** вийти з дому, він почав шукати паспорт.\nВін шукав його **довго**, **поки не** знайшов під ліжком.\n**Після того як** він знайшов паспорт, він викликав таксі.\nТаксі приїхало швидко. **Але** був затор.\n**В той час як** таксі стояло в заторі, Максим нервував.\n**Кожного разу, коли** машина рухалася, він радів.\nАле було пізно.\n**Коли** він приїхав на вокзал, поїзд уже поїхав.\nМаксим зрозумів: **перш ніж** розслаблятися, треба зробити справу.\nТепер він знає: **ніж** пити каву, краще зібрати речі!\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Cultural Insight",
+        "nameEn": null,
+        "type": "content",
+        "content": "> [!cultural] \"Поспішай повільно\"\n> This is a famous Latin phrase (Festina Lente) that Ukrainians love: \"Hurry slowly\".\n> It means: Do things quickly but carefully. Don't rush into mistakes.\n> Think **перед тим як** діяти. Але дій **як тільки** маєш план!\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Language in Action",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Dialogue: The Busy Morning\n\n**Andriy:** Що ти робив вранці?\n**Olya:** О, це був божевільний ранок. **Коли** я прокинулася, води не було.\n**Andriy:** І що ти зробила?\n**Olya:** Я чекала. **Поки** я чекала, я читала новини.\n**Andriy:** І довго ти чекала?\n**Olya:** Годину! **Як тільки** вода з'явилася, я побігла в душ.\n**Andriy:** А сніданок?\n**Olya:** Я поснідала **після того як** одяглася. А ти?\n**Andriy:** А я спав, **поки** ти бігала.\n**Olya:** Ти щасливчик.\n**Andriy:** Але **перед тим як** вийти, я зробив тобі каву.\n**Olya:** О, дякую! Ти найкращий.\n\n### Analysis\n1. **Коли я прокинулася** - Single point in time trigger.\n2. **Поки я чекала** - Duration/Process.\n3. **Як тільки вода з'явилася** - Immediate reaction.\n4. **Після того як одяглася** - Clear sequence.\n5. **Перед тим як вийти** - Action before another action.\n\n## Monologue: My Strategy\n\nЯ люблю планувати свій день.\n**Перш ніж** почати роботу, я пишу список завдань.\n**Коли** я працюю, я не дивлюся в телефон.\nЯ роблю перерву тільки **після того як** закінчу важливе завдання.\n**Поки** я п'ю каву, я думаю про майбутнє.\nЯ пообідаю, **як тільки** настане дванадцята година.\nА ввечері, **коли** я прийду додому, я буду відпочивати.\nАле **перед тим як** лягти спати, я буду читати книгу.\nЦе мій ідеальний день, **про який** я мрію.\n\n---"
+      },
+      {
+        "id": "section-8",
+        "name": "Pro-Tip: The \"Until\" Dual Meaning",
+        "nameEn": null,
+        "type": "content",
+        "content": "The word **поки** means \"while\".\nBut **поки не** means \"until\" (literally \"while not\").\n\n- *Я буду тут, **поки** ти працюєш.* (I will be here **while** you work).\n- *Я буду тут, **поки** ти **не** закінчиш.* (I will be here **while** you do **not** finish -> **Until** you finish).\n\nIt's logical: I stay in the state of \"waiting\" during the time that \"finishing\" has NOT happened yet.\n\n---"
+      },
+      {
+        "id": "section-9",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "1.  **Simultaneous:** Use **Поки** (While) or **В той час як**.\n2.  **Sequential:** Use **Коли** (When) or **Після того як** (After).\n3.  **Immediate:** Use **Як тільки** or **Щойно**.\n4.  **Before:** Use **Перед тим як** or **Перш ніж**.\n5.  **Frequency:** **Кожного разу, коли** (Every time when).\n\n---"
+      },
+      {
+        "id": "section-10",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Time Connectors\n\n> Match the connector to its function.\n\n- Коли :: When\n- Поки :: While\n- Після того як :: After\n- Перед тим як :: Before\n- Як тільки :: As soon as\n- Щойно :: Just now/As soon as\n- Доки :: While/Until\n- Перш ніж :: Before (Literary)\n- Тим часом як :: Meanwhile\n- Кожного разу коли :: Every time when\n\n## fill-in: Select the Connector\n\n> Choose the best connector for the logic.\n\n1. Я подзвоню, ___ приїду. (Sequence)\n   > [!answer] коли\n   > [!options] коли | поки | доки\n\n2. Ми говорили, ___ їли піцу. (Simultaneous)\n   > [!answer] поки\n   > [!options] поки | як тільки | після того як\n\n3. Я пішов спати ___ подивився фільм. (Sequence: after reading)\n   > [!answer] після того як\n   > [!options] після того як | перед тим як | поки\n\n4. Мий руки ___ їсти. (Before)\n   > [!answer] перед тим як\n   > [!options] перед тим як | після того як | коли\n\n5. ___ він зайшов, усі замовкли. (Instant)\n   > [!answer] Як тільки\n   > [!options] Як тільки | Поки | Перед тим як\n\n6. Я чекав, ___ вона не прийшла. (Until)\n   > [!answer] поки\n   > [!options] поки | коли | як тільки\n\n7. Ти читав, ___ я спав? (Simultaneous)\n   > [!answer] в той час як\n   > [!options] в той час як | як тільки | щойно\n\n8. Вибачся ___ підеш. (Before)\n   > [!answer] перш ніж\n   > [!options] перш ніж | після того як | поки\n\n## quiz: Time Logic\n\n1. \"Поки\" usually goes with which Aspect?\n   - [x] Imperfective (Process)\n   - [ ] Perfective (Result)\n\n2. \"Коли\" usually goes with which Aspect for sequence?\n   - [x] Perfective (Result)\n   - [ ] Imperfective (Process)\n\n3. \"Після того як\" implies:\n   - [x] One action strictly follows another\n   - [ ] Actions happen together\n\n4. Translate: \"Before I go...\"\n   - [x] Перед тим як я піду...\n   - [ ] Перед я піду...\n\n5. \"Поки не\" implies:\n   - [x] Until\n   - [ ] While\n   - [ ] Because\n\n6. Is a comma needed before \"коли\" in the middle of a sentence?\n   - [x] Yes, always.\n   - [ ] No, never.\n\n7. \"Як тільки\" shows:\n   - [x] Instant reaction\n   - [ ] Long wait\n\n8. \"Перш ніж\" is a synonym for:\n   - [x] Перед тим як\n   - [ ] Після того як\n\n## unjumble: Time Lines\n\n1. кожного / разу / коли / я / дзвоню / він / зайнятий\n   > [!answer] Кожного разу, коли я дзвоню, він зайнятий.\n\n2. ми / гуляли / тим / часом / як / йшов / дощ\n   > [!answer] Ми гуляли, тим часом як йшов дощ.\n\n3. я / заснув / після / як / того / прочитав\n   > [!answer] Я заснув після того, як прочитав.\n\n4. подзвони / як / тільки / будеш / вдома\n   > [!answer] Подзвони, як тільки будеш вдома.\n\n5. перед / тим / як / сказати / подумай\n   > [!answer] Перед тим як сказати, подумай.\n\n6. я / чекав / поки / ти / не / прийшов\n   > [!answer] Я чекав, поки ти не прийшов.\n\n## group-sort: Process vs Point\n\n### Point (Sequencing/Instant)\n- Коли я прийшов...\n- Як тільки я побачив...\n- Після того як я з'їв...\n- Перед тим як вийти...\n- Щойно я встав...\n- Того дня, коли він народився...\n\n### Process (Duration)\n- Поки я читав...\n- Поки ми йшли...\n- Доки я чекав...\n- В той час як я спав...\n- Тим часом як він говорив...\n- Відколи ми дружимо...\n\n## true-false: Connector Check\n\n1. \"Поки\" means \"After\".\n   - [ ] True\n   - [x] False\n\n2. \"Перед тим як\" needs a verb or clause.\n   - [x] True\n   - [ ] False\n\n3. \"Коли\" can express simultaneous action too (\"When I was walking...\").\n   - [x] True\n   - [ ] False\n   > Yes, aspect determines it.\n\n4. \"Як тільки\" implies a delay.\n   - [ ] True\n   - [x] False\n   > Speed/Immediacy.\n\n5. \"Після того як\" is very clear about order.\n   - [x] True\n   - [ ] False\n\n6. \"Поки не\" means \"While not\" or \"Until\".\n   - [x] True\n   - [ ] False\n\n7. You never use commas with time clauses.\n   - [ ] True\n   - [x] False\n\n8. \"В той час як\" is used for Parallel actions.\n   - [x] True\n   - [ ] False\n\n## cloze: The Narrative\n\n> Complete the story.\n\n[___:1] я був малим, я любив літо.\nЯ грав у футбол, [___:2] мама готувала обід.\n[___:3] ми їли, я йшов читати.\nАле [___:4] почати читати, я мив руки.\n[___:5] мама кликала мене, я біг назад.\nЯ не лягав спати, [___:6] сонце не сідало.\nЦе був час, [___:7] я був щасливий.\n\n1. Коли / Де\n> [!answer] Коли\n\n2. тим часом як / коли\n> [!answer] тим часом як\n\n3. Після того як / Перед тим як\n> [!answer] Після того як\n\n4. перед тим як / поки (Logic: wash hands BEFORE reading)\n> [!answer] перед тим як\n\n5. Кожного разу коли / Поки\n> [!answer] Кожного разу коли\n\n6. поки / коли (Logic: Until the sun set)\n> [!answer] поки\n\n7. коли / де\n> [!answer] коли\n\n## dialogue-reorder: The Meeting\n\n- Коли ти прийдеш?\n- Я прийду, як тільки закінчу роботу.\n- А коли ти закінчиш?\n- Я закінчу, коли напишу звіт.\n- Добре, подзвони мені перед тим як вийти.\n- Гаразд. А що ти будеш робити, поки чекаєш?\n- Я буду пити каву, поки ти працюєш.\n- Ти як завжди!\n\n> [!answer]\n> 1. Коли ти прийдеш?\n> 2. Я прийду, як тільки закінчу роботу.\n> 3. А коли ти закінчиш?\n> 4. Я закінчу, коли напишу звіт.\n> 5. Добре, подзвони мені перед тим як вийти.\n> 6. Гаразд. А що ти будеш робити, поки чекаєш?\n> 7. Я буду пити каву, поки ти працюєш.\n> 8. Ти як завжди!\n\n## mark-the-words: Time Markers\n\nМи пішли гуляти, [коли](correct) закінчився дощ. Я читав книгу, [поки](correct) їхав у метро. [Як тільки](correct) я побачив тебе, я зрадів. [Перш ніж](correct) купити це, подумай. Ми їли торт [після того як](correct) задули свічки.\n\n---\n\nВін [мій брат](incorrect). Це [гарний дім](incorrect). Я [люблю каву](incorrect).\n\n## error-correction: Fix the Logic\n\n1. Я спав, **коли** я читав. (While)\n   > [!error] коли\n   > [!answer] поки\n   > [!explanation] Two simultaneous processes usually take \"поки\".\n   > [!options] поки | коли\n\n2. Подзвони мені **після** вийти. (Grammar)\n   > [!error] після\n   > [!answer] після того як\n   > [!explanation] \"After\" with a verb phrase requires \"після того як\".\n   > [!options] після того як | після\n\n3. **Перед** я піду, я скажу. (Grammar)\n   > [!error] Перед\n   > [!answer] Перед тим як\n   > [!explanation] \"Before\" with a clause requires \"Перед тим як\".\n   > [!options] Перед тим як | Перед\n\n4. Я чекав, **як тільки** вона прийшла. (Logic: Until)\n   > [!error] як тільки\n   > [!answer] поки\n   > [!explanation] Waiting \"until\" requires \"поки\".\n   > [!options] поки | як тільки\n\n5. **Поки** я прийшов, вона вже пішла. (Logic: By the time -> Коли)\n   > [!error] Поки\n   > [!answer] Коли\n   > [!explanation] \"When I arrived\" is a point, not a process.\n   > [!options] Коли | Поки\n\n6. **Тим часом** я їв, вона пила. (Grammar)\n   > [!error] Тим часом\n   > [!answer] Тим часом як\n   > [!explanation] \"Meanwhile as\" is \"Тим часом як\".\n   > [!options] Тим часом як | Тим часом\n\n## translate: English to Ukrainian\n\n1. While I sleep, you work.\n   - [x] Поки я сплю, ти працюєш.\n   - [ ] Коли я сплю, ти працюєш.\n\n2. Before I ask...\n   - [x] Перед тим як я запитаю...\n   - [ ] Перед я запитаю...\n\n3. After I finish...\n   - [x] Після того як я закінчу...\n   - [ ] Після закінчу...\n\n4. As soon as I see him.\n   - [x] Як тільки я побачу його.\n   - [ ] Поки я побачу його.\n\n5. Whenever I see him...\n   - [x] Кожного разу, коли я бачу його...\n   - [ ] Поки я бачу його...\n\n6. Wait until I return.\n   - [x] Чекай, поки я не повернуся.\n   - [ ] Чекай, як я повернуся.\n\n---"
+      },
+      {
+        "id": "section-11",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| коли | /kɔˈlɪ/ | when | conj | — | trigger |\n| поки | /ˈpɔkɪ/ | while/until | conj | — | trigger |\n| доки | /ˈdɔkɪ/ | while/until | conj | — | synonym |\n| як тільки | /jɑk ˈtilʲkɪ/ | as soon as | phrase | — | instant |\n| щойно | /ˈʃt͡ʃɔjnɔ/ | just now / as soon as | adv | — | instant |\n| ледве | /ˈlɛdʋɛ/ | barely / hardly | adv | — | nuance |\n| тоді | /tɔˈdi/ | then | adv | — | time |\n| завжди | /zɑʋˈʒdɪ/ | always | adv | — | freq |\n| перед тим як | /pɛrɛd tɪm jɑk/ | before | conj | — | complex |\n| після того як | /pisʲlʲɑ tɔɦɔ jɑk/ | after | conj | — | complex |\n| перш ніж | /pɛrʃ niʒ/ | before | conj | — | literary |\n| поки не | /pɔkɪ nɛ/ | until | phrase | — | negative |\n| тим часом як | /tɪm t͡ʃɑsɔm jɑk/ | meanwhile | conj | — | parallel |\n| кожного разу | /kɔʒnɔɦɔ rɑzu/ | every time | phrase | — | freq |\n| раз у раз | /rɑz u rɑz/ | time and again | phrase | — | idiom |\n| того дня | /tɔɦɔ dnʲɑ/ | on that day | phrase | — | specific |\n| тоді коли | /tɔdi kɔlɪ/ | then when | phrase | — | specific |\n| в той час як | /ʋ tɔj t͡ʃɑs jɑk/ | at that time | phrase | — | parallel |\n| ніж | /niʒ/ | than / before | conj | — | comparison |\n| раз | /rɑz/ | time / once | noun | m | count |\n| часом | /ˈt͡ʃɑsɔm/ | sometimes | adv | — | freq |\n| ніколи | /niˈkɔlɪ/ | never | adv | — | freq |\n| часто | /ˈt͡ʃɑstɔ/ | often | adv | — | freq |\n| рідко | /ˈridkɔ/ | rarely | adv | — | freq |\n| вчора | /ˈʋt͡ʃɔrɑ/ | yesterday | adv | — | time |\n| сьогодні | /sʲɔˈɦɔdnʲi/ | today | adv | — | time |\n| завтра | /ˈzɑʋtrɑ/ | tomorrow | adv | — | time |\n| вранці | /ˈʋrɑnt͡sʲi/ | in the morning | adv | — | time |\n| вдень | /ʋdɛnʲ/ | in the afternoon | adv | — | time |\n| ввечері | /ˈʋʋɛt͡ʃɛri/ | in the evening | adv | — | time |\n| вночі | /ʋnɔˈt͡ʃi/ | at night | adv | — | time |\n| довго | /ˈdɔʋɦɔ/ | long (time) | adv | — | duration |\n| швидко | /ˈʃʋɪdkɔ/ | quickly | adv | — | speed |\n| ранок | /ˈrɑnɔk/ | morning | noun | m | part of day |\n| день | /dɛnʲ/ | day | noun | m | concept |\n| вечір | /ˈʋɛt͡ʃir/ | evening | noun | m | part of day |\n| ніч | /nit͡ʃ/ | night | noun | f | part of day |\n| час | /t͡ʃɑs/ | time | noun | m | concept |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-28\ntitle: When & While\nsubtitle: \"Time Clauses\"\nversion: \"1.0\"\nphase: \"A2.3\"\npedagogy: \"Expressive\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - connectors\n  - time\n  - grammar\n  - logic\ngrammar:\n  - time clauses (коли, поки)\n  - sequence of events (після того як)\n  - simultaneous events\nobjectives:\n  - \"Learner can express sequence (before/after)\"\n  - \"Learner can express duration (while)\"\n  - \"Learner understands 'як тільки'\"\nvocabulary_count: 25\n---\n\n# Warm-up\n\nLife is a sequence of events.\n- **When** I woke up, I drank coffee.\n- **While** I was drinking coffee, I checked the news.\n- **After** I finished coffee, I went to work.\n\nIn Ukrainian, these structures control the flow of your story.\n\n**We will cover:**\n- **The Trigger:** *Коли* (When).\n- **The Process:** *Поки* (While).\n- **The Sequence:** *Після того як* (After) vs *Перед тим як* (Before).\n\n> [!note] Pronunciation\n> **Поки** /ˈpɔkɪ/ means \"while\" or \"until\". It connects simultaneous actions.\n\n---\n\n# Presentation\n\n## 1. Simultaneous Actions: Поки\n\nWhen two things happen at the same time.\nUsually requires **Imperfective Aspect** (process).\n\n- **Поки** я читав, вона спала. (While I was reading, she was sleeping).\n- Ми говорили, **поки** йшли додому. (We talked while walking home).\n- Не дзвони мені, **поки** я працюю! (Don't call me while I'm working!).\n\n> [!tip] Comma Rule\n> Just like with \"щоб\" and \"який\", always put a comma before the connector if it's in the middle!\n\n## 2. Sequential Actions: Коли & Після того як\n\n### A. Simple \"When\" (Коли)\nUsually implies one thing happens after another (Perfective).\n\n- **Коли** я прийшов, ми почали їсти. (When I arrived [point], we started eating).\n- Я подзвоню, **коли** закінчу. (I will call when I finish).\n\n### B. Explicit \"After\" (Після того як)\nUsed when you want to emphasize the sequence.\n\n- **Після того як** я з'їв обід, я пішов гуляти. (After I ate lunch, I went for a walk).\n- Він заснув **після того як** прочитав книгу.\n\n## 3. Immediate Action: Як тільки (As soon as)\n\nUse this for instant reaction.\n\n- **Як тільки** я побачив його, я все зрозумів. (As soon as I saw him...).\n- Ми поїдемо, **як тільки** ти будеш готовий. (We will go as soon as you are ready).\n- **Щойно** я зайшов, телефон задзвонив. (Just as I entered...).\n\n---\n\n# Deep Dive: Before vs After\n\n\"Before\" is tricky in Ukrainian because it forces you to think about \"Before WHAT?\".\n\n- **Перед тим як** (Before [doing something]).\n- *Перед тим як вийти, вимкни світло.* (Before going out, turn off the light).\n- **Перш ніж** (Before / Prior to). Synonym, slightly more literary.\n- *Перш ніж сказати, подумай.* (Before speaking, think).\n\n**Logic Check:**\n- English: \"Call me before getting home.\"\n- Ukrainian: \"Call me before that, how [you] arrive home.\" -> *Подзвони мені **перед тим як** прийдеш додому.*\n\nIt requires a full verb phrase!\n\n> [!cultural] Myth: \"Punctuality\"\n> In Ukraine, usually \"коли я прийду\" (when I come) is flexible. But trains are very punctual.\n> If the train says 18:02, it leaves at 18:02. **Як тільки** (as soon as) the clock strikes, it moves. Don't be late!\n\n---\n\n# Deep Dive: Complex Time Connectors\n\nSometimes simple \"when\" is not enough. You need precision.\n\n### 1. The Loop: Кожного разу, коли...\n\"Every time when...\"\n- *Кожного разу, коли я бачу її, я радію.* (Every time I see her, I rejoice).\n- *Раз у раз, коли ми зустрічаємося...* (Time and again, when we meet...).\n\n### 2. The Parallel: Тим часом як...\n\"Meanwhile, as...\" or \"Whereas...\"\n- *Я працював, тим часом як він спав.* (I worked, meanwhile he slept).\n- *В той час як усі святкували, я вчився.* (At that time as everyone celebrated, I studied).\n\n### 3. The Date: Того дня, коли...\n\"On that day when...\"\n- *Того дня, коли народився син, йшов дощ.* (On the day the son was born, it rained).\n\n> [!tip] Logic Check\n> Unlike English \"While X, Y\", Ukrainian prefers \"X, тим часом як Y\" if you want to contrast the two actions heavily. But for simple background action, use **поки**.\n\n---\n\n# Story Time: The Late Traveller\n\nЦе історія про Максима, який завжди запізнювався.\n**Того дня, коли** він мав їхати у відпустку, він встав рано.\n**Перш ніж** почати збирати речі, він вирішив випити каву.\n**Поки** він пив каву, він читав новини.\nВін читав так довго, що забув про час.\n**Як тільки** він подивився на годинник, він зрозумів, що має мало часу.\n**Перед тим як** вийти з дому, він почав шукати паспорт.\nВін шукав його **довго**, **поки не** знайшов під ліжком.\n**Після того як** він знайшов паспорт, він викликав таксі.\nТаксі приїхало швидко. **Але** був затор.\n**В той час як** таксі стояло в заторі, Максим нервував.\n**Кожного разу, коли** машина рухалася, він радів.\nАле було пізно.\n**Коли** він приїхав на вокзал, поїзд уже поїхав.\nМаксим зрозумів: **перш ніж** розслаблятися, треба зробити справу.\nТепер він знає: **ніж** пити каву, краще зібрати речі!\n\n---\n\n# Cultural Insight\n\n> [!cultural] \"Поспішай повільно\"\n> This is a famous Latin phrase (Festina Lente) that Ukrainians love: \"Hurry slowly\".\n> It means: Do things quickly but carefully. Don't rush into mistakes.\n> Think **перед тим як** діяти. Але дій **як тільки** маєш план!\n\n---\n\n# Language in Action\n\n## Dialogue: The Busy Morning\n\n**Andriy:** Що ти робив вранці?\n**Olya:** О, це був божевільний ранок. **Коли** я прокинулася, води не було.\n**Andriy:** І що ти зробила?\n**Olya:** Я чекала. **Поки** я чекала, я читала новини.\n**Andriy:** І довго ти чекала?\n**Olya:** Годину! **Як тільки** вода з'явилася, я побігла в душ.\n**Andriy:** А сніданок?\n**Olya:** Я поснідала **після того як** одяглася. А ти?\n**Andriy:** А я спав, **поки** ти бігала.\n**Olya:** Ти щасливчик.\n**Andriy:** Але **перед тим як** вийти, я зробив тобі каву.\n**Olya:** О, дякую! Ти найкращий.\n\n### Analysis\n1. **Коли я прокинулася** - Single point in time trigger.\n2. **Поки я чекала** - Duration/Process.\n3. **Як тільки вода з'явилася** - Immediate reaction.\n4. **Після того як одяглася** - Clear sequence.\n5. **Перед тим як вийти** - Action before another action.\n\n## Monologue: My Strategy\n\nЯ люблю планувати свій день.\n**Перш ніж** почати роботу, я пишу список завдань.\n**Коли** я працюю, я не дивлюся в телефон.\nЯ роблю перерву тільки **після того як** закінчу важливе завдання.\n**Поки** я п'ю каву, я думаю про майбутнє.\nЯ пообідаю, **як тільки** настане дванадцята година.\nА ввечері, **коли** я прийду додому, я буду відпочивати.\nАле **перед тим як** лягти спати, я буду читати книгу.\nЦе мій ідеальний день, **про який** я мрію.\n\n---\n\n# Pro-Tip: The \"Until\" Dual Meaning\n\nThe word **поки** means \"while\".\nBut **поки не** means \"until\" (literally \"while not\").\n\n- *Я буду тут, **поки** ти працюєш.* (I will be here **while** you work).\n- *Я буду тут, **поки** ти **не** закінчиш.* (I will be here **while** you do **not** finish -> **Until** you finish).\n\nIt's logical: I stay in the state of \"waiting\" during the time that \"finishing\" has NOT happened yet.\n\n---\n\n# Summary\n\n1.  **Simultaneous:** Use **Поки** (While) or **В той час як**.\n2.  **Sequential:** Use **Коли** (When) or **Після того як** (After).\n3.  **Immediate:** Use **Як тільки** or **Щойно**.\n4.  **Before:** Use **Перед тим як** or **Перш ніж**.\n5.  **Frequency:** **Кожного разу, коли** (Every time when).\n\n---\n\n# Activities\n\n## match-up: Time Connectors\n\n> Match the connector to its function.\n\n- Коли :: When\n- Поки :: While\n- Після того як :: After\n- Перед тим як :: Before\n- Як тільки :: As soon as\n- Щойно :: Just now/As soon as\n- Доки :: While/Until\n- Перш ніж :: Before (Literary)\n- Тим часом як :: Meanwhile\n- Кожного разу коли :: Every time when\n\n## fill-in: Select the Connector\n\n> Choose the best connector for the logic.\n\n1. Я подзвоню, ___ приїду. (Sequence)\n   > [!answer] коли\n   > [!options] коли | поки | доки\n\n2. Ми говорили, ___ їли піцу. (Simultaneous)\n   > [!answer] поки\n   > [!options] поки | як тільки | після того як\n\n3. Я пішов спати ___ подивився фільм. (Sequence: after reading)\n   > [!answer] після того як\n   > [!options] після того як | перед тим як | поки\n\n4. Мий руки ___ їсти. (Before)\n   > [!answer] перед тим як\n   > [!options] перед тим як | після того як | коли\n\n5. ___ він зайшов, усі замовкли. (Instant)\n   > [!answer] Як тільки\n   > [!options] Як тільки | Поки | Перед тим як\n\n6. Я чекав, ___ вона не прийшла. (Until)\n   > [!answer] поки\n   > [!options] поки | коли | як тільки\n\n7. Ти читав, ___ я спав? (Simultaneous)\n   > [!answer] в той час як\n   > [!options] в той час як | як тільки | щойно\n\n8. Вибачся ___ підеш. (Before)\n   > [!answer] перш ніж\n   > [!options] перш ніж | після того як | поки\n\n## quiz: Time Logic\n\n1. \"Поки\" usually goes with which Aspect?\n   - [x] Imperfective (Process)\n   - [ ] Perfective (Result)\n\n2. \"Коли\" usually goes with which Aspect for sequence?\n   - [x] Perfective (Result)\n   - [ ] Imperfective (Process)\n\n3. \"Після того як\" implies:\n   - [x] One action strictly follows another\n   - [ ] Actions happen together\n\n4. Translate: \"Before I go...\"\n   - [x] Перед тим як я піду...\n   - [ ] Перед я піду...\n\n5. \"Поки не\" implies:\n   - [x] Until\n   - [ ] While\n   - [ ] Because\n\n6. Is a comma needed before \"коли\" in the middle of a sentence?\n   - [x] Yes, always.\n   - [ ] No, never.\n\n7. \"Як тільки\" shows:\n   - [x] Instant reaction\n   - [ ] Long wait\n\n8. \"Перш ніж\" is a synonym for:\n   - [x] Перед тим як\n   - [ ] Після того як\n\n## unjumble: Time Lines\n\n1. кожного / разу / коли / я / дзвоню / він / зайнятий\n   > [!answer] Кожного разу, коли я дзвоню, він зайнятий.\n\n2. ми / гуляли / тим / часом / як / йшов / дощ\n   > [!answer] Ми гуляли, тим часом як йшов дощ.\n\n3. я / заснув / після / як / того / прочитав\n   > [!answer] Я заснув після того, як прочитав.\n\n4. подзвони / як / тільки / будеш / вдома\n   > [!answer] Подзвони, як тільки будеш вдома.\n\n5. перед / тим / як / сказати / подумай\n   > [!answer] Перед тим як сказати, подумай.\n\n6. я / чекав / поки / ти / не / прийшов\n   > [!answer] Я чекав, поки ти не прийшов.\n\n## group-sort: Process vs Point\n\n### Point (Sequencing/Instant)\n- Коли я прийшов...\n- Як тільки я побачив...\n- Після того як я з'їв...\n- Перед тим як вийти...\n- Щойно я встав...\n- Того дня, коли він народився...\n\n### Process (Duration)\n- Поки я читав...\n- Поки ми йшли...\n- Доки я чекав...\n- В той час як я спав...\n- Тим часом як він говорив...\n- Відколи ми дружимо...\n\n## true-false: Connector Check\n\n1. \"Поки\" means \"After\".\n   - [ ] True\n   - [x] False\n\n2. \"Перед тим як\" needs a verb or clause.\n   - [x] True\n   - [ ] False\n\n3. \"Коли\" can express simultaneous action too (\"When I was walking...\").\n   - [x] True\n   - [ ] False\n   > Yes, aspect determines it.\n\n4. \"Як тільки\" implies a delay.\n   - [ ] True\n   - [x] False\n   > Speed/Immediacy.\n\n5. \"Після того як\" is very clear about order.\n   - [x] True\n   - [ ] False\n\n6. \"Поки не\" means \"While not\" or \"Until\".\n   - [x] True\n   - [ ] False\n\n7. You never use commas with time clauses.\n   - [ ] True\n   - [x] False\n\n8. \"В той час як\" is used for Parallel actions.\n   - [x] True\n   - [ ] False\n\n## cloze: The Narrative\n\n> Complete the story.\n\n[___:1] я був малим, я любив літо.\nЯ грав у футбол, [___:2] мама готувала обід.\n[___:3] ми їли, я йшов читати.\nАле [___:4] почати читати, я мив руки.\n[___:5] мама кликала мене, я біг назад.\nЯ не лягав спати, [___:6] сонце не сідало.\nЦе був час, [___:7] я був щасливий.\n\n1. Коли / Де\n> [!answer] Коли\n\n2. тим часом як / коли\n> [!answer] тим часом як\n\n3. Після того як / Перед тим як\n> [!answer] Після того як\n\n4. перед тим як / поки (Logic: wash hands BEFORE reading)\n> [!answer] перед тим як\n\n5. Кожного разу коли / Поки\n> [!answer] Кожного разу коли\n\n6. поки / коли (Logic: Until the sun set)\n> [!answer] поки\n\n7. коли / де\n> [!answer] коли\n\n## dialogue-reorder: The Meeting\n\n- Коли ти прийдеш?\n- Я прийду, як тільки закінчу роботу.\n- А коли ти закінчиш?\n- Я закінчу, коли напишу звіт.\n- Добре, подзвони мені перед тим як вийти.\n- Гаразд. А що ти будеш робити, поки чекаєш?\n- Я буду пити каву, поки ти працюєш.\n- Ти як завжди!\n\n> [!answer]\n> 1. Коли ти прийдеш?\n> 2. Я прийду, як тільки закінчу роботу.\n> 3. А коли ти закінчиш?\n> 4. Я закінчу, коли напишу звіт.\n> 5. Добре, подзвони мені перед тим як вийти.\n> 6. Гаразд. А що ти будеш робити, поки чекаєш?\n> 7. Я буду пити каву, поки ти працюєш.\n> 8. Ти як завжди!\n\n## mark-the-words: Time Markers\n\nМи пішли гуляти, [коли](correct) закінчився дощ. Я читав книгу, [поки](correct) їхав у метро. [Як тільки](correct) я побачив тебе, я зрадів. [Перш ніж](correct) купити це, подумай. Ми їли торт [після того як](correct) задули свічки.\n\n---\n\nВін [мій брат](incorrect). Це [гарний дім](incorrect). Я [люблю каву](incorrect).\n\n## error-correction: Fix the Logic\n\n1. Я спав, **коли** я читав. (While)\n   > [!error] коли\n   > [!answer] поки\n   > [!explanation] Two simultaneous processes usually take \"поки\".\n   > [!options] поки | коли\n\n2. Подзвони мені **після** вийти. (Grammar)\n   > [!error] після\n   > [!answer] після того як\n   > [!explanation] \"After\" with a verb phrase requires \"після того як\".\n   > [!options] після того як | після\n\n3. **Перед** я піду, я скажу. (Grammar)\n   > [!error] Перед\n   > [!answer] Перед тим як\n   > [!explanation] \"Before\" with a clause requires \"Перед тим як\".\n   > [!options] Перед тим як | Перед\n\n4. Я чекав, **як тільки** вона прийшла. (Logic: Until)\n   > [!error] як тільки\n   > [!answer] поки\n   > [!explanation] Waiting \"until\" requires \"поки\".\n   > [!options] поки | як тільки\n\n5. **Поки** я прийшов, вона вже пішла. (Logic: By the time -> Коли)\n   > [!error] Поки\n   > [!answer] Коли\n   > [!explanation] \"When I arrived\" is a point, not a process.\n   > [!options] Коли | Поки\n\n6. **Тим часом** я їв, вона пила. (Grammar)\n   > [!error] Тим часом\n   > [!answer] Тим часом як\n   > [!explanation] \"Meanwhile as\" is \"Тим часом як\".\n   > [!options] Тим часом як | Тим часом\n\n## translate: English to Ukrainian\n\n1. While I sleep, you work.\n   - [x] Поки я сплю, ти працюєш.\n   - [ ] Коли я сплю, ти працюєш.\n\n2. Before I ask...\n   - [x] Перед тим як я запитаю...\n   - [ ] Перед я запитаю...\n\n3. After I finish...\n   - [x] Після того як я закінчу...\n   - [ ] Після закінчу...\n\n4. As soon as I see him.\n   - [x] Як тільки я побачу його.\n   - [ ] Поки я побачу його.\n\n5. Whenever I see him...\n   - [x] Кожного разу, коли я бачу його...\n   - [ ] Поки я бачу його...\n\n6. Wait until I return.\n   - [x] Чекай, поки я не повернуся.\n   - [ ] Чекай, як я повернуся.\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| коли | /kɔˈlɪ/ | when | conj | — | trigger |\n| поки | /ˈpɔkɪ/ | while/until | conj | — | trigger |\n| доки | /ˈdɔkɪ/ | while/until | conj | — | synonym |\n| як тільки | /jɑk ˈtilʲkɪ/ | as soon as | phrase | — | instant |\n| щойно | /ˈʃt͡ʃɔjnɔ/ | just now / as soon as | adv | — | instant |\n| ледве | /ˈlɛdʋɛ/ | barely / hardly | adv | — | nuance |\n| тоді | /tɔˈdi/ | then | adv | — | time |\n| завжди | /zɑʋˈʒdɪ/ | always | adv | — | freq |\n| перед тим як | /pɛrɛd tɪm jɑk/ | before | conj | — | complex |\n| після того як | /pisʲlʲɑ tɔɦɔ jɑk/ | after | conj | — | complex |\n| перш ніж | /pɛrʃ niʒ/ | before | conj | — | literary |\n| поки не | /pɔkɪ nɛ/ | until | phrase | — | negative |\n| тим часом як | /tɪm t͡ʃɑsɔm jɑk/ | meanwhile | conj | — | parallel |\n| кожного разу | /kɔʒnɔɦɔ rɑzu/ | every time | phrase | — | freq |\n| раз у раз | /rɑz u rɑz/ | time and again | phrase | — | idiom |\n| того дня | /tɔɦɔ dnʲɑ/ | on that day | phrase | — | specific |\n| тоді коли | /tɔdi kɔlɪ/ | then when | phrase | — | specific |\n| в той час як | /ʋ tɔj t͡ʃɑs jɑk/ | at that time | phrase | — | parallel |\n| ніж | /niʒ/ | than / before | conj | — | comparison |\n| раз | /rɑz/ | time / once | noun | m | count |\n| часом | /ˈt͡ʃɑsɔm/ | sometimes | adv | — | freq |\n| ніколи | /niˈkɔlɪ/ | never | adv | — | freq |\n| часто | /ˈt͡ʃɑstɔ/ | often | adv | — | freq |\n| рідко | /ˈridkɔ/ | rarely | adv | — | freq |\n| вчора | /ˈʋt͡ʃɔrɑ/ | yesterday | adv | — | time |\n| сьогодні | /sʲɔˈɦɔdnʲi/ | today | adv | — | time |\n| завтра | /ˈzɑʋtrɑ/ | tomorrow | adv | — | time |\n| вранці | /ˈʋrɑnt͡sʲi/ | in the morning | adv | — | time |\n| вдень | /ʋdɛnʲ/ | in the afternoon | adv | — | time |\n| ввечері | /ˈʋʋɛt͡ʃɛri/ | in the evening | adv | — | time |\n| вночі | /ʋnɔˈt͡ʃi/ | at night | adv | — | time |\n| довго | /ˈdɔʋɦɔ/ | long (time) | adv | — | duration |\n| швидко | /ˈʃʋɪdkɔ/ | quickly | adv | — | speed |\n| ранок | /ˈrɑnɔk/ | morning | noun | m | part of day |\n| день | /dɛnʲ/ | day | noun | m | concept |\n| вечір | /ˈʋɛt͡ʃir/ | evening | noun | m | part of day |\n| ніч | /nit͡ʃ/ | night | noun | f | part of day |\n| час | /t͡ʃɑs/ | time | noun | m | concept |\n",
+    "createdAt": "2025-12-15T20:02:03.031063Z",
+    "modifiedAt": "2025-12-15T20:02:03.031063Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-32",
+    "level": "A2",
+    "phase": "A2.3",
+    "wordCount": 38,
+    "newWordCount": 38,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "коли",
+        "ipa": "/kɔˈlɪ/",
+        "en": "when",
+        "pos": "conj",
+        "gender": null,
+        "note": "trigger"
+      },
+      {
+        "id": "vocab-2",
+        "uk": "поки",
+        "ipa": "/ˈpɔkɪ/",
+        "en": "while/until",
+        "pos": "conj",
+        "gender": null,
+        "note": "trigger"
+      },
+      {
+        "id": "vocab-3",
+        "uk": "доки",
+        "ipa": "/ˈdɔkɪ/",
+        "en": "while/until",
+        "pos": "conj",
+        "gender": null,
+        "note": "synonym"
+      },
+      {
+        "id": "vocab-4",
+        "uk": "як тільки",
+        "ipa": "/jɑk ˈtilʲkɪ/",
+        "en": "as soon as",
+        "pos": "phrase",
+        "gender": null,
+        "note": "instant"
+      },
+      {
+        "id": "vocab-5",
+        "uk": "щойно",
+        "ipa": "/ˈʃt͡ʃɔjnɔ/",
+        "en": "just now / as soon as",
+        "pos": "adv",
+        "gender": null,
+        "note": "instant"
+      },
+      {
+        "id": "vocab-6",
+        "uk": "ледве",
+        "ipa": "/ˈlɛdʋɛ/",
+        "en": "barely / hardly",
+        "pos": "adv",
+        "gender": null,
+        "note": "nuance"
+      },
+      {
+        "id": "vocab-7",
+        "uk": "тоді",
+        "ipa": "/tɔˈdi/",
+        "en": "then",
+        "pos": "adv",
+        "gender": null,
+        "note": "time"
+      },
+      {
+        "id": "vocab-8",
+        "uk": "завжди",
+        "ipa": "/zɑʋˈʒdɪ/",
+        "en": "always",
+        "pos": "adv",
+        "gender": null,
+        "note": "freq"
+      },
+      {
+        "id": "vocab-9",
+        "uk": "перед тим як",
+        "ipa": "/pɛrɛd tɪm jɑk/",
+        "en": "before",
+        "pos": "conj",
+        "gender": null,
+        "note": "complex"
+      },
+      {
+        "id": "vocab-10",
+        "uk": "після того як",
+        "ipa": "/pisʲlʲɑ tɔɦɔ jɑk/",
+        "en": "after",
+        "pos": "conj",
+        "gender": null,
+        "note": "complex"
+      },
+      {
+        "id": "vocab-11",
+        "uk": "перш ніж",
+        "ipa": "/pɛrʃ niʒ/",
+        "en": "before",
+        "pos": "conj",
+        "gender": null,
+        "note": "literary"
+      },
+      {
+        "id": "vocab-12",
+        "uk": "поки не",
+        "ipa": "/pɔkɪ nɛ/",
+        "en": "until",
+        "pos": "phrase",
+        "gender": null,
+        "note": "negative"
+      },
+      {
+        "id": "vocab-13",
+        "uk": "тим часом як",
+        "ipa": "/tɪm t͡ʃɑsɔm jɑk/",
+        "en": "meanwhile",
+        "pos": "conj",
+        "gender": null,
+        "note": "parallel"
+      },
+      {
+        "id": "vocab-14",
+        "uk": "кожного разу",
+        "ipa": "/kɔʒnɔɦɔ rɑzu/",
+        "en": "every time",
+        "pos": "phrase",
+        "gender": null,
+        "note": "freq"
+      },
+      {
+        "id": "vocab-15",
+        "uk": "раз у раз",
+        "ipa": "/rɑz u rɑz/",
+        "en": "time and again",
+        "pos": "phrase",
+        "gender": null,
+        "note": "idiom"
+      },
+      {
+        "id": "vocab-16",
+        "uk": "того дня",
+        "ipa": "/tɔɦɔ dnʲɑ/",
+        "en": "on that day",
+        "pos": "phrase",
+        "gender": null,
+        "note": "specific"
+      },
+      {
+        "id": "vocab-17",
+        "uk": "тоді коли",
+        "ipa": "/tɔdi kɔlɪ/",
+        "en": "then when",
+        "pos": "phrase",
+        "gender": null,
+        "note": "specific"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "в той час як",
+        "ipa": "/ʋ tɔj t͡ʃɑs jɑk/",
+        "en": "at that time",
+        "pos": "phrase",
+        "gender": null,
+        "note": "parallel"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "ніж",
+        "ipa": "/niʒ/",
+        "en": "than / before",
+        "pos": "conj",
+        "gender": null,
+        "note": "comparison"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "раз",
+        "ipa": "/rɑz/",
+        "en": "time / once",
+        "pos": "noun",
+        "gender": "m",
+        "note": "count"
+      },
+      {
+        "id": "vocab-21",
+        "uk": "часом",
+        "ipa": "/ˈt͡ʃɑsɔm/",
+        "en": "sometimes",
+        "pos": "adv",
+        "gender": null,
+        "note": "freq"
+      },
+      {
+        "id": "vocab-22",
+        "uk": "ніколи",
+        "ipa": "/niˈkɔlɪ/",
+        "en": "never",
+        "pos": "adv",
+        "gender": null,
+        "note": "freq"
+      },
+      {
+        "id": "vocab-23",
+        "uk": "часто",
+        "ipa": "/ˈt͡ʃɑstɔ/",
+        "en": "often",
+        "pos": "adv",
+        "gender": null,
+        "note": "freq"
+      },
+      {
+        "id": "vocab-24",
+        "uk": "рідко",
+        "ipa": "/ˈridkɔ/",
+        "en": "rarely",
+        "pos": "adv",
+        "gender": null,
+        "note": "freq"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "вчора",
+        "ipa": "/ˈʋt͡ʃɔrɑ/",
+        "en": "yesterday",
+        "pos": "adv",
+        "gender": null,
+        "note": "time"
+      },
+      {
+        "id": "vocab-26",
+        "uk": "сьогодні",
+        "ipa": "/sʲɔˈɦɔdnʲi/",
+        "en": "today",
+        "pos": "adv",
+        "gender": null,
+        "note": "time"
+      },
+      {
+        "id": "vocab-27",
+        "uk": "завтра",
+        "ipa": "/ˈzɑʋtrɑ/",
+        "en": "tomorrow",
+        "pos": "adv",
+        "gender": null,
+        "note": "time"
+      },
+      {
+        "id": "vocab-28",
+        "uk": "вранці",
+        "ipa": "/ˈʋrɑnt͡sʲi/",
+        "en": "in the morning",
+        "pos": "adv",
+        "gender": null,
+        "note": "time"
+      },
+      {
+        "id": "vocab-29",
+        "uk": "вдень",
+        "ipa": "/ʋdɛnʲ/",
+        "en": "in the afternoon",
+        "pos": "adv",
+        "gender": null,
+        "note": "time"
+      },
+      {
+        "id": "vocab-30",
+        "uk": "ввечері",
+        "ipa": "/ˈʋʋɛt͡ʃɛri/",
+        "en": "in the evening",
+        "pos": "adv",
+        "gender": null,
+        "note": "time"
+      },
+      {
+        "id": "vocab-31",
+        "uk": "вночі",
+        "ipa": "/ʋnɔˈt͡ʃi/",
+        "en": "at night",
+        "pos": "adv",
+        "gender": null,
+        "note": "time"
+      },
+      {
+        "id": "vocab-32",
+        "uk": "довго",
+        "ipa": "/ˈdɔʋɦɔ/",
+        "en": "long (time)",
+        "pos": "adv",
+        "gender": null,
+        "note": "duration"
+      },
+      {
+        "id": "vocab-33",
+        "uk": "швидко",
+        "ipa": "/ˈʃʋɪdkɔ/",
+        "en": "quickly",
+        "pos": "adv",
+        "gender": null,
+        "note": "speed"
+      },
+      {
+        "id": "vocab-34",
+        "uk": "ранок",
+        "ipa": "/ˈrɑnɔk/",
+        "en": "morning",
+        "pos": "noun",
+        "gender": "m",
+        "note": "part of day"
+      },
+      {
+        "id": "vocab-35",
+        "uk": "день",
+        "ipa": "/dɛnʲ/",
+        "en": "day",
+        "pos": "noun",
+        "gender": "m",
+        "note": "concept"
+      },
+      {
+        "id": "vocab-36",
+        "uk": "вечір",
+        "ipa": "/ˈʋɛt͡ʃir/",
+        "en": "evening",
+        "pos": "noun",
+        "gender": "m",
+        "note": "part of day"
+      },
+      {
+        "id": "vocab-37",
+        "uk": "ніч",
+        "ipa": "/nit͡ʃ/",
+        "en": "night",
+        "pos": "noun",
+        "gender": "f",
+        "note": "part of day"
+      },
+      {
+        "id": "vocab-38",
+        "uk": "час",
+        "ipa": "/t͡ʃɑs/",
+        "en": "time",
+        "pos": "noun",
+        "gender": "m",
+        "note": "concept"
+      }
+    ],
+    "reviewWords": []
+  }
+}

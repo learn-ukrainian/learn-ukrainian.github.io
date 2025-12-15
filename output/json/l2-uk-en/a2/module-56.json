@@ -1,0 +1,377 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-56",
+    "moduleId": "mod-uk-A2-56",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2",
+    "moduleNumber": 56,
+    "moduleType": "checkpoint",
+    "pedagogy": "Review",
+    "immersionLevel": 0.4,
+    "title": "A2 Grammar Review",
+    "titleUk": null,
+    "subtitle": "Mastering the Rules",
+    "description": "Consolidate understanding of all 7 cases",
+    "objectives": [
+      "Consolidate understanding of all 7 cases",
+      "Master Perfective vs Imperfective aspect",
+      "Build complex sentences with connectors",
+      "Fix common grammatical errors"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "review-cases",
+      "review-aspect",
+      "complex-sentences"
+    ],
+    "tags": [
+      "review",
+      "grammar",
+      "cases",
+      "syntax"
+    ],
+    "totalDuration": 60,
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "A2 Grammar Review",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Warm-up\n\nCongratulations! You are almost at the end of Level A2.\nYou know words, you can speak, you can survive in Ukraine.\nBut do you speak *correctly*?\nGrammar is the skeleton of the language. Today we will check if your skeleton is strong.\nWe will review cases, verb aspects, and complex sentences.\n\n## Presentation\n\n### The 7 Cases: Quick Guide\n\n| Case | Question | Function | Prepositions | Example |\n|------|----------|----------|--------------|---------|\n| **Nominative** | Хто? Що? | Subject | - | **Студент** читає. |\n| **Genitive** | Кого? Чого? | Possession, Absence, Of, From | без, до, від, з, у | Немає **грошей**. З **Києва**. |\n| **Dative** | Кому? Чому? | Recipient, Feeling, Age | для (wrong! для is Gen), - | **Мені** холодно. **Студенту** 20 років. |\n| **Accusative** | Кого? Що? | Object, Direction | в, про, через | Я бачу **сестру**. Я йду в **кіно**. |\n| **Instrumental** | Ким? Чим? | With, By, As | з, над, під | Я пишу **ручкою**. Я працюю **лікарем**. |\n| **Locative** | (на/у) Кому? Чому? | Location | в, на, по | Я в **кімнаті**. На **столі**. |\n| **Vocative** | - | Addressing | - | **Мамо!** **Андрію!** |\n\n### Aspect: Process vs Result\n\n- **Imperfective**: Process, Habit, Duration.\n  * *Я писав лист 2 години.* (I was writing).\n  * *Я часто купував каву.* (I often bought).\n- **Perfective**: Result, One-time completed action.\n  * *Я написав лист.* (I wrote/have written).\n  * *Я купив каву.* (I bought).\n\n### Complex Sentences\n\nTo speak fluently, connect your ideas:\n- **тому що** (because): *Я не пішов, тому що я захворів.*\n- **щоб** (in order to): *Я вчуся, щоб знайти роботу.*\n- **який** (which/who): *Це друг, який живе в Києві.*\n- **коли** (when): *Коли я прийшов, вона спала.*\n- **якщо** (if): *Якщо буде дощ, ми будемо вдома.*\n\n## Practice\n\n### Story Time: The Grammar Detective\n\nІнспектор Граматика розслідує справу.\nВін прийшов у **кімнату** (Acc - Direction? No, Locative context? Moved INTO room -> Acc).\nТам він побачив **студента** (Acc - Object).\n— Що ви робили вчора о 5-й годині? — запитав інспектор.\n— Я **писав** (Imp - Process) тест, — відповів студент.\n— Ви **написали** (Perf - Result) його?\n— Ні, я не **дописав**, тому що **світло** (Nom - Subject) зникло.\n— З ким ви були?\n— Я був з **другом** (Instr - With).\n— Де ви були?\n— Ми були в **бібліотеці** (Loc - Location).\n\nІнспектор подумав. Все було правильно.\nСтудент знав відмінки. Він не міг бути злочинцем. Злочинці не знають граматику!\n\n> [!important] **Tip** \"Word Order\"\n> Ukrainian word order is flexible but not random.\n> - Neutral: Subject - Verb - Object (*Я люблю каву*).\n> - Emphasis: Object - Verb - Subject (*Каву люблю я* - It is ME who loves coffee).\n> - Question: Verb - Subject? (*Любиш ти каву?*).\n\n### Story Time: A Letter Home (Correct the Mistakes)\n\nHi Mom! Here is a letter with mistakes. Can you find them?\n\n\"Привіт, **мама** (Error: Vocative -> Мамо)!\nЯ живу в **Київ** (Error: Loc -> Києві).\nУ мене є **кіт** (Correct). Його звати Мурчик.\nЯ працюю **програміст** (Error: Instr -> програмістом).\nЯ люблю **Україна** (Error: Acc -> Україну).\nВчора я **купував** (Context: bought and finished -> купив) машину.\nВона **червоний** (Error: Fem -> червона).\nЯ щасливий!\"\n\n(In the activities, you will fix these!)\n\n### Review in Dialogue\n\n— Привіт! Ти **зробив** домашнє завдання? (Result)\n— Ні, я ще **роблю**. (Process)\n— Чому? Це ж легко.\n— Тому що я не розумію **відмінки** (Acc).\n— Давай я допоможу **тобі** (Dat).\n— Дякую! Ти справжній друг.\n— Без **проблем**. Для цього є друзі.\n\n> [!important] **Important** \"Grammar is Fun!\"\n> Do not be afraid of grammar. It is a logic puzzle. Ukrainian grammar is very logical. Once you understand the pattern, you can build any sentence.\n\n### Story Time: The Grammar Fairy\n\nЖив-був студент Том. Він не любив граматику.\nВін говорив: \"Моя твоя не розуміти\".\nОдного разу до нього прилетіла Граматична Фея.\n— Томе! — сказала вона. — Чому ти говориш як робот?\n— Я не знаю **відмінки**, — зітхнув Том.\n— Це просто, — сказала Фея. — Дивись.\nВона дала йому чарівні окуляри.\nТом одягнув їх і побачив світ по-новому.\nВін побачив, що **книга** (Називний) лежить на **столі** (Місцевий).\nВін побачив, що він пише **ручкою** (Орудний).\nВін побачив, що він йде до **друга** (Родовий).\n— Ого! — вигукнув Том. — Тепер я бачу зв'язки!\nЗ того дня Том говорив **правильно** і красиво.\nВін зрозумів, що граматика — це магія, яка з'єднує слова.\n\n### Story Time: Grammar in Action\n\nОдного разу іноземець Джон приїхав у Київ.\nВін знав слова, але не знав граматику.\nВін хотів купити **каву** (Accusative).\nВін зайшов у кав'ярню і сказав:\n— Я хотіти кава. (Nom/Inf error).\nБариста усміхнувся, але зрозумів.\nПотім Джон хотів знайти **метро** (Accusative).\nВін запитав перехожого:\n— Де є метро?\n— Прямо і наліво, — відповів перехожий.\nДжон сів у **поїзд** (Accusative) і поїхав у **парк** (Accusative).\nУ парку він зустрів дівчину.\nВона читала **книгу** (Accusative).\n— Привіт, — сказав Джон. — Ти читати книга? (Error).\nДівчина засміялася.\n— Ні, я читаю книгу, — виправила вона.\nДжон зрозумів, що треба вчити відмінки.\nЧерез рік він говорив ідеально: \"Я читаю українську літературу і спілкуюся з цікавими людьми\".\n\n### Story Time: The Grammar Exam\n\nСьогодні у студентів іспит з граматики.\nПрофесор дає завдання.\n— Слухайте уважно, — каже він.\n— Студент **Іван** (Називний) пише **вправу** (Знахідний) **ручкою** (Орудний).\n— Студентка **Марія** (Називний) мріє про **відпустку** (Знахідний).\n— Вони сидять в **аудиторії** (Місцевий).\nПрофесор запитує:\n— Хто знає, де помилка?\nІван піднімає руку.\n— Я не пишу, я думаю! — каже він.\nПрофесор сміється.\n— Правильно. \"Думати\" — це теж дія. Це Недоконаний вид.\nВсі студенти здали іспит на \"відмінно\".\n\n### Dialogue: Grammar Debate\n\n— Чому українська мова така складна? — питає Джон.\n— Вона не складна, вона багата, — каже Марія.\n— Але ці відмінки... Навіщо їх так багато?\n— Щоб бути точним. Дивись: \"Я кохаю тебе\" (I love you) і \"Тебе я кохаю\" (It is YOU I love) — це різні акценти.\n— Так, але в англійській простіше.\n— Простіше не означає краще. Українська мова — як музика. Кожне закінчення — це нота.\n— Красиво сказано. Ти поетка?\n— Ні, я просто люблю свою мову.\n— Добре, я буду вчити ноти.\n\n### Why Grammar Matters?\n\nУявіть, що слова — це цеглини.\nА граматика — це цемент.\nБез цементу будинок впаде.\nВ Україні кажуть: \"Зустрічають по одягу, а проводжають по розуму\".\nВаша граматика — це ваш \"одяг\".\nЯкщо ви говорите правильно, люди вас поважають.\nТому не лінуйтеся. Вчіть правила!\n\n### Tongue Twisters (Скоромовки) for Grammar\n\nPracticing these helps with endings:\n1. **Ворона** проворонила **вороненя**. (Crow missed the baby crow - Accusative).\n2. **Бабин** біб розцвів у **дощ** - буде **бабі** біб у **борщ**. (Bean in rain, bean for grandma in borscht - Loc/Dat/Acc).\n3. **Хитру** сороку спіймати **мороку**, а на сорок сорок - сорок **морок**. (Catching a magpie is trouble - Accusative).\n\n### Story Time: The Lost Tourist\n\nМайкл гуляв по **Львову** (Locative).\nВін шукав **Оперний театр** (Accusative).\nВін запитав у бабусі:\n— Вибачте, де театр?\n— Іди прямо по **вулиці** (Locative), потім поверни на **площу** (Accusative).\nМайкл подякував **бабусі** (Dative).\nВін знайшов театр. Це була красива будівля.\nВін купив **квиток** (Accusative) на балет.\nВвечері він дивився виставу з великим **задоволенням** (Instrumental).\nЛьвів — це місто, яке надихає.\n\n### Useful Phrases for Communication\n\nIf you make a mistake, say:\n- Вибачте, я тільки вчуся. (*Sorry, I am just learning*).\n- Виправте мене, будь ласка. (*Correct me, please*).\n- Як правильно сказати...? (*How to say correctly...?*).\n- Я не розумію, повторіть будь ласка. (*I don't understand, repeat please*).\n\n> [!cultural] **Cultural Insight** \"Surzhyk\"\n> You might hear people mixing Ukrainian and Russian. This is called **Surzhyk**. It often ignores grammar rules of both languages. As a learner, stick to standard Ukrainian (*літературна мова*) to gain respect and clarity.\n\n### Common Mistakes (Часті помилки)\n\nHere are errors that students often make:\n\n1. **Walking IN the park.**\n   - Error: *Я гуляю в парк.* (This means INTO the park).\n   - Correct: *Я гуляю в парку.* (Locative - Location).\n2. **Thanking.**\n   - Error: *Дякую тебе.*\n   - Correct: *Дякую тобі.* (Dative).\n3. **Playing games.**\n   - Error: *Грати футбол.*\n   - Correct: *Грати у футбол.* (In football).\n4. **My name is...**\n   - Error: *Моє ім'я є Том.* (English structure).\n   - Correct: *Мене звати Том.* (They call me Tom).\n\n> [!tip] **Pro Tip** \"Listen more\"\n> The best way to learn grammar is context. When you hear a song, ask yourself: Why is it \"ти\" here and \"тобі\" there? Analyzing real inputs creates deep neural connections."
+      },
+      {
+        "id": "section-2",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "This review covered:\n- **Cases**: The backbone of the sentence (Subj, Obj, Loc, Instr...).\n- **Aspect**: The timeline of the verb (Process vs Result).\n- **Structure**: Complex sentences make you sound smart.\n\nYou are now ready for the **Capstone Module**. Good luck!"
+      },
+      {
+        "id": "section-3",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## quiz: Grammar Master\n\n1. Which case is used for location usually?\n   - [x] Locative\n   - [ ] Accusative\n   - [ ] Dative\n   > Locative (Місцевий).\n\n2. \"Я працюю...\"\n   - [x] менеджером\n   - [ ] менеджер\n   - [ ] менеджера\n   > Instrumental.\n\n3. \"У мене немає...\"\n   - [x] часу\n   - [ ] час\n   - [ ] часом\n   > Genitive.\n\n4. \"Я бачу...\"\n   - [x] сестру\n   - [ ] сестра\n   - [ ] сестрі\n   > Accusative.\n\n5. \"Imperfective\" verb means...\n   - [x] Process / Habit\n   - [ ] Result\n   - [ ] Command\n   > Habitual or ongoing.\n\n6. \"Щоб\" means...\n   - [x] In order to\n   - [ ] Because\n   - [ ] But\n   > Purpose.\n\n7. \"Я даю подарунок...\"\n   - [x] мамі\n   - [ ] мама\n   - [ ] мами\n   > Dative (Recipient).\n\n8. \"Я пишу...\"\n   - [x] олівцем\n   - [ ] олівець\n   - [ ] олівця\n   > Instrumental (Tool).\n\n9. \"Він прийшов з...\"\n   - [x] магазину\n   - [ ] магазин\n   - [ ] магазині\n   > Genitive (From).\n\n10. \"Ми говоримо про...\"\n    - [x] політику\n    - [ ] політика\n    - [ ] політики\n    > Accusative (About).\n\n11. \"Я живу в...\"\n    - [x] Україні\n    - [ ] Україна\n    - [ ] України\n    > Locative.\n\n12. \"Привіт, ...\"\n    - [x] друже\n    - [ ] друг\n    - [ ] друга\n    > Vocative.\n\n## match-up: Case Functions\n\n- Subject :: Nominative\n- Possession/Of :: Genitive\n- Recipient/Feeling :: Dative\n- Direct Object :: Accusative\n- Instrument/Role :: Instrumental\n- Location :: Locative\n- Addressing :: Vocative\n- Without :: Genitive\n- With (someone) :: Instrumental\n- Examples of \"From\" :: Genitive\n- Giving to :: Dative\n- Being somewhere :: Locative\n\n## fill-in: Case Challenge\n\n1. Я йду в ____. (park)\n   > [!answer] парк\n   > [!options] парк | парку | парком | паркі\n   > Accusative (Direction).\n\n2. Я гуляю в ____. (park)\n   > [!answer] парку\n   > [!options] парку | парк | парком | парка\n   > Locative (Location).\n\n3. Я не бачу ____. (bus)\n   > [!answer] автобуса\n   > [!options] автобуса | автобус | автобусом | автобусі\n   > [!explanation] Genitive Negation. For inanimate nouns, Accusative is often used in negation, but Genitive is also common and sometimes preferred, especially in spoken language or for emphasis. Here, 'автобуса' (Genitive) is correct.\n\n4. Я їм ____. (soup)\n   > [!answer] суп\n   > [!options] суп | супу | супом | супі\n   > Accusative.\n\n5. Я їм суп ____. (spoon)\n   > [!answer] ложкою\n   > [!options] ложкою | ложка | ложку | ложці\n   > Instrumental (Tool).\n\n6. Я телефоную ____. (dad)\n   > [!answer] татові\n   > [!options] татові | тато | тата | татом\n   > Dative (Recipient).\n\n7. Ми з ____. (brother)\n   > [!answer] братом\n   > [!options] братом | брат | брата | брату\n   > Instrumental (With).\n\n8. Книга лежить на ____. (table)\n   > [!answer] столі\n   > [!options] столі | стіл | столу | столом\n   > Locative.\n\n9. У ____ є ідея. (me)\n   > [!answer] мене\n   > [!options] мене | мені | я | мною\n   > Genitive.\n\n10. Це подарунок для ____. (sister)\n    > [!answer] сестри\n    > [!options] сестри | сестрі | сестру | сестра\n    > Genitive (After preposition 'для').\n\n11. Я хочу стати ____. (artist)\n    > [!answer] художником\n    > [!options] художником | художник | художника | художнику\n    > Instrumental.\n\n12. Привіт, ____! (Ivan)\n    > [!answer] Іване\n    > [!options] Іване | Іван | Івана | Іваном\n    > Vocative.\n\n## true-false: Grammar Truths\n\n1. \"Dative\" case is used for \"Where?\".\n   - [x] false\n   > Locative is for Where.\n\n2. \"Accusative\" is used for Direct Object.\n   - [x] true\n   > Yes (I see WHOM/WHAT).\n\n3. Negative sentences (Немає...) usually take Genitive.\n   - [x] true\n   > Yes.\n\n4. \"With my friend\" uses Instrumental.\n   - [x] true\n   > З другом.\n\n5. \"Я працюю...\" takes Instrumental case.\n   - [x] true\n   > Я працюю лікарем.\n\n6. Perfective verbs explain a process.\n   - [x] false\n   > Imperfective explain process.\n\n7. \"Тому що\" means \"Although\".\n   - [x] false\n   > Because.\n\n8. Neuter nouns end in -а usually.\n   - [x] false\n   > -о or -е. -а is Feminine.\n\n9. \"Vocative\" is for calling someone.\n   - [x] true\n   > Yes.\n\n10. Adjectives agree with nouns in gender/number/case.\n    - [x] true\n    > Yes.\n\n11. \"Мені треба\" uses Nominative \"Я\".\n    - [x] false\n    > Dative \"Мені\".\n\n12. \"У мене є\" uses Genitive \"мене\".\n    - [x] true\n    > Yes.\n\n## group-sort: Aspect Sort\n\n### Groups\n- Imperfective (Process)\n- Perfective (Result)\n- Connectors\n\n### Items\n- писав: Imperfective (Process)\n- читав: Imperfective (Process)\n- робив: Imperfective (Process)\n- написав: Perfective (Result)\n- прочитав: Perfective (Result)\n- зробив: Perfective (Result)\n- купував: Imperfective (Process)\n- купив: Perfective (Result)\n- тому що: Connectors\n- якщо: Connectors\n- коли: Connectors\n- щоб: Connectors\n\n## unjumble: Sentence Builder\n\n1. Я / не / пішов / у / кіно / тому / що / працював\n   > [!answer] Я не пішов у кіно тому що працював\n   > I didn't go to the cinema because I was working.\n\n2. Коли / ми / прийшли / він / вже / спав\n   > [!answer] Коли ми прийшли він вже спав\n   > When we arrived he was already asleep.\n\n3. Я / хочу / щоб / ти / купив / хліб\n   > [!answer] Я хочу щоб ти купив хліб\n   > I want you to buy bread.\n\n4. Студент / який / читає / книгу / мій / друг\n   > [!answer] Студент який читає книгу мій друг\n   > The student who is reading a book is my friend.\n\n5. Якщо / буде / сонце / ми / підемо / гуляти\n   > [!answer] Якщо буде сонце ми підемо гуляти\n   > If there is sun we will go for a walk.\n\n6. Він / сказав / що / любить / Україну\n   > [!answer] Він сказав що любить Україну\n   > He said that he loves Ukraine.\n\n7. Я / пишу / листа / своєму / другу\n   > [!answer] Я пишу листа своєму другу\n   > I am writing a letter to my friend.\n\n8. Ми / їдемо / автобусом / до / Львова\n   > [!answer] Ми їдемо автобусом до Львова\n   > We are going by bus to Lviv.\n\n9. У / мене / немає / вільного / часу\n   > [!answer] У мене немає вільного часу\n   > I have no free time.\n\n10. Мені / дуже / подобається / ця / музика\n    > [!answer] Мені дуже подобається ця музика\n    > I really like this music.\n\n11. Де / ти / був / вчора / ввечері\n    > [!answer] Де ти був вчора ввечері\n    > Where were you yesterday evening?\n\n12. Мамо / де / мої / теплі / шкарпетки\n    > [!answer] Мамо де мої теплі шкарпетки\n    > Mom, where are my warm socks?\n\n## error-correction: Fix the Letter\n\n1. Привіт мама!\n   > [!error] мама\n   > [!answer] мамо\n   > [!options] мамо | мама | маму | мами\n   > [!explanation] Vocative: Мамо.\n\n2. Я живу в Київ.\n   > [!error] Київ\n   > [!answer] Києві\n   > [!options] Києві | Київ | Києва | Києвом\n   > [!explanation] Locative: в Києві.\n\n3. Я працюю програміст.\n   > [!error] програміст\n   > [!answer] програмістом\n   > [!options] програмістом | програміст | програміста | програмісту\n   > [!explanation] Instrumental: працюю програмістом.\n\n4. Я люблю Україна.\n   > [!error] Україна\n   > [!answer] Україну\n   > [!options] Україну | Україна | України | Україні\n   > [!explanation] Accusative: люблю Україну.\n\n5. Машина червоний.\n   > [!error] червоний\n   > [!answer] червона\n   > [!options] червона | червоний | червоне | червоні\n   > [!explanation] Gender agreement (Fem): червона машина.\n\n6. Вчора я купував машину. (Context: completed)\n   > [!error] купував\n   > [!answer] купив\n   > [!options] купив | купував | купую | буду купувати\n   > [!explanation] Result (bought): купив.\n7. Я не маю гроші.\n   > [!error] гроші\n   > [!answer] грошей\n   > [!options] гроші | грошей | грошам | грошима\n   > [!explanation] Genitive Negation: не маю грошей.\n   Rephrase 8:\n   Ми йдемо з друг.\n   > [!error] друг\n   > [!answer] другом\n   > [!options] другом | друг | друга | другу\n   > [!explanation] Instrumental.\n\n9. Дай мені вода.\n   > [!error] вода\n   > [!answer] воду\n   > [!options] воду | вода | води | водою\n   > [!explanation] Accusative.\n\n10. Я в кімнату. (Location)\n    > [!error] кімнату\n    > [!answer] кімнаті\n    > [!options] кімнаті | кімнату | кімната | кімнатою\n    > [!explanation] Locative (Where?): в кімнаті.\n\n11. Я дякую вас.\n    > [!error] вас\n    > [!answer] вам\n    > [!options] вам | вас | ви | вами\n    > [!explanation] Dative: дякую *кому?* вам.\n\n12. Я чекаю автобус.\n    > [!error] автобус\n    > [!answer] автобуса\n    > [!options] автобуса | автобус | автобусі | автобусом\n    > [!explanation] Genitive after \"чекати\" (often used). Or Accusative \"автобус\". Both are used.\n\n13. Я пишу ручка.\n    > [!error] ручка\n    > [!answer] ручкою\n    > [!options] ручкою | ручка | ручку | ручки\n    > [!explanation] Instrumental.\n\n## cloze: Grammar Fill\n\nЯ [___:1] студент. Я [___:2] в університеті.\nВчора я [___:3] книгу.\nКнига [___:4] дуже цікава.\nЯ читав її [___:5] вечір.\nМій друг [___:6] не читає книги.\nВін любить [___:7] у футбол.\nМи з [___:8] різні, але ми друзі.\n\n1. новий\n> [!answer] новий\n> [!options] новий | нова | нове\n\n2. навчаюся\n> [!answer] навчаюся\n> [!options] навчаюся | навчаюсь | вчу\n> I study.\n\n3. купив\n> [!answer] купив\n> [!options] купив | купував | куплю\n> Result (yesterday).\n\n4. була\n> [!answer] була\n> [!options] була | був | було\n> Fem agreement.\n\n5. весь\n> [!answer] весь\n> [!options] весь | все | всі\n> Accusative time.\n\n6. ніколи\n> [!answer] ніколи\n> [!options] ніколи | завжди | часто\n> Never.\n\n7. грати\n> [!answer] грати\n> [!options] грати | граю | грав\n> Infinitive.\n\n8. ним\n> [!answer] ним\n> [!options] ним | він | його\n> Instrumental pronoun (with him).\n\n## dialogue-reorder: Asking for Help\n\n- Привіт! Ти можеш мені допомогти?\n- Привіт. Так, звичайно. Що сталося?\n- Я не розумію це завдання.\n- Яке саме? З математики?\n- Ні, з української мови.\n- А, граматика! Це я люблю. Покажи.\n- Ось. Тут треба поставити слово у правильний відмінок.\n- Дивись: \"Я пишу...\" (чим?) ручкою. Це Орудний відмінок.\n- А! Тепер я зрозумів. Дякую!\n- Немає за що. Звертайся.\n- Ти найкращий друг.\n- Радий допомогти.\n\n## mark-the-words: Identification\n\n> [!instruction] Mark all verbs in Past Tense (Result/Perfective context).\n\nВчора я [встав] о 7:00. Я [поснідав] і [випив] каву. Потім я [пішов] на роботу. Я [зробив] важливий звіт. Ввечері я [купив] продукти і [приготував] вечерю. Я швидко [заснув].\n\n## select: Case Detector\n\n1. \"Мамо!\"\n   - [x] Vocative\n   - [ ] Nominative\n   > Calling mom.\n\n2. \"У Києві\"\n   - [x] Locative\n   - [ ] Dative\n   > In Kyiv.\n\n3. \"З другом\"\n   - [x] Instrumental\n   - [ ] Genitive\n   > With friend.\n\n4. \"Немає води\"\n   - [x] Genitive\n   - [ ] Accusative\n   > No water.\n\n5. \"Пишу листа\"\n   - [x] Accusative\n   - [ ] Nominative\n   > Writing a letter.\n\n6. \"Даю брату\"\n   - [x] Dative\n   - [ ] Locative\n   > Giving to brother.\n\n7. \"Я - студент\"\n   - [x] Nominative\n   - [ ] Instrumental\n   > Subject.\n\n8. \"Працюю лікарем\"\n   - [x] Instrumental\n   - [ ] Accusative\n   > Working as.\n\n9. \"Після уроку\"\n   - [x] Genitive\n   - [ ] Dative\n   > After lesson.\n\n10. \"Через ліс\"\n    - [x] Accusative\n    - [ ] Locative\n    > Through forest.\n\n11. \"На столі\"\n    - [x] Locative\n    - [ ] Nominative\n    > On table.\n\n12. \"Бачу маму\"\n    - [x] Accusative\n    - [ ] Genitive\n    > See mom."
+      },
+      {
+        "id": "section-4",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| граматика | /hraˈmatɪka/ | grammar | noun | f | |\n| правило | /ˈpraʋɪlɔ/ | rule | noun | n | |\n| помилка | /pɔˈmɪlka/ | mistake | noun | f | |\n| відмінок | /ʋidˈminɔk/ | case | noun | m | Grammatical case. |\n| дієслово | /dijeˈslɔʋɔ/ | verb | noun | n | |\n| іменник | /iˈmɛnnɪk/ | noun | noun | m | |\n| минулий | /mɪˈnulɪj/ | past | adj | m | |\n| теперішній | /teˈpɛriʃnij/ | present | adj | m | |\n| майбутній | /majˈbutnij/ | future | adj | m | |\n| речення | /ˈrɛtʃennʲa/ | sentence | noun | n | |\n| будувати | /buduˈʋatɪ/ | to build | verb | - | |\n| виправляти | /ʋɪpraʋˈlʲatɪ/ | to correct | verb | - | |\n| правильно | /ˈpraʋɪlnɔ/ | correctly | adv | - | |\n| наприклад | /naˈprɪklad/ | for example | adv | - | |\n| тому що | /tɔˈmu ʃtʃɔ/ | because | conj | - | |\n| якщо | /jakˈʃtʃɔ/ | if | conj | - | |\n| дякувати | /ˈdʲakuʋatɪ/ | to thank | verb | - | |\n| допомагати | /dɔpɔmaˈhatɪ/ | to help | verb | - | |\n| чекати | /tʃeˈkatɪ/ | to wait | verb | - | |\n| розуміти | /rozumˈitɪ/ | to understand | verb | - | |\n| пам'ятати | /pamjaˈtatɪ/ | to remember | verb | - | |\n| знати | /znatɪ/ | to know | verb | - | |\n| вчити | /ˈʋtʃɪtɪ/ | to learn | verb | - | |\n| мова | /ˈmɔʋa/ | language | noun | f | |\n| задоволення | /zadɔˈʋɔlennʲa/ | pleasure | noun | n | |\n| допомагати | /dɔpɔmaˈhatɪ/ | to help | verb | - | |\n| чекати | /tʃeˈkatɪ/ | to wait | verb | - | |\n| розуміти | /rozumˈitɪ/ | to understand | verb | - | |\n| пам'ятати | /pamjaˈtatɪ/ | to remember | verb | - | |\n| знати | /znatɪ/ | to know | verb | - | |\n| вчити | /ˈʋtʃɪtɪ/ | to learn | verb | - | |\n| мова | /ˈmɔʋa/ | language | noun | f | |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-56\ntitle: A2 Grammar Review\nsubtitle: \"Mastering the Rules\"\nversion: \"1.0\"\nphase: \"A2\"\npedagogy: \"Review\"\nduration: 60\ntransliteration: none\ntags: [\"review\", \"grammar\", \"cases\", \"syntax\"]\ngrammar: [\"review-cases\", \"review-aspect\", \"complex-sentences\"]\nobjectives:\n  - Consolidate understanding of all 7 cases\n  - Master Perfective vs Imperfective aspect\n  - Build complex sentences with connectors\n  - Fix common grammatical errors\nvocab_count: 10\n---\n\n# A2 Grammar Review\n\n## Warm-up\n\nCongratulations! You are almost at the end of Level A2.\nYou know words, you can speak, you can survive in Ukraine.\nBut do you speak *correctly*?\nGrammar is the skeleton of the language. Today we will check if your skeleton is strong.\nWe will review cases, verb aspects, and complex sentences.\n\n## Presentation\n\n### The 7 Cases: Quick Guide\n\n| Case | Question | Function | Prepositions | Example |\n|------|----------|----------|--------------|---------|\n| **Nominative** | Хто? Що? | Subject | - | **Студент** читає. |\n| **Genitive** | Кого? Чого? | Possession, Absence, Of, From | без, до, від, з, у | Немає **грошей**. З **Києва**. |\n| **Dative** | Кому? Чому? | Recipient, Feeling, Age | для (wrong! для is Gen), - | **Мені** холодно. **Студенту** 20 років. |\n| **Accusative** | Кого? Що? | Object, Direction | в, про, через | Я бачу **сестру**. Я йду в **кіно**. |\n| **Instrumental** | Ким? Чим? | With, By, As | з, над, під | Я пишу **ручкою**. Я працюю **лікарем**. |\n| **Locative** | (на/у) Кому? Чому? | Location | в, на, по | Я в **кімнаті**. На **столі**. |\n| **Vocative** | - | Addressing | - | **Мамо!** **Андрію!** |\n\n### Aspect: Process vs Result\n\n- **Imperfective**: Process, Habit, Duration.\n  * *Я писав лист 2 години.* (I was writing).\n  * *Я часто купував каву.* (I often bought).\n- **Perfective**: Result, One-time completed action.\n  * *Я написав лист.* (I wrote/have written).\n  * *Я купив каву.* (I bought).\n\n### Complex Sentences\n\nTo speak fluently, connect your ideas:\n- **тому що** (because): *Я не пішов, тому що я захворів.*\n- **щоб** (in order to): *Я вчуся, щоб знайти роботу.*\n- **який** (which/who): *Це друг, який живе в Києві.*\n- **коли** (when): *Коли я прийшов, вона спала.*\n- **якщо** (if): *Якщо буде дощ, ми будемо вдома.*\n\n## Practice\n\n### Story Time: The Grammar Detective\n\nІнспектор Граматика розслідує справу.\nВін прийшов у **кімнату** (Acc - Direction? No, Locative context? Moved INTO room -> Acc).\nТам він побачив **студента** (Acc - Object).\n— Що ви робили вчора о 5-й годині? — запитав інспектор.\n— Я **писав** (Imp - Process) тест, — відповів студент.\n— Ви **написали** (Perf - Result) його?\n— Ні, я не **дописав**, тому що **світло** (Nom - Subject) зникло.\n— З ким ви були?\n— Я був з **другом** (Instr - With).\n— Де ви були?\n— Ми були в **бібліотеці** (Loc - Location).\n\nІнспектор подумав. Все було правильно.\nСтудент знав відмінки. Він не міг бути злочинцем. Злочинці не знають граматику!\n\n> [!important] **Tip** \"Word Order\"\n> Ukrainian word order is flexible but not random.\n> - Neutral: Subject - Verb - Object (*Я люблю каву*).\n> - Emphasis: Object - Verb - Subject (*Каву люблю я* - It is ME who loves coffee).\n> - Question: Verb - Subject? (*Любиш ти каву?*).\n\n### Story Time: A Letter Home (Correct the Mistakes)\n\nHi Mom! Here is a letter with mistakes. Can you find them?\n\n\"Привіт, **мама** (Error: Vocative -> Мамо)!\nЯ живу в **Київ** (Error: Loc -> Києві).\nУ мене є **кіт** (Correct). Його звати Мурчик.\nЯ працюю **програміст** (Error: Instr -> програмістом).\nЯ люблю **Україна** (Error: Acc -> Україну).\nВчора я **купував** (Context: bought and finished -> купив) машину.\nВона **червоний** (Error: Fem -> червона).\nЯ щасливий!\"\n\n(In the activities, you will fix these!)\n\n### Review in Dialogue\n\n— Привіт! Ти **зробив** домашнє завдання? (Result)\n— Ні, я ще **роблю**. (Process)\n— Чому? Це ж легко.\n— Тому що я не розумію **відмінки** (Acc).\n— Давай я допоможу **тобі** (Dat).\n— Дякую! Ти справжній друг.\n— Без **проблем**. Для цього є друзі.\n\n> [!important] **Important** \"Grammar is Fun!\"\n> Do not be afraid of grammar. It is a logic puzzle. Ukrainian grammar is very logical. Once you understand the pattern, you can build any sentence.\n\n### Story Time: The Grammar Fairy\n\nЖив-був студент Том. Він не любив граматику.\nВін говорив: \"Моя твоя не розуміти\".\nОдного разу до нього прилетіла Граматична Фея.\n— Томе! — сказала вона. — Чому ти говориш як робот?\n— Я не знаю **відмінки**, — зітхнув Том.\n— Це просто, — сказала Фея. — Дивись.\nВона дала йому чарівні окуляри.\nТом одягнув їх і побачив світ по-новому.\nВін побачив, що **книга** (Називний) лежить на **столі** (Місцевий).\nВін побачив, що він пише **ручкою** (Орудний).\nВін побачив, що він йде до **друга** (Родовий).\n— Ого! — вигукнув Том. — Тепер я бачу зв'язки!\nЗ того дня Том говорив **правильно** і красиво.\nВін зрозумів, що граматика — це магія, яка з'єднує слова.\n\n### Story Time: Grammar in Action\n\nОдного разу іноземець Джон приїхав у Київ.\nВін знав слова, але не знав граматику.\nВін хотів купити **каву** (Accusative).\nВін зайшов у кав'ярню і сказав:\n— Я хотіти кава. (Nom/Inf error).\nБариста усміхнувся, але зрозумів.\nПотім Джон хотів знайти **метро** (Accusative).\nВін запитав перехожого:\n— Де є метро?\n— Прямо і наліво, — відповів перехожий.\nДжон сів у **поїзд** (Accusative) і поїхав у **парк** (Accusative).\nУ парку він зустрів дівчину.\nВона читала **книгу** (Accusative).\n— Привіт, — сказав Джон. — Ти читати книга? (Error).\nДівчина засміялася.\n— Ні, я читаю книгу, — виправила вона.\nДжон зрозумів, що треба вчити відмінки.\nЧерез рік він говорив ідеально: \"Я читаю українську літературу і спілкуюся з цікавими людьми\".\n\n### Story Time: The Grammar Exam\n\nСьогодні у студентів іспит з граматики.\nПрофесор дає завдання.\n— Слухайте уважно, — каже він.\n— Студент **Іван** (Називний) пише **вправу** (Знахідний) **ручкою** (Орудний).\n— Студентка **Марія** (Називний) мріє про **відпустку** (Знахідний).\n— Вони сидять в **аудиторії** (Місцевий).\nПрофесор запитує:\n— Хто знає, де помилка?\nІван піднімає руку.\n— Я не пишу, я думаю! — каже він.\nПрофесор сміється.\n— Правильно. \"Думати\" — це теж дія. Це Недоконаний вид.\nВсі студенти здали іспит на \"відмінно\".\n\n### Dialogue: Grammar Debate\n\n— Чому українська мова така складна? — питає Джон.\n— Вона не складна, вона багата, — каже Марія.\n— Але ці відмінки... Навіщо їх так багато?\n— Щоб бути точним. Дивись: \"Я кохаю тебе\" (I love you) і \"Тебе я кохаю\" (It is YOU I love) — це різні акценти.\n— Так, але в англійській простіше.\n— Простіше не означає краще. Українська мова — як музика. Кожне закінчення — це нота.\n— Красиво сказано. Ти поетка?\n— Ні, я просто люблю свою мову.\n— Добре, я буду вчити ноти.\n\n### Why Grammar Matters?\n\nУявіть, що слова — це цеглини.\nА граматика — це цемент.\nБез цементу будинок впаде.\nВ Україні кажуть: \"Зустрічають по одягу, а проводжають по розуму\".\nВаша граматика — це ваш \"одяг\".\nЯкщо ви говорите правильно, люди вас поважають.\nТому не лінуйтеся. Вчіть правила!\n\n### Tongue Twisters (Скоромовки) for Grammar\n\nPracticing these helps with endings:\n1. **Ворона** проворонила **вороненя**. (Crow missed the baby crow - Accusative).\n2. **Бабин** біб розцвів у **дощ** - буде **бабі** біб у **борщ**. (Bean in rain, bean for grandma in borscht - Loc/Dat/Acc).\n3. **Хитру** сороку спіймати **мороку**, а на сорок сорок - сорок **морок**. (Catching a magpie is trouble - Accusative).\n\n### Story Time: The Lost Tourist\n\nМайкл гуляв по **Львову** (Locative).\nВін шукав **Оперний театр** (Accusative).\nВін запитав у бабусі:\n— Вибачте, де театр?\n— Іди прямо по **вулиці** (Locative), потім поверни на **площу** (Accusative).\nМайкл подякував **бабусі** (Dative).\nВін знайшов театр. Це була красива будівля.\nВін купив **квиток** (Accusative) на балет.\nВвечері він дивився виставу з великим **задоволенням** (Instrumental).\nЛьвів — це місто, яке надихає.\n\n### Useful Phrases for Communication\n\nIf you make a mistake, say:\n- Вибачте, я тільки вчуся. (*Sorry, I am just learning*).\n- Виправте мене, будь ласка. (*Correct me, please*).\n- Як правильно сказати...? (*How to say correctly...?*).\n- Я не розумію, повторіть будь ласка. (*I don't understand, repeat please*).\n\n> [!cultural] **Cultural Insight** \"Surzhyk\"\n> You might hear people mixing Ukrainian and Russian. This is called **Surzhyk**. It often ignores grammar rules of both languages. As a learner, stick to standard Ukrainian (*літературна мова*) to gain respect and clarity.\n\n### Common Mistakes (Часті помилки)\n\nHere are errors that students often make:\n\n1. **Walking IN the park.**\n   - Error: *Я гуляю в парк.* (This means INTO the park).\n   - Correct: *Я гуляю в парку.* (Locative - Location).\n2. **Thanking.**\n   - Error: *Дякую тебе.*\n   - Correct: *Дякую тобі.* (Dative).\n3. **Playing games.**\n   - Error: *Грати футбол.*\n   - Correct: *Грати у футбол.* (In football).\n4. **My name is...**\n   - Error: *Моє ім'я є Том.* (English structure).\n   - Correct: *Мене звати Том.* (They call me Tom).\n\n> [!tip] **Pro Tip** \"Listen more\"\n> The best way to learn grammar is context. When you hear a song, ask yourself: Why is it \"ти\" here and \"тобі\" there? Analyzing real inputs creates deep neural connections.\n\n# Summary\n\nThis review covered:\n- **Cases**: The backbone of the sentence (Subj, Obj, Loc, Instr...).\n- **Aspect**: The timeline of the verb (Process vs Result).\n- **Structure**: Complex sentences make you sound smart.\n\nYou are now ready for the **Capstone Module**. Good luck!\n\n# Activities\n\n## quiz: Grammar Master\n\n1. Which case is used for location usually?\n   - [x] Locative\n   - [ ] Accusative\n   - [ ] Dative\n   > Locative (Місцевий).\n\n2. \"Я працюю...\"\n   - [x] менеджером\n   - [ ] менеджер\n   - [ ] менеджера\n   > Instrumental.\n\n3. \"У мене немає...\"\n   - [x] часу\n   - [ ] час\n   - [ ] часом\n   > Genitive.\n\n4. \"Я бачу...\"\n   - [x] сестру\n   - [ ] сестра\n   - [ ] сестрі\n   > Accusative.\n\n5. \"Imperfective\" verb means...\n   - [x] Process / Habit\n   - [ ] Result\n   - [ ] Command\n   > Habitual or ongoing.\n\n6. \"Щоб\" means...\n   - [x] In order to\n   - [ ] Because\n   - [ ] But\n   > Purpose.\n\n7. \"Я даю подарунок...\"\n   - [x] мамі\n   - [ ] мама\n   - [ ] мами\n   > Dative (Recipient).\n\n8. \"Я пишу...\"\n   - [x] олівцем\n   - [ ] олівець\n   - [ ] олівця\n   > Instrumental (Tool).\n\n9. \"Він прийшов з...\"\n   - [x] магазину\n   - [ ] магазин\n   - [ ] магазині\n   > Genitive (From).\n\n10. \"Ми говоримо про...\"\n    - [x] політику\n    - [ ] політика\n    - [ ] політики\n    > Accusative (About).\n\n11. \"Я живу в...\"\n    - [x] Україні\n    - [ ] Україна\n    - [ ] України\n    > Locative.\n\n12. \"Привіт, ...\"\n    - [x] друже\n    - [ ] друг\n    - [ ] друга\n    > Vocative.\n\n## match-up: Case Functions\n\n- Subject :: Nominative\n- Possession/Of :: Genitive\n- Recipient/Feeling :: Dative\n- Direct Object :: Accusative\n- Instrument/Role :: Instrumental\n- Location :: Locative\n- Addressing :: Vocative\n- Without :: Genitive\n- With (someone) :: Instrumental\n- Examples of \"From\" :: Genitive\n- Giving to :: Dative\n- Being somewhere :: Locative\n\n## fill-in: Case Challenge\n\n1. Я йду в ____. (park)\n   > [!answer] парк\n   > [!options] парк | парку | парком | паркі\n   > Accusative (Direction).\n\n2. Я гуляю в ____. (park)\n   > [!answer] парку\n   > [!options] парку | парк | парком | парка\n   > Locative (Location).\n\n3. Я не бачу ____. (bus)\n   > [!answer] автобуса\n   > [!options] автобуса | автобус | автобусом | автобусі\n   > [!explanation] Genitive Negation. For inanimate nouns, Accusative is often used in negation, but Genitive is also common and sometimes preferred, especially in spoken language or for emphasis. Here, 'автобуса' (Genitive) is correct.\n\n4. Я їм ____. (soup)\n   > [!answer] суп\n   > [!options] суп | супу | супом | супі\n   > Accusative.\n\n5. Я їм суп ____. (spoon)\n   > [!answer] ложкою\n   > [!options] ложкою | ложка | ложку | ложці\n   > Instrumental (Tool).\n\n6. Я телефоную ____. (dad)\n   > [!answer] татові\n   > [!options] татові | тато | тата | татом\n   > Dative (Recipient).\n\n7. Ми з ____. (brother)\n   > [!answer] братом\n   > [!options] братом | брат | брата | брату\n   > Instrumental (With).\n\n8. Книга лежить на ____. (table)\n   > [!answer] столі\n   > [!options] столі | стіл | столу | столом\n   > Locative.\n\n9. У ____ є ідея. (me)\n   > [!answer] мене\n   > [!options] мене | мені | я | мною\n   > Genitive.\n\n10. Це подарунок для ____. (sister)\n    > [!answer] сестри\n    > [!options] сестри | сестрі | сестру | сестра\n    > Genitive (After preposition 'для').\n\n11. Я хочу стати ____. (artist)\n    > [!answer] художником\n    > [!options] художником | художник | художника | художнику\n    > Instrumental.\n\n12. Привіт, ____! (Ivan)\n    > [!answer] Іване\n    > [!options] Іване | Іван | Івана | Іваном\n    > Vocative.\n\n## true-false: Grammar Truths\n\n1. \"Dative\" case is used for \"Where?\".\n   - [x] false\n   > Locative is for Where.\n\n2. \"Accusative\" is used for Direct Object.\n   - [x] true\n   > Yes (I see WHOM/WHAT).\n\n3. Negative sentences (Немає...) usually take Genitive.\n   - [x] true\n   > Yes.\n\n4. \"With my friend\" uses Instrumental.\n   - [x] true\n   > З другом.\n\n5. \"Я працюю...\" takes Instrumental case.\n   - [x] true\n   > Я працюю лікарем.\n\n6. Perfective verbs explain a process.\n   - [x] false\n   > Imperfective explain process.\n\n7. \"Тому що\" means \"Although\".\n   - [x] false\n   > Because.\n\n8. Neuter nouns end in -а usually.\n   - [x] false\n   > -о or -е. -а is Feminine.\n\n9. \"Vocative\" is for calling someone.\n   - [x] true\n   > Yes.\n\n10. Adjectives agree with nouns in gender/number/case.\n    - [x] true\n    > Yes.\n\n11. \"Мені треба\" uses Nominative \"Я\".\n    - [x] false\n    > Dative \"Мені\".\n\n12. \"У мене є\" uses Genitive \"мене\".\n    - [x] true\n    > Yes.\n\n## group-sort: Aspect Sort\n\n### Groups\n- Imperfective (Process)\n- Perfective (Result)\n- Connectors\n\n### Items\n- писав: Imperfective (Process)\n- читав: Imperfective (Process)\n- робив: Imperfective (Process)\n- написав: Perfective (Result)\n- прочитав: Perfective (Result)\n- зробив: Perfective (Result)\n- купував: Imperfective (Process)\n- купив: Perfective (Result)\n- тому що: Connectors\n- якщо: Connectors\n- коли: Connectors\n- щоб: Connectors\n\n## unjumble: Sentence Builder\n\n1. Я / не / пішов / у / кіно / тому / що / працював\n   > [!answer] Я не пішов у кіно тому що працював\n   > I didn't go to the cinema because I was working.\n\n2. Коли / ми / прийшли / він / вже / спав\n   > [!answer] Коли ми прийшли він вже спав\n   > When we arrived he was already asleep.\n\n3. Я / хочу / щоб / ти / купив / хліб\n   > [!answer] Я хочу щоб ти купив хліб\n   > I want you to buy bread.\n\n4. Студент / який / читає / книгу / мій / друг\n   > [!answer] Студент який читає книгу мій друг\n   > The student who is reading a book is my friend.\n\n5. Якщо / буде / сонце / ми / підемо / гуляти\n   > [!answer] Якщо буде сонце ми підемо гуляти\n   > If there is sun we will go for a walk.\n\n6. Він / сказав / що / любить / Україну\n   > [!answer] Він сказав що любить Україну\n   > He said that he loves Ukraine.\n\n7. Я / пишу / листа / своєму / другу\n   > [!answer] Я пишу листа своєму другу\n   > I am writing a letter to my friend.\n\n8. Ми / їдемо / автобусом / до / Львова\n   > [!answer] Ми їдемо автобусом до Львова\n   > We are going by bus to Lviv.\n\n9. У / мене / немає / вільного / часу\n   > [!answer] У мене немає вільного часу\n   > I have no free time.\n\n10. Мені / дуже / подобається / ця / музика\n    > [!answer] Мені дуже подобається ця музика\n    > I really like this music.\n\n11. Де / ти / був / вчора / ввечері\n    > [!answer] Де ти був вчора ввечері\n    > Where were you yesterday evening?\n\n12. Мамо / де / мої / теплі / шкарпетки\n    > [!answer] Мамо де мої теплі шкарпетки\n    > Mom, where are my warm socks?\n\n## error-correction: Fix the Letter\n\n1. Привіт мама!\n   > [!error] мама\n   > [!answer] мамо\n   > [!options] мамо | мама | маму | мами\n   > [!explanation] Vocative: Мамо.\n\n2. Я живу в Київ.\n   > [!error] Київ\n   > [!answer] Києві\n   > [!options] Києві | Київ | Києва | Києвом\n   > [!explanation] Locative: в Києві.\n\n3. Я працюю програміст.\n   > [!error] програміст\n   > [!answer] програмістом\n   > [!options] програмістом | програміст | програміста | програмісту\n   > [!explanation] Instrumental: працюю програмістом.\n\n4. Я люблю Україна.\n   > [!error] Україна\n   > [!answer] Україну\n   > [!options] Україну | Україна | України | Україні\n   > [!explanation] Accusative: люблю Україну.\n\n5. Машина червоний.\n   > [!error] червоний\n   > [!answer] червона\n   > [!options] червона | червоний | червоне | червоні\n   > [!explanation] Gender agreement (Fem): червона машина.\n\n6. Вчора я купував машину. (Context: completed)\n   > [!error] купував\n   > [!answer] купив\n   > [!options] купив | купував | купую | буду купувати\n   > [!explanation] Result (bought): купив.\n7. Я не маю гроші.\n   > [!error] гроші\n   > [!answer] грошей\n   > [!options] гроші | грошей | грошам | грошима\n   > [!explanation] Genitive Negation: не маю грошей.\n   Rephrase 8:\n   Ми йдемо з друг.\n   > [!error] друг\n   > [!answer] другом\n   > [!options] другом | друг | друга | другу\n   > [!explanation] Instrumental.\n\n9. Дай мені вода.\n   > [!error] вода\n   > [!answer] воду\n   > [!options] воду | вода | води | водою\n   > [!explanation] Accusative.\n\n10. Я в кімнату. (Location)\n    > [!error] кімнату\n    > [!answer] кімнаті\n    > [!options] кімнаті | кімнату | кімната | кімнатою\n    > [!explanation] Locative (Where?): в кімнаті.\n\n11. Я дякую вас.\n    > [!error] вас\n    > [!answer] вам\n    > [!options] вам | вас | ви | вами\n    > [!explanation] Dative: дякую *кому?* вам.\n\n12. Я чекаю автобус.\n    > [!error] автобус\n    > [!answer] автобуса\n    > [!options] автобуса | автобус | автобусі | автобусом\n    > [!explanation] Genitive after \"чекати\" (often used). Or Accusative \"автобус\". Both are used.\n\n13. Я пишу ручка.\n    > [!error] ручка\n    > [!answer] ручкою\n    > [!options] ручкою | ручка | ручку | ручки\n    > [!explanation] Instrumental.\n\n## cloze: Grammar Fill\n\nЯ [___:1] студент. Я [___:2] в університеті.\nВчора я [___:3] книгу.\nКнига [___:4] дуже цікава.\nЯ читав її [___:5] вечір.\nМій друг [___:6] не читає книги.\nВін любить [___:7] у футбол.\nМи з [___:8] різні, але ми друзі.\n\n1. новий\n> [!answer] новий\n> [!options] новий | нова | нове\n\n2. навчаюся\n> [!answer] навчаюся\n> [!options] навчаюся | навчаюсь | вчу\n> I study.\n\n3. купив\n> [!answer] купив\n> [!options] купив | купував | куплю\n> Result (yesterday).\n\n4. була\n> [!answer] була\n> [!options] була | був | було\n> Fem agreement.\n\n5. весь\n> [!answer] весь\n> [!options] весь | все | всі\n> Accusative time.\n\n6. ніколи\n> [!answer] ніколи\n> [!options] ніколи | завжди | часто\n> Never.\n\n7. грати\n> [!answer] грати\n> [!options] грати | граю | грав\n> Infinitive.\n\n8. ним\n> [!answer] ним\n> [!options] ним | він | його\n> Instrumental pronoun (with him).\n\n## dialogue-reorder: Asking for Help\n\n- Привіт! Ти можеш мені допомогти?\n- Привіт. Так, звичайно. Що сталося?\n- Я не розумію це завдання.\n- Яке саме? З математики?\n- Ні, з української мови.\n- А, граматика! Це я люблю. Покажи.\n- Ось. Тут треба поставити слово у правильний відмінок.\n- Дивись: \"Я пишу...\" (чим?) ручкою. Це Орудний відмінок.\n- А! Тепер я зрозумів. Дякую!\n- Немає за що. Звертайся.\n- Ти найкращий друг.\n- Радий допомогти.\n\n## mark-the-words: Identification\n\n> [!instruction] Mark all verbs in Past Tense (Result/Perfective context).\n\nВчора я [встав] о 7:00. Я [поснідав] і [випив] каву. Потім я [пішов] на роботу. Я [зробив] важливий звіт. Ввечері я [купив] продукти і [приготував] вечерю. Я швидко [заснув].\n\n## select: Case Detector\n\n1. \"Мамо!\"\n   - [x] Vocative\n   - [ ] Nominative\n   > Calling mom.\n\n2. \"У Києві\"\n   - [x] Locative\n   - [ ] Dative\n   > In Kyiv.\n\n3. \"З другом\"\n   - [x] Instrumental\n   - [ ] Genitive\n   > With friend.\n\n4. \"Немає води\"\n   - [x] Genitive\n   - [ ] Accusative\n   > No water.\n\n5. \"Пишу листа\"\n   - [x] Accusative\n   - [ ] Nominative\n   > Writing a letter.\n\n6. \"Даю брату\"\n   - [x] Dative\n   - [ ] Locative\n   > Giving to brother.\n\n7. \"Я - студент\"\n   - [x] Nominative\n   - [ ] Instrumental\n   > Subject.\n\n8. \"Працюю лікарем\"\n   - [x] Instrumental\n   - [ ] Accusative\n   > Working as.\n\n9. \"Після уроку\"\n   - [x] Genitive\n   - [ ] Dative\n   > After lesson.\n\n10. \"Через ліс\"\n    - [x] Accusative\n    - [ ] Locative\n    > Through forest.\n\n11. \"На столі\"\n    - [x] Locative\n    - [ ] Nominative\n    > On table.\n\n12. \"Бачу маму\"\n    - [x] Accusative\n    - [ ] Genitive\n    > See mom.\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| граматика | /hraˈmatɪka/ | grammar | noun | f | |\n| правило | /ˈpraʋɪlɔ/ | rule | noun | n | |\n| помилка | /pɔˈmɪlka/ | mistake | noun | f | |\n| відмінок | /ʋidˈminɔk/ | case | noun | m | Grammatical case. |\n| дієслово | /dijeˈslɔʋɔ/ | verb | noun | n | |\n| іменник | /iˈmɛnnɪk/ | noun | noun | m | |\n| минулий | /mɪˈnulɪj/ | past | adj | m | |\n| теперішній | /teˈpɛriʃnij/ | present | adj | m | |\n| майбутній | /majˈbutnij/ | future | adj | m | |\n| речення | /ˈrɛtʃennʲa/ | sentence | noun | n | |\n| будувати | /buduˈʋatɪ/ | to build | verb | - | |\n| виправляти | /ʋɪpraʋˈlʲatɪ/ | to correct | verb | - | |\n| правильно | /ˈpraʋɪlnɔ/ | correctly | adv | - | |\n| наприклад | /naˈprɪklad/ | for example | adv | - | |\n| тому що | /tɔˈmu ʃtʃɔ/ | because | conj | - | |\n| якщо | /jakˈʃtʃɔ/ | if | conj | - | |\n| дякувати | /ˈdʲakuʋatɪ/ | to thank | verb | - | |\n| допомагати | /dɔpɔmaˈhatɪ/ | to help | verb | - | |\n| чекати | /tʃeˈkatɪ/ | to wait | verb | - | |\n| розуміти | /rozumˈitɪ/ | to understand | verb | - | |\n| пам'ятати | /pamjaˈtatɪ/ | to remember | verb | - | |\n| знати | /znatɪ/ | to know | verb | - | |\n| вчити | /ˈʋtʃɪtɪ/ | to learn | verb | - | |\n| мова | /ˈmɔʋa/ | language | noun | f | |\n| задоволення | /zadɔˈʋɔlennʲa/ | pleasure | noun | n | |\n| допомагати | /dɔpɔmaˈhatɪ/ | to help | verb | - | |\n| чекати | /tʃeˈkatɪ/ | to wait | verb | - | |\n| розуміти | /rozumˈitɪ/ | to understand | verb | - | |\n| пам'ятати | /pamjaˈtatɪ/ | to remember | verb | - | |\n| знати | /znatɪ/ | to know | verb | - | |\n| вчити | /ˈʋtʃɪtɪ/ | to learn | verb | - | |\n| мова | /ˈmɔʋa/ | language | noun | f | |\n",
+    "createdAt": "2025-12-15T20:02:03.096023Z",
+    "modifiedAt": "2025-12-15T20:02:03.096023Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-56",
+    "level": "A2",
+    "phase": "A2",
+    "wordCount": 32,
+    "newWordCount": 32,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "граматика",
+        "ipa": "/hraˈmatɪka/",
+        "en": "grammar",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-2",
+        "uk": "правило",
+        "ipa": "/ˈpraʋɪlɔ/",
+        "en": "rule",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-3",
+        "uk": "помилка",
+        "ipa": "/pɔˈmɪlka/",
+        "en": "mistake",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-4",
+        "uk": "відмінок",
+        "ipa": "/ʋidˈminɔk/",
+        "en": "case",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Grammatical case."
+      },
+      {
+        "id": "vocab-5",
+        "uk": "дієслово",
+        "ipa": "/dijeˈslɔʋɔ/",
+        "en": "verb",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-6",
+        "uk": "іменник",
+        "ipa": "/iˈmɛnnɪk/",
+        "en": "noun",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-7",
+        "uk": "минулий",
+        "ipa": "/mɪˈnulɪj/",
+        "en": "past",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-8",
+        "uk": "теперішній",
+        "ipa": "/teˈpɛriʃnij/",
+        "en": "present",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-9",
+        "uk": "майбутній",
+        "ipa": "/majˈbutnij/",
+        "en": "future",
+        "pos": "adj",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-10",
+        "uk": "речення",
+        "ipa": "/ˈrɛtʃennʲa/",
+        "en": "sentence",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-11",
+        "uk": "будувати",
+        "ipa": "/buduˈʋatɪ/",
+        "en": "to build",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-12",
+        "uk": "виправляти",
+        "ipa": "/ʋɪpraʋˈlʲatɪ/",
+        "en": "to correct",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-13",
+        "uk": "правильно",
+        "ipa": "/ˈpraʋɪlnɔ/",
+        "en": "correctly",
+        "pos": "adv",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-14",
+        "uk": "наприклад",
+        "ipa": "/naˈprɪklad/",
+        "en": "for example",
+        "pos": "adv",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-15",
+        "uk": "тому що",
+        "ipa": "/tɔˈmu ʃtʃɔ/",
+        "en": "because",
+        "pos": "conj",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-16",
+        "uk": "якщо",
+        "ipa": "/jakˈʃtʃɔ/",
+        "en": "if",
+        "pos": "conj",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-17",
+        "uk": "дякувати",
+        "ipa": "/ˈdʲakuʋatɪ/",
+        "en": "to thank",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-18",
+        "uk": "допомагати",
+        "ipa": "/dɔpɔmaˈhatɪ/",
+        "en": "to help",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-19",
+        "uk": "чекати",
+        "ipa": "/tʃeˈkatɪ/",
+        "en": "to wait",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-20",
+        "uk": "розуміти",
+        "ipa": "/rozumˈitɪ/",
+        "en": "to understand",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-21",
+        "uk": "пам'ятати",
+        "ipa": "/pamjaˈtatɪ/",
+        "en": "to remember",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-22",
+        "uk": "знати",
+        "ipa": "/znatɪ/",
+        "en": "to know",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-23",
+        "uk": "вчити",
+        "ipa": "/ˈʋtʃɪtɪ/",
+        "en": "to learn",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-24",
+        "uk": "мова",
+        "ipa": "/ˈmɔʋa/",
+        "en": "language",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-25",
+        "uk": "задоволення",
+        "ipa": "/zadɔˈʋɔlennʲa/",
+        "en": "pleasure",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-26",
+        "uk": "допомагати",
+        "ipa": "/dɔpɔmaˈhatɪ/",
+        "en": "to help",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-27",
+        "uk": "чекати",
+        "ipa": "/tʃeˈkatɪ/",
+        "en": "to wait",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-28",
+        "uk": "розуміти",
+        "ipa": "/rozumˈitɪ/",
+        "en": "to understand",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-29",
+        "uk": "пам'ятати",
+        "ipa": "/pamjaˈtatɪ/",
+        "en": "to remember",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-30",
+        "uk": "знати",
+        "ipa": "/znatɪ/",
+        "en": "to know",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-31",
+        "uk": "вчити",
+        "ipa": "/ˈʋtʃɪtɪ/",
+        "en": "to learn",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-32",
+        "uk": "мова",
+        "ipa": "/ˈmɔʋa/",
+        "en": "language",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      }
+    ],
+    "reviewWords": []
+  }
+}

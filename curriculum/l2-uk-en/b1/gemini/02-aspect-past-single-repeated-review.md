@@ -1,14 +1,9 @@
 # Audit Report: 02-aspect-past-single-repeated.md
 **Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1250
-**Overall Status:** ❌ FAIL
-
-## Recommendation
-**📝 UPDATE** (severity 15/100)
-
-- Immersion 16% off target
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 2026/1250
+- **Words:** ⚠️ 3395/1250 (>2250 may be too long)
 - **Activities:** ✅ 15/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -19,17 +14,17 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 70.6% HIGH (target 50-55% (grammar))
+- **Immersion:** 🇺🇦 54.8% (target 50-60% (B1.1 Aspect))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Diagnostic** | ✅ | 174 | Included in Core |
-| **Analysis** | ⚪️ | 600 | Skipped |
-| **Deep Dive** | ✅ | 797 | Included in Core |
-| **Practice** | ⚪️ | 341 | Skipped |
-| **Summary** | ✅ | 114 | Included in Core |
+| **Intro/Narrative** | ✅ | 91 | Included in Core |
+| **Diagnostic** | ✅ | 263 | Included in Core |
+| **Analysis** | ⚪️ | 892 | Skipped |
+| **Deep Dive** | ✅ | 1286 | Included in Core |
+| **Practice** | ⚪️ | 526 | Skipped |
+| **Summary** | ✅ | 337 | Included in Core |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **quiz: Маркери часу та вид** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Маркери та види** | 🎮 | 14 | Activity (14 items, min 8) |

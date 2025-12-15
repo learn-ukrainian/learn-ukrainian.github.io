@@ -65,15 +65,21 @@ The B1 plan has been updated (Issue 113) to address previous gaps. New modules m
 **Total: 80 modules** (5 complete, 75 to create)
 
 ## GitHub Tracking
-Issues to be created when implementation begins:
 
-| Phase | Issue Title | Modules |
-|-------|-------------|---------|
-| B1.1b | Implement B1.1 Aspect Mastery II (M06-M10) | 5 modules |
-| B1.2 | Implement B1.2 Motion Verbs (M11-M20) | 10 modules |
-| B1.3 | Implement B1.3 Complex Sentences (M21-M35) | 15 modules |
-| B1.4 | Implement B1.4 Advanced Grammar (M36-M45) | 10 modules |
-| B1.5 | Implement B1.5 Vocabulary I (M46-M55) | 10 modules |
-| B1.6 | Implement B1.6 Vocabulary II (M56-M65) | 10 modules |
-| B1.7 | Implement B1.7 Contemporary Ukraine (M66-M75) | 10 modules |
-| B1.8 | Implement B1.8 Skills & Integration (M76-M80) | 5 modules |
+**Parent Issue:** [#115 - Build modules 01-80](https://github.com/krisztiankoos/curricula-opus/issues/115)
+
+| Phase | Issue | Modules | Status |
+|-------|-------|---------|--------|
+| B1.1b | [#149](https://github.com/krisztiankoos/curricula-opus/issues/149) | M06-M10 (5) | ⏳ Ready |
+| B1.2 | [#150](https://github.com/krisztiankoos/curricula-opus/issues/150) | M11-M20 (10) | ⏳ Planned |
+| B1.3 | [#151](https://github.com/krisztiankoos/curricula-opus/issues/151) | M21-M35 (15) | ⏳ Planned |
+| B1.4 | [#152](https://github.com/krisztiankoos/curricula-opus/issues/152) | M36-M45 (10) | ⏳ Planned |
+| B1.5 | [#153](https://github.com/krisztiankoos/curricula-opus/issues/153) | M46-M55 (10) | ⏳ Planned |
+| B1.6 | [#154](https://github.com/krisztiankoos/curricula-opus/issues/154) | M56-M65 (10) | ⏳ Planned |
+| B1.7 | [#155](https://github.com/krisztiankoos/curricula-opus/issues/155) | M66-M75 (10) | ⏳ Planned |
+| B1.8 | [#156](https://github.com/krisztiankoos/curricula-opus/issues/156) | M76-M80 (5) | ⏳ Planned |
+
+**Related Issues:**
+- [#113](https://github.com/krisztiankoos/curricula-opus/issues/113) - State Standard compliance ✅ Closed
+- [#114](https://github.com/krisztiankoos/curricula-opus/issues/114) - Curriculum plan improvements ✅ Closed
+- [#116](https://github.com/krisztiankoos/curricula-opus/issues/116) - Vocabulary finalization (final step)

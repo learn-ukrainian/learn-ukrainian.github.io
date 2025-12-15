@@ -1,0 +1,445 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-30",
+    "moduleId": "mod-uk-A2-30",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.3",
+    "moduleNumber": 30,
+    "moduleType": "grammar",
+    "pedagogy": "Expressive",
+    "immersionLevel": 0.4,
+    "title": "In Order To...",
+    "titleUk": null,
+    "subtitle": "Purpose and Desire",
+    "description": "Learner can express purpose",
+    "objectives": [
+      "Learner can express purpose",
+      "Learner can express wishes for others",
+      "Learner understands 'щоб + past'"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "purpose clauses (щоб)",
+      "subjunctive-like structures",
+      "infinitive vs past"
+    ],
+    "tags": [
+      "connectors",
+      "purpose",
+      "wish",
+      "grammar"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "Why are you learning Ukrainian?\n- To talk to friends?\n- To read poetry?\n- To understand the news?\n\nIn English, you say \"to\" or \"in order to\".\nIn Ukrainian, we use one powerful word: **Щоб**.\n\n**We will cover:**\n- **The Simple Purpose:** *Я вчуся, щоб знати.*\n- **The Complex Wish:** *Я хочу, щоб ти знав.*\n- **The Synonyms:** *Аби* and *Для того, щоб*.\n\n> [!note] Pronunciation\n> **Щоб** is pronounced /ʃɔb/. It is a fusion of \"що\" (what) and \"би\" (would).\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "Presentation",
+        "nameEn": null,
+        "type": "content",
+        "content": "## 1. Same Subject: Щоб + Infinitive\n\nWhen **YOU** do something for **YOURSELF** (the subject is the same).\n\n**Structure:** [Action] + **, щоб** + [Infinitive].\n\n| English | Ukrainian | Literal |\n|---------|-----------|---------|\n| I work to live. | **Я працюю, щоб жити.** | I work, in order to live. |\n| He came to help. | **Він прийшов, щоб допомогти.** | He came, in order to help. |\n| We run to be healthy. | **Ми бігаємо, щоб бути здоровими.** | We run, in order to be healthy. |\n\n> [!tip] Comma Rule\n> Always put a comma before **щоб**!\n\n## 2. Different Subjects: Щоб + Past Tense\n\nWhen **YOU** want **SOMEONE ELSE** to do something.\nThis is weird for English speakers! We use the **Past Tense** form, but the meaning is Future/General.\n(This is historically the Subjunctive Mood).\n\n**Structure:** [Subject 1 wants] + **, щоб** + [Subject 2] + [Past Verb].\n\n| English | Ukrainian | Literal |\n|---------|-----------|---------|\n| I want you to go. | **Я хочу, щоб ти пішов.** | I want that you \"went\". |\n| Dad wants Mom to rest. | **Тато хоче, щоб мама відпочила.** | Dad wants that mom \"rested\". |\n| The teacher speaks slowly so that we understand. | **Учитель говорить повільно, щоб ми зрозуміли.** | ...so that we \"understood\". |\n\n**Key logic:**\n- **Infinitive** = Same person. (*Я хочу їсти.* - I want to eat).\n- **Щоб + Past** = Different person. (*Я хочу, щоб ти їв.* - I want you to eat).\n\n## 3. Synonyms for \"In Order To\"\n\n**Щоб** is the most common. But you will hear others:\n\n1.  **Для того, щоб** (For that, in order to) - More formal/emphatic.\n    - *Він зробив це `для того, щоб` отримати гроші.*\n2.  **Аби** (So that / in order to) - Slightly archaic or colloquial, very \"Ukrainian sounding\".\n    - *Я прийшов, `аби` допомогти.*\n3.  **З метою** (With the aim of) - Very official.\n    - *З метою покращення...* (With the aim of improvement...).\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Deep Dive: Is there a Subjunctive Mood?",
+        "nameEn": null,
+        "type": "content",
+        "content": "You might ask: \"Why do we use the Past Tense for a wish?\"\n*Я хочу, щоб ти прийшов.* (I want you to come - literally \"that you came\").\n\nStrictly speaking, Ukrainian **does not have a separate Subjunctive Mood** (like Spanish or French).\nInstead, we use the **Past Tense particle `би`** (would).\n- *Я хотів би...* (I would like...).\n\nIn `щоб` (що + би), the particle `би` is already built-in!\nSo when you say `щоб ти прийшов`, you are effectively saying \"that you **would** come\". The verb aligns with the \"past-like\" nature of `би`.\n\n> [!cultural] Myth: Pessimism?\n> \"Ukrainians are pessimistic because they use Past Tense for future wishes.\"\n> **False.**\n> It's purely grammatical. When we say \"Щоб ти був здоровий!\" (May you be healthy!), we are projecting a desire. The Past form here indicates *unreality* or *potentiality*, not past time.\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Pro-Tip: The \"Toast\" Algorithm",
+        "nameEn": null,
+        "type": "content",
+        "content": "Want to make a toast like a native? Just start with **\"Я хочу випити за те, щоб...\"** (I want to drink for that, that...).\n\n1.  **Health:** ...щоб ми всі були здорові.\n2.  **Success:** ...щоб у нас було багато грошей.\n3.  **Peace:** ...щоб був мир.\n4.  **Love:** ...щоб ми кохали і були кохані.\n\nOr simpler: **\"За нас!\"** (To us!).\n\n\n> [!note] Fact: \"Meta\"\n> The word **мета** (goal/target) is related to \"meet\" in English (meeting point). When you do something **з метою** (with the aim), you are aiming to meet your goal!\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Deep Dive: The \"Desire\" Pattern",
+        "nameEn": null,
+        "type": "content",
+        "content": "The structure **\"хотіти, щоб...\"** is extremely common. It replaces English \"want someone to...\".\n\n- **Incorrect:** Я хочу тебе читати книгу. (I want you to read book - Sounds like \"I want to read you like a book\").\n- **Correct:** Я хочу, щоб ти читав книгу.\n\n**Practice Examples:**\n- *Mother to child:* Я не хочу, щоб ти хворів. (I don't want you to be sick).\n- *Boss to employee:* Я хочу, щоб ви закінчили звіт. (I want you to finish report).\n- *Ukraine to world:* Ми хочемо, щоб війна закінчилася. (We want the war to end).\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Cultural Insight",
+        "nameEn": null,
+        "type": "content",
+        "content": "> [!cultural] The \"Guest\" Protocol\n> In Ukraine, you never visit someone empty-handed.\n> You bring cake, flowers, or wine **щоб** show respect.\n> You take off your shoes **аби** keep the house clean.\n> You compliment the food **для того, щоб** the host feels happy.\n> It's not just politeness; it's a ritual **щоб** maintain good relationships.\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Language in Action",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Dialogue: The Surprise Party\n\nAnna and Borys are planning a surprise for Olena.\n\n**Anna:** Слухай, **щоб** зробити вечірку ідеальною, нам треба план.\n**Borys:** Я вже купив кульки, **щоб** прикрасити кімнату.\n**Anna:** Чудово. Але я хочу, **щоб** ти купив торт.\n**Borys:** Який торт?\n**Anna:** Олена любить шоколадний. Я хочу, **щоб** він був великий.\n**Borys:** Добре. А ти що зробиш?\n**Anna:** Я подзвоню друзям, **щоб** запросити їх.\n**Borys:** Головне — **щоб** Олена не прийшла рано.\n**Anna:** Так. Я сказала їй, **щоб** вона працювала до вечора.\n**Borys:** Ти жорстока!\n**Anna:** Я роблю це, **для того щоб** сюрприз вдався!\n**Borys:** Я сподіваюся, що вона не здогадається.\n**Anna:** Я теж. Я роблю все можливе, **аби** вона була щаслива.\n\n### Analysis\n1.  **Щоб зробити...**: Purpose (Subject \"we\" implied).\n2.  **Щоб прикрасити...**: Purpose (Both Borys does action and intent).\n3.  **Я хочу, щоб ти купив...**: Desire (Different subjects: I want -> You buy).\n4.  **Я хочу, щоб він був...**: Desire (I want -> It be).\n5.  **Головне — щоб...**: \"The main thing is that...\" structure.\n6.  **Аби вона була щаслива**: Purpose/Desire (Different subjects: I do -> She be).\n\n## Dialogue: New Year Resolutions\n\n**Olha:** Які в тебе плани на рік?\n**Taras:** Я хочу вивчити іспанську, **щоб** поїхати в Мексику. А ти?\n**Olha:** Я хочу, **щоб** мій бос підвищив мені зарплату.\n**Taras:** А що ти робиш для цього?\n**Olha:** Я працюю допізна, **щоб** він це помітив.\n**Taras:** А я записався в спортзал, **щоб** схуднути.\n**Olha:** Ти і так худий! Я хочу, **щоб** ти більше їв.\n**Taras:** Дякую, бабусю. Ти звучиш як моя бабуся.\n**Olha:** Я просто хочу, **щоб** ти був здоровий.\n\n## Monologue: The Ambitious Student\n\nМене звати Максим. Я багато вчуся.\nЯ вчу англійську, **щоб** подорожувати.\nЯ вчу математику, **щоб** стати програмістом.\nМої батьки хочуть, **щоб** я був лікарем.\nАле я хочу, **щоб** вони мене зрозуміли.\nЯ роблю все, **аби** бути щасливим.\nЯ не живу для того, **щоб** працювати. Я працюю, **щоб** жити!\nЯ читаю книги, **щоб** знати більше.\nЯ займаюся спортом, **щоб** бути сильним.\nЯ економлю гроші, **щоб** купити квартиру.\nЯ допомагаю людям, **щоб** світ був кращим.\nЯ мрію, **щоб** усі люди жили в мирі.\n\n---"
+      },
+      {
+        "id": "section-8",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "1.  **Purpose (One Person):** *Я йду, щоб спати.* (Infinitive).\n2.  **Wish (Two People):** *Я хочу, щоб ти спав.* (Past Tense).\n3.  **Commas:** Always use a comma before *щоб*.\n4.  **Alternatives:** *Для того щоб*, *Аби*.\n\n---"
+      },
+      {
+        "id": "section-9",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Purpose Pairs\n\n> Match the action to the purpose.\n\n- Я вчуся :: щоб бути розумним\n- Я їм :: щоб не бути голодним\n- Я працюю :: щоб мати гроші\n- Я телефоную :: щоб поговорити\n- Я бігаю :: щоб бути швидким\n- Я купив квіти :: щоб подарувати їх\n- Я увімкнув світло :: щоб краще бачити\n- Я взяв таксі :: щоб не запізнитися\n- Я відкрив вікно :: щоб дихати свіжим повітрям\n- Я закрив двері :: щоб було тепло\n\n## fill-in: Infinitive or Past?\n\n> Choose the correct form. Remember: Same subject = Infinitive, Different subject = Past.\n\n1. Я хочу ___ книгу. (Me -> Me)\n   > [!answer] читати\n   > [!options] читати | читав | читала\n\n2. Я хочу, щоб ти ___ книгу. (Me -> You [m])\n   > [!answer] читав\n   > [!options] читав | читати | читала\n\n3. Мама хоче, щоб син ___. (Mom -> Son)\n   > [!answer] їв\n   > [!options] їв | їсти | їла\n\n4. Син хоче ___. (Son -> Son)\n   > [!answer] їсти\n   > [!options] їсти | їв | їла\n\n5. Ми прийшли, щоб ___. (We -> We)\n   > [!answer] допомогти\n   > [!options] допомогти | допомогли | допоміг\n\n6. Вони хочуть, щоб ми ___. (They -> We)\n   > [!answer] допомогли\n   > [!options] допомогли | допомогти | допоміг\n\n7. Вона робить це, аби ___. (She -> She)\n   > [!answer] виграти\n   > [!options] виграти | виграла | виграв\n\n8. Він мріє, щоб вона ___. (He -> She)\n   > [!answer] виграла\n   > [!options] виграла | виграти | виграв\n\n## quiz: Purpose Master\n\n1. \"Щоб\" is usually preceded by:\n   - [x] A comma\n   - [ ] A period\n   - [ ] Nothing\n\n2. \"Я хочу, щоб ти...\" requires the next verb to be in:\n   - [x] Past tense\n   - [ ] Future tense\n   - [ ] Infinitive\n\n3. \"Аби\" is a synonym for:\n   - [x] Щоб\n   - [ ] Але\n   - [ ] Або\n\n4. Translate: \"I study to know.\"\n   - [x] Я вчуся, щоб знати.\n   - [ ] Я вчуся, що знати.\n\n5. Translate: \"I want him to know.\"\n   - [x] Я хочу, щоб він знав.\n   - [ ] Я хочу його знати.\n\n6. \"Для того, щоб\" is:\n   - [x] More formal/emphatic\n   - [ ] Rude\n   - [ ] Slang\n\n7. Can you say \"Я прийшов, щоб ти побачив\"?\n   - [x] Yes (Different subjects imply result)\n   - [ ] No, impossible\n\n8. \"Щоб\" comes from:\n   - [x] Що + Би\n   - [ ] Ще + Бо\n   - [ ] Що + Бо\n\n## unjumble: Constructing Purpose\n\n1. хочу / я / щоб / прийшов / ти\n   > [!answer] Я хочу, щоб ти прийшов.\n\n2. ми / щоб / працюємо / відпочивати / потім\n   > [!answer] Ми працюємо, щоб потім відпочивати.\n\n3. він / купив / щоб / авто / їздити\n   > [!answer] Він купив авто, щоб їздити.\n\n4. мама / щоб / хоче / я / вчився\n   > [!answer] Мама хоче, щоб я вчився.\n\n5. зроби / це / аби / я / радів\n   > [!answer] Зроби це, аби я радів.\n\n6. я / щоб / бігаю / схуднути\n   > [!answer] Я бігаю, щоб схуднути.\n\n## group-sort: Same vs Different\n\n### Same Subject (Infinitive)\n- Я йду, щоб спати.\n- Ми їмо, щоб жити.\n- Він дзвонить, щоб сказати.\n- Вона вчить, щоб знати.\n- Ти біжиш, щоб встигнути.\n- Я співаю, щоб радіти.\n- Я читаю, щоб знати.\n\n### Different Subjects (Past)\n- Я хочу, щоб ти спав.\n- Він хоче, щоб ми їли.\n- Ми просимо, щоб він сказав.\n- Вона мріє, щоб ти знав.\n- Ти кажеш, щоб я встиг.\n- Батько хоче, щоб син вчився.\n\n## true-false: Grammar Check\n\n1. \"Я хочу тебе принести воду\" is correct.\n   - [ ] True\n   - [x] False\n   > Incorrect. \"Я хочу, щоб ти приніс воду.\"\n\n2. \"Він пішов, щоб купити хліб\" is correct.\n   - [x] True\n   - [ ] False\n\n3. \"Для того щоб\" means \"Because\".\n   - [ ] True\n   - [x] False\n   > It means \"In order to\".\n\n4. After \"щоб\" for a different person, we use Future tense.\n   - [ ] True\n   - [x] False\n   > No, Past tense.\n\n5. \"Аби\" is a type of beer.\n   - [ ] True\n   - [x] False\n   > It's a connector.\n\n6. \"З метою\" is very casual.\n   - [ ] True\n   - [x] False\n   > It's official.\n\n7. \"Щоб\" is pronounced /ʃɔb/.\n   - [x] True\n   - [ ] False\n\n8. You can omit the comma before \"щоб\".\n   - [ ] True\n   - [x] False\n\n## cloze: The Project\n\n> Fill in the gaps using logic.\n\nНаш бос хоче, [___:1] ми закінчили проект сьогодні.\nВін дав нам комп'ютери, [___:2] ми працювали швидше.\nЯ прийшов раніше, [___:3] все перевірити.\nСекретар купив каву, [___:4] ми не спали.\nМи працюємо, [___:5] отримати премію.\nБос обіцяв, [___:6] він дасть нам вихідний.\nЦе все [___:7] клієнт був щасливий.\n\n1. щоб / що\n> [!answer] щоб\n\n2. щоб / як\n> [!answer] щоб\n\n3. щоб / що\n> [!answer] щоб\n\n4. щоб / де\n> [!answer] щоб\n\n5. щоб / коли\n> [!answer] щоб\n\n6. що / щоб\n> [!answer] що\n> Wait! \"Promised THAT he will give\". Not purpose. Regular relative \"що\".\n\n7. для того щоб / тому що\n> [!answer] для того щоб\n\n## dialogue-reorder: The Parent Trap\n\n- Чому ти не їси суп?\n- Я не хочу їсти!\n- Але я хочу, щоб ти був здоровий.\n- Я буду здоровий без супу.\n- Їж, щоб вирости сильним.\n- Я не хочу рости.\n- Ти кажеш це, аби я хвилювалася?\n- Ні, просто суп несмачний.\n\n> [!answer]\n> 1. Чому ти не їси суп?\n> 2. Я не хочу їсти!\n> 3. Але я хочу, щоб ти був здоровий.\n> 4. Я буду здоровий без супу.\n> 5. Їж, щоб вирости сильним.\n> 6. Я не хочу рости.\n> 7. Ти кажеш це, аби я хвилювалася?\n> 8. Ні, просто суп несмачний.\n\n## mark-the-words: Find the Connectors\n\n[Щоб](correct) знати мову, треба говорити. Я роблю це [для того, щоб](correct) ти зрозумів. Він прийшов, [аби](correct) побачити тебе. Вона хоче, [щоб](correct) ми пішли.\n\n---\n\nЯ знаю, [що](incorrect) ти тут. Це людина, [яка](incorrect) співає. Це тому, [що](incorrect) дощ.\n\n## error-correction: Fix the Purpose\n\n1. Я хочу **тебе спати**.\n   > [!error] тебе спати\n   > [!answer] щоб ти спав\n   > [!explanation] Different subjects require \"щоб\" + Past.\n   > [!options] щоб ти спав | тебе спати\n\n2. Ми вчимося, **що** знати.\n   > [!error] що\n   > [!answer] щоб\n   > [!explanation] Purpose is \"щоб\", not \"що\".\n   > [!options] щоб | що\n\n3. Вони хочуть, щоб я **прийду**. (Future)\n   > [!error] прийду\n   > [!answer] прийшов\n   > [!explanation] After \"щоб\" (desire), use Past tense form.\n   > [!options] прийшов | прийду\n\n4. Вона співає, **для** бути зіркою.\n   > [!error] для\n   > [!answer] щоб\n   > [!explanation] \"Для\" is not used for purpose with an infinitive. Use \"щоб\".\n   > [!options] щоб | для\n\n5. Я приніс це, **щоб** ти **радієш**. (Present)\n   > [!error] радієш\n   > [!answer] радів\n   > [!explanation] Use Past tense form for desire/purpose with different subject.\n   > [!options] радів | радієш\n\n6. **Аби** не запізнитися ми взяли таксі.\n   > [!error] таксі аби\n   > [!answer] таксі, аби\n   > [!explanation] A comma is required before \"аби\" when it introduces a clause.\n   > [!options] таксі, аби | таксі аби\n\n## translate: English to Ukrainian\n\n1. I read to know.\n   - [x] Я читаю, щоб знати.\n   - [ ] Я читаю, що знав.\n\n2. I want you to read.\n   - [x] Я хочу, щоб ти читав.\n   - [ ] Я хочу тебе читати.\n\n3. He runs to be fast.\n   - [x] Він бігає, щоб бути швидким.\n   - [ ] Він бігає, що бути швидким.\n\n4. We wish that you were happy.\n   - [x] Бажаємо, щоб ви були щасливі.\n   - [ ] Бажаємо вас бути щасливими.\n\n5. In order to win...\n   - [x] Для того, щоб виграти...\n   - [ ] Для виграти...\n\n6. She came so that we could talk.\n   - [x] Вона прийшла, щоб ми поговорили.\n   - [ ] Вона прийшла, щоб ми говорити.\n\n---"
+      },
+      {
+        "id": "section-10",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| щоб | /ʃɔb/ | in order to / so that | conj | — | purpose |\n| аби | /ɑˈbɪ/ | so that / in order to | conj | — | colloquial |\n| для того щоб | /dlʲɑ ˈtɔɦɔ ʃɔb/ | in order to | phrase | — | formal |\n| з метою | /z mɛˈtɔju/ | with the aim of | phrase | — | official |\n| хотіти | /xɔˈtitɪ/ | to want | verb | — | trigger |\n| бажати | /bɑˈʒɑtɪ/ | to wish | verb | — | trigger |\n| мета | /mɛˈtɑ/ | goal / aim | noun | f | concept |\n| мрія | /ˈmrʲijɑ/ | dream | noun | f | concept |\n| мріяти | /ˈmrʲijɑtɪ/ | to dream | verb | — | trigger |\n| просити | /prɔˈsɪtɪ/ | to ask/request | verb | — | trigger |\n| вимагати | /ʋɪmɑˈɦɑtɪ/ | to demand | verb | — | strong trigger |\n| заради | /zɑˈrɑdɪ/ | for the sake of | prep | — | + genitive |\n| план | /plɑn/ | plan | noun | m | concept |\n| успіх | /ˈuspix/ | success | noun | m | concept |\n| перемога | /pɛrɛˈmɔɦɑ/ | victory | noun | f | goal |\n| результат | /rɛzulʲˈtɑt/ | result | noun | m | goal |\n| причина | /prɪˈt͡ʃɪnɑ/ | reason | noun | f | concept |\n| можливість | /mɔʒˈlɪʋisʲtʲ/ | opportunity | noun | f | concept |\n| намір | /ˈnɑmir/ | intention | noun | m | concept |\n| майбутнє | /mɑjˈbutnʲɛ/ | future | noun | n | concept |\n| зрозумів | /zrɔzuˈmiʋ/ | understood (masc) | verb | — | past form |\n| розповів | /rɔzpɔˈʋiʋ/ | told (masc) | verb | — | past form |\n| показав | /pɔkɑˈzɑʋ/ | showed (masc) | verb | — | past form |\n| купив | /kuˈpɪʋ/ | bought (masc) | verb | — | past form |\n| принести | /prɪˈnɛstɪ/ | to bring | verb | — | infinitive |\n| пішов | /piˈʃɔʋ/ | went (masc) | verb | — | past form |\n| прийшов | /prɪjˈʃɔʋ/ | came (masc) | verb | — | past form |\n| зробив | /zrɔˈbɪʋ/ | did (masc) | verb | — | past form |\n| сказав | /skɑˈzɑʋ/ | said (masc) | verb | — | past form |\n| написав | /nɑpɪˈsɑʋ/ | wrote (masc) | verb | — | past form |\n| прочитав | /prɔt͡ʃɪˈtɑʋ/ | read (masc) | verb | — | past form |\n| вивчив | /ˈʋɪʋt͡ʃɪʋ/ | learned (masc) | verb | — | past form |\n| допоміг | /dɔpɔˈmiɦ/ | helped (masc) | verb | — | past form |\n| пояснив | /pɔjɑsˈnɪʋ/ | explained (masc) | verb | — | past form |\n| дав | /dɑʋ/ | gave (masc) | verb | — | past form |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-26\ntitle: In Order To...\nsubtitle: \"Purpose and Desire\"\nversion: \"1.0\"\nphase: \"A2.3\"\npedagogy: \"Expressive\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - connectors\n  - purpose\n  - wish\n  - grammar\ngrammar:\n  - purpose clauses (щоб)\n  - subjunctive-like structures\n  - infinitive vs past\nobjectives:\n  - \"Learner can express purpose\"\n  - \"Learner can express wishes for others\"\n  - \"Learner understands 'щоб + past'\"\nvocabulary_count: 20\n---\n\n# Warm-up\n\nWhy are you learning Ukrainian?\n- To talk to friends?\n- To read poetry?\n- To understand the news?\n\nIn English, you say \"to\" or \"in order to\".\nIn Ukrainian, we use one powerful word: **Щоб**.\n\n**We will cover:**\n- **The Simple Purpose:** *Я вчуся, щоб знати.*\n- **The Complex Wish:** *Я хочу, щоб ти знав.*\n- **The Synonyms:** *Аби* and *Для того, щоб*.\n\n> [!note] Pronunciation\n> **Щоб** is pronounced /ʃɔb/. It is a fusion of \"що\" (what) and \"би\" (would).\n\n---\n\n# Presentation\n\n## 1. Same Subject: Щоб + Infinitive\n\nWhen **YOU** do something for **YOURSELF** (the subject is the same).\n\n**Structure:** [Action] + **, щоб** + [Infinitive].\n\n| English | Ukrainian | Literal |\n|---------|-----------|---------|\n| I work to live. | **Я працюю, щоб жити.** | I work, in order to live. |\n| He came to help. | **Він прийшов, щоб допомогти.** | He came, in order to help. |\n| We run to be healthy. | **Ми бігаємо, щоб бути здоровими.** | We run, in order to be healthy. |\n\n> [!tip] Comma Rule\n> Always put a comma before **щоб**!\n\n## 2. Different Subjects: Щоб + Past Tense\n\nWhen **YOU** want **SOMEONE ELSE** to do something.\nThis is weird for English speakers! We use the **Past Tense** form, but the meaning is Future/General.\n(This is historically the Subjunctive Mood).\n\n**Structure:** [Subject 1 wants] + **, щоб** + [Subject 2] + [Past Verb].\n\n| English | Ukrainian | Literal |\n|---------|-----------|---------|\n| I want you to go. | **Я хочу, щоб ти пішов.** | I want that you \"went\". |\n| Dad wants Mom to rest. | **Тато хоче, щоб мама відпочила.** | Dad wants that mom \"rested\". |\n| The teacher speaks slowly so that we understand. | **Учитель говорить повільно, щоб ми зрозуміли.** | ...so that we \"understood\". |\n\n**Key logic:**\n- **Infinitive** = Same person. (*Я хочу їсти.* - I want to eat).\n- **Щоб + Past** = Different person. (*Я хочу, щоб ти їв.* - I want you to eat).\n\n## 3. Synonyms for \"In Order To\"\n\n**Щоб** is the most common. But you will hear others:\n\n1.  **Для того, щоб** (For that, in order to) - More formal/emphatic.\n    - *Він зробив це `для того, щоб` отримати гроші.*\n2.  **Аби** (So that / in order to) - Slightly archaic or colloquial, very \"Ukrainian sounding\".\n    - *Я прийшов, `аби` допомогти.*\n3.  **З метою** (With the aim of) - Very official.\n    - *З метою покращення...* (With the aim of improvement...).\n\n---\n\n# Deep Dive: Is there a Subjunctive Mood?\n\nYou might ask: \"Why do we use the Past Tense for a wish?\"\n*Я хочу, щоб ти прийшов.* (I want you to come - literally \"that you came\").\n\nStrictly speaking, Ukrainian **does not have a separate Subjunctive Mood** (like Spanish or French).\nInstead, we use the **Past Tense particle `би`** (would).\n- *Я хотів би...* (I would like...).\n\nIn `щоб` (що + би), the particle `би` is already built-in!\nSo when you say `щоб ти прийшов`, you are effectively saying \"that you **would** come\". The verb aligns with the \"past-like\" nature of `би`.\n\n> [!cultural] Myth: Pessimism?\n> \"Ukrainians are pessimistic because they use Past Tense for future wishes.\"\n> **False.**\n> It's purely grammatical. When we say \"Щоб ти був здоровий!\" (May you be healthy!), we are projecting a desire. The Past form here indicates *unreality* or *potentiality*, not past time.\n\n---\n\n# Pro-Tip: The \"Toast\" Algorithm\n\nWant to make a toast like a native? Just start with **\"Я хочу випити за те, щоб...\"** (I want to drink for that, that...).\n\n1.  **Health:** ...щоб ми всі були здорові.\n2.  **Success:** ...щоб у нас було багато грошей.\n3.  **Peace:** ...щоб був мир.\n4.  **Love:** ...щоб ми кохали і були кохані.\n\nOr simpler: **\"За нас!\"** (To us!).\n\n\n> [!note] Fact: \"Meta\"\n> The word **мета** (goal/target) is related to \"meet\" in English (meeting point). When you do something **з метою** (with the aim), you are aiming to meet your goal!\n\n---\n\n# Deep Dive: The \"Desire\" Pattern\n\nThe structure **\"хотіти, щоб...\"** is extremely common. It replaces English \"want someone to...\".\n\n- **Incorrect:** Я хочу тебе читати книгу. (I want you to read book - Sounds like \"I want to read you like a book\").\n- **Correct:** Я хочу, щоб ти читав книгу.\n\n**Practice Examples:**\n- *Mother to child:* Я не хочу, щоб ти хворів. (I don't want you to be sick).\n- *Boss to employee:* Я хочу, щоб ви закінчили звіт. (I want you to finish report).\n- *Ukraine to world:* Ми хочемо, щоб війна закінчилася. (We want the war to end).\n\n---\n\n# Cultural Insight\n\n> [!cultural] The \"Guest\" Protocol\n> In Ukraine, you never visit someone empty-handed.\n> You bring cake, flowers, or wine **щоб** show respect.\n> You take off your shoes **аби** keep the house clean.\n> You compliment the food **для того, щоб** the host feels happy.\n> It's not just politeness; it's a ritual **щоб** maintain good relationships.\n\n---\n\n# Language in Action\n\n## Dialogue: The Surprise Party\n\nAnna and Borys are planning a surprise for Olena.\n\n**Anna:** Слухай, **щоб** зробити вечірку ідеальною, нам треба план.\n**Borys:** Я вже купив кульки, **щоб** прикрасити кімнату.\n**Anna:** Чудово. Але я хочу, **щоб** ти купив торт.\n**Borys:** Який торт?\n**Anna:** Олена любить шоколадний. Я хочу, **щоб** він був великий.\n**Borys:** Добре. А ти що зробиш?\n**Anna:** Я подзвоню друзям, **щоб** запросити їх.\n**Borys:** Головне — **щоб** Олена не прийшла рано.\n**Anna:** Так. Я сказала їй, **щоб** вона працювала до вечора.\n**Borys:** Ти жорстока!\n**Anna:** Я роблю це, **для того щоб** сюрприз вдався!\n**Borys:** Я сподіваюся, що вона не здогадається.\n**Anna:** Я теж. Я роблю все можливе, **аби** вона була щаслива.\n\n### Analysis\n1.  **Щоб зробити...**: Purpose (Subject \"we\" implied).\n2.  **Щоб прикрасити...**: Purpose (Both Borys does action and intent).\n3.  **Я хочу, щоб ти купив...**: Desire (Different subjects: I want -> You buy).\n4.  **Я хочу, щоб він був...**: Desire (I want -> It be).\n5.  **Головне — щоб...**: \"The main thing is that...\" structure.\n6.  **Аби вона була щаслива**: Purpose/Desire (Different subjects: I do -> She be).\n\n## Dialogue: New Year Resolutions\n\n**Olha:** Які в тебе плани на рік?\n**Taras:** Я хочу вивчити іспанську, **щоб** поїхати в Мексику. А ти?\n**Olha:** Я хочу, **щоб** мій бос підвищив мені зарплату.\n**Taras:** А що ти робиш для цього?\n**Olha:** Я працюю допізна, **щоб** він це помітив.\n**Taras:** А я записався в спортзал, **щоб** схуднути.\n**Olha:** Ти і так худий! Я хочу, **щоб** ти більше їв.\n**Taras:** Дякую, бабусю. Ти звучиш як моя бабуся.\n**Olha:** Я просто хочу, **щоб** ти був здоровий.\n\n## Monologue: The Ambitious Student\n\nМене звати Максим. Я багато вчуся.\nЯ вчу англійську, **щоб** подорожувати.\nЯ вчу математику, **щоб** стати програмістом.\nМої батьки хочуть, **щоб** я був лікарем.\nАле я хочу, **щоб** вони мене зрозуміли.\nЯ роблю все, **аби** бути щасливим.\nЯ не живу для того, **щоб** працювати. Я працюю, **щоб** жити!\nЯ читаю книги, **щоб** знати більше.\nЯ займаюся спортом, **щоб** бути сильним.\nЯ економлю гроші, **щоб** купити квартиру.\nЯ допомагаю людям, **щоб** світ був кращим.\nЯ мрію, **щоб** усі люди жили в мирі.\n\n---\n\n# Summary\n\n1.  **Purpose (One Person):** *Я йду, щоб спати.* (Infinitive).\n2.  **Wish (Two People):** *Я хочу, щоб ти спав.* (Past Tense).\n3.  **Commas:** Always use a comma before *щоб*.\n4.  **Alternatives:** *Для того щоб*, *Аби*.\n\n---\n\n# Activities\n\n## match-up: Purpose Pairs\n\n> Match the action to the purpose.\n\n- Я вчуся :: щоб бути розумним\n- Я їм :: щоб не бути голодним\n- Я працюю :: щоб мати гроші\n- Я телефоную :: щоб поговорити\n- Я бігаю :: щоб бути швидким\n- Я купив квіти :: щоб подарувати їх\n- Я увімкнув світло :: щоб краще бачити\n- Я взяв таксі :: щоб не запізнитися\n- Я відкрив вікно :: щоб дихати свіжим повітрям\n- Я закрив двері :: щоб було тепло\n\n## fill-in: Infinitive or Past?\n\n> Choose the correct form. Remember: Same subject = Infinitive, Different subject = Past.\n\n1. Я хочу ___ книгу. (Me -> Me)\n   > [!answer] читати\n   > [!options] читати | читав | читала\n\n2. Я хочу, щоб ти ___ книгу. (Me -> You [m])\n   > [!answer] читав\n   > [!options] читав | читати | читала\n\n3. Мама хоче, щоб син ___. (Mom -> Son)\n   > [!answer] їв\n   > [!options] їв | їсти | їла\n\n4. Син хоче ___. (Son -> Son)\n   > [!answer] їсти\n   > [!options] їсти | їв | їла\n\n5. Ми прийшли, щоб ___. (We -> We)\n   > [!answer] допомогти\n   > [!options] допомогти | допомогли | допоміг\n\n6. Вони хочуть, щоб ми ___. (They -> We)\n   > [!answer] допомогли\n   > [!options] допомогли | допомогти | допоміг\n\n7. Вона робить це, аби ___. (She -> She)\n   > [!answer] виграти\n   > [!options] виграти | виграла | виграв\n\n8. Він мріє, щоб вона ___. (He -> She)\n   > [!answer] виграла\n   > [!options] виграла | виграти | виграв\n\n## quiz: Purpose Master\n\n1. \"Щоб\" is usually preceded by:\n   - [x] A comma\n   - [ ] A period\n   - [ ] Nothing\n\n2. \"Я хочу, щоб ти...\" requires the next verb to be in:\n   - [x] Past tense\n   - [ ] Future tense\n   - [ ] Infinitive\n\n3. \"Аби\" is a synonym for:\n   - [x] Щоб\n   - [ ] Але\n   - [ ] Або\n\n4. Translate: \"I study to know.\"\n   - [x] Я вчуся, щоб знати.\n   - [ ] Я вчуся, що знати.\n\n5. Translate: \"I want him to know.\"\n   - [x] Я хочу, щоб він знав.\n   - [ ] Я хочу його знати.\n\n6. \"Для того, щоб\" is:\n   - [x] More formal/emphatic\n   - [ ] Rude\n   - [ ] Slang\n\n7. Can you say \"Я прийшов, щоб ти побачив\"?\n   - [x] Yes (Different subjects imply result)\n   - [ ] No, impossible\n\n8. \"Щоб\" comes from:\n   - [x] Що + Би\n   - [ ] Ще + Бо\n   - [ ] Що + Бо\n\n## unjumble: Constructing Purpose\n\n1. хочу / я / щоб / прийшов / ти\n   > [!answer] Я хочу, щоб ти прийшов.\n\n2. ми / щоб / працюємо / відпочивати / потім\n   > [!answer] Ми працюємо, щоб потім відпочивати.\n\n3. він / купив / щоб / авто / їздити\n   > [!answer] Він купив авто, щоб їздити.\n\n4. мама / щоб / хоче / я / вчився\n   > [!answer] Мама хоче, щоб я вчився.\n\n5. зроби / це / аби / я / радів\n   > [!answer] Зроби це, аби я радів.\n\n6. я / щоб / бігаю / схуднути\n   > [!answer] Я бігаю, щоб схуднути.\n\n## group-sort: Same vs Different\n\n### Same Subject (Infinitive)\n- Я йду, щоб спати.\n- Ми їмо, щоб жити.\n- Він дзвонить, щоб сказати.\n- Вона вчить, щоб знати.\n- Ти біжиш, щоб встигнути.\n- Я співаю, щоб радіти.\n- Я читаю, щоб знати.\n\n### Different Subjects (Past)\n- Я хочу, щоб ти спав.\n- Він хоче, щоб ми їли.\n- Ми просимо, щоб він сказав.\n- Вона мріє, щоб ти знав.\n- Ти кажеш, щоб я встиг.\n- Батько хоче, щоб син вчився.\n\n## true-false: Grammar Check\n\n1. \"Я хочу тебе принести воду\" is correct.\n   - [ ] True\n   - [x] False\n   > Incorrect. \"Я хочу, щоб ти приніс воду.\"\n\n2. \"Він пішов, щоб купити хліб\" is correct.\n   - [x] True\n   - [ ] False\n\n3. \"Для того щоб\" means \"Because\".\n   - [ ] True\n   - [x] False\n   > It means \"In order to\".\n\n4. After \"щоб\" for a different person, we use Future tense.\n   - [ ] True\n   - [x] False\n   > No, Past tense.\n\n5. \"Аби\" is a type of beer.\n   - [ ] True\n   - [x] False\n   > It's a connector.\n\n6. \"З метою\" is very casual.\n   - [ ] True\n   - [x] False\n   > It's official.\n\n7. \"Щоб\" is pronounced /ʃɔb/.\n   - [x] True\n   - [ ] False\n\n8. You can omit the comma before \"щоб\".\n   - [ ] True\n   - [x] False\n\n## cloze: The Project\n\n> Fill in the gaps using logic.\n\nНаш бос хоче, [___:1] ми закінчили проект сьогодні.\nВін дав нам комп'ютери, [___:2] ми працювали швидше.\nЯ прийшов раніше, [___:3] все перевірити.\nСекретар купив каву, [___:4] ми не спали.\nМи працюємо, [___:5] отримати премію.\nБос обіцяв, [___:6] він дасть нам вихідний.\nЦе все [___:7] клієнт був щасливий.\n\n1. щоб / що\n> [!answer] щоб\n\n2. щоб / як\n> [!answer] щоб\n\n3. щоб / що\n> [!answer] щоб\n\n4. щоб / де\n> [!answer] щоб\n\n5. щоб / коли\n> [!answer] щоб\n\n6. що / щоб\n> [!answer] що\n> Wait! \"Promised THAT he will give\". Not purpose. Regular relative \"що\".\n\n7. для того щоб / тому що\n> [!answer] для того щоб\n\n## dialogue-reorder: The Parent Trap\n\n- Чому ти не їси суп?\n- Я не хочу їсти!\n- Але я хочу, щоб ти був здоровий.\n- Я буду здоровий без супу.\n- Їж, щоб вирости сильним.\n- Я не хочу рости.\n- Ти кажеш це, аби я хвилювалася?\n- Ні, просто суп несмачний.\n\n> [!answer]\n> 1. Чому ти не їси суп?\n> 2. Я не хочу їсти!\n> 3. Але я хочу, щоб ти був здоровий.\n> 4. Я буду здоровий без супу.\n> 5. Їж, щоб вирости сильним.\n> 6. Я не хочу рости.\n> 7. Ти кажеш це, аби я хвилювалася?\n> 8. Ні, просто суп несмачний.\n\n## mark-the-words: Find the Connectors\n\n[Щоб](correct) знати мову, треба говорити. Я роблю це [для того, щоб](correct) ти зрозумів. Він прийшов, [аби](correct) побачити тебе. Вона хоче, [щоб](correct) ми пішли.\n\n---\n\nЯ знаю, [що](incorrect) ти тут. Це людина, [яка](incorrect) співає. Це тому, [що](incorrect) дощ.\n\n## error-correction: Fix the Purpose\n\n1. Я хочу **тебе спати**.\n   > [!error] тебе спати\n   > [!answer] щоб ти спав\n   > [!explanation] Different subjects require \"щоб\" + Past.\n   > [!options] щоб ти спав | тебе спати\n\n2. Ми вчимося, **що** знати.\n   > [!error] що\n   > [!answer] щоб\n   > [!explanation] Purpose is \"щоб\", not \"що\".\n   > [!options] щоб | що\n\n3. Вони хочуть, щоб я **прийду**. (Future)\n   > [!error] прийду\n   > [!answer] прийшов\n   > [!explanation] After \"щоб\" (desire), use Past tense form.\n   > [!options] прийшов | прийду\n\n4. Вона співає, **для** бути зіркою.\n   > [!error] для\n   > [!answer] щоб\n   > [!explanation] \"Для\" is not used for purpose with an infinitive. Use \"щоб\".\n   > [!options] щоб | для\n\n5. Я приніс це, **щоб** ти **радієш**. (Present)\n   > [!error] радієш\n   > [!answer] радів\n   > [!explanation] Use Past tense form for desire/purpose with different subject.\n   > [!options] радів | радієш\n\n6. **Аби** не запізнитися ми взяли таксі.\n   > [!error] таксі аби\n   > [!answer] таксі, аби\n   > [!explanation] A comma is required before \"аби\" when it introduces a clause.\n   > [!options] таксі, аби | таксі аби\n\n## translate: English to Ukrainian\n\n1. I read to know.\n   - [x] Я читаю, щоб знати.\n   - [ ] Я читаю, що знав.\n\n2. I want you to read.\n   - [x] Я хочу, щоб ти читав.\n   - [ ] Я хочу тебе читати.\n\n3. He runs to be fast.\n   - [x] Він бігає, щоб бути швидким.\n   - [ ] Він бігає, що бути швидким.\n\n4. We wish that you were happy.\n   - [x] Бажаємо, щоб ви були щасливі.\n   - [ ] Бажаємо вас бути щасливими.\n\n5. In order to win...\n   - [x] Для того, щоб виграти...\n   - [ ] Для виграти...\n\n6. She came so that we could talk.\n   - [x] Вона прийшла, щоб ми поговорили.\n   - [ ] Вона прийшла, щоб ми говорити.\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| щоб | /ʃɔb/ | in order to / so that | conj | — | purpose |\n| аби | /ɑˈbɪ/ | so that / in order to | conj | — | colloquial |\n| для того щоб | /dlʲɑ ˈtɔɦɔ ʃɔb/ | in order to | phrase | — | formal |\n| з метою | /z mɛˈtɔju/ | with the aim of | phrase | — | official |\n| хотіти | /xɔˈtitɪ/ | to want | verb | — | trigger |\n| бажати | /bɑˈʒɑtɪ/ | to wish | verb | — | trigger |\n| мета | /mɛˈtɑ/ | goal / aim | noun | f | concept |\n| мрія | /ˈmrʲijɑ/ | dream | noun | f | concept |\n| мріяти | /ˈmrʲijɑtɪ/ | to dream | verb | — | trigger |\n| просити | /prɔˈsɪtɪ/ | to ask/request | verb | — | trigger |\n| вимагати | /ʋɪmɑˈɦɑtɪ/ | to demand | verb | — | strong trigger |\n| заради | /zɑˈrɑdɪ/ | for the sake of | prep | — | + genitive |\n| план | /plɑn/ | plan | noun | m | concept |\n| успіх | /ˈuspix/ | success | noun | m | concept |\n| перемога | /pɛrɛˈmɔɦɑ/ | victory | noun | f | goal |\n| результат | /rɛzulʲˈtɑt/ | result | noun | m | goal |\n| причина | /prɪˈt͡ʃɪnɑ/ | reason | noun | f | concept |\n| можливість | /mɔʒˈlɪʋisʲtʲ/ | opportunity | noun | f | concept |\n| намір | /ˈnɑmir/ | intention | noun | m | concept |\n| майбутнє | /mɑjˈbutnʲɛ/ | future | noun | n | concept |\n| зрозумів | /zrɔzuˈmiʋ/ | understood (masc) | verb | — | past form |\n| розповів | /rɔzpɔˈʋiʋ/ | told (masc) | verb | — | past form |\n| показав | /pɔkɑˈzɑʋ/ | showed (masc) | verb | — | past form |\n| купив | /kuˈpɪʋ/ | bought (masc) | verb | — | past form |\n| принести | /prɪˈnɛstɪ/ | to bring | verb | — | infinitive |\n| пішов | /piˈʃɔʋ/ | went (masc) | verb | — | past form |\n| прийшов | /prɪjˈʃɔʋ/ | came (masc) | verb | — | past form |\n| зробив | /zrɔˈbɪʋ/ | did (masc) | verb | — | past form |\n| сказав | /skɑˈzɑʋ/ | said (masc) | verb | — | past form |\n| написав | /nɑpɪˈsɑʋ/ | wrote (masc) | verb | — | past form |\n| прочитав | /prɔt͡ʃɪˈtɑʋ/ | read (masc) | verb | — | past form |\n| вивчив | /ˈʋɪʋt͡ʃɪʋ/ | learned (masc) | verb | — | past form |\n| допоміг | /dɔpɔˈmiɦ/ | helped (masc) | verb | — | past form |\n| пояснив | /pɔjɑsˈnɪʋ/ | explained (masc) | verb | — | past form |\n| дав | /dɑʋ/ | gave (masc) | verb | — | past form |\n",
+    "createdAt": "2025-12-15T20:02:03.026016Z",
+    "modifiedAt": "2025-12-15T20:02:03.026016Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-30",
+    "level": "A2",
+    "phase": "A2.3",
+    "wordCount": 35,
+    "newWordCount": 35,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "щоб",
+        "ipa": "/ʃɔb/",
+        "en": "in order to / so that",
+        "pos": "conj",
+        "gender": null,
+        "note": "purpose"
+      },
+      {
+        "id": "vocab-2",
+        "uk": "аби",
+        "ipa": "/ɑˈbɪ/",
+        "en": "so that / in order to",
+        "pos": "conj",
+        "gender": null,
+        "note": "colloquial"
+      },
+      {
+        "id": "vocab-3",
+        "uk": "для того щоб",
+        "ipa": "/dlʲɑ ˈtɔɦɔ ʃɔb/",
+        "en": "in order to",
+        "pos": "phrase",
+        "gender": null,
+        "note": "formal"
+      },
+      {
+        "id": "vocab-4",
+        "uk": "з метою",
+        "ipa": "/z mɛˈtɔju/",
+        "en": "with the aim of",
+        "pos": "phrase",
+        "gender": null,
+        "note": "official"
+      },
+      {
+        "id": "vocab-5",
+        "uk": "хотіти",
+        "ipa": "/xɔˈtitɪ/",
+        "en": "to want",
+        "pos": "verb",
+        "gender": null,
+        "note": "trigger"
+      },
+      {
+        "id": "vocab-6",
+        "uk": "бажати",
+        "ipa": "/bɑˈʒɑtɪ/",
+        "en": "to wish",
+        "pos": "verb",
+        "gender": null,
+        "note": "trigger"
+      },
+      {
+        "id": "vocab-7",
+        "uk": "мета",
+        "ipa": "/mɛˈtɑ/",
+        "en": "goal / aim",
+        "pos": "noun",
+        "gender": "f",
+        "note": "concept"
+      },
+      {
+        "id": "vocab-8",
+        "uk": "мрія",
+        "ipa": "/ˈmrʲijɑ/",
+        "en": "dream",
+        "pos": "noun",
+        "gender": "f",
+        "note": "concept"
+      },
+      {
+        "id": "vocab-9",
+        "uk": "мріяти",
+        "ipa": "/ˈmrʲijɑtɪ/",
+        "en": "to dream",
+        "pos": "verb",
+        "gender": null,
+        "note": "trigger"
+      },
+      {
+        "id": "vocab-10",
+        "uk": "просити",
+        "ipa": "/prɔˈsɪtɪ/",
+        "en": "to ask/request",
+        "pos": "verb",
+        "gender": null,
+        "note": "trigger"
+      },
+      {
+        "id": "vocab-11",
+        "uk": "вимагати",
+        "ipa": "/ʋɪmɑˈɦɑtɪ/",
+        "en": "to demand",
+        "pos": "verb",
+        "gender": null,
+        "note": "strong trigger"
+      },
+      {
+        "id": "vocab-12",
+        "uk": "заради",
+        "ipa": "/zɑˈrɑdɪ/",
+        "en": "for the sake of",
+        "pos": "prep",
+        "gender": null,
+        "note": "+ genitive"
+      },
+      {
+        "id": "vocab-13",
+        "uk": "план",
+        "ipa": "/plɑn/",
+        "en": "plan",
+        "pos": "noun",
+        "gender": "m",
+        "note": "concept"
+      },
+      {
+        "id": "vocab-14",
+        "uk": "успіх",
+        "ipa": "/ˈuspix/",
+        "en": "success",
+        "pos": "noun",
+        "gender": "m",
+        "note": "concept"
+      },
+      {
+        "id": "vocab-15",
+        "uk": "перемога",
+        "ipa": "/pɛrɛˈmɔɦɑ/",
+        "en": "victory",
+        "pos": "noun",
+        "gender": "f",
+        "note": "goal"
+      },
+      {
+        "id": "vocab-16",
+        "uk": "результат",
+        "ipa": "/rɛzulʲˈtɑt/",
+        "en": "result",
+        "pos": "noun",
+        "gender": "m",
+        "note": "goal"
+      },
+      {
+        "id": "vocab-17",
+        "uk": "причина",
+        "ipa": "/prɪˈt͡ʃɪnɑ/",
+        "en": "reason",
+        "pos": "noun",
+        "gender": "f",
+        "note": "concept"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "можливість",
+        "ipa": "/mɔʒˈlɪʋisʲtʲ/",
+        "en": "opportunity",
+        "pos": "noun",
+        "gender": "f",
+        "note": "concept"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "намір",
+        "ipa": "/ˈnɑmir/",
+        "en": "intention",
+        "pos": "noun",
+        "gender": "m",
+        "note": "concept"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "майбутнє",
+        "ipa": "/mɑjˈbutnʲɛ/",
+        "en": "future",
+        "pos": "noun",
+        "gender": "n",
+        "note": "concept"
+      },
+      {
+        "id": "vocab-21",
+        "uk": "зрозумів",
+        "ipa": "/zrɔzuˈmiʋ/",
+        "en": "understood (masc)",
+        "pos": "verb",
+        "gender": null,
+        "note": "past form"
+      },
+      {
+        "id": "vocab-22",
+        "uk": "розповів",
+        "ipa": "/rɔzpɔˈʋiʋ/",
+        "en": "told (masc)",
+        "pos": "verb",
+        "gender": null,
+        "note": "past form"
+      },
+      {
+        "id": "vocab-23",
+        "uk": "показав",
+        "ipa": "/pɔkɑˈzɑʋ/",
+        "en": "showed (masc)",
+        "pos": "verb",
+        "gender": null,
+        "note": "past form"
+      },
+      {
+        "id": "vocab-24",
+        "uk": "купив",
+        "ipa": "/kuˈpɪʋ/",
+        "en": "bought (masc)",
+        "pos": "verb",
+        "gender": null,
+        "note": "past form"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "принести",
+        "ipa": "/prɪˈnɛstɪ/",
+        "en": "to bring",
+        "pos": "verb",
+        "gender": null,
+        "note": "infinitive"
+      },
+      {
+        "id": "vocab-26",
+        "uk": "пішов",
+        "ipa": "/piˈʃɔʋ/",
+        "en": "went (masc)",
+        "pos": "verb",
+        "gender": null,
+        "note": "past form"
+      },
+      {
+        "id": "vocab-27",
+        "uk": "прийшов",
+        "ipa": "/prɪjˈʃɔʋ/",
+        "en": "came (masc)",
+        "pos": "verb",
+        "gender": null,
+        "note": "past form"
+      },
+      {
+        "id": "vocab-28",
+        "uk": "зробив",
+        "ipa": "/zrɔˈbɪʋ/",
+        "en": "did (masc)",
+        "pos": "verb",
+        "gender": null,
+        "note": "past form"
+      },
+      {
+        "id": "vocab-29",
+        "uk": "сказав",
+        "ipa": "/skɑˈzɑʋ/",
+        "en": "said (masc)",
+        "pos": "verb",
+        "gender": null,
+        "note": "past form"
+      },
+      {
+        "id": "vocab-30",
+        "uk": "написав",
+        "ipa": "/nɑpɪˈsɑʋ/",
+        "en": "wrote (masc)",
+        "pos": "verb",
+        "gender": null,
+        "note": "past form"
+      },
+      {
+        "id": "vocab-31",
+        "uk": "прочитав",
+        "ipa": "/prɔt͡ʃɪˈtɑʋ/",
+        "en": "read (masc)",
+        "pos": "verb",
+        "gender": null,
+        "note": "past form"
+      },
+      {
+        "id": "vocab-32",
+        "uk": "вивчив",
+        "ipa": "/ˈʋɪʋt͡ʃɪʋ/",
+        "en": "learned (masc)",
+        "pos": "verb",
+        "gender": null,
+        "note": "past form"
+      },
+      {
+        "id": "vocab-33",
+        "uk": "допоміг",
+        "ipa": "/dɔpɔˈmiɦ/",
+        "en": "helped (masc)",
+        "pos": "verb",
+        "gender": null,
+        "note": "past form"
+      },
+      {
+        "id": "vocab-34",
+        "uk": "пояснив",
+        "ipa": "/pɔjɑsˈnɪʋ/",
+        "en": "explained (masc)",
+        "pos": "verb",
+        "gender": null,
+        "note": "past form"
+      },
+      {
+        "id": "vocab-35",
+        "uk": "дав",
+        "ipa": "/dɑʋ/",
+        "en": "gave (masc)",
+        "pos": "verb",
+        "gender": null,
+        "note": "past form"
+      }
+    ],
+    "reviewWords": []
+  }
+}

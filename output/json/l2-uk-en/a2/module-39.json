@@ -1,0 +1,420 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-39",
+    "moduleId": "mod-uk-A2-39",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.4",
+    "moduleNumber": 39,
+    "moduleType": "grammar",
+    "pedagogy": "Inquiry",
+    "immersionLevel": 0.4,
+    "title": "Adjective Suffixes",
+    "titleUk": null,
+    "subtitle": "Describing the World",
+    "description": "Learner can turn nouns into adjectives (Music -> Musical)",
+    "objectives": [
+      "Learner can turn nouns into adjectives (Music -> Musical)",
+      "Learner can express origin (Ukraine -> Ukrainian)",
+      "Learner can use scientific/academic adjectives"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "adjective suffixes (-ний, -овий, -ський, -чий)",
+      "diminutive adjectives (-еньк-ий)"
+    ],
+    "tags": [
+      "grammar",
+      "adjectives",
+      "suffixes",
+      "word-formation"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "Welcome back to the Word Factory!\nLast time, we made Nouns. Today, we make **Adjectives**.\nAdjectives describe *what kind* of thing something is.\n\nIn English, you use:\n- **-al** (Music -> Musical)\n- **-ic** (History -> Historic)\n- **-an** (America -> American)\n- **-y** (Sun -> Sunny)\n\nIn Ukrainian, we have standard suffixes too.\nInput: **Музика** [Noun] -> Machine -> Output: **Музич-ний** [Adj].\nInput: **Україна** [Noun] -> Machine -> Output: **Україн-ський** [Adj].\n\n> [!question] The Universal Endings\n> Remember that the suffix changes the *meaning*, but the *ending* (flexion) must still match the Gender!\n> - Музичн**ий** (Masc)\n> - Музичн**а** (Fem)\n> - Музичн**е** (Neut)\n> - Музичн**і** (Plural)\n>\n> This is exactly like regular adjectives (Good -> Гарний, Гарна, Гарне).\n> The suffix (-н-, -ов-, -ськ-) just sits between the Root and the Ending.\n> Root + Suffix + Ending.\n> Think of it like a sandwich: Root is the meat, Suffix is the cheese, Ending is the bread.\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "Grammar Breakdown: 4 Rules to Remember",
+        "nameEn": null,
+        "type": "content",
+        "content": "Before we look at more examples, let's clarify the logic.\nUnlike English, which uses many different patterns (-al, -ic, -y, -ous, -an), Ukrainian is surprisingly consistent.\n\n**Rule 1: The Generalist (-ний) is King**\nIf you don't know which suffix to use, guess **-ний**. It is the most common adjective suffix in the Ukrainian language.\nIt works for almost all abstract concepts (Theory -> Theoretical).\n\n**Rule 2: Materials use -овий**\nIf something is made of distinct parts or materials, it often uses **-овий**.\nThink of \"Fruit\" -> \"Fruit-based cake\". That's a \"Fruit-ov-y\" cake.\nThink of \"Science\" -> \"Science-based fact\". That's a \"Science-ov-y\" fact.\n\n**Rule 3: Softness Matters**\nSometimes **-овий** becomes **-евий** or **-євий**. Why?\nBecause of Ukrainian phonetics. After soft sounds or 'j' sounds (like in Життя), we need a soft vowel.\nSo *Житт-ов-ий* sounds hard. *Житт-єв-ий* flows like water.\n\n**Rule 4: People and Places use -ськ-**\nThis is the \"Belonging\" suffix.\nIt answers: \"Whose is it?\" or \"Where is it from?\"\nIt is NOT about what it is made of. It is about *identity*.\n- Kyiv -> Kyiv-an identity -> Київський.\n- Student -> Student identity -> Студентський.\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "The Big Three: -Н, -ОВ, -СЬК",
+        "nameEn": null,
+        "type": "content",
+        "content": "These three suffixes create 80% of Ukrainian adjectives.\n\n## Machine 1: The Generalist (-н-ий)\n\nThis is the default suffix. Use it for general qualities.\n\n| Noun | Adjective | English | Note |\n| :--- | :--- | :--- | :--- |\n| **Музика** | Музич**н**ий | Musical | к -> ч mutation |\n| **Матема**тика | Математич**н**ий | Mathematical | |\n| **Фізик**а | Фізич**н**ий | Physical | |\n| **Смак** (Taste) | Смач**н**ий | Tasty | к -> ч |\n| **Холод** (Cold) | Холод**н**ий | Cold | |\n\n## Machine 2: The Relationship (-ов-ий)\n\nUse this for \"made of\" or \"related to\".\n\n| Noun | Adjective | English | Note |\n| :--- | :--- | :--- | :--- |\n| **Наук**а | Наук**ов**ий | Scientific | |\n| **Колір** | Кольор**ов**ий | Colorful | |\n| **Бізнес** | Бізнес**ов**ий | Business-related | |\n| **Життя** | Житт**єв**ий | Vital / Life-related | -ов becomes -єв after soft consonant |\n\n## Machine 3: The Origin (-ськ-ий)\n\nUse this for places, groups, and people.\n\n| Noun | Adjective | English | Note |\n| :--- | :--- | :--- | :--- |\n| **Україна** | Україн**ськ**ий | Ukrainian | |\n| **Міст**о | Мі**ськ**ий | Urban / City | ст -> ськ |\n| **Сел**о | Сіль**ськ**ий | Rural / Village | е -> і |\n| **Люд**и | Люд**ськ**ий | Human | |\n| **Чоловік** | Чолові**ч**ий | Male / Men's | Exception: -чий here |\n| **Жінк**а | Жіно**ч**ий | Female / Women's | Exception: -чий here |\n\n> [!tip] Sound Mutations\n> When attaching suffixes, consonants often change to make pronunciation smoother:\n> - **К, Ц, Ч** + ськ -> **-цьк-** (Козак -> Козацький).\n> - **Г, Ж, З** + ськ -> **-зьк-** (Прага -> Празький).\n> - **Х, Ш, С** + ськ -> **-ськ-** (Чех -> Чеський).\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Deep Dive: Living Adjectives (The Active State)",
+        "nameEn": null,
+        "type": "content",
+        "content": "Some adjectives describe a state or feeling.\n- **Гарячий** (Hot) — from \"to burn\".\n- **Свіжий** (Fresh).\n- **Чужий** (Foreign/Alien).\n- **Справжній** (Real/Genuine).\n\n> [!note] Why -ій?\n> Soft adjectives end in **-ій** (masculine).\n> - **Синій**: Blue\n> - **Вечірній**: Evening\n> - **Останній**: Last\n> They decline differently: *Синього*, NOT *Синого*.\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Deep Dive: The Diminutive (-еньк)",
+        "nameEn": null,
+        "type": "content",
+        "content": "Just like nouns have **-ок**, adjectives have **-еньк**.\nIt means \"sweet\", \"little\", or \"pleasant\".\n\n- **Малий** -> **Маленький** (Little/Small).\n- **Гарний** -> **Гарненький** (Pretty/Nice).\n- **Теплий** -> **Тепленький** (Nice and warm).\n- **Свіжий** -> **Свіженький** (Fresh).\n- **Чистий** -> **Чистенький** (Clean).\n\n*Мама купила свіженький хліб.* (Mom bought fresh-little-bread).\n*Це мій маленький кіт.* (This is my little cat).\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Story Time: The Professor",
+        "nameEn": null,
+        "type": "content",
+        "content": "Професор Лисенко — відома людина.\nВін читає **науковий** курс в університеті.\nЙого предмет — **історична** географія.\nВін вивчає **міські** та **сільські** поселення.\nСтуденти люблять його лекції. Вони завжди **цікаві** та **живі**.\nСьогодні він розповідає про **український** побут.\nВін показує **кольорові** мапи і **старі** фотографії.\n\"Ось **типовий** будинок,\" — каже він.\n\"Він має **дерев'яний** дах і **кам'яний** фундамент.\"\nСтуденти ставлять **розумні** питання.\nПрофесор дає **точні** відповіді.\nЦе справжній **академічний** процес.\n\n> [!cultural] Cultural Insight: Science\n> Ukraine has a strong tradition in **математична** (math) and **фізична** (physics) science.\n> Names like Korolyov (rockets), Sikorsky (helicopters), and Paton (welding) are world-famous.\n> The suffix **-ський** is also standard for many surnames!\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Story Time Part 2: The Map",
+        "nameEn": null,
+        "type": "content",
+        "content": "На столі лежить велика **географічна** мапа.\nЦе **фізична** мапа України.\nМи бачимо **Чорне** море. Воно **тепле** і **глибоке**.\nМи бачимо **Карпатські** гори. Вони **високі** і **красиві**.\nОсь **головна** річка — Дніпро.\nЦе **потужний** (powerful) водний шлях.\nНа березі стоїть **давній** Київ.\nЦе **політичний** і **культурний** центр.\nНа заході — **старовинний** Львів.\nНа півдні — **сонячна** Одеса.\nКожен регіон має свій **унікальний** характер.\nУкраїна — дуже **різноманітна** країна.\n\n---"
+      },
+      {
+        "id": "section-8",
+        "name": "Story Time Part 3: The Market",
+        "nameEn": null,
+        "type": "content",
+        "content": "У суботу люди йдуть на **міський** базар.\nТут є все: **свіжий** хліб, **домашній** сир, **смачна** ковбаса.\nБабуся продає **зелені** яблука. Вони **кислі**, але **корисні**.\nДідусь продає **солодкий** мед. Це **справжній** мед.\nМолодий хлопець купує **гострий** перець.\nЦе буде **гарячий** обід!\nДівчина шукає **червоні** помідори.\n\"Вони **українські**?\" — питає вона.\n\"Так, це наш **рідний** продукт,\" — відповідає продавець.\nБазар — це **веселий** і **шумний** світ.\n\n> [!cultural] Cultural Insight: Food Names\n> Many food names use standard suffixes:\n> - **Київський** торт (Kyiv cake).\n> - **Полтавська** галушка (Poltava dumpling).\n> - **Львівський** сирник (Lviv cheesecake).\n> Regional pride is delicious!\n\n---"
+      },
+      {
+        "id": "section-9",
+        "name": "Language in Action",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Dialogue: Shopping\n\n**Customer:** Добрий день. У вас є **дитячий** одяг?\n**Seller:** Так, звісно. Ось відділ для хлопців і дівчат.\n**Customer:** Мені потрібен **теплий** светр.\n**Seller:** Ось дуже гарний, **вовняний** (woolen).\n**Customer:** А він м'який?\n**Seller:** Так, він дуже **м'якенький** (soft-diminutive).\n**Customer:** А який це розмір?\n**Seller:** Це **стандартний** розмір.\n**Customer:** Добре. А ціна?\n**Seller:** Ціна **доступна**.\n**Customer:** Чудово. Я беру.\n\n## Monologue: The Artist\n\nЯ люблю цей світ. Він **кольоровий**.\n**Синє** небо, **зелена** трава, **жовте** сонце.\nМоя робота — **творча** (creative).\nЯ малюю **міські** пейзажі.\nЯ люблю **старий** Львів і **сучасний** Київ.\nКожне місто має свій **унікальний** смак.\nЛьвів — **кавовий** (coffee-flavored).\nКиїв — **каштановий** (chestnut).\nОдеса — **морська** (marine).\nУсе це — моя **рідна** Україна.\n\n## Dialogue: At the Hotel\n\n**Guest:** Добрий вечір. У вас є **вільний** номер?\n**Receptionist:** Добрий вечір. Так, є **одномісний** (single) і **двомісний** (double).\n**Guest:** Мені потрібен **тихий** номер. Я дуже **сонний** (sleepy).\n**Receptionist:** У нас є **чудовий** номер на другому поверсі.\n**Guest:** Там є **гаряча** вода?\n**Receptionist:** Звісно. І **свіжі** рушники.\n**Guest:** А сніданок?\n**Receptionist:** Сніданок **континентальний**. Дуже **смачний**.\n**Guest:** Супер. Я беру.\n\n## Dialogue: Describing People\n\n**Anna:** Хто цей **молодий** чоловік?\n**Oleh:** Це мій **новий** сусід.\n**Anna:** Він дуже **симпатичний** (cute). У нього **сині** очі.\n**Oleh:** Так, і він дуже **розумний**. Він — **науковий** співробітник.\n**Anna:** А хто ця **гарна** жінка поруч?\n**Oleh:** Це його сестра. У неї **довге** волосся.\n**Anna:** Вона має **модний** вигляд.\n**Oleh:** Так, вона — **відома** актриса.\n**Anna:** Який **цікавий** світ!\n\n---"
+      },
+      {
+        "id": "section-10",
+        "name": "English theory",
+        "nameEn": null,
+        "type": "content",
+        "content": "We have covered the main tools for building adjectives.\nLet's review the \"machine parts\" one last time.\n\n1.  **-н-ий** = The Generalist. Use this for general qualities (Musical, Tasty, Cold). It connects a noun to a quality.\n2.  **-ов-ий** = The Materialist. Use this for things made of something or related to a field (Scientific, Colorful, Apple-flavored).\n3.  **-ськ-ий** = The Identity Maker. Use this for geography, origin, and social groups (Ukrainian, Urban, Human).\n4.  **-еньк-ий** = The Sweetener. Use this to make anything cute, small, or pleasant (Small-sweet, Fresh-sweet).\n5.  **Active Adjectives** = These describe a state, like \"Hot\" (Burning) or \"Fresh\" (Blooming). They often behave like verbs frozen in time.\n\nRemember: Adjectives must always agree with their noun in Gender, Number, and Case!\nA \"Ukrainian book\" is *Українська книга* (Fem), but a \"Ukrainian passport\" is *Український паспорт* (Masc).\n\n---"
+      },
+      {
+        "id": "section-11",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "1.  **-н-ий** = General quality (Музичний, Смачний).\n2.  **-ов-ий** = Material/Relational (Науковий, Кольоровий).\n3.  **-ський** = Origin/Group (Український, Міський).\n4.  **-еньк-ий** = Diminutive (Маленький, Гарненький).\n5.  **Active Adjectives** = Гарячий, Свіжий (Describe state).\n\n---"
+      },
+      {
+        "id": "section-12",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Suffix Match\n\n> Match the suffix to its typical meaning.\n\n- -ський :: Origin / Group\n- -овий :: Material / Relation\n- -енький :: Diminutive / Cute\n- -ний :: General Quality\n- -ичний :: Academic / Science\n- -яний :: Material (Wood/Glass)\n- -ній :: Soft ending (Time/Space)\n- -анський :: Origin (American/African)\n\n## group-sort: Adjective Sorter\n\n> Which category does the adjective belong to?\n\n### Origin - Group (-ський)\n- Український\n- Міський\n- Сільський\n- Жіночий\n- Чоловічий\n- Дитячий\n\n### Relation - Material (-овий/-ний)\n- Науковий\n- Математичний\n- Фізичний\n- Кольоровий\n- Смаковий\n- Історичний\n\n### State - Description\n- Гарячий\n- Маленький\n- Свіженький\n- Холодний\n- Старий\n- Молодий\n\n## fill-in: Noun to Adjective\n\n> Change noun to adjective. Use hints.\n\n1. Музика -> ___ [Hint: Musical]\n   > [!answer] музичний\n   > [!options] музичний | музиковий | музицький\n\n2. Наука -> ___ [Hint: Scientific]\n   > [!answer] науковий\n   > [!options] науковий | научний | науцький\n\n3. Україна -> ___ [Hint: Ukrainian]\n   > [!answer] український\n   > [!options] український | україновий | українічний\n\n4. Місто -> ___ [Hint: Urban]\n   > [!answer] міський\n   > [!options] міський | містовий | містичний\n\n5. Село -> ___ [Hint: Rural]\n   > [!answer] сільський\n   > [!options] сільський | селевий | селичний\n\n6. Математика -> ___ [Hint: Mathematical]\n   > [!answer] математичний\n   > [!options] математичний | математиковий | математицький\n\n7. Історія -> ___ [Hint: Historical]\n   > [!answer] історичний\n   > [!options] історичний | історовий | історський\n\n8. Хімія -> ___ [Hint: Chemical]\n   > [!answer] хімічний\n   > [!options] хімічний | хімовий | хімський\n\n9. Фізика -> ___ [Hint: Physical]\n   > [!answer] фізичний\n   > [!options] фізичний | фізиковий | фізький\n\n10. Географія -> ___ [Hint: Geographical]\n    > [!answer] географічний\n    > [!options] географічний | географовий | географський\n\n11. Смак -> ___ [Hint: Tasty]\n    > [!answer] смачний\n    > [!options] смачний | смаковий | смічний\n\n12. Колір -> ___ [Hint: Colorful]\n    > [!answer] кольоровий\n    > [!options] кольоровий | колірний | колірський\n\n## fill-in: Gender Match\n\n> Match the adjective ending to the noun.\n\n1. ___ чай. [Hint: Hot]\n   > [!answer] гарячий\n   > [!options] гарячий | гаряча | гаряче\n\n2. ___ вода. [Hint: Cold]\n   > [!answer] холодна\n   > [!options] холодна | холодний | холодне\n\n3. ___ хліб. [Hint: Fresh]\n   > [!answer] свіжий\n   > [!options] свіжий | свіжа | свіже\n\n4. ___ молоко. [Hint: Warm]\n   > [!answer] тепле\n   > [!options] тепле | теплий | тепла\n\n5. ___ одяг. [Hint: Children's]\n   > [!answer] дитячий\n   > [!options] дитячий | дитяча | дитяче\n\n6. ___ робота. [Hint: Men's]\n   > [!answer] чоловіча\n   > [!options] чоловіча | чоловічий | чоловіче\n\n7. ___ журнал. [Hint: Women's]\n   > [!answer] жіночий\n   > [!options] жіночий | жіноча | жіноче\n\n8. ___ проблема. [Hint: Human]\n   > [!answer] людська\n   > [!options] людська | людський | людське\n\n9. ___ світ. [Hint: Material]\n   > [!answer] матеріальний\n   > [!options] матеріальний | матеріальна | матеріальне\n\n10. ___ життя. [Hint: Spiritual]\n    > [!answer] духовне\n    > [!options] духовне | духовний | духовна\n\n11. ___ день. [Hint: Working]\n    > [!answer] робочий\n    > [!options] робочий | робоча | робоче\n\n12. ___ камінь. [Hint: Ordinary]\n    > [!answer] звичайний\n    > [!options] звичайний | звичайна | звичайне\n\n## match-up: Opposites\n\n> Match adjective opposites.\n\n- Старий :: Молодий\n- Гарячий :: Холодний\n- Міський :: Сільський\n- Чоловічий :: Жіночий\n- Матеріальний :: Духовний\n- Теплий :: Холодний\n- Свіжий :: Старий\n- Великий :: Маленький\n\n## unjumble: Scientific Talk\n\n1. експеримент / це / хімічний\n   > [!answer] Це хімічний експеримент.\n2. проблема / це / фізична\n   > [!answer] Це фізична проблема.\n3. мапа / де / географічна\n   > [!answer] Де географічна мапа?\n4. факт / це / історичний\n   > [!answer] Це історичний факт.\n5. рівняння / це / математичне\n   > [!answer] Це математичне рівняння.\n6. журнал / це / науковий\n   > [!answer] Це науковий журнал.\n\n## fill-in: City Vibes\n\n> Complete phrases about cities.\n\n1. Київський ___. [Hint: Cake]\n   > [!answer] торт\n   > [!options] торт | хліб | суп\n\n2. Львівська ___. [Hint: Coffee]\n   > [!answer] кава\n   > [!options] кава | чай | вода\n\n3. Одеський ___. [Hint: Port]\n   > [!answer] порт\n   > [!options] порт | парк | сад\n\n4. Карпатський ___. [Hint: Tea/Herb]\n   > [!answer] чай\n   > [!options] чай | сік | лід\n\n5. Харківський ___. [Hint: University]\n   > [!answer] університет\n   > [!options] університет | школа | клас\n\n6. Полтавська ___. [Hint: Dumpling]\n   > [!answer] галушка\n   > [!options] галушка | піца | паста\n\n7. Миколаївський ___. [Hint: Zoo]\n   > [!answer] зоопарк\n   > [!options] зоопарк | парк | ліс\n\n8. Житомирські ___. [Hint: Socks]\n   > [!answer] шкарпетки\n   > [!options] шкарпетки | шапки | штани\n\n## quiz: Logic Check\n\n1. Which suffix is used for \"Urban/Rural\"?\n   - [x] -ський\n   - [ ] -овий\n   - [ ] -ний\n\n2. Which suffix is used for \"Scientific\"?\n   - [x] -овий\n   - [ ] -ський\n   - [ ] -чий\n\n3. \"Гарячий\" describes:\n   - [x] Temperature (Hot)\n   - [ ] Color (Red)\n   - [ ] Taste (Spicy)\n\n4. \"Маленький\" uses which suffix?\n   - [x] -еньк- (Diminutive)\n   - [ ] -ськ- (Origin)\n   - [ ] -ов- (Material)\n\n5. \"Жіночий\" means:\n   - [x] Women's/Female\n   - [ ] Men's/Male\n   - [ ] Child's\n\n6. \"Сільський\" relates to:\n   - [x] Village\n   - [ ] Salt\n   - [ ] Sun\n\n7. \"Український\" matches \"people\" (люди) in plural as:\n   - [x] Українські\n   - [ ] Українська\n   - [ ] Український\n\n8. \"Смаковий\" relates to:\n   - [x] Taste\n   - [ ] Smell\n   - [ ] Touch\n\n## cloze: The Professor's Day\n\n> Fill in the missing adjectives.\n\nПрофесор читає [___:1] [Hint: scientific] журнал.\nВін п'є [___:2] [Hint: hot] чай.\nЦе [___:3] [Hint: working] день.\nУ нього є [___:4] [Hint: mathematical] завдання.\nВін любить [___:5] [Hint: fresh] повітря.\nВін гуляє через [___:6] [Hint: old] парк.\nЦе [___:7] [Hint: urban] парк.\nВін бачить [___:8] [Hint: little] пташку.\nПташка співає [___:9] [Hint: musical] пісню.\nЖиття таке [___:10] [Hint: colorful].\nЦе [___:11] [Hint: physical] світ.\nАле і [___:12] [Hint: spiritual].\n\n1. науковий\n> [!answer] науковий\n\n2. гарячий\n> [!answer] гарячий\n\n3. робочий\n> [!answer] робочий\n\n4. математичне\n> [!answer] математичне\n\n5. свіже\n> [!answer] свіже\n\n6. старий\n> [!answer] старий\n\n7. міський\n> [!answer] міський\n\n8. маленьку\n> [!answer] маленьку\n\n9. музичну\n> [!answer] музичну\n\n10. кольорове\n> [!answer] кольорове\n\n11. фізичний\n> [!answer] фізичний\n\n12. духовний\n> [!answer] духовний\n\n## error-correction: Wrong Suffix\n\n1. Це **наукний** журнал. (Wrong suffix)\n   > [!error] наукний\n   > [!answer] науковий\n   > [!explanation] Science (Наука) -> Scientific (Науковий). -овий is consistent here.\n   > [!options] науковий | наукний\n\n2. Він **українновий** студент. (Wrong suffix)\n   > [!error] українновий\n   > [!answer] український\n   > [!explanation] Origin uses -ський.\n   > [!options] український | українновий\n\n3. Це **містовий** парк. (Wrong suffix)\n   > [!error] містовий\n   > [!answer] міський\n   > [!explanation] City (Місто) -> Urban (Міський).\n   > [!options] міський | містовий\n\n4. Чай **холодичний**. (Wrong form)\n   > [!error] холодичний\n   > [!answer] холодний\n   > [!explanation] Cold (Холод) -> Cold (Холодний).\n   > [!options] холодний | холодичний\n\n5. Це **дитяцький** садок. (Wrong form)\n   > [!error] дитяцький\n   > [!answer] дитячий\n   > [!explanation] Children's (Дитячий). Irregular/Soft.\n   > [!options] дитячий | дитяцький\n\n6. Світ **матерільний**. (Typo/Wrong form)\n   > [!error] матерільний\n   > [!answer] матеріальний\n   > [!explanation] Material (Матерія) -> Material (Матеріальний).\n   > [!options] матеріальний | матерільний\n\n---"
+      },
+      {
+        "id": "section-13",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| музичний | /muˈzɪt͡ʃnɪj/ | musical | adj | masc | -ний |\n| науковий | /nɑuˈkɔʋɪj/ | scientific | adj | masc | -овий |\n| український | /ukrɑˈjinʲsʲkɪj/ | Ukrainian | adj | masc | -ський |\n| російський | /rɔˈsʲij sʲkɪj/ | Russian | adj | masc | -ський |\n| англійський | /ɑnˈɦlʲijsʲkɪj/ | English | adj | masc | -ський |\n| міський | /mʲisʲˈkɪj/ | urban/city | adj | masc | -ський |\n| сільський | /sʲilʲˈsʲkɪj/ | rural/village | adj | masc | -ський |\n| людський | /lʲudˈsʲkɪj/ | human | adj | masc | -ський |\n| дитячий | /dɪˈtʲɑt͡ʃɪj/ | children's | adj | masc | -чий |\n| жіночий | /ʒiˈnɔt͡ʃɪj/ | women's/female | adj | masc | -чий |\n| чоловічий | /t͡ʃɔlɔˈʋit͡ʃɪj/ | men's/male | adj | masc | -чий |\n| кольоровий | /kɔlʲɔˈrɔʋɪj/ | colorful | adj | masc | -овий |\n| смаковий | /smɑkɔˈʋɪj/ | taste (adj) | adj | masc | -овий |\n| матеріальний | /mɑtɛriˈɑlʲnɪj/ | material | adj | masc | -ний |\n| духовний | /duˈxɔʋnɪj/ | spiritual | adj | masc | -ний |\n| фізичний | /fiˈzɪt͡ʃnɪj/ | physical | adj | masc | -ний |\n| хімічний | /xiˈmit͡ʃnɪj/ | chemical | adj | masc | -ний |\n| історичний | /istɔˈrɪt͡ʃnɪj/ | historical | adj | masc | -ний |\n| географічний | /ɦɛɔɦrɑˈfit͡ʃnɪj/ | geographical | adj | masc | -ний |\n| математичний | /mɑtɛmɑˈtɪt͡ʃnɪj/ | mathematical | adj | masc | -ний |\n| робочий | /rɔˈbɔt͡ʃɪj/ | working | adj | masc | -чий |\n| звичайний | /zʋɪˈt͡ʃɑjnɪj/ | ordinary | adj | masc | -ний |\n| маленький | /mɑˈlɛnʲkɪj/ | small/little | adj | masc | -еньк |\n| свіженький | /sʋiˈʒɛnʲkɪj/ | fresh (dim) | adj | masc | -еньк |\n| гарячий | /ɦɑˈrʲɑt͡ʃɪj/ | hot | adj | masc | -чий |\n| холодний | /xɔˈlɔdnɪj/ | cold | adj | masc | -ний |\n| теплий | /tˈɛplɪj/ | warm | adj | masc | -ий |\n| свіжий | /sˈʋiʒɪj/ | fresh | adj | masc | -ий |\n| старий | /stɑˈrɪj/ | old | adj | masc | -ий |\n| молодий | /mɔlɔˈdɪj/ | young | adj | masc | -ий |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-34\ntitle: Adjective Suffixes\nsubtitle: \"Describing the World\"\nversion: \"1.0\"\nphase: \"A2.4\"\npedagogy: \"Inquiry\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - grammar\n  - adjectives\n  - suffixes\n  - word-formation\ngrammar:\n  - adjective suffixes (-ний, -овий, -ський, -чий)\n  - diminutive adjectives (-еньк-ий)\nobjectives:\n  - \"Learner can turn nouns into adjectives (Music -> Musical)\"\n  - \"Learner can express origin (Ukraine -> Ukrainian)\"\n  - \"Learner can use scientific/academic adjectives\"\nvocabulary_count: 30\n---\n\n# Warm-up\n\nWelcome back to the Word Factory!\nLast time, we made Nouns. Today, we make **Adjectives**.\nAdjectives describe *what kind* of thing something is.\n\nIn English, you use:\n- **-al** (Music -> Musical)\n- **-ic** (History -> Historic)\n- **-an** (America -> American)\n- **-y** (Sun -> Sunny)\n\nIn Ukrainian, we have standard suffixes too.\nInput: **Музика** [Noun] -> Machine -> Output: **Музич-ний** [Adj].\nInput: **Україна** [Noun] -> Machine -> Output: **Україн-ський** [Adj].\n\n> [!question] The Universal Endings\n> Remember that the suffix changes the *meaning*, but the *ending* (flexion) must still match the Gender!\n> - Музичн**ий** (Masc)\n> - Музичн**а** (Fem)\n> - Музичн**е** (Neut)\n> - Музичн**і** (Plural)\n>\n> This is exactly like regular adjectives (Good -> Гарний, Гарна, Гарне).\n> The suffix (-н-, -ов-, -ськ-) just sits between the Root and the Ending.\n> Root + Suffix + Ending.\n> Think of it like a sandwich: Root is the meat, Suffix is the cheese, Ending is the bread.\n\n---\n\n# Grammar Breakdown: 4 Rules to Remember\n\nBefore we look at more examples, let's clarify the logic.\nUnlike English, which uses many different patterns (-al, -ic, -y, -ous, -an), Ukrainian is surprisingly consistent.\n\n**Rule 1: The Generalist (-ний) is King**\nIf you don't know which suffix to use, guess **-ний**. It is the most common adjective suffix in the Ukrainian language.\nIt works for almost all abstract concepts (Theory -> Theoretical).\n\n**Rule 2: Materials use -овий**\nIf something is made of distinct parts or materials, it often uses **-овий**.\nThink of \"Fruit\" -> \"Fruit-based cake\". That's a \"Fruit-ov-y\" cake.\nThink of \"Science\" -> \"Science-based fact\". That's a \"Science-ov-y\" fact.\n\n**Rule 3: Softness Matters**\nSometimes **-овий** becomes **-евий** or **-євий**. Why?\nBecause of Ukrainian phonetics. After soft sounds or 'j' sounds (like in Життя), we need a soft vowel.\nSo *Житт-ов-ий* sounds hard. *Житт-єв-ий* flows like water.\n\n**Rule 4: People and Places use -ськ-**\nThis is the \"Belonging\" suffix.\nIt answers: \"Whose is it?\" or \"Where is it from?\"\nIt is NOT about what it is made of. It is about *identity*.\n- Kyiv -> Kyiv-an identity -> Київський.\n- Student -> Student identity -> Студентський.\n\n---\n\n# The Big Three: -Н, -ОВ, -СЬК\n\nThese three suffixes create 80% of Ukrainian adjectives.\n\n## Machine 1: The Generalist (-н-ий)\n\nThis is the default suffix. Use it for general qualities.\n\n| Noun | Adjective | English | Note |\n| :--- | :--- | :--- | :--- |\n| **Музика** | Музич**н**ий | Musical | к -> ч mutation |\n| **Матема**тика | Математич**н**ий | Mathematical | |\n| **Фізик**а | Фізич**н**ий | Physical | |\n| **Смак** (Taste) | Смач**н**ий | Tasty | к -> ч |\n| **Холод** (Cold) | Холод**н**ий | Cold | |\n\n## Machine 2: The Relationship (-ов-ий)\n\nUse this for \"made of\" or \"related to\".\n\n| Noun | Adjective | English | Note |\n| :--- | :--- | :--- | :--- |\n| **Наук**а | Наук**ов**ий | Scientific | |\n| **Колір** | Кольор**ов**ий | Colorful | |\n| **Бізнес** | Бізнес**ов**ий | Business-related | |\n| **Життя** | Житт**єв**ий | Vital / Life-related | -ов becomes -єв after soft consonant |\n\n## Machine 3: The Origin (-ськ-ий)\n\nUse this for places, groups, and people.\n\n| Noun | Adjective | English | Note |\n| :--- | :--- | :--- | :--- |\n| **Україна** | Україн**ськ**ий | Ukrainian | |\n| **Міст**о | Мі**ськ**ий | Urban / City | ст -> ськ |\n| **Сел**о | Сіль**ськ**ий | Rural / Village | е -> і |\n| **Люд**и | Люд**ськ**ий | Human | |\n| **Чоловік** | Чолові**ч**ий | Male / Men's | Exception: -чий here |\n| **Жінк**а | Жіно**ч**ий | Female / Women's | Exception: -чий here |\n\n> [!tip] Sound Mutations\n> When attaching suffixes, consonants often change to make pronunciation smoother:\n> - **К, Ц, Ч** + ськ -> **-цьк-** (Козак -> Козацький).\n> - **Г, Ж, З** + ськ -> **-зьк-** (Прага -> Празький).\n> - **Х, Ш, С** + ськ -> **-ськ-** (Чех -> Чеський).\n\n---\n\n# Deep Dive: Living Adjectives (The Active State)\n\nSome adjectives describe a state or feeling.\n- **Гарячий** (Hot) — from \"to burn\".\n- **Свіжий** (Fresh).\n- **Чужий** (Foreign/Alien).\n- **Справжній** (Real/Genuine).\n\n> [!note] Why -ій?\n> Soft adjectives end in **-ій** (masculine).\n> - **Синій**: Blue\n> - **Вечірній**: Evening\n> - **Останній**: Last\n> They decline differently: *Синього*, NOT *Синого*.\n\n---\n\n# Deep Dive: The Diminutive (-еньк)\n\nJust like nouns have **-ок**, adjectives have **-еньк**.\nIt means \"sweet\", \"little\", or \"pleasant\".\n\n- **Малий** -> **Маленький** (Little/Small).\n- **Гарний** -> **Гарненький** (Pretty/Nice).\n- **Теплий** -> **Тепленький** (Nice and warm).\n- **Свіжий** -> **Свіженький** (Fresh).\n- **Чистий** -> **Чистенький** (Clean).\n\n*Мама купила свіженький хліб.* (Mom bought fresh-little-bread).\n*Це мій маленький кіт.* (This is my little cat).\n\n---\n\n# Story Time: The Professor\n\nПрофесор Лисенко — відома людина.\nВін читає **науковий** курс в університеті.\nЙого предмет — **історична** географія.\nВін вивчає **міські** та **сільські** поселення.\nСтуденти люблять його лекції. Вони завжди **цікаві** та **живі**.\nСьогодні він розповідає про **український** побут.\nВін показує **кольорові** мапи і **старі** фотографії.\n\"Ось **типовий** будинок,\" — каже він.\n\"Він має **дерев'яний** дах і **кам'яний** фундамент.\"\nСтуденти ставлять **розумні** питання.\nПрофесор дає **точні** відповіді.\nЦе справжній **академічний** процес.\n\n> [!cultural] Cultural Insight: Science\n> Ukraine has a strong tradition in **математична** (math) and **фізична** (physics) science.\n> Names like Korolyov (rockets), Sikorsky (helicopters), and Paton (welding) are world-famous.\n> The suffix **-ський** is also standard for many surnames!\n\n---\n\n# Story Time Part 2: The Map\n\nНа столі лежить велика **географічна** мапа.\nЦе **фізична** мапа України.\nМи бачимо **Чорне** море. Воно **тепле** і **глибоке**.\nМи бачимо **Карпатські** гори. Вони **високі** і **красиві**.\nОсь **головна** річка — Дніпро.\nЦе **потужний** (powerful) водний шлях.\nНа березі стоїть **давній** Київ.\nЦе **політичний** і **культурний** центр.\nНа заході — **старовинний** Львів.\nНа півдні — **сонячна** Одеса.\nКожен регіон має свій **унікальний** характер.\nУкраїна — дуже **різноманітна** країна.\n\n---\n\n# Story Time Part 3: The Market\n\nУ суботу люди йдуть на **міський** базар.\nТут є все: **свіжий** хліб, **домашній** сир, **смачна** ковбаса.\nБабуся продає **зелені** яблука. Вони **кислі**, але **корисні**.\nДідусь продає **солодкий** мед. Це **справжній** мед.\nМолодий хлопець купує **гострий** перець.\nЦе буде **гарячий** обід!\nДівчина шукає **червоні** помідори.\n\"Вони **українські**?\" — питає вона.\n\"Так, це наш **рідний** продукт,\" — відповідає продавець.\nБазар — це **веселий** і **шумний** світ.\n\n> [!cultural] Cultural Insight: Food Names\n> Many food names use standard suffixes:\n> - **Київський** торт (Kyiv cake).\n> - **Полтавська** галушка (Poltava dumpling).\n> - **Львівський** сирник (Lviv cheesecake).\n> Regional pride is delicious!\n\n---\n\n# Language in Action\n\n## Dialogue: Shopping\n\n**Customer:** Добрий день. У вас є **дитячий** одяг?\n**Seller:** Так, звісно. Ось відділ для хлопців і дівчат.\n**Customer:** Мені потрібен **теплий** светр.\n**Seller:** Ось дуже гарний, **вовняний** (woolen).\n**Customer:** А він м'який?\n**Seller:** Так, він дуже **м'якенький** (soft-diminutive).\n**Customer:** А який це розмір?\n**Seller:** Це **стандартний** розмір.\n**Customer:** Добре. А ціна?\n**Seller:** Ціна **доступна**.\n**Customer:** Чудово. Я беру.\n\n## Monologue: The Artist\n\nЯ люблю цей світ. Він **кольоровий**.\n**Синє** небо, **зелена** трава, **жовте** сонце.\nМоя робота — **творча** (creative).\nЯ малюю **міські** пейзажі.\nЯ люблю **старий** Львів і **сучасний** Київ.\nКожне місто має свій **унікальний** смак.\nЛьвів — **кавовий** (coffee-flavored).\nКиїв — **каштановий** (chestnut).\nОдеса — **морська** (marine).\nУсе це — моя **рідна** Україна.\n\n## Dialogue: At the Hotel\n\n**Guest:** Добрий вечір. У вас є **вільний** номер?\n**Receptionist:** Добрий вечір. Так, є **одномісний** (single) і **двомісний** (double).\n**Guest:** Мені потрібен **тихий** номер. Я дуже **сонний** (sleepy).\n**Receptionist:** У нас є **чудовий** номер на другому поверсі.\n**Guest:** Там є **гаряча** вода?\n**Receptionist:** Звісно. І **свіжі** рушники.\n**Guest:** А сніданок?\n**Receptionist:** Сніданок **континентальний**. Дуже **смачний**.\n**Guest:** Супер. Я беру.\n\n## Dialogue: Describing People\n\n**Anna:** Хто цей **молодий** чоловік?\n**Oleh:** Це мій **новий** сусід.\n**Anna:** Він дуже **симпатичний** (cute). У нього **сині** очі.\n**Oleh:** Так, і він дуже **розумний**. Він — **науковий** співробітник.\n**Anna:** А хто ця **гарна** жінка поруч?\n**Oleh:** Це його сестра. У неї **довге** волосся.\n**Anna:** Вона має **модний** вигляд.\n**Oleh:** Так, вона — **відома** актриса.\n**Anna:** Який **цікавий** світ!\n\n---\n\n# English theory\n\nWe have covered the main tools for building adjectives.\nLet's review the \"machine parts\" one last time.\n\n1.  **-н-ий** = The Generalist. Use this for general qualities (Musical, Tasty, Cold). It connects a noun to a quality.\n2.  **-ов-ий** = The Materialist. Use this for things made of something or related to a field (Scientific, Colorful, Apple-flavored).\n3.  **-ськ-ий** = The Identity Maker. Use this for geography, origin, and social groups (Ukrainian, Urban, Human).\n4.  **-еньк-ий** = The Sweetener. Use this to make anything cute, small, or pleasant (Small-sweet, Fresh-sweet).\n5.  **Active Adjectives** = These describe a state, like \"Hot\" (Burning) or \"Fresh\" (Blooming). They often behave like verbs frozen in time.\n\nRemember: Adjectives must always agree with their noun in Gender, Number, and Case!\nA \"Ukrainian book\" is *Українська книга* (Fem), but a \"Ukrainian passport\" is *Український паспорт* (Masc).\n\n---\n\n# Summary\n\n1.  **-н-ий** = General quality (Музичний, Смачний).\n2.  **-ов-ий** = Material/Relational (Науковий, Кольоровий).\n3.  **-ський** = Origin/Group (Український, Міський).\n4.  **-еньк-ий** = Diminutive (Маленький, Гарненький).\n5.  **Active Adjectives** = Гарячий, Свіжий (Describe state).\n\n---\n\n# Activities\n\n## match-up: Suffix Match\n\n> Match the suffix to its typical meaning.\n\n- -ський :: Origin / Group\n- -овий :: Material / Relation\n- -енький :: Diminutive / Cute\n- -ний :: General Quality\n- -ичний :: Academic / Science\n- -яний :: Material (Wood/Glass)\n- -ній :: Soft ending (Time/Space)\n- -анський :: Origin (American/African)\n\n## group-sort: Adjective Sorter\n\n> Which category does the adjective belong to?\n\n### Origin - Group (-ський)\n- Український\n- Міський\n- Сільський\n- Жіночий\n- Чоловічий\n- Дитячий\n\n### Relation - Material (-овий/-ний)\n- Науковий\n- Математичний\n- Фізичний\n- Кольоровий\n- Смаковий\n- Історичний\n\n### State - Description\n- Гарячий\n- Маленький\n- Свіженький\n- Холодний\n- Старий\n- Молодий\n\n## fill-in: Noun to Adjective\n\n> Change noun to adjective. Use hints.\n\n1. Музика -> ___ [Hint: Musical]\n   > [!answer] музичний\n   > [!options] музичний | музиковий | музицький\n\n2. Наука -> ___ [Hint: Scientific]\n   > [!answer] науковий\n   > [!options] науковий | научний | науцький\n\n3. Україна -> ___ [Hint: Ukrainian]\n   > [!answer] український\n   > [!options] український | україновий | українічний\n\n4. Місто -> ___ [Hint: Urban]\n   > [!answer] міський\n   > [!options] міський | містовий | містичний\n\n5. Село -> ___ [Hint: Rural]\n   > [!answer] сільський\n   > [!options] сільський | селевий | селичний\n\n6. Математика -> ___ [Hint: Mathematical]\n   > [!answer] математичний\n   > [!options] математичний | математиковий | математицький\n\n7. Історія -> ___ [Hint: Historical]\n   > [!answer] історичний\n   > [!options] історичний | історовий | історський\n\n8. Хімія -> ___ [Hint: Chemical]\n   > [!answer] хімічний\n   > [!options] хімічний | хімовий | хімський\n\n9. Фізика -> ___ [Hint: Physical]\n   > [!answer] фізичний\n   > [!options] фізичний | фізиковий | фізький\n\n10. Географія -> ___ [Hint: Geographical]\n    > [!answer] географічний\n    > [!options] географічний | географовий | географський\n\n11. Смак -> ___ [Hint: Tasty]\n    > [!answer] смачний\n    > [!options] смачний | смаковий | смічний\n\n12. Колір -> ___ [Hint: Colorful]\n    > [!answer] кольоровий\n    > [!options] кольоровий | колірний | колірський\n\n## fill-in: Gender Match\n\n> Match the adjective ending to the noun.\n\n1. ___ чай. [Hint: Hot]\n   > [!answer] гарячий\n   > [!options] гарячий | гаряча | гаряче\n\n2. ___ вода. [Hint: Cold]\n   > [!answer] холодна\n   > [!options] холодна | холодний | холодне\n\n3. ___ хліб. [Hint: Fresh]\n   > [!answer] свіжий\n   > [!options] свіжий | свіжа | свіже\n\n4. ___ молоко. [Hint: Warm]\n   > [!answer] тепле\n   > [!options] тепле | теплий | тепла\n\n5. ___ одяг. [Hint: Children's]\n   > [!answer] дитячий\n   > [!options] дитячий | дитяча | дитяче\n\n6. ___ робота. [Hint: Men's]\n   > [!answer] чоловіча\n   > [!options] чоловіча | чоловічий | чоловіче\n\n7. ___ журнал. [Hint: Women's]\n   > [!answer] жіночий\n   > [!options] жіночий | жіноча | жіноче\n\n8. ___ проблема. [Hint: Human]\n   > [!answer] людська\n   > [!options] людська | людський | людське\n\n9. ___ світ. [Hint: Material]\n   > [!answer] матеріальний\n   > [!options] матеріальний | матеріальна | матеріальне\n\n10. ___ життя. [Hint: Spiritual]\n    > [!answer] духовне\n    > [!options] духовне | духовний | духовна\n\n11. ___ день. [Hint: Working]\n    > [!answer] робочий\n    > [!options] робочий | робоча | робоче\n\n12. ___ камінь. [Hint: Ordinary]\n    > [!answer] звичайний\n    > [!options] звичайний | звичайна | звичайне\n\n## match-up: Opposites\n\n> Match adjective opposites.\n\n- Старий :: Молодий\n- Гарячий :: Холодний\n- Міський :: Сільський\n- Чоловічий :: Жіночий\n- Матеріальний :: Духовний\n- Теплий :: Холодний\n- Свіжий :: Старий\n- Великий :: Маленький\n\n## unjumble: Scientific Talk\n\n1. експеримент / це / хімічний\n   > [!answer] Це хімічний експеримент.\n2. проблема / це / фізична\n   > [!answer] Це фізична проблема.\n3. мапа / де / географічна\n   > [!answer] Де географічна мапа?\n4. факт / це / історичний\n   > [!answer] Це історичний факт.\n5. рівняння / це / математичне\n   > [!answer] Це математичне рівняння.\n6. журнал / це / науковий\n   > [!answer] Це науковий журнал.\n\n## fill-in: City Vibes\n\n> Complete phrases about cities.\n\n1. Київський ___. [Hint: Cake]\n   > [!answer] торт\n   > [!options] торт | хліб | суп\n\n2. Львівська ___. [Hint: Coffee]\n   > [!answer] кава\n   > [!options] кава | чай | вода\n\n3. Одеський ___. [Hint: Port]\n   > [!answer] порт\n   > [!options] порт | парк | сад\n\n4. Карпатський ___. [Hint: Tea/Herb]\n   > [!answer] чай\n   > [!options] чай | сік | лід\n\n5. Харківський ___. [Hint: University]\n   > [!answer] університет\n   > [!options] університет | школа | клас\n\n6. Полтавська ___. [Hint: Dumpling]\n   > [!answer] галушка\n   > [!options] галушка | піца | паста\n\n7. Миколаївський ___. [Hint: Zoo]\n   > [!answer] зоопарк\n   > [!options] зоопарк | парк | ліс\n\n8. Житомирські ___. [Hint: Socks]\n   > [!answer] шкарпетки\n   > [!options] шкарпетки | шапки | штани\n\n## quiz: Logic Check\n\n1. Which suffix is used for \"Urban/Rural\"?\n   - [x] -ський\n   - [ ] -овий\n   - [ ] -ний\n\n2. Which suffix is used for \"Scientific\"?\n   - [x] -овий\n   - [ ] -ський\n   - [ ] -чий\n\n3. \"Гарячий\" describes:\n   - [x] Temperature (Hot)\n   - [ ] Color (Red)\n   - [ ] Taste (Spicy)\n\n4. \"Маленький\" uses which suffix?\n   - [x] -еньк- (Diminutive)\n   - [ ] -ськ- (Origin)\n   - [ ] -ов- (Material)\n\n5. \"Жіночий\" means:\n   - [x] Women's/Female\n   - [ ] Men's/Male\n   - [ ] Child's\n\n6. \"Сільський\" relates to:\n   - [x] Village\n   - [ ] Salt\n   - [ ] Sun\n\n7. \"Український\" matches \"people\" (люди) in plural as:\n   - [x] Українські\n   - [ ] Українська\n   - [ ] Український\n\n8. \"Смаковий\" relates to:\n   - [x] Taste\n   - [ ] Smell\n   - [ ] Touch\n\n## cloze: The Professor's Day\n\n> Fill in the missing adjectives.\n\nПрофесор читає [___:1] [Hint: scientific] журнал.\nВін п'є [___:2] [Hint: hot] чай.\nЦе [___:3] [Hint: working] день.\nУ нього є [___:4] [Hint: mathematical] завдання.\nВін любить [___:5] [Hint: fresh] повітря.\nВін гуляє через [___:6] [Hint: old] парк.\nЦе [___:7] [Hint: urban] парк.\nВін бачить [___:8] [Hint: little] пташку.\nПташка співає [___:9] [Hint: musical] пісню.\nЖиття таке [___:10] [Hint: colorful].\nЦе [___:11] [Hint: physical] світ.\nАле і [___:12] [Hint: spiritual].\n\n1. науковий\n> [!answer] науковий\n\n2. гарячий\n> [!answer] гарячий\n\n3. робочий\n> [!answer] робочий\n\n4. математичне\n> [!answer] математичне\n\n5. свіже\n> [!answer] свіже\n\n6. старий\n> [!answer] старий\n\n7. міський\n> [!answer] міський\n\n8. маленьку\n> [!answer] маленьку\n\n9. музичну\n> [!answer] музичну\n\n10. кольорове\n> [!answer] кольорове\n\n11. фізичний\n> [!answer] фізичний\n\n12. духовний\n> [!answer] духовний\n\n## error-correction: Wrong Suffix\n\n1. Це **наукний** журнал. (Wrong suffix)\n   > [!error] наукний\n   > [!answer] науковий\n   > [!explanation] Science (Наука) -> Scientific (Науковий). -овий is consistent here.\n   > [!options] науковий | наукний\n\n2. Він **українновий** студент. (Wrong suffix)\n   > [!error] українновий\n   > [!answer] український\n   > [!explanation] Origin uses -ський.\n   > [!options] український | українновий\n\n3. Це **містовий** парк. (Wrong suffix)\n   > [!error] містовий\n   > [!answer] міський\n   > [!explanation] City (Місто) -> Urban (Міський).\n   > [!options] міський | містовий\n\n4. Чай **холодичний**. (Wrong form)\n   > [!error] холодичний\n   > [!answer] холодний\n   > [!explanation] Cold (Холод) -> Cold (Холодний).\n   > [!options] холодний | холодичний\n\n5. Це **дитяцький** садок. (Wrong form)\n   > [!error] дитяцький\n   > [!answer] дитячий\n   > [!explanation] Children's (Дитячий). Irregular/Soft.\n   > [!options] дитячий | дитяцький\n\n6. Світ **матерільний**. (Typo/Wrong form)\n   > [!error] матерільний\n   > [!answer] матеріальний\n   > [!explanation] Material (Матерія) -> Material (Матеріальний).\n   > [!options] матеріальний | матерільний\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| музичний | /muˈzɪt͡ʃnɪj/ | musical | adj | masc | -ний |\n| науковий | /nɑuˈkɔʋɪj/ | scientific | adj | masc | -овий |\n| український | /ukrɑˈjinʲsʲkɪj/ | Ukrainian | adj | masc | -ський |\n| російський | /rɔˈsʲij sʲkɪj/ | Russian | adj | masc | -ський |\n| англійський | /ɑnˈɦlʲijsʲkɪj/ | English | adj | masc | -ський |\n| міський | /mʲisʲˈkɪj/ | urban/city | adj | masc | -ський |\n| сільський | /sʲilʲˈsʲkɪj/ | rural/village | adj | masc | -ський |\n| людський | /lʲudˈsʲkɪj/ | human | adj | masc | -ський |\n| дитячий | /dɪˈtʲɑt͡ʃɪj/ | children's | adj | masc | -чий |\n| жіночий | /ʒiˈnɔt͡ʃɪj/ | women's/female | adj | masc | -чий |\n| чоловічий | /t͡ʃɔlɔˈʋit͡ʃɪj/ | men's/male | adj | masc | -чий |\n| кольоровий | /kɔlʲɔˈrɔʋɪj/ | colorful | adj | masc | -овий |\n| смаковий | /smɑkɔˈʋɪj/ | taste (adj) | adj | masc | -овий |\n| матеріальний | /mɑtɛriˈɑlʲnɪj/ | material | adj | masc | -ний |\n| духовний | /duˈxɔʋnɪj/ | spiritual | adj | masc | -ний |\n| фізичний | /fiˈzɪt͡ʃnɪj/ | physical | adj | masc | -ний |\n| хімічний | /xiˈmit͡ʃnɪj/ | chemical | adj | masc | -ний |\n| історичний | /istɔˈrɪt͡ʃnɪj/ | historical | adj | masc | -ний |\n| географічний | /ɦɛɔɦrɑˈfit͡ʃnɪj/ | geographical | adj | masc | -ний |\n| математичний | /mɑtɛmɑˈtɪt͡ʃnɪj/ | mathematical | adj | masc | -ний |\n| робочий | /rɔˈbɔt͡ʃɪj/ | working | adj | masc | -чий |\n| звичайний | /zʋɪˈt͡ʃɑjnɪj/ | ordinary | adj | masc | -ний |\n| маленький | /mɑˈlɛnʲkɪj/ | small/little | adj | masc | -еньк |\n| свіженький | /sʋiˈʒɛnʲkɪj/ | fresh (dim) | adj | masc | -еньк |\n| гарячий | /ɦɑˈrʲɑt͡ʃɪj/ | hot | adj | masc | -чий |\n| холодний | /xɔˈlɔdnɪj/ | cold | adj | masc | -ний |\n| теплий | /tˈɛplɪj/ | warm | adj | masc | -ий |\n| свіжий | /sˈʋiʒɪj/ | fresh | adj | masc | -ий |\n| старий | /stɑˈrɪj/ | old | adj | masc | -ий |\n| молодий | /mɔlɔˈdɪj/ | young | adj | masc | -ий |\n",
+    "createdAt": "2025-12-15T20:02:03.054351Z",
+    "modifiedAt": "2025-12-15T20:02:03.054351Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-39",
+    "level": "A2",
+    "phase": "A2.4",
+    "wordCount": 30,
+    "newWordCount": 30,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "музичний",
+        "ipa": "/muˈzɪt͡ʃnɪj/",
+        "en": "musical",
+        "pos": "adj",
+        "gender": null,
+        "note": "-ний"
+      },
+      {
+        "id": "vocab-2",
+        "uk": "науковий",
+        "ipa": "/nɑuˈkɔʋɪj/",
+        "en": "scientific",
+        "pos": "adj",
+        "gender": null,
+        "note": "-овий"
+      },
+      {
+        "id": "vocab-3",
+        "uk": "український",
+        "ipa": "/ukrɑˈjinʲsʲkɪj/",
+        "en": "Ukrainian",
+        "pos": "adj",
+        "gender": null,
+        "note": "-ський"
+      },
+      {
+        "id": "vocab-4",
+        "uk": "російський",
+        "ipa": "/rɔˈsʲij sʲkɪj/",
+        "en": "Russian",
+        "pos": "adj",
+        "gender": null,
+        "note": "-ський"
+      },
+      {
+        "id": "vocab-5",
+        "uk": "англійський",
+        "ipa": "/ɑnˈɦlʲijsʲkɪj/",
+        "en": "English",
+        "pos": "adj",
+        "gender": null,
+        "note": "-ський"
+      },
+      {
+        "id": "vocab-6",
+        "uk": "міський",
+        "ipa": "/mʲisʲˈkɪj/",
+        "en": "urban/city",
+        "pos": "adj",
+        "gender": null,
+        "note": "-ський"
+      },
+      {
+        "id": "vocab-7",
+        "uk": "сільський",
+        "ipa": "/sʲilʲˈsʲkɪj/",
+        "en": "rural/village",
+        "pos": "adj",
+        "gender": null,
+        "note": "-ський"
+      },
+      {
+        "id": "vocab-8",
+        "uk": "людський",
+        "ipa": "/lʲudˈsʲkɪj/",
+        "en": "human",
+        "pos": "adj",
+        "gender": null,
+        "note": "-ський"
+      },
+      {
+        "id": "vocab-9",
+        "uk": "дитячий",
+        "ipa": "/dɪˈtʲɑt͡ʃɪj/",
+        "en": "children's",
+        "pos": "adj",
+        "gender": null,
+        "note": "-чий"
+      },
+      {
+        "id": "vocab-10",
+        "uk": "жіночий",
+        "ipa": "/ʒiˈnɔt͡ʃɪj/",
+        "en": "women's/female",
+        "pos": "adj",
+        "gender": null,
+        "note": "-чий"
+      },
+      {
+        "id": "vocab-11",
+        "uk": "чоловічий",
+        "ipa": "/t͡ʃɔlɔˈʋit͡ʃɪj/",
+        "en": "men's/male",
+        "pos": "adj",
+        "gender": null,
+        "note": "-чий"
+      },
+      {
+        "id": "vocab-12",
+        "uk": "кольоровий",
+        "ipa": "/kɔlʲɔˈrɔʋɪj/",
+        "en": "colorful",
+        "pos": "adj",
+        "gender": null,
+        "note": "-овий"
+      },
+      {
+        "id": "vocab-13",
+        "uk": "смаковий",
+        "ipa": "/smɑkɔˈʋɪj/",
+        "en": "taste (adj)",
+        "pos": "adj",
+        "gender": null,
+        "note": "-овий"
+      },
+      {
+        "id": "vocab-14",
+        "uk": "матеріальний",
+        "ipa": "/mɑtɛriˈɑlʲnɪj/",
+        "en": "material",
+        "pos": "adj",
+        "gender": null,
+        "note": "-ний"
+      },
+      {
+        "id": "vocab-15",
+        "uk": "духовний",
+        "ipa": "/duˈxɔʋnɪj/",
+        "en": "spiritual",
+        "pos": "adj",
+        "gender": null,
+        "note": "-ний"
+      },
+      {
+        "id": "vocab-16",
+        "uk": "фізичний",
+        "ipa": "/fiˈzɪt͡ʃnɪj/",
+        "en": "physical",
+        "pos": "adj",
+        "gender": null,
+        "note": "-ний"
+      },
+      {
+        "id": "vocab-17",
+        "uk": "хімічний",
+        "ipa": "/xiˈmit͡ʃnɪj/",
+        "en": "chemical",
+        "pos": "adj",
+        "gender": null,
+        "note": "-ний"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "історичний",
+        "ipa": "/istɔˈrɪt͡ʃnɪj/",
+        "en": "historical",
+        "pos": "adj",
+        "gender": null,
+        "note": "-ний"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "географічний",
+        "ipa": "/ɦɛɔɦrɑˈfit͡ʃnɪj/",
+        "en": "geographical",
+        "pos": "adj",
+        "gender": null,
+        "note": "-ний"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "математичний",
+        "ipa": "/mɑtɛmɑˈtɪt͡ʃnɪj/",
+        "en": "mathematical",
+        "pos": "adj",
+        "gender": null,
+        "note": "-ний"
+      },
+      {
+        "id": "vocab-21",
+        "uk": "робочий",
+        "ipa": "/rɔˈbɔt͡ʃɪj/",
+        "en": "working",
+        "pos": "adj",
+        "gender": null,
+        "note": "-чий"
+      },
+      {
+        "id": "vocab-22",
+        "uk": "звичайний",
+        "ipa": "/zʋɪˈt͡ʃɑjnɪj/",
+        "en": "ordinary",
+        "pos": "adj",
+        "gender": null,
+        "note": "-ний"
+      },
+      {
+        "id": "vocab-23",
+        "uk": "маленький",
+        "ipa": "/mɑˈlɛnʲkɪj/",
+        "en": "small/little",
+        "pos": "adj",
+        "gender": null,
+        "note": "-еньк"
+      },
+      {
+        "id": "vocab-24",
+        "uk": "свіженький",
+        "ipa": "/sʋiˈʒɛnʲkɪj/",
+        "en": "fresh (dim)",
+        "pos": "adj",
+        "gender": null,
+        "note": "-еньк"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "гарячий",
+        "ipa": "/ɦɑˈrʲɑt͡ʃɪj/",
+        "en": "hot",
+        "pos": "adj",
+        "gender": null,
+        "note": "-чий"
+      },
+      {
+        "id": "vocab-26",
+        "uk": "холодний",
+        "ipa": "/xɔˈlɔdnɪj/",
+        "en": "cold",
+        "pos": "adj",
+        "gender": null,
+        "note": "-ний"
+      },
+      {
+        "id": "vocab-27",
+        "uk": "теплий",
+        "ipa": "/tˈɛplɪj/",
+        "en": "warm",
+        "pos": "adj",
+        "gender": null,
+        "note": "-ий"
+      },
+      {
+        "id": "vocab-28",
+        "uk": "свіжий",
+        "ipa": "/sˈʋiʒɪj/",
+        "en": "fresh",
+        "pos": "adj",
+        "gender": null,
+        "note": "-ий"
+      },
+      {
+        "id": "vocab-29",
+        "uk": "старий",
+        "ipa": "/stɑˈrɪj/",
+        "en": "old",
+        "pos": "adj",
+        "gender": null,
+        "note": "-ий"
+      },
+      {
+        "id": "vocab-30",
+        "uk": "молодий",
+        "ipa": "/mɔlɔˈdɪj/",
+        "en": "young",
+        "pos": "adj",
+        "gender": null,
+        "note": "-ий"
+      }
+    ],
+    "reviewWords": []
+  }
+}

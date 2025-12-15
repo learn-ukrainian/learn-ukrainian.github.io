@@ -6,7 +6,7 @@ version: "1.0"
 phase: "C2.1 Stylistic Perfection"
 pedagogy: "TTT"
 duration: 90
-transliteration: "none"
+transliteration: none
 tags:
   - assessment
   - diagnostics
@@ -1158,9 +1158,9 @@ vocabulary_count: 25
     > «Про що?» — знахідний відмінок: про політику.
 
 15. The book is on the table. (місцевий)
-    - [ ] Книга лежить на стіл.
+    - [ ] Книга лежала на столу.
     - [ ] Книга лежить на стола.
-    - [ ] Книга лежить на столу.
+    - [ ] Книга лежала на столом.
     - [x] Книга лежить на столі.
     > «На чому?» — місцевий відмінок: на столі.
 

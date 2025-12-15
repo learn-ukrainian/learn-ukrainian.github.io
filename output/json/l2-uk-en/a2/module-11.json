@@ -1,0 +1,332 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-11",
+    "moduleId": "mod-uk-A2-11",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.1",
+    "moduleNumber": 11,
+    "moduleType": "checkpoint",
+    "pedagogy": "Review",
+    "immersionLevel": 0.4,
+    "title": "Checkpoint - Cases",
+    "titleUk": null,
+    "subtitle": "Comprehensive Review of Modules 01-09",
+    "description": "Learner can demonstrate mastery of dative case",
+    "objectives": [
+      "Learner can demonstrate mastery of dative case",
+      "Learner can use instrumental case correctly",
+      "Learner can combine prepositions with correct cases",
+      "Learner can apply cases in service contexts"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "dative pronouns and nouns",
+      "instrumental case review",
+      "preposition + case combinations",
+      "all 7 cases integration",
+      "service vocabulary"
+    ],
+    "tags": [
+      "review",
+      "checkpoint",
+      "assessment",
+      "cases"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "**Вітаємо!** Ви завершили Фазу A2.1! Цей контрольний модуль перевіряє все, що ви вивчили в Модулях 01-09.\n\nCongratulations on completing Phase A2.1! This checkpoint module reviews everything you've learned in Modules 01-09. It covers all seven Ukrainian cases, prepositions, and practical vocabulary for services.\n\n**Що ви повторите:**\n- Давальний відмінок (M01-M03)\n- Орудний відмінок (M04-M06)  \n- Прийменники + відмінки (M07)\n- Усі 7 відмінків (M08)\n- Лексика послуг: пошта і банк (M09)\n\n**How to use this module:** Work through the activities to identify any areas that need more practice. If you score below 80% on any section, review the corresponding module before continuing.\n\n**Чому відмінки важливі?**\n\nВідмінкова система — це серце української граматики. Без неї неможливо правильно говорити і писати українською мовою. Кожен відмінок має чітку функцію: називний визначає підмет, знахідний — прямий об'єкт, давальний — адресата дії.\n\nUnlike English, Ukrainian uses case endings to show grammatical relationships. This gives Ukrainian its characteristic flexibility in word order. By the end of this phase, you should automatically select the correct case based on context.\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "Presentation",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Quick Review: The 7 Cases\n\nHere's a comprehensive summary of all seven cases and their primary functions. Study this table carefully — it contains the essential information you need to choose the correct case in any situation.\n\n| Case | Ukrainian | Question | Primary Function | Key Triggers |\n|------|-----------|----------|------------------|--------------|\n| Nominative | Називний | хто? що? | Subject of sentence | Subject position |\n| Genitive | Родовий | кого? чого? | Possession, absence, quantity | немає, багато, до/від/для/без |\n| Dative | Давальний | кому? чому? | Recipient, experiencer | давати, дзвонити, холодно... |\n| Accusative | Знахідний | кого? що? | Direct object, direction | бачити, читати, в/на for motion |\n| Instrumental | Орудний | ким? чим? | Means, accompaniment, profession | з — with, бути/стати/працювати |\n| Locative | Місцевий | де? на чому? | Location, always with prep. | в/у, на for location |\n| Vocative | Кличний | — | Direct address | Calling someone |\n\n> 💡 **Key Insight: The Question Method**\n>\n> The question words are your best tool for identifying cases. When you're unsure which case to use, ask yourself: \"What grammatical question does this word answer?\" The answer will guide you to the correct case. For example: \"Я даю книгу КОМУ?\" — The answer \"сестрі\" must be in dative because the question is кому?\n\n**Case Selection Decision Tree**\n\nHere's a practical approach to choosing cases:\n\n1. **Is it the subject?** → Nominative\n2. **Is it who receives something?** → Dative\n3. **Is it the direct object of the action?** → Accusative\n4. **Is it expressing \"with\" someone?** → Instrumental\n5. **Is it after a preposition?** → Check which case that preposition requires\n6. **Is it expressing absence or quantity?** → Genitive\n7. **Are you addressing someone directly?** → Vocative\n\n## Quick Review: Prepositions + Cases\n\nPrepositions are one of the trickiest aspects of the case system because each preposition requires a specific case. Some prepositions can even take different cases depending on meaning. Here's your comprehensive reference:\n\n**Genitive prepositions:** These all indicate relationships like origin, purpose, or absence:\n- **до** (to, until): до школи (to school)\n- **від** (from person/source): від мами (from mom)\n- **для** (for purpose): для тебе (for you)\n- **без** (without): без цукру (without sugar)\n- **з** (from location): з роботи (from work)\n- **після** (after): після роботи (after work)\n- **біля** (near): біля дверей (near the door)\n\n**Accusative prepositions:**\n- **про** (about): про книгу (about the book)\n- **через** (through, because of): через парк (through the park)\n- **в/на + motion**: в школу (to school — going there)\n\n**Instrumental prepositions:**\n- **з** (with/accompaniment): з другом (with a friend)\n- **над** (above): над столом (above the table)\n- **під** (under): під столом (under the table)\n- **перед** (in front of): перед дверима (in front of the door)\n- **за** (behind): за дверима (behind the door)\n- **між** (between): між нами (between us)\n\n**Locative prepositions:**\n- **в/у + location**: в школі (at school — already there)\n- **на + location**: на столі (on the table)\n\n> 📜 **The Motion vs. Location Rule**\n>\n> This is critical: **в школу** (Accusative with motion = going TO school) vs. **в школі** (Locative with location = being AT school). The same preposition takes different cases depending on whether you're expressing motion or location. This pattern applies to в/у and на.\n\n## Quick Review: Dative and Instrumental Cases\n\n**Dative Case — Key Uses:**\n1. **Recipient:** Giving or sending something TO someone: Даю книгу **другові**.\n2. **Experiencer states:** Physical/emotional states happen TO someone: **Мені** холодно.\n3. **Age expressions:** **Йому** двадцять років.\n4. **Specific verbs:** дзвонити, допомагати, радити all require dative.\n\n**Instrumental Case — Key Uses:**\n1. **Accompaniment:** Going WITH someone: Йду з **другом**.\n2. **Means/Tool:** Doing something BY means of: Писати **ручкою**.\n3. **Profession:** Being/becoming a profession: Працювати **лікарем**.\n4. **Time expressions:** Certain time phrases: **ранком** (in the morning).\n\n> [!tip] Case Pairing\n> Dative and Instrumental are often confused because both deal with relationships. Remember: Dative = TO someone (recipient direction), Instrumental = WITH something/someone (means or companion).\n\n## Quick Review: Service Vocabulary\n\nThe vocabulary from Module 09 gives you practical application of all cases in service contexts:\n\n**Post Office:**\n- відправити **листа** (Accusative — direct object)\n- отримати **квитанцію** (Accusative)\n- посилка з **України** (Genitive — origin)\n\n**Bank:**\n- зняти **гроші** (Accusative)\n- обміняти **долари** (Accusative)\n- платити **карткою** (Instrumental — means)\n- сто **гривень** (Genitive — quantity)\n\n> 🔍 **Перевір себе!**\n>\n> Перед початком вправ запитайте себе: Чи можете ви провідмінювати слово «мама» через усі 7 відмінків? Чи знаєте ви, який відмінок використовувати після кожного прийменника? Якщо так — ви готові до контрольної!\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "This checkpoint tests your knowledge from Modules 01-09. Here is a comprehensive summary of what you should have mastered by this point in your Ukrainian learning journey.\n\n**Dative Case (M01-M03):** The dative case is used for recipients of actions (giving something TO someone), experiencing states (feeling cold TO someone), and with specific verbs like дзвонити, допомагати, and подобатися. Key pattern: \"Я даю книгу другові\" — the recipient is always in dative.\n\n**Instrumental Case (M04-M06):** The instrumental case expresses means (writing WITH a pen), accompaniment (going WITH a friend), professions (working AS a doctor), and follows prepositions like над, під, перед, за, між. Key pattern: \"Він працює лікарем\" — professions use instrumental with бути/стати/працювати.\n\n**Prepositions (M07):** Each preposition requires a specific case. Some prepositions like в/на can take different cases depending on whether you express motion (accusative) or location (locative). Master the preposition-case combinations for fluent speech.\n\n**All Cases Integration (M08):** You now know all seven Ukrainian cases and can analyze any noun's function in a sentence. The question method helps: ask what grammatical question the word answers, and that determines the case.\n\n**Services (M09):** Post office and bank vocabulary with real-world case applications. Service verbs typically require accusative for direct objects.\n\n> [!tip] Mastery Check\n> If you can correctly identify and use all seven cases, you have completed the foundational Ukrainian case system. You're now ready for Phase A2.2, which covers verbal aspect and comparison structures.\n\n> 📜 **Your Achievement**\n>\n> Completing Phase A2.1 means you can now express complex grammatical relationships in Ukrainian. You understand who does what to whom, where things are, how actions are performed, and who receives what. This is a significant milestone!\n\n> 🌍 **Cultural Connection**\n>\n> Україна має багату граматичну традицію. Сім відмінків — це частина давньої слов'янської спадщини. Коли ви вивчаєте відмінки, ви торкаєтесь тисячолітньої історії української мови!\n>\n> *Translation: Ukraine has a rich grammatical tradition. Seven cases are part of ancient Slavic heritage. When you learn cases, you touch a thousand years of Ukrainian language history!*\n\nВітаємо! Ви готові до тестування. Зробіть вправи і перевірте свої знання. Удачі! 🎯"
+      },
+      {
+        "id": "section-4",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Case Questions\n\n- Nominative :: хто? що?\n- Genitive :: кого? чого?\n- Dative :: кому? чому?\n- Accusative :: кого? що?\n- Instrumental :: ким? чим?\n- Locative :: де? на чому?\n- Vocative :: addressing someone\n- до :: Genitive\n- про :: Accusative\n- з — with :: Instrumental\n- в for location :: Locative\n- для :: Genitive\n\n## fill-in: Case Selection\n\n> Choose the correct form to complete each sentence.\n\n1. Я даю книгу ___.\n   > [!answer] другові\n   > [!options] друг | друга | другові | другом\n\n2. Він їде ___.\n   > [!answer] автобусом\n   > [!options] автобус | автобуса | автобусу | автобусом\n\n3. Немає ___.\n   > [!answer] часу\n   > [!options] час | часу | часом | часі\n\n4. Вона в ___.\n   > [!answer] університеті\n   > [!options] університет | університету | університетом | університеті\n\n5. Я йду до ___.\n   > [!answer] школи\n   > [!options] школа | школи | школі | школою\n\n6. Кава без ___.\n   > [!answer] цукру\n   > [!options] цукор | цукру | цукром | цукрі\n\n7. Мені потрібно зняти ___.\n   > [!answer] гроші\n   > [!options] гроші | грошей | грошам | грошима\n\n8. Подарунок для ___.\n   > [!answer] мами\n   > [!options] мама | мами | мамі | мамою\n\n9. Платити ___.\n   > [!answer] карткою\n   > [!options] картка | картки | картку | карткою\n\n10. Лист від ___.\n    > [!answer] брата\n    > [!options] брат | брата | братові | братом\n\n11. Вона стала ___.\n    > [!answer] лікаркою\n    > [!options] лікарка | лікарки | лікарці | лікаркою\n\n12. ___, привіт!\n    > [!answer] Друже\n    > [!options] Друг | Друга | Друже | Другом\n\n## quiz: Comprehensive Case Quiz\n\n1. Which case for the subject of a sentence?\n\n- [x] Nominative\n- [ ] Accusative\n- [ ] Genitive\n\n---\n\n2. \"Мені холодно\" uses which case for \"мені\"?\n\n- [x] Dative\n- [ ] Accusative\n- [ ] Genitive\n\n---\n\n3. \"Працювати лікарем\" uses which case?\n\n- [x] Instrumental\n- [ ] Accusative\n- [ ] Nominative\n\n---\n\n4. \"До школи\" uses which case?\n\n- [x] Genitive\n- [ ] Accusative\n- [ ] Locative\n\n---\n\n5. \"Про книгу\" uses which case?\n\n- [x] Accusative\n- [ ] Genitive\n- [ ] Instrumental\n\n---\n\n6. \"З другом\" uses which case?\n\n- [x] Instrumental\n- [ ] Genitive\n- [ ] Dative\n\n---\n\n7. \"В школі\" uses which case?\n\n- [x] Locative\n- [ ] Accusative\n- [ ] Genitive\n\n---\n\n8. \"Немає часу\" uses which case?\n\n- [x] Genitive\n- [ ] Nominative\n- [ ] Accusative\n\n---\n\n9. Which case for \"Мамо!\"?\n\n- [x] Vocative\n- [ ] Nominative\n- [ ] Dative\n\n---\n\n10. \"Я бачу маму\" — which case?\n\n- [x] Accusative\n- [ ] Nominative\n- [ ] Genitive\n\n---\n\n11. \"Платити карткою\" — which case?\n\n- [x] Instrumental\n- [ ] Accusative\n- [ ] Dative\n\n---\n\n12. \"Допоможіть мені\" — which case?\n\n- [x] Dative\n- [ ] Accusative\n- [ ] Instrumental\n\n## true-false: Case Rules Review\n\n> Test your understanding of case rules.\n\n- [x] Dative is used for the recipient of an action.\n  > Correct! Даю книгу другові.\n\n- [x] Instrumental case expresses \"with\" someone.\n  > Yes! Йду з другом.\n\n- [ ] Locative case can be used without a preposition.\n  > Locative ALWAYS needs a preposition.\n\n- [x] Genitive is used after \"без\" (without).\n  > Correct! Кава без цукру.\n\n- [ ] \"В школу\" and \"в школі\" are the same case.\n  > No! В школу = Accusative (motion); в школі = Locative (location).\n\n- [x] Vocative is used when addressing someone directly.\n  > Yes! Мамо! Друже!\n\n- [x] \"Про\" takes accusative case.\n  > Correct! Про книгу, про тебе.\n\n- [ ] All prepositions take the same case.\n  > Different prepositions require different cases.\n\n- [x] \"Мені\" in \"Мені подобається\" is dative.\n  > Correct!\n\n- [x] Instrumental can express profession with бути.\n  > Yes! Він був студентом.\n\n- [ ] \"До\" takes accusative case.\n  > \"До\" takes genitive: до школи.\n\n- [x] Service vocabulary uses accusative for direct objects.\n  > Correct! Відправити листа, зняти гроші.\n\n## group-sort: Preposition Cases\n\n> Sort these prepositions by the case they require.\n\n### Genitive\n- до\n- від\n- для\n- без\n- після\n- біля\n\n### Accusative\n- про\n- через\n\n### Instrumental\n- з — with\n- над\n- під\n- між\n- перед\n\n### Locative\n- в/у for location\n- на for location\n\n## unjumble: Mixed Sentences\n\n> Put the words in the correct order.\n\n1. я / даю / книгу / сестрі\n   > [!answer] Я даю книгу сестрі.\n\n2. він / працює / лікарем\n   > [!answer] Він працює лікарем.\n\n3. кава / без / цукру\n   > [!answer] Кава без цукру.\n\n4. я / йду / до / школи\n   > [!answer] Я йду до школи.\n\n5. вона / в / університеті\n   > [!answer] Вона в університеті.\n\n6. подарунок / для / мами\n   > [!answer] Подарунок для мами.\n\n7. мені / потрібно / зняти / гроші\n   > [!answer] Мені потрібно зняти гроші.\n\n8. платити / карткою\n   > [!answer] Платити карткою.\n\n9. друже / привіт\n   > [!answer] Друже, привіт!\n\n10. він / гуляє / з / собакою\n    > [!answer] Він гуляє з собакою.\n\n11. вона / стала / вчителькою\n    > [!answer] Вона стала вчителькою.\n\n12. лампа / над / столом\n    > [!answer] Лампа над столом.\n\n## error-correction: Find the Mistake\n\n> Each sentence has ONE case error. Fix it.\n\n1. Я даю книгу друг.\n   > [!error] друг\n   > [!answer] другові\n   > [!explanation] Recipient requires dative: другові.\n   > [!options] друг | друга | другові | другом\n\n2. Він працює лікар.\n   > [!error] лікар\n   > [!answer] лікарем\n   > [!explanation] Profession with працювати uses instrumental.\n   > [!options] лікар | лікаря | лікарю | лікарем\n\n3. Посилка з Україна.\n   > [!error] Україна\n   > [!answer] України\n   > [!explanation] \"З\" meaning \"from\" requires genitive.\n   > [!options] Україна | України | Україні | Україною\n\n4. Вона в університет.\n   > [!error] університет\n   > [!answer] університеті\n   > [!explanation] Location requires locative with \"в.\"\n   > [!options] університет | університету | університетом | університеті\n\n5. Кава без цукор.\n   > [!error] цукор\n   > [!answer] цукру\n   > [!explanation] \"Без\" requires genitive: цукру.\n   > [!options] цукор | цукру | цукром | цукрі\n\n6. Мама, привіт!\n   > [!error] Мама\n   > [!answer] Мамо\n   > [!explanation] Direct address requires vocative.\n   > [!options] Мама | Мами | Мамо | Мамою\n\n7. Платити картка.\n   > [!error] картка\n   > [!answer] карткою\n   > [!explanation] Payment method uses instrumental.\n   > [!options] картка | картки | картку | карткою\n\n8. Йти до школа.\n   > [!error] школа\n   > [!answer] школи\n   > [!explanation] \"До\" requires genitive: школи.\n   > [!options] школа | школи | школі | школою\n\n9. Лист від мама.\n   > [!error] мама\n   > [!answer] мами\n   > [!explanation] \"Від\" requires genitive: мами.\n   > [!options] мама | мами | мамі | мамою\n\n10. Він гуляє з друг.\n    > [!error] друг\n    > [!answer] другом\n    > [!explanation] \"З\" for accompaniment requires instrumental.\n    > [!options] друг | друга | другові | другом\n\n11. Мені подобається ця книга.\n    > [!error] — (no error)\n    > [!answer] — (correct as is)\n    > [!explanation] This sentence is correct!\n    > [!options] — | мамі | мами | мама\n\n12. Я хочу відправити лист.\n    > [!error] лист\n    > [!answer] листа\n    > [!explanation] Animate accusative: листа.\n    > [!options] лист | листа | листом | листі\n\n## cloze: Service Dialogue\n\n> Complete the dialogue with correct forms.\n\n— Добрий день! Я хочу відправити [___:1] до [___:2].\n— Звичайний чи рекомендований?\n— Рекомендований.\n— Напишіть [___:3] на [___:4].\n— Скільки це коштує?\n— П'ятдесят [___:5].\n— Ось [___:6], будь ласка.\n\n1. лист | листа | листом\n> [!answer] листа\n\n2. Канада | Канади | Канаду\n> [!answer] Канади\n\n3. адреса | адреси | адресу\n> [!answer] адресу\n\n4. конверт | конверта | конверті\n> [!answer] конверті\n\n5. гривня | гривні | гривень\n> [!answer] гривень\n\n6. гроші | грошей | грошима\n> [!answer] гроші\n\n---\n\n— Мені потрібно обміняти [___:1] на [___:2].\n— Який [___:3] сьогодні?\n— 37 [___:4] за долар.\n— Добре. Ось сто [___:5].\n— Ваші [___:6].\n\n1. долари | доларів | доларам\n> [!answer] долари\n\n2. гривні | гривень | гривнями\n> [!answer] гривні\n\n3. курс | курсу | курсом\n> [!answer] курс\n\n4. гривня | гривні | гривень\n> [!answer] гривень\n\n5. долар | долара | доларів\n> [!answer] доларів\n\n6. гроші | грошей | грошима\n> [!answer] гроші\n\n## dialogue-reorder: Case Usage in Context\n\n- Добрий день! Чим можу допомогти?\n- Я шукаю подарунок для сестри.\n- Що їй подобається?\n- Вона любить книги про Україну.\n- Ось чудова книга з фотографіями.\n- Дякую! Скільки це коштує?\n\n> [!answer]\n> 1. Добрий день! Чим можу допомогти?\n> 2. Я шукаю подарунок для сестри.\n> 3. Що їй подобається?\n> 4. Вона любить книги про Україну.\n> 5. Ось чудова книга з фотографіями.\n> 6. Дякую! Скільки це коштує?\n\n---\n\n- Ким ти працюєш?\n- Я працюю вчителем.\n- Цікаво! Де ти працюєш?\n- У школі в центрі міста.\n- Тобі подобається твоя робота?\n- Так, дуже!\n\n> [!answer]\n> 1. Ким ти працюєш?\n> 2. Я працюю вчителем.\n> 3. Цікаво! Де ти працюєш?\n> 4. У школі в центрі міста.\n> 5. Тобі подобається твоя робота?\n> 6. Так, дуже!\n\n## mark-the-words: Identify Cases\n\nClick on nouns and pronouns showing case usage.\n\n[Мама](correct) дає [книгу](correct) [сестрі](correct). [Вона](correct) працює [вчителькою](correct) в [школі](correct).\n\n---\n\nЯ йду з [другом](correct) до [магазину](correct). Ми купуємо [подарунок](correct) для [мами](correct).\n\n---\n\n[Друже](correct)! Допоможи [мені](correct)! Мені потрібно написати [листа](correct) [бабусі](correct).\n\n## translate: English to Ukrainian\n\nI give a book to my sister.\n\n- [x] Я даю книгу сестрі.\n- [ ] Я даю книга сестрі.\n- [ ] Я даю книгу сестра.\n\n---\n\nHe works as a doctor.\n\n- [x] Він працює лікарем.\n- [ ] Він працює лікар.\n- [ ] Він працює лікаря.\n\n---\n\nCoffee without sugar.\n\n- [x] Кава без цукру.\n- [ ] Кава без цукор.\n- [ ] Кава без цукром.\n\n---\n\nI'm going to school.\n\n- [x] Я йду до школи.\n- [ ] Я йду до школа.\n- [ ] Я йду до школі.\n\n---\n\nShe's at the university.\n\n- [x] Вона в університеті.\n- [ ] Вона в університет.\n- [ ] Вона в університету.\n\n---\n\nA gift for mom.\n\n- [x] Подарунок для мами.\n- [ ] Подарунок для мама.\n- [ ] Подарунок для мамі.\n\n---\n\nPay by card.\n\n- [x] Платити карткою.\n- [ ] Платити картку.\n- [ ] Платити картки.\n\n---\n\nFriend, hello!\n\n- [x] Друже, привіт!\n- [ ] Друг, привіт!\n- [ ] Друга, привіт!\n\n---\n\nA package from Ukraine.\n\n- [x] Посилка з України.\n- [ ] Посилка з Україна.\n- [ ] Посилка з Україну.\n\n---\n\nI want to withdraw money.\n\n- [x] Я хочу зняти гроші.\n- [ ] Я хочу зняти грошей.\n- [ ] Я хочу зняти грошам.\n\n---\n\nShe became a teacher.\n\n- [x] Вона стала вчителькою.\n- [ ] Вона стала вчителька.\n- [ ] Вона стала вчительки.\n\n---\n\nThe lamp is above the table.\n\n- [x] Лампа над столом.\n- [ ] Лампа над стіл.\n- [ ] Лампа над столі.\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| відмінок | /ʋidˈminɔk/ | grammatical case | noun | m | grammar term |\n| називний | /nɑzɪʋˈnɪj/ | nominative | adj | m | case name |\n| родовий | /rɔdɔˈʋɪj/ | genitive | adj | m | case name |\n| давальний | /dɑˈʋɑlʲnɪj/ | dative | adj | m | case name |\n| знахідний | /znɑˈxidnɪj/ | accusative | adj | m | case name |\n| орудний | /ɔˈrudnɪj/ | instrumental | adj | m | case name |\n| місцевий | /misˈt͡sɛʋɪj/ | locative | adj | m | case name |\n| кличний | /ˈklɪt͡ʃnɪj/ | vocative | adj | m | case name |\n| прийменник | /prɪjˈmɛnnɪk/ | preposition | noun | m | grammar term |\n| закінчення | /zɑˈkint͡ʃɛnːɑ/ | ending | noun | n | grammar term |\n| пошта | /ˈpɔʃtɑ/ | post office | noun | f | service location |\n| банк | /bɑnk/ | bank | noun | m | service location |\n| лист | /lɪst/ | letter | noun | m | Acc: листа |\n| посилка | /pɔˈsɪlkɑ/ | package | noun | f | Acc: посилку |\n| рахунок | /ˈrɑxunɔk/ | account | noun | m | Acc: рахунок |\n| гроші | /ˈɦrɔʃi/ | money | noun | pl | Acc: гроші |\n| картка | /ˈkɑrtkɑ/ | card | noun | f | Acc: картку |\n| курс | /kurs/ | exchange rate | noun | m | banking term |\n| квитанція | /kʋɪˈtɑnt͡sʲijɑ/ | receipt | noun | f | Acc: квитанцію |\n| гривня | /ˈɦrɪʋnʲɑ/ | hryvnia | noun | f | Ukrainian currency |\n| час | /t͡ʃɑs/ | time | noun | m | Gen: часу |\n| адреса | /ɑˈdrɛsɑ/ | address | noun | f | Acc: адресу |\n| конверт | /kɔnˈʋɛrt/ | envelope | noun | m | Acc: конверт |\n| марка | /ˈmɑrkɑ/ | stamp | noun | f | Acc: марку |\n| переказ | /pɛrɛˈkɑz/ | money transfer | noun | m | banking term |\n| валюта | /ʋɑˈlʲutɑ/ | currency | noun | f | Acc: валюту |\n\n---"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-10\ntitle: \"Checkpoint - Cases\"\nsubtitle: \"Comprehensive Review of Modules 01-09\"\nversion: \"1.0\"\nphase: \"A2.1\"\npedagogy: \"Review\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - review\n  - checkpoint\n  - assessment\n  - cases\ngrammar:\n  - dative pronouns and nouns\n  - instrumental case review\n  - preposition + case combinations\n  - all 7 cases integration\n  - service vocabulary\nobjectives:\n  - \"Learner can demonstrate mastery of dative case\"\n  - \"Learner can use instrumental case correctly\"\n  - \"Learner can combine prepositions with correct cases\"\n  - \"Learner can apply cases in service contexts\"\nvocabulary_count: 20\n---\n# Warm-up\n\n**Вітаємо!** Ви завершили Фазу A2.1! Цей контрольний модуль перевіряє все, що ви вивчили в Модулях 01-09.\n\nCongratulations on completing Phase A2.1! This checkpoint module reviews everything you've learned in Modules 01-09. It covers all seven Ukrainian cases, prepositions, and practical vocabulary for services.\n\n**Що ви повторите:**\n- Давальний відмінок (M01-M03)\n- Орудний відмінок (M04-M06)  \n- Прийменники + відмінки (M07)\n- Усі 7 відмінків (M08)\n- Лексика послуг: пошта і банк (M09)\n\n**How to use this module:** Work through the activities to identify any areas that need more practice. If you score below 80% on any section, review the corresponding module before continuing.\n\n**Чому відмінки важливі?**\n\nВідмінкова система — це серце української граматики. Без неї неможливо правильно говорити і писати українською мовою. Кожен відмінок має чітку функцію: називний визначає підмет, знахідний — прямий об'єкт, давальний — адресата дії.\n\nUnlike English, Ukrainian uses case endings to show grammatical relationships. This gives Ukrainian its characteristic flexibility in word order. By the end of this phase, you should automatically select the correct case based on context.\n\n---\n\n# Presentation\n\n## Quick Review: The 7 Cases\n\nHere's a comprehensive summary of all seven cases and their primary functions. Study this table carefully — it contains the essential information you need to choose the correct case in any situation.\n\n| Case | Ukrainian | Question | Primary Function | Key Triggers |\n|------|-----------|----------|------------------|--------------|\n| Nominative | Називний | хто? що? | Subject of sentence | Subject position |\n| Genitive | Родовий | кого? чого? | Possession, absence, quantity | немає, багато, до/від/для/без |\n| Dative | Давальний | кому? чому? | Recipient, experiencer | давати, дзвонити, холодно... |\n| Accusative | Знахідний | кого? що? | Direct object, direction | бачити, читати, в/на for motion |\n| Instrumental | Орудний | ким? чим? | Means, accompaniment, profession | з — with, бути/стати/працювати |\n| Locative | Місцевий | де? на чому? | Location, always with prep. | в/у, на for location |\n| Vocative | Кличний | — | Direct address | Calling someone |\n\n> 💡 **Key Insight: The Question Method**\n>\n> The question words are your best tool for identifying cases. When you're unsure which case to use, ask yourself: \"What grammatical question does this word answer?\" The answer will guide you to the correct case. For example: \"Я даю книгу КОМУ?\" — The answer \"сестрі\" must be in dative because the question is кому?\n\n**Case Selection Decision Tree**\n\nHere's a practical approach to choosing cases:\n\n1. **Is it the subject?** → Nominative\n2. **Is it who receives something?** → Dative\n3. **Is it the direct object of the action?** → Accusative\n4. **Is it expressing \"with\" someone?** → Instrumental\n5. **Is it after a preposition?** → Check which case that preposition requires\n6. **Is it expressing absence or quantity?** → Genitive\n7. **Are you addressing someone directly?** → Vocative\n\n## Quick Review: Prepositions + Cases\n\nPrepositions are one of the trickiest aspects of the case system because each preposition requires a specific case. Some prepositions can even take different cases depending on meaning. Here's your comprehensive reference:\n\n**Genitive prepositions:** These all indicate relationships like origin, purpose, or absence:\n- **до** (to, until): до школи (to school)\n- **від** (from person/source): від мами (from mom)\n- **для** (for purpose): для тебе (for you)\n- **без** (without): без цукру (without sugar)\n- **з** (from location): з роботи (from work)\n- **після** (after): після роботи (after work)\n- **біля** (near): біля дверей (near the door)\n\n**Accusative prepositions:**\n- **про** (about): про книгу (about the book)\n- **через** (through, because of): через парк (through the park)\n- **в/на + motion**: в школу (to school — going there)\n\n**Instrumental prepositions:**\n- **з** (with/accompaniment): з другом (with a friend)\n- **над** (above): над столом (above the table)\n- **під** (under): під столом (under the table)\n- **перед** (in front of): перед дверима (in front of the door)\n- **за** (behind): за дверима (behind the door)\n- **між** (between): між нами (between us)\n\n**Locative prepositions:**\n- **в/у + location**: в школі (at school — already there)\n- **на + location**: на столі (on the table)\n\n> 📜 **The Motion vs. Location Rule**\n>\n> This is critical: **в школу** (Accusative with motion = going TO school) vs. **в школі** (Locative with location = being AT school). The same preposition takes different cases depending on whether you're expressing motion or location. This pattern applies to в/у and на.\n\n## Quick Review: Dative and Instrumental Cases\n\n**Dative Case — Key Uses:**\n1. **Recipient:** Giving or sending something TO someone: Даю книгу **другові**.\n2. **Experiencer states:** Physical/emotional states happen TO someone: **Мені** холодно.\n3. **Age expressions:** **Йому** двадцять років.\n4. **Specific verbs:** дзвонити, допомагати, радити all require dative.\n\n**Instrumental Case — Key Uses:**\n1. **Accompaniment:** Going WITH someone: Йду з **другом**.\n2. **Means/Tool:** Doing something BY means of: Писати **ручкою**.\n3. **Profession:** Being/becoming a profession: Працювати **лікарем**.\n4. **Time expressions:** Certain time phrases: **ранком** (in the morning).\n\n> [!tip] Case Pairing\n> Dative and Instrumental are often confused because both deal with relationships. Remember: Dative = TO someone (recipient direction), Instrumental = WITH something/someone (means or companion).\n\n## Quick Review: Service Vocabulary\n\nThe vocabulary from Module 09 gives you practical application of all cases in service contexts:\n\n**Post Office:**\n- відправити **листа** (Accusative — direct object)\n- отримати **квитанцію** (Accusative)\n- посилка з **України** (Genitive — origin)\n\n**Bank:**\n- зняти **гроші** (Accusative)\n- обміняти **долари** (Accusative)\n- платити **карткою** (Instrumental — means)\n- сто **гривень** (Genitive — quantity)\n\n> 🔍 **Перевір себе!**\n>\n> Перед початком вправ запитайте себе: Чи можете ви провідмінювати слово «мама» через усі 7 відмінків? Чи знаєте ви, який відмінок використовувати після кожного прийменника? Якщо так — ви готові до контрольної!\n\n---\n\n# Summary\n\nThis checkpoint tests your knowledge from Modules 01-09. Here is a comprehensive summary of what you should have mastered by this point in your Ukrainian learning journey.\n\n**Dative Case (M01-M03):** The dative case is used for recipients of actions (giving something TO someone), experiencing states (feeling cold TO someone), and with specific verbs like дзвонити, допомагати, and подобатися. Key pattern: \"Я даю книгу другові\" — the recipient is always in dative.\n\n**Instrumental Case (M04-M06):** The instrumental case expresses means (writing WITH a pen), accompaniment (going WITH a friend), professions (working AS a doctor), and follows prepositions like над, під, перед, за, між. Key pattern: \"Він працює лікарем\" — professions use instrumental with бути/стати/працювати.\n\n**Prepositions (M07):** Each preposition requires a specific case. Some prepositions like в/на can take different cases depending on whether you express motion (accusative) or location (locative). Master the preposition-case combinations for fluent speech.\n\n**All Cases Integration (M08):** You now know all seven Ukrainian cases and can analyze any noun's function in a sentence. The question method helps: ask what grammatical question the word answers, and that determines the case.\n\n**Services (M09):** Post office and bank vocabulary with real-world case applications. Service verbs typically require accusative for direct objects.\n\n> [!tip] Mastery Check\n> If you can correctly identify and use all seven cases, you have completed the foundational Ukrainian case system. You're now ready for Phase A2.2, which covers verbal aspect and comparison structures.\n\n> 📜 **Your Achievement**\n>\n> Completing Phase A2.1 means you can now express complex grammatical relationships in Ukrainian. You understand who does what to whom, where things are, how actions are performed, and who receives what. This is a significant milestone!\n\n> 🌍 **Cultural Connection**\n>\n> Україна має багату граматичну традицію. Сім відмінків — це частина давньої слов'янської спадщини. Коли ви вивчаєте відмінки, ви торкаєтесь тисячолітньої історії української мови!\n>\n> *Translation: Ukraine has a rich grammatical tradition. Seven cases are part of ancient Slavic heritage. When you learn cases, you touch a thousand years of Ukrainian language history!*\n\nВітаємо! Ви готові до тестування. Зробіть вправи і перевірте свої знання. Удачі! 🎯\n\n# Activities\n\n## match-up: Case Questions\n\n- Nominative :: хто? що?\n- Genitive :: кого? чого?\n- Dative :: кому? чому?\n- Accusative :: кого? що?\n- Instrumental :: ким? чим?\n- Locative :: де? на чому?\n- Vocative :: addressing someone\n- до :: Genitive\n- про :: Accusative\n- з — with :: Instrumental\n- в for location :: Locative\n- для :: Genitive\n\n## fill-in: Case Selection\n\n> Choose the correct form to complete each sentence.\n\n1. Я даю книгу ___.\n   > [!answer] другові\n   > [!options] друг | друга | другові | другом\n\n2. Він їде ___.\n   > [!answer] автобусом\n   > [!options] автобус | автобуса | автобусу | автобусом\n\n3. Немає ___.\n   > [!answer] часу\n   > [!options] час | часу | часом | часі\n\n4. Вона в ___.\n   > [!answer] університеті\n   > [!options] університет | університету | університетом | університеті\n\n5. Я йду до ___.\n   > [!answer] школи\n   > [!options] школа | школи | школі | школою\n\n6. Кава без ___.\n   > [!answer] цукру\n   > [!options] цукор | цукру | цукром | цукрі\n\n7. Мені потрібно зняти ___.\n   > [!answer] гроші\n   > [!options] гроші | грошей | грошам | грошима\n\n8. Подарунок для ___.\n   > [!answer] мами\n   > [!options] мама | мами | мамі | мамою\n\n9. Платити ___.\n   > [!answer] карткою\n   > [!options] картка | картки | картку | карткою\n\n10. Лист від ___.\n    > [!answer] брата\n    > [!options] брат | брата | братові | братом\n\n11. Вона стала ___.\n    > [!answer] лікаркою\n    > [!options] лікарка | лікарки | лікарці | лікаркою\n\n12. ___, привіт!\n    > [!answer] Друже\n    > [!options] Друг | Друга | Друже | Другом\n\n## quiz: Comprehensive Case Quiz\n\n1. Which case for the subject of a sentence?\n\n- [x] Nominative\n- [ ] Accusative\n- [ ] Genitive\n\n---\n\n2. \"Мені холодно\" uses which case for \"мені\"?\n\n- [x] Dative\n- [ ] Accusative\n- [ ] Genitive\n\n---\n\n3. \"Працювати лікарем\" uses which case?\n\n- [x] Instrumental\n- [ ] Accusative\n- [ ] Nominative\n\n---\n\n4. \"До школи\" uses which case?\n\n- [x] Genitive\n- [ ] Accusative\n- [ ] Locative\n\n---\n\n5. \"Про книгу\" uses which case?\n\n- [x] Accusative\n- [ ] Genitive\n- [ ] Instrumental\n\n---\n\n6. \"З другом\" uses which case?\n\n- [x] Instrumental\n- [ ] Genitive\n- [ ] Dative\n\n---\n\n7. \"В школі\" uses which case?\n\n- [x] Locative\n- [ ] Accusative\n- [ ] Genitive\n\n---\n\n8. \"Немає часу\" uses which case?\n\n- [x] Genitive\n- [ ] Nominative\n- [ ] Accusative\n\n---\n\n9. Which case for \"Мамо!\"?\n\n- [x] Vocative\n- [ ] Nominative\n- [ ] Dative\n\n---\n\n10. \"Я бачу маму\" — which case?\n\n- [x] Accusative\n- [ ] Nominative\n- [ ] Genitive\n\n---\n\n11. \"Платити карткою\" — which case?\n\n- [x] Instrumental\n- [ ] Accusative\n- [ ] Dative\n\n---\n\n12. \"Допоможіть мені\" — which case?\n\n- [x] Dative\n- [ ] Accusative\n- [ ] Instrumental\n\n## true-false: Case Rules Review\n\n> Test your understanding of case rules.\n\n- [x] Dative is used for the recipient of an action.\n  > Correct! Даю книгу другові.\n\n- [x] Instrumental case expresses \"with\" someone.\n  > Yes! Йду з другом.\n\n- [ ] Locative case can be used without a preposition.\n  > Locative ALWAYS needs a preposition.\n\n- [x] Genitive is used after \"без\" (without).\n  > Correct! Кава без цукру.\n\n- [ ] \"В школу\" and \"в школі\" are the same case.\n  > No! В школу = Accusative (motion); в школі = Locative (location).\n\n- [x] Vocative is used when addressing someone directly.\n  > Yes! Мамо! Друже!\n\n- [x] \"Про\" takes accusative case.\n  > Correct! Про книгу, про тебе.\n\n- [ ] All prepositions take the same case.\n  > Different prepositions require different cases.\n\n- [x] \"Мені\" in \"Мені подобається\" is dative.\n  > Correct!\n\n- [x] Instrumental can express profession with бути.\n  > Yes! Він був студентом.\n\n- [ ] \"До\" takes accusative case.\n  > \"До\" takes genitive: до школи.\n\n- [x] Service vocabulary uses accusative for direct objects.\n  > Correct! Відправити листа, зняти гроші.\n\n## group-sort: Preposition Cases\n\n> Sort these prepositions by the case they require.\n\n### Genitive\n- до\n- від\n- для\n- без\n- після\n- біля\n\n### Accusative\n- про\n- через\n\n### Instrumental\n- з — with\n- над\n- під\n- між\n- перед\n\n### Locative\n- в/у for location\n- на for location\n\n## unjumble: Mixed Sentences\n\n> Put the words in the correct order.\n\n1. я / даю / книгу / сестрі\n   > [!answer] Я даю книгу сестрі.\n\n2. він / працює / лікарем\n   > [!answer] Він працює лікарем.\n\n3. кава / без / цукру\n   > [!answer] Кава без цукру.\n\n4. я / йду / до / школи\n   > [!answer] Я йду до школи.\n\n5. вона / в / університеті\n   > [!answer] Вона в університеті.\n\n6. подарунок / для / мами\n   > [!answer] Подарунок для мами.\n\n7. мені / потрібно / зняти / гроші\n   > [!answer] Мені потрібно зняти гроші.\n\n8. платити / карткою\n   > [!answer] Платити карткою.\n\n9. друже / привіт\n   > [!answer] Друже, привіт!\n\n10. він / гуляє / з / собакою\n    > [!answer] Він гуляє з собакою.\n\n11. вона / стала / вчителькою\n    > [!answer] Вона стала вчителькою.\n\n12. лампа / над / столом\n    > [!answer] Лампа над столом.\n\n## error-correction: Find the Mistake\n\n> Each sentence has ONE case error. Fix it.\n\n1. Я даю книгу друг.\n   > [!error] друг\n   > [!answer] другові\n   > [!explanation] Recipient requires dative: другові.\n   > [!options] друг | друга | другові | другом\n\n2. Він працює лікар.\n   > [!error] лікар\n   > [!answer] лікарем\n   > [!explanation] Profession with працювати uses instrumental.\n   > [!options] лікар | лікаря | лікарю | лікарем\n\n3. Посилка з Україна.\n   > [!error] Україна\n   > [!answer] України\n   > [!explanation] \"З\" meaning \"from\" requires genitive.\n   > [!options] Україна | України | Україні | Україною\n\n4. Вона в університет.\n   > [!error] університет\n   > [!answer] університеті\n   > [!explanation] Location requires locative with \"в.\"\n   > [!options] університет | університету | університетом | університеті\n\n5. Кава без цукор.\n   > [!error] цукор\n   > [!answer] цукру\n   > [!explanation] \"Без\" requires genitive: цукру.\n   > [!options] цукор | цукру | цукром | цукрі\n\n6. Мама, привіт!\n   > [!error] Мама\n   > [!answer] Мамо\n   > [!explanation] Direct address requires vocative.\n   > [!options] Мама | Мами | Мамо | Мамою\n\n7. Платити картка.\n   > [!error] картка\n   > [!answer] карткою\n   > [!explanation] Payment method uses instrumental.\n   > [!options] картка | картки | картку | карткою\n\n8. Йти до школа.\n   > [!error] школа\n   > [!answer] школи\n   > [!explanation] \"До\" requires genitive: школи.\n   > [!options] школа | школи | школі | школою\n\n9. Лист від мама.\n   > [!error] мама\n   > [!answer] мами\n   > [!explanation] \"Від\" requires genitive: мами.\n   > [!options] мама | мами | мамі | мамою\n\n10. Він гуляє з друг.\n    > [!error] друг\n    > [!answer] другом\n    > [!explanation] \"З\" for accompaniment requires instrumental.\n    > [!options] друг | друга | другові | другом\n\n11. Мені подобається ця книга.\n    > [!error] — (no error)\n    > [!answer] — (correct as is)\n    > [!explanation] This sentence is correct!\n    > [!options] — | мамі | мами | мама\n\n12. Я хочу відправити лист.\n    > [!error] лист\n    > [!answer] листа\n    > [!explanation] Animate accusative: листа.\n    > [!options] лист | листа | листом | листі\n\n## cloze: Service Dialogue\n\n> Complete the dialogue with correct forms.\n\n— Добрий день! Я хочу відправити [___:1] до [___:2].\n— Звичайний чи рекомендований?\n— Рекомендований.\n— Напишіть [___:3] на [___:4].\n— Скільки це коштує?\n— П'ятдесят [___:5].\n— Ось [___:6], будь ласка.\n\n1. лист | листа | листом\n> [!answer] листа\n\n2. Канада | Канади | Канаду\n> [!answer] Канади\n\n3. адреса | адреси | адресу\n> [!answer] адресу\n\n4. конверт | конверта | конверті\n> [!answer] конверті\n\n5. гривня | гривні | гривень\n> [!answer] гривень\n\n6. гроші | грошей | грошима\n> [!answer] гроші\n\n---\n\n— Мені потрібно обміняти [___:1] на [___:2].\n— Який [___:3] сьогодні?\n— 37 [___:4] за долар.\n— Добре. Ось сто [___:5].\n— Ваші [___:6].\n\n1. долари | доларів | доларам\n> [!answer] долари\n\n2. гривні | гривень | гривнями\n> [!answer] гривні\n\n3. курс | курсу | курсом\n> [!answer] курс\n\n4. гривня | гривні | гривень\n> [!answer] гривень\n\n5. долар | долара | доларів\n> [!answer] доларів\n\n6. гроші | грошей | грошима\n> [!answer] гроші\n\n## dialogue-reorder: Case Usage in Context\n\n- Добрий день! Чим можу допомогти?\n- Я шукаю подарунок для сестри.\n- Що їй подобається?\n- Вона любить книги про Україну.\n- Ось чудова книга з фотографіями.\n- Дякую! Скільки це коштує?\n\n> [!answer]\n> 1. Добрий день! Чим можу допомогти?\n> 2. Я шукаю подарунок для сестри.\n> 3. Що їй подобається?\n> 4. Вона любить книги про Україну.\n> 5. Ось чудова книга з фотографіями.\n> 6. Дякую! Скільки це коштує?\n\n---\n\n- Ким ти працюєш?\n- Я працюю вчителем.\n- Цікаво! Де ти працюєш?\n- У школі в центрі міста.\n- Тобі подобається твоя робота?\n- Так, дуже!\n\n> [!answer]\n> 1. Ким ти працюєш?\n> 2. Я працюю вчителем.\n> 3. Цікаво! Де ти працюєш?\n> 4. У школі в центрі міста.\n> 5. Тобі подобається твоя робота?\n> 6. Так, дуже!\n\n## mark-the-words: Identify Cases\n\nClick on nouns and pronouns showing case usage.\n\n[Мама](correct) дає [книгу](correct) [сестрі](correct). [Вона](correct) працює [вчителькою](correct) в [школі](correct).\n\n---\n\nЯ йду з [другом](correct) до [магазину](correct). Ми купуємо [подарунок](correct) для [мами](correct).\n\n---\n\n[Друже](correct)! Допоможи [мені](correct)! Мені потрібно написати [листа](correct) [бабусі](correct).\n\n## translate: English to Ukrainian\n\nI give a book to my sister.\n\n- [x] Я даю книгу сестрі.\n- [ ] Я даю книга сестрі.\n- [ ] Я даю книгу сестра.\n\n---\n\nHe works as a doctor.\n\n- [x] Він працює лікарем.\n- [ ] Він працює лікар.\n- [ ] Він працює лікаря.\n\n---\n\nCoffee without sugar.\n\n- [x] Кава без цукру.\n- [ ] Кава без цукор.\n- [ ] Кава без цукром.\n\n---\n\nI'm going to school.\n\n- [x] Я йду до школи.\n- [ ] Я йду до школа.\n- [ ] Я йду до школі.\n\n---\n\nShe's at the university.\n\n- [x] Вона в університеті.\n- [ ] Вона в університет.\n- [ ] Вона в університету.\n\n---\n\nA gift for mom.\n\n- [x] Подарунок для мами.\n- [ ] Подарунок для мама.\n- [ ] Подарунок для мамі.\n\n---\n\nPay by card.\n\n- [x] Платити карткою.\n- [ ] Платити картку.\n- [ ] Платити картки.\n\n---\n\nFriend, hello!\n\n- [x] Друже, привіт!\n- [ ] Друг, привіт!\n- [ ] Друга, привіт!\n\n---\n\nA package from Ukraine.\n\n- [x] Посилка з України.\n- [ ] Посилка з Україна.\n- [ ] Посилка з Україну.\n\n---\n\nI want to withdraw money.\n\n- [x] Я хочу зняти гроші.\n- [ ] Я хочу зняти грошей.\n- [ ] Я хочу зняти грошам.\n\n---\n\nShe became a teacher.\n\n- [x] Вона стала вчителькою.\n- [ ] Вона стала вчителька.\n- [ ] Вона стала вчительки.\n\n---\n\nThe lamp is above the table.\n\n- [x] Лампа над столом.\n- [ ] Лампа над стіл.\n- [ ] Лампа над столі.\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| відмінок | /ʋidˈminɔk/ | grammatical case | noun | m | grammar term |\n| називний | /nɑzɪʋˈnɪj/ | nominative | adj | m | case name |\n| родовий | /rɔdɔˈʋɪj/ | genitive | adj | m | case name |\n| давальний | /dɑˈʋɑlʲnɪj/ | dative | adj | m | case name |\n| знахідний | /znɑˈxidnɪj/ | accusative | adj | m | case name |\n| орудний | /ɔˈrudnɪj/ | instrumental | adj | m | case name |\n| місцевий | /misˈt͡sɛʋɪj/ | locative | adj | m | case name |\n| кличний | /ˈklɪt͡ʃnɪj/ | vocative | adj | m | case name |\n| прийменник | /prɪjˈmɛnnɪk/ | preposition | noun | m | grammar term |\n| закінчення | /zɑˈkint͡ʃɛnːɑ/ | ending | noun | n | grammar term |\n| пошта | /ˈpɔʃtɑ/ | post office | noun | f | service location |\n| банк | /bɑnk/ | bank | noun | m | service location |\n| лист | /lɪst/ | letter | noun | m | Acc: листа |\n| посилка | /pɔˈsɪlkɑ/ | package | noun | f | Acc: посилку |\n| рахунок | /ˈrɑxunɔk/ | account | noun | m | Acc: рахунок |\n| гроші | /ˈɦrɔʃi/ | money | noun | pl | Acc: гроші |\n| картка | /ˈkɑrtkɑ/ | card | noun | f | Acc: картку |\n| курс | /kurs/ | exchange rate | noun | m | banking term |\n| квитанція | /kʋɪˈtɑnt͡sʲijɑ/ | receipt | noun | f | Acc: квитанцію |\n| гривня | /ˈɦrɪʋnʲɑ/ | hryvnia | noun | f | Ukrainian currency |\n| час | /t͡ʃɑs/ | time | noun | m | Gen: часу |\n| адреса | /ɑˈdrɛsɑ/ | address | noun | f | Acc: адресу |\n| конверт | /kɔnˈʋɛrt/ | envelope | noun | m | Acc: конверт |\n| марка | /ˈmɑrkɑ/ | stamp | noun | f | Acc: марку |\n| переказ | /pɛrɛˈkɑz/ | money transfer | noun | m | banking term |\n| валюта | /ʋɑˈlʲutɑ/ | currency | noun | f | Acc: валюту |\n\n---\n\n",
+    "createdAt": "2025-12-15T20:02:02.968064Z",
+    "modifiedAt": "2025-12-15T20:02:02.968064Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-11",
+    "level": "A2",
+    "phase": "A2.1",
+    "wordCount": 26,
+    "newWordCount": 26,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "відмінок",
+        "ipa": "/ʋidˈminɔk/",
+        "en": "grammatical case",
+        "pos": "noun",
+        "gender": "m",
+        "note": "grammar term"
+      },
+      {
+        "id": "vocab-2",
+        "uk": "називний",
+        "ipa": "/nɑzɪʋˈnɪj/",
+        "en": "nominative",
+        "pos": "adj",
+        "gender": "m",
+        "note": "case name"
+      },
+      {
+        "id": "vocab-3",
+        "uk": "родовий",
+        "ipa": "/rɔdɔˈʋɪj/",
+        "en": "genitive",
+        "pos": "adj",
+        "gender": "m",
+        "note": "case name"
+      },
+      {
+        "id": "vocab-4",
+        "uk": "давальний",
+        "ipa": "/dɑˈʋɑlʲnɪj/",
+        "en": "dative",
+        "pos": "adj",
+        "gender": "m",
+        "note": "case name"
+      },
+      {
+        "id": "vocab-5",
+        "uk": "знахідний",
+        "ipa": "/znɑˈxidnɪj/",
+        "en": "accusative",
+        "pos": "adj",
+        "gender": "m",
+        "note": "case name"
+      },
+      {
+        "id": "vocab-6",
+        "uk": "орудний",
+        "ipa": "/ɔˈrudnɪj/",
+        "en": "instrumental",
+        "pos": "adj",
+        "gender": "m",
+        "note": "case name"
+      },
+      {
+        "id": "vocab-7",
+        "uk": "місцевий",
+        "ipa": "/misˈt͡sɛʋɪj/",
+        "en": "locative",
+        "pos": "adj",
+        "gender": "m",
+        "note": "case name"
+      },
+      {
+        "id": "vocab-8",
+        "uk": "кличний",
+        "ipa": "/ˈklɪt͡ʃnɪj/",
+        "en": "vocative",
+        "pos": "adj",
+        "gender": "m",
+        "note": "case name"
+      },
+      {
+        "id": "vocab-9",
+        "uk": "прийменник",
+        "ipa": "/prɪjˈmɛnnɪk/",
+        "en": "preposition",
+        "pos": "noun",
+        "gender": "m",
+        "note": "grammar term"
+      },
+      {
+        "id": "vocab-10",
+        "uk": "закінчення",
+        "ipa": "/zɑˈkint͡ʃɛnːɑ/",
+        "en": "ending",
+        "pos": "noun",
+        "gender": "n",
+        "note": "grammar term"
+      },
+      {
+        "id": "vocab-11",
+        "uk": "пошта",
+        "ipa": "/ˈpɔʃtɑ/",
+        "en": "post office",
+        "pos": "noun",
+        "gender": "f",
+        "note": "service location"
+      },
+      {
+        "id": "vocab-12",
+        "uk": "банк",
+        "ipa": "/bɑnk/",
+        "en": "bank",
+        "pos": "noun",
+        "gender": "m",
+        "note": "service location"
+      },
+      {
+        "id": "vocab-13",
+        "uk": "лист",
+        "ipa": "/lɪst/",
+        "en": "letter",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Acc: листа"
+      },
+      {
+        "id": "vocab-14",
+        "uk": "посилка",
+        "ipa": "/pɔˈsɪlkɑ/",
+        "en": "package",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Acc: посилку"
+      },
+      {
+        "id": "vocab-15",
+        "uk": "рахунок",
+        "ipa": "/ˈrɑxunɔk/",
+        "en": "account",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Acc: рахунок"
+      },
+      {
+        "id": "vocab-16",
+        "uk": "гроші",
+        "ipa": "/ˈɦrɔʃi/",
+        "en": "money",
+        "pos": "noun",
+        "gender": null,
+        "note": "Acc: гроші"
+      },
+      {
+        "id": "vocab-17",
+        "uk": "картка",
+        "ipa": "/ˈkɑrtkɑ/",
+        "en": "card",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Acc: картку"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "курс",
+        "ipa": "/kurs/",
+        "en": "exchange rate",
+        "pos": "noun",
+        "gender": "m",
+        "note": "banking term"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "квитанція",
+        "ipa": "/kʋɪˈtɑnt͡sʲijɑ/",
+        "en": "receipt",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Acc: квитанцію"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "гривня",
+        "ipa": "/ˈɦrɪʋnʲɑ/",
+        "en": "hryvnia",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Ukrainian currency"
+      },
+      {
+        "id": "vocab-21",
+        "uk": "час",
+        "ipa": "/t͡ʃɑs/",
+        "en": "time",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Gen: часу"
+      },
+      {
+        "id": "vocab-22",
+        "uk": "адреса",
+        "ipa": "/ɑˈdrɛsɑ/",
+        "en": "address",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Acc: адресу"
+      },
+      {
+        "id": "vocab-23",
+        "uk": "конверт",
+        "ipa": "/kɔnˈʋɛrt/",
+        "en": "envelope",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Acc: конверт"
+      },
+      {
+        "id": "vocab-24",
+        "uk": "марка",
+        "ipa": "/ˈmɑrkɑ/",
+        "en": "stamp",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Acc: марку"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "переказ",
+        "ipa": "/pɛrɛˈkɑz/",
+        "en": "money transfer",
+        "pos": "noun",
+        "gender": "m",
+        "note": "banking term"
+      },
+      {
+        "id": "vocab-26",
+        "uk": "валюта",
+        "ipa": "/ʋɑˈlʲutɑ/",
+        "en": "currency",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Acc: валюту"
+      }
+    ],
+    "reviewWords": []
+  }
+}

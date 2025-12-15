@@ -1,0 +1,368 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-53",
+    "moduleId": "mod-uk-A2-53",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2",
+    "moduleNumber": 53,
+    "moduleType": "vocabulary",
+    "pedagogy": "Narrative",
+    "immersionLevel": 0.4,
+    "title": "Sports & Fitness",
+    "titleUk": null,
+    "subtitle": "Active Life in Ukraine",
+    "description": {
+      "Talk about sports": "футбол, бокс, біг"
+    },
+    "objectives": [
+      {
+        "Talk about sports": "футбол, бокс, біг"
+      },
+      {
+        "Describe fitness": "тренування, спортзал"
+      },
+      {
+        "Discuss watching sports": "матч, вболівальник"
+      },
+      {
+        "Use play verbs correctly": "грати в"
+      }
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "instrumental-with-verbs",
+      "play-prep-review"
+    ],
+    "tags": [
+      "vocabulary",
+      "sports",
+      "health",
+      "hobby"
+    ],
+    "totalDuration": 60,
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Sports & Fitness",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Warm-up\n\nВи любите спорт? Ви більше любите дивитися футбол чи грати в нього? Ви ходите в спортзал?\n\nУкраїнці — спортивна нація. Ми пишаємося нашими чемпіонами: брати Клички (бокс), Андрій Шевченко (футбол), Еліна Світоліна (теніс). Сьогодні ми поговоримо про активний спосіб життя!\n\nSports unite people. In this module, you'll learn to talk about playing sports, exercising, and cheering for your favorite team.\n\n> [!important] **Myth Buster** \"Only Football?\"\n> While football is #1, Ukraine is a powerhouse in many sports. Ukraine has world champions in **boxing** (Usyk, Klitschko), **high jump** (Mahuchikh), and **fencing** (Kharlan). We are also very strong in the Paralympics, often finishing in the top 10 medal table globally!\n\n## Presentation\n\n### Sports (Види спорту)\n\nPopular games and activities:\n\n| Слово | Переклад | Приклад |\n|-------|----------|---------|\n| **спорт** | sport | Я люблю спорт. |\n| **футбол** | football/soccer | Грати в футбол. |\n| **баскетбол** | basketball | Дивитися баскетбол. |\n| **теніс** | tennis | Великий теніс. |\n| **бокс** | boxing | Український бокс. |\n| **плавання** | swimming | Плавання корисне. |\n| **біг** | running | Ранковий біг. |\n| **гімнастика** | gymnastics | Художня гімнастика. |\n\n### Places & People\n\n- **стадіон** — stadium: *Ми йдемо на стадіон.*\n- **спортзал** — gym: *Він качається в спортзалі.*\n- **басейн** — swimming pool: *Вона плаває в басейні.*\n- **команда** — team: *Наша команда виграла.*\n- **гравець** — player: *Найкращий гравець.*\n- **вболівальник** — fan: *Футбольний вболівальник.*\n- **тренер** — coach/trainer: *Слухати тренера.*\n- **чемпіон** — champion: *Олімпійський чемпіон.*\n\n### Verbs & Action\n\n- **тренуватися** — to train/workout: *Я тренуюся щодня.*\n- **займатися** (спортом) — to do (sport): *Він займається боксом.*\n- **бігати** — to run: *Ми бігаємо в парку.*\n- **плавати** — to swim: *Я не вмію плавати.*\n- **вигравати** — to win: *Ми виграємо.*\n- **програвати** — to lose: *Вони програють.*\n- **змагання** — competition: *Важливі змагання.*\n- **матч** — match/game: *Дивитися матч.*\n- **рахунок** — score: *Який рахунок?*\n\n> [!note] Grammar Point: Instrumental with \"Займатися\"\n> When you say you \"do\" or \"practice\" a sport using **займатися**, you must use the **Instrumental case**:\n> - *Я займаюсь* **спортом**. (I do sport).\n> - *Він займається* **футболом**.\n> - *Вона займається* **йогою**.\n>\n> Remember words ending in consonant add **-ом**, words in **-а** change to **-ою**.\n\n> [!cultural] **Cultural Insight** Dynamo Kyiv\n> **FC Dynamo Kyiv** is the most legendary club in Ukrainian history. Founded in 1927, they won countless trophies. Their historic rival is **Shakhtar Donetsk**. When these two play, it's called \"The Ukrainian Classico\" (*Українське Класичне*). The whole country watches!\n\n## Practice\n\n### Story Time: The Morning Run\n\nМаксим любить **бігати**. Щоранку о 6:00 він йде в парк.\nСьогодні гарна погода. Світить сонце.\nМаксим одягає кросівки і вмикає музику.\n\nУ парку багато людей. Хтось гуляє з собакою, хтось катається на велосипеді.\nМаксим біжить 5 кілометрів.\n— Спорт — це здоров'я, — думає він.\n\nПісля бігу він йде на спортивний майданчик. Там він робить вправи.\nВін хоче бути сильним і здоровим.\nВдома він приймає душ і їсть сніданок. Тепер він готовий до роботи.\n\n### Story Time: The Big Match\n\nСьогодні важливий день. Грає **збірна** (national team) України з футболу.\nАндрій і його тато — **вболівальники**.\nВони йдуть на **стадіон** \"Олімпійський\".\nТам тисячі людей. Всі одягнені у жовте і синє.\n\nГра починається. Наші хлопці грають добре.\n— Давай! Бий! — кричить тато.\nГол! **Рахунок** 1:0. Україна виграє!\nСтадіон співає гімн. Це неймовірна атмосфера.\n\nПісля **матчу** всі святкують.\n— Це була чудова **гра**, — каже Андрій. — Наша **команда** найкраща.\n\n### Story Time: Gym Life\n\nОлена **займається** фітнесом.\nТри рази на тиждень вона ходить у **спортзал**.\nЇї **тренер** Ігор дуже суворий.\n— Олена, не зупиняйся! Ще 5 разів! — каже він.\n\nОлена втомлена, але задоволена.\nВона також любить **плавання**. Після тренування вона йде в **басейн**.\nВода знімає стрес.\n\nУ роздягальні вона говорить з подругою.\n— Ти виглядаєш супер! — каже подруга.\n— Дякую, — усміхається Олена. — Спорт змінює життя.\n\n### Hiking in Carpathians\n\nUkraine has beautiful mountains — the **Carpathians** (*Карпати*).\nHiking (*походи в гори*) is a very popular sport here.\nPeople take backpacks and tents and go to mount Hoverla (the highest peak, 2061m).\nIt is not easy to climb, but the view is amazing.\nYou breathe fresh air and drink pure water.\nThere are no stadiums or referees, only you and nature. This is the best fitness for the soul.\n\n### Cycling in the City\n\nMore and more Ukrainians ride bicycles (*кататися на велосипеді*).\nKyiv is very hilly (*пагорби*), so it is hard work for your legs!\nBut cities like Lviv or Vinnytsia are more flat and have new bike lanes.\nOn weekends, thousands of cyclists go to Trukhaniv Island in Kyiv. No cars are allowed there.\nIt is a paradise for cyclists and runners.\nYou can rent a bike using an app like \"Bikenow\". You scan the QR code and go!\n\n### Winter Sports: Bukovel\n\nWhen snow falls, Ukrainians go to **Bukovel**.\nIt is the biggest ski resort in the Carpathians.\nPeople go there to ski (*кататися на лижах*) or snowboard (*на сноуборді*).\nThe season lasts from December to April.\nEven if you don't ski, you can drink hot \"Hutsul tea\" with honey and enjoy the snowy forest.\nIt is like a fairy tale.\n\n### Story Time: Morning Yoga\n\nОля не любить бігати. Вона любить **йогу**.\nВона займається вдома.\nОля вмикає спокійну музику.\nВона робить глибокий вдих і видих.\n— Подякуй своєму тілу, — каже інструктор на відео.\nОля стоїть у позі \"дерево\". Це важко, але вона тримає баланс.\nПісля йоги вона п'є воду з лимоном.\n— Я спокійна і сильна, — каже Оля.\nЙога допомагає їй почати день правильно.\n\n### Kyiv Marathon\n\nEvery autumn, the **Kyiv Marathon** takes place.\nThousands of runners from all over the world come to run 42 kilometers.\nThe route goes through the historic center, across bridges, and past beautiful churches.\nEven if you don't run, you can come to support (*вболівати*) the runners.\nIt is a celebration of willpower.\n\n### Story Time: Running Club\n\nСергій не любив бігати. Йому було нудно.\nАле його друг сказав: \"Приходь у наш біговий клуб\".\nУ суботу вранці Сергій прийшов у парк. Там було 30 людей.\n— Привіт! — сказали вони. — Ми біжимо 5 кілометрів, а потім п'ємо каву.\n\nСергій побіг з ними. Вони говорили про роботу, кіно і життя.\nВін навіть не помітив, як пробіг дистанцію.\nПісля бігу вони пішли в кав'ярню.\n— Це було супер, — сказав Сергій. — Ви класна **команда**.\nТепер він чекає суботу, щоб знову побачити друзів.\n\n> [!tip] **Tip** \"Sporty Diet\"\n> Ukrainian athletes love **гречка** (buckwheat). It acts as a superfood full of iron and protein. If you want to be strong like Klitschko, eat buckwheat porridge with meat or salads!"
+      },
+      {
+        "id": "section-2",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "You learned to:\n- Name sports: **футбол**, **теніс**, **бокс**, **плавання**\n- Describe actions: **бігати**, **плавати**, **тренуватися**, **займатися**\n- Talk about events: **матч**, **змагання**, **рахунок**, **перемога** (victory)\n- Use Instrumental case: *займатися спортом*\n\nA healthy mind in a healthy body!"
+      },
+      {
+        "id": "section-3",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## quiz: Sports Knowledge\n\n1. Who is Andriy Shevchenko?\n   - [x] Football legend\n   - [ ] Boxer\n   - [ ] Singer\n   > Legendary footballer and coach.\n\n2. Which case follows \"займатися\"?\n   - [x] Instrumental\n   - [ ] Nominative\n   - [ ] Accusative\n   > Займатися спортОМ.\n\n3. \"Вболівальник\" means...\n   - [x] fan / supporter\n   - [ ] player\n   - [ ] referee\n   > Fan.\n\n4. Hoverla is...\n   - [x] highest mountain\n   - [ ] biggest stadium\n   - [ ] river\n   > Mountain (2061m).\n\n5. Dynamo Kyiv's rival is...\n   - [x] Shakhtar Donetsk\n   - [ ] Karpaty Lviv\n   - [ ] Desna\n   > Shakhtar.\n\n6. \"Басейн\" is for...\n   - [x] swimming\n   - [ ] running\n   - [ ] boxing\n   > Pool.\n\n7. \"Тренуватися\" means...\n   - [x] to train/workout\n   - [ ] to sleep\n   - [ ] to eat\n   > Train.\n\n8. \"Рахунок\" in sports means...\n   - [x] score\n   - [ ] bill (restaurant)\n   - [ ] count\n   > Score (e.g. 2:0).\n\n9. Klitschko brothers are famous for...\n   - [x] boxing\n   - [ ] tennis\n   - [ ] hockey\n   > Boxing champions.\n\n10. \"Змагання\" is...\n    - [x] competition\n    - [ ] training\n    - [ ] game\n    > Competition.\n\n11. \"Перемога\" means...\n    - [x] victory\n    - [ ] loss\n    - [ ] draw\n    > Victory.\n\n12. \"Гравець\" is...\n    - [x] player\n    - [ ] fan\n    - [ ] coach\n    > Player.\n\n## match-up: Sports Vocab\n\n- футбол :: football\n- бокс :: boxing\n- плавання :: swimming\n- біг :: running\n- теніс :: tennis\n- стадіон :: stadium\n- спортзал :: gym\n- басейн :: pool\n- тренер :: coach\n- команда :: team\n- гравець :: player\n- матч :: match\n\n## fill-in: Sport Instrumental\n\n1. Я займаюся ____.\n   > [!answer] спортом\n   > [!options] спортом | спорт | спорта | спорту\n   > Instrumental case.\n\n2. Він займається ____.\n   > [!answer] футболом\n   > [!options] футболом | футбол | футболу | футболі\n   > Instrumental case.\n\n3. Ми займаємося ____.\n   > [!answer] йогою\n   > [!options] йогою | йога | йогу | йозі\n   > Instrumental case.\n\n4. Вона займається ____.\n   > [!answer] фітнесом\n   > [!options] фітнесом | фітнес | фітнеса | фітнесі\n   > Instrumental case.\n\n5. Ти займаєшся ____?\n   > [!answer] бігом\n   > [!options] бігом | біг | бігу | бізі\n   > Instrumental case.\n\n6. Вони займаються ____.\n   > [!answer] боксом\n   > [!options] боксом | бокс | боксу | боксі\n   > Instrumental case.\n\n7. Я граю в ____.\n   > [!answer] теніс\n   > [!options] теніс | тенісом | тенісу | тенісі\n   > Play + Accusative.\n\n8. Ми граємо в ____.\n   > [!answer] футбол\n   > [!options] футбол | футболом | футбола | футболі\n   > Play + Accusative.\n\n9. Олена займається ____.\n   > [!answer] гімнастикою\n   > [!options] гімнастикою | гімнастика | гімнастику | гімнастики\n   > Instrumental case.\n\n10. Він цікавиться ____.\n    > [!answer] музикою\n    > [!options] музикою | музика | музику | музики\n    > Instrumental case.\n\n11. Я хочу бути ____.\n    > [!answer] чемпіоном\n    > [!options] чемпіоном | чемпіон | чемпіона | чемпіону\n    > Be + Instrumental.\n\n12. Він працює ____.\n    > [!answer] тренером\n    > [!options] тренером | тренер | тренера | тренеру\n    > Work as + Instrumental.\n\n## true-false: Sports Rules\n\n1. You say \"грати в футбол\".\n   - [x] true\n   > Play + in + Acc.\n\n2. You say \"займатися футбол\".\n   - [x] false\n   > Must be футболом (Instrumental case).\n\n3. \"Басейн\" is a place to run.\n   - [x] false\n   > To swim.\n\n4. Usyk is a football player.\n   - [x] false\n   > Boxer.\n\n5. \"Вболівальник\" plays on the field.\n   - [x] false\n   > Spectator/fan.\n\n6. \"Перемога\" is when you lose.\n   - [x] false\n   > It means victory.\n\n7. Stadiums are for concerts and sports.\n   - [x] true\n   > Yes.\n\n8. \"Рахунок\" tells who is winning.\n   - [x] true\n   > Score.\n\n9. You can \"займатися\" in a gym.\n   - [x] true\n   > Workout/exercise.\n\n10. \"Команда\" means one person.\n    - [x] false\n    > Team.\n\n11. Hoverla is a river in Kyiv.\n    - [x] false\n    > Mountain.\n\n12. Ukrainians like sports.\n    - [x] true\n    > Very much.\n\n## group-sort: Action vs Place\n\n### Groups\n- Actions\n- Places\n- People\n\n### Items\n- бігати: Actions\n- плавати: Actions\n- тренуватися: Actions\n- вигравати: Actions\n- стадіон: Places\n- спортзал: Places\n- басейн: Places\n- парк: Places\n- тренер: People\n- гравець: People\n- вболівальник: People\n- чемпіон: People\n\n## unjumble: Sport Sentences\n\n1. Я / люблю / дивитися / футбол\n   > [!answer] Я люблю дивитися футбол\n   > I like watching football.\n\n2. Ми / йдемо / на / стадіон\n   > [!answer] Ми йдемо на стадіон\n   > We are going to the stadium.\n\n3. Він / займається / боксом / щодня\n   > [!answer] Він займається боксом щодня\n   > He practices boxing every day.\n\n4. Наша / команда / вчора / виграла\n   > [!answer] Наша команда вчора виграла\n   > Our team won yesterday.\n\n5. Я / не / вмію / плавати\n   > [!answer] Я не вмію плавати\n   > I don't know how to swim.\n\n6. Олена / ходить / у / спортзал\n   > [!answer] Олена ходить у спортзал\n   > Olena goes to the gym.\n\n7. Який / зараз / рахунок / матчу\n   > [!answer] Який зараз рахунок матчу\n   > What is the match score now?\n\n8. Мій / брат — / олімпійський / чемпіон\n   > [!answer] Мій брат — олімпійський чемпіон\n   > My brother is an Olympic champion.\n\n9. Треба / багато / тренуватися\n   > [!answer] Треба багато тренуватися\n   > One needs to train a lot.\n\n10. Спорт — / це / моє / життя\n    > [!answer] Спорт — це моє життя\n    > Sport is my life.\n\n11. Де / твої / нові / кросівки\n    > [!answer] Де твої нові кросівки\n    > Where are your new sneakers?\n\n12. Ми / бігаємо / вранці / в / лісі\n    > [!answer] Ми бігаємо вранці в лісі\n    > We run in the morning in the forest.\n\n## error-correction: Sport Mistakes\n\n1. Я займаюся теніс.\n   > [!error] теніс\n   > [!answer] тенісом\n   > [!options] тенісом | теніс | тенісу | тенісі\n   > [!explanation] Instrumental.\n\n2. Він грає футболом.\n   > [!error] футболом\n   > [!answer] футбол\n   > [!options] футбол | футболом | футболу | футболі\n   > [!explanation] Play + Acc (game name does NOT change): грати в футбол. Instrumental is wrong here.\n\n3. Ми йдемо в стадіон.\n   > [!error] в\n   > [!answer] на\n   > [!options] на | в | біля | під\n   > [!explanation] 'На стадіон' is standard (open space).\n\n4. Я люблю бігати у басейні.\n   > [!error] бігати\n   > [!answer] плавати\n   > [!options] плавати | бігати | літати | спати\n   > [!explanation] You swim in a pool, not run.\n\n5. Мій тренер гарна.\n   > [!error] гарна\n   > [!answer] гарний\n   > [!options] гарний | гарна | гарне | гарні\n   > [!explanation] Masculine noun: гарний тренер.\n\n6. Вона чемпіонка з біг.\n   > [!error] біг\n   > [!answer] бігу\n   > [!options] бігу | біг | біга | бігом\n   > [!explanation] From what? Genitive: з бігу.\n\n7. Рахунок один нуль.\n   > [!error] один\n   > [!answer] один\n   > [!options] один | одна | одне | одні\n   > Correct. Let's make error.\n   > *Рахунок одна нуль.*\n   > Error: одна -> один (masc count).\n\n   Rephrase 7:\n   Рахунок одна нуль.\n   > [!error] одна\n   > [!answer] один\n   > [!options] один | одна | одне | одні\n   > [!explanation] Masculine count: один.\n\n8. Ми виграли матч.\n   > [!error] матч\n   > [!answer] матч\n   > [!options] матч | матчу | матча | матчем\n   > Correct. Let's fix aspect.\n   > *Ми вигравали вчора.* (We were winning - process).\n   > *Ми виграли.* (Result).\n   > Let's fix case.\n   > *Ми дивимося матчу.* -> матч.\n\n   Rephrase 8:\n   Ми дивимося матчу.\n   > [!error] матчу\n   > [!answer] матч\n   > [!options] матч | матчу | матчем | матчі\n   > [!explanation] Accusative: матч.\n\n9. Він не вміє грати на футбол.\n   > [!error] на\n   > [!answer] в\n   > [!options] в | на | з | про\n   > [!explanation] Грати В гру. Грати НА інструменті.\n\n10. Це моя улюблена спорту.\n    > [!error] спорту\n    > [!answer] спорт\n    > [!options] спорт | спорту | спорта | спортом\n    > [!explanation] Nominative: спорт.\n\n11. Я хочу бути сильним.\n    > [!error] сильним\n    > [!answer] сильним\n    > [!options] сильним | сильний | сильна | сильні\n    > Correct (Instrumental).\n    > Let's make error.\n    > *Я хочу бути сильний.* -> сильним.\n\n    Rephrase 11:\n    Я хочу бути сильний.\n    > [!error] сильний\n    > [!answer] сильним\n    > [!options] сильним | сильний | сильного | сильному\n    > [!explanation] 'To be' + Instrumental.\n\n12. Вона займається йогою.\n    > [!error] йогою\n    > [!answer] йогою\n    > [!options] йогою | йога | йогу | йозі\n    > Correct.\n    > Let's make error.\n    > *Вона займається йога.* -> йогою.\n\n    Rephrase 12:\n    Вона займається йога.\n    > [!error] йога\n    > [!answer] йогою\n    > [!options] йогою | йога | йогу | йозі\n    > [!explanation] Instrumental.\n\n## cloze: Football Match\n\nМи на стадіоні. Сьогодні [___:1].\nГрають \"Динамо\" і \"Шахтар\".\nЯ — [___:2] \"Динамо\".\nМій друг каже: \"Дивись, який [___:3]!\".\nСуддя дає жовту картку.\nНаш [___:4] забиває гол!\n[___:5] стає 1:0.\nМи кричимо \"Ура!\". Це [___:6]!\nСпорт — це сильні [___:7].\n\n1. матч\n> [!answer] матч\n> [!options] матч | урок | обід\n\n2. вболівальник\n> [!answer] вболівальник\n> [!options] вболівальник | гравець | лікар\n\n3. пас\n> [!answer] пас\n> [!options] пас | бас | час\n> Pass (football term).\n\n4. гравець\n> [!answer] гравець\n> [!options] гравець | тренер | водій\n\n5. рахунок\n> [!answer] рахунок\n> [!options] рахунок | ціна | година\n\n6. перемога\n> [!answer] перемога\n> [!options] перемога | проблема | машина\n\n7. емоції\n> [!answer] емоції\n> [!options] емоції | порції | акції\n\n## dialogue-reorder: Gym Chat\n\n- Привіт! Ти теж тут тренуєшся?\n- Привіт. Так, я ходжу сюди в понеділок і середу.\n- А я тільки почав. Ти можеш мені допомогти?\n- Звичайно. Що ти хочеш робити?\n- Я хочу качати прес.\n- Добре. Лягай на килимок.\n- Скільки разів робити?\n- Роби 3 підходи по 15 разів.\n- Ох, це важко!\n- Не здавайся. Спорт любить сильних.\n- Дякую за мотивацію!\n- Будь ласка. Відпочивай хвилину.\n\n## mark-the-words: Sports List\n\n> [!instruction] Mark all sports.\n\nУ школі ми грали в [футбол] і [баскетбол]. Мій брат любить [теніс]. Взимку ми дивимося [біатлон]. Влітку я люблю [плавання]. Мій тато дивиться [бокс]. Його друг займається [карате]. [Гімнастика] — це дуже красиво.\n\n## select: Choose Correct Verb\n\n1. To run.\n   - [x] Бігати.\n   - [ ] Стрибати.\n   > Run.\n\n2. To swim.\n   - [x] Плавати.\n   - [ ] Літати.\n   > Swim.\n\n3. To win.\n   - [x] Вигравати.\n   - [ ] Програвати.\n   > Win.\n\n4. To lose.\n   - [x] Програвати.\n   - [ ] Грати.\n   > Lose.\n\n5. To train.\n   - [x] Тренуватися.\n   - [ ] Лікуватися.\n   > Train.\n\n6. To play a game.\n   - [x] Грати.\n   - [ ] Спати.\n   > Play.\n\n7. To cheer/support.\n   - [x] Вболівати.\n   - [ ] Хворіти.\n   > Вболівати (also means to be sick, context matters!).\n\n8. To score (a goal).\n   - [x] Забити.\n   - [ ] Забути.\n   > Score vs Forget.\n\n9. To kick.\n   - [x] Бити.\n   - [ ] Пити.\n   > Kick/Hit vs Drink.\n\n10. To jump.\n    - [x] Стрибати.\n    - [ ] Співати.\n    > Jump.\n\n11. To catch.\n    - [x] Ловити.\n    - [ ] Любити.\n    > Catch.\n\n12. To become.\n    - [x] Стати.\n    - [ ] Спати.\n    > Become (champion)."
+      },
+      {
+        "id": "section-4",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| спорт | /spɔrt/ | sport | noun | m | |\n| футбол | /futˈbɔl/ | football | noun | m | |\n| баскетбол | /basketˈbɔl/ | basketball | noun | m | |\n| теніс | /ˈtɛnis/ | tennis | noun | m | |\n| бокс | /bɔks/ | boxing | noun | m | |\n| плавання | /ˈplaʋannʲa/ | swimming | noun | n | |\n| біг | /bih/ | running | noun | m | |\n| гімнастика | /himˈnastɪka/ | gymnastics | noun | f | |\n| стадіон | /stadiˈɔn/ | stadium | noun | m | |\n| спортзал | /spɔrtˈzal/ | gym | noun | m | |\n| басейн | /baˈsɛjn/ | pool | noun | m | |\n| команда | /koˈmanda/ | team | noun | f | |\n| гравець | /hraˈʋɛtsʲ/ | player | noun | m | |\n| вболівальник | /ʋboliˈʋalʲnɪk/ | fan | noun | m | |\n| тренер | /ˈtrɛner/ | coach | noun | m | |\n| чемпіон | /tʃempiˈɔn/ | champion | noun | m | |\n| тренуватися | /trenuˈʋatɪsʲa/ | to train | verb | - | |\n| займатися | /zajˈmatɪsʲa/ | to practice | verb | - | |\n| бігати | /ˈbihatɪ/ | to run | verb | - | |\n| плавати | /ˈplaʋatɪ/ | to swim | verb | - | |\n| вигравати | /ʋɪhraˈʋatɪ/ | to win | verb | - | |\n| програвати | /prohraˈʋatɪ/ | to lose | verb | - | |\n| змагання | /zmaˈhannʲa/ | competition | noun | n | |\n| матч | /matʃ/ | match | noun | m | |\n| рахунок | /raˈxunok/ | score | noun | m | |\n| перемога | /pereˈmɔha/ | victory | noun | f | |\n| м'яч | /mʲatʃ/ | ball | noun | m | |\n| гол | /hɔl/ | goal | noun | m | |\n| медаль | /meˈdalʲ/ | medal | noun | f | |\n| здоров'я | /zdɔˈrɔʋjja/ | health | noun | n | |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-53\ntitle: Sports & Fitness\nsubtitle: \"Active Life in Ukraine\"\nversion: \"1.0\"\nphase: \"A2\"\npedagogy: \"Narrative\"\nduration: 60\ntransliteration: none\ntags: [\"vocabulary\", \"sports\", \"health\", \"hobby\"]\ngrammar: [\"instrumental-with-verbs\", \"play-prep-review\"]\nobjectives:\n  - Talk about sports: футбол, бокс, біг\n  - Describe fitness: тренування, спортзал\n  - Discuss watching sports: матч, вболівальник\n  - Use play verbs correctly: грати в\nvocab_count: 30\n---\n\n# Sports & Fitness\n\n## Warm-up\n\nВи любите спорт? Ви більше любите дивитися футбол чи грати в нього? Ви ходите в спортзал?\n\nУкраїнці — спортивна нація. Ми пишаємося нашими чемпіонами: брати Клички (бокс), Андрій Шевченко (футбол), Еліна Світоліна (теніс). Сьогодні ми поговоримо про активний спосіб життя!\n\nSports unite people. In this module, you'll learn to talk about playing sports, exercising, and cheering for your favorite team.\n\n> [!important] **Myth Buster** \"Only Football?\"\n> While football is #1, Ukraine is a powerhouse in many sports. Ukraine has world champions in **boxing** (Usyk, Klitschko), **high jump** (Mahuchikh), and **fencing** (Kharlan). We are also very strong in the Paralympics, often finishing in the top 10 medal table globally!\n\n## Presentation\n\n### Sports (Види спорту)\n\nPopular games and activities:\n\n| Слово | Переклад | Приклад |\n|-------|----------|---------|\n| **спорт** | sport | Я люблю спорт. |\n| **футбол** | football/soccer | Грати в футбол. |\n| **баскетбол** | basketball | Дивитися баскетбол. |\n| **теніс** | tennis | Великий теніс. |\n| **бокс** | boxing | Український бокс. |\n| **плавання** | swimming | Плавання корисне. |\n| **біг** | running | Ранковий біг. |\n| **гімнастика** | gymnastics | Художня гімнастика. |\n\n### Places & People\n\n- **стадіон** — stadium: *Ми йдемо на стадіон.*\n- **спортзал** — gym: *Він качається в спортзалі.*\n- **басейн** — swimming pool: *Вона плаває в басейні.*\n- **команда** — team: *Наша команда виграла.*\n- **гравець** — player: *Найкращий гравець.*\n- **вболівальник** — fan: *Футбольний вболівальник.*\n- **тренер** — coach/trainer: *Слухати тренера.*\n- **чемпіон** — champion: *Олімпійський чемпіон.*\n\n### Verbs & Action\n\n- **тренуватися** — to train/workout: *Я тренуюся щодня.*\n- **займатися** (спортом) — to do (sport): *Він займається боксом.*\n- **бігати** — to run: *Ми бігаємо в парку.*\n- **плавати** — to swim: *Я не вмію плавати.*\n- **вигравати** — to win: *Ми виграємо.*\n- **програвати** — to lose: *Вони програють.*\n- **змагання** — competition: *Важливі змагання.*\n- **матч** — match/game: *Дивитися матч.*\n- **рахунок** — score: *Який рахунок?*\n\n> [!note] Grammar Point: Instrumental with \"Займатися\"\n> When you say you \"do\" or \"practice\" a sport using **займатися**, you must use the **Instrumental case**:\n> - *Я займаюсь* **спортом**. (I do sport).\n> - *Він займається* **футболом**.\n> - *Вона займається* **йогою**.\n>\n> Remember words ending in consonant add **-ом**, words in **-а** change to **-ою**.\n\n> [!cultural] **Cultural Insight** Dynamo Kyiv\n> **FC Dynamo Kyiv** is the most legendary club in Ukrainian history. Founded in 1927, they won countless trophies. Their historic rival is **Shakhtar Donetsk**. When these two play, it's called \"The Ukrainian Classico\" (*Українське Класичне*). The whole country watches!\n\n## Practice\n\n### Story Time: The Morning Run\n\nМаксим любить **бігати**. Щоранку о 6:00 він йде в парк.\nСьогодні гарна погода. Світить сонце.\nМаксим одягає кросівки і вмикає музику.\n\nУ парку багато людей. Хтось гуляє з собакою, хтось катається на велосипеді.\nМаксим біжить 5 кілометрів.\n— Спорт — це здоров'я, — думає він.\n\nПісля бігу він йде на спортивний майданчик. Там він робить вправи.\nВін хоче бути сильним і здоровим.\nВдома він приймає душ і їсть сніданок. Тепер він готовий до роботи.\n\n### Story Time: The Big Match\n\nСьогодні важливий день. Грає **збірна** (national team) України з футболу.\nАндрій і його тато — **вболівальники**.\nВони йдуть на **стадіон** \"Олімпійський\".\nТам тисячі людей. Всі одягнені у жовте і синє.\n\nГра починається. Наші хлопці грають добре.\n— Давай! Бий! — кричить тато.\nГол! **Рахунок** 1:0. Україна виграє!\nСтадіон співає гімн. Це неймовірна атмосфера.\n\nПісля **матчу** всі святкують.\n— Це була чудова **гра**, — каже Андрій. — Наша **команда** найкраща.\n\n### Story Time: Gym Life\n\nОлена **займається** фітнесом.\nТри рази на тиждень вона ходить у **спортзал**.\nЇї **тренер** Ігор дуже суворий.\n— Олена, не зупиняйся! Ще 5 разів! — каже він.\n\nОлена втомлена, але задоволена.\nВона також любить **плавання**. Після тренування вона йде в **басейн**.\nВода знімає стрес.\n\nУ роздягальні вона говорить з подругою.\n— Ти виглядаєш супер! — каже подруга.\n— Дякую, — усміхається Олена. — Спорт змінює життя.\n\n### Hiking in Carpathians\n\nUkraine has beautiful mountains — the **Carpathians** (*Карпати*).\nHiking (*походи в гори*) is a very popular sport here.\nPeople take backpacks and tents and go to mount Hoverla (the highest peak, 2061m).\nIt is not easy to climb, but the view is amazing.\nYou breathe fresh air and drink pure water.\nThere are no stadiums or referees, only you and nature. This is the best fitness for the soul.\n\n### Cycling in the City\n\nMore and more Ukrainians ride bicycles (*кататися на велосипеді*).\nKyiv is very hilly (*пагорби*), so it is hard work for your legs!\nBut cities like Lviv or Vinnytsia are more flat and have new bike lanes.\nOn weekends, thousands of cyclists go to Trukhaniv Island in Kyiv. No cars are allowed there.\nIt is a paradise for cyclists and runners.\nYou can rent a bike using an app like \"Bikenow\". You scan the QR code and go!\n\n### Winter Sports: Bukovel\n\nWhen snow falls, Ukrainians go to **Bukovel**.\nIt is the biggest ski resort in the Carpathians.\nPeople go there to ski (*кататися на лижах*) or snowboard (*на сноуборді*).\nThe season lasts from December to April.\nEven if you don't ski, you can drink hot \"Hutsul tea\" with honey and enjoy the snowy forest.\nIt is like a fairy tale.\n\n### Story Time: Morning Yoga\n\nОля не любить бігати. Вона любить **йогу**.\nВона займається вдома.\nОля вмикає спокійну музику.\nВона робить глибокий вдих і видих.\n— Подякуй своєму тілу, — каже інструктор на відео.\nОля стоїть у позі \"дерево\". Це важко, але вона тримає баланс.\nПісля йоги вона п'є воду з лимоном.\n— Я спокійна і сильна, — каже Оля.\nЙога допомагає їй почати день правильно.\n\n### Kyiv Marathon\n\nEvery autumn, the **Kyiv Marathon** takes place.\nThousands of runners from all over the world come to run 42 kilometers.\nThe route goes through the historic center, across bridges, and past beautiful churches.\nEven if you don't run, you can come to support (*вболівати*) the runners.\nIt is a celebration of willpower.\n\n### Story Time: Running Club\n\nСергій не любив бігати. Йому було нудно.\nАле його друг сказав: \"Приходь у наш біговий клуб\".\nУ суботу вранці Сергій прийшов у парк. Там було 30 людей.\n— Привіт! — сказали вони. — Ми біжимо 5 кілометрів, а потім п'ємо каву.\n\nСергій побіг з ними. Вони говорили про роботу, кіно і життя.\nВін навіть не помітив, як пробіг дистанцію.\nПісля бігу вони пішли в кав'ярню.\n— Це було супер, — сказав Сергій. — Ви класна **команда**.\nТепер він чекає суботу, щоб знову побачити друзів.\n\n> [!tip] **Tip** \"Sporty Diet\"\n> Ukrainian athletes love **гречка** (buckwheat). It acts as a superfood full of iron and protein. If you want to be strong like Klitschko, eat buckwheat porridge with meat or salads!\n\n# Summary\n\nYou learned to:\n- Name sports: **футбол**, **теніс**, **бокс**, **плавання**\n- Describe actions: **бігати**, **плавати**, **тренуватися**, **займатися**\n- Talk about events: **матч**, **змагання**, **рахунок**, **перемога** (victory)\n- Use Instrumental case: *займатися спортом*\n\nA healthy mind in a healthy body!\n\n# Activities\n\n## quiz: Sports Knowledge\n\n1. Who is Andriy Shevchenko?\n   - [x] Football legend\n   - [ ] Boxer\n   - [ ] Singer\n   > Legendary footballer and coach.\n\n2. Which case follows \"займатися\"?\n   - [x] Instrumental\n   - [ ] Nominative\n   - [ ] Accusative\n   > Займатися спортОМ.\n\n3. \"Вболівальник\" means...\n   - [x] fan / supporter\n   - [ ] player\n   - [ ] referee\n   > Fan.\n\n4. Hoverla is...\n   - [x] highest mountain\n   - [ ] biggest stadium\n   - [ ] river\n   > Mountain (2061m).\n\n5. Dynamo Kyiv's rival is...\n   - [x] Shakhtar Donetsk\n   - [ ] Karpaty Lviv\n   - [ ] Desna\n   > Shakhtar.\n\n6. \"Басейн\" is for...\n   - [x] swimming\n   - [ ] running\n   - [ ] boxing\n   > Pool.\n\n7. \"Тренуватися\" means...\n   - [x] to train/workout\n   - [ ] to sleep\n   - [ ] to eat\n   > Train.\n\n8. \"Рахунок\" in sports means...\n   - [x] score\n   - [ ] bill (restaurant)\n   - [ ] count\n   > Score (e.g. 2:0).\n\n9. Klitschko brothers are famous for...\n   - [x] boxing\n   - [ ] tennis\n   - [ ] hockey\n   > Boxing champions.\n\n10. \"Змагання\" is...\n    - [x] competition\n    - [ ] training\n    - [ ] game\n    > Competition.\n\n11. \"Перемога\" means...\n    - [x] victory\n    - [ ] loss\n    - [ ] draw\n    > Victory.\n\n12. \"Гравець\" is...\n    - [x] player\n    - [ ] fan\n    - [ ] coach\n    > Player.\n\n## match-up: Sports Vocab\n\n- футбол :: football\n- бокс :: boxing\n- плавання :: swimming\n- біг :: running\n- теніс :: tennis\n- стадіон :: stadium\n- спортзал :: gym\n- басейн :: pool\n- тренер :: coach\n- команда :: team\n- гравець :: player\n- матч :: match\n\n## fill-in: Sport Instrumental\n\n1. Я займаюся ____.\n   > [!answer] спортом\n   > [!options] спортом | спорт | спорта | спорту\n   > Instrumental case.\n\n2. Він займається ____.\n   > [!answer] футболом\n   > [!options] футболом | футбол | футболу | футболі\n   > Instrumental case.\n\n3. Ми займаємося ____.\n   > [!answer] йогою\n   > [!options] йогою | йога | йогу | йозі\n   > Instrumental case.\n\n4. Вона займається ____.\n   > [!answer] фітнесом\n   > [!options] фітнесом | фітнес | фітнеса | фітнесі\n   > Instrumental case.\n\n5. Ти займаєшся ____?\n   > [!answer] бігом\n   > [!options] бігом | біг | бігу | бізі\n   > Instrumental case.\n\n6. Вони займаються ____.\n   > [!answer] боксом\n   > [!options] боксом | бокс | боксу | боксі\n   > Instrumental case.\n\n7. Я граю в ____.\n   > [!answer] теніс\n   > [!options] теніс | тенісом | тенісу | тенісі\n   > Play + Accusative.\n\n8. Ми граємо в ____.\n   > [!answer] футбол\n   > [!options] футбол | футболом | футбола | футболі\n   > Play + Accusative.\n\n9. Олена займається ____.\n   > [!answer] гімнастикою\n   > [!options] гімнастикою | гімнастика | гімнастику | гімнастики\n   > Instrumental case.\n\n10. Він цікавиться ____.\n    > [!answer] музикою\n    > [!options] музикою | музика | музику | музики\n    > Instrumental case.\n\n11. Я хочу бути ____.\n    > [!answer] чемпіоном\n    > [!options] чемпіоном | чемпіон | чемпіона | чемпіону\n    > Be + Instrumental.\n\n12. Він працює ____.\n    > [!answer] тренером\n    > [!options] тренером | тренер | тренера | тренеру\n    > Work as + Instrumental.\n\n## true-false: Sports Rules\n\n1. You say \"грати в футбол\".\n   - [x] true\n   > Play + in + Acc.\n\n2. You say \"займатися футбол\".\n   - [x] false\n   > Must be футболом (Instrumental case).\n\n3. \"Басейн\" is a place to run.\n   - [x] false\n   > To swim.\n\n4. Usyk is a football player.\n   - [x] false\n   > Boxer.\n\n5. \"Вболівальник\" plays on the field.\n   - [x] false\n   > Spectator/fan.\n\n6. \"Перемога\" is when you lose.\n   - [x] false\n   > It means victory.\n\n7. Stadiums are for concerts and sports.\n   - [x] true\n   > Yes.\n\n8. \"Рахунок\" tells who is winning.\n   - [x] true\n   > Score.\n\n9. You can \"займатися\" in a gym.\n   - [x] true\n   > Workout/exercise.\n\n10. \"Команда\" means one person.\n    - [x] false\n    > Team.\n\n11. Hoverla is a river in Kyiv.\n    - [x] false\n    > Mountain.\n\n12. Ukrainians like sports.\n    - [x] true\n    > Very much.\n\n## group-sort: Action vs Place\n\n### Groups\n- Actions\n- Places\n- People\n\n### Items\n- бігати: Actions\n- плавати: Actions\n- тренуватися: Actions\n- вигравати: Actions\n- стадіон: Places\n- спортзал: Places\n- басейн: Places\n- парк: Places\n- тренер: People\n- гравець: People\n- вболівальник: People\n- чемпіон: People\n\n## unjumble: Sport Sentences\n\n1. Я / люблю / дивитися / футбол\n   > [!answer] Я люблю дивитися футбол\n   > I like watching football.\n\n2. Ми / йдемо / на / стадіон\n   > [!answer] Ми йдемо на стадіон\n   > We are going to the stadium.\n\n3. Він / займається / боксом / щодня\n   > [!answer] Він займається боксом щодня\n   > He practices boxing every day.\n\n4. Наша / команда / вчора / виграла\n   > [!answer] Наша команда вчора виграла\n   > Our team won yesterday.\n\n5. Я / не / вмію / плавати\n   > [!answer] Я не вмію плавати\n   > I don't know how to swim.\n\n6. Олена / ходить / у / спортзал\n   > [!answer] Олена ходить у спортзал\n   > Olena goes to the gym.\n\n7. Який / зараз / рахунок / матчу\n   > [!answer] Який зараз рахунок матчу\n   > What is the match score now?\n\n8. Мій / брат — / олімпійський / чемпіон\n   > [!answer] Мій брат — олімпійський чемпіон\n   > My brother is an Olympic champion.\n\n9. Треба / багато / тренуватися\n   > [!answer] Треба багато тренуватися\n   > One needs to train a lot.\n\n10. Спорт — / це / моє / життя\n    > [!answer] Спорт — це моє життя\n    > Sport is my life.\n\n11. Де / твої / нові / кросівки\n    > [!answer] Де твої нові кросівки\n    > Where are your new sneakers?\n\n12. Ми / бігаємо / вранці / в / лісі\n    > [!answer] Ми бігаємо вранці в лісі\n    > We run in the morning in the forest.\n\n## error-correction: Sport Mistakes\n\n1. Я займаюся теніс.\n   > [!error] теніс\n   > [!answer] тенісом\n   > [!options] тенісом | теніс | тенісу | тенісі\n   > [!explanation] Instrumental.\n\n2. Він грає футболом.\n   > [!error] футболом\n   > [!answer] футбол\n   > [!options] футбол | футболом | футболу | футболі\n   > [!explanation] Play + Acc (game name does NOT change): грати в футбол. Instrumental is wrong here.\n\n3. Ми йдемо в стадіон.\n   > [!error] в\n   > [!answer] на\n   > [!options] на | в | біля | під\n   > [!explanation] 'На стадіон' is standard (open space).\n\n4. Я люблю бігати у басейні.\n   > [!error] бігати\n   > [!answer] плавати\n   > [!options] плавати | бігати | літати | спати\n   > [!explanation] You swim in a pool, not run.\n\n5. Мій тренер гарна.\n   > [!error] гарна\n   > [!answer] гарний\n   > [!options] гарний | гарна | гарне | гарні\n   > [!explanation] Masculine noun: гарний тренер.\n\n6. Вона чемпіонка з біг.\n   > [!error] біг\n   > [!answer] бігу\n   > [!options] бігу | біг | біга | бігом\n   > [!explanation] From what? Genitive: з бігу.\n\n7. Рахунок один нуль.\n   > [!error] один\n   > [!answer] один\n   > [!options] один | одна | одне | одні\n   > Correct. Let's make error.\n   > *Рахунок одна нуль.*\n   > Error: одна -> один (masc count).\n\n   Rephrase 7:\n   Рахунок одна нуль.\n   > [!error] одна\n   > [!answer] один\n   > [!options] один | одна | одне | одні\n   > [!explanation] Masculine count: один.\n\n8. Ми виграли матч.\n   > [!error] матч\n   > [!answer] матч\n   > [!options] матч | матчу | матча | матчем\n   > Correct. Let's fix aspect.\n   > *Ми вигравали вчора.* (We were winning - process).\n   > *Ми виграли.* (Result).\n   > Let's fix case.\n   > *Ми дивимося матчу.* -> матч.\n\n   Rephrase 8:\n   Ми дивимося матчу.\n   > [!error] матчу\n   > [!answer] матч\n   > [!options] матч | матчу | матчем | матчі\n   > [!explanation] Accusative: матч.\n\n9. Він не вміє грати на футбол.\n   > [!error] на\n   > [!answer] в\n   > [!options] в | на | з | про\n   > [!explanation] Грати В гру. Грати НА інструменті.\n\n10. Це моя улюблена спорту.\n    > [!error] спорту\n    > [!answer] спорт\n    > [!options] спорт | спорту | спорта | спортом\n    > [!explanation] Nominative: спорт.\n\n11. Я хочу бути сильним.\n    > [!error] сильним\n    > [!answer] сильним\n    > [!options] сильним | сильний | сильна | сильні\n    > Correct (Instrumental).\n    > Let's make error.\n    > *Я хочу бути сильний.* -> сильним.\n\n    Rephrase 11:\n    Я хочу бути сильний.\n    > [!error] сильний\n    > [!answer] сильним\n    > [!options] сильним | сильний | сильного | сильному\n    > [!explanation] 'To be' + Instrumental.\n\n12. Вона займається йогою.\n    > [!error] йогою\n    > [!answer] йогою\n    > [!options] йогою | йога | йогу | йозі\n    > Correct.\n    > Let's make error.\n    > *Вона займається йога.* -> йогою.\n\n    Rephrase 12:\n    Вона займається йога.\n    > [!error] йога\n    > [!answer] йогою\n    > [!options] йогою | йога | йогу | йозі\n    > [!explanation] Instrumental.\n\n## cloze: Football Match\n\nМи на стадіоні. Сьогодні [___:1].\nГрають \"Динамо\" і \"Шахтар\".\nЯ — [___:2] \"Динамо\".\nМій друг каже: \"Дивись, який [___:3]!\".\nСуддя дає жовту картку.\nНаш [___:4] забиває гол!\n[___:5] стає 1:0.\nМи кричимо \"Ура!\". Це [___:6]!\nСпорт — це сильні [___:7].\n\n1. матч\n> [!answer] матч\n> [!options] матч | урок | обід\n\n2. вболівальник\n> [!answer] вболівальник\n> [!options] вболівальник | гравець | лікар\n\n3. пас\n> [!answer] пас\n> [!options] пас | бас | час\n> Pass (football term).\n\n4. гравець\n> [!answer] гравець\n> [!options] гравець | тренер | водій\n\n5. рахунок\n> [!answer] рахунок\n> [!options] рахунок | ціна | година\n\n6. перемога\n> [!answer] перемога\n> [!options] перемога | проблема | машина\n\n7. емоції\n> [!answer] емоції\n> [!options] емоції | порції | акції\n\n## dialogue-reorder: Gym Chat\n\n- Привіт! Ти теж тут тренуєшся?\n- Привіт. Так, я ходжу сюди в понеділок і середу.\n- А я тільки почав. Ти можеш мені допомогти?\n- Звичайно. Що ти хочеш робити?\n- Я хочу качати прес.\n- Добре. Лягай на килимок.\n- Скільки разів робити?\n- Роби 3 підходи по 15 разів.\n- Ох, це важко!\n- Не здавайся. Спорт любить сильних.\n- Дякую за мотивацію!\n- Будь ласка. Відпочивай хвилину.\n\n## mark-the-words: Sports List\n\n> [!instruction] Mark all sports.\n\nУ школі ми грали в [футбол] і [баскетбол]. Мій брат любить [теніс]. Взимку ми дивимося [біатлон]. Влітку я люблю [плавання]. Мій тато дивиться [бокс]. Його друг займається [карате]. [Гімнастика] — це дуже красиво.\n\n## select: Choose Correct Verb\n\n1. To run.\n   - [x] Бігати.\n   - [ ] Стрибати.\n   > Run.\n\n2. To swim.\n   - [x] Плавати.\n   - [ ] Літати.\n   > Swim.\n\n3. To win.\n   - [x] Вигравати.\n   - [ ] Програвати.\n   > Win.\n\n4. To lose.\n   - [x] Програвати.\n   - [ ] Грати.\n   > Lose.\n\n5. To train.\n   - [x] Тренуватися.\n   - [ ] Лікуватися.\n   > Train.\n\n6. To play a game.\n   - [x] Грати.\n   - [ ] Спати.\n   > Play.\n\n7. To cheer/support.\n   - [x] Вболівати.\n   - [ ] Хворіти.\n   > Вболівати (also means to be sick, context matters!).\n\n8. To score (a goal).\n   - [x] Забити.\n   - [ ] Забути.\n   > Score vs Forget.\n\n9. To kick.\n   - [x] Бити.\n   - [ ] Пити.\n   > Kick/Hit vs Drink.\n\n10. To jump.\n    - [x] Стрибати.\n    - [ ] Співати.\n    > Jump.\n\n11. To catch.\n    - [x] Ловити.\n    - [ ] Любити.\n    > Catch.\n\n12. To become.\n    - [x] Стати.\n    - [ ] Спати.\n    > Become (champion).\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| спорт | /spɔrt/ | sport | noun | m | |\n| футбол | /futˈbɔl/ | football | noun | m | |\n| баскетбол | /basketˈbɔl/ | basketball | noun | m | |\n| теніс | /ˈtɛnis/ | tennis | noun | m | |\n| бокс | /bɔks/ | boxing | noun | m | |\n| плавання | /ˈplaʋannʲa/ | swimming | noun | n | |\n| біг | /bih/ | running | noun | m | |\n| гімнастика | /himˈnastɪka/ | gymnastics | noun | f | |\n| стадіон | /stadiˈɔn/ | stadium | noun | m | |\n| спортзал | /spɔrtˈzal/ | gym | noun | m | |\n| басейн | /baˈsɛjn/ | pool | noun | m | |\n| команда | /koˈmanda/ | team | noun | f | |\n| гравець | /hraˈʋɛtsʲ/ | player | noun | m | |\n| вболівальник | /ʋboliˈʋalʲnɪk/ | fan | noun | m | |\n| тренер | /ˈtrɛner/ | coach | noun | m | |\n| чемпіон | /tʃempiˈɔn/ | champion | noun | m | |\n| тренуватися | /trenuˈʋatɪsʲa/ | to train | verb | - | |\n| займатися | /zajˈmatɪsʲa/ | to practice | verb | - | |\n| бігати | /ˈbihatɪ/ | to run | verb | - | |\n| плавати | /ˈplaʋatɪ/ | to swim | verb | - | |\n| вигравати | /ʋɪhraˈʋatɪ/ | to win | verb | - | |\n| програвати | /prohraˈʋatɪ/ | to lose | verb | - | |\n| змагання | /zmaˈhannʲa/ | competition | noun | n | |\n| матч | /matʃ/ | match | noun | m | |\n| рахунок | /raˈxunok/ | score | noun | m | |\n| перемога | /pereˈmɔha/ | victory | noun | f | |\n| м'яч | /mʲatʃ/ | ball | noun | m | |\n| гол | /hɔl/ | goal | noun | m | |\n| медаль | /meˈdalʲ/ | medal | noun | f | |\n| здоров'я | /zdɔˈrɔʋjja/ | health | noun | n | |\n",
+    "createdAt": "2025-12-15T20:02:03.089974Z",
+    "modifiedAt": "2025-12-15T20:02:03.089974Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-53",
+    "level": "A2",
+    "phase": "A2",
+    "wordCount": 30,
+    "newWordCount": 30,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "спорт",
+        "ipa": "/spɔrt/",
+        "en": "sport",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-2",
+        "uk": "футбол",
+        "ipa": "/futˈbɔl/",
+        "en": "football",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-3",
+        "uk": "баскетбол",
+        "ipa": "/basketˈbɔl/",
+        "en": "basketball",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-4",
+        "uk": "теніс",
+        "ipa": "/ˈtɛnis/",
+        "en": "tennis",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-5",
+        "uk": "бокс",
+        "ipa": "/bɔks/",
+        "en": "boxing",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-6",
+        "uk": "плавання",
+        "ipa": "/ˈplaʋannʲa/",
+        "en": "swimming",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-7",
+        "uk": "біг",
+        "ipa": "/bih/",
+        "en": "running",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-8",
+        "uk": "гімнастика",
+        "ipa": "/himˈnastɪka/",
+        "en": "gymnastics",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-9",
+        "uk": "стадіон",
+        "ipa": "/stadiˈɔn/",
+        "en": "stadium",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-10",
+        "uk": "спортзал",
+        "ipa": "/spɔrtˈzal/",
+        "en": "gym",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-11",
+        "uk": "басейн",
+        "ipa": "/baˈsɛjn/",
+        "en": "pool",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-12",
+        "uk": "команда",
+        "ipa": "/koˈmanda/",
+        "en": "team",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-13",
+        "uk": "гравець",
+        "ipa": "/hraˈʋɛtsʲ/",
+        "en": "player",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-14",
+        "uk": "вболівальник",
+        "ipa": "/ʋboliˈʋalʲnɪk/",
+        "en": "fan",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-15",
+        "uk": "тренер",
+        "ipa": "/ˈtrɛner/",
+        "en": "coach",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-16",
+        "uk": "чемпіон",
+        "ipa": "/tʃempiˈɔn/",
+        "en": "champion",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-17",
+        "uk": "тренуватися",
+        "ipa": "/trenuˈʋatɪsʲa/",
+        "en": "to train",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-18",
+        "uk": "займатися",
+        "ipa": "/zajˈmatɪsʲa/",
+        "en": "to practice",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-19",
+        "uk": "бігати",
+        "ipa": "/ˈbihatɪ/",
+        "en": "to run",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-20",
+        "uk": "плавати",
+        "ipa": "/ˈplaʋatɪ/",
+        "en": "to swim",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-21",
+        "uk": "вигравати",
+        "ipa": "/ʋɪhraˈʋatɪ/",
+        "en": "to win",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-22",
+        "uk": "програвати",
+        "ipa": "/prohraˈʋatɪ/",
+        "en": "to lose",
+        "pos": "verb",
+        "gender": null,
+        "note": ""
+      },
+      {
+        "id": "vocab-23",
+        "uk": "змагання",
+        "ipa": "/zmaˈhannʲa/",
+        "en": "competition",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      },
+      {
+        "id": "vocab-24",
+        "uk": "матч",
+        "ipa": "/matʃ/",
+        "en": "match",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-25",
+        "uk": "рахунок",
+        "ipa": "/raˈxunok/",
+        "en": "score",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-26",
+        "uk": "перемога",
+        "ipa": "/pereˈmɔha/",
+        "en": "victory",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-27",
+        "uk": "м'яч",
+        "ipa": "/mʲatʃ/",
+        "en": "ball",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-28",
+        "uk": "гол",
+        "ipa": "/hɔl/",
+        "en": "goal",
+        "pos": "noun",
+        "gender": "m",
+        "note": ""
+      },
+      {
+        "id": "vocab-29",
+        "uk": "медаль",
+        "ipa": "/meˈdalʲ/",
+        "en": "medal",
+        "pos": "noun",
+        "gender": "f",
+        "note": ""
+      },
+      {
+        "id": "vocab-30",
+        "uk": "здоров'я",
+        "ipa": "/zdɔˈrɔʋjja/",
+        "en": "health",
+        "pos": "noun",
+        "gender": "n",
+        "note": ""
+      }
+    ],
+    "reviewWords": []
+  }
+}

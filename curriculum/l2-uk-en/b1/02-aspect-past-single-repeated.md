@@ -24,6 +24,18 @@ vocabulary_count: 20
 ---
 # Вид у минулому часі — Одноразові та повторювані дії
 
+> 🎯 **Чому це важливо**
+>
+> Різниця між одноразовими та повторюваними діями — це перше, що помічають носії мови у вашому мовленні. Якщо ви скажете "Я вчора прочитав книгу" замість "Я часто прочитав книги", носій одразу зрозуміє помилку. Цей модуль навчить вас автоматично обирати правильний вид.
+
+> [!resources] 🎧 External Resources
+>
+> **Past Tense Foundation:** [Past Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-past-tense/) — Review past tense forms before aspect
+>
+> **Verb Prefixes:** [Ukrainian Verb Prefixes](https://www.ukrainianlessons.com/ukrainian-verb-prefixes/) — How prefixes create perfective verbs
+>
+> **Overview:** [All Verb Tenses](https://www.ukrainianlessons.com/ukrainian-tenses/) — Downloadable reference chart
+
 ## Diagnostic
 
 Ось дві історії про Софію з Дніпра:
@@ -42,6 +54,12 @@ vocabulary_count: 20
 
 The key insight: Story 1 describes a **pattern** — things that happened regularly throughout childhood. Story 2 describes a **specific event** — one memorable evening with one special book.
 
+**What English Speakers Miss**
+
+In English, both stories would use the same verb forms. "I read many books" and "I read the book" look identical in past tense. English relies on context (every week vs. that night) and quantity cues (many books vs. the book) to distinguish habitual from single events.
+
+Ukrainian makes this distinction grammatically mandatory. The verb form itself tells you whether you're describing a pattern or a specific occurrence. This precision is both a challenge (you must always choose) and a gift (you can be unambiguous).
+
 **Швидкий тест:**
 
 Which aspect would you use in these situations?
@@ -52,6 +70,21 @@ Which aspect would you use in these situations?
 4. Торік ми нарешті ___ (вчили / вивчили) всю граматику.
 
 ## Analysis
+
+**The Single vs Repeated Distinction: Why It Matters for English Speakers**
+
+English handles the difference between single and repeated events through context and additional words, not verb forms. Compare these English sentences:
+
+- "I read books" (habitual) vs "I read a book" (single event)
+- "She called me every day" (repeated) vs "She called me yesterday" (single)
+
+In both cases, English uses the same verb form ("read", "called"). The context tells you whether it's habitual or single.
+
+Ukrainian makes this distinction mandatory in the verb itself. You cannot use the same verb form for both meanings. This means every time you describe a past action, you must commit to either:
+- **Single event view** (perfective) — this happened once, as a complete event
+- **Repeated event view** (imperfective) — this happened multiple times, as a pattern
+
+The good news: Ukrainian provides clear markers that tell you which view to take. Learning these markers gives you an automatic aspect-selection system.
 
 ### Маркери одноразовості — Triggers for Perfective
 
@@ -116,6 +149,18 @@ Other time expressions signal **patterns, habits, or repeated actions**. These a
 > | usually | зазвичай | impf |
 > | from time to time | час від часу | impf |
 
+**How This Differs from English "Used To"**
+
+English speakers often try to map Ukrainian imperfective to "used to" (e.g., "I used to read"). While there's overlap, Ukrainian imperfective is broader. Consider:
+
+- "I used to read every day" → Я читав щодня (imperfective — correct)
+- "When I was young, I read a lot" → Коли я був молодим, я багато читав (imperfective — correct)
+- "Last summer I swam every day" → Минулого літа я плавав щодня. (Imperfective — repeated action within a specific period.)
+
+In the last example, English doesn't use "used to" because it's talking about a specific time period. But Ukrainian still uses imperfective because the action was repeated within that period.
+
+The rule is simpler than trying to translate from English: **repeated within any time frame = imperfective**.
+
 ### Коли маркера немає — What if there's no time marker?
 
 Without a clear time marker, context determines aspect:
@@ -137,6 +182,18 @@ Without a clear time marker, context determines aspect:
 ## Deep Dive
 
 ### Складні пари — When both aspects seem possible
+
+**Understanding Ambiguous Contexts**
+
+In many situations, both aspects are grammatically correct but communicate different meanings. This is where Ukrainian gives you expressive power that English lacks — you can precisely specify your perspective on the event.
+
+The key is to ask yourself: "What do I want to emphasize — the event as a single completed occurrence, or the activity as a general fact?"
+
+Consider "I went to the store yesterday":
+- Я **ходив** у магазин учора. (Imperfective) — You're stating that you went, perhaps mentioning it in conversation, not focusing on any particular outcome.
+- Я **пішов** у магазин учора. (Perfective) — You're emphasizing the specific act of leaving to go to the store, perhaps explaining your absence.
+
+Both are correct. Your choice depends on your communicative intent.
 
 Sometimes the choice isn't obvious. Let's analyze some tricky cases.
 
@@ -162,11 +219,31 @@ But perfective is possible for specific memories:
 - Учора вони **приходили**. (Yesterday they came — we're noting the fact.)
 - Учора вони **прийшли** о п'ятій. (Yesterday they arrived at five — specific time.)
 
-> 🌍 **Real World**
+> 🌍 **Real World: The Parental Question**
 >
 > When Ukrainian parents ask "Що ти **робив** сьогодні?" (imperfective — what were you doing today?), they want a general report. But if they ask "Що ти **зробив**?" (perfective), they're asking for concrete results — homework, chores, accomplishments. Kids quickly learn the difference!
+>
+> This shows how aspect carries social meaning. The imperfective question is casual and open-ended. The perfective question implies accountability — "what did you actually complete?" Understanding this helps you interpret not just grammar, but the intent behind questions.
 
 ### Наративи — Telling stories about the past
+
+**The Narrative Technique: Background vs Foreground**
+
+Professional writers and natural speakers use aspect to create what linguists call the "foreground-background" distinction in narrative. Understanding this technique will make your Ukrainian storytelling much more natural.
+
+**Background (imperfective)** sets the scene:
+- What was happening when the story begins
+- Ongoing states and situations
+- Atmospheric details
+- Simultaneous actions
+
+**Foreground (perfective)** advances the plot:
+- Main events that move the story forward
+- Sequential actions
+- Decisive moments
+- Outcomes and results
+
+This is similar to how movies use wide establishing shots (background) and close-up action shots (foreground). Ukrainian grammar gives you this "camera control" through aspect.
 
 Stories often mix aspects. Here's how:
 
@@ -184,6 +261,8 @@ This creates the "camera" effect: imperfective sets the scene (wide shot), perfe
 
 ### Діалог: Спогади дідуся в Запоріжжі
 
+This dialogue demonstrates how native speakers naturally switch between aspects when telling personal stories. The grandson asks questions using imperfective (to ask about general habits), while the grandfather uses imperfective for habitual background and perfective for specific memorable events. Pay special attention to the "one time" story about the boat — notice how all the main events use perfective.
+
 **Онук:** Дідусю, розкажи про своє дитинство.
 
 **Дідусь:** Ми **жили** в маленькому будинку біля Дніпра. Кожного ранку я **прокидався** і **біг** до річки. Ми з друзями **купалися** там годинами.
@@ -200,13 +279,17 @@ This creates the "camera" effect: imperfective sets the scene (wide shot), perfe
 
 **Дідусь:** О, мама дуже **розсердилася**. Але тато **посміхнувся** і **сказав**: "Ти справжній козак!"
 
-> 📚 **Grammar Insight**
+> 📚 **Grammar Insight: Analyzing the Dialogue**
 >
 > Notice how дідусь switches between imperfective (жили, купалися, грали — habitual actions) and perfective (знайшли, полагодили, поплили — specific events). This is the "camera technique" in storytelling: imperfective = wide shot (setting the scene), perfective = close-up (the action).
+>
+> Also notice the question triggers: When the grandson asks about habits (чим займалися взимку?), grandfather responds with imperfective. When asked about something special (щось особливе траплялося?), he shifts to perfective for the boat adventure. This natural pattern repeats in everyday conversation.
 
 ---
 
 ### Діалог: Інтерв'ю про подорож у Полтаві
+
+This interview shows how aspect works in Q&A situations. The journalist uses imperfective for general questions about the trip (planning, traveling), while Maria switches to perfective when describing the specific memorable incident (getting lost, meeting the Ukrainian woman). Notice the beautiful contrast: "ходили годинами" (imperfective — we were walking for hours) versus "зустріли українку" (perfective — we met a Ukrainian woman).
 
 **Журналіст:** Розкажіть про вашу першу подорож за кордон.
 
@@ -231,6 +314,8 @@ This creates the "camera" effect: imperfective sets the scene (wide shot), perfe
 ---
 
 ### Діалог: Робочі спогади в Івано-Франківську
+
+This dialogue shows aspect in a casual workplace conversation about memories. Notice how questions about habitual past use imperfective (what did you used to do?), while specific memorable incidents use perfective. Also pay attention to the humorous ending — the unexpected perfective switch creates the punchline.
 
 **Колега 1:** Ти давно **працюєш** у цій компанії?
 
@@ -273,6 +358,19 @@ This creates the "camera" effect: imperfective sets the scene (wide shot), perfe
 > Ukrainian comedians often play with aspect for humor. A classic joke: "Я **пив** каву кожного ранку п'ять років... а потім **випив** і пішов на роботу." The unexpected switch from habitual imperfective to perfective (as if one cup took five years) creates the punchline.
 
 ## Practice
+
+**Practicing Aspect: A Strategy for Checking Your Work**
+
+When practicing aspect selection, many learners make the mistake of translating from English first, then trying to fix the aspect. A better approach is to train yourself to think in aspect-first terms.
+
+Here's a practical technique:
+
+1. **Identify the time marker** (if any) — this often determines aspect automatically
+2. **If no marker**, ask: "Am I describing a pattern/habit, or a specific event?"
+3. **Choose the aspect** before you start forming the sentence
+4. **Form the sentence** with the correct verb
+
+This "aspect-first" approach prevents the common error of forming an English sentence, translating it, and then struggling to retrofit the correct aspect.
 
 ### Модель: Вибір за маркером
 
@@ -319,6 +417,13 @@ Transform each sentence from single event to habitual (or vice versa):
 
 ### Reading Practice: Лист із минулого
 
+This letter is an excellent example of natural aspect usage. Before reading, notice that the author:
+- Uses imperfective for nostalgic memories of repeated childhood activities (how they spent summers)
+- Switches to perfective for the specific "one time" adventure in the forest
+- Returns to perfective for his recent visit (a single event with emotional weight)
+
+As you read, try to identify which verbs describe habitual past actions and which describe single events.
+
 Прочитайте лист і визначте, чому автор обрав кожен вид.
 
 "Дорога Оксано,
@@ -343,6 +448,20 @@ Transform each sentence from single event to habitual (or vice versa):
 
 # Summary
 
+**What You've Learned: The Single vs Repeated Framework**
+
+This module has given you a powerful decision framework for past tense aspect. Unlike the more nuanced process vs result distinction (Module 01), the single vs repeated distinction is often clear-cut — if you can identify the time marker, you almost always know which aspect to use.
+
+**The Core Mental Model**
+
+Think of it this way: every past action either happened once or multiple times. Ukrainian verb forms capture this distinction directly:
+- **Once** = perfective (view the event as a completed whole)
+- **Multiple times** = imperfective (view the events as a recurring pattern)
+
+This is simpler than English, where "I read books" and "I read a book" use the same verb form and you rely on context.
+
+---
+
 У цьому модулі ви вивчили:
 
 **Маркери одноразовості (→ доконаний вид):**
@@ -359,6 +478,17 @@ Transform each sentence from single event to habitual (or vice versa):
 **Ключова ідея:** Time markers are your best friends in aspect selection. When you see a frequency word (щодня, часто, завжди), reach for imperfective. When you see a singularity marker (одного разу, раптом, нарешті), use perfective.
 
 **Порада:** In stories, imperfective sets the background (what was happening), while perfective advances the action (what happened next).
+
+> ✅ **Перевірте себе**
+>
+> Before moving on, can you:
+> - [ ] Identify time markers that trigger perfective (раптом, одного разу, нарешті)?
+> - [ ] Identify time markers that trigger imperfective (часто, щодня, завжди)?
+> - [ ] Choose correct aspect based on whether an event was single or repeated?
+> - [ ] Use aspect correctly to set background (impf) vs advance action (pf) in stories?
+>
+> If you checked all boxes, proceed to the next module.
+> If not, review the Analysis section and try the Practice activities again.
 
 ---
 

@@ -1,0 +1,357 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-46",
+    "moduleId": "mod-uk-A2-46",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.5",
+    "moduleNumber": 46,
+    "moduleType": "vocabulary",
+    "pedagogy": "PPP",
+    "immersionLevel": 0.4,
+    "title": "Nature & Weather",
+    "titleUk": null,
+    "subtitle": "Environment and Climate Vocabulary",
+    "description": "Learner knows nature and weather vocabulary",
+    "objectives": [
+      "Learner knows nature and weather vocabulary",
+      "Learner can describe weather and environment",
+      "Learner can discuss seasons and climate"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "thematic vocabulary",
+      "weather expressions"
+    ],
+    "tags": [
+      "vocabulary",
+      "nature",
+      "weather",
+      "environment"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Nature & Weather",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Warm-up\n\nУкраїна має чудову природу! Ukraine has beautiful nature! From the Carpathian Mountains in the west to the Black Sea coast in the south, Ukraine offers diverse landscapes and changing seasons.\n\nThis module covers essential vocabulary for discussing nature, weather, seasons, and the environment. Being able to talk about the weather is one of the most common conversation topics in any language.\n\nUkrainian weather patterns vary significantly by region. Kyiv experiences cold winters and warm summers, while Crimea and Odesa have milder climates near the sea. The Carpathians receive heavy snowfall, making them perfect for winter sports.\n\n---\n\n## Presentation\n\n## Landscape\n\nUkrainian landscapes are diverse and beautiful. Here is the essential vocabulary for describing natural features:\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| гора | mountain | Карпати — це гори. |\n| долина | valley | Долина зелена влітку. |\n| ліс | forest | Ми гуляємо в лісі. |\n| озеро | lake | Озеро чисте і холодне. |\n| ріка | river | Дніпро — велика ріка. |\n| море | sea | Ми їдемо на море. |\n| пляж | beach | Пляж гарний. |\n| поле | field | Поле жовте влітку. |\n\n> [!tip] Locative Case with Places\n> When describing being IN or AT a place, use the locative case:\n> **в лісі** (in the forest), **на морі** (at the sea), **в горах** (in the mountains)\n> Note: \"на морі\" uses НА because it refers to the surface of the sea, while \"в морі\" means under the water.\n> The locative case is essential for describing locations in Ukrainian. It is always used after prepositions like \"в/у\" (in) and \"на\" (on/at). This is different from English, where we simply say \"in the forest\" without changing the noun form.\n\nUkraine is known for its beautiful landscapes. The Carpathian Mountains in the west offer hiking and skiing. The Dnieper River flows through Kyiv, the capital city. The Black Sea coast provides beaches and resorts for summer vacations.\n\n## Weather\n\nWeather vocabulary is essential for daily conversations. Ukrainian uses adverbs to describe weather conditions:\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| сонячно | sunny | Сьогодні сонячно і тепло. |\n| хмарно | cloudy | Надворі хмарно. |\n| дощ | rain | Іде дощ. |\n| сніг | snow | Падає сніг. |\n| вітер | wind | Сильний вітер. |\n| гроза | thunderstorm | Буде гроза ввечері. |\n| туман | fog | Вранці туман. |\n\n> [!cultural] Weather Expressions\n> Ukrainians often ask \"Яка сьогодні погода?\" (What is the weather like today?)\n> The response typically starts with \"Сьогодні...\" (Today it is...)\n> For example: \"Сьогодні сонячно\" or \"Сьогодні йде дощ\"\n> The verb \"йти\" (to go) is used with precipitation: \"Іде дощ\" (It's raining)\n> This is similar to the English expression \"it's raining\" where we also use a verb to describe precipitation.\n\nWeather in Ukraine varies significantly throughout the year. Summer temperatures can reach 35 degrees Celsius in the south, while winter temperatures often drop to minus 20 in the north. Spring and autumn are mild and pleasant, making them ideal times for outdoor activities and sightseeing.\n\n## Seasons\n\nEach season in Ukraine has its own beauty and character:\n\n| Ukrainian | English | Characteristics |\n|-----------|---------|-----------------|\n| весна | spring | flowers bloom, warm |\n| літо | summer | hot, vacation time |\n| осінь | autumn | leaves fall, cool |\n| зима | winter | cold, snow |\n\n---\n\n## Story Time: На Природі\n\nСьогодні субота. Сім'я Петренків їде на природу. Погода чудова!\n\n— Яка гарна погода! — каже тато. — Сонячно і тепло!\n— Так, ідеальний день для прогулянки, — погоджується мама.\n\nВони приїжджають до лісу. Ліс зелений і свіжий.\n\n— Подивіться, яке гарне озеро! — кричить Марійка.\n— Вода чиста і прозора! — додає Олесь.\n\nДіти бігають по траві. Птахи співають на деревах.\n\n— Мамо, я бачу квітку! Яка вона гарна! — радіє Марійка.\n— Це ромашка. Влітку багато квітів у лісі.\n\nТато дивиться на небо.\n\n— Гляньте, хмари! Можливо, буде дощ.\n— Тоді давайте їсти! — пропонує мама.\n\nВони сідають і їдять бутерброди біля озера.\n\n— Я люблю природу! — каже Олесь.\n— Ми теж! — погоджується вся сім'я.\n\nПісля обіду вони гуляють біля озера. Тато показує дітям різних птахів.\n\n— Дивіться, це лелека! — каже тато. — Він живе біля води.\n— А це що за птах? — питає Марійка.\n— Це синичка. Вона співає дуже гарно.\n\nОлесь бачить рибу в озері.\n\n— Мамо, там риба! Можна ловити?\n— Ні, сьогодні ми просто відпочиваємо.\n\nВечоріє. Сонце заходить. Небо стає оранжевим і рожевим.\n\n— Який гарний захід сонця! — каже мама.\n— Пора додому, — каже тато. — Завтра на роботу.\n\nСім'я Петренків щаслива. Вони провели чудовий день на природі.\n\n> [!tip] Nature Vocabulary and Outdoor Activities\n> \"Природа\" means nature in general.\n> \"На природі\" means outdoors or in nature.\n> Ukrainians often go \"на природу\" for picnics and relaxation.\n> This tradition of spending time outdoors helps families connect with nature and each other.\n\n---\n\n## Story Time Part 2: Чотири Сезони\n\nОксана любить усі пори року. Кожен сезон — особливий.\n\n**Весна**\nВесна — це пробудження природи. Тане сніг. З'являються перші квіти.\n\n— Як чудово! Вже тепло! — радіє Оксана.\n\nПтахи повертаються з півдня. Дерева стають зеленими.\n\n**Літо**\nЛіто — це канікули та відпочинок. Оксана їде на море.\n\n— Море таке тепле! Я люблю плавати! — каже вона.\n\nСонце світить яскраво. Небо голубе і чисте.\n\n**Осінь**\nОсінь — це золота пора. Листя стає жовтим і червоним.\n\n— Який гарний парк! — захоплюється Оксана.\n\nЧасто йде дощ. Небо хмарне і сіре. Але осінь теж красива!\n\n**Зима**\nЗима — це сніг та мороз. Оксана катається на ковзанах.\n\n— Як холодно! Але я люблю зиму! — каже вона.\n\nПадає білий сніг. Усе біле і чисте. Новий рік і Різдво — улюблені свята!\n\nОксана дивиться у вікно. Діти ліплять сніговика на подвір'ї.\n\n— Мамо, можна гуляти? — питає вона.\n— Так, але одягни теплу куртку! — відповідає мама.\n\nОксана біжить надвір. Зима чудова! Кожен сезон має свою красу.\n\n> [!cultural] Пори Року в Україні\n> Україна має чотири різні пори року.\n> Влітку температура досягає 35°C, а взимку падає до -15°C.\n> Українці святкують прихід весни як час оновлення та надії.\n\n---\n\n## Common Expressions\n\n## Weather Questions and Answers\n\n| Question | Answer |\n|----------|--------|\n| Яка сьогодні погода? | Сьогодні сонячно. |\n| Іде дощ? | Так, іде дощ. / Ні, не йде. |\n| Яка температура? | Двадцять градусів. |\n| Буде дощ завтра? | Так, обіцяють дощ. |\n\n## Useful Phrases\n\nWhen discussing weather in Ukrainian, these expressions will help you communicate naturally:\n\n- **Яка гарна погода!** = What nice weather! Use this exclamation on beautiful days.\n- **Надворі холодно.** = It's cold outside. Надворі literally means \"outdoors\".\n- **Буде гроза.** = There will be a thunderstorm. Use this to warn about incoming storms.\n- **Падає сніг.** = It's snowing. Note that Ukrainian uses \"падає\" (falls) with snow.\n- **Дує вітер.** = The wind is blowing. The verb \"дути\" specifically means \"to blow\".\n- **Яка погода завтра?** = What is the weather tomorrow? Useful for planning activities.\n- **Візьми парасольку!** = Take an umbrella! A helpful reminder when rain is expected.\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "**Ландшафт:**\n- гора\n- долина\n- ліс\n- озеро\n- ріка\n- море\n- поле\n- пляж\n\n**Погода:**\n- сонячно\n- хмарно\n- дощ\n- сніг\n- вітер\n- гроза\n- туман\n\n**Сезони:**\n- весна\n- літо\n- осінь\n- зима\n\nТепер ви можете добре говорити про погоду і чудову природу українською мовою! Насолоджуйтесь чудовою природою рідної України! Вчіться нових слів і розповідайте друзям про кожен чудовий сезон! Бажаємо гарної погоди та великих успіхів у вивченні!\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Nature Words\n\n> Match Ukrainian to English.\n\n- гора :: mountain\n- долина :: valley\n- ліс :: forest\n- озеро :: lake\n- ріка :: river\n- море :: sea\n- сонячно :: sunny\n- хмарно :: cloudy\n- дощ :: rain\n- сніг :: snow\n- весна :: spring\n- зима :: winter\n\n## fill-in: Nature & Weather\n\n> Complete the sentences.\n\n1. Сьогодні [___]. (sunny)\n   > [!answer] сонячно\n   > [!options] сонячно | хмарно | дощ | сніг\n\n2. Іде [___]. (rain)\n   > [!answer] дощ\n   > [!options] сонячно | хмарно | дощ | сніг\n\n3. [___] гарна. (mountain)\n   > [!answer] Гора\n   > [!options] Гора | Долина | Ріка | Море\n\n4. Ми плаваємо в [___]. (lake)\n   > [!answer] озері\n   > [!options] горі | долині | озері | морі\n\n5. Я люблю [___]. (spring)\n   > [!answer] весну\n   > [!options] весну | літо | осінь | зиму\n\n6. [___] холодна. (Winter)\n   > [!answer] Зима\n   > [!options] Весна | Літо | Осінь | Зима\n\n7. Птахи співають у [___]. (forest)\n   > [!answer] лісі\n   > [!options] горі | лісі | морі | полі\n\n8. Сьогодні [___]. (windy)\n   > [!answer] вітряно\n   > [!options] сонячно | хмарно | вітряно | туманно\n\n## quiz: Nature & Weather\n\n1. \"Гора\" is:\n   - [x] Mountain\n   - [ ] Valley\n   - [ ] River\n\n2. \"Озеро\" is:\n   - [x] Lake\n   - [ ] Sea\n   - [ ] River\n\n3. \"Сонячно\" means:\n   - [x] Sunny\n   - [ ] Cloudy\n   - [ ] Rainy\n\n4. \"Дощ\" means:\n   - [x] Rain\n   - [ ] Snow\n   - [ ] Wind\n\n5. \"Весна\" is:\n   - [x] Spring\n   - [ ] Summer\n   - [ ] Winter\n\n6. \"Зима\" is:\n   - [x] Winter\n   - [ ] Summer\n   - [ ] Autumn\n\n7. \"Туман\" means:\n   - [x] Fog\n   - [ ] Rain\n   - [ ] Snow\n\n8. \"Літо\" means:\n   - [x] Summer\n   - [ ] Winter\n   - [ ] Autumn\n\n## cloze: Story Comprehension\n\n> Complete based on the stories.\n\nСім'я Петренків їде на [___:1]. (nature)\nПогода [___:2] і тепла. (sunny)\nОзеро [___:3] і прозоре. (clean)\nОксана їде на [___:4] влітку. (sea)\nОсінь — це [___:5] пора. (golden)\nВзимку падає білий [___:6]. (snow)\n\n1. природу\n> [!answer] природу\n> [!options] природу | море | дачу\n\n2. сонячна\n> [!answer] сонячна\n> [!options] сонячна | хмарна | дощова\n\n3. чисте\n> [!answer] чисте\n> [!options] чисте | брудне | мале\n\n4. море\n> [!answer] море\n> [!options] море | гори | ліс\n\n5. золота\n> [!answer] золота\n> [!options] золота | зелена | біла\n\n6. сніг\n> [!answer] сніг\n> [!options] сніг | дощ | листя\n\n## unjumble: Weather Sentences\n\n1. сонячно / Сьогодні / тепло / і\n   > [!answer] Сьогодні сонячно і тепло.\n2. йде / Надворі / дощ\n   > [!answer] Надворі йде дощ.\n3. холодно / Взимку / дуже\n   > [!answer] Взимку дуже холодно.\n4. падає / білий / Сніг\n   > [!answer] Падає білий сніг.\n5. чудова / погода / Яка\n   > [!answer] Яка чудова погода!\n6. весну / Я / люблю\n   > [!answer] Я люблю весну.\n7. хмарно / буде / Завтра\n   > [!answer] Завтра буде хмарно.\n8. гарне / озеро / Яке\n   > [!answer] Яке гарне озеро!\n\n## error-correction: Weather Mistakes\n\n1. Сьогодні **сніг** і тепло.\n   > [!error] сніг\n   > [!answer] сонячно\n   > [!explanation] Snow and warm don't go together. Use \"сонячно\" (sunny) with warm weather.\n   > [!options] сонячно | сніг\n\n2. Ми плаваємо в **горі**.\n   > [!error] горі\n   > [!answer] озері\n   > [!explanation] You swim in a lake (озеро) or sea, not a mountain.\n   > [!options] озері | горі\n\n3. **Літо** — це холодна пора.\n   > [!error] Літо\n   > [!answer] Зима\n   > [!explanation] Winter (зима) is the cold season, not summer.\n   > [!options] Зима | Літо\n\n4. Падає білий **дощ**.\n   > [!error] дощ\n   > [!answer] сніг\n   > [!explanation] Snow (сніг) is white, not rain.\n   > [!options] сніг | дощ\n\n5. Птахи співають на **морі**.\n   > [!error] морі\n   > [!answer] деревах\n   > [!explanation] Birds sing in trees (дерева), not at sea.\n   > [!options] деревах | морі\n\n6. Влітку дуже **холодно**.\n   > [!error] холодно\n   > [!answer] тепло\n   > [!explanation] Summer is warm (тепло), not cold.\n   > [!options] тепло | холодно\n\n## match-up: Seasons & Activities\n\n> Match seasons with typical activities.\n\n- весна :: квіти цвітуть\n- літо :: відпочинок на морі\n- осінь :: листя падає\n- зима :: катання на ковзанах\n- гроза :: блискавка і грім\n- туман :: погана видимість\n- сонячно :: хороша погода\n- сніг :: білий покрив\n\n## group-sort: Nature Categories\n\n> Sort words by category.\n\n### Landscape\n- гора\n- долина\n- ліс\n- озеро\n- ріка\n- море\n\n### Weather\n- сонячно\n- хмарно\n- дощ\n- сніг\n- вітер\n- гроза\n\n### Seasons\n- весна\n- літо\n- осінь\n- зима\n\n## true-false: Nature Facts\n\n> Mark true or false.\n\n- [x] \"Гора\" = mountain.\n- [x] \"Озеро\" = lake.\n- [ ] \"Ріка\" = sea.\n- [x] \"Море\" = sea.\n- [x] \"Сонячно\" = sunny.\n- [ ] \"Хмарно\" = sunny.\n- [x] \"Дощ\" = rain.\n- [x] \"Весна\" = spring.\n- [ ] \"Літо\" = winter.\n- [x] \"Зима\" = winter.\n- [x] \"Ліс\" = forest.\n- [ ] \"Долина\" = mountain.\n\n## translate: Nature Words\n\n1. Mountain\n   - [x] гора\n   - [ ] долина\n   - [ ] ріка\n\n2. Lake\n   - [x] озеро\n   - [ ] ріка\n   - [ ] море\n\n3. Forest\n   - [x] ліс\n   - [ ] поле\n   - [ ] гора\n\n4. Sunny\n   - [x] сонячно\n   - [ ] хмарно\n   - [ ] дощ\n\n5. Rain\n   - [x] дощ\n   - [ ] сніг\n   - [ ] вітер\n\n6. Spring\n   - [x] весна\n   - [ ] літо\n   - [ ] зима\n\n7. Summer\n   - [x] літо\n   - [ ] зима\n   - [ ] осінь\n\n8. Winter\n   - [x] зима\n   - [ ] літо\n   - [ ] весна\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| гора | /ɦɔˈra/ | mountain | noun | f | landscape |\n| долина | /dɔˈlɪna/ | valley | noun | f | landscape |\n| ліс | /lis/ | forest | noun | m | nature |\n| озеро | /ˈɔzerɔ/ | lake | noun | n | water |\n| ріка | /riˈka/ | river | noun | f | water |\n| море | /ˈmɔre/ | sea | noun | n | water |\n| океан | /ɔkeˈan/ | ocean | noun | m | water |\n| пляж | /plʲaʒ/ | beach | noun | m | landscape |\n| поле | /ˈpɔle/ | field | noun | n | landscape |\n| луг | /luɦ/ | meadow | noun | m | landscape |\n| сонячно | /ˈsɔnʲatʃnɔ/ | sunny | adv | — | weather |\n| хмарно | /ˈxmarnɔ/ | cloudy | adv | — | weather |\n| дощ | /dɔʃtʃ/ | rain | noun | m | weather |\n| сніг | /sniɦ/ | snow | noun | m | weather |\n| вітер | /ˈviter/ | wind | noun | m | weather |\n| гроза | /ɦrɔˈza/ | thunderstorm | noun | f | weather |\n| туман | /tuˈman/ | fog | noun | m | weather |\n| блискавка | /blɪsˈkavka/ | lightning | noun | f | weather |\n| грім | /ɦrim/ | thunder | noun | m | weather |\n| весна | /vesˈna/ | spring | noun | f | season |\n| літо | /ˈlitɔ/ | summer | noun | n | season |\n| осінь | /ˈɔsinʲ/ | autumn | noun | f | season |\n| зима | /zɪˈma/ | winter | noun | f | season |\n| дерево | /ˈderevɔ/ | tree | noun | n | flora |\n| квітка | /kvitˈka/ | flower | noun | f | flora |\n| трава | /traˈva/ | grass | noun | f | flora |\n| птах | /ptax/ | bird | noun | m | fauna |\n| тварина | /tvaˈrɪna/ | animal | noun | f | fauna |\n| погода | /pɔˈɦɔda/ | weather | noun | f | climate |\n| клімат | /ˈklimat/ | climate | noun | m | environment |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-46\ntitle: \"Nature & Weather\"\nsubtitle: \"Environment and Climate Vocabulary\"\nversion: \"2.0\"\nphase: \"A2.5\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - vocabulary\n  - nature\n  - weather\n  - environment\ngrammar:\n  - thematic vocabulary\n  - weather expressions\nobjectives:\n  - \"Learner knows nature and weather vocabulary\"\n  - \"Learner can describe weather and environment\"\n  - \"Learner can discuss seasons and climate\"\nvocabulary_count: 30\n---\n\n# Nature & Weather\n\n## Warm-up\n\nУкраїна має чудову природу! Ukraine has beautiful nature! From the Carpathian Mountains in the west to the Black Sea coast in the south, Ukraine offers diverse landscapes and changing seasons.\n\nThis module covers essential vocabulary for discussing nature, weather, seasons, and the environment. Being able to talk about the weather is one of the most common conversation topics in any language.\n\nUkrainian weather patterns vary significantly by region. Kyiv experiences cold winters and warm summers, while Crimea and Odesa have milder climates near the sea. The Carpathians receive heavy snowfall, making them perfect for winter sports.\n\n---\n\n## Presentation\n\n## Landscape\n\nUkrainian landscapes are diverse and beautiful. Here is the essential vocabulary for describing natural features:\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| гора | mountain | Карпати — це гори. |\n| долина | valley | Долина зелена влітку. |\n| ліс | forest | Ми гуляємо в лісі. |\n| озеро | lake | Озеро чисте і холодне. |\n| ріка | river | Дніпро — велика ріка. |\n| море | sea | Ми їдемо на море. |\n| пляж | beach | Пляж гарний. |\n| поле | field | Поле жовте влітку. |\n\n> [!tip] Locative Case with Places\n> When describing being IN or AT a place, use the locative case:\n> **в лісі** (in the forest), **на морі** (at the sea), **в горах** (in the mountains)\n> Note: \"на морі\" uses НА because it refers to the surface of the sea, while \"в морі\" means under the water.\n> The locative case is essential for describing locations in Ukrainian. It is always used after prepositions like \"в/у\" (in) and \"на\" (on/at). This is different from English, where we simply say \"in the forest\" without changing the noun form.\n\nUkraine is known for its beautiful landscapes. The Carpathian Mountains in the west offer hiking and skiing. The Dnieper River flows through Kyiv, the capital city. The Black Sea coast provides beaches and resorts for summer vacations.\n\n## Weather\n\nWeather vocabulary is essential for daily conversations. Ukrainian uses adverbs to describe weather conditions:\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| сонячно | sunny | Сьогодні сонячно і тепло. |\n| хмарно | cloudy | Надворі хмарно. |\n| дощ | rain | Іде дощ. |\n| сніг | snow | Падає сніг. |\n| вітер | wind | Сильний вітер. |\n| гроза | thunderstorm | Буде гроза ввечері. |\n| туман | fog | Вранці туман. |\n\n> [!cultural] Weather Expressions\n> Ukrainians often ask \"Яка сьогодні погода?\" (What is the weather like today?)\n> The response typically starts with \"Сьогодні...\" (Today it is...)\n> For example: \"Сьогодні сонячно\" or \"Сьогодні йде дощ\"\n> The verb \"йти\" (to go) is used with precipitation: \"Іде дощ\" (It's raining)\n> This is similar to the English expression \"it's raining\" where we also use a verb to describe precipitation.\n\nWeather in Ukraine varies significantly throughout the year. Summer temperatures can reach 35 degrees Celsius in the south, while winter temperatures often drop to minus 20 in the north. Spring and autumn are mild and pleasant, making them ideal times for outdoor activities and sightseeing.\n\n## Seasons\n\nEach season in Ukraine has its own beauty and character:\n\n| Ukrainian | English | Characteristics |\n|-----------|---------|-----------------|\n| весна | spring | flowers bloom, warm |\n| літо | summer | hot, vacation time |\n| осінь | autumn | leaves fall, cool |\n| зима | winter | cold, snow |\n\n---\n\n## Story Time: На Природі\n\nСьогодні субота. Сім'я Петренків їде на природу. Погода чудова!\n\n— Яка гарна погода! — каже тато. — Сонячно і тепло!\n— Так, ідеальний день для прогулянки, — погоджується мама.\n\nВони приїжджають до лісу. Ліс зелений і свіжий.\n\n— Подивіться, яке гарне озеро! — кричить Марійка.\n— Вода чиста і прозора! — додає Олесь.\n\nДіти бігають по траві. Птахи співають на деревах.\n\n— Мамо, я бачу квітку! Яка вона гарна! — радіє Марійка.\n— Це ромашка. Влітку багато квітів у лісі.\n\nТато дивиться на небо.\n\n— Гляньте, хмари! Можливо, буде дощ.\n— Тоді давайте їсти! — пропонує мама.\n\nВони сідають і їдять бутерброди біля озера.\n\n— Я люблю природу! — каже Олесь.\n— Ми теж! — погоджується вся сім'я.\n\nПісля обіду вони гуляють біля озера. Тато показує дітям різних птахів.\n\n— Дивіться, це лелека! — каже тато. — Він живе біля води.\n— А це що за птах? — питає Марійка.\n— Це синичка. Вона співає дуже гарно.\n\nОлесь бачить рибу в озері.\n\n— Мамо, там риба! Можна ловити?\n— Ні, сьогодні ми просто відпочиваємо.\n\nВечоріє. Сонце заходить. Небо стає оранжевим і рожевим.\n\n— Який гарний захід сонця! — каже мама.\n— Пора додому, — каже тато. — Завтра на роботу.\n\nСім'я Петренків щаслива. Вони провели чудовий день на природі.\n\n> [!tip] Nature Vocabulary and Outdoor Activities\n> \"Природа\" means nature in general.\n> \"На природі\" means outdoors or in nature.\n> Ukrainians often go \"на природу\" for picnics and relaxation.\n> This tradition of spending time outdoors helps families connect with nature and each other.\n\n---\n\n## Story Time Part 2: Чотири Сезони\n\nОксана любить усі пори року. Кожен сезон — особливий.\n\n**Весна**\nВесна — це пробудження природи. Тане сніг. З'являються перші квіти.\n\n— Як чудово! Вже тепло! — радіє Оксана.\n\nПтахи повертаються з півдня. Дерева стають зеленими.\n\n**Літо**\nЛіто — це канікули та відпочинок. Оксана їде на море.\n\n— Море таке тепле! Я люблю плавати! — каже вона.\n\nСонце світить яскраво. Небо голубе і чисте.\n\n**Осінь**\nОсінь — це золота пора. Листя стає жовтим і червоним.\n\n— Який гарний парк! — захоплюється Оксана.\n\nЧасто йде дощ. Небо хмарне і сіре. Але осінь теж красива!\n\n**Зима**\nЗима — це сніг та мороз. Оксана катається на ковзанах.\n\n— Як холодно! Але я люблю зиму! — каже вона.\n\nПадає білий сніг. Усе біле і чисте. Новий рік і Різдво — улюблені свята!\n\nОксана дивиться у вікно. Діти ліплять сніговика на подвір'ї.\n\n— Мамо, можна гуляти? — питає вона.\n— Так, але одягни теплу куртку! — відповідає мама.\n\nОксана біжить надвір. Зима чудова! Кожен сезон має свою красу.\n\n> [!cultural] Пори Року в Україні\n> Україна має чотири різні пори року.\n> Влітку температура досягає 35°C, а взимку падає до -15°C.\n> Українці святкують прихід весни як час оновлення та надії.\n\n---\n\n## Common Expressions\n\n## Weather Questions and Answers\n\n| Question | Answer |\n|----------|--------|\n| Яка сьогодні погода? | Сьогодні сонячно. |\n| Іде дощ? | Так, іде дощ. / Ні, не йде. |\n| Яка температура? | Двадцять градусів. |\n| Буде дощ завтра? | Так, обіцяють дощ. |\n\n## Useful Phrases\n\nWhen discussing weather in Ukrainian, these expressions will help you communicate naturally:\n\n- **Яка гарна погода!** = What nice weather! Use this exclamation on beautiful days.\n- **Надворі холодно.** = It's cold outside. Надворі literally means \"outdoors\".\n- **Буде гроза.** = There will be a thunderstorm. Use this to warn about incoming storms.\n- **Падає сніг.** = It's snowing. Note that Ukrainian uses \"падає\" (falls) with snow.\n- **Дує вітер.** = The wind is blowing. The verb \"дути\" specifically means \"to blow\".\n- **Яка погода завтра?** = What is the weather tomorrow? Useful for planning activities.\n- **Візьми парасольку!** = Take an umbrella! A helpful reminder when rain is expected.\n\n---\n\n# Summary\n\n**Ландшафт:**\n- гора\n- долина\n- ліс\n- озеро\n- ріка\n- море\n- поле\n- пляж\n\n**Погода:**\n- сонячно\n- хмарно\n- дощ\n- сніг\n- вітер\n- гроза\n- туман\n\n**Сезони:**\n- весна\n- літо\n- осінь\n- зима\n\nТепер ви можете добре говорити про погоду і чудову природу українською мовою! Насолоджуйтесь чудовою природою рідної України! Вчіться нових слів і розповідайте друзям про кожен чудовий сезон! Бажаємо гарної погоди та великих успіхів у вивченні!\n\n---\n\n# Activities\n\n## match-up: Nature Words\n\n> Match Ukrainian to English.\n\n- гора :: mountain\n- долина :: valley\n- ліс :: forest\n- озеро :: lake\n- ріка :: river\n- море :: sea\n- сонячно :: sunny\n- хмарно :: cloudy\n- дощ :: rain\n- сніг :: snow\n- весна :: spring\n- зима :: winter\n\n## fill-in: Nature & Weather\n\n> Complete the sentences.\n\n1. Сьогодні [___]. (sunny)\n   > [!answer] сонячно\n   > [!options] сонячно | хмарно | дощ | сніг\n\n2. Іде [___]. (rain)\n   > [!answer] дощ\n   > [!options] сонячно | хмарно | дощ | сніг\n\n3. [___] гарна. (mountain)\n   > [!answer] Гора\n   > [!options] Гора | Долина | Ріка | Море\n\n4. Ми плаваємо в [___]. (lake)\n   > [!answer] озері\n   > [!options] горі | долині | озері | морі\n\n5. Я люблю [___]. (spring)\n   > [!answer] весну\n   > [!options] весну | літо | осінь | зиму\n\n6. [___] холодна. (Winter)\n   > [!answer] Зима\n   > [!options] Весна | Літо | Осінь | Зима\n\n7. Птахи співають у [___]. (forest)\n   > [!answer] лісі\n   > [!options] горі | лісі | морі | полі\n\n8. Сьогодні [___]. (windy)\n   > [!answer] вітряно\n   > [!options] сонячно | хмарно | вітряно | туманно\n\n## quiz: Nature & Weather\n\n1. \"Гора\" is:\n   - [x] Mountain\n   - [ ] Valley\n   - [ ] River\n\n2. \"Озеро\" is:\n   - [x] Lake\n   - [ ] Sea\n   - [ ] River\n\n3. \"Сонячно\" means:\n   - [x] Sunny\n   - [ ] Cloudy\n   - [ ] Rainy\n\n4. \"Дощ\" means:\n   - [x] Rain\n   - [ ] Snow\n   - [ ] Wind\n\n5. \"Весна\" is:\n   - [x] Spring\n   - [ ] Summer\n   - [ ] Winter\n\n6. \"Зима\" is:\n   - [x] Winter\n   - [ ] Summer\n   - [ ] Autumn\n\n7. \"Туман\" means:\n   - [x] Fog\n   - [ ] Rain\n   - [ ] Snow\n\n8. \"Літо\" means:\n   - [x] Summer\n   - [ ] Winter\n   - [ ] Autumn\n\n## cloze: Story Comprehension\n\n> Complete based on the stories.\n\nСім'я Петренків їде на [___:1]. (nature)\nПогода [___:2] і тепла. (sunny)\nОзеро [___:3] і прозоре. (clean)\nОксана їде на [___:4] влітку. (sea)\nОсінь — це [___:5] пора. (golden)\nВзимку падає білий [___:6]. (snow)\n\n1. природу\n> [!answer] природу\n> [!options] природу | море | дачу\n\n2. сонячна\n> [!answer] сонячна\n> [!options] сонячна | хмарна | дощова\n\n3. чисте\n> [!answer] чисте\n> [!options] чисте | брудне | мале\n\n4. море\n> [!answer] море\n> [!options] море | гори | ліс\n\n5. золота\n> [!answer] золота\n> [!options] золота | зелена | біла\n\n6. сніг\n> [!answer] сніг\n> [!options] сніг | дощ | листя\n\n## unjumble: Weather Sentences\n\n1. сонячно / Сьогодні / тепло / і\n   > [!answer] Сьогодні сонячно і тепло.\n2. йде / Надворі / дощ\n   > [!answer] Надворі йде дощ.\n3. холодно / Взимку / дуже\n   > [!answer] Взимку дуже холодно.\n4. падає / білий / Сніг\n   > [!answer] Падає білий сніг.\n5. чудова / погода / Яка\n   > [!answer] Яка чудова погода!\n6. весну / Я / люблю\n   > [!answer] Я люблю весну.\n7. хмарно / буде / Завтра\n   > [!answer] Завтра буде хмарно.\n8. гарне / озеро / Яке\n   > [!answer] Яке гарне озеро!\n\n## error-correction: Weather Mistakes\n\n1. Сьогодні **сніг** і тепло.\n   > [!error] сніг\n   > [!answer] сонячно\n   > [!explanation] Snow and warm don't go together. Use \"сонячно\" (sunny) with warm weather.\n   > [!options] сонячно | сніг\n\n2. Ми плаваємо в **горі**.\n   > [!error] горі\n   > [!answer] озері\n   > [!explanation] You swim in a lake (озеро) or sea, not a mountain.\n   > [!options] озері | горі\n\n3. **Літо** — це холодна пора.\n   > [!error] Літо\n   > [!answer] Зима\n   > [!explanation] Winter (зима) is the cold season, not summer.\n   > [!options] Зима | Літо\n\n4. Падає білий **дощ**.\n   > [!error] дощ\n   > [!answer] сніг\n   > [!explanation] Snow (сніг) is white, not rain.\n   > [!options] сніг | дощ\n\n5. Птахи співають на **морі**.\n   > [!error] морі\n   > [!answer] деревах\n   > [!explanation] Birds sing in trees (дерева), not at sea.\n   > [!options] деревах | морі\n\n6. Влітку дуже **холодно**.\n   > [!error] холодно\n   > [!answer] тепло\n   > [!explanation] Summer is warm (тепло), not cold.\n   > [!options] тепло | холодно\n\n## match-up: Seasons & Activities\n\n> Match seasons with typical activities.\n\n- весна :: квіти цвітуть\n- літо :: відпочинок на морі\n- осінь :: листя падає\n- зима :: катання на ковзанах\n- гроза :: блискавка і грім\n- туман :: погана видимість\n- сонячно :: хороша погода\n- сніг :: білий покрив\n\n## group-sort: Nature Categories\n\n> Sort words by category.\n\n### Landscape\n- гора\n- долина\n- ліс\n- озеро\n- ріка\n- море\n\n### Weather\n- сонячно\n- хмарно\n- дощ\n- сніг\n- вітер\n- гроза\n\n### Seasons\n- весна\n- літо\n- осінь\n- зима\n\n## true-false: Nature Facts\n\n> Mark true or false.\n\n- [x] \"Гора\" = mountain.\n- [x] \"Озеро\" = lake.\n- [ ] \"Ріка\" = sea.\n- [x] \"Море\" = sea.\n- [x] \"Сонячно\" = sunny.\n- [ ] \"Хмарно\" = sunny.\n- [x] \"Дощ\" = rain.\n- [x] \"Весна\" = spring.\n- [ ] \"Літо\" = winter.\n- [x] \"Зима\" = winter.\n- [x] \"Ліс\" = forest.\n- [ ] \"Долина\" = mountain.\n\n## translate: Nature Words\n\n1. Mountain\n   - [x] гора\n   - [ ] долина\n   - [ ] ріка\n\n2. Lake\n   - [x] озеро\n   - [ ] ріка\n   - [ ] море\n\n3. Forest\n   - [x] ліс\n   - [ ] поле\n   - [ ] гора\n\n4. Sunny\n   - [x] сонячно\n   - [ ] хмарно\n   - [ ] дощ\n\n5. Rain\n   - [x] дощ\n   - [ ] сніг\n   - [ ] вітер\n\n6. Spring\n   - [x] весна\n   - [ ] літо\n   - [ ] зима\n\n7. Summer\n   - [x] літо\n   - [ ] зима\n   - [ ] осінь\n\n8. Winter\n   - [x] зима\n   - [ ] літо\n   - [ ] весна\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| гора | /ɦɔˈra/ | mountain | noun | f | landscape |\n| долина | /dɔˈlɪna/ | valley | noun | f | landscape |\n| ліс | /lis/ | forest | noun | m | nature |\n| озеро | /ˈɔzerɔ/ | lake | noun | n | water |\n| ріка | /riˈka/ | river | noun | f | water |\n| море | /ˈmɔre/ | sea | noun | n | water |\n| океан | /ɔkeˈan/ | ocean | noun | m | water |\n| пляж | /plʲaʒ/ | beach | noun | m | landscape |\n| поле | /ˈpɔle/ | field | noun | n | landscape |\n| луг | /luɦ/ | meadow | noun | m | landscape |\n| сонячно | /ˈsɔnʲatʃnɔ/ | sunny | adv | — | weather |\n| хмарно | /ˈxmarnɔ/ | cloudy | adv | — | weather |\n| дощ | /dɔʃtʃ/ | rain | noun | m | weather |\n| сніг | /sniɦ/ | snow | noun | m | weather |\n| вітер | /ˈviter/ | wind | noun | m | weather |\n| гроза | /ɦrɔˈza/ | thunderstorm | noun | f | weather |\n| туман | /tuˈman/ | fog | noun | m | weather |\n| блискавка | /blɪsˈkavka/ | lightning | noun | f | weather |\n| грім | /ɦrim/ | thunder | noun | m | weather |\n| весна | /vesˈna/ | spring | noun | f | season |\n| літо | /ˈlitɔ/ | summer | noun | n | season |\n| осінь | /ˈɔsinʲ/ | autumn | noun | f | season |\n| зима | /zɪˈma/ | winter | noun | f | season |\n| дерево | /ˈderevɔ/ | tree | noun | n | flora |\n| квітка | /kvitˈka/ | flower | noun | f | flora |\n| трава | /traˈva/ | grass | noun | f | flora |\n| птах | /ptax/ | bird | noun | m | fauna |\n| тварина | /tvaˈrɪna/ | animal | noun | f | fauna |\n| погода | /pɔˈɦɔda/ | weather | noun | f | climate |\n| клімат | /ˈklimat/ | climate | noun | m | environment |\n",
+    "createdAt": "2025-12-15T20:02:03.070771Z",
+    "modifiedAt": "2025-12-15T20:02:03.070771Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-46",
+    "level": "A2",
+    "phase": "A2.5",
+    "wordCount": 30,
+    "newWordCount": 30,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "гора",
+        "ipa": "/ɦɔˈra/",
+        "en": "mountain",
+        "pos": "noun",
+        "gender": "f",
+        "note": "landscape"
+      },
+      {
+        "id": "vocab-2",
+        "uk": "долина",
+        "ipa": "/dɔˈlɪna/",
+        "en": "valley",
+        "pos": "noun",
+        "gender": "f",
+        "note": "landscape"
+      },
+      {
+        "id": "vocab-3",
+        "uk": "ліс",
+        "ipa": "/lis/",
+        "en": "forest",
+        "pos": "noun",
+        "gender": "m",
+        "note": "nature"
+      },
+      {
+        "id": "vocab-4",
+        "uk": "озеро",
+        "ipa": "/ˈɔzerɔ/",
+        "en": "lake",
+        "pos": "noun",
+        "gender": "n",
+        "note": "water"
+      },
+      {
+        "id": "vocab-5",
+        "uk": "ріка",
+        "ipa": "/riˈka/",
+        "en": "river",
+        "pos": "noun",
+        "gender": "f",
+        "note": "water"
+      },
+      {
+        "id": "vocab-6",
+        "uk": "море",
+        "ipa": "/ˈmɔre/",
+        "en": "sea",
+        "pos": "noun",
+        "gender": "n",
+        "note": "water"
+      },
+      {
+        "id": "vocab-7",
+        "uk": "океан",
+        "ipa": "/ɔkeˈan/",
+        "en": "ocean",
+        "pos": "noun",
+        "gender": "m",
+        "note": "water"
+      },
+      {
+        "id": "vocab-8",
+        "uk": "пляж",
+        "ipa": "/plʲaʒ/",
+        "en": "beach",
+        "pos": "noun",
+        "gender": "m",
+        "note": "landscape"
+      },
+      {
+        "id": "vocab-9",
+        "uk": "поле",
+        "ipa": "/ˈpɔle/",
+        "en": "field",
+        "pos": "noun",
+        "gender": "n",
+        "note": "landscape"
+      },
+      {
+        "id": "vocab-10",
+        "uk": "луг",
+        "ipa": "/luɦ/",
+        "en": "meadow",
+        "pos": "noun",
+        "gender": "m",
+        "note": "landscape"
+      },
+      {
+        "id": "vocab-11",
+        "uk": "сонячно",
+        "ipa": "/ˈsɔnʲatʃnɔ/",
+        "en": "sunny",
+        "pos": "adv",
+        "gender": null,
+        "note": "weather"
+      },
+      {
+        "id": "vocab-12",
+        "uk": "хмарно",
+        "ipa": "/ˈxmarnɔ/",
+        "en": "cloudy",
+        "pos": "adv",
+        "gender": null,
+        "note": "weather"
+      },
+      {
+        "id": "vocab-13",
+        "uk": "дощ",
+        "ipa": "/dɔʃtʃ/",
+        "en": "rain",
+        "pos": "noun",
+        "gender": "m",
+        "note": "weather"
+      },
+      {
+        "id": "vocab-14",
+        "uk": "сніг",
+        "ipa": "/sniɦ/",
+        "en": "snow",
+        "pos": "noun",
+        "gender": "m",
+        "note": "weather"
+      },
+      {
+        "id": "vocab-15",
+        "uk": "вітер",
+        "ipa": "/ˈviter/",
+        "en": "wind",
+        "pos": "noun",
+        "gender": "m",
+        "note": "weather"
+      },
+      {
+        "id": "vocab-16",
+        "uk": "гроза",
+        "ipa": "/ɦrɔˈza/",
+        "en": "thunderstorm",
+        "pos": "noun",
+        "gender": "f",
+        "note": "weather"
+      },
+      {
+        "id": "vocab-17",
+        "uk": "туман",
+        "ipa": "/tuˈman/",
+        "en": "fog",
+        "pos": "noun",
+        "gender": "m",
+        "note": "weather"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "блискавка",
+        "ipa": "/blɪsˈkavka/",
+        "en": "lightning",
+        "pos": "noun",
+        "gender": "f",
+        "note": "weather"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "грім",
+        "ipa": "/ɦrim/",
+        "en": "thunder",
+        "pos": "noun",
+        "gender": "m",
+        "note": "weather"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "весна",
+        "ipa": "/vesˈna/",
+        "en": "spring",
+        "pos": "noun",
+        "gender": "f",
+        "note": "season"
+      },
+      {
+        "id": "vocab-21",
+        "uk": "літо",
+        "ipa": "/ˈlitɔ/",
+        "en": "summer",
+        "pos": "noun",
+        "gender": "n",
+        "note": "season"
+      },
+      {
+        "id": "vocab-22",
+        "uk": "осінь",
+        "ipa": "/ˈɔsinʲ/",
+        "en": "autumn",
+        "pos": "noun",
+        "gender": "f",
+        "note": "season"
+      },
+      {
+        "id": "vocab-23",
+        "uk": "зима",
+        "ipa": "/zɪˈma/",
+        "en": "winter",
+        "pos": "noun",
+        "gender": "f",
+        "note": "season"
+      },
+      {
+        "id": "vocab-24",
+        "uk": "дерево",
+        "ipa": "/ˈderevɔ/",
+        "en": "tree",
+        "pos": "noun",
+        "gender": "n",
+        "note": "flora"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "квітка",
+        "ipa": "/kvitˈka/",
+        "en": "flower",
+        "pos": "noun",
+        "gender": "f",
+        "note": "flora"
+      },
+      {
+        "id": "vocab-26",
+        "uk": "трава",
+        "ipa": "/traˈva/",
+        "en": "grass",
+        "pos": "noun",
+        "gender": "f",
+        "note": "flora"
+      },
+      {
+        "id": "vocab-27",
+        "uk": "птах",
+        "ipa": "/ptax/",
+        "en": "bird",
+        "pos": "noun",
+        "gender": "m",
+        "note": "fauna"
+      },
+      {
+        "id": "vocab-28",
+        "uk": "тварина",
+        "ipa": "/tvaˈrɪna/",
+        "en": "animal",
+        "pos": "noun",
+        "gender": "f",
+        "note": "fauna"
+      },
+      {
+        "id": "vocab-29",
+        "uk": "погода",
+        "ipa": "/pɔˈɦɔda/",
+        "en": "weather",
+        "pos": "noun",
+        "gender": "f",
+        "note": "climate"
+      },
+      {
+        "id": "vocab-30",
+        "uk": "клімат",
+        "ipa": "/ˈklimat/",
+        "en": "climate",
+        "pos": "noun",
+        "gender": "m",
+        "note": "environment"
+      }
+    ],
+    "reviewWords": []
+  }
+}

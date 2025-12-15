@@ -119,9 +119,10 @@ def extract_ukrainian_sentences(text: str) -> list[str]:
     - Numbered list headers (lines like **1. Title:**)
     - Lines starting with # (markdown headers)
     - Bullet point lists (lines starting with - or *)
-    - Blockquote callout headers (lines starting with >)
+    - Blockquote callout markers (lines with [!type])
     - Blockquote bullet points (lines like "> - item")
     - Grammatical pattern demonstrations (lines with X / Y / Z alternatives)
+    - Word lists (comma-separated items like "при, від, на, до")
     """
     sentences = []
 
@@ -142,7 +143,10 @@ def extract_ukrainian_sentences(text: str) -> list[str]:
         # Skip bullet point lists (common for letter/word lists)
         if re.match(r'^[-*]\s', stripped):
             continue
-        # Skip blockquote callout headers (e.g., "> 💡 **Did You Know**")
+        # Skip blockquote callout markers (e.g., "> [!tip]", "> [!note]")
+        if re.match(r'^>\s*\[!', stripped):
+            continue
+        # Skip blockquote lines with emoji headers (e.g., "> 💡 **Did You Know**")
         if re.match(r'^>\s*[💡⚡🎬🎭🔗🌍🎁🗣️🏠🔍]', stripped):
             continue
         # Skip blockquote bullet points (e.g., "> - Hard: ...")
@@ -151,15 +155,37 @@ def extract_ukrainian_sentences(text: str) -> list[str]:
         # Skip grammatical pattern demonstrations with / alternatives (e.g., "X / Y / Z")
         if stripped.count(' / ') >= 2:
             continue
+        # Skip word lists: lines with "Label:" followed by comma-separated items
+        # e.g., "Prefixes: при, від, на, до" or "**мов-**: мова, мовлення"
+        if re.match(r'^>?\s*\*?\*?[\w\-]+\*?\*?:\s*\w+,', stripped):
+            continue
+        # Skip transformation/drill patterns (word → word, word :: word)
+        # e.g., "читати → прочитати" or "imperfective :: perfective"
+        if re.search(r'→|::|↔|⟶', stripped):
+            continue
+        # Skip lines that are mostly single Cyrillic words (vocab drills)
+        # These are short lines with 1-3 Cyrillic words and no sentence structure
+        cyrillic_words = re.findall(r'[\u0400-\u04ff]{2,}', stripped)
+        if 1 <= len(cyrillic_words) <= 3 and len(stripped) < 50:
+            # Check if it looks like a drill item (no verbs/sentence markers)
+            if not re.search(r'\b(є|був|була|було|буде|можна|треба|потрібно)\b', stripped, re.IGNORECASE):
+                continue
         prose_lines.append(line)
 
     prose_text = '\n'.join(prose_lines)
 
-    # Split by sentence-ending punctuation AND em-dashes (common in Ukrainian text)
-    raw_sentences = re.split(r'[.!?—]', prose_text)
+    # Split by sentence-ending punctuation, em-dashes, and colons
+    # Colon added because Ukrainian instruction text often ends with ":"
+    raw_sentences = re.split(r'[.!?—:]', prose_text)
     for sent in raw_sentences:
         cyrillic_chars = len(re.findall(r'[\u0400-\u04ff]', sent))
         if cyrillic_chars > 5:
+            # Additional check: skip if this looks like a word list
+            # Word lists have high comma-to-word ratio (>0.3)
+            words = re.findall(r'[\u0400-\u04ff]{2,}', sent)
+            commas = sent.count(',')
+            if len(words) > 0 and commas / len(words) > 0.3:
+                continue
             sentences.append(sent.strip())
 
     return sentences

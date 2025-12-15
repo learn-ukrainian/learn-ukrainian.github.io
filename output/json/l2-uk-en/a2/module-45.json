@@ -1,0 +1,384 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-45",
+    "moduleId": "mod-uk-A2-45",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.5",
+    "moduleNumber": 45,
+    "moduleType": "vocabulary",
+    "pedagogy": "PPP",
+    "immersionLevel": 0.4,
+    "title": "Home & Furniture",
+    "titleUk": null,
+    "subtitle": "Household Vocabulary and Descriptions",
+    "description": "Learner knows home and furniture vocabulary",
+    "objectives": [
+      "Learner knows home and furniture vocabulary",
+      "Learner can describe rooms and furniture",
+      "Learner can talk about where things are located"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "thematic vocabulary",
+      "locative case for rooms"
+    ],
+    "tags": [
+      "vocabulary",
+      "home",
+      "furniture"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "Ласкаво просимо додому! Welcome home! This module covers rooms, furniture, and household vocabulary. Being able to describe your home is essential for daily conversations in Ukrainian.\n\nWhether you are looking for an apartment, describing your living situation, or simply chatting about home life, this vocabulary will help you communicate naturally.\n\nUkrainian homes often differ from Western ones. Many Ukrainians live in apartments rather than houses. The concept of \"дача\" (country house) is also very important in Ukrainian culture.\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "Presentation",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Rooms of the House\n\nEvery home has different rooms. Here is the essential vocabulary for talking about where you live:\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| вітальня | living room | Ми дивимось телевізор у вітальні. |\n| спальня | bedroom | Я сплю у спальні. |\n| кухня | kitchen | Мама готує їжу на кухні. |\n| ванна | bathroom | Ванна справа. |\n| кабінет | office/study | Тато працює в кабінеті. |\n| коридор | hallway | Взуття стоїть у коридорі. |\n| комора | storage room | Запаси в коморі. |\n| балкон | balcony | Квіти на балконі. |\n\n> [!tip] Locative Case for Location\n> Notice the case endings change when describing location!\n> **у вітальні**, **у спальні**, **на кухні**, **у ванній**\n> The locative case is used with \"in\" and \"on\" prepositions.\n> This is essential for describing where things and people are located in your home. Most feminine nouns ending in -я change to -і in the locative case. For example, вітальня becomes у вітальні.\n\n## Furniture\n\nFurniture is essential for a comfortable home. Ukrainian distinguishes between different types of seating: диван is a sofa for multiple people, крісло is an armchair for one person, and стілець is a dining or desk chair. Here is the vocabulary for common furniture:\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| диван | sofa | Сідай на диван! |\n| крісло | armchair | Дідусь сидить у кріслі. |\n| стіл | table | Книга на столі. |\n| стілець | chair | Візьми стілець. |\n| шафа | wardrobe | Одяг у шафі. |\n| полиця | shelf | Книги на полиці. |\n| комод | dresser | Речі в комоді. |\n| ліжко | bed | Я сплю на ліжку. |\n\n> [!cultural] Ukrainian Apartments\n> Many Ukrainians live in apartments rather than houses.\n> A typical apartment has a living room, bedroom, kitchen, and bathroom.\n> The balcony is an important space for storage and relaxation.\n> Apartment buildings from the Soviet era are still common in Ukrainian cities. These buildings usually have five to nine floors. Newer buildings may have elevators, but older ones often do not.\n\n## Appliances and Decor\n\nHousehold appliances make everyday life easier. Ukrainian vocabulary for appliances is practical and useful for daily conversations. Here are the essential terms for appliances and home decor items:\n\n| Ukrainian | English | Notes |\n|-----------|---------|-------|\n| пральна машина | washing machine | commonly in bathroom |\n| посудомийка | dishwasher | less common than in West |\n| пилосос | vacuum | essential for carpet cleaning |\n| праска | iron | for pressing clothes |\n| килим | carpet | decorative floor covering |\n| штори | curtains | window covering |\n| лампа | lamp | lighting fixture |\n| дзеркало | mirror | usually in bathroom or hallway |\n\nNote that washing machines in Ukraine are often located in the bathroom rather than a separate laundry room. This is because Ukrainian apartments are typically smaller than Western homes and space is used efficiently.\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Story Time: Нова Квартира",
+        "nameEn": null,
+        "type": "content",
+        "content": "Ольга щойно переїхала в нову квартиру. Вона показує її подрузі Катерині.\n\n— Ось моя нова **квартира**! — каже Ольга. — Заходь!\n— Дуже гарно! — відповідає Катерина. — Яка велика **вітальня**!\n— Так, тут є **диван** і два **крісла**. Ось **телевізор** на стіні.\n\nВони йдуть далі.\n\n— А це **кухня**, — показує Ольга. — Тут нова **плита** і **холодильник**.\n— Чудово! А де **спальня**?\n— Ось тут. У мене велике **ліжко** і **шафа** для одягу.\n\nКатерина бачить **балкон**.\n\n— О, який гарний **балкон**! Тут можна снідати влітку!\n— Саме так! Я люблю пити каву на **балконі** вранці.\n— А **ванна** де?\n— **Ванна** справа. Там є душ і **пральна машина**.\n\nКатерина оглядає всю квартиру. Вона дуже подобається їй.\n\n— У тебе є **кабінет**?\n— Ні, я працюю у **вітальні** за столом.\n— А це що за кімната?\n— Це **комора**. Там я зберігаю речі.\n\nКатерина дуже задоволена квартирою подруги.\n\n— Вітаю з новосіллям! — каже вона. — Квартира чудова!\n— Дякую! Приходь у гості! — відповідає Ольга.\n— Дякую! Приходь частіше! — посміхається Ольга.\n\n> [!tip] Новосілля\n> \"Новосілля\" — це свято переїзду в нове житло.\n> Українці запрошують друзів і родину на новосілля.\n> Гості приносять подарунки для дому.\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Story Time Part 2: Прибирання",
+        "nameEn": null,
+        "type": "content",
+        "content": "Сьогодні субота. Максим прибирає квартиру.\n\nСпочатку він **пилососить** **килим** у **вітальні**. Килим брудний після тижня.\n\n— Готово! — каже Максим. — Тепер **кухня**.\n\nНа **кухні** він миє **посуд** і витирає **стіл**. Плита теж потребує чистки.\n\nПотім Максим іде до **ванної**. Він чистить **раковину** і **дзеркало**.\n\n— Фух! Це важка робота! — зітхає він.\n\nВ **спальні** він застеляє **ліжко** і прибирає одяг у **шафу**.\n\n— Нарешті! Квартира чиста! — радіє Максим.\n\nВін сідає на **диван** і відпочиває. Прибирання закінчено!\n\nМама повертається додому і каже:\n\n— Максиме, яка чиста квартира! Дякую за допомогу!\n— Будь ласка, мамо! Я люблю допомагати.\n— Тепер можеш відпочивати. Ти добре попрацював!\n\nМаксим усміхається. Він стомився, але він радий. Чиста квартира — це чудово!\n\n— Мамо, я прибрав усю квартиру! — каже Максим.\n— Молодець, синку! Тепер квартира блищить! — відповідає мама.\n— Прибирання — це добра вправа, — жартує Максим.\n— Так, особливо пилососити! — сміється мама.\n\nThis story demonstrates common vocabulary for household chores. Cleaning vocabulary includes пилососити (to vacuum), мити (to wash), прибирати (to clean up), and застеляти (to make the bed). These verbs are essential for describing daily routines at home. Note that in Ukrainian, you would say \"Я прибираю квартиру\" rather than just \"I clean\". The word order is flexible but the verb must be conjugated correctly.\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Common Expressions",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Describing Location\n\nWhen describing where things are, use the locative case with prepositions:\n\n- **в/у** + locative = in (enclosed space)\n- **на** + locative = on (surface)\n\n| Expression | Meaning |\n|------------|---------|\n| на столі | on the table |\n| у шафі | in the wardrobe |\n| на полиці | on the shelf |\n| на ліжку | on the bed |\n| у кріслі | in the armchair |\n\n## Useful Home Phrases\n\nWhen visiting Ukrainian homes or discussing living situations, these phrases will be helpful:\n\n- **Де ванна?** = Where is the bathroom? This is a polite way to ask.\n- **Квартира на другому поверсі.** = The apartment is on the second floor.\n- **Я прибираю квартиру.** = I am cleaning the apartment.\n- **Сідай на диван.** = Sit on the sofa. Use this to invite guests to sit.\n- **Я переїжджаю.** = I am moving. This is a common life event.\n- **Заходьте!** = Come in! Used when welcoming guests at the door.\n- **Почувайтеся як вдома.** = Make yourself at home.\n\n> [!cultural] Дача — Улюблене Місце Відпочинку\n> \"Дача\" — це заміський будинок для відпочинку.\n> Багато українців мають дачу за містом.\n> Там є город, де вирощують овочі та фрукти.\n> Літо на дачі — улюблена традиція.\n> The dacha represents an escape from city life and a deep connection to nature. Families gather there for weekends and holidays.\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "**Кімнати:**\n- вітальня\n- спальня\n- кухня\n- ванна\n- кабінет\n- коридор\n- балкон\n\n**Меблі:**\n- диван\n- крісло\n- стіл\n- стілець\n- шафа\n- полиця\n- ліжко\n\n**Прилади:**\n- пральна машина\n- посудомийка\n- пилосос\n- праска\n\nТепер ви можете описати свій дім українською мовою! Запрошуйте друзів у гості та показуйте їм свою чудову квартиру. Успіхів!\n\nДім — це місце, де ми відпочиваємо після роботи. Українська квартира завжди чиста та затишна! Вчіться нових слів і розповідайте про свій дім! Домашній затишок — це найважливіше! Бажаємо успіхів у вивченні української мови!\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Home Words\n\n> Match Ukrainian to English.\n\n- вітальня :: living room\n- спальня :: bedroom\n- кухня :: kitchen\n- ванна :: bathroom\n- диван :: sofa\n- крісло :: armchair\n- шафа :: wardrobe\n- полиця :: shelf\n- ліжко :: bed\n- пральна машина :: washing machine\n- пилосос :: vacuum\n- комод :: dresser\n\n## fill-in: Home Vocabulary\n\n> Complete the sentences.\n\n1. Я сплю у [___]. (bedroom)\n   > [!answer] спальні\n   > [!options] спальні | вітальні | кухні | ванній\n\n2. Ми їмо на [___]. (kitchen)\n   > [!answer] кухні\n   > [!options] спальні | вітальні | кухні | ванній\n\n3. Сідай на [___]. (sofa)\n   > [!answer] диван\n   > [!options] диван | крісло | стіл | ліжко\n\n4. Книги на [___]. (shelf)\n   > [!answer] полиці\n   > [!options] полиці | шафі | комоді | столі\n\n5. Одяг у [___]. (wardrobe)\n   > [!answer] шафі\n   > [!options] полиці | шафі | комоді | столі\n\n6. Тато працює в [___]. (office)\n   > [!answer] кабінеті\n   > [!options] спальні | кабінеті | кухні | ванній\n\n7. Білизна в [___]. (washing machine)\n   > [!answer] пральній машині\n   > [!options] пральній машині | посудомийці | пилососі | духовці\n\n8. Прибираю [___]. (vacuum)\n   > [!answer] пилососом\n   > [!options] пральною машиною | посудомийкою | пилососом | чайником\n\n## quiz: Home & Furniture\n\n1. \"Вітальня\" is:\n   - [x] Living room\n   - [ ] Bedroom\n   - [ ] Kitchen\n\n2. \"Спальня\" is:\n   - [x] Bedroom\n   - [ ] Kitchen\n   - [ ] Bathroom\n\n3. \"Диван\" is:\n   - [x] Sofa\n   - [ ] Armchair\n   - [ ] Chair\n\n4. \"Крісло\" is:\n   - [x] Armchair\n   - [ ] Chair\n   - [ ] Sofa\n\n5. \"Шафа\" is:\n   - [x] Wardrobe\n   - [ ] Shelf\n   - [ ] Dresser\n\n6. \"Ліжко\" is:\n   - [x] Bed\n   - [ ] Sofa\n   - [ ] Armchair\n\n7. \"Пилосос\" is:\n   - [x] Vacuum\n   - [ ] Washing machine\n   - [ ] Iron\n\n8. \"Балкон\" is:\n   - [x] Balcony\n   - [ ] Hallway\n   - [ ] Storage room\n\n## cloze: Story Comprehension\n\n> Complete based on the stories.\n\nОльга переїхала в нову [___:1]. (apartment)\nУ вітальні є [___:2] і два крісла. (sofa)\nНа кухні нова [___:3] і холодильник. (stove)\nОльга любить пити каву на [___:4]. (balcony)\nМаксим [___:5] килим у вітальні. (vacuums)\nВін застеляє [___:6] у спальні. (bed)\n\n1. квартиру\n> [!answer] квартиру\n> [!options] квартиру | будинок | кімнату\n\n2. диван\n> [!answer] диван\n> [!options] диван | крісло | стіл\n\n3. плита\n> [!answer] плита\n> [!options] плита | духовка | пральна машина\n\n4. балконі\n> [!answer] балконі\n> [!options] балконі | кухні | вітальні\n\n5. пилососить\n> [!answer] пилососить\n> [!options] пилососить | миє | витирає\n\n6. ліжко\n> [!answer] ліжко\n> [!options] ліжко | диван | крісло\n\n## unjumble: Home Sentences\n\n1. сплю / спальні / Я / у\n   > [!answer] Я сплю у спальні.\n2. на / Книга / столі\n   > [!answer] Книга на столі.\n3. диван / на / Сідай\n   > [!answer] Сідай на диван.\n4. квартиру / прибираю / Я\n   > [!answer] Я прибираю квартиру.\n5. шафі / Одяг / у\n   > [!answer] Одяг у шафі.\n6. полиці / на / Книги\n   > [!answer] Книги на полиці.\n7. переїжджаю / Я / завтра\n   > [!answer] Я переїжджаю завтра.\n8. чудова / Квартира / дуже\n   > [!answer] Квартира дуже чудова.\n\n## error-correction: Home Mistakes\n\n1. Я сплю в **вітальні**.\n   > [!error] вітальні\n   > [!answer] спальні\n   > [!explanation] We sleep in the bedroom (спальня), not living room.\n   > [!options] спальні | вітальні\n\n2. **Одяг** на полиці.\n   > [!error] Одяг\n   > [!answer] Книги\n   > [!explanation] Books (книги) go on shelves, clothes go in wardrobes.\n   > [!options] Книги | Одяг\n\n3. Я мию посуд **пилососом**.\n   > [!error] пилососом\n   > [!answer] руками\n   > [!explanation] We wash dishes by hand or in dishwasher, not with vacuum.\n   > [!options] руками | пилососом\n\n4. Тато спить на **столі**.\n   > [!error] столі\n   > [!answer] ліжку\n   > [!explanation] We sleep on a bed (ліжко), not a table.\n   > [!options] ліжку | столі\n\n5. Взуття у **холодильнику**.\n   > [!error] холодильнику\n   > [!answer] коридорі\n   > [!explanation] Shoes go in the hallway (коридор), not the refrigerator.\n   > [!options] коридорі | холодильнику\n\n6. Ми дивимось телевізор у **ванній**.\n   > [!error] ванній\n   > [!answer] вітальні\n   > [!explanation] We watch TV in the living room (вітальня).\n   > [!options] вітальні | ванній\n\n## match-up: Appliances & Decor\n\n> Match Ukrainian to English.\n\n- пральна машина :: washing machine\n- посудомийка :: dishwasher\n- пилосос :: vacuum\n- праска :: iron\n- килим :: carpet\n- штори :: curtains\n- лампа :: lamp\n- дзеркало :: mirror\n\n## group-sort: Home Categories\n\n> Sort words by category.\n\n### Rooms\n- вітальня\n- спальня\n- кухня\n- ванна\n- кабінет\n- коридор\n\n### Furniture\n- диван\n- крісло\n- стіл\n- шафа\n- полиця\n- ліжко\n\n### Appliances\n- пральна машина\n- посудомийка\n- пилосос\n- праска\n\n## true-false: Home Facts\n\n> Mark true or false.\n\n- [x] \"Вітальня\" = living room.\n- [x] \"Спальня\" = bedroom.\n- [ ] \"Кухня\" = bedroom.\n- [x] \"Диван\" = sofa.\n- [x] \"Шафа\" = wardrobe.\n- [ ] \"Полиця\" = table.\n- [x] \"Ліжко\" = bed.\n- [x] \"Пилосос\" = vacuum.\n- [ ] \"Кабінет\" = kitchen.\n- [x] \"Комод\" = dresser.\n- [x] \"Балкон\" = balcony.\n- [ ] \"Коридор\" = bedroom.\n\n## translate: Home Words\n\n1. Living room\n   - [x] вітальня\n   - [ ] спальня\n   - [ ] кухня\n\n2. Bedroom\n   - [x] спальня\n   - [ ] кухня\n   - [ ] ванна\n\n3. Sofa\n   - [x] диван\n   - [ ] крісло\n   - [ ] стіл\n\n4. Wardrobe\n   - [x] шафа\n   - [ ] полиця\n   - [ ] комод\n\n5. Bed\n   - [x] ліжко\n   - [ ] диван\n   - [ ] крісло\n\n6. Vacuum\n   - [x] пилосос\n   - [ ] пральна машина\n   - [ ] праска\n\n7. Balcony\n   - [x] балкон\n   - [ ] коридор\n   - [ ] комора\n\n8. Kitchen\n   - [x] кухня\n   - [ ] вітальня\n   - [ ] спальня\n\n---"
+      },
+      {
+        "id": "section-8",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| вітальня | /ʋiˈtɑlʲnʲɑ/ | living room | noun | f | room |\n| спальня | /ˈspɑlʲnʲɑ/ | bedroom | noun | f | room |\n| кухня | /ˈkuxnʲɑ/ | kitchen | noun | f | room |\n| ванна | /ˈʋɑnnɑ/ | bathroom | noun | f | room |\n| кабінет | /kɑbiˈnɛt/ | office/study | noun | m | room |\n| коридор | /kɔrɪˈdɔr/ | hallway | noun | m | room |\n| комора | /kɔˈmɔrɑ/ | storage room | noun | f | room |\n| балкон | /bɑlˈkɔn/ | balcony | noun | m | area |\n| диван | /dɪˈʋɑn/ | sofa | noun | m | furniture |\n| крісло | /ˈkrʲislɔ/ | armchair | noun | n | furniture |\n| стіл | /stil/ | table | noun | m | furniture |\n| стілець | /stiˈlɛt͡sʲ/ | chair | noun | m | furniture |\n| шафа | /ˈʃɑfɑ/ | wardrobe | noun | f | furniture |\n| полиця | /pɔˈlɪt͡sʲɑ/ | shelf | noun | f | furniture |\n| комод | /kɔˈmɔd/ | dresser | noun | m | furniture |\n| ліжко | /ˈliʒkɔ/ | bed | noun | n | furniture |\n| килим | /kɪˈlɪm/ | carpet | noun | m | decor |\n| штори | /ˈʃtɔrɪ/ | curtains | noun | pl | decor |\n| лампа | /ˈlɑmpɑ/ | lamp | noun | f | lighting |\n| дзеркало | /ˈdzɛrkɑlɔ/ | mirror | noun | n | item |\n| пральна машина | /ˈprɑlʲnɑ mɑˈʃɪnɑ/ | washing machine | phrase | f | appliance |\n| посудомийка | /pɔsudɔˈmɪjkɑ/ | dishwasher | noun | f | appliance |\n| пилосос | /pɪlɔˈsɔs/ | vacuum | noun | m | appliance |\n| праска | /ˈprɑskɑ/ | iron | noun | f | appliance |\n| прибирати | /prɪbɪˈrɑtɪ/ | to clean | verb | — | action |\n| ремонтувати | /rɛmɔntuˈʋɑtɪ/ | to renovate | verb | — | action |\n| облаштовувати | /ɔblɑʃtɔˈʋuʋɑtɪ/ | to furnish | verb | — | action |\n| переїжджати | /pɛrɛˈjʒdʒɑtɪ/ | to move house | verb | — | action |\n| орендувати | /ɔrɛnduˈʋɑtɪ/ | to rent | verb | — | action |\n| власний | /ˈʋlɑsnɪj/ | own | adj | m | possession |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-45\ntitle: \"Home & Furniture\"\nsubtitle: \"Household Vocabulary and Descriptions\"\nversion: \"2.0\"\nphase: \"A2.5\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - vocabulary\n  - home\n  - furniture\ngrammar:\n  - thematic vocabulary\n  - locative case for rooms\nobjectives:\n  - \"Learner knows home and furniture vocabulary\"\n  - \"Learner can describe rooms and furniture\"\n  - \"Learner can talk about where things are located\"\nvocabulary_count: 30\n---\n\n# Warm-up\n\nЛаскаво просимо додому! Welcome home! This module covers rooms, furniture, and household vocabulary. Being able to describe your home is essential for daily conversations in Ukrainian.\n\nWhether you are looking for an apartment, describing your living situation, or simply chatting about home life, this vocabulary will help you communicate naturally.\n\nUkrainian homes often differ from Western ones. Many Ukrainians live in apartments rather than houses. The concept of \"дача\" (country house) is also very important in Ukrainian culture.\n\n---\n\n# Presentation\n\n## Rooms of the House\n\nEvery home has different rooms. Here is the essential vocabulary for talking about where you live:\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| вітальня | living room | Ми дивимось телевізор у вітальні. |\n| спальня | bedroom | Я сплю у спальні. |\n| кухня | kitchen | Мама готує їжу на кухні. |\n| ванна | bathroom | Ванна справа. |\n| кабінет | office/study | Тато працює в кабінеті. |\n| коридор | hallway | Взуття стоїть у коридорі. |\n| комора | storage room | Запаси в коморі. |\n| балкон | balcony | Квіти на балконі. |\n\n> [!tip] Locative Case for Location\n> Notice the case endings change when describing location!\n> **у вітальні**, **у спальні**, **на кухні**, **у ванній**\n> The locative case is used with \"in\" and \"on\" prepositions.\n> This is essential for describing where things and people are located in your home. Most feminine nouns ending in -я change to -і in the locative case. For example, вітальня becomes у вітальні.\n\n## Furniture\n\nFurniture is essential for a comfortable home. Ukrainian distinguishes between different types of seating: диван is a sofa for multiple people, крісло is an armchair for one person, and стілець is a dining or desk chair. Here is the vocabulary for common furniture:\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| диван | sofa | Сідай на диван! |\n| крісло | armchair | Дідусь сидить у кріслі. |\n| стіл | table | Книга на столі. |\n| стілець | chair | Візьми стілець. |\n| шафа | wardrobe | Одяг у шафі. |\n| полиця | shelf | Книги на полиці. |\n| комод | dresser | Речі в комоді. |\n| ліжко | bed | Я сплю на ліжку. |\n\n> [!cultural] Ukrainian Apartments\n> Many Ukrainians live in apartments rather than houses.\n> A typical apartment has a living room, bedroom, kitchen, and bathroom.\n> The balcony is an important space for storage and relaxation.\n> Apartment buildings from the Soviet era are still common in Ukrainian cities. These buildings usually have five to nine floors. Newer buildings may have elevators, but older ones often do not.\n\n## Appliances and Decor\n\nHousehold appliances make everyday life easier. Ukrainian vocabulary for appliances is practical and useful for daily conversations. Here are the essential terms for appliances and home decor items:\n\n| Ukrainian | English | Notes |\n|-----------|---------|-------|\n| пральна машина | washing machine | commonly in bathroom |\n| посудомийка | dishwasher | less common than in West |\n| пилосос | vacuum | essential for carpet cleaning |\n| праска | iron | for pressing clothes |\n| килим | carpet | decorative floor covering |\n| штори | curtains | window covering |\n| лампа | lamp | lighting fixture |\n| дзеркало | mirror | usually in bathroom or hallway |\n\nNote that washing machines in Ukraine are often located in the bathroom rather than a separate laundry room. This is because Ukrainian apartments are typically smaller than Western homes and space is used efficiently.\n\n---\n\n# Story Time: Нова Квартира\n\nОльга щойно переїхала в нову квартиру. Вона показує її подрузі Катерині.\n\n— Ось моя нова **квартира**! — каже Ольга. — Заходь!\n— Дуже гарно! — відповідає Катерина. — Яка велика **вітальня**!\n— Так, тут є **диван** і два **крісла**. Ось **телевізор** на стіні.\n\nВони йдуть далі.\n\n— А це **кухня**, — показує Ольга. — Тут нова **плита** і **холодильник**.\n— Чудово! А де **спальня**?\n— Ось тут. У мене велике **ліжко** і **шафа** для одягу.\n\nКатерина бачить **балкон**.\n\n— О, який гарний **балкон**! Тут можна снідати влітку!\n— Саме так! Я люблю пити каву на **балконі** вранці.\n— А **ванна** де?\n— **Ванна** справа. Там є душ і **пральна машина**.\n\nКатерина оглядає всю квартиру. Вона дуже подобається їй.\n\n— У тебе є **кабінет**?\n— Ні, я працюю у **вітальні** за столом.\n— А це що за кімната?\n— Це **комора**. Там я зберігаю речі.\n\nКатерина дуже задоволена квартирою подруги.\n\n— Вітаю з новосіллям! — каже вона. — Квартира чудова!\n— Дякую! Приходь у гості! — відповідає Ольга.\n— Дякую! Приходь частіше! — посміхається Ольга.\n\n> [!tip] Новосілля\n> \"Новосілля\" — це свято переїзду в нове житло.\n> Українці запрошують друзів і родину на новосілля.\n> Гості приносять подарунки для дому.\n\n---\n\n# Story Time Part 2: Прибирання\n\nСьогодні субота. Максим прибирає квартиру.\n\nСпочатку він **пилососить** **килим** у **вітальні**. Килим брудний після тижня.\n\n— Готово! — каже Максим. — Тепер **кухня**.\n\nНа **кухні** він миє **посуд** і витирає **стіл**. Плита теж потребує чистки.\n\nПотім Максим іде до **ванної**. Він чистить **раковину** і **дзеркало**.\n\n— Фух! Це важка робота! — зітхає він.\n\nВ **спальні** він застеляє **ліжко** і прибирає одяг у **шафу**.\n\n— Нарешті! Квартира чиста! — радіє Максим.\n\nВін сідає на **диван** і відпочиває. Прибирання закінчено!\n\nМама повертається додому і каже:\n\n— Максиме, яка чиста квартира! Дякую за допомогу!\n— Будь ласка, мамо! Я люблю допомагати.\n— Тепер можеш відпочивати. Ти добре попрацював!\n\nМаксим усміхається. Він стомився, але він радий. Чиста квартира — це чудово!\n\n— Мамо, я прибрав усю квартиру! — каже Максим.\n— Молодець, синку! Тепер квартира блищить! — відповідає мама.\n— Прибирання — це добра вправа, — жартує Максим.\n— Так, особливо пилососити! — сміється мама.\n\nThis story demonstrates common vocabulary for household chores. Cleaning vocabulary includes пилососити (to vacuum), мити (to wash), прибирати (to clean up), and застеляти (to make the bed). These verbs are essential for describing daily routines at home. Note that in Ukrainian, you would say \"Я прибираю квартиру\" rather than just \"I clean\". The word order is flexible but the verb must be conjugated correctly.\n\n---\n\n# Common Expressions\n\n## Describing Location\n\nWhen describing where things are, use the locative case with prepositions:\n\n- **в/у** + locative = in (enclosed space)\n- **на** + locative = on (surface)\n\n| Expression | Meaning |\n|------------|---------|\n| на столі | on the table |\n| у шафі | in the wardrobe |\n| на полиці | on the shelf |\n| на ліжку | on the bed |\n| у кріслі | in the armchair |\n\n## Useful Home Phrases\n\nWhen visiting Ukrainian homes or discussing living situations, these phrases will be helpful:\n\n- **Де ванна?** = Where is the bathroom? This is a polite way to ask.\n- **Квартира на другому поверсі.** = The apartment is on the second floor.\n- **Я прибираю квартиру.** = I am cleaning the apartment.\n- **Сідай на диван.** = Sit on the sofa. Use this to invite guests to sit.\n- **Я переїжджаю.** = I am moving. This is a common life event.\n- **Заходьте!** = Come in! Used when welcoming guests at the door.\n- **Почувайтеся як вдома.** = Make yourself at home.\n\n> [!cultural] Дача — Улюблене Місце Відпочинку\n> \"Дача\" — це заміський будинок для відпочинку.\n> Багато українців мають дачу за містом.\n> Там є город, де вирощують овочі та фрукти.\n> Літо на дачі — улюблена традиція.\n> The dacha represents an escape from city life and a deep connection to nature. Families gather there for weekends and holidays.\n\n---\n\n# Summary\n\n**Кімнати:**\n- вітальня\n- спальня\n- кухня\n- ванна\n- кабінет\n- коридор\n- балкон\n\n**Меблі:**\n- диван\n- крісло\n- стіл\n- стілець\n- шафа\n- полиця\n- ліжко\n\n**Прилади:**\n- пральна машина\n- посудомийка\n- пилосос\n- праска\n\nТепер ви можете описати свій дім українською мовою! Запрошуйте друзів у гості та показуйте їм свою чудову квартиру. Успіхів!\n\nДім — це місце, де ми відпочиваємо після роботи. Українська квартира завжди чиста та затишна! Вчіться нових слів і розповідайте про свій дім! Домашній затишок — це найважливіше! Бажаємо успіхів у вивченні української мови!\n\n---\n\n# Activities\n\n## match-up: Home Words\n\n> Match Ukrainian to English.\n\n- вітальня :: living room\n- спальня :: bedroom\n- кухня :: kitchen\n- ванна :: bathroom\n- диван :: sofa\n- крісло :: armchair\n- шафа :: wardrobe\n- полиця :: shelf\n- ліжко :: bed\n- пральна машина :: washing machine\n- пилосос :: vacuum\n- комод :: dresser\n\n## fill-in: Home Vocabulary\n\n> Complete the sentences.\n\n1. Я сплю у [___]. (bedroom)\n   > [!answer] спальні\n   > [!options] спальні | вітальні | кухні | ванній\n\n2. Ми їмо на [___]. (kitchen)\n   > [!answer] кухні\n   > [!options] спальні | вітальні | кухні | ванній\n\n3. Сідай на [___]. (sofa)\n   > [!answer] диван\n   > [!options] диван | крісло | стіл | ліжко\n\n4. Книги на [___]. (shelf)\n   > [!answer] полиці\n   > [!options] полиці | шафі | комоді | столі\n\n5. Одяг у [___]. (wardrobe)\n   > [!answer] шафі\n   > [!options] полиці | шафі | комоді | столі\n\n6. Тато працює в [___]. (office)\n   > [!answer] кабінеті\n   > [!options] спальні | кабінеті | кухні | ванній\n\n7. Білизна в [___]. (washing machine)\n   > [!answer] пральній машині\n   > [!options] пральній машині | посудомийці | пилососі | духовці\n\n8. Прибираю [___]. (vacuum)\n   > [!answer] пилососом\n   > [!options] пральною машиною | посудомийкою | пилососом | чайником\n\n## quiz: Home & Furniture\n\n1. \"Вітальня\" is:\n   - [x] Living room\n   - [ ] Bedroom\n   - [ ] Kitchen\n\n2. \"Спальня\" is:\n   - [x] Bedroom\n   - [ ] Kitchen\n   - [ ] Bathroom\n\n3. \"Диван\" is:\n   - [x] Sofa\n   - [ ] Armchair\n   - [ ] Chair\n\n4. \"Крісло\" is:\n   - [x] Armchair\n   - [ ] Chair\n   - [ ] Sofa\n\n5. \"Шафа\" is:\n   - [x] Wardrobe\n   - [ ] Shelf\n   - [ ] Dresser\n\n6. \"Ліжко\" is:\n   - [x] Bed\n   - [ ] Sofa\n   - [ ] Armchair\n\n7. \"Пилосос\" is:\n   - [x] Vacuum\n   - [ ] Washing machine\n   - [ ] Iron\n\n8. \"Балкон\" is:\n   - [x] Balcony\n   - [ ] Hallway\n   - [ ] Storage room\n\n## cloze: Story Comprehension\n\n> Complete based on the stories.\n\nОльга переїхала в нову [___:1]. (apartment)\nУ вітальні є [___:2] і два крісла. (sofa)\nНа кухні нова [___:3] і холодильник. (stove)\nОльга любить пити каву на [___:4]. (balcony)\nМаксим [___:5] килим у вітальні. (vacuums)\nВін застеляє [___:6] у спальні. (bed)\n\n1. квартиру\n> [!answer] квартиру\n> [!options] квартиру | будинок | кімнату\n\n2. диван\n> [!answer] диван\n> [!options] диван | крісло | стіл\n\n3. плита\n> [!answer] плита\n> [!options] плита | духовка | пральна машина\n\n4. балконі\n> [!answer] балконі\n> [!options] балконі | кухні | вітальні\n\n5. пилососить\n> [!answer] пилососить\n> [!options] пилососить | миє | витирає\n\n6. ліжко\n> [!answer] ліжко\n> [!options] ліжко | диван | крісло\n\n## unjumble: Home Sentences\n\n1. сплю / спальні / Я / у\n   > [!answer] Я сплю у спальні.\n2. на / Книга / столі\n   > [!answer] Книга на столі.\n3. диван / на / Сідай\n   > [!answer] Сідай на диван.\n4. квартиру / прибираю / Я\n   > [!answer] Я прибираю квартиру.\n5. шафі / Одяг / у\n   > [!answer] Одяг у шафі.\n6. полиці / на / Книги\n   > [!answer] Книги на полиці.\n7. переїжджаю / Я / завтра\n   > [!answer] Я переїжджаю завтра.\n8. чудова / Квартира / дуже\n   > [!answer] Квартира дуже чудова.\n\n## error-correction: Home Mistakes\n\n1. Я сплю в **вітальні**.\n   > [!error] вітальні\n   > [!answer] спальні\n   > [!explanation] We sleep in the bedroom (спальня), not living room.\n   > [!options] спальні | вітальні\n\n2. **Одяг** на полиці.\n   > [!error] Одяг\n   > [!answer] Книги\n   > [!explanation] Books (книги) go on shelves, clothes go in wardrobes.\n   > [!options] Книги | Одяг\n\n3. Я мию посуд **пилососом**.\n   > [!error] пилососом\n   > [!answer] руками\n   > [!explanation] We wash dishes by hand or in dishwasher, not with vacuum.\n   > [!options] руками | пилососом\n\n4. Тато спить на **столі**.\n   > [!error] столі\n   > [!answer] ліжку\n   > [!explanation] We sleep on a bed (ліжко), not a table.\n   > [!options] ліжку | столі\n\n5. Взуття у **холодильнику**.\n   > [!error] холодильнику\n   > [!answer] коридорі\n   > [!explanation] Shoes go in the hallway (коридор), not the refrigerator.\n   > [!options] коридорі | холодильнику\n\n6. Ми дивимось телевізор у **ванній**.\n   > [!error] ванній\n   > [!answer] вітальні\n   > [!explanation] We watch TV in the living room (вітальня).\n   > [!options] вітальні | ванній\n\n## match-up: Appliances & Decor\n\n> Match Ukrainian to English.\n\n- пральна машина :: washing machine\n- посудомийка :: dishwasher\n- пилосос :: vacuum\n- праска :: iron\n- килим :: carpet\n- штори :: curtains\n- лампа :: lamp\n- дзеркало :: mirror\n\n## group-sort: Home Categories\n\n> Sort words by category.\n\n### Rooms\n- вітальня\n- спальня\n- кухня\n- ванна\n- кабінет\n- коридор\n\n### Furniture\n- диван\n- крісло\n- стіл\n- шафа\n- полиця\n- ліжко\n\n### Appliances\n- пральна машина\n- посудомийка\n- пилосос\n- праска\n\n## true-false: Home Facts\n\n> Mark true or false.\n\n- [x] \"Вітальня\" = living room.\n- [x] \"Спальня\" = bedroom.\n- [ ] \"Кухня\" = bedroom.\n- [x] \"Диван\" = sofa.\n- [x] \"Шафа\" = wardrobe.\n- [ ] \"Полиця\" = table.\n- [x] \"Ліжко\" = bed.\n- [x] \"Пилосос\" = vacuum.\n- [ ] \"Кабінет\" = kitchen.\n- [x] \"Комод\" = dresser.\n- [x] \"Балкон\" = balcony.\n- [ ] \"Коридор\" = bedroom.\n\n## translate: Home Words\n\n1. Living room\n   - [x] вітальня\n   - [ ] спальня\n   - [ ] кухня\n\n2. Bedroom\n   - [x] спальня\n   - [ ] кухня\n   - [ ] ванна\n\n3. Sofa\n   - [x] диван\n   - [ ] крісло\n   - [ ] стіл\n\n4. Wardrobe\n   - [x] шафа\n   - [ ] полиця\n   - [ ] комод\n\n5. Bed\n   - [x] ліжко\n   - [ ] диван\n   - [ ] крісло\n\n6. Vacuum\n   - [x] пилосос\n   - [ ] пральна машина\n   - [ ] праска\n\n7. Balcony\n   - [x] балкон\n   - [ ] коридор\n   - [ ] комора\n\n8. Kitchen\n   - [x] кухня\n   - [ ] вітальня\n   - [ ] спальня\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| вітальня | /ʋiˈtɑlʲnʲɑ/ | living room | noun | f | room |\n| спальня | /ˈspɑlʲnʲɑ/ | bedroom | noun | f | room |\n| кухня | /ˈkuxnʲɑ/ | kitchen | noun | f | room |\n| ванна | /ˈʋɑnnɑ/ | bathroom | noun | f | room |\n| кабінет | /kɑbiˈnɛt/ | office/study | noun | m | room |\n| коридор | /kɔrɪˈdɔr/ | hallway | noun | m | room |\n| комора | /kɔˈmɔrɑ/ | storage room | noun | f | room |\n| балкон | /bɑlˈkɔn/ | balcony | noun | m | area |\n| диван | /dɪˈʋɑn/ | sofa | noun | m | furniture |\n| крісло | /ˈkrʲislɔ/ | armchair | noun | n | furniture |\n| стіл | /stil/ | table | noun | m | furniture |\n| стілець | /stiˈlɛt͡sʲ/ | chair | noun | m | furniture |\n| шафа | /ˈʃɑfɑ/ | wardrobe | noun | f | furniture |\n| полиця | /pɔˈlɪt͡sʲɑ/ | shelf | noun | f | furniture |\n| комод | /kɔˈmɔd/ | dresser | noun | m | furniture |\n| ліжко | /ˈliʒkɔ/ | bed | noun | n | furniture |\n| килим | /kɪˈlɪm/ | carpet | noun | m | decor |\n| штори | /ˈʃtɔrɪ/ | curtains | noun | pl | decor |\n| лампа | /ˈlɑmpɑ/ | lamp | noun | f | lighting |\n| дзеркало | /ˈdzɛrkɑlɔ/ | mirror | noun | n | item |\n| пральна машина | /ˈprɑlʲnɑ mɑˈʃɪnɑ/ | washing machine | phrase | f | appliance |\n| посудомийка | /pɔsudɔˈmɪjkɑ/ | dishwasher | noun | f | appliance |\n| пилосос | /pɪlɔˈsɔs/ | vacuum | noun | m | appliance |\n| праска | /ˈprɑskɑ/ | iron | noun | f | appliance |\n| прибирати | /prɪbɪˈrɑtɪ/ | to clean | verb | — | action |\n| ремонтувати | /rɛmɔntuˈʋɑtɪ/ | to renovate | verb | — | action |\n| облаштовувати | /ɔblɑʃtɔˈʋuʋɑtɪ/ | to furnish | verb | — | action |\n| переїжджати | /pɛrɛˈjʒdʒɑtɪ/ | to move house | verb | — | action |\n| орендувати | /ɔrɛnduˈʋɑtɪ/ | to rent | verb | — | action |\n| власний | /ˈʋlɑsnɪj/ | own | adj | m | possession |\n",
+    "createdAt": "2025-12-15T20:02:03.069130Z",
+    "modifiedAt": "2025-12-15T20:02:03.069130Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-45",
+    "level": "A2",
+    "phase": "A2.5",
+    "wordCount": 30,
+    "newWordCount": 30,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "вітальня",
+        "ipa": "/ʋiˈtɑlʲnʲɑ/",
+        "en": "living room",
+        "pos": "noun",
+        "gender": "f",
+        "note": "room"
+      },
+      {
+        "id": "vocab-2",
+        "uk": "спальня",
+        "ipa": "/ˈspɑlʲnʲɑ/",
+        "en": "bedroom",
+        "pos": "noun",
+        "gender": "f",
+        "note": "room"
+      },
+      {
+        "id": "vocab-3",
+        "uk": "кухня",
+        "ipa": "/ˈkuxnʲɑ/",
+        "en": "kitchen",
+        "pos": "noun",
+        "gender": "f",
+        "note": "room"
+      },
+      {
+        "id": "vocab-4",
+        "uk": "ванна",
+        "ipa": "/ˈʋɑnnɑ/",
+        "en": "bathroom",
+        "pos": "noun",
+        "gender": "f",
+        "note": "room"
+      },
+      {
+        "id": "vocab-5",
+        "uk": "кабінет",
+        "ipa": "/kɑbiˈnɛt/",
+        "en": "office/study",
+        "pos": "noun",
+        "gender": "m",
+        "note": "room"
+      },
+      {
+        "id": "vocab-6",
+        "uk": "коридор",
+        "ipa": "/kɔrɪˈdɔr/",
+        "en": "hallway",
+        "pos": "noun",
+        "gender": "m",
+        "note": "room"
+      },
+      {
+        "id": "vocab-7",
+        "uk": "комора",
+        "ipa": "/kɔˈmɔrɑ/",
+        "en": "storage room",
+        "pos": "noun",
+        "gender": "f",
+        "note": "room"
+      },
+      {
+        "id": "vocab-8",
+        "uk": "балкон",
+        "ipa": "/bɑlˈkɔn/",
+        "en": "balcony",
+        "pos": "noun",
+        "gender": "m",
+        "note": "area"
+      },
+      {
+        "id": "vocab-9",
+        "uk": "диван",
+        "ipa": "/dɪˈʋɑn/",
+        "en": "sofa",
+        "pos": "noun",
+        "gender": "m",
+        "note": "furniture"
+      },
+      {
+        "id": "vocab-10",
+        "uk": "крісло",
+        "ipa": "/ˈkrʲislɔ/",
+        "en": "armchair",
+        "pos": "noun",
+        "gender": "n",
+        "note": "furniture"
+      },
+      {
+        "id": "vocab-11",
+        "uk": "стіл",
+        "ipa": "/stil/",
+        "en": "table",
+        "pos": "noun",
+        "gender": "m",
+        "note": "furniture"
+      },
+      {
+        "id": "vocab-12",
+        "uk": "стілець",
+        "ipa": "/stiˈlɛt͡sʲ/",
+        "en": "chair",
+        "pos": "noun",
+        "gender": "m",
+        "note": "furniture"
+      },
+      {
+        "id": "vocab-13",
+        "uk": "шафа",
+        "ipa": "/ˈʃɑfɑ/",
+        "en": "wardrobe",
+        "pos": "noun",
+        "gender": "f",
+        "note": "furniture"
+      },
+      {
+        "id": "vocab-14",
+        "uk": "полиця",
+        "ipa": "/pɔˈlɪt͡sʲɑ/",
+        "en": "shelf",
+        "pos": "noun",
+        "gender": "f",
+        "note": "furniture"
+      },
+      {
+        "id": "vocab-15",
+        "uk": "комод",
+        "ipa": "/kɔˈmɔd/",
+        "en": "dresser",
+        "pos": "noun",
+        "gender": "m",
+        "note": "furniture"
+      },
+      {
+        "id": "vocab-16",
+        "uk": "ліжко",
+        "ipa": "/ˈliʒkɔ/",
+        "en": "bed",
+        "pos": "noun",
+        "gender": "n",
+        "note": "furniture"
+      },
+      {
+        "id": "vocab-17",
+        "uk": "килим",
+        "ipa": "/kɪˈlɪm/",
+        "en": "carpet",
+        "pos": "noun",
+        "gender": "m",
+        "note": "decor"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "штори",
+        "ipa": "/ˈʃtɔrɪ/",
+        "en": "curtains",
+        "pos": "noun",
+        "gender": null,
+        "note": "decor"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "лампа",
+        "ipa": "/ˈlɑmpɑ/",
+        "en": "lamp",
+        "pos": "noun",
+        "gender": "f",
+        "note": "lighting"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "дзеркало",
+        "ipa": "/ˈdzɛrkɑlɔ/",
+        "en": "mirror",
+        "pos": "noun",
+        "gender": "n",
+        "note": "item"
+      },
+      {
+        "id": "vocab-21",
+        "uk": "пральна машина",
+        "ipa": "/ˈprɑlʲnɑ mɑˈʃɪnɑ/",
+        "en": "washing machine",
+        "pos": "phrase",
+        "gender": "f",
+        "note": "appliance"
+      },
+      {
+        "id": "vocab-22",
+        "uk": "посудомийка",
+        "ipa": "/pɔsudɔˈmɪjkɑ/",
+        "en": "dishwasher",
+        "pos": "noun",
+        "gender": "f",
+        "note": "appliance"
+      },
+      {
+        "id": "vocab-23",
+        "uk": "пилосос",
+        "ipa": "/pɪlɔˈsɔs/",
+        "en": "vacuum",
+        "pos": "noun",
+        "gender": "m",
+        "note": "appliance"
+      },
+      {
+        "id": "vocab-24",
+        "uk": "праска",
+        "ipa": "/ˈprɑskɑ/",
+        "en": "iron",
+        "pos": "noun",
+        "gender": "f",
+        "note": "appliance"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "прибирати",
+        "ipa": "/prɪbɪˈrɑtɪ/",
+        "en": "to clean",
+        "pos": "verb",
+        "gender": null,
+        "note": "action"
+      },
+      {
+        "id": "vocab-26",
+        "uk": "ремонтувати",
+        "ipa": "/rɛmɔntuˈʋɑtɪ/",
+        "en": "to renovate",
+        "pos": "verb",
+        "gender": null,
+        "note": "action"
+      },
+      {
+        "id": "vocab-27",
+        "uk": "облаштовувати",
+        "ipa": "/ɔblɑʃtɔˈʋuʋɑtɪ/",
+        "en": "to furnish",
+        "pos": "verb",
+        "gender": null,
+        "note": "action"
+      },
+      {
+        "id": "vocab-28",
+        "uk": "переїжджати",
+        "ipa": "/pɛrɛˈjʒdʒɑtɪ/",
+        "en": "to move house",
+        "pos": "verb",
+        "gender": null,
+        "note": "action"
+      },
+      {
+        "id": "vocab-29",
+        "uk": "орендувати",
+        "ipa": "/ɔrɛnduˈʋɑtɪ/",
+        "en": "to rent",
+        "pos": "verb",
+        "gender": null,
+        "note": "action"
+      },
+      {
+        "id": "vocab-30",
+        "uk": "власний",
+        "ipa": "/ˈʋlɑsnɪj/",
+        "en": "own",
+        "pos": "adj",
+        "gender": "m",
+        "note": "possession"
+      }
+    ],
+    "reviewWords": []
+  }
+}

@@ -1,0 +1,347 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-31",
+    "moduleId": "mod-uk-A2-31",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.3",
+    "moduleNumber": 31,
+    "moduleType": "grammar",
+    "pedagogy": "Expressive",
+    "immersionLevel": 0.4,
+    "title": "Which One?",
+    "titleUk": null,
+    "subtitle": "Relative Clauses",
+    "description": "Learner can describe nouns using clauses",
+    "objectives": [
+      "Learner can describe nouns using clauses",
+      "Learner understands 'який' declension",
+      "Learner can link sentences"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "relative pronouns (який/яка/яке/які)",
+      "case agreement in clauses"
+    ],
+    "tags": [
+      "connectors",
+      "relative clauses",
+      "grammar",
+      "declension"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "How do you describe things?\n- The car **red**. (Adjective)\n- The car **of my father**. (Genitive)\n- The car **that I bought**. (Relative Clause)\n\nIn Ukrainian, \"that/which/who\" corresponds to one flexible word: **Який**.\n\n**We will cover:**\n- **The Linker:** Using *який* to connect sentences.\n- **The Chameleon:** Changing *який* for gender and case.\n- **The Comma:** Always separating the clause!\n\n> [!note] Pronunciation\n> **Який** /jɑˈkɪj/. It rhymes with \"key\" but starts with \"ya\".\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "Presentation",
+        "nameEn": null,
+        "type": "content",
+        "content": "## 1. Simple Linking (Nominative)\n\nUse **який** to explain *which* object you mean.\nIt must match the **Gender** and **Number** of the main word.\n\n| Antecedent | Relative Pronoun | Example |\n|------------|------------------|---------|\n| **Чоловік** (m) | **який** | Це чоловік, **який** тут працює. (This is the man **who** works here). |\n| **Жінка** (f) | **яка** | Це жінка, **яка** співає. (This is the woman **who** sings). |\n| **Місто** (n) | **яке** | Це місто, **яке** спить. (This is the city **which** sleeps). |\n| **Люди** (pl) | **які** | Це люди, **які** знають все. (These are people **who** know everything). |\n\n> [!tip] Comma Rule\n> Always put a comma before **який**!\n> *Це книга, про яку я говорив.*\n\n## 2. The Case Detective\n\nThis is the tricky part.\nInside the relative clause, **який** acts like a noun adjective. Its case depends on its **role within the clause**.\n\n**Scenario A: Subject (Nominative)**\n- *Я знаю хлопця, **який** любить мене.* (The boy loves me).\n\n**Scenario B: Object (Accusative)**\n- *Я знаю хлопця, **якого** люблю я.* (I love **whom**? The boy).\n\n**Scenario C: Prepositional (Locative)**\n- *Це будинок, **у якому** я живу.* (In which I live).\n\n**Think inside the box:**\nLook ONLY at the second part of the sentence to determine the case of *який*.\n1. *...я живу.* (I live).\n2. *...у будинку.* (In the house -> Locative).\n3. Result: *...у якому.*\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Deep Dive: \"Who\" vs \"Which\"",
+        "nameEn": null,
+        "type": "content",
+        "content": "In English:\n- People = Who (*The man **who** came*)\n- Things = Which/That (*The car **which** stopped*)\n\nIn Ukrainian:\n- Everything = **Який**\n- *Чоловік, який...* (Person)\n- *Стіл, який...* (Thing)\n\n> [!cultural] Myth: \"Що\" implies an object?\n> Sometimes you hear *Людина, що прийшла* instead of *Людина, яка прийшла*.\n> **Що** is an indeclinable alternative. It's simpler but less precise. For A2, focus on masterfully using **який**. It sounds richer and clearer.\n\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Deep Dive: The \"Те, що\" Connector",
+        "nameEn": null,
+        "type": "content",
+        "content": "Sometimes you don't have a specific noun to describe. You just want to refer to an abstract idea: \"That which...\" or \"What...\".\n\nIn Ukrainian, we use the combination **те, що** (that, which).\n\n- **I hear what you say.** -> **Я чую те, що ти кажеш.** (Lit: I hear that, which you say).\n- **Do what you love.** -> **Роби те, що ти любиш.**\n- **I don't believe in what I see.** -> **Я не вірю в те, що я бачу.**\n\n**Grammar Note:**\nThe first part (**те**) declines in the main sentence.\nThe second part (**що**) acts as the subject/object of the second sentence.\n\n- *Я думаю про **те**, **що** сталося.* (I think about [Loc] that, [Nom] which happened).\n\n> [!tip] Mental Model\n> Imagine **те** is an anchor in the main sentence. **Що** is the hook for the new sentence. You always need both!\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Cultural Insight",
+        "nameEn": null,
+        "type": "content",
+        "content": "> [!cultural] The Art of Description\n> Ukrainians love detailed descriptions. Unlike English, where you might say \"The tall guy\", a Ukrainian might say \"Той хлопець, який дуже високий\" (That guy, who is very tall).\n> Using relative clauses makes you sound more precise and deliberate. It is considered elegant to unfold your thought using **який**, rather than piling up adjectives before a noun.\n>\n> *English style:* \"Accurate, detailed, beautiful map.\"\n> *Ukrainian style:* \"Map, which is accurate, which is detailed, and which is beautiful.\"\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Language in Action",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Dialogue: The Police Witness\n\nA detective interviews a witness about a robbery.\n\n**Detective:** Опишіть чоловіка, **якого** ви бачили.\n**Witness:** Ну, це був чоловік, **який** швидко біг.\n**Detective:** Який одяг він мав?\n**Witness:** Він мав куртку, **яка** була чорна. І шапку, **яка** закривала обличчя.\n**Detective:** Ви бачили сумку?\n**Witness:** Так. Це була сумка, **у якій** було щось важке.\n**Detective:** Чому ви так думаєте?\n**Witness:** Тому що він біг важко. Це була річ, **яку** він тримав дуже міцно.\n**Detective:** Ви пам'ятаєте машину, **у яку** він сів?\n**Witness:** Так! Це було авто, **яке** стояло за рогом. Номер, **який** я запам'ятав, — АА 1234.\n**Detective:** Чудово. Це інформація, **яка** нам допоможе. Дякую.\n\n## Monologue: The Object That Changed My Life\n\nЯ хочу розповісти про річ, **яка** змінила моє життя.\nЦе був комп'ютер, **який** купив мій батько.\nДо цього я був хлопцем, **який** грав у футбол на вулиці.\nАле потім я став хлопцем, **якого** цікавили тільки коди і програми.\nЯ знайшов світ, **у якому** я міг будувати все.\nЦе світ, **який** не має кордонів.\nДрузі, **з якими** я грав у футбол, не розуміли мене.\nАле я знайшов нових друзів, **які** жили в інтернеті.\nКомп'ютер — це інструмент, **завдяки якому** я маю роботу, **яку** люблю.\nІ тепер я пишу цю програму, **яка** вчить вас української мови!\nЦе історія, **яку** я розповідаю всім.\nІ я сподіваюся, що це історія, **яка** надихне вас.\n\n## Dialogue: The Lost Item (Revamped)\n\n**Oksana:** Ти бачив книгу?\n**Mark:** Яку книгу?\n**Oksana:** Книгу, **яку** я читала вчора.\n**Mark:** Це та синя книга, **яка** лежала на столі?\n**Oksana:** Ні, це книга, **про яку** мені говорила мама.\n**Mark:** А, це та книга, **у якій** багато малюнків?\n**Oksana:** Так! Це книга, **яка** коштує сто доларів!\n**Mark:** Ого. Я бачив людину, **яка** взяла її.\n**Oksana:** Хто це був?\n**Mark:** Це був пес, **який** живе у нас.\n**Oksana:** Боже мій! Пес, **якого** ти приніс?!\n\n### Analysis\n1. **Книгу (Acc), яку (Acc) я читала**: Direct object of \"read\".\n2. **Книга (Nom), яка (Nom) лежала**: Subject of \"lay\".\n3. **Книга, про яку (Prep + Loc)**: Object of \"spoke about\".\n4. **Книга, у якій (Prep + Loc)**: Location \"in which\".\n5. **Людину (Acc), яка (Nom) взяла**: Subject of \"took\" (Wait! \"Person\" is Accusative in main clause, but \"who\" is Nominative in relative clause because SHE took it).\n   - This proves the rule: Case depends on role inside the clause!\n\n## Monologue: My Ideal City\n\nЯ хочу жити в місті, **яке** має багато парків.\nЦе місто, **у якому** люди посміхаються.\nЦе місце, **де** є робота, **яка** мені подобається.\nЯ шукаю друзів, **з якими** можна говорити про все.\nМені потрібен будинок, **який** стоїть біля річки.\nЦе мрія, **до якої** я йду.\nЯ знаю людину, **яка** допоможе мені. Це я!\nТакож я хочу мати сад, **у якому** ростуть квіти.\nЦе буде місце, **де** я буду читати книги.\nЯ хочу, **щоб** мої друзі приходили до мене в гості.\nМи будемо пити чай і говорити про життя.\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "1.  **Agreement:** *Який* matches the gender/number of the word it describes (Antecedent).\n2.  **Case:** *Який* changes case based on its function inside the relative clause.\n3.  **Punctuation:** Always use a comma before *який*.\n4.  **Usage:** Used for both people and things.\n5.  **Complexity:** Look at the clause as a mini-sentence to find the right case.\n\n---"
+      },
+      {
+        "id": "section-8",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Noun-Pronoun Link\n\n> Match the noun to the correct Nominative form of \"який\".\n\n- Чоловік :: який\n- Жінка :: яка\n- Місто :: яке\n- Люди :: які\n- Парк :: який\n- Книга :: яка\n- Вікно :: яке\n- Друзі :: які\n- Стіл :: який\n- Лампа :: яка\n- Дерево :: яке\n- Гроші :: які\n\n## fill-in: Choose the Form\n\n> Select the correct form based on gender and case.\n\n1. Це дівчина, ___ танцює. (Subj, f)\n   > [!answer] яка\n   > [!options] яка | яку | якій\n\n2. Це дівчина, ___ я люблю. (Obj, f)\n   > [!answer] яку\n   > [!options] яку | яка | якою\n\n3. Це хлопець, ___ живе тут. (Subj, m)\n   > [!answer] який\n   > [!options] який | якого | якому\n\n4. Це хлопець, ___ я знаю. (Obj, m - Live Animate/Genitive form)\n   > [!answer] якого\n   > [!options] якого | який | якому\n\n5. Це місто, ___ ми любимо. (Obj, n)\n   > [!answer] яке\n   > [!options] яке | якого | якому\n\n6. Це люди, з ___ я працюю. (Instr, pl)\n   > [!answer] якими\n   > [!options] якими | які | яких\n\n7. Це книга, про ___ я мрію. (Loc, f)\n   > [!answer] яку\n   > [!options] яку | якій | яка\n   > Wait. \"Про\" takes Accusative. \"Про мене\", \"Про книгу\". So \"Про яку\". Yes.\n\n8. Це будинок, у ___ я живу. (Loc, m)\n   > [!answer] якому\n   > [!options] якому | який | якого\n\n## quiz: Detective Works\n\n1. In \"Людина, яку я бачу\", what is the case of \"яку\"?\n   - [x] Accusative\n   - [ ] Nominative\n   - [ ] Genitive\n\n2. In \"Людина, яка бачить мене\", what is the case of \"яка\"?\n   - [x] Nominative\n   - [ ] Accusative\n   - [ ] Dative\n\n3. \"Який\" must agree in **gender** with:\n   - [x] The word before the comma (Antecedent)\n   - [ ] The verb after the comma\n   - [ ] The speaker\n\n4. Translate: \"The friends I live with\".\n   - [x] Друзі, з якими я живу.\n   - [ ] Друзі, з які я живу.\n\n5. \"Книгу\" is feminine. The relative pronoun starts as:\n   - [x] Яка\n   - [ ] Який\n   - [ ] Яке\n\n6. \"Про\" (about) usually triggers which case?\n   - [x] Accusative\n   - [ ] Dative\n   - [ ] Instrumental\n\n7. \"У/В\" (in) usually triggers which case for location?\n   - [x] Locative\n   - [ ] Nominative\n   - [ ] Genitive\n\n8. Is \"який\" used for people?\n   - [x] Yes, for everyone.\n   - [ ] No, only for things.\n\n## unjumble: Building Bridges\n\n1. це / чоловік / працює / який / тут\n   > [!answer] Це чоловік, який тут працює.\n\n2. книга / яку / я / читаю / цікава\n   > [!answer] Книга, яку я читаю, цікава.\n   > Or \"Це цікава книга, яку я читаю.\" - let's stick to simple relative embedding.\n\n3. ми / місто / любимо / в / живемо / якому\n   > [!answer] Ми любимо місто, в якому живемо.\n\n4. дівчина / з / якою / я / говорив\n   > [!answer] Дівчина, з якою я говорив.\n\n5. люди / які / знають / все / тут\n   > [!answer] Люди, які знають все, тут.\n   > Or \"Тут люди, які знають все.\"\n\n6. це / дім / який / я / купив\n   > [!answer] Це дім, який я купив.\n\n## group-sort: Which Case?\n\n### Nominative (Subject)\n- Чоловік, який спить.\n- Жінка, яка йде.\n- Авто, яке їде.\n- Люди, які стоять.\n- Пес, який гавкає.\n- Кіт, який їсть.\n\n### Oblique (Obj/Prep)\n- Чоловік, якого я знаю.\n- Жінка, яку я бачу.\n- Авто, у якому я сиджу.\n- Люди, з якими я говорю.\n- Пес, якого я годую.\n- Кіт, про якого я думаю.\n\n## true-false: Grammar Truths\n\n1. \"Який\" never changes form.\n   - [ ] True\n   - [x] False\n\n2. You need a comma before \"який\".\n   - [x] True\n   - [ ] False\n\n3. \"House, in which I live\" uses Locative case.\n   - [x] True\n   - [ ] False\n\n4. \"Girl, who sings\" uses Accusative case for \"who\".\n   - [ ] True\n   - [x] False\n   > She is the subject of singing -> Nominative.\n\n5. \"Which\" and \"Who\" are different words in Ukrainian.\n   - [ ] True\n   - [x] False\n   > Usually both are \"Який\".\n\n6. \"Про\" takes Dative case.\n   - [ ] True\n   - [x] False\n   > Accusative.\n\n7. \"З\" (with) takes Instrumental case.\n   - [x] True\n   - [ ] False\n\n8. \"Який\" is only for masculine words.\n   - [ ] True\n   - [x] False\n\n## cloze: My Dream House\n\n> Select the correct connector.\n\nЯ мрію про дім, [___:1] стоїть у лісі.\nЦе дім, [___:2] має великі вікна.\nЯ хочу кухню, [___:3] я буду готувати.\nЦе місце, [___:4] я буду щасливий.\nУ мене буде пес, [___:5] буде гратися.\nІ сусіди, [___:6] не шумлять.\nЦе життя, про [___:7] я мріяв.\n\n1. який / яка\n> [!answer] який\n\n2. який / якому\n> [!answer] який\n\n3. у якій / яка\n> [!answer] у якій\n\n4. де / що\n> [!answer] де\n\n5. який / якого\n> [!answer] який\n\n6. які / яких\n> [!answer] які\n\n7. яке / яким\n> [!answer] яке\n\n## dialogue-reorder: The Stranger\n\n- Ти знаєш цього чоловіка?\n- Якого чоловіка?\n- Того, який стоїть біля вікна.\n- Ні, я не знаю, хто це.\n- Він схожий на актора, якого я люблю.\n- У якому фільмі він грав?\n- У фільмі, який ми дивилися вчора.\n- А! Це той, який врятував світ?\n\n> [!answer]\n> 1. Ти знаєш цього чоловіка?\n> 2. Якого чоловіка?\n> 3. Того, який стоїть біля вікна.\n> 4. Ні, я не знаю, хто це.\n> 5. Він схожий на актора, якого я люблю.\n> 6. У якому фільмі він грав?\n> 7. У фільмі, який ми дивилися вчора.\n> 8. А! Це той, який врятував світ?\n\n## mark-the-words: Find Relative Clauses\n\nЦе [фільм, який я люблю](correct). Я знаю [дівчину, яка тут живе](correct). Це [місце, де ми зустрілися](correct).\nВін [людина, яку поважають](correct). Це [книга, про яку всі говорять](correct).\n\n---\n\nЯ хочу [спати](incorrect). Він [пішов додому](incorrect). Це [мій друг](incorrect).\n\n## error-correction: Fix the Link\n\n1. Це жінка, **який** співає. (Gender mismatch)\n   > [!error] який\n   > [!answer] яка\n   > [!explanation] Woman is feminine -> яка.\n   > [!options] яка | який\n\n2. Це місто, **який** я люблю. (Gender mismatch)\n   > [!error] який\n   > [!answer] яке\n   > [!explanation] City is neuter -> яке.\n   > [!options] яке | який\n\n3. Я знаю хлопця, **який** я бачу. (Case error)\n   > [!error] який\n   > [!answer] якого\n   > [!explanation] Direct object of \"see\" -> Accusative (Active Animate) -> якого.\n   > [!options] якого | який\n\n4. Це друг, з **який** я гуляю. (Case error)\n   > [!error] з який\n   > [!answer] з яким\n   > [!explanation] \"With\" triggers Instrumental -> з яким.\n   > [!options] з яким | з який\n\n5. Книга, **про якій** я говорив. (Case error)\n   > [!error] про якій\n   > [!answer] про яку\n   > [!explanation] \"About\" triggers Accusative -> про яку.\n   > [!options] про яку | про якій\n\n6. Люди, **яка** тут. (Number mismatch)\n   > [!error] яка\n   > [!answer] які\n   > [!explanation] People are plural -> які.\n   > [!options] які | яка\n\n## translate: English to Ukrainian\n\n1. The man who sleeps.\n   - [x] Чоловік, який спить.\n   - [ ] Чоловік, якого спить.\n\n2. The book which I read.\n   - [x] Книга, яку я читаю.\n   - [ ] Книга, яка я читаю.\n\n3. The city in which I live.\n   - [x] Місто, у якому я живу.\n   - [ ] Місто, який я живу.\n\n4. The friends with whom I speak.\n   - [x] Друзі, з якими я говорю.\n   - [ ] Друзі, з які я говорю.\n\n5. The girl who helps me.\n   - [x] Дівчина, яка допомагає мені.\n   - [ ] Дівчина, яку допомагає мені.\n\n6. The house that stands there.\n   - [x] Будинок, який стоїть там.\n   - [ ] Будинок, якого стоїть там.\n\n---"
+      },
+      {
+        "id": "section-9",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| який | /jɑˈkɪj/ | which/who (masc) | pron | m | base |\n| яка | /jɑˈkɑ/ | which/who (fem) | pron | f | form |\n| яке | /jɑˈkɛ/ | which/who (neut) | pron | n | form |\n| які | /jɑˈki/ | which/who (pl) | pron | pl | form |\n| якого | /jɑˈkɔɦɔ/ | whom/which (gen/acc) | pron | m | declension |\n| якої | /jɑˈkɔji/ | whom/which (gen) | pron | f | declension |\n| якому | /jɑˈkɔmu/ | whom/which (dat/loc) | pron | m | declension |\n| якій | /jɑˈkij/ | whom/which (dat/loc) | pron | f | declension |\n| яким | /jɑˈkɪm/ | whom/which (instr) | pron | m | declension |\n| якою | /jɑˈkɔju/ | whom/which (instr) | pron | f | declension |\n| якими | /jɑˈkɪmɪ/ | whom/which (instr pl) | pron | pl | declension |\n| котрий | /kɔtˈrɪj/ | which (out of selection) | pron | m | synonym |\n| що | /ʃt͡ʃɔ/ | that/which | pron | — | indeclinable |\n| де | /dɛ/ | where | adv | — | relative |\n| куди | /kuˈdɪ/ | where to | adv | — | relative |\n| звідки | /zˈʋidkɪ/ | where from | adv | — | relative |\n| коли | /kɔˈlɪ/ | when | adv | — | relative |\n| чий | /t͡ʃɪj/ | whose | pron | m | poss |\n| чия | /t͡ʃɪˈjɑ/ | whose | pron | f | poss |\n| чиє | /t͡ʃɪˈjɛ/ | whose | pron | n | poss |\n| людина | /lʲuˈdɪnɑ/ | person | noun | f | substantive |\n| річ | /rit͡ʃ/ | thing | noun | f | substantive |\n| місце | /ˈmis.t͡sɛ/ | place | noun | n | substantive |\n| час | /t͡ʃɑs/ | time | noun | m | substantive |\n| причина | /prɪˈt͡ʃɪnɑ/ | reason | noun | f | substantive |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-27\ntitle: Which One?\nsubtitle: \"Relative Clauses\"\nversion: \"1.0\"\nphase: \"A2.3\"\npedagogy: \"Expressive\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - connectors\n  - relative clauses\n  - grammar\n  - declension\ngrammar:\n  - relative pronouns (який/яка/яке/які)\n  - case agreement in clauses\nobjectives:\n  - \"Learner can describe nouns using clauses\"\n  - \"Learner understands 'який' declension\"\n  - \"Learner can link sentences\"\nvocabulary_count: 25\n---\n\n# Warm-up\n\nHow do you describe things?\n- The car **red**. (Adjective)\n- The car **of my father**. (Genitive)\n- The car **that I bought**. (Relative Clause)\n\nIn Ukrainian, \"that/which/who\" corresponds to one flexible word: **Який**.\n\n**We will cover:**\n- **The Linker:** Using *який* to connect sentences.\n- **The Chameleon:** Changing *який* for gender and case.\n- **The Comma:** Always separating the clause!\n\n> [!note] Pronunciation\n> **Який** /jɑˈkɪj/. It rhymes with \"key\" but starts with \"ya\".\n\n---\n\n# Presentation\n\n## 1. Simple Linking (Nominative)\n\nUse **який** to explain *which* object you mean.\nIt must match the **Gender** and **Number** of the main word.\n\n| Antecedent | Relative Pronoun | Example |\n|------------|------------------|---------|\n| **Чоловік** (m) | **який** | Це чоловік, **який** тут працює. (This is the man **who** works here). |\n| **Жінка** (f) | **яка** | Це жінка, **яка** співає. (This is the woman **who** sings). |\n| **Місто** (n) | **яке** | Це місто, **яке** спить. (This is the city **which** sleeps). |\n| **Люди** (pl) | **які** | Це люди, **які** знають все. (These are people **who** know everything). |\n\n> [!tip] Comma Rule\n> Always put a comma before **який**!\n> *Це книга, про яку я говорив.*\n\n## 2. The Case Detective\n\nThis is the tricky part.\nInside the relative clause, **який** acts like a noun adjective. Its case depends on its **role within the clause**.\n\n**Scenario A: Subject (Nominative)**\n- *Я знаю хлопця, **який** любить мене.* (The boy loves me).\n\n**Scenario B: Object (Accusative)**\n- *Я знаю хлопця, **якого** люблю я.* (I love **whom**? The boy).\n\n**Scenario C: Prepositional (Locative)**\n- *Це будинок, **у якому** я живу.* (In which I live).\n\n**Think inside the box:**\nLook ONLY at the second part of the sentence to determine the case of *який*.\n1. *...я живу.* (I live).\n2. *...у будинку.* (In the house -> Locative).\n3. Result: *...у якому.*\n\n---\n\n# Deep Dive: \"Who\" vs \"Which\"\n\nIn English:\n- People = Who (*The man **who** came*)\n- Things = Which/That (*The car **which** stopped*)\n\nIn Ukrainian:\n- Everything = **Який**\n- *Чоловік, який...* (Person)\n- *Стіл, який...* (Thing)\n\n> [!cultural] Myth: \"Що\" implies an object?\n> Sometimes you hear *Людина, що прийшла* instead of *Людина, яка прийшла*.\n> **Що** is an indeclinable alternative. It's simpler but less precise. For A2, focus on masterfully using **який**. It sounds richer and clearer.\n\n\n---\n\n# Deep Dive: The \"Те, що\" Connector\n\nSometimes you don't have a specific noun to describe. You just want to refer to an abstract idea: \"That which...\" or \"What...\".\n\nIn Ukrainian, we use the combination **те, що** (that, which).\n\n- **I hear what you say.** -> **Я чую те, що ти кажеш.** (Lit: I hear that, which you say).\n- **Do what you love.** -> **Роби те, що ти любиш.**\n- **I don't believe in what I see.** -> **Я не вірю в те, що я бачу.**\n\n**Grammar Note:**\nThe first part (**те**) declines in the main sentence.\nThe second part (**що**) acts as the subject/object of the second sentence.\n\n- *Я думаю про **те**, **що** сталося.* (I think about [Loc] that, [Nom] which happened).\n\n> [!tip] Mental Model\n> Imagine **те** is an anchor in the main sentence. **Що** is the hook for the new sentence. You always need both!\n\n---\n\n# Cultural Insight\n\n> [!cultural] The Art of Description\n> Ukrainians love detailed descriptions. Unlike English, where you might say \"The tall guy\", a Ukrainian might say \"Той хлопець, який дуже високий\" (That guy, who is very tall).\n> Using relative clauses makes you sound more precise and deliberate. It is considered elegant to unfold your thought using **який**, rather than piling up adjectives before a noun.\n>\n> *English style:* \"Accurate, detailed, beautiful map.\"\n> *Ukrainian style:* \"Map, which is accurate, which is detailed, and which is beautiful.\"\n\n---\n\n# Language in Action\n\n## Dialogue: The Police Witness\n\nA detective interviews a witness about a robbery.\n\n**Detective:** Опишіть чоловіка, **якого** ви бачили.\n**Witness:** Ну, це був чоловік, **який** швидко біг.\n**Detective:** Який одяг він мав?\n**Witness:** Він мав куртку, **яка** була чорна. І шапку, **яка** закривала обличчя.\n**Detective:** Ви бачили сумку?\n**Witness:** Так. Це була сумка, **у якій** було щось важке.\n**Detective:** Чому ви так думаєте?\n**Witness:** Тому що він біг важко. Це була річ, **яку** він тримав дуже міцно.\n**Detective:** Ви пам'ятаєте машину, **у яку** він сів?\n**Witness:** Так! Це було авто, **яке** стояло за рогом. Номер, **який** я запам'ятав, — АА 1234.\n**Detective:** Чудово. Це інформація, **яка** нам допоможе. Дякую.\n\n## Monologue: The Object That Changed My Life\n\nЯ хочу розповісти про річ, **яка** змінила моє життя.\nЦе був комп'ютер, **який** купив мій батько.\nДо цього я був хлопцем, **який** грав у футбол на вулиці.\nАле потім я став хлопцем, **якого** цікавили тільки коди і програми.\nЯ знайшов світ, **у якому** я міг будувати все.\nЦе світ, **який** не має кордонів.\nДрузі, **з якими** я грав у футбол, не розуміли мене.\nАле я знайшов нових друзів, **які** жили в інтернеті.\nКомп'ютер — це інструмент, **завдяки якому** я маю роботу, **яку** люблю.\nІ тепер я пишу цю програму, **яка** вчить вас української мови!\nЦе історія, **яку** я розповідаю всім.\nІ я сподіваюся, що це історія, **яка** надихне вас.\n\n## Dialogue: The Lost Item (Revamped)\n\n**Oksana:** Ти бачив книгу?\n**Mark:** Яку книгу?\n**Oksana:** Книгу, **яку** я читала вчора.\n**Mark:** Це та синя книга, **яка** лежала на столі?\n**Oksana:** Ні, це книга, **про яку** мені говорила мама.\n**Mark:** А, це та книга, **у якій** багато малюнків?\n**Oksana:** Так! Це книга, **яка** коштує сто доларів!\n**Mark:** Ого. Я бачив людину, **яка** взяла її.\n**Oksana:** Хто це був?\n**Mark:** Це був пес, **який** живе у нас.\n**Oksana:** Боже мій! Пес, **якого** ти приніс?!\n\n### Analysis\n1. **Книгу (Acc), яку (Acc) я читала**: Direct object of \"read\".\n2. **Книга (Nom), яка (Nom) лежала**: Subject of \"lay\".\n3. **Книга, про яку (Prep + Loc)**: Object of \"spoke about\".\n4. **Книга, у якій (Prep + Loc)**: Location \"in which\".\n5. **Людину (Acc), яка (Nom) взяла**: Subject of \"took\" (Wait! \"Person\" is Accusative in main clause, but \"who\" is Nominative in relative clause because SHE took it).\n   - This proves the rule: Case depends on role inside the clause!\n\n## Monologue: My Ideal City\n\nЯ хочу жити в місті, **яке** має багато парків.\nЦе місто, **у якому** люди посміхаються.\nЦе місце, **де** є робота, **яка** мені подобається.\nЯ шукаю друзів, **з якими** можна говорити про все.\nМені потрібен будинок, **який** стоїть біля річки.\nЦе мрія, **до якої** я йду.\nЯ знаю людину, **яка** допоможе мені. Це я!\nТакож я хочу мати сад, **у якому** ростуть квіти.\nЦе буде місце, **де** я буду читати книги.\nЯ хочу, **щоб** мої друзі приходили до мене в гості.\nМи будемо пити чай і говорити про життя.\n\n---\n\n# Summary\n\n1.  **Agreement:** *Який* matches the gender/number of the word it describes (Antecedent).\n2.  **Case:** *Який* changes case based on its function inside the relative clause.\n3.  **Punctuation:** Always use a comma before *який*.\n4.  **Usage:** Used for both people and things.\n5.  **Complexity:** Look at the clause as a mini-sentence to find the right case.\n\n---\n\n# Activities\n\n## match-up: Noun-Pronoun Link\n\n> Match the noun to the correct Nominative form of \"який\".\n\n- Чоловік :: який\n- Жінка :: яка\n- Місто :: яке\n- Люди :: які\n- Парк :: який\n- Книга :: яка\n- Вікно :: яке\n- Друзі :: які\n- Стіл :: який\n- Лампа :: яка\n- Дерево :: яке\n- Гроші :: які\n\n## fill-in: Choose the Form\n\n> Select the correct form based on gender and case.\n\n1. Це дівчина, ___ танцює. (Subj, f)\n   > [!answer] яка\n   > [!options] яка | яку | якій\n\n2. Це дівчина, ___ я люблю. (Obj, f)\n   > [!answer] яку\n   > [!options] яку | яка | якою\n\n3. Це хлопець, ___ живе тут. (Subj, m)\n   > [!answer] який\n   > [!options] який | якого | якому\n\n4. Це хлопець, ___ я знаю. (Obj, m - Live Animate/Genitive form)\n   > [!answer] якого\n   > [!options] якого | який | якому\n\n5. Це місто, ___ ми любимо. (Obj, n)\n   > [!answer] яке\n   > [!options] яке | якого | якому\n\n6. Це люди, з ___ я працюю. (Instr, pl)\n   > [!answer] якими\n   > [!options] якими | які | яких\n\n7. Це книга, про ___ я мрію. (Loc, f)\n   > [!answer] яку\n   > [!options] яку | якій | яка\n   > Wait. \"Про\" takes Accusative. \"Про мене\", \"Про книгу\". So \"Про яку\". Yes.\n\n8. Це будинок, у ___ я живу. (Loc, m)\n   > [!answer] якому\n   > [!options] якому | який | якого\n\n## quiz: Detective Works\n\n1. In \"Людина, яку я бачу\", what is the case of \"яку\"?\n   - [x] Accusative\n   - [ ] Nominative\n   - [ ] Genitive\n\n2. In \"Людина, яка бачить мене\", what is the case of \"яка\"?\n   - [x] Nominative\n   - [ ] Accusative\n   - [ ] Dative\n\n3. \"Який\" must agree in **gender** with:\n   - [x] The word before the comma (Antecedent)\n   - [ ] The verb after the comma\n   - [ ] The speaker\n\n4. Translate: \"The friends I live with\".\n   - [x] Друзі, з якими я живу.\n   - [ ] Друзі, з які я живу.\n\n5. \"Книгу\" is feminine. The relative pronoun starts as:\n   - [x] Яка\n   - [ ] Який\n   - [ ] Яке\n\n6. \"Про\" (about) usually triggers which case?\n   - [x] Accusative\n   - [ ] Dative\n   - [ ] Instrumental\n\n7. \"У/В\" (in) usually triggers which case for location?\n   - [x] Locative\n   - [ ] Nominative\n   - [ ] Genitive\n\n8. Is \"який\" used for people?\n   - [x] Yes, for everyone.\n   - [ ] No, only for things.\n\n## unjumble: Building Bridges\n\n1. це / чоловік / працює / який / тут\n   > [!answer] Це чоловік, який тут працює.\n\n2. книга / яку / я / читаю / цікава\n   > [!answer] Книга, яку я читаю, цікава.\n   > Or \"Це цікава книга, яку я читаю.\" - let's stick to simple relative embedding.\n\n3. ми / місто / любимо / в / живемо / якому\n   > [!answer] Ми любимо місто, в якому живемо.\n\n4. дівчина / з / якою / я / говорив\n   > [!answer] Дівчина, з якою я говорив.\n\n5. люди / які / знають / все / тут\n   > [!answer] Люди, які знають все, тут.\n   > Or \"Тут люди, які знають все.\"\n\n6. це / дім / який / я / купив\n   > [!answer] Це дім, який я купив.\n\n## group-sort: Which Case?\n\n### Nominative (Subject)\n- Чоловік, який спить.\n- Жінка, яка йде.\n- Авто, яке їде.\n- Люди, які стоять.\n- Пес, який гавкає.\n- Кіт, який їсть.\n\n### Oblique (Obj/Prep)\n- Чоловік, якого я знаю.\n- Жінка, яку я бачу.\n- Авто, у якому я сиджу.\n- Люди, з якими я говорю.\n- Пес, якого я годую.\n- Кіт, про якого я думаю.\n\n## true-false: Grammar Truths\n\n1. \"Який\" never changes form.\n   - [ ] True\n   - [x] False\n\n2. You need a comma before \"який\".\n   - [x] True\n   - [ ] False\n\n3. \"House, in which I live\" uses Locative case.\n   - [x] True\n   - [ ] False\n\n4. \"Girl, who sings\" uses Accusative case for \"who\".\n   - [ ] True\n   - [x] False\n   > She is the subject of singing -> Nominative.\n\n5. \"Which\" and \"Who\" are different words in Ukrainian.\n   - [ ] True\n   - [x] False\n   > Usually both are \"Який\".\n\n6. \"Про\" takes Dative case.\n   - [ ] True\n   - [x] False\n   > Accusative.\n\n7. \"З\" (with) takes Instrumental case.\n   - [x] True\n   - [ ] False\n\n8. \"Який\" is only for masculine words.\n   - [ ] True\n   - [x] False\n\n## cloze: My Dream House\n\n> Select the correct connector.\n\nЯ мрію про дім, [___:1] стоїть у лісі.\nЦе дім, [___:2] має великі вікна.\nЯ хочу кухню, [___:3] я буду готувати.\nЦе місце, [___:4] я буду щасливий.\nУ мене буде пес, [___:5] буде гратися.\nІ сусіди, [___:6] не шумлять.\nЦе життя, про [___:7] я мріяв.\n\n1. який / яка\n> [!answer] який\n\n2. який / якому\n> [!answer] який\n\n3. у якій / яка\n> [!answer] у якій\n\n4. де / що\n> [!answer] де\n\n5. який / якого\n> [!answer] який\n\n6. які / яких\n> [!answer] які\n\n7. яке / яким\n> [!answer] яке\n\n## dialogue-reorder: The Stranger\n\n- Ти знаєш цього чоловіка?\n- Якого чоловіка?\n- Того, який стоїть біля вікна.\n- Ні, я не знаю, хто це.\n- Він схожий на актора, якого я люблю.\n- У якому фільмі він грав?\n- У фільмі, який ми дивилися вчора.\n- А! Це той, який врятував світ?\n\n> [!answer]\n> 1. Ти знаєш цього чоловіка?\n> 2. Якого чоловіка?\n> 3. Того, який стоїть біля вікна.\n> 4. Ні, я не знаю, хто це.\n> 5. Він схожий на актора, якого я люблю.\n> 6. У якому фільмі він грав?\n> 7. У фільмі, який ми дивилися вчора.\n> 8. А! Це той, який врятував світ?\n\n## mark-the-words: Find Relative Clauses\n\nЦе [фільм, який я люблю](correct). Я знаю [дівчину, яка тут живе](correct). Це [місце, де ми зустрілися](correct).\nВін [людина, яку поважають](correct). Це [книга, про яку всі говорять](correct).\n\n---\n\nЯ хочу [спати](incorrect). Він [пішов додому](incorrect). Це [мій друг](incorrect).\n\n## error-correction: Fix the Link\n\n1. Це жінка, **який** співає. (Gender mismatch)\n   > [!error] який\n   > [!answer] яка\n   > [!explanation] Woman is feminine -> яка.\n   > [!options] яка | який\n\n2. Це місто, **який** я люблю. (Gender mismatch)\n   > [!error] який\n   > [!answer] яке\n   > [!explanation] City is neuter -> яке.\n   > [!options] яке | який\n\n3. Я знаю хлопця, **який** я бачу. (Case error)\n   > [!error] який\n   > [!answer] якого\n   > [!explanation] Direct object of \"see\" -> Accusative (Active Animate) -> якого.\n   > [!options] якого | який\n\n4. Це друг, з **який** я гуляю. (Case error)\n   > [!error] з який\n   > [!answer] з яким\n   > [!explanation] \"With\" triggers Instrumental -> з яким.\n   > [!options] з яким | з який\n\n5. Книга, **про якій** я говорив. (Case error)\n   > [!error] про якій\n   > [!answer] про яку\n   > [!explanation] \"About\" triggers Accusative -> про яку.\n   > [!options] про яку | про якій\n\n6. Люди, **яка** тут. (Number mismatch)\n   > [!error] яка\n   > [!answer] які\n   > [!explanation] People are plural -> які.\n   > [!options] які | яка\n\n## translate: English to Ukrainian\n\n1. The man who sleeps.\n   - [x] Чоловік, який спить.\n   - [ ] Чоловік, якого спить.\n\n2. The book which I read.\n   - [x] Книга, яку я читаю.\n   - [ ] Книга, яка я читаю.\n\n3. The city in which I live.\n   - [x] Місто, у якому я живу.\n   - [ ] Місто, який я живу.\n\n4. The friends with whom I speak.\n   - [x] Друзі, з якими я говорю.\n   - [ ] Друзі, з які я говорю.\n\n5. The girl who helps me.\n   - [x] Дівчина, яка допомагає мені.\n   - [ ] Дівчина, яку допомагає мені.\n\n6. The house that stands there.\n   - [x] Будинок, який стоїть там.\n   - [ ] Будинок, якого стоїть там.\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| який | /jɑˈkɪj/ | which/who (masc) | pron | m | base |\n| яка | /jɑˈkɑ/ | which/who (fem) | pron | f | form |\n| яке | /jɑˈkɛ/ | which/who (neut) | pron | n | form |\n| які | /jɑˈki/ | which/who (pl) | pron | pl | form |\n| якого | /jɑˈkɔɦɔ/ | whom/which (gen/acc) | pron | m | declension |\n| якої | /jɑˈkɔji/ | whom/which (gen) | pron | f | declension |\n| якому | /jɑˈkɔmu/ | whom/which (dat/loc) | pron | m | declension |\n| якій | /jɑˈkij/ | whom/which (dat/loc) | pron | f | declension |\n| яким | /jɑˈkɪm/ | whom/which (instr) | pron | m | declension |\n| якою | /jɑˈkɔju/ | whom/which (instr) | pron | f | declension |\n| якими | /jɑˈkɪmɪ/ | whom/which (instr pl) | pron | pl | declension |\n| котрий | /kɔtˈrɪj/ | which (out of selection) | pron | m | synonym |\n| що | /ʃt͡ʃɔ/ | that/which | pron | — | indeclinable |\n| де | /dɛ/ | where | adv | — | relative |\n| куди | /kuˈdɪ/ | where to | adv | — | relative |\n| звідки | /zˈʋidkɪ/ | where from | adv | — | relative |\n| коли | /kɔˈlɪ/ | when | adv | — | relative |\n| чий | /t͡ʃɪj/ | whose | pron | m | poss |\n| чия | /t͡ʃɪˈjɑ/ | whose | pron | f | poss |\n| чиє | /t͡ʃɪˈjɛ/ | whose | pron | n | poss |\n| людина | /lʲuˈdɪnɑ/ | person | noun | f | substantive |\n| річ | /rit͡ʃ/ | thing | noun | f | substantive |\n| місце | /ˈmis.t͡sɛ/ | place | noun | n | substantive |\n| час | /t͡ʃɑs/ | time | noun | m | substantive |\n| причина | /prɪˈt͡ʃɪnɑ/ | reason | noun | f | substantive |\n",
+    "createdAt": "2025-12-15T20:02:03.027880Z",
+    "modifiedAt": "2025-12-15T20:02:03.027880Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-31",
+    "level": "A2",
+    "phase": "A2.3",
+    "wordCount": 25,
+    "newWordCount": 25,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "який",
+        "ipa": "/jɑˈkɪj/",
+        "en": "which/who (masc)",
+        "pos": "pron",
+        "gender": "m",
+        "note": "base"
+      },
+      {
+        "id": "vocab-2",
+        "uk": "яка",
+        "ipa": "/jɑˈkɑ/",
+        "en": "which/who (fem)",
+        "pos": "pron",
+        "gender": "f",
+        "note": "form"
+      },
+      {
+        "id": "vocab-3",
+        "uk": "яке",
+        "ipa": "/jɑˈkɛ/",
+        "en": "which/who (neut)",
+        "pos": "pron",
+        "gender": "n",
+        "note": "form"
+      },
+      {
+        "id": "vocab-4",
+        "uk": "які",
+        "ipa": "/jɑˈki/",
+        "en": "which/who (pl)",
+        "pos": "pron",
+        "gender": null,
+        "note": "form"
+      },
+      {
+        "id": "vocab-5",
+        "uk": "якого",
+        "ipa": "/jɑˈkɔɦɔ/",
+        "en": "whom/which (gen/acc)",
+        "pos": "pron",
+        "gender": "m",
+        "note": "declension"
+      },
+      {
+        "id": "vocab-6",
+        "uk": "якої",
+        "ipa": "/jɑˈkɔji/",
+        "en": "whom/which (gen)",
+        "pos": "pron",
+        "gender": "f",
+        "note": "declension"
+      },
+      {
+        "id": "vocab-7",
+        "uk": "якому",
+        "ipa": "/jɑˈkɔmu/",
+        "en": "whom/which (dat/loc)",
+        "pos": "pron",
+        "gender": "m",
+        "note": "declension"
+      },
+      {
+        "id": "vocab-8",
+        "uk": "якій",
+        "ipa": "/jɑˈkij/",
+        "en": "whom/which (dat/loc)",
+        "pos": "pron",
+        "gender": "f",
+        "note": "declension"
+      },
+      {
+        "id": "vocab-9",
+        "uk": "яким",
+        "ipa": "/jɑˈkɪm/",
+        "en": "whom/which (instr)",
+        "pos": "pron",
+        "gender": "m",
+        "note": "declension"
+      },
+      {
+        "id": "vocab-10",
+        "uk": "якою",
+        "ipa": "/jɑˈkɔju/",
+        "en": "whom/which (instr)",
+        "pos": "pron",
+        "gender": "f",
+        "note": "declension"
+      },
+      {
+        "id": "vocab-11",
+        "uk": "якими",
+        "ipa": "/jɑˈkɪmɪ/",
+        "en": "whom/which (instr pl)",
+        "pos": "pron",
+        "gender": null,
+        "note": "declension"
+      },
+      {
+        "id": "vocab-12",
+        "uk": "котрий",
+        "ipa": "/kɔtˈrɪj/",
+        "en": "which (out of selection)",
+        "pos": "pron",
+        "gender": "m",
+        "note": "synonym"
+      },
+      {
+        "id": "vocab-13",
+        "uk": "що",
+        "ipa": "/ʃt͡ʃɔ/",
+        "en": "that/which",
+        "pos": "pron",
+        "gender": null,
+        "note": "indeclinable"
+      },
+      {
+        "id": "vocab-14",
+        "uk": "де",
+        "ipa": "/dɛ/",
+        "en": "where",
+        "pos": "adv",
+        "gender": null,
+        "note": "relative"
+      },
+      {
+        "id": "vocab-15",
+        "uk": "куди",
+        "ipa": "/kuˈdɪ/",
+        "en": "where to",
+        "pos": "adv",
+        "gender": null,
+        "note": "relative"
+      },
+      {
+        "id": "vocab-16",
+        "uk": "звідки",
+        "ipa": "/zˈʋidkɪ/",
+        "en": "where from",
+        "pos": "adv",
+        "gender": null,
+        "note": "relative"
+      },
+      {
+        "id": "vocab-17",
+        "uk": "коли",
+        "ipa": "/kɔˈlɪ/",
+        "en": "when",
+        "pos": "adv",
+        "gender": null,
+        "note": "relative"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "чий",
+        "ipa": "/t͡ʃɪj/",
+        "en": "whose",
+        "pos": "pron",
+        "gender": "m",
+        "note": "poss"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "чия",
+        "ipa": "/t͡ʃɪˈjɑ/",
+        "en": "whose",
+        "pos": "pron",
+        "gender": "f",
+        "note": "poss"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "чиє",
+        "ipa": "/t͡ʃɪˈjɛ/",
+        "en": "whose",
+        "pos": "pron",
+        "gender": "n",
+        "note": "poss"
+      },
+      {
+        "id": "vocab-21",
+        "uk": "людина",
+        "ipa": "/lʲuˈdɪnɑ/",
+        "en": "person",
+        "pos": "noun",
+        "gender": "f",
+        "note": "substantive"
+      },
+      {
+        "id": "vocab-22",
+        "uk": "річ",
+        "ipa": "/rit͡ʃ/",
+        "en": "thing",
+        "pos": "noun",
+        "gender": "f",
+        "note": "substantive"
+      },
+      {
+        "id": "vocab-23",
+        "uk": "місце",
+        "ipa": "/ˈmis.t͡sɛ/",
+        "en": "place",
+        "pos": "noun",
+        "gender": "n",
+        "note": "substantive"
+      },
+      {
+        "id": "vocab-24",
+        "uk": "час",
+        "ipa": "/t͡ʃɑs/",
+        "en": "time",
+        "pos": "noun",
+        "gender": "m",
+        "note": "substantive"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "причина",
+        "ipa": "/prɪˈt͡ʃɪnɑ/",
+        "en": "reason",
+        "pos": "noun",
+        "gender": "f",
+        "note": "substantive"
+      }
+    ],
+    "reviewWords": []
+  }
+}

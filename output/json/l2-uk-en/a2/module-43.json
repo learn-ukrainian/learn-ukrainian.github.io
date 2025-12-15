@@ -1,0 +1,349 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-43",
+    "moduleId": "mod-uk-A2-43",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.4",
+    "moduleNumber": 43,
+    "moduleType": "checkpoint",
+    "pedagogy": "Review",
+    "immersionLevel": 0.4,
+    "title": "Checkpoint - Word Formation",
+    "titleUk": null,
+    "subtitle": "Review of Modules 31-36",
+    "description": "Learner demonstrates mastery of word formation",
+    "objectives": [
+      "Learner demonstrates mastery of word formation",
+      "Learner can analyze word components",
+      "Learner can derive new words from roots"
+    ],
+    "objectivesUk": null,
+    "grammarFocus": [
+      "motion prefixes",
+      "action prefixes",
+      "noun suffixes",
+      "adjective suffixes",
+      "root families"
+    ],
+    "tags": [
+      "review",
+      "checkpoint",
+      "assessment"
+    ],
+    "totalDuration": "60 min",
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Warm-up",
+        "nameEn": null,
+        "type": "content",
+        "content": "Вітаємо на контрольному уроці! Welcome to your checkpoint lesson! This module reviews all word formation skills from Modules 31-36. You have learned how to build new words using prefixes, suffixes, and root families.\n\nWord formation is one of the most powerful tools in Ukrainian. Understanding how words are built helps you guess the meaning of new words, even if you have never seen them before.\n\n**Modules Reviewed:**\n- M31: Motion Verb Prefixes (при-, ви-, у-)\n- M32: Action Verb Prefixes (пере-, від-, роз-)\n- M33: Noun Suffixes (-ння, -ість, -ач)\n- M34: Adjective Suffixes (-ний, -овий, -ський)\n- M35: Root Families I (ход-, пис-)\n- M36: Root Families II (бач-, слух-, говор-)\n\n> [!tip] Review Strategy\n> Word formation follows patterns. Remember these key principles:\n> - Prefixes change the meaning of verbs\n> - Suffixes create new parts of speech\n> - Roots carry the core meaning across word families\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "Presentation",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Prefix Review\n\nUkrainian prefixes change the direction, completion, or manner of action. Here is a summary of the key prefixes you learned:\n\n| Prefix | Meaning | Example |\n|--------|---------|---------|\n| при- | arrival, toward | прийти (to arrive) |\n| ви- | exit, out of | вийти (to exit) |\n| у-/в- | entering | увійти (to enter) |\n| пере- | across, re-do | перейти (to cross) |\n| від- | away from, opening | відійти (to walk away) |\n| роз- | spreading, undoing | розійтися (to disperse) |\n\nThe most common mistake is confusing при- (arrival) with ви- (departure). Remember: прийти means to come TO a place, while вийти means to come OUT of a place.\n\n> [!cultural] Лінгвістичний Інсайт\n> Український словотвір дуже продуктивний.\n> Якщо ви знаєте корінь, ви можете зрозуміти багато споріднених слів.\n> Наприклад, від ход- (ходити) можна утворити: вхід, вихід, перехід, пішохід.\n> Це дуже ефективний спосіб вивчення нових слів!\n\n## Suffix Review\n\nSuffixes transform words from one part of speech to another. Here are the key patterns:\n\n| Suffix | Creates | Example |\n|--------|---------|---------|\n| -ння | verbal noun | читати → читання |\n| -ість | abstract noun | важливий → важливість |\n| -ач/-ик | agent noun | читати → читач |\n| -ний | adjective | музика → музичний |\n| -овий | relating to | слово → словниковий |\n| -ський | nationality/place | Україна → український |\n\nThese suffixes are consistent and predictable. When you see -ння, you know the word is a noun meaning \"the action of doing something.\"\n\n## Root Family Review\n\nRoot families connect related words across different parts of speech:\n\n| Root | Meaning | Examples |\n|------|---------|----------|\n| ход- | walk, go | вхід, вихід, пішохід, перехід |\n| пис- | write | писати, написати, письменник, писання |\n| бач- | see | бачити, побачення, передбачити |\n| слух- | hear | слухати, послухати, слухач |\n| говор-/мов- | speak | говорити, мова, розмова, мовчати |\n\nКореневі сім'ї дуже важливі для розширення словникового запасу. Якщо ви знаєте корінь, ви можете зрозуміти багато споріднених слів. Наприклад, від кореня \"пис-\" ми отримуємо: писати, написати, переписати, письменник, писання, лист.\n\n> [!tip] Поради для Розпізнавання Коренів\n> Коли ви зустрічаєте нове слово, шукайте знайомі корені.\n> Корінь несе основний зміст. Префікси і суфікси модифікують його.\n> Наприклад: передбачити = перед- (до) + бач- (бачити) = передбачати\n\n---"
+      },
+      {
+        "id": "section-3",
+        "name": "Story Time: Урок Словотвору",
+        "nameEn": null,
+        "type": "content",
+        "content": "Марійка вивчає українську мову. Вона — старанна **учениця**. Сьогодні вона має урок про словотвір. Її школа знаходиться в центрі міста. Вона любить **ходити** туди пішки.\n\n— Доброго ранку, клас! — каже вчителька. — Сьогодні ми повторимо словотвір. Це **важлива** тема для вашого прогресу.\n— Доброго ранку! — відповідають учні. Вони дістають свої зошити і ручки.\n— Хто може сказати, що таке корінь слова?\n\nМарійка піднімає руку.\n\n— Корінь — це головна частина слова. Він несе основний зміст.\n— Правильно! А яка функція префіксів?\n— Префікси змінюють значення дієслова, — відповідає Олесь.\n— Чудово! А суфікси?\n— Суфікси створюють нові частини мови, — додає Катя.\n\nВчителька показує приклад на дошці.\n\n— Дивіться: корінь **ход-** означає \"йти\". З нього ми можемо утворити багато слів.\n— **Вхід** — місце, де входять, — каже Марійка.\n— **Вихід** — місце, де виходять, — додає Олесь.\n— **Перехід** — місце, де переходять, — каже Катя.\n— **Пішохід** — людина, яка ходить пішки!\n\nВчителька посміхається.\n\n— Молодці! Тепер ви розумієте, як працює словотвір!\n\n> [!cultural] Ukrainian Morphology\n> Ukrainian is a highly inflected language with rich word formation.\n> Understanding prefixes, suffixes, and roots helps you decode new vocabulary.\n> This skill is especially useful when reading texts with unfamiliar words.\n\n---"
+      },
+      {
+        "id": "section-4",
+        "name": "Story Time Part 2: Практична Вправа",
+        "nameEn": null,
+        "type": "content",
+        "content": "Після теорії клас робить практичну вправу.\n\n— Тепер давайте попрактикуємось! — каже вчителька.\n\nВона пише на дошці слово **читати**.\n\n— Яке віддієслівне іменник від \"читати\"?\n— Читання! — хором відповідає клас.\n— А як називають людину, яка читає?\n— Читач! — каже Марійка.\n\nВчителька пише інше слово: **важливий**.\n\n— Утворіть іменник від прикметника \"важливий\".\n— Важливість! — відповідає Олесь.\n— Правильно! А тепер корінь **пис-**.\n— Писати, написати, переписати, письменник, писання! — перераховує Катя.\n\nВчителька аплодує.\n\n— Чудова робота! Ви добре засвоїли матеріал!\n\nМарійка записує все в зошит. Тепер вона краще розуміє, як будувати нові слова.\n\n— Вчителько, а які префікси найважливіші? — питає Олесь.\n— Всі важливі! Але при-, ви-, і пере- використовуються дуже часто.\n— А суфікси? — питає Катя.\n— Суфікси -ння, -ість, і -ач дуже популярні.\n— Дякую, вчителько! — хором відповідає клас.\n\nУрок закінчився. Всі діти тепер знають, як працює словотвір.\n\n---"
+      },
+      {
+        "id": "section-5",
+        "name": "Student Testimonies",
+        "nameEn": null,
+        "type": "content",
+        "content": "Here is what students say about learning word formation.\n\n**Олена (22, Polish, Krakow)**\n*\"Спочатку я мала страх перед довгими словами. Але тепер я бачу їх як конструктор. Коли я бачу слово 'неможливо передбачити', я його розбиваю. Я читаю: не-мож-ли-во пе-ред-ба-чи-ти. Ага! Impossible to foresee. Це геніально!\"*\n\n**Джон (45, American, Chicago)**\n*\"Я інженер. Мені подобається логіка. Українська мова дуже логічна. Корінь 'хід' працює як система. Вхід, вихід, перехід. Це як код. Я тепер можу читати технічні тексти і розуміти суть.\"*\n\n**Сара (30, Canadian, Toronto)**\n*\"Мій дід був українцем. Я хотіла читати його листи. Спочатку це було важко. Але коли я вивчила суфікси, все змінилося. Я тепер розумію різницю між 'добрий' і 'доброта'. Це відкрило мені очі.\"*\n\n---"
+      },
+      {
+        "id": "section-6",
+        "name": "Common Expressions",
+        "nameEn": null,
+        "type": "content",
+        "content": "## Formation Patterns\n\nWord formation follows predictable patterns. Understanding these patterns helps you build vocabulary systematically. Here are the key transformation types you have learned:\n\n| Pattern | Example | Translation |\n|---------|---------|-------------|\n| verb → noun | читати → читання | to read → reading |\n| adj → noun | важливий → важливість | important → importance |\n| verb → agent | писати → письменник | to write → writer |\n| noun → adj | музика → музичний | music → musical |\n\nVerbal nouns (nouns ending in -ння) describe the action of doing something. Agent nouns (nouns ending in -ач or -ик) describe the person who performs an action. Abstract nouns ending in -ість express qualities or states.\n\n## Word Family Examples\n\nEach root family has many related words. Learning the root helps you understand and remember all the words in the family. Here are expanded examples:\n\n- **ход-** (walk/go): вхід, вихід, перехід, пішохід, похід, прихід, відхід\n- **пис-** (write): писати, написати, переписати, письменник, писання, лист\n- **говор-/мов-** (speak): говорити, мова, мовчати, розмова, розмовляти\n- **бач-** (see): бачити, побачити, побачення, передбачати\n- **слух-** (hear): слухати, послухати, слухач, слухняний\n\n---"
+      },
+      {
+        "id": "section-7",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "**Префікси:**\n- при- (прибуття)\n- ви- (вихід)\n- у- (вхід)\n- пере- (через)\n- від- (відкриття)\n- роз- (розподіл)\n\n**Суфікси:**\n- -ння (дія)\n- -ість (абстрактність)\n- -ач (агент)\n- -ний/-овий/-ський (прикметники)\n\n**Корені:**\n- ход-, пис-, бач-, слух-, говор-/мов-\n\nТепер ви знаєте, як будувати нові слова! Словотвір — це ключ до розуміння української мови! Використовуйте ці знання щодня!\n\nWord formation is a key skill in Ukrainian. By understanding how prefixes, suffixes, and roots work together, you can decode the meaning of many new words. Continue practicing these patterns and you will quickly expand your vocabulary.\n\n---"
+      },
+      {
+        "id": "section-8",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## match-up: Comprehensive Review\n\n> Match prefixes and suffixes to their functions.\n\n- при- :: arrival\n- ви- :: exit\n- пере- :: across/redo\n- -ння :: verbal noun\n- -ість :: abstract noun\n- -ач :: agent noun\n- ход- :: walk/go\n- пис- :: write\n- бач- :: see\n- слух- :: hear\n- говор- :: speak\n- -ський :: relating to\n\n## fill-in: Mixed Review\n\n> Complete with the correct word form.\n\n1. Він [___] до кімнати. (entered)\n   > [!answer] увійшов\n   > [!options] увійшов | вийшов | прийшов | зайшов\n\n2. Вона [___] лист. (wrote — completed)\n   > [!answer] написала\n   > [!options] писала | написала | переписала | дописала\n\n3. читати → [___] (reading — noun)\n   > [!answer] читання\n   > [!options] читання | читач | читати | читаний\n\n4. музика → [___] (musical)\n   > [!answer] музичний\n   > [!options] музичний | музика | музикант | музично\n\n5. Where is the [___]? (entrance)\n   > [!answer] вхід\n   > [!options] вхід | вихід | перехід | похід\n\n6. He [___] the door. (opened)\n   > [!answer] відкрив\n   > [!options] відкрив | закрив | відчинив | зачинив\n\n7. важливий → [___] (importance)\n   > [!answer] важливість\n   > [!options] важливість | важливо | важний | важка\n\n8. Україна → [___] (Ukrainian)\n   > [!answer] український\n   > [!options] український | Україна | українець | україно\n\n## quiz: Word Formation Review\n\n1. \"При-\" indicates:\n   - [x] Arrival\n   - [ ] Departure\n   - [ ] Repetition\n\n2. \"-ння\" forms:\n   - [x] Verbal nouns\n   - [ ] Agent nouns\n   - [ ] Adjectives\n\n3. \"-ість\" forms:\n   - [x] Abstract nouns from adjectives\n   - [ ] Verbal nouns\n   - [ ] Verbs\n\n4. \"Ход-\" relates to:\n   - [x] Walking/movement\n   - [ ] Writing\n   - [ ] Speaking\n\n5. \"Пис-\" relates to:\n   - [x] Writing\n   - [ ] Speaking\n   - [ ] Seeing\n\n6. \"-ський\" often indicates:\n   - [x] Relating to place/group\n   - [ ] Past action\n   - [ ] Future action\n\n7. \"Пере-\" can mean:\n   - [x] Across or redo\n   - [ ] Only arrival\n   - [ ] Only departure\n\n8. \"Бач-\" relates to:\n   - [x] Seeing\n   - [ ] Hearing\n   - [ ] Writing\n\n## cloze: Story Comprehension\n\n> Complete based on the classroom story.\n\nМарійка вивчає [___:1] мову. (Ukrainian)\nКорінь — це [___:2] частина слова. (main)\nПрефікси змінюють [___:3] дієслова. (meaning)\nСуфікси створюють нові [___:4] мови. (parts)\nВхід — місце, де [___:5]. (enter)\nПішохід — людина, яка ходить [___:6]. (on foot)\n\n1. українську\n> [!answer] українську\n> [!options] українську | англійську | німецьку\n\n2. головна\n> [!answer] головна\n> [!options] головна | остання | перша\n\n3. значення\n> [!answer] значення\n> [!options] значення | форму | час\n\n4. частини\n> [!answer] частини\n> [!options] частини | букви | речення\n\n5. входять\n> [!answer] входять\n> [!options] входять | виходять | біжать\n\n6. пішки\n> [!answer] пішки\n> [!options] пішки | бігом | повільно\n\n## unjumble: Word Formation Sentences\n\n1. слова / частина / Корінь / головна\n   > [!answer] Корінь — головна частина слова.\n2. значення / Префікси / змінюють / дієслова\n   > [!answer] Префікси змінюють значення дієслова.\n3. утворюють / Суфікси / іменники / нові\n   > [!answer] Суфікси утворюють нові іменники.\n4. прийти / означає / прибуття\n   > [!answer] Прийти означає прибуття.\n5. слово / читання / від / читати\n   > [!answer] Читання — слово від читати.\n6. Вихід / виходять / де / місце\n   > [!answer] Вихід — місце, де виходять.\n7. пішки / ходить / Пішохід / який\n   > [!answer] Пішохід — який ходить пішки.\n8. мову / Вона / вивчає / українську\n   > [!answer] Вона вивчає українську мову.\n\n## error-correction: Formation Mistakes\n\n1. Він **вийшов** до школи. (arrived)\n   > [!error] вийшов\n   > [!answer] прийшов\n   > [!explanation] \"При-\" means arrival. \"Ви-\" means exit.\n   > [!options] прийшов | вийшов\n\n2. Вхід — місце, де **виходять**.\n   > [!error] виходять\n   > [!answer] входять\n   > [!explanation] Вхід comes from входити (to enter).\n   > [!options] входять | виходять\n\n3. Читати → **читач** (the action)\n   > [!error] читач\n   > [!answer] читання\n   > [!explanation] \"-ння\" forms verbal nouns. \"-ач\" forms agent nouns.\n   > [!options] читання | читач\n\n4. Важливий → **важливо** (noun)\n   > [!error] важливо\n   > [!answer] важливість\n   > [!explanation] \"-ість\" forms abstract nouns from adjectives.\n   > [!options] важливість | важливо\n\n5. **Слух-** means seeing.\n   > [!error] Слух-\n   > [!answer] Бач-\n   > [!explanation] \"Слух-\" means hearing. \"Бач-\" means seeing.\n   > [!options] Бач- | Слух-\n\n6. Пішохід — людина, яка **їде**.\n   > [!error] їде\n   > [!answer] ходить\n   > [!explanation] \"Пішохід\" comes from \"піший\" + \"ходити\" (walk).\n   > [!options] ходить | їде\n\n## match-up: Root Families\n\n> Match words to their root families.\n\n- вхід :: ход- (walk)\n- письменник :: пис- (write)\n- побачення :: бач- (see)\n- слухач :: слух- (hear)\n- розмова :: мов- (speak)\n- перехід :: ход- (walk)\n- писання :: пис- (write)\n- побачити :: бач- (see)\n\n## group-sort: Word Parts\n\n> Sort words by their formation type.\n\n### Prefixes\n- при-\n- ви-\n- пере-\n- від-\n- на-\n- роз-\n\n### Suffixes\n- -ння\n- -ість\n- -ач\n- -ний\n- -овий\n- -ський\n\n### Roots\n- ход-\n- пис-\n- бач-\n- слух-\n\n## true-false: Formation Rules\n\n> Mark true or false.\n\n- [x] \"При-\" = arrival.\n- [x] \"-ння\" forms verbal nouns.\n- [ ] \"-ість\" forms verbs.\n- [x] \"Ход-\" relates to movement.\n- [x] \"-ач\" forms agent nouns.\n- [ ] \"Ви-\" means \"entry.\"\n- [x] \"Ви-\" means \"exit.\"\n- [x] \"-ський\" relates to place.\n- [ ] \"Слух-\" means seeing.\n- [x] \"Слух-\" means hearing.\n- [x] Prefixes change verb meaning.\n- [ ] Suffixes do not change POS.\n\n## translate: Mixed Words\n\n1. Entrance\n   - [x] вхід\n   - [ ] вихід\n   - [ ] перехід\n\n2. Reading (noun)\n   - [x] читання\n   - [ ] читач\n   - [ ] читати\n\n3. Musical\n   - [x] музичний\n   - [ ] музика\n   - [ ] музикант\n\n4. Writer\n   - [x] письменник\n   - [ ] писання\n   - [ ] писати\n\n5. To enter\n   - [x] увійти\n   - [ ] вийти\n   - [ ] прийти\n\n6. To rewrite\n   - [x] переписати\n   - [ ] написати\n   - [ ] дописати\n\n7. Importance\n   - [x] важливість\n   - [ ] важливий\n   - [ ] важливо\n\n8. Ukrainian (adj)\n   - [x] український\n   - [ ] Україна\n   - [ ] українець\n\n---"
+      },
+      {
+        "id": "section-9",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| префікс | /ˈprɛfiks/ | prefix | noun | m | grammar |\n| суфікс | /ˈsufiks/ | suffix | noun | m | grammar |\n| корінь | /ˈkɔrinʲ/ | root | noun | m | grammar |\n| словотвір | /slɔʋɔˈtʋir/ | word formation | noun | m | grammar |\n| похідне слово | /pɔˈxidnɛ ˈslɔʋɔ/ | derivative word | phrase | — | grammar |\n| вхід | /ʋxid/ | entrance | noun | m | location |\n| вихід | /ˈʋɪxid/ | exit | noun | m | location |\n| перехід | /pɛrɛˈxid/ | crossing | noun | m | location |\n| пішохід | /piʃɔˈxid/ | pedestrian | noun | m | agent |\n| читання | /t͡ʃɪˈtɑnʲɑ/ | reading | noun | n | verbal noun |\n| писання | /pɪˈsɑnʲɑ/ | writing | noun | n | verbal noun |\n| важливість | /ʋɑʒˈlɪʋistʲ/ | importance | noun | f | abstract |\n| письменник | /pɪsʲˈmɛnnɪk/ | writer | noun | m | agent |\n| читач | /t͡ʃɪˈtɑt͡ʃ/ | reader | noun | m | agent |\n| слухач | /sluˈxɑt͡ʃ/ | listener | noun | m | agent |\n| український | /ukrɑˈjinsʲkɪj/ | Ukrainian | adj | m | nationality |\n| музичний | /muˈzɪt͡ʃnɪj/ | musical | adj | m | from noun |\n| словниковий | /slɔʋnɪˈkɔʋɪj/ | dictionary (adj) | adj | m | relating to |\n| мова | /ˈmɔʋɑ/ | language | noun | f | abstract |\n| розмова | /rɔzˈmɔʋɑ/ | conversation | noun | f | event |\n| побачення | /pɔˈbɑt͡ʃɛnʲɑ/ | meeting/date | noun | n | event |\n| значення | /znɑˈt͡ʃɛnʲɑ/ | meaning | noun | n | abstract |\n| частина | /t͡ʃɑsˈtɪnɑ/ | part | noun | f | component |\n| віддієслівний | /ʋiddiɛˈslɔʋnɪj/ | verbal (adj) | adj | m | grammar |\n| прикметник | /prɪˈkmɛtnɪk/ | adjective | noun | m | grammar |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-43\ntitle: \"Checkpoint - Word Formation\"\nsubtitle: \"Review of Modules 31-36\"\nversion: \"2.0\"\nphase: \"A2.4\"\npedagogy: \"Review\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - review\n  - checkpoint\n  - assessment\ngrammar:\n  - motion prefixes\n  - action prefixes\n  - noun suffixes\n  - adjective suffixes\n  - root families\nobjectives:\n  - \"Learner demonstrates mastery of word formation\"\n  - \"Learner can analyze word components\"\n  - \"Learner can derive new words from roots\"\nvocabulary_count: 25\n---\n\n# Warm-up\n\nВітаємо на контрольному уроці! Welcome to your checkpoint lesson! This module reviews all word formation skills from Modules 31-36. You have learned how to build new words using prefixes, suffixes, and root families.\n\nWord formation is one of the most powerful tools in Ukrainian. Understanding how words are built helps you guess the meaning of new words, even if you have never seen them before.\n\n**Modules Reviewed:**\n- M31: Motion Verb Prefixes (при-, ви-, у-)\n- M32: Action Verb Prefixes (пере-, від-, роз-)\n- M33: Noun Suffixes (-ння, -ість, -ач)\n- M34: Adjective Suffixes (-ний, -овий, -ський)\n- M35: Root Families I (ход-, пис-)\n- M36: Root Families II (бач-, слух-, говор-)\n\n> [!tip] Review Strategy\n> Word formation follows patterns. Remember these key principles:\n> - Prefixes change the meaning of verbs\n> - Suffixes create new parts of speech\n> - Roots carry the core meaning across word families\n\n---\n\n# Presentation\n\n## Prefix Review\n\nUkrainian prefixes change the direction, completion, or manner of action. Here is a summary of the key prefixes you learned:\n\n| Prefix | Meaning | Example |\n|--------|---------|---------|\n| при- | arrival, toward | прийти (to arrive) |\n| ви- | exit, out of | вийти (to exit) |\n| у-/в- | entering | увійти (to enter) |\n| пере- | across, re-do | перейти (to cross) |\n| від- | away from, opening | відійти (to walk away) |\n| роз- | spreading, undoing | розійтися (to disperse) |\n\nThe most common mistake is confusing при- (arrival) with ви- (departure). Remember: прийти means to come TO a place, while вийти means to come OUT of a place.\n\n> [!cultural] Лінгвістичний Інсайт\n> Український словотвір дуже продуктивний.\n> Якщо ви знаєте корінь, ви можете зрозуміти багато споріднених слів.\n> Наприклад, від ход- (ходити) можна утворити: вхід, вихід, перехід, пішохід.\n> Це дуже ефективний спосіб вивчення нових слів!\n\n## Suffix Review\n\nSuffixes transform words from one part of speech to another. Here are the key patterns:\n\n| Suffix | Creates | Example |\n|--------|---------|---------|\n| -ння | verbal noun | читати → читання |\n| -ість | abstract noun | важливий → важливість |\n| -ач/-ик | agent noun | читати → читач |\n| -ний | adjective | музика → музичний |\n| -овий | relating to | слово → словниковий |\n| -ський | nationality/place | Україна → український |\n\nThese suffixes are consistent and predictable. When you see -ння, you know the word is a noun meaning \"the action of doing something.\"\n\n## Root Family Review\n\nRoot families connect related words across different parts of speech:\n\n| Root | Meaning | Examples |\n|------|---------|----------|\n| ход- | walk, go | вхід, вихід, пішохід, перехід |\n| пис- | write | писати, написати, письменник, писання |\n| бач- | see | бачити, побачення, передбачити |\n| слух- | hear | слухати, послухати, слухач |\n| говор-/мов- | speak | говорити, мова, розмова, мовчати |\n\nКореневі сім'ї дуже важливі для розширення словникового запасу. Якщо ви знаєте корінь, ви можете зрозуміти багато споріднених слів. Наприклад, від кореня \"пис-\" ми отримуємо: писати, написати, переписати, письменник, писання, лист.\n\n> [!tip] Поради для Розпізнавання Коренів\n> Коли ви зустрічаєте нове слово, шукайте знайомі корені.\n> Корінь несе основний зміст. Префікси і суфікси модифікують його.\n> Наприклад: передбачити = перед- (до) + бач- (бачити) = передбачати\n\n---\n\n# Story Time: Урок Словотвору\n\nМарійка вивчає українську мову. Вона — старанна **учениця**. Сьогодні вона має урок про словотвір. Її школа знаходиться в центрі міста. Вона любить **ходити** туди пішки.\n\n— Доброго ранку, клас! — каже вчителька. — Сьогодні ми повторимо словотвір. Це **важлива** тема для вашого прогресу.\n— Доброго ранку! — відповідають учні. Вони дістають свої зошити і ручки.\n— Хто може сказати, що таке корінь слова?\n\nМарійка піднімає руку.\n\n— Корінь — це головна частина слова. Він несе основний зміст.\n— Правильно! А яка функція префіксів?\n— Префікси змінюють значення дієслова, — відповідає Олесь.\n— Чудово! А суфікси?\n— Суфікси створюють нові частини мови, — додає Катя.\n\nВчителька показує приклад на дошці.\n\n— Дивіться: корінь **ход-** означає \"йти\". З нього ми можемо утворити багато слів.\n— **Вхід** — місце, де входять, — каже Марійка.\n— **Вихід** — місце, де виходять, — додає Олесь.\n— **Перехід** — місце, де переходять, — каже Катя.\n— **Пішохід** — людина, яка ходить пішки!\n\nВчителька посміхається.\n\n— Молодці! Тепер ви розумієте, як працює словотвір!\n\n> [!cultural] Ukrainian Morphology\n> Ukrainian is a highly inflected language with rich word formation.\n> Understanding prefixes, suffixes, and roots helps you decode new vocabulary.\n> This skill is especially useful when reading texts with unfamiliar words.\n\n---\n\n# Story Time Part 2: Практична Вправа\n\nПісля теорії клас робить практичну вправу.\n\n— Тепер давайте попрактикуємось! — каже вчителька.\n\nВона пише на дошці слово **читати**.\n\n— Яке віддієслівне іменник від \"читати\"?\n— Читання! — хором відповідає клас.\n— А як називають людину, яка читає?\n— Читач! — каже Марійка.\n\nВчителька пише інше слово: **важливий**.\n\n— Утворіть іменник від прикметника \"важливий\".\n— Важливість! — відповідає Олесь.\n— Правильно! А тепер корінь **пис-**.\n— Писати, написати, переписати, письменник, писання! — перераховує Катя.\n\nВчителька аплодує.\n\n— Чудова робота! Ви добре засвоїли матеріал!\n\nМарійка записує все в зошит. Тепер вона краще розуміє, як будувати нові слова.\n\n— Вчителько, а які префікси найважливіші? — питає Олесь.\n— Всі важливі! Але при-, ви-, і пере- використовуються дуже часто.\n— А суфікси? — питає Катя.\n— Суфікси -ння, -ість, і -ач дуже популярні.\n— Дякую, вчителько! — хором відповідає клас.\n\nУрок закінчився. Всі діти тепер знають, як працює словотвір.\n\n---\n\n# Student Testimonies\n\nHere is what students say about learning word formation.\n\n**Олена (22, Polish, Krakow)**\n*\"Спочатку я мала страх перед довгими словами. Але тепер я бачу їх як конструктор. Коли я бачу слово 'неможливо передбачити', я його розбиваю. Я читаю: не-мож-ли-во пе-ред-ба-чи-ти. Ага! Impossible to foresee. Це геніально!\"*\n\n**Джон (45, American, Chicago)**\n*\"Я інженер. Мені подобається логіка. Українська мова дуже логічна. Корінь 'хід' працює як система. Вхід, вихід, перехід. Це як код. Я тепер можу читати технічні тексти і розуміти суть.\"*\n\n**Сара (30, Canadian, Toronto)**\n*\"Мій дід був українцем. Я хотіла читати його листи. Спочатку це було важко. Але коли я вивчила суфікси, все змінилося. Я тепер розумію різницю між 'добрий' і 'доброта'. Це відкрило мені очі.\"*\n\n---\n\n# Common Expressions\n\n## Formation Patterns\n\nWord formation follows predictable patterns. Understanding these patterns helps you build vocabulary systematically. Here are the key transformation types you have learned:\n\n| Pattern | Example | Translation |\n|---------|---------|-------------|\n| verb → noun | читати → читання | to read → reading |\n| adj → noun | важливий → важливість | important → importance |\n| verb → agent | писати → письменник | to write → writer |\n| noun → adj | музика → музичний | music → musical |\n\nVerbal nouns (nouns ending in -ння) describe the action of doing something. Agent nouns (nouns ending in -ач or -ик) describe the person who performs an action. Abstract nouns ending in -ість express qualities or states.\n\n## Word Family Examples\n\nEach root family has many related words. Learning the root helps you understand and remember all the words in the family. Here are expanded examples:\n\n- **ход-** (walk/go): вхід, вихід, перехід, пішохід, похід, прихід, відхід\n- **пис-** (write): писати, написати, переписати, письменник, писання, лист\n- **говор-/мов-** (speak): говорити, мова, мовчати, розмова, розмовляти\n- **бач-** (see): бачити, побачити, побачення, передбачати\n- **слух-** (hear): слухати, послухати, слухач, слухняний\n\n---\n\n# Summary\n\n**Префікси:**\n- при- (прибуття)\n- ви- (вихід)\n- у- (вхід)\n- пере- (через)\n- від- (відкриття)\n- роз- (розподіл)\n\n**Суфікси:**\n- -ння (дія)\n- -ість (абстрактність)\n- -ач (агент)\n- -ний/-овий/-ський (прикметники)\n\n**Корені:**\n- ход-, пис-, бач-, слух-, говор-/мов-\n\nТепер ви знаєте, як будувати нові слова! Словотвір — це ключ до розуміння української мови! Використовуйте ці знання щодня!\n\nWord formation is a key skill in Ukrainian. By understanding how prefixes, suffixes, and roots work together, you can decode the meaning of many new words. Continue practicing these patterns and you will quickly expand your vocabulary.\n\n---\n\n# Activities\n\n## match-up: Comprehensive Review\n\n> Match prefixes and suffixes to their functions.\n\n- при- :: arrival\n- ви- :: exit\n- пере- :: across/redo\n- -ння :: verbal noun\n- -ість :: abstract noun\n- -ач :: agent noun\n- ход- :: walk/go\n- пис- :: write\n- бач- :: see\n- слух- :: hear\n- говор- :: speak\n- -ський :: relating to\n\n## fill-in: Mixed Review\n\n> Complete with the correct word form.\n\n1. Він [___] до кімнати. (entered)\n   > [!answer] увійшов\n   > [!options] увійшов | вийшов | прийшов | зайшов\n\n2. Вона [___] лист. (wrote — completed)\n   > [!answer] написала\n   > [!options] писала | написала | переписала | дописала\n\n3. читати → [___] (reading — noun)\n   > [!answer] читання\n   > [!options] читання | читач | читати | читаний\n\n4. музика → [___] (musical)\n   > [!answer] музичний\n   > [!options] музичний | музика | музикант | музично\n\n5. Where is the [___]? (entrance)\n   > [!answer] вхід\n   > [!options] вхід | вихід | перехід | похід\n\n6. He [___] the door. (opened)\n   > [!answer] відкрив\n   > [!options] відкрив | закрив | відчинив | зачинив\n\n7. важливий → [___] (importance)\n   > [!answer] важливість\n   > [!options] важливість | важливо | важний | важка\n\n8. Україна → [___] (Ukrainian)\n   > [!answer] український\n   > [!options] український | Україна | українець | україно\n\n## quiz: Word Formation Review\n\n1. \"При-\" indicates:\n   - [x] Arrival\n   - [ ] Departure\n   - [ ] Repetition\n\n2. \"-ння\" forms:\n   - [x] Verbal nouns\n   - [ ] Agent nouns\n   - [ ] Adjectives\n\n3. \"-ість\" forms:\n   - [x] Abstract nouns from adjectives\n   - [ ] Verbal nouns\n   - [ ] Verbs\n\n4. \"Ход-\" relates to:\n   - [x] Walking/movement\n   - [ ] Writing\n   - [ ] Speaking\n\n5. \"Пис-\" relates to:\n   - [x] Writing\n   - [ ] Speaking\n   - [ ] Seeing\n\n6. \"-ський\" often indicates:\n   - [x] Relating to place/group\n   - [ ] Past action\n   - [ ] Future action\n\n7. \"Пере-\" can mean:\n   - [x] Across or redo\n   - [ ] Only arrival\n   - [ ] Only departure\n\n8. \"Бач-\" relates to:\n   - [x] Seeing\n   - [ ] Hearing\n   - [ ] Writing\n\n## cloze: Story Comprehension\n\n> Complete based on the classroom story.\n\nМарійка вивчає [___:1] мову. (Ukrainian)\nКорінь — це [___:2] частина слова. (main)\nПрефікси змінюють [___:3] дієслова. (meaning)\nСуфікси створюють нові [___:4] мови. (parts)\nВхід — місце, де [___:5]. (enter)\nПішохід — людина, яка ходить [___:6]. (on foot)\n\n1. українську\n> [!answer] українську\n> [!options] українську | англійську | німецьку\n\n2. головна\n> [!answer] головна\n> [!options] головна | остання | перша\n\n3. значення\n> [!answer] значення\n> [!options] значення | форму | час\n\n4. частини\n> [!answer] частини\n> [!options] частини | букви | речення\n\n5. входять\n> [!answer] входять\n> [!options] входять | виходять | біжать\n\n6. пішки\n> [!answer] пішки\n> [!options] пішки | бігом | повільно\n\n## unjumble: Word Formation Sentences\n\n1. слова / частина / Корінь / головна\n   > [!answer] Корінь — головна частина слова.\n2. значення / Префікси / змінюють / дієслова\n   > [!answer] Префікси змінюють значення дієслова.\n3. утворюють / Суфікси / іменники / нові\n   > [!answer] Суфікси утворюють нові іменники.\n4. прийти / означає / прибуття\n   > [!answer] Прийти означає прибуття.\n5. слово / читання / від / читати\n   > [!answer] Читання — слово від читати.\n6. Вихід / виходять / де / місце\n   > [!answer] Вихід — місце, де виходять.\n7. пішки / ходить / Пішохід / який\n   > [!answer] Пішохід — який ходить пішки.\n8. мову / Вона / вивчає / українську\n   > [!answer] Вона вивчає українську мову.\n\n## error-correction: Formation Mistakes\n\n1. Він **вийшов** до школи. (arrived)\n   > [!error] вийшов\n   > [!answer] прийшов\n   > [!explanation] \"При-\" means arrival. \"Ви-\" means exit.\n   > [!options] прийшов | вийшов\n\n2. Вхід — місце, де **виходять**.\n   > [!error] виходять\n   > [!answer] входять\n   > [!explanation] Вхід comes from входити (to enter).\n   > [!options] входять | виходять\n\n3. Читати → **читач** (the action)\n   > [!error] читач\n   > [!answer] читання\n   > [!explanation] \"-ння\" forms verbal nouns. \"-ач\" forms agent nouns.\n   > [!options] читання | читач\n\n4. Важливий → **важливо** (noun)\n   > [!error] важливо\n   > [!answer] важливість\n   > [!explanation] \"-ість\" forms abstract nouns from adjectives.\n   > [!options] важливість | важливо\n\n5. **Слух-** means seeing.\n   > [!error] Слух-\n   > [!answer] Бач-\n   > [!explanation] \"Слух-\" means hearing. \"Бач-\" means seeing.\n   > [!options] Бач- | Слух-\n\n6. Пішохід — людина, яка **їде**.\n   > [!error] їде\n   > [!answer] ходить\n   > [!explanation] \"Пішохід\" comes from \"піший\" + \"ходити\" (walk).\n   > [!options] ходить | їде\n\n## match-up: Root Families\n\n> Match words to their root families.\n\n- вхід :: ход- (walk)\n- письменник :: пис- (write)\n- побачення :: бач- (see)\n- слухач :: слух- (hear)\n- розмова :: мов- (speak)\n- перехід :: ход- (walk)\n- писання :: пис- (write)\n- побачити :: бач- (see)\n\n## group-sort: Word Parts\n\n> Sort words by their formation type.\n\n### Prefixes\n- при-\n- ви-\n- пере-\n- від-\n- на-\n- роз-\n\n### Suffixes\n- -ння\n- -ість\n- -ач\n- -ний\n- -овий\n- -ський\n\n### Roots\n- ход-\n- пис-\n- бач-\n- слух-\n\n## true-false: Formation Rules\n\n> Mark true or false.\n\n- [x] \"При-\" = arrival.\n- [x] \"-ння\" forms verbal nouns.\n- [ ] \"-ість\" forms verbs.\n- [x] \"Ход-\" relates to movement.\n- [x] \"-ач\" forms agent nouns.\n- [ ] \"Ви-\" means \"entry.\"\n- [x] \"Ви-\" means \"exit.\"\n- [x] \"-ський\" relates to place.\n- [ ] \"Слух-\" means seeing.\n- [x] \"Слух-\" means hearing.\n- [x] Prefixes change verb meaning.\n- [ ] Suffixes do not change POS.\n\n## translate: Mixed Words\n\n1. Entrance\n   - [x] вхід\n   - [ ] вихід\n   - [ ] перехід\n\n2. Reading (noun)\n   - [x] читання\n   - [ ] читач\n   - [ ] читати\n\n3. Musical\n   - [x] музичний\n   - [ ] музика\n   - [ ] музикант\n\n4. Writer\n   - [x] письменник\n   - [ ] писання\n   - [ ] писати\n\n5. To enter\n   - [x] увійти\n   - [ ] вийти\n   - [ ] прийти\n\n6. To rewrite\n   - [x] переписати\n   - [ ] написати\n   - [ ] дописати\n\n7. Importance\n   - [x] важливість\n   - [ ] важливий\n   - [ ] важливо\n\n8. Ukrainian (adj)\n   - [x] український\n   - [ ] Україна\n   - [ ] українець\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| префікс | /ˈprɛfiks/ | prefix | noun | m | grammar |\n| суфікс | /ˈsufiks/ | suffix | noun | m | grammar |\n| корінь | /ˈkɔrinʲ/ | root | noun | m | grammar |\n| словотвір | /slɔʋɔˈtʋir/ | word formation | noun | m | grammar |\n| похідне слово | /pɔˈxidnɛ ˈslɔʋɔ/ | derivative word | phrase | — | grammar |\n| вхід | /ʋxid/ | entrance | noun | m | location |\n| вихід | /ˈʋɪxid/ | exit | noun | m | location |\n| перехід | /pɛrɛˈxid/ | crossing | noun | m | location |\n| пішохід | /piʃɔˈxid/ | pedestrian | noun | m | agent |\n| читання | /t͡ʃɪˈtɑnʲɑ/ | reading | noun | n | verbal noun |\n| писання | /pɪˈsɑnʲɑ/ | writing | noun | n | verbal noun |\n| важливість | /ʋɑʒˈlɪʋistʲ/ | importance | noun | f | abstract |\n| письменник | /pɪsʲˈmɛnnɪk/ | writer | noun | m | agent |\n| читач | /t͡ʃɪˈtɑt͡ʃ/ | reader | noun | m | agent |\n| слухач | /sluˈxɑt͡ʃ/ | listener | noun | m | agent |\n| український | /ukrɑˈjinsʲkɪj/ | Ukrainian | adj | m | nationality |\n| музичний | /muˈzɪt͡ʃnɪj/ | musical | adj | m | from noun |\n| словниковий | /slɔʋnɪˈkɔʋɪj/ | dictionary (adj) | adj | m | relating to |\n| мова | /ˈmɔʋɑ/ | language | noun | f | abstract |\n| розмова | /rɔzˈmɔʋɑ/ | conversation | noun | f | event |\n| побачення | /pɔˈbɑt͡ʃɛnʲɑ/ | meeting/date | noun | n | event |\n| значення | /znɑˈt͡ʃɛnʲɑ/ | meaning | noun | n | abstract |\n| частина | /t͡ʃɑsˈtɪnɑ/ | part | noun | f | component |\n| віддієслівний | /ʋiddiɛˈslɔʋnɪj/ | verbal (adj) | adj | m | grammar |\n| прикметник | /prɪˈkmɛtnɪk/ | adjective | noun | m | grammar |\n",
+    "createdAt": "2025-12-15T20:02:03.064310Z",
+    "modifiedAt": "2025-12-15T20:02:03.064310Z",
+    "version": 2
+  },
+  "activities": [],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-43",
+    "level": "A2",
+    "phase": "A2.4",
+    "wordCount": 25,
+    "newWordCount": 25,
+    "reviewWordCount": 0,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "префікс",
+        "ipa": "/ˈprɛfiks/",
+        "en": "prefix",
+        "pos": "noun",
+        "gender": "m",
+        "note": "grammar"
+      },
+      {
+        "id": "vocab-2",
+        "uk": "суфікс",
+        "ipa": "/ˈsufiks/",
+        "en": "suffix",
+        "pos": "noun",
+        "gender": "m",
+        "note": "grammar"
+      },
+      {
+        "id": "vocab-3",
+        "uk": "корінь",
+        "ipa": "/ˈkɔrinʲ/",
+        "en": "root",
+        "pos": "noun",
+        "gender": "m",
+        "note": "grammar"
+      },
+      {
+        "id": "vocab-4",
+        "uk": "словотвір",
+        "ipa": "/slɔʋɔˈtʋir/",
+        "en": "word formation",
+        "pos": "noun",
+        "gender": "m",
+        "note": "grammar"
+      },
+      {
+        "id": "vocab-5",
+        "uk": "похідне слово",
+        "ipa": "/pɔˈxidnɛ ˈslɔʋɔ/",
+        "en": "derivative word",
+        "pos": "phrase",
+        "gender": null,
+        "note": "grammar"
+      },
+      {
+        "id": "vocab-6",
+        "uk": "вхід",
+        "ipa": "/ʋxid/",
+        "en": "entrance",
+        "pos": "noun",
+        "gender": "m",
+        "note": "location"
+      },
+      {
+        "id": "vocab-7",
+        "uk": "вихід",
+        "ipa": "/ˈʋɪxid/",
+        "en": "exit",
+        "pos": "noun",
+        "gender": "m",
+        "note": "location"
+      },
+      {
+        "id": "vocab-8",
+        "uk": "перехід",
+        "ipa": "/pɛrɛˈxid/",
+        "en": "crossing",
+        "pos": "noun",
+        "gender": "m",
+        "note": "location"
+      },
+      {
+        "id": "vocab-9",
+        "uk": "пішохід",
+        "ipa": "/piʃɔˈxid/",
+        "en": "pedestrian",
+        "pos": "noun",
+        "gender": "m",
+        "note": "agent"
+      },
+      {
+        "id": "vocab-10",
+        "uk": "читання",
+        "ipa": "/t͡ʃɪˈtɑnʲɑ/",
+        "en": "reading",
+        "pos": "noun",
+        "gender": "n",
+        "note": "verbal noun"
+      },
+      {
+        "id": "vocab-11",
+        "uk": "писання",
+        "ipa": "/pɪˈsɑnʲɑ/",
+        "en": "writing",
+        "pos": "noun",
+        "gender": "n",
+        "note": "verbal noun"
+      },
+      {
+        "id": "vocab-12",
+        "uk": "важливість",
+        "ipa": "/ʋɑʒˈlɪʋistʲ/",
+        "en": "importance",
+        "pos": "noun",
+        "gender": "f",
+        "note": "abstract"
+      },
+      {
+        "id": "vocab-13",
+        "uk": "письменник",
+        "ipa": "/pɪsʲˈmɛnnɪk/",
+        "en": "writer",
+        "pos": "noun",
+        "gender": "m",
+        "note": "agent"
+      },
+      {
+        "id": "vocab-14",
+        "uk": "читач",
+        "ipa": "/t͡ʃɪˈtɑt͡ʃ/",
+        "en": "reader",
+        "pos": "noun",
+        "gender": "m",
+        "note": "agent"
+      },
+      {
+        "id": "vocab-15",
+        "uk": "слухач",
+        "ipa": "/sluˈxɑt͡ʃ/",
+        "en": "listener",
+        "pos": "noun",
+        "gender": "m",
+        "note": "agent"
+      },
+      {
+        "id": "vocab-16",
+        "uk": "український",
+        "ipa": "/ukrɑˈjinsʲkɪj/",
+        "en": "Ukrainian",
+        "pos": "adj",
+        "gender": "m",
+        "note": "nationality"
+      },
+      {
+        "id": "vocab-17",
+        "uk": "музичний",
+        "ipa": "/muˈzɪt͡ʃnɪj/",
+        "en": "musical",
+        "pos": "adj",
+        "gender": "m",
+        "note": "from noun"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "словниковий",
+        "ipa": "/slɔʋnɪˈkɔʋɪj/",
+        "en": "dictionary (adj)",
+        "pos": "adj",
+        "gender": "m",
+        "note": "relating to"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "мова",
+        "ipa": "/ˈmɔʋɑ/",
+        "en": "language",
+        "pos": "noun",
+        "gender": "f",
+        "note": "abstract"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "розмова",
+        "ipa": "/rɔzˈmɔʋɑ/",
+        "en": "conversation",
+        "pos": "noun",
+        "gender": "f",
+        "note": "event"
+      },
+      {
+        "id": "vocab-21",
+        "uk": "побачення",
+        "ipa": "/pɔˈbɑt͡ʃɛnʲɑ/",
+        "en": "meeting/date",
+        "pos": "noun",
+        "gender": "n",
+        "note": "event"
+      },
+      {
+        "id": "vocab-22",
+        "uk": "значення",
+        "ipa": "/znɑˈt͡ʃɛnʲɑ/",
+        "en": "meaning",
+        "pos": "noun",
+        "gender": "n",
+        "note": "abstract"
+      },
+      {
+        "id": "vocab-23",
+        "uk": "частина",
+        "ipa": "/t͡ʃɑsˈtɪnɑ/",
+        "en": "part",
+        "pos": "noun",
+        "gender": "f",
+        "note": "component"
+      },
+      {
+        "id": "vocab-24",
+        "uk": "віддієслівний",
+        "ipa": "/ʋiddiɛˈslɔʋnɪj/",
+        "en": "verbal (adj)",
+        "pos": "adj",
+        "gender": "m",
+        "note": "grammar"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "прикметник",
+        "ipa": "/prɪˈkmɛtnɪk/",
+        "en": "adjective",
+        "pos": "noun",
+        "gender": "m",
+        "note": "grammar"
+      }
+    ],
+    "reviewWords": []
+  }
+}
