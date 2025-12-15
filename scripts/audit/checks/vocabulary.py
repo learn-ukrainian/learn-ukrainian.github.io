@@ -529,8 +529,8 @@ def check_metalanguage_scaffolding(
         return violations  # Basic metalanguage taught by M10
     if level_upper == 'A2' and module_num >= 15:
         return violations  # A2 metalanguage taught by M15
-    if level_upper in ('B1', 'B2', 'C1', 'C2'):
-        return violations  # B1+ assumes all prior metalanguage known
+    if level_upper in ('B1', 'B2', 'C1', 'C2', 'LIT'):
+        return violations  # B1+ and LIT assumes all metalanguage known
 
     # Get metalanguage for this level and all earlier levels
     level_order = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']

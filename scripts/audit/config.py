@@ -615,7 +615,7 @@ LEVEL_CONFIG = {
         'priority_types': {'cloze', 'fill-in'}
     },
     'LIT': {
-        'target_words': 2000,
+        'target_words': 3500,  # 3500-4000 for substantial literary analysis
         'min_activities': 0,
         'min_items_per_activity': 0,
         'min_types_unique': 0,
