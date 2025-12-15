@@ -943,39 +943,59 @@ def convert_callouts(content: str) -> str:
     return '\n'.join(result)
 
 def process_dialogues(content: str) -> str:
-    """Style dialogue lines (starting with em-dash) throughout the content.
+    """Group consecutive dialog lines into conversation blocks.
 
-    Only wraps lines that are in regular markdown content, not inside JSX components.
+    Detects sequences of lines starting with em-dash (—) and wraps
+    them in a styled conversation container. Separates Ukrainian
+    from English translations (they're separated by blank lines).
     """
     lines = content.split('\n')
     result = []
+    i = 0
 
-    # Track if we're inside a JSX component (between <Component and />)
+    # Track if we're inside a JSX component
     inside_jsx = 0
 
-    for line in lines:
+    while i < len(lines):
+        line = lines[i]
         stripped = line.strip()
 
         # Track JSX component depth
-        # Opening tags like <Cloze, <Quiz, <MatchUp etc.
         if re.match(r'^<[A-Z][a-zA-Z]*', stripped):
             inside_jsx += 1
-        # Self-closing end />
         if stripped.endswith('/>'):
             inside_jsx = max(0, inside_jsx - 1)
-        # Closing tags like </Cloze>
         if re.match(r'^</[A-Z]', stripped):
             inside_jsx = max(0, inside_jsx - 1)
 
-        # Only wrap dialog lines when NOT inside JSX components
-        if stripped.startswith('—') and inside_jsx == 0:
-            # Also skip if line contains template literal syntax (backticks)
-            if '`' not in line:
-                result.append(f'<div className="speech-line">\n\n{line}\n\n</div>')
+        # Check if this starts a dialog sequence (outside JSX)
+        if stripped.startswith('—') and inside_jsx == 0 and '`' not in line:
+            # Collect consecutive dialog lines (stop at blank line)
+            dialog_lines = []
+            while i < len(lines):
+                current = lines[i].strip()
+                if current.startswith('—') and '`' not in lines[i]:
+                    dialog_lines.append(lines[i])
+                    i += 1
+                else:
+                    # Stop at any non-dialog line (including blank)
+                    break
+
+            # Only wrap if we have 2+ dialog lines (actual conversation)
+            if len(dialog_lines) >= 2:
+                result.append('<div className="conversation">')
+                result.append('')
+                for dl in dialog_lines:
+                    result.append(dl)
+                    result.append('')
+                result.append('</div>')
             else:
-                result.append(line)
+                # Single line - just keep as-is
+                for dl in dialog_lines:
+                    result.append(dl)
         else:
             result.append(line)
+            i += 1
 
     return '\n'.join(result)
 

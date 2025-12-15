@@ -418,57 +418,39 @@ code {
   text-decoration: none;
 }
 
-/* ============= DIALOGUE / SPEECH LINES ============= */
-.speech-line {
-  position: relative;
-  margin: 0.75rem 0;
-  padding: 0.75rem 1rem 0.75rem 2.5rem;
-  background: linear-gradient(135deg, rgba(0, 87, 183, 0.04), rgba(26, 115, 232, 0.02));
-  border-left: 3px solid var(--co-blue-light);
+/* ============= CONVERSATION BLOCKS ============= */
+.conversation {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(to right, var(--co-gray-50), transparent);
+  border-left: 4px solid var(--co-blue-light);
   border-radius: 0 8px 8px 0;
-  font-style: italic;
+  position: relative;
 }
 
-.speech-line::before {
-  content: '💬';
-  position: absolute;
-  left: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1rem;
-  font-style: normal;
+.conversation::before {
+  content: '💬 Conversation';
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--co-blue-deep);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.75rem;
+  opacity: 0.8;
 }
 
-.speech-line p {
-  margin: 0;
-  font-style: italic;
+.conversation p {
+  margin: 0.4rem 0;
+  padding-left: 0.5rem;
 }
 
-/* Alternating colors for consecutive speech lines */
-.speech-line + .speech-line {
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.06), rgba(212, 175, 55, 0.03));
-  border-left-color: var(--co-gold);
+/* Dark mode */
+[data-theme='dark'] .conversation {
+  background: linear-gradient(to right, rgba(91, 155, 213, 0.1), transparent);
+  border-left-color: var(--co-blue-light);
 }
 
-.speech-line + .speech-line::before {
-  content: '🗣️';
-}
-
-/* Third speaker gets different style */
-.speech-line + .speech-line + .speech-line {
-  background: linear-gradient(135deg, rgba(52, 168, 83, 0.06), rgba(52, 168, 83, 0.03));
-  border-left-color: var(--co-success);
-}
-
-.speech-line + .speech-line + .speech-line::before {
-  content: '💬';
-}
-
-/* Dark mode adjustments */
-[data-theme='dark'] .speech-line {
-  background: linear-gradient(135deg, rgba(91, 155, 213, 0.1), rgba(91, 155, 213, 0.05));
-}
-
-[data-theme='dark'] .speech-line + .speech-line {
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(212, 175, 55, 0.05));
+[data-theme='dark'] .conversation::before {
+  color: var(--co-blue-light);
 }
