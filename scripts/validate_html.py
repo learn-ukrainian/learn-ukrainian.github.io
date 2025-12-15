@@ -364,6 +364,9 @@ async def main_async():
         for r in all_results:
             if not r.passed:
                 print(f"  - {r.level}/{r.module}: {', '.join(r.errors)}")
+                if r.console_errors:
+                    for err in r.console_errors[:5]:  # Show first 5 errors
+                        print(f"      → {err}")
         sys.exit(1)
     else:
         print("\n✅ VALIDATION PASSED")

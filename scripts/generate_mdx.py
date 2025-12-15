@@ -943,19 +943,41 @@ def convert_callouts(content: str) -> str:
     return '\n'.join(result)
 
 def process_dialogues(content: str) -> str:
-    """Add line breaks between dialogue turns."""
-    # Find conversation admonitions and add breaks between — lines
-    def add_breaks(match):
-        block = match.group(0)
-        lines = block.split('\n')
-        result = []
-        for j, line in enumerate(lines):
-            result.append(line)
-            if line.strip().startswith('—') and j + 1 < len(lines) and lines[j + 1].strip().startswith('—'):
-                result.append('')
-        return '\n'.join(result)
+    """Style dialogue lines (starting with em-dash) throughout the content.
 
-    return re.sub(r':::note\[.*?Conversation.*?\][\s\S]*?:::', add_breaks, content)
+    Only wraps lines that are in regular markdown content, not inside JSX components.
+    """
+    lines = content.split('\n')
+    result = []
+
+    # Track if we're inside a JSX component (between <Component and />)
+    inside_jsx = 0
+
+    for line in lines:
+        stripped = line.strip()
+
+        # Track JSX component depth
+        # Opening tags like <Cloze, <Quiz, <MatchUp etc.
+        if re.match(r'^<[A-Z][a-zA-Z]*', stripped):
+            inside_jsx += 1
+        # Self-closing end />
+        if stripped.endswith('/>'):
+            inside_jsx = max(0, inside_jsx - 1)
+        # Closing tags like </Cloze>
+        if re.match(r'^</[A-Z]', stripped):
+            inside_jsx = max(0, inside_jsx - 1)
+
+        # Only wrap dialog lines when NOT inside JSX components
+        if stripped.startswith('—') and inside_jsx == 0:
+            # Also skip if line contains template literal syntax (backticks)
+            if '`' not in line:
+                result.append(f'<div className="speech-line">\n\n{line}\n\n</div>')
+            else:
+                result.append(line)
+        else:
+            result.append(line)
+
+    return '\n'.join(result)
 
 # =============================================================================
 # MDX GENERATOR

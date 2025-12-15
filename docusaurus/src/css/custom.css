@@ -417,3 +417,58 @@ code {
 .generatedIndexPage .card a {
   text-decoration: none;
 }
+
+/* ============= DIALOGUE / SPEECH LINES ============= */
+.speech-line {
+  position: relative;
+  margin: 0.75rem 0;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  background: linear-gradient(135deg, rgba(0, 87, 183, 0.04), rgba(26, 115, 232, 0.02));
+  border-left: 3px solid var(--co-blue-light);
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+}
+
+.speech-line::before {
+  content: '💬';
+  position: absolute;
+  left: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  font-style: normal;
+}
+
+.speech-line p {
+  margin: 0;
+  font-style: italic;
+}
+
+/* Alternating colors for consecutive speech lines */
+.speech-line + .speech-line {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.06), rgba(212, 175, 55, 0.03));
+  border-left-color: var(--co-gold);
+}
+
+.speech-line + .speech-line::before {
+  content: '🗣️';
+}
+
+/* Third speaker gets different style */
+.speech-line + .speech-line + .speech-line {
+  background: linear-gradient(135deg, rgba(52, 168, 83, 0.06), rgba(52, 168, 83, 0.03));
+  border-left-color: var(--co-success);
+}
+
+.speech-line + .speech-line + .speech-line::before {
+  content: '💬';
+}
+
+/* Dark mode adjustments */
+[data-theme='dark'] .speech-line {
+  background: linear-gradient(135deg, rgba(91, 155, 213, 0.1), rgba(91, 155, 213, 0.05));
+}
+
+[data-theme='dark'] .speech-line + .speech-line {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(212, 175, 55, 0.05));
+}
