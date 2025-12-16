@@ -153,11 +153,28 @@ yt-dlp "ytsearch5:Ukrainian complex sentences складні речення" --p
 
 ### External Resources (B1.1)
 
+#### YouTube Videos
+
+| Module | Video Title | URL | Channel | Status |
+|--------|-------------|-----|---------|--------|
+| M01 | Perfective and Imperfective: Verb Aspects in Ukrainian | https://www.youtube.com/watch?v=YnWlncQJg8o | Let's Learn Ukrainian | ✅ Found |
+| M01 | PERFECTIVE VERBS vs IMPERFECTIVE VERBS - PART 1 | https://www.youtube.com/watch?v=v-SuEb_0WYM | Ukrainian grammar | ✅ Found |
+| M02 | The Past Imperfective tense in Ukrainian # 39 | https://www.youtube.com/watch?v=PK-108GsZF4 | Ukrainian Language | ✅ Found |
+| M02 | The Past Perfective tense in Ukrainian # 43 | https://www.youtube.com/watch?v=WfGlonPphFQ | Ukrainian Language | ✅ Found |
+| M03 | Learn 50 important Ukrainian Verb Pairs | https://www.youtube.com/watch?v=iK4uNlozmFE | Let's Learn Ukrainian | ✅ Found |
+| M04 | FUTURE TENSE IN UKRAINIAN LANGUAGE | https://www.youtube.com/watch?v=VJmihxvTLww | Speak Ukrainian | ✅ Found |
+| M04 | Verb Conjugation: Future Tense #Ukrainian | https://www.youtube.com/watch?v=7oBqLYAYnw4 | Let's Learn Ukrainian | ✅ Found |
+| M04 | The Future tense # 107 | https://www.youtube.com/watch?v=oXM7CrIta2E | Ukrainian Language | ✅ Found |
+| M05 | Рекомендації – Asking for advice + aspect | https://www.youtube.com/watch?v=POUzGxu9OxU | Ukrainian Lessons | ✅ Found |
+| M01-05 | 🇺🇦 Most Useful Ukrainian Verbs for Beginners | https://www.youtube.com/watch?v=xa-_fedNU6U | Ukrainian Language | ✅ Found |
+
+#### Grammar Guides
+
 | Module | Resource | URL | Status |
-|--------|----------|-----|--------|
-| M01-06 | Ukrainian Lessons: Aspect | ukrainianlessons.com/aspect/ | ✅ Linked |
-| M04 | Ukrainian Lessons: Future Tense | ukrainianlessons.com/grammar-future/ | ✅ Linked |
-| M07 | Ukrainian Lessons: Verb Pairs | ukrainianlessons.com/verbs/ | ✅ Linked |
+|--------|----------|-----|-----------|
+| M01-06 | Ukrainian Lessons: Aspect | https://ukrainianlessons.com/aspect/ | ✅ Linked |
+| M04 | Ukrainian Lessons: Future Tense | https://ukrainianlessons.com/grammar-future/ | ✅ Linked |
+| M01-05 | Ukrainian Lessons: Verb Pairs | https://ukrainianlessons.com/verbs/ | ✅ Linked |
 
 ---
 

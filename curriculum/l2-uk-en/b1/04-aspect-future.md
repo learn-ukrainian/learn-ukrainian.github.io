@@ -31,6 +31,12 @@ vocabulary_count: 20
 
 > [!resources] 🎧 External Resources
 >
+> **YouTube:** [FUTURE TENSE IN UKRAINIAN LANGUAGE](https://www.youtube.com/watch?v=VJmihxvTLww) — Speak Ukrainian
+>
+> **YouTube:** [Verb Conjugation: Future Tense #Ukrainian](https://www.youtube.com/watch?v=7oBqLYAYnw4) — Let's Learn Ukrainian
+>
+> **YouTube:** [The Future tense # 107](https://www.youtube.com/watch?v=oXM7CrIta2E) — Ukrainian Language
+>
 > **Future Tense Guide:** [Future Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-future-tense/) — Compound vs simple future
 >
 > **Verb Prefixes:** [Ukrainian Verb Prefixes](https://www.ukrainianlessons.com/ukrainian-verb-prefixes/) — How prefixes create perfective verbs

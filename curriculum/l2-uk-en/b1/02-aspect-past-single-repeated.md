@@ -30,6 +30,10 @@ vocabulary_count: 20
 
 > [!resources] 🎧 External Resources
 >
+> **YouTube:** [The Past Imperfective tense in Ukrainian # 39](https://www.youtube.com/watch?v=PK-108GsZF4) — Ukrainian Language
+>
+> **YouTube:** [The Past Perfective tense in Ukrainian # 43](https://www.youtube.com/watch?v=WfGlonPphFQ) — Ukrainian Language
+>
 > **Past Tense Foundation:** [Past Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-past-tense/) — Review past tense forms before aspect
 >
 > **Verb Prefixes:** [Ukrainian Verb Prefixes](https://www.ukrainianlessons.com/ukrainian-verb-prefixes/) — How prefixes create perfective verbs

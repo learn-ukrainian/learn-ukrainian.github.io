@@ -29,6 +29,10 @@ vocabulary_count: 20
 
 > [!resources] 🎧 External Resources
 >
+> **YouTube:** [Perfective and Imperfective: Verb Aspects in Ukrainian](https://www.youtube.com/watch?v=YnWlncQJg8o) — Let's Learn Ukrainian
+>
+> **YouTube:** [PERFECTIVE VERBS vs IMPERFECTIVE VERBS - PART 1](https://www.youtube.com/watch?v=v-SuEb_0WYM) — Ukrainian grammar
+>
 > **Verb System:** [Ukrainian Verb Prefixes](https://www.ukrainianlessons.com/ukrainian-verb-prefixes/) — How prefixes change meaning and create aspect pairs
 >
 > **Past Tense Review:** [Past Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-past-tense/) — Foundation for aspect in past

@@ -31,6 +31,8 @@ vocabulary_count: 20
 
 > [!resources] 🎧 External Resources
 >
+> **YouTube:** [Рекомендації – Asking for advice + aspect](https://www.youtube.com/watch?v=POUzGxu9OxU) — Ukrainian Lessons
+>
 > **Verb Prefixes:** [Ukrainian Verb Prefixes](https://www.ukrainianlessons.com/ukrainian-verb-prefixes/) — How prefixes create perfective verbs
 >
 > **Past Tense Review:** [Past Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-past-tense/) — Foundation for past negation
