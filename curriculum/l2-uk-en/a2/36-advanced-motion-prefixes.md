@@ -38,6 +38,14 @@ These prefixes transform simple motion into precise navigation. After this modul
 
 Motion prefixes are essential for everyday communication. When you give directions, describe your commute, or tell travel stories, you need these prefixes to be accurate. English uses prepositions for this purpose, but Ukrainian embeds the path information directly into the verb. This is both elegant and efficient.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Learn verbs of movements # 96...](https://www.youtube.com/watch?v=-tjrxxvT8Q8) — Ukrainian Language
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Prefix Group 1: Crossing & Through

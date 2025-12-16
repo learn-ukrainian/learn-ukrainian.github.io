@@ -37,6 +37,14 @@ In Ukraine, talking about health is a national sport. We love to discuss symptom
 > **Лікар** /ˈlʲikɑr/ (Doctor). Connects to "лікувати" (to treat/cure).
 > Note the soft 'L'.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Doctors Vocabulary and questions in Ukrainian - Learn doctor vocab and...](https://www.youtube.com/watch?v=OnO697z9iPM) — Ukrainian grammar
+>
+> **Grammar Guide:** [Something Hurts](https://www.ukrainianlessons.com/something-hurts/) — Ukrainian Lessons
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation

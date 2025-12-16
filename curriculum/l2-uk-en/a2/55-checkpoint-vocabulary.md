@@ -202,6 +202,14 @@ Let's see if you can fill in the gaps mentally.
 > - **Я прочитав книгу** (Perfective) = Result (I have finished reading).
 > In stories, use Imperfective for background (*Сонце світило...*) and Perfective for main actions (*Він вістав, помився, пішов...*).
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Learn Ukrainian FAST by Listening to Short Stories (A1-A2 Beginner Lev...](https://www.youtube.com/watch?v=xQBMRWK8ZKU) — Sebastians Language Hub
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 # Summary
 
 Congratulations! You have completed the Vocabulary Expansion phase.

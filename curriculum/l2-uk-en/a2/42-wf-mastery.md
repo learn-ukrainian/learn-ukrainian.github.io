@@ -38,6 +38,14 @@ vocabulary_count: 48
 
 А потім... ми перевіримо все.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [100 Ukrainian cognates ...](https://www.youtube.com/watch?v=CMpe0h8AcJs) — Ukrainian vocabulary for beginners
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Part 1: New Roots

@@ -39,6 +39,14 @@ Every time you shop, you compare prices and quality. Every time you describe som
 **Important Note About English vs Ukrainian:**
 Unlike English, which uses "more + adjective" for longer adjectives (more interesting, more comfortable), Ukrainian almost always uses the single-word comparative form (цікавіший, комфортніший). The "більш + adjective" construction exists but is less common in everyday speech.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Ukrainian Comparative & Superlative Adjectives ...](https://www.youtube.com/watch?v=D0OqItrsAQM) — Practice with me!
+>
+> **Grammar Guide:** [Adjectives Degrees Comparison](https://talkukrainian.com/adjectives-degrees-comparison/) — Ukrainian Lessons
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation

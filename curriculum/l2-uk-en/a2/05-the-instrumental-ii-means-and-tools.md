@@ -49,6 +49,12 @@ When you want to say "by bus," "with a pen," or "in a loud voice," Ukrainian use
 
 This is the "instrumental" in its truest sense — the case of instruments and means!
 
+> [!resources] 🔗 External Resources
+>
+> **Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
+>
+> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
+
 ---
 
 # Presentation

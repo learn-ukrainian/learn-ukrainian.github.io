@@ -29,6 +29,14 @@ Now you'll learn a special pronoun that causes confusion for English speakers: *
 
 English has no equivalent to свій. This single word means "one's own" and refers back to the subject of the sentence. Understanding this concept is essential for natural Ukrainian. Once you master it, your sentences will sound much more authentic to native speakers.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Ukrainian possessive pronoun СВІЙ ...](https://www.youtube.com/watch?v=u57A6YglFzk) — How to use it correctly?
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # The Problem: Ambiguity

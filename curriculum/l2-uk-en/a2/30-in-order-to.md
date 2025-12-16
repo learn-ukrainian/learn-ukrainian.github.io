@@ -41,6 +41,14 @@ In Ukrainian, we use one powerful word: **Щоб**.
 > [!note] Pronunciation
 > **Щоб** is pronounced /ʃɔb/. It is a fusion of "що" (what) and "би" (would).
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with th...](https://www.youtube.com/watch?v=H1MtDElLMeU) — Ukrainian Lessons
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation

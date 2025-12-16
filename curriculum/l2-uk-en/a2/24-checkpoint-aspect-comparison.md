@@ -37,6 +37,14 @@ Congratulations on completing Phase A2.2! This checkpoint reviews everything fro
 
 **How to use:** Work through all activities. If you score below 80% on any section, review that module before proceeding.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [A little test on Ukrainian language_ A2 level...](https://www.youtube.com/watch?v=0zgsiO7-TRQ) — Ukrainian grammar
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation

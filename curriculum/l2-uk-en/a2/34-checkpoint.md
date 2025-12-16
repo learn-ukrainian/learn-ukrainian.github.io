@@ -40,6 +40,14 @@ You can express opinions, feelings, and even talk to a doctor.
 > By the end of this module, you should be able to say:
 > "Although I was sick, I went to work because I wanted to finish the project which is important."
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Complex sentences with " which or who" in English...](https://www.youtube.com/watch?v=IbpsiJIOr-g) — Ukrainian grammar
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Review: The Connector Map

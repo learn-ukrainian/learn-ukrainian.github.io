@@ -46,6 +46,14 @@ The past tense is where aspect differences are most visible and most important. 
 >
 > Доконаний вид у минулому часі = закінчена дія з чітким результатом. Якщо можна вказати на результат — використовуйте доконаний вид!
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [The Past Perfective tense in Ukrainian # 43...](https://www.youtube.com/watch?v=WfGlonPphFQ) — Ukrainian Language
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation

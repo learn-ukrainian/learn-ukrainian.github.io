@@ -29,6 +29,14 @@ This module is pure practice. By the end, you should recall aspect pairs without
 
 **Goal:** When you hear "читати" you should instantly think "прочитати".
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [How To Improve Your Technique As A Football Player ? #football #soccer...](https://www.youtube.com/watch?v=uN3W7n3JG7w) — FC Mentality
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # The Core 30 Pairs

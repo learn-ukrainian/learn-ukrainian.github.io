@@ -50,6 +50,14 @@ Input: **Україна** [Noun] -> Machine -> Output: **Україн-ський
 > Root + Suffix + Ending.
 > Think of it like a sandwich: Root is the meat, Suffix is the cheese, Ending is the bread.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Ukrainian Grammar: ADJECTIVE CASES - Adjective declension...](https://www.youtube.com/watch?v=NjIXb7cc9UY) — Let's Learn Ukrainian
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Grammar Breakdown: 4 Rules to Remember

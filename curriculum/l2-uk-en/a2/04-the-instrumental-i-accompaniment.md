@@ -48,6 +48,14 @@ When you want to say you're doing something **with someone**, Ukrainian uses the
 
 The instrumental case answers the questions: **З ким?** (With whom?) and **З чим?** (With what?) Learning this case opens up the ability to describe social situations and relationships in Ukrainian.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [The Instrumental case in the Ukrainian language...](https://www.youtube.com/watch?v=lmPHpt2DGos) — Speak Ukrainian
+>
+> **Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
+>
+> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
+
 ---
 
 # Presentation

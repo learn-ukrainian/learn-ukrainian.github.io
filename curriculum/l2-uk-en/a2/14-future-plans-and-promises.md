@@ -48,6 +48,14 @@ This is a crucial distinction that doesn't exist in English! By the end of this 
 >
 > Недоконаний майбутній час (буду + інфінітив) — це процес. Доконаний майбутній час (змінене дієслово) — це результат. Цей вибір змінює значення!
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [FUTURE TENSE IN UKRAINIAN LANGUAGE...](https://www.youtube.com/watch?v=VJmihxvTLww) — Speak Ukrainian
+>
+> **Grammar Guide:** [Ukrainian Tenses](https://www.ukrainianlessons.com/ukrainian-tenses/) — Ukrainian Lessons
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation

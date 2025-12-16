@@ -42,6 +42,14 @@ This is how you multiply your vocabulary instantly.
 > - Kind -> Kind**ness** (-ness = Abstract Quality)
 > Ukrainian has the exact same logic!
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Prefix з-/с-: Which one to use? ...](https://www.youtube.com/watch?v=fRv6h6nhPxQ) — Spell It Right! #Ukrainian
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # The Suffix System

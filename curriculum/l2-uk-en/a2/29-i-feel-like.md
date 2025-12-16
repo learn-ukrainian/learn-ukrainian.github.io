@@ -40,6 +40,14 @@ You are the receiver of the emotion.
 > [!note] Cultural Insight
 > Ukrainians are emotional but private. We might look serious on the street (the "Slavic Face"), but with friends, we pour our hearts out. Sharing sadness is a sign of deep friendship.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [How do you really feel? (Ukrainian)...](https://www.youtube.com/watch?v=Mn_MOEThvCI) — EMOTIONS AND FEELINGS VOCABULARY
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation

@@ -32,6 +32,14 @@ This module is your comprehensive guide to Ukrainian prepositions. By the end, y
 
 **Why this matters:** Incorrect preposition-case combinations are one of the most common errors learners make. Mastering these patterns will immediately make your Ukrainian sound more natural and precise.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [10 Ukrainian Prepositions! ...](https://www.youtube.com/watch?v=CaKnNZHAex0) — #letslearnukrainian
+>
+> **Grammar Guide:** [Prepositions Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Ukrainian Lessons
+>
+> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
+
 ---
 
 # Presentation

@@ -185,6 +185,14 @@ Apps like **Glovo** or **Bolt Food** work 24/7. You can order sushi, burgers, or
 > [!tip] **Tip** "Sales"
 > Black Friday is popular in Ukraine, but big **розпродаж** (sales) also happen in January and July. Look for signs saying **"Знижки до -70%"**. It's the best time to buy clothes!
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Ukraine: emergency services at shopping mall shelling site in Kyiv ...](https://www.youtube.com/watch?v=FCGTzRtV0nI) — AFP
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 # Summary
 
 You learned to:

@@ -44,6 +44,14 @@ Word formation is one of the most powerful tools in Ukrainian. Understanding how
 > - Suffixes create new parts of speech
 > - Roots carry the core meaning across word families
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [How I learnt my first 500 words in Ukrainian ...](https://www.youtube.com/watch?v=SdgPUOHXNts) — Vocabooster Review
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation

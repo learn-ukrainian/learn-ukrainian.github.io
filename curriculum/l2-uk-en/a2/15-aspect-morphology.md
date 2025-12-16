@@ -47,6 +47,14 @@ However, you need to understand the patterns to make these predictions accuratel
 >
 > Більшість українських дієслів утворюють доконаний вид за допомогою префіксів. Коли бачите дієслово з префіксом — швидше за все, це доконаний вид!
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Learn 50 important Ukrainian Verb Pairs: Imperfective + Perfective ...](https://www.youtube.com/watch?v=iK4uNlozmFE) — #Ukrainian
+>
+> **Grammar Guide:** [Perfective Verbs](https://www.ukrainianlessons.com/perfective-verbs/) — Ukrainian Lessons
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation

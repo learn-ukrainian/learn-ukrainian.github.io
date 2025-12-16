@@ -62,6 +62,14 @@ When you want to say "I give the book **to my friend**" or "She writes **to her 
 
 Now let's see how nouns work: Кому ви пишете листа? (To whom do you write a letter?) The answer will always be in the dative case — and the noun's ending will change based on its gender.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [The Dative Case in Ukrainian ...](https://www.youtube.com/watch?v=ATeU7iwuyLU) — Nouns, Pronouns & How to Use Them
+>
+> **Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
+>
+> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
+
 ---
 
 # Presentation

@@ -36,6 +36,14 @@ Welcome to one of the most important concepts in Ukrainian grammar — verbal as
 - When to use each aspect
 - Common aspect pairs for essential verbs
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Perfective and Imperfective: Verb Aspects in Ukrainian...](https://www.youtube.com/watch?v=YnWlncQJg8o) — Let's Learn Ukrainian
+>
+> **Grammar Guide:** [Verb Aspect In Ukrainian Differences](https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/) — Ukrainian Lessons
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation

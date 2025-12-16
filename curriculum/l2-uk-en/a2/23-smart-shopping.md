@@ -33,6 +33,14 @@ Time to put your comparison skills to practical use! This module takes you shopp
 - Negotiation phrases
 - Making purchase decisions
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [UKRAINIAN DIALOGUES for beginners. Episode #3 At the coffee shop...](https://www.youtube.com/watch?v=YLBABZIOoo0) — Speak Ukrainian
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation

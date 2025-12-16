@@ -182,6 +182,14 @@ State medicine is free, but you often pay "charitable contributions" (*благ�
 > [!cultural] **Cultural Insight** Sanatoriums
 > A unique Soviet legacy is the **Sanatorium**. It is a mix of a hospital and a hotel. People go there for 2-3 weeks to drink mineral water, take mud baths (*грязі*), and relax. It is not just for sick people; it is for prevention (*профілактика*).
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [UKRAINIAN VOCABULARY: body parts and organs](https://www.youtube.com/watch?v=JZGl3Qo25Yc) — Red Purple Ukrainian
+>
+> **Grammar Guide:** [Ukrainian Health Vocabulary](https://www.ukrainianlessons.com/something-hurts/) — Common health expressions
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 # Summary
 
 You learned to:

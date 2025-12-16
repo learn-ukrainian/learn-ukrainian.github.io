@@ -39,6 +39,14 @@ In Ukrainian, "that/which/who" corresponds to one flexible word: **Який**.
 > [!note] Pronunciation
 > **Який** /jɑˈkɪj/. It rhymes with "key" but starts with "ya".
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Relative Clauses who, which, that, whose, where, when...](https://www.youtube.com/watch?v=PLnMCxhm7J0) — IDEAL STUDY
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation

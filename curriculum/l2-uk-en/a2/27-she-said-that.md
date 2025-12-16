@@ -40,6 +40,14 @@ In Ukrainian, it's easier! You usually keep the original tense.
 > In Ukrainian, you report: "Він сказав, що він **голодний**" (He said that he [is] hungry).
 > Logic: At that moment in history, he *is* hungry.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Learning Ukrainian with Odarka. Lesson 59. Direct and Indirect Speech...](https://www.youtube.com/watch?v=0SYRLbzFjtU) — Learning Ukrainian with Odarka
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation

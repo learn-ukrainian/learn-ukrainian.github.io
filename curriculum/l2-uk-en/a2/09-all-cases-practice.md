@@ -49,6 +49,14 @@ Unlike English, which relies heavily on word order and prepositions to show rela
 >
 > The key to mastering cases is to always ask yourself the right question. For example, when you see a noun after a verb, ask: "Who or what is receiving the action?" (accusative) or "To whom is something being given?" (dative). The question you ask determines the case you need.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [All Ukrainian Cases in 5 min...](https://www.youtube.com/watch?v=2Q66U7GlxBg) — Taste Ukrainian
+>
+> **Grammar Guide:** [Intro Cases](https://www.ukrainianlessons.com/intro-cases/) — Ukrainian Lessons
+>
+> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
+
 ---
 
 # Presentation

@@ -191,6 +191,14 @@ Notice how **радість** and **сум** are fundamental opposites — the l
 
 Сміливість і чесність — це головні українські цінності.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Oprah Winfrey's Emotional Message About Ukraine...](https://www.youtube.com/watch?v=3KE8phZ_OzA) — Access Hollywood
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 # Summary
 
 You learned to:

@@ -173,6 +173,14 @@ Being online requires safety (**безпека**).
 Галина швидко вчиться. Тепер вона має профіль у Фейсбуці. Вона **публікує** фото своїх пирогів. Сусіди пишуть їй гарні **коментарі**. Вона навіть слухає **подкаст** про садівництво!
 Інтернет — це цікаво, навіть якщо тобі 70 років.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [100 basic Ukrainian IT terms / Ukrainian vocabulary: IT, Technologies,...](https://www.youtube.com/watch?v=BAuSNnrkCKM) — Red Purple Ukrainian
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 # Summary
 
 You learned to:

@@ -37,6 +37,14 @@ In this module, you will move beyond simple sentences like "I woke up. I ate. I 
 > 🧠 **Think about it**
 > In your native language, how do you signal that a story is ending? Do you change your tone? Do you use a specific word like "Eventually"? Ukrainian implies this with words like **врешті-решт**.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Past Tense in the Ukrainian language...](https://www.youtube.com/watch?v=IxHx6fajRvU) — VERBA SCHOOL
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation

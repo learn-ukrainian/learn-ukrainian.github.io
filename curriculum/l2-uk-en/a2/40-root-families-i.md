@@ -39,6 +39,14 @@ Today, we unlock four "Super Roots":
 > - **Ви** + **Хід** = Out + Go = Exit
 > - **Пере** + **Хід** = Across + Go = Crossing
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Welsh vs. Ukrainian: 8 similar words explained...](https://www.youtube.com/watch?v=6B_GwMcttmU) — BenjaminAngwin
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Family 1: The Walkers (-ХІД-)

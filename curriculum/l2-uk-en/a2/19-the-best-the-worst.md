@@ -31,6 +31,14 @@ Now that you can make comparisons (bigger, better), let's go to the extreme! Thi
 - Irregular superlatives
 - Intensifiers (very, extremely, incredibly)
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Ukrainian Comparative & Superlative Adjectives ...](https://www.youtube.com/watch?v=D0OqItrsAQM) — Practice with me!
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation

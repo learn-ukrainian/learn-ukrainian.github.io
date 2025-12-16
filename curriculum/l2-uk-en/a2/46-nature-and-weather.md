@@ -32,6 +32,14 @@ This module covers essential vocabulary for discussing nature, weather, seasons,
 
 Ukrainian weather patterns vary significantly by region. Kyiv experiences cold winters and warm summers, while Crimea and Odesa have milder climates near the sea. The Carpathians receive heavy snowfall, making them perfect for winter sports.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Nature & Weather in Ukrainian...](https://www.youtube.com/watch?v=x9qlDTX3fVg) — Pinhok Languages
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 ## Presentation

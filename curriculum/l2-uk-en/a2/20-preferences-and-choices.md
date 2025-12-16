@@ -33,6 +33,14 @@ Now that you can form comparatives and superlatives, let's use them to express p
 - Making and explaining choices
 - Useful expressions for everyday decisions
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [100 USEFUL Basic Phrases in Ukrainian ...](https://www.youtube.com/watch?v=zHrJXg2c5Uo) — #Ukrainian Vocabulary
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation

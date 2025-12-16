@@ -29,6 +29,14 @@ Whether you are looking for an apartment, describing your living situation, or s
 
 Ukrainian homes often differ from Western ones. Many Ukrainians live in apartments rather than houses. The concept of "дача" (country house) is also very important in Ukrainian culture.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Furniture in Ukrainian - Lesson about Furniture in Ukrainian...](https://www.youtube.com/watch?v=pVknviJ4OOg) — Bright Kids Ukrainian Online School
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation

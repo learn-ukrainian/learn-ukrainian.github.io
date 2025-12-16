@@ -46,6 +46,14 @@ Congratulations on completing Phase A2.1! This checkpoint module reviews everyth
 
 Unlike English, Ukrainian uses case endings to show grammatical relationships. This gives Ukrainian its characteristic flexibility in word order. By the end of this phase, you should automatically select the correct case based on context.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [How I learnt my first 500 words in Ukrainian ...](https://www.youtube.com/watch?v=SdgPUOHXNts) — Vocabooster Review
+>
+> **Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
+>
+> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
+
 ---
 
 # Presentation

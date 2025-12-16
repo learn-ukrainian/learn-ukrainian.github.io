@@ -55,6 +55,12 @@ Understanding these patterns will help you form correct sentences automatically 
 > [!important] Key Concept
 > Most service verbs (відправити, зняти, обміняти, відкрити) take accusative for the direct object. Learn this pattern once and apply it everywhere!
 
+> [!resources] 🔗 External Resources
+>
+> **Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
+>
+> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
+
 ---
 
 # Presentation

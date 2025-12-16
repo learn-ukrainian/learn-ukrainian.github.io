@@ -44,6 +44,14 @@ Some verbs in Ukrainian are "dative-hungry" — they always need a dative object
 
 Think about English: "I help my mother" uses a direct object. But Ukrainian says "I help *to* my mother" — Я допомагаю мамі.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [10 Ukrainian Verbs that take Dative Case...](https://www.youtube.com/watch?v=pZvCMMjtAo0) — Let's Learn Ukrainian
+>
+> **Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
+>
+> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
+
 ---
 
 # Presentation

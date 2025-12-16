@@ -181,6 +181,14 @@ After school, students pass **ZNO** (External Independent Evaluation) — a very
 > [!cultural] **Cultural Insight** Teachers' Day
 > On the first Sunday of October, Ukraine celebrates Teachers' Day. Students bring huge bouquets of flowers and chocolate to school. Sometimes senior students teach classes for the younger ones ("Self-Governance Day"). It's a fun and respectful tradition.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Most interesting Facts about Ukrainian Schools/ #ukraineeducation #ukr...](https://www.youtube.com/watch?v=m2KybmMH1pE) — Ukrainian Guy
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 # Summary
 
 You learned to:

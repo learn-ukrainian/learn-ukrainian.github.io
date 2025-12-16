@@ -34,6 +34,14 @@ Today you will master this essential pattern for counting objects correctly.
 
 This topic is fundamental for everyday communication in Ukrainian. You'll use these patterns when shopping, telling your age, and discussing quantities. Without mastering numeral-noun agreement, even simple sentences about numbers will sound incorrect to native speakers.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [How to use numbers 1,2,3,4,5, etc. with the nouns...](https://www.youtube.com/watch?v=SJPr-ilnIV0) — Speak Ukrainian
+>
+> **Grammar Guide:** [Nouns After Numbers](https://www.ukrainianlessons.com/nouns-after-numbers/) — Ukrainian Lessons
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # The Three Zones

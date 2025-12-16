@@ -35,6 +35,14 @@ In this module, you will learn to be a philosopher. You won't just say *what* ha
 > [!note] Think about it
 > A child says "I want candy." An adult says "I want candy *because* I had a hard day, *although* I know it's bad for my teeth." Connectors are the sign of a mature speaker.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [3 ways to say "BECAUSE" in Ukrainian + a bonus phrase ...](https://www.youtube.com/watch?v=d0_wnb9X3-s) — Learn Ukrainian Language
+>
+> **Grammar Guide:** [Ukrainian Conjunctions Guide](https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/) — Ukrainian Lessons
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation

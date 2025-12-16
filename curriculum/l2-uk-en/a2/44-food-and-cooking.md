@@ -32,6 +32,14 @@ Food vocabulary is particularly important for language learners because eating i
 
 The cooking verbs in this module are especially useful because they use the imperative mood, which you will encounter in recipes and when receiving cooking instructions from native speakers.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [20 Ukrainian Food Words You Need To Know ...](https://www.youtube.com/watch?v=fN0BIF-iejo) — QUICK and EASY food vocabulary
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation

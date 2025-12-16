@@ -33,6 +33,14 @@ When you want to say "He is a doctor," "She became a teacher," or "I work as a p
 
 **Why is this important?** Talking about professions is a fundamental skill in any language. By the end of this module, you'll be able to describe your job, discuss career changes, and ask others about their work — all using proper Ukrainian grammar.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Bandura: The traditional Ukrainian instrument that's also a symbol of ...](https://www.youtube.com/watch?v=AcrRlIR9_Ew) — Instrumental
+>
+> **Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
+>
+> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
+
 ---
 
 # Presentation

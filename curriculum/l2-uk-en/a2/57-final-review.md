@@ -195,6 +195,14 @@ Understanding technical texts is a key skill for B1.
 > - Understand easy stories.
 > If yes, welcome to B1!
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Can Russians understand Ukrainian? 🇺🇦...](https://www.youtube.com/watch?v=BbGiUilnBOs) — NFKRZ
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 # Summary
 
 You have officially completed A2!

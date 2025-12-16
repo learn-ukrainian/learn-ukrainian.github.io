@@ -38,6 +38,14 @@ A prefix is like a GPS instruction added to the front of the verb.
 > - Come **in** -> **У**війти
 > - Walk **away** -> **Від**ійти
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [A little test on prefixed verbs of motion...](https://www.youtube.com/watch?v=UHdXnucAOxY) — Ukrainian grammar
+>
+> **Grammar Guide:** [Ukrainian Verb Prefixes](https://www.ukrainianlessons.com/ukrainian-verb-prefixes/) — Ukrainian Lessons
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # The Prefix Map

@@ -239,6 +239,14 @@ Here are errors that students often make:
 > [!tip] **Pro Tip** "Listen more"
 > The best way to learn grammar is context. When you hear a song, ask yourself: Why is it "ти" here and "тобі" there? Analyzing real inputs creates deep neural connections.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [HOW TO REVIEW ALL RUSSIAN CASES QUICKLY AND EFFECTIVELY?...](https://www.youtube.com/watch?v=PAzw0yZydPw) — Ukrainian grammar
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 # Summary
 
 This review covered:

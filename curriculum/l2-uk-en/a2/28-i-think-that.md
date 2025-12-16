@@ -32,6 +32,14 @@ Everyone has opinions! In any conversation, you need to express what you think, 
 - Qualifying opinions with words like "maybe" and "probably"
 - Discussing different views respectfully in conversation
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [U.S. peace plan for Russia-Ukraine war is "very pro-Russia," former am...](https://www.youtube.com/watch?v=JFDMCN-ps3I) — CBS News
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation

@@ -35,6 +35,14 @@ In this module, we focus on three important root families: perception roots for 
 
 English has similar patterns: "see" gives us "sight", "seer", "foresee", "oversee". Ukrainian's system is even more productive because of its rich prefixation and suffixation system.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [25 COMMON UKRAINIAN PHRASES EVERY LEARNER MUST KNOW...](https://www.youtube.com/watch?v=aJ2Ldu2TaKA) — Speak Ukrainian
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation

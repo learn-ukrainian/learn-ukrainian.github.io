@@ -32,6 +32,14 @@ What would you do if you won the lottery? How would life be different if you spo
 - The conditional particle б/би
 - Common hypothetical expressions
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Ukrainian Conditionals: Якби росли у роті гриби... What IF?...](https://www.youtube.com/watch?v=Co0Y44nLlPA) — Let's Learn Ukrainian
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
 # Presentation
