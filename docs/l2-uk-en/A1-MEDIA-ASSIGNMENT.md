@@ -7,6 +7,8 @@
 
 This document assigns media content to A1 modules.
 
+**📚 See also:** [MEDIA-SOURCES.md](./MEDIA-SOURCES.md) for complete channel list, permission tracking, and licensing information.
+
 ---
 
 ## 🚨 MANDATORY: NO RUSSIAN CONTENT

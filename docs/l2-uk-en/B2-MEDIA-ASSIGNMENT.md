@@ -5,7 +5,9 @@
 **Updated:** 2025-12-16
 **GitHub Issue:** #136
 
-This document assigns media content requirements to all 135 B2 modules before creation begins.
+This document assigns media content to B2 modules.
+
+**📚 See also:** [MEDIA-SOURCES.md](./MEDIA-SOURCES.md) for complete channel list, permission tracking, and licensing information.
 
 ---
 

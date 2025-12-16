@@ -420,6 +420,10 @@ yt-dlp "ytsearch5:Ukrainian complex sentences складні речення" --p
 
 **Note:** Історія мови (youtube.com/@Istoria-Movy) is marked as "PURE GOLD" for B1-C1 content on Ukrainian language development and dialectology.
 
+This document assigns media content to B1 modules.
+
+**📚 See also:** [MEDIA-SOURCES.md](./MEDIA-SOURCES.md) for complete channel list, permission tracking, and licensing information.
+
 ---
 
 ## Ukrainian Lessons Resources
