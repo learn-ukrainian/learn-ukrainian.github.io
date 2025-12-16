@@ -5,19 +5,20 @@ title: "Numerals & Nouns"
 description: "One, Two, Many: The Agreement Puzzle"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Warm-up
@@ -32,6 +33,17 @@ Today you will master this essential pattern for counting objects correctly.
 
 This topic is fundamental for everyday communication in Ukrainian. You'll use these patterns when shopping, telling your age, and discussing quantities. Without mastering numeral-noun agreement, even simple sentences about numbers will sound incorrect to native speakers.
 
+:::info
+🔗 External Resources
+
+**YouTube:** [How to use numbers 1,2,3,4,5, etc. with the nouns...](https://www.youtube.com/watch?v=SJPr-ilnIV0) — Speak Ukrainian
+
+**Grammar Guide:** [Nouns After Numbers](https://www.ukrainianlessons.com/nouns-after-numbers/) — Ukrainian Lessons
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+:::
+
+
 ---
 
 # The Three Zones
@@ -44,7 +56,8 @@ Ukrainian divides numbers into three zones with different noun agreement rules:
 | **Zone 2** | 2, 3, 4 | Genitive Singular | дві книги |
 | **Zone 3** | 5-20, 25-30... | Genitive Plural | п'ять книг |
 
-:::tip[The Pattern]
+:::tip
+The Pattern
 - **1** = singular (as expected)
 - **2-4** = "special plural" (Genitive Singular - looks like possessive)
 - **5+** = "true plural" (Genitive Plural)
@@ -91,7 +104,8 @@ The number "two" has gender forms:
 | 3 | три студенти | три студентки | три вікна |
 | 4 | чотири студенти | чотири студентки | чотири вікна |
 
-:::tip[Memory Trick]
+:::tip
+Memory Trick
 After 2, 3, 4 - the noun looks like you're asking "of what?"
 "Дві студентки" = "Two of student (singular)" - the genitive singular form.
 :::
@@ -123,7 +137,8 @@ Numbers 22-24, 32-34, etc. (ending in 2-4) follow Zone 2:
 Numbers 25-30, 35-40, etc. (ending in 5-0) follow Zone 3:
 - двадцять **п'ять** студентів (25 students)
 
-:::tip[The Last Digit Rule]
+:::tip
+The Last Digit Rule
 For compound numbers, look at the last digit to determine the zone.
 21 → ends in 1 → Zone 1 → одна книга → двадцять одна книга
 23 → ends in 3 → Zone 2 → три книги → двадцять три книги
@@ -156,32 +171,22 @@ Here is the complete pattern for the noun "книга" (book, f):
 
 Оля пішла на ринок. Вона хотіла купити овочі та фрукти.
 
-<div className="conversation">
-
 — Дайте, будь ласка, **один** кілограм яблук, — сказала Оля.
-
 — Ось, будь ласка. Щось ще?
-
 — Так. **Два** кілограми картоплі і **три** кілограми моркви.
-
 — Добре. А ще?
-
 — **П'ять** помідорів і **чотири** огірки.
-
 — Якісь ще овочі?
-
 — Ні, дякую. Тепер фрукти. **Одна** диня і **дві** груші.
-
 — Чудово! Всього **сто двадцять три** гривні.
-
-</div>
 
 Оля заплатила і пішла додому. У неї було багато смачних продуктів!
 
 Вона сказала продавцеві: "Дякую за все! До побачення!"
 Продавець відповів: "Будь ласка! Приходьте ще!"
 
-:::note[Cultural Note: Markets in Ukraine]
+:::note
+Cultural Note: Markets in Ukraine
 Traditional markets (ринки) are still popular in Ukraine.
 Vendors appreciate when you use correct numeral forms.
 It shows respect for the language and makes shopping smoother.
@@ -200,28 +205,18 @@ It shows respect for the language and makes shopping smoother.
 Для брата — **чотири** комікси.
 А для себе — **п'ять** детективів.
 
-<div className="conversation">
-
 — Скільки це коштує? — запитав Петро.
-
 — **Один** детектив коштує **сто** гривень. **П'ять** детективів — **п'ятсот** гривень.
-
 — Добре. Я візьму все.
 
-</div>
-
 Продавець порахував:
-<div className="conversation">
-
 — Одна книга, дві книги, три книги, чотири комікси, п'ять детективів...
-
 — Всього **п'ятнадцять** книг і **дев'ятсот** гривень.
-
-</div>
 
 Петро заплатив і вийшов щасливий.
 
-:::tip[Зверніть увагу!]
+:::tip
+Зверніть увагу!
 - одна книга (жіночий рід, Zone 1)
 - дві книги (жіночий рід, Zone 2)
 - три романи (чоловічий рід, Zone 2)
@@ -253,7 +248,8 @@ It shows respect for the language and makes shopping smoother.
 
 Всі були щасливі і ситі!
 
-:::note[Сімейні Традиції]
+:::note
+Сімейні Традиції
 В Україні сімейні обіди — це важлива традиція.
 Бабуся завжди готує багато їжі для всієї родини.
 Гостинність — це цінність української культури.
@@ -319,239 +315,24 @@ Today you learned numeral-noun agreement:
 
 ---
 
-## 🎯 Activities
 
-### Zone Identification
 
-<MatchUp pairs={[
-  { left: `1`, right: `Zone 1` },
-  { left: `3`, right: `Zone 2` },
-  { left: `7`, right: `Zone 3` },
-  { left: `12`, right: `Zone 3` },
-  { left: `21`, right: `Zone 1` },
-  { left: `24`, right: `Zone 2` },
-  { left: `30`, right: `Zone 3` },
-  { left: `33`, right: `Zone 2` }
-]} />
+> 💡 **Українське прислів'я**
+>
+> «Один за всіх, і всі за одного!» (Один — називний однини, всі — множина.)
+>
+> *Translation: "One for all, and all for one!"*
 
-### Complete the Phrase
+> 🇺🇦 **Числівники змінюють все!**
+>
+> Запам'ятайте правила:
+> - **1**: один студент, одна книга, одне вікно
+> - **2, 3, 4**: два студенти, три книги, чотири вікна
+> - **5-20**: п'ять студентів, десять книг, двадцять вікон
+>
+> Ці правила здаються складними, але вони логічні! Практикуйте з реальними предметами навколо вас.
 
-<FillIn items={[
-  {
-    sentence: `один [___] [Hint: student, m]`,
-    answer: `студент`,
-    options: [`студент`, `студенти`, `студентів`]
-  },  {
-    sentence: `два [___] [Hint: student, m]`,
-    answer: `студенти`,
-    options: [`студенти`, `студент`, `студентів`]
-  },  {
-    sentence: `п'ять [___] [Hint: student, m]`,
-    answer: `студентів`,
-    options: [`студентів`, `студенти`, `студент`]
-  },  {
-    sentence: `одна [___] [Hint: book, f]`,
-    answer: `книга`,
-    options: [`книга`, `книги`, `книг`]
-  },  {
-    sentence: `три [___] [Hint: book, f]`,
-    answer: `книги`,
-    options: [`книги`, `книга`, `книг`]
-  },  {
-    sentence: `десять [___] [Hint: book, f]`,
-    answer: `книг`,
-    options: [`книг`, `книги`, `книга`]
-  },  {
-    sentence: `дві [___] [Hint: window, n]`,
-    answer: `вікна`,
-    options: [`вікна`, `вікно`, `вікон`]
-  },  {
-    sentence: `шість [___] [Hint: window, n]`,
-    answer: `вікон`,
-    options: [`вікон`, `вікна`, `вікно`]
-  }
-]} />
 
-### Agreement Rules
-
-<Quiz questions={[
-  {
-    question: `After \"один\" the noun is in:`,
-    options: [
-      { text: `Nominative Singular`, correct: true },
-      { text: `Genitive Singular`, correct: false },
-      { text: `Genitive Plural`, correct: false }
-    ]
-  },  {
-    question: `After \"три\" the noun is in:`,
-    options: [
-      { text: `Nominative Singular`, correct: false },
-      { text: `Genitive Singular`, correct: true },
-      { text: `Genitive Plural`, correct: false }
-    ]
-  },  {
-    question: `After \"сім\" the noun is in:`,
-    options: [
-      { text: `Nominative Singular`, correct: false },
-      { text: `Genitive Singular`, correct: false },
-      { text: `Genitive Plural`, correct: true }
-    ]
-  },  {
-    question: `\"Дві\" is used with:`,
-    options: [
-      { text: `Feminine nouns`, correct: true },
-      { text: `Masculine nouns`, correct: false },
-      { text: `All nouns`, correct: false }
-    ]
-  },  {
-    question: `\"Двадцять один студент\" uses:`,
-    options: [
-      { text: `Zone 1 (ends in 1)`, correct: true },
-      { text: `Zone 2`, correct: false },
-      { text: `Zone 3`, correct: false }
-    ]
-  },  {
-    question: `\"П'ятнадцять книг\" uses:`,
-    options: [
-      { text: `Zone 1`, correct: false },
-      { text: `Zone 2`, correct: false },
-      { text: `Zone 3 (11-19 always Zone 3)`, correct: true }
-    ]
-  },  {
-    question: `\"Чотири книги\" is:`,
-    options: [
-      { text: `Nominative Plural`, correct: false },
-      { text: `Genitive Singular`, correct: true },
-      { text: `Genitive Plural`, correct: false }
-    ]
-  },  {
-    question: `\"Два\" is used with:`,
-    options: [
-      { text: `Masculine and Neuter nouns`, correct: true },
-      { text: `Feminine nouns only`, correct: false },
-      { text: `All nouns`, correct: false }
-    ]
-  }
-]} />
-
-### Shopping
-
-<Cloze
-  passage={`Дайте один [___:1] яблук. (kilogram)
-Два [___:2] картоплі. (kilogram)
-П'ять [___:3]. (tomatoes)
-Чотири [___:4]. (cucumbers)
-Одна [___:5]. (melon)
-Дві [___:6]. (pears)`}
-  blanks={[{ answer: `кілограм`, options: [`кілограм`, `кілограми`, `кілограмів`] }, { answer: `кілограми`, options: [`кілограми`, `кілограм`, `кілограмів`] }, { answer: `помідорів`, options: [`помідорів`, `помідори`, `помідор`] }, { answer: `огірки`, options: [`огірки`, `огірок`, `огірків`] }, { answer: `диня`, options: [`диня`, `дині`, `динь`] }, { answer: `груші`, options: [`груші`, `груша`, `груш`] }]}
-/>
-
-### Counting Sentences
-
-<Unjumble items={[
-  { jumbled: `книга / одна / маю / Я`, answer: `Я маю одну книгу.` },
-  { jumbled: `студенти / два / є / У / класі`, answer: `У класі є два студенти.` },
-  { jumbled: `книг / п'ять / прочитав / Він`, answer: `Він прочитав п'ять книг.` },
-  { jumbled: `вікна / три / кімнаті / У`, answer: `У кімнаті три вікна.` },
-  { jumbled: `гривень / сто / коштує / Це`, answer: `Це коштує сто гривень.` },
-  { jumbled: `яблук / купила / чотири / Вона`, answer: `Вона купила чотири яблука.` },
-  { jumbled: `років / двадцять / мені / один`, answer: `Мені двадцять один рік.` },
-  { jumbled: `студентів / є / двадцять / групі / У`, answer: `У групі є двадцять студентів.` }
-]} />
-
-### Wrong Agreement
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я маю **п'ять книги**.`}
-    errorWord={`книги`}
-    correctForm={`книг`}
-    options={[`книг`, `книги`]}
-    explanation={`After 5+ → Genitive Plural (книг).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`У класі **два студент**.`}
-    errorWord={`студент`}
-    correctForm={`студенти`}
-    options={[`студенти`, `студент`]}
-    explanation={`After 2-4 → Genitive Singular (студенти).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона купила **дві яблука**.`}
-    errorWord={`дві`}
-    correctForm={`два`}
-    options={[`два`, `дві`]}
-    explanation={`\"Яблуко\" is neuter → два (not дві).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Мені **двадцять один років**.`}
-    errorWord={`років`}
-    correctForm={`рік`}
-    options={[`рік`, `років`]}
-    explanation={`Ends in 1 → Zone 1 → Nominative Singular (рік).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`У мене **три книга**.`}
-    errorWord={`книга`}
-    correctForm={`книги`}
-    options={[`книги`, `книга`]}
-    explanation={`After 2-4 → Genitive Singular (книги).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Тут є **одинадцять студенти**.`}
-    errorWord={`студенти`}
-    correctForm={`студентів`}
-    options={[`студентів`, `студенти`]}
-    explanation={`11-19 always Zone 3 → Genitive Plural.`}
-  />
-</ErrorCorrection>
-
-### Zone Classification
-
-<GroupSort groups={{
-  "Zone 1 (Nominative Singular)": ["1", "21", "31", "101"],
-  "Zone 2 (Genitive Singular)": ["2", "3", "4", "22", "34"],
-  "Zone 3 (Genitive Plural)": ["5", "11", "15", "20", "100"]
-}} />
-
-### Noun Forms
-
-<MatchUp pairs={[
-  { left: `один студент`, right: `Nominative Singular` },
-  { left: `два студенти`, right: `Genitive Singular` },
-  { left: `п'ять студентів`, right: `Genitive Plural` },
-  { left: `одна книга`, right: `Nominative Singular` },
-  { left: `три книги`, right: `Genitive Singular` },
-  { left: `десять книг`, right: `Genitive Plural` },
-  { left: `двадцять один рік`, right: `Nominative Singular` },
-  { left: `двадцять два роки`, right: `Genitive Singular` }
-]} />
-
-### The Bookstore
-
-<Cloze
-  passage={`Для мами він вибрав одну [___:1]. (book)
-Для батька — дві [___:2]. (books)
-Для сестри — три [___:3]. (novels)
-Для брата — чотири [___:4]. (comics)
-А для себе — п'ять [___:5]. (detective novels)
-Всього п'ятнадцять [___:6]. (books)
-Це коштувало дев'ятсот [___:7]. (hryvnias)
-Він заплатив і вийшов [___:8]. (happy)`}
-  blanks={[{ answer: `книгу`, options: [`книгу`, `книги`, `книг`] }, { answer: `книги`, options: [`книги`, `книгу`, `книг`] }, { answer: `романи`, options: [`романи`, `роман`, `романів`] }, { answer: `комікси`, options: [`комікси`, `комікс`, `коміксів`] }, { answer: `детективів`, options: [`детективів`, `детективи`, `детектив`] }, { answer: `книг`, options: [`книг`, `книги`, `книгу`] }, { answer: `гривень`, options: [`гривень`, `гривні`, `гривня`] }, { answer: `щасливий`, options: [`щасливий`, `сумний`, `злий`] }]}
-/>
-
-### Age Expressions
-
-<Cloze
-  passage={`Мені [___:1] рік. (21)
-Йому [___:2] роки. (23)
-Їй [___:3] років. (25)
-Мамі [___:4] рік. (51)
-Батькові [___:5] роки. (54)
-Братові [___:6] років. (28)`}
-  blanks={[{ answer: `двадцять один`, options: [`двадцять один`, `двадцять одного`] }, { answer: `двадцять три`, options: [`двадцять три`, `двадцять третього`] }, { answer: `двадцять п'ять`, options: [`двадцять п'ять`, `двадцять п'ятого`] }, { answer: `п'ятдесят один`, options: [`п'ятдесят один`, `п'ятдесят одного`] }, { answer: `п'ятдесят чотири`, options: [`п'ятдесят чотири`, `п'ятдесят четвертого`] }, { answer: `двадцять вісім`, options: [`двадцять вісім`, `двадцять восьмого`] }]}
-/>
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Forms |
@@ -586,3 +367,269 @@ Today you learned numeral-noun agreement:
 | ринок | /rˈɪnɔk/ | market | noun | ринки, ринків |
 | книгарня | /knɪɦˈɑrnʲɑ/ | bookstore | noun | книгарні, книгарень |
 | продавець | /prɔdɑʋˈɛt͡sʲ/ | seller | noun | продавці, продавців |
+
+---
+
+## 🎯 Activities
+
+### Zone Identification
+
+*Match the number to its zone.*
+
+
+<MatchUp pairs={[
+  { left: `1`, right: `Zone 1` },
+  { left: `3`, right: `Zone 2` },
+  { left: `7`, right: `Zone 3` },
+  { left: `12`, right: `Zone 3` },
+  { left: `21`, right: `Zone 1` },
+  { left: `24`, right: `Zone 2` },
+  { left: `30`, right: `Zone 3` },
+  { left: `33`, right: `Zone 2` }
+]} />
+
+### Complete the Phrase
+
+*Add the correct noun form.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. один [___] [Hint: student, m]`}
+    answer={`студент`}
+    options={[`студент`, `студенти`, `студентів`]}
+  />
+  <FillInQuestion
+    sentence={`два [___] [Hint: student, m]`}
+    answer={`студенти`}
+    options={[`студенти`, `студент`, `студентів`]}
+  />
+  <FillInQuestion
+    sentence={`п'ять [___] [Hint: student, m]`}
+    answer={`студентів`}
+    options={[`студентів`, `студенти`, `студент`]}
+  />
+  <FillInQuestion
+    sentence={`одна [___] [Hint: book, f]`}
+    answer={`книга`}
+    options={[`книга`, `книги`, `книг`]}
+  />
+  <FillInQuestion
+    sentence={`три [___] [Hint: book, f]`}
+    answer={`книги`}
+    options={[`книги`, `книга`, `книг`]}
+  />
+  <FillInQuestion
+    sentence={`десять [___] [Hint: book, f]`}
+    answer={`книг`}
+    options={[`книг`, `книги`, `книга`]}
+  />
+  <FillInQuestion
+    sentence={`Два ___ (2 + nominative singular)`}
+    answer={`столи`}
+    options={[`столи`, `стола`, `столів`]}
+  />
+  <FillInQuestion
+    sentence={`П'ять ___ (5 + genitive plural)`}
+    answer={`столів`}
+    options={[`столів`, `столи`, `стола`]}
+  />
+  <FillInQuestion
+    sentence={`дві [___] [Hint: window, n]`}
+    answer={`вікна`}
+    options={[`вікна`, `вікно`, `вікон`]}
+  />
+  <FillInQuestion
+    sentence={`шість [___] [Hint: window, n]`}
+    answer={`вікон`}
+    options={[`вікон`, `вікна`, `вікно`]}
+  />
+</FillIn>
+
+### Agreement Rules
+
+<Quiz>
+  <QuizQuestion
+    question={`1. After "один" the noun is in:`}
+    options={[`Nominative Singular`, `Genitive Singular`, `Genitive Plural`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`After "три" the noun is in:`}
+    options={[`Nominative Singular`, `Genitive Singular`, `Genitive Plural`]}
+    correctIndex={1}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`After "сім" the noun is in:`}
+    options={[`Nominative Singular`, `Genitive Singular`, `Genitive Plural`]}
+    correctIndex={2}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Дві" is used with:`}
+    options={[`Feminine nouns`, `Masculine nouns`, `All nouns`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Двадцять один студент" uses:`}
+    options={[`Zone 1 (ends in 1)`, `Zone 2`, `Zone 3`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"П'ятнадцять книг" uses:`}
+    options={[`Zone 1`, `Zone 2`, `Zone 3 (11-19 always Zone 3)`]}
+    correctIndex={2}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Чотири книги" is:`}
+    options={[`Nominative Plural`, `Genitive Singular`, `Genitive Plural`]}
+    correctIndex={1}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Два" is used with:`}
+    options={[`Masculine and Neuter nouns`, `Feminine nouns only`, `All nouns`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+
+
+### Counting Sentences
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`книга / одна / маю / Я`}
+    answer={`Я маю одну книгу.`}
+  />
+  <UnjumbleQuestion
+    words={`студенти / два / є / У / класі`}
+    answer={`У класі є два студенти.`}
+  />
+  <UnjumbleQuestion
+    words={`книг / п'ять / прочитав / Він`}
+    answer={`Він прочитав п'ять книг.`}
+  />
+  <UnjumbleQuestion
+    words={`вікна / три / кімнаті / У`}
+    answer={`У кімнаті три вікна.`}
+  />
+  <UnjumbleQuestion
+    words={`гривень / сто / коштує / Це`}
+    answer={`Це коштує сто гривень.`}
+  />
+  <UnjumbleQuestion
+    words={`яблук / купила / чотири / Вона`}
+    answer={`Вона купила чотири яблука.`}
+  />
+  <UnjumbleQuestion
+    words={`років / двадцять / мені / один`}
+    answer={`Мені двадцять один рік.`}
+  />
+  <UnjumbleQuestion
+    words={`студентів / є / двадцять / групі / У`}
+    answer={`У групі є двадцять студентів.`}
+  />
+</Unjumble>
+
+### Wrong Agreement
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я маю **п'ять книги**.`}
+    error={`книги`}
+    answer={`книг`}
+    options={[`книг`, `книги`]}
+    explanation={`After 5+ → Genitive Plural (книг).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`У класі **два студент**.`}
+    error={`студент`}
+    answer={`студенти`}
+    options={[`студенти`, `студент`]}
+    explanation={`After 2-4 → Genitive Singular (студенти).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона купила **дві яблука**.`}
+    error={`дві`}
+    answer={`два`}
+    options={[`два`, `дві`]}
+    explanation={`"Яблуко" is neuter → два (not дві).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Мені **двадцять один років**.`}
+    error={`років`}
+    answer={`рік`}
+    options={[`рік`, `років`]}
+    explanation={`Ends in 1 → Zone 1 → Nominative Singular (рік).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`У мене **три книга**.`}
+    error={`книга`}
+    answer={`книги`}
+    options={[`книги`, `книга`]}
+    explanation={`After 2-4 → Genitive Singular (книги).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Тут є **одинадцять студенти**.`}
+    error={`студенти`}
+    answer={`студентів`}
+    options={[`студентів`, `студенти`]}
+    explanation={`11-19 always Zone 3 → Genitive Plural.`}
+  />
+</ErrorCorrection>
+
+### Zone Classification
+
+*Sort numbers by zone.*
+
+
+<GroupSort groups={{
+  "### Zone 1 (Nominative Singular)": [
+    "1",
+    "21",
+    "31",
+    "101"
+  ],
+  "Zone 2 (Genitive Singular)": [
+    "2",
+    "3",
+    "4",
+    "22",
+    "34"
+  ],
+  "Zone 3 (Genitive Plural)": [
+    "5",
+    "11",
+    "15",
+    "20",
+    "100"
+  ]
+}} />
+
+### Noun Forms
+
+*Match the numeral phrase to correct noun form.*
+
+
+<MatchUp pairs={[
+  { left: `один студент`, right: `Nominative Singular` },
+  { left: `два студенти`, right: `Genitive Singular` },
+  { left: `п'ять студентів`, right: `Genitive Plural` },
+  { left: `одна книга`, right: `Nominative Singular` },
+  { left: `три книги`, right: `Genitive Singular` },
+  { left: `десять книг`, right: `Genitive Plural` },
+  { left: `двадцять один рік`, right: `Nominative Singular` },
+  { left: `двадцять два роки`, right: `Genitive Singular` }
+]} />
+
+
+
+
+

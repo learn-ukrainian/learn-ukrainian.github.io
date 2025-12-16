@@ -5,19 +5,20 @@ title: "Root Families I"
 description: "Language Legos"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Warm-up
@@ -33,10 +34,22 @@ Today, we unlock four "Super Roots":
 3.  **ЧИТ** (Reading)
 4.  **БАЧ** (Vision)
 
-:::tip[The Logic]
+:::tip
+The Logic
 - **В** + **Хід** = In + Go = Entrance
 - **Ви** + **Хід** = Out + Go = Exit
 - **Пере** + **Хід** = Across + Go = Crossing
+:::
+
+
+:::info
+🔗 External Resources
+
+**YouTube:** [Welsh vs. Ukrainian: 8 similar words explained...](https://www.youtube.com/watch?v=6B_GwMcttmU) — BenjaminAngwin
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 :::
 
 
@@ -121,7 +134,8 @@ If you see **Розпис** (Mural/Painting), look at the root.
 **Роз** (Out/Spread) + **Пис** (Write/Paint).
 Spreading paint. Painting walls.
 
-:::note[English Theory]
+:::note
+English Theory
 This module relies heavily on pattern recognition.
 Do not memorize every word individually.
 Memorize the **blocks**.
@@ -172,7 +186,8 @@ It corresponds to the Latin **Trans-** (Across) or **Re-** (Again).
 Але я поспішаю. Мій друг чекає.
 Сподіваюсь, це буде гарний **вечір**.
 
-:::note[Cultural Insight: Signs]
+:::note
+Cultural Insight: Signs
 Common signs in Ukraine rely on these roots:
 - **Вхід** (Entrance) - Usually Green.
 - **Вихід** (Exit) - Also Green (Safety).
@@ -197,7 +212,8 @@ Common signs in Ukraine rely on these roots:
 Коли він закінчує роботу, він ставить **підпис**.
 Його книги — це його **внесок** (Contribution - In-carry) у культуру.
 
-:::note[Cultural Insight: The Post Office]
+:::note
+Cultural Insight: The Post Office
 At "Укрпошта" (Ukrposhta), you use many PYS/KHiD words:
 - **Написати** листа (To write a letter).
 - **Підписати** конверт (To sign an envelope).
@@ -214,52 +230,83 @@ At "Укрпошта" (Ukrposhta), you use many PYS/KHiD words:
 ## Dialogue: The Security Guard
 
 **Visitor:** Вибачте, де тут **вихід**?
+
 **Guard:** **Вихід** там, де і **вхід**.
+
 **Visitor:** Але двері зачинені.
+
 **Guard:** Треба натиснути кнопку.
+
 **Visitor:** Дякую. А де **перехід** на інший бік вулиці?
+
 **Guard:** **Підземний перехід** ліворуч.
+
 **Visitor:** Дякую за допомогу.
 
 ## Dialogue: The Contract
 
 **Manager:** Ви прочитали документ?
+
 **Client:** Так, я зробив повний **огляд**.
+
 **Manager:** У вас є питання?
+
 **Client:** Так, один момент. Цей **опис** товару неточний.
+
 **Manager:** Давайте виправимо.
+
 **Client:** Тепер все добре. Де поставити **підпис**?
+
 **Manager:** Ось тут, унизу сторінки.
 
 ## Dialogue: Asking Directions
 
 **Tourist:** Перепрошую, ви місцевий?
+
 **Local:** Так, я тут живу.
+
 **Tourist:** Де тут **східний** (Eastern) вхід у парк?
+
 **Local:** О, це далеко. Вам треба знайти **підземний перехід**.
+
 **Tourist:** А потім?
+
 **Local:** Потім йдіть прямо, поки не побачите великий **напис** "Парк".
+
 **Tourist:** А там є **вихід** до річки?
+
 **Local:** Так, там є **вихід**. Це дуже гарне місце для **походу**.
+
 **Tourist:** Дякую!
 
 ## Dialogue: The Movie Review
 
 **Oksana:** Ти вже бачив новий фільм?
+
 **Petro:** Так, я ходив у кіно вчора.
+
 **Oksana:** І як тобі? Яке твоє **бачення**?
+
 **Petro:** Чесно? Мені не сподобалося.
+
 **Oksana:** Чому? Поганий сюжет?
+
 **Petro:** Сюжет цікавий. Але **гра** акторів слабка.
+
 **Oksana:** А я читала **огляд** в інтернеті. Там пишуть, що це шедевр.
+
 **Petro:** У кожного свій **погляд**.
+
 **Oksana:** А як **візуальна** частина? Гарний **вигляд**?
+
 **Petro:** Так, ефекти супер. Але сценарій треба **переписати**.
+
 **Oksana:** Зрозуміло. Я краще піду на **побачення** в парк.
 
 ---
 
-:::tip[Pro Tip: Handwriting]
+:::tip
+Pro Tip: Handwriting
 In Ukrainian schools, children learn **propylys** (cursive).
 The word **пропис** comes from **ПИС** (write).
 Ukrainian handwriting is quite different from print.
@@ -284,289 +331,7 @@ Logic wins!
 
 ---
 
-## 🎯 Activities
 
-### Root Sorter
-
-<GroupSort groups={{
-  "ХІД - Motion": ["Вхід", "Вихід", "Перехід", "Похід", "Пішохід", "Прихід"],
-  "ПИС - Writing": ["Письменник", "Підпис", "Запис", "Опис", "Напис", "Письмо"],
-  "БАЧ/ГЛЯД - Vision": ["Побачення", "Передбачення", "Вигляд", "Погляд", "Огляд", "Бачення"]
-}} />
-
-### Definitions
-
-<MatchUp pairs={[
-  { left: `Вхід`, right: `Entrance` },
-  { left: `Вихід`, right: `Exit` },
-  { left: `Підпис`, right: `Signature` },
-  { left: `Письменник`, right: `Writer` },
-  { left: `Побачення`, right: `Date / Meeting` },
-  { left: `Читач`, right: `Reader` },
-  { left: `Опис`, right: `Description` },
-  { left: `Пішохід`, right: `Pedestrian` }
-]} />
-
-### Where to Go?
-
-<FillIn items={[
-  {
-    sentence: `Де [___] у метро? [Hint: Entrance]`,
-    answer: `вхід`,
-    options: [`вхід`, `вихід`, `похід`]
-  },  {
-    sentence: `Це небезпечний [___]. [Hint: Crossing]`,
-    answer: `перехід`,
-    options: [`перехід`, `захід`, `прихід`]
-  },  {
-    sentence: `Я не можу знайти [___]. [Hint: Exit]`,
-    answer: `вихід`,
-    options: [`вихід`, `вхід`, `схід`]
-  },  {
-    sentence: `Це зона для [___]. [Hint: Pedestrians (Gen pl)]`,
-    answer: `пішоходів`,
-    options: [`пішоходів`, `переходів`, `виходів`]
-  },  {
-    sentence: `Ми плануємо [___] в гори. [Hint: Hike]`,
-    answer: `похід`,
-    options: [`похід`, `вихід`, `захід`]
-  },  {
-    sentence: `[___] потяга о 10:00. [Hint: Arrival]`,
-    answer: `Прихід`,
-    options: [`Прихід`, `Відхід`, `Вихід`]
-  },  {
-    sentence: `Поїзд робить [___] зі станції. [Hint: Departure]`,
-    answer: `відхід`,
-    options: [`відхід`, `вхід`, `прихід`]
-  },  {
-    sentence: `Сонце сідає. Це [___]. [Hint: Sunset/West]`,
-    answer: `захід`,
-    options: [`захід`, `схід`, `вихід`]
-  }
-]} />
-
-### Document Logic
-
-<Unjumble items={[
-  { jumbled: `потрібен / Мені / підпис / ваш`, answer: `Мені потрібен ваш підпис.` },
-  { jumbled: `зробив / Я / опис / товару`, answer: `Я зробив опис товару.` },
-  { jumbled: `читає / Письменник / книгу / свою`, answer: `Письменник читає свою книгу.` },
-  { jumbled: `гарний / У / вигляд / нього`, answer: `У нього гарний вигляд.` },
-  { jumbled: `тут / Де / перехід`, answer: `Де тут перехід?` },
-  { jumbled: `читання / Це / урок`, answer: `Це урок читання.` }
-]} />
-
-### Root Logic
-
-<Quiz questions={[
-  {
-    question: `If \"Вхід\" is Entrance, what is \"Вихід\"?`,
-    options: [
-      { text: `Exit`, correct: true },
-      { text: `Crossing`, correct: false },
-      { text: `Signature`, correct: false }
-    ]
-  },  {
-    question: `What does \"Підпис\" literally mean?`,
-    options: [
-      { text: `Under-write`, correct: true },
-      { text: `Over-write`, correct: false },
-      { text: `Re-write`, correct: false }
-    ]
-  },  {
-    question: `\"Передбачення\" (Prediction) contains which root?`,
-    options: [
-      { text: `БАЧ`, correct: true },
-      { text: `ХІД`, correct: false },
-      { text: `ПИС`, correct: false }
-    ]
-  },  {
-    question: `A \"Пішохід\" goes on:`,
-    options: [
-      { text: `Foot (Пішки)`, correct: true },
-      { text: `Car (Машина)`, correct: false },
-      { text: `Horse (Кінь)`, correct: false }
-    ]
-  },  {
-    question: `\"До побачення\" includes the root meaning:`,
-    options: [
-      { text: `Seeing`, correct: true },
-      { text: `Writing`, correct: false },
-      { text: `Walking`, correct: false }
-    ]
-  },  {
-    question: `\"Погляд\" usually relates to:`,
-    options: [
-      { text: `Opinion / Glance`, correct: true },
-      { text: `Walking style`, correct: false },
-      { text: `Handwriting`, correct: false }
-    ]
-  },  {
-    question: `Which word describes a person?`,
-    options: [
-      { text: `Письменник`, correct: true },
-      { text: `Письмо`, correct: false },
-      { text: `Напис`, correct: false }
-    ]
-  },  {
-    question: `\"Читання\" is the process of:`,
-    options: [
-      { text: `Reading`, correct: true },
-      { text: `Writing`, correct: false },
-      { text: `Walking`, correct: false }
-    ]
-  }
-]} />
-
-### Medical Form
-
-<FillIn items={[
-  {
-    sentence: `Ваш [___] на документі. [Hint: Signature]`,
-    answer: `підпис`,
-    options: [`підпис`, `напис`, `запис`]
-  },  {
-    sentence: `Лікар робить [___] пацієнта. [Hint: Inspection/Review]`,
-    answer: `огляд`,
-    options: [`огляд`, `вигляд`, `погляд`]
-  },  {
-    sentence: `Це [___] симптомів. [Hint: Description]`,
-    answer: `опис`,
-    options: [`опис`, `напис`, `вхід`]
-  },  {
-    sentence: `У вас хворий [___]. [Hint: Look/Appearance]`,
-    answer: `вигляд`,
-    options: [`вигляд`, `огляд`, `перехід`]
-  },  {
-    sentence: `Зробіть [___] у карті. [Hint: Record/Entry]`,
-    answer: `запис`,
-    options: [`запис`, `напис`, `підпис`]
-  },  {
-    sentence: `Читати [___] на дверях. [Hint: Inscription/Sign]`,
-    answer: `напис`,
-    options: [`напис`, `опис`, `вихід`]
-  },  {
-    sentence: `Це точне [___]. [Hint: Prediction]`,
-    answer: `передбачення`,
-    options: [`передбачення`, `бачення`, `читання`]
-  },  {
-    sentence: `Ваше [___] майбутнього. [Hint: Vision]`,
-    answer: `бачення`,
-    options: [`бачення`, `читання`, `письмо`]
-  }
-]} />
-
-### The Date
-
-<Cloze
-  passage={`Я йду на [___:1] [Hint: date].
-Я чекаю біля [___:2] [Hint: entrance].
-У мене гарний [___:3] [Hint: look/appearance].
-Моя дівчина — це [___:4] [Hint: prediction] мого серця (poetic).
-Ми зробимо [___:5] [Hint: walk/hike] парком.
-Там є гарний [___:6] [Hint: view/glance].
-Потім ми знайдемо [___:7] [Hint: exit].
-Я скажу: \"До [___:8] [Hint: see you]!\"`}
-  blanks={[{ answer: `побачення`, options: [`побачення`] }, { answer: `входу`, options: [`входу`] }, { answer: `вигляд`, options: [`вигляд`] }, { answer: `передбачення`, options: [`передбачення`] }, { answer: `похід`, options: [`похід`] }, { answer: `вигляд`, options: [`вигляд`] }, { answer: `вихід`, options: [`вихід`] }, { answer: `побачення`, options: [`побачення`] }]}
-/>
-
-### Wrong Root
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Де тут **випис**? (Intended: Exit)`}
-    errorWord={`випис`}
-    correctForm={`вихід`}
-    options={[`вихід`, `випис`]}
-    explanation={`Exit refers to movement (ХІД), not writing (ПИС).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ваш **підхід** на документі. (Intended: Signature)`}
-    errorWord={`підхід`}
-    correctForm={`підпис`}
-    options={[`підпис`, `підхід`]}
-    explanation={`Signature is Under-write (ПИС), not Under-move (ХІД - approach).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Це цікаве **читання**. (Intended: Date/Meeting)`}
-    errorWord={`читання`}
-    correctForm={`побачення`}
-    options={[`побачення`, `читання`]}
-    explanation={`A date is Seeing (БАЧ), not Reading (ЧИТ).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він **пішопис**. (Intended: Pedestrian)`}
-    errorWord={`пішопис`}
-    correctForm={`пішохід`}
-    options={[`пішохід`, `пішопис`]}
-    explanation={`Pedestrian walks (ХІД).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Гарний **вхід**. (Intended: Look/Appearance)`}
-    errorWord={`вхід`}
-    correctForm={`вигляд`}
-    options={[`вигляд`, `вхід`]}
-    explanation={`Look is 'View-out' (Вигляд), not 'Go-in' (Вхід).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Зробити **захід** у зошит. (Intended: Note/Record)`}
-    errorWord={`захід`}
-    correctForm={`запис`}
-    options={[`запис`, `захід`]}
-    explanation={`A note is 'For-write' (Запис). 'Захід' is West/Sunset.`}
-  />
-</ErrorCorrection>
-
-### Verb to Noun
-
-<MatchUp pairs={[
-  { left: `Писати`, right: `Письменник` },
-  { left: `Ходити`, right: `Пішохід` },
-  { left: `Читати`, right: `Читач` },
-  { left: `Бачити`, right: `Побачення` },
-  { left: `Передбачати`, right: `Передбачення` },
-  { left: `Входити`, right: `Вхід` },
-  { left: `Виходити`, right: `Вихід` },
-  { left: `Записувати`, right: `Запис` }
-]} />
-
-### Prefixes
-
-<FillIn items={[
-  {
-    sentence: `[___]хід. [Hint: Entrance (In)]`,
-    answer: `В`,
-    options: [`В`, `Ви`, `Пере`]
-  },  {
-    sentence: `[___]хід. [Hint: Exit (Out)]`,
-    answer: `Ви`,
-    options: [`Ви`, `В`, `При`]
-  },  {
-    sentence: `[___]пис. [Hint: Signature (Under)]`,
-    answer: `Під`,
-    options: [`Під`, `На`, `За`]
-  },  {
-    sentence: `[___]пис. [Hint: Description (About/Round)]`,
-    answer: `О`,
-    options: [`О`, `В`, `Ви`]
-  },  {
-    sentence: `[___]хід. [Hint: Crossing (Across)]`,
-    answer: `Пере`,
-    options: [`Пере`, `За`, `При`]
-  },  {
-    sentence: `[___]хід. [Hint: Sunset/West (Behind)]`,
-    answer: `За`,
-    options: [`За`, `С`, `Ви`]
-  },  {
-    sentence: `[___]бачення. [Hint: Prediction (Fore)]`,
-    answer: `Перед`,
-    options: [`Перед`, `За`, `По`]
-  },  {
-    sentence: `[___]бачення. [Hint: Date (Po)]`,
-    answer: `По`,
-    options: [`По`, `За`, `На`]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Root |
@@ -601,3 +366,347 @@ Logic wins!
 | огляд | /ɔˈɦlʲɑd/ | review | noun | masc | гляд |
 | погляд | /pˈɔɦlʲɑd/ | glance/view | noun | masc | гляд |
 | вигляд | /ʋˈɪɦlʲɑd/ | look/appearance | noun | masc | гляд |
+
+---
+
+## 🎯 Activities
+
+### Root Sorter
+
+*Group the words by their root family.*
+
+
+<GroupSort groups={{
+  "### ХІД - Motion": [
+    "Вхід",
+    "Вихід",
+    "Перехід",
+    "Похід",
+    "Пішохід",
+    "Прихід"
+  ],
+  "ПИС - Writing": [
+    "Письменник",
+    "Підпис",
+    "Запис",
+    "Опис",
+    "Напис",
+    "Письмо"
+  ],
+  "БАЧ/ГЛЯД - Vision": [
+    "Побачення",
+    "Передбачення",
+    "Вигляд",
+    "Погляд",
+    "Огляд",
+    "Бачення"
+  ]
+}} />
+
+### Definitions
+
+*Match the word to its meaning.*
+
+
+<MatchUp pairs={[
+  { left: `Вхід`, right: `Entrance` },
+  { left: `Вихід`, right: `Exit` },
+  { left: `Підпис`, right: `Signature` },
+  { left: `Письменник`, right: `Writer` },
+  { left: `Побачення`, right: `Date / Meeting` },
+  { left: `Читач`, right: `Reader` },
+  { left: `Опис`, right: `Description` },
+  { left: `Пішохід`, right: `Pedestrian` }
+]} />
+
+### Where to Go?
+
+*Choose the correct movement word.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Де [___] у метро? [Hint: Entrance]`}
+    answer={`вхід`}
+    options={[`вхід`, `вихід`, `похід`]}
+  />
+  <FillInQuestion
+    sentence={`Це небезпечний [___]. [Hint: Crossing]`}
+    answer={`перехід`}
+    options={[`перехід`, `захід`, `прихід`]}
+  />
+  <FillInQuestion
+    sentence={`Я не можу знайти [___]. [Hint: Exit]`}
+    answer={`вихід`}
+    options={[`вихід`, `вхід`, `схід`]}
+  />
+  <FillInQuestion
+    sentence={`Це зона для [___]. [Hint: Pedestrians (Gen pl)]`}
+    answer={`пішоходів`}
+    options={[`пішоходів`, `переходів`, `виходів`]}
+  />
+  <FillInQuestion
+    sentence={`Ми плануємо [___] в гори. [Hint: Hike]`}
+    answer={`похід`}
+    options={[`похід`, `вихід`, `захід`]}
+  />
+  <FillInQuestion
+    sentence={`[___] потяга о 10:00. [Hint: Arrival]`}
+    answer={`Прихід`}
+    options={[`Прихід`, `Відхід`, `Вихід`]}
+  />
+  <FillInQuestion
+    sentence={`Поїзд робить [___] зі станції. [Hint: Departure]`}
+    answer={`відхід`}
+    options={[`відхід`, `вхід`, `прихід`]}
+  />
+  <FillInQuestion
+    sentence={`Сонце сідає. Це [___]. [Hint: Sunset/West]`}
+    answer={`захід`}
+    options={[`захід`, `схід`, `вихід`]}
+  />
+</FillIn>
+
+### Document Logic
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`потрібен / Мені / підпис / ваш`}
+    answer={`Мені потрібен ваш підпис.`}
+  />
+  <UnjumbleQuestion
+    words={`зробив / Я / опис / товару`}
+    answer={`Я зробив опис товару.`}
+  />
+  <UnjumbleQuestion
+    words={`читає / Письменник / книгу / свою`}
+    answer={`Письменник читає свою книгу.`}
+  />
+  <UnjumbleQuestion
+    words={`гарний / У / вигляд / нього`}
+    answer={`У нього гарний вигляд.`}
+  />
+  <UnjumbleQuestion
+    words={`тут / Де / перехід`}
+    answer={`Де тут перехід?`}
+  />
+  <UnjumbleQuestion
+    words={`читання / Це / урок`}
+    answer={`Це урок читання.`}
+  />
+</Unjumble>
+
+### Root Logic
+
+<Quiz>
+  <QuizQuestion
+    question={`1. If "Вхід" is Entrance, what is "Вихід"?`}
+    options={[`Exit`, `Crossing`, `Signature`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`What does "Підпис" literally mean?`}
+    options={[`Under-write`, `Over-write`, `Re-write`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Передбачення" (Prediction) contains which root?`}
+    options={[`БАЧ`, `ХІД`, `ПИС`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`A "Пішохід" goes on:`}
+    options={[`Foot (Пішки)`, `Car (Машина)`, `Horse (Кінь)`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"До побачення" includes the root meaning:`}
+    options={[`Seeing`, `Writing`, `Walking`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Погляд" usually relates to:`}
+    options={[`Opinion / Glance`, `Walking style`, `Handwriting`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Which word describes a person?`}
+    options={[`Письменник`, `Письмо`, `Напис`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Читання" is the process of:`}
+    options={[`Reading`, `Writing`, `Walking`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### Medical Form
+
+*Complete the phrases using root logic. Hint provided.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Ваш [___] на документі. [Hint: Signature]`}
+    answer={`підпис`}
+    options={[`підпис`, `напис`, `запис`]}
+  />
+  <FillInQuestion
+    sentence={`Лікар робить [___] пацієнта. [Hint: Inspection/Review]`}
+    answer={`огляд`}
+    options={[`огляд`, `вигляд`, `погляд`]}
+  />
+  <FillInQuestion
+    sentence={`Це [___] симптомів. [Hint: Description]`}
+    answer={`опис`}
+    options={[`опис`, `напис`, `вхід`]}
+  />
+  <FillInQuestion
+    sentence={`У вас хворий [___]. [Hint: Look/Appearance]`}
+    answer={`вигляд`}
+    options={[`вигляд`, `огляд`, `перехід`]}
+  />
+  <FillInQuestion
+    sentence={`Зробіть [___] у карті. [Hint: Record/Entry]`}
+    answer={`запис`}
+    options={[`запис`, `напис`, `підпис`]}
+  />
+  <FillInQuestion
+    sentence={`Читати [___] на дверях. [Hint: Inscription/Sign]`}
+    answer={`напис`}
+    options={[`напис`, `опис`, `вихід`]}
+  />
+  <FillInQuestion
+    sentence={`Це точне [___]. [Hint: Prediction]`}
+    answer={`передбачення`}
+    options={[`передбачення`, `бачення`, `читання`]}
+  />
+  <FillInQuestion
+    sentence={`Ваше [___] майбутнього. [Hint: Vision]`}
+    answer={`бачення`}
+    options={[`бачення`, `читання`, `письмо`]}
+  />
+</FillIn>
+
+
+
+### Wrong Root
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Де тут **випис**? (Intended: Exit)`}
+    error={`випис`}
+    answer={`вихід`}
+    options={[`вихід`, `випис`]}
+    explanation={`Exit refers to movement (ХІД), not writing (ПИС).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ваш **підхід** на документі. (Intended: Signature)`}
+    error={`підхід`}
+    answer={`підпис`}
+    options={[`підпис`, `підхід`]}
+    explanation={`Signature is Under-write (ПИС), not Under-move (ХІД - approach).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Це цікаве **читання**. (Intended: Date/Meeting)`}
+    error={`читання`}
+    answer={`побачення`}
+    options={[`побачення`, `читання`]}
+    explanation={`A date is Seeing (БАЧ), not Reading (ЧИТ).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він **пішопис**. (Intended: Pedestrian)`}
+    error={`пішопис`}
+    answer={`пішохід`}
+    options={[`пішохід`, `пішопис`]}
+    explanation={`Pedestrian walks (ХІД).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Гарний **вхід**. (Intended: Look/Appearance)`}
+    error={`вхід`}
+    answer={`вигляд`}
+    options={[`вигляд`, `вхід`]}
+    explanation={`Look is 'View-out' (Вигляд), not 'Go-in' (Вхід).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Зробити **захід** у зошит. (Intended: Note/Record)`}
+    error={`захід`}
+    answer={`запис`}
+    options={[`запис`, `захід`]}
+    explanation={`A note is 'For-write' (Запис). 'Захід' is West/Sunset.`}
+  />
+</ErrorCorrection>
+
+### Verb to Noun
+
+*Match the verb to the noun.*
+
+
+<MatchUp pairs={[
+  { left: `Писати`, right: `Письменник` },
+  { left: `Ходити`, right: `Пішохід` },
+  { left: `Читати`, right: `Читач` },
+  { left: `Бачити`, right: `Побачення` },
+  { left: `Передбачати`, right: `Передбачення` },
+  { left: `Входити`, right: `Вхід` },
+  { left: `Виходити`, right: `Вихід` },
+  { left: `Записувати`, right: `Запис` }
+]} />
+
+### Prefixes
+
+*Add the correct prefix.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. [___]хід. [Hint: Entrance (In)]`}
+    answer={`В`}
+    options={[`В`, `Ви`, `Пере`]}
+  />
+  <FillInQuestion
+    sentence={`[___]хід. [Hint: Exit (Out)]`}
+    answer={`Ви`}
+    options={[`Ви`, `В`, `При`]}
+  />
+  <FillInQuestion
+    sentence={`[___]пис. [Hint: Signature (Under)]`}
+    answer={`Під`}
+    options={[`Під`, `На`, `За`]}
+  />
+  <FillInQuestion
+    sentence={`[___]пис. [Hint: Description (About/Round)]`}
+    answer={`О`}
+    options={[`О`, `В`, `Ви`]}
+  />
+  <FillInQuestion
+    sentence={`[___]хід. [Hint: Crossing (Across)]`}
+    answer={`Пере`}
+    options={[`Пере`, `За`, `При`]}
+  />
+  <FillInQuestion
+    sentence={`[___]хід. [Hint: Sunset/West (Behind)]`}
+    answer={`За`}
+    options={[`За`, `С`, `Ви`]}
+  />
+  <FillInQuestion
+    sentence={`[___]бачення. [Hint: Prediction (Fore)]`}
+    answer={`Перед`}
+    options={[`Перед`, `За`, `По`]}
+  />
+  <FillInQuestion
+    sentence={`[___]бачення. [Hint: Date (Po)]`}
+    answer={`По`}
+    options={[`По`, `За`, `На`]}
+  />
+</FillIn>
+

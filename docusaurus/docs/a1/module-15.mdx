@@ -5,19 +5,20 @@ title: "Around the City"
 description: "Navigating urban spaces with confidence"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 ## Warm-up
@@ -33,7 +34,8 @@ Today you'll master the language of navigation — giving directions, describing
 
 
 
-:::info[🔗 External Resources]
+:::info
+🔗 External Resources
 
 **YouTube:** [Ukrainian Vocabulary: Tourism, Travelling, Asking for Directions #ukrainian #letslearnukrainian](https://www.youtube.com/watch?v=40HW7URLQNI) — Let's Learn Ukrainian
 
@@ -94,15 +96,9 @@ Ukrainians use simple directional adverbs when guiding others:
 
 **Mini-Dialogue: At the Train Station**
 
-<div className="conversation">
-
 — Вибачте, де туалет?
-
 — Прямо, потім наліво.
-
 — Дякую!
-
-</div>
 
 (Excuse me, where is the bathroom? — Straight, then left. — Thank you!)
 
@@ -116,21 +112,12 @@ Ukrainians use simple directional adverbs when guiding others:
 
 **Міні-діалог: На вулиці**
 
-<div className="conversation">
-
 — Вибачте, де аптека?
-
 — Прямо, потім наліво біля парку.
-
 — Це далеко?
-
 — Ні, близько. Три хвилини пішки.
-
 — Дякую!
-
 — Будь ласка.
-
-</div>
 
 (Excuse me, where is the pharmacy? — Straight, then left near the park. — Is it far? — No, close. Three minutes on foot. — Thank you! — You're welcome.)
 
@@ -162,13 +149,8 @@ When asking **"Це далеко?"** (Is it far?), you'll hear responses using t
 
 **Example:**
 
-<div className="conversation">
-
 — **Де аптека?**
-
 — **Навпроти банку, біля світлофора.**
-
-</div>
 (Where is the pharmacy? — Opposite the bank, near the traffic light.)
 
 > 🎬 **Pop Culture Moment: S.T.A.L.K.E.R. and Chornobyl**
@@ -191,17 +173,10 @@ How you get there matters. Ukrainians use several transportation phrases to desc
 
 **Mini-Dialogue: How Do You Get to Work?**
 
-<div className="conversation">
-
 — Як ти дістаєшся на роботу?
-
 — Я їду на трамваї, а потім пішки.
-
 — Це далеко?
-
 — Ні, близько. Десять хвилин.
-
-</div>
 
 (How do you get to work? — I go by tram, then on foot. — Is it far? — No, close. Ten minutes.)
 
@@ -369,374 +344,7 @@ Next module: **Genitive Case I — Absence and Negation** (немає, without).
 
 ---
 
-## 🎯 Activities
 
-### Navigation Basics
-
-<Quiz questions={[
-  {
-    question: `You're at an intersection and need to turn left. Which word do you use?`,
-    options: [
-      { text: `прямо`, correct: false },
-      { text: `наліво`, correct: true },
-      { text: `направо`, correct: false },
-      { text: `назад`, correct: false }
-    ]
-  },  {
-    question: `What does \"Це далеко?\" mean?`,
-    options: [
-      { text: `Is it nearby?`, correct: false },
-      { text: `Is it far?`, correct: true },
-      { text: `Where is it?`, correct: false },
-      { text: `How do I get there?`, correct: false }
-    ]
-  },  {
-    question: `Which preposition means \"opposite\"?`,
-    options: [
-      { text: `біля`, correct: false },
-      { text: `за`, correct: false },
-      { text: `навпроти`, correct: true },
-      { text: `перед`, correct: false }
-    ]
-  },  {
-    question: `How do you say \"by bus\" in Ukrainian?`,
-    options: [
-      { text: `автобус`, correct: false },
-      { text: `автобуса`, correct: false },
-      { text: `на автобусі`, correct: true },
-      { text: `в автобусі`, correct: false }
-    ]
-  },  {
-    question: `What is a \"провулок\"?`,
-    options: [
-      { text: `A square`, correct: false },
-      { text: `A lane or alley`, correct: true },
-      { text: `A bridge`, correct: false },
-      { text: `A traffic light`, correct: false }
-    ]
-  },  {
-    question: `If someone says \"Прямо, потім направо,\" what should you do?`,
-    options: [
-      { text: `Turn left, then go straight`, correct: false },
-      { text: `Go back, then turn right`, correct: false },
-      { text: `Go straight, then turn right`, correct: true },
-      { text: `Turn right, then turn left`, correct: false }
-    ]
-  },  {
-    question: `What does \"пішки\" mean?`,
-    options: [
-      { text: `by bicycle`, correct: false },
-      { text: `on foot`, correct: true },
-      { text: `by car`, correct: false },
-      { text: `by metro`, correct: false }
-    ]
-  },  {
-    question: `Which is NOT a type of urban street in Ukrainian?`,
-    options: [
-      { text: `вулиця`, correct: false },
-      { text: `проспект`, correct: false },
-      { text: `бульвар`, correct: false },
-      { text: `хмарочос`, correct: true }
-    ]
-  },  {
-    question: `Where would you find a \"зупинка\"?`,
-    options: [
-      { text: `In a restaurant`, correct: false },
-      { text: `At a bus or tram stop`, correct: true },
-      { text: `At the post office`, correct: false },
-      { text: `In a park`, correct: false }
-    ]
-  },  {
-    question: `What does \"станція метро\" mean?`,
-    options: [
-      { text: `bus station`, correct: false },
-      { text: `train platform`, correct: false },
-      { text: `metro station`, correct: true },
-      { text: `taxi stand`, correct: false }
-    ]
-  },  {
-    question: `If something is \"поруч,\" it is:`,
-    options: [
-      { text: `far away`, correct: false },
-      { text: `behind you`, correct: false },
-      { text: `nearby`, correct: true },
-      { text: `in front`, correct: false }
-    ]
-  },  {
-    question: `Which city has Ukraine's oldest metro system?`,
-    options: [
-      { text: `Lviv`, correct: false },
-      { text: `Kyiv`, correct: true },
-      { text: `Kharkiv`, correct: false },
-      { text: `Odesa`, correct: false }
-    ]
-  }
-]} />
-
-### City Vocabulary
-
-<MatchUp pairs={[
-  { left: `Ukrainian`, right: `English` },
-  { left: `міст`, right: `bridge` },
-  { left: `площа`, right: `square` },
-  { left: `вхід`, right: `entrance` },
-  { left: `вихід`, right: `exit` },
-  { left: `перехрестя`, right: `intersection` },
-  { left: `світлофор`, right: `traffic light` },
-  { left: `набережна`, right: `embankment` },
-  { left: `зупинка`, right: `stop` },
-  { left: `станція`, right: `station` },
-  { left: `проспект`, right: `avenue` },
-  { left: `провулок`, right: `lane` },
-  { left: `бульвар`, right: `boulevard` }
-]} />
-
-### Complete the Directions
-
-<FillIn items={[
-  {
-    sentence: `Іди ___, потім поверни направо. (straight)`,
-    answer: `прямо`,
-    options: [`прямо`, `наліво`, `направо`, `назад`]
-  },  {
-    sentence: `Аптека ___ банку, біля світлофора. (opposite)`,
-    answer: `навпроти`,
-    options: [`навпроти`, `біля`, `за`, `перед`]
-  },  {
-    sentence: `На перехресті поверніть ___. (to the left)`,
-    answer: `наліво`,
-    options: [`наліво`, `направо`, `прямо`, `назад`]
-  },  {
-    sentence: `Музей ___ парку. (near)`,
-    answer: `біля`,
-    options: [`біля`, `навпроти`, `між`, `за`]
-  },  {
-    sentence: `Це далеко? — Ні, ___. (close)`,
-    answer: `близько`,
-    options: [`близько`, `далеко`, `поруч`, `туди`]
-  },  {
-    sentence: `Станція метро ___ мостом. (behind)`,
-    answer: `за`,
-    options: [`за`, `перед`, `навпроти`, `між`]
-  },  {
-    sentence: `Я їду до університету ___. (by tram)`,
-    answer: `на трамваї`,
-    options: [`на трамваї`, `на автобусі`, `на машині`, `пішки`]
-  },  {
-    sentence: `Книгарня ___ кафе і банком. (between)`,
-    answer: `між`,
-    options: [`між`, `біля`, `за`, `навпроти`]
-  },  {
-    sentence: `Іди ___ вулиці Шевченка. (along)`,
-    answer: `вздовж`,
-    options: [`вздовж`, `через`, `до`, `від`]
-  },  {
-    sentence: `Театр ___ парку. (in front of)`,
-    answer: `перед`,
-    options: [`перед`, `за`, `біля`, `навпроти`]
-  },  {
-    sentence: `Поверніть ___ біля світлофора. (to the right)`,
-    answer: `направо`,
-    options: [`направо`, `наліво`, `прямо`, `назад`]
-  },  {
-    sentence: `Я ходжу на роботу ___. (on foot)`,
-    answer: `пішки`,
-    options: [`пішки`, `на автобусі`, `метро`, `на машині`]
-  }
-]} />
-
-### Transportation Phrases
-
-<FillIn items={[
-  {
-    sentence: `Ми їдемо ___ до центру. (by bus)`,
-    answer: `на автобусі`,
-    options: [`на автобусі`, `автобус`, `в автобусі`, `автобуса`]
-  },  {
-    sentence: `Вона дістається на роботу ___. (by metro)`,
-    answer: `метро`,
-    options: [`метро`, `на метро`, `в метро`, `метром`]
-  },  {
-    sentence: `Я їжджу ___ щодня. (by bicycle)`,
-    answer: `на велосипеді`,
-    options: [`на велосипеді`, `велосипед`, `велосипедом`, `у велосипеді`]
-  },  {
-    sentence: `Вони приїхали ___. (by car)`,
-    answer: `на машині`,
-    options: [`на машині`, `машина`, `машину`, `машиною`]
-  },  {
-    sentence: `Ти їдеш ___? (by tram)`,
-    answer: `на трамваї`,
-    options: [`на трамваї`, `трамвай`, `трамваєм`, `у трамваї`]
-  },  {
-    sentence: `Я вже йду ___. (on foot)`,
-    answer: `пішки`,
-    options: [`пішки`, `ногами`, `на ногах`, `пішком`]
-  },  {
-    sentence: `Вони дістаються ___ до університету. (by taxi)`,
-    answer: `на таксі`,
-    options: [`на таксі`, `таксі`, `таксієм`, `в таксі`]
-  },  {
-    sentence: `Ми їдемо ___ на роботу. (by bus)`,
-    answer: `на автобусі`,
-    options: [`на автобусі`, `автобусом`, `автобус`, `в автобусі`]
-  }
-]} />
-
-### City Navigation Facts
-
-<TrueFalse items={[
-  {
-    statement: `Only three Ukrainian cities have metro systems: Kyiv, Kharkiv, and Dnipro.`,
-    isTrue: true,
-    explanation: `Correct! Kyiv (1960), Kharkiv (1975), Dnipro (1995).`
-  },  {
-    statement: `\"Прямо\" means \"turn left.\"`,
-    isTrue: false,
-    explanation: `Incorrect. \"Прямо\" means \"straight\" (forward).`
-  },  {
-    statement: `In Kyiv metro, female announcers indicate trains heading toward the center.`,
-    isTrue: true,
-    explanation: `Correct! Female voice = toward center, male voice = away from center.`
-  },  {
-    statement: `\"Провулок\" is a wide avenue.`,
-    isTrue: false,
-    explanation: `Incorrect. Провулок is a narrow lane or alley, not a wide street.`
-  },  {
-    statement: `Lviv is considered Ukraine's coffee capital.`,
-    isTrue: true,
-    explanation: `Correct! The first coffeehouse in Eastern Europe opened in Lviv in 1574.`
-  },  {
-    statement: `\"Навпроти\" means \"behind.\"`,
-    isTrue: false,
-    explanation: `Incorrect. \"Навпроти\" means \"opposite\" or \"across from.\" \"За\" means \"behind.\"`
-  },  {
-    statement: `\"Пішки\" means \"on foot.\"`,
-    isTrue: true,
-    explanation: `Correct! Пішки = walking.`
-  },  {
-    statement: `All Ukrainian cities use marshrutky.`,
-    isTrue: false,
-    explanation: `Actually true! Marshrutky are ubiquitous across all Ukrainian cities, not just metro cities.`
-  },  {
-    statement: `\"Станція\" can refer to both metro and train stations.`,
-    isTrue: true,
-    explanation: `Correct! Станція is the general word for \"station.\"`
-  },  {
-    statement: `\"Близько\" and \"далеко\" are opposites.`,
-    isTrue: false,
-    explanation: `Correct! Близько = close/near, далеко = far.`
-  },  {
-    statement: `S.T.A.L.K.E.R. is a Ukrainian game set in the Chornobyl Exclusion Zone.`,
-    isTrue: true,
-    explanation: `Correct! Made by GSC Game World in Kyiv.`
-  },  {
-    statement: `\"Метро\" declines like other Ukrainian nouns.`,
-    isTrue: false,
-    explanation: `Incorrect. Метро is indeclinable (doesn't change form).`
-  }
-]} />
-
-### Directional vs. Locational
-
-<GroupSort groups={{
-  "Direction (Motion)": ["прямо", "наліво", "направо", "назад", "туди", "сюди", "звідти", "куди", "до", "від"],
-  "Location (Static)": ["тут", "там", "біля", "навпроти", "за", "перед", "між", "поруч"]
-}} />
-
-### Types of Urban Spaces
-
-<GroupSort groups={{
-  "Roads and Streets": ["вулиця", "провулок", "проспект", "бульвар", "набережна"],
-  "Reference Points": ["міст", "перехрестя", "світлофор", "площа"],
-  "Transport Infrastructure": ["зупинка", "станція", "вхід", "вихід"]
-}} />
-
-### Giving Directions
-
-<Unjumble items={[
-  { jumbled: `прямо / Іди / наліво / потім / поверни`, answer: `Іди прямо, потім поверни наліво.` },
-  { jumbled: `Де / станція / метро`, answer: `Де станція метро?` },
-  { jumbled: `навпроти / Аптека / банку`, answer: `Аптека навпроти банку.` },
-  { jumbled: `дістатися / Як / центру / до`, answer: `Як дістатися до центру?` },
-  { jumbled: `автобусі / Я / на / їду / роботу / на`, answer: `Я їду на роботу на автобусі.` },
-  { jumbled: `біля / Зупинка / світлофора`, answer: `Зупинка біля світлофора.` },
-  { jumbled: `вулиці / вздовж / Іди / Шевченка`, answer: `Іди вздовж вулиці Шевченка.` },
-  { jumbled: `Це / далеко / дуже`, answer: `Це дуже далеко.` },
-  { jumbled: `перехресті / направо / На / поверніть`, answer: `На перехресті поверніть направо.` },
-  { jumbled: `пішки / Я / університет / до / ходжу`, answer: `Я ходжу до університету пішки.` },
-  { jumbled: `між / Музей / театром / парком / і`, answer: `Музей між театром і парком.` },
-  { jumbled: `близько / Ні / це`, answer: `Ні, це близько.` }
-]} />
-
-### Question and Answer Pairs
-
-<MatchUp pairs={[
-  { left: `Question`, right: `Answer` },
-  { left: `Де метро?`, right: `Прямо, біля банку.` },
-  { left: `Це далеко?`, right: `Ні, близько. П'ять хвилин пішки.` },
-  { left: `Як дістатися до центру?`, right: `На автобусі або на трамваї.` },
-  { left: `Де зупинка?`, right: `Навпроти парку.` },
-  { left: `Як ти їдеш на роботу?`, right: `Я їжджу метро.` },
-  { left: `Де вхід?`, right: `За мостом, наліво.` },
-  { left: `Перепрошую, де банк?`, right: `Біля світлофора, направо.` },
-  { left: `Скільки хвилин пішки?`, right: `Десь десять хвилин.` }
-]} />
-
-### Transportation Facts
-
-<TrueFalse items={[
-  {
-    statement: `\"Пішки\" means \"on foot.\"`,
-    isTrue: true,
-    explanation: `Correct! Пішки = walking.`
-  },  {
-    statement: `You say \"автобус\" to mean \"by bus.\"`,
-    isTrue: false,
-    explanation: `Incorrect. You say \"на автобусі\" (on the bus).`
-  },  {
-    statement: `\"Метро\" is used alone without a preposition.`,
-    isTrue: true,
-    explanation: `Correct! \"Я їду метро\" (I go by metro).`
-  },  {
-    statement: `\"На машині\" means \"by bicycle.\"`,
-    isTrue: false,
-    explanation: `Incorrect. \"На машині\" = by car. By bicycle = \"на велосипеді.\"`
-  },  {
-    statement: `You use locative case (на + Loc) for most vehicles.`,
-    isTrue: true,
-    explanation: `Correct! На автобусі, на трамваї, на велосипеді.`
-  },  {
-    statement: `\"Трамвай\" and \"трамваї\" are the same form.`,
-    isTrue: false,
-    explanation: `Incorrect. \"Трамвай\" is nominative, \"трамваї\" is locative (used after \"на\").`
-  },  {
-    statement: `\"На таксі\" is the correct way to say \"by taxi.\"`,
-    isTrue: true,
-    explanation: `Correct! Таксі is indeclinable, so use \"на таксі.\"`
-  },  {
-    statement: `You can say \"їду в автобусі\" to mean \"I go by bus.\"`,
-    isTrue: false,
-    explanation: `Incorrect. Use \"їду на автобусі\" (на, not в) for transportation.`
-  }
-]} />
-
-### Transportation Phrases
-
-<Unjumble items={[
-  { jumbled: `їду / Я / автобусі / на / щодня`, answer: `Я їду на автобусі щодня.` },
-  { jumbled: `трамваї / вона / на / дістається / роботу / На`, answer: `Вона дістається на роботу на трамваї.` },
-  { jumbled: `метро / Ми / їдемо / центру / до`, answer: `Ми їдемо метро до центру.` },
-  { jumbled: `велосипеді / він / на / щодня / Їздить`, answer: `Він їздить на велосипеді щодня.` },
-  { jumbled: `машині / Вони / на / приїхали`, answer: `Вони приїхали на машині.` },
-  { jumbled: `університету / до / пішки / Я / ходжу`, answer: `Я ходжу до університету пішки.` },
-  { jumbled: `таксі / на / додому / Він / їде`, answer: `Він їде додому на таксі.` },
-  { jumbled: `зупинка / Де / автобуса`, answer: `Де зупинка автобуса?` },
-  { jumbled: `станція / там / Метро / прямо`, answer: `Метро станція там, прямо.` },
-  { jumbled: `трамваї / їду / Зазвичай / на / я`, answer: `Зазвичай я їду на трамваї.` },
-  { jumbled: `світлофора / Поверніть / направо / біля`, answer: `Поверніть направо біля світлофора.` },
-  { jumbled: `перехресті / На / наліво / ідіть`, answer: `На перехресті ідіть наліво.` }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -783,3 +391,525 @@ Next module: **Genitive Case I — Absence and Negation** (немає, without).
 | велосипед | /wɛlɔsɪˈpɛd/ | bicycle | noun | m | на велосипеді = by bicycle |
 
 ---
+
+---
+
+## 🎯 Activities
+
+### Navigation Basics
+
+*Test your understanding of directional vocabulary.*
+
+
+<Quiz>
+  <QuizQuestion
+    question={`1. You're at an intersection and need to turn left. Which word do you use?`}
+    options={[`прямо`, `наліво`, `направо`, `назад`]}
+    correctIndex={1}
+    explanation={`наліво = to the left`}
+  />
+  <QuizQuestion
+    question={`What does "Це далеко?" mean?`}
+    options={[`Is it nearby?`, `Is it far?`, `Where is it?`, `How do I get there?`]}
+    correctIndex={1}
+    explanation={`далеко = far`}
+  />
+  <QuizQuestion
+    question={`Which preposition means "opposite"?`}
+    options={[`біля`, `за`, `навпроти`, `перед`]}
+    correctIndex={2}
+    explanation={`навпроти = opposite, across from`}
+  />
+  <QuizQuestion
+    question={`How do you say "by bus" in Ukrainian?`}
+    options={[`автобус`, `автобуса`, `на автобусі`, `в автобусі`]}
+    correctIndex={2}
+    explanation={`на автобусі (on the bus) = by bus`}
+  />
+  <QuizQuestion
+    question={`What is a "провулок"?`}
+    options={[`A square`, `A lane or alley`, `A bridge`, `A traffic light`]}
+    correctIndex={1}
+    explanation={`провулок = narrow side street, alley`}
+  />
+  <QuizQuestion
+    question={`If someone says "Прямо, потім направо," what should you do?`}
+    options={[`Turn left, then go straight`, `Go back, then turn right`, `Go straight, then turn right`, `Turn right, then turn left`]}
+    correctIndex={2}
+    explanation={`прямо = straight, направо = to the right`}
+  />
+  <QuizQuestion
+    question={`What does "пішки" mean?`}
+    options={[`by bicycle`, `on foot`, `by car`, `by metro`]}
+    correctIndex={1}
+    explanation={`пішки = walking, on foot`}
+  />
+  <QuizQuestion
+    question={`Which is NOT a type of urban street in Ukrainian?`}
+    options={[`вулиця`, `проспект`, `бульвар`, `хмарочос`]}
+    correctIndex={3}
+    explanation={`хмарочос = skyscraper (building, not a street type)`}
+  />
+  <QuizQuestion
+    question={`Where would you find a "зупинка"?`}
+    options={[`In a restaurant`, `At a bus or tram stop`, `At the post office`, `In a park`]}
+    correctIndex={1}
+    explanation={`зупинка = stop (for public transport)`}
+  />
+  <QuizQuestion
+    question={`What does "станція метро" mean?`}
+    options={[`bus station`, `train platform`, `metro station`, `taxi stand`]}
+    correctIndex={2}
+    explanation={`станція метро = metro/subway station`}
+  />
+  <QuizQuestion
+    question={`If something is "поруч," it is:`}
+    options={[`far away`, `behind you`, `nearby`, `in front`]}
+    correctIndex={2}
+    explanation={`поруч = nearby, next to`}
+  />
+  <QuizQuestion
+    question={`Which city has Ukraine's oldest metro system?`}
+    options={[`Lviv`, `Kyiv`, `Kharkiv`, `Odesa`]}
+    correctIndex={1}
+    explanation={`Kyiv metro opened in 1960, making it the oldest`}
+  />
+</Quiz>
+
+### City Vocabulary
+
+*Match the Ukrainian words with their English meanings.*
+
+
+<MatchUp pairs={[
+  { left: `міст`, right: `bridge` },
+  { left: `площа`, right: `square` },
+  { left: `вхід`, right: `entrance` },
+  { left: `вихід`, right: `exit` },
+  { left: `перехрестя`, right: `intersection` },
+  { left: `світлофор`, right: `traffic light` },
+  { left: `набережна`, right: `embankment` },
+  { left: `зупинка`, right: `stop` },
+  { left: `станція`, right: `station` },
+  { left: `проспект`, right: `avenue` },
+  { left: `провулок`, right: `lane` },
+  { left: `бульвар`, right: `boulevard` }
+]} />
+
+### Complete the Directions
+
+*Fill in the blanks with the correct directional words.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Іди ___, потім поверни направо. (straight)`}
+    answer={`прямо`}
+    options={[`прямо`, `наліво`, `направо`, `назад`]}
+  />
+  <FillInQuestion
+    sentence={`Аптека ___ банку, біля світлофора. (opposite)`}
+    answer={`навпроти`}
+    options={[`навпроти`, `біля`, `за`, `перед`]}
+  />
+  <FillInQuestion
+    sentence={`На перехресті поверніть ___. (to the left)`}
+    answer={`наліво`}
+    options={[`наліво`, `направо`, `прямо`, `назад`]}
+  />
+  <FillInQuestion
+    sentence={`Музей ___ парку. (near)`}
+    answer={`біля`}
+    options={[`біля`, `навпроти`, `між`, `за`]}
+  />
+  <FillInQuestion
+    sentence={`Це далеко? — Ні, ___. (close)`}
+    answer={`близько`}
+    options={[`близько`, `далеко`, `поруч`, `туди`]}
+  />
+  <FillInQuestion
+    sentence={`Станція метро ___ мостом. (behind)`}
+    answer={`за`}
+    options={[`за`, `перед`, `навпроти`, `між`]}
+  />
+  <FillInQuestion
+    sentence={`Я їду до університету ___. (by tram)`}
+    answer={`на трамваї`}
+    options={[`на трамваї`, `на автобусі`, `на машині`, `пішки`]}
+  />
+  <FillInQuestion
+    sentence={`Книгарня ___ кафе і банком. (between)`}
+    answer={`між`}
+    options={[`між`, `біля`, `за`, `навпроти`]}
+  />
+  <FillInQuestion
+    sentence={`Іди ___ вулиці Шевченка. (along)`}
+    answer={`вздовж`}
+    options={[`вздовж`, `через`, `до`, `від`]}
+  />
+  <FillInQuestion
+    sentence={`Театр ___ парку. (in front of)`}
+    answer={`перед`}
+    options={[`перед`, `за`, `біля`, `навпроти`]}
+  />
+  <FillInQuestion
+    sentence={`Поверніть ___ біля світлофора. (to the right)`}
+    answer={`направо`}
+    options={[`направо`, `наліво`, `прямо`, `назад`]}
+  />
+  <FillInQuestion
+    sentence={`Я ходжу на роботу ___. (on foot)`}
+    answer={`пішки`}
+    options={[`пішки`, `на автобусі`, `метро`, `на машині`]}
+  />
+</FillIn>
+
+### Transportation Phrases
+
+*Complete the sentences with the correct transportation phrase.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Ми їдемо ___ до центру. (by bus)`}
+    answer={`на автобусі`}
+    options={[`на автобусі`, `автобус`, `в автобусі`, `автобуса`]}
+  />
+  <FillInQuestion
+    sentence={`Вона дістається на роботу ___. (by metro)`}
+    answer={`метро`}
+    options={[`метро`, `на метро`, `в метро`, `метром`]}
+  />
+  <FillInQuestion
+    sentence={`Я їжджу ___ щодня. (by bicycle)`}
+    answer={`на велосипеді`}
+    options={[`на велосипеді`, `велосипед`, `велосипедом`, `у велосипеді`]}
+  />
+  <FillInQuestion
+    sentence={`Вони приїхали ___. (by car)`}
+    answer={`на машині`}
+    options={[`на машині`, `машина`, `машину`, `машиною`]}
+  />
+  <FillInQuestion
+    sentence={`Ти їдеш ___? (by tram)`}
+    answer={`на трамваї`}
+    options={[`на трамваї`, `трамвай`, `трамваєм`, `у трамваї`]}
+  />
+  <FillInQuestion
+    sentence={`Я вже йду ___. (on foot)`}
+    answer={`пішки`}
+    options={[`пішки`, `ногами`, `на ногах`, `пішком`]}
+  />
+  <FillInQuestion
+    sentence={`Вони дістаються ___ до університету. (by taxi)`}
+    answer={`на таксі`}
+    options={[`на таксі`, `таксі`, `таксієм`, `в таксі`]}
+  />
+  <FillInQuestion
+    sentence={`Ми їдемо ___ на роботу. (by bus)`}
+    answer={`на автобусі`}
+    options={[`на автобусі`, `автобусом`, `автобус`, `в автобусі`]}
+  />
+</FillIn>
+
+### City Navigation Facts
+
+*Decide if each statement is true or false.*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`Only three Ukrainian cities have metro systems: Kyiv, Kharkiv, and Dnipro.`}
+    isTrue={true}
+    explanation={`Correct! Kyiv (1960), Kharkiv (1975), Dnipro (1995).`}
+  />
+  <TrueFalseQuestion
+    statement={`"Прямо" means "turn left."`}
+    isTrue={false}
+    explanation={`Incorrect. "Прямо" means "straight" (forward).`}
+  />
+  <TrueFalseQuestion
+    statement={`In Kyiv metro, female announcers indicate trains heading toward the center.`}
+    isTrue={true}
+    explanation={`Correct! Female voice = toward center, male voice = away from center.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Провулок" is a wide avenue.`}
+    isTrue={false}
+    explanation={`Incorrect. Провулок is a narrow lane or alley, not a wide street.`}
+  />
+  <TrueFalseQuestion
+    statement={`Lviv is considered Ukraine's coffee capital.`}
+    isTrue={true}
+    explanation={`Correct! The first coffeehouse in Eastern Europe opened in Lviv in 1574.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Навпроти" means "behind."`}
+    isTrue={false}
+    explanation={`Incorrect. "Навпроти" means "opposite" or "across from." "За" means "behind."`}
+  />
+  <TrueFalseQuestion
+    statement={`"Пішки" means "on foot."`}
+    isTrue={true}
+    explanation={`Correct! Пішки = walking.`}
+  />
+  <TrueFalseQuestion
+    statement={`All Ukrainian cities use marshrutky.`}
+    isTrue={false}
+    explanation={`Actually true! Marshrutky are ubiquitous across all Ukrainian cities, not just metro cities.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Станція" can refer to both metro and train stations.`}
+    isTrue={true}
+    explanation={`Correct! Станція is the general word for "station."`}
+  />
+  <TrueFalseQuestion
+    statement={`"Близько" and "далеко" are opposites.`}
+    isTrue={false}
+    explanation={`Correct! Близько = close/near, далеко = far.`}
+  />
+  <TrueFalseQuestion
+    statement={`S.T.A.L.K.E.R. is a Ukrainian game set in the Chornobyl Exclusion Zone.`}
+    isTrue={true}
+    explanation={`Correct! Made by GSC Game World in Kyiv.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Метро" declines like other Ukrainian nouns.`}
+    isTrue={false}
+    explanation={`Incorrect. Метро is indeclinable (doesn't change form).`}
+  />
+</TrueFalse>
+
+### Directional vs. Locational
+
+*Sort these words by whether they indicate direction (motion) or location (static position).*
+
+
+<GroupSort groups={{
+  "### Direction (Motion)": [
+    "прямо",
+    "наліво",
+    "направо",
+    "назад",
+    "туди",
+    "сюди",
+    "звідти",
+    "куди",
+    "до",
+    "від"
+  ],
+  "Location (Static)": [
+    "тут",
+    "там",
+    "біля",
+    "навпроти",
+    "за",
+    "перед",
+    "між",
+    "поруч"
+  ]
+}} />
+
+### Types of Urban Spaces
+
+*Sort these urban features into the correct categories.*
+
+
+<GroupSort groups={{
+  "### Roads and Streets": [
+    "вулиця",
+    "провулок",
+    "проспект",
+    "бульвар",
+    "набережна"
+  ],
+  "Reference Points": [
+    "міст",
+    "перехрестя",
+    "світлофор",
+    "площа"
+  ],
+  "Transport Infrastructure": [
+    "зупинка",
+    "станція",
+    "вхід",
+    "вихід"
+  ]
+}} />
+
+### Giving Directions
+
+*Put the words in the correct order to form natural Ukrainian sentences.*
+
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`прямо / Іди / наліво / потім / поверни`}
+    answer={`Іди прямо, потім поверни наліво.`}
+  />
+  <UnjumbleQuestion
+    words={`Де / станція / метро`}
+    answer={`Де станція метро?`}
+  />
+  <UnjumbleQuestion
+    words={`навпроти / Аптека / банку`}
+    answer={`Аптека навпроти банку.`}
+  />
+  <UnjumbleQuestion
+    words={`дістатися / Як / центру / до`}
+    answer={`Як дістатися до центру?`}
+  />
+  <UnjumbleQuestion
+    words={`автобусі / Я / на / їду / роботу / на`}
+    answer={`Я їду на роботу на автобусі.`}
+  />
+  <UnjumbleQuestion
+    words={`біля / Зупинка / світлофора`}
+    answer={`Зупинка біля світлофора.`}
+  />
+  <UnjumbleQuestion
+    words={`вулиці / вздовж / Іди / Шевченка`}
+    answer={`Іди вздовж вулиці Шевченка.`}
+  />
+  <UnjumbleQuestion
+    words={`Це / далеко / дуже`}
+    answer={`Це дуже далеко.`}
+  />
+  <UnjumbleQuestion
+    words={`перехресті / направо / На / поверніть`}
+    answer={`На перехресті поверніть направо.`}
+  />
+  <UnjumbleQuestion
+    words={`пішки / Я / університет / до / ходжу`}
+    answer={`Я ходжу до університету пішки.`}
+  />
+  <UnjumbleQuestion
+    words={`між / Музей / театром / парком / і`}
+    answer={`Музей між театром і парком.`}
+  />
+  <UnjumbleQuestion
+    words={`близько / Ні / це`}
+    answer={`Ні, це близько.`}
+  />
+</Unjumble>
+
+### Question and Answer Pairs
+
+*Match common navigation questions with appropriate responses.*
+
+
+<MatchUp pairs={[
+  { left: `Де метро?`, right: `Прямо, біля банку.` },
+  { left: `Це далеко?`, right: `Ні, близько. П'ять хвилин пішки.` },
+  { left: `Як дістатися до центру?`, right: `На автобусі або на трамваї.` },
+  { left: `Де зупинка?`, right: `Навпроти парку.` },
+  { left: `Як ти їдеш на роботу?`, right: `Я їжджу метро.` },
+  { left: `Де вхід?`, right: `За мостом, наліво.` },
+  { left: `Перепрошую, де банк?`, right: `Біля світлофора, направо.` },
+  { left: `Скільки хвилин пішки?`, right: `Десь десять хвилин.` }
+]} />
+
+### Transportation Facts
+
+*Decide if each statement is true or false.*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`"Пішки" means "on foot."`}
+    isTrue={true}
+    explanation={`Correct! Пішки = walking.`}
+  />
+  <TrueFalseQuestion
+    statement={`You say "автобус" to mean "by bus."`}
+    isTrue={false}
+    explanation={`Incorrect. You say "на автобусі" (on the bus).`}
+  />
+  <TrueFalseQuestion
+    statement={`"Метро" is used alone without a preposition.`}
+    isTrue={true}
+    explanation={`Correct! "Я їду метро" (I go by metro).`}
+  />
+  <TrueFalseQuestion
+    statement={`"На машині" means "by bicycle."`}
+    isTrue={false}
+    explanation={`Incorrect. "На машині" = by car. By bicycle = "на велосипеді."`}
+  />
+  <TrueFalseQuestion
+    statement={`You use locative case (на + Loc) for most vehicles.`}
+    isTrue={true}
+    explanation={`Correct! На автобусі, на трамваї, на велосипеді.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Трамвай" and "трамваї" are the same form.`}
+    isTrue={false}
+    explanation={`Incorrect. "Трамвай" is nominative, "трамваї" is locative (used after "на").`}
+  />
+  <TrueFalseQuestion
+    statement={`"На таксі" is the correct way to say "by taxi."`}
+    isTrue={true}
+    explanation={`Correct! Таксі is indeclinable, so use "на таксі."`}
+  />
+  <TrueFalseQuestion
+    statement={`You can say "їду в автобусі" to mean "I go by bus."`}
+    isTrue={false}
+    explanation={`Incorrect. Use "їду на автобусі" (на, not в) for transportation.`}
+  />
+</TrueFalse>
+
+### Transportation Phrases
+
+*Put the words in order to form correct sentences about transportation.*
+
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`їду / Я / автобусі / на / щодня`}
+    answer={`Я їду на автобусі щодня.`}
+  />
+  <UnjumbleQuestion
+    words={`трамваї / вона / на / дістається / роботу / На`}
+    answer={`Вона дістається на роботу на трамваї.`}
+  />
+  <UnjumbleQuestion
+    words={`метро / Ми / їдемо / центру / до`}
+    answer={`Ми їдемо метро до центру.`}
+  />
+  <UnjumbleQuestion
+    words={`велосипеді / він / на / щодня / Їздить`}
+    answer={`Він їздить на велосипеді щодня.`}
+  />
+  <UnjumbleQuestion
+    words={`машині / Вони / на / приїхали`}
+    answer={`Вони приїхали на машині.`}
+  />
+  <UnjumbleQuestion
+    words={`університету / до / пішки / Я / ходжу`}
+    answer={`Я ходжу до університету пішки.`}
+  />
+  <UnjumbleQuestion
+    words={`таксі / на / додому / Він / їде`}
+    answer={`Він їде додому на таксі.`}
+  />
+  <UnjumbleQuestion
+    words={`зупинка / Де / автобуса`}
+    answer={`Де зупинка автобуса?`}
+  />
+  <UnjumbleQuestion
+    words={`станція / там / Метро / прямо`}
+    answer={`Метро станція там, прямо.`}
+  />
+  <UnjumbleQuestion
+    words={`трамваї / їду / Зазвичай / на / я`}
+    answer={`Зазвичай я їду на трамваї.`}
+  />
+  <UnjumbleQuestion
+    words={`світлофора / Поверніть / направо / біля`}
+    answer={`Поверніть направо біля світлофора.`}
+  />
+  <UnjumbleQuestion
+    words={`перехресті / На / наліво / ідіть`}
+    answer={`На перехресті ідіть наліво.`}
+  />
+</Unjumble>
+

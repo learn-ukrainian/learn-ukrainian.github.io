@@ -5,19 +5,20 @@ title: "Nature & Weather"
 description: "Environment and Climate Vocabulary"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Nature & Weather
@@ -29,6 +30,17 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 This module covers essential vocabulary for discussing nature, weather, seasons, and the environment. Being able to talk about the weather is one of the most common conversation topics in any language.
 
 Ukrainian weather patterns vary significantly by region. Kyiv experiences cold winters and warm summers, while Crimea and Odesa have milder climates near the sea. The Carpathians receive heavy snowfall, making them perfect for winter sports.
+
+:::info
+🔗 External Resources
+
+**YouTube:** [Nature & Weather in Ukrainian...](https://www.youtube.com/watch?v=x9qlDTX3fVg) — Pinhok Languages
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+:::
+
 
 ---
 
@@ -49,7 +61,8 @@ Ukrainian landscapes are diverse and beautiful. Here is the essential vocabulary
 | пляж | beach | Пляж гарний. |
 | поле | field | Поле жовте влітку. |
 
-:::tip[Locative Case with Places]
+:::tip
+Locative Case with Places
 When describing being IN or AT a place, use the locative case:
 **в лісі** (in the forest), **на морі** (at the sea), **в горах** (in the mountains)
 Note: "на морі" uses НА because it refers to the surface of the sea, while "в морі" means under the water.
@@ -73,7 +86,8 @@ Weather vocabulary is essential for daily conversations. Ukrainian uses adverbs 
 | гроза | thunderstorm | Буде гроза ввечері. |
 | туман | fog | Вранці туман. |
 
-:::note[Weather Expressions]
+:::note
+Weather Expressions
 Ukrainians often ask "Яка сьогодні погода?" (What is the weather like today?)
 The response typically starts with "Сьогодні..." (Today it is...)
 For example: "Сьогодні сонячно" or "Сьогодні йде дощ"
@@ -101,89 +115,49 @@ Each season in Ukraine has its own beauty and character:
 
 Сьогодні субота. Сім'я Петренків їде на природу. Погода чудова!
 
-<div className="conversation">
-
 — Яка гарна погода! — каже тато. — Сонячно і тепло!
-
 — Так, ідеальний день для прогулянки, — погоджується мама.
-
-</div>
 
 Вони приїжджають до лісу. Ліс зелений і свіжий.
 
-<div className="conversation">
-
 — Подивіться, яке гарне озеро! — кричить Марійка.
-
 — Вода чиста і прозора! — додає Олесь.
-
-</div>
 
 Діти бігають по траві. Птахи співають на деревах.
 
-<div className="conversation">
-
 — Мамо, я бачу квітку! Яка вона гарна! — радіє Марійка.
-
 — Це ромашка. Влітку багато квітів у лісі.
-
-</div>
 
 Тато дивиться на небо.
 
-<div className="conversation">
-
 — Гляньте, хмари! Можливо, буде дощ.
-
 — Тоді давайте їсти! — пропонує мама.
-
-</div>
 
 Вони сідають і їдять бутерброди біля озера.
 
-<div className="conversation">
-
 — Я люблю природу! — каже Олесь.
-
 — Ми теж! — погоджується вся сім'я.
-
-</div>
 
 Після обіду вони гуляють біля озера. Тато показує дітям різних птахів.
 
-<div className="conversation">
-
 — Дивіться, це лелека! — каже тато. — Він живе біля води.
-
 — А це що за птах? — питає Марійка.
-
 — Це синичка. Вона співає дуже гарно.
-
-</div>
 
 Олесь бачить рибу в озері.
 
-<div className="conversation">
-
 — Мамо, там риба! Можна ловити?
-
 — Ні, сьогодні ми просто відпочиваємо.
-
-</div>
 
 Вечоріє. Сонце заходить. Небо стає оранжевим і рожевим.
 
-<div className="conversation">
-
 — Який гарний захід сонця! — каже мама.
-
 — Пора додому, — каже тато. — Завтра на роботу.
-
-</div>
 
 Сім'я Петренків щаслива. Вони провели чудовий день на природі.
 
-:::tip[Nature Vocabulary and Outdoor Activities]
+:::tip
+Nature Vocabulary and Outdoor Activities
 "Природа" means nature in general.
 "На природі" means outdoors or in nature.
 Ukrainians often go "на природу" for picnics and relaxation.
@@ -227,17 +201,13 @@ This tradition of spending time outdoors helps families connect with nature and 
 
 Оксана дивиться у вікно. Діти ліплять сніговика на подвір'ї.
 
-<div className="conversation">
-
 — Мамо, можна гуляти? — питає вона.
-
 — Так, але одягни теплу куртку! — відповідає мама.
-
-</div>
 
 Оксана біжить надвір. Зима чудова! Кожен сезон має свою красу.
 
-:::note[Пори Року в Україні]
+:::note
+Пори Року в Україні
 Україна має чотири різні пори року.
 Влітку температура досягає 35°C, а взимку падає до -15°C.
 Українці святкують прихід весни як час оновлення та надії.
@@ -302,333 +272,25 @@ When discussing weather in Ukrainian, these expressions will help you communicat
 
 ---
 
-## 🎯 Activities
 
-### Nature Words
 
-<MatchUp pairs={[
-  { left: `гора`, right: `mountain` },
-  { left: `долина`, right: `valley` },
-  { left: `ліс`, right: `forest` },
-  { left: `озеро`, right: `lake` },
-  { left: `ріка`, right: `river` },
-  { left: `море`, right: `sea` },
-  { left: `сонячно`, right: `sunny` },
-  { left: `хмарно`, right: `cloudy` },
-  { left: `дощ`, right: `rain` },
-  { left: `сніг`, right: `snow` },
-  { left: `весна`, right: `spring` },
-  { left: `зима`, right: `winter` }
-]} />
+> 💡 **Пори року**
+>
+> «В Україні чотири пори року: весна, літо, осінь, зима. Кожна прекрасна!»
+>
+> *Translation: "Ukraine has four seasons. Each is beautiful!"*
 
-### Nature & Weather
+> 🇺🇦 **Погода в Україні**
+>
+> Українські пори року дуже різноманітні:
+> - **Весна**: тепло, сонячно, квітнуть дерева
+> - **Літо**: жарко, часто йде дощ
+> - **Осінь**: прохолодно, золоте листя
+> - **Зима**: холодно, йде сніг
+>
+> Українці дуже люблять говорити про погоду! Це завжди гарна тема для розмови.
 
-<FillIn items={[
-  {
-    sentence: `Сьогодні [___]. (sunny)`,
-    answer: `сонячно`,
-    options: [`сонячно`, `хмарно`, `дощ`, `сніг`]
-  },  {
-    sentence: `Іде [___]. (rain)`,
-    answer: `дощ`,
-    options: [`сонячно`, `хмарно`, `дощ`, `сніг`]
-  },  {
-    sentence: `[___] гарна. (mountain)`,
-    answer: `Гора`,
-    options: [`Гора`, `Долина`, `Ріка`, `Море`]
-  },  {
-    sentence: `Ми плаваємо в [___]. (lake)`,
-    answer: `озері`,
-    options: [`горі`, `долині`, `озері`, `морі`]
-  },  {
-    sentence: `Я люблю [___]. (spring)`,
-    answer: `весну`,
-    options: [`весну`, `літо`, `осінь`, `зиму`]
-  },  {
-    sentence: `[___] холодна. (Winter)`,
-    answer: `Зима`,
-    options: [`Весна`, `Літо`, `Осінь`, `Зима`]
-  },  {
-    sentence: `Птахи співають у [___]. (forest)`,
-    answer: `лісі`,
-    options: [`горі`, `лісі`, `морі`, `полі`]
-  },  {
-    sentence: `Сьогодні [___]. (windy)`,
-    answer: `вітряно`,
-    options: [`сонячно`, `хмарно`, `вітряно`, `туманно`]
-  }
-]} />
 
-### Nature & Weather
-
-<Quiz questions={[
-  {
-    question: `\"Гора\" is:`,
-    options: [
-      { text: `Mountain`, correct: true },
-      { text: `Valley`, correct: false },
-      { text: `River`, correct: false }
-    ]
-  },  {
-    question: `\"Озеро\" is:`,
-    options: [
-      { text: `Lake`, correct: true },
-      { text: `Sea`, correct: false },
-      { text: `River`, correct: false }
-    ]
-  },  {
-    question: `\"Сонячно\" means:`,
-    options: [
-      { text: `Sunny`, correct: true },
-      { text: `Cloudy`, correct: false },
-      { text: `Rainy`, correct: false }
-    ]
-  },  {
-    question: `\"Дощ\" means:`,
-    options: [
-      { text: `Rain`, correct: true },
-      { text: `Snow`, correct: false },
-      { text: `Wind`, correct: false }
-    ]
-  },  {
-    question: `\"Весна\" is:`,
-    options: [
-      { text: `Spring`, correct: true },
-      { text: `Summer`, correct: false },
-      { text: `Winter`, correct: false }
-    ]
-  },  {
-    question: `\"Зима\" is:`,
-    options: [
-      { text: `Winter`, correct: true },
-      { text: `Summer`, correct: false },
-      { text: `Autumn`, correct: false }
-    ]
-  },  {
-    question: `\"Туман\" means:`,
-    options: [
-      { text: `Fog`, correct: true },
-      { text: `Rain`, correct: false },
-      { text: `Snow`, correct: false }
-    ]
-  },  {
-    question: `\"Літо\" means:`,
-    options: [
-      { text: `Summer`, correct: true },
-      { text: `Winter`, correct: false },
-      { text: `Autumn`, correct: false }
-    ]
-  }
-]} />
-
-### Story Comprehension
-
-<Cloze
-  passage={`Сім'я Петренків їде на [___:1]. (nature)
-Погода [___:2] і тепла. (sunny)
-Озеро [___:3] і прозоре. (clean)
-Оксана їде на [___:4] влітку. (sea)
-Осінь — це [___:5] пора. (golden)
-Взимку падає білий [___:6]. (snow)`}
-  blanks={[{ answer: `природу`, options: [`природу`, `море`, `дачу`] }, { answer: `сонячна`, options: [`сонячна`, `хмарна`, `дощова`] }, { answer: `чисте`, options: [`чисте`, `брудне`, `мале`] }, { answer: `море`, options: [`море`, `гори`, `ліс`] }, { answer: `золота`, options: [`золота`, `зелена`, `біла`] }, { answer: `сніг`, options: [`сніг`, `дощ`, `листя`] }]}
-/>
-
-### Weather Sentences
-
-<Unjumble items={[
-  { jumbled: `сонячно / Сьогодні / тепло / і`, answer: `Сьогодні сонячно і тепло.` },
-  { jumbled: `йде / Надворі / дощ`, answer: `Надворі йде дощ.` },
-  { jumbled: `холодно / Взимку / дуже`, answer: `Взимку дуже холодно.` },
-  { jumbled: `падає / білий / Сніг`, answer: `Падає білий сніг.` },
-  { jumbled: `чудова / погода / Яка`, answer: `Яка чудова погода!` },
-  { jumbled: `весну / Я / люблю`, answer: `Я люблю весну.` },
-  { jumbled: `хмарно / буде / Завтра`, answer: `Завтра буде хмарно.` },
-  { jumbled: `гарне / озеро / Яке`, answer: `Яке гарне озеро!` }
-]} />
-
-### Weather Mistakes
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Сьогодні **сніг** і тепло.`}
-    errorWord={`сніг`}
-    correctForm={`сонячно`}
-    options={[`сонячно`, `сніг`]}
-    explanation={`Snow and warm don't go together. Use \"сонячно\" (sunny) with warm weather.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми плаваємо в **горі**.`}
-    errorWord={`горі`}
-    correctForm={`озері`}
-    options={[`озері`, `горі`]}
-    explanation={`You swim in a lake (озеро) or sea, not a mountain.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`**Літо** — це холодна пора.`}
-    errorWord={`Літо`}
-    correctForm={`Зима`}
-    options={[`Зима`, `Літо`]}
-    explanation={`Winter (зима) is the cold season, not summer.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Падає білий **дощ**.`}
-    errorWord={`дощ`}
-    correctForm={`сніг`}
-    options={[`сніг`, `дощ`]}
-    explanation={`Snow (сніг) is white, not rain.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Птахи співають на **морі**.`}
-    errorWord={`морі`}
-    correctForm={`деревах`}
-    options={[`деревах`, `морі`]}
-    explanation={`Birds sing in trees (дерева), not at sea.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Влітку дуже **холодно**.`}
-    errorWord={`холодно`}
-    correctForm={`тепло`}
-    options={[`тепло`, `холодно`]}
-    explanation={`Summer is warm (тепло), not cold.`}
-  />
-</ErrorCorrection>
-
-### Seasons & Activities
-
-<MatchUp pairs={[
-  { left: `весна`, right: `квіти цвітуть` },
-  { left: `літо`, right: `відпочинок на морі` },
-  { left: `осінь`, right: `листя падає` },
-  { left: `зима`, right: `катання на ковзанах` },
-  { left: `гроза`, right: `блискавка і грім` },
-  { left: `туман`, right: `погана видимість` },
-  { left: `сонячно`, right: `хороша погода` },
-  { left: `сніг`, right: `білий покрив` }
-]} />
-
-### Nature Categories
-
-<GroupSort groups={{
-  "Landscape": ["гора", "долина", "ліс", "озеро", "ріка", "море"],
-  "Weather": ["сонячно", "хмарно", "дощ", "сніг", "вітер", "гроза"],
-  "Seasons": ["весна", "літо", "осінь", "зима"]
-}} />
-
-### Nature Facts
-
-<TrueFalse items={[
-  {
-    statement: `\"Гора\" = mountain.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Озеро\" = lake.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Ріка\" = sea.`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `\"Море\" = sea.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Сонячно\" = sunny.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Хмарно\" = sunny.`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `\"Дощ\" = rain.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Весна\" = spring.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Літо\" = winter.`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `\"Зима\" = winter.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Ліс\" = forest.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Долина\" = mountain.`,
-    isTrue: false,
-    explanation: ``
-  }
-]} />
-
-### Nature Words
-
-<Translate questions={[
-  {
-    source: `Mountain`,
-    options: [
-      { text: `гора`, correct: true },
-      { text: `долина`, correct: false },
-      { text: `ріка`, correct: false }
-    ]
-  },  {
-    source: `Lake`,
-    options: [
-      { text: `озеро`, correct: true },
-      { text: `ріка`, correct: false },
-      { text: `море`, correct: false }
-    ]
-  },  {
-    source: `Forest`,
-    options: [
-      { text: `ліс`, correct: true },
-      { text: `поле`, correct: false },
-      { text: `гора`, correct: false }
-    ]
-  },  {
-    source: `Sunny`,
-    options: [
-      { text: `сонячно`, correct: true },
-      { text: `хмарно`, correct: false },
-      { text: `дощ`, correct: false }
-    ]
-  },  {
-    source: `Rain`,
-    options: [
-      { text: `дощ`, correct: true },
-      { text: `сніг`, correct: false },
-      { text: `вітер`, correct: false }
-    ]
-  },  {
-    source: `Spring`,
-    options: [
-      { text: `весна`, correct: true },
-      { text: `літо`, correct: false },
-      { text: `зима`, correct: false }
-    ]
-  },  {
-    source: `Summer`,
-    options: [
-      { text: `літо`, correct: true },
-      { text: `зима`, correct: false },
-      { text: `осінь`, correct: false }
-    ]
-  },  {
-    source: `Winter`,
-    options: [
-      { text: `зима`, correct: true },
-      { text: `літо`, correct: false },
-      { text: `весна`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -663,3 +325,392 @@ When discussing weather in Ukrainian, these expressions will help you communicat
 | тварина | /tvaˈrɪna/ | animal | noun | f | fauna |
 | погода | /pɔˈɦɔda/ | weather | noun | f | climate |
 | клімат | /ˈklimat/ | climate | noun | m | environment |
+
+---
+
+## 🎯 Activities
+
+### Nature Words
+
+*Match Ukrainian to English.*
+
+
+<MatchUp pairs={[
+  { left: `гора`, right: `mountain` },
+  { left: `долина`, right: `valley` },
+  { left: `ліс`, right: `forest` },
+  { left: `озеро`, right: `lake` },
+  { left: `ріка`, right: `river` },
+  { left: `море`, right: `sea` },
+  { left: `сонячно`, right: `sunny` },
+  { left: `хмарно`, right: `cloudy` },
+  { left: `дощ`, right: `rain` },
+  { left: `сніг`, right: `snow` },
+  { left: `весна`, right: `spring` },
+  { left: `зима`, right: `winter` }
+]} />
+
+### Nature & Weather
+
+*Complete the sentences.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Сьогодні [___]. (sunny)`}
+    answer={`сонячно`}
+    options={[`сонячно`, `хмарно`, `дощ`, `сніг`]}
+  />
+  <FillInQuestion
+    sentence={`Іде [___]. (rain)`}
+    answer={`дощ`}
+    options={[`сонячно`, `хмарно`, `дощ`, `сніг`]}
+  />
+  <FillInQuestion
+    sentence={`[___] гарна. (mountain)`}
+    answer={`Гора`}
+    options={[`Гора`, `Долина`, `Ріка`, `Море`]}
+  />
+  <FillInQuestion
+    sentence={`Ми плаваємо в [___]. (lake)`}
+    answer={`озері`}
+    options={[`горі`, `долині`, `озері`, `морі`]}
+  />
+  <FillInQuestion
+    sentence={`Я люблю [___]. (spring)`}
+    answer={`весну`}
+    options={[`весну`, `літо`, `осінь`, `зиму`]}
+  />
+  <FillInQuestion
+    sentence={`[___] холодна. (Winter)`}
+    answer={`Зима`}
+    options={[`Весна`, `Літо`, `Осінь`, `Зима`]}
+  />
+  <FillInQuestion
+    sentence={`Дощ ___ цілий день. (rained all day)`}
+    answer={`йшов`}
+    options={[`йшов`, `пішов`]}
+  />
+  <FillInQuestion
+    sentence={`Раптом ___ дощ. (suddenly started)`}
+    answer={`пішов`}
+    options={[`йшов`, `пішов`]}
+  />
+  <FillInQuestion
+    sentence={`Птахи співають у [___]. (forest)`}
+    answer={`лісі`}
+    options={[`горі`, `лісі`, `морі`, `полі`]}
+  />
+  <FillInQuestion
+    sentence={`Сьогодні [___]. (windy)`}
+    answer={`вітряно`}
+    options={[`сонячно`, `хмарно`, `вітряно`, `туманно`]}
+  />
+</FillIn>
+
+### Nature & Weather
+
+<Quiz>
+  <QuizQuestion
+    question={`1. "Гора" is:`}
+    options={[`Mountain`, `Valley`, `River`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Озеро" is:`}
+    options={[`Lake`, `Sea`, `River`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Сонячно" means:`}
+    options={[`Sunny`, `Cloudy`, `Rainy`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Дощ" means:`}
+    options={[`Rain`, `Snow`, `Wind`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Весна" is:`}
+    options={[`Spring`, `Summer`, `Winter`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Зима" is:`}
+    options={[`Winter`, `Summer`, `Autumn`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Туман" means:`}
+    options={[`Fog`, `Rain`, `Snow`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Літо" means:`}
+    options={[`Summer`, `Winter`, `Autumn`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+
+
+### Weather Sentences
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`сонячно / Сьогодні / тепло / і`}
+    answer={`Сьогодні сонячно і тепло.`}
+  />
+  <UnjumbleQuestion
+    words={`йде / Надворі / дощ`}
+    answer={`Надворі йде дощ.`}
+  />
+  <UnjumbleQuestion
+    words={`холодно / Взимку / дуже`}
+    answer={`Взимку дуже холодно.`}
+  />
+  <UnjumbleQuestion
+    words={`падає / білий / Сніг`}
+    answer={`Падає білий сніг.`}
+  />
+  <UnjumbleQuestion
+    words={`чудова / погода / Яка`}
+    answer={`Яка чудова погода!`}
+  />
+  <UnjumbleQuestion
+    words={`весну / Я / люблю`}
+    answer={`Я люблю весну.`}
+  />
+  <UnjumbleQuestion
+    words={`хмарно / буде / Завтра`}
+    answer={`Завтра буде хмарно.`}
+  />
+  <UnjumbleQuestion
+    words={`гарне / озеро / Яке`}
+    answer={`Яке гарне озеро!`}
+  />
+</Unjumble>
+
+### Weather Mistakes
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Сьогодні **сніг** і тепло.`}
+    error={`сніг`}
+    answer={`сонячно`}
+    options={[`сонячно`, `сніг`]}
+    explanation={`Snow and warm don't go together. Use "сонячно" (sunny) with warm weather.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми плаваємо в **горі**.`}
+    error={`горі`}
+    answer={`озері`}
+    options={[`озері`, `горі`]}
+    explanation={`You swim in a lake (озеро) or sea, not a mountain.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`**Літо** — це холодна пора.`}
+    error={`Літо`}
+    answer={`Зима`}
+    options={[`Зима`, `Літо`]}
+    explanation={`Winter (зима) is the cold season, not summer.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Падає білий **дощ**.`}
+    error={`дощ`}
+    answer={`сніг`}
+    options={[`сніг`, `дощ`]}
+    explanation={`Snow (сніг) is white, not rain.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Птахи співають на **морі**.`}
+    error={`морі`}
+    answer={`деревах`}
+    options={[`деревах`, `морі`]}
+    explanation={`Birds sing in trees (дерева), not at sea.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Влітку дуже **холодно**.`}
+    error={`холодно`}
+    answer={`тепло`}
+    options={[`тепло`, `холодно`]}
+    explanation={`Summer is warm (тепло), not cold.`}
+  />
+</ErrorCorrection>
+
+### Seasons & Activities
+
+*Match seasons with typical activities.*
+
+
+<MatchUp pairs={[
+  { left: `весна`, right: `квіти цвітуть` },
+  { left: `літо`, right: `відпочинок на морі` },
+  { left: `осінь`, right: `листя падає` },
+  { left: `зима`, right: `катання на ковзанах` },
+  { left: `гроза`, right: `блискавка і грім` },
+  { left: `туман`, right: `погана видимість` },
+  { left: `сонячно`, right: `хороша погода` },
+  { left: `сніг`, right: `білий покрив` }
+]} />
+
+### Nature Categories
+
+*Sort words by category.*
+
+
+<GroupSort groups={{
+  "### Landscape": [
+    "гора",
+    "долина",
+    "ліс",
+    "озеро",
+    "ріка",
+    "море"
+  ],
+  "Weather": [
+    "сонячно",
+    "хмарно",
+    "дощ",
+    "сніг",
+    "вітер",
+    "гроза"
+  ],
+  "Seasons": [
+    "весна",
+    "літо",
+    "осінь",
+    "зима"
+  ]
+}} />
+
+### Nature Facts
+
+*Mark true or false.*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`"Гора" = mountain.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Озеро" = lake.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Ріка" = sea.`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Море" = sea.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Сонячно" = sunny.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Хмарно" = sunny.`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Дощ" = rain.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Весна" = spring.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Літо" = winter.`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Зима" = winter.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Ліс" = forest.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Долина" = mountain.`}
+    isTrue={false}
+    explanation={``}
+  />
+</TrueFalse>
+
+### Nature Words
+
+<Translate>
+  <TranslateItem
+    source={`1. Mountain`}
+    answer={`гора`}
+    options={[`гора`, `долина`, `ріка`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Lake`}
+    answer={`озеро`}
+    options={[`озеро`, `ріка`, `море`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Forest`}
+    answer={`ліс`}
+    options={[`ліс`, `поле`, `гора`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Sunny`}
+    answer={`сонячно`}
+    options={[`сонячно`, `хмарно`, `дощ`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Rain`}
+    answer={`дощ`}
+    options={[`дощ`, `сніг`, `вітер`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Spring`}
+    answer={`весна`}
+    options={[`весна`, `літо`, `зима`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Summer`}
+    answer={`літо`}
+    options={[`літо`, `зима`, `осінь`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Winter`}
+    answer={`зима`}
+    options={[`зима`, `літо`, `весна`]}
+    explanation={``}
+  />
+</Translate>
+

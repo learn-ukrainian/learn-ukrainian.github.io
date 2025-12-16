@@ -5,19 +5,20 @@ title: "Checkpoint 3"
 description: "Complex Ideas Review"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Warm-up
@@ -33,9 +34,21 @@ You can express opinions, feelings, and even talk to a doctor.
 3.  **The People:** Opinions, Gossip (Reported Speech), and Feelings.
 4.  **The Real World:** Medical Emergencies.
 
-:::note[Success Criteria]
+:::note
+Success Criteria
 By the end of this module, you should be able to say:
 "Although I was sick, I went to work because I wanted to finish the project which is important."
+:::
+
+
+:::info
+🔗 External Resources
+
+**YouTube:** [Complex sentences with " which or who" in English...](https://www.youtube.com/watch?v=IbpsiJIOr-g) — Ukrainian grammar
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 :::
 
 
@@ -73,7 +86,8 @@ To tell a good story, you need to order events.
 **Example:**
 *Спочатку* я встав. *Потім* я поснідав. *Поки* я їв, я читав. *Після того як* я поїв, я пішов. *Нарешті* я прийшов.
 
-:::info[English Translation]
+:::info
+English Translation
 First, I got up. Then, I had breakfast. While I was eating, I read. After I ate, I left. Finally, I arrived.
 Notice how "Поки" usually goes with imperfective verbs (doing), and "Після того як" often triggers main actions.
 :::
@@ -99,7 +113,8 @@ If he said "I am busy" (present), you report it as "He said that he IS busy" (pr
 | "I will come" | He said he **would** come | Він сказав, що він **прийде** | Keep Future |
 | "I did it" | He said he **had done** it | Він сказав, що він **зробив** це | Keep Past |
 
-:::tip[Warning]
+:::tip
+Warning
 Never change the tense in reported speech in Ukrainian!
 He said he **is** busy -> Він сказав, що він **зайнятий** (present).
 This makes Ukrainian reported speech much simpler than English! No complex sequence of tenses to memorize. Just repeat what you heard, but change "I" to "He".
@@ -156,31 +171,53 @@ Let's review some words that often confuse learners in Phase A2.3.
 ## Dialogue: The Sick Employee
 
 **Boss:** Алло, Андрію? Де ти?
+
 **Andriy:** Доброго ранку. Я дзвоню, **щоб** сказати, **що** я захворів.
+
 **Boss:** Що сталося?
+
 **Andriy:** У мене висока температура і болить горло.
+
 **Boss:** Це погано. Ти викликав лікаря?
+
 **Andriy:** Так. Лікар сказав, **що** це грип.
+
 **Boss:** Зрозуміло. Тобі треба лікуватися.
+
 **Andriy:** Я знаю. **Хоча** у нас сьогодні важлива зустріч, я не можу прийти.
+
 **Boss:** Не хвилюйся. **Головне**, **щоб** ти одужав.
+
 **Andriy:** Дякую. Я буду на зв'язку, **як тільки** мені стане краще.
+
 **Boss:** Відпочивай.
 
 ## Dialogue: The Interview
 
 **Interviewer:** Доброго дня. Розкажіть, чому ви хочете тут працювати?
+
 **Candidate:** Доброго дня. Я хочу працювати тут, **тому що** ваша компанія найкраща.
+
 **Interviewer:** Дякую. А що ви робили раніше?
+
 **Candidate:** **Спочатку** я вчився в університеті. **Потім** я працював у школі.
+
 **Interviewer:** Чому ви пішли зі школи?
+
 **Candidate:** Я пішов, **тому що** хотів змінити кар'єру.
+
 **Interviewer:** Що ви вмієте робити?
+
 **Candidate:** Я вмію писати коди, **які** працюють швидко.
+
 **Interviewer:** Чудово. А як ви працюєте в команді?
+
 **Candidate:** Я думаю, **що** я гарний командний гравець. **Хоча** я люблю працювати самостійно, я поважаю колег.
+
 **Interviewer:** Ми шукаємо людину, **яка** готова вчитися.
+
 **Candidate:** Це я! Я вчуся щодня, **щоб** бути кращим.
+
 **Interviewer:** Гаразд. Ми вам подзвонимо, **після того як** поговоримо з директором.
 
 ## Monologue: The Review of My Year
@@ -211,7 +248,8 @@ Let's review some words that often confuse learners in Phase A2.3.
 Це мій план.
 І я вірю, **що** він здійсниться.
 
-:::tip[Review Tip]
+:::tip
+Review Tip
 Read this monologue aloud.
 Circle every connector.
 Translate it to English logic: "Logic: Condition -> Result. Purpose -> Action."
@@ -223,7 +261,8 @@ Ukrainian logic is very strict!
 
 # Cultural Insight
 
-:::note[Fate and Future]
+:::note
+Fate and Future
 When talking about plans connectors like **коли** (when) and **якщо** (if), Ukrainians often add a touch of fatalism.
 - "Коли я поїду у відпустку... **якщо Бог дасть** (God willing)."
 - "Я зроблю це, **якщо все буде добре**."
@@ -256,333 +295,7 @@ You have mastered **Logic**.
 
 ---
 
-## 🎯 Activities
 
-### Logical Pairs
-
-<MatchUp pairs={[
-  { left: `Я не пішов,`, right: `тому що захворів.` },
-  { left: `Я пішов,`, right: `хоча захворів.` },
-  { left: `Я дзвоню,`, right: `щоб запитати.` },
-  { left: `Це лікар,`, right: `який лікує мене.` },
-  { left: `Він сказав,`, right: `що прийде.` },
-  { left: `Як тільки прийду,`, right: `подзвоню.` },
-  { left: `Перед тим як їсти,`, right: `мий руки.` },
-  { left: `Мені здається,`, right: `що це правда.` },
-  { left: `Я радий,`, right: `що ти тут.` },
-  { left: `Я думаю,`, right: `що все буде добре.` }
-]} />
-
-### The Ultimate Connector Test
-
-<FillIn items={[
-  {
-    sentence: `Я хочу, ___ ти прийшов. (Subjunctive/Purpose)`,
-    answer: `щоб`,
-    options: [`щоб`, `що`, `як`]
-  },  {
-    sentence: `Я знаю, ___ ти прийшов. (Fact)`,
-    answer: `що`,
-    options: [`що`, `щоб`, `як`]
-  },  {
-    sentence: `Це парк, ___ ми гуляли. (Place)`,
-    answer: `де`,
-    options: [`де`, `який`, `куди`]
-  },  {
-    sentence: `Це парк, ___ ми любимо. (Object)`,
-    answer: `який`,
-    options: [`який`, `де`, `що`]
-  },  {
-    sentence: `Ми пішли, ___ пішов дощ. (Cause)`,
-    answer: `тому що`,
-    options: [`тому що`, `хоча`, `щоб`]
-  },  {
-    sentence: `Ми пішли, ___ йшов дощ. (Contrast)`,
-    answer: `хоча`,
-    options: [`хоча`, `тому що`, `як`]
-  },  {
-    sentence: `___ я їв, я мовчав. (Duration)`,
-    answer: `Поки`,
-    options: [`Поки`, `Коли`, `Як тільки`]
-  },  {
-    sentence: `___ я з'їв, я пішов. (Sequence)`,
-    answer: `Після того як`,
-    options: [`Після того як`, `Поки`, `Хоча`]
-  }
-]} />
-
-### Grammar Master
-
-<Quiz questions={[
-  {
-    question: `\"Він сказав, що він хворий.\" - In English, \"said\" is past, \"is\" becomes...`,
-    options: [
-      { text: `was (Backshift)`, correct: true },
-      { text: `is (No change)`, correct: false }
-    ]
-  },  {
-    question: `\"Він сказав, що він хворий.\" - In Ukrainian, does the tense change?`,
-    options: [
-      { text: `No, keep original tense.`, correct: true },
-      { text: `Yes, backshift.`, correct: false }
-    ]
-  },  {
-    question: `Which word means \"Although\"?`,
-    options: [
-      { text: `Хоча`, correct: true },
-      { text: `Тому що`, correct: false },
-      { text: `Щоб`, correct: false }
-    ]
-  },  {
-    question: `Which word introduces a Purpose (\"in order to\")?`,
-    options: [
-      { text: `Щоб`, correct: true },
-      { text: `Що`, correct: false }
-    ]
-  },  {
-    question: `\"Книга, яку я читаю\" - Why \"яку\"?`,
-    options: [
-      { text: `Accusative (Object of read)`, correct: true },
-      { text: `Nominative (Subject)`, correct: false }
-    ]
-  },  {
-    question: `\"У мене болить...\" requires the body part to be in which case?`,
-    options: [
-      { text: `Nominative`, correct: true },
-      { text: `Accusative`, correct: false },
-      { text: `Genitive`, correct: false }
-    ]
-  },  {
-    question: `\"Мені здається\" is used for:`,
-    options: [
-      { text: `Opinions`, correct: true },
-      { text: `Facts`, correct: false },
-      { text: `Commands`, correct: false }
-    ]
-  },  {
-    question: `\"Спочатку\" means:`,
-    options: [
-      { text: `At first`, correct: true },
-      { text: `Finally`, correct: false }
-    ]
-  }
-]} />
-
-### The Complex Sentence
-
-<Unjumble items={[
-  { jumbled: `я / що / думаю / ти / правий`, answer: `Я думаю, що ти правий.` },
-  { jumbled: `пішов / хоча / він / був / дощ`, answer: `Він пішов, хоча був дощ.` },
-  { jumbled: `ми / вчимося / знати / щоб / більше`, answer: `Ми вчимося, щоб знати більше.` },
-  { jumbled: `це / місто / в / я / живу / якому`, answer: `Це місто, в якому я живу.` },
-  { jumbled: `того / після / як / встав / снідав / я`, answer: `Після того як встав, я снідав.` },
-  { jumbled: `сказав / лікар / що / здоровий / я`, answer: `Лікар сказав, що я здоровий.` }
-]} />
-
-### Categories of Logic
-
-<GroupSort groups={{
-  "Time (Коли)": ["Поки", "Після того як", "Перед тим як", "Як тільки", "Спочатку", "Нарешті"],
-  "Logic (Чому)": ["Тому що", "Через те, що", "Тому", "Хоча", "Однак", "Щоб"]
-}} />
-
-### Concepts Review
-
-<TrueFalse items={[
-  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False (Simultaneous)`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False (No backshift!)`,
-    isTrue: false,
-    explanation: ``
-  }
-]} />
-
-### The Final Story
-
-<Cloze
-  passage={`[___:1] я приїхав у Львів, я був вражений.
-Я побачив місто, [___:2] виглядало як казка.
-Я хотів пити каву, [___:3] Львів славиться кавою.
-[___:4] я не знав, де найкраща кав'ярня.
-Я запитав перехожого: \"Скажіть, будь ласка, [___:5] тут можна випити каву?\"
-Він сказав, [___:6] є гарне місце за рогом.
-Я пішов туди, [___:7] насолодитися атмосферою.`}
-  blanks={[{ answer: `Коли`, options: [`Коли`] }, { answer: `яке`, options: [`яке`] }, { answer: `тому що`, options: [`тому що`] }, { answer: `Але`, options: [`Але`] }, { answer: `де`, options: [`де`] }, { answer: `що`, options: [`що`] }, { answer: `щоб`, options: [`щоб`] }]}
-/>
-
-### The Incident
-
-<DialogueReorder lines={[
-  { text: `Чому ти запізнився?`, order: 1 },
-  { text: `Вибачте. Спочатку я проспав.`, order: 2 },
-  { text: `А потім?`, order: 3 },
-  { text: `Потім я не міг знайти ключі, які лежали під ліжком.`, order: 4 },
-  { text: `І це все?`, order: 5 },
-  { text: `Ні. Коли я вийшов, почався дощ.`, order: 6 },
-  { text: `Але ти тут. Це головне.`, order: 7 },
-  { text: `Так, хоча я дуже мокрий.`, order: 8 }
-]} />
-
-### Connector Spotting
-
-<MarkTheWords>
-<MarkTheWordsActivity
-  text={`Я не знаю, де він живе. Він сказав, що прийде, хоча він не обіцяв. Я роблю це, тому що люблю. Це дім, у якому я ріс. Коли я сплю, я бачу сни.`}
-  correctWords={[`де`, `що`, `хоча`, `тому що`, `у якому`, `Коли`]}
-/>
-<MarkTheWordsActivity
-  text={`Стіл стоїть. Книга лежить. Сонце світить.`}
-  correctWords={[`Стіл`, `Книга`, `Сонце`]}
-/>
-</MarkTheWords>
-
-### Fix the Mistakes
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я вчуся, **що** хочу знати. (Logic)`}
-    errorWord={`що`}
-    correctForm={`тому що`}
-    options={[`тому що`, `що`]}
-    explanation={`Cause requires \"тому що\".`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я хочу, **що** ти прийшов. (Subjunctive)`}
-    errorWord={`що`}
-    correctForm={`щоб`}
-    options={[`щоб`, `що`]}
-    explanation={`Desire/Subjunctive requires \"щоб\".`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Це місто, **який** я люблю. (Gender)`}
-    errorWord={`який`}
-    correctForm={`яке`}
-    options={[`яке`, `який`]}
-    explanation={`City (містo) is Neuter -> яке.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він сказав, що він **був** зайнятий зараз. (Backshift error)`}
-    errorWord={`був`}
-    correctForm={`зайнятий`}
-    options={[`зайнятий`, `був`]}
-    explanation={`Keep original tense (present). He said he IS busy.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`**Поки** я прийшов, вона пішла. (Time aspect)`}
-    errorWord={`Поки`}
-    correctForm={`Коли`}
-    options={[`Коли`, `Поки`]}
-    explanation={`Point in time -> Коли.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я пішов гуляти, **тому що** я хотів спати. (Illogical)`}
-    errorWord={`тому що`}
-    correctForm={`хоча`}
-    options={[`хоча`, `тому що`]}
-    explanation={`Contrast logic.`}
-  />
-</ErrorCorrection>
-
-### English to Ukrainian
-
-<Translate questions={[
-  {
-    source: `I know that you are smart.`,
-    options: [
-      { text: `Я знаю, що ти розумний.`, correct: true },
-      { text: `Я знаю, щоб ти розумний.`, correct: false }
-    ]
-  },  {
-    source: `The car which I bought.`,
-    options: [
-      { text: `Машина, яку я купив.`, correct: true },
-      { text: `Машина, яка я купив.`, correct: false }
-    ]
-  },  {
-    source: `Because I can.`,
-    options: [
-      { text: `Тому що я можу.`, correct: true },
-      { text: `Хоча я можу.`, correct: false }
-    ]
-  },  {
-    source: `Although it is raining.`,
-    options: [
-      { text: `Хоча йде дощ.`, correct: true },
-      { text: `Тому що йде дощ.`, correct: false }
-    ]
-  },  {
-    source: `First... Then...`,
-    options: [
-      { text: `Спочатку... Потім...`, correct: true },
-      { text: `Перший... Тоді...`, correct: false }
-    ]
-  },  {
-    source: `He said that he loved her.`,
-    options: [
-      { text: `Він сказав, що кохає її.`, correct: true },
-      { text: `Він сказав, що кохав її.`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -617,3 +330,317 @@ You have mastered **Logic**.
 | надіятися | /nɑˈdijɑtɪsʲɑ/ | to hope | verb | — | mental |
 | мріяти | /ˈmrijɑtɪ/ | to dream | verb | — | mental |
 | план | /plɑn/ | plan | noun | m | concept |
+
+---
+
+## 🎯 Activities
+
+### Logical Pairs
+
+*Match the start to the logical finish.*
+
+
+<MatchUp pairs={[
+  { left: `Я не пішов,`, right: `тому що захворів.` },
+  { left: `Я пішов,`, right: `хоча захворів.` },
+  { left: `Я дзвоню,`, right: `щоб запитати.` },
+  { left: `Це лікар,`, right: `який лікує мене.` },
+  { left: `Він сказав,`, right: `що прийде.` },
+  { left: `Як тільки прийду,`, right: `подзвоню.` },
+  { left: `Перед тим як їсти,`, right: `мий руки.` },
+  { left: `Мені здається,`, right: `що це правда.` },
+  { left: `Я радий,`, right: `що ти тут.` },
+  { left: `Я думаю,`, right: `що все буде добре.` }
+]} />
+
+### The Ultimate Connector Test
+
+*Choose description.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я хочу, ___ ти прийшов. (Subjunctive/Purpose)`}
+    answer={`щоб`}
+    options={[`щоб`, `що`, `як`]}
+  />
+  <FillInQuestion
+    sentence={`Я знаю, ___ ти прийшов. (Fact)`}
+    answer={`що`}
+    options={[`що`, `щоб`, `як`]}
+  />
+  <FillInQuestion
+    sentence={`Це парк, ___ ми гуляли. (Place)`}
+    answer={`де`}
+    options={[`де`, `який`, `куди`]}
+  />
+  <FillInQuestion
+    sentence={`Це парк, ___ ми любимо. (Object)`}
+    answer={`який`}
+    options={[`який`, `де`, `що`]}
+  />
+  <FillInQuestion
+    sentence={`Ми пішли, ___ пішов дощ. (Cause)`}
+    answer={`тому що`}
+    options={[`тому що`, `хоча`, `щоб`]}
+  />
+  <FillInQuestion
+    sentence={`Ми пішли, ___ йшов дощ. (Contrast)`}
+    answer={`хоча`}
+    options={[`хоча`, `тому що`, `як`]}
+  />
+  <FillInQuestion
+    sentence={`___ я їв, я мовчав. (Duration)`}
+    answer={`Поки`}
+    options={[`Поки`, `Коли`, `Як тільки`]}
+  />
+  <FillInQuestion
+    sentence={`___ я з'їв, я пішов. (Sequence)`}
+    answer={`Після того як`}
+    options={[`Після того як`, `Поки`, `Хоча`]}
+  />
+</FillIn>
+
+### Grammar Master
+
+<Quiz>
+  <QuizQuestion
+    question={`1. "Він сказав, що він хворий." - In English, "said" is past, "is" becomes...`}
+    options={[`was (Backshift)`, `is (No change)`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Він сказав, що він хворий." - In Ukrainian, does the tense change?`}
+    options={[`No, keep original tense.`, `Yes, backshift.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Which word means "Although"?`}
+    options={[`Хоча`, `Тому що`, `Щоб`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Which word introduces a Purpose ("in order to")?`}
+    options={[`Щоб`, `Що`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Книга, яку я читаю" - Why "яку"?`}
+    options={[`Accusative (Object of read)`, `Nominative (Subject)`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"У мене болить..." requires the body part to be in which case?`}
+    options={[`Nominative`, `Accusative`, `Genitive`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Мені здається" is used for:`}
+    options={[`Opinions`, `Facts`, `Commands`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Спочатку" means:`}
+    options={[`At first`, `Finally`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### The Complex Sentence
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`я / що / думаю / ти / правий`}
+    answer={`Я думаю, що ти правий.`}
+  />
+  <UnjumbleQuestion
+    words={`пішов / хоча / він / був / дощ`}
+    answer={`Він пішов, хоча був дощ.`}
+  />
+  <UnjumbleQuestion
+    words={`ми / вчимося / знати / щоб / більше`}
+    answer={`Ми вчимося, щоб знати більше.`}
+  />
+  <UnjumbleQuestion
+    words={`це / місто / в / я / живу / якому`}
+    answer={`Це місто, в якому я живу.`}
+  />
+  <UnjumbleQuestion
+    words={`того / після / як / встав / снідав / я`}
+    answer={`Після того як встав, я снідав.`}
+  />
+  <UnjumbleQuestion
+    words={`сказав / лікар / що / здоровий / я`}
+    answer={`Лікар сказав, що я здоровий.`}
+  />
+</Unjumble>
+
+### Categories of Logic
+
+<GroupSort groups={{
+  "### Time (Коли)": [
+    "Поки",
+    "Після того як",
+    "Перед тим як",
+    "Як тільки",
+    "Спочатку",
+    "Нарешті"
+  ],
+  "Logic (Чому)": [
+    "Тому що",
+    "Через те, що",
+    "Тому",
+    "Хоча",
+    "Однак",
+    "Щоб"
+  ]
+}} />
+
+
+
+
+
+### The Incident
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Чому ти запізнився?"
+  },
+  {
+    "speaker": "",
+    "line": "Вибачте. Спочатку я проспав."
+  },
+  {
+    "speaker": "",
+    "line": "А потім?"
+  },
+  {
+    "speaker": "",
+    "line": "Потім я не міг знайти ключі, які лежали під ліжком."
+  },
+  {
+    "speaker": "",
+    "line": "І це все?"
+  },
+  {
+    "speaker": "",
+    "line": "Ні. Коли я вийшов, почався дощ."
+  },
+  {
+    "speaker": "",
+    "line": "Але ти тут. Це головне."
+  },
+  {
+    "speaker": "",
+    "line": "Так, хоча я дуже мокрий."
+  }
+]} />
+</DialogueReorder>
+
+### Connector Spotting
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Я не знаю, де він живе. Він сказав, що прийде, хоча він не обіцяв. Я роблю це, тому що люблю. Це дім, у якому я ріс. Коли я сплю, я бачу сни. Стіл(incorrect) стоїть. Книга(incorrect) лежить. Сонце(incorrect) світить.`}
+    correctWords={[`де`, `що`, `хоча`, `тому що`, `у якому`, `Коли`, `Стіл`, `Книга`, `Сонце`]}
+  />
+</MarkTheWords>
+
+### Fix the Mistakes
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я вчуся, **що** хочу знати. (Logic)`}
+    error={`що`}
+    answer={`тому що`}
+    options={[`тому що`, `що`]}
+    explanation={`Cause requires "тому що".`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я хочу, **що** ти прийшов. (Subjunctive)`}
+    error={`що`}
+    answer={`щоб`}
+    options={[`щоб`, `що`]}
+    explanation={`Desire/Subjunctive requires "щоб".`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Це місто, **який** я люблю. (Gender)`}
+    error={`який`}
+    answer={`яке`}
+    options={[`яке`, `який`]}
+    explanation={`City (містo) is Neuter -> яке.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він сказав, що він **був** зайнятий зараз. (Backshift error)`}
+    error={`був`}
+    answer={`зайнятий`}
+    options={[`зайнятий`, `був`]}
+    explanation={`Keep original tense (present). He said he IS busy.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`**Поки** я прийшов, вона пішла. (Time aspect)`}
+    error={`Поки`}
+    answer={`Коли`}
+    options={[`Коли`, `Поки`]}
+    explanation={`Point in time -> Коли.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я пішов гуляти, **тому що** я хотів спати. (Illogical)`}
+    error={`тому що`}
+    answer={`хоча`}
+    options={[`хоча`, `тому що`]}
+    explanation={`Contrast logic.`}
+  />
+</ErrorCorrection>
+
+### English to Ukrainian
+
+<Translate>
+  <TranslateItem
+    source={`1. I know that you are smart.`}
+    answer={`Я знаю, що ти розумний.`}
+    options={[`Я знаю, що ти розумний.`, `Я знаю, щоб ти розумний.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`The car which I bought.`}
+    answer={`Машина, яку я купив.`}
+    options={[`Машина, яку я купив.`, `Машина, яка я купив.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Because I can.`}
+    answer={`Тому що я можу.`}
+    options={[`Тому що я можу.`, `Хоча я можу.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Although it is raining.`}
+    answer={`Хоча йде дощ.`}
+    options={[`Хоча йде дощ.`, `Тому що йде дощ.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`First... Then...`}
+    answer={`Спочатку... Потім...`}
+    options={[`Спочатку... Потім...`, `Перший... Тоді...`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`He said that he loved her.`}
+    answer={`Він сказав, що кохає її.`}
+    options={[`Він сказав, що кохає її.`, `Він сказав, що кохав її.`]}
+    explanation={``}
+  />
+</Translate>
+

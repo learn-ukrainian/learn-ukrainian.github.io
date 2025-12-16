@@ -5,19 +5,20 @@ title: "Technology & Media"
 description: "Digital Life in Ukrainian"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Technology & Media
@@ -30,7 +31,8 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 
 Technology connects us. In this module, you'll learn to talk about your devices, internet habits, and how you consume media in Ukrainian. From "downloading" files to "liking" posts, you will master the digital vocabulary.
 
-:::warning[**Myth Buster** "Paper Bureaucracy"]
+:::warning
+**Myth Buster** "Paper Bureaucracy"
 Forget the stereotype of endless paperwork! Ukraine is a world leader in digital governance. The app **Дія** (Action) allows citizens to carry digital passports, pay taxes, and access services on their smartphones. Ukraine was the first country to equate digital passports to physical ones!
 :::
 
@@ -67,7 +69,8 @@ Going online is essential:
 - **зв'язок** — connection: *Тут поганий зв'язок.*
 - **онлайн / офлайн** — online / offline: *Він зараз онлайн.*
 
-:::note[**History Bite** The Cybernetic Pioneer]
+:::note
+**History Bite** The Cybernetic Pioneer
 Did you know the first computer in continental Europe was built in Kyiv? In 1951, **MESM** was created by Serhiy Lebedev. Later, Victor Glushkov founded the Institute of Cybernetics in Kyiv, pioneering early concepts of the internet and digital economy ("OGAS"). Kyiv has deep cybernetic roots!
 :::
 
@@ -95,7 +98,8 @@ Verbs for the digital age:
 - **надсилати** — to send: *Я надсилаю повідомлення.*
 - **коментувати** — to comment: *Ми коментуємо новини.*
 
-:::note[**Cultural Insight** Telegram Nation]
+:::note
+**Cultural Insight** Telegram Nation
 While Facebook and Instagram are popular, **Telegram** is critical in Ukraine. It's not just a messenger; it's the primary source of news, air raid alerts, and community organization. Everyone has "TG" channels they follow religiously.
 :::
 
@@ -117,7 +121,8 @@ Being online requires safety (**безпека**).
 - **приватність** (privacy) is important. Don't share your address.
 - **шахрай** (scammer) wants your money.
 
-:::tip[**Tip** "Like" in Ukrainian]
+:::tip
+**Tip** "Like" in Ukrainian
 While **лайк** is common, the proper Ukrainian word is **вподобайка** (from *вподобати* - to like). You might see both!
 :::
 
@@ -167,15 +172,9 @@ While **лайк** is common, the proper Ukrainian word is **вподобайк�
 Андрій пише код, **завантажує** файли на сервер і **публікує** оновлення. Якщо він має питання, він **шукає** відповідь в інтернеті. Його робота вимагає уваги. Один неправильний символ — і програма не працює!
 
 В обід він дзвонить мамі по відеозв'язку (**video call**).
-<div className="conversation">
-
 — Привіт, мамо! Як справи?
-
 — Привіт, синку. Я не можу знайти свій серіал.
-
 — Зараз я тобі скину **посилання**, — каже Андрій.
-
-</div>
 
 Ввечері він вимикає комп'ютер. Його очі втомилися від екрана. Він бере **навушники** і йде бігати. Музика допомагає йому відпочити. Без технологій він не може працювати, але без спорту він не може жити.
 
@@ -183,18 +182,23 @@ While **лайк** is common, the proper Ukrainian word is **вподобайк�
 
 Бабуся Галина купила **планшет**. Вона хоче бути сучасною. Її онук, Максим, допомагає їй.
 
-<div className="conversation">
-
 — Бабусю, це твій **логін**, а це **пароль**, — пояснює Максим. — Не забудь їх!
-
 — Добре, а як знайти рецепт борщу? — питає Галина.
-
 — Треба відкрити **вебсайт** або Гугл і написати "борщ".
-
-</div>
 
 Галина швидко вчиться. Тепер вона має профіль у Фейсбуці. Вона **публікує** фото своїх пирогів. Сусіди пишуть їй гарні **коментарі**. Вона навіть слухає **подкаст** про садівництво!
 Інтернет — це цікаво, навіть якщо тобі 70 років.
+
+:::info
+🔗 External Resources
+
+**YouTube:** [100 basic Ukrainian IT terms / Ukrainian vocabulary: IT, Technologies,...](https://www.youtube.com/watch?v=BAuSNnrkCKM) — Red Purple Ukrainian
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+:::
+
 
 ## 📋 Summary
 
@@ -206,442 +210,7 @@ You learned to:
 
 Digital literacy is key in modern Ukrainian society. Use these words to stay connected!
 
-## 🎯 Activities
 
-### Tech Quiz
-
-<Quiz questions={[
-  {
-    question: `What do you use to type?`,
-    options: [
-      { text: `клавіатура`, correct: true },
-      { text: `мишка`, correct: false },
-      { text: `екран`, correct: false }
-    ]
-  },  {
-    question: `Where do you read articles?`,
-    options: [
-      { text: `на вебсайті`, correct: true },
-      { text: `в навушниках`, correct: false },
-      { text: `на мишці`, correct: false }
-    ]
-  },  {
-    question: `What fits in your pocket?`,
-    options: [
-      { text: `смартфон`, correct: true },
-      { text: `комп'ютер`, correct: false },
-      { text: `телевізор`, correct: false }
-    ]
-  },  {
-    question: `What do you need to log in?`,
-    options: [
-      { text: `пароль`, correct: true },
-      { text: `лайк`, correct: false },
-      { text: `коментар`, correct: false }
-    ]
-  },  {
-    question: `Who writes a blog?`,
-    options: [
-      { text: `блогер`, correct: true },
-      { text: `лікар`, correct: false },
-      { text: `водій`, correct: false }
-    ]
-  },  {
-    question: `What is \"to download\"?`,
-    options: [
-      { text: `завантажувати`, correct: true },
-      { text: `шукати`, correct: false },
-      { text: `надсилати`, correct: false }
-    ]
-  },  {
-    question: `Where do you listen to music privately?`,
-    options: [
-      { text: `у навушниках`, correct: true },
-      { text: `на екрані`, correct: false },
-      { text: `в новинах`, correct: false }
-    ]
-  },  {
-    question: `What is a \"link\"?`,
-    options: [
-      { text: `посилання`, correct: true },
-      { text: `повідомлення`, correct: false },
-      { text: `стаття`, correct: false }
-    ]
-  },  {
-    question: `What do you do with a query in Google?`,
-    options: [
-      { text: `шукати`, correct: true },
-      { text: `публікувати`, correct: false },
-      { text: `купувати`, correct: false }
-    ]
-  },  {
-    question: `Is Ukraine digitally advanced?`,
-    options: [
-      { text: `Yes, very (Дія app)`, correct: true },
-      { text: `No, paper only`, correct: false },
-      { text: `Only in Kyiv`, correct: false }
-    ]
-  },  {
-    question: `What is \"network\"?`,
-    options: [
-      { text: `мережа`, correct: true },
-      { text: `павутина`, correct: false },
-      { text: `новина`, correct: false }
-    ]
-  },  {
-    question: `What action shows approval online?`,
-    options: [
-      { text: `лайк`, correct: true },
-      { text: `блок`, correct: false },
-      { text: `спам`, correct: false }
-    ]
-  }
-]} />
-
-### Digital Terms
-
-<MatchUp pairs={[
-  { left: `комп'ютер`, right: `computer` },
-  { left: `мишка`, right: `mouse` },
-  { left: `екран`, right: `screen` },
-  { left: `пароль`, right: `password` },
-  { left: `новини`, right: `news (pl)` },
-  { left: `стаття`, right: `article` },
-  { left: `посилання`, right: `link` },
-  { left: `мережа`, right: `network` },
-  { left: `зв'язок`, right: `connection (signal)` },
-  { left: `навушники`, right: `headphones` },
-  { left: `повідомлення`, right: `message` },
-  { left: `блогер`, right: `blogger` }
-]} />
-
-### Tech Sentences
-
-<FillIn items={[
-  {
-    sentence: `Я забув свій ____.`,
-    answer: `пароль`,
-    options: [`пароль`, `екран`, `стіл`, `кіт`]
-  },  {
-    sentence: `Надішли мені ____ на це відео.`,
-    answer: `посилання`,
-    options: [`посилання`, `мишку`, `клавіатуру`, `каву`]
-  },  {
-    sentence: `Він купив новий ____.`,
-    answer: `ноутбук`,
-    options: [`ноутбук`, `ноутбука`, `ноутбуком`, `ноутбуки`]
-  },  {
-    sentence: `Вона пише цікавий ____.`,
-    answer: `блог`,
-    options: [`блог`, `блога`, `блогом`, `блогу`]
-  },  {
-    sentence: `Ми читаємо ____ в інтернеті.`,
-    answer: `новини`,
-    options: [`новини`, `новина`, `новиною`, `новин`]
-  },  {
-    sentence: `У мене розбився ____ телефона.`,
-    answer: `екран`,
-    options: [`екран`, `клавіатура`, `мишка`, `звук`]
-  },  {
-    sentence: `Я ____ файл з інтернету.`,
-    answer: `завантажую`,
-    options: [`завантажую`, `шукаю`, `пишу`, `сплю`]
-  },  {
-    sentence: `Це мій улюблений ____.`,
-    answer: `сайт`,
-    options: [`сайт`, `сайту`, `сайтом`, `сайти`]
-  },  {
-    sentence: `Ти читав цю ____?`,
-    answer: `статтю`,
-    options: [`статтю`, `стаття`, `статті`, `статтею`]
-  },  {
-    sentence: `Тут поганий ____.`,
-    answer: `зв'язок`,
-    options: [`зв'язок`, `телефон`, `комп'ютер`, `стіл`]
-  },  {
-    sentence: `Він завжди ____.`,
-    answer: `онлайн`,
-    options: [`онлайн`, `офлайн`, `вдома`, `спить`]
-  },  {
-    sentence: `Постав мені ____!`,
-    answer: `лайк`,
-    options: [`лайк`, `коментар`, `бан`, `дізлайк`]
-  }
-]} />
-
-### Tech Facts
-
-<TrueFalse items={[
-  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Yes, mouse (animal) and mouse (device) are both мишка.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Новини is plural (news). One piece of news = новина.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `It means to download/upload. Delete is видаляти.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Telegram is a major news source.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Yes, it's a loan word. Also знімок екрана.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Diia is a digital app for government services.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Like \"headphones\" or \"pants\", it's plural only (pluralia tantum).`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Passwords should be secret.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `It was built in Kyiv (MESM).`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `To publish/post. To read is читати.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Yes, blogger/vlogger.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Phonetic borrowing: вайфай.`
-  }
-]} />
-
-### Hardware vs Software
-
-<GroupSort groups={{
-  "Groups": ["Hardware (Gadjety)", "Software/Internet", "Actions"],
-  "Items": ["комп'ютер: Hardware (Gadjety)", "мишка: Hardware (Gadjety)", "клавіатура: Hardware (Gadjety)", "екран: Hardware (Gadjety)", "вебсайт: Software/Internet", "блог: Software/Internet", "пароль: Software/Internet", "посилання: Software/Internet", "завантажувати: Actions", "шукати: Actions", "публікувати: Actions", "коментувати: Actions"]
-}} />
-
-### Digital Sentences
-
-<Unjumble items={[
-  { jumbled: `Я / купив / новий / планшет`, answer: `Я купив новий планшет` },
-  { jumbled: `Надішли / мені / посилання / в / Телеграм`, answer: `Надішли мені посилання в Телеграм` },
-  { jumbled: `Вона / читає / новини / онлайн`, answer: `Вона читає новини онлайн` },
-  { jumbled: `Мій / комп'ютер / дуже / старий`, answer: `Мій комп'ютер дуже старий` },
-  { jumbled: `Я / не / пам'ятаю / пароль`, answer: `Я не пам'ятаю пароль` },
-  { jumbled: `Ми / дивимося / смішне / відео`, answer: `Ми дивимося смішне відео` },
-  { jumbled: `Він / пише / коментар / під / фото`, answer: `Він пише коментар під фото` },
-  { jumbled: `Бабуся / має / смартфон`, answer: `Бабуся має смартфон` },
-  { jumbled: `Тут / є / хороший / інтернет`, answer: `Тут є хороший інтернет` },
-  { jumbled: `Я / шукаю / інформацію / про / Київ`, answer: `Я шукаю інформацію про Київ` },
-  { jumbled: `Блогер / знімає / нове / відео`, answer: `Блогер знімає нове відео` },
-  { jumbled: `Ввімкни / будь ласка / свій / екран`, answer: `Ввімкни будь ласка свій екран` }
-]} />
-
-### Fix the Tech
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я читаю новина.`}
-    errorWord={`новина`}
-    correctForm={`новини`}
-    options={[`новини`, `новину`, `новина`, `новиною`]}
-    explanation={`Usually we read \"news\" in plural: новини.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він купив комп'ютера.`}
-    errorWord={`комп'ютера`}
-    correctForm={`комп'ютер`}
-    options={[`комп'ютер`, `комп'ютера`, `комп'ютеру`, `комп'ютером`]}
-    explanation={`Inanimate masculine accusative = nominative: комп'ютер.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона пише блогу.`}
-    errorWord={`блогу`}
-    correctForm={`блог`}
-    options={[`блог`, `блогу`, `блога`, `блогом`]}
-    explanation={`Inanimate masculine accusative = nominative: блог.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я шукаю інформація.`}
-    errorWord={`інформація`}
-    correctForm={`інформацію`}
-    options={[`інформацію`, `інформація`, `інформації`, `інформацією`]}
-    explanation={`Accusative feminine (-я -> -ю): інформацію.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми дивимося фільма.`}
-    errorWord={`фільма`}
-    correctForm={`фільм`}
-    options={[`фільм`, `фільма`, `фільму`, `фільми`]}
-    explanation={`Inanimate masculine accusative = nominative: фільм.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Надішли посилання в чаті.`}
-    errorWord={`чаті`}
-    correctForm={`чат`}
-    options={[`чат`, `чаті`, `чату`, `чатом`]}
-    explanation={`Direction (into where?) requires Accusative: в чат. (Locative 'в чаті' means location).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я забула свій логіну.`}
-    errorWord={`логіну`}
-    correctForm={`логін`}
-    options={[`логін`, `логіну`, `логіна`, `логіном`]}
-    explanation={`Inanimate masculine accusative = nominative: логін.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він сидить на інтернеті.`}
-    errorWord={`на`}
-    correctForm={`в`}
-    options={[`в`, `на`, `у`, `при`]}
-    explanation={`We say \"in the internet\": в інтернеті.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`У мене немає смартфон.`}
-    errorWord={`смартфон`}
-    correctForm={`смартфона`}
-    options={[`смартфона`, `смартфон`, `смартфону`, `смартфоном`]}
-    explanation={`Genitive of negation: немає смартфона (animate-like ending often used for gadgets, or standard genitive -а).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона лайкає фото.`}
-    errorWord={`палець`}
-    correctForm={`пальцем`}
-    options={[`пальцем`, `палець`, `пальця`, `пальцю`]}
-    explanation={`Instrumental (with what?): пальцем.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Екран телефон розбитий.`}
-    errorWord={`телефон`}
-    correctForm={`телефона`}
-    options={[`телефона`, `телефон`, `телефону`, `телефоном`]}
-    explanation={`Genitive possession: screen of phone -> екран телефона.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я слухаю музика.`}
-    errorWord={`музика`}
-    correctForm={`музику`}
-    options={[`музику`, `музика`, `музики`, `музикою`]}
-    explanation={`Accusative feminine: музику.`}
-  />
-</ErrorCorrection>
-
-### Digital Morning
-
-<Cloze
-  passage={`Мій ранок починається зі [___:1]. Я вимикаю будильник на [___:2].
-Потім я перевіряю [___:3] і читаю [___:4].
-Я п'ю каву і гортаю [___:5] в Інстаграмі.
-Мені подобається одна [___:6] про подорожі. Я ставлю [___:7].
-Потім я вмикаю [___:8] і починаю працювати [___:9].
-Сьогодні треба написати [___:10] для сайту.`}
-  blanks={[{ answer: `смартфона`, options: [`смартфона`, `книги`, `вікна`] }, { answer: `екрані`, options: [`екрані`, `столі`, `вулиці`] }, { answer: `пошту`, options: [`пошту`, `вікно`, `двері`] }, { answer: `новини`, options: [`новини`, `музику`, `ігри`] }, { answer: `стрічку`, options: [`стрічку`, `книгу`, `зошит`] }, { answer: `стаття`, options: [`стаття`, `пісня`, `гра`] }, { answer: `лайк`, options: [`лайк`, `бан`, `смайл`] }, { answer: `ноутбук`, options: [`ноутбук`, `телевізор`, `праску`] }, { answer: `онлайн`, options: [`онлайн`, `офлайн`, `спати`] }, { answer: `код`, options: [`код`, `пісню`, `обід`] }]}
-/>
-
-### IT Support
-
-<DialogueReorder lines={[
-  { text: `Алло, підтримка? У мене не працює інтернет.`, order: 1 },
-  { text: `Доброго дня. Який у вас логін?`, order: 2 },
-  { text: `Мій логін — user123.`, order: 3 },
-  { text: `Бачу ваш акаунт. Модем увімкнений?`, order: 4 },
-  { text: `Так, всі лампочки горять.`, order: 5 },
-  { text: `Спробуйте вимкнути його на 10 секунд.`, order: 6 },
-  { text: `Хвилиночку... Вимкнув... Увімкнув.`, order: 7 },
-  { text: `Тепер працює?`, order: 8 },
-  { text: `О, так! Дякую. Ви мене врятували.`, order: 9 },
-  { text: `Будь ласка. Маєте ще питання?`, order: 10 },
-  { text: `Ні, це все. Гарного дня!`, order: 11 },
-  { text: `До побачення!`, order: 12 }
-]} />
-
-### Choose Best Word
-
-<Select questions={[
-  {
-    question: `I need to enter my...`,
-    options: [
-      { text: `пароль`, correct: true },
-      { text: `паспорт`, correct: false }
-    ]
-  },  {
-    question: `Click on the...`,
-    options: [
-      { text: `посилання`, correct: true },
-      { text: `пошту`, correct: false }
-    ]
-  },  {
-    question: `Read the...`,
-    options: [
-      { text: `статтю`, correct: true },
-      { text: `стілець`, correct: false }
-    ]
-  },  {
-    question: `Connect to the...`,
-    options: [
-      { text: `мережі`, correct: true },
-      { text: `вулиці`, correct: false }
-    ]
-  },  {
-    question: `Send a...`,
-    options: [
-      { text: `повідомлення`, correct: true },
-      { text: `книгу`, correct: false }
-    ]
-  },  {
-    question: `Watch a...`,
-    options: [
-      { text: `відео`, correct: true },
-      { text: `радіо`, correct: false }
-    ]
-  },  {
-    question: `Write a...`,
-    options: [
-      { text: `коментар`, correct: true },
-      { text: `роман`, correct: false }
-    ]
-  },  {
-    question: `Buy a...`,
-    options: [
-      { text: `ноутбук`, correct: true },
-      { text: `вікно`, correct: false }
-    ]
-  },  {
-    question: `Search in...`,
-    options: [
-      { text: `Гуглі`, correct: true },
-      { text: `кишені`, correct: false }
-    ]
-  },  {
-    question: `Charge the...`,
-    options: [
-      { text: `смартфон`, correct: true },
-      { text: `стіл`, correct: false }
-    ]
-  },  {
-    question: `Listen to a...`,
-    options: [
-      { text: `подкаст`, correct: true },
-      { text: `газету`, correct: false }
-    ]
-  },  {
-    question: `Work...`,
-    options: [
-      { text: `онлайн`, correct: true },
-      { text: `у лісі`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -676,3 +245,480 @@ Digital literacy is key in modern Ukrainian society. Use these words to stay con
 | публікувати | /publikuˈvatɪ/ | to publish | verb | - | |
 | надсилати | /nadsɪˈlatɪ/ | to send | verb | - | |
 | коментувати | /komentuˈvatɪ/ | to comment | verb | - | |
+
+---
+
+## 🎯 Activities
+
+### Tech Quiz
+
+<Quiz>
+  <QuizQuestion
+    question={`1. What do you use to type?`}
+    options={[`клавіатура`, `мишка`, `екран`]}
+    correctIndex={0}
+    explanation={`Keyboard = клавіатура.`}
+  />
+  <QuizQuestion
+    question={`Where do you read articles?`}
+    options={[`на вебсайті`, `в навушниках`, `на мишці`]}
+    correctIndex={0}
+    explanation={`On a website = на вебсайті.`}
+  />
+  <QuizQuestion
+    question={`What fits in your pocket?`}
+    options={[`смартфон`, `комп'ютер`, `телевізор`]}
+    correctIndex={0}
+    explanation={`Smartphone fits in a pocket.`}
+  />
+  <QuizQuestion
+    question={`What do you need to log in?`}
+    options={[`пароль`, `лайк`, `коментар`]}
+    correctIndex={0}
+    explanation={`Password = пароль.`}
+  />
+  <QuizQuestion
+    question={`Who writes a blog?`}
+    options={[`блогер`, `лікар`, `водій`]}
+    correctIndex={0}
+    explanation={`Blogger writes a blog.`}
+  />
+  <QuizQuestion
+    question={`What is "to download"?`}
+    options={[`завантажувати`, `шукати`, `надсилати`]}
+    correctIndex={0}
+    explanation={`Завантажувати = download (or upload contextually).`}
+  />
+  <QuizQuestion
+    question={`Where do you listen to music privately?`}
+    options={[`у навушниках`, `на екрані`, `в новинах`]}
+    correctIndex={0}
+    explanation={`In headphones = у навушниках.`}
+  />
+  <QuizQuestion
+    question={`What is a "link"?`}
+    options={[`посилання`, `повідомлення`, `стаття`]}
+    correctIndex={0}
+    explanation={`Link = посилання.`}
+  />
+  <QuizQuestion
+    question={`What do you do with a query in Google?`}
+    options={[`шукати`, `публікувати`, `купувати`]}
+    correctIndex={0}
+    explanation={`To search = шукати.`}
+  />
+  <QuizQuestion
+    question={`Is Ukraine digitally advanced?`}
+    options={[`Yes, very (Дія app)`, `No, paper only`, `Only in Kyiv`]}
+    correctIndex={0}
+    explanation={`Ukraine is a leader in digital governance (Diia).`}
+  />
+  <QuizQuestion
+    question={`What is "network"?`}
+    options={[`мережа`, `павутина`, `новина`]}
+    correctIndex={0}
+    explanation={`Network = мережа (social network = соціальна мережа).`}
+  />
+  <QuizQuestion
+    question={`What action shows approval online?`}
+    options={[`лайк`, `блок`, `спам`]}
+    correctIndex={0}
+    explanation={`Like = лайк.`}
+  />
+</Quiz>
+
+### Digital Terms
+
+<MatchUp pairs={[
+  { left: `комп'ютер`, right: `computer` },
+  { left: `мишка`, right: `mouse` },
+  { left: `екран`, right: `screen` },
+  { left: `пароль`, right: `password` },
+  { left: `новини`, right: `news (pl)` },
+  { left: `стаття`, right: `article` },
+  { left: `посилання`, right: `link` },
+  { left: `мережа`, right: `network` },
+  { left: `зв'язок`, right: `connection (signal)` },
+  { left: `навушники`, right: `headphones` },
+  { left: `повідомлення`, right: `message` },
+  { left: `блогер`, right: `blogger` }
+]} />
+
+### Tech Sentences
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я забув свій ____.`}
+    answer={`пароль`}
+    options={[`пароль`, `екран`, `стіл`, `кіт`]}
+  />
+  <FillInQuestion
+    sentence={`Надішли мені ____ на це відео.`}
+    answer={`посилання`}
+    options={[`посилання`, `мишку`, `клавіатуру`, `каву`]}
+  />
+  <FillInQuestion
+    sentence={`Він купив новий ____.`}
+    answer={`ноутбук`}
+    options={[`ноутбук`, `ноутбука`, `ноутбуком`, `ноутбуки`]}
+  />
+  <FillInQuestion
+    sentence={`Вона пише цікавий ____.`}
+    answer={`блог`}
+    options={[`блог`, `блога`, `блогом`, `блогу`]}
+  />
+  <FillInQuestion
+    sentence={`Ми читаємо ____ в інтернеті.`}
+    answer={`новини`}
+    options={[`новини`, `новина`, `новиною`, `новин`]}
+  />
+  <FillInQuestion
+    sentence={`У мене розбився ____ телефона.`}
+    answer={`екран`}
+    options={[`екран`, `клавіатура`, `мишка`, `звук`]}
+  />
+  <FillInQuestion
+    sentence={`Я ____ файл з інтернету.`}
+    answer={`завантажую`}
+    options={[`завантажую`, `шукаю`, `пишу`, `сплю`]}
+  />
+  <FillInQuestion
+    sentence={`Це мій улюблений ____.`}
+    answer={`сайт`}
+    options={[`сайт`, `сайту`, `сайтом`, `сайти`]}
+  />
+  <FillInQuestion
+    sentence={`Ти читав цю ____?`}
+    answer={`статтю`}
+    options={[`статтю`, `стаття`, `статті`, `статтею`]}
+  />
+  <FillInQuestion
+    sentence={`Тут поганий ____.`}
+    answer={`зв'язок`}
+    options={[`зв'язок`, `телефон`, `комп'ютер`, `стіл`]}
+  />
+  <FillInQuestion
+    sentence={`Він завжди ____.`}
+    answer={`онлайн`}
+    options={[`онлайн`, `офлайн`, `вдома`, `спить`]}
+  />
+  <FillInQuestion
+    sentence={`Постав мені ____!`}
+    answer={`лайк`}
+    options={[`лайк`, `коментар`, `бан`, `дізлайк`]}
+  />
+</FillIn>
+
+
+
+### Hardware vs Software
+
+<GroupSort groups={{
+  "Hardware (Gadjety)": [
+    "комп'ютер",
+    "мишка",
+    "клавіатура",
+    "екран"
+  ],
+  "Software/Internet": [
+    "вебсайт",
+    "блог",
+    "пароль",
+    "посилання"
+  ],
+  "Actions": [
+    "завантажувати",
+    "шукати",
+    "публікувати",
+    "коментувати"
+  ]
+}} />
+
+### Digital Sentences
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`Я / купив / новий / планшет`}
+    answer={`Я купив новий планшет`}
+  />
+  <UnjumbleQuestion
+    words={`Надішли / мені / посилання / в / Телеграм`}
+    answer={`Надішли мені посилання в Телеграм`}
+  />
+  <UnjumbleQuestion
+    words={`Вона / читає / новини / онлайн`}
+    answer={`Вона читає новини онлайн`}
+  />
+  <UnjumbleQuestion
+    words={`Мій / комп'ютер / дуже / старий`}
+    answer={`Мій комп'ютер дуже старий`}
+  />
+  <UnjumbleQuestion
+    words={`Я / не / пам'ятаю / пароль`}
+    answer={`Я не пам'ятаю пароль`}
+  />
+  <UnjumbleQuestion
+    words={`Ми / дивимося / смішне / відео`}
+    answer={`Ми дивимося смішне відео`}
+  />
+  <UnjumbleQuestion
+    words={`Він / пише / коментар / під / фото`}
+    answer={`Він пише коментар під фото`}
+  />
+  <UnjumbleQuestion
+    words={`Бабуся / має / смартфон`}
+    answer={`Бабуся має смартфон`}
+  />
+  <UnjumbleQuestion
+    words={`Тут / є / хороший / інтернет`}
+    answer={`Тут є хороший інтернет`}
+  />
+  <UnjumbleQuestion
+    words={`Я / шукаю / інформацію / про / Київ`}
+    answer={`Я шукаю інформацію про Київ`}
+  />
+  <UnjumbleQuestion
+    words={`Блогер / знімає / нове / відео`}
+    answer={`Блогер знімає нове відео`}
+  />
+  <UnjumbleQuestion
+    words={`Ввімкни / будь ласка / свій / екран`}
+    answer={`Ввімкни будь ласка свій екран`}
+  />
+</Unjumble>
+
+### Fix the Tech
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я читаю новина.`}
+    error={`новина`}
+    answer={`новини`}
+    options={[`новини`, `новину`, `новина`, `новиною`]}
+    explanation={`Usually we read "news" in plural: новини.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він купив комп'ютера.`}
+    error={`комп'ютера`}
+    answer={`комп'ютер`}
+    options={[`комп'ютер`, `комп'ютера`, `комп'ютеру`, `комп'ютером`]}
+    explanation={`Inanimate masculine accusative = nominative: комп'ютер.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона пише блогу.`}
+    error={`блогу`}
+    answer={`блог`}
+    options={[`блог`, `блогу`, `блога`, `блогом`]}
+    explanation={`Inanimate masculine accusative = nominative: блог.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я шукаю інформація.`}
+    error={`інформація`}
+    answer={`інформацію`}
+    options={[`інформацію`, `інформація`, `інформації`, `інформацією`]}
+    explanation={`Accusative feminine (-я -> -ю): інформацію.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми дивимося фільма.`}
+    error={`фільма`}
+    answer={`фільм`}
+    options={[`фільм`, `фільма`, `фільму`, `фільми`]}
+    explanation={`Inanimate masculine accusative = nominative: фільм.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Надішли посилання в чаті.`}
+    error={`чаті`}
+    answer={`чат`}
+    options={[`чат`, `чаті`, `чату`, `чатом`]}
+    explanation={`Direction (into where?) requires Accusative: в чат. (Locative 'в чаті' means location).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я забула свій логіну.`}
+    error={`логіну`}
+    answer={`логін`}
+    options={[`логін`, `логіну`, `логіна`, `логіном`]}
+    explanation={`Inanimate masculine accusative = nominative: логін.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він сидить на інтернеті.`}
+    error={`на`}
+    answer={`в`}
+    options={[`в`, `на`, `у`, `при`]}
+    explanation={`We say "in the internet": в інтернеті.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`У мене немає смартфон.`}
+    error={`смартфон`}
+    answer={`смартфона`}
+    options={[`смартфона`, `смартфон`, `смартфону`, `смартфоном`]}
+    explanation={`Genitive of negation: немає смартфона (animate-like ending often used for gadgets, or standard genitive -а).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона лайкає фото.`}
+    error={`палець`}
+    answer={`пальцем`}
+    options={[`пальцем`, `палець`, `пальця`, `пальцю`]}
+    explanation={`Instrumental (with what?): пальцем.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Екран телефон розбитий.`}
+    error={`телефон`}
+    answer={`телефона`}
+    options={[`телефона`, `телефон`, `телефону`, `телефоном`]}
+    explanation={`Genitive possession: screen of phone -> екран телефона.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я слухаю музика.`}
+    error={`музика`}
+    answer={`музику`}
+    options={[`музику`, `музика`, `музики`, `музикою`]}
+    explanation={`Accusative feminine: музику.`}
+  />
+</ErrorCorrection>
+
+
+
+### IT Support
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Алло, підтримка? У мене не працює інтернет."
+  },
+  {
+    "speaker": "",
+    "line": "Доброго дня. Який у вас логін?"
+  },
+  {
+    "speaker": "",
+    "line": "Мій логін — user123."
+  },
+  {
+    "speaker": "",
+    "line": "Бачу ваш акаунт. Модем увімкнений?"
+  },
+  {
+    "speaker": "",
+    "line": "Так, всі лампочки горять."
+  },
+  {
+    "speaker": "",
+    "line": "Спробуйте вимкнути його на 10 секунд."
+  },
+  {
+    "speaker": "",
+    "line": "Хвилиночку... Вимкнув... Увімкнув."
+  },
+  {
+    "speaker": "",
+    "line": "Тепер працює?"
+  },
+  {
+    "speaker": "",
+    "line": "О, так! Дякую. Ви мене врятували."
+  },
+  {
+    "speaker": "",
+    "line": "Будь ласка. Маєте ще питання?"
+  },
+  {
+    "speaker": "",
+    "line": "Ні, це все. Гарного дня!"
+  },
+  {
+    "speaker": "",
+    "line": "До побачення!"
+  }
+]} />
+</DialogueReorder>
+
+### Find the Gadgets
+
+[!instruction] Mark all devices and tech words.
+
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Я люблю свій смартфон. Це мій головний гаджет. Вдома у мене є ноутбук і планшет. Я люблю грати в ігри на планшеті. Для роботи мені потрібен комп'ютер. У нього великий екран і зручна клавіатура. Я також маю бездротові навушники. Техніка допомагає мені бути онлайн.`}
+    correctWords={[`смартфон`, `гаджет`, `ноутбук`, `планшет`, `планшеті`, `комп'ютер`, `екран`, `клавіатура`, `навушники`, `онлайн`]}
+  />
+</MarkTheWords>
+
+### Choose Best Word
+
+<Select>
+  <SelectQuestion
+    question={`1. I need to enter my...`}
+    options={[`пароль`, `паспорт`]}
+    correctAnswers={[`пароль`]}
+    explanation={`Password.`}
+  />
+  <SelectQuestion
+    question={`Click on the...`}
+    options={[`посилання`, `пошту`]}
+    correctAnswers={[`посилання`]}
+    explanation={`Link.`}
+  />
+  <SelectQuestion
+    question={`Read the...`}
+    options={[`статтю`, `стілець`]}
+    correctAnswers={[`статтю`]}
+    explanation={`Article.`}
+  />
+  <SelectQuestion
+    question={`Connect to the...`}
+    options={[`мережі`, `вулиці`]}
+    correctAnswers={[`мережі`]}
+    explanation={`Network.`}
+  />
+  <SelectQuestion
+    question={`Send a...`}
+    options={[`повідомлення`, `книгу`]}
+    correctAnswers={[`повідомлення`]}
+    explanation={`Message.`}
+  />
+  <SelectQuestion
+    question={`Watch a...`}
+    options={[`відео`, `радіо`]}
+    correctAnswers={[`відео`]}
+    explanation={`Video.`}
+  />
+  <SelectQuestion
+    question={`Write a...`}
+    options={[`коментар`, `роман`]}
+    correctAnswers={[`коментар`]}
+    explanation={`Comment.`}
+  />
+  <SelectQuestion
+    question={`Buy a...`}
+    options={[`ноутбук`, `вікно`]}
+    correctAnswers={[`ноутбук`]}
+    explanation={`Laptop.`}
+  />
+  <SelectQuestion
+    question={`Search in...`}
+    options={[`Гуглі`, `кишені`]}
+    correctAnswers={[`Гуглі`]}
+    explanation={`Google.`}
+  />
+  <SelectQuestion
+    question={`Charge the...`}
+    options={[`смартфон`, `стіл`]}
+    correctAnswers={[`смартфон`]}
+    explanation={`Smartphone.`}
+  />
+  <SelectQuestion
+    question={`Listen to a...`}
+    options={[`подкаст`, `газету`]}
+    correctAnswers={[`подкаст`]}
+    explanation={`Podcast.`}
+  />
+  <SelectQuestion
+    question={`Work...`}
+    options={[`онлайн`, `у лісі`]}
+    correctAnswers={[`онлайн`]}
+    explanation={`Online.`}
+  />
+</Select>
+

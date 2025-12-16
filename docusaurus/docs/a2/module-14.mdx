@@ -5,19 +5,20 @@ title: "Future Plans & Promises"
 description: "Perfective Future Tense"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 **Ласкаво просимо до майбутнього часу!**
@@ -42,6 +43,17 @@ This is a crucial distinction that doesn't exist in English! By the end of this 
 > 💡 **Пам'ятайте!**
 >
 > Недоконаний майбутній час (буду + інфінітив) — це процес. Доконаний майбутній час (змінене дієслово) — це результат. Цей вибір змінює значення!
+
+:::info
+🔗 External Resources
+
+**YouTube:** [FUTURE TENSE IN UKRAINIAN LANGUAGE...](https://www.youtube.com/watch?v=VJmihxvTLww) — Speak Ukrainian
+
+**Grammar Guide:** [Ukrainian Tenses](https://www.ukrainianlessons.com/ukrainian-tenses/) — Ukrainian Lessons
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+:::
+
 
 ---
 
@@ -106,7 +118,8 @@ Here's the same verb pair in both future forms:
 | Impf. | буду робити | will be doing (process) |
 | Perf. | зроблю | will do/finish (result) |
 
-:::tip[Simple Rule]
+:::tip
+Simple Rule
 **Making plans about DOING something:** буду + infinitive
 **Promising to COMPLETE something:** perfective form
 :::
@@ -219,367 +232,15 @@ In Ukrainian culture, using perfective future often carries more weight. When yo
 >
 > Коли даєте обіцянки, використовуйте доконаний вид — це звучить переконливіше. «Я напишу тобі!» сильніше за «Я буду писати тобі.»
 
-Тепер ви можете говорити про майбутнє українською! Плануйте, обіцяйте і мрійте! 🔮
+> 💡 **Українське прислів'я**
+>
+> «Не кажи "гоп", поки не перескочиш!» (Не обіцяй, поки не зробиш! Використовуй доконаний вид тільки коли впевнений у результаті.)
+>
+> *Translation: "Don't say 'hop' until you've jumped!" (Don't promise until you've done it! Use perfective only when certain of the result.)*
 
-## 🎯 Activities
+Тепер ви можете говорити про майбутнє українською! Плануйте, обіцяйте і мрійте! Пам'ятайте: «Я буду робити» — це план, а «Я зроблю» — це обіцянка. Вибирайте мудро! 🔮
 
-### Future Forms
 
-<MatchUp pairs={[
-  { left: `буду читати`, right: `will be reading` },
-  { left: `прочитаю`, right: `will read/finish` },
-  { left: `буду писати`, right: `will be writing` },
-  { left: `напишу`, right: `will write/finish` },
-  { left: `буду робити`, right: `will be doing` },
-  { left: `зроблю`, right: `will do/finish` },
-  { left: `буду говорити`, right: `will be speaking` },
-  { left: `скажу`, right: `will say` },
-  { left: `буду їсти`, right: `will be eating` },
-  { left: `з'їм`, right: `will eat up` },
-  { left: `буду пити`, right: `will be drinking` },
-  { left: `вип'ю`, right: `will drink up` }
-]} />
-
-### Choose the Correct Future
-
-<FillIn items={[
-  {
-    sentence: `Я ___ книгу завтра. (will finish reading)`,
-    answer: `прочитаю`,
-    options: [`буду читати`, `прочитаю`]
-  },  {
-    sentence: `Вона ___ цілий день. (will be working)`,
-    answer: `буде працювати`,
-    options: [`буде працювати`, `попрацює`]
-  },  {
-    sentence: `Він ___ тобі! (will write — promise)`,
-    answer: `напише`,
-    options: [`буде писати`, `напише`]
-  },  {
-    sentence: `Ми ___ щодня. (will read — habit)`,
-    answer: `будемо читати`,
-    options: [`будемо читати`, `прочитаємо`]
-  },  {
-    sentence: `Я ___ це! (will do — promise)`,
-    answer: `зроблю`,
-    options: [`буду робити`, `зроблю`]
-  },  {
-    sentence: `Вони ___ увечері. (will be eating)`,
-    answer: `будуть їсти`,
-    options: [`будуть їсти`, `з'їдять`]
-  },  {
-    sentence: `Ти ___ правду? (will you tell — ask for result)`,
-    answer: `скажеш`,
-    options: [`будеш говорити`, `скажеш`]
-  },  {
-    sentence: `Ми ___ в понеділок. (will arrive — result)`,
-    answer: `приїдемо`,
-    options: [`будемо їхати`, `приїдемо`]
-  },  {
-    sentence: `Вона ___ три години. (will be writing — duration)`,
-    answer: `буде писати`,
-    options: [`буде писати`, `напише`]
-  },  {
-    sentence: `Я ___ тебе! (I will see you)`,
-    answer: `побачу`,
-    options: [`буду бачити`, `побачу`]
-  },  {
-    sentence: `Він ___ українську. (will be learning — process)`,
-    answer: `буде вчити`,
-    options: [`буде вчити`, `вивчить`]
-  },  {
-    sentence: `Ми ___ цей урок! (will master — completion)`,
-    answer: `вивчимо`,
-    options: [`будемо вчити`, `вивчимо`]
-  }
-]} />
-
-### Future Tense
-
-<Quiz questions={[
-  {
-    question: `How is imperfective future formed?`,
-    options: [
-      { text: `буду + infinitive`, correct: true },
-      { text: `conjugated verb`, correct: false },
-      { text: `will + verb`, correct: false }
-    ]
-  },  {
-    question: `How is perfective future formed?`,
-    options: [
-      { text: `conjugated perfective verb`, correct: true },
-      { text: `буду + infinitive`, correct: false },
-      { text: `буму + verb`, correct: false }
-    ]
-  },  {
-    question: `\"Я буду читати\" means:`,
-    options: [
-      { text: `I will be reading (process)`, correct: true },
-      { text: `I will finish reading (result)`, correct: false }
-    ]
-  },  {
-    question: `\"Я прочитаю\" means:`,
-    options: [
-      { text: `I will read/finish (result)`, correct: true },
-      { text: `I will be reading (process)`, correct: false }
-    ]
-  },  {
-    question: `Which is stronger for promises?`,
-    options: [
-      { text: `Perfective future (Я зроблю!)`, correct: true },
-      { text: `Imperfective future (Я буду робити)`, correct: false }
-    ]
-  },  {
-    question: `\"Прочитаю\" is which person?`,
-    options: [
-      { text: `я (first person singular)`, correct: true },
-      { text: `ти (second person singular)`, correct: false },
-      { text: `він (third person singular)`, correct: false }
-    ]
-  },  {
-    question: `\"Напишемо\" is which person?`,
-    options: [
-      { text: `ми (first person plural)`, correct: true },
-      { text: `вони (third person plural)`, correct: false },
-      { text: `ви (second person plural)`, correct: false }
-    ]
-  },  {
-    question: `Future of \"я\" + \"бути\":`,
-    options: [
-      { text: `буду`, correct: true },
-      { text: `будеш`, correct: false },
-      { text: `будуть`, correct: false }
-    ]
-  },  {
-    question: `Future of \"ви\" + \"бути\":`,
-    options: [
-      { text: `будете`, correct: true },
-      { text: `будемо`, correct: false },
-      { text: `будуть`, correct: false }
-    ]
-  },  {
-    question: `Perfective future can be formed from:`,
-    options: [
-      { text: `Only perfective verbs`, correct: true },
-      { text: `Only imperfective verbs`, correct: false },
-      { text: `Both aspects`, correct: false }
-    ]
-  },  {
-    question: `\"Вона буде писати\" — aspect?`,
-    options: [
-      { text: `Imperfective`, correct: true },
-      { text: `Perfective`, correct: false }
-    ]
-  },  {
-    question: `\"Вона напише\" — aspect?`,
-    options: [
-      { text: `Perfective`, correct: true },
-      { text: `Imperfective`, correct: false }
-    ]
-  }
-]} />
-
-### Future Rules
-
-<TrueFalse items={[
-  {
-    statement: `Imperfective future uses буду + infinitive.`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `Perfective future uses conjugated verb.`,
-    isTrue: true,
-    explanation: `Yes!`
-  },  {
-    statement: `Perfective verbs can have true present tense.`,
-    isTrue: false,
-    explanation: `No, their \"present\" conjugation means future!`
-  },  {
-    statement: `\"Я зроблю\" expresses a promise.`,
-    isTrue: true,
-    explanation: `Correct! Perfective = commitment to complete.`
-  },  {
-    statement: `\"Я буду робити\" focuses on process.`,
-    isTrue: true,
-    explanation: `Yes!`
-  },  {
-    statement: `\"Прочитаю\" means \"I am reading.\"`,
-    isTrue: false,
-    explanation: `\"Прочитаю\" means \"I will read/finish.\"`
-  },  {
-    statement: `Duration in future = imperfective.`,
-    isTrue: true,
-    explanation: `Correct! \"Буду читати цілий день.\"`
-  },  {
-    statement: `Completion in future = perfective.`,
-    isTrue: true,
-    explanation: `Yes! \"Прочитаю книгу.\"`
-  },  {
-    statement: `Both aspects form future the same way.`,
-    isTrue: false,
-    explanation: `No, they have different formations!`
-  },  {
-    statement: `\"Будеш\" is future of \"ти\" + \"бути.\"`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `Perfective future sounds more definite.`,
-    isTrue: true,
-    explanation: `Yes, it's like a promise.`
-  },  {
-    statement: `\"Буду читати\" = I finished reading.`,
-    isTrue: false,
-    explanation: `\"Буду читати\" = I will be reading.`
-  }
-]} />
-
-### Future Formation
-
-<GroupSort groups={{
-  "Imperfective (буду + inf.)": ["буду читати", "будеш писати", "буде працювати", "будемо вчити", "будете їсти", "будуть говорити"],
-  "Perfective (conjugated)": ["прочитаю", "напишеш", "зробить", "скажемо", "візьмете", "дадуть"]
-}} />
-
-### Future Sentences
-
-<Unjumble items={[
-  { jumbled: `я / прочитаю / книгу / завтра`, answer: `Я прочитаю книгу завтра.` },
-  { jumbled: `вона / буде / працювати / завтра`, answer: `Вона буде працювати завтра.` },
-  { jumbled: `він / напише / листа`, answer: `Він напише листа.` },
-  { jumbled: `ми / будемо / вчити / українську`, answer: `Ми будемо вчити українську.` },
-  { jumbled: `я / зроблю / це`, answer: `Я зроблю це!` },
-  { jumbled: `вони / приїдуть / завтра`, answer: `Вони приїдуть завтра.` },
-  { jumbled: `ти / будеш / читати / щодня`, answer: `Ти будеш читати щодня?` },
-  { jumbled: `вона / скаже / правду`, answer: `Вона скаже правду.` },
-  { jumbled: `ми / побачимо / море`, answer: `Ми побачимо море!` },
-  { jumbled: `він / буде / писати / цілий / день`, answer: `Він буде писати цілий день.` },
-  { jumbled: `я / візьму / книгу`, answer: `Я візьму книгу.` },
-  { jumbled: `вони / будуть / вчитися`, answer: `Вони будуть вчитися.` }
-]} />
-
-### Choose Correct Future
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я ___ цілий день. (duration)`}
-    errorWord={`duration`}
-    correctForm={`буду працювати`}
-    options={[`буду працювати`, `попрацюю`]}
-    explanation={`Duration (цілий день) requires imperfective future.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона ___ книгу. (will finish)`}
-    errorWord={`will finish`}
-    correctForm={`прочитає`}
-    options={[`буде читати`, `прочитає`]}
-    explanation={`Completion requires perfective future.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я ___ тобі! (promise)`}
-    errorWord={`promise`}
-    correctForm={`напишу`}
-    options={[`буду писати`, `напишу`]}
-    explanation={`Promises use perfective for definiteness.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми ___ в Україну. (will arrive)`}
-    errorWord={`will arrive`}
-    correctForm={`приїдемо`}
-    options={[`будемо їхати`, `приїдемо`]}
-    explanation={`Arrival is completion = perfective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він ___ щодня. (habit)`}
-    errorWord={`habit`}
-    correctForm={`буде читати`}
-    options={[`буде читати`, `прочитає`]}
-    explanation={`Habitual action = imperfective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона ___ це! (definite promise)`}
-    errorWord={`definite promise`}
-    correctForm={`зробить`}
-    options={[`буде робити`, `зробить`]}
-    explanation={`Definite commitment = perfective.`}
-  />
-</ErrorCorrection>
-
-### Future Plans
-
-<Cloze
-  passage={`Завтра я [___:1] рано. Я [___:2] каву і [___:3] на роботу. На роботі я [___:4] цілий день. Увечері я [___:5] і [___:6] книгу.`}
-  blanks={[{ answer: `поїдемо`, options: [`поїдемо`] }, { answer: `будемо їхати`, options: [`будемо їхати`] }, { answer: `побачу`, options: [`побачу`] }, { answer: `зроблю`, options: [`зроблю`] }, { answer: `повернуся`, options: [`повернуся`] }, { answer: `розповім`, options: [`розповім`] }]}
-/>
-
-### Making Plans
-
-<DialogueReorder lines={[
-  { text: `Що ти будеш робити завтра?`, order: 1 },
-  { text: `Я буду працювати весь день.`, order: 2 },
-  { text: `А увечері?`, order: 3 },
-  { text: `Увечері прочитаю книгу.`, order: 4 },
-  { text: `Може, підемо в кіно?`, order: 5 },
-  { text: `Гаразд, я закінчу роботу рано і підемо!`, order: 6 },
-  { text: `Ти напишеш мені?`, order: 7 },
-  { text: `Так, обов'язково напишу!`, order: 8 },
-  { text: `Коли?`, order: 9 },
-  { text: `Коли приїду, одразу напишу.`, order: 10 },
-  { text: `Обіцяєш?`, order: 11 },
-  { text: `Обіцяю!`, order: 12 }
-]} />
-
-### Find Perfective Future
-
-<MarkTheWords>
-<MarkTheWordsActivity
-  text={`Click on PERFECTIVE FUTURE forms only.
-
-Завтра я прочитаю книгу. Потім я напишу рецензію. Я буду писати цілий день, але закінчу!`}
-  correctWords={[`прочитаю`, `напишу`, `закінчу`]}
-/>
-<MarkTheWordsActivity
-  text={`Ми приїдемо завтра. Вона скаже правду. Він візьме книгу і піде.`}
-  correctWords={[`приїдемо`, `скаже`, `візьме`, `піде`]}
-/>
-<MarkTheWordsActivity
-  text={`Вони будуть працювати весь день. Потім вони закінчать і підуть додому.`}
-  correctWords={[`закінчать`, `підуть`]}
-/>
-</MarkTheWords>
-
-### English to Ukrainian
-
-<Translate questions={[
-  {
-    source: `I will be reading in the evening.`,
-    options: [
-      { text: `Я буду читати увечері.`, correct: true },
-      { text: `Я прочитаю увечері.`, correct: false },
-      { text: `Я прочитаю цю книгу.`, correct: true },
-      { text: `Я буду читати цю книгу.`, correct: false },
-      { text: `Вона напише листа.`, correct: true },
-      { text: `Вона буде писати листа.`, correct: false },
-      { text: `Він буде працювати цілий день.`, correct: true },
-      { text: `Він попрацює цілий день.`, correct: false },
-      { text: `Я зроблю це!`, correct: true },
-      { text: `Я буду робити це!`, correct: false },
-      { text: `Ми приїдемо завтра.`, correct: true },
-      { text: `Ми будемо їхати завтра.`, correct: false },
-      { text: `Вони будуть вчити українську.`, correct: true },
-      { text: `Вони вивчать українську.`, correct: false },
-      { text: `Я побачу тебе!`, correct: true },
-      { text: `Я буду бачити тебе!`, correct: false },
-      { text: `Вона скаже правду.`, correct: true },
-      { text: `Вона буде говорити правду.`, correct: false },
-      { text: `Він візьме книгу.`, correct: true },
-      { text: `Він буде брати книгу.`, correct: false },
-      { text: `Я буду читати щодня.`, correct: true },
-      { text: `Я прочитаю щодня.`, correct: false },
-      { text: `Ми закінчимо проект!`, correct: true },
-      { text: `Ми будемо закінчувати проект!`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -622,4 +283,525 @@ In Ukrainian culture, using perfective future often carries more weight. When yo
 ---
 
 
+
+
+---
+
+## 🎯 Activities
+
+### Future Forms
+
+<MatchUp pairs={[
+  { left: `буду читати`, right: `will be reading` },
+  { left: `прочитаю`, right: `will read/finish` },
+  { left: `буду писати`, right: `will be writing` },
+  { left: `напишу`, right: `will write/finish` },
+  { left: `буду робити`, right: `will be doing` },
+  { left: `зроблю`, right: `will do/finish` },
+  { left: `буду говорити`, right: `will be speaking` },
+  { left: `скажу`, right: `will say` },
+  { left: `буду їсти`, right: `will be eating` },
+  { left: `з'їм`, right: `will eat up` },
+  { left: `буду пити`, right: `will be drinking` },
+  { left: `вип'ю`, right: `will drink up` }
+]} />
+
+### Choose the Correct Future
+
+*Complete each sentence with the correct future form.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я ___ книгу завтра. (will finish reading)`}
+    answer={`прочитаю`}
+    options={[`буду читати`, `прочитаю`]}
+  />
+  <FillInQuestion
+    sentence={`Вона ___ цілий день. (will be working)`}
+    answer={`буде працювати`}
+    options={[`буде працювати`, `попрацює`]}
+  />
+  <FillInQuestion
+    sentence={`Він ___ тобі! (will write — promise)`}
+    answer={`напише`}
+    options={[`буде писати`, `напише`]}
+  />
+  <FillInQuestion
+    sentence={`Ми ___ щодня. (will read — habit)`}
+    answer={`будемо читати`}
+    options={[`будемо читати`, `прочитаємо`]}
+  />
+  <FillInQuestion
+    sentence={`Я ___ це! (will do — promise)`}
+    answer={`зроблю`}
+    options={[`буду робити`, `зроблю`]}
+  />
+  <FillInQuestion
+    sentence={`Вони ___ увечері. (will be eating)`}
+    answer={`будуть їсти`}
+    options={[`будуть їсти`, `з'їдять`]}
+  />
+  <FillInQuestion
+    sentence={`Я ___ завтра. (future completion)`}
+    answer={`зроблю`}
+    options={[`робитиму`, `зроблю`]}
+  />
+  <FillInQuestion
+    sentence={`Вона ___ кожного дня. (habitual future)`}
+    answer={`читатиме`}
+    options={[`читатиме`, `прочитає`]}
+  />
+  <FillInQuestion
+    sentence={`Ти ___ правду? (will you tell — ask for result)`}
+    answer={`скажеш`}
+    options={[`будеш говорити`, `скажеш`]}
+  />
+  <FillInQuestion
+    sentence={`Ми ___ в понеділок. (will arrive — result)`}
+    answer={`приїдемо`}
+    options={[`будемо їхати`, `приїдемо`]}
+  />
+  <FillInQuestion
+    sentence={`Вона ___ три години. (will be writing — duration)`}
+    answer={`буде писати`}
+    options={[`буде писати`, `напише`]}
+  />
+  <FillInQuestion
+    sentence={`Я ___ тебе! (I will see you)`}
+    answer={`побачу`}
+    options={[`буду бачити`, `побачу`]}
+  />
+  <FillInQuestion
+    sentence={`Він ___ українську. (will be learning — process)`}
+    answer={`буде вчити`}
+    options={[`буде вчити`, `вивчить`]}
+  />
+  <FillInQuestion
+    sentence={`Ми ___ цей урок! (will master — completion)`}
+    answer={`вивчимо`}
+    options={[`будемо вчити`, `вивчимо`]}
+  />
+</FillIn>
+
+### Future Tense
+
+<Quiz>
+  <QuizQuestion
+    question={`1. How is imperfective future formed?`}
+    options={[`буду + infinitive`, `conjugated verb`, `will + verb`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`How is perfective future formed?`}
+    options={[`conjugated perfective verb`, `буду + infinitive`, `буму + verb`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Я буду читати" means:`}
+    options={[`I will be reading (process)`, `I will finish reading (result)`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Я прочитаю" means:`}
+    options={[`I will read/finish (result)`, `I will be reading (process)`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Which is stronger for promises?`}
+    options={[`Perfective future (Я зроблю!)`, `Imperfective future (Я буду робити)`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Прочитаю" is which person?`}
+    options={[`я (first person singular)`, `ти (second person singular)`, `він (third person singular)`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Напишемо" is which person?`}
+    options={[`ми (first person plural)`, `вони (third person plural)`, `ви (second person plural)`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Future of "я" + "бути":`}
+    options={[`буду`, `будеш`, `будуть`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Future of "ви" + "бути":`}
+    options={[`будете`, `будемо`, `будуть`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Perfective future can be formed from:`}
+    options={[`Only perfective verbs`, `Only imperfective verbs`, `Both aspects`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Вона буде писати" — aspect?`}
+    options={[`Imperfective`, `Perfective`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Вона напише" — aspect?`}
+    options={[`Perfective`, `Imperfective`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### Future Rules
+
+*Decide if each statement is true or false.*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`Imperfective future uses буду + infinitive.`}
+    isTrue={true}
+    explanation={`Correct!`}
+  />
+  <TrueFalseQuestion
+    statement={`Perfective future uses conjugated verb.`}
+    isTrue={true}
+    explanation={`Yes!`}
+  />
+  <TrueFalseQuestion
+    statement={`Perfective verbs can have true present tense.`}
+    isTrue={false}
+    explanation={`No, their "present" conjugation means future!`}
+  />
+  <TrueFalseQuestion
+    statement={`"Я зроблю" expresses a promise.`}
+    isTrue={true}
+    explanation={`Correct! Perfective = commitment to complete.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Я буду робити" focuses on process.`}
+    isTrue={true}
+    explanation={`Yes!`}
+  />
+  <TrueFalseQuestion
+    statement={`"Прочитаю" means "I am reading."`}
+    isTrue={false}
+    explanation={`"Прочитаю" means "I will read/finish."`}
+  />
+  <TrueFalseQuestion
+    statement={`Duration in future = imperfective.`}
+    isTrue={true}
+    explanation={`Correct! "Буду читати цілий день."`}
+  />
+  <TrueFalseQuestion
+    statement={`Completion in future = perfective.`}
+    isTrue={true}
+    explanation={`Yes! "Прочитаю книгу."`}
+  />
+  <TrueFalseQuestion
+    statement={`Both aspects form future the same way.`}
+    isTrue={false}
+    explanation={`No, they have different formations!`}
+  />
+  <TrueFalseQuestion
+    statement={`"Будеш" is future of "ти" + "бути."`}
+    isTrue={true}
+    explanation={`Correct!`}
+  />
+  <TrueFalseQuestion
+    statement={`Perfective future sounds more definite.`}
+    isTrue={true}
+    explanation={`Yes, it's like a promise.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Буду читати" = I finished reading.`}
+    isTrue={false}
+    explanation={`"Буду читати" = I will be reading.`}
+  />
+</TrueFalse>
+
+### Future Formation
+
+*Sort by future formation type.*
+
+
+<GroupSort groups={{
+  "### Imperfective (буду + inf.)": [
+    "буду читати",
+    "будеш писати",
+    "буде працювати",
+    "будемо вчити",
+    "будете їсти",
+    "будуть говорити"
+  ],
+  "Perfective (conjugated)": [
+    "прочитаю",
+    "напишеш",
+    "зробить",
+    "скажемо",
+    "візьмете",
+    "дадуть"
+  ]
+}} />
+
+### Future Sentences
+
+*Put the words in the correct order.*
+
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`я / прочитаю / книгу / завтра`}
+    answer={`Я прочитаю книгу завтра.`}
+  />
+  <UnjumbleQuestion
+    words={`вона / буде / працювати / завтра`}
+    answer={`Вона буде працювати завтра.`}
+  />
+  <UnjumbleQuestion
+    words={`він / напише / листа`}
+    answer={`Він напише листа.`}
+  />
+  <UnjumbleQuestion
+    words={`ми / будемо / вчити / українську`}
+    answer={`Ми будемо вчити українську.`}
+  />
+  <UnjumbleQuestion
+    words={`я / зроблю / це`}
+    answer={`Я зроблю це!`}
+  />
+  <UnjumbleQuestion
+    words={`вони / приїдуть / завтра`}
+    answer={`Вони приїдуть завтра.`}
+  />
+  <UnjumbleQuestion
+    words={`ти / будеш / читати / щодня`}
+    answer={`Ти будеш читати щодня?`}
+  />
+  <UnjumbleQuestion
+    words={`вона / скаже / правду`}
+    answer={`Вона скаже правду.`}
+  />
+  <UnjumbleQuestion
+    words={`ми / побачимо / море`}
+    answer={`Ми побачимо море!`}
+  />
+  <UnjumbleQuestion
+    words={`він / буде / писати / цілий / день`}
+    answer={`Він буде писати цілий день.`}
+  />
+  <UnjumbleQuestion
+    words={`я / візьму / книгу`}
+    answer={`Я візьму книгу.`}
+  />
+  <UnjumbleQuestion
+    words={`вони / будуть / вчитися`}
+    answer={`Вони будуть вчитися.`}
+  />
+</Unjumble>
+
+### Choose Correct Future
+
+*Select the correct future form for each context.*
+
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я ___ цілий день. (duration)`}
+    error={`duration`}
+    answer={`буду працювати`}
+    options={[`буду працювати`, `попрацюю`]}
+    explanation={`Duration (цілий день) requires imperfective future.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона ___ книгу. (will finish)`}
+    error={`will finish`}
+    answer={`прочитає`}
+    options={[`буде читати`, `прочитає`]}
+    explanation={`Completion requires perfective future.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я ___ тобі! (promise)`}
+    error={`promise`}
+    answer={`напишу`}
+    options={[`буду писати`, `напишу`]}
+    explanation={`Promises use perfective for definiteness.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми ___ в Україну. (will arrive)`}
+    error={`will arrive`}
+    answer={`приїдемо`}
+    options={[`будемо їхати`, `приїдемо`]}
+    explanation={`Arrival is completion = perfective.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він ___ щодня. (habit)`}
+    error={`habit`}
+    answer={`буде читати`}
+    options={[`буде читати`, `прочитає`]}
+    explanation={`Habitual action = imperfective.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона ___ це! (definite promise)`}
+    error={`definite promise`}
+    answer={`зробить`}
+    options={[`буде робити`, `зробить`]}
+    explanation={`Definite commitment = perfective.`}
+  />
+</ErrorCorrection>
+
+
+
+### Making Plans
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Що ти будеш робити завтра?"
+  },
+  {
+    "speaker": "",
+    "line": "Я буду працювати весь день."
+  },
+  {
+    "speaker": "",
+    "line": "А увечері?"
+  },
+  {
+    "speaker": "",
+    "line": "Увечері прочитаю книгу."
+  },
+  {
+    "speaker": "",
+    "line": "Може, підемо в кіно?"
+  },
+  {
+    "speaker": "",
+    "line": "Гаразд, я закінчу роботу рано і підемо!"
+  },
+  {
+    "speaker": "",
+    "line": "Ти напишеш мені?"
+  },
+  {
+    "speaker": "",
+    "line": "Так, обов'язково напишу!"
+  },
+  {
+    "speaker": "",
+    "line": "Коли?"
+  },
+  {
+    "speaker": "",
+    "line": "Коли приїду, одразу напишу."
+  },
+  {
+    "speaker": "",
+    "line": "Обіцяєш?"
+  },
+  {
+    "speaker": "",
+    "line": "Обіцяю!"
+  }
+]} />
+</DialogueReorder>
+
+### Find Perfective Future
+
+Click on PERFECTIVE FUTURE forms only.
+
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Завтра я прочитаю книгу. Потім я напишу рецензію. Я буду писати цілий день, але закінчу! Ми приїдемо завтра. Вона скаже правду. Він візьме книгу і піде. Вони будуть працювати весь день. Потім вони закінчать і підуть додому.`}
+    correctWords={[`прочитаю`, `напишу`, `закінчу`, `приїдемо`, `скаже`, `візьме`, `піде`, `закінчать`, `підуть`]}
+  />
+</MarkTheWords>
+
+### English to Ukrainian
+
+<Translate>
+  <TranslateItem
+    source={`I will be reading in the evening.`}
+    answer={`Я буду читати увечері.`}
+    options={[`Я буду читати увечері.`, `Я прочитаю увечері.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I will finish reading this book.`}
+    answer={`Я прочитаю цю книгу.`}
+    options={[`Я прочитаю цю книгу.`, `Я буду читати цю книгу.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She will write the letter.`}
+    answer={`Вона напише листа.`}
+    options={[`Вона напише листа.`, `Вона буде писати листа.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`He will be working all day.`}
+    answer={`Він буде працювати цілий день.`}
+    options={[`Він буде працювати цілий день.`, `Він попрацює цілий день.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I will do it! (promise)`}
+    answer={`Я зроблю це!`}
+    options={[`Я зроблю це!`, `Я буду робити це!`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`We will arrive tomorrow.`}
+    answer={`Ми приїдемо завтра.`}
+    options={[`Ми приїдемо завтра.`, `Ми будемо їхати завтра.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`They will be studying Ukrainian.`}
+    answer={`Вони будуть вчити українську.`}
+    options={[`Вони будуть вчити українську.`, `Вони вивчать українську.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I will see you!`}
+    answer={`Я побачу тебе!`}
+    options={[`Я побачу тебе!`, `Я буду бачити тебе!`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She will tell the truth.`}
+    answer={`Вона скаже правду.`}
+    options={[`Вона скаже правду.`, `Вона буде говорити правду.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`He will take the book.`}
+    answer={`Він візьме книгу.`}
+    options={[`Він візьме книгу.`, `Він буде брати книгу.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I will read every day.`}
+    answer={`Я буду читати щодня.`}
+    options={[`Я буду читати щодня.`, `Я прочитаю щодня.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`We will finish the project!`}
+    answer={`Ми закінчимо проект!`}
+    options={[`Ми закінчимо проект!`, `Ми будемо закінчувати проект!`]}
+    explanation={``}
+  />
+</Translate>
 

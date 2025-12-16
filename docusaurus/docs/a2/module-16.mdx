@@ -5,19 +5,20 @@ title: "Aspect Mastery"
 description: "Drilling the 30 Most Common Pairs"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Warm-up
@@ -27,6 +28,17 @@ In Modules 12-15, you learned the theory of aspect. Now it's time to **drill** u
 This module is pure practice. By the end, you should recall aspect pairs without thinking. This is essential for fluency.
 
 **Goal:** When you hear "читати" you should instantly think "прочитати".
+
+:::info
+🔗 External Resources
+
+**YouTube:** [How To Improve Your Technique As A Football Player ? #football #soccer...](https://www.youtube.com/watch?v=uN3W7n3JG7w) — FC Mentality
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+:::
+
 
 ---
 
@@ -49,7 +61,8 @@ These are the most common verbs. You'll use them every single day. Master these 
 | 9 | їсти | з'їсти | to eat |
 | 10 | пити | випити | to drink |
 
-:::tip[Pattern Recognition]
+:::tip
+Pattern Recognition
 Notice: Many perfective verbs are formed by adding a prefix:
 - **про-** (читати → прочитати)
 - **на-** (писати → написати)
@@ -75,7 +88,8 @@ These verbs are essential for language learning and social interaction.
 | 19 | пам'ятати | запам'ятати | to remember |
 | 20 | забувати | забути | to forget |
 
-:::tip[Suppletive Pairs]
+:::tip
+Suppletive Pairs
 Some pairs have completely different roots:
 - говорити / **сказати** (different roots!)
 - брати / **взяти** (different roots!)
@@ -200,7 +214,8 @@ Now the opposite - perfective to imperfective:
 
 Оксана **зрозуміла**, що вся її робота **окупилася**. Вона **відчула** радість. Увечері вона **розповіла** мамі про успіх. Мама **привітала** її і **сказала**: "Я горджуся тобою!"
 
-:::tip[Notice the Pattern]
+:::tip
+Notice the Pattern
 The story uses mostly perfective verbs because it describes a sequence of completed actions.
 Each action is finished before the next one begins.
 This is very common in narrative storytelling.
@@ -219,7 +234,8 @@ This is very common in narrative storytelling.
 
 Це його звичайний день. Він **робить** це щодня.
 
-:::tip[Notice the Pattern]
+:::tip
+Notice the Pattern
 The story uses imperfective verbs because it describes habitual, repeated actions.
 These are things Andriy does routinely, not one-time completed events.
 This is very common when describing daily routines or habits.
@@ -280,255 +296,25 @@ Today you drilled the 30 most common aspect pairs.
 
 ---
 
-## 🎯 Activities
 
-### Tier 1 Pairs
 
-<MatchUp pairs={[
-  { left: `читати`, right: `прочитати` },
-  { left: `писати`, right: `написати` },
-  { left: `робити`, right: `зробити` },
-  { left: `говорити`, right: `сказати` },
-  { left: `бачити`, right: `побачити` },
-  { left: `чути`, right: `почути` },
-  { left: `брати`, right: `взяти` },
-  { left: `давати`, right: `дати` }
-]} />
+> 💡 **Українське прислів'я**
+>
+> «Знання — сила.» (Знати — недоконаний, бо знання — це постійний процес!)
+>
+> *Translation: "Knowledge is power." (Знати is imperfective — knowledge is ongoing!)*
 
-### Tier 2 Pairs
+> 🇺🇦 **Пари аспекту — ваші найкращі друзі**
+>
+> Запам'ятайте ці важливі пари дієслів:
+> - говорити / сказати — різні корені! (супплетивні пари)
+> - брати / взяти — також різні корені!
+> - читати / прочитати — префікс про-
+> - писати / написати — префікс на-
+>
+> Практикуйте ці пари кожен день. Вони — основа для правильного вибору аспекту!
 
-<MatchUp pairs={[
-  { left: `вчити`, right: `вивчити` },
-  { left: `вчитися`, right: `навчитися` },
-  { left: `розуміти`, right: `зрозуміти` },
-  { left: `питати`, right: `запитати` },
-  { left: `відповідати`, right: `відповісти` },
-  { left: `пояснювати`, right: `пояснити` },
-  { left: `пам'ятати`, right: `запам'ятати` },
-  { left: `забувати`, right: `забути` }
-]} />
 
-### Tier 3 Pairs
-
-<MatchUp pairs={[
-  { left: `купувати`, right: `купити` },
-  { left: `продавати`, right: `продати` },
-  { left: `відкривати`, right: `відкрити` },
-  { left: `закривати`, right: `закрити` },
-  { left: `починати`, right: `почати` },
-  { left: `закінчувати`, right: `закінчити` },
-  { left: `готувати`, right: `приготувати` },
-  { left: `знаходити`, right: `знайти` }
-]} />
-
-### Transform to Perfective
-
-<FillIn items={[
-  {
-    sentence: `читати → [___] [Hint: про-]`,
-    answer: `прочитати`,
-    options: [`прочитати`, `читати`, `почитати`]
-  },  {
-    sentence: `писати → [___] [Hint: на-]`,
-    answer: `написати`,
-    options: [`написати`, `писати`, `пописати`]
-  },  {
-    sentence: `робити → [___] [Hint: з-]`,
-    answer: `зробити`,
-    options: [`зробити`, `робити`, `поробити`]
-  },  {
-    sentence: `бачити → [___] [Hint: по-]`,
-    answer: `побачити`,
-    options: [`побачити`, `бачити`, `пробачити`]
-  },  {
-    sentence: `чути → [___] [Hint: по-]`,
-    answer: `почути`,
-    options: [`почути`, `чути`, `прочути`]
-  },  {
-    sentence: `вчити → [___] [Hint: ви-]`,
-    answer: `вивчити`,
-    options: [`вивчити`, `вчити`, `повчити`]
-  },  {
-    sentence: `розуміти → [___] [Hint: з-]`,
-    answer: `зрозуміти`,
-    options: [`зрозуміти`, `розуміти`, `прозуміти`]
-  },  {
-    sentence: `готувати → [___] [Hint: при-]`,
-    answer: `приготувати`,
-    options: [`приготувати`, `готувати`, `заготувати`]
-  }
-]} />
-
-### Transform to Imperfective
-
-<FillIn items={[
-  {
-    sentence: `взяти → [___]`,
-    answer: `брати`,
-    options: [`брати`, `взяти`, `взятися`]
-  },  {
-    sentence: `сказати → [___]`,
-    answer: `говорити`,
-    options: [`говорити`, `сказати`, `казати`]
-  },  {
-    sentence: `дати → [___]`,
-    answer: `давати`,
-    options: [`давати`, `дати`, `дадати`]
-  },  {
-    sentence: `знайти → [___]`,
-    answer: `знаходити`,
-    options: [`знаходити`, `знайти`, `шукати`]
-  },  {
-    sentence: `почати → [___]`,
-    answer: `починати`,
-    options: [`починати`, `почати`, `почитати`]
-  },  {
-    sentence: `закінчити → [___]`,
-    answer: `закінчувати`,
-    options: [`закінчувати`, `закінчити`, `кінчати`]
-  },  {
-    sentence: `відповісти → [___]`,
-    answer: `відповідати`,
-    options: [`відповідати`, `відповісти`, `повідати`]
-  },  {
-    sentence: `запам'ятати → [___]`,
-    answer: `пам'ятати`,
-    options: [`пам'ятати`, `запам'ятати`, `пам'ятка`]
-  }
-]} />
-
-### Aspect Selection
-
-<Quiz questions={[
-  {
-    question: `\"I finished reading the book\" uses:`,
-    options: [
-      { text: `Perfective`, correct: true },
-      { text: `Imperfective`, correct: false }
-    ]
-  },  {
-    question: `\"I was reading when you called\" uses:`,
-    options: [
-      { text: `Perfective`, correct: false },
-      { text: `Imperfective`, correct: true }
-    ]
-  },  {
-    question: `\"I read every day\" uses:`,
-    options: [
-      { text: `Perfective`, correct: false },
-      { text: `Imperfective`, correct: true }
-    ]
-  },  {
-    question: `\"She wrote the letter (completed)\" uses:`,
-    options: [
-      { text: `Perfective`, correct: true },
-      { text: `Imperfective`, correct: false }
-    ]
-  },  {
-    question: `\"We will do this tomorrow (once)\" uses:`,
-    options: [
-      { text: `Perfective`, correct: true },
-      { text: `Imperfective`, correct: false }
-    ]
-  },  {
-    question: `\"I will be reading in the evening\" uses:`,
-    options: [
-      { text: `Perfective`, correct: false },
-      { text: `Imperfective`, correct: true }
-    ]
-  },  {
-    question: `\"Did you finish?\" expects:`,
-    options: [
-      { text: `Perfective`, correct: true },
-      { text: `Imperfective`, correct: false }
-    ]
-  },  {
-    question: `\"He studies every day\" uses:`,
-    options: [
-      { text: `Perfective`, correct: false },
-      { text: `Imperfective`, correct: true }
-    ]
-  }
-]} />
-
-### Context Selection
-
-<Cloze
-  passage={`Я вже [___:1] книгу. (finished)
-Вона [___:2] листи щодня. (writes habitually)
-Ми [___:3] домашнє завдання вчора. (completed)
-Він [___:4] каву кожного ранку. (drinks habitually)
-Вона [___:5] їжу зараз. (is cooking now)
-Ти вже [___:6] відповідь? (Did you find?)`}
-  blanks={[{ answer: `прочитав`, options: [`прочитав`, `читав`] }, { answer: `пише`, options: [`пише`, `написала`] }, { answer: `зробили`, options: [`зробили`, `робили`] }, { answer: `п'є`, options: [`п'є`, `випив`] }, { answer: `готує`, options: [`готує`, `приготувала`] }, { answer: `знайшов`, options: [`знайшов`, `знаходив`] }]}
-/>
-
-### Aspect Sentences
-
-<Unjumble items={[
-  { jumbled: `книгу / прочитав / Я / цю`, answer: `Я прочитав цю книгу.` },
-  { jumbled: `листа / Вона / написала`, answer: `Вона написала листа.` },
-  { jumbled: `зробили / Ми / завдання`, answer: `Ми зробили завдання.` },
-  { jumbled: `побачив / Він / її`, answer: `Він побачив її.` },
-  { jumbled: `почула / шум / Вона`, answer: `Вона почула шум.` },
-  { jumbled: `каву / випив / Я`, answer: `Я випив каву.` },
-  { jumbled: `все / зрозумів / Він`, answer: `Він зрозумів все.` },
-  { jumbled: `двері / відкрила / Вона`, answer: `Вона відкрила двері.` }
-]} />
-
-### Wrong Aspect
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я **читав** книгу вчора і закінчив.`}
-    errorWord={`читав`}
-    correctForm={`прочитав`}
-    options={[`прочитав`, `читав`]}
-    explanation={`\"Finished\" = completed action → perfective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона **написала** листи кожного дня.`}
-    errorWord={`написала`}
-    correctForm={`пише`}
-    options={[`пише`, `написала`]}
-    explanation={`\"Every day\" = habitual → imperfective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми **зробили** це, коли ви прийшли.`}
-    errorWord={`зробили`}
-    correctForm={`робили`}
-    options={[`робили`, `зробили`]}
-    explanation={`Action was in progress when interrupted → imperfective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він **вивчив** українську мову щодня.`}
-    errorWord={`вивчив`}
-    correctForm={`вчить`}
-    options={[`вчить`, `вивчив`]}
-    explanation={`\"Every day\" = habitual → imperfective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я **пишу** листа і відправив.`}
-    errorWord={`пишу`}
-    correctForm={`написав`}
-    options={[`написав`, `пишу`]}
-    explanation={`\"Sent\" implies completion → both verbs should be perfective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона **п'є** каву і вийшла.`}
-    errorWord={`п'є`}
-    correctForm={`випила`}
-    options={[`випила`, `п'є`]}
-    explanation={`Sequence of completed actions → both verbs should be perfective.`}
-  />
-</ErrorCorrection>
-
-### Formation Pattern
-
-<GroupSort groups={{
-  "Prefix (про-, на-, з-, по-)": ["читати → прочитати", "писати → написати", "робити → зробити", "бачити → побачити"],
-  "Suppletive (different roots)": ["говорити → сказати", "брати → взяти", "шукати → знайти", "класти → покласти"]
-}} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Aspect |
@@ -589,3 +375,322 @@ Today you drilled the 30 most common aspect pairs.
 | знайти | /znɑjtˈɪ/ | to find (once) | verb | pf |
 | губити | /ɦubˈɪtɪ/ | to lose | verb | impf |
 | загубити | /zɑɦubˈɪtɪ/ | to lose (once) | verb | pf |
+
+---
+
+## 🎯 Activities
+
+### Tier 1 Pairs
+
+*Match imperfective to perfective.*
+
+
+<MatchUp pairs={[
+  { left: `читати`, right: `прочитати` },
+  { left: `писати`, right: `написати` },
+  { left: `робити`, right: `зробити` },
+  { left: `говорити`, right: `сказати` },
+  { left: `бачити`, right: `побачити` },
+  { left: `чути`, right: `почути` },
+  { left: `брати`, right: `взяти` },
+  { left: `давати`, right: `дати` }
+]} />
+
+### Tier 2 Pairs
+
+*Match imperfective to perfective.*
+
+
+<MatchUp pairs={[
+  { left: `вчити`, right: `вивчити` },
+  { left: `вчитися`, right: `навчитися` },
+  { left: `розуміти`, right: `зрозуміти` },
+  { left: `питати`, right: `запитати` },
+  { left: `відповідати`, right: `відповісти` },
+  { left: `пояснювати`, right: `пояснити` },
+  { left: `пам'ятати`, right: `запам'ятати` },
+  { left: `забувати`, right: `забути` }
+]} />
+
+### Tier 3 Pairs
+
+*Match imperfective to perfective.*
+
+
+<MatchUp pairs={[
+  { left: `купувати`, right: `купити` },
+  { left: `продавати`, right: `продати` },
+  { left: `відкривати`, right: `відкрити` },
+  { left: `закривати`, right: `закрити` },
+  { left: `починати`, right: `почати` },
+  { left: `закінчувати`, right: `закінчити` },
+  { left: `готувати`, right: `приготувати` },
+  { left: `знаходити`, right: `знайти` }
+]} />
+
+### Transform to Perfective
+
+*Give the perfective form.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. читати → [___] [Hint: про-]`}
+    answer={`прочитати`}
+    options={[`прочитати`, `читати`, `почитати`]}
+  />
+  <FillInQuestion
+    sentence={`писати → [___] [Hint: на-]`}
+    answer={`написати`}
+    options={[`написати`, `писати`, `пописати`]}
+  />
+  <FillInQuestion
+    sentence={`робити → [___] [Hint: з-]`}
+    answer={`зробити`}
+    options={[`зробити`, `робити`, `поробити`]}
+  />
+  <FillInQuestion
+    sentence={`бачити → [___] [Hint: по-]`}
+    answer={`побачити`}
+    options={[`побачити`, `бачити`, `пробачити`]}
+  />
+  <FillInQuestion
+    sentence={`чути → [___] [Hint: по-]`}
+    answer={`почути`}
+    options={[`почути`, `чути`, `прочути`]}
+  />
+  <FillInQuestion
+    sentence={`вчити → [___] [Hint: ви-]`}
+    answer={`вивчити`}
+    options={[`вивчити`, `вчити`, `повчити`]}
+  />
+  <FillInQuestion
+    sentence={`говорити / ___ (suppletive pair)`}
+    answer={`сказати`}
+    options={[`сказати`, `поговорити`, `заговорити`]}
+  />
+  <FillInQuestion
+    sentence={`брати / ___ (suppletive pair)`}
+    answer={`взяти`}
+    options={[`взяти`, `побрати`, `забрати`]}
+  />
+  <FillInQuestion
+    sentence={`розуміти → [___] [Hint: з-]`}
+    answer={`зрозуміти`}
+    options={[`зрозуміти`, `розуміти`, `прозуміти`]}
+  />
+  <FillInQuestion
+    sentence={`готувати → [___] [Hint: при-]`}
+    answer={`приготувати`}
+    options={[`приготувати`, `готувати`, `заготувати`]}
+  />
+</FillIn>
+
+### Transform to Imperfective
+
+*Give the imperfective form.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. взяти → [___]`}
+    answer={`брати`}
+    options={[`брати`, `взяти`, `взятися`]}
+  />
+  <FillInQuestion
+    sentence={`сказати → [___]`}
+    answer={`говорити`}
+    options={[`говорити`, `сказати`, `казати`]}
+  />
+  <FillInQuestion
+    sentence={`дати → [___]`}
+    answer={`давати`}
+    options={[`давати`, `дати`, `дадати`]}
+  />
+  <FillInQuestion
+    sentence={`знайти → [___]`}
+    answer={`знаходити`}
+    options={[`знаходити`, `знайти`, `шукати`]}
+  />
+  <FillInQuestion
+    sentence={`почати → [___]`}
+    answer={`починати`}
+    options={[`починати`, `почати`, `почитати`]}
+  />
+  <FillInQuestion
+    sentence={`закінчити → [___]`}
+    answer={`закінчувати`}
+    options={[`закінчувати`, `закінчити`, `кінчати`]}
+  />
+  <FillInQuestion
+    sentence={`відповісти → [___]`}
+    answer={`відповідати`}
+    options={[`відповідати`, `відповісти`, `повідати`]}
+  />
+  <FillInQuestion
+    sentence={`запам'ятати → [___]`}
+    answer={`пам'ятати`}
+    options={[`пам'ятати`, `запам'ятати`, `пам'ятка`]}
+  />
+</FillIn>
+
+### Aspect Selection
+
+<Quiz>
+  <QuizQuestion
+    question={`1. "I finished reading the book" uses:`}
+    options={[`Perfective`, `Imperfective`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"I was reading when you called" uses:`}
+    options={[`Perfective`, `Imperfective`]}
+    correctIndex={1}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"I read every day" uses:`}
+    options={[`Perfective`, `Imperfective`]}
+    correctIndex={1}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"She wrote the letter (completed)" uses:`}
+    options={[`Perfective`, `Imperfective`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"We will do this tomorrow (once)" uses:`}
+    options={[`Perfective`, `Imperfective`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"I will be reading in the evening" uses:`}
+    options={[`Perfective`, `Imperfective`]}
+    correctIndex={1}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Did you finish?" expects:`}
+    options={[`Perfective`, `Imperfective`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"He studies every day" uses:`}
+    options={[`Perfective`, `Imperfective`]}
+    correctIndex={1}
+    explanation={``}
+  />
+</Quiz>
+
+
+
+### Aspect Sentences
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`книгу / прочитав / Я / цю`}
+    answer={`Я прочитав цю книгу.`}
+  />
+  <UnjumbleQuestion
+    words={`листа / Вона / написала`}
+    answer={`Вона написала листа.`}
+  />
+  <UnjumbleQuestion
+    words={`зробили / Ми / завдання`}
+    answer={`Ми зробили завдання.`}
+  />
+  <UnjumbleQuestion
+    words={`побачив / Він / її`}
+    answer={`Він побачив її.`}
+  />
+  <UnjumbleQuestion
+    words={`почула / шум / Вона`}
+    answer={`Вона почула шум.`}
+  />
+  <UnjumbleQuestion
+    words={`каву / випив / Я`}
+    answer={`Я випив каву.`}
+  />
+  <UnjumbleQuestion
+    words={`все / зрозумів / Він`}
+    answer={`Він зрозумів все.`}
+  />
+  <UnjumbleQuestion
+    words={`двері / відкрила / Вона`}
+    answer={`Вона відкрила двері.`}
+  />
+</Unjumble>
+
+### Wrong Aspect
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я **читав** книгу вчора і закінчив.`}
+    error={`читав`}
+    answer={`прочитав`}
+    options={[`прочитав`, `читав`]}
+    explanation={`"Finished" = completed action → perfective.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона **написала** листи кожного дня.`}
+    error={`написала`}
+    answer={`пише`}
+    options={[`пише`, `написала`]}
+    explanation={`"Every day" = habitual → imperfective.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми **зробили** це, коли ви прийшли.`}
+    error={`зробили`}
+    answer={`робили`}
+    options={[`робили`, `зробили`]}
+    explanation={`Action was in progress when interrupted → imperfective.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він **вивчив** українську мову щодня.`}
+    error={`вивчив`}
+    answer={`вчить`}
+    options={[`вчить`, `вивчив`]}
+    explanation={`"Every day" = habitual → imperfective.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я **пишу** листа і відправив.`}
+    error={`пишу`}
+    answer={`написав`}
+    options={[`написав`, `пишу`]}
+    explanation={`"Sent" implies completion → both verbs should be perfective.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона **п'є** каву і вийшла.`}
+    error={`п'є`}
+    answer={`випила`}
+    options={[`випила`, `п'є`]}
+    explanation={`Sequence of completed actions → both verbs should be perfective.`}
+  />
+</ErrorCorrection>
+
+### Formation Pattern
+
+*Group verbs by how perfective is formed.*
+
+
+<GroupSort groups={{
+  "### Prefix (про-, на-, з-, по-)": [
+    "читати → прочитати",
+    "писати → написати",
+    "робити → зробити",
+    "бачити → побачити"
+  ],
+  "Suppletive (different roots)": [
+    "говорити → сказати",
+    "брати → взяти",
+    "шукати → знайти",
+    "класти → покласти",
+    "--"
+  ]
+}} />
+

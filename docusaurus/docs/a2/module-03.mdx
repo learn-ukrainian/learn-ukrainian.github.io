@@ -5,19 +5,20 @@ title: "Dative Verbs"
 description: "Helping, Thanking, and Believing"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 In this module, you'll discover which Ukrainian verbs require the Dative case — these are verbs of helping, thanking, believing, and trusting. Understanding verb "case government" (which case a verb requires) is essential for speaking Ukrainian correctly.
@@ -38,6 +39,17 @@ English uses the same direct object for "I help my mother" and "I see my mother.
 Some verbs in Ukrainian are "dative-hungry" — they always need a dative object. When you help someone, you допомагаєш **комусь** (help *to someone*). When you believe someone, you віриш **комусь** (believe *to someone*). The dative is built into how these verbs work.
 
 Think about English: "I help my mother" uses a direct object. But Ukrainian says "I help *to* my mother" — Я допомагаю мамі.
+
+:::info
+🔗 External Resources
+
+**YouTube:** [10 Ukrainian Verbs that take Dative Case...](https://www.youtube.com/watch?v=pZvCMMjtAo0) — Let's Learn Ukrainian
+
+**Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
+
+**Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
+:::
+
 
 ---
 
@@ -64,7 +76,8 @@ These verbs ALWAYS require a dative object — they cannot take an accusative:
 | симпатизувати | to sympathize | Я симпатизую цій ідеї. |
 | співчувати | to feel for | Ми співчуваємо родині. |
 
-:::tip[Подобатися — A Special Verb That Flips the Sentence]
+:::tip
+Подобатися — A Special Verb That Flips the Sentence
 In English, "I like the book" makes "I" the subject and "book" the object. Ukrainian flips this completely! "The book pleases *to me*" — Книга подобається **мені**. The thing liked becomes the grammatical subject (nominative case), and the person experiencing the liking is in the dative case.
 
 **Think of it this way:** In Ukrainian, you don't actively "do" liking — rather, things please YOU. This passive experience is expressed with dative.
@@ -85,18 +98,12 @@ This verb deserves special attention because it flips the typical English senten
 Їй не подобається ця ідея. (She doesn't like this idea.)
 Нам подобається Україна! (We like Ukraine!)
 
-:::info[У кінотеатрі в Одесі (At the Cinema in Odesa)]
-<div className="conversation">
-
+:::info
+У кінотеатрі в Одесі (At the Cinema in Odesa)
 — Тобі сподобався фільм? (Did you like the film?)
-
 — Так! Мені дуже сподобалася головна героїня. (Yes! I really liked the main heroine.)
-
 — А мені сподобалась музика. (And I liked the music.)
-
 — Нам обом сподобався цей вечір! (We both liked this evening!)
-
-</div>
 :::
 
 
@@ -117,7 +124,8 @@ These verbs take TWO objects: a dative (recipient) and an accusative (thing):
 | писати | Dat + Acc | Я пишу другові повідомлення. |
 | радити | Dat + Acc | Лікар радить пацієнтові ліки. |
 
-:::info[Word Order Flexibility — Cases Set You Free]
+:::info
+Word Order Flexibility — Cases Set You Free
 In Ukrainian, word order is remarkably flexible because case endings do the work of showing grammatical relationships. You can emphasize different elements by moving them to sentence-initial position:
 - **Я даю мамі квіти.** (neutral statement)
 - **Мамі я даю квіти.** (emphasis: it's specifically to MOM I give flowers)
@@ -157,7 +165,8 @@ These verbs take a dative person + infinitive action:
 Дощ заважає нам гуляти. (Rain prevents us from walking.)
 Я допомагаю братові вчитися. (I help my brother study.)
 
-:::warning[Common Mistake: Forgetting the Dative]
+:::warning
+Common Mistake: Forgetting the Dative
 A very common error for English speakers is using accusative instead of dative with these verbs. This happens because English uses direct objects ("I help my mother") where Ukrainian uses dative ("I help to my mother").
 
 **Watch out for this pattern:**
@@ -193,7 +202,8 @@ Ukrainians have a rich culture of expressing gratitude, and the language provide
 Дякую лікареві за допомогу. (Thank the doctor for help.)
 Дякуємо вчителеві за урок. (We thank the teacher for the lesson.)
 
-:::tip[Дякую vs. Спасибі — When to use each]
+:::tip
+Дякую vs. Спасибі — When to use each
 Both words mean "thank you," but they have different origins and connotations:
 - **Дякую** — the native Ukrainian word, derived from an ancient Slavic root meaning "to give thanks." Preferred in formal contexts, written Ukrainian, and official speech.
 - **Спасибі** — derived from the phrase "спаси Боже" (may God save/bless you). More casual and commonly used in everyday conversation.
@@ -213,7 +223,8 @@ Ukrainian distinguishes between two levels of forgiveness, each with its own ver
 Я вибачаю тобі цю помилку. (I forgive you this mistake.)
 Чи можеш ти пробачити мені? (Can you forgive me?)
 
-:::note[Language Evolution and Cultural Values]
+:::note
+Language Evolution and Cultural Values
 The distinction between вибачати and пробачати reflects deeper cultural values embedded in the Ukrainian language. Ukrainian traditionally reserves stronger, more emotionally weighted words for serious matters, while using lighter variants for everyday situations.
 
 This careful gradation of meaning shows how the language encourages thoughtful, measured communication about sensitive topics like forgiveness. You wouldn't use пробачати for stepping on someone's toe — that would feel dramatically out of proportion. Conversely, using вибачати for a serious betrayal would seem dismissive.
@@ -222,18 +233,12 @@ Learning to choose the right word for the situation is part of developing cultur
 :::
 
 
-:::info[Родинна сцена в Харкові (Family Scene in Kharkiv)]
-<div className="conversation">
-
+:::info
+Родинна сцена в Харкові (Family Scene in Kharkiv)
 — Мамо, вибач мені. Я розбив твою вазу. (Mom, excuse me. I broke your vase.)
-
 — Ти знаєш, як я люблю цю вазу! (You know how I love that vase!)
-
 — Я дуже шкодую. Ти пробачаєш мені? (I'm very sorry. Do you forgive me?)
-
 — Звичайно пробачаю. Ти мій син. (Of course I forgive you. You're my son.)
-
-</div>
 :::
 
 
@@ -277,53 +282,31 @@ The following dialogues show Dative verbs in natural conversation. Notice how д
 This dialogue demonstrates допомагати (to help) with Dative — notice the librarian says "Я покажу вам" (I'll show to you).
 
 **У бібліотеці:**
-<div className="conversation">
-
 — Вибачте, ви можете допомогти мені?
-
 — Звичайно! Що вам потрібно?
-
 — Я шукаю книгу про історію України.
-
 — Я покажу вам, де вона стоїть.
-
 — Дякую вам!
-
-</div>
 
 **Dialogue 2: На вечірці (At the Party)**
 
 Here заважати (to bother) and подобатися (to please) both need Dative: тобі, мені.
 
 **На вечірці:**
-<div className="conversation">
-
 — Ця музика заважає тобі?
-
 — Ні, мені подобається ця музика!
-
 — Справді? Мені вона не подобається.
-
 — Кожному своє!
-
-</div>
 
 **Dialogue 3: У лікарні (At the Hospital)**
 
 Here радити (to advise) takes Dat + Acc (recommending something TO someone), and забороняти (to forbid) takes Dat + Inf.
 
 **У лікарні:**
-<div className="conversation">
-
 — Лікарю, що ви радите мені?
-
 — Я раджу вам відпочивати.
-
 — Ви забороняєте мені працювати?
-
 — Так, я забороняю вам працювати цього тижня.
-
-</div>
 
 ---
 
@@ -381,376 +364,7 @@ This reading presents a teacher's diary entries over one week. Each entry uses m
 
 Тепер ви можете допомагати, дякувати, довіряти і вибачати — все з правильним давальним відмінком!
 
-## 🎯 Activities
 
-### Verb + Dative Pattern
-
-<MatchUp pairs={[
-  { left: `допомагати`, right: `to help someone (Dat only)` },
-  { left: `давати`, right: `to give something to someone (Dat + Acc)` },
-  { left: `заважати`, right: `to bother someone (Dat only)` },
-  { left: `показувати`, right: `to show something to someone (Dat + Acc)` },
-  { left: `подобатися`, right: `to please someone (Dat only)` },
-  { left: `пояснювати`, right: `to explain something to someone (Dat + Acc)` },
-  { left: `вірити`, right: `to believe someone (Dat only)` },
-  { left: `дякувати`, right: `to thank someone (Dat only)` },
-  { left: `радити`, right: `to advise someone something (Dat + Acc)` },
-  { left: `довіряти`, right: `to trust someone (Dat only)` },
-  { left: `забороняти`, right: `to forbid someone (Dat + Inf)` },
-  { left: `дозволяти`, right: `to allow someone (Dat + Inf)` }
-]} />
-
-### Choose the Correct Form
-
-<FillIn items={[
-  {
-    sentence: `Я ___ мамі готувати обід.`,
-    answer: `допомагаю`,
-    options: [`допомагаю`, `допомагати`, `допомагає`]
-  },  {
-    sentence: `Ця музика ___ мені спати.`,
-    answer: `заважає`,
-    options: [`заважає`, `заважати`, `заважаю`]
-  },  {
-    sentence: `Мені ___ цей фільм.`,
-    answer: `подобається`,
-    options: [`подобається`, `подобаюсь`, `подобатися`]
-  },  {
-    sentence: `Він ___ другові свою машину.`,
-    answer: `показує`,
-    options: [`показує`, `показувати`, `показуюсь`]
-  },  {
-    sentence: `Вчитель ___ учням нове правило.`,
-    answer: `пояснює`,
-    options: [`пояснює`, `пояснювати`, `пояснюється`]
-  },  {
-    sentence: `Я ___ тобі за допомогу!`,
-    answer: `дякую`,
-    options: [`дякую`, `дякувати`, `дякуюсь`]
-  },  {
-    sentence: `Ми не ___ цій людині.`,
-    answer: `довіряємо`,
-    options: [`довіряємо`, `довіряти`, `довіряється`]
-  },  {
-    sentence: `Батько ___ синові вчитися краще.`,
-    answer: `радить`,
-    options: [`радить`, `радити`, `радиться`]
-  },  {
-    sentence: `Лікар ___ пацієнтові курити.`,
-    answer: `забороняє`,
-    options: [`забороняє`, `забороняти`, `забороняється`]
-  },  {
-    sentence: `Я ___ тобі цю помилку.`,
-    answer: `вибачаю`,
-    options: [`вибачаю`, `вибачати`, `вибачаюсь`]
-  },  {
-    sentence: `Вона ___ подрузі новину.`,
-    answer: `розповідає`,
-    options: [`розповідає`, `розповідати`, `розповідається`]
-  },  {
-    sentence: `Мама ___ дітям гратися надворі.`,
-    answer: `дозволяє`,
-    options: [`дозволяє`, `дозволяти`, `дозволяється`]
-  }
-]} />
-
-### Dative Verb Patterns
-
-<Quiz questions={[
-  {
-    question: `Який відмінок потрібен після \"допомагати\"?`,
-    options: [
-      { text: `Accusative`, correct: false },
-      { text: `Dative`, correct: true },
-      { text: `Genitive`, correct: false }
-    ]
-  },  {
-    question: `\"Подобатися\" — яка конструкція правильна?`,
-    options: [
-      { text: `Мені подобається кава.`, correct: true },
-      { text: `Я подобаюся кава.`, correct: false },
-      { text: `Я подобаю каву.`, correct: false }
-    ]
-  },  {
-    question: `Яке речення правильне?`,
-    options: [
-      { text: `Я вірю цей людина.`, correct: false },
-      { text: `Я вірю цю людину.`, correct: false },
-      { text: `Я вірю цій людині.`, correct: true }
-    ]
-  },  {
-    question: `\"Давати\" потребує...`,
-    options: [
-      { text: `тільки давального відмінка`, correct: false },
-      { text: `тільки знахідного відмінка`, correct: false },
-      { text: `давального + знахідного відмінка`, correct: true }
-    ]
-  },  {
-    question: `Як сказати \"I thank the teacher\"?`,
-    options: [
-      { text: `Я дякую вчитель.`, correct: false },
-      { text: `Я дякую вчителеві.`, correct: true },
-      { text: `Я дякую вчителя.`, correct: false }
-    ]
-  },  {
-    question: `Яке речення правильне?`,
-    options: [
-      { text: `Мама забороняє дітям їсти цукерки.`, correct: true },
-      { text: `Мама забороняє дітей їсти цукерки.`, correct: false },
-      { text: `Мама забороняє діти їсти цукерки.`, correct: false }
-    ]
-  },  {
-    question: `\"Заздрити\" потребує...`,
-    options: [
-      { text: `давального відмінка`, correct: true },
-      { text: `знахідного відмінка`, correct: false },
-      { text: `родового відмінка`, correct: false }
-    ]
-  },  {
-    question: `Як сказати \"The noise bothers me\"?`,
-    options: [
-      { text: `Шум заважає мені.`, correct: true },
-      { text: `Шум заважає мене.`, correct: false },
-      { text: `Шум заважає я.`, correct: false }
-    ]
-  },  {
-    question: `Яке речення правильне?`,
-    options: [
-      { text: `Я пояснюю учні правило.`, correct: false },
-      { text: `Я пояснюю учнів правило.`, correct: false },
-      { text: `Я пояснюю учням правило.`, correct: true }
-    ]
-  },  {
-    question: `\"Співчувати\" потребує...`,
-    options: [
-      { text: `давального відмінка`, correct: true },
-      { text: `знахідного відмінка`, correct: false },
-      { text: `орудного відмінка`, correct: false }
-    ]
-  },  {
-    question: `Як сказати \"I forgive you\"?`,
-    options: [
-      { text: `Я пробачаю ти.`, correct: false },
-      { text: `Я пробачаю тобі.`, correct: true },
-      { text: `Я пробачаю тебе.`, correct: false }
-    ]
-  },  {
-    question: `Яке речення правильне?`,
-    options: [
-      { text: `Він радить мені відпочити.`, correct: true },
-      { text: `Він радить мене відпочити.`, correct: false },
-      { text: `Він радить я відпочити.`, correct: false }
-    ]
-  }
-]} />
-
-### Dative Verb Rules
-
-<TrueFalse items={[
-  {
-    statement: `\"Допомагати\" requires the accusative case.`,
-    isTrue: false,
-    explanation: `Допомагати requires the dative: Я допомагаю мамі.`
-  },  {
-    statement: `\"Подобатися\" makes the liked thing the grammatical subject.`,
-    isTrue: true,
-    explanation: `Yes! \"Мені подобається кава\" — кава is the subject, мені is dative.`
-  },  {
-    statement: `\"Давати\" requires both dative and accusative objects.`,
-    isTrue: true,
-    explanation: `Correct! Я даю мамі книгу.`
-  },  {
-    statement: `\"Вірити\" can take an accusative object.`,
-    isTrue: false,
-    explanation: `Вірити only takes dative: Я вірю другові.`
-  },  {
-    statement: `\"Забороняти\" takes dative + infinitive.`,
-    isTrue: true,
-    explanation: `Correct! Мама забороняє дітям гратися.`
-  },  {
-    statement: `\"Заздрити\" means \"to help.\"`,
-    isTrue: false,
-    explanation: `Заздрити means \"to envy.\" Допомагати means \"to help.\"`
-  },  {
-    statement: `In \"Мені подобається музика,\" \"мені\" is the subject.`,
-    isTrue: false,
-    explanation: `Мені is dative. Музика is the nominative subject.`
-  },  {
-    statement: `\"Дякую тобі\" and \"Дякую вам\" both use the dative case.`,
-    isTrue: true,
-    explanation: `Correct! Тобі and вам are both dative forms.`
-  },  {
-    statement: `\"Показувати\" is a dative-only verb.`,
-    isTrue: false,
-    explanation: `Показувати takes Dat + Acc: Я показую другові фото.`
-  },  {
-    statement: `\"Співчувати\" requires the dative case.`,
-    isTrue: true,
-    explanation: `Correct! Я співчуваю родині.`
-  },  {
-    statement: `\"Пояснювати\" only needs an accusative object.`,
-    isTrue: false,
-    explanation: `Пояснювати takes Dat + Acc: Я пояснюю учням правило.`
-  },  {
-    statement: `Word order in Ukrainian sentences with dative is completely fixed.`,
-    isTrue: false,
-    explanation: `Word order is flexible! Case endings show grammatical roles.`
-  }
-]} />
-
-### Verb Categories
-
-<GroupSort groups={{
-  "Dative Only": ["допомагати", "заважати", "подобатися", "вірити", "довіряти", "дякувати"],
-  "Dative + Accusative": ["давати", "показувати", "пояснювати", "розповідати", "радити", "писати"]
-}} />
-
-### Dative Verb Sentences
-
-<Unjumble items={[
-  { jumbled: `я / допомагаю / мамі / готувати / обід`, answer: `Я допомагаю мамі готувати обід.` },
-  { jumbled: `мені / подобається / ця / музика`, answer: `Мені подобається ця музика.` },
-  { jumbled: `він / показує / другові / нову / машину`, answer: `Він показує другові нову машину.` },
-  { jumbled: `вчитель / пояснює / учням / складне / правило`, answer: `Вчитель пояснює учням складне правило.` },
-  { jumbled: `я / дякую / тобі / за / допомогу`, answer: `Я дякую тобі за допомогу.` },
-  { jumbled: `ця / музика / заважає / мені / спати`, answer: `Ця музика заважає мені спати.` }
-]} />
-
-### Fix the Dative Errors
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я допомагаю маму.`}
-    errorWord={`маму`}
-    correctForm={`мамі`}
-    options={[`маму`, `мамі`, `мамою`, `мама`]}
-    explanation={`The verb «допомагати» requires Dative case. Feminine nouns ending in -а take -і: мама → мамі.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Мене подобається ця книга.`}
-    errorWord={`Мене`}
-    correctForm={`Мені`}
-    options={[`Мене`, `Мені`, `Мій`, `Моя`]}
-    explanation={`With «подобатися», the experiencer is in Dative. The pronoun «я» becomes «мені» in Dative, not «мене» (Accusative).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він показує друг свою машину.`}
-    errorWord={`друг`}
-    correctForm={`другові`}
-    options={[`друг`, `другові`, `друга`, `другом`]}
-    explanation={`The verb «показувати» takes Dative + Accusative. The recipient needs Dative: друг → другові.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вчитель пояснює учнів правило.`}
-    errorWord={`учнів`}
-    correctForm={`учням`}
-    options={[`учнів`, `учням`, `учні`, `учнями`]}
-    explanation={`The verb «пояснювати» takes Dative + Accusative. The Dative plural of «учень» is «учням», not «учнів» (Genitive).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я дякую тебе за допомогу.`}
-    errorWord={`тебе`}
-    correctForm={`тобі`}
-    options={[`тебе`, `тобі`, `тобою`, `ти`]}
-    explanation={`The verb «дякувати» requires Dative. The pronoun «ти» becomes «тобі» in Dative, not «тебе» (Accusative).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Музика заважає мене спати.`}
-    errorWord={`мене`}
-    correctForm={`мені`}
-    options={[`мене`, `мені`, `мною`, `я`]}
-    explanation={`The verb «заважати» requires Dative. The pronoun «я» becomes «мені» in Dative, not «мене» (Accusative).`}
-  />
-</ErrorCorrection>
-
-### Complete the Story
-
-<Cloze
-  passage={`Марія працює вчителькою. Щодня вона [___:1] учням нові теми. Коли учень не розуміє, вона [___:2] йому. Марія [___:3] своїм учням — вони старанні. Батьки [___:4] Марії за хорошу роботу.`}
-  blanks={[{ answer: `Йому`, options: [`Йому`] }, { answer: `заважає`, options: [`заважає`] }, { answer: `розуміє`, options: [`розуміє`] }, { answer: `каже`, options: [`каже`] }]}
-/>
-
-### At the Doctor's Office
-
-<DialogueReorder lines={[
-  { text: `Дякую вам, лікарю!`, order: 1 },
-  { text: `Добрий день! Що вас турбує?`, order: 2 },
-  { text: `Я раджу вам відпочивати і пити багато води.`, order: 3 },
-  { text: `Мені боляче ковтати. Я думаю, це ангіна.`, order: 4 },
-  { text: `Ви забороняєте мені працювати?`, order: 5 },
-  { text: `Так, це ангіна. Я забороняю вам працювати цього тижня.`, order: 6 },
-  { text: `Так, звичайно!`, order: 7 },
-  { text: `Ти можеш показати мені цю фотографію?`, order: 8 },
-  { text: `Дякую! Мені дуже подобається це місце.`, order: 9 },
-  { text: `Це Карпати. Я був там минулого року.`, order: 10 },
-  { text: `Яке гарне місце! Що це?`, order: 11 },
-  { text: `Тобі теж варто поїхати туди!`, order: 12 }
-]} />
-
-### Find Dative Objects
-
-<MarkTheWords>
-<MarkTheWordsActivity
-  text={`Click on the dative objects in these sentences.
-
-Я допомагаю мамі готувати обід. Вона дякує мені. Музика заважає сусідам. Вчитель пояснює учням правило.`}
-  correctWords={[`мамі`, `мені`, `Музика`, `сусідам`, `учням`, `правило`]}
-/>
-<MarkTheWordsActivity
-  text={`Мені подобається ця книга. Він показує другові фото. Ми довіряємо лікареві. Батьки забороняють дітям гратися надворі.`}
-  correctWords={[`Мені`, `ця книга`, `другові`, `фото`, `лікареві`, `дітям`, `гратися`]}
-/>
-<MarkTheWordsActivity
-  text={`Бабуся розповідає онукам казку. Я вірю тобі. Лікар радить пацієнтові відпочивати. Вона заздрить подрузі.`}
-  correctWords={[`онукам`, `казку`, `тобі`, `Лікар`, `пацієнтові`, `подрузі`]}
-/>
-</MarkTheWords>
-
-### English to Ukrainian
-
-<Translate questions={[
-  {
-    source: `I help my brother.`,
-    options: [
-      { text: `Я допомагаю брат.`, correct: false },
-      { text: `Я допомагаю братові.`, correct: true },
-      { text: `Я допомагаю брата.`, correct: false },
-      { text: `Вона показує подрузі фото.`, correct: true },
-      { text: `Вона показує подруга фото.`, correct: false },
-      { text: `Вона показує подругу фото.`, correct: false },
-      { text: `Лікар забороняє пацієнт курити.`, correct: false },
-      { text: `Лікар забороняє пацієнтові курити.`, correct: true },
-      { text: `Лікар забороняє пацієнта курити.`, correct: false },
-      { text: `Я дякую тебе за допомогу.`, correct: false },
-      { text: `Я дякую тобі за допомогу.`, correct: true },
-      { text: `Я дякую ти за допомогу.`, correct: false },
-      { text: `Музика заважає сусідам.`, correct: true },
-      { text: `Музика заважає сусіди.`, correct: false },
-      { text: `Музика заважає сусідів.`, correct: false },
-      { text: `Я подобаюся цей фільм.`, correct: false },
-      { text: `Мені подобається цей фільм.`, correct: true },
-      { text: `Я подобаю цей фільм.`, correct: false },
-      { text: `Вчитель пояснює учням правило.`, correct: true },
-      { text: `Вчитель пояснює учні правило.`, correct: false },
-      { text: `Вчитель пояснює учнів правило.`, correct: false },
-      { text: `Я довіряю друг.`, correct: false },
-      { text: `Я довіряю другові.`, correct: true },
-      { text: `Я довіряю друга.`, correct: false },
-      { text: `Мама дозволяє дітям гратися.`, correct: true },
-      { text: `Мама дозволяє діти гратися.`, correct: false },
-      { text: `Мама дозволяє дітей гратися.`, correct: false },
-      { text: `Вона заздрить подруга.`, correct: false },
-      { text: `Вона заздрить подрузі.`, correct: true },
-      { text: `Вона заздрить подругу.`, correct: false },
-      { text: `Я вірю ти.`, correct: false },
-      { text: `Я вірю тобі.`, correct: true },
-      { text: `Я вірю тебе.`, correct: false },
-      { text: `Бабуся розповідає онукам казку.`, correct: true },
-      { text: `Бабуся розповідає онуки казку.`, correct: false },
-      { text: `Бабуся розповідає онуків казку.`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -785,3 +399,573 @@ This reading presents a teacher's diary entries over one week. Each entry uses m
 | час | /t͡ʃɑs/ | time | noun | m | review from A1 |
 
 ---
+
+---
+
+## 🎯 Activities
+
+### Verb + Dative Pattern
+
+<MatchUp pairs={[
+  { left: `допомагати`, right: `to help someone (Dat only)` },
+  { left: `давати`, right: `to give something to someone (Dat + Acc)` },
+  { left: `заважати`, right: `to bother someone (Dat only)` },
+  { left: `показувати`, right: `to show something to someone (Dat + Acc)` },
+  { left: `подобатися`, right: `to please someone (Dat only)` },
+  { left: `пояснювати`, right: `to explain something to someone (Dat + Acc)` },
+  { left: `вірити`, right: `to believe someone (Dat only)` },
+  { left: `дякувати`, right: `to thank someone (Dat only)` },
+  { left: `радити`, right: `to advise someone something (Dat + Acc)` },
+  { left: `довіряти`, right: `to trust someone (Dat only)` },
+  { left: `забороняти`, right: `to forbid someone (Dat + Inf)` },
+  { left: `дозволяти`, right: `to allow someone (Dat + Inf)` }
+]} />
+
+### Choose the Correct Form
+
+*Complete each sentence with the correct verb form.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я ___ мамі готувати обід.`}
+    answer={`допомагаю`}
+    options={[`допомагаю`, `допомагати`, `допомагає`]}
+  />
+  <FillInQuestion
+    sentence={`Ця музика ___ мені спати.`}
+    answer={`заважає`}
+    options={[`заважає`, `заважати`, `заважаю`]}
+  />
+  <FillInQuestion
+    sentence={`Мені ___ цей фільм.`}
+    answer={`подобається`}
+    options={[`подобається`, `подобаюсь`, `подобатися`]}
+  />
+  <FillInQuestion
+    sentence={`Він ___ другові свою машину.`}
+    answer={`показує`}
+    options={[`показує`, `показувати`, `показуюсь`]}
+  />
+  <FillInQuestion
+    sentence={`Вчитель ___ учням нове правило.`}
+    answer={`пояснює`}
+    options={[`пояснює`, `пояснювати`, `пояснюється`]}
+  />
+  <FillInQuestion
+    sentence={`Я ___ тобі за допомогу!`}
+    answer={`дякую`}
+    options={[`дякую`, `дякувати`, `дякуюсь`]}
+  />
+  <FillInQuestion
+    sentence={`Ми не ___ цій людині.`}
+    answer={`довіряємо`}
+    options={[`довіряємо`, `довіряти`, `довіряється`]}
+  />
+  <FillInQuestion
+    sentence={`Батько ___ синові вчитися краще.`}
+    answer={`радить`}
+    options={[`радить`, `радити`, `радиться`]}
+  />
+  <FillInQuestion
+    sentence={`Лікар ___ пацієнтові курити.`}
+    answer={`забороняє`}
+    options={[`забороняє`, `забороняти`, `забороняється`]}
+  />
+  <FillInQuestion
+    sentence={`Я ___ тобі цю помилку.`}
+    answer={`вибачаю`}
+    options={[`вибачаю`, `вибачати`, `вибачаюсь`]}
+  />
+  <FillInQuestion
+    sentence={`Вона ___ подрузі новину.`}
+    answer={`розповідає`}
+    options={[`розповідає`, `розповідати`, `розповідається`]}
+  />
+  <FillInQuestion
+    sentence={`Мама ___ дітям гратися надворі.`}
+    answer={`дозволяє`}
+    options={[`дозволяє`, `дозволяти`, `дозволяється`]}
+  />
+</FillIn>
+
+### Dative Verb Patterns
+
+<Quiz>
+  <QuizQuestion
+    question={`1. Який відмінок потрібен після "допомагати"?`}
+    options={[`Accusative`, `Dative`, `Genitive`]}
+    correctIndex={1}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Подобатися" — яка конструкція правильна?`}
+    options={[`Мені подобається кава.`, `Я подобаюся кава.`, `Я подобаю каву.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Яке речення правильне?`}
+    options={[`Я вірю цей людина.`, `Я вірю цю людину.`, `Я вірю цій людині.`]}
+    correctIndex={2}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Давати" потребує...`}
+    options={[`тільки давального відмінка`, `тільки знахідного відмінка`, `давального + знахідного відмінка`]}
+    correctIndex={2}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Як сказати "I thank the teacher"?`}
+    options={[`Я дякую вчитель.`, `Я дякую вчителеві.`, `Я дякую вчителя.`]}
+    correctIndex={1}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Яке речення правильне?`}
+    options={[`Мама забороняє дітям їсти цукерки.`, `Мама забороняє дітей їсти цукерки.`, `Мама забороняє діти їсти цукерки.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Заздрити" потребує...`}
+    options={[`давального відмінка`, `знахідного відмінка`, `родового відмінка`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Як сказати "The noise bothers me"?`}
+    options={[`Шум заважає мені.`, `Шум заважає мене.`, `Шум заважає я.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Яке речення правильне?`}
+    options={[`Я пояснюю учні правило.`, `Я пояснюю учнів правило.`, `Я пояснюю учням правило.`]}
+    correctIndex={2}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Співчувати" потребує...`}
+    options={[`давального відмінка`, `знахідного відмінка`, `орудного відмінка`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Як сказати "I forgive you"?`}
+    options={[`Я пробачаю ти.`, `Я пробачаю тобі.`, `Я пробачаю тебе.`]}
+    correctIndex={1}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Яке речення правильне?`}
+    options={[`Він радить мені відпочити.`, `Він радить мене відпочити.`, `Він радить я відпочити.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### Dative Verb Rules
+
+*Decide if each statement is true or false.*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`"Допомагати" requires the accusative case.`}
+    isTrue={false}
+    explanation={`Допомагати requires the dative: Я допомагаю мамі.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Подобатися" makes the liked thing the grammatical subject.`}
+    isTrue={true}
+    explanation={`Yes! "Мені подобається кава" — кава is the subject, мені is dative.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Давати" requires both dative and accusative objects.`}
+    isTrue={true}
+    explanation={`Correct! Я даю мамі книгу.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Вірити" can take an accusative object.`}
+    isTrue={false}
+    explanation={`Вірити only takes dative: Я вірю другові.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Забороняти" takes dative + infinitive.`}
+    isTrue={true}
+    explanation={`Correct! Мама забороняє дітям гратися.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Заздрити" means "to help."`}
+    isTrue={false}
+    explanation={`Заздрити means "to envy." Допомагати means "to help."`}
+  />
+  <TrueFalseQuestion
+    statement={`In "Мені подобається музика," "мені" is the subject.`}
+    isTrue={false}
+    explanation={`Мені is dative. Музика is the nominative subject.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Дякую тобі" and "Дякую вам" both use the dative case.`}
+    isTrue={true}
+    explanation={`Correct! Тобі and вам are both dative forms.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Показувати" is a dative-only verb.`}
+    isTrue={false}
+    explanation={`Показувати takes Dat + Acc: Я показую другові фото.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Співчувати" requires the dative case.`}
+    isTrue={true}
+    explanation={`Correct! Я співчуваю родині.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Пояснювати" only needs an accusative object.`}
+    isTrue={false}
+    explanation={`Пояснювати takes Dat + Acc: Я пояснюю учням правило.`}
+  />
+  <TrueFalseQuestion
+    statement={`Word order in Ukrainian sentences with dative is completely fixed.`}
+    isTrue={false}
+    explanation={`Word order is flexible! Case endings show grammatical roles.`}
+  />
+</TrueFalse>
+
+### Verb Categories
+
+*Sort these verbs into the correct category.*
+
+
+<GroupSort groups={{
+  "### Dative Only": [
+    "допомагати",
+    "заважати",
+    "подобатися",
+    "вірити",
+    "довіряти",
+    "дякувати"
+  ],
+  "Dative + Accusative": [
+    "давати",
+    "показувати",
+    "пояснювати",
+    "розповідати",
+    "радити",
+    "писати"
+  ]
+}} />
+
+### Dative Verb Sentences
+
+*Put the words in the correct order.*
+
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`я / допомагаю / мамі / готувати / обід`}
+    answer={`Я допомагаю мамі готувати обід.`}
+  />
+  <UnjumbleQuestion
+    words={`мені / подобається / ця / музика`}
+    answer={`Мені подобається ця музика.`}
+  />
+  <UnjumbleQuestion
+    words={`він / показує / другові / нову / машину`}
+    answer={`Він показує другові нову машину.`}
+  />
+  <UnjumbleQuestion
+    words={`вчитель / пояснює / учням / складне / правило`}
+    answer={`Вчитель пояснює учням складне правило.`}
+  />
+  <UnjumbleQuestion
+    words={`я / дякую / тобі / за / допомогу`}
+    answer={`Я дякую тобі за допомогу.`}
+  />
+  <UnjumbleQuestion
+    words={`ця / музика / заважає / мені / спати`}
+    answer={`Ця музика заважає мені спати.`}
+  />
+</Unjumble>
+
+### Fix the Dative Errors
+
+*Each sentence has ONE error. Find and correct it.*
+
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я допомагаю маму.`}
+    error={`маму`}
+    answer={`мамі`}
+    options={[`маму`, `мамі`, `мамою`, `мама`]}
+    explanation={`The verb «допомагати» requires Dative case. Feminine nouns ending in -а take -і: мама → мамі.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Мене подобається ця книга.`}
+    error={`Мене`}
+    answer={`Мені`}
+    options={[`Мене`, `Мені`, `Мій`, `Моя`]}
+    explanation={`With «подобатися», the experiencer is in Dative. The pronoun «я» becomes «мені» in Dative, not «мене» (Accusative).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він показує друг свою машину.`}
+    error={`друг`}
+    answer={`другові`}
+    options={[`друг`, `другові`, `друга`, `другом`]}
+    explanation={`The verb «показувати» takes Dative + Accusative. The recipient needs Dative: друг → другові.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вчитель пояснює учнів правило.`}
+    error={`учнів`}
+    answer={`учням`}
+    options={[`учнів`, `учням`, `учні`, `учнями`]}
+    explanation={`The verb «пояснювати» takes Dative + Accusative. The Dative plural of «учень» is «учням», not «учнів» (Genitive).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я дякую тебе за допомогу.`}
+    error={`тебе`}
+    answer={`тобі`}
+    options={[`тебе`, `тобі`, `тобою`, `ти`]}
+    explanation={`The verb «дякувати» requires Dative. The pronoun «ти» becomes «тобі» in Dative, not «тебе» (Accusative).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Музика заважає мене спати.`}
+    error={`мене`}
+    answer={`мені`}
+    options={[`мене`, `мені`, `мною`, `я`]}
+    explanation={`The verb «заважати» requires Dative. The pronoun «я» becomes «мені» in Dative, not «мене» (Accusative).`}
+  />
+</ErrorCorrection>
+
+### Complete the Story
+
+*Fill in the blanks with the correct words.*
+
+
+<Cloze>
+  <ClozePassage
+    text={`Марія працює вчителькою. Щодня вона [___:1] учням нові теми. Коли учень не розуміє, вона [___:2] йому. Марія [___:3] своїм учням — вони старанні. Батьки [___:4] Марії за хорошу роботу.`}
+    blanks={[
+  {
+    "index": 0,
+    "options": [
+      "пояснює",
+      "пояснювати",
+      "пояснюється"
+    ],
+    "answer": "пояснює"
+  },
+  {
+    "index": 1,
+    "options": [
+      "допомагає",
+      "допомагати",
+      "допомагається"
+    ],
+    "answer": "допомагає"
+  },
+  {
+    "index": 2,
+    "options": [
+      "вірить",
+      "вірити",
+      "віриться"
+    ],
+    "answer": "вірить"
+  },
+  {
+    "index": 3,
+    "options": [
+      "дякують",
+      "дякувати",
+      "дякуються"
+    ],
+    "answer": "дякують"
+  },
+  {
+    "index": 4,
+    "options": [
+      "Йому",
+      "Його",
+      "Він"
+    ],
+    "answer": "Йому"
+  },
+  {
+    "index": 5,
+    "options": [
+      "заважає",
+      "заважати",
+      "заважається"
+    ],
+    "answer": "заважає"
+  },
+  {
+    "index": 6,
+    "options": [
+      "пробачає",
+      "розуміє",
+      "любить"
+    ],
+    "answer": "розуміє"
+  },
+  {
+    "index": 7,
+    "options": [
+      "каже",
+      "говорить",
+      "розповідає"
+    ],
+    "answer": "каже"
+  }
+]}
+  />
+</Cloze>
+
+### At the Doctor's Office
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Дякую вам, лікарю!"
+  },
+  {
+    "speaker": "",
+    "line": "Добрий день! Що вас турбує?"
+  },
+  {
+    "speaker": "",
+    "line": "Я раджу вам відпочивати і пити багато води."
+  },
+  {
+    "speaker": "",
+    "line": "Мені боляче ковтати. Я думаю, це ангіна."
+  },
+  {
+    "speaker": "",
+    "line": "Ви забороняєте мені працювати?"
+  },
+  {
+    "speaker": "",
+    "line": "Так, це ангіна. Я забороняю вам працювати цього тижня."
+  },
+  {
+    "speaker": "",
+    "line": "Так, звичайно!"
+  },
+  {
+    "speaker": "",
+    "line": "Ти можеш показати мені цю фотографію?"
+  },
+  {
+    "speaker": "",
+    "line": "Дякую! Мені дуже подобається це місце."
+  },
+  {
+    "speaker": "",
+    "line": "Це Карпати. Я був там минулого року."
+  },
+  {
+    "speaker": "",
+    "line": "Яке гарне місце! Що це?"
+  },
+  {
+    "speaker": "",
+    "line": "Тобі теж варто поїхати туди!"
+  }
+]} />
+</DialogueReorder>
+
+### Find Dative Objects
+
+Click on the dative objects in these sentences.
+
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Я допомагаю мамі готувати обід. Вона дякує мені. Музика заважає сусідам. Вчитель пояснює учням правило. Мені подобається ця книга. Він показує другові фото. Ми довіряємо лікареві. Батьки забороняють дітям гратися надворі. Бабуся розповідає онукам казку. Я вірю тобі. Лікар радить пацієнтові відпочивати. Вона заздрить подрузі.`}
+    correctWords={[`мамі`, `мені`, `сусідам`, `учням`, `Мені`, `другові`, `лікареві`, `дітям`, `онукам`, `тобі`, `пацієнтові`, `подрузі`]}
+  />
+</MarkTheWords>
+
+### English to Ukrainian
+
+<Translate>
+  <TranslateItem
+    source={`I help my brother.`}
+    answer={`Я допомагаю братові.`}
+    options={[`Я допомагаю брат.`, `Я допомагаю братові.`, `Я допомагаю брата.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She shows her friend a photo.`}
+    answer={`Вона показує подрузі фото.`}
+    options={[`Вона показує подрузі фото.`, `Вона показує подруга фото.`, `Вона показує подругу фото.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`The doctor forbids the patient to smoke.`}
+    answer={`Лікар забороняє пацієнтові курити.`}
+    options={[`Лікар забороняє пацієнт курити.`, `Лікар забороняє пацієнтові курити.`, `Лікар забороняє пацієнта курити.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I thank you for the help.`}
+    answer={`Я дякую тобі за допомогу.`}
+    options={[`Я дякую тебе за допомогу.`, `Я дякую тобі за допомогу.`, `Я дякую ти за допомогу.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`The music bothers the neighbors.`}
+    answer={`Музика заважає сусідам.`}
+    options={[`Музика заважає сусідам.`, `Музика заважає сусіди.`, `Музика заважає сусідів.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I like this film.`}
+    answer={`Мені подобається цей фільм.`}
+    options={[`Я подобаюся цей фільм.`, `Мені подобається цей фільм.`, `Я подобаю цей фільм.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`The teacher explains the rule to the students.`}
+    answer={`Вчитель пояснює учням правило.`}
+    options={[`Вчитель пояснює учням правило.`, `Вчитель пояснює учні правило.`, `Вчитель пояснює учнів правило.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I trust my friend.`}
+    answer={`Я довіряю другові.`}
+    options={[`Я довіряю друг.`, `Я довіряю другові.`, `Я довіряю друга.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Mom allows the children to play.`}
+    answer={`Мама дозволяє дітям гратися.`}
+    options={[`Мама дозволяє дітям гратися.`, `Мама дозволяє діти гратися.`, `Мама дозволяє дітей гратися.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She envies her friend.`}
+    answer={`Вона заздрить подрузі.`}
+    options={[`Вона заздрить подруга.`, `Вона заздрить подрузі.`, `Вона заздрить подругу.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I believe you.`}
+    answer={`Я вірю тобі.`}
+    options={[`Я вірю ти.`, `Я вірю тобі.`, `Я вірю тебе.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Grandma tells the grandchildren a story.`}
+    answer={`Бабуся розповідає онукам казку.`}
+    options={[`Бабуся розповідає онукам казку.`, `Бабуся розповідає онуки казку.`, `Бабуся розповідає онуків казку.`]}
+    explanation={``}
+  />
+</Translate>
+

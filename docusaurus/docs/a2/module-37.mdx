@@ -5,19 +5,20 @@ title: "Action Verb Prefixes"
 description: "The Magic of Transformation"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Warm-up
@@ -35,11 +36,23 @@ In English, you use phrasal verbs or extra words.
 In Ukrainian, you just click a LEGO piece (prefix) onto the verb!
 **Писати** -> **За**писати, **Пере**писати, **По**писати, **Під**писати.
 
-:::note[Think about it]
+:::tip
+Think about it
 A prefix changes the "angle" of the action.
 - **Пере-** usually means "re-" (redo) or "across".
 - **До-** usually means "finish" (to the end).
 - **За-** usually means "close" or "fix/record".
+:::
+
+
+:::info
+🔗 External Resources
+
+**YouTube:** [Prefix з-/с-: Which one to use? ...](https://www.youtube.com/watch?v=fRv6h6nhPxQ) — Spell It Right! #Ukrainian
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 :::
 
 
@@ -81,7 +94,8 @@ Let's look at the most powerful "Transformers".
 Редактор прочитав і сказав: "Це шедевр!".
 Вранці письменник **прокинувся** відомим.
 
-:::note[Cultural Insight: Hospitality]
+:::note
+Cultural Insight: Hospitality
 Prefixes are everywhere in Ukrainian culture, especially hospitality.
 When guests arrive, you **відкрити** (open) the door and the wine.
 You **накрити** (cover/set) the table ("накрити на стіл").
@@ -112,7 +126,8 @@ Unlike English ("turn on/off" vs "open/close"), Ukrainian logic is consistent.
 | Eyes | Open | **Розплющити** (Specific!) |
 | Eyes | Close | **Заплющити** |
 
-:::note[Open vs Unlock]
+:::note
+Open vs Unlock
 **Відкрити** usually means to open access (a store, a bottle, a new land).
 **Відчинити** is specifically for physical barriers like doors and windows.
 However, in modern Ukrainian, **відкрити двері** is also common, though purists prefer **відчинити**.
@@ -160,17 +175,29 @@ Base: **Єднати** (to unite).
 ## Dialogue: Office Chaos
 
 **Manager:** Андрій, ти вже **написав** звіт?
+
 **Andriy:** Так, я написав його вчора.
+
 **Manager:** Де він? Я не можу його знайти.
+
 **Andriy:** Я **відправив** його тобі на пошту.
+
 **Manager:** Я не отримав. Ти точно **натиснув** "Відправити"?
+
 **Andriy:** Ой, здається, я **забув** натиснути кнопку.
+
 **Manager:** Андрій! Ти маєш **надіслати** його зараз же! Клієнт чекає!
+
 **Andriy:** Добре, я зараз **відкрию** пошту і **перешлю**.
+
 **Manager:** І будь ласка, **перевір** цифри. Минулого разу ти помилився.
+
 **Andriy:** Я все **переписав** і **перевірив**. Не хвилюйся.
+
 **Manager:** Сподіваюся. Якщо ми втратимо клієнта, я тебе **звільню** (fire)!
+
 **Andriy:** Все, **відправлено**!
+
 **Manager:** Добре. Тепер **роздрукуй** копію для мене.
 
 ## Monologue: The Renovator
@@ -187,7 +214,8 @@ Base: **Єднати** (to unite).
 Я **наробив** стільки шуму, що прийшли сусіди.
 Ремонт — це жах!
 
-:::tip[Learning Tip]
+:::tip
+Learning Tip
 When you learn a new verb, ask: "Can I add **пере-** (redo) or **до-** (finish)?"
 Usually, the answer is Yes!
 - Їсти -> **До**їсти (Finish eating).
@@ -239,7 +267,8 @@ The prefix **За-** is the trickiest one. It has three opposite meanings!
     *   **Загулятися** (Party/Walk too long).
     *   **Засидітися** (Sit too long / stay up late).
 
-:::warning[Context Matters]
+:::warning
+Context Matters
 - *Він **заговорив**.* = He started speaking.
 - *Він мене **заговорив**.* = He tired me with too much talking.
 The context tells you if it's "Start" or "Too Much".
@@ -250,7 +279,8 @@ The context tells you if it's "Start" or "Too Much".
 
 # Anti-Propaganda Showcase
 
-:::note[Myth: "Ukrainian vocabulary is small."]
+:::warning
+Myth: "Ukrainian vocabulary is small."
 **Fact:** This myth comes from Soviet dictionaries that artificially limited defining Ukrainian words to match Russian ones.
 In reality, Ukrainian prefixation allows for nuances that English needs sentences to explain.
 Example: **Заговорити** (to start speaking / to charm someone / to tire someone with talk).
@@ -275,321 +305,7 @@ One root "говорити" creates dozens of distinct concepts. This is linguis
 
 ---
 
-## 🎯 Activities
 
-### The Transformers
-
-<MatchUp pairs={[
-  { left: `Пере-`, right: `Redo (Do again)` },
-  { left: `До-`, right: `Finish (To the end)` },
-  { left: `За-`, right: `Close / Excess` },
-  { left: `Від-`, right: `Open / Away` },
-  { left: `Під-`, right: `Under / Sub-` },
-  { left: `По-`, right: `A little bit` },
-  { left: `Роз-`, right: `Disperse / Open wide` },
-  { left: `На-`, right: `Create / On` }
-]} />
-
-### The Editor
-
-<FillIn items={[
-  {
-    sentence: `Я хочу ___ цей текст. [Hint: Rewrite \"писати\"]`,
-    answer: `переписати`,
-    options: [`переписати`, `дописати`, `записати`]
-  },  {
-    sentence: `Ми повинні ___ цю роботу. [Hint: Redo \"робити\"]`,
-    answer: `переробити`,
-    options: [`переробити`, `доробити`, `зробити`]
-  },  {
-    sentence: `Треба ___ книгу ще раз. [Hint: Reread \"читати\"]`,
-    answer: `перечитати`,
-    options: [`перечитати`, `дочитати`, `почитати`]
-  },  {
-    sentence: `Стіна погана, треба ___. [Hint: Repaint \"фарбувати\"]`,
-    answer: `перефарбувати`,
-    options: [`перефарбувати`, `пофарбувати`, `зафарбувати`]
-  },  {
-    sentence: `Посуд брудний, треба ___. [Hint: Wash again \"мити\"]`,
-    answer: `перемити`,
-    options: [`перемити`, `помити`, `вимити`]
-  },  {
-    sentence: `Я хочу ___ цей фільм. [Hint: Watch again \"дивитися\"]`,
-    answer: `передивитися`,
-    options: [`передивитися`, `подивитися`, `задивитися`]
-  },  {
-    sentence: `Він вирішив ___ екзамен. [Hint: Retake \"здавати\"]`,
-    answer: `перездати`,
-    options: [`перездати`, `здати`, `видати`]
-  },  {
-    sentence: `Ми ___ плани. [Hint: Changed/Remade \"будувати\"]`,
-    answer: `перебудували`,
-    options: [`перебудували`, `збудували`, `добудували`]
-  }
-]} />
-
-### The Perfectionist
-
-<FillIn items={[
-  {
-    sentence: `Цей текст поганий. Треба його ___. [Hint: Rewrite]`,
-    answer: `переписати`,
-    options: [`переписати`, `дописати`, `записати`]
-  },  {
-    sentence: `Я не ___ книгу, вона нудна. [Hint: Finish reading]`,
-    answer: `дочитав`,
-    options: [`дочитав`, `перечитав`, `почитав`]
-  },  {
-    sentence: `Будь ласка, ___ двері. Холодно. [Hint: Close]`,
-    answer: `закрий`,
-    options: [`закрий`, `відкрий`, `розкрий`]
-  },  {
-    sentence: `Я хочу ___ твій номер телефону. [Hint: Write down]`,
-    answer: `записати`,
-    options: [`записати`, `підписати`, `написати`]
-  },  {
-    sentence: `Де тут можна ___ документи? [Hint: Sign]`,
-    answer: `підписати`,
-    options: [`підписати`, `описати`, `виписати`]
-  },  {
-    sentence: `Мама попросила ___ посуд. [Hint: Wash again]`,
-    answer: `перемити`,
-    options: [`перемити`, `домити`, `замити`]
-  },  {
-    sentence: `Треба ___ роботу до вечора. [Hint: Finish doing]`,
-    answer: `доробити`,
-    options: [`доробити`, `переробити`, `зробити`]
-  },  {
-    sentence: `Він ___ двері ключем. [Hint: Opened]`,
-    answer: `відкрив`,
-    options: [`відкрив`, `закрив`, `розкрив`]
-  }
-]} />
-
-### Open vs Close
-
-<GroupSort groups={{
-  "Opening (Від-/Роз-)": ["Відкрити вікно", "Розгорнути книгу", "Відчинити двері", "Розплющити очі", "Відкоркувати вино", "Відімкнути замок"],
-  "Closing (За-)": ["Закрити вікно", "Згорнути книгу", "Зачинити двері", "Заплющити очі", "Закоркувати вино", "Замкнути замок"]
-}} />
-
-### Meaning Check
-
-<Quiz questions={[
-  {
-    question: `\"Доробити\" means to:`,
-    options: [
-      { text: `Finish doing`, correct: true },
-      { text: `Redo`, correct: false },
-      { text: `Do a little`, correct: false }
-    ]
-  },  {
-    question: `\"Почитати\" means to:`,
-    options: [
-      { text: `Read a little bit`, correct: true },
-      { text: `Finish reading`, correct: false },
-      { text: `Reread`, correct: false }
-    ]
-  },  {
-    question: `\"Підписати\" implies putting your name:`,
-    options: [
-      { text: `Under the text`, correct: true },
-      { text: `Over the text`, correct: false },
-      { text: `Inside the text`, correct: false }
-    ]
-  },  {
-    question: `\"Переробити\" implies the first attempt was:`,
-    options: [
-      { text: `Bad or wrong`, correct: true },
-      { text: `Perfect`, correct: false },
-      { text: `Non-existent`, correct: false }
-    ]
-  },  {
-    question: `\"Наробити\" usually implies:`,
-    options: [
-      { text: `A large quantity`, correct: true },
-      { text: `A small quantity`, correct: false },
-      { text: `A specific quality`, correct: false }
-    ]
-  },  {
-    question: `\"Відкрити\" relates to which preposition logic?`,
-    options: [
-      { text: `Від: Away`, correct: true },
-      { text: `До: To`, correct: false },
-      { text: `В: In`, correct: false }
-    ]
-  },  {
-    question: `\"Здати\" (to betray) literally means:`,
-    options: [
-      { text: `To give up/away`, correct: true },
-      { text: `To give in`, correct: false },
-      { text: `To give under`, correct: false }
-    ]
-  },  {
-    question: `\"Наїстися\" means:`,
-    options: [
-      { text: `To eat until full`, correct: true },
-      { text: `To eat a little`, correct: false },
-      { text: `To start eating`, correct: false }
-    ]
-  }
-]} />
-
-### Propaganda Check
-
-<TrueFalse items={[
-  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False (Prefixes expand it)`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False (To say a lot)`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False (To publish/reveal)`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False (To give back)`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  }
-]} />
-
-### The Test
-
-<Cloze
-  passage={`Студент складав іспит.
-Він [___:1]йшов в аудиторію.
-Він [___:2]тягнув білет.
-Він [___:3]чав писати відповідь.
-Але він зробив помилку і мусив [___:4]писати речення.
-Час закінчувався, він ледве встиг [___:5]писати.
-Він [___:6]дав роботу професору.
-Професор [___:7]вірив і сказав: \"Молодець!\".
-Студент [___:8]дихнув з полегшенням.`}
-  blanks={[{ answer: `увій`, options: [`увій`] }, { answer: `ви`, options: [`ви`] }, { answer: `по`, options: [`по`] }, { answer: `пере`, options: [`пере`] }, { answer: `до`, options: [`до`] }, { answer: `з`, options: [`з`] }, { answer: `пере`, options: [`пере`] }, { answer: `зіт`, options: [`зіт`] }]}
-/>
-
-### Fix the Verb
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я хочу **переписати** це яблуко. (Context: eat finishes it)`}
-    errorWord={`переписати`}
-    correctForm={`доїсти`}
-    options={[`доїсти`, `переписати`]}
-    explanation={`You finish eating (доїсти), not rewrite (переписати) an apple.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Треба **відкрити** вікно, бо холодно. (Logic)`}
-    errorWord={`відкрити`}
-    correctForm={`закрити`}
-    options={[`закрити`, `відкрити`]}
-    explanation={`If cold, close (закрити).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я **дописав** книгу три рази. (Redo context)`}
-    errorWord={`дописав`}
-    correctForm={`перечитав`}
-    options={[`перечитав`, `дописав`]}
-    explanation={`Reading 3 times is re-reading (пере-).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він **підписав** двері ключем. (Open context)`}
-    errorWord={`підписав`}
-    correctForm={`відкрив`}
-    options={[`відкрив`, `підписав`]}
-    explanation={`You open (відкрити) a door with a key. Signed (підписав) makes no sense.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми **розробили** ремонт. (Context: Massive redo/work)`}
-    errorWord={`розробили`}
-    correctForm={`зробили / переробили`}
-    options={[`зробили`, `розробили`, `зробили / переробили`]}
-    explanation={`Use \"зробили\" (simple did) or \"переробили\" (redid). \"Розробили\" implies \"developed/designed\" which is weird for \"repair\".`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я **написав** трохи, 5 хвилин. (Brief process)`}
-    errorWord={`написав`}
-    correctForm={`пописав`}
-    options={[`пописав`, `написав`]}
-    explanation={`Brief process uses По-. \"Написав\" implies a result (finished thing).`}
-  />
-</ErrorCorrection>
-
-### Give and Take
-
-<MatchUp pairs={[
-  { left: `Віддати`, right: `Give back (Return)` },
-  { left: `Передати`, right: `Pass (Salt/Message)` },
-  { left: `Здати`, right: `Turn in / Rent out` },
-  { left: `Видати`, right: `Publish / Reveal` },
-  { left: `Подати`, right: `Serve (Food/Hand)` },
-  { left: `Роздати`, right: `Distribute (To many)` },
-  { left: `Надати`, right: `Provide (Official)` },
-  { left: `Продати`, right: `Sell (Give for money)` }
-]} />
-
-### The Office
-
-<Unjumble items={[
-  { jumbled: `документ / він / підписав`, answer: `Він підписав документ.` },
-  { jumbled: `звіт / ми / переробили`, answer: `Ми переробили звіт.` },
-  { jumbled: `двері / секретар / відкрив`, answer: `Секретар відкрив двері.` },
-  { jumbled: `картку / банк / видав`, answer: `Банк видав картку.` },
-  { jumbled: `книгу / я / дочитав`, answer: `Я дочитав книгу.` },
-  { jumbled: `інтернет / ми / під'єднали`, answer: `Ми під'єднали інтернет.` }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -624,3 +340,296 @@ One root "говорити" creates dozens of distinct concepts. This is linguis
 | перенести | /pɛrɛnɛsˈtɪ/ | to move/reschedule | verb | — | pf |
 | донести | /dɔnɛsˈtɪ/ | to carry to finish | verb | — | pf |
 | почекати | /pɔt͡ʃɛˈkɑtɪ/ | to wait a bit | verb | — | pf |
+
+---
+
+## 🎯 Activities
+
+### The Transformers
+
+*Match the prefix to the transformation.*
+
+
+<MatchUp pairs={[
+  { left: `Пере-`, right: `Redo (Do again)` },
+  { left: `До-`, right: `Finish (To the end)` },
+  { left: `За-`, right: `Close / Excess` },
+  { left: `Від-`, right: `Open / Away` },
+  { left: `Під-`, right: `Under / Sub-` },
+  { left: `По-`, right: `A little bit` },
+  { left: `Роз-`, right: `Disperse / Open wide` },
+  { left: `На-`, right: `Create / On` }
+]} />
+
+### The Editor
+
+*Change the verb to mean "Redo" using the prefix **Пере-**.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я хочу ___ цей текст. [Hint: Rewrite "писати"]`}
+    answer={`переписати`}
+    options={[`переписати`, `дописати`, `записати`]}
+  />
+  <FillInQuestion
+    sentence={`Ми повинні ___ цю роботу. [Hint: Redo "робити"]`}
+    answer={`переробити`}
+    options={[`переробити`, `доробити`, `зробити`]}
+  />
+  <FillInQuestion
+    sentence={`Треба ___ книгу ще раз. [Hint: Reread "читати"]`}
+    answer={`перечитати`}
+    options={[`перечитати`, `дочитати`, `почитати`]}
+  />
+  <FillInQuestion
+    sentence={`Стіна погана, треба ___. [Hint: Repaint "фарбувати"]`}
+    answer={`перефарбувати`}
+    options={[`перефарбувати`, `пофарбувати`, `зафарбувати`]}
+  />
+  <FillInQuestion
+    sentence={`Посуд брудний, треба ___. [Hint: Wash again "мити"]`}
+    answer={`перемити`}
+    options={[`перемити`, `помити`, `вимити`]}
+  />
+  <FillInQuestion
+    sentence={`Я хочу ___ цей фільм. [Hint: Watch again "дивитися"]`}
+    answer={`передивитися`}
+    options={[`передивитися`, `подивитися`, `задивитися`]}
+  />
+  <FillInQuestion
+    sentence={`Він вирішив ___ екзамен. [Hint: Retake "здавати"]`}
+    answer={`перездати`}
+    options={[`перездати`, `здати`, `видати`]}
+  />
+  <FillInQuestion
+    sentence={`Ми ___ плани. [Hint: Changed/Remade "будувати"]`}
+    answer={`перебудували`}
+    options={[`перебудували`, `збудували`, `добудували`]}
+  />
+</FillIn>
+
+### The Perfectionist
+
+*Complete the sentence with the correct prefixed verb.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Цей текст поганий. Треба його ___. [Hint: Rewrite]`}
+    answer={`переписати`}
+    options={[`переписати`, `дописати`, `записати`]}
+  />
+  <FillInQuestion
+    sentence={`Я не ___ книгу, вона нудна. [Hint: Finish reading]`}
+    answer={`дочитав`}
+    options={[`дочитав`, `перечитав`, `почитав`]}
+  />
+  <FillInQuestion
+    sentence={`Будь ласка, ___ двері. Холодно. [Hint: Close]`}
+    answer={`закрий`}
+    options={[`закрий`, `відкрий`, `розкрий`]}
+  />
+  <FillInQuestion
+    sentence={`Я хочу ___ твій номер телефону. [Hint: Write down]`}
+    answer={`записати`}
+    options={[`записати`, `підписати`, `написати`]}
+  />
+  <FillInQuestion
+    sentence={`Де тут можна ___ документи? [Hint: Sign]`}
+    answer={`підписати`}
+    options={[`підписати`, `описати`, `виписати`]}
+  />
+  <FillInQuestion
+    sentence={`Мама попросила ___ посуд. [Hint: Wash again]`}
+    answer={`перемити`}
+    options={[`перемити`, `домити`, `замити`]}
+  />
+  <FillInQuestion
+    sentence={`Треба ___ роботу до вечора. [Hint: Finish doing]`}
+    answer={`доробити`}
+    options={[`доробити`, `переробити`, `зробити`]}
+  />
+  <FillInQuestion
+    sentence={`Він ___ двері ключем. [Hint: Opened]`}
+    answer={`відкрив`}
+    options={[`відкрив`, `закрив`, `розкрив`]}
+  />
+</FillIn>
+
+### Open vs Close
+
+*Is this opening or closing?*
+
+
+<GroupSort groups={{
+  "### Opening (Від-/Роз-)": [
+    "Відкрити вікно",
+    "Розгорнути книгу",
+    "Відчинити двері",
+    "Розплющити очі",
+    "Відкоркувати вино",
+    "Відімкнути замок"
+  ],
+  "Closing (За-)": [
+    "Закрити вікно",
+    "Згорнути книгу",
+    "Зачинити двері",
+    "Заплющити очі",
+    "Закоркувати вино",
+    "Замкнути замок"
+  ]
+}} />
+
+### Meaning Check
+
+*Choose the correct meaning.*
+
+
+<Quiz>
+  <QuizQuestion
+    question={`1. "Доробити" means to:`}
+    options={[`Finish doing`, `Redo`, `Do a little`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Почитати" means to:`}
+    options={[`Read a little bit`, `Finish reading`, `Reread`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Підписати" implies putting your name:`}
+    options={[`Under the text`, `Over the text`, `Inside the text`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Переробити" implies the first attempt was:`}
+    options={[`Bad or wrong`, `Perfect`, `Non-existent`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Наробити" usually implies:`}
+    options={[`A large quantity`, `A small quantity`, `A specific quality`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Відкрити" relates to which preposition logic?`}
+    options={[`Від: Away`, `До: To`, `В: In`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Здати" (to betray) literally means:`}
+    options={[`To give up/away`, `To give in`, `To give under`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Наїстися" means:`}
+    options={[`To eat until full`, `To eat a little`, `To start eating`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+
+
+
+
+### Fix the Verb
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я хочу **переписати** це яблуко. (Context: eat finishes it)`}
+    error={`переписати`}
+    answer={`доїсти`}
+    options={[`доїсти`, `переписати`]}
+    explanation={`You finish eating (доїсти), not rewrite (переписати) an apple.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Треба **відкрити** вікно, бо холодно. (Logic)`}
+    error={`відкрити`}
+    answer={`закрити`}
+    options={[`закрити`, `відкрити`]}
+    explanation={`If cold, close (закрити).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я **дописав** книгу три рази. (Redo context)`}
+    error={`дописав`}
+    answer={`перечитав`}
+    options={[`перечитав`, `дописав`]}
+    explanation={`Reading 3 times is re-reading (пере-).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він **підписав** двері ключем. (Open context)`}
+    error={`підписав`}
+    answer={`відкрив`}
+    options={[`відкрив`, `підписав`]}
+    explanation={`You open (відкрити) a door with a key. Signed (підписав) makes no sense.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми **розробили** ремонт. (Context: Massive redo/work)`}
+    error={`розробили`}
+    answer={`зробили / переробили`}
+    options={[`зробили`, `розробили`]}
+    explanation={`Use "зробили" (simple did) or "переробили" (redid). "Розробили" implies "developed/designed" which is weird for "repair".`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я **написав** трохи, 5 хвилин. (Brief process)`}
+    error={`написав`}
+    answer={`пописав`}
+    options={[`пописав`, `написав`]}
+    explanation={`Brief process uses По-. "Написав" implies a result (finished thing).`}
+  />
+</ErrorCorrection>
+
+### Give and Take
+
+*Match the "Give" verb to its meaning.*
+
+
+<MatchUp pairs={[
+  { left: `Віддати`, right: `Give back (Return)` },
+  { left: `Передати`, right: `Pass (Salt/Message)` },
+  { left: `Здати`, right: `Turn in / Rent out` },
+  { left: `Видати`, right: `Publish / Reveal` },
+  { left: `Подати`, right: `Serve (Food/Hand)` },
+  { left: `Роздати`, right: `Distribute (To many)` },
+  { left: `Надати`, right: `Provide (Official)` },
+  { left: `Продати`, right: `Sell (Give for money)` }
+]} />
+
+### The Office
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`документ / він / підписав`}
+    answer={`Він підписав документ.`}
+  />
+  <UnjumbleQuestion
+    words={`звіт / ми / переробили`}
+    answer={`Ми переробили звіт.`}
+  />
+  <UnjumbleQuestion
+    words={`двері / секретар / відкрив`}
+    answer={`Секретар відкрив двері.`}
+  />
+  <UnjumbleQuestion
+    words={`картку / банк / видав`}
+    answer={`Банк видав картку.`}
+  />
+  <UnjumbleQuestion
+    words={`книгу / я / дочитав`}
+    answer={`Я дочитав книгу.`}
+  />
+  <UnjumbleQuestion
+    words={`інтернет / ми / під'єднали`}
+    answer={`Ми під'єднали інтернет.`}
+  />
+</Unjumble>
+

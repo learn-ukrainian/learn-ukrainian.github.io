@@ -5,19 +5,20 @@ title: "Advanced Motion Prefixes"
 description: "Complex Paths: Crossing, Stopping, Going Around"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Warm-up
@@ -35,6 +36,17 @@ Now we go deeper into **advanced motion prefixes** that describe complex paths:
 These prefixes transform simple motion into precise navigation. After this module, you'll give directions like a local!
 
 Motion prefixes are essential for everyday communication. When you give directions, describe your commute, or tell travel stories, you need these prefixes to be accurate. English uses prepositions for this purpose, but Ukrainian embeds the path information directly into the verb. This is both elegant and efficient.
+
+:::info
+🔗 External Resources
+
+**YouTube:** [Learn verbs of movements # 96...](https://www.youtube.com/watch?v=-tjrxxvT8Q8) — Ukrainian Language
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+:::
+
 
 ---
 
@@ -54,7 +66,8 @@ The prefix **пере-** indicates crossing from one side to another.
 - пере- can also mean "re-" (doing again): переробити = to redo
 - пере- can mean "excessively": переїсти = to overeat
 
-:::tip[Візуалізуйте!]
+:::tip
+Візуалізуйте!
 Уявіть, що пере- означає лінію, яку ви перетинаєте.
 Ви починаєте з одного боку і закінчуєте з іншого.
 Вулиця, річка, міст — всі мають "інший бік" для пере-.
@@ -75,7 +88,8 @@ The prefix **про-** indicates passing through or going past something.
 - пере- = cross to the other side
 - про- = pass through/by without stopping
 
-:::tip[Пере- vs Про-]
+:::tip
+Пере- vs Про-
 **Перейти вулицю** = Cross the street (reach the other side).
 **Пройти вулицю** = Walk through/along the street (from end to end).
 The difference is the perspective: crossing vs traversing.
@@ -108,7 +122,8 @@ The prefix **за-** has multiple meanings related to motion:
 | заплакати | to start crying | Дитина заплакала. |
 | заспівати | to start singing | Вона заспівала пісню. |
 
-:::note[Важлива Традиція]
+:::note
+Важлива Традиція
 Українці часто кажуть: "Заходь до нас!"
 Це означає: "Приходь у гості!"
 Гостинність дуже важлива в українській культурі.
@@ -144,7 +159,8 @@ The prefix **об-** indicates going around something.
 - обійняти = to embrace (arms "around")
 - обдумати = to think over (thoughts "around" the topic)
 
-:::tip[Візуалізуйте Об-]
+:::tip
+Візуалізуйте Об-
 Уявіть коло навколо об'єкта.
 Ви рухаєтесь по колу, не перетинаючи центр.
 Це відрізняється від "пере-" (через) і "про-" (насквозь).
@@ -180,17 +196,13 @@ The prefix **під-** indicates approaching from below or getting closer.
 — Ми можемо **обійти** замок навколо. Або **проїхати** через арку на автобусі.
 
 Один турист запитав:
-<div className="conversation">
-
 — А можна **заїхати** в кафе?
-
 — Так, ми **заїдемо** за кавою після замку.
-
-</div>
 
 Увечері всі **дійшли** до готелю втомлені, але задоволені!
 
-:::note[Українські Екскурсії]
+:::note
+Українські Екскурсії
 В Україні є багато чудових міст для екскурсій.
 Львів, Київ, Одеса — кожне місто має свою історію.
 Українці пишаються своєю культурою та архітектурою.
@@ -229,7 +241,8 @@ The prefix **під-** indicates approaching from below or getting closer.
 
 Увечері вони сиділи біля вогнища і розповідали історії. Це був чудовий відпочинок!
 
-:::note[Карпати — Серце України]
+:::note
+Карпати — Серце України
 Карпатські гори — це популярне місце для відпочинку.
 Тут можна ходити в походи, кататися на лижах, і насолоджуватися природою.
 Гуцули — це етнічна група, яка живе в Карпатах і має унікальну культуру.
@@ -306,263 +319,7 @@ These prefixes combine with motion verbs to create precise navigation instructio
 
 ---
 
-## 🎯 Activities
 
-### Prefix Meanings
-
-<MatchUp pairs={[
-  { left: `пере-`, right: `across, over` },
-  { left: `про-`, right: `through, past` },
-  { left: `за-`, right: `behind, stopping by` },
-  { left: `до-`, right: `reaching destination` },
-  { left: `об-`, right: `around` },
-  { left: `під-`, right: `approaching` },
-  { left: `ви-`, right: `out` },
-  { left: `в-/у-`, right: `into` }
-]} />
-
-### Choose the Prefix
-
-<FillIn items={[
-  {
-    sentence: `[___]йти вулицю (to cross the street)`,
-    answer: `Пере`,
-    options: [`Пере`, `Про`, `За`]
-  },  {
-    sentence: `[___]їхати через місто (to drive through the city)`,
-    answer: `Про`,
-    options: [`Про`, `Пере`, `За`]
-  },  {
-    sentence: `[___]йти в кафе (to stop by the cafe)`,
-    answer: `За`,
-    options: [`За`, `Про`, `До`]
-  },  {
-    sentence: `[___]йти до парку (to reach the park)`,
-    answer: `До`,
-    options: [`До`, `За`, `Про`]
-  },  {
-    sentence: `[___]йти озеро (to walk around the lake)`,
-    answer: `Об`,
-    options: [`Об`, `Про`, `Пере`]
-  },  {
-    sentence: `[___]йти ближче (to approach)`,
-    answer: `Під`,
-    options: [`Під`, `До`, `Про`]
-  },  {
-    sentence: `[___]їхати зупинку (to miss the stop)`,
-    answer: `Про`,
-    options: [`Про`, `Пере`, `За`]
-  },  {
-    sentence: `[___]їхати за хлібом (to stop by for bread)`,
-    answer: `За`,
-    options: [`За`, `До`, `Про`]
-  }
-]} />
-
-### Prefix Concepts
-
-<Quiz questions={[
-  {
-    question: `\"Перейти вулицю\" means:`,
-    options: [
-      { text: `To cross the street`, correct: true },
-      { text: `To walk along the street`, correct: false },
-      { text: `To approach the street`, correct: false }
-    ]
-  },  {
-    question: `\"Зайти до друга\" means:`,
-    options: [
-      { text: `To stop by a friend's place`, correct: true },
-      { text: `To leave a friend's place`, correct: false },
-      { text: `To walk past a friend`, correct: false }
-    ]
-  },  {
-    question: `\"Пройти парк\" means:`,
-    options: [
-      { text: `To walk through/along the park`, correct: true },
-      { text: `To cross the park to the other side`, correct: false },
-      { text: `To go around the park`, correct: false }
-    ]
-  },  {
-    question: `\"Доїхати до Києва\" means:`,
-    options: [
-      { text: `To reach Kyiv`, correct: true },
-      { text: `To leave Kyiv`, correct: false },
-      { text: `To drive through Kyiv`, correct: false }
-    ]
-  },  {
-    question: `\"Обійти озеро\" means:`,
-    options: [
-      { text: `To walk around the lake`, correct: true },
-      { text: `To cross the lake`, correct: false },
-      { text: `To reach the lake`, correct: false }
-    ]
-  },  {
-    question: `\"Підійти ближче\" means:`,
-    options: [
-      { text: `To come closer`, correct: true },
-      { text: `To go away`, correct: false },
-      { text: `To walk around`, correct: false }
-    ]
-  },  {
-    question: `\"Проїхати зупинку\" means:`,
-    options: [
-      { text: `To miss/pass the stop`, correct: true },
-      { text: `To reach the stop`, correct: false },
-      { text: `To cross the stop`, correct: false }
-    ]
-  },  {
-    question: `\"Заходь!\" commonly means:`,
-    options: [
-      { text: `Come in! (invitation)`, correct: true },
-      { text: `Go away!`, correct: false },
-      { text: `Wait here!`, correct: false }
-    ]
-  }
-]} />
-
-### Tour Guide Instructions
-
-<Cloze
-  passage={`Спочатку ми [___:1] вулицю. (cross)
-Потім [___:2] до площі. (reach, approach)
-Ми [___:3] в музей. (stop by)
-Після музею [___:4] парк. (walk through)
-Не [___:5] пам'ятник! (go around)
-Ми [___:6] до замку. (reach)`}
-  blanks={[{ answer: `перейдемо`, options: [`перейдемо`, `пройдемо`, `обійдемо`] }, { answer: `підійдемо`, options: [`підійдемо`, `зайдемо`, `проїдемо`] }, { answer: `зайдемо`, options: [`зайдемо`, `дійдемо`, `обійдемо`] }, { answer: `пройдемо`, options: [`пройдемо`, `перейдемо`, `обійдемо`] }, { answer: `обходьте`, options: [`обходьте`, `переходьте`, `заходьте`] }, { answer: `дійдемо`, options: [`дійдемо`, `зайдемо`, `пройдемо`] }]}
-/>
-
-### Motion Sentences
-
-<Unjumble items={[
-  { jumbled: `вулицю / Перейди / !`, answer: `Перейди вулицю!` },
-  { jumbled: `до / парку / дійшли / Ми`, answer: `Ми дійшли до парку.` },
-  { jumbled: `зупинку / Автобус / проїхав`, answer: `Автобус проїхав зупинку.` },
-  { jumbled: `озеро / Обійди / справа`, answer: `Обійди озеро справа.` },
-  { jumbled: `до / мене / Зайди / ввечері`, answer: `Зайди до мене ввечері!` },
-  { jumbled: `ближче / Підійди / !`, answer: `Підійди ближче!` },
-  { jumbled: `парк / через / Ми / пройшли`, answer: `Ми пройшли через парк.` },
-  { jumbled: `хлібом / за / Заїдь`, answer: `Заїдь за хлібом.` }
-]} />
-
-### Wrong Prefix
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я **проїхав** вулицю на інший бік.`}
-    errorWord={`проїхав`}
-    correctForm={`переїхав`}
-    options={[`переїхав`, `проїхав`]}
-    explanation={`\"To the other side\" = crossing → пере-.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми **перейшли** через парк від початку до кінця.`}
-    errorWord={`перейшли`}
-    correctForm={`пройшли`}
-    options={[`пройшли`, `перейшли`]}
-    explanation={`\"Through from start to end\" = through → про-.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Автобус **дійшов** зупинку і не зупинився.`}
-    errorWord={`дійшов`}
-    correctForm={`проїхав`}
-    options={[`проїхав`, `дійшов`]}
-    explanation={`\"Passed without stopping\" = past → про-.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`**Пройди** ближче до мене.`}
-    errorWord={`Пройди`}
-    correctForm={`Підійди`}
-    options={[`Підійди`, `Пройди`]}
-    explanation={`\"Come closer\" = approach → під-.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми **заходили** озеро пішки.`}
-    errorWord={`заходили`}
-    correctForm={`обходили`}
-    options={[`обходили`, `заходили`]}
-    explanation={`\"Around the lake\" = around → об-.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він **об'їхав** вулицю до іншого боку.`}
-    errorWord={`об'їхав`}
-    correctForm={`переїхав`}
-    options={[`переїхав`, `об'їхав`]}
-    explanation={`\"To the other side\" = across → пере-.`}
-  />
-</ErrorCorrection>
-
-### Prefix Categories
-
-<GroupSort groups={{
-  "Crossing/Over (пере-)": ["перейти", "переїхати", "переплисти", "перебігти"],
-  "Through/Past (про-)": ["пройти", "проїхати", "пролетіти", "пробігти"],
-  "Stopping By (за-)": ["зайти", "заїхати", "забігти", "заскочити"]
-}} />
-
-### Directions
-
-<MatchUp pairs={[
-  { left: `Перейди вулицю`, right: `Cross the street` },
-  { left: `Пройди через парк`, right: `Walk through the park` },
-  { left: `Зайди до друга`, right: `Stop by your friend's` },
-  { left: `Дійди до кінця`, right: `Reach the end` },
-  { left: `Обійди будинок`, right: `Go around the building` },
-  { left: `Підійди ближче`, right: `Come closer` },
-  { left: `Проїдь зупинку`, right: `Pass the stop` },
-  { left: `Заїдь за молоком`, right: `Stop by for milk` }
-]} />
-
-### Daily Commute
-
-<FillIn items={[
-  {
-    sentence: `Олег [___] з дому о сьомій. (exits)`,
-    answer: `виходить`,
-    options: [`виходить`, `заходить`, `проходить`]
-  },  {
-    sentence: `Він [___] до зупинки. (approaches)`,
-    answer: `підходить`,
-    options: [`підходить`, `проходить`, `заходить`]
-  },  {
-    sentence: `Автобус [___] три зупинки. (passes)`,
-    answer: `проїжджає`,
-    options: [`проїжджає`, `переїжджає`, `об'їжджає`]
-  },  {
-    sentence: `Олег [___] вулицю. (crosses)`,
-    answer: `переходить`,
-    options: [`переходить`, `проходить`, `обходить`]
-  },  {
-    sentence: `Він [___] до офісу. (reaches)`,
-    answer: `доходить`,
-    options: [`доходить`, `заходить`, `проходить`]
-  },  {
-    sentence: `У обід він [___] квартал. (walks around)`,
-    answer: `обходить`,
-    options: [`обходить`, `проходить`, `переходить`]
-  },  {
-    sentence: `Він [___] в кафе. (stops by)`,
-    answer: `заходить`,
-    options: [`заходить`, `доходить`, `проходить`]
-  },  {
-    sentence: `Увечері він [___] в супермаркет. (stops by, driving)`,
-    answer: `заїжджає`,
-    options: [`заїжджає`, `проїжджає`, `об'їжджає`]
-  }
-]} />
-
-### Carpathians Trip
-
-<Cloze
-  passage={`Родина [___:1] з Києва вранці. (departed)
-По дорозі вони [___:2] багато сіл. (drove through)
-Вони [___:3] в село за сиром. (stopped by)
-Коли вони [___:4] до гір, краєвид був чудовий! (reached)
-Вони [___:5] річку по камінцях. (crossed)
-Потім вони [___:6] озеро. (walked around)`}
-  blanks={[{ answer: `виїхала`, options: [`виїхала`, `заїхала`, `доїхала`] }, { answer: `проїхали`, options: [`проїхали`, `переїхали`, `об'їхали`] }, { answer: `заїхали`, options: [`заїхали`, `доїхали`, `проїхали`] }, { answer: `доїхали`, options: [`доїхали`, `заїхали`, `проїхали`] }, { answer: `перейшли`, options: [`перейшли`, `пройшли`, `обійшли`] }, { answer: `обійшли`, options: [`обійшли`, `пройшли`, `перейшли`] }]}
-/>
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Note |
@@ -597,3 +354,303 @@ These prefixes combine with motion verbs to create precise navigation instructio
 | пам'ятник | /pɑmjˈɑtnɪk/ | monument | noun | - |
 | турист | /turˈɪst/ | tourist | noun | - |
 | напрямок | /nɑprʲɑmˈɔk/ | direction | noun | - |
+
+---
+
+## 🎯 Activities
+
+### Prefix Meanings
+
+*Match the prefix to its core meaning.*
+
+
+<MatchUp pairs={[
+  { left: `пере-`, right: `across, over` },
+  { left: `про-`, right: `through, past` },
+  { left: `за-`, right: `behind, stopping by` },
+  { left: `до-`, right: `reaching destination` },
+  { left: `об-`, right: `around` },
+  { left: `під-`, right: `approaching` },
+  { left: `ви-`, right: `out` },
+  { left: `в-/у-`, right: `into` }
+]} />
+
+### Choose the Prefix
+
+*Select the correct prefix.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. [___]йти вулицю (to cross the street)`}
+    answer={`Пере`}
+    options={[`Пере`, `Про`, `За`]}
+  />
+  <FillInQuestion
+    sentence={`[___]їхати через місто (to drive through the city)`}
+    answer={`Про`}
+    options={[`Про`, `Пере`, `За`]}
+  />
+  <FillInQuestion
+    sentence={`[___]йти в кафе (to stop by the cafe)`}
+    answer={`За`}
+    options={[`За`, `Про`, `До`]}
+  />
+  <FillInQuestion
+    sentence={`[___]йти до парку (to reach the park)`}
+    answer={`До`}
+    options={[`До`, `За`, `Про`]}
+  />
+  <FillInQuestion
+    sentence={`[___]йти озеро (to walk around the lake)`}
+    answer={`Об`}
+    options={[`Об`, `Про`, `Пере`]}
+  />
+  <FillInQuestion
+    sentence={`[___]йти ближче (to approach)`}
+    answer={`Під`}
+    options={[`Під`, `До`, `Про`]}
+  />
+  <FillInQuestion
+    sentence={`[___]їхати зупинку (to miss the stop)`}
+    answer={`Про`}
+    options={[`Про`, `Пере`, `За`]}
+  />
+  <FillInQuestion
+    sentence={`[___]їхати за хлібом (to stop by for bread)`}
+    answer={`За`}
+    options={[`За`, `До`, `Про`]}
+  />
+</FillIn>
+
+### Prefix Concepts
+
+<Quiz>
+  <QuizQuestion
+    question={`1. "Перейти вулицю" means:`}
+    options={[`To cross the street`, `To walk along the street`, `To approach the street`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Зайти до друга" means:`}
+    options={[`To stop by a friend's place`, `To leave a friend's place`, `To walk past a friend`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Пройти парк" means:`}
+    options={[`To walk through/along the park`, `To cross the park to the other side`, `To go around the park`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Доїхати до Києва" means:`}
+    options={[`To reach Kyiv`, `To leave Kyiv`, `To drive through Kyiv`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Обійти озеро" means:`}
+    options={[`To walk around the lake`, `To cross the lake`, `To reach the lake`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Підійти ближче" means:`}
+    options={[`To come closer`, `To go away`, `To walk around`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Проїхати зупинку" means:`}
+    options={[`To miss/pass the stop`, `To reach the stop`, `To cross the stop`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Заходь!" commonly means:`}
+    options={[`Come in! (invitation)`, `Go away!`, `Wait here!`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+
+
+### Motion Sentences
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`вулицю / Перейди / !`}
+    answer={`Перейди вулицю!`}
+  />
+  <UnjumbleQuestion
+    words={`до / парку / дійшли / Ми`}
+    answer={`Ми дійшли до парку.`}
+  />
+  <UnjumbleQuestion
+    words={`зупинку / Автобус / проїхав`}
+    answer={`Автобус проїхав зупинку.`}
+  />
+  <UnjumbleQuestion
+    words={`озеро / Обійди / справа`}
+    answer={`Обійди озеро справа.`}
+  />
+  <UnjumbleQuestion
+    words={`до / мене / Зайди / ввечері`}
+    answer={`Зайди до мене ввечері!`}
+  />
+  <UnjumbleQuestion
+    words={`ближче / Підійди / !`}
+    answer={`Підійди ближче!`}
+  />
+  <UnjumbleQuestion
+    words={`парк / через / Ми / пройшли`}
+    answer={`Ми пройшли через парк.`}
+  />
+  <UnjumbleQuestion
+    words={`хлібом / за / Заїдь`}
+    answer={`Заїдь за хлібом.`}
+  />
+</Unjumble>
+
+### Wrong Prefix
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я **проїхав** вулицю на інший бік.`}
+    error={`проїхав`}
+    answer={`переїхав`}
+    options={[`переїхав`, `проїхав`]}
+    explanation={`"To the other side" = crossing → пере-.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми **перейшли** через парк від початку до кінця.`}
+    error={`перейшли`}
+    answer={`пройшли`}
+    options={[`пройшли`, `перейшли`]}
+    explanation={`"Through from start to end" = through → про-.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Автобус **дійшов** зупинку і не зупинився.`}
+    error={`дійшов`}
+    answer={`проїхав`}
+    options={[`проїхав`, `дійшов`]}
+    explanation={`"Passed without stopping" = past → про-.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`**Пройди** ближче до мене.`}
+    error={`Пройди`}
+    answer={`Підійди`}
+    options={[`Підійди`, `Пройди`]}
+    explanation={`"Come closer" = approach → під-.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми **заходили** озеро пішки.`}
+    error={`заходили`}
+    answer={`обходили`}
+    options={[`обходили`, `заходили`]}
+    explanation={`"Around the lake" = around → об-.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він **об'їхав** вулицю до іншого боку.`}
+    error={`об'їхав`}
+    answer={`переїхав`}
+    options={[`переїхав`, `об'їхав`]}
+    explanation={`"To the other side" = across → пере-.`}
+  />
+</ErrorCorrection>
+
+### Prefix Categories
+
+*Sort verbs by prefix meaning.*
+
+
+<GroupSort groups={{
+  "### Crossing/Over (пере-)": [
+    "перейти",
+    "переїхати",
+    "переплисти",
+    "перебігти"
+  ],
+  "Through/Past (про-)": [
+    "пройти",
+    "проїхати",
+    "пролетіти",
+    "пробігти"
+  ],
+  "Stopping By (за-)": [
+    "зайти",
+    "заїхати",
+    "забігти",
+    "заскочити"
+  ]
+}} />
+
+### Directions
+
+*Match the instruction to the action.*
+
+
+<MatchUp pairs={[
+  { left: `Перейди вулицю`, right: `Cross the street` },
+  { left: `Пройди через парк`, right: `Walk through the park` },
+  { left: `Зайди до друга`, right: `Stop by your friend's` },
+  { left: `Дійди до кінця`, right: `Reach the end` },
+  { left: `Обійди будинок`, right: `Go around the building` },
+  { left: `Підійди ближче`, right: `Come closer` },
+  { left: `Проїдь зупинку`, right: `Pass the stop` },
+  { left: `Заїдь за молоком`, right: `Stop by for milk` }
+]} />
+
+### Daily Commute
+
+*Complete Oleh's route.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Олег [___] з дому о сьомій. (exits)`}
+    answer={`виходить`}
+    options={[`виходить`, `заходить`, `проходить`]}
+  />
+  <FillInQuestion
+    sentence={`Він [___] до зупинки. (approaches)`}
+    answer={`підходить`}
+    options={[`підходить`, `проходить`, `заходить`]}
+  />
+  <FillInQuestion
+    sentence={`Автобус [___] три зупинки. (passes)`}
+    answer={`проїжджає`}
+    options={[`проїжджає`, `переїжджає`, `об'їжджає`]}
+  />
+  <FillInQuestion
+    sentence={`Олег [___] вулицю. (crosses)`}
+    answer={`переходить`}
+    options={[`переходить`, `проходить`, `обходить`]}
+  />
+  <FillInQuestion
+    sentence={`Він [___] до офісу. (reaches)`}
+    answer={`доходить`}
+    options={[`доходить`, `заходить`, `проходить`]}
+  />
+  <FillInQuestion
+    sentence={`У обід він [___] квартал. (walks around)`}
+    answer={`обходить`}
+    options={[`обходить`, `проходить`, `переходить`]}
+  />
+  <FillInQuestion
+    sentence={`Він [___] в кафе. (stops by)`}
+    answer={`заходить`}
+    options={[`заходить`, `доходить`, `проходить`]}
+  />
+  <FillInQuestion
+    sentence={`Увечері він [___] в супермаркет. (stops by, driving)`}
+    answer={`заїжджає`}
+    options={[`заїжджає`, `проїжджає`, `об'їжджає`]}
+  />
+</FillIn>
+
+
+

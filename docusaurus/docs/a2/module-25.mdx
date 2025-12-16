@@ -5,19 +5,20 @@ title: "Telling Stories"
 description: "First, Then, Finally"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Warm-up
@@ -34,6 +35,17 @@ In this module, you will move beyond simple sentences like "I woke up. I ate. I 
 
 > 🧠 **Think about it**
 > In your native language, how do you signal that a story is ending? Do you change your tone? Do you use a specific word like "Eventually"? Ukrainian implies this with words like **врешті-решт**.
+
+:::info
+🔗 External Resources
+
+**YouTube:** [Past Tense in the Ukrainian language...](https://www.youtube.com/watch?v=IxHx6fajRvU) — VERBA SCHOOL
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+:::
+
 
 ---
 
@@ -71,7 +83,8 @@ Compare these two versions:
 1.  **Robot Style:** Я встав. Я поснідав. Я пішов на роботу. (Boring!)
 2.  **Storyteller Style:** **Спочатку** я встав. **Потім** я поснідав. **Після цього** я пішов на роботу. (Better!)
 
-:::note[Grammar Note: Word Order]
+:::note
+Grammar Note: Word Order
 These connectors usually come at the **very beginning** of the sentence to set the scene.
 - **Раптом** почався дощ. (Suddenly, rain started.)
 :::
@@ -102,7 +115,8 @@ Ukrainians love fishing (**риболовля**). Here is a typical exaggerated 
 **Mykola:** **Врешті-решт**, вона зірвалася.
 **Petro:** Ха-ха! Як завжди. Найбільша риба — та, що втекла.
 
-:::tip[Exaggeration]
+:::tip
+Exaggeration
 Notice how Mykola uses **"О, це була пригода!"** to set the stage. Stories are rarely just factual; they are performances.
 :::
 
@@ -175,7 +189,8 @@ Read this story and notice the bold words.
 - **Чесно кажучи...** (Honestly speaking...)
 - **Коротше кажучи...** (Long story short...)
 
-:::tip["Sche" vs "Vzhe"]
+:::tip
+"Sche" vs "Vzhe"
 - **Ще** (Still / Yet): "Я ще не готовий." (I am not ready yet.)
 - **Вже** (Already): "Я вже готовий." (I am already ready.)
 
@@ -201,424 +216,7 @@ Now you can turn a boring list of facts into an exciting narrative!
 
 ---
 
-## 🎯 Activities
 
-### Connectors and Meanings
-
-<MatchUp pairs={[
-  { left: `Спочатку`, right: `At first` },
-  { left: `Потім`, right: `Then` },
-  { left: `Раптом`, right: `Suddenly` },
-  { left: `Нарешті`, right: `Finally` },
-  { left: `Врешті-решт`, right: `In the end` },
-  { left: `Одного разу`, right: `One day (story start)` },
-  { left: `Недавно`, right: `Recently` },
-  { left: `Давно`, right: `Long ago` },
-  { left: `Відразу`, right: `Immediately` },
-  { left: `Щойно`, right: `Just now / Just recently` },
-  { left: `Ледве`, right: `Barely` },
-  { left: `Раніше`, right: `Before / Earlier` }
-]} />
-
-### Complete the Story
-
-<FillIn items={[
-  {
-    sentence: `___ я не любив футбол, але тепер люблю. (Used to/Before)`,
-    answer: `Раніше`,
-    options: [`Раніше`, `Потім`, `Раптом`, `Нарешті`]
-  },  {
-    sentence: `___ йшов дощ, а тепер сонце. (Just now)`,
-    answer: `Щойно`,
-    options: [`Щойно`, `Давно`, `Колись`, `Завжди`]
-  },  {
-    sentence: `Ми чекали три години і ___ автобус приїхав! (Finally)`,
-    answer: `нарешті`,
-    options: [`нарешті`, `спочатку`, `раптом`, `згодом`]
-  },  {
-    sentence: `___ ми пішли в кіно, а після цього в кафе. (First)`,
-    answer: `Спочатку`,
-    options: [`Спочатку`, `Врешті-решт`, `Раптом`, `Якось`]
-  },  {
-    sentence: `Я читав книгу. ___, хтось постукав у двері. (Suddenly)`,
-    answer: `Раптом`,
-    options: [`Раптом`, `Потім`, `Тоді`, `Тому`]
-  },  {
-    sentence: `Він зателефонував ___. (Immediately)`,
-    answer: `відразу`,
-    options: [`відразу`, `ледве`, `ще`, `вже`]
-  },  {
-    sentence: `Це сталося ___ влітку. (Once/Somehow)`,
-    answer: `якось`,
-    options: [`якось`, `вчора`, `тепер`, `завжди`]
-  },  {
-    sentence: `Вона ___ зробила це завдання. (Already)`,
-    answer: `вже`,
-    options: [`вже`, `ще`, `тільки`, `ледве`]
-  },  {
-    sentence: `Ми не бачилися ___. (Long ago)`,
-    answer: `давно`,
-    options: [`давно`, `недавно`, `скоро`, `вчора`]
-  },  {
-    sentence: `___ він став відомим актором. (Later/Subsequently)`,
-    answer: `Згодом`,
-    options: [`Згодом`, `Спочатку`, `Раніше`, `Щойно`]
-  },  {
-    sentence: `Я ___ тебе не впізнав! (Barely/Almost not)`,
-    answer: `ледве`,
-    options: [`ледве`, `дуже`, `так`, `як`]
-  },  {
-    sentence: `Ми ___ прийшли. (Just/Only just)`,
-    answer: `тільки-но`,
-    options: [`тільки-но`, `довго`, `раніше`, `потім`]
-  }
-]} />
-
-### Understand the Sequence
-
-<Quiz questions={[
-  {
-    question: `Which word starts a story?`,
-    options: [
-      { text: `Спочатку`, correct: true },
-      { text: `Потім`, correct: false },
-      { text: `Нарешті`, correct: false }
-    ]
-  },  {
-    question: `Which word implies a sudden change?`,
-    options: [
-      { text: `Несподівано`, correct: true },
-      { text: `Врешті-решт`, correct: false },
-      { text: `Перед цим`, correct: false }
-    ]
-  },  {
-    question: `\"Я **ще** працюю\" means:`,
-    options: [
-      { text: `I am still working.`, correct: true },
-      { text: `I am already working.`, correct: false },
-      { text: `I finished working.`, correct: false }
-    ]
-  },  {
-    question: `\"Це було **недавно**\" means:`,
-    options: [
-      { text: `It was recently.`, correct: true },
-      { text: `It was long ago.`, correct: false },
-      { text: `It will be soon.`, correct: false }
-    ]
-  },  {
-    question: `Which word connects two actions in sequence?`,
-    options: [
-      { text: `Після цього`, correct: true },
-      { text: `Але`, correct: false },
-      { text: `Або`, correct: false }
-    ]
-  },  {
-    question: `\"Врешті-решт\" is best used for:`,
-    options: [
-      { text: `The final conclusion/result`, correct: true },
-      { text: `The beginning`, correct: false },
-      { text: `A sudden surprise`, correct: false }
-    ]
-  },  {
-    question: `\"Одного разу\" usually corresponds to:`,
-    options: [
-      { text: `Once upon a time / One day`, correct: true },
-      { text: `First of all`, correct: false },
-      { text: `Immediately`, correct: false }
-    ]
-  },  {
-    question: `\"Негайно\" means:`,
-    options: [
-      { text: `Immediately / Urgently`, correct: true },
-      { text: `Slowly`, correct: false },
-      { text: `Never`, correct: false }
-    ]
-  },  {
-    question: `\"Перед цим\" means:`,
-    options: [
-      { text: `Before this`, correct: true },
-      { text: `After this`, correct: false },
-      { text: `During this`, correct: false }
-    ]
-  },  {
-    question: `\"Саме тоді\" emphasizes:`,
-    options: [
-      { text: `An exact moment`, correct: true },
-      { text: `A long duration`, correct: false },
-      { text: `A future plan`, correct: false }
-    ]
-  },  {
-    question: `\"Згодом\" implies:`,
-    options: [
-      { text: `Some time later`, correct: true },
-      { text: `At the same time`, correct: false },
-      { text: `Yesterday`, correct: false }
-    ]
-  },  {
-    question: `\"Вже\" indicates:`,
-    options: [
-      { text: `Completion / Already`, correct: true },
-      { text: `Continuation`, correct: false },
-      { text: `Repetition`, correct: false }
-    ]
-  }
-]} />
-
-### Time Categories
-
-<GroupSort groups={{
-  "Start/Past": ["Спочатку", "Раніше", "Давно", "Колись", "Одного разу"],
-  "Sequence/Middle": ["Потім", "Після цього", "Тоді", "Далі", "Згодом"],
-  "Surprise/Speed": ["Раптом", "Несподівано", "Відразу", "Негайно", "Раптово"],
-  "Finish/Result": ["Нарешті", "Врешті-решт", "У кінці"]
-}} />
-
-### True or False?
-
-<TrueFalse items={[
-  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `\"Спочатку\" means \"At first\".`
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: `It means \"Suddenly\".`
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `\"Вже\" = already, \"Ще\" = still/yet.`
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: `Correct.`
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `\"Ледве\" means \"barely\" or \"hardly\".`
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: `It's the classic \"Once upon a time\".`
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `It means \"Before this\".`
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: `It means \"Immediately\" or \"Right now!\".`
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `It refers to the distant past (long ago).`
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: `\"Just now\".`
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: `\"At that exact moment\".`
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: `Aspect is crucial for sequencing (process vs result).`
-  }
-]} />
-
-### The Lost Keys
-
-<Cloze
-  passage={`[___:1] я прийшов додому. Я хотів відкрити двері, але [___:2] зрозумів, що не маю ключів!
-Я шукав у кишені, у сумці, але марно.
-[___:3] я подумав: \"Може, я залишив їх на роботі?\".
-Я [___:4] зателефонував колезі. Він сказав, що на моєму столі нічого немає.
-[___:5] я згадав! Я був у кафе [___:6]. Може, вони там?
-Я [___:7] побіг у кафе.
-[___:8] я прибіг, кафе [___:9] зачинялося.
-Я [___:10] встиг зайти всередину.
-Офіціант усміхнувся і віддав мені ключі.
-[___:11], я був удома. Яка пригода!`}
-  blanks={[{ answer: `Спочатку`, options: [`Спочатку`] }, { answer: `раптом`, options: [`раптом`] }, { answer: `Потім`, options: [`Потім`] }, { answer: `відразу`, options: [`відразу`] }, { answer: `Несподівано`, options: [`Несподівано`] }, { answer: `перед цим`, options: [`перед цим`] }, { answer: `негайно`, options: [`негайно`] }, { answer: `Коли`, options: [`Коли`] }, { answer: `вже`, options: [`вже`] }, { answer: `ледве`, options: [`ледве`] }, { answer: `Нарешті`, options: [`Нарешті`] }]}
-/>
-
-### Telling a Funny Story
-
-<DialogueReorder lines={[
-  { text: `Ти не повіриш, що зі мною сталося вчора!`, order: 1 },
-  { text: `Що саме? Розказуй!`, order: 2 },
-  { text: `Спочатку я пішов у магазин за хлібом.`, order: 3 },
-  { text: `Ну і? Що було далі?`, order: 4 },
-  { text: `Потім я побачив там відомого співака!`, order: 5 },
-  { text: `Серйозно? І що ти зробив?`, order: 6 },
-  { text: `Я хотів підійти, але раптом він почав співати.`, order: 7 },
-  { text: `Неймовірно! І чим усе закінчилося?`, order: 8 },
-  { text: `Врешті-решт, це був просто схожий хлопець.`, order: 9 },
-  { text: `Ха-ха! Яка смішна історія.`, order: 10 }
-]} />
-
-### Identify Connectors
-
-<MarkTheWords>
-<MarkTheWordsActivity
-  text={`Одного разу ми пішли в ліс. Спочатку світило сонце. Але раптом почався дощ. Ми відразу побігли додому. Нарешті ми були в теплі. Згодом ми пили чай.`}
-  correctWords={[`Одного разу`, `Спочатку`, `Але`, `раптом`, `відразу`, `Нарешті`, `Згодом`]}
-/>
-<MarkTheWordsActivity
-  text={`Раніше я не вмів плавати. Потім я пішов у басейн. Врешті-решт я навчився.`}
-  correctWords={[`Раніше`, `Потім`, `Врешті-решт`]}
-/>
-<MarkTheWordsActivity
-  text={`Щойно я зайшов, як телефон задзвонив. Це було несподівано.`}
-  correctWords={[`Щойно`, `несподівано`]}
-/>
-</MarkTheWords>
-
-### Fix the Story Flow
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`**Нарешті** я прокинувся, а **потім** пішов спати.`}
-    errorWord={`Нарешті`}
-    correctForm={`Спочатку`}
-    options={[`Спочатку`, `Нарешті`]}
-    explanation={`Stories start with \"First\", not \"Finally\".`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він прийшов додому **перед цим** роботи. (after work)`}
-    errorWord={`перед цим`}
-    correctForm={`після`}
-    options={[`після`, `перед цим`]}
-    explanation={`\"Після\" = after. \"Перед цим\" = before this.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я **вже** чекаю тебе! (am still waiting)`}
-    errorWord={`вже`}
-    correctForm={`ще`}
-    options={[`ще`, `вже`]}
-    explanation={`\"Ще\" indicates process is still going.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`**Раптом** я поснідав. (Routine action, not sudden)`}
-    errorWord={`Раптом`}
-    correctForm={`Потім`}
-    options={[`Потім`, `Раптом`]}
-    explanation={`Breakfast is usually a sequence step \"Then\", not a shock \"Suddenly\".`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Це сталося **скоро**. (Long ago)`}
-    errorWord={`скоро`}
-    correctForm={`давно`}
-    options={[`давно`, `скоро`]}
-    explanation={`\"Скоро\" = soon. \"Давно\" = long ago.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я зробив це **несподівано**. (Specifically meaning \"immediately\" as reaction)`}
-    errorWord={`несподівано`}
-    correctForm={`відразу`}
-    options={[`відразу`, `несподівано`]}
-    explanation={`\"Відразу\" means immediately/at once. \"Несподівано\" implies surprise.`}
-  />
-</ErrorCorrection>
-
-### English to Ukrainian
-
-<Translate questions={[
-  {
-    source: `First, I wash my face.`,
-    options: [
-      { text: `Спочатку я вмиваюся.`, correct: true },
-      { text: `Потім я вмиваюся.`, correct: false }
-    ]
-  },  {
-    source: `Then I drink coffee.`,
-    options: [
-      { text: `Потім я п'ю каву.`, correct: true },
-      { text: `Раптом я п'ю каву.`, correct: false }
-    ]
-  },  {
-    source: `Suddenly, the phone rang.`,
-    options: [
-      { text: `Раптом задзвонив телефон.`, correct: true },
-      { text: `Нарешті задзвонив телефон.`, correct: false }
-    ]
-  },  {
-    source: `Eventually, we found the house.`,
-    options: [
-      { text: `Врешті-решт ми знайшли будинок.`, correct: true },
-      { text: `Спочатку ми знайшли будинок.`, correct: false }
-    ]
-  },  {
-    source: `I immediately answered.`,
-    options: [
-      { text: `Я відразу відповів.`, correct: true },
-      { text: `Я вже відповів.`, correct: false }
-    ]
-  },  {
-    source: `It happened long ago.`,
-    options: [
-      { text: `Це сталося давно.`, correct: true },
-      { text: `Це сталося недавно.`, correct: false }
-    ]
-  },  {
-    source: `I haven't finished yet.`,
-    options: [
-      { text: `Я ще не закінчив.`, correct: true },
-      { text: `Я вже не закінчив.`, correct: false }
-    ]
-  },  {
-    source: `One day I will go there.`,
-    options: [
-      { text: `Одного разу я поїду туди.`, correct: true },
-      { text: `Раніше я поїду туди.`, correct: false }
-    ]
-  },  {
-    source: `We met recently.`,
-    options: [
-      { text: `Ми зустрілися недавно.`, correct: true },
-      { text: `Ми зустрілися давно.`, correct: false }
-    ]
-  },  {
-    source: `Barely had I started...`,
-    options: [
-      { text: `Ледве я почав...`, correct: true },
-      { text: `Вже я почав...`, correct: false }
-    ]
-  },  {
-    source: `Just then, he came in.`,
-    options: [
-      { text: `Саме тоді він зайшов.`, correct: true },
-      { text: `Потім він зайшов.`, correct: false }
-    ]
-  },  {
-    source: `Before this, I lived in Kyiv.`,
-    options: [
-      { text: `Перед цим я жив у Києві.`, correct: true },
-      { text: `Після цього я жив у Києві.`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -648,4 +246,403 @@ Now you can turn a boring list of facts into an exciting narrative!
 | вже | /ʋʒɛ/ | already | adv | — | aspect |
 | тільки-но | /ˈtɪlʲkɪ nɔ/ | just / as soon as | adv | — | time |
 | саме тоді | /ˈsɑmɛ tɔˈdi/ | just then / at that moment | phrase | — | precision |
+
+
+---
+
+## 🎯 Activities
+
+
+
+### Connectors and Meanings
+
+*Match the connector to its function or translation.*
+
+
+<MatchUp pairs={[
+  { left: `Спочатку`, right: `At first` },
+  { left: `Потім`, right: `Then` },
+  { left: `Раптом`, right: `Suddenly` },
+  { left: `Нарешті`, right: `Finally` },
+  { left: `Врешті-решт`, right: `In the end` },
+  { left: `Одного разу`, right: `One day (story start)` },
+  { left: `Недавно`, right: `Recently` },
+  { left: `Давно`, right: `Long ago` },
+  { left: `Відразу`, right: `Immediately` },
+  { left: `Щойно`, right: `Just now / Just recently` },
+  { left: `Ледве`, right: `Barely` },
+  { left: `Раніше`, right: `Before / Earlier` }
+]} />
+
+### Complete the Story
+
+*Fill in the blanks with the correct connector.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. ___ я не любив футбол, але тепер люблю. (Used to/Before)`}
+    answer={`Раніше`}
+    options={[`Раніше`, `Потім`, `Раптом`, `Нарешті`]}
+  />
+  <FillInQuestion
+    sentence={`___ йшов дощ, а тепер сонце. (Just now)`}
+    answer={`Щойно`}
+    options={[`Щойно`, `Давно`, `Колись`, `Завжди`]}
+  />
+  <FillInQuestion
+    sentence={`Ми чекали три години і ___ автобус приїхав! (Finally)`}
+    answer={`нарешті`}
+    options={[`нарешті`, `спочатку`, `раптом`, `згодом`]}
+  />
+  <FillInQuestion
+    sentence={`___ ми пішли в кіно, а після цього в кафе. (First)`}
+    answer={`Спочатку`}
+    options={[`Спочатку`, `Врешті-решт`, `Раптом`, `Якось`]}
+  />
+  <FillInQuestion
+    sentence={`Я читав книгу. ___, хтось постукав у двері. (Suddenly)`}
+    answer={`Раптом`}
+    options={[`Раптом`, `Потім`, `Тоді`, `Тому`]}
+  />
+  <FillInQuestion
+    sentence={`Він зателефонував ___. (Immediately)`}
+    answer={`відразу`}
+    options={[`відразу`, `ледве`, `ще`, `вже`]}
+  />
+  <FillInQuestion
+    sentence={`Це сталося ___ влітку. (Once/Somehow)`}
+    answer={`якось`}
+    options={[`якось`, `вчора`, `тепер`, `завжди`]}
+  />
+  <FillInQuestion
+    sentence={`Вона ___ зробила це завдання. (Already)`}
+    answer={`вже`}
+    options={[`вже`, `ще`, `тільки`, `ледве`]}
+  />
+  <FillInQuestion
+    sentence={`Ми не бачилися ___. (Long ago)`}
+    answer={`давно`}
+    options={[`давно`, `недавно`, `скоро`, `вчора`]}
+  />
+  <FillInQuestion
+    sentence={`___ він став відомим актором. (Later/Subsequently)`}
+    answer={`Згодом`}
+    options={[`Згодом`, `Спочатку`, `Раніше`, `Щойно`]}
+  />
+  <FillInQuestion
+    sentence={`Я ___ тебе не впізнав! (Barely/Almost not)`}
+    answer={`ледве`}
+    options={[`ледве`, `дуже`, `так`, `як`]}
+  />
+  <FillInQuestion
+    sentence={`Ми ___ прийшли. (Just/Only just)`}
+    answer={`тільки-но`}
+    options={[`тільки-но`, `довго`, `раніше`, `потім`]}
+  />
+</FillIn>
+
+### Understand the Sequence
+
+<Quiz>
+  <QuizQuestion
+    question={`1. Which word starts a story?`}
+    options={[`Спочатку`, `Потім`, `Нарешті`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Which word implies a sudden change?`}
+    options={[`Несподівано`, `Врешті-решт`, `Перед цим`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Я ще працюю" means:`}
+    options={[`I am still working.`, `I am already working.`, `I finished working.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Це було недавно" means:`}
+    options={[`It was recently.`, `It was long ago.`, `It will be soon.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Which word connects two actions in sequence?`}
+    options={[`Після цього`, `Але`, `Або`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Врешті-решт" is best used for:`}
+    options={[`The final conclusion/result`, `The beginning`, `A sudden surprise`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Одного разу" usually corresponds to:`}
+    options={[`Once upon a time / One day`, `First of all`, `Immediately`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Негайно" means:`}
+    options={[`Immediately / Urgently`, `Slowly`, `Never`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Перед цим" means:`}
+    options={[`Before this`, `After this`, `During this`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Саме тоді" emphasizes:`}
+    options={[`An exact moment`, `A long duration`, `A future plan`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Згодом" implies:`}
+    options={[`Some time later`, `At the same time`, `Yesterday`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Вже" indicates:`}
+    options={[`Completion / Already`, `Continuation`, `Repetition`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### Time Categories
+
+*Sort the words into categories.*
+
+
+<GroupSort groups={{
+  "### Start/Past": [
+    "Спочатку",
+    "Раніше",
+    "Давно",
+    "Колись",
+    "Одного разу"
+  ],
+  "Sequence/Middle": [
+    "Потім",
+    "Після цього",
+    "Тоді",
+    "Далі",
+    "Згодом"
+  ],
+  "Surprise/Speed": [
+    "Раптом",
+    "Несподівано",
+    "Відразу",
+    "Негайно",
+    "Раптово"
+  ],
+  "Finish/Result": [
+    "Нарешті",
+    "Врешті-решт",
+    "У кінці"
+  ]
+}} />
+
+
+
+
+
+### Telling a Funny Story
+
+*Reorder the conversation.*
+
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Ти не повіриш, що зі мною сталося вчора!"
+  },
+  {
+    "speaker": "",
+    "line": "Що саме? Розказуй!"
+  },
+  {
+    "speaker": "",
+    "line": "Спочатку я пішов у магазин за хлібом."
+  },
+  {
+    "speaker": "",
+    "line": "Ну і? Що було далі?"
+  },
+  {
+    "speaker": "",
+    "line": "Потім я побачив там відомого співака!"
+  },
+  {
+    "speaker": "",
+    "line": "Серйозно? І що ти зробив?"
+  },
+  {
+    "speaker": "",
+    "line": "Я хотів підійти, але раптом він почав співати."
+  },
+  {
+    "speaker": "",
+    "line": "Неймовірно! І чим усе закінчилося?"
+  },
+  {
+    "speaker": "",
+    "line": "Врешті-решт, це був просто схожий хлопець."
+  },
+  {
+    "speaker": "",
+    "line": "Ха-ха! Яка смішна історія."
+  }
+]} />
+</DialogueReorder>
+
+### Identify Connectors
+
+*Highlight the sequence words.*
+
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Одного разу ми пішли в ліс. Спочатку світило сонце. Але раптом почався дощ. Ми відразу побігли додому. Нарешті ми були в теплі. Згодом ми пили чай. Раніше я не вмів плавати. Потім я пішов у басейн. Врешті-решт я навчився. Щойно я зайшов, як телефон задзвонив. Це було несподівано.`}
+    correctWords={[`Одного разу`, `Спочатку`, `Але`, `раптом`, `відразу`, `Нарешті`, `Згодом`, `Раніше`, `Потім`, `Врешті-решт`, `Щойно`, `несподівано`]}
+  />
+</MarkTheWords>
+
+### Fix the Story Flow
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. **Нарешті** я прокинувся, а **потім** пішов спати.`}
+    error={`Нарешті`}
+    answer={`Спочатку`}
+    options={[`Спочатку`, `Нарешті`]}
+    explanation={`Stories start with "First", not "Finally".`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він прийшов додому **перед цим** роботи. (after work)`}
+    error={`перед цим`}
+    answer={`після`}
+    options={[`після`, `перед цим`]}
+    explanation={`"Після" = after. "Перед цим" = before this.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я **вже** чекаю тебе! (am still waiting)`}
+    error={`вже`}
+    answer={`ще`}
+    options={[`ще`, `вже`]}
+    explanation={`"Ще" indicates process is still going.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`**Раптом** я поснідав. (Routine action, not sudden)`}
+    error={`Раптом`}
+    answer={`Потім`}
+    options={[`Потім`, `Раптом`]}
+    explanation={`Breakfast is usually a sequence step "Then", not a shock "Suddenly".`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Це сталося **скоро**. (Long ago)`}
+    error={`скоро`}
+    answer={`давно`}
+    options={[`давно`, `скоро`]}
+    explanation={`"Скоро" = soon. "Давно" = long ago.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я зробив це **несподівано**. (Specifically meaning "immediately" as reaction)`}
+    error={`несподівано`}
+    answer={`відразу`}
+    options={[`відразу`, `несподівано`]}
+    explanation={`"Відразу" means immediately/at once. "Несподівано" implies surprise.`}
+  />
+</ErrorCorrection>
+
+### English to Ukrainian
+
+*Translate the sentences.*
+
+
+<Translate>
+  <TranslateItem
+    source={`1. First, I wash my face.`}
+    answer={`Спочатку я вмиваюся.`}
+    options={[`Спочатку я вмиваюся.`, `Потім я вмиваюся.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Then I drink coffee.`}
+    answer={`Потім я п'ю каву.`}
+    options={[`Потім я п'ю каву.`, `Раптом я п'ю каву.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Suddenly, the phone rang.`}
+    answer={`Раптом задзвонив телефон.`}
+    options={[`Раптом задзвонив телефон.`, `Нарешті задзвонив телефон.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Eventually, we found the house.`}
+    answer={`Врешті-решт ми знайшли будинок.`}
+    options={[`Врешті-решт ми знайшли будинок.`, `Спочатку ми знайшли будинок.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I immediately answered.`}
+    answer={`Я відразу відповів.`}
+    options={[`Я відразу відповів.`, `Я вже відповів.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`It happened long ago.`}
+    answer={`Це сталося давно.`}
+    options={[`Це сталося давно.`, `Це сталося недавно.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I haven't finished yet.`}
+    answer={`Я ще не закінчив.`}
+    options={[`Я ще не закінчив.`, `Я вже не закінчив.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`One day I will go there.`}
+    answer={`Одного разу я поїду туди.`}
+    options={[`Одного разу я поїду туди.`, `Раніше я поїду туди.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`We met recently.`}
+    answer={`Ми зустрілися недавно.`}
+    options={[`Ми зустрілися недавно.`, `Ми зустрілися давно.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Barely had I started...`}
+    answer={`Ледве я почав...`}
+    options={[`Ледве я почав...`, `Вже я почав...`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Just then, he came in.`}
+    answer={`Саме тоді він зайшов.`}
+    options={[`Саме тоді він зайшов.`, `Потім він зайшов.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Before this, I lived in Kyiv.`}
+    answer={`Перед цим я жив у Києві.`}
+    options={[`Перед цим я жив у Києві.`, `Після цього я жив у Києві.`]}
+    explanation={``}
+  />
+</Translate>
 

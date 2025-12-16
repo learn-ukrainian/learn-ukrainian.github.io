@@ -5,19 +5,20 @@ title: "At the Post Office & Bank"
 description: "Service Interactions with Cases"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 Welcome to the practical world of Ukrainian services! In this module, you'll learn vocabulary and phrases for two essential destinations: the post office (пошта) and the bank (банк). These real-world situations will help you practice the cases you've learned in authentic contexts.
@@ -47,8 +48,18 @@ Before we dive into specific vocabulary, here's how cases work in service contex
 
 Understanding these patterns will help you form correct sentences automatically when you're at a service counter.
 
-:::warning[Key Concept]
+:::warning
+Key Concept
 Most service verbs (відправити, зняти, обміняти, відкрити) take accusative for the direct object. Learn this pattern once and apply it everywhere!
+:::
+
+
+:::info
+🔗 External Resources
+
+**Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
+
+**Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
 :::
 
 
@@ -173,7 +184,8 @@ When interacting at the post office or bank, you'll use multiple cases. Here's a
 - Платити **карткою**. (To pay by card.)
 - Йти з **документами**. (To go with documents.)
 
-:::tip[Polite Requests Formula]
+:::tip
+Polite Requests Formula
 Use **Я хочу** + infinitive + accusative object: "Я хочу відправити листа." Or **Мені потрібно** + infinitive + accusative: "Мені потрібно зняти гроші."
 :::
 
@@ -239,389 +251,7 @@ In this module you learned essential vocabulary for two key service locations in
 
 Тепер ви готові до реальних ситуацій! 📬🏦
 
-## 🎯 Activities
 
-### Post Office Vocabulary
-
-<MatchUp pairs={[
-  { left: `лист`, right: `letter` },
-  { left: `посилка`, right: `package` },
-  { left: `марка`, right: `stamp` },
-  { left: `конверт`, right: `envelope` },
-  { left: `адреса`, right: `address` },
-  { left: `індекс`, right: `postal code` },
-  { left: `відправляти`, right: `to send` },
-  { left: `отримувати`, right: `to receive` },
-  { left: `надсилати`, right: `to mail` },
-  { left: `квитанція`, right: `receipt` },
-  { left: `рекомендований`, right: `registered` },
-  { left: `звичайний`, right: `regular` }
-]} />
-
-### Complete the Sentences
-
-<FillIn items={[
-  {
-    sentence: `Я хочу відправити ___.`,
-    answer: `листа`,
-    options: [`лист`, `листа`, `листом`, `листі`]
-  },  {
-    sentence: `Мені потрібно зняти ___.`,
-    answer: `гроші`,
-    options: [`гроші`, `грошей`, `грошам`, `грошима`]
-  },  {
-    sentence: `Я хочу обміняти ___.`,
-    answer: `долари`,
-    options: [`долари`, `доларів`, `доларам`, `доларами`]
-  },  {
-    sentence: `Дайте, будь ласка, ___.`,
-    answer: `квитанцію`,
-    options: [`квитанція`, `квитанції`, `квитанцію`, `квитанцією`]
-  },  {
-    sentence: `Покажіть ___.`,
-    answer: `паспорт`,
-    options: [`паспорт`, `паспорта`, `паспортом`, `паспорті`]
-  },  {
-    sentence: `Напишіть ___ на конверті.`,
-    answer: `адресу`,
-    options: [`адреса`, `адреси`, `адресу`, `адресою`]
-  },  {
-    sentence: `Мені потрібна нова ___.`,
-    answer: `картка`,
-    options: [`картка`, `картки`, `картку`, `карткою`]
-  },  {
-    sentence: `Я хочу відкрити ___.`,
-    answer: `рахунок`,
-    options: [`рахунок`, `рахунку`, `рахунком`, `рахунці`]
-  },  {
-    sentence: `Скільки коштує ___?`,
-    answer: `марка`,
-    options: [`марка`, `марки`, `марку`, `маркою`]
-  },  {
-    sentence: `Посилка з ___.`,
-    answer: `України`,
-    options: [`Україна`, `України`, `Україні`, `Україною`]
-  },  {
-    sentence: `Платити ___.`,
-    answer: `карткою`,
-    options: [`картка`, `картки`, `картку`, `карткою`]
-  },  {
-    sentence: `П'ятсот ___.`,
-    answer: `гривень`,
-    options: [`гривня`, `гривні`, `гривню`, `гривень`]
-  }
-]} />
-
-### Service Situations
-
-<Quiz questions={[
-  {
-    question: `What do you say to send a letter?`,
-    options: [
-      { text: `Я хочу відправити листа.`, correct: true },
-      { text: `Я хочу відправити лист.`, correct: false },
-      { text: `Я хочу відправити листом.`, correct: false }
-    ]
-  },  {
-    question: `How do you ask for the exchange rate?`,
-    options: [
-      { text: `Який сьогодні курс?`, correct: true },
-      { text: `Який сьогодні гроші?`, correct: false },
-      { text: `Який сьогодні банк?`, correct: false }
-    ]
-  },  {
-    question: `To pay by card, you say:`,
-    options: [
-      { text: `Платити карткою.`, correct: true },
-      { text: `Платити картку.`, correct: false },
-      { text: `Платити картки.`, correct: false }
-    ]
-  },  {
-    question: `\"I need to withdraw money\" is:`,
-    options: [
-      { text: `Мені потрібно зняти гроші.`, correct: true },
-      { text: `Мені потрібно зняти грошей.`, correct: false },
-      { text: `Мені потрібно зняти грошам.`, correct: false }
-    ]
-  },  {
-    question: `\"A package from Ukraine\":`,
-    options: [
-      { text: `Посилка з України.`, correct: true },
-      { text: `Посилка з Україна.`, correct: false },
-      { text: `Посилка з Україну.`, correct: false }
-    ]
-  },  {
-    question: `\"Give me the receipt\":`,
-    options: [
-      { text: `Дайте мені квитанцію.`, correct: true },
-      { text: `Дайте мені квитанція.`, correct: false },
-      { text: `Дайте мені квитанції.`, correct: false }
-    ]
-  },  {
-    question: `How much is a stamp?`,
-    options: [
-      { text: `Скільки коштує марка?`, correct: true },
-      { text: `Скільки коштує марку?`, correct: false },
-      { text: `Скільки коштує марки?`, correct: false }
-    ]
-  },  {
-    question: `I want to open an account:`,
-    options: [
-      { text: `Я хочу відкрити рахунок.`, correct: true },
-      { text: `Я хочу відкрити рахунку.`, correct: false },
-      { text: `Я хочу відкрити рахунком.`, correct: false }
-    ]
-  },  {
-    question: `Write the address:`,
-    options: [
-      { text: `Напишіть адресу.`, correct: true },
-      { text: `Напишіть адреса.`, correct: false },
-      { text: `Напишіть адреси.`, correct: false }
-    ]
-  },  {
-    question: `Five hundred hryvnias:`,
-    options: [
-      { text: `П'ятсот гривень.`, correct: true },
-      { text: `П'ятсот гривня.`, correct: false },
-      { text: `П'ятсот гривні.`, correct: false }
-    ]
-  },  {
-    question: `I lost my card:`,
-    options: [
-      { text: `Я загубив картку.`, correct: true },
-      { text: `Я загубив картка.`, correct: false },
-      { text: `Я загубив карткою.`, correct: false }
-    ]
-  },  {
-    question: `The national currency is:`,
-    options: [
-      { text: `гривня`, correct: true },
-      { text: `рубль`, correct: false },
-      { text: `злотий`, correct: false }
-    ]
-  }
-]} />
-
-### Service Facts
-
-<TrueFalse items={[
-  {
-    statement: `Пошта is the Ukrainian word for post office.`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `Accusative case is used for direct objects in service contexts.`,
-    isTrue: true,
-    explanation: `Yes! Відправити листа, зняти гроші.`
-  },  {
-    statement: `Курс means \"cash\" in Ukrainian.`,
-    isTrue: false,
-    explanation: `Курс means exchange rate. Cash is готівка.`
-  },  {
-    statement: `Instrumental case is used with \"платити\" for payment method.`,
-    isTrue: true,
-    explanation: `Correct! Платити карткою = pay by card.`
-  },  {
-    statement: `Ukrainian banks only use hryvnia.`,
-    isTrue: false,
-    explanation: `Banks also exchange foreign currency.`
-  },  {
-    statement: `Genitive case is used after \"з\" meaning \"from.\"`,
-    isTrue: true,
-    explanation: `Yes! Посилка з України.`
-  },  {
-    statement: `Рахунок means \"account\" in banking context.`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `Посилка means letter.`,
-    isTrue: false,
-    explanation: `Посилка means package. Letter is лист.`
-  },  {
-    statement: `You can use \"Мені потрібно\" to make polite requests.`,
-    isTrue: true,
-    explanation: `Yes! Мені потрібно зняти гроші.`
-  },  {
-    statement: `Дайте мені uses dative case for \"мені.\"`,
-    isTrue: true,
-    explanation: `Correct! Дайте мені = Give to me.`
-  },  {
-    statement: `Марка means money.`,
-    isTrue: false,
-    explanation: `Марка means stamp.`
-  },  {
-    statement: `Квитанція means receipt.`,
-    isTrue: true,
-    explanation: `Correct!`
-  }
-]} />
-
-### Post Office vs Bank
-
-<GroupSort groups={{
-  "Пошта (Post Office)": ["лист", "посилка", "марка", "конверт", "адреса", "індекс"],
-  "Банк": ["рахунок", "картка", "гроші", "валюта", "переказ", "кредит"]
-}} />
-
-### Service Sentences
-
-<Unjumble items={[
-  { jumbled: `я / хочу / відправити / листа`, answer: `Я хочу відправити листа.` },
-  { jumbled: `мені / потрібно / зняти / гроші`, answer: `Мені потрібно зняти гроші.` },
-  { jumbled: `скільки / коштує / марка`, answer: `Скільки коштує марка?` },
-  { jumbled: `який / сьогодні / курс`, answer: `Який сьогодні курс?` },
-  { jumbled: `дайте / будь ласка / квитанцію`, answer: `Дайте, будь ласка, квитанцію.` },
-  { jumbled: `посилка / з / України`, answer: `Посилка з України.` },
-  { jumbled: `я / хочу / обміняти / долари`, answer: `Я хочу обміняти долари.` },
-  { jumbled: `напишіть / адресу / на / конверті`, answer: `Напишіть адресу на конверті.` },
-  { jumbled: `платити / карткою`, answer: `Платити карткою.` },
-  { jumbled: `мені / потрібна / нова / картка`, answer: `Мені потрібна нова картка.` },
-  { jumbled: `я / хочу / відкрити / рахунок`, answer: `Я хочу відкрити рахунок.` },
-  { jumbled: `п'ятсот / гривень`, answer: `П'ятсот гривень.` }
-]} />
-
-### Fix the Case
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я хочу відправити лист.`}
-    errorWord={`лист`}
-    correctForm={`листа`}
-    options={[`лист`, `листа`, `листом`, `листі`]}
-    explanation={`Animate accusative for лист = листа.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Мені потрібно зняти грошей.`}
-    errorWord={`грошей`}
-    correctForm={`гроші`}
-    options={[`грошей`, `гроші`, `грошам`, `грошима`]}
-    explanation={`Direct object of зняти takes accusative: гроші.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Посилка з Україна.`}
-    errorWord={`Україна`}
-    correctForm={`України`}
-    options={[`Україна`, `України`, `Україні`, `Україною`]}
-    explanation={`\"З\" requires genitive: України.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Платити картка.`}
-    errorWord={`картка`}
-    correctForm={`карткою`}
-    options={[`картка`, `картки`, `картку`, `карткою`]}
-    explanation={`Means of payment uses instrumental: карткою.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Дайте мені квитанція.`}
-    errorWord={`квитанція`}
-    correctForm={`квитанцію`}
-    options={[`квитанція`, `квитанції`, `квитанцію`, `квитанцією`]}
-    explanation={`Direct object uses accusative: квитанцію.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я хочу обміняти долар.`}
-    errorWord={`долар`}
-    correctForm={`долари`}
-    options={[`долар`, `долара`, `долари`, `доларами`]}
-    explanation={`Plural accusative: долари.`}
-  />
-</ErrorCorrection>
-
-### Complete the Dialogue
-
-<Cloze
-  passage={`— Добрий день! Я хочу відправити [___:1].
-— Куди?
-— До [___:2].
-— Звичайний чи рекомендований?
-— Рекомендований, будь ласка.
-— Напишіть [___:3] на [___:4].
-— Скільки це [___:5]?
-— Сорок [___:6].`}
-  blanks={[{ answer: `долари`, options: [`долари`] }, { answer: `гривні`, options: [`гривні`] }, { answer: `доларів`, options: [`доларів`] }, { answer: `Курс`, options: [`Курс`] }, { answer: `гривень`, options: [`гривень`] }, { answer: `долари`, options: [`долари`] }]}
-/>
-
-### At the Post Office
-
-<DialogueReorder lines={[
-  { text: `Добрий день! Чим можу допомогти?`, order: 1 },
-  { text: `Я хочу відправити посилку до Німеччини.`, order: 2 },
-  { text: `Що в посилці?`, order: 3 },
-  { text: `Книги і одяг.`, order: 4 },
-  { text: `Покладіть на вагу. Три кілограми.`, order: 5 },
-  { text: `Скільки це коштує?`, order: 6 },
-  { text: `Добрий день! Я хочу обміняти валюту.`, order: 7 },
-  { text: `Яку валюту?`, order: 8 },
-  { text: `Долари на гривні.`, order: 9 },
-  { text: `Скільки доларів?`, order: 10 },
-  { text: `П'ятсот.`, order: 11 },
-  { text: `Курс сьогодні 37. Вісімнадцять тисяч п'ятсот гривень.`, order: 12 }
-]} />
-
-### Find Case Forms
-
-<MarkTheWords>
-<MarkTheWordsActivity
-  text={`Click on words in a specific case.
-
-Я хочу відправити листа до Канади. Дайте мені квитанцію. Посилка з України.`}
-  correctWords={[`листа`, `Канади`, `мені`, `квитанцію`, `України`]}
-/>
-<MarkTheWordsActivity
-  text={`Мені потрібно зняти гроші. Я хочу обміняти долари на гривні. Платити карткою.`}
-  correctWords={[`гроші`, `долари`, `гривні`, `карткою`]}
-/>
-<MarkTheWordsActivity
-  text={`Напишіть адресу на конверті. Покажіть паспорт. Скільки коштує марка?`}
-  correctWords={[`адресу`, `конверті`, `паспорт`, `марка`]}
-/>
-</MarkTheWords>
-
-### English to Ukrainian
-
-<Translate questions={[
-  {
-    source: `I want to send a letter.`,
-    options: [
-      { text: `Я хочу відправити листа.`, correct: true },
-      { text: `Я хочу відправити лист.`, correct: false },
-      { text: `Я хочу відправити листом.`, correct: false },
-      { text: `Скільки коштує марка?`, correct: true },
-      { text: `Скільки коштує марку?`, correct: false },
-      { text: `Скільки коштує марки?`, correct: false },
-      { text: `Мені потрібно зняти гроші.`, correct: true },
-      { text: `Мені потрібно зняти грошей.`, correct: false },
-      { text: `Мені потрібно зняти грошам.`, correct: false },
-      { text: `Посилка з України.`, correct: true },
-      { text: `Посилка з Україна.`, correct: false },
-      { text: `Посилка з Україну.`, correct: false },
-      { text: `Платити карткою.`, correct: true },
-      { text: `Платити картку.`, correct: false },
-      { text: `Платити картки.`, correct: false },
-      { text: `Який сьогодні курс?`, correct: true },
-      { text: `Який сьогодні гроші?`, correct: false },
-      { text: `Який сьогодні банк?`, correct: false },
-      { text: `Я хочу відкрити рахунок.`, correct: true },
-      { text: `Я хочу відкрити рахунку.`, correct: false },
-      { text: `Я хочу відкрити рахунком.`, correct: false },
-      { text: `Напишіть адресу.`, correct: true },
-      { text: `Напишіть адреса.`, correct: false },
-      { text: `Напишіть адреси.`, correct: false },
-      { text: `Дайте мені квитанцію.`, correct: true },
-      { text: `Дайте мені квитанція.`, correct: false },
-      { text: `Дайте мені квитанції.`, correct: false },
-      { text: `П'ятсот гривень.`, correct: true },
-      { text: `П'ятсот гривня.`, correct: false },
-      { text: `П'ятсот гривні.`, correct: false },
-      { text: `Я загубив картку.`, correct: true },
-      { text: `Я загубив картка.`, correct: false },
-      { text: `Я загубив карткою.`, correct: false },
-      { text: `Я хочу обміняти долари.`, correct: true },
-      { text: `Я хочу обміняти долар.`, correct: false },
-      { text: `Я хочу обміняти доларів.`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -664,4 +294,641 @@ In this module you learned essential vocabulary for two key service locations in
 | бланк | /blɑnk/ | form, blank | noun | m | Acc: бланк |
 
 ---
+
+
+---
+
+## 🎯 Activities
+
+### Post Office Vocabulary
+
+<MatchUp pairs={[
+  { left: `лист`, right: `letter` },
+  { left: `посилка`, right: `package` },
+  { left: `марка`, right: `stamp` },
+  { left: `конверт`, right: `envelope` },
+  { left: `адреса`, right: `address` },
+  { left: `індекс`, right: `postal code` },
+  { left: `відправляти`, right: `to send` },
+  { left: `отримувати`, right: `to receive` },
+  { left: `надсилати`, right: `to mail` },
+  { left: `квитанція`, right: `receipt` },
+  { left: `рекомендований`, right: `registered` },
+  { left: `звичайний`, right: `regular` }
+]} />
+
+### Complete the Sentences
+
+*Complete each sentence with the correct word form.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я хочу відправити ___.`}
+    answer={`листа`}
+    options={[`лист`, `листа`, `листом`, `листі`]}
+  />
+  <FillInQuestion
+    sentence={`Мені потрібно зняти ___.`}
+    answer={`гроші`}
+    options={[`гроші`, `грошей`, `грошам`, `грошима`]}
+  />
+  <FillInQuestion
+    sentence={`Я хочу обміняти ___.`}
+    answer={`долари`}
+    options={[`долари`, `доларів`, `доларам`, `доларами`]}
+  />
+  <FillInQuestion
+    sentence={`Дайте, будь ласка, ___.`}
+    answer={`квитанцію`}
+    options={[`квитанція`, `квитанції`, `квитанцію`, `квитанцією`]}
+  />
+  <FillInQuestion
+    sentence={`Покажіть ___.`}
+    answer={`паспорт`}
+    options={[`паспорт`, `паспорта`, `паспортом`, `паспорті`]}
+  />
+  <FillInQuestion
+    sentence={`Напишіть ___ на конверті.`}
+    answer={`адресу`}
+    options={[`адреса`, `адреси`, `адресу`, `адресою`]}
+  />
+  <FillInQuestion
+    sentence={`Мені потрібна нова ___.`}
+    answer={`картка`}
+    options={[`картка`, `картки`, `картку`, `карткою`]}
+  />
+  <FillInQuestion
+    sentence={`Я хочу відкрити ___.`}
+    answer={`рахунок`}
+    options={[`рахунок`, `рахунку`, `рахунком`, `рахунці`]}
+  />
+  <FillInQuestion
+    sentence={`Скільки коштує ___?`}
+    answer={`марка`}
+    options={[`марка`, `марки`, `марку`, `маркою`]}
+  />
+  <FillInQuestion
+    sentence={`Посилка з ___.`}
+    answer={`України`}
+    options={[`Україна`, `України`, `Україні`, `Україною`]}
+  />
+  <FillInQuestion
+    sentence={`Платити ___.`}
+    answer={`карткою`}
+    options={[`картка`, `картки`, `картку`, `карткою`]}
+  />
+  <FillInQuestion
+    sentence={`П'ятсот ___.`}
+    answer={`гривень`}
+    options={[`гривня`, `гривні`, `гривню`, `гривень`]}
+  />
+</FillIn>
+
+### Service Situations
+
+<Quiz>
+  <QuizQuestion
+    question={`1. What do you say to send a letter?`}
+    options={[`Я хочу відправити листа.`, `Я хочу відправити лист.`, `Я хочу відправити листом.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`How do you ask for the exchange rate?`}
+    options={[`Який сьогодні курс?`, `Який сьогодні гроші?`, `Який сьогодні банк?`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`To pay by card, you say:`}
+    options={[`Платити карткою.`, `Платити картку.`, `Платити картки.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"I need to withdraw money" is:`}
+    options={[`Мені потрібно зняти гроші.`, `Мені потрібно зняти грошей.`, `Мені потрібно зняти грошам.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"A package from Ukraine":`}
+    options={[`Посилка з України.`, `Посилка з Україна.`, `Посилка з Україну.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Give me the receipt":`}
+    options={[`Дайте мені квитанцію.`, `Дайте мені квитанція.`, `Дайте мені квитанції.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`How much is a stamp?`}
+    options={[`Скільки коштує марка?`, `Скільки коштує марку?`, `Скільки коштує марки?`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`I want to open an account:`}
+    options={[`Я хочу відкрити рахунок.`, `Я хочу відкрити рахунку.`, `Я хочу відкрити рахунком.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Write the address:`}
+    options={[`Напишіть адресу.`, `Напишіть адреса.`, `Напишіть адреси.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Five hundred hryvnias:`}
+    options={[`П'ятсот гривень.`, `П'ятсот гривня.`, `П'ятсот гривні.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`I lost my card:`}
+    options={[`Я загубив картку.`, `Я загубив картка.`, `Я загубив карткою.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`The national currency is:`}
+    options={[`гривня`, `рубль`, `злотий`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### Service Facts
+
+*Decide if each statement is true or false.*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`Пошта is the Ukrainian word for post office.`}
+    isTrue={true}
+    explanation={`Correct!`}
+  />
+  <TrueFalseQuestion
+    statement={`Accusative case is used for direct objects in service contexts.`}
+    isTrue={true}
+    explanation={`Yes! Відправити листа, зняти гроші.`}
+  />
+  <TrueFalseQuestion
+    statement={`Курс means "cash" in Ukrainian.`}
+    isTrue={false}
+    explanation={`Курс means exchange rate. Cash is готівка.`}
+  />
+  <TrueFalseQuestion
+    statement={`Instrumental case is used with "платити" for payment method.`}
+    isTrue={true}
+    explanation={`Correct! Платити карткою = pay by card.`}
+  />
+  <TrueFalseQuestion
+    statement={`Ukrainian banks only use hryvnia.`}
+    isTrue={false}
+    explanation={`Banks also exchange foreign currency.`}
+  />
+  <TrueFalseQuestion
+    statement={`Genitive case is used after "з" meaning "from."`}
+    isTrue={true}
+    explanation={`Yes! Посилка з України.`}
+  />
+  <TrueFalseQuestion
+    statement={`Рахунок means "account" in banking context.`}
+    isTrue={true}
+    explanation={`Correct!`}
+  />
+  <TrueFalseQuestion
+    statement={`Посилка means letter.`}
+    isTrue={false}
+    explanation={`Посилка means package. Letter is лист.`}
+  />
+  <TrueFalseQuestion
+    statement={`You can use "Мені потрібно" to make polite requests.`}
+    isTrue={true}
+    explanation={`Yes! Мені потрібно зняти гроші.`}
+  />
+  <TrueFalseQuestion
+    statement={`Дайте мені uses dative case for "мені."`}
+    isTrue={true}
+    explanation={`Correct! Дайте мені = Give to me.`}
+  />
+  <TrueFalseQuestion
+    statement={`Марка means money.`}
+    isTrue={false}
+    explanation={`Марка means stamp.`}
+  />
+  <TrueFalseQuestion
+    statement={`Квитанція means receipt.`}
+    isTrue={true}
+    explanation={`Correct!`}
+  />
+</TrueFalse>
+
+### Post Office vs Bank
+
+*Sort these words by location.*
+
+
+<GroupSort groups={{
+  "### Пошта (Post Office)": [
+    "лист",
+    "посилка",
+    "марка",
+    "конверт",
+    "адреса",
+    "індекс"
+  ],
+  "Банк": [
+    "рахунок",
+    "картка",
+    "гроші",
+    "валюта",
+    "переказ",
+    "кредит"
+  ]
+}} />
+
+### Service Sentences
+
+*Put the words in the correct order.*
+
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`я / хочу / відправити / листа`}
+    answer={`Я хочу відправити листа.`}
+  />
+  <UnjumbleQuestion
+    words={`мені / потрібно / зняти / гроші`}
+    answer={`Мені потрібно зняти гроші.`}
+  />
+  <UnjumbleQuestion
+    words={`скільки / коштує / марка`}
+    answer={`Скільки коштує марка?`}
+  />
+  <UnjumbleQuestion
+    words={`який / сьогодні / курс`}
+    answer={`Який сьогодні курс?`}
+  />
+  <UnjumbleQuestion
+    words={`дайте / будь ласка / квитанцію`}
+    answer={`Дайте, будь ласка, квитанцію.`}
+  />
+  <UnjumbleQuestion
+    words={`посилка / з / України`}
+    answer={`Посилка з України.`}
+  />
+  <UnjumbleQuestion
+    words={`я / хочу / обміняти / долари`}
+    answer={`Я хочу обміняти долари.`}
+  />
+  <UnjumbleQuestion
+    words={`напишіть / адресу / на / конверті`}
+    answer={`Напишіть адресу на конверті.`}
+  />
+  <UnjumbleQuestion
+    words={`платити / карткою`}
+    answer={`Платити карткою.`}
+  />
+  <UnjumbleQuestion
+    words={`мені / потрібна / нова / картка`}
+    answer={`Мені потрібна нова картка.`}
+  />
+  <UnjumbleQuestion
+    words={`я / хочу / відкрити / рахунок`}
+    answer={`Я хочу відкрити рахунок.`}
+  />
+  <UnjumbleQuestion
+    words={`п'ятсот / гривень`}
+    answer={`П'ятсот гривень.`}
+  />
+</Unjumble>
+
+### Fix the Case
+
+*Each sentence has ONE case error. Find and correct it.*
+
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я хочу відправити лист.`}
+    error={`лист`}
+    answer={`листа`}
+    options={[`лист`, `листа`, `листом`, `листі`]}
+    explanation={`Animate accusative for лист = листа.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Мені потрібно зняти грошей.`}
+    error={`грошей`}
+    answer={`гроші`}
+    options={[`грошей`, `гроші`, `грошам`, `грошима`]}
+    explanation={`Direct object of зняти takes accusative: гроші.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Посилка з Україна.`}
+    error={`Україна`}
+    answer={`України`}
+    options={[`Україна`, `України`, `Україні`, `Україною`]}
+    explanation={`"З" requires genitive: України.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Платити картка.`}
+    error={`картка`}
+    answer={`карткою`}
+    options={[`картка`, `картки`, `картку`, `карткою`]}
+    explanation={`Means of payment uses instrumental: карткою.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Дайте мені квитанція.`}
+    error={`квитанція`}
+    answer={`квитанцію`}
+    options={[`квитанція`, `квитанції`, `квитанцію`, `квитанцією`]}
+    explanation={`Direct object uses accusative: квитанцію.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я хочу обміняти долар.`}
+    error={`долар`}
+    answer={`долари`}
+    options={[`долар`, `долара`, `долари`, `доларами`]}
+    explanation={`Plural accusative: долари.`}
+  />
+</ErrorCorrection>
+
+### Complete the Dialogue
+
+*Fill in the blanks with correct forms.*
+
+
+<Cloze>
+  <ClozePassage
+    text={`— Добрий день! Я хочу відправити [___:1].
+— Куди?
+— До [___:2].
+— Звичайний чи рекомендований?
+— Рекомендований, будь ласка.
+— Напишіть [___:3] на [___:4].
+— Скільки це [___:5]?
+— Сорок [___:6].`}
+    blanks={[
+  {
+    "index": 0,
+    "options": [
+      "лист",
+      "листа",
+      "листом"
+    ],
+    "answer": "листа"
+  },
+  {
+    "index": 1,
+    "options": [
+      "Канада",
+      "Канади",
+      "Канаду"
+    ],
+    "answer": "Канади"
+  },
+  {
+    "index": 2,
+    "options": [
+      "адреса",
+      "адреси",
+      "адресу"
+    ],
+    "answer": "адресу"
+  },
+  {
+    "index": 3,
+    "options": [
+      "конверт",
+      "конверта",
+      "конверті"
+    ],
+    "answer": "конверті"
+  },
+  {
+    "index": 4,
+    "options": [
+      "коштує",
+      "коштуєте",
+      "коштують"
+    ],
+    "answer": "коштує"
+  },
+  {
+    "index": 5,
+    "options": [
+      "гривня",
+      "гривні",
+      "гривень"
+    ],
+    "answer": "гривень"
+  },
+  {
+    "index": 6,
+    "options": [
+      "долари",
+      "доларів",
+      "доларам"
+    ],
+    "answer": "долари"
+  },
+  {
+    "index": 7,
+    "options": [
+      "гривні",
+      "гривень",
+      "гривнями"
+    ],
+    "answer": "гривні"
+  },
+  {
+    "index": 8,
+    "options": [
+      "долар",
+      "долара",
+      "доларів"
+    ],
+    "answer": "доларів"
+  },
+  {
+    "index": 9,
+    "options": [
+      "Курс",
+      "Курси",
+      "Курсу"
+    ],
+    "answer": "Курс"
+  },
+  {
+    "index": 10,
+    "options": [
+      "гривня",
+      "гривні",
+      "гривень"
+    ],
+    "answer": "гривень"
+  },
+  {
+    "index": 11,
+    "options": [
+      "долар",
+      "долари",
+      "доларів"
+    ],
+    "answer": "долари"
+  }
+]}
+  />
+</Cloze>
+
+### At the Post Office
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Добрий день! Чим можу допомогти?"
+  },
+  {
+    "speaker": "",
+    "line": "Я хочу відправити посилку до Німеччини."
+  },
+  {
+    "speaker": "",
+    "line": "Що в посилці?"
+  },
+  {
+    "speaker": "",
+    "line": "Книги і одяг."
+  },
+  {
+    "speaker": "",
+    "line": "Покладіть на вагу. Три кілограми."
+  },
+  {
+    "speaker": "",
+    "line": "Скільки це коштує?"
+  },
+  {
+    "speaker": "",
+    "line": "Добрий день! Я хочу обміняти валюту."
+  },
+  {
+    "speaker": "",
+    "line": "Яку валюту?"
+  },
+  {
+    "speaker": "",
+    "line": "Долари на гривні."
+  },
+  {
+    "speaker": "",
+    "line": "Скільки доларів?"
+  },
+  {
+    "speaker": "",
+    "line": "П'ятсот."
+  },
+  {
+    "speaker": "",
+    "line": "Курс сьогодні 37. Вісімнадцять тисяч п'ятсот гривень."
+  }
+]} />
+</DialogueReorder>
+
+### Find Case Forms
+
+Click on words in a specific case.
+
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Я хочу відправити листа до Канади. Дайте мені квитанцію. Посилка з України. Мені потрібно зняти гроші. Я хочу обміняти долари на гривні. Платити карткою. Напишіть адресу на конверті. Покажіть паспорт. Скільки коштує марка?`}
+    correctWords={[`листа`, `Канади`, `мені`, `квитанцію`, `України`, `гроші`, `долари`, `гривні`, `карткою`, `адресу`, `конверті`, `паспорт`, `марка`]}
+  />
+</MarkTheWords>
+
+### English to Ukrainian
+
+<Translate>
+  <TranslateItem
+    source={`I want to send a letter.`}
+    answer={`Я хочу відправити листа.`}
+    options={[`Я хочу відправити листа.`, `Я хочу відправити лист.`, `Я хочу відправити листом.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`How much is a stamp?`}
+    answer={`Скільки коштує марка?`}
+    options={[`Скільки коштує марка?`, `Скільки коштує марку?`, `Скільки коштує марки?`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I need to withdraw money.`}
+    answer={`Мені потрібно зняти гроші.`}
+    options={[`Мені потрібно зняти гроші.`, `Мені потрібно зняти грошей.`, `Мені потрібно зняти грошам.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`A package from Ukraine.`}
+    answer={`Посилка з України.`}
+    options={[`Посилка з України.`, `Посилка з Україна.`, `Посилка з Україну.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`To pay by card.`}
+    answer={`Платити карткою.`}
+    options={[`Платити карткою.`, `Платити картку.`, `Платити картки.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`What's the exchange rate today?`}
+    answer={`Який сьогодні курс?`}
+    options={[`Який сьогодні курс?`, `Який сьогодні гроші?`, `Який сьогодні банк?`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I want to open an account.`}
+    answer={`Я хочу відкрити рахунок.`}
+    options={[`Я хочу відкрити рахунок.`, `Я хочу відкрити рахунку.`, `Я хочу відкрити рахунком.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Write the address.`}
+    answer={`Напишіть адресу.`}
+    options={[`Напишіть адресу.`, `Напишіть адреса.`, `Напишіть адреси.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Give me the receipt.`}
+    answer={`Дайте мені квитанцію.`}
+    options={[`Дайте мені квитанцію.`, `Дайте мені квитанція.`, `Дайте мені квитанції.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Five hundred hryvnias.`}
+    answer={`П'ятсот гривень.`}
+    options={[`П'ятсот гривень.`, `П'ятсот гривня.`, `П'ятсот гривні.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I lost my card.`}
+    answer={`Я загубив картку.`}
+    options={[`Я загубив картку.`, `Я загубив картка.`, `Я загубив карткою.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I want to exchange dollars.`}
+    answer={`Я хочу обміняти долари.`}
+    options={[`Я хочу обміняти долари.`, `Я хочу обміняти долар.`, `Я хочу обміняти доларів.`]}
+    explanation={``}
+  />
+</Translate>
 

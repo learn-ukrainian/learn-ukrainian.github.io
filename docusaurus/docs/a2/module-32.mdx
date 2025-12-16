@@ -5,19 +5,20 @@ title: "When & While"
 description: "Time Clauses"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Warm-up
@@ -34,8 +35,20 @@ In Ukrainian, these structures control the flow of your story.
 - **The Process:** *Поки* (While).
 - **The Sequence:** *Після того як* (After) vs *Перед тим як* (Before).
 
-:::note[Pronunciation]
+:::note
+Pronunciation
 **Поки** /ˈpɔkɪ/ means "while" or "until". It connects simultaneous actions.
+:::
+
+
+:::info
+🔗 External Resources
+
+**YouTube:** [🔴 СРОЧНО Переговоры Уиткофф-Зеленский начались в Берлине...](https://www.youtube.com/watch?v=_8dnhN2D59k) — One Day
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 :::
 
 
@@ -52,7 +65,8 @@ Usually requires **Imperfective Aspect** (process).
 - Ми говорили, **поки** йшли додому. (We talked while walking home).
 - Не дзвони мені, **поки** я працюю! (Don't call me while I'm working!).
 
-:::tip[Comma Rule]
+:::tip
+Comma Rule
 Just like with "щоб" and "який", always put a comma before the connector if it's in the middle!
 :::
 
@@ -96,7 +110,8 @@ Use this for instant reaction.
 
 It requires a full verb phrase!
 
-:::note[Myth: "Punctuality"]
+:::note
+Myth: "Punctuality"
 In Ukraine, usually "коли я прийду" (when I come) is flexible. But trains are very punctual.
 If the train says 18:02, it leaves at 18:02. **Як тільки** (as soon as) the clock strikes, it moves. Don't be late!
 :::
@@ -122,7 +137,8 @@ Sometimes simple "when" is not enough. You need precision.
 "On that day when..."
 - *Того дня, коли народився син, йшов дощ.* (On the day the son was born, it rained).
 
-:::tip[Logic Check]
+:::tip
+Logic Check
 Unlike English "While X, Y", Ukrainian prefers "X, тим часом як Y" if you want to contrast the two actions heavily. But for simple background action, use **поки**.
 :::
 
@@ -152,7 +168,8 @@ Unlike English "While X, Y", Ukrainian prefers "X, тим часом як Y" if 
 
 # Cultural Insight
 
-:::note["Поспішай повільно"]
+:::note
+"Поспішай повільно"
 This is a famous Latin phrase (Festina Lente) that Ukrainians love: "Hurry slowly".
 It means: Do things quickly but carefully. Don't rush into mistakes.
 Think **перед тим як** діяти. Але дій **як тільки** маєш план!
@@ -166,16 +183,27 @@ Think **перед тим як** діяти. Але дій **як тільки**
 ## Dialogue: The Busy Morning
 
 **Andriy:** Що ти робив вранці?
+
 **Olya:** О, це був божевільний ранок. **Коли** я прокинулася, води не було.
+
 **Andriy:** І що ти зробила?
+
 **Olya:** Я чекала. **Поки** я чекала, я читала новини.
+
 **Andriy:** І довго ти чекала?
+
 **Olya:** Годину! **Як тільки** вода з'явилася, я побігла в душ.
+
 **Andriy:** А сніданок?
+
 **Olya:** Я поснідала **після того як** одяглася. А ти?
+
 **Andriy:** А я спав, **поки** ти бігала.
+
 **Olya:** Ти щасливчик.
+
 **Andriy:** Але **перед тим як** вийти, я зробив тобі каву.
+
 **Olya:** О, дякую! Ти найкращий.
 
 ### Analysis
@@ -221,331 +249,7 @@ It's logical: I stay in the state of "waiting" during the time that "finishing" 
 
 ---
 
-## 🎯 Activities
 
-### Time Connectors
-
-<MatchUp pairs={[
-  { left: `Коли`, right: `When` },
-  { left: `Поки`, right: `While` },
-  { left: `Після того як`, right: `After` },
-  { left: `Перед тим як`, right: `Before` },
-  { left: `Як тільки`, right: `As soon as` },
-  { left: `Щойно`, right: `Just now/As soon as` },
-  { left: `Доки`, right: `While/Until` },
-  { left: `Перш ніж`, right: `Before (Literary)` },
-  { left: `Тим часом як`, right: `Meanwhile` },
-  { left: `Кожного разу коли`, right: `Every time when` }
-]} />
-
-### Select the Connector
-
-<FillIn items={[
-  {
-    sentence: `Я подзвоню, ___ приїду. (Sequence)`,
-    answer: `коли`,
-    options: [`коли`, `поки`, `доки`]
-  },  {
-    sentence: `Ми говорили, ___ їли піцу. (Simultaneous)`,
-    answer: `поки`,
-    options: [`поки`, `як тільки`, `після того як`]
-  },  {
-    sentence: `Я пішов спати ___ подивився фільм. (Sequence: after reading)`,
-    answer: `після того як`,
-    options: [`після того як`, `перед тим як`, `поки`]
-  },  {
-    sentence: `Мий руки ___ їсти. (Before)`,
-    answer: `перед тим як`,
-    options: [`перед тим як`, `після того як`, `коли`]
-  },  {
-    sentence: `___ він зайшов, усі замовкли. (Instant)`,
-    answer: `Як тільки`,
-    options: [`Як тільки`, `Поки`, `Перед тим як`]
-  },  {
-    sentence: `Я чекав, ___ вона не прийшла. (Until)`,
-    answer: `поки`,
-    options: [`поки`, `коли`, `як тільки`]
-  },  {
-    sentence: `Ти читав, ___ я спав? (Simultaneous)`,
-    answer: `в той час як`,
-    options: [`в той час як`, `як тільки`, `щойно`]
-  },  {
-    sentence: `Вибачся ___ підеш. (Before)`,
-    answer: `перш ніж`,
-    options: [`перш ніж`, `після того як`, `поки`]
-  }
-]} />
-
-### Time Logic
-
-<Quiz questions={[
-  {
-    question: `\"Поки\" usually goes with which Aspect?`,
-    options: [
-      { text: `Imperfective (Process)`, correct: true },
-      { text: `Perfective (Result)`, correct: false }
-    ]
-  },  {
-    question: `\"Коли\" usually goes with which Aspect for sequence?`,
-    options: [
-      { text: `Perfective (Result)`, correct: true },
-      { text: `Imperfective (Process)`, correct: false }
-    ]
-  },  {
-    question: `\"Після того як\" implies:`,
-    options: [
-      { text: `One action strictly follows another`, correct: true },
-      { text: `Actions happen together`, correct: false }
-    ]
-  },  {
-    question: `Translate: \"Before I go...\"`,
-    options: [
-      { text: `Перед тим як я піду...`, correct: true },
-      { text: `Перед я піду...`, correct: false }
-    ]
-  },  {
-    question: `\"Поки не\" implies:`,
-    options: [
-      { text: `Until`, correct: true },
-      { text: `While`, correct: false },
-      { text: `Because`, correct: false }
-    ]
-  },  {
-    question: `Is a comma needed before \"коли\" in the middle of a sentence?`,
-    options: [
-      { text: `Yes, always.`, correct: true },
-      { text: `No, never.`, correct: false }
-    ]
-  },  {
-    question: `\"Як тільки\" shows:`,
-    options: [
-      { text: `Instant reaction`, correct: true },
-      { text: `Long wait`, correct: false }
-    ]
-  },  {
-    question: `\"Перш ніж\" is a synonym for:`,
-    options: [
-      { text: `Перед тим як`, correct: true },
-      { text: `Після того як`, correct: false }
-    ]
-  }
-]} />
-
-### Time Lines
-
-<Unjumble items={[
-  { jumbled: `кожного / разу / коли / я / дзвоню / він / зайнятий`, answer: `Кожного разу, коли я дзвоню, він зайнятий.` },
-  { jumbled: `ми / гуляли / тим / часом / як / йшов / дощ`, answer: `Ми гуляли, тим часом як йшов дощ.` },
-  { jumbled: `я / заснув / після / як / того / прочитав`, answer: `Я заснув після того, як прочитав.` },
-  { jumbled: `подзвони / як / тільки / будеш / вдома`, answer: `Подзвони, як тільки будеш вдома.` },
-  { jumbled: `перед / тим / як / сказати / подумай`, answer: `Перед тим як сказати, подумай.` },
-  { jumbled: `я / чекав / поки / ти / не / прийшов`, answer: `Я чекав, поки ти не прийшов.` }
-]} />
-
-### Process vs Point
-
-<GroupSort groups={{
-  "Point (Sequencing/Instant)": ["Коли я прийшов...", "Як тільки я побачив...", "Після того як я з'їв...", "Перед тим як вийти...", "Щойно я встав...", "Того дня, коли він народився..."],
-  "Process (Duration)": ["Поки я читав...", "Поки ми йшли...", "Доки я чекав...", "В той час як я спав...", "Тим часом як він говорив...", "Відколи ми дружимо..."]
-}} />
-
-### Connector Check
-
-<TrueFalse items={[
-  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: `Yes, aspect determines it.`
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `Speed/Immediacy.`
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  }
-]} />
-
-### The Narrative
-
-<Cloze
-  passage={`[___:1] я був малим, я любив літо.
-Я грав у футбол, [___:2] мама готувала обід.
-[___:3] ми їли, я йшов читати.
-Але [___:4] почати читати, я мив руки.
-[___:5] мама кликала мене, я біг назад.
-Я не лягав спати, [___:6] сонце не сідало.
-Це був час, [___:7] я був щасливий.`}
-  blanks={[{ answer: `Коли`, options: [`Коли`] }, { answer: `тим часом як`, options: [`тим часом як`] }, { answer: `Після того як`, options: [`Після того як`] }, { answer: `перед тим як`, options: [`перед тим як`] }, { answer: `Кожного разу коли`, options: [`Кожного разу коли`] }, { answer: `поки`, options: [`поки`] }, { answer: `коли`, options: [`коли`] }]}
-/>
-
-### The Meeting
-
-<DialogueReorder lines={[
-  { text: `Коли ти прийдеш?`, order: 1 },
-  { text: `Я прийду, як тільки закінчу роботу.`, order: 2 },
-  { text: `А коли ти закінчиш?`, order: 3 },
-  { text: `Я закінчу, коли напишу звіт.`, order: 4 },
-  { text: `Добре, подзвони мені перед тим як вийти.`, order: 5 },
-  { text: `Гаразд. А що ти будеш робити, поки чекаєш?`, order: 6 },
-  { text: `Я буду пити каву, поки ти працюєш.`, order: 7 },
-  { text: `Ти як завжди!`, order: 8 }
-]} />
-
-### Time Markers
-
-<MarkTheWords>
-<MarkTheWordsActivity
-  text={`Ми пішли гуляти, коли закінчився дощ. Я читав книгу, поки їхав у метро. Як тільки я побачив тебе, я зрадів. Перш ніж купити це, подумай. Ми їли торт після того як задули свічки.`}
-  correctWords={[`коли`, `поки`, `Як тільки`, `Перш ніж`, `після того як`]}
-/>
-<MarkTheWordsActivity
-  text={`Він мій брат. Це гарний дім. Я люблю каву.`}
-  correctWords={[`мій брат`, `гарний дім`, `люблю каву`]}
-/>
-</MarkTheWords>
-
-### Fix the Logic
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я спав, **коли** я читав. (While)`}
-    errorWord={`коли`}
-    correctForm={`поки`}
-    options={[`поки`, `коли`]}
-    explanation={`Two simultaneous processes usually take \"поки\".`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Подзвони мені **після** вийти. (Grammar)`}
-    errorWord={`після`}
-    correctForm={`після того як`}
-    options={[`після того як`, `після`]}
-    explanation={`\"After\" with a verb phrase requires \"після того як\".`}
-  />
-  <ErrorCorrectionItem
-    sentence={`**Перед** я піду, я скажу. (Grammar)`}
-    errorWord={`Перед`}
-    correctForm={`Перед тим як`}
-    options={[`Перед тим як`, `Перед`]}
-    explanation={`\"Before\" with a clause requires \"Перед тим як\".`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я чекав, **як тільки** вона прийшла. (Logic: Until)`}
-    errorWord={`як тільки`}
-    correctForm={`поки`}
-    options={[`поки`, `як тільки`]}
-    explanation={`Waiting \"until\" requires \"поки\".`}
-  />
-  <ErrorCorrectionItem
-    sentence={`**Поки** я прийшов, вона вже пішла. (Logic: By the time -> Коли)`}
-    errorWord={`Поки`}
-    correctForm={`Коли`}
-    options={[`Коли`, `Поки`]}
-    explanation={`\"When I arrived\" is a point, not a process.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`**Тим часом** я їв, вона пила. (Grammar)`}
-    errorWord={`Тим часом`}
-    correctForm={`Тим часом як`}
-    options={[`Тим часом як`, `Тим часом`]}
-    explanation={`\"Meanwhile as\" is \"Тим часом як\".`}
-  />
-</ErrorCorrection>
-
-### English to Ukrainian
-
-<Translate questions={[
-  {
-    source: `While I sleep, you work.`,
-    options: [
-      { text: `Поки я сплю, ти працюєш.`, correct: true },
-      { text: `Коли я сплю, ти працюєш.`, correct: false }
-    ]
-  },  {
-    source: `Before I ask...`,
-    options: [
-      { text: `Перед тим як я запитаю...`, correct: true },
-      { text: `Перед я запитаю...`, correct: false }
-    ]
-  },  {
-    source: `After I finish...`,
-    options: [
-      { text: `Після того як я закінчу...`, correct: true },
-      { text: `Після закінчу...`, correct: false }
-    ]
-  },  {
-    source: `As soon as I see him.`,
-    options: [
-      { text: `Як тільки я побачу його.`, correct: true },
-      { text: `Поки я побачу його.`, correct: false }
-    ]
-  },  {
-    source: `Whenever I see him...`,
-    options: [
-      { text: `Кожного разу, коли я бачу його...`, correct: true },
-      { text: `Поки я бачу його...`, correct: false }
-    ]
-  },  {
-    source: `Wait until I return.`,
-    options: [
-      { text: `Чекай, поки я не повернуся.`, correct: true },
-      { text: `Чекай, як я повернуся.`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -588,3 +292,317 @@ It's logical: I stay in the state of "waiting" during the time that "finishing" 
 | вечір | /ˈʋɛt͡ʃir/ | evening | noun | m | part of day |
 | ніч | /nit͡ʃ/ | night | noun | f | part of day |
 | час | /t͡ʃɑs/ | time | noun | m | concept |
+
+---
+
+## 🎯 Activities
+
+### Time Connectors
+
+*Match the connector to its function.*
+
+
+<MatchUp pairs={[
+  { left: `Коли`, right: `When` },
+  { left: `Поки`, right: `While` },
+  { left: `Після того як`, right: `After` },
+  { left: `Перед тим як`, right: `Before` },
+  { left: `Як тільки`, right: `As soon as` },
+  { left: `Щойно`, right: `Just now/As soon as` },
+  { left: `Доки`, right: `While/Until` },
+  { left: `Перш ніж`, right: `Before (Literary)` },
+  { left: `Тим часом як`, right: `Meanwhile` },
+  { left: `Кожного разу коли`, right: `Every time when` }
+]} />
+
+### Select the Connector
+
+*Choose the best connector for the logic.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я подзвоню, ___ приїду. (Sequence)`}
+    answer={`коли`}
+    options={[`коли`, `поки`, `доки`]}
+  />
+  <FillInQuestion
+    sentence={`Ми говорили, ___ їли піцу. (Simultaneous)`}
+    answer={`поки`}
+    options={[`поки`, `як тільки`, `після того як`]}
+  />
+  <FillInQuestion
+    sentence={`Я пішов спати ___ подивився фільм. (Sequence: after reading)`}
+    answer={`після того як`}
+    options={[`після того як`, `перед тим як`, `поки`]}
+  />
+  <FillInQuestion
+    sentence={`Мий руки ___ їсти. (Before)`}
+    answer={`перед тим як`}
+    options={[`перед тим як`, `після того як`, `коли`]}
+  />
+  <FillInQuestion
+    sentence={`___ він зайшов, усі замовкли. (Instant)`}
+    answer={`Як тільки`}
+    options={[`Як тільки`, `Поки`, `Перед тим як`]}
+  />
+  <FillInQuestion
+    sentence={`Я чекав, ___ вона не прийшла. (Until)`}
+    answer={`поки`}
+    options={[`поки`, `коли`, `як тільки`]}
+  />
+  <FillInQuestion
+    sentence={`Ти читав, ___ я спав? (Simultaneous)`}
+    answer={`в той час як`}
+    options={[`в той час як`, `як тільки`, `щойно`]}
+  />
+  <FillInQuestion
+    sentence={`Вибачся ___ підеш. (Before)`}
+    answer={`перш ніж`}
+    options={[`перш ніж`, `після того як`, `поки`]}
+  />
+</FillIn>
+
+### Time Logic
+
+<Quiz>
+  <QuizQuestion
+    question={`1. "Поки" usually goes with which Aspect?`}
+    options={[`Imperfective (Process)`, `Perfective (Result)`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Коли" usually goes with which Aspect for sequence?`}
+    options={[`Perfective (Result)`, `Imperfective (Process)`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Після того як" implies:`}
+    options={[`One action strictly follows another`, `Actions happen together`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Translate: "Before I go..."`}
+    options={[`Перед тим як я піду...`, `Перед я піду...`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Поки не" implies:`}
+    options={[`Until`, `While`, `Because`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Is a comma needed before "коли" in the middle of a sentence?`}
+    options={[`Yes, always.`, `No, never.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Як тільки" shows:`}
+    options={[`Instant reaction`, `Long wait`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Перш ніж" is a synonym for:`}
+    options={[`Перед тим як`, `Після того як`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### Time Lines
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`кожного / разу / коли / я / дзвоню / він / зайнятий`}
+    answer={`Кожного разу, коли я дзвоню, він зайнятий.`}
+  />
+  <UnjumbleQuestion
+    words={`ми / гуляли / тим / часом / як / йшов / дощ`}
+    answer={`Ми гуляли, тим часом як йшов дощ.`}
+  />
+  <UnjumbleQuestion
+    words={`я / заснув / після / як / того / прочитав`}
+    answer={`Я заснув після того, як прочитав.`}
+  />
+  <UnjumbleQuestion
+    words={`подзвони / як / тільки / будеш / вдома`}
+    answer={`Подзвони, як тільки будеш вдома.`}
+  />
+  <UnjumbleQuestion
+    words={`перед / тим / як / сказати / подумай`}
+    answer={`Перед тим як сказати, подумай.`}
+  />
+  <UnjumbleQuestion
+    words={`я / чекав / поки / ти / не / прийшов`}
+    answer={`Я чекав, поки ти не прийшов.`}
+  />
+</Unjumble>
+
+### Process vs Point
+
+<GroupSort groups={{
+  "### Point (Sequencing/Instant)": [
+    "Коли я прийшов...",
+    "Як тільки я побачив...",
+    "Після того як я з'їв...",
+    "Перед тим як вийти...",
+    "Щойно я встав...",
+    "Того дня, коли він народився..."
+  ],
+  "Process (Duration)": [
+    "Поки я читав...",
+    "Поки ми йшли...",
+    "Доки я чекав...",
+    "В той час як я спав...",
+    "Тим часом як він говорив...",
+    "Відколи ми дружимо..."
+  ]
+}} />
+
+
+
+
+
+### The Meeting
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Коли ти прийдеш?"
+  },
+  {
+    "speaker": "",
+    "line": "Я прийду, як тільки закінчу роботу."
+  },
+  {
+    "speaker": "",
+    "line": "А коли ти закінчиш?"
+  },
+  {
+    "speaker": "",
+    "line": "Я закінчу, коли напишу звіт."
+  },
+  {
+    "speaker": "",
+    "line": "Добре, подзвони мені перед тим як вийти."
+  },
+  {
+    "speaker": "",
+    "line": "Гаразд. А що ти будеш робити, поки чекаєш?"
+  },
+  {
+    "speaker": "",
+    "line": "Я буду пити каву, поки ти працюєш."
+  },
+  {
+    "speaker": "",
+    "line": "Ти як завжди!"
+  }
+]} />
+</DialogueReorder>
+
+### Time Markers
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Ми пішли гуляти, коли закінчився дощ. Я читав книгу, поки їхав у метро. Як тільки я побачив тебе, я зрадів. Перш ніж купити це, подумай. Ми їли торт після того як задули свічки. Він мій брат(incorrect). Це гарний дім(incorrect). Я люблю каву(incorrect).`}
+    correctWords={[`коли`, `поки`, `Як тільки`, `Перш ніж`, `після того як`, `мій брат`, `гарний дім`, `люблю каву`]}
+  />
+</MarkTheWords>
+
+### Fix the Logic
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я спав, **коли** я читав. (While)`}
+    error={`коли`}
+    answer={`поки`}
+    options={[`поки`, `коли`]}
+    explanation={`Two simultaneous processes usually take "поки".`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Подзвони мені **після** вийти. (Grammar)`}
+    error={`після`}
+    answer={`після того як`}
+    options={[`після того як`, `після`]}
+    explanation={`"After" with a verb phrase requires "після того як".`}
+  />
+  <ErrorCorrectionItem
+    sentence={`**Перед** я піду, я скажу. (Grammar)`}
+    error={`Перед`}
+    answer={`Перед тим як`}
+    options={[`Перед тим як`, `Перед`]}
+    explanation={`"Before" with a clause requires "Перед тим як".`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я чекав, **як тільки** вона прийшла. (Logic: Until)`}
+    error={`як тільки`}
+    answer={`поки`}
+    options={[`поки`, `як тільки`]}
+    explanation={`Waiting "until" requires "поки".`}
+  />
+  <ErrorCorrectionItem
+    sentence={`**Поки** я прийшов, вона вже пішла. (Logic: By the time -> Коли)`}
+    error={`Поки`}
+    answer={`Коли`}
+    options={[`Коли`, `Поки`]}
+    explanation={`"When I arrived" is a point, not a process.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`**Тим часом** я їв, вона пила. (Grammar)`}
+    error={`Тим часом`}
+    answer={`Тим часом як`}
+    options={[`Тим часом як`, `Тим часом`]}
+    explanation={`"Meanwhile as" is "Тим часом як".`}
+  />
+</ErrorCorrection>
+
+### English to Ukrainian
+
+<Translate>
+  <TranslateItem
+    source={`1. While I sleep, you work.`}
+    answer={`Поки я сплю, ти працюєш.`}
+    options={[`Поки я сплю, ти працюєш.`, `Коли я сплю, ти працюєш.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Before I ask...`}
+    answer={`Перед тим як я запитаю...`}
+    options={[`Перед тим як я запитаю...`, `Перед я запитаю...`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`After I finish...`}
+    answer={`Після того як я закінчу...`}
+    options={[`Після того як я закінчу...`, `Після закінчу...`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`As soon as I see him.`}
+    answer={`Як тільки я побачу його.`}
+    options={[`Як тільки я побачу його.`, `Поки я побачу його.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Whenever I see him...`}
+    answer={`Кожного разу, коли я бачу його...`}
+    options={[`Кожного разу, коли я бачу його...`, `Поки я бачу його...`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Wait until I return.`}
+    answer={`Чекай, поки я не повернуся.`}
+    options={[`Чекай, поки я не повернуся.`, `Чекай, як я повернуся.`]}
+    explanation={``}
+  />
+</Translate>
+

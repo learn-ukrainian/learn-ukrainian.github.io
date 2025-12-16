@@ -5,19 +5,20 @@ title: "Preposition Master Class"
 description: "Mastering Ukrainian Prepositions with Cases"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 Prepositions are small but mighty words that connect nouns to the rest of the sentence. In English, prepositions like "in," "on," "to," and "from" are straightforward. But in Ukrainian, prepositions work hand-in-hand with grammatical cases — and some prepositions even change meaning depending on which case follows them!
@@ -25,6 +26,17 @@ Prepositions are small but mighty words that connect nouns to the rest of the se
 This module is your comprehensive guide to Ukrainian prepositions. By the end, you'll understand how to combine prepositions with the correct cases to express location, motion, time, and relationships accurately.
 
 **Why this matters:** Incorrect preposition-case combinations are one of the most common errors learners make. Mastering these patterns will immediately make your Ukrainian sound more natural and precise.
+
+:::info
+🔗 External Resources
+
+**YouTube:** [10 Ukrainian Prepositions! ...](https://www.youtube.com/watch?v=CaKnNZHAex0) — #letslearnukrainian
+
+**Grammar Guide:** [Prepositions Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Ukrainian Lessons
+
+**Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
+:::
+
 
 ---
 
@@ -73,7 +85,8 @@ These prepositions always take the genitive case. Many express origin, absence, 
 | **біля** | near, by | Стояти біля дверей. (To stand near the door.) |
 | **після** | after | Після роботи. (After work.) |
 
-:::tip[Memory Tip]
+:::tip
+Memory Tip
 Think of genitive prepositions as expressing relationships: FROM where, FOR whom, WITHOUT what, NEAR what. These all answer "of/from" questions.
 :::
 
@@ -115,7 +128,8 @@ These are the trickiest: they take accusative for motion, but locative or instru
 | **під** | Класти під стіл. | Лежати під столом. (Instr) |
 | **за** | Йти за будинок. | Бути за будинком. (Instr) |
 
-:::tip[Pattern Discovery]
+:::tip
+Pattern Discovery
 Notice that **в/у** and **на** use locative for location, while **під** and **за** use instrumental for location. This is an important distinction!
 :::
 
@@ -246,7 +260,8 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 
 ---
 
-:::tip[Як запам'ятати прийменники]
+:::tip
+Як запам'ятати прийменники
 Уявіть кімнату. Стіл **посередині**. Лампа **над** столом. Кіт **під** столом. Стілець **за** столом. Вікно **біля** стіни. Ця картинка допоможе!
 :::
 
@@ -280,425 +295,7 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 **Two-Way Prepositions:** в/у, на, під, за — use accusative for motion (Куди?) and locative/instrumental for location (Де?).
 
 
-## 🎯 Activities
 
-### Preposition Meanings
-
-<MatchUp pairs={[
-  { left: `в/у`, right: `in, into` },
-  { left: `на`, right: `on, onto` },
-  { left: `з/із`, right: `from, with` },
-  { left: `до`, right: `to, until` },
-  { left: `від`, right: `from (person)` },
-  { left: `для`, right: `for` },
-  { left: `без`, right: `without` },
-  { left: `під`, right: `under` },
-  { left: `над`, right: `above` },
-  { left: `перед`, right: `in front of` },
-  { left: `за`, right: `behind` },
-  { left: `між`, right: `between` }
-]} />
-
-### Choose the Correct Preposition
-
-<FillIn items={[
-  {
-    sentence: `Вона йде ___ школи.`,
-    answer: `до`,
-    options: [`до`, `на`, `в`]
-  },  {
-    sentence: `Кава ___ цукру.`,
-    answer: `без`,
-    options: [`без`, `з`, `від`]
-  },  {
-    sentence: `Лист ___ мами.`,
-    answer: `від`,
-    options: [`від`, `для`, `до`]
-  },  {
-    sentence: `Подарунок ___ тебе.`,
-    answer: `для`,
-    options: [`для`, `від`, `до`]
-  },  {
-    sentence: `Він іде ___ роботи.`,
-    answer: `з`,
-    options: [`з`, `до`, `на`]
-  },  {
-    sentence: `Лампа ___ столом.`,
-    answer: `над`,
-    options: [`над`, `під`, `на`]
-  },  {
-    sentence: `Стояти ___ дверима.`,
-    answer: `перед`,
-    options: [`перед`, `за`, `між`]
-  },  {
-    sentence: `Йти ___ парк.`,
-    answer: `через`,
-    options: [`через`, `про`, `на`]
-  },  {
-    sentence: `Говорити ___ тебе.`,
-    answer: `про`,
-    options: [`про`, `для`, `через`]
-  },  {
-    sentence: `Кіт ___ столом.`,
-    answer: `під`,
-    options: [`під`, `над`, `на`]
-  },  {
-    sentence: `Гуляти ___ друзями.`,
-    answer: `з`,
-    options: [`з`, `до`, `від`]
-  },  {
-    sentence: `___ нами.`,
-    answer: `Між`,
-    options: [`Між`, `За`, `Над`]
-  }
-]} />
-
-### Motion or Location?
-
-<Quiz questions={[
-  {
-    question: `Я йду в школу. What case is \"школу\"?`,
-    options: [
-      { text: `Accusative (motion)`, correct: true },
-      { text: `Locative (location)`, correct: false },
-      { text: `Genitive`, correct: false }
-    ]
-  },  {
-    question: `Він у школі. What case is \"школі\"?`,
-    options: [
-      { text: `Locative (location)`, correct: true },
-      { text: `Accusative (motion)`, correct: false },
-      { text: `Instrumental`, correct: false }
-    ]
-  },  {
-    question: `Вона кладе книгу на стіл. What case is \"стіл\"?`,
-    options: [
-      { text: `Accusative (motion)`, correct: true },
-      { text: `Locative (location)`, correct: false },
-      { text: `Genitive`, correct: false }
-    ]
-  },  {
-    question: `Книга лежить на столі. What case is \"столі\"?`,
-    options: [
-      { text: `Locative (location)`, correct: true },
-      { text: `Accusative (motion)`, correct: false },
-      { text: `Instrumental`, correct: false }
-    ]
-  },  {
-    question: `Кіт біжить під стіл. What case is \"стіл\"?`,
-    options: [
-      { text: `Accusative (motion)`, correct: true },
-      { text: `Instrumental (location)`, correct: false },
-      { text: `Genitive`, correct: false }
-    ]
-  },  {
-    question: `Кіт спить під столом. What case is \"столом\"?`,
-    options: [
-      { text: `Instrumental (location)`, correct: true },
-      { text: `Accusative (motion)`, correct: false },
-      { text: `Locative`, correct: false }
-    ]
-  },  {
-    question: `Вони йдуть за будинок. What case?`,
-    options: [
-      { text: `Accusative (motion)`, correct: true },
-      { text: `Instrumental (location)`, correct: false },
-      { text: `Genitive`, correct: false }
-    ]
-  },  {
-    question: `Вони стоять за будинком. What case?`,
-    options: [
-      { text: `Instrumental (location)`, correct: true },
-      { text: `Accusative (motion)`, correct: false },
-      { text: `Locative`, correct: false }
-    ]
-  },  {
-    question: `Which preposition always takes genitive?`,
-    options: [
-      { text: `без`, correct: true },
-      { text: `над`, correct: false },
-      { text: `про`, correct: false }
-    ]
-  },  {
-    question: `Which preposition always takes instrumental?`,
-    options: [
-      { text: `між`, correct: true },
-      { text: `до`, correct: false },
-      { text: `через`, correct: false }
-    ]
-  },  {
-    question: `\"Про\" takes which case?`,
-    options: [
-      { text: `Accusative`, correct: true },
-      { text: `Genitive`, correct: false },
-      { text: `Instrumental`, correct: false }
-    ]
-  },  {
-    question: `\"Для\" takes which case?`,
-    options: [
-      { text: `Genitive`, correct: true },
-      { text: `Accusative`, correct: false },
-      { text: `Dative`, correct: false }
-    ]
-  }
-]} />
-
-### Preposition Rules
-
-<TrueFalse items={[
-  {
-    statement: `Prepositions in Ukrainian require specific grammatical cases.`,
-    isTrue: true,
-    explanation: `Correct! Every Ukrainian preposition is linked to one or more cases.`
-  },  {
-    statement: `\"В школу\" and \"в школі\" mean exactly the same thing.`,
-    isTrue: false,
-    explanation: `False! \"В школу\" (accusative) means motion TO school; \"в школі\" (locative) means location AT school.`
-  },  {
-    statement: `\"Без\" always takes the genitive case.`,
-    isTrue: true,
-    explanation: `Yes! \"Без цукру\" (without sugar) uses genitive.`
-  },  {
-    statement: `\"Над\" always takes the instrumental case.`,
-    isTrue: true,
-    explanation: `Correct! \"Над столом\" (above the table) uses instrumental.`
-  },  {
-    statement: `\"На\" only takes accusative case.`,
-    isTrue: false,
-    explanation: `False! \"На\" takes accusative for motion, locative for location.`
-  },  {
-    statement: `\"До\" takes genitive case.`,
-    isTrue: true,
-    explanation: `Yes! \"До школи\" (to school) uses genitive.`
-  },  {
-    statement: `\"З\" always means \"from.\"`,
-    isTrue: false,
-    explanation: `\"З\" can mean \"from\" with genitive OR \"with\" with instrumental.`
-  },  {
-    statement: `Motion uses accusative with в/у, на, під, за.`,
-    isTrue: true,
-    explanation: `Correct! These two-way prepositions use accusative for motion.`
-  },  {
-    statement: `\"В\" and \"у\" have the same meaning.`,
-    isTrue: true,
-    explanation: `Yes! They differ only in when you use them for euphony.`
-  },  {
-    statement: `\"Перед\" takes locative case.`,
-    isTrue: false,
-    explanation: `\"Перед\" takes instrumental: \"перед дверима.\"`
-  },  {
-    statement: `\"Між\" means \"between\" and takes instrumental.`,
-    isTrue: true,
-    explanation: `Correct! \"Між нами\" (between us).`
-  },  {
-    statement: `Location after \"під\" uses instrumental, not locative.`,
-    isTrue: true,
-    explanation: `Yes! \"Під столом\" (under the table) uses instrumental.`
-  }
-]} />
-
-### Prepositions by Case
-
-<GroupSort groups={{
-  "Genitive": ["з = from", "до", "від", "для", "без", "біля"],
-  "Accusative": ["про", "через"],
-  "Instrumental": ["з = with", "над", "перед", "між"]
-}} />
-
-### Preposition Sentences
-
-<Unjumble items={[
-  { jumbled: `я / йду / до / школи`, answer: `Я йду до школи.` },
-  { jumbled: `кава / без / цукру`, answer: `Кава без цукру.` },
-  { jumbled: `лампа / над / столом`, answer: `Лампа над столом.` },
-  { jumbled: `він / гуляє / з / друзями`, answer: `Він гуляє з друзями.` },
-  { jumbled: `подарунок / для / мами`, answer: `Подарунок для мами.` },
-  { jumbled: `ми / йдемо / через / парк`, answer: `Ми йдемо через парк.` },
-  { jumbled: `вони / говорять / про / мене`, answer: `Вони говорять про мене.` },
-  { jumbled: `кіт / спить / під / столом`, answer: `Кіт спить під столом.` },
-  { jumbled: `стояти / перед / дверима`, answer: `Стояти перед дверима.` },
-  { jumbled: `бути / за / будинком`, answer: `Бути за будинком.` },
-  { jumbled: `лист / від / брата`, answer: `Лист від брата.` },
-  { jumbled: `після / роботи`, answer: `Після роботи.` }
-]} />
-
-### Fix the Case
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Він йде до школа.`}
-    errorWord={`школа`}
-    correctForm={`школи`}
-    options={[`школа`, `школи`, `школу`, `школі`]}
-    explanation={`\"До\" requires genitive case: школа → школи.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Кава без цукор.`}
-    errorWord={`цукор`}
-    correctForm={`цукру`}
-    options={[`цукор`, `цукру`, `цукром`, `цукрі`]}
-    explanation={`\"Без\" requires genitive case: цукор → цукру.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Лампа над стіл.`}
-    errorWord={`стіл`}
-    correctForm={`столом`}
-    options={[`стіл`, `столом`, `столі`, `столу`]}
-    explanation={`\"Над\" requires instrumental case: стіл → столом.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Подарунок для мама.`}
-    errorWord={`мама`}
-    correctForm={`мами`}
-    options={[`мама`, `мами`, `маму`, `мамі`]}
-    explanation={`\"Для\" requires genitive case: мама → мами.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вони говорять про ти.`}
-    errorWord={`ти`}
-    correctForm={`тебе`}
-    options={[`ти`, `тебе`, `тобі`, `тобою`]}
-    explanation={`\"Про\" requires accusative case: ти → тебе.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він гуляє з друг.`}
-    errorWord={`друг`}
-    correctForm={`другом`}
-    options={[`друг`, `другом`, `друга`, `другу`]}
-    explanation={`\"З\" (with) requires instrumental case: друг → другом.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Стояти перед двері.`}
-    errorWord={`двері`}
-    correctForm={`дверима`}
-    options={[`двері`, `дверима`, `дверей`, `дверях`]}
-    explanation={`\"Перед\" requires instrumental case: двері → дверима.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Між ми.`}
-    errorWord={`ми`}
-    correctForm={`нами`}
-    options={[`ми`, `нами`, `нас`, `нам`]}
-    explanation={`\"Між\" requires instrumental case: ми → нами.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Лист від мама.`}
-    errorWord={`мама`}
-    correctForm={`мами`}
-    options={[`мама`, `мами`, `маму`, `мамі`]}
-    explanation={`\"Від\" requires genitive case: мама → мами.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Йти через парку.`}
-    errorWord={`парку`}
-    correctForm={`парк`}
-    options={[`парку`, `парк`, `парком`, `парці`]}
-    explanation={`\"Через\" requires accusative case: парку → парк.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Кіт під стіл.`}
-    errorWord={`стіл`}
-    correctForm={`столом`}
-    options={[`стіл`, `столом`, `столі`, `столу`]}
-    explanation={`Location after \"під\" requires instrumental: стіл → столом.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Бути за будинок.`}
-    errorWord={`будинок`}
-    correctForm={`будинком`}
-    options={[`будинок`, `будинком`, `будинку`, `будинці`]}
-    explanation={`Location after \"за\" requires instrumental: будинок → будинком.`}
-  />
-</ErrorCorrection>
-
-### Complete the Story
-
-<Cloze
-  passage={`Марія живе [___:1] Києві. Вранці вона йде [___:2] роботи. Вона працює [___:3] великому офісі. [___:4] роботи вона йде [___:5] магазину.`}
-  blanks={[{ answer: `в/у + Loc`, options: [`в/у + Loc`] }, { answer: `на + Loc`, options: [`на + Loc`] }, { answer: `над + Instr`, options: [`над + Instr`] }, { answer: `під + Instr`, options: [`під + Instr`] }, { answer: `до + Gen`, options: [`до + Gen`] }]}
-/>
-
-### Asking for Directions
-
-<DialogueReorder lines={[
-  { text: `Вибачте, як дійти до пошти?`, order: 1 },
-  { text: `Йдіть через парк.`, order: 2 },
-  { text: `Дякую!`, order: 3 },
-  { text: `Потім поверніть за будинок.`, order: 4 },
-  { text: `Пошта буде перед вами.`, order: 5 },
-  { text: `Будь ласка!`, order: 6 },
-  { text: `Де знаходиться банк?`, order: 7 },
-  { text: `Він між аптекою і магазином.`, order: 8 },
-  { text: `Далеко від станції метро?`, order: 9 },
-  { text: `Ні, біля станції.`, order: 10 },
-  { text: `Добре, дякую!`, order: 11 },
-  { text: `Немає за що!`, order: 12 }
-]} />
-
-### Find Preposition + Case
-
-<MarkTheWords>
-<MarkTheWordsActivity
-  text={`Click on preposition + noun combinations.
-
-Він іде до школи. Потім він буде в класі. Книги лежать на столі. Олівець під зошитом.`}
-  correctWords={[`до школи`, `в класі`, `на столі`, `під зошитом`]}
-/>
-<MarkTheWordsActivity
-  text={`Вона живе біля парку. Гуляє з собакою. Сидить перед телевізором. Після роботи йде до магазину.`}
-  correctWords={[`біля парку`, `з собакою`, `перед телевізором`, `до магазину`]}
-/>
-<MarkTheWordsActivity
-  text={`Лист від друга. Подарунок для сестри. Кава без цукру. Розмова про майбутнє.`}
-  correctWords={[`від друга`, `для сестри`, `без цукру`, `про майбутнє`]}
-/>
-</MarkTheWords>
-
-### English to Ukrainian
-
-<Translate questions={[
-  {
-    source: `I'm going to school.`,
-    options: [
-      { text: `Я йду до школи.`, correct: true },
-      { text: `Я йду в школу.`, correct: false },
-      { text: `Я йду на школу.`, correct: false },
-      { text: `Кава без цукру.`, correct: true },
-      { text: `Кава з цукру.`, correct: false },
-      { text: `Кава від цукру.`, correct: false },
-      { text: `Лист від мами.`, correct: true },
-      { text: `Лист для мами.`, correct: false },
-      { text: `Лист до мами.`, correct: false },
-      { text: `Лампа над столом.`, correct: true },
-      { text: `Лампа під столом.`, correct: false },
-      { text: `Лампа на столі.`, correct: false },
-      { text: `Він гуляє з друзями.`, correct: true },
-      { text: `Він гуляє до друзів.`, correct: false },
-      { text: `Він гуляє від друзів.`, correct: false },
-      { text: `Вони говорять про мене.`, correct: true },
-      { text: `Вони говорять для мене.`, correct: false },
-      { text: `Вони говорять до мене.`, correct: false },
-      { text: `Кіт під столом.`, correct: true },
-      { text: `Кіт під столі.`, correct: false },
-      { text: `Кіт під стіл.`, correct: false },
-      { text: `Стояти перед дверима.`, correct: true },
-      { text: `Стояти за дверима.`, correct: false },
-      { text: `Стояти між дверима.`, correct: false },
-      { text: `Після роботи.`, correct: true },
-      { text: `До роботи.`, correct: false },
-      { text: `Для роботи.`, correct: false },
-      { text: `Подарунок для тебе.`, correct: true },
-      { text: `Подарунок від тебе.`, correct: false },
-      { text: `Подарунок до тебе.`, correct: false },
-      { text: `Між нами.`, correct: true },
-      { text: `За нами.`, correct: false },
-      { text: `Перед нами.`, correct: false },
-      { text: `Ми йдемо через парк.`, correct: true },
-      { text: `Ми йдемо про парк.`, correct: false },
-      { text: `Ми йдемо на парк.`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -741,3 +338,650 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 | відмінок | /ʋidˈminɔk/ | grammatical case | noun | m | grammar term |
 
 ---
+
+---
+
+## 🎯 Activities
+
+### Preposition Meanings
+
+<MatchUp pairs={[
+  { left: `в/у`, right: `in, into` },
+  { left: `на`, right: `on, onto` },
+  { left: `з/із`, right: `from, with` },
+  { left: `до`, right: `to, until` },
+  { left: `від`, right: `from (person)` },
+  { left: `для`, right: `for` },
+  { left: `без`, right: `without` },
+  { left: `під`, right: `under` },
+  { left: `над`, right: `above` },
+  { left: `перед`, right: `in front of` },
+  { left: `за`, right: `behind` },
+  { left: `між`, right: `between` }
+]} />
+
+### Choose the Correct Preposition
+
+*Complete each sentence with the correct preposition.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Вона йде ___ школи.`}
+    answer={`до`}
+    options={[`до`, `на`, `в`]}
+  />
+  <FillInQuestion
+    sentence={`Кава ___ цукру.`}
+    answer={`без`}
+    options={[`без`, `з`, `від`]}
+  />
+  <FillInQuestion
+    sentence={`Лист ___ мами.`}
+    answer={`від`}
+    options={[`від`, `для`, `до`]}
+  />
+  <FillInQuestion
+    sentence={`Подарунок ___ тебе.`}
+    answer={`для`}
+    options={[`для`, `від`, `до`]}
+  />
+  <FillInQuestion
+    sentence={`Він іде ___ роботи.`}
+    answer={`з`}
+    options={[`з`, `до`, `на`]}
+  />
+  <FillInQuestion
+    sentence={`Лампа ___ столом.`}
+    answer={`над`}
+    options={[`над`, `під`, `на`]}
+  />
+  <FillInQuestion
+    sentence={`Стояти ___ дверима.`}
+    answer={`перед`}
+    options={[`перед`, `за`, `між`]}
+  />
+  <FillInQuestion
+    sentence={`Йти ___ парк.`}
+    answer={`через`}
+    options={[`через`, `про`, `на`]}
+  />
+  <FillInQuestion
+    sentence={`Говорити ___ тебе.`}
+    answer={`про`}
+    options={[`про`, `для`, `через`]}
+  />
+  <FillInQuestion
+    sentence={`Кіт ___ столом.`}
+    answer={`під`}
+    options={[`під`, `над`, `на`]}
+  />
+  <FillInQuestion
+    sentence={`Гуляти ___ друзями.`}
+    answer={`з`}
+    options={[`з`, `до`, `від`]}
+  />
+  <FillInQuestion
+    sentence={`___ нами.`}
+    answer={`Між`}
+    options={[`Між`, `За`, `Над`]}
+  />
+</FillIn>
+
+### Motion or Location?
+
+<Quiz>
+  <QuizQuestion
+    question={`1. Я йду в школу. What case is "школу"?`}
+    options={[`Accusative (motion)`, `Locative (location)`, `Genitive`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Він у школі. What case is "школі"?`}
+    options={[`Locative (location)`, `Accusative (motion)`, `Instrumental`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Вона кладе книгу на стіл. What case is "стіл"?`}
+    options={[`Accusative (motion)`, `Locative (location)`, `Genitive`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Книга лежить на столі. What case is "столі"?`}
+    options={[`Locative (location)`, `Accusative (motion)`, `Instrumental`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Кіт біжить під стіл. What case is "стіл"?`}
+    options={[`Accusative (motion)`, `Instrumental (location)`, `Genitive`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Кіт спить під столом. What case is "столом"?`}
+    options={[`Instrumental (location)`, `Accusative (motion)`, `Locative`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Вони йдуть за будинок. What case?`}
+    options={[`Accusative (motion)`, `Instrumental (location)`, `Genitive`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Вони стоять за будинком. What case?`}
+    options={[`Instrumental (location)`, `Accusative (motion)`, `Locative`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Which preposition always takes genitive?`}
+    options={[`без`, `над`, `про`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Which preposition always takes instrumental?`}
+    options={[`між`, `до`, `через`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Про" takes which case?`}
+    options={[`Accusative`, `Genitive`, `Instrumental`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Для" takes which case?`}
+    options={[`Genitive`, `Accusative`, `Dative`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### Preposition Rules
+
+*Decide if each statement is true or false.*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`Prepositions in Ukrainian require specific grammatical cases.`}
+    isTrue={true}
+    explanation={`Correct! Every Ukrainian preposition is linked to one or more cases.`}
+  />
+  <TrueFalseQuestion
+    statement={`"В школу" and "в школі" mean exactly the same thing.`}
+    isTrue={false}
+    explanation={`False! "В школу" (accusative) means motion TO school; "в школі" (locative) means location AT school.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Без" always takes the genitive case.`}
+    isTrue={true}
+    explanation={`Yes! "Без цукру" (without sugar) uses genitive.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Над" always takes the instrumental case.`}
+    isTrue={true}
+    explanation={`Correct! "Над столом" (above the table) uses instrumental.`}
+  />
+  <TrueFalseQuestion
+    statement={`"На" only takes accusative case.`}
+    isTrue={false}
+    explanation={`False! "На" takes accusative for motion, locative for location.`}
+  />
+  <TrueFalseQuestion
+    statement={`"До" takes genitive case.`}
+    isTrue={true}
+    explanation={`Yes! "До школи" (to school) uses genitive.`}
+  />
+  <TrueFalseQuestion
+    statement={`"З" always means "from."`}
+    isTrue={false}
+    explanation={`"З" can mean "from" with genitive OR "with" with instrumental.`}
+  />
+  <TrueFalseQuestion
+    statement={`Motion uses accusative with в/у, на, під, за.`}
+    isTrue={true}
+    explanation={`Correct! These two-way prepositions use accusative for motion.`}
+  />
+  <TrueFalseQuestion
+    statement={`"В" and "у" have the same meaning.`}
+    isTrue={true}
+    explanation={`Yes! They differ only in when you use them for euphony.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Перед" takes locative case.`}
+    isTrue={false}
+    explanation={`"Перед" takes instrumental: "перед дверима."`}
+  />
+  <TrueFalseQuestion
+    statement={`"Між" means "between" and takes instrumental.`}
+    isTrue={true}
+    explanation={`Correct! "Між нами" (between us).`}
+  />
+  <TrueFalseQuestion
+    statement={`Location after "під" uses instrumental, not locative.`}
+    isTrue={true}
+    explanation={`Yes! "Під столом" (under the table) uses instrumental.`}
+  />
+</TrueFalse>
+
+### Prepositions by Case
+
+*Sort these prepositions into the correct case category.*
+
+
+<GroupSort groups={{
+  "### Genitive": [
+    "з = from",
+    "до",
+    "від",
+    "для",
+    "без",
+    "біля"
+  ],
+  "Accusative": [
+    "про",
+    "через"
+  ],
+  "Instrumental": [
+    "з = with",
+    "над",
+    "перед",
+    "між"
+  ]
+}} />
+
+### Preposition Sentences
+
+*Put the words in the correct order.*
+
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`я / йду / до / школи`}
+    answer={`Я йду до школи.`}
+  />
+  <UnjumbleQuestion
+    words={`кава / без / цукру`}
+    answer={`Кава без цукру.`}
+  />
+  <UnjumbleQuestion
+    words={`лампа / над / столом`}
+    answer={`Лампа над столом.`}
+  />
+  <UnjumbleQuestion
+    words={`він / гуляє / з / друзями`}
+    answer={`Він гуляє з друзями.`}
+  />
+  <UnjumbleQuestion
+    words={`подарунок / для / мами`}
+    answer={`Подарунок для мами.`}
+  />
+  <UnjumbleQuestion
+    words={`ми / йдемо / через / парк`}
+    answer={`Ми йдемо через парк.`}
+  />
+  <UnjumbleQuestion
+    words={`вони / говорять / про / мене`}
+    answer={`Вони говорять про мене.`}
+  />
+  <UnjumbleQuestion
+    words={`кіт / спить / під / столом`}
+    answer={`Кіт спить під столом.`}
+  />
+  <UnjumbleQuestion
+    words={`стояти / перед / дверима`}
+    answer={`Стояти перед дверима.`}
+  />
+  <UnjumbleQuestion
+    words={`бути / за / будинком`}
+    answer={`Бути за будинком.`}
+  />
+  <UnjumbleQuestion
+    words={`лист / від / брата`}
+    answer={`Лист від брата.`}
+  />
+  <UnjumbleQuestion
+    words={`після / роботи`}
+    answer={`Після роботи.`}
+  />
+</Unjumble>
+
+### Fix the Case
+
+*Each sentence has ONE error in case. Find and correct it.*
+
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Він йде до школа.`}
+    error={`школа`}
+    answer={`школи`}
+    options={[`школа`, `школи`, `школу`, `школі`]}
+    explanation={`"До" requires genitive case: школа → школи.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Кава без цукор.`}
+    error={`цукор`}
+    answer={`цукру`}
+    options={[`цукор`, `цукру`, `цукром`, `цукрі`]}
+    explanation={`"Без" requires genitive case: цукор → цукру.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Лампа над стіл.`}
+    error={`стіл`}
+    answer={`столом`}
+    options={[`стіл`, `столом`, `столі`, `столу`]}
+    explanation={`"Над" requires instrumental case: стіл → столом.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Подарунок для мама.`}
+    error={`мама`}
+    answer={`мами`}
+    options={[`мама`, `мами`, `маму`, `мамі`]}
+    explanation={`"Для" requires genitive case: мама → мами.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вони говорять про ти.`}
+    error={`ти`}
+    answer={`тебе`}
+    options={[`ти`, `тебе`, `тобі`, `тобою`]}
+    explanation={`"Про" requires accusative case: ти → тебе.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він гуляє з друг.`}
+    error={`друг`}
+    answer={`другом`}
+    options={[`друг`, `другом`, `друга`, `другу`]}
+    explanation={`"З" (with) requires instrumental case: друг → другом.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Стояти перед двері.`}
+    error={`двері`}
+    answer={`дверима`}
+    options={[`двері`, `дверима`, `дверей`, `дверях`]}
+    explanation={`"Перед" requires instrumental case: двері → дверима.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Між ми.`}
+    error={`ми`}
+    answer={`нами`}
+    options={[`ми`, `нами`, `нас`, `нам`]}
+    explanation={`"Між" requires instrumental case: ми → нами.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Лист від мама.`}
+    error={`мама`}
+    answer={`мами`}
+    options={[`мама`, `мами`, `маму`, `мамі`]}
+    explanation={`"Від" requires genitive case: мама → мами.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Йти через парку.`}
+    error={`парку`}
+    answer={`парк`}
+    options={[`парку`, `парк`, `парком`, `парці`]}
+    explanation={`"Через" requires accusative case: парку → парк.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Кіт під стіл.`}
+    error={`стіл`}
+    answer={`столом`}
+    options={[`стіл`, `столом`, `столі`, `столу`]}
+    explanation={`Location after "під" requires instrumental: стіл → столом.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Бути за будинок.`}
+    error={`будинок`}
+    answer={`будинком`}
+    options={[`будинок`, `будинком`, `будинку`, `будинці`]}
+    explanation={`Location after "за" requires instrumental: будинок → будинком.`}
+  />
+</ErrorCorrection>
+
+### Complete the Story
+
+*Fill in the blanks with the correct preposition + case form.*
+
+
+<Cloze>
+  <ClozePassage
+    text={`Марія живе [___:1] Києві. Вранці вона йде [___:2] роботи. Вона працює [___:3] великому офісі. [___:4] роботи вона йде [___:5] магазину.`}
+    blanks={[
+  {
+    "index": 0,
+    "options": [
+      "в/у + Loc",
+      "на + Acc",
+      "з + Gen"
+    ],
+    "answer": "в/у + Loc"
+  },
+  {
+    "index": 1,
+    "options": [
+      "на + Acc",
+      "до + Gen",
+      "з + Gen"
+    ],
+    "answer": "на + Acc"
+  },
+  {
+    "index": 2,
+    "options": [
+      "в/у + Loc",
+      "на + Acc",
+      "з + Gen"
+    ],
+    "answer": "в/у + Loc"
+  },
+  {
+    "index": 3,
+    "options": [
+      "Після + Gen",
+      "До + Gen",
+      "Для + Gen"
+    ],
+    "answer": "Після + Gen"
+  },
+  {
+    "index": 4,
+    "options": [
+      "до + Gen",
+      "на + Acc",
+      "в + Acc"
+    ],
+    "answer": "до + Gen"
+  },
+  {
+    "index": 5,
+    "options": [
+      "в/у + Loc",
+      "на + Acc",
+      "до + Gen"
+    ],
+    "answer": "в/у + Loc"
+  },
+  {
+    "index": 6,
+    "options": [
+      "на + Loc",
+      "в + Acc",
+      "до + Gen"
+    ],
+    "answer": "на + Loc"
+  },
+  {
+    "index": 7,
+    "options": [
+      "над + Instr",
+      "під + Instr",
+      "перед + Instr"
+    ],
+    "answer": "над + Instr"
+  },
+  {
+    "index": 8,
+    "options": [
+      "під + Instr",
+      "над + Instr",
+      "за + Instr"
+    ],
+    "answer": "під + Instr"
+  }
+]}
+  />
+</Cloze>
+
+### Asking for Directions
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Вибачте, як дійти до пошти?"
+  },
+  {
+    "speaker": "",
+    "line": "Йдіть через парк."
+  },
+  {
+    "speaker": "",
+    "line": "Дякую!"
+  },
+  {
+    "speaker": "",
+    "line": "Потім поверніть за будинок."
+  },
+  {
+    "speaker": "",
+    "line": "Пошта буде перед вами."
+  },
+  {
+    "speaker": "",
+    "line": "Будь ласка!"
+  },
+  {
+    "speaker": "",
+    "line": "Де знаходиться банк?"
+  },
+  {
+    "speaker": "",
+    "line": "Він між аптекою і магазином."
+  },
+  {
+    "speaker": "",
+    "line": "Далеко від станції метро?"
+  },
+  {
+    "speaker": "",
+    "line": "Ні, біля станції."
+  },
+  {
+    "speaker": "",
+    "line": "Добре, дякую!"
+  },
+  {
+    "speaker": "",
+    "line": "Немає за що!"
+  }
+]} />
+</DialogueReorder>
+
+### Find Preposition + Case
+
+Click on preposition + noun combinations.
+
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Він іде до школи. Потім він буде в класі. Книги лежать на столі. Олівець під зошитом. Вона живе біля парку. Гуляє з собакою. Сидить перед телевізором. Після роботи йде до магазину. Лист від друга. Подарунок для сестри. Кава без цукру. Розмова про майбутнє.`}
+    correctWords={[`до школи`, `в класі`, `на столі`, `під зошитом`, `біля парку`, `з собакою`, `перед телевізором`, `до магазину`, `від друга`, `для сестри`, `без цукру`, `про майбутнє`]}
+  />
+</MarkTheWords>
+
+### English to Ukrainian
+
+<Translate>
+  <TranslateItem
+    source={`I'm going to school.`}
+    answer={`Я йду до школи.`}
+    options={[`Я йду до школи.`, `Я йду в школу.`, `Я йду на школу.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Coffee without sugar.`}
+    answer={`Кава без цукру.`}
+    options={[`Кава без цукру.`, `Кава з цукру.`, `Кава від цукру.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`A letter from mom.`}
+    answer={`Лист від мами.`}
+    options={[`Лист від мами.`, `Лист для мами.`, `Лист до мами.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`The lamp is above the table.`}
+    answer={`Лампа над столом.`}
+    options={[`Лампа над столом.`, `Лампа під столом.`, `Лампа на столі.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`He's walking with friends.`}
+    answer={`Він гуляє з друзями.`}
+    options={[`Він гуляє з друзями.`, `Він гуляє до друзів.`, `Він гуляє від друзів.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`They're talking about me.`}
+    answer={`Вони говорять про мене.`}
+    options={[`Вони говорять про мене.`, `Вони говорять для мене.`, `Вони говорять до мене.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`The cat is under the table.`}
+    answer={`Кіт під столом.`}
+    options={[`Кіт під столом.`, `Кіт під столі.`, `Кіт під стіл.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Stand in front of the door.`}
+    answer={`Стояти перед дверима.`}
+    options={[`Стояти перед дверима.`, `Стояти за дверима.`, `Стояти між дверима.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`After work.`}
+    answer={`Після роботи.`}
+    options={[`Після роботи.`, `До роботи.`, `Для роботи.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`A gift for you.`}
+    answer={`Подарунок для тебе.`}
+    options={[`Подарунок для тебе.`, `Подарунок від тебе.`, `Подарунок до тебе.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Between us.`}
+    answer={`Між нами.`}
+    options={[`Між нами.`, `За нами.`, `Перед нами.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`We're going through the park.`}
+    answer={`Ми йдемо через парк.`}
+    options={[`Ми йдемо через парк.`, `Ми йдемо про парк.`, `Ми йдемо на парк.`]}
+    explanation={``}
+  />
+</Translate>
+

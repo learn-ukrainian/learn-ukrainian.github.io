@@ -5,19 +5,20 @@ title: "The Accusative I - Things"
 description: "Making Direct Objects Work"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # The Accusative I - Things
@@ -29,7 +30,8 @@ You've been using Ukrainian to talk about what things ARE (nominative case). Now
 
 
 
-:::info[🔗 External Resources]
+:::info
+🔗 External Resources
 
 **YouTube:** [The Accusative case in the Ukrainian language](https://www.youtube.com/watch?v=D_-Y5kfanl0) — Speak Ukrainian
 
@@ -60,7 +62,8 @@ In Ukrainian, when something RECEIVES the action (the direct object), it changes
 
 **Key insight:** Only feminine nouns ending in -а/-я change their endings in accusative. Masculine inanimate and neuter nouns stay the same!
 
-:::tip[**Did You Know?**]
+:::tip
+**Did You Know?**
 
 The accusative case is called **знахідний** (znakhidnyy) from the word **знаходити** (to find). You "find" the object of the action! This makes it one of the most frequently used cases in Ukrainian — you use it dozens of times every day.
 :::
@@ -80,7 +83,8 @@ These verbs need accusative case for their objects:
 | читати | читати | читаю | to read | Я **читаю** газету. |
 | показувати | показувати | показую | to show | Він **показує** документ. |
 
-:::info[**Pop Culture Moment: S.T.A.L.K.E.R.**]
+:::info
+**Pop Culture Moment: S.T.A.L.K.E.R.**
 
 The iconic Ukrainian game S.T.A.L.K.E.R. (made by GSC Game World in Kyiv) has a famous phrase: "Іди своєю дорогою, сталкер" (Go your way, stalker). Notice **дорогою** — that's instrumental case! But when characters say "Я бачу аномалію!" (I see an anomaly!), that's accusative: аномалію (from аномалія). The Zone teaches grammar!
 :::
@@ -103,7 +107,8 @@ Let's see the accusative in action:
 11. **Я маю газету.** (I have a newspaper.) — feminine -а → -у
 12. **Вона відкриває коробку.** (She opens the box.) — feminine -а → -у
 
-:::info[**Real World: Ukrainian Post Office**]
+:::info
+**Real World: Ukrainian Post Office**
 
 When you send mail in Ukraine, you'll use these words constantly: "Я відправляю **посилку**" (I'm sending a parcel), "Покажіть **паспорт**, будь ласка" (Show your passport, please), "Ви маєте **конверт**?" (Do you have an envelope?). All accusative!
 :::
@@ -111,53 +116,30 @@ When you send mail in Ukraine, you'll use these words constantly: "Я відпр
 
 ### Mini-Dialogue 1: At the Post Office (На пошті)
 
-<div className="conversation">
-
 — Добрий день! Я хочу відправити **посилку**.
-
 — Будь ласка. Покажіть **паспорт**.
-
 — Ось, будь ласка. Я також маю **лист**.
-
 — Добре. Ви берете **конверт**?
-
 — Так, дайте один **конверт**, будь ласка.
-
-</div>
 
 *(Good day! I want to send a parcel. — Please. Show your passport. — Here you are. I also have a letter. — Good. Are you taking an envelope? — Yes, give me one envelope, please.)*
 
 ### Mini-Dialogue 2: Packing for a Trip (Збираємося у подорож)
 
-<div className="conversation">
-
 — Ти маєш **валізу**?
-
 — Так, я беру **сумку** і **валізу**.
-
 — Не забудь **паспорт** і **квитки**!
-
 — Я вже маю **паспорт**. Де **квитки**?
-
 — Вони в **коробці** на столі.
-
-</div>
 
 *(Do you have a suitcase? — Yes, I'm taking a bag and a suitcase. — Don't forget your passport and tickets! — I already have my passport. Where are the tickets? — They're in the box on the table.)*
 
 ### Mini-Dialogue 3: Reading the News (Читаємо новини)
 
-<div className="conversation">
-
 — Що ти читаєш?
-
 — Я читаю **газету**.
-
 — А я маю цікавий **журнал**. Хочеш бачити?
-
 — Так! Покажи **журнал**.
-
-</div>
 
 *(What are you reading? — I'm reading a newspaper. — And I have an interesting magazine. Do you want to see? — Yes! Show me the magazine.)*
 
@@ -176,7 +158,8 @@ When you send mail in Ukraine, you'll use these words constantly: "Я відпр
 
 **Remember:** Feminine -а/-я nouns ALWAYS change to -у/-ю in accusative!
 
-:::warning[**Watch Out!**]
+:::warning
+**Watch Out!**
 
 Don't confuse nominative and accusative for feminine nouns:
 - **Це книга.** (This is a book. — nominative)
@@ -249,344 +232,7 @@ In this module, you learned:
 
 ---
 
-## 🎯 Activities
 
-### Accusative Recognition
-
-<Quiz questions={[
-  {
-    question: `What is the accusative form of \"книга\"?`,
-    options: [
-      { text: `книга`, correct: false },
-      { text: `книгу`, correct: true },
-      { text: `книги`, correct: false },
-      { text: `книзі`, correct: false }
-    ]
-  },  {
-    question: `What is the accusative form of \"паспорт\"?`,
-    options: [
-      { text: `паспорт`, correct: true },
-      { text: `паспорта`, correct: false },
-      { text: `паспорту`, correct: false },
-      { text: `паспортом`, correct: false }
-    ]
-  },  {
-    question: `Which verb requires accusative case?`,
-    options: [
-      { text: `бачити (to see)`, correct: true },
-      { text: `бути (to be)`, correct: false },
-      { text: `працювати (to work)`, correct: false },
-      { text: `спати (to sleep)`, correct: false }
-    ]
-  },  {
-    question: `What is the accusative form of \"вікно\"?`,
-    options: [
-      { text: `вікна`, correct: false },
-      { text: `вікні`, correct: false },
-      { text: `вікно`, correct: true },
-      { text: `вікном`, correct: false }
-    ]
-  },  {
-    question: `Complete: \"Я читаю ___\" (newspaper)`,
-    options: [
-      { text: `газета`, correct: false },
-      { text: `газету`, correct: true },
-      { text: `газети`, correct: false },
-      { text: `газеті`, correct: false }
-    ]
-  },  {
-    question: `Complete: \"Він бере ___\" (suitcase)`,
-    options: [
-      { text: `валіза`, correct: false },
-      { text: `валізу`, correct: true },
-      { text: `валізи`, correct: false },
-      { text: `валізі`, correct: false }
-    ]
-  },  {
-    question: `What is the accusative form of \"море\"?`,
-    options: [
-      { text: `моря`, correct: false },
-      { text: `морю`, correct: false },
-      { text: `море`, correct: true },
-      { text: `морі`, correct: false }
-    ]
-  },  {
-    question: `Complete: \"Вона дає ___\" (gift)`,
-    options: [
-      { text: `подарунок`, correct: true },
-      { text: `подарунку`, correct: false },
-      { text: `подарунка`, correct: false },
-      { text: `подарунком`, correct: false }
-    ]
-  },  {
-    question: `What is the accusative form of \"сумка\"?`,
-    options: [
-      { text: `сумка`, correct: false },
-      { text: `сумку`, correct: true },
-      { text: `сумки`, correct: false },
-      { text: `сумці`, correct: false }
-    ]
-  },  {
-    question: `Complete: \"Ти маєш ___?\" (ticket)`,
-    options: [
-      { text: `квиток`, correct: true },
-      { text: `квитка`, correct: false },
-      { text: `квитку`, correct: false },
-      { text: `квитком`, correct: false }
-    ]
-  },  {
-    question: `What is the accusative form of \"коробка\"?`,
-    options: [
-      { text: `коробка`, correct: false },
-      { text: `коробку`, correct: true },
-      { text: `коробки`, correct: false },
-      { text: `коробці`, correct: false }
-    ]
-  },  {
-    question: `Complete: \"Я відкриваю ___\" (window)`,
-    options: [
-      { text: `вікна`, correct: false },
-      { text: `вікно`, correct: true },
-      { text: `вікні`, correct: false },
-      { text: `вікном`, correct: false }
-    ]
-  }
-]} />
-
-### Vocabulary Practice
-
-<MatchUp pairs={[
-  { left: `Ukrainian`, right: `English` },
-  { left: `бачити`, right: `to see` },
-  { left: `чути`, right: `to hear` },
-  { left: `брати`, right: `to take` },
-  { left: `давати`, right: `to give` },
-  { left: `мати`, right: `to have` },
-  { left: `нести`, right: `to carry` },
-  { left: `класти`, right: `to put` },
-  { left: `відкривати`, right: `to open` },
-  { left: `закривати`, right: `to close` },
-  { left: `вмикати`, right: `to turn on` },
-  { left: `вимикати`, right: `to turn off` },
-  { left: `показувати`, right: `to show` }
-]} />
-
-### Transform to Accusative
-
-<FillIn items={[
-  {
-    sentence: `Я бачу ___. (газета)`,
-    answer: `газету`,
-    options: [`газета`, `газету`, `газети`, `газеті`]
-  },  {
-    sentence: `Вона читає ___. (книга)`,
-    answer: `книгу`,
-    options: [`книга`, `книгу`, `книги`, `книзі`]
-  },  {
-    sentence: `Ти маєш ___? (паспорт)`,
-    answer: `паспорт`,
-    options: [`паспорт`, `паспорта`, `паспорту`, `паспортом`]
-  },  {
-    sentence: `Він бере ___. (валіза)`,
-    answer: `валізу`,
-    options: [`валіза`, `валізу`, `валізи`, `валізі`]
-  },  {
-    sentence: `Ми відкриваємо ___. (вікно)`,
-    answer: `вікно`,
-    options: [`вікно`, `вікна`, `вікні`, `вікном`]
-  },  {
-    sentence: `Я маю ___. (квиток)`,
-    answer: `квиток`,
-    options: [`квиток`, `квитка`, `квитку`, `квитком`]
-  },  {
-    sentence: `Вона дає ___. (подарунок)`,
-    answer: `подарунок`,
-    options: [`подарунок`, `подарунку`, `подарунка`, `подарунком`]
-  },  {
-    sentence: `Ти берешь ___? (сумка)`,
-    answer: `сумку`,
-    options: [`сумка`, `сумку`, `сумки`, `сумці`]
-  },  {
-    sentence: `Він показує ___. (документ)`,
-    answer: `документ`,
-    options: [`документ`, `документа`, `документу`, `документом`]
-  },  {
-    sentence: `Я відправляю ___. (посилка)`,
-    answer: `посилку`,
-    options: [`посилка`, `посилку`, `посилки`, `посилці`]
-  },  {
-    sentence: `Ми маємо ___. (журнал)`,
-    answer: `журнал`,
-    options: [`журнал`, `журнала`, `журналу`, `журналом`]
-  },  {
-    sentence: `Вона відкриває ___. (коробка)`,
-    answer: `коробку`,
-    options: [`коробка`, `коробку`, `коробки`, `коробці`]
-  }
-]} />
-
-### Grammar Rules
-
-<TrueFalse items={[
-  {
-    statement: `Feminine nouns ending in -а change to -у in accusative.`,
-    isTrue: true,
-    explanation: `Correct! книга → книгу`
-  },  {
-    statement: `Masculine inanimate nouns change in accusative.`,
-    isTrue: false,
-    explanation: `Incorrect! They stay the same: паспорт → паспорт`
-  },  {
-    statement: `The verb \"бачити\" takes accusative case.`,
-    isTrue: true,
-    explanation: `Correct! Я бачу книгу (I see a book)`
-  },  {
-    statement: `Neuter nouns change their endings in accusative.`,
-    isTrue: false,
-    explanation: `Incorrect! They stay the same: вікно → вікно`
-  },  {
-    statement: `Accusative answers the question \"Що?\" (What?)`,
-    isTrue: true,
-    explanation: `Correct! It marks the direct object`
-  },  {
-    statement: `The accusative form of \"газета\" is \"газети\".`,
-    isTrue: false,
-    explanation: `Incorrect! газета → газету`
-  },  {
-    statement: `The verb \"мати\" (to have) requires accusative.`,
-    isTrue: true,
-    explanation: `Correct! Я маю книгу`
-  },  {
-    statement: `Masculine nouns ending in consonants add -а in accusative.`,
-    isTrue: false,
-    explanation: `Incorrect! Inanimate masculines don't change`
-  },  {
-    statement: `Feminine -я nouns change to -ю in accusative.`,
-    isTrue: true,
-    explanation: `Correct! земля → землю`
-  },  {
-    statement: `The accusative of \"вікно\" is \"вікна\".`,
-    isTrue: false,
-    explanation: `Incorrect! Neuter stays same: вікно`
-  },  {
-    statement: `\"Брати\" (to take) uses accusative for the object.`,
-    isTrue: true,
-    explanation: `Correct! Він бере сумку`
-  },  {
-    statement: `All Ukrainian nouns change in accusative.`,
-    isTrue: false,
-    explanation: `Incorrect! Only feminine -а/-я change`
-  }
-]} />
-
-### Gender and Accusative Changes
-
-<GroupSort groups={{
-  "Change in Accusative (Feminine -а/-я)": ["газета → газету", "книга → книгу", "валіза → валізу", "сумка → сумку", "посилка → посилку", "коробка → коробку"],
-  "No Change (Masculine/Neuter inanimate)": ["паспорт → паспорт", "квиток → квиток", "подарунок → подарунок", "документ → документ", "журнал → журнал", "вікно → вікно", "море → море", "місто → місто"]
-}} />
-
-### Complete the Sentences
-
-<FillIn items={[
-  {
-    sentence: `Я ___ (to see) автобус.`,
-    answer: `бачу`,
-    options: [`бачу`, `бачиш`, `бачить`, `бачимо`]
-  },  {
-    sentence: `Вона ___ (to read) газету вранці.`,
-    answer: `читає`,
-    options: [`читаю`, `читає`, `читаєш`, `читають`]
-  },  {
-    sentence: `Ти ___ (to have) паспорт?`,
-    answer: `маєш`,
-    options: [`маю`, `маєш`, `має`, `маємо`]
-  },  {
-    sentence: `Ми ___ (to take) валізу.`,
-    answer: `беремо`,
-    options: [`беру`, `береш`, `бере`, `беремо`]
-  },  {
-    sentence: `Він ___ (to open) вікно.`,
-    answer: `відкриває`,
-    options: [`відкриваю`, `відкриваєш`, `відкриває`, `відкривають`]
-  },  {
-    sentence: `Вони ___ (to give) подарунок.`,
-    answer: `дають`,
-    options: [`даю`, `даєш`, `дає`, `дають`]
-  },  {
-    sentence: `Я ___ (to show) квиток.`,
-    answer: `показую`,
-    options: [`показую`, `показуєш`, `показує`, `показують`]
-  },  {
-    sentence: `Ти ___ (to hear) музику?`,
-    answer: `чуєш`,
-    options: [`чую`, `чуєш`, `чує`, `чуємо`]
-  },  {
-    sentence: `Вона ___ (to close) двері.`,
-    answer: `закриває`,
-    options: [`закриваю`, `закриваєш`, `закриває`, `закривають`]
-  },  {
-    sentence: `Ми ___ (to carry) сумку.`,
-    answer: `несемо`,
-    options: [`несу`, `несеш`, `несе`, `несемо`]
-  },  {
-    sentence: `Він ___ (to turn on) світло.`,
-    answer: `вмикає`,
-    options: [`вмикаю`, `вмикаєш`, `вмикає`, `вмикають`]
-  },  {
-    sentence: `Я ___ (to take) документ.`,
-    answer: `беру`,
-    options: [`беру`, `береш`, `бере`, `беремо`]
-  }
-]} />
-
-### Word Order Practice
-
-<Unjumble items={[
-  { jumbled: `бачу / Я / автобус`, answer: `Я бачу автобус.` },
-  { jumbled: `газету / читає / Вона`, answer: `Вона читає газету.` },
-  { jumbled: `маєш / паспорт / Ти / ?`, answer: `Ти маєш паспорт?` },
-  { jumbled: `валізу / беремо / Ми`, answer: `Ми беремо валізу.` },
-  { jumbled: `вікно / Він / відкриває`, answer: `Він відкриває вікно.` },
-  { jumbled: `дають / подарунок / Вони`, answer: `Вони дають подарунок.` },
-  { jumbled: `показую / квиток / Я`, answer: `Я показую квиток.` },
-  { jumbled: `музику / чуєш / Ти / ?`, answer: `Ти чуєш музику?` },
-  { jumbled: `закриває / двері / Вона`, answer: `Вона закриває двері.` },
-  { jumbled: `несемо / сумку / Ми`, answer: `Ми несемо сумку.` },
-  { jumbled: `журнал / Я / цікавий / читаю`, answer: `Я читаю цікавий журнал.` },
-  { jumbled: `посилку / відправляємо / Ми / сьогодні`, answer: `Ми відправляємо посилку сьогодні.` }
-]} />
-
-### Verb + Object Pairs
-
-<MatchUp pairs={[
-  { left: `Verb`, right: `Object` },
-  { left: `читати`, right: `газету` },
-  { left: `показувати`, right: `паспорт` },
-  { left: `брати`, right: `валізу` },
-  { left: `відкривати`, right: `вікно` },
-  { left: `відправляти`, right: `посилку` },
-  { left: `мати`, right: `квиток` },
-  { left: `давати`, right: `подарунок` },
-  { left: `нести`, right: `сумку` },
-  { left: `закривати`, right: `двері` },
-  { left: `вмикати`, right: `світло` }
-]} />
-
-### Longer Sentences
-
-<Unjumble items={[
-  { jumbled: `читаю / Я / цікаву / газету / щоранку`, answer: `Я читаю цікаву газету щоранку.` },
-  { jumbled: `валізу / Вона / бере / велику / і / сумку`, answer: `Вона бере велику валізу і сумку.` },
-  { jumbled: `паспорт / маєш / Ти / український / ?`, answer: `Ти маєш український паспорт?` },
-  { jumbled: `сумку / беру / Я / велику / чорну`, answer: `Я беру велику чорну сумку.` },
-  { jumbled: `вікно / Ми / відкриваємо / в / кімнаті`, answer: `Ми відкриваємо вікно в кімнаті.` },
-  { jumbled: `валізу / Ми / несемо / важку / велику`, answer: `Ми несемо велику важку валізу.` },
-  { jumbled: `газету / читає / українську / Вона / щодня`, answer: `Вона щодня читає українську газету.` },
-  { jumbled: `посилку / Вона / відправляє / у / Київ`, answer: `Вона відправляє посилку у Київ.` },
-  { jumbled: `Я / маю / квиток / новий / український`, answer: `Я маю новий український квиток.` },
-  { jumbled: `коробку / відкриває / велику / Він / обережно`, answer: `Він обережно відкриває велику коробку.` }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -616,3 +262,460 @@ In this module, you learned:
 | сумка | /ˈsumkɑ/ | bag | noun | f | - |
 | валіза | /vɑˈlizɑ/ | suitcase | noun | f | - |
 | коробка | /koˈrobkɑ/ | box | noun | f | - |
+
+---
+
+## 🎯 Activities
+
+### Accusative Recognition
+
+*Choose the correct answer.*
+
+
+<Quiz>
+  <QuizQuestion
+    question={`1. What is the accusative form of "книга"?`}
+    options={[`книга`, `книгу`, `книги`, `книзі`]}
+    correctIndex={1}
+    explanation={`Feminine -а → -у in accusative`}
+  />
+  <QuizQuestion
+    question={`What is the accusative form of "паспорт"?`}
+    options={[`паспорт`, `паспорта`, `паспорту`, `паспортом`]}
+    correctIndex={0}
+    explanation={`Masculine inanimate stays the same`}
+  />
+  <QuizQuestion
+    question={`Which verb requires accusative case?`}
+    options={[`бачити (to see)`, `бути (to be)`, `працювати (to work)`, `спати (to sleep)`]}
+    correctIndex={0}
+    explanation={`бачити needs an object: Я бачу книгу`}
+  />
+  <QuizQuestion
+    question={`What is the accusative form of "вікно"?`}
+    options={[`вікна`, `вікні`, `вікно`, `вікном`]}
+    correctIndex={2}
+    explanation={`Neuter stays the same`}
+  />
+  <QuizQuestion
+    question={`Complete: "Я читаю ___" (newspaper)`}
+    options={[`газета`, `газету`, `газети`, `газеті`]}
+    correctIndex={1}
+    explanation={`Feminine -а → -у`}
+  />
+  <QuizQuestion
+    question={`Complete: "Він бере ___" (suitcase)`}
+    options={[`валіза`, `валізу`, `валізи`, `валізі`]}
+    correctIndex={1}
+    explanation={`Feminine -а → -у`}
+  />
+  <QuizQuestion
+    question={`What is the accusative form of "море"?`}
+    options={[`моря`, `морю`, `море`, `морі`]}
+    correctIndex={2}
+    explanation={`Neuter -е stays the same`}
+  />
+  <QuizQuestion
+    question={`Complete: "Вона дає ___" (gift)`}
+    options={[`подарунок`, `подарунку`, `подарунка`, `подарунком`]}
+    correctIndex={0}
+    explanation={`Masculine inanimate stays the same`}
+  />
+  <QuizQuestion
+    question={`What is the accusative form of "сумка"?`}
+    options={[`сумка`, `сумку`, `сумки`, `сумці`]}
+    correctIndex={1}
+    explanation={`Feminine -а → -у`}
+  />
+  <QuizQuestion
+    question={`Complete: "Ти маєш ___?" (ticket)`}
+    options={[`квиток`, `квитка`, `квитку`, `квитком`]}
+    correctIndex={0}
+    explanation={`Masculine inanimate stays the same`}
+  />
+  <QuizQuestion
+    question={`What is the accusative form of "коробка"?`}
+    options={[`коробка`, `коробку`, `коробки`, `коробці`]}
+    correctIndex={1}
+    explanation={`Feminine -а → -у`}
+  />
+  <QuizQuestion
+    question={`Complete: "Я відкриваю ___" (window)`}
+    options={[`вікна`, `вікно`, `вікні`, `вікном`]}
+    correctIndex={1}
+    explanation={`Neuter stays the same`}
+  />
+</Quiz>
+
+### Vocabulary Practice
+
+*Match the Ukrainian words with their English translations.*
+
+
+<MatchUp pairs={[
+  { left: `бачити`, right: `to see` },
+  { left: `чути`, right: `to hear` },
+  { left: `брати`, right: `to take` },
+  { left: `давати`, right: `to give` },
+  { left: `мати`, right: `to have` },
+  { left: `нести`, right: `to carry` },
+  { left: `класти`, right: `to put` },
+  { left: `відкривати`, right: `to open` },
+  { left: `закривати`, right: `to close` },
+  { left: `вмикати`, right: `to turn on` },
+  { left: `вимикати`, right: `to turn off` },
+  { left: `показувати`, right: `to show` }
+]} />
+
+### Transform to Accusative
+
+*Change the nominative form to accusative.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я бачу ___. (газета)`}
+    answer={`газету`}
+    options={[`газета`, `газету`, `газети`, `газеті`]}
+  />
+  <FillInQuestion
+    sentence={`Вона читає ___. (книга)`}
+    answer={`книгу`}
+    options={[`книга`, `книгу`, `книги`, `книзі`]}
+  />
+  <FillInQuestion
+    sentence={`Ти маєш ___? (паспорт)`}
+    answer={`паспорт`}
+    options={[`паспорт`, `паспорта`, `паспорту`, `паспортом`]}
+  />
+  <FillInQuestion
+    sentence={`Він бере ___. (валіза)`}
+    answer={`валізу`}
+    options={[`валіза`, `валізу`, `валізи`, `валізі`]}
+  />
+  <FillInQuestion
+    sentence={`Ми відкриваємо ___. (вікно)`}
+    answer={`вікно`}
+    options={[`вікно`, `вікна`, `вікні`, `вікном`]}
+  />
+  <FillInQuestion
+    sentence={`Я маю ___. (квиток)`}
+    answer={`квиток`}
+    options={[`квиток`, `квитка`, `квитку`, `квитком`]}
+  />
+  <FillInQuestion
+    sentence={`Вона дає ___. (подарунок)`}
+    answer={`подарунок`}
+    options={[`подарунок`, `подарунку`, `подарунка`, `подарунком`]}
+  />
+  <FillInQuestion
+    sentence={`Ти берешь ___? (сумка)`}
+    answer={`сумку`}
+    options={[`сумка`, `сумку`, `сумки`, `сумці`]}
+  />
+  <FillInQuestion
+    sentence={`Він показує ___. (документ)`}
+    answer={`документ`}
+    options={[`документ`, `документа`, `документу`, `документом`]}
+  />
+  <FillInQuestion
+    sentence={`Я відправляю ___. (посилка)`}
+    answer={`посилку`}
+    options={[`посилка`, `посилку`, `посилки`, `посилці`]}
+  />
+  <FillInQuestion
+    sentence={`Ми маємо ___. (журнал)`}
+    answer={`журнал`}
+    options={[`журнал`, `журнала`, `журналу`, `журналом`]}
+  />
+  <FillInQuestion
+    sentence={`Вона відкриває ___. (коробка)`}
+    answer={`коробку`}
+    options={[`коробка`, `коробку`, `коробки`, `коробці`]}
+  />
+</FillIn>
+
+### Grammar Rules
+
+*Decide if each statement is true or false.*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`Feminine nouns ending in -а change to -у in accusative.`}
+    isTrue={true}
+    explanation={`Correct! книга → книгу`}
+  />
+  <TrueFalseQuestion
+    statement={`Masculine inanimate nouns change in accusative.`}
+    isTrue={false}
+    explanation={`Incorrect! They stay the same: паспорт → паспорт`}
+  />
+  <TrueFalseQuestion
+    statement={`The verb "бачити" takes accusative case.`}
+    isTrue={true}
+    explanation={`Correct! Я бачу книгу (I see a book)`}
+  />
+  <TrueFalseQuestion
+    statement={`Neuter nouns change their endings in accusative.`}
+    isTrue={false}
+    explanation={`Incorrect! They stay the same: вікно → вікно`}
+  />
+  <TrueFalseQuestion
+    statement={`Accusative answers the question "Що?" (What?)`}
+    isTrue={true}
+    explanation={`Correct! It marks the direct object`}
+  />
+  <TrueFalseQuestion
+    statement={`The accusative form of "газета" is "газети".`}
+    isTrue={false}
+    explanation={`Incorrect! газета → газету`}
+  />
+  <TrueFalseQuestion
+    statement={`The verb "мати" (to have) requires accusative.`}
+    isTrue={true}
+    explanation={`Correct! Я маю книгу`}
+  />
+  <TrueFalseQuestion
+    statement={`Masculine nouns ending in consonants add -а in accusative.`}
+    isTrue={false}
+    explanation={`Incorrect! Inanimate masculines don't change`}
+  />
+  <TrueFalseQuestion
+    statement={`Feminine -я nouns change to -ю in accusative.`}
+    isTrue={true}
+    explanation={`Correct! земля → землю`}
+  />
+  <TrueFalseQuestion
+    statement={`The accusative of "вікно" is "вікна".`}
+    isTrue={false}
+    explanation={`Incorrect! Neuter stays same: вікно`}
+  />
+  <TrueFalseQuestion
+    statement={`"Брати" (to take) uses accusative for the object.`}
+    isTrue={true}
+    explanation={`Correct! Він бере сумку`}
+  />
+  <TrueFalseQuestion
+    statement={`All Ukrainian nouns change in accusative.`}
+    isTrue={false}
+    explanation={`Incorrect! Only feminine -а/-я change`}
+  />
+</TrueFalse>
+
+### Gender and Accusative Changes
+
+*Sort these nouns by whether they change in accusative or stay the same.*
+
+
+<GroupSort groups={{
+  "### Change in Accusative (Feminine -а/-я)": [
+    "газета → газету",
+    "книга → книгу",
+    "валіза → валізу",
+    "сумка → сумку",
+    "посилка → посилку",
+    "коробка → коробку"
+  ],
+  "No Change (Masculine/Neuter inanimate)": [
+    "паспорт → паспорт",
+    "квиток → квиток",
+    "подарунок → подарунок",
+    "документ → документ",
+    "журнал → журнал",
+    "вікно → вікно",
+    "море → море",
+    "місто → місто"
+  ]
+}} />
+
+### Complete the Sentences
+
+*Fill in the blank with the correct verb form and accusative noun.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я ___ (to see) автобус.`}
+    answer={`бачу`}
+    options={[`бачу`, `бачиш`, `бачить`, `бачимо`]}
+  />
+  <FillInQuestion
+    sentence={`Вона ___ (to read) газету вранці.`}
+    answer={`читає`}
+    options={[`читаю`, `читає`, `читаєш`, `читають`]}
+  />
+  <FillInQuestion
+    sentence={`Ти ___ (to have) паспорт?`}
+    answer={`маєш`}
+    options={[`маю`, `маєш`, `має`, `маємо`]}
+  />
+  <FillInQuestion
+    sentence={`Ми ___ (to take) валізу.`}
+    answer={`беремо`}
+    options={[`беру`, `береш`, `бере`, `беремо`]}
+  />
+  <FillInQuestion
+    sentence={`Він ___ (to open) вікно.`}
+    answer={`відкриває`}
+    options={[`відкриваю`, `відкриваєш`, `відкриває`, `відкривають`]}
+  />
+  <FillInQuestion
+    sentence={`Вони ___ (to give) подарунок.`}
+    answer={`дають`}
+    options={[`даю`, `даєш`, `дає`, `дають`]}
+  />
+  <FillInQuestion
+    sentence={`Я ___ (to show) квиток.`}
+    answer={`показую`}
+    options={[`показую`, `показуєш`, `показує`, `показують`]}
+  />
+  <FillInQuestion
+    sentence={`Ти ___ (to hear) музику?`}
+    answer={`чуєш`}
+    options={[`чую`, `чуєш`, `чує`, `чуємо`]}
+  />
+  <FillInQuestion
+    sentence={`Вона ___ (to close) двері.`}
+    answer={`закриває`}
+    options={[`закриваю`, `закриваєш`, `закриває`, `закривають`]}
+  />
+  <FillInQuestion
+    sentence={`Ми ___ (to carry) сумку.`}
+    answer={`несемо`}
+    options={[`несу`, `несеш`, `несе`, `несемо`]}
+  />
+  <FillInQuestion
+    sentence={`Він ___ (to turn on) світло.`}
+    answer={`вмикає`}
+    options={[`вмикаю`, `вмикаєш`, `вмикає`, `вмикають`]}
+  />
+  <FillInQuestion
+    sentence={`Я ___ (to take) документ.`}
+    answer={`беру`}
+    options={[`беру`, `береш`, `бере`, `беремо`]}
+  />
+</FillIn>
+
+### Word Order Practice
+
+*Put the words in the correct order to form sentences.*
+
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`бачу / Я / автобус`}
+    answer={`Я бачу автобус.`}
+  />
+  <UnjumbleQuestion
+    words={`газету / читає / Вона`}
+    answer={`Вона читає газету.`}
+  />
+  <UnjumbleQuestion
+    words={`маєш / паспорт / Ти / ?`}
+    answer={`Ти маєш паспорт?`}
+  />
+  <UnjumbleQuestion
+    words={`валізу / беремо / Ми`}
+    answer={`Ми беремо валізу.`}
+  />
+  <UnjumbleQuestion
+    words={`вікно / Він / відкриває`}
+    answer={`Він відкриває вікно.`}
+  />
+  <UnjumbleQuestion
+    words={`дають / подарунок / Вони`}
+    answer={`Вони дають подарунок.`}
+  />
+  <UnjumbleQuestion
+    words={`показую / квиток / Я`}
+    answer={`Я показую квиток.`}
+  />
+  <UnjumbleQuestion
+    words={`музику / чуєш / Ти / ?`}
+    answer={`Ти чуєш музику?`}
+  />
+  <UnjumbleQuestion
+    words={`закриває / двері / Вона`}
+    answer={`Вона закриває двері.`}
+  />
+  <UnjumbleQuestion
+    words={`несемо / сумку / Ми`}
+    answer={`Ми несемо сумку.`}
+  />
+  <UnjumbleQuestion
+    words={`журнал / Я / цікавий / читаю`}
+    answer={`Я читаю цікавий журнал.`}
+  />
+  <UnjumbleQuestion
+    words={`посилку / відправляємо / Ми / сьогодні`}
+    answer={`Ми відправляємо посилку сьогодні.`}
+  />
+</Unjumble>
+
+### Verb + Object Pairs
+
+*Match each verb with the most logical object in accusative.*
+
+
+<MatchUp pairs={[
+  { left: `читати`, right: `газету` },
+  { left: `показувати`, right: `паспорт` },
+  { left: `брати`, right: `валізу` },
+  { left: `відкривати`, right: `вікно` },
+  { left: `відправляти`, right: `посилку` },
+  { left: `мати`, right: `квиток` },
+  { left: `давати`, right: `подарунок` },
+  { left: `нести`, right: `сумку` },
+  { left: `закривати`, right: `двері` },
+  { left: `вмикати`, right: `світло` }
+]} />
+
+### Longer Sentences
+
+*Put the words in the correct order.*
+
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`читаю / Я / цікаву / газету / щоранку`}
+    answer={`Я читаю цікаву газету щоранку.`}
+  />
+  <UnjumbleQuestion
+    words={`валізу / Вона / бере / велику / і / сумку`}
+    answer={`Вона бере велику валізу і сумку.`}
+  />
+  <UnjumbleQuestion
+    words={`паспорт / маєш / Ти / український / ?`}
+    answer={`Ти маєш український паспорт?`}
+  />
+  <UnjumbleQuestion
+    words={`сумку / беру / Я / велику / чорну`}
+    answer={`Я беру велику чорну сумку.`}
+  />
+  <UnjumbleQuestion
+    words={`вікно / Ми / відкриваємо / в / кімнаті`}
+    answer={`Ми відкриваємо вікно в кімнаті.`}
+  />
+  <UnjumbleQuestion
+    words={`валізу / Ми / несемо / важку / велику`}
+    answer={`Ми несемо велику важку валізу.`}
+  />
+  <UnjumbleQuestion
+    words={`газету / читає / українську / Вона / щодня`}
+    answer={`Вона щодня читає українську газету.`}
+  />
+  <UnjumbleQuestion
+    words={`посилку / Вона / відправляє / у / Київ`}
+    answer={`Вона відправляє посилку у Київ.`}
+  />
+  <UnjumbleQuestion
+    words={`Я / маю / квиток / новий / український`}
+    answer={`Я маю новий український квиток.`}
+  />
+  <UnjumbleQuestion
+    words={`коробку / відкриває / велику / Він / обережно`}
+    answer={`Він обережно відкриває велику коробку.`}
+  />
+</Unjumble>
+

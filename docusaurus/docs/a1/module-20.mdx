@@ -5,19 +5,20 @@ title: "Checkpoint - Navigation"
 description: "Consolidation of Modules 11-19"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 ## Warm-up
@@ -33,7 +34,8 @@ Think about it: with just these three cases plus what you knew from A1.1, you ca
 
 Let's review these powerful tools through real scenarios you might encounter in Ukraine.
 
-:::tip[**Чому контрольні модулі важливі? (Why Checkpoint Modules Matter)**]
+:::tip
+**Чому контрольні модулі важливі? (Why Checkpoint Modules Matter)**
 
 Вивчення мови — це цикл, а не лінія. Ви вчите щось, використовуєте, забуваєте частину, і потрібно повторити. Контрольні модулі допомагають закріпити знання через реальні сценарії.
 
@@ -44,7 +46,8 @@ Language learning is cyclical. You learn, use, forget parts, and need to revisit
 
 
 
-:::info[🔗 External Resources]
+:::info
+🔗 External Resources
 
 **YouTube:** [How I learnt my first 500 words in Ukrainian ](https://www.youtube.com/watch?v=SdgPUOHXNts) —  Vocabooster Review|Conor Clyne - New Europe Experience
 
@@ -97,7 +100,8 @@ Used for location - where things are or happen.
 - **у/в** (in, inside): у магазині, в кімнаті, у Києві
 - **на** (on, at): на столі, на вулиці, на концерті, на роботі
 
-:::info[**Таємниця в/у розкрита! (The в/у Mystery Solved)**]
+:::info
+**Таємниця в/у розкрита! (The в/у Mystery Solved)**
 
 Запам'ятайте: **в** перед приголосними (в Києві, в магазині), **у** перед голосними (у школі, у Львові). Це фонетичне правило. Обирайте варіант з кращим звучанням!
 
@@ -144,7 +148,8 @@ From Module 14, you learned to express possession with pronouns that agree in ge
 - **Наше** місто велике. (Our city is big.) - neuter
 - **Їхні** друзі в Києві. (Their friends are in Kyiv.) - plural
 
-:::warning[**Типова помилка: його vs їхній (Common Mistake)**]
+:::warning
+**Типова помилка: його vs їхній (Common Mistake)**
 
 **його** та **її** НІКОЛИ не змінюються!
 **їхній** ЗМІНЮЄТЬСЯ за родами.
@@ -222,7 +227,8 @@ A tourist is lost near Independence Square:
 - **Locative:** у метро (in the metro), біля входу (near the entrance)
 - **Genitive:** у мене немає картки (I don't have a card), за допомогу (for the help)
 
-:::info[**Цікавий факт: Київське метро (Pop Culture Moment)**]
+:::info
+**Цікавий факт: Київське метро (Pop Culture Moment)**
 
 Київське метро — одне з найглибших у світі! Станція «Арсенальна» — 105,5 метрів під землею. Це глибше, ніж 30-поверховий будинок. Чому? Київ стоїть на пагорбах, а метро будували як бомбосховище.
 
@@ -269,7 +275,8 @@ Ordering coffee on Svobody Avenue:
 - **Locative:** біля вікна (by the window), у вас є (you have)
 - **Genitive:** без молока (without milk), за п'ять хвилин (in five minutes)
 
-:::info[**Реальний світ: Кавова культура Львова (Lviv Coffee Culture)**]
+:::info
+**Реальний світ: Кавова культура Львова (Lviv Coffee Culture)**
 
 Львів — кавова столиця України! У місті сотні кав'ярень — від традиційних до тематичних. «Львівська кава» — це бренд і стиль: міцна, ароматна, часто з прянощами. Традиція сягає часів Австрійської імперії.
 
@@ -357,7 +364,8 @@ You're ordering dinner. Create a dialogue where you:
 - Specify preferences (without sugar, with milk, etc.)
 - Ask for the check
 
-:::tip[**Self-Assessment Checklist**]
+:::tip
+**Self-Assessment Checklist**
 
 After this module, you should be able to:
 - ✓ Use Accusative case (direct objects)
@@ -397,7 +405,8 @@ In restaurants, it's common for one person to pay for everyone, especially if th
 
 Tipping is expected in restaurants - usually 10% is standard. In cafés, rounding up is fine. You can leave extra money on the table or say "Дякую" (Thank you) when paying.
 
-:::info[**Борщова дипломатія (Borsch Diplomacy)**]
+:::info
+**Борщова дипломатія (Borsch Diplomacy)**
 
 У 2022 році ЮНЕСКО визнала український борщ частиною культурної спадщини. Українські посольства по всьому світу проводять «борщову дипломатію» — готують борщ для промоції української культури.
 
@@ -450,429 +459,6 @@ Module 21 introduces the past tense - your first journey into talking about what
 
 ---
 
-## 🎯 Activities
-
-### Case Mastery - Accusative
-
-<FillIn items={[
-  {
-    sentence: `Я бачу ___ у парку.`,
-    answer: `студента`,
-    options: [`студент`, `студента`, `студенту`, `студентом`]
-  },  {
-    sentence: `Вона читає ___ кожен день.`,
-    answer: `книгу`,
-    options: [`книга`, `книгу`, `книги`, `книзі`]
-  },  {
-    sentence: `Ми хочемо купити ___.`,
-    answer: `хліб`,
-    options: [`хліб`, `хліба`, `хлібу`, `хлібом`]
-  },  {
-    sentence: `Ти любиш ___?`,
-    answer: `каву`,
-    options: [`кава`, `каву`, `кави`, `каві`]
-  },  {
-    sentence: `Він знає ___ добре.`,
-    answer: `цього лікаря`,
-    options: [`цей лікар`, `цього лікаря`, `цьому лікарю`, `цим лікарем`]
-  },  {
-    sentence: `Вони слухають ___.`,
-    answer: `музику`,
-    options: [`музика`, `музику`, `музики`, `музиці`]
-  },  {
-    sentence: `Я п'ю ___ з молоком.`,
-    answer: `чай`,
-    options: [`чай`, `чаю`, `чаєм`, `чаї`]
-  },  {
-    sentence: `Ми бачимо ___ біля школи.`,
-    answer: `вчительку`,
-    options: [`вчителька`, `вчительку`, `вчительки`, `вчительці`]
-  },  {
-    sentence: `Вона купує ___ на ринку.`,
-    answer: `яблука`,
-    options: [`яблуко`, `яблука`, `яблук`, `яблуках`]
-  },  {
-    sentence: `Ти чекаєш ___?`,
-    answer: `друга`,
-    options: [`друг`, `друга`, `другу`, `другом`]
-  },  {
-    sentence: `Він відкриває ___.`,
-    answer: `вікно`,
-    options: [`вікно`, `вікна`, `вікну`, `вікні`]
-  },  {
-    sentence: `Я знаю ___ добре.`,
-    answer: `цю дівчину`,
-    options: [`ця дівчина`, `цю дівчину`, `цієї дівчини`, `цій дівчині`]
-  }
-]} />
-
-### Case Mastery - Locative
-
-<FillIn items={[
-  {
-    sentence: `Книга ___ столі.`,
-    answer: `на`,
-    options: [`на`, `у`, `в`, `біля`]
-  },  {
-    sentence: `Ми живемо ___ Києві.`,
-    answer: `у`,
-    options: [`у`, `на`, `в`, `біля`]
-  },  {
-    sentence: `Студенти ___ бібліотеці.`,
-    answer: `у`,
-    options: [`у`, `на`, `біля`, `до`]
-  },  {
-    sentence: `Вона працює ___ офісі.`,
-    answer: `в`,
-    options: [`в`, `на`, `у`, `біля`]
-  },  {
-    sentence: `Діти ___ парку.`,
-    answer: `у`,
-    options: [`у`, `на`, `в`, `біля`]
-  },  {
-    sentence: `Концерт ___ вулиці Хрещатик.`,
-    answer: `на`,
-    options: [`на`, `у`, `в`, `біля`]
-  },  {
-    sentence: `Ми ___ ресторані.`,
-    answer: `у`,
-    options: [`у`, `на`, `в`, `біля`]
-  },  {
-    sentence: `Лампа ___ столі.`,
-    answer: `на`,
-    options: [`на`, `у`, `в`, `біля`]
-  },  {
-    sentence: `Турист ___ центрі міста.`,
-    answer: `у`,
-    options: [`у`, `на`, `в`, `біля`]
-  },  {
-    sentence: `Вони ___ станції метро.`,
-    answer: `на`,
-    options: [`на`, `у`, `в`, `біля`]
-  },  {
-    sentence: `Я ___ роботі зараз.`,
-    answer: `на`,
-    options: [`на`, `у`, `в`, `біля`]
-  },  {
-    sentence: `Кава ___ чашці.`,
-    answer: `у`,
-    options: [`у`, `на`, `в`, `біля`]
-  }
-]} />
-
-### Case Mastery - Genitive
-
-<FillIn items={[
-  {
-    sentence: `У мене немає ___.`,
-    answer: `часу`,
-    options: [`час`, `часу`, `часі`, `часом`]
-  },  {
-    sentence: `Тут немає ___.`,
-    answer: `молока`,
-    options: [`молоко`, `молока`, `молоку`, `молоці`]
-  },  {
-    sentence: `Кава без ___, будь ласка.`,
-    answer: `цукру`,
-    options: [`цукор`, `цукру`, `цукра`, `цукрі`]
-  },  {
-    sentence: `У нас немає ___.`,
-    answer: `води`,
-    options: [`вода`, `води`, `воду`, `воді`]
-  },  {
-    sentence: `П'ять ___, будь ласка.`,
-    answer: `квитків`,
-    options: [`квиток`, `квитка`, `квитків`, `квитками`]
-  },  {
-    sentence: `У них немає ___.`,
-    answer: `машини`,
-    options: [`машина`, `машини`, `машину`, `машині`]
-  },  {
-    sentence: `Склянка ___, будь ласка.`,
-    answer: `соку`,
-    options: [`сік`, `соку`, `сока`, `соці`]
-  },  {
-    sentence: `Сьогодні немає ___.`,
-    answer: `хліба`,
-    options: [`хліб`, `хліба`, `хлібу`, `хлібом`]
-  },  {
-    sentence: `У магазині немає ___.`,
-    answer: `помідорів`,
-    options: [`помідор`, `помідора`, `помідорів`, `помідорами`]
-  },  {
-    sentence: `Кілограм ___, будь ласка.`,
-    answer: `яблук`,
-    options: [`яблуко`, `яблука`, `яблук`, `яблуками`]
-  },  {
-    sentence: `Без ___ я не можу працювати.`,
-    answer: `кави`,
-    options: [`кава`, `кави`, `каву`, `каві`]
-  },  {
-    sentence: `Тридцять ___.`,
-    answer: `гривень`,
-    options: [`гривня`, `гривні`, `гривень`, `гривнями`]
-  }
-]} />
-
-### Possessive Pronouns Agreement
-
-<MatchUp pairs={[
-  { left: `Possessive`, right: `Noun` },
-  { left: `мій`, right: `телефон` },
-  { left: `моя`, right: `книга` },
-  { left: `моє`, right: `вікно` },
-  { left: `мої`, right: `друзі` },
-  { left: `твій`, right: `стіл` },
-  { left: `твоя`, right: `сумка` },
-  { left: `твоє`, right: `місто` },
-  { left: `його`, right: `машина` },
-  { left: `її`, right: `будинок` },
-  { left: `наш`, right: `університет` },
-  { left: `наша`, right: `кімната` },
-  { left: `їхнє`, right: `життя` }
-]} />
-
-### Grammar Knowledge Check
-
-<Quiz questions={[
-  {
-    question: `Which case do you use for the direct object of \"I see\"?`,
-    options: [
-      { text: `Nominative`, correct: false },
-      { text: `Accusative`, correct: true },
-      { text: `Locative`, correct: false },
-      { text: `Genitive`, correct: false }
-    ]
-  },  {
-    question: `What preposition requires the locative case for \"inside\"?`,
-    options: [
-      { text: `на`, correct: false },
-      { text: `у/в`, correct: true },
-      { text: `до`, correct: false },
-      { text: `з`, correct: false }
-    ]
-  },  {
-    question: `Which case do you use after \"немає\"?`,
-    options: [
-      { text: `Nominative`, correct: false },
-      { text: `Accusative`, correct: false },
-      { text: `Locative`, correct: false },
-      { text: `Genitive`, correct: true }
-    ]
-  },  {
-    question: `Which possessive pronoun NEVER changes form?`,
-    options: [
-      { text: `мій`, correct: false },
-      { text: `наш`, correct: false },
-      { text: `його`, correct: true },
-      { text: `їхній`, correct: false }
-    ]
-  },  {
-    question: `What is the accusative form of \"студент\" (animate)?`,
-    options: [
-      { text: `студент`, correct: false },
-      { text: `студента`, correct: true },
-      { text: `студенту`, correct: false },
-      { text: `студентом`, correct: false }
-    ]
-  },  {
-    question: `Which preposition do you use with \"на столі\"?`,
-    options: [
-      { text: `на`, correct: true },
-      { text: `у`, correct: false },
-      { text: `в`, correct: false },
-      { text: `біля`, correct: false }
-    ]
-  },  {
-    question: `How do you say \"without sugar\"?`,
-    options: [
-      { text: `немає цукор`, correct: false },
-      { text: `не цукру`, correct: false },
-      { text: `без цукру`, correct: true },
-      { text: `до цукру`, correct: false }
-    ]
-  },  {
-    question: `What's the locative form of \"Київ\"?`,
-    options: [
-      { text: `в Київ`, correct: false },
-      { text: `у Києві`, correct: true },
-      { text: `на Київ`, correct: false },
-      { text: `до Києва`, correct: false }
-    ]
-  },  {
-    question: `Which number range uses genitive plural?`,
-    options: [
-      { text: `1`, correct: false },
-      { text: `2-4`, correct: false },
-      { text: `5+`, correct: true },
-      { text: `All numbers`, correct: false }
-    ]
-  },  {
-    question: `What's the feminine form of \"мій\"?`,
-    options: [
-      { text: `мій`, correct: false },
-      { text: `моя`, correct: true },
-      { text: `моє`, correct: false },
-      { text: `мої`, correct: false }
-    ]
-  },  {
-    question: `Which preposition means \"on\" or \"at\" (surface)?`,
-    options: [
-      { text: `на`, correct: true },
-      { text: `у`, correct: false },
-      { text: `в`, correct: false },
-      { text: `біля`, correct: false }
-    ]
-  },  {
-    question: `What case do you use for \"I love Ukraine\"?`,
-    options: [
-      { text: `Nominative - Україна`, correct: false },
-      { text: `Accusative - Україну`, correct: true },
-      { text: `Locative - Україні`, correct: false },
-      { text: `Genitive - України`, correct: false }
-    ]
-  }
-]} />
-
-### Grammar Rules Review
-
-<TrueFalse items={[
-  {
-    statement: `Accusative case is used for direct objects.`,
-    isTrue: true,
-    explanation: `True! Accusative shows what or whom the action affects directly.`
-  },  {
-    statement: `Locative case is used with the preposition \"до\".`,
-    isTrue: false,
-    explanation: `False! \"до\" uses genitive. Locative uses \"у/в\" and \"на\".`
-  },  {
-    statement: `Genitive case is used after \"немає\".`,
-    isTrue: true,
-    explanation: `True! немає + genitive: немає часу, немає води.`
-  },  {
-    statement: `Masculine animate accusative has no change from nominative.`,
-    isTrue: false,
-    explanation: `False! Animate masculine accusative = genitive: студент → студента.`
-  },  {
-    statement: `Feminine nouns ending in -а change to -у in accusative.`,
-    isTrue: true,
-    explanation: `True! книга → книгу, сумка → сумку.`
-  },  {
-    statement: `\"його\" changes to \"його\" for different genders.`,
-    isTrue: false,
-    explanation: `False! \"його\" NEVER changes - it's a frozen form.`
-  },  {
-    statement: `\"на\" can mean both \"on\" and \"at\".`,
-    isTrue: true,
-    explanation: `True! на столі (on the table), на роботі (at work).`
-  },  {
-    statement: `Numbers 2-4 use genitive plural.`,
-    isTrue: false,
-    explanation: `False! Numbers 2-4 use nominative plural. 5+ use genitive plural.`
-  },  {
-    statement: `\"у/в\" and \"на\" both require locative case for location.`,
-    isTrue: true,
-    explanation: `True! Both prepositions use locative to show where something is.`
-  },  {
-    statement: `\"їхній\" never changes form.`,
-    isTrue: false,
-    explanation: `False! \"їхній\" DOES change: їхній/їхня/їхнє/їхні.`
-  },  {
-    statement: `\"без\" + genitive means \"without\".`,
-    isTrue: true,
-    explanation: `True! без цукру (without sugar), без молока (without milk).`
-  },  {
-    statement: `Neuter nouns don't change in accusative.`,
-    isTrue: true,
-    explanation: `True! вікно → вікно, місто → місто.`
-  }
-]} />
-
-### Preposition Usage
-
-<GroupSort groups={{
-  "у/в (in, inside)": ["у магазині", "в кімнаті", "у Києві", "в офісі", "у парку", "в ресторані"],
-  "на (on, at)": ["на столі", "на вулиці", "на роботі", "на станції", "на концерті", "на площі"]
-}} />
-
-### Building Sentences - Cases in Context
-
-<Unjumble items={[
-  { jumbled: `бачу / студента / Я / у / бібліотеці`, answer: `Я бачу студента у бібліотеці.` },
-  { jumbled: `на / столі / Книга / лежить`, answer: `Книга лежить на столі.` },
-  { jumbled: `немає / У / мене / часу / сьогодні`, answer: `У мене немає часу сьогодні.` },
-  { jumbled: `моя / Це / сумка / а / це / твоя`, answer: `Це моя сумка, а це твоя.` },
-  { jumbled: `у / Ми / живемо / Львові / центрі`, answer: `Ми живемо у центрі Львова.` },
-  { jumbled: `каву / Я / хочу / без / цукру`, answer: `Я хочу каву без цукру.` },
-  { jumbled: `на / Вона / працює / роботі / зараз`, answer: `Вона на роботі зараз.` },
-  { jumbled: `П'ять / гривень / коштує / квиток / один`, answer: `Один квиток коштує п'ять гривень.` },
-  { jumbled: `купити / хочу / Я / хліб / і / молоко`, answer: `Я хочу купити хліб і молоко.` },
-  { jumbled: `у / немає / магазині / помідорів / Сьогодні`, answer: `Сьогодні у магазині немає помідорів.` },
-  { jumbled: `читає / книгу / Він / цікаву / дуже`, answer: `Він читає дуже цікаву книгу.` },
-  { jumbled: `біля / метро / Станція / вокзалу`, answer: `Станція метро біля вокзалу.` }
-]} />
-
-### Real Dialogues - Navigation & Restaurant
-
-<Unjumble items={[
-  { jumbled: `до / як / дістатися / станції / метро`, answer: `Як дістатися до станції метро?` },
-  { jumbled: `прямо / Ідіть / наліво / потім / і`, answer: `Ідіть прямо і потім наліво.` },
-  { jumbled: `ресторані / У / є / меню / українською`, answer: `У ресторані є меню українською?` },
-  { jumbled: `будь ласка / Так / ось / звичайно`, answer: `Так, звичайно. Ось, будь ласка.` },
-  { jumbled: `візьму / борщ / Я / і / вареники`, answer: `Я візьму борщ і вареники.` },
-  { jumbled: `можна / рахунок / Можна / будь ласка`, answer: `Можна рахунок, будь ласка?` },
-  { jumbled: `Скільки / коштує / все / разом`, answer: `Скільки коштує все разом?` },
-  { jumbled: `вісімдесят / Разом / гривень`, answer: `Разом вісімдесят гривень.` },
-  { jumbled: `картою / платити / Можна`, answer: `Можна платити картою?` },
-  { jumbled: `готівкою / Так / або / картою / можна`, answer: `Так, можна готівкою або картою.` },
-  { jumbled: `Дякую / допомогу / дуже / за`, answer: `Дякую дуже за допомогу!` },
-  { jumbled: `ласка / Будь / дороги / доброї`, answer: `Будь ласка! Доброї дороги!` }
-]} />
-
-### City Vocabulary - Navigation
-
-<MatchUp pairs={[
-  { left: `Ukrainian`, right: `English` },
-  { left: `Як дістатися до центру?`, right: `How do I get to the center?` },
-  { left: `Це далеко?`, right: `Is it far?` },
-  { left: `Це близько.`, right: `It's close.` },
-  { left: `Ідіть прямо.`, right: `Go straight.` },
-  { left: `Поверніть наліво.`, right: `Turn left.` },
-  { left: `Поверніть праворуч.`, right: `Turn right.` },
-  { left: `Станція метро`, right: `Metro station` },
-  { left: `Зупинка автобуса`, right: `Bus stop` },
-  { left: `Біля вокзалу`, right: `Near the train station` },
-  { left: `У центрі міста`, right: `In the city center` },
-  { left: `На площі`, right: `At the square` },
-  { left: `Де можна купити квиток?`, right: `Where can I buy a ticket?` }
-]} />
-## ✅ Self-Assessment Rubric
-
-Rate yourself 1-5 on each can-do statement (1 = cannot do, 5 = can do confidently):
-
-### Cases
-- [ ] I can use Accusative for direct objects (Я бачу книгу)
-- [ ] I can use animate Accusative = Genitive rule (Я бачу студента)
-- [ ] I can use Locative with у/в and на for location (Я живу в Києві)
-- [ ] I can use Genitive for absence and negation (У мене немає часу)
-
-### Possessives & Pronouns
-- [ ] I can match possessives to noun gender (мій/моя/моє/мої)
-- [ ] I understand invariant possessives (його, її never change)
-- [ ] I can use свій for reflexive possession
-
-### Practical Skills
-- [ ] I can ask for and give directions (Де метро? Ідіть прямо.)
-- [ ] I can use numbers with nouns correctly (2 книги, 5 книг)
-- [ ] I can order food and ask for prices (Скільки коштує?)
-- [ ] I can navigate a café/restaurant conversation
-
-### Scoring
-- **25-35 points**: Ready for A1.3! Proceed to Module 21.
-- **18-24 points**: Review case endings, then continue.
-- **Under 18 points**: Revisit Modules 11-19 before continuing.
-
----
 
 ## 📚 Vocabulary
 
@@ -898,3 +484,536 @@ Rate yourself 1-5 on each can-do statement (1 = cannot do, 5 = can do confidentl
 | молодець | /mɔlɔˈdɛt͡sʲ/ | well done (to male) | exclamation | m | |
 | молодчина | /mɔlɔdˈt͡ʃɪnɑ/ | well done (general) | exclamation | - | |
 | продовжуємо | /prɔdɔˈʋʒujɛmɔ/ | we continue, let's continue | verb form | - | from продовжувати |
+
+---
+
+## 🎯 Activities
+
+### Case Mastery - Accusative
+
+*Choose the correct accusative form.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я бачу ___ у парку.`}
+    answer={`студента`}
+    options={[`студент`, `студента`, `студенту`, `студентом`]}
+  />
+  <FillInQuestion
+    sentence={`Вона читає ___ кожен день.`}
+    answer={`книгу`}
+    options={[`книга`, `книгу`, `книги`, `книзі`]}
+  />
+  <FillInQuestion
+    sentence={`Ми хочемо купити ___.`}
+    answer={`хліб`}
+    options={[`хліб`, `хліба`, `хлібу`, `хлібом`]}
+  />
+  <FillInQuestion
+    sentence={`Ти любиш ___?`}
+    answer={`каву`}
+    options={[`кава`, `каву`, `кави`, `каві`]}
+  />
+  <FillInQuestion
+    sentence={`Він знає ___ добре.`}
+    answer={`цього лікаря`}
+    options={[`цей лікар`, `цього лікаря`, `цьому лікарю`, `цим лікарем`]}
+  />
+  <FillInQuestion
+    sentence={`Вони слухають ___.`}
+    answer={`музику`}
+    options={[`музика`, `музику`, `музики`, `музиці`]}
+  />
+  <FillInQuestion
+    sentence={`Я п'ю ___ з молоком.`}
+    answer={`чай`}
+    options={[`чай`, `чаю`, `чаєм`, `чаї`]}
+  />
+  <FillInQuestion
+    sentence={`Ми бачимо ___ біля школи.`}
+    answer={`вчительку`}
+    options={[`вчителька`, `вчительку`, `вчительки`, `вчительці`]}
+  />
+  <FillInQuestion
+    sentence={`Вона купує ___ на ринку.`}
+    answer={`яблука`}
+    options={[`яблуко`, `яблука`, `яблук`, `яблуках`]}
+  />
+  <FillInQuestion
+    sentence={`Ти чекаєш ___?`}
+    answer={`друга`}
+    options={[`друг`, `друга`, `другу`, `другом`]}
+  />
+  <FillInQuestion
+    sentence={`Він відкриває ___.`}
+    answer={`вікно`}
+    options={[`вікно`, `вікна`, `вікну`, `вікні`]}
+  />
+  <FillInQuestion
+    sentence={`Я знаю ___ добре.`}
+    answer={`цю дівчину`}
+    options={[`ця дівчина`, `цю дівчину`, `цієї дівчини`, `цій дівчині`]}
+  />
+</FillIn>
+
+### Case Mastery - Locative
+
+*Choose the correct locative form with the appropriate preposition.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Книга ___ столі.`}
+    answer={`на`}
+    options={[`на`, `у`, `в`, `біля`]}
+  />
+  <FillInQuestion
+    sentence={`Ми живемо ___ Києві.`}
+    answer={`у`}
+    options={[`у`, `на`, `в`, `біля`]}
+  />
+  <FillInQuestion
+    sentence={`Студенти ___ бібліотеці.`}
+    answer={`у`}
+    options={[`у`, `на`, `біля`, `до`]}
+  />
+  <FillInQuestion
+    sentence={`Вона працює ___ офісі.`}
+    answer={`в`}
+    options={[`в`, `на`, `у`, `біля`]}
+  />
+  <FillInQuestion
+    sentence={`Діти ___ парку.`}
+    answer={`у`}
+    options={[`у`, `на`, `в`, `біля`]}
+  />
+  <FillInQuestion
+    sentence={`Концерт ___ вулиці Хрещатик.`}
+    answer={`на`}
+    options={[`на`, `у`, `в`, `біля`]}
+  />
+  <FillInQuestion
+    sentence={`Ми ___ ресторані.`}
+    answer={`у`}
+    options={[`у`, `на`, `в`, `біля`]}
+  />
+  <FillInQuestion
+    sentence={`Лампа ___ столі.`}
+    answer={`на`}
+    options={[`на`, `у`, `в`, `біля`]}
+  />
+  <FillInQuestion
+    sentence={`Турист ___ центрі міста.`}
+    answer={`у`}
+    options={[`у`, `на`, `в`, `біля`]}
+  />
+  <FillInQuestion
+    sentence={`Вони ___ станції метро.`}
+    answer={`на`}
+    options={[`на`, `у`, `в`, `біля`]}
+  />
+  <FillInQuestion
+    sentence={`Я ___ роботі зараз.`}
+    answer={`на`}
+    options={[`на`, `у`, `в`, `біля`]}
+  />
+  <FillInQuestion
+    sentence={`Кава ___ чашці.`}
+    answer={`у`}
+    options={[`у`, `на`, `в`, `біля`]}
+  />
+</FillIn>
+
+### Case Mastery - Genitive
+
+*Choose the correct genitive form.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. У мене немає ___.`}
+    answer={`часу`}
+    options={[`час`, `часу`, `часі`, `часом`]}
+  />
+  <FillInQuestion
+    sentence={`Тут немає ___.`}
+    answer={`молока`}
+    options={[`молоко`, `молока`, `молоку`, `молоці`]}
+  />
+  <FillInQuestion
+    sentence={`Кава без ___, будь ласка.`}
+    answer={`цукру`}
+    options={[`цукор`, `цукру`, `цукра`, `цукрі`]}
+  />
+  <FillInQuestion
+    sentence={`У нас немає ___.`}
+    answer={`води`}
+    options={[`вода`, `води`, `воду`, `воді`]}
+  />
+  <FillInQuestion
+    sentence={`П'ять ___, будь ласка.`}
+    answer={`квитків`}
+    options={[`квиток`, `квитка`, `квитків`, `квитками`]}
+  />
+  <FillInQuestion
+    sentence={`У них немає ___.`}
+    answer={`машини`}
+    options={[`машина`, `машини`, `машину`, `машині`]}
+  />
+  <FillInQuestion
+    sentence={`Склянка ___, будь ласка.`}
+    answer={`соку`}
+    options={[`сік`, `соку`, `сока`, `соці`]}
+  />
+  <FillInQuestion
+    sentence={`Сьогодні немає ___.`}
+    answer={`хліба`}
+    options={[`хліб`, `хліба`, `хлібу`, `хлібом`]}
+  />
+  <FillInQuestion
+    sentence={`У магазині немає ___.`}
+    answer={`помідорів`}
+    options={[`помідор`, `помідора`, `помідорів`, `помідорами`]}
+  />
+  <FillInQuestion
+    sentence={`Кілограм ___, будь ласка.`}
+    answer={`яблук`}
+    options={[`яблуко`, `яблука`, `яблук`, `яблуками`]}
+  />
+  <FillInQuestion
+    sentence={`Без ___ я не можу працювати.`}
+    answer={`кави`}
+    options={[`кава`, `кави`, `каву`, `каві`]}
+  />
+  <FillInQuestion
+    sentence={`Тридцять ___.`}
+    answer={`гривень`}
+    options={[`гривня`, `гривні`, `гривень`, `гривнями`]}
+  />
+</FillIn>
+
+### Possessive Pronouns Agreement
+
+*Match the possessive pronoun with the correct noun form.*
+
+
+<MatchUp pairs={[
+  { left: `мій`, right: `телефон` },
+  { left: `моя`, right: `книга` },
+  { left: `моє`, right: `вікно` },
+  { left: `мої`, right: `друзі` },
+  { left: `твій`, right: `стіл` },
+  { left: `твоя`, right: `сумка` },
+  { left: `твоє`, right: `місто` },
+  { left: `його`, right: `машина` },
+  { left: `її`, right: `будинок` },
+  { left: `наш`, right: `університет` },
+  { left: `наша`, right: `кімната` },
+  { left: `їхнє`, right: `життя` }
+]} />
+
+### Grammar Knowledge Check
+
+*Select the correct answer.*
+
+
+<Quiz>
+  <QuizQuestion
+    question={`1. Which case do you use for the direct object of "I see"?`}
+    options={[`Nominative`, `Accusative`, `Locative`, `Genitive`]}
+    correctIndex={1}
+    explanation={`Accusative case shows the direct object (what or whom you see).`}
+  />
+  <QuizQuestion
+    question={`What preposition requires the locative case for "inside"?`}
+    options={[`на`, `у/в`, `до`, `з`]}
+    correctIndex={1}
+    explanation={`у/в (in, inside) + locative: у магазині, в кімнаті`}
+  />
+  <QuizQuestion
+    question={`Which case do you use after "немає"?`}
+    options={[`Nominative`, `Accusative`, `Locative`, `Genitive`]}
+    correctIndex={3}
+    explanation={`немає + genitive: немає часу, немає води`}
+  />
+  <QuizQuestion
+    question={`Which possessive pronoun NEVER changes form?`}
+    options={[`мій`, `наш`, `його`, `їхній`]}
+    correctIndex={2}
+    explanation={`його (his) and її (her) are frozen genitives and never change.`}
+  />
+  <QuizQuestion
+    question={`What is the accusative form of "студент" (animate)?`}
+    options={[`студент`, `студента`, `студенту`, `студентом`]}
+    correctIndex={1}
+    explanation={`Animate masculine accusative = genitive: студента`}
+  />
+  <QuizQuestion
+    question={`Which preposition do you use with "на столі"?`}
+    options={[`на`, `у`, `в`, `біля`]}
+    correctIndex={0}
+    explanation={`"on the table" = на столі`}
+  />
+  <QuizQuestion
+    question={`How do you say "without sugar"?`}
+    options={[`немає цукор`, `не цукру`, `без цукру`, `до цукру`]}
+    correctIndex={2}
+    explanation={`без + genitive: без цукру`}
+  />
+  <QuizQuestion
+    question={`What's the locative form of "Київ"?`}
+    options={[`в Київ`, `у Києві`, `на Київ`, `до Києва`]}
+    correctIndex={1}
+    explanation={`у Києві (in Kyiv) - locative case`}
+  />
+  <QuizQuestion
+    question={`Which number range uses genitive plural?`}
+    options={[`1`, `2-4`, `5+`, `All numbers`]}
+    correctIndex={2}
+    explanation={`Numbers 5+ use genitive plural: п'ять книг`}
+  />
+  <QuizQuestion
+    question={`What's the feminine form of "мій"?`}
+    options={[`мій`, `моя`, `моє`, `мої`]}
+    correctIndex={1}
+    explanation={`Feminine singular: моя`}
+  />
+  <QuizQuestion
+    question={`Which preposition means "on" or "at" (surface)?`}
+    options={[`на`, `у`, `в`, `біля`]}
+    correctIndex={0}
+    explanation={`на (on, at): на столі, на вулиці`}
+  />
+  <QuizQuestion
+    question={`What case do you use for "I love Ukraine"?`}
+    options={[`Nominative - Україна`, `Accusative - Україну`, `Locative - Україні`, `Genitive - України`]}
+    correctIndex={1}
+    explanation={`Я люблю Україну - accusative case for direct object`}
+  />
+</Quiz>
+
+### Grammar Rules Review
+
+*Decide if each statement is true or false.*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`Accusative case is used for direct objects.`}
+    isTrue={true}
+    explanation={`True! Accusative shows what or whom the action affects directly.`}
+  />
+  <TrueFalseQuestion
+    statement={`Locative case is used with the preposition "до".`}
+    isTrue={false}
+    explanation={`False! "до" uses genitive. Locative uses "у/в" and "на".`}
+  />
+  <TrueFalseQuestion
+    statement={`Genitive case is used after "немає".`}
+    isTrue={true}
+    explanation={`True! немає + genitive: немає часу, немає води.`}
+  />
+  <TrueFalseQuestion
+    statement={`Masculine animate accusative has no change from nominative.`}
+    isTrue={false}
+    explanation={`False! Animate masculine accusative = genitive: студент → студента.`}
+  />
+  <TrueFalseQuestion
+    statement={`Feminine nouns ending in -а change to -у in accusative.`}
+    isTrue={true}
+    explanation={`True! книга → книгу, сумка → сумку.`}
+  />
+  <TrueFalseQuestion
+    statement={`"його" changes to "його" for different genders.`}
+    isTrue={false}
+    explanation={`False! "його" NEVER changes - it's a frozen form.`}
+  />
+  <TrueFalseQuestion
+    statement={`"на" can mean both "on" and "at".`}
+    isTrue={true}
+    explanation={`True! на столі (on the table), на роботі (at work).`}
+  />
+  <TrueFalseQuestion
+    statement={`Numbers 2-4 use genitive plural.`}
+    isTrue={false}
+    explanation={`False! Numbers 2-4 use nominative plural. 5+ use genitive plural.`}
+  />
+  <TrueFalseQuestion
+    statement={`"у/в" and "на" both require locative case for location.`}
+    isTrue={true}
+    explanation={`True! Both prepositions use locative to show where something is.`}
+  />
+  <TrueFalseQuestion
+    statement={`"їхній" never changes form.`}
+    isTrue={false}
+    explanation={`False! "їхній" DOES change: їхній/їхня/їхнє/їхні.`}
+  />
+  <TrueFalseQuestion
+    statement={`"без" + genitive means "without".`}
+    isTrue={true}
+    explanation={`True! без цукру (without sugar), без молока (without milk).`}
+  />
+  <TrueFalseQuestion
+    statement={`Neuter nouns don't change in accusative.`}
+    isTrue={true}
+    explanation={`True! вікно → вікно, місто → місто.`}
+  />
+</TrueFalse>
+
+### Preposition Usage
+
+*Sort these location expressions by which preposition they use.*
+
+
+<GroupSort groups={{
+  "### у/в (in, inside)": [
+    "у магазині",
+    "в кімнаті",
+    "у Києві",
+    "в офісі",
+    "у парку",
+    "в ресторані"
+  ],
+  "на (on, at)": [
+    "на столі",
+    "на вулиці",
+    "на роботі",
+    "на станції",
+    "на концерті",
+    "на площі"
+  ]
+}} />
+
+### Building Sentences - Cases in Context
+
+*Put the words in the correct order to form sentences.*
+
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`бачу / студента / Я / у / бібліотеці`}
+    answer={`Я бачу студента у бібліотеці.`}
+  />
+  <UnjumbleQuestion
+    words={`на / столі / Книга / лежить`}
+    answer={`Книга лежить на столі.`}
+  />
+  <UnjumbleQuestion
+    words={`немає / У / мене / часу / сьогодні`}
+    answer={`У мене немає часу сьогодні.`}
+  />
+  <UnjumbleQuestion
+    words={`моя / Це / сумка / а / це / твоя`}
+    answer={`Це моя сумка, а це твоя.`}
+  />
+  <UnjumbleQuestion
+    words={`у / Ми / живемо / Львові / центрі`}
+    answer={`Ми живемо у центрі Львова.`}
+  />
+  <UnjumbleQuestion
+    words={`каву / Я / хочу / без / цукру`}
+    answer={`Я хочу каву без цукру.`}
+  />
+  <UnjumbleQuestion
+    words={`на / Вона / працює / роботі / зараз`}
+    answer={`Вона на роботі зараз.`}
+  />
+  <UnjumbleQuestion
+    words={`П'ять / гривень / коштує / квиток / один`}
+    answer={`Один квиток коштує п'ять гривень.`}
+  />
+  <UnjumbleQuestion
+    words={`купити / хочу / Я / хліб / і / молоко`}
+    answer={`Я хочу купити хліб і молоко.`}
+  />
+  <UnjumbleQuestion
+    words={`у / немає / магазині / помідорів / Сьогодні`}
+    answer={`Сьогодні у магазині немає помідорів.`}
+  />
+  <UnjumbleQuestion
+    words={`читає / книгу / Він / цікаву / дуже`}
+    answer={`Він читає дуже цікаву книгу.`}
+  />
+  <UnjumbleQuestion
+    words={`біля / метро / Станція / вокзалу`}
+    answer={`Станція метро біля вокзалу.`}
+  />
+</Unjumble>
+
+### Real Dialogues - Navigation & Restaurant
+
+*Put the dialogue lines in the correct order to form natural conversations.*
+
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`до / як / дістатися / станції / метро`}
+    answer={`Як дістатися до станції метро?`}
+  />
+  <UnjumbleQuestion
+    words={`прямо / Ідіть / наліво / потім / і`}
+    answer={`Ідіть прямо і потім наліво.`}
+  />
+  <UnjumbleQuestion
+    words={`ресторані / У / є / меню / українською`}
+    answer={`У ресторані є меню українською?`}
+  />
+  <UnjumbleQuestion
+    words={`будь ласка / Так / ось / звичайно`}
+    answer={`Так, звичайно. Ось, будь ласка.`}
+  />
+  <UnjumbleQuestion
+    words={`візьму / борщ / Я / і / вареники`}
+    answer={`Я візьму борщ і вареники.`}
+  />
+  <UnjumbleQuestion
+    words={`можна / рахунок / Можна / будь ласка`}
+    answer={`Можна рахунок, будь ласка?`}
+  />
+  <UnjumbleQuestion
+    words={`Скільки / коштує / все / разом`}
+    answer={`Скільки коштує все разом?`}
+  />
+  <UnjumbleQuestion
+    words={`вісімдесят / Разом / гривень`}
+    answer={`Разом вісімдесят гривень.`}
+  />
+  <UnjumbleQuestion
+    words={`картою / платити / Можна`}
+    answer={`Можна платити картою?`}
+  />
+  <UnjumbleQuestion
+    words={`готівкою / Так / або / картою / можна`}
+    answer={`Так, можна готівкою або картою.`}
+  />
+  <UnjumbleQuestion
+    words={`Дякую / допомогу / дуже / за`}
+    answer={`Дякую дуже за допомогу!`}
+  />
+  <UnjumbleQuestion
+    words={`ласка / Будь / дороги / доброї`}
+    answer={`Будь ласка! Доброї дороги!`}
+  />
+</Unjumble>
+
+### City Vocabulary - Navigation
+
+*Match the Ukrainian phrases with their English meanings.*
+
+
+<MatchUp pairs={[
+  { left: `Як дістатися до центру?`, right: `How do I get to the center?` },
+  { left: `Це далеко?`, right: `Is it far?` },
+  { left: `Це близько.`, right: `It's close.` },
+  { left: `Ідіть прямо.`, right: `Go straight.` },
+  { left: `Поверніть наліво.`, right: `Turn left.` },
+  { left: `Поверніть праворуч.`, right: `Turn right.` },
+  { left: `Станція метро`, right: `Metro station` },
+  { left: `Зупинка автобуса`, right: `Bus stop` },
+  { left: `Біля вокзалу`, right: `Near the train station` },
+  { left: `У центрі міста`, right: `In the city center` },
+  { left: `На площі`, right: `At the square` },
+  { left: `Де можна купити квиток?`, right: `Where can I buy a ticket?` }
+]} />
+

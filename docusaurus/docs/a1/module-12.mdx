@@ -5,19 +5,20 @@ title: "The Accusative II: People"
 description: "Animate Nouns and the Genitive Connection"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 ## Warm-up
@@ -33,7 +34,8 @@ Why? Because Ukrainian wants to clearly mark **who** you're seeing, not just **w
 
 
 
-:::info[🔗 External Resources]
+:::info
+🔗 External Resources
 
 **YouTube:** [Practice #Ukrainian Accusative Case with me! (with nouns, pronouns and adjectives)](https://www.youtube.com/watch?v=BYBWx6ds8Fk) — Let's Learn Ukrainian
 
@@ -258,334 +260,7 @@ In this module, you learned the **animate accusative** — how Ukrainian marks p
 
 ---
 
-## 🎯 Activities
 
-### People in Your Life
-
-<MatchUp pairs={[
-  { left: `Ukrainian`, right: `English` },
-  { left: `друг`, right: `friend (male)` },
-  { left: `подруга`, right: `friend (female)` },
-  { left: `колега`, right: `colleague` },
-  { left: `сусід`, right: `neighbor (male)` },
-  { left: `лікар`, right: `doctor` },
-  { left: `вчитель`, right: `teacher (male)` },
-  { left: `студент`, right: `student (male)` },
-  { left: `водій`, right: `driver` },
-  { left: `гість`, right: `guest` },
-  { left: `директор`, right: `director` },
-  { left: `офіціант`, right: `waiter` },
-  { left: `пасажир`, right: `passenger` }
-]} />
-
-### Animate vs Inanimate
-
-<GroupSort groups={{
-  "Animate Nouns": ["друг", "студент", "лікар", "водій", "колега", "офіціант", "гість", "сусід"],
-  "Inanimate Nouns": ["стіл", "книга", "вікно", "машина", "телефон", "магазин"]
-}} />
-
-### Accusative Endings
-
-<Quiz questions={[
-  {
-    question: `Я бачу ___ у парку.`,
-    options: [
-      { text: `студент`, correct: false },
-      { text: `студента`, correct: true },
-      { text: `студенту`, correct: false },
-      { text: `студенті`, correct: false }
-    ]
-  },  {
-    question: `Вона знає мою ___.`,
-    options: [
-      { text: `подруга`, correct: false },
-      { text: `подругу`, correct: true },
-      { text: `подруги`, correct: false },
-      { text: `подрузі`, correct: false }
-    ]
-  },  {
-    question: `Ми чекаємо ___.`,
-    options: [
-      { text: `лікар`, correct: false },
-      { text: `лікаря`, correct: true },
-      { text: `лікару`, correct: false },
-      { text: `лікарі`, correct: false }
-    ]
-  },  {
-    question: `Ти знаєш цього ___?`,
-    options: [
-      { text: `чоловік`, correct: false },
-      { text: `чоловіка`, correct: true },
-      { text: `чоловіку`, correct: false },
-      { text: `чоловікові`, correct: false }
-    ]
-  },  {
-    question: `Вони бачать ___.`,
-    options: [
-      { text: `офіціант`, correct: false },
-      { text: `офіціанта`, correct: true },
-      { text: `офіціанту`, correct: false },
-      { text: `офіціанті`, correct: false }
-    ]
-  },  {
-    question: `Він любить свою ___.`,
-    options: [
-      { text: `вчителька`, correct: false },
-      { text: `вчительку`, correct: true },
-      { text: `вчительки`, correct: false },
-      { text: `вчительці`, correct: false }
-    ]
-  },  {
-    question: `Я шукаю ___.`,
-    options: [
-      { text: `водій`, correct: false },
-      { text: `водія`, correct: true },
-      { text: `водію`, correct: false },
-      { text: `водієві`, correct: false }
-    ]
-  },  {
-    question: `Вона бачить ___.`,
-    options: [
-      { text: `гість`, correct: false },
-      { text: `гостя`, correct: true },
-      { text: `гостю`, correct: false },
-      { text: `гості`, correct: false }
-    ]
-  },  {
-    question: `Ти чекаєш ___?`,
-    options: [
-      { text: `директор`, correct: false },
-      { text: `директора`, correct: true },
-      { text: `директору`, correct: false },
-      { text: `директорі`, correct: false }
-    ]
-  },  {
-    question: `Ми знаємо цю ___.`,
-    options: [
-      { text: `студентка`, correct: false },
-      { text: `студентку`, correct: true },
-      { text: `студентки`, correct: false },
-      { text: `студентці`, correct: false }
-    ]
-  },  {
-    question: `Він бачить нашого ___.`,
-    options: [
-      { text: `сусід`, correct: false },
-      { text: `сусіда`, correct: true },
-      { text: `сусіду`, correct: false },
-      { text: `сусідові`, correct: false }
-    ]
-  },  {
-    question: `Я люблю свого ___.`,
-    options: [
-      { text: `друг`, correct: false },
-      { text: `друга`, correct: true },
-      { text: `другу`, correct: false },
-      { text: `другові`, correct: false }
-    ]
-  }
-]} />
-
-### Animate Accusative Rules
-
-<TrueFalse items={[
-  {
-    statement: `Masculine animate nouns in accusative case end in -а or -я.`,
-    isTrue: true,
-    explanation: `Correct! Animate accusative = genitive for masculine nouns.`
-  },  {
-    statement: `Feminine animate nouns have special accusative endings.`,
-    isTrue: false,
-    explanation: `Incorrect! Feminine animate nouns use the same -у/-ю pattern as inanimate nouns.`
-  },  {
-    statement: `\"Я бачу студента\" is correct.`,
-    isTrue: true,
-    explanation: `Correct! Animate masculine: студент → студента.`
-  },  {
-    statement: `\"Я знаю лікар\" is correct.`,
-    isTrue: false,
-    explanation: `Incorrect! Should be \"лікаря\" (animate accusative).`
-  },  {
-    statement: `\"Вона чекає подругу\" is correct.`,
-    isTrue: true,
-    explanation: `Correct! Feminine accusative: подруга → подругу.`
-  },  {
-    statement: `Inanimate masculine nouns change in accusative case.`,
-    isTrue: false,
-    explanation: `Incorrect! Inanimate masculine nouns stay the same (стіл → стіл).`
-  },  {
-    statement: `The animate-inanimate distinction only affects masculine nouns.`,
-    isTrue: true,
-    explanation: `Correct! Feminine nouns follow the same pattern regardless of animacy.`
-  },  {
-    statement: `\"Він бачить водія\" is correct.`,
-    isTrue: true,
-    explanation: `Correct! Animate masculine: водій → водія.`
-  },  {
-    statement: `\"Ми чекаємо вчитель\" is correct.`,
-    isTrue: false,
-    explanation: `Incorrect! Should be \"вчителя\" (animate accusative).`
-  },  {
-    statement: `Accusative = genitive for masculine animate nouns.`,
-    isTrue: true,
-    explanation: `Correct! This is the key rule for animate objects.`
-  },  {
-    statement: `\"Я люблю директор\" is correct.`,
-    isTrue: false,
-    explanation: `Incorrect! Should be \"директора\" (animate accusative).`
-  },  {
-    statement: `\"Ти знаєш мою сусідку\" is correct.`,
-    isTrue: true,
-    explanation: `Correct! Feminine accusative: сусідка → сусідку.`
-  }
-]} />
-
-### Complete with Animate Accusative
-
-<FillIn items={[
-  {
-    sentence: `Я бачу ___ у магазині.`,
-    answer: `колегу`,
-    options: [`колега`, `колегу`, `колеги`, `колезі`]
-  },  {
-    sentence: `Вона знає цього ___.`,
-    answer: `студента`,
-    options: [`студент`, `студента`, `студенту`, `студенті`]
-  },  {
-    sentence: `Ми чекаємо ___.`,
-    answer: `лікаря`,
-    options: [`лікар`, `лікаря`, `лікару`, `лікарі`]
-  },  {
-    sentence: `Ти бачиш мою ___?`,
-    answer: `подругу`,
-    options: [`подруга`, `подругу`, `подруги`, `подрузі`]
-  },  {
-    sentence: `Він любить свою ___.`,
-    answer: `вчительку`,
-    options: [`вчителька`, `вчительку`, `вчительки`, `вчительці`]
-  },  {
-    sentence: `Я шукаю ___.`,
-    answer: `водія`,
-    options: [`водій`, `водія`, `водію`, `водієві`]
-  },  {
-    sentence: `Вона бачить нашого ___.`,
-    answer: `сусіда`,
-    options: [`сусід`, `сусіда`, `сусіду`, `сусідові`]
-  },  {
-    sentence: `Ми знаємо цього ___.`,
-    answer: `директора`,
-    options: [`директор`, `директора`, `директору`, `директорі`]
-  },  {
-    sentence: `Ти чекаєш ___?`,
-    answer: `офіціанта`,
-    options: [`офіціант`, `офіціанта`, `офіціанту`, `офіціанті`]
-  },  {
-    sentence: `Він бачить ___ на вулиці.`,
-    answer: `пасажира`,
-    options: [`пасажир`, `пасажира`, `пасажиру`, `пасажирі`]
-  },  {
-    sentence: `Я люблю свого ___.`,
-    answer: `друга`,
-    options: [`друг`, `друга`, `другу`, `другові`]
-  },  {
-    sentence: `Вона знає цю ___.`,
-    answer: `студентку`,
-    options: [`студентка`, `студентку`, `студентки`, `студентці`]
-  },  {
-    sentence: `Ми бачимо ___.`,
-    answer: `гостя`,
-    options: [`гість`, `гостя`, `гостю`, `гості`]
-  },  {
-    sentence: `Ти чекаєш свою ___?`,
-    answer: `сусідку`,
-    options: [`сусідка`, `сусідку`, `сусідки`, `сусідці`]
-  }
-]} />
-
-### Sentences in Context
-
-<FillIn items={[
-  {
-    sentence: `У кав'ярні я бачу ___.`,
-    answer: `офіціанта`,
-    options: [`офіціант`, `офіціанта`, `офіціанту`, `офіціанті`]
-  },  {
-    sentence: `Вона знає мого ___ з університету.`,
-    answer: `друга`,
-    options: [`друг`, `друга`, `другу`, `другові`]
-  },  {
-    sentence: `Ми чекаємо ___ біля школи.`,
-    answer: `вчителя`,
-    options: [`вчитель`, `вчителя`, `вчителю`, `вчителеві`]
-  },  {
-    sentence: `Ти бачиш ___ на зупинці?`,
-    answer: `водія`,
-    options: [`водій`, `водія`, `водію`, `водієві`]
-  },  {
-    sentence: `Він любить свою ___.`,
-    answer: `лікарку`,
-    options: [`лікарка`, `лікарку`, `лікарки`, `лікарці`]
-  },  {
-    sentence: `Я шукаю свого ___.`,
-    answer: `колегу`,
-    options: [`колега`, `колегу`, `колеги`, `колезі`]
-  },  {
-    sentence: `Вона бачить ___ у магазині.`,
-    answer: `продавця`,
-    options: [`продавець`, `продавця`, `продавцю`, `продавцеві`]
-  },  {
-    sentence: `Ми знаємо цього ___.`,
-    answer: `менеджера`,
-    options: [`менеджер`, `менеджера`, `менеджеру`, `менеджерові`]
-  },  {
-    sentence: `Ти чекаєш свою ___?`,
-    answer: `подругу`,
-    options: [`подруга`, `подругу`, `подруги`, `подрузі`]
-  },  {
-    sentence: `Він бачить ___ біля метро.`,
-    answer: `пасажира`,
-    options: [`пасажир`, `пасажира`, `пасажиру`, `пасажирі`]
-  },  {
-    sentence: `Я люблю нашого ___.`,
-    answer: `директора`,
-    options: [`директор`, `директора`, `директору`, `директорі`]
-  },  {
-    sentence: `Вона знає цього ___?`,
-    answer: `гостя`,
-    options: [`гість`, `гостя`, `гостю`, `гості`]
-  }
-]} />
-
-### Sentences with Animate Objects
-
-<Unjumble items={[
-  { jumbled: `бачу / Я / студента / у / бібліотеці`, answer: `Я бачу студента у бібліотеці.` },
-  { jumbled: `знає / Вона / мого / друга / добре`, answer: `Вона добре знає мого друга.` },
-  { jumbled: `чекаємо / Ми / лікаря / у / лікарні`, answer: `Ми чекаємо лікаря у лікарні.` },
-  { jumbled: `бачиш / Ти / офіціанта / там`, answer: `Ти бачиш офіціанта там?` },
-  { jumbled: `любить / Він / свою / вчительку`, answer: `Він любить свою вчительку.` },
-  { jumbled: `шукаю / Я / водія / нашого`, answer: `Я шукаю нашого водія.` },
-  { jumbled: `знаємо / Ми / цього / директора`, answer: `Ми знаємо цього директора.` },
-  { jumbled: `бачить / Вона / сусіда / кожного / ранку`, answer: `Вона бачить сусіда кожного ранку.` },
-  { jumbled: `чекаєш / Ти / подругу / свою`, answer: `Ти чекаєш свою подругу?` },
-  { jumbled: `люблю / Я / колегу / мого`, answer: `Я люблю мого колегу.` },
-  { jumbled: `бачимо / Ми / пасажира / біля / метро`, answer: `Ми бачимо пасажира біля метро.` },
-  { jumbled: `знає / Він / студентку / цю / з / школи`, answer: `Він знає цю студентку з школи.` }
-]} />
-
-### More Complex Sentences
-
-<Unjumble items={[
-  { jumbled: `бачу / Я / мого / друга / та / його / подругу`, answer: `Я бачу мого друга та його подругу.` },
-  { jumbled: `чекаємо / Ми / нашого / вчителя / біля / університету`, answer: `Ми чекаємо нашого вчителя біля університету.` },
-  { jumbled: `знає / Вона / всіх / студентів / у / групі`, answer: `Вона знає всіх студентів у групі.` },
-  { jumbled: `бачиш / Ти / того / лікаря / там`, answer: `Ти бачиш того лікаря там?` },
-  { jumbled: `любить / Він / свою / сусідку / дуже`, answer: `Він дуже любить свою сусідку.` },
-  { jumbled: `шукаю / Я / нашого / директора / і / менеджера`, answer: `Я шукаю нашого директора і менеджера.` },
-  { jumbled: `знаємо / Ми / цього / водія / добре`, answer: `Ми добре знаємо цього водія.` },
-  { jumbled: `бачить / Вона / офіціанта / та / офіціантку`, answer: `Вона бачить офіціанта та офіціантку.` }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -612,3 +287,444 @@ In this module, you learned the **animate accusative** — how Ukrainian marks p
 | менеджер | /mɛˈnɛd͡ʒɛr/ | manager | noun | m | animate |
 
 ---
+
+---
+
+## 🎯 Activities
+
+### People in Your Life
+
+*Match the Ukrainian words with their English meanings.*
+
+
+<MatchUp pairs={[
+  { left: `друг`, right: `friend (male)` },
+  { left: `подруга`, right: `friend (female)` },
+  { left: `колега`, right: `colleague` },
+  { left: `сусід`, right: `neighbor (male)` },
+  { left: `лікар`, right: `doctor` },
+  { left: `вчитель`, right: `teacher (male)` },
+  { left: `студент`, right: `student (male)` },
+  { left: `водій`, right: `driver` },
+  { left: `гість`, right: `guest` },
+  { left: `директор`, right: `director` },
+  { left: `офіціант`, right: `waiter` },
+  { left: `пасажир`, right: `passenger` }
+]} />
+
+### Animate vs Inanimate
+
+*Sort these nouns by whether they are animate (people/animals) or inanimate (objects).*
+
+
+<GroupSort groups={{
+  "### Animate Nouns": [
+    "друг",
+    "студент",
+    "лікар",
+    "водій",
+    "колега",
+    "офіціант",
+    "гість",
+    "сусід"
+  ],
+  "Inanimate Nouns": [
+    "стіл",
+    "книга",
+    "вікно",
+    "машина",
+    "телефон",
+    "магазин"
+  ]
+}} />
+
+### Accusative Endings
+
+*Choose the correct accusative form for each sentence.*
+
+
+<Quiz>
+  <QuizQuestion
+    question={`1. Я бачу ___ у парку.`}
+    options={[`студент`, `студента`, `студенту`, `студенті`]}
+    correctIndex={1}
+    explanation={`Animate masculine accusative = genitive (-а ending)`}
+  />
+  <QuizQuestion
+    question={`Вона знає мою ___.`}
+    options={[`подруга`, `подругу`, `подруги`, `подрузі`]}
+    correctIndex={1}
+    explanation={`Feminine accusative: -а → -у`}
+  />
+  <QuizQuestion
+    question={`Ми чекаємо ___.`}
+    options={[`лікар`, `лікаря`, `лікару`, `лікарі`]}
+    correctIndex={1}
+    explanation={`Animate masculine accusative = genitive (-я ending)`}
+  />
+  <QuizQuestion
+    question={`Ти знаєш цього ___?`}
+    options={[`чоловік`, `чоловіка`, `чоловіку`, `чоловікові`]}
+    correctIndex={1}
+    explanation={`Animate masculine accusative (-а ending)`}
+  />
+  <QuizQuestion
+    question={`Вони бачать ___.`}
+    options={[`офіціант`, `офіціанта`, `офіціанту`, `офіціанті`]}
+    correctIndex={1}
+    explanation={`Animate masculine accusative (-а ending)`}
+  />
+  <QuizQuestion
+    question={`Він любить свою ___.`}
+    options={[`вчителька`, `вчительку`, `вчительки`, `вчительці`]}
+    correctIndex={1}
+    explanation={`Feminine accusative: -а → -у`}
+  />
+  <QuizQuestion
+    question={`Я шукаю ___.`}
+    options={[`водій`, `водія`, `водію`, `водієві`]}
+    correctIndex={1}
+    explanation={`Animate masculine accusative (-я ending)`}
+  />
+  <QuizQuestion
+    question={`Вона бачить ___.`}
+    options={[`гість`, `гостя`, `гостю`, `гості`]}
+    correctIndex={1}
+    explanation={`Animate masculine accusative (-я ending)`}
+  />
+  <QuizQuestion
+    question={`Ти чекаєш ___?`}
+    options={[`директор`, `директора`, `директору`, `директорі`]}
+    correctIndex={1}
+    explanation={`Animate masculine accusative (-а ending)`}
+  />
+  <QuizQuestion
+    question={`Ми знаємо цю ___.`}
+    options={[`студентка`, `студентку`, `студентки`, `студентці`]}
+    correctIndex={1}
+    explanation={`Feminine accusative: -а → -у`}
+  />
+  <QuizQuestion
+    question={`Він бачить нашого ___.`}
+    options={[`сусід`, `сусіда`, `сусіду`, `сусідові`]}
+    correctIndex={1}
+    explanation={`Animate masculine accusative (-а ending)`}
+  />
+  <QuizQuestion
+    question={`Я люблю свого ___.`}
+    options={[`друг`, `друга`, `другу`, `другові`]}
+    correctIndex={1}
+    explanation={`Animate masculine accusative (-а ending)`}
+  />
+</Quiz>
+
+### Animate Accusative Rules
+
+*Decide if each statement is true or false.*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`Masculine animate nouns in accusative case end in -а or -я.`}
+    isTrue={true}
+    explanation={`Correct! Animate accusative = genitive for masculine nouns.`}
+  />
+  <TrueFalseQuestion
+    statement={`Feminine animate nouns have special accusative endings.`}
+    isTrue={false}
+    explanation={`Incorrect! Feminine animate nouns use the same -у/-ю pattern as inanimate nouns.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Я бачу студента" is correct.`}
+    isTrue={true}
+    explanation={`Correct! Animate masculine: студент → студента.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Я знаю лікар" is correct.`}
+    isTrue={false}
+    explanation={`Incorrect! Should be "лікаря" (animate accusative).`}
+  />
+  <TrueFalseQuestion
+    statement={`"Вона чекає подругу" is correct.`}
+    isTrue={true}
+    explanation={`Correct! Feminine accusative: подруга → подругу.`}
+  />
+  <TrueFalseQuestion
+    statement={`Inanimate masculine nouns change in accusative case.`}
+    isTrue={false}
+    explanation={`Incorrect! Inanimate masculine nouns stay the same (стіл → стіл).`}
+  />
+  <TrueFalseQuestion
+    statement={`The animate-inanimate distinction only affects masculine nouns.`}
+    isTrue={true}
+    explanation={`Correct! Feminine nouns follow the same pattern regardless of animacy.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Він бачить водія" is correct.`}
+    isTrue={true}
+    explanation={`Correct! Animate masculine: водій → водія.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Ми чекаємо вчитель" is correct.`}
+    isTrue={false}
+    explanation={`Incorrect! Should be "вчителя" (animate accusative).`}
+  />
+  <TrueFalseQuestion
+    statement={`Accusative = genitive for masculine animate nouns.`}
+    isTrue={true}
+    explanation={`Correct! This is the key rule for animate objects.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Я люблю директор" is correct.`}
+    isTrue={false}
+    explanation={`Incorrect! Should be "директора" (animate accusative).`}
+  />
+  <TrueFalseQuestion
+    statement={`"Ти знаєш мою сусідку" is correct.`}
+    isTrue={true}
+    explanation={`Correct! Feminine accusative: сусідка → сусідку.`}
+  />
+</TrueFalse>
+
+### Complete with Animate Accusative
+
+*Fill in the blanks with the correct accusative form.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я бачу ___ у магазині.`}
+    answer={`колегу`}
+    options={[`колега`, `колегу`, `колеги`, `колезі`]}
+  />
+  <FillInQuestion
+    sentence={`Вона знає цього ___.`}
+    answer={`студента`}
+    options={[`студент`, `студента`, `студенту`, `студенті`]}
+  />
+  <FillInQuestion
+    sentence={`Ми чекаємо ___.`}
+    answer={`лікаря`}
+    options={[`лікар`, `лікаря`, `лікару`, `лікарі`]}
+  />
+  <FillInQuestion
+    sentence={`Ти бачиш мою ___?`}
+    answer={`подругу`}
+    options={[`подруга`, `подругу`, `подруги`, `подрузі`]}
+  />
+  <FillInQuestion
+    sentence={`Він любить свою ___.`}
+    answer={`вчительку`}
+    options={[`вчителька`, `вчительку`, `вчительки`, `вчительці`]}
+  />
+  <FillInQuestion
+    sentence={`Я шукаю ___.`}
+    answer={`водія`}
+    options={[`водій`, `водія`, `водію`, `водієві`]}
+  />
+  <FillInQuestion
+    sentence={`Вона бачить нашого ___.`}
+    answer={`сусіда`}
+    options={[`сусід`, `сусіда`, `сусіду`, `сусідові`]}
+  />
+  <FillInQuestion
+    sentence={`Ми знаємо цього ___.`}
+    answer={`директора`}
+    options={[`директор`, `директора`, `директору`, `директорі`]}
+  />
+  <FillInQuestion
+    sentence={`Ти чекаєш ___?`}
+    answer={`офіціанта`}
+    options={[`офіціант`, `офіціанта`, `офіціанту`, `офіціанті`]}
+  />
+  <FillInQuestion
+    sentence={`Він бачить ___ на вулиці.`}
+    answer={`пасажира`}
+    options={[`пасажир`, `пасажира`, `пасажиру`, `пасажирі`]}
+  />
+  <FillInQuestion
+    sentence={`Я люблю свого ___.`}
+    answer={`друга`}
+    options={[`друг`, `друга`, `другу`, `другові`]}
+  />
+  <FillInQuestion
+    sentence={`Вона знає цю ___.`}
+    answer={`студентку`}
+    options={[`студентка`, `студентку`, `студентки`, `студентці`]}
+  />
+  <FillInQuestion
+    sentence={`Ми бачимо ___.`}
+    answer={`гостя`}
+    options={[`гість`, `гостя`, `гостю`, `гості`]}
+  />
+  <FillInQuestion
+    sentence={`Ти чекаєш свою ___?`}
+    answer={`сусідку`}
+    options={[`сусідка`, `сусідку`, `сусідки`, `сусідці`]}
+  />
+</FillIn>
+
+### Sentences in Context
+
+*Complete the sentences with the correct accusative form.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. У кав'ярні я бачу ___.`}
+    answer={`офіціанта`}
+    options={[`офіціант`, `офіціанта`, `офіціанту`, `офіціанті`]}
+  />
+  <FillInQuestion
+    sentence={`Вона знає мого ___ з університету.`}
+    answer={`друга`}
+    options={[`друг`, `друга`, `другу`, `другові`]}
+  />
+  <FillInQuestion
+    sentence={`Ми чекаємо ___ біля школи.`}
+    answer={`вчителя`}
+    options={[`вчитель`, `вчителя`, `вчителю`, `вчителеві`]}
+  />
+  <FillInQuestion
+    sentence={`Ти бачиш ___ на зупинці?`}
+    answer={`водія`}
+    options={[`водій`, `водія`, `водію`, `водієві`]}
+  />
+  <FillInQuestion
+    sentence={`Він любить свою ___.`}
+    answer={`лікарку`}
+    options={[`лікарка`, `лікарку`, `лікарки`, `лікарці`]}
+  />
+  <FillInQuestion
+    sentence={`Я шукаю свого ___.`}
+    answer={`колегу`}
+    options={[`колега`, `колегу`, `колеги`, `колезі`]}
+  />
+  <FillInQuestion
+    sentence={`Вона бачить ___ у магазині.`}
+    answer={`продавця`}
+    options={[`продавець`, `продавця`, `продавцю`, `продавцеві`]}
+  />
+  <FillInQuestion
+    sentence={`Ми знаємо цього ___.`}
+    answer={`менеджера`}
+    options={[`менеджер`, `менеджера`, `менеджеру`, `менеджерові`]}
+  />
+  <FillInQuestion
+    sentence={`Ти чекаєш свою ___?`}
+    answer={`подругу`}
+    options={[`подруга`, `подругу`, `подруги`, `подрузі`]}
+  />
+  <FillInQuestion
+    sentence={`Він бачить ___ біля метро.`}
+    answer={`пасажира`}
+    options={[`пасажир`, `пасажира`, `пасажиру`, `пасажирі`]}
+  />
+  <FillInQuestion
+    sentence={`Я люблю нашого ___.`}
+    answer={`директора`}
+    options={[`директор`, `директора`, `директору`, `директорі`]}
+  />
+  <FillInQuestion
+    sentence={`Вона знає цього ___?`}
+    answer={`гостя`}
+    options={[`гість`, `гостя`, `гостю`, `гості`]}
+  />
+</FillIn>
+
+### Sentences with Animate Objects
+
+*Put the words in the correct order to form sentences.*
+
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`бачу / Я / студента / у / бібліотеці`}
+    answer={`Я бачу студента у бібліотеці.`}
+  />
+  <UnjumbleQuestion
+    words={`знає / Вона / мого / друга / добре`}
+    answer={`Вона добре знає мого друга.`}
+  />
+  <UnjumbleQuestion
+    words={`чекаємо / Ми / лікаря / у / лікарні`}
+    answer={`Ми чекаємо лікаря у лікарні.`}
+  />
+  <UnjumbleQuestion
+    words={`бачиш / Ти / офіціанта / там`}
+    answer={`Ти бачиш офіціанта там?`}
+  />
+  <UnjumbleQuestion
+    words={`любить / Він / свою / вчительку`}
+    answer={`Він любить свою вчительку.`}
+  />
+  <UnjumbleQuestion
+    words={`шукаю / Я / водія / нашого`}
+    answer={`Я шукаю нашого водія.`}
+  />
+  <UnjumbleQuestion
+    words={`знаємо / Ми / цього / директора`}
+    answer={`Ми знаємо цього директора.`}
+  />
+  <UnjumbleQuestion
+    words={`бачить / Вона / сусіда / кожного / ранку`}
+    answer={`Вона бачить сусіда кожного ранку.`}
+  />
+  <UnjumbleQuestion
+    words={`чекаєш / Ти / подругу / свою`}
+    answer={`Ти чекаєш свою подругу?`}
+  />
+  <UnjumbleQuestion
+    words={`люблю / Я / колегу / мого`}
+    answer={`Я люблю мого колегу.`}
+  />
+  <UnjumbleQuestion
+    words={`бачимо / Ми / пасажира / біля / метро`}
+    answer={`Ми бачимо пасажира біля метро.`}
+  />
+  <UnjumbleQuestion
+    words={`знає / Він / студентку / цю / з / школи`}
+    answer={`Він знає цю студентку з школи.`}
+  />
+</Unjumble>
+
+### More Complex Sentences
+
+*Put the words in the correct order.*
+
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`бачу / Я / мого / друга / та / його / подругу`}
+    answer={`Я бачу мого друга та його подругу.`}
+  />
+  <UnjumbleQuestion
+    words={`чекаємо / Ми / нашого / вчителя / біля / університету`}
+    answer={`Ми чекаємо нашого вчителя біля університету.`}
+  />
+  <UnjumbleQuestion
+    words={`знає / Вона / всіх / студентів / у / групі`}
+    answer={`Вона знає всіх студентів у групі.`}
+  />
+  <UnjumbleQuestion
+    words={`бачиш / Ти / того / лікаря / там`}
+    answer={`Ти бачиш того лікаря там?`}
+  />
+  <UnjumbleQuestion
+    words={`любить / Він / свою / сусідку / дуже`}
+    answer={`Він дуже любить свою сусідку.`}
+  />
+  <UnjumbleQuestion
+    words={`шукаю / Я / нашого / директора / і / менеджера`}
+    answer={`Я шукаю нашого директора і менеджера.`}
+  />
+  <UnjumbleQuestion
+    words={`знаємо / Ми / цього / водія / добре`}
+    answer={`Ми добре знаємо цього водія.`}
+  />
+  <UnjumbleQuestion
+    words={`бачить / Вона / офіціанта / та / офіціантку`}
+    answer={`Вона бачить офіціанта та офіціантку.`}
+  />
+</Unjumble>
+

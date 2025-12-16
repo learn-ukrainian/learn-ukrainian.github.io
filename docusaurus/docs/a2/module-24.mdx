@@ -5,19 +5,20 @@ title: "Checkpoint - Aspect & Comparison"
 description: "Review of Modules 11-19"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 Congratulations on completing Phase A2.2! This checkpoint reviews everything from Modules 11-19, covering verbal aspect, comparison (comparative and superlative adjectives), conditional mood, and shopping vocabulary.
@@ -32,6 +33,17 @@ Congratulations on completing Phase A2.2! This checkpoint reviews everything fro
 
 **How to use:** Work through all activities. If you score below 80% on any section, review that module before proceeding.
 
+:::info
+🔗 External Resources
+
+**YouTube:** [A little test on Ukrainian language_ A2 level...](https://www.youtube.com/watch?v=0zgsiO7-TRQ) — Ukrainian grammar
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+:::
+
+
 ---
 
 # Presentation
@@ -44,9 +56,9 @@ Mastering aspect is mastering Ukrainian time. Remember this golden rule: **Proce
 
 | Tense | Imperfective (ND) | Perfective (D) |
 |-------|-------------------|----------------|
-| **Past** | **Process/Repetition** <br /> Я читав книгу. (I was reading) <br /> Я читав щодня. (I read every day) | **Result/One-time** <br /> Я прочитав книгу. (I finished reading) <br /> Я прочитав цей лист. (I read this letter) |
-| **Present**| **Action now / General fact** <br /> Я читаю. (I am reading) <br /> Я читаю книги. (I read books) | **No Present Tense!** <br /> Perfective verbs strictly describe future completion or past result. |
-| **Future** | **Process will happen** <br /> Я буду читати. (I will be reading) <br /> Я читатиму. (I will be reading) | **Result will occur** <br /> Я прочитаю. (I will finish reading) |
+| **Past** | **Process/Repetition** <br> Я читав книгу. (I was reading) <br> Я читав щодня. (I read every day) | **Result/One-time** <br> Я прочитав книгу. (I finished reading) <br> Я прочитав цей лист. (I read this letter) |
+| **Present**| **Action now / General fact** <br> Я читаю. (I am reading) <br> Я читаю книги. (I read books) | **No Present Tense!** <br> Perfective verbs strictly describe future completion or past result. |
+| **Future** | **Process will happen** <br> Я буду читати. (I will be reading) <br> Я читатиму. (I will be reading) | **Result will occur** <br> Я прочитаю. (I will finish reading) |
 
 > 🧠 **Memory Hack: Prefixes**
 >
@@ -110,19 +122,11 @@ Read this story. It combines aspect, comparison, and conditional mood.
 Він **порадив** (perf.) мені спробувати узвар. Це було **чудове** рішення.
 
 Потім я **пішов** (perf.) на Андріївський узвіз. Там продавали сувеніри.
-<div className="conversation">
-
 — Скільки **коштує** ця картина? — запитав я.
-
 — Дві тисячі гривень, — сказав продавець.
-
 — Це **занадто** дорого! Чи можна **дешевше**?
-
 — Для вас — тисяча п'ятсот.
-
 — **Беру**! (perf. future implied decision)
-
-</div>
 
 Ввечері я **писав** (imperf.) у щоденнику:
 "Якби я **жив** (cond.) у Києві, я **б гуляв** (cond.) тут щодня. Це місто **гарніше** (comp.) за будь-яке інше".
@@ -209,368 +213,24 @@ Go to the activities section and try to get 100%! If you make a mistake, read th
 
 Успіхів! 🎯
 
-## 🎯 Activities
 
-### Aspect Pairs Review
 
-<MatchUp pairs={[
-  { left: `читати`, right: `прочитати` },
-  { left: `писати`, right: `написати` },
-  { left: `робити`, right: `зробити` },
-  { left: `говорити`, right: `сказати` },
-  { left: `бачити`, right: `побачити` },
-  { left: `брати`, right: `взяти` },
-  { left: `давати`, right: `дати` },
-  { left: `вставати`, right: `встати` },
-  { left: `купувати`, right: `купити` },
-  { left: `відпочивати`, right: `відпочити` },
-  { left: `починати`, right: `почати` },
-  { left: `закінчувати`, right: `закінчити` }
-]} />
+> 💡 **Українська мудрість**
+>
+> «Повторення — мати навчання.» (Цей модуль — саме про повторення!)
+>
+> *Translation: "Repetition is the mother of learning."*
 
-### Comprehensive Review
+> 🇺🇦 **Контрольний пункт**
+>
+> Вітаємо! Ви дійшли до контрольного модуля. Ви вже знаєте:
+> - Як працює аспект у минулому і майбутньому часі
+> - Як порівнювати речі: більший, менший, найкращий
+> - Як правильно вибирати між доконаним і недоконаним видом
+>
+> Продовжуйте практикувати! Кожен день приносить нові знання.
 
-<FillIn items={[
-  {
-    sentence: `Я ___ книгу вчора. (finished reading)`,
-    answer: `прочитав`,
-    options: [`читав`, `прочитав`, `читаю`, `прочитаю`]
-  },  {
-    sentence: `Вона ___ за мене. (older)`,
-    answer: `старіша`,
-    options: [`стара`, `старіша`, `старша`, `найстаріша`]
-  },  {
-    sentence: `Це ___ книга. (best)`,
-    answer: `найкраща`,
-    options: [`краща`, `найкраща`, `добра`, `найдобріша`]
-  },  {
-    sentence: `___ я мав гроші... (If — unreal)`,
-    answer: `Якби`,
-    options: [`Якщо`, `Якби`, `Коли`, `Тому`]
-  },  {
-    sentence: `Я ___ хотів поїхати. (would)`,
-    answer: `б`,
-    options: [`б`, `буду`, `був`, `бути`]
-  },  {
-    sentence: `Що ви ___? (recommend)`,
-    answer: `порекомендуєте`,
-    options: [`рекомендую`, `порекомендуєте`, `рекомендував`, `порекомендував`]
-  },  {
-    sentence: `Він ___ три години. (was writing — duration)`,
-    answer: `писав`,
-    options: [`писав`, `написав`, `пише`, `напише`]
-  },  {
-    sentence: `Я ___ цей телефон. (will take)`,
-    answer: `візьму`,
-    options: [`беру`, `візьму`, `брав`, `взяв`]
-  },  {
-    sentence: `Мені ___ подобається чай. (more)`,
-    answer: `більше`,
-    options: [`більше`, `більший`, `великий`, `багато`]
-  },  {
-    sentence: `___ читати, ніж дивитися. (better)`,
-    answer: `Краще`,
-    options: [`Краще`, `Кращий`, `Добре`, `Добрий`]
-  },  {
-    sentence: `Чи є ___? (discount)`,
-    answer: `знижка`,
-    options: [`знижка`, `ціна`, `якість`, `покупка`]
-  },  {
-    sentence: `Він ___ \"так.\" (said — completed)`,
-    answer: `сказав`,
-    options: [`говорив`, `сказав`, `говорить`, `скаже`]
-  }
-]} />
 
-### Phase A2.2 Review
-
-<Quiz questions={[
-  {
-    question: `\"Прочитав\" is:`,
-    options: [
-      { text: `Perfective past`, correct: true },
-      { text: `Imperfective past`, correct: false },
-      { text: `Present tense`, correct: false }
-    ]
-  },  {
-    question: `\"Буду читати\" is:`,
-    options: [
-      { text: `Imperfective future`, correct: true },
-      { text: `Perfective future`, correct: false },
-      { text: `Past tense`, correct: false }
-    ]
-  },  {
-    question: `The comparative of \"добрий\" is:`,
-    options: [
-      { text: `кращий`, correct: true },
-      { text: `добріший`, correct: false },
-      { text: `найдобріший`, correct: false }
-    ]
-  },  {
-    question: `The superlative of \"великий\" is:`,
-    options: [
-      { text: `найбільший`, correct: true },
-      { text: `більший`, correct: false },
-      { text: `великіший`, correct: false }
-    ]
-  },  {
-    question: `\"Якби\" is used for:`,
-    options: [
-      { text: `Unreal conditions`, correct: true },
-      { text: `Real conditions`, correct: false },
-      { text: `Questions`, correct: false }
-    ]
-  },  {
-    question: `The conditional particle is:`,
-    options: [
-      { text: `б/би`, correct: true },
-      { text: `не`, correct: false },
-      { text: `ще`, correct: false }
-    ]
-  },  {
-    question: `\"Мені більше подобається\" means:`,
-    options: [
-      { text: `I like more`, correct: true },
-      { text: `I don't like`, correct: false },
-      { text: `I prefer (formal)`, correct: false }
-    ]
-  },  {
-    question: `\"Знижка\" means:`,
-    options: [
-      { text: `discount`, correct: true },
-      { text: `price`, correct: false },
-      { text: `quality`, correct: false }
-    ]
-  },  {
-    question: `Which aspect for \"I was reading for 3 hours\"?`,
-    options: [
-      { text: `Imperfective (читав)`, correct: true },
-      { text: `Perfective (прочитав)`, correct: false }
-    ]
-  },  {
-    question: `Which aspect for \"I finished the book\"?`,
-    options: [
-      { text: `Perfective (прочитав)`, correct: true },
-      { text: `Imperfective (читав)`, correct: false }
-    ]
-  },  {
-    question: `\"Найкращий\" means:`,
-    options: [
-      { text: `best`, correct: true },
-      { text: `better`, correct: false },
-      { text: `good`, correct: false }
-    ]
-  },  {
-    question: `\"Я б хотів\" means:`,
-    options: [
-      { text: `I would like`, correct: true },
-      { text: `I want`, correct: false },
-      { text: `I wanted`, correct: false }
-    ]
-  }
-]} />
-
-### Mixed Review
-
-<TrueFalse items={[
-  {
-    statement: `Perfective verbs focus on completed actions.`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `Superlatives are formed with най-.`,
-    isTrue: true,
-    explanation: `Yes!`
-  },  {
-    statement: `\"Якщо\" is for unreal conditions.`,
-    isTrue: false,
-    explanation: `\"Якщо\" is for REAL conditions. \"Якби\" is unreal.`
-  },  {
-    statement: `\"Кращий\" means \"better.\"`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `\"Буду + infinitive\" is imperfective future.`,
-    isTrue: true,
-    explanation: `Yes!`
-  },  {
-    statement: `\"Говорити\" is perfective.`,
-    isTrue: false,
-    explanation: `\"Говорити\" is imperfective. \"Сказати\" is perfective.`
-  },  {
-    statement: `\"Б\" makes speech more polite.`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `\"Порекомендуєте\" is a polite request form.`,
-    isTrue: true,
-    explanation: `Yes!`
-  },  {
-    statement: `\"Найдешевший\" means \"expensive.\"`,
-    isTrue: false,
-    explanation: `\"Найдешевший\" means \"cheapest.\"`
-  },  {
-    statement: `Aspect affects meaning in past and future.`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `\"За\" in comparison takes Accusative.`,
-    isTrue: true,
-    explanation: `Yes!`
-  },  {
-    statement: `All aspect pairs use the same root.`,
-    isTrue: false,
-    explanation: `Some pairs like говорити/сказати use different roots.`
-  }
-]} />
-
-### Aspect Sorting
-
-<GroupSort groups={{
-  "Imperfective": ["читати", "писати", "робити", "говорити", "бачити", "давати"],
-  "Perfective": ["прочитати", "написати", "зробити", "сказати", "побачити", "дати"]
-}} />
-
-### Mixed Sentences
-
-<Unjumble items={[
-  { jumbled: `він / прочитав / книгу / вчора`, answer: `Він прочитав книгу вчора.` },
-  { jumbled: `вона / старіша / за / мене`, answer: `Вона старіша за мене.` },
-  { jumbled: `це / найкраща / книга`, answer: `Це найкраща книга.` },
-  { jumbled: `якби / я / мав / гроші`, answer: `Якби я мав гроші...` },
-  { jumbled: `я / б / хотів / поїхати`, answer: `Я б хотів поїхати.` },
-  { jumbled: `мені / більше / подобається / кава`, answer: `Мені більше подобається кава.` },
-  { jumbled: `що / ви / порекомендуєте`, answer: `Що ви порекомендуєте?` },
-  { jumbled: `чи / можна / дешевше`, answer: `Чи можна дешевше?` },
-  { jumbled: `якщо / буде / сонячно / підемо`, answer: `Якщо буде сонячно, підемо.` },
-  { jumbled: `краще / читати / ніж / дивитися`, answer: `Краще читати, ніж дивитися.` },
-  { jumbled: `я / візьму / цей / телефон`, answer: `Я візьму цей телефон.` },
-  { jumbled: `він / писав / три / години`, answer: `Він писав три години.` }
-]} />
-
-### Fix the Grammar
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я ___ книгу три години. (was reading — duration)`}
-    errorWord={`duration`}
-    correctForm={`читав`}
-    options={[`читав`, `прочитав`]}
-    explanation={`Duration = imperfective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Це ___ книга. (best)`}
-    errorWord={`best`}
-    correctForm={`найкраща`}
-    options={[`краща`, `найкраща`]}
-    explanation={`Superlative: най- + кращий.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`___ я знав... (If — unreal)`}
-    errorWord={`unreal`}
-    correctForm={`Якби`}
-    options={[`Якщо`, `Якби`]}
-    explanation={`Unreal condition = якби.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона ___ за мене. (older)`}
-    errorWord={`older`}
-    correctForm={`старіша`}
-    options={[`стара`, `старіша`]}
-    explanation={`Comparative of стара: старіша.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Чи можна ___? (cheaper)`}
-    errorWord={`cheaper`}
-    correctForm={`дешевше`}
-    options={[`дешевший`, `дешевше`]}
-    explanation={`Comparative adverb.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він ___ правду. (said — completed)`}
-    errorWord={`completed`}
-    correctForm={`сказав`}
-    options={[`говорив`, `сказав`]}
-    explanation={`Completed = perfective.`}
-  />
-</ErrorCorrection>
-
-### Integrated Review
-
-<Cloze
-  passage={`Учора я [___:1] цілий день. Спочатку я [___:2] статтю. Потім я [___:3] в магазин — хотів купити [___:4] телефон. Продавець запитав: \"Що ви [___:5]?\" Я сказав, що шукаю [___:6] варіант.`}
-  blanks={[{ answer: `Якби`, options: [`Якби`] }, { answer: `б`, options: [`б`] }, { answer: `більше`, options: [`більше`] }, { answer: `було`, options: [`було`] }, { answer: `Краще`, options: [`Краще`] }, { answer: `дешевший`, options: [`дешевший`] }]}
-/>
-
-### Shopping with Comparison
-
-<DialogueReorder lines={[
-  { text: `Я шукаю телефон. Що порекомендуєте?`, order: 1 },
-  { text: `Цей найкращий. Але він дорожчий.`, order: 2 },
-  { text: `А є щось дешевше?`, order: 3 },
-  { text: `Так, цей. Він менший, але дешевший.`, order: 4 },
-  { text: `Якби я мав більше грошей, взяв би кращий.`, order: 5 },
-  { text: `Розумію. Який візьмете?`, order: 6 },
-  { text: `Вона вже прочитала книгу?`, order: 7 },
-  { text: `Ні, ще читає. Читала цілий день.`, order: 8 },
-  { text: `А тобі подобається ця книга?`, order: 9 },
-  { text: `Так, вона найцікавіша!`, order: 10 },
-  { text: `Краще читати, ніж дивитися фільми.`, order: 11 },
-  { text: `Згодна!`, order: 12 }
-]} />
-
-### Find Key Grammar
-
-<MarkTheWords>
-<MarkTheWordsActivity
-  text={`Click on PERFECTIVE verbs and SUPERLATIVES.
-
-Він прочитав найкращу книгу. Потім написав рецензію. Це найцікавіша історія!`}
-  correctWords={[`прочитав`, `найкращу`, `написав`, `найцікавіша`]}
-/>
-<MarkTheWordsActivity
-  text={`Я купив найдешевший телефон. Він сказав, що це хороший вибір.`}
-  correctWords={[`купив`, `найдешевший`, `сказав`]}
-/>
-<MarkTheWordsActivity
-  text={`Вона зробила домашнє завдання. Це найважливіша справа!`}
-  correctWords={[`зробила`, `найважливіша`]}
-/>
-</MarkTheWords>
-
-### English to Ukrainian
-
-<Translate questions={[
-  {
-    source: `I finished reading the book.`,
-    options: [
-      { text: `Я прочитав книгу.`, correct: true },
-      { text: `Я читав книгу.`, correct: false },
-      { text: `Він старіший за мене.`, correct: true },
-      { text: `Він старий за мене.`, correct: false },
-      { text: `Це найкращий фільм.`, correct: true },
-      { text: `Це кращий фільм.`, correct: false },
-      { text: `Якби я мав гроші...`, correct: true },
-      { text: `Якщо я маю гроші...`, correct: false },
-      { text: `Я б хотів відвідати Україну.`, correct: true },
-      { text: `Я хочу відвідати Україну.`, correct: false },
-      { text: `Що ви порекомендуєте?`, correct: true },
-      { text: `Що ви хочете?`, correct: false },
-      { text: `Чи можна дешевше?`, correct: true },
-      { text: `Скільки коштує?`, correct: false },
-      { text: `Мені більше подобається кава, ніж чай.`, correct: true },
-      { text: `Я люблю каву більш чай.`, correct: false },
-      { text: `Краще читати.`, correct: true },
-      { text: `Добре читати.`, correct: false },
-      { text: `Вона писала три години.`, correct: true },
-      { text: `Вона написала три години.`, correct: false },
-      { text: `Я візьму цей.`, correct: true },
-      { text: `Я хочу цей.`, correct: false },
-      { text: `Це було б чудово!`, correct: true },
-      { text: `Це буде чудово!`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -602,3 +262,524 @@ Go to the activities section and try to get 100%! If you make a mistake, read th
 | успіх | /uˈspix/ | success | noun | m | general |
 
 ---
+
+---
+
+## 🎯 Activities
+
+### Aspect Pairs Review
+
+<MatchUp pairs={[
+  { left: `читати`, right: `прочитати` },
+  { left: `писати`, right: `написати` },
+  { left: `робити`, right: `зробити` },
+  { left: `говорити`, right: `сказати` },
+  { left: `бачити`, right: `побачити` },
+  { left: `брати`, right: `взяти` },
+  { left: `давати`, right: `дати` },
+  { left: `вставати`, right: `встати` },
+  { left: `купувати`, right: `купити` },
+  { left: `відпочивати`, right: `відпочити` },
+  { left: `починати`, right: `почати` },
+  { left: `закінчувати`, right: `закінчити` }
+]} />
+
+### Comprehensive Review
+
+*Complete each sentence.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я ___ книгу вчора. (finished reading)`}
+    answer={`прочитав`}
+    options={[`читав`, `прочитав`, `читаю`, `прочитаю`]}
+  />
+  <FillInQuestion
+    sentence={`Вона ___ за мене. (older)`}
+    answer={`старіша`}
+    options={[`стара`, `старіша`, `старша`, `найстаріша`]}
+  />
+  <FillInQuestion
+    sentence={`Це ___ книга. (best)`}
+    answer={`найкраща`}
+    options={[`краща`, `найкраща`, `добра`, `найдобріша`]}
+  />
+  <FillInQuestion
+    sentence={`___ я мав гроші... (If — unreal)`}
+    answer={`Якби`}
+    options={[`Якщо`, `Якби`, `Коли`, `Тому`]}
+  />
+  <FillInQuestion
+    sentence={`Я ___ хотів поїхати. (would)`}
+    answer={`б`}
+    options={[`б`, `буду`, `був`, `бути`]}
+  />
+  <FillInQuestion
+    sentence={`Що ви ___? (recommend)`}
+    answer={`порекомендуєте`}
+    options={[`рекомендую`, `порекомендуєте`, `рекомендував`, `порекомендував`]}
+  />
+  <FillInQuestion
+    sentence={`Я ___ книгу вчора. (completed yesterday)`}
+    answer={`прочитав`}
+    options={[`читав`, `прочитав`]}
+  />
+  <FillInQuestion
+    sentence={`Вона ___ щодня. (every day = habit)`}
+    answer={`читає`}
+    options={[`читає`, `прочитає`]}
+  />
+  <FillInQuestion
+    sentence={`Він ___ три години. (was writing — duration)`}
+    answer={`писав`}
+    options={[`писав`, `написав`, `пише`, `напише`]}
+  />
+  <FillInQuestion
+    sentence={`Я ___ цей телефон. (will take)`}
+    answer={`візьму`}
+    options={[`беру`, `візьму`, `брав`, `взяв`]}
+  />
+  <FillInQuestion
+    sentence={`Мені ___ подобається чай. (more)`}
+    answer={`більше`}
+    options={[`більше`, `більший`, `великий`, `багато`]}
+  />
+  <FillInQuestion
+    sentence={`___ читати, ніж дивитися. (better)`}
+    answer={`Краще`}
+    options={[`Краще`, `Кращий`, `Добре`, `Добрий`]}
+  />
+  <FillInQuestion
+    sentence={`Чи є ___? (discount)`}
+    answer={`знижка`}
+    options={[`знижка`, `ціна`, `якість`, `покупка`]}
+  />
+  <FillInQuestion
+    sentence={`Він ___ "так." (said — completed)`}
+    answer={`сказав`}
+    options={[`говорив`, `сказав`, `говорить`, `скаже`]}
+  />
+</FillIn>
+
+### Phase A2.2 Review
+
+<Quiz>
+  <QuizQuestion
+    question={`1. "Прочитав" is:`}
+    options={[`Perfective past`, `Imperfective past`, `Present tense`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Буду читати" is:`}
+    options={[`Imperfective future`, `Perfective future`, `Past tense`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`The comparative of "добрий" is:`}
+    options={[`кращий`, `добріший`, `найдобріший`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`The superlative of "великий" is:`}
+    options={[`найбільший`, `більший`, `великіший`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Якби" is used for:`}
+    options={[`Unreal conditions`, `Real conditions`, `Questions`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`The conditional particle is:`}
+    options={[`б/би`, `не`, `ще`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Мені більше подобається" means:`}
+    options={[`I like more`, `I don't like`, `I prefer (formal)`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Знижка" means:`}
+    options={[`discount`, `price`, `quality`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Which aspect for "I was reading for 3 hours"?`}
+    options={[`Imperfective (читав)`, `Perfective (прочитав)`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Which aspect for "I finished the book"?`}
+    options={[`Perfective (прочитав)`, `Imperfective (читав)`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Найкращий" means:`}
+    options={[`best`, `better`, `good`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Я б хотів" means:`}
+    options={[`I would like`, `I want`, `I wanted`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### Mixed Review
+
+*Test your understanding.*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`Perfective verbs focus on completed actions.`}
+    isTrue={true}
+    explanation={`Correct!`}
+  />
+  <TrueFalseQuestion
+    statement={`Superlatives are formed with най-.`}
+    isTrue={true}
+    explanation={`Yes!`}
+  />
+  <TrueFalseQuestion
+    statement={`"Якщо" is for unreal conditions.`}
+    isTrue={false}
+    explanation={`"Якщо" is for REAL conditions. "Якби" is unreal.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Кращий" means "better."`}
+    isTrue={true}
+    explanation={`Correct!`}
+  />
+  <TrueFalseQuestion
+    statement={`"Буду + infinitive" is imperfective future.`}
+    isTrue={true}
+    explanation={`Yes!`}
+  />
+  <TrueFalseQuestion
+    statement={`"Говорити" is perfective.`}
+    isTrue={false}
+    explanation={`"Говорити" is imperfective. "Сказати" is perfective.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Б" makes speech more polite.`}
+    isTrue={true}
+    explanation={`Correct!`}
+  />
+  <TrueFalseQuestion
+    statement={`"Порекомендуєте" is a polite request form.`}
+    isTrue={true}
+    explanation={`Yes!`}
+  />
+  <TrueFalseQuestion
+    statement={`"Найдешевший" means "expensive."`}
+    isTrue={false}
+    explanation={`"Найдешевший" means "cheapest."`}
+  />
+  <TrueFalseQuestion
+    statement={`Aspect affects meaning in past and future.`}
+    isTrue={true}
+    explanation={`Correct!`}
+  />
+  <TrueFalseQuestion
+    statement={`"За" in comparison takes Accusative.`}
+    isTrue={true}
+    explanation={`Yes!`}
+  />
+  <TrueFalseQuestion
+    statement={`All aspect pairs use the same root.`}
+    isTrue={false}
+    explanation={`Some pairs like говорити/сказати use different roots.`}
+  />
+</TrueFalse>
+
+### Aspect Sorting
+
+*Sort by aspect.*
+
+
+<GroupSort groups={{
+  "### Imperfective": [
+    "читати",
+    "писати",
+    "робити",
+    "говорити",
+    "бачити",
+    "давати"
+  ],
+  "Perfective": [
+    "прочитати",
+    "написати",
+    "зробити",
+    "сказати",
+    "побачити",
+    "дати"
+  ]
+}} />
+
+### Mixed Sentences
+
+*Put the words in the correct order.*
+
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`він / прочитав / книгу / вчора`}
+    answer={`Він прочитав книгу вчора.`}
+  />
+  <UnjumbleQuestion
+    words={`вона / старіша / за / мене`}
+    answer={`Вона старіша за мене.`}
+  />
+  <UnjumbleQuestion
+    words={`це / найкраща / книга`}
+    answer={`Це найкраща книга.`}
+  />
+  <UnjumbleQuestion
+    words={`якби / я / мав / гроші`}
+    answer={`Якби я мав гроші...`}
+  />
+  <UnjumbleQuestion
+    words={`я / б / хотів / поїхати`}
+    answer={`Я б хотів поїхати.`}
+  />
+  <UnjumbleQuestion
+    words={`мені / більше / подобається / кава`}
+    answer={`Мені більше подобається кава.`}
+  />
+  <UnjumbleQuestion
+    words={`що / ви / порекомендуєте`}
+    answer={`Що ви порекомендуєте?`}
+  />
+  <UnjumbleQuestion
+    words={`чи / можна / дешевше`}
+    answer={`Чи можна дешевше?`}
+  />
+  <UnjumbleQuestion
+    words={`якщо / буде / сонячно / підемо`}
+    answer={`Якщо буде сонячно, підемо.`}
+  />
+  <UnjumbleQuestion
+    words={`краще / читати / ніж / дивитися`}
+    answer={`Краще читати, ніж дивитися.`}
+  />
+  <UnjumbleQuestion
+    words={`я / візьму / цей / телефон`}
+    answer={`Я візьму цей телефон.`}
+  />
+  <UnjumbleQuestion
+    words={`він / писав / три / години`}
+    answer={`Він писав три години.`}
+  />
+</Unjumble>
+
+### Fix the Grammar
+
+*Choose the correct form.*
+
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я ___ книгу три години. (was reading — duration)`}
+    error={`duration`}
+    answer={`читав`}
+    options={[`читав`, `прочитав`]}
+    explanation={`Duration = imperfective.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Це ___ книга. (best)`}
+    error={`best`}
+    answer={`найкраща`}
+    options={[`краща`, `найкраща`]}
+    explanation={`Superlative: най- + кращий.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`___ я знав... (If — unreal)`}
+    error={`unreal`}
+    answer={`Якби`}
+    options={[`Якщо`, `Якби`]}
+    explanation={`Unreal condition = якби.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона ___ за мене. (older)`}
+    error={`older`}
+    answer={`старіша`}
+    options={[`стара`, `старіша`]}
+    explanation={`Comparative of стара: старіша.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Чи можна ___? (cheaper)`}
+    error={`cheaper`}
+    answer={`дешевше`}
+    options={[`дешевший`, `дешевше`]}
+    explanation={`Comparative adverb.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він ___ правду. (said — completed)`}
+    error={`completed`}
+    answer={`сказав`}
+    options={[`говорив`, `сказав`]}
+    explanation={`Completed = perfective.`}
+  />
+</ErrorCorrection>
+
+
+
+### Shopping with Comparison
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Я шукаю телефон. Що порекомендуєте?"
+  },
+  {
+    "speaker": "",
+    "line": "Цей найкращий. Але він дорожчий."
+  },
+  {
+    "speaker": "",
+    "line": "А є щось дешевше?"
+  },
+  {
+    "speaker": "",
+    "line": "Так, цей. Він менший, але дешевший."
+  },
+  {
+    "speaker": "",
+    "line": "Якби я мав більше грошей, взяв би кращий."
+  },
+  {
+    "speaker": "",
+    "line": "Розумію. Який візьмете?"
+  },
+  {
+    "speaker": "",
+    "line": "Вона вже прочитала книгу?"
+  },
+  {
+    "speaker": "",
+    "line": "Ні, ще читає. Читала цілий день."
+  },
+  {
+    "speaker": "",
+    "line": "А тобі подобається ця книга?"
+  },
+  {
+    "speaker": "",
+    "line": "Так, вона найцікавіша!"
+  },
+  {
+    "speaker": "",
+    "line": "Краще читати, ніж дивитися фільми."
+  },
+  {
+    "speaker": "",
+    "line": "Згодна!"
+  }
+]} />
+</DialogueReorder>
+
+### Find Key Grammar
+
+Click on PERFECTIVE verbs and SUPERLATIVES.
+
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Він прочитав найкращу книгу. Потім написав рецензію. Це найцікавіша історія! Я купив найдешевший телефон. Він сказав, що це хороший вибір. Вона зробила домашнє завдання. Це найважливіша справа!`}
+    correctWords={[`прочитав`, `найкращу`, `написав`, `найцікавіша`, `купив`, `найдешевший`, `сказав`, `зробила`, `найважливіша`]}
+  />
+</MarkTheWords>
+
+### English to Ukrainian
+
+<Translate>
+  <TranslateItem
+    source={`I finished reading the book.`}
+    answer={`Я прочитав книгу.`}
+    options={[`Я прочитав книгу.`, `Я читав книгу.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`He is older than me.`}
+    answer={`Він старіший за мене.`}
+    options={[`Він старіший за мене.`, `Він старий за мене.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`This is the best movie.`}
+    answer={`Це найкращий фільм.`}
+    options={[`Це найкращий фільм.`, `Це кращий фільм.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`If I had money... (unreal)`}
+    answer={`Якби я мав гроші...`}
+    options={[`Якби я мав гроші...`, `Якщо я маю гроші...`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I would like to visit Ukraine.`}
+    answer={`Я б хотів відвідати Україну.`}
+    options={[`Я б хотів відвідати Україну.`, `Я хочу відвідати Україну.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`What do you recommend?`}
+    answer={`Що ви порекомендуєте?`}
+    options={[`Що ви порекомендуєте?`, `Що ви хочете?`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Can it be cheaper?`}
+    answer={`Чи можна дешевше?`}
+    options={[`Чи можна дешевше?`, `Скільки коштує?`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I like coffee more than tea.`}
+    answer={`Мені більше подобається кава, ніж чай.`}
+    options={[`Мені більше подобається кава, ніж чай.`, `Я люблю каву більш чай.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`It's better to read.`}
+    answer={`Краще читати.`}
+    options={[`Краще читати.`, `Добре читати.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She was writing for 3 hours.`}
+    answer={`Вона писала три години.`}
+    options={[`Вона писала три години.`, `Вона написала три години.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I'll take this one.`}
+    answer={`Я візьму цей.`}
+    options={[`Я візьму цей.`, `Я хочу цей.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`That would be wonderful!`}
+    answer={`Це було б чудово!`}
+    options={[`Це було б чудово!`, `Це буде чудово!`]}
+    explanation={``}
+  />
+</Translate>
+

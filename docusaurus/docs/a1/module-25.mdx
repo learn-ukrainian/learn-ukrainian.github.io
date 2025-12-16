@@ -5,19 +5,20 @@ title: "My Daily Routine"
 description: "Reflexive Verbs and Daily Activities"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 > 🕰️ **Мій типовий день**
@@ -38,7 +39,8 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 
 # Examples in Context
 
-:::info[Morning Routine]
+:::info
+Morning Routine
 
 - Я **прокидаюся** о сьомій ранку. (I wake up at 7 in the morning.)
 - **Спочатку** я **вмиваюся**. (First I wash my face.)
@@ -49,7 +51,8 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 :::
 
 
-:::info[Daytime Activities]
+:::info
+Daytime Activities
 
 - Я **виходжу** з дому о восьмій. (I leave home at 8.)
 - Вона **їде** на роботу автобусом. (She goes to work by bus.)
@@ -59,7 +62,8 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 :::
 
 
-:::info[Evening Activities]
+:::info
+Evening Activities
 
 - Я **повертаюся** додому о сьомій. (I return home at 7.)
 - Ми **вечеряємо** разом. (We have dinner together.)
@@ -69,7 +73,8 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 :::
 
 
-:::info[Night Routine]
+:::info
+Night Routine
 
 - Я **лягаю спати** о десятій. (I go to bed at 10.)
 - Вона **засинає** швидко. (She falls asleep quickly.)
@@ -82,103 +87,56 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 
 # Dialogues
 
-:::note[Morning Conversation]
-
-<div className="conversation">
+:::note
+Morning Conversation
 
 — Котра година?
-
 — Сьома ранку. Час вставати!
-
 — Добре. Я вмиваюся і одягаюся.
-
 — А я готую сніданок.
-
 — Дякую! Я **зазвичай** снідаю о восьмій.
 
-</div>
-
-<div className="conversation">
-
 — What time is it?
-
 — Seven in the morning. Time to get up!
-
 — Okay. I'm washing up and getting dressed.
-
 — And I'm making breakfast.
-
 — Thanks! I usually have breakfast at eight.
-
-</div>
 :::
 
 
-:::note[Daily Schedule]
-
-<div className="conversation">
+:::note
+Daily Schedule
 
 — Який твій розпорядок дня?
-
 — **Спочатку** я прокидаюся о шостій.
-
 — Так рано?
-
 — Так. **Потім** я біжу у парку. **Після того** я вмиваюся і снідаю.
-
 — А **потім**?
-
 — **Потім** я їду на роботу. **Нарешті** о сьомій вечора я повертаюся додому.
 
-</div>
-
-<div className="conversation">
-
 — What is your daily schedule?
-
 — First, I wake up at six.
-
 — So early?
-
 — Yes. Then I run in the park. After that I wash and have breakfast.
-
 — And then?
-
 — Then I go to work. Finally at 7 in the evening I return home.
-
-</div>
 :::
 
 
-:::note[Evening Plans]
-
-<div className="conversation">
+:::note
+Evening Plans
 
 — Що ти робиш увечері?
-
 — Я **зазвичай** відпочиваю.
-
 — Що ти робиш?
-
 — Іноді дивлюся телевізор, іноді читаю. А ти?
-
 — Я **щодня** гуляю у парку.
 
-</div>
-
-<div className="conversation">
-
 — What do you do in the evening?
-
 — I usually rest.
-
 — And what exactly?
-
 — Sometimes I watch TV, sometimes I read. And you?
-
 — I walk in the park every day.
-
-</div>
 :::
 
 
@@ -215,313 +173,7 @@ In this module, you learned:
 
 **Coming up:** Module 26 will teach you adjective agreement for describing things!
 
-## 🎯 Activities
 
-### Daily Actions
-
-<MatchUp pairs={[
-  { left: `прокидатися`, right: `to wake up` },
-  { left: `вмиватися`, right: `to wash (face)` },
-  { left: `одягатися`, right: `to get dressed` },
-  { left: `снідати`, right: `to have breakfast` },
-  { left: `виходити`, right: `to go out, leave` },
-  { left: `працювати`, right: `to work` },
-  { left: `обідати`, right: `to have lunch` },
-  { left: `повертатися`, right: `to return` },
-  { left: `вечеряти`, right: `to have dinner` },
-  { left: `відпочивати`, right: `to rest` },
-  { left: `лягати спати`, right: `to go to bed` },
-  { left: `засинати`, right: `to fall asleep` }
-]} />
-
-### When Do We Do This?
-
-<GroupSort groups={{
-  "Morning (Ранок)": ["прокидатися", "вмиватися", "одягатися", "снідати"],
-  "Day (День)": ["працювати", "обідати", "їхати"],
-  "Evening (Вечір)": ["повертатися", "вечеряти", "відпочивати", "гуляти"]
-}} />
-
-### Reflexive Verb Forms
-
-<FillIn items={[
-  {
-    sentence: `Я ___ о сьомій ранку.`,
-    answer: `прокидаюся`,
-    options: [`прокидаюся`, `прокидаєшся`, `прокидається`, `прокидаються`]
-  },  {
-    sentence: `Вона ___ швидко.`,
-    answer: `одягається`,
-    options: [`одягається`, `одягаюся`, `одягаєшся`, `одягаються`]
-  },  {
-    sentence: `Ми ___ разом.`,
-    answer: `вмиваємося`,
-    options: [`вмиваємося`, `вмиваюся`, `вмивається`, `вмиваються`]
-  },  {
-    sentence: `Ти ___ рано?`,
-    answer: `прокидаєшся`,
-    options: [`прокидаєшся`, `прокидаюся`, `прокидається`, `прокидаємося`]
-  },  {
-    sentence: `Вони ___ додому о шостій.`,
-    answer: `повертаються`,
-    options: [`повертаються`, `повертаюся`, `повертається`, `повертаємося`]
-  },  {
-    sentence: `Він ___ кожного ранку.`,
-    answer: `голиться`,
-    options: [`голиться`, `голюся`, `голишся`, `голяться`]
-  },  {
-    sentence: `Ви ___ тепло?`,
-    answer: `одягаєтеся`,
-    options: [`одягаєтеся`, `одягаюся`, `одягається`, `одягаємося`]
-  },  {
-    sentence: `Я ___ телевізор увечері.`,
-    answer: `дивлюся`,
-    options: [`дивлюся`, `дивишся`, `дивиться`, `дивляться`]
-  }
-]} />
-
-### Sequence Words
-
-<FillIn items={[
-  {
-    sentence: `___ я прокидаюся. Потім я вмиваюся.`,
-    answer: `Спочатку`,
-    options: [`Спочатку`, `Потім`, `Нарешті`, `Після того`]
-  },  {
-    sentence: `Спочатку я снідаю. ___ я виходжу.`,
-    answer: `Потім`,
-    options: [`Потім`, `Спочатку`, `Завжди`, `Ніколи`]
-  },  {
-    sentence: `Я працюю весь день. ___ я повертаюся додому.`,
-    answer: `Нарешті`,
-    options: [`Нарешті`, `Спочатку`, `Зазвичай`, `Щодня`]
-  },  {
-    sentence: `Я вмиваюся. ___ я одягаюся.`,
-    answer: `Після того`,
-    options: [`Після того`, `Спочатку`, `Нарешті`, `Ніколи`]
-  },  {
-    sentence: `Я ___ снідаю о восьмій.`,
-    answer: `зазвичай`,
-    options: [`зазвичай`, `спочатку`, `нарешті`, `потім`]
-  },  {
-    sentence: `Він ___ не запізнюється.`,
-    answer: `ніколи`,
-    options: [`ніколи`, `завжди`, `спочатку`, `нарешті`]
-  },  {
-    sentence: `Я читаю ___.`,
-    answer: `щодня`,
-    options: [`щодня`, `потім`, `спочатку`, `нарешті`]
-  },  {
-    sentence: `Вона ___ встає рано.`,
-    answer: `завжди`,
-    options: [`завжди`, `потім`, `спочатку`, `нарешті`]
-  }
-]} />
-
-### Daily Routine
-
-<Quiz questions={[
-  {
-    question: `Я прокидаюся о сьомій.`,
-    options: [
-      { text: `I wake up at seven.`, correct: true },
-      { text: `I go to bed at seven.`, correct: false },
-      { text: `I work at seven.`, correct: false },
-      { text: `I eat at seven.`, correct: false }
-    ]
-  },  {
-    question: `Спочатку я вмиваюся.`,
-    options: [
-      { text: `First I wash my face.`, correct: true },
-      { text: `Then I wash my face.`, correct: false },
-      { text: `Finally I wash my face.`, correct: false },
-      { text: `Never I wash my face.`, correct: false }
-    ]
-  },  {
-    question: `Вона завжди снідає.`,
-    options: [
-      { text: `She always has breakfast.`, correct: true },
-      { text: `She never has breakfast.`, correct: false },
-      { text: `She sometimes has breakfast.`, correct: false },
-      { text: `She first has breakfast.`, correct: false }
-    ]
-  },  {
-    question: `Вони повертаються додому.`,
-    options: [
-      { text: `They return home.`, correct: true },
-      { text: `They leave home.`, correct: false },
-      { text: `They work at home.`, correct: false },
-      { text: `They sleep at home.`, correct: false }
-    ]
-  },  {
-    question: `Він одягається швидко.`,
-    options: [
-      { text: `He gets dressed quickly.`, correct: true },
-      { text: `He undresses quickly.`, correct: false },
-      { text: `He eats quickly.`, correct: false },
-      { text: `He works quickly.`, correct: false }
-    ]
-  },  {
-    question: `Ми обідаємо опівдні.`,
-    options: [
-      { text: `We have lunch at noon.`, correct: true },
-      { text: `We have breakfast at noon.`, correct: false },
-      { text: `We have dinner at noon.`, correct: false },
-      { text: `We work at noon.`, correct: false }
-    ]
-  },  {
-    question: `Я лягаю спати о десятій.`,
-    options: [
-      { text: `I go to bed at ten.`, correct: true },
-      { text: `I wake up at ten.`, correct: false },
-      { text: `I eat at ten.`, correct: false },
-      { text: `I work at ten.`, correct: false }
-    ]
-  },  {
-    question: `Нарешті я відпочиваю.`,
-    options: [
-      { text: `Finally I rest.`, correct: true },
-      { text: `First I rest.`, correct: false },
-      { text: `Then I rest.`, correct: false },
-      { text: `Never I rest.`, correct: false }
-    ]
-  }
-]} />
-
-### Reflexive Understanding
-
-<Quiz questions={[
-  {
-    question: `Which verb is reflexive?`,
-    options: [
-      { text: `вмиватися`, correct: true },
-      { text: `читати`, correct: false },
-      { text: `їсти`, correct: false },
-      { text: `працювати`, correct: false }
-    ]
-  },  {
-    question: `What does \"-ся\" indicate?`,
-    options: [
-      { text: `The action is done to oneself`, correct: true },
-      { text: `The action is past tense`, correct: false },
-      { text: `The action is future`, correct: false },
-      { text: `The action is negative`, correct: false }
-    ]
-  },  {
-    question: `\"Я одягаюся\" means:`,
-    options: [
-      { text: `I get dressed (myself)`, correct: true },
-      { text: `I dress someone else`, correct: false },
-      { text: `I undress`, correct: false },
-      { text: `I buy clothes`, correct: false }
-    ]
-  },  {
-    question: `When do we use \"-сь\" instead of \"-ся\"?`,
-    options: [
-      { text: `After vowels (я вмиваюсь)`, correct: true },
-      { text: `After consonants`, correct: false },
-      { text: `In past tense`, correct: false },
-      { text: `In future tense`, correct: false }
-    ]
-  },  {
-    question: `Which verb is NOT reflexive?`,
-    options: [
-      { text: `снідати`, correct: true },
-      { text: `прокидатися`, correct: false },
-      { text: `одягатися`, correct: false },
-      { text: `повертатися`, correct: false }
-    ]
-  },  {
-    question: `\"Вона повертається\" means:`,
-    options: [
-      { text: `She returns`, correct: true },
-      { text: `She turns someone`, correct: false },
-      { text: `She leaves`, correct: false },
-      { text: `She works`, correct: false }
-    ]
-  },  {
-    question: `\"Голитися\" means:`,
-    options: [
-      { text: `To shave (oneself)`, correct: true },
-      { text: `To shave someone else`, correct: false },
-      { text: `To cut hair`, correct: false },
-      { text: `To wash`, correct: false }
-    ]
-  },  {
-    question: `Which ending is correct: \"ми вмиваємо___\"?`,
-    options: [
-      { text: `-ся (after consonant)`, correct: true },
-      { text: `-сь (after vowel)`, correct: false },
-      { text: `No ending needed`, correct: false },
-      { text: `-ти`, correct: false }
-    ]
-  }
-]} />
-
-### Daily Routine
-
-<Unjumble items={[
-  { jumbled: `прокидаюся / я / о сьомій / ранку`, answer: `Я прокидаюся о сьомій ранку.` },
-  { jumbled: `вмиваюся / спочатку / я`, answer: `Спочатку я вмиваюся.` },
-  { jumbled: `снідаю / потім / я / і / виходжу`, answer: `Потім я снідаю і виходжу.` },
-  { jumbled: `повертається / вона / о шостій / додому`, answer: `Вона повертається додому о шостій.` },
-  { jumbled: `ніколи / він / не / запізнюється`, answer: `Він ніколи не запізнюється.` },
-  { jumbled: `зазвичай / ми / телевізор / дивимося`, answer: `Зазвичай ми дивимося телевізор.` }
-]} />
-
-### Daily Routine Facts
-
-<TrueFalse items={[
-  {
-    statement: `\"Прокидатися\" is a reflexive verb.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Снідати\" is a reflexive verb.`,
-    isTrue: false,
-    explanation: `Incorrect! it's not reflexive`
-  },  {
-    statement: `\"Спочатку\" means \"first\" or \"at first\".`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Нарешті\" means \"never\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"finally\"`
-  },  {
-    statement: `\"-Ся\" is added to show an action done to oneself.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Щодня\" means \"sometimes\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"every day\"`
-  },  {
-    statement: `\"Зазвичай\" means \"usually\".`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Повертатися\" means \"to leave\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"to return\"`
-  },  {
-    statement: `\"Засинати\" means \"to fall asleep\".`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Виходити\" means \"to enter\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"to go out\"`
-  },  {
-    statement: `\"Звичка\" means \"habit\".`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Завжди\" means \"never\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"always\"`
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -558,3 +210,347 @@ In this module, you learned:
 | ніколи | /nʲiˈkɔlɪ/ | never | adv | - | - |
 
 ---
+
+---
+
+## 🎯 Activities
+
+### Daily Actions
+
+<MatchUp pairs={[
+  { left: `прокидатися`, right: `to wake up` },
+  { left: `вмиватися`, right: `to wash (face)` },
+  { left: `одягатися`, right: `to get dressed` },
+  { left: `снідати`, right: `to have breakfast` },
+  { left: `виходити`, right: `to go out, leave` },
+  { left: `працювати`, right: `to work` },
+  { left: `обідати`, right: `to have lunch` },
+  { left: `повертатися`, right: `to return` },
+  { left: `вечеряти`, right: `to have dinner` },
+  { left: `відпочивати`, right: `to rest` },
+  { left: `лягати спати`, right: `to go to bed` },
+  { left: `засинати`, right: `to fall asleep` }
+]} />
+
+### When Do We Do This?
+
+*Sort these activities by time of day.*
+
+
+<GroupSort groups={{
+  "### Morning (Ранок)": [
+    "прокидатися",
+    "вмиватися",
+    "одягатися",
+    "снідати"
+  ],
+  "Day (День)": [
+    "працювати",
+    "обідати",
+    "їхати"
+  ],
+  "Evening (Вечір)": [
+    "повертатися",
+    "вечеряти",
+    "відпочивати",
+    "гуляти",
+    "--"
+  ]
+}} />
+
+### Reflexive Verb Forms
+
+*Complete with the correct reflexive verb form.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я ___ о сьомій ранку.`}
+    answer={`прокидаюся`}
+    options={[`прокидаюся`, `прокидаєшся`, `прокидається`, `прокидаються`]}
+  />
+  <FillInQuestion
+    sentence={`Вона ___ швидко.`}
+    answer={`одягається`}
+    options={[`одягається`, `одягаюся`, `одягаєшся`, `одягаються`]}
+  />
+  <FillInQuestion
+    sentence={`Ми ___ разом.`}
+    answer={`вмиваємося`}
+    options={[`вмиваємося`, `вмиваюся`, `вмивається`, `вмиваються`]}
+  />
+  <FillInQuestion
+    sentence={`Ти ___ рано?`}
+    answer={`прокидаєшся`}
+    options={[`прокидаєшся`, `прокидаюся`, `прокидається`, `прокидаємося`]}
+  />
+  <FillInQuestion
+    sentence={`Вони ___ додому о шостій.`}
+    answer={`повертаються`}
+    options={[`повертаються`, `повертаюся`, `повертається`, `повертаємося`]}
+  />
+  <FillInQuestion
+    sentence={`Він ___ кожного ранку.`}
+    answer={`голиться`}
+    options={[`голиться`, `голюся`, `голишся`, `голяться`]}
+  />
+  <FillInQuestion
+    sentence={`Ви ___ тепло?`}
+    answer={`одягаєтеся`}
+    options={[`одягаєтеся`, `одягаюся`, `одягається`, `одягаємося`]}
+  />
+  <FillInQuestion
+    sentence={`Я ___ телевізор увечері.`}
+    answer={`дивлюся`}
+    options={[`дивлюся`, `дивишся`, `дивиться`, `дивляться`]}
+  />
+</FillIn>
+
+### Sequence Words
+
+*Choose the correct sequence word.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. ___ я прокидаюся. Потім я вмиваюся.`}
+    answer={`Спочатку`}
+    options={[`Спочатку`, `Потім`, `Нарешті`, `Після того`]}
+  />
+  <FillInQuestion
+    sentence={`Спочатку я снідаю. ___ я виходжу.`}
+    answer={`Потім`}
+    options={[`Потім`, `Спочатку`, `Завжди`, `Ніколи`]}
+  />
+  <FillInQuestion
+    sentence={`Я працюю весь день. ___ я повертаюся додому.`}
+    answer={`Нарешті`}
+    options={[`Нарешті`, `Спочатку`, `Зазвичай`, `Щодня`]}
+  />
+  <FillInQuestion
+    sentence={`Я вмиваюся. ___ я одягаюся.`}
+    answer={`Після того`}
+    options={[`Після того`, `Спочатку`, `Нарешті`, `Ніколи`]}
+  />
+  <FillInQuestion
+    sentence={`Я ___ снідаю о восьмій.`}
+    answer={`зазвичай`}
+    options={[`зазвичай`, `спочатку`, `нарешті`, `потім`]}
+  />
+  <FillInQuestion
+    sentence={`Він ___ не запізнюється.`}
+    answer={`ніколи`}
+    options={[`ніколи`, `завжди`, `спочатку`, `нарешті`]}
+  />
+  <FillInQuestion
+    sentence={`Я читаю ___.`}
+    answer={`щодня`}
+    options={[`щодня`, `потім`, `спочатку`, `нарешті`]}
+  />
+  <FillInQuestion
+    sentence={`Вона ___ встає рано.`}
+    answer={`завжди`}
+    options={[`завжди`, `потім`, `спочатку`, `нарешті`]}
+  />
+</FillIn>
+
+### Daily Routine
+
+<Quiz>
+  <QuizQuestion
+    question={`Я прокидаюся о сьомій.`}
+    options={[`I wake up at seven.`, `I go to bed at seven.`, `I work at seven.`, `I eat at seven.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Спочатку я вмиваюся.`}
+    options={[`First I wash my face.`, `Then I wash my face.`, `Finally I wash my face.`, `Never I wash my face.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Вона завжди снідає.`}
+    options={[`She always has breakfast.`, `She never has breakfast.`, `She sometimes has breakfast.`, `She first has breakfast.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Вони повертаються додому.`}
+    options={[`They return home.`, `They leave home.`, `They work at home.`, `They sleep at home.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Він одягається швидко.`}
+    options={[`He gets dressed quickly.`, `He undresses quickly.`, `He eats quickly.`, `He works quickly.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Ми обідаємо опівдні.`}
+    options={[`We have lunch at noon.`, `We have breakfast at noon.`, `We have dinner at noon.`, `We work at noon.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Я лягаю спати о десятій.`}
+    options={[`I go to bed at ten.`, `I wake up at ten.`, `I eat at ten.`, `I work at ten.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Нарешті я відпочиваю.`}
+    options={[`Finally I rest.`, `First I rest.`, `Then I rest.`, `Never I rest.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### Reflexive Understanding
+
+<Quiz>
+  <QuizQuestion
+    question={`Which verb is reflexive?`}
+    options={[`вмиватися`, `читати`, `їсти`, `працювати`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`What does "-ся" indicate?`}
+    options={[`The action is done to oneself`, `The action is past tense`, `The action is future`, `The action is negative`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Я одягаюся" means:`}
+    options={[`I get dressed (myself)`, `I dress someone else`, `I undress`, `I buy clothes`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`When do we use "-сь" instead of "-ся"?`}
+    options={[`After vowels (я вмиваюсь)`, `After consonants`, `In past tense`, `In future tense`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Which verb is NOT reflexive?`}
+    options={[`снідати`, `прокидатися`, `одягатися`, `повертатися`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Вона повертається" means:`}
+    options={[`She returns`, `She turns someone`, `She leaves`, `She works`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Голитися" means:`}
+    options={[`To shave (oneself)`, `To shave someone else`, `To cut hair`, `To wash`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Which ending is correct: "ми вмиваємо___"?`}
+    options={[`-ся (after consonant)`, `-сь (after vowel)`, `No ending needed`, `-ти`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### Daily Routine
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`прокидаюся / я / о сьомій / ранку`}
+    answer={`Я прокидаюся о сьомій ранку.`}
+  />
+  <UnjumbleQuestion
+    words={`вмиваюся / спочатку / я`}
+    answer={`Спочатку я вмиваюся.`}
+  />
+  <UnjumbleQuestion
+    words={`снідаю / потім / я / і / виходжу`}
+    answer={`Потім я снідаю і виходжу.`}
+  />
+  <UnjumbleQuestion
+    words={`повертається / вона / о шостій / додому`}
+    answer={`Вона повертається додому о шостій.`}
+  />
+  <UnjumbleQuestion
+    words={`ніколи / він / не / запізнюється`}
+    answer={`Він ніколи не запізнюється.`}
+  />
+  <UnjumbleQuestion
+    words={`зазвичай / ми / телевізор / дивимося`}
+    answer={`Зазвичай ми дивимося телевізор.`}
+  />
+</Unjumble>
+
+### Daily Routine Facts
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`"Прокидатися" is a reflexive verb.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Снідати" is a reflexive verb.`}
+    isTrue={false}
+    explanation={`Incorrect! it's not reflexive`}
+  />
+  <TrueFalseQuestion
+    statement={`"Спочатку" means "first" or "at first".`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Нарешті" means "never".`}
+    isTrue={false}
+    explanation={`Incorrect! it means "finally"`}
+  />
+  <TrueFalseQuestion
+    statement={`"-Ся" is added to show an action done to oneself.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Щодня" means "sometimes".`}
+    isTrue={false}
+    explanation={`Incorrect! it means "every day"`}
+  />
+  <TrueFalseQuestion
+    statement={`"Зазвичай" means "usually".`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Повертатися" means "to leave".`}
+    isTrue={false}
+    explanation={`Incorrect! it means "to return"`}
+  />
+  <TrueFalseQuestion
+    statement={`"Засинати" means "to fall asleep".`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Виходити" means "to enter".`}
+    isTrue={false}
+    explanation={`Incorrect! it means "to go out"`}
+  />
+  <TrueFalseQuestion
+    statement={`"Звичка" means "habit".`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Завжди" means "never".`}
+    isTrue={false}
+    explanation={`Incorrect! it means "always"`}
+  />
+</TrueFalse>
+

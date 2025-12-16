@@ -5,19 +5,20 @@ title: "In Order To..."
 description: "Purpose and Desire"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Warm-up
@@ -35,8 +36,20 @@ In Ukrainian, we use one powerful word: **Щоб**.
 - **The Complex Wish:** *Я хочу, щоб ти знав.*
 - **The Synonyms:** *Аби* and *Для того, щоб*.
 
-:::note[Pronunciation]
+:::note
+Pronunciation
 **Щоб** is pronounced /ʃɔb/. It is a fusion of "що" (what) and "би" (would).
+:::
+
+
+:::info
+🔗 External Resources
+
+**YouTube:** [ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with th...](https://www.youtube.com/watch?v=H1MtDElLMeU) — Ukrainian Lessons
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 :::
 
 
@@ -56,7 +69,8 @@ When **YOU** do something for **YOURSELF** (the subject is the same).
 | He came to help. | **Він прийшов, щоб допомогти.** | He came, in order to help. |
 | We run to be healthy. | **Ми бігаємо, щоб бути здоровими.** | We run, in order to be healthy. |
 
-:::tip[Comma Rule]
+:::tip
+Comma Rule
 Always put a comma before **щоб**!
 :::
 
@@ -104,7 +118,8 @@ Instead, we use the **Past Tense particle `би`** (would).
 In `щоб` (що + би), the particle `би` is already built-in!
 So when you say `щоб ти прийшов`, you are effectively saying "that you **would** come". The verb aligns with the "past-like" nature of `би`.
 
-:::note[Myth: Pessimism?]
+:::note
+Myth: Pessimism?
 "Ukrainians are pessimistic because they use Past Tense for future wishes."
 **False.**
 It's purely grammatical. When we say "Щоб ти був здоровий!" (May you be healthy!), we are projecting a desire. The Past form here indicates *unreality* or *potentiality*, not past time.
@@ -125,7 +140,8 @@ Want to make a toast like a native? Just start with **"Я хочу випити 
 Or simpler: **"За нас!"** (To us!).
 
 
-:::note[Fact: "Meta"]
+:::note
+Fact: "Meta"
 The word **мета** (goal/target) is related to "meet" in English (meeting point). When you do something **з метою** (with the aim), you are aiming to meet your goal!
 :::
 
@@ -148,7 +164,8 @@ The structure **"хотіти, щоб..."** is extremely common. It replaces Eng
 
 # Cultural Insight
 
-:::note[The "Guest" Protocol]
+:::note
+The "Guest" Protocol
 In Ukraine, you never visit someone empty-handed.
 You bring cake, flowers, or wine **щоб** show respect.
 You take off your shoes **аби** keep the house clean.
@@ -166,17 +183,29 @@ It's not just politeness; it's a ritual **щоб** maintain good relationships.
 Anna and Borys are planning a surprise for Olena.
 
 **Anna:** Слухай, **щоб** зробити вечірку ідеальною, нам треба план.
+
 **Borys:** Я вже купив кульки, **щоб** прикрасити кімнату.
+
 **Anna:** Чудово. Але я хочу, **щоб** ти купив торт.
+
 **Borys:** Який торт?
+
 **Anna:** Олена любить шоколадний. Я хочу, **щоб** він був великий.
+
 **Borys:** Добре. А ти що зробиш?
+
 **Anna:** Я подзвоню друзям, **щоб** запросити їх.
+
 **Borys:** Головне — **щоб** Олена не прийшла рано.
+
 **Anna:** Так. Я сказала їй, **щоб** вона працювала до вечора.
+
 **Borys:** Ти жорстока!
+
 **Anna:** Я роблю це, **для того щоб** сюрприз вдався!
+
 **Borys:** Я сподіваюся, що вона не здогадається.
+
 **Anna:** Я теж. Я роблю все можливе, **аби** вона була щаслива.
 
 ### Analysis
@@ -190,13 +219,21 @@ Anna and Borys are planning a surprise for Olena.
 ## Dialogue: New Year Resolutions
 
 **Olha:** Які в тебе плани на рік?
+
 **Taras:** Я хочу вивчити іспанську, **щоб** поїхати в Мексику. А ти?
+
 **Olha:** Я хочу, **щоб** мій бос підвищив мені зарплату.
+
 **Taras:** А що ти робиш для цього?
+
 **Olha:** Я працюю допізна, **щоб** він це помітив.
+
 **Taras:** А я записався в спортзал, **щоб** схуднути.
+
 **Olha:** Ти і так худий! Я хочу, **щоб** ти більше їв.
+
 **Taras:** Дякую, бабусю. Ти звучиш як моя бабуся.
+
 **Olha:** Я просто хочу, **щоб** ти був здоровий.
 
 ## Monologue: The Ambitious Student
@@ -225,335 +262,7 @@ Anna and Borys are planning a surprise for Olena.
 
 ---
 
-## 🎯 Activities
 
-### Purpose Pairs
-
-<MatchUp pairs={[
-  { left: `Я вчуся`, right: `щоб бути розумним` },
-  { left: `Я їм`, right: `щоб не бути голодним` },
-  { left: `Я працюю`, right: `щоб мати гроші` },
-  { left: `Я телефоную`, right: `щоб поговорити` },
-  { left: `Я бігаю`, right: `щоб бути швидким` },
-  { left: `Я купив квіти`, right: `щоб подарувати їх` },
-  { left: `Я увімкнув світло`, right: `щоб краще бачити` },
-  { left: `Я взяв таксі`, right: `щоб не запізнитися` },
-  { left: `Я відкрив вікно`, right: `щоб дихати свіжим повітрям` },
-  { left: `Я закрив двері`, right: `щоб було тепло` }
-]} />
-
-### Infinitive or Past?
-
-<FillIn items={[
-  {
-    sentence: `Я хочу ___ книгу. (Me -> Me)`,
-    answer: `читати`,
-    options: [`читати`, `читав`, `читала`]
-  },  {
-    sentence: `Я хочу, щоб ти ___ книгу. (Me -> You [m])`,
-    answer: `читав`,
-    options: [`читав`, `читати`, `читала`]
-  },  {
-    sentence: `Мама хоче, щоб син ___. (Mom -> Son)`,
-    answer: `їв`,
-    options: [`їв`, `їсти`, `їла`]
-  },  {
-    sentence: `Син хоче ___. (Son -> Son)`,
-    answer: `їсти`,
-    options: [`їсти`, `їв`, `їла`]
-  },  {
-    sentence: `Ми прийшли, щоб ___. (We -> We)`,
-    answer: `допомогти`,
-    options: [`допомогти`, `допомогли`, `допоміг`]
-  },  {
-    sentence: `Вони хочуть, щоб ми ___. (They -> We)`,
-    answer: `допомогли`,
-    options: [`допомогли`, `допомогти`, `допоміг`]
-  },  {
-    sentence: `Вона робить це, аби ___. (She -> She)`,
-    answer: `виграти`,
-    options: [`виграти`, `виграла`, `виграв`]
-  },  {
-    sentence: `Він мріє, щоб вона ___. (He -> She)`,
-    answer: `виграла`,
-    options: [`виграла`, `виграти`, `виграв`]
-  }
-]} />
-
-### Purpose Master
-
-<Quiz questions={[
-  {
-    question: `\"Щоб\" is usually preceded by:`,
-    options: [
-      { text: `A comma`, correct: true },
-      { text: `A period`, correct: false },
-      { text: `Nothing`, correct: false }
-    ]
-  },  {
-    question: `\"Я хочу, щоб ти...\" requires the next verb to be in:`,
-    options: [
-      { text: `Past tense`, correct: true },
-      { text: `Future tense`, correct: false },
-      { text: `Infinitive`, correct: false }
-    ]
-  },  {
-    question: `\"Аби\" is a synonym for:`,
-    options: [
-      { text: `Щоб`, correct: true },
-      { text: `Але`, correct: false },
-      { text: `Або`, correct: false }
-    ]
-  },  {
-    question: `Translate: \"I study to know.\"`,
-    options: [
-      { text: `Я вчуся, щоб знати.`, correct: true },
-      { text: `Я вчуся, що знати.`, correct: false }
-    ]
-  },  {
-    question: `Translate: \"I want him to know.\"`,
-    options: [
-      { text: `Я хочу, щоб він знав.`, correct: true },
-      { text: `Я хочу його знати.`, correct: false }
-    ]
-  },  {
-    question: `\"Для того, щоб\" is:`,
-    options: [
-      { text: `More formal/emphatic`, correct: true },
-      { text: `Rude`, correct: false },
-      { text: `Slang`, correct: false }
-    ]
-  },  {
-    question: `Can you say \"Я прийшов, щоб ти побачив\"?`,
-    options: [
-      { text: `Yes (Different subjects imply result)`, correct: true },
-      { text: `No, impossible`, correct: false }
-    ]
-  },  {
-    question: `\"Щоб\" comes from:`,
-    options: [
-      { text: `Що + Би`, correct: true },
-      { text: `Ще + Бо`, correct: false },
-      { text: `Що + Бо`, correct: false }
-    ]
-  }
-]} />
-
-### Constructing Purpose
-
-<Unjumble items={[
-  { jumbled: `хочу / я / щоб / прийшов / ти`, answer: `Я хочу, щоб ти прийшов.` },
-  { jumbled: `ми / щоб / працюємо / відпочивати / потім`, answer: `Ми працюємо, щоб потім відпочивати.` },
-  { jumbled: `він / купив / щоб / авто / їздити`, answer: `Він купив авто, щоб їздити.` },
-  { jumbled: `мама / щоб / хоче / я / вчився`, answer: `Мама хоче, щоб я вчився.` },
-  { jumbled: `зроби / це / аби / я / радів`, answer: `Зроби це, аби я радів.` },
-  { jumbled: `я / щоб / бігаю / схуднути`, answer: `Я бігаю, щоб схуднути.` }
-]} />
-
-### Same vs Different
-
-<GroupSort groups={{
-  "Same Subject (Infinitive)": ["Я йду, щоб спати.", "Ми їмо, щоб жити.", "Він дзвонить, щоб сказати.", "Вона вчить, щоб знати.", "Ти біжиш, щоб встигнути.", "Я співаю, щоб радіти.", "Я читаю, щоб знати."],
-  "Different Subjects (Past)": ["Я хочу, щоб ти спав.", "Він хоче, щоб ми їли.", "Ми просимо, щоб він сказав.", "Вона мріє, щоб ти знав.", "Ти кажеш, щоб я встиг.", "Батько хоче, щоб син вчився."]
-}} />
-
-### Grammar Check
-
-<TrueFalse items={[
-  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `Incorrect. \"Я хочу, щоб ти приніс воду.\"`
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `It means \"In order to\".`
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `No, Past tense.`
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `It's a connector.`
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `It's official.`
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: ``
-  }
-]} />
-
-### The Project
-
-<Cloze
-  passage={`Наш бос хоче, [___:1] ми закінчили проект сьогодні.
-Він дав нам комп'ютери, [___:2] ми працювали швидше.
-Я прийшов раніше, [___:3] все перевірити.
-Секретар купив каву, [___:4] ми не спали.
-Ми працюємо, [___:5] отримати премію.
-Бос обіцяв, [___:6] він дасть нам вихідний.
-Це все [___:7] клієнт був щасливий.`}
-  blanks={[{ answer: `щоб`, options: [`щоб`] }, { answer: `щоб`, options: [`щоб`] }, { answer: `щоб`, options: [`щоб`] }, { answer: `щоб`, options: [`щоб`] }, { answer: `щоб`, options: [`щоб`] }, { answer: `що`, options: [`що`] }, { answer: `для того щоб`, options: [`для того щоб`] }]}
-/>
-
-### The Parent Trap
-
-<DialogueReorder lines={[
-  { text: `Чому ти не їси суп?`, order: 1 },
-  { text: `Я не хочу їсти!`, order: 2 },
-  { text: `Але я хочу, щоб ти був здоровий.`, order: 3 },
-  { text: `Я буду здоровий без супу.`, order: 4 },
-  { text: `Їж, щоб вирости сильним.`, order: 5 },
-  { text: `Я не хочу рости.`, order: 6 },
-  { text: `Ти кажеш це, аби я хвилювалася?`, order: 7 },
-  { text: `Ні, просто суп несмачний.`, order: 8 }
-]} />
-
-### Find the Connectors
-
-<MarkTheWords>
-<MarkTheWordsActivity
-  text={`Щоб знати мову, треба говорити. Я роблю це для того, щоб ти зрозумів. Він прийшов, аби побачити тебе. Вона хоче, щоб ми пішли.`}
-  correctWords={[`Щоб`, `для того, щоб`, `аби`, `щоб`]}
-/>
-<MarkTheWordsActivity
-  text={`Я знаю, що ти тут. Це людина, яка співає. Це тому, що дощ.`}
-  correctWords={[`що`, `яка`, `що`]}
-/>
-</MarkTheWords>
-
-### Fix the Purpose
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я хочу **тебе спати**.`}
-    errorWord={`тебе спати`}
-    correctForm={`щоб ти спав`}
-    options={[`щоб ти спав`, `тебе спати`]}
-    explanation={`Different subjects require \"щоб\" + Past.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми вчимося, **що** знати.`}
-    errorWord={`що`}
-    correctForm={`щоб`}
-    options={[`щоб`, `що`]}
-    explanation={`Purpose is \"щоб\", not \"що\".`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вони хочуть, щоб я **прийду**. (Future)`}
-    errorWord={`прийду`}
-    correctForm={`прийшов`}
-    options={[`прийшов`, `прийду`]}
-    explanation={`After \"щоб\" (desire), use Past tense form.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона співає, **для** бути зіркою.`}
-    errorWord={`для`}
-    correctForm={`щоб`}
-    options={[`щоб`, `для`]}
-    explanation={`\"Для\" is not used for purpose with an infinitive. Use \"щоб\".`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я приніс це, **щоб** ти **радієш**. (Present)`}
-    errorWord={`радієш`}
-    correctForm={`радів`}
-    options={[`радів`, `радієш`]}
-    explanation={`Use Past tense form for desire/purpose with different subject.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`**Аби** не запізнитися ми взяли таксі.`}
-    errorWord={`таксі аби`}
-    correctForm={`таксі, аби`}
-    options={[`таксі, аби`, `таксі аби`]}
-    explanation={`A comma is required before \"аби\" when it introduces a clause.`}
-  />
-</ErrorCorrection>
-
-### English to Ukrainian
-
-<Translate questions={[
-  {
-    source: `I read to know.`,
-    options: [
-      { text: `Я читаю, щоб знати.`, correct: true },
-      { text: `Я читаю, що знав.`, correct: false }
-    ]
-  },  {
-    source: `I want you to read.`,
-    options: [
-      { text: `Я хочу, щоб ти читав.`, correct: true },
-      { text: `Я хочу тебе читати.`, correct: false }
-    ]
-  },  {
-    source: `He runs to be fast.`,
-    options: [
-      { text: `Він бігає, щоб бути швидким.`, correct: true },
-      { text: `Він бігає, що бути швидким.`, correct: false }
-    ]
-  },  {
-    source: `We wish that you were happy.`,
-    options: [
-      { text: `Бажаємо, щоб ви були щасливі.`, correct: true },
-      { text: `Бажаємо вас бути щасливими.`, correct: false }
-    ]
-  },  {
-    source: `In order to win...`,
-    options: [
-      { text: `Для того, щоб виграти...`, correct: true },
-      { text: `Для виграти...`, correct: false }
-    ]
-  },  {
-    source: `She came so that we could talk.`,
-    options: [
-      { text: `Вона прийшла, щоб ми поговорили.`, correct: true },
-      { text: `Вона прийшла, щоб ми говорити.`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -593,3 +302,318 @@ Anna and Borys are planning a surprise for Olena.
 | допоміг | /dɔpɔˈmiɦ/ | helped (masc) | verb | — | past form |
 | пояснив | /pɔjɑsˈnɪʋ/ | explained (masc) | verb | — | past form |
 | дав | /dɑʋ/ | gave (masc) | verb | — | past form |
+
+---
+
+## 🎯 Activities
+
+### Purpose Pairs
+
+*Match the action to the purpose.*
+
+
+<MatchUp pairs={[
+  { left: `Я вчуся`, right: `щоб бути розумним` },
+  { left: `Я їм`, right: `щоб не бути голодним` },
+  { left: `Я працюю`, right: `щоб мати гроші` },
+  { left: `Я телефоную`, right: `щоб поговорити` },
+  { left: `Я бігаю`, right: `щоб бути швидким` },
+  { left: `Я купив квіти`, right: `щоб подарувати їх` },
+  { left: `Я увімкнув світло`, right: `щоб краще бачити` },
+  { left: `Я взяв таксі`, right: `щоб не запізнитися` },
+  { left: `Я відкрив вікно`, right: `щоб дихати свіжим повітрям` },
+  { left: `Я закрив двері`, right: `щоб було тепло` }
+]} />
+
+### Infinitive or Past?
+
+*Choose the correct form. Remember: Same subject = Infinitive, Different subject = Past.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я хочу ___ книгу. (Me -> Me)`}
+    answer={`читати`}
+    options={[`читати`, `читав`, `читала`]}
+  />
+  <FillInQuestion
+    sentence={`Я хочу, щоб ти ___ книгу. (Me -> You [m])`}
+    answer={`читав`}
+    options={[`читав`, `читати`, `читала`]}
+  />
+  <FillInQuestion
+    sentence={`Мама хоче, щоб син ___. (Mom -> Son)`}
+    answer={`їв`}
+    options={[`їв`, `їсти`, `їла`]}
+  />
+  <FillInQuestion
+    sentence={`Син хоче ___. (Son -> Son)`}
+    answer={`їсти`}
+    options={[`їсти`, `їв`, `їла`]}
+  />
+  <FillInQuestion
+    sentence={`Ми прийшли, щоб ___. (We -> We)`}
+    answer={`допомогти`}
+    options={[`допомогти`, `допомогли`, `допоміг`]}
+  />
+  <FillInQuestion
+    sentence={`Вони хочуть, щоб ми ___. (They -> We)`}
+    answer={`допомогли`}
+    options={[`допомогли`, `допомогти`, `допоміг`]}
+  />
+  <FillInQuestion
+    sentence={`Вона робить це, аби ___. (She -> She)`}
+    answer={`виграти`}
+    options={[`виграти`, `виграла`, `виграв`]}
+  />
+  <FillInQuestion
+    sentence={`Він мріє, щоб вона ___. (He -> She)`}
+    answer={`виграла`}
+    options={[`виграла`, `виграти`, `виграв`]}
+  />
+</FillIn>
+
+### Purpose Master
+
+<Quiz>
+  <QuizQuestion
+    question={`1. "Щоб" is usually preceded by:`}
+    options={[`A comma`, `A period`, `Nothing`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Я хочу, щоб ти..." requires the next verb to be in:`}
+    options={[`Past tense`, `Future tense`, `Infinitive`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Аби" is a synonym for:`}
+    options={[`Щоб`, `Але`, `Або`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Translate: "I study to know."`}
+    options={[`Я вчуся, щоб знати.`, `Я вчуся, що знати.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Translate: "I want him to know."`}
+    options={[`Я хочу, щоб він знав.`, `Я хочу його знати.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Для того, щоб" is:`}
+    options={[`More formal/emphatic`, `Rude`, `Slang`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Can you say "Я прийшов, щоб ти побачив"?`}
+    options={[`Yes (Different subjects imply result)`, `No, impossible`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Щоб" comes from:`}
+    options={[`Що + Би`, `Ще + Бо`, `Що + Бо`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### Constructing Purpose
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`хочу / я / щоб / прийшов / ти`}
+    answer={`Я хочу, щоб ти прийшов.`}
+  />
+  <UnjumbleQuestion
+    words={`ми / щоб / працюємо / відпочивати / потім`}
+    answer={`Ми працюємо, щоб потім відпочивати.`}
+  />
+  <UnjumbleQuestion
+    words={`він / купив / щоб / авто / їздити`}
+    answer={`Він купив авто, щоб їздити.`}
+  />
+  <UnjumbleQuestion
+    words={`мама / щоб / хоче / я / вчився`}
+    answer={`Мама хоче, щоб я вчився.`}
+  />
+  <UnjumbleQuestion
+    words={`зроби / це / аби / я / радів`}
+    answer={`Зроби це, аби я радів.`}
+  />
+  <UnjumbleQuestion
+    words={`я / щоб / бігаю / схуднути`}
+    answer={`Я бігаю, щоб схуднути.`}
+  />
+</Unjumble>
+
+### Same vs Different
+
+<GroupSort groups={{
+  "### Same Subject (Infinitive)": [
+    "Я йду, щоб спати.",
+    "Ми їмо, щоб жити.",
+    "Він дзвонить, щоб сказати.",
+    "Вона вчить, щоб знати.",
+    "Ти біжиш, щоб встигнути.",
+    "Я співаю, щоб радіти.",
+    "Я читаю, щоб знати."
+  ],
+  "Different Subjects (Past)": [
+    "Я хочу, щоб ти спав.",
+    "Він хоче, щоб ми їли.",
+    "Ми просимо, щоб він сказав.",
+    "Вона мріє, щоб ти знав.",
+    "Ти кажеш, щоб я встиг.",
+    "Батько хоче, щоб син вчився."
+  ]
+}} />
+
+
+
+
+
+### The Parent Trap
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Чому ти не їси суп?"
+  },
+  {
+    "speaker": "",
+    "line": "Я не хочу їсти!"
+  },
+  {
+    "speaker": "",
+    "line": "Але я хочу, щоб ти був здоровий."
+  },
+  {
+    "speaker": "",
+    "line": "Я буду здоровий без супу."
+  },
+  {
+    "speaker": "",
+    "line": "Їж, щоб вирости сильним."
+  },
+  {
+    "speaker": "",
+    "line": "Я не хочу рости."
+  },
+  {
+    "speaker": "",
+    "line": "Ти кажеш це, аби я хвилювалася?"
+  },
+  {
+    "speaker": "",
+    "line": "Ні, просто суп несмачний."
+  }
+]} />
+</DialogueReorder>
+
+### Find the Connectors
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Щоб знати мову, треба говорити. Я роблю це для того, щоб ти зрозумів. Він прийшов, аби побачити тебе. Вона хоче, щоб ми пішли. Я знаю, що(incorrect) ти тут. Це людина, яка(incorrect) співає. Це тому, що(incorrect) дощ.`}
+    correctWords={[`Щоб`, `для того, щоб`, `аби`, `щоб`, `що`, `яка`, `що`]}
+  />
+</MarkTheWords>
+
+### Fix the Purpose
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я хочу **тебе спати**.`}
+    error={`тебе спати`}
+    answer={`щоб ти спав`}
+    options={[`щоб ти спав`, `тебе спати`]}
+    explanation={`Different subjects require "щоб" + Past.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми вчимося, **що** знати.`}
+    error={`що`}
+    answer={`щоб`}
+    options={[`щоб`, `що`]}
+    explanation={`Purpose is "щоб", not "що".`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вони хочуть, щоб я **прийду**. (Future)`}
+    error={`прийду`}
+    answer={`прийшов`}
+    options={[`прийшов`, `прийду`]}
+    explanation={`After "щоб" (desire), use Past tense form.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона співає, **для** бути зіркою.`}
+    error={`для`}
+    answer={`щоб`}
+    options={[`щоб`, `для`]}
+    explanation={`"Для" is not used for purpose with an infinitive. Use "щоб".`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я приніс це, **щоб** ти **радієш**. (Present)`}
+    error={`радієш`}
+    answer={`радів`}
+    options={[`радів`, `радієш`]}
+    explanation={`Use Past tense form for desire/purpose with different subject.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`**Аби** не запізнитися ми взяли таксі.`}
+    error={`таксі аби`}
+    answer={`таксі, аби`}
+    options={[`таксі, аби`, `таксі аби`]}
+    explanation={`A comma is required before "аби" when it introduces a clause.`}
+  />
+</ErrorCorrection>
+
+### English to Ukrainian
+
+<Translate>
+  <TranslateItem
+    source={`1. I read to know.`}
+    answer={`Я читаю, щоб знати.`}
+    options={[`Я читаю, щоб знати.`, `Я читаю, що знав.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I want you to read.`}
+    answer={`Я хочу, щоб ти читав.`}
+    options={[`Я хочу, щоб ти читав.`, `Я хочу тебе читати.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`He runs to be fast.`}
+    answer={`Він бігає, щоб бути швидким.`}
+    options={[`Він бігає, щоб бути швидким.`, `Він бігає, що бути швидким.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`We wish that you were happy.`}
+    answer={`Бажаємо, щоб ви були щасливі.`}
+    options={[`Бажаємо, щоб ви були щасливі.`, `Бажаємо вас бути щасливими.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`In order to win...`}
+    answer={`Для того, щоб виграти...`}
+    options={[`Для того, щоб виграти...`, `Для виграти...`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She came so that we could talk.`}
+    answer={`Вона прийшла, щоб ми поговорили.`}
+    options={[`Вона прийшла, щоб ми поговорили.`, `Вона прийшла, щоб ми говорити.`]}
+    explanation={``}
+  />
+</Translate>
+

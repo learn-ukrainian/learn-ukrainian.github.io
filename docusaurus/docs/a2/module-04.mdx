@@ -5,19 +5,20 @@ title: "The Instrumental I — Accompaniment"
 description: "With Friends and Family"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 In this module, you'll learn the Instrumental case — the seventh and final case in Ukrainian. While the Instrumental has several functions, this module focuses on its most common use at A2 level: expressing **accompaniment** (with whom or with what you do something).
@@ -42,6 +43,17 @@ Every time you want to say you're doing something "with" someone or something, y
 When you want to say you're doing something **with someone**, Ukrainian uses the instrumental case with the preposition **з** (with). "I'm going with a friend" = Я йду **з другом**. "She drinks coffee with milk" = Вона п'є каву **з молоком**.
 
 The instrumental case answers the questions: **З ким?** (With whom?) and **З чим?** (With what?) Learning this case opens up the ability to describe social situations and relationships in Ukrainian.
+
+:::info
+🔗 External Resources
+
+**YouTube:** [The Instrumental case in the Ukrainian language...](https://www.youtube.com/watch?v=lmPHpt2DGos) — Speak Ukrainian
+
+**Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
+
+**Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
+:::
+
 
 ---
 
@@ -84,7 +96,8 @@ Masculine nouns take **-ом** after hard consonants or **-ем** after soft con
 Вона розмовляє з братом. (She's talking with her brother.)
 Ми живемо з батьком. (We live with our father.)
 
-:::tip[Hard vs. Soft — How to Choose the Right Ending]
+:::tip
+Hard vs. Soft — How to Choose the Right Ending
 The key to choosing the correct masculine instrumental ending is identifying whether the stem ends in a hard or soft consonant:
 
 **Hard consonants** are most consonants without a following soft sign. After hard consonants, use **-ом**:
@@ -116,7 +129,8 @@ Feminine nouns take **-ою** after hard consonants or **-ею** after soft cons
 Він гуляє з дівчиною. (He's walking with his girlfriend.)
 Вона п'є чай з подругою. (She's drinking tea with her friend.)
 
-:::warning[Fleeting Vowels — Watch for Disappearing Letters]
+:::warning
+Fleeting Vowels — Watch for Disappearing Letters
 Some feminine nouns have "fleeting vowels" — vowels that disappear in certain case forms. This is a common phonological pattern in Ukrainian:
 - донька → донькою (the о before к disappears)
 - сестра → сестрою (follows the standard pattern)
@@ -141,7 +155,8 @@ Neuter nouns take **-ом** after hard consonants or **-ем** after soft conson
 Кава з молоком смачна. (Coffee with milk is tasty.)
 Чай з лимоном освіжає. (Tea with lemon refreshes.)
 
-:::info[Neuter with -я]
+:::info
+Neuter with -я
 Neuter nouns ending in -я (like ім'я) take -ям: ім'я → ім'ям.
 :::
 
@@ -161,7 +176,8 @@ All genders take **-ами** or **-ями** in the plural:
 Вона живе з батьками. (She lives with her parents.)
 Він грає з дітьми. (He's playing with the children.)
 
-:::warning[Irregular Plurals — Important Exceptions]
+:::warning
+Irregular Plurals — Important Exceptions
 Some common nouns have irregular instrumental plurals that you need to memorize. These are among the most frequently used nouns in Ukrainian, so learning them correctly is important:
 - люди → людьми (people — not *людями)
 - діти → дітьми (children — not *дітями)
@@ -193,7 +209,8 @@ Ukrainian has three forms of "with" to ease pronunciation. This is called **phon
 Я йду із сестрою. (optional, formal)
 Я йду зі мною. (required before "мн-")
 
-:::tip[Personal Pronouns in the Instrumental Case]
+:::tip
+Personal Pronouns in the Instrumental Case
 Here are all the personal pronouns in Instrumental — memorize these as a set:
 
 - **я** → мною: зі мною
@@ -220,20 +237,13 @@ The instrumental with **з** is essential for describing social activities in Uk
 | Dining | обідати з родиною |
 | Working | працювати з партнерами |
 
-:::info[Вихідні у Львові]
-<div className="conversation">
-
+:::info
+Вихідні у Львові
 — Що ти робитимеш на вихідних?
-
 — У суботу я зустрічаюся з друзями. Ми йдемо в ресторан.
-
 — А в неділю?
-
 — У неділю гулятиму з дівчиною в парку.
-
 — Звучить чудово! А я проводитиму час з родиною.
-
-</div>
 :::
 
 
@@ -254,22 +264,14 @@ Many relationship verbs use **з + Instrumental**:
 Ми познайомилися з ними в університеті. (We met them at university.)
 Вони посварилися, але потім помирилися. (They quarrelled but then made peace.)
 
-:::info[Історія кохання]
-<div className="conversation">
-
+:::info
+Історія кохання
 — Як ви познайомилися з чоловіком?
-
 — Ми познайомилися на вечірці. Друг познайомив мене з ним.
-
 — І ви відразу закохалися?
-
 — Ні! Спочатку ми посварилися! Але потім помирилися і подружилися.
-
 — А коли ви одружилися?
-
 — Через рік. І живемо разом уже десять років!
-
-</div>
 :::
 
 
@@ -315,51 +317,30 @@ The following dialogues demonstrate Instrumental case in natural conversation. N
 This dialogue shows introductions using the Instrumental — "познайомлю тебе з" (I'll introduce you to).
 
 **У кафе:**
-<div className="conversation">
-
 — З ким ти прийшла?
-
 — Я прийшла з подругою. Ось вона!
-
 — Привіт! Давай познайомлю тебе з моїм братом.
-
 — Приємно познайомитися!
-
-</div>
 
 **Dialogue 2: На роботі (At Work)**
 
 Here we see working "with" colleagues and talking "with" the boss — all Instrumental.
 
 **На роботі:**
-<div className="conversation">
-
 — З ким ти працюєш над проєктом?
-
 — Я працюю з Олексієм і Мариною.
-
 — А з начальником уже говорив?
-
 — Так, я розмовляв з ним учора.
-
-</div>
 
 **Dialogue 3: На кухні (In the Kitchen)**
 
 Food and drink combinations use Instrumental too — coffee WITH milk, tea WITH lemon.
 
 **На кухні:**
-<div className="conversation">
-
 — Ти хочеш каву з молоком?
-
 — Ні, я п'ю каву з цукром.
-
 — А чай?
-
 — Чай — з лимоном і з медом!
-
-</div>
 
 ---
 
@@ -422,378 +403,7 @@ This story about a surprise party is full of Instrumental examples. Every time s
 
 Тепер ви можете розповідати, з ким ви гуляєте, живете, працюєте і п'єте каву! ☕
 
-## 🎯 Activities
 
-### Nominative to Instrumental
-
-<MatchUp pairs={[
-  { left: `друг`, right: `другом` },
-  { left: `сестра`, right: `сестрою` },
-  { left: `брат`, right: `братом` },
-  { left: `мама`, right: `мамою` },
-  { left: `батько`, right: `батьком` },
-  { left: `вчитель`, right: `вчителем` },
-  { left: `дитина`, right: `дитиною` },
-  { left: `подруга`, right: `подругою` },
-  { left: `хлопець`, right: `хлопцем` },
-  { left: `дівчина`, right: `дівчиною` },
-  { left: `собака`, right: `собакою` },
-  { left: `кіт`, right: `котом` }
-]} />
-
-### Instrumental Endings
-
-<FillIn items={[
-  {
-    sentence: `Я йду в кіно з ___.`,
-    answer: `другом`,
-    options: [`другом`, `друг`, `друга`]
-  },  {
-    sentence: `Вона розмовляє з ___.`,
-    answer: `мамою`,
-    options: [`мамою`, `мама`, `мамі`]
-  },  {
-    sentence: `Він гуляє з ___.`,
-    answer: `собакою`,
-    options: [`собакою`, `собака`, `собаки`]
-  },  {
-    sentence: `Ми живемо з ___.`,
-    answer: `батьками`,
-    options: [`батьками`, `батьки`, `батькам`]
-  },  {
-    sentence: `Я п'ю каву з ___.`,
-    answer: `молоком`,
-    options: [`молоком`, `молоко`, `молока`]
-  },  {
-    sentence: `Вона познайомилася з ___.`,
-    answer: `хлопцем`,
-    options: [`хлопцем`, `хлопець`, `хлопця`]
-  },  {
-    sentence: `Діти грають з ___.`,
-    answer: `котом`,
-    options: [`котом`, `кіт`, `кота`]
-  },  {
-    sentence: `Він одружився з ___.`,
-    answer: `Марією`,
-    options: [`Марією`, `Марія`, `Марії`]
-  },  {
-    sentence: `Ми зустрічаємося з ___ щотижня.`,
-    answer: `друзями`,
-    options: [`друзями`, `друзі`, `друзям`]
-  },  {
-    sentence: `Я працюю з ___ над проєктом.`,
-    answer: `колегою`,
-    options: [`колегою`, `колега`, `колегу`]
-  },  {
-    sentence: `Вона п'є чай з ___.`,
-    answer: `лимоном`,
-    options: [`лимоном`, `лимон`, `лимона`]
-  },  {
-    sentence: `Він помирився з ___.`,
-    answer: `сестрою`,
-    options: [`сестрою`, `сестра`, `сестрі`]
-  }
-]} />
-
-### Instrumental Forms
-
-<Quiz questions={[
-  {
-    question: `Яка форма \"вчитель\" в орудному відмінку?`,
-    options: [
-      { text: `вчителя`, correct: false },
-      { text: `вчителем`, correct: true },
-      { text: `вчителеві`, correct: false }
-    ]
-  },  {
-    question: `Як сказати \"with my sister\"?`,
-    options: [
-      { text: `з моя сестра`, correct: false },
-      { text: `з моєю сестрою`, correct: true },
-      { text: `з моєї сестри`, correct: false }
-    ]
-  },  {
-    question: `Яке закінчення орудного відмінка для жіночого роду?`,
-    options: [
-      { text: `-ом`, correct: false },
-      { text: `-ою/-ею`, correct: true },
-      { text: `-ам`, correct: false }
-    ]
-  },  {
-    question: `Як сказати \"with me\"?`,
-    options: [
-      { text: `з я`, correct: false },
-      { text: `з мене`, correct: false },
-      { text: `зі мною`, correct: true }
-    ]
-  },  {
-    question: `Яка форма \"діти\" в орудному відмінку?`,
-    options: [
-      { text: `дітями`, correct: false },
-      { text: `дітьми`, correct: true },
-      { text: `дітей`, correct: false }
-    ]
-  },  {
-    question: `Як сказати \"coffee with milk\"?`,
-    options: [
-      { text: `кава з молоком`, correct: true },
-      { text: `кава з молока`, correct: false },
-      { text: `кава з молоко`, correct: false }
-    ]
-  },  {
-    question: `Який прийменник перед \"снігом\"?`,
-    options: [
-      { text: `з`, correct: false },
-      { text: `із`, correct: false },
-      { text: `зі`, correct: true }
-    ]
-  },  {
-    question: `Як сказати \"I met him\"?`,
-    options: [
-      { text: `Я познайомився з він.`, correct: false },
-      { text: `Я познайомився з ним.`, correct: true },
-      { text: `Я познайомився з його.`, correct: false }
-    ]
-  },  {
-    question: `Яка форма \"люди\" в орудному відмінку?`,
-    options: [
-      { text: `людями`, correct: false },
-      { text: `людьми`, correct: true },
-      { text: `людей`, correct: false }
-    ]
-  },  {
-    question: `Як сказати \"with friends\"?`,
-    options: [
-      { text: `з *друзі*`, correct: false },
-      { text: `з друзями`, correct: true },
-      { text: `з *друзі*в`, correct: false }
-    ]
-  },  {
-    question: `Яка форма \"батько\" в орудному відмінку?`,
-    options: [
-      { text: `батька`, correct: false },
-      { text: `батьком`, correct: true },
-      { text: `батькові`, correct: false }
-    ]
-  },  {
-    question: `Як сказати \"She married Petro\"?`,
-    options: [
-      { text: `Вона одружилася з Петром.`, correct: true },
-      { text: `Вона одружилася Петра.`, correct: false },
-      { text: `Вона одружилася з Петра.`, correct: false }
-    ]
-  }
-]} />
-
-### Instrumental Rules
-
-<TrueFalse items={[
-  {
-    statement: `Masculine nouns always take -ом in the instrumental.`,
-    isTrue: false,
-    explanation: `Soft-stem masculine nouns take -ем: вчитель → вчителем.`
-  },  {
-    statement: `Feminine nouns take -ою or -ею in the instrumental.`,
-    isTrue: true,
-    explanation: `Correct! Hard stems take -ою, soft stems take -ею.`
-  },  {
-    statement: `The preposition \"зі\" is used before \"мною.\"`,
-    isTrue: true,
-    explanation: `Yes! \"Зі мною\" — the зі is needed before the consonant cluster.`
-  },  {
-    statement: `\"Дітьми\" is the correct instrumental plural of \"діти.\"`,
-    isTrue: true,
-    explanation: `Correct! Діти has an irregular instrumental plural: дітьми.`
-  },  {
-    statement: `All plural instrumental endings are -ами.`,
-    isTrue: false,
-    explanation: `Plurals take -ами OR -ями depending on the stem: друзями, сестрами.`
-  },  {
-    statement: `\"Познайомитися\" requires the accusative case.`,
-    isTrue: false,
-    explanation: `Познайомитися requires з + instrumental: познайомитися з ним.`
-  },  {
-    statement: `\"З\" and \"із\" mean the same thing.`,
-    isTrue: true,
-    explanation: `Yes! Both mean \"with\" — із is used before consonant clusters.`
-  },  {
-    statement: `Neuter nouns take -ою in the instrumental.`,
-    isTrue: false,
-    explanation: `Neuter nouns take -ом or -ем: вікном, морем.`
-  },  {
-    statement: `\"Людьми\" is an irregular instrumental form.`,
-    isTrue: true,
-    explanation: `Correct! Люди → людьми.`
-  },  {
-    statement: `\"Одружитися\" means \"to divorce.\"`,
-    isTrue: false,
-    explanation: `Одружитися means \"to marry.\" Розлучитися means \"to divorce.\"`
-  },  {
-    statement: `The instrumental pronoun for \"вона\" is \"нею.\"`,
-    isTrue: true,
-    explanation: `Correct! Вона → з нею.`
-  },  {
-    statement: `\"Ім'я\" has an irregular instrumental form.`,
-    isTrue: true,
-    explanation: `Yes! Ім'я → ім'ям.`
-  }
-]} />
-
-### Gender by Instrumental Ending
-
-<GroupSort groups={{
-  "Masculine": ["другом", "братом", "вчителем", "хлопцем", "батьком"],
-  "Feminine": ["сестрою", "мамою", "подругою", "дівчиною", "землею"],
-  "Neuter": ["вікном", "містом", "морем", "полем", "молоком"]
-}} />
-
-### Instrumental Sentences
-
-<Unjumble items={[
-  { jumbled: `я / йду / в / кіно / з / другом`, answer: `Я йду в кіно з другом.` },
-  { jumbled: `вона / розмовляє / з / сестрою / по / телефону`, answer: `Вона розмовляє з сестрою по телефону.` },
-  { jumbled: `ми / живемо / з / батьками / в / Києві`, answer: `Ми живемо з батьками в Києві.` },
-  { jumbled: `він / гуляє / з / собакою / в / парку`, answer: `Він гуляє з собакою в парку.` },
-  { jumbled: `я / п'ю / каву / з / молоком`, answer: `Я п'ю каву з молоком.` },
-  { jumbled: `вона / познайомилася / з / хлопцем / на / вечірці`, answer: `Вона познайомилася з хлопцем на вечірці.` }
-]} />
-
-### Fix the Instrumental
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я йду в кіно з *друг*.`}
-    errorWord={`друг`}
-    correctForm={`другом`}
-    options={[`друг`, `другом`, `друга`, `другові`]}
-    explanation={`After the preposition «з», nouns take Instrumental case. Masculine hard-stem nouns take -ом: друг → другом.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона розмовляє з *сестра*.`}
-    errorWord={`сестра`}
-    correctForm={`сестрою`}
-    options={[`сестра`, `сестрою`, `сестри`, `сестрі`]}
-    explanation={`After the preposition «з», nouns take Instrumental case. Feminine hard-stem nouns take -ою: сестра → сестрою.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він гуляє з *собака*.`}
-    errorWord={`собака`}
-    correctForm={`собакою`}
-    options={[`собака`, `собакою`, `собаки`, `собаці`]}
-    explanation={`After the preposition «з», nouns take Instrumental case. Feminine hard-stem nouns take -ою: собака → собакою.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми живемо з *батьки*.`}
-    errorWord={`батьки`}
-    correctForm={`батьками`}
-    options={[`батьки`, `батьками`, `батьків`, `батькам`]}
-    explanation={`After the preposition «з», nouns take Instrumental case. Plural nouns take -ами: батьки → батьками.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я п'ю каву з *молоко*.`}
-    errorWord={`молоко`}
-    correctForm={`молоком`}
-    options={[`молоко`, `молоком`, `молока`, `молоці`]}
-    explanation={`After the preposition «з», nouns take Instrumental case. Neuter hard-stem nouns take -ом: молоко → молоком.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона познайомилася з *хлопець*.`}
-    errorWord={`хлопець`}
-    correctForm={`хлопцем`}
-    options={[`хлопець`, `хлопцем`, `хлопця`, `хлопцеві`]}
-    explanation={`After the preposition «з», nouns take Instrumental case. Masculine soft-stem nouns take -ем: хлопець → хлопцем.`}
-  />
-</ErrorCorrection>
-
-### Complete the Story
-
-<Cloze
-  passage={`У суботу ми пішли в ресторан [___:1]. Марія прийшла [___:2]. Петро прийшов [___:3]. Ми їли піцу [___:4] і пили каву [___:5]. Було дуже весело!`}
-  blanks={[{ answer: `з батьками`, options: [`з батьками`] }, { answer: `зустрічається`, options: [`зустрічається`] }, { answer: `познайомилася`, options: [`познайомилася`] }, { answer: `гуляють`, options: [`гуляють`] }, { answer: `одружаться`, options: [`одружаться`] }]}
-/>
-
-### Meeting Someone New
-
-<DialogueReorder lines={[
-  { text: `Приємно познайомитися! Я Олег.`, order: 1 },
-  { text: `Ви вже знайомі?`, order: 2 },
-  { text: `Привіт! З ким ти прийшла?`, order: 3 },
-  { text: `Ні, ми щойно познайомилися!`, order: 4 },
-  { text: `Я прийшла з подругою. Ось вона — Марина.`, order: 5 },
-  { text: `Приємно познайомитися, Марино!`, order: 6 },
-  { text: `Ні, ми посварилися минулого тижня.`, order: 7 },
-  { text: `Ти все ще спілкуєшся з Петром?`, order: 8 },
-  { text: `Вибач, що так сталося.`, order: 9 },
-  { text: `Так, я розмовлятиму з ним сьогодні.`, order: 10 },
-  { text: `Що трапилося?`, order: 11 },
-  { text: `Нічого серйозного. Ми вже помирилися.`, order: 12 },
-  { text: `Ти спробуєш помиритися з ним?`, order: 13 }
-]} />
-
-### Find Instrumental Forms
-
-<MarkTheWords>
-<MarkTheWordsActivity
-  text={`Click on all instrumental case forms.
-
-Я йду в кіно з другом. Вона розмовляє з сестрою. Ми живемо з батьками. Діти грають з котом.`}
-  correctWords={[`з другом`, `з сестрою`, `з батьками`, `Діти`, `з котом`]}
-/>
-<MarkTheWordsActivity
-  text={`Він познайомився з дівчиною на вечірці. Вона п'є каву з молоком. Ми зустрічаємося з друзями щотижня.`}
-  correctWords={[`познайомився`, `з дівчиною`, `вечірці`, `каву`, `з молоком`, `зустрічаємося`, `з друзями`, `щотижня`]}
-/>
-<MarkTheWordsActivity
-  text={`Петро одружився з Марією. Вони живуть з дітьми. Бабуся гуляє з онуками. Він розмовляє з колегою про роботу.`}
-  correctWords={[`з Марією`, `з дітьми`, `Бабуся`, `з онуками`, `з колегою`, `про роботу`]}
-/>
-</MarkTheWords>
-
-### English to Ukrainian
-
-<Translate questions={[
-  {
-    source: `I'm going to the cinema with a friend.`,
-    options: [
-      { text: `Я йду в кіно з *друг*.`, correct: false },
-      { text: `Я йду в кіно з другом.`, correct: true },
-      { text: `Я йду в кіно з друга.`, correct: false },
-      { text: `Вона живе з батьками.`, correct: true },
-      { text: `Вона живе з батьки.`, correct: false },
-      { text: `Вона живе з батьків.`, correct: false },
-      { text: `Він одружився з Марія.`, correct: false },
-      { text: `Він одружився з Марією.`, correct: true },
-      { text: `Він одружився з Марії.`, correct: false },
-      { text: `Я п'ю каву з молоко.`, correct: false },
-      { text: `Я п'ю каву з молоком.`, correct: true },
-      { text: `Я п'ю каву з молока.`, correct: false },
-      { text: `Вона познайомилася з ним на вечірці.`, correct: true },
-      { text: `Вона познайомилася з він на вечірці.`, correct: false },
-      { text: `Вона познайомилася з його на вечірці.`, correct: false },
-      { text: `Ми гуляємо з *собака*.`, correct: false },
-      { text: `Ми гуляємо з собакою.`, correct: true },
-      { text: `Ми гуляємо з собаки.`, correct: false },
-      { text: `Він розмовляє з братом.`, correct: true },
-      { text: `Він розмовляє з *брат*.`, correct: false },
-      { text: `Він розмовляє з брата.`, correct: false },
-      { text: `Я працюю з *колеги*.`, correct: false },
-      { text: `Я працюю з колегами.`, correct: true },
-      { text: `Я працюю з колег.`, correct: false },
-      { text: `Вона п'є чай з *лимон*.`, correct: false },
-      { text: `Вона п'є чай з лимоном.`, correct: true },
-      { text: `Вона п'є чай з лимона.`, correct: false },
-      { text: `Вони посварилися і потім помирилися.`, correct: true },
-      { text: `Вони посварилися і потім помиритися.`, correct: false },
-      { text: `Вони посваритися і потім помирилися.`, correct: false },
-      { text: `Діти грають з *кіт*.`, correct: false },
-      { text: `Діти грають з котом.`, correct: true },
-      { text: `Діти грають з кота.`, correct: false },
-      { text: `Я зустрічаюся з *друзі* щотижня.`, correct: false },
-      { text: `Я зустрічаюся з друзями щотижня.`, correct: true },
-      { text: `Я зустрічаюся з друзів щотижня.`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -835,3 +445,600 @@ This story about a surprise party is full of Instrumental examples. Every time s
 | час | /t͡ʃɑs/ | time | noun | m | review from A1 |
 
 ---
+
+---
+
+## 🎯 Activities
+
+### Nominative to Instrumental
+
+<MatchUp pairs={[
+  { left: `друг`, right: `другом` },
+  { left: `сестра`, right: `сестрою` },
+  { left: `брат`, right: `братом` },
+  { left: `мама`, right: `мамою` },
+  { left: `батько`, right: `батьком` },
+  { left: `вчитель`, right: `вчителем` },
+  { left: `дитина`, right: `дитиною` },
+  { left: `подруга`, right: `подругою` },
+  { left: `хлопець`, right: `хлопцем` },
+  { left: `дівчина`, right: `дівчиною` },
+  { left: `собака`, right: `собакою` },
+  { left: `кіт`, right: `котом` }
+]} />
+
+### Instrumental Endings
+
+*Complete each sentence with the correct instrumental form.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я йду в кіно з ___.`}
+    answer={`другом`}
+    options={[`другом`, `друг`, `друга`]}
+  />
+  <FillInQuestion
+    sentence={`Вона розмовляє з ___.`}
+    answer={`мамою`}
+    options={[`мамою`, `мама`, `мамі`]}
+  />
+  <FillInQuestion
+    sentence={`Він гуляє з ___.`}
+    answer={`собакою`}
+    options={[`собакою`, `собака`, `собаки`]}
+  />
+  <FillInQuestion
+    sentence={`Ми живемо з ___.`}
+    answer={`батьками`}
+    options={[`батьками`, `батьки`, `батькам`]}
+  />
+  <FillInQuestion
+    sentence={`Я п'ю каву з ___.`}
+    answer={`молоком`}
+    options={[`молоком`, `молоко`, `молока`]}
+  />
+  <FillInQuestion
+    sentence={`Вона познайомилася з ___.`}
+    answer={`хлопцем`}
+    options={[`хлопцем`, `хлопець`, `хлопця`]}
+  />
+  <FillInQuestion
+    sentence={`Діти грають з ___.`}
+    answer={`котом`}
+    options={[`котом`, `кіт`, `кота`]}
+  />
+  <FillInQuestion
+    sentence={`Він одружився з ___.`}
+    answer={`Марією`}
+    options={[`Марією`, `Марія`, `Марії`]}
+  />
+  <FillInQuestion
+    sentence={`Ми зустрічаємося з ___ щотижня.`}
+    answer={`друзями`}
+    options={[`друзями`, `друзі`, `друзям`]}
+  />
+  <FillInQuestion
+    sentence={`Я працюю з ___ над проєктом.`}
+    answer={`колегою`}
+    options={[`колегою`, `колега`, `колегу`]}
+  />
+  <FillInQuestion
+    sentence={`Вона п'є чай з ___.`}
+    answer={`лимоном`}
+    options={[`лимоном`, `лимон`, `лимона`]}
+  />
+  <FillInQuestion
+    sentence={`Він помирився з ___.`}
+    answer={`сестрою`}
+    options={[`сестрою`, `сестра`, `сестрі`]}
+  />
+</FillIn>
+
+### Instrumental Forms
+
+<Quiz>
+  <QuizQuestion
+    question={`1. Яка форма "вчитель" в орудному відмінку?`}
+    options={[`вчителя`, `вчителем`, `вчителеві`]}
+    correctIndex={1}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Як сказати "with my sister"?`}
+    options={[`з моя сестра`, `з моєю сестрою`, `з моєї сестри`]}
+    correctIndex={1}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Яке закінчення орудного відмінка для жіночого роду?`}
+    options={[`-ом`, `-ою/-ею`, `-ам`]}
+    correctIndex={1}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Як сказати "with me"?`}
+    options={[`з я`, `з мене`, `зі мною`]}
+    correctIndex={2}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Яка форма "діти" в орудному відмінку?`}
+    options={[`дітями`, `дітьми`, `дітей`]}
+    correctIndex={1}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Як сказати "coffee with milk"?`}
+    options={[`кава з молоком`, `кава з молока`, `кава з молоко`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Який прийменник перед "снігом"?`}
+    options={[`з`, `із`, `зі`]}
+    correctIndex={2}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Як сказати "I met him"?`}
+    options={[`Я познайомився з він.`, `Я познайомився з ним.`, `Я познайомився з його.`]}
+    correctIndex={1}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Яка форма "люди" в орудному відмінку?`}
+    options={[`людями`, `людьми`, `людей`]}
+    correctIndex={1}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Як сказати "with friends"?`}
+    options={[`з *друзі*`, `з друзями`, `з *друзі*в`]}
+    correctIndex={1}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Яка форма "батько" в орудному відмінку?`}
+    options={[`батька`, `батьком`, `батькові`]}
+    correctIndex={1}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Як сказати "She married Petro"?`}
+    options={[`Вона одружилася з Петром.`, `Вона одружилася Петра.`, `Вона одружилася з Петра.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### Instrumental Rules
+
+*Decide if each statement is true or false.*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`Masculine nouns always take -ом in the instrumental.`}
+    isTrue={false}
+    explanation={`Soft-stem masculine nouns take -ем: вчитель → вчителем.`}
+  />
+  <TrueFalseQuestion
+    statement={`Feminine nouns take -ою or -ею in the instrumental.`}
+    isTrue={true}
+    explanation={`Correct! Hard stems take -ою, soft stems take -ею.`}
+  />
+  <TrueFalseQuestion
+    statement={`The preposition "зі" is used before "мною."`}
+    isTrue={true}
+    explanation={`Yes! "Зі мною" — the зі is needed before the consonant cluster.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Дітьми" is the correct instrumental plural of "діти."`}
+    isTrue={true}
+    explanation={`Correct! Діти has an irregular instrumental plural: дітьми.`}
+  />
+  <TrueFalseQuestion
+    statement={`All plural instrumental endings are -ами.`}
+    isTrue={false}
+    explanation={`Plurals take -ами OR -ями depending on the stem: друзями, сестрами.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Познайомитися" requires the accusative case.`}
+    isTrue={false}
+    explanation={`Познайомитися requires з + instrumental: познайомитися з ним.`}
+  />
+  <TrueFalseQuestion
+    statement={`"З" and "із" mean the same thing.`}
+    isTrue={true}
+    explanation={`Yes! Both mean "with" — із is used before consonant clusters.`}
+  />
+  <TrueFalseQuestion
+    statement={`Neuter nouns take -ою in the instrumental.`}
+    isTrue={false}
+    explanation={`Neuter nouns take -ом or -ем: вікном, морем.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Людьми" is an irregular instrumental form.`}
+    isTrue={true}
+    explanation={`Correct! Люди → людьми.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Одружитися" means "to divorce."`}
+    isTrue={false}
+    explanation={`Одружитися means "to marry." Розлучитися means "to divorce."`}
+  />
+  <TrueFalseQuestion
+    statement={`The instrumental pronoun for "вона" is "нею."`}
+    isTrue={true}
+    explanation={`Correct! Вона → з нею.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Ім'я" has an irregular instrumental form.`}
+    isTrue={true}
+    explanation={`Yes! Ім'я → ім'ям.`}
+  />
+</TrueFalse>
+
+### Gender by Instrumental Ending
+
+*Sort these instrumental forms into the correct gender category.*
+
+
+<GroupSort groups={{
+  "### Masculine": [
+    "другом",
+    "братом",
+    "вчителем",
+    "хлопцем",
+    "батьком"
+  ],
+  "Feminine": [
+    "сестрою",
+    "мамою",
+    "подругою",
+    "дівчиною",
+    "землею"
+  ],
+  "Neuter": [
+    "вікном",
+    "містом",
+    "морем",
+    "полем",
+    "молоком"
+  ]
+}} />
+
+### Instrumental Sentences
+
+*Put the words in the correct order.*
+
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`я / йду / в / кіно / з / другом`}
+    answer={`Я йду в кіно з другом.`}
+  />
+  <UnjumbleQuestion
+    words={`вона / розмовляє / з / сестрою / по / телефону`}
+    answer={`Вона розмовляє з сестрою по телефону.`}
+  />
+  <UnjumbleQuestion
+    words={`ми / живемо / з / батьками / в / Києві`}
+    answer={`Ми живемо з батьками в Києві.`}
+  />
+  <UnjumbleQuestion
+    words={`він / гуляє / з / собакою / в / парку`}
+    answer={`Він гуляє з собакою в парку.`}
+  />
+  <UnjumbleQuestion
+    words={`я / п'ю / каву / з / молоком`}
+    answer={`Я п'ю каву з молоком.`}
+  />
+  <UnjumbleQuestion
+    words={`вона / познайомилася / з / хлопцем / на / вечірці`}
+    answer={`Вона познайомилася з хлопцем на вечірці.`}
+  />
+</Unjumble>
+
+### Fix the Instrumental
+
+*Кожне речення має ОДНУ помилку. Знайдіть і виправте її.*
+
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я йду в кіно з *друг*.`}
+    error={`друг`}
+    answer={`другом`}
+    options={[`друг`, `другом`, `друга`, `другові`]}
+    explanation={`After the preposition «з», nouns take Instrumental case. Masculine hard-stem nouns take -ом: друг → другом.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона розмовляє з *сестра*.`}
+    error={`сестра`}
+    answer={`сестрою`}
+    options={[`сестра`, `сестрою`, `сестри`, `сестрі`]}
+    explanation={`After the preposition «з», nouns take Instrumental case. Feminine hard-stem nouns take -ою: сестра → сестрою.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він гуляє з *собака*.`}
+    error={`собака`}
+    answer={`собакою`}
+    options={[`собака`, `собакою`, `собаки`, `собаці`]}
+    explanation={`After the preposition «з», nouns take Instrumental case. Feminine hard-stem nouns take -ою: собака → собакою.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми живемо з *батьки*.`}
+    error={`батьки`}
+    answer={`батьками`}
+    options={[`батьки`, `батьками`, `батьків`, `батькам`]}
+    explanation={`After the preposition «з», nouns take Instrumental case. Plural nouns take -ами: батьки → батьками.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я п'ю каву з *молоко*.`}
+    error={`молоко`}
+    answer={`молоком`}
+    options={[`молоко`, `молоком`, `молока`, `молоці`]}
+    explanation={`After the preposition «з», nouns take Instrumental case. Neuter hard-stem nouns take -ом: молоко → молоком.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона познайомилася з *хлопець*.`}
+    error={`хлопець`}
+    answer={`хлопцем`}
+    options={[`хлопець`, `хлопцем`, `хлопця`, `хлопцеві`]}
+    explanation={`After the preposition «з», nouns take Instrumental case. Masculine soft-stem nouns take -ем: хлопець → хлопцем.`}
+  />
+</ErrorCorrection>
+
+### Complete the Story
+
+*Fill in the blanks with the correct words.*
+
+
+<Cloze>
+  <ClozePassage
+    text={`У суботу ми пішли в ресторан [___:1]. Марія прийшла [___:2]. Петро прийшов [___:3]. Ми їли піцу [___:4] і пили каву [___:5]. Було дуже весело!`}
+    blanks={[
+  {
+    "index": 0,
+    "options": [
+      "з друзями",
+      "з *друзі*",
+      "з друзів"
+    ],
+    "answer": "з друзями"
+  },
+  {
+    "index": 1,
+    "options": [
+      "з чоловіком",
+      "з *чоловік*",
+      "з чоловіка"
+    ],
+    "answer": "з чоловіком"
+  },
+  {
+    "index": 2,
+    "options": [
+      "з дівчиною",
+      "з *дівчина*",
+      "з дівчини"
+    ],
+    "answer": "з дівчиною"
+  },
+  {
+    "index": 3,
+    "options": [
+      "з грибами",
+      "з *гриби*",
+      "з грибів"
+    ],
+    "answer": "з грибами"
+  },
+  {
+    "index": 4,
+    "options": [
+      "з молоком",
+      "з *молоко*",
+      "з молока"
+    ],
+    "answer": "з молоком"
+  },
+  {
+    "index": 5,
+    "options": [
+      "з батьками",
+      "з *батьки*",
+      "з батьків"
+    ],
+    "answer": "з батьками"
+  },
+  {
+    "index": 6,
+    "options": [
+      "зустрічається",
+      "зустрічатися",
+      "зустрічаюсь"
+    ],
+    "answer": "зустрічається"
+  },
+  {
+    "index": 7,
+    "options": [
+      "познайомилася",
+      "познайомитися",
+      "познайомлюсь"
+    ],
+    "answer": "познайомилася"
+  },
+  {
+    "index": 8,
+    "options": [
+      "гуляють",
+      "гуляти",
+      "гуляємо"
+    ],
+    "answer": "гуляють"
+  },
+  {
+    "index": 9,
+    "options": [
+      "одружаться",
+      "одружуються",
+      "одружитися"
+    ],
+    "answer": "одружаться"
+  }
+]}
+  />
+</Cloze>
+
+### Meeting Someone New
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Приємно познайомитися! Я Олег."
+  },
+  {
+    "speaker": "",
+    "line": "Ви вже знайомі?"
+  },
+  {
+    "speaker": "",
+    "line": "Привіт! З ким ти прийшла?"
+  },
+  {
+    "speaker": "",
+    "line": "Ні, ми щойно познайомилися!"
+  },
+  {
+    "speaker": "",
+    "line": "Я прийшла з подругою. Ось вона — Марина."
+  },
+  {
+    "speaker": "",
+    "line": "Приємно познайомитися, Марино!"
+  },
+  {
+    "speaker": "",
+    "line": "Ні, ми посварилися минулого тижня."
+  },
+  {
+    "speaker": "",
+    "line": "Ти все ще спілкуєшся з Петром?"
+  },
+  {
+    "speaker": "",
+    "line": "Вибач, що так сталося."
+  },
+  {
+    "speaker": "",
+    "line": "Так, я розмовлятиму з ним сьогодні."
+  },
+  {
+    "speaker": "",
+    "line": "Що трапилося?"
+  },
+  {
+    "speaker": "",
+    "line": "Нічого серйозного. Ми вже помирилися."
+  },
+  {
+    "speaker": "",
+    "line": "Ти спробуєш помиритися з ним?"
+  }
+]} />
+</DialogueReorder>
+
+### Find Instrumental Forms
+
+Click on all instrumental case forms.
+
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Я йду в кіно з другом. Вона розмовляє з сестрою. Ми живемо з батьками. Діти грають з котом. Він познайомився з дівчиною на вечірці. Вона п'є каву з молоком. Ми зустрічаємося з друзями щотижня. Петро одружився з Марією. Вони живуть з дітьми. Бабуся гуляє з онуками. Він розмовляє з колегою про роботу.`}
+    correctWords={[`з другом`, `з сестрою`, `з батьками`, `з котом`, `з дівчиною`, `з молоком`, `з друзями`, `з Марією`, `з дітьми`, `з онуками`, `з колегою`]}
+  />
+</MarkTheWords>
+
+### English to Ukrainian
+
+<Translate>
+  <TranslateItem
+    source={`I'm going to the cinema with a friend.`}
+    answer={`Я йду в кіно з другом.`}
+    options={[`Я йду в кіно з *друг*.`, `Я йду в кіно з другом.`, `Я йду в кіно з друга.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She lives with her parents.`}
+    answer={`Вона живе з батьками.`}
+    options={[`Вона живе з батьками.`, `Вона живе з батьки.`, `Вона живе з батьків.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`He married Maria.`}
+    answer={`Він одружився з Марією.`}
+    options={[`Він одружився з Марія.`, `Він одружився з Марією.`, `Він одружився з Марії.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I drink coffee with milk.`}
+    answer={`Я п'ю каву з молоком.`}
+    options={[`Я п'ю каву з молоко.`, `Я п'ю каву з молоком.`, `Я п'ю каву з молока.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She met him at a party.`}
+    answer={`Вона познайомилася з ним на вечірці.`}
+    options={[`Вона познайомилася з ним на вечірці.`, `Вона познайомилася з він на вечірці.`, `Вона познайомилася з його на вечірці.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`We are walking with the dog.`}
+    answer={`Ми гуляємо з собакою.`}
+    options={[`Ми гуляємо з *собака*.`, `Ми гуляємо з собакою.`, `Ми гуляємо з собаки.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`He talks with his brother.`}
+    answer={`Він розмовляє з братом.`}
+    options={[`Він розмовляє з братом.`, `Він розмовляє з *брат*.`, `Він розмовляє з брата.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I work with colleagues.`}
+    answer={`Я працюю з колегами.`}
+    options={[`Я працюю з *колеги*.`, `Я працюю з колегами.`, `Я працюю з колег.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She drinks tea with lemon.`}
+    answer={`Вона п'є чай з лимоном.`}
+    options={[`Вона п'є чай з *лимон*.`, `Вона п'є чай з лимоном.`, `Вона п'є чай з лимона.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`They quarrelled and then made peace.`}
+    answer={`Вони посварилися і потім помирилися.`}
+    options={[`Вони посварилися і потім помирилися.`, `Вони посварилися і потім помиритися.`, `Вони посваритися і потім помирилися.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`The children play with the cat.`}
+    answer={`Діти грають з котом.`}
+    options={[`Діти грають з *кіт*.`, `Діти грають з котом.`, `Діти грають з кота.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I meet with friends every week.`}
+    answer={`Я зустрічаюся з друзями щотижня.`}
+    options={[`Я зустрічаюся з *друзі* щотижня.`, `Я зустрічаюся з друзями щотижня.`, `Я зустрічаюся з друзів щотижня.`]}
+    explanation={``}
+  />
+</Translate>
+

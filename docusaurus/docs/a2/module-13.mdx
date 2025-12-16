@@ -5,19 +5,20 @@ title: "The Completed Past"
 description: "Perfective Verbs in Past Tense"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 **Тепер, коли ви розумієте аспект, давайте навчимося використовувати доконаний вид у минулому часі!**
@@ -40,6 +41,17 @@ The past tense is where aspect differences are most visible and most important. 
 > 💡 **Запам'ятайте!**
 >
 > Доконаний вид у минулому часі = закінчена дія з чітким результатом. Якщо можна вказати на результат — використовуйте доконаний вид!
+
+:::info
+🔗 External Resources
+
+**YouTube:** [The Past Perfective tense in Ukrainian # 43...](https://www.youtube.com/watch?v=WfGlonPphFQ) — Ukrainian Language
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+:::
+
 
 ---
 
@@ -125,7 +137,8 @@ When asking "what were you doing?":
 - Що ти **робив** учора? (What were you doing yesterday?)
 - Що вона **читала**? (What was she reading?)
 
-:::tip[Decision Guide]
+:::tip
+Decision Guide
 Ask yourself: "Am I focusing on what got done (perfective) or what someone was doing (imperfective)?"
 :::
 
@@ -217,362 +230,7 @@ In the following modules, you'll learn how perfective verbs work in future tense
 
 Тепер ви можете говорити про завершені дії! ✅
 
-## 🎯 Activities
 
-### Past Tense Forms
-
-<MatchUp pairs={[
-  { left: `зробив`, right: `did/finished` },
-  { left: `написав`, right: `wrote/finished` },
-  { left: `прочитав`, right: `read/finished` },
-  { left: `сказав`, right: `said` },
-  { left: `побачив`, right: `saw` },
-  { left: `почув`, right: `heard` },
-  { left: `взяв`, right: `took` },
-  { left: `дав`, right: `gave` },
-  { left: `пішов`, right: `went/left` },
-  { left: `прийшов`, right: `came/arrived` },
-  { left: `закінчив`, right: `finished` },
-  { left: `почав`, right: `began` }
-]} />
-
-### Perfective or Imperfective Past
-
-<FillIn items={[
-  {
-    sentence: `Він ___ книгу вчора. (finished reading)`,
-    answer: `прочитав`,
-    options: [`читав`, `прочитав`]
-  },  {
-    sentence: `Вона ___ три години. (was writing)`,
-    answer: `писала`,
-    options: [`писала`, `написала`]
-  },  {
-    sentence: `Я вже ___ це! (already did)`,
-    answer: `зробив`,
-    options: [`робив`, `зробив`]
-  },  {
-    sentence: `Ми ___ щодня. (read every day)`,
-    answer: `читали`,
-    options: [`читали`, `прочитали`]
-  },  {
-    sentence: `Він ___ \"привіт.\" (said)`,
-    answer: `сказав`,
-    options: [`говорив`, `сказав`]
-  },  {
-    sentence: `Вона довго ___. (was speaking)`,
-    answer: `говорила`,
-    options: [`говорила`, `сказала`]
-  },  {
-    sentence: `Ми нарешті ___! (finally arrived)`,
-    answer: `приїхали`,
-    options: [`їхали`, `приїхали`]
-  },  {
-    sentence: `Він ___ весь день. (was working)`,
-    answer: `працював`,
-    options: [`працював`, `попрацював`]
-  },  {
-    sentence: `Вона ___ роботу. (finished)`,
-    answer: `закінчила`,
-    options: [`закінчувала`, `закінчила`]
-  },  {
-    sentence: `Я ___ його часто. (saw often)`,
-    answer: `бачив`,
-    options: [`бачив`, `побачив`]
-  },  {
-    sentence: `Він раптом ___ шум. (suddenly heard)`,
-    answer: `почув`,
-    options: [`чув`, `почув`]
-  },  {
-    sentence: `Ми ___ листа. (wrote/finished)`,
-    answer: `написали`,
-    options: [`писали`, `написали`]
-  }
-]} />
-
-### Aspect in Past Tense
-
-<Quiz questions={[
-  {
-    question: `\"Я прочитав книгу\" focuses on:`,
-    options: [
-      { text: `Completed result`, correct: true },
-      { text: `Ongoing process`, correct: false }
-    ]
-  },  {
-    question: `\"Я читав книгу\" focuses on:`,
-    options: [
-      { text: `Process`, correct: true },
-      { text: `Completed result`, correct: false }
-    ]
-  },  {
-    question: `Which word signals perfective past?`,
-    options: [
-      { text: `вже — already`, correct: true },
-      { text: `довго (for a long time)`, correct: false }
-    ]
-  },  {
-    question: `\"Вона писала три години\" — aspect?`,
-    options: [
-      { text: `Imperfective`, correct: true },
-      { text: `Perfective`, correct: false }
-    ]
-  },  {
-    question: `\"Він написав листа вчора\" — aspect?`,
-    options: [
-      { text: `Perfective`, correct: true },
-      { text: `Imperfective`, correct: false }
-    ]
-  },  {
-    question: `Past tense endings are:`,
-    options: [
-      { text: `The same for both aspects`, correct: true },
-      { text: `Different for each aspect`, correct: false }
-    ]
-  },  {
-    question: `Masculine past ending:`,
-    options: [
-      { text: `-в / -∅`, correct: true },
-      { text: `-ла`, correct: false },
-      { text: `-ли`, correct: false }
-    ]
-  },  {
-    question: `Feminine past ending:`,
-    options: [
-      { text: `-ла`, correct: true },
-      { text: `-в`, correct: false },
-      { text: `-ли`, correct: false }
-    ]
-  },  {
-    question: `\"Що ти робив?\" uses:`,
-    options: [
-      { text: `Imperfective (asking about activities)`, correct: true },
-      { text: `Perfective`, correct: false }
-    ]
-  },  {
-    question: `\"Ти зробив це?\" uses:`,
-    options: [
-      { text: `Perfective (asking about completion)`, correct: true },
-      { text: `Imperfective`, correct: false }
-    ]
-  },  {
-    question: `\"Піти\" past masculine:`,
-    options: [
-      { text: `пішов`, correct: true },
-      { text: `пів`, correct: false },
-      { text: `пишов`, correct: false }
-    ]
-  },  {
-    question: `\"Прийти\" past masculine:`,
-    options: [
-      { text: `прийшов`, correct: true },
-      { text: `прийв`, correct: false },
-      { text: `прив`, correct: false }
-    ]
-  }
-]} />
-
-### Past Tense Rules
-
-<TrueFalse items={[
-  {
-    statement: `Perfective past shows completed actions.`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `Imperfective past can show duration.`,
-    isTrue: true,
-    explanation: `Yes! \"Він читав три години.\"`
-  },  {
-    statement: `Past endings are different for each aspect.`,
-    isTrue: false,
-    explanation: `No, the endings are the same — the stems are different.`
-  },  {
-    statement: `\"Вже\" usually appears with perfective.`,
-    isTrue: true,
-    explanation: `Correct! \"Я вже зробив.\"`
-  },  {
-    statement: `\"Довго\" usually appears with imperfective.`,
-    isTrue: true,
-    explanation: `Yes! \"Він довго працював.\"`
-  },  {
-    statement: `\"Писав\" is perfective past.`,
-    isTrue: false,
-    explanation: `\"Писав\" is imperfective. \"Написав\" is perfective.`
-  },  {
-    statement: `\"Прочитав\" means \"finished reading.\"`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `\"Пішов\" is the past of \"піти.\"`,
-    isTrue: true,
-    explanation: `Yes!`
-  },  {
-    statement: `Repeated actions use perfective.`,
-    isTrue: false,
-    explanation: `Repeated actions use imperfective.`
-  },  {
-    statement: `\"Що ти робив?\" asks about activities.`,
-    isTrue: true,
-    explanation: `Yes, using imperfective to ask about process.`
-  },  {
-    statement: `\"Нарешті\" signals perfective.`,
-    isTrue: true,
-    explanation: `Correct! \"Нарешті зробив!\"`
-  },  {
-    statement: `\"Сказав\" is imperfective.`,
-    isTrue: false,
-    explanation: `\"Сказав\" is perfective. \"Говорив\" is imperfective.`
-  }
-]} />
-
-### Verb Aspect
-
-<GroupSort groups={{
-  "Imperfective": ["читав", "писав", "робив", "говорив", "бачив", "їхав"],
-  "Perfective": ["прочитав", "написав", "зробив", "сказав", "побачив", "приїхав"]
-}} />
-
-### Past Tense Sentences
-
-<Unjumble items={[
-  { jumbled: `він / прочитав / книгу / вчора`, answer: `Він прочитав книгу вчора.` },
-  { jumbled: `вона / писала / три / години`, answer: `Вона писала три години.` },
-  { jumbled: `я / вже / зробив / це`, answer: `Я вже зробив це.` },
-  { jumbled: `ми / нарешті / приїхали`, answer: `Ми нарешті приїхали.` },
-  { jumbled: `він / сказав / правду`, answer: `Він сказав правду.` },
-  { jumbled: `вона / довго / говорила`, answer: `Вона довго говорила.` },
-  { jumbled: `ти / прочитав / статтю`, answer: `Ти прочитав статтю?` },
-  { jumbled: `він / пішов / додому`, answer: `Він пішов додому.` },
-  { jumbled: `вона / побачила / море`, answer: `Вона побачила море.` },
-  { jumbled: `ми / закінчили / роботу`, answer: `Ми закінчили роботу.` },
-  { jumbled: `він / раптом / почув / шум`, answer: `Він раптом почув шум.` },
-  { jumbled: `я / взяв / книгу`, answer: `Я взяв книгу.` }
-]} />
-
-### Choose Correct Aspect
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Він ___ книгу весь вечір. (duration)`}
-    errorWord={`duration`}
-    correctForm={`читав`}
-    options={[`читав`, `прочитав`]}
-    explanation={`Duration (весь вечір) requires imperfective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона ___ листа і пішла. (completed then left)`}
-    errorWord={`completed then left`}
-    correctForm={`написала`}
-    options={[`писала`, `написала`]}
-    explanation={`Completed action before next action = perfective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я вже ___ це! (already)`}
-    errorWord={`already`}
-    correctForm={`зробив`}
-    options={[`робив`, `зробив`]}
-    explanation={`\"Вже\" signals completion = perfective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він ___ часто. (often)`}
-    errorWord={`often`}
-    correctForm={`приходив`}
-    options={[`приходив`, `прийшов`]}
-    explanation={`Repeated action (часто) = imperfective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона нарешті ___! (finally)`}
-    errorWord={`finally`}
-    correctForm={`зробила`}
-    options={[`робила`, `зробила`]}
-    explanation={`\"Нарешті\" signals completion = perfective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Що ти ___ учора? (activities)`}
-    errorWord={`activities`}
-    correctForm={`робив`}
-    options={[`робив`, `зробив`]}
-    explanation={`Asking about activities = imperfective.`}
-  />
-</ErrorCorrection>
-
-### Aspect in Context
-
-<Cloze
-  passage={`Учора я [___:1] рано. Я [___:2] каву і [___:3] сніданок. Потім я [___:4] на роботу. На роботі я [___:5] цілий день. Увечері я [___:6] додому і [___:7] телевізор.`}
-  blanks={[{ answer: `купив`, options: [`купив`] }, { answer: `читав`, options: [`читав`] }, { answer: `закінчив`, options: [`закінчив`] }, { answer: `прочитав`, options: [`прочитав`] }, { answer: `написав`, options: [`написав`] }, { answer: `прийшов`, options: [`прийшов`] }, { answer: `дивився`, options: [`дивився`] }]}
-/>
-
-### Completed vs Process
-
-<DialogueReorder lines={[
-  { text: `Що ти робив учора?`, order: 1 },
-  { text: `Я працював цілий день.`, order: 2 },
-  { text: `Ти закінчив проект?`, order: 3 },
-  { text: `Так, нарешті закінчив!`, order: 4 },
-  { text: `А що робила Оля?`, order: 5 },
-  { text: `Вона теж працювала, але не закінчила.`, order: 6 },
-  { text: `Ти прочитав книгу?`, order: 7 },
-  { text: `Ні, я читав, але не закінчив.`, order: 8 },
-  { text: `Скільки часу ти читав?`, order: 9 },
-  { text: `Дві години.`, order: 10 },
-  { text: `А коли закінчиш?`, order: 11 },
-  { text: `Думаю, сьогодні прочитаю.`, order: 12 }
-]} />
-
-### Find Perfective Past
-
-<MarkTheWords>
-<MarkTheWordsActivity
-  text={`Click on PERFECTIVE PAST forms only.
-
-Учора я прочитав книгу. Потім я написав листа. Я довго писав, але нарешті закінчив.`}
-  correctWords={[`прочитав`, `написав`, `закінчив`]}
-/>
-<MarkTheWordsActivity
-  text={`Вона сказала правду. Ми почули шум. Він взяв книгу і пішов.`}
-  correctWords={[`сказала`, `почули`, `взяв`, `пішов`]}
-/>
-<MarkTheWordsActivity
-  text={`Він працював цілий день. Потім він закінчив і пішов додому. Вдома він відпочив.`}
-  correctWords={[`закінчив`, `пішов`, `відпочив`]}
-/>
-</MarkTheWords>
-
-### English to Ukrainian
-
-<Translate questions={[
-  {
-    source: `He finished reading the book.`,
-    options: [
-      { text: `Він прочитав книгу.`, correct: true },
-      { text: `Він читав книгу.`, correct: false },
-      { text: `Вона писала три години.`, correct: true },
-      { text: `Вона написала три години.`, correct: false },
-      { text: `Я вже зробив це!`, correct: true },
-      { text: `Я вже робив це!`, correct: false },
-      { text: `Ми нарешті приїхали.`, correct: true },
-      { text: `Ми нарешті їхали.`, correct: false },
-      { text: `Він сказав \"так.\"`, correct: true },
-      { text: `Він говорив \"так.\"`, correct: false },
-      { text: `Вона голосно говорила.`, correct: true },
-      { text: `Вона голосно сказала.`, correct: false },
-      { text: `Вони побачили фільм.`, correct: true },
-      { text: `Вони бачили фільм.`, correct: false },
-      { text: `Я працював цілий день.`, correct: true },
-      { text: `Я попрацював цілий день.`, correct: false },
-      { text: `Він взяв книгу і пішов.`, correct: true },
-      { text: `Він брав книгу і йшов.`, correct: false },
-      { text: `Вона почула новини.`, correct: true },
-      { text: `Вона чула новини.`, correct: false },
-      { text: `Що ти робив учора?`, correct: true },
-      { text: `Що ти зробив учора?`, correct: false },
-      { text: `Ти закінчив?`, correct: true },
-      { text: `Ти закінчував?`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -609,4 +267,515 @@ In the following modules, you'll learn how perfective verbs work in future tense
 
 ---
 
+
+
+---
+
+## 🎯 Activities
+
+### Past Tense Forms
+
+<MatchUp pairs={[
+  { left: `зробив`, right: `did/finished` },
+  { left: `написав`, right: `wrote/finished` },
+  { left: `прочитав`, right: `read/finished` },
+  { left: `сказав`, right: `said` },
+  { left: `побачив`, right: `saw` },
+  { left: `почув`, right: `heard` },
+  { left: `взяв`, right: `took` },
+  { left: `дав`, right: `gave` },
+  { left: `пішов`, right: `went/left` },
+  { left: `прийшов`, right: `came/arrived` },
+  { left: `закінчив`, right: `finished` },
+  { left: `почав`, right: `began` }
+]} />
+
+### Perfective or Imperfective Past
+
+*Choose the correct verb form for each context.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Він ___ книгу вчора. (finished reading)`}
+    answer={`прочитав`}
+    options={[`читав`, `прочитав`]}
+  />
+  <FillInQuestion
+    sentence={`Вона ___ три години. (was writing)`}
+    answer={`писала`}
+    options={[`писала`, `написала`]}
+  />
+  <FillInQuestion
+    sentence={`Я вже ___ це! (already did)`}
+    answer={`зробив`}
+    options={[`робив`, `зробив`]}
+  />
+  <FillInQuestion
+    sentence={`Ми ___ щодня. (read every day)`}
+    answer={`читали`}
+    options={[`читали`, `прочитали`]}
+  />
+  <FillInQuestion
+    sentence={`Він ___ "привіт." (said)`}
+    answer={`сказав`}
+    options={[`говорив`, `сказав`]}
+  />
+  <FillInQuestion
+    sentence={`Вона довго ___. (was speaking)`}
+    answer={`говорила`}
+    options={[`говорила`, `сказала`]}
+  />
+  <FillInQuestion
+    sentence={`Ми нарешті ___! (finally arrived)`}
+    answer={`приїхали`}
+    options={[`їхали`, `приїхали`]}
+  />
+  <FillInQuestion
+    sentence={`Він ___ весь день. (was working)`}
+    answer={`працював`}
+    options={[`працював`, `попрацював`]}
+  />
+  <FillInQuestion
+    sentence={`Вона ___ роботу. (finished)`}
+    answer={`закінчила`}
+    options={[`закінчувала`, `закінчила`]}
+  />
+  <FillInQuestion
+    sentence={`Я ___ його часто. (saw often)`}
+    answer={`бачив`}
+    options={[`бачив`, `побачив`]}
+  />
+  <FillInQuestion
+    sentence={`Він раптом ___ шум. (suddenly heard)`}
+    answer={`почув`}
+    options={[`чув`, `почув`]}
+  />
+  <FillInQuestion
+    sentence={`Ми ___ листа. (wrote/finished)`}
+    answer={`написали`}
+    options={[`писали`, `написали`]}
+  />
+</FillIn>
+
+### Aspect in Past Tense
+
+<Quiz>
+  <QuizQuestion
+    question={`1. "Я прочитав книгу" focuses on:`}
+    options={[`Completed result`, `Ongoing process`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Я читав книгу" focuses on:`}
+    options={[`Process`, `Completed result`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Which word signals perfective past?`}
+    options={[`вже — already`, `довго (for a long time)`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Вона писала три години" — aspect?`}
+    options={[`Imperfective`, `Perfective`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Він написав листа вчора" — aspect?`}
+    options={[`Perfective`, `Imperfective`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Past tense endings are:`}
+    options={[`The same for both aspects`, `Different for each aspect`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Masculine past ending:`}
+    options={[`-в / -∅`, `-ла`, `-ли`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Feminine past ending:`}
+    options={[`-ла`, `-в`, `-ли`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Що ти робив?" uses:`}
+    options={[`Imperfective (asking about activities)`, `Perfective`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Ти зробив це?" uses:`}
+    options={[`Perfective (asking about completion)`, `Imperfective`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Піти" past masculine:`}
+    options={[`пішов`, `пів`, `пишов`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Прийти" past masculine:`}
+    options={[`прийшов`, `прийв`, `прив`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### Past Tense Rules
+
+*Decide if each statement is true or false.*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`Perfective past shows completed actions.`}
+    isTrue={true}
+    explanation={`Correct!`}
+  />
+  <TrueFalseQuestion
+    statement={`Imperfective past can show duration.`}
+    isTrue={true}
+    explanation={`Yes! "Він читав три години."`}
+  />
+  <TrueFalseQuestion
+    statement={`Past endings are different for each aspect.`}
+    isTrue={false}
+    explanation={`No, the endings are the same — the stems are different.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Вже" usually appears with perfective.`}
+    isTrue={true}
+    explanation={`Correct! "Я вже зробив."`}
+  />
+  <TrueFalseQuestion
+    statement={`"Довго" usually appears with imperfective.`}
+    isTrue={true}
+    explanation={`Yes! "Він довго працював."`}
+  />
+  <TrueFalseQuestion
+    statement={`"Писав" is perfective past.`}
+    isTrue={false}
+    explanation={`"Писав" is imperfective. "Написав" is perfective.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Прочитав" means "finished reading."`}
+    isTrue={true}
+    explanation={`Correct!`}
+  />
+  <TrueFalseQuestion
+    statement={`"Пішов" is the past of "піти."`}
+    isTrue={true}
+    explanation={`Yes!`}
+  />
+  <TrueFalseQuestion
+    statement={`Repeated actions use perfective.`}
+    isTrue={false}
+    explanation={`Repeated actions use imperfective.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Що ти робив?" asks about activities.`}
+    isTrue={true}
+    explanation={`Yes, using imperfective to ask about process.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Нарешті" signals perfective.`}
+    isTrue={true}
+    explanation={`Correct! "Нарешті зробив!"`}
+  />
+  <TrueFalseQuestion
+    statement={`"Сказав" is imperfective.`}
+    isTrue={false}
+    explanation={`"Сказав" is perfective. "Говорив" is imperfective.`}
+  />
+</TrueFalse>
+
+### Verb Aspect
+
+*Sort these past tense forms by aspect.*
+
+
+<GroupSort groups={{
+  "### Imperfective": [
+    "читав",
+    "писав",
+    "робив",
+    "говорив",
+    "бачив",
+    "їхав"
+  ],
+  "Perfective": [
+    "прочитав",
+    "написав",
+    "зробив",
+    "сказав",
+    "побачив",
+    "приїхав"
+  ]
+}} />
+
+### Past Tense Sentences
+
+*Put the words in the correct order.*
+
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`він / прочитав / книгу / вчора`}
+    answer={`Він прочитав книгу вчора.`}
+  />
+  <UnjumbleQuestion
+    words={`вона / писала / три / години`}
+    answer={`Вона писала три години.`}
+  />
+  <UnjumbleQuestion
+    words={`я / вже / зробив / це`}
+    answer={`Я вже зробив це.`}
+  />
+  <UnjumbleQuestion
+    words={`ми / нарешті / приїхали`}
+    answer={`Ми нарешті приїхали.`}
+  />
+  <UnjumbleQuestion
+    words={`він / сказав / правду`}
+    answer={`Він сказав правду.`}
+  />
+  <UnjumbleQuestion
+    words={`вона / довго / говорила`}
+    answer={`Вона довго говорила.`}
+  />
+  <UnjumbleQuestion
+    words={`ти / прочитав / статтю`}
+    answer={`Ти прочитав статтю?`}
+  />
+  <UnjumbleQuestion
+    words={`він / пішов / додому`}
+    answer={`Він пішов додому.`}
+  />
+  <UnjumbleQuestion
+    words={`вона / побачила / море`}
+    answer={`Вона побачила море.`}
+  />
+  <UnjumbleQuestion
+    words={`ми / закінчили / роботу`}
+    answer={`Ми закінчили роботу.`}
+  />
+  <UnjumbleQuestion
+    words={`він / раптом / почув / шум`}
+    answer={`Він раптом почув шум.`}
+  />
+  <UnjumbleQuestion
+    words={`я / взяв / книгу`}
+    answer={`Я взяв книгу.`}
+  />
+</Unjumble>
+
+### Choose Correct Aspect
+
+*Select the correct aspect for each context.*
+
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Він ___ книгу весь вечір. (duration)`}
+    error={`duration`}
+    answer={`читав`}
+    options={[`читав`, `прочитав`]}
+    explanation={`Duration (весь вечір) requires imperfective.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона ___ листа і пішла. (completed then left)`}
+    error={`completed then left`}
+    answer={`написала`}
+    options={[`писала`, `написала`]}
+    explanation={`Completed action before next action = perfective.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я вже ___ це! (already)`}
+    error={`already`}
+    answer={`зробив`}
+    options={[`робив`, `зробив`]}
+    explanation={`"Вже" signals completion = perfective.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він ___ часто. (often)`}
+    error={`often`}
+    answer={`приходив`}
+    options={[`приходив`, `прийшов`]}
+    explanation={`Repeated action (часто) = imperfective.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона нарешті ___! (finally)`}
+    error={`finally`}
+    answer={`зробила`}
+    options={[`робила`, `зробила`]}
+    explanation={`"Нарешті" signals completion = perfective.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Що ти ___ учора? (activities)`}
+    error={`activities`}
+    answer={`робив`}
+    options={[`робив`, `зробив`]}
+    explanation={`Asking about activities = imperfective.`}
+  />
+</ErrorCorrection>
+
+
+
+### Completed vs Process
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Що ти робив учора?"
+  },
+  {
+    "speaker": "",
+    "line": "Я працював цілий день."
+  },
+  {
+    "speaker": "",
+    "line": "Ти закінчив проект?"
+  },
+  {
+    "speaker": "",
+    "line": "Так, нарешті закінчив!"
+  },
+  {
+    "speaker": "",
+    "line": "А що робила Оля?"
+  },
+  {
+    "speaker": "",
+    "line": "Вона теж працювала, але не закінчила."
+  },
+  {
+    "speaker": "",
+    "line": "Ти прочитав книгу?"
+  },
+  {
+    "speaker": "",
+    "line": "Ні, я читав, але не закінчив."
+  },
+  {
+    "speaker": "",
+    "line": "Скільки часу ти читав?"
+  },
+  {
+    "speaker": "",
+    "line": "Дві години."
+  },
+  {
+    "speaker": "",
+    "line": "А коли закінчиш?"
+  },
+  {
+    "speaker": "",
+    "line": "Думаю, сьогодні прочитаю."
+  }
+]} />
+</DialogueReorder>
+
+### Find Perfective Past
+
+Click on PERFECTIVE PAST forms only.
+
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Учора я прочитав книгу. Потім я написав листа. Я довго писав, але нарешті закінчив. Вона сказала правду. Ми почули шум. Він взяв книгу і пішов. Він працював цілий день. Потім він закінчив і пішов додому. Вдома він відпочив.`}
+    correctWords={[`прочитав`, `написав`, `закінчив`, `сказала`, `почули`, `взяв`, `пішов`, `закінчив`, `пішов`, `відпочив`]}
+  />
+</MarkTheWords>
+
+### English to Ukrainian
+
+<Translate>
+  <TranslateItem
+    source={`He finished reading the book.`}
+    answer={`Він прочитав книгу.`}
+    options={[`Він прочитав книгу.`, `Він читав книгу.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She was writing for 3 hours.`}
+    answer={`Вона писала три години.`}
+    options={[`Вона писала три години.`, `Вона написала три години.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I already did this!`}
+    answer={`Я вже зробив це!`}
+    options={[`Я вже зробив це!`, `Я вже робив це!`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`We finally arrived.`}
+    answer={`Ми нарешті приїхали.`}
+    options={[`Ми нарешті приїхали.`, `Ми нарешті їхали.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`He said "yes."`}
+    answer={`Він сказав "так."`}
+    options={[`Він сказав "так."`, `Він говорив "так."`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She was speaking loudly.`}
+    answer={`Вона голосно говорила.`}
+    options={[`Вона голосно говорила.`, `Вона голосно сказала.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`They saw the movie.`}
+    answer={`Вони побачили фільм.`}
+    options={[`Вони побачили фільм.`, `Вони бачили фільм.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I was working all day.`}
+    answer={`Я працював цілий день.`}
+    options={[`Я працював цілий день.`, `Я попрацював цілий день.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`He took the book and left.`}
+    answer={`Він взяв книгу і пішов.`}
+    options={[`Він взяв книгу і пішов.`, `Він брав книгу і йшов.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She heard the news.`}
+    answer={`Вона почула новини.`}
+    options={[`Вона почула новини.`, `Вона чула новини.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`What were you doing yesterday?`}
+    answer={`Що ти робив учора?`}
+    options={[`Що ти робив учора?`, `Що ти зробив учора?`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Did you finish? (asking about completion)`}
+    answer={`Ти закінчив?`}
+    options={[`Ти закінчив?`, `Ти закінчував?`]}
+    explanation={``}
+  />
+</Translate>
 

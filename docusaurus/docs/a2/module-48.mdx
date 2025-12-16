@@ -5,19 +5,20 @@ title: "Work & Professions"
 description: "Building a Career in Ukrainian"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Work & Professions
@@ -30,7 +31,8 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 
 Work is universally important. In this module, you'll learn to talk about what you do, where you work, and your professional goals in Ukrainian. You will master vocabulary for modern professions, traditional jobs, and workplace interactions.
 
-:::warning[**Myth Buster** "Job Stability"]
+:::warning
+**Myth Buster** "Job Stability"
 Russian propaganda often portrays Ukraine as economically unstable. In reality, Ukraine has a booming IT sector and diverse industries. Many Ukrainians build successful international careers.
 :::
 
@@ -67,7 +69,8 @@ Where do people work?
 
 Notice the prepositions: **в** офісі, **в** школі, **в** лікарні, але **на** фабриці (open space/process).
 
-:::note[**History Bite** The Antonov Giants]
+:::note
+**History Bite** The Antonov Giants
 Ukraine is the home of the world's largest aircraft, the **An-225 Mriya** ("Dream"). It was designed and built by the Antonov Design Bureau in Kyiv. This engineering marvel symbolizes Ukrainian technical prowess and ambition.
 :::
 
@@ -91,7 +94,8 @@ To describe what you do, use these verbs:
 - **клієнт** — client: *Клієнт завжди правий.*
 - **начальник** — boss: *Мій начальник суворий.*
 
-:::note[**Cultural Insight** Salary Talk]
+:::note
+**Cultural Insight** Salary Talk
 In Ukraine, it is not taboo to discuss **зарплата** (salary) with close friends, but avoided in polite formal conversation. However, complaining about low salary is a national sport!
 :::
 
@@ -104,29 +108,16 @@ Punctuality is expected, though social meetings might have a "flexible" start ti
 
 ### Dialogue: At the Interview
 
-<div className="conversation">
-
 — Доброго дня. Розкажіть про себе.
-
 — Доброго дня. Мене звати Андрій. Я — програміст.
-
 — Де ви працювали раніше?
-
 — Я працював у великій ІТ-компанії.
-
 — Чому ви хочете працювати у нас?
-
 — Ваша компанія дуже успішна. Мені подобаються ваші проєкти.
-
 — Чудово. Яка зарплата вас цікавить?
-
 — Я хочу заробляти гідно.
-
 — Ми пропонуємо хороші умови і відпустку.
-
 — Дякую. Коли я можу почати?
-
-</div>
 
 ## Practice
 
@@ -141,7 +132,8 @@ Or simply **бути** + **ким** (instrumental):
 
 Wait, normally we say: *Я — лікар* (Nominative) for simple ID. But describing function/status often involves Instrumental.
 
-:::note[Nominative vs Instrumental]
+:::note
+Nominative vs Instrumental
 *Я — лікар* (Nominative) names who you are.
 *Я працюю лікарем* (Instrumental) describes your function.
 Both are common, but Instrumental is safer with verbs.
@@ -153,13 +145,8 @@ Both are common, but Instrumental is safer with verbs.
 Олег був талановитим інженером. Він працював на заводі, але мріяв про власний бізнес. Його друг, Максим, був програмістом. Він працював в офісі і отримував високу зарплату.
 
 Одного дня Олег сказав:
-<div className="conversation">
-
 — Максиме, давай відкриємо свою компанію!
-
 — Але це ризик, — відповів Максим. — Нам потрібен хороший менеджер.
-
-</div>
 
 Вони знайшли Ірину. Вона була чудовим менеджером. Разом вони створили стартап. Вони працювали вдень і вночі.
 
@@ -173,15 +160,9 @@ Both are common, but Instrumental is safer with verbs.
 
 Олена працює лікарем у міській лікарні. Її робота дуже важлива і відповідальна. Щоранку вона приходить у свій кабінет.
 
-<div className="conversation">
-
 — Доброго ранку, колего! — вітає її медсестра.
-
 — Доброго ранку! Скільки у нас пацієнтів сьогодні?
-
 — Дуже багато. Всі хочуть бути здоровими.
-
-</div>
 
 Олена оглядає хворих. Вона уважна і добра. Пацієнти люблять її.
 
@@ -195,13 +176,8 @@ Both are common, but Instrumental is safer with verbs.
 
 Андрій завжди хотів бути пілотом. У дитинстві він дивився на небо і мріяв.
 
-<div className="conversation">
-
 — Я буду літати! — казав він мамі.
-
 — Це хороша мрія, — відповідала вона. — Але треба багато вчитися.
-
-</div>
 
 Андрій вчився старанно. Він знав математику і фізику. Після школи він пішов в університет. Це було важко. Інші студенти гуляли, а Андрій читав книги.
 
@@ -209,13 +185,8 @@ Both are common, but Instrumental is safer with verbs.
 
 Одного разу головний пілот захворів.
 
-<div className="conversation">
-
 — Хто може допомогти? — запитав директор.
-
 — Я знаю систему! — сказав Андрій.
-
-</div>
 
 Він не полетів (він ще не був пілотом), але він допоміг команді на землі. Директор побачив його талант.
 
@@ -225,8 +196,20 @@ Both are common, but Instrumental is safer with verbs.
 
 Його колеги поважають його. Він — професіонал. Іноді він згадує той день в офісі. Шлях до мрії був довгим, але результат того вартий.
 
-:::tip[Talking about Future Plans]
+:::tip
+Talking about Future Plans
 Use **хотіти бути** + instrumental: *Я хочу бути лікарем*. This expresses your professional goal.
+:::
+
+
+:::info
+🔗 External Resources
+
+**YouTube:** [Top 5 Best Jobs in Ukraine in 2025 ...](https://www.youtube.com/watch?v=orgFRG0VW4Y) — Where the Big Money Is!
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 :::
 
 
@@ -240,441 +223,7 @@ You learned to:
 
 Work is not just about money; it's about passion and contribution. Whether you are a lawyer or a driver, your work matters. Keep learning Ukrainian to expand your professional horizons!
 
-## 🎯 Activities
 
-### Profession Quiz
-
-<Quiz questions={[
-  {
-    question: `Who treats people?`,
-    options: [
-      { text: `лікар`, correct: true },
-      { text: `вчитель`, correct: false },
-      { text: `інженер`, correct: false }
-    ]
-  },  {
-    question: `Where does a teacher work?`,
-    options: [
-      { text: `в школі`, correct: true },
-      { text: `в лікарні`, correct: false },
-      { text: `на фабриці`, correct: false }
-    ]
-  },  {
-    question: `Who writes code?`,
-    options: [
-      { text: `програміст`, correct: true },
-      { text: `водій`, correct: false },
-      { text: `юрист`, correct: false }
-    ]
-  },  {
-    question: `What is \"salary\" in Ukrainian?`,
-    options: [
-      { text: `зарплата`, correct: true },
-      { text: `робота`, correct: false },
-      { text: `відпустка`, correct: false }
-    ]
-  },  {
-    question: `Who manages a team?`,
-    options: [
-      { text: `менеджер`, correct: true },
-      { text: `колега`, correct: false },
-      { text: `клієнт`, correct: false }
-    ]
-  },  {
-    question: `What implies \"to earn\"?`,
-    options: [
-      { text: `заробляти`, correct: true },
-      { text: `працювати`, correct: false },
-      { text: `керувати`, correct: false }
-    ]
-  },  {
-    question: `Where does a factory worker work?`,
-    options: [
-      { text: `на фабриці`, correct: true },
-      { text: `в офісі`, correct: false },
-      { text: `в магазині`, correct: false }
-    ]
-  },  {
-    question: `What is the opposite of \"to hire\"?`,
-    options: [
-      { text: `звільнити`, correct: true },
-      { text: `платити`, correct: false },
-      { text: `працювати`, correct: false }
-    ]
-  },  {
-    question: `Who sells goods?`,
-    options: [
-      { text: `продавець`, correct: true },
-      { text: `водій`, correct: false },
-      { text: `лікар`, correct: false }
-    ]
-  },  {
-    question: `What do you build?`,
-    options: [
-      { text: `кар'єру`, correct: true },
-      { text: `зарплату`, correct: false },
-      { text: `відпустку`, correct: false }
-    ]
-  },  {
-    question: `Who creates technology?`,
-    options: [
-      { text: `інженер`, correct: true },
-      { text: `юрист`, correct: false },
-      { text: `лікар`, correct: false }
-    ]
-  },  {
-    question: `Where involves \"open space\" preposition?`,
-    options: [
-      { text: `на фабриці`, correct: true },
-      { text: `в офісі`, correct: false },
-      { text: `в школі`, correct: false }
-    ]
-  }
-]} />
-
-### Profession Match-up
-
-<MatchUp pairs={[
-  { left: `лікар`, right: `лікарня` },
-  { left: `вчитель`, right: `школа` },
-  { left: `інженер`, right: `завод` },
-  { left: `програміст`, right: `офіс` },
-  { left: `водій`, right: `автобус` },
-  { left: `продавець`, right: `магазин` },
-  { left: `директор`, right: `компанія` },
-  { left: `юрист`, right: `суд` },
-  { left: `менеджер`, right: `команда` },
-  { left: `клієнт`, right: `послуга` },
-  { left: `начальник`, right: `підлеглий` },
-  { left: `колега`, right: `співробітник` }
-]} />
-
-### Fill in the Blanks
-
-<FillIn items={[
-  {
-    sentence: `Я працюю в ____.`,
-    answer: `офісі`,
-    options: [`офісі`, `офіс`, `офісом`, `офісу`]
-  },  {
-    sentence: `Вона хоче ____ багато грошей.`,
-    answer: `заробляти`,
-    options: [`заробляти`, `працювати`, `відпочивати`, `грати`]
-  },  {
-    sentence: `Мій батько — ____.`,
-    answer: `інженер`,
-    options: [`інженер`, `інженера`, `інженером`, `інженеру`]
-  },  {
-    sentence: `Вчитель працює в ____.`,
-    answer: `школі`,
-    options: [`школі`, `школа`, `школі`, `школою`]
-  },  {
-    sentence: `Директор ____ компанією.`,
-    answer: `керує`,
-    options: [`керує`, `працює`, `робить`, `йде`]
-  },  {
-    sentence: `У мене завтра ____.`,
-    answer: `відпустка`,
-    options: [`відпустка`, `робота`, `зарплата`, `офіс`]
-  },  {
-    sentence: `Ми шукаємо нового ____.`,
-    answer: `співробітника`,
-    options: [`співробітника`, `співробітник`, `співробітником`, `співробітнику`]
-  },  {
-    sentence: `Лікар оглядає ____.`,
-    answer: `пацієнта`,
-    options: [`пацієнта`, `пацієнт`, `пацієнтом`, `пацієнту`]
-  },  {
-    sentence: `Програміст пише ____.`,
-    answer: `код`,
-    options: [`код`, `коду`, `кодом`, `коди`]
-  },  {
-    sentence: `Він отримав високу ____.`,
-    answer: `зарплату`,
-    options: [`зарплату`, `зарплата`, `зарплати`, `зарплатою`]
-  },  {
-    sentence: `Це мій ____ Андрій.`,
-    answer: `колега`,
-    options: [`колега`, `колегу`, `колегою`, `колеги`]
-  },  {
-    sentence: `Я поважаю свого ____.`,
-    answer: `начальника`,
-    options: [`начальника`, `начальник`, `начальником`, `начальнику`]
-  }
-]} />
-
-### True or False
-
-<TrueFalse items={[
-  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Doctor works in a hospital.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Engineers build structures.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Seller sells goods.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Director manages the company.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Vacation is time for rest.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Teacher teaches children.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Salary is money for work.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Lawyer deals with laws.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Client buys goods/services.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Office is for work.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Career requires work.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Programmers work with computers.`
-  }
-]} />
-
-### Category Sort
-
-<GroupSort groups={{
-  "Groups": ["People", "Places", "Actions"],
-  "Items": ["лікар: People", "вчитель: People", "інженер: People", "менеджер: People", "офіс: Places", "школа: Places", "лікарня: Places", "фабрика: Places", "працювати: Actions", "заробляти: Actions", "керувати: Actions", "звільнити: Actions"]
-}} />
-
-### Unjumble Sentences
-
-<Unjumble items={[
-  { jumbled: `Я / працюю / в / офісі`, answer: `Я працюю в офісі` },
-  { jumbled: `Він / хоче / бути / лікарем`, answer: `Він хоче бути лікарем` },
-  { jumbled: `Ми / маємо / хорошу / зарплату`, answer: `Ми маємо хорошу зарплату` },
-  { jumbled: `Директор / керує / великою / компанією`, answer: `Директор керує великою компанією` },
-  { jumbled: `Вчитель / любить / свою / роботу`, answer: `Вчитель любить свою роботу` },
-  { jumbled: `Інженер / будує / новий / міст`, answer: `Інженер будує новий міст` },
-  { jumbled: `Мій / колега / мені / допоміг`, answer: `Мій колега мені допоміг` },
-  { jumbled: `Вона / пішла / у / відпустку`, answer: `Вона пішла у відпустку` },
-  { jumbled: `Клієнт / завжди / має / рацію`, answer: `Клієнт завжди має рацію` },
-  { jumbled: `Програміст / пише / складний / код`, answer: `Програміст пише складний код` },
-  { jumbled: `Юрист / знає / всі / закони`, answer: `Юрист знає всі закони` },
-  { jumbled: `Студент / мріє / про / кар'єру`, answer: `Студент мріє про кар'єру` }
-]} />
-
-### Fix the Mistakes
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я працюю в офіс.`}
-    errorWord={`офіс`}
-    correctForm={`офісі`}
-    options={[`офісі`, `офіс`, `офісу`, `офісом`]}
-    explanation={`Locative case: в офісі.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона є лікар.`}
-    errorWord={`лікар`}
-    correctForm={`лікарем`}
-    options={[`лікарем`, `лікар`, `лікаря`, `лікарю`]}
-    explanation={`Instrumental after бути: лікарем.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він керує компанія.`}
-    errorWord={`компанія`}
-    correctForm={`компанією`}
-    options={[`компанією`, `компанія`, `компанію`, `компанії`]}
-    explanation={`Керувати requires Instrumental.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми працюємо на школа.`}
-    errorWord={`школа`}
-    correctForm={`школі`}
-    options={[`школі`, `школа`, `школі`, `школою`]}
-    explanation={`Locative: в школі (use 'в' for enclosed buildings).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я хочу зарплата.`}
-    errorWord={`зарплата`}
-    correctForm={`зарплату`}
-    options={[`зарплату`, `зарплата`, `зарплати`, `зарплатою`]}
-    explanation={`Accusative: хочу зарплату.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вчитель навчає діти.`}
-    errorWord={`діти`}
-    correctForm={`дітей`}
-    options={[`дітей`, `діти`, `дітям`, `дітьми`]}
-    explanation={`Accusative animate: дітей.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Це мій колега Ірина.`}
-    errorWord={`мій`}
-    correctForm={`моя`}
-    options={[`моя`, `мій`, `моє`, `мої`]}
-    explanation={`Feminine agreement for Irina: моя.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Водій керує автобус.`}
-    errorWord={`автобус`}
-    correctForm={`автобусом`}
-    options={[`автобусом`, `автобус`, `автобуса`, `автобусу`]}
-    explanation={`Керувати requires Instrumental.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він звільнити з роботи.`}
-    errorWord={`звільнити`}
-    correctForm={`звільнився`}
-    options={[`звільнився`, `звільнити`, `звільнив`, `звільняє`]}
-    explanation={`Past reflexive: він звільнився (he quit).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Менеджер говорить з клієнт.`}
-    errorWord={`клієнт`}
-    correctForm={`клієнтом`}
-    options={[`клієнтом`, `клієнт`, `клієнта`, `клієнту`]}
-    explanation={`'З' requires Instrumental.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я йду у відпустка.`}
-    errorWord={`відпустка`}
-    correctForm={`відпустку`}
-    options={[`відпустку`, `відпустка`, `відпустці`, `відпусткою`]}
-    explanation={`Accusative direction: у відпустку.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Чесний люди живуть краще.`}
-    errorWord={`Чесний`}
-    correctForm={`Чесні`}
-    options={[`Чесні`, `Чесний`, `Чесна`, `Чеснім`]}
-    explanation={`Plural agreement: чесні люди.`}
-  />
-</ErrorCorrection>
-
-### Career Ladder
-
-<Cloze
-  passage={`Максим почав свою [___:1] в маленькій фірмі. Він працював [___:2]. Його [___:3] був дуже розумним.
-Максим хотів [___:4] багато грошей. Він працював старанно.
-Через рік його [___:5] новим менеджером. Тепер у нього є своя [___:6].
-Він [___:7] великими проєктами. Його [___:8] зросла.
-Максим любить свій [___:9] і своїх колег. Влітку він поїде у [___:10].`}
-  blanks={[{ answer: `кар'єру`, options: [`кар'єру`, `роботу`, `школу`] }, { answer: `програмістом`, options: [`програмістом`, `лікарем`, `водієм`] }, { answer: `начальник`, options: [`начальник`, `клієнт`, `син`] }, { answer: `заробляти`, options: [`заробляти`, `витрачати`, `грати`] }, { answer: `найняли`, options: [`найняли`, `звільнили`, `забули`] }, { answer: `команда`, options: [`команда`, `фабрика`, `школа`] }, { answer: `керує`, options: [`керує`, `працює`, `хоче`] }, { answer: `зарплата`, options: [`зарплата`, `відпустка`, `робота`] }, { answer: `офіс`, options: [`офіс`, `дім`, `парк`] }, { answer: `відпустку`, options: [`відпустку`, `роботу`, `лікарню`] }]}
-/>
-
-### Interview Dialogue
-
-<DialogueReorder lines={[
-  { text: `Доброго дня. Ви прийшли на співбесіду?`, order: 1 },
-  { text: `Так, доброго дня. Я шукаю роботу.`, order: 2 },
-  { text: `Яка ваша професія?`, order: 3 },
-  { text: `Я — інженер. Маю досвід 5 років.`, order: 4 },
-  { text: `Чудово. Де ви працювали раніше?`, order: 5 },
-  { text: `На заводі \"Антонов\" у Києві.`, order: 6 },
-  { text: `Це престижне місце! Чому ви пішли?`, order: 7 },
-  { text: `Я шукаю нові виклики і вищу зарплату.`, order: 8 },
-  { text: `Ми можемо запропонувати вам хороші умови.`, order: 9 },
-  { text: `Дякую. Які мої обов'язки?`, order: 10 },
-  { text: `Керувати відділом проєктування.`, order: 11 },
-  { text: `Звучить цікаво. Я згоден!`, order: 12 }
-]} />
-
-### Choose the Correct Word
-
-<Select questions={[
-  {
-    question: `Я працюю ____.`,
-    options: [
-      { text: `лікарем`, correct: true },
-      { text: `лікар`, correct: false }
-    ]
-  },  {
-    question: `Вона йде на ____.`,
-    options: [
-      { text: `роботу`, correct: true },
-      { text: `робота`, correct: false }
-    ]
-  },  {
-    question: `Ми ____ проєктом.`,
-    options: [
-      { text: `керуємо`, correct: true },
-      { text: `керувати`, correct: false }
-    ]
-  },  {
-    question: `Директор ____ його.`,
-    options: [
-      { text: `звільнив`, correct: true },
-      { text: `звільнити`, correct: false }
-    ]
-  },  {
-    question: `У мене висока ____.`,
-    options: [
-      { text: `зарплата`, correct: true },
-      { text: `зарплату`, correct: false }
-    ]
-  },  {
-    question: `Це мій ____.`,
-    options: [
-      { text: `офіс`, correct: true },
-      { text: `офісу`, correct: false }
-    ]
-  },  {
-    question: `Я хочу ____.`,
-    options: [
-      { text: `відпустку`, correct: true },
-      { text: `відпустка`, correct: false }
-    ]
-  },  {
-    question: `Інженер ____ міст.`,
-    options: [
-      { text: `будує`, correct: true },
-      { text: `будувати`, correct: false }
-    ]
-  },  {
-    question: `Вчитель ____ дітей.`,
-    options: [
-      { text: `навчає`, correct: true },
-      { text: `навчати`, correct: false }
-    ]
-  },  {
-    question: `Клієнт ____ товар.`,
-    options: [
-      { text: `купує`, correct: true },
-      { text: `купувати`, correct: false }
-    ]
-  },  {
-    question: `Юрист знає ____.`,
-    options: [
-      { text: `закон`, correct: true },
-      { text: `законом`, correct: false }
-    ]
-  },  {
-    question: `Ми ____ в компанії.`,
-    options: [
-      { text: `працюємо`, correct: true },
-      { text: `працювати`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -709,3 +258,480 @@ Work is not just about money; it's about passion and contribution. Whether you a
 | начальник | /nɑˈtʃɑlʲnɪk/ | boss | noun | m | |
 | успішний | /uˈspʲiʃnɪj/ | successful | adj | m | |
 | зайнятий | /ˈzɑjnʲɑtɪj/ | busy/occupied | adj | m | |
+
+---
+
+## 🎯 Activities
+
+### Profession Quiz
+
+<Quiz>
+  <QuizQuestion
+    question={`1. Who treats people?`}
+    options={[`лікар`, `вчитель`, `інженер`]}
+    correctIndex={0}
+    explanation={`Лікар treats people.`}
+  />
+  <QuizQuestion
+    question={`Where does a teacher work?`}
+    options={[`в школі`, `в лікарні`, `на фабриці`]}
+    correctIndex={0}
+    explanation={`Teacher works in a school (школа).`}
+  />
+  <QuizQuestion
+    question={`Who writes code?`}
+    options={[`програміст`, `водій`, `юрист`]}
+    correctIndex={0}
+    explanation={`Programmer writes code.`}
+  />
+  <QuizQuestion
+    question={`What is "salary" in Ukrainian?`}
+    options={[`зарплата`, `робота`, `відпустка`]}
+    correctIndex={0}
+    explanation={`Salary is зарплата.`}
+  />
+  <QuizQuestion
+    question={`Who manages a team?`}
+    options={[`менеджер`, `колега`, `клієнт`]}
+    correctIndex={0}
+    explanation={`Manager manages (керує).`}
+  />
+  <QuizQuestion
+    question={`What implies "to earn"?`}
+    options={[`заробляти`, `працювати`, `керувати`]}
+    correctIndex={0}
+    explanation={`Заробляти means to earn.`}
+  />
+  <QuizQuestion
+    question={`Where does a factory worker work?`}
+    options={[`на фабриці`, `в офісі`, `в магазині`]}
+    correctIndex={0}
+    explanation={`At the factory = на фабриці.`}
+  />
+  <QuizQuestion
+    question={`What is the opposite of "to hire"?`}
+    options={[`звільнити`, `платити`, `працювати`]}
+    correctIndex={0}
+    explanation={`To fire = звільнити.`}
+  />
+  <QuizQuestion
+    question={`Who sells goods?`}
+    options={[`продавець`, `водій`, `лікар`]}
+    correctIndex={0}
+    explanation={`Seller = продавець.`}
+  />
+  <QuizQuestion
+    question={`What do you build?`}
+    options={[`кар'єру`, `зарплату`, `відпустку`]}
+    correctIndex={0}
+    explanation={`You build a career (кар'єру).`}
+  />
+  <QuizQuestion
+    question={`Who creates technology?`}
+    options={[`інженер`, `юрист`, `лікар`]}
+    correctIndex={0}
+    explanation={`Engineer = інженер.`}
+  />
+  <QuizQuestion
+    question={`Where involves "open space" preposition?`}
+    options={[`на фабриці`, `в офісі`, `в школі`]}
+    correctIndex={0}
+    explanation={`На фабриці involves 'на' (on/at).`}
+  />
+</Quiz>
+
+### Profession Match-up
+
+<MatchUp pairs={[
+  { left: `лікар`, right: `лікарня` },
+  { left: `вчитель`, right: `школа` },
+  { left: `інженер`, right: `завод` },
+  { left: `програміст`, right: `офіс` },
+  { left: `водій`, right: `автобус` },
+  { left: `продавець`, right: `магазин` },
+  { left: `директор`, right: `компанія` },
+  { left: `юрист`, right: `суд` },
+  { left: `менеджер`, right: `команда` },
+  { left: `клієнт`, right: `послуга` },
+  { left: `начальник`, right: `підлеглий` },
+  { left: `колега`, right: `співробітник` }
+]} />
+
+### Fill in the Blanks
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я працюю в ____.`}
+    answer={`офісі`}
+    options={[`офісі`, `офіс`, `офісом`, `офісу`]}
+  />
+  <FillInQuestion
+    sentence={`Вона хоче ____ багато грошей.`}
+    answer={`заробляти`}
+    options={[`заробляти`, `працювати`, `відпочивати`, `грати`]}
+  />
+  <FillInQuestion
+    sentence={`Мій батько — ____.`}
+    answer={`інженер`}
+    options={[`інженер`, `інженера`, `інженером`, `інженеру`]}
+  />
+  <FillInQuestion
+    sentence={`Вчитель працює в ____.`}
+    answer={`школі`}
+    options={[`школі`, `школа`, `школі`, `школою`]}
+  />
+  <FillInQuestion
+    sentence={`Директор ____ компанією.`}
+    answer={`керує`}
+    options={[`керує`, `працює`, `робить`, `йде`]}
+  />
+  <FillInQuestion
+    sentence={`У мене завтра ____.`}
+    answer={`відпустка`}
+    options={[`відпустка`, `робота`, `зарплата`, `офіс`]}
+  />
+  <FillInQuestion
+    sentence={`Ми шукаємо нового ____.`}
+    answer={`співробітника`}
+    options={[`співробітника`, `співробітник`, `співробітником`, `співробітнику`]}
+  />
+  <FillInQuestion
+    sentence={`Лікар оглядає ____.`}
+    answer={`пацієнта`}
+    options={[`пацієнта`, `пацієнт`, `пацієнтом`, `пацієнту`]}
+  />
+  <FillInQuestion
+    sentence={`Програміст пише ____.`}
+    answer={`код`}
+    options={[`код`, `коду`, `кодом`, `коди`]}
+  />
+  <FillInQuestion
+    sentence={`Він отримав високу ____.`}
+    answer={`зарплату`}
+    options={[`зарплату`, `зарплата`, `зарплати`, `зарплатою`]}
+  />
+  <FillInQuestion
+    sentence={`Це мій ____ Андрій.`}
+    answer={`колега`}
+    options={[`колега`, `колегу`, `колегою`, `колеги`]}
+  />
+  <FillInQuestion
+    sentence={`Я поважаю свого ____.`}
+    answer={`начальника`}
+    options={[`начальника`, `начальник`, `начальником`, `начальнику`]}
+  />
+</FillIn>
+
+
+
+### Category Sort
+
+<GroupSort groups={{
+  "People": [
+    "лікар",
+    "вчитель",
+    "інженер",
+    "менеджер"
+  ],
+  "Places": [
+    "офіс",
+    "школа",
+    "лікарня",
+    "фабрика"
+  ],
+  "Actions": [
+    "працювати",
+    "заробляти",
+    "керувати",
+    "звільнити"
+  ]
+}} />
+
+### Unjumble Sentences
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`Я / працюю / в / офісі`}
+    answer={`Я працюю в офісі`}
+  />
+  <UnjumbleQuestion
+    words={`Він / хоче / бути / лікарем`}
+    answer={`Він хоче бути лікарем`}
+  />
+  <UnjumbleQuestion
+    words={`Ми / маємо / хорошу / зарплату`}
+    answer={`Ми маємо хорошу зарплату`}
+  />
+  <UnjumbleQuestion
+    words={`Директор / керує / великою / компанією`}
+    answer={`Директор керує великою компанією`}
+  />
+  <UnjumbleQuestion
+    words={`Вчитель / любить / свою / роботу`}
+    answer={`Вчитель любить свою роботу`}
+  />
+  <UnjumbleQuestion
+    words={`Інженер / будує / новий / міст`}
+    answer={`Інженер будує новий міст`}
+  />
+  <UnjumbleQuestion
+    words={`Мій / колега / мені / допоміг`}
+    answer={`Мій колега мені допоміг`}
+  />
+  <UnjumbleQuestion
+    words={`Вона / пішла / у / відпустку`}
+    answer={`Вона пішла у відпустку`}
+  />
+  <UnjumbleQuestion
+    words={`Клієнт / завжди / має / рацію`}
+    answer={`Клієнт завжди має рацію`}
+  />
+  <UnjumbleQuestion
+    words={`Програміст / пише / складний / код`}
+    answer={`Програміст пише складний код`}
+  />
+  <UnjumbleQuestion
+    words={`Юрист / знає / всі / закони`}
+    answer={`Юрист знає всі закони`}
+  />
+  <UnjumbleQuestion
+    words={`Студент / мріє / про / кар'єру`}
+    answer={`Студент мріє про кар'єру`}
+  />
+</Unjumble>
+
+### Fix the Mistakes
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я працюю в офіс.`}
+    error={`офіс`}
+    answer={`офісі`}
+    options={[`офісі`, `офіс`, `офісу`, `офісом`]}
+    explanation={`Locative case: в офісі.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона є лікар.`}
+    error={`лікар`}
+    answer={`лікарем`}
+    options={[`лікарем`, `лікар`, `лікаря`, `лікарю`]}
+    explanation={`Instrumental after бути: лікарем.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він керує компанія.`}
+    error={`компанія`}
+    answer={`компанією`}
+    options={[`компанією`, `компанія`, `компанію`, `компанії`]}
+    explanation={`Керувати requires Instrumental.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми працюємо на школа.`}
+    error={`школа`}
+    answer={`школі`}
+    options={[`школі`, `школа`, `школі`, `школою`]}
+    explanation={`Locative: в школі (use 'в' for enclosed buildings).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я хочу зарплата.`}
+    error={`зарплата`}
+    answer={`зарплату`}
+    options={[`зарплату`, `зарплата`, `зарплати`, `зарплатою`]}
+    explanation={`Accusative: хочу зарплату.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вчитель навчає діти.`}
+    error={`діти`}
+    answer={`дітей`}
+    options={[`дітей`, `діти`, `дітям`, `дітьми`]}
+    explanation={`Accusative animate: дітей.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Це мій колега Ірина.`}
+    error={`мій`}
+    answer={`моя`}
+    options={[`моя`, `мій`, `моє`, `мої`]}
+    explanation={`Feminine agreement for Irina: моя.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Водій керує автобус.`}
+    error={`автобус`}
+    answer={`автобусом`}
+    options={[`автобусом`, `автобус`, `автобуса`, `автобусу`]}
+    explanation={`Керувати requires Instrumental.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він звільнити з роботи.`}
+    error={`звільнити`}
+    answer={`звільнився`}
+    options={[`звільнився`, `звільнити`, `звільнив`, `звільняє`]}
+    explanation={`Past reflexive: він звільнився (he quit).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Менеджер говорить з клієнт.`}
+    error={`клієнт`}
+    answer={`клієнтом`}
+    options={[`клієнтом`, `клієнт`, `клієнта`, `клієнту`]}
+    explanation={`'З' requires Instrumental.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я йду у відпустка.`}
+    error={`відпустка`}
+    answer={`відпустку`}
+    options={[`відпустку`, `відпустка`, `відпустці`, `відпусткою`]}
+    explanation={`Accusative direction: у відпустку.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Чесний люди живуть краще.`}
+    error={`Чесний`}
+    answer={`Чесні`}
+    options={[`Чесні`, `Чесний`, `Чесна`, `Чеснім`]}
+    explanation={`Plural agreement: чесні люди.`}
+  />
+</ErrorCorrection>
+
+
+
+### Interview Dialogue
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Доброго дня. Ви прийшли на співбесіду?"
+  },
+  {
+    "speaker": "",
+    "line": "Так, доброго дня. Я шукаю роботу."
+  },
+  {
+    "speaker": "",
+    "line": "Яка ваша професія?"
+  },
+  {
+    "speaker": "",
+    "line": "Я — інженер. Маю досвід 5 років."
+  },
+  {
+    "speaker": "",
+    "line": "Чудово. Де ви працювали раніше?"
+  },
+  {
+    "speaker": "",
+    "line": "На заводі \"Антонов\" у Києві."
+  },
+  {
+    "speaker": "",
+    "line": "Це престижне місце! Чому ви пішли?"
+  },
+  {
+    "speaker": "",
+    "line": "Я шукаю нові виклики і вищу зарплату."
+  },
+  {
+    "speaker": "",
+    "line": "Ми можемо запропонувати вам хороші умови."
+  },
+  {
+    "speaker": "",
+    "line": "Дякую. Які мої обов'язки?"
+  },
+  {
+    "speaker": "",
+    "line": "Керувати відділом проєктування."
+  },
+  {
+    "speaker": "",
+    "line": "Звучить цікаво. Я згоден!"
+  }
+]} />
+</DialogueReorder>
+
+### Profession Search
+
+[!instruction] Mark all professions and workplace words.
+
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Мій брат — програміст. Він працює в офісі. Його дружина — лікар. Вона працює в лікарні. Мій батько був водієм. Він любив свій автобус. Моя мама — вчитель. Школа — це її другий дім. Я хочу бути юристом. Я буду працювати в суді. Всі професії важливі!`}
+    correctWords={[`програміст`, `офісі`, `лікар`, `лікарні`, `водієм`, `автобус`, `вчитель`, `Школа`, `юристом`, `суді`]}
+  />
+</MarkTheWords>
+
+### Choose the Correct Word
+
+<Select>
+  <SelectQuestion
+    question={`1. Я працюю ____.`}
+    options={[`лікарем`, `лікар`]}
+    correctAnswers={[`лікарем`]}
+    explanation={`Instrumental case for profession function.`}
+  />
+  <SelectQuestion
+    question={`Вона йде на ____.`}
+    options={[`роботу`, `робота`]}
+    correctAnswers={[`роботу`]}
+    explanation={`Accusative with motion preposition 'на'.`}
+  />
+  <SelectQuestion
+    question={`Ми ____ проєктом.`}
+    options={[`керуємо`, `керувати`]}
+    correctAnswers={[`керуємо`]}
+    explanation={`Conjugated verb 'we manage'.`}
+  />
+  <SelectQuestion
+    question={`Директор ____ його.`}
+    options={[`звільнив`, `звільнити`]}
+    correctAnswers={[`звільнив`]}
+    explanation={`Past tense 'fired'.`}
+  />
+  <SelectQuestion
+    question={`У мене висока ____.`}
+    options={[`зарплата`, `зарплату`]}
+    correctAnswers={[`зарплата`]}
+    explanation={`Nominative subject 'salary is high'.`}
+  />
+  <SelectQuestion
+    question={`Це мій ____.`}
+    options={[`офіс`, `офісу`]}
+    correctAnswers={[`офіс`]}
+    explanation={`Nominative identification.`}
+  />
+  <SelectQuestion
+    question={`Я хочу ____.`}
+    options={[`відпустку`, `відпустка`]}
+    correctAnswers={[`відпустку`]}
+    explanation={`Accusative object 'want (what?) vacation'.`}
+  />
+  <SelectQuestion
+    question={`Інженер ____ міст.`}
+    options={[`будує`, `будувати`]}
+    correctAnswers={[`будує`]}
+    explanation={`Conjugated verb 'builds'.`}
+  />
+  <SelectQuestion
+    question={`Вчитель ____ дітей.`}
+    options={[`навчає`, `навчати`]}
+    correctAnswers={[`навчає`]}
+    explanation={`Conjugated verb 'teaches'.`}
+  />
+  <SelectQuestion
+    question={`Клієнт ____ товар.`}
+    options={[`купує`, `купувати`]}
+    correctAnswers={[`купує`]}
+    explanation={`Conjugated verb 'buys'.`}
+  />
+  <SelectQuestion
+    question={`Юрист знає ____.`}
+    options={[`закон`, `законом`]}
+    correctAnswers={[`закон`]}
+    explanation={`Accusative object 'law'.`}
+  />
+  <SelectQuestion
+    question={`Ми ____ в компанії.`}
+    options={[`працюємо`, `працювати`]}
+    correctAnswers={[`працюємо`]}
+    explanation={`Conjugated verb 'we work'.`}
+  />
+</Select>
+

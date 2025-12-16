@@ -5,19 +5,20 @@ title: "What Time Is It?"
 description: "Telling Time, Days, and Months"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 ## Warm-up
@@ -33,7 +34,8 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 # Grammar
 
 
-:::info[🔗 External Resources]
+:::info
+🔗 External Resources
 
 **YouTube:** [Telling the time in Ukrainian](https://www.youtube.com/watch?v=0Dkug4_mrDA) — Speak Ukrainian
 
@@ -48,7 +50,8 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 
 ## Telling Time
 
-:::tip[Pattern Discovery]
+:::tip
+Pattern Discovery
 
 Look at how Ukrainians tell time:
 - **Котра година?** — What time is it? (lit. "Which hour?")
@@ -78,7 +81,8 @@ Ukrainians use ordinal numbers (first, second, third...) for hours!
 
 ### Half and Quarter Hours
 
-:::tip[Pattern Discovery]
+:::tip
+Pattern Discovery
 
 - **Пів на другу** — Half past one (lit. "half to second")
 - **Чверть на третю** — Quarter past two (lit. "quarter to third")
@@ -157,7 +161,8 @@ Or in conversation:
 
 ## Time Prepositions
 
-:::tip[Pattern Discovery]
+:::tip
+Pattern Discovery
 
 - **о** + time = at (о третій = at 3:00)
 - **до** + time = until (до п'ятої = until 5:00)
@@ -181,7 +186,8 @@ Or in conversation:
 
 # Examples in Context
 
-:::info[Asking About Time]
+:::info
+Asking About Time
 
 - Котра година? — Друга година. (What time is it? — Two o'clock.)
 - О котрій зустріч? — О п'ятій. (At what time is the meeting? — At five.)
@@ -190,7 +196,8 @@ Or in conversation:
 :::
 
 
-:::info[Talking About Days]
+:::info
+Talking About Days
 
 - Сьогодні понеділок. (Today is Monday.)
 - Завтра буде вівторок. (Tomorrow will be Tuesday.)
@@ -200,7 +207,8 @@ Or in conversation:
 :::
 
 
-:::info[Talking About Months]
+:::info
+Talking About Months
 
 - Зараз грудень. (It's December now.)
 - Мій день народження в травні. (My birthday is in May.)
@@ -209,7 +217,8 @@ Or in conversation:
 :::
 
 
-:::info[Being On Time]
+:::info
+Being On Time
 
 - Ти прийшов рано! (You came early!)
 - Вибач, я запізнився. (Sorry, I'm late.)
@@ -218,7 +227,8 @@ Or in conversation:
 :::
 
 
-:::info[More Time Sentences]
+:::info
+More Time Sentences
 
 - О котрій починається фільм? — О восьмій. (What time does the movie start? — At eight.)
 - Зараз пів на другу. (It's half past one now.)
@@ -237,95 +247,52 @@ Or in conversation:
 
 # Dialogues
 
-:::note[Scheduling a Meeting]
-
-<div className="conversation">
+:::note
+Scheduling a Meeting
 
 — Привіт! О котрій ми зустрінемося завтра?
-
 — Давай о третій. Добре?
-
 — Три — це рано. Може, о п'ятій?
-
 — Добре. О п'ятій після обіду.
-
 — Чудово! Побачимось!
 
-</div>
-
-<div className="conversation">
-
 — Hi! At what time will we meet tomorrow?
-
 — How about at three. Okay?
-
 — Three is early. Maybe at five?
-
 — Good. At five in the afternoon.
-
 — Wonderful! See you!
-
-</div>
 :::
 
 
-:::note[Days of the Week]
-
-<div className="conversation">
+:::note
+Days of the Week
 
 — Який сьогодні день?
-
 — Сьогодні середа.
-
 — А який день завтра?
-
 — Завтра четвер. Майже вихідні!
-
 — Так, у п'ятницю вечером я вільний.
 
-</div>
-
-<div className="conversation">
-
 — What day is today?
-
 — Today is Wednesday.
-
 — And what day is tomorrow?
-
 — Tomorrow is Thursday. Almost the weekend!
-
 — Yes, on Friday evening I'm free.
-
-</div>
 :::
 
 
-:::note[Birthday Month]
-
-<div className="conversation">
+:::note
+Birthday Month
 
 — Коли твій день народження?
-
 — У квітні. А твій?
-
 — Мій у листопаді. Холодно!
-
 — Квітень — це весна. Квіти цвітуть!
 
-</div>
-
-<div className="conversation">
-
 — When is your birthday?
-
 — In April. And yours?
-
 — Mine is in November. Cold!
-
 — April is spring. Flowers bloom!
-
-</div>
 :::
 
 
@@ -362,330 +329,317 @@ Or in conversation:
 
 **Наступний урок:** Модальні дієслова — можна, треба, хочу!
 
-## 🎯 Activities
+# Вправи (Activities)
 
-### Days of the Week
+## match-up: Days of the Week
 
-<MatchUp pairs={[
-  { left: `понеділок`, right: `Monday` },
-  { left: `вівторок`, right: `Tuesday` },
-  { left: `середа`, right: `Wednesday` },
-  { left: `четвер`, right: `Thursday` },
-  { left: `п'ятниця`, right: `Friday` },
-  { left: `субота`, right: `Saturday` },
-  { left: `неділя`, right: `Sunday` },
-  { left: `тиждень`, right: `week` },
-  { left: `вихідні`, right: `weekend` },
-  { left: `робочий день`, right: `workday` },
-  { left: `сьогодні`, right: `today` },
-  { left: `завтра`, right: `tomorrow` }
-]} />
+Match the Ukrainian day with its English equivalent.
 
-### Months of the Year
+- понеділок :: Monday
+- вівторок :: Tuesday
+- середа :: Wednesday
+- четвер :: Thursday
+- п'ятниця :: Friday
+- субота :: Saturday
+- неділя :: Sunday
+- тиждень :: week
+- вихідні :: weekend
+- робочий день :: workday
+- сьогодні :: today
+- завтра :: tomorrow
 
-<MatchUp pairs={[
-  { left: `січень`, right: `January` },
-  { left: `лютий`, right: `February` },
-  { left: `березень`, right: `March` },
-  { left: `квітень`, right: `April` },
-  { left: `травень`, right: `May` },
-  { left: `червень`, right: `June` },
-  { left: `липень`, right: `July` },
-  { left: `серпень`, right: `August` },
-  { left: `вересень`, right: `September` },
-  { left: `жовтень`, right: `October` },
-  { left: `листопад`, right: `November` },
-  { left: `грудень`, right: `December` }
-]} />
+---
 
-### Time Units
+## match-up: Months of the Year
 
-<GroupSort groups={{
-  "Days (Дні)": ["понеділок", "вівторок", "середа", "четвер"],
-  "Months (Місяці)": ["січень", "квітень", "липень", "грудень"],
-  "Time Words (Час)": ["година", "хвилина", "секунда", "чверть"]
-}} />
+Match the Ukrainian month with its English equivalent.
 
-### Telling Time
+- січень :: January
+- лютий :: February
+- березень :: March
+- квітень :: April
+- травень :: May
+- червень :: June
+- липень :: July
+- серпень :: August
+- вересень :: September
+- жовтень :: October
+- листопад :: November
+- грудень :: December
 
-<FillIn items={[
-  {
-    sentence: `Зараз ___ година.`,
-    answer: `друга`,
-    options: [`друга`, `два`, `другий`, `друге`]
-  },  {
-    sentence: `О котрій зустріч? — О ___.`,
-    answer: `п'ятій`,
-    options: [`п'ятій`, `п'ять`, `п'ятого`, `п'яти`]
-  },  {
-    sentence: `Магазин працює з дев'ятої ___ шостої.`,
-    answer: `до`,
-    options: [`до`, `о`, `на`, `в`]
-  },  {
-    sentence: `___ обіду я відпочиваю.`,
-    answer: `Після`,
-    options: [`Після`, `До`, `О`, `На`]
-  },  {
-    sentence: `Я приїду ___ третій.`,
-    answer: `о`,
-    options: [`о`, `до`, `з`, `на`]
-  },  {
-    sentence: `Зараз пів ___ третю.`,
-    answer: `на`,
-    options: [`на`, `до`, `о`, `в`]
-  },  {
-    sentence: `Зустріч ___ дванадцятій.`,
-    answer: `о`,
-    options: [`о`, `до`, `на`, `в`]
-  },  {
-    sentence: `Ти прийшов ___!`,
-    answer: `вчасно`,
-    options: [`вчасно`, `рано`, `пізно`, `зараз`]
-  }
-]} />
+---
 
-### Days and Months
+## group-sort: Time Units
+> Sort these words into the correct categories.
 
-<FillIn items={[
-  {
-    sentence: `Сьогодні ___. Завтра буде субота.`,
-    answer: `п'ятниця`,
-    options: [`п'ятниця`, `четвер`, `середа`, `неділя`]
-  },  {
-    sentence: `Мій день народження в ___.`,
-    answer: `травні`,
-    options: [`травні`, `травень`, `травня`, `травню`]
-  },  {
-    sentence: `Перший день тижня — це ___.`,
-    answer: `понеділок`,
-    options: [`понеділок`, `неділя`, `субота`, `вівторок`]
-  },  {
-    sentence: `___ — це пора листопаду.`,
-    answer: `Листопад`,
-    options: [`Листопад`, `Жовтень`, `Вересень`, `Грудень`]
-  },  {
-    sentence: `Новий рік — це перше ___.`,
-    answer: `січня`,
-    options: [`січня`, `січень`, `січню`, `січні`]
-  },  {
-    sentence: `У ___ я відпочиваю.`,
-    answer: `вихідні`,
-    options: [`вихідні`, `понеділок`, `робочий день`, `тиждень`]
-  },  {
-    sentence: `Літо — це червень, липень і ___.`,
-    answer: `серпень`,
-    options: [`серпень`, `вересень`, `травень`, `квітень`]
-  },  {
-    sentence: `Сьогодні ___, це середина тижня.`,
-    answer: `середа`,
-    options: [`середа`, `четвер`, `п'ятниця`, `понеділок`]
-  }
-]} />
+### Days (Дні)
+- понеділок
+- вівторок
+- середа
+- четвер
 
-### Time Expressions
+### Months (Місяці)
+- січень
+- квітень
+- липень
+- грудень
 
-<Quiz questions={[
-  {
-    question: `Котра година?`,
-    options: [
-      { text: `What time is it?`, correct: true },
-      { text: `Which day is it?`, correct: false },
-      { text: `What date is it?`, correct: false },
-      { text: `How long is it?`, correct: false }
-    ]
-  },  {
-    question: `Зустріч о третій.`,
-    options: [
-      { text: `The meeting is at three.`, correct: true },
-      { text: `The meeting is at third.`, correct: false },
-      { text: `The meeting lasts three hours.`, correct: false },
-      { text: `Three meetings today.`, correct: false }
-    ]
-  },  {
-    question: `Він приходить рано.`,
-    options: [
-      { text: `He comes early.`, correct: true },
-      { text: `He comes late.`, correct: false },
-      { text: `He comes on time.`, correct: false },
-      { text: `He comes now.`, correct: false }
-    ]
-  },  {
-    question: `Магазин працює з дев'ятої до шостої.`,
-    options: [
-      { text: `The store works from nine to six.`, correct: true },
-      { text: `The store works until nine.`, correct: false },
-      { text: `The store works at six.`, correct: false },
-      { text: `The store is closed from nine to six.`, correct: false }
-    ]
-  },  {
-    question: `Зараз половина на другу.`,
-    options: [
-      { text: `It's half past one now.`, correct: true },
-      { text: `It's two o'clock now.`, correct: false },
-      { text: `It's one o'clock now.`, correct: false },
-      { text: `It's half past two now.`, correct: false }
-    ]
-  },  {
-    question: `Я приїхав вчасно.`,
-    options: [
-      { text: `I arrived on time.`, correct: true },
-      { text: `I arrived early.`, correct: false },
-      { text: `I arrived late.`, correct: false },
-      { text: `I will arrive.`, correct: false }
-    ]
-  },  {
-    question: `Після обіду я відпочиваю.`,
-    options: [
-      { text: `After lunch I rest.`, correct: true },
-      { text: `Before lunch I rest.`, correct: false },
-      { text: `During lunch I rest.`, correct: false },
-      { text: `At lunch I rest.`, correct: false }
-    ]
-  },  {
-    question: `Урок триває годину.`,
-    options: [
-      { text: `The lesson lasts an hour.`, correct: true },
-      { text: `The lesson starts in an hour.`, correct: false },
-      { text: `The lesson ends in an hour.`, correct: false },
-      { text: `The lesson is at one.`, correct: false }
-    ]
-  }
-]} />
+### Time Words (Час)
+- година
+- хвилина
+- секунда
+- чверть
 
-### Months and Seasons
+---
 
-<Quiz questions={[
-  {
-    question: `Які місяці — зима?`,
-    options: [
-      { text: `Грудень, січень, лютий`, correct: true },
-      { text: `Березень, квітень, травень`, correct: false },
-      { text: `Червень, липень, серпень`, correct: false },
-      { text: `Вересень, жовтень, листопад`, correct: false }
-    ]
-  },  {
-    question: `Коли листя падає?`,
-    options: [
-      { text: `У листопаді`, correct: true },
-      { text: `У травні`, correct: false },
-      { text: `У січні`, correct: false },
-      { text: `У липні`, correct: false }
-    ]
-  },  {
-    question: `Який місяць названий на честь берези?`,
-    options: [
-      { text: `Березень`, correct: true },
-      { text: `Квітень`, correct: false },
-      { text: `Травень`, correct: false },
-      { text: `Липень`, correct: false }
-    ]
-  },  {
-    question: `Який день після четверга?`,
-    options: [
-      { text: `П'ятниця`, correct: true },
-      { text: `Середа`, correct: false },
-      { text: `Субота`, correct: false },
-      { text: `Вівторок`, correct: false }
-    ]
-  },  {
-    question: `Які місяці — весна?`,
-    options: [
-      { text: `Березень, квітень, травень`, correct: true },
-      { text: `Грудень, січень, лютий`, correct: false },
-      { text: `Червень, липень, серпень`, correct: false },
-      { text: `Вересень, жовтень, листопад`, correct: false }
-    ]
-  },  {
-    question: `Який місяць названий на честь липи (дерева)?`,
-    options: [
-      { text: `Липень`, correct: true },
-      { text: `Березень`, correct: false },
-      { text: `Вересень`, correct: false },
-      { text: `Травень`, correct: false }
-    ]
-  },  {
-    question: `Який перший день тижня в Україні?`,
-    options: [
-      { text: `Понеділок`, correct: true },
-      { text: `Неділя`, correct: false },
-      { text: `Субота`, correct: false },
-      { text: `Вівторок`, correct: false }
-    ]
-  },  {
-    question: `Які дні — вихідні?`,
-    options: [
-      { text: `Субота і неділя`, correct: true },
-      { text: `Понеділок і вівторок`, correct: false },
-      { text: `П'ятниця і субота`, correct: false },
-      { text: `Четвер і п'ятниця`, correct: false }
-    ]
-  }
-]} />
+## fill-in: Telling Time
+> Choose the correct time expression.
 
-### Time Sentences
+1. Зараз ___ година.
+   > [!answer] друга
+   > [!options] друга | два | другий | друге
 
-<Unjumble items={[
-  { jumbled: `година / котра / зараз / ?`, answer: `Котра зараз година?` },
-  { jumbled: `о / зустріч / третій / наша`, answer: `Наша зустріч о третій.` },
-  { jumbled: `понеділок / сьогодні / робочий день / це`, answer: `Сьогодні понеділок, це робочий день.` },
-  { jumbled: `вихідні / я / у / відпочиваю`, answer: `У вихідні я відпочиваю.` },
-  { jumbled: `працює / магазин / до / дев'ятої / шостої / з`, answer: `Магазин працює з дев'ятої до шостої.` },
-  { jumbled: `народження / травні / мій / у / день`, answer: `Мій день народження у травні.` }
-]} />
+2. О котрій зустріч? — О ___.
+   > [!answer] п'ятій
+   > [!options] п'ятій | п'ять | п'ятого | п'яти
 
-### Calendar Knowledge
+3. Магазин працює з дев'ятої ___ шостої.
+   > [!answer] до
+   > [!options] до | о | на | в
 
-<TrueFalse items={[
-  {
-    statement: `Понеділок — перший день тижня в Україні.`,
-    isTrue: true,
-    explanation: `Correct! The Ukrainian week starts on Monday.`
-  },  {
-    statement: `Тиждень має шість днів.`,
-    isTrue: false,
-    explanation: `Incorrect! A week has seven days.`
-  },  {
-    statement: `Листопад названий від \"листя падає\".`,
-    isTrue: true,
-    explanation: `Correct! Listopad means \"leaves fall.\"`
-  },  {
-    statement: `Субота — це робочий день.`,
-    isTrue: false,
-    explanation: `Incorrect! Saturday is a weekend day.`
-  },  {
-    statement: `Червень, липень, серпень — це літо.`,
-    isTrue: true,
-    explanation: `Correct! These are the summer months.`
-  },  {
-    statement: `Січень — це весняний місяць.`,
-    isTrue: false,
-    explanation: `Incorrect! January is a winter month.`
-  },  {
-    statement: `Неділя означає \"немає діла\" (no work).`,
-    isTrue: true,
-    explanation: `Correct! Nedilya means \"no work.\"`
-  },  {
-    statement: `Середа — це останній день тижня.`,
-    isTrue: false,
-    explanation: `Incorrect! Wednesday is the middle of the week.`
-  },  {
-    statement: `Україна використовує 24-годинний формат часу.`,
-    isTrue: true,
-    explanation: `Correct! Ukraine uses 24-hour time officially.`
-  },  {
-    statement: `\"Рано\" означає \"late\".`,
-    isTrue: false,
-    explanation: `Incorrect! \"Рано\" means \"early.\"`
-  },  {
-    statement: `\"Вчасно\" означає \"on time\".`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `Вихідні — це понеділок і вівторок.`,
-    isTrue: false,
-    explanation: `Incorrect! Weekend is Saturday and Sunday.`
-  }
-]} />
+4. ___ обіду я відпочиваю.
+   > [!answer] Після
+   > [!options] Після | До | О | На
+
+5. Я приїду ___ третій.
+   > [!answer] о
+   > [!options] о | до | з | на
+
+6. Зараз пів ___ третю.
+   > [!answer] на
+   > [!options] на | до | о | в
+
+7. Зустріч ___ дванадцятій.
+   > [!answer] о
+   > [!options] о | до | на | в
+
+8. Ти прийшов ___!
+   > [!answer] вчасно
+   > [!options] вчасно | рано | пізно | зараз
+
+---
+
+## fill-in: Days and Months
+> Complete with the correct day or month.
+
+1. Сьогодні ___. Завтра буде субота.
+   > [!answer] п'ятниця
+   > [!options] п'ятниця | четвер | середа | неділя
+
+2. Мій день народження в ___.
+   > [!answer] травні
+   > [!options] травні | травень | травня | травню
+
+3. Перший день тижня — це ___.
+   > [!answer] понеділок
+   > [!options] понеділок | неділя | субота | вівторок
+
+4. ___ — це пора листопаду.
+   > [!answer] Листопад
+   > [!options] Листопад | Жовтень | Вересень | Грудень
+
+5. Новий рік — це перше ___.
+   > [!answer] січня
+   > [!options] січня | січень | січню | січні
+
+6. У ___ я відпочиваю.
+   > [!answer] вихідні
+   > [!options] вихідні | понеділок | робочий день | тиждень
+
+7. Літо — це червень, липень і ___.
+   > [!answer] серпень
+   > [!options] серпень | вересень | травень | квітень
+
+8. Сьогодні ___, це середина тижня.
+   > [!answer] середа
+   > [!options] середа | четвер | п'ятниця | понеділок
+
+---
+
+## quiz: Time Expressions
+
+Choose the correct translation.
+
+1. Котра година?
+   - [x] What time is it?
+   - [ ] Which day is it?
+   - [ ] What date is it?
+   - [ ] How long is it?
+
+2. Зустріч о третій.
+   - [x] The meeting is at three.
+   - [ ] The meeting is at third.
+   - [ ] The meeting lasts three hours.
+   - [ ] Three meetings today.
+
+3. Він приходить рано.
+   - [x] He comes early.
+   - [ ] He comes late.
+   - [ ] He comes on time.
+   - [ ] He comes now.
+
+4. Магазин працює з дев'ятої до шостої.
+   - [x] The store works from nine to six.
+   - [ ] The store works until nine.
+   - [ ] The store works at six.
+   - [ ] The store is closed from nine to six.
+
+5. Зараз половина на другу.
+   - [x] It's half past one now.
+   - [ ] It's two o'clock now.
+   - [ ] It's one o'clock now.
+   - [ ] It's half past two now.
+
+6. Я приїхав вчасно.
+   - [x] I arrived on time.
+   - [ ] I arrived early.
+   - [ ] I arrived late.
+   - [ ] I will arrive.
+
+7. Після обіду я відпочиваю.
+   - [x] After lunch I rest.
+   - [ ] Before lunch I rest.
+   - [ ] During lunch I rest.
+   - [ ] At lunch I rest.
+
+8. Урок триває годину.
+   - [x] The lesson lasts an hour.
+   - [ ] The lesson starts in an hour.
+   - [ ] The lesson ends in an hour.
+   - [ ] The lesson is at one.
+
+---
+
+## quiz: Months and Seasons
+
+Select the correct answer.
+
+1. Які місяці — зима?
+   - [x] Грудень, січень, лютий
+   - [ ] Березень, квітень, травень
+   - [ ] Червень, липень, серпень
+   - [ ] Вересень, жовтень, листопад
+
+2. Коли листя падає?
+   - [x] У листопаді
+   - [ ] У травні
+   - [ ] У січні
+   - [ ] У липні
+
+3. Який місяць названий на честь берези?
+   - [x] Березень
+   - [ ] Квітень
+   - [ ] Травень
+   - [ ] Липень
+
+4. Який день після четверга?
+   - [x] П'ятниця
+   - [ ] Середа
+   - [ ] Субота
+   - [ ] Вівторок
+
+5. Які місяці — весна?
+   - [x] Березень, квітень, травень
+   - [ ] Грудень, січень, лютий
+   - [ ] Червень, липень, серпень
+   - [ ] Вересень, жовтень, листопад
+
+6. Який місяць названий на честь липи (дерева)?
+   - [x] Липень
+   - [ ] Березень
+   - [ ] Вересень
+   - [ ] Травень
+
+7. Який перший день тижня в Україні?
+   - [x] Понеділок
+   - [ ] Неділя
+   - [ ] Субота
+   - [ ] Вівторок
+
+8. Які дні — вихідні?
+   - [x] Субота і неділя
+   - [ ] Понеділок і вівторок
+   - [ ] П'ятниця і субота
+   - [ ] Четвер і п'ятниця
+
+---
+
+## unjumble: Time Sentences
+
+Put the words in the correct order.
+
+1. година / котра / зараз / ?
+   > [!answer] Котра зараз година?
+
+2. о / зустріч / третій / наша
+   > [!answer] Наша зустріч о третій.
+
+3. понеділок / сьогодні / робочий день / це
+   > [!answer] Сьогодні понеділок, це робочий день.
+
+4. вихідні / я / у / відпочиваю
+   > [!answer] У вихідні я відпочиваю.
+
+5. працює / магазин / до / дев'ятої / шостої / з
+   > [!answer] Магазин працює з дев'ятої до шостої.
+
+6. народження / травні / мій / у / день
+   > [!answer] Мій день народження у травні.
+
+---
+
+## true-false: Calendar Knowledge
+
+Decide if each statement is true or false.
+
+- [x] Понеділок — перший день тижня в Україні.
+  > Correct! The Ukrainian week starts on Monday.
+
+- [ ] Тиждень має шість днів.
+  > Incorrect! A week has seven days.
+
+- [x] Листопад названий від "листя падає".
+  > Correct! Listopad means "leaves fall."
+
+- [ ] Субота — це робочий день.
+  > Incorrect! Saturday is a weekend day.
+
+- [x] Червень, липень, серпень — це літо.
+  > Correct! These are the summer months.
+
+- [ ] Січень — це весняний місяць.
+  > Incorrect! January is a winter month.
+
+- [x] Неділя означає "немає діла" (no work).
+  > Correct! Nedilya means "no work."
+
+- [ ] Середа — це останній день тижня.
+  > Incorrect! Wednesday is the middle of the week.
+
+- [x] Україна використовує 24-годинний формат часу.
+  > Correct! Ukraine uses 24-hour time officially.
+
+- [ ] "Рано" означає "late".
+  > Incorrect! "Рано" means "early."
+
+- [x] "Вчасно" означає "on time".
+  > Correct!
+
+- [ ] Вихідні — це понеділок і вівторок.
+  > Incorrect! Weekend is Saturday and Sunday.
+
+---
+
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |

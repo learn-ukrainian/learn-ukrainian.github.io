@@ -5,19 +5,20 @@ title: "Aspect Pairs Deep Dive"
 description: "Prefixation Patterns and Common Pairs"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 **Ласкаво просимо до глибшого вивчення аспектних пар!**
@@ -41,6 +42,17 @@ However, you need to understand the patterns to make these predictions accuratel
 > 💡 **Запам'ятайте!**
 >
 > Більшість українських дієслів утворюють доконаний вид за допомогою префіксів. Коли бачите дієслово з префіксом — швидше за все, це доконаний вид!
+
+:::info
+🔗 External Resources
+
+**YouTube:** [Learn 50 important Ukrainian Verb Pairs: Imperfective + Perfective ...](https://www.youtube.com/watch?v=iK4uNlozmFE) — #Ukrainian
+
+**Grammar Guide:** [Perfective Verbs](https://www.ukrainianlessons.com/perfective-verbs/) — Ukrainian Lessons
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+:::
+
 
 ---
 
@@ -126,7 +138,8 @@ When prefixed perfective verbs need imperfective counterparts, Ukrainian often a
 
 For example: показати — perfective → показувати — imperfective.
 
-:::tip[Easy Recognition]
+:::tip
+Easy Recognition
 If a verb ends in -вати or -увати, it's almost always imperfective. Remove the suffix, and you often get the perfective!
 :::
 
@@ -246,372 +259,25 @@ Adding different prefixes to the same root creates different perfective verbs wi
 
 Тепер ви можете розпізнавати аспектні пари та передбачати форми нових дієслів! 🔍
 
-## 🎯 Activities
 
-### Aspect Pairs
 
-<MatchUp pairs={[
-  { left: `читати`, right: `прочитати` },
-  { left: `писати`, right: `написати` },
-  { left: `робити`, right: `зробити` },
-  { left: `їсти`, right: `з'їсти` },
-  { left: `бачити`, right: `побачити` },
-  { left: `чути`, right: `почути` },
-  { left: `давати`, right: `дати` },
-  { left: `вставати`, right: `встати` },
-  { left: `відпочивати`, right: `відпочити` },
-  { left: `говорити`, right: `сказати` },
-  { left: `брати`, right: `взяти` },
-  { left: `показувати`, right: `показати` }
-]} />
+> 💡 **Українське прислів'я**
+>
+> «Хто рано встає, тому Бог дає.» (Встати — доконаний вид! Результат важливий!)
+>
+> *Translation: "God gives to those who rise early." (Встати is perfective — result matters!)*
 
-### Identify the Pattern
+> 🇺🇦 **Практика морфології**
+>
+> Запам'ятайте основні префікси для творення доконаного виду:
+> - **про-**: читати → прочитати (закінчити читання)
+> - **на-**: писати → написати (закінчити писання)
+> - **з-/с-**: робити → зробити (закінчити роботу)
+> - **по-**: бачити → побачити (побачити щось нове)
+>
+> Ці префікси — ваші найкращі друзі в українській мові! Коли ви бачите префікс перед дієсловом, це майже завжди означає доконаний вид. Практикуйте щодня!
 
-<FillIn items={[
-  {
-    sentence: `читати → прочитати: ___`,
-    answer: `про- prefix`,
-    options: [`про- prefix`, `на- prefix`, `-ва- removal`, `suppletive`]
-  },  {
-    sentence: `писати → написати: ___`,
-    answer: `на- prefix`,
-    options: [`про- prefix`, `на- prefix`, `-ва- removal`, `suppletive`]
-  },  {
-    sentence: `давати → дати: ___`,
-    answer: `-ва- removal`,
-    options: [`про- prefix`, `з- prefix`, `-ва- removal`, `suppletive`]
-  },  {
-    sentence: `говорити → сказати: ___`,
-    answer: `suppletive`,
-    options: [`по- prefix`, `с- prefix`, `-ва- removal`, `suppletive`]
-  },  {
-    sentence: `робити → зробити: ___`,
-    answer: `з- prefix`,
-    options: [`про- prefix`, `на- prefix`, `з- prefix`, `suppletive`]
-  },  {
-    sentence: `бачити → побачити: ___`,
-    answer: `по- prefix`,
-    options: [`про- prefix`, `на- prefix`, `по- prefix`, `suppletive`]
-  },  {
-    sentence: `вчити → вивчити: ___`,
-    answer: `ви- prefix`,
-    options: [`про- prefix`, `ви- prefix`, `-ва- removal`, `suppletive`]
-  },  {
-    sentence: `брати → взяти: ___`,
-    answer: `suppletive`,
-    options: [`в- prefix`, `ви- prefix`, `-ва- removal`, `suppletive`]
-  },  {
-    sentence: `вставати → встати: ___`,
-    answer: `-ва- removal`,
-    options: [`про- prefix`, `з- prefix`, `-ва- removal`, `suppletive`]
-  },  {
-    sentence: `їсти → з'їсти: ___`,
-    answer: `з- prefix`,
-    options: [`про- prefix`, `на- prefix`, `з- prefix`, `suppletive`]
-  },  {
-    sentence: `показувати → показати: ___`,
-    answer: `-ува- removal`,
-    options: [`по- prefix`, `на- prefix`, `-ува- removal`, `suppletive`]
-  },  {
-    sentence: `чути → почути: ___`,
-    answer: `по- prefix`,
-    options: [`про- prefix`, `на- prefix`, `по- prefix`, `suppletive`]
-  }
-]} />
 
-### Aspect Formation
-
-<Quiz questions={[
-  {
-    question: `Which prefix means \"through/completion\"?`,
-    options: [
-      { text: `про-`, correct: true },
-      { text: `на-`, correct: false },
-      { text: `по-`, correct: false }
-    ]
-  },  {
-    question: `Which prefix is common for writing/creating?`,
-    options: [
-      { text: `на-`, correct: true },
-      { text: `про-`, correct: false },
-      { text: `ви-`, correct: false }
-    ]
-  },  {
-    question: `If a verb has -ва- or -ува-, it's usually:`,
-    options: [
-      { text: `Imperfective`, correct: true },
-      { text: `Perfective`, correct: false }
-    ]
-  },  {
-    question: `\"Говорити / сказати\" are:`,
-    options: [
-      { text: `Suppletive pairs (different roots)`, correct: true },
-      { text: `Prefixed pairs`, correct: false },
-      { text: `Suffixed pairs`, correct: false }
-    ]
-  },  {
-    question: `What's the perfective of \"давати\"?`,
-    options: [
-      { text: `дати (remove -ва-)`, correct: true },
-      { text: `давив`, correct: false },
-      { text: `подавати`, correct: false }
-    ]
-  },  {
-    question: `What's the perfective of \"вчити\"?`,
-    options: [
-      { text: `вивчити (ви- prefix)`, correct: true },
-      { text: `провчити`, correct: false },
-      { text: `вчивати`, correct: false }
-    ]
-  },  {
-    question: `Prefix \"з-\" becomes \"с-\" before:`,
-    options: [
-      { text: `Voiceless consonants`, correct: true },
-      { text: `Vowels`, correct: false },
-      { text: `All consonants`, correct: false }
-    ]
-  },  {
-    question: `\"Показувати\" is:`,
-    options: [
-      { text: `Imperfective (-ува-)`, correct: true },
-      { text: `Perfective`, correct: false }
-    ]
-  },  {
-    question: `Adding different prefixes to одне verb creates:`,
-    options: [
-      { text: `Different verbs with different meanings`, correct: true },
-      { text: `The same verb with same meaning`, correct: false },
-      { text: `Only aspect change`, correct: false }
-    ]
-  },  {
-    question: `\"Ви-\" often means:`,
-    options: [
-      { text: `Out, mastery, completion`, correct: true },
-      { text: `In, beginning`, correct: false },
-      { text: `Under`, correct: false }
-    ]
-  },  {
-    question: `Number of suppletive pairs is:`,
-    options: [
-      { text: `Small, must memorize`, correct: true },
-      { text: `Large`, correct: false },
-      { text: `Zero`, correct: false }
-    ]
-  },  {
-    question: `When you see a prefixed verb, assume:`,
-    options: [
-      { text: `It's probably perfective`, correct: true },
-      { text: `It's probably imperfective`, correct: false },
-      { text: `You can't tell`, correct: false }
-    ]
-  }
-]} />
-
-### Formation Rules
-
-<TrueFalse items={[
-  {
-    statement: `Most perfective verbs are formed with prefixes.`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `Verbs with -ва-/-ува- are usually imperfective.`,
-    isTrue: true,
-    explanation: `Yes!`
-  },  {
-    statement: `All aspect pairs use the same root.`,
-    isTrue: false,
-    explanation: `Suppletive pairs like говорити/сказати use different roots.`
-  },  {
-    statement: `\"про-\" often means through or completion.`,
-    isTrue: true,
-    explanation: `Correct! Прочитати = read through.`
-  },  {
-    statement: `Suppletive pairs must be memorized.`,
-    isTrue: true,
-    explanation: `Yes, no pattern to predict them.`
-  },  {
-    statement: `\"сказати\" is imperfective.`,
-    isTrue: false,
-    explanation: `\"Сказати\" is perfective. \"Говорити\" is imperfective.`
-  },  {
-    statement: `\"Давати → дати\" shows -ва- removal.`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `Prefix changes can change verb meaning.`,
-    isTrue: true,
-    explanation: `Yes! Писати, написати, переписати, підписати all differ!`
-  },  {
-    statement: `\"Вставати\" is perfective.`,
-    isTrue: false,
-    explanation: `\"Вставати\" has -ва-, so it's imperfective.`
-  },  {
-    statement: `\"По-\" can mark moment of perception.`,
-    isTrue: true,
-    explanation: `Yes! Побачити = to catch sight of.`
-  },  {
-    statement: `Prefixed verbs can have their own imperfective forms.`,
-    isTrue: true,
-    explanation: `Correct! Переписати → переписувати.`
-  },  {
-    statement: `All prefixes perfectivize without changing meaning.`,
-    isTrue: false,
-    explanation: `Different prefixes add different meanings!`
-  }
-]} />
-
-### Formation Patterns
-
-<GroupSort groups={{
-  "Prefix про-": ["читати/прочитати", "слухати/прослухати"],
-  "Prefix на-": ["писати/написати", "малювати/намалювати"],
-  "Prefix з-": ["робити/зробити", "їсти/з'їсти"],
-  "Prefix по-": ["бачити/побачити", "чути/почути"],
-  "-ва- removal": ["давати/дати", "вставати/встати", "відпочивати/відпочити"],
-  "Suppletive": ["говорити/сказати", "брати/взяти"]
-}} />
-
-### Aspect Pattern Sentences
-
-<Unjumble items={[
-  { jumbled: `про / читати / = / прочитати`, answer: `Про- + читати = прочитати.` },
-  { jumbled: `на / писати / = / написати`, answer: `На- + писати = написати.` },
-  { jumbled: `з / робити / = / зробити`, answer: `З- + робити = зробити.` },
-  { jumbled: `давати / мінус / -ва- / = / дати`, answer: `Давати мінус -ва- = дати.` },
-  { jumbled: `говорити / сказати / різні / корені`, answer: `Говорити і сказати — різні корені.` },
-  { jumbled: `по / бачити / = / побачити`, answer: `По- + бачити = побачити.` },
-  { jumbled: `ви / вчити / = / вивчити`, answer: `Ви- + вчити = вивчити.` },
-  { jumbled: `вставати / встати / -ва- / видалення`, answer: `Вставати → встати: -ва- видалення.` },
-  { jumbled: `брати / взяти / суплетивна / пара`, answer: `Брати/взяти — суплетивна пара.` },
-  { jumbled: `з'їсти / їсти / з- / префікс`, answer: `Їсти + з- префікс = з'їсти.` },
-  { jumbled: `відпочивати / відпочити / -ва-`, answer: `Відпочивати → відпочити: -ва- removal.` },
-  { jumbled: `показувати / показати / -ува-`, answer: `Показувати → показати: -ува- removal.` }
-]} />
-
-### Find the Perfective
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`читати → ___`}
-    errorWord={`___`}
-    correctForm={`прочитати`}
-    options={[`читати`, `прочитати`, `начитати`, `зачитати`]}
-    explanation={`Про- prefix for completion.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`писати → ___`}
-    errorWord={`___`}
-    correctForm={`написати`}
-    options={[`писати`, `написати`, `пописати`, `списати`]}
-    explanation={`На- prefix for writing/creating.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`робити → ___`}
-    errorWord={`___`}
-    correctForm={`зробити`}
-    options={[`робити`, `зробити`, `проробити`, `наробити`]}
-    explanation={`З- prefix for completion.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`давати → ___`}
-    errorWord={`___`}
-    correctForm={`дати`}
-    options={[`давати`, `дати`, `подавати`, `надавати`]}
-    explanation={`Remove -ва-.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`говорити → ___`}
-    errorWord={`___`}
-    correctForm={`сказати`}
-    options={[`говорити`, `проговорити`, `сказати`, `заговорити`]}
-    explanation={`Suppletive pair — different roots!`}
-  />
-  <ErrorCorrectionItem
-    sentence={`брати → ___`}
-    errorWord={`___`}
-    correctForm={`взяти`}
-    options={[`брати`, `пробрати`, `взяти`, `забрати`]}
-    explanation={`Suppletive pair — different roots!`}
-  />
-</ErrorCorrection>
-
-### Pattern Recognition
-
-<Cloze
-  passage={`Аспектна пара читати/прочитати використовує [___:1]. Пара писати/написати використовує [___:2]. Пара давати/дати використовує [___:3]. Пара говорити/сказати — це [___:4] пара.`}
-  blanks={[{ answer: `про-`, options: [`про-`] }, { answer: `на-`, options: [`на-`] }, { answer: `-ва-`, options: [`-ва-`] }, { answer: `suppletive`, options: [`suppletive`] }]}
-/>
-
-### Learning Aspect
-
-<DialogueReorder lines={[
-  { text: `Як утворити доконаний вид від \"читати\"?`, order: 1 },
-  { text: `Додай префікс \"про-\" і отримаєш \"прочитати.\"`, order: 2 },
-  { text: `А від \"давати\"?`, order: 3 },
-  { text: `Тут інакше — видали суфікс \"-ва-\" і отримаєш \"дати.\"`, order: 4 },
-  { text: `А \"говорити\"?`, order: 5 },
-  { text: `Це суплетивна пара — доконаний вид \"сказати\" має інший корінь!`, order: 6 },
-  { text: `Чому \"написати\" і \"переписати\" різні?`, order: 7 },
-  { text: `Бо різні префікси додають різні значення.`, order: 8 },
-  { text: `Яке значення \"пере-\"?`, order: 9 },
-  { text: `\"Пере-\" означає \"знову\" або \"через.\"`, order: 10 },
-  { text: `Отже, \"переписати\" — написати знову?`, order: 11 },
-  { text: `Так, точно!`, order: 12 }
-]} />
-
-### Identify Perfective Verbs
-
-<MarkTheWords>
-<MarkTheWordsActivity
-  text={`Click on PERFECTIVE verbs only.
-
-Я прочитав книгу. Потім я написав рецензію. Він сказав правду. Вона довго говорила.`}
-  correctWords={[`прочитав`, `написав`, `сказав`]}
-/>
-<MarkTheWordsActivity
-  text={`Ми вивчили урок. Вона встала рано. Він давав книгу, а потім дав.`}
-  correctWords={[`вивчили`, `встала`, `дав`]}
-/>
-<MarkTheWordsActivity
-  text={`Вони побачили море! Він почув шум. Я взяв книгу і пішов.`}
-  correctWords={[`побачили`, `почув`, `взяв`, `пішов`]}
-/>
-</MarkTheWords>
-
-### English to Ukrainian
-
-<Translate questions={[
-  {
-    source: `I read through the book. (finished)`,
-    options: [
-      { text: `Я прочитав книгу.`, correct: true },
-      { text: `Я читав книгу.`, correct: false },
-      { text: `Вона дала книгу.`, correct: true },
-      { text: `Вона давала книгу.`, correct: false },
-      { text: `Він сказав правду.`, correct: true },
-      { text: `Він говорив правду.`, correct: false },
-      { text: `Я вивчив урок.`, correct: true },
-      { text: `Я вчив урок.`, correct: false },
-      { text: `Вона встала.`, correct: true },
-      { text: `Вона вставала.`, correct: false },
-      { text: `Він узяв книгу.`, correct: true },
-      { text: `Він брав книгу.`, correct: false },
-      { text: `Ми побачили море!`, correct: true },
-      { text: `Ми бачили море!`, correct: false },
-      { text: `Вона відпочила.`, correct: true },
-      { text: `Вона відпочивала.`, correct: false },
-      { text: `Він показав фото.`, correct: true },
-      { text: `Він показував фото.`, correct: false },
-      { text: `Вони почули новини.`, correct: true },
-      { text: `Вони чули новини.`, correct: false },
-      { text: `Я з'їв усе.`, correct: true },
-      { text: `Я їв усе.`, correct: false },
-      { text: `Вона випила каву.`, correct: true },
-      { text: `Вона пила каву.`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -656,4 +322,534 @@ Adding different prefixes to the same root creates different perfective verbs wi
 
 ---
 
+
+
+---
+
+## 🎯 Activities
+
+### Aspect Pairs
+
+<MatchUp pairs={[
+  { left: `читати`, right: `прочитати` },
+  { left: `писати`, right: `написати` },
+  { left: `робити`, right: `зробити` },
+  { left: `їсти`, right: `з'їсти` },
+  { left: `бачити`, right: `побачити` },
+  { left: `чути`, right: `почути` },
+  { left: `давати`, right: `дати` },
+  { left: `вставати`, right: `встати` },
+  { left: `відпочивати`, right: `відпочити` },
+  { left: `говорити`, right: `сказати` },
+  { left: `брати`, right: `взяти` },
+  { left: `показувати`, right: `показати` }
+]} />
+
+### Identify the Pattern
+
+*What pattern forms this aspect pair?*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. читати → прочитати: ___`}
+    answer={`про- prefix`}
+    options={[`про- prefix`, `на- prefix`, `-ва- removal`, `suppletive`]}
+  />
+  <FillInQuestion
+    sentence={`читати → ___ (add prefix for perfective)`}
+    answer={`прочитати`}
+    options={[`прочитати`, `почитати`, `зачитати`]}
+  />
+  <FillInQuestion
+    sentence={`писати → ___ (add prefix for perfective)`}
+    answer={`написати`}
+    options={[`написати`, `пописати`, `виписати`]}
+  />
+  <FillInQuestion
+    sentence={`писати → написати: ___`}
+    answer={`на- prefix`}
+    options={[`про- prefix`, `на- prefix`, `-ва- removal`, `suppletive`]}
+  />
+  <FillInQuestion
+    sentence={`давати → дати: ___`}
+    answer={`-ва- removal`}
+    options={[`про- prefix`, `з- prefix`, `-ва- removal`, `suppletive`]}
+  />
+  <FillInQuestion
+    sentence={`говорити → сказати: ___`}
+    answer={`suppletive`}
+    options={[`по- prefix`, `с- prefix`, `-ва- removal`, `suppletive`]}
+  />
+  <FillInQuestion
+    sentence={`робити → зробити: ___`}
+    answer={`з- prefix`}
+    options={[`про- prefix`, `на- prefix`, `з- prefix`, `suppletive`]}
+  />
+  <FillInQuestion
+    sentence={`бачити → побачити: ___`}
+    answer={`по- prefix`}
+    options={[`про- prefix`, `на- prefix`, `по- prefix`, `suppletive`]}
+  />
+  <FillInQuestion
+    sentence={`вчити → вивчити: ___`}
+    answer={`ви- prefix`}
+    options={[`про- prefix`, `ви- prefix`, `-ва- removal`, `suppletive`]}
+  />
+  <FillInQuestion
+    sentence={`брати → взяти: ___`}
+    answer={`suppletive`}
+    options={[`в- prefix`, `ви- prefix`, `-ва- removal`, `suppletive`]}
+  />
+  <FillInQuestion
+    sentence={`вставати → встати: ___`}
+    answer={`-ва- removal`}
+    options={[`про- prefix`, `з- prefix`, `-ва- removal`, `suppletive`]}
+  />
+  <FillInQuestion
+    sentence={`їсти → з'їсти: ___`}
+    answer={`з- prefix`}
+    options={[`про- prefix`, `на- prefix`, `з- prefix`, `suppletive`]}
+  />
+  <FillInQuestion
+    sentence={`показувати → показати: ___`}
+    answer={`-ува- removal`}
+    options={[`по- prefix`, `на- prefix`, `-ува- removal`, `suppletive`]}
+  />
+  <FillInQuestion
+    sentence={`чути → почути: ___`}
+    answer={`по- prefix`}
+    options={[`про- prefix`, `на- prefix`, `по- prefix`, `suppletive`]}
+  />
+</FillIn>
+
+### Aspect Formation
+
+<Quiz>
+  <QuizQuestion
+    question={`1. Which prefix means "through/completion"?`}
+    options={[`про-`, `на-`, `по-`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Which prefix is common for writing/creating?`}
+    options={[`на-`, `про-`, `ви-`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`If a verb has -ва- or -ува-, it's usually:`}
+    options={[`Imperfective`, `Perfective`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Говорити / сказати" are:`}
+    options={[`Suppletive pairs (different roots)`, `Prefixed pairs`, `Suffixed pairs`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`What's the perfective of "давати"?`}
+    options={[`дати (remove -ва-)`, `давив`, `подавати`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`What's the perfective of "вчити"?`}
+    options={[`вивчити (ви- prefix)`, `провчити`, `вчивати`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Prefix "з-" becomes "с-" before:`}
+    options={[`Voiceless consonants`, `Vowels`, `All consonants`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Показувати" is:`}
+    options={[`Imperfective (-ува-)`, `Perfective`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Adding different prefixes to одне verb creates:`}
+    options={[`Different verbs with different meanings`, `The same verb with same meaning`, `Only aspect change`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Ви-" often means:`}
+    options={[`Out, mastery, completion`, `In, beginning`, `Under`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Number of suppletive pairs is:`}
+    options={[`Small, must memorize`, `Large`, `Zero`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`When you see a prefixed verb, assume:`}
+    options={[`It's probably perfective`, `It's probably imperfective`, `You can't tell`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### Formation Rules
+
+*Decide if each statement is true or false.*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`Most perfective verbs are formed with prefixes.`}
+    isTrue={true}
+    explanation={`Correct!`}
+  />
+  <TrueFalseQuestion
+    statement={`Verbs with -ва-/-ува- are usually imperfective.`}
+    isTrue={true}
+    explanation={`Yes!`}
+  />
+  <TrueFalseQuestion
+    statement={`All aspect pairs use the same root.`}
+    isTrue={false}
+    explanation={`Suppletive pairs like говорити/сказати use different roots.`}
+  />
+  <TrueFalseQuestion
+    statement={`"про-" often means through or completion.`}
+    isTrue={true}
+    explanation={`Correct! Прочитати = read through.`}
+  />
+  <TrueFalseQuestion
+    statement={`Suppletive pairs must be memorized.`}
+    isTrue={true}
+    explanation={`Yes, no pattern to predict them.`}
+  />
+  <TrueFalseQuestion
+    statement={`"сказати" is imperfective.`}
+    isTrue={false}
+    explanation={`"Сказати" is perfective. "Говорити" is imperfective.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Давати → дати" shows -ва- removal.`}
+    isTrue={true}
+    explanation={`Correct!`}
+  />
+  <TrueFalseQuestion
+    statement={`Prefix changes can change verb meaning.`}
+    isTrue={true}
+    explanation={`Yes! Писати, написати, переписати, підписати all differ!`}
+  />
+  <TrueFalseQuestion
+    statement={`"Вставати" is perfective.`}
+    isTrue={false}
+    explanation={`"Вставати" has -ва-, so it's imperfective.`}
+  />
+  <TrueFalseQuestion
+    statement={`"По-" can mark moment of perception.`}
+    isTrue={true}
+    explanation={`Yes! Побачити = to catch sight of.`}
+  />
+  <TrueFalseQuestion
+    statement={`Prefixed verbs can have their own imperfective forms.`}
+    isTrue={true}
+    explanation={`Correct! Переписати → переписувати.`}
+  />
+  <TrueFalseQuestion
+    statement={`All prefixes perfectivize without changing meaning.`}
+    isTrue={false}
+    explanation={`Different prefixes add different meanings!`}
+  />
+</TrueFalse>
+
+### Formation Patterns
+
+*Sort these pairs by how the perfective is formed.*
+
+
+<GroupSort groups={{
+  "### Prefix про-": [
+    "читати/прочитати",
+    "слухати/прослухати"
+  ],
+  "Prefix на-": [
+    "писати/написати",
+    "малювати/намалювати"
+  ],
+  "Prefix з-": [
+    "робити/зробити",
+    "їсти/з'їсти"
+  ],
+  "Prefix по-": [
+    "бачити/побачити",
+    "чути/почути"
+  ],
+  "-ва- removal": [
+    "давати/дати",
+    "вставати/встати",
+    "відпочивати/відпочити"
+  ],
+  "Suppletive": [
+    "говорити/сказати",
+    "брати/взяти"
+  ]
+}} />
+
+### Aspect Pattern Sentences
+
+*Put the words in the correct order.*
+
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`про / читати / = / прочитати`}
+    answer={`Про- + читати = прочитати.`}
+  />
+  <UnjumbleQuestion
+    words={`на / писати / = / написати`}
+    answer={`На- + писати = написати.`}
+  />
+  <UnjumbleQuestion
+    words={`з / робити / = / зробити`}
+    answer={`З- + робити = зробити.`}
+  />
+  <UnjumbleQuestion
+    words={`давати / мінус / -ва- / = / дати`}
+    answer={`Давати мінус -ва- = дати.`}
+  />
+  <UnjumbleQuestion
+    words={`говорити / сказати / різні / корені`}
+    answer={`Говорити і сказати — різні корені.`}
+  />
+  <UnjumbleQuestion
+    words={`по / бачити / = / побачити`}
+    answer={`По- + бачити = побачити.`}
+  />
+  <UnjumbleQuestion
+    words={`ви / вчити / = / вивчити`}
+    answer={`Ви- + вчити = вивчити.`}
+  />
+  <UnjumbleQuestion
+    words={`вставати / встати / -ва- / видалення`}
+    answer={`Вставати → встати: -ва- видалення.`}
+  />
+  <UnjumbleQuestion
+    words={`брати / взяти / суплетивна / пара`}
+    answer={`Брати/взяти — суплетивна пара.`}
+  />
+  <UnjumbleQuestion
+    words={`з'їсти / їсти / з- / префікс`}
+    answer={`Їсти + з- префікс = з'їсти.`}
+  />
+  <UnjumbleQuestion
+    words={`відпочивати / відпочити / -ва-`}
+    answer={`Відпочивати → відпочити: -ва- removal.`}
+  />
+  <UnjumbleQuestion
+    words={`показувати / показати / -ува-`}
+    answer={`Показувати → показати: -ува- removal.`}
+  />
+</Unjumble>
+
+### Find the Perfective
+
+*What's the perfective of each verb?*
+
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. читати → ___`}
+    error={`___`}
+    answer={`прочитати`}
+    options={[`читати`, `прочитати`, `начитати`, `зачитати`]}
+    explanation={`Про- prefix for completion.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`писати → ___`}
+    error={`___`}
+    answer={`написати`}
+    options={[`писати`, `написати`, `пописати`, `списати`]}
+    explanation={`На- prefix for writing/creating.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`робити → ___`}
+    error={`___`}
+    answer={`зробити`}
+    options={[`робити`, `зробити`, `проробити`, `наробити`]}
+    explanation={`З- prefix for completion.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`давати → ___`}
+    error={`___`}
+    answer={`дати`}
+    options={[`давати`, `дати`, `подавати`, `надавати`]}
+    explanation={`Remove -ва-.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`говорити → ___`}
+    error={`___`}
+    answer={`сказати`}
+    options={[`говорити`, `проговорити`, `сказати`, `заговорити`]}
+    explanation={`Suppletive pair — different roots!`}
+  />
+  <ErrorCorrectionItem
+    sentence={`брати → ___`}
+    error={`___`}
+    answer={`взяти`}
+    options={[`брати`, `пробрати`, `взяти`, `забрати`]}
+    explanation={`Suppletive pair — different roots!`}
+  />
+</ErrorCorrection>
+
+
+
+### Learning Aspect
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Як утворити доконаний вид від \"читати\"?"
+  },
+  {
+    "speaker": "",
+    "line": "Додай префікс \"про-\" і отримаєш \"прочитати.\""
+  },
+  {
+    "speaker": "",
+    "line": "А від \"давати\"?"
+  },
+  {
+    "speaker": "",
+    "line": "Тут інакше — видали суфікс \"-ва-\" і отримаєш \"дати.\""
+  },
+  {
+    "speaker": "",
+    "line": "А \"говорити\"?"
+  },
+  {
+    "speaker": "",
+    "line": "Це суплетивна пара — доконаний вид \"сказати\" має інший корінь!"
+  },
+  {
+    "speaker": "",
+    "line": "Чому \"написати\" і \"переписати\" різні?"
+  },
+  {
+    "speaker": "",
+    "line": "Бо різні префікси додають різні значення."
+  },
+  {
+    "speaker": "",
+    "line": "Яке значення \"пере-\"?"
+  },
+  {
+    "speaker": "",
+    "line": "\"Пере-\" означає \"знову\" або \"через.\""
+  },
+  {
+    "speaker": "",
+    "line": "Отже, \"переписати\" — написати знову?"
+  },
+  {
+    "speaker": "",
+    "line": "Так, точно!"
+  }
+]} />
+</DialogueReorder>
+
+### Identify Perfective Verbs
+
+Click on PERFECTIVE verbs only.
+
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Я прочитав книгу. Потім я написав рецензію. Він сказав правду. Вона довго говорила. Ми вивчили урок. Вона встала рано. Він давав книгу, а потім дав. Вони побачили море! Він почув шум. Я взяв книгу і пішов.`}
+    correctWords={[`прочитав`, `написав`, `сказав`, `вивчили`, `встала`, `дав`, `побачили`, `почув`, `взяв`, `пішов`]}
+  />
+</MarkTheWords>
+
+### English to Ukrainian
+
+<Translate>
+  <TranslateItem
+    source={`I read through the book. (finished)`}
+    answer={`Я прочитав книгу.`}
+    options={[`Я прочитав книгу.`, `Я читав книгу.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She gave the book. (completed)`}
+    answer={`Вона дала книгу.`}
+    options={[`Вона дала книгу.`, `Вона давала книгу.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`He said the truth.`}
+    answer={`Він сказав правду.`}
+    options={[`Він сказав правду.`, `Він говорив правду.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I learned the lesson. (mastered)`}
+    answer={`Я вивчив урок.`}
+    options={[`Я вивчив урок.`, `Я вчив урок.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She stood up.`}
+    answer={`Вона встала.`}
+    options={[`Вона встала.`, `Вона вставала.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`He took the book.`}
+    answer={`Він узяв книгу.`}
+    options={[`Він узяв книгу.`, `Він брав книгу.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`We saw the sea!`}
+    answer={`Ми побачили море!`}
+    options={[`Ми побачили море!`, `Ми бачили море!`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She rested. (completed)`}
+    answer={`Вона відпочила.`}
+    options={[`Вона відпочила.`, `Вона відпочивала.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`He showed the photo.`}
+    answer={`Він показав фото.`}
+    options={[`Він показав фото.`, `Він показував фото.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`They heard the news.`}
+    answer={`Вони почули новини.`}
+    options={[`Вони почули новини.`, `Вони чули новини.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I ate it all.`}
+    answer={`Я з'їв усе.`}
+    options={[`Я з'їв усе.`, `Я їв усе.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She drank the coffee.`}
+    answer={`Вона випила каву.`}
+    options={[`Вона випила каву.`, `Вона пила каву.`]}
+    explanation={``}
+  />
+</Translate>
 

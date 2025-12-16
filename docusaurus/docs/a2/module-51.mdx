@@ -5,19 +5,20 @@ title: "Education & Learning"
 description: "Studying in Ukrainian"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Education & Learning
@@ -30,7 +31,8 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 
 Education is a lifelong journey. In this module, you'll learn to talk about schools, universities, exams, and the tools of learning.
 
-:::warning[**Myth Buster** "Soviet Legacy?"]
+:::warning
+**Myth Buster** "Soviet Legacy?"
 While Soviet education was strong in math/physics, Ukraine has a much older tradition. The **Ostroh Academy** (1576) and **Kyiv-Mohyla Academy** (1615) were among the first universities in Eastern Europe, long before many "imperial" institutions. Ukraine has always been a center of European learning.
 :::
 
@@ -74,18 +76,20 @@ Higher education:
 - **дошка** — blackboard/whiteboard: *Дивіться на дошку.*
 - **знання** — knowledge: *Знання — це сила.*
 
-:::note[Grammar Point: Two ways to "Study"]
+:::note
+Grammar Point: Two ways to "Study"
 This is tricky!
 1. **Вчитися** (to study/learn generally): Focus on the process or place.
-* *Я вчуся в школі.* (I study at school).
-* *Він добре вчиться.* (He studies well).
+   * *Я вчуся в школі.* (I study at school).
+   * *Він добре вчиться.* (He studies well).
 2. **Вивчати** (to study/learn something specific): Needs an object (Accusative).
-* *Я вивчаю українську мову.* (I study Ukrainian language).
-* *Ми вивчаємо історію.* (We study history).
+   * *Я вивчаю українську мову.* (I study Ukrainian language).
+   * *Ми вивчаємо історію.* (We study history).
 :::
 
 
-:::note[**Cultural Insight** 12-Point System]
+:::note
+**Cultural Insight** 12-Point System
 Unlike the A-F or 1-5 systems, Ukrainian schools use a **12-point scale**.
 - 10-12: High (Відмінно)
 - 7-9: Good (Добре)
@@ -102,13 +106,8 @@ So getting a "12" is perfect!
 Сьогодні перше вересня. Це свято — День знань.
 Маленький Тарас йде у **школу**. У нього новий рюкзак і красива форма. В руках він несе квіти для **вчительки**.
 
-<div className="conversation">
-
 — Мамо, я боюся, — каже Тарас.
-
 — Не бійся, синку. **Школа** — це цікаво, — каже мама.
-
-</div>
 У класі багато дітей. Вчителька пані Надія усміхається.
 — Добрий день, **учні**! — каже вона. — Це ваш перший **урок**.
 Тарас сідає за парту. Він відкриває **зошит** і бере **ручку**. Він пише перше слово: "Мама".
@@ -117,33 +116,18 @@ So getting a "12" is perfect!
 ### Story Time: The Exchange Student
 
 Джон — студент з Америки. Він приїхав у Львів **вивчати** історію.
-<div className="conversation">
-
 — Чому Україна? — питають його нові друзі.
-
 — Тут цікава історія і смачна кава, — сміється Джон.
 
-</div>
-
 Він живе в гуртожитку. Його сусід — Максим. Максим допомагає Джону **вчити** українські слова.
-<div className="conversation">
-
 — Як буде "good morning"? — питає Джон.
-
 — "Доброго ранку", — каже Максим.
-
-</div>
 
 Джон ходить на **лекції**. Він розуміє не все. Професор говорить швидко.
 Але Джон має гарний **зошит**, де він пише всі нові слова. Він дуже старанний **студент**.
 Ввечері вони з Максимом ходять у піцерію.
-<div className="conversation">
-
 — Українська мова складна, але красива, — каже Джон.
-
 — Ти молодець, — відповідає Максим. — Ти вже гарно говориш.
-
-</div>
 
 ### Ukrainian Education System
 
@@ -154,7 +138,8 @@ Education in Ukraine has three stages:
 
 After school, students pass **ZNO** (External Independent Evaluation) — a very important national test. Based on the **оцінка** from ZNO, they enter university.
 
-:::warning[**Tip** "Student Day"]
+:::warning
+**Tip** "Student Day"
 November 17th is International Students' Day. In Ukraine, it's a huge party. Universities often have concerts, shortened classes, and even "Student Rectors" for a day. If you are a student, don't miss it!
 :::
 
@@ -165,17 +150,10 @@ November 17th is International Students' Day. In Ukraine, it's a huge party. Uni
 Завтра у нього **іспит** з історії.
 Він сидить у бібліотеці. На столі лежать книги, **підручник** і **конспект** (notes).
 
-<div className="conversation">
-
 — Привіт, Олег! — каже його друг Андрій. — Йдемо на каву?
-
 — Не можу, — відповідає Олег. — Я мушу **вчитися**. Професор дуже суворий.
-
 — Ти все знаєш! Ти добре **навчаєшся**.
-
 — Я не пам'ятаю дати, — зітхає Олег.
-
-</div>
 
 Олег повертається додому пізно. Він читає конспект всю ніч.
 Зранку він йде в **університет**. Він бере білет. Питання про козаків. Олег знає все!
@@ -186,26 +164,16 @@ November 17th is International Students' Day. In Ukraine, it's a huge party. Uni
 Марина працює в банку. Їй 40 років. Але вона вирішила **вивчати** іспанську мову.
 Двічі на тиждень вона ходить на курси.
 
-<div className="conversation">
-
 — Чому іспанська? — питають колеги.
-
 — Я хочу поїхати в Іспанію, — каже Марина. — І мені подобається **вчитися** нового.
-
-</div>
 
 На уроці вони багато говорять, читають тексти і пишуть вправи.
 Вчитель Карлос каже:
 — Марина, у вас талант! Ви швидко **вивчаєте** слова.
 
 Вдома Марина робить домашнє завдання. Вона пише слова в **зошит**. Її дочка сміється:
-<div className="conversation">
-
 — Мамо, ти як школярка!
-
 — Так, — каже Марина. — **Знання** роблять нас молодими.
-
-</div>
 
 ### Story Time: Prom Night
 
@@ -218,22 +186,28 @@ November 17th is International Students' Day. In Ukraine, it's a huge party. Uni
 — Ви маєте **знання**. Тепер ви йдете у великий світ. Не забувайте своїх вчителів!
 
 Олена танцює з Андрієм.
-<div className="conversation">
-
 — Куди ти будеш вступати? — питає Андрій.
-
 — Я хочу **вивчати** медицину. Я буду лікарем. А ти?
-
 — Я буду **вчити** комп'ютери. Я хочу бути айтішником.
-
-</div>
 
 Вони дивляться на школу.
 — Ми будемо сумувати, — каже Олена.
 Сонце сходить. Новий день, нове життя.
 
-:::note[**Cultural Insight** Teachers' Day]
+:::note
+**Cultural Insight** Teachers' Day
 On the first Sunday of October, Ukraine celebrates Teachers' Day. Students bring huge bouquets of flowers and chocolate to school. Sometimes senior students teach classes for the younger ones ("Self-Governance Day"). It's a fun and respectful tradition.
+:::
+
+
+:::info
+🔗 External Resources
+
+**YouTube:** [Most interesting Facts about Ukrainian Schools/ #ukraineeducation #ukr...](https://www.youtube.com/watch?v=m2KybmMH1pE) — Ukrainian Guy
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 :::
 
 
@@ -247,443 +221,7 @@ You learned to:
 
 Keep learning! Education is the key to the future. Good luck on your path to fluency!
 
-## 🎯 Activities
 
-### Education Facts
-
-<Quiz questions={[
-  {
-    question: `What implies studying a specific subject?`,
-    options: [
-      { text: `вивчати`, correct: true },
-      { text: `вчитися`, correct: false },
-      { text: `спати`, correct: false }
-    ]
-  },  {
-    question: `A \"зошит\" is for...`,
-    options: [
-      { text: `writing`, correct: true },
-      { text: `reading only`, correct: false },
-      { text: `sleeping`, correct: false }
-    ]
-  },  {
-    question: `The best grade in Ukrainian schools is...`,
-    options: [
-      { text: `12`, correct: true },
-      { text: `5`, correct: false },
-      { text: `A`, correct: false }
-    ]
-  },  {
-    question: `Who teaches at school?`,
-    options: [
-      { text: `вчитель`, correct: true },
-      { text: `студент`, correct: false },
-      { text: `лікар`, correct: false }
-    ]
-  },  {
-    question: `What happens at the end of a semester?`,
-    options: [
-      { text: `сесія / іспити`, correct: true },
-      { text: `канікули`, correct: false },
-      { text: `урок`, correct: false }
-    ]
-  },  {
-    question: `\"Вчитися\" focuses on...`,
-    options: [
-      { text: `process or place`, correct: true },
-      { text: `specific object`, correct: false },
-      { text: `result only`, correct: false }
-    ]
-  },  {
-    question: `\"Пара\" in university slang refers to...`,
-    options: [
-      { text: `a double period lesson (lecture)`, correct: true },
-      { text: `two students`, correct: false },
-      { text: `bad grade`, correct: false }
-    ]
-  },  {
-    question: `First of September is...`,
-    options: [
-      { text: `Day of Knowledge`, correct: true },
-      { text: `Independence Day`, correct: false },
-      { text: `New Year`, correct: false }
-    ]
-  },  {
-    question: `Kyiv-Mohyla Academy was founded in...`,
-    options: [
-      { text: `1615`, correct: true },
-      { text: `1917`, correct: false },
-      { text: `2000`, correct: false }
-    ]
-  },  {
-    question: `\"Оцінка\" implies...`,
-    options: [
-      { text: `grade/mark`, correct: true },
-      { text: `price`, correct: false },
-      { text: `teacher`, correct: false }
-    ]
-  },  {
-    question: `\"Складати іспит\" means...`,
-    options: [
-      { text: `to take an exam (process)`, correct: true },
-      { text: `to fail an exam`, correct: false },
-      { text: `to create an exam`, correct: false }
-    ]
-  },  {
-    question: `\"Предмет\" in school means...`,
-    options: [
-      { text: `subject`, correct: true },
-      { text: `object`, correct: false },
-      { text: `furniture`, correct: false }
-    ]
-  }
-]} />
-
-### School Vocab
-
-<MatchUp pairs={[
-  { left: `школа`, right: `school` },
-  { left: `університет`, right: `university` },
-  { left: `учень`, right: `pupil/student` },
-  { left: `вчитель`, right: `teacher` },
-  { left: `оцінка`, right: `grade` },
-  { left: `підручник`, right: `textbook` },
-  { left: `зошит`, right: `notebook` },
-  { left: `ручка`, right: `pen` },
-  { left: `іспит`, right: `exam` },
-  { left: `лекція`, right: `lecture` },
-  { left: `знання`, right: `knowledge` },
-  { left: `предмет`, right: `subject` }
-]} />
-
-### Study Verbs
-
-<FillIn items={[
-  {
-    sentence: `Я ____ в університеті.`,
-    answer: `вчуся`,
-    options: [`вчуся`, `вивчаю`, `вчить`, `вчимо`]
-  },  {
-    sentence: `Я ____ українську мову.`,
-    answer: `вивчаю`,
-    options: [`вивчаю`, `вчуся`, `вчиться`, `навчаюсь`]
-  },  {
-    sentence: `Він гарно ____.`,
-    answer: `вчиться`,
-    options: [`вчиться`, `вивчає`, `вивчають`, `вчимо`]
-  },  {
-    sentence: `Ми ____ історію України.`,
-    answer: `вивчаємо`,
-    options: [`вивчаємо`, `вчимося`, `вчиться`, `вчать`]
-  },  {
-    sentence: `Де ти ____?`,
-    answer: `вчишся`,
-    options: [`вчишся`, `вивчаєш`, `вивчаєте`, `вчить`]
-  },  {
-    sentence: `Вона хоче ____ медицину.`,
-    answer: `вивчати`,
-    options: [`вивчати`, `вчитися`, `вчить`, `навчається`]
-  },  {
-    sentence: `Студенти ____ в бібліотеці.`,
-    answer: `вчаться`,
-    options: [`вчаться`, `вивчають`, `вивчає`, `вчишся`]
-  },  {
-    sentence: `Ти ____ нові слова.`,
-    answer: `вивчаєш`,
-    options: [`вивчаєш`, `вчишся`, `вчіться`, `вчимо`]
-  },  {
-    sentence: `Учні ____ писати.`,
-    answer: `вчаться`,
-    options: [`вчаться`, `вивчають`, `вивчати`, `вчитися`]
-  },  {
-    sentence: `Професор ____ лекцію.`,
-    answer: `читає`,
-    options: [`читає`, `вчиться`, `вивчає`, `пише`]
-  },  {
-    sentence: `Ми ____ вірш напам'ять.`,
-    answer: `вчимо`,
-    options: [`вчимо`, `вчимося`, `вивчаємо`, `вчать`]
-  },  {
-    sentence: `Я ____. (I am studying/busy with studies).`,
-    answer: `вчуся`,
-    options: [`вчуся`, `вивчаю`, `вчить`, `вчишся`]
-  }
-]} />
-
-### Ukrainian Education
-
-<TrueFalse items={[
-  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `It is 12.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Факультети.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Very old (1615).`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `For university. School children are \"учні\".`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Usually hard (exam).`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Generally yes.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `You write in a \"зошит\" (notebook). You read a \"підручник\".`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Sept 1st.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `It's a double lesson.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `No ticket usually. Maybe student ID.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Needs Accusative object.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Я вчуся в школі.`
-  }
-]} />
-
-### School vs Uni
-
-<GroupSort groups={{
-  "Groups": ["School", "University", "Materials"],
-  "Items": ["вчитель: School", "клас: School", "учень: School", "професор: University", "лекція: University", "студент: University", "семінар: University", "факультет: University", "зошит: Materials", "ручка: Materials", "підручник: Materials", "олівець: Materials"]
-}} />
-
-### Education Syntax
-
-<Unjumble items={[
-  { jumbled: `Я / вивчаю / українську / мову`, answer: `Я вивчаю українську мову` },
-  { jumbled: `Мій / брат / вчиться / в / школі`, answer: `Мій брат вчиться в школі` },
-  { jumbled: `Завтра / буде / важкий / іспит`, answer: `Завтра буде важкий іспит` },
-  { jumbled: `Студенти / слухають / цікаву / лекцію`, answer: `Студенти слухають цікаву лекцію` },
-  { jumbled: `Вчитель / пише / на / дошці`, answer: `Вчитель пише на дошці` },
-  { jumbled: `Відкрийте / свої / зошити / будь ласка`, answer: `Відкрийте свої зошити будь ласка` },
-  { jumbled: `У / мене / гарна / оцінка`, answer: `У мене гарна оцінка` },
-  { jumbled: `Я / складаю / іспит / з / історії`, answer: `Я складаю іспит з історії` },
-  { jumbled: `Знання — / це / велика / сила`, answer: `Знання — це велика сила` },
-  { jumbled: `Ми / любимо / наш / факультет`, answer: `Ми любимо наш факультет` },
-  { jumbled: `Де / твій / синій / олівець`, answer: `Де твій синій олівець` },
-  { jumbled: `Вона / пише / дипломну / роботу`, answer: `Вона пише дипломну роботу` }
-]} />
-
-### Grammar Fix
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я вивчаю в школі.`}
-    errorWord={`вивчаю`}
-    correctForm={`вчуся`}
-    options={[`вчуся`, `вивчаю`, `вчить`, `вчимо`]}
-    explanation={`Place requires 'вчитися'.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми вчимося математику.`}
-    errorWord={`вчимося`}
-    correctForm={`вивчаємо`}
-    options={[`вивчаємо`, `вчимося`, `вчиться`, `вчать`]}
-    explanation={`Object requires 'вивчати'.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Це цікава лекцій.`}
-    errorWord={`лекцій`}
-    correctForm={`лекція`}
-    options={[`лекція`, `лекцій`, `лекцію`, `лекції`]}
-    explanation={`Nominative singular: лекція.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`У мене немає ручка.`}
-    errorWord={`ручка`}
-    correctForm={`ручки`}
-    options={[`ручки`, `ручка`, `ручку`, `ручкою`]}
-    explanation={`Genitive of negation: немає ручки.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я пишу олівець.`}
-    errorWord={`олівець`}
-    correctForm={`олівцем`}
-    options={[`олівцем`, `олівець`, `олівця`, `олівцю`]}
-    explanation={`Instrumental (with what?): олівцем.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Студенти сидить на лекції.`}
-    errorWord={`сидить`}
-    correctForm={`сидять`}
-    options={[`сидять`, `сидить`, `сидимо`, `сиджу`]}
-    explanation={`Plural subject: сидять.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я йду в школа.`}
-    errorWord={`школа`}
-    correctForm={`школу`}
-    options={[`школу`, `школа`, `школі`, `школою`]}
-    explanation={`Direction (Accusative): в школу.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вчитель стоїть біля дошка.`}
-    errorWord={`дошка`}
-    correctForm={`дошки`}
-    options={[`дошки`, `дошка`, `дошку`, `дошкою`]}
-    explanation={`Genitive after 'біля': біля дошки.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Це мій улюблений предмету.`}
-    errorWord={`предмету`}
-    correctForm={`предмет`}
-    options={[`предмет`, `предмету`, `предмета`, `предметом`]}
-    explanation={`Nominative: предмет.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми йдемо на іспиту.`}
-    errorWord={`іспиту`}
-    correctForm={`іспит`}
-    options={[`іспит`, `іспиту`, `іспита`, `іспитом`]}
-    explanation={`Accusative: на іспит.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я отримав диплом.`}
-    errorWord={`диплома`}
-    correctForm={`диплом`}
-    options={[`диплом`, `диплома`, `диплому`, `дипломи`]}
-    explanation={`Accusative inanimate: диплом.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона читає зошит.`}
-    errorWord={`підручник`}
-    correctForm={`підручників`}
-    options={[`підручників`, `підручник`, `підручника`, `підручники`]}
-    explanation={`Genitive plural after 'багато': підручників.`}
-  />
-</ErrorCorrection>
-
-### University Day
-
-<Cloze
-  passage={`Я — студент. Я [___:1] в університеті.
-Сьогодні у мене перша [___:2] о 9:00.
-Професор читає цікавий матеріал, а я пишу [___:3] у зошит.
-Мій улюблений [___:4] — історія.
-У червні у нас буде [___:5]. Я боюся складати [___:6].
-Треба багато [___:7]. Я беру [___:8] в бібліотеці.
-Мій друг каже: \"Головне — це [___:9], а не оцінка\".`}
-  blanks={[{ answer: `вчуся`, options: [`вчуся`, `вивчаю`, `сплю`] }, { answer: `лекція`, options: [`лекція`, `школа`, `дача`] }, { answer: `конспект`, options: [`конспект`, `обід`, `вікно`] }, { answer: `предмет`, options: [`предмет`, `стіл`, `олівець`] }, { answer: `сесія`, options: [`сесія`, `канікули`, `свято`] }, { answer: `іспити`, options: [`іспити`, `квитки`, `намети`] }, { answer: `вчитися`, options: [`вчитися`, `грати`, `спати`] }, { answer: `підручник`, options: [`підручник`, `м'яч`, `гітару`] }, { answer: `знання`, options: [`знання`, `гроші`, `слава`] }]}
-/>
-
-### Be Quiet Example
-
-<DialogueReorder lines={[
-  { text: `Привіт! Ти готовий до іспиту?`, order: 1 },
-  { text: `Привіт. Ні, я дуже хвилююся.`, order: 2 },
-  { text: `Чому? Ти ж добре вчишся.`, order: 3 },
-  { text: `Так, але я не розумію останню тему.`, order: 4 },
-  { text: `Давай я тобі поясню.`, order: 5 },
-  { text: `Справді? Ти можеш допомогти?`, order: 6 },
-  { text: `Звичайно. Відкривай підручник.`, order: 7 },
-  { text: `Дякую! Ти справжній друг.`, order: 8 },
-  { text: `Де ми будемо займатися?`, order: 9 },
-  { text: `Пішли в бібліотеку. Там тихо.`, order: 10 },
-  { text: `Добре. Я візьму зошит і ручку.`, order: 11 },
-  { text: `Ходімо!`, order: 12 }
-]} />
-
-### Word Choice
-
-<Select questions={[
-  {
-    question: `We study history.`,
-    options: [
-      { text: `Ми вивчаємо історію.`, correct: true },
-      { text: `Ми вчимося історію.`, correct: false }
-    ]
-  },  {
-    question: `I am a student (uni).`,
-    options: [
-      { text: `Я студент.`, correct: true },
-      { text: `Я учень.`, correct: false }
-    ]
-  },  {
-    question: `Teacher (female).`,
-    options: [
-      { text: `Вчителька.`, correct: true },
-      { text: `Вчитель.`, correct: false }
-    ]
-  },  {
-    question: `To pass an exam (perfective/result).`,
-    options: [
-      { text: `Скласти іспит.`, correct: true },
-      { text: `Складати іспит.`, correct: false }
-    ]
-  },  {
-    question: `Notebook.`,
-    options: [
-      { text: `Зошит.`, correct: true },
-      { text: `Книга.`, correct: false }
-    ]
-  },  {
-    question: `Lesson.`,
-    options: [
-      { text: `Урок.`, correct: true },
-      { text: `Перерва.`, correct: false }
-    ]
-  },  {
-    question: `Knowledge.`,
-    options: [
-      { text: `Знання.`, correct: true },
-      { text: `Дурниці.`, correct: false }
-    ]
-  },  {
-    question: `Grade/Mark.`,
-    options: [
-      { text: `Оцінка.`, correct: true },
-      { text: `Ціна.`, correct: false }
-    ]
-  },  {
-    question: `Pen.`,
-    options: [
-      { text: `Ручка.`, correct: true },
-      { text: `Ніжка.`, correct: false }
-    ]
-  },  {
-    question: `Faculty.`,
-    options: [
-      { text: `Факультет.`, correct: true },
-      { text: `Кафедра.`, correct: false }
-    ]
-  },  {
-    question: `To read a lecture.`,
-    options: [
-      { text: `Читати лекцію.`, correct: true },
-      { text: `Співати лекцію.`, correct: false }
-    ]
-  },  {
-    question: `Diploma.`,
-    options: [
-      { text: `Диплом.`, correct: true },
-      { text: `Папір.`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -720,4 +258,481 @@ Keep learning! Education is the key to the future. Good luck on your path to flu
 | бібліотека | /biblioˈtɛka/ | library | noun | f | |
 | парта | /ˈparta/ | school desk | noun | f | |
 | сесія | /ˈsɛsʲija/ | exam period | noun | f | |
+
+
+---
+
+## 🎯 Activities
+
+### Education Facts
+
+<Quiz>
+  <QuizQuestion
+    question={`1. What implies studying a specific subject?`}
+    options={[`вивчати`, `вчитися`, `спати`]}
+    correctIndex={0}
+    explanation={`Subject requires "вивчати" + Acc.`}
+  />
+  <QuizQuestion
+    question={`A "зошит" is for...`}
+    options={[`writing`, `reading only`, `sleeping`]}
+    correctIndex={0}
+    explanation={`Notebook (writing).`}
+  />
+  <QuizQuestion
+    question={`The best grade in Ukrainian schools is...`}
+    options={[`12`, `5`, `A`]}
+    correctIndex={0}
+    explanation={`12-point scale.`}
+  />
+  <QuizQuestion
+    question={`Who teaches at school?`}
+    options={[`вчитель`, `студент`, `лікар`]}
+    correctIndex={0}
+    explanation={`Teacher.`}
+  />
+  <QuizQuestion
+    question={`What happens at the end of a semester?`}
+    options={[`сесія / іспити`, `канікули`, `урок`]}
+    correctIndex={0}
+    explanation={`Session/Exams.`}
+  />
+  <QuizQuestion
+    question={`"Вчитися" focuses on...`}
+    options={[`process or place`, `specific object`, `result only`]}
+    correctIndex={0}
+    explanation={`Process/Place.`}
+  />
+  <QuizQuestion
+    question={`"Пара" in university slang refers to...`}
+    options={[`a double period lesson (lecture)`, `two students`, `bad grade`]}
+    correctIndex={0}
+    explanation={`A 90-min lecture is often called "пара" (pair).`}
+  />
+  <QuizQuestion
+    question={`First of September is...`}
+    options={[`Day of Knowledge`, `Independence Day`, `New Year`]}
+    correctIndex={0}
+    explanation={`День Знань.`}
+  />
+  <QuizQuestion
+    question={`Kyiv-Mohyla Academy was founded in...`}
+    options={[`1615`, `1917`, `2000`]}
+    correctIndex={0}
+    explanation={`One of the oldest.`}
+  />
+  <QuizQuestion
+    question={`"Оцінка" implies...`}
+    options={[`grade/mark`, `price`, `teacher`]}
+    correctIndex={0}
+    explanation={`Grade.`}
+  />
+  <QuizQuestion
+    question={`"Складати іспит" means...`}
+    options={[`to take an exam (process)`, `to fail an exam`, `to create an exam`]}
+    correctIndex={0}
+    explanation={`To take (literally "to compose/stack", imperfective). "Скласти" is to pass (perfective).`}
+  />
+  <QuizQuestion
+    question={`"Предмет" in school means...`}
+    options={[`subject`, `object`, `furniture`]}
+    correctIndex={0}
+    explanation={`Subject (math, history).`}
+  />
+</Quiz>
+
+### School Vocab
+
+<MatchUp pairs={[
+  { left: `школа`, right: `school` },
+  { left: `університет`, right: `university` },
+  { left: `учень`, right: `pupil/student` },
+  { left: `вчитель`, right: `teacher` },
+  { left: `оцінка`, right: `grade` },
+  { left: `підручник`, right: `textbook` },
+  { left: `зошит`, right: `notebook` },
+  { left: `ручка`, right: `pen` },
+  { left: `іспит`, right: `exam` },
+  { left: `лекція`, right: `lecture` },
+  { left: `знання`, right: `knowledge` },
+  { left: `предмет`, right: `subject` }
+]} />
+
+### Study Verbs
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я ____ в університеті.`}
+    answer={`вчуся`}
+    options={[`вчуся`, `вивчаю`, `вчить`, `вчимо`]}
+  />
+  <FillInQuestion
+    sentence={`Я ____ українську мову.`}
+    answer={`вивчаю`}
+    options={[`вивчаю`, `вчуся`, `вчиться`, `навчаюсь`]}
+  />
+  <FillInQuestion
+    sentence={`Він гарно ____.`}
+    answer={`вчиться`}
+    options={[`вчиться`, `вивчає`, `вивчають`, `вчимо`]}
+  />
+  <FillInQuestion
+    sentence={`Ми ____ історію України.`}
+    answer={`вивчаємо`}
+    options={[`вивчаємо`, `вчимося`, `вчиться`, `вчать`]}
+  />
+  <FillInQuestion
+    sentence={`Де ти ____?`}
+    answer={`вчишся`}
+    options={[`вчишся`, `вивчаєш`, `вивчаєте`, `вчить`]}
+  />
+  <FillInQuestion
+    sentence={`Вона хоче ____ медицину.`}
+    answer={`вивчати`}
+    options={[`вивчати`, `вчитися`, `вчить`, `навчається`]}
+  />
+  <FillInQuestion
+    sentence={`Студенти ____ в бібліотеці.`}
+    answer={`вчаться`}
+    options={[`вчаться`, `вивчають`, `вивчає`, `вчишся`]}
+  />
+  <FillInQuestion
+    sentence={`Ти ____ нові слова.`}
+    answer={`вивчаєш`}
+    options={[`вивчаєш`, `вчишся`, `вчіться`, `вчимо`]}
+  />
+  <FillInQuestion
+    sentence={`Учні ____ писати.`}
+    answer={`вчаться`}
+    options={[`вчаться`, `вивчають`, `вивчати`, `вчитися`]}
+  />
+  <FillInQuestion
+    sentence={`Професор ____ лекцію.`}
+    answer={`читає`}
+    options={[`читає`, `вчиться`, `вивчає`, `пише`]}
+  />
+  <FillInQuestion
+    sentence={`Ми ____ вірш напам'ять.`}
+    answer={`вчимо`}
+    options={[`вчимо`, `вчимося`, `вивчаємо`, `вчать`]}
+  />
+  <FillInQuestion
+    sentence={`Я ____. (I am studying/busy with studies).`}
+    answer={`вчуся`}
+    options={[`вчуся`, `вивчаю`, `вчить`, `вчишся`]}
+  />
+</FillIn>
+
+
+
+### School vs Uni
+
+<GroupSort groups={{
+  "School": [
+    "вчитель",
+    "клас",
+    "учень"
+  ],
+  "University": [
+    "професор",
+    "лекція",
+    "студент",
+    "семінар",
+    "факультет"
+  ],
+  "Materials": [
+    "зошит",
+    "ручка",
+    "підручник",
+    "олівець"
+  ]
+}} />
+
+### Education Syntax
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`Я / вивчаю / українську / мову`}
+    answer={`Я вивчаю українську мову`}
+  />
+  <UnjumbleQuestion
+    words={`Мій / брат / вчиться / в / школі`}
+    answer={`Мій брат вчиться в школі`}
+  />
+  <UnjumbleQuestion
+    words={`Завтра / буде / важкий / іспит`}
+    answer={`Завтра буде важкий іспит`}
+  />
+  <UnjumbleQuestion
+    words={`Студенти / слухають / цікаву / лекцію`}
+    answer={`Студенти слухають цікаву лекцію`}
+  />
+  <UnjumbleQuestion
+    words={`Вчитель / пише / на / дошці`}
+    answer={`Вчитель пише на дошці`}
+  />
+  <UnjumbleQuestion
+    words={`Відкрийте / свої / зошити / будь ласка`}
+    answer={`Відкрийте свої зошити будь ласка`}
+  />
+  <UnjumbleQuestion
+    words={`У / мене / гарна / оцінка`}
+    answer={`У мене гарна оцінка`}
+  />
+  <UnjumbleQuestion
+    words={`Я / складаю / іспит / з / історії`}
+    answer={`Я складаю іспит з історії`}
+  />
+  <UnjumbleQuestion
+    words={`Знання — / це / велика / сила`}
+    answer={`Знання — це велика сила`}
+  />
+  <UnjumbleQuestion
+    words={`Ми / любимо / наш / факультет`}
+    answer={`Ми любимо наш факультет`}
+  />
+  <UnjumbleQuestion
+    words={`Де / твій / синій / олівець`}
+    answer={`Де твій синій олівець`}
+  />
+  <UnjumbleQuestion
+    words={`Вона / пише / дипломну / роботу`}
+    answer={`Вона пише дипломну роботу`}
+  />
+</Unjumble>
+
+### Grammar Fix
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я вивчаю в школі.`}
+    error={`вивчаю`}
+    answer={`вчуся`}
+    options={[`вчуся`, `вивчаю`, `вчить`, `вчимо`]}
+    explanation={`Place requires 'вчитися'.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми вчимося математику.`}
+    error={`вчимося`}
+    answer={`вивчаємо`}
+    options={[`вивчаємо`, `вчимося`, `вчиться`, `вчать`]}
+    explanation={`Object requires 'вивчати'.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Це цікава лекцій.`}
+    error={`лекцій`}
+    answer={`лекція`}
+    options={[`лекція`, `лекцій`, `лекцію`, `лекції`]}
+    explanation={`Nominative singular: лекція.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`У мене немає ручка.`}
+    error={`ручка`}
+    answer={`ручки`}
+    options={[`ручки`, `ручка`, `ручку`, `ручкою`]}
+    explanation={`Genitive of negation: немає ручки.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я пишу олівець.`}
+    error={`олівець`}
+    answer={`олівцем`}
+    options={[`олівцем`, `олівець`, `олівця`, `олівцю`]}
+    explanation={`Instrumental (with what?): олівцем.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Студенти сидить на лекції.`}
+    error={`сидить`}
+    answer={`сидять`}
+    options={[`сидять`, `сидить`, `сидимо`, `сиджу`]}
+    explanation={`Plural subject: сидять.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я йду в школа.`}
+    error={`школа`}
+    answer={`школу`}
+    options={[`школу`, `школа`, `школі`, `школою`]}
+    explanation={`Direction (Accusative): в школу.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вчитель стоїть біля дошка.`}
+    error={`дошка`}
+    answer={`дошки`}
+    options={[`дошки`, `дошка`, `дошку`, `дошкою`]}
+    explanation={`Genitive after 'біля': біля дошки.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Це мій улюблений предмету.`}
+    error={`предмету`}
+    answer={`предмет`}
+    options={[`предмет`, `предмету`, `предмета`, `предметом`]}
+    explanation={`Nominative: предмет.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми йдемо на іспиту.`}
+    error={`іспиту`}
+    answer={`іспит`}
+    options={[`іспит`, `іспиту`, `іспита`, `іспитом`]}
+    explanation={`Accusative: на іспит.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я отримав диплом.`}
+    error={`диплома`}
+    answer={`диплом`}
+    options={[`диплом`, `диплома`, `диплому`, `дипломи`]}
+    explanation={`Accusative inanimate: диплом.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона читає зошит.`}
+    error={`підручник`}
+    answer={`підручників`}
+    options={[`підручників`, `підручник`, `підручника`, `підручники`]}
+    explanation={`Genitive plural after 'багато': підручників.`}
+  />
+</ErrorCorrection>
+
+
+
+### Be Quiet Example
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Привіт! Ти готовий до іспиту?"
+  },
+  {
+    "speaker": "",
+    "line": "Привіт. Ні, я дуже хвилююся."
+  },
+  {
+    "speaker": "",
+    "line": "Чому? Ти ж добре вчишся."
+  },
+  {
+    "speaker": "",
+    "line": "Так, але я не розумію останню тему."
+  },
+  {
+    "speaker": "",
+    "line": "Давай я тобі поясню."
+  },
+  {
+    "speaker": "",
+    "line": "Справді? Ти можеш допомогти?"
+  },
+  {
+    "speaker": "",
+    "line": "Звичайно. Відкривай підручник."
+  },
+  {
+    "speaker": "",
+    "line": "Дякую! Ти справжній друг."
+  },
+  {
+    "speaker": "",
+    "line": "Де ми будемо займатися?"
+  },
+  {
+    "speaker": "",
+    "line": "Пішли в бібліотеку. Там тихо."
+  },
+  {
+    "speaker": "",
+    "line": "Добре. Я візьму зошит і ручку."
+  },
+  {
+    "speaker": "",
+    "line": "Ходімо!"
+  }
+]} />
+</DialogueReorder>
+
+### Classroom Objects
+
+[!instruction] Mark all school objects and materials.
+
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`На столі лежить підручник і мій синій зошит. Я беру ручку, щоб писати. Де мій олівець? Вчитель пише на дошці. У класі є комп'ютер і карта. У мене в рюкзаку є книга і лінійка. Я люблю свій клас.`}
+    correctWords={[`підручник`, `зошит`, `ручку`, `олівець`, `дошці`, `карта`, `книга`, `лінійка`, `клас`]}
+  />
+</MarkTheWords>
+
+### Word Choice
+
+<Select>
+  <SelectQuestion
+    question={`1. We study history.`}
+    options={[`Ми вивчаємо історію.`, `Ми вчимося історію.`]}
+    correctAnswers={[`Ми вивчаємо історію.`]}
+    explanation={`Object -> вивчаємо.`}
+  />
+  <SelectQuestion
+    question={`I am a student (uni).`}
+    options={[`Я студент.`, `Я учень.`]}
+    correctAnswers={[`Я студент.`]}
+    explanation={`Студент.`}
+  />
+  <SelectQuestion
+    question={`Teacher (female).`}
+    options={[`Вчителька.`, `Вчитель.`]}
+    correctAnswers={[`Вчителька.`]}
+    explanation={`Вчителька.`}
+  />
+  <SelectQuestion
+    question={`To pass an exam (perfective/result).`}
+    options={[`Скласти іспит.`, `Складати іспит.`]}
+    correctAnswers={[`Скласти іспит.`]}
+    explanation={`Скласти means to successfully pass. Складати is to sit for it.`}
+  />
+  <SelectQuestion
+    question={`Notebook.`}
+    options={[`Зошит.`, `Книга.`]}
+    correctAnswers={[`Зошит.`]}
+    explanation={`Зошит.`}
+  />
+  <SelectQuestion
+    question={`Lesson.`}
+    options={[`Урок.`, `Перерва.`]}
+    correctAnswers={[`Урок.`]}
+    explanation={`Урок.`}
+  />
+  <SelectQuestion
+    question={`Knowledge.`}
+    options={[`Знання.`, `Дурниці.`]}
+    correctAnswers={[`Знання.`]}
+    explanation={`Знання.`}
+  />
+  <SelectQuestion
+    question={`Grade/Mark.`}
+    options={[`Оцінка.`, `Ціна.`]}
+    correctAnswers={[`Оцінка.`]}
+    explanation={`Оцінка.`}
+  />
+  <SelectQuestion
+    question={`Pen.`}
+    options={[`Ручка.`, `Ніжка.`]}
+    correctAnswers={[`Ручка.`]}
+    explanation={`Ручка.`}
+  />
+  <SelectQuestion
+    question={`Faculty.`}
+    options={[`Факультет.`, `Кафедра.`]}
+    correctAnswers={[`Факультет.`]}
+    explanation={`Faculty.`}
+  />
+  <SelectQuestion
+    question={`To read a lecture.`}
+    options={[`Читати лекцію.`, `Співати лекцію.`]}
+    correctAnswers={[`Читати лекцію.`]}
+    explanation={`Professors "read" lectures (common phrase).`}
+  />
+  <SelectQuestion
+    question={`Diploma.`}
+    options={[`Диплом.`, `Папір.`]}
+    correctAnswers={[`Диплом.`]}
+    explanation={`Diploma.`}
+  />
+</Select>
 

@@ -5,19 +5,20 @@ title: "Checkpoint - Word Formation"
 description: "Review of Modules 31-36"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Warm-up
@@ -34,11 +35,23 @@ Word formation is one of the most powerful tools in Ukrainian. Understanding how
 - M35: Root Families I (ход-, пис-)
 - M36: Root Families II (бач-, слух-, говор-)
 
-:::tip[Review Strategy]
+:::tip
+Review Strategy
 Word formation follows patterns. Remember these key principles:
 - Prefixes change the meaning of verbs
 - Suffixes create new parts of speech
 - Roots carry the core meaning across word families
+:::
+
+
+:::info
+🔗 External Resources
+
+**YouTube:** [How I learnt my first 500 words in Ukrainian ...](https://www.youtube.com/watch?v=SdgPUOHXNts) — Vocabooster Review
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 :::
 
 
@@ -61,7 +74,8 @@ Ukrainian prefixes change the direction, completion, or manner of action. Here i
 
 The most common mistake is confusing при- (arrival) with ви- (departure). Remember: прийти means to come TO a place, while вийти means to come OUT of a place.
 
-:::note[Лінгвістичний Інсайт]
+:::note
+Лінгвістичний Інсайт
 Український словотвір дуже продуктивний.
 Якщо ви знаєте корінь, ви можете зрозуміти багато споріднених слів.
 Наприклад, від ход- (ходити) можна утворити: вхід, вихід, перехід, пішохід.
@@ -98,7 +112,8 @@ Root families connect related words across different parts of speech:
 
 Кореневі сім'ї дуже важливі для розширення словникового запасу. Якщо ви знаєте корінь, ви можете зрозуміти багато споріднених слів. Наприклад, від кореня "пис-" ми отримуємо: писати, написати, переписати, письменник, писання, лист.
 
-:::tip[Поради для Розпізнавання Коренів]
+:::tip
+Поради для Розпізнавання Коренів
 Коли ви зустрічаєте нове слово, шукайте знайомі корені.
 Корінь несе основний зміст. Префікси і суфікси модифікують його.
 Наприклад: передбачити = перед- (до) + бач- (бачити) = передбачати
@@ -111,53 +126,32 @@ Root families connect related words across different parts of speech:
 
 Марійка вивчає українську мову. Вона — старанна **учениця**. Сьогодні вона має урок про словотвір. Її школа знаходиться в центрі міста. Вона любить **ходити** туди пішки.
 
-<div className="conversation">
-
 — Доброго ранку, клас! — каже вчителька. — Сьогодні ми повторимо словотвір. Це **важлива** тема для вашого прогресу.
-
 — Доброго ранку! — відповідають учні. Вони дістають свої зошити і ручки.
-
 — Хто може сказати, що таке корінь слова?
-
-</div>
 
 Марійка піднімає руку.
 
-<div className="conversation">
-
 — Корінь — це головна частина слова. Він несе основний зміст.
-
 — Правильно! А яка функція префіксів?
-
 — Префікси змінюють значення дієслова, — відповідає Олесь.
-
 — Чудово! А суфікси?
-
 — Суфікси створюють нові частини мови, — додає Катя.
-
-</div>
 
 Вчителька показує приклад на дошці.
 
-<div className="conversation">
-
 — Дивіться: корінь **ход-** означає "йти". З нього ми можемо утворити багато слів.
-
 — **Вхід** — місце, де входять, — каже Марійка.
-
 — **Вихід** — місце, де виходять, — додає Олесь.
-
 — **Перехід** — місце, де переходять, — каже Катя.
-
 — **Пішохід** — людина, яка ходить пішки!
-
-</div>
 
 Вчителька посміхається.
 
 — Молодці! Тепер ви розумієте, як працює словотвір!
 
-:::note[Ukrainian Morphology]
+:::note
+Ukrainian Morphology
 Ukrainian is a highly inflected language with rich word formation.
 Understanding prefixes, suffixes, and roots helps you decode new vocabulary.
 This skill is especially useful when reading texts with unfamiliar words.
@@ -174,31 +168,17 @@ This skill is especially useful when reading texts with unfamiliar words.
 
 Вона пише на дошці слово **читати**.
 
-<div className="conversation">
-
 — Яке віддієслівне іменник від "читати"?
-
 — Читання! — хором відповідає клас.
-
 — А як називають людину, яка читає?
-
 — Читач! — каже Марійка.
-
-</div>
 
 Вчителька пише інше слово: **важливий**.
 
-<div className="conversation">
-
 — Утворіть іменник від прикметника "важливий".
-
 — Важливість! — відповідає Олесь.
-
 — Правильно! А тепер корінь **пис-**.
-
 — Писати, написати, переписати, письменник, писання! — перераховує Катя.
-
-</div>
 
 Вчителька аплодує.
 
@@ -206,19 +186,11 @@ This skill is especially useful when reading texts with unfamiliar words.
 
 Марійка записує все в зошит. Тепер вона краще розуміє, як будувати нові слова.
 
-<div className="conversation">
-
 — Вчителько, а які префікси найважливіші? — питає Олесь.
-
 — Всі важливі! Але при-, ви-, і пере- використовуються дуже часто.
-
 — А суфікси? — питає Катя.
-
 — Суфікси -ння, -ість, і -ач дуже популярні.
-
 — Дякую, вчителько! — хором відповідає клас.
-
-</div>
 
 Урок закінчився. Всі діти тепер знають, як працює словотвір.
 
@@ -291,333 +263,7 @@ Word formation is a key skill in Ukrainian. By understanding how prefixes, suffi
 
 ---
 
-## 🎯 Activities
 
-### Comprehensive Review
-
-<MatchUp pairs={[
-  { left: `при-`, right: `arrival` },
-  { left: `ви-`, right: `exit` },
-  { left: `пере-`, right: `across/redo` },
-  { left: `-ння`, right: `verbal noun` },
-  { left: `-ість`, right: `abstract noun` },
-  { left: `-ач`, right: `agent noun` },
-  { left: `ход-`, right: `walk/go` },
-  { left: `пис-`, right: `write` },
-  { left: `бач-`, right: `see` },
-  { left: `слух-`, right: `hear` },
-  { left: `говор-`, right: `speak` },
-  { left: `-ський`, right: `relating to` }
-]} />
-
-### Mixed Review
-
-<FillIn items={[
-  {
-    sentence: `Він [___] до кімнати. (entered)`,
-    answer: `увійшов`,
-    options: [`увійшов`, `вийшов`, `прийшов`, `зайшов`]
-  },  {
-    sentence: `Вона [___] лист. (wrote — completed)`,
-    answer: `написала`,
-    options: [`писала`, `написала`, `переписала`, `дописала`]
-  },  {
-    sentence: `читати → [___] (reading — noun)`,
-    answer: `читання`,
-    options: [`читання`, `читач`, `читати`, `читаний`]
-  },  {
-    sentence: `музика → [___] (musical)`,
-    answer: `музичний`,
-    options: [`музичний`, `музика`, `музикант`, `музично`]
-  },  {
-    sentence: `Where is the [___]? (entrance)`,
-    answer: `вхід`,
-    options: [`вхід`, `вихід`, `перехід`, `похід`]
-  },  {
-    sentence: `He [___] the door. (opened)`,
-    answer: `відкрив`,
-    options: [`відкрив`, `закрив`, `відчинив`, `зачинив`]
-  },  {
-    sentence: `важливий → [___] (importance)`,
-    answer: `важливість`,
-    options: [`важливість`, `важливо`, `важний`, `важка`]
-  },  {
-    sentence: `Україна → [___] (Ukrainian)`,
-    answer: `український`,
-    options: [`український`, `Україна`, `українець`, `україно`]
-  }
-]} />
-
-### Word Formation Review
-
-<Quiz questions={[
-  {
-    question: `\"При-\" indicates:`,
-    options: [
-      { text: `Arrival`, correct: true },
-      { text: `Departure`, correct: false },
-      { text: `Repetition`, correct: false }
-    ]
-  },  {
-    question: `\"-ння\" forms:`,
-    options: [
-      { text: `Verbal nouns`, correct: true },
-      { text: `Agent nouns`, correct: false },
-      { text: `Adjectives`, correct: false }
-    ]
-  },  {
-    question: `\"-ість\" forms:`,
-    options: [
-      { text: `Abstract nouns from adjectives`, correct: true },
-      { text: `Verbal nouns`, correct: false },
-      { text: `Verbs`, correct: false }
-    ]
-  },  {
-    question: `\"Ход-\" relates to:`,
-    options: [
-      { text: `Walking/movement`, correct: true },
-      { text: `Writing`, correct: false },
-      { text: `Speaking`, correct: false }
-    ]
-  },  {
-    question: `\"Пис-\" relates to:`,
-    options: [
-      { text: `Writing`, correct: true },
-      { text: `Speaking`, correct: false },
-      { text: `Seeing`, correct: false }
-    ]
-  },  {
-    question: `\"-ський\" often indicates:`,
-    options: [
-      { text: `Relating to place/group`, correct: true },
-      { text: `Past action`, correct: false },
-      { text: `Future action`, correct: false }
-    ]
-  },  {
-    question: `\"Пере-\" can mean:`,
-    options: [
-      { text: `Across or redo`, correct: true },
-      { text: `Only arrival`, correct: false },
-      { text: `Only departure`, correct: false }
-    ]
-  },  {
-    question: `\"Бач-\" relates to:`,
-    options: [
-      { text: `Seeing`, correct: true },
-      { text: `Hearing`, correct: false },
-      { text: `Writing`, correct: false }
-    ]
-  }
-]} />
-
-### Story Comprehension
-
-<Cloze
-  passage={`Марійка вивчає [___:1] мову. (Ukrainian)
-Корінь — це [___:2] частина слова. (main)
-Префікси змінюють [___:3] дієслова. (meaning)
-Суфікси створюють нові [___:4] мови. (parts)
-Вхід — місце, де [___:5]. (enter)
-Пішохід — людина, яка ходить [___:6]. (on foot)`}
-  blanks={[{ answer: `українську`, options: [`українську`, `англійську`, `німецьку`] }, { answer: `головна`, options: [`головна`, `остання`, `перша`] }, { answer: `значення`, options: [`значення`, `форму`, `час`] }, { answer: `частини`, options: [`частини`, `букви`, `речення`] }, { answer: `входять`, options: [`входять`, `виходять`, `біжать`] }, { answer: `пішки`, options: [`пішки`, `бігом`, `повільно`] }]}
-/>
-
-### Word Formation Sentences
-
-<Unjumble items={[
-  { jumbled: `слова / частина / Корінь / головна`, answer: `Корінь — головна частина слова.` },
-  { jumbled: `значення / Префікси / змінюють / дієслова`, answer: `Префікси змінюють значення дієслова.` },
-  { jumbled: `утворюють / Суфікси / іменники / нові`, answer: `Суфікси утворюють нові іменники.` },
-  { jumbled: `прийти / означає / прибуття`, answer: `Прийти означає прибуття.` },
-  { jumbled: `слово / читання / від / читати`, answer: `Читання — слово від читати.` },
-  { jumbled: `Вихід / виходять / де / місце`, answer: `Вихід — місце, де виходять.` },
-  { jumbled: `пішки / ходить / Пішохід / який`, answer: `Пішохід — який ходить пішки.` },
-  { jumbled: `мову / Вона / вивчає / українську`, answer: `Вона вивчає українську мову.` }
-]} />
-
-### Formation Mistakes
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Він **вийшов** до школи. (arrived)`}
-    errorWord={`вийшов`}
-    correctForm={`прийшов`}
-    options={[`прийшов`, `вийшов`]}
-    explanation={`\"При-\" means arrival. \"Ви-\" means exit.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вхід — місце, де **виходять**.`}
-    errorWord={`виходять`}
-    correctForm={`входять`}
-    options={[`входять`, `виходять`]}
-    explanation={`Вхід comes from входити (to enter).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Читати → **читач** (the action)`}
-    errorWord={`читач`}
-    correctForm={`читання`}
-    options={[`читання`, `читач`]}
-    explanation={`\"-ння\" forms verbal nouns. \"-ач\" forms agent nouns.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Важливий → **важливо** (noun)`}
-    errorWord={`важливо`}
-    correctForm={`важливість`}
-    options={[`важливість`, `важливо`]}
-    explanation={`\"-ість\" forms abstract nouns from adjectives.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`**Слух-** means seeing.`}
-    errorWord={`Слух-`}
-    correctForm={`Бач-`}
-    options={[`Бач-`, `Слух-`]}
-    explanation={`\"Слух-\" means hearing. \"Бач-\" means seeing.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Пішохід — людина, яка **їде**.`}
-    errorWord={`їде`}
-    correctForm={`ходить`}
-    options={[`ходить`, `їде`]}
-    explanation={`\"Пішохід\" comes from \"піший\" + \"ходити\" (walk).`}
-  />
-</ErrorCorrection>
-
-### Root Families
-
-<MatchUp pairs={[
-  { left: `вхід`, right: `ход- (walk)` },
-  { left: `письменник`, right: `пис- (write)` },
-  { left: `побачення`, right: `бач- (see)` },
-  { left: `слухач`, right: `слух- (hear)` },
-  { left: `розмова`, right: `мов- (speak)` },
-  { left: `перехід`, right: `ход- (walk)` },
-  { left: `писання`, right: `пис- (write)` },
-  { left: `побачити`, right: `бач- (see)` }
-]} />
-
-### Word Parts
-
-<GroupSort groups={{
-  "Prefixes": ["при-", "ви-", "пере-", "від-", "на-", "роз-"],
-  "Suffixes": ["-ння", "-ість", "-ач", "-ний", "-овий", "-ський"],
-  "Roots": ["ход-", "пис-", "бач-", "слух-"]
-}} />
-
-### Formation Rules
-
-<TrueFalse items={[
-  {
-    statement: `\"При-\" = arrival.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"-ння\" forms verbal nouns.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"-ість\" forms verbs.`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `\"Ход-\" relates to movement.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"-ач\" forms agent nouns.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Ви-\" means \"entry.\"`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `\"Ви-\" means \"exit.\"`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"-ський\" relates to place.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Слух-\" means seeing.`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `\"Слух-\" means hearing.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `Prefixes change verb meaning.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `Suffixes do not change POS.`,
-    isTrue: false,
-    explanation: ``
-  }
-]} />
-
-### Mixed Words
-
-<Translate questions={[
-  {
-    source: `Entrance`,
-    options: [
-      { text: `вхід`, correct: true },
-      { text: `вихід`, correct: false },
-      { text: `перехід`, correct: false }
-    ]
-  },  {
-    source: `Reading (noun)`,
-    options: [
-      { text: `читання`, correct: true },
-      { text: `читач`, correct: false },
-      { text: `читати`, correct: false }
-    ]
-  },  {
-    source: `Musical`,
-    options: [
-      { text: `музичний`, correct: true },
-      { text: `музика`, correct: false },
-      { text: `музикант`, correct: false }
-    ]
-  },  {
-    source: `Writer`,
-    options: [
-      { text: `письменник`, correct: true },
-      { text: `писання`, correct: false },
-      { text: `писати`, correct: false }
-    ]
-  },  {
-    source: `To enter`,
-    options: [
-      { text: `увійти`, correct: true },
-      { text: `вийти`, correct: false },
-      { text: `прийти`, correct: false }
-    ]
-  },  {
-    source: `To rewrite`,
-    options: [
-      { text: `переписати`, correct: true },
-      { text: `написати`, correct: false },
-      { text: `дописати`, correct: false }
-    ]
-  },  {
-    source: `Importance`,
-    options: [
-      { text: `важливість`, correct: true },
-      { text: `важливий`, correct: false },
-      { text: `важливо`, correct: false }
-    ]
-  },  {
-    source: `Ukrainian (adj)`,
-    options: [
-      { text: `український`, correct: true },
-      { text: `Україна`, correct: false },
-      { text: `українець`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -647,3 +293,382 @@ Word formation is a key skill in Ukrainian. By understanding how prefixes, suffi
 | частина | /t͡ʃɑsˈtɪnɑ/ | part | noun | f | component |
 | віддієслівний | /ʋiddiɛˈslɔʋnɪj/ | verbal (adj) | adj | m | grammar |
 | прикметник | /prɪˈkmɛtnɪk/ | adjective | noun | m | grammar |
+
+---
+
+## 🎯 Activities
+
+### Comprehensive Review
+
+*Match prefixes and suffixes to their functions.*
+
+
+<MatchUp pairs={[
+  { left: `при-`, right: `arrival` },
+  { left: `ви-`, right: `exit` },
+  { left: `пере-`, right: `across/redo` },
+  { left: `-ння`, right: `verbal noun` },
+  { left: `-ість`, right: `abstract noun` },
+  { left: `-ач`, right: `agent noun` },
+  { left: `ход-`, right: `walk/go` },
+  { left: `пис-`, right: `write` },
+  { left: `бач-`, right: `see` },
+  { left: `слух-`, right: `hear` },
+  { left: `говор-`, right: `speak` },
+  { left: `-ський`, right: `relating to` }
+]} />
+
+### Mixed Review
+
+*Complete with the correct word form.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Він [___] до кімнати. (entered)`}
+    answer={`увійшов`}
+    options={[`увійшов`, `вийшов`, `прийшов`, `зайшов`]}
+  />
+  <FillInQuestion
+    sentence={`Вона [___] лист. (wrote — completed)`}
+    answer={`написала`}
+    options={[`писала`, `написала`, `переписала`, `дописала`]}
+  />
+  <FillInQuestion
+    sentence={`читати → [___] (reading — noun)`}
+    answer={`читання`}
+    options={[`читання`, `читач`, `читати`, `читаний`]}
+  />
+  <FillInQuestion
+    sentence={`музика → [___] (musical)`}
+    answer={`музичний`}
+    options={[`музичний`, `музика`, `музикант`, `музично`]}
+  />
+  <FillInQuestion
+    sentence={`Where is the [___]? (entrance)`}
+    answer={`вхід`}
+    options={[`вхід`, `вихід`, `перехід`, `похід`]}
+  />
+  <FillInQuestion
+    sentence={`He [___] the door. (opened)`}
+    answer={`відкрив`}
+    options={[`відкрив`, `закрив`, `відчинив`, `зачинив`]}
+  />
+  <FillInQuestion
+    sentence={`важливий → [___] (importance)`}
+    answer={`важливість`}
+    options={[`важливість`, `важливо`, `важний`, `важка`]}
+  />
+  <FillInQuestion
+    sentence={`Україна → [___] (Ukrainian)`}
+    answer={`український`}
+    options={[`український`, `Україна`, `українець`, `україно`]}
+  />
+</FillIn>
+
+### Word Formation Review
+
+<Quiz>
+  <QuizQuestion
+    question={`1. "При-" indicates:`}
+    options={[`Arrival`, `Departure`, `Repetition`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"-ння" forms:`}
+    options={[`Verbal nouns`, `Agent nouns`, `Adjectives`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"-ість" forms:`}
+    options={[`Abstract nouns from adjectives`, `Verbal nouns`, `Verbs`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Ход-" relates to:`}
+    options={[`Walking/movement`, `Writing`, `Speaking`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Пис-" relates to:`}
+    options={[`Writing`, `Speaking`, `Seeing`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"-ський" often indicates:`}
+    options={[`Relating to place/group`, `Past action`, `Future action`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Пере-" can mean:`}
+    options={[`Across or redo`, `Only arrival`, `Only departure`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Бач-" relates to:`}
+    options={[`Seeing`, `Hearing`, `Writing`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+
+
+### Word Formation Sentences
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`слова / частина / Корінь / головна`}
+    answer={`Корінь — головна частина слова.`}
+  />
+  <UnjumbleQuestion
+    words={`значення / Префікси / змінюють / дієслова`}
+    answer={`Префікси змінюють значення дієслова.`}
+  />
+  <UnjumbleQuestion
+    words={`утворюють / Суфікси / іменники / нові`}
+    answer={`Суфікси утворюють нові іменники.`}
+  />
+  <UnjumbleQuestion
+    words={`прийти / означає / прибуття`}
+    answer={`Прийти означає прибуття.`}
+  />
+  <UnjumbleQuestion
+    words={`слово / читання / від / читати`}
+    answer={`Читання — слово від читати.`}
+  />
+  <UnjumbleQuestion
+    words={`Вихід / виходять / де / місце`}
+    answer={`Вихід — місце, де виходять.`}
+  />
+  <UnjumbleQuestion
+    words={`пішки / ходить / Пішохід / який`}
+    answer={`Пішохід — який ходить пішки.`}
+  />
+  <UnjumbleQuestion
+    words={`мову / Вона / вивчає / українську`}
+    answer={`Вона вивчає українську мову.`}
+  />
+</Unjumble>
+
+### Formation Mistakes
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Він **вийшов** до школи. (arrived)`}
+    error={`вийшов`}
+    answer={`прийшов`}
+    options={[`прийшов`, `вийшов`]}
+    explanation={`"При-" means arrival. "Ви-" means exit.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вхід — місце, де **виходять**.`}
+    error={`виходять`}
+    answer={`входять`}
+    options={[`входять`, `виходять`]}
+    explanation={`Вхід comes from входити (to enter).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Читати → **читач** (the action)`}
+    error={`читач`}
+    answer={`читання`}
+    options={[`читання`, `читач`]}
+    explanation={`"-ння" forms verbal nouns. "-ач" forms agent nouns.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Важливий → **важливо** (noun)`}
+    error={`важливо`}
+    answer={`важливість`}
+    options={[`важливість`, `важливо`]}
+    explanation={`"-ість" forms abstract nouns from adjectives.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`**Слух-** means seeing.`}
+    error={`Слух-`}
+    answer={`Бач-`}
+    options={[`Бач-`, `Слух-`]}
+    explanation={`"Слух-" means hearing. "Бач-" means seeing.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Пішохід — людина, яка **їде**.`}
+    error={`їде`}
+    answer={`ходить`}
+    options={[`ходить`, `їде`]}
+    explanation={`"Пішохід" comes from "піший" + "ходити" (walk).`}
+  />
+</ErrorCorrection>
+
+### Root Families
+
+*Match words to their root families.*
+
+
+<MatchUp pairs={[
+  { left: `вхід`, right: `ход- (walk)` },
+  { left: `письменник`, right: `пис- (write)` },
+  { left: `побачення`, right: `бач- (see)` },
+  { left: `слухач`, right: `слух- (hear)` },
+  { left: `розмова`, right: `мов- (speak)` },
+  { left: `перехід`, right: `ход- (walk)` },
+  { left: `писання`, right: `пис- (write)` },
+  { left: `побачити`, right: `бач- (see)` }
+]} />
+
+### Word Parts
+
+*Sort words by their formation type.*
+
+
+<GroupSort groups={{
+  "### Prefixes": [
+    "при-",
+    "ви-",
+    "пере-",
+    "від-",
+    "на-",
+    "роз-"
+  ],
+  "Suffixes": [
+    "-ння",
+    "-ість",
+    "-ач",
+    "-ний",
+    "-овий",
+    "-ський"
+  ],
+  "Roots": [
+    "ход-",
+    "пис-",
+    "бач-",
+    "слух-"
+  ]
+}} />
+
+### Formation Rules
+
+*Mark true or false.*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`"При-" = arrival.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"-ння" forms verbal nouns.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"-ість" forms verbs.`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Ход-" relates to movement.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"-ач" forms agent nouns.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Ви-" means "entry."`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Ви-" means "exit."`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"-ський" relates to place.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Слух-" means seeing.`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Слух-" means hearing.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`Prefixes change verb meaning.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`Suffixes do not change POS.`}
+    isTrue={false}
+    explanation={``}
+  />
+</TrueFalse>
+
+### Mixed Words
+
+<Translate>
+  <TranslateItem
+    source={`1. Entrance`}
+    answer={`вхід`}
+    options={[`вхід`, `вихід`, `перехід`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Reading (noun)`}
+    answer={`читання`}
+    options={[`читання`, `читач`, `читати`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Musical`}
+    answer={`музичний`}
+    options={[`музичний`, `музика`, `музикант`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Writer`}
+    answer={`письменник`}
+    options={[`письменник`, `писання`, `писати`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`To enter`}
+    answer={`увійти`}
+    options={[`увійти`, `вийти`, `прийти`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`To rewrite`}
+    answer={`переписати`}
+    options={[`переписати`, `написати`, `дописати`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Importance`}
+    answer={`важливість`}
+    options={[`важливість`, `важливий`, `важливо`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Ukrainian (adj)`}
+    answer={`український`}
+    options={[`український`, `Україна`, `українець`]}
+    explanation={``}
+  />
+</Translate>
+

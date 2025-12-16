@@ -5,19 +5,20 @@ title: "Adjective Suffixes"
 description: "Describing the World"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Warm-up
@@ -36,7 +37,8 @@ In Ukrainian, we have standard suffixes too.
 Input: **Музика** [Noun] -> Machine -> Output: **Музич-ний** [Adj].
 Input: **Україна** [Noun] -> Machine -> Output: **Україн-ський** [Adj].
 
-:::note[The Universal Endings]
+:::tip
+The Universal Endings
 Remember that the suffix changes the *meaning*, but the *ending* (flexion) must still match the Gender!
 - Музичн**ий** (Masc)
 - Музичн**а** (Fem)
@@ -47,6 +49,17 @@ This is exactly like regular adjectives (Good -> Гарний, Гарна, Га�
 The suffix (-н-, -ов-, -ськ-) just sits between the Root and the Ending.
 Root + Suffix + Ending.
 Think of it like a sandwich: Root is the meat, Suffix is the cheese, Ending is the bread.
+:::
+
+
+:::info
+🔗 External Resources
+
+**YouTube:** [Ukrainian Grammar: ADJECTIVE CASES - Adjective declension...](https://www.youtube.com/watch?v=NjIXb7cc9UY) — Let's Learn Ukrainian
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 :::
 
 
@@ -120,7 +133,8 @@ Use this for places, groups, and people.
 | **Чоловік** | Чолові**ч**ий | Male / Men's | Exception: -чий here |
 | **Жінк**а | Жіно**ч**ий | Female / Women's | Exception: -чий here |
 
-:::tip[Sound Mutations]
+:::tip
+Sound Mutations
 When attaching suffixes, consonants often change to make pronunciation smoother:
 - **К, Ц, Ч** + ськ -> **-цьк-** (Козак -> Козацький).
 - **Г, Ж, З** + ськ -> **-зьк-** (Прага -> Празький).
@@ -138,7 +152,8 @@ Some adjectives describe a state or feeling.
 - **Чужий** (Foreign/Alien).
 - **Справжній** (Real/Genuine).
 
-:::note[Why -ій?]
+:::note
+Why -ій?
 Soft adjectives end in **-ій** (masculine).
 - **Синій**: Blue
 - **Вечірній**: Evening
@@ -180,7 +195,8 @@ It means "sweet", "little", or "pleasant".
 Професор дає **точні** відповіді.
 Це справжній **академічний** процес.
 
-:::note[Cultural Insight: Science]
+:::note
+Cultural Insight: Science
 Ukraine has a strong tradition in **математична** (math) and **фізична** (physics) science.
 Names like Korolyov (rockets), Sikorsky (helicopters), and Paton (welding) are world-famous.
 The suffix **-ський** is also standard for many surnames!
@@ -219,7 +235,8 @@ The suffix **-ський** is also standard for many surnames!
 "Так, це наш **рідний** продукт," — відповідає продавець.
 Базар — це **веселий** і **шумний** світ.
 
-:::note[Cultural Insight: Food Names]
+:::note
+Cultural Insight: Food Names
 Many food names use standard suffixes:
 - **Київський** торт (Kyiv cake).
 - **Полтавська** галушка (Poltava dumpling).
@@ -235,15 +252,25 @@ Regional pride is delicious!
 ## Dialogue: Shopping
 
 **Customer:** Добрий день. У вас є **дитячий** одяг?
+
 **Seller:** Так, звісно. Ось відділ для хлопців і дівчат.
+
 **Customer:** Мені потрібен **теплий** светр.
+
 **Seller:** Ось дуже гарний, **вовняний** (woolen).
+
 **Customer:** А він м'який?
+
 **Seller:** Так, він дуже **м'якенький** (soft-diminutive).
+
 **Customer:** А який це розмір?
+
 **Seller:** Це **стандартний** розмір.
+
 **Customer:** Добре. А ціна?
+
 **Seller:** Ціна **доступна**.
+
 **Customer:** Чудово. Я беру.
 
 ## Monologue: The Artist
@@ -262,25 +289,41 @@ Regional pride is delicious!
 ## Dialogue: At the Hotel
 
 **Guest:** Добрий вечір. У вас є **вільний** номер?
+
 **Receptionist:** Добрий вечір. Так, є **одномісний** (single) і **двомісний** (double).
+
 **Guest:** Мені потрібен **тихий** номер. Я дуже **сонний** (sleepy).
+
 **Receptionist:** У нас є **чудовий** номер на другому поверсі.
+
 **Guest:** Там є **гаряча** вода?
+
 **Receptionist:** Звісно. І **свіжі** рушники.
+
 **Guest:** А сніданок?
+
 **Receptionist:** Сніданок **континентальний**. Дуже **смачний**.
+
 **Guest:** Супер. Я беру.
 
 ## Dialogue: Describing People
 
 **Anna:** Хто цей **молодий** чоловік?
+
 **Oleh:** Це мій **новий** сусід.
+
 **Anna:** Він дуже **симпатичний** (cute). У нього **сині** очі.
+
 **Oleh:** Так, і він дуже **розумний**. Він — **науковий** співробітник.
+
 **Anna:** А хто ця **гарна** жінка поруч?
+
 **Oleh:** Це його сестра. У неї **довге** волосся.
+
 **Anna:** Вона має **модний** вигляд.
+
 **Oleh:** Так, вона — **відома** актриса.
+
 **Anna:** Який **цікавий** світ!
 
 ---
@@ -311,325 +354,7 @@ A "Ukrainian book" is *Українська книга* (Fem), but a "Ukrainian 
 
 ---
 
-## 🎯 Activities
 
-### Suffix Match
-
-<MatchUp pairs={[
-  { left: `-ський`, right: `Origin / Group` },
-  { left: `-овий`, right: `Material / Relation` },
-  { left: `-енький`, right: `Diminutive / Cute` },
-  { left: `-ний`, right: `General Quality` },
-  { left: `-ичний`, right: `Academic / Science` },
-  { left: `-яний`, right: `Material (Wood/Glass)` },
-  { left: `-ній`, right: `Soft ending (Time/Space)` },
-  { left: `-анський`, right: `Origin (American/African)` }
-]} />
-
-### Adjective Sorter
-
-<GroupSort groups={{
-  "Origin - Group (-ський)": ["Український", "Міський", "Сільський", "Жіночий", "Чоловічий", "Дитячий"],
-  "Relation - Material (-овий/-ний)": ["Науковий", "Математичний", "Фізичний", "Кольоровий", "Смаковий", "Історичний"],
-  "State - Description": ["Гарячий", "Маленький", "Свіженький", "Холодний", "Старий", "Молодий"]
-}} />
-
-### Noun to Adjective
-
-<FillIn items={[
-  {
-    sentence: `Музика -> ___ [Hint: Musical]`,
-    answer: `музичний`,
-    options: [`музичний`, `музиковий`, `музицький`]
-  },  {
-    sentence: `Наука -> ___ [Hint: Scientific]`,
-    answer: `науковий`,
-    options: [`науковий`, `научний`, `науцький`]
-  },  {
-    sentence: `Україна -> ___ [Hint: Ukrainian]`,
-    answer: `український`,
-    options: [`український`, `україновий`, `українічний`]
-  },  {
-    sentence: `Місто -> ___ [Hint: Urban]`,
-    answer: `міський`,
-    options: [`міський`, `містовий`, `містичний`]
-  },  {
-    sentence: `Село -> ___ [Hint: Rural]`,
-    answer: `сільський`,
-    options: [`сільський`, `селевий`, `селичний`]
-  },  {
-    sentence: `Математика -> ___ [Hint: Mathematical]`,
-    answer: `математичний`,
-    options: [`математичний`, `математиковий`, `математицький`]
-  },  {
-    sentence: `Історія -> ___ [Hint: Historical]`,
-    answer: `історичний`,
-    options: [`історичний`, `історовий`, `історський`]
-  },  {
-    sentence: `Хімія -> ___ [Hint: Chemical]`,
-    answer: `хімічний`,
-    options: [`хімічний`, `хімовий`, `хімський`]
-  },  {
-    sentence: `Фізика -> ___ [Hint: Physical]`,
-    answer: `фізичний`,
-    options: [`фізичний`, `фізиковий`, `фізький`]
-  },  {
-    sentence: `Географія -> ___ [Hint: Geographical]`,
-    answer: `географічний`,
-    options: [`географічний`, `географовий`, `географський`]
-  },  {
-    sentence: `Смак -> ___ [Hint: Tasty]`,
-    answer: `смачний`,
-    options: [`смачний`, `смаковий`, `смічний`]
-  },  {
-    sentence: `Колір -> ___ [Hint: Colorful]`,
-    answer: `кольоровий`,
-    options: [`кольоровий`, `колірний`, `колірський`]
-  }
-]} />
-
-### Gender Match
-
-<FillIn items={[
-  {
-    sentence: `___ чай. [Hint: Hot]`,
-    answer: `гарячий`,
-    options: [`гарячий`, `гаряча`, `гаряче`]
-  },  {
-    sentence: `___ вода. [Hint: Cold]`,
-    answer: `холодна`,
-    options: [`холодна`, `холодний`, `холодне`]
-  },  {
-    sentence: `___ хліб. [Hint: Fresh]`,
-    answer: `свіжий`,
-    options: [`свіжий`, `свіжа`, `свіже`]
-  },  {
-    sentence: `___ молоко. [Hint: Warm]`,
-    answer: `тепле`,
-    options: [`тепле`, `теплий`, `тепла`]
-  },  {
-    sentence: `___ одяг. [Hint: Children's]`,
-    answer: `дитячий`,
-    options: [`дитячий`, `дитяча`, `дитяче`]
-  },  {
-    sentence: `___ робота. [Hint: Men's]`,
-    answer: `чоловіча`,
-    options: [`чоловіча`, `чоловічий`, `чоловіче`]
-  },  {
-    sentence: `___ журнал. [Hint: Women's]`,
-    answer: `жіночий`,
-    options: [`жіночий`, `жіноча`, `жіноче`]
-  },  {
-    sentence: `___ проблема. [Hint: Human]`,
-    answer: `людська`,
-    options: [`людська`, `людський`, `людське`]
-  },  {
-    sentence: `___ світ. [Hint: Material]`,
-    answer: `матеріальний`,
-    options: [`матеріальний`, `матеріальна`, `матеріальне`]
-  },  {
-    sentence: `___ життя. [Hint: Spiritual]`,
-    answer: `духовне`,
-    options: [`духовне`, `духовний`, `духовна`]
-  },  {
-    sentence: `___ день. [Hint: Working]`,
-    answer: `робочий`,
-    options: [`робочий`, `робоча`, `робоче`]
-  },  {
-    sentence: `___ камінь. [Hint: Ordinary]`,
-    answer: `звичайний`,
-    options: [`звичайний`, `звичайна`, `звичайне`]
-  }
-]} />
-
-### Opposites
-
-<MatchUp pairs={[
-  { left: `Старий`, right: `Молодий` },
-  { left: `Гарячий`, right: `Холодний` },
-  { left: `Міський`, right: `Сільський` },
-  { left: `Чоловічий`, right: `Жіночий` },
-  { left: `Матеріальний`, right: `Духовний` },
-  { left: `Теплий`, right: `Холодний` },
-  { left: `Свіжий`, right: `Старий` },
-  { left: `Великий`, right: `Маленький` }
-]} />
-
-### Scientific Talk
-
-<Unjumble items={[
-  { jumbled: `експеримент / це / хімічний`, answer: `Це хімічний експеримент.` },
-  { jumbled: `проблема / це / фізична`, answer: `Це фізична проблема.` },
-  { jumbled: `мапа / де / географічна`, answer: `Де географічна мапа?` },
-  { jumbled: `факт / це / історичний`, answer: `Це історичний факт.` },
-  { jumbled: `рівняння / це / математичне`, answer: `Це математичне рівняння.` },
-  { jumbled: `журнал / це / науковий`, answer: `Це науковий журнал.` }
-]} />
-
-### City Vibes
-
-<FillIn items={[
-  {
-    sentence: `Київський ___. [Hint: Cake]`,
-    answer: `торт`,
-    options: [`торт`, `хліб`, `суп`]
-  },  {
-    sentence: `Львівська ___. [Hint: Coffee]`,
-    answer: `кава`,
-    options: [`кава`, `чай`, `вода`]
-  },  {
-    sentence: `Одеський ___. [Hint: Port]`,
-    answer: `порт`,
-    options: [`порт`, `парк`, `сад`]
-  },  {
-    sentence: `Карпатський ___. [Hint: Tea/Herb]`,
-    answer: `чай`,
-    options: [`чай`, `сік`, `лід`]
-  },  {
-    sentence: `Харківський ___. [Hint: University]`,
-    answer: `університет`,
-    options: [`університет`, `школа`, `клас`]
-  },  {
-    sentence: `Полтавська ___. [Hint: Dumpling]`,
-    answer: `галушка`,
-    options: [`галушка`, `піца`, `паста`]
-  },  {
-    sentence: `Миколаївський ___. [Hint: Zoo]`,
-    answer: `зоопарк`,
-    options: [`зоопарк`, `парк`, `ліс`]
-  },  {
-    sentence: `Житомирські ___. [Hint: Socks]`,
-    answer: `шкарпетки`,
-    options: [`шкарпетки`, `шапки`, `штани`]
-  }
-]} />
-
-### Logic Check
-
-<Quiz questions={[
-  {
-    question: `Which suffix is used for \"Urban/Rural\"?`,
-    options: [
-      { text: `-ський`, correct: true },
-      { text: `-овий`, correct: false },
-      { text: `-ний`, correct: false }
-    ]
-  },  {
-    question: `Which suffix is used for \"Scientific\"?`,
-    options: [
-      { text: `-овий`, correct: true },
-      { text: `-ський`, correct: false },
-      { text: `-чий`, correct: false }
-    ]
-  },  {
-    question: `\"Гарячий\" describes:`,
-    options: [
-      { text: `Temperature (Hot)`, correct: true },
-      { text: `Color (Red)`, correct: false },
-      { text: `Taste (Spicy)`, correct: false }
-    ]
-  },  {
-    question: `\"Маленький\" uses which suffix?`,
-    options: [
-      { text: `-еньк- (Diminutive)`, correct: true },
-      { text: `-ськ- (Origin)`, correct: false },
-      { text: `-ов- (Material)`, correct: false }
-    ]
-  },  {
-    question: `\"Жіночий\" means:`,
-    options: [
-      { text: `Women's/Female`, correct: true },
-      { text: `Men's/Male`, correct: false },
-      { text: `Child's`, correct: false }
-    ]
-  },  {
-    question: `\"Сільський\" relates to:`,
-    options: [
-      { text: `Village`, correct: true },
-      { text: `Salt`, correct: false },
-      { text: `Sun`, correct: false }
-    ]
-  },  {
-    question: `\"Український\" matches \"people\" (люди) in plural as:`,
-    options: [
-      { text: `Українські`, correct: true },
-      { text: `Українська`, correct: false },
-      { text: `Український`, correct: false }
-    ]
-  },  {
-    question: `\"Смаковий\" relates to:`,
-    options: [
-      { text: `Taste`, correct: true },
-      { text: `Smell`, correct: false },
-      { text: `Touch`, correct: false }
-    ]
-  }
-]} />
-
-### The Professor's Day
-
-<Cloze
-  passage={`Професор читає [___:1] [Hint: scientific] журнал.
-Він п'є [___:2] [Hint: hot] чай.
-Це [___:3] [Hint: working] день.
-У нього є [___:4] [Hint: mathematical] завдання.
-Він любить [___:5] [Hint: fresh] повітря.
-Він гуляє через [___:6] [Hint: old] парк.
-Це [___:7] [Hint: urban] парк.
-Він бачить [___:8] [Hint: little] пташку.
-Пташка співає [___:9] [Hint: musical] пісню.
-Життя таке [___:10] [Hint: colorful].
-Це [___:11] [Hint: physical] світ.
-Але і [___:12] [Hint: spiritual].`}
-  blanks={[{ answer: `науковий`, options: [`науковий`] }, { answer: `гарячий`, options: [`гарячий`] }, { answer: `робочий`, options: [`робочий`] }, { answer: `математичне`, options: [`математичне`] }, { answer: `свіже`, options: [`свіже`] }, { answer: `старий`, options: [`старий`] }, { answer: `міський`, options: [`міський`] }, { answer: `маленьку`, options: [`маленьку`] }, { answer: `музичну`, options: [`музичну`] }, { answer: `кольорове`, options: [`кольорове`] }, { answer: `фізичний`, options: [`фізичний`] }, { answer: `духовний`, options: [`духовний`] }]}
-/>
-
-### Wrong Suffix
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Це **наукний** журнал. (Wrong suffix)`}
-    errorWord={`наукний`}
-    correctForm={`науковий`}
-    options={[`науковий`, `наукний`]}
-    explanation={`Science (Наука) -> Scientific (Науковий). -овий is consistent here.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він **українновий** студент. (Wrong suffix)`}
-    errorWord={`українновий`}
-    correctForm={`український`}
-    options={[`український`, `українновий`]}
-    explanation={`Origin uses -ський.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Це **містовий** парк. (Wrong suffix)`}
-    errorWord={`містовий`}
-    correctForm={`міський`}
-    options={[`міський`, `містовий`]}
-    explanation={`City (Місто) -> Urban (Міський).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Чай **холодичний**. (Wrong form)`}
-    errorWord={`холодичний`}
-    correctForm={`холодний`}
-    options={[`холодний`, `холодичний`]}
-    explanation={`Cold (Холод) -> Cold (Холодний).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Це **дитяцький** садок. (Wrong form)`}
-    errorWord={`дитяцький`}
-    correctForm={`дитячий`}
-    options={[`дитячий`, `дитяцький`]}
-    explanation={`Children's (Дитячий). Irregular/Soft.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Світ **матерільний**. (Typo/Wrong form)`}
-    errorWord={`матерільний`}
-    correctForm={`матеріальний`}
-    options={[`матеріальний`, `матерільний`]}
-    explanation={`Material (Матерія) -> Material (Матеріальний).`}
-  />
-</ErrorCorrection>
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -664,3 +389,387 @@ A "Ukrainian book" is *Українська книга* (Fem), but a "Ukrainian 
 | свіжий | /sˈʋiʒɪj/ | fresh | adj | masc | -ий |
 | старий | /stɑˈrɪj/ | old | adj | masc | -ий |
 | молодий | /mɔlɔˈdɪj/ | young | adj | masc | -ий |
+
+---
+
+## 🎯 Activities
+
+### Suffix Match
+
+*Match the suffix to its typical meaning.*
+
+
+<MatchUp pairs={[
+  { left: `-ський`, right: `Origin / Group` },
+  { left: `-овий`, right: `Material / Relation` },
+  { left: `-енький`, right: `Diminutive / Cute` },
+  { left: `-ний`, right: `General Quality` },
+  { left: `-ичний`, right: `Academic / Science` },
+  { left: `-яний`, right: `Material (Wood/Glass)` },
+  { left: `-ній`, right: `Soft ending (Time/Space)` },
+  { left: `-анський`, right: `Origin (American/African)` }
+]} />
+
+### Adjective Sorter
+
+*Which category does the adjective belong to?*
+
+
+<GroupSort groups={{
+  "### Origin - Group (-ський)": [
+    "Український",
+    "Міський",
+    "Сільський",
+    "Жіночий",
+    "Чоловічий",
+    "Дитячий"
+  ],
+  "Relation - Material (-овий/-ний)": [
+    "Науковий",
+    "Математичний",
+    "Фізичний",
+    "Кольоровий",
+    "Смаковий",
+    "Історичний"
+  ],
+  "State - Description": [
+    "Гарячий",
+    "Маленький",
+    "Свіженький",
+    "Холодний",
+    "Старий",
+    "Молодий"
+  ]
+}} />
+
+### Noun to Adjective
+
+*Change noun to adjective. Use hints.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Музика -> ___ [Hint: Musical]`}
+    answer={`музичний`}
+    options={[`музичний`, `музиковий`, `музицький`]}
+  />
+  <FillInQuestion
+    sentence={`Наука -> ___ [Hint: Scientific]`}
+    answer={`науковий`}
+    options={[`науковий`, `научний`, `науцький`]}
+  />
+  <FillInQuestion
+    sentence={`Україна -> ___ [Hint: Ukrainian]`}
+    answer={`український`}
+    options={[`український`, `україновий`, `українічний`]}
+  />
+  <FillInQuestion
+    sentence={`Місто -> ___ [Hint: Urban]`}
+    answer={`міський`}
+    options={[`міський`, `містовий`, `містичний`]}
+  />
+  <FillInQuestion
+    sentence={`Село -> ___ [Hint: Rural]`}
+    answer={`сільський`}
+    options={[`сільський`, `селевий`, `селичний`]}
+  />
+  <FillInQuestion
+    sentence={`Математика -> ___ [Hint: Mathematical]`}
+    answer={`математичний`}
+    options={[`математичний`, `математиковий`, `математицький`]}
+  />
+  <FillInQuestion
+    sentence={`Історія -> ___ [Hint: Historical]`}
+    answer={`історичний`}
+    options={[`історичний`, `історовий`, `історський`]}
+  />
+  <FillInQuestion
+    sentence={`Хімія -> ___ [Hint: Chemical]`}
+    answer={`хімічний`}
+    options={[`хімічний`, `хімовий`, `хімський`]}
+  />
+  <FillInQuestion
+    sentence={`Фізика -> ___ [Hint: Physical]`}
+    answer={`фізичний`}
+    options={[`фізичний`, `фізиковий`, `фізький`]}
+  />
+  <FillInQuestion
+    sentence={`Географія -> ___ [Hint: Geographical]`}
+    answer={`географічний`}
+    options={[`географічний`, `географовий`, `географський`]}
+  />
+  <FillInQuestion
+    sentence={`Смак -> ___ [Hint: Tasty]`}
+    answer={`смачний`}
+    options={[`смачний`, `смаковий`, `смічний`]}
+  />
+  <FillInQuestion
+    sentence={`Колір -> ___ [Hint: Colorful]`}
+    answer={`кольоровий`}
+    options={[`кольоровий`, `колірний`, `колірський`]}
+  />
+</FillIn>
+
+### Gender Match
+
+*Match the adjective ending to the noun.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. ___ чай. [Hint: Hot]`}
+    answer={`гарячий`}
+    options={[`гарячий`, `гаряча`, `гаряче`]}
+  />
+  <FillInQuestion
+    sentence={`___ вода. [Hint: Cold]`}
+    answer={`холодна`}
+    options={[`холодна`, `холодний`, `холодне`]}
+  />
+  <FillInQuestion
+    sentence={`___ хліб. [Hint: Fresh]`}
+    answer={`свіжий`}
+    options={[`свіжий`, `свіжа`, `свіже`]}
+  />
+  <FillInQuestion
+    sentence={`___ молоко. [Hint: Warm]`}
+    answer={`тепле`}
+    options={[`тепле`, `теплий`, `тепла`]}
+  />
+  <FillInQuestion
+    sentence={`___ одяг. [Hint: Children's]`}
+    answer={`дитячий`}
+    options={[`дитячий`, `дитяча`, `дитяче`]}
+  />
+  <FillInQuestion
+    sentence={`___ робота. [Hint: Men's]`}
+    answer={`чоловіча`}
+    options={[`чоловіча`, `чоловічий`, `чоловіче`]}
+  />
+  <FillInQuestion
+    sentence={`___ журнал. [Hint: Women's]`}
+    answer={`жіночий`}
+    options={[`жіночий`, `жіноча`, `жіноче`]}
+  />
+  <FillInQuestion
+    sentence={`___ проблема. [Hint: Human]`}
+    answer={`людська`}
+    options={[`людська`, `людський`, `людське`]}
+  />
+  <FillInQuestion
+    sentence={`___ світ. [Hint: Material]`}
+    answer={`матеріальний`}
+    options={[`матеріальний`, `матеріальна`, `матеріальне`]}
+  />
+  <FillInQuestion
+    sentence={`___ життя. [Hint: Spiritual]`}
+    answer={`духовне`}
+    options={[`духовне`, `духовний`, `духовна`]}
+  />
+  <FillInQuestion
+    sentence={`___ день. [Hint: Working]`}
+    answer={`робочий`}
+    options={[`робочий`, `робоча`, `робоче`]}
+  />
+  <FillInQuestion
+    sentence={`___ камінь. [Hint: Ordinary]`}
+    answer={`звичайний`}
+    options={[`звичайний`, `звичайна`, `звичайне`]}
+  />
+</FillIn>
+
+### Opposites
+
+*Match adjective opposites.*
+
+
+<MatchUp pairs={[
+  { left: `Старий`, right: `Молодий` },
+  { left: `Гарячий`, right: `Холодний` },
+  { left: `Міський`, right: `Сільський` },
+  { left: `Чоловічий`, right: `Жіночий` },
+  { left: `Матеріальний`, right: `Духовний` },
+  { left: `Теплий`, right: `Холодний` },
+  { left: `Свіжий`, right: `Старий` },
+  { left: `Великий`, right: `Маленький` }
+]} />
+
+### Scientific Talk
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`експеримент / це / хімічний`}
+    answer={`Це хімічний експеримент.`}
+  />
+  <UnjumbleQuestion
+    words={`проблема / це / фізична`}
+    answer={`Це фізична проблема.`}
+  />
+  <UnjumbleQuestion
+    words={`мапа / де / географічна`}
+    answer={`Де географічна мапа?`}
+  />
+  <UnjumbleQuestion
+    words={`факт / це / історичний`}
+    answer={`Це історичний факт.`}
+  />
+  <UnjumbleQuestion
+    words={`рівняння / це / математичне`}
+    answer={`Це математичне рівняння.`}
+  />
+  <UnjumbleQuestion
+    words={`журнал / це / науковий`}
+    answer={`Це науковий журнал.`}
+  />
+</Unjumble>
+
+### City Vibes
+
+*Complete phrases about cities.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Київський ___. [Hint: Cake]`}
+    answer={`торт`}
+    options={[`торт`, `хліб`, `суп`]}
+  />
+  <FillInQuestion
+    sentence={`Львівська ___. [Hint: Coffee]`}
+    answer={`кава`}
+    options={[`кава`, `чай`, `вода`]}
+  />
+  <FillInQuestion
+    sentence={`Одеський ___. [Hint: Port]`}
+    answer={`порт`}
+    options={[`порт`, `парк`, `сад`]}
+  />
+  <FillInQuestion
+    sentence={`Карпатський ___. [Hint: Tea/Herb]`}
+    answer={`чай`}
+    options={[`чай`, `сік`, `лід`]}
+  />
+  <FillInQuestion
+    sentence={`Харківський ___. [Hint: University]`}
+    answer={`університет`}
+    options={[`університет`, `школа`, `клас`]}
+  />
+  <FillInQuestion
+    sentence={`Полтавська ___. [Hint: Dumpling]`}
+    answer={`галушка`}
+    options={[`галушка`, `піца`, `паста`]}
+  />
+  <FillInQuestion
+    sentence={`Миколаївський ___. [Hint: Zoo]`}
+    answer={`зоопарк`}
+    options={[`зоопарк`, `парк`, `ліс`]}
+  />
+  <FillInQuestion
+    sentence={`Житомирські ___. [Hint: Socks]`}
+    answer={`шкарпетки`}
+    options={[`шкарпетки`, `шапки`, `штани`]}
+  />
+</FillIn>
+
+### Logic Check
+
+<Quiz>
+  <QuizQuestion
+    question={`1. Which suffix is used for "Urban/Rural"?`}
+    options={[`-ський`, `-овий`, `-ний`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Which suffix is used for "Scientific"?`}
+    options={[`-овий`, `-ський`, `-чий`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Гарячий" describes:`}
+    options={[`Temperature (Hot)`, `Color (Red)`, `Taste (Spicy)`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Маленький" uses which suffix?`}
+    options={[`-еньк- (Diminutive)`, `-ськ- (Origin)`, `-ов- (Material)`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Жіночий" means:`}
+    options={[`Women's/Female`, `Men's/Male`, `Child's`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Сільський" relates to:`}
+    options={[`Village`, `Salt`, `Sun`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Український" matches "people" (люди) in plural as:`}
+    options={[`Українські`, `Українська`, `Український`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Смаковий" relates to:`}
+    options={[`Taste`, `Smell`, `Touch`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+
+
+### Wrong Suffix
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Це **наукний** журнал. (Wrong suffix)`}
+    error={`наукний`}
+    answer={`науковий`}
+    options={[`науковий`, `наукний`]}
+    explanation={`Science (Наука) -> Scientific (Науковий). -овий is consistent here.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він **українновий** студент. (Wrong suffix)`}
+    error={`українновий`}
+    answer={`український`}
+    options={[`український`, `українновий`]}
+    explanation={`Origin uses -ський.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Це **містовий** парк. (Wrong suffix)`}
+    error={`містовий`}
+    answer={`міський`}
+    options={[`міський`, `містовий`]}
+    explanation={`City (Місто) -> Urban (Міський).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Чай **холодичний**. (Wrong form)`}
+    error={`холодичний`}
+    answer={`холодний`}
+    options={[`холодний`, `холодичний`]}
+    explanation={`Cold (Холод) -> Cold (Холодний).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Це **дитяцький** садок. (Wrong form)`}
+    error={`дитяцький`}
+    answer={`дитячий`}
+    options={[`дитячий`, `дитяцький`]}
+    explanation={`Children's (Дитячий). Irregular/Soft.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Світ **матерільний**. (Typo/Wrong form)`}
+    error={`матерільний`}
+    answer={`матеріальний`}
+    options={[`матеріальний`, `матерільний`]}
+    explanation={`Material (Матерія) -> Material (Матеріальний).`}
+  />
+</ErrorCorrection>
+

@@ -5,19 +5,20 @@ title: "Root Families II"
 description: "Motion and Perception Roots"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Warm-up
@@ -34,6 +35,17 @@ In this module, we focus on three important root families: perception roots for 
 
 English has similar patterns: "see" gives us "sight", "seer", "foresee", "oversee". Ukrainian's system is even more productive because of its rich prefixation and suffixation system.
 
+:::info
+🔗 External Resources
+
+**YouTube:** [25 COMMON UKRAINIAN PHRASES EVERY LEARNER MUST KNOW...](https://www.youtube.com/watch?v=aJ2Ldu2TaKA) — Speak Ukrainian
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+:::
+
+
 ---
 
 # Presentation
@@ -49,7 +61,8 @@ The root **бач-** relates to seeing and visual perception.
 | побачення | meeting/date | романтичне побачення |
 | передбачення | prediction | точне передбачення |
 
-:::tip[Словотвір: Приклад Кореня бач-]
+:::tip
+Словотвір: Приклад Кореня бач-
 Корінь бач- дає дієслово "бачити".
 Від дієслова утворюємо "бачення" (суфікс -ення).
 Префікс "по-" додає значення "раз" → побачення.
@@ -78,7 +91,8 @@ Ukrainian has two related roots for hearing: **слух-** (active listening) an
 | почуття | feeling | глибокі почуття (deep feelings) |
 | відчуття | sensation | дивне відчуття (strange sensation) |
 
-:::note[Слухати vs Чути: Важлива Різниця]
+:::note
+Слухати vs Чути: Важлива Різниця
 Українська мова розрізняє активне слухання і пасивне чуття.
 "Я слухаю музику" = active listening.
 "Я чую музику" = passive hearing.
@@ -99,7 +113,8 @@ The **говор-/мов-** roots relate to speech and language.
 | мовчати | to be silent | Мовчи! Слухай! |
 | мовчання | silence | золоте мовчання |
 
-:::tip[Логіка Кореня мов-]
+:::tip
+Логіка Кореня мов-
 - **мов-**: мова, мовлення (говоріння).
 - **мовч-**: мовчати, мовчання (НЕ говорити).
 Цікаво: "мовч-" = "мов-" + "-ч-" означає відсутність мови!
@@ -113,39 +128,24 @@ The **говор-/мов-** roots relate to speech and language.
 
 Оксана і Тарас сидять у кафе. Тарас розповідає про свій день.
 
-<div className="conversation">
-
 — Сьогодні я **бачив** дивну річ, — каже Тарас.
-
 — Що саме? — питає Оксана. — **Розкажи**!
-
 — Я йшов вулицею і **почув** дивний звук. Я **слухав** уважно. Це була пташка. Але вона **мовчала** коли я **дивився** на неї.
-
 — Цікаво! А яке у тебе **відчуття**?
-
 — Я мав **почуття** спокою. Це був чудовий момент.
-
 — Я люблю такі історії, — каже Оксана. — Ти маєш гарне **бачення** світу.
-
-</div>
 
 Вони продовжили **розмову** про природу та **мовчання** в лісі.
 
-<div className="conversation">
-
 — Ти часто ходиш у ліс? — питає Оксана.
-
 — Так, я люблю **слухати** звуки природи. Там можна **чути** пташок, вітер, воду. Це допомагає думати.
-
 — Я розумію. Ми забуваємо **слухати** тишу в місті.
-
 — Саме так! **Мовчання** — це теж **мова**, тільки без слів.
-
-</div>
 
 Оксана посміхнулась. Вона зрозуміла **бачення** свого друга.
 
-:::note[Українське Слово]
+:::note
+Українське Слово
 Слово "мова" є дуже важливим для українців.
 Українська мова — це не просто спосіб спілкування.
 Це символ національної ідентичності та культури.
@@ -165,25 +165,14 @@ The **говор-/мов-** roots relate to speech and language.
 
 Один студент **мовчить** увесь час. Він тільки **слухає** і **дивиться** на професора. Після лекції Марія питає його:
 
-<div className="conversation">
-
 — Чому ти **мовчав** весь час?
-
 — Я мав глибокі **почуття** про цю тему. Мені потрібен час для **роздумів**.
-
 — Я розумію, — каже Марія. — Іноді **мовчання** — це найкращий спосіб вчитися.
-
-</div>
 
 Вони домовилися про **побачення** в бібліотеці наступного тижня для обговорення цієї важливої теми.
 
-<div className="conversation">
-
 — До **побачення**! — сказала Марія.
-
 — До **побачення**! **Слухай** лекцію уважно! — відповів студент.
-
-</div>
 
 ---
 
@@ -210,7 +199,8 @@ Related to internal perception:
 | думка | thought |
 | роздуми | reflections |
 
-:::tip[Зв'язок Коренів]
+:::tip
+Зв'язок Коренів
 **бач-** (бачити) — сприйняття очима
 **слух-** (слухати) — сприйняття вухами
 **чут-** (почуття) — сприйняття емоційне
@@ -288,329 +278,24 @@ These words look similar but mean different things. Бачення is vision or 
 
 ---
 
-## 🎯 Activities
 
-### Perception Roots
 
-<MatchUp pairs={[
-  { left: `бачити`, right: `to see` },
-  { left: `бачення`, right: `vision` },
-  { left: `побачення`, right: `meeting/date` },
-  { left: `слухати`, right: `to listen` },
-  { left: `слух`, right: `hearing` },
-  { left: `слухач`, right: `listener` },
-  { left: `чути`, right: `to hear` },
-  { left: `почуття`, right: `feeling` }
-]} />
+> 💡 **Мова як дерево**
+>
+> «Слово — не горобець, вилетить — не спіймаєш.» (Корінь слова — ключ до значення!)
+>
+> *Translation: "A word is not a sparrow — once spoken, you can't take it back."*
 
-### Speech Roots
+> 🇺🇦 **Родини коренів — ключ до розуміння**
+>
+> Коли ви знаєте один корінь, ви знаєте десятки слів:
+> - **уч-**: вчити, учень, учитель, навчання, вивчати
+> - **люб-**: любити, любов, любий, полюбити
+> - **пис-**: писати, письмо, письменник, записати
+>
+> Шукайте корені у нових словах — це найкращий спосіб розширити словник!
 
-<MatchUp pairs={[
-  { left: `говорити`, right: `to speak` },
-  { left: `розмова`, right: `conversation` },
-  { left: `мова`, right: `language` },
-  { left: `мовлення`, right: `speech` },
-  { left: `мовчати`, right: `to be silent` },
-  { left: `мовчання`, right: `silence` },
-  { left: `думати`, right: `to think` },
-  { left: `думка`, right: `thought` }
-]} />
 
-### Root Families
-
-<FillIn items={[
-  {
-    sentence: `Я хочу [___] тебе. (see)`,
-    answer: `бачити`,
-    options: [`бачити`, `слухати`, `говорити`, `чути`]
-  },  {
-    sentence: `[___] уважно! (Listen)`,
-    answer: `Слухай`,
-    options: [`Слухай`, `Бач`, `Говори`, `Пиши`]
-  },  {
-    sentence: `Українська [___] красива. (language)`,
-    answer: `мова`,
-    options: [`мова`, `розмова`, `мовлення`, `слово`]
-  },  {
-    sentence: `Я [___] музику здалеку. (hear)`,
-    answer: `чую`,
-    options: [`чую`, `слухаю`, `бачу`, `говорю`]
-  },  {
-    sentence: `Ми мали гарну [___]. (conversation)`,
-    answer: `розмову`,
-    options: [`розмову`, `мову`, `слово`, `бачення`]
-  },  {
-    sentence: `Вони мали романтичне [___]. (date)`,
-    answer: `побачення`,
-    options: [`побачення`, `бачення`, `розмова`, `слухання`]
-  },  {
-    sentence: `[___] були уважними. (listeners)`,
-    answer: `Слухачі`,
-    options: [`Слухачі`, `Мовці`, `Читачі`, `Глядачі`]
-  },  {
-    sentence: `Будь ласка, [___]! (be silent)`,
-    answer: `мовчи`,
-    options: [`мовчи`, `говори`, `слухай`, `дивись`]
-  }
-]} />
-
-### Perception Roots
-
-<Quiz questions={[
-  {
-    question: `\"Бач-\" relates to:`,
-    options: [
-      { text: `Seeing`, correct: true },
-      { text: `Hearing`, correct: false },
-      { text: `Speaking`, correct: false }
-    ]
-  },  {
-    question: `\"Слух-\" relates to:`,
-    options: [
-      { text: `Hearing`, correct: true },
-      { text: `Seeing`, correct: false },
-      { text: `Thinking`, correct: false }
-    ]
-  },  {
-    question: `\"Говор-/мов-\" relates to:`,
-    options: [
-      { text: `Speaking`, correct: true },
-      { text: `Seeing`, correct: false },
-      { text: `Hearing`, correct: false }
-    ]
-  },  {
-    question: `\"Побачення\" means:`,
-    options: [
-      { text: `Meeting/date`, correct: true },
-      { text: `Vision`, correct: false },
-      { text: `Prediction`, correct: false }
-    ]
-  },  {
-    question: `\"Слухач\" means:`,
-    options: [
-      { text: `Listener`, correct: true },
-      { text: `Speaker`, correct: false },
-      { text: `Viewer`, correct: false }
-    ]
-  },  {
-    question: `\"Мова\" vs \"мовлення\":`,
-    options: [
-      { text: `Мова = language system`, correct: true },
-      { text: `Мова = act of speaking`, correct: false },
-      { text: `They are the same`, correct: false }
-    ]
-  },  {
-    question: `\"Мовчати\" means:`,
-    options: [
-      { text: `To be silent`, correct: true },
-      { text: `To speak`, correct: false },
-      { text: `To listen`, correct: false }
-    ]
-  },  {
-    question: `\"Почуття\" vs \"відчуття\":`,
-    options: [
-      { text: `Почуття = emotional feeling`, correct: true },
-      { text: `Почуття = physical sensation`, correct: false },
-      { text: `They are the same`, correct: false }
-    ]
-  }
-]} />
-
-### Story Comprehension
-
-<Cloze
-  passage={`Тарас [___:1] дивну річ. (saw)
-Він [___:2] дивний звук. (heard)
-Пташка [___:3] коли він дивився. (was silent)
-Професор [___:4] про мову. (speaks)
-Студенти уважно [___:5]. (listen)
-Марія і студент домовились про [___:6]. (meeting)`}
-  blanks={[{ answer: `бачив`, options: [`бачив`, `чув`, `слухав`] }, { answer: `почув`, options: [`почув`, `бачив`, `слухав`] }, { answer: `мовчала`, options: [`мовчала`, `говорила`, `слухала`] }, { answer: `говорить`, options: [`говорить`, `слухає`, `мовчить`] }, { answer: `слухають`, options: [`слухають`, `говорять`, `мовчать`] }, { answer: `побачення`, options: [`побачення`, `розмову`, `мовчання`] }]}
-/>
-
-### Perception Sentences
-
-<Unjumble items={[
-  { jumbled: `бачу / Я / тебе`, answer: `Я бачу тебе.` },
-  { jumbled: `музику / чую / Я`, answer: `Я чую музику.` },
-  { jumbled: `уважно / Слухай`, answer: `Слухай уважно.` },
-  { jumbled: `гарне / мовлення / Це`, answer: `Це гарне мовлення.` },
-  { jumbled: `цікава / розмова / була / Це`, answer: `Це була цікава розмова.` },
-  { jumbled: `мовчить / Він / весь / час`, answer: `Він мовчить весь час.` },
-  { jumbled: `почуття / глибокі / Це`, answer: `Це глибокі почуття.` },
-  { jumbled: `слухачі / уважні / Вони`, answer: `Вони уважні слухачі.` }
-]} />
-
-### Root Usage
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я **слухаю** шум машин на вулиці. (passive hearing)`}
-    errorWord={`слухаю`}
-    correctForm={`чую`}
-    options={[`чую`, `слухаю`]}
-    explanation={`Passive hearing = чути, active listening = слухати.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він вчить українське **мовлення**. (the language system)`}
-    errorWord={`мовлення`}
-    correctForm={`мову`}
-    options={[`мову`, `мовлення`]}
-    explanation={`Language system = мова, speech act = мовлення.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона має дивне **почуття** у пальцях. (physical)`}
-    errorWord={`почуття`}
-    correctForm={`відчуття`}
-    options={[`відчуття`, `почуття`]}
-    explanation={`Physical sensation = відчуття, emotion = почуття.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`**Чуй** уважно, що я кажу! (active listening)`}
-    errorWord={`Чуй`}
-    correctForm={`Слухай`}
-    options={[`Слухай`, `Чуй`]}
-    explanation={`Command to listen actively = слухай.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Це моє художнє **побачення** світу. (vision/perspective)`}
-    errorWord={`побачення`}
-    correctForm={`бачення`}
-    options={[`бачення`, `побачення`]}
-    explanation={`Vision/perspective = бачення, meeting = побачення.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вони мають **бачення** о третій годині. (meeting)`}
-    errorWord={`бачення`}
-    correctForm={`побачення`}
-    options={[`побачення`, `бачення`]}
-    explanation={`Meeting/date = побачення, vision = бачення.`}
-  />
-</ErrorCorrection>
-
-### Root Families
-
-<GroupSort groups={{
-  "бач- (see)": ["бачити", "бачення", "побачення", "передбачення"],
-  "слух-/чут- (hear/feel)": ["слухати", "слух", "слухач", "чути", "почуття", "відчуття"],
-  "говор-/мов- (speak)": ["говорити", "розмова", "мова", "мовлення", "мовчати", "мовчання"]
-}} />
-
-### Root Rules
-
-<TrueFalse items={[
-  {
-    statement: `\"Бач-\" = seeing/vision.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Слух-\" = active listening.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Чут-\" = active listening.`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `\"Чут-\" = passive hearing.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Мов-\" = speaking/language.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Мов-\" = seeing.`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `\"Побачення\" = meeting/date.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Побачення\" = vision.`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `\"Мовчати\" = to be silent.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Мовчати\" = to speak.`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `\"Слухач\" = listener.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Слухач\" = speaker.`,
-    isTrue: false,
-    explanation: ``
-  }
-]} />
-
-### English to Ukrainian
-
-<Translate questions={[
-  {
-    source: `To see`,
-    options: [
-      { text: `бачити`, correct: true },
-      { text: `слухати`, correct: false },
-      { text: `чути`, correct: false }
-    ]
-  },  {
-    source: `Vision (artistic)`,
-    options: [
-      { text: `бачення`, correct: true },
-      { text: `побачення`, correct: false },
-      { text: `слух`, correct: false }
-    ]
-  },  {
-    source: `Meeting/date`,
-    options: [
-      { text: `побачення`, correct: true },
-      { text: `бачення`, correct: false },
-      { text: `розмова`, correct: false }
-    ]
-  },  {
-    source: `To listen`,
-    options: [
-      { text: `слухати`, correct: true },
-      { text: `чути`, correct: false },
-      { text: `бачити`, correct: false }
-    ]
-  },  {
-    source: `Listener`,
-    options: [
-      { text: `слухач`, correct: true },
-      { text: `мовець`, correct: false },
-      { text: `читач`, correct: false }
-    ]
-  },  {
-    source: `To hear`,
-    options: [
-      { text: `чути`, correct: true },
-      { text: `слухати`, correct: false },
-      { text: `бачити`, correct: false }
-    ]
-  },  {
-    source: `Feeling (emotional)`,
-    options: [
-      { text: `почуття`, correct: true },
-      { text: `відчуття`, correct: false },
-      { text: `слух`, correct: false }
-    ]
-  },  {
-    source: `Language`,
-    options: [
-      { text: `мова`, correct: true },
-      { text: `мовлення`, correct: false },
-      { text: `розмова`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -640,3 +325,388 @@ These words look similar but mean different things. Бачення is vision or 
 | думати | /ˈdumɑtɪ/ | to think | verb | — | mental |
 | думка | /ˈdumkɑ/ | thought | noun | f | abstract |
 | роздуми | /rɔzˈdumɪ/ | reflections | noun | pl | abstract |
+
+---
+
+## 🎯 Activities
+
+### Perception Roots
+
+*Match the word to its meaning.*
+
+
+<MatchUp pairs={[
+  { left: `бачити`, right: `to see` },
+  { left: `бачення`, right: `vision` },
+  { left: `побачення`, right: `meeting/date` },
+  { left: `слухати`, right: `to listen` },
+  { left: `слух`, right: `hearing` },
+  { left: `слухач`, right: `listener` },
+  { left: `чути`, right: `to hear` },
+  { left: `почуття`, right: `feeling` }
+]} />
+
+### Speech Roots
+
+*Match the word to its meaning.*
+
+
+<MatchUp pairs={[
+  { left: `говорити`, right: `to speak` },
+  { left: `розмова`, right: `conversation` },
+  { left: `мова`, right: `language` },
+  { left: `мовлення`, right: `speech` },
+  { left: `мовчати`, right: `to be silent` },
+  { left: `мовчання`, right: `silence` },
+  { left: `думати`, right: `to think` },
+  { left: `думка`, right: `thought` }
+]} />
+
+### Root Families
+
+*Complete the sentences.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я хочу [___] тебе. (see)`}
+    answer={`бачити`}
+    options={[`бачити`, `слухати`, `говорити`, `чути`]}
+  />
+  <FillInQuestion
+    sentence={`[___] уважно! (Listen)`}
+    answer={`Слухай`}
+    options={[`Слухай`, `Бач`, `Говори`, `Пиши`]}
+  />
+  <FillInQuestion
+    sentence={`Українська [___] красива. (language)`}
+    answer={`мова`}
+    options={[`мова`, `розмова`, `мовлення`, `слово`]}
+  />
+  <FillInQuestion
+    sentence={`Я [___] музику здалеку. (hear)`}
+    answer={`чую`}
+    options={[`чую`, `слухаю`, `бачу`, `говорю`]}
+  />
+  <FillInQuestion
+    sentence={`Ми мали гарну [___]. (conversation)`}
+    answer={`розмову`}
+    options={[`розмову`, `мову`, `слово`, `бачення`]}
+  />
+  <FillInQuestion
+    sentence={`Вони мали романтичне [___]. (date)`}
+    answer={`побачення`}
+    options={[`побачення`, `бачення`, `розмова`, `слухання`]}
+  />
+  <FillInQuestion
+    sentence={`вод- (root for water) → ___`}
+    answer={`вода`}
+    options={[`вода`, `водити`, `провід`]}
+  />
+  <FillInQuestion
+    sentence={`люб- (root for love) → ___`}
+    answer={`любити`}
+    options={[`любити`, `любов`, `любий`]}
+  />
+  <FillInQuestion
+    sentence={`[___] були уважними. (listeners)`}
+    answer={`Слухачі`}
+    options={[`Слухачі`, `Мовці`, `Читачі`, `Глядачі`]}
+  />
+  <FillInQuestion
+    sentence={`Будь ласка, [___]! (be silent)`}
+    answer={`мовчи`}
+    options={[`мовчи`, `говори`, `слухай`, `дивись`]}
+  />
+</FillIn>
+
+### Perception Roots
+
+<Quiz>
+  <QuizQuestion
+    question={`1. "Бач-" relates to:`}
+    options={[`Seeing`, `Hearing`, `Speaking`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Слух-" relates to:`}
+    options={[`Hearing`, `Seeing`, `Thinking`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Говор-/мов-" relates to:`}
+    options={[`Speaking`, `Seeing`, `Hearing`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Побачення" means:`}
+    options={[`Meeting/date`, `Vision`, `Prediction`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Слухач" means:`}
+    options={[`Listener`, `Speaker`, `Viewer`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Мова" vs "мовлення":`}
+    options={[`Мова = language system`, `Мова = act of speaking`, `They are the same`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Мовчати" means:`}
+    options={[`To be silent`, `To speak`, `To listen`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Почуття" vs "відчуття":`}
+    options={[`Почуття = emotional feeling`, `Почуття = physical sensation`, `They are the same`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+
+
+### Perception Sentences
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`бачу / Я / тебе`}
+    answer={`Я бачу тебе.`}
+  />
+  <UnjumbleQuestion
+    words={`музику / чую / Я`}
+    answer={`Я чую музику.`}
+  />
+  <UnjumbleQuestion
+    words={`уважно / Слухай`}
+    answer={`Слухай уважно.`}
+  />
+  <UnjumbleQuestion
+    words={`гарне / мовлення / Це`}
+    answer={`Це гарне мовлення.`}
+  />
+  <UnjumbleQuestion
+    words={`цікава / розмова / була / Це`}
+    answer={`Це була цікава розмова.`}
+  />
+  <UnjumbleQuestion
+    words={`мовчить / Він / весь / час`}
+    answer={`Він мовчить весь час.`}
+  />
+  <UnjumbleQuestion
+    words={`почуття / глибокі / Це`}
+    answer={`Це глибокі почуття.`}
+  />
+  <UnjumbleQuestion
+    words={`слухачі / уважні / Вони`}
+    answer={`Вони уважні слухачі.`}
+  />
+</Unjumble>
+
+### Root Usage
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я **слухаю** шум машин на вулиці. (passive hearing)`}
+    error={`слухаю`}
+    answer={`чую`}
+    options={[`чую`, `слухаю`]}
+    explanation={`Passive hearing = чути, active listening = слухати.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він вчить українське **мовлення**. (the language system)`}
+    error={`мовлення`}
+    answer={`мову`}
+    options={[`мову`, `мовлення`]}
+    explanation={`Language system = мова, speech act = мовлення.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона має дивне **почуття** у пальцях. (physical)`}
+    error={`почуття`}
+    answer={`відчуття`}
+    options={[`відчуття`, `почуття`]}
+    explanation={`Physical sensation = відчуття, emotion = почуття.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`**Чуй** уважно, що я кажу! (active listening)`}
+    error={`Чуй`}
+    answer={`Слухай`}
+    options={[`Слухай`, `Чуй`]}
+    explanation={`Command to listen actively = слухай.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Це моє художнє **побачення** світу. (vision/perspective)`}
+    error={`побачення`}
+    answer={`бачення`}
+    options={[`бачення`, `побачення`]}
+    explanation={`Vision/perspective = бачення, meeting = побачення.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вони мають **бачення** о третій годині. (meeting)`}
+    error={`бачення`}
+    answer={`побачення`}
+    options={[`побачення`, `бачення`]}
+    explanation={`Meeting/date = побачення, vision = бачення.`}
+  />
+</ErrorCorrection>
+
+### Root Families
+
+*Sort words by root family.*
+
+
+<GroupSort groups={{
+  "### бач- (see)": [
+    "бачити",
+    "бачення",
+    "побачення",
+    "передбачення"
+  ],
+  "слух-/чут- (hear/feel)": [
+    "слухати",
+    "слух",
+    "слухач",
+    "чути",
+    "почуття",
+    "відчуття"
+  ],
+  "говор-/мов- (speak)": [
+    "говорити",
+    "розмова",
+    "мова",
+    "мовлення",
+    "мовчати",
+    "мовчання"
+  ]
+}} />
+
+### Root Rules
+
+*Mark true or false.*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`"Бач-" = seeing/vision.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Слух-" = active listening.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Чут-" = active listening.`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Чут-" = passive hearing.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Мов-" = speaking/language.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Мов-" = seeing.`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Побачення" = meeting/date.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Побачення" = vision.`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Мовчати" = to be silent.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Мовчати" = to speak.`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Слухач" = listener.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Слухач" = speaker.`}
+    isTrue={false}
+    explanation={``}
+  />
+</TrueFalse>
+
+### English to Ukrainian
+
+<Translate>
+  <TranslateItem
+    source={`1. To see`}
+    answer={`бачити`}
+    options={[`бачити`, `слухати`, `чути`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Vision (artistic)`}
+    answer={`бачення`}
+    options={[`бачення`, `побачення`, `слух`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Meeting/date`}
+    answer={`побачення`}
+    options={[`побачення`, `бачення`, `розмова`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`To listen`}
+    answer={`слухати`}
+    options={[`слухати`, `чути`, `бачити`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Listener`}
+    answer={`слухач`}
+    options={[`слухач`, `мовець`, `читач`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`To hear`}
+    answer={`чути`}
+    options={[`чути`, `слухати`, `бачити`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Feeling (emotional)`}
+    answer={`почуття`}
+    options={[`почуття`, `відчуття`, `слух`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Language`}
+    answer={`мова`}
+    options={[`мова`, `мовлення`, `розмова`]}
+    explanation={``}
+  />
+</Translate>
+

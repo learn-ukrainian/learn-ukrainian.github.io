@@ -5,19 +5,20 @@ title: "I Think That..."
 description: "Expressing Opinions"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 Everyone has opinions! In any conversation, you need to express what you think, believe, and feel about topics — and to do it politely. This is especially important in Ukrainian culture, where showing respect for others' views matters greatly. This module teaches you the essential phrases for sharing opinions and for agreeing or disagreeing without causing offense. You will learn how to soften your statements when you are not completely certain, and how to acknowledge other people's points of view even when you do not share them.
@@ -27,6 +28,17 @@ Everyone has opinions! In any conversation, you need to express what you think, 
 - Phrases for agreeing and disagreeing politely
 - Qualifying opinions with words like "maybe" and "probably"
 - Discussing different views respectfully in conversation
+
+:::info
+🔗 External Resources
+
+**YouTube:** [U.S. peace plan for Russia-Ukraine war is "very pro-Russia," former am...](https://www.youtube.com/watch?v=JFDMCN-ps3I) — CBS News
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+:::
+
 
 ---
 
@@ -92,7 +104,8 @@ Knowing how to agree and disagree politely is crucial for respectful conversatio
 | Ви маєте рацію. | You're right. | polite/formal |
 | Абсолютно! | Absolutely! | very strong |
 
-:::tip[Agreement Phrases]
+:::tip
+Agreement Phrases
 Note that "згоден" is the masculine form and "згодна" is the feminine form. Always use the form that matches your gender.
 :::
 
@@ -108,7 +121,8 @@ Note that "згоден" is the masculine form and "згодна" is the feminin
 | Можливо, але... | Possibly, but... | very polite |
 | Я не впевнений/впевнена. | I'm not sure. (m/f) | soft |
 
-:::warning[Polite Disagreement]
+:::warning
+Polite Disagreement
 Direct disagreement can sound harsh in Ukrainian. Using "Я б не сказав/сказала" or "Не зовсім" softens your disagreement and shows respect for the other person's opinion. Starting with "Можливо, але..." acknowledges their point before introducing your different view.
 :::
 
@@ -250,417 +264,7 @@ Remember: adding certainty markers like "можливо" or "мабуть" makes
 
 Тепер ви можете висловлювати свою думку українською мовою! 💭
 
-## 🎯 Activities
 
-### Opinion Expressions
-
-<MatchUp pairs={[
-  { left: `Я думаю, що`, right: `I think that` },
-  { left: `Я вважаю, що`, right: `I believe that` },
-  { left: `Мені здається, що`, right: `It seems to me that` },
-  { left: `На мою думку`, right: `In my opinion` },
-  { left: `Я згоден`, right: `I agree (m)` },
-  { left: `Я не згодна`, right: `I disagree (f)` },
-  { left: `Це правда`, right: `That's true` },
-  { left: `Не зовсім`, right: `Not exactly` },
-  { left: `Можливо`, right: `Possibly` },
-  { left: `Напевно`, right: `Probably` },
-  { left: `Безумовно`, right: `Undoubtedly` },
-  { left: `Очевидно`, right: `Obviously` }
-]} />
-
-### Express Opinions
-
-<FillIn items={[
-  {
-    sentence: `___ думаю, що це правда. (I)`,
-    answer: `Я`,
-    options: [`Я`, `Мені`, `Він`, `Вона`]
-  },  {
-    sentence: `___ мою думку, це добре. (In)`,
-    answer: `На`,
-    options: [`На`, `До`, `В`, `З`]
-  },  {
-    sentence: `Я ___ з вами. (agree — m)`,
-    answer: `згоден`,
-    options: [`згоден`, `згодна`, `думаю`, `вважаю`]
-  },  {
-    sentence: `Мені ___, що він правий. (seems)`,
-    answer: `здається`,
-    options: [`здається`, `думаю`, `кажу`, `вважаю`]
-  },  {
-    sentence: `Це ___ правда. (undoubtedly)`,
-    answer: `безумовно`,
-    options: [`безумовно`, `можливо`, `не`, `так`]
-  },  {
-    sentence: `Ви маєте ___. (right)`,
-    answer: `рацію`,
-    options: [`рацію`, `правду`, `думку`, `погляд`]
-  },  {
-    sentence: `___, я помиляюся. (Possibly)`,
-    answer: `Можливо`,
-    options: [`Можливо`, `Безумовно`, `Напевно`, `Точно`]
-  },  {
-    sentence: `Я б не ___. (wouldn't say)`,
-    answer: `сказав`,
-    options: [`сказав`, `казав`, `думав`, `вважав`]
-  },  {
-    sentence: `Не ___. (Not exactly)`,
-    answer: `зовсім`,
-    options: [`зовсім`, `так`, `правда`, `точно`]
-  },  {
-    sentence: `Я ___ так думаю. (also)`,
-    answer: `теж`,
-    options: [`теж`, `так`, `не`, `все`]
-  },  {
-    sentence: `Він ___ прийде. (probably)`,
-    answer: `напевно`,
-    options: [`напевно`, `можливо`, `безумовно`, `не`]
-  },  {
-    sentence: `Це не ___. (so)`,
-    answer: `так`,
-    options: [`так`, `правда`, `зовсім`, `точно`]
-  }
-]} />
-
-### Understanding Opinions
-
-<Quiz questions={[
-  {
-    question: `\"Я думаю, що\" means:`,
-    options: [
-      { text: `I think that`, correct: true },
-      { text: `I don't think`, correct: false },
-      { text: `She thinks`, correct: false }
-    ]
-  },  {
-    question: `\"Мені здається, що\" is:`,
-    options: [
-      { text: `A soft, tentative opinion`, correct: true },
-      { text: `A strong opinion`, correct: false },
-      { text: `An expression of disagreement`, correct: false }
-    ]
-  },  {
-    question: `\"На мою думку\" means:`,
-    options: [
-      { text: `In my opinion`, correct: true },
-      { text: `I don't know`, correct: false },
-      { text: `Possibly`, correct: false }
-    ]
-  },  {
-    question: `\"Я згоден\" means:`,
-    options: [
-      { text: `I agree (masculine)`, correct: true },
-      { text: `I disagree`, correct: false },
-      { text: `I think`, correct: false }
-    ]
-  },  {
-    question: `\"Не зовсім\" means:`,
-    options: [
-      { text: `Not exactly`, correct: true },
-      { text: `I agree completely`, correct: false },
-      { text: `That's true`, correct: false }
-    ]
-  },  {
-    question: `\"Безумовно\" indicates:`,
-    options: [
-      { text: `High certainty`, correct: true },
-      { text: `Low certainty`, correct: false },
-      { text: `Disagreement`, correct: false }
-    ]
-  },  {
-    question: `\"Можливо\" indicates:`,
-    options: [
-      { text: `Medium-low certainty`, correct: true },
-      { text: `Very high certainty`, correct: false },
-      { text: `Total disagreement`, correct: false }
-    ]
-  },  {
-    question: `\"Ви маєте рацію\" means:`,
-    options: [
-      { text: `You're right`, correct: true },
-      { text: `You're wrong`, correct: false },
-      { text: `I'm not sure`, correct: false }
-    ]
-  },  {
-    question: `\"Я б не сказав\" is:`,
-    options: [
-      { text: `Polite disagreement`, correct: true },
-      { text: `Strong agreement`, correct: false },
-      { text: `A question`, correct: false }
-    ]
-  },  {
-    question: `\"Очевидно\" means:`,
-    options: [
-      { text: `Obviously`, correct: true },
-      { text: `Possibly`, correct: false },
-      { text: `Not at all`, correct: false }
-    ]
-  },  {
-    question: `\"Я не згодна\" is said by:`,
-    options: [
-      { text: `A woman disagreeing`, correct: true },
-      { text: `A man disagreeing`, correct: false },
-      { text: `Someone agreeing`, correct: false }
-    ]
-  },  {
-    question: `\"Мабуть\" means:`,
-    options: [
-      { text: `Probably`, correct: true },
-      { text: `Definitely`, correct: false },
-      { text: `Not at all`, correct: false }
-    ]
-  }
-]} />
-
-### Opinion Rules
-
-<TrueFalse items={[
-  {
-    statement: `\"Я думаю, що\" introduces an opinion.`,
-    isTrue: true,
-    explanation: `Correct! This is a standard opinion structure.`
-  },  {
-    statement: `\"Мені здається\" is softer than \"Я думаю.\"`,
-    isTrue: true,
-    explanation: `Yes! It sounds more tentative.`
-  },  {
-    statement: `\"Безумовно\" means \"possibly.\"`,
-    isTrue: false,
-    explanation: `\"Безумовно\" means \"undoubtedly\" — high certainty.`
-  },  {
-    statement: `\"Я згодна\" is the feminine form.`,
-    isTrue: true,
-    explanation: `Correct! Masculine is \"згоден.\"`
-  },  {
-    statement: `\"Не зовсім\" is soft disagreement.`,
-    isTrue: true,
-    explanation: `Yes! It means \"not exactly.\"`
-  },  {
-    statement: `\"На мою думку\" is casual.`,
-    isTrue: false,
-    explanation: `\"На мою думку\" is actually formal.`
-  },  {
-    statement: `\"Можливо\" shows uncertainty.`,
-    isTrue: true,
-    explanation: `Correct! It means \"possibly.\"`
-  },  {
-    statement: `\"Ви маєте рацію\" is polite.`,
-    isTrue: true,
-    explanation: `Yes! It's a respectful way to say \"you're right.\"`
-  },  {
-    statement: `\"Я б не сказав\" is strong disagreement.`,
-    isTrue: false,
-    explanation: `It's actually POLITE disagreement.`
-  },  {
-    statement: `\"Мабуть\" = probably.`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `Adding \"можливо\" softens statements.`,
-    isTrue: true,
-    explanation: `Yes! It makes you sound more open.`
-  },  {
-    statement: `\"Очевидно\" shows low certainty.`,
-    isTrue: false,
-    explanation: `\"Очевидно\" shows HIGH certainty.`
-  }
-]} />
-
-### Agree vs Disagree
-
-<GroupSort groups={{
-  "Agreeing": ["Я згоден/згодна.", "Це правда.", "Так, точно.", "Ви маєте рацію.", "Я теж так думаю.", "Абсолютно!"],
-  "Disagreeing": ["Я не згоден/не згодна.", "Це не так.", "Не зовсім.", "Я б не сказав/сказала.", "Можливо, але...", "Я не впевнений."]
-}} />
-
-### Opinion Sentences
-
-<Unjumble items={[
-  { jumbled: `я / думаю / що / фільм / цікавий`, answer: `Я думаю, що фільм цікавий.` },
-  { jumbled: `мені / здається / що / вона / зайнята`, answer: `Мені здається, що вона зайнята.` },
-  { jumbled: `на / мою / думку / це / добре`, answer: `На мою думку, це добре.` },
-  { jumbled: `я / згоден / з / вами`, answer: `Я згоден з вами.` },
-  { jumbled: `це / не / так`, answer: `Це не так.` },
-  { jumbled: `можливо / я / помиляюся`, answer: `Можливо, я помиляюся.` },
-  { jumbled: `ви / маєте / рацію`, answer: `Ви маєте рацію.` },
-  { jumbled: `я / б / не / сказав`, answer: `Я б не сказав.` },
-  { jumbled: `безумовно / це / правда`, answer: `Безумовно, це правда.` },
-  { jumbled: `напевно / він / прийде`, answer: `Напевно, він прийде.` },
-  { jumbled: `я / теж / так / думаю`, answer: `Я теж так думаю.` },
-  { jumbled: `не / зовсім / але / близько`, answer: `Не зовсім, але близько.` }
-]} />
-
-### Fix the Expression
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`___ думаю, що це правда. (I think)`}
-    errorWord={`I think`}
-    correctForm={`Я`}
-    options={[`Я`, `Мені`, `Він`, `Вона`]}
-    explanation={`\"Я думаю, що...\" is the correct structure.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`___, це хороша ідея. (In my opinion)`}
-    errorWord={`In my opinion`}
-    correctForm={`На мою думку`}
-    options={[`Я думаю`, `На мою думку`, `Мені здається`, `Він каже`]}
-    explanation={`\"На мою думку, ...\" is the formal opinion structure.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я ___ з вами. (agree — masculine)`}
-    errorWord={`agree — masculine`}
-    correctForm={`згоден`}
-    options={[`згодна`, `згоден`, `згодно`, `згодні`]}
-    explanation={`Masculine form is \"згоден,\" feminine is \"згодна.\"`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ви ___ рацію. (have right)`}
-    errorWord={`have right`}
-    correctForm={`маєте`}
-    options={[`маєте`, `має`, `маю`, `мати`]}
-    explanation={`\"Ви маєте рацію\" = You're right.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я б ___ сказала. (wouldn't)`}
-    errorWord={`wouldn't`}
-    correctForm={`не`}
-    options={[`не`, `так`, `вже`, `ще`]}
-    explanation={`\"Я б не сказала\" = I wouldn't say.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`___ він прийде. (Probably)`}
-    errorWord={`Probably`}
-    correctForm={`Напевно`}
-    options={[`Можливо`, `Напевно`, `Безумовно`, `Очевидно`]}
-    explanation={`Напевно = probably.`}
-  />
-</ErrorCorrection>
-
-### Opinion Exchange
-
-<Cloze
-  passage={`— [___:1], що цей фільм хороший.
-— [___:2], я теж так думаю!
-— Але моя сестра [___:3].
-— Що вона [___:4]?
-— Вона [___:5], що фільм нудний.
-— [___:6], кожен має свою думку.`}
-  blanks={[{ answer: `На мою`, options: [`На мою`] }, { answer: `згодна`, options: [`згодна`] }, { answer: `Мабуть`, options: [`Мабуть`] }, { answer: `Не зовсім`, options: [`Не зовсім`] }, { answer: `маєте`, options: [`маєте`] }, { answer: `Добре`, options: [`Добре`] }]}
-/>
-
-### Discussing Views
-
-<DialogueReorder lines={[
-  { text: `Я думаю, що ця книга цікава.`, order: 1 },
-  { text: `Я згоден, вона справді хороша.`, order: 2 },
-  { text: `А що ти думаєш про фільм?`, order: 3 },
-  { text: `Мені здається, що книга краща.`, order: 4 },
-  { text: `Можливо, ти маєш рацію.`, order: 5 },
-  { text: `Напевно, книги завжди кращі!`, order: 6 },
-  { text: `На мою думку, це погана ідея.`, order: 7 },
-  { text: `Я б не сказав. Чому ти так думаєш?`, order: 8 },
-  { text: `Тому що це занадто дорого.`, order: 9 },
-  { text: `Ви маєте рацію, але якість хороша.`, order: 10 },
-  { text: `Не зовсім. Є дешевші варіанти.`, order: 11 },
-  { text: `Можливо, давайте порівняємо.`, order: 12 }
-]} />
-
-### Find Opinion Expressions
-
-<MarkTheWords>
-<MarkTheWordsActivity
-  text={`Я думаю, що це правда. Мені здається, що він правий. На мою думку, це добре.`}
-  correctWords={[`Я думаю, що`, `Мені здається`, `На мою думку`]}
-/>
-<MarkTheWordsActivity
-  text={`Я згоден! Це правда. Ви маєте рацію.`}
-  correctWords={[`Я згоден`, `Це правда`, `Ви маєте рацію`]}
-/>
-<MarkTheWordsActivity
-  text={`Можливо, я помиляюся. Напевно, він прийде. Безумовно, це так.`}
-  correctWords={[`Можливо`, `Напевно`, `Безумовно`]}
-/>
-</MarkTheWords>
-
-### English to Ukrainian
-
-<Translate questions={[
-  {
-    source: `I think that this is true.`,
-    options: [
-      { text: `Я думаю, що це правда.`, correct: true },
-      { text: `Я знаю, що це правда.`, correct: false }
-    ]
-  },  {
-    source: `In my opinion, this is a good idea.`,
-    options: [
-      { text: `На мою думку, це хороша ідея.`, correct: true },
-      { text: `Я думаю хороша ідея.`, correct: false }
-    ]
-  },  {
-    source: `I agree with you.`,
-    options: [
-      { text: `Я згоден/згодна з вами.`, correct: true },
-      { text: `Я думаю з вами.`, correct: false }
-    ]
-  },  {
-    source: `That's not so.`,
-    options: [
-      { text: `Це не так.`, correct: true },
-      { text: `Це так.`, correct: false }
-    ]
-  },  {
-    source: `It seems to me that he's right.`,
-    options: [
-      { text: `Мені здається, що він правий.`, correct: true },
-      { text: `Я думаю, що він правий.`, correct: false }
-    ]
-  },  {
-    source: `You're right.`,
-    options: [
-      { text: `Ви маєте рацію.`, correct: true },
-      { text: `Ви не праві.`, correct: false }
-    ]
-  },  {
-    source: `I wouldn't say that.`,
-    options: [
-      { text: `Я б не сказав/сказала.`, correct: true },
-      { text: `Я так не думаю.`, correct: false }
-    ]
-  },  {
-    source: `Possibly, I'm wrong.`,
-    options: [
-      { text: `Можливо, я помиляюся.`, correct: true },
-      { text: `Я точно помиляюся.`, correct: false }
-    ]
-  },  {
-    source: `Undoubtedly, this is true.`,
-    options: [
-      { text: `Безумовно, це правда.`, correct: true },
-      { text: `Можливо, це правда.`, correct: false }
-    ]
-  },  {
-    source: `He will probably come.`,
-    options: [
-      { text: `Напевно, він прийде.`, correct: true },
-      { text: `Він точно прийде.`, correct: false }
-    ]
-  },  {
-    source: `Not exactly.`,
-    options: [
-      { text: `Не зовсім.`, correct: true },
-      { text: `Так, точно.`, correct: false }
-    ]
-  },  {
-    source: `I think so too.`,
-    options: [
-      { text: `Я теж так думаю.`, correct: true },
-      { text: `Я так не думаю.`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -692,3 +296,517 @@ Remember: adding certainty markers like "можливо" or "мабуть" makes
 | помилятися | /pɔmɪˈlʲɑtɪsʲɑ/ | to be wrong | verb | — | imperfective |
 
 ---
+
+---
+
+## 🎯 Activities
+
+### Opinion Expressions
+
+<MatchUp pairs={[
+  { left: `Я думаю, що`, right: `I think that` },
+  { left: `Я вважаю, що`, right: `I believe that` },
+  { left: `Мені здається, що`, right: `It seems to me that` },
+  { left: `На мою думку`, right: `In my opinion` },
+  { left: `Я згоден`, right: `I agree (m)` },
+  { left: `Я не згодна`, right: `I disagree (f)` },
+  { left: `Це правда`, right: `That's true` },
+  { left: `Не зовсім`, right: `Not exactly` },
+  { left: `Можливо`, right: `Possibly` },
+  { left: `Напевно`, right: `Probably` },
+  { left: `Безумовно`, right: `Undoubtedly` },
+  { left: `Очевидно`, right: `Obviously` }
+]} />
+
+### Express Opinions
+
+*Complete with the correct word or phrase.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. ___ думаю, що це правда. (I)`}
+    answer={`Я`}
+    options={[`Я`, `Мені`, `Він`, `Вона`]}
+  />
+  <FillInQuestion
+    sentence={`___ мою думку, це добре. (In)`}
+    answer={`На`}
+    options={[`На`, `До`, `В`, `З`]}
+  />
+  <FillInQuestion
+    sentence={`Я ___ з вами. (agree — m)`}
+    answer={`згоден`}
+    options={[`згоден`, `згодна`, `думаю`, `вважаю`]}
+  />
+  <FillInQuestion
+    sentence={`Мені ___, що він правий. (seems)`}
+    answer={`здається`}
+    options={[`здається`, `думаю`, `кажу`, `вважаю`]}
+  />
+  <FillInQuestion
+    sentence={`Це ___ правда. (undoubtedly)`}
+    answer={`безумовно`}
+    options={[`безумовно`, `можливо`, `не`, `так`]}
+  />
+  <FillInQuestion
+    sentence={`Ви маєте ___. (right)`}
+    answer={`рацію`}
+    options={[`рацію`, `правду`, `думку`, `погляд`]}
+  />
+  <FillInQuestion
+    sentence={`___, я помиляюся. (Possibly)`}
+    answer={`Можливо`}
+    options={[`Можливо`, `Безумовно`, `Напевно`, `Точно`]}
+  />
+  <FillInQuestion
+    sentence={`Я б не ___. (wouldn't say)`}
+    answer={`сказав`}
+    options={[`сказав`, `казав`, `думав`, `вважав`]}
+  />
+  <FillInQuestion
+    sentence={`Не ___. (Not exactly)`}
+    answer={`зовсім`}
+    options={[`зовсім`, `так`, `правда`, `точно`]}
+  />
+  <FillInQuestion
+    sentence={`Я ___ так думаю. (also)`}
+    answer={`теж`}
+    options={[`теж`, `так`, `не`, `все`]}
+  />
+  <FillInQuestion
+    sentence={`Він ___ прийде. (probably)`}
+    answer={`напевно`}
+    options={[`напевно`, `можливо`, `безумовно`, `не`]}
+  />
+  <FillInQuestion
+    sentence={`Це не ___. (so)`}
+    answer={`так`}
+    options={[`так`, `правда`, `зовсім`, `точно`]}
+  />
+</FillIn>
+
+### Understanding Opinions
+
+<Quiz>
+  <QuizQuestion
+    question={`1. "Я думаю, що" means:`}
+    options={[`I think that`, `I don't think`, `She thinks`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Мені здається, що" is:`}
+    options={[`A soft, tentative opinion`, `A strong opinion`, `An expression of disagreement`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"На мою думку" means:`}
+    options={[`In my opinion`, `I don't know`, `Possibly`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Я згоден" means:`}
+    options={[`I agree (masculine)`, `I disagree`, `I think`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Не зовсім" means:`}
+    options={[`Not exactly`, `I agree completely`, `That's true`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Безумовно" indicates:`}
+    options={[`High certainty`, `Low certainty`, `Disagreement`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Можливо" indicates:`}
+    options={[`Medium-low certainty`, `Very high certainty`, `Total disagreement`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Ви маєте рацію" means:`}
+    options={[`You're right`, `You're wrong`, `I'm not sure`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Я б не сказав" is:`}
+    options={[`Polite disagreement`, `Strong agreement`, `A question`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Очевидно" means:`}
+    options={[`Obviously`, `Possibly`, `Not at all`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Я не згодна" is said by:`}
+    options={[`A woman disagreeing`, `A man disagreeing`, `Someone agreeing`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Мабуть" means:`}
+    options={[`Probably`, `Definitely`, `Not at all`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### Opinion Rules
+
+*Decide if each statement is true or false.*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`"Я думаю, що" introduces an opinion.`}
+    isTrue={true}
+    explanation={`Correct! This is a standard opinion structure.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Мені здається" is softer than "Я думаю."`}
+    isTrue={true}
+    explanation={`Yes! It sounds more tentative.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Безумовно" means "possibly."`}
+    isTrue={false}
+    explanation={`"Безумовно" means "undoubtedly" — high certainty.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Я згодна" is the feminine form.`}
+    isTrue={true}
+    explanation={`Correct! Masculine is "згоден."`}
+  />
+  <TrueFalseQuestion
+    statement={`"Не зовсім" is soft disagreement.`}
+    isTrue={true}
+    explanation={`Yes! It means "not exactly."`}
+  />
+  <TrueFalseQuestion
+    statement={`"На мою думку" is casual.`}
+    isTrue={false}
+    explanation={`"На мою думку" is actually formal.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Можливо" shows uncertainty.`}
+    isTrue={true}
+    explanation={`Correct! It means "possibly."`}
+  />
+  <TrueFalseQuestion
+    statement={`"Ви маєте рацію" is polite.`}
+    isTrue={true}
+    explanation={`Yes! It's a respectful way to say "you're right."`}
+  />
+  <TrueFalseQuestion
+    statement={`"Я б не сказав" is strong disagreement.`}
+    isTrue={false}
+    explanation={`It's actually POLITE disagreement.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Мабуть" = probably.`}
+    isTrue={true}
+    explanation={`Correct!`}
+  />
+  <TrueFalseQuestion
+    statement={`Adding "можливо" softens statements.`}
+    isTrue={true}
+    explanation={`Yes! It makes you sound more open.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Очевидно" shows low certainty.`}
+    isTrue={false}
+    explanation={`"Очевидно" shows HIGH certainty.`}
+  />
+</TrueFalse>
+
+### Agree vs Disagree
+
+*Sort these expressions by function.*
+
+
+<GroupSort groups={{
+  "### Agreeing": [
+    "Я згоден/згодна.",
+    "Це правда.",
+    "Так, точно.",
+    "Ви маєте рацію.",
+    "Я теж так думаю.",
+    "Абсолютно!"
+  ],
+  "Disagreeing": [
+    "Я не згоден/не згодна.",
+    "Це не так.",
+    "Не зовсім.",
+    "Я б не сказав/сказала.",
+    "Можливо, але...",
+    "Я не впевнений."
+  ]
+}} />
+
+### Opinion Sentences
+
+*Put the words in the correct order.*
+
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`я / думаю / що / фільм / цікавий`}
+    answer={`Я думаю, що фільм цікавий.`}
+  />
+  <UnjumbleQuestion
+    words={`мені / здається / що / вона / зайнята`}
+    answer={`Мені здається, що вона зайнята.`}
+  />
+  <UnjumbleQuestion
+    words={`на / мою / думку / це / добре`}
+    answer={`На мою думку, це добре.`}
+  />
+  <UnjumbleQuestion
+    words={`я / згоден / з / вами`}
+    answer={`Я згоден з вами.`}
+  />
+  <UnjumbleQuestion
+    words={`це / не / так`}
+    answer={`Це не так.`}
+  />
+  <UnjumbleQuestion
+    words={`можливо / я / помиляюся`}
+    answer={`Можливо, я помиляюся.`}
+  />
+  <UnjumbleQuestion
+    words={`ви / маєте / рацію`}
+    answer={`Ви маєте рацію.`}
+  />
+  <UnjumbleQuestion
+    words={`я / б / не / сказав`}
+    answer={`Я б не сказав.`}
+  />
+  <UnjumbleQuestion
+    words={`безумовно / це / правда`}
+    answer={`Безумовно, це правда.`}
+  />
+  <UnjumbleQuestion
+    words={`напевно / він / прийде`}
+    answer={`Напевно, він прийде.`}
+  />
+  <UnjumbleQuestion
+    words={`я / теж / так / думаю`}
+    answer={`Я теж так думаю.`}
+  />
+  <UnjumbleQuestion
+    words={`не / зовсім / але / близько`}
+    answer={`Не зовсім, але близько.`}
+  />
+</Unjumble>
+
+### Fix the Expression
+
+*Choose the correct form for each context.*
+
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. ___ думаю, що це правда. (I think)`}
+    error={`I think`}
+    answer={`Я`}
+    options={[`Я`, `Мені`, `Він`, `Вона`]}
+    explanation={`"Я думаю, що..." is the correct structure.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`___, це хороша ідея. (In my opinion)`}
+    error={`In my opinion`}
+    answer={`На мою думку`}
+    options={[`Я думаю`, `На мою думку`, `Мені здається`, `Він каже`]}
+    explanation={`"На мою думку, ..." is the formal opinion structure.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я ___ з вами. (agree — masculine)`}
+    error={`agree — masculine`}
+    answer={`згоден`}
+    options={[`згодна`, `згоден`, `згодно`, `згодні`]}
+    explanation={`Masculine form is "згоден," feminine is "згодна."`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ви ___ рацію. (have right)`}
+    error={`have right`}
+    answer={`маєте`}
+    options={[`маєте`, `має`, `маю`, `мати`]}
+    explanation={`"Ви маєте рацію" = You're right.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я б ___ сказала. (wouldn't)`}
+    error={`wouldn't`}
+    answer={`не`}
+    options={[`не`, `так`, `вже`, `ще`]}
+    explanation={`"Я б не сказала" = I wouldn't say.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`___ він прийде. (Probably)`}
+    error={`Probably`}
+    answer={`Напевно`}
+    options={[`Можливо`, `Напевно`, `Безумовно`, `Очевидно`]}
+    explanation={`Напевно = probably.`}
+  />
+</ErrorCorrection>
+
+
+
+### Discussing Views
+
+*Arrange this conversation in the correct order.*
+
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Я думаю, що ця книга цікава."
+  },
+  {
+    "speaker": "",
+    "line": "Я згоден, вона справді хороша."
+  },
+  {
+    "speaker": "",
+    "line": "А що ти думаєш про фільм?"
+  },
+  {
+    "speaker": "",
+    "line": "Мені здається, що книга краща."
+  },
+  {
+    "speaker": "",
+    "line": "Можливо, ти маєш рацію."
+  },
+  {
+    "speaker": "",
+    "line": "Напевно, книги завжди кращі!"
+  },
+  {
+    "speaker": "",
+    "line": "На мою думку, це погана ідея."
+  },
+  {
+    "speaker": "",
+    "line": "Я б не сказав. Чому ти так думаєш?"
+  },
+  {
+    "speaker": "",
+    "line": "Тому що це занадто дорого."
+  },
+  {
+    "speaker": "",
+    "line": "Ви маєте рацію, але якість хороша."
+  },
+  {
+    "speaker": "",
+    "line": "Не зовсім. Є дешевші варіанти."
+  },
+  {
+    "speaker": "",
+    "line": "Можливо, давайте порівняємо."
+  }
+]} />
+</DialogueReorder>
+
+### Find Opinion Expressions
+
+*Click on OPINION expressions only.*
+
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Я думаю, що це правда. Мені здається, що він правий. На мою думку, це добре. Я згоден! Це правда. Ви маєте рацію. Можливо, я помиляюся. Напевно, він прийде. Безумовно, це так.`}
+    correctWords={[`Я думаю, що`, `Мені здається`, `На мою думку`, `Я згоден`, `Це правда`, `Ви маєте рацію`, `Можливо`, `Напевно`, `Безумовно`]}
+  />
+</MarkTheWords>
+
+### English to Ukrainian
+
+<Translate>
+  <TranslateItem
+    source={`1. I think that this is true.`}
+    answer={`Я думаю, що це правда.`}
+    options={[`Я думаю, що це правда.`, `Я знаю, що це правда.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`In my opinion, this is a good idea.`}
+    answer={`На мою думку, це хороша ідея.`}
+    options={[`На мою думку, це хороша ідея.`, `Я думаю хороша ідея.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I agree with you.`}
+    answer={`Я згоден/згодна з вами.`}
+    options={[`Я згоден/згодна з вами.`, `Я думаю з вами.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`That's not so.`}
+    answer={`Це не так.`}
+    options={[`Це не так.`, `Це так.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`It seems to me that he's right.`}
+    answer={`Мені здається, що він правий.`}
+    options={[`Мені здається, що він правий.`, `Я думаю, що він правий.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`You're right.`}
+    answer={`Ви маєте рацію.`}
+    options={[`Ви маєте рацію.`, `Ви не праві.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I wouldn't say that.`}
+    answer={`Я б не сказав/сказала.`}
+    options={[`Я б не сказав/сказала.`, `Я так не думаю.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Possibly, I'm wrong.`}
+    answer={`Можливо, я помиляюся.`}
+    options={[`Можливо, я помиляюся.`, `Я точно помиляюся.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Undoubtedly, this is true.`}
+    answer={`Безумовно, це правда.`}
+    options={[`Безумовно, це правда.`, `Можливо, це правда.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`He will probably come.`}
+    answer={`Напевно, він прийде.`}
+    options={[`Напевно, він прийде.`, `Він точно прийде.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Not exactly.`}
+    answer={`Не зовсім.`}
+    options={[`Не зовсім.`, `Так, точно.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I think so too.`}
+    answer={`Я теж так думаю.`}
+    options={[`Я теж так думаю.`, `Я так не думаю.`]}
+    explanation={``}
+  />
+</Translate>
+

@@ -5,19 +5,20 @@ title: "Which One?"
 description: "Relative Clauses"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Warm-up
@@ -34,8 +35,20 @@ In Ukrainian, "that/which/who" corresponds to one flexible word: **Який**.
 - **The Chameleon:** Changing *який* for gender and case.
 - **The Comma:** Always separating the clause!
 
-:::note[Pronunciation]
+:::note
+Pronunciation
 **Який** /jɑˈkɪj/. It rhymes with "key" but starts with "ya".
+:::
+
+
+:::info
+🔗 External Resources
+
+**YouTube:** [Relative Clauses who, which, that, whose, where, when...](https://www.youtube.com/watch?v=PLnMCxhm7J0) — IDEAL STUDY
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 :::
 
 
@@ -55,7 +68,8 @@ It must match the **Gender** and **Number** of the main word.
 | **Місто** (n) | **яке** | Це місто, **яке** спить. (This is the city **which** sleeps). |
 | **Люди** (pl) | **які** | Це люди, **які** знають все. (These are people **who** know everything). |
 
-:::tip[Comma Rule]
+:::tip
+Comma Rule
 Always put a comma before **який**!
 *Це книга, про яку я говорив.*
 :::
@@ -94,7 +108,8 @@ In Ukrainian:
 - *Чоловік, який...* (Person)
 - *Стіл, який...* (Thing)
 
-:::note[Myth: "Що" implies an object?]
+:::note
+Myth: "Що" implies an object?
 Sometimes you hear *Людина, що прийшла* instead of *Людина, яка прийшла*.
 **Що** is an indeclinable alternative. It's simpler but less precise. For A2, focus on masterfully using **який**. It sounds richer and clearer.
 :::
@@ -119,7 +134,8 @@ The second part (**що**) acts as the subject/object of the second sentence.
 
 - *Я думаю про **те**, **що** сталося.* (I think about [Loc] that, [Nom] which happened).
 
-:::tip[Mental Model]
+:::tip
+Mental Model
 Imagine **те** is an anchor in the main sentence. **Що** is the hook for the new sentence. You always need both!
 :::
 
@@ -128,7 +144,8 @@ Imagine **те** is an anchor in the main sentence. **Що** is the hook for the
 
 # Cultural Insight
 
-:::note[The Art of Description]
+:::note
+The Art of Description
 Ukrainians love detailed descriptions. Unlike English, where you might say "The tall guy", a Ukrainian might say "Той хлопець, який дуже високий" (That guy, who is very tall).
 Using relative clauses makes you sound more precise and deliberate. It is considered elegant to unfold your thought using **який**, rather than piling up adjectives before a noun.
 
@@ -146,15 +163,25 @@ Using relative clauses makes you sound more precise and deliberate. It is consid
 A detective interviews a witness about a robbery.
 
 **Detective:** Опишіть чоловіка, **якого** ви бачили.
+
 **Witness:** Ну, це був чоловік, **який** швидко біг.
+
 **Detective:** Який одяг він мав?
+
 **Witness:** Він мав куртку, **яка** була чорна. І шапку, **яка** закривала обличчя.
+
 **Detective:** Ви бачили сумку?
+
 **Witness:** Так. Це була сумка, **у якій** було щось важке.
+
 **Detective:** Чому ви так думаєте?
+
 **Witness:** Тому що він біг важко. Це була річ, **яку** він тримав дуже міцно.
+
 **Detective:** Ви пам'ятаєте машину, **у яку** він сів?
+
 **Witness:** Так! Це було авто, **яке** стояло за рогом. Номер, **який** я запам'ятав, — АА 1234.
+
 **Detective:** Чудово. Це інформація, **яка** нам допоможе. Дякую.
 
 ## Monologue: The Object That Changed My Life
@@ -175,15 +202,25 @@ A detective interviews a witness about a robbery.
 ## Dialogue: The Lost Item (Revamped)
 
 **Oksana:** Ти бачив книгу?
+
 **Mark:** Яку книгу?
+
 **Oksana:** Книгу, **яку** я читала вчора.
+
 **Mark:** Це та синя книга, **яка** лежала на столі?
+
 **Oksana:** Ні, це книга, **про яку** мені говорила мама.
+
 **Mark:** А, це та книга, **у якій** багато малюнків?
+
 **Oksana:** Так! Це книга, **яка** коштує сто доларів!
+
 **Mark:** Ого. Я бачив людину, **яка** взяла її.
+
 **Oksana:** Хто це був?
+
 **Mark:** Це був пес, **який** живе у нас.
+
 **Oksana:** Боже мій! Пес, **якого** ти приніс?!
 
 ### Analysis
@@ -220,339 +257,7 @@ A detective interviews a witness about a robbery.
 
 ---
 
-## 🎯 Activities
 
-### Noun-Pronoun Link
-
-<MatchUp pairs={[
-  { left: `Чоловік`, right: `який` },
-  { left: `Жінка`, right: `яка` },
-  { left: `Місто`, right: `яке` },
-  { left: `Люди`, right: `які` },
-  { left: `Парк`, right: `який` },
-  { left: `Книга`, right: `яка` },
-  { left: `Вікно`, right: `яке` },
-  { left: `Друзі`, right: `які` },
-  { left: `Стіл`, right: `який` },
-  { left: `Лампа`, right: `яка` },
-  { left: `Дерево`, right: `яке` },
-  { left: `Гроші`, right: `які` }
-]} />
-
-### Choose the Form
-
-<FillIn items={[
-  {
-    sentence: `Це дівчина, ___ танцює. (Subj, f)`,
-    answer: `яка`,
-    options: [`яка`, `яку`, `якій`]
-  },  {
-    sentence: `Це дівчина, ___ я люблю. (Obj, f)`,
-    answer: `яку`,
-    options: [`яку`, `яка`, `якою`]
-  },  {
-    sentence: `Це хлопець, ___ живе тут. (Subj, m)`,
-    answer: `який`,
-    options: [`який`, `якого`, `якому`]
-  },  {
-    sentence: `Це хлопець, ___ я знаю. (Obj, m - Live Animate/Genitive form)`,
-    answer: `якого`,
-    options: [`якого`, `який`, `якому`]
-  },  {
-    sentence: `Це місто, ___ ми любимо. (Obj, n)`,
-    answer: `яке`,
-    options: [`яке`, `якого`, `якому`]
-  },  {
-    sentence: `Це люди, з ___ я працюю. (Instr, pl)`,
-    answer: `якими`,
-    options: [`якими`, `які`, `яких`]
-  },  {
-    sentence: `Це книга, про ___ я мрію. (Loc, f)`,
-    answer: `яку`,
-    options: [`яку`, `якій`, `яка`]
-  },  {
-    sentence: `Це будинок, у ___ я живу. (Loc, m)`,
-    answer: `якому`,
-    options: [`якому`, `який`, `якого`]
-  }
-]} />
-
-### Detective Works
-
-<Quiz questions={[
-  {
-    question: `In \"Людина, яку я бачу\", what is the case of \"яку\"?`,
-    options: [
-      { text: `Accusative`, correct: true },
-      { text: `Nominative`, correct: false },
-      { text: `Genitive`, correct: false }
-    ]
-  },  {
-    question: `In \"Людина, яка бачить мене\", what is the case of \"яка\"?`,
-    options: [
-      { text: `Nominative`, correct: true },
-      { text: `Accusative`, correct: false },
-      { text: `Dative`, correct: false }
-    ]
-  },  {
-    question: `\"Який\" must agree in **gender** with:`,
-    options: [
-      { text: `The word before the comma (Antecedent)`, correct: true },
-      { text: `The verb after the comma`, correct: false },
-      { text: `The speaker`, correct: false }
-    ]
-  },  {
-    question: `Translate: \"The friends I live with\".`,
-    options: [
-      { text: `Друзі, з якими я живу.`, correct: true },
-      { text: `Друзі, з які я живу.`, correct: false }
-    ]
-  },  {
-    question: `\"Книгу\" is feminine. The relative pronoun starts as:`,
-    options: [
-      { text: `Яка`, correct: true },
-      { text: `Який`, correct: false },
-      { text: `Яке`, correct: false }
-    ]
-  },  {
-    question: `\"Про\" (about) usually triggers which case?`,
-    options: [
-      { text: `Accusative`, correct: true },
-      { text: `Dative`, correct: false },
-      { text: `Instrumental`, correct: false }
-    ]
-  },  {
-    question: `\"У/В\" (in) usually triggers which case for location?`,
-    options: [
-      { text: `Locative`, correct: true },
-      { text: `Nominative`, correct: false },
-      { text: `Genitive`, correct: false }
-    ]
-  },  {
-    question: `Is \"який\" used for people?`,
-    options: [
-      { text: `Yes, for everyone.`, correct: true },
-      { text: `No, only for things.`, correct: false }
-    ]
-  }
-]} />
-
-### Building Bridges
-
-<Unjumble items={[
-  { jumbled: `це / чоловік / працює / який / тут`, answer: `Це чоловік, який тут працює.` },
-  { jumbled: `книга / яку / я / читаю / цікава`, answer: `Книга, яку я читаю, цікава.` },
-  { jumbled: `ми / місто / любимо / в / живемо / якому`, answer: `Ми любимо місто, в якому живемо.` },
-  { jumbled: `дівчина / з / якою / я / говорив`, answer: `Дівчина, з якою я говорив.` },
-  { jumbled: `люди / які / знають / все / тут`, answer: `Люди, які знають все, тут.` },
-  { jumbled: `це / дім / який / я / купив`, answer: `Це дім, який я купив.` }
-]} />
-
-### Which Case?
-
-<GroupSort groups={{
-  "Nominative (Subject)": ["Чоловік, який спить.", "Жінка, яка йде.", "Авто, яке їде.", "Люди, які стоять.", "Пес, який гавкає.", "Кіт, який їсть."],
-  "Oblique (Obj/Prep)": ["Чоловік, якого я знаю.", "Жінка, яку я бачу.", "Авто, у якому я сиджу.", "Люди, з якими я говорю.", "Пес, якого я годую.", "Кіт, про якого я думаю."]
-}} />
-
-### Grammar Truths
-
-<TrueFalse items={[
-  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `She is the subject of singing -> Nominative.`
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `Usually both are \"Який\".`
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `Accusative.`
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: ``
-  }
-]} />
-
-### My Dream House
-
-<Cloze
-  passage={`Я мрію про дім, [___:1] стоїть у лісі.
-Це дім, [___:2] має великі вікна.
-Я хочу кухню, [___:3] я буду готувати.
-Це місце, [___:4] я буду щасливий.
-У мене буде пес, [___:5] буде гратися.
-І сусіди, [___:6] не шумлять.
-Це життя, про [___:7] я мріяв.`}
-  blanks={[{ answer: `який`, options: [`який`] }, { answer: `який`, options: [`який`] }, { answer: `у якій`, options: [`у якій`] }, { answer: `де`, options: [`де`] }, { answer: `який`, options: [`який`] }, { answer: `які`, options: [`які`] }, { answer: `яке`, options: [`яке`] }]}
-/>
-
-### The Stranger
-
-<DialogueReorder lines={[
-  { text: `Ти знаєш цього чоловіка?`, order: 1 },
-  { text: `Якого чоловіка?`, order: 2 },
-  { text: `Того, який стоїть біля вікна.`, order: 3 },
-  { text: `Ні, я не знаю, хто це.`, order: 4 },
-  { text: `Він схожий на актора, якого я люблю.`, order: 5 },
-  { text: `У якому фільмі він грав?`, order: 6 },
-  { text: `У фільмі, який ми дивилися вчора.`, order: 7 },
-  { text: `А! Це той, який врятував світ?`, order: 8 }
-]} />
-
-### Find Relative Clauses
-
-<MarkTheWords>
-<MarkTheWordsActivity
-  text={`Це фільм, який я люблю. Я знаю дівчину, яка тут живе. Це місце, де ми зустрілися.
-Він людина, яку поважають. Це книга, про яку всі говорять.`}
-  correctWords={[`фільм, який я люблю`, `дівчину, яка тут живе`, `місце, де ми зустрілися`, `людина, яку поважають`, `книга, про яку всі говорять`]}
-/>
-<MarkTheWordsActivity
-  text={`Я хочу спати. Він пішов додому. Це мій друг.`}
-  correctWords={[`спати`, `пішов додому`, `мій друг`]}
-/>
-</MarkTheWords>
-
-### Fix the Link
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Це жінка, **який** співає. (Gender mismatch)`}
-    errorWord={`який`}
-    correctForm={`яка`}
-    options={[`яка`, `який`]}
-    explanation={`Woman is feminine -> яка.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Це місто, **який** я люблю. (Gender mismatch)`}
-    errorWord={`який`}
-    correctForm={`яке`}
-    options={[`яке`, `який`]}
-    explanation={`City is neuter -> яке.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я знаю хлопця, **який** я бачу. (Case error)`}
-    errorWord={`який`}
-    correctForm={`якого`}
-    options={[`якого`, `який`]}
-    explanation={`Direct object of \"see\" -> Accusative (Active Animate) -> якого.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Це друг, з **який** я гуляю. (Case error)`}
-    errorWord={`з який`}
-    correctForm={`з яким`}
-    options={[`з яким`, `з який`]}
-    explanation={`\"With\" triggers Instrumental -> з яким.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Книга, **про якій** я говорив. (Case error)`}
-    errorWord={`про якій`}
-    correctForm={`про яку`}
-    options={[`про яку`, `про якій`]}
-    explanation={`\"About\" triggers Accusative -> про яку.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Люди, **яка** тут. (Number mismatch)`}
-    errorWord={`яка`}
-    correctForm={`які`}
-    options={[`які`, `яка`]}
-    explanation={`People are plural -> які.`}
-  />
-</ErrorCorrection>
-
-### English to Ukrainian
-
-<Translate questions={[
-  {
-    source: `The man who sleeps.`,
-    options: [
-      { text: `Чоловік, який спить.`, correct: true },
-      { text: `Чоловік, якого спить.`, correct: false }
-    ]
-  },  {
-    source: `The book which I read.`,
-    options: [
-      { text: `Книга, яку я читаю.`, correct: true },
-      { text: `Книга, яка я читаю.`, correct: false }
-    ]
-  },  {
-    source: `The city in which I live.`,
-    options: [
-      { text: `Місто, у якому я живу.`, correct: true },
-      { text: `Місто, який я живу.`, correct: false }
-    ]
-  },  {
-    source: `The friends with whom I speak.`,
-    options: [
-      { text: `Друзі, з якими я говорю.`, correct: true },
-      { text: `Друзі, з які я говорю.`, correct: false }
-    ]
-  },  {
-    source: `The girl who helps me.`,
-    options: [
-      { text: `Дівчина, яка допомагає мені.`, correct: true },
-      { text: `Дівчина, яку допомагає мені.`, correct: false }
-    ]
-  },  {
-    source: `The house that stands there.`,
-    options: [
-      { text: `Будинок, який стоїть там.`, correct: true },
-      { text: `Будинок, якого стоїть там.`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -582,3 +287,319 @@ A detective interviews a witness about a robbery.
 | місце | /ˈmis.t͡sɛ/ | place | noun | n | substantive |
 | час | /t͡ʃɑs/ | time | noun | m | substantive |
 | причина | /prɪˈt͡ʃɪnɑ/ | reason | noun | f | substantive |
+
+---
+
+## 🎯 Activities
+
+### Noun-Pronoun Link
+
+*Match the noun to the correct Nominative form of "який".*
+
+
+<MatchUp pairs={[
+  { left: `Чоловік`, right: `який` },
+  { left: `Жінка`, right: `яка` },
+  { left: `Місто`, right: `яке` },
+  { left: `Люди`, right: `які` },
+  { left: `Парк`, right: `який` },
+  { left: `Книга`, right: `яка` },
+  { left: `Вікно`, right: `яке` },
+  { left: `Друзі`, right: `які` },
+  { left: `Стіл`, right: `який` },
+  { left: `Лампа`, right: `яка` },
+  { left: `Дерево`, right: `яке` },
+  { left: `Гроші`, right: `які` }
+]} />
+
+### Choose the Form
+
+*Select the correct form based on gender and case.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Це дівчина, ___ танцює. (Subj, f)`}
+    answer={`яка`}
+    options={[`яка`, `яку`, `якій`]}
+  />
+  <FillInQuestion
+    sentence={`Це дівчина, ___ я люблю. (Obj, f)`}
+    answer={`яку`}
+    options={[`яку`, `яка`, `якою`]}
+  />
+  <FillInQuestion
+    sentence={`Це хлопець, ___ живе тут. (Subj, m)`}
+    answer={`який`}
+    options={[`який`, `якого`, `якому`]}
+  />
+  <FillInQuestion
+    sentence={`Це хлопець, ___ я знаю. (Obj, m - Live Animate/Genitive form)`}
+    answer={`якого`}
+    options={[`якого`, `який`, `якому`]}
+  />
+  <FillInQuestion
+    sentence={`Це місто, ___ ми любимо. (Obj, n)`}
+    answer={`яке`}
+    options={[`яке`, `якого`, `якому`]}
+  />
+  <FillInQuestion
+    sentence={`Це люди, з ___ я працюю. (Instr, pl)`}
+    answer={`якими`}
+    options={[`якими`, `які`, `яких`]}
+  />
+  <FillInQuestion
+    sentence={`Це книга, про ___ я мрію. (Loc, f)`}
+    answer={`яку`}
+    options={[`яку`, `якій`, `яка`]}
+  />
+  <FillInQuestion
+    sentence={`Це будинок, у ___ я живу. (Loc, m)`}
+    answer={`якому`}
+    options={[`якому`, `який`, `якого`]}
+  />
+</FillIn>
+
+### Detective Works
+
+<Quiz>
+  <QuizQuestion
+    question={`1. In "Людина, яку я бачу", what is the case of "яку"?`}
+    options={[`Accusative`, `Nominative`, `Genitive`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`In "Людина, яка бачить мене", what is the case of "яка"?`}
+    options={[`Nominative`, `Accusative`, `Dative`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Який" must agree in gender with:`}
+    options={[`The word before the comma (Antecedent)`, `The verb after the comma`, `The speaker`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Translate: "The friends I live with".`}
+    options={[`Друзі, з якими я живу.`, `Друзі, з які я живу.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Книгу" is feminine. The relative pronoun starts as:`}
+    options={[`Яка`, `Який`, `Яке`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Про" (about) usually triggers which case?`}
+    options={[`Accusative`, `Dative`, `Instrumental`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"У/В" (in) usually triggers which case for location?`}
+    options={[`Locative`, `Nominative`, `Genitive`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Is "який" used for people?`}
+    options={[`Yes, for everyone.`, `No, only for things.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### Building Bridges
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`це / чоловік / працює / який / тут`}
+    answer={`Це чоловік, який тут працює.`}
+  />
+  <UnjumbleQuestion
+    words={`книга / яку / я / читаю / цікава`}
+    answer={`Книга, яку я читаю, цікава.`}
+  />
+  <UnjumbleQuestion
+    words={`ми / місто / любимо / в / живемо / якому`}
+    answer={`Ми любимо місто, в якому живемо.`}
+  />
+  <UnjumbleQuestion
+    words={`дівчина / з / якою / я / говорив`}
+    answer={`Дівчина, з якою я говорив.`}
+  />
+  <UnjumbleQuestion
+    words={`люди / які / знають / все / тут`}
+    answer={`Люди, які знають все, тут.`}
+  />
+  <UnjumbleQuestion
+    words={`це / дім / який / я / купив`}
+    answer={`Це дім, який я купив.`}
+  />
+</Unjumble>
+
+### Which Case?
+
+<GroupSort groups={{
+  "### Nominative (Subject)": [
+    "Чоловік, який спить.",
+    "Жінка, яка йде.",
+    "Авто, яке їде.",
+    "Люди, які стоять.",
+    "Пес, який гавкає.",
+    "Кіт, який їсть."
+  ],
+  "Oblique (Obj/Prep)": [
+    "Чоловік, якого я знаю.",
+    "Жінка, яку я бачу.",
+    "Авто, у якому я сиджу.",
+    "Люди, з якими я говорю.",
+    "Пес, якого я годую.",
+    "Кіт, про якого я думаю."
+  ]
+}} />
+
+
+
+
+
+### The Stranger
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Ти знаєш цього чоловіка?"
+  },
+  {
+    "speaker": "",
+    "line": "Якого чоловіка?"
+  },
+  {
+    "speaker": "",
+    "line": "Того, який стоїть біля вікна."
+  },
+  {
+    "speaker": "",
+    "line": "Ні, я не знаю, хто це."
+  },
+  {
+    "speaker": "",
+    "line": "Він схожий на актора, якого я люблю."
+  },
+  {
+    "speaker": "",
+    "line": "У якому фільмі він грав?"
+  },
+  {
+    "speaker": "",
+    "line": "У фільмі, який ми дивилися вчора."
+  },
+  {
+    "speaker": "",
+    "line": "А! Це той, який врятував світ?"
+  }
+]} />
+</DialogueReorder>
+
+### Find Relative Clauses
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Це фільм, який я люблю. Я знаю дівчину, яка тут живе. Це місце, де ми зустрілися. Він людина, яку поважають. Це книга, про яку всі говорять. Я хочу спати(incorrect). Він пішов додому(incorrect). Це мій друг(incorrect).`}
+    correctWords={[`фільм, який я люблю`, `дівчину, яка тут живе`, `місце, де ми зустрілися`, `людина, яку поважають`, `книга, про яку всі говорять`, `спати`, `пішов додому`, `мій друг`]}
+  />
+</MarkTheWords>
+
+### Fix the Link
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Це жінка, **який** співає. (Gender mismatch)`}
+    error={`який`}
+    answer={`яка`}
+    options={[`яка`, `який`]}
+    explanation={`Woman is feminine -> яка.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Це місто, **який** я люблю. (Gender mismatch)`}
+    error={`який`}
+    answer={`яке`}
+    options={[`яке`, `який`]}
+    explanation={`City is neuter -> яке.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я знаю хлопця, **який** я бачу. (Case error)`}
+    error={`який`}
+    answer={`якого`}
+    options={[`якого`, `який`]}
+    explanation={`Direct object of "see" -> Accusative (Active Animate) -> якого.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Це друг, з **який** я гуляю. (Case error)`}
+    error={`з який`}
+    answer={`з яким`}
+    options={[`з яким`, `з який`]}
+    explanation={`"With" triggers Instrumental -> з яким.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Книга, **про якій** я говорив. (Case error)`}
+    error={`про якій`}
+    answer={`про яку`}
+    options={[`про яку`, `про якій`]}
+    explanation={`"About" triggers Accusative -> про яку.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Люди, **яка** тут. (Number mismatch)`}
+    error={`яка`}
+    answer={`які`}
+    options={[`які`, `яка`]}
+    explanation={`People are plural -> які.`}
+  />
+</ErrorCorrection>
+
+### English to Ukrainian
+
+<Translate>
+  <TranslateItem
+    source={`1. The man who sleeps.`}
+    answer={`Чоловік, який спить.`}
+    options={[`Чоловік, який спить.`, `Чоловік, якого спить.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`The book which I read.`}
+    answer={`Книга, яку я читаю.`}
+    options={[`Книга, яку я читаю.`, `Книга, яка я читаю.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`The city in which I live.`}
+    answer={`Місто, у якому я живу.`}
+    options={[`Місто, у якому я живу.`, `Місто, який я живу.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`The friends with whom I speak.`}
+    answer={`Друзі, з якими я говорю.`}
+    options={[`Друзі, з якими я говорю.`, `Друзі, з які я говорю.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`The girl who helps me.`}
+    answer={`Дівчина, яка допомагає мені.`}
+    options={[`Дівчина, яка допомагає мені.`, `Дівчина, яку допомагає мені.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`The house that stands there.`}
+    answer={`Будинок, який стоїть там.`}
+    options={[`Будинок, який стоїть там.`, `Будинок, якого стоїть там.`]}
+    explanation={``}
+  />
+</Translate>
+

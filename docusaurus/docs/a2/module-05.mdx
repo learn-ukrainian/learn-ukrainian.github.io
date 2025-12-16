@@ -5,19 +5,20 @@ title: "The Instrumental II — Means & Tools"
 description: "By Bus, With a Pen"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 Module 4 introduced the Instrumental case with the preposition **з** for accompaniment: з другом (with a friend), з сестрою (with sister). Now it's time to learn the Instrumental case **without a preposition** — the true "instrumental" use of this case!
@@ -42,6 +43,15 @@ English uses "by" for transport (by bus) and "with" for tools (with a pen), but 
 When you want to say "by bus," "with a pen," or "in a loud voice," Ukrainian uses the instrumental case WITHOUT any preposition. "I'm going **by bus**" = Я їду **автобусом**. "She writes **with a pen**" = Вона пише **ручкою**.
 
 This is the "instrumental" in its truest sense — the case of instruments and means!
+
+:::info
+🔗 External Resources
+
+**Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
+
+**Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
+:::
+
 
 ---
 
@@ -84,7 +94,8 @@ When describing how you travel, use instrumental without a preposition:
 Вона їде в центр трамваєм. (She's going downtown by tram.)
 Ми летимо до Львова літаком. (We're flying to Lviv by plane.)
 
-:::tip[Метро і Таксі — Indeclinable Nouns]
+:::tip
+Метро і Таксі — Indeclinable Nouns
 These are **indeclinable** — they don't change form in any case! Їхати метро, їхати таксі.
 
 **Why?** Both words are borrowed from other languages (French/Italian) and end in vowels that don't fit Ukrainian declension patterns. This actually makes them easier to use — no endings to memorize!
@@ -103,20 +114,14 @@ Sometimes you'll hear "на автобусі" (on the bus) — this is locative 
 | сидіти на автобусі | to sit on (top of) the bus |
 | їхати в автобусі | to ride in the bus (inside) |
 
-:::info[У Києві — Commute Conversation]
+:::info
+У Києві — Commute Conversation
 This dialogue shows Ukrainians discussing their daily commute. Notice how metro and taxi don't change form (indeclinable), while автобусом is regular instrumental.
 
-<div className="conversation">
-
 — Як ти добираєшся до роботи? (How do you get to work?)
-
 — Зазвичай їду метро. А коли метро закрите, їду таксі. (Usually by metro. When metro is closed, by taxi.)
-
 — А я їду автобусом. Автобус зупиняється біля мого будинку. (I go by bus. The bus stops near my building.)
-
 — Це зручно! Мені треба йти до станції метро пішки. (That's convenient! I have to walk to the metro station.)
-
-</div>
 :::
 
 
@@ -142,7 +147,8 @@ For example: "I write with a pen" = Я пишу ручкою. "She cuts with a k
 Вона ріже хліб ножем. (She's cutting bread with a knife.)
 Ми їмо суп ложкою. (We eat soup with a spoon.)
 
-:::info[Ножиці — Plural Only (Pluralia Tantum)]
+:::info
+Ножиці — Plural Only (Pluralia Tantum)
 The word **ножиці** exists only in plural form (like English "scissors"), so its instrumental is ножицями.
 
 **Other plural-only nouns in Ukrainian:**
@@ -170,7 +176,8 @@ Body parts can also be used as instruments: wave with your hand, nod with your h
 Вона киває головою. (She's nodding with her head.)
 Дитина б'є ногами. (The child is kicking with its legs.)
 
-:::warning[Очі — Irregular Instrumental]
+:::warning
+Очі — Irregular Instrumental
 The word **очі** has an irregular instrumental: **очима** instead of the expected *очами*.
 
 **Why?** This is a historical remnant from Old Ukrainian. The form очима preserves an ancient dual number pattern (for pairs of body parts).
@@ -196,7 +203,8 @@ Modern technology also uses the instrumental case. You work with a computer, sen
 Я працюю комп'ютером щодня. (I work with a computer every day.)
 Вона надсилає документи електронною поштою. (She sends documents by email.)
 
-:::tip[Телефоном vs. По телефону — Both Are Correct]
+:::tip
+Телефоном vs. По телефону — Both Are Correct
 Both constructions mean "by phone" and are interchangeable in modern Ukrainian:
 - дзвонити **телефоном** = bare instrumental (classic pattern)
 - дзвонити **по телефону** = preposition + locative (also common)
@@ -227,20 +235,14 @@ The instrumental case also expresses manner — how an action is performed. This
 Вона каже це пошепки. (She says this in a whisper.)
 Дітей не варто кричати голосом. (One shouldn't shout at children.)
 
-:::info[У бібліотеці в Одесі — Library Etiquette]
+:::info
+У бібліотеці в Одесі — Library Etiquette
 This dialogue demonstrates manner expressions with instrumental. "Тихим голосом" (in a quiet voice) combines an adjective with instrumental noun.
 
-<div className="conversation">
-
 — Пробачте, тут треба говорити тихим голосом. (Excuse me, you need to speak in a quiet voice here.)
-
 — Вибачте! Я не помітив. (Sorry! I didn't notice.)
-
 — Будь ласка, розмовляйте пошепки. (Please speak in a whisper.)
-
 — Звичайно. Дякую за нагадування. (Of course. Thanks for the reminder.)
-
-</div>
 :::
 
 
@@ -255,7 +257,8 @@ Ukrainian cities have extensive public transport systems. Here are interesting f
 | Одеса | Трамвай і тролейбус |
 | Харків | Друге метро в Україні |
 
-:::tip[Маршрутка — The Ukrainian Minibus]
+:::tip
+Маршрутка — The Ukrainian Minibus
 The **маршрутка** (marshrutka) is a uniquely post-Soviet phenomenon — a small minibus that runs on fixed routes throughout Ukrainian cities.
 
 **Key facts:**
@@ -270,28 +273,24 @@ The **маршрутка** (marshrutka) is a uniquely post-Soviet phenomenon —
 :::
 
 
-> [!did-you-know] 💡 Did You Know
-> The Kyiv Metro has some of the deepest stations in the world! Arsenalna station is 105.5 meters below ground — the deepest metro station on Earth. This depth was originally designed for civil defense purposes during the Soviet era. When you say "Я їду метро до Арсенальної," you're traveling to a piece of engineering history!
+:::tip
+💡 Did You Know
+The Kyiv Metro has some of the deepest stations in the world! Arsenalna station is 105.5 meters below ground — the deepest metro station on Earth. This depth was originally designed for civil defense purposes during the Soviet era. When you say "Я їду метро до Арсенальної," you're traveling to a piece of engineering history!
+:::
+
 
 Я їду маршруткою на базар. (I'm going to the market by minibus.)
 У Києві зручно їздити метро. (In Kyiv it's convenient to travel by metro.)
 
-:::info[Подорож до Карпат — Travel Story]
+:::info
+Подорож до Карпат — Travel Story
 This dialogue shows multiple transport modes in one trip. Notice the pattern: always bare instrumental for the transport (поїздом, автобусом), never with preposition "з".
 
-<div className="conversation">
-
 — Як ви добиралися до Карпат? (How did you get to the Carpathians?)
-
 — Спочатку ми їхали поїздом до Івано-Франківська. (First we went by train to Ivano-Frankivsk.)
-
 — А далі? (And then?)
-
 — Потім їхали автобусом до Яремче. А в гори ми йшли пішки! (Then by bus to Yaremche. And into the mountains we walked!)
-
 — Звучить як пригода! (Sounds like an adventure!)
-
-</div>
 :::
 
 
@@ -337,51 +336,30 @@ The following dialogues show bare Instrumental in natural conversations about tr
 Getting directions — notice both автобусом and трамваєм are bare Instrumental (no preposition).
 
 **На зупинці:**
-<div className="conversation">
-
 — Вибачте, як дістатися до центру?
-
 — Можна їхати автобусом або трамваєм.
-
 — А що швидше?
-
 — Трамваєм швидше, але автобусом зручніше.
-
-</div>
 
 **Dialogue 2: На кухні (In the Kitchen)**
 
 Discussing tools — чим (with what) asks about Instrumental; ножем and ножицями are the answers.
 
 **На кухні:**
-<div className="conversation">
-
 — Чим ти ріжеш помідори?
-
 — Ножем, звичайно!
-
 — А я волію різати ножицями.
-
 — Ножицями? Це дивно!
-
-</div>
 
 **Dialogue 3: В офісі (At the Office)**
 
 Modern communication — електронною поштою (by email) and голосом (by voice) are both bare Instrumental.
 
 **В офісі:**
-<div className="conversation">
-
 — Як ви надсилаєте документи?
-
 — Зазвичай електронною поштою.
-
 — А якщо терміново?
-
 — Тоді телефоную і пояснюю голосом.
-
-</div>
 
 ---
 
@@ -439,376 +417,7 @@ This text describes a typical day in Kyiv, filled with bare Instrumental example
 
 Тепер ви готові! Ви можете розповісти, чим їдете на роботу і чим пишете. 🚌✏️🗣️
 
-## 🎯 Activities
 
-### Transport and Tools
-
-<MatchUp pairs={[
-  { left: `автобусом`, right: `by bus` },
-  { left: `поїздом`, right: `by train` },
-  { left: `ручкою`, right: `with a pen` },
-  { left: `ножем`, right: `with a knife` },
-  { left: `літаком`, right: `by plane` },
-  { left: `ложкою`, right: `with a spoon` },
-  { left: `машиною`, right: `by car` },
-  { left: `олівцем`, right: `with a pencil` },
-  { left: `трамваєм`, right: `by tram` },
-  { left: `виделкою`, right: `with a fork` },
-  { left: `таксі`, right: `by taxi` },
-  { left: `голосом`, right: `with voice` }
-]} />
-
-### Instrumental Without Preposition
-
-<FillIn items={[
-  {
-    sentence: `Ми їдемо в аеропорт ___.`,
-    answer: `таксі`,
-    options: [`таксі`, `з таксі`, `на таксі`]
-  },  {
-    sentence: `Вона пише листа ___.`,
-    answer: `ручкою`,
-    options: [`ручкою`, `ручка`, `з ручкою`]
-  },  {
-    sentence: `Він ріже хліб ___.`,
-    answer: `ножем`,
-    options: [`ножем`, `ніж`, `з ножем`]
-  },  {
-    sentence: `Ми їмо суп ___.`,
-    answer: `ложкою`,
-    options: [`ложкою`, `ложка`, `з ложкою`]
-  },  {
-    sentence: `Вона летить до Парижа ___.`,
-    answer: `літаком`,
-    options: [`літаком`, `літак`, `з літаком`]
-  },  {
-    sentence: `Він говорить тихим ___.`,
-    answer: `голосом`,
-    options: [`голосом`, `голос`, `з голосом`]
-  },  {
-    sentence: `Я працюю ___ щодня.`,
-    answer: `комп'ютером`,
-    options: [`комп'ютером`, `комп'ютер`, `з комп'ютером`]
-  },  {
-    sentence: `Діти малюють ___.`,
-    answer: `олівцем`,
-    options: [`олівцем`, `олівець`, `з олівцем`]
-  },  {
-    sentence: `Вона махає ___.`,
-    answer: `рукою`,
-    options: [`рукою`, `рука`, `з рукою`]
-  },  {
-    sentence: `Ми їдемо в центр ___.`,
-    answer: `трамваєм`,
-    options: [`трамваєм`, `трамвай`, `з трамваєм`]
-  },  {
-    sentence: `Я надсилаю документи ___.`,
-    answer: `електронною поштою`,
-    options: [`електронною поштою`, `електронна пошта`, `з електронною поштою`]
-  },  {
-    sentence: `Вона киває ___.`,
-    answer: `головою`,
-    options: [`головою`, `голова`, `з головою`]
-  }
-]} />
-
-### Instrumental Uses
-
-<Quiz questions={[
-  {
-    question: `Як сказати \"by bus\"?`,
-    options: [
-      { text: `з автобусом`, correct: false },
-      { text: `автобусом`, correct: true },
-      { text: `на автобус`, correct: false }
-    ]
-  },  {
-    question: `Яке речення правильне?`,
-    options: [
-      { text: `Я пишу ручкою.`, correct: true },
-      { text: `Я пишу з ручкою.`, correct: false },
-      { text: `Я пишу ручка.`, correct: false }
-    ]
-  },  {
-    question: `Коли використовуємо орудний БЕЗ прийменника?`,
-    options: [
-      { text: `Для засобу пересування та інструментів`, correct: true },
-      { text: `Для супроводу (з ким?)`, correct: false },
-      { text: `Для місця (де?)`, correct: false }
-    ]
-  },  {
-    question: `Як сказати \"with a knife\"?`,
-    options: [
-      { text: `ножем`, correct: true },
-      { text: `з ножем`, correct: false },
-      { text: `ножа`, correct: false }
-    ]
-  },  {
-    question: `Яке речення правильне?`,
-    options: [
-      { text: `Він говорить тихим голосом.`, correct: true },
-      { text: `Він говорить з тихим голосом.`, correct: false },
-      { text: `Він говорить тихий голос.`, correct: false }
-    ]
-  },  {
-    question: `Як сказати \"by train\"?`,
-    options: [
-      { text: `поїздом`, correct: true },
-      { text: `з поїздом`, correct: false },
-      { text: `на поїзд`, correct: false }
-    ]
-  },  {
-    question: `\"Метро\" в орудному відмінку...`,
-    options: [
-      { text: `не змінюється`, correct: true },
-      { text: `стає \"метром\"`, correct: false },
-      { text: `стає \"метрою\"`, correct: false }
-    ]
-  },  {
-    question: `Як сказати \"with eyes\"?`,
-    options: [
-      { text: `очима`, correct: true },
-      { text: `очами`, correct: false },
-      { text: `з очами`, correct: false }
-    ]
-  },  {
-    question: `Яке речення правильне?`,
-    options: [
-      { text: `Вона ріже хліб ножем.`, correct: true },
-      { text: `Вона ріже хліб з ножем.`, correct: false },
-      { text: `Вона ріже хліб ніж.`, correct: false }
-    ]
-  },  {
-    question: `Як сказати \"by email\"?`,
-    options: [
-      { text: `електронною поштою`, correct: true },
-      { text: `з електронною поштою`, correct: false },
-      { text: `електронна пошта`, correct: false }
-    ]
-  },  {
-    question: `\"Ножиці\" в орудному відмінку...`,
-    options: [
-      { text: `ножицями`, correct: true },
-      { text: `ножицею`, correct: false },
-      { text: `ножицям`, correct: false }
-    ]
-  },  {
-    question: `Як сказати \"in a whisper\"?`,
-    options: [
-      { text: `пошепки`, correct: true },
-      { text: `з пошепки`, correct: false },
-      { text: `пошепкою`, correct: false }
-    ]
-  }
-]} />
-
-### Instrumental Rules
-
-<TrueFalse items={[
-  {
-    statement: `For means of transport, we use \"з + Instrumental.\"`,
-    isTrue: false,
-    explanation: `For transport, we use bare instrumental: їхати автобусом.`
-  },  {
-    statement: `\"Метро\" and \"таксі\" don't change form in the instrumental.`,
-    isTrue: true,
-    explanation: `Correct! They are indeclinable: їхати метро, їхати таксі.`
-  },  {
-    statement: `\"Очима\" is the instrumental of \"очі.\"`,
-    isTrue: true,
-    explanation: `Yes! Очі has an irregular instrumental: очима.`
-  },  {
-    statement: `We always use a preposition with the instrumental case.`,
-    isTrue: false,
-    explanation: `The instrumental can be used without a preposition for means, tools, and manner.`
-  },  {
-    statement: `\"Ручкою\" means \"with a pen\" (tool).`,
-    isTrue: true,
-    explanation: `Correct! Писати ручкою = to write with a pen.`
-  },  {
-    statement: `\"Їхати автобусом\" and \"їхати на автобусі\" mean the same thing.`,
-    isTrue: false,
-    explanation: `Автобусом = by bus. На автобусі = on the bus.`
-  },  {
-    statement: `Body parts can be used in the instrumental to describe actions.`,
-    isTrue: true,
-    explanation: `Yes! Махати рукою, кивати головою, бити ногами.`
-  },  {
-    statement: `\"Голосом\" is used to express manner of speaking.`,
-    isTrue: true,
-    explanation: `Correct! Говорити тихим голосом = to speak in a quiet voice.`
-  },  {
-    statement: `\"Ножиці\" has a singular form.`,
-    isTrue: false,
-    explanation: `Ножиці exists only in plural. Its instrumental is ножицями.`
-  },  {
-    statement: `\"Електронною поштою\" means \"by email.\"`,
-    isTrue: true,
-    explanation: `Correct! Надсилати електронною поштою = to send by email.`
-  },  {
-    statement: `For accompaniment, we use bare instrumental.`,
-    isTrue: false,
-    explanation: `For accompaniment, we use з + instrumental: з другом, з сестрою.`
-  },  {
-    statement: `\"Пошепки\" is an adverb, not a noun in instrumental.`,
-    isTrue: true,
-    explanation: `Correct! Пошепки is an adverb meaning \"in a whisper.\"`
-  }
-]} />
-
-### Transport vs. Tools
-
-<GroupSort groups={{
-  "Transport": ["автобусом", "трамваєм", "поїздом", "літаком", "машиною", "метро"],
-  "Tools": ["ручкою", "олівцем", "ножем", "ложкою", "виделкою", "ножицями"]
-}} />
-
-### Instrumental Sentences
-
-<Unjumble items={[
-  { jumbled: `вона / їде / до / центру / трамваєм`, answer: `Вона їде до центру трамваєм.` },
-  { jumbled: `вона / пише / листа / ручкою`, answer: `Вона пише листа ручкою.` },
-  { jumbled: `він / ріже / хліб / ножем`, answer: `Він ріже хліб ножем.` },
-  { jumbled: `ми / їмо / суп / ложкою`, answer: `Ми їмо суп ложкою.` },
-  { jumbled: `вона / летить / до / Парижа / літаком`, answer: `Вона летить до Парижа літаком.` },
-  { jumbled: `він / говорить / тихим / голосом`, answer: `Він говорить тихим голосом.` }
-]} />
-
-### Fix the Instrumental
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я їду на роботу з автобусом.`}
-    errorWord={`з автобусом`}
-    correctForm={`автобусом`}
-    options={[`з автобусом`, `автобусом`, `автобус`, `на автобус`]}
-    explanation={`For means of transport, use bare Instrumental WITHOUT preposition. \"By bus\" = автобусом, not з автобусом.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона пише листа з ручкою.`}
-    errorWord={`з ручкою`}
-    correctForm={`ручкою`}
-    options={[`з ручкою`, `ручкою`, `ручка`, `ручку`]}
-    explanation={`For tools, use bare Instrumental WITHOUT preposition. \"With a pen\" = ручкою, not з ручкою.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він ріже хліб з ніж.`}
-    errorWord={`з ніж`}
-    correctForm={`ножем`}
-    options={[`з ніж`, `ножем`, `ніж`, `ножа`]}
-    explanation={`Tools use bare Instrumental: ніж → ножем. No preposition needed, and the noun must be in Instrumental case.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми їмо суп ложка.`}
-    errorWord={`ложка`}
-    correctForm={`ложкою`}
-    options={[`ложка`, `ложкою`, `ложки`, `ложку`]}
-    explanation={`Tools require Instrumental case. Feminine nouns ending in -а take -ою: ложка → ложкою.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона летить до Парижа з літаком.`}
-    errorWord={`з літаком`}
-    correctForm={`літаком`}
-    options={[`з літаком`, `літаком`, `літак`, `літака`]}
-    explanation={`For means of transport, use bare Instrumental WITHOUT preposition. \"By plane\" = літаком, not з літаком.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він говорить тихим з голосом.`}
-    errorWord={`з голосом`}
-    correctForm={`голосом`}
-    options={[`з голосом`, `голосом`, `голос`, `голосу`]}
-    explanation={`Manner expressions use bare Instrumental. \"In a quiet voice\" = тихим голосом, not з голосом.`}
-  />
-</ErrorCorrection>
-
-### Complete the Story
-
-<Cloze
-  passage={`Вранці я йду на зупинку і їду [___:1] на роботу. На роботі працюю [___:2] цілий день. Пишу листи [___:3] і надсилаю їх [___:4]. Увечері їду додому [___:5] — це швидше.`}
-  blanks={[{ answer: `ножем`, options: [`ножем`] }, { answer: `ножицями`, options: [`ножицями`] }, { answer: `ложкою`, options: [`ложкою`] }, { answer: `виделкою`, options: [`виделкою`] }, { answer: `голосом`, options: [`голосом`] }]}
-/>
-
-### Asking Directions
-
-<DialogueReorder lines={[
-  { text: `Дякую! До побачення!`, order: 1 },
-  { text: `Добрий день! Як дістатися до центру?`, order: 2 },
-  { text: `Автобусом швидше, але метро зручніше.`, order: 3 },
-  { text: `Можна їхати автобусом або метро.`, order: 4 },
-  { text: `А що швидше?`, order: 5 },
-  { text: `Тоді поїду метро. Дякую!`, order: 6 },
-  { text: `Звичайно. Дай мені ніж.`, order: 7 },
-  { text: `Ось. Тепер ріжу ножем.`, order: 8 },
-  { text: `Чим ти ріжеш помідори?`, order: 9 },
-  { text: `Можеш нарізати сир ножем?`, order: 10 },
-  { text: `Ручкою! Жартую. Ножем, звичайно.`, order: 11 },
-  { text: `Готово! Тепер можемо їсти!`, order: 12 }
-]} />
-
-### Find Bare Instrumental
-
-<MarkTheWords>
-<MarkTheWordsActivity
-  text={`Click on instrumental forms used WITHOUT a preposition (means/tools).
-
-Я їду на роботу автобусом. Вона пише листа ручкою. Ми живемо з батьками. Він ріже хліб ножем. Кава з молоком смачна.`}
-  correctWords={[`автобусом`, `ручкою`, `з батьками`, `ножем`, `з молоком`]}
-/>
-<MarkTheWordsActivity
-  text={`Вона летить літаком до Парижа. Він розмовляє з другом. Я працюю комп'ютером. Діти грають з котом. Вона махає рукою.`}
-  correctWords={[`літаком`, `з другом`, `комп'ютером`, `з котом`, `рукою`]}
-/>
-<MarkTheWordsActivity
-  text={`Ми їмо суп ложкою. Він гуляє з собакою. Вона говорить тихим голосом. Я їду поїздом. Він живе з братом.`}
-  correctWords={[`ложкою`, `з собакою`, `голосом`, `поїздом`, `з братом`]}
-/>
-</MarkTheWords>
-
-### English to Ukrainian
-
-<Translate questions={[
-  {
-    source: `They travel to Lviv by train.`,
-    options: [
-      { text: `Вони їдуть до Львова з поїздом.`, correct: false },
-      { text: `Вони їдуть до Львова поїздом.`, correct: true },
-      { text: `Вони їдуть до Львова поїзд.`, correct: false },
-      { text: `Вона пише з ручкою.`, correct: false },
-      { text: `Вона пише ручкою.`, correct: true },
-      { text: `Вона пише ручка.`, correct: false },
-      { text: `Він ріже хліб ножем.`, correct: true },
-      { text: `Він ріже хліб з ножем.`, correct: false },
-      { text: `Він ріже хліб ніж.`, correct: false },
-      { text: `Ми їмо суп ложкою.`, correct: true },
-      { text: `Ми їмо суп з ложкою.`, correct: false },
-      { text: `Ми їмо суп ложка.`, correct: false },
-      { text: `Вона летить до Парижа літаком.`, correct: true },
-      { text: `Вона летить до Парижа з літаком.`, correct: false },
-      { text: `Вона летить до Парижа літак.`, correct: false },
-      { text: `Він говорить тихим голосом.`, correct: true },
-      { text: `Він говорить з тихим голосом.`, correct: false },
-      { text: `Він говорить тихий голос.`, correct: false },
-      { text: `Я працюю комп'ютером щодня.`, correct: true },
-      { text: `Я працюю з комп'ютером щодня.`, correct: false },
-      { text: `Я працюю комп'ютер щодня.`, correct: false },
-      { text: `Діти малюють олівцем.`, correct: true },
-      { text: `Діти малюють з олівцем.`, correct: false },
-      { text: `Діти малюють олівець.`, correct: false },
-      { text: `Вона махає рукою.`, correct: true },
-      { text: `Вона махає з рукою.`, correct: false },
-      { text: `Вона махає рука.`, correct: false },
-      { text: `Ми їдемо в центр трамваєм.`, correct: true },
-      { text: `Ми їдемо в центр з трамваєм.`, correct: false },
-      { text: `Ми їдемо в центр трамвай.`, correct: false },
-      { text: `Я надсилаю документи електронною поштою.`, correct: true },
-      { text: `Я надсилаю документи з електронною поштою.`, correct: false },
-      { text: `Я надсилаю документи електронна пошта.`, correct: false },
-      { text: `Вона киває головою.`, correct: true },
-      { text: `Вона киває з головою.`, correct: false },
-      { text: `Вона киває голова.`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -843,3 +452,591 @@ This text describes a typical day in Kyiv, filled with bare Instrumental example
 | час | /t͡ʃɑs/ | time | noun | m | review from A1 |
 
 ---
+
+---
+
+## 🎯 Activities
+
+### Transport and Tools
+
+<MatchUp pairs={[
+  { left: `автобусом`, right: `by bus` },
+  { left: `поїздом`, right: `by train` },
+  { left: `ручкою`, right: `with a pen` },
+  { left: `ножем`, right: `with a knife` },
+  { left: `літаком`, right: `by plane` },
+  { left: `ложкою`, right: `with a spoon` },
+  { left: `машиною`, right: `by car` },
+  { left: `олівцем`, right: `with a pencil` },
+  { left: `трамваєм`, right: `by tram` },
+  { left: `виделкою`, right: `with a fork` },
+  { left: `таксі`, right: `by taxi` },
+  { left: `голосом`, right: `with voice` }
+]} />
+
+### Instrumental Without Preposition
+
+*Complete each sentence with the correct instrumental form (no preposition).*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Ми їдемо в аеропорт ___.`}
+    answer={`таксі`}
+    options={[`таксі`, `з таксі`, `на таксі`]}
+  />
+  <FillInQuestion
+    sentence={`Вона пише листа ___.`}
+    answer={`ручкою`}
+    options={[`ручкою`, `ручка`, `з ручкою`]}
+  />
+  <FillInQuestion
+    sentence={`Він ріже хліб ___.`}
+    answer={`ножем`}
+    options={[`ножем`, `ніж`, `з ножем`]}
+  />
+  <FillInQuestion
+    sentence={`Ми їмо суп ___.`}
+    answer={`ложкою`}
+    options={[`ложкою`, `ложка`, `з ложкою`]}
+  />
+  <FillInQuestion
+    sentence={`Вона летить до Парижа ___.`}
+    answer={`літаком`}
+    options={[`літаком`, `літак`, `з літаком`]}
+  />
+  <FillInQuestion
+    sentence={`Він говорить тихим ___.`}
+    answer={`голосом`}
+    options={[`голосом`, `голос`, `з голосом`]}
+  />
+  <FillInQuestion
+    sentence={`Я працюю ___ щодня.`}
+    answer={`комп'ютером`}
+    options={[`комп'ютером`, `комп'ютер`, `з комп'ютером`]}
+  />
+  <FillInQuestion
+    sentence={`Діти малюють ___.`}
+    answer={`олівцем`}
+    options={[`олівцем`, `олівець`, `з олівцем`]}
+  />
+  <FillInQuestion
+    sentence={`Вона махає ___.`}
+    answer={`рукою`}
+    options={[`рукою`, `рука`, `з рукою`]}
+  />
+  <FillInQuestion
+    sentence={`Ми їдемо в центр ___.`}
+    answer={`трамваєм`}
+    options={[`трамваєм`, `трамвай`, `з трамваєм`]}
+  />
+  <FillInQuestion
+    sentence={`Я надсилаю документи ___.`}
+    answer={`електронною поштою`}
+    options={[`електронною поштою`, `електронна пошта`, `з електронною поштою`]}
+  />
+  <FillInQuestion
+    sentence={`Вона киває ___.`}
+    answer={`головою`}
+    options={[`головою`, `голова`, `з головою`]}
+  />
+</FillIn>
+
+### Instrumental Uses
+
+<Quiz>
+  <QuizQuestion
+    question={`1. Як сказати "by bus"?`}
+    options={[`з автобусом`, `автобусом`, `на автобус`]}
+    correctIndex={1}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Яке речення правильне?`}
+    options={[`Я пишу ручкою.`, `Я пишу з ручкою.`, `Я пишу ручка.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Коли використовуємо орудний БЕЗ прийменника?`}
+    options={[`Для засобу пересування та інструментів`, `Для супроводу (з ким?)`, `Для місця (де?)`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Як сказати "with a knife"?`}
+    options={[`ножем`, `з ножем`, `ножа`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Яке речення правильне?`}
+    options={[`Він говорить тихим голосом.`, `Він говорить з тихим голосом.`, `Він говорить тихий голос.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Як сказати "by train"?`}
+    options={[`поїздом`, `з поїздом`, `на поїзд`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Метро" в орудному відмінку...`}
+    options={[`не змінюється`, `стає "метром"`, `стає "метрою"`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Як сказати "with eyes"?`}
+    options={[`очима`, `очами`, `з очами`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Яке речення правильне?`}
+    options={[`Вона ріже хліб ножем.`, `Вона ріже хліб з ножем.`, `Вона ріже хліб ніж.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Як сказати "by email"?`}
+    options={[`електронною поштою`, `з електронною поштою`, `електронна пошта`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Ножиці" в орудному відмінку...`}
+    options={[`ножицями`, `ножицею`, `ножицям`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Як сказати "in a whisper"?`}
+    options={[`пошепки`, `з пошепки`, `пошепкою`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### Instrumental Rules
+
+*Decide if each statement is true or false.*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`For means of transport, we use "з + Instrumental."`}
+    isTrue={false}
+    explanation={`For transport, we use bare instrumental: їхати автобусом.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Метро" and "таксі" don't change form in the instrumental.`}
+    isTrue={true}
+    explanation={`Correct! They are indeclinable: їхати метро, їхати таксі.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Очима" is the instrumental of "очі."`}
+    isTrue={true}
+    explanation={`Yes! Очі has an irregular instrumental: очима.`}
+  />
+  <TrueFalseQuestion
+    statement={`We always use a preposition with the instrumental case.`}
+    isTrue={false}
+    explanation={`The instrumental can be used without a preposition for means, tools, and manner.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Ручкою" means "with a pen" (tool).`}
+    isTrue={true}
+    explanation={`Correct! Писати ручкою = to write with a pen.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Їхати автобусом" and "їхати на автобусі" mean the same thing.`}
+    isTrue={false}
+    explanation={`Автобусом = by bus. На автобусі = on the bus.`}
+  />
+  <TrueFalseQuestion
+    statement={`Body parts can be used in the instrumental to describe actions.`}
+    isTrue={true}
+    explanation={`Yes! Махати рукою, кивати головою, бити ногами.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Голосом" is used to express manner of speaking.`}
+    isTrue={true}
+    explanation={`Correct! Говорити тихим голосом = to speak in a quiet voice.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Ножиці" has a singular form.`}
+    isTrue={false}
+    explanation={`Ножиці exists only in plural. Its instrumental is ножицями.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Електронною поштою" means "by email."`}
+    isTrue={true}
+    explanation={`Correct! Надсилати електронною поштою = to send by email.`}
+  />
+  <TrueFalseQuestion
+    statement={`For accompaniment, we use bare instrumental.`}
+    isTrue={false}
+    explanation={`For accompaniment, we use з + instrumental: з другом, з сестрою.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Пошепки" is an adverb, not a noun in instrumental.`}
+    isTrue={true}
+    explanation={`Correct! Пошепки is an adverb meaning "in a whisper."`}
+  />
+</TrueFalse>
+
+### Transport vs. Tools
+
+*Sort these words into the correct category.*
+
+
+<GroupSort groups={{
+  "### Transport": [
+    "автобусом",
+    "трамваєм",
+    "поїздом",
+    "літаком",
+    "машиною",
+    "метро"
+  ],
+  "Tools": [
+    "ручкою",
+    "олівцем",
+    "ножем",
+    "ложкою",
+    "виделкою",
+    "ножицями"
+  ]
+}} />
+
+### Instrumental Sentences
+
+*Put the words in the correct order.*
+
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`вона / їде / до / центру / трамваєм`}
+    answer={`Вона їде до центру трамваєм.`}
+  />
+  <UnjumbleQuestion
+    words={`вона / пише / листа / ручкою`}
+    answer={`Вона пише листа ручкою.`}
+  />
+  <UnjumbleQuestion
+    words={`він / ріже / хліб / ножем`}
+    answer={`Він ріже хліб ножем.`}
+  />
+  <UnjumbleQuestion
+    words={`ми / їмо / суп / ложкою`}
+    answer={`Ми їмо суп ложкою.`}
+  />
+  <UnjumbleQuestion
+    words={`вона / летить / до / Парижа / літаком`}
+    answer={`Вона летить до Парижа літаком.`}
+  />
+  <UnjumbleQuestion
+    words={`він / говорить / тихим / голосом`}
+    answer={`Він говорить тихим голосом.`}
+  />
+</Unjumble>
+
+### Fix the Instrumental
+
+*Each sentence has ONE error. Find and correct it.*
+
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я їду на роботу з автобусом.`}
+    error={`з автобусом`}
+    answer={`автобусом`}
+    options={[`з автобусом`, `автобусом`, `автобус`, `на автобус`]}
+    explanation={`For means of transport, use bare Instrumental WITHOUT preposition. "By bus" = автобусом, not з автобусом.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона пише листа з ручкою.`}
+    error={`з ручкою`}
+    answer={`ручкою`}
+    options={[`з ручкою`, `ручкою`, `ручка`, `ручку`]}
+    explanation={`For tools, use bare Instrumental WITHOUT preposition. "With a pen" = ручкою, not з ручкою.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він ріже хліб з ніж.`}
+    error={`з ніж`}
+    answer={`ножем`}
+    options={[`з ніж`, `ножем`, `ніж`, `ножа`]}
+    explanation={`Tools use bare Instrumental: ніж → ножем. No preposition needed, and the noun must be in Instrumental case.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми їмо суп ложка.`}
+    error={`ложка`}
+    answer={`ложкою`}
+    options={[`ложка`, `ложкою`, `ложки`, `ложку`]}
+    explanation={`Tools require Instrumental case. Feminine nouns ending in -а take -ою: ложка → ложкою.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона летить до Парижа з літаком.`}
+    error={`з літаком`}
+    answer={`літаком`}
+    options={[`з літаком`, `літаком`, `літак`, `літака`]}
+    explanation={`For means of transport, use bare Instrumental WITHOUT preposition. "By plane" = літаком, not з літаком.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він говорить тихим з голосом.`}
+    error={`з голосом`}
+    answer={`голосом`}
+    options={[`з голосом`, `голосом`, `голос`, `голосу`]}
+    explanation={`Manner expressions use bare Instrumental. "In a quiet voice" = тихим голосом, not з голосом.`}
+  />
+</ErrorCorrection>
+
+### Complete the Story
+
+*Fill in the blanks with the correct words.*
+
+
+<Cloze>
+  <ClozePassage
+    text={`Вранці я йду на зупинку і їду [___:1] на роботу. На роботі працюю [___:2] цілий день. Пишу листи [___:3] і надсилаю їх [___:4]. Увечері їду додому [___:5] — це швидше.`}
+    blanks={[
+  {
+    "index": 0,
+    "options": [
+      "автобусом",
+      "з автобусом",
+      "автобус"
+    ],
+    "answer": "автобусом"
+  },
+  {
+    "index": 1,
+    "options": [
+      "комп'ютером",
+      "з комп'ютером",
+      "комп'ютер"
+    ],
+    "answer": "комп'ютером"
+  },
+  {
+    "index": 2,
+    "options": [
+      "ручкою",
+      "з ручкою",
+      "ручка"
+    ],
+    "answer": "ручкою"
+  },
+  {
+    "index": 3,
+    "options": [
+      "електронною поштою",
+      "з електронною поштою",
+      "електронна пошта"
+    ],
+    "answer": "електронною поштою"
+  },
+  {
+    "index": 4,
+    "options": [
+      "метро",
+      "з метро",
+      "на метро"
+    ],
+    "answer": "метро"
+  },
+  {
+    "index": 5,
+    "options": [
+      "ножем",
+      "з ножем",
+      "ніж"
+    ],
+    "answer": "ножем"
+  },
+  {
+    "index": 6,
+    "options": [
+      "ножицями",
+      "з ножицями",
+      "ножиці"
+    ],
+    "answer": "ножицями"
+  },
+  {
+    "index": 7,
+    "options": [
+      "ложкою",
+      "з ложкою",
+      "ложка"
+    ],
+    "answer": "ложкою"
+  },
+  {
+    "index": 8,
+    "options": [
+      "виделкою",
+      "з виделкою",
+      "виделка"
+    ],
+    "answer": "виделкою"
+  },
+  {
+    "index": 9,
+    "options": [
+      "голосом",
+      "з голосом",
+      "голос"
+    ],
+    "answer": "голосом"
+  }
+]}
+  />
+</Cloze>
+
+### Asking Directions
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Дякую! До побачення!"
+  },
+  {
+    "speaker": "",
+    "line": "Добрий день! Як дістатися до центру?"
+  },
+  {
+    "speaker": "",
+    "line": "Автобусом швидше, але метро зручніше."
+  },
+  {
+    "speaker": "",
+    "line": "Можна їхати автобусом або метро."
+  },
+  {
+    "speaker": "",
+    "line": "А що швидше?"
+  },
+  {
+    "speaker": "",
+    "line": "Тоді поїду метро. Дякую!"
+  },
+  {
+    "speaker": "",
+    "line": "Звичайно. Дай мені ніж."
+  },
+  {
+    "speaker": "",
+    "line": "Ось. Тепер ріжу ножем."
+  },
+  {
+    "speaker": "",
+    "line": "Чим ти ріжеш помідори?"
+  },
+  {
+    "speaker": "",
+    "line": "Можеш нарізати сир ножем?"
+  },
+  {
+    "speaker": "",
+    "line": "Ручкою! Жартую. Ножем, звичайно."
+  },
+  {
+    "speaker": "",
+    "line": "Готово! Тепер можемо їсти!"
+  }
+]} />
+</DialogueReorder>
+
+### Find Bare Instrumental
+
+Click on instrumental forms used WITHOUT a preposition (means/tools).
+
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Я їду на роботу автобусом. Вона пише листа ручкою. Ми живемо з батьками. Він ріже хліб ножем. Кава з молоком смачна. Вона летить літаком до Парижа. Він розмовляє з другом. Я працюю комп'ютером. Діти грають з котом. Вона махає рукою. Ми їмо суп ложкою. Він гуляє з собакою. Вона говорить тихим голосом. Я їду поїздом. Він живе з братом.`}
+    correctWords={[`автобусом`, `ручкою`, `ножем`, `літаком`, `комп'ютером`, `рукою`, `ложкою`, `голосом`, `поїздом`]}
+  />
+</MarkTheWords>
+
+### English to Ukrainian
+
+<Translate>
+  <TranslateItem
+    source={`They travel to Lviv by train.`}
+    answer={`Вони їдуть до Львова поїздом.`}
+    options={[`Вони їдуть до Львова з поїздом.`, `Вони їдуть до Львова поїздом.`, `Вони їдуть до Львова поїзд.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She writes with a pen.`}
+    answer={`Вона пише ручкою.`}
+    options={[`Вона пише з ручкою.`, `Вона пише ручкою.`, `Вона пише ручка.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`He cuts bread with a knife.`}
+    answer={`Він ріже хліб ножем.`}
+    options={[`Він ріже хліб ножем.`, `Він ріже хліб з ножем.`, `Він ріже хліб ніж.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`We eat soup with a spoon.`}
+    answer={`Ми їмо суп ложкою.`}
+    options={[`Ми їмо суп ложкою.`, `Ми їмо суп з ложкою.`, `Ми їмо суп ложка.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She flies to Paris by plane.`}
+    answer={`Вона летить до Парижа літаком.`}
+    options={[`Вона летить до Парижа літаком.`, `Вона летить до Парижа з літаком.`, `Вона летить до Парижа літак.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`He speaks in a quiet voice.`}
+    answer={`Він говорить тихим голосом.`}
+    options={[`Він говорить тихим голосом.`, `Він говорить з тихим голосом.`, `Він говорить тихий голос.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I work with a computer every day.`}
+    answer={`Я працюю комп'ютером щодня.`}
+    options={[`Я працюю комп'ютером щодня.`, `Я працюю з комп'ютером щодня.`, `Я працюю комп'ютер щодня.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Children draw with a pencil.`}
+    answer={`Діти малюють олівцем.`}
+    options={[`Діти малюють олівцем.`, `Діти малюють з олівцем.`, `Діти малюють олівець.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She waves with her hand.`}
+    answer={`Вона махає рукою.`}
+    options={[`Вона махає рукою.`, `Вона махає з рукою.`, `Вона махає рука.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`We go downtown by tram.`}
+    answer={`Ми їдемо в центр трамваєм.`}
+    options={[`Ми їдемо в центр трамваєм.`, `Ми їдемо в центр з трамваєм.`, `Ми їдемо в центр трамвай.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I send documents by email.`}
+    answer={`Я надсилаю документи електронною поштою.`}
+    options={[`Я надсилаю документи електронною поштою.`, `Я надсилаю документи з електронною поштою.`, `Я надсилаю документи електронна пошта.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She nods with her head.`}
+    answer={`Вона киває головою.`}
+    options={[`Вона киває головою.`, `Вона киває з головою.`, `Вона киває голова.`]}
+    explanation={``}
+  />
+</Translate>
+

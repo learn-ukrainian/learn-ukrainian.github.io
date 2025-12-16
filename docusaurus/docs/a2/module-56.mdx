@@ -5,19 +5,20 @@ title: "A2 Grammar Review"
 description: "Mastering the Rules"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # A2 Grammar Review
@@ -69,30 +70,20 @@ To speak fluently, connect your ideas:
 Інспектор Граматика розслідує справу.
 Він прийшов у **кімнату** (Acc - Direction? No, Locative context? Moved INTO room -> Acc).
 Там він побачив **студента** (Acc - Object).
-<div className="conversation">
-
 — Що ви робили вчора о 5-й годині? — запитав інспектор.
-
 — Я **писав** (Imp - Process) тест, — відповів студент.
-
 — Ви **написали** (Perf - Result) його?
-
 — Ні, я не **дописав**, тому що **світло** (Nom - Subject) зникло.
-
 — З ким ви були?
-
 — Я був з **другом** (Instr - With).
-
 — Де ви були?
-
 — Ми були в **бібліотеці** (Loc - Location).
-
-</div>
 
 Інспектор подумав. Все було правильно.
 Студент знав відмінки. Він не міг бути злочинцем. Злочинці не знають граматику!
 
-:::warning[**Tip** "Word Order"]
+:::warning
+**Tip** "Word Order"
 Ukrainian word order is flexible but not random.
 - Neutral: Subject - Verb - Object (*Я люблю каву*).
 - Emphasis: Object - Verb - Subject (*Каву люблю я* - It is ME who loves coffee).
@@ -117,25 +108,16 @@ Hi Mom! Here is a letter with mistakes. Can you find them?
 
 ### Review in Dialogue
 
-<div className="conversation">
-
 — Привіт! Ти **зробив** домашнє завдання? (Result)
-
 — Ні, я ще **роблю**. (Process)
-
 — Чому? Це ж легко.
-
 — Тому що я не розумію **відмінки** (Acc).
-
 — Давай я допоможу **тобі** (Dat).
-
 — Дякую! Ти справжній друг.
-
 — Без **проблем**. Для цього є друзі.
 
-</div>
-
-:::warning[**Important** "Grammar is Fun!"]
+:::warning
+**Important** "Grammar is Fun!"
 Do not be afraid of grammar. It is a logic puzzle. Ukrainian grammar is very logical. Once you understand the pattern, you can build any sentence.
 :::
 
@@ -145,15 +127,9 @@ Do not be afraid of grammar. It is a logic puzzle. Ukrainian grammar is very log
 Жив-був студент Том. Він не любив граматику.
 Він говорив: "Моя твоя не розуміти".
 Одного разу до нього прилетіла Граматична Фея.
-<div className="conversation">
-
 — Томе! — сказала вона. — Чому ти говориш як робот?
-
 — Я не знаю **відмінки**, — зітхнув Том.
-
 — Це просто, — сказала Фея. — Дивись.
-
-</div>
 Вона дала йому чарівні окуляри.
 Том одягнув їх і побачив світ по-новому.
 Він побачив, що **книга** (Називний) лежить на **столі** (Місцевий).
@@ -173,13 +149,8 @@ Do not be afraid of grammar. It is a logic puzzle. Ukrainian grammar is very log
 Бариста усміхнувся, але зрозумів.
 Потім Джон хотів знайти **метро** (Accusative).
 Він запитав перехожого:
-<div className="conversation">
-
 — Де є метро?
-
 — Прямо і наліво, — відповів перехожий.
-
-</div>
 Джон сів у **поїзд** (Accusative) і поїхав у **парк** (Accusative).
 У парку він зустрів дівчину.
 Вона читала **книгу** (Accusative).
@@ -193,17 +164,10 @@ Do not be afraid of grammar. It is a logic puzzle. Ukrainian grammar is very log
 
 Сьогодні у студентів іспит з граматики.
 Професор дає завдання.
-<div className="conversation">
-
 — Слухайте уважно, — каже він.
-
 — Студент **Іван** (Називний) пише **вправу** (Знахідний) **ручкою** (Орудний).
-
 — Студентка **Марія** (Називний) мріє про **відпустку** (Знахідний).
-
 — Вони сидять в **аудиторії** (Місцевий).
-
-</div>
 Професор запитує:
 — Хто знає, де помилка?
 Іван піднімає руку.
@@ -214,27 +178,15 @@ Do not be afraid of grammar. It is a logic puzzle. Ukrainian grammar is very log
 
 ### Dialogue: Grammar Debate
 
-<div className="conversation">
-
 — Чому українська мова така складна? — питає Джон.
-
 — Вона не складна, вона багата, — каже Марія.
-
 — Але ці відмінки... Навіщо їх так багато?
-
 — Щоб бути точним. Дивись: "Я кохаю тебе" (I love you) і "Тебе я кохаю" (It is YOU I love) — це різні акценти.
-
 — Так, але в англійській простіше.
-
 — Простіше не означає краще. Українська мова — як музика. Кожне закінчення — це нота.
-
 — Красиво сказано. Ти поетка?
-
 — Ні, я просто люблю свою мову.
-
 — Добре, я буду вчити ноти.
-
-</div>
 
 ### Why Grammar Matters?
 
@@ -258,13 +210,8 @@ Practicing these helps with endings:
 Майкл гуляв по **Львову** (Locative).
 Він шукав **Оперний театр** (Accusative).
 Він запитав у бабусі:
-<div className="conversation">
-
 — Вибачте, де театр?
-
 — Іди прямо по **вулиці** (Locative), потім поверни на **площу** (Accusative).
-
-</div>
 Майкл подякував **бабусі** (Dative).
 Він знайшов театр. Це була красива будівля.
 Він купив **квиток** (Accusative) на балет.
@@ -279,7 +226,8 @@ If you make a mistake, say:
 - Як правильно сказати...? (*How to say correctly...?*).
 - Я не розумію, повторіть будь ласка. (*I don't understand, repeat please*).
 
-:::note[**Cultural Insight** "Surzhyk"]
+:::note
+**Cultural Insight** "Surzhyk"
 You might hear people mixing Ukrainian and Russian. This is called **Surzhyk**. It often ignores grammar rules of both languages. As a learner, stick to standard Ukrainian (*літературна мова*) to gain respect and clarity.
 :::
 
@@ -301,8 +249,20 @@ Here are errors that students often make:
    - Error: *Моє ім'я є Том.* (English structure).
    - Correct: *Мене звати Том.* (They call me Tom).
 
-:::tip[**Pro Tip** "Listen more"]
+:::tip
+**Pro Tip** "Listen more"
 The best way to learn grammar is context. When you hear a song, ask yourself: Why is it "ти" here and "тобі" there? Analyzing real inputs creates deep neural connections.
+:::
+
+
+:::info
+🔗 External Resources
+
+**YouTube:** [Ukrainian Cases Explained](https://www.youtube.com/watch?v=xVD1GRxnvNw) — Ukrainian Lessons
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 :::
 
 
@@ -315,443 +275,7 @@ This review covered:
 
 You are now ready for the **Capstone Module**. Good luck!
 
-## 🎯 Activities
 
-### Grammar Master
-
-<Quiz questions={[
-  {
-    question: `Which case is used for location usually?`,
-    options: [
-      { text: `Locative`, correct: true },
-      { text: `Accusative`, correct: false },
-      { text: `Dative`, correct: false }
-    ]
-  },  {
-    question: `\"Я працюю...\"`,
-    options: [
-      { text: `менеджером`, correct: true },
-      { text: `менеджер`, correct: false },
-      { text: `менеджера`, correct: false }
-    ]
-  },  {
-    question: `\"У мене немає...\"`,
-    options: [
-      { text: `часу`, correct: true },
-      { text: `час`, correct: false },
-      { text: `часом`, correct: false }
-    ]
-  },  {
-    question: `\"Я бачу...\"`,
-    options: [
-      { text: `сестру`, correct: true },
-      { text: `сестра`, correct: false },
-      { text: `сестрі`, correct: false }
-    ]
-  },  {
-    question: `\"Imperfective\" verb means...`,
-    options: [
-      { text: `Process / Habit`, correct: true },
-      { text: `Result`, correct: false },
-      { text: `Command`, correct: false }
-    ]
-  },  {
-    question: `\"Щоб\" means...`,
-    options: [
-      { text: `In order to`, correct: true },
-      { text: `Because`, correct: false },
-      { text: `But`, correct: false }
-    ]
-  },  {
-    question: `\"Я даю подарунок...\"`,
-    options: [
-      { text: `мамі`, correct: true },
-      { text: `мама`, correct: false },
-      { text: `мами`, correct: false }
-    ]
-  },  {
-    question: `\"Я пишу...\"`,
-    options: [
-      { text: `олівцем`, correct: true },
-      { text: `олівець`, correct: false },
-      { text: `олівця`, correct: false }
-    ]
-  },  {
-    question: `\"Він прийшов з...\"`,
-    options: [
-      { text: `магазину`, correct: true },
-      { text: `магазин`, correct: false },
-      { text: `магазині`, correct: false }
-    ]
-  },  {
-    question: `\"Ми говоримо про...\"`,
-    options: [
-      { text: `політику`, correct: true },
-      { text: `політика`, correct: false },
-      { text: `політики`, correct: false }
-    ]
-  },  {
-    question: `\"Я живу в...\"`,
-    options: [
-      { text: `Україні`, correct: true },
-      { text: `Україна`, correct: false },
-      { text: `України`, correct: false }
-    ]
-  },  {
-    question: `\"Привіт, ...\"`,
-    options: [
-      { text: `друже`, correct: true },
-      { text: `друг`, correct: false },
-      { text: `друга`, correct: false }
-    ]
-  }
-]} />
-
-### Case Functions
-
-<MatchUp pairs={[
-  { left: `Subject`, right: `Nominative` },
-  { left: `Possession/Of`, right: `Genitive` },
-  { left: `Recipient/Feeling`, right: `Dative` },
-  { left: `Direct Object`, right: `Accusative` },
-  { left: `Instrument/Role`, right: `Instrumental` },
-  { left: `Location`, right: `Locative` },
-  { left: `Addressing`, right: `Vocative` },
-  { left: `Without`, right: `Genitive` },
-  { left: `With (someone)`, right: `Instrumental` },
-  { left: `Examples of \"From\"`, right: `Genitive` },
-  { left: `Giving to`, right: `Dative` },
-  { left: `Being somewhere`, right: `Locative` }
-]} />
-
-### Case Challenge
-
-<FillIn items={[
-  {
-    sentence: `Я йду в ____. (park)`,
-    answer: `парк`,
-    options: [`парк`, `парку`, `парком`, `паркі`]
-  },  {
-    sentence: `Я гуляю в ____. (park)`,
-    answer: `парку`,
-    options: [`парку`, `парк`, `парком`, `парка`]
-  },  {
-    sentence: `Я не бачу ____. (bus)`,
-    answer: `автобуса`,
-    options: [`автобуса`, `автобус`, `автобусом`, `автобусі`]
-  },  {
-    sentence: `Я їм ____. (soup)`,
-    answer: `суп`,
-    options: [`суп`, `супу`, `супом`, `супі`]
-  },  {
-    sentence: `Я їм суп ____. (spoon)`,
-    answer: `ложкою`,
-    options: [`ложкою`, `ложка`, `ложку`, `ложці`]
-  },  {
-    sentence: `Я телефоную ____. (dad)`,
-    answer: `татові`,
-    options: [`татові`, `тато`, `тата`, `татом`]
-  },  {
-    sentence: `Ми з ____. (brother)`,
-    answer: `братом`,
-    options: [`братом`, `брат`, `брата`, `брату`]
-  },  {
-    sentence: `Книга лежить на ____. (table)`,
-    answer: `столі`,
-    options: [`столі`, `стіл`, `столу`, `столом`]
-  },  {
-    sentence: `У ____ є ідея. (me)`,
-    answer: `мене`,
-    options: [`мене`, `мені`, `я`, `мною`]
-  },  {
-    sentence: `Це подарунок для ____. (sister)`,
-    answer: `сестри`,
-    options: [`сестри`, `сестрі`, `сестру`, `сестра`]
-  },  {
-    sentence: `Я хочу стати ____. (artist)`,
-    answer: `художником`,
-    options: [`художником`, `художник`, `художника`, `художнику`]
-  },  {
-    sentence: `Привіт, ____! (Ivan)`,
-    answer: `Іване`,
-    options: [`Іване`, `Іван`, `Івана`, `Іваном`]
-  }
-]} />
-
-### Grammar Truths
-
-<TrueFalse items={[
-  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Locative is for Where.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Yes (I see WHOM/WHAT).`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Yes.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `З другом.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Я працюю лікарем.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Imperfective explain process.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Because.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `-о or -е. -а is Feminine.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Yes.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Yes.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Dative \"Мені\".`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Yes.`
-  }
-]} />
-
-### Aspect Sort
-
-<GroupSort groups={{
-  "Groups": ["Imperfective (Process)", "Perfective (Result)", "Connectors"],
-  "Items": ["писав: Imperfective (Process)", "читав: Imperfective (Process)", "робив: Imperfective (Process)", "написав: Perfective (Result)", "прочитав: Perfective (Result)", "зробив: Perfective (Result)", "купував: Imperfective (Process)", "купив: Perfective (Result)", "тому що: Connectors", "якщо: Connectors", "коли: Connectors", "щоб: Connectors"]
-}} />
-
-### Sentence Builder
-
-<Unjumble items={[
-  { jumbled: `Я / не / пішов / у / кіно / тому / що / працював`, answer: `Я не пішов у кіно тому що працював` },
-  { jumbled: `Коли / ми / прийшли / він / вже / спав`, answer: `Коли ми прийшли він вже спав` },
-  { jumbled: `Я / хочу / щоб / ти / купив / хліб`, answer: `Я хочу щоб ти купив хліб` },
-  { jumbled: `Студент / який / читає / книгу / мій / друг`, answer: `Студент який читає книгу мій друг` },
-  { jumbled: `Якщо / буде / сонце / ми / підемо / гуляти`, answer: `Якщо буде сонце ми підемо гуляти` },
-  { jumbled: `Він / сказав / що / любить / Україну`, answer: `Він сказав що любить Україну` },
-  { jumbled: `Я / пишу / листа / своєму / другу`, answer: `Я пишу листа своєму другу` },
-  { jumbled: `Ми / їдемо / автобусом / до / Львова`, answer: `Ми їдемо автобусом до Львова` },
-  { jumbled: `У / мене / немає / вільного / часу`, answer: `У мене немає вільного часу` },
-  { jumbled: `Мені / дуже / подобається / ця / музика`, answer: `Мені дуже подобається ця музика` },
-  { jumbled: `Де / ти / був / вчора / ввечері`, answer: `Де ти був вчора ввечері` },
-  { jumbled: `Мамо / де / мої / теплі / шкарпетки`, answer: `Мамо де мої теплі шкарпетки` }
-]} />
-
-### Fix the Letter
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Привіт мама!`}
-    errorWord={`мама`}
-    correctForm={`мамо`}
-    options={[`мамо`, `мама`, `маму`, `мами`]}
-    explanation={`Vocative: Мамо.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я живу в Київ.`}
-    errorWord={`Київ`}
-    correctForm={`Києві`}
-    options={[`Києві`, `Київ`, `Києва`, `Києвом`]}
-    explanation={`Locative: в Києві.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я працюю програміст.`}
-    errorWord={`програміст`}
-    correctForm={`програмістом`}
-    options={[`програмістом`, `програміст`, `програміста`, `програмісту`]}
-    explanation={`Instrumental: працюю програмістом.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я люблю Україна.`}
-    errorWord={`Україна`}
-    correctForm={`Україну`}
-    options={[`Україну`, `Україна`, `України`, `Україні`]}
-    explanation={`Accusative: люблю Україну.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Машина червоний.`}
-    errorWord={`червоний`}
-    correctForm={`червона`}
-    options={[`червона`, `червоний`, `червоне`, `червоні`]}
-    explanation={`Gender agreement (Fem): червона машина.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вчора я купував машину. (Context: completed)`}
-    errorWord={`купував`}
-    correctForm={`купив`}
-    options={[`купив`, `купував`, `купую`, `буду купувати`]}
-    explanation={`Result (bought): купив.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я не маю гроші.`}
-    errorWord={`друг`}
-    correctForm={`другом`}
-    options={[`другом`, `друг`, `друга`, `другу`]}
-    explanation={`Instrumental.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Дай мені вода.`}
-    errorWord={`вода`}
-    correctForm={`воду`}
-    options={[`воду`, `вода`, `води`, `водою`]}
-    explanation={`Accusative.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я в кімнату. (Location)`}
-    errorWord={`кімнату`}
-    correctForm={`кімнаті`}
-    options={[`кімнаті`, `кімнату`, `кімната`, `кімнатою`]}
-    explanation={`Locative (Where?): в кімнаті.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я дякую вас.`}
-    errorWord={`вас`}
-    correctForm={`вам`}
-    options={[`вам`, `вас`, `ви`, `вами`]}
-    explanation={`Dative: дякую *кому?* вам.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я чекаю автобус.`}
-    errorWord={`автобус`}
-    correctForm={`автобуса`}
-    options={[`автобуса`, `автобус`, `автобусі`, `автобусом`]}
-    explanation={`Genitive after \"чекати\" (often used). Or Accusative \"автобус\". Both are used.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я пишу ручка.`}
-    errorWord={`ручка`}
-    correctForm={`ручкою`}
-    options={[`ручкою`, `ручка`, `ручку`, `ручки`]}
-    explanation={`Instrumental.`}
-  />
-</ErrorCorrection>
-
-### Grammar Fill
-
-<Cloze
-  passage={`Я [___:1] студент. Я [___:2] в університеті.
-Вчора я [___:3] книгу.
-Книга [___:4] дуже цікава.
-Я читав її [___:5] вечір.
-Мій друг [___:6] не читає книги.
-Він любить [___:7] у футбол.
-Ми з [___:8] різні, але ми друзі.`}
-  blanks={[{ answer: `новий`, options: [`новий`, `нова`, `нове`] }, { answer: `навчаюся`, options: [`навчаюся`, `навчаюсь`, `вчу`] }, { answer: `купив`, options: [`купив`, `купував`, `куплю`] }, { answer: `була`, options: [`була`, `був`, `було`] }, { answer: `весь`, options: [`весь`, `все`, `всі`] }, { answer: `ніколи`, options: [`ніколи`, `завжди`, `часто`] }, { answer: `грати`, options: [`грати`, `граю`, `грав`] }, { answer: `ним`, options: [`ним`, `він`, `його`] }]}
-/>
-
-### Asking for Help
-
-<DialogueReorder lines={[
-  { text: `Привіт! Ти можеш мені допомогти?`, order: 1 },
-  { text: `Привіт. Так, звичайно. Що сталося?`, order: 2 },
-  { text: `Я не розумію це завдання.`, order: 3 },
-  { text: `Яке саме? З математики?`, order: 4 },
-  { text: `Ні, з української мови.`, order: 5 },
-  { text: `А, граматика! Це я люблю. Покажи.`, order: 6 },
-  { text: `Ось. Тут треба поставити слово у правильний відмінок.`, order: 7 },
-  { text: `Дивись: \"Я пишу...\" (чим?) ручкою. Це Орудний відмінок.`, order: 8 },
-  { text: `А! Тепер я зрозумів. Дякую!`, order: 9 },
-  { text: `Немає за що. Звертайся.`, order: 10 },
-  { text: `Ти найкращий друг.`, order: 11 },
-  { text: `Радий допомогти.`, order: 12 }
-]} />
-
-### Case Detector
-
-<Select questions={[
-  {
-    question: `\"Мамо!\"`,
-    options: [
-      { text: `Vocative`, correct: true },
-      { text: `Nominative`, correct: false }
-    ]
-  },  {
-    question: `\"У Києві\"`,
-    options: [
-      { text: `Locative`, correct: true },
-      { text: `Dative`, correct: false }
-    ]
-  },  {
-    question: `\"З другом\"`,
-    options: [
-      { text: `Instrumental`, correct: true },
-      { text: `Genitive`, correct: false }
-    ]
-  },  {
-    question: `\"Немає води\"`,
-    options: [
-      { text: `Genitive`, correct: true },
-      { text: `Accusative`, correct: false }
-    ]
-  },  {
-    question: `\"Пишу листа\"`,
-    options: [
-      { text: `Accusative`, correct: true },
-      { text: `Nominative`, correct: false }
-    ]
-  },  {
-    question: `\"Даю брату\"`,
-    options: [
-      { text: `Dative`, correct: true },
-      { text: `Locative`, correct: false }
-    ]
-  },  {
-    question: `\"Я - студент\"`,
-    options: [
-      { text: `Nominative`, correct: true },
-      { text: `Instrumental`, correct: false }
-    ]
-  },  {
-    question: `\"Працюю лікарем\"`,
-    options: [
-      { text: `Instrumental`, correct: true },
-      { text: `Accusative`, correct: false }
-    ]
-  },  {
-    question: `\"Після уроку\"`,
-    options: [
-      { text: `Genitive`, correct: true },
-      { text: `Dative`, correct: false }
-    ]
-  },  {
-    question: `\"Через ліс\"`,
-    options: [
-      { text: `Accusative`, correct: true },
-      { text: `Locative`, correct: false }
-    ]
-  },  {
-    question: `\"На столі\"`,
-    options: [
-      { text: `Locative`, correct: true },
-      { text: `Nominative`, correct: false }
-    ]
-  },  {
-    question: `\"Бачу маму\"`,
-    options: [
-      { text: `Accusative`, correct: true },
-      { text: `Genitive`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -788,3 +312,436 @@ You are now ready for the **Capstone Module**. Good luck!
 | знати | /znatɪ/ | to know | verb | - | |
 | вчити | /ˈʋtʃɪtɪ/ | to learn | verb | - | |
 | мова | /ˈmɔʋa/ | language | noun | f | |
+
+---
+
+## 🎯 Activities
+
+### Grammar Master
+
+<Quiz>
+  <QuizQuestion
+    question={`1. Which case is used for location usually?`}
+    options={[`Locative`, `Accusative`, `Dative`]}
+    correctIndex={0}
+    explanation={`Locative (Місцевий).`}
+  />
+  <QuizQuestion
+    question={`"Я працюю..."`}
+    options={[`менеджером`, `менеджер`, `менеджера`]}
+    correctIndex={0}
+    explanation={`Instrumental.`}
+  />
+  <QuizQuestion
+    question={`"У мене немає..."`}
+    options={[`часу`, `час`, `часом`]}
+    correctIndex={0}
+    explanation={`Genitive.`}
+  />
+  <QuizQuestion
+    question={`"Я бачу..."`}
+    options={[`сестру`, `сестра`, `сестрі`]}
+    correctIndex={0}
+    explanation={`Accusative.`}
+  />
+  <QuizQuestion
+    question={`"Imperfective" verb means...`}
+    options={[`Process / Habit`, `Result`, `Command`]}
+    correctIndex={0}
+    explanation={`Habitual or ongoing.`}
+  />
+  <QuizQuestion
+    question={`"Щоб" means...`}
+    options={[`In order to`, `Because`, `But`]}
+    correctIndex={0}
+    explanation={`Purpose.`}
+  />
+  <QuizQuestion
+    question={`"Я даю подарунок..."`}
+    options={[`мамі`, `мама`, `мами`]}
+    correctIndex={0}
+    explanation={`Dative (Recipient).`}
+  />
+  <QuizQuestion
+    question={`"Я пишу..."`}
+    options={[`олівцем`, `олівець`, `олівця`]}
+    correctIndex={0}
+    explanation={`Instrumental (Tool).`}
+  />
+  <QuizQuestion
+    question={`"Він прийшов з..."`}
+    options={[`магазину`, `магазин`, `магазині`]}
+    correctIndex={0}
+    explanation={`Genitive (From).`}
+  />
+  <QuizQuestion
+    question={`"Ми говоримо про..."`}
+    options={[`політику`, `політика`, `політики`]}
+    correctIndex={0}
+    explanation={`Accusative (About).`}
+  />
+  <QuizQuestion
+    question={`"Я живу в..."`}
+    options={[`Україні`, `Україна`, `України`]}
+    correctIndex={0}
+    explanation={`Locative.`}
+  />
+  <QuizQuestion
+    question={`"Привіт, ..."`}
+    options={[`друже`, `друг`, `друга`]}
+    correctIndex={0}
+    explanation={`Vocative.`}
+  />
+</Quiz>
+
+### Case Functions
+
+<MatchUp pairs={[
+  { left: `Subject`, right: `Nominative` },
+  { left: `Possession/Of`, right: `Genitive` },
+  { left: `Recipient/Feeling`, right: `Dative` },
+  { left: `Direct Object`, right: `Accusative` },
+  { left: `Instrument/Role`, right: `Instrumental` },
+  { left: `Location`, right: `Locative` },
+  { left: `Addressing`, right: `Vocative` },
+  { left: `Without`, right: `Genitive` },
+  { left: `With (someone)`, right: `Instrumental` },
+  { left: `Examples of "From"`, right: `Genitive` },
+  { left: `Giving to`, right: `Dative` },
+  { left: `Being somewhere`, right: `Locative` }
+]} />
+
+### Case Challenge
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я йду в ____. (park)`}
+    answer={`парк`}
+    options={[`парк`, `парку`, `парком`, `паркі`]}
+  />
+  <FillInQuestion
+    sentence={`Я гуляю в ____. (park)`}
+    answer={`парку`}
+    options={[`парку`, `парк`, `парком`, `парка`]}
+  />
+  <FillInQuestion
+    sentence={`Я не бачу ____. (bus)`}
+    answer={`автобуса`}
+    options={[`автобуса`, `автобус`, `автобусом`, `автобусі`]}
+  />
+  <FillInQuestion
+    sentence={`Я їм ____. (soup)`}
+    answer={`суп`}
+    options={[`суп`, `супу`, `супом`, `супі`]}
+  />
+  <FillInQuestion
+    sentence={`Я їм суп ____. (spoon)`}
+    answer={`ложкою`}
+    options={[`ложкою`, `ложка`, `ложку`, `ложці`]}
+  />
+  <FillInQuestion
+    sentence={`Я телефоную ____. (dad)`}
+    answer={`татові`}
+    options={[`татові`, `тато`, `тата`, `татом`]}
+  />
+  <FillInQuestion
+    sentence={`Ми з ____. (brother)`}
+    answer={`братом`}
+    options={[`братом`, `брат`, `брата`, `брату`]}
+  />
+  <FillInQuestion
+    sentence={`Книга лежить на ____. (table)`}
+    answer={`столі`}
+    options={[`столі`, `стіл`, `столу`, `столом`]}
+  />
+  <FillInQuestion
+    sentence={`У ____ є ідея. (me)`}
+    answer={`мене`}
+    options={[`мене`, `мені`, `я`, `мною`]}
+  />
+  <FillInQuestion
+    sentence={`Це подарунок для ____. (sister)`}
+    answer={`сестри`}
+    options={[`сестри`, `сестрі`, `сестру`, `сестра`]}
+  />
+  <FillInQuestion
+    sentence={`Я хочу стати ____. (artist)`}
+    answer={`художником`}
+    options={[`художником`, `художник`, `художника`, `художнику`]}
+  />
+  <FillInQuestion
+    sentence={`Привіт, ____! (Ivan)`}
+    answer={`Іване`}
+    options={[`Іване`, `Іван`, `Івана`, `Іваном`]}
+  />
+</FillIn>
+
+
+
+### Aspect Sort
+
+<GroupSort groups={{
+  "Imperfective (Process)": [
+    "писав",
+    "читав",
+    "робив",
+    "купував"
+  ],
+  "Perfective (Result)": [
+    "написав",
+    "прочитав",
+    "зробив",
+    "купив"
+  ],
+  "Connectors": [
+    "тому що",
+    "якщо",
+    "коли",
+    "щоб"
+  ]
+}} />
+
+### Sentence Builder
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`Я / не / пішов / у / кіно / тому / що / працював`}
+    answer={`Я не пішов у кіно тому що працював`}
+  />
+  <UnjumbleQuestion
+    words={`Коли / ми / прийшли / він / вже / спав`}
+    answer={`Коли ми прийшли він вже спав`}
+  />
+  <UnjumbleQuestion
+    words={`Я / хочу / щоб / ти / купив / хліб`}
+    answer={`Я хочу щоб ти купив хліб`}
+  />
+  <UnjumbleQuestion
+    words={`Студент / який / читає / книгу / мій / друг`}
+    answer={`Студент який читає книгу мій друг`}
+  />
+  <UnjumbleQuestion
+    words={`Якщо / буде / сонце / ми / підемо / гуляти`}
+    answer={`Якщо буде сонце ми підемо гуляти`}
+  />
+  <UnjumbleQuestion
+    words={`Він / сказав / що / любить / Україну`}
+    answer={`Він сказав що любить Україну`}
+  />
+  <UnjumbleQuestion
+    words={`Я / пишу / листа / своєму / другу`}
+    answer={`Я пишу листа своєму другу`}
+  />
+  <UnjumbleQuestion
+    words={`Ми / їдемо / автобусом / до / Львова`}
+    answer={`Ми їдемо автобусом до Львова`}
+  />
+  <UnjumbleQuestion
+    words={`У / мене / немає / вільного / часу`}
+    answer={`У мене немає вільного часу`}
+  />
+  <UnjumbleQuestion
+    words={`Мені / дуже / подобається / ця / музика`}
+    answer={`Мені дуже подобається ця музика`}
+  />
+  <UnjumbleQuestion
+    words={`Де / ти / був / вчора / ввечері`}
+    answer={`Де ти був вчора ввечері`}
+  />
+  <UnjumbleQuestion
+    words={`Мамо / де / мої / теплі / шкарпетки`}
+    answer={`Мамо де мої теплі шкарпетки`}
+  />
+</Unjumble>
+
+### Fix the Letter
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Привіт мама!`}
+    error={`мама`}
+    answer={`мамо`}
+    options={[`мамо`, `мама`, `маму`, `мами`]}
+    explanation={`Vocative: Мамо.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я живу в Київ.`}
+    error={`Київ`}
+    answer={`Києві`}
+    options={[`Києві`, `Київ`, `Києва`, `Києвом`]}
+    explanation={`Locative: в Києві.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я працюю програміст.`}
+    error={`програміст`}
+    answer={`програмістом`}
+    options={[`програмістом`, `програміст`, `програміста`, `програмісту`]}
+    explanation={`Instrumental: працюю програмістом.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я люблю Україна.`}
+    error={`Україна`}
+    answer={`Україну`}
+    options={[`Україну`, `Україна`, `України`, `Україні`]}
+    explanation={`Accusative: люблю Україну.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Машина червоний.`}
+    error={`червоний`}
+    answer={`червона`}
+    options={[`червона`, `червоний`, `червоне`, `червоні`]}
+    explanation={`Gender agreement (Fem): червона машина.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вчора я купував машину. (Context: completed)`}
+    error={`купував`}
+    answer={`купив`}
+    options={[`купив`, `купував`, `купую`, `буду купувати`]}
+    explanation={`Result (bought): купив.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я не маю гроші.`}
+    error={`друг`}
+    answer={`другом`}
+    options={[`другом`, `друг`, `друга`, `другу`]}
+    explanation={`Instrumental.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Дай мені вода.`}
+    error={`вода`}
+    answer={`воду`}
+    options={[`воду`, `вода`, `води`, `водою`]}
+    explanation={`Accusative.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я в кімнату. (Location)`}
+    error={`кімнату`}
+    answer={`кімнаті`}
+    options={[`кімнаті`, `кімнату`, `кімната`, `кімнатою`]}
+    explanation={`Locative (Where?): в кімнаті.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я дякую вас.`}
+    error={`вас`}
+    answer={`вам`}
+    options={[`вам`, `вас`, `ви`, `вами`]}
+    explanation={`Dative: дякую *кому?* вам.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я чекаю автобус.`}
+    error={`автобус`}
+    answer={`автобуса`}
+    options={[`автобуса`, `автобус`, `автобусі`, `автобусом`]}
+    explanation={`Genitive after "чекати" (often used). Or Accusative "автобус". Both are used.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я пишу ручка.`}
+    error={`ручка`}
+    answer={`ручкою`}
+    options={[`ручкою`, `ручка`, `ручку`, `ручки`]}
+    explanation={`Instrumental.`}
+  />
+</ErrorCorrection>
+
+
+
+### Asking for Help
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "Дивись",
+    "line": "\"Я пишу...\" (чим?) ручкою. Це Орудний відмінок."
+  }
+]} />
+</DialogueReorder>
+
+### Identification
+
+[!instruction] Mark all verbs in Past Tense (Result/Perfective context).
+
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Вчора я встав о 7:00. Я поснідав і випив каву. Потім я пішов на роботу. Я зробив важливий звіт. Ввечері я купив продукти і приготував вечерю. Я швидко заснув.`}
+    correctWords={[`встав`, `поснідав`, `випив`, `пішов`, `зробив`, `купив`, `приготував`, `заснув`]}
+  />
+</MarkTheWords>
+
+### Case Detector
+
+<Select>
+  <SelectQuestion
+    question={`1. "Мамо!"`}
+    options={[`Vocative`, `Nominative`]}
+    correctAnswers={[`Vocative`]}
+    explanation={`Calling mom.`}
+  />
+  <SelectQuestion
+    question={`"У Києві"`}
+    options={[`Locative`, `Dative`]}
+    correctAnswers={[`Locative`]}
+    explanation={`In Kyiv.`}
+  />
+  <SelectQuestion
+    question={`"З другом"`}
+    options={[`Instrumental`, `Genitive`]}
+    correctAnswers={[`Instrumental`]}
+    explanation={`With friend.`}
+  />
+  <SelectQuestion
+    question={`"Немає води"`}
+    options={[`Genitive`, `Accusative`]}
+    correctAnswers={[`Genitive`]}
+    explanation={`No water.`}
+  />
+  <SelectQuestion
+    question={`"Пишу листа"`}
+    options={[`Accusative`, `Nominative`]}
+    correctAnswers={[`Accusative`]}
+    explanation={`Writing a letter.`}
+  />
+  <SelectQuestion
+    question={`"Даю брату"`}
+    options={[`Dative`, `Locative`]}
+    correctAnswers={[`Dative`]}
+    explanation={`Giving to brother.`}
+  />
+  <SelectQuestion
+    question={`"Я - студент"`}
+    options={[`Nominative`, `Instrumental`]}
+    correctAnswers={[`Nominative`]}
+    explanation={`Subject.`}
+  />
+  <SelectQuestion
+    question={`"Працюю лікарем"`}
+    options={[`Instrumental`, `Accusative`]}
+    correctAnswers={[`Instrumental`]}
+    explanation={`Working as.`}
+  />
+  <SelectQuestion
+    question={`"Після уроку"`}
+    options={[`Genitive`, `Dative`]}
+    correctAnswers={[`Genitive`]}
+    explanation={`After lesson.`}
+  />
+  <SelectQuestion
+    question={`"Через ліс"`}
+    options={[`Accusative`, `Locative`]}
+    correctAnswers={[`Accusative`]}
+    explanation={`Through forest.`}
+  />
+  <SelectQuestion
+    question={`"На столі"`}
+    options={[`Locative`, `Nominative`]}
+    correctAnswers={[`Locative`]}
+    explanation={`On table.`}
+  />
+  <SelectQuestion
+    question={`"Бачу маму"`}
+    options={[`Accusative`, `Genitive`]}
+    correctAnswers={[`Accusative`]}
+    explanation={`See mom.`}
+  />
+</Select>
+

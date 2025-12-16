@@ -1559,6 +1559,28 @@ const CALLOUT_MAP: Record<string, { type: string; icon?: string; title?: string 
     'example': { type: 'info', icon: '📝', title: 'Example' },
     'conversation': { type: 'note', icon: '💬', title: 'Conversation' },
     'summary': { type: 'note', icon: '📋', title: 'Summary' },
+    // Myth-busting and anti-propaganda (CRITICAL for curriculum)
+    'myth-buster': { type: 'warning', icon: '🔍', title: 'Myth Buster' },
+    'myth': { type: 'warning', icon: '🔍', title: 'Myth Buster' },
+    'history-bite': { type: 'info', icon: '📜', title: 'History Bite' },
+    'history': { type: 'info', icon: '📜', title: 'History Bite' },
+    // Cultural and linguistic notes
+    'cultural': { type: 'note', icon: '🌍', title: 'Cultural Insight' },
+    'culture-note': { type: 'note', icon: '🌍', title: 'Cultural Insight' },
+    'culture': { type: 'note', icon: '🌍', title: 'Cultural Insight' },
+    'language-note': { type: 'tip', icon: '🗣️', title: 'Language Note' },
+    'language': { type: 'tip', icon: '🗣️', title: 'Language Note' },
+    // Grammar and learning
+    'grammar': { type: 'info', icon: '📖', title: 'Grammar Point' },
+    'grammar-point': { type: 'info', icon: '📖', title: 'Grammar Point' },
+    'question': { type: 'tip', icon: '❓', title: 'Think About It' },
+    // Model answers (for B2+)
+    'model-answer': { type: 'note', icon: '✍️', title: 'Model Answer' },
+    // Fun facts and engagement
+    'fun-fact': { type: 'tip', icon: '🎉', title: 'Fun Fact' },
+    'did-you-know': { type: 'tip', icon: '💡', title: 'Did You Know?' },
+    // Additional answer type (for activities)
+    'answer': { type: 'note' },
 };
 
 function convertCalloutsToAdmonitions(content: string): string {

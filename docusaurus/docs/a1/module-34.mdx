@@ -5,19 +5,20 @@ title: "Checkpoint: Final Review"
 description: "A1 Mastery"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 ## A1 Mastery Assessment
@@ -70,7 +71,8 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 
 ## Section 1: Self-Introduction
 
-:::info[Про себе (About Myself)]
+:::info
+Про себе (About Myself)
 
 Write sentences about yourself using these patterns:
 - Мене звати... (My name is...)
@@ -86,7 +88,8 @@ Write sentences about yourself using these patterns:
 
 ## Section 2: My Family
 
-:::info[Моя родина (My Family)]
+:::info
+Моя родина (My Family)
 
 Describe your family:
 - У мене є... (I have...)
@@ -101,7 +104,8 @@ Describe your family:
 
 ## Section 3: Daily Routine
 
-:::info[Мій день (My Day)]
+:::info
+Мій день (My Day)
 
 Describe your typical day:
 - Я встаю о... (I get up at...)
@@ -117,7 +121,8 @@ Describe your typical day:
 
 ## Section 4: Past & Future
 
-:::info[Вчора і завтра (Yesterday and Tomorrow)]
+:::info
+Вчора і завтра (Yesterday and Tomorrow)
 
 What did you do yesterday? What will you do tomorrow?
 - Вчора я... (Yesterday I...)
@@ -129,167 +134,89 @@ What did you do yesterday? What will you do tomorrow?
 
 # Dialogues
 
-:::note[Познайомимось! (Let's Get Acquainted!)]
-
-<div className="conversation">
+:::note
+Познайомимось! (Let's Get Acquainted!)
 
 — Привіт! Мене звати Оксана. А як тебе звати?
-
 — Привіт! Я Марко. Звідки ти?
-
 — Я з Києва. А ти?
-
 — Я з Львова. Ти студентка?
-
 — Так, я вчуся в університеті. А ти працюєш?
-
 — Так, я програміст.
 
-</div>
-
-<div className="conversation">
-
 — Hi! My name is Oksana. And what's your name?
-
 — Hi! I'm Marko. Where are you from?
-
 — I'm from Kyiv. And you?
-
 — I'm from Lviv. Are you a student?
-
 — Yes, I study at university. And do you work?
-
 — Yes, I'm a programmer.
-
-</div>
 :::
 
 
-:::note[Мій типовий день (My Typical Day)]
-
-<div className="conversation">
+:::note
+Мій типовий день (My Typical Day)
 
 — Коли ти встаєш?
-
 — Я встаю о сьомій ранку.
-
 — Що ти робиш вранці?
-
 — Я снідаю і йду на роботу.
-
 — А ввечері?
-
 — Ввечері я читаю або дивлюся телевізор.
-
 — О котрій ти лягаєш спати?
-
 — Я лягаю о одинадцятій.
 
-</div>
-
-<div className="conversation">
-
 — When do you get up?
-
 — I get up at seven in the morning.
-
 — What do you do in the morning?
-
 — I have breakfast and go to work.
-
 — And in the evening?
-
 — In the evening I read or watch TV.
-
 — What time do you go to bed?
-
 — I go to bed at eleven.
-
-</div>
 :::
 
 
-:::note[У кафе (At the Café)]
-
-<div className="conversation">
+:::note
+У кафе (At the Café)
 
 — Добрий день! Що бажаєте?
-
 — Чорну каву, будь ласка.
-
 — Велику чи маленьку?
-
 — Велику. І круасан.
-
 — Це все?
-
 — Так, дякую. Скільки коштує?
-
 — Вісімдесят гривень.
-
 — Ось, будь ласка.
-
 — Дякую! Смачного!
 
-</div>
-
-<div className="conversation">
-
 — Good day! What would you like?
-
 — Black coffee, please.
-
 — Large or small?
-
 — Large. And a croissant.
-
 — Is that all?
-
 — Yes, thank you. How much is it?
-
 — Eighty hryvnias.
-
 — Here you go.
-
 — Thank you! Enjoy your meal!
-
-</div>
 :::
 
 
-:::note[Як пройти? (How Do I Get There?)]
-
-<div className="conversation">
+:::note
+Як пройти? (How Do I Get There?)
 
 — Вибачте, де найближча аптека?
-
 — Ідіть прямо, потім праворуч.
-
 — Це далеко?
-
 — Ні, п'ять хвилин пішки.
-
 — Дякую!
-
 — Будь ласка!
 
-</div>
-
-<div className="conversation">
-
 — Excuse me, where's the nearest pharmacy?
-
 — Go straight, then turn right.
-
 — Is it far?
-
 — No, five minutes on foot.
-
 — Thank you!
-
 — You're welcome!
-
-</div>
 :::
 
 
@@ -338,6 +265,40 @@ What did you do yesterday? What will you do tomorrow?
 
 ---
 
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| вітаємо | /wʲiˈtɑjemɔ/ | congratulations | v | — | 1st pl |
+| досягнення | /dɔsʲɑhˈnɛnʲːɑ/ | achievement | n | n | |
+| майстерність | /mɑjˈstɛrnʲistʲ/ | mastery | n | f | |
+| повторення | /pɔwtɔˈrɛnʲːɑ/ | review | n | n | |
+| оцінка | /ɔˈt͡sʲinkɑ/ | assessment | n | f | |
+| рівень | /ˈrʲiwɛnʲ/ | level | n | m | |
+| прогрес | /prɔˈhrɛs/ | progress | n | m | |
+| знання | /ˈznɑnʲːɑ/ | knowledge | n | n | |
+| вміння | /ˈwmʲinʲːɑ/ | skill | n | n | |
+| розуміння | /rɔzuˈmʲinʲːɑ/ | understanding | n | n | |
+| успіх | /usˈpʲix/ | success | n | m | |
+| мова | /ˈmɔwɑ/ | language | n | f | |
+| практика | /ˈprɑktɪkɑ/ | practice | n | f | |
+| граматика | /hrɑˈmɑtɪkɑ/ | grammar | n | f | |
+| слово | /ˈslɔwɔ/ | word | n | n | |
+| речення | /rɛˈtʃɛnʲːɑ/ | sentence | n | n | |
+| читання | /tʃɪˈtɑnʲːɑ/ | reading | n | n | |
+| письмо | /ˈpɪsʲmɔ/ | writing | n | n | |
+| говоріння | /hɔwɔˈrʲinʲːɑ/ | speaking | n | n | |
+| слухання | /ˈsluxɑnʲːɑ/ | listening | n | n | |
+
+---
+
+
+
+---
+
+---
+
 ## 🎯 Activities
 
 ### Core Vocabulary Review
@@ -376,424 +337,497 @@ What did you do yesterday? What will you do tomorrow?
 
 ### Parts of Speech
 
+*Sort words by their part of speech.*
+
+
 <GroupSort groups={{
-  "Іменники (Nouns)": ["книга", "хліб", "вода", "сім'я", "місто", "погода"],
-  "Дієслова (Verbs)": ["читати", "писати", "говорити", "їсти", "пити", "працювати"],
-  "Прикметники (Adjectives)": ["великий", "малий", "гарний", "новий", "старий", "добрий"]
+  "### Іменники (Nouns)": [
+    "книга",
+    "хліб",
+    "вода",
+    "сім'я",
+    "місто",
+    "погода"
+  ],
+  "Дієслова (Verbs)": [
+    "читати",
+    "писати",
+    "говорити",
+    "їсти",
+    "пити",
+    "працювати"
+  ],
+  "Прикметники (Adjectives)": [
+    "великий",
+    "малий",
+    "гарний",
+    "новий",
+    "старий",
+    "добрий",
+    "--"
+  ]
 }} />
 
 ### Gender Recognition
 
+*Sort nouns by grammatical gender.*
+
+
 <GroupSort groups={{
-  "Чоловічий рід (Masculine)": ["стіл", "брат", "дім", "хліб", "лікар", "день"],
-  "Жіночий рід (Feminine)": ["книга", "сестра", "вода", "вулиця", "родина", "ніч"],
-  "Середній рід (Neuter)": ["вікно", "місто", "море", "ім'я", "питання", "знання"]
+  "### Чоловічий рід (Masculine)": [
+    "стіл",
+    "брат",
+    "дім",
+    "хліб",
+    "лікар",
+    "день"
+  ],
+  "Жіночий рід (Feminine)": [
+    "книга",
+    "сестра",
+    "вода",
+    "вулиця",
+    "родина",
+    "ніч"
+  ],
+  "Середній рід (Neuter)": [
+    "вікно",
+    "місто",
+    "море",
+    "ім'я",
+    "питання",
+    "знання",
+    "--"
+  ]
 }} />
 
 ### Grammar Review - Cases
 
-<FillIn items={[
-  {
-    sentence: `Я бачу ___ (брат).`,
-    answer: `брата`,
-    options: [`брата`, `брат`, `братом`, `брату`]
-  },  {
-    sentence: `Я живу в ___ (Київ).`,
-    answer: `Києві`,
-    options: [`Києві`, `Київ`, `Києва`, `Києвом`]
-  },  {
-    sentence: `У мене немає ___ (машина).`,
-    answer: `машини`,
-    options: [`машини`, `машина`, `машину`, `машиною`]
-  },  {
-    sentence: `Книга на ___ (стіл).`,
-    answer: `столі`,
-    options: [`столі`, `стіл`, `стола`, `столом`]
-  },  {
-    sentence: `Я йду до ___ (лікар).`,
-    answer: `лікаря`,
-    options: [`лікаря`, `лікар`, `лікарем`, `лікареві`]
-  },  {
-    sentence: `Це подарунок для ___ (мама).`,
-    answer: `мами`,
-    options: [`мами`, `мама`, `маму`, `мамою`]
-  },  {
-    sentence: `Ми живемо в ___ (місто).`,
-    answer: `місті`,
-    options: [`місті`, `місто`, `міста`, `містом`]
-  },  {
-    sentence: `Я люблю ___ (кава).`,
-    answer: `каву`,
-    options: [`каву`, `кава`, `кави`, `кавою`]
-  },  {
-    sentence: `Вона з ___ (Україна).`,
-    answer: `України`,
-    options: [`України`, `Україна`, `Україну`, `Українi`]
-  },  {
-    sentence: `Я працюю в ___ (банк).`,
-    answer: `банку`,
-    options: [`банку`, `банк`, `банка`, `банком`]
-  },  {
-    sentence: `Ми йдемо в ___ (парк).`,
-    answer: `парк`,
-    options: [`парк`, `парку`, `парка`, `парком`]
-  },  {
-    sentence: `Це книга ___ (тато).`,
-    answer: `тата`,
-    options: [`тата`, `тато`, `татом`, `татові`]
-  }
-]} />
+*Choose the correct form.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я бачу ___ (брат).`}
+    answer={`брата`}
+    options={[`брата`, `брат`, `братом`, `брату`]}
+  />
+  <FillInQuestion
+    sentence={`Я живу в ___ (Київ).`}
+    answer={`Києві`}
+    options={[`Києві`, `Київ`, `Києва`, `Києвом`]}
+  />
+  <FillInQuestion
+    sentence={`У мене немає ___ (машина).`}
+    answer={`машини`}
+    options={[`машини`, `машина`, `машину`, `машиною`]}
+  />
+  <FillInQuestion
+    sentence={`Книга на ___ (стіл).`}
+    answer={`столі`}
+    options={[`столі`, `стіл`, `стола`, `столом`]}
+  />
+  <FillInQuestion
+    sentence={`Я йду до ___ (лікар).`}
+    answer={`лікаря`}
+    options={[`лікаря`, `лікар`, `лікарем`, `лікареві`]}
+  />
+  <FillInQuestion
+    sentence={`Це подарунок для ___ (мама).`}
+    answer={`мами`}
+    options={[`мами`, `мама`, `маму`, `мамою`]}
+  />
+  <FillInQuestion
+    sentence={`Ми живемо в ___ (місто).`}
+    answer={`місті`}
+    options={[`місті`, `місто`, `міста`, `містом`]}
+  />
+  <FillInQuestion
+    sentence={`Я люблю ___ (кава).`}
+    answer={`каву`}
+    options={[`каву`, `кава`, `кави`, `кавою`]}
+  />
+  <FillInQuestion
+    sentence={`Вона з ___ (Україна).`}
+    answer={`України`}
+    options={[`України`, `Україна`, `Україну`, `Українi`]}
+  />
+  <FillInQuestion
+    sentence={`Я працюю в ___ (банк).`}
+    answer={`банку`}
+    options={[`банку`, `банк`, `банка`, `банком`]}
+  />
+  <FillInQuestion
+    sentence={`Ми йдемо в ___ (парк).`}
+    answer={`парк`}
+    options={[`парк`, `парку`, `парка`, `парком`]}
+  />
+  <FillInQuestion
+    sentence={`Це книга ___ (тато).`}
+    answer={`тата`}
+    options={[`тата`, `тато`, `татом`, `татові`]}
+  />
+</FillIn>
 
 ### Verb Tenses
 
-<FillIn items={[
-  {
-    sentence: `Вчора я ___ книгу. (читати - past)`,
-    answer: `читав`,
-    options: [`читав`, `читаю`, `буду читати`, `читати`]
-  },  {
-    sentence: `Зараз він ___ каву. (пити - present)`,
-    answer: `п'є`,
-    options: [`п'є`, `пив`, `буде пити`, `пити`]
-  },  {
-    sentence: `Завтра ми ___ в кіно. (йти - future)`,
-    answer: `підемо`,
-    options: [`підемо`, `йдемо`, `йшли`, `йти`]
-  },  {
-    sentence: `Вона завжди ___ о сьомій. (вставати - present)`,
-    answer: `встає`,
-    options: [`встає`, `встала`, `встане`, `вставати`]
-  },  {
-    sentence: `Минулого тижня вони ___ в Києві. (бути - past)`,
-    answer: `були`,
-    options: [`були`, `є`, `будуть`, `бути`]
-  },  {
-    sentence: `Наступного року я ___ українську. (вчити - future)`,
-    answer: `буду вчити`,
-    options: [`буду вчити`, `вчу`, `вчив`, `вчити`]
-  },  {
-    sentence: `Учора вона ___ смачний обід. (готувати - past, f)`,
-    answer: `готувала`,
-    options: [`готувала`, `готую`, `буде готувати`, `готувати`]
-  },  {
-    sentence: `Кожен день я ___ на роботу. (їздити - present)`,
-    answer: `їжджу`,
-    options: [`їжджу`, `їздив`, `буду їздити`, `їздити`]
-  },  {
-    sentence: `Зараз діти ___ у парку. (грати - present)`,
-    answer: `грають`,
-    options: [`грають`, `грали`, `будуть грати`, `грати`]
-  },  {
-    sentence: `Завтра ___ дощ. (йти - future)`,
-    answer: `буде`,
-    options: [`буде`, `йде`, `йшов`, `йти`]
-  },  {
-    sentence: `Вона ___ українською добре. (говорити - present)`,
-    answer: `говорить`,
-    options: [`говорить`, `говорила`, `буде говорити`, `говорити`]
-  },  {
-    sentence: `Минулого року ми ___ в Одесі. (жити - past)`,
-    answer: `жили`,
-    options: [`жили`, `живемо`, `будемо жити`, `жити`]
-  }
-]} />
+*Choose the correct tense form.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Вчора я ___ книгу. (читати - past)`}
+    answer={`читав`}
+    options={[`читав`, `читаю`, `буду читати`, `читати`]}
+  />
+  <FillInQuestion
+    sentence={`Зараз він ___ каву. (пити - present)`}
+    answer={`п'є`}
+    options={[`п'є`, `пив`, `буде пити`, `пити`]}
+  />
+  <FillInQuestion
+    sentence={`Завтра ми ___ в кіно. (йти - future)`}
+    answer={`підемо`}
+    options={[`підемо`, `йдемо`, `йшли`, `йти`]}
+  />
+  <FillInQuestion
+    sentence={`Вона завжди ___ о сьомій. (вставати - present)`}
+    answer={`встає`}
+    options={[`встає`, `встала`, `встане`, `вставати`]}
+  />
+  <FillInQuestion
+    sentence={`Минулого тижня вони ___ в Києві. (бути - past)`}
+    answer={`були`}
+    options={[`були`, `є`, `будуть`, `бути`]}
+  />
+  <FillInQuestion
+    sentence={`Наступного року я ___ українську. (вчити - future)`}
+    answer={`буду вчити`}
+    options={[`буду вчити`, `вчу`, `вчив`, `вчити`]}
+  />
+  <FillInQuestion
+    sentence={`Учора вона ___ смачний обід. (готувати - past, f)`}
+    answer={`готувала`}
+    options={[`готувала`, `готую`, `буде готувати`, `готувати`]}
+  />
+  <FillInQuestion
+    sentence={`Кожен день я ___ на роботу. (їздити - present)`}
+    answer={`їжджу`}
+    options={[`їжджу`, `їздив`, `буду їздити`, `їздити`]}
+  />
+  <FillInQuestion
+    sentence={`Зараз діти ___ у парку. (грати - present)`}
+    answer={`грають`}
+    options={[`грають`, `грали`, `будуть грати`, `грати`]}
+  />
+  <FillInQuestion
+    sentence={`Завтра ___ дощ. (йти - future)`}
+    answer={`буде`}
+    options={[`буде`, `йде`, `йшов`, `йти`]}
+  />
+  <FillInQuestion
+    sentence={`Вона ___ українською добре. (говорити - present)`}
+    answer={`говорить`}
+    options={[`говорить`, `говорила`, `буде говорити`, `говорити`]}
+  />
+  <FillInQuestion
+    sentence={`Минулого року ми ___ в Одесі. (жити - past)`}
+    answer={`жили`}
+    options={[`жили`, `живемо`, `будемо жити`, `жити`]}
+  />
+</FillIn>
 
 ### Daily Life Situations
 
-<Quiz questions={[
-  {
-    question: `Someone asks \"Як справи?\"`,
-    options: [
-      { text: `Добре, дякую!`, correct: true },
-      { text: `Мене звати Олена.`, correct: false },
-      { text: `Я з Києва.`, correct: false },
-      { text: `До побачення!`, correct: false }
-    ]
-  },  {
-    question: `You want to order coffee at a café:`,
-    options: [
-      { text: `Каву, будь ласка.`, correct: true },
-      { text: `Де кава?`, correct: false },
-      { text: `Кава там.`, correct: false },
-      { text: `Кава смачна.`, correct: false }
-    ]
-  },  {
-    question: `You're asking for directions to the pharmacy:`,
-    options: [
-      { text: `Вибачте, де аптека?`, correct: true },
-      { text: `Аптека добра.`, correct: false },
-      { text: `Я в аптеці.`, correct: false },
-      { text: `Аптека!`, correct: false }
-    ]
-  },  {
-    question: `You have a headache at the doctor's:`,
-    options: [
-      { text: `У мене болить голова.`, correct: true },
-      { text: `Моя голова.`, correct: false },
-      { text: `Голова там.`, correct: false },
-      { text: `Добра голова.`, correct: false }
-    ]
-  },  {
-    question: `It's someone's birthday:`,
-    options: [
-      { text: `З Днем народження!`, correct: true },
-      { text: `З Новим роком!`, correct: false },
-      { text: `Добрий день!`, correct: false },
-      { text: `Дякую!`, correct: false }
-    ]
-  },  {
-    question: `You want to know the time:`,
-    options: [
-      { text: `Котра година?`, correct: true },
-      { text: `Яка погода?`, correct: false },
-      { text: `Де час?`, correct: false },
-      { text: `Час добрий.`, correct: false }
-    ]
-  },  {
-    question: `You want to introduce yourself:`,
-    options: [
-      { text: `Мене звати...`, correct: true },
-      { text: `Як справи?`, correct: false },
-      { text: `Добрий день!`, correct: false },
-      { text: `Дякую!`, correct: false }
-    ]
-  },  {
-    question: `You want to ask the price:`,
-    options: [
-      { text: `Скільки коштує?`, correct: true },
-      { text: `Де гроші?`, correct: false },
-      { text: `Це дорого.`, correct: false },
-      { text: `Дякую!`, correct: false }
-    ]
-  }
-]} />
+<Quiz>
+  <QuizQuestion
+    question={`Someone asks "Як справи?"`}
+    options={[`Добре, дякую!`, `Мене звати Олена.`, `Я з Києва.`, `До побачення!`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`You want to order coffee at a café:`}
+    options={[`Каву, будь ласка.`, `Де кава?`, `Кава там.`, `Кава смачна.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`You're asking for directions to the pharmacy:`}
+    options={[`Вибачте, де аптека?`, `Аптека добра.`, `Я в аптеці.`, `Аптека!`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`You have a headache at the doctor's:`}
+    options={[`У мене болить голова.`, `Моя голова.`, `Голова там.`, `Добра голова.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`It's someone's birthday:`}
+    options={[`З Днем народження!`, `З Новим роком!`, `Добрий день!`, `Дякую!`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`You want to know the time:`}
+    options={[`Котра година?`, `Яка погода?`, `Де час?`, `Час добрий.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`You want to introduce yourself:`}
+    options={[`Мене звати...`, `Як справи?`, `Добрий день!`, `Дякую!`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`You want to ask the price:`}
+    options={[`Скільки коштує?`, `Де гроші?`, `Це дорого.`, `Дякую!`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
 
 ### Weather and Nature
 
-<Quiz questions={[
-  {
-    question: `\"It's cold\" in Ukrainian:`,
-    options: [
-      { text: `Холодно.`, correct: true },
-      { text: `Холодний.`, correct: false },
-      { text: `Холоднити.`, correct: false },
-      { text: `Холод.`, correct: false }
-    ]
-  },  {
-    question: `\"It's raining\" in Ukrainian:`,
-    options: [
-      { text: `Йде дощ.`, correct: true },
-      { text: `Дощ холодний.`, correct: false },
-      { text: `Є дощ.`, correct: false },
-      { text: `Буде дощити.`, correct: false }
-    ]
-  },  {
-    question: `The Dnipro is:`,
-    options: [
-      { text: `Річка`, correct: true },
-      { text: `Море`, correct: false },
-      { text: `Озеро`, correct: false },
-      { text: `Гора`, correct: false }
-    ]
-  },  {
-    question: `Carpathians are:`,
-    options: [
-      { text: `Гори`, correct: true },
-      { text: `Річки`, correct: false },
-      { text: `Моря`, correct: false },
-      { text: `Озера`, correct: false }
-    ]
-  },  {
-    question: `\"It's warm\" in Ukrainian:`,
-    options: [
-      { text: `Тепло.`, correct: true },
-      { text: `Теплий.`, correct: false },
-      { text: `Теплити.`, correct: false },
-      { text: `Тепла.`, correct: false }
-    ]
-  },  {
-    question: `\"It's sunny\" in Ukrainian:`,
-    options: [
-      { text: `Сонячно.`, correct: true },
-      { text: `Сонячний.`, correct: false },
-      { text: `Сонце.`, correct: false },
-      { text: `Сонячна.`, correct: false }
-    ]
-  },  {
-    question: `\"It's snowing\" in Ukrainian:`,
-    options: [
-      { text: `Йде сніг.`, correct: true },
-      { text: `Сніг холодний.`, correct: false },
-      { text: `Є сніг.`, correct: false },
-      { text: `Сніг буде.`, correct: false }
-    ]
-  },  {
-    question: `The Black Sea in Ukrainian:`,
-    options: [
-      { text: `Чорне море`, correct: true },
-      { text: `Синє море`, correct: false },
-      { text: `Біле море`, correct: false },
-      { text: `Велике море`, correct: false }
-    ]
-  }
-]} />
+<Quiz>
+  <QuizQuestion
+    question={`"It's cold" in Ukrainian:`}
+    options={[`Холодно.`, `Холодний.`, `Холоднити.`, `Холод.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"It's raining" in Ukrainian:`}
+    options={[`Йде дощ.`, `Дощ холодний.`, `Є дощ.`, `Буде дощити.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`The Dnipro is:`}
+    options={[`Річка`, `Море`, `Озеро`, `Гора`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Carpathians are:`}
+    options={[`Гори`, `Річки`, `Моря`, `Озера`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"It's warm" in Ukrainian:`}
+    options={[`Тепло.`, `Теплий.`, `Теплити.`, `Тепла.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"It's sunny" in Ukrainian:`}
+    options={[`Сонячно.`, `Сонячний.`, `Сонце.`, `Сонячна.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"It's snowing" in Ukrainian:`}
+    options={[`Йде сніг.`, `Сніг холодний.`, `Є сніг.`, `Сніг буде.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`The Black Sea in Ukrainian:`}
+    options={[`Чорне море`, `Синє море`, `Біле море`, `Велике море`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
 
 ### Comprehensive Sentence Building
 
-<Unjumble items={[
-  { jumbled: `мене / Олена / звати`, answer: `Мене звати Олена.` },
-  { jumbled: `я / з / України`, answer: `Я з України.` },
-  { jumbled: `у мене / брат / є / і / сестра`, answer: `У мене є брат і сестра.` },
-  { jumbled: `о сьомій / я / встаю`, answer: `Я встаю о сьомій.` },
-  { jumbled: `снідаю / я / вранці / завжди`, answer: `Я завжди снідаю вранці.` },
-  { jumbled: `вчора / читав / я / книгу`, answer: `Вчора я читав книгу.` },
-  { jumbled: `сьогодні / сонячно / і / тепло`, answer: `Сьогодні сонячно і тепло.` },
-  { jumbled: `болить / голова / у мене`, answer: `У мене болить голова.` },
-  { jumbled: `народження / Днем / З`, answer: `З Днем народження!` },
-  { jumbled: `в магазин / йду / я`, answer: `Я йду в магазин.` },
-  { jumbled: `каву / будь ласка / дайте`, answer: `Дайте каву, будь ласка.` },
-  { jumbled: `аптека / де / вибачте`, answer: `Вибачте, де аптека?` }
-]} />
+<Unjumble>
+  <UnjumbleQuestion
+    words={`мене / Олена / звати`}
+    answer={`Мене звати Олена.`}
+  />
+  <UnjumbleQuestion
+    words={`я / з / України`}
+    answer={`Я з України.`}
+  />
+  <UnjumbleQuestion
+    words={`у мене / брат / є / і / сестра`}
+    answer={`У мене є брат і сестра.`}
+  />
+  <UnjumbleQuestion
+    words={`о сьомій / я / встаю`}
+    answer={`Я встаю о сьомій.`}
+  />
+  <UnjumbleQuestion
+    words={`снідаю / я / вранці / завжди`}
+    answer={`Я завжди снідаю вранці.`}
+  />
+  <UnjumbleQuestion
+    words={`вчора / читав / я / книгу`}
+    answer={`Вчора я читав книгу.`}
+  />
+  <UnjumbleQuestion
+    words={`сьогодні / сонячно / і / тепло`}
+    answer={`Сьогодні сонячно і тепло.`}
+  />
+  <UnjumbleQuestion
+    words={`болить / голова / у мене`}
+    answer={`У мене болить голова.`}
+  />
+  <UnjumbleQuestion
+    words={`народження / Днем / З`}
+    answer={`З Днем народження!`}
+  />
+  <UnjumbleQuestion
+    words={`в магазин / йду / я`}
+    answer={`Я йду в магазин.`}
+  />
+  <UnjumbleQuestion
+    words={`каву / будь ласка / дайте`}
+    answer={`Дайте каву, будь ласка.`}
+  />
+  <UnjumbleQuestion
+    words={`аптека / де / вибачте`}
+    answer={`Вибачте, де аптека?`}
+  />
+</Unjumble>
 
 ### A1 Knowledge Check
 
-<TrueFalse items={[
-  {
-    statement: `Ukrainian has three grammatical genders: masculine, feminine, neuter.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `All nouns ending in -а are masculine.`,
-    isTrue: false,
-    explanation: `Incorrect! they're usually feminine`
-  },  {
-    statement: `\"Я читаю\" is present tense.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Я читав\" is past tense (male speaker).`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Йде дощ\" means \"It's cold.\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"It's raining\"`
-  },  {
-    statement: `\"Де?\" asks about location.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Куди?\" asks about direction.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Болить\" is used for plural body parts.`,
-    isTrue: false,
-    explanation: `Incorrect! use \"болять\"`
-  },  {
-    statement: `Ukrainian Christmas is now on December 25th (since 2023).`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Мій\" is masculine possessive.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Вдома\" means \"to home.\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"at home\"`
-  },  {
-    statement: `\"З Новим роком!\" means \"Happy New Year!\".`,
-    isTrue: true,
-    explanation: ``
-  }
-]} />
-## ✅ Самооцінка A1 (Final Self-Assessment)
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`Ukrainian has three grammatical genders: masculine, feminine, neuter.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`All nouns ending in -а are masculine.`}
+    isTrue={false}
+    explanation={`Incorrect! they're usually feminine`}
+  />
+  <TrueFalseQuestion
+    statement={`"Я читаю" is present tense.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Я читав" is past tense (male speaker).`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Йде дощ" means "It's cold.".`}
+    isTrue={false}
+    explanation={`Incorrect! it means "It's raining"`}
+  />
+  <TrueFalseQuestion
+    statement={`"Де?" asks about location.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Куди?" asks about direction.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Болить" is used for plural body parts.`}
+    isTrue={false}
+    explanation={`Incorrect! use "болять"`}
+  />
+  <TrueFalseQuestion
+    statement={`Ukrainian Christmas is now on December 25th (since 2023).`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Мій" is masculine possessive.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Вдома" means "to home.".`}
+    isTrue={false}
+    explanation={`Incorrect! it means "at home"`}
+  />
+  <TrueFalseQuestion
+    statement={`"З Новим роком!" means "Happy New Year!".`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`Я розумію знайомі слова і прості фрази про себе, родину і оточення`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`Я читаю короткі тексти: меню, знаки, повідомлення`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`Я знаходжу інформацію в оголошеннях і розкладах`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`Я можу представитися і розповісти про себе`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`Я можу спілкуватися, якщо співрозмовник говорить повільно`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`Я можу описати, де я живу, і людей, яких знаю`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`Я можу замовити їжу і запитати ціну в магазині`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`Я можу написати коротку листівку або заповнити анкету`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`Я можу написати прості речення про себе і свою родину`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`Я читаю кирилицю вільно, без транслітерації`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`Я знаю відмінки: Називний, Знахідний, Родовий, Місцевий`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`Я відмінюю дієслова в теперішньому, минулому, майбутньому часі`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`Я використовую присвійні займенники з правильним родом`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`Я узгоджую прикметники з іменниками за родом і числом`}
+    isTrue={false}
+    explanation={`🎉 **Вітаємо з завершенням рівня A1!** (Congratulations on completing level A1!) Ви тепер знаєте українську на базовому рівні! (You now know Ukrainian at a basic level!) **Next step: A2 — Elementary!** ⚡ **Your Journey So Far** **A1 Complete!** You've learned ~450 words, 4 cases, 3 verb tenses, and can navigate basic daily life in Ukrainian! **Coming in A2:** - All 7 cases (adding Dative, Instrumental, Vocative) - More verb forms (aspect introduction) - Deeper vocabulary across more domains - More complex sentence structures`}
+  />
+</TrueFalse>
 
-Оцініть себе від 1 до 5 (1 = не можу, 5 = впевнено можу):
-*(Rate yourself 1-5 on each CEFR can-do statement)*
-
-### Слухання і читання (Listening & Reading)
-- [ ] Я розумію знайомі слова і прості фрази про себе, родину і оточення
-- [ ] Я читаю короткі тексти: меню, знаки, повідомлення
-- [ ] Я знаходжу інформацію в оголошеннях і розкладах
-
-### Говоріння та взаємодія (Speaking & Interaction)
-- [ ] Я можу представитися і розповісти про себе
-- [ ] Я можу спілкуватися, якщо співрозмовник говорить повільно
-- [ ] Я можу описати, де я живу, і людей, яких знаю
-- [ ] Я можу замовити їжу і запитати ціну в магазині
-
-### Письмо (Writing)
-- [ ] Я можу написати коротку листівку або заповнити анкету
-- [ ] Я можу написати прості речення про себе і свою родину
-
-### Українська специфіка (Ukrainian-Specific Skills)
-- [ ] Я читаю кирилицю вільно, без транслітерації
-- [ ] Я знаю відмінки: Називний, Знахідний, Родовий, Місцевий
-- [ ] Я відмінюю дієслова в теперішньому, минулому, майбутньому часі
-- [ ] Я використовую присвійні займенники з правильним родом
-- [ ] Я узгоджую прикметники з іменниками за родом і числом
-
-### Результати (Scoring)
-- **50-65 балів**: Рівень A1 завершено! Ви готові до A2.
-- **35-49 балів**: Добрий A1, але повторіть слабкі теми.
-- **Менше 35 балів**: Продовжуйте практикувати A1.
-
----
-
-> 🎉 **Вітаємо з завершенням рівня A1!**
->
-> (Congratulations on completing level A1!)
->
-> Ви тепер знаєте українську на базовому рівні!
-> (You now know Ukrainian at a basic level!)
->
-> **Next step: A2 — Elementary!**
-
----
-
-> ⚡ **Your Journey So Far**
->
-> **A1 Complete!** You've learned ~450 words, 4 cases, 3 verb tenses, and can navigate basic daily life in Ukrainian!
->
-> **Coming in A2:**
-> - All 7 cases (adding Dative, Instrumental, Vocative)
-> - More verb forms (aspect introduction)
-> - Deeper vocabulary across more domains
-> - More complex sentence structures
-
----
-
-**Congratulations! You are now ready for A2!**
-
-## 📚 Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| вітаємо | /wʲiˈtɑjemɔ/ | congratulations | v | — | 1st pl |
-| досягнення | /dɔsʲɑhˈnɛnʲːɑ/ | achievement | n | n | |
-| майстерність | /mɑjˈstɛrnʲistʲ/ | mastery | n | f | |
-| повторення | /pɔwtɔˈrɛnʲːɑ/ | review | n | n | |
-| оцінка | /ɔˈt͡sʲinkɑ/ | assessment | n | f | |
-| рівень | /ˈrʲiwɛnʲ/ | level | n | m | |
-| прогрес | /prɔˈhrɛs/ | progress | n | m | |
-| знання | /ˈznɑnʲːɑ/ | knowledge | n | n | |
-| вміння | /ˈwmʲinʲːɑ/ | skill | n | n | |
-| розуміння | /rɔzuˈmʲinʲːɑ/ | understanding | n | n | |
-| успіх | /usˈpʲix/ | success | n | m | |
-| мова | /ˈmɔwɑ/ | language | n | f | |
-| практика | /ˈprɑktɪkɑ/ | practice | n | f | |
-| граматика | /hrɑˈmɑtɪkɑ/ | grammar | n | f | |
-| слово | /ˈslɔwɔ/ | word | n | n | |
-| речення | /rɛˈtʃɛnʲːɑ/ | sentence | n | n | |
-| читання | /tʃɪˈtɑnʲːɑ/ | reading | n | n | |
-| письмо | /ˈpɪsʲmɔ/ | writing | n | n | |
-| говоріння | /hɔwɔˈrʲinʲːɑ/ | speaking | n | n | |
-| слухання | /ˈsluxɑnʲːɑ/ | listening | n | n | |
-
----
-
-
-
----

@@ -5,19 +5,20 @@ title: "Home & Furniture"
 description: "Household Vocabulary and Descriptions"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Warm-up
@@ -27,6 +28,17 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 Whether you are looking for an apartment, describing your living situation, or simply chatting about home life, this vocabulary will help you communicate naturally.
 
 Ukrainian homes often differ from Western ones. Many Ukrainians live in apartments rather than houses. The concept of "дача" (country house) is also very important in Ukrainian culture.
+
+:::info
+🔗 External Resources
+
+**YouTube:** [Furniture in Ukrainian - Lesson about Furniture in Ukrainian...](https://www.youtube.com/watch?v=pVknviJ4OOg) — Bright Kids Ukrainian Online School
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+:::
+
 
 ---
 
@@ -47,7 +59,8 @@ Every home has different rooms. Here is the essential vocabulary for talking abo
 | комора | storage room | Запаси в коморі. |
 | балкон | balcony | Квіти на балконі. |
 
-:::tip[Locative Case for Location]
+:::tip
+Locative Case for Location
 Notice the case endings change when describing location!
 **у вітальні**, **у спальні**, **на кухні**, **у ванній**
 The locative case is used with "in" and "on" prepositions.
@@ -70,7 +83,8 @@ Furniture is essential for a comfortable home. Ukrainian distinguishes between d
 | комод | dresser | Речі в комоді. |
 | ліжко | bed | Я сплю на ліжку. |
 
-:::note[Ukrainian Apartments]
+:::note
+Ukrainian Apartments
 Many Ukrainians live in apartments rather than houses.
 A typical apartment has a living room, bedroom, kitchen, and bathroom.
 The balcony is an important space for storage and relaxation.
@@ -101,69 +115,38 @@ Note that washing machines in Ukraine are often located in the bathroom rather t
 
 Ольга щойно переїхала в нову квартиру. Вона показує її подрузі Катерині.
 
-<div className="conversation">
-
 — Ось моя нова **квартира**! — каже Ольга. — Заходь!
-
 — Дуже гарно! — відповідає Катерина. — Яка велика **вітальня**!
-
 — Так, тут є **диван** і два **крісла**. Ось **телевізор** на стіні.
-
-</div>
 
 Вони йдуть далі.
 
-<div className="conversation">
-
 — А це **кухня**, — показує Ольга. — Тут нова **плита** і **холодильник**.
-
 — Чудово! А де **спальня**?
-
 — Ось тут. У мене велике **ліжко** і **шафа** для одягу.
-
-</div>
 
 Катерина бачить **балкон**.
 
-<div className="conversation">
-
 — О, який гарний **балкон**! Тут можна снідати влітку!
-
 — Саме так! Я люблю пити каву на **балконі** вранці.
-
 — А **ванна** де?
-
 — **Ванна** справа. Там є душ і **пральна машина**.
-
-</div>
 
 Катерина оглядає всю квартиру. Вона дуже подобається їй.
 
-<div className="conversation">
-
 — У тебе є **кабінет**?
-
 — Ні, я працюю у **вітальні** за столом.
-
 — А це що за кімната?
-
 — Це **комора**. Там я зберігаю речі.
-
-</div>
 
 Катерина дуже задоволена квартирою подруги.
 
-<div className="conversation">
-
 — Вітаю з новосіллям! — каже вона. — Квартира чудова!
-
 — Дякую! Приходь у гості! — відповідає Ольга.
-
 — Дякую! Приходь частіше! — посміхається Ольга.
 
-</div>
-
-:::tip[Новосілля]
+:::tip
+Новосілля
 "Новосілля" — це свято переїзду в нове житло.
 Українці запрошують друзів і родину на новосілля.
 Гості приносять подарунки для дому.
@@ -194,29 +177,16 @@ Note that washing machines in Ukraine are often located in the bathroom rather t
 
 Мама повертається додому і каже:
 
-<div className="conversation">
-
 — Максиме, яка чиста квартира! Дякую за допомогу!
-
 — Будь ласка, мамо! Я люблю допомагати.
-
 — Тепер можеш відпочивати. Ти добре попрацював!
-
-</div>
 
 Максим усміхається. Він стомився, але він радий. Чиста квартира — це чудово!
 
-<div className="conversation">
-
 — Мамо, я прибрав усю квартиру! — каже Максим.
-
 — Молодець, синку! Тепер квартира блищить! — відповідає мама.
-
 — Прибирання — це добра вправа, — жартує Максим.
-
 — Так, особливо пилососити! — сміється мама.
-
-</div>
 
 This story demonstrates common vocabulary for household chores. Cleaning vocabulary includes пилососити (to vacuum), мити (to wash), прибирати (to clean up), and застеляти (to make the bed). These verbs are essential for describing daily routines at home. Note that in Ukrainian, you would say "Я прибираю квартиру" rather than just "I clean". The word order is flexible but the verb must be conjugated correctly.
 
@@ -251,7 +221,8 @@ When visiting Ukrainian homes or discussing living situations, these phrases wil
 - **Заходьте!** = Come in! Used when welcoming guests at the door.
 - **Почувайтеся як вдома.** = Make yourself at home.
 
-:::note[Дача — Улюблене Місце Відпочинку]
+:::note
+Дача — Улюблене Місце Відпочинку
 "Дача" — це заміський будинок для відпочинку.
 Багато українців мають дачу за містом.
 Там є город, де вирощують овочі та фрукти.
@@ -288,339 +259,31 @@ The dacha represents an escape from city life and a deep connection to nature. F
 - пилосос
 - праска
 
-Тепер ви можете описати свій дім українською мовою! Запрошуйте друзів у гості та показуйте їм свою чудову квартиру. Успіхів!
+> 💡 **Дім — це серце**
+>
+> «Мій дім — моя фортеця.» (Будинок — це стіни, дім — це родина. Українці люблять свій дім!)
+>
+> *Translation: "My home is my fortress." (A house is walls, a home is family. Ukrainians love their homes!)*
+
+Тепер ви можете описати свій дім українською! Кімнати, меблі, затишок — все це важливо. Кажіть: «У моїй кімнаті є ліжко, шафа і стіл.» українською мовою! Запрошуйте друзів у гості та показуйте їм свою чудову квартиру. Успіхів!
 
 Дім — це місце, де ми відпочиваємо після роботи. Українська квартира завжди чиста та затишна! Вчіться нових слів і розповідайте про свій дім! Домашній затишок — це найважливіше! Бажаємо успіхів у вивченні української мови!
 
+> 🇺🇦 **Кімнати українського дому**
+>
+> **Вітальня** — найбільша кімната, де родина збирається разом. Тут стоїть диван, крісла, телевізор. Це місце для відпочинку та гостей.
+>
+> **Спальня** — тиха кімната для сну. Ліжко, шафа для одягу, тумбочка — основні меблі.
+>
+> **Кухня** — серце дому! Українці люблять готувати вдома. Плита, холодильник, стіл для їжі.
+>
+> **Ванна** — кімната для гігієни. Душ або ванна, раковина, дзеркало, пральна машина.
+>
+> Український дім — це затишок, тепло та любов! Запрошуйте гостей: «Заходьте, будь ласка!»
+
 ---
 
-## 🎯 Activities
 
-### Home Words
-
-<MatchUp pairs={[
-  { left: `вітальня`, right: `living room` },
-  { left: `спальня`, right: `bedroom` },
-  { left: `кухня`, right: `kitchen` },
-  { left: `ванна`, right: `bathroom` },
-  { left: `диван`, right: `sofa` },
-  { left: `крісло`, right: `armchair` },
-  { left: `шафа`, right: `wardrobe` },
-  { left: `полиця`, right: `shelf` },
-  { left: `ліжко`, right: `bed` },
-  { left: `пральна машина`, right: `washing machine` },
-  { left: `пилосос`, right: `vacuum` },
-  { left: `комод`, right: `dresser` }
-]} />
-
-### Home Vocabulary
-
-<FillIn items={[
-  {
-    sentence: `Я сплю у [___]. (bedroom)`,
-    answer: `спальні`,
-    options: [`спальні`, `вітальні`, `кухні`, `ванній`]
-  },  {
-    sentence: `Ми їмо на [___]. (kitchen)`,
-    answer: `кухні`,
-    options: [`спальні`, `вітальні`, `кухні`, `ванній`]
-  },  {
-    sentence: `Сідай на [___]. (sofa)`,
-    answer: `диван`,
-    options: [`диван`, `крісло`, `стіл`, `ліжко`]
-  },  {
-    sentence: `Книги на [___]. (shelf)`,
-    answer: `полиці`,
-    options: [`полиці`, `шафі`, `комоді`, `столі`]
-  },  {
-    sentence: `Одяг у [___]. (wardrobe)`,
-    answer: `шафі`,
-    options: [`полиці`, `шафі`, `комоді`, `столі`]
-  },  {
-    sentence: `Тато працює в [___]. (office)`,
-    answer: `кабінеті`,
-    options: [`спальні`, `кабінеті`, `кухні`, `ванній`]
-  },  {
-    sentence: `Білизна в [___]. (washing machine)`,
-    answer: `пральній машині`,
-    options: [`пральній машині`, `посудомийці`, `пилососі`, `духовці`]
-  },  {
-    sentence: `Прибираю [___]. (vacuum)`,
-    answer: `пилососом`,
-    options: [`пральною машиною`, `посудомийкою`, `пилососом`, `чайником`]
-  }
-]} />
-
-### Home & Furniture
-
-<Quiz questions={[
-  {
-    question: `\"Вітальня\" is:`,
-    options: [
-      { text: `Living room`, correct: true },
-      { text: `Bedroom`, correct: false },
-      { text: `Kitchen`, correct: false }
-    ]
-  },  {
-    question: `\"Спальня\" is:`,
-    options: [
-      { text: `Bedroom`, correct: true },
-      { text: `Kitchen`, correct: false },
-      { text: `Bathroom`, correct: false }
-    ]
-  },  {
-    question: `\"Диван\" is:`,
-    options: [
-      { text: `Sofa`, correct: true },
-      { text: `Armchair`, correct: false },
-      { text: `Chair`, correct: false }
-    ]
-  },  {
-    question: `\"Крісло\" is:`,
-    options: [
-      { text: `Armchair`, correct: true },
-      { text: `Chair`, correct: false },
-      { text: `Sofa`, correct: false }
-    ]
-  },  {
-    question: `\"Шафа\" is:`,
-    options: [
-      { text: `Wardrobe`, correct: true },
-      { text: `Shelf`, correct: false },
-      { text: `Dresser`, correct: false }
-    ]
-  },  {
-    question: `\"Ліжко\" is:`,
-    options: [
-      { text: `Bed`, correct: true },
-      { text: `Sofa`, correct: false },
-      { text: `Armchair`, correct: false }
-    ]
-  },  {
-    question: `\"Пилосос\" is:`,
-    options: [
-      { text: `Vacuum`, correct: true },
-      { text: `Washing machine`, correct: false },
-      { text: `Iron`, correct: false }
-    ]
-  },  {
-    question: `\"Балкон\" is:`,
-    options: [
-      { text: `Balcony`, correct: true },
-      { text: `Hallway`, correct: false },
-      { text: `Storage room`, correct: false }
-    ]
-  }
-]} />
-
-### Story Comprehension
-
-<Cloze
-  passage={`Ольга переїхала в нову [___:1]. (apartment)
-У вітальні є [___:2] і два крісла. (sofa)
-На кухні нова [___:3] і холодильник. (stove)
-Ольга любить пити каву на [___:4]. (balcony)
-Максим [___:5] килим у вітальні. (vacuums)
-Він застеляє [___:6] у спальні. (bed)`}
-  blanks={[{ answer: `квартиру`, options: [`квартиру`, `будинок`, `кімнату`] }, { answer: `диван`, options: [`диван`, `крісло`, `стіл`] }, { answer: `плита`, options: [`плита`, `духовка`, `пральна машина`] }, { answer: `балконі`, options: [`балконі`, `кухні`, `вітальні`] }, { answer: `пилососить`, options: [`пилососить`, `миє`, `витирає`] }, { answer: `ліжко`, options: [`ліжко`, `диван`, `крісло`] }]}
-/>
-
-### Home Sentences
-
-<Unjumble items={[
-  { jumbled: `сплю / спальні / Я / у`, answer: `Я сплю у спальні.` },
-  { jumbled: `на / Книга / столі`, answer: `Книга на столі.` },
-  { jumbled: `диван / на / Сідай`, answer: `Сідай на диван.` },
-  { jumbled: `квартиру / прибираю / Я`, answer: `Я прибираю квартиру.` },
-  { jumbled: `шафі / Одяг / у`, answer: `Одяг у шафі.` },
-  { jumbled: `полиці / на / Книги`, answer: `Книги на полиці.` },
-  { jumbled: `переїжджаю / Я / завтра`, answer: `Я переїжджаю завтра.` },
-  { jumbled: `чудова / Квартира / дуже`, answer: `Квартира дуже чудова.` }
-]} />
-
-### Home Mistakes
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я сплю в **вітальні**.`}
-    errorWord={`вітальні`}
-    correctForm={`спальні`}
-    options={[`спальні`, `вітальні`]}
-    explanation={`We sleep in the bedroom (спальня), not living room.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`**Одяг** на полиці.`}
-    errorWord={`Одяг`}
-    correctForm={`Книги`}
-    options={[`Книги`, `Одяг`]}
-    explanation={`Books (книги) go on shelves, clothes go in wardrobes.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я мию посуд **пилососом**.`}
-    errorWord={`пилососом`}
-    correctForm={`руками`}
-    options={[`руками`, `пилососом`]}
-    explanation={`We wash dishes by hand or in dishwasher, not with vacuum.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Тато спить на **столі**.`}
-    errorWord={`столі`}
-    correctForm={`ліжку`}
-    options={[`ліжку`, `столі`]}
-    explanation={`We sleep on a bed (ліжко), not a table.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Взуття у **холодильнику**.`}
-    errorWord={`холодильнику`}
-    correctForm={`коридорі`}
-    options={[`коридорі`, `холодильнику`]}
-    explanation={`Shoes go in the hallway (коридор), not the refrigerator.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми дивимось телевізор у **ванній**.`}
-    errorWord={`ванній`}
-    correctForm={`вітальні`}
-    options={[`вітальні`, `ванній`]}
-    explanation={`We watch TV in the living room (вітальня).`}
-  />
-</ErrorCorrection>
-
-### Appliances & Decor
-
-<MatchUp pairs={[
-  { left: `пральна машина`, right: `washing machine` },
-  { left: `посудомийка`, right: `dishwasher` },
-  { left: `пилосос`, right: `vacuum` },
-  { left: `праска`, right: `iron` },
-  { left: `килим`, right: `carpet` },
-  { left: `штори`, right: `curtains` },
-  { left: `лампа`, right: `lamp` },
-  { left: `дзеркало`, right: `mirror` }
-]} />
-
-### Home Categories
-
-<GroupSort groups={{
-  "Rooms": ["вітальня", "спальня", "кухня", "ванна", "кабінет", "коридор"],
-  "Furniture": ["диван", "крісло", "стіл", "шафа", "полиця", "ліжко"],
-  "Appliances": ["пральна машина", "посудомийка", "пилосос", "праска"]
-}} />
-
-### Home Facts
-
-<TrueFalse items={[
-  {
-    statement: `\"Вітальня\" = living room.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Спальня\" = bedroom.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Кухня\" = bedroom.`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `\"Диван\" = sofa.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Шафа\" = wardrobe.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Полиця\" = table.`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `\"Ліжко\" = bed.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Пилосос\" = vacuum.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Кабінет\" = kitchen.`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `\"Комод\" = dresser.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Балкон\" = balcony.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Коридор\" = bedroom.`,
-    isTrue: false,
-    explanation: ``
-  }
-]} />
-
-### Home Words
-
-<Translate questions={[
-  {
-    source: `Living room`,
-    options: [
-      { text: `вітальня`, correct: true },
-      { text: `спальня`, correct: false },
-      { text: `кухня`, correct: false }
-    ]
-  },  {
-    source: `Bedroom`,
-    options: [
-      { text: `спальня`, correct: true },
-      { text: `кухня`, correct: false },
-      { text: `ванна`, correct: false }
-    ]
-  },  {
-    source: `Sofa`,
-    options: [
-      { text: `диван`, correct: true },
-      { text: `крісло`, correct: false },
-      { text: `стіл`, correct: false }
-    ]
-  },  {
-    source: `Wardrobe`,
-    options: [
-      { text: `шафа`, correct: true },
-      { text: `полиця`, correct: false },
-      { text: `комод`, correct: false }
-    ]
-  },  {
-    source: `Bed`,
-    options: [
-      { text: `ліжко`, correct: true },
-      { text: `диван`, correct: false },
-      { text: `крісло`, correct: false }
-    ]
-  },  {
-    source: `Vacuum`,
-    options: [
-      { text: `пилосос`, correct: true },
-      { text: `пральна машина`, correct: false },
-      { text: `праска`, correct: false }
-    ]
-  },  {
-    source: `Balcony`,
-    options: [
-      { text: `балкон`, correct: true },
-      { text: `коридор`, correct: false },
-      { text: `комора`, correct: false }
-    ]
-  },  {
-    source: `Kitchen`,
-    options: [
-      { text: `кухня`, correct: true },
-      { text: `вітальня`, correct: false },
-      { text: `спальня`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -655,3 +318,392 @@ The dacha represents an escape from city life and a deep connection to nature. F
 | переїжджати | /pɛrɛˈjʒdʒɑtɪ/ | to move house | verb | — | action |
 | орендувати | /ɔrɛnduˈʋɑtɪ/ | to rent | verb | — | action |
 | власний | /ˈʋlɑsnɪj/ | own | adj | m | possession |
+
+---
+
+## 🎯 Activities
+
+### Home Words
+
+*Match Ukrainian to English.*
+
+
+<MatchUp pairs={[
+  { left: `вітальня`, right: `living room` },
+  { left: `спальня`, right: `bedroom` },
+  { left: `кухня`, right: `kitchen` },
+  { left: `ванна`, right: `bathroom` },
+  { left: `диван`, right: `sofa` },
+  { left: `крісло`, right: `armchair` },
+  { left: `шафа`, right: `wardrobe` },
+  { left: `полиця`, right: `shelf` },
+  { left: `ліжко`, right: `bed` },
+  { left: `пральна машина`, right: `washing machine` },
+  { left: `пилосос`, right: `vacuum` },
+  { left: `комод`, right: `dresser` }
+]} />
+
+### Home Vocabulary
+
+*Complete the sentences.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я сплю у [___]. (bedroom)`}
+    answer={`спальні`}
+    options={[`спальні`, `вітальні`, `кухні`, `ванній`]}
+  />
+  <FillInQuestion
+    sentence={`Ми їмо на [___]. (kitchen)`}
+    answer={`кухні`}
+    options={[`спальні`, `вітальні`, `кухні`, `ванній`]}
+  />
+  <FillInQuestion
+    sentence={`Сідай на [___]. (sofa)`}
+    answer={`диван`}
+    options={[`диван`, `крісло`, `стіл`, `ліжко`]}
+  />
+  <FillInQuestion
+    sentence={`Книги на [___]. (shelf)`}
+    answer={`полиці`}
+    options={[`полиці`, `шафі`, `комоді`, `столі`]}
+  />
+  <FillInQuestion
+    sentence={`Одяг у [___]. (wardrobe)`}
+    answer={`шафі`}
+    options={[`полиці`, `шафі`, `комоді`, `столі`]}
+  />
+  <FillInQuestion
+    sentence={`Тато працює в [___]. (office)`}
+    answer={`кабінеті`}
+    options={[`спальні`, `кабінеті`, `кухні`, `ванній`]}
+  />
+  <FillInQuestion
+    sentence={`Меблі ___ в кімнаті. (furniture is located)`}
+    answer={`стоять`}
+    options={[`стоять`, `постоять`]}
+  />
+  <FillInQuestion
+    sentence={`Я ___ стіл біля вікна. (placed table)`}
+    answer={`поставив`}
+    options={[`ставив`, `поставив`]}
+  />
+  <FillInQuestion
+    sentence={`Білизна в [___]. (washing machine)`}
+    answer={`пральній машині`}
+    options={[`пральній машині`, `посудомийці`, `пилососі`, `духовці`]}
+  />
+  <FillInQuestion
+    sentence={`Прибираю [___]. (vacuum)`}
+    answer={`пилососом`}
+    options={[`пральною машиною`, `посудомийкою`, `пилососом`, `чайником`]}
+  />
+</FillIn>
+
+### Home & Furniture
+
+<Quiz>
+  <QuizQuestion
+    question={`1. "Вітальня" is:`}
+    options={[`Living room`, `Bedroom`, `Kitchen`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Спальня" is:`}
+    options={[`Bedroom`, `Kitchen`, `Bathroom`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Диван" is:`}
+    options={[`Sofa`, `Armchair`, `Chair`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Крісло" is:`}
+    options={[`Armchair`, `Chair`, `Sofa`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Шафа" is:`}
+    options={[`Wardrobe`, `Shelf`, `Dresser`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Ліжко" is:`}
+    options={[`Bed`, `Sofa`, `Armchair`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Пилосос" is:`}
+    options={[`Vacuum`, `Washing machine`, `Iron`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Балкон" is:`}
+    options={[`Balcony`, `Hallway`, `Storage room`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+
+
+### Home Sentences
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`сплю / спальні / Я / у`}
+    answer={`Я сплю у спальні.`}
+  />
+  <UnjumbleQuestion
+    words={`на / Книга / столі`}
+    answer={`Книга на столі.`}
+  />
+  <UnjumbleQuestion
+    words={`диван / на / Сідай`}
+    answer={`Сідай на диван.`}
+  />
+  <UnjumbleQuestion
+    words={`квартиру / прибираю / Я`}
+    answer={`Я прибираю квартиру.`}
+  />
+  <UnjumbleQuestion
+    words={`шафі / Одяг / у`}
+    answer={`Одяг у шафі.`}
+  />
+  <UnjumbleQuestion
+    words={`полиці / на / Книги`}
+    answer={`Книги на полиці.`}
+  />
+  <UnjumbleQuestion
+    words={`переїжджаю / Я / завтра`}
+    answer={`Я переїжджаю завтра.`}
+  />
+  <UnjumbleQuestion
+    words={`чудова / Квартира / дуже`}
+    answer={`Квартира дуже чудова.`}
+  />
+</Unjumble>
+
+### Home Mistakes
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я сплю в **вітальні**.`}
+    error={`вітальні`}
+    answer={`спальні`}
+    options={[`спальні`, `вітальні`]}
+    explanation={`We sleep in the bedroom (спальня), not living room.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`**Одяг** на полиці.`}
+    error={`Одяг`}
+    answer={`Книги`}
+    options={[`Книги`, `Одяг`]}
+    explanation={`Books (книги) go on shelves, clothes go in wardrobes.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я мию посуд **пилососом**.`}
+    error={`пилососом`}
+    answer={`руками`}
+    options={[`руками`, `пилососом`]}
+    explanation={`We wash dishes by hand or in dishwasher, not with vacuum.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Тато спить на **столі**.`}
+    error={`столі`}
+    answer={`ліжку`}
+    options={[`ліжку`, `столі`]}
+    explanation={`We sleep on a bed (ліжко), not a table.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Взуття у **холодильнику**.`}
+    error={`холодильнику`}
+    answer={`коридорі`}
+    options={[`коридорі`, `холодильнику`]}
+    explanation={`Shoes go in the hallway (коридор), not the refrigerator.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми дивимось телевізор у **ванній**.`}
+    error={`ванній`}
+    answer={`вітальні`}
+    options={[`вітальні`, `ванній`]}
+    explanation={`We watch TV in the living room (вітальня).`}
+  />
+</ErrorCorrection>
+
+### Appliances & Decor
+
+*Match Ukrainian to English.*
+
+
+<MatchUp pairs={[
+  { left: `пральна машина`, right: `washing machine` },
+  { left: `посудомийка`, right: `dishwasher` },
+  { left: `пилосос`, right: `vacuum` },
+  { left: `праска`, right: `iron` },
+  { left: `килим`, right: `carpet` },
+  { left: `штори`, right: `curtains` },
+  { left: `лампа`, right: `lamp` },
+  { left: `дзеркало`, right: `mirror` }
+]} />
+
+### Home Categories
+
+*Sort words by category.*
+
+
+<GroupSort groups={{
+  "### Rooms": [
+    "вітальня",
+    "спальня",
+    "кухня",
+    "ванна",
+    "кабінет",
+    "коридор"
+  ],
+  "Furniture": [
+    "диван",
+    "крісло",
+    "стіл",
+    "шафа",
+    "полиця",
+    "ліжко"
+  ],
+  "Appliances": [
+    "пральна машина",
+    "посудомийка",
+    "пилосос",
+    "праска"
+  ]
+}} />
+
+### Home Facts
+
+*Mark true or false.*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`"Вітальня" = living room.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Спальня" = bedroom.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Кухня" = bedroom.`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Диван" = sofa.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Шафа" = wardrobe.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Полиця" = table.`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Ліжко" = bed.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Пилосос" = vacuum.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Кабінет" = kitchen.`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Комод" = dresser.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Балкон" = balcony.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Коридор" = bedroom.`}
+    isTrue={false}
+    explanation={``}
+  />
+</TrueFalse>
+
+### Home Words
+
+<Translate>
+  <TranslateItem
+    source={`1. Living room`}
+    answer={`вітальня`}
+    options={[`вітальня`, `спальня`, `кухня`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Bedroom`}
+    answer={`спальня`}
+    options={[`спальня`, `кухня`, `ванна`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Sofa`}
+    answer={`диван`}
+    options={[`диван`, `крісло`, `стіл`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Wardrobe`}
+    answer={`шафа`}
+    options={[`шафа`, `полиця`, `комод`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Bed`}
+    answer={`ліжко`}
+    options={[`ліжко`, `диван`, `крісло`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Vacuum`}
+    answer={`пилосос`}
+    options={[`пилосос`, `пральна машина`, `праска`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Balcony`}
+    answer={`балкон`}
+    options={[`балкон`, `коридор`, `комора`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Kitchen`}
+    answer={`кухня`}
+    options={[`кухня`, `вітальня`, `спальня`]}
+    explanation={``}
+  />
+</Translate>
+

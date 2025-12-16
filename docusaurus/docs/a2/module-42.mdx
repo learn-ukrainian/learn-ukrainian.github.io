@@ -5,19 +5,20 @@ title: "Word Formation Mastery"
 description: "Checkpoint & New Roots"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Warm-up
@@ -35,6 +36,17 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 3.  **ДУМ** - Думка
 
 А потім... ми перевіримо все.
+
+:::info
+🔗 External Resources
+
+**YouTube:** [100 Ukrainian cognates ...](https://www.youtube.com/watch?v=CMpe0h8AcJs) — Ukrainian vocabulary for beginners
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+:::
+
 
 ---
 
@@ -147,7 +159,8 @@ Verb: **Світити** (To shine).
 *Київ — це велике місто. Там живуть містяни.*
 
 
-:::tip[Pro Tip: Mova vs Yazik]
+:::tip
+Pro Tip: Mova vs Yazik
 **Мова** is Language/Speech.
 **Язик** is the Tongue (Anatomy).
 Never confuse them!
@@ -191,7 +204,8 @@ Literally: "Re-out-along-divide".
 This is the secret to mastering Slavic languages.
 Do not memorize. **Analyze**.
 
-:::tip[Pro Tip: Roots in the City]
+:::tip
+Pro Tip: Roots in the City
 When you visit Kyiv, you will walk on **Хрещатик** (Khreshchatyk).
 This comes from the root **ХРЕСТ** (Cross).
 Why? Because it was a valley where roads crossed (**перехрестя**).
@@ -277,7 +291,8 @@ Combine **Roots** with **Prefixes** and **Suffixes**.
 Це буде бестселер.
 Це справжня історія успіху.
 
-:::note[Cultural Insight: Movchannya]
+:::note
+Cultural Insight: Movchannya
 There is a famous phrase: *"Слово — срібло, а мовчання — золото"* (Speech is silver, but silence is gold).
 Paradoxically, Ukrainians love vivid **розмови** (conversations)!
 Silence is valued only when words are unnecessary.
@@ -292,44 +307,69 @@ But if you have something to say, say it beautifully.
 ## Dialogue: The Order
 
 **Waiter:** Добрий день. Ви готові зробити **замовлення**?
+
 **Guest:** Так. Я хочу борщ і **київську** котлету.
+
 **Waiter:** Добре. А що будете пити?
+
 **Guest:** Якусь **холодну** воду.
+
 **Waiter:** З газом чи без?
+
 **Guest:** Без газу.
+
 **Waiter:** Дякую. Замовлення **прийнято** (accepted).
 
 ## Dialogue: The Idea
 
 **Oleh:** Слухай, я **придумав** (invented) щось цікаве.
+
 **Ira:** Що саме? Яка твоя **ідея**?
+
 **Oleh:** Давай відкриємо кафе.
+
 **Ira:** Ого. Це серйозний **задум**. Але це дорого.
+
 **Oleh:** Я маю план. У мене є **бізнес-план**.
+
 **Ira:** Твоя **думка** мені подобається. Але треба все **обдумати** (think over).
 
 ## Dialogue: The Look
 
 **Anna:** Ти бачила Олега?
+
 **Maria:** Так, він має дивний **вигляд**.
+
 **Anna:** Чому?
+
 **Maria:** Він купив новий костюм.
+
 **Anna:** І що?
+
 **Maria:** Цей стиль йому не пасує. Це мій суб'єктивний **погляд**.
+
 **Anna:** Може, це нові **відчуття** стилю?
+
 **Maria:** Ні, це катастрофа.
 
 ## Dialogue: The Interview
 
 **Boss:** Чому ви хочете тут працювати?
+
 **Candidate:** Я маю **науковий** інтерес до вашої компанії.
+
 **Boss:** Ви читали наш звіт?
+
 **Candidate:** Так, я зробив повний **огляд**. У мене є свої **міркування**.
+
 **Boss:** Це добре. Ми любимо людей, які мають власне **бачення**.
+
 **Candidate:** Дякую. Коли буде **рішення**?
+
 **Boss:** Ми вам зателефонуємо.
 
-:::note[Cultural Insight: Politeness]
+:::note
+Cultural Insight: Politeness
 You might notice we use formal language like **замовлення** (order) instead of just "I want".
 Relationships in Slavic culture are built on respect.
 Using the correct "Social Root" words shows you are educated and polite.
@@ -365,7 +405,8 @@ Now you are ready for the next phase: **Vocabulary Expansion**.
 We will apply these tools to real life: Food, Health, Home, and Work.
 Get ready to speak!
 
-:::note[Рідна Мова]
+:::note
+Рідна Мова
 The concept of **Рідна Мова** (Native Language) comes from the root **РІД** (Kin).
 It connects your language to your ancestors.
 It is why language is so sacred in Ukrainian culture.
@@ -375,233 +416,24 @@ It is why language is so sacred in Ukrainian culture.
 
 ---
 
-## 🎯 Activities
 
-### Root Match
 
-<MatchUp pairs={[
-  { left: `Мова`, right: `Speech` },
-  { left: `Слух`, right: `Hearing` },
-  { left: `Думка`, right: `Thought` },
-  { left: `Вхід`, right: `Entrance (Go)` },
-  { left: `Письмо`, right: `Writing` },
-  { left: `Вигляд`, right: `Appearance (See)` },
-  { left: `Перемога`, right: `Victory (Over-power)` },
-  { left: `Розмова`, right: `Conversation` }
-]} />
+> 💡 **Словотвір — мистецтво**
+>
+> «Українська мова — як конструктор: префікси, корені, суфікси. Будуйте слова самостійно!»
+>
+> *Translation: "Ukrainian is like a construction set: prefixes, roots, suffixes."*
 
-### Family Tree
+> 🇺🇦 **Творіть нові слова!**
+>
+> Основні префікси та їх значення:
+> - **пере-**: переписати (писати знову), перечитати (читати знову)
+> - **роз-**: розповісти (розказати детально), розібрати (розділити на частини)
+> - **при-**: прийти (наблизитися), прибігти (прибігти до місця)
+>
+> Суфікси також важливі: -ець (читач → читачець), -ість (добрий → доброта)
 
-<GroupSort groups={{
-  "МОВ - Speech": ["Мова", "Розмова", "Промова", "Замовлення", "Мовчати", "Мовлення"],
-  "СЛУХ/ДУМ - Sense": ["Слухати", "Слухач", "Слухняний", "Думати", "Думка", "Задум"],
-  "Review (Mix)": ["Письменник", "Переклад", "Вхід", "Науковий", "Український", "Читач"]
-}} />
 
-### Logic Puzzle
-
-<FillIn items={[
-  {
-    sentence: `Людина, яка слухає. Це [___]. [Hint: Listener]`,
-    answer: `слухач`,
-    options: [`слухач`, `мовець`, `письменник`]
-  },  {
-    sentence: `Процес обміну словами. Це [___]. [Hint: Conversation]`,
-    answer: `розмова`,
-    options: [`розмова`, `промова`, `замовлення`]
-  },  {
-    sentence: `Те, що ми думаємо. Це [___]. [Hint: Thought]`,
-    answer: `думка`,
-    options: [`думка`, `слух`, `мова`]
-  },  {
-    sentence: `Офіційний виступ. Це [___]. [Hint: Speech]`,
-    answer: `промова`,
-    options: [`промова`, `розмова`, `мовчання`]
-  },  {
-    sentence: `Те, що ми робимо в ресторані. Це [___]. [Hint: Order]`,
-    answer: `замовлення`,
-    options: [`замовлення`, `промова`, `слух`]
-  },  {
-    sentence: `Перекласти текст іншою мовою. Це [___]. [Hint: Translation]`,
-    answer: `переклад`,
-    options: [`переклад`, `перехід`, `перерва`]
-  },  {
-    sentence: `Коли ти не говориш. Це [___]. [Hint: Silence]`,
-    answer: `мовчання`,
-    options: [`мовчання`, `розмова`, `крик`]
-  },  {
-    sentence: `Результат творчості. Це [___]. [Hint: Creation/Work (Act)]`,
-    answer: `твір`,
-    options: [`твір`, `двір`, `звір`]
-  }
-]} />
-
-### High Sentences
-
-<Unjumble items={[
-  { jumbled: `гарна / Це / дуже / думка`, answer: `Це дуже гарна думка.` },
-  { jumbled: `українську / Ми / мову / вивчаємо`, answer: `Ми вивчаємо українську мову.` },
-  { jumbled: `уважно / Слухачі / професора / слухають`, answer: `Слухачі уважно слухають професора.` },
-  { jumbled: `зробив / Я / замовлення / вже`, answer: `Я вже зробив замовлення.` },
-  { jumbled: `була / серйозна / Це / розмова`, answer: `Це була серйозна розмова.` },
-  { jumbled: `має / Він / талант / письменницький`, answer: `Він має письменницький талант.` }
-]} />
-
-### Formation Check
-
-<Quiz questions={[
-  {
-    question: `\"Мовчати\" means:`,
-    options: [
-      { text: `To be silent`, correct: true },
-      { text: `To speak loud`, correct: false },
-      { text: `To sing`, correct: false }
-    ]
-  },  {
-    question: `\"Замовлення\" contains which root?`,
-    options: [
-      { text: `МОВ`, correct: true },
-      { text: `ДУМ`, correct: false },
-      { text: `ХІД`, correct: false }
-    ]
-  },  {
-    question: `\"Слухач\" suffix \"-ач\" indicates:`,
-    options: [
-      { text: `Person (Doer)`, correct: true },
-      { text: `Process`, correct: false },
-      { text: `Quality`, correct: false }
-    ]
-  },  {
-    question: `\"Переклад\" (Translation) literally means:`,
-    options: [
-      { text: `Cross-lay`, correct: true },
-      { text: `In-write`, correct: false },
-      { text: `Out-speak`, correct: false }
-    ]
-  },  {
-    question: `Adjective from \"Наука\":`,
-    options: [
-      { text: `Науковий`, correct: true },
-      { text: `Наукний`, correct: false },
-      { text: `Наукач`, correct: false }
-    ]
-  },  {
-    question: `\"Вхід\" and \"Вихід\" are opposites.`,
-    options: [
-      { text: `True`, correct: true },
-      { text: `False`, correct: false }
-    ]
-  },  {
-    question: `\"Придумати\" means:`,
-    options: [
-      { text: `To invent`, correct: true },
-      { text: `To forget`, correct: false },
-      { text: `To sleep`, correct: false }
-    ]
-  },  {
-    question: `\"Ukrainian language\" is:`,
-    options: [
-      { text: `Українська мова`, correct: true },
-      { text: `Український мова`, correct: false },
-      { text: `Українське мова`, correct: false }
-    ]
-  }
-]} />
-
-### The Conference
-
-<Cloze
-  passage={`На сцені стоїть [___:1] [Hint: speaker/orator].
-Він читає [___:2] [Hint: speech].
-Тема — екологія.
-Це важлива [___:3] [Hint: thought/idea].
-Люди в залі — це [___:4] [Hint: listeners].
-Потім буде [___:5] [Hint: conversation/discussion].
-Ми маємо знайти [___:6] [Hint: solution/exit].
-Це наш спільний [___:7] [Hint: contribution/in-carry].
-Всі сидять [___:8] [Hint: silently/quietly].`}
-  blanks={[{ answer: `промовець`, options: [`промовець`, `співак`, `актор`] }, { answer: `промову`, options: [`промову`, `розмова`, `мовчання`] }, { answer: `думка`, options: [`думка`, `слух`, `вихід`] }, { answer: `слухачі`, options: [`слухачі`, `глядачі`, `читачі`] }, { answer: `розмова`, options: [`розмова`, `промова`, `замовлення`] }, { answer: `вихід`, options: [`вихід`, `вхід`, `схід`] }, { answer: `внесок`, options: [`внесок`, `список`, `голосок`] }, { answer: `мовчки`, options: [`мовчки`, `голосно`, `швидко`] }]}
-/>
-
-### Wrong Logic
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я **слухаю** книгу. (Intended: Read)`}
-    errorWord={`слухаю`}
-    correctForm={`читаю`}
-    options={[`читаю`, `слухаю`]}
-    explanation={`You read books (ЧИТ). Though audiobooks exist, usually we read.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Це моя **мова**. (Intended: Opinion/Thought)`}
-    errorWord={`мова`}
-    correctForm={`думка`}
-    options={[`думка`, `мова`]}
-    explanation={`Opinion is 'Thought' (Думка), not 'Language' (Мова).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Де тут **вхід**? (Intended: Exit)`}
-    errorWord={`вхід`}
-    correctForm={`вихід`}
-    options={[`вихід`, `вхід`]}
-    explanation={`Exit is Out-go (Вихід).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він **читач** музику. (Intended: Listener)`}
-    errorWord={`читач`}
-    correctForm={`слухач`}
-    options={[`слухач`, `читач`]}
-    explanation={`Music is for hearing (СЛУХ).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Це **наука** журнал. (Intended: Scientific)`}
-    errorWord={`наука`}
-    correctForm={`науковий`}
-    options={[`науковий`, `наука`]}
-    explanation={`Adjective form needed: -овий.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Гарна **розмова**. (Intended: Speech/Oration)`}
-    errorWord={`розмова`}
-    correctForm={`промова`}
-    options={[`промова`, `розмова`]}
-    explanation={`A public speech is Pro-mova, not Roz-mova (Conversation).`}
-  />
-</ErrorCorrection>
-
-### Opposites
-
-<MatchUp pairs={[
-  { left: `Вхід`, right: `Вихід` },
-  { left: `Мовчати`, right: `Говорити` },
-  { left: `Вступ`, right: `Виступ` },
-  { left: `Схід`, right: `Захід` },
-  { left: `Слухач`, right: `Мовець` },
-  { left: `Вдих`, right: `Видих` },
-  { left: `Прихід`, right: `Відхід` },
-  { left: `Запитання`, right: `Відповідь` }
-]} />
-
-### Parts of Speech
-
-<GroupSort groups={{
-  "Noun - Object/Thing": ["Мова", "Думка", "Слух", "Вхід", "Письменник", "Погляд", "Промова", "Розмова"],
-  "Verb - Action": ["Мовчати", "Думати", "Слухати", "Бачити", "Писати", "Говорити", "Обдумати"]
-}} />
-
-### Definitions II
-
-<MatchUp pairs={[
-  { left: `Огляд`, right: `Review` },
-  { left: `Погляд`, right: `Glance` },
-  { left: `Вигляд`, right: `Appearance` },
-  { left: `Відчуття`, right: `Sensation` },
-  { left: `Почуття`, right: `Feeling` },
-  { left: `Побачення`, right: `Date/Meeting` },
-  { left: `Передбачення`, right: `Prediction` },
-  { left: `Обдумати`, right: `To think over` }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Root |
@@ -664,3 +496,304 @@ It is why language is so sacred in Ukrainian culture.
 | місто | /ˈmistɔ/ | city | noun | міст |
 | міський | /misʲˈkɪj/ | urban | adj | міст |
 | містянин | /misˈtʲɑnɪn/ | city dweller | noun | міст |
+
+---
+
+## 🎯 Activities
+
+### Root Match
+
+*Match the word to its root logic.*
+
+
+<MatchUp pairs={[
+  { left: `Мова`, right: `Speech` },
+  { left: `Слух`, right: `Hearing` },
+  { left: `Думка`, right: `Thought` },
+  { left: `Вхід`, right: `Entrance (Go)` },
+  { left: `Письмо`, right: `Writing` },
+  { left: `Вигляд`, right: `Appearance (See)` },
+  { left: `Перемога`, right: `Victory (Over-power)` },
+  { left: `Розмова`, right: `Conversation` }
+]} />
+
+### Family Tree
+
+*Group words by their root.*
+
+
+<GroupSort groups={{
+  "### МОВ - Speech": [
+    "Мова",
+    "Розмова",
+    "Промова",
+    "Замовлення",
+    "Мовчати",
+    "Мовлення"
+  ],
+  "СЛУХ/ДУМ - Sense": [
+    "Слухати",
+    "Слухач",
+    "Слухняний",
+    "Думати",
+    "Думка",
+    "Задум"
+  ],
+  "Review (Mix)": [
+    "Письменник",
+    "Переклад",
+    "Вхід",
+    "Науковий",
+    "Український",
+    "Читач"
+  ]
+}} />
+
+### Logic Puzzle
+
+*Guess the word.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Людина, яка слухає. Це [___]. [Hint: Listener]`}
+    answer={`слухач`}
+    options={[`слухач`, `мовець`, `письменник`]}
+  />
+  <FillInQuestion
+    sentence={`Процес обміну словами. Це [___]. [Hint: Conversation]`}
+    answer={`розмова`}
+    options={[`розмова`, `промова`, `замовлення`]}
+  />
+  <FillInQuestion
+    sentence={`Те, що ми думаємо. Це [___]. [Hint: Thought]`}
+    answer={`думка`}
+    options={[`думка`, `слух`, `мова`]}
+  />
+  <FillInQuestion
+    sentence={`Офіційний виступ. Це [___]. [Hint: Speech]`}
+    answer={`промова`}
+    options={[`промова`, `розмова`, `мовчання`]}
+  />
+  <FillInQuestion
+    sentence={`Те, що ми робимо в ресторані. Це [___]. [Hint: Order]`}
+    answer={`замовлення`}
+    options={[`замовлення`, `промова`, `слух`]}
+  />
+  <FillInQuestion
+    sentence={`Перекласти текст іншою мовою. Це [___]. [Hint: Translation]`}
+    answer={`переклад`}
+    options={[`переклад`, `перехід`, `перерва`]}
+  />
+  <FillInQuestion
+    sentence={`пере- + писати = ___ (rewrite)`}
+    answer={`переписати`}
+    options={[`переписати`, `написати`, `виписати`]}
+  />
+  <FillInQuestion
+    sentence={`роз- + казати = ___ (tell in detail)`}
+    answer={`розказати`}
+    options={[`розказати`, `сказати`, `показати`]}
+  />
+  <FillInQuestion
+    sentence={`Коли ти не говориш. Це [___]. [Hint: Silence]`}
+    answer={`мовчання`}
+    options={[`мовчання`, `розмова`, `крик`]}
+  />
+  <FillInQuestion
+    sentence={`Результат творчості. Це [___]. [Hint: Creation/Work (Act)]`}
+    answer={`твір`}
+    options={[`твір`, `двір`, `звір`]}
+  />
+</FillIn>
+
+### High Sentences
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`гарна / Це / дуже / думка`}
+    answer={`Це дуже гарна думка.`}
+  />
+  <UnjumbleQuestion
+    words={`українську / Ми / мову / вивчаємо`}
+    answer={`Ми вивчаємо українську мову.`}
+  />
+  <UnjumbleQuestion
+    words={`уважно / Слухачі / професора / слухають`}
+    answer={`Слухачі уважно слухають професора.`}
+  />
+  <UnjumbleQuestion
+    words={`зробив / Я / замовлення / вже`}
+    answer={`Я вже зробив замовлення.`}
+  />
+  <UnjumbleQuestion
+    words={`була / серйозна / Це / розмова`}
+    answer={`Це була серйозна розмова.`}
+  />
+  <UnjumbleQuestion
+    words={`має / Він / талант / письменницький`}
+    answer={`Він має письменницький талант.`}
+  />
+</Unjumble>
+
+### Formation Check
+
+<Quiz>
+  <QuizQuestion
+    question={`1. "Мовчати" means:`}
+    options={[`To be silent`, `To speak loud`, `To sing`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Замовлення" contains which root?`}
+    options={[`МОВ`, `ДУМ`, `ХІД`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Слухач" suffix "-ач" indicates:`}
+    options={[`Person (Doer)`, `Process`, `Quality`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Переклад" (Translation) literally means:`}
+    options={[`Cross-lay`, `In-write`, `Out-speak`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Adjective from "Наука":`}
+    options={[`Науковий`, `Наукний`, `Наукач`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Вхід" and "Вихід" are opposites.`}
+    options={[`True`, `False`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Придумати" means:`}
+    options={[`To invent`, `To forget`, `To sleep`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Ukrainian language" is:`}
+    options={[`Українська мова`, `Український мова`, `Українське мова`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+
+
+### Wrong Logic
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я **слухаю** книгу. (Intended: Read)`}
+    error={`слухаю`}
+    answer={`читаю`}
+    options={[`читаю`, `слухаю`]}
+    explanation={`You read books (ЧИТ). Though audiobooks exist, usually we read.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Це моя **мова**. (Intended: Opinion/Thought)`}
+    error={`мова`}
+    answer={`думка`}
+    options={[`думка`, `мова`]}
+    explanation={`Opinion is 'Thought' (Думка), not 'Language' (Мова).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Де тут **вхід**? (Intended: Exit)`}
+    error={`вхід`}
+    answer={`вихід`}
+    options={[`вихід`, `вхід`]}
+    explanation={`Exit is Out-go (Вихід).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він **читач** музику. (Intended: Listener)`}
+    error={`читач`}
+    answer={`слухач`}
+    options={[`слухач`, `читач`]}
+    explanation={`Music is for hearing (СЛУХ).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Це **наука** журнал. (Intended: Scientific)`}
+    error={`наука`}
+    answer={`науковий`}
+    options={[`науковий`, `наука`]}
+    explanation={`Adjective form needed: -овий.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Гарна **розмова**. (Intended: Speech/Oration)`}
+    error={`розмова`}
+    answer={`промова`}
+    options={[`промова`, `розмова`]}
+    explanation={`A public speech is Pro-mova, not Roz-mova (Conversation).`}
+  />
+</ErrorCorrection>
+
+### Opposites
+
+*Match the opposite concepts.*
+
+
+<MatchUp pairs={[
+  { left: `Вхід`, right: `Вихід` },
+  { left: `Мовчати`, right: `Говорити` },
+  { left: `Вступ`, right: `Виступ` },
+  { left: `Схід`, right: `Захід` },
+  { left: `Слухач`, right: `Мовець` },
+  { left: `Вдих`, right: `Видих` },
+  { left: `Прихід`, right: `Відхід` },
+  { left: `Запитання`, right: `Відповідь` }
+]} />
+
+### Parts of Speech
+
+*Sort the words by type.*
+
+
+<GroupSort groups={{
+  "### Noun - Object/Thing": [
+    "Мова",
+    "Думка",
+    "Слух",
+    "Вхід",
+    "Письменник",
+    "Погляд",
+    "Промова",
+    "Розмова"
+  ],
+  "Verb - Action": [
+    "Мовчати",
+    "Думати",
+    "Слухати",
+    "Бачити",
+    "Писати",
+    "Говорити",
+    "Обдумати"
+  ]
+}} />
+
+### Definitions II
+
+*Match the word to its meaning.*
+
+
+<MatchUp pairs={[
+  { left: `Огляд`, right: `Review` },
+  { left: `Погляд`, right: `Glance` },
+  { left: `Вигляд`, right: `Appearance` },
+  { left: `Відчуття`, right: `Sensation` },
+  { left: `Почуття`, right: `Feeling` },
+  { left: `Побачення`, right: `Date/Meeting` },
+  { left: `Передбачення`, right: `Prediction` },
+  { left: `Обдумати`, right: `To think over` }
+]} />
+

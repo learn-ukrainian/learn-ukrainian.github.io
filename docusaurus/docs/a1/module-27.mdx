@@ -5,19 +5,20 @@ title: "Colors & Clothing"
 description: "Describing What You Wear"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 ## Warm-up
@@ -33,7 +34,8 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 # Grammar
 
 
-:::info[🔗 External Resources]
+:::info
+🔗 External Resources
 
 **YouTube:** [Colours and Clothes in Ukrainian ](https://www.youtube.com/watch?v=tNgpkde4pnc) —  Speak Ukrainian Language|Learn Ukrainian with Vakulenko
 
@@ -48,7 +50,8 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 
 ## Color Adjectives Must Agree
 
-:::tip[Спостереження (Pattern Discovery)]
+:::tip
+Спостереження (Pattern Discovery)
 
 Look at how "білий" (white) changes:
 - **білий** светр (white sweater - m)
@@ -117,7 +120,8 @@ These words take **plural adjectives**:
 
 # Examples in Context
 
-:::info[Опис одягу (Describing Clothes)]
+:::info
+Опис одягу (Describing Clothes)
 
 - У мене **біла** сорочка. (I have a white shirt.)
 - Мій светр **зелений**. (My sweater is green.)
@@ -128,7 +132,8 @@ These words take **plural adjectives**:
 :::
 
 
-:::info[Кольори світу (Colors of the World)]
+:::info
+Кольори світу (Colors of the World)
 
 - Небо **блакитне**. (The sky is light blue.)
 - Трава **зелена**. (The grass is green.)
@@ -141,7 +146,8 @@ These words take **plural adjectives**:
 :::
 
 
-:::info[Поєднання кольорів (Color Combinations)]
+:::info
+Поєднання кольорів (Color Combinations)
 
 - **Чорно-білий** фільм. (A black-and-white film.)
 - **Темно-синій** светр. (A dark blue sweater.)
@@ -156,99 +162,54 @@ These words take **plural adjectives**:
 
 # Dialogues
 
-:::note[Shopping for Clothes]
-
-<div className="conversation">
+:::note
+Shopping for Clothes
 
 — Яка гарна сорочка!
-
 — Так, вона **синя**. Подобається?
-
 — Так! А є **біла**?
-
 — Так, ось **біла** сорочка.
-
 — Чудово! Я беру!
 
-</div>
-
-<div className="conversation">
-
 — What a nice shirt!
-
 — Yes, it's blue. Do you like it?
-
 — Yes! Is there a white one?
-
 — Yes, here's a white shirt.
-
 — Wonderful! I'll take it!
-
-</div>
 :::
 
 
-:::note[Describing Someone]
-
-<div className="conversation">
+:::note
+Describing Someone
 
 — Який у тебе светр?
-
 — **Чорний**.
-
 — А штани?
-
 — **Сині** джинси.
-
 — Красиво!
 
-</div>
-
-<div className="conversation">
-
 — What sweater do you have?
-
 — Black.
-
 — And pants?
-
 — Blue jeans.
-
 — Nice!
-
-</div>
 :::
 
 
-:::note[Getting Dressed]
-
-<div className="conversation">
+:::note
+Getting Dressed
 
 — Що ти сьогодні одягаєш?
-
 — **Білу** футболку і **чорні** штани.
-
 — А взуття?
-
 — **Білі** кросівки.
-
 — Класно!
 
-</div>
-
-<div className="conversation">
-
 — What are you wearing today?
-
 — A white t-shirt and black pants.
-
 — And footwear?
-
 — White sneakers.
-
 — Cool!
-
-</div>
 :::
 
 
@@ -288,314 +249,295 @@ These words take **plural adjectives**:
 
 **Наступний урок:** Прислівники — як описувати ДІЇ!
 
-## 🎯 Activities
+# Вправи (Activities)
 
-### Колір і одяг
+## match-up: Колір і одяг
 
-<MatchUp pairs={[
-  { left: `біла`, right: `сорочка` },
-  { left: `чорний`, right: `светр` },
-  { left: `сині`, right: `джинси` },
-  { left: `червона`, right: `сукня` },
-  { left: `зелене`, right: `пальто` },
-  { left: `жовта`, right: `футболка` },
-  { left: `білі`, right: `кросівки` },
-  { left: `чорні`, right: `штани` },
-  { left: `синя`, right: `куртка` },
-  { left: `сіра`, right: `спідниця` },
-  { left: `коричневий`, right: `капелюх` },
-  { left: `рожевий`, right: `шарф` }
-]} />
+З'єднайте колір з предметом одягу.
 
-### Clothing by Gender
+- біла :: сорочка
+- чорний :: светр
+- сині :: джинси
+- червона :: сукня
+- зелене :: пальто
+- жовта :: футболка
+- білі :: кросівки
+- чорні :: штани
+- синя :: куртка
+- сіра :: спідниця
+- коричневий :: капелюх
+- рожевий :: шарф
 
-<GroupSort groups={{
-  "Masculine": ["светр", "капелюх", "шарф"],
-  "Feminine": ["сорочка", "футболка", "куртка", "спідниця", "сукня"],
-  "Neuter": ["пальто", "взуття"],
-  "Plural Only": ["штани", "джинси", "черевики", "кросівки"]
-}} />
+---
 
-### Узгодження кольорів (Color Agreement)
+## group-sort: Clothing by Gender
 
-<FillIn items={[
-  {
-    sentence: `У мене ___ сорочка.`,
-    answer: `біла`,
-    options: [`біла`, `білий`, `біле`, `білі`]
-  },  {
-    sentence: `Його светр ___.`,
-    answer: `чорний`,
-    options: [`чорний`, `чорна`, `чорне`, `чорні`]
-  },  {
-    sentence: `Це ___ пальто.`,
-    answer: `синє`,
-    options: [`синє`, `синій`, `синя`, `сині`]
-  },  {
-    sentence: `У неї ___ сукня.`,
-    answer: `червона`,
-    options: [`червона`, `червоний`, `червоне`, `червоні`]
-  },  {
-    sentence: `Мої джинси ___.`,
-    answer: `сині`,
-    options: [`сині`, `синій`, `синя`, `синє`]
-  },  {
-    sentence: `Ця футболка ___.`,
-    answer: `жовта`,
-    options: [`жовта`, `жовтий`, `жовте`, `жовті`]
-  },  {
-    sentence: `Його капелюх ___.`,
-    answer: `коричневий`,
-    options: [`коричневий`, `коричнева`, `коричневе`, `коричневі`]
-  },  {
-    sentence: `Мої кросівки ___.`,
-    answer: `білі`,
-    options: [`білі`, `білий`, `біла`, `біле`]
-  }
-]} />
+> Sort clothing words by grammatical gender.
 
-### Опис одягу (Describing Outfits)
+### Masculine
+- светр
+- капелюх
+- шарф
 
-<FillIn items={[
-  {
-    sentence: `У мене нова ___ куртка.`,
-    answer: `чорна`,
-    options: [`чорна`, `чорний`, `чорне`, `чорні`]
-  },  {
-    sentence: `Я люблю ___ кольори.`,
-    answer: `яскраві`,
-    options: [`яскраві`, `яскравий`, `яскрава`, `яскраве`]
-  },  {
-    sentence: `Небо сьогодні ___.`,
-    answer: `блакитне`,
-    options: [`блакитне`, `блакитний`, `блакитна`, `блакитні`]
-  },  {
-    sentence: `Її шарф дуже ___.`,
-    answer: `теплий`,
-    options: [`теплий`, `тепла`, `тепле`, `теплі`]
-  },  {
-    sentence: `Це ___ спідниця.`,
-    answer: `зелена`,
-    options: [`зелена`, `зелений`, `зелене`, `зелені`]
-  },  {
-    sentence: `У нас ___ черевики.`,
-    answer: `нові`,
-    options: [`нові`, `новий`, `нова`, `нове`]
-  },  {
-    sentence: `Мій светр ___.`,
-    answer: `теплий`,
-    options: [`теплий`, `тепла`, `тепле`, `теплі`]
-  },  {
-    sentence: `Сонце ___.`,
-    answer: `жовте`,
-    options: [`жовте`, `жовтий`, `жовта`, `жовті`]
-  }
-]} />
+### Feminine
+- сорочка
+- футболка
+- куртка
+- спідниця
+- сукня
 
-### Що це? (What Is It?)
+### Neuter
+- пальто
+- взуття
 
-<Quiz questions={[
-  {
-    question: `Біла сорочка`,
-    options: [
-      { text: `White shirt`, correct: true },
-      { text: `Black shirt`, correct: false },
-      { text: `Blue shirt`, correct: false },
-      { text: `Red shirt`, correct: false }
-    ]
-  },  {
-    question: `Чорні штани`,
-    options: [
-      { text: `Black pants`, correct: true },
-      { text: `White pants`, correct: false },
-      { text: `Blue pants`, correct: false },
-      { text: `Black shirt`, correct: false }
-    ]
-  },  {
-    question: `Синє пальто`,
-    options: [
-      { text: `Blue coat`, correct: true },
-      { text: `Blue pants`, correct: false },
-      { text: `Red coat`, correct: false },
-      { text: `Green coat`, correct: false }
-    ]
-  },  {
-    question: `Червона сукня`,
-    options: [
-      { text: `Red dress`, correct: true },
-      { text: `Red skirt`, correct: false },
-      { text: `Red t-shirt`, correct: false },
-      { text: `Yellow dress`, correct: false }
-    ]
-  },  {
-    question: `Зелена футболка`,
-    options: [
-      { text: `Green t-shirt`, correct: true },
-      { text: `Green dress`, correct: false },
-      { text: `Blue t-shirt`, correct: false },
-      { text: `Yellow t-shirt`, correct: false }
-    ]
-  },  {
-    question: `Сіра куртка`,
-    options: [
-      { text: `Gray jacket`, correct: true },
-      { text: `Gray shirt`, correct: false },
-      { text: `Black jacket`, correct: false },
-      { text: `Gray pants`, correct: false }
-    ]
-  },  {
-    question: `Жовті кросівки`,
-    options: [
-      { text: `Yellow sneakers`, correct: true },
-      { text: `Yellow shirt`, correct: false },
-      { text: `White sneakers`, correct: false },
-      { text: `Yellow coat`, correct: false }
-    ]
-  },  {
-    question: `Коричневий капелюх`,
-    options: [
-      { text: `Brown hat`, correct: true },
-      { text: `Black hat`, correct: false },
-      { text: `Brown coat`, correct: false },
-      { text: `Brown pants`, correct: false }
-    ]
-  }
-]} />
+### Plural Only
+- штани
+- джинси
+- черевики
+- кросівки
 
-### Який колір? (What Color?)
+---
 
-<Quiz questions={[
-  {
-    question: `Сніг — це якого кольору?`,
-    options: [
-      { text: `Білий`, correct: true },
-      { text: `Чорний`, correct: false },
-      { text: `Синій`, correct: false },
-      { text: `Зелений`, correct: false }
-    ]
-  },  {
-    question: `Небо вдень — це якого кольору?`,
-    options: [
-      { text: `Блакитний`, correct: true },
-      { text: `Чорний`, correct: false },
-      { text: `Червоний`, correct: false },
-      { text: `Жовтий`, correct: false }
-    ]
-  },  {
-    question: `Трава — це якого кольору?`,
-    options: [
-      { text: `Зелена`, correct: true },
-      { text: `Синя`, correct: false },
-      { text: `Біла`, correct: false },
-      { text: `Жовта`, correct: false }
-    ]
-  },  {
-    question: `Сонце — це якого кольору?`,
-    options: [
-      { text: `Жовте`, correct: true },
-      { text: `Біле`, correct: false },
-      { text: `Синє`, correct: false },
-      { text: `Чорне`, correct: false }
-    ]
-  },  {
-    question: `Море — це якого кольору?`,
-    options: [
-      { text: `Синє`, correct: true },
-      { text: `Біле`, correct: false },
-      { text: `Зелене`, correct: false },
-      { text: `Жовте`, correct: false }
-    ]
-  },  {
-    question: `Земля — це якого кольору?`,
-    options: [
-      { text: `Коричнева`, correct: true },
-      { text: `Біла`, correct: false },
-      { text: `Синя`, correct: false },
-      { text: `Жовта`, correct: false }
-    ]
-  },  {
-    question: `Ніч — це якого кольору?`,
-    options: [
-      { text: `Чорна`, correct: true },
-      { text: `Біла`, correct: false },
-      { text: `Синя`, correct: false },
-      { text: `Жовта`, correct: false }
-    ]
-  },  {
-    question: `Рожа — це якого кольору?`,
-    options: [
-      { text: `Червона`, correct: true },
-      { text: `Зелена`, correct: false },
-      { text: `Синя`, correct: false },
-      { text: `Біла`, correct: false }
-    ]
-  }
-]} />
+## fill-in: Узгодження кольорів (Color Agreement)
 
-### Опис одягу
+> Виберіть правильний колір.
 
-<Unjumble items={[
-  { jumbled: `сорочка / біла / у мене`, answer: `У мене біла сорочка.` },
-  { jumbled: `чорний / светр / мій`, answer: `Мій светр чорний.` },
-  { jumbled: `сині / штани / нові`, answer: `Нові сині штани.` },
-  { jumbled: `червона / гарна / сукня`, answer: `Гарна червона сукня.` },
-  { jumbled: `білі / кросівки / це`, answer: `Це білі кросівки.` },
-  { jumbled: `синя / куртка / його`, answer: `Його куртка синя.` }
-]} />
+1. У мене ___ сорочка.
+   > [!answer] біла
+   > [!options] біла | білий | біле | білі
 
-### Color Rules
+2. Його светр ___.
+   > [!answer] чорний
+   > [!options] чорний | чорна | чорне | чорні
 
-<TrueFalse items={[
-  {
-    statement: `\"Біла\" is the feminine form of \"white\".`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Синій\" is the neuter form.`,
-    isTrue: false,
-    explanation: `Incorrect! it's masculine`
-  },  {
-    statement: `\"Штани\" is always plural in Ukrainian.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Пальто\" is masculine.`,
-    isTrue: false,
-    explanation: `Incorrect! it's neuter`
-  },  {
-    statement: `\"Блакитний\" means light blue.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Чорне\" is masculine.`,
-    isTrue: false,
-    explanation: `Incorrect! it's neuter`
-  },  {
-    statement: `\"Джинси\" is always plural.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Біле\" is feminine.`,
-    isTrue: false,
-    explanation: `Incorrect! it's neuter`
-  },  {
-    statement: `Colors are adjectives and must agree with nouns.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Сукня\" is neuter.`,
-    isTrue: false,
-    explanation: `Incorrect! it's feminine`
-  },  {
-    statement: `\"Світлий\" means \"light\" (as in bright).`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Темна\" is the masculine form.`,
-    isTrue: false,
-    explanation: `Incorrect! it's feminine`
-  }
-]} />
+3. Це ___ пальто.
+   > [!answer] синє
+   > [!options] синє | синій | синя | сині
+
+4. У неї ___ сукня.
+   > [!answer] червона
+   > [!options] червона | червоний | червоне | червоні
+
+5. Мої джинси ___.
+   > [!answer] сині
+   > [!options] сині | синій | синя | синє
+
+6. Ця футболка ___.
+   > [!answer] жовта
+   > [!options] жовта | жовтий | жовте | жовті
+
+7. Його капелюх ___.
+   > [!answer] коричневий
+   > [!options] коричневий | коричнева | коричневе | коричневі
+
+8. Мої кросівки ___.
+   > [!answer] білі
+   > [!options] білі | білий | біла | біле
+
+---
+
+## fill-in: Опис одягу (Describing Outfits)
+
+> Виберіть правильне слово.
+
+1. У мене нова ___ куртка.
+   > [!answer] чорна
+   > [!options] чорна | чорний | чорне | чорні
+
+2. Я люблю ___ кольори.
+   > [!answer] яскраві
+   > [!options] яскраві | яскравий | яскрава | яскраве
+
+3. Небо сьогодні ___.
+   > [!answer] блакитне
+   > [!options] блакитне | блакитний | блакитна | блакитні
+
+4. Її шарф дуже ___.
+   > [!answer] теплий
+   > [!options] теплий | тепла | тепле | теплі
+
+5. Це ___ спідниця.
+   > [!answer] зелена
+   > [!options] зелена | зелений | зелене | зелені
+
+6. У нас ___ черевики.
+   > [!answer] нові
+   > [!options] нові | новий | нова | нове
+
+7. Мій светр ___.
+   > [!answer] теплий
+   > [!options] теплий | тепла | тепле | теплі
+
+8. Сонце ___.
+   > [!answer] жовте
+   > [!options] жовте | жовтий | жовта | жовті
+
+---
+
+## quiz: Що це? (What Is It?)
+
+Виберіть правильну відповідь.
+
+1. Біла сорочка
+   - [x] White shirt
+   - [ ] Black shirt
+   - [ ] Blue shirt
+   - [ ] Red shirt
+
+2. Чорні штани
+   - [x] Black pants
+   - [ ] White pants
+   - [ ] Blue pants
+   - [ ] Black shirt
+
+3. Синє пальто
+   - [x] Blue coat
+   - [ ] Blue pants
+   - [ ] Red coat
+   - [ ] Green coat
+
+4. Червона сукня
+   - [x] Red dress
+   - [ ] Red skirt
+   - [ ] Red t-shirt
+   - [ ] Yellow dress
+
+5. Зелена футболка
+   - [x] Green t-shirt
+   - [ ] Green dress
+   - [ ] Blue t-shirt
+   - [ ] Yellow t-shirt
+
+6. Сіра куртка
+   - [x] Gray jacket
+   - [ ] Gray shirt
+   - [ ] Black jacket
+   - [ ] Gray pants
+
+7. Жовті кросівки
+   - [x] Yellow sneakers
+   - [ ] Yellow shirt
+   - [ ] White sneakers
+   - [ ] Yellow coat
+
+8. Коричневий капелюх
+   - [x] Brown hat
+   - [ ] Black hat
+   - [ ] Brown coat
+   - [ ] Brown pants
+
+---
+
+## quiz: Який колір? (What Color?)
+
+Виберіть правильну відповідь.
+
+1. Сніг — це якого кольору?
+   - [x] Білий
+   - [ ] Чорний
+   - [ ] Синій
+   - [ ] Зелений
+
+2. Небо вдень — це якого кольору?
+   - [x] Блакитний
+   - [ ] Чорний
+   - [ ] Червоний
+   - [ ] Жовтий
+
+3. Трава — це якого кольору?
+   - [x] Зелена
+   - [ ] Синя
+   - [ ] Біла
+   - [ ] Жовта
+
+4. Сонце — це якого кольору?
+   - [x] Жовте
+   - [ ] Біле
+   - [ ] Синє
+   - [ ] Чорне
+
+5. Море — це якого кольору?
+   - [x] Синє
+   - [ ] Біле
+   - [ ] Зелене
+   - [ ] Жовте
+
+6. Земля — це якого кольору?
+   - [x] Коричнева
+   - [ ] Біла
+   - [ ] Синя
+   - [ ] Жовта
+
+7. Ніч — це якого кольору?
+   - [x] Чорна
+   - [ ] Біла
+   - [ ] Синя
+   - [ ] Жовта
+
+8. Рожа — це якого кольору?
+   - [x] Червона
+   - [ ] Зелена
+   - [ ] Синя
+   - [ ] Біла
+
+---
+
+## unjumble: Опис одягу
+
+Розташуйте слова у правильному порядку.
+
+1. сорочка / біла / у мене
+   > [!answer] У мене біла сорочка.
+
+2. чорний / светр / мій
+   > [!answer] Мій светр чорний.
+
+3. сині / штани / нові
+   > [!answer] Нові сині штани.
+
+4. червона / гарна / сукня
+   > [!answer] Гарна червона сукня.
+
+5. білі / кросівки / це
+   > [!answer] Це білі кросівки.
+
+6. синя / куртка / його
+   > [!answer] Його куртка синя.
+
+
+---
+
+## true-false: Color Rules
+
+Is this true or false?
+
+- [x] "Біла" is the feminine form of "white".
+- [ ] "Синій" is the neuter form.
+  > Incorrect! it's masculine
+
+- [x] "Штани" is always plural in Ukrainian.
+- [ ] "Пальто" is masculine.
+  > Incorrect! it's neuter
+
+- [x] "Блакитний" means light blue.
+- [ ] "Чорне" is masculine.
+  > Incorrect! it's neuter
+
+- [x] "Джинси" is always plural.
+- [ ] "Біле" is feminine.
+  > Incorrect! it's neuter
+
+- [x] Colors are adjectives and must agree with nouns.
+- [ ] "Сукня" is neuter.
+  > Incorrect! it's feminine
+
+- [x] "Світлий" means "light" (as in bright).
+- [ ] "Темна" is the masculine form.
+  > Incorrect! it's feminine
+
+
+---
+
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |

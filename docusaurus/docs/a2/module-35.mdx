@@ -5,19 +5,20 @@ title: "Motion Verb Prefixes"
 description: "The GPS of Ukrainian"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Warm-up
@@ -28,12 +29,24 @@ But "going" is boring. Do you want to **arrived**, **exit**, **enter**, **cross*
 In Ukrainian, you don't need new words for this. You just need a **prefix**!
 A prefix is like a GPS instruction added to the front of the verb.
 
-:::note[Think about it]
+:::tip
+Think about it
 In English, you say "go **out**", "come **in**", "walk **away**".
 In Ukrainian, these prepositions become prefixes attached to the verb:
 - Go **out** -> **Ви**йти
 - Come **in** -> **У**війти
 - Walk **away** -> **Від**ійти
+:::
+
+
+:::info
+🔗 External Resources
+
+**YouTube:** [A little test on prefixed verbs of motion...](https://www.youtube.com/watch?v=UHdXnucAOxY) — Ukrainian grammar
+
+**Grammar Guide:** [Ukrainian Verb Prefixes](https://www.ukrainianlessons.com/ukrainian-verb-prefixes/) — Ukrainian Lessons
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 :::
 
 
@@ -56,7 +69,8 @@ Imagine a house. We will use the verb **йти** (to walk) as our base.
 | **Про-** | **Through** | Passing by/through | **Про**йти парк (Pass through the park) |
 | **Об-** | **Around** | Circumnavigating | **Об**ійти дім (Walk around the house) |
 
-:::warning[Grammar Note]
+:::warning
+Grammar Note
 When you add a prefix to **йти** (imperfective), it usually becomes **perfective** (a completed single action).
 - Я **йду** (I am walking - process).
 - Я **прийшов** (I arrived - result).
@@ -86,7 +100,8 @@ When you add a prefix to **йти** (imperfective), it usually becomes **perfect
 Вони **обходили** всі історичні місця.
 Ввечері турист **прийшов** у готель. Він **втомився**, але був щасливий.
 
-:::note[History Bite: The Chumak Way]
+:::note
+History Bite: The Chumak Way
 Before trucks and trains, Ukrainians had **Chumaks** (Чумаки).
 They were traders who drove wagons drawn by oxen to Crimea to buy salt.
 Their journey (**шлях**) was dangerous and long.
@@ -109,7 +124,8 @@ It implies covering a distance or passing through.
 
 Imagine an arrow going *through* a tube. That is **Про-**.
 
-:::note[Sitting "On the Horse"]
+:::note
+Sitting "On the Horse"
 Before a long journey, Ukrainians have a tradition.
 Before you **вийти** (exit) the house, everyone must sit down for a minute.
 It is called "**посидіти на доріжку**" (sit for the road).
@@ -135,7 +151,8 @@ You are not "at" a place (Locative). You are going "into" a place (Accusative).
 | **Піти** | **На** | Accusative | Я пішов **на концерт**. |
 | **Поїхати** | **До** | Genitive | Я поїхав **до бабусі**. |
 
-:::tip[Which Preposition?]
+:::tip
+Which Preposition?
 - Use **В/З** for enclosed spaces (buildings, cities, countries).
 - Use **На/З** for open spaces, events, or islands (concert, work, street).
 - Use **До/Від** for people (I go **to** Mom). You cannot go "inside" Mom!
@@ -182,7 +199,8 @@ Just change the base.
 - Я **прийшов** додому. (I walked/arrived home).
 - Я **приїхав** додому. (I drove/arrived home).
 
-:::tip[Pronunciation Tip: The Apostrophe]
+:::tip
+Pronunciation Tip: The Apostrophe
 Note **В'їхати** (To drive in).
 The apostrophe means a hard stop. Pronounce it like "V... Yikhaty".
 :::
@@ -195,17 +213,27 @@ The apostrophe means a hard stop. Pronounce it like "V... Yikhaty".
 ## Dialogue: The Taxi Ride
 
 **Driver:** Добрий день. Куди їдемо?
+
 **Passenger:** Добрий день. На вокзал, будь ласка.
+
 **Driver:** Добре. Ми **виїжджаємо** з парковки?
+
 **Passenger:** Так. Нам треба **переїхати** міст?
+
 **Driver:** Ні, міст не працює. Ми **об'їдемо** через центр.
+
 **Passenger:** Це довго? Я можу запізнитися.
+
 **Driver:** Не хвилюйтеся. Ми **доїдемо** за 20 хвилин.
+
 **Passenger:** О, я забув телефон! Можемо **заїхати** додому?
+
 **Driver:** Ні, тоді ми точно не встигнемо.
+
 **Passenger:** Добре, їдемо прямо.
 *(20 minutes later)*
 **Driver:** Ми **приїхали**. Це вхід на вокзал.
+
 **Passenger:** Дякую! Я **піду** швидко.
 
 ---
@@ -227,7 +255,8 @@ Mastering prefixes is the biggest "hack" in the Ukrainian language.
 
 # Anti-Propaganda Showcase
 
-:::note[Myth: "Ukrainian is just a rural dialect."]
+:::warning
+Myth: "Ukrainian is just a rural dialect."
 **Fact:** Ukrainian has a highly engineered system of motion verbs that precise distinguishing between "walking around", "walking through", and "dropping by".
 Imperial Russia banned Ukrainian in cities (Valuev Circular 1863) to force it into villages, creating this myth.
 Yet, the language survived with its complex urban grammar intact. When you ask "**Як пройти до метро?**" (How to get to the metro?), you are using high-level prefix grammar that proves the language belongs in the metropolis.
@@ -246,294 +275,26 @@ Yet, the language survived with its complex urban grammar intact. When you ask "
 
 ---
 
-## 🎯 Activities
 
-### Prefix Power
 
-<MatchUp pairs={[
-  { left: `При-`, right: `Arrival (Destination reached)` },
-  { left: `Ви-`, right: `Exit (Out of somewhere)` },
-  { left: `Під-`, right: `Approach (Getting closer)` },
-  { left: `Пере-`, right: `Cross (Over a line)` },
-  { left: `За-`, right: `Drop by (Brief visit / Behind)` },
-  { left: `В-`, right: `Enter (Into somewhere)` },
-  { left: `Від-`, right: `Away (Distance increases)` },
-  { left: `Об-`, right: `Around (Circle)` },
-  { left: `Про-`, right: `Through (Passing distance)` },
-  { left: `До-`, right: `Reach (Final limit)` }
-]} />
+> 💡 **Українське прислів'я**
+>
+> «Куди йдеш — туди й прийдеш.» (Йти — процес, прийти — результат!)
+>
+> *Translation: "Where you go — there you'll arrive."*
 
-### The Tourist Map
+> 🇺🇦 **Дієслова руху — магія префіксів**
+>
+> Українські дієслова руху дуже багаті на значення:
+> - **піти** — почати рух, піти кудись
+> - **прийти** — прибути, досягти мети
+> - **вийти** — вийти назовні, покинути приміщення
+> - **ввійти** — увійти всередину
+> - **пройти** — пройти повз щось
+>
+> Кожен префікс змінює значення! Це як будівельні блоки мови.
 
-<FillIn items={[
-  {
-    sentence: `Я хочу ___ в магазин купити води. (Drop by - foot)`,
-    answer: `зайти`,
-    options: [`зайти`, `вийти`, `підійти`]
-  },  {
-    sentence: `Турист ___ з готелю вранці. (Exited - foot - past)`,
-    answer: `вийшов`,
-    options: [`вийшов`, `прийшов`, `зайшов`]
-  },  {
-    sentence: `Ми ___ в Київ поїздом. (Arrived - vehicle - past)`,
-    answer: `приїхали`,
-    options: [`приїхали`, `прийшли`, `пішли`]
-  },  {
-    sentence: `Вам треба ___ вулицю на світлофорі. (Cross - foot)`,
-    answer: `перейти`,
-    options: [`перейти`, `вийти`, `увійти`]
-  },  {
-    sentence: `Автобус ___ до зупинки. (Approached - vehicle - past)`,
-    answer: `під'їхав`,
-    options: [`під'їхав`, `від'їхав`, `заїхав`]
-  },  {
-    sentence: `Я ___ ключі додому? (Bring - foot - future simple)`,
-    answer: `принесу`,
-    options: [`принесу`, `винесу`, `занесу`]
-  },  {
-    sentence: `Він ___ від мене, тому що образився. (Walked away - past)`,
-    answer: `відійшов`,
-    options: [`відійшов`, `підійшов`, `увійшов`]
-  },  {
-    sentence: `Ми ___ весь світ. (Travel/Go around - vehicle)`,
-    answer: `об'їхали`,
-    options: [`об'їхали`, `в'їхали`, `приїхали`]
-  }
-]} />
 
-### Foot vs. Wheel
-
-<GroupSort groups={{
-  "On Foot (Йти bases)": ["Прийти", "Вийти", "Підійти", "Зайти до кімнати", "Перейти дорогу", "Ввійти"],
-  "By Vehicle (Їхати bases)": ["Приїхати", "Виїхати", "Під'їхати", "Заїхати на заправку", "Переїхати міст", "В'їхати"]
-}} />
-
-### Logic Check
-
-<Quiz questions={[
-  {
-    question: `You are inside a room. You want to leave. You...`,
-    options: [
-      { text: `Виходите`, correct: true },
-      { text: `Входите`, correct: false },
-      { text: `Підходите`, correct: false }
-    ]
-  },  {
-    question: `You see a friend across the street. To meet him, you must...`,
-    options: [
-      { text: `Перейти вулицю`, correct: true },
-      { text: `Обійти вулицю`, correct: false },
-      { text: `Зайти вулицю`, correct: false }
-    ]
-  },  {
-    question: `The train is at the platform. It is ready to start the journey. It...`,
-    options: [
-      { text: `Відправляється / Від'їжджає`, correct: true },
-      { text: `Приїжджає`, correct: false },
-      { text: `Під'їжджає`, correct: false }
-    ]
-  },  {
-    question: `You want to give flowers to Mom. You...`,
-    options: [
-      { text: `Приносите квіти`, correct: true },
-      { text: `Виносите квіти`, correct: false },
-      { text: `Переносите квіти`, correct: false }
-    ]
-  },  {
-    question: `\"Зайти\" implies the visit is...`,
-    options: [
-      { text: `Short/Brief`, correct: true },
-      { text: `Permanent`, correct: false },
-      { text: `Dangerous`, correct: false }
-    ]
-  },  {
-    question: `\"Чумаки\" traveled to get...`,
-    options: [
-      { text: `Salt`, correct: true },
-      { text: `Gold`, correct: false },
-      { text: `Coffee`, correct: false }
-    ]
-  },  {
-    question: `If you \"Проїхали\" your stop, you went...`,
-    options: [
-      { text: `Too far (Past it)`, correct: true },
-      { text: `Not far enough`, correct: false },
-      { text: `Exactly there`, correct: false }
-    ]
-  },  {
-    question: `\"Обйти\" helps you avoid...`,
-    options: [
-      { text: `An obstacle`, correct: true },
-      { text: `A door`, correct: false },
-      { text: `A friend`, correct: false }
-    ]
-  }
-]} />
-
-### Prefix Mystery
-
-<TrueFalse items={[
-  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False (Exit)`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False (Getting closer)`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False (Go around)`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False (Drop by)`,
-    isTrue: true,
-    explanation: ``
-  }
-]} />
-
-### Build the Sentence
-
-<Unjumble items={[
-  { jumbled: `магазин / в / зайшов / він`, answer: `Він зайшов в магазин.` },
-  { jumbled: `з / вийшла / вона / дому`, answer: `Вона вийшла з дому.` },
-  { jumbled: `до / підійти / вікна`, answer: `Підійти до вікна.` },
-  { jumbled: `ми / міст / переїхали`, answer: `Ми переїхали міст.` },
-  { jumbled: `додому / я / прийшов`, answer: `Я прийшов додому.` },
-  { jumbled: `автобус / від / від'їхав / зупинки`, answer: `Автобус від'їхав від зупинки.` }
-]} />
-
-### Find the Motion
-
-<MarkTheWords>
-<MarkTheWordsActivity
-  text={`Турист вийшов з готелю. Він побачив карту. Він перейшов площу. Потім він зайшов у музей. Там він слухав гіда. Ввечері він повернувся назад. Він їв вечерю і спав.`}
-  correctWords={[`вийшов`, `побачив`, `перейшов`, `зайшов`, `слухав`, `повернувся`, `їв`, `спав`]}
-/>
-</MarkTheWords>
-
-### The Journey Home
-
-<Cloze
-  passage={`Я живу в Києві, але мої батьки у Львові.
-У п'ятницю я [___:1]їжджаю з Києва.
-Я [___:2]їжджаю на вокзал на таксі.
-Я [___:3]ходжу у вагон поїзда.
-Поїзд [___:4]їжджає рівно о 18:00.
-Вранці я [___:5]їжджаю у Львів.
-Тато [___:6]стрічає мене на пероні.
-Ми [___:7]їжджаємо додому машиною.
-Мама рада, що я [___:8]їхав.`}
-  blanks={[{ answer: `ви`, options: [`ви`] }, { answer: `при`, options: [`при`] }, { answer: `за`, options: [`за`] }, { answer: `від`, options: [`від`] }, { answer: `при`, options: [`при`] }, { answer: `зу`, options: [`зу`] }, { answer: `їд`, options: [`їд`] }, { answer: `при`, options: [`при`] }]}
-/>
-
-### Asking Directions
-
-<DialogueReorder lines={[
-  { text: `Перепрошую, як пройти до опери?`, order: 1 },
-  { text: `Добрий день. Це недалеко.`, order: 2 },
-  { text: `Мені треба переходити вулицю?`, order: 3 },
-  { text: `Ні, не треба. Просто вийдіть з метро і йдіть прямо.`, order: 4 },
-  { text: `А потім?`, order: 5 },
-  { text: `Потім обійдіть пам'ятник Тарасу Шевченку.`, order: 6 },
-  { text: `І я побачу оперу?`, order: 7 },
-  { text: `Так, ви відразу її побачите.`, order: 8 }
-]} />
-
-### Fix the Trips
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я **вийшов** в кімнату. (Logic: Exit into?)`}
-    errorWord={`вийшов`}
-    correctForm={`увійшов / зайшов`}
-    options={[`увійшов`, `вийшов`, `увійшов / зайшов`]}
-    explanation={`Entering a room uses \"увійти\" or \"зайти\". \"Вийти\" means to exit.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Машина **прийшла** в гараж. (Verb type)`}
-    errorWord={`прийшла`}
-    correctForm={`приїхала / заїхала`}
-    options={[`заїхала`, `прийшла`, `приїхала / заїхала`]}
-    explanation={`Cars rely on wheels (їхати), not feet (йти).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він **перейшов** від мене. (Prefix meaning)`}
-    errorWord={`перейшов`}
-    correctForm={`відійшов`}
-    options={[`відійшов`, `перейшов`]}
-    explanation={`Moving away is \"від-\". \"Пере-\" is crossing.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми **приїхали** з дому на роботу. (Leaving context)`}
-    errorWord={`приїхали`}
-    correctForm={`виїхали`}
-    options={[`виїхали`, `приїхали`]}
-    explanation={`Leaving a place is \"ви-\". Arriving is \"при-\".`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я **обійшов** вулицю. (Context: crossing)`}
-    errorWord={`обійшов`}
-    correctForm={`перейшов`}
-    options={[`перейшов`, `обійшов`]}
-    explanation={`You cross a street, you don't usually walk around it (unless it's closed).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Поїзд **під'їхав** з Києва. (Arrival from city)`}
-    errorWord={`під'їхав`}
-    correctForm={`приїхав`}
-    options={[`приїхав`, `під'їхав`]}
-    explanation={`\"Приїхав\" is arrival from a distance. \"Під'їхав\" is approaching a specific spot near you.`}
-  />
-</ErrorCorrection>
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -573,3 +334,292 @@ Yet, the language survived with its complex urban grammar intact. When you ask "
 | привезти | /prɪʋɛzˈtɪ/ | to transport here | verb | — | pf |
 | йти | /jtɪ/ | to go (foot) | verb | — | impf |
 | їхати | /ˈjixɑtɪ/ | to go (vehicle) | verb | — | impf |
+
+---
+
+## 🎯 Activities
+
+### Prefix Power
+
+*Match the prefix to its GPS meaning.*
+
+
+<MatchUp pairs={[
+  { left: `При-`, right: `Arrival (Destination reached)` },
+  { left: `Ви-`, right: `Exit (Out of somewhere)` },
+  { left: `Під-`, right: `Approach (Getting closer)` },
+  { left: `Пере-`, right: `Cross (Over a line)` },
+  { left: `За-`, right: `Drop by (Brief visit / Behind)` },
+  { left: `В-`, right: `Enter (Into somewhere)` },
+  { left: `Від-`, right: `Away (Distance increases)` },
+  { left: `Об-`, right: `Around (Circle)` },
+  { left: `Про-`, right: `Through (Passing distance)` },
+  { left: `До-`, right: `Reach (Final limit)` }
+]} />
+
+### The Tourist Map
+
+*Complete the sentences with the correct verb form.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я хочу ___ в магазин купити води. (Drop by - foot)`}
+    answer={`зайти`}
+    options={[`зайти`, `вийти`, `підійти`]}
+  />
+  <FillInQuestion
+    sentence={`Турист ___ з готелю вранці. (Exited - foot - past)`}
+    answer={`вийшов`}
+    options={[`вийшов`, `прийшов`, `зайшов`]}
+  />
+  <FillInQuestion
+    sentence={`Ми ___ в Київ поїздом. (Arrived - vehicle - past)`}
+    answer={`приїхали`}
+    options={[`приїхали`, `прийшли`, `пішли`]}
+  />
+  <FillInQuestion
+    sentence={`Вам треба ___ вулицю на світлофорі. (Cross - foot)`}
+    answer={`перейти`}
+    options={[`перейти`, `вийти`, `увійти`]}
+  />
+  <FillInQuestion
+    sentence={`Автобус ___ до зупинки. (Approached - vehicle - past)`}
+    answer={`під'їхав`}
+    options={[`під'їхав`, `від'їхав`, `заїхав`]}
+  />
+  <FillInQuestion
+    sentence={`Я ___ ключі додому? (Bring - foot - future simple)`}
+    answer={`принесу`}
+    options={[`принесу`, `винесу`, `занесу`]}
+  />
+  <FillInQuestion
+    sentence={`Він ___ до школи. (motion to a place)`}
+    answer={`пішов`}
+    options={[`ішов`, `пішов`, `прийшов`]}
+  />
+  <FillInQuestion
+    sentence={`Ми ___ додому. (arrived home)`}
+    answer={`прийшли`}
+    options={[`йшли`, `пішли`, `прийшли`]}
+  />
+  <FillInQuestion
+    sentence={`Він ___ від мене, тому що образився. (Walked away - past)`}
+    answer={`відійшов`}
+    options={[`відійшов`, `підійшов`, `увійшов`]}
+  />
+  <FillInQuestion
+    sentence={`Ми ___ весь світ. (Travel/Go around - vehicle)`}
+    answer={`об'їхали`}
+    options={[`об'їхали`, `в'їхали`, `приїхали`]}
+  />
+</FillIn>
+
+### Foot vs. Wheel
+
+*Is this action usually done on foot or by vehicle?*
+
+
+<GroupSort groups={{
+  "### On Foot (Йти bases)": [
+    "Прийти",
+    "Вийти",
+    "Підійти",
+    "Зайти до кімнати",
+    "Перейти дорогу",
+    "Ввійти"
+  ],
+  "By Vehicle (Їхати bases)": [
+    "Приїхати",
+    "Виїхати",
+    "Під'їхати",
+    "Заїхати на заправку",
+    "Переїхати міст",
+    "В'їхати"
+  ]
+}} />
+
+### Logic Check
+
+*Choose the most logical action.*
+
+
+<Quiz>
+  <QuizQuestion
+    question={`1. You are inside a room. You want to leave. You...`}
+    options={[`Виходите`, `Входите`, `Підходите`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`You see a friend across the street. To meet him, you must...`}
+    options={[`Перейти вулицю`, `Обійти вулицю`, `Зайти вулицю`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`The train is at the platform. It is ready to start the journey. It...`}
+    options={[`Відправляється / Від'їжджає`, `Приїжджає`, `Під'їжджає`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`You want to give flowers to Mom. You...`}
+    options={[`Приносите квіти`, `Виносите квіти`, `Переносите квіти`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Зайти" implies the visit is...`}
+    options={[`Short/Brief`, `Permanent`, `Dangerous`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Чумаки" traveled to get...`}
+    options={[`Salt`, `Gold`, `Coffee`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`If you "Проїхали" your stop, you went...`}
+    options={[`Too far (Past it)`, `Not far enough`, `Exactly there`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Обйти" helps you avoid...`}
+    options={[`An obstacle`, `A door`, `A friend`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+
+
+### Build the Sentence
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`магазин / в / зайшов / він`}
+    answer={`Він зайшов в магазин.`}
+  />
+  <UnjumbleQuestion
+    words={`з / вийшла / вона / дому`}
+    answer={`Вона вийшла з дому.`}
+  />
+  <UnjumbleQuestion
+    words={`до / підійти / вікна`}
+    answer={`Підійти до вікна.`}
+  />
+  <UnjumbleQuestion
+    words={`ми / міст / переїхали`}
+    answer={`Ми переїхали міст.`}
+  />
+  <UnjumbleQuestion
+    words={`додому / я / прийшов`}
+    answer={`Я прийшов додому.`}
+  />
+  <UnjumbleQuestion
+    words={`автобус / від / від'їхав / зупинки`}
+    answer={`Автобус від'їхав від зупинки.`}
+  />
+</Unjumble>
+
+### Find the Motion
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Турист вийшов(motion) з готелю. Він побачив(perception) карту. Він перейшов(motion) площу. Потім він зайшов(motion) у музей. Там він слухав(perception) гіда. Ввечері він повернувся(motion) назад. Він їв(action) вечерю і спав(state).`}
+    correctWords={[`вийшов`, `побачив`, `перейшов`, `зайшов`, `слухав`, `повернувся`, `їв`, `спав`]}
+  />
+</MarkTheWords>
+
+
+
+### Asking Directions
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Перепрошую, як пройти до опери?"
+  },
+  {
+    "speaker": "",
+    "line": "Добрий день. Це недалеко."
+  },
+  {
+    "speaker": "",
+    "line": "Мені треба переходити вулицю?"
+  },
+  {
+    "speaker": "",
+    "line": "Ні, не треба. Просто вийдіть з метро і йдіть прямо."
+  },
+  {
+    "speaker": "",
+    "line": "А потім?"
+  },
+  {
+    "speaker": "",
+    "line": "Потім обійдіть пам'ятник Тарасу Шевченку."
+  },
+  {
+    "speaker": "",
+    "line": "І я побачу оперу?"
+  },
+  {
+    "speaker": "",
+    "line": "Так, ви відразу її побачите."
+  }
+]} />
+</DialogueReorder>
+
+### Fix the Trips
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я **вийшов** в кімнату. (Logic: Exit into?)`}
+    error={`вийшов`}
+    answer={`увійшов / зайшов`}
+    options={[`увійшов`, `вийшов`]}
+    explanation={`Entering a room uses "увійти" or "зайти". "Вийти" means to exit.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Машина **прийшла** в гараж. (Verb type)`}
+    error={`прийшла`}
+    answer={`приїхала / заїхала`}
+    options={[`заїхала`, `прийшла`]}
+    explanation={`Cars rely on wheels (їхати), not feet (йти).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він **перейшов** від мене. (Prefix meaning)`}
+    error={`перейшов`}
+    answer={`відійшов`}
+    options={[`відійшов`, `перейшов`]}
+    explanation={`Moving away is "від-". "Пере-" is crossing.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми **приїхали** з дому на роботу. (Leaving context)`}
+    error={`приїхали`}
+    answer={`виїхали`}
+    options={[`виїхали`, `приїхали`]}
+    explanation={`Leaving a place is "ви-". Arriving is "при-".`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я **обійшов** вулицю. (Context: crossing)`}
+    error={`обійшов`}
+    answer={`перейшов`}
+    options={[`перейшов`, `обійшов`]}
+    explanation={`You cross a street, you don't usually walk around it (unless it's closed).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Поїзд **під'їхав** з Києва. (Arrival from city)`}
+    error={`під'їхав`}
+    answer={`приїхав`}
+    options={[`приїхав`, `під'їхав`]}
+    explanation={`"Приїхав" is arrival from a distance. "Під'їхав" is approaching a specific spot near you.`}
+  />
+</ErrorCorrection>
+

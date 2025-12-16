@@ -5,19 +5,20 @@ title: "Describing Things - Adjectives"
 description: "Adjective Agreement in Gender and Number"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 ## Warm-up
@@ -35,7 +36,8 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 # Grammar
 
 
-:::info[🔗 External Resources]
+:::info
+🔗 External Resources
 
 **YouTube:** [20 COMMON UKRAINIAN ADJECTIVES Every Beginner Must Know](https://www.youtube.com/watch?v=OixU7XdhNq4) — Speak Ukrainian
 
@@ -56,7 +58,8 @@ This might seem complex at first, but it actually helps! When you see an adjecti
 
 ## Hard Stem Adjective Endings
 
-:::tip[Pattern Discovery]
+:::tip
+Pattern Discovery
 
 Look at these adjective forms:
 - **новий** будинок (new house - m)
@@ -94,7 +97,8 @@ Most Ukrainian adjectives use these endings:
 
 Some adjectives have "soft" stems (those ending in soft consonants). They use slightly different endings.
 
-:::tip[Pattern Discovery]
+:::tip
+Pattern Discovery
 
 Compare:
 - Hard: нов**ий** / нов**а** / нов**е** / нов**і**
@@ -146,7 +150,8 @@ Learning adjectives in pairs helps you remember them better:
 
 # Examples in Context
 
-:::info[Опис предметів (Describing Objects)]
+:::info
+Опис предметів (Describing Objects)
 
 - Це **великий** будинок. (This is a big house.)
 - У мене **нова** машина. (I have a new car.)
@@ -157,7 +162,8 @@ Learning adjectives in pairs helps you remember them better:
 :::
 
 
-:::info[Опис людей (Describing People)]
+:::info
+Опис людей (Describing People)
 
 - Він **високий** і **сильний**. (He is tall and strong.)
 - Вона **розумна** і **гарна**. (She is smart and beautiful.)
@@ -168,7 +174,8 @@ Learning adjectives in pairs helps you remember them better:
 :::
 
 
-:::info[Comparisons and Descriptions]
+:::info
+Comparisons and Descriptions
 
 - Цей фільм **цікавий**, а той — **нудний**. (This movie is interesting, but that one is boring.)
 - **Новий** телефон **дорогий**. (The new phone is expensive.)
@@ -178,7 +185,8 @@ Learning adjectives in pairs helps you remember them better:
 :::
 
 
-:::info[Розмір і вимір (Size and Dimension)]
+:::info
+Розмір і вимір (Size and Dimension)
 
 - **Довга** дорога. (A long road.)
 - **Короткий** день. (A short day.)
@@ -194,91 +202,50 @@ Learning adjectives in pairs helps you remember them better:
 
 # Dialogues
 
-:::note[Shopping]
-
-<div className="conversation">
+:::note
+Shopping
 
 — Я хочу **нову** сумку.
-
 — Яка? **Велика** чи **мала**?
-
 — **Велика**. І не дуже **дорога**.
-
 — Ось ця. Вона **красива** і **дешева**.
-
 — Чудово! Я беру!
 
-</div>
-
-<div className="conversation">
-
 — I want a new bag.
-
 — What kind? Big or small?
-
 — Big. And not too expensive.
-
 — Here's this one. It's beautiful and cheap.
-
 — Wonderful! I'll take it!
-
-</div>
 :::
 
 
-:::note[Describing a Friend]
-
-<div className="conversation">
+:::note
+Describing a Friend
 
 — Розкажи про свого друга.
-
 — Він **високий** і **сильний**. Дуже **розумний**.
-
 — А який він характер?
-
 — Він **добрий** і **веселий**. **Цікава** людина!
 
-</div>
-
-<div className="conversation">
-
 — Tell me about your friend.
-
 — He's tall and strong. Very smart.
-
 — And what's his personality like?
-
 — He's kind and cheerful. An interesting person!
-
-</div>
 :::
 
 
-:::note[Describing a Place]
-
-<div className="conversation">
+:::note
+Describing a Place
 
 — Яке Київ?
-
 — Київ — **красиве** і **старе** місто.
-
 — А **велике**?
-
 — Так, дуже **велике**! І **цікаве**.
 
-</div>
-
-<div className="conversation">
-
 — What's Kyiv like?
-
 — Kyiv is a beautiful and old city.
-
 — And big?
-
 — Yes, very big! And interesting.
-
-</div>
 :::
 
 
@@ -322,313 +289,288 @@ Learning adjectives in pairs helps you remember them better:
 
 **Наступний урок:** Кольори та одяг!
 
-## 🎯 Activities
+# Вправи (Activities)
 
-### Антоніми (Antonym Pairs)
+## match-up: Антоніми (Antonym Pairs)
 
-<MatchUp pairs={[
-  { left: `великий`, right: `малий` },
-  { left: `новий`, right: `старий` },
-  { left: `добрий`, right: `поганий` },
-  { left: `швидкий`, right: `повільний` },
-  { left: `дорогий`, right: `дешевий` },
-  { left: `легкий`, right: `важкий` },
-  { left: `довгий`, right: `короткий` },
-  { left: `широкий`, right: `вузький` },
-  { left: `високий`, right: `низький` },
-  { left: `сильний`, right: `слабкий` },
-  { left: `цікавий`, right: `нудний` },
-  { left: `простий`, right: `складний` }
-]} />
+З'єднайте прикметник з його протилежністю. (Match the adjective with its opposite.)
 
-### Категорії прикметників
+- великий :: малий
+- новий :: старий
+- добрий :: поганий
+- швидкий :: повільний
+- дорогий :: дешевий
+- легкий :: важкий
+- довгий :: короткий
+- широкий :: вузький
+- високий :: низький
+- сильний :: слабкий
+- цікавий :: нудний
+- простий :: складний
 
-<GroupSort groups={{
-  "Size (Розмір)": ["великий", "малий", "високий", "низький"],
-  "Quality (Якість)": ["добрий", "поганий", "гарний", "красивий"],
-  "Speed/Weight (Швидкість)": ["швидкий", "повільний", "легкий", "важкий"]
-}} />
+---
 
-### Masculine Adjective Forms
+## group-sort: Категорії прикметників
+> Розсортуйте прикметники за категоріями. (Sort these adjectives into categories.)
 
-<FillIn items={[
-  {
-    sentence: `Це ___ будинок.`,
-    answer: `великий`,
-    options: [`великий`, `велика`, `велике`, `великі`]
-  },  {
-    sentence: `Мій друг дуже ___.`,
-    answer: `розумний`,
-    options: [`розумний`, `розумна`, `розумне`, `розумні`]
-  },  {
-    sentence: `Це ___ фільм.`,
-    answer: `цікавий`,
-    options: [`цікавий`, `цікава`, `цікаве`, `цікаві`]
-  },  {
-    sentence: `Він ___ і сильний.`,
-    answer: `високий`,
-    options: [`високий`, `висока`, `високе`, `високі`]
-  },  {
-    sentence: `Це ___ день.`,
-    answer: `добрий`,
-    options: [`добрий`, `добра`, `добре`, `добрі`]
-  },  {
-    sentence: `Новий телефон ___.`,
-    answer: `дорогий`,
-    options: [`дорогий`, `дорога`, `дороге`, `дорогі`]
-  },  {
-    sentence: `Старий комп'ютер ___.`,
-    answer: `повільний`,
-    options: [`повільний`, `повільна`, `повільне`, `повільні`]
-  },  {
-    sentence: `Це ___ чоловік.`,
-    answer: `молодий`,
-    options: [`молодий`, `молода`, `молоде`, `молоді`]
-  }
-]} />
+### Size (Розмір)
+- великий
+- малий
+- високий
+- низький
 
-### Feminine and Neuter Forms
+### Quality (Якість)
+- добрий
+- поганий
+- гарний
+- красивий
 
-<FillIn items={[
-  {
-    sentence: `Це ___ книга.`,
-    answer: `цікава`,
-    options: [`цікава`, `цікавий`, `цікаве`, `цікаві`]
-  },  {
-    sentence: `___ машина стоїть там.`,
-    answer: `Нова`,
-    options: [`Нова`, `Новий`, `Нове`, `Нові`]
-  },  {
-    sentence: `Це ___ місто.`,
-    answer: `красиве`,
-    options: [`красиве`, `красивий`, `красива`, `красиві`]
-  },  {
-    sentence: `Моя сестра дуже ___.`,
-    answer: `розумна`,
-    options: [`розумна`, `розумний`, `розумне`, `розумні`]
-  },  {
-    sentence: `Це ___ питання.`,
-    answer: `важливе`,
-    options: [`важливе`, `важливий`, `важлива`, `важливі`]
-  },  {
-    sentence: `У мене ___ сумка.`,
-    answer: `велика`,
-    options: [`велика`, `великий`, `велике`, `великі`]
-  },  {
-    sentence: `Вулиця дуже ___.`,
-    answer: `широка`,
-    options: [`широка`, `широкий`, `широке`, `широкі`]
-  },  {
-    sentence: `Це ___ слово.`,
-    answer: `нове`,
-    options: [`нове`, `новий`, `нова`, `нові`]
-  }
-]} />
+### Speed/Weight (Швидкість)
+- швидкий
+- повільний
+- легкий
+- важкий
 
-### Узгодження прикметників
+---
 
-<Quiz questions={[
-  {
-    question: `Велика машина`,
-    options: [
-      { text: `Big car (feminine)`, correct: true },
-      { text: `Big house (masculine)`, correct: false },
-      { text: `Big cars (plural)`, correct: false },
-      { text: `Big city (neuter)`, correct: false }
-    ]
-  },  {
-    question: `Старе фото`,
-    options: [
-      { text: `Old photo (neuter)`, correct: true },
-      { text: `Old book (feminine)`, correct: false },
-      { text: `Old man (masculine)`, correct: false },
-      { text: `Old friends (plural)`, correct: false }
-    ]
-  },  {
-    question: `Добрі люди`,
-    options: [
-      { text: `Good people (plural)`, correct: true },
-      { text: `Good person (masculine)`, correct: false },
-      { text: `Good woman (feminine)`, correct: false },
-      { text: `Good word (neuter)`, correct: false }
-    ]
-  },  {
-    question: `Цікавий фільм`,
-    options: [
-      { text: `Interesting movie (masculine)`, correct: true },
-      { text: `Interesting book (feminine)`, correct: false },
-      { text: `Interesting city (neuter)`, correct: false },
-      { text: `Interesting people (plural)`, correct: false }
-    ]
-  },  {
-    question: `Нова книга`,
-    options: [
-      { text: `New book (feminine)`, correct: true },
-      { text: `New house (masculine)`, correct: false },
-      { text: `New city (neuter)`, correct: false },
-      { text: `New books (plural)`, correct: false }
-    ]
-  },  {
-    question: `Високий чоловік`,
-    options: [
-      { text: `Tall man (masculine)`, correct: true },
-      { text: `Tall woman (feminine)`, correct: false },
-      { text: `Tall building (neuter)`, correct: false },
-      { text: `Tall people (plural)`, correct: false }
-    ]
-  },  {
-    question: `Красиве місто`,
-    options: [
-      { text: `Beautiful city (neuter)`, correct: true },
-      { text: `Beautiful woman (feminine)`, correct: false },
-      { text: `Beautiful man (masculine)`, correct: false },
-      { text: `Beautiful cities (plural)`, correct: false }
-    ]
-  },  {
-    question: `Швидкі машини`,
-    options: [
-      { text: `Fast cars (plural)`, correct: true },
-      { text: `Fast car (masculine)`, correct: false },
-      { text: `Fast car (feminine)`, correct: false },
-      { text: `Fast train (neuter)`, correct: false }
-    ]
-  }
-]} />
+## fill-in: Masculine Adjective Forms
+> Виберіть правильну форму.
 
-### Значення прикметників
+1. Це ___ будинок.
+   > [!answer] великий
+   > [!options] великий | велика | велике | великі
 
-<Quiz questions={[
-  {
-    question: `Він швидкий.`,
-    options: [
-      { text: `He is fast.`, correct: true },
-      { text: `He is slow.`, correct: false },
-      { text: `He is strong.`, correct: false },
-      { text: `He is weak.`, correct: false }
-    ]
-  },  {
-    question: `Книга нудна.`,
-    options: [
-      { text: `The book is boring.`, correct: true },
-      { text: `The book is interesting.`, correct: false },
-      { text: `The book is new.`, correct: false },
-      { text: `The book is old.`, correct: false }
-    ]
-  },  {
-    question: `Це важливе питання.`,
-    options: [
-      { text: `This is an important question.`, correct: true },
-      { text: `This is a simple question.`, correct: false },
-      { text: `This is a boring question.`, correct: false },
-      { text: `This is a bad question.`, correct: false }
-    ]
-  },  {
-    question: `Вони сильні.`,
-    options: [
-      { text: `They are strong.`, correct: true },
-      { text: `They are weak.`, correct: false },
-      { text: `They are fast.`, correct: false },
-      { text: `They are slow.`, correct: false }
-    ]
-  },  {
-    question: `Це дорогий телефон.`,
-    options: [
-      { text: `This is an expensive phone.`, correct: true },
-      { text: `This is a cheap phone.`, correct: false },
-      { text: `This is a new phone.`, correct: false },
-      { text: `This is an old phone.`, correct: false }
-    ]
-  },  {
-    question: `Вона розумна.`,
-    options: [
-      { text: `She is smart.`, correct: true },
-      { text: `She is slow.`, correct: false },
-      { text: `She is weak.`, correct: false },
-      { text: `She is boring.`, correct: false }
-    ]
-  },  {
-    question: `Це просте завдання.`,
-    options: [
-      { text: `This is an easy task.`, correct: true },
-      { text: `This is a difficult task.`, correct: false },
-      { text: `This is a long task.`, correct: false },
-      { text: `This is an interesting task.`, correct: false }
-    ]
-  },  {
-    question: `Вулиця вузька.`,
-    options: [
-      { text: `The street is narrow.`, correct: true },
-      { text: `The street is wide.`, correct: false },
-      { text: `The street is long.`, correct: false },
-      { text: `The street is short.`, correct: false }
-    ]
-  }
-]} />
+2. Мій друг дуже ___.
+   > [!answer] розумний
+   > [!options] розумний | розумна | розумне | розумні
 
-### Складіть речення
+3. Це ___ фільм.
+   > [!answer] цікавий
+   > [!options] цікавий | цікава | цікаве | цікаві
 
-<Unjumble items={[
-  { jumbled: `будинок / великий / це`, answer: `Це великий будинок.` },
-  { jumbled: `нова / машина / у мене`, answer: `У мене нова машина.` },
-  { jumbled: `місто / красиве / Київ`, answer: `Київ — красиве місто.` },
-  { jumbled: `дорогий / телефон / новий`, answer: `Новий телефон дорогий.` },
-  { jumbled: `добрі / вони / люди`, answer: `Вони добрі люди.` },
-  { jumbled: `важливе / це / питання`, answer: `Це важливе питання.` }
-]} />
+4. Він ___ і сильний.
+   > [!answer] високий
+   > [!options] високий | висока | високе | високі
 
-### Правила прикметників
+5. Це ___ день.
+   > [!answer] добрий
+   > [!options] добрий | добра | добре | добрі
 
-<TrueFalse items={[
-  {
-    statement: `Ukrainian adjectives change their endings to match nouns.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Велика\" is masculine form.`,
-    isTrue: false,
-    explanation: `Incorrect! it's feminine`
-  },  {
-    statement: `\"-Ий\" is the masculine hard stem ending.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"-А\" is the neuter ending.`,
-    isTrue: false,
-    explanation: `Incorrect! it's feminine`
-  },  {
-    statement: `\"-Е\" is the neuter hard stem ending.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Нові\" is singular form.`,
-    isTrue: false,
-    explanation: `Incorrect! it's plural`
-  },  {
-    statement: `\"Добрий\" means \"good\" or \"kind\".`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Поганий\" means \"good\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"bad\"`
-  },  {
-    statement: `Adjectives usually come before nouns in Ukrainian.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Високий\" means \"short\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"tall\"`
-  },  {
-    statement: `\"Розумний\" means \"smart\".`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Повільний\" means \"fast\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"slow\"`
-  }
-]} />
+6. Новий телефон ___.
+   > [!answer] дорогий
+   > [!options] дорогий | дорога | дороге | дорогі
+
+7. Старий комп'ютер ___.
+   > [!answer] повільний
+   > [!options] повільний | повільна | повільне | повільні
+
+8. Це ___ чоловік.
+   > [!answer] молодий
+   > [!options] молодий | молода | молоде | молоді
+
+---
+
+## fill-in: Feminine and Neuter Forms
+> Виберіть правильну форму.
+
+1. Це ___ книга.
+   > [!answer] цікава
+   > [!options] цікава | цікавий | цікаве | цікаві
+
+2. ___ машина стоїть там.
+   > [!answer] Нова
+   > [!options] Нова | Новий | Нове | Нові
+
+3. Це ___ місто.
+   > [!answer] красиве
+   > [!options] красиве | красивий | красива | красиві
+
+4. Моя сестра дуже ___.
+   > [!answer] розумна
+   > [!options] розумна | розумний | розумне | розумні
+
+5. Це ___ питання.
+   > [!answer] важливе
+   > [!options] важливе | важливий | важлива | важливі
+
+6. У мене ___ сумка.
+   > [!answer] велика
+   > [!options] велика | великий | велике | великі
+
+7. Вулиця дуже ___.
+   > [!answer] широка
+   > [!options] широка | широкий | широке | широкі
+
+8. Це ___ слово.
+   > [!answer] нове
+   > [!options] нове | новий | нова | нові
+
+---
+
+## quiz: Узгодження прикметників
+
+Виберіть правильний переклад.
+
+1. Велика машина
+   - [x] Big car (feminine)
+   - [ ] Big house (masculine)
+   - [ ] Big cars (plural)
+   - [ ] Big city (neuter)
+
+2. Старе фото
+   - [x] Old photo (neuter)
+   - [ ] Old book (feminine)
+   - [ ] Old man (masculine)
+   - [ ] Old friends (plural)
+
+3. Добрі люди
+   - [x] Good people (plural)
+   - [ ] Good person (masculine)
+   - [ ] Good woman (feminine)
+   - [ ] Good word (neuter)
+
+4. Цікавий фільм
+   - [x] Interesting movie (masculine)
+   - [ ] Interesting book (feminine)
+   - [ ] Interesting city (neuter)
+   - [ ] Interesting people (plural)
+
+5. Нова книга
+   - [x] New book (feminine)
+   - [ ] New house (masculine)
+   - [ ] New city (neuter)
+   - [ ] New books (plural)
+
+6. Високий чоловік
+   - [x] Tall man (masculine)
+   - [ ] Tall woman (feminine)
+   - [ ] Tall building (neuter)
+   - [ ] Tall people (plural)
+
+7. Красиве місто
+   - [x] Beautiful city (neuter)
+   - [ ] Beautiful woman (feminine)
+   - [ ] Beautiful man (masculine)
+   - [ ] Beautiful cities (plural)
+
+8. Швидкі машини
+   - [x] Fast cars (plural)
+   - [ ] Fast car (masculine)
+   - [ ] Fast car (feminine)
+   - [ ] Fast train (neuter)
+
+---
+
+## quiz: Значення прикметників
+
+Що означають ці речення?
+
+1. Він швидкий.
+   - [x] He is fast.
+   - [ ] He is slow.
+   - [ ] He is strong.
+   - [ ] He is weak.
+
+2. Книга нудна.
+   - [x] The book is boring.
+   - [ ] The book is interesting.
+   - [ ] The book is new.
+   - [ ] The book is old.
+
+3. Це важливе питання.
+   - [x] This is an important question.
+   - [ ] This is a simple question.
+   - [ ] This is a boring question.
+   - [ ] This is a bad question.
+
+4. Вони сильні.
+   - [x] They are strong.
+   - [ ] They are weak.
+   - [ ] They are fast.
+   - [ ] They are slow.
+
+5. Це дорогий телефон.
+   - [x] This is an expensive phone.
+   - [ ] This is a cheap phone.
+   - [ ] This is a new phone.
+   - [ ] This is an old phone.
+
+6. Вона розумна.
+   - [x] She is smart.
+   - [ ] She is slow.
+   - [ ] She is weak.
+   - [ ] She is boring.
+
+7. Це просте завдання.
+   - [x] This is an easy task.
+   - [ ] This is a difficult task.
+   - [ ] This is a long task.
+   - [ ] This is an interesting task.
+
+8. Вулиця вузька.
+   - [x] The street is narrow.
+   - [ ] The street is wide.
+   - [ ] The street is long.
+   - [ ] The street is short.
+
+---
+
+## unjumble: Складіть речення
+
+Розташуйте слова у правильному порядку.
+
+1. будинок / великий / це
+   > [!answer] Це великий будинок.
+
+2. нова / машина / у мене
+   > [!answer] У мене нова машина.
+
+3. місто / красиве / Київ
+   > [!answer] Київ — красиве місто.
+
+4. дорогий / телефон / новий
+   > [!answer] Новий телефон дорогий.
+
+5. добрі / вони / люди
+   > [!answer] Вони добрі люди.
+
+6. важливе / це / питання
+   > [!answer] Це важливе питання.
+
+
+---
+
+## true-false: Правила прикметників
+
+Правда чи ні? (Decide if each statement is true or false.)
+
+- [x] Ukrainian adjectives change their endings to match nouns.
+- [ ] "Велика" is masculine form.
+  > Incorrect! it's feminine
+
+- [x] "-Ий" is the masculine hard stem ending.
+- [ ] "-А" is the neuter ending.
+  > Incorrect! it's feminine
+
+- [x] "-Е" is the neuter hard stem ending.
+- [ ] "Нові" is singular form.
+  > Incorrect! it's plural
+
+- [x] "Добрий" means "good" or "kind".
+- [ ] "Поганий" means "good".
+  > Incorrect! it means "bad"
+
+- [x] Adjectives usually come before nouns in Ukrainian.
+- [ ] "Високий" means "short".
+  > Incorrect! it means "tall"
+
+- [x] "Розумний" means "smart".
+- [ ] "Повільний" means "fast".
+  > Incorrect! it means "slow"
+
+
+---
+
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |

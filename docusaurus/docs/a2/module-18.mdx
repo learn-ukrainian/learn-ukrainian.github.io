@@ -5,19 +5,20 @@ title: "Bigger, Better, Stronger"
 description: "Comparative Adjectives"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 Time to make comparisons! In this module, you'll learn to say things like "bigger," "better," "more interesting," and "faster" in Ukrainian. Comparing things is essential for everyday conversation — choosing products, describing people, expressing preferences, and giving opinions.
@@ -33,6 +34,17 @@ Every time you shop, you compare prices and quality. Every time you describe som
 
 **Important Note About English vs Ukrainian:**
 Unlike English, which uses "more + adjective" for longer adjectives (more interesting, more comfortable), Ukrainian almost always uses the single-word comparative form (цікавіший, комфортніший). The "більш + adjective" construction exists but is less common in everyday speech.
+
+:::info
+🔗 External Resources
+
+**YouTube:** [Ukrainian Comparative & Superlative Adjectives ...](https://www.youtube.com/watch?v=D0OqItrsAQM) — Practice with me!
+
+**Grammar Guide:** [Adjectives Degrees Comparison](https://talkukrainian.com/adjectives-degrees-comparison/) — Ukrainian Lessons
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+:::
+
 
 ---
 
@@ -96,7 +108,8 @@ Some very common adjectives have completely irregular comparatives:
 
 **MEMORIZE these!** They're very common in daily speech.
 
-:::tip[Memory Trick]
+:::tip
+Memory Trick
 The most irregular ones are the most common adjectives. добрий → кращий and поганий → гірший are used constantly!
 :::
 
@@ -146,7 +159,8 @@ Ukrainians use comparatives constantly for shopping, planning, and expressing op
 - Він **розумніший** за мене. (He's smarter than me.)
 - Ця ідея **краща**! (This idea is better!)
 
-:::tip[Intensifying Comparatives]
+:::tip
+Intensifying Comparatives
 Use **набагато** (much), **трохи** (a little), **значно** (significantly):
 - Він набагато кращий. (He's much better.)
 - Вона трохи старша. (She's a little older.)
@@ -245,382 +259,7 @@ There are two ways to say "than" in Ukrainian:
 
 Тепер ви можете порівнювати що завгодно українською! 📊
 
-## 🎯 Activities
 
-### Comparative Forms
-
-<MatchUp pairs={[
-  { left: `добрий`, right: `кращий` },
-  { left: `поганий`, right: `гірший` },
-  { left: `великий`, right: `більший` },
-  { left: `малий`, right: `менший` },
-  { left: `високий`, right: `вищий` },
-  { left: `низький`, right: `нижчий` },
-  { left: `довгий`, right: `довший` },
-  { left: `короткий`, right: `коротший` },
-  { left: `дорогий`, right: `дорожчий` },
-  { left: `дешевий`, right: `дешевший` },
-  { left: `новий`, right: `новіший` },
-  { left: `старий`, right: `старіший` }
-]} />
-
-### Form the Comparative
-
-<FillIn items={[
-  {
-    sentence: `Він ___ за мене. (старий)`,
-    answer: `старіший`,
-    options: [`старий`, `старіший`, `старший`, `найстаріший`]
-  },  {
-    sentence: `Ця книга ___. (цікавий)`,
-    answer: `цікавіша`,
-    options: [`цікава`, `цікавіша`, `цікавший`, `найцікавіша`]
-  },  {
-    sentence: `Цей телефон ___. (добрий)`,
-    answer: `кращий`,
-    options: [`добріший`, `кращий`, `найдобріший`, `добрий`]
-  },  {
-    sentence: `Лев ___ за кота. (великий)`,
-    answer: `більший`,
-    options: [`великий`, `великіший`, `більший`, `найбільший`]
-  },  {
-    sentence: `Ця машина ___. (дорогий)`,
-    answer: `дорожча`,
-    options: [`дорога`, `дорожча`, `дорогіша`, `найдорожча`]
-  },  {
-    sentence: `Чай ___ за каву. (дешевий)`,
-    answer: `дешевший`,
-    options: [`дешевий`, `дешевший`, `дешевіший`, `найдешевший`]
-  },  {
-    sentence: `Вона ___ за нього. (високий)`,
-    answer: `вища`,
-    options: [`висока`, `вища`, `високіша`, `найвища`]
-  },  {
-    sentence: `Ця дорога ___. (довгий)`,
-    answer: `довша`,
-    options: [`довга`, `довша`, `довгіша`, `найдовша`]
-  },  {
-    sentence: `Він ___ за мене. (розумний)`,
-    answer: `розумніший`,
-    options: [`розумний`, `розумніший`, `розумнійший`, `найрозумніший`]
-  },  {
-    sentence: `Ця ідея ___! (поганий)`,
-    answer: `гірша`,
-    options: [`погана`, `поганіша`, `гірша`, `найгірша`]
-  },  {
-    sentence: `Ця кава ___. (гарячий)`,
-    answer: `гарячіша`,
-    options: [`гаряча`, `гарячіша`, `гарячша`, `найгарячіша`]
-  },  {
-    sentence: `Він ___ за брата. (молодий)`,
-    answer: `молодший`,
-    options: [`молодий`, `молодший`, `молодіший`, `наймолодший`]
-  }
-]} />
-
-### Comparatives
-
-<Quiz questions={[
-  {
-    question: `What's the comparative of \"добрий\"?`,
-    options: [
-      { text: `кращий`, correct: true },
-      { text: `добріший`, correct: false },
-      { text: `добрійший`, correct: false }
-    ]
-  },  {
-    question: `What's the comparative of \"великий\"?`,
-    options: [
-      { text: `більший`, correct: true },
-      { text: `великіший`, correct: false },
-      { text: `великший`, correct: false }
-    ]
-  },  {
-    question: `\"Ніж\" is followed by:`,
-    options: [
-      { text: `Nominative case`, correct: true },
-      { text: `Accusative case`, correct: false },
-      { text: `Genitive case`, correct: false }
-    ]
-  },  {
-    question: `\"За\" in comparisons is followed by:`,
-    options: [
-      { text: `Accusative case`, correct: true },
-      { text: `Nominative case`, correct: false },
-      { text: `Genitive case`, correct: false }
-    ]
-  },  {
-    question: `\"He is taller than me\" translates as:`,
-    options: [
-      { text: `Він вищий за мене.`, correct: true },
-      { text: `Він високий за мене.`, correct: false },
-      { text: `Він вищий мене.`, correct: false }
-    ]
-  },  {
-    question: `What intensifies a comparative?`,
-    options: [
-      { text: `набагато — much`, correct: true },
-      { text: `ніж — than`, correct: false },
-      { text: `за — for`, correct: false }
-    ]
-  },  {
-    question: `\"Дорожчий\" means:`,
-    options: [
-      { text: `more expensive`, correct: true },
-      { text: `cheaper`, correct: false },
-      { text: `most expensive`, correct: false }
-    ]
-  },  {
-    question: `\"Дешевший\" means:`,
-    options: [
-      { text: `cheaper`, correct: true },
-      { text: `more expensive`, correct: false },
-      { text: `cheapest`, correct: false }
-    ]
-  },  {
-    question: `\"Гірший\" is the comparative of:`,
-    options: [
-      { text: `поганий — bad`, correct: true },
-      { text: `добрий — good`, correct: false },
-      { text: `гарний — nice`, correct: false }
-    ]
-  },  {
-    question: `How do you say \"less interesting\"?`,
-    options: [
-      { text: `менш цікавий`, correct: true },
-      { text: `більш цікавий`, correct: false },
-      { text: `некращий`, correct: false }
-    ]
-  },  {
-    question: `\"Старіший\" means:`,
-    options: [
-      { text: `older`, correct: true },
-      { text: `younger`, correct: false },
-      { text: `oldest`, correct: false }
-    ]
-  },  {
-    question: `Which is NOT irregular?`,
-    options: [
-      { text: `новий → новіший`, correct: true },
-      { text: `добрий → кращий`, correct: false },
-      { text: `великий → більший`, correct: false }
-    ]
-  }
-]} />
-
-### Comparative Rules
-
-<TrueFalse items={[
-  {
-    statement: `Regular comparatives add -ший/-іший.`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `\"Кращий\" means \"better.\"`,
-    isTrue: true,
-    explanation: `Yes!`
-  },  {
-    statement: `\"Добріший\" is the comparative of \"добрий.\"`,
-    isTrue: false,
-    explanation: `The comparative is \"кращий\" (irregular).`
-  },  {
-    statement: `\"За\" takes accusative case.`,
-    isTrue: true,
-    explanation: `Correct! Вищий за мене.`
-  },  {
-    statement: `\"Ніж\" takes nominative case.`,
-    isTrue: true,
-    explanation: `Yes! Вищий ніж я.`
-  },  {
-    statement: `All comparatives are formed the same way.`,
-    isTrue: false,
-    explanation: `Common adjectives have irregular forms.`
-  },  {
-    statement: `\"Більший\" is the comparative of \"великий.\"`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `\"Набагато\" intensifies comparatives.`,
-    isTrue: true,
-    explanation: `Yes! Набагато кращий = much better.`
-  },  {
-    statement: `\"Гірший\" means \"better.\"`,
-    isTrue: false,
-    explanation: `\"Гірший\" means \"worse.\"`
-  },  {
-    statement: `Compound comparatives use більш/менш.`,
-    isTrue: true,
-    explanation: `Correct! Більш важливий.`
-  },  {
-    statement: `\"Вищий\" means \"taller\" or \"higher.\"`,
-    isTrue: true,
-    explanation: `Yes!`
-  },  {
-    statement: `\"Дорожчий\" is a regular form.`,
-    isTrue: false,
-    explanation: `It's irregular: дорогий → дорожчий.`
-  }
-]} />
-
-### Regular vs Irregular
-
-<GroupSort groups={{
-  "Regular (-ший/-іший)": ["новіший", "старіший", "розумніший", "цікавіший", "красивіший", "молодший"],
-  "Irregular": ["кращий", "гірший", "більший", "менший", "вищий", "нижчий"]
-}} />
-
-### Comparison Sentences
-
-<Unjumble items={[
-  { jumbled: `він / старіший / за / мене`, answer: `Він старіший за мене.` },
-  { jumbled: `ця / книга / цікавіша / ніж / та`, answer: `Ця книга цікавіша ніж та.` },
-  { jumbled: `лев / більший / за / кота`, answer: `Лев більший за кота.` },
-  { jumbled: `цей / телефон / кращий`, answer: `Цей телефон кращий.` },
-  { jumbled: `вона / вища / за / нього`, answer: `Вона вища за нього.` },
-  { jumbled: `ця / машина / дорожча`, answer: `Ця машина дорожча.` },
-  { jumbled: `він / набагато / розумніший`, answer: `Він набагато розумніший.` },
-  { jumbled: `зима / холодніша / за / літо`, answer: `Зима холодніша за літо.` },
-  { jumbled: `ця / дорога / довша`, answer: `Ця дорога довша.` },
-  { jumbled: `він / трохи / старіший`, answer: `Він трохи старіший.` },
-  { jumbled: `ця / ідея / гірша`, answer: `Ця ідея гірша.` },
-  { jumbled: `кава / гарячіша / ніж / чай`, answer: `Кава гарячіша ніж чай.` }
-]} />
-
-### Fix the Comparative
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Він ___ за мене. (добрий)`}
-    errorWord={`good → better`}
-    correctForm={`кращий`}
-    options={[`добріший`, `кращий`, `добрий`, `добрійший`]}
-    explanation={`Irregular: добрий → кращий.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ця машина ___. (великий)`}
-    errorWord={`big → bigger`}
-    correctForm={`більша`}
-    options={[`великіша`, `більша`, `великша`, `велика`]}
-    explanation={`Irregular: великий → більший.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він ___ за брата. (молодий)`}
-    errorWord={`young → younger`}
-    correctForm={`молодший`}
-    options={[`молодий`, `молодший`, `молодіший`, `молодойший`]}
-    explanation={`Regular: молодий → молодший.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ця ідея ___. (поганий)`}
-    errorWord={`bad → worse`}
-    correctForm={`гірша`}
-    options={[`поганіша`, `гірша`, `погана`, `поганіша`]}
-    explanation={`Irregular: поганий → гірший.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він ___ за мене. (високий)`}
-    errorWord={`tall → taller`}
-    correctForm={`вищий`}
-    options={[`високіший`, `вищий`, `високий`, `високший`]}
-    explanation={`Irregular: високий → вищий.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Цей телефон ___. (дорогий)`}
-    errorWord={`expensive → more expensive`}
-    correctForm={`дорожчий`}
-    options={[`дорогіший`, `дорожчий`, `дорогий`, `дорогійший`]}
-    explanation={`Irregular: дорогий → дорожчий.`}
-  />
-</ErrorCorrection>
-
-### Comparisons in Context
-
-<Cloze
-  passage={`Цей ноутбук [___:1] за той. Він має [___:2] екран, але він [___:3]. Батарея працює [___:4], ніж у старої моделі. Загалом, цей ноутбук [___:5].`}
-  blanks={[{ answer: `старіша`, options: [`старіша`] }, { answer: `вища`, options: [`вища`] }, { answer: `розумніша`, options: [`розумніша`] }, { answer: `молодший`, options: [`молодший`] }, { answer: `кращі`, options: [`кращі`] }]}
-/>
-
-### Shopping Comparisons
-
-<DialogueReorder lines={[
-  { text: `Яка машина краща?`, order: 1 },
-  { text: `Ця більша, але дорожча.`, order: 2 },
-  { text: `А та?`, order: 3 },
-  { text: `Та менша, але дешевша.`, order: 4 },
-  { text: `Яка економніша?`, order: 5 },
-  { text: `Менша машина економніша.`, order: 6 },
-  { text: `Цей телефон кращий ніж той?`, order: 7 },
-  { text: `Так, він швидший і новіший.`, order: 8 },
-  { text: `Але він набагато дорожчий!`, order: 9 },
-  { text: `Так, якість коштує.`, order: 10 },
-  { text: `Є щось дешевше?`, order: 11 },
-  { text: `Так, цей. Він трохи гірший, але дешевший.`, order: 12 }
-]} />
-
-### Find Comparatives
-
-<MarkTheWords>
-<MarkTheWordsActivity
-  text={`Click on COMPARATIVE adjective forms only.
-
-Цей телефон кращий і швидший. Він новіший за мій старий телефон. Але він дорожчий.`}
-  correctWords={[`кращий`, `швидший`, `новіший`, `дорожчий`]}
-/>
-<MarkTheWordsActivity
-  text={`Вона вища за мене. Він старіший за брата. Ця ідея цікавіша!`}
-  correctWords={[`вища`, `старіший`, `цікавіша`]}
-/>
-<MarkTheWordsActivity
-  text={`Машина більша, але дешевша. Він набагато розумніший.`}
-  correctWords={[`більша`, `дешевша`, `розумніший`]}
-/>
-</MarkTheWords>
-
-### English to Ukrainian
-
-<Translate questions={[
-  {
-    source: `He is older than me.`,
-    options: [
-      { text: `Він старіший за мене.`, correct: true },
-      { text: `Він старий за мене.`, correct: false },
-      { text: `Він старіший мене.`, correct: false },
-      { text: `Ця книга краща.`, correct: true },
-      { text: `Ця книга добріша.`, correct: false },
-      { text: `Ця книга добра.`, correct: false },
-      { text: `Лев більший за кота.`, correct: true },
-      { text: `Лев великий за кота.`, correct: false },
-      { text: `Лев великіший за кота.`, correct: false },
-      { text: `Це дорожче.`, correct: true },
-      { text: `Це дороге.`, correct: false },
-      { text: `Це дорогіше.`, correct: false },
-      { text: `Вона вища за нього.`, correct: true },
-      { text: `Вона висока за нього.`, correct: false },
-      { text: `Вона високіша за нього.`, correct: false },
-      { text: `Ця ідея гірша.`, correct: true },
-      { text: `Ця ідея поганіша.`, correct: false },
-      { text: `Ця ідея погана.`, correct: false },
-      { text: `Він набагато розумніший.`, correct: true },
-      { text: `Він розумний.`, correct: false },
-      { text: `Він трохи розумний.`, correct: false },
-      { text: `Є щось дешевше?`, correct: true },
-      { text: `Є щось дешеве?`, correct: false },
-      { text: `Є щось недороге?`, correct: false },
-      { text: `Зима холодніша за літо.`, correct: true },
-      { text: `Зима холодна за літо.`, correct: false },
-      { text: `Зима холодніша літо.`, correct: false },
-      { text: `Ця дорога довша.`, correct: true },
-      { text: `Ця дорога довга.`, correct: false },
-      { text: `Ця дорога довгіша.`, correct: false },
-      { text: `Він трохи старіший.`, correct: true },
-      { text: `Він старий.`, correct: false },
-      { text: `Він набагато старіший.`, correct: false },
-      { text: `Кава гарячіша за чай.`, correct: true },
-      { text: `Кава гаряча за чай.`, correct: false },
-      { text: `Кава гарячіша чай.`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -652,3 +291,514 @@ There are two ways to say "than" in Ukrainian:
 | гарячіший | /ɦɑˈrʲɑt͡ʃiʃɪj/ | hotter | adj | m | comparative of гарячий |
 
 ---
+
+---
+
+## 🎯 Activities
+
+### Comparative Forms
+
+<MatchUp pairs={[
+  { left: `добрий`, right: `кращий` },
+  { left: `поганий`, right: `гірший` },
+  { left: `великий`, right: `більший` },
+  { left: `малий`, right: `менший` },
+  { left: `високий`, right: `вищий` },
+  { left: `низький`, right: `нижчий` },
+  { left: `довгий`, right: `довший` },
+  { left: `короткий`, right: `коротший` },
+  { left: `дорогий`, right: `дорожчий` },
+  { left: `дешевий`, right: `дешевший` },
+  { left: `новий`, right: `новіший` },
+  { left: `старий`, right: `старіший` }
+]} />
+
+### Form the Comparative
+
+*Complete with the correct comparative form.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Він ___ за мене. (старий)`}
+    answer={`старіший`}
+    options={[`старий`, `старіший`, `старший`, `найстаріший`]}
+  />
+  <FillInQuestion
+    sentence={`Ця книга ___. (цікавий)`}
+    answer={`цікавіша`}
+    options={[`цікава`, `цікавіша`, `цікавший`, `найцікавіша`]}
+  />
+  <FillInQuestion
+    sentence={`Цей телефон ___. (добрий)`}
+    answer={`кращий`}
+    options={[`добріший`, `кращий`, `найдобріший`, `добрий`]}
+  />
+  <FillInQuestion
+    sentence={`Лев ___ за кота. (великий)`}
+    answer={`більший`}
+    options={[`великий`, `великіший`, `більший`, `найбільший`]}
+  />
+  <FillInQuestion
+    sentence={`Ця машина ___. (дорогий)`}
+    answer={`дорожча`}
+    options={[`дорога`, `дорожча`, `дорогіша`, `найдорожча`]}
+  />
+  <FillInQuestion
+    sentence={`Чай ___ за каву. (дешевий)`}
+    answer={`дешевший`}
+    options={[`дешевий`, `дешевший`, `дешевіший`, `найдешевший`]}
+  />
+  <FillInQuestion
+    sentence={`Вона ___ за нього. (високий)`}
+    answer={`вища`}
+    options={[`висока`, `вища`, `високіша`, `найвища`]}
+  />
+  <FillInQuestion
+    sentence={`Ця дорога ___. (довгий)`}
+    answer={`довша`}
+    options={[`довга`, `довша`, `довгіша`, `найдовша`]}
+  />
+  <FillInQuestion
+    sentence={`Він ___ за мене. (розумний)`}
+    answer={`розумніший`}
+    options={[`розумний`, `розумніший`, `розумнійший`, `найрозумніший`]}
+  />
+  <FillInQuestion
+    sentence={`Ця ідея ___! (поганий)`}
+    answer={`гірша`}
+    options={[`погана`, `поганіша`, `гірша`, `найгірша`]}
+  />
+  <FillInQuestion
+    sentence={`Ця кава ___. (гарячий)`}
+    answer={`гарячіша`}
+    options={[`гаряча`, `гарячіша`, `гарячша`, `найгарячіша`]}
+  />
+  <FillInQuestion
+    sentence={`Він ___ за брата. (молодий)`}
+    answer={`молодший`}
+    options={[`молодий`, `молодший`, `молодіший`, `наймолодший`]}
+  />
+</FillIn>
+
+### Comparatives
+
+<Quiz>
+  <QuizQuestion
+    question={`1. What's the comparative of "добрий"?`}
+    options={[`кращий`, `добріший`, `добрійший`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`What's the comparative of "великий"?`}
+    options={[`більший`, `великіший`, `великший`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Ніж" is followed by:`}
+    options={[`Nominative case`, `Accusative case`, `Genitive case`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"За" in comparisons is followed by:`}
+    options={[`Accusative case`, `Nominative case`, `Genitive case`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"He is taller than me" translates as:`}
+    options={[`Він вищий за мене.`, `Він високий за мене.`, `Він вищий мене.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`What intensifies a comparative?`}
+    options={[`набагато — much`, `ніж — than`, `за — for`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Дорожчий" means:`}
+    options={[`more expensive`, `cheaper`, `most expensive`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Дешевший" means:`}
+    options={[`cheaper`, `more expensive`, `cheapest`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Гірший" is the comparative of:`}
+    options={[`поганий — bad`, `добрий — good`, `гарний — nice`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`How do you say "less interesting"?`}
+    options={[`менш цікавий`, `більш цікавий`, `некращий`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Старіший" means:`}
+    options={[`older`, `younger`, `oldest`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Which is NOT irregular?`}
+    options={[`новий → новіший`, `добрий → кращий`, `великий → більший`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### Comparative Rules
+
+*Decide if each statement is true or false.*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`Regular comparatives add -ший/-іший.`}
+    isTrue={true}
+    explanation={`Correct!`}
+  />
+  <TrueFalseQuestion
+    statement={`"Кращий" means "better."`}
+    isTrue={true}
+    explanation={`Yes!`}
+  />
+  <TrueFalseQuestion
+    statement={`"Добріший" is the comparative of "добрий."`}
+    isTrue={false}
+    explanation={`The comparative is "кращий" (irregular).`}
+  />
+  <TrueFalseQuestion
+    statement={`"За" takes accusative case.`}
+    isTrue={true}
+    explanation={`Correct! Вищий за мене.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Ніж" takes nominative case.`}
+    isTrue={true}
+    explanation={`Yes! Вищий ніж я.`}
+  />
+  <TrueFalseQuestion
+    statement={`All comparatives are formed the same way.`}
+    isTrue={false}
+    explanation={`Common adjectives have irregular forms.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Більший" is the comparative of "великий."`}
+    isTrue={true}
+    explanation={`Correct!`}
+  />
+  <TrueFalseQuestion
+    statement={`"Набагато" intensifies comparatives.`}
+    isTrue={true}
+    explanation={`Yes! Набагато кращий = much better.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Гірший" means "better."`}
+    isTrue={false}
+    explanation={`"Гірший" means "worse."`}
+  />
+  <TrueFalseQuestion
+    statement={`Compound comparatives use більш/менш.`}
+    isTrue={true}
+    explanation={`Correct! Більш важливий.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Вищий" means "taller" or "higher."`}
+    isTrue={true}
+    explanation={`Yes!`}
+  />
+  <TrueFalseQuestion
+    statement={`"Дорожчий" is a regular form.`}
+    isTrue={false}
+    explanation={`It's irregular: дорогий → дорожчий.`}
+  />
+</TrueFalse>
+
+### Regular vs Irregular
+
+*Sort these comparatives by formation type.*
+
+
+<GroupSort groups={{
+  "### Regular (-ший/-іший)": [
+    "новіший",
+    "старіший",
+    "розумніший",
+    "цікавіший",
+    "красивіший",
+    "молодший"
+  ],
+  "Irregular": [
+    "кращий",
+    "гірший",
+    "більший",
+    "менший",
+    "вищий",
+    "нижчий"
+  ]
+}} />
+
+### Comparison Sentences
+
+*Put the words in the correct order.*
+
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`він / старіший / за / мене`}
+    answer={`Він старіший за мене.`}
+  />
+  <UnjumbleQuestion
+    words={`ця / книга / цікавіша / ніж / та`}
+    answer={`Ця книга цікавіша ніж та.`}
+  />
+  <UnjumbleQuestion
+    words={`лев / більший / за / кота`}
+    answer={`Лев більший за кота.`}
+  />
+  <UnjumbleQuestion
+    words={`цей / телефон / кращий`}
+    answer={`Цей телефон кращий.`}
+  />
+  <UnjumbleQuestion
+    words={`вона / вища / за / нього`}
+    answer={`Вона вища за нього.`}
+  />
+  <UnjumbleQuestion
+    words={`ця / машина / дорожча`}
+    answer={`Ця машина дорожча.`}
+  />
+  <UnjumbleQuestion
+    words={`він / набагато / розумніший`}
+    answer={`Він набагато розумніший.`}
+  />
+  <UnjumbleQuestion
+    words={`зима / холодніша / за / літо`}
+    answer={`Зима холодніша за літо.`}
+  />
+  <UnjumbleQuestion
+    words={`ця / дорога / довша`}
+    answer={`Ця дорога довша.`}
+  />
+  <UnjumbleQuestion
+    words={`він / трохи / старіший`}
+    answer={`Він трохи старіший.`}
+  />
+  <UnjumbleQuestion
+    words={`ця / ідея / гірша`}
+    answer={`Ця ідея гірша.`}
+  />
+  <UnjumbleQuestion
+    words={`кава / гарячіша / ніж / чай`}
+    answer={`Кава гарячіша ніж чай.`}
+  />
+</Unjumble>
+
+### Fix the Comparative
+
+*Choose the correct comparative form.*
+
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Він ___ за мене. (добрий)`}
+    error={`good → better`}
+    answer={`кращий`}
+    options={[`добріший`, `кращий`, `добрий`, `добрійший`]}
+    explanation={`Irregular: добрий → кращий.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ця машина ___. (великий)`}
+    error={`big → bigger`}
+    answer={`більша`}
+    options={[`великіша`, `більша`, `великша`, `велика`]}
+    explanation={`Irregular: великий → більший.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він ___ за брата. (молодий)`}
+    error={`young → younger`}
+    answer={`молодший`}
+    options={[`молодий`, `молодший`, `молодіший`, `молодойший`]}
+    explanation={`Regular: молодий → молодший.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ця ідея ___. (поганий)`}
+    error={`bad → worse`}
+    answer={`гірша`}
+    options={[`поганіша`, `гірша`, `погана`, `поганіша`]}
+    explanation={`Irregular: поганий → гірший.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він ___ за мене. (високий)`}
+    error={`tall → taller`}
+    answer={`вищий`}
+    options={[`високіший`, `вищий`, `високий`, `високший`]}
+    explanation={`Irregular: високий → вищий.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Цей телефон ___. (дорогий)`}
+    error={`expensive → more expensive`}
+    answer={`дорожчий`}
+    options={[`дорогіший`, `дорожчий`, `дорогий`, `дорогійший`]}
+    explanation={`Irregular: дорогий → дорожчий.`}
+  />
+</ErrorCorrection>
+
+
+
+### Shopping Comparisons
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Яка машина краща?"
+  },
+  {
+    "speaker": "",
+    "line": "Ця більша, але дорожча."
+  },
+  {
+    "speaker": "",
+    "line": "А та?"
+  },
+  {
+    "speaker": "",
+    "line": "Та менша, але дешевша."
+  },
+  {
+    "speaker": "",
+    "line": "Яка економніша?"
+  },
+  {
+    "speaker": "",
+    "line": "Менша машина економніша."
+  },
+  {
+    "speaker": "",
+    "line": "Цей телефон кращий ніж той?"
+  },
+  {
+    "speaker": "",
+    "line": "Так, він швидший і новіший."
+  },
+  {
+    "speaker": "",
+    "line": "Але він набагато дорожчий!"
+  },
+  {
+    "speaker": "",
+    "line": "Так, якість коштує."
+  },
+  {
+    "speaker": "",
+    "line": "Є щось дешевше?"
+  },
+  {
+    "speaker": "",
+    "line": "Так, цей. Він трохи гірший, але дешевший."
+  }
+]} />
+</DialogueReorder>
+
+### Find Comparatives
+
+Click on COMPARATIVE adjective forms only.
+
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Цей телефон кращий і швидший. Він новіший за мій старий телефон. Але він дорожчий. Вона вища за мене. Він старіший за брата. Ця ідея цікавіша! Машина більша, але дешевша. Він набагато розумніший.`}
+    correctWords={[`кращий`, `швидший`, `новіший`, `дорожчий`, `вища`, `старіший`, `цікавіша`, `більша`, `дешевша`, `розумніший`]}
+  />
+</MarkTheWords>
+
+### English to Ukrainian
+
+<Translate>
+  <TranslateItem
+    source={`He is older than me.`}
+    answer={`Він старіший за мене.`}
+    options={[`Він старіший за мене.`, `Він старий за мене.`, `Він старіший мене.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`This book is better.`}
+    answer={`Ця книга краща.`}
+    options={[`Ця книга краща.`, `Ця книга добріша.`, `Ця книга добра.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`The lion is bigger than the cat.`}
+    answer={`Лев більший за кота.`}
+    options={[`Лев більший за кота.`, `Лев великий за кота.`, `Лев великіший за кота.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`This is more expensive.`}
+    answer={`Це дорожче.`}
+    options={[`Це дорожче.`, `Це дороге.`, `Це дорогіше.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She is taller than him.`}
+    answer={`Вона вища за нього.`}
+    options={[`Вона вища за нього.`, `Вона висока за нього.`, `Вона високіша за нього.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`This idea is worse.`}
+    answer={`Ця ідея гірша.`}
+    options={[`Ця ідея гірша.`, `Ця ідея поганіша.`, `Ця ідея погана.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`He is much smarter.`}
+    answer={`Він набагато розумніший.`}
+    options={[`Він набагато розумніший.`, `Він розумний.`, `Він трохи розумний.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Is there something cheaper?`}
+    answer={`Є щось дешевше?`}
+    options={[`Є щось дешевше?`, `Є щось дешеве?`, `Є щось недороге?`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Winter is colder than summer.`}
+    answer={`Зима холодніша за літо.`}
+    options={[`Зима холодніша за літо.`, `Зима холодна за літо.`, `Зима холодніша літо.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`This road is longer.`}
+    answer={`Ця дорога довша.`}
+    options={[`Ця дорога довша.`, `Ця дорога довга.`, `Ця дорога довгіша.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`He is a little older.`}
+    answer={`Він трохи старіший.`}
+    options={[`Він трохи старіший.`, `Він старий.`, `Він набагато старіший.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`Coffee is hotter than tea.`}
+    answer={`Кава гарячіша за чай.`}
+    options={[`Кава гарячіша за чай.`, `Кава гаряча за чай.`, `Кава гарячіша чай.`]}
+    explanation={``}
+  />
+</Translate>
+

@@ -5,19 +5,20 @@ title: "Hobbies & Leisure"
 description: "Free Time in Ukrainian"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Hobbies & Leisure
@@ -30,7 +31,8 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 
 Free time is essential. In this module, you'll learn to talk about your hobbies, from painting to traveling. You'll learn verbs for creative activities and nouns for entertainment.
 
-:::warning[**Myth Buster** "The Gloomy Slav"]
+:::warning
+**Myth Buster** "The Gloomy Slav"
 Stereotypes say Eastern Europeans are gloomy. False! Ukraine has a vibrant culture of music, dance, and festivals. From traditional **вечорниці** (evening gatherings) to modern techno raves in Kyiv, Ukrainians know how to party and enjoy life.
 :::
 
@@ -54,7 +56,8 @@ What do you create?
 
 Note: **Грати** takes **на** + Locative for instruments (*на гітарі*) but **в** + Accusative for sports/games (*в футбол*).
 
-:::note[Grammar Point: Playing]
+:::note
+Grammar Point: Playing
 In Ukrainian, the verb **грати** changes prepositions based on context:
 - **Music**: грати **на** + Instrument (Locative case). *Я граю на гітарі, на піаніно.*
 - **Sports/Games**: грати **в** + Game (Accusative case). *Ми граємо в футбол, в шахи, в теніс.*
@@ -75,7 +78,8 @@ Exploring the world:
 - **намет** — tent: *Ми спимо в наметі.*
 - **квиток** — ticket: *У мене є квиток на поїзд.*
 
-:::note[**Cultural Insight** The Dacha]
+:::note
+**Cultural Insight** The Dacha
 Many Ukrainians have a **дача** (summer house) or a garden outside the city. On weekends, families go there to relax, grow vegetables (esp. potatoes!), and make BBQ (**шашлик**). It's a national ritual.
 :::
 
@@ -99,7 +103,8 @@ Where do we go?
 - **захоплення** — passion/hobby: *Його захоплення — спорт.*
 - **відпочинок** — rest/leisure: *Активний відпочинок.*
 
-:::tip[**Tip** "Visiting"]
+:::tip
+**Tip** "Visiting"
 In Ukraine, **ходити в гості** (to go visiting) is huge. If you are invited, never come empty-handed. Bring creative sweets, cake ("to tea"), or flowers. Hospitality (**гостинність**) is sacred.
 :::
 
@@ -117,13 +122,8 @@ In Ukraine, **ходити в гості** (to go visiting) is huge. If you are 
 Дмитро часто **виступає** на **сцені**. **Глядачі** люблять його пісні.
 
 Одного разу вони зустрілися на виставці.
-<div className="conversation">
-
 — Твої картини чудові! — сказав Дмитро.
-
 — А твій концерт був супер! — відповіла Олена.
-
-</div>
 Тепер вони разом ходять у **театр** і на **концерти**. Мистецтво об'єднує!
 
 ### Story Time: The Traveler
@@ -135,13 +135,8 @@ In Ukraine, **ходити в гості** (to go visiting) is huge. If you are 
 
 Він **оглядав** старі церкви і **відвідував** гуцульські села. Вдень він йшов горами, а ввечері розпалював вогонь.
 Одного разу він зустрів туристів.
-<div className="conversation">
-
 — Привіт! Куди йдете?
-
 — Ми йдемо на Говерлу, — відповіли вони.
-
-</div>
 
 Максим пішов з ними. Вони разом піднялися на найвищу гору України. Там було холодно, але красиво. Максим зробив багато фото.
 — Це найкраща **подорож** у моєму житті! — сказав він.
@@ -150,29 +145,16 @@ In Ukraine, **ходити в гості** (to go visiting) is huge. If you are 
 
 Сьогодні п'ятниця. Наталя і Ігор планують вихідні.
 
-<div className="conversation">
-
 — Що будемо робити? — питає Ігор. — У мене є **вільний час**.
-
 — Може, підемо в **кіно**? — пропонує Наталя. — Там новий фільм.
-
 — Я не хочу в кіно. Я хочу на природу.
-
 — Але на вулиці дощ!
-
 — Тоді давай підемо в **музей**. Там нова **виставка**.
-
 — Це нудно, — каже Наталя. — Я хочу веселощів.
-
 — Добре, а як щодо театру?
-
 — **Театр**? Це цікаво. А є **квитки**?
-
 — Зараз подивлюся онлайн. О, є два квитки на комедію!
-
 — Чудово! Я люблю сміятися.
-
-</div>
 
 Вони замовили квитки. Вечір буде культурним. Ігор радий, що Наталя задоволена.
 
@@ -192,7 +174,8 @@ In Ukraine, **ходити в гості** (to go visiting) is huge. If you are 
 В антракті вони пили шампанське.
 — Дякую за цей вечір, — сказала Оксана. — Це найкращий **відпочинок**.
 
-:::note[**Cultural Insight** Opera Houses]
+:::note
+**Cultural Insight** Opera Houses
 Ukraine has stunning opera houses in Kyiv, Lviv, and Odesa. The Odesa Opera House is considered one of the most beautiful in the world. Going to the opera is a popular and relatively affordable activity for Ukrainians.
 :::
 
@@ -214,23 +197,24 @@ Ukraine has stunning opera houses in Kyiv, Lviv, and Odesa. The Odesa Opera Hous
 Марія любить **співати**. Вона не професійна співачка, але у неї гарний голос.
 Коли у неї **вільний час**, вона йде в караоке з друзями.
 
-<div className="conversation">
-
 — Що будемо співати? — питають друзі.
-
 — Звичайно, "Червону руту"! — відповідає Марія.
-
-</div>
 Вони співають голосно і весело. Інші люди аплодують.
 
 Вдома Марія співає, коли готує їжу. Її чоловік сміється:
-<div className="conversation">
-
 — Ти можеш виступати на концерті!
-
 — Може, колись, — усміхається вона. — А поки я співаю для тебе.
 
-</div>
+:::info
+🔗 External Resources
+
+**YouTube:** [Beekeeping as Pleasant Hobby and Healthy Leisure in Ukraine! (ENGLISH)...](https://www.youtube.com/watch?v=3SQ84KLtK-A) — Dr Victor Fursov Entomologist Beekeeper Teacher
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+:::
+
 
 ## 📋 Summary
 
@@ -242,440 +226,7 @@ You learned to:
 
 Life is not only work. Ukrainians value their rest highly. Make sure you rest well and find a hobby that makes you truly happy! Don't forget to invite friends!
 
-## 🎯 Activities
 
-### Hobby Quiz
-
-<Quiz questions={[
-  {
-    question: `What implies creating a picture?`,
-    options: [
-      { text: `малювати`, correct: true },
-      { text: `співати`, correct: false },
-      { text: `грати`, correct: false }
-    ]
-  },  {
-    question: `Where do you sleep camping?`,
-    options: [
-      { text: `у наметі`, correct: true },
-      { text: `у театрі`, correct: false },
-      { text: `у музеї`, correct: false }
-    ]
-  },  {
-    question: `What do you need to enter a cinema?`,
-    options: [
-      { text: `квиток`, correct: true },
-      { text: `намет`, correct: false },
-      { text: `сцену`, correct: false }
-    ]
-  },  {
-    question: `Who watches a performance?`,
-    options: [
-      { text: `глядач`, correct: true },
-      { text: `актор`, correct: false },
-      { text: `співак`, correct: false }
-    ]
-  },  {
-    question: `What instrument is \"грати на...\"?`,
-    options: [
-      { text: `на гітарі`, correct: true },
-      { text: `в футбол`, correct: false },
-      { text: `в теніс`, correct: false }
-    ]
-  },  {
-    question: `Is \"хобі\" declinable?`,
-    options: [
-      { text: `No, it is indeclinable`, correct: true },
-      { text: `Yes, хобі, хоббі, хоббю`, correct: false }
-    ]
-  },  {
-    question: `Which involves collecting things?`,
-    options: [
-      { text: `колекціонувати`, correct: true },
-      { text: `співати`, correct: false },
-      { text: `бігати`, correct: false }
-    ]
-  },  {
-    question: `Where do you see actors?`,
-    options: [
-      { text: `в театрі`, correct: true },
-      { text: `в наметі`, correct: false },
-      { text: `в лісі`, correct: false }
-    ]
-  },  {
-    question: `What is \"leisure\"?`,
-    options: [
-      { text: `відпочинок`, correct: true },
-      { text: `робота`, correct: false },
-      { text: `сон`, correct: false }
-    ]
-  },  {
-    question: `What is a \"journey\"?`,
-    options: [
-      { text: `подорож`, correct: true },
-      { text: `квиток`, correct: false },
-      { text: `сцена`, correct: false }
-    ]
-  },  {
-    question: `To take photos is...`,
-    options: [
-      { text: `фотографувати`, correct: true },
-      { text: `малювати`, correct: false },
-      { text: `писати`, correct: false }
-    ]
-  },  {
-    question: `To see sights/inspect implies...`,
-    options: [
-      { text: `оглядати`, correct: true },
-      { text: `спати`, correct: false },
-      { text: `їсти`, correct: false }
-    ]
-  }
-]} />
-
-### Hobby Vocabulary
-
-<MatchUp pairs={[
-  { left: `малювати`, right: `to draw/paint` },
-  { left: `співати`, right: `to sing` },
-  { left: `танцювати`, right: `to dance` },
-  { left: `подорожувати`, right: `to travel` },
-  { left: `збирати`, right: `to gather/collect` },
-  { left: `грати`, right: `to play` },
-  { left: `читати`, right: `to read` },
-  { left: `відвідувати`, right: `to visit` },
-  { left: `фотографувати`, right: `to photograph` },
-  { left: `колекціонувати`, right: `to collect (items)` },
-  { left: `оглядати`, right: `to inspect/sightsee` },
-  { left: `писати`, right: `to write` }
-]} />
-
-### My Hobbies
-
-<FillIn items={[
-  {
-    sentence: `Я люблю ____ на гітарі.`,
-    answer: `грати`,
-    options: [`грати`, `спати`, `їсти`, `йти`]
-  },  {
-    sentence: `Вона ____ красиві картини.`,
-    answer: `малює`,
-    options: [`малює`, `співає`, `читає`, `п'є`]
-  },  {
-    sentence: `Ми йдемо в ____ на новий фільм.`,
-    answer: `кіно`,
-    options: [`кіно`, `театр`, `музей`, `парк`]
-  },  {
-    sentence: `Це моє улюблене ____.`,
-    answer: `хобі`,
-    options: [`хобі`, `хоббі`, `хобба`, `хобу`]
-  },  {
-    sentence: `У мене є два ____ на концерт.`,
-    answer: `квитки`,
-    options: [`квитки`, `намети`, `сцени`, `поїзди`]
-  },  {
-    sentence: `Ми ____ старий замок.`,
-    answer: `оглядаємо`,
-    options: [`оглядаємо`, `співаємо`, `малюємо`, `спимо`]
-  },  {
-    sentence: `Він ____ марки.`,
-    answer: `колекціонує`,
-    options: [`колекціонує`, `грає`, `танцює`, `йде`]
-  },  {
-    sentence: `Я хочу ____ у Францію.`,
-    answer: `подорожувати`,
-    options: [`подорожувати`, `малювати`, `грати`, `читати`]
-  },  {
-    sentence: `Артист стоїть на ____.`,
-    answer: `сцені`,
-    options: [`сцені`, `наметі`, `квитку`, `лісі`]
-  },  {
-    sentence: `Ми спимо в ____.`,
-    answer: `наметі`,
-    options: [`наметі`, `кіно`, `театрі`, `сцені`]
-  },  {
-    sentence: `Це цікава ____.`,
-    answer: `виставка`,
-    options: [`виставка`, `квиток`, `намет`, `хобі`]
-  },  {
-    sentence: `____ аплодують.`,
-    answer: `Глядачі`,
-    options: [`Глядачі`, `Квитки`, `Намети`, `Музеї`]
-  }
-]} />
-
-### Cultural Leisure
-
-<TrueFalse items={[
-  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Singing is huge in UA culture.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `It's a summer house/garden.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `BBQ is a ritual.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Never empty-handed.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Кіно = cinema. Театр = theater.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `It never changes.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `\"Грати на\" + Instr = Music. \"Грати в\" + Acc = Sports.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Yes, mountains.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Free time.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Yes.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Tent is for camping.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Famous energetic dance.`
-  }
-]} />
-
-### Activity Types
-
-<GroupSort groups={{
-  "Groups": ["Creative", "Active/Travel", "Places"],
-  "Items": ["малювати: Creative", "співати: Creative", "писати: Creative", "фотографувати: Creative", "подорожувати: Active/Travel", "ходити: Active/Travel", "збирати: Active/Travel", "танцювати: Active/Travel", "кіно: Places", "театр: Places", "музей: Places", "сцена: Places"]
-}} />
-
-### Weekend Sentences
-
-<Unjumble items={[
-  { jumbled: `Ми / йдемо / в / кіно / завтра`, answer: `Ми йдемо в кіно завтра` },
-  { jumbled: `Я / люблю / грати / на / гітарі`, answer: `Я люблю грати на гітарі` },
-  { jumbled: `Вона / часто / подорожує / світом`, answer: `Вона часто подорожує світом` },
-  { jumbled: `У / мене / є / нове / хобі`, answer: `У мене є нове хобі` },
-  { jumbled: `Ми / купили / квитки / в / театр`, answer: `Ми купили квитки в театр` },
-  { jumbled: `Він / колекціонує / старі / картини`, answer: `Він колекціонує старі картини` },
-  { jumbled: `Глядачі / люблять / цей / концерт`, answer: `Глядачі люблять цей концерт` },
-  { jumbled: `Вони / відпочивають / на / дачі`, answer: `Вони відпочивають на дачі` },
-  { jumbled: `Олена / гарно / танцює / гопак`, answer: `Олена гарно танцює гопак` },
-  { jumbled: `Це / був / чудовий / відпочинок`, answer: `Це був чудовий відпочинок` },
-  { jumbled: `Я / відвідую / музеї / влітку`, answer: `Я відвідую музеї влітку` },
-  { jumbled: `Намет / стоїть / у / лісі`, answer: `Намет стоїть у лісі` }
-]} />
-
-### Fix the Hobby
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я граю в гітарі.`}
-    errorWord={`в`}
-    correctForm={`на`}
-    options={[`на`, `в`, `у`, `за`]}
-    explanation={`Instruments: грати НА гітарі.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми йдемо в театру.`}
-    errorWord={`театру`}
-    correctForm={`театр`}
-    options={[`театр`, `театру`, `театра`, `театром`]}
-    explanation={`Direction (Accusative inanimate): в театр.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Це моє хоббі.`}
-    errorWord={`хоббі`}
-    correctForm={`хобі`}
-    options={[`хобі`, `хоббі`, `хобби`, `гобі`]}
-    explanation={`Ukrainian spelling: one 'б' (хобі).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він малює картин.`}
-    errorWord={`картин`}
-    correctForm={`картини`}
-    options={[`картини`, `картин`, `картиною`, `картинам`]}
-    explanation={`Accusative plural: картини.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я маю вільний часу.`}
-    errorWord={`часу`}
-    correctForm={`час`}
-    options={[`час`, `часу`, `часом`, `часи`]}
-    explanation={`Accusative: маю час.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона співає пісня.`}
-    errorWord={`пісня`}
-    correctForm={`пісню`}
-    options={[`пісню`, `пісня`, `пісні`, `піснею`]}
-    explanation={`Accusative feminine: пісню.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми спимо в намет.`}
-    errorWord={`намет`}
-    correctForm={`наметі`}
-    options={[`наметі`, `намет`, `намету`, `наметом`]}
-    explanation={`Locative (where?): в наметі.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Глядач дивляться фільм.`}
-    errorWord={`Глядач`}
-    correctForm={`Глядачі`}
-    options={[`Глядачі`, `Глядач`, `Глядача`, `Глядачем`]}
-    explanation={`Plural verb requires plural subject.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я колекціоную монет.`}
-    errorWord={`монет`}
-    correctForm={`монети`}
-    options={[`монети`, `монет`, `монетою`, `монетам`]}
-    explanation={`Accusative plural: монети.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він фотографує природі.`}
-    errorWord={`природі`}
-    correctForm={`природу`}
-    options={[`природу`, `природі`, `природа`, `природою`]}
-    explanation={`Accusative feminine: природу.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми були на концерт.`}
-    errorWord={`концерт`}
-    correctForm={`концерті`}
-    options={[`концерті`, `концерт`, `концерту`, `концертом`]}
-    explanation={`Locative (location): на концерті.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я люблю подорожувати світ.`}
-    errorWord={`світ`}
-    correctForm={`світом`}
-    options={[`світом`, `світ`, `світу`, `світі`]}
-    explanation={`Instrumental (through/by means of): світом.`}
-  />
-</ErrorCorrection>
-
-### Cultural Weekend
-
-<Cloze
-  passage={`У суботу ми поїхали на [___:1]. Там ми робили шашлик.
-Ми [___:2] пісні і [___:3] на гітарі.
-У неділю ми пішли в [___:4]. Ми купили [___:5] онлайн.
-Ми дивилися новий [___:6]. В залі були інші [___:7].
-Потім ми пішли в [___:8]. Там була [___:9] сучасного мистецтва.
-Ми любимо такий [___:10].`}
-  blanks={[{ answer: `дачу`, options: [`дачу`, `роботу`, `школу`] }, { answer: `співали`, options: [`співали`, `спали`, `їли`] }, { answer: `грали`, options: [`грали`, `читали`, `писали`] }, { answer: `кіно`, options: [`кіно`, `намет`, `ліс`] }, { answer: `квитки`, options: [`квитки`, `вікна`, `двері`] }, { answer: `фільм`, options: [`фільм`, `театр`, `парк`] }, { answer: `глядачі`, options: [`глядачі`, `актори`, `лікарі`] }, { answer: `музей`, options: [`музей`, `офіс`, `завод`] }, { answer: `виставка`, options: [`виставка`, `пісня`, `гра`] }, { answer: `відпочинок`, options: [`відпочинок`, `урок`, `сон`] }]}
-/>
-
-### Weekend Plans
-
-<DialogueReorder lines={[
-  { text: `Привіт! Які плани на вихідні?`, order: 1 },
-  { text: `Привіт. Я хочу піти в театр.`, order: 2 },
-  { text: `О, я теж люблю театр. Що там показують?`, order: 3 },
-  { text: `Там нова комедія \"Ревізор\".`, order: 4 },
-  { text: `Чудово! А квитки ще є?`, order: 5 },
-  { text: `Так, я бачив квитки на сайті.`, order: 6 },
-  { text: `Скільки вони коштують?`, order: 7 },
-  { text: `300 гривень. Це нормальна ціна.`, order: 8 },
-  { text: `Давай купимо два. Я заплачу.`, order: 9 },
-  { text: `Добре, я забронюю зараз.`, order: 10 },
-  { text: `Дякую! Зустрінемося біля театру.`, order: 11 },
-  { text: `Домовилися. До зустрічі!`, order: 12 }
-]} />
-
-### Choose Correct Verb
-
-<Select questions={[
-  {
-    question: `__ на гітарі.`,
-    options: [
-      { text: `Грати`, correct: true },
-      { text: `Гратися`, correct: false }
-    ]
-  },  {
-    question: `__ пісні.`,
-    options: [
-      { text: `Співати`, correct: true },
-      { text: `Спати`, correct: false }
-    ]
-  },  {
-    question: `__ марки.`,
-    options: [
-      { text: `Колекціонувати`, correct: true }
-    ]
-  },  {
-    question: `__ картини.`,
-    options: [
-      { text: `Малювати`, correct: true },
-      { text: `Писати`, correct: false }
-    ]
-  },  {
-    question: `__ гопак.`,
-    options: [
-      { text: `Танцювати`, correct: true },
-      { text: `Співати`, correct: false }
-    ]
-  },  {
-    question: `__ місто.`,
-    options: [
-      { text: `Оглядати`, correct: true },
-      { text: `Дивитися`, correct: false }
-    ]
-  },  {
-    question: `__ у наметі.`,
-    options: [
-      { text: `Спати`, correct: true },
-      { text: `Грати`, correct: false }
-    ]
-  },  {
-    question: `__ квиток.`,
-    options: [
-      { text: `Купувати`, correct: true },
-      { text: `Продавати`, correct: false }
-    ]
-  },  {
-    question: `__ музеї.`,
-    options: [
-      { text: `Відвідувати`, correct: true },
-      { text: `Жити`, correct: false }
-    ]
-  },  {
-    question: `__ фото.`,
-    options: [
-      { text: `Робити`, correct: true },
-      { text: `Грати`, correct: false }
-    ]
-  },  {
-    question: `__ вірші.`,
-    options: [
-      { text: `Писати`, correct: true },
-      { text: `Читати`, correct: false }
-    ]
-  },  {
-    question: `__ валізу.`,
-    options: [
-      { text: `Збирати`, correct: true },
-      { text: `Розкидати`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -712,3 +263,480 @@ Life is not only work. Ukrainians value their rest highly. Make sure you rest we
 | шашлик | /ʃaʃˈlɪk/ | BBQ (meat) | noun | m | |
 | гостинність | /hosˈtɪnʲːistʲ/ | hospitality | noun | f | |
 | вечорниці | /vetʃorˈnɪtsʲi/ | evening gathering | noun | pl | |
+
+---
+
+## 🎯 Activities
+
+### Hobby Quiz
+
+<Quiz>
+  <QuizQuestion
+    question={`1. What implies creating a picture?`}
+    options={[`малювати`, `співати`, `грати`]}
+    correctIndex={0}
+    explanation={`To paint/draw = малювати.`}
+  />
+  <QuizQuestion
+    question={`Where do you sleep camping?`}
+    options={[`у наметі`, `у театрі`, `у музеї`]}
+    correctIndex={0}
+    explanation={`In a tent = у наметі.`}
+  />
+  <QuizQuestion
+    question={`What do you need to enter a cinema?`}
+    options={[`квиток`, `намет`, `сцену`]}
+    correctIndex={0}
+    explanation={`Ticket = квиток.`}
+  />
+  <QuizQuestion
+    question={`Who watches a performance?`}
+    options={[`глядач`, `актор`, `співак`]}
+    correctIndex={0}
+    explanation={`Spectator = глядач.`}
+  />
+  <QuizQuestion
+    question={`What instrument is "грати на..."?`}
+    options={[`на гітарі`, `в футбол`, `в теніс`]}
+    correctIndex={0}
+    explanation={`Instruments use 'на' + Locative. Sports use 'в' + Accusative.`}
+  />
+  <QuizQuestion
+    question={`Is "хобі" declinable?`}
+    options={[`No, it is indeclinable`, `Yes, хобі, хоббі, хоббю`]}
+    correctIndex={0}
+    explanation={`Хобі never changes form.`}
+  />
+  <QuizQuestion
+    question={`Which involves collecting things?`}
+    options={[`колекціонувати`, `співати`, `бігати`]}
+    correctIndex={0}
+    explanation={`To collect = колекціонувати.`}
+  />
+  <QuizQuestion
+    question={`Where do you see actors?`}
+    options={[`в театрі`, `в наметі`, `в лісі`]}
+    correctIndex={0}
+    explanation={`In theater = в театрі.`}
+  />
+  <QuizQuestion
+    question={`What is "leisure"?`}
+    options={[`відпочинок`, `робота`, `сон`]}
+    correctIndex={0}
+    explanation={`Rest/Leisure = відпочинок.`}
+  />
+  <QuizQuestion
+    question={`What is a "journey"?`}
+    options={[`подорож`, `квиток`, `сцена`]}
+    correctIndex={0}
+    explanation={`Journey/Trip = подорож.`}
+  />
+  <QuizQuestion
+    question={`To take photos is...`}
+    options={[`фотографувати`, `малювати`, `писати`]}
+    correctIndex={0}
+    explanation={`To photograph.`}
+  />
+  <QuizQuestion
+    question={`To see sights/inspect implies...`}
+    options={[`оглядати`, `спати`, `їсти`]}
+    correctIndex={0}
+    explanation={`Оглядати (місто, замок).`}
+  />
+</Quiz>
+
+### Hobby Vocabulary
+
+<MatchUp pairs={[
+  { left: `малювати`, right: `to draw/paint` },
+  { left: `співати`, right: `to sing` },
+  { left: `танцювати`, right: `to dance` },
+  { left: `подорожувати`, right: `to travel` },
+  { left: `збирати`, right: `to gather/collect` },
+  { left: `грати`, right: `to play` },
+  { left: `читати`, right: `to read` },
+  { left: `відвідувати`, right: `to visit` },
+  { left: `фотографувати`, right: `to photograph` },
+  { left: `колекціонувати`, right: `to collect (items)` },
+  { left: `оглядати`, right: `to inspect/sightsee` },
+  { left: `писати`, right: `to write` }
+]} />
+
+### My Hobbies
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я люблю ____ на гітарі.`}
+    answer={`грати`}
+    options={[`грати`, `спати`, `їсти`, `йти`]}
+  />
+  <FillInQuestion
+    sentence={`Вона ____ красиві картини.`}
+    answer={`малює`}
+    options={[`малює`, `співає`, `читає`, `п'є`]}
+  />
+  <FillInQuestion
+    sentence={`Ми йдемо в ____ на новий фільм.`}
+    answer={`кіно`}
+    options={[`кіно`, `театр`, `музей`, `парк`]}
+  />
+  <FillInQuestion
+    sentence={`Це моє улюблене ____.`}
+    answer={`хобі`}
+    options={[`хобі`, `хоббі`, `хобба`, `хобу`]}
+  />
+  <FillInQuestion
+    sentence={`У мене є два ____ на концерт.`}
+    answer={`квитки`}
+    options={[`квитки`, `намети`, `сцени`, `поїзди`]}
+  />
+  <FillInQuestion
+    sentence={`Ми ____ старий замок.`}
+    answer={`оглядаємо`}
+    options={[`оглядаємо`, `співаємо`, `малюємо`, `спимо`]}
+  />
+  <FillInQuestion
+    sentence={`Він ____ марки.`}
+    answer={`колекціонує`}
+    options={[`колекціонує`, `грає`, `танцює`, `йде`]}
+  />
+  <FillInQuestion
+    sentence={`Я хочу ____ у Францію.`}
+    answer={`подорожувати`}
+    options={[`подорожувати`, `малювати`, `грати`, `читати`]}
+  />
+  <FillInQuestion
+    sentence={`Артист стоїть на ____.`}
+    answer={`сцені`}
+    options={[`сцені`, `наметі`, `квитку`, `лісі`]}
+  />
+  <FillInQuestion
+    sentence={`Ми спимо в ____.`}
+    answer={`наметі`}
+    options={[`наметі`, `кіно`, `театрі`, `сцені`]}
+  />
+  <FillInQuestion
+    sentence={`Це цікава ____.`}
+    answer={`виставка`}
+    options={[`виставка`, `квиток`, `намет`, `хобі`]}
+  />
+  <FillInQuestion
+    sentence={`____ аплодують.`}
+    answer={`Глядачі`}
+    options={[`Глядачі`, `Квитки`, `Намети`, `Музеї`]}
+  />
+</FillIn>
+
+
+
+### Activity Types
+
+<GroupSort groups={{
+  "Creative": [
+    "малювати",
+    "співати",
+    "писати",
+    "фотографувати"
+  ],
+  "Active/Travel": [
+    "подорожувати",
+    "ходити",
+    "збирати",
+    "танцювати"
+  ],
+  "Places": [
+    "кіно",
+    "театр",
+    "музей",
+    "сцена"
+  ]
+}} />
+
+### Weekend Sentences
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`Ми / йдемо / в / кіно / завтра`}
+    answer={`Ми йдемо в кіно завтра`}
+  />
+  <UnjumbleQuestion
+    words={`Я / люблю / грати / на / гітарі`}
+    answer={`Я люблю грати на гітарі`}
+  />
+  <UnjumbleQuestion
+    words={`Вона / часто / подорожує / світом`}
+    answer={`Вона часто подорожує світом`}
+  />
+  <UnjumbleQuestion
+    words={`У / мене / є / нове / хобі`}
+    answer={`У мене є нове хобі`}
+  />
+  <UnjumbleQuestion
+    words={`Ми / купили / квитки / в / театр`}
+    answer={`Ми купили квитки в театр`}
+  />
+  <UnjumbleQuestion
+    words={`Він / колекціонує / старі / картини`}
+    answer={`Він колекціонує старі картини`}
+  />
+  <UnjumbleQuestion
+    words={`Глядачі / люблять / цей / концерт`}
+    answer={`Глядачі люблять цей концерт`}
+  />
+  <UnjumbleQuestion
+    words={`Вони / відпочивають / на / дачі`}
+    answer={`Вони відпочивають на дачі`}
+  />
+  <UnjumbleQuestion
+    words={`Олена / гарно / танцює / гопак`}
+    answer={`Олена гарно танцює гопак`}
+  />
+  <UnjumbleQuestion
+    words={`Це / був / чудовий / відпочинок`}
+    answer={`Це був чудовий відпочинок`}
+  />
+  <UnjumbleQuestion
+    words={`Я / відвідую / музеї / влітку`}
+    answer={`Я відвідую музеї влітку`}
+  />
+  <UnjumbleQuestion
+    words={`Намет / стоїть / у / лісі`}
+    answer={`Намет стоїть у лісі`}
+  />
+</Unjumble>
+
+### Fix the Hobby
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я граю в гітарі.`}
+    error={`в`}
+    answer={`на`}
+    options={[`на`, `в`, `у`, `за`]}
+    explanation={`Instruments: грати НА гітарі.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми йдемо в театру.`}
+    error={`театру`}
+    answer={`театр`}
+    options={[`театр`, `театру`, `театра`, `театром`]}
+    explanation={`Direction (Accusative inanimate): в театр.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Це моє хоббі.`}
+    error={`хоббі`}
+    answer={`хобі`}
+    options={[`хобі`, `хоббі`, `хобби`, `гобі`]}
+    explanation={`Ukrainian spelling: one 'б' (хобі).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він малює картин.`}
+    error={`картин`}
+    answer={`картини`}
+    options={[`картини`, `картин`, `картиною`, `картинам`]}
+    explanation={`Accusative plural: картини.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я маю вільний часу.`}
+    error={`часу`}
+    answer={`час`}
+    options={[`час`, `часу`, `часом`, `часи`]}
+    explanation={`Accusative: маю час.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона співає пісня.`}
+    error={`пісня`}
+    answer={`пісню`}
+    options={[`пісню`, `пісня`, `пісні`, `піснею`]}
+    explanation={`Accusative feminine: пісню.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми спимо в намет.`}
+    error={`намет`}
+    answer={`наметі`}
+    options={[`наметі`, `намет`, `намету`, `наметом`]}
+    explanation={`Locative (where?): в наметі.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Глядач дивляться фільм.`}
+    error={`Глядач`}
+    answer={`Глядачі`}
+    options={[`Глядачі`, `Глядач`, `Глядача`, `Глядачем`]}
+    explanation={`Plural verb requires plural subject.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я колекціоную монет.`}
+    error={`монет`}
+    answer={`монети`}
+    options={[`монети`, `монет`, `монетою`, `монетам`]}
+    explanation={`Accusative plural: монети.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він фотографує природі.`}
+    error={`природі`}
+    answer={`природу`}
+    options={[`природу`, `природі`, `природа`, `природою`]}
+    explanation={`Accusative feminine: природу.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми були на концерт.`}
+    error={`концерт`}
+    answer={`концерті`}
+    options={[`концерті`, `концерт`, `концерту`, `концертом`]}
+    explanation={`Locative (location): на концерті.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я люблю подорожувати світ.`}
+    error={`світ`}
+    answer={`світом`}
+    options={[`світом`, `світ`, `світу`, `світі`]}
+    explanation={`Instrumental (through/by means of): світом.`}
+  />
+</ErrorCorrection>
+
+
+
+### Weekend Plans
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Привіт! Які плани на вихідні?"
+  },
+  {
+    "speaker": "",
+    "line": "Привіт. Я хочу піти в театр."
+  },
+  {
+    "speaker": "",
+    "line": "О, я теж люблю театр. Що там показують?"
+  },
+  {
+    "speaker": "",
+    "line": "Там нова комедія \"Ревізор\"."
+  },
+  {
+    "speaker": "",
+    "line": "Чудово! А квитки ще є?"
+  },
+  {
+    "speaker": "",
+    "line": "Так, я бачив квитки на сайті."
+  },
+  {
+    "speaker": "",
+    "line": "Скільки вони коштують?"
+  },
+  {
+    "speaker": "",
+    "line": "300 гривень. Це нормальна ціна."
+  },
+  {
+    "speaker": "",
+    "line": "Давай купимо два. Я заплачу."
+  },
+  {
+    "speaker": "",
+    "line": "Добре, я забронюю зараз."
+  },
+  {
+    "speaker": "",
+    "line": "Дякую! Зустрінемося біля театру."
+  },
+  {
+    "speaker": "",
+    "line": "Домовилися. До зустрічі!"
+  }
+]} />
+</DialogueReorder>
+
+### Hobbies Search
+
+[!instruction] Mark all hobby and leisure words.
+
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Мій брат любить подорожувати. Він бере намет і йде в гори. Моя сестра любить малювати. Вона завжди купує фарби. Я люблю театр. Я часто купую квитки на вистави. Мій батько любить риболовлю. Це його хобі. Мама любить співати в хорі. У кожного свій відпочинок.`}
+    correctWords={[`подорожувати`, `намет`, `малювати`, `театр`, `квитки`, `риболовлю`, `хобі`, `співати`, `відпочинок`]}
+  />
+</MarkTheWords>
+
+### Choose Correct Verb
+
+<Select>
+  <SelectQuestion
+    question={`1. __ на гітарі.`}
+    options={[`Грати`, `Гратися`]}
+    correctAnswers={[`Грати`]}
+    explanation={`Play instrument.`}
+  />
+  <SelectQuestion
+    question={`__ пісні.`}
+    options={[`Співати`, `Спати`]}
+    correctAnswers={[`Співати`]}
+    explanation={`Sing songs.`}
+  />
+  <SelectQuestion
+    question={`__ марки.`}
+    options={[`Колекціонувати`]}
+    correctAnswers={[`Колекціонувати`]}
+    explanation={``}
+  />
+  <SelectQuestion
+    question={`__ картини.`}
+    options={[`Малювати`, `Писати`]}
+    correctAnswers={[`Малювати`]}
+    explanation={`Paint pictures (Малювати). Note: artists say "писати картину", but "малювати" is standard for learners.`}
+  />
+  <SelectQuestion
+    question={`__ гопак.`}
+    options={[`Танцювати`, `Співати`]}
+    correctAnswers={[`Танцювати`]}
+    explanation={`Dance hopak.`}
+  />
+  <SelectQuestion
+    question={`__ місто.`}
+    options={[`Оглядати`, `Дивитися`]}
+    correctAnswers={[`Оглядати`]}
+    explanation={`Inspect/sightsee city.`}
+  />
+  <SelectQuestion
+    question={`__ у наметі.`}
+    options={[`Спати`, `Грати`]}
+    correctAnswers={[`Спати`]}
+    explanation={`Sleep in a tent.`}
+  />
+  <SelectQuestion
+    question={`__ квиток.`}
+    options={[`Купувати`, `Продавати`]}
+    correctAnswers={[`Купувати`]}
+    explanation={`Buy a ticket (usual context).`}
+  />
+  <SelectQuestion
+    question={`__ музеї.`}
+    options={[`Відвідувати`, `Жити`]}
+    correctAnswers={[`Відвідувати`]}
+    explanation={`Visit museums.`}
+  />
+  <SelectQuestion
+    question={`__ фото.`}
+    options={[`Робити`, `Грати`]}
+    correctAnswers={[`Робити`]}
+    explanation={`Make (take) photos. Or Фотографувати. 'Робити фото' is common.`}
+  />
+  <SelectQuestion
+    question={`__ вірші.`}
+    options={[`Писати`, `Читати`]}
+    correctAnswers={[`Писати`]}
+    explanation={`Write poems.`}
+  />
+  <SelectQuestion
+    question={`__ валізу.`}
+    options={[`Збирати`, `Розкидати`]}
+    correctAnswers={[`Збирати`]}
+    explanation={`Pack (gather) suitcase.`}
+  />
+</Select>
+

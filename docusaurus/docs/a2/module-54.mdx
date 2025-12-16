@@ -5,19 +5,20 @@ title: "Health & Body"
 description: "Feeling Good"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Health & Body
@@ -30,7 +31,8 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 
 In this module, you'll learn to describe symptoms, visit a pharmacy, and understand the doctor's orders.
 
-:::warning[**Myth Buster** "Free Healthcare?"]
+:::warning
+**Myth Buster** "Free Healthcare?"
 Constitutionally, healthcare in Ukraine is free. In reality, it's a mix. State clinics (*поліклініки*) are free but crowded. Private clinics (*приватні клініки*) offer modern service but cost money. Also, Ukrainians can sign a declaration with a family doctor using the electronic system **eHealth** (Helsi.me), which has modernized the system significantly.
 :::
 
@@ -72,18 +74,20 @@ From head to toe:
 - **рецепт** — prescription (or recipe): *Лікар дав рецепт.*
 - **одужувати** — to recover/get well: *Швидше одужуйте!*
 
-:::note[Grammar Point: Dative Constructions]
+:::note
+Grammar Point: Dative Constructions
 To say "something hurts me", we use:
 - **У мене болить** + Nominative body part.
-* *У мене болить голова.* (My head hurts).
-* *У мене болять ноги.* (My legs hurt - Plural verb).
+  * *У мене болить голова.* (My head hurts).
+  * *У мене болять ноги.* (My legs hurt - Plural verb).
 Alternatively (less common for pain, more for state):
 - **Мені** погано. (I feel bad - Dative).
 - **Мені** холодно. (I feel cold).
 :::
 
 
-:::note[**Cultural Insight** Mineral Waters]
+:::note
+**Cultural Insight** Mineral Waters
 Ukraine is famous for healing mineral waters (*мінеральні води*). Resorts like **Truskavets**, **Morshyn**, and **Myrhorod** attract thousands of people. They drink water like "Naftusya" to treat liver or kidney problems. It smells like oil but it works!
 :::
 
@@ -97,13 +101,8 @@ Ukraine is famous for healing mineral waters (*мінеральні води*). 
 Він поміряв **температуру**. Градусник показав 38.5.
 — О ні, це **хвороба**, — подумав Андрій.
 Він подзвонив на роботу.
-<div className="conversation">
-
 — Алло, шеф? Я не прийду. Я **захворів**.
-
 — Одужуй, Андрію, — сказав шеф.
-
-</div>
 
 Андрій ліг у ліжко. Він пив багато чаю з лимоном і медом.
 У нього був **нежить** і сильний **кашель**.
@@ -116,46 +115,24 @@ Ukraine is famous for healing mineral waters (*мінеральні води*). 
 Вона не могла їсти і спати.
 Вона пішла в **аптеку**.
 Фармацевт була дуже приємна жінка.
-<div className="conversation">
-
 — Добрий день. Що у вас трапилося?
-
 — У мене дуже болить зуб, — сказала Олена. — Дайте щось від болю.
-
 — Візьміть ці **таблетки**. Пийте одну таблетку двічі на день. Але вам треба до стоматолога.
-
 — Я знаю, — зітхнула Олена. — Я піду завтра.
-
 — Ось ваша решта. Одужуйте!
-
-</div>
 
 ### Story Time: The Doctor's Visit
 
 Іван прийшов до сімейного **лікаря**.
-<div className="conversation">
-
 — Добрий день, лікарю.
-
 — Добрий день. На що скаржитеся?
-
 — У мене болить **спина** і **серце**. Я швидко втомлююся.
-
-</div>
 Лікар послухав серце і поміряв тиск.
-<div className="conversation">
-
 — Ви багато працюєте? — спитав лікар.
-
 — Так, я працюю 12 годин на день за комп'ютером.
-
 — Вам треба відпочивати. Більше гуляйте, менше пийте кави. Ось **рецепт** на вітаміни.
-
 — Дякую, лікарю.
-
 — Бережіть себе!
-
-</div>
 
 ### Why We Say "Будьмо!"
 
@@ -168,21 +145,12 @@ So, taking care of yourself is not just medical, it is cultural.
 ### Story Time: Eye Test
 
 Марія погано бачить. Вона пішла до окуліста.
-<div className="conversation">
-
 — Сядьте тут, — каже лікар. — Закрийте ліве **око**. Що ви бачите?
-
 — Я бачу літери Ш, Б, М, Н...
-
 — Добре. Тепер закрийте праве око.
-
 — Ой, тут я нічого не бачу. Все розмито.
-
 — Це погано, — каже лікар. — У вас впав зір.
-
 — Вам потрібні окуляри, — каже лікар.
-
-</div>
 Марія вибрала красиву оправу. Тепер вона виглядає дуже стильно.
 
 ### 5 Rules of Healthy Life
@@ -224,8 +192,20 @@ If you work in IT or international business, you probably have it.
 Without insurance, a visit to a private doctor costs 500-1000 UAH ($12-$25).
 State medicine is free, but you often pay "charitable contributions" (*благодійні внески*) for better service.
 
-:::note[**Cultural Insight** Sanatoriums]
+:::note
+**Cultural Insight** Sanatoriums
 A unique Soviet legacy is the **Sanatorium**. It is a mix of a hospital and a hotel. People go there for 2-3 weeks to drink mineral water, take mud baths (*грязі*), and relax. It is not just for sick people; it is for prevention (*профілактика*).
+:::
+
+
+:::info
+🔗 External Resources
+
+**YouTube:** [UKRAINIAN VOCABULARY: body parts and organs](https://www.youtube.com/watch?v=JZGl3Qo25Yc) — Red Purple Ukrainian
+
+**Grammar Guide:** [Ukrainian Health Vocabulary](https://www.ukrainianlessons.com/something-hurts/) — Common health expressions
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 :::
 
 
@@ -239,445 +219,37 @@ You learned to:
 
 Take care and stay healthy!
 
-## 🎯 Activities
 
-### Health Quiz
 
-<Quiz questions={[
-  {
-    question: `What do you do if you have a fever?`,
-    options: [
-      { text: `call a doctor / stay home`, correct: true },
-      { text: `go to a disco`, correct: false },
-      { text: `eat ice cream`, correct: false }
-    ]
-  },  {
-    question: `\"Швидка допомога\" number is...`,
-    options: [
-      { text: `103`, correct: true },
-      { text: `911`, correct: false },
-      { text: `101`, correct: false }
-    ]
-  },  {
-    question: `\"У мене болить...\" requires...`,
-    options: [
-      { text: `Nominative (subject of pain)`, correct: true },
-      { text: `Accusative`, correct: false },
-      { text: `Instrumental`, correct: false }
-    ]
-  },  {
-    question: `Naftusya is...`,
-    options: [
-      { text: `mineral water`, correct: true },
-      { text: `wine`, correct: false },
-      { text: `soup`, correct: false }
-    ]
-  },  {
-    question: `\"Аптека\" sells...`,
-    options: [
-      { text: `ліки`, correct: true },
-      { text: `хліб`, correct: false },
-      { text: `одяг`, correct: false }
-    ]
-  },  {
-    question: `\"Одужуйте\" means...`,
-    options: [
-      { text: `Get well soon`, correct: true },
-      { text: `Good bye`, correct: false },
-      { text: `Good appetite`, correct: false }
-    ]
-  },  {
-    question: `\"Стоматолог\" treats...`,
-    options: [
-      { text: `teeth`, correct: true },
-      { text: `legs`, correct: false },
-      { text: `heart`, correct: false }
-    ]
-  },  {
-    question: `\"Серце\" is...`,
-    options: [
-      { text: `heart`, correct: true },
-      { text: `stomach`, correct: false },
-      { text: `liver`, correct: false }
-    ]
-  },  {
-    question: `\"Нежить\" is...`,
-    options: [
-      { text: `runny nose`, correct: true },
-      { text: `headache`, correct: false },
-      { text: `broken leg`, correct: false }
-    ]
-  },  {
-    question: `A pill is...`,
-    options: [
-      { text: `таблетка`, correct: true },
-      { text: `тарілка`, correct: false },
-      { text: `табуретка`, correct: false }
-    ]
-  },  {
-    question: `\"Будьмо!\" relates to...`,
-    options: [
-      { text: `health`, correct: true },
-      { text: `money`, correct: false },
-      { text: `weather`, correct: false }
-    ]
-  },  {
-    question: `Helsi.me is for...`,
-    options: [
-      { text: `booking doctors`, correct: true },
-      { text: `buying food`, correct: false },
-      { text: `watching movies`, correct: false }
-    ]
-  }
-]} />
+> 💡 **Здоров'я — багатство**
+>
+> «Здоровий дух у здоровому тілі!» (Доглядайте за собою!)
+>
+> *Translation: "A healthy mind in a healthy body!"*
 
-### Body & Health
+> 🇺🇦 **Здоров'я в Україні**
+>
+> Корисні фрази для поліклініки:
+> - «Як ви себе почуваєте?» — How are you feeling?
+> - «У мене болить голова» — I have a headache
+> - «Мені потрібні ліки» — I need medicine
+> - «Де тут аптека?» — Where is the pharmacy here?
+>
+> Українці кажуть: «Здоров'я — найбільше багатство!»
 
-<MatchUp pairs={[
-  { left: `голова`, right: `head` },
-  { left: `рука`, right: `hand/arm` },
-  { left: `нога`, right: `leg/foot` },
-  { left: `спина`, right: `back` },
-  { left: `живіт`, right: `stomach` },
-  { left: `серце`, right: `heart` },
-  { left: `зуб`, right: `tooth` },
-  { left: `лікар`, right: `doctor` },
-  { left: `ліки`, right: `medicine` },
-  { left: `аптека`, right: `pharmacy` },
-  { left: `температура`, right: `fever` },
-  { left: `біль`, right: `pain` }
-]} />
+> 🏥 **Медицина в Україні**
+>
+> Українська медична система включає поліклініки, лікарні та аптеки. Лікарі допомагають пацієнтам одужати. Медсестри роблять уколи та дають ліки. Аптека працює щодня, часто цілодобово.
+>
+> Частини тіла українською:
+> - **голова** — head (болить голова — headache)
+> - **горло** — throat (болить горло — sore throat)
+> - **живіт** — stomach (болить живіт — stomachache)
+> - **спина** — back (болить спина — backache)
+>
+> Бережіть своє здоров'я! Здорове харчування, спорт і достатній сон — запорука довгого життя!
 
-### My Symptoms
 
-<FillIn items={[
-  {
-    sentence: `У мене болить ____. (head)`,
-    answer: `голова`,
-    options: [`голова`, `голову`, `головою`, `голові`]
-  },  {
-    sentence: `У нього висока ____. (temperature)`,
-    answer: `температура`,
-    options: [`температура`, `температуру`, `температурою`, `температури`]
-  },  {
-    sentence: `Мені треба купити ____. (medicine)`,
-    answer: `ліки`,
-    options: [`ліки`, `лікаря`, `ліків`, `ліками`]
-  },  {
-    sentence: `У неї болить ____. (tooth)`,
-    answer: `зуб`,
-    options: [`зуб`, `зуби`, `зуба`, `зубом`]
-  },  {
-    sentence: `Викличіть ____! (doctor - Acc)`,
-    answer: `лікаря`,
-    options: [`лікаря`, `лікар`, `лікарем`, `лікарю`]
-  },  {
-    sentence: `Я п'ю ____. (pills)`,
-    answer: `таблетки`,
-    options: [`таблетки`, `таблетка`, `таблеток`, `таблетками`]
-  },  {
-    sentence: `У мене сильний ____. (cough)`,
-    answer: `кашель`,
-    options: [`кашель`, `кашлю`, `кашлем`, `нежить`]
-  },  {
-    sentence: `Болять ____. (eyes)`,
-    answer: `очі`,
-    options: [`очі`, `око`, `очам`, `очима`]
-  },  {
-    sentence: `Це ____ від грипу. (medicine/cure)`,
-    answer: `ліки`,
-    options: [`ліки`, `таблетка`, `мазь`, `сироп`]
-  },  {
-    sentence: `Де тут ____? (pharmacy)`,
-    answer: `аптека`,
-    options: [`аптека`, `аптеку`, `аптеки`, `аптекою`]
-  },  {
-    sentence: `Лікар дав ____. (prescription)`,
-    answer: `рецепт`,
-    options: [`рецепт`, `рецепту`, `рецептом`, `рецепти`]
-  },  {
-    sentence: `У мене болить ____. (back)`,
-    answer: `спина`,
-    options: [`спина`, `спину`, `спиною`, `спині`]
-  }
-]} />
-
-### Medical Beliefs
-
-<TrueFalse items={[
-  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Traditional remedy.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Pharmacy sells medicine.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Ambulance (Fast Help).`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Mineral water resort. Bukovel is for skiing.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Yes.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `\"У мене болить голова\".`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `It's a kind wish (Get well).`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Celsius standard.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Flu.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Myth, but they comfort you!`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Word is same (recipe/prescription).`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Left usually.`
-  }
-]} />
-
-### Body vs Illness
-
-<GroupSort groups={{
-  "Groups": ["Body Parts", "Symptoms", "Medicine/Help"],
-  "Items": ["голова: Body Parts", "рука: Body Parts", "нога: Body Parts", "спина: Body Parts", "серце: Body Parts", "температура: Symptoms", "кашель: Symptoms", "біль: Symptoms", "нежить: Symptoms", "таблетка: Medicine/Help", "лікар: Medicine/Help", "аптека: Medicine/Help", "рецепт: Medicine/Help"]
-}} />
-
-### Health Sentences
-
-<Unjumble items={[
-  { jumbled: `У / мене / дуже / болить / голова`, answer: `У мене дуже болить голова` },
-  { jumbled: `Будь / ласка / викличіть / лікаря`, answer: `Будь ласка викличіть лікаря` },
-  { jumbled: `Я / хочу / купити / ліки`, answer: `Я хочу купити ліки` },
-  { jumbled: `У / вас / є / температура`, answer: `У вас є температура` },
-  { jumbled: `Пийте / багато / теплої / води`, answer: `Пийте багато теплої води` },
-  { jumbled: `Де / найближча / цілодобова / аптека`, answer: `Де найближча цілодобова аптека` },
-  { jumbled: `Мені / треба / піти / до / стоматолога`, answer: `Мені треба піти до стоматолога` },
-  { jumbled: `Як / ви / себе / почуваєте`, answer: `Як ви себе почуваєте` },
-  { jumbled: `Спорт / корисний / для / здоров'я`, answer: `Спорт корисний для здоров'я` },
-  { jumbled: `Бажаю / вам / міцного / здоров'я`, answer: `Бажаю вам міцного здоров'я` },
-  { jumbled: `Ця / таблетка / від / голови`, answer: `Ця таблетка від голови` },
-  { jumbled: `Ви / вже / одужали`, answer: `Ви вже одужали` }
-]} />
-
-### Grammar Clinic
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я болю голову.`}
-    errorWord={`Я болю голову`}
-    correctForm={`У мене болить голова`}
-    options={[`У мене болить голова`, `Я маю біль голови`, `Голова болить мене`]}
-    explanation={`Standard phrase: У мене болить + Nom.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`У мене болить зуби.`}
-    errorWord={`болить`}
-    correctForm={`болять`}
-    options={[`болять`, `болить`, `болів`, `боліли`]}
-    explanation={`Plural subject (зуби): болять.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я треба ліки.`}
-    errorWord={`Я`}
-    correctForm={`Мені`}
-    options={[`Мені`, `Я`, `Мене`, `Мною`]}
-    explanation={`Dative subject for need: Мені треба.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він має температура.`}
-    errorWord={`температура`}
-    correctForm={`температуру`}
-    options={[`температуру`, `температура`, `температури`, `температурою`]}
-    explanation={`Accusative object: має (що?) температуру. OR better: У нього температура. But focusing on case error here.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Це таблетка для голову.`}
-    errorWord={`для`}
-    correctForm={`від`}
-    options={[`від`, `для`, `з`, `про`]}
-    explanation={`Pills \"from\" pain: від голови. \"Для\" means \"for benefit of\". A pill *for benefit of* a headache sounds wrong.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Лікар дав рецепта.`}
-    errorWord={`рецепта`}
-    correctForm={`рецепт`}
-    options={[`рецепт`, `рецепта`, `рецепту`, `рецептом`]}
-    explanation={`Accusative inanimate: рецепт.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Мені болить нога.`}
-    errorWord={`Мені`}
-    correctForm={`У мене`}
-    options={[`У мене`, `Мені`, `Я`, `Мене`]}
-    explanation={`\"Мені болить\" is dialect/colloquial. Standard: \"У мене болить\".`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я пішов в аптека.`}
-    errorWord={`аптека`}
-    correctForm={`аптеку`}
-    options={[`аптеку`, `аптека`, `аптеці`, `аптекою`]}
-    explanation={`Direction (Accusative): в аптеку.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`У мене немає кашель.`}
-    errorWord={`кашель`}
-    correctForm={`кашлю`}
-    options={[`кашлю`, `кашель`, `кашля`, `кашлем`]}
-    explanation={`Genitive negation: немає кашлю.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Мої очі блакитні.`}
-    errorWord={`блакитний`}
-    correctForm={`блакитні`}
-    options={[`блакитні`, `блакитний`, `блакитна`, `блакитне`]}
-    explanation={`Plural adjective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона зламала руку.`}
-    errorWord={`рука`}
-    correctForm={`руку`}
-    options={[`руку`, `рука`, `руки`, `рукою`]}
-    explanation={`Accusative: руку.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Будьте здоровий! (to plural/polite)`}
-    errorWord={`здоровий`}
-    correctForm={`здорові`}
-    options={[`здорові`, `здоровий`, `здорова`, `здорове`]}
-    explanation={`Plural/Formal: Будьте здорові.`}
-  />
-</ErrorCorrection>
-
-### Call the Doctor
-
-<Cloze
-  passage={`— Алло, це [___:1]?
-— Так, оператор слухає. Що сталося?
-— Моєму чоловіку [___:2].
-— Які симптоми?
-— У нього сильний [___:3] в грудях і важко дихати.
-— Яка у нього [___:4]?
-— Нормальна.
-— Скажіть адресу.
-— Вулиця Садова, 5.
-— Чекайте, [___:5] виїхала.
-— Дякую, ми чекаємо [___:6].`}
-  blanks={[{ answer: `швидка`, options: [`швидка`, `піца`, `таксі`] }, { answer: `погано`, options: [`погано`, `добре`, `весело`] }, { answer: `біль`, options: [`біль`, `сміх`, `сон`] }, { answer: `температура`, options: [`температура`, `машина`, `зарплата`] }, { answer: `бригада`, options: [`бригада`, `погода`, `вода`] }, { answer: `лікаря`, options: [`лікаря`, `поштаря`, `кухаря`] }]}
-/>
-
-### Sick Leave
-
-<DialogueReorder lines={[
-  { text: `Добрий ранок. Я хочу повідомити, що я захворів.`, order: 1 },
-  { text: `Добрий ранок. Що трапилося?`, order: 2 },
-  { text: `У мене висока температура і горло болить.`, order: 3 },
-  { text: `Це схоже на грип. Ти викликав лікаря?`, order: 4 },
-  { text: `Так, лікар буде після обіду.`, order: 5 },
-  { text: `Добре, залишайся вдома і лікуйся.`, order: 6 },
-  { text: `Дякую. Коли мені повернутися на роботу?`, order: 7 },
-  { text: `Коли будеш здоровий. Не поспішай.`, order: 8 },
-  { text: `Добре. Я надішлю лікарняний (sick note).`, order: 9 },
-  { text: `Одужуй! Чекаємо тебе.`, order: 10 }
-]} />
-
-### Medical Choice
-
-<Select questions={[
-  {
-    question: `Headache.`,
-    options: [
-      { text: `Головний біль.`, correct: true },
-      { text: `Головний убір.`, correct: false }
-    ]
-  },  {
-    question: `Pharmacy.`,
-    options: [
-      { text: `Аптека.`, correct: true },
-      { text: `Оптика.`, correct: false }
-    ]
-  },  {
-    question: `Doctor.`,
-    options: [
-      { text: `Лікар.`, correct: true },
-      { text: `Лікеро.`, correct: false }
-    ]
-  },  {
-    question: `To recover.`,
-    options: [
-      { text: `Одужувати.`, correct: true },
-      { text: `Вмирати.`, correct: false }
-    ]
-  },  {
-    question: `Cold (illness).`,
-    options: [
-      { text: `Застуда.`, correct: true },
-      { text: `Посуда.`, correct: false }
-    ]
-  },  {
-    question: `Pill.`,
-    options: [
-      { text: `Таблетка.`, correct: true },
-      { text: `Серветка.`, correct: false }
-    ]
-  },  {
-    question: `Eye.`,
-    options: [
-      { text: `Око.`, correct: true },
-      { text: `Вікно.`, correct: false }
-    ]
-  },  {
-    question: `Heart.`,
-    options: [
-      { text: `Серце.`, correct: true },
-      { text: `Сонце.`, correct: false }
-    ]
-  },  {
-    question: `Pain.`,
-    options: [
-      { text: `Біль.`, correct: true },
-      { text: `Біл.`, correct: false }
-    ]
-  },  {
-    question: `Fever/Temp.`,
-    options: [
-      { text: `Температура.`, correct: true },
-      { text: `Література.`, correct: false }
-    ]
-  },  {
-    question: `Ambulance.`,
-    options: [
-      { text: `Швидка.`, correct: true },
-      { text: `Повільна.`, correct: false }
-    ]
-  },  {
-    question: `To cough.`,
-    options: [
-      { text: `Кашляти.`, correct: true },
-      { text: `Коштувати.`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -712,3 +284,503 @@ Take care and stay healthy!
 | тіло | /ˈtilɔ/ | body | noun | n | |
 | допомога | /dɔpɔˈmɔɦa/ | help | noun | f | |
 | почуватися | /pɔtʃuˈʋatɪsʲa/ | to feel | verb | - | |
+
+---
+
+## 🎯 Activities
+
+### Health Quiz
+
+<Quiz>
+  <QuizQuestion
+    question={`1. What do you do if you have a fever?`}
+    options={[`call a doctor / stay home`, `go to a disco`, `eat ice cream`]}
+    correctIndex={0}
+    explanation={`Stay home.`}
+  />
+  <QuizQuestion
+    question={`"Швидка допомога" number is...`}
+    options={[`103`, `911`, `101`]}
+    correctIndex={0}
+    explanation={`103 usually.`}
+  />
+  <QuizQuestion
+    question={`"У мене болить..." requires...`}
+    options={[`Nominative (subject of pain)`, `Accusative`, `Instrumental`]}
+    correctIndex={0}
+    explanation={`"Hurt(s)" is the verb, body part is subject.`}
+  />
+  <QuizQuestion
+    question={`Naftusya is...`}
+    options={[`mineral water`, `wine`, `soup`]}
+    correctIndex={0}
+    explanation={`Healing water.`}
+  />
+  <QuizQuestion
+    question={`"Аптека" sells...`}
+    options={[`ліки`, `хліб`, `одяг`]}
+    correctIndex={0}
+    explanation={`Medicine.`}
+  />
+  <QuizQuestion
+    question={`"Одужуйте" means...`}
+    options={[`Get well soon`, `Good bye`, `Good appetite`]}
+    correctIndex={0}
+    explanation={`Get well.`}
+  />
+  <QuizQuestion
+    question={`"Стоматолог" treats...`}
+    options={[`teeth`, `legs`, `heart`]}
+    correctIndex={0}
+    explanation={`Dentist.`}
+  />
+  <QuizQuestion
+    question={`"Серце" is...`}
+    options={[`heart`, `stomach`, `liver`]}
+    correctIndex={0}
+    explanation={`Heart.`}
+  />
+  <QuizQuestion
+    question={`"Нежить" is...`}
+    options={[`runny nose`, `headache`, `broken leg`]}
+    correctIndex={0}
+    explanation={`Runny nose.`}
+  />
+  <QuizQuestion
+    question={`A pill is...`}
+    options={[`таблетка`, `тарілка`, `табуретка`]}
+    correctIndex={0}
+    explanation={`Таблетка.`}
+  />
+  <QuizQuestion
+    question={`"Будьмо!" relates to...`}
+    options={[`health`, `money`, `weather`]}
+    correctIndex={0}
+    explanation={`"Let us be healthy".`}
+  />
+  <QuizQuestion
+    question={`Helsi.me is for...`}
+    options={[`booking doctors`, `buying food`, `watching movies`]}
+    correctIndex={0}
+    explanation={`eHealth system.`}
+  />
+</Quiz>
+
+### Body & Health
+
+<MatchUp pairs={[
+  { left: `голова`, right: `head` },
+  { left: `рука`, right: `hand/arm` },
+  { left: `нога`, right: `leg/foot` },
+  { left: `спина`, right: `back` },
+  { left: `живіт`, right: `stomach` },
+  { left: `серце`, right: `heart` },
+  { left: `зуб`, right: `tooth` },
+  { left: `лікар`, right: `doctor` },
+  { left: `ліки`, right: `medicine` },
+  { left: `аптека`, right: `pharmacy` },
+  { left: `температура`, right: `fever` },
+  { left: `біль`, right: `pain` }
+]} />
+
+### My Symptoms
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. У мене болить ____. (head)`}
+    answer={`голова`}
+    options={[`голова`, `голову`, `головою`, `голові`]}
+  />
+  <FillInQuestion
+    sentence={`У мене ___ голова. (head hurts)`}
+    answer={`болить`}
+    options={[`болить`, `заболить`]}
+  />
+  <FillInQuestion
+    sentence={`Голова раптом ___. (suddenly started hurting)`}
+    answer={`заболіла`}
+    options={[`боліла`, `заболіла`]}
+  />
+  <FillInQuestion
+    sentence={`Я ___ ліки. (took medicine)`}
+    answer={`прийняв`}
+    options={[`приймав`, `прийняв`]}
+  />
+  <FillInQuestion
+    sentence={`Лікар ___ пацієнта. (examined patient)`}
+    answer={`оглянув`}
+    options={[`оглядав`, `оглянув`]}
+  />
+  <FillInQuestion
+    sentence={`Він ___ довго. (was sick long time)`}
+    answer={`хворів`}
+    options={[`хворів`, `захворів`]}
+  />
+  <FillInQuestion
+    sentence={`Вона нарешті ___. (finally recovered)`}
+    answer={`одужала`}
+    options={[`одужувала`, `одужала`]}
+  />
+  <FillInQuestion
+    sentence={`У нього висока ____. (temperature)`}
+    answer={`температура`}
+    options={[`температура`, `температуру`, `температурою`, `температури`]}
+  />
+  <FillInQuestion
+    sentence={`Мені треба купити ____. (medicine)`}
+    answer={`ліки`}
+    options={[`ліки`, `лікаря`, `ліків`, `ліками`]}
+  />
+  <FillInQuestion
+    sentence={`У неї болить ____. (tooth)`}
+    answer={`зуб`}
+    options={[`зуб`, `зуби`, `зуба`, `зубом`]}
+  />
+  <FillInQuestion
+    sentence={`Викличіть ____! (doctor - Acc)`}
+    answer={`лікаря`}
+    options={[`лікаря`, `лікар`, `лікарем`, `лікарю`]}
+  />
+  <FillInQuestion
+    sentence={`Я п'ю ____. (pills)`}
+    answer={`таблетки`}
+    options={[`таблетки`, `таблетка`, `таблеток`, `таблетками`]}
+  />
+  <FillInQuestion
+    sentence={`У мене сильний ____. (cough)`}
+    answer={`кашель`}
+    options={[`кашель`, `кашлю`, `кашлем`, `нежить`]}
+  />
+  <FillInQuestion
+    sentence={`Болять ____. (eyes)`}
+    answer={`очі`}
+    options={[`очі`, `око`, `очам`, `очима`]}
+  />
+  <FillInQuestion
+    sentence={`Це ____ від грипу. (medicine/cure)`}
+    answer={`ліки`}
+    options={[`ліки`, `таблетка`, `мазь`, `сироп`]}
+  />
+  <FillInQuestion
+    sentence={`Де тут ____? (pharmacy)`}
+    answer={`аптека`}
+    options={[`аптека`, `аптеку`, `аптеки`, `аптекою`]}
+  />
+  <FillInQuestion
+    sentence={`Лікар дав ____. (prescription)`}
+    answer={`рецепт`}
+    options={[`рецепт`, `рецепту`, `рецептом`, `рецепти`]}
+  />
+  <FillInQuestion
+    sentence={`У мене болить ____. (back)`}
+    answer={`спина`}
+    options={[`спина`, `спину`, `спиною`, `спині`]}
+  />
+</FillIn>
+
+
+
+### Body vs Illness
+
+<GroupSort groups={{
+  "Body Parts": [
+    "голова",
+    "рука",
+    "нога",
+    "спина",
+    "серце"
+  ],
+  "Symptoms": [
+    "температура",
+    "кашель",
+    "біль",
+    "нежить"
+  ],
+  "Medicine/Help": [
+    "таблетка",
+    "лікар",
+    "аптека",
+    "рецепт"
+  ]
+}} />
+
+### Health Sentences
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`У / мене / дуже / болить / голова`}
+    answer={`У мене дуже болить голова`}
+  />
+  <UnjumbleQuestion
+    words={`Будь / ласка / викличіть / лікаря`}
+    answer={`Будь ласка викличіть лікаря`}
+  />
+  <UnjumbleQuestion
+    words={`Я / хочу / купити / ліки`}
+    answer={`Я хочу купити ліки`}
+  />
+  <UnjumbleQuestion
+    words={`У / вас / є / температура`}
+    answer={`У вас є температура`}
+  />
+  <UnjumbleQuestion
+    words={`Пийте / багато / теплої / води`}
+    answer={`Пийте багато теплої води`}
+  />
+  <UnjumbleQuestion
+    words={`Де / найближча / цілодобова / аптека`}
+    answer={`Де найближча цілодобова аптека`}
+  />
+  <UnjumbleQuestion
+    words={`Мені / треба / піти / до / стоматолога`}
+    answer={`Мені треба піти до стоматолога`}
+  />
+  <UnjumbleQuestion
+    words={`Як / ви / себе / почуваєте`}
+    answer={`Як ви себе почуваєте`}
+  />
+  <UnjumbleQuestion
+    words={`Спорт / корисний / для / здоров'я`}
+    answer={`Спорт корисний для здоров'я`}
+  />
+  <UnjumbleQuestion
+    words={`Бажаю / вам / міцного / здоров'я`}
+    answer={`Бажаю вам міцного здоров'я`}
+  />
+  <UnjumbleQuestion
+    words={`Ця / таблетка / від / голови`}
+    answer={`Ця таблетка від голови`}
+  />
+  <UnjumbleQuestion
+    words={`Ви / вже / одужали`}
+    answer={`Ви вже одужали`}
+  />
+</Unjumble>
+
+### Grammar Clinic
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я болю голову.`}
+    error={`Я болю голову`}
+    answer={`У мене болить голова`}
+    options={[`У мене болить голова`, `Я маю біль голови`, `Голова болить мене`]}
+    explanation={`Standard phrase: У мене болить + Nom.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`У мене болить зуби.`}
+    error={`болить`}
+    answer={`болять`}
+    options={[`болять`, `болить`, `болів`, `боліли`]}
+    explanation={`Plural subject (зуби): болять.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я треба ліки.`}
+    error={`Я`}
+    answer={`Мені`}
+    options={[`Мені`, `Я`, `Мене`, `Мною`]}
+    explanation={`Dative subject for need: Мені треба.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він має температура.`}
+    error={`температура`}
+    answer={`температуру`}
+    options={[`температуру`, `температура`, `температури`, `температурою`]}
+    explanation={`Accusative object: має (що?) температуру. OR better: У нього температура. But focusing on case error here.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Це таблетка для голову.`}
+    error={`для`}
+    answer={`від`}
+    options={[`від`, `для`, `з`, `про`]}
+    explanation={`Pills "from" pain: від голови. "Для" means "for benefit of". A pill *for benefit of* a headache sounds wrong.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Лікар дав рецепта.`}
+    error={`рецепта`}
+    answer={`рецепт`}
+    options={[`рецепт`, `рецепта`, `рецепту`, `рецептом`]}
+    explanation={`Accusative inanimate: рецепт.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Мені болить нога.`}
+    error={`Мені`}
+    answer={`У мене`}
+    options={[`У мене`, `Мені`, `Я`, `Мене`]}
+    explanation={`"Мені болить" is dialect/colloquial. Standard: "У мене болить".`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я пішов в аптека.`}
+    error={`аптека`}
+    answer={`аптеку`}
+    options={[`аптеку`, `аптека`, `аптеці`, `аптекою`]}
+    explanation={`Direction (Accusative): в аптеку.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`У мене немає кашель.`}
+    error={`кашель`}
+    answer={`кашлю`}
+    options={[`кашлю`, `кашель`, `кашля`, `кашлем`]}
+    explanation={`Genitive negation: немає кашлю.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Мої очі блакитні.`}
+    error={`блакитний`}
+    answer={`блакитні`}
+    options={[`блакитні`, `блакитний`, `блакитна`, `блакитне`]}
+    explanation={`Plural adjective.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона зламала руку.`}
+    error={`рука`}
+    answer={`руку`}
+    options={[`руку`, `рука`, `руки`, `рукою`]}
+    explanation={`Accusative: руку.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Будьте здоровий! (to plural/polite)`}
+    error={`здоровий`}
+    answer={`здорові`}
+    options={[`здорові`, `здоровий`, `здорова`, `здорове`]}
+    explanation={`Plural/Formal: Будьте здорові.`}
+  />
+</ErrorCorrection>
+
+
+
+### Sick Leave
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Добрий ранок. Я хочу повідомити, що я захворів."
+  },
+  {
+    "speaker": "",
+    "line": "Добрий ранок. Що трапилося?"
+  },
+  {
+    "speaker": "",
+    "line": "У мене висока температура і горло болить."
+  },
+  {
+    "speaker": "",
+    "line": "Це схоже на грип. Ти викликав лікаря?"
+  },
+  {
+    "speaker": "",
+    "line": "Так, лікар буде після обіду."
+  },
+  {
+    "speaker": "",
+    "line": "Добре, залишайся вдома і лікуйся."
+  },
+  {
+    "speaker": "",
+    "line": "Дякую. Коли мені повернутися на роботу?"
+  },
+  {
+    "speaker": "",
+    "line": "Коли будеш здоровий. Не поспішай."
+  },
+  {
+    "speaker": "",
+    "line": "Добре. Я надішлю лікарняний (sick note)."
+  },
+  {
+    "speaker": "",
+    "line": "Одужуй! Чекаємо тебе."
+  }
+]} />
+</DialogueReorder>
+
+### Body Parts
+
+[!instruction] Mark body parts.
+
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`У людини є одна голова, дві руки і дві ноги. На обличчі є очі, ніс і рот. У роті є зуби. У грудях б'ється серце. Коли ми їмо, працює шлунок. Якщо ми носимо важке, болить спина.`}
+    correctWords={[`голова`, `руки`, `ноги`, `очі`, `зуби`, `серце`, `шлунок`, `спина`]}
+  />
+</MarkTheWords>
+
+### Medical Choice
+
+<Select>
+  <SelectQuestion
+    question={`1. Headache.`}
+    options={[`Головний біль.`, `Головний убір.`]}
+    correctAnswers={[`Головний біль.`]}
+    explanation={`Headache vs Headgear.`}
+  />
+  <SelectQuestion
+    question={`Pharmacy.`}
+    options={[`Аптека.`, `Оптика.`]}
+    correctAnswers={[`Аптека.`]}
+    explanation={`Pharmacy.`}
+  />
+  <SelectQuestion
+    question={`Doctor.`}
+    options={[`Лікар.`, `Лікеро.`]}
+    correctAnswers={[`Лікар.`]}
+    explanation={`Doctor.`}
+  />
+  <SelectQuestion
+    question={`To recover.`}
+    options={[`Одужувати.`, `Вмирати.`]}
+    correctAnswers={[`Одужувати.`]}
+    explanation={`Recover vs Die.`}
+  />
+  <SelectQuestion
+    question={`Cold (illness).`}
+    options={[`Застуда.`, `Посуда.`]}
+    correctAnswers={[`Застуда.`]}
+    explanation={`Cold vs Dishes.`}
+  />
+  <SelectQuestion
+    question={`Pill.`}
+    options={[`Таблетка.`, `Серветка.`]}
+    correctAnswers={[`Таблетка.`]}
+    explanation={`Pill vs Napkin.`}
+  />
+  <SelectQuestion
+    question={`Eye.`}
+    options={[`Око.`, `Вікно.`]}
+    correctAnswers={[`Око.`]}
+    explanation={`Eye vs Window.`}
+  />
+  <SelectQuestion
+    question={`Heart.`}
+    options={[`Серце.`, `Сонце.`]}
+    correctAnswers={[`Серце.`]}
+    explanation={`Heart vs Sun.`}
+  />
+  <SelectQuestion
+    question={`Pain.`}
+    options={[`Біль.`, `Біл.`]}
+    correctAnswers={[`Біль.`]}
+    explanation={`Pain.`}
+  />
+  <SelectQuestion
+    question={`Fever/Temp.`}
+    options={[`Температура.`, `Література.`]}
+    correctAnswers={[`Температура.`]}
+    explanation={`Temperature vs Literature.`}
+  />
+  <SelectQuestion
+    question={`Ambulance.`}
+    options={[`Швидка.`, `Повільна.`]}
+    correctAnswers={[`Швидка.`]}
+    explanation={`Fast vs Slow.`}
+  />
+  <SelectQuestion
+    question={`To cough.`}
+    options={[`Кашляти.`, `Коштувати.`]}
+    correctAnswers={[`Кашляти.`]}
+    explanation={`Cough vs Cost.`}
+  />
+</Select>
+

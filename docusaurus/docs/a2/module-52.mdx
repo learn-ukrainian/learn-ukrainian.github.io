@@ -5,19 +5,20 @@ title: "Shopping & Services"
 description: "Buying and Selling in Ukrainian"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 # Shopping & Services
@@ -30,7 +31,8 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 
 Shopping is a daily necessity. In this module, you'll learn how to navigate shops, use services like banks and post offices, and handle money.
 
-:::warning[**Myth Buster** "Cash Only?"]
+:::warning
+**Myth Buster** "Cash Only?"
 Think you need a suitcase of cash in Eastern Europe? Wrong! Ukraine is a leader in cashless payments. You can pay with Apple Pay or Google Pay almost everywhere — in the subway, at a tiny coffee kiosk, and often even at the market. **Готівка** (cash) is becoming rare!
 :::
 
@@ -74,7 +76,8 @@ Where do we buy things?
 - **знижка** — discount: *Сьогодні знижка 50%!*
 - **чек** — receipt/check: *Візьміть чек.*
 
-:::note[Grammar Point: Asking Price]
+:::note
+Grammar Point: Asking Price
 To ask "How much is it?", we say:
 - **Скільки це коштує?** (How much does this cost?)
 - **Яка ціна?** (What is the price?)
@@ -84,7 +87,8 @@ The verb **коштувати** agrees with the item:
 :::
 
 
-:::note[**Cultural Insight** The Market (Ринок/Базар)]
+:::note
+**Cultural Insight** The Market (Ринок/Базар)
 The **ринок** is the heart of Ukrainian food culture. Here you buy the freshest vegetables, fruits, meat, and cheese (especially **творог**). It's normal to taste ("попробовать") products before buying. And yes, you can bargain ("торгуватися"), but politely!
 :::
 
@@ -97,30 +101,15 @@ The **ринок** is the heart of Ukrainian food culture. Here you buy the fres
 — На ринку все свіже, — каже вона.
 
 Вона підходить до продавця овочів.
-<div className="conversation">
-
 — Добрий день! Скільки **коштують** помідори?
-
 — 50 гривень за кілограм, — відповідає продавець. — Дуже солодкі, спробуйте!
-
-</div>
 Марія куштує.
-<div className="conversation">
-
 — Смачні. Але чому так дорого? Давайте за 45?
-
 — Добре, для вас — 45.
 
-</div>
-
 Марія бере два кілограми. Вона дає **готівку**.
-<div className="conversation">
-
 — Ось ваші 100 гривень.
-
 — Дякую, ось ваша **решта** — 10 гривень, — каже продавець.
-
-</div>
 Бабуся задоволена. Вона любить **купувати** на ринку.
 
 ### Story Time: Shopping Mall
@@ -132,13 +121,8 @@ The **ринок** is the heart of Ukrainian food culture. Here you buy the fres
 — Дивись, яка гарна сукня! — каже Олена. — І тут є **знижка**!
 Вона йде **міряти** сукню. Вона їй пасує.
 
-<div className="conversation">
-
 — Ми беремо цю сукню, — каже Андрій на **касі**. — Можна заплатити **карткою**?
-
 — Так, звичайно прикладіть картку, — каже касир. — Ось ваш **чек**.
-
-</div>
 
 Після шопінгу вони йдуть у кафе. Андрій **замовляє** каву і тістечка.
 Вони витратили багато грошей, але вони щасливі.
@@ -152,13 +136,8 @@ The **ринок** is the heart of Ukrainian food culture. Here you buy the fres
 Мама йде на **пошту**. Це світле і чисте відділення. Немає **черги**.
 — Я хочу відправити посилку в Київ, — каже вона.
 Оператор швидко оформлює замовлення.
-<div className="conversation">
-
 — Це буде **коштувати** 80 гривень. Оплата тут чи одержувач?
-
 — Одержувач, — каже мама.
-
-</div>
 
 На наступний день Іван отримує смс: "Ваша посилка прибула".
 Він заходить у відділення біля свого дому. Він сканує додаток у смартфоні, платить через Apple Pay і забирає варення.
@@ -177,19 +156,11 @@ Also, currency exchange (**обмін валют**) is strictly regulated but ac
 ### Story Time: At the Hairdresser
 
 Ольга хоче нову зачіску. Вона йде в **перукарню** "Красуня".
-<div className="conversation">
-
 — Добрий день, я записана на 14:00, — каже вона.
-
 — Добрий день, сідайте, будь ласка, — каже перукар Наталя. — Що будемо робити?
-
 — Я хочу стрижку і фарбування, — каже Ольга. — Скільки це буде **коштувати**?
-
 — Стрижка — 500 гривень, фарбування — 1500.
-
 — Добре.
-
-</div>
 
 Вони розмовляють про моду і життя.
 Через дві години Ольга дивиться у дзеркало.
@@ -209,27 +180,14 @@ Most people order delivery to a "Nova Poshta" branch, not to their home address,
 ### Story Time: Taxi
 
 Андрій викликав таксі через додаток Uklon.
-<div className="conversation">
-
 — Добрий день. Ви де? — дзвонить водій.
-
 — Я біля банку "ПриватБанк", — каже Андрій.
-
 — Буду через 5 хвилин. Яка у вас машина?
-
 — Сіра Тойота. Номер 4567.
-
 — Добре, чекаю на вулиці.
-
-</div>
 Андрій сідає в машину.
-<div className="conversation">
-
 — На вокзал, будь ласка. Я поспішаю.
-
 — Не хвилюйтеся, встигнемо.
-
-</div>
 
 ### Food Delivery
 
@@ -237,8 +195,20 @@ If you are hungry, you don't need to cook.
 In big cities like Kyiv or Lviv, you will see many couriers with yellow or green backpacks.
 Apps like **Glovo** or **Bolt Food** work 24/7. You can order sushi, burgers, or even borscht from your favorite restaurant. Just open the app, choose the food, and wait 30 minutes. It is fast and tasty.
 
-:::tip[**Tip** "Sales"]
+:::tip
+**Tip** "Sales"
 Black Friday is popular in Ukraine, but big **розпродаж** (sales) also happen in January and July. Look for signs saying **"Знижки до -70%"**. It's the best time to buy clothes!
+:::
+
+
+:::info
+🔗 External Resources
+
+**YouTube:** [Ukraine: emergency services at shopping mall shelling site in Kyiv ...](https://www.youtube.com/watch?v=FCGTzRtV0nI) — AFP
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 :::
 
 
@@ -252,443 +222,37 @@ You learned to:
 
 Shopping in Ukraine is easy and modern. Don't be afraid to ask the price!
 
-## 🎯 Activities
 
-### Shopping Facts
 
-<Quiz questions={[
-  {
-    question: `Where do you usually bargain?`,
-    options: [
-      { text: `на ринку`, correct: true },
-      { text: `у супермаркеті`, correct: false },
-      { text: `в аптеці`, correct: false }
-    ]
-  },  {
-    question: `\"Готівка\" means...`,
-    options: [
-      { text: `cash`, correct: true },
-      { text: `card`, correct: false },
-      { text: `discount`, correct: false }
-    ]
-  },  {
-    question: `\"Нова Пошта\" is famous for...`,
-    options: [
-      { text: `speed and modern service`, correct: true },
-      { text: `losing letters`, correct: false },
-      { text: `selling food`, correct: false }
-    ]
-  },  {
-    question: `To ask for the price, you say...`,
-    options: [
-      { text: `Скільки коштує?`, correct: true },
-      { text: `Як тебе звати?`, correct: false },
-      { text: `Де магазин?`, correct: false }
-    ]
-  },  {
-    question: `\"Знижка\" is...`,
-    options: [
-      { text: `discount`, correct: true },
-      { text: `receipt`, correct: false },
-      { text: `bag`, correct: false }
-    ]
-  },  {
-    question: `Where do you buy medicine?`,
-    options: [
-      { text: `в аптеці`, correct: true },
-      { text: `у банку`, correct: false },
-      { text: `на пошті`, correct: false }
-    ]
-  },  {
-    question: `What do you get after paying?`,
-    options: [
-      { text: `чек`, correct: true },
-      { text: `чергу`, correct: false },
-      { text: `ціну`, correct: false }
-    ]
-  },  {
-    question: `\"Черга\" is...`,
-    options: [
-      { text: `queue/line`, correct: true },
-      { text: `cashier`, correct: false },
-      { text: `money`, correct: false }
-    ]
-  },  {
-    question: `Monobank is a...`,
-    options: [
-      { text: `neo-bank inside a phone`, correct: true },
-      { text: `state post office`, correct: false },
-      { text: `market`, correct: false }
-    ]
-  },  {
-    question: `\"Решта\" is...`,
-    options: [
-      { text: `change (money returned)`, correct: true },
-      { text: `price`, correct: false },
-      { text: `card`, correct: false }
-    ]
-  },  {
-    question: `\"Міряти\" means to...`,
-    options: [
-      { text: `try on (clothes)`, correct: true },
-      { text: `buy`, correct: false },
-      { text: `eat`, correct: false }
-    ]
-  },  {
-    question: `Can you pay with Apple Pay in Ukraine?`,
-    options: [
-      { text: `Yes, almost everywhere`, correct: true },
-      { text: `No, cash only`, correct: false },
-      { text: `Only in banks`, correct: false }
-    ]
-  }
-]} />
+> 💡 **Культура покупок**
+>
+> «На базарі торгуються, у супермаркеті — ні. Це українська традиція!»
+>
+> *Translation: "At the bazaar, you bargain; at the supermarket, you don't."*
 
-### Shop Vocabulary
+> 🇺🇦 **Покупки в Україні**
+>
+> Корисні фрази для покупок:
+> - «Скільки коштує?» — How much does it cost?
+> - «Дайте, будь ласка...» — Please give me...
+> - «Я хочу купити...» — I want to buy...
+> - «Це занадто дорого!» — That's too expensive!
+>
+> На базарі можна торгуватися! Питайте: «А дешевше можна?»
 
-<MatchUp pairs={[
-  { left: `магазин`, right: `shop` },
-  { left: `ринок`, right: `market` },
-  { left: `аптека`, right: `pharmacy` },
-  { left: `банк`, right: `bank` },
-  { left: `пошта`, right: `post office` },
-  { left: `готівка`, right: `cash` },
-  { left: `картка`, right: `card` },
-  { left: `ціна`, right: `price` },
-  { left: `знижка`, right: `discount` },
-  { left: `черга`, right: `queue` },
-  { left: `каса`, right: `checkout` },
-  { left: `перукарня`, right: `hairdresser's` }
-]} />
+> 🛒 **Сучасний шопінг в Україні**
+>
+> Україна — сучасна країна! Тут працюють Apple Pay, Google Pay, безконтактна оплата. Нова Пошта доставляє посилки за один день. Rozetka — український Amazon. Інтернет-шопінг дуже популярний!
+>
+> Основні слова для покупок:
+> - **магазин** — будь-який магазин
+> - **супермаркет** — великий магазин для продуктів
+> - **ринок** — традиційний базар зі свіжими продуктами
+> - **торговий центр** — сучасний молл для шопінгу
+>
+> Запрошуємо до покупок! Шопінг в Україні — це зручно та швидко!
 
-### Shopping Sentences
 
-<FillIn items={[
-  {
-    sentence: `Я хочу ____ хліб.`,
-    answer: `купити`,
-    options: [`купити`, `продати`, `міряти`, `спати`]
-  },  {
-    sentence: `Скільки це ____?`,
-    answer: `коштує`,
-    options: [`коштує`, `коштують`, `платить`, `купує`]
-  },  {
-    sentence: `У мене немає ____. (cash)`,
-    answer: `готівки`,
-    options: [`готівки`, `готівка`, `картка`, `банку`]
-  },  {
-    sentence: `Я плачу ____. (by card)`,
-    answer: `карткою`,
-    options: [`карткою`, `карта`, `карту`, `картки`]
-  },  {
-    sentence: `Це велика ____. (queue)`,
-    answer: `черга`,
-    options: [`черга`, `каса`, `ціна`, `знижка`]
-  },  {
-    sentence: `Дайте, будь ласка, ____. (receipt)`,
-    answer: `чек`,
-    options: [`чек`, `чергу`, `гривню`, `решту`]
-  },  {
-    sentence: `Ось ваша ____. (change)`,
-    answer: `решта`,
-    options: [`решта`, `каса`, `ціна`, `пошта`]
-  },  {
-    sentence: `Ми йдемо на ____. (market)`,
-    answer: `ринок`,
-    options: [`ринок`, `банк`, `аптеку`, `магазин`]
-  },  {
-    sentence: `Я хочу ____ ці джинси. (try on)`,
-    answer: `поміряти`,
-    options: [`поміряти`, `купити`, `з'їсти`, `випити`]
-  },  {
-    sentence: `Сьогодні у магазині ____. (discount)`,
-    answer: `знижка`,
-    options: [`знижка`, `черга`, `ціна`, `каса`]
-  },  {
-    sentence: `Можна ____ піцу? (order)`,
-    answer: `замовити`,
-    options: [`замовити`, `купити`, `міряти`, `платити`]
-  },  {
-    sentence: `Банк закритий, він не ____.`,
-    answer: `працює`,
-    options: [`працює`, `коштує`, `купує`, `спить`]
-  }
-]} />
-
-### Ukrainian Services
-
-<TrueFalse items={[
-  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Generally true perception.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Very false.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Medicine.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Known for speed.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Fixed prices. Bargain at the market.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `It's an app-only bank.`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Money you get back.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Dry cleaner.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Cash.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Bill/receipt is чек (or рахунок).`
-  },  {
-    statement: `false`,
-    isTrue: true,
-    explanation: `Nobody likes a queue.`
-  },  {
-    statement: `true`,
-    isTrue: true,
-    explanation: `Delivery is popular (Glovo, Bolt Food).`
-  }
-]} />
-
-### Places vs Things
-
-<GroupSort groups={{
-  "Groups": ["Places", "Money/Things", "Actions"],
-  "Items": ["магазин: Places", "банк: Places", "ринок: Places", "аптека: Places", "пошта: Places", "готівка: Money/Things", "картка: Money/Things", "чек: Money/Things", "знижка: Money/Things", "купувати: Actions", "платити: Actions", "міряти: Actions"]
-}} />
-
-### Shopping Dialogue
-
-<Unjumble items={[
-  { jumbled: `Скільки / коштує / цей / хліб`, answer: `Скільки коштує цей хліб` },
-  { jumbled: `Я / хочу / заплатити / карткою`, answer: `Я хочу заплатити карткою` },
-  { jumbled: `Де / тут / найближчий / банк`, answer: `Де тут найближчий банк` },
-  { jumbled: `У / нас / сьогодні / знижка`, answer: `У нас сьогодні знижка` },
-  { jumbled: `Я / йду / в / супермаркет`, answer: `Я йду в супермаркет` },
-  { jumbled: `Дайте / мені / чек / будь ласка`, answer: `Дайте мені чек будь ласка` },
-  { jumbled: `Ця / сукня / дуже / дорога`, answer: `Ця сукня дуже дорога` },
-  { jumbled: `Ми / замовляємо / їжу / додому`, answer: `Ми замовляємо їжу додому` },
-  { jumbled: `На / пошті / велика / черга`, answer: `На пошті велика черга` },
-  { jumbled: `Ваша / решта — / двадцять / гривень`, answer: `Ваша решта — двадцять гривень` },
-  { jumbled: `Я / люблю / купувати / на / ринку`, answer: `Я люблю купувати на ринку` },
-  { jumbled: `Мені / треба / поміряти / взуття`, answer: `Мені треба поміряти взуття` }
-]} />
-
-### Shop Grammar
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я йду в магазин.`}
-    errorWord={`магазину`}
-    correctForm={`магазин`}
-    options={[`магазин`, `магазину`, `магазина`, `магазином`]}
-    explanation={`Direction (Accusative): в магазин.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Скільки коштує банани?`}
-    errorWord={`коштує`}
-    correctForm={`коштують`}
-    options={[`коштують`, `коштує`, `коштувати`, `коштував`]}
-    explanation={`Plural subject (bananas): коштують.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я плачу картка.`}
-    errorWord={`картка`}
-    correctForm={`карткою`}
-    options={[`карткою`, `картка`, `карти`, `карту`]}
-    explanation={`Instrumental (with what?): карткою.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Дайте чеку.`}
-    errorWord={`чеку`}
-    correctForm={`чек`}
-    options={[`чек`, `чеку`, `чека`, `чеком`]}
-    explanation={`Accusative request: чек.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`У мене немає готівка.`}
-    errorWord={`готівка`}
-    correctForm={`готівки`}
-    options={[`готівки`, `готівка`, `готівку`, `готівкою`]}
-    explanation={`Genitive negation: немає готівки.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми були на ринок.`}
-    errorWord={`ринок`}
-    correctForm={`ринку`}
-    options={[`ринку`, `ринок`, `ринка`, `ринком`]}
-    explanation={`Location (Locative): на ринку.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я купую хліба.`}
-    errorWord={`хліба`}
-    correctForm={`хліб`}
-    options={[`хліб`, `хліба`, `хлібу`, `хлібом`]}
-    explanation={`Accusative: купую хліб. (Partitive Genitive 'хліба' exists but Accusative is standard for 'a loaf').`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Це дорога магазин.`}
-    errorWord={`дорога`}
-    correctForm={`дорогий`}
-    options={[`дорогий`, `дорога`, `дороге`, `дорогі`]}
-    explanation={`Masculine noun: дорогий магазин.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Тут велика знижку.`}
-    errorWord={`знижку`}
-    correctForm={`знижка`}
-    options={[`знижка`, `знижку`, `знижки`, `знижкою`]}
-    explanation={`Nominative (\"There is\"): знижка.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він працює в аптека.`}
-    errorWord={`аптека`}
-    correctForm={`аптеці`}
-    options={[`аптеці`, `аптека`, `аптеку`, `аптекою`]}
-    explanation={`Locative: в аптеці.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я хочу поміряти плаття.`}
-    errorWord={`сукня`}
-    correctForm={`сукню`}
-    options={[`сукню`, `сукня`, `сукні`, `сукнею`]}
-    explanation={`Accusative feminine: сукню.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Де тут банків?`}
-    errorWord={`банків`}
-    correctForm={`банк`}
-    options={[`банк`, `банків`, `банку`, `банком`]}
-    explanation={`Nominative subject: банк.`}
-  />
-</ErrorCorrection>
-
-### At the Supermarket
-
-<Cloze
-  passage={`Я беру [___:1] і йду в зал.
-Мені треба [___:2] молоко і хліб.
-Я дивлюся на [___:3]. Молоко коштує 40 гривень.
-Я йду на [___:4]. Там велика [___:5].
-Касир питає: \"Пакет потрібен?\". Я кажу: \"Ні, дякую\".
-Я плачу [___:6], тому що не люблю [___:7].
-Касир дає мені [___:8]. Шопінг закінчено.`}
-  blanks={[{ answer: `кошик`, options: [`кошик`, `пакет`, `стіл`] }, { answer: `купити`, options: [`купити`, `продати`, `знайти`] }, { answer: `ціну`, options: [`ціну`, `вагу`, `колір`] }, { answer: `касу`, options: [`касу`, `вікно`, `двері`] }, { answer: `черга`, options: [`черга`, `знижка`, `каса`] }, { answer: `карткою`, options: [`карткою`, `готівкою`, `чеком`] }, { answer: `готівку`, options: [`готівку`, `картку`, `знижку`] }, { answer: `чек`, options: [`чек`, `гроші`, `товар`] }]}
-/>
-
-### Buying Shoes
-
-<DialogueReorder lines={[
-  { text: `Добрий день. Я можу вам допомогти?`, order: 1 },
-  { text: `Добрий день. Я шукаю кросівки.`, order: 2 },
-  { text: `Який у вас розмір?`, order: 3 },
-  { text: `42-й розмір.`, order: 4 },
-  { text: `Ось гарна модель. Хочете поміряти?`, order: 5 },
-  { text: `Так, дякую. Де дзеркало?`, order: 6 },
-  { text: `Дзеркало там, зліва.`, order: 7 },
-  { text: `Вони зручні. Скільки вони коштують?`, order: 8 },
-  { text: `2000 гривень.`, order: 9 },
-  { text: `Добре, я беру їх.`, order: 10 },
-  { text: `Оплата карткою чи готівкою?`, order: 11 },
-  { text: `Карткою, будь ласка.`, order: 12 }
-]} />
-
-### Shopping Choices
-
-<Select questions={[
-  {
-    question: `To pay money.`,
-    options: [
-      { text: `Платити.`, correct: true },
-      { text: `Плакати.`, correct: false }
-    ]
-  },  {
-    question: `To buy.`,
-    options: [
-      { text: `Купувати.`, correct: true },
-      { text: `Купати.`, correct: false }
-    ]
-  },  {
-    question: `To order.`,
-    options: [
-      { text: `Замовляти.`, correct: true },
-      { text: `Мовчати.`, correct: false }
-    ]
-  },  {
-    question: `Receipt.`,
-    options: [
-      { text: `Чек.`, correct: true },
-      { text: `Чех.`, correct: false }
-    ]
-  },  {
-    question: `Cash.`,
-    options: [
-      { text: `Готівка.`, correct: true },
-      { text: `Готування.`, correct: false }
-    ]
-  },  {
-    question: `Price.`,
-    options: [
-      { text: `Ціна.`, correct: true },
-      { text: `Стіна.`, correct: false }
-    ]
-  },  {
-    question: `Discount.`,
-    options: [
-      { text: `Знижка.`, correct: true },
-      { text: `Книжка.`, correct: false }
-    ]
-  },  {
-    question: `Market.`,
-    options: [
-      { text: `Ринок.`, correct: true },
-      { text: `Ранок.`, correct: false }
-    ]
-  },  {
-    question: `Shop.`,
-    options: [
-      { text: `Магазин.`, correct: true },
-      { text: `Журнал`, correct: false }
-    ]
-  },  {
-    question: `Pharmacy.`,
-    options: [
-      { text: `Аптека.`, correct: true },
-      { text: `Бібліотека.`, correct: false }
-    ]
-  },  {
-    question: `Post Office.`,
-    options: [
-      { text: `Пошта.`, correct: true },
-      { text: `Площа.`, correct: false }
-    ]
-  },  {
-    question: `To try on.`,
-    options: [
-      { text: `Міряти.`, correct: true },
-      { text: `Мирити.`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -723,3 +287,510 @@ Shopping in Ukraine is easy and modern. Don't be afraid to ask the price!
 | овочі | /ˈɔvotʃi/ | vegetables | noun | pl | |
 | фрукти | /ˈfruktɪ/ | fruits | noun | pl | |
 | сервіс | /ˈsɛrvis/ | service | noun | m | |
+
+---
+
+## 🎯 Activities
+
+### Shopping Facts
+
+<Quiz>
+  <QuizQuestion
+    question={`1. Where do you usually bargain?`}
+    options={[`на ринку`, `у супермаркеті`, `в аптеці`]}
+    correctIndex={0}
+    explanation={`Bargaining (торгуватися) is for the market.`}
+  />
+  <QuizQuestion
+    question={`"Готівка" means...`}
+    options={[`cash`, `card`, `discount`]}
+    correctIndex={0}
+    explanation={`Cash.`}
+  />
+  <QuizQuestion
+    question={`"Нова Пошта" is famous for...`}
+    options={[`speed and modern service`, `losing letters`, `selling food`]}
+    correctIndex={0}
+    explanation={`Fast private post.`}
+  />
+  <QuizQuestion
+    question={`To ask for the price, you say...`}
+    options={[`Скільки коштує?`, `Як тебе звати?`, `Де магазин?`]}
+    correctIndex={0}
+    explanation={`How much does it cost?`}
+  />
+  <QuizQuestion
+    question={`"Знижка" is...`}
+    options={[`discount`, `receipt`, `bag`]}
+    correctIndex={0}
+    explanation={`Discount.`}
+  />
+  <QuizQuestion
+    question={`Where do you buy medicine?`}
+    options={[`в аптеці`, `у банку`, `на пошті`]}
+    correctIndex={0}
+    explanation={`Pharmacy (аптека).`}
+  />
+  <QuizQuestion
+    question={`What do you get after paying?`}
+    options={[`чек`, `чергу`, `ціну`]}
+    correctIndex={0}
+    explanation={`Receipt (чек).`}
+  />
+  <QuizQuestion
+    question={`"Черга" is...`}
+    options={[`queue/line`, `cashier`, `money`]}
+    correctIndex={0}
+    explanation={`Queue.`}
+  />
+  <QuizQuestion
+    question={`Monobank is a...`}
+    options={[`neo-bank inside a phone`, `state post office`, `market`]}
+    correctIndex={0}
+    explanation={`Digital bank.`}
+  />
+  <QuizQuestion
+    question={`"Решта" is...`}
+    options={[`change (money returned)`, `price`, `card`]}
+    correctIndex={0}
+    explanation={`Change.`}
+  />
+  <QuizQuestion
+    question={`"Міряти" means to...`}
+    options={[`try on (clothes)`, `buy`, `eat`]}
+    correctIndex={0}
+    explanation={`To try on.`}
+  />
+  <QuizQuestion
+    question={`Can you pay with Apple Pay in Ukraine?`}
+    options={[`Yes, almost everywhere`, `No, cash only`, `Only in banks`]}
+    correctIndex={0}
+    explanation={`Widespread acceptance.`}
+  />
+</Quiz>
+
+### Shop Vocabulary
+
+<MatchUp pairs={[
+  { left: `магазин`, right: `shop` },
+  { left: `ринок`, right: `market` },
+  { left: `аптека`, right: `pharmacy` },
+  { left: `банк`, right: `bank` },
+  { left: `пошта`, right: `post office` },
+  { left: `готівка`, right: `cash` },
+  { left: `картка`, right: `card` },
+  { left: `ціна`, right: `price` },
+  { left: `знижка`, right: `discount` },
+  { left: `черга`, right: `queue` },
+  { left: `каса`, right: `checkout` },
+  { left: `перукарня`, right: `hairdresser's` }
+]} />
+
+### Shopping Sentences
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я хочу ____ хліб.`}
+    answer={`купити`}
+    options={[`купити`, `продати`, `міряти`, `спати`]}
+  />
+  <FillInQuestion
+    sentence={`Я ___ хліб щодня. (buy daily)`}
+    answer={`купую`}
+    options={[`купую`, `куплю`]}
+  />
+  <FillInQuestion
+    sentence={`Вона ___ нову сукню. (bought dress)`}
+    answer={`купила`}
+    options={[`купувала`, `купила`]}
+  />
+  <FillInQuestion
+    sentence={`Де можна ___ молоко? (where to buy)`}
+    answer={`купити`}
+    options={[`купувати`, `купити`]}
+  />
+  <FillInQuestion
+    sentence={`Я завжди ___ тут. (always shop here)`}
+    answer={`купую`}
+    options={[`купую`, `куплю`]}
+  />
+  <FillInQuestion
+    sentence={`Треба ___ продукти. (need to buy)`}
+    answer={`купити`}
+    options={[`купувати`, `купити`]}
+  />
+  <FillInQuestion
+    sentence={`Вони ___ багато речей. (bought many things)`}
+    answer={`купили`}
+    options={[`купували`, `купили`]}
+  />
+  <FillInQuestion
+    sentence={`Скільки це ____?`}
+    answer={`коштує`}
+    options={[`коштує`, `коштують`, `платить`, `купує`]}
+  />
+  <FillInQuestion
+    sentence={`У мене немає ____. (cash)`}
+    answer={`готівки`}
+    options={[`готівки`, `готівка`, `картка`, `банку`]}
+  />
+  <FillInQuestion
+    sentence={`Я плачу ____. (by card)`}
+    answer={`карткою`}
+    options={[`карткою`, `карта`, `карту`, `картки`]}
+  />
+  <FillInQuestion
+    sentence={`Це велика ____. (queue)`}
+    answer={`черга`}
+    options={[`черга`, `каса`, `ціна`, `знижка`]}
+  />
+  <FillInQuestion
+    sentence={`Дайте, будь ласка, ____. (receipt)`}
+    answer={`чек`}
+    options={[`чек`, `чергу`, `гривню`, `решту`]}
+  />
+  <FillInQuestion
+    sentence={`Ось ваша ____. (change)`}
+    answer={`решта`}
+    options={[`решта`, `каса`, `ціна`, `пошта`]}
+  />
+  <FillInQuestion
+    sentence={`Ми йдемо на ____. (market)`}
+    answer={`ринок`}
+    options={[`ринок`, `банк`, `аптеку`, `магазин`]}
+  />
+  <FillInQuestion
+    sentence={`Я хочу ____ ці джинси. (try on)`}
+    answer={`поміряти`}
+    options={[`поміряти`, `купити`, `з'їсти`, `випити`]}
+  />
+  <FillInQuestion
+    sentence={`Сьогодні у магазині ____. (discount)`}
+    answer={`знижка`}
+    options={[`знижка`, `черга`, `ціна`, `каса`]}
+  />
+  <FillInQuestion
+    sentence={`Можна ____ піцу? (order)`}
+    answer={`замовити`}
+    options={[`замовити`, `купити`, `міряти`, `платити`]}
+  />
+  <FillInQuestion
+    sentence={`Банк закритий, він не ____.`}
+    answer={`працює`}
+    options={[`працює`, `коштує`, `купує`, `спить`]}
+  />
+</FillIn>
+
+
+
+### Places vs Things
+
+<GroupSort groups={{
+  "Places": [
+    "магазин",
+    "банк",
+    "ринок",
+    "аптека",
+    "пошта"
+  ],
+  "Money/Things": [
+    "готівка",
+    "картка",
+    "чек",
+    "знижка"
+  ],
+  "Actions": [
+    "купувати",
+    "платити",
+    "міряти"
+  ]
+}} />
+
+### Shopping Dialogue
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`Скільки / коштує / цей / хліб`}
+    answer={`Скільки коштує цей хліб`}
+  />
+  <UnjumbleQuestion
+    words={`Я / хочу / заплатити / карткою`}
+    answer={`Я хочу заплатити карткою`}
+  />
+  <UnjumbleQuestion
+    words={`Де / тут / найближчий / банк`}
+    answer={`Де тут найближчий банк`}
+  />
+  <UnjumbleQuestion
+    words={`У / нас / сьогодні / знижка`}
+    answer={`У нас сьогодні знижка`}
+  />
+  <UnjumbleQuestion
+    words={`Я / йду / в / супермаркет`}
+    answer={`Я йду в супермаркет`}
+  />
+  <UnjumbleQuestion
+    words={`Дайте / мені / чек / будь ласка`}
+    answer={`Дайте мені чек будь ласка`}
+  />
+  <UnjumbleQuestion
+    words={`Ця / сукня / дуже / дорога`}
+    answer={`Ця сукня дуже дорога`}
+  />
+  <UnjumbleQuestion
+    words={`Ми / замовляємо / їжу / додому`}
+    answer={`Ми замовляємо їжу додому`}
+  />
+  <UnjumbleQuestion
+    words={`На / пошті / велика / черга`}
+    answer={`На пошті велика черга`}
+  />
+  <UnjumbleQuestion
+    words={`Ваша / решта — / двадцять / гривень`}
+    answer={`Ваша решта — двадцять гривень`}
+  />
+  <UnjumbleQuestion
+    words={`Я / люблю / купувати / на / ринку`}
+    answer={`Я люблю купувати на ринку`}
+  />
+  <UnjumbleQuestion
+    words={`Мені / треба / поміряти / взуття`}
+    answer={`Мені треба поміряти взуття`}
+  />
+</Unjumble>
+
+### Shop Grammar
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я йду в магазин.`}
+    error={`магазину`}
+    answer={`магазин`}
+    options={[`магазин`, `магазину`, `магазина`, `магазином`]}
+    explanation={`Direction (Accusative): в магазин.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Скільки коштує банани?`}
+    error={`коштує`}
+    answer={`коштують`}
+    options={[`коштують`, `коштує`, `коштувати`, `коштував`]}
+    explanation={`Plural subject (bananas): коштують.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я плачу картка.`}
+    error={`картка`}
+    answer={`карткою`}
+    options={[`карткою`, `картка`, `карти`, `карту`]}
+    explanation={`Instrumental (with what?): карткою.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Дайте чеку.`}
+    error={`чеку`}
+    answer={`чек`}
+    options={[`чек`, `чеку`, `чека`, `чеком`]}
+    explanation={`Accusative request: чек.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`У мене немає готівка.`}
+    error={`готівка`}
+    answer={`готівки`}
+    options={[`готівки`, `готівка`, `готівку`, `готівкою`]}
+    explanation={`Genitive negation: немає готівки.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми були на ринок.`}
+    error={`ринок`}
+    answer={`ринку`}
+    options={[`ринку`, `ринок`, `ринка`, `ринком`]}
+    explanation={`Location (Locative): на ринку.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я купую хліба.`}
+    error={`хліба`}
+    answer={`хліб`}
+    options={[`хліб`, `хліба`, `хлібу`, `хлібом`]}
+    explanation={`Accusative: купую хліб. (Partitive Genitive 'хліба' exists but Accusative is standard for 'a loaf').`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Це дорога магазин.`}
+    error={`дорога`}
+    answer={`дорогий`}
+    options={[`дорогий`, `дорога`, `дороге`, `дорогі`]}
+    explanation={`Masculine noun: дорогий магазин.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Тут велика знижку.`}
+    error={`знижку`}
+    answer={`знижка`}
+    options={[`знижка`, `знижку`, `знижки`, `знижкою`]}
+    explanation={`Nominative ("There is"): знижка.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він працює в аптека.`}
+    error={`аптека`}
+    answer={`аптеці`}
+    options={[`аптеці`, `аптека`, `аптеку`, `аптекою`]}
+    explanation={`Locative: в аптеці.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я хочу поміряти плаття.`}
+    error={`сукня`}
+    answer={`сукню`}
+    options={[`сукню`, `сукня`, `сукні`, `сукнею`]}
+    explanation={`Accusative feminine: сукню.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Де тут банків?`}
+    error={`банків`}
+    answer={`банк`}
+    options={[`банк`, `банків`, `банку`, `банком`]}
+    explanation={`Nominative subject: банк.`}
+  />
+</ErrorCorrection>
+
+
+
+### Buying Shoes
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Добрий день. Я можу вам допомогти?"
+  },
+  {
+    "speaker": "",
+    "line": "Добрий день. Я шукаю кросівки."
+  },
+  {
+    "speaker": "",
+    "line": "Який у вас розмір?"
+  },
+  {
+    "speaker": "",
+    "line": "42-й розмір."
+  },
+  {
+    "speaker": "",
+    "line": "Ось гарна модель. Хочете поміряти?"
+  },
+  {
+    "speaker": "",
+    "line": "Так, дякую. Де дзеркало?"
+  },
+  {
+    "speaker": "",
+    "line": "Дзеркало там, зліва."
+  },
+  {
+    "speaker": "",
+    "line": "Вони зручні. Скільки вони коштують?"
+  },
+  {
+    "speaker": "",
+    "line": "2000 гривень."
+  },
+  {
+    "speaker": "",
+    "line": "Добре, я беру їх."
+  },
+  {
+    "speaker": "",
+    "line": "Оплата карткою чи готівкою?"
+  },
+  {
+    "speaker": "",
+    "line": "Карткою, будь ласка."
+  }
+]} />
+</DialogueReorder>
+
+### Find Services
+
+[!instruction] Mark all shops and services.
+
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Я живу в центрі. Біля мого дому є супермаркет і маленька аптека. Коли мені треба гроші, я йду в банк. У неділю я йду на ринок за овочами. Моя мама працює на пошті. Тато стрижеться в перукарні. Ми любимо ходити в кіно і ресторан. Лікарня теж недалеко.`}
+    correctWords={[`супермаркет`, `аптека`, `банк`, `ринок`, `пошті`, `перукарні`, `кіно`, `ресторан`, `Лікарня`]}
+  />
+</MarkTheWords>
+
+### Shopping Choices
+
+<Select>
+  <SelectQuestion
+    question={`1. To pay money.`}
+    options={[`Платити.`, `Плакати.`]}
+    correctAnswers={[`Платити.`]}
+    explanation={`Pay vs Cry.`}
+  />
+  <SelectQuestion
+    question={`To buy.`}
+    options={[`Купувати.`, `Купати.`]}
+    correctAnswers={[`Купувати.`]}
+    explanation={`Buy vs Bathe.`}
+  />
+  <SelectQuestion
+    question={`To order.`}
+    options={[`Замовляти.`, `Мовчати.`]}
+    correctAnswers={[`Замовляти.`]}
+    explanation={`Order vs Be silent.`}
+  />
+  <SelectQuestion
+    question={`Receipt.`}
+    options={[`Чек.`, `Чех.`]}
+    correctAnswers={[`Чек.`]}
+    explanation={`Receipt vs Czech person.`}
+  />
+  <SelectQuestion
+    question={`Cash.`}
+    options={[`Готівка.`, `Готування.`]}
+    correctAnswers={[`Готівка.`]}
+    explanation={`Cash vs Cooking.`}
+  />
+  <SelectQuestion
+    question={`Price.`}
+    options={[`Ціна.`, `Стіна.`]}
+    correctAnswers={[`Ціна.`]}
+    explanation={`Price vs Wall.`}
+  />
+  <SelectQuestion
+    question={`Discount.`}
+    options={[`Знижка.`, `Книжка.`]}
+    correctAnswers={[`Знижка.`]}
+    explanation={`Discount vs Book.`}
+  />
+  <SelectQuestion
+    question={`Market.`}
+    options={[`Ринок.`, `Ранок.`]}
+    correctAnswers={[`Ринок.`]}
+    explanation={`Market vs Morning.`}
+  />
+  <SelectQuestion
+    question={`Shop.`}
+    options={[`Магазин.`, `Журнал`]}
+    correctAnswers={[`Магазин.`]}
+    explanation={`Shop. False friend "Journal".`}
+  />
+  <SelectQuestion
+    question={`Pharmacy.`}
+    options={[`Аптека.`, `Бібліотека.`]}
+    correctAnswers={[`Аптека.`]}
+    explanation={`Pharmacy.`}
+  />
+  <SelectQuestion
+    question={`Post Office.`}
+    options={[`Пошта.`, `Площа.`]}
+    correctAnswers={[`Пошта.`]}
+    explanation={`Post vs Square.`}
+  />
+  <SelectQuestion
+    question={`To try on.`}
+    options={[`Міряти.`, `Мирити.`]}
+    correctAnswers={[`Міряти.`]}
+    explanation={`Try on vs Reconcile.`}
+  />
+</Select>
+

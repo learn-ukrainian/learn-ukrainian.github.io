@@ -5,19 +5,20 @@ title: "Being and Becoming"
 description: "Professions and States with Instrumental"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 In previous modules, you learned about the instrumental case: with the preposition **з** for accompaniment and without a preposition for transport and tools. Now it's time to discover another important use of the instrumental case — with the verbs **бути** (to be), **стати** (to become), and **працювати** (to work as)!
@@ -25,6 +26,17 @@ In previous modules, you learned about the instrumental case: with the prepositi
 When you want to say "He is a doctor," "She became a teacher," or "I work as a programmer," Ukrainian uses the instrumental case. This is one of the most practical uses of the instrumental — talking about what people are and what they do!
 
 **Why is this important?** Talking about professions is a fundamental skill in any language. By the end of this module, you'll be able to describe your job, discuss career changes, and ask others about their work — all using proper Ukrainian grammar.
+
+:::info
+🔗 External Resources
+
+**YouTube:** [Bandura: The traditional Ukrainian instrument that's also a symbol of ...](https://www.youtube.com/watch?v=AcrRlIR9_Ew) — Instrumental
+
+**Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
+
+**Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
+:::
+
 
 ---
 
@@ -106,13 +118,8 @@ The question word for "as what" is **ким?** — the instrumental form of **х
 
 Note that you can also use **ким?** (as whom?) — this is the instrumental of **хто**:
 
-<div className="conversation">
-
 — Ким ти працюєш? (What do you work as?)
-
 — Я працюю вчителем. (I work as a teacher.)
-
-</div>
 
 ### Common Profession Verbs with Instrumental
 
@@ -128,22 +135,14 @@ Here are the most common verbs that take the instrumental case when followed by 
 
 Note that all these verbs follow the same pattern: verb + profession in instrumental case.
 
-:::info[У кафе]
-<div className="conversation">
-
+:::info
+У кафе
 — Ким працює твій брат?
-
 — Він працює програмістом у великій компанії.
-
 — А твоя сестра?
-
 — Вона була студенткою, але зараз стала журналісткою.
-
 — Круто! А ти?
-
 — Я працюю вчителем. Мрію стати директором школи!
-
-</div>
 :::
 
 
@@ -200,12 +199,14 @@ Notice how each profession appears in the instrumental case after the verbs бу
 >
 > In modern Ukraine, IT professionals (програмісти) are one of the largest professional communities. Many Ukrainians say: "Я працюю програмістом" or "Моя мрія — стати програмістом." The tech sector uses both masculine and feminine forms actively: програміст / програмістка.
 
-:::tip[Common Mistakes]
+:::tip
+Common Mistakes
 English speakers often try to use "є" (is) in present tense: "Він є лікар." While this is understood, native Ukrainian simply says "Він лікар." The verb "to be" is invisible in present tense — it appears only in past (був) and future (буде).
 :::
 
 
-:::tip[Pattern Discovery]
+:::tip
+Pattern Discovery
 Notice that **стати** always takes instrumental, regardless of tense. Whether you say "Він став лікарем" (past), "Він стане лікарем" (future), or "Він хоче стати лікарем" (infinitive), the profession is always in instrumental!
 :::
 
@@ -247,45 +248,23 @@ Here is a reference table showing how common professions change from nominative 
 Practice these conversations that demonstrate бути, стати, and працювати with instrumental case. English translations are provided to help you understand the meaning.
 
 **На вечірці (At a party):**
-<div className="conversation">
-
 — Ким ти працюєш? (What do you work as?)
-
 — Я працюю програмістом. А ти? (I work as a programmer. And you?)
-
 — Я вчителька. Працюю в школі. (I'm a teacher. I work at a school.)
-
 — Цікаво! А ким ти хочеш стати в майбутньому? (Interesting! What do you want to become in the future?)
-
 — Я хочу стати директоркою школи. (I want to become a school principal.)
 
-</div>
-
 **У родині (In the family):**
-<div className="conversation">
-
 — Ким був твій дідусь? (What was your grandfather?)
-
 — Він був лікарем. (He was a doctor.)
-
 — А бабуся? (And grandmother?)
-
 — Вона була вчителькою музики. (She was a music teacher.)
 
-</div>
-
 **На співбесіді (At a job interview):**
-<div className="conversation">
-
 — Ким ви працювали раніше? (What did you work as before?)
-
 — Я працював журналістом шість років. (I worked as a journalist for six years.)
-
 — А чому хочете змінити професію? (Why do you want to change professions?)
-
 — Я хочу стати програмістом. (I want to become a programmer.)
-
-</div>
 
 ---
 
@@ -336,426 +315,7 @@ No preposition is needed — just verb + profession in instrumental:
 
 Now you can talk about your profession with confidence! 👨‍⚕️👩‍🏫💻
 
-## 🎯 Activities
 
-### Professions Masculine and Feminine
-
-<MatchUp pairs={[
-  { left: `лікар`, right: `лікарка` },
-  { left: `вчитель`, right: `вчителька` },
-  { left: `інженер`, right: `інженерка` },
-  { left: `програміст`, right: `програмістка` },
-  { left: `журналіст`, right: `журналістка` },
-  { left: `юрист`, right: `юристка` },
-  { left: `актор`, right: `акторка` },
-  { left: `письменник`, right: `письменниця` },
-  { left: `менеджер`, right: `менеджерка` },
-  { left: `директор`, right: `директорка` },
-  { left: `секретар`, right: `секретарка` },
-  { left: `водій`, right: `водійка` }
-]} />
-
-### Бути/Стати + Instrumental
-
-<FillIn items={[
-  {
-    sentence: `Він раніше був ___.`,
-    answer: `студентом`,
-    options: [`студент`, `студентом`, `студента`]
-  },  {
-    sentence: `Вона хоче стати ___.`,
-    answer: `лікаркою`,
-    options: [`лікарка`, `лікаркою`, `лікарку`]
-  },  {
-    sentence: `Ми будемо ___.`,
-    answer: `друзями`,
-    options: [`друзі`, `друзями`, `друзів`]
-  },  {
-    sentence: `Він працює ___.`,
-    answer: `програмістом`,
-    options: [`програміст`, `програмістом`, `програміста`]
-  },  {
-    sentence: `Вона стала ___.`,
-    answer: `вчителькою`,
-    options: [`вчителька`, `вчителькою`, `вчительку`]
-  },  {
-    sentence: `Він був ___.`,
-    answer: `директором`,
-    options: [`директор`, `директором`, `директора`]
-  },  {
-    sentence: `Вона буде ___.`,
-    answer: `журналісткою`,
-    options: [`журналістка`, `журналісткою`, `журналістку`]
-  },  {
-    sentence: `Він мріє стати ___.`,
-    answer: `письменником`,
-    options: [`письменник`, `письменником`, `письменника`]
-  },  {
-    sentence: `Вона працює ___.`,
-    answer: `секретаркою`,
-    options: [`секретарка`, `секретаркою`, `секретарку`]
-  },  {
-    sentence: `Ми були ___.`,
-    answer: `студентами`,
-    options: [`студенти`, `студентами`, `студентів`]
-  },  {
-    sentence: `Він хоче стати ___.`,
-    answer: `інженером`,
-    options: [`інженер`, `інженером`, `інженера`]
-  },  {
-    sentence: `Вона була ___.`,
-    answer: `акторкою`,
-    options: [`акторка`, `акторкою`, `акторку`]
-  }
-]} />
-
-### When to Use Instrumental
-
-<Quiz questions={[
-  {
-    question: `Яке речення правильне?`,
-    options: [
-      { text: `Він був студентом.`, correct: true },
-      { text: `Він був студент.`, correct: false },
-      { text: `Він був студента.`, correct: false }
-    ]
-  },  {
-    question: `Як сказати \"She became a teacher\"?`,
-    options: [
-      { text: `Вона стала вчителькою.`, correct: true },
-      { text: `Вона стала вчителька.`, correct: false },
-      { text: `Вона стала вчительку.`, correct: false }
-    ]
-  },  {
-    question: `Коли використовуємо орудний з \"бути\"?`,
-    options: [
-      { text: `У минулому та майбутньому часі`, correct: true },
-      { text: `У теперішньому часі`, correct: false },
-      { text: `Ніколи`, correct: false }
-    ]
-  },  {
-    question: `Як сказати \"I work as a programmer\"?`,
-    options: [
-      { text: `Я працюю програмістом.`, correct: true },
-      { text: `Я працюю програміст.`, correct: false },
-      { text: `Я працюю програміста.`, correct: false }
-    ]
-  },  {
-    question: `Яке речення правильне для теперішнього часу?`,
-    options: [
-      { text: `Він лікар.`, correct: true },
-      { text: `Він є лікарем.`, correct: false },
-      { text: `Він лікарем.`, correct: false }
-    ]
-  },  {
-    question: `Як запитати \"What do you work as\"?`,
-    options: [
-      { text: `Ким ти працюєш?`, correct: true },
-      { text: `Що ти працюєш?`, correct: false },
-      { text: `Хто ти працюєш?`, correct: false }
-    ]
-  },  {
-    question: `Яке речення правильне?`,
-    options: [
-      { text: `Він буде інженером.`, correct: true },
-      { text: `Він буде інженер.`, correct: false },
-      { text: `Він буде інженера.`, correct: false }
-    ]
-  },  {
-    question: `\"Стати\" вимагає якого відмінка?`,
-    options: [
-      { text: `Орудного`, correct: true },
-      { text: `Знахідного`, correct: false },
-      { text: `Називного`, correct: false }
-    ]
-  },  {
-    question: `Як сказати \"We were friends\"?`,
-    options: [
-      { text: `Ми були друзями.`, correct: true },
-      { text: `Ми були друзі.`, correct: false },
-      { text: `Ми були друзів.`, correct: false }
-    ]
-  },  {
-    question: `Яка жіноча форма \"програміст\"?`,
-    options: [
-      { text: `програмістка`, correct: true },
-      { text: `програмістиця`, correct: false },
-      { text: `програмістеса`, correct: false }
-    ]
-  },  {
-    question: `Яке речення правильне?`,
-    options: [
-      { text: `Вона працює журналісткою.`, correct: true },
-      { text: `Вона працює журналістка.`, correct: false },
-      { text: `Вона працює журналістку.`, correct: false }
-    ]
-  },  {
-    question: `Як сказати \"He wants to become a doctor\"?`,
-    options: [
-      { text: `Він хоче стати лікарем.`, correct: true },
-      { text: `Він хоче стати лікар.`, correct: false },
-      { text: `Він хоче стати лікаря.`, correct: false }
-    ]
-  }
-]} />
-
-### Instrumental with Professions
-
-<TrueFalse items={[
-  {
-    statement: `In present tense, we usually don't use \"бути\" for professions.`,
-    isTrue: true,
-    explanation: `Correct! Він лікар. (not Він є лікарем.)`
-  },  {
-    statement: `\"Стати\" takes the nominative case.`,
-    isTrue: false,
-    explanation: `False! Стати always takes instrumental: стати лікарем.`
-  },  {
-    statement: `\"Працювати + Instrumental\" expresses \"to work as.\"`,
-    isTrue: true,
-    explanation: `Yes! Я працюю вчителем = I work as a teacher.`
-  },  {
-    statement: `\"Він є лікар\" is the standard way to say \"He is a doctor.\"`,
-    isTrue: false,
-    explanation: `In standard Ukrainian, we say \"Він лікар\" (zero copula).`
-  },  {
-    statement: `Feminine profession forms like \"лікарка\" are grammatically correct.`,
-    isTrue: true,
-    explanation: `Yes! Ukrainian has productive feminine suffixes.`
-  },  {
-    statement: `\"Був/була + Instrumental\" is used for past tense.`,
-    isTrue: true,
-    explanation: `Correct! Він був студентом. Вона була лікаркою.`
-  },  {
-    statement: `\"Ким?\" is the nominative of \"хто.\"`,
-    isTrue: false,
-    explanation: `\"Ким?\" is the instrumental of \"хто.\"`
-  },  {
-    statement: `\"Він буде інженером\" means \"He will be an engineer.\"`,
-    isTrue: true,
-    explanation: `Correct! Future tense uses буде + instrumental.`
-  },  {
-    statement: `\"Вона лікаром\" is a complete sentence in present tense.`,
-    isTrue: false,
-    explanation: `In present tense, use nominative: Вона лікарка.`
-  },  {
-    statement: `\"Залишатися\" can also take instrumental.`,
-    isTrue: true,
-    explanation: `Yes! Вона залишається директоркою.`
-  },  {
-    statement: `\"Служити\" takes instrumental for role.`,
-    isTrue: true,
-    explanation: `Correct! Він служить солдатом.`
-  },  {
-    statement: `The feminine of \"письменник\" is \"письменниця.\"`,
-    isTrue: false,
-    explanation: `Wait — this IS true! Письменник → письменниця.`
-  }
-]} />
-
-### Masculine vs. Feminine Professions
-
-<GroupSort groups={{
-  "Masculine": ["лікар", "вчитель", "інженер", "програміст", "журналіст", "письменник"],
-  "Feminine": ["лікарка", "вчителька", "інженерка", "програмістка", "журналістка", "письменниця"]
-}} />
-
-### Profession Sentences
-
-<Unjumble items={[
-  { jumbled: `він / раніше / був / студентом`, answer: `Він раніше був студентом.` },
-  { jumbled: `вона / стала / вчителькою / після / університету`, answer: `Вона стала вчителькою після університету.` },
-  { jumbled: `я / працюю / програмістом / у / компанії`, answer: `Я працюю програмістом у компанії.` },
-  { jumbled: `він / хоче / стати / лікарем`, answer: `Він хоче стати лікарем.` },
-  { jumbled: `вона / буде / журналісткою`, answer: `Вона буде журналісткою.` },
-  { jumbled: `ми / були / друзями / багато / років`, answer: `Ми були друзями багато років.` },
-  { jumbled: `ким / ти / працюєш`, answer: `Ким ти працюєш?` },
-  { jumbled: `він / мріє / стати / письменником`, answer: `Він мріє стати письменником.` },
-  { jumbled: `вона / працювала / секретаркою / п'ять / років`, answer: `Вона працювала секретаркою п'ять років.` },
-  { jumbled: `вони / стануть / інженерами`, answer: `Вони стануть інженерами.` },
-  { jumbled: `він / був / директором / школи`, answer: `Він був директором школи.` },
-  { jumbled: `вона / хотіла / стати / акторкою`, answer: `Вона хотіла стати акторкою.` }
-]} />
-
-### Fix the Instrumental
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Він був студент.`}
-    errorWord={`студент`}
-    correctForm={`студентом`}
-    options={[`студент`, `студентом`, `студента`, `студенту`]}
-    explanation={`After \"був\" (was), professions take the instrumental case.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона стала вчителька.`}
-    errorWord={`вчителька`}
-    correctForm={`вчителькою`}
-    options={[`вчителька`, `вчителькою`, `вчительку`, `вчительки`]}
-    explanation={`\"Стати\" always requires the instrumental case.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я працюю програміст.`}
-    errorWord={`програміст`}
-    correctForm={`програмістом`}
-    options={[`програміст`, `програмістом`, `програміста`, `програмісту`]}
-    explanation={`\"Працювати\" + profession requires instrumental.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він буде лікар.`}
-    errorWord={`лікар`}
-    correctForm={`лікарем`}
-    options={[`лікар`, `лікарем`, `лікаря`, `лікарю`]}
-    explanation={`Future \"буде\" + profession requires instrumental.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона хоче стати журналістка.`}
-    errorWord={`журналістка`}
-    correctForm={`журналісткою`}
-    options={[`журналістка`, `журналісткою`, `журналістку`, `журналістки`]}
-    explanation={`\"Стати\" always requires the instrumental case.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми були друзі.`}
-    errorWord={`друзі`}
-    correctForm={`друзями`}
-    options={[`друзі`, `друзями`, `друзів`, `друзям`]}
-    explanation={`Past \"були\" requires instrumental plural.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він стала інженером.`}
-    errorWord={`стала`}
-    correctForm={`став`}
-    options={[`стала`, `став`, `стало`, `стали`]}
-    explanation={`\"Він\" (he) requires masculine past form \"став.\"`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона працює лікар.`}
-    errorWord={`лікар`}
-    correctForm={`лікаркою`}
-    options={[`лікар`, `лікаркою`, `лікарку`, `лікарки`]}
-    explanation={`Use feminine \"лікарка\" for woman + instrumental.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він був директор школи.`}
-    errorWord={`директор`}
-    correctForm={`директором`}
-    options={[`директор`, `директором`, `директора`, `директору`]}
-    explanation={`Past \"був\" requires the instrumental case.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона буде письменник.`}
-    errorWord={`письменник`}
-    correctForm={`письменницею`}
-    options={[`письменник`, `письменницею`, `письменницю`, `письменниці`]}
-    explanation={`Use feminine \"письменниця\" for woman + instrumental.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він мріє стати актор.`}
-    errorWord={`актор`}
-    correctForm={`актором`}
-    options={[`актор`, `актором`, `актора`, `актору`]}
-    explanation={`\"Стати\" always requires the instrumental case.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми станемо інженери.`}
-    errorWord={`інженери`}
-    correctForm={`інженерами`}
-    options={[`інженери`, `інженерами`, `інженерів`, `інженерам`]}
-    explanation={`Future of \"стати\" requires instrumental plural.`}
-  />
-</ErrorCorrection>
-
-### Complete the Story
-
-<Cloze
-  passage={`Мій друг Андрій раніше [___:1]. Він вчився в університеті п'ять років. Після університету він [___:2]. Зараз він [___:3] у великій лікарні. Він каже, що завжди мріяв [___:4].`}
-  blanks={[{ answer: `працювала журналісткою`, options: [`працювала журналісткою`] }, { answer: `стала письменницею`, options: [`стала письменницею`] }, { answer: `пише книги`, options: [`пише книги`] }, { answer: `стала письменницею`, options: [`стала письменницею`] }]}
-/>
-
-### Job Interview
-
-<DialogueReorder lines={[
-  { text: `Я був журналістом п'ять років.`, order: 1 },
-  { text: `Добрий день! Сідайте, будь ласка.`, order: 2 },
-  { text: `Дякую! До побачення!`, order: 3 },
-  { text: `Ким ви працювали раніше?`, order: 4 },
-  { text: `Добрий день!`, order: 5 },
-  { text: `Ми зателефонуємо вам завтра.`, order: 6 },
-  { text: `Чому хочете стати програмістом?`, order: 7 },
-  { text: `Мені подобаються технології і я хочу працювати в IT.`, order: 8 },
-  { text: `Він був студентом політехніки.`, order: 9 },
-  { text: `Ким працює твій тато?`, order: 10 },
-  { text: `Він працює програмістом у компанії.`, order: 11 },
-  { text: `Круто! А ким він хоче стати?`, order: 12 },
-  { text: `Ким він був раніше?`, order: 13 },
-  { text: `Він хоче стати директором заводу!`, order: 14 }
-]} />
-
-### Find Instrumental Forms
-
-<MarkTheWords>
-<MarkTheWordsActivity
-  text={`Click on instrumental forms used with бути/стати/працювати.
-
-Він раніше був студентом. Зараз він лікар. Він працює лікарем у лікарні. Його сестра стала вчителькою.`}
-  correctWords={[`був студентом`, `працює лікарем`, `стала вчителькою`]}
-/>
-<MarkTheWordsActivity
-  text={`Вона була журналісткою п'ять років. Потім вона стала письменницею. Зараз вона письменниця. Вона працює письменницею.`}
-  correctWords={[`була журналісткою`, `стала письменницею`, `працює письменницею`]}
-/>
-<MarkTheWordsActivity
-  text={`Мій брат інженер. Раніше він був студентом. Він хоче стати директором. Він працює інженером на заводі.`}
-  correctWords={[`був студентом`, `хоче стати директором`, `працює інженером`]}
-/>
-</MarkTheWords>
-
-### English to Ukrainian
-
-<Translate questions={[
-  {
-    source: `He was a student.`,
-    options: [
-      { text: `Він був студентом.`, correct: true },
-      { text: `Він був студент.`, correct: false },
-      { text: `Він був студента.`, correct: false },
-      { text: `Вона стала вчителькою.`, correct: true },
-      { text: `Вона стала вчителька.`, correct: false },
-      { text: `Вона стала вчительку.`, correct: false },
-      { text: `Я працюю програмістом.`, correct: true },
-      { text: `Я працюю програміст.`, correct: false },
-      { text: `Я працюю програміста.`, correct: false },
-      { text: `Він буде лікарем.`, correct: true },
-      { text: `Він буде лікар.`, correct: false },
-      { text: `Він буде лікаря.`, correct: false },
-      { text: `Вона хоче стати журналісткою.`, correct: true },
-      { text: `Вона хоче стати журналістка.`, correct: false },
-      { text: `Вона хоче стати журналістку.`, correct: false },
-      { text: `Ми були друзями.`, correct: true },
-      { text: `Ми були друзі.`, correct: false },
-      { text: `Ми були друзів.`, correct: false },
-      { text: `Ким ти працюєш?`, correct: true },
-      { text: `Що ти працюєш?`, correct: false },
-      { text: `Хто ти працюєш?`, correct: false },
-      { text: `Він мріє стати письменником.`, correct: true },
-      { text: `Він мріє стати письменник.`, correct: false },
-      { text: `Він мріє стати письменника.`, correct: false },
-      { text: `Вона працювала секретаркою.`, correct: true },
-      { text: `Вона працювала секретарка.`, correct: false },
-      { text: `Вона працювала секретарку.`, correct: false },
-      { text: `Вони стануть інженерами.`, correct: true },
-      { text: `Вони стануть інженери.`, correct: false },
-      { text: `Вони стануть інженерів.`, correct: false },
-      { text: `Він був директором школи.`, correct: true },
-      { text: `Він був директор школи.`, correct: false },
-      { text: `Він був директора школи.`, correct: false },
-      { text: `Вона хотіла стати акторкою.`, correct: true },
-      { text: `Вона хотіла стати акторка.`, correct: false },
-      { text: `Вона хотіла стати акторку.`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -791,7 +351,652 @@ Now you can talk about your profession with confidence! 👨‍⚕️👩‍🏫
 
 ---
 
-:::tip[Remember the Key Verbs]
+:::tip
+Remember the Key Verbs
 Three verbs that take instrumental for professions: **бути** (to be, past/future), **стати** (to become), **працювати** (to work as). Master these and you can talk about any career!
 :::
+
+
+---
+
+## 🎯 Activities
+
+### Professions Masculine and Feminine
+
+<MatchUp pairs={[
+  { left: `лікар`, right: `лікарка` },
+  { left: `вчитель`, right: `вчителька` },
+  { left: `інженер`, right: `інженерка` },
+  { left: `програміст`, right: `програмістка` },
+  { left: `журналіст`, right: `журналістка` },
+  { left: `юрист`, right: `юристка` },
+  { left: `актор`, right: `акторка` },
+  { left: `письменник`, right: `письменниця` },
+  { left: `менеджер`, right: `менеджерка` },
+  { left: `директор`, right: `директорка` },
+  { left: `секретар`, right: `секретарка` },
+  { left: `водій`, right: `водійка` }
+]} />
+
+### Бути/Стати + Instrumental
+
+*Complete each sentence with the correct instrumental form.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Він раніше був ___.`}
+    answer={`студентом`}
+    options={[`студент`, `студентом`, `студента`]}
+  />
+  <FillInQuestion
+    sentence={`Вона хоче стати ___.`}
+    answer={`лікаркою`}
+    options={[`лікарка`, `лікаркою`, `лікарку`]}
+  />
+  <FillInQuestion
+    sentence={`Ми будемо ___.`}
+    answer={`друзями`}
+    options={[`друзі`, `друзями`, `друзів`]}
+  />
+  <FillInQuestion
+    sentence={`Він працює ___.`}
+    answer={`програмістом`}
+    options={[`програміст`, `програмістом`, `програміста`]}
+  />
+  <FillInQuestion
+    sentence={`Вона стала ___.`}
+    answer={`вчителькою`}
+    options={[`вчителька`, `вчителькою`, `вчительку`]}
+  />
+  <FillInQuestion
+    sentence={`Він був ___.`}
+    answer={`директором`}
+    options={[`директор`, `директором`, `директора`]}
+  />
+  <FillInQuestion
+    sentence={`Вона буде ___.`}
+    answer={`журналісткою`}
+    options={[`журналістка`, `журналісткою`, `журналістку`]}
+  />
+  <FillInQuestion
+    sentence={`Він мріє стати ___.`}
+    answer={`письменником`}
+    options={[`письменник`, `письменником`, `письменника`]}
+  />
+  <FillInQuestion
+    sentence={`Вона працює ___.`}
+    answer={`секретаркою`}
+    options={[`секретарка`, `секретаркою`, `секретарку`]}
+  />
+  <FillInQuestion
+    sentence={`Ми були ___.`}
+    answer={`студентами`}
+    options={[`студенти`, `студентами`, `студентів`]}
+  />
+  <FillInQuestion
+    sentence={`Він хоче стати ___.`}
+    answer={`інженером`}
+    options={[`інженер`, `інженером`, `інженера`]}
+  />
+  <FillInQuestion
+    sentence={`Вона була ___.`}
+    answer={`акторкою`}
+    options={[`акторка`, `акторкою`, `акторку`]}
+  />
+</FillIn>
+
+### When to Use Instrumental
+
+<Quiz>
+  <QuizQuestion
+    question={`1. Яке речення правильне?`}
+    options={[`Він був студентом.`, `Він був студент.`, `Він був студента.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Як сказати "She became a teacher"?`}
+    options={[`Вона стала вчителькою.`, `Вона стала вчителька.`, `Вона стала вчительку.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Коли використовуємо орудний з "бути"?`}
+    options={[`У минулому та майбутньому часі`, `У теперішньому часі`, `Ніколи`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Як сказати "I work as a programmer"?`}
+    options={[`Я працюю програмістом.`, `Я працюю програміст.`, `Я працюю програміста.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Яке речення правильне для теперішнього часу?`}
+    options={[`Він лікар.`, `Він є лікарем.`, `Він лікарем.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Як запитати "What do you work as"?`}
+    options={[`Ким ти працюєш?`, `Що ти працюєш?`, `Хто ти працюєш?`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Яке речення правильне?`}
+    options={[`Він буде інженером.`, `Він буде інженер.`, `Він буде інженера.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`"Стати" вимагає якого відмінка?`}
+    options={[`Орудного`, `Знахідного`, `Називного`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Як сказати "We were friends"?`}
+    options={[`Ми були друзями.`, `Ми були друзі.`, `Ми були друзів.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Яка жіноча форма "програміст"?`}
+    options={[`програмістка`, `програмістиця`, `програмістеса`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Яке речення правильне?`}
+    options={[`Вона працює журналісткою.`, `Вона працює журналістка.`, `Вона працює журналістку.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Як сказати "He wants to become a doctor"?`}
+    options={[`Він хоче стати лікарем.`, `Він хоче стати лікар.`, `Він хоче стати лікаря.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### Instrumental with Professions
+
+*Decide if each statement is true or false.*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`In present tense, we usually don't use "бути" for professions.`}
+    isTrue={true}
+    explanation={`Correct! Він лікар. (not Він є лікарем.)`}
+  />
+  <TrueFalseQuestion
+    statement={`"Стати" takes the nominative case.`}
+    isTrue={false}
+    explanation={`False! Стати always takes instrumental: стати лікарем.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Працювати + Instrumental" expresses "to work as."`}
+    isTrue={true}
+    explanation={`Yes! Я працюю вчителем = I work as a teacher.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Він є лікар" is the standard way to say "He is a doctor."`}
+    isTrue={false}
+    explanation={`In standard Ukrainian, we say "Він лікар" (zero copula).`}
+  />
+  <TrueFalseQuestion
+    statement={`Feminine profession forms like "лікарка" are grammatically correct.`}
+    isTrue={true}
+    explanation={`Yes! Ukrainian has productive feminine suffixes.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Був/була + Instrumental" is used for past tense.`}
+    isTrue={true}
+    explanation={`Correct! Він був студентом. Вона була лікаркою.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Ким?" is the nominative of "хто."`}
+    isTrue={false}
+    explanation={`"Ким?" is the instrumental of "хто."`}
+  />
+  <TrueFalseQuestion
+    statement={`"Він буде інженером" means "He will be an engineer."`}
+    isTrue={true}
+    explanation={`Correct! Future tense uses буде + instrumental.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Вона лікаром" is a complete sentence in present tense.`}
+    isTrue={false}
+    explanation={`In present tense, use nominative: Вона лікарка.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Залишатися" can also take instrumental.`}
+    isTrue={true}
+    explanation={`Yes! Вона залишається директоркою.`}
+  />
+  <TrueFalseQuestion
+    statement={`"Служити" takes instrumental for role.`}
+    isTrue={true}
+    explanation={`Correct! Він служить солдатом.`}
+  />
+  <TrueFalseQuestion
+    statement={`The feminine of "письменник" is "письменниця."`}
+    isTrue={false}
+    explanation={`Wait — this IS true! Письменник → письменниця.`}
+  />
+</TrueFalse>
+
+### Masculine vs. Feminine Professions
+
+*Sort these profession forms into the correct category.*
+
+
+<GroupSort groups={{
+  "### Masculine": [
+    "лікар",
+    "вчитель",
+    "інженер",
+    "програміст",
+    "журналіст",
+    "письменник"
+  ],
+  "Feminine": [
+    "лікарка",
+    "вчителька",
+    "інженерка",
+    "програмістка",
+    "журналістка",
+    "письменниця"
+  ]
+}} />
+
+### Profession Sentences
+
+*Put the words in the correct order.*
+
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`він / раніше / був / студентом`}
+    answer={`Він раніше був студентом.`}
+  />
+  <UnjumbleQuestion
+    words={`вона / стала / вчителькою / після / університету`}
+    answer={`Вона стала вчителькою після університету.`}
+  />
+  <UnjumbleQuestion
+    words={`я / працюю / програмістом / у / компанії`}
+    answer={`Я працюю програмістом у компанії.`}
+  />
+  <UnjumbleQuestion
+    words={`він / хоче / стати / лікарем`}
+    answer={`Він хоче стати лікарем.`}
+  />
+  <UnjumbleQuestion
+    words={`вона / буде / журналісткою`}
+    answer={`Вона буде журналісткою.`}
+  />
+  <UnjumbleQuestion
+    words={`ми / були / друзями / багато / років`}
+    answer={`Ми були друзями багато років.`}
+  />
+  <UnjumbleQuestion
+    words={`ким / ти / працюєш`}
+    answer={`Ким ти працюєш?`}
+  />
+  <UnjumbleQuestion
+    words={`він / мріє / стати / письменником`}
+    answer={`Він мріє стати письменником.`}
+  />
+  <UnjumbleQuestion
+    words={`вона / працювала / секретаркою / п'ять / років`}
+    answer={`Вона працювала секретаркою п'ять років.`}
+  />
+  <UnjumbleQuestion
+    words={`вони / стануть / інженерами`}
+    answer={`Вони стануть інженерами.`}
+  />
+  <UnjumbleQuestion
+    words={`він / був / директором / школи`}
+    answer={`Він був директором школи.`}
+  />
+  <UnjumbleQuestion
+    words={`вона / хотіла / стати / акторкою`}
+    answer={`Вона хотіла стати акторкою.`}
+  />
+</Unjumble>
+
+### Fix the Instrumental
+
+*Each sentence has ONE error. Find and correct it.*
+
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Він був студент.`}
+    error={`студент`}
+    answer={`студентом`}
+    options={[`студент`, `студентом`, `студента`, `студенту`]}
+    explanation={`After "був" (was), professions take the instrumental case.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона стала вчителька.`}
+    error={`вчителька`}
+    answer={`вчителькою`}
+    options={[`вчителька`, `вчителькою`, `вчительку`, `вчительки`]}
+    explanation={`"Стати" always requires the instrumental case.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я працюю програміст.`}
+    error={`програміст`}
+    answer={`програмістом`}
+    options={[`програміст`, `програмістом`, `програміста`, `програмісту`]}
+    explanation={`"Працювати" + profession requires instrumental.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він буде лікар.`}
+    error={`лікар`}
+    answer={`лікарем`}
+    options={[`лікар`, `лікарем`, `лікаря`, `лікарю`]}
+    explanation={`Future "буде" + profession requires instrumental.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона хоче стати журналістка.`}
+    error={`журналістка`}
+    answer={`журналісткою`}
+    options={[`журналістка`, `журналісткою`, `журналістку`, `журналістки`]}
+    explanation={`"Стати" always requires the instrumental case.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми були друзі.`}
+    error={`друзі`}
+    answer={`друзями`}
+    options={[`друзі`, `друзями`, `друзів`, `друзям`]}
+    explanation={`Past "були" requires instrumental plural.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він стала інженером.`}
+    error={`стала`}
+    answer={`став`}
+    options={[`стала`, `став`, `стало`, `стали`]}
+    explanation={`"Він" (he) requires masculine past form "став."`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона працює лікар.`}
+    error={`лікар`}
+    answer={`лікаркою`}
+    options={[`лікар`, `лікаркою`, `лікарку`, `лікарки`]}
+    explanation={`Use feminine "лікарка" for woman + instrumental.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він був директор школи.`}
+    error={`директор`}
+    answer={`директором`}
+    options={[`директор`, `директором`, `директора`, `директору`]}
+    explanation={`Past "був" requires the instrumental case.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона буде письменник.`}
+    error={`письменник`}
+    answer={`письменницею`}
+    options={[`письменник`, `письменницею`, `письменницю`, `письменниці`]}
+    explanation={`Use feminine "письменниця" for woman + instrumental.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він мріє стати актор.`}
+    error={`актор`}
+    answer={`актором`}
+    options={[`актор`, `актором`, `актора`, `актору`]}
+    explanation={`"Стати" always requires the instrumental case.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми станемо інженери.`}
+    error={`інженери`}
+    answer={`інженерами`}
+    options={[`інженери`, `інженерами`, `інженерів`, `інженерам`]}
+    explanation={`Future of "стати" requires instrumental plural.`}
+  />
+</ErrorCorrection>
+
+### Complete the Story
+
+*Fill in the blanks with the correct words.*
+
+
+<Cloze>
+  <ClozePassage
+    text={`Мій друг Андрій раніше [___:1]. Він вчився в університеті п'ять років. Після університету він [___:2]. Зараз він [___:3] у великій лікарні. Він каже, що завжди мріяв [___:4].`}
+    blanks={[
+  {
+    "index": 0,
+    "options": [
+      "був студентом",
+      "був студент",
+      "був студента"
+    ],
+    "answer": "був студентом"
+  },
+  {
+    "index": 1,
+    "options": [
+      "став лікарем",
+      "став лікар",
+      "став лікаря"
+    ],
+    "answer": "став лікарем"
+  },
+  {
+    "index": 2,
+    "options": [
+      "працює лікарем",
+      "працює лікар",
+      "працює лікаря"
+    ],
+    "answer": "працює лікарем"
+  },
+  {
+    "index": 3,
+    "options": [
+      "стати лікарем",
+      "стати лікар",
+      "стати лікаря"
+    ],
+    "answer": "стати лікарем"
+  },
+  {
+    "index": 4,
+    "options": [
+      "працювала журналісткою",
+      "працювала журналістка",
+      "працювала журналістку"
+    ],
+    "answer": "працювала журналісткою"
+  },
+  {
+    "index": 5,
+    "options": [
+      "стала письменницею",
+      "стала письменниця",
+      "стала письменницю"
+    ],
+    "answer": "стала письменницею"
+  },
+  {
+    "index": 6,
+    "options": [
+      "пише книги",
+      "пише книжки",
+      "пише романи"
+    ],
+    "answer": "пише книги"
+  },
+  {
+    "index": 7,
+    "options": [
+      "стала письменницею",
+      "стала журналісткою",
+      "працює письменницею"
+    ],
+    "answer": "стала письменницею"
+  }
+]}
+  />
+</Cloze>
+
+### Job Interview
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "",
+    "line": "Я був журналістом п'ять років."
+  },
+  {
+    "speaker": "",
+    "line": "Добрий день! Сідайте, будь ласка."
+  },
+  {
+    "speaker": "",
+    "line": "Дякую! До побачення!"
+  },
+  {
+    "speaker": "",
+    "line": "Ким ви працювали раніше?"
+  },
+  {
+    "speaker": "",
+    "line": "Добрий день!"
+  },
+  {
+    "speaker": "",
+    "line": "Ми зателефонуємо вам завтра."
+  },
+  {
+    "speaker": "",
+    "line": "Чому хочете стати програмістом?"
+  },
+  {
+    "speaker": "",
+    "line": "Мені подобаються технології і я хочу працювати в IT."
+  },
+  {
+    "speaker": "",
+    "line": "Він був студентом політехніки."
+  },
+  {
+    "speaker": "",
+    "line": "Ким працює твій тато?"
+  },
+  {
+    "speaker": "",
+    "line": "Він працює програмістом у компанії."
+  },
+  {
+    "speaker": "",
+    "line": "Круто! А ким він хоче стати?"
+  },
+  {
+    "speaker": "",
+    "line": "Ким він був раніше?"
+  },
+  {
+    "speaker": "",
+    "line": "Він хоче стати директором заводу!"
+  }
+]} />
+</DialogueReorder>
+
+### Find Instrumental Forms
+
+Click on instrumental forms used with бути/стати/працювати.
+
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    text={`Він раніше був студентом. Зараз він лікар. Він працює лікарем у лікарні. Його сестра стала вчителькою. Вона була журналісткою п'ять років. Потім вона стала письменницею. Зараз вона письменниця. Вона працює письменницею. Мій брат інженер. Раніше він був студентом. Він хоче стати директором. Він працює інженером на заводі.`}
+    correctWords={[`був студентом`, `працює лікарем`, `стала вчителькою`, `була журналісткою`, `стала письменницею`, `працює письменницею`, `був студентом`, `хоче стати директором`, `працює інженером`]}
+  />
+</MarkTheWords>
+
+### English to Ukrainian
+
+<Translate>
+  <TranslateItem
+    source={`He was a student.`}
+    answer={`Він був студентом.`}
+    options={[`Він був студентом.`, `Він був студент.`, `Він був студента.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She became a teacher.`}
+    answer={`Вона стала вчителькою.`}
+    options={[`Вона стала вчителькою.`, `Вона стала вчителька.`, `Вона стала вчительку.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`I work as a programmer.`}
+    answer={`Я працюю програмістом.`}
+    options={[`Я працюю програмістом.`, `Я працюю програміст.`, `Я працюю програміста.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`He will be a doctor.`}
+    answer={`Він буде лікарем.`}
+    options={[`Він буде лікарем.`, `Він буде лікар.`, `Він буде лікаря.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She wants to become a journalist.`}
+    answer={`Вона хоче стати журналісткою.`}
+    options={[`Вона хоче стати журналісткою.`, `Вона хоче стати журналістка.`, `Вона хоче стати журналістку.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`We were friends.`}
+    answer={`Ми були друзями.`}
+    options={[`Ми були друзями.`, `Ми були друзі.`, `Ми були друзів.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`What do you work as?`}
+    answer={`Ким ти працюєш?`}
+    options={[`Ким ти працюєш?`, `Що ти працюєш?`, `Хто ти працюєш?`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`He dreams of becoming a writer.`}
+    answer={`Він мріє стати письменником.`}
+    options={[`Він мріє стати письменником.`, `Він мріє стати письменник.`, `Він мріє стати письменника.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She worked as a secretary.`}
+    answer={`Вона працювала секретаркою.`}
+    options={[`Вона працювала секретаркою.`, `Вона працювала секретарка.`, `Вона працювала секретарку.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`They will become engineers.`}
+    answer={`Вони стануть інженерами.`}
+    options={[`Вони стануть інженерами.`, `Вони стануть інженери.`, `Вони стануть інженерів.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`He was the director of the school.`}
+    answer={`Він був директором школи.`}
+    options={[`Він був директором школи.`, `Він був директор школи.`, `Він був директора школи.`]}
+    explanation={``}
+  />
+  <TranslateItem
+    source={`She wanted to become an actress.`}
+    answer={`Вона хотіла стати акторкою.`}
+    options={[`Вона хотіла стати акторкою.`, `Вона хотіла стати акторка.`, `Вона хотіла стати акторку.`]}
+    explanation={``}
+  />
+</Translate>
 

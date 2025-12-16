@@ -5,19 +5,20 @@ title: "The Dative I — Pronouns"
 description: "To Whom Does This Belong?"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 ## Introduction
@@ -44,6 +45,17 @@ In English, we say "I like music" — the person who likes is the subject. In Uk
 В англійській мові для позначення отримувача дії використовують прийменники «to» і «for». Українська мова натомість використовує відмінкові закінчення. Питальне слово для давального відмінка — **кому?** для людей і **чому?** для речей.
 
 Почнемо з найлегшого: займенників. Коли ви опануєте займенники в давальному відмінку, уся система відмінків стане зрозумілішою.
+
+:::info
+🔗 External Resources
+
+**YouTube:** [The Dative Case in Ukrainian ...](https://www.youtube.com/watch?v=ATeU7iwuyLU) —  Nouns, Pronouns & How to Use Them
+
+**Grammar Guide:** [Ukrainian Cases](https://www.ukrainianlessons.com/intro-cases/) — Overview of all 7 cases
+
+**Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
+:::
+
 
 ## Presentation
 
@@ -158,15 +170,9 @@ Ukrainians are famous for their hospitality — and hospitality is fundamentally
 
 When you visit a Ukrainian home, you'll hear:
 
-<div className="conversation">
-
 — Вам чаю? (Would you like tea? — literally: To-you tea?)
-
 — Тобі ще? (More for you? — literally: To-you more?)
-
 — Дайте йому тарілку. (Give him a plate.)
-
-</div>
 
 The host puts the guest in the Dative — the position of receiver. Refusing food or drink is almost impossible in Ukrainian culture. "Мені не треба" (I don't need it) will be met with "Та ні, тобі треба!" (Oh yes, you do need it!).
 
@@ -182,17 +188,10 @@ The following three mini-dialogues show Dative pronouns in natural conversation.
 
 This dialogue shows how waiters use Dative to make offers. Notice: Вам (to you), мені (to me), йому (to him).
 
-<div className="conversation">
-
 — Вам каву чи чай?
-
 — Мені каву, будь ласка.
-
 — Йому теж?
-
 — Ні, йому чай. Йому не подобається кава.
-
-</div>
 
 *(— Coffee or tea for you? — Coffee for me, please. — For him too? — No, tea for him. He doesn't like coffee.)*
 
@@ -200,17 +199,10 @@ This dialogue shows how waiters use Dative to make offers. Notice: Вам (to yo
 
 This dialogue demonstrates physical states (cold, warm) and needs. All use Dative + adverb or Dative + потрібно patterns.
 
-<div className="conversation">
-
 — Тобі добре?
-
 — Ні, мені погано. Мені холодно.
-
 — Тобі потрібна куртка?
-
 — Так, дякую. Тепер мені тепло.
-
-</div>
 
 *(— Are you okay? — No, I feel bad. I'm cold. — Do you need a jacket? — Yes, thanks. Now I'm warm.)*
 
@@ -218,17 +210,10 @@ This dialogue demonstrates physical states (cold, warm) and needs. All use Dativ
 
 This conversation uses подобається extensively to discuss what people like. Notice how the dialogue switches between singular informal (тобі), plural/formal (вам), and third-person plural (їм).
 
-<div className="conversation">
-
 — Вам подобається Київ?
-
 — Так, нам дуже подобається! Нам тут цікаво.
-
 — А їм подобається?
-
 — Їм теж подобається. Їм подобається метро.
-
-</div>
 
 *(— Do you like Kyiv? — Yes, we like it very much! We find it interesting here. — And do they like it? — They like it too. They like the metro.)*
 
@@ -328,469 +313,7 @@ Try creating similar sentences about yourself before moving to the activities be
 
 ---
 
-## 🎯 Activities
 
-### Nominative to Dative
-
-<MatchUp pairs={[
-  { left: `Nominative`, right: `Dative` },
-  { left: `я`, right: `мені` },
-  { left: `ти`, right: `тобі` },
-  { left: `він`, right: `йому` },
-  { left: `вона`, right: `їй` },
-  { left: `ми`, right: `нам` },
-  { left: `ви`, right: `вам` },
-  { left: `вони`, right: `їм` },
-  { left: `воно`, right: `йому` }
-]} />
-
-### Pronoun Cases [stage: recognition]
-
-<GroupSort groups={{
-  "Називний": ["я", "ти", "він", "вона", "ми", "ви", "вони"],
-  "Давальний": ["мені", "тобі", "йому", "їй", "нам", "вам", "їм"],
-  "Родовий": ["мене", "тебе", "його", "її", "нас", "вас", "їх"]
-}} />
-
-### Dative Rules [stage: discrimination]
-
-<TrueFalse items={[
-  {
-    statement: `«Мені подобається» дослівно означає «мені це приємно».`,
-    isTrue: true,
-    explanation: `Так! Те, що подобається, є граматичним підметом в українській мові.`
-  },  {
-    statement: `У реченні «Йому холодно» слово «йому» стоїть у знахідному відмінку.`,
-    isTrue: false,
-    explanation: `Ні! «Йому» — це давальний відмінок. Фізичні стани вимагають давального.`
-  },  {
-    statement: `Давальні форми слів «він» і «воно» — обидві «йому».`,
-    isTrue: true,
-    explanation: `Yes! Masculine and neuter share the same Dative form.`
-  },  {
-    statement: `Щоб сказати «I need», використовують «Я потрібно».`,
-    isTrue: false,
-    explanation: `Ні! Використовують «Мені потрібно» з займенником у давальному відмінку.`
-  },  {
-    statement: `The verb «подобатися» always requires a Dative object.`,
-    isTrue: true,
-    explanation: `Yes! The person who likes something is always in the Dative case.`
-  },  {
-    statement: `«Їй» означає «to him».`,
-    isTrue: false,
-    explanation: `Ні! «Їй» означає «to her». «Йому» означає «to him».`
-  },  {
-    statement: `Українською «I'm cold» передається як «Мені холодно».`,
-    isTrue: true,
-    explanation: `Так! Фізичні стани використовують давальний + прислівник.`
-  },  {
-    statement: `«Вам» — це давальна форма «ви», але лише для формальних ситуацій.`,
-    isTrue: false,
-    explanation: `Ні! «Вам» використовується і для формального звертання, і для множини.`
-  },  {
-    statement: `«Нам весело» означає «We're having fun».`,
-    isTrue: true,
-    explanation: `Так! Дослівно «нам весело».`
-  },  {
-    statement: `Давальний відмінок виражає лише отримувачів предметів.`,
-    isTrue: false,
-    explanation: `Ні! Давальний також виражає переживачів, потреби та стани.`
-  },  {
-    statement: `«Дякую тобі» uses the Dative case.`,
-    isTrue: true,
-    explanation: `Yes! The verb «дякувати» requires a Dative object.`
-  },  {
-    statement: `Щоб запитати «Do you like Ukraine?», кажуть «Ти подобаєшся Україна?»`,
-    isTrue: false,
-    explanation: `Ні! Кажуть «Тобі подобається Україна?» з давальним відмінком.`
-  }
-]} />
-
-### Dative Pronouns [stage: controlled-production]
-
-<FillIn items={[
-  {
-    sentence: `___ подобається музика.`,
-    answer: `Мені`,
-    options: [`Мені`, `Я`, `Мене`, `Моя`]
-  },  {
-    sentence: `___ потрібно йти.`,
-    answer: `Тобі`,
-    options: [`Тобі`, `Ти`, `Тебе`, `Твоя`]
-  },  {
-    sentence: `___ холодно. Дай куртку.`,
-    answer: `Йому`,
-    options: [`Йому`, `Він`, `Його`, `Його`]
-  },  {
-    sentence: `___ подобається танцювати.`,
-    answer: `Їй`,
-    options: [`Їй`, `Вона`, `Її`, `Її`]
-  },  {
-    sentence: `___ потрібна допомога?`,
-    answer: `Вам`,
-    options: [`Вам`, `Ви`, `Вас`, `Ваша`]
-  },  {
-    sentence: `___ весело в Києві.`,
-    answer: `Нам`,
-    options: [`Нам`, `Ми`, `Нас`, `Наша`]
-  },  {
-    sentence: `___ подобається футбол.`,
-    answer: `Їм`,
-    options: [`Їм`, `Вони`, `Їх`, `Їхній`]
-  },  {
-    sentence: `___ здається, що це правда.`,
-    answer: `Мені`,
-    options: [`Мені`, `Я`, `Мене`, `Моя`]
-  },  {
-    sentence: `___ потрібно більше часу.`,
-    answer: `Йому`,
-    options: [`Йому`, `Він`, `Його`, `Його`]
-  },  {
-    sentence: `___ тепло тут?`,
-    answer: `Тобі`,
-    options: [`Тобі`, `Ти`, `Тебе`, `Твоя`]
-  },  {
-    sentence: `___ цікаво вчити українську.`,
-    answer: `Нам`,
-    options: [`Нам`, `Ми`, `Нас`, `Наш`]
-  },  {
-    sentence: `___ сумно без друзів.`,
-    answer: `Їй`,
-    options: [`Їй`, `Вона`, `Її`, `Її`]
-  }
-]} />
-
-### Understanding Dative
-
-<Quiz questions={[
-  {
-    question: `\"I like coffee\" in Ukrainian is:`,
-    options: [
-      { text: `Я подобаюся кава.`, correct: false },
-      { text: `Мені подобається кава.`, correct: true },
-      { text: `Моя подобається кава.`, correct: false },
-      { text: `Мене подобається кава.`, correct: false }
-    ]
-  },  {
-    question: `\"She needs to rest\" in Ukrainian is:`,
-    options: [
-      { text: `Вона потрібно відпочити.`, correct: false },
-      { text: `Її потрібно відпочити.`, correct: false },
-      { text: `Їй потрібно відпочити.`, correct: true },
-      { text: `Вона потрібна відпочити.`, correct: false }
-    ]
-  },  {
-    question: `\"He is cold\" in Ukrainian is:`,
-    options: [
-      { text: `Він холодно.`, correct: false },
-      { text: `Йому холодно.`, correct: true },
-      { text: `Його холодно.`, correct: false },
-      { text: `Він холодний.`, correct: false }
-    ]
-  },  {
-    question: `\"Do you like Kyiv?\" in Ukrainian is:`,
-    options: [
-      { text: `Тобі подобається Київ?`, correct: true },
-      { text: `Ти подобаєшся Київ?`, correct: false },
-      { text: `Твій подобається Київ?`, correct: false },
-      { text: `Тебе подобається Київ?`, correct: false }
-    ]
-  },  {
-    question: `\"We need help\" in Ukrainian is:`,
-    options: [
-      { text: `Ми потрібно допомога.`, correct: false },
-      { text: `Ми потрібна допомога.`, correct: false },
-      { text: `Нам потрібна допомога.`, correct: true },
-      { text: `Нас потрібна допомога.`, correct: false }
-    ]
-  },  {
-    question: `\"They find it interesting\" in Ukrainian is:`,
-    options: [
-      { text: `Вони цікаво.`, correct: false },
-      { text: `Їм цікаво.`, correct: true },
-      { text: `Їх цікаво.`, correct: false },
-      { text: `Вони цікаві.`, correct: false }
-    ]
-  },  {
-    question: `What does \"Мені здається\" mean?`,
-    options: [
-      { text: `I am seen`, correct: false },
-      { text: `It seems to me`, correct: true },
-      { text: `I see`, correct: false },
-      { text: `I am being`, correct: false }
-    ]
-  },  {
-    question: `What does \"Тобі добре?\" mean?`,
-    options: [
-      { text: `You are good?`, correct: false },
-      { text: `Are you okay?`, correct: true },
-      { text: `Your good?`, correct: false },
-      { text: `Do you have good?`, correct: false }
-    ]
-  },  {
-    question: `Which pronoun means \"to her\"?`,
-    options: [
-      { text: `її`, correct: false },
-      { text: `їй`, correct: true },
-      { text: `вона`, correct: false },
-      { text: `йому`, correct: false }
-    ]
-  },  {
-    question: `Which pronoun means \"to them\"?`,
-    options: [
-      { text: `вони`, correct: false },
-      { text: `їх`, correct: false },
-      { text: `їм`, correct: true },
-      { text: `вонам`, correct: false }
-    ]
-  },  {
-    question: `\"Дякую тобі\" means:`,
-    options: [
-      { text: `I thank you`, correct: true },
-      { text: `You thank me`, correct: false },
-      { text: `Thanks for you`, correct: false },
-      { text: `Your thanks`, correct: false }
-    ]
-  },  {
-    question: `In \"Вам каву?\", the speaker is:`,
-    options: [
-      { text: `Asking if you have coffee`, correct: false },
-      { text: `Offering you coffee`, correct: true },
-      { text: `Thanking you for coffee`, correct: false },
-      { text: `Ordering coffee for themselves`, correct: false }
-    ]
-  }
-]} />
-
-### Find the Mistake [stage: controlled-production]
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я подобається музика.`}
-    errorWord={`Я`}
-    correctForm={`Мені`}
-    options={[`Я`, `Мені`, `Мене`, `Моя`]}
-    explanation={`З «подобатися» особа стоїть у давальному (мені), не в називному.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона потрібно йти.`}
-    errorWord={`Вона`}
-    correctForm={`Їй`}
-    options={[`Вона`, `Їй`, `Її`, `Вони`]}
-    explanation={`З «потрібно» особа стоїть у давальному (їй).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він холодно.`}
-    errorWord={`Він`}
-    correctForm={`Йому`}
-    options={[`Він`, `Йому`, `Його`, `Він є`]}
-    explanation={`Фізичні стани: давальний + прислівник: Йому холодно.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми весело тут.`}
-    errorWord={`Ми`}
-    correctForm={`Нам`}
-    options={[`Ми`, `Нам`, `Нас`, `Наш`]}
-    explanation={`Емоційні стани вимагають давального: Нам весело тут.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ти подобається Київ?`}
-    errorWord={`Ти`}
-    correctForm={`Тобі`}
-    options={[`Ти`, `Тобі`, `Тебе`, `Твоя`]}
-    explanation={`З «подобатися» використовують давальний: Тобі подобається Київ?`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вони потрібна допомога.`}
-    errorWord={`Вони`}
-    correctForm={`Їм`}
-    options={[`Вони`, `Їм`, `Їх`, `Вона`]}
-    explanation={`З «потрібно/потрібна» використовують давальний: Їм потрібна допомога.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Мене подобається кава.`}
-    errorWord={`Мене`}
-    correctForm={`Мені`}
-    options={[`Мене`, `Мені`, `Моя`, `Я`]}
-    explanation={`«Мене» — родовий/знахідний. Для «подобатися» — давальний: мені.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Його сумно без друзів.`}
-    errorWord={`Його`}
-    correctForm={`Йому`}
-    options={[`Його`, `Йому`, `Він`, `Його є`]}
-    explanation={`«Його» — родовий/знахідний. Для емоційних станів — давальний: йому.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Нас цікаво вчити українську.`}
-    errorWord={`Нас`}
-    correctForm={`Нам`}
-    options={[`Нас`, `Нам`, `Ми`, `Наш`]}
-    explanation={`«Нас» — родовий/знахідний. Для станів — давальний: нам.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Тебе тепло?`}
-    errorWord={`Тебе`}
-    correctForm={`Тобі`}
-    options={[`Тебе`, `Тобі`, `Ти`, `Твоя`]}
-    explanation={`«Тебе» — родовий/знахідний. Для фізичних станів — давальний: тобі.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Їх подобається музика.`}
-    errorWord={`Їх`}
-    correctForm={`Їм`}
-    options={[`Їх`, `Їм`, `Вони`, `Їхній`]}
-    explanation={`«Їх» — родовий/знахідний. Для «подобатися» — давальний: їм.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вас потрібно відпочити.`}
-    errorWord={`Вас`}
-    correctForm={`Вам`}
-    options={[`Вас`, `Вам`, `Ви`, `Ваш`]}
-    explanation={`«Вас» — родовий/знахідний. Для «потрібно» — давальний: вам.`}
-  />
-</ErrorCorrection>
-
-### Complete the Story [stage: controlled-production]
-
-<Cloze
-  passage={`Марія і Петро в Одесі. [___:1] подобається море. [___:2] тепло і весело.
-
-Офіціант запитує: «[___:3] каву?» Марія каже: «Так, [___:4] каву, будь ласка.» А Петро каже: «Ні, [___:5] не потрібно. [___:6] краще чай.»
-
-Увечері [___:7] холодно. Вони йдуть додому. [___:8] подобається Одеса!`}
-  blanks={[{ answer: `Їм`, options: [`Їм`] }, { answer: `Їм`, options: [`Їм`] }, { answer: `Вам`, options: [`Вам`] }, { answer: `мені`, options: [`мені`] }, { answer: `мені`, options: [`мені`] }, { answer: `Мені`, options: [`Мені`] }, { answer: `їм`, options: [`їм`] }, { answer: `Їм`, options: [`Їм`] }]}
-/>
-
-### Dative Sentences [stage: free-production]
-
-<Unjumble items={[
-  { jumbled: `подобається / Мені / музика / українська`, answer: `Мені подобається українська музика.` },
-  { jumbled: `потрібно / Тобі / відпочити`, answer: `Тобі потрібно відпочити.` },
-  { jumbled: `холодно / Йому / тут`, answer: `Йому тут холодно.` },
-  { jumbled: `подобається / їй / Київ / Чи`, answer: `Чи їй подобається Київ?` },
-  { jumbled: `потрібна / Нам / допомога`, answer: `Нам потрібна допомога.` },
-  { jumbled: `цікаво / Вам / тут`, answer: `Вам тут цікаво?` },
-  { jumbled: `футбол / Їм / подобається`, answer: `Їм подобається футбол.` },
-  { jumbled: `здається / Мені / це / що / правда`, answer: `Мені здається, що це правда.` },
-  { jumbled: `тепло / Тобі / зараз`, answer: `Тобі зараз тепло?` },
-  { jumbled: `весело / Нам / дуже / тут`, answer: `Нам тут дуже весело.` },
-  { jumbled: `потрібно / Йому / працювати / більше`, answer: `Йому потрібно більше працювати.` },
-  { jumbled: `подобаються / Їй / квіти`, answer: `Їй подобаються квіти.` }
-]} />
-
-### At the Restaurant [stage: free-production]
-
-<DialogueReorder lines={[
-  { text: `A: Добрий вечір! Вам меню?`, order: 1 },
-  { text: `B: Так, дякую. Нам меню, будь ласка.`, order: 2 },
-  { text: `A: Вам подобається риба?`, order: 3 },
-  { text: `B: Так, мені подобається. А йому більше подобається м'ясо.`, order: 4 },
-  { text: `A: Зрозуміло. Йому м'ясо, вам рибу?`, order: 5 },
-  { text: `B: Так, дякую. І нам воду, будь ласка.`, order: 6 }
-]} />
-
-### English to Ukrainian [stage: free-production]
-
-<Translate questions={[
-  {
-    source: `I like Ukrainian music.`,
-    options: [
-      { text: `Я подобаюся українська музика.`, correct: false },
-      { text: `Мені подобається українська музика.`, correct: true },
-      { text: `Мене подобається українська музика.`, correct: false },
-      { text: `Моя подобається українська музика.`, correct: false }
-    ]
-  },  {
-    source: `She needs help.`,
-    options: [
-      { text: `Вона потрібна допомога.`, correct: false },
-      { text: `Її потрібна допомога.`, correct: false },
-      { text: `Їй потрібна допомога.`, correct: true },
-      { text: `Вона потрібно допомога.`, correct: false }
-    ]
-  },  {
-    source: `We are having fun.`,
-    options: [
-      { text: `Ми весело.`, correct: false },
-      { text: `Нам весело.`, correct: true },
-      { text: `Нас весело.`, correct: false },
-      { text: `Наш весело.`, correct: false }
-    ]
-  },  {
-    source: `Do you like Kyiv?`,
-    options: [
-      { text: `Ти подобаєшся Київ?`, correct: false },
-      { text: `Тобі подобається Київ?`, correct: true },
-      { text: `Тебе подобається Київ?`, correct: false },
-      { text: `Твій подобається Київ?`, correct: false }
-    ]
-  },  {
-    source: `He is cold.`,
-    options: [
-      { text: `Він холодно.`, correct: false },
-      { text: `Він холодний.`, correct: false },
-      { text: `Йому холодно.`, correct: true },
-      { text: `Його холодно.`, correct: false }
-    ]
-  },  {
-    source: `They need more time.`,
-    options: [
-      { text: `Вони потрібно більше часу.`, correct: false },
-      { text: `Їх потрібно більше часу.`, correct: false },
-      { text: `Їм потрібно більше часу.`, correct: true },
-      { text: `Вони потрібний більше часу.`, correct: false }
-    ]
-  },  {
-    source: `I thank you.`,
-    options: [
-      { text: `Я дякую ти.`, correct: false },
-      { text: `Дякую тобі.`, correct: true },
-      { text: `Дякую тебе.`, correct: false },
-      { text: `Я дякую твій.`, correct: false }
-    ]
-  },  {
-    source: `It seems to me that...`,
-    options: [
-      { text: `Мені здається, що...`, correct: true },
-      { text: `Я здаюся, що...`, correct: false },
-      { text: `Мене здається, що...`, correct: false },
-      { text: `Моя здається, що...`, correct: false }
-    ]
-  },  {
-    source: `Are you warm?`,
-    options: [
-      { text: `Ти тепло?`, correct: false },
-      { text: `Тобі тепло?`, correct: true },
-      { text: `Тебе тепло?`, correct: false },
-      { text: `Твоя тепло?`, correct: false }
-    ]
-  },  {
-    source: `She likes to dance.`,
-    options: [
-      { text: `Вона подобається танцювати.`, correct: false },
-      { text: `Її подобається танцювати.`, correct: false },
-      { text: `Їй подобається танцювати.`, correct: true },
-      { text: `Вона подобається танець.`, correct: false }
-    ]
-  },  {
-    source: `Do you need coffee?`,
-    options: [
-      { text: `Ти потрібно кава?`, correct: false },
-      { text: `Вам потрібна кава?`, correct: true },
-      { text: `Вас потрібна кава?`, correct: false },
-      { text: `Ви потрібно кава?`, correct: false }
-    ]
-  },  {
-    source: `They find it interesting.`,
-    options: [
-      { text: `Вони цікаво.`, correct: false },
-      { text: `Їх цікаво.`, correct: false },
-      { text: `Їм цікаво.`, correct: true },
-      { text: `Вони цікаві.`, correct: false }
-    ]
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -830,3 +353,624 @@ Try creating similar sentences about yourself before moving to the activities be
 | місцевий | /misˈt͡sɛvɪj/ | Locative (case) | adj | m | де? на чому? |
 | іменник | /iˈmɛnːɪk/ | noun | noun | m | grammar term |
 | час | /t͡ʃɑs/ | time | noun | m | Скільки часу? |
+
+---
+
+## 🎯 Activities
+
+### Nominative to Dative
+
+*Match the nominative pronoun with its dative form.*
+
+
+<MatchUp pairs={[
+  { left: `я`, right: `мені` },
+  { left: `ти`, right: `тобі` },
+  { left: `він`, right: `йому` },
+  { left: `вона`, right: `їй` },
+  { left: `ми`, right: `нам` },
+  { left: `ви`, right: `вам` },
+  { left: `вони`, right: `їм` },
+  { left: `воно`, right: `йому` }
+]} />
+
+### Pronoun Cases [stage: recognition]
+
+*Розсортуйте ці займенники за відмінками.*
+
+
+<GroupSort groups={{
+  "### Називний": [
+    "я",
+    "ти",
+    "він",
+    "вона",
+    "ми",
+    "ви",
+    "вони"
+  ],
+  "Давальний": [
+    "мені",
+    "тобі",
+    "йому",
+    "їй",
+    "нам",
+    "вам",
+    "їм"
+  ],
+  "Родовий": [
+    "мене",
+    "тебе",
+    "його",
+    "її",
+    "нас",
+    "вас",
+    "їх"
+  ]
+}} />
+
+### Dative Rules [stage: discrimination]
+
+*Визначте, чи кожне твердження правдиве (Правда) чи хибне (Міф).*
+
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`«Мені подобається» дослівно означає «мені це приємно».`}
+    isTrue={true}
+    explanation={`Так! Те, що подобається, є граматичним підметом в українській мові.`}
+  />
+  <TrueFalseQuestion
+    statement={`У реченні «Йому холодно» слово «йому» стоїть у знахідному відмінку.`}
+    isTrue={false}
+    explanation={`Ні! «Йому» — це давальний відмінок. Фізичні стани вимагають давального.`}
+  />
+  <TrueFalseQuestion
+    statement={`Давальні форми слів «він» і «воно» — обидві «йому».`}
+    isTrue={true}
+    explanation={`Yes! Masculine and neuter share the same Dative form.`}
+  />
+  <TrueFalseQuestion
+    statement={`Щоб сказати «I need», використовують «Я потрібно».`}
+    isTrue={false}
+    explanation={`Ні! Використовують «Мені потрібно» з займенником у давальному відмінку.`}
+  />
+  <TrueFalseQuestion
+    statement={`The verb «подобатися» always requires a Dative object.`}
+    isTrue={true}
+    explanation={`Yes! The person who likes something is always in the Dative case.`}
+  />
+  <TrueFalseQuestion
+    statement={`«Їй» означає «to him».`}
+    isTrue={false}
+    explanation={`Ні! «Їй» означає «to her». «Йому» означає «to him».`}
+  />
+  <TrueFalseQuestion
+    statement={`Українською «I'm cold» передається як «Мені холодно».`}
+    isTrue={true}
+    explanation={`Так! Фізичні стани використовують давальний + прислівник.`}
+  />
+  <TrueFalseQuestion
+    statement={`«Вам» — це давальна форма «ви», але лише для формальних ситуацій.`}
+    isTrue={false}
+    explanation={`Ні! «Вам» використовується і для формального звертання, і для множини.`}
+  />
+  <TrueFalseQuestion
+    statement={`«Нам весело» означає «We're having fun».`}
+    isTrue={true}
+    explanation={`Так! Дослівно «нам весело».`}
+  />
+  <TrueFalseQuestion
+    statement={`Давальний відмінок виражає лише отримувачів предметів.`}
+    isTrue={false}
+    explanation={`Ні! Давальний також виражає переживачів, потреби та стани.`}
+  />
+  <TrueFalseQuestion
+    statement={`«Дякую тобі» uses the Dative case.`}
+    isTrue={true}
+    explanation={`Yes! The verb «дякувати» requires a Dative object.`}
+  />
+  <TrueFalseQuestion
+    statement={`Щоб запитати «Do you like Ukraine?», кажуть «Ти подобаєшся Україна?»`}
+    isTrue={false}
+    explanation={`Ні! Кажуть «Тобі подобається Україна?» з давальним відмінком.`}
+  />
+</TrueFalse>
+
+### Dative Pronouns [stage: controlled-production]
+
+*Доповніть кожне речення правильним займенником у давальному відмінку.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. ___ подобається музика.`}
+    answer={`Мені`}
+    options={[`Мені`, `Я`, `Мене`, `Моя`]}
+  />
+  <FillInQuestion
+    sentence={`___ потрібно йти.`}
+    answer={`Тобі`}
+    options={[`Тобі`, `Ти`, `Тебе`, `Твоя`]}
+  />
+  <FillInQuestion
+    sentence={`___ холодно. Дай куртку.`}
+    answer={`Йому`}
+    options={[`Йому`, `Він`, `Його`, `Його`]}
+  />
+  <FillInQuestion
+    sentence={`___ подобається танцювати.`}
+    answer={`Їй`}
+    options={[`Їй`, `Вона`, `Її`, `Її`]}
+  />
+  <FillInQuestion
+    sentence={`___ потрібна допомога?`}
+    answer={`Вам`}
+    options={[`Вам`, `Ви`, `Вас`, `Ваша`]}
+  />
+  <FillInQuestion
+    sentence={`___ весело в Києві.`}
+    answer={`Нам`}
+    options={[`Нам`, `Ми`, `Нас`, `Наша`]}
+  />
+  <FillInQuestion
+    sentence={`___ подобається футбол.`}
+    answer={`Їм`}
+    options={[`Їм`, `Вони`, `Їх`, `Їхній`]}
+  />
+  <FillInQuestion
+    sentence={`___ здається, що це правда.`}
+    answer={`Мені`}
+    options={[`Мені`, `Я`, `Мене`, `Моя`]}
+  />
+  <FillInQuestion
+    sentence={`___ потрібно більше часу.`}
+    answer={`Йому`}
+    options={[`Йому`, `Він`, `Його`, `Його`]}
+  />
+  <FillInQuestion
+    sentence={`___ тепло тут?`}
+    answer={`Тобі`}
+    options={[`Тобі`, `Ти`, `Тебе`, `Твоя`]}
+  />
+  <FillInQuestion
+    sentence={`___ цікаво вчити українську.`}
+    answer={`Нам`}
+    options={[`Нам`, `Ми`, `Нас`, `Наш`]}
+  />
+  <FillInQuestion
+    sentence={`___ сумно без друзів.`}
+    answer={`Їй`}
+    options={[`Їй`, `Вона`, `Її`, `Її`]}
+  />
+</FillIn>
+
+### Understanding Dative
+
+*Choose the correct translation.*
+
+
+<Quiz>
+  <QuizQuestion
+    question={`1. "I like coffee" in Ukrainian is:`}
+    options={[`Я подобаюся кава.`, `Мені подобається кава.`, `Моя подобається кава.`, `Мене подобається кава.`]}
+    correctIndex={1}
+    explanation={`The person who likes goes into Dative (мені), not Nominative.`}
+  />
+  <QuizQuestion
+    question={`"She needs to rest" in Ukrainian is:`}
+    options={[`Вона потрібно відпочити.`, `Її потрібно відпочити.`, `Їй потрібно відпочити.`, `Вона потрібна відпочити.`]}
+    correctIndex={2}
+    explanation={`The person who needs goes into Dative (їй).`}
+  />
+  <QuizQuestion
+    question={`"He is cold" in Ukrainian is:`}
+    options={[`Він холодно.`, `Йому холодно.`, `Його холодно.`, `Він холодний.`]}
+    correctIndex={1}
+    explanation={`Physical states use Dative + adverb construction.`}
+  />
+  <QuizQuestion
+    question={`"Do you like Kyiv?" in Ukrainian is:`}
+    options={[`Тобі подобається Київ?`, `Ти подобаєшся Київ?`, `Твій подобається Київ?`, `Тебе подобається Київ?`]}
+    correctIndex={0}
+    explanation={`The person who likes is in Dative (тобі).`}
+  />
+  <QuizQuestion
+    question={`"We need help" in Ukrainian is:`}
+    options={[`Ми потрібно допомога.`, `Ми потрібна допомога.`, `Нам потрібна допомога.`, `Нас потрібна допомога.`]}
+    correctIndex={2}
+    explanation={`"We" in Dative is "нам," and допомога is feminine, so потрібна.`}
+  />
+  <QuizQuestion
+    question={`"They find it interesting" in Ukrainian is:`}
+    options={[`Вони цікаво.`, `Їм цікаво.`, `Їх цікаво.`, `Вони цікаві.`]}
+    correctIndex={1}
+    explanation={`Emotional states use Dative pronoun + adverb.`}
+  />
+  <QuizQuestion
+    question={`What does "Мені здається" mean?`}
+    options={[`I am seen`, `It seems to me`, `I see`, `I am being`]}
+    correctIndex={1}
+    explanation={`«здаватися» вимагає давального відмінка.`}
+  />
+  <QuizQuestion
+    question={`What does "Тобі добре?" mean?`}
+    options={[`You are good?`, `Are you okay?`, `Your good?`, `Do you have good?`]}
+    correctIndex={1}
+    explanation={`Literally "To-you it's good?" meaning "Are you feeling okay?"`}
+  />
+  <QuizQuestion
+    question={`Which pronoun means "to her"?`}
+    options={[`її`, `їй`, `вона`, `йому`]}
+    correctIndex={1}
+    explanation={`«їй» — давальна форма від «вона».`}
+  />
+  <QuizQuestion
+    question={`Which pronoun means "to them"?`}
+    options={[`вони`, `їх`, `їм`, `вонам`]}
+    correctIndex={2}
+    explanation={`«їм» — давальна форма від «вони».`}
+  />
+  <QuizQuestion
+    question={`"Дякую тобі" means:`}
+    options={[`I thank you`, `You thank me`, `Thanks for you`, `Your thanks`]}
+    correctIndex={0}
+    explanation={`дякувати takes Dative: тобі = to you.`}
+  />
+  <QuizQuestion
+    question={`In "Вам каву?", the speaker is:`}
+    options={[`Asking if you have coffee`, `Offering you coffee`, `Thanking you for coffee`, `Ordering coffee for themselves`]}
+    correctIndex={1}
+    explanation={`«Вам» + іменник — типова формула гостинності для пропозицій.`}
+  />
+</Quiz>
+
+### Find the Mistake [stage: controlled-production]
+
+*Кожне речення має ОДНУ помилку. Знайдіть і виправте її.*
+
+
+<ErrorCorrection>
+  <ErrorCorrectionItem
+    sentence={`1. Я подобається музика.`}
+    error={`Я`}
+    answer={`Мені`}
+    options={[`Я`, `Мені`, `Мене`, `Моя`]}
+    explanation={`З «подобатися» особа стоїть у давальному (мені), не в називному.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона потрібно йти.`}
+    error={`Вона`}
+    answer={`Їй`}
+    options={[`Вона`, `Їй`, `Її`, `Вони`]}
+    explanation={`З «потрібно» особа стоїть у давальному (їй).`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він холодно.`}
+    error={`Він`}
+    answer={`Йому`}
+    options={[`Він`, `Йому`, `Його`, `Він є`]}
+    explanation={`Фізичні стани: давальний + прислівник: Йому холодно.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ми весело тут.`}
+    error={`Ми`}
+    answer={`Нам`}
+    options={[`Ми`, `Нам`, `Нас`, `Наш`]}
+    explanation={`Емоційні стани вимагають давального: Нам весело тут.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Ти подобається Київ?`}
+    error={`Ти`}
+    answer={`Тобі`}
+    options={[`Ти`, `Тобі`, `Тебе`, `Твоя`]}
+    explanation={`З «подобатися» використовують давальний: Тобі подобається Київ?`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вони потрібна допомога.`}
+    error={`Вони`}
+    answer={`Їм`}
+    options={[`Вони`, `Їм`, `Їх`, `Вона`]}
+    explanation={`З «потрібно/потрібна» використовують давальний: Їм потрібна допомога.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Мене подобається кава.`}
+    error={`Мене`}
+    answer={`Мені`}
+    options={[`Мене`, `Мені`, `Моя`, `Я`]}
+    explanation={`«Мене» — родовий/знахідний. Для «подобатися» — давальний: мені.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Його сумно без друзів.`}
+    error={`Його`}
+    answer={`Йому`}
+    options={[`Його`, `Йому`, `Він`, `Його є`]}
+    explanation={`«Його» — родовий/знахідний. Для емоційних станів — давальний: йому.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Нас цікаво вчити українську.`}
+    error={`Нас`}
+    answer={`Нам`}
+    options={[`Нас`, `Нам`, `Ми`, `Наш`]}
+    explanation={`«Нас» — родовий/знахідний. Для станів — давальний: нам.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Тебе тепло?`}
+    error={`Тебе`}
+    answer={`Тобі`}
+    options={[`Тебе`, `Тобі`, `Ти`, `Твоя`]}
+    explanation={`«Тебе» — родовий/знахідний. Для фізичних станів — давальний: тобі.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Їх подобається музика.`}
+    error={`Їх`}
+    answer={`Їм`}
+    options={[`Їх`, `Їм`, `Вони`, `Їхній`]}
+    explanation={`«Їх» — родовий/знахідний. Для «подобатися» — давальний: їм.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вас потрібно відпочити.`}
+    error={`Вас`}
+    answer={`Вам`}
+    options={[`Вас`, `Вам`, `Ви`, `Ваш`]}
+    explanation={`«Вас» — родовий/знахідний. Для «потрібно» — давальний: вам.`}
+  />
+</ErrorCorrection>
+
+### Complete the Story [stage: controlled-production]
+
+*Заповніть пропуски правильними займенниками в давальному відмінку.*
+
+
+<Cloze>
+  <ClozePassage
+    text={`Марія і Петро в Одесі. [___:1] подобається море. [___:2] тепло і весело.
+Офіціант запитує: «[___:3] каву?» Марія каже: «Так, [___:4] каву, будь ласка.» А Петро каже: «Ні, [___:5] не потрібно. [___:6] краще чай.»
+Увечері [___:7] холодно. Вони йдуть додому. [___:8] подобається Одеса!`}
+    blanks={[
+  {
+    "index": 0,
+    "options": [
+      "Їм",
+      "Їх",
+      "Вони"
+    ],
+    "answer": "Їм"
+  },
+  {
+    "index": 1,
+    "options": [
+      "Їм",
+      "Їх",
+      "Вони"
+    ],
+    "answer": "Їм"
+  },
+  {
+    "index": 2,
+    "options": [
+      "Вам",
+      "Вас",
+      "Ви"
+    ],
+    "answer": "Вам"
+  },
+  {
+    "index": 3,
+    "options": [
+      "мені",
+      "мене",
+      "я"
+    ],
+    "answer": "мені"
+  },
+  {
+    "index": 4,
+    "options": [
+      "мені",
+      "мене",
+      "я"
+    ],
+    "answer": "мені"
+  },
+  {
+    "index": 5,
+    "options": [
+      "Мені",
+      "Мене",
+      "Я"
+    ],
+    "answer": "Мені"
+  },
+  {
+    "index": 6,
+    "options": [
+      "їм",
+      "їх",
+      "вони"
+    ],
+    "answer": "їм"
+  },
+  {
+    "index": 7,
+    "options": [
+      "Їм",
+      "Їх",
+      "Вони"
+    ],
+    "answer": "Їм"
+  }
+]}
+  />
+</Cloze>
+
+### Dative Sentences [stage: free-production]
+
+*Put the words in the correct order.*
+
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`подобається / Мені / музика / українська`}
+    answer={`Мені подобається українська музика.`}
+  />
+  <UnjumbleQuestion
+    words={`потрібно / Тобі / відпочити`}
+    answer={`Тобі потрібно відпочити.`}
+  />
+  <UnjumbleQuestion
+    words={`холодно / Йому / тут`}
+    answer={`Йому тут холодно.`}
+  />
+  <UnjumbleQuestion
+    words={`подобається / їй / Київ / Чи`}
+    answer={`Чи їй подобається Київ?`}
+  />
+  <UnjumbleQuestion
+    words={`потрібна / Нам / допомога`}
+    answer={`Нам потрібна допомога.`}
+  />
+  <UnjumbleQuestion
+    words={`цікаво / Вам / тут`}
+    answer={`Вам тут цікаво?`}
+  />
+  <UnjumbleQuestion
+    words={`футбол / Їм / подобається`}
+    answer={`Їм подобається футбол.`}
+  />
+  <UnjumbleQuestion
+    words={`здається / Мені / це / що / правда`}
+    answer={`Мені здається, що це правда.`}
+  />
+  <UnjumbleQuestion
+    words={`тепло / Тобі / зараз`}
+    answer={`Тобі зараз тепло?`}
+  />
+  <UnjumbleQuestion
+    words={`весело / Нам / дуже / тут`}
+    answer={`Нам тут дуже весело.`}
+  />
+  <UnjumbleQuestion
+    words={`потрібно / Йому / працювати / більше`}
+    answer={`Йому потрібно більше працювати.`}
+  />
+  <UnjumbleQuestion
+    words={`подобаються / Їй / квіти`}
+    answer={`Їй подобаються квіти.`}
+  />
+</Unjumble>
+
+### At the Restaurant [stage: free-production]
+
+*Розставте репліки діалогу у правильному порядку.*
+
+
+<DialogueReorder>
+  <DialogueReorderActivity lines={[
+  {
+    "speaker": "A",
+    "line": "Добрий вечір! Вам меню?"
+  },
+  {
+    "speaker": "B",
+    "line": "Так, дякую. Нам меню, будь ласка."
+  },
+  {
+    "speaker": "A",
+    "line": "Вам подобається риба?"
+  },
+  {
+    "speaker": "B",
+    "line": "Так, мені подобається. А йому більше подобається м'ясо."
+  },
+  {
+    "speaker": "A",
+    "line": "Зрозуміло. Йому м'ясо, вам рибу?"
+  },
+  {
+    "speaker": "B",
+    "line": "Так, дякую. І нам воду, будь ласка."
+  }
+]} />
+</DialogueReorder>
+
+### English to Ukrainian [stage: free-production]
+
+*Choose the correct Ukrainian translation.*
+
+
+<Translate>
+  <TranslateItem
+    source={`1. I like Ukrainian music.`}
+    answer={`Мені подобається українська музика.`}
+    options={[`Я подобаюся українська музика.`, `Мені подобається українська музика.`, `Мене подобається українська музика.`, `Моя подобається українська музика.`]}
+    explanation={`Dative мені + подобається + Nominative subject.`}
+  />
+  <TranslateItem
+    source={`She needs help.`}
+    answer={`Їй потрібна допомога.`}
+    options={[`Вона потрібна допомога.`, `Її потрібна допомога.`, `Їй потрібна допомога.`, `Вона потрібно допомога.`]}
+    explanation={`Dative їй + потрібна + Nominative noun.`}
+  />
+  <TranslateItem
+    source={`We are having fun.`}
+    answer={`Нам весело.`}
+    options={[`Ми весело.`, `Нам весело.`, `Нас весело.`, `Наш весело.`]}
+    explanation={`Dative нам + adverb for emotional state.`}
+  />
+  <TranslateItem
+    source={`Do you like Kyiv?`}
+    answer={`Тобі подобається Київ?`}
+    options={[`Ти подобаєшся Київ?`, `Тобі подобається Київ?`, `Тебе подобається Київ?`, `Твій подобається Київ?`]}
+    explanation={`Dative тобі + подобається + city name.`}
+  />
+  <TranslateItem
+    source={`He is cold.`}
+    answer={`Йому холодно.`}
+    options={[`Він холодно.`, `Він холодний.`, `Йому холодно.`, `Його холодно.`]}
+    explanation={`Dative йому + adverb for physical state.`}
+  />
+  <TranslateItem
+    source={`They need more time.`}
+    answer={`Їм потрібно більше часу.`}
+    options={[`Вони потрібно більше часу.`, `Їх потрібно більше часу.`, `Їм потрібно більше часу.`, `Вони потрібний більше часу.`]}
+    explanation={`Dative їм + потрібно + noun phrase.`}
+  />
+  <TranslateItem
+    source={`I thank you.`}
+    answer={`Дякую тобі.`}
+    options={[`Я дякую ти.`, `Дякую тобі.`, `Дякую тебе.`, `Я дякую твій.`]}
+    explanation={`дякувати takes Dative: тобі.`}
+  />
+  <TranslateItem
+    source={`It seems to me that...`}
+    answer={`Мені здається, що...`}
+    options={[`Мені здається, що...`, `Я здаюся, що...`, `Мене здається, що...`, `Моя здається, що...`]}
+    explanation={`здаватися takes Dative: мені.`}
+  />
+  <TranslateItem
+    source={`Are you warm?`}
+    answer={`Тобі тепло?`}
+    options={[`Ти тепло?`, `Тобі тепло?`, `Тебе тепло?`, `Твоя тепло?`]}
+    explanation={`Physical state: Dative тобі + adverb.`}
+  />
+  <TranslateItem
+    source={`She likes to dance.`}
+    answer={`Їй подобається танцювати.`}
+    options={[`Вона подобається танцювати.`, `Її подобається танцювати.`, `Їй подобається танцювати.`, `Вона подобається танець.`]}
+    explanation={`Dative їй + подобається + infinitive.`}
+  />
+  <TranslateItem
+    source={`Do you need coffee?`}
+    answer={`Вам потрібна кава?`}
+    options={[`Ти потрібно кава?`, `Вам потрібна кава?`, `Вас потрібна кава?`, `Ви потрібно кава?`]}
+    explanation={`Dative вам + потрібна (fem. agreement) + noun.`}
+  />
+  <TranslateItem
+    source={`They find it interesting.`}
+    answer={`Їм цікаво.`}
+    options={[`Вони цікаво.`, `Їх цікаво.`, `Їм цікаво.`, `Вони цікаві.`]}
+    explanation={`Dative їм + adverb for emotional/mental state.`}
+  />
+</Translate>
+

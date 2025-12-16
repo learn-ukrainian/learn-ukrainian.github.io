@@ -5,19 +5,20 @@ title: "Can, Must, Want - Modals"
 description: "Expressing Ability, Obligation, and Desire"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 ## Warm-up
@@ -33,7 +34,8 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 # Grammar
 
 
-:::info[🔗 External Resources]
+:::info
+🔗 External Resources
 
 **YouTube:** [Ukrainian verbs: What to consider?](https://www.youtube.com/watch?v=UprIjfMZgzA) — Taste Ukrainian
 
@@ -48,7 +50,8 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 
 ## Expressing Ability: могти vs вміти
 
-:::tip[Pattern Discovery]
+:::tip
+Pattern Discovery
 
 Look at these sentences:
 - Я **можу** говорити українською. (I can speak Ukrainian.) — general ability
@@ -85,7 +88,8 @@ Look at these sentences:
 
 ## Expressing Obligation: повинен, треба, мусити
 
-:::tip[Pattern Discovery]
+:::tip
+Pattern Discovery
 
 - Я **повинен** працювати. (I must work.) — personal obligation
 - **Треба** працювати. (One must work.) — impersonal necessity
@@ -127,7 +131,8 @@ These are impersonal — the "subject" is optional:
 
 ## Expressing Permission: можна / не можна
 
-:::tip[Pattern Discovery]
+:::tip
+Pattern Discovery
 
 - **Можна** увійти? (May I enter?)
 - **Не можна** палити тут. (Smoking is not allowed here.)
@@ -181,7 +186,8 @@ These are impersonal — the "subject" is optional:
 
 # Examples in Context
 
-:::info[Ability]
+:::info
+Ability
 
 - Я **можу** говорити українською. (I can speak Ukrainian.)
 - Вона **вміє** плавати дуже добре. (She knows how to swim very well.)
@@ -191,7 +197,8 @@ These are impersonal — the "subject" is optional:
 :::
 
 
-:::info[Obligation]
+:::info
+Obligation
 
 - Я **повинен** працювати завтра. (I must work tomorrow.)
 - **Треба** вчитися кожен день. (One must study every day.)
@@ -201,7 +208,8 @@ These are impersonal — the "subject" is optional:
 :::
 
 
-:::info[Permission]
+:::info
+Permission
 
 - **Можна** взяти це? (May I take this?)
 - Тут **не можна** палити. (Smoking is not allowed here.)
@@ -211,7 +219,8 @@ These are impersonal — the "subject" is optional:
 :::
 
 
-:::info[Trying and Readiness]
+:::info
+Trying and Readiness
 
 - Я **намагаюся** зрозуміти граматику. (I'm trying to understand grammar.)
 - Він **старається** говорити українською. (He tries hard to speak Ukrainian.)
@@ -225,107 +234,58 @@ These are impersonal — the "subject" is optional:
 
 # Dialogues
 
-:::note[Asking for Permission]
-
-<div className="conversation">
+:::note
+Asking for Permission
 
 — **Можна** увійти?
-
 — Так, **можна**. Заходь!
-
 — Дякую. **Можна** сісти тут?
-
 — Звичайно. Сідай.
-
 — А **можна** відкрити вікно? Тут тепло.
-
 — Так, будь ласка.
 
-</div>
-
-<div className="conversation">
-
 — May I come in?
-
 — Yes, you may. Come in!
-
 — Thank you. May I sit here?
-
 — Of course. Sit down.
-
 — And may I open the window? It's warm here.
-
 — Yes, please.
-
-</div>
 :::
 
 
-:::note[Discussing Abilities]
-
-<div className="conversation">
+:::note
+Discussing Abilities
 
 — Ти **вмієш** плавати?
-
 — Так, я **вмію** плавати, але **не вмію** нирати.
-
 — А ти **можеш** навчити мене?
-
 — Звичайно! Я **можу** допомогти.
-
 — Чудово! Коли ми **можемо** почати?
 
-</div>
-
-<div className="conversation">
-
 — Do you know how to swim?
-
 — Yes, I know how to swim, but I don't know how to dive.
-
 — And can you teach me?
-
 — Of course! I can help.
-
 — Wonderful! When can we start?
-
-</div>
 :::
 
 
-:::note[Obligations]
-
-<div className="conversation">
+:::note
+Obligations
 
 — Що ти **мусиш** робити сьогодні?
-
 — Я **повинен** закінчити роботу. А потім **треба** купити продукти.
-
 — А завтра?
-
 — Завтра я **вільний**. Не **треба** працювати.
-
 — Чудово! Ти **можеш** прийти до мене?
-
 — Так, звичайно!
 
-</div>
-
-<div className="conversation">
-
 — What do you have to do today?
-
 — I must finish work. And then I need to buy groceries.
-
 — And tomorrow?
-
 — Tomorrow I'm free. No need to work.
-
 — Wonderful! Can you come to my place?
-
 — Yes, of course!
-
-</div>
 :::
 
 
@@ -360,313 +320,7 @@ In this module, you learned:
 
 **Coming up:** Module 25 will teach you reflexive verbs for daily routines!
 
-## 🎯 Activities
 
-### Modal Meanings
-
-<MatchUp pairs={[
-  { left: `могти`, right: `can, be able to` },
-  { left: `вміти`, right: `know how to` },
-  { left: `повинен`, right: `must (personal)` },
-  { left: `треба`, right: `need to (impersonal)` },
-  { left: `можна`, right: `may, allowed` },
-  { left: `не можна`, right: `not allowed` },
-  { left: `заборонено`, right: `forbidden` },
-  { left: `дозволено`, right: `permitted` },
-  { left: `слід`, right: `should, ought to` },
-  { left: `варто`, right: `worth, advisable` },
-  { left: `готовий`, right: `ready` },
-  { left: `здатний`, right: `capable` }
-]} />
-
-### Modal Categories
-
-<GroupSort groups={{
-  "Ability (Здатність)": ["могти", "вміти", "здатний", "мати змогу"],
-  "Obligation (Обов'язок)": ["повинен", "мусити", "треба", "потрібно"],
-  "Permission (Дозвіл)": ["можна", "дозволено", "не можна", "заборонено"]
-}} />
-
-### могти Conjugation
-
-<FillIn items={[
-  {
-    sentence: `Я ___ говорити українською.`,
-    answer: `можу`,
-    options: [`можу`, `можеш`, `може`, `можуть`]
-  },  {
-    sentence: `Ти ___ допомогти?`,
-    answer: `можеш`,
-    options: [`можу`, `можеш`, `може`, `можете`]
-  },  {
-    sentence: `Вона ___ прийти завтра.`,
-    answer: `може`,
-    options: [`можу`, `можеш`, `може`, `можуть`]
-  },  {
-    sentence: `Ми ___ зробити це разом.`,
-    answer: `можемо`,
-    options: [`можемо`, `можете`, `можуть`, `можу`]
-  },  {
-    sentence: `Ви ___ почекати трохи?`,
-    answer: `можете`,
-    options: [`можете`, `можемо`, `можуть`, `можеш`]
-  },  {
-    sentence: `Вони ___ грати на гітарі.`,
-    answer: `можуть`,
-    options: [`можуть`, `можемо`, `можете`, `може`]
-  },  {
-    sentence: `Він ___ плавати дуже швидко.`,
-    answer: `може`,
-    options: [`може`, `можу`, `можеш`, `можуть`]
-  },  {
-    sentence: `Я не ___ прийти сьогодні.`,
-    answer: `можу`,
-    options: [`можу`, `можеш`, `може`, `можемо`]
-  }
-]} />
-
-### Obligation Words
-
-<FillIn items={[
-  {
-    sentence: `Я ___ працювати завтра.`,
-    answer: `повинен`,
-    options: [`повинен`, `можу`, `вмію`, `хочу`]
-  },  {
-    sentence: `___ вчитися кожен день.`,
-    answer: `Треба`,
-    options: [`Треба`, `Можна`, `Вмію`, `Готовий`]
-  },  {
-    sentence: `Вона ___ закінчити проект.`,
-    answer: `мусить`,
-    options: [`мусить`, `вміє`, `може`, `готова`]
-  },  {
-    sentence: `___ відповісти на лист.`,
-    answer: `Потрібно`,
-    options: [`Потрібно`, `Можна`, `Дозволено`, `Готовий`]
-  },  {
-    sentence: `Він ___ прийти вчасно.`,
-    answer: `повинен`,
-    options: [`повинен`, `вміє`, `може`, `хоче`]
-  },  {
-    sentence: `Тут ___ палити.`,
-    answer: `заборонено`,
-    options: [`заборонено`, `дозволено`, `можна`, `треба`]
-  },  {
-    sentence: `___ подивитися цей фільм.`,
-    answer: `Варто`,
-    options: [`Варто`, `Треба`, `Не можна`, `Заборонено`]
-  },  {
-    sentence: `___ відпочити після роботи.`,
-    answer: `Слід`,
-    options: [`Слід`, `Можна`, `Дозволено`, `Вмію`]
-  }
-]} />
-
-### Ability or Skill?
-
-<Quiz questions={[
-  {
-    question: `Я вмію плавати.`,
-    options: [
-      { text: `Skill (learned ability)`, correct: true },
-      { text: `Physical ability`, correct: false },
-      { text: `Permission`, correct: false },
-      { text: `Obligation`, correct: false }
-    ]
-  },  {
-    question: `Я не можу прийти сьогодні.`,
-    options: [
-      { text: `Physical ability (circumstance)`, correct: true },
-      { text: `Skill`, correct: false },
-      { text: `Permission`, correct: false },
-      { text: `Obligation`, correct: false }
-    ]
-  },  {
-    question: `Вона вміє готувати українські страви.`,
-    options: [
-      { text: `Skill (learned ability)`, correct: true },
-      { text: `Physical ability`, correct: false },
-      { text: `Permission`, correct: false },
-      { text: `Obligation`, correct: false }
-    ]
-  },  {
-    question: `Ти можеш відкрити двері?`,
-    options: [
-      { text: `Physical ability (request)`, correct: true },
-      { text: `Skill`, correct: false },
-      { text: `Obligation`, correct: false },
-      { text: `Prohibition`, correct: false }
-    ]
-  },  {
-    question: `Він вміє грати на гітарі.`,
-    options: [
-      { text: `Skill (learned ability)`, correct: true },
-      { text: `Physical ability`, correct: false },
-      { text: `Permission`, correct: false },
-      { text: `Obligation`, correct: false }
-    ]
-  },  {
-    question: `Ми можемо почати зараз.`,
-    options: [
-      { text: `Physical ability (circumstance)`, correct: true },
-      { text: `Skill`, correct: false },
-      { text: `Permission`, correct: false },
-      { text: `Obligation`, correct: false }
-    ]
-  },  {
-    question: `Вони вміють танцювати сальсу.`,
-    options: [
-      { text: `Skill (learned ability)`, correct: true },
-      { text: `Physical ability`, correct: false },
-      { text: `Permission`, correct: false },
-      { text: `Obligation`, correct: false }
-    ]
-  },  {
-    question: `Я не можу знайти ключі.`,
-    options: [
-      { text: `Physical ability (circumstance)`, correct: true },
-      { text: `Skill`, correct: false },
-      { text: `Permission`, correct: false },
-      { text: `Obligation`, correct: false }
-    ]
-  }
-]} />
-
-### Modal Meanings
-
-<Quiz questions={[
-  {
-    question: `Можна увійти?`,
-    options: [
-      { text: `May I enter?`, correct: true },
-      { text: `Must I enter?`, correct: false },
-      { text: `Can I swim?`, correct: false },
-      { text: `Should I leave?`, correct: false }
-    ]
-  },  {
-    question: `Тут заборонено палити.`,
-    options: [
-      { text: `Smoking is forbidden here.`, correct: true },
-      { text: `Smoking is allowed here.`, correct: false },
-      { text: `You must smoke here.`, correct: false },
-      { text: `You should smoke here.`, correct: false }
-    ]
-  },  {
-    question: `Я повинен працювати.`,
-    options: [
-      { text: `I must work.`, correct: true },
-      { text: `I can work.`, correct: false },
-      { text: `I want to work.`, correct: false },
-      { text: `I know how to work.`, correct: false }
-    ]
-  },  {
-    question: `Варто подивитися цей фільм.`,
-    options: [
-      { text: `This movie is worth watching.`, correct: true },
-      { text: `You must watch this movie.`, correct: false },
-      { text: `You can't watch this movie.`, correct: false },
-      { text: `This movie is forbidden.`, correct: false }
-    ]
-  },  {
-    question: `Треба вчитися кожен день.`,
-    options: [
-      { text: `One must study every day.`, correct: true },
-      { text: `One can study every day.`, correct: false },
-      { text: `One wants to study every day.`, correct: false },
-      { text: `One is allowed to study every day.`, correct: false }
-    ]
-  },  {
-    question: `Вона готова почати.`,
-    options: [
-      { text: `She is ready to start.`, correct: true },
-      { text: `She must start.`, correct: false },
-      { text: `She can start.`, correct: false },
-      { text: `She wants to start.`, correct: false }
-    ]
-  },  {
-    question: `Тут дозволено фотографувати.`,
-    options: [
-      { text: `Photography is permitted here.`, correct: true },
-      { text: `Photography is forbidden here.`, correct: false },
-      { text: `You must take photos here.`, correct: false },
-      { text: `You should take photos here.`, correct: false }
-    ]
-  },  {
-    question: `Слід відпочити.`,
-    options: [
-      { text: `One should rest.`, correct: true },
-      { text: `One must rest.`, correct: false },
-      { text: `One can rest.`, correct: false },
-      { text: `One is forbidden to rest.`, correct: false }
-    ]
-  }
-]} />
-
-### Modal Sentences
-
-<Unjumble items={[
-  { jumbled: `можу / я / українською / говорити`, answer: `Я можу говорити українською.` },
-  { jumbled: `вмієш / ти / плавати / ?`, answer: `Ти вмієш плавати?` },
-  { jumbled: `повинен / він / працювати / завтра`, answer: `Він повинен працювати завтра.` },
-  { jumbled: `можна / тут / сісти / ?`, answer: `Можна тут сісти?` },
-  { jumbled: `заборонено / палити / тут`, answer: `Тут заборонено палити.` },
-  { jumbled: `готова / вона / почати`, answer: `Вона готова почати.` }
-]} />
-
-### Modal Understanding
-
-<TrueFalse items={[
-  {
-    statement: `\"Вміти\" means \"to know how to\" (learned skill).`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Могти\" means \"must\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"can\"`
-  },  {
-    statement: `\"Можна\" is used to ask permission.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Заборонено\" means \"allowed\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"forbidden\"`
-  },  {
-    statement: `\"Треба\" is an impersonal word for necessity.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Повинен\" changes gender: повинен/повинна.`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `\"Варто\" means \"worth\" or \"advisable\".`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Мусити\" means \"to want\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"must\"`
-  },  {
-    statement: `\"Готовий\" means \"ready\".`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Слід\" means \"forbidden\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"should\"`
-  },  {
-    statement: `\"Здатний\" means \"capable\".`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Не можна\" means \"you can\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"not allowed\"`
-  }
-]} />
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
@@ -698,3 +352,348 @@ In this module, you learned:
 | бути в змозі | /ˈbutɪ w ˈzmɔzʲi/ | to be able to | phrase | - | formal |
 
 ---
+
+---
+
+## 🎯 Activities
+
+### Modal Meanings
+
+<MatchUp pairs={[
+  { left: `могти`, right: `can, be able to` },
+  { left: `вміти`, right: `know how to` },
+  { left: `повинен`, right: `must (personal)` },
+  { left: `треба`, right: `need to (impersonal)` },
+  { left: `можна`, right: `may, allowed` },
+  { left: `не можна`, right: `not allowed` },
+  { left: `заборонено`, right: `forbidden` },
+  { left: `дозволено`, right: `permitted` },
+  { left: `слід`, right: `should, ought to` },
+  { left: `варто`, right: `worth, advisable` },
+  { left: `готовий`, right: `ready` },
+  { left: `здатний`, right: `capable` }
+]} />
+
+### Modal Categories
+
+*Sort these words by their meaning.*
+
+
+<GroupSort groups={{
+  "### Ability (Здатність)": [
+    "могти",
+    "вміти",
+    "здатний",
+    "мати змогу"
+  ],
+  "Obligation (Обов'язок)": [
+    "повинен",
+    "мусити",
+    "треба",
+    "потрібно"
+  ],
+  "Permission (Дозвіл)": [
+    "можна",
+    "дозволено",
+    "не можна",
+    "заборонено",
+    "--"
+  ]
+}} />
+
+### могти Conjugation
+
+*Complete with the correct form of могти.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я ___ говорити українською.`}
+    answer={`можу`}
+    options={[`можу`, `можеш`, `може`, `можуть`]}
+  />
+  <FillInQuestion
+    sentence={`Ти ___ допомогти?`}
+    answer={`можеш`}
+    options={[`можу`, `можеш`, `може`, `можете`]}
+  />
+  <FillInQuestion
+    sentence={`Вона ___ прийти завтра.`}
+    answer={`може`}
+    options={[`можу`, `можеш`, `може`, `можуть`]}
+  />
+  <FillInQuestion
+    sentence={`Ми ___ зробити це разом.`}
+    answer={`можемо`}
+    options={[`можемо`, `можете`, `можуть`, `можу`]}
+  />
+  <FillInQuestion
+    sentence={`Ви ___ почекати трохи?`}
+    answer={`можете`}
+    options={[`можете`, `можемо`, `можуть`, `можеш`]}
+  />
+  <FillInQuestion
+    sentence={`Вони ___ грати на гітарі.`}
+    answer={`можуть`}
+    options={[`можуть`, `можемо`, `можете`, `може`]}
+  />
+  <FillInQuestion
+    sentence={`Він ___ плавати дуже швидко.`}
+    answer={`може`}
+    options={[`може`, `можу`, `можеш`, `можуть`]}
+  />
+  <FillInQuestion
+    sentence={`Я не ___ прийти сьогодні.`}
+    answer={`можу`}
+    options={[`можу`, `можеш`, `може`, `можемо`]}
+  />
+</FillIn>
+
+### Obligation Words
+
+*Choose the correct obligation word.*
+
+
+<FillIn>
+  <FillInQuestion
+    sentence={`1. Я ___ працювати завтра.`}
+    answer={`повинен`}
+    options={[`повинен`, `можу`, `вмію`, `хочу`]}
+  />
+  <FillInQuestion
+    sentence={`___ вчитися кожен день.`}
+    answer={`Треба`}
+    options={[`Треба`, `Можна`, `Вмію`, `Готовий`]}
+  />
+  <FillInQuestion
+    sentence={`Вона ___ закінчити проект.`}
+    answer={`мусить`}
+    options={[`мусить`, `вміє`, `може`, `готова`]}
+  />
+  <FillInQuestion
+    sentence={`___ відповісти на лист.`}
+    answer={`Потрібно`}
+    options={[`Потрібно`, `Можна`, `Дозволено`, `Готовий`]}
+  />
+  <FillInQuestion
+    sentence={`Він ___ прийти вчасно.`}
+    answer={`повинен`}
+    options={[`повинен`, `вміє`, `може`, `хоче`]}
+  />
+  <FillInQuestion
+    sentence={`Тут ___ палити.`}
+    answer={`заборонено`}
+    options={[`заборонено`, `дозволено`, `можна`, `треба`]}
+  />
+  <FillInQuestion
+    sentence={`___ подивитися цей фільм.`}
+    answer={`Варто`}
+    options={[`Варто`, `Треба`, `Не можна`, `Заборонено`]}
+  />
+  <FillInQuestion
+    sentence={`___ відпочити після роботи.`}
+    answer={`Слід`}
+    options={[`Слід`, `Можна`, `Дозволено`, `Вмію`]}
+  />
+</FillIn>
+
+### Ability or Skill?
+
+<Quiz>
+  <QuizQuestion
+    question={`Я вмію плавати.`}
+    options={[`Skill (learned ability)`, `Physical ability`, `Permission`, `Obligation`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Я не можу прийти сьогодні.`}
+    options={[`Physical ability (circumstance)`, `Skill`, `Permission`, `Obligation`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Вона вміє готувати українські страви.`}
+    options={[`Skill (learned ability)`, `Physical ability`, `Permission`, `Obligation`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Ти можеш відкрити двері?`}
+    options={[`Physical ability (request)`, `Skill`, `Obligation`, `Prohibition`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Він вміє грати на гітарі.`}
+    options={[`Skill (learned ability)`, `Physical ability`, `Permission`, `Obligation`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Ми можемо почати зараз.`}
+    options={[`Physical ability (circumstance)`, `Skill`, `Permission`, `Obligation`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Вони вміють танцювати сальсу.`}
+    options={[`Skill (learned ability)`, `Physical ability`, `Permission`, `Obligation`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Я не можу знайти ключі.`}
+    options={[`Physical ability (circumstance)`, `Skill`, `Permission`, `Obligation`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### Modal Meanings
+
+<Quiz>
+  <QuizQuestion
+    question={`Можна увійти?`}
+    options={[`May I enter?`, `Must I enter?`, `Can I swim?`, `Should I leave?`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Тут заборонено палити.`}
+    options={[`Smoking is forbidden here.`, `Smoking is allowed here.`, `You must smoke here.`, `You should smoke here.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Я повинен працювати.`}
+    options={[`I must work.`, `I can work.`, `I want to work.`, `I know how to work.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Варто подивитися цей фільм.`}
+    options={[`This movie is worth watching.`, `You must watch this movie.`, `You can't watch this movie.`, `This movie is forbidden.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Треба вчитися кожен день.`}
+    options={[`One must study every day.`, `One can study every day.`, `One wants to study every day.`, `One is allowed to study every day.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Вона готова почати.`}
+    options={[`She is ready to start.`, `She must start.`, `She can start.`, `She wants to start.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Тут дозволено фотографувати.`}
+    options={[`Photography is permitted here.`, `Photography is forbidden here.`, `You must take photos here.`, `You should take photos here.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+  <QuizQuestion
+    question={`Слід відпочити.`}
+    options={[`One should rest.`, `One must rest.`, `One can rest.`, `One is forbidden to rest.`]}
+    correctIndex={0}
+    explanation={``}
+  />
+</Quiz>
+
+### Modal Sentences
+
+<Unjumble>
+  <UnjumbleQuestion
+    words={`можу / я / українською / говорити`}
+    answer={`Я можу говорити українською.`}
+  />
+  <UnjumbleQuestion
+    words={`вмієш / ти / плавати / ?`}
+    answer={`Ти вмієш плавати?`}
+  />
+  <UnjumbleQuestion
+    words={`повинен / він / працювати / завтра`}
+    answer={`Він повинен працювати завтра.`}
+  />
+  <UnjumbleQuestion
+    words={`можна / тут / сісти / ?`}
+    answer={`Можна тут сісти?`}
+  />
+  <UnjumbleQuestion
+    words={`заборонено / палити / тут`}
+    answer={`Тут заборонено палити.`}
+  />
+  <UnjumbleQuestion
+    words={`готова / вона / почати`}
+    answer={`Вона готова почати.`}
+  />
+</Unjumble>
+
+### Modal Understanding
+
+<TrueFalse>
+  <TrueFalseQuestion
+    statement={`"Вміти" means "to know how to" (learned skill).`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Могти" means "must".`}
+    isTrue={false}
+    explanation={`Incorrect! it means "can"`}
+  />
+  <TrueFalseQuestion
+    statement={`"Можна" is used to ask permission.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Заборонено" means "allowed".`}
+    isTrue={false}
+    explanation={`Incorrect! it means "forbidden"`}
+  />
+  <TrueFalseQuestion
+    statement={`"Треба" is an impersonal word for necessity.`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Повинен" changes gender: повинен/повинна.`}
+    isTrue={false}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Варто" means "worth" or "advisable".`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Мусити" means "to want".`}
+    isTrue={false}
+    explanation={`Incorrect! it means "must"`}
+  />
+  <TrueFalseQuestion
+    statement={`"Готовий" means "ready".`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Слід" means "forbidden".`}
+    isTrue={false}
+    explanation={`Incorrect! it means "should"`}
+  />
+  <TrueFalseQuestion
+    statement={`"Здатний" means "capable".`}
+    isTrue={true}
+    explanation={``}
+  />
+  <TrueFalseQuestion
+    statement={`"Не можна" means "you can".`}
+    isTrue={false}
+    explanation={`Incorrect! it means "not allowed"`}
+  />
+</TrueFalse>
+

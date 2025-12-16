@@ -5,19 +5,20 @@ title: "Weather & Nature"
 description: "Seasons, Weather & The Natural World"
 ---
 
-import Quiz from '@site/src/components/Quiz';
+import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
+import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
 import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
+import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
+import Anagram, { AnagramQuestion } from '@site/src/components/Anagram';
+import Unjumble, { UnjumbleQuestion } from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+import Select, { SelectQuestion } from '@site/src/components/Select';
+import Translate, { TranslateItem } from '@site/src/components/Translate';
+import Cloze, { ClozePassage } from '@site/src/components/Cloze';
+import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+
 
 
 ## Warm-up
@@ -38,7 +39,8 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 # Grammar
 
 
-:::info[🔗 External Resources]
+:::info
+🔗 External Resources
 
 **YouTube:** [Nature & Weather in Ukrainian](https://www.youtube.com/watch?v=x9qlDTX3fVg) — Pinhok Languages
 
@@ -53,7 +55,8 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 
 ## Impersonal Weather Expressions
 
-:::tip[Спостереження (Pattern Discovery)]
+:::tip
+Спостереження (Pattern Discovery)
 
 Look at these sentences:
 - **Тепло.** (It's warm.)
@@ -113,7 +116,8 @@ For rain and snow, Ukrainian uses "йде" (goes):
 
 # Examples in Context
 
-:::info[Погода в Україні (Weather in Ukraine)]
+:::info
+Погода в Україні (Weather in Ukraine)
 
 - **Влітку** в Україні **жарко**. (In summer in Ukraine it's hot.)
 - **Взимку** в Карпатах **йде сніг**. (In winter in the Carpathians it snows.)
@@ -124,7 +128,8 @@ For rain and snow, Ukrainian uses "йде" (goes):
 :::
 
 
-:::info[Природа України (Ukrainian Nature)]
+:::info
+Природа України (Ukrainian Nature)
 
 - Україна має гарну **природу**. (Ukraine has beautiful nature.)
 - У Карпатах є **гори** і **ліси**. (In the Carpathians there are mountains and forests.)
@@ -135,7 +140,8 @@ For rain and snow, Ukrainian uses "йде" (goes):
 :::
 
 
-:::info[Тварини (Animals)]
+:::info
+Тварини (Animals)
 
 - У мене є **собака**. (I have a dog.)
 - Моя **кішка** — біла. (My cat is white.)
@@ -150,123 +156,67 @@ For rain and snow, Ukrainian uses "йде" (goes):
 
 # Dialogues
 
-:::note[Яка погода? (What's the Weather?)]
-
-<div className="conversation">
+:::note
+Яка погода? (What's the Weather?)
 
 — Привіт! Яка сьогодні погода?
-
 — Сьогодні **сонячно** і **тепло**!
-
 — Добре! Ходімо гуляти в парк!
-
 — Так, чудова ідея!
 
-</div>
-
-<div className="conversation">
-
 — Hi! What's the weather like today?
-
 — Today it's sunny and warm!
-
 — Good! Let's go for a walk in the park!
-
 — Yes, great idea!
-
-</div>
 :::
 
 
-:::note[Твої тварини (Your Pets)]
-
-<div className="conversation">
+:::note
+Твої тварини (Your Pets)
 
 — У тебе є тварини?
-
 — Так, у мене є **кіт** і **собака**.
-
 — О, класно! Як їх звати?
-
 — Кота звати Мурчик, а собаку — Рекс.
 
-</div>
-
-<div className="conversation">
-
 — Do you have any pets?
-
 — Yes, I have a cat and a dog.
-
 — Oh, cool! What are their names?
-
 — The cat's name is Murchyk, and the dog's is Rex.
-
-</div>
 :::
 
 
-:::note[Яка твоя улюблена пора року? (What's Your Favorite Season?)]
-
-<div className="conversation">
+:::note
+Яка твоя улюблена пора року? (What's Your Favorite Season?)
 
 — Яка твоя улюблена пора року?
-
 — Я люблю **літо**, бо **жарко** і **сонячно**.
-
 — А я люблю **зиму** — **йде сніг**!
-
 — Кожному своє!
 
-</div>
-
-<div className="conversation">
-
 — What's your favorite season?
-
 — I love summer because it's hot and sunny.
-
 — And I love winter — it snows!
-
 — To each their own!
-
-</div>
 :::
 
 
-:::note[На прогулянці (On a Walk)]
-
-<div className="conversation">
+:::note
+На прогулянці (On a Walk)
 
 — Яка гарна погода сьогодні!
-
 — Так, дуже **тепло** і **сонячно**.
-
 — Дивись! Тут красива **квітка**!
-
 — І багато **птахів** у **парку**.
-
 — Мені подобається **природа**.
-
 — Я теж люблю гуляти **надворі**.
 
-</div>
-
-<div className="conversation">
-
 — What beautiful weather today!
-
 — Yes, very warm and sunny.
-
 — Look! There's a beautiful flower here!
-
 — And lots of birds in the park.
-
 — I like nature.
-
 — I also love walking outside.
-
-</div>
 :::
 
 
@@ -310,360 +260,366 @@ For rain and snow, Ukrainian uses "йде" (goes):
 
 **Наступний урок:** Прийменники напрямку та місця!
 
-## 🎯 Activities
+# Вправи (Activities)
 
-### Weather Expressions
+## match-up: Weather Expressions
 
-<MatchUp pairs={[
-  { left: `Тепло`, right: `It's warm` },
-  { left: `Холодно`, right: `It's cold` },
-  { left: `Жарко`, right: `It's hot` },
-  { left: `Сонячно`, right: `It's sunny` },
-  { left: `Хмарно`, right: `It's cloudy` },
-  { left: `Вітряно`, right: `It's windy` },
-  { left: `Йде дощ`, right: `It's raining` },
-  { left: `Йде сніг`, right: `It's snowing` },
-  { left: `Яка погода?`, right: `What's the weather?` },
-  { left: `Як надворі?`, right: `How is it outside?` },
-  { left: `Сьогодні тепло`, right: `It's warm today` },
-  { left: `Влітку жарко`, right: `In summer it's hot` }
-]} />
+Match the Ukrainian expression with its English meaning.
 
-### Nature Vocabulary
+- Тепло :: It's warm
+- Холодно :: It's cold
+- Жарко :: It's hot
+- Сонячно :: It's sunny
+- Хмарно :: It's cloudy
+- Вітряно :: It's windy
+- Йде дощ :: It's raining
+- Йде сніг :: It's snowing
+- Яка погода? :: What's the weather?
+- Як надворі? :: How is it outside?
+- Сьогодні тепло :: It's warm today
+- Влітку жарко :: In summer it's hot
 
-<MatchUp pairs={[
-  { left: `сонце`, right: `sun` },
-  { left: `хмара`, right: `cloud` },
-  { left: `вітер`, right: `wind` },
-  { left: `дощ`, right: `rain` },
-  { left: `сніг`, right: `snow` },
-  { left: `дерево`, right: `tree` },
-  { left: `квітка`, right: `flower` },
-  { left: `ліс`, right: `forest` },
-  { left: `річка`, right: `river` },
-  { left: `море`, right: `sea` },
-  { left: `гора`, right: `mountain` },
-  { left: `озеро`, right: `lake` }
-]} />
+---
 
-### Seasons
+## match-up: Nature Vocabulary
 
-<GroupSort groups={{
-  "Весна (Spring)": ["тепло", "йде дощ", "квітки"],
-  "Літо (Summer)": ["жарко", "сонячно", "море"],
-  "Осінь (Autumn)": ["холодно", "хмарно", "вітряно"],
-  "Зима (Winter)": ["мороз", "йде сніг", "холодно взимку"]
-}} />
+Match the Ukrainian word with its English meaning.
 
-### Animals vs Plants
+- сонце :: sun
+- хмара :: cloud
+- вітер :: wind
+- дощ :: rain
+- сніг :: snow
+- дерево :: tree
+- квітка :: flower
+- ліс :: forest
+- річка :: river
+- море :: sea
+- гора :: mountain
+- озеро :: lake
 
-<GroupSort groups={{
-  "Тварини (Animals)": ["собака", "кіт", "птах", "риба", "пес", "кішка"],
-  "Рослини (Plants)": ["дерево", "квітка", "ліс", "трава", "парк", "сад"]
-}} />
+---
 
-### Яка погода? (What's the Weather?)
+## group-sort: Seasons
 
-<FillIn items={[
-  {
-    sentence: `Сьогодні світить сонце. ___.`,
-    answer: `Сонячно`,
-    options: [`Сонячно`, `Хмарно`, `Холодно`, `Вітряно`]
-  },  {
-    sentence: `На небі багато хмар. ___.`,
-    answer: `Хмарно`,
-    options: [`Хмарно`, `Сонячно`, `Жарко`, `Тепло`]
-  },  {
-    sentence: `Температура +30°C! ___.`,
-    answer: `Жарко`,
-    options: [`Жарко`, `Холодно`, `Хмарно`, `Вітряно`]
-  },  {
-    sentence: `Температура -10°C. ___.`,
-    answer: `Холодно`,
-    options: [`Холодно`, `Жарко`, `Тепло`, `Сонячно`]
-  },  {
-    sentence: `Дує сильний вітер. ___.`,
-    answer: `Вітряно`,
-    options: [`Вітряно`, `Хмарно`, `Сонячно`, `Тепло`]
-  },  {
-    sentence: `Падає біла вода з неба. ___.`,
-    answer: `Йде сніг`,
-    options: [`Йде сніг`, `Йде дощ`, `Сонячно`, `Жарко`]
-  },  {
-    sentence: `Падає вода з неба. ___.`,
-    answer: `Йде дощ`,
-    options: [`Йде дощ`, `Йде сніг`, `Хмарно`, `Вітряно`]
-  },  {
-    sentence: `Температура +20°C. Приємна погода. ___.`,
-    answer: `Тепло`,
-    options: [`Тепло`, `Холодно`, `Жарко`, `Хмарно`]
-  },  {
-    sentence: `Взимку в Карпатах завжди ___.`,
-    answer: `холодно`,
-    options: [`холодно`, `жарко`, `тепло`, `сонячно`]
-  },  {
-    sentence: `Влітку в Одесі завжди ___.`,
-    answer: `жарко`,
-    options: [`жарко`, `холодно`, `йде сніг`, `хмарно`]
-  },  {
-    sentence: `Восени часто ___.`,
-    answer: `хмарно`,
-    options: [`хмарно`, `жарко`, `сонячно`, `тепло`]
-  },  {
-    sentence: `Весною вже не ___, а тепло.`,
-    answer: `холодно`,
-    options: [`холодно`, `жарко`, `сонячно`, `вітряно`]
-  }
-]} />
+> Sort weather descriptions by season.
 
-### Природа і тварини (Nature and Animals)
+### Весна (Spring)
+- тепло
+- йде дощ
+- квітки
 
-<FillIn items={[
-  {
-    sentence: `У мене є ___ Рекс.`,
-    answer: `пес`,
-    options: [`пес`, `кіт`, `птах`, `риба`]
-  },  {
-    sentence: `Моя ___ — біла і пухнаста.`,
-    answer: `кішка`,
-    options: [`кішка`, `собака`, `риба`, `птах`]
-  },  {
-    sentence: `Дніпро — це велика ___.`,
-    answer: `річка`,
-    options: [`річка`, `море`, `гора`, `озеро`]
-  },  {
-    sentence: `У Карпатах є високі ___.`,
-    answer: `гори`,
-    options: [`гори`, `річки`, `озера`, `моря`]
-  },  {
-    sentence: `У парку багато красивих ___.`,
-    answer: `квіток`,
-    options: [`квіток`, `гір`, `морів`, `птахів`]
-  },  {
-    sentence: `Влітку ми їдемо на ___.`,
-    answer: `море`,
-    options: [`море`, `гору`, `ліс`, `річку`]
-  },  {
-    sentence: `У ___ живе багато тварин.`,
-    answer: `лісі`,
-    options: [`лісі`, `морі`, `горі`, `парку`]
-  },  {
-    sentence: `На дереві сидить ___.`,
-    answer: `птах`,
-    options: [`птах`, `риба`, `кіт`, `собака`]
-  },  {
-    sentence: `У мене є акваріум з ___.`,
-    answer: `рибою`,
-    options: [`рибою`, `котом`, `собакою`, `птахом`]
-  },  {
-    sentence: `___ — це найбільша річка України.`,
-    answer: `Дніпро`,
-    options: [`Дніпро`, `Карпати`, `Одеса`, `Львів`]
-  },  {
-    sentence: `Чорне ___ — на півдні України.`,
-    answer: `море`,
-    options: [`море`, `озеро`, `річка`, `ліс`]
-  },  {
-    sentence: `У парку росте багато ___.`,
-    answer: `дерев`,
-    options: [`дерев`, `гір`, `морів`, `птахів`]
-  }
-]} />
+### Літо (Summer)
+- жарко
+- сонячно
+- море
 
-### What Season?
+### Осінь (Autumn)
+- холодно
+- хмарно
+- вітряно
 
-<Quiz questions={[
-  {
-    question: `Йде сніг, холодно`,
-    options: [
-      { text: `Зима`, correct: true },
-      { text: `Літо`, correct: false },
-      { text: `Весна`, correct: false },
-      { text: `Осінь`, correct: false }
-    ]
-  },  {
-    question: `Жарко, сонячно, море`,
-    options: [
-      { text: `Літо`, correct: true },
-      { text: `Зима`, correct: false },
-      { text: `Весна`, correct: false },
-      { text: `Осінь`, correct: false }
-    ]
-  },  {
-    question: `Тепло, квіти, йде дощ`,
-    options: [
-      { text: `Весна`, correct: true },
-      { text: `Літо`, correct: false },
-      { text: `Зима`, correct: false },
-      { text: `Осінь`, correct: false }
-    ]
-  },  {
-    question: `Холодно, хмарно, вітряно`,
-    options: [
-      { text: `Осінь`, correct: true },
-      { text: `Літо`, correct: false },
-      { text: `Весна`, correct: false },
-      { text: `Зима`, correct: false }
-    ]
-  },  {
-    question: `Діти грають у сніг`,
-    options: [
-      { text: `Зима`, correct: true },
-      { text: `Літо`, correct: false },
-      { text: `Весна`, correct: false },
-      { text: `Осінь`, correct: false }
-    ]
-  },  {
-    question: `Люди на пляжі`,
-    options: [
-      { text: `Літо`, correct: true },
-      { text: `Зима`, correct: false },
-      { text: `Осінь`, correct: false },
-      { text: `Весна`, correct: false }
-    ]
-  },  {
-    question: `Листя падає з дерев`,
-    options: [
-      { text: `Осінь`, correct: true },
-      { text: `Літо`, correct: false },
-      { text: `Весна`, correct: false },
-      { text: `Зима`, correct: false }
-    ]
-  },  {
-    question: `Птахи повертаються з півдня`,
-    options: [
-      { text: `Весна`, correct: true },
-      { text: `Осінь`, correct: false },
-      { text: `Зима`, correct: false },
-      { text: `Літо`, correct: false }
-    ]
-  }
-]} />
+### Зима (Winter)
+- мороз
+- йде сніг
+- холодно взимку
 
-### Animal or Plant?
+---
 
-<Quiz questions={[
-  {
-    question: `Собака`,
-    options: [
-      { text: `Тварина`, correct: true },
-      { text: `Рослина`, correct: false }
-    ]
-  },  {
-    question: `Дерево`,
-    options: [
-      { text: `Рослина`, correct: true },
-      { text: `Тварина`, correct: false }
-    ]
-  },  {
-    question: `Кіт`,
-    options: [
-      { text: `Тварина`, correct: true },
-      { text: `Рослина`, correct: false }
-    ]
-  },  {
-    question: `Квітка`,
-    options: [
-      { text: `Рослина`, correct: true },
-      { text: `Тварина`, correct: false }
-    ]
-  },  {
-    question: `Птах`,
-    options: [
-      { text: `Тварина`, correct: true },
-      { text: `Рослина`, correct: false }
-    ]
-  },  {
-    question: `Ліс`,
-    options: [
-      { text: `Рослина`, correct: true },
-      { text: `Тварина`, correct: false }
-    ]
-  },  {
-    question: `Риба`,
-    options: [
-      { text: `Тварина`, correct: true },
-      { text: `Рослина`, correct: false }
-    ]
-  },  {
-    question: `Трава`,
-    options: [
-      { text: `Рослина`, correct: true },
-      { text: `Тварина`, correct: false }
-    ]
-  }
-]} />
+## group-sort: Animals vs Plants
 
-### Weather Sentences
+> Sort vocabulary into categories.
 
-<Unjumble items={[
-  { jumbled: `погода / яка / сьогодні`, answer: `Яка сьогодні погода?` },
-  { jumbled: `тепло / сьогодні / і / сонячно`, answer: `Сьогодні тепло і сонячно.` },
-  { jumbled: `йде / взимку / сніг`, answer: `Взимку йде сніг.` },
-  { jumbled: `жарко / влітку / дуже`, answer: `Влітку дуже жарко.` },
-  { jumbled: `дощ / весною / йде`, answer: `Весною йде дощ.` },
-  { jumbled: `є / у мене / собака`, answer: `У мене є собака.` },
-  { jumbled: `кіт / мій / білий`, answer: `Мій кіт білий.` },
-  { jumbled: `багато / у парку / дерев`, answer: `У парку багато дерев.` },
-  { jumbled: `гори / в Карпатах / є`, answer: `В Карпатах є гори.` },
-  { jumbled: `річка / Дніпро / велика`, answer: `Дніпро — велика річка.` },
-  { jumbled: `люблю / я / море`, answer: `Я люблю море.` },
-  { jumbled: `холодно / надворі / сьогодні`, answer: `Сьогодні надворі холодно.` }
-]} />
+### Тварини (Animals)
+- собака
+- кіт
+- птах
+- риба
+- пес
+- кішка
 
-### Weather and Nature Facts
+### Рослини (Plants)
+- дерево
+- квітка
+- ліс
+- трава
+- парк
+- сад
 
-<TrueFalse items={[
-  {
-    statement: `\"Йде дощ\" means \"It's raining.\".`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Йде сніг\" means \"It's cold.\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"it's snowing\"`
-  },  {
-    statement: `Ukrainian weather expressions don't need a subject.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Тепло\" means \"hot.\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"warm\"`
-  },  {
-    statement: `\"Жарко\" means \"hot.\".`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `Ukraine has only steppes.`,
-    isTrue: false,
-    explanation: `Incorrect! it has mountains, forests, seas`
-  },  {
-    statement: `The Carpathians are mountains in Ukraine.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Собака\" and \"пес\" both mean \"dog.\".`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Кіт\" means \"a female cat.\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"male cat\"`
-  },  {
-    statement: `\"Влітку\" means \"in summer.\".`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Взимку\" means \"in autumn.\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"in winter\"`
-  },  {
-    statement: `The Dnipro is a river.`,
-    isTrue: true,
-    explanation: ``
-  }
-]} />
+---
+
+## fill-in: Яка погода? (What's the Weather?)
+
+> Choose the correct weather expression.
+
+1. Сьогодні світить сонце. ___.
+   > [!answer] Сонячно
+   > [!options] Сонячно | Хмарно | Холодно | Вітряно
+
+2. На небі багато хмар. ___.
+   > [!answer] Хмарно
+   > [!options] Хмарно | Сонячно | Жарко | Тепло
+
+3. Температура +30°C! ___.
+   > [!answer] Жарко
+   > [!options] Жарко | Холодно | Хмарно | Вітряно
+
+4. Температура -10°C. ___.
+   > [!answer] Холодно
+   > [!options] Холодно | Жарко | Тепло | Сонячно
+
+5. Дує сильний вітер. ___.
+   > [!answer] Вітряно
+   > [!options] Вітряно | Хмарно | Сонячно | Тепло
+
+6. Падає біла вода з неба. ___.
+   > [!answer] Йде сніг
+   > [!options] Йде сніг | Йде дощ | Сонячно | Жарко
+
+7. Падає вода з неба. ___.
+   > [!answer] Йде дощ
+   > [!options] Йде дощ | Йде сніг | Хмарно | Вітряно
+
+8. Температура +20°C. Приємна погода. ___.
+   > [!answer] Тепло
+   > [!options] Тепло | Холодно | Жарко | Хмарно
+
+9. Взимку в Карпатах завжди ___.
+   > [!answer] холодно
+   > [!options] холодно | жарко | тепло | сонячно
+
+10. Влітку в Одесі завжди ___.
+    > [!answer] жарко
+    > [!options] жарко | холодно | йде сніг | хмарно
+
+11. Восени часто ___.
+    > [!answer] хмарно
+    > [!options] хмарно | жарко | сонячно | тепло
+
+12. Весною вже не ___, а тепло.
+    > [!answer] холодно
+    > [!options] холодно | жарко | сонячно | вітряно
+
+---
+
+## fill-in: Природа і тварини (Nature and Animals)
+
+> Choose the correct word.
+
+1. У мене є ___ Рекс.
+   > [!answer] пес
+   > [!options] пес | кіт | птах | риба
+
+2. Моя ___ — біла і пухнаста.
+   > [!answer] кішка
+   > [!options] кішка | собака | риба | птах
+
+3. Дніпро — це велика ___.
+   > [!answer] річка
+   > [!options] річка | море | гора | озеро
+
+4. У Карпатах є високі ___.
+   > [!answer] гори
+   > [!options] гори | річки | озера | моря
+
+5. У парку багато красивих ___.
+   > [!answer] квіток
+   > [!options] квіток | гір | морів | птахів
+
+6. Влітку ми їдемо на ___.
+   > [!answer] море
+   > [!options] море | гору | ліс | річку
+
+7. У ___ живе багато тварин.
+   > [!answer] лісі
+   > [!options] лісі | морі | горі | парку
+
+8. На дереві сидить ___.
+   > [!answer] птах
+   > [!options] птах | риба | кіт | собака
+
+9. У мене є акваріум з ___.
+   > [!answer] рибою
+   > [!options] рибою | котом | собакою | птахом
+
+10. ___ — це найбільша річка України.
+    > [!answer] Дніпро
+    > [!options] Дніпро | Карпати | Одеса | Львів
+
+11. Чорне ___ — на півдні України.
+    > [!answer] море
+    > [!options] море | озеро | річка | ліс
+
+12. У парку росте багато ___.
+    > [!answer] дерев
+    > [!options] дерев | гір | морів | птахів
+
+---
+
+## quiz: What Season?
+
+Choose the correct season.
+
+1. Йде сніг, холодно
+   - [x] Зима
+   - [ ] Літо
+   - [ ] Весна
+   - [ ] Осінь
+
+2. Жарко, сонячно, море
+   - [x] Літо
+   - [ ] Зима
+   - [ ] Весна
+   - [ ] Осінь
+
+3. Тепло, квіти, йде дощ
+   - [x] Весна
+   - [ ] Літо
+   - [ ] Зима
+   - [ ] Осінь
+
+4. Холодно, хмарно, вітряно
+   - [x] Осінь
+   - [ ] Літо
+   - [ ] Весна
+   - [ ] Зима
+
+5. Діти грають у сніг
+   - [x] Зима
+   - [ ] Літо
+   - [ ] Весна
+   - [ ] Осінь
+
+6. Люди на пляжі
+   - [x] Літо
+   - [ ] Зима
+   - [ ] Осінь
+   - [ ] Весна
+
+7. Листя падає з дерев
+   - [x] Осінь
+   - [ ] Літо
+   - [ ] Весна
+   - [ ] Зима
+
+8. Птахи повертаються з півдня
+   - [x] Весна
+   - [ ] Осінь
+   - [ ] Зима
+   - [ ] Літо
+
+---
+
+## quiz: Animal or Plant?
+
+Choose the correct category.
+
+1. Собака
+   - [x] Тварина
+   - [ ] Рослина
+
+2. Дерево
+   - [x] Рослина
+   - [ ] Тварина
+
+3. Кіт
+   - [x] Тварина
+   - [ ] Рослина
+
+4. Квітка
+   - [x] Рослина
+   - [ ] Тварина
+
+5. Птах
+   - [x] Тварина
+   - [ ] Рослина
+
+6. Ліс
+   - [x] Рослина
+   - [ ] Тварина
+
+7. Риба
+   - [x] Тварина
+   - [ ] Рослина
+
+8. Трава
+   - [x] Рослина
+   - [ ] Тварина
+
+---
+
+## unjumble: Weather Sentences
+
+Put the words in the correct order.
+
+1. погода / яка / сьогодні
+   > [!answer] Яка сьогодні погода?
+
+2. тепло / сьогодні / і / сонячно
+   > [!answer] Сьогодні тепло і сонячно.
+
+3. йде / взимку / сніг
+   > [!answer] Взимку йде сніг.
+
+4. жарко / влітку / дуже
+   > [!answer] Влітку дуже жарко.
+
+5. дощ / весною / йде
+   > [!answer] Весною йде дощ.
+
+6. є / у мене / собака
+   > [!answer] У мене є собака.
+
+7. кіт / мій / білий
+   > [!answer] Мій кіт білий.
+
+8. багато / у парку / дерев
+   > [!answer] У парку багато дерев.
+
+9. гори / в Карпатах / є
+   > [!answer] В Карпатах є гори.
+
+10. річка / Дніпро / велика
+   > [!answer] Дніпро — велика річка.
+
+11. люблю / я / море
+   > [!answer] Я люблю море.
+
+12. холодно / надворі / сьогодні
+   > [!answer] Сьогодні надворі холодно.
+
+
+---
+
+## true-false: Weather and Nature Facts
+
+Is this true or false?
+
+- [x] "Йде дощ" means "It's raining.".
+- [ ] "Йде сніг" means "It's cold.".
+  > Incorrect! it means "it's snowing"
+
+- [x] Ukrainian weather expressions don't need a subject.
+- [ ] "Тепло" means "hot.".
+  > Incorrect! it means "warm"
+
+- [x] "Жарко" means "hot.".
+- [ ] Ukraine has only steppes.
+  > Incorrect! it has mountains, forests, seas
+
+- [x] The Carpathians are mountains in Ukraine.
+- [x] "Собака" and "пес" both mean "dog.".
+- [ ] "Кіт" means "a female cat.".
+  > Incorrect! it means "male cat"
+
+- [x] "Влітку" means "in summer.".
+- [ ] "Взимку" means "in autumn.".
+  > Incorrect! it means "in winter"
+
+- [x] The Dnipro is a river.
+
+---
+
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
