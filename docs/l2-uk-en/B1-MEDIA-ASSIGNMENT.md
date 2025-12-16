@@ -240,6 +240,16 @@ yt-dlp "ytsearch5:Ukrainian complex sentences складні речення" --p
 
 ### External Resources (B1.3)
 
+#### YouTube Videos
+
+*Note: Limited Ukrainian-language grammar videos found for complex sentences. Most results were English lessons or news clips. Consider creating custom content.*
+
+| Title | URL | Channel | Status |
+|-------|-----|---------|--------|
+| Якби я мала крила орлині, якби я вміла літати - Українська народна пісня | https://www.youtube.com/watch?v=4HOw1znM7Sc | Tatiana Pluhatar | ✅ Found (якби examples in folk song) |
+
+#### Grammar Guides
+
 | Module | Resource | URL | Status |
 |--------|----------|-----|--------|
 | M21-23 | Ukrainian Lessons: Relative Clauses | ukrainianlessons.com/relative-clauses/ | ✅ Linked |
@@ -264,6 +274,18 @@ yt-dlp "ytsearch5:Ukrainian complex sentences складні речення" --p
 | 43 | Numerals: Collectives & Fractions | Numeral forms table | 🎨 Self-created | Planned |
 | 44 | Integrated Grammar Lab | Grammar integration practice | 🎨 Self-created | Planned |
 | 45 | Checkpoint: Advanced Grammar | Advanced grammar assessment | 🎨 Self-created | Planned |
+
+### External Resources (B1.4)
+
+#### YouTube Videos
+
+| Title | URL | Channel | Status |
+|-------|-----|---------|--------|
+| ULP 3-107 У барі – At the bar in Ukraine + Дієприслівник – Adverbial participle in Ukrainian | https://www.youtube.com/watch?v=S3GgY9Fa8uk | Ukrainian Lessons | ✅ Found |
+| Learning Ukrainian with Odarka. Lesson 57. Adverbial Participle | https://www.youtube.com/watch?v=SRKqRpPzXnE | Learning Ukrainian with Odarka | ✅ Found |
+| How to form and use passive voice in Ukrainian | https://www.youtube.com/watch?v=txDI2JzODFo | Ukrainian grammar | ✅ Found |
+| Practice with me the passive voice | https://www.youtube.com/watch?v=zsSqBE-iaNM | Ukrainian grammar | ✅ Found |
+| 🤯 Мене попросили, запитали, запросили!?Vocabulary + Passive Voice practice 🗣️ A2-B1 | https://www.youtube.com/watch?v=khJ6GLWoYZ4 | bazikschool | ✅ Found |
 
 ### Literary Excerpts (B1.4)
 
@@ -357,6 +379,22 @@ yt-dlp "ytsearch5:Ukrainian complex sentences складні речення" --p
 | M67 | Eastern | Харків, Слобожанщина | Industrial, academic heritage |
 | M68 | Southern | Одеса, Херсон, Чорне море | Port cities, agriculture |
 | M69 | Central | Київ, Полтава, Черкаси | Historical heart, Cossack heritage |
+
+### External Resources (B1.7)
+
+#### YouTube Videos - Ukraїner Channel
+
+| Title | URL | Channel | Status |
+|-------|-----|---------|--------|
+| Що таке українська мова? • Ukraïner | https://www.youtube.com/watch?v=nqReOxAjuWg | Ukraїner | ✅ Found |
+| Німці України. Хто вони? · Ukraїner | https://www.youtube.com/watch?v=OarTBeBi1DI | Ukraїner | ✅ Found |
+| Болгари України. Хто вони? · Ukraїner | https://www.youtube.com/watch?v=Oi-t55SYdq8 | Ukraїner | ✅ Found |
+| Волинь. Україна з неба · Ukraїner | https://www.youtube.com/watch?v=yE61lOcmuHs | Ukraїner | ✅ Found |
+| Полтавщина. Україна з неба · Eкспедиція Ukraїner | https://www.youtube.com/watch?v=sX1xttuglKE | Ukraїner | ✅ Found |
+| Україна з неба • Ukraïner | https://www.youtube.com/watch?v=vb0ZWc70gOk | Ukraїner | ✅ Found |
+| Чим для вас є Україна? • Ukraïner | https://www.youtube.com/watch?v=x75Me7dLRj4 | Ukraїner | ✅ Found |
+| Сіверськодонецьк — це Україна. Хоробрі міста • Ukraїner | https://www.youtube.com/watch?v=exyLdpF8JZA | Ukraїner | ✅ Found |
+| Віталій Портников: «Розвивати українське, а не боротися з російським» • Ukraїner Q | https://www.youtube.com/watch?v=cslHRvAe3oA | Ukraїner Q | ✅ Found |
 
 ---
 
