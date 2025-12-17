@@ -277,6 +277,11 @@ npm run validate:html l2-uk-en a1      # Browser rendering check (needs dev serv
 # Run audit
 python3 scripts/audit_module.py {file_path}
 
+# Content quality audit (optional, requires API key)
+export GEMINI_API_KEY="your-key"
+export AUDIT_CONTENT_QUALITY="true"
+python3 scripts/audit_module.py {file_path}
+
 # Vocabulary
 npm run vocab:enrich l2-uk-en [moduleNum]
 npm run vocab:rebuild                  # Rebuild vocabulary database
@@ -292,8 +297,28 @@ npm run claude:deploy
 | Level | Header | Columns |
 |-------|--------|---------|
 | A1, A2 | `# Vocabulary` | Word \| IPA \| English \| POS \| Gender \| Note |
-| B1 | `# Словник` | Слово \| Вимова \| Переклад \| ЧМ \| Примітка |
-| B2, C1, C2 | `# Словник` | Слово \| Переклад \| Примітки |
+| B1+ | `# Словник` | Слово \| Переклад \| Примітки |
+
+**Note:** B1 originally used 5-column format (with Вимова/IPA), but the audit script flags this as "transliteration" for modules >= 21. Use 3-column format for all B1+ modules.
+
+## Activity Format Requirements (CRITICAL)
+
+**Error-correction** (A2+) MUST use all 4 callouts:
+```markdown
+1. Sentence with error.
+   > [!error] wrong_word
+   > [!answer] correct_word
+   > [!options] wrong | correct | distractor1 | distractor2
+   > [!explanation] Why it's wrong.
+```
+
+**Unjumble** MUST use `[!answer]` callout:
+```markdown
+1. слова / в / порядку
+   > [!answer] Слова в правильному порядку.
+```
+
+**See `docs/ACTIVITY-MARKDOWN-REFERENCE.md` for complete syntax.**
 
 ## Level Status
 
@@ -320,6 +345,7 @@ npm run claude:deploy
 - `docs/MARKDOWN-FORMAT.md` - Markdown syntax spec (all activity formats)
 - `docs/ACTIVITY-MARKDOWN-REFERENCE.md` - **Activity syntax patterns for AI agents** (READ THIS when writing activities)
 - `docs/SCRIPTS.md` - Scripts reference
+- `docs/CONTENT-QUALITY-AUDIT.md` - **LLM-based content quality evaluation** (optional audit check)
 - `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` - Quality standards + activity matrix
 - `docs/l2-uk-en/claude-review-prompt.md` - Review prompts
 - `docusaurus/docs/activity-test.mdx` - Interactive activity demo (live preview)

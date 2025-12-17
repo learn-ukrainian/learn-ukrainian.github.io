@@ -53,6 +53,9 @@ from .section_order import (
     get_section_order_summary,
     parse_sections,
 )
+from .content_quality import (
+    check_content_quality,
+)
 
 __all__ = [
     # Grammar
@@ -94,4 +97,6 @@ __all__ = [
     'fix_section_order',
     'get_section_order_summary',
     'parse_sections',
+    # Content Quality
+    'check_content_quality',
 ]

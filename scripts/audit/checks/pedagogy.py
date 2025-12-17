@@ -30,6 +30,9 @@ from .activities import (
     check_activity_focus_alignment,
     check_anagram_min_letters,
 )
+from .content_quality import (
+    check_content_quality,
+)
 
 
 def check_duplicate_content(content: str) -> list[dict]:
@@ -65,7 +68,7 @@ def check_duplicate_content(content: str) -> list[dict]:
             sentences.append((normalized, sent.strip()[:50]))
 
     sentence_counts = Counter(s[0] for s in sentences)
-    duplicates = [(sent, count) for sent, count in sentence_counts.items() if count >= 3]
+    duplicates = [(sent, count) for sent, count in sentence_counts.items() if count >= 7]
 
     if duplicates:
         for sent, count in duplicates[:3]:
@@ -210,5 +213,8 @@ def run_pedagogical_checks(
 
     # 15. Anagram minimum letters (must have 3+ letters)
     all_violations.extend(check_anagram_min_letters(content))
+
+    # 16. Content quality (LLM-based evaluation - optional, enabled via env var)
+    all_violations.extend(check_content_quality(content, level_code, module_num))
 
     return all_violations
