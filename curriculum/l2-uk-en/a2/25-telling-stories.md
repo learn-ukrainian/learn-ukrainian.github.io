@@ -22,7 +22,7 @@ objectives:
 vocabulary_count: 25
 ---
 
-# Warm-up
+## Warm-up
 
 Everyone loves a good story. Whether you are telling a joke, explaining your weekend, or writing a report, the *order* of events matters.
 
@@ -47,7 +47,7 @@ In this module, you will move beyond simple sentences like "I woke up. I ate. I 
 
 ---
 
-# Presentation
+## Presentation
 
 ## 1. The Timeline of a Story
 
@@ -125,7 +125,7 @@ Ukrainians are very expressive storytellers. Don't be afraid to act!
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 ## The Art of the "Anekdot"
 
@@ -191,7 +191,7 @@ Read this story and notice the bold words.
 
 ---
 
-# Summary
+## Summary
 
 Telling a story is like building a house. You need a foundation (**Спочатку**), walls (**Потім**), windows (**Раптом**), and a roof (**Нарешті**).
 
@@ -205,7 +205,7 @@ Now you can turn a boring list of facts into an exciting narrative!
 
 ---
 
-# Activities
+## Activities
 
 ## dialogue-reorder: Order the Story
 
@@ -623,7 +623,7 @@ Now you can turn a boring list of facts into an exciting narrative!
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

@@ -22,7 +22,8 @@ objectives:
   - "Learner can choose aspect based on meaning"
 vocabulary_count: 25
 ---
-# Warm-up
+
+## Warm-up
 
 **Ласкаво просимо!** Сьогодні ви дізнаєтесь про аспект — одну з найважливіших тем української граматики.
 
@@ -46,7 +47,7 @@ Welcome to one of the most important concepts in Ukrainian grammar — verbal as
 
 ---
 
-# Presentation
+## Presentation
 
 ## What is Verbal Aspect?
 
@@ -143,7 +144,7 @@ Some aspect pairs use completely different roots. You must memorize these:
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 ## Aspect and Ukrainian Thinking
 
@@ -166,7 +167,7 @@ Understanding aspect helps you understand how Ukrainian speakers conceptualize t
 
 ---
 
-# Practice
+## Practice
 
 ## Practice Examples
 
@@ -189,7 +190,7 @@ Now try these more challenging examples. Think about WHY each aspect is used:
 
 ---
 
-# Summary
+## Summary
 
 ## What You Learned
 
@@ -229,7 +230,7 @@ Verbal aspect is about HOW you conceptualize an action, not WHEN it happened. Th
 
 Тепер ви розумієте основи аспекту! Продовжуйте практикувати — це найважливіша граматична тема для природного мовлення українською. Пам'ятайте: кожен день ви **читаєте** (процес), і колись ви **прочитаєте** всю книгу (результат)! 📚
 
-# Activities
+## Activities
 
 ## match-up: Aspect Pairs
 
@@ -717,7 +718,7 @@ She always speaks Ukrainian. (habitual)
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

@@ -21,7 +21,7 @@ objectives:
 vocabulary_count: 30
 ---
 
-# Warm-up
+## Warm-up
 
 Ласкаво просимо додому! Welcome home! This module covers rooms, furniture, and household vocabulary. Being able to describe your home is essential for daily conversations in Ukrainian.
 
@@ -39,7 +39,7 @@ Ukrainian homes often differ from Western ones. Many Ukrainians live in apartmen
 
 ---
 
-# Presentation
+## Presentation
 
 ## Rooms of the House
 
@@ -218,7 +218,7 @@ When visiting Ukrainian homes or discussing living situations, these phrases wil
 
 ---
 
-# Summary
+## Summary
 
 **Кімнати:**
 - вітальня
@@ -268,7 +268,7 @@ When visiting Ukrainian homes or discussing living situations, these phrases wil
 
 ---
 
-# Activities
+## Activities
 
 ## match-up: Home Words
 
@@ -569,7 +569,7 @@ When visiting Ukrainian homes or discussing living situations, these phrases wil
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

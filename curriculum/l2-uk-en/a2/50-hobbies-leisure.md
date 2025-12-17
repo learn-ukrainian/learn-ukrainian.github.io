@@ -194,7 +194,7 @@ Where do we go?
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
-# Summary
+## Summary
 
 You learned to:
 - Discuss creative hobbies: **малювати**, **грати**, **співати**
@@ -204,7 +204,7 @@ You learned to:
 
 Life is not only work. Ukrainians value their rest highly. Make sure you rest well and find a hobby that makes you truly happy! Don't forget to invite friends!
 
-# Activities
+## Activities
 
 ## quiz: Hobby Quiz
 
@@ -688,7 +688,7 @@ Life is not only work. Ukrainians value their rest highly. Make sure you rest we
     - [ ] Розкидати
     > Pack (gather) suitcase.
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

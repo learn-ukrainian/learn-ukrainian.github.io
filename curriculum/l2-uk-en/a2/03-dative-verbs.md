@@ -23,7 +23,8 @@ objectives:
   - "Learner can express feelings and states using dative constructions"
 vocabulary_count: 28
 ---
-# Introduction
+
+## Introduction
 
 In this module, you'll discover which Ukrainian verbs require the Dative case — these are verbs of helping, thanking, believing, and trusting. Understanding verb "case government" (which case a verb requires) is essential for speaking Ukrainian correctly.
 
@@ -36,7 +37,7 @@ In this module, you'll discover which Ukrainian verbs require the Dative case �
 **Why this matters:**
 English uses the same direct object for "I help my mother" and "I see my mother." But Ukrainian distinguishes them by case: Я допомагаю мамі (Dative — helping is directed TO someone) vs. Я бачу маму (Accusative — seeing affects someone directly).
 
-# Warm-up
+## Warm-up
 
 Ви вже знаєте, як утворювати давальний відмінок займенників і іменників. Тепер час дізнатися, які дієслова "люблять" давальний відмінок!
 
@@ -54,7 +55,7 @@ Think about English: "I help my mother" uses a direct object. But Ukrainian says
 
 ---
 
-# Presentation
+## Presentation
 
 ## Dative-Only Verbs
 
@@ -170,7 +171,7 @@ These verbs take a dative person + infinitive action:
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 Understanding how Ukrainians express gratitude and ask for forgiveness reveals deeper cultural values. The verbs in this section — дякувати (to thank), вибачати (to excuse), and пробачати (to forgive) — all take Dative objects, reflecting the idea that these acts are directed TO someone.
 
@@ -224,7 +225,7 @@ Ukrainian distinguishes between two levels of forgiveness, each with its own ver
 
 ---
 
-# Practice
+## Practice
 
 Now let's practice using Dative verbs in context. The key skill is identifying whether a verb takes Dative alone or needs both Dative and Accusative objects.
 
@@ -290,7 +291,7 @@ Here радити (to advise) takes Dat + Acc (recommending something TO someone
 
 ---
 
-# Reading Practice: Щоденник вчительки
+## Reading Practice: Щоденник вчительки
 
 This reading presents a teacher's diary entries over one week. Each entry uses multiple Dative verbs — пояснювати, допомагати, показувати, дозволяти, забороняти, дякувати, вірити.
 
@@ -326,7 +327,7 @@ This reading presents a teacher's diary entries over one week. Each entry uses m
 
 ---
 
-# Підсумок
+## Підсумок
 
 У цьому модулі ви навчилися:
 
@@ -344,7 +345,7 @@ This reading presents a teacher's diary entries over one week. Each entry uses m
 
 Тепер ви можете допомагати, дякувати, довіряти і вибачати — все з правильним давальним відмінком!
 
-# Activities
+## Activities
 
 The following activities will help you master Dative verb patterns. Progress through matching (recognition), fill-in (controlled production), and translation (free production) to build your skills.
 
@@ -819,7 +820,7 @@ Grandma tells the grandchildren a story.
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

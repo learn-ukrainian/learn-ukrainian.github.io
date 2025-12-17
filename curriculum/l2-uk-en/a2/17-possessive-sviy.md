@@ -21,7 +21,7 @@ objectives:
 vocabulary_count: 25
 ---
 
-# Warm-up
+## Warm-up
 
 In A1, you learned possessive pronouns: мій, твій, його, її, наш, ваш, їхній.
 
@@ -283,7 +283,7 @@ This mental check will help you until the pattern becomes automatic through prac
 
 ---
 
-# Summary
+## Summary
 
 Today you learned the reflexive possessive pronoun **свій**.
 
@@ -299,7 +299,7 @@ Today you learned the reflexive possessive pronoun **свій**.
 
 ---
 
-# Activities
+## Activities
 
 ## match-up: Свій vs Його
 
@@ -586,7 +586,7 @@ Today you learned the reflexive possessive pronoun **свій**.
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Forms |
 |------|-----|---------|-----|-------|

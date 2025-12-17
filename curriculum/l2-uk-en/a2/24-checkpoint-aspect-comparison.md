@@ -23,7 +23,8 @@ objectives:
   - "Learner can apply skills in shopping contexts"
 vocabulary_count: 25
 ---
-# Warm-up
+
+## Warm-up
 
 Congratulations on completing Phase A2.2! This checkpoint reviews everything from Modules 11-19, covering verbal aspect, comparison (comparative and superlative adjectives), conditional mood, and shopping vocabulary.
 
@@ -47,7 +48,7 @@ Congratulations on completing Phase A2.2! This checkpoint reviews everything fro
 
 ---
 
-# Presentation
+## Presentation
 
 ## Comprehensive Grammar Guide
 
@@ -134,7 +135,7 @@ Read this story. It combines aspect, comparison, and conditional mood.
 
 ---
 
-# Summary
+## Summary
 
 ## Frequently Asked Questions
 
@@ -231,7 +232,7 @@ Go to the activities section and try to get 100%! If you make a mistake, read th
 >
 > Продовжуйте практикувати! Кожен день приносить нові знання.
 
-# Activities
+## Activities
 
 ## match-up: Aspect Pairs Review
 
@@ -723,7 +724,7 @@ That would be wonderful!
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

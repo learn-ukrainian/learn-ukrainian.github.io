@@ -190,7 +190,7 @@ State medicine is free, but you often pay "charitable contributions" (*благ�
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
-# Summary
+## Summary
 
 You learned to:
 - Be anatomy savvy: **голова**, **рука**, **спина**, **серце**
@@ -230,7 +230,7 @@ Take care and stay healthy!
 >
 > Бережіть своє здоров'я! Здорове харчування, спорт і достатній сон — запорука довгого життя!
 
-# Activities
+## Activities
 
 ## quiz: Health Quiz
 
@@ -753,7 +753,7 @@ Take care and stay healthy!
     - [ ] Коштувати.
     > Cough vs Cost.
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

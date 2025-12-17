@@ -21,7 +21,7 @@ objectives:
 vocabulary_count: 25
 ---
 
-# Warm-up
+## Warm-up
 
 Welcome to more root families! This module covers **seeing** (бач-), **hearing** (слух-/чут-), and **speaking** (говор-/мов-) roots.
 
@@ -45,7 +45,7 @@ English has similar patterns: "see" gives us "sight", "seer", "foresee", "overse
 
 ---
 
-# Presentation
+## Presentation
 
 ## бач- Family (see)
 
@@ -232,7 +232,7 @@ These words look similar but mean different things. Бачення is vision or 
 
 ---
 
-# Summary
+## Summary
 
 **Корінь бач-:**
 - бачити
@@ -277,7 +277,7 @@ These words look similar but mean different things. Бачення is vision or 
 >
 > Шукайте корені у нових словах — це найкращий спосіб розширити словник!
 
-# Activities
+## Activities
 
 ## match-up: Perception Roots
 
@@ -574,7 +574,7 @@ These words look similar but mean different things. Бачення is vision or 
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

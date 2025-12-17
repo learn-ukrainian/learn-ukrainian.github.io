@@ -193,7 +193,7 @@ Apps like **Glovo** or **Bolt Food** work 24/7. You can order sushi, burgers, or
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
-# Summary
+## Summary
 
 You learned to:
 - Use shop types: **магазин**, **ринок**, **супермаркет**, **аптека**
@@ -233,7 +233,7 @@ Shopping in Ukraine is easy and modern. Don't be afraid to ask the price!
 >
 > Запрошуємо до покупок! Шопінг в Україні — це зручно та швидко!
 
-# Activities
+## Activities
 
 ## quiz: Shopping Facts
 
@@ -762,7 +762,7 @@ Shopping in Ukraine is easy and modern. Don't be afraid to ask the price!
     - [ ] Мирити.
     > Try on vs Reconcile.
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

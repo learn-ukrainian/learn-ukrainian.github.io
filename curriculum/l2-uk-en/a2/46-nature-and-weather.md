@@ -227,7 +227,7 @@ When discussing weather in Ukrainian, these expressions will help you communicat
 
 ---
 
-# Summary
+## Summary
 
 **Ландшафт:**
 - гора
@@ -276,7 +276,7 @@ When discussing weather in Ukrainian, these expressions will help you communicat
 >
 > Українці дуже люблять говорити про погоду! Це завжди гарна тема для розмови.
 
-# Activities
+## Activities
 
 ## match-up: Nature Words
 
@@ -577,7 +577,7 @@ When discussing weather in Ukrainian, these expressions will help you communicat
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

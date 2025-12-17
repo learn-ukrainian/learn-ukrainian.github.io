@@ -210,7 +210,7 @@ Let's see if you can fill in the gaps mentally.
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
-# Summary
+## Summary
 
 Congratulations! You have completed the Vocabulary Expansion phase.
 You can now talk about:
@@ -222,7 +222,7 @@ You can now talk about:
 
 You are real expert now. Keep going!
 
-# Activities
+## Activities
 
 ## quiz: Big Review Quiz
 
@@ -627,7 +627,7 @@ You are real expert now. Keep going!
 > [!answer] чудова
 > [!options] чудова | погана | кисла
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

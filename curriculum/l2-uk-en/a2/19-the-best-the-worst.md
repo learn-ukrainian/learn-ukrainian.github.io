@@ -22,7 +22,8 @@ objectives:
   - "Learner can use intensifiers"
 vocabulary_count: 25
 ---
-# Warm-up
+
+## Warm-up
 
 Now that you can make comparisons (bigger, better), let's go to the extreme! This module covers superlatives — how to say "the biggest," "the best," "the most interesting." You'll also learn intensifiers to emphasize adjectives.
 
@@ -41,7 +42,7 @@ Now that you can make comparisons (bigger, better), let's go to the extreme! Thi
 
 ---
 
-# Presentation
+## Presentation
 
 ## Forming Superlatives
 
@@ -156,7 +157,7 @@ Structure: **один із найкращих + Genitive plural**
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 ## Ukrainian Records: The "Mriya" and More
 
@@ -193,7 +194,7 @@ If you are a guest in a Ukrainian home, using superlatives is the best way to sh
 
 ---
 
-# Practice
+## Practice
 
 ## Practice Examples
 
@@ -230,7 +231,7 @@ Try to translate these common superlative phrases:
 
 ---
 
-# Summary
+## Summary
 
 ## What You Learned
 
@@ -261,7 +262,7 @@ Use these to add emotion without comparison:
 
 Тепер ви знаєте **найкращі** слова, щоб описати **найважливіші** речі у вашому житті! 🏆
 
-# Activities
+## Activities
 
 ## match-up: Superlative Forms
 
@@ -746,7 +747,7 @@ This is the cheapest option.
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

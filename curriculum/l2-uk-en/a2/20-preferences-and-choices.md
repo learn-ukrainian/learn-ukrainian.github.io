@@ -23,7 +23,8 @@ objectives:
   - "Learner can discuss likes and dislikes"
 vocabulary_count: 25
 ---
-# Warm-up
+
+## Warm-up
 
 Now that you can form comparatives and superlatives, let's use them to express preferences! This module teaches you how to say what you like better, make choices, and explain why you prefer one thing over another.
 
@@ -43,7 +44,7 @@ Now that you can form comparatives and superlatives, let's use them to express p
 
 ---
 
-# Presentation
+## Presentation
 
 ## Expressing Preferences
 
@@ -127,7 +128,7 @@ You can compare actions using comparatives + infinitives:
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 ## The Art of Hospitality & Refusal
 
@@ -183,7 +184,7 @@ Here is how you can ask someone to help you choose:
 
 ---
 
-# Practice
+## Practice
 
 ## Practice Expressions
 
@@ -221,7 +222,7 @@ Try to answer using different structures:
 
 ---
 
-# Summary
+## Summary
 
 ## What You Learned
 
@@ -239,7 +240,7 @@ This module covered expressing preferences and making choices.
 
 Тепер ви можете висловлювати свої вподобання! 💭
 
-# Activities
+## Activities
 
 ## match-up: Preference Expressions
 
@@ -739,7 +740,7 @@ It's worse to do nothing.
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

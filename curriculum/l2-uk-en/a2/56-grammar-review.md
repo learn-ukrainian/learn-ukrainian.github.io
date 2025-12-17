@@ -247,7 +247,7 @@ Here are errors that students often make:
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
-# Summary
+## Summary
 
 This review covered:
 - **Cases**: The backbone of the sentence (Subj, Obj, Loc, Instr...).
@@ -256,7 +256,7 @@ This review covered:
 
 You are now ready for the **Capstone Module**. Good luck!
 
-# Activities
+## Activities
 
 ## quiz: Grammar Master
 
@@ -741,7 +741,7 @@ You are now ready for the **Capstone Module**. Good luck!
     - [ ] Genitive
     > See mom.
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

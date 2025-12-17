@@ -23,7 +23,8 @@ objectives:
   - "Learner can make purchase decisions"
 vocabulary_count: 25
 ---
-# Warm-up
+
+## Warm-up
 
 Time to put your comparison skills to practical use! This module takes you shopping in Ukrainian. You'll learn to compare products, ask for recommendations, and negotiate — all essential skills for real-world situations.
 
@@ -43,7 +44,7 @@ Time to put your comparison skills to practical use! This module takes you shopp
 
 ---
 
-# Presentation
+## Presentation
 
 ## Comparing Products
 
@@ -106,7 +107,7 @@ In some contexts (markets, small shops), negotiation is possible:
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 ## Shopping in Ukraine
 
@@ -158,7 +159,7 @@ When buying food, you often count or weigh things. This triggers the **Genitive 
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 ## The Soul of the "Bazar"
 
@@ -188,7 +189,7 @@ The Ukrainian **базар** (market) is more than a store; it's a community hub
 
 ---
 
-# Practice
+## Practice
 
 ## Practice Dialogues
 
@@ -222,7 +223,7 @@ The Ukrainian **базар** (market) is more than a store; it's a community hub
 
 ---
 
-# Summary
+## Summary
 
 ## What You Learned
 
@@ -246,7 +247,7 @@ This module covered practical shopping vocabulary and comparison.
 
 Тепер ви готові до покупок! Ви можете впевнено йти на ринок або в магазин. Порівнюйте ціни, спілкуйтеся з продавцями та знаходьте найкращі товари. Вдалих покупок! 🛒
 
-# Activities
+## Activities
 
 ## match-up: Shopping Vocabulary
 
@@ -744,7 +745,7 @@ There's a sale today!
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

@@ -22,7 +22,7 @@ objectives:
 vocabulary_count: 25
 ---
 
-# Warm-up
+## Warm-up
 
 "Did you hear what she said?"
 Reporting speech is one of the most common social activities. Whether it's news, instructions, or gossip, we constantly repeat what others say.
@@ -50,7 +50,7 @@ In Ukrainian, it's easier! You usually keep the original tense.
 
 ---
 
-# Presentation
+## Presentation
 
 ## 1. The Golden Rule: No Backshift
 
@@ -115,7 +115,7 @@ When reporting a question, we don't use "що". We use **чи** (if/whether) or 
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 ## "Plitky" (Gossip)
 
@@ -144,7 +144,7 @@ How you say it matters. Ukrainian has many reporting verbs to convey attitude.
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 ## The Grandmother News Network
 
@@ -230,7 +230,7 @@ Read the chain of messages. See how information changes.
 
 ---
 
-# Summary
+## Summary
 
 Reporting speech in Ukrainian is both simple and powerful.
 
@@ -245,7 +245,7 @@ Now you can spread the news (or the gossip)!
 
 ---
 
-# Activities
+## Activities
 
 ## match-up: Reporting Verbs
 
@@ -609,7 +609,7 @@ Now you can spread the news (or the gossip)!
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

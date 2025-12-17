@@ -25,7 +25,8 @@ objectives:
   - "Learner can apply cases in service contexts"
 vocabulary_count: 20
 ---
-# Warm-up
+
+## Warm-up
 
 **Вітаємо!** Ви завершили Фазу A2.1! Цей контрольний модуль перевіряє все, що ви вивчили в Модулях 01-09.
 
@@ -56,7 +57,7 @@ Unlike English, Ukrainian uses case endings to show grammatical relationships. T
 
 ---
 
-# Presentation
+## Presentation
 
 ## Quick Review: The 7 Cases
 
@@ -160,7 +161,7 @@ The vocabulary from Module 09 gives you practical application of all cases in se
 
 ---
 
-# Summary
+## Summary
 
 This checkpoint tests your knowledge from Modules 01-09. Here is a comprehensive summary of what you should have mastered by this point in your Ukrainian learning journey.
 
@@ -189,7 +190,7 @@ This checkpoint tests your knowledge from Modules 01-09. Here is a comprehensive
 
 Вітаємо! Ви готові до тестування. Зробіть вправи і перевірте свої знання. Удачі! 🎯
 
-# Activities
+## Activities
 
 ## match-up: Case Questions
 
@@ -739,7 +740,7 @@ The lamp is above the table.
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

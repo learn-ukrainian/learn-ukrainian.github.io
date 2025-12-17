@@ -199,7 +199,7 @@ Notice how **радість** and **сум** are fundamental opposites — the l
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
-# Summary
+## Summary
 
 You learned to:
 - Name basic emotions: радість, сум, гнів, страх
@@ -210,7 +210,7 @@ You learned to:
 
 Remember that emotions in Ukrainian culture are often expressed openly. Use these new words to share your feelings with friends and family. Practice describing the characters in books or movies using the personality adjectives you learned. Are they сміливі or боягузливі? Чесні or нечесні? This will help you master the vocabulary.
 
-# Activities
+## Activities
 
 ## quiz: Emotion Recognition
 
@@ -697,7 +697,7 @@ Remember that emotions in Ukrainian culture are often expressed openly. Use thes
     - [ ] спокійна
     > Стати + instrumental.
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

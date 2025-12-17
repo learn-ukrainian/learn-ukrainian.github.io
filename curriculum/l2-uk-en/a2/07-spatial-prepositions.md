@@ -24,7 +24,8 @@ objectives:
   - "Learner can understand spatial relationships in Ukrainian"
 vocabulary_count: 30
 ---
-# Warm-up
+
+## Warm-up
 
 Prepositions are small but mighty words that connect nouns to the rest of the sentence. In English, prepositions like "in," "on," "to," and "from" are straightforward. But in Ukrainian, prepositions work hand-in-hand with grammatical cases — and some prepositions even change meaning depending on which case follows them!
 
@@ -42,7 +43,7 @@ This module is your comprehensive guide to Ukrainian prepositions. By the end, y
 
 ---
 
-# Presentation
+## Presentation
 
 ## The Preposition-Case Connection
 
@@ -152,7 +153,7 @@ Examples:
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 ## Prepositions in Ukrainian Addresses
 
@@ -197,7 +198,7 @@ A full address: Я живу **на** вулиці Шевченка, **в** бу�
 
 ---
 
-# Practice
+## Practice
 
 ## Building Sentences with Prepositions
 
@@ -222,7 +223,7 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 
 ---
 
-# Reading Practice: Моя кімната
+## Reading Practice: Моя кімната
 
 > Моя кімната знаходиться **на** другому поверсі. Вікно виходить **на** вулицю. **Біля** вікна стоїть стіл. **На** столі лежать книги і зошити. Лампа висить **над** столом.
 >
@@ -261,7 +262,7 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 
 ---
 
-# Summary
+## Summary
 
 ## Що ви вивчили
 
@@ -288,7 +289,7 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 **Two-Way Prepositions:** в/у, на, під, за — use accusative for motion (Куди?) and locative/instrumental for location (Де?).
 
 
-# Activities
+## Activities
 
 ## match-up: Preposition Meanings
 
@@ -826,7 +827,7 @@ We're going through the park.
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

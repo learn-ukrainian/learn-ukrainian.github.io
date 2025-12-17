@@ -25,7 +25,8 @@ objectives:
   - "Learner can distinguish present (no copula) from past/future (бути + Instr)"
 vocabulary_count: 25
 ---
-# Warm-up
+
+## Warm-up
 
 In previous modules, you learned about the instrumental case: with the preposition **з** for accompaniment and without a preposition for transport and tools. Now it's time to discover another important use of the instrumental case — with the verbs **бути** (to be), **стати** (to become), and **працювати** (to work as)!
 
@@ -43,7 +44,7 @@ When you want to say "He is a doctor," "She became a teacher," or "I work as a p
 
 ---
 
-# Presentation
+## Presentation
 
 ## Бути + Instrumental: Being Something
 
@@ -148,7 +149,7 @@ Note that all these verbs follow the same pattern: verb + profession in instrume
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 ## Ukrainian Professions: Gender Forms
 
@@ -207,7 +208,7 @@ Notice how each profession appears in the instrumental case after the verbs бу
 
 ---
 
-# Practice
+## Practice
 
 ## Present vs. Past/Future
 
@@ -262,7 +263,7 @@ Practice these conversations that demonstrate бути, стати, and прац
 
 ---
 
-# Reading Practice: Моя родина і професії
+## Reading Practice: Моя родина і професії
 
 This reading passage demonstrates all three verbs (бути, стати, працювати) with professions in instrumental case. Pay attention to how the bolded phrases follow the pattern: verb + profession in instrumental.
 
@@ -282,7 +283,7 @@ This reading passage demonstrates all three verbs (бути, стати, пра�
 
 ---
 
-# Summary
+## Summary
 
 In this module, you learned how to talk about professions using three key verbs that take the instrumental case: бути (to be), стати (to become), and працювати (to work as). Here's a recap of the key patterns you mastered:
 
@@ -309,7 +310,7 @@ No preposition is needed — just verb + profession in instrumental:
 
 Now you can talk about your profession with confidence! 👨‍⚕️👩‍🏫💻
 
-# Activities
+## Activities
 
 ## match-up: Professions Masculine and Feminine
 
@@ -846,7 +847,7 @@ She wanted to become an actress.
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

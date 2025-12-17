@@ -22,7 +22,7 @@ objectives:
 vocabulary_count: 30
 ---
 
-# Warm-up
+## Warm-up
 
 In A1, you learned basic motion verbs (йти, їхати). In earlier A2 modules, you learned simple prefixes.
 
@@ -282,7 +282,7 @@ When you hear a motion verb, visualize the path first. This will help you unders
 
 ---
 
-# Summary
+## Summary
 
 Today you learned advanced motion prefixes:
 
@@ -299,7 +299,7 @@ These prefixes combine with motion verbs to create precise navigation instructio
 
 ---
 
-# Activities
+## Activities
 
 ## match-up: Prefix Meanings
 
@@ -592,7 +592,7 @@ These prefixes combine with motion verbs to create precise navigation instructio
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Note |
 |------|-----|---------|-----|------|

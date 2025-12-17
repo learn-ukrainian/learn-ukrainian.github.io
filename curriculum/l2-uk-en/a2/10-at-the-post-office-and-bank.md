@@ -23,7 +23,8 @@ objectives:
   - "Learner can make polite requests"
 vocabulary_count: 30
 ---
-# Warm-up
+
+## Warm-up
 
 Welcome to the practical world of Ukrainian services! In this module, you'll learn vocabulary and phrases for two essential destinations: the post office (пошта) and the bank (банк). These real-world situations will help you practice the cases you've learned in authentic contexts.
 
@@ -63,7 +64,7 @@ Understanding these patterns will help you form correct sentences automatically 
 
 ---
 
-# Presentation
+## Presentation
 
 ## На пошті — At the Post Office
 
@@ -160,7 +161,7 @@ The bank is called **банк**. Here you can manage accounts, exchange currency
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 ## Case Usage in Services
 
@@ -191,7 +192,7 @@ When interacting at the post office or bank, you'll use multiple cases. Here's a
 
 ---
 
-# Practice
+## Practice
 
 ## Practice Dialogues
 
@@ -220,7 +221,7 @@ Read these dialogues aloud and identify the cases used in each sentence. This ex
 
 ---
 
-# Summary
+## Summary
 
 In this module you learned essential vocabulary for two key service locations in Ukraine. You practiced applying grammatical cases in real-world contexts.
 
@@ -246,7 +247,7 @@ In this module you learned essential vocabulary for two key service locations in
 
 Тепер ви готові до реальних ситуацій! 📬🏦
 
-# Activities
+## Activities
 
 ## match-up: Post Office Vocabulary
 
@@ -754,7 +755,7 @@ I want to exchange dollars.
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

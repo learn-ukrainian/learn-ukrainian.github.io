@@ -22,7 +22,8 @@ objectives:
   - "Learner can discuss views respectfully"
 vocabulary_count: 25
 ---
-# Warm-up
+
+## Warm-up
 
 Everyone has opinions! In any conversation, you need to express what you think, believe, and feel about topics — and to do it politely. This is especially important in Ukrainian culture, where showing respect for others' views matters greatly. This module teaches you the essential phrases for sharing opinions and for agreeing or disagreeing without causing offense. You will learn how to soften your statements when you are not completely certain, and how to acknowledge other people's points of view even when you do not share them.
 
@@ -42,7 +43,7 @@ Everyone has opinions! In any conversation, you need to express what you think, 
 
 ---
 
-# Presentation
+## Presentation
 
 ## Expressing Opinions
 
@@ -123,7 +124,7 @@ Knowing how to agree and disagree politely is crucial for respectful conversatio
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 ## Discussing Opinions in Ukrainian Culture
 
@@ -150,7 +151,7 @@ Ukrainians value open discussion and often express opinions directly in casual s
 
 ---
 
-# Practice
+## Practice
 
 ## Practice Dialogues
 
@@ -238,7 +239,7 @@ Here are useful phrases for discussions:
 
 ---
 
-# Summary
+## Summary
 
 ## What You Learned in This Module
 
@@ -258,7 +259,7 @@ Remember: adding certainty markers like "можливо" or "мабуть" makes
 
 Тепер ви можете висловлювати свою думку українською мовою! 💭
 
-# Activities
+## Activities
 
 ## match-up: Opinion Expressions
 
@@ -755,7 +756,7 @@ Remember: adding certainty markers like "можливо" or "мабуть" makes
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

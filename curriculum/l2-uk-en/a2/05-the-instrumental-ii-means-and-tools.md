@@ -24,7 +24,8 @@ objectives:
   - "Learner can distinguish between з + Instrumental and bare Instrumental"
 vocabulary_count: 28
 ---
-# Introduction
+
+## Introduction
 
 Module 4 introduced the Instrumental case with the preposition **з** for accompaniment: з другом (with a friend), з сестрою (with sister). Now it's time to learn the Instrumental case **without a preposition** — the true "instrumental" use of this case!
 
@@ -41,7 +42,7 @@ Module 4 introduced the Instrumental case with the preposition **з** for accomp
 **Why this matters:**
 English uses "by" for transport (by bus) and "with" for tools (with a pen), but Ukrainian uses the same grammatical case for both — the Instrumental without a preposition. This is the Instrumental in its most literal sense: the case of instruments and means.
 
-# Warm-up
+## Warm-up
 
 У попередньому модулі ви вивчили орудний відмінок з прийменником **з** для супроводу: з другом, з сестрою. Тепер час дізнатися про орудний відмінок **без прийменника**!
 
@@ -57,7 +58,7 @@ This is the "instrumental" in its truest sense — the case of instruments and m
 
 ---
 
-# Presentation
+## Presentation
 
 ## The Bare Instrumental: No Preposition Needed
 
@@ -206,7 +207,7 @@ Modern technology also uses the instrumental case. You work with a computer, sen
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 ## Manner and Voice
 
@@ -271,7 +272,7 @@ Ukrainian cities have extensive public transport systems. Here are interesting f
 
 ---
 
-# Practice
+## Practice
 
 Now let's practice using the bare Instrumental for transport, tools, and manner. The key skill is distinguishing between accompaniment (з + Instrumental) and means/tools (bare Instrumental).
 
@@ -338,7 +339,7 @@ Modern communication — електронною поштою (by email) and го
 
 ---
 
-# Reading Practice: Один день у Києві
+## Reading Practice: Один день у Києві
 
 This text describes a typical day in Kyiv, filled with bare Instrumental examples: transport (метро, автобусом, трамваєм), tools (ложкою, ножем, виделкою), and technology (комп'ютером, електронною поштою).
 
@@ -369,7 +370,7 @@ This text describes a typical day in Kyiv, filled with bare Instrumental example
 
 ---
 
-# Підсумок
+## Підсумок
 
 У цьому модулі ви навчилися:
 
@@ -392,7 +393,7 @@ This text describes a typical day in Kyiv, filled with bare Instrumental example
 
 Тепер ви готові! Ви можете розповісти, чим їдете на роботу і чим пишете. 🚌✏️🗣️
 
-# Activities
+## Activities
 
 The following activities will help you master the bare Instrumental case. Remember: no preposition is needed for transport, tools, body parts, or manner!
 
@@ -870,7 +871,7 @@ She nods with her head.
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

@@ -22,7 +22,7 @@ objectives:
 vocabulary_count: 35
 ---
 
-# Warm-up
+## Warm-up
 
 Welcome to the **Word Factory**!
 In the last module, we put prefixes on the *front* of words to change direction.
@@ -278,7 +278,7 @@ To make things small or cute, we use suffixes:
 
 ---
 
-# Summary
+## Summary
 
 1.  **Suffixes change the part of speech.**
 2.  **-ач / -ець / -ник** = Person (Doer).
@@ -288,7 +288,7 @@ To make things small or cute, we use suffixes:
 
 ---
 
-# Activities
+## Activities
 
 ## match-up: The Factory
 
@@ -670,7 +670,7 @@ To make things small or cute, we use suffixes:
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

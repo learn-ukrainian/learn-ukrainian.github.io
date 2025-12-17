@@ -21,7 +21,7 @@ objectives:
 vocabulary_count: 30
 ---
 
-# Warm-up
+## Warm-up
 
 Ukrainian words are like Lego structures.
 They are built from small, reusable blocks.
@@ -267,7 +267,7 @@ It corresponds to the Latin **Trans-** (Across) or **Re-** (Again).
 > For example, the handwritten *т* often looks like an English *m*.
 > Mastering the *pidpys* (signature) is a true art form in Ukraine!
 
-# Summary
+## Summary
 
 We have unlocked the power of "Lego Language".
 Instead of memorizing thousands of random words, you now see the connections.
@@ -283,7 +283,7 @@ Logic wins!
 
 ---
 
-# Activities
+## Activities
 
 ## group-sort: Root Sorter
 
@@ -581,7 +581,7 @@ Logic wins!
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Root |
 |------|-----|---------|-----|--------|------|

@@ -22,7 +22,7 @@ objectives:
 vocabulary_count: 48
 ---
 
-# Warm-up
+## Warm-up
 
 Ласкаво просимо до фінального етапу "Фабрики Слів".
 Тепер ви знаєте, як будувати:
@@ -342,7 +342,7 @@ Combine **Roots** with **Prefixes** and **Suffixes**.
 
 ---
 
-# Summary
+## Summary
 
 Congratulations! You have completed the **Word Formation** phase.
 This is a huge milestone.
@@ -392,7 +392,7 @@ Get ready to speak!
 >
 > Суфікси також важливі: -ець (читач → читачець), -ість (добрий → доброта)
 
-# Activities
+## Activities
 
 ## match-up: Root Match
 
@@ -674,7 +674,7 @@ Get ready to speak!
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Root |
 |------|-----|---------|-----|------|

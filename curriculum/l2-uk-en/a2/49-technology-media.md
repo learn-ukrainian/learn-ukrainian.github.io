@@ -181,7 +181,7 @@ Being online requires safety (**безпека**).
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
-# Summary
+## Summary
 
 You learned to:
 - Name tech: **комп'ютер**, **смартфон**, **планшет**, **ноутбук**
@@ -191,7 +191,7 @@ You learned to:
 
 Digital literacy is key in modern Ukrainian society. Use these words to stay connected!
 
-# Activities
+## Activities
 
 ## quiz: Tech Quiz
 
@@ -680,7 +680,7 @@ Digital literacy is key in modern Ukrainian society. Use these words to stay con
     - [ ] у лісі
     > Online.
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

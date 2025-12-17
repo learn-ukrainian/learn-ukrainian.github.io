@@ -23,7 +23,8 @@ objectives:
   - "Learner knows suppletive pairs"
 vocabulary_count: 30
 ---
-# Warm-up
+
+## Warm-up
 
 **Ласкаво просимо до глибшого вивчення аспектних пар!**
 
@@ -57,7 +58,7 @@ However, you need to understand the patterns to make these predictions accuratel
 
 ---
 
-# Presentation
+## Presentation
 
 ## Prefixation: The Most Common Pattern
 
@@ -159,7 +160,7 @@ Some aspect pairs use completely different words. You must memorize these:
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 ## Aspect and Word Formation
 
@@ -183,7 +184,7 @@ Understanding aspect patterns helps you learn vocabulary faster. When you encoun
 
 ---
 
-# Practice
+## Practice
 
 ## Practice: Identify the Pattern
 
@@ -215,7 +216,7 @@ When you encounter a new verb, follow this decision tree:
 
 ---
 
-# Summary
+## Summary
 
 ## What You Learned
 
@@ -275,7 +276,7 @@ Adding different prefixes to the same root creates different perfective verbs wi
 >
 > Ці префікси — ваші найкращі друзі в українській мові! Коли ви бачите префікс перед дієсловом, це майже завжди означає доконаний вид. Практикуйте щодня!
 
-# Activities
+## Activities
 
 ## match-up: Aspect Pairs
 
@@ -767,7 +768,7 @@ She drank the coffee.
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

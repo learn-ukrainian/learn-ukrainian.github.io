@@ -21,7 +21,7 @@ objectives:
 vocabulary_count: 30
 ---
 
-# Warm-up
+## Warm-up
 
 In Module 07, you learned **where** things are.
 Now, let's learn **why** and **for whom**.
@@ -321,7 +321,7 @@ All logical prepositions require a specific case:
 
 ---
 
-# Summary
+## Summary
 
 Today you learned 10 logical prepositions:
 
@@ -345,7 +345,7 @@ Key distinctions:
 
 ---
 
-# Activities
+## Activities
 
 ## match-up: Preposition Meaning
 
@@ -623,7 +623,7 @@ Key distinctions:
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Case |
 |------|-----|---------|-----|------|

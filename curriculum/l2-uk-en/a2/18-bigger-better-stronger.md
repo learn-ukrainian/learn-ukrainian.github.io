@@ -23,7 +23,8 @@ objectives:
   - "Learner can express preferences"
 vocabulary_count: 25
 ---
-# Warm-up
+
+## Warm-up
 
 Time to make comparisons! In this module, you'll learn to say things like "bigger," "better," "more interesting," and "faster" in Ukrainian. Comparing things is essential for everyday conversation — choosing products, describing people, expressing preferences, and giving opinions.
 
@@ -49,7 +50,7 @@ Unlike English, which uses "more + adjective" for longer adjectives (more intere
 
 ---
 
-# Presentation
+## Presentation
 
 ## Forming Comparative Adjectives
 
@@ -139,7 +140,7 @@ There are TWO ways to compare in Ukrainian:
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 ## Comparatives in Daily Life
 
@@ -180,7 +181,7 @@ Using these comparative structures makes your speech sound more nuanced and poli
 
 ---
 
-# Practice
+## Practice
 
 ## Practice Examples
 
@@ -212,7 +213,7 @@ When you want to emphasize how much more something is, use intensifiers before t
 
 ---
 
-# Summary
+## Summary
 
 ## What You Learned
 
@@ -254,7 +255,7 @@ There are two ways to say "than" in Ukrainian:
 
 Тепер ви можете порівнювати що завгодно українською! 📊
 
-# Activities
+## Activities
 
 ## match-up: Comparative Forms
 
@@ -745,7 +746,7 @@ Coffee is hotter than tea.
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

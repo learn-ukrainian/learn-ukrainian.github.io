@@ -22,7 +22,7 @@ objectives:
 vocabulary_count: 25
 ---
 
-# Warm-up
+## Warm-up
 
 Why are you learning Ukrainian? *Because* it's beautiful? *Although* it's hard?
 In this module, you will learn to be a philosopher. You won't just say *what* happened; you will explain *why* it happened, and what happened *despite* obstacles.
@@ -45,7 +45,7 @@ In this module, you will learn to be a philosopher. You won't just say *what* ha
 
 ---
 
-# Presentation
+## Presentation
 
 ## 1. The "Why": Causal Connectors
 
@@ -111,7 +111,7 @@ This distinction is critical.
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 ## The "Bo" Philosophy
 
@@ -191,7 +191,7 @@ Read this conversation between optimists and pessimists.
 
 ---
 
-# Summary
+## Summary
 
 You have unlocked the power of complex thought!
 
@@ -208,7 +208,7 @@ Don't forget the comma!
 
 ---
 
-# Activities
+## Activities
 
 ## match-up: Logic Pairs
 
@@ -571,7 +571,7 @@ Don't forget the comma!
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

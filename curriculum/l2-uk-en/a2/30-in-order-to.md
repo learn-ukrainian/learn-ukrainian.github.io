@@ -23,7 +23,7 @@ objectives:
 vocabulary_count: 20
 ---
 
-# Warm-up
+## Warm-up
 
 Why are you learning Ukrainian?
 - To talk to friends?
@@ -51,7 +51,7 @@ In Ukrainian, we use one powerful word: **Щоб**.
 
 ---
 
-# Presentation
+## Presentation
 
 ## 1. Same Subject: Щоб + Infinitive
 
@@ -149,7 +149,7 @@ The structure **"хотіти, щоб..."** is extremely common. It replaces Eng
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 > [!cultural] The "Guest" Protocol
 > In Ukraine, you never visit someone empty-handed.
@@ -217,7 +217,7 @@ Anna and Borys are planning a surprise for Olena.
 
 ---
 
-# Summary
+## Summary
 
 1.  **Purpose (One Person):** *Я йду, щоб спати.* (Infinitive).
 2.  **Wish (Two People):** *Я хочу, щоб ти спав.* (Past Tense).
@@ -226,7 +226,7 @@ Anna and Borys are planning a surprise for Olena.
 
 ---
 
-# Activities
+## Activities
 
 ## match-up: Purpose Pairs
 
@@ -525,7 +525,7 @@ Anna and Borys are planning a surprise for Olena.
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

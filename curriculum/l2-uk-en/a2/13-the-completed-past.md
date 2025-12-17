@@ -23,7 +23,8 @@ objectives:
   - "Learner can distinguish process from result in past"
 vocabulary_count: 20
 ---
-# Warm-up
+
+## Warm-up
 
 **Тепер, коли ви розумієте аспект, давайте навчимося використовувати доконаний вид у минулому часі!**
 
@@ -56,7 +57,7 @@ The past tense is where aspect differences are most visible and most important. 
 
 ---
 
-# Presentation
+## Presentation
 
 ## Forming the Perfective Past
 
@@ -147,7 +148,7 @@ When asking "what were you doing?":
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 ## Common Perfective Past Forms
 
@@ -177,7 +178,7 @@ Here are the most common perfective verbs in past tense:
 
 ---
 
-# Practice
+## Practice
 
 ## Practice Examples
 
@@ -198,7 +199,7 @@ Before moving to the activities, make sure you can answer these questions:
 
 ---
 
-# Summary
+## Summary
 
 ## What You Learned
 
@@ -228,7 +229,7 @@ In the following modules, you'll learn how perfective verbs work in future tense
 
 Тепер ви можете говорити про завершені дії! ✅
 
-# Activities
+## Activities
 
 ## match-up: Past Tense Forms
 
@@ -705,7 +706,7 @@ Did you finish? (asking about completion)
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

@@ -203,7 +203,7 @@ Understanding technical texts is a key skill for B1.
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
-# Summary
+## Summary
 
 You have officially completed A2!
 You can:
@@ -215,7 +215,7 @@ You can:
 You are ready for **Level B1**.
 Success! (*Успіхів!*)
 
-# Activities
+## Activities
 
 ## quiz: Reading Comprehension (Text 1)
 
@@ -585,7 +585,7 @@ Success! (*Успіхів!*)
     - [ ] Ні...
     > Yes!
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

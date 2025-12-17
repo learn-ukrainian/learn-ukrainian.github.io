@@ -189,7 +189,7 @@ After school, students pass **ZNO** (External Independent Evaluation) — a very
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
-# Summary
+## Summary
 
 You learned to:
 - Talk about school: **школа**, **урок**, **вчитель**, **оцінка**
@@ -199,7 +199,7 @@ You learned to:
 
 Keep learning! Education is the key to the future. Good luck on your path to fluency!
 
-# Activities
+## Activities
 
 ## quiz: Education Facts
 
@@ -693,7 +693,7 @@ Keep learning! Education is the key to the future. Good luck on your path to flu
     - [ ] Папір.
     > Diploma.
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

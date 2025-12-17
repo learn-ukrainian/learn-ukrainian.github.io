@@ -23,7 +23,7 @@ objectives:
 vocabulary_count: 30
 ---
 
-# Warm-up
+## Warm-up
 
 "Health is wealth."
 In Ukraine, talking about health is a national sport. We love to discuss symptoms!
@@ -47,7 +47,7 @@ In Ukraine, talking about health is a national sport. We love to discuss symptom
 
 ---
 
-# Presentation
+## Presentation
 
 ## 1. Expressing Pain: Болить
 
@@ -251,7 +251,7 @@ Don't confuse with **Боліти** (to hurt).
 
 ---
 
-# Summary
+## Summary
 
 1.  **Botlily:** *У мене болить [Subject].*
 2.  **Part of Body:** Learner nouns (голова, горло, живіт).
@@ -261,7 +261,7 @@ Don't confuse with **Боліти** (to hurt).
 
 ---
 
-# Activities
+## Activities
 
 ## match-up: Body & Pain
 
@@ -555,7 +555,7 @@ Don't confuse with **Боліти** (to hurt).
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

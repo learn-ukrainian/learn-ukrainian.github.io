@@ -22,7 +22,8 @@ objectives:
   - "Learner can use якби correctly"
 vocabulary_count: 25
 ---
-# Warm-up
+
+## Warm-up
 
 What would you do if you won the lottery? How would life be different if you spoke Ukrainian fluently? This module teaches you to express hypothetical situations — things that could happen, might happen, or aren't real.
 
@@ -42,7 +43,7 @@ What would you do if you won the lottery? How would life be different if you spo
 
 ---
 
-# Presentation
+## Presentation
 
 ## Real vs. Unreal Conditions
 
@@ -164,7 +165,7 @@ Literally: "Whether could would you...?"
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 ## Superstitions about the Future
 
@@ -193,7 +194,7 @@ Meaning: You can't foresee everything, so hindsight is 20/20.
 
 ---
 
-# Practice
+## Practice
 
 ## Practice Examples
 
@@ -219,7 +220,7 @@ The conditional mood is also perfect for saying sorry and soft refusals.
 
 ---
 
-# Practice
+## Practice
 
 ## Practice Examples
 
@@ -234,7 +235,7 @@ The conditional mood is also perfect for saying sorry and soft refusals.
 
 ---
 
-# Summary
+## Summary
 
 ## What You Learned
 
@@ -256,7 +257,7 @@ This module covered conditional mood in Ukrainian.
 
 Тепер ви можете мріяти українською! 🌟
 
-# Activities
+## Activities
 
 ## match-up: Conditional Forms
 
@@ -732,7 +733,7 @@ I would want to see that.
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

@@ -23,7 +23,7 @@ objectives:
 vocabulary_count: 35
 ---
 
-# Warm-up
+## Warm-up
 
 Prepare your imaginary travel bag. We are going on a journey!
 In Module 01, you learned **йти** (to go).
@@ -233,7 +233,7 @@ Mastering prefixes is the biggest "hack" in the Ukrainian language.
 
 ---
 
-# Summary
+## Summary
 
 1.  **Prefixes are GPS:** They tell you direction.
 2.  **При-** (Arrival) vs **Пі-** (Departure).
@@ -262,7 +262,7 @@ Mastering prefixes is the biggest "hack" in the Ukrainian language.
 >
 > Кожен префікс змінює значення! Це як будівельні блоки мови.
 
-# Activities
+## Activities
 
 ## match-up: Prefix Power
 
@@ -543,7 +543,7 @@ Mastering prefixes is the biggest "hack" in the Ukrainian language.
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

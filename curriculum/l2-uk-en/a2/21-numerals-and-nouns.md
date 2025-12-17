@@ -22,7 +22,7 @@ objectives:
 vocabulary_count: 30
 ---
 
-# Warm-up
+## Warm-up
 
 You already know numbers in Ukrainian. But did you know that the form of the noun changes based on the number?
 
@@ -278,7 +278,7 @@ Practice by counting objects around you. The more you practice, the more automat
 
 ---
 
-# Summary
+## Summary
 
 Today you learned numeral-noun agreement:
 
@@ -312,7 +312,7 @@ Today you learned numeral-noun agreement:
 >
 > Ці правила здаються складними, але вони логічні! Практикуйте з реальними предметами навколо вас.
 
-# Activities
+## Activities
 
 ## match-up: Zone Identification
 
@@ -628,7 +628,7 @@ Today you learned numeral-noun agreement:
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Forms |
 |------|-----|---------|-----|-------|

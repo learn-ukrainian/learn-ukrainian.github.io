@@ -339,43 +339,98 @@ def check_cloze_format(content: str) -> list[dict]:
     return violations
 
 
+def check_frontmatter_spacing(content: str) -> list[dict]:
+    """
+    Check that there's a blank line after YAML frontmatter.
+    
+    YAML frontmatter is enclosed between two '---' lines. Markdown parsing
+    requires a blank line after the closing '---' before content begins.
+    Without this, the first heading may not render correctly.
+    """
+    violations = []
+    
+    lines = content.split('\n')
+    
+    # Find the closing --- of frontmatter
+    frontmatter_start = -1
+    frontmatter_end = -1
+    
+    for i, line in enumerate(lines):
+        if line.strip() == '---':
+            if frontmatter_start == -1:
+                frontmatter_start = i
+            else:
+                frontmatter_end = i
+                break
+    
+    # Check if there's content after frontmatter
+    if frontmatter_end > 0 and frontmatter_end + 1 < len(lines):
+        next_line = lines[frontmatter_end + 1]
+        
+        # If the next line is not blank, it's a problem
+        if next_line.strip() != '':
+            violations.append({
+                'type': 'FRONTMATTER_SPACING',
+                'line': frontmatter_end + 2,  # 1-indexed
+                'issue': f"Missing blank line after YAML frontmatter (line {frontmatter_end + 1})",
+                'fix': "Add a blank line between the closing '---' and the first content/heading"
+            })
+    
+    return violations
+
+
 def check_heading_levels(content: str) -> list[dict]:
     """
     Check that section headings use H2 (##) not H1 (#).
     
     Docusaurus TOC shows H2-H3 by default. H1 should only be used for
-    the page title. Section headings like Warm-up, Presentation, etc.
-    must use H2 (##) to appear correctly in the right sidebar.
+    the page title (ONCE). Any additional H1 headings break the sidebar TOC.
+    
+    Two checks:
+    1. Any H1 after the first one is an error (multiple H1s)
+    2. Known section names (warm-up, activities, etc.) must be H2
     """
     violations = []
     
     # Reserved section words that should NOT be H1
-    # These are standard module section names that must be H2
     reserved_sections = [
         'warm-up', 'presentation', 'practice', 'cultural',
         'summary', 'activities', 'production', 'vocabulary',
-        'reading', 'grammar', 'dialogue', 'підсумок'
+        'reading', 'grammar', 'dialogue', 'підсумок', 'introduction'
     ]
     
     lines = content.split('\n')
+    h1_count = 0
+    first_h1_line = None
+    
     for line_num, line in enumerate(lines, 1):
         # Check for H1 headings (^# but not ^##)
         if line.startswith('# ') and not line.startswith('## '):
+            h1_count += 1
             heading = line[2:].strip()
             heading_lower = heading.lower()
+            clean_heading = heading[:50] + ('...' if len(heading) > 50 else '')
             
-            # Check if this H1 contains a reserved section word
-            for reserved in reserved_sections:
-                if reserved in heading_lower:
-                    # Clean heading text for display (remove emoji)
-                    clean_heading = heading[:50] + ('...' if len(heading) > 50 else '')
-                    violations.append({
-                        'type': 'HEADING_LEVEL',
-                        'line': line_num,
-                        'issue': f"Section heading '{clean_heading}' uses H1 (#), should use H2 (##)",
-                        'fix': f"Change '# {heading}' to '## {heading}' - H1 is reserved for page titles only"
-                    })
-                    break  # One violation per heading is enough
+            if h1_count == 1:
+                first_h1_line = line_num
+                # Still check if first H1 is a reserved section (shouldn't be)
+                for reserved in reserved_sections:
+                    if reserved in heading_lower:
+                        violations.append({
+                            'type': 'HEADING_LEVEL',
+                            'line': line_num,
+                            'issue': f"'{clean_heading}' is a section heading but uses H1 (#)",
+                            'fix': f"Change '# {heading}' to '## {heading}' - reserved for page title only"
+                        })
+                        break
+            else:
+                # Any H1 after the first is definitely wrong
+                violations.append({
+                    'type': 'HEADING_LEVEL',
+                    'line': line_num,
+                    'issue': f"Multiple H1 headings: '{clean_heading}' should be H2 (##)",
+                    'fix': f"Only one H1 allowed (page title). Change '# {heading}' to '## {heading}'"
+                })
     
     return violations
 
@@ -392,6 +447,11 @@ def check_markdown_format(content: str) -> list[dict]:
     """
     violations = []
 
+    # Structure checks (run first)
+    violations.extend(check_frontmatter_spacing(content))
+    violations.extend(check_heading_levels(content))
+    
+    # Activity format checks
     violations.extend(check_quiz_format(content))
     violations.extend(check_true_false_format(content))
     violations.extend(check_unjumble_format(content))
@@ -399,6 +459,5 @@ def check_markdown_format(content: str) -> list[dict]:
     violations.extend(check_fill_in_format(content))
     violations.extend(check_error_correction_format(content))
     violations.extend(check_cloze_format(content))
-    violations.extend(check_heading_levels(content))
 
     return violations

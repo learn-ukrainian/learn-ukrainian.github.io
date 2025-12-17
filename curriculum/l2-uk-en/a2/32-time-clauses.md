@@ -23,7 +23,7 @@ objectives:
 vocabulary_count: 25
 ---
 
-# Warm-up
+## Warm-up
 
 Life is a sequence of events.
 - **When** I woke up, I drank coffee.
@@ -50,7 +50,7 @@ In Ukrainian, these structures control the flow of your story.
 
 ---
 
-# Presentation
+## Presentation
 
 ## 1. Simultaneous Actions: Поки
 
@@ -153,7 +153,7 @@ Sometimes simple "when" is not enough. You need precision.
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 > [!cultural] "Поспішай повільно"
 > This is a famous Latin phrase (Festina Lente) that Ukrainians love: "Hurry slowly".
@@ -212,7 +212,7 @@ It's logical: I stay in the state of "waiting" during the time that "finishing" 
 
 ---
 
-# Summary
+## Summary
 
 1.  **Simultaneous:** Use **Поки** (While) or **В той час як**.
 2.  **Sequential:** Use **Коли** (When) or **Після того як** (After).
@@ -222,7 +222,7 @@ It's logical: I stay in the state of "waiting" during the time that "finishing" 
 
 ---
 
-# Activities
+## Activities
 
 ## match-up: Time Connectors
 
@@ -512,7 +512,7 @@ It's logical: I stay in the state of "waiting" during the time that "finishing" 
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

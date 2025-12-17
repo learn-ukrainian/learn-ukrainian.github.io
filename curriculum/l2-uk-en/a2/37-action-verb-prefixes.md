@@ -22,7 +22,7 @@ objectives:
 vocabulary_count: 30
 ---
 
-# Warm-up
+## Warm-up
 
 In Module 31, we used prefixes to move (GPS).
 Now, we use prefixes to **transform** actions.
@@ -261,7 +261,7 @@ The prefix **За-** is the trickiest one. It has three opposite meanings!
 
 ---
 
-# Summary
+## Summary
 
 1.  **Prefixes transform meaning.** They act like modifiers (Re-, Sub-, Out-).
 2.  **Пере-** = Redo / Across.
@@ -273,7 +273,7 @@ The prefix **За-** is the trickiest one. It has three opposite meanings!
 
 ---
 
-# Activities
+## Activities
 
 ## match-up: The Transformers
 
@@ -583,7 +583,7 @@ When you speak, use these gestures. It helps your brain "feel" the grammar.
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

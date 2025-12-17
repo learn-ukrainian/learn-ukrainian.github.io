@@ -21,7 +21,7 @@ objectives:
 vocabulary_count: 30
 ---
 
-# Warm-up
+## Warm-up
 
 In Modules 12-15, you learned the theory of aspect. Now it's time to **drill** until the pairs become automatic!
 
@@ -266,7 +266,7 @@ Remember: Making mistakes is part of learning. Native speakers will understand y
 
 ---
 
-# Summary
+## Summary
 
 Today you drilled the 30 most common aspect pairs.
 
@@ -299,7 +299,7 @@ Today you drilled the 30 most common aspect pairs.
 >
 > Практикуйте ці пари кожен день. Вони — основа для правильного вибору аспекту!
 
-# Activities
+## Activities
 
 ## match-up: Tier 1 Pairs
 
@@ -568,7 +568,7 @@ Today you drilled the 30 most common aspect pairs.
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Aspect |
 |------|-----|---------|-----|--------|

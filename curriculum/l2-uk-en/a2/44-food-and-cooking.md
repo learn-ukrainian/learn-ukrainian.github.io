@@ -22,7 +22,7 @@ objectives:
 vocabulary_count: 35
 ---
 
-# Warm-up
+## Warm-up
 
 Welcome to the kitchen! Food and cooking are central to Ukrainian culture. In this module, you will learn essential vocabulary for cooking, kitchen equipment, and describing food. After this lesson, you will be able to navigate a Ukrainian kitchen and follow basic recipes.
 
@@ -42,7 +42,7 @@ The cooking verbs in this module are especially useful because they use the impe
 
 ---
 
-# Presentation
+## Presentation
 
 ## Kitchen Equipment
 
@@ -217,7 +217,7 @@ When eating with Ukrainian friends or family, these phrases will help you partic
 
 ---
 
-# Summary
+## Summary
 
 **Обладнання:**
 - каструля
@@ -271,7 +271,7 @@ When eating with Ukrainian friends or family, these phrases will help you partic
 >
 > Українці кажуть: «Їж, пий, та нас не забувай!» Смачного!
 
-# Activities
+## Activities
 
 ## match-up: Kitchen Words
 
@@ -572,7 +572,7 @@ When eating with Ukrainian friends or family, these phrases will help you partic
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

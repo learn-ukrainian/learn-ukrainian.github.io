@@ -23,7 +23,8 @@ objectives:
   - "Learner can make promises and express intentions"
 vocabulary_count: 20
 ---
-# Warm-up
+
+## Warm-up
 
 **Ласкаво просимо до майбутнього часу!**
 
@@ -58,7 +59,7 @@ This is a crucial distinction that doesn't exist in English! By the end of this 
 
 ---
 
-# Presentation
+## Presentation
 
 ## Two Types of Future
 
@@ -141,7 +142,7 @@ Understanding which time expressions go with which aspect will help you sound mo
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 ## Promises and Intentions
 
@@ -169,7 +170,7 @@ In Ukrainian culture, using perfective future often carries more commitment — 
 
 ---
 
-# Practice
+## Practice
 
 ## Practice Examples
 
@@ -189,7 +190,7 @@ Choose the correct future form:
 
 ---
 
-# Summary
+## Summary
 
 ## What You Learned
 
@@ -238,7 +239,7 @@ In Ukrainian culture, using perfective future often carries more weight. When yo
 
 Тепер ви можете говорити про майбутнє українською! Плануйте, обіцяйте і мрійте! Пам'ятайте: «Я буду робити» — це план, а «Я зроблю» — це обіцянка. Вибирайте мудро! 🔮
 
-# Activities
+## Activities
 
 ## match-up: Future Forms
 
@@ -730,7 +731,7 @@ We will finish the project!
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

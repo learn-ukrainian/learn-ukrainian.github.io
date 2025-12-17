@@ -22,6 +22,7 @@ objectives:
   - "Learner can describe physical and emotional states with dative"
 vocabulary_count: 26
 ---
+
 # Давальний відмінок I — Займенники
 
 ## Introduction
@@ -299,7 +300,7 @@ Try creating similar sentences about yourself before moving to the activities be
 
 ---
 
-# Підсумок
+## Підсумок
 
 У цьому модулі ви навчилися:
 
@@ -313,7 +314,7 @@ Try creating similar sentences about yourself before moving to the activities be
 
 ---
 
-# Activities
+## Activities
 
 The activities below progress from recognition (matching, sorting) to production (translation, sentence building). Complete them in order for the best learning experience. Each activity targets a specific skill:
 
@@ -812,7 +813,7 @@ The activities below progress from recognition (matching, sorting) to production
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

@@ -24,7 +24,7 @@ objectives:
 vocabulary_count: 25
 ---
 
-# Warm-up
+## Warm-up
 
 Вітаємо на контрольному уроці! Welcome to your checkpoint lesson! This module reviews all word formation skills from Modules 31-36. You have learned how to build new words using prefixes, suffixes, and root families.
 
@@ -54,7 +54,7 @@ Word formation is one of the most powerful tools in Ukrainian. Understanding how
 
 ---
 
-# Presentation
+## Presentation
 
 ## Prefix Review
 
@@ -226,7 +226,7 @@ Each root family has many related words. Learning the root helps you understand 
 
 ---
 
-# Summary
+## Summary
 
 **Префікси:**
 - при- (прибуття)
@@ -251,7 +251,7 @@ Word formation is a key skill in Ukrainian. By understanding how prefixes, suffi
 
 ---
 
-# Activities
+## Activities
 
 ## match-up: Comprehensive Review
 
@@ -540,7 +540,7 @@ Word formation is a key skill in Ukrainian. By understanding how prefixes, suffi
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

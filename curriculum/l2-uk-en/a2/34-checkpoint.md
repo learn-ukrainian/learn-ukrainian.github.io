@@ -23,7 +23,7 @@ objectives:
 vocabulary_count: 30
 ---
 
-# Warm-up
+## Warm-up
 
 Congratulations! You have finished Phase A2.3.
 You moved from simple sentences to complex stories.
@@ -224,7 +224,7 @@ Let's review some words that often confuse learners in Phase A2.3.
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 > [!cultural] Fate and Future
 > When talking about plans connectors like **коли** (when) and **якщо** (if), Ukrainians often add a touch of fatalism.
@@ -245,7 +245,7 @@ To make sure you don't forget it, try these steps:
 
 ---
 
-# Summary
+## Summary
 
 You have mastered **Logic**.
 - You can explain Cause (**Тому що**).
@@ -257,7 +257,7 @@ You have mastered **Logic**.
 
 ---
 
-# Activities
+## Activities
 
 ## match-up: Logical Pairs
 
@@ -547,7 +547,7 @@ You have mastered **Logic**.
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

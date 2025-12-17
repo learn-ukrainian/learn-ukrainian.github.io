@@ -25,7 +25,8 @@ objectives:
   - "Learner can use dative nouns with common verbs"
 vocabulary_count: 25
 ---
-# Introduction
+
+## Introduction
 
 Module 01 introduced the seven Dative pronouns: мені, тобі, йому, їй, нам, вам, їм. Now it's time to learn how to form Dative endings for nouns — and there are different patterns for masculine, feminine, neuter, and plural nouns.
 
@@ -43,7 +44,7 @@ When you say "I give the book to my friend" in Ukrainian, the word "friend" must
 - **Кому?** — To whom? (for people and animals)
 - **Чому?** — To what? (for things and abstract concepts)
 
-# Warm-up
+## Warm-up
 
 You already know the seven Dative pronouns: мені, тобі, йому, їй, нам, вам, їм. Now you'll learn how nouns change their endings in the Dative case.
 
@@ -72,7 +73,7 @@ Now let's see how nouns work: Кому ви пишете листа? (To whom do
 
 ---
 
-# Presentation
+## Presentation
 
 ## The Dative Question: Кому? Чому?
 
@@ -188,7 +189,7 @@ Good news: the plural is uniform across all genders! All nouns — masculine, fe
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 ## Давати і Дарувати: The Culture of Giving
 
@@ -231,7 +232,7 @@ Some verbs are "dative-hungry" — they always need a dative object:
 
 ---
 
-# Practice
+## Practice
 
 Now let's practice forming Dative noun endings. The key is to identify the noun's gender first, then apply the correct ending pattern. Remember:
 - Masculine: -ові/-еві for formal contexts OR -у/-ю for casual speech
@@ -294,7 +295,7 @@ Friends texting at the café — notice подрузі (to a friend, feminine) w
 
 ---
 
-# Reading Practice: Лист із Канади
+## Reading Practice: Лист із Канади
 
 This letter from Canada demonstrates Dative nouns in a natural context. Before reading, note that every person who receives an action (writing, helping, explaining, calling, sending) will be in the Dative case.
 
@@ -331,7 +332,7 @@ This letter from Canada demonstrates Dative nouns in a natural context. Before r
 
 ---
 
-# Підсумок
+## Підсумок
 
 У цьому модулі ви навчилися:
 
@@ -357,7 +358,7 @@ This letter from Canada demonstrates Dative nouns in a natural context. Before r
 
 Тепер ви можете казати, кому ви допомагаєте, пишете, телефонуєте, і даруєте подарунки! 🎁
 
-# Activities
+## Activities
 
 The following activities will help you master Dative noun endings through various exercise types. Progress from matching (recognition) through translation (production) to build your skills systematically.
 
@@ -837,7 +838,7 @@ He writes to the teacher.
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

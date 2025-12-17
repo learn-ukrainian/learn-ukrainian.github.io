@@ -22,7 +22,7 @@ objectives:
 vocabulary_count: 30
 ---
 
-# Warm-up
+## Warm-up
 
 Welcome back to the Word Factory!
 Last time, we made Nouns. Today, we make **Adjectives**.
@@ -301,7 +301,7 @@ A "Ukrainian book" is *Українська книга* (Fem), but a "Ukrainian 
 
 ---
 
-# Summary
+## Summary
 
 1.  **-н-ий** = General quality (Музичний, Смачний).
 2.  **-ов-ий** = Material/Relational (Науковий, Кольоровий).
@@ -311,7 +311,7 @@ A "Ukrainian book" is *Українська книга* (Fem), but a "Ukrainian 
 
 ---
 
-# Activities
+## Activities
 
 ## match-up: Suffix Match
 
@@ -657,7 +657,7 @@ A "Ukrainian book" is *Українська книга* (Fem), but a "Ukrainian 
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

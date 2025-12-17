@@ -22,7 +22,7 @@ objectives:
 vocabulary_count: 25
 ---
 
-# Warm-up
+## Warm-up
 
 "How are you?"
 Usually, you say "Normalno". But sometimes, you want to scream, cry, or laugh.
@@ -50,7 +50,7 @@ You are the receiver of the emotion.
 
 ---
 
-# Presentation
+## Presentation
 
 ## 1. The Dative Construction (Impersonal)
 
@@ -189,7 +189,7 @@ Oleh and Katya are watching a film.
 
 ---
 
-# Summary
+## Summary
 
 To express feelings:
 1.  **Impersonal (State):** *Мені + Adverb* (Мені холодно, мені сумно, мені прикро).
@@ -252,7 +252,7 @@ To ask about *feelings*, use:
 
 ---
 
-# Activities
+## Activities
 
 ## match-up: Feelings Pairs
 
@@ -602,7 +602,7 @@ To ask about *feelings*, use:
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

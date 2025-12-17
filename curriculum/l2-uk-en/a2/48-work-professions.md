@@ -191,7 +191,7 @@ Wait, normally we say: *Я — лікар* (Nominative) for simple ID. But descr
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
-# Summary
+## Summary
 
 You learned to:
 - Name professions: **лікар**, **вчитель**, **інженер**, **програміст**
@@ -201,7 +201,7 @@ You learned to:
 
 Work is not just about money; it's about passion and contribution. Whether you are a lawyer or a driver, your work matters. Keep learning Ukrainian to expand your professional horizons!
 
-# Activities
+## Activities
 
 ## quiz: Profession Quiz
 
@@ -681,7 +681,7 @@ Work is not just about money; it's about passion and contribution. Whether you a
     - [ ] працювати
     > Conjugated verb 'we work'.
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

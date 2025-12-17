@@ -23,7 +23,8 @@ objectives:
   - "Learner can use instrumental for social activities"
 vocabulary_count: 35
 ---
-# Introduction
+
+## Introduction
 
 In this module, you'll learn the Instrumental case — the seventh and final case in Ukrainian. While the Instrumental has several functions, this module focuses on its most common use at A2 level: expressing **accompaniment** (with whom or with what you do something).
 
@@ -40,7 +41,7 @@ Every time you want to say you're doing something "with" someone or something, y
 - **З ким?** — With whom? (for people/animals)
 - **З чим?** — With what? (for things)
 
-# Warm-up
+## Warm-up
 
 Ви вже знаєте шість відмінків: називний, родовий, давальний, знахідний, місцевий і кличний. Тепер час вивчити сьомий — орудний відмінок!
 
@@ -58,7 +59,7 @@ The instrumental case answers the questions: **З ким?** (With whom?) and **�
 
 ---
 
-# Presentation
+## Presentation
 
 ## The Instrumental Question: Ким? Чим?
 
@@ -180,7 +181,7 @@ The plural instrumental is particularly useful for expressing group activities a
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 Ukrainian culture places great importance on social relationships, and the language reflects this through a rich vocabulary of verbs describing how people interact with each other. The Instrumental case is central to expressing these relationships.
 
@@ -257,7 +258,7 @@ Many relationship verbs use **з + Instrumental**:
 
 ---
 
-# Practice
+## Practice
 
 Now let's practice forming Instrumental endings and using them with the preposition з. The key is to identify the noun's gender and choose the correct ending:
 - **Masculine:** -ом for hard stems, -ем for soft stems
@@ -324,7 +325,7 @@ Food and drink combinations use Instrumental too — coffee WITH milk, tea WITH 
 
 ---
 
-# Reading Practice: Вечірка-сюрприз
+## Reading Practice: Вечірка-сюрприз
 
 This story about a surprise party is full of Instrumental examples. Every time someone arrives "with" someone else, or does something "with" someone, you'll see the Instrumental case.
 
@@ -355,7 +356,7 @@ This story about a surprise party is full of Instrumental examples. Every time s
 
 ---
 
-# Підсумок
+## Підсумок
 
 У цьому модулі ви навчилися:
 
@@ -383,7 +384,7 @@ This story about a surprise party is full of Instrumental examples. Every time s
 
 Тепер ви можете розповідати, з ким ви гуляєте, живете, працюєте і п'єте каву! ☕
 
-# Activities
+## Activities
 
 The following activities will help you master Instrumental case endings through various exercise types. Progress from matching (recognition) through translation (production) to build your skills.
 
@@ -872,7 +873,7 @@ I meet with friends every week.
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

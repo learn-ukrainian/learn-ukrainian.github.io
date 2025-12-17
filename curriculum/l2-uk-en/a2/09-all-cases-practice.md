@@ -23,7 +23,8 @@ objectives:
   - "Learner can use cases in connected speech"
 vocabulary_count: 25
 ---
-# Warm-up
+
+## Warm-up
 
 Congratulations — you've now learned all seven Ukrainian cases! This is a major milestone in your Ukrainian journey. In this module, we'll bring everything together in one comprehensive practice session.
 
@@ -59,7 +60,7 @@ Unlike English, which relies heavily on word order and prepositions to show rela
 
 ---
 
-# Presentation
+## Presentation
 
 ## Understanding the Case System
 
@@ -158,7 +159,7 @@ Before we dive into reviewing each case, let's understand why cases matter and h
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 ## Як відмінки формують речення
 
@@ -197,7 +198,7 @@ Before we dive into reviewing each case, let's understand why cases matter and h
 
 ---
 
-# Practice
+## Practice
 
 ## Практичні вправи
 
@@ -237,7 +238,7 @@ Before we dive into reviewing each case, let's understand why cases matter and h
 
 ---
 
-# Summary
+## Summary
 
 ## Підсумок
 
@@ -257,7 +258,7 @@ Before we dive into reviewing each case, let's understand why cases matter and h
 
 Продовжуйте практикувати відмінки. Вони — ключ до вільного володіння українською мовою!
 
-# Activities
+## Activities
 
 ## match-up: Case Questions
 
@@ -800,7 +801,7 @@ Mom cooks dinner.
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

@@ -22,7 +22,7 @@ objectives:
 vocabulary_count: 25
 ---
 
-# Warm-up
+## Warm-up
 
 How do you describe things?
 - The car **red**. (Adjective)
@@ -49,7 +49,7 @@ In Ukrainian, "that/which/who" corresponds to one flexible word: **Який**.
 
 ---
 
-# Presentation
+## Presentation
 
 ## 1. Simple Linking (Nominative)
 
@@ -128,7 +128,7 @@ The second part (**що**) acts as the subject/object of the second sentence.
 
 ---
 
-# Cultural Insight
+## Cultural Insight
 
 > [!cultural] The Art of Description
 > Ukrainians love detailed descriptions. Unlike English, where you might say "The tall guy", a Ukrainian might say "Той хлопець, який дуже високий" (That guy, who is very tall).
@@ -210,7 +210,7 @@ A detective interviews a witness about a robbery.
 
 ---
 
-# Summary
+## Summary
 
 1.  **Agreement:** *Який* matches the gender/number of the word it describes (Antecedent).
 2.  **Case:** *Який* changes case based on its function inside the relative clause.
@@ -220,7 +220,7 @@ A detective interviews a witness about a robbery.
 
 ---
 
-# Activities
+## Activities
 
 ## match-up: Noun-Pronoun Link
 
@@ -522,7 +522,7 @@ A detective interviews a witness about a robbery.
 
 ---
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

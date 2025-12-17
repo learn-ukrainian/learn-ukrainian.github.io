@@ -198,7 +198,7 @@ It is a celebration of willpower.
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
-# Summary
+## Summary
 
 You learned to:
 - Name sports: **футбол**, **теніс**, **бокс**, **плавання**
@@ -226,7 +226,7 @@ A healthy mind in a healthy body!
 >
 > Спорт — це здоров'я! Українці кажуть: «Рух — це життя!»
 
-# Activities
+## Activities
 
 ## quiz: Sports Knowledge
 
@@ -772,7 +772,7 @@ A healthy mind in a healthy body!
     - [ ] Спати.
     > Become (champion).
 
-# Vocabulary
+## Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
