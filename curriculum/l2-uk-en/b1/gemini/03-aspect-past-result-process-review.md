@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 2655/1250 (>2250 may be too long)
+- **Words:** ⚠️ 2668/1250 (>2250 may be too long)
 - **Activities:** ✅ 15/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -14,12 +14,12 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 59.7% (target 50-60% (B1.1 Aspect))
+- **Immersion:** 🇺🇦 59.5% (target 50-60% (B1.1 Aspect))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 92 | Included in Core |
+| **Intro/Narrative** | ✅ | 105 | Included in Core |
 | **Diagnostic** | ✅ | 123 | Included in Core |
 | **The Process vs Result Distinction: Why English Speakers Struggle** | ⚪️ | 174 | Skipped |
 | **Analysis** | ⚪️ | 686 | Skipped |

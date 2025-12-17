@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1993/1250
+- **Words:** ✅ 2025/1250
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -14,15 +14,15 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 50.3% (target 50-60% (B1.1 Aspect))
+- **Immersion:** 🇺🇦 52.1% (target 50-60% (B1.1 Aspect))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 89 | Included in Core |
+| **Intro/Narrative** | ✅ | 123 | Included in Core |
 | **Diagnostic** | ✅ | 164 | Included in Core |
-| **Analysis** | ⚪️ | 484 | Skipped |
-| **Deep Dive** | ✅ | 752 | Included in Core |
+| **Analysis** | ⚪️ | 485 | Skipped |
+| **Deep Dive** | ✅ | 749 | Included in Core |
 | **Practice** | ⚪️ | 268 | Skipped |
 | **Summary** | ✅ | 236 | Included in Core |
 | **Activities** | ➖ | 0 | Excluded Type |
