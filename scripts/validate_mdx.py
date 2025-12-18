@@ -76,8 +76,10 @@ def extract_vocabulary(content: str) -> set[str]:
     """
     vocab = set()
 
-    # Find vocabulary section (may have emoji prefix like "📚 Vocabulary")
-    match = re.search(r'#+ .*?(?:Vocabulary|Словник)[\s\S]*?(?=^#|\Z)', content, re.MULTILINE)
+    # Find vocabulary section (must be ## level, not ### activity titles)
+    # May have emoji prefix like "📚 Vocabulary" but no other words before it
+    # This prevents matching "## match-up: Café Vocabulary" etc.
+    match = re.search(r'^##\s+[^\w]*(?:Vocabulary|Словник)\s*$[\s\S]*?(?=^##\s|\Z)', content, re.MULTILINE)
     if not match:
         return vocab
 

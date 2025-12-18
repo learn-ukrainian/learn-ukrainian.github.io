@@ -755,6 +755,9 @@ You can now count, ask prices, and shop confidently in Ukraine!
 | знижка | /ˈznɪʒkɑ/ | discount | noun | f | - |
 | решта | /ˈrɛʃtɑ/ | change (money) | noun | f | money returned |
 | платити | /plɑˈtɪtɪ/ | to pay | verb | - | плачу, платиш |
+| купувати | /kʊpʊˈvɑtɪ/ | to buy | verb | - | купую, купуєш |
+| продавати | /prɔdɑˈvɑtɪ/ | to sell | verb | - | продаю, продаєш |
+| каса | /ˈkɑsɑ/ | cashier, checkout | noun | f | - |
 | рахунок | /rɑˈxunɔk/ | bill, check | noun | m | - |
 | готівка | /ɦɔˈtivkɑ/ | cash | noun | f | - |
 | картка | /ˈkɑrtkɑ/ | card | noun | f | credit/debit card |

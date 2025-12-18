@@ -41,16 +41,16 @@ vocabulary_count: 10
 
 ---
 
-# A1 Can-Do Checklist
+## A1 Can-Do Checklist
 
-## Reading & Writing
+### Reading & Writing
 
 - [ ] I can read Cyrillic without transliteration
 - [ ] I can write simple sentences about myself
 - [ ] I can fill out basic forms (name, address, phone)
 - [ ] I can understand simple signs and menus
 
-## Speaking & Listening
+### Speaking & Listening
 
 - [ ] I can introduce myself
 - [ ] I can ask and answer simple questions
@@ -58,7 +58,7 @@ vocabulary_count: 10
 - [ ] I can ask for directions
 - [ ] I can describe symptoms to a doctor
 
-## Граматика (Grammar)
+### Граматика (Grammar)
 
 - [ ] Я знаю три роди: чоловічий, жіночий, середній
 - [ ] Я вживаю відмінки: Н., Зн., Р., М.
@@ -66,16 +66,16 @@ vocabulary_count: 10
 - [ ] Я вживаю присвійні займенники: мій, твій, його, її
 - [ ] Я утворюю прислівники від прикметників
 
-### Vocabulary Mastery
+#### Vocabulary Mastery
 
 - [ ] I know 400+ words across all topics
 - [ ] I can talk about family, food, city, time, weather, health, holidays
 
 ---
 
-# Review Sections
+## Review Sections
 
-## Section 1: Self-Introduction
+### Section 1: Self-Introduction
 
 > [!example] Про себе (About Myself)
 >
@@ -89,7 +89,7 @@ vocabulary_count: 10
 
 ---
 
-## Section 2: My Family
+### Section 2: My Family
 
 > [!example] Моя родина (My Family)
 >
@@ -102,7 +102,7 @@ vocabulary_count: 10
 
 ---
 
-## Section 3: Daily Routine
+### Section 3: Daily Routine
 
 > [!example] Мій день (My Day)
 >
@@ -116,7 +116,7 @@ vocabulary_count: 10
 
 ---
 
-## Section 4: Past & Future
+### Section 4: Past & Future
 
 > [!example] Вчора і завтра (Yesterday and Tomorrow)
 >
@@ -633,7 +633,7 @@ Is this true or false?
 
 ---
 
-# Самооцінка A1 (Final Self-Assessment)
+## Самооцінка A1 (Final Self-Assessment)
 
 Оцініть себе від 1 до 5 (1 = не можу, 5 = впевнено можу):
 *(Rate yourself 1-5 on each CEFR can-do statement)*

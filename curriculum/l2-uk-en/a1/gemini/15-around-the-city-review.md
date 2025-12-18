@@ -1,18 +1,9 @@
 # Audit Report: 15-around-the-city.md
 **Phase:** A1 | **Level:** A1 | **Pedagogy:** "PPP" | **Target:** 750
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[GRAMMAR]** Instrumental case used at A1: 'За мостом'
-  - FIX: Instrumental case not allowed until A2 (M36+). Restructure sentence.
-
-## Recommendation
-**📝 UPDATE** (severity 10/100)
-
-- 1 pedagogical violations (minor)
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 3389/750 (>1750 may be too long)
+- **Words:** ⚠️ 1866/750 (>1750 may be too long)
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -22,8 +13,11 @@
 - **Vocab:** ✅ 40/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 30.2% (target 25-40% (M15))
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -42,8 +42,6 @@ Think of it like a secret code: the last letter reveals the gender. And once you
 > **Video:** [How to Know Noun Gender](https://www.ukrainianlessons.com/video-noun-gender/) — 8-minute grammar guide
 >
 > **Plurals:** [Plural of Nouns](https://www.ukrainianlessons.com/grammar-plural-nouns/) — How gender affects plural forms
-> [!answer]
-> Стіл (consonant) = masculine. Книга (-а) = feminine. Вікно (-о) = neuter.
 
 ## Presentation
 

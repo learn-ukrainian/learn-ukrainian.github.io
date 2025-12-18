@@ -35,11 +35,9 @@ You've just used Ukrainian demonstratives. Words that point to things. Words tha
 
 By the end of this module, you'll be able to navigate your entire living space in Ukrainian, pointing to objects and naming them with confidence. Let's start with the closest things around you.
 
-**Why demonstratives matter:** In English, we use "this" and "that" without thinking about gender. We say "this book," "this table," "this window" — the word "this" stays the same. But Ukrainian demonstratives change based on what you're pointing at. If it's a masculine noun, you use one form. If it's feminine, another. If it's neuter, yet another. And if you're pointing at multiple things, there's a special plural form that works for all genders.
-
-This might sound complicated at first, but it actually makes Ukrainian more precise. When a Ukrainian says "ця," you immediately know they're pointing to something feminine and singular. When they say "ці," you know it's plural. The demonstrative carries information that English requires extra words to express.
-
-**The connection to Module 03:** You already learned about noun gender in Module 03: The Gender Code. You know that nouns ending in consonants are usually masculine (стіл, телефон), nouns ending in -а/-я are usually feminine (книга, сумка), and nouns ending in -о/-е are usually neuter (вікно, крісло). Now you're going to use that gender knowledge every time you point to something!
+> 💡 **Did You Know?**
+>
+> You already learned about noun gender in Module 03. Now you'll use that knowledge every time you point to something! Ukrainian demonstratives change based on gender: one form for masculine, another for feminine, another for neuter, and a special plural form for all genders.
 
 
 
@@ -57,16 +55,7 @@ This might sound complicated at first, but it actually makes Ukrainian more prec
 
 ### The Near Demonstratives: цей, ця, це, ці (this/these)
 
-**Pronunciation Guide:** Before we dive into the forms, let's make sure you can pronounce these demonstratives correctly. Ukrainian has sounds that don't exist in English, and demonstratives use some of them:
-
-- **цей** (tsey) — Start with the "ts" sound in "cats." Then add "ey" like in "hey." Together: "tsey."
-- **ця** (tsya) — Same "ts" sound, but followed by "ya" like in "yard." The "y" is soft, almost like you're smiling while saying "ah."
-- **це** (tse) — Just "ts" plus "e" like in "set." Simple: "tse."
-- **ці** (tsi) — "ts" plus "ee" like in "see." Straightforward: "tsee."
-
-The tricky part is the "ц" (ts) sound at the beginning. English speakers often want to pronounce it like "k" or "ch," but it's actually like the "ts" in "cats" or "bats." Practice saying "cats" and isolate the "ts" sound — that's your "ц"!
-
-**How it works:** When you point to something **close to you**, use forms of **цей** (tsey):
+When you point to something **close to you**, use forms of **цей** (tsey):
 
 | Gender | Singular | Example | Transliteration | English |
 |--------|----------|---------|-----------------|---------|
@@ -150,7 +139,7 @@ Notice how **"Це"** introduces objects (This is a...), but **"ця"** points t
 You're describing furniture to someone on the phone:
 
 — Де твій телефон? (De tviy telefon?) — Where is your phone?
-— **Він на тому столі.** (Vin na tomu stoli.) — It's on that table. (Locative case, from M03!)
+— **Він на тому столі.** (Vin na tomu stoli.) — It's on that table.
 
 — а пульт? (A pul't?) — And the remote?
 — **Цей пульт на дивані.** (Tsey pul't na dyvani.) — This remote is on the couch.
@@ -227,14 +216,7 @@ Common household objects include:
 - **Телефон** (telefon) — phone (mobile or landline)
 - **Комп'ютер** (komp'yuter) — computer
 - **Мікрохвильовка** (mikrokhvyl'ovka) — microwave
-- **Пилосос** (pyloson) — vacuum cleaner
 - **Праска** (praska) — iron
-
-Unlike English, Ukrainian assigns gender to all these modern words. Most technology words are masculine (**телефон**, **комп'ютер**), but some are feminine (**мікрохвильовка**, **праска**).
-
-> 🎯 **Fun Fact**
->
-> The word **пилосос** (vacuum cleaner) literally means "dust sucker" — **пил** (dust) + **сос** (sucker). Ukrainians love compound words that describe exactly what something does!
 
 ## Production
 
