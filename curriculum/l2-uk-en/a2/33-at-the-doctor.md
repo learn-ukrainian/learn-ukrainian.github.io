@@ -85,7 +85,7 @@ We use "У мене..." + Noun.
 
 ---
 
-# Deep Dive: The Ukrainian Medical System
+## Deep Dive: The Ukrainian Medical System
 
 > [!cultural] Myth: "Ambulance costs money"
 > In Ukraine, state emergency ambulance ("Швидка допомога" - 103) is free.
@@ -100,7 +100,7 @@ We use "У мене..." + Noun.
 
 ---
 
-# Deep Dive: Traditional Medicine
+## Deep Dive: Traditional Medicine
 
 > [!cultural] Grandma's Cure
 > Before going to the doctor, most Ukrainians try "Grandma's methods" (Бабусині методи).
@@ -117,7 +117,7 @@ We use "У мене..." + Noun.
 
 ---
 
-# Story Time: The Pharmacy Mistake
+## Story Time: The Pharmacy Mistake
 
 Це смішна історія про туриста на ім'я Джон.
 Джон приїхав у Київ і захворів.
@@ -184,7 +184,7 @@ We use "У мене..." + Noun.
 
 ---
 
-# Deep Dive: Heart Metaphors
+## Deep Dive: Heart Metaphors
 
 The word **серце** (heart) is huge in Ukrainian culture.
 
@@ -194,25 +194,6 @@ The word **серце** (heart) is huge in Ukrainian culture.
 - **Брати близько до серця** (To take close to heart - to worry too much).
 
 ---
-
-# Story Time: The Pharmacy Mistake
-
-Це смішна історія про туриста на ім'я Джон.
-Джон приїхав у Київ і захворів.
-У нього боліла голова.
-Він пішов в аптеку.
-Він хотів сказати: "У мене біль" (I have pain).
-Але він забув слово "біль".
-Він сказав: "У мене білий". (I have white).
-Аптекар здивувався: "Що у вас біле?"
-Джон показав на голову: "Тут білий!"
-Аптекар подумав, що Джон хоче фарбу для волосся.
-Він дав йому фарбу.
-Джон подивився і сказав: "Ні, ні. Мені треба таблетку від білого!"
-Тут зайшла бабуся. Вона зрозуміла все.
-Вона сказала: "Сину, у тебе болить голова? На тобі малину!"
-Джон випив чай з малиною і одужав.
-Мораль: Вчіть слова правильно, або носіть з собою малину!
 
 ## Monologue: The Hypochondriac
 
@@ -232,7 +213,7 @@ The word **серце** (heart) is huge in Ukrainian culture.
 
 ---
 
-# Pro-Tip: "Being Sick" vs "Sicking"
+## Pro-Tip: "Being Sick" vs "Sicking"
 
 In English "To be sick" is a state.
 In Ukrainian **Хворіти** (to be sick) is an active ongoing process.
@@ -439,25 +420,25 @@ Don't confuse with **Боліти** (to hurt).
 Він дав мені [___:6] на ліки.
 Я пішов в [___:7], щоб купити таблетки.
 
-1. поліклініку / школу
+1. поліклініку | школу | магазин
 > [!answer] поліклініку
 
-2. турбує / радіє
+2. турбує | радіє | цікавить
 > [!answer] турбує
 
-3. горло / стіл
+3. горло | стіл | вікно
 > [!answer] горло
 
-4. температуру / книгу
+4. температуру | книгу | сумку
 > [!answer] температуру
 
-5. грип / спорт
+5. грип | спорт | відпочинок
 > [!answer] грип
 
-6. рецепт / квиток
+6. рецепт | квиток | паспорт
 > [!answer] рецепт
 
-7. аптеку / кіно
+7. аптеку | кіно | кафе
 > [!answer] аптеку
 
 ## dialogue-reorder: The Emergency

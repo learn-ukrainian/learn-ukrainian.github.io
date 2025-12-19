@@ -23,6 +23,7 @@ objectives:
   - "Learner can apply correct aspect in negative imperatives"
 vocabulary_count: 20
 ---
+
 # Вид у запереченні — Особливості
 
 > 🎯 **Чому це важливо**
@@ -32,13 +33,9 @@ vocabulary_count: 20
 > [!resources] 🎧 External Resources
 >
 > **YouTube:** [Рекомендації – Asking for advice + aspect](https://www.youtube.com/watch?v=POUzGxu9OxU) — Ukrainian Lessons
->
 > **Verb Prefixes:** [Ukrainian Verb Prefixes](https://www.ukrainianlessons.com/ukrainian-verb-prefixes/) — How prefixes create perfective verbs
->
 > **Past Tense Review:** [Past Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-past-tense/) — Foundation for past negation
->
 > **All Tenses Overview:** [Ukrainian Verb Tenses](https://www.ukrainianlessons.com/ukrainian-tenses/) — Complete verb system reference
->
 > **Practical Usage:** [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/category/podcast/) — Real conversations with negation patterns
 
 ## Diagnostic
@@ -50,7 +47,7 @@ vocabulary_count: 20
 
 Both translate roughly as "I haven't read this book." But the Ukrainian sentences communicate very different things:
 
-- Sentence 1 (imperfective): I have never read this book / I didn't read this book.
+- Sentence 1 (недоконаний вид): I have never read this book / I didn't read this book.
 - Sentence 2 (perfective + ще): I haven't read this book **yet** (but I will, or I'm expected to).
 
 > [!observe] Compare these pairs:
@@ -152,7 +149,7 @@ These expressions mean the action used to happen but has stopped. Aspect choice 
 
 > 🎬 **Pop Culture Moment: Ukrainian Songs**
 >
-> The song "Більше не повернусь" (I Won't Return Anymore) uses perfective because it describes a final, decisive action — not returning one specific time, with finality. "Більше не повертаюсь" (imperfective) would mean "I don't return anymore" — an ongoing state of not returning.
+> The song "Більше не повернусь" (I Won't Return Anymore) uses perfective because it describes a final, decisive action — not returning one specific time, with finality. "Більше не повертаюсь" (недоконаний вид) would mean "I don't return anymore" — an ongoing state of not returning.
 
 ## Deep Dive
 
@@ -401,7 +398,7 @@ Convert each positive command to a negative one with appropriate aspect:
 
 ---
 
-# Summary
+## Summary
 
 У цьому модулі ви вивчили:
 
@@ -441,7 +438,7 @@ Convert each positive command to a negative one with appropriate aspect:
 
 ---
 
-# Activities
+## Activities
 
 ## quiz: Aspect in Negation
 > Choose the correct answer about negation and aspect in Ukrainian.
@@ -544,7 +541,9 @@ Convert each positive command to a negative one with appropriate aspect:
     - [ ] He didn't come
     > Навряд чи = unlikely, hardly.
 
-## match-up: Negation Vocabulary
+## match-up: Negation
+
+# Vocabulary
 > Match the Ukrainian words with their English meanings.
 
 | Ukrainian | English |
@@ -755,118 +754,118 @@ Convert each positive command to a negative one with appropriate aspect:
 > Put the words in the correct order.
 
 1. читав / книги / ніколи / не / Я / цієї
-   > [!answer] Я ніколи не читав цієї книги.
+   > [!answer] Я ніколи не читав цієї книги
    > (I've never read this book.) [6 words]
 
 2. не / Ніхто / дзвонив / мені
-   > [!answer] Ніхто не дзвонив мені.
+   > [!answer] Ніхто не дзвонив мені
    > (Nobody called me.) [4 words]
 
 3. казав / Він / про / нічого / це / не
-   > [!answer] Він нічого не казав про це.
+   > [!answer] Він нічого не казав про це
    > (He didn't say anything about this.) [6 words]
 
 4. працювала / Вона / ніде / не / раніше
-   > [!answer] Вона ніде не працювала раніше.
+   > [!answer] Вона ніде не працювала раніше
    > (She didn't work anywhere before.) [5 words]
 
 5. бачилися / не / Ми / раніше
-   > [!answer] Ми не бачилися раніше.
+   > [!answer] Ми не бачилися раніше
    > (We haven't met before.) [4 words]
 
 6. їв / ніколи / суші / Я / не
-   > [!answer] Я ніколи не їв суші.
+   > [!answer] Я ніколи не їв суші
    > (I've never eaten sushi.) [5 words]
 
 7. знали / про / Вони / це / не
-   > [!answer] Вони не знали про це.
+   > [!answer] Вони не знали про це
    > (They didn't know about this.) [5 words]
 
 8. не / Ніяк / міг / Я / зрозуміти
-   > [!answer] Я ніяк не міг зрозуміти.
+   > [!answer] Я ніяк не міг зрозуміти
    > (I couldn't understand at all.) [5 words]
 
 9. жодного / запізнювався / не / Він / разу
-   > [!answer] Він жодного разу не запізнювався.
+   > [!answer] Він жодного разу не запізнювався
    > (He was never late.) [5 words]
 
 10. не / Я / курив / ніколи
-    > [!answer] Я ніколи не курив.
+    > [!answer] Я ніколи не курив
     > (I've never smoked.) [4 words]
 
 11. працював / Він / тут / не
-    > [!answer] Він не працював тут.
+    > [!answer] Він не працював тут
     > (He didn't work here.) [4 words]
 
 12. зустрічалися / ніколи / Ми / не / раніше
-    > [!answer] Ми ніколи не зустрічалися раніше.
+    > [!answer] Ми ніколи не зустрічалися раніше
     > (We've never met before.) [5 words]
 
 13. не / пробував / Я / ніколи / цього
-    > [!answer] Я ніколи не пробував цього.
+    > [!answer] Я ніколи не пробував цього
     > (I've never tried this.) [5 words]
 
 14. говорив / про / Ніхто / не / це
-    > [!answer] Ніхто не говорив про це.
+    > [!answer] Ніхто не говорив про це
     > (Nobody talked about this.) [5 words]
 
 ## unjumble: "Ще не" Sentences
 > Put the words in the correct order.
 
 1. прочитав / книгу / ще / Я / не
-   > [!answer] Я ще не прочитав книгу.
+   > [!answer] Я ще не прочитав книгу
    > (I haven't read the book yet.) [5 words]
 
 2. не / ще / Він / подзвонив
-   > [!answer] Він ще не подзвонив.
+   > [!answer] Він ще не подзвонив
    > (He hasn't called yet.) [4 words]
 
 3. вирішили / ще / Ми / не
-   > [!answer] Ми ще не вирішили.
+   > [!answer] Ми ще не вирішили
    > (We haven't decided yet.) [4 words]
 
 4. закінчила / Вона / не / ще
-   > [!answer] Вона ще не закінчила.
+   > [!answer] Вона ще не закінчила
    > (She hasn't finished yet.) [4 words]
 
 5. приїхали / не / Вони / ще
-   > [!answer] Вони ще не приїхали.
+   > [!answer] Вони ще не приїхали
    > (They haven't arrived yet.) [4 words]
 
 6. не / звіт / написав / ще / Я
-   > [!answer] Я ще не написав звіт.
+   > [!answer] Я ще не написав звіт
    > (I haven't written the report yet.) [5 words]
 
 7. отримала / документи / не / ще / Вона
-   > [!answer] Вона ще не отримала документи.
+   > [!answer] Вона ще не отримала документи
    > (She hasn't received the documents yet.) [5 words]
 
 8. не / Ми / подивилися / ще / фільм
-   > [!answer] Ми ще не подивилися фільм.
+   > [!answer] Ми ще не подивилися фільм
    > (We haven't watched the movie yet.) [5 words]
 
 9. купили / квитки / ще / Вони / не
-   > [!answer] Вони ще не купили квитки.
+   > [!answer] Вони ще не купили квитки
    > (They haven't bought the tickets yet.) [5 words]
 
 10. не / Я / поснідав / ще
-    > [!answer] Я ще не поснідав.
+    > [!answer] Я ще не поснідав
     > (I haven't had breakfast yet.) [4 words]
 
 11. поговорив / з / не / ще / Він / начальником
-    > [!answer] Він ще не поговорив з начальником.
+    > [!answer] Він ще не поговорив з начальником
     > (He hasn't talked to the boss yet.) [6 words]
 
 12. ще / прийняла / не / Вона / рішення
-    > [!answer] Вона ще не прийняла рішення.
+    > [!answer] Вона ще не прийняла рішення
     > (She hasn't made a decision yet.) [5 words]
 
 13. не / підписали / Ми / договір / ще
-    > [!answer] Ми ще не підписали договір.
+    > [!answer] Ми ще не підписали договір
     > (We haven't signed the contract yet.) [5 words]
 
 14. дізнався / Він / не / про / ще / це
-    > [!answer] Він ще не дізнався про це.
+    > [!answer] Він ще не дізнався про це
     > (He hasn't found out about this yet.) [6 words]
 
 ## error-correction: Aspect Errors in Negation
@@ -1375,7 +1374,7 @@ Convert each positive command to a negative one with appropriate aspect:
     > [!answer] повернулися
     > [!options] поверталися | повернулися | повертаються | повернуться
 
-# Словник
+## Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

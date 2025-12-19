@@ -1,9 +1,9 @@
 # Audit Report: 11-motion-verbs-full-system.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1250
+**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1250/1250
+- **Words:** ✅ 1567/1500
 - **Activities:** ✅ 19/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -14,13 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 58.8% (target 50-60% (B1.2 Motion))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (17 interactive elements)
+- **Immersion:** 🇺🇦 55.9% (target 40-68% (B1.2 Motion))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -29,6 +23,7 @@
 | **Діагностика** | ✅ | 120 | Included in Core |
 | **Аналіз** | ✅ | 158 | Included in Core |
 | **Поглиблення** | ⚪️ | 714 | Skipped |
+| **The Logic of Space: Vectors vs. Fields** | ⚪️ | 317 | Skipped |
 | **Практика** | ⚪️ | 156 | Skipped |
 | **Підсумок** | ✅ | 0 | Included in Core |
 | **Головне** | ⚪️ | 102 | Skipped |

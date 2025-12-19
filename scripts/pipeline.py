@@ -63,6 +63,9 @@ def step_lint(lang_pair: str, level: Optional[str], module_num: Optional[int]) -
         # Find the specific module file
         level_path = CURRICULUM_DIR / lang_pair / level
         module_files = list(level_path.glob(f"{module_num:02d}-*.md")) + list(level_path.glob(f"{module_num}-*.md"))
+        # Support module-LEVEL-NUM format (e.g. module-LIT-005.md)
+        if level:
+            module_files += list(level_path.glob(f"module-{level.upper()}-{module_num:03d}*.md"))
         if module_files:
             cmd.append(str(module_files[0]))
         else:

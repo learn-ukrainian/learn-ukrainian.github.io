@@ -39,7 +39,7 @@ This module is pure practice. By the end, you should recall aspect pairs without
 
 ---
 
-# The Core 30 Pairs
+## The Core 30 Pairs
 
 ## Tier 1: Essential Everyday Pairs
 
@@ -108,7 +108,7 @@ These verbs describe physical actions and changes.
 
 ---
 
-# How to Choose: The Decision Tree
+## How to Choose: The Decision Tree
 
 Choosing between aspects can be challenging for English speakers because English does not have the same system. In English, we use different verb tenses and context to convey similar information. In Ukrainian, the choice between perfective and imperfective is grammatically required and changes the form of the verb itself.
 
@@ -133,7 +133,7 @@ Here is a simple decision process to help you choose:
 
 ---
 
-# Drill Patterns
+## Drill Patterns
 
 ## Pattern A: Past Tense Drill
 
@@ -161,7 +161,7 @@ Use **imperfective** for process/duration:
 
 ---
 
-# Rapid Fire Drills
+## Rapid Fire Drills
 
 ## Drill 1: Instant Recall
 
@@ -195,7 +195,7 @@ Now the opposite - perfective to imperfective:
 
 ---
 
-# Story Time: The Exam
+## Story Time: The Exam
 
 Сьогодні в Оксани іспит. Вона **готувалася** весь тиждень. Вона **прочитала** всі конспекти. Вона **вивчила** всі правила. Вона **повторила** все двічі.
 
@@ -212,7 +212,7 @@ Now the opposite - perfective to imperfective:
 
 ---
 
-# Story Time Part 2: The Routine
+## Story Time Part 2: The Routine
 
 Кожного дня Андрій **встає** о сьомій. Він **снідає**, **п'є** каву і **їде** на роботу.
 
@@ -229,7 +229,7 @@ Now the opposite - perfective to imperfective:
 
 ---
 
-# Common Mistakes
+## Common Mistakes
 
 ## Mistake 1: Using Imperfective for Results
 
@@ -250,7 +250,7 @@ Now the opposite - perfective to imperfective:
 
 ---
 
-# Language Learning Tip
+## Language Learning Tip
 
 The best way to master aspect pairs is through massive input and repeated practice. Here are some strategies:
 
@@ -469,29 +469,23 @@ Today you drilled the 30 most common aspect pairs.
 Вона [___:5] їжу зараз. (is cooking now)
 Ти вже [___:6] відповідь? (Did you find?)
 
-1. прочитав
-> [!answer] прочитав
-> [!options] прочитав | читав
+1. прочитав | читав
+   > [!answer] прочитав
 
-2. пише
-> [!answer] пише
-> [!options] пише | написала
+2. пише | написала
+   > [!answer] пише
 
-3. зробили
-> [!answer] зробили
-> [!options] зробили | робили
+3. зробили | робили
+   > [!answer] зробили
 
-4. п'є
-> [!answer] п'є
-> [!options] п'є | випив
+4. п'є | випив
+   > [!answer] п'є
 
-5. готує
-> [!answer] готує
-> [!options] готує | приготувала
+5. готує | приготувала
+   > [!answer] готує
 
-6. знайшов
-> [!answer] знайшов
-> [!options] знайшов | знаходив
+6. знайшов | знаходив
+   > [!answer] знайшов
 
 ## unjumble: Aspect Sentences
 
@@ -514,37 +508,37 @@ Today you drilled the 30 most common aspect pairs.
 
 ## error-correction: Wrong Aspect
 
-1. Я **читав** книгу вчора і закінчив.
+1. Я читав книгу вчора і закінчив.
    > [!error] читав
    > [!answer] прочитав
    > [!explanation] "Finished" = completed action → perfective.
    > [!options] прочитав | читав
 
-2. Вона **написала** листи кожного дня.
+2. Вона написала листи кожного дня.
    > [!error] написала
    > [!answer] пише
    > [!explanation] "Every day" = habitual → imperfective.
    > [!options] пише | написала
 
-3. Ми **зробили** це, коли ви прийшли.
+3. Ми зробили це, коли ви прийшли.
    > [!error] зробили
    > [!answer] робили
    > [!explanation] Action was in progress when interrupted → imperfective.
    > [!options] робили | зробили
 
-4. Він **вивчив** українську мову щодня.
+4. Він вивчив українську мову щодня.
    > [!error] вивчив
    > [!answer] вчить
    > [!explanation] "Every day" = habitual → imperfective.
    > [!options] вчить | вивчив
 
-5. Я **пишу** листа і відправив.
+5. Я пишу листа і відправив.
    > [!error] пишу
    > [!answer] написав
    > [!explanation] "Sent" implies completion → both verbs should be perfective.
    > [!options] написав | пишу
 
-6. Вона **п'є** каву і вийшла.
+6. Вона п'є каву і вийшла.
    > [!error] п'є
    > [!answer] випила
    > [!explanation] Sequence of completed actions → both verbs should be perfective.

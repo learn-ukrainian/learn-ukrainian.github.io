@@ -1,25 +1,25 @@
 # Audit Report: 04-aspect-future.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1250
+**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 2025/1250
+- **Words:** ✅ 2025/1500
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 52.1% (target 50-60% (B1.1 Aspect))
+- **Immersion:** 🇺🇦 52.1% (target 40-68% (B1.1 Aspect))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 123 | Included in Core |
+| **Вид у майбутньому часі — Три способи** | ⚪️ | 123 | Skipped |
 | **Diagnostic** | ✅ | 164 | Included in Core |
 | **Analysis** | ⚪️ | 485 | Skipped |
 | **Deep Dive** | ✅ | 749 | Included in Core |

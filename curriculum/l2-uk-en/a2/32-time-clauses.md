@@ -88,7 +88,7 @@ Use this for instant reaction.
 
 ---
 
-# Deep Dive: Before vs After
+## Deep Dive: Before vs After
 
 "Before" is tricky in Ukrainian because it forces you to think about "Before WHAT?".
 
@@ -109,7 +109,7 @@ It requires a full verb phrase!
 
 ---
 
-# Deep Dive: Complex Time Connectors
+## Deep Dive: Complex Time Connectors
 
 Sometimes simple "when" is not enough. You need precision.
 
@@ -132,7 +132,7 @@ Sometimes simple "when" is not enough. You need precision.
 
 ---
 
-# Story Time: The Late Traveller
+## Story Time: The Late Traveller
 
 Це історія про Максима, який завжди запізнювався.
 **Того дня, коли** він мав їхати у відпустку, він встав рано.
@@ -162,7 +162,7 @@ Sometimes simple "when" is not enough. You need precision.
 
 ---
 
-# Language in Action
+## Language in Action
 
 ## Dialogue: The Busy Morning
 
@@ -200,7 +200,7 @@ Sometimes simple "when" is not enough. You need precision.
 
 ---
 
-# Pro-Tip: The "Until" Dual Meaning
+## Pro-Tip: The "Until" Dual Meaning
 
 The word **поки** means "while".
 But **поки не** means "until" (literally "while not").

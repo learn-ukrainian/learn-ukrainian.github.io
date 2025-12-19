@@ -1,9 +1,9 @@
 # Audit Report: 14-motion-starting-returning.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1250
+**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1628/1250
+- **Words:** ✅ 1628/1500
 - **Activities:** ✅ 19/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -14,13 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 56.2% (target 50-60% (B1.2 Motion))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (17 interactive elements)
+- **Immersion:** 🇺🇦 56.2% (target 40-68% (B1.2 Motion))
 
 ## Section Audit
 | Section | Status | Count | Notes |

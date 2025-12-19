@@ -17,7 +17,14 @@ objectives:
 vocabulary_count: 25
 ---
 
-# Рух — Наближення та віддалення
+# Untitled
+
+
+> 🎯 **Чому це важливо**
+>
+> Під-, від- — наближення та віддалення. «Підійшов до мене» vs «відійшов від мене» — дві протилежні дії, які постійно використовуються в розмові. Цей модуль завершує вашу систему напрямків.
+
+## Рух — Наближення та віддалення
 
 ## Діагностика
 
@@ -204,6 +211,65 @@ Prefix **до-** indicates **reaching** — completing movement to a destination
 
 ---
 
+---
+
+## Figurative Meanings: Beyond Physical Motion
+
+At B1 level, you must master the **metaphorical** uses of these verbs. They are used constantly in business, relationships, and logic.
+
+### 1. Підходити (To Approach → To Fit/Suit)
+
+If something "approaches" you well, it fits you.
+- **Цей колір тобі підходить.** (This color suits you.)
+- **Цей ключ не підходить до замка.** (This key doesn't fit the lock.)
+- **Мені це не підходить.** (This [arrangement/time/offer] doesn't work for me.)
+
+> 🧠 **Logic:** It comes close to your requirements or parameters.
+
+### 2. Відходити (To Move Away → To Recover/Expire)
+
+- **Відійти від шоку.** (To recover from shock — lit. to move away from it.)
+- **Відійти від справ.** (To retire/step away from business.)
+- **Душа відійшла.** (The soul departed/passed away — poetic.)
+
+### 3. Доходити (To Reach → To Grasp/Escalate)
+
+- **До мене дійшло!** (It dawned on me! / I finally got it! — lit. It reached me.)
+- **Дійти згоди.** (To reach an agreement.)
+- **Справа дійшла до суду.** (The matter reached the court/escalated to trial.)
+- **Дійти висновку.** (To reach a conclusion.)
+
+### Contrast in Idioms
+
+| Prefix | Idiom | Meaning |
+|--------|-------|---------|
+| **Під-** | **Підвести когось** | To let someone down (fail them) |
+| **Від-** | **Відвести душу** | To unburden one's soul / vent |
+| **До-** | **Довести до сліз** | To drive someone to tears |
+
+*Note: "Підвести" literally means "to lead under" (like leading someone onto thin ice), hence "to let down/betray".*
+
+---
+
+## Cultural Insight: The Art of Leaving
+
+Ukrainians rarely **відходять** (depart) abruptly. Leaving is a ritual.
+
+### 1. "Присядемо на дорогу" (Let's sit for the road)
+Before a long journey (before you **від'їжджаєте**), everyone must sit down in silence for a minute.
+- **Purpose:** To trick the house spirits (domovyk) into thinking you aren't leaving, so they don't follow you. Or simply to gather thoughts and remember forgotten passports.
+
+### 2. "Проводижати" (To see someone off)
+You don't just say goodbye at the door. You **проводижаєш** (accompany) the guest to the gate, the car, or even the bus stop. To close the door immediately is rude.
+
+### 3. "На коня" (On the horse)
+The final drink before leaving. historically, the guest was already on the horse, and the host gave one last cup. Now it's the "one for the road" drink.
+
+> 🇺🇦 **Language Tip:**
+> When a guest says "Я пішов" (I'm leaving), the host says "Та ще посидьте!" (Sit a while longer!). This loop can repeat 3-4 times. This is called **Українське прощання** (Ukrainian goodbye).
+
+---
+
 ## Практика
 
 ### Вправа: Оберіть правильний префікс
@@ -240,7 +306,7 @@ Prefix **до-** indicates **reaching** — completing movement to a destination
 
 ---
 
-# Підсумок
+## Підсумок
 
 ## Головне
 
@@ -279,7 +345,7 @@ Prefix **до-** indicates **reaching** — completing movement to a destination
 
 ---
 
-# Вправи
+## Вправи
 
 ## quiz: Prefix Selection
 
@@ -621,117 +687,117 @@ Sort these verbs by their prefix meaning:
 ## unjumble: Form Correct Sentences
 
 1. підійшов | він | вікна | до | і | подивився
-   > [!answer] Він підійшов до вікна і подивився.
+   > [!answer] Він підійшов до вікна і подивився
    > [!explanation] "He approached the window and looked"
 
 2. відійшла | вона | столу | від | і | вийшла
-   > [!answer] Вона відійшла від столу і вийшла.
+   > [!answer] Вона відійшла від столу і вийшла
    > [!explanation] "She stepped away from the table and left"
 
 3. дійшли | ми | центру | до | за | годину
-   > [!answer] Ми дійшли до центру за годину.
+   > [!answer] Ми дійшли до центру за годину
    > [!explanation] "We reached the center in an hour"
 
 4. під'їхало | таксі | будинку | до | і | зупинилося
-   > [!answer] Таксі під'їхало до будинку і зупинилося.
+   > [!answer] Таксі під'їхало до будинку і зупинилося
    > [!explanation] "The taxi pulled up to the house and stopped"
 
 5. від'їхав | поїзд | тому | хвилин | п'ять
-   > [!answer] Поїзд від'їхав п'ять хвилин тому.
+   > [!answer] Поїзд від'їхав п'ять хвилин тому
    > [!explanation] "The train left five minutes ago"
 
 6. доїхала | вона | Львова | до | за | три | години
-   > [!answer] Вона доїхала до Львова за три години.
+   > [!answer] Вона доїхала до Львова за три години
    > [!explanation] "She reached Lviv in three hours"
 
 7. підійди | ближче | тебе | не | я | чую
-   > [!answer] Підійди ближче, я тебе не чую.
+   > [!answer] Підійди ближче, я тебе не чую
    > [!explanation] "Come closer, I can't hear you"
 
 8. віднесла | вона | посуд | кухні | до
-   > [!answer] Вона віднесла посуд до кухні.
+   > [!answer] Вона віднесла посуд до кухні
    > [!explanation] "She took the dishes to the kitchen"
 
 9. доніс | кур'єр | посилку | вчасно
-   > [!answer] Кур'єр доніс посилку вчасно.
+   > [!answer] Кур'єр доніс посилку вчасно
    > [!explanation] "The courier delivered the package on time"
 
 10. підлетів | птах | вікна | до | і | сів
-    > [!answer] Птах підлетів до вікна і сів.
+    > [!answer] Птах підлетів до вікна і сів
     > [!explanation] "The bird flew up to the window and sat"
 
 11. відлетіли | птахи | шуму | від
-    > [!answer] Птахи відлетіли від шуму.
+    > [!answer] Птахи відлетіли від шуму
     > [!explanation] "The birds flew away from the noise"
 
 12. довів | гід | нас | музею | до
-    > [!answer] Гід довів нас до музею.
+    > [!answer] Гід довів нас до музею
     > [!explanation] "The guide led us to the museum"
 
 13. підвезти | можеш | мене | центру | до
-    > [!answer] Можеш підвезти мене до центру?
+    > [!answer] Можеш підвезти мене до центру
     > [!explanation] "Can you give me a ride to the center?"
 
 14. відвезло | таксі | його | додому
-    > [!answer] Таксі відвезло його додому.
+    > [!answer] Таксі відвезло його додому
     > [!explanation] "The taxi took him home"
 
 ## unjumble: Complex Sentences
 
 1. підійшов | він | вікна | до | і | подивився | на | вулицю
-   > [!answer] Він підійшов до вікна і подивився на вулицю.
+   > [!answer] Він підійшов до вікна і подивився на вулицю
    > [!explanation] "He approached the window and looked at the street"
 
 2. відійшла | вона | дороги | від | бо | побачила | машину
-   > [!answer] Вона відійшла від дороги, бо побачила машину.
+   > [!answer] Вона відійшла від дороги, бо побачила машину
    > [!explanation] "She stepped away from the road because she saw a car"
 
 3. дійшли | ми | нарешті | готелю | до | втомлені
-   > [!answer] Ми нарешті дійшли до готелю втомлені.
+   > [!answer] Ми нарешті дійшли до готелю втомлені
    > [!explanation] "We finally reached the hotel, tired"
 
 4. під'їхало | таксі | готелю | до | і | водій | вийшов
-   > [!answer] Таксі під'їхало до готелю, і водій вийшов.
+   > [!answer] Таксі під'їхало до готелю, і водій вийшов
    > [!explanation] "The taxi pulled up to the hotel and the driver got out"
 
 5. від'їхав | поїзд | точно | за | розкладом | о | третій
-   > [!answer] Поїзд від'їхав точно за розкладом о третій.
+   > [!answer] Поїзд від'їхав точно за розкладом о третій
    > [!explanation] "The train left exactly on schedule at three"
 
 6. доїхали | вони | аеропорту | до | за | годину | без | заторів
-   > [!answer] Вони доїхали до аеропорту за годину без заторів.
+   > [!answer] Вони доїхали до аеропорту за годину без заторів
    > [!explanation] "They reached the airport in an hour without traffic"
 
 7. підійшов | офіціант | нашого | до | столика | і | запитав
-   > [!answer] Офіціант підійшов до нашого столика і запитав.
+   > [!answer] Офіціант підійшов до нашого столика і запитав
    > [!explanation] "The waiter approached our table and asked"
 
 8. віднесла | вона | брудний | посуд | кухні | до | після | обіду
-   > [!answer] Вона віднесла брудний посуд до кухні після обіду.
+   > [!answer] Вона віднесла брудний посуд до кухні після обіду
    > [!explanation] "She took the dirty dishes to the kitchen after lunch"
 
 9. доніс | кур'єр | всі | посилки | клієнтам | вчасно
-   > [!answer] Кур'єр доніс всі посилки клієнтам вчасно.
+   > [!answer] Кур'єр доніс всі посилки клієнтам вчасно
    > [!explanation] "The courier delivered all packages to clients on time"
 
 10. підлетів | літак | аеропорту | до | і | почав | знижуватися
-    > [!answer] Літак підлетів до аеропорту і почав знижуватися.
+    > [!answer] Літак підлетів до аеропорту і почав знижуватися
     > [!explanation] "The plane approached the airport and began descending"
 
 11. відлетіли | птахи | від | шуму | і | сховалися | в | лісі
-    > [!answer] Птахи відлетіли від шуму і сховалися в лісі.
+    > [!answer] Птахи відлетіли від шуму і сховалися в лісі
     > [!explanation] "The birds flew away from the noise and hid in the forest"
 
 12. довів | гід | туристів | всіх | музею | до | о | третій
-    > [!answer] Гід довів всіх туристів до музею о третій.
+    > [!answer] Гід довів всіх туристів до музею о третій
     > [!explanation] "The guide led all tourists to the museum at three"
 
 13. підвезти | можеш | мене | станції | до | метро | по | дорозі
-    > [!answer] Можеш підвезти мене до станції метро по дорозі?
+    > [!answer] Можеш підвезти мене до станції метро по дорозі
     > [!explanation] "Can you give me a ride to the metro station on the way?"
 
 14. відвезло | таксі | пасажирів | всіх | готелів | до | їхніх
-    > [!answer] Таксі відвезло всіх пасажирів до їхніх готелів.
+    > [!answer] Таксі відвезло всіх пасажирів до їхніх готелів
     > [!explanation] "The taxi took all passengers to their hotels"
 
 ## error-correction: Fix Prefix Mistakes
@@ -1158,7 +1224,7 @@ Translate using the correct prefixed verb:
 
 ---
 
-# Словник
+## Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

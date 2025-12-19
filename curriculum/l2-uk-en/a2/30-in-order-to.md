@@ -99,7 +99,7 @@ This is weird for English speakers! We use the **Past Tense** form, but the mean
 
 ---
 
-# Deep Dive: Is there a Subjunctive Mood?
+## Deep Dive: Is there a Subjunctive Mood?
 
 You might ask: "Why do we use the Past Tense for a wish?"
 *Я хочу, щоб ти прийшов.* (I want you to come - literally "that you came").
@@ -118,7 +118,7 @@ So when you say `щоб ти прийшов`, you are effectively saying "that y
 
 ---
 
-# Pro-Tip: The "Toast" Algorithm
+## Pro-Tip: The "Toast" Algorithm
 
 Want to make a toast like a native? Just start with **"Я хочу випити за те, щоб..."** (I want to drink for that, that...).
 
@@ -135,7 +135,7 @@ Or simpler: **"За нас!"** (To us!).
 
 ---
 
-# Deep Dive: The "Desire" Pattern
+## Deep Dive: The "Desire" Pattern
 
 The structure **"хотіти, щоб..."** is extremely common. It replaces English "want someone to...".
 
@@ -160,7 +160,7 @@ The structure **"хотіти, щоб..."** is extremely common. It replaces Eng
 
 ---
 
-# Language in Action
+## Language in Action
 
 ## Dialogue: The Surprise Party
 

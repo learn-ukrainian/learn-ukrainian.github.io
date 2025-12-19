@@ -512,8 +512,8 @@ Now you can talk about your profession with confidence! 👨‍⚕️👩‍🏫
 - [x] "Служити" takes instrumental for role.
   > Correct! Він служить солдатом.
 
-- [ ] The feminine of "письменник" is "письменниця."
-  > Wait — this IS true! Письменник → письменниця.
+- [x] The feminine of "письменник" is "письменниця."
+  > Correct! Письменник → письменниця.
 
 ## group-sort: Masculine vs. Feminine Professions
 

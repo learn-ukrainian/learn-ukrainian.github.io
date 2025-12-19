@@ -53,7 +53,7 @@ In Ukrainian, you just click a LEGO piece (prefix) onto the verb!
 
 ---
 
-# The Meaning Map
+## The Meaning Map
 
 Let's look at the most powerful "Transformers".
 
@@ -70,7 +70,7 @@ Let's look at the most powerful "Transformers".
 
 ---
 
-# Story Time: The Writer's Deadline
+## Story Time: The Writer's Deadline
 
 Це історія про письменника, який намагався написати геніальну книгу.
 Спочатку він **написав** план на серветці в кафе.
@@ -99,7 +99,7 @@ Let's look at the most powerful "Transformers".
 
 ---
 
-# Deep Dive: Open and Close (Відкрити / Закрити)
+## Deep Dive: Open and Close (Відкрити / Закрити)
 
 These are the most useful practical verbs.
 Unlike English ("turn on/off" vs "open/close"), Ukrainian logic is consistent.
@@ -125,7 +125,7 @@ Unlike English ("turn on/off" vs "open/close"), Ukrainian logic is consistent.
 
 ---
 
-# Deep Dive: To Give (The "Give" Family)
+## Deep Dive: To Give (The "Give" Family)
 
 The verb **Дати** (to give) is a prefix magnet.
 
@@ -145,7 +145,7 @@ The verb **Дати** (to give) is a prefix magnet.
 
 ---
 
-# Deep Dive: Connect and Disconnect
+## Deep Dive: Connect and Disconnect
 
 In the age of technology, these are crucial.
 Base: **Єднати** (to unite).
@@ -159,7 +159,7 @@ Base: **Єднати** (to unite).
 
 ---
 
-# Language in Action
+## Language in Action
 
 ## Dialogue: Office Chaos
 
@@ -200,7 +200,7 @@ Base: **Єднати** (to unite).
 
 ---
 
-# Reflection Point
+## Reflection Point
 
 Before we finish, answer these questions for yourself:
 1.  How do you say "Redo" in Ukrainian? (Hint: **Пере-**)
@@ -214,7 +214,7 @@ If yes, you are ready for suffixes!
 
 ---
 
-# Deep Dive: The Logic of "Na-" (Accumulation)
+## Deep Dive: The Logic of "Na-" (Accumulation)
 
 The prefix **На-** often means "to put on" or "to accumulate/create a lot of".
 - **Писати** (write) -> **Написати** (create a written text).
@@ -225,7 +225,7 @@ The prefix **На-** often means "to put on" or "to accumulate/create a lot of".
 
 ---
 
-# Deep Dive: The "Za-" Trap
+## Deep Dive: The "Za-" Trap
 
 The prefix **За-** is the trickiest one. It has three opposite meanings!
 
@@ -248,7 +248,7 @@ The prefix **За-** is the trickiest one. It has three opposite meanings!
 
 ---
 
-# Anti-Propaganda Showcase
+## Anti-Propaganda Showcase
 
 > [!myth] Myth: "Ukrainian vocabulary is small."
 > **Fact:** This myth comes from Soviet dictionaries that artificially limited defining Ukrainian words to match Russian ones.
@@ -362,7 +362,7 @@ The prefix **За-** is the trickiest one. It has three opposite meanings!
 
 ---
 
-# Deep Dive: Feel the Prefix
+## Deep Dive: Feel the Prefix
 
 Comparing suffixes (like in English *beauty-ful*) which are abstract, Ukrainian prefixes are **physical**.
 You can use your hands to memorize them!

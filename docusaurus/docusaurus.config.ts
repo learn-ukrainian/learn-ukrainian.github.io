@@ -11,6 +11,8 @@ const config: Config = {
     v4: true,
   },
 
+  clientModules: [],
+
   url: 'https://krisztiankoos.github.io',
   baseUrl: '/curricula-opus/',
 

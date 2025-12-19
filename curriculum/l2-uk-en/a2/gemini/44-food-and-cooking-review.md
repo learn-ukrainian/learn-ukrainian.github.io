@@ -1,20 +1,9 @@
 # Audit Report: 44-food-and-cooking.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[HEADING_LEVEL]** Multiple H1 headings: 'Story Time Part 2: Рецепт Вареників' should be H2 (##)
-  - FIX: Only one H1 allowed (page title). Change '# Story Time Part 2: Рецепт Вареників' to '## Story Time Part 2: Рецепт Вареників'
-- **[HEADING_LEVEL]** Multiple H1 headings: 'Common Expressions' should be H2 (##)
-  - FIX: Only one H1 allowed (page title). Change '# Common Expressions' to '## Common Expressions'
-
-## Recommendation
-**📝 UPDATE** (severity 10/100)
-
-- 2 pedagogical violations (minor)
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1893/1000
+- **Words:** ✅ 1182/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -24,8 +13,8 @@
 - **Vocab:** ✅ 35/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
-- **Immersion:** 🇺🇦 50.8% (target 50-60% (A2.3))
+- **Pedagogy:** ✅ Level-appropriate
+- **Immersion:** 🇺🇦 51.6% (target 50-60% (A2.3))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -44,7 +33,7 @@
 | **Summary** | ✅ | 141 | Included in Core |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **match-up: Kitchen Words** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Cooking Methods** | 🎮 | 10 | Activity (10 items, min 8) |
+| **fill-in: Cooking Methods** | 🎮 | 8 | Activity (8 items, min 8) |
 | **quiz: Food & Cooking** | 🎮 | 8 | Activity (8 items, min 8) |
 | **cloze: Recipe Story** | 🎮 | 6 | Activity (6 items, min 6) |
 | **unjumble: Cooking Sentences** | 🎮 | 8 | Activity (8 items, min 6) |

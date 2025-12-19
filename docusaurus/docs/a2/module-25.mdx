@@ -154,7 +154,7 @@ Many stories feature two **куми** (godfathers/close friends). They are usual
 
 ---
 
-# Language in Action
+## Language in Action
 
 ## A Strange Morning
 
@@ -470,7 +470,7 @@ Now you can turn a boring list of facts into an exciting narrative!
 Я [___:10] встиг зайти всередину.
 Офіціант усміхнувся і віддав мені ключі.
 [___:11], я був удома. Яка пригода!`}
-  blanks={[{ answer: `Спочатку`, options: [`Спочатку`] }, { answer: `раптом`, options: [`раптом`] }, { answer: `Потім`, options: [`Потім`] }, { answer: `відразу`, options: [`відразу`] }, { answer: `Несподівано`, options: [`Несподівано`] }, { answer: `перед цим`, options: [`перед цим`] }, { answer: `негайно`, options: [`негайно`] }, { answer: `Коли`, options: [`Коли`] }, { answer: `вже`, options: [`вже`] }, { answer: `ледве`, options: [`ледве`] }, { answer: `Нарешті`, options: [`Нарешті`] }]}
+  blanks={[{ index: 0, answer: `Спочатку`, options: [`Спочатку`] }, { index: 1, answer: `раптом`, options: [`раптом`] }, { index: 2, answer: `Потім`, options: [`Потім`] }, { index: 3, answer: `відразу`, options: [`відразу`] }, { index: 4, answer: `Несподівано`, options: [`Несподівано`] }, { index: 5, answer: `перед цим`, options: [`перед цим`] }, { index: 6, answer: `негайно`, options: [`негайно`] }, { index: 7, answer: `Коли`, options: [`Коли`] }, { index: 8, answer: `вже`, options: [`вже`] }, { index: 9, answer: `ледве`, options: [`ледве`] }, { index: 10, answer: `Нарешті`, options: [`Нарешті`] }]}
 />
 
 ### Telling a Funny Story
@@ -509,42 +509,42 @@ Now you can turn a boring list of facts into an exciting narrative!
 
 <ErrorCorrection>
   <ErrorCorrectionItem
-    sentence={`**Нарешті** я прокинувся, а **потім** пішов спати.`}
+    sentence={`Нарешті я прокинувся, а потім пішов спати.`}
     errorWord={`Нарешті`}
     correctForm={`Спочатку`}
     options={[`Спочатку`, `Нарешті`]}
     explanation={`Stories start with \"First\", not \"Finally\".`}
   />
   <ErrorCorrectionItem
-    sentence={`Він прийшов додому **перед цим** роботи. (after work)`}
+    sentence={`Він прийшов додому перед цим роботи. (after work)`}
     errorWord={`перед цим`}
     correctForm={`після`}
     options={[`після`, `перед цим`]}
     explanation={`\"Після\" = after. \"Перед цим\" = before this.`}
   />
   <ErrorCorrectionItem
-    sentence={`Я **вже** чекаю тебе! (am still waiting)`}
+    sentence={`Я вже чекаю тебе! (am still waiting)`}
     errorWord={`вже`}
     correctForm={`ще`}
     options={[`ще`, `вже`]}
     explanation={`\"Ще\" indicates process is still going.`}
   />
   <ErrorCorrectionItem
-    sentence={`**Раптом** я поснідав. (Routine action, not sudden)`}
+    sentence={`Раптом я поснідав. (Routine action, not sudden)`}
     errorWord={`Раптом`}
     correctForm={`Потім`}
     options={[`Потім`, `Раптом`]}
     explanation={`Breakfast is usually a sequence step \"Then\", not a shock \"Suddenly\".`}
   />
   <ErrorCorrectionItem
-    sentence={`Це сталося **скоро**. (Long ago)`}
+    sentence={`Це сталося скоро. (Long ago)`}
     errorWord={`скоро`}
     correctForm={`давно`}
     options={[`давно`, `скоро`]}
     explanation={`\"Скоро\" = soon. \"Давно\" = long ago.`}
   />
   <ErrorCorrectionItem
-    sentence={`Я зробив це **несподівано**. (Specifically meaning \"immediately\" as reaction)`}
+    sentence={`Я зробив це несподівано. (Specifically meaning \"immediately\" as reaction)`}
     errorWord={`несподівано`}
     correctForm={`відразу`}
     options={[`відразу`, `несподівано`]}

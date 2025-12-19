@@ -1,9 +1,9 @@
 # Audit Report: 08-aspect-working-week.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1250
+**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1510/1250
+- **Words:** ✅ 1511/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 59.5% (target 50-60% (B1.1 Aspect))
+- **Immersion:** 🇺🇦 59.6% (target 40-68% (B1.1 Aspect))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -23,7 +23,7 @@
 | **A Monday at Work: Aspect in Action** | ⚪️ | 181 | Skipped |
 | **Аналіз** | ✅ | 0 | Included in Core |
 | **Aspect in the Workplace: A Complete Guide** | ⚪️ | 204 | Skipped |
-| **Діалоги на роботі** | ✅ | 468 | Included in Core |
+| **Діалоги на роботі** | ✅ | 469 | Included in Core |
 | **Поглиблення** | ⚪️ | 0 | Skipped |
 | **Workplace Scenarios: When Aspect Really Matters** | ✅ | 79 | Included in Core |
 | **Типові робочі ситуації** | ⚪️ | 155 | Skipped |

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 2399/1000 (>2000 may be too long)
+- **Words:** ✅ 1143/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types

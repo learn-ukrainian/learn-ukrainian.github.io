@@ -331,13 +331,7 @@ Life is not only work. Ukrainians value their rest highly. Make sure you rest we
    > [!options] колекціонує | грає | танцює | йде
    > He collects stamps.
 
-8. Я хочу ____ у Францію.
-   > [!answer] поїхати
-   > [!options] поїхати | малювати | співати | спати
-   > To go (travel) to France. Wait, 'подорожувати' fits too, but 'поїхати' is more natural with destination 'у Францію'. Let's use 'подорожувати' generic: *Я хочу подорожувати світом.*
-   
-   Rephrase item 8:
-   Я хочу ____ світом.
+8. Я хочу ____ світом.
    > [!answer] подорожувати
    > [!options] подорожувати | малювати | грати | читати
    > To travel the world (Instr).
@@ -566,45 +560,35 @@ Life is not only work. Ukrainians value their rest highly. Make sure you rest we
 Потім ми пішли в [___:8]. Там була [___:9] сучасного мистецтва.
 Ми любимо такий [___:10].
 
-1. дачу
-> [!answer] дачу
-> [!options] дачу | роботу | школу
+1. дачу | роботу | школу
+   > [!answer] дачу
 
-2. співали
-> [!answer] співали
-> [!options] співали | спали | їли
+2. співали | спали | їли
+   > [!answer] співали
 
-3. грали
-> [!answer] грали
-> [!options] грали | читали | писали
+3. грали | читали | писали
+   > [!answer] грали
 
-4. кіно
-> [!answer] кіно
-> [!options] кіно | намет | ліс
+4. кіно | намет | ліс
+   > [!answer] кіно
 
-5. квитки
-> [!answer] квитки
-> [!options] квитки | вікна | двері
+5. квитки | вікна | двері
+   > [!answer] квитки
 
-6. фільм
-> [!answer] фільм
-> [!options] фільм | театр | парк
+6. фільм | театр | парк
+   > [!answer] фільм
 
-7. глядачі
-> [!answer] глядачі
-> [!options] глядачі | актори | лікарі
+7. глядачі | актори | лікарі
+   > [!answer] глядачі
 
-8. музей
-> [!answer] музей
-> [!options] музей | офіс | завод
+8. музей | офіс | завод
+   > [!answer] музей
 
-9. виставка
-> [!answer] виставка
-> [!options] виставка | пісня | гра
+9. виставка | пісня | гра
+   > [!answer] виставка
 
-10. відпочинок
-> [!answer] відпочинок
-> [!options] відпочинок | урок | сон
+10. відпочинок | урок | сон
+   > [!answer] відпочинок
 
 ## dialogue-reorder: Weekend Plans
 
@@ -641,7 +625,8 @@ Life is not only work. Ukrainians value their rest highly. Make sure you rest we
 
 3. __ марки.
    - [x] Колекціонувати
-
+   - [ ] Читати
+   > Collect stamps.
 
 4. __ картини.
    - [x] Малювати

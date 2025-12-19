@@ -1,20 +1,20 @@
 # Audit Report: 06-aspect-imperatives.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1250
+**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1299/1250
+- **Words:** ✅ 1535/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 58.3% (target 50-60% (B1.1 Aspect))
+- **Immersion:** 🇺🇦 61.2% (target 40-68% (B1.1 Aspect))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -23,12 +23,12 @@
 | **Test Yourself First** | ⚪️ | 236 | Skipped |
 | **Аналіз** | ✅ | 0 | Included in Core |
 | **Дві душі українського наказу** | ⚪️ | 84 | Skipped |
-| **Парадокс ввічливості** | ⚪️ | 68 | Skipped |
+| **Парадокс ввічливості** | ⚪️ | 142 | Skipped |
 | **Поглиблення** | ⚪️ | 0 | Skipped |
 | **Коли вид змінює значення** | ⚪️ | 92 | Skipped |
-| **Негативні імперативи: Особливий випадок** | ⚪️ | 55 | Skipped |
+| **Негативні імперативи: Особливий випадок** | ⚪️ | 141 | Skipped |
 | **Практика** | ⚪️ | 0 | Skipped |
-| **Контрольована практика: Вибір виду** | ⚪️ | 163 | Skipped |
+| **Контрольована практика: Вибір виду** | ⚪️ | 239 | Skipped |
 | **Вправа на трансформацію** | ⚪️ | 112 | Skipped |
 | **Розширена практика: Діалоги** | ✅ | 366 | Included in Core |
 | **Summary** | ✅ | 0 | Included in Core |

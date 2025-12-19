@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 3643/1000 (>2000 may be too long)
+- **Words:** ✅ 1820/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -15,6 +15,12 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 43.6% (target 35-50% (A2.1))
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (10 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

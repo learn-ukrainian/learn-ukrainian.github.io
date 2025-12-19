@@ -102,7 +102,7 @@ Note that washing machines in Ukraine are often located in the bathroom rather t
 
 ---
 
-# Story Time: Нова Квартира
+## Story Time: Нова Квартира
 
 Ольга щойно переїхала в нову квартиру. Вона показує її подрузі Катерині.
 
@@ -134,7 +134,6 @@ Note that washing machines in Ukraine are often located in the bathroom rather t
 
 — Вітаю з новосіллям! — каже вона. — Квартира чудова!
 — Дякую! Приходь у гості! — відповідає Ольга.
-— Дякую! Приходь частіше! — посміхається Ольга.
 
 > [!tip] Новосілля
 > "Новосілля" — це свято переїзду в нове житло.
@@ -143,7 +142,7 @@ Note that washing machines in Ukraine are often located in the bathroom rather t
 
 ---
 
-# Story Time Part 2: Прибирання
+## Story Time Part 2: Прибирання
 
 Сьогодні субота. Максим прибирає квартиру.
 
@@ -180,7 +179,7 @@ This story demonstrates common vocabulary for household chores. Cleaning vocabul
 
 ---
 
-# Common Expressions
+## Common Expressions
 
 ## Describing Location
 
@@ -315,18 +314,6 @@ When visiting Ukrainian homes or discussing living situations, these phrases wil
    > [!answer] кабінеті
    > [!options] спальні | кабінеті | кухні | ванній
 
-
-7. Меблі ___ в кімнаті. (furniture is located)
-   > [!error] located
-   > [!answer] стоять
-   > [!explanation] Location state → imperfective.
-   > [!options] стоять | постоять
-
-8. Я ___ стіл біля вікна. (placed table)
-   > [!error] placed
-   > [!answer] поставив
-   > [!explanation] Completed placement → perfective.
-   > [!options] ставив | поставив
 7. Білизна в [___]. (washing machine)
    > [!answer] пральній машині
    > [!options] пральній машині | посудомийці | пилососі | духовці
@@ -388,29 +375,23 @@ When visiting Ukrainian homes or discussing living situations, these phrases wil
 Максим [___:5] килим у вітальні. (vacuums)
 Він застеляє [___:6] у спальні. (bed)
 
-1. квартиру
-> [!answer] квартиру
-> [!options] квартиру | будинок | кімнату
+1. квартиру | будинок | кімнату
+   > [!answer] квартиру
 
-2. диван
-> [!answer] диван
-> [!options] диван | крісло | стіл
+2. диван | крісло | стіл
+   > [!answer] диван
 
-3. плита
-> [!answer] плита
-> [!options] плита | духовка | пральна машина
+3. плита | духовка | пральна машина
+   > [!answer] плита
 
-4. балконі
-> [!answer] балконі
-> [!options] балконі | кухні | вітальні
+4. балконі | кухні | вітальні
+   > [!answer] балконі
 
-5. пилососить
-> [!answer] пилососить
-> [!options] пилососить | миє | витирає
+5. пилососить | миє | витирає
+   > [!answer] пилососить
 
-6. ліжко
-> [!answer] ліжко
-> [!options] ліжко | диван | крісло
+6. ліжко | диван | крісло
+   > [!answer] ліжко
 
 ## unjumble: Home Sentences
 

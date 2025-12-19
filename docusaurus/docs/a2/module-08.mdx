@@ -48,7 +48,7 @@ Today we unlock:
 
 ---
 
-# Part 1: Benefit & Absence
+## Part 1: Benefit & Absence
 
 ## Understanding Logical Prepositions
 
@@ -90,7 +90,7 @@ Use **без** to indicate absence. This is straightforward - it simply means "w
 
 ---
 
-# Part 2: Cause & Topic
+## Part 2: Cause & Topic
 
 ## Через + Accusative (Because of / Through)
 Use **через** to show cause or path.
@@ -144,7 +144,7 @@ Think of it like color-coding in a spreadsheet - each case has its "color" that 
 
 ---
 
-# Part 3: Source & Accompaniment
+## Part 3: Source & Accompaniment
 
 ## Від + Genitive (From - Source)
 Use **від** to show origin or sender.
@@ -175,7 +175,7 @@ Use **з** to show accompaniment.
 
 ---
 
-# Part 4: Time & Exception
+## Part 4: Time & Exception
 
 ## О/Об + Locative (At - Time)
 Use **о** (or **об** before vowels) for clock time.
@@ -213,7 +213,7 @@ Use **замість** for substitution.
 
 ---
 
-# Deep Dive: Case Summary
+## Deep Dive: Case Summary
 
 All logical prepositions require a specific case:
 
@@ -239,7 +239,7 @@ Most abstract prepositions take **Genitive** (від, для, без, після
 
 ---
 
-# Story Time: The Letter
+## Story Time: The Letter
 
 Марія отримала **лист від мами**.
 У листі було написано **про сім'ю**.
@@ -262,7 +262,7 @@ Most abstract prepositions take **Genitive** (від, для, без, після
 
 ---
 
-# Story Time Part 2: The Café
+## Story Time Part 2: The Café
 
 Оля зайшла в кафе **після роботи**.
 Вона замовила каву **з молоком** і торт **без глютену**.
@@ -292,7 +292,7 @@ Never give an even number of flowers — that's for funerals!
 
 ---
 
-# Language in Action
+## Language in Action
 
 ## Dialogue: At the Pharmacy
 
@@ -503,7 +503,7 @@ Key distinctions:
 
 Всі її люблять, [___:8] одного колеги.`}
 
-  blanks={[{ answer: `від`, options: [`від`, `для`, `про`] }, { answer: `про`, options: [`про`, `для`, `від`] }, { answer: `для`, options: [`для`, `від`, `з`] }, { answer: `з`, options: [`з`, `без`, `для`] }, { answer: `о`, options: [`о`, `після`, `для`] }, { answer: `Після`, options: [`Після`, `Через`, `Для`] }, { answer: `Через`, options: [`Через`, `Для`, `Про`] }, { answer: `крім`, options: [`крім`, `для`, `з`] }]}
+  blanks={[{ index: 0, answer: `від`, options: [`від`, `для`, `про`] }, { index: 1, answer: `про`, options: [`про`, `для`, `від`] }, { index: 2, answer: `для`, options: [`для`, `від`, `з`] }, { index: 3, answer: `з`, options: [`з`, `без`, `для`] }, { index: 4, answer: `о`, options: [`о`, `після`, `для`] }, { index: 5, answer: `Після`, options: [`Після`, `Через`, `Для`] }, { index: 6, answer: `Через`, options: [`Через`, `Для`, `Про`] }, { index: 7, answer: `крім`, options: [`крім`, `для`, `з`] }]}
 
 />
 
@@ -524,48 +524,148 @@ Key distinctions:
 
 <ErrorCorrection>
   <ErrorCorrectionItem
-    sentence={`Подарунок **від** мами. (Intended: for mom)`}
+    sentence={`Подарунок від мами. (Intended: for mom)`}
     errorWord={`від`}
     correctForm={`для`}
     options={[`для`, `від`]}
     explanation={`\"For mom\" = benefit → для. \"From mom\" = від.`}
   />
   <ErrorCorrectionItem
-    sentence={`Кава **з** цукру. (Intended: without sugar)`}
+    sentence={`Кава з цукру. (Intended: without sugar)`}
     errorWord={`з`}
     correctForm={`без`}
     options={[`без`, `з`]}
     explanation={`\"Without\" = без. \"With\" = з.`}
   />
   <ErrorCorrectionItem
-    sentence={`Ми говорили **для** тебе. (Intended: about you)`}
+    sentence={`Ми говорили для тебе. (Intended: about you)`}
     errorWord={`для`}
     correctForm={`про`}
     options={[`про`, `для`]}
     explanation={`\"About\" = про. \"For\" = для.`}
   />
   <ErrorCorrectionItem
-    sentence={`**Від** хвороби він не прийшов. (Intended: because of)`}
+    sentence={`Від хвороби він не прийшов. (Intended: because of)`}
     errorWord={`Від`}
     correctForm={`Через`}
     options={[`Через`, `Від`]}
     explanation={`\"Because of\" = через. \"From\" (source) = від.`}
   />
   <ErrorCorrectionItem
-    sentence={`Я не можу **для** тебе. (Intended: without you)`}
+    sentence={`Я не можу для тебе. (Intended: without you)`}
     errorWord={`для`}
     correctForm={`без`}
     options={[`без`, `для`]}
     explanation={`\"Without\" = без. \"For\" = для.`}
   />
   <ErrorCorrectionItem
-    sentence={`**Після** кого? (Intended: for whom)`}
+    sentence={`Після кого? (Intended: for whom)`}
     errorWord={`Після`}
     correctForm={`Для`}
     options={[`Для`, `Після`]}
     explanation={`\"For whom?\" = Для кого? \"After\" = Після.`}
   />
 </ErrorCorrection>
+
+### Preposition Rules
+
+<TrueFalse items={[
+  {
+    statement: `\"Для\" always takes the genitive case.`,
+    isTrue: true,
+    explanation: `Correct! Для + Gen: для мами, для тебе.`
+  },  {
+    statement: `\"Про\" takes the genitive case.`,
+    isTrue: false,
+    explanation: `False! \"Про\" takes accusative: про тебе, про книгу.`
+  },  {
+    statement: `\"Через\" can mean both \"because of\" and \"through.\"`,
+    isTrue: true,
+    explanation: `Yes! Через дощ (because of rain), через парк (through the park).`
+  },  {
+    statement: `\"Від\" is used for receiving something from a person.`,
+    isTrue: true,
+    explanation: `Correct! Лист від мами = a letter from mom.`
+  },  {
+    statement: `\"З\" always means \"from.\"`,
+    isTrue: false,
+    explanation: `False! \"З\" with instrumental means \"with\": з другом.`
+  },  {
+    statement: `\"Після\" means \"after\" and takes genitive.`,
+    isTrue: true,
+    explanation: `Yes! Після роботи = after work.`
+  },  {
+    statement: `\"Для\" and \"на\" mean the same thing.`,
+    isTrue: false,
+    explanation: `False! Для = benefit (для тебе), На = payment (на каву).`
+  },  {
+    statement: `\"Крім\" means \"except\" and takes genitive.`,
+    isTrue: true,
+    explanation: `Correct! Всі прийшли, крім Олега.`
+  },  {
+    statement: `\"О/об\" is used for clock time.`,
+    isTrue: true,
+    explanation: `Yes! О третій = at three o'clock.`
+  },  {
+    statement: `\"Через + noun\" and \"тому що + clause\" are interchangeable.`,
+    isTrue: false,
+    explanation: `They both mean \"because\" but have different grammar: через дощ vs тому що йде дощ.`
+  },  {
+    statement: `\"Замість\" means \"instead of.\"`,
+    isTrue: true,
+    explanation: `Correct! Чай замість кави = tea instead of coffee.`
+  },  {
+    statement: `\"Без\" expresses absence.`,
+    isTrue: true,
+    explanation: `Yes! Кава без цукру = coffee without sugar.`
+  }
+]} />
+
+### English to Ukrainian
+
+<Translate questions={[
+  {
+    source: `A gift for mom.`,
+    options: [
+      { text: `Подарунок для мами.`, correct: true },
+      { text: `Подарунок від мами.`, correct: false },
+      { text: `Подарунок про маму.`, correct: false },
+      { text: `Кава без цукру.`, correct: true },
+      { text: `Кава з цукром.`, correct: false },
+      { text: `Кава для цукру.`, correct: false },
+      { text: `Лист від друга.`, correct: true },
+      { text: `Лист для друга.`, correct: false },
+      { text: `Лист про друга.`, correct: false },
+      { text: `Через дощ.`, correct: true },
+      { text: `Про дощ.`, correct: false },
+      { text: `Від дощу.`, correct: false },
+      { text: `Ми говорили про тебе.`, correct: true },
+      { text: `Ми говорили для тебе.`, correct: false },
+      { text: `Ми говорили від тебе.`, correct: false },
+      { text: `Кава з молоком.`, correct: true },
+      { text: `Кава без молока.`, correct: false },
+      { text: `Кава для молока.`, correct: false },
+      { text: `Після роботи.`, correct: true },
+      { text: `Для роботи.`, correct: false },
+      { text: `Про роботу.`, correct: false },
+      { text: `Всі прийшли, крім Олега.`, correct: true },
+      { text: `Всі прийшли, для Олега.`, correct: false },
+      { text: `Всі прийшли, від Олега.`, correct: false },
+      { text: `О третій годині.`, correct: true },
+      { text: `Для третьої години.`, correct: false },
+      { text: `Після третьої години.`, correct: false },
+      { text: `Чай замість кави.`, correct: true },
+      { text: `Чай без кави.`, correct: false },
+      { text: `Чай для кави.`, correct: false },
+      { text: `Ліки від головного болю.`, correct: true },
+      { text: `Ліки для головного болю.`, correct: false },
+      { text: `Ліки про головний біль.`, correct: false },
+      { text: `Я не можу без тебе.`, correct: true },
+      { text: `Я не можу для тебе.`, correct: false },
+      { text: `Я не можу від тебе.`, correct: false }
+    ]
+  }
+]} />
 
 ### Contrast Pairs
 
@@ -587,7 +687,7 @@ Key distinctions:
 [___:2] дітей чи [___:3] дорослих?
 [___:4] дорослих. І щось [___:5] кашлю.
 Сироп [___:6] цукру підійде?`}
-  blanks={[{ answer: `від`, options: [`від`, `для`, `про`] }, { answer: `Для`, options: [`Для`, `Від`, `Без`] }, { answer: `для`, options: [`для`, `від`, `з`] }, { answer: `Для`, options: [`Для`, `Від`, `Без`] }, { answer: `від`, options: [`від`, `для`, `про`] }, { answer: `без`, options: [`без`, `з`, `для`] }]}
+  blanks={[{ index: 0, answer: `від`, options: [`від`, `для`, `про`] }, { index: 1, answer: `Для`, options: [`Для`, `Від`, `Без`] }, { index: 2, answer: `для`, options: [`для`, `від`, `з`] }, { index: 3, answer: `Для`, options: [`Для`, `Від`, `Без`] }, { index: 4, answer: `від`, options: [`від`, `для`, `про`] }, { index: 5, answer: `без`, options: [`без`, `з`, `для`] }]}
 />
 
 ### Case Endings

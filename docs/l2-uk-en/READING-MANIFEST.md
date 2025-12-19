@@ -53,9 +53,9 @@ Before reading ANY other document, internalize these:
 |-------|------------|------------|----------------|-----------------|
 | A1 | 300/500/750* | 8+ | 12+ | ALLOWED (first-occurrence) |
 | A2 | 1000+ | 10+ | 12+ | ⛔ FORBIDDEN |
-| B1 | 1250+ | 12+ | 14+ | ⛔ FORBIDDEN |
-| B2 | 1500+ | 14+ | 16+ | ⛔ FORBIDDEN |
-| C1 | 1750+ | 16+ | 18+ | ⛔ FORBIDDEN |
+| B1 | 1500+ | 12+ | 14+ | ⛔ FORBIDDEN |
+| B2 | 1750+ | 14+ | 16+ | ⛔ FORBIDDEN |
+| C1 | 2000+ | 16+ | 18+ | ⛔ FORBIDDEN |
 | C2 | 2000+ | 16+ | 18+ | ⛔ FORBIDDEN |
 
 *A1 Core Word Count Graduated: M01-05 (300+), M06-10 (500+), M11-34 (750+)

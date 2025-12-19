@@ -1,9 +1,9 @@
 # Audit Report: 17-motion-prefix-integration.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1250
+**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1467/1250
+- **Words:** ✅ 1511/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 51.6% (target 50-60% (B1.2 Motion))
+- **Immersion:** 🇺🇦 51.3% (target 40-68% (B1.2 Motion))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -24,7 +24,7 @@
 | **Аналіз** | ✅ | 0 | Included in Core |
 | **The Complete Prefix System for Motion Verbs** | ⚪️ | 537 | Skipped |
 | **Поглиблення** | ⚪️ | 0 | Skipped |
-| **Combining Multiple Directions: Complex Movements** | ✅ | 208 | Included in Core |
+| **Combining Multiple Directions: Complex Movements** | ✅ | 252 | Included in Core |
 | **Practice Dialogues: Prefixes in Context** | ✅ | 194 | Included in Core |
 | **Практика** | ⚪️ | 0 | Skipped |
 | **Exercise 1: Prefix Prediction** | ⚪️ | 65 | Skipped |

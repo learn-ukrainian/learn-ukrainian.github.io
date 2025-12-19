@@ -1,27 +1,27 @@
 # Audit Report: 05-aspect-negation.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1250
+**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 2388/1250 (>2250 may be too long)
+- **Words:** ✅ 2390/1500
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 50.0% (target 50-60% (B1.1 Aspect))
+- **Immersion:** 🇺🇦 50.1% (target 40-68% (B1.1 Aspect))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 141 | Included in Core |
-| **Diagnostic** | ✅ | 235 | Included in Core |
-| **Analysis** | ⚪️ | 497 | Skipped |
+| **Вид у запереченні — Особливості** | ⚪️ | 141 | Skipped |
+| **Diagnostic** | ✅ | 236 | Included in Core |
+| **Analysis** | ⚪️ | 498 | Skipped |
 | **Deep Dive** | ✅ | 847 | Included in Core |
 | **Practice** | ⚪️ | 413 | Skipped |
 | **Summary** | ✅ | 255 | Included in Core |

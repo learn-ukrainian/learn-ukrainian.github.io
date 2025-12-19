@@ -1261,75 +1261,75 @@ vocabulary_count: 20
 > Розташуйте слова у правильному порядку.
 
 1. було / дослідження / успішно / проведено
-   > [!answer] Дослідження було проведено успішно.
+   > [!answer] Дослідження було проведено успішно
    > (The research was conducted successfully.) [4 words]
 
 2. результати / опубліковано / в / журналі / науковому
-   > [!answer] Результати опубліковано в науковому журналі.
+   > [!answer] Результати опубліковано в науковому журналі
    > (The results were published in a scientific journal.) [5 words]
 
 3. методологію / було / застосовано / нову
-   > [!answer] Було застосовано нову методологію.
+   > [!answer] Було застосовано нову методологію
    > (A new methodology was applied.) [4 words]
 
 4. статті / у / розглядається / проблема / важлива
-   > [!answer] У статті розглядається важлива проблема.
+   > [!answer] У статті розглядається важлива проблема
    > (An important problem is examined in the article.) [5 words]
 
 5. даних / на / проведено / основі / аналіз
-   > [!answer] На основі даних проведено аналіз.
+   > [!answer] На основі даних проведено аналіз
    > (Analysis was conducted based on the data.) [5 words]
 
 6. встановлено / що / залежність / існує / було
-   > [!answer] Було встановлено, що існує залежність.
+   > [!answer] Було встановлено, що існує залежність
    > (It was established that a correlation exists.) [5 words]
 
 7. систематизацію / здійснено / матеріалу / повну
-   > [!answer] Здійснено повну систематизацію матеріалу.
+   > [!answer] Здійснено повну систематизацію матеріалу
    > (A complete systematization of the material was carried out.) [4 words]
 
 8. метод / ефективним / виявився / запропонований
-   > [!answer] Запропонований метод виявився ефективним.
+   > [!answer] Запропонований метод виявився ефективним
    > (The proposed method proved to be effective.) [4 words]
 
 9. консолідація / знань / для / важлива / просунутого / рівня
-   > [!answer] Консолідація знань важлива для просунутого рівня.
+   > [!answer] Консолідація знань важлива для просунутого рівня
    > (Consolidation of knowledge is important for the advanced level.) [6 words]
 
 10. поглиблення / сприяє / практика / розуміння / постійна
-    > [!answer] Постійна практика сприяє поглибленню розуміння.
+    > [!answer] Постійна практика сприяє поглибленню розуміння
     > (Constant practice contributes to deepening understanding.) [5 words]
 
 11. перехід / рівня / потребує / до / наступного / підготовки
-    > [!answer] Перехід до наступного рівня потребує підготовки.
+    > [!answer] Перехід до наступного рівня потребує підготовки
     > (Transition to the next level requires preparation.) [5 words]
 
 12. академічний / вимагає / стиль / точності / лексичної
-    > [!answer] Академічний стиль вимагає лексичної точності.
+    > [!answer] Академічний стиль вимагає лексичної точності
     > (Academic style requires lexical precision.) [4 words]
 
 13. було / закріплення / проведено / матеріалу / ефективно
-    > [!answer] Закріплення матеріалу було проведено ефективно.
+    > [!answer] Закріплення матеріалу було проведено ефективно
     > (Reinforcement of the material was conducted effectively.) [5 words]
 
 14. застосування / показало / методу / нового / результати / хороші
-    > [!answer] Застосування нового методу показало хороші результати.
+    > [!answer] Застосування нового методу показало хороші результати
     > (Application of the new method showed good results.) [6 words]
 
 15. інтеграція / даних / завершена / успішно / була
-    > [!answer] Інтеграція даних була успішно завершена.
+    > [!answer] Інтеграція даних була успішно завершена
     > (Data integration was successfully completed.) [5 words]
 
 16. синтез / результатів / на / здійснено / основі / аналізу
-    > [!answer] Синтез результатів здійснено на основі аналізу.
+    > [!answer] Синтез результатів здійснено на основі аналізу
     > (Synthesis of results was carried out based on the analysis.) [6 words]
 
 17. оцінювання / об'єктивне / проведено / було / результатів
-    > [!answer] Було проведено об'єктивне оцінювання результатів.
+    > [!answer] Було проведено об'єктивне оцінювання результатів
     > (An objective assessment of the results was conducted.) [5 words]
 
 18. компетенцій / для / розширення / необхідна / практика / постійна
-    > [!answer] Для розширення компетенцій необхідна постійна практика.
+    > [!answer] Для розширення компетенцій необхідна постійна практика
     > (Constant practice is necessary for expanding competencies.) [5 words]
 
 ---
@@ -1339,75 +1339,75 @@ vocabulary_count: 20
 > Розташуйте слова у правильному порядку для офіційного документа.
 
 1. рішення / ухвалено / одноголосно / було
-   > [!answer] Рішення було ухвалено одноголосно.
+   > [!answer] Рішення було ухвалено одноголосно
    > (The decision was adopted unanimously.) [4 words]
 
 2. директором / наказ / підписано
-   > [!answer] Наказ підписано директором.
+   > [!answer] Наказ підписано директором
    > (The order was signed by the director.) [3 words]
 
 3. заяву / розглянуто / комісією / було
-   > [!answer] Заяву було розглянуто комісією.
+   > [!answer] Заяву було розглянуто комісією
    > (The application was reviewed by the commission.) [4 words]
 
 4. документи / терміново / подано / усі
-   > [!answer] Усі документи подано терміново.
+   > [!answer] Усі документи подано терміново
    > (All documents were submitted urgently.) [4 words]
 
 5. затверджено / план / роботи / річний
-   > [!answer] Затверджено річний план роботи.
+   > [!answer] Затверджено річний план роботи
    > (The annual work plan was approved.) [4 words]
 
 6. покладено / контроль / на / заступника
-   > [!answer] Контроль покладено на заступника.
+   > [!answer] Контроль покладено на заступника
    > (Control was assigned to the deputy.) [4 words]
 
 7. встановлено / виконання / терміни
-   > [!answer] Терміни виконання встановлено.
+   > [!answer] Терміни виконання встановлено
    > (Deadlines for completion were set.) [3 words]
 
 8. звіт / подати / необхідно / до / кінця / місяця
-   > [!answer] Звіт необхідно подати до кінця місяця.
+   > [!answer] Звіт необхідно подати до кінця місяця
    > (The report must be submitted by the end of the month.) [6 words]
 
 9. протокол / засідання / підписано / усіма / учасниками
-   > [!answer] Протокол засідання підписано усіма учасниками.
+   > [!answer] Протокол засідання підписано усіма учасниками
    > (The meeting minutes were signed by all participants.) [5 words]
 
 10. запроваджено / нові / правила / роботи
-    > [!answer] Запроваджено нові правила роботи.
+    > [!answer] Запроваджено нові правила роботи
     > (New work rules were introduced.) [4 words]
 
 11. виконано / завдання / вчасно / було
-    > [!answer] Завдання було виконано вчасно.
+    > [!answer] Завдання було виконано вчасно
     > (The task was completed on time.) [4 words]
 
 12. призначено / відповідального / за / проєкт
-    > [!answer] Призначено відповідального за проєкт.
+    > [!answer] Призначено відповідального за проєкт
     > (A person responsible for the project was appointed.) [4 words]
 
 13. перевірку / проведено / документів
-    > [!answer] Проведено перевірку документів.
+    > [!answer] Проведено перевірку документів
     > (Document verification was conducted.) [3 words]
 
 14. схвалено / пропозицію / більшістю / голосів
-    > [!answer] Пропозицію схвалено більшістю голосів.
+    > [!answer] Пропозицію схвалено більшістю голосів
     > (The proposal was approved by a majority vote.) [4 words]
 
 15. внесено / зміни / до / статуту
-    > [!answer] Зміни внесено до статуту.
+    > [!answer] Зміни внесено до статуту
     > (Changes were made to the charter.) [4 words]
 
 16. оголошено / конкурс / на / посаду
-    > [!answer] Оголошено конкурс на посаду.
+    > [!answer] Оголошено конкурс на посаду
     > (A competition for the position was announced.) [4 words]
 
 17. завершено / будівництво / об'єкта
-    > [!answer] Будівництво об'єкта завершено.
+    > [!answer] Будівництво об'єкта завершено
     > (Construction of the facility was completed.) [3 words]
 
 18. надано / дозвіл / на / проведення / заходу
-    > [!answer] Надано дозвіл на проведення заходу.
+    > [!answer] Надано дозвіл на проведення заходу
     > (Permission to hold the event was granted.) [5 words]
 
 ---

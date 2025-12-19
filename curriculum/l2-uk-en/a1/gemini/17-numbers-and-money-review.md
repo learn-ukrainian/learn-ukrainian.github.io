@@ -1,6 +1,15 @@
 # Audit Report: 17-numbers-and-money.md
 **Phase:** A1 | **Level:** A1 | **Pedagogy:** "PPP" | **Target:** 750
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[IPA]** Invalid IPA symbols in /kʊpʊˈvɑtɪ/: ['ʊ', 'ʊ']
+  - FIX: Use valid IPA symbols. Check https://en.wikipedia.org/wiki/IPA_for_Ukrainian
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1195/750
@@ -10,14 +19,11 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/20
+- **Vocab:** ✅ 38/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Immersion:** 🇺🇦 30.9% (target 25-40% (M17))
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

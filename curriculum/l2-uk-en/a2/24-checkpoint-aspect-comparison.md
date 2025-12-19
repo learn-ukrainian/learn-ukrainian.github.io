@@ -108,7 +108,7 @@ Formula: **Past Tense Verb + б/би**
 
 ---
 
-# Integrated Review Story
+## Integrated Review Story
 
 ## A Dream About Kyiv
 
@@ -132,6 +132,55 @@ Read this story. It combines aspect, comparison, and conditional mood.
 
 Ввечері я **писав** (imperf.) у щоденнику:
 "Якби я **жив** (cond.) у Києві, я **б гуляв** (cond.) тут щодня. Це місто **гарніше** (comp.) за будь-яке інше".
+
+### Story Comprehension
+
+Answer these questions about the story:
+
+1. **Aspect:** Why "їздив" (imperfective) for the trip to Kyiv?
+   - It describes the general experience/journey (process), not a single completed moment.
+
+2. **Comparison:** What comparison does the narrator make about Софійський собор?
+   - "Він **більший**, ніж я думав!" — It was bigger than expected.
+
+3. **Conditional:** What would the narrator do if he lived in Kyiv?
+   - "Якби я **жив** у Києві, я **б гуляв** тут щодня." — He would walk there every day.
+
+4. **Aspect choice:** Why "зайшов" (perfective) for entering the café?
+   - It's a completed, one-time action with a result (he went inside).
+
+---
+
+## Integrated Scenario 2: Planning a Trip
+
+This dialogue integrates all three grammar areas. Read and identify the grammar points.
+
+**Оля:** Привіт! Ти вже **вирішив** (perf.), куди поїдеш у відпустку?
+
+**Максим:** Ще ні. Я **думав** (imp.) про Львів і Одесу. Обидва **гарні**, але Львів **старіший** (comp.) і **цікавіший** (comp.).
+
+**Оля:** А що **дешевше** (comp.) — поїзд чи автобус?
+
+**Максим:** Автобус **дешевший** (comp.), але поїзд **зручніший** (comp.). **Якби** я мав більше часу, я **б поїхав** (cond.) поїздом.
+
+**Оля:** Я минулого року **їздила** (imp.) до Львова. Там **найкращі** (superl.) кав'ярні!
+
+**Максим:** Правда? Ти **відвідала** (perf.) музеї?
+
+**Оля:** Так, я **подивилася** (perf.) три музеї за один день. Оперний театр — **найкрасивіший** (superl.) в Україні!
+
+**Максим:** Гаразд, **вирішено**! Їду до Львова. **Якби** ти могла, ти **б поїхала** (cond.) зі мною?
+
+**Оля:** **Якби** я не **працювала** (cond.), **поїхала б** (cond.) обов'язково!
+
+### Grammar Spotting
+
+In the dialogue above, find:
+- **3 perfective past verbs** (completed actions): вирішив, відвідала, подивилася
+- **2 imperfective past verbs** (process/duration): думав, їздила
+- **4 comparative forms**: старіший, цікавіший, дешевше, зручніший
+- **2 superlative forms**: найкращі, найкрасивіший
+- **3 conditional sentences**: Якби я мав..., Якби ти могла..., Якби я не працювала...
 
 ---
 
@@ -553,41 +602,41 @@ Go to the activities section and try to get 100%! If you make a mistake, read th
 
 Учора я [___:1] цілий день. Спочатку я [___:2] статтю. Потім я [___:3] в магазин — хотів купити [___:4] телефон. Продавець запитав: "Що ви [___:5]?" Я сказав, що шукаю [___:6] варіант.
 
-1. читати: читав / прочитав
+1. читав | прочитав
 > [!answer] читав
 
-2. писати: писав / написав
+2. писав | написав
 > [!answer] написав
 
-3. йти/піти: ходив / пішов
+3. ходив | пішов
 > [!answer] пішов
 
-4. новий: новий / новіший
+4. новий | новіший
 > [!answer] новий
 
-5. рекомендувати: рекомендуєте / порекомендуєте
+5. рекомендуєте | порекомендуєте
 > [!answer] порекомендуєте
 
-6. дешевий: дешевший / найдешевший
+6. дешевший | найдешевший
 > [!answer] дешевший
 
 ---
 
 [___:1] я виграв у лотерею, я [___:2] купив найбільший будинок. Мені [___:3] подобаються великі будинки. Це [___:4] б чудово! [___:5] читати мрії, ніж не мріяти.
 
-1. Якщо / Якби
+1. Якщо | Якби
 > [!answer] Якби
 
-2. б / буду
+2. б | буду
 > [!answer] б
 
-3. більше / великий
+3. більше | великий
 > [!answer] більше
 
-4. було / буде
+4. було | буде
 > [!answer] було
 
-5. Краще / Кращий
+5. Краще | Кращий
 > [!answer] Краще
 
 ## dialogue-reorder: Shopping with Comparison

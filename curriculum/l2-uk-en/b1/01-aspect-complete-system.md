@@ -21,6 +21,7 @@ objectives:
   - "Learner can explain why a particular aspect is used in a given sentence"
 vocabulary_count: 20
 ---
+
 # Вид дієслова — Повна система
 
 > 🎯 **Чому це важливо**

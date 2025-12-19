@@ -39,7 +39,7 @@ English has no equivalent to свій. This single word means "one's own" and re
 
 ---
 
-# The Problem: Ambiguity
+## The Problem: Ambiguity
 
 Look at this English sentence:
 - "He loves his mother."
@@ -59,7 +59,7 @@ Ukrainian solves this problem elegantly with **свій**.
 
 ---
 
-# The Rule: Свій = Subject's Own
+## The Rule: Свій = Subject's Own
 
 ## When to Use Свій
 
@@ -86,7 +86,7 @@ Use **його/її/їхній** when the possessor is NOT the subject.
 
 ---
 
-# The Contrast in Action
+## The Contrast in Action
 
 Here is the key difference illustrated clearly:
 
@@ -105,7 +105,7 @@ This distinction is critical in Ukrainian and must be observed in all sentences.
 
 ---
 
-# Declension of Свій
+## Declension of Свій
 
 Свій declines exactly like мій/твій. Here are the forms:
 
@@ -155,7 +155,7 @@ This distinction is critical in Ukrainian and must be observed in all sentences.
 
 ---
 
-# Common Patterns
+## Common Patterns
 
 ## Pattern 1: Subject = 1st/2nd Person
 
@@ -184,7 +184,7 @@ When possessor differs from subject, use його/її/їхній.
 
 ---
 
-# Story Time: The Family Dinner
+## Story Time: The Family Dinner
 
 Сьогодні у Марії сімейний обід. Вона готує вечерю у **своїй** кухні. Її мама приїхала з **своїм** чоловіком — **її** батьком.
 
@@ -203,7 +203,7 @@ When possessor differs from subject, use його/її/їхній.
 
 ---
 
-# Story Time Part 2: The Job Interview
+## Story Time Part 2: The Job Interview
 
 Петро пішов на співбесіду. Він надів **свій** найкращий костюм. Він взяв **свою** папку з документами. Він поцілував **свою** дружину і пішов.
 
@@ -222,7 +222,7 @@ When possessor differs from subject, use його/її/їхній.
 
 ---
 
-# Deep Dive: Edge Cases
+## Deep Dive: Edge Cases
 
 ## Case 1: Infinitive Constructions
 
@@ -243,7 +243,7 @@ In subordinate clauses, свій typically refers to the subject of that clause:
 
 These advanced patterns become natural with practice. Focus first on the basic rule before tackling these edge cases.
 
-# Common Mistakes
+## Common Mistakes
 
 ## Mistake 1: Using Його for Own Possession
 
@@ -262,7 +262,7 @@ These advanced patterns become natural with practice. Focus first on the basic r
 
 ---
 
-# Language Learning Tip
+## Language Learning Tip
 
 A helpful way to remember the rule is to ask yourself: "Is the possessor doing the action?"
 
@@ -403,29 +403,23 @@ Today you learned the reflexive possessive pronoun **свій**.
 Мама взяла [___:5] сумку. (her own)
 Марія слухала [___:6] батьків. (her own)
 
-1. своїй
-> [!answer] своїй
-> [!options] своїй | її
+1. своїй | її
+   > [!answer] своїй
 
-2. своїм
-> [!answer] своїм
-> [!options] своїм | його
+2. своїм | його
+   > [!answer] своїм
 
-3. свою
-> [!answer] свою
-> [!options] свою | її
+3. свою | її
+   > [!answer] свою
 
-4. свою
-> [!answer] свою
-> [!options] свою | його
+4. свою | його
+   > [!answer] свою
 
-5. свою
-> [!answer] свою
-> [!options] свою | її
+5. свою | її
+   > [!answer] свою
 
-6. своїх
-> [!answer] своїх
-> [!options] своїх | її
+6. своїх | її
+   > [!answer] своїх
 
 ## unjumble: Possessive Sentences
 
@@ -448,37 +442,37 @@ Today you learned the reflexive possessive pronoun **свій**.
 
 ## error-correction: Wrong Possessive
 
-1. Він любить **його** маму. (Intended: his own mom)
+1. Він любить його маму. (Intended: his own mom)
    > [!error] його
    > [!answer] свою
    > [!explanation] "His own" = subject owns it → свою.
    > [!options] свою | його
 
-2. Вона взяла **свою** сумку Марії. (Intended: Maria's bag)
+2. Вона взяла свою сумку Марії. (Intended: Maria's bag)
    > [!error] свою
    > [!answer] її
    > [!explanation] Maria is not the subject → її.
    > [!options] її | свою
 
-3. Я живу у **свій** дім. (Intended: my house)
+3. Я живу у свій дім. (Intended: my house)
    > [!error] свій
    > [!answer] своєму
    > [!explanation] Locative case after "у" → своєму.
    > [!options] своєму | свій
 
-4. Вони говорять про **їхню** роботу. (Intended: their own work)
+4. Вони говорять про їхню роботу. (Intended: their own work)
    > [!error] їхню
    > [!answer] свою
    > [!explanation] Subject = Вони, their own → свою.
    > [!options] свою | їхню
 
-5. Марія любить **своєї** мами. (Intended: her own mom)
+5. Марія любить своєї мами. (Intended: her own mom)
    > [!error] своєї
    > [!answer] свою
    > [!explanation] "Любить" takes Accusative → свою.
    > [!options] свою | своєї
 
-6. Петро бачив **свою** сестру Оксани. (Intended: Oksana's sister)
+6. Петро бачив свою сестру Оксани. (Intended: Oksana's sister)
    > [!error] свою
    > [!answer] її
    > [!explanation] Oksana is not the subject → її.
@@ -560,29 +554,23 @@ Today you learned the reflexive possessive pronoun **свій**.
 Вона хоче, щоб я прочитав [___:5] статтю. (her own)
 Він допоміг [___:6] братові. (his own)
 
-1. свою
-> [!answer] свою
-> [!options] свою | його
+1. свою | його
+   > [!answer] свою
 
-2. свою
-> [!answer] свою
-> [!options] свою | її
+2. свою | її
+   > [!answer] свою
 
-3. свою
-> [!answer] свою
-> [!options] свою | його
+3. свою | його
+   > [!answer] свою
 
-4. своє
-> [!answer] своє
-> [!options] своє | їхнє
+4. своє | їхнє
+   > [!answer] своє
 
-5. свою
-> [!answer] свою
-> [!options] свою | її
+5. свою | її
+   > [!answer] свою
 
-6. своєму
-> [!answer] своєму
-> [!options] своєму | його
+6. своєму | його
+   > [!answer] своєму
 
 ---
 

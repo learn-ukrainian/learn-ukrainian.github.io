@@ -48,7 +48,7 @@ A prefix is like a GPS instruction added to the front of the verb.
 
 ---
 
-# The Prefix Map
+## The Prefix Map
 
 Imagine a house. We will use the verb **йти** (to walk) as our base.
 
@@ -72,7 +72,7 @@ Imagine a house. We will use the verb **йти** (to walk) as our base.
 
 ---
 
-# Story Time: The Lost Tourist
+## Story Time: The Lost Tourist
 
 Це історія про туриста, який гуляв Києвом.
 Його звали Джон, і він дуже любив пригоди.
@@ -103,7 +103,7 @@ Imagine a house. We will use the verb **йти** (to walk) as our base.
 
 ---
 
-# Deep Dive: The Logic of "Pro-" (Distance)
+## Deep Dive: The Logic of "Pro-" (Distance)
 
 We learned many prefixes, but let's look at **Про-**.
 It implies covering a distance or passing through.
@@ -123,7 +123,7 @@ Imagine an arrow going *through* a tube. That is **Про-**.
 
 ---
 
-# Deep Dive: Where are you going? (B/HA + Accusative)
+## Deep Dive: Where are you going? (B/HA + Accusative)
 
 Motion verbs change the case of the destination!
 You are not "at" a place (Locative). You are going "into" a place (Accusative).
@@ -145,7 +145,7 @@ You are not "at" a place (Locative). You are going "into" a place (Accusative).
 
 ---
 
-# Deep Dive: Figurative Motion
+## Deep Dive: Figurative Motion
 
 Ukrainian loves to use motion verbs for abstract ideas.
 
@@ -160,11 +160,7 @@ Ukrainian loves to use motion verbs for abstract ideas.
 
 ---
 
-# Deep Dive: Go vs. Drive (Йти vs. Їхати)
-
----
-
-# Deep Dive: Go vs. Drive (Йти vs. Їхати)
+## Deep Dive: Go vs. Drive (Йти vs. Їхати)
 
 The prefixes work exactly the same for vehicles!
 Just change the base.
@@ -189,7 +185,7 @@ Just change the base.
 
 ---
 
-# Language in Action
+## Language in Action
 
 ## Dialogue: The Taxi Ride
 
@@ -209,7 +205,7 @@ Just change the base.
 
 ---
 
-# Deep Dive: Prefix Mathematics
+## Deep Dive: Prefix Mathematics
 
 Here is a secret: Ukrainians are efficient.
 Instead of inventing completely new words for "enter", "exit", "arrive", "depart", they just recycle the same base verbs.
@@ -224,7 +220,7 @@ Mastering prefixes is the biggest "hack" in the Ukrainian language.
 
 ---
 
-# Anti-Propaganda Showcase
+## Anti-Propaganda Showcase
 
 > [!myth] Myth: "Ukrainian is just a rural dialect."
 > **Fact:** Ukrainian has a highly engineered system of motion verbs that precise distinguishing between "walking around", "walking through", and "dropping by".
@@ -458,28 +454,28 @@ Mastering prefixes is the biggest "hack" in the Ukrainian language.
 Ми [___:7]їжджаємо додому машиною.
 Мама рада, що я [___:8]їхав.
 
-1. ви
+1. ви | при | від
 > [!answer] ви
 
-2. при
+2. при | ви | за
 > [!answer] при
 
-3. за
+3. за | ви | при
 > [!answer] за
 
-4. від
+4. від | при | ви
 > [!answer] від
 
-5. при
+5. при | ви | від
 > [!answer] при
 
-6. зу
+6. зу | при | ви
 > [!answer] зу
 
-7. їд
+7. їд | при | від
 > [!answer] їд
 
-8. при
+8. при | ви | від
 > [!answer] при
 
 ## dialogue-reorder: Asking Directions

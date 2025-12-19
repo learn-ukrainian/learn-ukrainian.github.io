@@ -110,7 +110,7 @@ Some emotions are active verbs.
 
 ---
 
-# Deep Dive: Active vs Passive Emotions
+## Deep Dive: Active vs Passive Emotions
 
 In English, you usually "are" something (I am happy, I am sad). In Ukrainian, you have three choices, and they change the nuance.
 
@@ -142,7 +142,7 @@ This is active. You are engaging with the emotion.
 
 ---
 
-# Myth Buster: The "Cold" Slavs?
+## Myth Buster: The "Cold" Slavs?
 
 > [!myth] "Ukrainians are cold and unemotional."
 > **FALSE.**
@@ -151,7 +151,7 @@ This is active. You are engaging with the emotion.
 
 ---
 
-# Language in Action
+## Language in Action
 
 ## Dialogue: The Horror Movie
 
@@ -200,7 +200,7 @@ Listen to your **душа**!
 
 ---
 
-# Deep Dive: The Color of Emotion
+## Deep Dive: The Color of Emotion
 
 Ukrainians associate colors with emotions, just like English speakers, but there are some unique nuances.
 
@@ -229,7 +229,7 @@ Ukrainians associate colors with emotions, just like English speakers, but there
 
 ---
 
-# Pro-Tip: How to Ask "How Are You?"
+## Pro-Tip: How to Ask "How Are You?"
 
 Don't just say "**Як справи?**" (How are things?). That is for casual acquaintances.
 To ask about *feelings*, use:
@@ -514,37 +514,37 @@ To ask about *feelings*, use:
 
 ## error-correction: Fix the Feelings
 
-1. Я **холодно**.
+1. Я холодно.
    > [!error] Я
    > [!answer] Мені
    > [!explanation] "I feel cold" is "Мені холодно".
    > [!options] Мені | Я
 
-2. Мені **сумний**.
+2. Мені сумний.
    > [!error] сумний
    > [!answer] сумно
    > [!explanation] Impersonal structures use Adverbs (-о).
    > [!options] сумно | сумний
 
-3. Я **почуваюся** біль.
+3. Я почуваюся біль.
    > [!error] почуваюся
    > [!answer] відчуваю
    > [!explanation] "Відчувати" is for sensations/objects.
    > [!options] відчуваю | почуваюся
 
-4. Вона **боїться** павука.
+4. Вона боїться павука.
    > [!error] павука
    > [!answer] павуків
    > [!explanation] "Fear of spiders" (plural genitive).
    > [!options] павуків | павука
 
-5. Ми **надія**.
+5. Ми надія.
    > [!error] надія
    > [!answer] надіємося
    > [!explanation] We need a verb here.
    > [!options] надіємося | надія
 
-6. Тобі **веселий**?
+6. Тобі веселий?
    > [!error] веселий
    > [!answer] весело
    > [!explanation] Dative state -> Adverb.

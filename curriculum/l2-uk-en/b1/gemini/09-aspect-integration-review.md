@@ -1,20 +1,20 @@
 # Audit Report: 09-aspect-integration.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1250
+**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1395/1250
+- **Words:** ✅ 1522/1500
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 32/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 53.7% (target 50-60% (B1.1 Aspect))
+- **Immersion:** 🇺🇦 52.3% (target 40-68% (B1.1 Aspect))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -23,7 +23,7 @@
 | **Comprehensive Aspect Test** | ⚪️ | 205 | Skipped |
 | **Аналіз** | ✅ | 0 | Included in Core |
 | **Master Reference: When to Use Each Aspect** | ⚪️ | 122 | Skipped |
-| **Combined Contexts: How Aspects Work Together** | ✅ | 297 | Included in Core |
+| **Combined Contexts: How Aspects Work Together** | ✅ | 424 | Included in Core |
 | **Поглиблення** | ⚪️ | 0 | Skipped |
 | **Advanced Cases: Where Aspect Gets Tricky** | ⚪️ | 167 | Skipped |
 | **Practice Dialogues: Aspect in Real Conversations** | ✅ | 353 | Included in Core |

@@ -113,7 +113,7 @@ Root families connect related words across different parts of speech:
 
 ---
 
-# Story Time: Урок Словотвору
+## Story Time: Урок Словотвору
 
 Марійка вивчає українську мову. Вона — старанна **учениця**. Сьогодні вона має урок про словотвір. Її школа знаходиться в центрі міста. Вона любить **ходити** туди пішки.
 
@@ -148,7 +148,7 @@ Root families connect related words across different parts of speech:
 
 ---
 
-# Story Time Part 2: Практична Вправа
+## Story Time Part 2: Практична Вправа
 
 Після теорії клас робить практичну вправу.
 
@@ -184,7 +184,7 @@ Root families connect related words across different parts of speech:
 
 ---
 
-# Student Testimonies
+## Student Testimonies
 
 Here is what students say about learning word formation.
 
@@ -199,7 +199,7 @@ Here is what students say about learning word formation.
 
 ---
 
-# Common Expressions
+## Common Expressions
 
 ## Formation Patterns
 
@@ -359,29 +359,23 @@ Word formation is a key skill in Ukrainian. By understanding how prefixes, suffi
 Вхід — місце, де [___:5]. (enter)
 Пішохід — людина, яка ходить [___:6]. (on foot)
 
-1. українську
-> [!answer] українську
-> [!options] українську | англійську | німецьку
+1. українську | англійську | німецьку
+   > [!answer] українську
 
-2. головна
-> [!answer] головна
-> [!options] головна | остання | перша
+2. головна | остання | перша
+   > [!answer] головна
 
-3. значення
-> [!answer] значення
-> [!options] значення | форму | час
+3. значення | форму | час
+   > [!answer] значення
 
-4. частини
-> [!answer] частини
-> [!options] частини | букви | речення
+4. частини | букви | речення
+   > [!answer] частини
 
-5. входять
-> [!answer] входять
-> [!options] входять | виходять | біжать
+5. входять | виходять | біжать
+   > [!answer] входять
 
-6. пішки
-> [!answer] пішки
-> [!options] пішки | бігом | повільно
+6. пішки | бігом | повільно
+   > [!answer] пішки
 
 ## unjumble: Word Formation Sentences
 

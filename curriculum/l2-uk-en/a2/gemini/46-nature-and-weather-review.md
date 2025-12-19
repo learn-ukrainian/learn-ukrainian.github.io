@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1814/1000
+- **Words:** ✅ 1131/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 50.7% (target 50-60% (A2.3))
+- **Immersion:** 🇺🇦 51.4% (target 50-60% (A2.3))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -33,7 +33,7 @@
 | **Summary** | ✅ | 155 | Included in Core |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **match-up: Nature Words** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Nature & Weather** | 🎮 | 10 | Activity (10 items, min 8) |
+| **fill-in: Nature & Weather** | 🎮 | 8 | Activity (8 items, min 8) |
 | **quiz: Nature & Weather** | 🎮 | 8 | Activity (8 items, min 8) |
 | **cloze: Story Comprehension** | 🎮 | 6 | Activity (6 items, min 6) |
 | **unjumble: Weather Sentences** | 🎮 | 8 | Activity (8 items, min 6) |

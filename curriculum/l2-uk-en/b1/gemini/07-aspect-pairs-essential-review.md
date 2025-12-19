@@ -1,9 +1,9 @@
 # Audit Report: 07-aspect-pairs-essential.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1250
+**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1302/1250
+- **Words:** ✅ 1539/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 54.5% (target 50-60% (B1.1 Aspect))
+- **Immersion:** 🇺🇦 51.2% (target 40-68% (B1.1 Aspect))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -22,13 +22,13 @@
 | **Діагностика** | ✅ | 0 | Included in Core |
 | **Test Your Current Knowledge** | ⚪️ | 154 | Skipped |
 | **Аналіз** | ✅ | 0 | Included in Core |
-| **Як утворюються видові пари** | ⚪️ | 126 | Skipped |
+| **Як утворюються видові пари** | ⚪️ | 241 | Skipped |
 | **Поглиблення** | ⚪️ | 0 | Skipped |
 | **The Complete B1 Aspect Pair Collection** | ⚪️ | 124 | Skipped |
-| **40 найважливіших пар** | ⚪️ | 95 | Skipped |
+| **40 найважливіших пар** | ⚪️ | 211 | Skipped |
 | **Applying Aspect Pairs in Real Conversations** | ✅ | 52 | Included in Core |
-| **Діалог: На роботі** | ✅ | 99 | Included in Core |
-| **Діалог: У магазині** | ✅ | 246 | Included in Core |
+| **Діалог: На роботі** | ✅ | 102 | Included in Core |
+| **Діалог: У магазині** | ✅ | 249 | Included in Core |
 | **Практика** | ⚪️ | 0 | Skipped |
 | **The Practice Strategy** | ⚪️ | 52 | Skipped |
 | **Вправа 1: Доповніть пари** | ⚪️ | 14 | Skipped |

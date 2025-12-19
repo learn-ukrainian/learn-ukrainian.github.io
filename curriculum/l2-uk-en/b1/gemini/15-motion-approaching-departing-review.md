@@ -1,26 +1,20 @@
 # Audit Report: 15-motion-approaching-departing.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1250
+**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1251/1250
+- **Words:** ✅ 1564/1500
 - **Activities:** ✅ 19/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 58.5% (target 50-60% (B1.2 Motion))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (17 interactive elements)
+- **Immersion:** 🇺🇦 55.6% (target 40-68% (B1.2 Motion))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -29,6 +23,8 @@
 | **Діагностика** | ✅ | 89 | Included in Core |
 | **Аналіз** | ✅ | 200 | Included in Core |
 | **Поглиблення** | ⚪️ | 661 | Skipped |
+| **Figurative Meanings: Beyond Physical Motion** | ⚪️ | 167 | Skipped |
+| **Cultural Insight: The Art of Leaving** | ✅ | 146 | Included in Core |
 | **Практика** | ⚪️ | 191 | Skipped |
 | **Підсумок** | ✅ | 0 | Included in Core |
 | **Головне** | ⚪️ | 110 | Skipped |

@@ -68,6 +68,7 @@
    - **Celebrate Ukrainian identity**: Unique letters (Ї, Є, Ґ, І), distinct linguistic heritage, cultural achievements.
    - **Use "Prosecutor's Voice"**: Frame facts to actively dismantle imperial narratives.
    - **Anti-Russian propaganda**: Actively counter common lies about Ukrainian language/culture/history.
+9. **Issue Tracking**: Use GitHub Issues for all task tracking. DO NOT use `docs/issues/` (folder has been deprecated and removed). Use `gh issue create` and `gh issue list`.
 
 ## File Structure Reference
 - **Curriculum Plans**: `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md`

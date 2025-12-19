@@ -22,6 +22,7 @@ objectives:
   - "Learner can identify duration markers that trigger imperfective aspect"
 vocabulary_count: 20
 ---
+
 # Вид у минулому часі — Результат чи процес
 
 > 🎯 **Чому це важливо**
@@ -31,11 +32,8 @@ vocabulary_count: 20
 > [!resources] 🎧 External Resources
 >
 > **YouTube:** [Learn 50 important Ukrainian Verb Pairs](https://www.youtube.com/watch?v=iK4uNlozmFE) — Let's Learn Ukrainian
->
 > **Past Tense Foundation:** [Past Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-past-tense/) — Review past tense forms
->
 > **Verb Prefixes:** [Ukrainian Verb Prefixes](https://www.ukrainianlessons.com/ukrainian-verb-prefixes/) — How prefixes change meaning
->
 > **Verb Overview:** [All Verb Tenses](https://www.ukrainianlessons.com/ukrainian-tenses/) — Downloadable reference chart
 
 ## Diagnostic
@@ -55,8 +53,8 @@ vocabulary_count: 20
 — Ось, на вашому столі.
 
 > [!observe] Compare these exchanges:
-> - **Писав** (imperfective) tells the boss about the **process** — Oleksiy was working, but there's no guarantee of completion.
-> - **Написав** (perfective) tells the boss about the **result** — the report exists, it's done.
+> - **Писав** (недоконаний вид) tells the boss about the **process** — Oleksiy was working, but there's no guarantee of completion.
+> - **Написав** (доконаний вид) tells the boss about the **result** — the report exists, it's done.
 >
 > Which answer would a boss prefer to hear?
 
@@ -195,7 +193,7 @@ A crucial pattern that distinguishes result from process:
 
 > 🎬 **Pop Culture Moment: Ukrainian Cinema**
 >
-> In the classic film "За двома зайцями" (Chasing Two Rabbits), the title uses "за" — but for a different meaning. However, in the dialogue, aspect plays a key role. When Pronya says "Я **чекала** на тебе!" (imperfective), she emphasizes the duration of waiting. When she says "Ти **обдурив** мене!" (perfective), she emphasizes the completed betrayal.
+> In the classic film "За двома зайцями" (Chasing Two Rabbits), the title uses "за" — but for a different meaning. However, in the dialogue, aspect plays a key role. When Pronya says "Я **чекала** на тебе!" (недоконаний вид), she emphasizes the duration of waiting. When she says "Ти **обдурив** мене!" (доконаний вид), she emphasizes the completed betrayal.
 
 ## Deep Dive
 
@@ -265,7 +263,7 @@ This dialogue between a mother and son demonstrates how aspect shifts naturally 
 
 ### Діалог: Проект в IT-компанії в Харкові
 
-In a professional setting, the process/result distinction becomes critical. This IT team meeting shows how Ukrainians report progress: imperfective for ongoing work ("I was writing code"), perfective for deliverables ("I finished the main page"). Pay attention to how "Скільки часу робила?" asks about duration (imperfective), while deliverables use perfective.
+In a professional setting, the process/result distinction becomes critical. This IT team meeting shows how Ukrainians report progress: imperfective for ongoing work ("I was writing code"), perfective for deliverables ("I finished the main page"). Pay attention to how "Скільки часу робила?" asks about duration (недоконаний вид), while deliverables use perfective.
 
 **Менеджер:** Команда, де ми з проектом?
 
@@ -293,7 +291,7 @@ In a professional setting, the process/result distinction becomes critical. This
 
 ### Діалог: Лікар і пацієнт у Дніпрі
 
-Medical consultations require precise aspect usage. When the doctor asks "Ви приймали ліки?" (imperfective), they're asking about general medication habits. When they ask "Скільки таблеток прийняли?" (perfective), they want a specific count of completed doses. This distinction helps doctors understand both treatment patterns and specific quantities.
+Medical consultations require precise aspect usage. When the doctor asks "Ви приймали ліки?" (недоконаний вид), they're asking about general medication habits. When they ask "Скільки таблеток прийняли?" (доконаний вид), they want a specific count of completed doses. This distinction helps doctors understand both treatment patterns and specific quantities.
 
 **Лікар:** Що вас турбує?
 
@@ -317,7 +315,7 @@ Medical consultations require precise aspect usage. When the doctor asks "Ви �
 
 ### Діалог: Ремонт квартири в Одесі
 
-Home renovation discussions perfectly illustrate the process/result contrast. "Працювали весь день" (imperfective) describes the workers' activity. "Пофарбували стіни" (perfective) reports a completed task. Notice how the wife uses both aspects to give a comprehensive progress report: what's been done (perfective) and what's still in progress (imperfective).
+Home renovation discussions perfectly illustrate the process/result contrast. "Працювали весь день" (недоконаний вид) describes the workers' activity. "Пофарбували стіни" (доконаний вид) reports a completed task. Notice how the wife uses both aspects to give a comprehensive progress report: what's been done (доконаний вид) and what's still in progress (недоконаний вид).
 
 **Чоловік:** Ну що, як ремонт?
 
@@ -422,11 +420,11 @@ Change each sentence from process-focused to result-focused (or vice versa):
 
 > 🔗 **Analysis Pattern**
 >
-> Notice how **працювала**, **проводила**, **аналізувала**, **шукала** describe ongoing background work (imperfective), while **помітила**, **покликала**, **дослідили**, **відкрили**, **змінило**, **стала**, **отримала** describe key events and achievements (perfective). The final sentence returns to imperfective **працювала** for her lifelong work, then perfective **зробила** for her accomplishments.
+> Notice how **працювала**, **проводила**, **аналізувала**, **шукала** describe ongoing background work (недоконаний вид), while **помітила**, **покликала**, **дослідили**, **відкрили**, **змінило**, **стала**, **отримала** describe key events and achievements (доконаний вид). The final sentence returns to imperfective **працювала** for her lifelong work, then perfective **зробила** for her accomplishments.
 
 ---
 
-# Summary
+## Summary
 
 ## What You've Learned: A Framework for Process vs Result
 
@@ -477,7 +475,7 @@ The process/result distinction is perhaps the most practical aspect of Ukrainian
 
 ---
 
-# Activities
+## Activities
 
 ## quiz: Процес чи результат
 > Оберіть правильну відповідь про процес і результат.
@@ -729,118 +727,118 @@ The process/result distinction is perhaps the most practical aspect of Ukrainian
 > Розташуйте слова в правильному порядку.
 
 1. книгу / він / читав / весь / вечір
-   > [!answer] Він читав книгу весь вечір.
+   > [!answer] Він читав книгу весь вечір
    > (He was reading a book all evening.) [5 words]
 
 2. вже / вона / закінчила / роботу
-   > [!answer] Вона вже закінчила роботу.
+   > [!answer] Вона вже закінчила роботу
    > (She has already finished work.) [4 words]
 
 3. годину / ми / чекали / на / автобус
-   > [!answer] Ми чекали на автобус годину.
+   > [!answer] Ми чекали на автобус годину
    > (We were waiting for the bus for an hour.) [5 words]
 
 4. за / він / годину / прочитав / статтю
-   > [!answer] Він прочитав статтю за годину.
+   > [!answer] Він прочитав статтю за годину
    > (He read the article in an hour.) [5 words]
 
 5. довго / вони / йшли / до / станції
-   > [!answer] Вони довго йшли до станції.
+   > [!answer] Вони довго йшли до станції
    > (They walked to the station for a long time.) [5 words]
 
 6. що / тільки / він / прийшов
-   > [!answer] Він тільки що прийшов.
+   > [!answer] Він тільки що прийшов
    > (He just arrived.) [4 words]
 
 7. весь / вона / день / працювала
-   > [!answer] Вона працювала весь день.
+   > [!answer] Вона працювала весь день
    > (She was working all day.) [4 words]
 
 8. нарешті / вони / домовилися
-   > [!answer] Нарешті вони домовилися.
+   > [!answer] Нарешті вони домовилися
    > (Finally they agreed.) [3 words]
 
 9. поступово / він / розумів / ситуацію
-   > [!answer] Він поступово розумів ситуацію.
+   > [!answer] Він поступово розумів ситуацію
    > (He was gradually understanding the situation.) [4 words]
 
 10. щойно / вона / новину / дізналася
-    > [!answer] Вона щойно дізналася новину.
+    > [!answer] Вона щойно дізналася новину
     > (She just found out the news.) [4 words]
 
 11. цілий / тиждень / він / писав / звіт
-    > [!answer] Він писав звіт цілий тиждень.
+    > [!answer] Він писав звіт цілий тиждень
     > (He was writing the report all week.) [5 words]
 
 12. за / тиждень / він / написав / звіт
-    > [!answer] Він написав звіт за тиждень.
+    > [!answer] Він написав звіт за тиждень
     > (He wrote the report in a week.) [5 words]
 
 13. ми / працювали / протягом / дня / всього
-    > [!answer] Ми працювали протягом всього дня.
+    > [!answer] Ми працювали протягом всього дня
     > (We were working throughout the whole day.) [5 words]
 
 14. він / швидко / зробив / це
-    > [!answer] Він швидко зробив це.
+    > [!answer] Він швидко зробив це
     > (He did it quickly.) [4 words]
 
 ## unjumble: Складніші речення
 > Розташуйте слова в правильному порядку.
 
 1. коли / вона / готувала / він / увійшов / до / кухні
-   > [!answer] Коли вона готувала, він увійшов до кухні.
+   > [!answer] Коли вона готувала, він увійшов до кухні
    > (When she was cooking, he entered the kitchen.) [7 words]
 
 2. поки / я / працював / телефон / задзвонив
-   > [!answer] Поки я працював, телефон задзвонив.
+   > [!answer] Поки я працював, телефон задзвонив
    > (While I was working, the phone rang.) [5 words]
 
 3. він / прийшов / зняв / пальто / і / сів
-   > [!answer] Він прийшов, зняв пальто і сів.
+   > [!answer] Він прийшов, зняв пальто і сів
    > (He came, took off his coat, and sat down.) [6 words]
 
 4. вона / дивилася / телевізор / і / їла / вечерю
-   > [!answer] Вона дивилася телевізор і їла вечерю.
+   > [!answer] Вона дивилася телевізор і їла вечерю
    > (She was watching TV and eating dinner.) [6 words]
 
 5. вони / працювали / над / проєктом / три / місяці
-   > [!answer] Вони працювали над проєктом три місяці.
+   > [!answer] Вони працювали над проєктом три місяці
    > (They were working on the project for three months.) [6 words]
 
 6. вони / закінчили / проєкт / за / три / місяці
-   > [!answer] Вони закінчили проєкт за три місяці.
+   > [!answer] Вони закінчили проєкт за три місяці
    > (They finished the project in three months.) [6 words]
 
 7. поступово / ситуація / покращувалася
-   > [!answer] Ситуація поступово покращувалася.
+   > [!answer] Ситуація поступово покращувалася
    > (The situation was gradually improving.) [3 words]
 
 8. він / досі / не / прийняв / рішення
-   > [!answer] Він досі не прийняв рішення.
+   > [!answer] Він досі не прийняв рішення
    > (He still hasn't made a decision.) [5 words]
 
 9. вона / весь / час / думала / про / це
-   > [!answer] Вона весь час думала про це.
+   > [!answer] Вона весь час думала про це
    > (She was thinking about it all the time.) [6 words]
 
 10. під / час / обіду / він / подзвонив
-    > [!answer] Він подзвонив під час обіду.
+    > [!answer] Він подзвонив під час обіду
     > (He called during lunch.) [5 words]
 
 11. у / цей / час / вони / працювали
-    > [!answer] У цей час вони працювали.
+    > [!answer] У цей час вони працювали
     > (At this time they were working.) [5 words]
 
 12. вона / недовго / чекала / і / пішла
-    > [!answer] Вона недовго чекала і пішла.
+    > [!answer] Вона недовго чекала і пішла
     > (She waited briefly and left.) [5 words]
 
 13. повільно / але / впевнено / він / йшов / вперед
-    > [!answer] Він повільно, але впевнено йшов вперед.
+    > [!answer] Він повільно, але впевнено йшов вперед
     > (He was walking forward slowly but confidently.) [6 words]
 
 14. швидко / вона / зрозуміла / що / сталося
-    > [!answer] Вона швидко зрозуміла, що сталося.
+    > [!answer] Вона швидко зрозуміла, що сталося
     > (She quickly understood what happened.) [5 words]
 
 ## error-correction: Помилки з процесом і результатом
@@ -1333,7 +1331,7 @@ The process/result distinction is perhaps the most practical aspect of Ukrainian
     > [!answer] приготувала
     > [!options] приготувала | готувала | готує | приготує
 
-# Словник
+## Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 2350/1000 (>2000 may be too long)
+- **Words:** ✅ 1436/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 41.2% (target 40-55% (A2.2))
+- **Immersion:** 🇺🇦 42.0% (target 40-55% (A2.2))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -23,7 +23,8 @@
 | **Presentation** | ✅ | 0 | Included in Core |
 | **Comprehensive Grammar Guide** | ⚪️ | 166 | Skipped |
 | **Integrated Review Story** | ✅ | 0 | Included in Core |
-| **A Dream About Kyiv** | ⚪️ | 159 | Skipped |
+| **A Dream About Kyiv** | ⚪️ | 262 | Skipped |
+| **Integrated Scenario 2: Planning a Trip** | ⚪️ | 180 | Skipped |
 | **Summary** | ✅ | 0 | Included in Core |
 | **Frequently Asked Questions** | ⚪️ | 180 | Skipped |
 | **The Road to B1: What's Next?** | ⚪️ | 124 | Skipped |

@@ -22,6 +22,7 @@ objectives:
   - "Learner can identify time markers that trigger each aspect"
 vocabulary_count: 20
 ---
+
 # Вид у минулому часі — Одноразові та повторювані дії
 
 > 🎯 **Чому це важливо**
@@ -31,13 +32,9 @@ vocabulary_count: 20
 > [!resources] 🎧 External Resources
 >
 > **YouTube:** [The Past Imperfective tense in Ukrainian # 39](https://www.youtube.com/watch?v=PK-108GsZF4) — Ukrainian Language
->
 > **YouTube:** [The Past Perfective tense in Ukrainian # 43](https://www.youtube.com/watch?v=WfGlonPphFQ) — Ukrainian Language
->
 > **Past Tense Foundation:** [Past Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-past-tense/) — Review past tense forms before aspect
->
 > **Verb Prefixes:** [Ukrainian Verb Prefixes](https://www.ukrainianlessons.com/ukrainian-verb-prefixes/) — How prefixes create perfective verbs
->
 > **Overview:** [All Verb Tenses](https://www.ukrainianlessons.com/ukrainian-tenses/) — Downloadable reference chart
 
 ## Diagnostic
@@ -85,8 +82,8 @@ English handles the difference between single and repeated events through contex
 In both cases, English uses the same verb form ("read", "called"). The context tells you whether it's habitual or single.
 
 Ukrainian makes this distinction mandatory in the verb itself. You cannot use the same verb form for both meanings. This means every time you describe a past action, you must commit to either:
-- **Single event view** (perfective) — this happened once, as a complete event
-- **Repeated event view** (imperfective) — this happened multiple times, as a pattern
+- **Single event view** (доконаний вид) — this happened once, as a complete event
+- **Repeated event view** (недоконаний вид) — this happened multiple times, as a pattern
 
 The good news: Ukrainian provides clear markers that tell you which view to take. Learning these markers gives you an automatic aspect-selection system.
 
@@ -169,12 +166,12 @@ The rule is simpler than trying to translate from English: **repeated within any
 
 Without a clear time marker, context determines aspect:
 
-**Asking about general experience (imperfective):**
+**Asking about general experience (недоконаний вид):**
 - Ти **читав** цю книгу? (Have you read this book? — ever)
 - Він **був** у Львові? (Has he been to Lviv? — ever)
 - Вона **вчила** німецьку? (Did she study German? — at any point)
 
-**Reporting a specific past event (perfective):**
+**Reporting a specific past event (доконаний вид):**
 - Я **прочитав** твою статтю. (I read your article — that specific one.)
 - Він **приїхав** учора. (He arrived yesterday.)
 - Вона **закінчила** університет. (She graduated from university.)
@@ -225,7 +222,7 @@ But perfective is possible for specific memories:
 
 > 🌍 **Real World: The Parental Question**
 >
-> When Ukrainian parents ask "Що ти **робив** сьогодні?" (imperfective — what were you doing today?), they want a general report. But if they ask "Що ти **зробив**?" (perfective), they're asking for concrete results — homework, chores, accomplishments. Kids quickly learn the difference!
+> When Ukrainian parents ask "Що ти **робив** сьогодні?" (imperfective — what were you doing today?), they want a general report. But if they ask "Що ти **зробив**?" (доконаний вид), they're asking for concrete results — homework, chores, accomplishments. Kids quickly learn the difference!
 >
 > This shows how aspect carries social meaning. The imperfective question is casual and open-ended. The perfective question implies accountability — "what did you actually complete?" Understanding this helps you interpret not just grammar, but the intent behind questions.
 
@@ -235,13 +232,13 @@ But perfective is possible for specific memories:
 
 Professional writers and natural speakers use aspect to create what linguists call the "foreground-background" distinction in narrative. Understanding this technique will make your Ukrainian storytelling much more natural.
 
-**Background (imperfective)** sets the scene:
+**Background (недоконаний вид)** sets the scene:
 - What was happening when the story begins
 - Ongoing states and situations
 - Atmospheric details
 - Simultaneous actions
 
-**Foreground (perfective)** advances the plot:
+**Foreground (доконаний вид)** advances the plot:
 - Main events that move the story forward
 - Sequential actions
 - Decisive moments
@@ -251,12 +248,12 @@ This is similar to how movies use wide establishing shots (background) and close
 
 Stories often mix aspects. Here's how:
 
-**Background information (imperfective):**
+**Background information (недоконаний вид):**
 - Того вечора **йшов** дощ. (That evening it was raining.)
 - Люди **сиділи** в кафе. (People were sitting in the café.)
 - Музика **грала** тихо. (Music was playing softly.)
 
-**Main events (perfective):**
+**Main events (доконаний вид):**
 - **Увійшов** високий чоловік. (A tall man entered.)
 - Він **підійшов** до бару. (He walked up to the bar.)
 - **Замовив** каву і **сів** біля вікна. (He ordered coffee and sat by the window.)
@@ -450,7 +447,7 @@ As you read, try to identify which verbs describe habitual past actions and whic
 
 ---
 
-# Summary
+## Summary
 
 **What You've Learned: The Single vs Repeated Framework**
 
@@ -496,7 +493,7 @@ This is simpler than English, where "I read books" and "I read a book" use the s
 
 ---
 
-# Activities
+## Activities
 
 ## quiz: Маркери часу та вид
 > Оберіть правильну відповідь про маркери часу.
@@ -748,118 +745,118 @@ This is simpler than English, where "I read books" and "I read a book" use the s
 > Розташуйте слова в правильному порядку.
 
 1. разу / він / одного / зрозумів / все
-   > [!answer] Одного разу він зрозумів все.
+   > [!answer] Одного разу він зрозумів все
    > (Once he understood everything.) [4 words]
 
 2. вона / часто / телефонувала / мені
-   > [!answer] Вона часто телефонувала мені.
+   > [!answer] Вона часто телефонувала мені
    > (She often called me.) [4 words]
 
 3. двері / раптом / відчинилися
-   > [!answer] Раптом двері відчинилися.
+   > [!answer] Раптом двері відчинилися
    > (Suddenly the door opened.) [3 words]
 
 4. він / завжди / запізнювався / на / роботу
-   > [!answer] Він завжди запізнювався на роботу.
+   > [!answer] Він завжди запізнювався на роботу
    > (He was always late for work.) [5 words]
 
 5. нарешті / закінчив / він / проєкт
-   > [!answer] Нарешті він закінчив проєкт.
+   > [!answer] Нарешті він закінчив проєкт
    > (Finally he finished the project.) [4 words]
 
 6. газету / він / щодня / читав
-   > [!answer] Він щодня читав газету.
+   > [!answer] Він щодня читав газету
    > (He read the newspaper every day.) [4 words]
 
 7. того / разу / пішло / все / не / так
-   > [!answer] Того разу все пішло не так.
+   > [!answer] Того разу все пішло не так
    > (That time everything went wrong.) [5 words]
 
 8. іноді / приходили / вони / без / попередження
-   > [!answer] Іноді вони приходили без попередження.
+   > [!answer] Іноді вони приходили без попередження
    > (Sometimes they came without warning.) [5 words]
 
 9. вперше / я / побачив / її / в / парку
-   > [!answer] Вперше я побачив її в парку.
+   > [!answer] Вперше я побачив її в парку
    > (For the first time I saw her in the park.) [6 words]
 
 10. ми / регулярно / зустрічалися / в / кафе
-    > [!answer] Ми регулярно зустрічалися в кафе.
+    > [!answer] Ми регулярно зустрічалися в кафе
     > (We regularly met in the café.) [5 words]
 
 11. востаннє / ми / бачилися / минулого / року
-    > [!answer] Востаннє ми бачилися минулого року.
+    > [!answer] Востаннє ми бачилися минулого року
     > (The last time we saw each other was last year.) [5 words]
 
 12. він / рідко / говорив / про / себе
-    > [!answer] Він рідко говорив про себе.
+    > [!answer] Він рідко говорив про себе
     > (He rarely talked about himself.) [5 words]
 
 13. раптом / вона / посміхнулася
-    > [!answer] Раптом вона посміхнулася.
+    > [!answer] Раптом вона посміхнулася
     > (Suddenly she smiled.) [3 words]
 
 14. вони / постійно / сперечалися
-    > [!answer] Вони постійно сперечалися.
+    > [!answer] Вони постійно сперечалися
     > (They constantly argued.) [3 words]
 
 ## unjumble: Складніші речення
 > Розташуйте слова в правильному порядку.
 
 1. того / разу / він / приніс / квіти / і / вибачився
-   > [!answer] Того разу він приніс квіти і вибачився.
+   > [!answer] Того разу він приніс квіти і вибачився
    > (That time he brought flowers and apologized.) [6 words]
 
 2. ми / щотижня / грали / у / футбол / у / парку
-   > [!answer] Ми щотижня грали у футбол у парку.
+   > [!answer] Ми щотижня грали у футбол у парку
    > (We played football in the park every week.) [7 words]
 
 3. одного / разу / вона / загубила / ключі / від / дому
-   > [!answer] Одного разу вона загубила ключі від дому.
+   > [!answer] Одного разу вона загубила ключі від дому
    > (Once she lost the keys to the house.) [6 words]
 
 4. він / часто / згадував / свою / бабусю
-   > [!answer] Він часто згадував свою бабусю.
+   > [!answer] Він часто згадував свою бабусю
    > (He often remembered his grandmother.) [5 words]
 
 5. нарешті / вони / домовилися / про / зустріч
-   > [!answer] Нарешті вони домовилися про зустріч.
+   > [!answer] Нарешті вони домовилися про зустріч
    > (Finally they agreed on a meeting.) [5 words]
 
 6. раптом / почався / сильний / дощ
-   > [!answer] Раптом почався сильний дощ.
+   > [!answer] Раптом почався сильний дощ
    > (Suddenly heavy rain started.) [4 words]
 
 7. вона / щомісяця / відвідувала / своїх / батьків
-   > [!answer] Вона щомісяця відвідувала своїх батьків.
+   > [!answer] Вона щомісяця відвідувала своїх батьків
    > (She visited her parents every month.) [5 words]
 
 8. вперше / він / спробував / український / борщ
-   > [!answer] Вперше він спробував український борщ.
+   > [!answer] Вперше він спробував український борщ
    > (For the first time he tried Ukrainian borscht.) [5 words]
 
 9. вони / іноді / ходили / в / театр / разом
-   > [!answer] Вони іноді ходили в театр разом.
+   > [!answer] Вони іноді ходили в театр разом
    > (They sometimes went to the theater together.) [6 words]
 
 10. востаннє / я / бачив / його / на / вокзалі
-    > [!answer] Востаннє я бачив його на вокзалі.
+    > [!answer] Востаннє я бачив його на вокзалі
     > (The last time I saw him at the station.) [6 words]
 
 11. він / періодично / перевіряв / свою / пошту
-    > [!answer] Він періодично перевіряв свою пошту.
+    > [!answer] Він періодично перевіряв свою пошту
     > (He periodically checked his mail.) [5 words]
 
 12. того / разу / ми / виграли / важливий / матч
-    > [!answer] Того разу ми виграли важливий матч.
+    > [!answer] Того разу ми виграли важливий матч
     > (That time we won an important match.) [6 words]
 
 13. раптом / він / згадав / про / зустріч
-    > [!answer] Раптом він згадав про зустріч.
+    > [!answer] Раптом він згадав про зустріч
     > (Suddenly he remembered about the meeting.) [5 words]
 
 14. вона / рідко / скаржилася / на / проблеми
-    > [!answer] Вона рідко скаржилася на проблеми.
+    > [!answer] Вона рідко скаржилася на проблеми
     > (She rarely complained about problems.) [5 words]
 
 ## error-correction: Помилки з маркерами
@@ -1357,7 +1354,7 @@ This is simpler than English, where "I read books" and "I read a book" use the s
     > [!answer] ходила
     > [!options] ходила | пішла | ходить | піде
 
-# Словник
+## Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

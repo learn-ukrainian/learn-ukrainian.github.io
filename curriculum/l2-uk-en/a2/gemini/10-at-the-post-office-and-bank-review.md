@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 2423/1000 (>2000 may be too long)
+- **Words:** ✅ 1098/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -14,7 +14,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 47.7% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 47.9% (target 35-50% (A2.1))
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -35,7 +41,7 @@
 | **true-false: Service Facts** | 🎮 | 12 | Activity (12 items, min 8) |
 | **group-sort: Post Office vs Bank** | 🎮 | 12 | Activity (12 items, min 8) |
 | **unjumble: Service Sentences** | 🎮 | 12 | Activity (12 items, min 6) |
-| **error-correction: Fix the Case** | 🎮 | 6 | Activity (6 items, min 6) |
+| **error-correction: Fix the Case** | 🎮 | 12 | Activity (12 items, min 6) |
 | **cloze: Complete the Dialogue** | 🎮 | 12 | Activity (12 items, min 6) |
 | **dialogue-reorder: At the Post Office** | 🎮 | 12 | Activity (12 items, min 5) |
 | **mark-the-words: Find Case Forms** | 🎮 | 13 | Activity (13 items, min 6) |

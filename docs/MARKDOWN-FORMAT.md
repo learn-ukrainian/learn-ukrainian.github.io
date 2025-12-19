@@ -504,8 +504,16 @@ Passage with multiple dropdown blanks. Use `[___:N]` markers in the text.
 
 **Key points:**
 - Use `[___:N]` markers in text (N = 1-based option index)
-- Numbered items provide options (pipe-separated)
+- Numbered items provide options (pipe-separated): `1. opt1 | opt2 | opt3`
 - `> [!answer]` identifies the correct option
+- **DO NOT use `[!options]` callout** - options must be inline on the numbered line
+
+**WRONG format (will fail audit):**
+```markdown
+1. звати
+> [!answer] звати
+> [!options] звати | є | маю   <-- WRONG! No [!options] for cloze
+```
 
 ### Dialogue Reorder Format (A2+)
 

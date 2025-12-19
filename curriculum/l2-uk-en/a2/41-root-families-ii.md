@@ -112,7 +112,7 @@ The **говор-/мов-** roots relate to speech and language.
 
 ---
 
-# Story Time: Розмова між друзями
+## Story Time: Розмова між друзями
 
 Оксана і Тарас сидять у кафе. Тарас розповідає про свій день.
 
@@ -140,7 +140,7 @@ The **говор-/мов-** roots relate to speech and language.
 
 ---
 
-# Story Time Part 2: На лекції
+## Story Time Part 2: На лекції
 
 Марія — студентка. Сьогодні в неї лекція з лінгвістики.
 
@@ -161,7 +161,7 @@ The **говор-/мов-** roots relate to speech and language.
 
 ---
 
-# Deep Dive: Related Roots
+## Deep Dive: Related Roots
 
 ## глял-/дивл- (glance/look)
 
@@ -193,7 +193,7 @@ Related to internal perception:
 
 ---
 
-# Common Mistakes
+## Common Mistakes
 
 Understanding the difference between related words is crucial for natural Ukrainian speech. Here are the most common mistakes learners make with perception roots.
 
@@ -333,18 +333,6 @@ These words look similar but mean different things. Бачення is vision or 
    > [!answer] побачення
    > [!options] побачення | бачення | розмова | слухання
 
-
-7. вод- (root for water) → ___
-   > [!error] water root
-   > [!answer] вода
-   > [!explanation] Root вод- means water.
-   > [!options] вода | водити | провід
-
-8. люб- (root for love) → ___
-   > [!error] love root
-   > [!answer] любити
-   > [!explanation] Root люб- means love.
-   > [!options] любити | любов | любий
 7. [___] були уважними. (listeners)
    > [!answer] Слухачі
    > [!options] Слухачі | Мовці | Читачі | Глядачі
@@ -406,29 +394,23 @@ These words look similar but mean different things. Бачення is vision or 
 Студенти уважно [___:5]. (listen)
 Марія і студент домовились про [___:6]. (meeting)
 
-1. бачив
-> [!answer] бачив
-> [!options] бачив | чув | слухав
+1. бачив | чув | слухав
+   > [!answer] бачив
 
-2. почув
-> [!answer] почув
-> [!options] почув | бачив | слухав
+2. почув | бачив | слухав
+   > [!answer] почув
 
-3. мовчала
-> [!answer] мовчала
-> [!options] мовчала | говорила | слухала
+3. мовчала | говорила | слухала
+   > [!answer] мовчала
 
-4. говорить
-> [!answer] говорить
-> [!options] говорить | слухає | мовчить
+4. говорить | слухає | мовчить
+   > [!answer] говорить
 
-5. слухають
-> [!answer] слухають
-> [!options] слухають | говорять | мовчать
+5. слухають | говорять | мовчать
+   > [!answer] слухають
 
-6. побачення
-> [!answer] побачення
-> [!options] побачення | розмову | мовчання
+6. побачення | розмову | мовчання
+   > [!answer] побачення
 
 ## unjumble: Perception Sentences
 

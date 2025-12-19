@@ -1,7 +1,7 @@
 ---
 module: a2-07
-title: "Preposition Master Class"
-subtitle: "Mastering Ukrainian Prepositions with Cases"
+title: "Spatial Prepositions"
+subtitle: "Location, Motion, and Case Combinations"
 version: "1.0"
 phase: "A2.1"
 pedagogy: "PPP"
@@ -244,7 +244,7 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 
 ---
 
-# Dialogue: Де що знаходиться?
+## Dialogue: Де що знаходиться?
 
 > — Вибачте, ви знаєте, де знаходиться банк?
 > — Так, звичайно. Йдіть **через** парк, потім поверніть **за** будинок.

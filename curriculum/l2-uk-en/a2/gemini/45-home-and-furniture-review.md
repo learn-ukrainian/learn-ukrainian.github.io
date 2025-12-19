@@ -1,20 +1,9 @@
 # Audit Report: 45-home-and-furniture.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[HEADING_LEVEL]** Multiple H1 headings: 'Story Time Part 2: Прибирання' should be H2 (##)
-  - FIX: Only one H1 allowed (page title). Change '# Story Time Part 2: Прибирання' to '## Story Time Part 2: Прибирання'
-- **[HEADING_LEVEL]** Multiple H1 headings: 'Common Expressions' should be H2 (##)
-  - FIX: Only one H1 allowed (page title). Change '# Common Expressions' to '## Common Expressions'
-
-## Recommendation
-**📝 UPDATE** (severity 10/100)
-
-- 2 pedagogical violations (minor)
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1922/1000
+- **Words:** ✅ 1212/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -24,8 +13,8 @@
 - **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
-- **Immersion:** 🇺🇦 51.4% (target 50-60% (A2.3))
+- **Pedagogy:** ✅ Level-appropriate
+- **Immersion:** 🇺🇦 52.1% (target 50-60% (A2.3))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -35,7 +24,7 @@
 | **Rooms of the House** | ⚪️ | 85 | Skipped |
 | **Furniture** | ⚪️ | 111 | Skipped |
 | **Appliances and Decor** | ⚪️ | 62 | Skipped |
-| **Story Time: Нова Квартира** | ✅ | 200 | Included in Core |
+| **Story Time: Нова Квартира** | ✅ | 193 | Included in Core |
 | **Story Time Part 2: Прибирання** | ✅ | 215 | Included in Core |
 | **Common Expressions** | ⚪️ | 0 | Skipped |
 | **Describing Location** | ⚪️ | 26 | Skipped |
@@ -43,7 +32,7 @@
 | **Summary** | ✅ | 241 | Included in Core |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **match-up: Home Words** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Home Vocabulary** | 🎮 | 10 | Activity (10 items, min 8) |
+| **fill-in: Home Vocabulary** | 🎮 | 8 | Activity (8 items, min 8) |
 | **quiz: Home & Furniture** | 🎮 | 8 | Activity (8 items, min 8) |
 | **cloze: Story Comprehension** | 🎮 | 6 | Activity (6 items, min 6) |
 | **unjumble: Home Sentences** | 🎮 | 8 | Activity (8 items, min 6) |

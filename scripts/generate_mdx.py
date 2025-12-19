@@ -420,7 +420,13 @@ def parse_error_correction(content: str) -> list[ErrorCorrectionItem]:
 def parse_cloze(content: str) -> ClozeData:
     """Parse cloze activity with passage and blanks.
 
-    Format:
+    Format (new - inline options):
+    - Passage with [___:N] markers for blanks
+    - Numbered answer sections:
+      N. opt1 | opt2 | opt3
+         > [!answer] correct_answer
+
+    Format (legacy - [!options] callout):
     - Passage with [___:N] markers for blanks
     - Numbered answer sections:
       N. default_answer
@@ -439,7 +445,7 @@ def parse_cloze(content: str) -> ClozeData:
     for line in lines:
         stripped = line.strip()
 
-        # Check for numbered answer line (e.g., "1. від")
+        # Check for numbered answer line (e.g., "1. від | для | про" or "1. від")
         num_match = re.match(r'^(\d+)\.\s*(.*)$', stripped)
         if num_match:
             # Save previous blank if exists
@@ -448,17 +454,24 @@ def parse_cloze(content: str) -> ClozeData:
 
             current_blank_num = int(num_match.group(1))
             default_val = num_match.group(2).strip()
-            current_answer = default_val  # Default answer from the line itself
-            current_options = []
+
+            # Check if options are inline (new format: "1. opt1 | opt2 | opt3")
+            if '|' in default_val:
+                current_options = [o.strip() for o in default_val.split('|')]
+                current_answer = current_options[0]  # First option as default answer
+            else:
+                current_answer = default_val  # Default answer from the line itself
+                current_options = []
+
             in_answers = True
             continue
 
-        # Parse answer callout
+        # Parse answer callout (overrides default answer)
         if stripped.startswith('> [!answer]'):
             current_answer = stripped.replace('> [!answer]', '').strip()
             continue
 
-        # Parse options callout
+        # Parse options callout (legacy format)
         if stripped.startswith('> [!options]'):
             opts = stripped.replace('> [!options]', '').strip()
             current_options = [o.strip() for o in opts.split('|')]
@@ -720,9 +733,9 @@ def cloze_to_jsx(data: ClozeData, title: str) -> str:
         return ''
 
     blanks_jsx = []
-    for blank in data.blanks:
+    for idx, blank in enumerate(data.blanks):
         opts = ', '.join([f'`{escape_jsx(o)}`' for o in blank.get("options", [])])
-        blanks_jsx.append(f'{{ answer: `{escape_jsx(blank["answer"])}`, options: [{opts}] }}')
+        blanks_jsx.append(f'{{ index: {idx}, answer: `{escape_jsx(blank["answer"])}`, options: [{opts}] }}')
 
     return f'''### {title}
 
@@ -949,6 +962,7 @@ CALLOUT_MAP = {
     'example': {'type': 'info', 'icon': '📝', 'title': 'Example'},
     'conversation': {'type': 'note', 'icon': '💬', 'title': 'Conversation'},
     'summary': {'type': 'note', 'icon': '📋', 'title': 'Summary'},
+    'solution': {'type': 'solution'},  # Collapsible answer reveal for checkpoints
 }
 
 def convert_callouts(content: str) -> str:
@@ -985,11 +999,21 @@ def convert_callouts(content: str) -> str:
                 callout_lines.append(lines[i][1:].strip() if len(lines[i]) > 1 else '')
                 i += 1
 
-            # Output Docusaurus admonition
-            result.append(f':::{admon_type}[{title}]')
-            result.extend(callout_lines)
-            result.append(':::')
-            result.append('')
+            # Special handling for solution callouts - use HTML details for collapsible
+            if callout_type == 'solution':
+                result.append(f'<details className="solution-block">')
+                result.append(f'<summary>{title}</summary>')
+                result.append('')
+                result.extend(callout_lines)
+                result.append('')
+                result.append('</details>')
+                result.append('')
+            else:
+                # Output Docusaurus admonition
+                result.append(f':::{admon_type}[{title}]')
+                result.extend(callout_lines)
+                result.append(':::')
+                result.append('')
         else:
             result.append(line)
             i += 1

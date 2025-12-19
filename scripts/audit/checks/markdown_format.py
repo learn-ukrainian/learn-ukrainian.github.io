@@ -336,6 +336,37 @@ def check_cloze_format(content: str) -> list[dict]:
                 'fix': "Each cloze option set must have '> [!answer]' identifying the correct option."
             })
 
+        # Check for incorrect [!options] callout (cloze uses inline options, not callout)
+        # Correct format:   1. opt1 | opt2 | opt3
+        #                      > [!answer] opt1
+        # Incorrect format: 1. opt1
+        #                   > [!answer] opt1
+        #                   > [!options] opt1 | opt2 | opt3
+        if '> [!options]' in body or '>[!options]' in body:
+            violations.append({
+                'type': 'CLOZE_FORMAT',
+                'issue': f"Cloze '{title.strip()}' uses incorrect format with [!options] callout",
+                'fix': "Use inline options format: '1. opt1 | opt2 | opt3' with only [!answer] callout below"
+            })
+
+        # Check that numbered items have inline options (must contain |)
+        # Correct: 1. opt1 | opt2 | opt3
+        # Wrong:   1. opt1
+        numbered_lines = re.findall(r'^\s*\d+\.\s*(.+)$', body, re.MULTILINE)
+        items_without_options = []
+        for i, line_content in enumerate(numbered_lines, 1):
+            # Skip if line contains | (has options) or is empty
+            if '|' not in line_content and line_content.strip():
+                items_without_options.append(i)
+
+        if items_without_options and len(items_without_options) == len(numbered_lines):
+            # All items missing options - likely wrong format
+            violations.append({
+                'type': 'CLOZE_FORMAT',
+                'issue': f"Cloze '{title.strip()}' items missing inline options (no | found)",
+                'fix': "Each item must have options: '1. opt1 | opt2 | opt3' not just '1. answer'"
+            })
+
     return violations
 
 
@@ -382,35 +413,62 @@ def check_frontmatter_spacing(content: str) -> list[dict]:
 def check_heading_levels(content: str) -> list[dict]:
     """
     Check that section headings use H2 (##) not H1 (#).
-    
+
     Docusaurus TOC shows H2-H3 by default. H1 should only be used for
     the page title (ONCE). Any additional H1 headings break the sidebar TOC.
-    
-    Two checks:
+
+    Three checks:
     1. Any H1 after the first one is an error (multiple H1s)
     2. Known section names (warm-up, activities, etc.) must be H2
+    3. Heading hierarchy violations (going UP from H2/H3 to H1)
     """
     violations = []
-    
+
     # Reserved section words that should NOT be H1
     reserved_sections = [
         'warm-up', 'presentation', 'practice', 'cultural',
         'summary', 'activities', 'production', 'vocabulary',
         'reading', 'grammar', 'dialogue', 'підсумок', 'introduction'
     ]
-    
+
     lines = content.split('\n')
     h1_count = 0
     first_h1_line = None
-    
+
+    # Track heading hierarchy
+    prev_heading_level = 0
+    prev_heading_line = 0
+    in_frontmatter = False
+    frontmatter_count = 0
+
     for line_num, line in enumerate(lines, 1):
-        # Check for H1 headings (^# but not ^##)
-        if line.startswith('# ') and not line.startswith('## '):
+        # Skip frontmatter
+        if line.strip() == '---':
+            frontmatter_count += 1
+            if frontmatter_count == 1:
+                in_frontmatter = True
+            elif frontmatter_count == 2:
+                in_frontmatter = False
+            continue
+
+        if in_frontmatter:
+            continue
+
+        # Detect heading level
+        heading_match = re.match(r'^(#{1,6})\s+(.+)$', line)
+        if not heading_match:
+            continue
+
+        hashes = heading_match.group(1)
+        heading = heading_match.group(2).strip()
+        current_level = len(hashes)
+        heading_lower = heading.lower()
+        clean_heading = heading[:50] + ('...' if len(heading) > 50 else '')
+
+        # Check for H1 specifically
+        if current_level == 1:
             h1_count += 1
-            heading = line[2:].strip()
-            heading_lower = heading.lower()
-            clean_heading = heading[:50] + ('...' if len(heading) > 50 else '')
-            
+
             if h1_count == 1:
                 first_h1_line = line_num
                 # Still check if first H1 is a reserved section (shouldn't be)
@@ -431,7 +489,20 @@ def check_heading_levels(content: str) -> list[dict]:
                     'issue': f"Multiple H1 headings: '{clean_heading}' should be H2 (##)",
                     'fix': f"Only one H1 allowed (page title). Change '# {heading}' to '## {heading}'"
                 })
-    
+
+        # Check heading hierarchy - going from H2/H3 back UP to H1 is wrong
+        # (except for the very first H1 which is the title)
+        if prev_heading_level >= 2 and current_level == 1:
+            violations.append({
+                'type': 'HEADING_HIERARCHY',
+                'line': line_num,
+                'issue': f"Heading hierarchy broken: H{prev_heading_level} → H1 at '{clean_heading}'",
+                'fix': f"Don't go from ## back to #. Change '# {heading}' to '## {heading}' to maintain proper hierarchy"
+            })
+
+        prev_heading_level = current_level
+        prev_heading_line = line_num
+
     return violations
 
 

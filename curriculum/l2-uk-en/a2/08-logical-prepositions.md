@@ -47,7 +47,7 @@ Today we unlock:
 
 ---
 
-# Part 1: Benefit & Absence
+## Part 1: Benefit & Absence
 
 ## Understanding Logical Prepositions
 
@@ -87,7 +87,7 @@ Use **без** to indicate absence. This is straightforward - it simply means "w
 
 ---
 
-# Part 2: Cause & Topic
+## Part 2: Cause & Topic
 
 ## Через + Accusative (Because of / Through)
 Use **через** to show cause or path.
@@ -139,7 +139,7 @@ Think of it like color-coding in a spreadsheet - each case has its "color" that 
 
 ---
 
-# Part 3: Source & Accompaniment
+## Part 3: Source & Accompaniment
 
 ## Від + Genitive (From - Source)
 Use **від** to show origin or sender.
@@ -168,7 +168,7 @@ Use **з** to show accompaniment.
 
 ---
 
-# Part 4: Time & Exception
+## Part 4: Time & Exception
 
 ## О/Об + Locative (At - Time)
 Use **о** (or **об** before vowels) for clock time.
@@ -206,7 +206,7 @@ Use **замість** for substitution.
 
 ---
 
-# Deep Dive: Case Summary
+## Deep Dive: Case Summary
 
 All logical prepositions require a specific case:
 
@@ -230,7 +230,7 @@ All logical prepositions require a specific case:
 
 ---
 
-# Story Time: The Letter
+## Story Time: The Letter
 
 Марія отримала **лист від мами**.
 У листі було написано **про сім'ю**.
@@ -253,7 +253,7 @@ All logical prepositions require a specific case:
 
 ---
 
-# Story Time Part 2: The Café
+## Story Time Part 2: The Café
 
 Оля зайшла в кафе **після роботи**.
 Вона замовила каву **з молоком** і торт **без глютену**.
@@ -281,7 +281,7 @@ All logical prepositions require a specific case:
 
 ---
 
-# Language in Action
+## Language in Action
 
 ## Dialogue: At the Pharmacy
 
@@ -473,37 +473,29 @@ Key distinctions:
 [___:7] роботу вона не їздить часто додому.
 Всі її люблять, [___:8] одного колеги.
 
-1. від
-> [!answer] від
-> [!options] від | для | про
+1. від | для | про
+   > [!answer] від
 
-2. про
-> [!answer] про
-> [!options] про | для | від
+2. про | для | від
+   > [!answer] про
 
-3. для
-> [!answer] для
-> [!options] для | від | з
+3. для | від | з
+   > [!answer] для
 
-4. з
-> [!answer] з
-> [!options] з | без | для
+4. з | без | для
+   > [!answer] з
 
-5. о
-> [!answer] о
-> [!options] о | після | для
+5. о | після | для
+   > [!answer] о
 
-6. Після
-> [!answer] Після
-> [!options] Після | Через | Для
+6. Після | Через | Для
+   > [!answer] Після
 
-7. Через
-> [!answer] Через
-> [!options] Через | Для | Про
+7. Через | Для | Про
+   > [!answer] Через
 
-8. крім
-> [!answer] крім
-> [!options] крім | для | з
+8. крім | для | з
+   > [!answer] крім
 
 ## unjumble: Logical Sentences
 
@@ -526,41 +518,179 @@ Key distinctions:
 
 ## error-correction: Wrong Preposition
 
-1. Подарунок **від** мами. (Intended: for mom)
+1. Подарунок від мами. (Intended: for mom)
    > [!error] від
    > [!answer] для
    > [!explanation] "For mom" = benefit → для. "From mom" = від.
    > [!options] для | від
 
-2. Кава **з** цукру. (Intended: without sugar)
+2. Кава з цукру. (Intended: without sugar)
    > [!error] з
    > [!answer] без
    > [!explanation] "Without" = без. "With" = з.
    > [!options] без | з
 
-3. Ми говорили **для** тебе. (Intended: about you)
+3. Ми говорили для тебе. (Intended: about you)
    > [!error] для
    > [!answer] про
    > [!explanation] "About" = про. "For" = для.
    > [!options] про | для
 
-4. **Від** хвороби він не прийшов. (Intended: because of)
+4. Від хвороби він не прийшов. (Intended: because of)
    > [!error] Від
    > [!answer] Через
    > [!explanation] "Because of" = через. "From" (source) = від.
    > [!options] Через | Від
 
-5. Я не можу **для** тебе. (Intended: without you)
+5. Я не можу для тебе. (Intended: without you)
    > [!error] для
    > [!answer] без
    > [!explanation] "Without" = без. "For" = для.
    > [!options] без | для
 
-6. **Після** кого? (Intended: for whom)
+6. Після кого? (Intended: for whom)
    > [!error] Після
    > [!answer] Для
    > [!explanation] "For whom?" = Для кого? "After" = Після.
    > [!options] Для | Після
+
+## true-false: Preposition Rules
+
+> Decide if each statement is true or false.
+
+- [x] "Для" always takes the genitive case.
+  > Correct! Для + Gen: для мами, для тебе.
+
+- [ ] "Про" takes the genitive case.
+  > False! "Про" takes accusative: про тебе, про книгу.
+
+- [x] "Через" can mean both "because of" and "through."
+  > Yes! Через дощ (because of rain), через парк (through the park).
+
+- [x] "Від" is used for receiving something from a person.
+  > Correct! Лист від мами = a letter from mom.
+
+- [ ] "З" always means "from."
+  > False! "З" with instrumental means "with": з другом.
+
+- [x] "Після" means "after" and takes genitive.
+  > Yes! Після роботи = after work.
+
+- [ ] "Для" and "на" mean the same thing.
+  > False! Для = benefit (для тебе), На = payment (на каву).
+
+- [x] "Крім" means "except" and takes genitive.
+  > Correct! Всі прийшли, крім Олега.
+
+- [x] "О/об" is used for clock time.
+  > Yes! О третій = at three o'clock.
+
+- [ ] "Через + noun" and "тому що + clause" are interchangeable.
+  > They both mean "because" but have different grammar: через дощ vs тому що йде дощ.
+
+- [x] "Замість" means "instead of."
+  > Correct! Чай замість кави = tea instead of coffee.
+
+- [x] "Без" expresses absence.
+  > Yes! Кава без цукру = coffee without sugar.
+
+## translate: English to Ukrainian
+
+A gift for mom.
+
+- [x] Подарунок для мами.
+- [ ] Подарунок від мами.
+- [ ] Подарунок про маму.
+
+---
+
+Coffee without sugar.
+
+- [x] Кава без цукру.
+- [ ] Кава з цукром.
+- [ ] Кава для цукру.
+
+---
+
+A letter from a friend.
+
+- [x] Лист від друга.
+- [ ] Лист для друга.
+- [ ] Лист про друга.
+
+---
+
+Because of the rain.
+
+- [x] Через дощ.
+- [ ] Про дощ.
+- [ ] Від дощу.
+
+---
+
+We talked about you.
+
+- [x] Ми говорили про тебе.
+- [ ] Ми говорили для тебе.
+- [ ] Ми говорили від тебе.
+
+---
+
+Coffee with milk.
+
+- [x] Кава з молоком.
+- [ ] Кава без молока.
+- [ ] Кава для молока.
+
+---
+
+After work.
+
+- [x] Після роботи.
+- [ ] Для роботи.
+- [ ] Про роботу.
+
+---
+
+Everyone came except Oleh.
+
+- [x] Всі прийшли, крім Олега.
+- [ ] Всі прийшли, для Олега.
+- [ ] Всі прийшли, від Олега.
+
+---
+
+At three o'clock.
+
+- [x] О третій годині.
+- [ ] Для третьої години.
+- [ ] Після третьої години.
+
+---
+
+Tea instead of coffee.
+
+- [x] Чай замість кави.
+- [ ] Чай без кави.
+- [ ] Чай для кави.
+
+---
+
+Medicine for headache.
+
+- [x] Ліки від головного болю.
+- [ ] Ліки для головного болю.
+- [ ] Ліки про головний біль.
+
+---
+
+I can't live without you.
+
+- [x] Я не можу без тебе.
+- [ ] Я не можу для тебе.
+- [ ] Я не можу від тебе.
+
+---
 
 ## match-up: Contrast Pairs
 
@@ -584,29 +714,23 @@ Key distinctions:
 [___:4] дорослих. І щось [___:5] кашлю.
 Сироп [___:6] цукру підійде?
 
-1. від
-> [!answer] від
-> [!options] від | для | про
+1. від | для | про
+   > [!answer] від
 
-2. Для
-> [!answer] Для
-> [!options] Для | Від | Без
+2. Для | Від | Без
+   > [!answer] Для
 
-3. для
-> [!answer] для
-> [!options] для | від | з
+3. для | від | з
+   > [!answer] для
 
-4. Для
-> [!answer] Для
-> [!options] Для | Від | Без
+4. Для | Від | Без
+   > [!answer] Для
 
-5. від
-> [!answer] від
-> [!options] від | для | про
+5. від | для | про
+   > [!answer] від
 
-6. без
-> [!answer] без
-> [!options] без | з | для
+6. без | з | для
+   > [!answer] без
 
 ## match-up: Case Endings
 

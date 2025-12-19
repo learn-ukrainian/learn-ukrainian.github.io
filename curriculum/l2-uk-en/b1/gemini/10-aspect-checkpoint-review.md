@@ -1,9 +1,9 @@
 # Audit Report: 10-aspect-checkpoint.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1250
+**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1265/1250
+- **Words:** ✅ 1620/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 51.7% (target 50-60% (B1.1 Aspect))
+- **Immersion:** 🇺🇦 46.7% (target 40-68% (B1.1 Aspect))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -25,11 +25,12 @@
 | **Master Summary: The Complete Aspect System** | ✅ | 108 | Included in Core |
 | **Поглиблення** | ⚪️ | 0 | Skipped |
 | **Ваш прогрес / Your Learning Journey: Modules 01-09 Recap** | ⚪️ | 343 | Skipped |
-| **Final Analysis Text** | ⚪️ | 270 | Skipped |
+| **Final Analysis Text** | ⚪️ | 272 | Skipped |
+| **The Logic of Aspect: Viewing Time Differently** | ⚪️ | 351 | Skipped |
 | **Практика** | ⚪️ | 0 | Skipped |
 | **Final Preparation Exercises** | ⚪️ | 130 | Skipped |
 | **Summary** | ✅ | 0 | Included in Core |
-| **Success Criteria: How to Know You've Mastered Aspect** | ⚪️ | 262 | Skipped |
+| **Success Criteria: How to Know You've Mastered Aspect** | ⚪️ | 264 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **fill-in: Комплексний тест** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Видові пари — повний список** | 🎮 | 14 | Activity (14 items, min 8) |

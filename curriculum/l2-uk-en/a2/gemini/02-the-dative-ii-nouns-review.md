@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 3387/1000 (>2000 may be too long)
+- **Words:** ✅ 1750/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -14,21 +14,26 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 43.9% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 44.1% (target 35-50% (A2.1))
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Introduction** | ✅ | 165 | Included in Core |
 | **Warm-up** | ✅ | 150 | Included in Core |
-| **Presentation** | ✅ | 0 | Included in Core |
-| **The Dative Question: Кому? Чому?** | ⚪️ | 85 | Skipped |
+| **Presentation** | ✅ | 85 | Included in Core |
 | **Masculine Noun Endings** | ⚪️ | 178 | Skipped |
 | **Feminine Noun Endings** | ⚪️ | 148 | Skipped |
 | **Neuter Noun Endings** | ⚪️ | 59 | Skipped |
 | **Plural Dative Endings** | ⚪️ | 122 | Skipped |
 | **Cultural Insight** | ✅ | 0 | Included in Core |
-| **Давати і Дарувати: The Culture of Giving** | ✅ | 187 | Included in Core |
+| **Давати і Дарувати: The Culture of Giving** | ✅ | 148 | Included in Core |
 | **Verbs That Love the Dative** | ⚪️ | 74 | Skipped |
 | **Practice** | ⚪️ | 47 | Skipped |
 | **Pattern Drill: Forming the Dative** | ✅ | 18 | Included in Core |

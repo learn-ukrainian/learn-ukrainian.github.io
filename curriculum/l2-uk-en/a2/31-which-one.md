@@ -89,7 +89,7 @@ Look ONLY at the second part of the sentence to determine the case of *який*
 
 ---
 
-# Deep Dive: "Who" vs "Which"
+## Deep Dive: "Who" vs "Which"
 
 In English:
 - People = Who (*The man **who** came*)
@@ -107,7 +107,7 @@ In Ukrainian:
 
 ---
 
-# Deep Dive: The "Те, що" Connector
+## Deep Dive: The "Те, що" Connector
 
 Sometimes you don't have a specific noun to describe. You just want to refer to an abstract idea: "That which..." or "What...".
 
@@ -139,7 +139,7 @@ The second part (**що**) acts as the subject/object of the second sentence.
 
 ---
 
-# Language in Action
+## Language in Action
 
 ## Dialogue: The Police Witness
 

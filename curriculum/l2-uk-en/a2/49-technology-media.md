@@ -102,11 +102,22 @@ Verbs for the digital age:
 
 ### Digital Safety
 
-Being online requires safety (**безпека**).
+Being online requires safety (**безпека**). The internet is wonderful, but it can also be dangerous. Here are important rules for staying safe online.
 
-- **пароль** (password) must be strong. "123456" is a bad password.
-- **приватність** (privacy) is important. Don't share your address.
-- **шахрай** (scammer) wants your money.
+- **пароль** (password) must be strong. "123456" is a bad password. Use letters, numbers, and symbols.
+- **приватність** (privacy) is important. Don't share your address or phone number with strangers.
+- **шахрай** (scammer) wants your money. Never send money to people you don't know.
+- **вірус** (virus) can damage your computer. Don't click on suspicious links.
+- **резервна копія** (backup) saves your files. Make copies of important documents.
+
+Андрій continues working. He writes code, **завантажує** (uploads) files to the server, and **публікує** (publishes) updates. If he has a question, he **шукає** (searches) the answer on the internet. His work requires attention. One wrong symbol — and the program doesn't work!
+
+At lunch, he calls his mom via video call (**відеозв'язок**).
+— Привіт, мамо! Як справи?
+— Привіт, синку. Я не можу знайти свій серіал.
+— Зараз я тобі скину **посилання**, — says Андрій.
+
+In the evening, he turns off the computer. His eyes are tired from the screen. He takes his **навушники** (headphones) and goes running. Music helps him relax. Without technology, he cannot work, but without sport, he cannot live.
 
 > [!tip] **Tip** "Like" in Ukrainian
 > While **лайк** is common, the proper Ukrainian word is **вподобайка** (from *вподобати* - to like). You might see both!
@@ -145,22 +156,6 @@ Being online requires safety (**безпека**).
 — Привіт, мій електронний друже. Я сумував.
 
 Він відкрив **ноутбук**, зайшов у **мережу** і написав великий пост про свою подорож. Всі його друзі поставили лайки.
-
-### Story Time: The Remote Worker (Expanded)
-
-Андрій — програміст. Він працює вдома. Його робоче місце дуже зручне. На столі стоїть потужний **комп'ютер** і два великі **екрани**.
-
-Вранці Андрій вмикає **ноутбук**. Він перевіряє **пошту** і читає **новини**. Потім він заходить у робочий чат.
-— Привіт всім! Я **онлайн**, — пише він.
-
-Андрій пише код, **завантажує** файли на сервер і **публікує** оновлення. Якщо він має питання, він **шукає** відповідь в інтернеті. Його робота вимагає уваги. Один неправильний символ — і програма не працює!
-
-В обід він дзвонить мамі по відеозв'язку (**video call**).
-— Привіт, мамо! Як справи?
-— Привіт, синку. Я не можу знайти свій серіал.
-— Зараз я тобі скину **посилання**, — каже Андрій.
-
-Ввечері він вимикає комп'ютер. Його очі втомилися від екрана. Він бере **навушники** і йде бігати. Музика допомагає йому відпочити. Без технологій він не може працювати, але без спорту він не може жити.
 
 ### Story Time: Grandma Online
 
@@ -521,15 +516,7 @@ Digital literacy is key in modern Ukrainian society. Use these words to stay con
    > [!options] смартфона | смартфон | смартфону | смартфоном
    > [!explanation] Genitive of negation: немає смартфона (animate-like ending often used for gadgets, or standard genitive -а).
 
-10. Вона лайкає фото.
-    > [!error] лайкає
-    > [!answer] лайкає
-    > [!options] лайкає | лайкує | лайк | лайки
-    > [!explanation] Wait, 'лайкає' is colloquial but correct here. Maybe case? 'лайкає фото' (acc pl). It's fine.
-
-
-    New Item 10:
-    Я пишу коментар палець.
+10. Я пишу коментар палець.
     > [!error] палець
     > [!answer] пальцем
     > [!options] пальцем | палець | пальця | пальцю
@@ -556,46 +543,36 @@ Digital literacy is key in modern Ukrainian society. Use these words to stay con
 Потім я вмикаю [___:8] і починаю працювати [___:9].
 Сьогодні треба написати [___:10] для сайту.
 
-1. смартфона
-> [!answer] смартфона
-> [!options] смартфона | книги | вікна
+1. смартфона | книги | вікна
+   > [!answer] смартфона
 
-2. екрані
-> [!answer] екрані
-> [!options] екрані | столі | вулиці
+2. екрані | столі | вулиці
+   > [!answer] екрані
 
-3. пошту
-> [!answer] пошту
-> [!options] пошту | вікно | двері
+3. пошту | вікно | двері
+   > [!answer] пошту
 
-4. новини
-> [!answer] новини
-> [!options] новини | музику | ігри
+4. новини | музику | ігри
+   > [!answer] новини
 
-5. стрічку
-> [!answer] стрічку
-> [!options] стрічку | книгу | зошит
+5. стрічку | книгу | зошит
+   > [!answer] стрічку
 > (Feed = стрічка)
 
-6. стаття
-> [!answer] стаття
-> [!options] стаття | пісня | гра
+6. стаття | пісня | гра
+   > [!answer] стаття
 
-7. лайк
-> [!answer] лайк
-> [!options] лайк | бан | смайл
+7. лайк | бан | смайл
+   > [!answer] лайк
 
-8. ноутбук
-> [!answer] ноутбук
-> [!options] ноутбук | телевізор | праску
+8. ноутбук | телевізор | праску
+   > [!answer] ноутбук
 
-9. онлайн
-> [!answer] онлайн
-> [!options] онлайн | офлайн | спати
+9. онлайн | офлайн | спати
+   > [!answer] онлайн
 
-10. код
-> [!answer] код
-> [!options] код | пісню | обід
+10. код | пісню | обід
+   > [!answer] код
 
 ## dialogue-reorder: IT Support
 

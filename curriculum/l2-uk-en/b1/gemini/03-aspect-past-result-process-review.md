@@ -1,30 +1,30 @@
 # Audit Report: 03-aspect-past-result-process.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1250
+**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 2668/1250 (>2250 may be too long)
+- **Words:** ⚠️ 2681/1500 (>2500 may be too long)
 - **Activities:** ✅ 15/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 59.5% (target 50-60% (B1.1 Aspect))
+- **Immersion:** 🇺🇦 60.2% (target 40-68% (B1.1 Aspect))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 105 | Included in Core |
-| **Diagnostic** | ✅ | 123 | Included in Core |
+| **Вид у минулому часі — Результат чи процес** | ⚪️ | 105 | Skipped |
+| **Diagnostic** | ✅ | 125 | Included in Core |
 | **The Process vs Result Distinction: Why English Speakers Struggle** | ⚪️ | 174 | Skipped |
-| **Analysis** | ⚪️ | 686 | Skipped |
-| **Deep Dive** | ✅ | 1059 | Included in Core |
-| **Practice** | ⚪️ | 252 | Skipped |
+| **Analysis** | ⚪️ | 688 | Skipped |
+| **Deep Dive** | ✅ | 1066 | Included in Core |
+| **Practice** | ⚪️ | 254 | Skipped |
 | **Summary** | ✅ | 0 | Included in Core |
 | **What You've Learned: A Framework for Process vs Result** | ⚪️ | 269 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |

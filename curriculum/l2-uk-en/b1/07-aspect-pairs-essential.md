@@ -16,7 +16,20 @@ objectives:
 vocabulary_count: 80
 ---
 
-# Діагностика
+# Видові пари — Найважливіші 40
+
+
+> 🎯 **Чому це важливо**
+>
+> Видові пари — основа української дієслівної системи. Без знання пар «читати–прочитати», «писати–написати» ви не зможете правильно вибирати форми в реченнях. Цей модуль дає вам 50+ найважливіших пар, які покривають 80% повсякденного мовлення.
+
+> [!resources] 🎧 External Resources
+>
+> 📖 **Reading:** [Ukrainian Lessons: Verb Pairs](https://ukrainianlessons.com/verbs/) - Comprehensive list of aspect pairs.
+> 📺 **Video:** [Most Useful Ukrainian Verbs for Beginners](https://www.youtube.com/watch?v=xa-_fedNU6U) - Review of common pairs.
+>
+
+## Діагностика
 
 ## Test Your Current Knowledge
 
@@ -44,7 +57,7 @@ If you knew all five — excellent! You're ready for the expanded list. If you m
 
 ---
 
-# Аналіз
+## Аналіз
 
 ## Як утворюються видові пари
 
@@ -96,7 +109,26 @@ Some pairs use completely different roots:
 
 ---
 
-# Поглиблення
+### Semantic Nuances in Aspect Pairs
+
+Understanding aspect pairs goes beyond memorizing forms. Each pair encodes a fundamental distinction between **process** and **result**:
+
+| Pair | Process Meaning | Result Meaning |
+|------|----------------|----------------|
+| читати / прочитати | Reading (ongoing) | Read through completely |
+| шукати / знайти | Searching | Found it! (search succeeded) |
+| вчити / вивчити | Learning (studying) | Mastered (learned completely) |
+| готувати / приготувати | Preparing | Preparation complete |
+
+> 🏛️ **Decolonization Moment: Aspect as Ukrainian Heritage**
+> 
+> The Ukrainian aspect system developed independently from Russian and has unique characteristics. For example, Ukrainian preserves certain aspect pairs that Russian has lost or modified. During the Ems Decree period, teaching Ukrainian grammar — including the aspect system — was forbidden. Today, mastering Ukrainian aspect is an act of linguistic reclamation.
+> 
+> **Fun fact:** Some aspect pairs in Ukrainian have clearer semantic distinctions than their Russian equivalents. For instance, Ukrainian «шукати → знайти» explicitly encodes the difference between "searching" and "finding," while Russian often uses прфixes ambiguously.
+
+---
+
+## Поглиблення
 
 ## The Complete B1 Aspect Pair Collection
 
@@ -178,6 +210,18 @@ Now that you understand the three formation patterns, let's examine all 40 essen
 
 ---
 
+> 📖 **Aspect in Storytelling: The Movie vs. The Photo**
+>
+> Think of imperfective verbs as **video clips** and perfective verbs as **snapshots**.
+> - When you tell a story using imperfective verbs (ми йшли, сонце світило), you are setting the scene, describing the background atmosphere. It's the video playing.
+> - When you switch to a perfective verb (раптом ми побачили, він сказав), you are advancing the plot. It's the snapshot of a specific event that moves the story forward.
+>
+> **Example:**
+> «Ми **сиділи** (process/background) в кафе і **пили** (process/background) каву. Раптом **зайшов** (plot event) мій друг і **сів** (plot event) біля нас.»
+> This interplay creates the rhythm of Ukrainian narrative.
+
+---
+
 ## Applying Aspect Pairs in Real Conversations
 
 The best way to internalize aspect pairs is to see them in action. The following dialogues demonstrate how native speakers naturally switch between imperfective and perfective forms. Pay attention to the bolded verbs — try to identify whether each one is imperfective or perfective, and why the speaker chose that particular form.
@@ -193,7 +237,7 @@ The best way to internalize aspect pairs is to see them in action. The following
 **Марина:** Чудово! Коли **закінчиш** — **надішли** мені на пошту.
 **Олена:** Добре, **надішлю** одразу!
 
-**Analysis:** Марина's first question uses **написала** (perfective) — she's asking about a completed result, not the process. When Олена answers "ще **пишу**" (imperfective), she indicates the activity is still ongoing. Her promise "**Закінчу**" (perfective) commits to a completed future action.
+**Analysis:** Марина's first question uses **написала** (доконаний вид) — she's asking about a completed result, not the process. When Олена answers "ще **пишу**" (недоконаний вид), she indicates the activity is still ongoing. Her promise "**Закінчу**" (доконаний вид) commits to a completed future action.
 
 ---
 
@@ -209,7 +253,7 @@ The best way to internalize aspect pairs is to see them in action. The following
 **Покупець:** **Візьму** цей! Можна **заплатити** карткою?
 **Продавець:** Звичайно! **Вмикаю** термінал.
 
-**Analysis:** The customer uses **шукаю** (imperfective) — they're in the process of searching, not committed to buying yet. When they decide, they switch to **Візьму!** (perfective) — a definite decision. The seller's **Вмикаю** (imperfective) describes the current action of turning on the terminal.
+**Analysis:** The customer uses **шукаю** (недоконаний вид) — they're in the process of searching, not committed to buying yet. When they decide, they switch to **Візьму!** (доконаний вид) — a definite decision. The seller's **Вмикаю** (недоконаний вид) describes the current action of turning on the terminal.
 
 ---
 
@@ -225,7 +269,7 @@ The best way to internalize aspect pairs is to see them in action. The following
 
 ---
 
-# Практика
+## Практика
 
 ## The Practice Strategy
 
@@ -256,7 +300,7 @@ Fill in the table with the corresponding forms. Remember which pattern each pair
 
 ---
 
-# Summary
+## Summary
 
 ## Key Takeaways / Головні висновки
 
@@ -294,7 +338,7 @@ Understanding how aspect pairs are formed helps you predict forms for new verbs 
 
 ---
 
-# Activities
+## Activities
 
 ## fill-in: Доповніть пари
 > Заповніть пропуски правильною формою дієслова.
@@ -576,59 +620,59 @@ Understanding how aspect pairs are formed helps you predict forms for new verbs 
 > Розташуйте слова у правильному порядку.
 
 1. вже / книгу / я / прочитав
-   > [!answer] Я вже прочитав книгу.
+   > [!answer] Я вже прочитав книгу
    > (I've already read the book.) [4 words]
 
 2. весь / писав / він / день / звіт
-   > [!answer] Він весь день писав звіт.
+   > [!answer] Він весь день писав звіт
    > (He wrote the report all day.) [5 words]
 
 3. документи / перевірила / вона / вже
-   > [!answer] Вона вже перевірила документи.
+   > [!answer] Вона вже перевірила документи
    > (She already checked the documents.) [4 words]
 
 4. допоможеш / мені / ти / ?
-   > [!answer] Ти допоможеш мені?
+   > [!answer] Ти допоможеш мені
    > (Will you help me?) [3 words]
 
 5. подарунок / я / вибрав / чудовий
-   > [!answer] Я вибрав чудовий подарунок.
+   > [!answer] Я вибрав чудовий подарунок
    > (I chose a wonderful gift.) [4 words]
 
 6. помилку / знайшов / він / нарешті
-   > [!answer] Нарешті він знайшов помилку.
+   > [!answer] Нарешті він знайшов помилку
    > (Finally he found the mistake.) [4 words]
 
 7. листа / вона / надіслала / мені
-   > [!answer] Вона надіслала мені листа.
+   > [!answer] Вона надіслала мені листа
    > (She sent me a letter.) [4 words]
 
 8. увімкнув / комп'ютер / я / ранку / з
-   > [!answer] Я увімкнув комп'ютер з ранку.
+   > [!answer] Я увімкнув комп'ютер з ранку
    > (I turned on the computer in the morning.) [5 words]
 
 9. завдання / ми / закінчили / усі
-   > [!answer] Ми закінчили усі завдання.
+   > [!answer] Ми закінчили усі завдання
    > (We finished all the tasks.) [4 words]
 
 10. купив / він / квитки / на / концерт
-    > [!answer] Він купив квитки на концерт.
+    > [!answer] Він купив квитки на концерт
     > (He bought tickets for the concert.) [5 words]
 
 11. ключі / вона / забула / вдома
-    > [!answer] Вона забула ключі вдома.
+    > [!answer] Вона забула ключі вдома
     > (She forgot the keys at home.) [4 words]
 
 12. телефон / він / вимкнув / свій
-    > [!answer] Він вимкнув свій телефон.
+    > [!answer] Він вимкнув свій телефон
     > (He turned off his phone.) [4 words]
 
 13. запропонувала / вона / допомогу / свою
-    > [!answer] Вона запропонувала свою допомогу.
+    > [!answer] Вона запропонувала свою допомогу
     > (She offered her help.) [4 words]
 
 14. дозволили / вони / нам / йти
-    > [!answer] Вони дозволили нам йти.
+    > [!answer] Вони дозволили нам йти
     > (They allowed us to go.) [4 words]
 
 ## true-false: Правила видових пар
@@ -679,61 +723,47 @@ Understanding how aspect pairs are formed helps you predict forms for new verbs 
 ## cloze: Діалог з видовими парами
 > Заповніть пропуски правильною формою.
 
-1. — Ти вже ___ звіт?
+1. написав | писав | написував | пишеш
    > [!answer] написав
-   > [!options] написав | писав | написував | пишеш
 
-2. — Ні, ще ___. Закінчу за годину.
+2. пишу | напишу | написав | писав
    > [!answer] пишу
-   > [!options] пишу | напишу | написав | писав
 
-3. — А документи ти ___?
+3. перевірив | перевіряв | перевіряю | перевіриш
    > [!answer] перевірив
-   > [!options] перевірив | перевіряв | перевіряю | перевіриш
 
-4. — Так, вже ___ і виправив помилки.
+4. перевірив | перевіряв | перевіряю | перевіриш
    > [!answer] перевірив
-   > [!options] перевірив | перевіряв | перевіряю | перевіриш
 
-5. — Коли закінчиш — ___ мені на пошту.
+5. надішли | надсилай | надсилаєш | надіслав
    > [!answer] надішли
-   > [!options] надішли | надсилай | надсилаєш | надіслав
 
-6. — Добре, ___ одразу!
+6. надішлю | надсилаю | надсилав | надіслав
    > [!answer] надішлю
-   > [!options] надішлю | надсилаю | надсилав | надіслав
 
-7. — Ти ___ подарунок для мами?
+7. вибрав | вибирав | вибираєш | вибереш
    > [!answer] вибрав
-   > [!options] вибрав | вибирав | вибираєш | вибереш
 
-8. — Так, я ___ дуже гарний браслет.
+8. купив | купував | купую | куплю
    > [!answer] купив
-   > [!options] купив | купував | купую | куплю
 
-9. — Вона ___ свої ключі вдома.
+9. забула | забувала | забуває | забуде
    > [!answer] забула
-   > [!options] забула | забувала | забуває | забуде
 
-10. — Нарешті він ___ помилку в коді.
-    > [!answer] знайшов
-    > [!options] знайшов | шукав | шукає | знайде
+10. знайшов | шукав | шукає | знайде
+   > [!answer] знайшов
 
-11. — Вони нам ___ додаткову знижку.
-    > [!answer] запропонували
-    > [!options] запропонували | пропонували | пропонують | запропонують
+11. запропонували | пропонували | пропонують | запропонують
+   > [!answer] запропонували
 
-12. — Батьки ___ мені поїхати на відпочинок.
-    > [!answer] дозволили
-    > [!options] дозволили | дозволяли | дозволяють | дозволять
+12. дозволили | дозволяли | дозволяють | дозволять
+   > [!answer] дозволили
 
-13. — Я ___ комп'ютер і почав працювати.
-    > [!answer] увімкнув
-    > [!options] увімкнув | вмикав | вмикаю | увімкну
+13. увімкнув | вмикав | вмикаю | увімкну
+   > [!answer] увімкнув
 
-14. — Вона ___ нам усе дуже добре.
-    > [!answer] пояснила
-    > [!options] пояснила | пояснювала | пояснює | пояснить
+14. пояснила | пояснювала | пояснює | пояснить
+   > [!answer] пояснила
 
 ## select: Виберіть правильний вид
 > Оберіть правильну форму для кожного контексту.
@@ -812,46 +842,46 @@ Understanding how aspect pairs are formed helps you predict forms for new verbs 
 > Перекладіть речення українською.
 
 1. I read the book. (completed)
-   > [!answer] Я прочитав книгу. / Я прочитала книгу.
+   > [!answer] Я прочитав книгу. / Я прочитала книгу
 
 2. I was reading the book. (process)
-   > [!answer] Я читав книгу. / Я читала книгу.
+   > [!answer] Я читав книгу. / Я читала книгу
 
 3. She wrote the letter. (completed)
-   > [!answer] Вона написала листа.
+   > [!answer] Вона написала листа
 
 4. He was writing all day. (process)
-   > [!answer] Він писав цілий день.
+   > [!answer] Він писав цілий день
 
 5. They helped me. (once)
-   > [!answer] Вони допомогли мені.
+   > [!answer] Вони допомогли мені
 
 6. She always helped me. (habitually)
-   > [!answer] Вона завжди допомагала мені.
+   > [!answer] Вона завжди допомагала мені
 
 7. I chose a gift. (completed)
-   > [!answer] Я вибрав подарунок. / Я вибрала подарунок.
+   > [!answer] Я вибрав подарунок. / Я вибрала подарунок
 
 8. I was choosing for hours. (process)
-   > [!answer] Я вибирав годинами. / Я вибирала годинами.
+   > [!answer] Я вибирав годинами. / Я вибирала годинами
 
 9. He turned on the computer. (completed)
-   > [!answer] Він увімкнув комп'ютер.
+   > [!answer] Він увімкнув комп'ютер
 
 10. Turn off the light! (command)
-    > [!answer] Вимкни світло! / Вимкніть світло!
+    > [!answer] Вимкни світло! / Вимкніть світло
 
 11. She forgot the keys. (completed)
-    > [!answer] Вона забула ключі.
+    > [!answer] Вона забула ключі
 
 12. He often forgets things. (habitually)
-    > [!answer] Він часто забуває речі.
+    > [!answer] Він часто забуває речі
 
 13. I found the answer! (completed)
-    > [!answer] Я знайшов відповідь! / Я знайшла відповідь!
+    > [!answer] Я знайшов відповідь! / Я знайшла відповідь
 
 14. I was looking for hours. (process)
-    > [!answer] Я шукав годинами. / Я шукала годинами.
+    > [!answer] Я шукав годинами. / Я шукала годинами
 
 ## mark-the-words: Знайдіть доконаний вид
 > Знайдіть і позначте дієслово доконаного виду.
@@ -885,7 +915,7 @@ Understanding how aspect pairs are formed helps you predict forms for new verbs 
 
 ---
 
-# Словник
+## Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

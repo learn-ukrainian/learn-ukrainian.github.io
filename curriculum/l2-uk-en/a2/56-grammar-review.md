@@ -17,8 +17,6 @@ objectives:
 vocab_count: 10
 ---
 
-# A2 Grammar Review
-
 ## Warm-up
 
 Congratulations! You are almost at the end of Level A2.
@@ -619,43 +617,35 @@ You are now ready for the **Capstone Module**. Good luck!
 Він любить [___:7] у футбол.
 Ми з [___:8] різні, але ми друзі.
 
-1. новий
-> [!answer] новий
-> [!options] новий | нова | нове
+1. новий | нова | нове
+   > [!answer] новий
 
-2. навчаюся
-> [!answer] навчаюся
-> [!options] навчаюся | навчаюсь | вчу
+2. навчаюся | навчаюсь | вчу
+   > [!answer] навчаюся
 > I study.
 
-3. купив
-> [!answer] купив
-> [!options] купив | купував | куплю
+3. купив | купував | куплю
+   > [!answer] купив
 > Result (yesterday).
 
-4. була
-> [!answer] була
-> [!options] була | був | було
+4. була | був | було
+   > [!answer] була
 > Fem agreement.
 
-5. весь
-> [!answer] весь
-> [!options] весь | все | всі
+5. весь | все | всі
+   > [!answer] весь
 > Accusative time.
 
-6. ніколи
-> [!answer] ніколи
-> [!options] ніколи | завжди | часто
+6. ніколи | завжди | часто
+   > [!answer] ніколи
 > Never.
 
-7. грати
-> [!answer] грати
-> [!options] грати | граю | грав
+7. грати | граю | грав
+   > [!answer] грати
 > Infinitive.
 
-8. ним
-> [!answer] ним
-> [!options] ним | він | його
+8. ним | він | його
+   > [!answer] ним
 > Instrumental pronoun (with him).
 
 ## dialogue-reorder: Asking for Help

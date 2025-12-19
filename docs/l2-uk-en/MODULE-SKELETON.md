@@ -6,6 +6,9 @@ pedagogy: [PPP | TTT | Narrative]
 duration: 45
 tags: [tag1, tag2]
 audio: true
+resources:
+  - "**Type:** [Title](url) — Description"
+vocabulary_count: 20
 ---
 
 <!-- 

@@ -1,26 +1,9 @@
 # Audit Report: 33-at-the-doctor.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "Expressive" | **Target:** 1000
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[HEADING_LEVEL]** Multiple H1 headings: 'Deep Dive: Traditional Medicine' should be H2 (##)
-  - FIX: Only one H1 allowed (page title). Change '# Deep Dive: Traditional Medicine' to '## Deep Dive: Traditional Medicine'
-- **[HEADING_LEVEL]** Multiple H1 headings: 'Story Time: The Pharmacy Mistake' should be H2 (##)
-  - FIX: Only one H1 allowed (page title). Change '# Story Time: The Pharmacy Mistake' to '## Story Time: The Pharmacy Mistake'
-- **[HEADING_LEVEL]** Multiple H1 headings: 'Deep Dive: Heart Metaphors' should be H2 (##)
-  - FIX: Only one H1 allowed (page title). Change '# Deep Dive: Heart Metaphors' to '## Deep Dive: Heart Metaphors'
-- **[HEADING_LEVEL]** Multiple H1 headings: 'Story Time: The Pharmacy Mistake' should be H2 (##)
-  - FIX: Only one H1 allowed (page title). Change '# Story Time: The Pharmacy Mistake' to '## Story Time: The Pharmacy Mistake'
-- **[HEADING_LEVEL]** Multiple H1 headings: 'Pro-Tip: "Being Sick" vs "Sicking"' should be H2 (##)
-  - FIX: Only one H1 allowed (page title). Change '# Pro-Tip: "Being Sick" vs "Sicking"' to '## Pro-Tip: "Being Sick" vs "Sicking"'
-
-## Recommendation
-**📝 UPDATE** (severity 25/100)
-
-- 5 pedagogical violations (moderate)
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 2052/1000 (>2000 may be too long)
+- **Words:** ✅ 1144/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -30,8 +13,8 @@
 - **Vocab:** ✅ 33/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 5 violations
-- **Immersion:** 🇺🇦 52.6% (target 40-55% (A2.2))
+- **Pedagogy:** ✅ Level-appropriate
+- **Immersion:** 🇺🇦 50.0% (target 40-55% (A2.2))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -43,7 +26,7 @@
 | **3. At the Pharmacy (Аптека)** | ⚪️ | 29 | Skipped |
 | **Deep Dive: The Ukrainian Medical System** | ✅ | 87 | Included in Core |
 | **Deep Dive: Traditional Medicine** | ✅ | 130 | Included in Core |
-| **Story Time: The Pharmacy Mistake** | ✅ | 111 | Included in Core |
+| **Story Time: The Pharmacy Mistake** | ✅ | 206 | Included in Core |
 | **Dialogue: The Visit** | ✅ | 112 | Included in Core |
 | **Dialogue: Calling an Ambulance** | ✅ | 47 | Included in Core |
 | **Deep Dive: Heart Metaphors** | ✅ | 58 | Included in Core |

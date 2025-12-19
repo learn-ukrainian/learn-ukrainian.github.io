@@ -551,6 +551,48 @@ In this module you learned essential vocabulary for two key service locations in
     options={[`долар`, `долара`, `долари`, `доларами`]}
     explanation={`Plural accusative: долари.`}
   />
+  <ErrorCorrectionItem
+    sentence={`Я хочу відкрити рахунку.`}
+    errorWord={`рахунку`}
+    correctForm={`рахунок`}
+    options={[`рахунку`, `рахунок`, `рахунком`, `рахунці`]}
+    explanation={`Direct object uses accusative: рахунок.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Мені потрібно купити марки.`}
+    errorWord={`марки`}
+    correctForm={`марку`}
+    options={[`марка`, `марки`, `марку`, `маркою`]}
+    explanation={`Singular accusative: марку.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Напишіть адреса на конверті.`}
+    errorWord={`адреса`}
+    correctForm={`адресу`}
+    options={[`адреса`, `адреси`, `адресу`, `адресою`]}
+    explanation={`Direct object uses accusative: адресу.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Сто гривні, будь ласка.`}
+    errorWord={`гривні`}
+    correctForm={`гривень`}
+    options={[`гривня`, `гривні`, `гривень`, `гривнями`]}
+    explanation={`Numbers 5+ require genitive plural: гривень.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Покладіть лист на конверт.`}
+    errorWord={`конверт`}
+    correctForm={`конверті`}
+    options={[`конверт`, `конверта`, `конверту`, `конверті`]}
+    explanation={`Location uses locative after на: конверті.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Посилка до Канада.`}
+    errorWord={`Канада`}
+    correctForm={`Канади`}
+    options={[`Канада`, `Канади`, `Канаді`, `Канадою`]}
+    explanation={`\"До\" requires genitive: Канади.`}
+  />
 </ErrorCorrection>
 
 ### Complete the Dialogue
@@ -564,7 +606,7 @@ In this module you learned essential vocabulary for two key service locations in
 — Напишіть [___:3] на [___:4].
 — Скільки це [___:5]?
 — Сорок [___:6].`}
-  blanks={[{ answer: `долари`, options: [`долари`] }, { answer: `гривні`, options: [`гривні`] }, { answer: `доларів`, options: [`доларів`] }, { answer: `Курс`, options: [`Курс`] }, { answer: `гривень`, options: [`гривень`] }, { answer: `долари`, options: [`долари`] }]}
+  blanks={[{ index: 0, answer: `долари`, options: [`долари`, `доларів`, `доларам`] }, { index: 1, answer: `гривні`, options: [`гривні`, `гривень`, `гривнями`] }, { index: 2, answer: `доларів`, options: [`долар`, `долара`, `доларів`] }, { index: 3, answer: `Курс`, options: [`Курс`, `Курси`, `Курсу`] }, { index: 4, answer: `гривень`, options: [`гривня`, `гривні`, `гривень`] }, { index: 5, answer: `долари`, options: [`долар`, `долари`, `доларів`] }]}
 />
 
 ### At the Post Office

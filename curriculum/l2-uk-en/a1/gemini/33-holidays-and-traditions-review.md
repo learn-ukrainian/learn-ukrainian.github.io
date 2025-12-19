@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 895/750
+- **Words:** ✅ 896/750
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -14,10 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 46.1% (target 35-55% (M33))
-
-## MDX VALIDATION
-✅ No issues found
+- **Immersion:** 🇺🇦 46.0% (target 35-55% (M33))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -30,7 +27,7 @@
 | **When Is Your Birthday?** | ⚪️ | 12 | Skipped |
 | **Examples in Context** | ✅ | 186 | Included in Core |
 | **Dialogues** | ✅ | 443 | Included in Core |
-| **Підсумок (Summary)** | ✅ | 88 | Included in Core |
+| **Підсумок (Summary)** | ✅ | 89 | Included in Core |
 | **Вправи (Activities)** | ➖ | 0 | Excluded Type |
 | **match-up: Holidays and Greetings** | 🎮 | 12 | Activity (12 items, min 8) |
 | **match-up: Celebration Vocabulary** | 🎮 | 12 | Activity (12 items, min 8) |

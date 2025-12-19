@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 2524/1000 (>2000 may be too long)
+- **Words:** ✅ 1194/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 36.1% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 36.1% (checkpoint - no gate)
 
 ## Section Audit
 | Section | Status | Count | Notes |

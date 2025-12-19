@@ -1,5 +1,5 @@
 ---
-module: a2-09
+module: a2-10
 title: "At the Post Office & Bank"
 subtitle: "Service Interactions with Cases"
 version: "1.0"
@@ -551,6 +551,42 @@ In this module you learned essential vocabulary for two key service locations in
    > [!answer] долари
    > [!explanation] Plural accusative: долари.
    > [!options] долар | долара | долари | доларами
+
+7. Я хочу відкрити рахунку.
+   > [!error] рахунку
+   > [!answer] рахунок
+   > [!explanation] Direct object uses accusative: рахунок.
+   > [!options] рахунку | рахунок | рахунком | рахунці
+
+8. Мені потрібно купити марки.
+   > [!error] марки
+   > [!answer] марку
+   > [!explanation] Singular accusative: марку.
+   > [!options] марка | марки | марку | маркою
+
+9. Напишіть адреса на конверті.
+   > [!error] адреса
+   > [!answer] адресу
+   > [!explanation] Direct object uses accusative: адресу.
+   > [!options] адреса | адреси | адресу | адресою
+
+10. Сто гривні, будь ласка.
+    > [!error] гривні
+    > [!answer] гривень
+    > [!explanation] Numbers 5+ require genitive plural: гривень.
+    > [!options] гривня | гривні | гривень | гривнями
+
+11. Покладіть лист на конверт.
+    > [!error] конверт
+    > [!answer] конверті
+    > [!explanation] Location uses locative after на: конверті.
+    > [!options] конверт | конверта | конверту | конверті
+
+12. Посилка до Канада.
+    > [!error] Канада
+    > [!answer] Канади
+    > [!explanation] "До" requires genitive: Канади.
+    > [!options] Канада | Канади | Канаді | Канадою
 
 ## cloze: Complete the Dialogue
 

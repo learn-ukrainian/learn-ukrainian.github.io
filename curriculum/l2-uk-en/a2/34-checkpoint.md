@@ -50,7 +50,7 @@ You can express opinions, feelings, and even talk to a doctor.
 
 ---
 
-# Review: The Connector Map
+## Review: The Connector Map
 
 Connectors are the glue of language. Without them, your speech sounds like a robot: "I eat. I sleep. I work."
 With connectors, you sound human: "I eat because I'm hungry, although I should diet."
@@ -69,7 +69,7 @@ Mastering these words is the fastest way to jump from A2 to B1 fluency.
 
 ---
 
-# Review: Storytelling & Time
+## Review: Storytelling & Time
 
 To tell a good story, you need to order events.
 
@@ -88,7 +88,7 @@ To tell a good story, you need to order events.
 
 ---
 
-# Review: Reported Speech & Opinions
+## Review: Reported Speech & Opinions
 
 - **Direct:** Я думаю: "Це добре".
 - **Indirect:** Я думаю, **що** це добре.
@@ -113,7 +113,7 @@ If he said "I am busy" (present), you report it as "He said that he IS busy" (pr
 
 ---
 
-# Story Time: The Great Adventure
+## Story Time: The Great Adventure
 
 Це історія про хлопця, **ім'я якого** було Марко.
 **Спочатку** Марко жив у маленькому селі, **де** було тихо.
@@ -137,7 +137,7 @@ If he said "I am busy" (present), you report it as "He said that he IS busy" (pr
 
 ---
 
-# Deep Dive: Reviewing "Tricky" Words
+## Deep Dive: Reviewing "Tricky" Words
 
 Let's review some words that often confuse learners in Phase A2.3.
 
@@ -156,7 +156,7 @@ Let's review some words that often confuse learners in Phase A2.3.
 
 ---
 
-# Language in Action
+## Language in Action
 
 ## Dialogue: The Sick Employee
 
@@ -234,7 +234,7 @@ Let's review some words that often confuse learners in Phase A2.3.
 
 ---
 
-# Study Tip: How to Review
+## Study Tip: How to Review
 
 You have covered a lot of ground in Phase A2.3.
 To make sure you don't forget it, try these steps:

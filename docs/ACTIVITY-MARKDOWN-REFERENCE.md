@@ -254,6 +254,18 @@ All 13 activity types are fully supported by the MDX generator.
 3. говорю | говорить | говорять
    > [!answer] говорю
 
+**IMPORTANT - Cloze Format Rules:**
+- Options MUST be inline on the numbered line: `1. opt1 | opt2 | opt3`
+- Only use `[!answer]` callout (indented) - NO `[!options]` callout
+- Placeholders use `[___:N]` format, NOT `{N}`
+
+**WRONG format (will fail audit):**
+```markdown
+1. звати
+> [!answer] звати
+> [!options] звати | є | маю   <-- DO NOT USE [!options] for cloze!
+```
+
 ## dialogue-reorder: Conversation Order (A2+)
 > Put the dialogue in the correct order.
 

@@ -133,16 +133,23 @@ def detect_level(file_path: str, frontmatter_str: str) -> tuple[str, int]:
     return level_code, module_num
 
 
-def detect_focus(frontmatter_str: str, level_code: str, module_num: int) -> str | None:
-    """Detect grammar vs vocabulary focus for B1/B2 modules."""
+def detect_focus(frontmatter_str: str, level_code: str, module_num: int, title: str = "") -> str | None:
+    """Detect module focus (grammar, vocab, checkpoint, etc.)."""
     # Check frontmatter for explicit focus
     focus_match = re.search(
-        r'^focus:\s*(grammar|vocab|vocabulary)$',
+        r'^focus:\s*(grammar|vocab|vocabulary|checkpoint)$',
         frontmatter_str, re.MULTILINE | re.IGNORECASE
     )
     if focus_match:
         focus_val = focus_match.group(1).lower()
+        if focus_val == 'checkpoint':
+            return 'checkpoint'
         return 'grammar' if focus_val == 'grammar' else 'vocab'
+
+    # Detect checkpoint from title or filename
+    title_lower = title.lower() if title else ""
+    if 'checkpoint' in title_lower:
+        return 'checkpoint'
 
     # Auto-detect based on module number
     if level_code == 'B1':
@@ -347,8 +354,8 @@ def audit_module(file_path: str) -> bool:
     phase_match = re.search(r'phase:\s*([A-Za-z0-9\.]+)', frontmatter_str)
     phase = phase_match.group(1) if phase_match else level_code
 
-    # Detect focus
-    module_focus = detect_focus(frontmatter_str, level_code, module_num)
+    # Detect focus (pass filename for checkpoint detection)
+    module_focus = detect_focus(frontmatter_str, level_code, module_num, os.path.basename(file_path))
 
     # Get config
     config = get_level_config(level_code, module_focus)
@@ -599,7 +606,11 @@ def audit_module(file_path: str) -> bool:
     immersion_score = calculate_immersion(full_immersion_text)
 
     # Immersion targets (phase-based for A1, A2, and B1 - check level directly)
-    if level_code == 'A1':
+    # CHECKPOINTS: No immersion gate - immersion should come naturally from practice
+    if module_focus == 'checkpoint':
+        min_imm, max_imm = 0, 100  # Skip gate - just report the value
+        phase_label = " (checkpoint - no gate)"
+    elif level_code == 'A1':
         min_imm, max_imm = get_a1_immersion_range(module_num)
         phase_label = f" (M{module_num:02d})"
     elif level_code == 'A2':
@@ -641,7 +652,7 @@ def audit_module(file_path: str) -> bool:
 
     # Transliteration policy
     if not transliteration_allowed:
-        if not re.search(r'transliteration:\s*none', frontmatter_str):
+        if not re.search(r'transliteration:\s*["\']?none["\']?', frontmatter_str):
             print(f"❌ AUDIT FAILED: Level {level_code} forbids transliteration. Set 'transliteration: none' in frontmatter.")
             has_critical_failure = True
 

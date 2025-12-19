@@ -18,6 +18,18 @@ vocabulary_count: 25
 
 # Дієслова руху — Повна система
 
+
+> 🎯 **Чому це важливо**
+>
+> Дієслова руху — найскладніша частина української дієслівної системи. «Йти» vs «ходити», «їхати» vs «їздити» — англійською це просто «go», але українською — різні типи руху. Цей модуль дає вам повну картину всіх 14 пар дієслів руху.
+
+> [!resources] 🎧 External Resources
+>
+> 📺 **Video:** [Verbs of Motion: Unidirectional, Multidirectional](https://www.youtube.com/watch?v=Bs7EJFMsAJY) - Comprehensive system overview.
+> 📺 **Video:** [Verbs of motion: ЙТИ, ХОДИТИ vs ЇХАТИ ЇЗДИТИ](https://www.youtube.com/watch?v=BHURRyliZHo) - Basic pairs.
+> 📖 **Reading:** [Ukrainian Lessons: Motion Verbs](https://ukrainianlessons.com/motion-verbs/) - Detailed guide.
+>
+
 ## Діагностика
 
 Уявіть: ви в Києві, розповідаєте другові про свій ранок.
@@ -220,6 +232,57 @@ In English, "I go to work" is ambiguous. Ukrainian makes the distinction clear:
 
 ---
 
+## The Logic of Space: Vectors vs. Fields
+
+To master Ukrainian motion verbs, you must stop thinking about "going" and start thinking about geometry.
+
+### 1. The Vector (Unidirectional) ➡️
+
+Verbs like **іти, їхати, летіти** are **vectors**.
+- They have a specific **Origin (A)** and a specific **Destination (B)**.
+- They exist only **in the moment of movement**.
+- If you freeze time, the subject is displaced from A towards B.
+
+**Metaphor:** An arrow on a map.
+- *Я йду до магазину.* (You can draw a straight line from me to the shop).
+- *Птах летить на південь.* (The compass points South).
+
+### 2. The Field (Multidirectional) 🔄
+
+Verbs like **ходити, їздити, літати** are **fields of activity**.
+- They imply movement within a bounded space, or repeat movement back and forth.
+- They exist as a **general truth** or **habit**.
+- If you freeze time, the subject might be at home sleeping, but the statement "He drives to work" is still true.
+
+**Metaphor:** A cloud of points or a circle.
+- *Я ходжу до магазину щосуботи.* (A repeating cycle).
+- *Птахи літають над озером.* (Random movement within the "lake" zone).
+
+### 3. The "Round Trip" Rule
+
+This is the most common trap for learners.
+- In English: "I went to Paris last year." (Simple Past).
+- In Estonian/Hungarian/etc: Often uses a perfective-like form.
+- In Ukrainian: "Я **їздив** до Парижа." (Multidirectional).
+
+**Why?**
+Because you are back now!
+- A → B (You went).
+- B → A (You returned).
+- The vectors cancel out. The total displacement is zero.
+- Therefore, we use the **Multidirectional** verb to describe the *experience* of the trip, not the current state of moving.
+
+**Exception:**
+- *Я поїхав до Парижа.* (Perfective Unidirectional).
+- Meaning: "I left for Paris (and I might still be there, or I am focusing on the departure)."
+
+> 🧠 **Cognitive Shift:**
+> When you tell a story about a trip you returned from, use **ходити/їздити/літати**.
+> - "Ти вчора **ходив** у кіно?" (Did you go [and come back]?)
+> - "Ні, я **був** удома."
+
+---
+
 ## Практика
 
 ### Вправа: Оберіть правильну форму
@@ -250,7 +313,7 @@ In English, "I go to work" is ambiguous. Ukrainian makes the distinction clear:
 
 ---
 
-# Підсумок
+## Підсумок
 
 ## Головне
 
@@ -290,7 +353,9 @@ In English, "I go to work" is ambiguous. Ukrainian makes the distinction clear:
 
 ---
 
-# Вправи
+
+
+## Вправи
 
 ## quiz: Motion Verb Basics
 
@@ -628,117 +693,117 @@ Sort these verbs into the correct category:
 ## unjumble: Form Correct Sentences
 
 1. йду | я | зараз | школи | до
-   > [!answer] Зараз я йду до школи.
+   > [!answer] Зараз я йду до школи
    > [!explanation] "Right now I'm walking to school" - unidirectional
 
 2. їздить | роботу | він | на | машиною | щодня
-   > [!answer] Він їздить на роботу машиною щодня.
+   > [!answer] Він їздить на роботу машиною щодня
    > [!explanation] "He drives to work every day" - habitual multidirectional
 
 3. літають | птахи | над | озером
-   > [!answer] Птахи літають над озером.
+   > [!answer] Птахи літають над озером
    > [!explanation] "Birds fly over the lake" - around, multidirectional
 
 4. несе | він | важку | сумку
-   > [!answer] Він несе важку сумку.
+   > [!answer] Він несе важку сумку
    > [!explanation] "He's carrying a heavy bag" - right now, unidirectional
 
 5. пливе | корабель | до | острова
-   > [!answer] Корабель пливе до острова.
+   > [!answer] Корабель пливе до острова
    > [!explanation] "The ship is sailing to the island" - one direction
 
 6. бігають | діти | парку | в | люблять
-   > [!answer] Діти люблять бігати в парку.
+   > [!answer] Діти люблять бігати в парку
    > [!explanation] "Children like to run in the park" - activity, multidirectional
 
 7. летить | до | Києва | літак
-   > [!answer] Літак летить до Києва.
+   > [!answer] Літак летить до Києва
    > [!explanation] "The plane is flying to Kyiv" - one direction
 
 8. ходить | до | магазину | вона | часто
-   > [!answer] Вона часто ходить до магазину.
+   > [!answer] Вона часто ходить до магазину
    > [!explanation] "She often goes to the store" - habitual
 
 9. веде | мама | школи | до | дитину
-   > [!answer] Мама веде дитину до школи.
+   > [!answer] Мама веде дитину до школи
    > [!explanation] "Mom is leading the child to school" - right now
 
 10. водить | дітей | до | садка | він | щодня
-    > [!answer] Він щодня водить дітей до садка.
+    > [!answer] Він щодня водить дітей до садка
     > [!explanation] "He takes children to kindergarten every day" - habitual
 
 11. біжить | хлопчик | до | мами
-    > [!answer] Хлопчик біжить до мами.
+    > [!answer] Хлопчик біжить до мами
     > [!explanation] "The boy is running to mom" - one direction
 
 12. плаває | в | басейні | дівчинка | добре
-    > [!answer] Дівчинка добре плаває в басейні.
+    > [!answer] Дівчинка добре плаває в басейні
     > [!explanation] "The girl swims well in the pool" - ability/activity
 
 13. везуть | товари | вони | по | країні | всій
-    > [!answer] Вони возять товари по всій країні.
+    > [!answer] Вони возять товари по всій країні
     > [!explanation] "They transport goods across the country" - regular activity
 
 14. повзе | до | малюк | іграшки
-    > [!answer] Малюк повзе до іграшки.
+    > [!answer] Малюк повзе до іграшки
     > [!explanation] "The baby is crawling to the toy" - one direction
 
 ## unjumble: Complex Motion Sentences
 
 1. що | йдеш | куди | ти | зараз | робиш | і
-   > [!answer] Куди ти зараз йдеш і що робиш?
+   > [!answer] Куди ти зараз йдеш і що робиш
    > [!explanation] "Where are you going now and what are you doing?"
 
 2. часто | до | батьки | їздять | моря | мої | влітку
-   > [!answer] Мої батьки часто їздять до моря влітку.
+   > [!answer] Мої батьки часто їздять до моря влітку
    > [!explanation] "My parents often go to the sea in summer"
 
 3. нам | таксі | до | везе | готелю | зараз
-   > [!answer] Таксі зараз везе нам до готелю.
+   > [!answer] Таксі зараз везе нам до готелю
    > [!explanation] "The taxi is taking us to the hotel now"
 
 4. літають | Африки | до | птахи | ці | щозими
-   > [!answer] Ці птахи щозими літають до Африки.
+   > [!answer] Ці птахи щозими літають до Африки
    > [!explanation] "These birds fly to Africa every winter"
 
 5. носить | завжди | вона | з | собою | парасольку
-   > [!answer] Вона завжди носить з собою парасольку.
+   > [!answer] Вона завжди носить з собою парасольку
    > [!explanation] "She always carries an umbrella with her"
 
 6. ходжу | на | я | зазвичай | пішки | роботу
-   > [!answer] Зазвичай я ходжу на роботу пішки.
+   > [!answer] Зазвичай я ходжу на роботу пішки
    > [!explanation] "Usually I walk to work on foot"
 
 7. по | діти | лазять | деревах | люблять
-   > [!answer] Діти люблять лазити по деревах.
+   > [!answer] Діти люблять лазити по деревах
    > [!explanation] "Children like to climb trees"
 
 8. через | пливе | корабель | океан
-   > [!answer] Корабель пливе через океан.
+   > [!answer] Корабель пливе через океан
    > [!explanation] "The ship is sailing across the ocean"
 
 9. за | собака | жене | кішкою
-   > [!answer] Собака жене за кішкою.
+   > [!answer] Собака жене за кішкою
    > [!explanation] "The dog is chasing the cat"
 
 10. м'яч | діти | у | качають | дворі
-    > [!answer] Діти качають м'яч у дворі.
+    > [!answer] Діти качають м'яч у дворі
     > [!explanation] "Children are rolling the ball in the yard"
 
 11. валізу | він | до | тягне | машини
-    > [!answer] Він тягне валізу до машини.
+    > [!answer] Він тягне валізу до машини
     > [!explanation] "He's pulling the suitcase to the car"
 
 12. немовля | кімнаті | по | вже | повзає
-    > [!answer] Немовля вже повзає по кімнаті.
+    > [!answer] Немовля вже повзає по кімнаті
     > [!explanation] "The baby already crawls around the room"
 
 13. вони | товари | всій | возять | по | країні
-    > [!answer] Вони возять товари по всій країні.
+    > [!answer] Вони возять товари по всій країні
     > [!explanation] "They transport goods across the whole country"
 
 14. веде | до | тато | зоопарку | сина
-    > [!answer] Тато веде сина до зоопарку.
+    > [!answer] Тато веде сина до зоопарку
     > [!explanation] "Dad is taking his son to the zoo"
 
 ## error-correction: Fix Motion Verb Mistakes
@@ -1161,7 +1226,7 @@ Translate using the correct motion verb:
 
 ---
 
-# Словник
+## Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

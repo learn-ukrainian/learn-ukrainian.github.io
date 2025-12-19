@@ -52,7 +52,7 @@ This is how you multiply your vocabulary instantly.
 
 ---
 
-# The Suffix System
+## The Suffix System
 
 Let's look at the three main machines in our factory.
 
@@ -102,7 +102,7 @@ Turns a **Quality** (Adjective) into a **Concept**.
 
 ---
 
-# Cultural Insight: Last Names
+## Cultural Insight: Last Names
 
 Many Ukrainian surnames tell you what an ancestor did for a living!
 They use the exact suffixes we just learned.
@@ -126,7 +126,7 @@ They use the exact suffixes we just learned.
 
 ---
 
-# Deep Dive: The Logic of -ISTYH
+## Deep Dive: The Logic of -ISTYH
 
 The suffix **-ість** is the equivalent of English **-ness** or **-ity**.
 It creates abstract nouns from adjectives.
@@ -144,7 +144,7 @@ It is almost always **Feminine** and ends in a soft sign (**ь**).
 
 ---
 
-# Deep Dive: Feminitives (The Rise of -KA)
+## Deep Dive: Feminitives (The Rise of -KA)
 
 Ukrainian is a gendered language. In the past, many professions were used only in the masculine form (Лікар, Директор), even for women.
 But in modern Ukrainian, we prefer **Feminitives**!
@@ -166,7 +166,7 @@ The magic machine for this is the suffix **-ка**.
 
 ---
 
-# Deep Dive: The Crafter Suffix (-ар)
+## Deep Dive: The Crafter Suffix (-ар)
 
 Another common suffix for professions is **-ар** (or -яр).
 It usually indicates a skilled craftsman or worker.
@@ -182,7 +182,7 @@ It usually indicates a skilled craftsman or worker.
 
 ---
 
-# Story Time: The Little House
+## Story Time: The Little House
 
 Ми у "Світі Зменшення" (World of Diminutives). Тут усе маленьке і миле.
 
@@ -206,7 +206,7 @@ It usually indicates a skilled craftsman or worker.
 
 ---
 
-# Deep Dive: Diminutives Logic
+## Deep Dive: Diminutives Logic
 
 To make things small or cute, we use suffixes:
 - Masc: **-ок**, **-ик** (Кіт -> Кот**ик**, Дім -> Будин**ок** -> Будин**очок**)
@@ -221,7 +221,7 @@ To make things small or cute, we use suffixes:
 
 ---
 
-# Story Time Part 2: The Factory Tour
+## Story Time Part 2: The Factory Tour
 
 Ласкаво просимо на "Фабрику Слів".
 Сьогодні ми побачимо, як працюють машини.
@@ -238,7 +238,7 @@ To make things small or cute, we use suffixes:
 
 ---
 
-# Language in Action
+## Language in Action
 
 ## Dialogue: The Interview
 

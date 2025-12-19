@@ -150,7 +150,7 @@ Many stories feature two **куми** (godfathers/close friends). They are usual
 
 ---
 
-# Language in Action
+## Language in Action
 
 ## A Strange Morning
 
@@ -533,37 +533,37 @@ Now you can turn a boring list of facts into an exciting narrative!
 
 ## error-correction: Fix the Story Flow
 
-1. **Нарешті** я прокинувся, а **потім** пішов спати.
+1. Нарешті я прокинувся, а потім пішов спати.
    > [!error] Нарешті
    > [!answer] Спочатку
    > [!explanation] Stories start with "First", not "Finally".
    > [!options] Спочатку | Нарешті
 
-2. Він прийшов додому **перед цим** роботи. (after work)
+2. Він прийшов додому перед цим роботи. (after work)
    > [!error] перед цим
    > [!answer] після
    > [!explanation] "Після" = after. "Перед цим" = before this.
    > [!options] після | перед цим
 
-3. Я **вже** чекаю тебе! (am still waiting)
+3. Я вже чекаю тебе! (am still waiting)
    > [!error] вже
    > [!answer] ще
    > [!explanation] "Ще" indicates process is still going.
    > [!options] ще | вже
 
-4. **Раптом** я поснідав. (Routine action, not sudden)
+4. Раптом я поснідав. (Routine action, not sudden)
    > [!error] Раптом
    > [!answer] Потім
    > [!explanation] Breakfast is usually a sequence step "Then", not a shock "Suddenly".
    > [!options] Потім | Раптом
 
-5. Це сталося **скоро**. (Long ago)
+5. Це сталося скоро. (Long ago)
    > [!error] скоро
    > [!answer] давно
    > [!explanation] "Скоро" = soon. "Давно" = long ago.
    > [!options] давно | скоро
 
-6. Я зробив це **несподівано**. (Specifically meaning "immediately" as reaction)
+6. Я зробив це несподівано. (Specifically meaning "immediately" as reaction)
    > [!error] несподівано
    > [!answer] відразу
    > [!explanation] "Відразу" means immediately/at once. "Несподівано" implies surprise.

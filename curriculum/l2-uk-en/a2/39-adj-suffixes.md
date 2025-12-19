@@ -60,7 +60,7 @@ Input: **Україна** [Noun] -> Machine -> Output: **Україн-ський
 
 ---
 
-# Grammar Breakdown: 4 Rules to Remember
+## Grammar Breakdown: 4 Rules to Remember
 
 Before we look at more examples, let's clarify the logic.
 Unlike English, which uses many different patterns (-al, -ic, -y, -ous, -an), Ukrainian is surprisingly consistent.
@@ -88,7 +88,7 @@ It is NOT about what it is made of. It is about *identity*.
 
 ---
 
-# The Big Three: -Н, -ОВ, -СЬК
+## The Big Three: -Н, -ОВ, -СЬК
 
 These three suffixes create 80% of Ukrainian adjectives.
 
@@ -136,7 +136,7 @@ Use this for places, groups, and people.
 
 ---
 
-# Deep Dive: Living Adjectives (The Active State)
+## Deep Dive: Living Adjectives (The Active State)
 
 Some adjectives describe a state or feeling.
 - **Гарячий** (Hot) — from "to burn".
@@ -153,7 +153,7 @@ Some adjectives describe a state or feeling.
 
 ---
 
-# Deep Dive: The Diminutive (-еньк)
+## Deep Dive: The Diminutive (-еньк)
 
 Just like nouns have **-ок**, adjectives have **-еньк**.
 It means "sweet", "little", or "pleasant".
@@ -169,7 +169,7 @@ It means "sweet", "little", or "pleasant".
 
 ---
 
-# Story Time: The Professor
+## Story Time: The Professor
 
 Професор Лисенко — відома людина.
 Він читає **науковий** курс в університеті.
@@ -191,7 +191,7 @@ It means "sweet", "little", or "pleasant".
 
 ---
 
-# Story Time Part 2: The Map
+## Story Time Part 2: The Map
 
 На столі лежить велика **географічна** мапа.
 Це **фізична** мапа України.
@@ -208,7 +208,7 @@ It means "sweet", "little", or "pleasant".
 
 ---
 
-# Story Time Part 3: The Market
+## Story Time Part 3: The Market
 
 У суботу люди йдуть на **міський** базар.
 Тут є все: **свіжий** хліб, **домашній** сир, **смачна** ковбаса.
@@ -230,7 +230,7 @@ It means "sweet", "little", or "pleasant".
 
 ---
 
-# Language in Action
+## Language in Action
 
 ## Dialogue: Shopping
 
@@ -285,7 +285,7 @@ It means "sweet", "little", or "pleasant".
 
 ---
 
-# English theory
+## English theory
 
 We have covered the main tools for building adjectives.
 Let's review the "machine parts" one last time.

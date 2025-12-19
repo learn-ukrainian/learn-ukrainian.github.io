@@ -119,7 +119,7 @@ Describing food requires knowing taste adjectives. These adjectives are essentia
 
 Готові вчитися готувати? Давайте розпочнемо!
 
-# Story Time: У Бабусі на Кухні
+## Story Time: У Бабусі на Кухні
 
 Марія приїхала до бабусі на вихідні. Вона дуже любить бабусину кухню.
 
@@ -151,7 +151,7 @@ Describing food requires knowing taste adjectives. These adjectives are essentia
 
 ---
 
-# Story Time Part 2: Рецепт Вареників
+## Story Time Part 2: Рецепт Вареників
 
 Оксана вчиться готувати вареники. Це традиційна українська страва. Її мама — чудова кухарка. Вона дає дочці інструкції.
 
@@ -189,7 +189,7 @@ Describing food requires knowing taste adjectives. These adjectives are essentia
 
 ---
 
-# Common Expressions
+## Common Expressions
 
 ## Recipe Imperatives
 
@@ -318,18 +318,6 @@ When eating with Ukrainian friends or family, these phrases will help you partic
    > [!answer] сковороді
    > [!options] каструлі | сковороді | духовці | чайнику
 
-
-7. Я ___ суп. (cooking process)
-   > [!error] cooking process
-   > [!answer] варю
-   > [!explanation] Ongoing cooking → imperfective.
-   > [!options] варю | зварю
-
-8. Вона ___ обід. (finished cooking)
-   > [!error] finished cooking
-   > [!answer] приготувала
-   > [!explanation] Completed cooking → perfective.
-   > [!options] готувала | приготувала
 7. Пиріг у [___]. (oven)
    > [!answer] духовці
    > [!options] каструлі | сковороді | духовці | холодильнику
@@ -391,29 +379,23 @@ When eating with Ukrainian friends or family, these phrases will help you partic
 [___:5] борщ дві години. (stew)
 [___:6] пампушки в духовці. (bake)
 
-1. готує
-> [!answer] готує
-> [!options] готує | нарізає | смажить
+1. готує | нарізає | смажить
+   > [!answer] готує
 
-2. наріж
-> [!answer] наріж
-> [!options] наріж | вари | смаж
+2. наріж | вари | смаж
+   > [!answer] наріж
 
-3. смаж
-> [!answer] смаж
-> [!options] смаж | вари | наріж
+3. смаж | вари | наріж
+   > [!answer] смаж
 
-4. Поклади
-> [!answer] Поклади
-> [!options] Поклади | Наріж | Смаж
+4. Поклади | Наріж | Смаж
+   > [!answer] Поклади
 
-5. Тушкуй
-> [!answer] Тушкуй
-> [!options] Тушкуй | Вари | Смаж
+5. Тушкуй | Вари | Смаж
+   > [!answer] Тушкуй
 
-6. Печи
-> [!answer] Печи
-> [!options] Печи | Вари | Смаж
+6. Печи | Вари | Смаж
+   > [!answer] Печи
 
 ## unjumble: Cooking Sentences
 

@@ -219,7 +219,7 @@ vocabulary_count: 30
 - **Дієслова (Verbs):** святкувати, дарувати, отримувати
 - **Вечірка (Party):** гості, торт, свічка, квіти, музика, танці, подарунок
 - **Дата (Date):** Коли твій день народження? + родовий відмінок
-- **Різдво в Україні:** 7 січня (Юліанський календар)
+- **Різдво в Україні:** 25 грудня (з 2023 року)
 
 ---
 
@@ -315,7 +315,7 @@ Match the Ukrainian word with its English meaning.
    > [!answer] З Новим роком
    > [!options] З Новим роком | З Різдвом | З Великоднем | З Днем народження
 
-2. Сьомого січня. ___!
+2. Двадцять п'ятого грудня. ___!
    > [!answer] З Різдвом
    > [!options] З Різдвом | З Новим роком | З Великоднем | З весіллям
 
@@ -420,8 +420,8 @@ Match the Ukrainian word with its English meaning.
 Choose the correct answer.
 
 1. When is Ukrainian Christmas (Різдво)?
-   - [x] January 7
-   - [ ] December 25
+   - [ ] January 7
+   - [x] December 25
    - [ ] January 1
    - [ ] December 31
 
@@ -516,7 +516,7 @@ Put the words in the correct order.
 
 Is this true or false?
 
-- [x] Ukrainian Christmas is on January 7th.
+- [x] Ukrainian Christmas is on December 25th (since 2023).
 - [ ] "З Новим роком!" means "Merry Christmas!".
   > Incorrect! it means "Happy New Year!"
 
@@ -546,7 +546,7 @@ Is this true or false?
 | свято | /ˈswjɑtɔ/ | holiday | n | n | |
 | традиція | /trɑˈdɪtsʲijɑ/ | tradition | n | f | |
 | Новий рік | /nɔˈwɪj rʲik/ | New Year | n | m | |
-| Різдво | /rʲizˈdwɔ/ | Christmas | n | n | January 7 |
+| Різдво | /rʲizˈdwɔ/ | Christmas | n | n | December 25 |
 | Великдень | /wɛˈlɪkdɛnʲ/ | Easter | n | m | |
 | день народження | /dɛnʲ nɑˈrɔdʒɛnʲːɑ/ | birthday | n | m | |
 | весілля | /wɛˈsʲilʲːɑ/ | wedding | n | n | |

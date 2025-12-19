@@ -1,20 +1,9 @@
 # Audit Report: 31-which-one.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "Expressive" | **Target:** 1000
-**Overall Status:** ❌ FAIL
-
-## PEDAGOGICAL VIOLATIONS
-- **[HEADING_LEVEL]** Multiple H1 headings: 'Deep Dive: The "Те, що" Connector' should be H2 (##)
-  - FIX: Only one H1 allowed (page title). Change '# Deep Dive: The "Те, що" Connector' to '## Deep Dive: The "Те, що" Connector'
-- **[HEADING_LEVEL]** Multiple H1 headings: 'Language in Action' should be H2 (##)
-  - FIX: Only one H1 allowed (page title). Change '# Language in Action' to '## Language in Action'
-
-## Recommendation
-**📝 UPDATE** (severity 10/100)
-
-- 2 pedagogical violations (minor)
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 2095/1000 (>2000 may be too long)
+- **Words:** ✅ 1069/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -24,7 +13,7 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 47.0% (target 40-55% (A2.2))
 
 ## Section Audit

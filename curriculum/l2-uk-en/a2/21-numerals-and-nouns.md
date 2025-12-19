@@ -44,7 +44,7 @@ This topic is fundamental for everyday communication in Ukrainian. You'll use th
 
 ---
 
-# The Three Zones
+## The Three Zones
 
 Ukrainian divides numbers into three zones with different noun agreement rules:
 
@@ -61,7 +61,7 @@ Ukrainian divides numbers into three zones with different noun agreement rules:
 
 ---
 
-# Zone 1: One (Один, Одна, Одне)
+## Zone 1: One (Один, Одна, Одне)
 
 The number "one" agrees with the noun in gender:
 
@@ -77,7 +77,7 @@ When you count "one" of something, you need to know the noun's gender to select 
 
 ---
 
-# Zone 2: Two Through Four (2-4)
+## Zone 2: Two Through Four (2-4)
 
 This is where Ukrainian differs from English. After 2, 3, and 4, the noun takes **Genitive Singular** form.
 
@@ -105,7 +105,7 @@ The number "two" has gender forms:
 
 ---
 
-# Zone 3: Five and Above (5+)
+## Zone 3: Five and Above (5+)
 
 After 5 and higher, the noun takes **Genitive Plural** form.
 
@@ -137,7 +137,7 @@ Numbers 25-30, 35-40, etc. (ending in 5-0) follow Zone 3:
 
 ---
 
-# Quick Reference Table
+## Quick Reference Table
 
 Here is the complete pattern for the noun "книга" (book, f):
 
@@ -156,7 +156,7 @@ Here is the complete pattern for the noun "книга" (book, f):
 
 ---
 
-# Story Time: At the Market
+## Story Time: At the Market
 
 Оля пішла на ринок. Вона хотіла купити овочі та фрукти.
 
@@ -181,7 +181,7 @@ Here is the complete pattern for the noun "книга" (book, f):
 
 ---
 
-# Story Time Part 2: The Bookstore
+## Story Time Part 2: The Bookstore
 
 Петро зайшов у книгарню. Він хотів купити подарунки для родини.
 
@@ -210,7 +210,7 @@ Here is the complete pattern for the noun "книга" (book, f):
 
 ---
 
-# Story Time Part 3: Сімейний обід
+## Story Time Part 3: Сімейний обід
 
 Бабуся приготувала великий обід для родини.
 
@@ -238,7 +238,7 @@ Here is the complete pattern for the noun "книга" (book, f):
 
 ---
 
-# Common Mistakes
+## Common Mistakes
 
 ## Mistake 1: Using Plural After 2-4
 
@@ -264,7 +264,7 @@ Note: For masculine nouns, genitive singular often looks like nominative plural,
 
 ---
 
-# Language Learning Tip
+## Language Learning Tip
 
 When counting, always ask: "What zone is this number in?"
 
@@ -428,29 +428,23 @@ Today you learned numeral-noun agreement:
 Одна [___:5]. (melon)
 Дві [___:6]. (pears)
 
-1. кілограм
-> [!answer] кілограм
-> [!options] кілограм | кілограми | кілограмів
+1. кілограм | кілограми | кілограмів
+   > [!answer] кілограм
 
-2. кілограми
-> [!answer] кілограми
-> [!options] кілограми | кілограм | кілограмів
+2. кілограми | кілограм | кілограмів
+   > [!answer] кілограми
 
-3. помідорів
-> [!answer] помідорів
-> [!options] помідорів | помідори | помідор
+3. помідорів | помідори | помідор
+   > [!answer] помідорів
 
-4. огірки
-> [!answer] огірки
-> [!options] огірки | огірок | огірків
+4. огірки | огірок | огірків
+   > [!answer] огірки
 
-5. диня
-> [!answer] диня
-> [!options] диня | дині | динь
+5. диня | дині | динь
+   > [!answer] диня
 
-6. груші
-> [!answer] груші
-> [!options] груші | груша | груш
+6. груші | груша | груш
+   > [!answer] груші
 
 ## unjumble: Counting Sentences
 
@@ -559,37 +553,29 @@ Today you learned numeral-noun agreement:
 Це коштувало дев'ятсот [___:7]. (hryvnias)
 Він заплатив і вийшов [___:8]. (happy)
 
-1. книгу
-> [!answer] книгу
-> [!options] книгу | книги | книг
+1. книгу | книги | книг
+   > [!answer] книгу
 
-2. книги
-> [!answer] книги
-> [!options] книги | книгу | книг
+2. книги | книгу | книг
+   > [!answer] книги
 
-3. романи
-> [!answer] романи
-> [!options] романи | роман | романів
+3. романи | роман | романів
+   > [!answer] романи
 
-4. комікси
-> [!answer] комікси
-> [!options] комікси | комікс | коміксів
+4. комікси | комікс | коміксів
+   > [!answer] комікси
 
-5. детективів
-> [!answer] детективів
-> [!options] детективів | детективи | детектив
+5. детективів | детективи | детектив
+   > [!answer] детективів
 
-6. книг
-> [!answer] книг
-> [!options] книг | книги | книгу
+6. книг | книги | книгу
+   > [!answer] книг
 
-7. гривень
-> [!answer] гривень
-> [!options] гривень | гривні | гривня
+7. гривень | гривні | гривня
+   > [!answer] гривень
 
-8. щасливий
-> [!answer] щасливий
-> [!options] щасливий | сумний | злий
+8. щасливий | сумний | злий
+   > [!answer] щасливий
 
 ## cloze: Age Expressions
 
@@ -602,29 +588,23 @@ Today you learned numeral-noun agreement:
 Батькові [___:5] роки. (54)
 Братові [___:6] років. (28)
 
-1. двадцять один
-> [!answer] двадцять один
-> [!options] двадцять один | двадцять одного
+1. двадцять один | двадцять одного
+   > [!answer] двадцять один
 
-2. двадцять три
-> [!answer] двадцять три
-> [!options] двадцять три | двадцять третього
+2. двадцять три | двадцять третього
+   > [!answer] двадцять три
 
-3. двадцять п'ять
-> [!answer] двадцять п'ять
-> [!options] двадцять п'ять | двадцять п'ятого
+3. двадцять п'ять | двадцять п'ятого
+   > [!answer] двадцять п'ять
 
-4. п'ятдесят один
-> [!answer] п'ятдесят один
-> [!options] п'ятдесят один | п'ятдесят одного
+4. п'ятдесят один | п'ятдесят одного
+   > [!answer] п'ятдесят один
 
-5. п'ятдесят чотири
-> [!answer] п'ятдесят чотири
-> [!options] п'ятдесят чотири | п'ятдесят четвертого
+5. п'ятдесят чотири | п'ятдесят четвертого
+   > [!answer] п'ятдесят чотири
 
-6. двадцять вісім
-> [!answer] двадцять вісім
-> [!options] двадцять вісім | двадцять восьмого
+6. двадцять вісім | двадцять восьмого
+   > [!answer] двадцять вісім
 
 ---
 

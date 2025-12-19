@@ -48,7 +48,7 @@ Motion prefixes are essential for everyday communication. When you give directio
 
 ---
 
-# Prefix Group 1: Crossing & Through
+## Prefix Group 1: Crossing & Through
 
 ## Пере- (Across, Over, Re-)
 
@@ -90,7 +90,7 @@ The prefix **про-** indicates passing through or going past something.
 
 ---
 
-# Prefix Group 2: Stopping & Arriving
+## Prefix Group 2: Stopping & Arriving
 
 ## За- (Behind, Stopping By, Beginning)
 
@@ -133,7 +133,7 @@ The prefix **до-** indicates reaching a destination or completing motion.
 
 ---
 
-# Prefix Group 3: Around & Under
+## Prefix Group 3: Around & Under
 
 ## Об- / Обі- (Around)
 
@@ -169,7 +169,7 @@ The prefix **під-** indicates approaching from below or getting closer.
 
 ---
 
-# Story Time: Екскурсія Містом
+## Story Time: Екскурсія Містом
 
 Туристи пішли на екскурсію містом. Гід розповідав:
 
@@ -194,7 +194,7 @@ The prefix **під-** indicates approaching from below or getting closer.
 
 ---
 
-# Story Time Part 2: Дорога на Роботу
+## Story Time Part 2: Дорога на Роботу
 
 Олег їде на роботу щодня. Його маршрут складний.
 
@@ -210,7 +210,7 @@ The prefix **під-** indicates approaching from below or getting closer.
 
 ---
 
-# Story Time Part 3: Подорож до Карпат
+## Story Time Part 3: Подорож до Карпат
 
 Родина вирішила поїхати до Карпат на вихідні. Вони **виїхали** з Києва рано вранці.
 
@@ -231,7 +231,7 @@ The prefix **під-** indicates approaching from below or getting closer.
 
 ---
 
-# Deep Dive: Prefix Combinations
+## Deep Dive: Prefix Combinations
 
 Advanced speakers combine prefixes for even more precise meanings. Here are some examples you may encounter:
 
@@ -248,7 +248,7 @@ Understanding these combinations will help you describe complex journeys with pr
 
 ---
 
-# Common Mistakes
+## Common Mistakes
 
 ## Mistake 1: Confusing Пере- and Про-
 
@@ -267,7 +267,7 @@ Understanding these combinations will help you describe complex journeys with pr
 
 ---
 
-# Language Learning Tip
+## Language Learning Tip
 
 Motion prefix mastery comes from visualization. For each prefix, create a mental image of the path:
 
@@ -403,29 +403,23 @@ These prefixes combine with motion verbs to create precise navigation instructio
 Не [___:5] пам'ятник! (go around)
 Ми [___:6] до замку. (reach)
 
-1. перейдемо
-> [!answer] перейдемо
-> [!options] перейдемо | пройдемо | обійдемо
+1. перейдемо | пройдемо | обійдемо
+   > [!answer] перейдемо
 
-2. підійдемо
-> [!answer] підійдемо
-> [!options] підійдемо | зайдемо | проїдемо
+2. підійдемо | зайдемо | проїдемо
+   > [!answer] підійдемо
 
-3. зайдемо
-> [!answer] зайдемо
-> [!options] зайдемо | дійдемо | обійдемо
+3. зайдемо | дійдемо | обійдемо
+   > [!answer] зайдемо
 
-4. пройдемо
-> [!answer] пройдемо
-> [!options] пройдемо | перейдемо | обійдемо
+4. пройдемо | перейдемо | обійдемо
+   > [!answer] пройдемо
 
-5. обходьте
-> [!answer] обходьте
-> [!options] обходьте | переходьте | заходьте
+5. обходьте | переходьте | заходьте
+   > [!answer] обходьте
 
-6. дійдемо
-> [!answer] дійдемо
-> [!options] дійдемо | зайдемо | пройдемо
+6. дійдемо | зайдемо | пройдемо
+   > [!answer] дійдемо
 
 ## unjumble: Motion Sentences
 
@@ -566,29 +560,23 @@ These prefixes combine with motion verbs to create precise navigation instructio
 Вони [___:5] річку по камінцях. (crossed)
 Потім вони [___:6] озеро. (walked around)
 
-1. виїхала
-> [!answer] виїхала
-> [!options] виїхала | заїхала | доїхала
+1. виїхала | заїхала | доїхала
+   > [!answer] виїхала
 
-2. проїхали
-> [!answer] проїхали
-> [!options] проїхали | переїхали | об'їхали
+2. проїхали | переїхали | об'їхали
+   > [!answer] проїхали
 
-3. заїхали
-> [!answer] заїхали
-> [!options] заїхали | доїхали | проїхали
+3. заїхали | доїхали | проїхали
+   > [!answer] заїхали
 
-4. доїхали
-> [!answer] доїхали
-> [!options] доїхали | заїхали | проїхали
+4. доїхали | заїхали | проїхали
+   > [!answer] доїхали
 
-5. перейшли
-> [!answer] перейшли
-> [!options] перейшли | пройшли | обійшли
+5. перейшли | пройшли | обійшли
+   > [!answer] перейшли
 
-6. обійшли
-> [!answer] обійшли
-> [!options] обійшли | пройшли | перейшли
+6. обійшли | пройшли | перейшли
+   > [!answer] обійшли
 
 ---
 

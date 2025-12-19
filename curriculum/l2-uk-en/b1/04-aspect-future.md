@@ -23,6 +23,7 @@ objectives:
   - "Learner can select the appropriate future form based on aspect and register"
 vocabulary_count: 20
 ---
+
 # Вид у майбутньому часі — Три способи
 
 > 🎯 **Чому це важливо**
@@ -32,15 +33,10 @@ vocabulary_count: 20
 > [!resources] 🎧 External Resources
 >
 > **YouTube:** [FUTURE TENSE IN UKRAINIAN LANGUAGE](https://www.youtube.com/watch?v=VJmihxvTLww) — Speak Ukrainian
->
 > **YouTube:** [Verb Conjugation: Future Tense #Ukrainian](https://www.youtube.com/watch?v=7oBqLYAYnw4) — Let's Learn Ukrainian
->
 > **YouTube:** [The Future tense # 107](https://www.youtube.com/watch?v=oXM7CrIta2E) — Ukrainian Language
->
 > **Future Tense Guide:** [Future Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-future-tense/) — Compound vs simple future
->
 > **Verb Prefixes:** [Ukrainian Verb Prefixes](https://www.ukrainianlessons.com/ukrainian-verb-prefixes/) — How prefixes create perfective verbs
->
 > **All Tenses:** [Verb Tenses Overview](https://www.ukrainianlessons.com/ukrainian-tenses/) — Downloadable reference chart
 
 ## Diagnostic
@@ -401,7 +397,7 @@ Choose the most appropriate form based on context:
 
 ---
 
-# Summary
+## Summary
 
 У цьому модулі ви вивчили:
 
@@ -446,7 +442,7 @@ Choose the most appropriate form based on context:
 
 ---
 
-# Activities
+## Activities
 
 ## quiz: Three Future Forms
 > Choose the correct answer about Ukrainian future tense.
@@ -760,118 +756,118 @@ Choose the most appropriate form based on context:
 > Put the words in the correct order.
 
 1. читати / буду / книгу / Я / завтра
-   > [!answer] Я буду читати книгу завтра.
+   > [!answer] Я буду читати книгу завтра
    > (I will be reading a book tomorrow.) [5 words]
 
 2. працювати / Ти / будеш / вдома / ?
-   > [!answer] Ти будеш працювати вдома?
+   > [!answer] Ти будеш працювати вдома
    > (Will you be working from home?) [4 words]
 
 3. чекати / Ми / будемо / тебе / на
-   > [!answer] Ми будемо чекати на тебе.
+   > [!answer] Ми будемо чекати на тебе
    > (We will be waiting for you.) [5 words]
 
 4. весь / буде / готувати / Вона / день
-   > [!answer] Вона буде готувати весь день.
+   > [!answer] Вона буде готувати весь день
    > (She will be cooking all day.) [5 words]
 
 5. вивчати / будуть / Вони / українську
-   > [!answer] Вони будуть вивчати українську.
+   > [!answer] Вони будуть вивчати українську
    > (They will be studying Ukrainian.) [4 words]
 
 6. будете / відпочивати / морі / Ви / на / ?
-   > [!answer] Ви будете відпочивати на морі?
+   > [!answer] Ви будете відпочивати на морі
    > (Will you be vacationing at the sea?) [5 words]
 
 7. буду / влітку / подорожувати / Я
-   > [!answer] Я буду подорожувати влітку.
+   > [!answer] Я буду подорожувати влітку
    > (I will be traveling in summer.) [4 words]
 
 8. робити / Що / будеш / ввечері / ти / ?
-   > [!answer] Що ти будеш робити ввечері?
+   > [!answer] Що ти будеш робити ввечері
    > (What will you be doing in the evening?) [5 words]
 
 9. дивитися / Ми / будемо / фільм / разом
-   > [!answer] Ми будемо разом дивитися фільм.
+   > [!answer] Ми будемо разом дивитися фільм
    > (We will be watching a movie together.) [5 words]
 
 10. слухати / буде / Він / музику
-    > [!answer] Він буде слухати музику.
+    > [!answer] Він буде слухати музику
     > (He will be listening to music.) [4 words]
 
 11. писати / буду / весь / Я / день / звіт
-    > [!answer] Я буду писати звіт весь день.
+    > [!answer] Я буду писати звіт весь день
     > (I will be writing the report all day.) [6 words]
 
 12. займатися / будеш / Ти / спортом / ?
-    > [!answer] Ти будеш займатися спортом?
+    > [!answer] Ти будеш займатися спортом
     > (Will you be doing sports?) [4 words]
 
 13. готуватися / буде / Вона / до / іспиту
-    > [!answer] Вона буде готуватися до іспиту.
+    > [!answer] Вона буде готуватися до іспиту
     > (She will be preparing for the exam.) [5 words]
 
 14. працювати / офісі / будуть / Вони / в
-    > [!answer] Вони будуть працювати в офісі.
+    > [!answer] Вони будуть працювати в офісі
     > (They will be working in the office.) [5 words]
 
 ## unjumble: Perfective Future Sentences
 > Put the words in the correct order.
 
 1. прочитаю / книгу / Я / цю / завтра
-   > [!answer] Я прочитаю цю книгу завтра.
+   > [!answer] Я прочитаю цю книгу завтра
    > (I will read/finish this book tomorrow.) [5 words]
 
 2. напишеш / листа / Ти / ?
-   > [!answer] Ти напишеш листа?
+   > [!answer] Ти напишеш листа
    > (Will you write the letter?) [3 words]
 
 3. подзвонить / Вона / увечері
-   > [!answer] Вона подзвонить увечері.
+   > [!answer] Вона подзвонить увечері
    > (She will call in the evening.) [3 words]
 
 4. закінчимо / до / Ми / п'ятниці
-   > [!answer] Ми закінчимо до п'ятниці.
+   > [!answer] Ми закінчимо до п'ятниці
    > (We will finish by Friday.) [4 words]
 
 5. приїдуть / Вони / третій / о
-   > [!answer] Вони приїдуть о третій.
+   > [!answer] Вони приїдуть о третій
    > (They will arrive at three.) [4 words]
 
 6. зроблю / сьогодні / Я / це
-   > [!answer] Я зроблю це сьогодні.
+   > [!answer] Я зроблю це сьогодні
    > (I will do this today.) [4 words]
 
 7. проект / Ми / завершимо / місяця / наприкінці
-   > [!answer] Ми завершимо проект наприкінці місяця.
+   > [!answer] Ми завершимо проект наприкінці місяця
    > (We will complete the project at the end of the month.) [5 words]
 
 8. вирішу / Я / це / питання
-   > [!answer] Я вирішу це питання.
+   > [!answer] Я вирішу це питання
    > (I will solve this issue.) [4 words]
 
 9. допоможеш / мені / Ти / ?
-   > [!answer] Ти допоможеш мені?
+   > [!answer] Ти допоможеш мені
    > (Will you help me?) [3 words]
 
 10. приготує / вечерю / Він / смачну
-    > [!answer] Він приготує смачну вечерю.
+    > [!answer] Він приготує смачну вечерю
     > (He will cook a delicious dinner.) [4 words]
 
 11. пошлю / тобі / документи / Я
-    > [!answer] Я пошлю тобі документи.
+    > [!answer] Я пошлю тобі документи
     > (I will send you the documents.) [4 words]
 
 12. встигнете / вчасно / Ви / ?
-    > [!answer] Ви встигнете вчасно?
+    > [!answer] Ви встигнете вчасно
     > (Will you make it on time?) [3 words]
 
 13. купить / подарунок / Вона / мамі
-    > [!answer] Вона купить мамі подарунок.
+    > [!answer] Вона купить мамі подарунок
     > (She will buy a gift for mom.) [4 words]
 
 14. повернуться / вони / Коли / ?
-    > [!answer] Коли вони повернуться?
+    > [!answer] Коли вони повернуться
     > (When will they return?) [3 words]
 
 ## error-correction: Future Tense Errors
@@ -1376,7 +1372,7 @@ Choose the most appropriate form based on context:
     > [!answer] зроблю
     > [!options] буду робити | робитиму | зроблю | роблю
 
-# Словник
+## Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

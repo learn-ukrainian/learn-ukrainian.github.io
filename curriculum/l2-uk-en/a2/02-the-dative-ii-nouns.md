@@ -75,7 +75,7 @@ Now let's see how nouns work: Кому ви пишете листа? (To whom do
 
 ## Presentation
 
-## The Dative Question: Кому? Чому?
+### The Dative Question: Кому? Чому?
 
 The dative case in Ukrainian serves a specific function: it marks the indirect object of a sentence — the recipient or beneficiary of an action. In English, we often use "to" or "for" to show this relationship: "I gave the book **to him**" or "She bought flowers **for her mother**."
 
@@ -198,8 +198,6 @@ Understanding the difference between давати and дарувати reveals s
 **Давати (to give)** is a neutral, everyday verb. You can давати книгу (give a book), давати пораду (give advice), давати дозвіл (give permission). There's no emotional weight — it's simply transferring something to someone.
 
 **Дарувати (to give as a gift)** implies a heartfelt present, often with ceremony and emotional significance. When you дарувати something, you're not just handing it over — you're presenting it as a meaningful gift.
-
-In Ukrainian culture, the verbs давати (to give) and дарувати (to give as a gift) carry different weights. Давати is neutral — you can давати книгу, давати пораду, давати дозвіл. But дарувати implies a heartfelt gift, often with ceremony.
 
 Я даю тобі ручку. (Here's a pen — neutral transaction.)
 Я дарую тобі цю ручку. (I'm giving you this pen as a gift.)

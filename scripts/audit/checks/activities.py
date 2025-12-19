@@ -305,7 +305,8 @@ def count_items(text: str) -> int:
     bullets = len(re.findall(r'^\s*-\s+[^\[]', text, re.MULTILINE))
 
     # 5. Cloze Placeholders
-    cloze_placeholders = len(re.findall(r'\{\d+\}', text))
+    # Match {1} or {1:DROPDOWN...} or {1:TEXT...}
+    cloze_placeholders = len(re.findall(r'\{\d+(?::[^}]+)?\}', text))
 
     # 6. Mark-the-words Brackets
     mark_words = len([

@@ -323,18 +323,6 @@ When discussing weather in Ukrainian, these expressions will help you communicat
    > [!answer] Зима
    > [!options] Весна | Літо | Осінь | Зима
 
-
-7. Дощ ___ цілий день. (rained all day)
-   > [!error] all day
-   > [!answer] йшов
-   > [!explanation] Duration → imperfective.
-   > [!options] йшов | пішов
-
-8. Раптом ___ дощ. (suddenly started)
-   > [!error] suddenly started
-   > [!answer] пішов
-   > [!explanation] Sudden start → perfective.
-   > [!options] йшов | пішов
 7. Птахи співають у [___]. (forest)
    > [!answer] лісі
    > [!options] горі | лісі | морі | полі
@@ -396,29 +384,23 @@ When discussing weather in Ukrainian, these expressions will help you communicat
 Осінь — це [___:5] пора. (golden)
 Взимку падає білий [___:6]. (snow)
 
-1. природу
-> [!answer] природу
-> [!options] природу | море | дачу
+1. природу | море | дачу
+   > [!answer] природу
 
-2. сонячна
-> [!answer] сонячна
-> [!options] сонячна | хмарна | дощова
+2. сонячна | хмарна | дощова
+   > [!answer] сонячна
 
-3. чисте
-> [!answer] чисте
-> [!options] чисте | брудне | мале
+3. чисте | брудне | мале
+   > [!answer] чисте
 
-4. море
-> [!answer] море
-> [!options] море | гори | ліс
+4. море | гори | ліс
+   > [!answer] море
 
-5. золота
-> [!answer] золота
-> [!options] золота | зелена | біла
+5. золота | зелена | біла
+   > [!answer] золота
 
-6. сніг
-> [!answer] сніг
-> [!options] сніг | дощ | листя
+6. сніг | дощ | листя
+   > [!answer] сніг
 
 ## unjumble: Weather Sentences
 

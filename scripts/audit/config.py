@@ -291,8 +291,30 @@ LEVEL_CONFIG = {
         'transliteration_allowed': False,
         'priority_types': {'error-correction', 'unjumble', 'fill-in'}
     },
+    'A1-checkpoint': {
+        'target_words': 500,  # Checkpoints can be shorter
+        'min_activities': 8,
+        'min_items_per_activity': 10,
+        'min_types_unique': 4,
+        'min_vocab': 10,
+        'min_engagement': 2,
+        # NO immersion gate - comes naturally from practice
+        'transliteration_allowed': True,
+        'priority_types': {'quiz', 'fill-in', 'match-up'}
+    },
+    'A2-checkpoint': {
+        'target_words': 800,  # Checkpoints can be shorter
+        'min_activities': 10,
+        'min_items_per_activity': 10,
+        'min_types_unique': 4,
+        'min_vocab': 10,
+        'min_engagement': 3,
+        # NO immersion gate - comes naturally from practice
+        'transliteration_allowed': False,
+        'priority_types': {'quiz', 'fill-in', 'error-correction'}
+    },
     'B1-grammar': {
-        'target_words': 1250,
+        'target_words': 1500,
         'min_activities': 12,
         'min_items_per_activity': 14,
         'min_types_unique': 4,
@@ -304,7 +326,7 @@ LEVEL_CONFIG = {
         'priority_types': {'error-correction', 'fill-in', 'unjumble', 'cloze'}
     },
     'B1-vocab': {
-        'target_words': 1250,
+        'target_words': 1500,
         'min_activities': 12,
         'min_items_per_activity': 14,
         'min_types_unique': 4,
@@ -316,7 +338,7 @@ LEVEL_CONFIG = {
         'priority_types': {'match-up', 'mark-the-words', 'translate', 'quiz'}
     },
     'B1': {
-        'target_words': 1250,
+        'target_words': 1500,
         'min_activities': 12,
         'min_items_per_activity': 14,
         'min_types_unique': 4,
@@ -345,8 +367,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 10,
         'min_engagement': 3,
-        'min_immersion': 60,
-        'max_immersion': 70,
+        # NO immersion gate - comes naturally from practice
         'transliteration_allowed': False,
         'priority_types': {'quiz', 'fill-in', 'error-correction'}
     },
@@ -429,8 +450,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 10,
         'min_engagement': 4,
-        'min_immersion': 70,
-        'max_immersion': 85,
+        # NO immersion gate - comes naturally from practice
         'transliteration_allowed': False,
         'priority_types': {'quiz', 'fill-in', 'error-correction', 'cloze'}
     },
@@ -525,8 +545,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 15,
         'min_engagement': 4,
-        'min_immersion': 90,
-        'max_immersion': 95,
+        # NO immersion gate - comes naturally from practice
         'transliteration_allowed': False,
         'priority_types': {'quiz', 'fill-in', 'error-correction', 'cloze'}
     },
@@ -597,8 +616,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 15,
         'min_engagement': 4,
-        'min_immersion': 98,
-        'max_immersion': 100,
+        # NO immersion gate - comes naturally from practice
         'transliteration_allowed': False,
         'priority_types': {'quiz', 'fill-in', 'error-correction', 'cloze'}
     },
@@ -800,7 +818,7 @@ def get_b1_immersion_range(module_num: int) -> tuple[int, int]:
     to compensate, but 45-50% proved unrealistic for this structure.
     """
     if module_num <= 45:
-        return (50, 60)  # B1.1-4: Grammar-heavy (Aspect, Motion, Complex)
+        return (40, 68)  # B1.1-4: Grammar-heavy (Aspect, Motion, Complex, Participles) - widened for extensive English explanations
     elif module_num <= 65:
         return (60, 65)  # B1.5-6: Vocabulary expansion
     else:

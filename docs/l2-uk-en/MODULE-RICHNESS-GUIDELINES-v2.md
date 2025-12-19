@@ -9,12 +9,40 @@
 <critical>
 
 
+### Resource Section Placement
+
+> [!important]
+> **Standardized Module Structure:**
+>
+> All B1+ modules follow this layout:
+> ```markdown
+> ---
+> YAML frontmatter (including optional `resources:` in YAML)
+> ---
+>
+> # Title (H1 - from YAML title field)
+>
+> > Introduction hook (🎯 **Чому це важливо** or similar - optional)
+>
+> > [!resources] 🎧 External Resources
+> > **Type:** [Title](url) — Description
+>
+> ## Diagnostic / Діагностика
+> ```
+>
+> **Key Rules:**
+> 1. H1 Title MUST exist immediately after YAML
+> 2. Introduction hook (if present) comes BEFORE resources
+> 3. Resources callout comes AFTER intro, BEFORE first `##` header
+> 4. First content section is typically `## Diagnostic` or `## Діагностика`
+
+
 ### Content Requirements by Level (Instructional Core Only*)
 
 | Metric | A1 | A2 | B1 | B2 | C1 | C2 |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Module Range** | M01-34 | M01-50 | **M01-80** | **M01-135** | M01-115 | M01-80 |
-| **Core Word Count** | **Graduated*** | **1000+** | **1250+** | **1500+** | **1750+** | **2000+** |
+| **Core Word Count** | **Graduated*** | **1000+** | **1500+** | **1750+** | **2000+** | **2000+** |
 | **Immersion (% Ukr)** | **10-40%*** | **40-55%*** | **45-70%*** | **65-90%*** | 95% | 100% |
 | **Min Vocab Words** | 20+ | 25+ | 20+/30+ | 20+/30+ | 25+ | 25+ |
 | **Example Sentences** | 12+ | 18+ | 24+ | 24+ | 30+ | 32+ |
@@ -353,8 +381,8 @@ Each module should include review items from previous module(s) to reinforce ret
 
 | Type | Modules | Words | Vocab | Immersion | Focus |
 |------|---------|-------|-------|-----------|-------|
-| `B1-grammar` | 01-45 (excl. checkpoints) | 1250+ | 20+ | 50-55% | Grammar acquisition: aspect, motion verbs, complex sentences |
-| `B1-vocab` | 46-75 (excl. checkpoints) | 1250+ | 25-30 | 60-65% | Thematic vocabulary: regions, professions, media |
+| `B1-grammar` | 01-45 (excl. checkpoints) | 1500+ | 20+ | 50-55% | Grammar acquisition: aspect, motion verbs, complex sentences |
+| `B1-vocab` | 46-75 (excl. checkpoints) | 1500+ | 25-30 | 60-65% | Thematic vocabulary: regions, professions, media |
 | `B1-skills` | 76-79 | 1000+ | 15-20 | 55-60% | Receptive skills, reading/listening integration |
 | `B1-checkpoint` | 10, 20, 35, 45, 55, 65, 75 | 800+ | 10-15 | 60%+ | Review & self-assessment with CEFR rubrics |
 | `B1-capstone` | 80 | 1000+ | 10 | 50%+ | Final assessment with comprehensive rubric |
@@ -363,8 +391,8 @@ Each module should include review items from previous module(s) to reinforce ret
 
 | Type | Modules | Words | Vocab | Immersion | Focus |
 |------|---------|-------|-------|-----------|-------|
-| `B2-grammar` | 01-40 | 1500+ | 20+ | 65-70% | Passive voice, participles, register, word formation |
-| `B2-vocab` | 41-70 | 1500+ | 25-30 | 75-80% | Phraseology: proverbs, idioms, synonyms |
+| `B2-grammar` | 01-40 | 1750+ | 20+ | 65-70% | Passive voice, participles, register, word formation |
+| `B2-vocab` | 41-70 | 1750+ | 25-30 | 75-80% | Phraseology: proverbs, idioms, synonyms |
 | `B2-history` | 71-95 | 1400+ | 20+ | 80-85% | Ukrainian history narratives |
 | `B2-biography` | 96-120 | 1400+ | 20+ | 80-85% | Biographical narratives (24 notable Ukrainians) |
 | `B2-checkpoint` | 30, 40, 70, 95, 120 | 1000+ | 10-15 | 70-85% | Phase review & assessment |
@@ -377,8 +405,8 @@ Each module should include review items from previous module(s) to reinforce ret
 | `C1-academic` | 01-20 | 1750+ | 24+ | 85-90% | Academic Ukrainian, morphology, syntax |
 | `C1-professional` | 21-35 | 1600+ | 24+ | 90-95% | Professional & social register |
 | `C1-stylistics` | 36-55 | 1600+ | 24+ | 90-95% | 5 functional styles, rhetoric, argumentation |
-| `C1-folk` | 56-80 | 1500+ | 24+ | 95%+ | Folk culture, arts, dialects, Surzhyk |
-| `C1-literature` | 81-115 | 1500+ | 24+ | 95%+ | Literary analysis: classics to contemporary |
+| `C1-folk` | 56-80 | 2000+ | 24+ | 95%+ | Folk culture, arts, dialects, Surzhyk |
+| `C1-literature` | 81-115 | 2000+ | 24+ | 95%+ | Literary analysis: classics to contemporary |
 | `C1-checkpoint` | 20, 35, 55, 80, 95, 115 | 1200+ | 15 | 90-95% | Phase review & CEFR self-assessment |
 | `C1-capstone` | 111-112 | 1500+ | 15 | 95%+ | Research paper (2000+ words) & oral defense |
 

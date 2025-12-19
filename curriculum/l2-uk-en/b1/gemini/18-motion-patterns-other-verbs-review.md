@@ -1,9 +1,9 @@
 # Audit Report: 18-motion-patterns-other-verbs.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1250
+**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
 **Overall Status:** ❌ FAIL
 
 ## Gates
-- **Words:** ✅ 1283/1250
+- **Words:** ❌ 1464/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 61.4% HIGH (target 50-60% (B1.2 Motion))
+- **Immersion:** 🇺🇦 58.8% (target 40-68% (B1.2 Motion))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -22,11 +22,12 @@
 | **Діагностика** | ✅ | 0 | Included in Core |
 | **When Motion Means Something Else** | ⚪️ | 303 | Skipped |
 | **Аналіз** | ✅ | 0 | Included in Core |
-| **How Motion Prefixes Transfer Meaning** | ⚪️ | 543 | Skipped |
+| **How Motion Prefixes Transfer Meaning** | ⚪️ | 557 | Skipped |
 | **Поглиблення** | ⚪️ | 0 | Skipped |
 | **Combining Patterns: Advanced Word Formation** | ✅ | 153 | Included in Core |
 | **Діалог: На роботі** | ✅ | 59 | Included in Core |
 | **Діалог 2: У видавництві** | ✅ | 152 | Included in Core |
+| **Figurative Motion Idioms** | ⚪️ | 167 | Skipped |
 | **Summary** | ✅ | 0 | Included in Core |
 | **Motion Prefix Transfer Patterns** | ✅ | 73 | Included in Core |
 | **Activities** | ➖ | 0 | Excluded Type |

@@ -48,7 +48,7 @@ vocabulary_count: 48
 
 ---
 
-# Part 1: New Roots
+## Part 1: New Roots
 
 ## Family 1: Speech - МОВ
 Verb: **Мовити** (To speak - poetic/formal). **Говорити** is more common, but **МОВ** is the heart of "Language".
@@ -108,7 +108,7 @@ Verb: **Народитися** (To be born).
 
 ---
 
-# Deep Dive: The Logic of Obedience
+## Deep Dive: The Logic of Obedience
 
 The root **СЛУХ** - Hearing is fascinating.
 In Ukrainian culture, "Being Good" = "Listening".
@@ -166,7 +166,7 @@ Verb: **Світити** (To shine).
 
 ---
 
-# Deep Dive: Feeling vs Sensation
+## Deep Dive: Feeling vs Sensation
 
 The root **ЧУ** - Hear/Sense gives us two important words.
 
@@ -185,7 +185,7 @@ This is why the word "Hear" is so powerful.
 
 ---
 
-# Deep Dive: The Power of Roots
+## Deep Dive: The Power of Roots
 
 Stop treating words like random strings of letters.
 Treat them like Lego blocks.
@@ -207,7 +207,7 @@ Do not memorize. **Analyze**.
 
 ---
 
-# Part 2: Review - The Machine
+## Part 2: Review - The Machine
 
 Let's test your logic.
 Combine **Roots** with **Prefixes** and **Suffixes**.
@@ -232,7 +232,7 @@ Combine **Roots** with **Prefixes** and **Suffixes**.
 
 ---
 
-# Story Time: The Conference
+## Story Time: The Conference
 
 У Києві проходить велика **наукова** (science-adj) конференція.
 Тема: "Українська **мова** в світі".
@@ -251,7 +251,7 @@ Combine **Roots** with **Prefixes** and **Suffixes**.
 
 ---
 
-# Story Time Part 2: The Psychologist
+## Story Time Part 2: The Psychologist
 
 Психолог слухає пацієнта.
 Пацієнт має сумний **вигляд** (look).
@@ -268,7 +268,7 @@ Combine **Roots** with **Prefixes** and **Suffixes**.
 
 ---
 
-# Story Time Part 3: The Success
+## Story Time Part 3: The Success
 
 Через місяць пацієнт повертається.
 Тепер він має веселий **вигляд**.
@@ -291,7 +291,7 @@ Combine **Roots** with **Prefixes** and **Suffixes**.
 
 ---
 
-# Language in Action
+## Language in Action
 
 ## Dialogue: The Order
 
@@ -463,18 +463,6 @@ Get ready to speak!
    > [!answer] переклад
    > [!options] переклад | перехід | перерва
 
-
-7. пере- + писати = ___ (rewrite)
-   > [!error] rewrite
-   > [!answer] переписати
-   > [!explanation] Prefix пере- means "re-" or "over".
-   > [!options] переписати | написати | виписати
-
-8. роз- + казати = ___ (tell in detail)
-   > [!error] tell detail
-   > [!answer] розказати
-   > [!explanation] Prefix роз- indicates spreading or detail.
-   > [!options] розказати | сказати | показати
 7. Коли ти не говориш. Це [___]. [Hint: Silence]
    > [!answer] мовчання
    > [!options] мовчання | розмова | крик
@@ -553,37 +541,29 @@ Get ready to speak!
 Це наш спільний [___:7] [Hint: contribution/in-carry].
 Всі сидять [___:8] [Hint: silently/quietly].
 
-1. промовець
-> [!answer] промовець
-> [!options] промовець | співак | актор
+1. промовець | співак | актор
+   > [!answer] промовець
 
-2. промову
-> [!answer] промову
-> [!options] промову | розмова | мовчання
+2. промову | розмова | мовчання
+   > [!answer] промову
 
-3. думка
-> [!answer] думка
-> [!options] думка | слух | вихід
+3. думка | слух | вихід
+   > [!answer] думка
 
-4. слухачі
-> [!answer] слухачі
-> [!options] слухачі | глядачі | читачі
+4. слухачі | глядачі | читачі
+   > [!answer] слухачі
 
-5. розмова
-> [!answer] розмова
-> [!options] розмова | промова | замовлення
+5. розмова | промова | замовлення
+   > [!answer] розмова
 
-6. вихід
-> [!answer] вихід
-> [!options] вихід | вхід | схід
+6. вихід | вхід | схід
+   > [!answer] вихід
 
-7. внесок
-> [!answer] внесок
-> [!options] внесок | список | голосок
+7. внесок | список | голосок
+   > [!answer] внесок
 
-8. мовчки
-> [!answer] мовчки
-> [!options] мовчки | голосно | швидко
+8. мовчки | голосно | швидко
+   > [!answer] мовчки
 
 ## error-correction: Wrong Logic
 

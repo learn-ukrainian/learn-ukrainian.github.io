@@ -49,7 +49,7 @@ Today, we unlock four "Super Roots":
 
 ---
 
-# Family 1: The Walkers (-ХІД-)
+## Family 1: The Walkers (-ХІД-)
 
 The root **ХІД** implies movement, walking, or a path.
 Verb: **Ходити** (To walk).
@@ -69,7 +69,7 @@ Verb: **Ходити** (To walk).
 
 ---
 
-# Family 2: The Writers (-ПИС-)
+## Family 2: The Writers (-ПИС-)
 
 The root **ПИС** relates to writing, recording, or marks.
 Verb: **Писати** (To write).
@@ -88,11 +88,11 @@ Verb: **Писати** (To write).
 
 ---
 
-# Family 3: Input (-ЧИТ- / -БАЧ-)
+## Family 3: Input (-ЧИТ- / -БАЧ-)
 
 We perceive the world through reading and seeing.
 
-## The Readers (-ЧИТ-)
+### The Readers (-ЧИТ-)
 Verb: **Читати** (To read).
 
 - **Читач**: Reader (Person).
@@ -103,7 +103,7 @@ Verb: **Читати** (To read).
 
 *Читання — це корисна звичка.* (Reading is a useful habit).
 
-## The Seers (-БАЧ- / -ГЛЯД-)
+### The Seers (-БАЧ- / -ГЛЯД-)
 Verb: **Бачити** (To see). Root often swaps with **ГЛЯД** (Look).
 
 - **Бачення**: Vision (Concept).
@@ -118,7 +118,7 @@ Verb: **Бачити** (To see). Root often swaps with **ГЛЯД** (Look).
 
 ---
 
-# Deep Dive: Guessing Game
+## Deep Dive: Guessing Game
 
 If you see **Захід** (West/Sunset), look at the root.
 **За** (Behind) + **Хід** (Go).
@@ -137,7 +137,7 @@ Spreading paint. Painting walls.
 
 ---
 
-# Deep Dive: The Power of 'Pere-'
+## Deep Dive: The Power of 'Pere-'
 
 One of the most useful prefixes in Ukrainian is **Пере-**.
 It corresponds to the Latin **Trans-** (Across) or **Re-** (Again).
@@ -158,7 +158,7 @@ It corresponds to the Latin **Trans-** (Across) or **Re-** (Again).
 
 ---
 
-# Story Time: The City Walk
+## Story Time: The City Walk
 
 Я люблю гуляти містом.
 Я — звичайний **пішохід**.
@@ -186,7 +186,7 @@ It corresponds to the Latin **Trans-** (Across) or **Re-** (Again).
 
 ---
 
-# Story Time Part 2: The Writer's House
+## Story Time Part 2: The Writer's House
 
 Письменник Андрій живе у старому будинку.
 У нього окремий **вхід**.
@@ -210,9 +210,9 @@ It corresponds to the Latin **Trans-** (Across) or **Re-** (Again).
 
 ---
 
-# Language in Action
+## Language in Action
 
-## Dialogue: The Security Guard
+### Dialogue: The Security Guard
 
 **Visitor:** Вибачте, де тут **вихід**?
 **Guard:** **Вихід** там, де і **вхід**.
@@ -222,7 +222,7 @@ It corresponds to the Latin **Trans-** (Across) or **Re-** (Again).
 **Guard:** **Підземний перехід** ліворуч.
 **Visitor:** Дякую за допомогу.
 
-## Dialogue: The Contract
+### Dialogue: The Contract
 
 **Manager:** Ви прочитали документ?
 **Client:** Так, я зробив повний **огляд**.
@@ -232,7 +232,7 @@ It corresponds to the Latin **Trans-** (Across) or **Re-** (Again).
 **Client:** Тепер все добре. Де поставити **підпис**?
 **Manager:** Ось тут, унизу сторінки.
 
-## Dialogue: Asking Directions
+### Dialogue: Asking Directions
 
 **Tourist:** Перепрошую, ви місцевий?
 **Local:** Так, я тут живу.
@@ -244,7 +244,7 @@ It corresponds to the Latin **Trans-** (Across) or **Re-** (Again).
 **Local:** Так, там є **вихід**. Це дуже гарне місце для **походу**.
 **Tourist:** Дякую!
 
-## Dialogue: The Movie Review
+### Dialogue: The Movie Review
 
 **Oksana:** Ти вже бачив новий фільм?
 **Petro:** Так, я ходив у кіно вчора.

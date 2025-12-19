@@ -1,20 +1,20 @@
 # Audit Report: 16-motion-figurative-uses.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1250
+**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1342/1250
+- **Words:** ✅ 1586/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 55.4% (target 50-60% (B1.2 Motion))
+- **Immersion:** 🇺🇦 53.2% (target 40-68% (B1.2 Motion))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -22,9 +22,9 @@
 | **Діагностика** | ✅ | 0 | Included in Core |
 | **The Hidden Motion in Abstract Thoughts** | ⚪️ | 229 | Skipped |
 | **Аналіз** | ✅ | 0 | Included in Core |
-| **How Motion Becomes Meaning: The Prefix Principle** | ⚪️ | 530 | Skipped |
+| **How Motion Becomes Meaning: The Prefix Principle** | ⚪️ | 694 | Skipped |
 | **Поглиблення** | ⚪️ | 0 | Skipped |
-| **Recognizing Figurative vs. Literal Motion** | ⚪️ | 59 | Skipped |
+| **Recognizing Figurative vs. Literal Motion** | ⚪️ | 139 | Skipped |
 | **Common Combinations: Verb + Preposition + Abstract Noun** | ⚪️ | 84 | Skipped |
 | **Practice Dialogues: Figurative Motion in Context** | ✅ | 151 | Included in Core |
 | **Практика** | ⚪️ | 0 | Skipped |

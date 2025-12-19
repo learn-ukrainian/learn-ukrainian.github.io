@@ -1,36 +1,30 @@
 # Audit Report: 01-aspect-complete-system.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1250
+**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 3942/1250 (>2250 may be too long)
+- **Words:** ⚠️ 3954/1500 (>2500 may be too long)
 - **Activities:** ✅ 15/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 50.2% (target 50-60% (B1.1 Aspect))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
+- **Immersion:** 🇺🇦 50.8% (target 40-68% (B1.1 Aspect))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 134 | Included in Core |
-| **Diagnostic** | ✅ | 215 | Included in Core |
-| **Analysis** | ⚪️ | 994 | Skipped |
-| **Deep Dive** | ✅ | 1474 | Included in Core |
-| **Practice** | ⚪️ | 661 | Skipped |
-| **Summary** | ✅ | 464 | Included in Core |
+| **Вид дієслова — Повна система** | ⚪️ | 134 | Skipped |
+| **Diagnostic** | ✅ | 214 | Included in Core |
+| **Analysis** | ⚪️ | 993 | Skipped |
+| **Deep Dive** | ✅ | 1484 | Included in Core |
+| **Practice** | ⚪️ | 663 | Skipped |
+| **Summary** | ✅ | 466 | Included in Core |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **quiz: Визначення виду** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Аспектні пари** | 🎮 | 14 | Activity (14 items, min 8) |
