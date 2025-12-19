@@ -130,6 +130,40 @@ vocabulary_count: 20
 
 > [!tip] 🌟 **Pro Tip:** [Final actionable advice]
 
+---
+
+## Need More Practice?
+
+> [!resources] External Resources
+>
+> **Topic Links:**
+> - 🎧 [Resource from {LEVEL}-MEDIA-ASSIGNMENT.md](URL) — Description
+> - 🎙️ [Podcast Episode](URL) — Description
+>
+> **Review Previous Modules:**
+> - Topic X → Module Y
+> - Topic Z → Module W
+
+<!--
+    📚 RESOURCES SECTION (REQUIRED)
+
+    Every module MUST have this section before Activities.
+
+    Get links from: docs/l2-uk-en/{LEVEL}-MEDIA-ASSIGNMENT.md
+
+    Example (A1 M10):
+    > [!resources] External Resources
+    >
+    > **Alphabet Review:**
+    > - 🎧 [Ukrainian Alphabet Guide](https://www.ukrainianlessons.com/ukrainian-alphabet/) — All 33 letters with audio
+    >
+    > **Struggling with a skill?** Go back to:
+    > - Cyrillic → Modules 1-2
+    > - Gender → Module 3
+-->
+
+---
+
 ## Activities
 
 ## [Activity Type]: [Title]
