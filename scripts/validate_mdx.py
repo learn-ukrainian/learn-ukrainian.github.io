@@ -184,6 +184,22 @@ def validate_module(md_path: Path, mdx_path: Path) -> ValidationResult:
     if missing_activities:
         errors.append(f"Activity types missing in MDX: {', '.join(missing_activities)}")
 
+    # Check [!solution] callouts are converted to <details> elements
+    md_solution_count = len(re.findall(r'>\s*\[!solution\]', md_content, re.IGNORECASE))
+    mdx_details_count = len(re.findall(r'<details\s+className=["\']solution-block["\']', mdx_content))
+    
+    if md_solution_count > 0:
+        if mdx_details_count == 0:
+            errors.append(f"[!solution] callouts ({md_solution_count}) not converted to <details> elements")
+        elif mdx_details_count < md_solution_count:
+            warnings.append(f"Some [!solution] callouts may not be converted ({mdx_details_count}/{md_solution_count} found)")
+        
+        # Verify balanced tags
+        details_open = len(re.findall(r'<details\s', mdx_content))
+        details_close = len(re.findall(r'</details>', mdx_content))
+        if details_open != details_close:
+            errors.append(f"Unbalanced <details> tags: {details_open} opens, {details_close} closes")
+
     passed = len(errors) == 0
 
     return ValidationResult(
