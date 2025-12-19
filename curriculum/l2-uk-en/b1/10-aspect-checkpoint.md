@@ -2,8 +2,9 @@
 module: b1-10
 title: "Контрольна точка: Вид"
 subtitle: "Checkpoint - Aspect Mastery"
-version: "1.0"
+version: "2.0"
 phase: "B1"
+focus: checkpoint
 pedagogy: "TTT"
 duration: 60
 transliteration: none
@@ -18,280 +19,281 @@ vocabulary_count: 20
 
 # Контрольна точка: Вид
 
-
 > 🎯 **Контрольна точка**
 >
-> Ви пройшли 9 модулів про вид дієслова. Цей контрольний модуль перевіряє вашу здатність застосовувати всі правила разом. Якщо ви успішно його пройдете — вид дієслова більше не буде для вас проблемою.
+> Ви пройшли 9 модулів про вид дієслова. Цей контрольний модуль перевіряє вашу здатність застосовувати всі правила разом.
 
-> [!resources] 🎧 External Resources
+## Overview
+
+This checkpoint reviews skills from Modules 01-09:
+
+- **Skill 1:** Process vs Result (core distinction)
+- **Skill 2:** Past Tense Aspect (single vs repeated actions)
+- **Skill 3:** Negation Patterns (never vs not yet)
+- **Skill 4:** Imperative Aspect (invitations vs commands)
+- **Skill 5:** Aspect in Narratives (background vs plot points)
+
+---
+
+## Skill 1: Process vs Result
+
+**Model:**
+
+> Учора я **писав** листа дві години.
+> (Yesterday I **was writing** a letter for two hours.)
+
+> Учора я **написав** листа.
+> (Yesterday I **wrote** [completed] a letter.)
+
+**Notice:**
+- **писав** (imperfective) — focuses on the process, duration
+- **написав** (perfective) — focuses on the result, completion
+
+**Practice:** Which aspect fits the context?
+
+1. Я весь день ___ (працювати). — all day = duration
+2. Нарешті я ___ (закінчити) проєкт! — finally = result
+3. Вона три години ___ (готувати). — three hours = duration
+4. Він ___ (знайти) відповідь. — found = result
+
+<details>
+<summary>Перевірити</summary>
+
+1. **працював** (imperfective — duration marker "весь день")
+2. **закінчив** (perfective — result marker "нарешті")
+3. **готувала** (imperfective — duration marker "три години")
+4. **знайшов** (perfective — result achieved)
+
+</details>
+
+**Self-Check:**
+- ☐ Did you use imperfective for all duration markers?
+- ☐ Did you use perfective for results?
+
+> 💡 **Чи ви знали?**
 >
-> 📖 **Reading:** [Ukrainian Lessons: Aspect](https://ukrainianlessons.com/aspect/) - Final review before test.
+> Aspect is one of the most difficult topics for English speakers learning Slavic languages. English uses tense (past, present, future) and context words to convey what Ukrainian expresses through aspect. If you've made it this far — ви вже опанували одну з найскладніших тем!
+
+---
+
+## Skill 2: Past Tense Patterns
+
+**Model — Single vs Repeated:**
+
+> Він **приходив** щодня.
+> (He **used to come** every day.) — repeated
+
+> Він **прийшов** о п'ятій.
+> (He **came** at five.) — single event
+
+**Model — Background vs Sequence:**
+
+> Поки вона **читала**, він **прийшов**.
+> (While she **was reading**, he **arrived**.)
+
+> Спочатку **поснідав**, потім **пішов** на роботу.
+> (First **had breakfast**, then **went** to work.)
+
+**Practice:** Choose the correct form:
+
+1. Вона завжди ___ (допомагати) мені. — always = repeated
+2. Коли він ___ (закінчити), ми поговорили. — when finished = sequence
+3. Поки я ___ (готувати), він читав. — while = background
+4. Він три рази ___ (телефонувати). — three times = repeated
+
+<details>
+<summary>Перевірити</summary>
+
+1. **допомагала** (imperfective — repetition marker "завжди")
+2. **закінчив** (perfective — sequence trigger "коли...ми поговорили")
+3. **готував/готувала** (imperfective — background action)
+4. **телефонував** (imperfective — repeated action, counted)
+
+</details>
+
+**Self-Check:**
+- ☐ Did you use imperfective for repeated actions?
+- ☐ Did you use perfective for sequences?
+- ☐ Did you use imperfective for background actions?
+
+---
+
+## Skill 3: Negation Patterns
+
+**Model — "Not yet" vs "Never":**
+
+> Я **ще не прочитав** цю книгу.
+> (I **haven't read** this book **yet**.) — perfective
+
+> Я **ніколи не читав** цю книгу.
+> (I **have never read** this book.) — imperfective
+
+**The Rule:**
+- "ще не" (not yet) → **perfective** (result pending)
+- "ніколи не" (never) → **imperfective** (no experience)
+
+**Practice:** Fill in the correct form:
+
+1. Я ще не ___ (закінчити) роботу. — not yet
+2. Вона ніколи не ___ (бути) в Україні. — never
+3. Він ще не ___ (відповісти) на лист. — not yet
+4. Ми ніколи не ___ (пробувати) суші. — never
+
+<details>
+<summary>Перевірити</summary>
+
+1. **закінчив** (perfective — "ще не" = result pending)
+2. **була** (imperfective — "ніколи" = no experience)
+3. **відповів** (perfective — "ще не" = result pending)
+4. **пробували** (imperfective — "ніколи" = no experience)
+
+</details>
+
+**Self-Check:**
+- ☐ Did you use perfective after "ще не"?
+- ☐ Did you use imperfective after "ніколи не"?
+
+---
+
+## Skill 4: Imperative Patterns
+
+**Model — Invitations vs Commands:**
+
+> **Заходьте!** Сідайте!
+> (**Come in!** Sit down!) — invitation = imperfective
+
+> **Напиши** звіт до п'ятниці!
+> (**Write** the report by Friday!) — specific task = perfective
+
+**Model — Prohibitions vs Warnings:**
+
+> **Не торкайся** плити!
+> (**Don't touch** the stove!) — prohibition = imperfective
+
+> **Не забудь** ключі!
+> (**Don't forget** the keys!) — point event = perfective (exception!)
+
+**Practice:** Choose the correct imperative:
+
+1. ___ (Заходити)! — welcoming a guest
+2. ___ (Не торкатися) документів! — prohibition
+3. ___ (Не забути) зателефонувати! — warning (point event)
+4. ___ (Зробити) це до понеділка! — specific task with deadline
+
+<details>
+<summary>Перевірити</summary>
+
+1. **Заходьте** or **Заходь** (imperfective — invitation)
+2. **Не торкайтеся** or **Не торкайся** (imperfective — prohibition)
+3. **Не забудьте** or **Не забудь** (perfective — point event exception)
+4. **Зробіть** or **Зроби** (perfective — specific completed task)
+
+</details>
+
+**Self-Check:**
+- ☐ Did you use imperfective for invitations?
+- ☐ Did you use imperfective for prohibitions?
+- ☐ Did you recognize "не забути" as an exception?
+
+> 🌍 **У реальному світі**
 >
-
-## Діагностика
-
-## Pre-Test Self-Assessment
-
-Before the final checkpoint, assess your readiness honestly. This self-evaluation helps you identify any remaining gaps before the comprehensive test.
-
-**Can you confidently...?**
-
-- [ ] Explain the difference between perfective and imperfective aspect in your own words
-- [ ] Name 20+ aspect pairs from memory
-- [ ] Choose the correct aspect in workplace contexts
-- [ ] Use aspect correctly in narratives with mixed tenses
-- [ ] Explain why «Не забудь!» is an exception to the prohibition rule
-
-If you checked all boxes — you're ready! If not, review the relevant modules before proceeding.
+> Українці часто помічають неправильне використання виду у мовленні іноземців. Правильний вид — це те, що відрізняє продвинутого учня від носія мови. Коли ви кажете «Заходьте!» замість «Зайдіть!» — носії відразу чують вашу впевненість!
 
 ---
 
-> 💡 **What This Checkpoint Tests**
-> 
-> This is a checkpoint module that tests your mastery of the Ukrainian aspect system. Modules 01-09 gave you the theory and practice. Now it's time to demonstrate that you've internalized these patterns. This is not about memorizing rules — it's about showing intuitive, native-like aspect selection.
+## Skill 5: Aspect in Narratives
 
----
+**Model:**
 
-## Аналіз
-
-## Master Summary: The Complete Aspect System
-
-This section provides an at-a-glance reference for everything you've learned about Ukrainian aspect. Use it as a final review before the test.
-
-### The Core Rule
-
-The fundamental distinction in Ukrainian aspect is simple: **What do you want to emphasize?**
-
-| I want to convey... | Aspect | Example |
-|---------------------|--------|---------|
-| Result, completion | Perfective | Я **написав** |
-| Process, duration | Imperfective | Я **писав** |
-| One-time action | Perfective | Він **прийшов** |
-| Repeated action | Imperfective | Він **приходив** |
-| Sequence of events | Perfective | **Прийшов**, **сів** |
-| Background action | Imperfective | Поки **читав**... |
-
-### Special Cases That Trip Up Learners
-
-These are the exceptions and edge cases that separate intermediate learners from advanced speakers:
-
-| Situation | Rule | Example |
-|-----------|------|---------|
-| "Not yet" (ще не) | Perfective | Я ще не **прочитав** |
-| General experience | Imperfective | Ти **читав** Шевченка? |
-| Invitation | Imperfective | **Заходьте!** |
-| Warning (point event) | Perfective | Не **забудь!** |
-| Prohibition | Imperfective | Не **торкайся!** |
-
----
-
-> 🌍 **Why This Matters for Your Ukrainian**
-> 
-> Correct aspect usage is what distinguishes an advanced learner from a near-native speaker. It's one of the most challenging topics for English speakers, and you've now studied it systematically. This is a significant achievement — правильне використання виду — це те, що відрізняє продвинутого учня від носія мови.
-
----
-
-## Поглиблення
-
-## Ваш прогрес / Your Learning Journey: Modules 01-09 Recap
-
-Протягом дев'яти модулів ви побудували повне розуміння української системи виду. Over the course of nine modules, you've built a complete understanding of the Ukrainian aspect system.
-
-**Ось що ви опанували / Here's what you've mastered:**
-
-1. **Модуль 01:** Повна система виду — основи / The complete aspect system — foundations
-2. **Модуль 02:** Вид у минулому часі — процес vs результат / Aspect in past tense — process vs result
-3. **Модуль 03:** Вид у майбутньому часі — плани vs зобов'язання / Aspect in future tense — plans vs commitments
-4. **Модуль 04:** Розширені застосування майбутнього часу / Extended future tense applications
-5. **Модуль 05:** Заперечення і вид — «ніколи» vs «ще не» / Negation and aspect — "never" vs "not yet"
-6. **Модуль 06:** Вид в імперативах — запрошення vs команди / Aspect in imperatives — invitations vs commands
-7. **Модуль 07:** 40 основних видових пар — базовий словник / 40 essential aspect pairs — the core vocabulary
-8. **Модуль 08:** Вид на роботі — професійна комунікація / Aspect at work — professional communication
-9. **Модуль 09:** Інтеграційна практика — об'єднання всіх правил / Integration practice — combining all rules
-
-**Тепер ви готові до фінального тесту! / Now you're ready for the final test!**
-
----
-
-> 🔗 **Language Link: Why English Speakers Struggle with Aspect**
-> 
-> English doesn't have grammatical aspect the way Ukrainian does. English uses tense (past, present, future) plus context words to convey what Ukrainian expresses through aspect. This means your brain has been learning an entirely new way of thinking about actions. The fact that you've reached this checkpoint means you've successfully rewired your linguistic intuitions — that's a major cognitive achievement!
-
----
-
-> 📜 **Strategy for the Test**
-> 
-> When you encounter a difficult aspect choice on the test, use this three-step process:
-> 1. **Identify the context:** Is this about process or result?
-> 2. **Look for markers:** Check for time expressions (весь день = impf, за годину = pf)
-> 3. **Trust your intuition:** After nine modules of practice, your first instinct is usually correct
-
----
-
-## Final Analysis Text
-
-Read this text and analyze each highlighted verb. This is exactly the kind of analysis you'll need to do on the test:
-
-> Олександр давно **мріяв** (ipf) про подорож до Японії. Минулого року він нарешті **накопичив** (pf) достатньо грошей і **купив** (pf) квитки. Три місяці він **вивчав** (ipf) японську мову. Коли він **приїхав** (pf) до Токіо, він був дуже схвильований.
->
-> Увесь перший день він **гуляв** (ipf) містом. Він **відвідав** (pf) знаменитий храм і **спробував** (pf) справжні суші. Увечері він **зателефонував** (pf) батькам і **розповів** (pf) про свої враження.
->
-> «Я так радий, що **приїхав** (pf)!» — **сказав** (pf) він. — «Я **мріяв** (ipf) про це все життя, і нарешті моя мрія **здійснилася** (pf)!»
+> Олександр давно **мріяв** про подорож. Минулого року він **накопичив** гроші і **купив** квитки. Три місяці він **вивчав** японську. Коли він **приїхав** до Токіо, він був схвильований.
 
 **Analysis:**
-- **Imperfective verbs (background/duration):** мріяв, вивчав, гуляв — these show duration and ongoing states
-- **Perfective verbs (plot points/results):** накопичив, купив, приїхав, відвідав, спробував, зателефонував, розповів, сказав, здійснилася — these move the story forward
+- **мріяв, вивчав** (imperfective) — background, duration
+- **накопичив, купив, приїхав** (perfective) — plot points, results
+
+**Practice:** Identify aspect function in each sentence:
+
+1. Вона **працювала** в офісі, коли **зателефонував** шеф.
+2. Спочатку **поснідав**, потім **поїхав** на роботу.
+3. Він **шукав** роботу три місяці. Нарешті **знайшов**.
+4. Поки **їхали** в автобусі, вони **розмовляли**.
+
+<details>
+<summary>Перевірити</summary>
+
+1. **працювала** = background (impf) / **зателефонував** = interruption (pf)
+2. **поснідав, поїхав** = sequence of completed actions (pf + pf)
+3. **шукав** = duration (impf) / **знайшов** = result (pf)
+4. **їхали, розмовляли** = two parallel backgrounds (impf + impf)
+
+</details>
+
+**Self-Check:**
+- ☐ Can you identify background vs plot point?
+- ☐ Can you use perfective for sequences?
+- ☐ Do you recognize duration → result patterns?
 
 ---
 
-> 🎭 **Cultural Insight: Emotional Impact Through Aspect**
-> 
-> Ukrainians often use aspect for emotional effect. Notice in the story: «Я мріяв» (недоконаний вид) shows long-lasting desire, while «мрія здійснилася» (доконаний вид) captures the moment of realization. This contrast amplifies the emotional impact — the contrast between years of dreaming and the single moment when the dream came true.
+## Integration Challenge
 
----
+**Read this text and answer the questions:**
 
-> 💡 **Common Mistakes at This Level**
-> 
-> Even at the checkpoint stage, learners commonly confuse these patterns:
-> 1. Using perfective for general experience questions (wrong: "Ти прочитав Шевченка?")
-> 2. Using imperfective with "ще не" (wrong: "Я ще не читав")
-> 3. Using perfective for invitations (wrong: "Зайдіть!" instead of "Заходьте!")
-> Review these carefully before the test!
+> Марія давно **хотіла** навчитися грати на піаніно. Минулого року вона **знайшла** викладача і **почала** заняття. Три місяці вона **практикувалася** щодня. Коли вона нарешті **зіграла** свою першу п'єсу, вона була дуже щаслива.
+>
+> «Я так радію, що **почала**!» — **сказала** вона. — «Я **мріяла** про це все життя, і нарешті моя мрія **здійснилася**!»
 
----
+**Questions:**
 
-## The Logic of Aspect: Viewing Time Differently
+1. Why is "хотіла" imperfective but "знайшла" perfective?
+2. Why is "практикувалася" imperfective?
+3. Why is "зіграла" perfective?
+4. In the final quote, why is "мріяла" imperfective but "здійснилася" perfective?
 
-Why does Ukrainian need TWO forms for every verb? This is not just grammar; it is a philosophy of time.
+<details>
+<summary>Перевірити</summary>
 
-### The Linear vs. The Holistic View
+1. **хотіла** = long-lasting desire (background/duration) vs **знайшла** = single completed action (result)
+2. **практикувалася** = duration ("три місяці") + repeated daily action
+3. **зіграла** = completed performance (result marker "нарешті")
+4. **мріяла** = years of ongoing desire vs **здійснилася** = the moment the dream came true
 
-In English, we often view time linearly: Past → Present → Future. We use auxiliary verbs (have, had, will) to place actions on this timeline.
-- "I wrote" (Past)
-- "I am writing" (Present)
-- "I will write" (Future)
-
-Ukrainian views time **holistically**. The primary question is not "When?" but "How?".
-- **Imperfective (Недоконаний):** Focuses on the *internal quality* of the action. It is like a video clip. You see the movement, the effort, the process. It has volume and duration.
-    - *Я писав* = You see me sitting at the desk, hand moving, pen scratching paper. 
-- **Perfective (Доконаний):** Focuses on the *external boundary* of the action. It is like a snapshot. You see the result, the finished product. It has no duration, only a fact.
-    - *Я написав* = You see the finished letter on the table.
-
-### The "Result" Metaphor
-
-Think of Perfective aspect as a **switch**.
-- Before the action: The switch is OFF (Letter does not exist).
-- Action happens (Total event).
-- After the action: The switch is ON (Letter exists).
-
-Perfective verbs change the state of the world.
-- *Я з'їв яблуко* (I ate the apple).
-    - State change: Apple existed → Apple is gone.
-- *Я їв яблуко* (I was eating the apple).
-    - No state change guaranteed. Maybe I stopped halfway. The apple might still be there.
-
-### The "Frame" Metaphor
-
-Imperfective verbs provide the **background frame** for Perfective events.
-- *Коли я **читав** (Imperfv - Background Frame), телефон **задзвонив** (Perfv - Point Event).*
-- Imagine a painting. The background scenery (trees, sky) is Imperfective. The main figures or action points overlaying it are Perfective.
-
-### Why This Matters for Learners
-
-Internalizing this "Video vs. Snapshot" or "Frame vs. Event" logic makes selection intuitive. Instead of memorizing rules ("Use Imperfective for repetition"), ask yourself: *Am I describing the process (video) or the fact (snapshot)?*
-
-If you are inviting someone (*Заходьте!*), you focus on the process of entering, keeping the door open (Video). If you command someone (*Зайди!*), you demand the result of them being inside (Snapshot).
-
----
----
-
-
-
-## Практика
-
-## Final Preparation Exercises
-
-Before the checkpoint test, complete these comprehensive review exercises. These are designed to test every aspect pattern you've learned.
-
-### Exercise 1: Aspect Pair Recall
-
-Name the perfective form of these common verbs. This tests your Module 07 knowledge:
-
-| Imperfective | → Perfective |
-|--------------|--------------|
-| читати | прочитати |
-| писати | написати |
-| робити | зробити |
-| брати | взяти |
-| говорити | сказати |
-| давати | дати |
-| вибирати | вибрати |
-| шукати | знайти |
-
-**Self-Check:** If you got all 8 correct, excellent! If you missed "брати → взяти" or "шукати → знайти" (suppletive pairs), review Module 07.
-
-### Exercise 2: Context-Based Selection
-
-Choose the correct aspect based on the context clues:
-
-1. «Я вчора весь день ___» (писав / написав)
-   > [!answer] писав (duration marker "весь день" = imperfective)
-
-2. «Нарешті вона ___ рішення!» (знаходила / знайшла)
-   > [!answer] знайшла (result marker "нарешті" = perfective)
-
-3. «Он завжди ___ мені допомогу.» (пропонував / запропонував)
-   > [!answer] пропонував (repetition marker "завжди" = imperfective)
-
-### Exercise 3: Imperative Selection
-
-Choose the correct aspect for these imperative situations:
-
-1. «___!» (Заходьте / Зайдіть) — for welcoming guests
-   > [!answer] Заходьте (invitation = imperfective)
-
-2. «Не ___ ключі!» (забувай / забудь) — warning before leaving
-   > [!answer] забудь (point event warning = perfective exception)
-
-3. «___ звіт до понеділка!» (Пиши / Напиши) — work assignment
-   > [!answer] Напиши (specific completed task = perfective)
+</details>
 
 ---
 
 ## Summary
 
-## Success Criteria: How to Know You've Mastered Aspect
+| Pattern | Aspect | Example |
+|---------|--------|---------|
+| Result/Completion | Perfective | Я **написав** |
+| Process/Duration | Imperfective | Я **писав** |
+| Sequence | Perfective | **Прийшов**, **сів** |
+| Background | Imperfective | Поки **читав**... |
+| "Ще не" (not yet) | Perfective | Ще не **прочитав** |
+| "Ніколи не" (never) | Imperfective | Ніколи не **читав** |
+| Invitation | Imperfective | **Заходьте!** |
+| Prohibition | Imperfective | Не **торкайся!** |
+| Warning (point event) | Perfective | Не **забудь!** |
 
-This is the most important section of the checkpoint. Use these criteria to honestly assess your readiness.
+---
 
-**You have mastered Ukrainian aspect if you:**
+## Need More Practice?
 
-✅ Can explain the imperfective/perfective difference in your own words without hesitation
-✅ Know 40+ aspect pairs from Module 07 (including the tricky suppletive pairs)
-✅ Choose the correct aspect intuitively, without consciously thinking about rules
-✅ Understand and can apply the exceptions (не забудь, ще не, etc.)
-✅ Use aspect naturally in narratives, smoothly alternating between background (ipf) and plot points (pf)
-
-**Red Flags — Signs You Need More Practice:**
-
-❌ You still have to consciously think about rules for simple sentences
-❌ You confuse "ще не" (доконаний вид) with general negation (недоконаний вид)
-❌ You use perfective for invitations
-❌ You can't recall more than 20 aspect pairs from memory
-
-### What's Next After This Checkpoint?
-
-Once you successfully complete this module, you're ready for the next phase of B1 content:
-
-- **Modules 11-15:** Verbs of motion — another challenging topic where aspect combines with directionality
-- **Modules 16-20:** Verbal adverbs (дієприслівники) — adding temporal and causal relationships
-- **Modules 21+:** Complex syntax with subordinate clauses — using aspect in multi-clause sentences
-
-### Final Words of Encouragement
-
-Mastering aspect is one of the most difficult achievements for English speakers learning any Slavic language, and Ukrainian aspect is particularly nuanced. If you've made it this far with solid understanding, you've accomplished something that many learners never achieve. 
-
-**Carry this confidence forward!** The aspect intuition you've developed will serve you throughout your Ukrainian learning journey. Every native speaker you talk to will notice your sophisticated verb usage — це справжнє досягнення!
+> [!resources] 🎧 External Resources
+>
+> **Verb Aspect:**
+> - 📖 [Perfective and Imperfective: Verb Aspect](https://www.ukrainianlessons.com/aspect/) — Detailed grammar guide by Ukrainian Lessons
+> - 📺 [Perfective and Imperfective: Verb Aspects in Ukrainian](https://www.youtube.com/watch?v=YnWlncQJg8o) — Let's Learn Ukrainian
+> - 📺 [PERFECTIVE VERBS vs IMPERFECTIVE VERBS - PART 1](https://www.youtube.com/watch?v=v-SuEb_0WYM) — Ukrainian grammar
+> - 🎧 [Season 2, Episode 51: Perfective & Imperfective](https://www.ukrainianlessons.com/the-podcast/) — Audio lesson on aspect
+>
+> **Struggling with a skill?** Go back to:
+> - Process vs Result → Module 01
+> - Past Tense Patterns → Modules 02-03
+> - Negation Patterns → Module 05
+> - Imperative Patterns → Module 06
+> - Aspect Pairs → Module 07
 
 ---
 
@@ -562,59 +564,59 @@ Mastering aspect is one of the most difficult achievements for English speakers 
 
 1. весь / день / я / працював / над / проєктом
    > [!answer] Я весь день працював над проєктом
-   > (I worked on the project all day.) [6 words]
+   > (I worked on the project all day.)
 
 2. нарешті / вона / знайшла / рішення
    > [!answer] Нарешті вона знайшла рішення
-   > (Finally she found the solution.) [4 words]
+   > (Finally she found the solution.)
 
 3. спочатку / написав / потім / надіслав
    > [!answer] Спочатку написав, потім надіслав
-   > (First wrote, then sent.) [4 words]
+   > (First wrote, then sent.)
 
 4. поки / він / готував / вона / читала
    > [!answer] Поки він готував, вона читала
-   > (While he was cooking, she was reading.) [5 words]
+   > (While he was cooking, she was reading.)
 
 5. я / ще / не / прочитав / цю / книгу
    > [!answer] Я ще не прочитав цю книгу
-   > (I haven't read this book yet.) [6 words]
+   > (I haven't read this book yet.)
 
 6. заходьте / сідайте / будь / ласка
    > [!answer] Заходьте, сідайте, будь ласка
-   > (Come in, sit down, please!) [4 words]
+   > (Come in, sit down, please!)
 
 7. не / забудь / взяти / парасольку
    > [!answer] Не забудь взяти парасольку
-   > (Don't forget to take the umbrella!) [4 words]
+   > (Don't forget to take the umbrella!)
 
 8. вона / завжди / допомагала / мені
    > [!answer] Вона завжди допомагала мені
-   > (She always helped me.) [4 words]
+   > (She always helped me.)
 
 9. він / раптом / заговорив / українською
    > [!answer] Він раптом заговорив українською
-   > (He suddenly started speaking Ukrainian.) [4 words]
+   > (He suddenly started speaking Ukrainian.)
 
 10. ти / коли-небудь / був / в / Україні
     > [!answer] Ти коли-небудь був в Україні
-    > (Have you ever been to Ukraine?) [5 words]
+    > (Have you ever been to Ukraine?)
 
 11. напиши / звіт / до / п'ятниці
     > [!answer] Напиши звіт до п'ятниці
-    > (Write the report by Friday!) [4 words]
+    > (Write the report by Friday!)
 
 12. коли / він / закінчив / ми / поговорили
     > [!answer] Коли він закінчив, ми поговорили
-    > (When he finished, we talked.) [5 words]
+    > (When he finished, we talked.)
 
 13. не / торкайся / гарячої / плити
     > [!answer] Не торкайся гарячої плити
-    > (Don't touch the hot stove!) [4 words]
+    > (Don't touch the hot stove!)
 
 14. вчора / прийшов / сів / почав / працювати
     > [!answer] Вчора прийшов, сів, почав працювати
-    > (Yesterday came, sat, started working.) [5 words]
+    > (Yesterday came, sat, started working.)
 
 ## true-false: Фінальна перевірка
 > Визначте, чи правильне твердження.
@@ -664,6 +666,14 @@ Mastering aspect is one of the most difficult achievements for English speakers 
 ## cloze: Текст для аналізу
 > Заповніть пропуски правильними формами.
 
+**Подорож Олександра**
+
+Олександр давно [___:1] про подорож до Японії. Минулого року він нарешті [___:2] достатньо грошей і [___:3] квитки. Три місяці він [___:4] японську мову. Коли він [___:5] до Токіо, він був дуже схвильований.
+
+Увесь перший день він [___:6] містом. Він [___:7] знаменитий храм і [___:8] справжні суші. Увечері він [___:9] батькам і [___:10] про свої враження.
+
+«Я так радий, що [___:11]!» — [___:12] він. — «Я [___:13] про це все життя, і нарешті моя мрія [___:14]!»
+
 1. мріяв | помріяв | мріє | помріє
    > [!answer] мріяв
 
@@ -692,19 +702,19 @@ Mastering aspect is one of the most difficult achievements for English speakers 
    > [!answer] зателефонував
 
 10. розповідав | розповів | розповідає | розповість
-   > [!answer] розповів
+    > [!answer] розповів
 
 11. приїжджав | приїхав | приїжджаю | приїду
-   > [!answer] приїхав
+    > [!answer] приїхав
 
-12. мріяв | помріяв | мрію | помрію
-   > [!answer] мріяв
+12. говорив | сказав | говорить | скаже
+    > [!answer] сказав
 
-13. здійснювалася | здійснилася | здійснюється | здійсниться
-   > [!answer] здійснилася
+13. мріяв | помріяв | мрію | помрію
+    > [!answer] мріяв
 
-14. здійснював | здійснив | здійснює | здійснить
-   > [!answer] здійснив
+14. здійснювалася | здійснилася | здійснюється | здійсниться
+    > [!answer] здійснилася
 
 ## select: Фінальний вибір
 > Оберіть правильну форму.
@@ -780,64 +790,120 @@ Mastering aspect is one of the most difficult achievements for English speakers 
     > Результат = доконаний.
 
 ## translate: Фінальний переклад
-> Перекладіть українською.
+> Оберіть правильний переклад.
 
 1. I worked all day. (process)
-   > [!answer] Я працював цілий день
+   - [x] Я працював цілий день.
+   - [ ] Я попрацював цілий день.
+   - [ ] Я працюю цілий день.
+   - [ ] Я попрацюю цілий день.
+   > Тривалість = недоконаний.
 
 2. I finished the report. (result)
-   > [!answer] Я закінчив звіт
+   - [ ] Я закінчував звіт.
+   - [x] Я закінчив звіт.
+   - [ ] Я закінчую звіт.
+   - [ ] Я закінчу звіт.
+   > Результат = доконаний.
 
 3. Have you read Shevchenko? (experience)
-   > [!answer] Ти читав Шевченка
+   - [x] Ти читав Шевченка?
+   - [ ] Ти прочитав Шевченка?
+   - [ ] Ти читаєш Шевченка?
+   - [ ] Ти прочитаєш Шевченка?
+   > Досвід = недоконаний.
 
 4. I haven't read it yet.
-   > [!answer] Я ще не прочитав це
+   - [ ] Я не читав це.
+   - [x] Я ще не прочитав це.
+   - [ ] Я не читаю це.
+   - [ ] Я не прочитаю це.
+   > «Ще не» = доконаний.
 
 5. Come in! Sit down!
-   > [!answer] Заходь! / Заходьте! Сідай! / Сідайте
+   - [x] Заходь! Сідай!
+   - [ ] Зайди! Сядь!
+   - [ ] Заходиш! Сідаєш!
+   - [ ] Зайдеш! Сядеш!
+   > Запрошення = недоконаний.
 
 6. Don't forget the keys!
-   > [!answer] Не забудь ключі
+   - [ ] Не забувай ключі!
+   - [x] Не забудь ключі!
+   - [ ] Не забуваєш ключі!
+   - [ ] Не забудеш ключі!
+   > Застереження = доконаний.
 
 7. First he wrote, then he sent.
-   > [!answer] Спочатку написав, потім надіслав
+   - [ ] Спочатку писав, потім надсилав.
+   - [x] Спочатку написав, потім надіслав.
+   - [ ] Спочатку пише, потім надсилає.
+   - [ ] Спочатку напише, потім надішле.
+   > Послідовність = доконаний.
 
 8. While she was cooking, he was reading.
-   > [!answer] Поки вона готувала, він читав
+   - [x] Поки вона готувала, він читав.
+   - [ ] Поки вона приготувала, він прочитав.
+   - [ ] Поки вона готує, він читає.
+   - [ ] Поки вона приготує, він прочитає.
+   > Фонові дії = недоконаний.
 
 9. She always helped me.
-   > [!answer] Вона завжди допомагала мені
+   - [x] Вона завжди допомагала мені.
+   - [ ] Вона завжди допомогла мені.
+   - [ ] Вона завжди допомагає мені.
+   - [ ] Вона завжди допоможе мені.
+   > Регулярність = недоконаний.
 
 10. He suddenly started speaking.
-    > [!answer] Він раптом заговорив
+    - [ ] Він раптом заговорював.
+    - [x] Він раптом заговорив.
+    - [ ] Він раптом заговорює.
+    - [ ] Він раптом заговорить.
+    > Початок = доконаний.
 
 11. Write the report by Friday!
-    > [!answer] Напиши звіт до п'ятниці
+    - [ ] Пиши звіт до п'ятниці!
+    - [x] Напиши звіт до п'ятниці!
+    - [ ] Пишеш звіт до п'ятниці!
+    - [ ] Напишеш звіт до п'ятниці!
+    > Завдання = доконаний.
 
 12. Don't touch the stove!
-    > [!answer] Не торкайся плити
+    - [x] Не торкайся плити!
+    - [ ] Не торкнися плити!
+    - [ ] Не торкаєшся плити!
+    - [ ] Не доторкнешся плити!
+    > Заборона = недоконаний.
 
 13. Finally she found the solution!
-    > [!answer] Нарешті вона знайшла рішення
+    - [ ] Нарешті вона шукала рішення!
+    - [x] Нарешті вона знайшла рішення!
+    - [ ] Нарешті вона шукає рішення!
+    - [ ] Нарешті вона знайде рішення!
+    > Результат = доконаний.
 
 14. I've been dreaming about this all my life.
-    > [!answer] Я мріяв про це все життя
+    - [x] Я мріяв про це все життя.
+    - [ ] Я помріяв про це все життя.
+    - [ ] Я мрію про це все життя.
+    - [ ] Я помрію про це все життя.
+    > Тривалість = недоконаний.
 
-## dialogue-reorder: Aspect Mastery Conversation
-> Reconstruct this conversation about learning Ukrainian aspect. Use logical flow and aspect knowledge to determine the sequence.
+## dialogue-reorder: Курс українського виду
+> Розташуйте репліки діалогу в правильному порядку.
 
-1. **Студент:** Найважче було запам'ятати всі 40 видових пар.
-2. **Викладач:** Вітаю! Ви пройшли курс виду. Як вам?
-3. **Викладач:** Це нормально! Практика допоможе.
-4. **Студент:** Дякую! Тепер я більш впевнений.
-5. **Студент:** Було складно, але цікаво!
-6. **Студент:** Іноді ще помиляюся з імперативами.
+- A: Вітаю! Ви пройшли курс виду. Як вам?
+- B: Було складно, але цікаво!
+- A: Що було найважчим?
+- B: Найважче було запам'ятати всі 40 видових пар.
+- A: А зараз добре вдається?
+- B: Іноді ще помиляюся з імперативами.
+- A: Це нормально! Практика допоможе.
+- B: Дякую! Тепер я більш впевнений.
 
-> [!answer] 2, 5, 1, 6, 3, 4
-
-## mark-the-words: Checkpoint Review — Find Perfectives
-> Mark all perfective verbs in these final review sentences.
+## mark-the-words: Знайдіть доконаний вид
+> Позначте всі дієслова доконаного виду.
 
 1. Він нарешті *закінчив* університет.
 2. Вона *написала* три звіти за день.
@@ -858,25 +924,25 @@ Mastering aspect is one of the most difficult achievements for English speakers 
 
 ## Словник
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-|-------|--------|----------|-----|----------|
-| контрольна точка | /kɔnˈtrɔlʲna ˈtɔtʃka/ | checkpoint | фраза | етап перевірки |
-| майстерність | /majˈstɛrnʲistʲ/ | mastery | ім. | високий рівень |
-| опанувати | /ɔpanuˈvatɪ/ | to master | дієсл. | досягти рівня |
-| перевірка | /pereˈvirka/ | verification | ім. | тест, контроль |
-| готовність | /ɦɔˈtɔvnʲistʲ/ | readiness | ім. | стан готовності |
-| самооцінка | /samɔˈɔt͡sʲinka/ | self-assessment | ім. | оцінка себе |
-| узагальнення | /uzaɦalʲˈnenʲa/ | summary | ім. | підсумок |
-| головне правило | /ɦɔˈlɔvne ˈpravɪlɔ/ | main rule | фраза | основний принцип |
-| особливий випадок | /ɔsɔbˈlɪvɪj ˈvɪpadɔk/ | special case | фраза | виняток |
-| критерій | /krɪˈtɛrʲij/ | criterion | ім. | стандарт |
-| успіх | /uˈspʲix/ | success | ім. | досягнення |
-| продовжити | /prɔdɔvˈʒɪtɪ/ | to continue | дієсл. | йти далі |
-| накопичити | /nakɔˈpɪtʃɪtɪ/ | to save up | дієсл. | зібрати |
-| подорож | /ˈpɔdɔrɔʒ/ | journey, trip | ім. | мандрівка |
-| враження | /vraˈʒenʲa/ | impression | ім. | відчуття |
-| схвильований | /sxvɪlʲɔˈvanɪj/ | excited | прикм. | емоційний стан |
-| здійснитися | /zdʲijsˈnɪtɪsʲa/ | to come true | дієсл. | реалізуватися |
-| мріяти | /mrʲiˈjatɪ/ | to dream | дієсл. | бажати |
-| досягнення | /dɔsʲaɦˈnenʲa/ | achievement | ім. | успіх |
-| інтуїтивно | /intujɪˈtɪvnɔ/ | intuitively | присл. | без роздумів |
+| Слово | Переклад | Примітки |
+|-------|----------|----------|
+| контрольна точка | checkpoint | етап перевірки |
+| майстерність | mastery | високий рівень |
+| опанувати | to master | досягти рівня |
+| перевірка | verification | тест, контроль |
+| готовність | readiness | стан готовності |
+| самооцінка | self-assessment | оцінка себе |
+| узагальнення | summary | підсумок |
+| головне правило | main rule | основний принцип |
+| особливий випадок | special case | виняток |
+| критерій | criterion | стандарт |
+| успіх | success | досягнення |
+| продовжити | to continue | йти далі |
+| накопичити | to save up | зібрати |
+| подорож | journey, trip | мандрівка |
+| враження | impression | відчуття |
+| схвильований | excited | емоційний стан |
+| здійснитися | to come true | реалізуватися |
+| мріяти | to dream | бажати |
+| досягнення | achievement | успіх |
+| інтуїтивно | intuitively | без роздумів |

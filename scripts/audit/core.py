@@ -359,7 +359,7 @@ def audit_module(file_path: str) -> bool:
 
     # Get config
     config = get_level_config(level_code, module_focus)
-    target = get_word_target(level_code, module_num)
+    target = get_word_target(level_code, module_num, module_focus)
     vocab_target = config.get('min_vocab', 25)
     transliteration_allowed = config.get('transliteration_allowed', True)
 

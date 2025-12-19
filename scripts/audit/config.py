@@ -835,9 +835,9 @@ def get_level_config(level_code: str, module_focus: str = None) -> dict:
     return LEVEL_CONFIG.get(config_key, LEVEL_CONFIG['A1'])
 
 
-def get_word_target(level_code: str, module_num: int) -> int:
+def get_word_target(level_code: str, module_num: int, module_focus: str = None) -> int:
     """Get word target for a level, with A1 graduation."""
-    config = get_level_config(level_code)
+    config = get_level_config(level_code, module_focus)
     if level_code == 'A1':
         if module_num <= 5:
             return 300
