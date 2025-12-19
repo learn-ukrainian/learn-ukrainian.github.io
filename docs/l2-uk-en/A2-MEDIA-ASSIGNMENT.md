@@ -50,6 +50,60 @@ Before embedding resources into modules, you MUST:
 2. Verify the URL exists and is relevant
 3. Use the verified resource sites below
 
+See **Issue #170** for the standardization task.
+
+---
+
+## 📋 Standard Format for Module Resources
+
+Every module MUST have a "Need More Practice?" section **before `## Activities`**.
+
+**Location in module:**
+```
+## Summary
+...
+
+---
+
+## Need More Practice?    <-- HERE
+
+> [!resources] External Resources
+> ...
+
+---
+
+## Activities
+```
+
+**Standard format:**
+```markdown
+## Need More Practice?
+
+> [!resources] External Resources
+>
+> **Topic Links:**
+> - 🎧 [Resource Title](URL) — Brief description
+> - 🎙️ [Podcast Episode](URL) — Brief description
+> - 📖 [Grammar Guide](URL) — Brief description
+>
+> **Review Previous Modules:**
+> - Topic X → Module Y
+> - Topic Z → Module W
+```
+
+**Live example:** [A1 Module 10](https://krisztiankoos.github.io/curricula-opus/docs/a1/module-10#need-more-practice)
+
+**Icon conventions:**
+| Icon | Type |
+|------|------|
+| 🎧 | Audio/Alphabet guides |
+| 🎙️ | Podcast episodes |
+| 📖 | Grammar guides |
+| 🔊 | Pronunciation tools |
+| 📝 | Vocabulary lists |
+
+---
+
 ### Verified Resource Sites
 
 | Site | Best For | Example Verified URLs |

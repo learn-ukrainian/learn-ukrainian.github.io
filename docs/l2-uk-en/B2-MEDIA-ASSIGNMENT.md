@@ -90,6 +90,40 @@ yt-dlp "ytsearch5:Ukrainian literature Шевченко Франко" --print "%
 
 ---
 
+## 📋 Standard Format for Module Resources
+
+Every module MUST have a "Need More Practice?" section **before `## Activities`**.
+
+**Standard format:**
+```markdown
+## Need More Practice?
+
+> [!resources] External Resources
+>
+> **Topic Links:**
+> - 🎧 [Resource Title](URL) — Brief description
+> - 🎙️ [Podcast Episode](URL) — Brief description
+>
+> **Struggling with a skill?** Go back to:
+> - Skill X → Module Y
+> - Skill Z → Module W
+```
+
+**Live example:** [A1 Module 10](https://krisztiankoos.github.io/curricula-opus/docs/a1/module-10#need-more-practice)
+
+**Icon conventions:**
+| Icon | Type |
+|------|------|
+| 🎧 | Audio/Pronunciation guides |
+| 🎙️ | Podcast episodes |
+| 📖 | Grammar guides |
+| 📚 | Reading resources |
+| 🎬 | Video content |
+
+**GitHub Issue:** [#170](https://github.com/krisztiankoos/curricula-opus/issues/170) - Standardize "Need More Practice?" section
+
+---
+
 ## Permission Status Legend
 
 | Status | Symbol | Meaning |
