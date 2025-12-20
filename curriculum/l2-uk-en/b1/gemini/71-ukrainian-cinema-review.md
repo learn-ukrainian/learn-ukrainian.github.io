@@ -10,7 +10,7 @@
 - Vocabulary count below minimum
 
 ## Gates
-- **Words:** ❌ 1014/1500
+- **Words:** ❌ 1053/1500
 - **Activities:** ✅ 14/12
 - **Density:** ❌ 4 < 14
 - **Unique_types:** ✅ 12/4 types
@@ -21,7 +21,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 72.9% HIGH (target 65-70% (B1.7-8 Ukraine))
+- **Immersion:** ❌ 72.1% HIGH (target 65-70% (B1.7-8 Ukraine))
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
@@ -35,11 +35,12 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Українське кіно та серіали** | ⚪️ | 65 | Skipped |
+| **Українське кіно та серіали** | ⚪️ | 29 | Skipped |
 | **Діагностика** | ✅ | 171 | Included in Core |
 | **Аналіз: The Language of Ukrainian Cinema** | ✅ | 132 | Included in Core |
 | **Поглиблення: Behind the Camera** | ⚪️ | 223 | Skipped |
 | **Film Festivals and Industry** | ⚪️ | 193 | Skipped |
+| **Need More Practice?** | ⚪️ | 75 | Skipped |
 | **Практика: Film Reviews** | ✅ | 126 | Included in Core |
 | **Підсумок** | ✅ | 104 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |

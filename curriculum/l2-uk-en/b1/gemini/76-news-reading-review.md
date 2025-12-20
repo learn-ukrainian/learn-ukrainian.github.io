@@ -11,7 +11,7 @@
 - Vocabulary count below minimum
 
 ## Gates
-- **Words:** ❌ 467/1500
+- **Words:** ❌ 519/1500
 - **Activities:** ❌ 9/12
 - **Density:** ❌ 4 < 14
 - **Unique_types:** ✅ 9/4 types
@@ -22,7 +22,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 65.8% (target 65-70% (B1.7-8 Ukraine))
+- **Immersion:** ❌ 64.4% LOW (target 65-70% (B1.7-8 Ukraine))
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
@@ -36,10 +36,11 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Новини — як читати** | ⚪️ | 50 | Skipped |
+| **Новини — як читати** | ⚪️ | 28 | Skipped |
 | **Діагностика: Як ви читаєте новини?** | ✅ | 88 | Included in Core |
 | **Аналіз: Structure of a News Article** | ✅ | 93 | Included in Core |
 | **Поглиблення: Types of News Content** | ⚪️ | 110 | Skipped |
+| **Need More Practice?** | ⚪️ | 74 | Skipped |
 | **Практика: Reading Strategies** | ✅ | 58 | Included in Core |
 | **Підсумок** | ✅ | 68 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |

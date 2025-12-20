@@ -3,22 +3,23 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1629/1500
+- **Words:** ✅ 1713/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/5
+- **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 41.0% (target 40-68% (B1.3-4 Complex))
+- **Immersion:** 🇺🇦 41.1% (target 40-68% (B1.3-4 Complex))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
+| **Дієприслівники доконаного виду** | ⚪️ | 28 | Skipped |
 | **Діагностика** | ✅ | 123 | Included in Core |
 | **Аналіз** | ✅ | 198 | Included in Core |
 | **Поглиблення** | ⚪️ | 359 | Skipped |
@@ -28,6 +29,7 @@
 | **Cultural Insight: The Language of History** | ✅ | 62 | Included in Core |
 | **Etymology: The Origins of -вши** | ⚪️ | 92 | Skipped |
 | **Semantic Deep Dive: Cause, Condition, or Time?** | ✅ | 144 | Included in Core |
+| **Need More Practice?** | ⚪️ | 56 | Skipped |
 | **Практика** | ⚪️ | 192 | Skipped |
 | **Summary** | ✅ | 71 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |

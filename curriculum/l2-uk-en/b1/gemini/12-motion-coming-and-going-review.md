@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1540/1500
+- **Words:** ✅ 1552/1500
 - **Activities:** ✅ 19/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -16,9 +16,6 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 53.1% (target 40-68% (B1.2 Motion))
 
-## MDX VALIDATION
-✅ No issues found
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -26,7 +23,7 @@
 | **Діагностика** | ✅ | 83 | Included in Core |
 | **Аналіз** | ✅ | 58 | Included in Core |
 | **Поглиблення** | ⚪️ | 1020 | Skipped |
-| **Need More Practice?** | ⚪️ | 66 | Skipped |
+| **Need More Practice?** | ⚪️ | 78 | Skipped |
 | **Практика** | ⚪️ | 189 | Skipped |
 | **Підсумок** | ✅ | 0 | Included in Core |
 | **Key Takeaways** | ⚪️ | 85 | Skipped |

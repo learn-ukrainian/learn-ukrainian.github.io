@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1733/1500
+- **Words:** ✅ 1745/1500
 - **Activities:** ✅ 19/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -16,12 +16,6 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 55.9% (target 40-68% (B1.2 Motion))
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (17 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -29,7 +23,7 @@
 | **Діагностика** | ✅ | 195 | Included in Core |
 | **Аналіз** | ✅ | 195 | Included in Core |
 | **Поглиблення** | ⚪️ | 947 | Skipped |
-| **Need More Practice?** | ⚪️ | 66 | Skipped |
+| **Need More Practice?** | ⚪️ | 78 | Skipped |
 | **Практика** | ⚪️ | 180 | Skipped |
 | **Підсумок** | ✅ | 0 | Included in Core |
 | **Головне** | ⚪️ | 111 | Skipped |

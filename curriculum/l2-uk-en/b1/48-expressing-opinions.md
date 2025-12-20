@@ -38,24 +38,26 @@ Read this discussion. Notice how each speaker expresses their opinion differentl
 > 
 > **Петро:** **Безперечно**, але час обмежений.
 
-**Questions:**
-1. Which expressions mean "I think" or "I believe"?
-2. Who expresses the strongest opinion?
-3. Which expression is the most tentative?
+**Запитання:**
+1. Які вирази означають "Я думаю" або "Я вірю"?
+2. Хто висловлює найсильнішу думку?
+3. Який вираз є найбільш обережним і невпевненим?
 
 > 💡 **Pattern Discovery**
-> Ukrainian has many ways to express opinions, from strong (я переконаний) to tentative (мені здається). Choosing the right expression shows your level of certainty and politeness.
+> Українська мова має багато способів вираження думки: від сильних (*я переконаний*) до обережних (*мені здається*). Вибір правильного виразу демонструє ваш рівень впевненості та ввічливості.
+>
+> В українській мові дієслово часто стоїть на першому місці у фразі: *Здається, дощ починається.* (It seems rain is starting). Але у виразах думки "мені" (to me) часто передує дієслову: *Мені здається*...
 
 ---
 
 ## Аналіз
 
-### The Spectrum of Certainty
+### Спектр впевненості (The Spectrum of Certainty)
 
-Opinion expressions range from very strong to very weak:
+Вирази думки варіюються від дуже сильних до дуже слабких:
 
-| Certainty Level | Expression | English |
-|----------------|------------|---------|
+| Рівень впевненості | Вираз | English |
+|--------------------|-------|---------|
 | **STRONG** | Я переконаний, що... | I'm convinced that... |
 | **STRONG** | Я впевнений, що... | I'm certain that... |
 | **MEDIUM** | Я вважаю, що... | I believe that... |
@@ -64,16 +66,15 @@ Opinion expressions range from very strong to very weak:
 | **WEAK** | Я припускаю, що... | I suppose that... |
 
 > 🔗 **Language Link: Diplomacy Through Language**
-> 
-> In English, you might soften "I think" with "maybe" or "perhaps."
-> In Ukrainian, you choose different **verbs and constructions** to signal certainty:
+>
+> Англійською ви можете пом'якшити "I think" словами "maybe" або "perhaps". В українській мові ви обираєте різні **дієслова та конструкції** для сигналу впевненості:
 > - Strong: *Я впевнений* (I'm sure)
 > - Diplomatic: *На мою думку* (In my opinion)
 > - Tentative: *Мені здається* (It seems to me)
 
 ---
 
-### Core Opinion Verbs
+### Основні дієслова думки
 
 | Ukrainian | IPA | English | Certainty |
 |-----------|-----|---------|-----------|
@@ -93,15 +94,46 @@ Opinion expressions range from very strong to very weak:
 - Я **припускаю**, що є проблема. — *I assume there's a problem.*
 - Я **переконаний**, що ми переможемо. — *I'm convinced we'll win.*
 
-> 📚 **Historical Note: Ukrainian Intellectual Discourse**
-> 
-> During the Soviet era, expressing personal opinions was often suppressed. The phrase "Я вважаю" (I believe) became a subtle way to assert individual thought. Today, these expressions are essential for democratic discourse and academic freedom.
+**Practice Sentences (Практичні речення):**
+
+1. **Я впевнений, що все буде добре.**  
+   *(I am sure that everything will be fine.)*
+   
+2. **Ти справді так думаєш?**  
+   *(Do you really think so?)*
+   
+3. **Ми вважаємо це неприпустимим.**  
+   *(We consider this unacceptable.)*
+   
+4. **Я сумніваюся, що він встигне.**  
+   *(I doubt that he will be on time.)*
+   
+5. **Лікар припускає, що це алергія.**  
+   *(The doctor assumes that it is an allergy.)*
+
+**Contextual Examples (Приклади в контексті):**
+
+> **Formal:**
+> *Шановні колеги, я **вважаю**, що стратегію треба змінити.*  
+> (Dear colleagues, I believe the strategy needs to be changed.)
+>
+> **Informal:**
+> *Слухай, я **гадаю**, що це погана ідея.*  
+> (Listen, I guess this is a bad idea.)
+>
+> **Emphatic:**
+> *Я **абсолютно переконаний**, що ми на правильному шляху!*  
+> (I am absolutely convinced that we are on the right track!)
+
+> 📚 **Історична довідка: Інтелектуальний дискурс**
+>
+> У радянські часи висловлення власної думки часто пригнічувалося. Фраза "Я вважаю" стала способом ствердження індивідуальної думки. Сьогодні ці вирази є необхідними для демократичного дискурсу та свободи слова.
 
 ---
 
-### Phrases for Expressing Opinions
+### Фрази для вираження думки
 
-**Introductory phrases:**
+**Вступні фрази (Introductory phrases):**
 
 | Ukrainian | English | Use |
 |-----------|---------|-----|
@@ -121,7 +153,7 @@ Opinion expressions range from very strong to very weak:
 
 ---
 
-### Agreement & Reaction Verbs
+### Дієслова згоди та реакції
 
 | Ukrainian | IPA | English | Example |
 |-----------|-----|---------|---------|
@@ -141,13 +173,32 @@ Opinion expressions range from very strong to very weak:
 > - *Опозиція критикує рішення.* (The opposition criticizes the decision.)
 > - *Міжнародна спільнота засуджує агресію.* (The international community condemns the aggression.)
 
+**Reaction Patterns (Моделі реакції):**
+
+1. **Agreeing (Згода):**
+   - *Я повністю погоджуюся з автором.* (I fully agree with the author.)
+   - *Ми підтримуємо вашу пропозицію.* (We support your proposal.)
+   - *Керівництво схвалило план.* (The management approved the plan.)
+
+2. **Disagreeing (Незгода):**
+   - *Я категорично не погоджуюся!* (I categorically disagree!)
+   - *Експерти критикують цей підхід.* (Experts criticize this approach.)
+   - *Він заперечує всі звинувачення.* (He denies all accusations.)
+
+3. **Evaluating (Оцінка):**
+   - *Як ви оцінюєте ситуацію?* (How do you evaluate the situation?)
+   - *Ми позитивно оцінюємо зміни.* (We evaluate the changes positively.)
+
+> ⚠️ **Important Nuance:**
+> *Засуджувати* is a very strong verb, usually reserved for crimes, moral violations, or war crimes. Do not use it for simple disagreement. Use *не погоджуватися* or *критикувати* instead.
+
 ---
 
 ## Поглиблення
 
-### Hedging & Qualification
+### Пом'якшення та обережність
 
-To sound diplomatic, Ukrainians use **hedging words** to soften their opinions:
+Щоб звучати дипломатично, українці використовують "слова-пом'якшувачі" (hedging), щоб зробити свою думку менш категоричною:
 
 | Ukrainian | English | Example |
 |-----------|---------|---------|
@@ -171,14 +222,29 @@ To sound diplomatic, Ukrainians use **hedging words** to soften their opinions:
 > 💡 **Pragmatics Tip**
 > 
 > Using tentative language shows politeness and openness to other views:
-> - Too strong: *Ви помиляєтесь!* (You're wrong!)
 > - Polite: *Мені здається, що це не зовсім так.* (It seems to me this isn't quite right.)
+
+**Polite Disagreement Techniques (Техніки ввічливої незгоди):**
+
+В українській культурі пряма незгода іноді сприймається як агресія. Використовуйте "пом'якшувачі", щоб звучати більш конструктивно.
+
+| Direct (Aggressive) | Softened (Polite) | English Translation |
+|---------------------|-------------------|---------------------|
+| Це неправда. | **Я не зовсім впевнений**, що це так. | I'm not entirely sure that's so. |
+| Ви неправі. | **Дозвольте не погодитися** з вами. | Allow me to disagree with you. |
+| Це погана ідея. | **Мені здається**, що є певні ризики. | It seems to me there are certain risks. |
+| Я проти. | **Я маю сумніви** щодо цього. | I have doubts about this. |
+
+Example Conversation:
+> **A:** Ми повинні все змінити негайно!  
+> **B:** **Розумію вашу позицію, але, можливо**, варто спочатку провести аналіз?  
+> *(I understand your position, but maybe it's worth analyzing first?)*
 
 ---
 
-### Impersonal Opinion Constructions
+### Безособові конструкції
 
-For formal or academic contexts, Ukrainian uses impersonal constructions:
+Для офіційних або академічних контекстів українська мова використовує безособові конструкції:
 
 | Ukrainian | English | Context |
 |-----------|---------|---------|
@@ -194,9 +260,9 @@ For formal or academic contexts, Ukrainian uses impersonal constructions:
 - **Вважається**, що це найкращий метод.
 - **Слід зазначити**, що є й інші погляди.
 
-> 🎬 **Cinema Corner: Expert Opinions**
-> 
-> In documentaries and news programs:
+> 🎬 **Кіно куточок: Думки експертів**
+>
+> У документальних фільмах та новинах ви часто почуєте:
 > - *«На думку експертів, ситуація стабілізується.»*
 >   (In the opinion of experts, the situation is stabilizing.)
 > - *«Як вважають аналітики...»*
@@ -204,9 +270,9 @@ For formal or academic contexts, Ukrainian uses impersonal constructions:
 
 ---
 
-### Expressing Doubt
+### Вираження сумніву
 
-When you're not sure, use doubt expressions:
+Коли ви не впевнені, використовуйте такі вирази:
 
 | Ukrainian | English | Example |
 |-----------|---------|---------|
@@ -218,9 +284,9 @@ When you're not sure, use doubt expressions:
 
 ---
 
-## Structuring Your Opinion: The PREP Method
+## Структура думки: Метод PREP
 
-To sound professional in debates, use a structure. A common method is **PREP**: Point, Reason, Example, Point.
+Щоб звучати професійно в дебатах, використовуйте структуру. Поширений метод — **PREP**: Point (Теза), Reason (Причина), Example (Приклад), Point (Висновок).
 
 **1. Point (Теза):**
 - *Я вважаю, що вивчати історію важливо.* (I believe studying history is important.)
@@ -242,6 +308,37 @@ To sound professional in debates, use a structure. A common method is **PREP**: 
 > - **Отже,...** (Therefore/So...)
 
 ---
+
+## Debate Club Simulations (Симуляції дебатів)
+
+Попрактикуйтесь у вираженні поглядів на суперечливі теми. Прочитайте аргументи та знайдіть маркери думки.
+
+### Topic 1: Technology & Society (Технології та суспільство)
+
+**Argument A (Optimist):**
+> **Я переконаний**, що технології роблять світ кращим. **З мого погляду**, інтернет дає необмежені можливості для навчання. **Очевидно**, що ми живемо в найкращий час в історії. **Слід зазначити**, що медицина та наука розвиваються дуже швидко.
+>
+> *(I am convinced that technology makes the world better. From my point of view, the internet gives unlimited opportunities for learning. It is obvious that we live in the best time in history. It should be noted that medicine and science are developing very quickly.)*
+
+**Argument B (Skeptic):**
+> **Я сумніваюся** в цьому. **На мою думку**, люди стають залежними від гаджетів. **Я вважаю**, що ми втрачаємо реальне спілкування. **Безперечно**, є певні плюси, але **мені здається**, що мінуси переважають.
+>
+> *(I doubt this. In my opinion, people are becoming dependent on gadgets. I believe that we are losing real communication. Undoubtedly, there are certain pluses, but it seems to me that the minuses prevail.)*
+
+### Topic 2: Remote Work (Віддалена робота)
+
+**Argument A (Employee):**
+> **Як на мене**, віддалена робота — це ідеально. **Я думаю**, що це економить час і гроші. **Можна сказати**, що ефективність навіть зростає. **Я впевнений**, що майбутнє за цим форматом.
+>
+> *(As for me, remote work is ideal. I think it saves time and money. One can say that efficiency even grows. I am certain that the future belongs to this format.)*
+
+**Argument B (Manager):**
+> **Дозвольте не погодитися**. **З мого погляду**, командний дух страждає. **Мабуть**, для декого це зручно, але **я припускаю**, що більшість людей потребує соціалізації. **Я боюся**, що ми втрачаємо контроль над процесом.
+>
+> *(Allow me to disagree. From my point of view, team spirit suffers. Probably, for some it is convenient, but I assume that most people need socialization. I fear that we are losing control over the process.)*
+
+> 🧠 **Завдання на критичне мислення**
+> Хто з мовців використовував більш офіційну мову? (Підказка: шукайте "З мого погляду" проти "Як на мене"). Чиї аргументи видалися сильнішими завдяки вибору слів?
 
 ## Need More Practice?
 
@@ -355,6 +452,41 @@ To sound professional in debates, use a structure. A common method is **PREP**: 
    - [ ] Growth has stopped
    - [ ] Growth is declining
    > "Спостерігається" = is observed.
+
+4. Which word describes a negative change?
+   - [ ] розвиток
+   - [x] занепад
+   - [ ] прогрес
+   - [ ] відновлення
+   > "Занепад" = decline/decay.
+
+5. "Стабілізація" is:
+   - [x] a neutral state
+   - [ ] a negative change
+   - [ ] a rapid growth
+   - [ ] a total collapse
+   > Stabilization is generally neutral/positive but describes a state.
+
+6. "Модернізація" implies:
+   - [ ] going back to old ways
+   - [x] updating and improving
+   - [ ] destroying everything
+   - [ ] staying the same
+   > Modernization = updating.
+
+7. "Зниження цін" refers to:
+   - [x] lower prices
+   - [ ] higher prices
+   - [ ] stable prices
+   - [ ] no prices
+   > "Зниження" = lowering/decrease.
+
+8. "Реформи" are usually intended to:
+   - [x] improve a system
+   - [ ] cause chaos
+   - [ ] do nothing
+   - [ ] celebrate holidays
+   > Reforms aim at improvement.
 
 ---
 
@@ -650,8 +782,10 @@ To sound professional in debates, use a structure. A common method is **PREP**: 
 | Я впевнений | Я думаю | Я гадаю |
 | Безперечно | На мою думку | Можливо |
 | Безсумнівно | Як на мене | Мабуть |
-| Очевидно | | Я припускаю |
-| Напевне | | Навряд чи |
+| Очевидно | З мого погляду | Я припускаю |
+| Напевне | Можна сказати | Навряд чи |
+| Я знаю, що | Слід зазначити | Не впевнений |
+| Безумовно | Вважається | Може бути |
 
 ---
 
@@ -867,7 +1001,7 @@ To sound professional in debates, use a structure. A common method is **PREP**: 
 ## mark-the-words: Знайдіть вирази думок
 > Click/tap all the opinion expressions in the text.
 
-*На мою думку*, ситуація покращилась. *Я вважаю*, що *реформи* дали результат. *Мені здається*, що *прогрес* очевидний. *Безперечно*, є ще *проблеми*. *Я переконаний*, що ми їх вирішимо. *Як на мене*, *стратегія* правильна. *Слід зазначити*, що є й *критики*. Але *я підтримую* цей *підхід*.
+[На мою думку], ситуація покращилась. [Я вважаю], що реформи дали результат. [Мені здається], що прогрес очевидний. [Безперечно], є ще проблеми. [Я переконаний], що ми їх вирішимо. [Як на мене], стратегія правильна. [Слід зазначити], що є й критики. Але [я підтримую] цей підхід.
 
 > **Opinion expressions:** На мою думку, Я вважаю, Мені здається, Безперечно, Я переконаний, Як на мене, Слід зазначити, я підтримую
 > 
@@ -918,3 +1052,8 @@ In the next module, you'll learn vocabulary for **agreement and disagreement** �
 | безперечно | /bɛzpɛˈrɛtʃno/ | undoubtedly | Very strong |
 | безсумнівно | /bɛzsumˈnjivno/ | without doubt | Very strong |
 | слід зазначити | — | it should be noted | Academic |
+| можна сказати | — | one can say | Impersonal |
+| певно | /pɛvno/ | certainly, surely | Hedging |
+| зрозуміло | /zrozumiˈlo/ | understandably | Clear |
+| навряд чи | /nɑvˈrʲɑd tʃɪ/ | hardly, unlikely | Strong doubt |
+| точка зору | /totʃkɑ zoru/ | point of view | Noun phrase |

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1616/1500
+- **Words:** ✅ 1629/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -14,13 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 63.7% (target 40-68% (B1.1 Aspect))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
+- **Immersion:** 🇺🇦 63.5% (target 40-68% (B1.1 Aspect))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -35,7 +29,7 @@
 | **Workplace Scenarios: When Aspect Really Matters** | ✅ | 79 | Included in Core |
 | **Типові робочі ситуації** | ⚪️ | 155 | Skipped |
 | **Тиждень Олени: Повна історія** | ⚪️ | 170 | Skipped |
-| **Need More Practice?** | ⚪️ | 67 | Skipped |
+| **Need More Practice?** | ⚪️ | 80 | Skipped |
 | **Практика** | ⚪️ | 0 | Skipped |
 | **Practice Exercise 1: Status Report Simulation** | ⚪️ | 85 | Skipped |
 | **Practice Exercise 2: Aspect Transformation** | ✅ | 45 | Included in Core |

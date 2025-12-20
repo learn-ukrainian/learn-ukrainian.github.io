@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 2332/800 (>1800 may be too long)
+- **Words:** ⚠️ 2527/800 (>1800 may be too long)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
@@ -14,13 +14,17 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 58.6% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 57.3% (checkpoint - no gate)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Контрольна точка: просунута граматика** | ⚪️ | 133 | Skipped |
-| **Діагностика** | ✅ | 428 | Included in Core |
+| **Контрольна точка: просунута граматика** | ⚪️ | 134 | Skipped |
+| **Skill 1: Adverbial Participles (Дієприслівники)** | ⚪️ | 163 | Skipped |
+| **Skill 2: Passive Constructions** | ⚪️ | 128 | Skipped |
+| **Skill 3: Diminutives (Зменшувальні форми)** | ⚪️ | 162 | Skipped |
+| **Skill 4: Numerals - Collective & Fractions** | ⚪️ | 92 | Skipped |
+| **Summary** | ✅ | 102 | Included in Core |
 | **Аналіз** | ✅ | 540 | Included in Core |
 | **Поглиблення** | ⚪️ | 576 | Skipped |
 | **Need More Practice?** | ⚪️ | 56 | Skipped |

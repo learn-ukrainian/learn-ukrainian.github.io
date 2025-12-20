@@ -3,22 +3,23 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1581/1500
+- **Words:** ✅ 1707/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 51.4% (target 40-68% (B1.3-4 Complex))
+- **Immersion:** 🇺🇦 50.0% (target 40-68% (B1.3-4 Complex))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
+| **Умовні речення — Змішані та складні** | ⚪️ | 33 | Skipped |
 | **Діагностика** | ✅ | 0 | Included in Core |
 | **Beyond Simple Conditionals** | ⚪️ | 164 | Skipped |
 | **Аналіз** | ✅ | 0 | Included in Core |
@@ -31,6 +32,7 @@
 | **Текст для аналізу: Ділові рішення** | ✅ | 158 | Included in Core |
 | **Summary** | ✅ | 0 | Included in Core |
 | **Complex Conditional Patterns** | ✅ | 366 | Included in Core |
+| **Need More Practice?** | ⚪️ | 93 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **fill-in: Змішані та складні умови** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Типи умов** | 🎮 | 14 | Activity (14 items, min 8) |

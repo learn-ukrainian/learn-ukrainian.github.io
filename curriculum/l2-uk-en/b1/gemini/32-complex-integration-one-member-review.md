@@ -3,22 +3,23 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1548/1500
+- **Words:** ✅ 1673/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 58.0% (target 40-68% (B1.3-4 Complex))
+- **Immersion:** 🇺🇦 57.2% (target 40-68% (B1.3-4 Complex))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
+| **Складні речення та односкладні конструкції** | ⚪️ | 32 | Skipped |
 | **Діагностика** | ✅ | 0 | Included in Core |
 | **Beyond Simple Clauses** | ⚪️ | 219 | Skipped |
 | **Аналіз** | ✅ | 0 | Included in Core |
@@ -31,6 +32,7 @@
 | **Multi-Clause Sentence Patterns** | ✅ | 0 | Included in Core |
 | **One-Member Sentence Types** | ⚪️ | 0 | Skipped |
 | **Key Impersonal Modal Words** | ⚪️ | 72 | Skipped |
+| **Need More Practice?** | ⚪️ | 93 | Skipped |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **fill-in: Правильний сполучник** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Односкладні речення** | 🎮 | 14 | Activity (14 items, min 8) |

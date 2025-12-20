@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1657/1500
+- **Words:** ✅ 1681/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -14,13 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 57.4% (target 40-68% (B1.3-4 Complex))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
+- **Immersion:** 🇺🇦 57.1% (target 40-68% (B1.3-4 Complex))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -37,7 +31,7 @@
 | **Summary** | ✅ | 0 | Included in Core |
 | **який Declension Reference** | ⚪️ | 0 | Skipped |
 | **The Two-Step Process** | ⚪️ | 235 | Skipped |
-| **Need More Practice?** | ⚪️ | 69 | Skipped |
+| **Need More Practice?** | ⚪️ | 93 | Skipped |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **fill-in: Правильна форма який** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Антецедент і форма** | 🎮 | 14 | Activity (14 items, min 8) |

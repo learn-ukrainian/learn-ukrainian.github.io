@@ -3,18 +3,18 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1968/1500
+- **Words:** ✅ 2052/1500
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 58.8% (target 40-68% (B1.3-4 Complex))
+- **Immersion:** 🇺🇦 58.5% (target 40-68% (B1.3-4 Complex))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -23,6 +23,7 @@
 | **Діагностика** | ✅ | 157 | Included in Core |
 | **Аналіз** | ✅ | 310 | Included in Core |
 | **Поглиблення** | ⚪️ | 569 | Skipped |
+| **Need More Practice?** | ⚪️ | 56 | Skipped |
 | **Практика** | ⚪️ | 529 | Skipped |
 | **Genre Lab: The Kolobok Experiment** | ⚪️ | 202 | Skipped |
 | **Summary** | ✅ | 106 | Included in Core |

@@ -10,7 +10,7 @@
 - Vocabulary count below minimum
 
 ## Gates
-- **Words:** ❌ 934/1500
+- **Words:** ❌ 993/1500
 - **Activities:** ✅ 14/12
 - **Density:** ❌ 4 < 14
 - **Unique_types:** ✅ 12/4 types
@@ -21,7 +21,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 71.5% HIGH (target 65-70% (B1.7-8 Ukraine))
+- **Immersion:** ❌ 70.5% HIGH (target 65-70% (B1.7-8 Ukraine))
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
@@ -35,11 +35,12 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Українська кухня** | ⚪️ | 44 | Skipped |
+| **Українська кухня** | ⚪️ | 28 | Skipped |
 | **Діагностика** | ✅ | 151 | Included in Core |
 | **Аналіз: The Language of Ukrainian Food** | ✅ | 157 | Included in Core |
 | **Поглиблення: Traditional Dishes** | ⚪️ | 244 | Skipped |
 | **Культура застілля** | ✅ | 104 | Included in Core |
+| **Need More Practice?** | ⚪️ | 75 | Skipped |
 | **Практика: Talking About Food** | ⚪️ | 121 | Skipped |
 | **Підсумок** | ✅ | 113 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |

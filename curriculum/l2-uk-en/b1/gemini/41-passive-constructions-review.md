@@ -1,36 +1,31 @@
 # Audit Report: 41-passive-constructions.md
 **Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
-**Overall Status:** ❌ FAIL
-
-## LINT ERRORS
-- ❌ Line 247: AI Contamination detected ('\bApologies\b'). Remove thinking/self-correction artifacts.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1682/1500
+- **Words:** ✅ 1703/1500
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 1 Format Errors
+- **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 50.9% (target 40-68% (B1.3-4 Complex))
+- **Immersion:** 🇺🇦 50.7% (target 40-68% (B1.3-4 Complex))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Пасивні конструкції** | ⚪️ | 67 | Skipped |
+| **Пасивні конструкції** | ⚪️ | 28 | Skipped |
 | **Діагностика** | ✅ | 195 | Included in Core |
 | **Аналіз** | ✅ | 554 | Included in Core |
 | **Поглиблення** | ⚪️ | 237 | Skipped |
+| **Need More Practice?** | ⚪️ | 56 | Skipped |
 | **Практика** | ⚪️ | 363 | Skipped |
-| **Stylistic Register: The Art of Distance** | ⚪️ | 135 | Skipped |
+| **Stylistic Register: The Art of Distance** | ⚪️ | 139 | Skipped |
 | **Summary** | ✅ | 131 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Passive Type Recognition** | 🎮 | 15 | Activity (15 items, min 8) |

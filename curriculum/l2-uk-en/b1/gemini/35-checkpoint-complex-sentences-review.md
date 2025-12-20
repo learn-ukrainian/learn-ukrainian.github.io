@@ -3,35 +3,36 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1684/800
+- **Words:** ⚠️ 2027/800 (>1800 may be too long)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/3
+- **Engagement:** ✅ 9/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 56.0% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 56.1% (checkpoint - no gate)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Контрольна точка: Складні речення** | ⚪️ | 27 | Skipped |
-| **Діагностика** | ✅ | 0 | Included in Core |
-| **Pre-Test Self-Assessment** | ⚪️ | 253 | Skipped |
-| **Аналіз** | ✅ | 0 | Included in Core |
+| **Контрольна точка: Складні речення** | ⚪️ | 148 | Skipped |
+| **Skill 1: Relative & Purpose Clauses** | ⚪️ | 154 | Skipped |
+| **Skill 2: Conditionals** | ⚪️ | 128 | Skipped |
+| **Skill 3: Temporal & Concessive Clauses** | ⚪️ | 76 | Skipped |
+| **Skill 4: Reported Speech** | ⚪️ | 93 | Skipped |
+| **Summary** | ✅ | 0 | Included in Core |
 | **Master Summary: Complex Sentence Structures** | ✅ | 283 | Included in Core |
 | **Поглиблення** | ⚪️ | 0 | Skipped |
 | **Your Learning Journey: Modules 21-34 Recap** | ⚪️ | 352 | Skipped |
 | **CEFR Can-Do Targets** | ⚪️ | 163 | Skipped |
-| **Need More Practice?** | ⚪️ | 69 | Skipped |
+| **Need More Practice?** | ⚪️ | 93 | Skipped |
 | **Практика** | ⚪️ | 0 | Skipped |
 | **Diagnostic Reading** | ✅ | 156 | Included in Core |
 | **Final Preparation Exercises** | ⚪️ | 105 | Skipped |
-| **Summary** | ✅ | 0 | Included in Core |
 | **Key Patterns to Remember** | ✅ | 0 | Included in Core |
 | **Комплексне повторення** | ⚪️ | 166 | Skipped |
 | **Success Criteria** | ⚪️ | 110 | Skipped |

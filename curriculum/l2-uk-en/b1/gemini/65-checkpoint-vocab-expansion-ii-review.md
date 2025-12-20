@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1343/800
+- **Words:** ✅ 1439/800
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 59.2% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 60.2% (checkpoint - no gate)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -25,6 +25,7 @@
 | **Skill 3: Speaking Verb Synonyms** | ⚪️ | 253 | Skipped |
 | **Skill 4: Ukrainian Collocations** | ⚪️ | 282 | Skipped |
 | **Integration Challenge** | ⚪️ | 150 | Skipped |
+| **Need More Practice?** | ⚪️ | 96 | Skipped |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Travel & Geography Review (М61)** | 🎮 | 8 | Activity (8 items, min 8) |
 | **quiz: Thinking Verb Synonyms (М62)** | 🎮 | 8 | Activity (8 items, min 8) |
@@ -39,9 +40,8 @@
 | **unjumble: Build Sentences** | 🎮 | 8 | Activity (8 items, min 6) |
 | **cloze: Integrated Test** | 🎮 | 8 | Activity (8 items, min 6) |
 | **translate: English to Ukrainian** | 🎮 | 8 | Activity (8 items, min 6) |
-| **group-sort: Categorization** | 🎮 | 8 | Activity (8 items, min 8) |
+| **group-sort: Categorization** | 🎮 | 32 | Activity (32 items, min 8) |
 | **select: Multiple Correct Options** | 🎮 | 6 | Activity (6 items, min 6) |
 | **true-false: Knowledge Check** | 🎮 | 8 | Activity (8 items, min 8) |
 | **Summary** | ✅ | 0 | Included in Core |
-| **Need More Practice?** | ⚪️ | 86 | Skipped |
 | **Словник** | ⚪️ | 0 | Skipped |

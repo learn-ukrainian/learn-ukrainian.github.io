@@ -181,6 +181,7 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 | Channel | URL | Content Type | Status | C2 Use |
 |---------|-----|--------------|--------|--------|
 | Alpha Centauri | youtube.com/@AlphaCentauriUA | Space, scientific Ukrainian | ❓ TBD | C2.1 M03 scientific style, C2.3 professional communication |
+| All-Ukrainian School Online | youtube.com/@ukrainian-online-school | Academic subjects | ❓ TBD | C2.1 M03 standardized academic style |
 
 #### Food & Lifestyle (Cultural Context)
 

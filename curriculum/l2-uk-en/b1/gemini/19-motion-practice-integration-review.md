@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1528/1500
+- **Words:** ✅ 1540/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -15,12 +15,6 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 59.3% (target 40-68% (B1.2 Motion))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -37,7 +31,7 @@
 | **Historical Journey: The Chumaks** | ⚪️ | 132 | Skipped |
 | **Summary** | ✅ | 0 | Included in Core |
 | **Motion Integration Checklist** | ➖ | 166 | Excluded Type |
-| **Need More Practice?** | ⚪️ | 66 | Skipped |
+| **Need More Practice?** | ⚪️ | 78 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **fill-in: Подорожі** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Англійська і українська** | 🎮 | 14 | Activity (14 items, min 8) |

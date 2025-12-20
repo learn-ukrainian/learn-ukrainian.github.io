@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1676/1500
+- **Words:** ✅ 1688/1500
 - **Activities:** ✅ 19/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -16,12 +16,6 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 55.6% (target 40-68% (B1.2 Motion))
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (17 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -30,7 +24,7 @@
 | **Аналіз** | ✅ | 158 | Included in Core |
 | **Поглиблення** | ⚪️ | 714 | Skipped |
 | **The Logic of Space: Vectors vs. Fields** | ⚪️ | 317 | Skipped |
-| **Need More Practice?** | ⚪️ | 66 | Skipped |
+| **Need More Practice?** | ⚪️ | 78 | Skipped |
 | **Практика** | ⚪️ | 156 | Skipped |
 | **Підсумок** | ✅ | 0 | Included in Core |
 | **Головне** | ⚪️ | 102 | Skipped |

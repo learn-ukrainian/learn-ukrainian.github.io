@@ -3,8 +3,8 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1506/1500
-- **Activities:** ✅ 13/12
+- **Words:** ✅ 1533/1500
+- **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
@@ -16,19 +16,16 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 65.0% (target 60-65% (B1.5-6 Vocab))
 
-## MDX VALIDATION
-✅ No issues found
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Здоров'я та благополуччя** | ⚪️ | 93 | Skipped |
+| **Здоров'я та благополуччя** | ⚪️ | 68 | Skipped |
 | **Діагностика** | ✅ | 191 | Included in Core |
 | **Аналіз** | ✅ | 1000 | Included in Core |
 | **Поглиблення** | ⚪️ | 139 | Skipped |
 | **Підсумок** | ✅ | 83 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **quiz: Повторення (М56)** | 🎮 | 8 | Activity (8 items, min 8) |
+| **Need More Practice?** | ⚪️ | 52 | Skipped |
+| **Activities** | ➖ | 216 | Excluded Type |
 | **match-up: Здоров'я — Health Terms** | 🎮 | 14 | Activity (14 items, min 8) |
 | **fill-in: Симптоми та лікування** | 🎮 | 8 | Activity (8 items, min 8) |
 | **group-sort: Корисне vs Шкідливе** | 🎮 | 12 | Activity (12 items, min 8) |

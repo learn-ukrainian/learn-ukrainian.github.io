@@ -3,28 +3,30 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1519/1500
+- **Words:** ✅ 1607/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 40.5% (target 40-68% (B1.3-4 Complex))
+- **Immersion:** 🇺🇦 40.6% (target 40-68% (B1.3-4 Complex))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
+| **Активні дієприкметники та конструкції** | ⚪️ | 32 | Skipped |
 | **Діагностика** | ✅ | 125 | Included in Core |
 | **Аналіз** | ✅ | 313 | Included in Core |
 | **Поглиблення** | ⚪️ | 278 | Skipped |
 | **The Stylistic Trap: Why "Active" isn't always good** | ⚪️ | 115 | Skipped |
 | **Decolonization: The Myth of "Poverty"** | ⚪️ | 93 | Skipped |
 | **Literary Corner: The Power of the "L-Participle"** | ⚪️ | 78 | Skipped |
+| **Need More Practice?** | ⚪️ | 56 | Skipped |
 | **Практика** | ⚪️ | 199 | Skipped |
 | **Deeper Look: Imperial vs. Native Thought** | ⚪️ | 230 | Skipped |
 | **Summary** | ✅ | 88 | Included in Core |

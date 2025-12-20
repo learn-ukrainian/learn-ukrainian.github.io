@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1222/800
+- **Words:** ✅ 1172/800
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
@@ -14,21 +14,21 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 67.3% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 69.0% (checkpoint - no gate)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Контрольна точка: Вид** | ⚪️ | 23 | Skipped |
 | **Overview** | ⚪️ | 52 | Skipped |
-| **Skill 1: Process vs Result** | ⚪️ | 198 | Skipped |
-| **Skill 2: Past Tense Patterns** | ✅ | 171 | Included in Core |
-| **Skill 3: Negation Patterns** | ✅ | 159 | Included in Core |
-| **Skill 4: Imperative Patterns** | ✅ | 211 | Included in Core |
-| **Skill 5: Aspect in Narratives** | ✅ | 153 | Included in Core |
+| **Skill 1: Process vs Result** | ⚪️ | 189 | Skipped |
+| **Skill 2: Past Tense Patterns** | ✅ | 155 | Included in Core |
+| **Skill 3: Negation Patterns** | ✅ | 146 | Included in Core |
+| **Skill 4: Imperative Patterns** | ✅ | 195 | Included in Core |
+| **Skill 5: Aspect in Narratives** | ✅ | 144 | Included in Core |
 | **Integration Challenge** | ⚪️ | 142 | Skipped |
 | **Summary** | ✅ | 0 | Included in Core |
-| **Need More Practice?** | ⚪️ | 113 | Skipped |
+| **Need More Practice?** | ⚪️ | 126 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **fill-in: Комплексний тест** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Видові пари — повний список** | 🎮 | 14 | Activity (14 items, min 8) |

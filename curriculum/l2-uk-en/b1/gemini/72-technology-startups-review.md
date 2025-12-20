@@ -10,7 +10,7 @@
 - Vocabulary count below minimum
 
 ## Gates
-- **Words:** ❌ 981/1500
+- **Words:** ❌ 1040/1500
 - **Activities:** ✅ 14/12
 - **Density:** ❌ 4 < 14
 - **Unique_types:** ✅ 12/4 types
@@ -21,7 +21,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 71.8% HIGH (target 65-70% (B1.7-8 Ukraine))
+- **Immersion:** ❌ 71.0% HIGH (target 65-70% (B1.7-8 Ukraine))
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
@@ -35,11 +35,12 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Технології та стартапи** | ⚪️ | 42 | Skipped |
+| **Технології та стартапи** | ⚪️ | 26 | Skipped |
 | **Діагностика** | ✅ | 151 | Included in Core |
 | **Аналіз: The Language of Ukrainian Tech** | ✅ | 156 | Included in Core |
 | **Поглиблення: Digital Ukraine** | ⚪️ | 224 | Skipped |
 | **Робоче середовище в ІТ** | ⚪️ | 182 | Skipped |
+| **Need More Practice?** | ⚪️ | 75 | Skipped |
 | **Практика: Describing Tech Work** | ⚪️ | 119 | Skipped |
 | **Підсумок** | ✅ | 107 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1689/1500
+- **Words:** ✅ 1701/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -15,9 +15,6 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 58.1% (target 40-68% (B1.2 Motion))
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -31,7 +28,7 @@
 | **Recognizing Figurative vs. Literal Motion** | ⚪️ | 139 | Skipped |
 | **Common Combinations: Verb + Preposition + Abstract Noun** | ⚪️ | 84 | Skipped |
 | **Practice Dialogues: Figurative Motion in Context** | ✅ | 151 | Included in Core |
-| **Need More Practice?** | ⚪️ | 66 | Skipped |
+| **Need More Practice?** | ⚪️ | 78 | Skipped |
 | **Практика** | ⚪️ | 0 | Skipped |
 | **Exercise 1: Identify the Meaning** | ⚪️ | 55 | Skipped |
 | **Exercise 2: Complete the Expression** | ⚪️ | 10 | Skipped |

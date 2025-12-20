@@ -3,27 +3,30 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1550/800
+- **Words:** ⚠️ 1860/800 (>1800 may be too long)
 - **Activities:** ✅ 13/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/3
+- **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 64.2% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 62.9% (checkpoint - no gate)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Контрольна точка I** | ⚪️ | 24 | Skipped |
-| **Діагностика** | ✅ | 159 | Included in Core |
-| **Аналіз** | ✅ | 848 | Included in Core |
+| **Контрольна точка I** | ⚪️ | 128 | Skipped |
+| **Skill 1: Discourse Markers (Дискурсивні маркери)** | ⚪️ | 118 | Skipped |
+| **Skill 2: Describing Changes (Дієслова зміни)** | ⚪️ | 148 | Skipped |
+| **Skill 3: Media & News (Медіа-лексика)** | ⚪️ | 135 | Skipped |
+| **Skill 4: Society & Politics (Політична лексика)** | ⚪️ | 95 | Skipped |
+| **Summary** | ✅ | 705 | Included in Core |
 | **Поглиблення** | ⚪️ | 293 | Skipped |
-| **Need More Practice?** | ⚪️ | 60 | Skipped |
+| **Need More Practice?** | ⚪️ | 72 | Skipped |
 | **Практика** | ⚪️ | 55 | Skipped |
 | **Підсумок** | ✅ | 111 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |

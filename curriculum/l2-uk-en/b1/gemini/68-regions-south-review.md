@@ -3,7 +3,7 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): сільське, зерно, південний, одещина, курорт...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): татарин, болгарин, виноробство, торгівля, туризм...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -11,12 +11,12 @@
 
 - Borderline case (severity 55/100)
 - 1 pedagogical violations (minor)
-- Immersion 12% off target
+- Immersion 13% off target
 - Activity density below minimum
 - Vocabulary count below minimum
 
 ## Gates
-- **Words:** ❌ 1019/1500
+- **Words:** ❌ 1077/1500
 - **Activities:** ✅ 13/12
 - **Density:** ❌ 5 < 14
 - **Unique_types:** ✅ 10/4 types
@@ -27,7 +27,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 53.0% LOW (target 65-70% (B1.7-8 Ukraine))
+- **Immersion:** ❌ 52.2% LOW (target 65-70% (B1.7-8 Ukraine))
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
@@ -42,10 +42,11 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Українські регіони: Південь** | ⚪️ | 41 | Skipped |
+| **Українські регіони: Південь** | ⚪️ | 24 | Skipped |
 | **Діагностика** | ✅ | 143 | Included in Core |
 | **Аналіз** | ✅ | 631 | Included in Core |
 | **Поглиблення** | ⚪️ | 94 | Skipped |
+| **Need More Practice?** | ⚪️ | 75 | Skipped |
 | **Практика** | ⚪️ | 110 | Skipped |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Повторення (М67)** | 🎮 | 3 | Activity (3 items, min 8) |

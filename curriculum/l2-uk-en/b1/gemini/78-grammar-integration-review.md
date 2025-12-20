@@ -7,16 +7,16 @@
   - FIX: Change '# B1 Grammar Integration' to '## B1 Grammar Integration' - reserved for page title only
 
 ## Recommendation
-**🔄 REWRITE** (severity 60/100)
+**🔄 REWRITE** (severity 70/100)
 
 - 1 pedagogical violations (minor)
-- Immersion 9% off target (minor)
+- Immersion 11% off target
 - Activity count below minimum
 - Activity density below minimum
 - Vocabulary count below minimum
 
 ## Gates
-- **Words:** ❌ 214/1500
+- **Words:** ❌ 288/1500
 - **Activities:** ❌ 11/12
 - **Density:** ❌ 4 < 14
 - **Unique_types:** ✅ 7/4 types
@@ -27,7 +27,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Immersion:** ❌ 55.6% LOW (target 65-70% (B1.7-8 Ukraine))
+- **Immersion:** ❌ 53.6% LOW (target 65-70% (B1.7-8 Ukraine))
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
@@ -48,6 +48,7 @@
 | **Частина 3: Складні речення (Complex Sentences)** | ⚪️ | 0 | Skipped |
 | **Частина 4: Дієприкметники та дієприслівники** | ⚪️ | 35 | Skipped |
 | **Підсумок** | ✅ | 53 | Included in Core |
+| **Need More Practice?** | ⚪️ | 74 | Skipped |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Діагностика виду** | 🎮 | 5 | Activity (5 items, min 8) |
 | **quiz: Дієслова руху** | 🎮 | 5 | Activity (5 items, min 8) |

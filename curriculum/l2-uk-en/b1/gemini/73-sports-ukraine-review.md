@@ -3,15 +3,14 @@
 **Overall Status:** ❌ FAIL
 
 ## Recommendation
-**📝 UPDATE** (severity 35/100)
+**📝 UPDATE** (severity 30/100)
 
-- Borderline case (severity 35/100)
-- Immersion 6% off target (minor)
+- Borderline case (severity 30/100)
 - Activity density below minimum
 - Vocabulary count below minimum
 
 ## Gates
-- **Words:** ❌ 856/1500
+- **Words:** ❌ 915/1500
 - **Activities:** ✅ 14/12
 - **Density:** ❌ 4 < 14
 - **Unique_types:** ✅ 12/4 types
@@ -22,7 +21,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 76.0% HIGH (target 65-70% (B1.7-8 Ukraine))
+- **Immersion:** ❌ 75.0% HIGH (target 65-70% (B1.7-8 Ukraine))
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
@@ -36,11 +35,12 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Спорт в Україні** | ⚪️ | 40 | Skipped |
+| **Спорт в Україні** | ⚪️ | 24 | Skipped |
 | **Діагностика** | ✅ | 149 | Included in Core |
 | **Аналіз: The Language of Ukrainian Sports** | ✅ | 149 | Included in Core |
 | **Поглиблення: Competitions and Achievements** | ⚪️ | 208 | Skipped |
 | **Успіхи та результати** | ⚪️ | 109 | Skipped |
+| **Need More Practice?** | ⚪️ | 75 | Skipped |
 | **Практика: Discussing Sports** | ⚪️ | 106 | Skipped |
 | **Підсумок** | ✅ | 95 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |

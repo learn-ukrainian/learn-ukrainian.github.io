@@ -178,6 +178,7 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 | Прямий | youtube.com/@PriamyiChannel | Political news, analysis | ❓ TBD | B2.1 politics vocabulary |
 | Телеканал 1+1 | youtube.com/@1plus1 | Entertainment, documentary | ❓ TBD | B2.2 contemporary culture |
 | ICTV | youtube.com/@ICTVchannel | News, factual programs | ❓ TBD | B2.1 news register |
+| All-Ukrainian School Online | youtube.com/@ukrainian-online-school | School lessons (History, Lit) | ❓ TBD | B2.1-B2.5 Academic Immersion |
 
 #### History & Culture Channels
 

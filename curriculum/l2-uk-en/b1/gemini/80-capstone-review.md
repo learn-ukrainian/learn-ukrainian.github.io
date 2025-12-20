@@ -5,13 +5,13 @@
 ## Recommendation
 **🔄 REWRITE** (severity 60/100)
 
-- Immersion 11% off target
+- Immersion 12% off target
 - Activity count below minimum
 - Activity density below minimum
 - Vocabulary count below minimum
 
 ## Gates
-- **Words:** ❌ 531/1500
+- **Words:** ❌ 605/1500
 - **Activities:** ❌ 10/12
 - **Density:** ❌ 4 < 14
 - **Unique_types:** ✅ 7/4 types
@@ -22,7 +22,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 53.8% LOW (target 65-70% (B1.7-8 Ukraine))
+- **Immersion:** ❌ 52.5% LOW (target 65-70% (B1.7-8 Ukraine))
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
@@ -44,6 +44,7 @@
 | **Частина 4: Лексика** | ⚪️ | 33 | Skipped |
 | **Самооцінка** | ⚪️ | 48 | Skipped |
 | **Підсумок** | ✅ | 70 | Included in Core |
+| **Need More Practice?** | ⚪️ | 74 | Skipped |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Розуміння тексту** | 🎮 | 5 | Activity (5 items, min 8) |
 | **quiz: Комплексний тест граматики** | 🎮 | 5 | Activity (5 items, min 8) |

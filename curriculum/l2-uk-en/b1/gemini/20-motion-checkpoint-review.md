@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1040/800
+- **Words:** ✅ 1015/800
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -14,21 +14,21 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 40.0% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 41.3% (checkpoint - no gate)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Контрольна точка: Дієслова руху** | ⚪️ | 27 | Skipped |
 | **Overview** | ⚪️ | 54 | Skipped |
-| **Skill 1: Determinate vs Indeterminate** | ⚪️ | 161 | Skipped |
-| **Skill 2: Motion Verb Pairs** | ⚪️ | 98 | Skipped |
-| **Skill 3: Prefix System** | ⚪️ | 185 | Skipped |
-| **Skill 4: Giving Directions** | ⚪️ | 144 | Skipped |
-| **Skill 5: Figurative Motion** | ⚪️ | 118 | Skipped |
+| **Skill 1: Determinate vs Indeterminate** | ⚪️ | 151 | Skipped |
+| **Skill 2: Motion Verb Pairs** | ⚪️ | 85 | Skipped |
+| **Skill 3: Prefix System** | ⚪️ | 172 | Skipped |
+| **Skill 4: Giving Directions** | ⚪️ | 132 | Skipped |
+| **Skill 5: Figurative Motion** | ⚪️ | 103 | Skipped |
 | **Integration Challenge** | ⚪️ | 180 | Skipped |
 | **Summary** | ✅ | 19 | Included in Core |
-| **Need More Practice?** | ⚪️ | 54 | Skipped |
+| **Need More Practice?** | ⚪️ | 92 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **fill-in: Motion Verb Selection** | 🎮 | 12 | Activity (12 items, min 6) |
 | **quiz: Motion Verb Theory** | 🎮 | 12 | Activity (12 items, min 8) |

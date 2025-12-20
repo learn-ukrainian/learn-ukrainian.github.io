@@ -3,12 +3,12 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1510/1500
+- **Words:** ✅ 1594/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
@@ -19,12 +19,14 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
+| **Пасивні дієприкметники минулого часу II** | ⚪️ | 28 | Skipped |
 | **Діагностика** | ✅ | 97 | Included in Core |
 | **Аналіз** | ✅ | 192 | Included in Core |
 | **Поглиблення** | ⚪️ | 183 | Skipped |
 | **Deeper Look: The Passive Voice of Manipulation** | ⚪️ | 106 | Skipped |
 | **Stylistic Nuance: Bureaucracy vs. Life** | ⚪️ | 75 | Skipped |
 | **Poetry of the Short Form** | ⚪️ | 213 | Skipped |
+| **Need More Practice?** | ⚪️ | 56 | Skipped |
 | **Практика** | ⚪️ | 33 | Skipped |
 | **Deeper Look: The Executed Renaissance** | ⚪️ | 84 | Skipped |
 | **Detailed Analysis: Common Mistakes** | ⚪️ | 69 | Skipped |

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1650/1500
+- **Words:** ✅ 1663/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -14,13 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 64.3% (target 40-68% (B1.1 Aspect))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
+- **Immersion:** 🇺🇦 64.2% (target 40-68% (B1.1 Aspect))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -34,7 +28,7 @@
 | **Поглиблення** | ⚪️ | 0 | Skipped |
 | **Коли вид змінює значення** | ⚪️ | 92 | Skipped |
 | **Негативні імперативи: Особливий випадок** | ⚪️ | 141 | Skipped |
-| **Need More Practice?** | ⚪️ | 67 | Skipped |
+| **Need More Practice?** | ⚪️ | 80 | Skipped |
 | **Практика** | ⚪️ | 0 | Skipped |
 | **Контрольована практика: Вибір виду** | ⚪️ | 239 | Skipped |
 | **Вправа на трансформацію** | ⚪️ | 112 | Skipped |

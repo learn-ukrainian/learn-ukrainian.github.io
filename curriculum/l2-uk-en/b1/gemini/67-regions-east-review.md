@@ -3,7 +3,7 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): суржик, технології, схід, ідентичність, університет...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): східний, заводи, ідентичність, наука, хокей...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -11,12 +11,12 @@
 
 - Borderline case (severity 55/100)
 - 1 pedagogical violations (minor)
-- Immersion 12% off target
+- Immersion 13% off target
 - Activity density below minimum
 - Vocabulary count below minimum
 
 ## Gates
-- **Words:** ❌ 1036/1500
+- **Words:** ❌ 1094/1500
 - **Activities:** ✅ 13/12
 - **Density:** ❌ 6 < 14
 - **Unique_types:** ✅ 10/4 types
@@ -27,7 +27,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 52.6% LOW (target 65-70% (B1.7-8 Ukraine))
+- **Immersion:** ❌ 51.9% LOW (target 65-70% (B1.7-8 Ukraine))
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
@@ -43,10 +43,11 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Українські регіони: Схід** | ⚪️ | 45 | Skipped |
+| **Українські регіони: Схід** | ⚪️ | 28 | Skipped |
 | **Діагностика** | ✅ | 140 | Included in Core |
 | **Аналіз** | ✅ | 562 | Included in Core |
 | **Поглиблення** | ⚪️ | 182 | Skipped |
+| **Need More Practice?** | ⚪️ | 75 | Skipped |
 | **Практика** | ⚪️ | 107 | Skipped |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Повторення (М66)** | 🎮 | 3 | Activity (3 items, min 8) |

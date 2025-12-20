@@ -3,22 +3,23 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1509/1500
+- **Words:** ✅ 1592/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/5
+- **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 44.3% (target 40-68% (B1.3-4 Complex))
+- **Immersion:** 🇺🇦 44.2% (target 40-68% (B1.3-4 Complex))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
+| **Пасивні дієприкметники минулого часу I** | ⚪️ | 27 | Skipped |
 | **Діагностика** | ✅ | 119 | Included in Core |
 | **Аналіз** | ✅ | 251 | Included in Core |
 | **Поглиблення** | ⚪️ | 205 | Skipped |
@@ -27,6 +28,7 @@
 | **The Culinary Kitchen: Participles at Work** | ⚪️ | 195 | Skipped |
 | **Deeper Look: The Passive Worldview** | ⚪️ | 114 | Skipped |
 | **Stylistic Nuance: Formal vs. Personal** | ⚪️ | 71 | Skipped |
+| **Need More Practice?** | ⚪️ | 56 | Skipped |
 | **Практика** | ⚪️ | 147 | Skipped |
 | **Summary** | ✅ | 77 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |

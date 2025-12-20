@@ -3,7 +3,7 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): традиція, площа, ерник, кава, франківщина...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): кава, ерник, австро, спадщина, угорський...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -16,7 +16,7 @@
 - Vocabulary count below minimum
 
 ## Gates
-- **Words:** ❌ 1110/1500
+- **Words:** ❌ 1158/1500
 - **Activities:** ✅ 12/12
 - **Density:** ❌ 3 < 14
 - **Unique_types:** ✅ 10/4 types
@@ -27,7 +27,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 53.5% LOW (target 65-70% (B1.7-8 Ukraine))
+- **Immersion:** ❌ 52.9% LOW (target 65-70% (B1.7-8 Ukraine))
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
@@ -40,10 +40,11 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Українські регіони: Захід** | ⚪️ | 52 | Skipped |
+| **Українські регіони: Захід** | ⚪️ | 25 | Skipped |
 | **Діагностика** | ✅ | 139 | Included in Core |
 | **Аналіз** | ✅ | 559 | Included in Core |
 | **Поглиблення** | ⚪️ | 253 | Skipped |
+| **Need More Practice?** | ⚪️ | 75 | Skipped |
 | **Практика** | ⚪️ | 107 | Skipped |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Повторення (М65)** | 🎮 | 3 | Activity (3 items, min 8) |

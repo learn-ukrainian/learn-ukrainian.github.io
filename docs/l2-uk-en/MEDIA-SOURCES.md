@@ -61,6 +61,7 @@ This document tracks all external media sources used in the curriculum, their pe
 |---------|-----|--------------|--------|----------|
 | Alpha Centauri | https://youtube.com/@theACentauri | Space, science vlog | ❓ TBD | B2-C1 science |
 | Цікава наука | https://youtube.com/@... | Science education | ❓ TBD | B2 technical |
+| All-Ukrainian School Online | https://www.youtube.com/@ukrainian-online-school | School lessons (All subjects) | ❓ TBD | B1-B2 academic immersion |
 
 #### Food & Lifestyle (A2-B2)
 

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1408/800
+- **Words:** ✅ 1505/800
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 70.1% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 70.7% (checkpoint - no gate)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -25,6 +25,7 @@
 | **Skill 3: Technology & Sports** | ⚪️ | 276 | Skipped |
 | **Skill 4: Ukrainian Cuisine** | ⚪️ | 212 | Skipped |
 | **Integration Challenge** | ⚪️ | 152 | Skipped |
+| **Need More Practice?** | ⚪️ | 97 | Skipped |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Регіони України** | 🎮 | 8 | Activity (8 items, min 8) |
 | **quiz: Українська культура** | 🎮 | 8 | Activity (8 items, min 8) |
@@ -36,7 +37,6 @@
 | **unjumble: Речення про Україну** | 🎮 | 8 | Activity (8 items, min 6) |
 | **cloze: Україна сьогодні** | 🎮 | 8 | Activity (8 items, min 6) |
 | **select: Правильні твердження** | 🎮 | 6 | Activity (6 items, min 6) |
-| **group-sort: Категоризація** | 🎮 | 8 | Activity (8 items, min 8) |
+| **group-sort: Категоризація** | 🎮 | 32 | Activity (32 items, min 8) |
 | **Summary** | ✅ | 0 | Included in Core |
-| **Need More Practice?** | ⚪️ | 88 | Skipped |
 | **Словник** | ⚪️ | 0 | Skipped |

@@ -150,6 +150,7 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 | Channel | URL | Content Type | Status | C1 Use |
 |---------|-----|--------------|--------|--------|
 | Alpha Centauri | youtube.com/@theACentauri | Space, astronomy | ❓ TBD | C1.1 academic Ukrainian |
+| All-Ukrainian School Online | youtube.com/@ukrainian-online-school | School curriculum | ❓ TBD | C1.1 academic context |
 
 #### Food & Lifestyle Channels
 

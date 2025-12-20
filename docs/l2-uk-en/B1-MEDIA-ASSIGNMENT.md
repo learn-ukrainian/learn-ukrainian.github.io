@@ -97,6 +97,7 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 | **Ukrainian Language** | `@LearnUkrainianLanguage` | Grammar lessons |
 | **Speak Ukrainian** | `@speakukrainian` | Comprehensive grammar |
 | **Olga Reznikova** | `@OlgaReznikova` | Wide variety (233K subs) |
+| **All-Ukrainian School Online** | `@ukrainian-online-school` | School curriculum (History, Literature) |
 
 ### Finding YouTube Videos with yt-dlp
 

@@ -11,7 +11,7 @@
 - Vocabulary count below minimum
 
 ## Gates
-- **Words:** ❌ 553/1500
+- **Words:** ❌ 610/1500
 - **Activities:** ❌ 9/12
 - **Density:** ❌ 4 < 14
 - **Unique_types:** ✅ 9/4 types
@@ -22,7 +22,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 64.0% LOW (target 65-70% (B1.7-8 Ukraine))
+- **Immersion:** ❌ 62.9% LOW (target 65-70% (B1.7-8 Ukraine))
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
@@ -36,11 +36,12 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Інтерв'ю та подкасти** | ⚪️ | 46 | Skipped |
+| **Інтерв'ю та подкасти** | ⚪️ | 29 | Skipped |
 | **Діагностика: Ваш досвід із подкастами** | ✅ | 57 | Included in Core |
 | **Аналіз: Interview Format** | ✅ | 72 | Included in Core |
 | **Поглиблення: Listening Skills** | ⚪️ | 120 | Skipped |
 | **Стратегії слухання** | ⚪️ | 116 | Skipped |
+| **Need More Practice?** | ⚪️ | 74 | Skipped |
 | **Практика: Podcast Listening** | ⚪️ | 75 | Skipped |
 | **Підсумок** | ✅ | 67 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |

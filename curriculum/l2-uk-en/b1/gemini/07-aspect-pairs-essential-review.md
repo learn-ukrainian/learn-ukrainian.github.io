@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1645/1500
+- **Words:** ✅ 1658/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -14,13 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 56.2% (target 40-68% (B1.1 Aspect))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
+- **Immersion:** 🇺🇦 56.0% (target 40-68% (B1.1 Aspect))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -36,7 +30,7 @@
 | **Applying Aspect Pairs in Real Conversations** | ✅ | 52 | Included in Core |
 | **Діалог: На роботі** | ✅ | 102 | Included in Core |
 | **Діалог: У магазині** | ✅ | 249 | Included in Core |
-| **Need More Practice?** | ⚪️ | 67 | Skipped |
+| **Need More Practice?** | ⚪️ | 80 | Skipped |
 | **Практика** | ⚪️ | 0 | Skipped |
 | **The Practice Strategy** | ⚪️ | 52 | Skipped |
 | **Вправа 1: Доповніть пари** | ⚪️ | 14 | Skipped |

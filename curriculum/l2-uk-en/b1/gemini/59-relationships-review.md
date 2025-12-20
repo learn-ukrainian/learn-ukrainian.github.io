@@ -1,10 +1,10 @@
 # Audit Report: 59-relationships.md
 **Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
-**Overall Status:** ❌ FAIL
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ❌ 1256/1500
-- **Activities:** ✅ 13/12
+- **Words:** ✅ 1587/1500
+- **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
@@ -14,18 +14,18 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 56.6% LOW (target 60-65% (B1.5-6 Vocab))
+- **Immersion:** 🇺🇦 62.2% (target 60-65% (B1.5-6 Vocab))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Стосунки** | ⚪️ | 92 | Skipped |
+| **Стосунки** | ⚪️ | 65 | Skipped |
 | **Діагностика** | ✅ | 169 | Included in Core |
-| **Аналіз** | ✅ | 856 | Included in Core |
-| **Поглиблення** | ⚪️ | 79 | Skipped |
+| **Аналіз** | ✅ | 854 | Included in Core |
+| **Поглиблення** | ⚪️ | 385 | Skipped |
 | **Підсумок** | ✅ | 60 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **quiz: Повторення (М58)** | 🎮 | 8 | Activity (8 items, min 8) |
+| **Need More Practice?** | ⚪️ | 54 | Skipped |
+| **Activities** | ➖ | 237 | Excluded Type |
 | **match-up: Стосунки — Relationships** | 🎮 | 12 | Activity (12 items, min 8) |
 | **fill-in: Опис стосунків** | 🎮 | 8 | Activity (8 items, min 8) |
 | **group-sort: Позитивні vs Негативні** | 🎮 | 15 | Activity (15 items, min 8) |

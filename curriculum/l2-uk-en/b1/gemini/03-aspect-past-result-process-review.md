@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 2693/1500 (>2500 may be too long)
+- **Words:** ⚠️ 2706/1500 (>2500 may be too long)
 - **Activities:** ✅ 15/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -14,13 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 60.1% (target 40-68% (B1.1 Aspect))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
+- **Immersion:** 🇺🇦 60.0% (target 40-68% (B1.1 Aspect))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -33,7 +27,7 @@
 | **Practice** | ⚪️ | 254 | Skipped |
 | **Summary** | ✅ | 0 | Included in Core |
 | **What You've Learned: A Framework for Process vs Result** | ⚪️ | 269 | Skipped |
-| **Need More Practice?** | ⚪️ | 67 | Skipped |
+| **Need More Practice?** | ⚪️ | 80 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **quiz: Процес чи результат** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Маркери та види** | 🎮 | 14 | Activity (14 items, min 8) |

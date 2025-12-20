@@ -1,34 +1,31 @@
 # Audit Report: 51-discourse-markers-advanced.md
 **Phase:** B1 | **Level:** B1 | **Pedagogy:** "PPP" | **Target:** 1500
-**Overall Status:** ❌ FAIL
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- Immersion 7% off target (minor)
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1508/1500
+- **Words:** ✅ 1905/1500
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/30
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 71.7% HIGH (target 60-65% (B1.5-6 Vocab))
+- **Immersion:** 🇺🇦 63.9% (target 60-65% (B1.5-6 Vocab))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Діагностика** | ✅ | 168 | Included in Core |
-| **Аналіз** | ✅ | 364 | Included in Core |
+| **Дискурсивні маркери II — Складна організація тексту** | ✅ | 31 | Included in Core |
+| **Діагностика** | ✅ | 223 | Included in Core |
+| **Аналіз** | ✅ | 474 | Included in Core |
 | **Поглиблення** | ⚪️ | 310 | Skipped |
+| **Need More Practice?** | ⚪️ | 72 | Skipped |
 | **Практика** | ⚪️ | 520 | Skipped |
-| **Підсумок** | ✅ | 146 | Included in Core |
+| **Summary: Key Takeaways** | ✅ | 275 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Категорії маркерів** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Переклад маркерів** | 🎮 | 14 | Activity (14 items, min 8) |

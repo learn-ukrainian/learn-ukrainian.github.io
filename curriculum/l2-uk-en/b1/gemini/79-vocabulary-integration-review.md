@@ -16,7 +16,7 @@
 - Vocabulary count below minimum
 
 ## Gates
-- **Words:** ❌ 237/1500
+- **Words:** ❌ 311/1500
 - **Activities:** ❌ 11/12
 - **Density:** ❌ 5 < 14
 - **Unique_types:** ✅ 8/4 types
@@ -27,7 +27,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Immersion:** ❌ 64.0% LOW (target 65-70% (B1.7-8 Ukraine))
+- **Immersion:** ❌ 61.6% LOW (target 65-70% (B1.7-8 Ukraine))
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
@@ -50,6 +50,7 @@
 | **Частина 4: Регіони та подорожі** | ⚪️ | 15 | Skipped |
 | **Частина 5: Сучасна Україна** | ⚪️ | 15 | Skipped |
 | **Підсумок** | ✅ | 63 | Included in Core |
+| **Need More Practice?** | ⚪️ | 74 | Skipped |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Абстрактні поняття** | 🎮 | 5 | Activity (5 items, min 8) |
 | **quiz: Медіа та суспільство** | 🎮 | 5 | Activity (5 items, min 8) |

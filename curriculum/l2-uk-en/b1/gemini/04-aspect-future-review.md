@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 2015/1500
+- **Words:** ✅ 2028/1500
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -14,13 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 52.2% (target 40-68% (B1.1 Aspect))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (15 interactive elements)
+- **Immersion:** 🇺🇦 52.1% (target 40-68% (B1.1 Aspect))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -31,7 +25,7 @@
 | **Deep Dive** | ✅ | 749 | Included in Core |
 | **Practice** | ⚪️ | 268 | Skipped |
 | **Summary** | ✅ | 236 | Included in Core |
-| **Need More Practice?** | ⚪️ | 67 | Skipped |
+| **Need More Practice?** | ⚪️ | 80 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **quiz: Three Future Forms** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Future Time Markers** | 🎮 | 14 | Activity (14 items, min 8) |

@@ -1,47 +1,32 @@
 # Audit Report: 63-synonymy-speaking-verbs.md
 **Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
-**Overall Status:** ❌ FAIL
-
-## Recommendation
-**📝 UPDATE** (severity 30/100)
-
-- Borderline case (severity 30/100)
-- Activity density below minimum
-- Vocabulary count below minimum
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ❌ 1493/1500
+- **Words:** ✅ 1547/1500
 - **Activities:** ✅ 14/12
-- **Density:** ❌ 4 < 14
+- **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ❌ 20 < 30
+- **Vocab:** ✅ 30/30
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 56.9% LOW (target 60-65% (B1.5-6 Vocab))
-
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-| quiz: Повторення (М62) | quiz | 3 | 8 | Add 5 more items |
-| group-sort: Категорії дієслів мовлення | group-sort | 4 | 8 | Add 4 more items |
-| mark-the-words: Знайдіть дієслова мовлення | mark-the-words | 0 | 6 | Add 6 more items |
-| dialogue-reorder: Ділова розмова | dialogue-reorder | 4 | 5 | Add 1 more items |
-
+- **Immersion:** 🇺🇦 64.8% (target 60-65% (B1.5-6 Vocab))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Синоніми II: Дієслова мовлення** | ⚪️ | 27 | Skipped |
 | **Діагностика** | ✅ | 143 | Included in Core |
-| **Аналіз** | ✅ | 797 | Included in Core |
-| **Поглиблення** | ⚪️ | 403 | Skipped |
+| **Аналіз** | ✅ | 786 | Included in Core |
+| **Поглиблення** | ⚪️ | 398 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 70 | Skipped |
 | **Практика** | ⚪️ | 123 | Skipped |
 | **Вправи** | ⚪️ | 0 | Skipped |
-| **quiz: Повторення (М62)** | 🎮 | 3 | Activity (3 items, min 8) |
+| **quiz: Повторення (М62)** | 🎮 | 8 | Activity (8 items, min 8) |
 | **quiz: Базові дієслова мовлення** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Дієслова та значення** | 🎮 | 14 | Activity (14 items, min 8) |
 | **fill-in: Правильне дієслово мовлення** | 🎮 | 14 | Activity (14 items, min 8) |
@@ -50,10 +35,10 @@
 | **error-correction: Помилки у дієсловах мовлення** | 🎮 | 14 | Activity (14 items, min 6) |
 | **cloze: Переказ зустрічі** | 🎮 | 8 | Activity (8 items, min 6) |
 | **translate: Переклад дієслів мовлення** | 🎮 | 14 | Activity (14 items, min 6) |
-| **group-sort: Категорії дієслів мовлення** | 🎮 | 4 | Activity (4 items, min 8) |
-| **mark-the-words: Знайдіть дієслова мовлення** | 🎮 | 0 | Activity (0 items, min 6) |
-| **dialogue-reorder: Ділова розмова** | 🎮 | 4 | Activity (4 items, min 5) |
+| **group-sort: Категорії дієслів мовлення** | 🎮 | 8 | Activity (8 items, min 8) |
+| **mark-the-words: Знайдіть дієслова мовлення** | 🎮 | 7 | Activity (7 items, min 6) |
+| **dialogue-reorder: Ділова розмова** | 🎮 | 5 | Activity (5 items, min 5) |
 | **select: Вибір правильного дієслова** | 🎮 | 6 | Activity (6 items, min 6) |
 | **true-false: Факти про дієслова мовлення** | 🎮 | 14 | Activity (14 items, min 8) |
-| **Підсумок** | ✅ | 79 | Included in Core |
+| **Summary** | ✅ | 78 | Included in Core |
 | **Словник** | ⚪️ | 0 | Skipped |

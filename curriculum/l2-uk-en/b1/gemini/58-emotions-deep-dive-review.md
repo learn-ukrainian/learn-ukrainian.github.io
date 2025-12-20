@@ -3,8 +3,8 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1508/1500
-- **Activities:** ✅ 13/12
+- **Words:** ✅ 1535/1500
+- **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
@@ -14,21 +14,18 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 60.2% (target 60-65% (B1.5-6 Vocab))
-
-## MDX VALIDATION
-✅ No issues found
+- **Immersion:** 🇺🇦 60.3% (target 60-65% (B1.5-6 Vocab))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Емоції — глибоке занурення** | ✅ | 94 | Included in Core |
+| **Емоції — глибоке занурення** | ✅ | 68 | Included in Core |
 | **Діагностика** | ✅ | 178 | Included in Core |
 | **Аналіз** | ✅ | 950 | Included in Core |
 | **Поглиблення** | ⚪️ | 228 | Skipped |
 | **Підсумок** | ✅ | 58 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **quiz: Повторення (М57)** | 🎮 | 8 | Activity (8 items, min 8) |
+| **Need More Practice?** | ⚪️ | 53 | Skipped |
+| **Activities** | ➖ | 227 | Excluded Type |
 | **match-up: Емоції — Emotions** | 🎮 | 14 | Activity (14 items, min 8) |
 | **fill-in: Опис емоцій** | 🎮 | 8 | Activity (8 items, min 8) |
 | **group-sort: Позитивні vs Негативні** | 🎮 | 15 | Activity (15 items, min 8) |

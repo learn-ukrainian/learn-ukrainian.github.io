@@ -3,12 +3,12 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1545/1500
+- **Words:** ✅ 1630/1500
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 12/5
+- **Engagement:** ✅ 13/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
@@ -19,9 +19,11 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
+| **Дієприслівники недоконаного виду** | ⚪️ | 29 | Skipped |
 | **Діагностика** | ✅ | 138 | Included in Core |
 | **Аналіз** | ✅ | 445 | Included in Core |
 | **Поглиблення** | ⚪️ | 709 | Skipped |
+| **Need More Practice?** | ⚪️ | 56 | Skipped |
 | **Практика** | ⚪️ | 183 | Skipped |
 | **Summary** | ✅ | 70 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |

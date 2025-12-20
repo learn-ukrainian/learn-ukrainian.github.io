@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 3852/1500 (>2500 may be too long)
+- **Words:** ⚠️ 3932/1500 (>2500 may be too long)
 - **Activities:** ✅ 15/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -14,13 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 50.4% (target 40-68% (B1.1 Aspect))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
+- **Immersion:** 🇺🇦 50.3% (target 40-68% (B1.1 Aspect))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -31,8 +25,8 @@
 | **Deep Dive** | ✅ | 1474 | Included in Core |
 | **Practice** | ⚪️ | 661 | Skipped |
 | **Summary** | ✅ | 464 | Included in Core |
+| **Need More Practice?** | ⚪️ | 80 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
-| **Need More Practice?** | ⚪️ | 67 | Skipped |
 | **quiz: Визначення виду** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Аспектні пари** | 🎮 | 14 | Activity (14 items, min 8) |
 | **fill-in: Вибір виду в контексті** | 🎮 | 14 | Activity (14 items, min 8) |

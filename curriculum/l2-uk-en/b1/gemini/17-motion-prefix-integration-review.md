@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1609/1500
+- **Words:** ✅ 1621/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -16,12 +16,6 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 56.0% (target 40-68% (B1.2 Motion))
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -33,7 +27,7 @@
 | **Поглиблення** | ⚪️ | 0 | Skipped |
 | **Combining Multiple Directions: Complex Movements** | ✅ | 252 | Included in Core |
 | **Practice Dialogues: Prefixes in Context** | ✅ | 194 | Included in Core |
-| **Need More Practice?** | ⚪️ | 66 | Skipped |
+| **Need More Practice?** | ⚪️ | 78 | Skipped |
 | **Практика** | ⚪️ | 0 | Skipped |
 | **Exercise 1: Prefix Prediction** | ⚪️ | 65 | Skipped |
 | **Exercise 2: Complete the Journey** | ⚪️ | 223 | Skipped |

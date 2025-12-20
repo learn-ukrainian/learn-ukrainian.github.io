@@ -3,7 +3,7 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): русь, лісостеп, полтава, центральний, центр...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): черкаси, хутір, центральний, традиційний, вишиванка...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -11,12 +11,12 @@
 
 - Borderline case (severity 55/100)
 - 1 pedagogical violations (minor)
-- Immersion 13% off target
+- Immersion 14% off target
 - Activity density below minimum
 - Vocabulary count below minimum
 
 ## Gates
-- **Words:** ❌ 966/1500
+- **Words:** ❌ 1024/1500
 - **Activities:** ✅ 13/12
 - **Density:** ❌ 5 < 14
 - **Unique_types:** ✅ 10/4 types
@@ -27,7 +27,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 52.1% LOW (target 65-70% (B1.7-8 Ukraine))
+- **Immersion:** ❌ 51.3% LOW (target 65-70% (B1.7-8 Ukraine))
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
@@ -42,10 +42,11 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Українські регіони: Центр** | ⚪️ | 42 | Skipped |
+| **Українські регіони: Центр** | ⚪️ | 25 | Skipped |
 | **Діагностика** | ✅ | 126 | Included in Core |
 | **Аналіз** | ✅ | 653 | Included in Core |
 | **Поглиблення** | ⚪️ | 33 | Skipped |
+| **Need More Practice?** | ⚪️ | 75 | Skipped |
 | **Практика** | ⚪️ | 112 | Skipped |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Повторення (М68)** | 🎮 | 3 | Activity (3 items, min 8) |
