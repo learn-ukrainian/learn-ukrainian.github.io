@@ -37,7 +37,7 @@ This checkpoint reviews skills from Modules 01-09:
 
 ## Skill 1: Process vs Result
 
-**Model:**
+### Model:
 
 > Учора я **писав** листа дві години.
 > (Yesterday I **was writing** a letter for two hours.)
@@ -45,11 +45,11 @@ This checkpoint reviews skills from Modules 01-09:
 > Учора я **написав** листа.
 > (Yesterday I **wrote** [completed] a letter.)
 
-**Notice:**
+### Notice:
 - **писав** (imperfective) — focuses on the process, duration
 - **написав** (perfective) — focuses on the result, completion
 
-**Practice:** Which aspect fits the context?
+### Practice: Which aspect fits the context?
 
 1. Я весь день ___ (працювати). — all day = duration
 2. Нарешті я ___ (закінчити) проєкт! — finally = result
@@ -66,7 +66,7 @@ This checkpoint reviews skills from Modules 01-09:
 
 </details>
 
-**Self-Check:**
+### Self-Check
 - ☐ Did you use imperfective for all duration markers?
 - ☐ Did you use perfective for results?
 
@@ -78,7 +78,7 @@ This checkpoint reviews skills from Modules 01-09:
 
 ## Skill 2: Past Tense Patterns
 
-**Model — Single vs Repeated:**
+### Model: Single vs Repeated:**
 
 > Він **приходив** щодня.
 > (He **used to come** every day.) — repeated
@@ -86,7 +86,7 @@ This checkpoint reviews skills from Modules 01-09:
 > Він **прийшов** о п'ятій.
 > (He **came** at five.) — single event
 
-**Model — Background vs Sequence:**
+### Model: Background vs Sequence:**
 
 > Поки вона **читала**, він **прийшов**.
 > (While she **was reading**, he **arrived**.)
@@ -94,7 +94,7 @@ This checkpoint reviews skills from Modules 01-09:
 > Спочатку **поснідав**, потім **пішов** на роботу.
 > (First **had breakfast**, then **went** to work.)
 
-**Practice:** Choose the correct form:
+### Practice: Choose the correct form:
 
 1. Вона завжди ___ (допомагати) мені. — always = repeated
 2. Коли він ___ (закінчити), ми поговорили. — when finished = sequence
@@ -111,7 +111,7 @@ This checkpoint reviews skills from Modules 01-09:
 
 </details>
 
-**Self-Check:**
+### Self-Check
 - ☐ Did you use imperfective for repeated actions?
 - ☐ Did you use perfective for sequences?
 - ☐ Did you use imperfective for background actions?
@@ -120,7 +120,7 @@ This checkpoint reviews skills from Modules 01-09:
 
 ## Skill 3: Negation Patterns
 
-**Model — "Not yet" vs "Never":**
+### Model: "Not yet" vs "Never":**
 
 > Я **ще не прочитав** цю книгу.
 > (I **haven't read** this book **yet**.) — perfective
@@ -132,7 +132,7 @@ This checkpoint reviews skills from Modules 01-09:
 - "ще не" (not yet) → **perfective** (result pending)
 - "ніколи не" (never) → **imperfective** (no experience)
 
-**Practice:** Fill in the correct form:
+### Practice: Fill in the correct form:
 
 1. Я ще не ___ (закінчити) роботу. — not yet
 2. Вона ніколи не ___ (бути) в Україні. — never
@@ -149,7 +149,7 @@ This checkpoint reviews skills from Modules 01-09:
 
 </details>
 
-**Self-Check:**
+### Self-Check
 - ☐ Did you use perfective after "ще не"?
 - ☐ Did you use imperfective after "ніколи не"?
 
@@ -157,7 +157,7 @@ This checkpoint reviews skills from Modules 01-09:
 
 ## Skill 4: Imperative Patterns
 
-**Model — Invitations vs Commands:**
+### Model: Invitations vs Commands:**
 
 > **Заходьте!** Сідайте!
 > (**Come in!** Sit down!) — invitation = imperfective
@@ -165,7 +165,7 @@ This checkpoint reviews skills from Modules 01-09:
 > **Напиши** звіт до п'ятниці!
 > (**Write** the report by Friday!) — specific task = perfective
 
-**Model — Prohibitions vs Warnings:**
+### Model: Prohibitions vs Warnings:**
 
 > **Не торкайся** плити!
 > (**Don't touch** the stove!) — prohibition = imperfective
@@ -173,7 +173,7 @@ This checkpoint reviews skills from Modules 01-09:
 > **Не забудь** ключі!
 > (**Don't forget** the keys!) — point event = perfective (exception!)
 
-**Practice:** Choose the correct imperative:
+### Practice: Choose the correct imperative:
 
 1. ___ (Заходити)! — welcoming a guest
 2. ___ (Не торкатися) документів! — prohibition
@@ -190,7 +190,7 @@ This checkpoint reviews skills from Modules 01-09:
 
 </details>
 
-**Self-Check:**
+### Self-Check
 - ☐ Did you use imperfective for invitations?
 - ☐ Did you use imperfective for prohibitions?
 - ☐ Did you recognize "не забути" as an exception?
@@ -203,7 +203,7 @@ This checkpoint reviews skills from Modules 01-09:
 
 ## Skill 5: Aspect in Narratives
 
-**Model:**
+### Model:
 
 > Олександр давно **мріяв** про подорож. Минулого року він **накопичив** гроші і **купив** квитки. Три місяці він **вивчав** японську. Коли він **приїхав** до Токіо, він був схвильований.
 
@@ -211,7 +211,7 @@ This checkpoint reviews skills from Modules 01-09:
 - **мріяв, вивчав** (imperfective) — background, duration
 - **накопичив, купив, приїхав** (perfective) — plot points, results
 
-**Practice:** Identify aspect function in each sentence:
+### Practice: Identify aspect function in each sentence:
 
 1. Вона **працювала** в офісі, коли **зателефонував** шеф.
 2. Спочатку **поснідав**, потім **поїхав** на роботу.
@@ -228,7 +228,7 @@ This checkpoint reviews skills from Modules 01-09:
 
 </details>
 
-**Self-Check:**
+### Self-Check
 - ☐ Can you identify background vs plot point?
 - ☐ Can you use perfective for sequences?
 - ☐ Do you recognize duration → result patterns?

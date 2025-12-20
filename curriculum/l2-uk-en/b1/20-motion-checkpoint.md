@@ -37,7 +37,7 @@ This checkpoint reviews skills from Modules 11-19:
 
 ## Skill 1: Determinate vs Indeterminate
 
-**Model:**
+### Model:
 
 > Я **йду** до магазину.
 > (I **am going** to the store.) — single, directional
@@ -45,11 +45,11 @@ This checkpoint reviews skills from Modules 11-19:
 > Я **ходжу** до магазину щодня.
 > (I **go** to the store every day.) — repeated, habitual
 
-**Notice:**
+### Notice:
 - **йду** (determinate) — one trip, specific direction
 - **ходжу** (indeterminate) — repeated trips, general activity
 
-**Practice:** Choose determinate (Д) or indeterminate (І):
+### Practice: Choose determinate (Д) or indeterminate (І):
 
 1. Куди ти зараз ___? — "where are you going now?" = single trip
 2. Він часто ___ до бібліотеки. — "often" = repeated
@@ -66,7 +66,7 @@ This checkpoint reviews skills from Modules 11-19:
 
 </details>
 
-**Self-Check:**
+### Self-Check
 - ☐ Did you use determinate for single, directional movements?
 - ☐ Did you use indeterminate for repeated/habitual actions?
 
@@ -74,7 +74,7 @@ This checkpoint reviews skills from Modules 11-19:
 
 ## Skill 2: Motion Verb Pairs
 
-**Model — The 8 Core Pairs:**
+### Model: The 8 Core Pairs:**
 
 | Indeterminate | Determinate | English |
 |---------------|-------------|---------|
@@ -87,7 +87,7 @@ This checkpoint reviews skills from Modules 11-19:
 | водити | вести | to lead |
 | возити | везти | to transport |
 
-**Practice:** Fill in the correct verb:
+### Practice: Fill in the correct verb:
 
 1. Літак ___ (fly-DET) над Карпатами. — in flight now
 2. Він часто ___ (run-IND) вранці. — regularly
@@ -104,7 +104,7 @@ This checkpoint reviews skills from Modules 11-19:
 
 </details>
 
-**Self-Check:**
+### Self-Check
 - ☐ Can you recall all 8 pairs from memory?
 - ☐ Do you recognize the phonetic patterns (іти/йти, їхати, бігти...)?
 
@@ -112,7 +112,7 @@ This checkpoint reviews skills from Modules 11-19:
 
 ## Skill 3: Prefix System
 
-**Model — Direction Through Prefixes:**
+### Model: Direction Through Prefixes:**
 
 > Він **вийшов** з кімнати.
 > (He **went out** of the room.) — ви- = out
@@ -138,7 +138,7 @@ This checkpoint reviews skills from Modules 11-19:
 | під- | approach | підійти, під'їхати |
 | об- | around | обійти, об'їхати |
 
-**Practice:** Complete with the correct prefixed verb:
+### Practice: Complete with the correct prefixed verb:
 
 1. Поїзд ___ (arrive) о п'ятій. — arriving
 2. Ми ___ (cross) вулицю. — crossing
@@ -155,7 +155,7 @@ This checkpoint reviews skills from Modules 11-19:
 
 </details>
 
-**Self-Check:**
+### Self-Check
 - ☐ Can you predict prefix meanings from context?
 - ☐ Do you understand both literal and figurative uses?
 
@@ -167,12 +167,12 @@ This checkpoint reviews skills from Modules 11-19:
 
 ## Skill 4: Giving Directions
 
-**Model — Ukrainian Navigation:**
+### Model: Ukrainian Navigation:**
 
 > **Вийдіть** з метро. **Перейдіть** вулицю. **Пройдіть** прямо. **Підійдіть** до церкви.
 > (Exit the metro. Cross the street. Go straight. Approach the church.)
 
-**Practice:** Complete the directions to Софійський собор:
+### Practice: Complete the directions to Софійський собор:
 
 > ___ (Exit) з метро "Золоті ворота".
 > ___ (Cross) вулицю Володимирську.
@@ -191,7 +191,7 @@ This checkpoint reviews skills from Modules 11-19:
 
 </details>
 
-**Self-Check:**
+### Self-Check
 - ☐ Can you give directions using appropriate motion imperatives?
 - ☐ Do you know the case requirements after each prefix?
 
@@ -203,7 +203,7 @@ This checkpoint reviews skills from Modules 11-19:
 
 ## Skill 5: Figurative Motion
 
-**Model — Prefixes Beyond Physical Motion:**
+### Model: Prefixes Beyond Physical Motion:**
 
 Motion prefixes extend to non-motion verbs, preserving their directional meaning:
 
@@ -215,7 +215,7 @@ Motion prefixes extend to non-motion verbs, preserving their directional meaning
 | заговорити | to start speaking | step INTO speech |
 | дослідити | to research | reach TO knowledge |
 
-**Practice:** Match the prefixed verb to its meaning:
+### Practice: Match the prefixed verb to its meaning:
 
 1. проаналізувати — a) to enter (a field)
 2. доїсти — b) to finish eating
@@ -232,7 +232,7 @@ Motion prefixes extend to non-motion verbs, preserving their directional meaning
 
 </details>
 
-**Self-Check:**
+### Self-Check
 - ☐ Can you recognize motion prefixes in abstract verbs?
 - ☐ Can you predict meanings of unfamiliar prefixed verbs?
 
