@@ -23,39 +23,183 @@ vocabulary_count: 20
 >
 > Складні речення — серце B1. Цей контрольний модуль перевіряє всі типи підрядних: відносні, мети, умовні, допустові, причинові, часові, непряма мова. Готові?
 
-## Діагностика
+This checkpoint reviews **four core skills** from Phase B1.3 (Modules 21-34):
 
-## Pre-Test Self-Assessment
+- **Skill 1:** Relative & Purpose Clauses (який, де, куди, звідки; щоб)
+- **Skill 2:** Conditionals (якщо, якби)
+- **Skill 3:** Temporal & Concessive Clauses (коли, поки, хоча)
+- **Skill 4:** Reported Speech (що, чи, щоб)
 
-Before the checkpoint, assess your readiness honestly. This phase covered a wide range of complex sentence structures. How confident are you?
-
-**Can you confidently...?**
-
-- [ ] Form relative clauses with який, де, куди, звідки, коли, що
-- [ ] Express purpose using щоб + infinitive (same subject) and щоб + past (different subjects)
-- [ ] Create real conditionals (якщо + future/present) and unreal conditionals (якби + past)
-- [ ] Use concessive clauses with хоча, незважаючи на те що, попри те що
-- [ ] Form causal clauses with бо, тому що, оскільки, через те що
-- [ ] Apply temporal clauses with коли, після того як, перш ніж, поки, як тільки
-- [ ] Convert direct speech to reported statements (що), questions (чи, question words), and commands (щоб)
-
-If you checked all boxes — you're ready! If not, review the relevant modules before proceeding.
-
----
-
-> 💡 **What This Checkpoint Tests**
+> [!myth-buster] 🔍 Myth Buster: "Ukrainian grammar is just simplified Russian"
 >
-> This checkpoint assesses your mastery of complex sentence structures from Modules 21-34. You've learned relative clauses, purpose clauses, conditionals, concessive clauses, causal clauses, temporal clauses, and reported speech. Now it's time to demonstrate that you can use these patterns accurately and naturally.
+> **Lie:** "Ukrainian subordinate structures are borrowed from Russian."
+>
+> **Truth:** Ukrainian has preserved unique clause patterns from Old Slavic that Russian simplified or lost. The modal particle **б** after **якби** traces to Church Slavonic, while Ukrainian's preference for **щоб + past tense** for subjunctive meaning is distinct from Russian's **чтобы + infinitive** pattern. These features predate the Russian literary language.
 
 ---
 
-**Why Complex Sentences Matter**
+## Skill 1: Relative & Purpose Clauses
 
-Complex sentences are the building blocks of sophisticated communication. Simple sentences convey basic information, but complex sentences express relationships: cause and effect, conditions and consequences, time sequences, purposes, and concessions. Without these structures, your Ukrainian sounds choppy and childlike. With them, you can express nuanced ideas and engage with authentic Ukrainian content.
+### Model: Підрядні відносні та мети
+
+> **Книга, яку я читаю, цікава.** (The book [which/that] I'm reading is interesting.)
+>
+> Notice: **яку** agrees with **книга** (feminine) in the Accusative case (object of читаю).
+
+| Connector | Function | Example |
+|-----------|----------|---------|
+| який/яка/яке/які | things, people (declines) | Книга, **яку** я читаю, цікава. |
+| де | location (where) | Місто, **де** я живу, велике. |
+| куди | direction (where to) | Країна, **куди** ми поїдемо, далеко. |
+| звідки | origin (from where) | Село, **звідки** він родом, гарне. |
+| коли | time (when) | День, **коли** ми зустрілися, був особливим. |
+| що | facts, abstract concepts | Те, **що** він сказав, здивувало мене. |
+
+**Purpose Clauses:**
+
+| Pattern | Usage | Example |
+|---------|-------|---------|
+| щоб + infinitive | Same subject | Я прийшов, **щоб** допомогти. |
+| щоб + past tense | Different subjects | Я прийшов, **щоб** він **допоміг**. |
+
+### Practice: Доповніть сполучником
+
+1. Книга, ___ я читаю, цікава. (which - Accusative)
+   > [!solution] **яку** — feminine Accusative, object of читаю
+
+2. Місто, ___ я живу, велике. (where - location)
+   > [!solution] **де** — location, not direction
+
+3. Країна, ___ ми поїдемо, далеко. (where to)
+   > [!solution] **куди** — direction
+
+4. Я прийшов, ___ допомогти. (to help - same subject)
+   > [!solution] **щоб** + infinitive (same subject)
+
+5. Я прийшов, ___ він мені допоміг. (so he would help - different subjects)
+   > [!solution] **щоб** + past (different subjects)
+
+### Self-Check
+
+- ☐ Can you decline **який** correctly in all cases?
+- ☐ Do you know when to use **де** vs **куди** vs **звідки**?
+- ☐ Can you apply **щоб + infinitive** (same subject) vs **щоб + past** (different subjects)?
 
 ---
 
-## Аналіз
+## Skill 2: Conditionals
+
+### Model: Умовні речення
+
+> **Якщо прийдеш, я буду радий.** (If you come, I'll be happy.) — Real condition
+>
+> **Якби я мав час, я б прийшов.** (If I had time, I would come.) — Unreal condition
+
+| Type | Structure | Example |
+|------|-----------|---------|
+| Real | якщо + present/future | **Якщо** підеш, я піду з тобою. |
+| Unreal | якби + past + б | **Якби** я мав час, я **б** прийшов. |
+
+### Practice: Якщо чи якби?
+
+1. ___ прийдеш завтра, зустрінемося. (if you come - real)
+   > [!solution] **Якщо** — real possibility
+
+2. ___ я мав гроші, я б купив машину. (if I had - unreal)
+   > [!solution] **Якби** — hypothetical situation
+
+3. ___ матимеш час, зателефонуй. (if you have time - real)
+   > [!solution] **Якщо** — real possibility
+
+4. ___ вона знала, вона б сказала. (if she knew - unreal)
+   > [!solution] **Якби** — contrary to fact
+
+### Self-Check
+
+- ☐ Can you distinguish **якщо** (real) from **якби** (unreal)?
+- ☐ Do you know where to place **б/би** in unreal conditionals?
+
+---
+
+## Skill 3: Temporal & Concessive Clauses
+
+### Model: Часові та допустові
+
+**Temporal:**
+| Connector | Meaning | Example |
+|-----------|---------|---------|
+| коли | when | **Коли** я прийшов, вона вже пішла. |
+| після того як | after | **Після того як** закінчу, зателефоную. |
+| перш ніж | before | **Перш ніж** піти, перевір все. |
+| поки | while | **Поки** я чекав, читав книгу. |
+
+**Concessive:**
+| Connector | Example |
+|-----------|---------|
+| хоча | **Хоча** було холодно, ми пішли. |
+| незважаючи на те що | **Незважаючи на те що** він хворий, він працює. |
+
+**Causal:**
+| Connector | Example |
+|-----------|---------|
+| бо | Він не прийшов, **бо** був зайнятий. |
+| тому що | Я запізнився, **тому що** був затор. |
+| оскільки | **Оскільки** ви тут, починаймо. |
+
+### Practice: Оберіть правильний сполучник
+
+1. ___ було холодно, ми пішли гуляти. (although)
+   > [!solution] **Хоча** — concessive
+
+2. Він не прийшов, ___ був хворий. (because)
+   > [!solution] **бо** — causal
+
+3. ___ закінчу роботу, зателефоную. (after)
+   > [!solution] **Після того як** — temporal
+
+4. ___ піти, перевір документи. (before)
+   > [!solution] **Перш ніж** — before action
+
+### Self-Check
+
+- ☐ Can you distinguish temporal connectors (коли, поки, перш ніж)?
+- ☐ Do you know **хоча** (concessive) from **бо** (causal)?
+
+---
+
+## Skill 4: Reported Speech
+
+### Model: Непряма мова
+
+| Type | Connector | Direct → Reported |
+|------|-----------|-------------------|
+| Statements | що | «Я прийду» → Він сказав, **що** прийде. |
+| Yes/No questions | чи | «Ти прийдеш?» → Він запитав, **чи** я прийду. |
+| Commands | щоб + past | «Зачекай!» → Він попросив, **щоб** я зачекав. |
+
+### Practice: Перетворіть на непряму мову
+
+1. Він сказав: «Я прийду.» → Він сказав, ___ прийде.
+   > [!solution] **що** — statement
+
+2. Він запитав: «Ти прийдеш?» → Він запитав, ___ я прийду.
+   > [!solution] **чи** — yes/no question
+
+3. Він попросив: «Зачекай!» → Він попросив, ___ я зачекав.
+   > [!solution] **щоб** — command/request
+
+4. Він запитав: «Де ти живеш?» → Він запитав, ___ я живу.
+   > [!solution] **де** — keep question word
+
+### Self-Check
+
+- ☐ Can you convert statements using **що**?
+- ☐ Do you use **чи** for yes/no questions?
+- ☐ Can you convert commands using **щоб + past**?
+
+---
+
+## Summary
 
 ## Master Summary: Complex Sentence Structures
 

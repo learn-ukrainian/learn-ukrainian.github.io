@@ -24,76 +24,194 @@ vocabulary_count: 15
 >
 > Просунута граматика B1: дієприслівники, дієприкметники, пасив, зменшувальні, складні числівники. Цей контрольний модуль перевіряє все. Готові до фінальної перевірки граматики?
 
-## Контрольна точка: просунута граматика
+This checkpoint reviews **four core skills** from Phase B1.4 (Modules 36-44):
 
-This checkpoint assesses your mastery of Phase B1.4 (Modules 36-44). You've learned adverbial participles, passive participles, passive constructions, diminutives, and numerals. Now it's time to demonstrate that knowledge.
+- **Skill 1:** Adverbial Participles (дієприслівники)
+- **Skill 2:** Passive Constructions (пасивні конструкції)
+- **Skill 3:** Diminutives (зменшувальні форми)
+- **Skill 4:** Numerals - Collective & Fractions (числівники)
 
-**What to Expect:** This checkpoint contains a comprehensive diagnostic test covering all major grammar concepts from Phase B1.4. Unlike regular modules, this is a cumulative assessment designed to help you identify areas that need additional review before moving to Phase B1.5. Take your time with each section and use the self-assessment tools provided to guide your continued learning.
-
-**How to Use This Checkpoint:** Start with the diagnostic section to identify your current level. Then review the analysis section for any areas where you scored below 80%. The practice dialogues demonstrate all concepts in natural contexts, and the exercises provide targeted practice for each grammar point.
+> [!myth-buster] 🔍 Myth Buster: "Ukrainian just copies Russian grammar"
+>
+> **Lie:** "Ukrainian participles are borrowed from Russian."
+>
+> **Truth:** Ukrainian has unique participle restrictions. While Russian freely uses active participles like *читающий* (reading), standard Ukrainian prefers relative clauses: *який читає*. Forms like *читаючий* are considered Russian calques and are avoided in normative Ukrainian. The Ukrainian **short-form passive** (-но/-то: прийнято, зроблено) is more productive than its Russian counterpart.
 
 ---
 
-## Діагностика
+## Skill 1: Adverbial Participles (Дієприслівники)
 
-> This diagnostic covers all major concepts from Phase B1.4.
+### Model: Дієприслівники недоконаного та доконаного виду
 
-**Part 1: Adverbial Participles (5 items)**
+> **Читаючи книгу, він робив нотатки.** (While reading the book, he was taking notes.)
+> — Imperfective adverbial participle (-учи/-ачи): simultaneous action
+>
+> **Прочитавши книгу, вона заснула.** (Having read the book, she fell asleep.)
+> — Perfective adverbial participle (-вши/-ши): completed prior action
 
-Transform each verb phrase into an adverbial participle construction:
+| Aspect | Suffix | Meaning | Example |
+|--------|--------|---------|---------|
+| Imperfective | -учи/-ючи, -ачи/-ячи | while doing | **читаючи** (while reading) |
+| Perfective | -вши/-ши | having done | **прочитавши** (having read) |
 
-1. Коли він читав книгу, він робив нотатки. → ___ книгу, він робив нотатки.
-2. Після того як вона закінчила роботу, вона пішла додому. → ___ роботу, вона пішла додому.
-3. Коли я йшов вулицею, я зустрів друга. → ___ вулицею, я зустрів друга.
-4. Після того як вони переглянули звіт, вони його схвалили. → ___ звіт, вони його схвалили.
-5. Поки вона слухала музику, вона прибирала кімнату. → ___ музику, вона прибирала кімнату.
+**Key Rule:** The subject of the adverbial participle must match the subject of the main clause!
+- ✅ **Прочитавши книгу, я задоволений.** (I read, I am satisfied)
+- ❌ **Прочитавши книгу, мені сподобалось.** (Different subjects!)
 
-**Expected answers:** 1. Читаючи, 2. Закінчивши, 3. Йдучи, 4. Переглянувши, 5. Слухаючи
+### Practice: Утворіть дієприслівник
 
-**Part 2: Passive Constructions (4 items)**
+1. читати (недок.) → ___ книгу, він усміхався.
+   > [!solution] **Читаючи** — imperfective, simultaneous action
 
-Identify the passive type (Full participle / Short form / Reflexive):
+2. написати (док.) → ___ листа, вона відправила його.
+   > [!solution] **Написавши** — perfective, completed prior action
 
-6. Звіт написаний директором. → ___
-7. Рішення прийнято. → ___
-8. Будинок будується. → ___
-9. Документи перевірено ретельно. → ___
+3. слухати (недок.) → ___ музику, вона працювала.
+   > [!solution] **Слухаючи** — imperfective
 
-**Expected answers:** 6. Full participle, 7. Short form, 8. Reflexive, 9. Short form
+4. завершити (док.) → ___ проєкт, ми святкували.
+   > [!solution] **Завершивши** — perfective
 
-**Part 3: Diminutives (4 items)**
+### Self-Check
 
-What function does the diminutive serve? (Affection / Politeness / Size / Irony)
+- ☐ Can you form imperfective participles (-учи/-ачи)?
+- ☐ Can you form perfective participles (-вши/-ши)?
+- ☐ Do you ensure same subject in both clauses?
 
-10. Синочку, іди сюди! → ___
-11. Дайте водички, будь ласка. → ___
-12. От це проблемка у нас! → ___
-13. Купила столик для тераси. → ___
+---
 
-**Expected answers:** 10. Affection, 11. Politeness, 12. Irony, 13. Size
+## Skill 2: Passive Constructions
 
-**Part 4: Numerals (4 items)**
+### Model: Три типи пасиву
 
-Choose the correct form:
+Ukrainian has **three** types of passive constructions:
 
-14. У нас ___ дітей. (три / троє)
-15. ___ роботи завершено. (Третина / Третя)
-16. Продажі зросли на 20 ___. (процент / відсотків)
-17. ___ сестри прийшли. (Обидва / Обидві)
+| Type | Structure | Example | Use |
+|------|-----------|---------|-----|
+| Full participle | -ний/-тий + agent | Звіт **написаний** директором. | With agent specified |
+| Short form | -но/-то | Рішення **прийнято**. | Impersonal, no agent |
+| Reflexive | -ться/-ються | Будинок **будується**. | Ongoing process |
 
-**Expected answers:** 14. троє, 15. Третина, 16. відсотків, 17. Обидві
+> **Full:** Книга **написана** автором. (The book was written by the author.)
+>
+> **Short:** Роботу **завершено**. (The work has been completed.) — Never changes form!
+>
+> **Reflexive:** Газета **видається** щодня. (The newspaper is published daily.)
 
-**Part 5: Active Participles - Stylistic Recognition (3 items)**
+### Practice: Визначте тип пасиву
 
-Are these active participles used correctly (standard/acceptable) or incorrectly (calque/bookish)?
+1. Звіт написаний директором. → ___
+   > [!solution] **Full participle** — -ний + agent (директором)
 
-18. Люди, які читають книги, мудріші. → ___
-19. Читаюча жінка сиділа в кутку. → ___
-20. Студент, що працює в бібліотеці, мій друг. → ___
+2. Рішення прийнято. → ___
+   > [!solution] **Short form** — -то, impersonal
 
-**Expected answers:** 18. Correct (relative clause), 19. Incorrect (Russian calque), 20. Correct (relative clause)
+3. Будинок будується. → ___
+   > [!solution] **Reflexive** — -ться, ongoing process
 
-**Scoring:**
+4. Документи перевірено ретельно. → ___
+   > [!solution] **Short form** — -но, impersonal
+
+### Self-Check
+
+- ☐ Can you identify full participle vs short form vs reflexive?
+- ☐ Do you know short forms (-но/-то) never change?
+- ☐ Can you form full participles with correct agreement?
+
+---
+
+## Skill 3: Diminutives (Зменшувальні форми)
+
+> [!history-bite] 📜 History Bite: The Soul of Ukrainian
+>
+> Diminutives are one of the most distinctive features of Ukrainian, far more productive than in Russian or English. They express not just small size, but affection (**синочку**), politeness (**водички**), irony (**проблемка**), and cultural warmth. During Russification, Ukrainians used diminutives as a covert way to preserve their language's emotional richness.
+
+### Model: Чотири функції здрібнілих форм
+
+| Function | Example | Context |
+|----------|---------|---------|
+| Affection | **Синочку**, іди сюди! | Family, children |
+| Politeness | Дайте **водички**, будь ласка. | Softening requests |
+| Irony | От це **проблемка** у нас! | Sarcastic understatement |
+| Size | Купила **столик** для тераси. | Actual small size |
+
+**Style Rule:** Avoid diminutives in formal contexts!
+- ❌ «У звіті 50 **відсоточків**» (inappropriate in documents)
+- ✅ «У звіті 50 **відсотків**»
+
+### Practice: Яка функція?
+
+1. Синочку, іди сюди! → ___
+   > [!solution] **Affection** — parent to child
+
+2. Дайте водички, будь ласка. → ___
+   > [!solution] **Politeness** — softening request
+
+3. От це проблемка у нас! → ___
+   > [!solution] **Irony** — sarcastic (big problem)
+
+4. Купила столик для тераси. → ___
+   > [!solution] **Size** — actual small table
+
+### Self-Check
+
+- ☐ Can you identify the four diminutive functions?
+- ☐ Do you know when diminutives are inappropriate?
+- ☐ Can you form diminutives naturally?
+
+---
+
+## Skill 4: Numerals - Collective & Fractions
+
+### Model: Збірні числівники та дроби
+
+**Collective Numerals** (for people and pluralia tantum):
+| Cardinal | Collective | Use with |
+|----------|------------|----------|
+| два/дві | **двоє** | people, pluralia tantum (ножиці) |
+| три | **троє** | people, детей, дверей |
+| п'ять | **п'ятеро** | especially with children |
+
+**Fractions:**
+| Fraction | Ukrainian | Example |
+|----------|-----------|---------|
+| 1/2 | половина | **Половина** роботи зроблено. |
+| 1/3 | третина | **Третина** населення підтримує. |
+| 1/4 | чверть | **Чверть** бюджету витрачено. |
+| 1.5 | півтора/півтори | **Півтора** кілограма (ч.р.), **півтори** години (ж.р.) |
+
+**Both (обидва/обидві/обоє):**
+| Gender | Form | Example |
+|--------|------|---------|
+| Masculine | обидва | **Обидва** брати прийшли. |
+| Feminine | обидві | **Обидві** сестри тут. |
+| Mixed | обоє | **Обоє** закохані. |
+
+### Practice: Оберіть правильну форму
+
+1. У нас ___ дітей. (три / троє)
+   > [!solution] **троє** — collective for people
+
+2. ___ роботи завершено. (Третина / Третя)
+   > [!solution] **Третина** — fraction (1/3)
+
+3. Продажі зросли на 20 ___. (процент / відсотків)
+   > [!solution] **відсотків** — Genitive plural after 20
+
+4. ___ сестри прийшли. (Обидва / Обидві)
+   > [!solution] **Обидві** — feminine
+
+### Self-Check
+
+- ☐ Can you use collective numerals with people?
+- ☐ Do you know fractions (половина, третина, чверть)?
+- ☐ Can you choose обидва/обидві/обоє correctly?
+
+---
+
+## Summary
+
+**Scoring (from diagnostic):**
 - 20-25 correct: Excellent! Ready for Phase B1.5
 - 15-19 correct: Good, but review weak areas
 - 10-14 correct: Need more practice with specific topics

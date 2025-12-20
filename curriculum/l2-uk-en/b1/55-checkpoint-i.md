@@ -32,68 +32,181 @@ vocabulary_count: 30
 >
 > Половина шляху B1! Цей контрольний модуль перевіряє абстрактну лексику, висловлення думок, дискурсивні маркери та медіа-мову. Оцініть свій прогрес.
 
-## Діагностика
+This checkpoint reviews **four core skills** from Modules 51-54:
 
-This checkpoint reviews the vocabulary and skills from Modules 51-54. Before continuing to new topics, let's ensure you've mastered:
+- **Skill 1:** Discourse Markers (дискурсивні маркери)
+- **Skill 2:** Describing Changes (дієслова зміни)
+- **Skill 3:** Media & News (медіа-лексика)
+- **Skill 4:** Society & Politics (політична лексика)
 
-- **M51:** Discourse Markers II (зокрема, насамперед, водночас...)
-- **M52:** Describing Changes (зростати, знижуватися, стабілізуватися...)
-- **M53:** Media & News (новини, джерело, достовірний...)
-- **M54:** Society & Politics (уряд, вибори, громадянин...)
-
-> 🎯 **Why Checkpoints Matter**
+> [!myth-buster] 🔍 Myth Buster: "Ukrainian political terms are all Russian"
 >
-> Vocabulary that isn't reviewed fades quickly. Research shows that active recall — testing yourself — is far more effective than passive review. This checkpoint gives you the chance to identify gaps before they become problems.
-
-**This checkpoint will test:**
-- Recognition and recall of key vocabulary
-- Appropriate usage in context
-- Connection between topics
-- Integration into natural speech
-
-**How to use this checkpoint:**
-- Complete all activities without looking back at previous modules
-- Note any vocabulary you struggle with
-- Review specific modules if you score below 80%
-- Return to this checkpoint after a week for spaced repetition
+> **Lie:** "Ukrainian political vocabulary was borrowed from Russian."
+>
+> **Truth:** Ukrainian has its own rich political tradition. Terms like **Верховна Рада** (Supreme Council) originate from Ukrainian Cossack governance. **Громада** (community/hromada) is distinctly Ukrainian, now central to decentralization reforms. Words like **виборці** (voters), **закон** (law), and **уряд** (government) have deep roots in Ukrainian.
 
 ---
 
-## Аналіз
+## Skill 1: Discourse Markers (Дискурсивні маркери)
+
+### Model: Типи дискурсивних маркерів
+
+> **По-перше**, Україна є демократичною країною. **По-друге**, вона має сильне громадянське суспільство. **Нарешті**, українці активно борються за свої права.
+>
+> — Sequencing markers (по-перше, по-друге, нарешті)
+
+| Type | Markers | Function |
+|------|---------|----------|
+| Sequencing | по-перше, по-друге, нарешті | Ordered lists |
+| Contrast | проте, однак, водночас | Showing contrast |
+| Addition | крім того, до того ж, більше того | Adding info |
+| Specificity | зокрема, насамперед | Highlighting |
+| Concession | незважаючи на це, попри це | Conceding points |
+
+### Practice: Оберіть правильний маркер
+
+1. ___, реформи необхідні. ___, часу мало. (firstly, however)
+   > [!solution] **По-перше / Проте** — sequence + contrast
+
+2. Економіка зростає. ___, безробіття залишається. (at the same time)
+   > [!solution] **Водночас** — simultaneous contrast
+
+3. ___, треба боротися з корупцією. (in particular)
+   > [!solution] **Зокрема** — highlighting specific point
+
+4. ___ війну, Україна продовжує реформи. (despite)
+   > [!solution] **Незважаючи на** — concession
+
+### Self-Check
+
+- ☐ Can you use 3+ markers in one paragraph?
+- ☐ Do you know contrast markers (проте, однак, водночас)?
+- ☐ Can you sequence arguments (по-перше, по-друге, нарешті)?
+
+---
+
+## Skill 2: Describing Changes (Дієслова зміни)
+
+### Model: Дієслова зростання та зниження
+
+> **ВВП зріс на 4%** порівняно з минулим роком. (GDP increased by 4%...)
+>
+> **Інфляція знизилася з 20% до 12%** за рік. (Inflation decreased from 20% to 12%...)
+
+| Direction | Verbs | Pattern |
+|-----------|-------|---------|
+| Increase | зростати, збільшуватися, підніматися | зросло **на** 10% |
+| Decrease | зменшуватися, падати, знижуватися | знизилося **з** X **до** Y |
+| Stable | стабілізуватися | стабілізувалося **на рівні** X |
+| Fluctuate | коливатися | коливається **між** X **і** Y |
+
+**Key patterns:**
+- зросло **на** 10% (increased **by** 10%)
+- знизилося **з** 12% **до** 9% (decreased **from** 12% **to** 9%)
+- порівняно **з** минулим роком (compared **to** last year)
+
+### Practice: Опишіть зміни
+
+1. Інфляція: 20% → 12% (минулий рік)
+   > [!solution] Інфляція **знизилася з 20% до 12%** за минулий рік.
+
+2. ВВП: +4% (порівняно з минулим роком)
+   > [!solution] ВВП **зріс на 4%** порівняно з минулим роком.
+
+3. Курс долара: стабільний на рівні 37 грн
+   > [!solution] Курс долара **стабілізувався на рівні** 37 гривень.
+
+4. Безробіття: 8%-10% (коливається)
+   > [!solution] Безробіття **коливається між** 8% **і** 10%.
+
+### Self-Check
+
+- ☐ Can you use **на** for "by X%" changes?
+- ☐ Can you use **з...до** for ranges?
+- ☐ Can you compare using **порівняно з**?
+
+---
+
+## Skill 3: Media & News (Медіа-лексика)
+
+> [!history-bite] 📜 History Bite: Ukrainian Media Independence
+>
+> After 2014, Ukrainian media transformed dramatically. Independent outlets like **Hromadske** and **Ukrainska Pravda** gained prominence. Russian propaganda channels were banned. Ukrainians became Europe's most media-literate nation. Terms like **StopFake**, **fact-checking**, and **медіаграмотність** entered everyday speech.
+
+### Model: Медіа-словник
+
+| Category | Vocabulary |
+|----------|------------|
+| Types | телебачення, радіо, газета, інтернет-видання, соцмережі |
+| Reliability | достовірний, недостовірний, фейк, дезінформація, пропаганда |
+| People | журналіст, редактор, кореспондент, ведучий |
+
+> **Незалежні ЗМІ** висвітлюють діяльність **уряду**.
+> (Independent media cover government activities.)
+
+### Practice: Оберіть правильне слово
+
+1. Це ___ джерело. Можна довіряти. (reliable)
+   > [!solution] **достовірне** — reliable source
+
+2. Це ___, а не справжня новина. (fake)
+   > [!solution] **фейк** — fake news
+
+3. ___ написав статтю про корупцію. (journalist)
+   > [!solution] **Журналіст** — person who writes articles
+
+4. Російська ___ небезпечна. (propaganda)
+   > [!solution] **пропаганда** — propaganda
+
+### Self-Check
+
+- ☐ Can you discuss media reliability?
+- ☐ Do you know words for fake news and propaganda?
+- ☐ Can you name different media types?
+
+---
+
+## Skill 4: Society & Politics (Політична лексика)
+
+### Model: Структура влади
+
+| Branch | Institution | Key Actors |
+|--------|-------------|------------|
+| Legislative | Верховна Рада | депутат |
+| Executive | Уряд, Президент | прем'єр-міністр |
+| Judicial | Суди | суддя |
+| Civil society | НУО, активісти | волонтер, громадянин |
+
+> **Верховна Рада ухвалила** новий **закон** про **реформу**.
+> (Parliament passed a new law on reform.)
+
+**Processes:** вибори, голосування, закон, реформа, указ
+
+### Practice: Доповніть речення
+
+1. ___ ухвалила новий закон. (parliament)
+   > [!solution] **Верховна Рада** — Ukraine's parliament
+
+2. ___ підписав указ. (president)
+   > [!solution] **Президент** — signs decrees
+
+3. Громадяни мають право ___. (vote)
+   > [!solution] **голосувати** — right to vote
+
+4. ___ організували протест. (activists)
+   > [!solution] **Активісти** — organize protests
+
+### Self-Check
+
+- ☐ Do you know three branches of government?
+- ☐ Can you discuss elections and voting?
+- ☐ Can you talk about civil society?
+
+---
+
+## Summary
 
 ### Огляд дискурсивних маркерів (M51)
-
-**Sequencing markers:**
-> **По-перше... по-друге... нарешті** — for ordered lists
-> **Спочатку... потім... наприкінці** — for temporal sequence
-
-**Contrast markers:**
-> **Проте, однак, водночас** — for showing contrasts
-> **Незважаючи на це, попри це** — for concessions
-
-**Addition markers:**
-> **Крім того, до того ж, більше того** — for adding information
-> **Зокрема, насамперед** — for highlighting specifics
-
-**Приклади дискурсивних маркерів у контексті:**
-
-1. **По-перше**, Україна є демократичною країною. **По-друге**, вона має сильне громадянське суспільство. **Нарешті**, українці активно борються за свої права.
-
-2. Економіка зростає. **Проте**, багато проблем залишаються невирішеними.
-
-3. Реформи необхідні. **Крім того**, потрібна підтримка міжнародних партнерів.
-
-4. **Зокрема**, важливо боротися з корупцією у державних органах.
-
-5. **Незважаючи на війну**, Україна продовжує проводити реформи.
-
-> 💡 **Quick Test**
->
-> Can you use at least 3 discourse markers in a single paragraph about Ukrainian media? Try it now before reading further.
-
----
-
-### Огляд лексики змін (M52)
 
 **Increase verbs:**
 > зростати, збільшуватися, підніматися, розширюватися
