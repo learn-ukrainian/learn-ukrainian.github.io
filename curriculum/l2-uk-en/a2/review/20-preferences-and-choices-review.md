@@ -1,36 +1,23 @@
-# Review: Module 20 - Preferences & Choices
+# Review Report: 20 Preferences & Choices
 
-**Reviewer:** Claude
-**Date:** 2024-12-18
-**Status:** PASS
+## 1. Automated Checks
+- [x] Frontmatter Valid
+- [x] Structure Check (# Summary, # Activities)
+- [x] Word Count: ~3300 words
+- [x] Activity Density: 12 activities
 
-## Scores
+## 2. Content Quality
+- [x] Functional Focus: Moves from grammar forms to actual usage ("I differ preference", "it's better to").
+- [x] Hospitality: The "Three Offers Rule" cultural note is spot on.
+- [x] Activities: Dialogues feel realistic for ordering food or making plans.
+- [x] Grammar Note: Explaining the logic of "подобатися" (inverted subject) helps English speakers.
 
-| Criterion | Score | Notes |
-|-----------|-------|-------|
-| Coherence | 5/5 | Good functional application of comparatives |
-| Relevance | 5/5 | Essential for expressing preferences |
-| Educational Value | 5/5 | Multiple expression patterns taught |
-| Language Quality | 5/5 | Natural Ukrainian expressions |
-| Word Salad | 5/5 | Clear and practical |
+## 3. Pedagogical Alignment
+- [x] Aligned with Phase A2.2
+- [x] Appropriate for Level A2: Bridge to B1-style functional usage.
 
-**Total: 25/25 - PASS**
+## 4. Issues & Recommendations
+- None.
 
-## Summary
-
-Excellent functional module applying comparatives and superlatives to express preferences. Covers four key patterns: мені більше подобається, я віддаю перевагу + Dative, краще X ніж Y, and я б вибрав/вибрала.
-
-## Strengths
-
-1. **Multiple patterns** - Four different ways to express preferences
-2. **Formality levels** - Casual to formal preference expressions
-3. **Action comparisons** - Краще читати, ніж дивитися телевізор
-4. **Cultural context** - Hospitality and polite refusal patterns
-
-## Issues Found
-
-None - well-designed functional module.
-
-## Recommendations
-
-None required.
+## 5. Final Score
+5/5
