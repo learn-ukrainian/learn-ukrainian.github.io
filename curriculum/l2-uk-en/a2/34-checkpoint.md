@@ -1,5 +1,5 @@
 ---
-module: a2-30
+module: a2-34
 title: "Checkpoint - Complex Ideas"
 subtitle: "Review of Modules 25-33"
 version: "2.0"

@@ -1,5 +1,5 @@
 ---
-module: a2-19
+module: a2-23
 title: "Smart Shopping"
 subtitle: "Comparing Products and Making Decisions"
 version: "1.0"

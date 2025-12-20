@@ -66,14 +66,35 @@ Score each criterion 1-5:
 - Grammatically correct Ukrainian
 - Grammatically correct English explanations
 - Consistent terminology
+- **No Russisms/Surzhik:** Strictly standard Ukrainian (e.g., use 'так' not 'да', 'будь ласка' not 'пожалуйста', 'звичайно' not 'канешно'). Flag any non-standard usage.
 
-**5. Word Salad Check**
+**5. Pedagogical Correctness**
+- **Sequence:** Does it teach A before B? (e.g., specific letters before reading words)
+- **Scaffolding:** clear step-by-step instructions?
+- **Cognitive Load:** Is it too much at once?
+- **Accuracy:** Are grammar rules explained correctly?
+
+**6. Natural Immersion (Mixed Language Check)**
+- **Natural Flow:** Mixing must feel intentional (e.g., "In Ukrainian, we say **так** for yes"), NOT forced.
+- **Syntactic Integrity:** Do NOT break English syntax just to insert a Ukrainian word (e.g., "The **хлопець** goes to the **школа**" -> BAD).
+- **No "Denglish":** Sentences should generally be fully English (explanation) or fully Ukrainian (example), with specific exceptions for target vocabulary insertion in clear contexts.
+- **Contextual Clarity:** Does the mix help or confuse?
+- **Exception:** Checkpoint modules (assessments) are exempt from strict immersion flow checks.
+
+**7. Word Salad Check**
 Flag if ANY true:
 - Same sentence pattern repeated 5+ times
 - Generic filler without substance
 - Contradictory explanations
 - Examples unrelated to explanations
 - Clear auto-generation artifacts
+
+**8. Red Flags (Auto-fail)**
+Flag if:
+- **Forced Mixing:** "I want to **їсти** the **яблуко**." (Syntactic breakage)
+- **Undefined Terms:** Using concepts not yet taught.
+- **False Friends:** Using high-level grammar (cases) in A1 without explanation.
+- **Russianisms/Surzhik:** Any detection of mixed Ukrainian-Russian forms (unless explicitly teaching *about* Surzhik).
 
 **Step 3: Generate Summary Report**
 
@@ -82,7 +103,7 @@ For each module, output:
 ```
 ## Module {num}: {title}
 
-**Scores:** Coherence {X}/5 | Relevance {X}/5 | Educational {X}/5 | Language {X}/5 | **Overall {X}/5**
+**Scores:** Coherence {X}/5 | Relevance {X}/5 | Educational {X}/5 | Language {X}/5 | Pedagogy {X}/5 | Immersion {X}/5 | **Overall {X}/5**
 **Status:** ✅ PASS / ⚠️ NEEDS WORK / ❌ REWRITE
 
 {If not PASS, list 2-3 main issues}
@@ -156,6 +177,8 @@ After reviewing all modules in scope:
 - Relevance: {X}/5 {reason}
 - Educational: {X}/5 {reason}
 - Language: {X}/5 {reason}
+- Pedagogy: {X}/5 {reason}
+- Immersion: {X}/5 {reason}
 - Word Salad: ❌ No / ⚠️ Yes
 
 ### Strengths
@@ -297,3 +320,5 @@ These trigger automatic REWRITE recommendation:
 - ❌ Examples completely unrelated to topic
 - ❌ No actual teaching content (just filler)
 - ❌ Contradictory explanations
+- ❌ **Unnatural Language Mixing:** (e.g., "The **чоловiк** is walking" -> BAD. "The word for man is **чоловік**" -> GOOD).
+- ❌ **Pedagogical Leaps:** Testing material that wasn't taught.

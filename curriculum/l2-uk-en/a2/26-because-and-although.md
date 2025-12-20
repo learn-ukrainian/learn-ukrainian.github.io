@@ -1,5 +1,5 @@
 ---
-module: a2-22
+module: a2-26
 title: Because and Although
 subtitle: "Explaining Why and Why Not"
 version: "1.0"

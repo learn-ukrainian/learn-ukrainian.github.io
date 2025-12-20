@@ -1,66 +1,47 @@
 # Audit Report: 65-checkpoint-vocab-expansion-ii.md
 **Phase:** B1 | **Level:** B1 | **Pedagogy:** "checkpoint" | **Target:** 800
-**Overall Status:** ❌ FAIL
-
-## Recommendation
-**📝 UPDATE** (severity 10/100)
-
-- Activity density below minimum
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ❌ 289/800
+- **Words:** ✅ 1343/800
 - **Activities:** ✅ 16/10
-- **Density:** ❌ 8 < 12
+- **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 1/3
+- **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 15/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 59.4% (checkpoint - no gate)
-
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-| quiz: Подорожі та географія (М61) | quiz | 5 | 8 | Add 3 more items |
-| quiz: Дієслова мислення (М62) | quiz | 5 | 8 | Add 3 more items |
-| quiz: Дієслова мовлення (М63) | quiz | 5 | 8 | Add 3 more items |
-| quiz: Колокації (М64) | quiz | 5 | 8 | Add 3 more items |
-| fill-in: Подорожі | fill-in | 6 | 8 | Add 2 more items |
-| group-sort: Категоризація | group-sort | 4 | 8 | Add 4 more items |
-| select: Вибір | select | 4 | 6 | Add 2 more items |
-| true-false: Перевірка знань | true-false | 6 | 8 | Add 2 more items |
-
+- **Immersion:** 🇺🇦 59.2% (checkpoint - no gate)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Контрольна точка: Лексичне розширення II** | ⚪️ | 28 | Skipped |
-| **Огляд фази B1.6** | ⚪️ | 9 | Skipped |
-| **CEFR Can-Do Targets** | ⚪️ | 56 | Skipped |
-| **Діагностична вправа** | ⚪️ | 129 | Skipped |
-| **Self-Assessment Rubric** | ⚪️ | 7 | Skipped |
-| **Need More Practice?** | ⚪️ | 60 | Skipped |
+| **Контрольна точка B1.6** | ⚪️ | 136 | Skipped |
+| **Skill 1: Travel & Geography Vocabulary** | ➖ | 236 | Excluded Type |
+| **Skill 2: Thinking Verb Synonyms** | ⚪️ | 286 | Skipped |
+| **Skill 3: Speaking Verb Synonyms** | ⚪️ | 253 | Skipped |
+| **Skill 4: Ukrainian Collocations** | ⚪️ | 282 | Skipped |
+| **Integration Challenge** | ⚪️ | 150 | Skipped |
 | **Вправи** | ⚪️ | 0 | Skipped |
-| **quiz: Подорожі та географія (М61)** | 🎮 | 5 | Activity (5 items, min 8) |
-| **quiz: Дієслова мислення (М62)** | 🎮 | 5 | Activity (5 items, min 8) |
-| **quiz: Дієслова мовлення (М63)** | 🎮 | 5 | Activity (5 items, min 8) |
-| **quiz: Колокації (М64)** | 🎮 | 5 | Activity (5 items, min 8) |
-| **match-up: Синоніми мислення** | 🎮 | 8 | Activity (8 items, min 8) |
-| **match-up: Синоніми мовлення** | 🎮 | 8 | Activity (8 items, min 8) |
-| **match-up: Колокації** | 🎮 | 8 | Activity (8 items, min 8) |
-| **fill-in: Мікс лексики** | 🎮 | 8 | Activity (8 items, min 8) |
-| **fill-in: Подорожі** | 🎮 | 6 | Activity (6 items, min 8) |
-| **error-correction: Помилки** | 🎮 | 6 | Activity (6 items, min 6) |
-| **unjumble: Речення** | 🎮 | 8 | Activity (8 items, min 6) |
-| **cloze: Комплексний тест** | 🎮 | 8 | Activity (8 items, min 6) |
-| **translate: Переклад** | 🎮 | 6 | Activity (6 items, min 6) |
-| **group-sort: Категоризація** | 🎮 | 4 | Activity (4 items, min 8) |
-| **select: Вибір** | 🎮 | 4 | Activity (4 items, min 6) |
-| **true-false: Перевірка знань** | 🎮 | 6 | Activity (6 items, min 8) |
-| **Самооцінка** | ⚪️ | 0 | Skipped |
-| **Результати та рекомендації** | ⚪️ | 109 | Skipped |
-| **Підсумок** | ✅ | 87 | Included in Core |
+| **quiz: Travel & Geography Review (М61)** | 🎮 | 8 | Activity (8 items, min 8) |
+| **quiz: Thinking Verb Synonyms (М62)** | 🎮 | 8 | Activity (8 items, min 8) |
+| **quiz: Speaking Verb Synonyms (М63)** | 🎮 | 8 | Activity (8 items, min 8) |
+| **quiz: Collocations (М64)** | 🎮 | 8 | Activity (8 items, min 8) |
+| **match-up: Thinking Verb Synonyms** | 🎮 | 8 | Activity (8 items, min 8) |
+| **match-up: Speaking Verb Synonyms** | 🎮 | 8 | Activity (8 items, min 8) |
+| **match-up: Collocations** | 🎮 | 8 | Activity (8 items, min 8) |
+| **fill-in: Mixed Vocabulary Review** | 🎮 | 8 | Activity (8 items, min 8) |
+| **fill-in: Travel Vocabulary** | 🎮 | 8 | Activity (8 items, min 8) |
+| **error-correction: Find the Calque Error** | 🎮 | 8 | Activity (8 items, min 6) |
+| **unjumble: Build Sentences** | 🎮 | 8 | Activity (8 items, min 6) |
+| **cloze: Integrated Test** | 🎮 | 8 | Activity (8 items, min 6) |
+| **translate: English to Ukrainian** | 🎮 | 8 | Activity (8 items, min 6) |
+| **group-sort: Categorization** | 🎮 | 8 | Activity (8 items, min 8) |
+| **select: Multiple Correct Options** | 🎮 | 6 | Activity (6 items, min 6) |
+| **true-false: Knowledge Check** | 🎮 | 8 | Activity (8 items, min 8) |
+| **Summary** | ✅ | 0 | Included in Core |
+| **Need More Practice?** | ⚪️ | 86 | Skipped |
 | **Словник** | ⚪️ | 0 | Skipped |

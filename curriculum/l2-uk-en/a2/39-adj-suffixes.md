@@ -1,5 +1,5 @@
 ---
-module: a2-34
+module: a2-39
 title: Adjective Suffixes
 subtitle: "Describing the World"
 version: "1.0"

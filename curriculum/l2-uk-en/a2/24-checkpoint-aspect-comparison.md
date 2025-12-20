@@ -1,5 +1,5 @@
 ---
-module: a2-20
+module: a2-24
 title: "Checkpoint - Aspect & Comparison"
 subtitle: "Review of Modules 11-19"
 version: "2.0"

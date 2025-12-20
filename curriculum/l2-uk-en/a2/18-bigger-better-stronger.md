@@ -1,5 +1,5 @@
 ---
-module: a2-15
+module: a2-18
 title: "Bigger, Better, Stronger"
 subtitle: "Comparative Adjectives"
 version: "1.0"
