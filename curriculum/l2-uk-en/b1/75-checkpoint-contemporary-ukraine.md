@@ -310,6 +310,24 @@ Read this passage that integrates all four skills:
 
 ---
 
+## Need More Practice?
+
+> [!resources] 🎧 External Resources
+>
+> **Contemporary Ukraine:**
+> - 📺 [Чим для вас є Україна? (What is Ukraine to you?)](https://www.youtube.com/watch?v=x75Me7dLRj4) — Ukraїner identity documentary
+> - 📺 [Віталій Портников: «Розвивати українське»](https://www.youtube.com/watch?v=cslHRvAe3oA) — Ukraїner cultural analysis
+> - 📺 [Contemporary Ukrainian Cuisine with Klopotenko](https://www.youtube.com/@klopotenko) — Authentic recipes and food culture
+>
+> **Struggling with a skill?** Go back to:
+> - Regions → Modules 66-69
+> - Music & Cinema → Modules 70-71
+> - Tech & Sports → Modules 72-73
+> - Cuisine → Module 74
+> - 📺 [Що таке українська мова?](https://www.youtube.com/watch?v=nqReOxAjuWg) — Ukraїner
+
+---
+
 ## Вправи
 
 ## quiz: Регіони України
@@ -755,22 +773,6 @@ Read this passage that integrates all four skills:
 | Cuisine | Traditional dishes | борщ, вареники, 12 страв на Святвечір |
 
 ---
-
-## Need More Practice?
-
-> [!resources] 🎧 External Resources
->
-> **Contemporary Ukraine:**
-> - 📺 [Чим для вас є Україна? (What is Ukraine to you?)](https://www.youtube.com/watch?v=x75Me7dLRj4) — Ukraїner identity documentary
-> - 📺 [Віталій Портников: «Розвивати українське»](https://www.youtube.com/watch?v=cslHRvAe3oA) — Ukraїner cultural analysis
-> - 📺 [Contemporary Ukrainian Cuisine with Klopotenko](https://www.youtube.com/@klopotenko) — Authentic recipes and food culture
->
-> **Struggling with a skill?** Go back to:
-> - Regions → Modules 66-69
-> - Music & Cinema → Modules 70-71
-> - Tech & Sports → Modules 72-73
-> - Cuisine → Module 74
-> - 📺 [Що таке українська мова?](https://www.youtube.com/watch?v=nqReOxAjuWg) — Ukraїner
 
 ---
 

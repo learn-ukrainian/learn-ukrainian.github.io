@@ -556,8 +556,6 @@ Ukrainian just makes these distinctions obligatory and consistent across all con
 
 ---
 
-## Activities
-
 ## Need More Practice?
 
 > [!resources] 🎧 External Resources
@@ -568,6 +566,8 @@ Ukrainian just makes these distinctions obligatory and consistent across all con
 > - 📺 [PERFECTIVE VERBS vs IMPERFECTIVE VERBS - PART 1](https://www.youtube.com/watch?v=v-SuEb_0WYM) — Ukrainian grammar
 > - 🎧 [Season 2, Episode 51: Perfective & Imperfective](https://www.ukrainianlessons.com/the-podcast/) — Audio lesson on aspect
 > - 📺 [Learn 50 important Ukrainian Verb Pairs](https://www.youtube.com/watch?v=iK4uNlozmFE) — Let's Learn Ukrainian
+
+## Activities
 
 ## quiz: Визначення виду
 > Оберіть правильну відповідь про вид дієслова.

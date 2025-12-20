@@ -323,6 +323,24 @@ Read this dialogue that uses all four skills, then answer the questions:
 
 ---
 
+## Need More Practice?
+
+> [!resources] 🎧 External Resources
+>
+> **Vocabulary & Topics:**
+> - 📺 [Україна з неба (Ukraine From Above)](https://www.youtube.com/watch?v=vb0ZWc70gOk) — Ukraїner aerial documentary
+> - 📖 [Business Ukrainian Vocabulary & Infographics](https://www.ukrainianlessons.com/business-ukrainian-vocabulary/) — Infographics and audio
+> - 📺 [Що таке українська мова? (What is Ukrainian Language?)](https://www.youtube.com/watch?v=nqReOxAjuWg) — Ukraїner documentary
+>
+> **Struggling with a skill?** Go back to:
+> - Travel & Geography → Module 61
+> - Thinking verbs → Module 62
+> - Speaking verbs → Module 63
+> - Collocations → Module 64
+> - 📺 [Чим для вас є Україна?](https://www.youtube.com/watch?v=x75Me7dLRj4) — Ukraїner
+
+---
+
 ## Вправи
 
 ## quiz: Travel & Geography Review (М61)
@@ -993,22 +1011,6 @@ Read this dialogue that uses all four skills, then answer the questions:
 | Collocations | Fixed verb-noun pairs | приймати рішення, брати участь |
 
 ---
-
-## Need More Practice?
-
-> [!resources] 🎧 External Resources
->
-> **Vocabulary & Topics:**
-> - 📺 [Україна з неба (Ukraine From Above)](https://www.youtube.com/watch?v=vb0ZWc70gOk) — Ukraїner aerial documentary
-> - 📖 [Business Ukrainian Vocabulary & Infographics](https://www.ukrainianlessons.com/business-ukrainian-vocabulary/) — Infographics and audio
-> - 📺 [Що таке українська мова? (What is Ukrainian Language?)](https://www.youtube.com/watch?v=nqReOxAjuWg) — Ukraїner documentary
->
-> **Struggling with a skill?** Go back to:
-> - Travel & Geography → Module 61
-> - Thinking verbs → Module 62
-> - Speaking verbs → Module 63
-> - Collocations → Module 64
-> - 📺 [Чим для вас є Україна?](https://www.youtube.com/watch?v=x75Me7dLRj4) — Ukraїner
 
 ---
 

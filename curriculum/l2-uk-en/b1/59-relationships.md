@@ -23,12 +23,6 @@ vocabulary_count: 30
 >
 > Relationships are the foundation of our social lives. Whether discussing family, friendship, or romance, the ability to express the nuances of human connections in Ukrainian is essential for meaningful conversations. This module covers the vocabulary you need to talk about the people in your life, the bonds you share, and the complexities of human relationships in Ukrainian culture.
 
-> [!resources] 🎧 External Resources
-> **YouTube:** [Ukrainian Lessons - Family](https://www.youtube.com/results?search_query=ukrainian+family+vocabulary) — Family and relationship terms
-> **Blog:** [Ukrainian Lessons: Love](https://www.ukrainianlessons.com/) — Expressions of love and affection
-> - 📺 [Що таке українська мова?](https://www.youtube.com/watch?v=nqReOxAjuWg) — Ukraїner
-> - 📺 [Чим для вас є Україна?](https://www.youtube.com/watch?v=x75Me7dLRj4) — Ukraїner
-> - 📺 [Україна з неба](https://www.youtube.com/watch?v=vb0ZWc70gOk) — Ukraїner
 
 ---
 
@@ -283,8 +277,17 @@ When discussing how you feel about relationships, these expressions are useful:
 
 ---
 
-## Activities
 
+## Need More Practice?
+
+> [!resources] 🎧 External Resources
+> **YouTube:** [Ukrainian Lessons - Family](https://www.youtube.com/results?search_query=ukrainian+family+vocabulary) — Family and relationship terms
+> **Blog:** [Ukrainian Lessons: Love](https://www.ukrainianlessons.com/) — Expressions of love and affection
+> - 📺 [Що таке українська мова?](https://www.youtube.com/watch?v=nqReOxAjuWg) — Ukraїner
+> - 📺 [Чим для вас є Україна?](https://www.youtube.com/watch?v=x75Me7dLRj4) — Ukraїner
+> - 📺 [Україна з неба](https://www.youtube.com/watch?v=vb0ZWc70gOk) — Ukraїner
+
+## Activities
 ## quiz: Повторення (М58)
 > Quick review from the previous module on Emotions.
 

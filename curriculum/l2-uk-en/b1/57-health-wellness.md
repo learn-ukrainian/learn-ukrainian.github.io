@@ -23,12 +23,6 @@ vocabulary_count: 30
 >
 > Health is the foundation of a good life. Without good health, we cannot enjoy our work, hobbies, or time with family. The Ukrainian philosopher Hryhorii Skovoroda wrote: «Найбільше багатство людини — здоров'я» (A person's greatest wealth is health). In this module, you'll learn to discuss health, illness, treatment, and healthy lifestyle choices — essential vocabulary for living and working in Ukraine.
 
-> [!resources] 🎧 External Resources
-> **YouTube:** [Ukrainian Lessons - Medical Vocabulary](https://www.youtube.com/results?search_query=ukrainian+medical+vocabulary) — Real doctor visits
-> **Blog:** [Ukrainian Lessons: Health](https://www.ukrainianlessons.com/) — Health vocabulary guide
-> - 📺 [Що таке українська мова?](https://www.youtube.com/watch?v=nqReOxAjuWg) — Ukraїner
-> - 📺 [Чим для вас є Україна?](https://www.youtube.com/watch?v=x75Me7dLRj4) — Ukraїner
-> - 📺 [Україна з неба](https://www.youtube.com/watch?v=vb0ZWc70gOk) — Ukraїner
 
 ---
 
@@ -348,8 +342,17 @@ In this module, you learned:
 
 ---
 
-## Activities
 
+## Need More Practice?
+
+> [!resources] 🎧 External Resources
+> **YouTube:** [Ukrainian Lessons - Medical Vocabulary](https://www.youtube.com/results?search_query=ukrainian+medical+vocabulary) — Real doctor visits
+> **Blog:** [Ukrainian Lessons: Health](https://www.ukrainianlessons.com/) — Health vocabulary guide
+> - 📺 [Що таке українська мова?](https://www.youtube.com/watch?v=nqReOxAjuWg) — Ukraїner
+> - 📺 [Чим для вас є Україна?](https://www.youtube.com/watch?v=x75Me7dLRj4) — Ukraїner
+> - 📺 [Україна з неба](https://www.youtube.com/watch?v=vb0ZWc70gOk) — Ukraїner
+
+## Activities
 ## quiz: Повторення (М56)
 > Quick review from the previous module on Nature & Environment.
 

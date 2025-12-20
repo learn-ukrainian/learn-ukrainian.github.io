@@ -23,12 +23,6 @@ vocabulary_count: 30
 >
 > Emotions are at the heart of human communication. Being able to express your feelings precisely in Ukrainian goes beyond basic vocabulary — it shows cultural fluency and emotional intelligence. Ukrainian literature and poetry are famous for their emotional depth, from Shevchenko's grief to Lesya Ukrainka's passionate hope. This module will help you navigate the rich emotional landscape of the Ukrainian language.
 
-> [!resources] 🎧 External Resources
-> **YouTube:** [Ukrainian Lessons - Emotions](https://www.youtube.com/results?search_query=ukrainian+emotions+vocabulary) — Emotional vocabulary in context
-> **Blog:** [Ukrainian Lessons: Feelings](https://www.ukrainianlessons.com/) — How to express emotions
-> - 📺 [Що таке українська мова?](https://www.youtube.com/watch?v=nqReOxAjuWg) — Ukraїner
-> - 📺 [Чим для вас є Україна?](https://www.youtube.com/watch?v=x75Me7dLRj4) — Ukraїner
-> - 📺 [Україна з неба](https://www.youtube.com/watch?v=vb0ZWc70gOk) — Ukraїner
 
 ---
 
@@ -313,8 +307,17 @@ When describing how you or others feel, you can use different levels of intensit
 
 ---
 
-## Activities
 
+## Need More Practice?
+
+> [!resources] 🎧 External Resources
+> **YouTube:** [Ukrainian Lessons - Emotions](https://www.youtube.com/results?search_query=ukrainian+emotions+vocabulary) — Emotional vocabulary in context
+> **Blog:** [Ukrainian Lessons: Feelings](https://www.ukrainianlessons.com/) — How to express emotions
+> - 📺 [Що таке українська мова?](https://www.youtube.com/watch?v=nqReOxAjuWg) — Ukraїner
+> - 📺 [Чим для вас є Україна?](https://www.youtube.com/watch?v=x75Me7dLRj4) — Ukraїner
+> - 📺 [Україна з неба](https://www.youtube.com/watch?v=vb0ZWc70gOk) — Ukraїner
+
+## Activities
 ## quiz: Повторення (М57)
 > Quick review from the previous module on Health & Wellness.
 

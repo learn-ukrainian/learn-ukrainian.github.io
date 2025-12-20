@@ -23,12 +23,6 @@ vocabulary_count: 30
 >
 > Business vocabulary is essential for anyone working in or with Ukraine. Whether you're participating in meetings, negotiating contracts, or simply discussing your work with Ukrainian colleagues, this vocabulary will help you communicate professionally. Ukraine has a vibrant startup scene and a growing economy — understanding business Ukrainian opens doors to professional opportunities.
 
-> [!resources] 🎧 External Resources
-> **YouTube:** [Ukrainian Lessons - Business](https://www.youtube.com/results?search_query=ukrainian+business+vocabulary) — Professional vocabulary in context
-> **Blog:** [Ukrainian Lessons: Work](https://www.ukrainianlessons.com/) — Workplace expressions
-> - 📺 [Що таке українська мова?](https://www.youtube.com/watch?v=nqReOxAjuWg) — Ukraїner
-> - 📺 [Чим для вас є Україна?](https://www.youtube.com/watch?v=x75Me7dLRj4) — Ukraїner
-> - 📺 [Україна з неба](https://www.youtube.com/watch?v=vb0ZWc70gOk) — Ukraїner
 
 ---
 
@@ -245,8 +239,17 @@ When talking about business performance, these phrases are essential:
 
 ---
 
-## Activities
 
+## Need More Practice?
+
+> [!resources] 🎧 External Resources
+> **YouTube:** [Ukrainian Lessons - Business](https://www.youtube.com/results?search_query=ukrainian+business+vocabulary) — Professional vocabulary in context
+> **Blog:** [Ukrainian Lessons: Work](https://www.ukrainianlessons.com/) — Workplace expressions
+> - 📺 [Що таке українська мова?](https://www.youtube.com/watch?v=nqReOxAjuWg) — Ukraїner
+> - 📺 [Чим для вас є Україна?](https://www.youtube.com/watch?v=x75Me7dLRj4) — Ukraїner
+> - 📺 [Україна з неба](https://www.youtube.com/watch?v=vb0ZWc70gOk) — Ukraїner
+
+## Activities
 ## quiz: Повторення (М59)
 > Quick review from the previous module on Relationships.
 
