@@ -2,7 +2,7 @@
 module: b1-65
 title: "Контрольна точка: Лексичне розширення II"
 subtitle: "Checkpoint: Vocabulary Expansion II"
-version: "1.0"
+version: "2.0"
 phase: "B1"
 focus: checkpoint
 pedagogy: "checkpoint"
@@ -18,95 +18,314 @@ objectives:
 vocabulary_count: 15
 ---
 
-# Контрольна точка: Лексичне розширення II
+# Контрольна точка B1.6
 
 > 🎯 **Контрольна точка**
 >
-> Розширення словника: синоніми, колокації, подорожі. Цей контрольний модуль перевіряє лексичну глибину — чи знаєте ви не лише слова, а й їхні нюанси.
+> Цей модуль перевіряє ваше володіння лексикою з модулів 56-64: синоніми думання та мовлення, колокації, та подорожі.
 
-## Огляд фази B1.6
+This checkpoint reviews **four core skills** from Phase B1.6:
 
-Ця контрольна точка охоплює **модулі 56-64** (Vocabulary Expansion II):
+- **Skill 1:** Travel & Geography vocabulary (M61)
+- **Skill 2:** Thinking verb synonyms (M62)
+- **Skill 3:** Speaking verb synonyms (M63)
+- **Skill 4:** Ukrainian collocations (M64)
 
-| Module | Topic | Key Focus |
-|--------|-------|-----------|
-| 56 | Nature & Environment | Environmental vocabulary |
-| 57 | Technology & Innovation | Tech terms |
-| 58 | Sports & Health | Physical well-being |
-| 59 | Art & Culture | Cultural vocabulary |
-| 60 | Checkpoint I | Phase review |
-| 61 | Travel & Geography | Travel planning, directions |
-| 62 | Synonymy I: Thinking | думати, міркувати, вважати... |
-| 63 | Synonymy II: Speaking | казати, розповідати, стверджувати... |
-| 64 | Collocations | приймати рішення, брати участь... |
-
----
-
-## CEFR Can-Do Targets
-
-By completing this checkpoint, you should be able to:
-
-- [ ] Discuss environmental issues using appropriate vocabulary
-- [ ] Talk about technology and health topics
-- [ ] Use travel vocabulary for planning and navigation
-- [ ] Select correct thinking and speaking verb synonyms
-- [ ] Apply Ukrainian collocations naturally without calques
-
----
-
-## Діагностична вправа
-
-Before starting the review, test your current knowledge.
-
-> 🎧 **Мікс-діалог: Усе разом**
+> [!myth-buster] 🔍 Myth Buster: "Ukrainian vocabulary is just borrowed from Russian"
 >
+> **Lie:** "Ukrainian words are just Russian with different pronunciation."
+>
+> **Truth:** Ukrainian has preserved many original Slavic roots that Russian lost. Words like **подорож** (journey), **мандрівка** (travel), and **митниця** (customs) are distinctly Ukrainian. The verb **думати** comes from Proto-Slavic, while Ukrainian uniquely developed nuanced synonyms like **міркувати** (to ponder) and **гадати** (to suppose) that don't exist in Russian with the same meanings.
+
+---
+
+## Skill 1: Travel & Geography Vocabulary
+
+### Model: Марина планує відпустку
+
+> **Марина:** Я вирішила поїхати до Карпат на **відпустку**. Спочатку я зателефонувала до **турагентства**, щоб **забронювати** готель. Вони порадили відвідати цікаві **пам'ятки** в регіоні.
+>
+> На летовищі мені видали **посадковий талон**, і я пройшла **митницю** без проблем. **Гід** зустрів нашу групу і провів чудову **екскурсію**.
+>
+> Львів знаходиться на **заході** України, Одеса — на **півдні**, Харків — на **сході**, а Київ — у **центрі**.
+
+**Notice:**
+- **турагентство, пам'ятка, посадковий талон, митниця, гід, екскурсія** — key travel vocabulary
+- **Cardinal directions** use Locative case: **на заході**, **на півдні**, **на сході**
+- **забронювати** — to book/reserve (perfective)
+
+### Practice: Доповніть речення
+
+Fill in the correct travel vocabulary:
+
+1. Для польоту потрібен авіаквиток і ___.
+   > [!solution] **посадковий талон** (boarding pass)
+
+2. На ___ перевіряють багаж і документи.
+   > [!solution] **митниці** (customs, Locative case)
+
+3. ___ — це людина, яка водить екскурсії.
+   > [!solution] **Гід** (guide)
+
+4. Львів розташований на ___ України.
+   > [!solution] **заході** (west, Locative case)
+
+5. Одеса — портове місто на ___.
+   > [!solution] **півдні** (south, Locative case)
+
+6. Харків — велике промислове місто на ___.
+   > [!solution] **сході** (east, Locative case)
+
+7. Я замовила тур через ___.
+   > [!solution] **турагентство** (travel agency)
+
+8. Ми відвідали багато цікавих ___ у Львові.
+   > [!solution] **пам'яток** (landmarks, Genitive plural)
+
+### Self-Check
+
+- ☐ Can you name 8+ travel vocabulary words?
+- ☐ Do you know all four cardinal directions with correct preposition (на + Locative)?
+- ☐ Can you use **забронювати** correctly?
+
+---
+
+## Skill 2: Thinking Verb Synonyms
+
+> [!history-bite] 📜 History Bite: The Depth of Ukrainian Vocabulary
+>
+> Ukrainian developed a rich vocabulary of mental verbs because it was the language of **Cossack councils** (ради), where nuanced debate was essential. **Думати** (general thinking), **міркувати** (deliberating), **гадати** (supposing), and **вважати** (considering firmly) each served different rhetorical purposes. This depth was suppressed during the Russification period when Ukrainian was banned from schools (Ems Decree, 1876).
+
+### Model: Думання vs. Міркування
+
+> **Олег:** Я **думаю про** майбутнє щодня. (general thinking)
+>
+> **Марина:** А я **міркую над** цією проблемою вже тиждень. (deep pondering)
+>
+> **Сергій:** **Гадаю**, що завтра буде дощ. (tentative supposition)
+>
+> **Олена:** Я **вважаю**, що треба діяти зараз. (firm opinion)
+>
+> **Петро:** Він **припускає**, що це можливо. (assumption)
+>
+> **Ірина:** Нарешті я **усвідомила** помилку. (realization)
+
+**Key Pattern:**
+| Verb | Preposition | Meaning | Certainty |
+|------|-------------|---------|-----------|
+| думати | **про** + Acc | to think about | neutral |
+| міркувати | **над** + Instr | to ponder | analytical |
+| гадати | — | to suppose | low |
+| вважати | що | to consider | high |
+| припускати | що | to assume | hypothesis |
+| усвідомлювати | що | to realize | discovery |
+
+### Practice: Виберіть правильне дієслово
+
+Complete each sentence with the correct thinking verb:
+
+1. Я ___ про тебе часто. (general thinking)
+   > [!solution] **думаю** — "думати про" for general thinking
+
+2. Він ___ над рішенням уже годину. (deep pondering)
+   > [!solution] **міркує** — "міркувати над" for deliberation
+
+3. ___, що вони запізняться. (tentative guess)
+   > [!solution] **Гадаю** — tentative opinion
+
+4. Вони ___, що це правильний вибір. (firm belief)
+   > [!solution] **вважають** — firm conviction
+
+5. Учені ___, що існує зв'язок. (hypothesis)
+   > [!solution] **припускають** — scientific assumption
+
+6. Нарешті вона ___ свою помилку. (realization)
+   > [!solution] **усвідомила** — sudden understanding
+
+7. Ми ___ про новий проєкт. (casual thinking)
+   > [!solution] **думаємо** — "думати про"
+
+8. Я довго ___ над вашою пропозицією. (careful analysis)
+   > [!solution] **міркував/міркувала** — analytical thinking
+
+### Self-Check
+
+- ☐ Can you distinguish **думати про** from **міркувати над**?
+- ☐ Do you know the certainty scale: гадати < думати < вважати?
+- ☐ Can you use **усвідомлювати** for sudden realizations?
+
+---
+
+## Skill 3: Speaking Verb Synonyms
+
+> [!tip] 💡 Pro Tip: Speaking Verb Categories
+>
+> **Neutral:** казати (to say, specific content), говорити (to speak, process)
+> **Narrative:** розповідати (to tell/narrate stories)
+> **Official:** повідомляти, оголошувати, заявляти (to inform, announce, declare)
+> **Persuasive:** переконувати, наполягати, наголошувати (to convince, insist, emphasize)
+
+### Model: Різні способи "казати"
+
+> **Журналіст повідомив**, що президент прибув. (official reporting)
+>
+> **Бабуся розповіла** нам казку про Котигорошка. (storytelling)
+>
+> **Прем'єр-міністр заявив**, що реформи продовжаться. (official declaration)
+>
+> **Професор наголосив** на важливості цього факту. (emphasis)
+>
+> **Адвокат переконував** присяжних у невинуватості клієнта. (persuasion)
+>
+> **Мати наполягала**, щоб діти поверталися до восьмої. (insistence)
+
+### Practice: Виберіть правильне дієслово мовлення
+
+Choose the correct speaking verb for each context:
+
+1. Вона ___ мені цікаву історію про своє дитинство. (narrating)
+   > [!solution] **розповіла** — storytelling
+
+2. Міністерство ___, що ціни зростуть. (official announcement)
+   > [!solution] **повідомило** — official reporting
+
+3. Він ___ на терміновості цього питання. (emphasis)
+   > [!solution] **наголосив** — emphasizing importance
+
+4. Вона ___ мені, що прийде о третій. (specific content)
+   > [!solution] **сказала / казала** — saying specific info
+
+5. Опозиція ___, що вибори були нечесними. (official claim)
+   > [!solution] **заявила** — formal declaration
+
+6. Він ___ мене змінити думку. (persuasion)
+   > [!solution] **переконав** — convincing
+
+7. Мама ___, щоб я прибрала кімнату. (insistence)
+   > [!solution] **наполягала** — insisting on action
+
+8. Дідусь завжди ___ нам про війну. (repeated narration)
+   > [!solution] **розповідав** — telling stories (imperfective)
+
+### Self-Check
+
+- ☐ Can you distinguish **казати** from **розповідати**?
+- ☐ Do you know official verbs: **повідомляти**, **оголошувати**, **заявляти**?
+- ☐ Can you use persuasive verbs: **переконувати**, **наполягати**?
+
+---
+
+## Skill 4: Ukrainian Collocations
+
+> [!warning] ⚠️ Warning: Common Calque Errors
+>
+> English speakers often translate collocations literally — this creates unnatural Ukrainian:
+> - ❌ **робити рішення** (make a decision) → ✅ **приймати рішення**
+> - ❌ **давати увагу** (give attention) → ✅ **звертати увагу**
+> - ❌ **мати участь** (have part) → ✅ **брати участь**
+> - ❌ **тримати відповідальність** → ✅ **нести відповідальність**
+
+### Model: Правильні колокації
+
+> Ми **прийняли рішення** переїхати до Києва.
+>
+> **Зверни увагу** на цю деталь!
+>
+> Вони **беруть участь** у конкурсі.
+>
+> Хто **несе відповідальність** за цей проєкт?
+>
+> Вона **набула досвіду** за кордоном. (Genitive: досвіду)
+>
+> Ми **досягли успіху** в переговорах. (Genitive: успіху)
+>
+> Музика **грає важливу роль** у нашому житті.
+>
+> Фільм **справив враження** на глядачів.
+
+**Key Collocations with Correct Case:**
+| Verb | Noun | Case | Meaning |
+|------|------|------|---------|
+| приймати | рішення | Acc | to make a decision |
+| звертати | увагу | Acc | to pay attention |
+| брати | участь | Acc | to take part |
+| нести | відповідальність | Acc | to bear responsibility |
+| набувати | досвіду | **Gen** | to gain experience |
+| досягати | успіху | **Gen** | to achieve success |
+| грати | роль | Acc | to play a role |
+| справляти | враження | Acc | to make an impression |
+
+### Practice: Виберіть правильну колокацію
+
+Complete each sentence with the correct collocation:
+
+1. Ми ___ про відпустку. (made a decision)
+   > [!solution] **прийняли рішення** — NOT "зробили рішення"
+
+2. ___ на деталі! (pay attention)
+   > [!solution] **Зверни увагу** — NOT "дай увагу"
+
+3. Хто ___ у проєкті? (participating)  
+   > [!solution] **бере участь** — NOT "має участь"
+
+4. Директор ___ за результати. (bears responsibility)
+   > [!solution] **несе відповідальність** — NOT "має відповідальність"
+
+5. Вона ___ під час стажування. (gained experience)
+   > [!solution] **набула досвіду** — Genitive case!
+
+6. Нарешті ми ___ ! (achieved success)
+   > [!solution] **досягли успіху** — Genitive case!
+
+7. Це ___ у моєму житті. (plays a role)
+   > [!solution] **грає важливу роль**
+
+8. Презентація ___ на керівництво. (made an impression)
+   > [!solution] **справила враження**
+
+### Self-Check
+
+- ☐ Can you use all 8 collocations correctly?
+- ☐ Do you remember which collocations require Genitive (досвіду, успіху)?
+- ☐ Have you eliminated calque errors from your speech?
+
+---
+
+## Integration Challenge
+
+Read this dialogue that uses all four skills, then answer the questions:
+
 > **Марина:** Сергію, я **прийняла рішення** про відпустку. **Гадаю**, що поїдемо до Карпат.
 >
 > **Сергій:** Чудово! Я теж **вважаю**, що гори — краще за море. Ти вже **забронювала** готель?
 >
 > **Марина:** Так, через **турагентство**. Вони **повідомили**, що є чудові **екскурсії**.
 >
-> **Сергій:** А хто **нестиме відповідальність** за **маршрут**?
+> **Сергій:** Хто **нестиме відповідальність** за **маршрут**?
 >
 > **Марина:** Я **набула досвіду** в минулих поїздках. **Звертатиму увагу** на деталі.
 >
 > **Сергій:** Добре! Сподіваюся, **досягнемо успіху** і гарно відпочинемо!
 
-> [!observe] In this dialogue, identify:
-> - **Travel vocabulary:** відпустка, гори, море, готель, турагентство, екскурсії, маршрут
-> - **Thinking verbs:** гадаю, вважаю
-> - **Speaking verbs:** повідомили
-> - **Collocations:** прийняла рішення, нестиме відповідальність, набула досвіду, звертатиму увагу, досягнемо успіху
+**Questions:**
+
+1. Which collocation did Марина use for "made a decision"?
+   > [!solution] **прийняла рішення** (NOT "зробила рішення")
+
+2. Which thinking verb expresses tentative opinion?
+   > [!solution] **Гадаю** (I suppose) — shows uncertainty
+
+3. Which speaking verb did the travel agency use?
+   > [!solution] **повідомили** — official information
+
+4. Which collocation requires Genitive case in the dialogue?
+   > [!solution] **набула досвіду** (experience is in Genitive)
 
 ---
-
-## Self-Assessment Rubric
-
-Before completing the exercises, rate yourself honestly:
-
-| Skill | Not Yet (1) | Developing (2) | Achieved (3) |
-|-------|-------------|----------------|--------------|
-| **Travel vocabulary** | Know basic words | Can plan a trip | Navigate confidently |
-| **Thinking verbs** | Use only "думати" | Know 3-4 synonyms | Select by context |
-| **Speaking verbs** | Use only "казати" | Know 5-6 variants | Vary in writing |
-| **Collocations** | Make calque errors | Know common ones | Use naturally |
-| **Cardinal directions** | Not sure | Know all four | Use with prepositions |
-
----
-
-## Need More Practice?
-
-> [!resources] 🎧 External Resources
->
-> **Vocabulary & Topics:**
-> - 📺 [Україна з неба (Ukraine From Above)](https://www.youtube.com/watch?v=vb0ZWc70gOk) — Ukraїner aerial documentary
-> - 📖 [Business Ukrainian Vocabulary & Infographics](https://www.ukrainianlessons.com/business-ukrainian-vocabulary/) — Infographics and audio
-> - 📺 [Що таке українська мова? (What is Ukrainian Language?)](https://www.youtube.com/watch?v=nqReOxAjuWg) — Ukraїner documentary
-> - 🎧 [Intermediate/Advanced Slow Ukrainian Podcast](https://www.ukrainianlessons.com/the-podcast/) — Authentic listening practice
 
 ## Вправи
 
-## quiz: Подорожі та географія (М61)
+## quiz: Travel & Geography Review (М61)
 > Review travel and geography vocabulary.
 
 1. Як сказати "travel agency"?
@@ -144,7 +363,28 @@ Before completing the exercises, rate yourself honestly:
    - [ ] airport
    > "Митниця" is customs.
 
-## quiz: Дієслова мислення (М62)
+6. Де розташована Одеса?
+   - [ ] на півночі
+   - [ ] на заході
+   - [ ] на сході
+   - [x] на півдні
+   > Odesa is in the south on the Black Sea.
+
+7. Як сказати "guide" (person)?
+   - [x] гід
+   - [ ] турист
+   - [ ] агент
+   - [ ] пасажир
+   > "Гід" leads tours.
+
+8. Що означає "забронювати"?
+   - [x] to book, to reserve
+   - [ ] to pay
+   - [ ] to cancel
+   - [ ] to confirm
+   > "Забронювати" — to make a reservation.
+
+## quiz: Thinking Verb Synonyms (М62)
 > Review thinking verb synonyms.
 
 1. Яке дієслово виражає невпевнену думку?
@@ -182,7 +422,28 @@ Before completing the exercises, rate yourself honestly:
    - [ ] думати
    > "Усвідомлювати" — to realize.
 
-## quiz: Дієслова мовлення (М63)
+6. Яке дієслово означає тверду думку?
+   - [ ] гадати
+   - [ ] припускати
+   - [x] вважати
+   - [ ] думати
+   > "Вважати" — firm belief.
+
+7. Яке дієслово використовують вчені для гіпотези?
+   - [ ] знати
+   - [ ] вважати
+   - [x] припускати
+   - [ ] гадати
+   > "Припускати" — to assume (scientific).
+
+8. Яке дієслово означає уявляти в голові?
+   - [x] уявляти
+   - [ ] думати
+   - [ ] гадати
+   - [ ] міркувати
+   > "Уявляти" — to imagine.
+
+## quiz: Speaking Verb Synonyms (М63)
 > Review speaking verb synonyms.
 
 1. Яке дієслово означає "to tell a story"?
@@ -220,7 +481,28 @@ Before completing the exercises, rate yourself honestly:
    - [ ] Я переконую тебе.
    > "Погоджуватися з" — to agree with.
 
-## quiz: Колокації (М64)
+6. Яке дієслово означає "to declare officially"?
+   - [ ] казати
+   - [ ] розповідати
+   - [x] заявляти
+   - [ ] наголошувати
+   > "Заявляти" — formal declaration.
+
+7. Яке дієслово означає "to convince"?
+   - [ ] наполягати
+   - [x] переконувати
+   - [ ] стверджувати
+   - [ ] повідомляти
+   > "Переконувати" — to convince someone.
+
+8. Яка різниця між "казати" і "говорити"?
+   - [x] казати — specific content; говорити — process of speaking
+   - [ ] казати — formal; говорити — informal
+   - [ ] немає різниці
+   - [ ] говорити — specific; казати — process
+   > "Казати" for what is said; "говорити" for the act of speaking.
+
+## quiz: Collocations (М64)
 > Review correct collocations.
 
 1. Як сказати "to make a decision"?
@@ -258,7 +540,28 @@ Before completing the exercises, rate yourself honestly:
    - [ ] мати досвід
    > "Набувати досвіду" (genitive).
 
-## match-up: Синоніми мислення
+6. Як сказати "to achieve success"?
+   - [ ] робити успіх
+   - [ ] мати успіх
+   - [x] досягати успіху
+   - [ ] брати успіх
+   > "Досягати успіху" (genitive).
+
+7. Як сказати "to play a role"?
+   - [x] грати роль
+   - [ ] мати роль
+   - [ ] брати роль
+   - [ ] робити роль
+   > "Грати роль" is correct.
+
+8. Як сказати "to make an impression"?
+   - [ ] робити враження
+   - [x] справляти враження
+   - [ ] давати враження
+   - [ ] мати враження
+   > "Справляти враження" is correct.
+
+## match-up: Thinking Verb Synonyms
 > Match the thinking verb with its meaning.
 
 | Verb | Meaning |
@@ -272,7 +575,7 @@ Before completing the exercises, rate yourself honestly:
 | усвідомлювати | to realize |
 | припускати | to assume |
 
-## match-up: Синоніми мовлення
+## match-up: Speaking Verb Synonyms
 > Match the speaking verb with its function.
 
 | Verb | Function |
@@ -286,7 +589,7 @@ Before completing the exercises, rate yourself honestly:
 | наголошувати | to emphasize |
 | переконувати | to convince |
 
-## match-up: Колокації
+## match-up: Collocations
 > Match the verb with its correct noun partner.
 
 | Verb | Noun |
@@ -300,7 +603,7 @@ Before completing the exercises, rate yourself honestly:
 | грати | роль |
 | справляти | враження |
 
-## fill-in: Мікс лексики
+## fill-in: Mixed Vocabulary Review
 > Complete with the correct word.
 
 1. Ми ___ рішення про переїзд.
@@ -343,7 +646,7 @@ Before completing the exercises, rate yourself honestly:
    > [!options] беремо | маємо | робимо | даємо
    > [!explanation] "Брати участь."
 
-## fill-in: Подорожі
+## fill-in: Travel Vocabulary
 > Complete with correct travel vocabulary.
 
 1. Для польоту потрібен ___ і посадковий талон.
@@ -376,7 +679,17 @@ Before completing the exercises, rate yourself honestly:
    > [!options] турагентство | митницю | кордон | пам'ятку
    > [!explanation] "Турагентство" — travel agency.
 
-## error-correction: Помилки
+7. Ми відвідали багато цікавих ___.
+   > [!answer] пам'яток
+   > [!options] пам'яток | місць | готелів | турів
+   > [!explanation] "Пам'ятка" — landmark (Gen. plural).
+
+8. Я ___ номер у готелі заздалегідь.
+   > [!answer] забронювала
+   > [!options] забронювала | замовила | купила | взяла
+   > [!explanation] "Забронювати" — to book.
+
+## error-correction: Find the Calque Error
 > Find and correct the error.
 
 1. Я зробив рішення про відпустку.
@@ -391,13 +704,13 @@ Before completing the exercises, rate yourself honestly:
    > [!options] Дайте увагу | Зверніть увагу | Майте увагу
    > [!explanation] "Звертати увагу" is correct.
 
-3. Vона говорить мені, що прийде. (saying specific info)
+3. Вона говорить мені, що прийде о третій.
    > [!error] говорить
    > [!answer] каже
    > [!options] говорить | каже | розповідає
    > [!explanation] "Казати" for specific content.
 
-4. Я думаю над проблемою. (general thinking about)
+4. Я думаю над проблемою.
    > [!error] над проблемою
    > [!answer] про проблему
    > [!options] над проблемою | про проблему | у проблемі
@@ -415,7 +728,19 @@ Before completing the exercises, rate yourself honestly:
    > [!options] захід | заході | західний
    > [!explanation] "На заході" — locative case.
 
-## unjumble: Речення
+7. Вона робила враження на всіх.
+   > [!error] робила враження
+   > [!answer] справляла враження
+   > [!options] робила враження | справляла враження | давала враження
+   > [!explanation] "Справляти враження" is correct.
+
+8. Він тримає відповідальність за бюджет.
+   > [!error] тримає відповідальність
+   > [!answer] несе відповідальність
+   > [!options] тримає відповідальність | несе відповідальність | має відповідальність
+   > [!explanation] "Нести відповідальність" is correct.
+
+## unjumble: Build Sentences
 > Put the words in correct order.
 
 1. рішення / прийняли / ми / важливе
@@ -442,7 +767,7 @@ Before completing the exercises, rate yourself honestly:
 8. досвіду / набула / вона / за / кордоном
    > [!answer] Вона набула досвіду за кордоном.
 
-## cloze: Комплексний тест
+## cloze: Integrated Test
 > Complete the passage with correct words.
 
 Минулого літа ми !!1!! здійснити чудову подорож. Я !!2!! рішення поїхати до Карпат, які знаходяться на !!3!! України.
@@ -462,8 +787,8 @@ Before completing the exercises, rate yourself honestly:
 - !!7(стверджував | казав | говорив | гадав)!! ← asserted
 - !!8(погоджуюся | наполягаю | стверджую | гадаю)!! ← agree
 
-## translate: Переклад
-> Translate to Ukrainian using correct vocabulary and collocations.
+## translate: English to Ukrainian
+> Translate using correct vocabulary and collocations.
 
 1. We made a decision to travel to the Carpathians.
    - [x] Ми прийняли рішення подорожувати до Карпат.
@@ -501,23 +826,40 @@ Before completing the exercises, rate yourself honestly:
    - [ ] Майте увагу на деталі!
    > "Звертати увагу."
 
-## group-sort: Категоризація
+7. They are taking part in the competition.
+   - [x] Вони беруть участь у змаганні.
+   - [ ] Вони мають участь у змаганні.
+   - [ ] Вони роблять участь у змаганні.
+   > "Брати участь."
+
+8. I've been pondering this problem for a week.
+   - [x] Я міркую над цією проблемою вже тиждень.
+   - [ ] Я думаю про цією проблемою вже тиждень.
+   - [ ] Я гадаю над цією проблемою вже тиждень.
+   > "Міркувати над" + instrumental.
+
+## group-sort: Categorization
 > Sort vocabulary into correct categories.
 
-| Travel | Thinking Verbs | Collocations |
-|--------|----------------|--------------|
-| турагентство | думати | приймати рішення |
-| пам'ятка | міркувати | брати участь |
-| посадковий талон | гадати | нести відповідальність |
-| митниця | усвідомлювати | набувати досвіду |
+| Travel | Thinking Verbs | Speaking Verbs | Collocations |
+|--------|----------------|----------------|--------------|
+| турагентство | думати | казати | приймати рішення |
+| пам'ятка | міркувати | розповідати | брати участь |
+| посадковий талон | гадати | повідомляти | нести відповідальність |
+| митниця | усвідомлювати | наголошувати | набувати досвіду |
+| гід | вважати | стверджувати | досягати успіху |
+| екскурсія | припускати | заявляти | справляти враження |
+| відпустка | передбачати | переконувати | грати роль |
+| маршрут | уявляти | пояснювати | звертати увагу |
 
-## select: Вибір
+## select: Multiple Correct Options
 > Select all correct options.
 
 1. Які слова пов'язані з подорожами?
    - [x] турагентство
    - [x] пам'ятка
    - [x] митниця
+   - [x] посадковий талон
    - [ ] міркувати
    - [ ] стверджувати
    > Travel vocabulary.
@@ -528,12 +870,14 @@ Before completing the exercises, rate yourself honestly:
    - [x] обмірковувати
    - [ ] казати
    - [ ] повідомляти
+   - [ ] переконувати
    > Deep thinking verbs.
 
 3. Які колокації правильні?
    - [x] приймати рішення
    - [x] звертати увагу
    - [x] брати участь
+   - [x] нести відповідальність
    - [ ] робити рішення
    - [ ] давати увагу
    > Correct collocations.
@@ -544,9 +888,28 @@ Before completing the exercises, rate yourself honestly:
    - [x] заявляти
    - [ ] розповідати
    - [ ] казати
+   - [ ] гадати
    > Official communication verbs.
 
-## true-false: Перевірка знань
+5. Які неправильні колокації (помилки)?
+   - [x] робити рішення
+   - [x] давати увагу
+   - [x] мати участь
+   - [ ] приймати рішення
+   - [ ] звертати увагу
+   - [ ] брати участь
+   > Calque errors to avoid.
+
+6. Які дієслова означають переконування?
+   - [x] переконувати
+   - [x] наполягати
+   - [ ] погоджуватися
+   - [ ] розповідати
+   - [ ] повідомляти
+   - [x] стверджувати
+   > Persuasion verbs.
+
+## true-false: Knowledge Check
 > Determine if each statement is true or false.
 
 1. Львів знаходиться на заході України.
@@ -579,68 +942,43 @@ Before completing the exercises, rate yourself honestly:
    - [ ] False
    > Correct collocation.
 
----
+7. "Набувати досвіду" вимагає Accusative.
+   - [ ] True
+   - [x] False
+   > "Набувати" requires Genitive (досвіду).
 
-## Самооцінка
-
-## Результати та рекомендації
-
-After completing all exercises, calculate your score:
-
-| Score | Level | Recommendation |
-|-------|-------|----------------|
-| **< 60%** | Needs Review | Review M61-64, redo all signature activities |
-| **60-79%** | Developing | Focus on weak areas (synonyms or collocations) |
-| **80%+** | Ready | Proceed to Phase B1.7 (Contemporary Ukraine) |
-
-### Areas to Focus On
-
-**If struggling with Travel (M61):**
-- Review cardinal directions with prepositions
-- Practice airport/hotel dialogues
-- Create your own travel plan vocabulary list
-
-**If struggling with Thinking Verbs (M62):**
-- Create flashcards: verb → context
-- Practice using думати про vs. міркувати над
-- Write sentences with each synonym
-
-**If struggling with Speaking Verbs (M63):**
-- Create a "reporting verbs" list for news reading
-- Practice varying verbs in reported speech
-- Rewrite paragraphs using different speaking verbs
-
-**If struggling with Collocations (M64):**
-- Make verb + noun flashcards
-- Avoid translating from English literally
-- Read Ukrainian texts and highlight collocations
+8. Одеса знаходиться на сході України.
+   - [ ] True
+   - [x] False
+   > Odesa is in the SOUTH, on the Black Sea.
 
 ---
 
-## Підсумок
+## Summary
 
-### Phase B1.6 Key Achievements
+| Skill | Key Pattern | Example |
+|-------|-------------|---------|
+| Travel vocabulary | на + Locative for directions | на заході, на півдні |
+| Thinking verbs | про/над determines verb | думати про, міркувати над |
+| Speaking verbs | Context determines choice | розповідати → narratives, повідомляти → official |
+| Collocations | Fixed verb-noun pairs | приймати рішення, брати участь |
 
-**Travel & Geography (M61):**
-- 30 words: подорож, мандрівка, турагентство, митниця, пам'ятка...
-- Cardinal directions: північ, південь, схід, захід
-- Preposition: на + locative (на заході)
+---
 
-**Thinking Verbs (M62):**
-- Certainty scale: гадати < думати < вважати
-- Deep thinking: міркувати, роздумувати
-- Prepositions: думати про, міркувати над
+## Need More Practice?
 
-**Speaking Verbs (M63):**
-- Basic: казати, говорити
-- Informing: розповідати, повідомляти, оголошувати
-- Asserting: стверджувати, заявляти, наполягати
-
-**Collocations (M64):**
-- приймати рішення (NOT робити)
-- звертати увагу (NOT давати)
-- брати участь (NOT мати)
-- нести відповідальність (NOT тримати)
+> [!resources] 🎧 External Resources
+>
+> **Vocabulary & Topics:**
+> - 📺 [Україна з неба (Ukraine From Above)](https://www.youtube.com/watch?v=vb0ZWc70gOk) — Ukraїner aerial documentary
+> - 📖 [Business Ukrainian Vocabulary & Infographics](https://www.ukrainianlessons.com/business-ukrainian-vocabulary/) — Infographics and audio
+> - 📺 [Що таке українська мова? (What is Ukrainian Language?)](https://www.youtube.com/watch?v=nqReOxAjuWg) — Ukraїner documentary
+>
+> **Struggling with a skill?** Go back to:
+> - Travel & Geography → Module 61
+> - Thinking verbs → Module 62
+> - Speaking verbs → Module 63
+> - Collocations → Module 64
 
 ---
 
@@ -651,7 +989,7 @@ After completing all exercises, calculate your score:
 | турагентство | travel agency | M61 |
 | пам'ятка | landmark | M61 |
 | митниця | customs | M61 |
-| півночі | north | M61 |
+| забронювати | to book | M61 |
 | думати | to think | M62 |
 | гадати | to suppose | M62 |
 | вважати | to consider | M62 |
@@ -659,7 +997,7 @@ After completing all exercises, calculate your score:
 | казати | to say | M63 |
 | розповідати | to narrate | M63 |
 | повідомляти | to inform | M63 |
-| стверджувати | to assert | M63 |
+| наголошувати | to emphasize | M63 |
 | приймати рішення | make decision | M64 |
 | брати участь | participate | M64 |
 | нести відповідальність | bear responsibility | M64 |
