@@ -56,6 +56,10 @@ from .section_order import (
 from .content_quality import (
     check_content_quality,
 )
+from .checkpoint_format import (
+    check_checkpoint_format,
+    get_checkpoint_structure_summary,
+)
 
 __all__ = [
     # Grammar
@@ -99,4 +103,7 @@ __all__ = [
     'parse_sections',
     # Content Quality
     'check_content_quality',
+    # Checkpoint Format
+    'check_checkpoint_format',
+    'get_checkpoint_structure_summary',
 ]

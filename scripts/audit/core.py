@@ -309,29 +309,52 @@ def validate_tone(content: str) -> list[str]:
 
 
 def validate_checkpoint_format(content: str) -> list[str]:
-    """Validate checkpoint modules follow A1 checkpoint format.
+    """Validate checkpoint modules follow Skill-based format.
     
-    Required structure (per A1 M10 template):
-    - H1: # Checkpoint - [Name]
-    - Skills list in intro
+    Required structure (per checkpoint design guide):
+    - H1: # Checkpoint - [Name] or # Контрольна точка
     - ## Skill N: [Name] sections (at least 1)
     - Each skill has: ### Model:, ### Practice:, ### Self-Check
+    
+    Alternative structures (Діагностика/Аналіз/Поглиблення) are flagged as errors
+    requiring rewrite to Skill-based format.
     
     See: docs/l2-uk-en/CHECKPOINT-DESIGN-GUIDE.md
     """
     errors = []
     
-    # Check for H1 checkpoint title
-    if not re.search(r'^# Checkpoint', content, re.MULTILINE):
-        errors.append("Checkpoint missing '# Checkpoint - [Name]' H1 header")
+    # Check for alternative (incorrect) structure that needs rewrite
+    has_diagnostika = bool(re.search(r'^## Діагностика', content, re.MULTILINE))
+    has_analiz = bool(re.search(r'^## Аналіз', content, re.MULTILINE))
+    has_pogliblennya = bool(re.search(r'^## Поглиблення', content, re.MULTILINE))
+    
+    alternative_structure = has_diagnostika or has_analiz or has_pogliblennya
     
     # Check for at least one Skill section  
-    skill_matches = re.findall(r'^## Skill \d+:', content, re.MULTILINE)
-    if not skill_matches:
+    skill_matches = re.findall(r'^## Skill\s*\d*:', content, re.MULTILINE)
+    
+    # Flag alternative structure as error if no Skill sections
+    if alternative_structure and not skill_matches:
+        alt_sections = []
+        if has_diagnostika:
+            alt_sections.append("Діагностика")
+        if has_analiz:
+            alt_sections.append("Аналіз")
+        if has_pogliblennya:
+            alt_sections.append("Поглиблення")
+        errors.append(f"REWRITE REQUIRED: Checkpoint uses incorrect '{'/'.join(alt_sections)}' structure instead of Skill-based format (## Skill N: → ### Model: → ### Practice: → ### Self-Check)")
+    elif not skill_matches:
         errors.append("Checkpoint missing '## Skill N:' sections (need at least 1)")
     
+    # Check for bold-style headers (old format)
+    bold_model = len(re.findall(r'^\*\*Model:', content, re.MULTILINE))
+    bold_practice = len(re.findall(r'^\*\*Practice:', content, re.MULTILINE))
+    
+    if bold_model > 0 or bold_practice > 0:
+        errors.append(f"Checkpoint uses **bold:** format ({bold_model} Model, {bold_practice} Practice) - convert to ### H3 headers")
+    
     # Check each Skill section structure (H3 headers required)
-    skill_sections = re.split(r'^## Skill \d+:', content, flags=re.MULTILINE)[1:]
+    skill_sections = re.split(r'^## Skill\s*\d*:', content, flags=re.MULTILINE)[1:]
     for i, section in enumerate(skill_sections, 1):
         section_end = re.search(r'^##\s', section, re.MULTILINE)
         section_text = section[:section_end.start()] if section_end else section
@@ -463,6 +486,9 @@ def audit_module(file_path: str) -> bool:
         print(f"❌ AUDIT FAILED: Missing 'Summary' section.")
         print("  -> Every module must have a Summary section.")
         sys.exit(1)
+
+    # Initialize failure flag early (checkpoint validation may set it)
+    has_critical_failure = False
 
     # Checkpoint format validation
     if module_focus == 'checkpoint':
@@ -596,7 +622,6 @@ def audit_module(file_path: str) -> bool:
 
     # Evaluate gates
     results = {}
-    has_critical_failure = False
 
     results['words'] = evaluate_word_count(total_words, target)
     if results['words'].status == 'FAIL':
