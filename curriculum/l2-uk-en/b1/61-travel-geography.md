@@ -68,9 +68,9 @@ Travel vocabulary in Ukrainian can be organized into clear thematic clusters. Un
 
 | Українською | English | Usage Note |
 |-------------|---------|------------|
-| подорож (f) | journey, trip | General term; formal |
-| мандрівка (f) | travel, wandering | Implies adventure, exploration |
-| поїздка (f) | trip, ride | Short trip; business or pleasure |
+| подорож | journey, trip | General term; formal |
+| мандрівка | travel, wandering | Implies adventure, exploration |
+| поїздка | trip, ride | Short trip; business or pleasure |
 
 > 🔗 **Language Link: Travel Word Choice**
 >
@@ -92,10 +92,10 @@ Travel vocabulary in Ukrainian can be organized into clear thematic clusters. Un
 
 | Українською | English | Context |
 |-------------|---------|---------|
-| турист (m) | tourist | Person traveling for pleasure |
-| турагентство (n) | travel agency | Books trips, hotels, excursions |
-| бронювання (n) | booking, reservation | The act of reserving |
-| резервація (f) | reservation | Often interchangeable with бронювання |
+| турист | tourist | Person traveling for pleasure |
+| турагентство | travel agency | Books trips, hotels, excursions |
+| бронювання | booking, reservation | The act of reserving |
+| резервація | reservation | Often interchangeable with бронювання |
 
 **Practical Dialogue:**
 
@@ -115,17 +115,17 @@ Travel vocabulary in Ukrainian can be organized into clear thematic clusters. Un
 
 | Українською | English | Essential Info |
 |-------------|---------|----------------|
-| готель (m) | hotel | Derives from French "hôtel" |
-| хостел (m) | hostel | Budget accommodation |
-| віза (f) | visa | Entry permit |
-| паспорт (m) | passport | Travel document |
-| митниця (f) | customs | Border control |
-| кордон (m) | border | State boundary |
-| авіаквиток (m) | plane ticket | Compound: авіа + квиток |
-| посадковий талон (m) | boarding pass | Lit: "boarding coupon" |
-| багаж (m) | luggage | Ваш багаж занадто важкий |
-| валіза (f) | suitcase | Hard-sided luggage |
-| рюкзак (m) | backpack | For hiking, casual travel |
+| готель | hotel | Derives from French "hôtel" |
+| хостел | hostel | Budget accommodation |
+| віза | visa | Entry permit |
+| паспорт | passport | Travel document |
+| митниця | customs | Border control |
+| кордон | border | State boundary |
+| авіаквиток | plane ticket | Compound: авіа + квиток |
+| посадковий талон | boarding pass | Lit: "boarding coupon" |
+| багаж | luggage | Ваш багаж занадто важкий |
+| валіза | suitcase | Hard-sided luggage |
+| рюкзак | backpack | For hiking, casual travel |
 
 > 💡 **Did You Know?**
 >
@@ -151,12 +151,12 @@ Travel vocabulary in Ukrainian can be organized into clear thematic clusters. Un
 
 | Українською | English | Example |
 |-------------|---------|---------|
-| пам'ятка (f) | landmark, sight | Софія Київська — відома пам'ятка |
-| екскурсія (f) | excursion, tour | Екскурсія по старому місту |
+| пам'ятка | landmark, sight | Софія Київська — відома пам'ятка |
+| екскурсія | excursion, tour | Екскурсія по старому місту |
 | гід (m/f) | guide | Наш гід говорить трьома мовами |
-| маршрут (m) | route, itinerary | Маршрут проходить через гори |
-| карта (f) | map | У мене є карта Києва |
-| напрямок (m) | direction | Який напрямок до вокзалу? |
+| маршрут | route, itinerary | Маршрут проходить через гори |
+| карта | map | У мене є карта Києва |
+| напрямок | direction | Який напрямок до вокзалу? |
 
 > 🎭 **Cultural Note: Ukrainian Tourism**
 >
@@ -173,12 +173,12 @@ Travel vocabulary in Ukrainian can be organized into clear thematic clusters. Un
 
 | Українською | English | Geography |
 |-------------|---------|-----------|
-| північ (f) | north | На півночі України — Полісся |
-| південь (m) | south | Південь країни виходить до моря |
-| схід (m) | east | Харків — на сході |
-| захід (m) | west | Львів — на заході |
-| континент (m) | continent | Європа — наш континент |
-| острів (m) | island | Зміїний острів у Чорному морі |
+| північ | north | На півночі України — Полісся |
+| південь | south | Південь країни виходить до моря |
+| схід | east | Харків — на сході |
+| захід | west | Львів — на заході |
+| континент | continent | Європа — наш континент |
+| острів | island | Зміїний острів у Чорному морі |
 
 > 🔗 **Language Link: Cardinal Directions**
 >
@@ -212,8 +212,8 @@ Ukrainian creates many travel terms through compounding. Understanding these pat
 
 | Compound | Parts | Meaning |
 |----------|-------|---------|
-| авіаквиток | авіа (air) + квиток (ticket) | plane ticket |
-| турагентство | тур (tour) + агентство (agency) | travel agency |
+| авіаквиток | авіа + квиток | plane ticket |
+| турагентство | тур + агентство | travel agency |
 | автобусна зупинка | автобусна + зупинка | bus stop |
 
 **Pattern Recognition:**
@@ -285,6 +285,22 @@ Ukrainian creates many travel terms through compounding. Understanding these pat
 > - **Херсон** — gateway to the Dnieper delta
 >
 > Crimea was transferred to Ukrainian SSR in 1954 and has been internationally recognized as Ukrainian territory. The illegal Russian annexation in 2014 is condemned by the UN.
+
+---
+
+### Популярні напрямки — Popular Destinations
+
+Ukraine offers diverse travel experiences for every type of traveler. Here are some of the most popular destinations and what makes them special:
+
+**Київ** — the capital city combines ancient history with modern urban life. Must-see **пам'ятки** include **Софійський собор**, **Києво-Печерська лавра**, and **Андріївський узвіз**. The city offers world-class museums, restaurants, and nightlife.
+
+**Львів** — often called Ukraine's cultural capital. The entire old town is a UNESCO World Heritage Site. Famous for its coffee culture, chocolate, and Austrian-era architecture. Popular **екскурсії** include tours of the historic center, Armenian Cathedral, and Lychakiv Cemetery.
+
+**Карпати** — Ukraine's mountain paradise perfect for hiking, skiing, and wellness tourism. Key destinations include **Буковель** for skiing, **Говерла** for hiking, and traditional Hutsul villages where you can experience authentic Ukrainian mountain culture.
+
+**Одеса** — Ukraine's summer capital on the Black Sea. Known for its beaches, **Потьомкінські сходи**, historic Opera House, and humor festival. The catacombs under the city attract adventure seekers.
+
+When planning your **подорож** to Ukraine, consider the season: spring and autumn are ideal for city tours, summer for beaches and hiking, and winter for Carpathian ski resorts.
 
 ---
 
