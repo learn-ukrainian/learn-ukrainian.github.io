@@ -414,15 +414,15 @@ By module 30, learners can:
 ---
 
 #### Module 10: Checkpoint - First Contact
-**Review of:** Modules 1-9
+**Covers:** M01-09
 
-**Assessment areas:**
-1. Alphabet reading (timed)
-2. Gender identification
-3. Verb conjugation (Class I + II)
-4. Question formation
-5. Food vocabulary comprehension
-6. Basic dialogue completion
+**Required Skill Groups:**
+1. Cyrillic Alphabet (M01-02) - reading, false friends, letter recognition
+2. Gender Identification (M03) - masculine/feminine/neuter by ending
+3. Verb Conjugation (M06, M08) - Class I (-ати) and Class II (-ити)
+4. Question Formation (M07) - чи, що, хто, де, коли
+5. Food Vocabulary (M09) - basic meals, ordering
+6. Basic Dialogue (M04-05) - introductions, greetings
 
 **Vocabulary (10 words):** Review selection
 
@@ -689,15 +689,15 @@ By module 30, learners can:
 ---
 
 #### Module 20: Checkpoint - Navigation
-**Review of:** Modules 11-19
+**Covers:** M11-19
 
-**Assessment areas:**
-1. Accusative case (inanimate + animate)
-2. Locative case (location expressions)
-3. Genitive case (absence + quantities)
-4. Possessive pronouns
-5. City navigation dialogue
-6. Restaurant interaction
+**Required Skill Groups:**
+1. Accusative Case (M11-12) - inanimate "-у/-ю", animate = genitive
+2. Locative Case (M13) - у/в, на + location
+3. Genitive Case (M16-17) - absence "немає", numbers 5+
+4. Possessive Pronouns (M14) - мій/твій/його/її/наш/ваш
+5. City Navigation (M15) - directions, transport
+6. Restaurant Interaction (M18-19) - ordering, paying
 
 **Vocabulary (10 words):** Review selection from A1.2
 
@@ -1048,17 +1048,17 @@ By module 30, learners can:
 ---
 
 #### Module 34: Checkpoint: Final Review (A1 Mastery)
-**Review of:** All A1 modules (1-33)
+**Covers:** M01-33
 
-**Can-do assessment:**
-1. Read Cyrillic fluently (no transliteration)
-2. Introduce myself and family
-3. Describe daily routine
-4. Navigate city and order food
-5. Use phrases for health and shopping
-6. Talk about weather and holidays
-7. Use past and future tense
-8. Use adverbs to describe actions
+**Required Skill Groups:**
+1. Cyrillic Fluency (M01-02) - read without transliteration
+2. Verb Tenses (M21-22) - past (-в/-ла) and future (буду+)
+3. Four Cases (M11-17) - Nom/Acc/Gen/Loc endings
+4. Adjective Agreement (M26-27) - gender/number matching
+5. Adverbs (M28) - manner, frequency, formation
+6. Time & Routine (M23-25) - scheduling, daily activities
+7. Practical Contexts (M18-19, M31-32) - café, health, family
+8. Weather & Holidays (M29, M33) - seasons, celebrations
 
 **Final tasks:**
 1. Self-introduction monologue

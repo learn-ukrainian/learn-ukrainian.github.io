@@ -156,7 +156,7 @@ Some common verbs don't follow the standard pattern. Here are three essentials:
 **Олена:** Так, я п'ю каву. Я також читаю книгу. (Tak, ja p'jú kávu. Ja takózh chytáju knýhu.)
 *Yes, I'm drinking coffee. I also read a book.*
 
-**Марко:** Я хочу їсти. Ти любиш борщ? (Ja khochú jisty. Ty ljubljúsh borshch?)
+**Марко:** Я хочу їсти. Ти любиш борщ? (Ja khochú jisty. Ty ljúbysh borshch?)
 *I want to eat. Do you love borscht?*
 
 **Олена:** Так, я дуже люблю борщ! (Tak, ja dúzhe ljubljú borshch!)
