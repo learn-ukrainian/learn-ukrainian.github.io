@@ -51,13 +51,15 @@ Which version sounds more professional? The second one — because discourse mar
 >
 > Without discourse markers, even grammatically perfect Ukrainian sounds like a list of disconnected facts. With them, you sound educated, organized, and persuasive. This is essential for academic writing, professional emails, and formal presentations.
 
+**Learning Strategy:** As you work through this module, pay attention to how each marker category serves a different logical purpose. Sequence markers create order, addition markers expand ideas, contrast markers show opposing views, and summary markers conclude arguments. Recognizing these patterns will help you both understand Ukrainian texts and produce well-organized writing of your own.
+
 ---
 
 ## Аналіз
 
 ### Три категорії дискурсивних маркерів
 
-Ukrainian discourse markers fall into three functional categories. Let's master each one.
+Ukrainian discourse markers fall into three functional categories. Each category serves a distinct purpose in structuring your arguments and guiding your reader through your ideas. Let's master each one in turn.
 
 ---
 
@@ -156,6 +158,10 @@ These markers show consequences and wrap up arguments:
 **Full example with all categories:**
 
 > **По-перше**, Україна є аграрною державою. **По-друге**, вона має значні природні ресурси. **Крім того**, є розвинена IT-галузь. **Водночас**, війна завдала величезних збитків. **Попри це**, економіка відновлюється. **У результаті**, країна демонструє стійкість. **Підсумовуючи**, Україна має значний потенціал для розвитку.
+
+**Translation:** "**Firstly**, Ukraine is an agricultural state. **Secondly**, it has significant natural resources. **In addition**, there is a developed IT sector. **At the same time**, the war has caused enormous damage. **Despite this**, the economy is recovering. **As a result**, the country demonstrates resilience. **To summarize**, Ukraine has significant potential for development."
+
+Notice how each discourse marker serves a specific logical function: sequence (по-перше, по-друге), addition (крім того), contrast (водночас, попри це), result (у результаті), and summary (підсумовуючи). This creates a clear argumentative flow that guides the reader through your reasoning.
 
 ---
 
@@ -346,28 +352,23 @@ Advanced speakers combine discourse markers for nuanced expression. Here are com
 
 ---
 
-## Підсумок
+## Summary: Key Takeaways
 
-У цьому модулі ви вивчили:
+This module covered advanced discourse markers for organizing complex texts. Here are the essential points to remember:
 
-**Маркери послідовності:**
-- по-перше, по-друге, по-третє — для нумерації пунктів
-- насамперед, передусім — для пріоритету
-- нарешті, насамкінець, на завершення — для завершення
+**Sequence Markers** help organize your ideas in logical order. Start with **насамперед** (first of all) when establishing priority, then use **по-перше, по-друге, по-третє** (firstly, secondly, thirdly) for numbered points. Close with **нарешті** (finally) or **насамкінець** (in conclusion) for your last point.
 
-**Маркери додавання:**
-- крім того, додатково — для додаткової інформації
-- більше того, тим паче — для підсилення
+**Addition Markers** build on previous ideas. Use **крім того** (in addition) for neutral additions, and **більше того** (moreover) when your new point strengthens the previous one. For emphasis, use **тим паче** (especially, all the more).
 
-**Маркери контрасту:**
-- з іншого боку, натомість — для протиставлення
-- водночас, попри це — для одночасного контрасту
+**Contrast Markers** present opposing views or limitations. **З іншого боку** (on the other hand) introduces the opposite perspective, while **водночас** (at the same time) shows simultaneous contrast. For concession, use **попри це** (despite this) or the more formal **незважаючи на** (notwithstanding).
 
-**Маркери результату:**
-- внаслідок, у результаті — для наслідків
-- підсумовуючи, у підсумку — для висновків
+**Summary Markers** wrap up your arguments. Use **підсумовуючи** (to summarize) or **загалом кажучи** (generally speaking) to signal your conclusion. **У підсумку** (in summary) works for final statements.
 
-> ✅ **Перевірте себе**
+**Register Matters:** Remember that some markers are formal (незважаючи на, насамкінець) and belong in academic or business writing, while others (загалом, а ще) are conversational. Matching register to context makes you sound natural.
+
+**Punctuation Rule:** Most discourse markers require a comma after them: "По-перше, Україна має..." not "По-перше Україна має..."
+
+> ✅ **Self-Check**
 >
 > Before moving on, can you:
 > - [ ] Use sequence markers (по-перше, по-друге, нарешті)?

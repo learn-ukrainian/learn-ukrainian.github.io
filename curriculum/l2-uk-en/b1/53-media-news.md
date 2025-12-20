@@ -63,6 +63,8 @@ According to recent research:
 
 This module will help you participate in this media-savvy culture and understand how Ukrainians discuss news, sources, and reliability.
 
+**What You'll Learn:** By the end of this module, you will be able to identify different types of media in Ukrainian, discuss the reliability of news sources using appropriate vocabulary, express skepticism or trust about information you encounter, and participate in conversations about current events. These skills are essential for anyone wanting to engage meaningfully with Ukrainian society and culture.
+
 ---
 
 ## Аналіз
